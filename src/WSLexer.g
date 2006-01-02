@@ -38,6 +38,11 @@ tokens {
     FORMFEED;
 }
 
+// formfeed
+FORMFEED :
+         '\f'
+;
+
 // whitespace (except for newline)
 WS :
         (
@@ -47,10 +52,7 @@ WS :
             '\t' |
 
             // vertical tab replaced by space
-            '\13' { $setText(' '); } |
-
-            // form feed replaced by space
-            '\f' { $setType(FORMFEED); }
+            '\13' { $setText(' '); }
         )+
 ;
 

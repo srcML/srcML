@@ -287,6 +287,12 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
 
     // output text
     switch (xmlTextReaderNodeType(reader)) {
+
+      // special case for formfeed element
+    case XML_READER_TYPE_ELEMENT:
+      if (strcmp((const char*) xmlTextReaderName(reader), "formfeed") == 0)
+	    xmlTextWriterWriteRawLen(writer, BAD_CAST "\f", 1);
+      break;
     case XML_READER_TYPE_TEXT:
     case XML_READER_TYPE_SIGNIFICANT_WHITESPACE:
       outputText(xmlTextReaderValue(reader), writer, false);
