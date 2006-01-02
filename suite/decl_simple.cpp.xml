@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" dir="decl_simple" language="C++">
+
+<unit>
+<decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>long</name> <name>int</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>signed</name> <name>char</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>short</name> <name>int</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>unsigned</name> <name>char</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>unsigned</name> <name>short</name> <name>int</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>unsigned</name> <name>int</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>unsigned</name> <name>long</name> <name>int</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>bool</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>char</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>wchar_t</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>float</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>double</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>long</name> <name>double</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>void</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>int</name>*</type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<!--
+<unit>
+<decl_stmt><decl><type><name>int</name></type> <name>a</name>, <name>b</name></decl>;</decl_stmt>
+</unit>
+-->
+
+<unit>
+<decl_stmt><decl><type><name>const</name> <name>int</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>const</name> <name>int</name>*</type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>const</name> <name>int</name> *</type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>const</name> *<name>int</name> *</type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>int</name></type> <name>a</name> =<init> <expr>1</expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>int</name></type> <name>a</name> =<init> <expr><name>a</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>int</name></type> <name>a</name> =<init> <expr><block>{ <expr><name>a</name></expr> }</block></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>int</name></type> <name>a</name> =<init> <expr><block>{<expr><block>{ <expr><name>a</name></expr> }</block></expr>, <expr><name>b</name></expr>}</block></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>int</name></type> <name>a</name> =<init> <expr>(<block>{<expr><block>{ <expr><name>a</name></expr> }</block></expr>, <expr><name>b</name></expr>}</block>)</expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>a</name></type> <name>b</name><argument_list>(<argument><expr><call><name>c</name><argument_list>(<argument><expr><name>d</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></decl>;</decl_stmt>
+</unit>
+
+<!-- c preprocessor names -->
+<unit>
+<decl_stmt><decl><type><name>include</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>define</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>elif</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>endif</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>error</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>ifdef</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>ifndef</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>line</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>pragma</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>undef</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>int</name></type> <name>include</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>int</name></type> <name>define</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>int</name></type> <name>elif</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>int</name></type> <name>endif</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>int</name></type> <name>error</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>int</name></type> <name>ifdef</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>int</name></type> <name>ifndef</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>int</name></type> <name>line</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>int</name></type> <name>pragma</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>int</name></type> <name>undef</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>extern</name> <name>int</name></type> <name>foo</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>extern</name> <name>int</name>*</type> <name>foo</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>a</name></type> <name>b</name><argument_list>(<argument><expr>*<name>c</name></expr></argument>)</argument_list>,<name>d</name><argument_list>(<argument><expr>*<name>e</name></expr></argument>)</argument_list></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type>enum <name>a</name></type> <name>b</name></decl>;</decl_stmt>
+</unit>
+
+<!--
+<unit>
+<decl_stmt><decl><type><name>int</name></type></name> <name><name>sign</name> =<init> <expr>( <name>m_oldParameters[ <expr><name>paramindex</name></expr> ]</name> &lt; 0 )? -1:1</expr></init></decl>;</decl_stmt>
+</unit>
+-->
+
+</unit>

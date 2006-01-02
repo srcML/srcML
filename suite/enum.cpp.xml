@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" dir="enum" language="C++">
+
+<unit>
+<enum>enum <block>{ <expr><name>a</name></expr> }</block>;</enum>
+</unit>
+
+<unit>
+<enum>enum <name>a</name> <block>{ <expr><name>b</name></expr> }</block>;</enum>
+</unit>
+
+<unit>
+<enum>enum <block>{ <expr><name>a</name></expr>, <expr><name>b</name></expr> }</block>;</enum>
+</unit>
+
+<unit>
+<enum>enum <name>a</name> <block>{ <expr><name>b</name></expr>, <expr><name>c</name></expr> }</block>;</enum>
+</unit>
+
+<unit>
+<enum>enum <block>{ <expr><name>a</name> = 0</expr> }</block>;</enum>
+</unit>
+
+<unit>
+<enum>enum <name>a</name> <block>{ <expr><name>b</name> = 0</expr> }</block>;</enum>
+</unit>
+
+<unit>
+<enum>enum <block>{ <expr><name>a</name> = 0</expr>, <expr><name>b</name></expr> }</block>;</enum>
+</unit>
+
+<unit>
+<enum>enum <name>a</name> <block>{ <expr><name>b</name> = 0</expr>, <expr><name>c</name></expr> }</block>;</enum>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>const</name> <enum>enum <name>a</name> <block>{ <expr><name>b</name> = 0</expr> }</block></enum></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+</unit>
+

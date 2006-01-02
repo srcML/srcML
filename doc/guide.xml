@@ -1,0 +1,515 @@
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook V4.3//EN" 
+"file:///usr/share/xml/docbook/schema/dtd/4.3/docbookx.dtd">
+
+<article>
+
+<artheader>
+  <title>Guide to srcML Translation</title>
+  <author>
+    <honorific>Dr</honorific>
+    <firstname>Michael</firstname>
+    <othername role="mi">L</othername>
+  <surname>Collard</surname></author>
+</artheader>
+
+  <para>
+  This is a short guide to the usage of the srcML translator, src2srcml, and its related utility, srcml2src.
+  The translation options and general behavior of these utilities is explained.
+  The intended audience are those who may not be that familiar with using UNIX-style command-line utilities.
+  </para>
+
+  <para>
+  If you have any suggestions or questions, please email Michael Collard at <a href="mailto:collard@cs.kent.edu">collard@cs.kent.edu</a>.
+  </para>
+
+  <section><title>src2srcml:  Translation to srcML</title>
+
+  <section><title>Preliminaries</title>
+
+  <para>
+  You should always be aware of what version of the translator that you are using.  This helps in reporting errors
+  and making sure you have the latest version.  The program includes the standard option to present the version:
+  </para>
+
+  <para>
+  <userinput>src2srcml --version</userinput>
+  </para>
+
+  <para>
+  alternatively:
+  </para>
+
+  <para>
+  <userinput>src2srcml -v</userinput>
+  </para>
+
+  <para>
+  In order to remind yourself of the usage, the standard option to present help is included:
+
+  <programlisting>src2srcml --help</programlisting>
+
+  </para>
+
+  <para>alternatively:
+
+  <programlisting>src2srcml -h</programlisting>
+
+</para>
+
+  </section><section><title>Single File Translation</title>
+
+  <para>
+  In order to translate the C++ program <filename class="source">operation.cpp</filename> the command is:
+
+  <programlisting>src2srcml operation.cpp operation.cpp.xml</programlisting>
+  </para>
+
+  <para>
+  The srcML file <filename class="source">operation.cpp.xml</filename> is created by the command.  If the file already exists, it is overwritten.
+  </para>
+
+  <para>
+  Like any good utility, the translator also allows input from standard input (e.g., keyboard) and output to standard output 
+  (e.g., screen).  To write the srcML translation of the file <filename class="source">operation.cpp</filename> to the screen:
+  </para>
+
+  <para>
+  <userinput>src2srcml <filename class="source">operation.cpp</filename></userinput>
+  </para>
+
+  <para>
+  To read from the keyboard and write to the screen:
+
+  <programlisting>src2srcml</programlisting>
+  </para>
+
+  <para>
+  Use control-D to indicate an end of file.
+  </para>
+
+  <para>
+  This is a good way to see what the srcML is for a short example.  It can also be used in a pipe.  To translate
+  the source code fragment "a;" to srcML and write it to the screen:
+
+  <programlisting>echo "a;" | src2srcml</programlisting>
+  </para>
+
+  <para>
+  The screen would display:
+  </para>
+
+  <programlisting>
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"&gt;
+&lt;expr_stmt&gt;&lt;expr&gt;&lt;name&gt;a&lt;/name&gt;&lt;/expr&gt;;&lt;/expr_stmt&gt;
+&lt;/unit&gt;
+  </programlisting>
+
+  <para>
+  If you want to write the previous result to the file <filename class="srcML">example.xml</filename>:
+
+  <programlisting>
+  echo "a;" | src2srcml - example.xml
+  </programlisting>
+  </para>
+
+  </section><section><title>Specifying a Language</title>
+
+  <para>
+  The default language is C++.  The language used in translation is recorded in the attribute <sgmltag class="attribute">language</sgmltag> on the element
+  <sgmltag class="element">unit</sgmltag>.  The translator does not base the language on the file extension.
+  Any other language must be explicitly specified. If you want to translate the C program <filename class="source">operation.c</filename>, then you need to specify
+  a language:
+
+  <programlisting>
+  src2srcml --language C operation.c operation.c.xml
+  </programlisting>
+  </para>
+
+  <para>alternatively:
+
+  <programlisting>
+  src2srcml -l C operation.c operation.c.xml
+  </programlisting>
+  </para>
+
+  <para>
+  The following are equivalent:
+
+  <programlisting>
+  src2srcml operation.cpp operation.cpp.xml
+  src2srcml --language C++ operation.cpp operation.cpp.xml
+  src2srcml -l C++ operation.cpp operation.cpp.xml
+  </programlisting>
+  </para>
+
+  <para>
+  Of course, if your C program is using the C subset of C++, then you can translate using C++ mode.
+  </para>
+
+  </section><section><title>Specifying an Encoding</title>
+
+  <para>
+  The XML declaration in an XML document is the (optional) first part of the document:
+
+  <programlisting>
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+  </programlisting>
+  </para>
+
+  <para>
+  The default encoding is ISO-8859-1.
+  The exact encoding used will depend on the character set of your original source code files and
+  how you want to process the XML document.
+  Any other encoding must be explicitly specified.  If you want to specify the encoding as UTF-8:
+  a language:
+
+  <programlisting>src2srcml --encoding UTF-8</programlisting>
+  </para>
+
+  <para>alternatively:
+
+  <programlisting>
+  src2srcml -e UTF-8
+  </programlisting>
+  </para>
+
+  <para>
+  The srcML document would have the XML declaration:
+
+  <programlisting>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+  </programlisting>
+  </para>
+
+  <para>
+  XML declarations are optional.  If the encoding given is the empty string, the XML declaration is not given:
+
+  <programlisting>
+  src2srcml -e ""
+  </programlisting>
+  </para>
+
+  </section>
+
+  <section><title>Multiple Files</title>
+ 
+  <para>
+  If you want to translate multiple files (into separate srcML documents)
+  the most flexible way is to combine the use of the command xargs with the translator.
+  To find all files with the extension <filename class="extension">.cpp</filename> and run the translator on each of them individually:
+
+  <programlisting>
+  find . -name "*.cpp" | xargs -i src2srcml {} {}.xml
+  </programlisting>
+  </para>
+
+  <para>
+  If you would like to see the progress as it translates each file:
+
+  <programlisting>
+  find . -name "*.cpp" | xargs -i -t src2srcml {} {}.xml
+  </programlisting>
+  </para>
+
+  <para>
+  You can also create a file with a list of filenames.  The following command will take every filename listed in the file
+  <filename>list.txt</filename> and run the translator on each of them individually:
+
+  <programlisting>
+  cat list.txt | xargs -i src2srcml {} {}.xml
+  </programlisting>
+  </para>
+
+  </section><section><title>Directory and Filename Attributes</title>
+
+  <para>
+  The srcML element <sgmltag class="element">unit</sgmltag> includes two optional attributes to store information the path of the input file:
+  attribute <sgmltag class="attribute">directory</sgmltag> is the path to the directory, and the attribute <sgmltag class="attribute">filename</sgmltag> is the filename
+  without the directory.  The attribute values are obtained from the parameter name.  The attributes for the command:
+
+  <programlisting>
+  src2srcml operation.cpp
+  </programlisting>
+  </para>
+
+  <para>
+  are
+
+  <programlisting>
+&lt;unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="operation.cpp"&gt;
+&lt;/unit&gt;
+  </programlisting>
+  </para>
+
+  <para>
+  When a full path is specified on the command line, that filename is split to give a value for these
+  attributes.  The attributes for the command:
+
+  <programlisting>
+  src2srcml src/operation.cpp
+  </programlisting>
+  </para>
+
+  <para>
+  are
+
+  <programlisting>
+&lt;unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="src" filename="operation.cpp"&gt;
+&lt;/unit&gt;
+  </programlisting>
+  </para>
+
+  <para>
+  If standard input is used, the values for the directory and filename attributes must be explicitly given.
+  Full control of the attributes <sgmltag class="attribute">directory</sgmltag> and <sgmltag class="attribute">filename</sgmltag> is available from the command line.  To specify the
+  directory <filename class="source">src/cli</filename> and the filename <filename class="source">operation.cpp</filename>:
+
+  <programlisting>
+  src2srcml --directory "src/cli" --filename "operation.cpp"
+  </programlisting>
+  </para>
+
+  <para>
+  alternatively:
+
+  <programlisting>
+  src2srcml -d "src/cli" -f "operation.cpp"
+  </programlisting>
+  </para>
+
+  <para>
+  produce the attribute values:
+
+  <programlisting>
+&lt;unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="src/cli" filename="operation.cpp"&gt;
+&lt;/unit&gt;
+  </programlisting>
+  </para>
+
+  </section><section><title>Debugging Elements</title>
+
+  <para>
+  The translator tries to be as robust as possible.  However, with invalid C++ code (and some valid C++ code) the translator
+  may produce errors.
+  However, even during translation errors no source-code text is lost.  The problem is that the markup may not be complete
+  or correct. 
+  </para>
+
+  <para>
+  The translator can optionally mark these problem sections.  A separate set of elements from a different namespace is used.
+  To mark problem areas (and declare the proper namespace):
+
+  <programlisting>
+  src2srcml --debug operation.cpp operation.cpp.xml
+  </programlisting>
+  </para>
+
+  <para>alternatively:
+
+  <programlisting>
+  src2srcml -g operation.cpp operation.cpp.xml
+  </programlisting>
+</para>
+
+  <para>
+  The text area with the problem will be in an <code>srcerr:error</code> element.
+  </para>
+
+  <para>
+  If you find any translation errors, especially valid source code that won't translate, please contact the author.
+  </para>
+
+  </section><section><title>Compound srcML Files</title>
+
+  <para><strong>Warning:  This interface is still under development</strong></para>
+
+  <para>
+  From the beginning srcML allowed the representation of multiple source-code files in a single srcML file.
+  Single source-code file are stored in a srcML file in the element <sgmltag class="element">unit</sgmltag>.  The srcML specification
+  allows for these elements to be nested.  In a compound srcML file each individual source-code file is represented
+  in a separate <sgmltag class="element">unit</sgmltag> element.  All the individual <sgmltag class="element">unit</sgmltag> elements are stored in a single
+  top-level <sgmltag class="element">unit</sgmltag> element.
+  </para>
+
+  <para>
+  The translator only translates a single source-code file at a time.  This allows individual adjustment of the
+  translator for each file.  However, in the append mode the output is appended to form a complex srcML file.
+  To form a complex srcML file of <filename class="source">operation.cpp</filename>:
+
+  <programlisting>
+  src2srcml --append operation.cpp operation.cpp.xml
+  </programlisting>
+  </para>
+
+  <para>
+  alternatively:
+
+  <programlisting>
+  src2srcml -a operation.cpp operation.cpp.xml
+  </programlisting>
+  </para>
+
+  <para>
+  To form a complex srcML file of <filename class="source">operation.cpp</filename>, <filename class="source">sub.h</filename> and <filename class="source">sub.c</filename>:
+
+  <programlisting>
+  src2srcml --append --language C++ operation.cpp project.xml
+  src2srcml --append --language C   sub.h project.xml
+  src2srcml --append --language C   sub.c project.xml
+  </programlisting>
+  </para>
+
+  <para>
+  As can be seen in this example, each embedded srcML file can have its own translation options.
+  </para>
+
+</section>
+
+</section>
+
+<section>
+
+  <title>srcml2src:  Translation from srcML</title>
+
+  <para>
+  A related utility, srcml2src, can convert from srcML back to source code.  This requires removing all elements and
+  unescaping escaped characters.  Although this can be done using standard XML tools, srcml2src provides an
+  easier, standalone application.
+  </para>
+
+  <section><title>Preliminaries</title>
+
+  <para>
+  You should always be aware of what version of the translator that you are using.  This helps in reporting errors
+  and making sure you have the latest version.  The program includes the standard option to present the version:
+
+  <programlisting>
+  srcml2src --version
+  </programlisting>
+  </para>
+
+  <para>alternatively:
+
+  <programlisting>
+  srcml2src -v
+  </programlisting>
+  </para>
+
+  <para>
+  In order to remind yourself of the usage, the standard option to present help is included:
+
+  <programlisting>
+  srcml2src --help
+  </programlisting>
+  </para>
+
+  <para>alternatively:
+
+  <programlisting>
+  srcml2src -h
+  </programlisting>
+  </para>
+
+  </section><section><title>Single File Translation</title>
+
+  <para>
+  To convert the srcML file <filename class="source">operation.cpp.xml</filename> to the source-code file <filename class="source">operation.cpp</filename>:
+
+  <programlisting>
+  srcml2src operation.cpp.xml operation.cpp
+  </programlisting>
+  </para>
+
+  <para>
+  The full range of input and output alternatives provided by src2srcml are supported.  This allows for piping of commands.
+  The following command translates a file to srcML, back to source code, and then compares it to the original file:
+
+  <programlisting>
+  src2srcml operation.cpp | srcml2src | diff - operation.cpp
+  </programlisting>
+  </para>
+
+  </section><section><title>Extracting the Language</title>
+
+  <para>
+  There are also options for easy access to the meta-data in the srcML file.  The results are written to standard output.
+  To extract the language of the srcML file <filename class="source">operation.cpp.xml</filename>:
+
+  <programlisting>
+  srcml2srml --language operation.cpp.xml
+  </programlisting>
+  </para>
+
+  <para>
+  alternatively:
+
+  <programlisting>
+  srcml2srml -l operation.cpp.xml
+  </programlisting>
+  </para>
+
+  </section><section><title>Extracting the Directory and Filename Attributes</title>
+
+  <para>
+  To extract the attribute <sgmltag class="attribute">directory</sgmltag> of the srcML file <filename class="srcML">operation.cpp.xml</filename>:
+
+  <programlisting>
+  srcml2srml --directory operation.cpp.xml
+  </programlisting>
+  </para>
+
+  <para>
+  alternatively:
+
+  <programlisting>
+  srcml2srml -d operation.cpp.xml
+  </programlisting>
+  </para>
+
+  <para>
+  To extract the attribute <sgmltag class="attribute">filename</sgmltag> of the srcML file <filename class="srcML">operation.cpp.xml</filename>:
+
+  <programlisting>
+  srcml2srml --filename operation.cpp.xml
+  </programlisting>
+  </para>
+
+  <para>
+  alternatively:
+
+  <programlisting>
+  srcml2srml -f operation.cpp.xml
+  </programlisting>
+  </para>
+
+  </section><section><title>Extracting from Compound srcML Documents</title>
+
+  <para><strong>Warning:  The following is still under development</strong></para>
+
+  <para>
+  The utility can also be used to extract nested srcML files from compound srcML files.
+  To extract the first nested srcML file from <filename class="srcML">project.xml</filename>:
+
+  <programlisting>
+  srcml2srml --extractunit 1 project.xml
+  </programlisting>
+  </para>
+
+  <para>
+  alternatively:
+
+  <programlisting>
+  srcml2srml -e 1 project.xml
+  </programlisting>
+  </para>
+
+  <para>
+  If the number given is not that of a nested unit a blank is returned.
+  </para>
+
+</section>
+
+</section>
+
+</article>

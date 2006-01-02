@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" dir="for" language="C++">
+
+<unit>
+<for>for (<init><expr><type><name>int</name></type> <name>i</name> =<init> <expr>0</expr></init></expr>;</init> <condition><expr><name>i</name> &lt; 5</expr>;</condition> <incr><expr>++<name>i</name></expr></incr>)
+;</for>
+</unit>
+
+<unit>
+<for>for (<init><expr><type><name>int</name></type> <name>i</name> =<init> <expr>0</expr></init></expr>;</init> <condition><expr><name>i</name> &lt; 5</expr>;</condition> <incr><expr>++<name>i</name></expr></incr>)
+<block>{}</block></for>
+</unit>
+
+<unit>
+<for>for (<init><expr><name>i</name> = 0</expr>;</init> <condition><expr><name>i</name> &lt; 5</expr>;</condition> <incr><expr>++<name>i</name></expr></incr>)
+;</for>
+</unit>
+
+<unit>
+<for>for (<init><expr><name>i</name> = 0</expr>;</init> <condition><expr><name>i</name> &lt; 5</expr>;</condition> <incr><expr>++<name>i</name></expr></incr>)
+<block>{}</block></for>
+</unit>
+
+<unit>
+<for>for (<init>;</init><condition>;</condition><incr/>)
+;</for>
+</unit>
+
+<unit>
+<for>for (<init>;</init><condition>;</condition><incr/>)
+<block>{}</block></for>
+</unit>
+
+<unit>
+<for>for (<init><expr><type><name>int</name></type> <name>i</name> =<init> <expr>0</expr></init></expr>;</init> <condition><expr><name>i</name> &lt; 5</expr>;</condition> <incr><expr>++<name>i</name></expr>, <expr>++<name>s</name></expr></incr>)
+  <expr_stmt><expr><name>a</name></expr>;</expr_stmt></for>
+</unit>
+
+<unit>
+<for>for (<init><expr><name>depth</name> = 0</expr>, <expr><name>p</name> = <name>r</name></expr>;</init> <condition><expr><name>depth</name> &lt; <name>MAX_IORES_LEVEL</name></expr>;</condition> <incr><expr><name>depth</name>++</expr>, <expr><name>p</name> = <name>p</name>-&gt;<name>parent</name></expr></incr>)
+     ;</for>
+</unit>
+
+<unit>
+<for>for (<init>;</init><condition><expr>1</expr>, <expr>2</expr>;</condition><incr/>)
+;</for>
+</unit>
+
+</unit>

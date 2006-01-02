@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" dir="namespace" language="C++">
+
+<unit>
+<namespace>namespace <name>a</name> <block>{}</block></namespace>
+</unit>
+
+<unit>
+<namespace>namespace <block>{}</block></namespace>
+</unit>
+
+<unit>
+<namespace>namespace <name>a</name> = <name>b</name>;</namespace>
+</unit>
+
+<unit>
+<using>using <name><name>std</name>::<name>cin</name></name>;</using>
+</unit>
+
+<unit>
+<using>using <name><name>a</name>::<name>b</name></name>;</using>
+</unit>
+
+<unit>
+<using>using <name><name>a</name>::<name>b</name>::<name>c</name></name>;</using>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>const</name> <name><name>std</name>::<name>string</name></name></type> <name>s</name></decl>;</decl_stmt>
+</unit>
+
+</unit>

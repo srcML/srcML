@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" dir="comment" language="C++">
+
+<unit>
+<comment type="line">//</comment>
+</unit>
+
+<unit>
+<comment type="block">/* */</comment>
+</unit>
+
+<unit>
+<comment type="block">/*
+*/</comment>
+</unit>
+
+<!-- Specific case -->
+<unit>
+<comment type="block">/*
+@
+*/</comment>
+</unit>
+
+<!-- Specific case -->
+<unit>
+<comment type="line">// @</comment>
+</unit>
+
+<!-- Specific case -->
+<unit>
+<comment type="line">// `</comment>
+</unit>
+
+<unit>
+<comment type="block">/*
+abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%*()_+-=
+*/</comment>
+</unit>
+
+</unit>

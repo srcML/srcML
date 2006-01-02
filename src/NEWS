@@ -1,0 +1,68 @@
+NEWS
+
+Trunk
+
+	Changed srcml2src to use libxml2.  This allows it to handle the full range
+	of XML including CDATA, processing instructions, etc.  It also allows for
+	improved handling of XML currently used including XML declarations.  In short,
+	it is much more robust, a lot smaller, and almost twice as fast.	
+
+Release of Aug-29-2005-Beta
+
+It has been a long time between releases.  Development continued during that 
+time especially with regards to robustness.  In spite of increased robustness,
+speed of translation remains over 11,000 LOC/second.
+
+Major New Features
+
+	* There is preliminary support for Java.  It is available using the 
+	options "--language Java" or "-l Java".  Most of the common statements
+	between Java and C++ work, the import and package statements work, and
+	classes work.  	More work needs to be done on testing on large Java
+	code bases.
+
+	* Old K&R C function parameter declarations are now handled.  This is 
+	only available in C mode under the options "--language C" and "-l C".
+
+	* srcml2src is now available in a Windows build.
+
+There have been some markup changes:
+
+	* A macro statement (a macro with a terminating semicolon) now does not 
+	include the semicolon
+
+	* Line comments no longer include the end-of-line character inside of 
+	the element
+
+	* Remove initial special newline whitespace after the start element of 
+	unit
+
+	* Language attribute on element unit is now always inserted
+
+	* The translator now outputs a default XML declaration.  This allows 
+	for proper encoding type to be given and clears up some problems with
+	special characters.  An alternate encoding can be specified
+	on the command line using the option "--encoding UTF-8 or "-e UTF-8".
+	If a blank encoding is specified using the option '--encoding ""' or 
+	'-i UTF-8' then no XML declaration is issued.
+
+The debug mode is now more properly integrated:
+
+	* New option for marking translation errors with proper namespace
+
+	* Changed names of error mode elements to "srcmlerr:parse" and 
+	"srcmlerr:mode" to better reflect different problems
+
+Translator interface has been improved:
+
+	* Options can now be specified in any order
+
+	* Unrecognized options are properly handled
+
+	* Single options (those without parameters) can be grouped 
+	
+Extended Mode
+
+	* Hidden extended mode for marking literals "--extended" or "-x"
+
+	* More options will follow

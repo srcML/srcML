@@ -1,0 +1,14 @@
+srcML Translator
+
+The srcML translator translates C++ source code to srcML (source 
+Markup Language).  More information on the srcML format and the translator
+can be found at:
+
+	www.sdml.info
+
+
+Michael L. Collard
+collard@cs.kent.edu
+
+Huzefa Kagdi
+hkagdi@cs.kent.edu

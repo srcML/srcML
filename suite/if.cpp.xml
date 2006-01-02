@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" dir="if" language="C++">
+
+<unit>
+<if>if <condition>(<expr><name>a</name></expr>)</condition><then> <block>{}</block></then></if>
+</unit>
+
+<unit>
+<if>if <condition>(<expr><name>a</name></expr>)</condition><then> <expr_stmt><expr><name>b</name></expr>;</expr_stmt></then></if>
+</unit>
+
+<unit>
+<if>if <condition>(<expr><name>a</name></expr>)</condition><then> ;</then></if>
+</unit>
+
+<unit>
+<if>if <condition>(<expr>1</expr>)</condition><then> <block>{}</block></then></if>
+</unit>
+
+<unit>
+<if>if <condition>(<expr>1</expr>)</condition><then> <expr_stmt><expr>2</expr>;</expr_stmt></then></if>
+</unit>
+
+<unit>
+<if>if <condition>(<expr>1</expr>)</condition><then> ;</then></if>
+</unit>
+
+<unit>
+<if>if <condition>(<expr><name>a</name> == <name>b</name></expr>)</condition><then> <block>{}</block></then></if>
+</unit>
+
+<unit>
+<if>if <condition>(<expr><name>a</name> == <name>b</name></expr>)</condition><then> <expr_stmt><expr><name>c</name></expr>;</expr_stmt></then></if>
+</unit>
+
+<unit>
+<if>if <condition>(<expr><name>a</name> == <name>b</name></expr>)</condition><then> ;</then></if>
+</unit>
+
+<unit>
+<if>if <condition>(<expr><name>a</name></expr>)</condition><then> <block>{ <expr_stmt><expr><name>b</name> = <name>c</name></expr>;</expr_stmt> }</block></then></if>
+</unit>
+
+<unit>
+<if>if <condition>(<expr>1</expr>)</condition><then> <block>{ <expr_stmt><expr><name>b</name> = <name>c</name></expr>;</expr_stmt> }</block></then></if>
+</unit>
+
+<unit>
+<if>if <condition>(<expr><name>a</name> == <name>d</name></expr>)</condition><then> <block>{ <expr_stmt><expr><name>b</name> = <name>c</name></expr>;</expr_stmt> }</block></then></if>
+</unit>
+
+<unit>
+<if>if <condition>(<expr><name>a</name></expr>)</condition><then> <block>{}</block></then>
+<else>else <block>{}</block></else></if>
+</unit>
+
+<unit>
+<if>if <condition>(<expr><name>a</name></expr>)</condition><then> ;</then>
+<else>else <block>{}</block></else></if>
+</unit>
+
+<unit>
+<if>if <condition>(<expr><name>a</name></expr>)</condition><then> <block>{}</block></then>
+<else>else ;</else></if>
+</unit>
+
+<unit>
+<if>if <condition>(<expr><name>c</name></expr>)</condition><then> <expr_stmt><expr><name>a</name></expr>, <expr><name>b</name></expr>;</expr_stmt></then></if>
+</unit>
+
+<unit>
+<if>if <condition>(<expr><call><name>a</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call> &lt; <name>t</name></expr>)</condition><then>
+     ;</then></if>
+</unit>
+
+<unit>
+<if>if <condition>(<expr>(<call><name>a</name><argument_list>(<argument><expr><name>b</name></expr></argument>, <argument><expr><name>c</name></expr></argument>)</argument_list></call>)</expr></condition><then> <block>{
+}</block></then></if>
+</unit>
+
+<unit>
+<if>if <condition>(<expr>1</expr>)</condition><then> 
+  <while>while <condition>(<expr>2</expr>)</condition>
+    ;</while></then></if>
+</unit>
+
+</unit>

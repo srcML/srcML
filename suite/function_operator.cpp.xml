@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" dir="function_operator" language="C++">
+
+<unit>
+<function><type><name>int</name></type> <name>operator+</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator-</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator*</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator/</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator%</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator^</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator&amp;</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator|</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator~</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator!</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator=</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator&lt;</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator&gt;</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator+=</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator-=</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator*=</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator/=</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator%=</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator^=</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator&amp;=</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator|=</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator&lt;&lt;</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator&gt;&gt;</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator&gt;&gt;=</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator&lt;&lt;=</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator==</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator!=</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator&lt;=</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator&gt;=</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator&amp;&amp;</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator||</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator++</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator--</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator-&gt;*</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator,</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator-&gt;</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator[]</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator()</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator new</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator new[]</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator delete</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator delete[]</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><name>operator int</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>operator+</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name><name>a</name>::<name>operator+</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+</unit>

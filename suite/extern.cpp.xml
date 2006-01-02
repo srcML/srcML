@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" dir="extern" language="C++">
+
+<unit>
+<extern>extern "C" <block>{}</block></extern>
+</unit>
+
+<unit>
+<extern>extern "C" <block>{<break>break;</break>}</block></extern>
+</unit>
+
+</unit>

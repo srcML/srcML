@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" dir="try" language="C++">
+
+<unit>
+<try>try <block>{}</block></try>
+</unit>
+
+<unit>
+<try>try <block>{ <expr_stmt><expr><name>a</name></expr>;</expr_stmt> }</block></try>
+</unit>
+
+</unit>

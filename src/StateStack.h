@@ -1,0 +1,235 @@
+/*
+  StateStack.h
+
+  Copyright (C) 2002, 2003, 2004, 2005  SDML (www.sdml.info)
+
+  This file is part of the srcML translator.
+
+  The srcML translator is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  The srcML translator is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with the srcML translator; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
+
+#ifndef STATESTACK_H
+#define STATESTACK_H
+
+#include <list>
+#include <stack>
+#include "TokenParser.h"
+#include "srcMLException.h"
+
+#include "State.h"
+#include "Stack.h"
+
+template <class Base>
+class StateStack {
+ public:
+
+  // token parser constructor
+  StateStack(TokenParser* ptp)
+    : parser(ptp)
+    {}
+
+  const Base& currentState() const {
+    if (st.empty())
+      throw Segmentation_Fault();
+
+    return st.top();
+  }
+
+  Base& currentState() {
+    if (st.empty())
+      throw Segmentation_Fault();
+
+    return st.top();
+  }
+
+  void startNewMode(State::MODE_TYPE m) {
+
+    // prepare for the new stack
+    st.push(Base(m, !empty() ? getTransparentMode() : 0));
+  }
+
+  void endCurrentMode() {
+
+    if (st.size() == 1)
+      throw Segmentation_Fault();
+
+    // end all open elements
+    endElementStack();
+
+    // delete the top of the mode stack
+    deleteTop();
+  }
+
+  void endCurrentMode(State::MODE_TYPE m) {
+
+    if (st.size() <= 1)
+      throw Segmentation_Fault();
+
+    // end all open elements
+    endElementStack();
+
+    // delete the top of the mode stack
+    deleteTop();
+  }
+
+  void endLastMode() {
+
+    // end all open elements
+    endElementStack();
+
+    // delete the top of the mode stack
+    deleteTop();
+  }
+
+  void endCurrentModeSafely(State::MODE_TYPE m) {
+
+    if (inMode(m))
+      endCurrentMode(m);
+#ifdef ASSERT_ENDMODE
+    else
+      std::cout << "End mode problem" << std::endl;
+#endif
+  }
+
+  State::MODE_TYPE getMode() const {
+
+    return !st.empty() ? st.top().getMode() : 0;
+  }
+
+  State::MODE_TYPE getTransparentMode() const {
+
+    return !st.empty() ? st.top().getTransparentMode() : 0;
+  }
+
+  void setMode(State::MODE_TYPE m) {
+    if (st.empty())
+      throw Segmentation_Fault();
+
+    st.top().setMode(m);
+  }
+
+  void clearMode(State::MODE_TYPE m) {
+    if (st.empty())
+      throw Segmentation_Fault();
+
+    st.top().clearMode(m);
+  }
+
+  void replaceMode(State::MODE_TYPE oldm, State::MODE_TYPE newm) {
+    clearMode(oldm);
+    setMode(newm);
+  }
+
+  void push(State::MODE_TYPE id) {
+    if (st.empty())
+      throw Segmentation_Fault();
+
+    st.top().push(id);
+  }
+
+  void pop() {
+    if (st.empty())
+      throw Segmentation_Fault();
+
+    st.top().pop();
+  }
+
+  // stack size
+  int size() const {
+  
+    return st.size();
+  }
+
+  // stack empty
+  bool empty() const {
+  
+    return st.empty();
+  }
+
+  bool inMode(State::MODE_TYPE m) const {
+   
+    return !st.empty() ? st.top().inMode(m) : false;
+  }
+
+  bool inTransparentMode(State::MODE_TYPE m) const {
+   
+    return !st.empty() ? st.top().inTransparentMode(m) : false;
+  }
+
+  // increment the parentheses count
+  int getParen() const {
+    return !st.empty() ? st.top().getParen() : 0;
+  }
+
+  // increment the parentheses count
+  void incParen() {
+    if (st.empty())
+      throw Segmentation_Fault();
+
+    st.top().incParen();
+  }
+
+  // decrement the parentheses count
+  void decParen() {
+    if (st.empty())
+      throw Segmentation_Fault();
+
+    st.top().decParen();
+  }
+
+  // destructor
+  ~StateStack() {
+
+    // end all modes
+    endAllModes();
+  }
+
+ protected:
+
+  // destructor
+  void endAllModes() {
+
+    // end all modes
+    while (!st.empty()) {
+      endCurrentMode(getMode());
+    }
+  }
+
+  void endElementStack() {
+    if (st.empty())
+      throw Segmentation_Fault();
+
+    // close all open elements
+    while (!st.empty() && !st.top().callstack.empty()) {
+      parser->endElement(st.top().callstack.top());
+    }
+  }
+
+  // destructor
+  void deleteTop() {
+    // delete the top of the mode stack
+    //    Base* pb = st.top();
+    st.pop();
+    //    delete pb;
+  }
+
+ private:
+  TokenParser* parser;
+  SimpleStack<Base, 500> st;
+
+  //  std::stack<Base*, std::list<Base*> > st;
+};
+
+#endif

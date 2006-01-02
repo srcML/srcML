@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" dir="function_pointer" language="C++">
+
+<unit>
+<function_decl><type><name>int</name></type> <name>f</name><parameter_list>(<param><function_decl><type><name>double</name></type> (*<name>g</name>)<parameter_list>()</parameter_list></function_decl></param>)</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>int</name></type> <name>f</name><parameter_list>(<param><function_decl><type><name>double</name></type> (*<name>g</name>)<parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list></function_decl></param>)</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>int</name></type> <name>f</name><parameter_list>(<param><function_decl><type><name>double</name></type> (*<name>g</name>)<parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list></function_decl></param>)</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>double</name></type> (*<name>g</name>)<parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>double</name></type> (*)<parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<macro>A<argument_list>(1)</argument_list></macro> <function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+</unit>

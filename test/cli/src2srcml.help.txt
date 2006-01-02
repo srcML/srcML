@@ -1,0 +1,38 @@
+Usage: src2srcml [options] <infile>... <outfile>
+
+Translates source-code files into the XML source-code representation srcML.
+
+When no filenames are given read from standard input.
+When only one filename is given write to standard output.
+An input filename of '-' also reads from standard input.
+
+Options:
+  -h, --help              display this help and exit
+  -V, --version           display version number and exit
+
+  -l, --language=LANG     set the language to C, CPP, or Java
+  -d, --directory=DIR     set the directory attribute to DIR
+  -f, --filename=FILE     set the filename attribute to FILE
+  -s, --src-version=VER   set the version attribute to VER
+  -t, --src-encoding=ENC  set the input source encoding to ENC (default:  ISO-8859-1) 
+  -x, --xml-encoding=ENC  set the output XML encoding to ENC (default:  UTF-8) 
+
+  -n, --nested            nest all input source files in one output srcML file
+  -i, --input-file        treat input file as a list of source files
+
+  -z, --compressed        output in gzip format
+  -c, --interactive       low-latency output
+  -g, --debug             debug translation errors with special namespace
+  -v, --verbose           verbose output
+
+Examples:  
+  src2srcml                                       (read from standard input, write to standard output)
+  src2srcml foo.cpp                               (read from file foo.cpp, write to standard output)
+  src2srcml foo.cpp foo.cpp.xml                   (read from file foo.cpp, write to file foo.cpp.xml)
+  src2srcml -                                     (read from standard input, write to standard output)
+  src2srcml - foo.cpp.xml                         (read from standard input, write to file foo.cpp.xml)
+  src2srcml -d src -f foo.cpp foo.cpp foo.cpp.xml (srcML unit has directory name "src", filename "foo.cpp"
+  src2srcml -x ISO-8859-1 foo.cpp foo.cpp.xml     (set encoding to ISO-8859-1)
+
+www.sdml.info
+Report bugs to srcmlbugs@sdml.info

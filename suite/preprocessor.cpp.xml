@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" dir="preprocessor" language="C++">
+
+<unit>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>a</name></expr></cpp:if>
+</unit>
+
+<unit>
+<cpp:if>#<cpp:directive>if</cpp:directive></cpp:if>
+</unit>
+
+<unit>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+
+<unit>
+<cpp:define>#<cpp:directive>define</cpp:directive> <name>a</name></cpp:define>
+</unit>
+
+<unit>
+<cpp:define>#<cpp:directive>define</cpp:directive></cpp:define>
+</unit>
+
+<unit>
+<cpp:define>#<cpp:directive>define</cpp:directive> <name>a</name> @</cpp:define>
+</unit>
+
+<unit>
+<cpp:ifdef>#<cpp:directive>ifdef</cpp:directive> <name>a</name></cpp:ifdef>
+</unit>
+
+<unit>
+<cpp:ifdef>#<cpp:directive>ifdef</cpp:directive></cpp:ifdef>
+</unit>
+
+<unit>
+<cpp:ifndef>#<cpp:directive>ifndef</cpp:directive> <name>a</name></cpp:ifndef>
+</unit>
+
+<unit>
+<cpp:ifndef>#<cpp:directive>ifndef</cpp:directive></cpp:ifndef>
+</unit>
+
+<unit>
+<cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>"abc"</cpp:file></cpp:include>
+</unit>
+
+<unit>
+<cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>"asm/if.h"</cpp:file></cpp:include>
+</unit>
+
+<unit>
+<cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>&lt;abc&gt;</cpp:file></cpp:include>
+</unit>
+
+<unit>
+<cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>&lt;asm/if.h&gt;</cpp:file></cpp:include>
+</unit>
+
+<unit>
+<cpp:include>#<cpp:directive>include</cpp:directive></cpp:include>
+</unit>
+
+<unit>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif> <comment type="line">// a</comment>
+</unit>
+
+<unit>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif> <comment type="block">/* a
+*/</comment>
+</unit>
+
+<unit>
+<cpp:define>#<cpp:directive>define</cpp:directive> <name>A</name> "abc"</cpp:define>
+</unit>
+
+<unit>
+<cpp:define>#<cpp:directive>define</cpp:directive></cpp:define>
+</unit>
+
+<unit>
+<cpp:line>#<cpp:directive>line</cpp:directive></cpp:line>
+</unit>
+
+<unit>
+<cpp:line>#<cpp:directive>line</cpp:directive> 456</cpp:line>
+</unit>
+
+<unit>
+<cpp:line>#<cpp:directive>line</cpp:directive> 456 <cpp:file>"abc"</cpp:file></cpp:line>
+</unit>
+
+<unit>
+<cpp:define>#<cpp:directive>define</cpp:directive> <name>A</name> \
+ { 0x7c02eeee, \
+ { 0x77, 0x88 } }</cpp:define>
+</unit>
+
+<unit>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><call><name>defined</name><argument_list>(<argument><expr><name>DEBUG</name></expr></argument>)</argument_list></call> &amp;&amp; <call><name>defined</name><argument_list>(<argument><expr><name>__KERNEL__</name></expr></argument>)</argument_list></call></expr></cpp:if>
+</unit>
+
+<unit>
+<cpp:define>#<cpp:directive>define</cpp:directive> <name>HZ_NS</name> (1000000000 / HZ)</cpp:define>
+</unit>
+
+<!--
+<unit>
+<cpp:define>#<cpp:directive>define</cpp:directive> <name>A</name> \
+ <block>{ <expr_stmt><expr>0x7c02eeee</expr></expr_stmt>, \
+ <block>{ <expr_stmt><expr>0x77</expr></expr_stmt>, <expr_stmt><expr>0x88</expr></expr_stmt> }</block> }</block></cpp:define>
+</unit>
+
+<unit>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><call><name>defined</name><argument_list>(<argument><expr><name>DEBUG</name></expr></argument>)</argument_list></call> &amp;&amp; <call><name>defined</name><argument_list>(<argument><expr><name>__KERNEL__</name></expr></argument>)</argument_list></call></expr></cpp:if>
+</unit>
+
+<unit>
+<cpp:define>#<cpp:directive>define</cpp:directive> <name>HZ_NS</name> <expr>(1000000000 / <name>HZ</name>)</expr></cpp:define>
+</unit>
+-->
+
+<unit>
+<label><name>error</name>:</label>
+</unit>
+
+<unit>
+<cpp:define>#<cpp:directive>define</cpp:directive> <name>PCI_VENDOR_ESS_OLD</name>		0x1285</cpp:define>		<comment type="block">/* Platform Tech, 
+						the people the maestro 
+						was bought from */</comment>
+</unit>
+
+<unit>
+<label><name>error</name>:</label>
+
+<cpp:define>#<cpp:directive>define</cpp:directive> <name>PCI_VENDOR_ESS_OLD</name>		0x1285</cpp:define>		<comment type="block">/* Platform Tech, 
+						the people the maestro 
+						was bought from */</comment>
+</unit>
+
+<unit>
+<cpp:define>#<cpp:directive>define</cpp:directive> <name>a</name> "abc"</cpp:define>
+</unit>
+
+<unit>
+<cpp:define>#<cpp:directive>define</cpp:directive> <name>a</name> "abc</cpp:define>
+</unit>
+
+<unit>
+<cpp:define>#<cpp:directive>define</cpp:directive> <name>a</name> "abc" "def</cpp:define>
+</unit>
+
+</unit>

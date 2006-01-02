@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" dir="switch" language="C++">
+
+<unit>
+<switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block>{}</block></switch>
+</unit>
+
+<unit>
+<switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block>{
+ <case>case <expr>1</expr>:
+</case>}</block></switch>
+</unit>
+
+<unit>
+<switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block>{
+ <case>case <expr>1</expr>:
+   <break>break;</break>
+</case>}</block></switch>
+</unit>
+
+<unit>
+<switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block>{
+ <case>case <expr><name>b</name></expr>:
+   <break>break;</break>
+</case>}</block></switch>
+</unit>
+
+<unit>
+<switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block>{
+ <case>case <expr><name>b</name></expr>:
+</case>}</block></switch>
+</unit>
+
+<unit>
+<switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block>{
+ <case>case <expr>1</expr>:
+   <break>break;</break>
+ </case><case>case <expr>2</expr>:
+   <break>break;</break>
+</case>}</block></switch>
+</unit>
+
+<unit>
+<switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block>{
+ <case>case <expr><name>b</name></expr>:
+   <break>break;</break>
+ </case><case>case <expr><name>c</name></expr>:
+   <break>break;</break>
+</case>}</block></switch>
+</unit>
+
+<unit>
+<switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block>{
+ <case>case <expr>1</expr>:
+   <break>break;</break>
+ </case><case>case <expr>2</expr>:
+   <break>break;</break>
+ </case><default>default:
+   <break>break;</break>
+</default>}</block></switch>
+</unit>
+
+<unit>
+<switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block>{
+ <case>case <expr>1</expr>:
+   <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+   <break>break;</break>
+ </case><case>case <expr>2</expr>:
+   <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
+   <break>break;</break>
+</case>}</block></switch>
+</unit>
+
+<unit>
+<switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block>{
+ <case>case <expr>1</expr>:
+   <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+   <break>break;</break>
+ </case><case>case <expr>2</expr>:
+   <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
+   <break>break;</break>
+ </case><default>default:
+   <expr_stmt><expr><name>d</name></expr>;</expr_stmt>
+   <break>break;</break>
+</default>}</block></switch>
+</unit>
+
+<unit>
+<switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block>{
+	<case>case <expr><call><name>b</name><argument_list>(<argument><expr><name>c</name></expr></argument>)</argument_list></call></expr>:
+	</case>}</block></switch>
+</unit>
+
+</unit>

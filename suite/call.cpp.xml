@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" dir="call" language="C++">
+
+<unit>
+<expr_stmt><expr><call><name>f</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>f</name><argument_list>()</argument_list></call> + 1</expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><name>a</name> + <name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><call><name>g</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><call><name>g</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call> + <name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><call><name>g</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><call><name>g</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call> + <name>b</name></expr></argument>)</argument_list></call> + <name>c</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call> + <call><name>g</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><name>a</name></expr></argument>,<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><name>a</name> + <name>b</name></expr></argument>, <argument><expr><name>c</name> + <name>d</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><name>a</name></expr></argument>, <argument><expr><name>b</name></expr></argument>, <argument><expr><name>c</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr>("a", (<name>mAccWrapCreated</name>-<name>mAccWrapDeleted</name>))</expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><name>a</name></expr></argument>,<argument><expr>(<name>b</name>,<name>c</name>)</expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+</unit>

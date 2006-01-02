@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" dir="function_throw" language="C++">
+
+<unit>
+<function_decl><type><name>int</name></type> <name>f</name><parameter_list>()</parameter_list> <throw>throw (<argument><expr><name>a</name></expr></argument>)</throw> ;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>static</name> <name>int</name></type> <name>f</name><parameter_list>()</parameter_list> <throw>throw (<argument><expr><name>a</name></expr></argument>)</throw> ;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>int</name> *</type> <name>f</name><parameter_list>()</parameter_list> <throw>throw (<argument><expr><name>a</name></expr></argument>)</throw> ;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>const</name> <name>int</name></type> <name>f</name><parameter_list>()</parameter_list> <throw>throw (<argument><expr><name>a</name></expr></argument>)</throw> ;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>const</name> <name>int</name>*</type> <name>f</name><parameter_list>()</parameter_list> <throw>throw (<argument><expr><name>a</name></expr></argument>)</throw> ;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>int</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list> <throw>throw (<argument><expr><name>a</name></expr></argument>)</throw> ;</function_decl>
+</unit>
+
+<unit
+><function_decl><type><name>int</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list> <throw>throw (<argument><expr><call><name>a</name><argument_list>()</argument_list></call></expr></argument>)</throw>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>static</name> <name>int</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list> <throw>throw (<argument><expr><name>a</name></expr></argument>)</throw> ;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>int</name>*</type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list> <throw>throw (<argument><expr><name>a</name></expr></argument>)</throw> ;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>const</name> <name>int</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list> <throw>throw (<argument><expr><name>a</name></expr></argument>)</throw> ;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>const</name> <name>int</name>*</type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list> <throw>throw (<argument><expr><name>a</name></expr></argument>)</throw> ;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>virtual</name> <name>int</name>*</type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list> <throw>throw (<argument><expr><name>a</name></expr></argument>)</throw> ;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>virtual</name> <name>int</name>*</type> <name>f<argument_list>&lt;<argument><name>int</name></argument>&gt;</argument_list></name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list> <throw>throw (<argument><expr><name>a</name></expr></argument>)</throw> ;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list><throw>throw (<argument><expr><name>a</name></expr></argument>)</throw> ;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list><throw>throw (<argument><expr><name>a</name></expr></argument>)</throw> ;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list><throw>throw (<argument><expr><name>a</name></expr></argument>)</throw> ;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>int</name></type> <name>b</name></decl></param>)</parameter_list><throw>throw (<argument><expr><name>a</name></expr></argument>)</throw> ;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>const</name> <name>int</name></type> <name>a</name></decl></param>)</parameter_list><throw>throw (<argument><expr><name>a</name></expr></argument>)</throw> ;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name>*</type> <name>a</name></decl></param>)</parameter_list><throw>throw (<argument><expr><name>a</name></expr></argument>)</throw> ;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name>*</type> <name>a</name></decl></param>)</parameter_list><throw>throw (<argument><expr><name>a</name></expr></argument>)</throw> ;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name>*</type> <name>a</name></decl></param>)</parameter_list> <specifier>const</specifier> <throw>throw (<argument><expr><name>a</name></expr></argument>)</throw> ;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name>*</type> <name>a</name></decl></param>)</parameter_list> <throw>throw (<argument><expr><name>a</name></expr></argument>)</throw> <specifier>const</specifier>;</function_decl>
+</unit>
+
+<unit>
+<function><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name>*</type> <name>a</name></decl></param>)</parameter_list><throw>throw ()</throw> <block>{}</block></function>
+</unit>
+
+<unit>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name>*</type> <name>a</name></decl></param>)</parameter_list><throw>throw ()</throw> ;</function_decl>
+</unit>
+
+<unit>
+<function><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name>*</type> <name>a</name></decl></param>)</parameter_list><throw>throw ()</throw> <block>{}</block></function>
+</unit>
+
+</unit>

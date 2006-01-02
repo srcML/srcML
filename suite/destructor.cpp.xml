@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" dir="destructor" language="C++">
+
+<!-- external destructor definitions -->
+<unit>
+<destructor><name>A::~A</name><parameter_list>()</parameter_list> <block>{}</block></destructor>
+</unit>
+
+<unit>
+<destructor><name>A::~A</name><parameter_list>()</parameter_list> <throw>throw()</throw> <block>{}</block></destructor>
+</unit>
+
+<unit>
+<destructor><name>A::~A</name><parameter_list>(<param><decl><type><name>void</name></type></decl></param>)</parameter_list> <block>{}</block></destructor>
+</unit>
+
+<!-- internal destructor declarations -->
+<unit>
+<class>class <name>A</name> <block>{<private type="default"> <destructor_decl><name>~A</name><parameter_list>()</parameter_list>;</destructor_decl> </private>}</block>;</class>
+</unit>
+
+<unit>
+<class>class <name>A</name> <block>{<private type="default"> <destructor_decl><name>~A</name><parameter_list>()</parameter_list> <throw>throw ()</throw>;</destructor_decl> </private>}</block>;</class>
+</unit>
+
+<unit>
+<class>class <name>A</name> <block>{<private type="default">
+</private><public>public:
+    <destructor_decl><name>~A</name><parameter_list>()</parameter_list>;</destructor_decl>
+</public>}</block>;</class>
+</unit>
+
+<unit>
+<class>class <name>A</name> <block>{<private type="default">
+</private><public>public:
+    <destructor_decl><name>A::~A</name><parameter_list>()</parameter_list>;</destructor_decl>
+</public>}</block>;</class>
+</unit>
+
+<unit>
+<class>class <name>A</name> <block>{<private type="default">
+</private><public>public:
+    <destructor_decl><name>A::~A</name><parameter_list>(<param><decl><type><name>void</name></type></decl></param>)</parameter_list>;</destructor_decl>
+</public>}</block>;</class>
+</unit>
+
+<!-- internal destructor definitions -->
+
+<unit>
+<class>class <name>A</name> <block>{<private type="default">
+</private><public>public:
+<destructor><name>~A</name><parameter_list>()</parameter_list> <block>{}</block></destructor>
+</public>}</block>;</class>
+</unit>
+
+<unit>
+<class>class <name>A</name> <block>{<private type="default">
+</private><public>public:
+    <destructor><name>A::~A</name><parameter_list>(<param><decl><type><name>void</name></type></decl></param>)</parameter_list> <block>{}</block></destructor>
+</public>}</block>;</class>
+</unit>
+
+<unit>
+<class>class <name>A</name> <block>{<private type="default">
+</private><public>public:
+<destructor><name>~A</name><parameter_list>()</parameter_list> <throw>throw()</throw> <block>{}</block></destructor>
+</public>}</block>;</class>
+</unit>
+
+<unit>
+<class>class <name>A</name> <block>{<private type="default">
+</private><public>public:
+    <destructor><name>~A</name><parameter_list>(<param><decl><type><name>void</name></type></decl></param>)</parameter_list> <throw>throw()</throw> <block>{}</block></destructor>
+</public>}</block>;</class>
+</unit>
+
+<unit>
+<class>class <name>A</name> <block>{<private type="default">
+</private><public>public:
+    <destructor><name>A::~A</name><parameter_list>()</parameter_list> <throw>throw()</throw> <block>{}</block></destructor>
+</public>}</block>;</class>
+</unit>
+
+<unit>
+<class>class <name>A</name> <block>{<private type="default">
+</private><public>public:
+    <destructor><name>A::~A</name><parameter_list>(<param><decl><type><name>void</name></type></decl></param>)</parameter_list> <throw>throw()</throw> <block>{}</block></destructor>
+</public>}</block>;</class>
+</unit>
+
+</unit>

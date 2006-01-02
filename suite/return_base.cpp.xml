@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" dir="return" language="C++">
+
+<unit>
+<return>return <expr>1</expr>;</return>
+</unit>
+
+<unit>
+<return>return;</return>
+</unit>
+
+</unit>

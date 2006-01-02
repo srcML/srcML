@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" dir="extra" language="C++">
+
+<unit>
+<constructor><name>A::A</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>int</name>[]</type></decl></param>)</parameter_list> <block>{}</block></constructor> 
+</unit>
+
+<unit>
+<function_decl><type><name>int</name></type> (*<name>a</name>)<parameter_list>(<param><decl><type><name>int</name></type> <name>b</name></decl></param>, <param><decl><type><name>int</name>[]</type></decl></param>)</parameter_list>;</function_decl>
+</unit>
+
+<unit filename="cfe_api.c">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><call><name>defined</name><argument_list>(<argument><expr><name>CFE_API_strlen</name></expr></argument>)</argument_list></call></expr></cpp:if>
+
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>(<call><name>a</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call>)</expr></cpp:if>
+
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>(<call><name>defined</name><argument_list>(<argument><expr><name>CFE_API_strlen</name></expr></argument>)</argument_list></call>)</expr></cpp:if>
+
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+
+<unit filename="aurora.c">
+<block>{
+	<if>if <condition>(<expr>(<call><name>aurora_paranoia_check</name><argument_list>(<argument><expr><name>port</name></expr></argument>, <argument><expr><name>tty</name>-&gt;<name>name</name></expr></argument>, <argument><expr>"aurora_open"</expr></argument>)</argument_list></call>)</expr></condition><then> <block>{
+<cpp:ifdef>#<cpp:directive>ifdef</cpp:directive> <name>AURORA_DEBUG</name></cpp:ifdef>
+		<expr_stmt><expr><call><name>printk</name><argument_list>(<argument><expr>"a"</expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+	}</block></then></if>
+}</block>
+</unit>
+
+<unit filename="urb.c">
+<block>{
+<return>return <macro>snprintf <argument_list>(buf, size,
+		 ({ char *s;
+                 switch (urb-&gt;dev-&gt;speed) {
+                 case USB_SPEED_LOW:    s = "ls"; break;
+                 default:               s = "?"; break;
+                 }; s; }),
+		 urb-&gt;actual_length, urb-&gt;transfer_buffer_length)</argument_list></macro>;</return>
+}</block>
+</unit>
+
+<unit filename="ip_vs.h">
+<block>{
+	<switch>switch <condition>(<expr><call><name>IP_VS_FWD_METHOD</name><argument_list>(<argument><expr><name>cp</name></expr></argument>)</argument_list></call></expr>)</condition> <block>{
+	}</block></switch>
+}</block>
+</unit>
+
+<unit filename="if_vlan.h">
+<if>if <condition>(<expr><call><name>a</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call> &lt; <name>t</name></expr>)</condition><then>
+     ;</then></if>
+</unit>
+
+<unit filename="cs461x_image.h">
+<decl_stmt><decl><type><name>a</name></type> <name>b</name> =<init> <expr><block>{ <expr><block>{<expr><call><name>sizeof</name><argument_list>(<argument><expr><name>c</name></expr></argument>)</argument_list></call></expr>, <expr><name>d</name></expr>}</block></expr> }</block></expr></init></decl>;</decl_stmt>
+</unit>
+
+<!--
+<unit filename="n.c">
+<decl_stmt><decl><type><name>a</name></type> <name>b</name>=<init>{
+    {1,0,{{2,0</init></decl></decl_stmt>}<srcml:error/>,<expr_stmt><expr>0</expr></expr_stmt>}<srcml:error/>,<block>{<expr_stmt><expr>0</expr></expr_stmt>}</block>}<srcml:error/>,
+    
+<block>{<expr_stmt><expr>2</expr></expr_stmt>,<block>{<block>{<expr_stmt><expr>1</expr></expr_stmt>}</block>,<block>{<expr_stmt><expr>0</expr></expr_stmt>}</block>,<expr_stmt><expr>0</expr></expr_stmt>}</block>,<block>{<expr_stmt><expr>0</expr></expr_stmt>}</block>}</block>,
+    
+}<srcml:error/>;
+</unit>
+-->
+
+<unit>
+<decl_stmt><decl><type><name>a</name></type> <name>b</name>=<init><expr><block>{
+    <expr><block>{<expr>1</expr>,<expr>0</expr>,<expr><block>{<expr><block>{<expr>2</expr>,<expr>0</expr>}</block></expr>,<expr>0</expr>}</block></expr>,<expr><block>{<expr>0</expr>}</block></expr>}</block></expr>,
+    
+<expr><block>{<expr>2</expr>,<expr><block>{<expr><block>{<expr>1</expr>}</block></expr>,<expr><block>{<expr>0</expr>}</block></expr>,<expr>0</expr>}</block></expr>,<expr><block>{<expr>0</expr>}</block></expr>}</block></expr>,
+    
+}</block></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>(<call><name>defined</name><argument_list>(<argument><expr><name>A</name></expr></argument>)</argument_list></call>)</expr></cpp:if>
+<break>break;</break>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+
+</unit>

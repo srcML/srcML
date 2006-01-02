@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" dir="main" language="C++">
+
+<unit>
+<function><type><name>int</name></type> <name>main</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><name>main</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+</unit>

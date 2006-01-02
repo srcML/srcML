@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" dir="friend" language="C++">
+
+<unit>
+<class>class <name>A</name> <block>{<private type="default"> 
+    <function_decl><type><name>friend</name> <name>int</name></type> <name>A</name><parameter_list>()</parameter_list>;</function_decl> </private>}</block>;</class>
+</unit>
+
+<unit>
+<class>class <name>A</name> <block>{<private type="default"> 
+    <function_decl><type><name>friend</name> <name>int</name>*</type> <name>A</name><parameter_list>()</parameter_list>;</function_decl> </private>}</block>;</class>
+</unit>
+
+</unit>

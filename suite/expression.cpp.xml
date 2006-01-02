@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" dir="expression" language="C++">
+
+<unit>
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr>(<name>a</name>)</expr>;</expr_stmt>
+</unit>
+
+<unit>
+;
+</unit>
+
+<unit>
+<expr_stmt><expr>1</expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr>1.</expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr>10.</expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr>1.2</expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr>10.20</expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr>*<name>a</name> = <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>a</name> *</type> <name>b</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr>*(<name>a</name>)<name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> - <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> &lt; <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> &gt; <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> + <call><name>f</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> ? <name>b</name> : <name>c</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name></expr>, <expr><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name><name>a</name>[<expr>1 + 1 - 1 * 1 &amp; 1 % 1 ! 1 ~ 1 &lt; 1 &gt; 1 &lt;= 1 &gt;= 1 == 1 != 1 / 1 | 1 || 1 &amp;&amp; 1 ? 1 : 1</expr>]</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>b</name><argument_list>(<argument><expr><name>c</name></expr></argument>, <argument><expr><name>d</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name><name>a</name>[<expr><call><name>b</name><argument_list>(<argument><expr><name>c</name></expr></argument>, <argument><expr><name>d</name></expr></argument>)</argument_list></call></expr>]</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>tmp</name> &amp;= <name>f</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>tmp</name> *= <name>f</name></expr>;</expr_stmt>
+</unit>
+
+</unit>

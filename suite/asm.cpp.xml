@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" dir="asm" language="C++">
+
+<unit>
+<asm>asm ();</asm>
+</unit>
+
+<unit>
+<asm>asm ("abc");</asm>
+</unit>
+
+<unit>
+       <asm>asm volatile("  movl    %%esp,%%edi     \n"
+                    "  andl    %0,%%edi        \n"
+                    "  addl    %1,%%edi        \n"
+                    "  movl    %%esp,%%ecx     \n"
+                    "  subl    %%edi,%%ecx     \n"
+                    "  shrl    $2,%%ecx        \n"
+                    "  movl    $0xedededed,%%eax     \n"
+                    "  rep stosl               \n"
+                    :
+                    : "i"(~(THREAD_SIZE-1)), "i"(sizeof(struct thread_info))
+                    : "eax", "ecx", "edi", "memory", "cc"
+                    );</asm>
+</unit>
+
+</unit>

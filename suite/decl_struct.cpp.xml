@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" dir="decl_struct" language="C++">
+
+<unit>
+<decl_stmt><decl><type><name>static</name> struct <name>resource</name></type> <name><name>reserve</name>[<expr><name>MAXRESERVE</name></expr>]</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type>struct <name>a</name></type> <name>b</name></decl>;</decl_stmt>
+</unit>
+
+</unit>

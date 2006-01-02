@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" dir="do" language="C++">
+
+<unit>
+<do>do <block>{}</block> while <condition>(<expr><name>a</name></expr>)</condition>;</do>
+</unit>
+
+<unit>
+<do>do <block>{ <break>break;</break> }</block> while <condition>(<expr><name>a</name></expr>)</condition>;</do>
+</unit>
+
+<unit>
+<do>do <break>break;</break> while <condition>(<expr><name>a</name></expr>)</condition>;</do>
+</unit>
+
+<unit>
+<do>do <while>while <condition>(<expr><name>b</name></expr>)</condition>;</while> while <condition>(<expr><name>a</name></expr>)</condition>;</do>
+</unit>
+
+</unit>

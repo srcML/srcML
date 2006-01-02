@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" dir="template" language="C++">
+
+<unit>
+<template>template <parameter_list>&lt;<param><type><name>int</name></type> <name>n</name></param>&gt;</parameter_list> <function_decl><type><name>int</name></type> <name>foo</name><parameter_list>()</parameter_list>;</function_decl></template>
+</unit>
+
+<unit>
+<template>template <parameter_list>&lt;<param><type>class</type> <name>n</name></param>&gt;</parameter_list> <function_decl><type><name>int</name></type> <name>foo</name><parameter_list>()</parameter_list>;</function_decl></template>
+</unit>
+
+<unit>
+<template>template <parameter_list>&lt;<param><type><name>typename</name></type> <name>n</name></param>&gt;</parameter_list> <function_decl><type><name>int</name></type> <name>foo</name><parameter_list>()</parameter_list>;</function_decl></template>
+</unit>
+
+<unit>
+<template>template <parameter_list>&lt;<param><type><name>int</name></type> <name>n</name></param>, <param><type><name>double</name></type> <name>m</name></param>&gt;</parameter_list> <function_decl><type><name>int</name></type> <name>foo</name><parameter_list>()</parameter_list>;</function_decl></template>
+</unit>
+
+<unit>
+<template>template <parameter_list>&lt;<param><type><name>int</name></type> <name>n</name> =<init> <expr><name>b</name></expr></init></param>&gt;</parameter_list> <function_decl><type><name>int</name></type> <name>foo</name><parameter_list>()</parameter_list>;</function_decl></template>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>a<argument_list>&lt;<argument><name>b</name></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>c</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<function><type><name>virtual</name> <name>int</name>*</type> <name>f<argument_list>&lt;<argument><name>int</name></argument>&gt;</argument_list></name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>a<argument_list>&lt;<argument><name>b</name></argument>&gt;</argument_list></name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>a<argument_list>&lt;<argument><name>b</name></argument>,<argument><name>c</name></argument>&gt;</argument_list></name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+</unit>

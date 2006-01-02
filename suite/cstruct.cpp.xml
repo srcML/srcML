@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" dir="cstruct" language="C">
+
+<unit>
+<struct_decl>struct <name>A</name>;</struct_decl>
+</unit>
+
+<unit>
+<struct>struct <name>A</name> <block>{}</block>;</struct>
+</unit>
+
+<unit>
+<struct>struct <macro>M</macro> <name>A</name> <block>{}</block>;</struct>
+</unit>
+
+<unit>
+<struct>struct <name>A</name> <block>{ }</block>;</struct>
+</unit>
+
+<unit>
+<struct>struct <name>A</name> <block>{
+}</block>;</struct>
+</unit>
+
+<unit>
+<struct>struct <name>A</name> <block>{}</block>;</struct>
+</unit>
+
+<unit>
+<struct>struct <name>a</name> <block>{
+    <function_decl><type><name>void</name></type> <name>b</name><parameter_list>()</parameter_list>;</function_decl>
+}</block>;</struct>
+</unit>
+
+</unit>

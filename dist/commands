@@ -1,0 +1,12 @@
+rm -R srcML
+cvs checkout -r beta-mar-03-2004 srcML/fparser
+tar cvf src2srcml.src.tar srcML
+zip -r src2srcml.src.zip srcML
+gzip src2srcml.src.tar
+cd srcML/fparser
+make
+gzip src2srcml
+cd ../..
+mv srcML/fparser/src2srcml.gz .
+
+

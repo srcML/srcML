@@ -1,0 +1,1015 @@
+/*
+  srcmltags.css
+
+  CSS file for marking tags in styled views of srcML documents.
+  Generated automatically from an XML Schema for srcML by xmlschema2css.xsl
+
+  Michael L. Collard
+  collard@cs.kent.edu
+*/
+  
+  
+/* tag actual_params */
+actual_params::before {
+
+  content : "<actual_params>"
+
+}
+
+actual_params::after {
+
+  content : "</actual_params>"
+
+}
+
+
+  
+/* tag asm */
+asm::before {
+
+  content : "<asm>"
+
+}
+
+asm::after {
+
+  content : "</asm>"
+
+}
+
+
+  
+/* tag block */
+block::before {
+
+  content : "<block>"
+
+}
+
+block::after {
+
+  content : "</block>"
+
+}
+
+
+  
+/* tag break */
+break::before {
+
+  content : "<break>"
+
+}
+
+break::after {
+
+  content : "</break>"
+
+}
+
+
+  
+/* tag call */
+call::before {
+
+  content : "<call>"
+
+}
+
+call::after {
+
+  content : "</call>"
+
+}
+
+
+  
+/* tag case */
+case::before {
+
+  content : "<case>"
+
+}
+
+case::after {
+
+  content : "</case>"
+
+}
+
+
+  
+/* tag catch */
+catch::before {
+
+  content : "<catch>"
+
+}
+
+catch::after {
+
+  content : "</catch>"
+
+}
+
+
+  
+/* tag class */
+class::before {
+
+  content : "<class>"
+
+}
+
+class::after {
+
+  content : "</class>"
+
+}
+
+
+  
+/* tag class_decl */
+class_decl::before {
+
+  content : "<class_decl>"
+
+}
+
+class_decl::after {
+
+  content : "</class_decl>"
+
+}
+
+
+  
+/* tag comment */
+comment::before {
+
+  content : "<comment>"
+
+}
+
+comment::after {
+
+  content : "</comment>"
+
+}
+
+
+  
+/* tag condition */
+condition::before {
+
+  content : "<condition>"
+
+}
+
+condition::after {
+
+  content : "</condition>"
+
+}
+
+
+  
+/* tag constructor */
+constructor::before {
+
+  content : "<constructor>"
+
+}
+
+constructor::after {
+
+  content : "</constructor>"
+
+}
+
+
+  
+/* tag constructor_decl */
+constructor_decl::before {
+
+  content : "<constructor_decl>"
+
+}
+
+constructor_decl::after {
+
+  content : "</constructor_decl>"
+
+}
+
+
+  
+/* tag cpp:define */
+cpp:define::before {
+
+  content : "<cpp:define>"
+
+}
+
+cpp:define::after {
+
+  content : "</cpp:define>"
+
+}
+
+
+  
+/* tag cpp:directive */
+cpp:directive::before {
+
+  content : "<cpp:directive>"
+
+}
+
+cpp:directive::after {
+
+  content : "</cpp:directive>"
+
+}
+
+
+  
+/* tag cpp:elif */
+cpp:elif::before {
+
+  content : "<cpp:elif>"
+
+}
+
+cpp:elif::after {
+
+  content : "</cpp:elif>"
+
+}
+
+
+  
+/* tag cpp:else */
+cpp:else::before {
+
+  content : "<cpp:else>"
+
+}
+
+cpp:else::after {
+
+  content : "</cpp:else>"
+
+}
+
+
+  
+/* tag cpp:endif */
+cpp:endif::before {
+
+  content : "<cpp:endif>"
+
+}
+
+cpp:endif::after {
+
+  content : "</cpp:endif>"
+
+}
+
+
+  
+/* tag cpp:file */
+cpp:file::before {
+
+  content : "<cpp:file>"
+
+}
+
+cpp:file::after {
+
+  content : "</cpp:file>"
+
+}
+
+
+  
+/* tag cpp:if */
+cpp:if::before {
+
+  content : "<cpp:if>"
+
+}
+
+cpp:if::after {
+
+  content : "</cpp:if>"
+
+}
+
+
+  
+/* tag cpp:ifdef */
+cpp:ifdef::before {
+
+  content : "<cpp:ifdef>"
+
+}
+
+cpp:ifdef::after {
+
+  content : "</cpp:ifdef>"
+
+}
+
+
+  
+/* tag cpp:ifndef */
+cpp:ifndef::before {
+
+  content : "<cpp:ifndef>"
+
+}
+
+cpp:ifndef::after {
+
+  content : "</cpp:ifndef>"
+
+}
+
+
+  
+/* tag cpp:include */
+cpp:include::before {
+
+  content : "<cpp:include>"
+
+}
+
+cpp:include::after {
+
+  content : "</cpp:include>"
+
+}
+
+
+  
+/* tag cpp:then */
+cpp:then::before {
+
+  content : "<cpp:then>"
+
+}
+
+cpp:then::after {
+
+  content : "</cpp:then>"
+
+}
+
+
+  
+/* tag cpp:undef */
+cpp:undef::before {
+
+  content : "<cpp:undef>"
+
+}
+
+cpp:undef::after {
+
+  content : "</cpp:undef>"
+
+}
+
+
+  
+/* tag decl */
+decl::before {
+
+  content : "<decl>"
+
+}
+
+decl::after {
+
+  content : "</decl>"
+
+}
+
+
+  
+/* tag decl_stmt */
+decl_stmt::before {
+
+  content : "<decl_stmt>"
+
+}
+
+decl_stmt::after {
+
+  content : "</decl_stmt>"
+
+}
+
+
+  
+/* tag default */
+default::before {
+
+  content : "<default>"
+
+}
+
+default::after {
+
+  content : "</default>"
+
+}
+
+
+  
+/* tag destructor */
+destructor::before {
+
+  content : "<destructor>"
+
+}
+
+destructor::after {
+
+  content : "</destructor>"
+
+}
+
+
+  
+/* tag destructor_decl */
+destructor_decl::before {
+
+  content : "<destructor_decl>"
+
+}
+
+destructor_decl::after {
+
+  content : "</destructor_decl>"
+
+}
+
+
+  
+/* tag do */
+do::before {
+
+  content : "<do>"
+
+}
+
+do::after {
+
+  content : "</do>"
+
+}
+
+
+  
+/* tag else */
+else::before {
+
+  content : "<else>"
+
+}
+
+else::after {
+
+  content : "</else>"
+
+}
+
+
+  
+/* tag enum */
+enum::before {
+
+  content : "<enum>"
+
+}
+
+enum::after {
+
+  content : "</enum>"
+
+}
+
+
+  
+/* tag expr */
+expr::before {
+
+  content : "<expr>"
+
+}
+
+expr::after {
+
+  content : "</expr>"
+
+}
+
+
+  
+/* tag expr_stmt */
+expr_stmt::before {
+
+  content : "<expr_stmt>"
+
+}
+
+expr_stmt::after {
+
+  content : "</expr_stmt>"
+
+}
+
+
+  
+/* tag for */
+for::before {
+
+  content : "<for>"
+
+}
+
+for::after {
+
+  content : "</for>"
+
+}
+
+
+  
+/* tag formal_params */
+formal_params::before {
+
+  content : "<formal_params>"
+
+}
+
+formal_params::after {
+
+  content : "</formal_params>"
+
+}
+
+
+  
+/* tag function */
+function::before {
+
+  content : "<function>"
+
+}
+
+function::after {
+
+  content : "</function>"
+
+}
+
+
+  
+/* tag function_decl */
+function_decl::before {
+
+  content : "<function_decl>"
+
+}
+
+function_decl::after {
+
+  content : "</function_decl>"
+
+}
+
+
+  
+/* tag goto */
+goto::before {
+
+  content : "<goto>"
+
+}
+
+goto::after {
+
+  content : "</goto>"
+
+}
+
+
+  
+/* tag if */
+if::before {
+
+  content : "<if>"
+
+}
+
+if::after {
+
+  content : "</if>"
+
+}
+
+
+  
+/* tag incr */
+incr::before {
+
+  content : "<incr>"
+
+}
+
+incr::after {
+
+  content : "</incr>"
+
+}
+
+
+  
+/* tag init */
+init::before {
+
+  content : "<init>"
+
+}
+
+init::after {
+
+  content : "</init>"
+
+}
+
+
+  
+/* tag label */
+label::before {
+
+  content : "<label>"
+
+}
+
+label::after {
+
+  content : "</label>"
+
+}
+
+
+  
+/* tag name */
+name::before {
+
+  content : "<name>"
+
+}
+
+name::after {
+
+  content : "</name>"
+
+}
+
+
+  
+/* tag namespace */
+namespace::before {
+
+  content : "<namespace>"
+
+}
+
+namespace::after {
+
+  content : "</namespace>"
+
+}
+
+
+  
+/* tag param */
+param::before {
+
+  content : "<param>"
+
+}
+
+param::after {
+
+  content : "</param>"
+
+}
+
+
+  
+/* tag private */
+private::before {
+
+  content : "<private>"
+
+}
+
+private::after {
+
+  content : "</private>"
+
+}
+
+
+  
+/* tag protected */
+protected::before {
+
+  content : "<protected>"
+
+}
+
+protected::after {
+
+  content : "</protected>"
+
+}
+
+
+  
+/* tag public */
+public::before {
+
+  content : "<public>"
+
+}
+
+public::after {
+
+  content : "</public>"
+
+}
+
+
+  
+/* tag return */
+return::before {
+
+  content : "<return>"
+
+}
+
+return::after {
+
+  content : "</return>"
+
+}
+
+
+  
+/* tag specifier */
+specifier::before {
+
+  content : "<specifier>"
+
+}
+
+specifier::after {
+
+  content : "</specifier>"
+
+}
+
+
+  
+/* tag struct */
+struct::before {
+
+  content : "<struct>"
+
+}
+
+struct::after {
+
+  content : "</struct>"
+
+}
+
+
+  
+/* tag struct_decl */
+struct_decl::before {
+
+  content : "<struct_decl>"
+
+}
+
+struct_decl::after {
+
+  content : "</struct_decl>"
+
+}
+
+
+  
+/* tag super */
+super::before {
+
+  content : "<super>"
+
+}
+
+super::after {
+
+  content : "</super>"
+
+}
+
+
+  
+/* tag switch */
+switch::before {
+
+  content : "<switch>"
+
+}
+
+switch::after {
+
+  content : "</switch>"
+
+}
+
+
+  
+/* tag template */
+template::before {
+
+  content : "<template>"
+
+}
+
+template::after {
+
+  content : "</template>"
+
+}
+
+
+  
+/* tag then */
+then::before {
+
+  content : "<then>"
+
+}
+
+then::after {
+
+  content : "</then>"
+
+}
+
+
+  
+/* tag throw */
+throw::before {
+
+  content : "<throw>"
+
+}
+
+throw::after {
+
+  content : "</throw>"
+
+}
+
+
+  
+/* tag try */
+try::before {
+
+  content : "<try>"
+
+}
+
+try::after {
+
+  content : "</try>"
+
+}
+
+
+  
+/* tag type */
+type::before {
+
+  content : "<type>"
+
+}
+
+type::after {
+
+  content : "</type>"
+
+}
+
+
+  
+/* tag typedef */
+typedef::before {
+
+  content : "<typedef>"
+
+}
+
+typedef::after {
+
+  content : "</typedef>"
+
+}
+
+
+  
+/* tag union */
+union::before {
+
+  content : "<union>"
+
+}
+
+union::after {
+
+  content : "</union>"
+
+}
+
+
+  
+/* tag union_decl */
+union_decl::before {
+
+  content : "<union_decl>"
+
+}
+
+union_decl::after {
+
+  content : "</union_decl>"
+
+}
+
+
+  
+/* tag unit */
+unit::before {
+
+  content : "<unit>"
+
+}
+
+unit::after {
+
+  content : "</unit>"
+
+}
+
+
+  
+/* tag using_directive */
+using_directive::before {
+
+  content : "<using_directive>"
+
+}
+
+using_directive::after {
+
+  content : "</using_directive>"
+
+}
+
+
+  
+/* tag while */
+while::before {
+
+  content : "<while>"
+
+}
+
+while::after {
+
+  content : "</while>"
+
+}
+
+
