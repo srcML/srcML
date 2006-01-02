@@ -50,6 +50,9 @@ XSLT_INSERTCOMMENT=${XSLT} xsl/insertcomments.xsl
 # insert preprocessor
 XSLT_INSERTPREPROC=${XSLT} xsl/insertpreproc.xsl
 
+# insert form feed
+XSLT_INSERTFORMFEED=${XSLT} xsl/insertformfeed.xsl
+
 ##
 # Test cases for one language are generated from test cases for another language.
 
@@ -114,6 +117,11 @@ GEN_FILES_COMMENT= ${foreach nm, $(SEP_FILES_PLUS),          suite/$(nm).comment
 		   ${foreach nm, $(SEP_FILES_BASE_JAVA_ALL), suite/$(nm).comment.java.xml} \
 		   suite/extra.comment.c.xml suite/extra.comment.cpp.xml
 
+GEN_FILES_FORMFEED = ${foreach nm, $(SEP_FILES_PLUS),          suite/$(nm).formfeed.cpp.xml} \
+		     ${foreach nm, $(SEP_FILES_BASE_C_ALL),    suite/$(nm).formfeed.c.xml} \
+		     ${foreach nm, $(SEP_FILES_BASE_JAVA_ALL), suite/$(nm).formfeed.java.xml} \
+		     suite/extra.formfeed.c.xml suite/extra.formfeed.cpp.xml
+
 GEN_FILES_PREPROC= ${foreach nm, $(SEP_FILES_PLUS), suite/$(nm).preproc.cpp.xml} \
 	           ${foreach nm, $(SEP_FILES_BASE_C_ALL), suite/$(nm).preproc.c.xml} \
 		   suite/extra.preproc.c.xml suite/extra.preproc.cpp.xml
@@ -128,14 +136,47 @@ language2extension=./get_extension.py $1
 %.all.cpp.xml : %.cpp.xml
 	${XSLT_MERGEUNIT} $< > $@
 
+%.all.c.xml : %.c.xml
+	${XSLT_MERGEUNIT} $< > $@
+
+%.all.java.xml : %.java.xml
+	${XSLT_MERGEUNIT} $< > $@
+
 %.block.cpp.xml : %.cpp.xml
+	${XSLT_BLOCKUNIT} $< > $@
+
+%.block.c.xml : %.c.xml
+	${XSLT_BLOCKUNIT} $< > $@
+
+%.block.java.xml : %.java.xml
 	${XSLT_BLOCKUNIT} $< > $@
 
 %.comment.cpp.xml : %.cpp.xml
 	${XSLT_INSERTCOMMENT} $< > $@
 
+%.comment.c.xml : %.c.xml
+	${XSLT_INSERTCOMMENT} $< > $@
+
+%.comment.java.xml : %.java.xml
+	${XSLT_INSERTCOMMENT} $< > $@
+
 %.preproc.cpp.xml : %.cpp.xml
 	${XSLT_INSERTPREPROC} $< > $@
+
+%.preproc.c.xml : %.c.xml
+	${XSLT_INSERTPREPROC} $< > $@
+
+%.preproc.java.xml : %.java.xml
+	${XSLT_INSERTPREPROC} $< > $@
+
+%.formfeed.cpp.xml : %.cpp.xml
+	${XSLT_INSERTFORMFEED} $< > $@
+
+%.formfeed.c.xml : %.c.xml
+	${XSLT_INSERTFORMFEED} $< > $@
+
+%.formfeed.java.xml : %.java.xml
+	${XSLT_INSERTFORMFEED} $< > $@
 
 %.java.xml : %.cpp.xml
 	${XSLT_SETLANGUAGE_JAVA} $< > $@
@@ -143,7 +184,7 @@ language2extension=./get_extension.py $1
 %.c.xml : %.cpp.xml
 	${XSLT_SETLANGUAGE_C} $< > $@
 
-GEN_FILES=${GEN_FILES_PART} ${GEN_FILES_ALL} ${GEN_FILES_BLOCK} ${GEN_FILES_COMMENT} ${GEN_FILES_PREPROC} suite/constructor.cpp.xml $(GEN_FILES_JAVA) $(GEN_FILES_ALL_JAVA) $(GEN_FILES_C) $(GEN_FILES_ALL_C)
+GEN_FILES=${GEN_FILES_PART} ${GEN_FILES_ALL} ${GEN_FILES_BLOCK} ${GEN_FILES_COMMENT} ${GEN_FILES_PREPROC} ${GEN_FILES_FORMFEED} suite/constructor.cpp.xml $(GEN_FILES_JAVA) $(GEN_FILES_ALL_JAVA) $(GEN_FILES_C) $(GEN_FILES_ALL_C)
 
 GEN_FILES_CPP_BASE=${GEN_FILES_SEP} ${foreach nm, $(SEP_FILES_PLUS), $(nm).all} ${foreach nm, $(SEP_FILES_PLUS), $(nm).block} ${foreach nm, $(SEP_FILES_PLUS), $(nm).comment} ${foreach nm, $(SEP_FILES_PLUS), $(nm).preproc}
 
