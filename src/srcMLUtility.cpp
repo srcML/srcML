@@ -246,7 +246,7 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
 
   // copy all attributes from current unit (may be main unit)
   while (xmlTextReaderMoveToNextAttribute(reader)) {
-    xmlTextWriterWriteAttribute(writer, xmlTextReaderConstName(reader), xmlTextReaderValue(reader));
+    xmlTextWriterWriteAttribute(writer, xmlTextReaderConstName(reader), xmlTextReaderConstValue(reader));
   }
 
   // process the nodes in this unit
@@ -295,8 +295,8 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
       break;
     case XML_READER_TYPE_TEXT:
     case XML_READER_TYPE_SIGNIFICANT_WHITESPACE:
-      outputText(xmlTextReaderValue(reader), writer, false);
-      //    xmlTextWriterWriteString(writer, xmlTextReaderValue(reader));
+      outputText(xmlTextReaderConstValue(reader), writer, false);
+      //    xmlTextWriterWriteString(writer, xmlTextReaderConstValue(reader));
       break;
     default:
       break;
@@ -371,7 +371,7 @@ void srcMLUtility::outputText(const xmlChar* s, xmlTextWriterPtr writer, bool es
 
       // copy all the attributes
       while (xmlTextReaderMoveToNextAttribute(reader)) {
-	xmlTextWriterWriteAttribute(writer, xmlTextReaderConstName(reader), xmlTextReaderValue(reader));
+	xmlTextWriterWriteAttribute(writer, xmlTextReaderConstName(reader), xmlTextReaderConstValue(reader));
       }
 
       // end now if this is an empty element
@@ -387,7 +387,7 @@ void srcMLUtility::outputText(const xmlChar* s, xmlTextWriterPtr writer, bool es
 
     case XML_READER_TYPE_TEXT:
     case XML_READER_TYPE_SIGNIFICANT_WHITESPACE:
-      outputText(xmlTextReaderValue(reader), writer);
+      outputText(xmlTextReaderConstValue(reader), writer);
       break;
 
     default:
