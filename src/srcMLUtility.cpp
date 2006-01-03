@@ -86,10 +86,14 @@ void srcMLUtility::translate(const char* ofilename) {
 std::string srcMLUtility::attribute(const char* attribute_name) {
 
   // extract attribute from unit tag
-  const xmlChar* value = xmlTextReaderGetAttribute(reader, BAD_CAST attribute_name);
+  xmlChar* value = xmlTextReaderGetAttribute(reader, BAD_CAST attribute_name);
 
   // return the extracted attribute or a blank string if it doesn't exist
-  return std::string(value != 0 ? (const char*)value : "");
+  std::string s(value != 0 ? (const char*)value : "");
+
+  xmlFree(value);
+
+  return s;
 }
 
 // attribute
@@ -99,10 +103,7 @@ std::string srcMLUtility::unit_attribute(int unitnumber, const char* attribute_n
   skiptounit(reader, unitnumber);
 
   // extract attribute from unit tag
-  const xmlChar* value = xmlTextReaderGetAttribute(reader, BAD_CAST attribute_name);
-
-  // return the extracted attribute or a blank string if it doesn't exist
-  return std::string(value != 0 ? (const char*)value : "");
+  return attribute(attribute_name);
 }
 
 // count of nested units
@@ -181,8 +182,8 @@ void srcMLUtility::expand(const char* root_filename) {
     skiptounit(reader, 1);
 
     // extract the attributes from the unit for filename and directory
-    const char* filename = (const char*) xmlTextReaderGetAttribute(reader, BAD_CAST "filename");
-    const char* directory = (const char*) xmlTextReaderGetAttribute(reader, BAD_CAST "dir");
+    xmlChar* filename = xmlTextReaderGetAttribute(reader, BAD_CAST "filename");
+    xmlChar* directory = xmlTextReaderGetAttribute(reader, BAD_CAST "dir");
 
     if (!filename) {
       std::cout << "Missing filename" << '\n';
@@ -192,7 +193,7 @@ void srcMLUtility::expand(const char* root_filename) {
     // construct the directory if needed
     std::string directory_filename = root_filename;
     if (directory) {
-      directory_filename += directory;
+      directory_filename += (const char*) directory;
 
       // make the directory path if there is one
       int ret = mkpath(directory_filename.c_str(), EXPAND_DIR_PERM);
@@ -205,7 +206,7 @@ void srcMLUtility::expand(const char* root_filename) {
     std::string output_filename = directory_filename;
     if (output_filename != "")
       output_filename += "/";
-    output_filename += filename;
+    output_filename += (const char*) filename;
 
     // output file status message if in verbose mode
     if (isoption(options, OPTION_VERBOSE))
@@ -213,6 +214,9 @@ void srcMLUtility::expand(const char* root_filename) {
 
     // output this particular unit
     outputSrc(output_filename.c_str(), reader);
+
+    xmlFree(filename);
+    xmlFree(directory);
   }
 }
 
