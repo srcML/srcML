@@ -118,7 +118,7 @@ int srcMLUtility::unit_count() {
       break;
 
     if (xmlTextReaderDepth(reader) == 1 && (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT)
-	&& strcmp((const char*) xmlTextReaderName(reader), "unit") == 0)
+	&& strcmp((const char*) xmlTextReaderConstName(reader), "unit") == 0)
       ++count;
   }
 
@@ -246,7 +246,7 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
 
   // copy all attributes from current unit (may be main unit)
   while (xmlTextReaderMoveToNextAttribute(reader)) {
-    xmlTextWriterWriteAttribute(writer, xmlTextReaderName(reader), xmlTextReaderValue(reader));
+    xmlTextWriterWriteAttribute(writer, xmlTextReaderConstName(reader), xmlTextReaderValue(reader));
   }
 
   // process the nodes in this unit
@@ -290,7 +290,7 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
 
       // special case for formfeed element
     case XML_READER_TYPE_ELEMENT:
-      if (strcmp((const char*) xmlTextReaderName(reader), "formfeed") == 0)
+      if (strcmp((const char*) xmlTextReaderConstName(reader), "formfeed") == 0)
 	    xmlTextWriterWriteRawLen(writer, BAD_CAST "\f", 1);
       break;
     case XML_READER_TYPE_TEXT:
@@ -304,7 +304,7 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
 
     // found end element of this unit
     if (xmlTextReaderDepth(reader) == 1 && xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT
-	&& strcmp((const char*) xmlTextReaderName(reader), "unit") == 0)
+	&& strcmp((const char*) xmlTextReaderConstName(reader), "unit") == 0)
       break;
   }
 
@@ -367,11 +367,11 @@ void srcMLUtility::outputText(const xmlChar* s, xmlTextWriterPtr writer, bool es
       isemptyelement = xmlTextReaderIsEmptyElement(reader);
 
       // start the element
-      xmlTextWriterStartElement(writer, xmlTextReaderName(reader));
+      xmlTextWriterStartElement(writer, xmlTextReaderConstName(reader));
 
       // copy all the attributes
       while (xmlTextReaderMoveToNextAttribute(reader)) {
-	xmlTextWriterWriteAttribute(writer, xmlTextReaderName(reader), xmlTextReaderValue(reader));
+	xmlTextWriterWriteAttribute(writer, xmlTextReaderConstName(reader), xmlTextReaderValue(reader));
       }
 
       // end now if this is an empty element
@@ -406,7 +406,7 @@ void srcMLUtility::outputText(const xmlChar* s, xmlTextWriterPtr writer, bool es
 	throw LibXMLError(ret);
 
       if (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT &&
-	  strcmp((const char*) xmlTextReaderName(reader), "unit") == 0) {
+	  strcmp((const char*) xmlTextReaderConstName(reader), "unit") == 0) {
 	break;
       }
     }
