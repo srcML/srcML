@@ -1,0 +1,105 @@
+<refentry>
+<refentryinfo>
+  <date>2001-01-01</date>
+</refentryinfo>
+<refmeta>
+  <refentrytitle>
+    <application>foo</application>
+  </refentrytitle>
+  <manvolnum>1</manvolnum>
+  <refmiscinfo>foo 1.0</refmiscinfo>
+</refmeta>
+<refnamediv>
+  <refname>
+    <application>foo</application>
+  </refname>
+  <refpurpose>
+    Does nothing useful.
+  </refpurpose>
+</refnamediv>
+<refsynopsisdiv>
+  <refsynopsisdivinfo>
+    <date>2001-01-01</date>
+  </refsynopsisdivinfo>
+  <cmdsynopsis>
+    <command>foo</command>
+<arg><option>-f </option><replaceable class="parameter">bar</replaceable></arg>
+<arg><option>-d<replaceable class="parameter">n</replaceable></option></arg>
+<arg rep="repeat"><replaceable class="parameter">file</replaceable></arg>
+  </cmdsynopsis>
+</refsynopsisdiv>
+<refsect1>
+  <refsect1info>
+    <date>2001-01-01</date>
+  </refsect1info>
+  <title>DESCRIPTION</title>
+  <para>
+    <command>foo</command> does nothing useful.
+  </para>
+</refsect1>
+<refsect1>
+  <title>OPTIONS</title>
+  <variablelist>
+    <varlistentry>
+      <term>-f <replaceable class="parameter">bar</replaceable></term>
+      <listitem>
+	<para>
+	  Takes <filename>bar</filename> as it's run
+	  control file. If this were a real program,
+	  there might be more to say here about what
+	  bar is and how it will be used.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>-d<replaceable class="parameter">n</replaceable></term>
+      <listitem>
+	<para>
+	  Do something, where integer
+	  <replaceable class="parameter">n</replaceable>
+	  specifies how many times.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><replaceable class="parameter">file...</replaceable></term>
+      <listitem>
+	<para>
+	  Processes the files in the order listed,
+	  sending all output to stdout.
+	</para>
+      </listitem>
+    </varlistentry>
+  </variablelist>
+</refsect1>
+<refsect1>
+  <title>USAGE</title>
+  <para>
+    <command>foo</command> -f foo.conf -d2 foodata.foo
+  </para>
+</refsect1>
+<refsect1>
+  <title>CAVEATS</title>
+  <para>
+    Other programs named <command>foo</command> may exist and actually
+    do something!
+  </para>
+</refsect1>
+<refsect1>
+  <title>BUGS</title>
+  <para>
+    None.  Program does nothing.
+  </para>
+</refsect1>
+<refsect1>
+  <title>AUTHOR</title>
+  <para>
+    <author>
+      <firstname>Foo</firstname>
+      <othername role="mi">E</othername>
+      <surname>Bar</surname>
+      <contrib>Original author</contrib>
+    </author>
+  </para>
+</refsect1>
+</refentry>
