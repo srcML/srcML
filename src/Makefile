@@ -245,3 +245,8 @@ PHONY : trunkversion
 trunkversion :
 	echo -n "Trunk " > VERSION
 	echo -n `date` >> VERSION
+
+PHONY : install
+install :
+	cp ../bin/src2srcml /usr/bin/.
+	cp ../bin/srcml2src /usr/bin/.
