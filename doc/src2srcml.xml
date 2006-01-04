@@ -38,19 +38,103 @@
   </para>
 </refsect1>
 <refsect1>
+
+<!--
+<![CDATA[
+Usage: src2srcml [options] <infile>... <outfile>
+
+Translates source-code files into the XML source-code representation srcML.
+
+When no filenames are given read from standard input.
+When only one filename is given write to standard output.
+An input filename of '-' also reads from standard input.
+
+Options:
+  -h, -help              display this help and exit
+  -V, -version           display version number and exit
+
+  -l, -language=LANG     set the language to C, CPP, or Java
+  -d, -directory=DIR     set the directory attribute to DIR
+  -f, -filename=FILE     set the filename attribute to FILE
+  -s, -src-version=VER   set the version attribute to VER
+
+  -t, -src-encoding=ENC  set the input source encoding to ENC (default:  based on locale) 
+  -x, -xml-encoding=ENC  set the output XML encoding to ENC (default:  UTF-8) 
+
+  -n, -nested            store all input source files in one compound srcML document
+  -i, -input-file        treat input file as a list of source files
+
+  -z, -compressed        output in gzip format
+  -c, -interactive       low-latency output
+  -g, -debug             debug translation errors with special namespace
+  -v, -verbose           verbose output
+
+Examples:  
+  src2srcml                                                        (read from standard input, write to standard output)
+  src2srcml main.cpp                                               (read from file main.cpp, write to standard output)
+  src2srcml main.cpp main.cpp.xml                                  (read from file main.cpp, write to file main.cpp.xml)
+  src2srcml -                                                      (read from standard input, write to standard output)
+  src2srcml - main.cpp.xml                                         (read from standard input, write to file main.cpp.xml)
+  src2srcml -directory=src -filename=main.cpp - main.cpp.xml     (element unit attributes dir "src", filename "main.cpp")
+  src2srcml -src-encoding=UTF-8 main.cpp main.cpp.xml             (encoding of input text file is UTF-8)
+  src2srcml -xml-encoding=ISO-8859-1 main.cpp main.cpp.xml        (set encoding of srcML file to ISO-8859-1)
+
+www.sdml.info
+Report bugs to srcmlbugs@sdml.info
+]]>
+ -->
   <title>OPTIONS</title>
   <variablelist>
     <varlistentry>
-      <term>-f <replaceable class="parameter">bar</replaceable></term>
+      <term>-l, --language=<replaceable class="parameter">LANG</replaceable></term>
       <listitem>
 	<para>
-	  Takes <filename>bar</filename> as it's run
-	  control file. If this were a real program,
-	  there might be more to say here about what
-	  bar is and how it will be used.
+	  Set the language of the source-code file to <filename>UNIT</filename>.
+	  This affects parsing, the allowed markup, and what is considered a keyword.  The default
+	  is CPP.  The value is also stored as an attribute of the root unit element.
 	</para>
       </listitem>
     </varlistentry>
+    <varlistentry>
+      <term>-d, --directory=<replaceable class="parameter">DIR</replaceable></term>
+      <listitem>
+	<para>
+	  The unit element includes a descriptive attribute directory.  The value is typically obtained from
+	  the path of the input filename.  This option allows you to specify a different directory for standard
+	  input or where the directory is not contained in the path of the input filename.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>-f, --filename=<replaceable class="parameter">DIR</replaceable></term>
+      <listitem>
+	<para>
+	  The unit element includes a descriptive attribute filename.  The value is typically obtained from
+	  the input filename.  This option allows you to specify a different filename for standard
+	  input or where a different filename is wanted.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>-s, --src-version=<replaceable class="parameter">VER</replaceable></term>
+      <listitem>
+	<para>
+	  The unit element includes the version, an optional, purely-descriptive attribute.
+	  Sets the value of the attribute version to <filename>VER</filename>.  The value is a string with no interpretation
+	  by the srcML tools.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>-t, --src-encoding=<replaceable class="parameter">ENC</replaceable></term>
+      <listitem>
+	<para>
+	  Sets the input encoding of the source-code file to <filename>VER</filename>.  Not stored, but used for any
+	  necessary source-code file translation.  The default is based on the locale.
+	</para>
+      </listitem>
+    </varlistentry>
+
     <varlistentry>
       <term>-d<replaceable class="parameter">n</replaceable></term>
       <listitem>
