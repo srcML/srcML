@@ -217,16 +217,18 @@ Report bugs to srcmlbugs@sdml.info
   <para>
     <command>src2srcml</command> --language=Java main.java main.java.xml
   </para>
-<!--
-  src2srcml                                                        (read from standard input, write to standard output)
-  src2srcml main.cpp                                               (read from file main.cpp, write to standard output)
-  src2srcml main.cpp main.cpp.xml                                  (read from file main.cpp, write to file main.cpp.xml)
-  src2srcml -                                                      (read from standard input, write to standard output)
-  src2srcml - main.cpp.xml                                         (read from standard input, write to file main.cpp.xml)
-  src2srcml -directory=src -filename=main.cpp - main.cpp.xml     (element unit attributes dir "src", filename "main.cpp")
-  src2srcml -src-encoding=UTF-8 main.cpp main.cpp.xml             (encoding of input text file is UTF-8)
-  src2srcml -xml-encoding=ISO-8859-1 main.cpp main.cpp.xml        (set encoding of srcML file to ISO-8859-1)
--->
+  <para>
+    To specify the directory, filename, and version for an input file from standard input:
+  </para>
+  <para>
+    <command>src2srcml</command> --directory=src --filename=main.cpp --version=1 - main.cpp.xml
+  </para>
+  <para>
+    To translate a source-code file in ISO-8859-1 encoding into a srcML file with UTF-8 encoding:
+  </para>
+  <para>
+    <command>src2srcml</command> --src-endocing=ISO-8859-1 --xml-encoding=UTF-8 main.cpp main.cpp.xml
+  </para>
 </refsect1>
 <refsect1>
   <title>CAVEATS</title>
