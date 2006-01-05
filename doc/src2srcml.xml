@@ -10,22 +10,22 @@
   <refmiscinfo>src2srcml 1.0</refmiscinfo>
 </refmeta>
 <refnamediv>
-  <refname>
-    <application>src2srcml</application>
-  </refname>
-  <refpurpose>
-    Does nothing useful.
-  </refpurpose>
+  <refname><application>src2srcml</application></refname><refpurpose>translates source code into the XML source-code representation srcML</refpurpose>
 </refnamediv>
 <refsynopsisdiv>
   <refsynopsisdivinfo>
     <date>2001-01-01</date>
   </refsynopsisdivinfo>
   <cmdsynopsis>
-    <command>foo</command>
-<arg><option>-f </option><replaceable class="parameter">bar</replaceable></arg>
-<arg><option>-d<replaceable class="parameter">n</replaceable></option></arg>
-<arg rep="repeat"><replaceable class="parameter">file</replaceable></arg>
+    <command>src2srcml</command>
+<arg><option>-l </option><replaceable class="parameter">language</replaceable></arg>
+<arg><option>-f <replaceable class="parameter">filename</replaceable></option></arg>
+<arg><option>-d <replaceable class="parameter">directory</replaceable></option></arg>
+<arg><option>-t <replaceable class="parameter">encoding</replaceable></option></arg>
+<arg><option>-x <replaceable class="parameter">encoding</replaceable></option></arg>
+<arg><option>-nizcgv </option></arg>
+<arg rep="repeat"><replaceable class="parameter">infile</replaceable></arg>
+<arg><replaceable class="parameter">outfile</replaceable></arg>
   </cmdsynopsis>
 </refsynopsisdiv>
 <refsect1>
@@ -139,6 +139,23 @@ Report bugs to srcmlbugs@sdml.info
       <listitem>
 	<para>
 	  Sets the xml encoding of the output srcML file to <filename>encoding</filename>.  The default is UTF-8.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>-n, --nested</term>
+      <listitem>
+	<para>
+	  Stores all input source files into one compound srcML document.  Default with --input-file mode.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>-i, --input-file</term>
+      <listitem>
+	<para>
+	  Treats the input file as a list of source files.  The list has a single file on each line.  Each file is separately
+	  translated and collectively stored into a single compound srcML document.
 	</para>
       </listitem>
     </varlistentry>
