@@ -31,7 +31,7 @@
   <title>DESCRIPTION</title>
   <para>
     The program <command>srcml2src</command> translates from the XML source-code representation srcML into source code.  The srcML format
-    allows for full XML addressing, querying, and transformation of source code.
+    allows for XML addressing, querying, and transformation of source code.
   </para>
   <para>
     The combination of src2srcml and srcml2src allows for full round-trip transformation of source-code files without any loss of comments,
@@ -39,11 +39,11 @@
   </para>
   <para>
     Conversion from the srcML format to source code is relatively straightforward.  All XML tags are removed and escaped characters are
-    unescaped.  In addition, the special srcML element for a formfeed is converted back to a form feed character (form feed characters
+    unescaped.  In addition, the special srcML element for a formfeed is converted back to a form-feed character (form-feed characters
     are not allowed in XML, even escaped).
   </para>
   <para>
-    In addition to conversion srcml2src provides various srcML utilities such as extracting metadata, extracting individual parts of compound
+    In addition to conversion, srcml2src provides various srcML utilities such as extracting metadata, extracting individual parts of compound
     srcML files, and extracting metadata from individual parts of compound srcML files.
   </para>
 </refsect1>

@@ -14,13 +14,13 @@
   </refsynopsisdivinfo>
   <cmdsynopsis>
     <command>src2srcml</command>
+<arg><option>-hVnizcgv</option></arg>
 <arg><option>-l </option><replaceable class="parameter">language</replaceable></arg>
 <arg><option>-f <replaceable class="parameter">filename</replaceable></option></arg>
 <arg><option>-d <replaceable class="parameter">directory</replaceable></option></arg>
 <arg><option>-t <replaceable class="parameter">encoding</replaceable></option></arg>
 <arg><option>-x <replaceable class="parameter">encoding</replaceable></option></arg>
-<arg><option>-nizcgv </option></arg>
-<arg rep="repeat"><replaceable class="parameter">input-source-code-file(s)</replaceable></arg>
+<arg rep="repeat"><replaceable class="parameter">input-source-code-file</replaceable></arg>
 <arg><replaceable class="parameter">output-srcML-file</replaceable></arg>
   </cmdsynopsis>
 </refsynopsisdiv>
@@ -31,9 +31,7 @@
   <title>DESCRIPTION</title>
   <para>
     The program <command>src2srcml</command> translates source-code files into the XML source-code representation srcML.  The srcML format
-    allows for full XML addressing, querying, and transformation of source code.
-  </para>
-  <para>
+    allows for XML addressing, querying, and transformation of source code.
     All text from the original source-code file is preserved including white-space, comments and preprocessor
     statements.  No preprocessing of the source code is done.  In addition it can be applied to invidual source-code files, or code
     fragments.
@@ -61,7 +59,7 @@
       <term>-V, --version</term>
       <listitem>
 	<para>
-	  Output the version of src2srcml and whether libxml2 enabled, then exit.
+	  Output the version of src2srcml, including whether libxml2 enabled, then exit.
 	</para>
       </listitem>
     </varlistentry>
