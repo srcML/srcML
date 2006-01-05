@@ -41,9 +41,6 @@ const char* LANGUAGE_C = "C";
 const char* LANGUAGE_CXX = "C++";
 const char* LANGUAGE_JAVA = "Java";
 
-const char* APPEND_FLAG = "--append";
-const char* APPEND_FLAG_SHORT = "-a";
-
 const char* EXTENDED_FLAG = "--extended";
 const char* EXTENDED_FLAG_SHORT = "-t";
 
@@ -107,7 +104,6 @@ void output_help(const char* name) {
 	      << "  " << INTERACTIVE_FLAG_SHORT << ", " << setw(COL) <<  INTERACTIVE_FLAG << "low-latency output\n"
 	      << "  " << DEBUG_FLAG_SHORT       << ", " << setw(COL) <<  DEBUG_FLAG       << "debug translation errors with special namespace\n"
               << "  " << VERBOSE_FLAG_SHORT     << ", " << setw(COL) << VERBOSE_FLAG      << "verbose output\n"
-      //	      << "  " << APPEND_FLAG_SHORT      << ", " << setw(COL) <<  APPEND_FLAG      << "appends to the output file\n"
 	      << '\n'
 	      << "Examples:  " << '\n'
 	      << "  " << name << "                      " << GAP << "(read from standard input, write to standard output)" << '\n'
@@ -176,14 +172,6 @@ int main(int argc, char* argv[]) {
       options |= OPTION_NESTED;
       if (position == original_position) ++curarg;
     }
-
-    /*
-    // append mode
-    else if (compare_flags(argv[curarg], APPEND_FLAG, APPEND_FLAG_SHORT, position)) {
-      options |= OPTION_APPEND;
-      if (position == original_position) ++curarg;
-    }
-    */
 
     // extended mode
     else if (compare_flags(argv[curarg], EXTENDED_FLAG, EXTENDED_FLAG_SHORT, position)) {
