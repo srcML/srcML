@@ -3,11 +3,7 @@
     <date>2006-01-04</date>
 </refentryinfo>
 <refmeta>
-  <refentrytitle>
-    <application>src2srcml</application>
-  </refentrytitle>
-  <manvolnum>1</manvolnum>
-  <refmiscinfo>src2srcml 1.0</refmiscinfo>
+  <refentrytitle><application>src2srcml</application></refentrytitle><manvolnum>1</manvolnum><refmiscinfo>src2srcml 1.0</refmiscinfo>
 </refmeta>
 <refnamediv>
   <refname><application>src2srcml</application></refname><refpurpose>translates source code into the XML source-code representation srcML</refpurpose>
@@ -34,55 +30,11 @@
   </refsect1info>
   <title>DESCRIPTION</title>
   <para>
-    <command>src2srcml</command> translates source code files (e.g., C, C++, Java) into the XML source-code representation srcML.
+    <command>src2srcml</command> translates source-code files into the XML source-code representation srcML.  The srcML format
+    allows for full XML addressing, querying, and transformation of source code.
   </para>
 </refsect1>
 <refsect1>
-
-<!--
-<![CDATA[
-Usage: src2srcml [options] <infile>... <outfile>
-
-Translates source-code files into the XML source-code representation srcML.
-
-When no filenames are given read from standard input.
-When only one filename is given write to standard output.
-An input filename of '-' also reads from standard input.
-
-Options:
-  -h, -help              display this help and exit
-  -V, -version           display version number and exit
-
-  -l, -language=LANG     set the language to C, CPP, or Java
-  -d, -directory=DIR     set the directory attribute to DIR
-  -f, -filename=FILE     set the filename attribute to FILE
-  -s, -src-version=VER   set the version attribute to VER
-
-  -t, -src-encoding=ENC  set the input source encoding to ENC (default:  based on locale) 
-  -x, -xml-encoding=ENC  set the output XML encoding to ENC (default:  UTF-8) 
-
-  -n, -nested            store all input source files in one compound srcML document
-  -i, -input-file        treat input file as a list of source files
-
-  -z, -compressed        output in gzip format
-  -c, -interactive       low-latency output
-  -g, -debug             debug translation errors with special namespace
-  -v, -verbose           verbose output
-
-Examples:  
-  src2srcml                                                        (read from standard input, write to standard output)
-  src2srcml main.cpp                                               (read from file main.cpp, write to standard output)
-  src2srcml main.cpp main.cpp.xml                                  (read from file main.cpp, write to file main.cpp.xml)
-  src2srcml -                                                      (read from standard input, write to standard output)
-  src2srcml - main.cpp.xml                                         (read from standard input, write to file main.cpp.xml)
-  src2srcml -directory=src -filename=main.cpp - main.cpp.xml     (element unit attributes dir "src", filename "main.cpp")
-  src2srcml -src-encoding=UTF-8 main.cpp main.cpp.xml             (encoding of input text file is UTF-8)
-  src2srcml -xml-encoding=ISO-8859-1 main.cpp main.cpp.xml        (set encoding of srcML file to ISO-8859-1)
-
-www.sdml.info
-Report bugs to srcmlbugs@sdml.info
-]]>
- -->
   <title>OPTIONS</title>
   <variablelist>
     <varlistentry>
@@ -165,7 +117,7 @@ Report bugs to srcmlbugs@sdml.info
       <term>-z, --compressed</term>
       <listitem>
 	<para>
-	  Output is in compressed, i.e., gzip, format.
+	  Output is in compressed, i.e., gzip, format.  Only available in the libxml2-enabled version.
 	</para>
       </listitem>
     </varlistentry>
@@ -241,6 +193,12 @@ Report bugs to srcmlbugs@sdml.info
   <title>BUGS</title>
   <para>
     Java language mode does not contain all of the Java 1.5 language elements.
+  </para>
+</refsect1>
+<refsect1>
+  <title>SEE ALSO</title>
+  <para>
+    <command>srcml2src</command>(1)
   </para>
 </refsect1>
 <refsect1>
