@@ -42,6 +42,9 @@
     The translation is fast and uses a stream-parsing approach where parsing is done top-down and elements are issued as soon
     as they are detected.
   </para>
+  <para>
+    Some options are only available in the libxml2 version.
+  </para>
 </refsect1>
 <refsect1>
   <title>OPTIONS</title>
@@ -58,7 +61,7 @@
       <term>-V, --version</term>
       <listitem>
 	<para>
-	  Output the version of src2srcml and exit.
+	  Output the version of src2srcml and whether libxml2 enabled, then exit.
 	</para>
       </listitem>
     </varlistentry>
@@ -117,7 +120,7 @@
 	<para>
 	  Sets the xml encoding of the output srcML file to <filename>encoding</filename>.  The default is UTF-8.
 	  Conversion to the xml encoding from the source encoding is only performed in the libxml2-enabled version.
-	  Possible encodings can be obtained by using the command <command>iconv -l</command>.
+	  Possible encodings with the libxml2-enabled version can be obtained by using the command <command>iconv -l</command>.
 	</para>
       </listitem>
     </varlistentry>
@@ -234,7 +237,7 @@
   <para>
     <author>
       <firstname>Michael</firstname>
-      <othername role="mi">L</othername>
+      <othername role="mi">L.</othername>
       <surname>Collard</surname>
       <contrib>Original author</contrib>
     </author>

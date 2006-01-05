@@ -38,13 +38,13 @@
     white space, and preprocessing statements.
   </para>
   <para>
-    Conversion from the srcML format to source code is relatively straightforward.  All srcML tags are removed and escaped characters are
+    Conversion from the srcML format to source code is relatively straightforward.  All XML tags are removed and escaped characters are
     unescaped.  In addition, the special srcML element for a formfeed is converted back to a form feed character (form feed characters
-    are not allowed in XML).
+    are not allowed in XML, even escaped).
   </para>
   <para>
-    In addition to conversion srcml2src provides various srcML utilities such as extracting metadata and individual parts of compound
-    srcML files.
+    In addition to conversion srcml2src provides various srcML utilities such as extracting metadata, extracting individual parts of compound
+    srcML files, and extracting metadata from individual parts of compound srcML files.
   </para>
 </refsect1>
 <refsect1>
@@ -186,7 +186,7 @@
   <para>
     <author>
       <firstname>Michael</firstname>
-      <othername role="mi">L</othername>
+      <othername role="mi">L.</othername>
       <surname>Collard</surname>
       <contrib>Original author</contrib>
     </author>
