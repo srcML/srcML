@@ -99,7 +99,7 @@ Report bugs to srcmlbugs@sdml.info
       <term>-d, --directory=<replaceable class="parameter">DIR</replaceable></term>
       <listitem>
 	<para>
-	  The unit element includes a descriptive attribute directory.  The value is typically obtained from
+	  The unit element includes an optional descriptive attribute directory.  The value is typically obtained from
 	  the path of the input filename.  This option allows you to specify a different directory for standard
 	  input or where the directory is not contained in the path of the input filename.
 	</para>
@@ -109,7 +109,7 @@ Report bugs to srcmlbugs@sdml.info
       <term>-f, --filename=<replaceable class="parameter">DIR</replaceable></term>
       <listitem>
 	<para>
-	  The unit element includes a descriptive attribute filename.  The value is typically obtained from
+	  The unit element includes an optional descriptive attribute filename.  The value is typically obtained from
 	  the input filename.  This option allows you to specify a different filename for standard
 	  input or where a different filename is wanted.
 	</para>
@@ -126,31 +126,19 @@ Report bugs to srcmlbugs@sdml.info
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>-t, --src-encoding=<replaceable class="parameter">ENC</replaceable></term>
+      <term>-t, --src-encoding=<replaceable class="parameter">encoding</replaceable></term>
       <listitem>
 	<para>
-	  Sets the input encoding of the source-code file to <filename>VER</filename>.  Not stored, but used for any
+	  Sets the input encoding of the source-code file to <filename>encoding</filename>.  Not stored, but used for any
 	  necessary source-code file translation.  The default is based on the locale.
 	</para>
       </listitem>
     </varlistentry>
-
     <varlistentry>
-      <term>-d<replaceable class="parameter">n</replaceable></term>
+      <term>-x, --xml-encoding=<replaceable class="parameter">encoding</replaceable></term>
       <listitem>
 	<para>
-	  Do something, where integer
-	  <replaceable class="parameter">n</replaceable>
-	  specifies how many times.
-	</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term><replaceable class="parameter">file...</replaceable></term>
-      <listitem>
-	<para>
-	  Processes the files in the order listed,
-	  sending all output to stdout.
+	  Sets the xml encoding of the output srcML file to <filename>encoding</filename>.  The default is UTF-8.
 	</para>
       </listitem>
     </varlistentry>
@@ -159,7 +147,7 @@ Report bugs to srcmlbugs@sdml.info
 <refsect1>
   <title>USAGE</title>
   <para>
-    <command>foo</command> -f foo.conf -d2 foodata.foo
+    <command>src2srcml</command> main.cpp main.cpp.xml
   </para>
 </refsect1>
 <refsect1>
@@ -172,7 +160,8 @@ Report bugs to srcmlbugs@sdml.info
 <refsect1>
   <title>BUGS</title>
   <para>
-    None.  Program does nothing.
+    Translation is performed based on local information with no symbol table.  For non-CFG languages, i.e., C/C++, and with
+    macros this may lead to incorrect markup.
   </para>
 </refsect1>
 <refsect1>
