@@ -27,7 +27,7 @@ CXX_LINK_FLAGS = -s
 # libxml use
 LIBXML_INCLUDE=-I/usr/include/libxml2
 
-#LIBXML_DISABLED=a
+LIBXML_DISABLED=a
 
 # object code for xml
 ifdef LIBXML_DISABLED
@@ -40,6 +40,7 @@ LIBXML_SRC2SRCML_INCLUDE=-I/usr/include/libxml2
 XML_OBJ=
 XML_LIB=-lxml2
 XML_PRE=-DLIBXML_ENABLED
+LIBXML_VERSION= (libxml2 enabled)
 endif
 
 SRC2SRCML_BIN=/home/collard/svnsrcml/srcML/trunk/bin/src2srcml
@@ -211,6 +212,7 @@ cleanantlr :
 version.cpp : VERSION
 	echo -n 'const char* version() { const char* Version = "' > $@
 	cat VERSION	              >> $@
+	echo -n " ${LIBXML_VERSION}"   >> $@
 	echo '"; return Version; }'   >> $@
 
 PHONY : time

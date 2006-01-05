@@ -566,12 +566,10 @@ int main(int argc, char* argv[]) {
     for (int i = input_arg_start; i <= input_arg_end; ++i) {
       const char* path = argv[i];
       std::string sdirectory = get_directory(path);
-      const char* directory = sdirectory.c_str();
       std::string sfilename = get_filename(path);
-      const char* filename  = sfilename.c_str();
 
       try {
-	translator.translate(path, directory, filename);
+	translator.translate(path, sdirectory.c_str(), sfilename.c_str());
       } catch (FileError e) {
 	std::cerr << NAME << " error: file \'" << path << "\' does not exist." << "\n";
       }
