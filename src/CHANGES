@@ -1,7 +1,9 @@
 CHANGES
 
 Trunk
-	Form feeds are now stored using a new empty element.
+	Added whether libxml2 enabled to version.
+
+	Form feeds are now stored using a new empty XML element.
 
 	Default xml encoding for srcml2src unit extraction is that of the root unit.
 
