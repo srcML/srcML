@@ -30,8 +30,17 @@
   </refsect1info>
   <title>DESCRIPTION</title>
   <para>
-    <command>src2srcml</command> translates source-code files into the XML source-code representation srcML.  The srcML format
+    The program <command>src2srcml</command> translates source-code files into the XML source-code representation srcML.  The srcML format
     allows for full XML addressing, querying, and transformation of source code.
+  </para>
+  <para>
+    All text from the original source-code file is preserved including white-space, comments and preprocessor
+    statements.  No preprocessing of the source code is done.  In addition it can be applied to invidual source-code files, or code
+    fragments.
+  </para>
+  <para>
+    The translation is fast and uses a stream-parsing approach where parsing is done top-down and elements are issued as soon
+    as they are detected.
   </para>
 </refsect1>
 <refsect1>
@@ -187,6 +196,9 @@
   <para>
     Translation is performed based on local information with no symbol table.  For non-CFG languages, i.e., C/C++, and with
     macros this may lead to incorrect markup.
+  </para>
+  <para>
+    Line endings are normalized in XML and in the srcML format.
   </para>
 </refsect1>
 <refsect1>
