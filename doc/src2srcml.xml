@@ -20,8 +20,8 @@
 <arg><option>-t <replaceable class="parameter">encoding</replaceable></option></arg>
 <arg><option>-x <replaceable class="parameter">encoding</replaceable></option></arg>
 <arg><option>-nizcgv </option></arg>
-<arg rep="repeat"><replaceable class="parameter">infile</replaceable></arg>
-<arg><replaceable class="parameter">outfile</replaceable></arg>
+<arg rep="repeat"><replaceable class="parameter">input-source-code-file(s)</replaceable></arg>
+<arg><replaceable class="parameter">output-srcML-file</replaceable></arg>
   </cmdsynopsis>
 </refsynopsisdiv>
 <refsect1>
@@ -46,6 +46,22 @@
 <refsect1>
   <title>OPTIONS</title>
   <variablelist>
+    <varlistentry>
+      <term>-h, --help</term>
+      <listitem>
+	<para>
+	  Output the help and exit.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>-V, --version</term>
+      <listitem>
+	<para>
+	  Output the version of src2srcml and exit.
+	</para>
+      </listitem>
+    </varlistentry>
     <varlistentry>
       <term>-l, --language=<replaceable class="parameter">language</replaceable></term>
       <listitem>

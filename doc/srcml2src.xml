@@ -1,0 +1,200 @@
+<refentry>
+<refentryinfo>
+    <date>2006-01-04</date>
+</refentryinfo>
+<refmeta>
+  <refentrytitle><application>srcml2src</application></refentrytitle><manvolnum>1</manvolnum><refmiscinfo>srcml2src 1.0</refmiscinfo>
+</refmeta>
+<refnamediv>
+  <refname><application>srcml2src</application></refname><refpurpose>translates the XML source-code representation srcML into source code and provides utility features for the srcML format</refpurpose>
+</refnamediv>
+<refsynopsisdiv>
+  <refsynopsisdivinfo>
+    <date>2001-01-01</date>
+  </refsynopsisdivinfo>
+  <cmdsynopsis>
+    <command>srcml2src</command>
+<arg><option>-l </option></arg>
+<arg><option>-f </option></arg>
+<arg><option>-d </option></arg>
+<arg><option>-x </option></arg>
+<arg><option>-t <replaceable class="parameter">encoding</replaceable></option></arg>
+<arg><option>-nizcgv </option></arg>
+<arg><replaceable class="parameter">input-srcML-file</replaceable></arg>
+<arg><replaceable class="parameter">output-source-code-file</replaceable></arg>
+  </cmdsynopsis>
+</refsynopsisdiv>
+<refsect1>
+  <refsect1info>
+    <date>2006-01-04</date>
+  </refsect1info>
+  <title>DESCRIPTION</title>
+  <para>
+    The program <command>srcml2src</command> translates from the XML source-code representation srcML into source code.  The srcML format
+    allows for full XML addressing, querying, and transformation of source code.
+  </para>
+  <para>
+    The combination of src2srcml and srcml2src allows for full round-trip transformation of source-code files without any loss of comments,
+    white space, and preprocessing statements.
+  </para>
+  <para>
+    Conversion from the srcML format to source code is relatively straightforward.  All srcML tags are removed and escaped characters are
+    unescaped.  In addition, the special srcML element for a formfeed is converted back to a form feed character (form feed characters
+    are not allowed in XML).
+  </para>
+  <para>
+    In addition to conversion srcml2src provides various srcML utilities such as extracting metadata and individual parts of compound
+    srcML files.
+  </para>
+</refsect1>
+<refsect1>
+  <title>OPTIONS</title>
+  <variablelist>
+    <varlistentry>
+      <term>-h, --help</term>
+      <listitem>
+	<para>
+	  Output the help and exit.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>-V, --version</term>
+      <listitem>
+	<para>
+	  Output the version of srcml2src and exit.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>-l, --language</term>
+      <listitem>
+	<para>
+	  Output the language of the srcML file as stored in the unit element attribute language.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>-d, --directory</term>
+      <listitem>
+	<para>
+	  Output the directory of the srcML file as stored in the unit element attribute directory.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>-f, --filename</term>
+      <listitem>
+	<para>
+	  Output the filename of the srcML file as stored in the unit element attribute filename.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>-s, --src-version</term>
+      <listitem>
+	<para>
+	  Output the version of the srcML file as stored in the unit element attribute filename.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>-x, --xml-encoding</term>
+      <listitem>
+	<para>
+	  Output the xml encoding of the srcML file as stored in the xml declaration.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>-t, --src-encoding=<replaceable class="parameter">encoding</replaceable></term>
+      <listitem>
+	<para>
+	  Sets the encoding used for the output text source-code files to <replaceable>encoding</replaceable>.  The default is based on the locale.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>-v, --verbose</term>
+      <listitem>
+	<para>
+	  Verbose output in --extract-all mode.
+	</para>
+      </listitem>
+    </varlistentry>
+  </variablelist>
+</refsect1>
+<refsect1>
+  <title>USAGE</title>
+  <para>
+    To translate the srcML file main.cpp.xml into the C++ source-code file main.cpp:
+  </para>
+  <para>
+    <command>srcml2src</command> main.cpp.xml main.cpp
+  </para>
+  <para>
+    To extract the language of the srcML file main.cpp.xml:
+  </para>
+  <para>
+    <command>srcml2src</command> --language main.c.xml
+  </para>
+  <para>
+    To extract the directory of the srcML file main.cpp.xml:
+  </para>
+  <para>
+    <command>srcml2src</command> --directory main.c.xml
+  </para>
+  <para>
+    To extract the filename of the srcML file main.cpp.xml:
+  </para>
+  <para>
+    <command>srcml2src</command> --filename main.c.xml
+  </para>
+  <para>
+    To extract the version of the srcML file main.cpp.xml:
+  </para>
+  <para>
+    <command>srcml2src</command> --version main.c.xml
+  </para>
+  <para>
+    To extract the xml encoding of the srcML file main.cpp.xml:
+  </para>
+  <para>
+    <command>srcml2src</command> --xml-encoding main.c.xml
+  </para>
+</refsect1>
+<refsect1>
+  <title>CAVEATS</title>
+  <para>
+    Line endings are normalized in XML and in the srcML format.
+  </para>
+</refsect1>
+<refsect1>
+  <title>BUGS</title>
+  <para>
+    There may be some parts of XML unused in the srcML format (i.e., not generated by src2srcml) that are not output correctly.
+  </para>
+</refsect1>
+<refsect1>
+  <title>SEE ALSO</title>
+  <para>
+    <command>src2srcml</command>(1)
+  </para>
+</refsect1>
+<refsect1>
+  <title>AUTHOR</title>
+  <para>
+    <author>
+      <firstname>Michael</firstname>
+      <othername role="mi">L</othername>
+      <surname>Collard</surname>
+      <contrib>Original author</contrib>
+    </author>
+    <author>
+      <firstname>Huzefa</firstname>
+      <surname>Kagdi</surname>
+      <contrib>Original author</contrib>
+    </author>
+  </para>
+</refsect1>
+</refentry>
