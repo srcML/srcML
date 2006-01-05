@@ -86,17 +86,17 @@ Report bugs to srcmlbugs@sdml.info
   <title>OPTIONS</title>
   <variablelist>
     <varlistentry>
-      <term>-l, --language=<replaceable class="parameter">LANG</replaceable></term>
+      <term>-l, --language=<replaceable class="parameter">language</replaceable></term>
       <listitem>
 	<para>
-	  Set the language of the source-code file to <filename>UNIT</filename>.
+	  Set the language of the source-code file to <replaceable>language</replaceable>.
 	  This affects parsing, the allowed markup, and what is considered a keyword.  The default
 	  is CPP.  The value is also stored as an attribute of the root unit element.
 	</para>
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>-d, --directory=<replaceable class="parameter">DIR</replaceable></term>
+      <term>-d, --directory=<replaceable class="parameter">directory</replaceable></term>
       <listitem>
 	<para>
 	  The unit element includes an optional descriptive attribute directory.  The value is typically obtained from
@@ -106,7 +106,7 @@ Report bugs to srcmlbugs@sdml.info
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>-f, --filename=<replaceable class="parameter">DIR</replaceable></term>
+      <term>-f, --filename=<replaceable class="parameter">filename</replaceable></term>
       <listitem>
 	<para>
 	  The unit element includes an optional descriptive attribute filename.  The value is typically obtained from
@@ -116,11 +116,11 @@ Report bugs to srcmlbugs@sdml.info
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>-s, --src-version=<replaceable class="parameter">VER</replaceable></term>
+      <term>-s, --src-version=<replaceable class="parameter">version</replaceable></term>
       <listitem>
 	<para>
 	  The unit element includes the version, an optional, purely-descriptive attribute.
-	  Sets the value of the attribute version to <filename>VER</filename>.  The value is a string with no interpretation
+	  Sets the value of the attribute version to <replaceable>version</replaceable>.  The value is a string with no interpretation
 	  by the srcML tools.
 	</para>
       </listitem>
@@ -129,8 +129,8 @@ Report bugs to srcmlbugs@sdml.info
       <term>-t, --src-encoding=<replaceable class="parameter">encoding</replaceable></term>
       <listitem>
 	<para>
-	  Sets the input encoding of the source-code file to <filename>encoding</filename>.  Not stored, but used for any
-	  necessary source-code file translation.  The default is based on the locale.
+	  Sets the input encoding of the source-code file to <replaceable>encoding</replaceable>.  The default is based on the locale.
+	  Not stored, but used for any necessary source-code text translation in the libxml2-enabled version.  
 	</para>
       </listitem>
     </varlistentry>
@@ -139,6 +139,8 @@ Report bugs to srcmlbugs@sdml.info
       <listitem>
 	<para>
 	  Sets the xml encoding of the output srcML file to <filename>encoding</filename>.  The default is UTF-8.
+	  Conversion to the xml encoding from the source encoding is only performed in the libxml2-enabled version.
+	  Possible encodings can be obtained by using the command <command>iconv -l</command>.
 	</para>
       </listitem>
     </varlistentry>
@@ -159,26 +161,84 @@ Report bugs to srcmlbugs@sdml.info
 	</para>
       </listitem>
     </varlistentry>
+    <varlistentry>
+      <term>-z, --compressed</term>
+      <listitem>
+	<para>
+	  Output is in compressed, i.e., gzip, format.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>-c, --interactive</term>
+      <listitem>
+	<para>
+	  Default is to use buffered output for speed.  For interactive applications output is issued as soon as parsed.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>-g, --debug</term>
+      <listitem>
+	<para>
+	  When translation errors occur src2srcml preserves all text, but may issue incorrect markup.  In debug mode
+	  the text with the translation error is marked with a special set of tags with the prefix srcerr
+	  from the namesepace http://www.sdml.info/srcml/srcerr.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>-v, --verbose</term>
+      <listitem>
+	<para>
+	  Verbose output in --input-file mode.
+	</para>
+      </listitem>
+    </varlistentry>
   </variablelist>
 </refsect1>
 <refsect1>
   <title>USAGE</title>
   <para>
+    To translate the C++ source-code file main.cpp into the srcML file main.cpp.xml:
+  </para>
+  <para>
     <command>src2srcml</command> main.cpp main.cpp.xml
   </para>
+  <para>
+    To translate a C source-code file main.c into the srcML file main.c.xml:
+  </para>
+  <para>
+    <command>src2srcml</command> --language=C main.c main.c.xml
+  </para>
+  <para>
+    To translate a Java source-code file main.java into the srcML file main.java.xml:
+  </para>
+  <para>
+    <command>src2srcml</command> --language=Java main.java main.java.xml
+  </para>
+<!--
+  src2srcml                                                        (read from standard input, write to standard output)
+  src2srcml main.cpp                                               (read from file main.cpp, write to standard output)
+  src2srcml main.cpp main.cpp.xml                                  (read from file main.cpp, write to file main.cpp.xml)
+  src2srcml -                                                      (read from standard input, write to standard output)
+  src2srcml - main.cpp.xml                                         (read from standard input, write to file main.cpp.xml)
+  src2srcml -directory=src -filename=main.cpp - main.cpp.xml     (element unit attributes dir "src", filename "main.cpp")
+  src2srcml -src-encoding=UTF-8 main.cpp main.cpp.xml             (encoding of input text file is UTF-8)
+  src2srcml -xml-encoding=ISO-8859-1 main.cpp main.cpp.xml        (set encoding of srcML file to ISO-8859-1)
+-->
 </refsect1>
 <refsect1>
   <title>CAVEATS</title>
   <para>
-    Other programs named <command>foo</command> may exist and actually
-    do something!
+    Translation is performed based on local information with no symbol table.  For non-CFG languages, i.e., C/C++, and with
+    macros this may lead to incorrect markup.
   </para>
 </refsect1>
 <refsect1>
   <title>BUGS</title>
   <para>
-    Translation is performed based on local information with no symbol table.  For non-CFG languages, i.e., C/C++, and with
-    macros this may lead to incorrect markup.
+    Java language mode does not contain all of the Java 1.5 language elements.
   </para>
 </refsect1>
 <refsect1>
@@ -188,6 +248,11 @@ Report bugs to srcmlbugs@sdml.info
       <firstname>Michael</firstname>
       <othername role="mi">L</othername>
       <surname>Collard</surname>
+      <contrib>Original author</contrib>
+    </author>
+    <author>
+      <firstname>Huzefa</firstname>
+      <surname>Kagdi</surname>
       <contrib>Original author</contrib>
     </author>
   </para>
