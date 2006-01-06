@@ -547,13 +547,11 @@ int main(int argc, char* argv[]) {
     // from full path
     const char* path = argv[input_arg_start];
 
-    std::string sdirectory = get_directory(path);
-    const char* directory = isoption(options, OPTION_DIRECTORY) ? given_directory : sdirectory.c_str();
-    std::string sfilename = get_filename(path);
-    const char* filename  = isoption(options, OPTION_FILENAME)  ? given_filename  : sfilename.c_str();
+    std::string directory = isoption(options, OPTION_DIRECTORY) ? given_directory : get_directory(path);
+    std::string filename  = isoption(options, OPTION_FILENAME)  ? given_filename  : get_filename(path);
 
     try {
-      translator.translate(path, directory, filename, given_version);
+      translator.translate(path, directory.c_str(), filename.c_str(), given_version);
 
     } catch (FileError e) {
 
