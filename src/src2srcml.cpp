@@ -505,7 +505,7 @@ int main(int argc, char* argv[]) {
     // translate all the filenames listed in the named file
     std::string infilename;
     int count = 0;    // keep count for verbose mode
-    while (*pinfilelist >> infilename) {
+    while (getline(*pinfilelist, infilename)) {
 
       // in verbose mode output the currently processed filename
       if (isoption(options, OPTION_VERBOSE)) {
