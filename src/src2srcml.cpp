@@ -206,6 +206,9 @@ int main(int argc, char* argv[]) {
     else if (compare_flags(argv[curarg], FILELIST_FLAG, FILELIST_FLAG_SHORT, position)) {
       options |= OPTION_FILELIST;
       if (position == original_position) ++curarg;
+
+      // filelist mode is default nested mode
+      options |= OPTION_NESTED;
     }
 
     // language is based on parameter
