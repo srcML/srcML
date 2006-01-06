@@ -46,6 +46,9 @@
     In addition to conversion, srcml2src provides various srcML utilities such as extracting metadata, extracting individual parts of compound
     srcML files, and extracting metadata from individual parts of compound srcML files.
   </para>
+  <para>
+    Using the character - in the place of an input source-code filename uses standard input, and in place of an output srcML file uses standard output.
+  </para>
 </refsect1>
 <refsect1>
   <title>OPTIONS</title>
@@ -71,6 +74,8 @@
       <listitem>
 	<para>
 	  Output the language of the srcML file as stored in the unit element attribute language.
+	  The language is the value of the attribute of the root element unit, unless
+	  a particular unit is specified with the --unit option.
 	</para>
       </listitem>
     </varlistentry>
@@ -78,7 +83,9 @@
       <term>-d, --directory</term>
       <listitem>
 	<para>
-	  Output the directory of the srcML file as stored in the unit element attribute directory.
+	  Output the directory of the srcML file as stored in the unit element attribute dir.
+	  The directory is the value of the attribute of the root element unit, unless
+	  a particular unit is specified with the --unit option.
 	</para>
       </listitem>
     </varlistentry>
@@ -87,6 +94,8 @@
       <listitem>
 	<para>
 	  Output the filename of the srcML file as stored in the unit element attribute filename.
+	  The filename is the value of the attribute of the root element unit, unless
+	  a particular unit is specified with the --unit option.
 	</para>
       </listitem>
     </varlistentry>
@@ -95,14 +104,36 @@
       <listitem>
 	<para>
 	  Output the version of the srcML file as stored in the unit element attribute filename.
+	  The version is the value of the attribute of the root element unit, unless
+	  a particular unit is specified with the --unit option.
 	</para>
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>-x, --xml-encoding</term>
+      <term>-U, --unit=<replaceable class="parameter">number</replaceable></term>
       <listitem>
 	<para>
-	  Output the xml encoding of the srcML file as stored in the xml declaration.
+	  Refers to a specific nested unit in a compound srcML file.  If the number is outside
+	  of the range of nested units then the command is ignored.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>-X, --xml</term>
+      <listitem>
+	<para>
+	  Output is in srcML format.  Used in combination with the --unit to output a particular nested
+	  unit in XML.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>-e, --extract-all</term>
+      <listitem>
+	<para>
+	  Extracts all units from a compound srcML file back into source-code files.  The directory and filename
+	  used is based on that stored in the directory and filename attributes.  Any necessary subdirectories are
+	  created and the file itself is created.  Any existing file with the same path will be overwritten.
 	</para>
       </listitem>
     </varlistentry>
@@ -110,7 +141,8 @@
       <term>-t, --src-encoding=<replaceable class="parameter">encoding</replaceable></term>
       <listitem>
 	<para>
-	  Sets the encoding used for the output text source-code files to <replaceable>encoding</replaceable>.  The default is based on the locale.
+	  Sets the encoding used for the output text source-code files to <replaceable>encoding</replaceable>.
+	  The default is based on the locale.
 	</para>
       </listitem>
     </varlistentry>
