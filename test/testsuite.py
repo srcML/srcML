@@ -28,7 +28,7 @@ def extract_unit(src_filename, count):
 	filename = tempfile.NamedTemporaryFile()
 
 	# run the srcml processor
-	command = startcmd + srcmlutility + " --unit=" + str(count) + " " + src_filename + " " + filename.name
+	command = startcmd + srcmlutility + " --xml --unit=" + str(count) + " " + src_filename + " " + filename.name
 	if debug:
 		print command
 	p = os.system(command)
