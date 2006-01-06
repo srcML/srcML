@@ -514,7 +514,7 @@ int main(int argc, char* argv[]) {
       std::string infilename = line.substr(0, line.find_first_of(' '));
 
       // skip blank lines
-      if (infilename == "")
+      if (infilename == "" || infilename[0] == '#')
 	continue;
 
       // in verbose mode output the currently processed filename

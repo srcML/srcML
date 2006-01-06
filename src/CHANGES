@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Allow for comment character of '#' in file list.
+
 	Allow for blank lines in file list.
 
 	Input file option is made a default nested output.
