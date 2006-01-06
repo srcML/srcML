@@ -510,7 +510,12 @@ int main(int argc, char* argv[]) {
     int count = 0;    // keep count for verbose mode
     while (getline(*pinfilelist, line)) {
 
-      std::string infilename = line;
+      // extract the filename from the line
+      std::string infilename = line.substr(0, line.find_first_of(' '));
+
+      // skip blank lines
+      if (infilename == "")
+	continue;
 
       // in verbose mode output the currently processed filename
       if (isoption(options, OPTION_VERBOSE)) {

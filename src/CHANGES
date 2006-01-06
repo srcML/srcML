@@ -1,6 +1,10 @@
 CHANGES
 
 Trunk
+	Allow for blank lines in file list.
+
+	Input file option is made a default nested output.
+
 	Added whether libxml2 enabled to version.
 
 	Form feeds are now stored using a new empty XML element.
