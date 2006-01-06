@@ -48,6 +48,7 @@ srcMLTranslator::srcMLTranslator(int language,
    out.startconsumeAll(ofilename);
 
    if ((options & OPTION_NESTED) > 0)
+
      out.startUnit(getLanguageString(), "", "", "", true);
 }
 
