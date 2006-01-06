@@ -198,6 +198,7 @@ gencpp : ${GEN_FILES_CPP}
 
 gen : ${GEN_FILES}
 	rm -f suite/preprocessor.preproc.cpp.xml
+	rm -f suite/class_java.preproc.cpp.xml
 
 #  Test cases generated from other test cases
 
