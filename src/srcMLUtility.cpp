@@ -88,9 +88,13 @@ void srcMLUtility::translate_xml(const char* ofilename) {
   // Set the encoding to that of the outer, root unit element
   encoding = (const char*) xmlTextReaderConstEncoding(reader);
 
-  while (xmlTextReaderReadState(reader) != 3) {
+  while (xmlTextReaderReadState(reader) == 1) {
+    std::cout << "HERE" << std::endl;
     // output entire unit element
     outputUnit(ofilename, reader);
+
+    // output separator
+    //    xmlTextWriterWriteRawLen(writer, BAD_CAST "\n\n", 2);
   }
 }
 
