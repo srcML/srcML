@@ -6,10 +6,10 @@ all : man
 man : ${MAN_PAGES}
 
 src2srcml.1 : src2srcml.xml
-	xmlto --skip-validation man src2srcml.xml
+	docbook2x-man src2srcml.xml
 
 srcml2src.1 : srcml2src.xml
-	xmlto --skip-validation man srcml2src.xml
+	docbook2x-man srcml2src.xml
 
 view : man
 	man -l src2srcml.1
