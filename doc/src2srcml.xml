@@ -134,8 +134,10 @@
       <term>-i, --input-file</term>
       <listitem>
 	<para>
-	  Treats the input file as a list of source files.  The list has a single file on each line.  Each file is separately
-	  translated and collectively stored into a single compound srcML document.
+	  Treats the input file as a list of source files.
+	  Each file is separately translated and collectively stored into a single compound srcML document.
+	  The list has a single filename on each line starting at the beginning of the line.  Blank lines are
+	  allowed.  The character '#' at the start of a line is regarded as a comment character and the line is ignored.
 	</para>
       </listitem>
     </varlistentry>
