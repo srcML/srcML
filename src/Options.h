@@ -84,6 +84,9 @@ enum Options {
 
   // expand nested units into separate files
   OPTION_EXPAND       = 0x20000,
+
+  // output is xml
+  OPTION_XML          = 0x40000,
 };
 
 #endif

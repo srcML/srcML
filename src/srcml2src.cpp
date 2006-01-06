@@ -44,9 +44,8 @@ const char* UNIT_FLAG = "--unit";
 const char* UNIT_FLAG_SHORT = "-U";
 const char* UNIT_FLAG_FULL = "--unit=NUM";
 
-const char* TEXT_FLAG = "--src";
-const char* TEXT_FLAG_SHORT = "-S";
-const char* TEXT_FLAG_FULL = "--src=NUM";
+const char* XML_FLAG = "--xml";
+const char* XML_FLAG_SHORT = "-X";
 
 const char* ATTRIBUTE_FILENAME_FLAG = "--attributefilename";
 const char* ATTRIBUTE_FILENAME_FLAG_SHORT = "-a";
@@ -76,8 +75,8 @@ void output_help(const char* name) {
 	       << "  " << SRCVERSION_FLAG_SHORT << ", " << setw(COL) << SRCVERSION_FLAG << "display source version and exit\n"
 	       << "  " << ENCODING_FLAG_SHORT   << ", " << setw(COL) << ENCODING_FLAG   << "display xml encoding and exit\n"
 	       << '\n'
-	       << "  " << UNIT_FLAG_SHORT       << ", " << setw(COL) << UNIT_FLAG_FULL  << "extract nested unit NUM as XML from a compound srcML document\n"
-	       << "  " << TEXT_FLAG_SHORT       << ", " << setw(COL) << TEXT_FLAG_FULL  << "extract nested unit NUM as text from a compound srcML document\n"
+	       << "  " << UNIT_FLAG_SHORT       << ", " << setw(COL) << UNIT_FLAG_FULL  << "process nested unit NUM from a compound srcML document\n"
+	       << "  " << XML_FLAG_SHORT        << ", " << setw(COL) << XML_FLAG        << "output is in XML instead of text\n"
 	       << "  " << EXPAND_FLAG_SHORT     << ", " << setw(COL) << EXPAND_FLAG     << "extract all files from a compound srcML document\n"
 	       << '\n'
 	       << "  " << TEXTENCODING_FLAG_SHORT << ", " << setw(COL) <<  TEXTENCODING_FLAG_FULL  << "set the output source encoding to ENC (default:  "
@@ -184,6 +183,12 @@ int main(int argc, char* argv[]) {
       if (position == original_position) ++curarg;
     }
 
+    // xml output flag
+    else if (compare_flags(argv[curarg], XML_FLAG, XML_FLAG_SHORT, position)) {
+      options |= OPTION_XML;
+      if (position == original_position) ++curarg;
+    }
+
     // extract unit flag
     else if (compare_flags(argv[curarg], UNIT_FLAG, UNIT_FLAG_SHORT)) {
       options |= OPTION_UNIT;
@@ -212,7 +217,7 @@ int main(int argc, char* argv[]) {
 	exit(0);
       }
     }
-
+    /*
     // extract text flag
     else if (compare_flags(argv[curarg], TEXT_FLAG, TEXT_FLAG_SHORT)) {
       options |= OPTION_TEXT;
@@ -241,7 +246,7 @@ int main(int argc, char* argv[]) {
 	exit(0);
       }
     }
-
+    */
     // encoding
     else if (compare_flags(argv[curarg], ENCODING_FLAG, ENCODING_FLAG_SHORT)) {
 
@@ -446,17 +451,21 @@ int main(int argc, char* argv[]) {
 
       (*pout) << su.getencoding() << '\n';
 
-    } else if (isoption(options, OPTION_TEXT)) {
+    } else if (isoption(options, OPTION_UNIT) && isoption(options, OPTION_XML)) {
 
-      su.extract_text(ofilename, unit);
+      su.extract_xml(ofilename, unit);
 
     } else if (isoption(options, OPTION_UNIT)) {
 
-      su.extract_xml(ofilename, unit);
+      su.extract_text(ofilename, unit);
 
     } else if (isoption(options, OPTION_EXPAND)) {
 
       su.expand();
+
+    } else if (isoption(options, OPTION_XML)) {
+
+      su.translate_xml(ofilename);
 
     } else {
 

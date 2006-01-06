@@ -51,8 +51,11 @@ class srcMLUtility {
   // constructor
   srcMLUtility(const char* infilename, const char* encoding, int op = 0);
 
-  // translate from input stream to output stream
+  // translate from input stream to output stream as text
   virtual void translate(const char* ofilename);
+
+  // translate from input stream to output stream as xml
+  virtual void translate_xml(const char* ofilename);
 
   int process_tag(std::istream& in, std::string& tagname, std::vector<std::pair<std::string, std::string> >& m);
 

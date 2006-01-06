@@ -82,6 +82,18 @@ void srcMLUtility::translate(const char* ofilename) {
   outputSrc(ofilename, reader);
 }
 
+
+// translate from input stream to output stream
+void srcMLUtility::translate_xml(const char* ofilename) {
+  // Set the encoding to that of the outer, root unit element
+  encoding = (const char*) xmlTextReaderConstEncoding(reader);
+
+  while (xmlTextReaderReadState(reader) != 3) {
+    // output entire unit element
+    outputUnit(ofilename, reader);
+  }
+}
+
 // attribute
 std::string srcMLUtility::attribute(const char* attribute_name) {
 
