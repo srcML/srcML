@@ -255,6 +255,10 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
       xmlTextWriterWriteAttribute(xout, BAD_CAST "version", BAD_CAST version);
     }
 
+    // leave a blank line before first nested unit
+    if (outer) {
+      processText("\n\n");
+    }
 }
 
 void srcMLOutput::endUnit() {
@@ -267,15 +271,13 @@ void srcMLOutput::processUnit(const antlr::RefToken& token) {
 
   if (isstart(token)) {
 
-    if (isoption(OPTION_NESTED))
-      processText("\n\n");
-
-    startUnit(language, dir, filename, version, !isoption(OPTION_NESTED));
+    startUnit(language, dir, filename, version, false);
 
   } else {
 
     endUnit();
 
+    // leave a blank line before next nested unit even the last one
     if (isoption(OPTION_NESTED))
       processText("\n\n");
   }
