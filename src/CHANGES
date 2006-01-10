@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Fix function pointer declarations with no '*'.
+
 	Allow for comment character of '#' in file list.
 
 	Allow for blank lines in file list.
