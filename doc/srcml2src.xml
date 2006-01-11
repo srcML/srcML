@@ -110,6 +110,15 @@
       </listitem>
     </varlistentry>
     <varlistentry>
+      <term>-n, --nested</term>
+      <listitem>
+	<para>
+	  Count the number of nested units in a compound srcML file.  Result is 0 if the srcML file is not
+	  compound.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
       <term>-U, --unit=<replaceable class="parameter">number</replaceable></term>
       <listitem>
 	<para>
