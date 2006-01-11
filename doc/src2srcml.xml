@@ -20,8 +20,8 @@
 <arg><option>&LANGUAGE_FLAG_SHORT; <replaceable class="parameter">language</replaceable></option></arg>
 <arg><option>&FILENAME_FLAG_SHORT; <replaceable class="parameter">filename</replaceable></option></arg>
 <arg><option>&DIRECTORY_FLAG_SHORT; <replaceable class="parameter">directory</replaceable></option></arg>
-<arg><option>-t <replaceable class="parameter">encoding</replaceable></option></arg>
-<arg><option>-x <replaceable class="parameter">encoding</replaceable></option></arg>
+<arg><option>&TEXTENCODING_FLAG_SHORT; <replaceable class="parameter">encoding</replaceable></option></arg>
+<arg><option>&ENCODING_FLAG_SHORT; <replaceable class="parameter">encoding</replaceable></option></arg>
 <arg rep="repeat"><replaceable class="parameter">input-source-code-file</replaceable></arg>
 <arg><replaceable class="parameter">output-srcML-file</replaceable></arg>
   </cmdsynopsis>
