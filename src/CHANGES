@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Document hidden srcml2src option for nested unit count in help.
+
 	Fix function pointer declarations with no '*'.
 
 	Allow for comment character of '#' in file list.
