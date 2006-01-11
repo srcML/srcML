@@ -1,3 +1,5 @@
+<!DOCTYPE refentry SYSTEM "option.dtd">
+
 <refentry>
 <refentryinfo>
     <date>2006-01-04</date>
@@ -15,9 +17,9 @@
   <cmdsynopsis>
     <command>src2srcml</command>
 <arg><option>-hVnizcgv</option></arg>
-<arg><option>-l </option><replaceable class="parameter">language</replaceable></arg>
-<arg><option>-f <replaceable class="parameter">filename</replaceable></option></arg>
-<arg><option>-d <replaceable class="parameter">directory</replaceable></option></arg>
+<arg><option>&LANGUAGE_FLAG_SHORT; <replaceable class="parameter">language</replaceable></option></arg>
+<arg><option>&FILENAME_FLAG_SHORT; <replaceable class="parameter">filename</replaceable></option></arg>
+<arg><option>&DIRECTORY_FLAG_SHORT; <replaceable class="parameter">directory</replaceable></option></arg>
 <arg><option>-t <replaceable class="parameter">encoding</replaceable></option></arg>
 <arg><option>-x <replaceable class="parameter">encoding</replaceable></option></arg>
 <arg rep="repeat"><replaceable class="parameter">input-source-code-file</replaceable></arg>
@@ -48,7 +50,7 @@
   <title>OPTIONS</title>
   <variablelist>
     <varlistentry>
-      <term>-h, --help</term>
+      <term>&HELP_FLAG_SHORT;, &HELP_FLAG;</term>
       <listitem>
 	<para>
 	  Output the help and exit.
@@ -56,7 +58,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>-V, --version</term>
+      <term>&VERSION_FLAG_SHORT;, &VERSION_FLAG;</term>
       <listitem>
 	<para>
 	  Output the version of src2srcml, including whether libxml2 enabled, then exit.
@@ -64,7 +66,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>-l, --language=<replaceable class="parameter">language</replaceable></term>
+      <term>&LANGUAGE_FLAG_SHORT;, &LANGUAGE_FLAG;=<replaceable class="parameter">language</replaceable></term>
       <listitem>
 	<para>
 	  Set the language of the source-code file to <replaceable>language</replaceable>.
@@ -74,7 +76,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>-d, --directory=<replaceable class="parameter">directory</replaceable></term>
+      <term>&DIRECTORY_FLAG_SHORT;, &DIRECTORY_FLAG;=<replaceable class="parameter">directory</replaceable></term>
       <listitem>
 	<para>
 	  The unit element includes an optional descriptive attribute directory.  The value is typically obtained from
@@ -84,7 +86,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>-f, --filename=<replaceable class="parameter">filename</replaceable></term>
+      <term>&FILENAME_FLAG_SHORT;, &FILENAME_FLAG;=<replaceable class="parameter">filename</replaceable></term>
       <listitem>
 	<para>
 	  The unit element includes an optional descriptive attribute filename.  The value is typically obtained from
@@ -94,7 +96,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>-s, --src-version=<replaceable class="parameter">version</replaceable></term>
+      <term>&SRCVERSION_FLAG_SHORT;, &SRCVERSION_FLAG;=<replaceable class="parameter">version</replaceable></term>
       <listitem>
 	<para>
 	  The unit element includes the version, an optional, purely-descriptive attribute.
@@ -104,7 +106,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>-t, --src-encoding=<replaceable class="parameter">encoding</replaceable></term>
+      <term>&TEXTENCODING_FLAG_SHORT;, &TEXTENCODING_FLAG;=<replaceable class="parameter">encoding</replaceable></term>
       <listitem>
 	<para>
 	  Sets the input encoding of the source-code file to <replaceable>encoding</replaceable>.  The default is based on the locale.
@@ -113,7 +115,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>-x, --xml-encoding=<replaceable class="parameter">encoding</replaceable></term>
+      <term>&ENCODING_FLAG_SHORT;, &ENCODING_FLAG;=<replaceable class="parameter">encoding</replaceable></term>
       <listitem>
 	<para>
 	  Sets the xml encoding of the output srcML file to <filename>encoding</filename>.  The default is UTF-8.
@@ -123,15 +125,15 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>-n, --nested</term>
+      <term>&NESTED_FLAG_SHORT;, &NESTED_FLAG;</term>
       <listitem>
 	<para>
-	  Stores all input source files into one compound srcML document.  Default with --input-file mode.
+	  Stores all input source files into one compound srcML document.  Default with &FILELIST_FLAG; mode.
 	</para>
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>-i, --input-file</term>
+      <term>&FILELIST_FLAG_SHORT;, &FILELIST_FLAG;</term>
       <listitem>
 	<para>
 	  Treats the input file as a list of source files.
@@ -142,7 +144,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>-z, --compressed</term>
+      <term>&COMPRESSED_FLAG_SHORT;, &COMPRESSED_FLAG;</term>
       <listitem>
 	<para>
 	  Output is in compressed, i.e., gzip, format.  Only available in the libxml2-enabled version.
@@ -150,7 +152,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>-c, --interactive</term>
+      <term>&INTERACTIVE_FLAG_SHORT;, &INTERACTIVE_FLAG;</term>
       <listitem>
 	<para>
 	  Default is to use buffered output for speed.  For interactive applications output is issued as soon as parsed.
@@ -158,7 +160,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>-g, --debug</term>
+      <term>&DEBUG_FLAG_SHORT;, &DEBUG_FLAG;</term>
       <listitem>
 	<para>
 	  When translation errors occur src2srcml preserves all text, but may issue incorrect markup.  In debug mode
@@ -168,10 +170,10 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>-v, --verbose</term>
+      <term>&VERBOSE_FLAG_SHORT;, &VERBOSE_FLAG;</term>
       <listitem>
 	<para>
-	  Verbose output in --input-file mode.
+	  Verbose output in &FILELIST_FLAG; mode.
 	</para>
       </listitem>
     </varlistentry>
@@ -189,25 +191,25 @@
     To translate a C source-code file main.c into the srcML file main.c.xml:
   </para>
   <para>
-    <command>src2srcml</command> --language=C main.c main.c.xml
+    <command>src2srcml</command> &LANGUAGE_FLAG;=C main.c main.c.xml
   </para>
   <para>
     To translate a Java source-code file main.java into the srcML file main.java.xml:
   </para>
   <para>
-    <command>src2srcml</command> --language=Java main.java main.java.xml
+    <command>src2srcml</command> &LANGUAGE_FLAG;=Java main.java main.java.xml
   </para>
   <para>
     To specify the directory, filename, and version for an input file from standard input:
   </para>
   <para>
-    <command>src2srcml</command> --directory=src --filename=main.cpp --version=1 - main.cpp.xml
+    <command>src2srcml</command> &DIRECTORY_FLAG;=src &FILENAME_FLAG;=main.cpp &VERSION_FLAG;=1 - main.cpp.xml
   </para>
   <para>
     To translate a source-code file in ISO-8859-1 encoding into a srcML file with UTF-8 encoding:
   </para>
   <para>
-    <command>src2srcml</command> --src-endocing=ISO-8859-1 --xml-encoding=UTF-8 main.cpp main.cpp.xml
+    <command>src2srcml</command> &TEXTENCODING_FLAG;=ISO-8859-1 &ENCODING_FLAG;=UTF-8 main.cpp main.cpp.xml
   </para>
 </refsect1>
 <refsect1>

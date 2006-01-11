@@ -20,6 +20,10 @@ src2srcml.1.gz : src2srcml.1
 srcml2src.1.gz : srcml2src.1
 	gzip srcml2src.1
 
+OPTION_SRC= ../src/src2srcml.cpp ../src/srcml2src.cpp ../src/srcmlapps.h
+option.dtd : ${OPTION_SRC}
+	src2srcml ${OPTION_SRC} - | xsltproc extract_options.xsl - > option.dtd
+
 gzip : man
 	gzip src2srcml.1
 	gzip srcml2src.1
