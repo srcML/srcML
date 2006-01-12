@@ -118,7 +118,7 @@
       <term>&ENCODING_FLAG_SHORT;, &ENCODING_FLAG;=<replaceable class="parameter">encoding</replaceable></term>
       <listitem>
 	<para>
-	  Sets the xml encoding of the output srcML file to <filename>encoding</filename>.  The default is UTF-8.
+	  Sets the xml encoding of the output srcML file to <replaceable class="parameter">encoding</replaceable>.  The default is UTF-8.
 	  Conversion to the xml encoding from the source encoding is only performed in the libxml2-enabled version.
 	  Possible encodings with the libxml2-enabled version can be obtained by using the command <command>iconv -l</command>.
 	</para>

@@ -5,10 +5,10 @@ all : man
 
 man : ${MAN_PAGES}
 
-src2srcml.1 : src2srcml.xml
+src2srcml.1 : src2srcml.xml option.dtd
 	docbook2x-man src2srcml.xml
 
-srcml2src.1 : srcml2src.xml
+srcml2src.1 : srcml2src.xml option.dtd
 	docbook2x-man srcml2src.xml
 
 view : man
@@ -32,5 +32,5 @@ install : ${MAN_GZIP}
 	cp src2srcml.1.gz srcml2src.1.gz /usr/share/man/man1/.
 
 clean :
-	rm -f ${MAN_PAGES} ${MAN_GZIP}
+	rm -f ${MAN_PAGES} ${MAN_GZIP} option.dtd
 
