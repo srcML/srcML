@@ -69,7 +69,8 @@ void output_help(const char* name) {
 	       << "  " << HELP_FLAG_SHORT       << ", " << setw(COL) << HELP_FLAG       << "display this help and exit\n"
 	       << "  " << VERSION_FLAG_SHORT    << ", " << setw(COL) << VERSION_FLAG    << "display version number and exit\n"
 	       << '\n'
-	       << "  " << LANGUAGE_FLAG_SHORT   << ", " << setw(COL) << LANGUAGE_FLAG   << "display source language (e.g., C, C++, Java) and exit\n"
+	       << "  " << LANGUAGE_FLAG_SHORT   << ", " << setw(COL) << LANGUAGE_FLAG
+	       << "display source language (e.g., " << LANGUAGE_C << ", " << LANGUAGE_CXX << ", " << LANGUAGE_JAVA << ") and exit\n"
 	       << "  " << DIRECTORY_FLAG_SHORT  << ", " << setw(COL) << DIRECTORY_FLAG  << "display source directory name and exit\n"
 	       << "  " << FILENAME_FLAG_SHORT   << ", " << setw(COL) << FILENAME_FLAG   << "display source filename and exit\n"
 	       << "  " << SRCVERSION_FLAG_SHORT << ", " << setw(COL) << SRCVERSION_FLAG << "display source version and exit\n"

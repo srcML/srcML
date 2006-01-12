@@ -73,6 +73,10 @@ const char* SRCVERSION_FLAG_FULL = "--src-version=VER";
 const char* VERBOSE_FLAG = "--verbose";
 const char* VERBOSE_FLAG_SHORT = "-v";
 
+const char* LANGUAGE_C = "C";
+const char* LANGUAGE_CXX = "C++";
+const char* LANGUAGE_JAVA = "Java";
+
 // width of long form of flag
 const int COL = 20;
 

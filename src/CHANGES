@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Make sure that C++ is specified as the language for C++ (instead of CPP).
+
 	Document hidden srcml2src option for nested unit count in help.
 
 	Fix function pointer declarations with no '*'.

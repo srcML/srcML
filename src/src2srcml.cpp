@@ -37,10 +37,6 @@ const char* NAME = "src2srcml";
 const char* DEBUG_FLAG = "--debug";
 const char* DEBUG_FLAG_SHORT = "-g";
 
-const char* LANGUAGE_C = "C";
-const char* LANGUAGE_CXX = "C++";
-const char* LANGUAGE_JAVA = "Java";
-
 const char* EXTENDED_FLAG = "--extended";
 const char* EXTENDED_FLAG_SHORT = "-t";
 
@@ -85,7 +81,8 @@ void output_help(const char* name) {
 	      << "  " << HELP_FLAG_SHORT        << ", " << setw(COL) <<  HELP_FLAG        << "display this help and exit\n"
 	      << "  " << VERSION_FLAG_SHORT     << ", " << setw(COL) <<  VERSION_FLAG     << "display version number and exit\n"
               << '\n'
-	      << "  " << LANGUAGE_FLAG_SHORT    << ", " << setw(COL) <<  LANGUAGE_FLAG_FULL << "set the language to C, CPP, or Java\n"
+	      << "  " << LANGUAGE_FLAG_SHORT    << ", " << setw(COL) <<  LANGUAGE_FLAG_FULL 
+	      << "set the language to " << LANGUAGE_C << ", " << LANGUAGE_CXX << ", or " << LANGUAGE_JAVA << "\n"
 	      << "  " << DIRECTORY_FLAG_SHORT   << ", " << setw(COL) <<  DIRECTORY_FLAG_FULL << "set the directory attribute to DIR\n"
 	      << "  " << FILENAME_FLAG_SHORT    << ", " << setw(COL) <<  FILENAME_FLAG_FULL  << "set the filename attribute to FILE\n"
 	      << "  " << SRCVERSION_FLAG_SHORT  << ", " << setw(COL) <<  SRCVERSION_FLAG_FULL  << "set the version attribute to VER\n"
