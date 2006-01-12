@@ -1947,13 +1947,13 @@ function_pointer_name_base { LocalMode lm; } :
             complex_name[true] |
 
         // special name prefix of namespace or class
-        pair function_pointer_name_base |
+        function_pointer_name_prefix function_pointer_name_base |
 
         // typical function pointer name
         operator_multiplication (complex_name[true])*
 ;
 
-pair { LocalMode lm; } :
+function_pointer_name_prefix { LocalMode lm; } :
          identifier optional_template_argument_list DCOLON
 ;
 
