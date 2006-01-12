@@ -69,9 +69,9 @@
       <term>&LANGUAGE_FLAG_SHORT;, &LANGUAGE_FLAG;=<replaceable class="parameter">language</replaceable></term>
       <listitem>
 	<para>
-	  Set the language of the source-code file to <replaceable>language</replaceable>.
-	  This affects parsing, the allowed markup, and what is considered a keyword.  The default
-	  is CPP.  The value is also stored as an attribute of the root unit element.
+	  The programming language of the source-code file.  Allowable value (for now) are C, C++, or Java.
+	  The language affects parsing, the allowed markup, and what is considered a keyword.  The default
+	  is C++.  The value is also stored as an attribute of the root unit element.
 	</para>
       </listitem>
     </varlistentry>
