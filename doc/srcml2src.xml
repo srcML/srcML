@@ -20,7 +20,7 @@
 <arg><option>&FILENAME_FLAG_SHORT; </option></arg>
 <arg><option>&DIRECTORY_FLAG_SHORT; </option></arg>
 <arg><option>&ENCODING_FLAG_SHORT; </option></arg>
-<arg><option>-t <replaceable class="parameter">encoding</replaceable></option></arg>
+<arg><option>&TEXTENCODING_FLAG_SHORT; <replaceable class="parameter">encoding</replaceable></option></arg>
 <arg><option>-nizcgv </option></arg>
 <arg><replaceable class="parameter">input-srcML-file</replaceable></arg>
 <arg><replaceable class="parameter">output-source-code-file</replaceable></arg>
@@ -124,7 +124,7 @@
       <term>&UNIT_FLAG_SHORT;, &UNIT_FLAG;=<replaceable class="parameter">number</replaceable></term>
       <listitem>
 	<para>
-	  Refers to a specific nested unit in a compound srcML file.  If the number is outside
+	  Refers to a specific nested unit in a compound srcML file.  The numbering starts at 1.  If the number is outside
 	  of the range of nested units then the command is ignored.
 	</para>
       </listitem>
