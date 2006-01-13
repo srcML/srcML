@@ -173,7 +173,7 @@
       <term>&VERBOSE_FLAG_SHORT;, &VERBOSE_FLAG;</term>
       <listitem>
 	<para>
-	  Verbose output in &FILELIST_FLAG; mode.
+	  Verbose output to standard error in &FILELIST_FLAG; mode.
 	</para>
       </listitem>
     </varlistentry>

@@ -161,7 +161,7 @@
       <term>&VERBOSE_FLAG_SHORT;, &VERBOSE_FLAG;</term>
       <listitem>
 	<para>
-	  Verbose output in &EXPAND_FLAG; mode is sent to standard error.
+	  Verbose output to standard error.  Especially useful in &FILELIST_FLAG; mode.
 	</para>
       </listitem>
     </varlistentry>
