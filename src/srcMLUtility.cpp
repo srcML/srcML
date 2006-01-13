@@ -226,7 +226,7 @@ void srcMLUtility::expand(const char* root_filename) {
 
     // output file status message if in verbose mode
     if (isoption(options, OPTION_VERBOSE))
-      std::cout << "Creating file:  " << output_filename << '\n';
+      std::cerr << "Creating file:  " << output_filename << '\n';
 
     // output this particular unit
     outputSrc(output_filename.c_str(), reader);

@@ -100,7 +100,7 @@ void output_help(const char* name) {
 #endif
 	      << "  " << INTERACTIVE_FLAG_SHORT << ", " << setw(COL) <<  INTERACTIVE_FLAG << "low-latency output\n"
 	      << "  " << DEBUG_FLAG_SHORT       << ", " << setw(COL) <<  DEBUG_FLAG       << "debug translation errors with special namespace\n"
-              << "  " << VERBOSE_FLAG_SHORT     << ", " << setw(COL) << VERBOSE_FLAG      << "verbose output\n"
+              << "  " << VERBOSE_FLAG_SHORT     << ", " << setw(COL) << VERBOSE_FLAG      << "verbose output to standard error\n"
 	      << '\n'
 	      << "Examples:  " << '\n'
 	      << "  " << name << "                      " << GAP << "(read from standard input, write to standard output)" << '\n'
