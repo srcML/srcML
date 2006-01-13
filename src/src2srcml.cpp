@@ -517,7 +517,7 @@ int main(int argc, char* argv[]) {
       // in verbose mode output the currently processed filename
       if (isoption(options, OPTION_VERBOSE)) {
 	++count;
-	std::cout << count << '\t' << infilename;
+	std::cerr << count << '\t' << infilename;
       }
 
       // translate the file listed in the input file using the directory and filename extracted from the path
@@ -528,13 +528,13 @@ int main(int argc, char* argv[]) {
       } catch (FileError e) {
 
 	if (isoption(options, OPTION_VERBOSE))
-	  std::cout << "\t\terror: file \'" << path << "\' does not exist.";
+	  std::cerr << "\t\terror: file \'" << path << "\' does not exist.";
 	else
 	  std::cerr << NAME << " error: file \'" << path << "\' does not exist." << "\n";
       }
 
       if (isoption(options, OPTION_VERBOSE)) {
-	std::cout << '\n';
+	std::cerr << '\n';
       }
     }
 
