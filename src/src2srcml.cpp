@@ -489,6 +489,10 @@ int main(int argc, char* argv[]) {
   // translator from input to output using determined language
   srcMLTranslator translator(language, src_encoding, xml_encoding, srcml_filename, options);
 
+  // output source encoding
+  if (isoption(options, OPTION_VERBOSE))
+    std::cerr << "Source encoding:  " << src_encoding << '\n';
+
   // translate input filenames from list in file
   if (isoption(options, OPTION_FILELIST)) {
 

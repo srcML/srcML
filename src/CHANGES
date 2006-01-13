@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Output source encoding in src2srcml when in verbose mode.
+
 	Write verbose output to standard error.
 
 	Make sure that C++ is specified as the language for C++ (instead of CPP).
