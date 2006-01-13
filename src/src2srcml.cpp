@@ -581,7 +581,7 @@ int main(int argc, char* argv[]) {
     }
   }
   } catch (srcEncodingException) {
-    std::cout << "Translation encoding problem" << '\n';
+    std::cerr << "Translation encoding problem" << '\n';
   }
 
   return 0;
