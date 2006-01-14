@@ -4,13 +4,10 @@
 #
 # Michael L. Collard
 
-import libxml2
 import sys
 import os.path
 import string
-import time
 import tempfile
-import libxslt
 import re
 
 debug = 0
