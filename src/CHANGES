@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Fix regression error for Java packages.
+
 	Output source encoding in src2srcml when in verbose mode.
 
 	Write verbose output to standard error.

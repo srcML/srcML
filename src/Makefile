@@ -46,6 +46,8 @@ endif
 SRC2SRCML_BIN=/home/collard/svnsrcml/srcML/trunk/bin/src2srcml
 SRCML2SRC_BIN=/home/collard/svnsrcml/srcML/trunk/bin/srcml2src.test
 
+TIMING_MED=timing_med.h
+
 # default
 all : ${EXE_DIR}src2srcml ${EXE_DIR}srcml2src
 #all : ${EXE_DIR}src2srcml ${EXE_DIR}srcml2src ${EXE_DIR}srcmllexer
@@ -217,7 +219,7 @@ version.cpp : VERSION
 
 PHONY : time
 time : ../bin/src2srcml
-	cd /home/collard/srcmlexp; time /home/collard/svnsrcml/srcML/trunk/bin/src2srcml i8.h i8.h.xml
+	cd ../timing; time ../bin/src2srcml ${TIMING_MED} ${TIMING_MED}.xml
 
 PHONY : javatime
 javatime :
