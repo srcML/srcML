@@ -47,6 +47,7 @@ SRC2SRCML_BIN=/home/collard/svnsrcml/srcML/trunk/bin/src2srcml
 SRCML2SRC_BIN=/home/collard/svnsrcml/srcML/trunk/bin/srcml2src.test
 
 TIMING_MED=timing_med.h
+TIMING_JAVA=timing_java.java
 
 # default
 all : ${EXE_DIR}src2srcml ${EXE_DIR}srcml2src
@@ -223,7 +224,7 @@ time : ../bin/src2srcml
 
 PHONY : javatime
 javatime :
-	cd /home/collard/srcmlexp; time /home/collard/svnsrcml/srcML/trunk/bin/src2srcml --debug -l Java draw/draw.all draw/draw.all.xml; cd /home/collard/svnsrcml/srcML/trunk/src
+	cd ../timing; time ../bin/src2srcml --language Java ${TIMING_JAVA} ${TIMING_JAVA}.xml
 
 PHONY : testbase
 testbase :
