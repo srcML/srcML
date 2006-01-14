@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" dir="problem" language="C++">
+
+<unit>
+<comment type="block">/*
+ * äöüÄÖÜ
+ * A comment 
+ */</comment>
+</unit>
+
+<!-- Taken from linux kernel source sys.c -->
+<unit>
+<comment type="block">/*
+ * Samma på svenska..
+*/</comment>
+</unit>
+
+<unit>
+<comment type="block">/*
+ * Samma p&amp;#xE5; svenska..
+*/</comment>
+</unit>
+
+</unit>

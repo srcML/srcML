@@ -22,6 +22,10 @@
 </unit>
 
 <unit>
+<function_decl><type><name>void</name></type> (*<name>a</name>) <parameter_list>(<param><function_decl><type><name>void</name></type> (<name>callback</name>) <parameter_list>(<param><decl><type><name>void</name> *</type> <name>data</name></decl></param>)</parameter_list></function_decl></param>)</parameter_list>;</function_decl>
+</unit>
+
+<unit>
 <macro>A<argument_list>(1)</argument_list></macro> <function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
