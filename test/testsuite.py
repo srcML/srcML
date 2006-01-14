@@ -15,8 +15,12 @@ debug = 0
 maxcount = 40
 
 srcmltranslator = os.environ.get("SRC2SRCML_BIN")
-
+if srcmltranslator == "":
+	srcmltranslator = "../bin/src2srcml"
+	
 srcmlutility = os.environ.get("SRCML2SRC_BIN")
+if srcmlutility == "":
+	srcmlutility = "../bin/src2srcml"
 
 handles_src_encoding = os.environ.get("SRC2SRCML_SRC_ENCODING")
 
