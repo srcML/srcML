@@ -228,6 +228,7 @@ testbase :
 	@rm -f ../bin/src2srcml.test ../bin/srcml2src.test
 	@cp ../bin/src2srcml ../bin/src2srcml.test
 	@cp ../bin/srcml2src ../bin/srcml2src.test
+	cd ../test; make -f Makefile gen;
 
 PHONY : shorttest
 shorttest : testbase
