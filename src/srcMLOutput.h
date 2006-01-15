@@ -79,7 +79,6 @@ class srcMLOutput : public srcMLParserTokenTypes {
   int options;
   const char* rfilename;
   const char* xml_encoding;
-  const char* src_encoding;
 
   int consume_next();
 
