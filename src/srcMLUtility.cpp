@@ -440,15 +440,12 @@ void srcMLUtility::outputText(const xmlChar* s, xmlTextWriterPtr writer, bool es
   // skip to a particular unit
   void srcMLUtility::skiptounit(xmlTextReaderPtr reader, int number) throw (LibXMLError) {
 
-    // skip to the correct unit
-    int count = 0;
-    while (1) {
-      skiptonextunit(reader);
+    // skip to the first nested unit
+    skiptonextunit(reader);
 
-      ++count;
-
-      // did we find it?
-      if (count == number)
-	break;
+    // skip over until we find the right one
+    for (int count = 1; count < number; ++count) {
+      xmlTextReaderNext(reader);
+      xmlTextReaderRead(reader);
     }
   }
