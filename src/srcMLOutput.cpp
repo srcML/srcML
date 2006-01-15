@@ -51,8 +51,8 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 			 const char* xml_enc, 
 			 int op, 
 			 const char* filename,
-			 const char* src_enc)
-  : input(ints), dir(""), version(""), language(l), options(op), xml_encoding(xml_enc), src_encoding(src_enc)
+			 const char* src_encoding)
+  : input(ints), dir(""), version(""), language(l), options(op), xml_encoding(xml_enc)
 {
   // setup an output handler
   handler = xmlFindCharEncodingHandler(src_encoding);
