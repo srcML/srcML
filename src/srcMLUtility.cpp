@@ -125,18 +125,22 @@ std::string srcMLUtility::unit_attribute(int unitnumber, const char* attribute_n
 // count of nested units
 int srcMLUtility::unit_count() {
 
-  // process all nodes counting units
+  // counting units
   int count = 0;
-  while (1) {
 
-    // read a node
-    int ret = xmlTextReaderRead(reader);
-    if (ret != 1)
+  // get to the first nested unit (if it exists)
+  try {
+    skiptonextunit(reader);
+  } catch (LibXMLError) {
+    return 0;
+  }
+
+  // skip units
+  while (xmlTextReaderNext(reader)) {
+    ++count;
+    
+    if (xmlTextReaderRead(reader) != 1)
       break;
-
-    if (xmlTextReaderDepth(reader) == 1 && (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT)
-	&& strcmp((const char*) xmlTextReaderConstName(reader), "unit") == 0)
-      ++count;
   }
 
   return count;
