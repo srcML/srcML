@@ -111,6 +111,8 @@ void output_version(const char* name) {
 
 int main(int argc, char* argv[]) {
 
+  int exit_status = EXIT_SUCCESS;
+
   // option values
   const char* encoding = DEFAULT_TEXT_ENCODING;
   const char* src_encoding = DEFAULT_TEXT_ENCODING;
@@ -482,5 +484,5 @@ int main(int argc, char* argv[]) {
 
   }
 
-  return 0;
+  return exit_status;
 }

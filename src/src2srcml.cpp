@@ -26,6 +26,7 @@
 #include <iomanip>
 #include <fstream>
 #include <string>
+#include <cstdlib>
 #include "version.h"
 #include "srcmlapps.h"
 #include "Options.h"
@@ -129,6 +130,8 @@ void output_version(const char* name) {
 }
 
 int main(int argc, char* argv[]) {
+
+  int exit_status = EXIT_SUCCESS;
 
   int language = DEFAULT_LANGUAGE;
   const char* xml_encoding = DEFAULT_XML_ENCODING;
@@ -588,7 +591,7 @@ int main(int argc, char* argv[]) {
     std::cerr << "Translation encoding problem" << '\n';
   }
 
-  return 0;
+  return exit_status;
 }
 
 // filename part of path
