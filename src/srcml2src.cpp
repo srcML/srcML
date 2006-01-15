@@ -221,36 +221,7 @@ int main(int argc, char* argv[]) {
 	exit(0);
       }
     }
-    /*
-    // extract text flag
-    else if (compare_flags(argv[curarg], TEXT_FLAG, TEXT_FLAG_SHORT)) {
-      options |= OPTION_TEXT;
 
-      char* embedded = extract_option(argv[curarg]);
-
-      // filename is embedded parameter
-      if (embedded) {
-
-	unit = pstd::atoi(embedded + 1);
-	++curarg;
-
-      // check for text flag with missing number
-      } else if (argc <= curarg + 2 || strcmp(argv[curarg], OPTION_SEPARATOR) == 0) {
-	std::cerr << NAME << ": text option selected but no number specified." << '\n';
-	exit(0);
-      } else {
-	++curarg;
-	unit = pstd::atoi(argv[curarg]);
-	++curarg;
-      }
-
-      // validate unit number
-      if (unit < 0) {
-	std::cerr << NAME << ": unit \"" << unit << "\" is not valid." << '\n';
-	exit(0);
-      }
-    }
-    */
     // encoding
     else if (compare_flags(argv[curarg], ENCODING_FLAG, ENCODING_FLAG_SHORT)) {
 
