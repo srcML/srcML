@@ -60,9 +60,10 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* enc, int op)
   if (reader == NULL)
     throw "Unable to open file as XML";
 
-  // read the outer unit
+  // read the start element of the outer unit
   try {
-    skiptounit(reader, 1);
+    if (xmlTextReaderRead(reader) != 1)
+	throw;
   } catch (...) {
     throw "Unable to find starting unit element";
   }
@@ -89,7 +90,7 @@ void srcMLUtility::translate_xml(const char* ofilename) {
   encoding = (const char*) xmlTextReaderConstEncoding(reader);
 
   while (xmlTextReaderReadState(reader) == 1) {
-    std::cout << "HERE" << std::endl;
+
     // output entire unit element
     outputUnit(ofilename, reader);
 
