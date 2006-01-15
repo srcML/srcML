@@ -88,10 +88,6 @@ class srcMLOutput : public srcMLParserTokenTypes {
 
   void outputToken(const antlr::RefToken& token);
 
-  bool isstart(const antlr::RefToken& token) const;
-
-  bool isempty(const antlr::RefToken& token) const;
-
   bool isoption(int) const;
 
   // List of element names

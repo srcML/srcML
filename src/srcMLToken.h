@@ -29,6 +29,8 @@
 
 #include <antlr/Token.hpp>
 
+enum { STARTTOKEN = 0, ENDTOKEN = 50, EMPTYTOKEN = 75 };
+
 template <int T>
 class srcMLToken : public antlr::Token {
 
@@ -43,9 +45,19 @@ class srcMLToken : public antlr::Token {
   int getLine() const { return T; }
 };
 
-typedef srcMLToken<50> EndToken;
-typedef srcMLToken<75> EmptyToken;
-typedef srcMLToken<0> StartToken;
+typedef srcMLToken<ENDTOKEN> EndToken;
+typedef srcMLToken<EMPTYTOKEN> EmptyToken;
+typedef srcMLToken<STARTTOKEN> StartToken;
+
+inline bool isstart(const antlr::RefToken& token) {
+
+  return token->getLine() != ENDTOKEN;
+}
+
+inline bool isempty(const antlr::RefToken& token) {
+
+  return token->getLine() == EMPTYTOKEN;
+}
 
 class MarkerToken : public EmptyToken {
 

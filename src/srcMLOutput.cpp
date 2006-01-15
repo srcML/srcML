@@ -23,6 +23,7 @@
 */
 
 #include "srcMLOutput.h"
+#include "srcMLToken.h"
 #include "project.h"
 #include "srcmlns.h"
 
@@ -154,16 +155,6 @@ int srcMLOutput::consume_next() {
   }
 
   return token->getType();
-}
-
-bool srcMLOutput::isstart(const antlr::RefToken& token) const {
-
-  return token->getLine() != 50;
-}
-
-bool srcMLOutput::isempty(const antlr::RefToken& token) const {
-
-  return token->getLine() == 75;
 }
 
 const char* srcMLOutput::token2name(const antlr::RefToken& token) const {
