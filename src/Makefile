@@ -220,11 +220,11 @@ version.cpp : VERSION
 
 PHONY : time
 time : ../bin/src2srcml
-	cd ../timing; time ../bin/src2srcml ${TIMING_MED} ${TIMING_MED}.xml
+	cd .; time ../bin/src2srcml ../timing/${TIMING_MED} ../timing/${TIMING_MED}.xml
 
 PHONY : javatime
 javatime :
-	cd ../timing; time ../bin/src2srcml --language Java ${TIMING_JAVA} ${TIMING_JAVA}.xml
+	cd .; time ../bin/src2srcml --language Java ../timing/${TIMING_JAVA} ../timing/${TIMING_JAVA}.xml
 
 PHONY : testbase
 testbase :
