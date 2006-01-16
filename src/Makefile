@@ -161,7 +161,7 @@ ${OBJ_DIR}KeywordLexer.o : $(firstword $(KEYWORDLEXER_GENS))
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) -c $< -o $@
 #	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(SRCMLPARSER_CXX_FLAGS) -c $< -o $@
 
-${OBJ_DIR}srcMLOutput.o : srcMLOutput.cpp srcMLOutput.h
+${OBJ_DIR}srcMLOutput.o : srcMLOutput.cpp srcMLOutput.h srcMLOutputPR.h
 	$(CXX) ${XML_PRE} $(ANTLR_INC) $(CXXFLAGS) $(SRCMLPARSER_CXX_FLAGS) $(LIBXML_SRC2SRCML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}Mode.o : Mode.cpp Mode.h
