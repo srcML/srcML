@@ -60,10 +60,9 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* enc, int op)
   if (reader == NULL)
     throw "Unable to open file as XML";
 
-  // read the start element of the outer unit
+  // read the outer unit
   try {
-    if (xmlTextReaderRead(reader) != 1)
-	throw;
+    skiptounit(reader, 1);
   } catch (...) {
     throw "Unable to find starting unit element";
   }
@@ -90,7 +89,7 @@ void srcMLUtility::translate_xml(const char* ofilename) {
   encoding = (const char*) xmlTextReaderConstEncoding(reader);
 
   while (xmlTextReaderReadState(reader) == 1) {
-
+    std::cout << "HERE" << std::endl;
     // output entire unit element
     outputUnit(ofilename, reader);
 
@@ -126,22 +125,18 @@ std::string srcMLUtility::unit_attribute(int unitnumber, const char* attribute_n
 // count of nested units
 int srcMLUtility::unit_count() {
 
-  // counting units
+  // process all nodes counting units
   int count = 0;
+  while (1) {
 
-  // get to the first nested unit (if it exists)
-  try {
-    skiptonextunit(reader);
-  } catch (LibXMLError) {
-    return 0;
-  }
-
-  // skip units
-  while (xmlTextReaderNext(reader)) {
-    ++count;
-    
-    if (xmlTextReaderRead(reader) != 1)
+    // read a node
+    int ret = xmlTextReaderRead(reader);
+    if (ret != 1)
       break;
+
+    if (xmlTextReaderDepth(reader) == 1 && (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT)
+	&& strcmp((const char*) xmlTextReaderConstName(reader), "unit") == 0)
+      ++count;
   }
 
   return count;
@@ -440,12 +435,15 @@ void srcMLUtility::outputText(const xmlChar* s, xmlTextWriterPtr writer, bool es
   // skip to a particular unit
   void srcMLUtility::skiptounit(xmlTextReaderPtr reader, int number) throw (LibXMLError) {
 
-    // skip to the first nested unit
-    skiptonextunit(reader);
+    // skip to the correct unit
+    int count = 0;
+    while (1) {
+      skiptonextunit(reader);
 
-    // skip over until we find the right one
-    for (int count = 1; count < number; ++count) {
-      xmlTextReaderNext(reader);
-      xmlTextReaderRead(reader);
+      ++count;
+
+      // did we find it?
+      if (count == number)
+	break;
     }
   }
