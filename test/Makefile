@@ -39,6 +39,9 @@ XSLT_STRUCT2UNION=${XSLT} ${XSLT_STRUCT2UNION_XSL}
 XSLT_CLASS2STRUCT_XSL=xsl/class2struct.xsl
 XSLT_CLASS2STRUCT=${XSLT} ${XSLT_CLASS2STRUCT_XSL}
 
+XSLT_CLASS2INTERFACE_XSL=xsl/class2interface.xsl
+XSLT_CLASS2INTERFACE=${XSLT} ${XSLT_CLASS2INTERFACE_XSL}
+
 ##
 # Comments and preprocessor statements are handled out of the normal grammar rules
 # in src2srcml.  In order to test the handling of these tokens, special cases are
@@ -84,7 +87,7 @@ SEP_FILES_BASE_OO=function_ns decl_ns variable_names_ns
 
 SEP_FILES_BASE_CXX=friend try namespace template typedef_template constructor destructor throw_base function_throw catch_form class
 
-SEP_FILES_BASE_JAVA=class_java keyword_java
+SEP_FILES_BASE_JAVA=class_java keyword_java interface_java
 
 SEP_FILES_BASE=$(SEP_FILES_BASE_COMMON) $(SEP_FILES_BASE_C) $(SEP_FILES_BASE_C_FAMILY) $(SEP_FILES_BASE_CXX) $(SEP_FILES_BASE_JAVA)
 
@@ -110,7 +113,7 @@ GEN_FILES_ALL= ${foreach nm, $(SEP_FILES_PLUS), suite/$(nm).all.cpp.xml} suite/e
 GEN_FILES_BLOCK= ${foreach nm, $(SEP_FILES_PLUS),          suite/$(nm).block.cpp.xml} \
                  ${foreach nm, $(SEP_FILES_BASE_C_ALL),    suite/$(nm).block.c.xml} \
                  ${foreach nm, $(SEP_FILES_BASE_JAVA_ALL), suite/$(nm).block.java.xml} \
-		 suite/extra.block.c.xml suite/extra.block.cpp.xml
+		 suite/extra.block.c.xml suite/extra.block.cpp.xml suite/package.block.java.xml
 
 GEN_FILES_COMMENT= ${foreach nm, $(SEP_FILES_PLUS),          suite/$(nm).comment.cpp.xml} \
 		   ${foreach nm, $(SEP_FILES_BASE_C_ALL),    suite/$(nm).comment.c.xml} \
@@ -245,6 +248,11 @@ suite/struct.cpp.xml : suite/class.cpp.xml ${XSLT_CLASS2STRUCT_XSL}
 # union from struct
 suite/union.cpp.xml : suite/struct.cpp.xml ${XSLT_STRUCT2UNION_XSL}
 	${XSLT_STRUCT2UNION} $< > $@
+
+# interface from class
+suite/interface_java.cpp.xml : suite/class_java.cpp.xml ${XSLT_CLASS2INTERFACE_XSL}
+	${XSLT_CLASS2INTERFACE} $< > $@
+
 
 cleangen :
 	rm -f ${GEN_FILES}

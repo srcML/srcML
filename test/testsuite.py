@@ -24,6 +24,8 @@ if srcmlutility == "":
 
 handles_src_encoding = os.environ.get("SRC2SRCML_SRC_ENCODING")
 
+entire_file = ""
+
 # extracts a particular unit from a srcML file
 def extract_unit(src_filename, count):
 	filename = tempfile.NamedTemporaryFile()
@@ -136,7 +138,7 @@ def getdirname(xml_file):
 
 # find differences of two files
 def getlanguage(xml_file):
-
+	
 	# run the srcml processor
 	command = startcmd + srcmlutility + " -l " + " " + xml_file
 	if debug:
@@ -219,6 +221,9 @@ for root, dirs, files in os.walk(source_dir):
 		# only perform for specname if given
 		if specname != "" and m.match(ufilename) == None:
 			continue
+		
+		# read file into string
+		entire_file = open(xml_filename, 'r').read()
 		
 		# extract the language of the entire document
 		res = getlanguage(xml_filename)
