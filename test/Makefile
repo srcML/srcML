@@ -28,10 +28,10 @@ XSLT_ADDCONST=${XSLT} xsl/addconst.xsl
 XSLT_IDENTITY=${XSLT} xsl/identity.xsl
 
 XSLT_INSERTEXPR=${XSLT} --stringparam expr_filename "../suite/expression.cpp.xml" xsl/insertexpr.xsl
-XSLT_INSERTEXPR_XSL= suite/expression.cpp.xml xsl/insertexpr.xsl
+XSLT_INSERTEXPR_XSL= ../suite/expression.cpp.xml xsl/insertexpr.xsl
 
 XSLT_INSERTDECL=${XSLT} --stringparam decl_filename "../suite/decl_simple.cpp.xml" xsl/insertparam.xsl
-XSLT_INSERTDECL_XSL= suite/decl_simple.cpp.xml xsl/insertdecl.xsl
+XSLT_INSERTDECL_XSL= ../suite/decl_simple.cpp.xml xsl/insertdecl.xsl
 
 XSLT_STRUCT2UNION_XSL=xsl/struct2union.xsl
 XSLT_STRUCT2UNION=${XSLT} ${XSLT_STRUCT2UNION_XSL}
@@ -75,7 +75,7 @@ XSLT_SETLANGUAGE_JAVA=${XSLT} --stringparam language "Java" ${XSLT_SETLANGUAGE_X
 
 GEN_FILES_SEP=while ifnestcond return throw function_decl constructor_explicit destructor_virtual function_const struct union 
 
-GEN_FILES_PART=${foreach nm, $(GEN_FILES_SEP), suite/$(nm).cpp.xml}
+GEN_FILES_PART=${foreach nm, $(GEN_FILES_SEP), ../suite/$(nm).cpp.xml}
 
 SEP_FILES_BASE_COMMON=comment string variable_names expression decl_simple if for do switch call function enum return_base problem
 
@@ -95,39 +95,39 @@ SEP_FILES=$(SEP_FILES_BASE) preprocessor
 
 
 SEP_FILES_BASE_JAVA_ALL = $(SEP_FILES_BASE_COMMON) $(SEP_FILES_BASE_00) package
-GEN_FILES_JAVA= ${foreach nm, $(SEP_FILES_BASE_JAVA_ALL), suite/$(nm).java.xml}
+GEN_FILES_JAVA= ${foreach nm, $(SEP_FILES_BASE_JAVA_ALL), ../suite/$(nm).java.xml}
 
 SEP_FILES_BASE_C_ALL = $(SEP_FILES_BASE_COMMON) $(SEP_FILES_BASE_C_FAMILY)
-GEN_FILES_C= ${foreach nm, $(SEP_FILES_BASE_C_ALL), suite/$(nm).c.xml}
+GEN_FILES_C= ${foreach nm, $(SEP_FILES_BASE_C_ALL), ../suite/$(nm).c.xml}
 
 GEN_FILES_ALL_PART= ${foreach nm, $(SEP_FILES), $(nm).all}
 
 SEP_FILES_PLUS= ${SEP_FILES} ${GEN_FILES_SEP}
 
-GEN_FILES_ALL_JAVA=${foreach nm, $(SEP_FILES_BASE_JAVA_ALL), suite/$(nm).all.java.xml}
+GEN_FILES_ALL_JAVA=${foreach nm, $(SEP_FILES_BASE_JAVA_ALL), ../suite/$(nm).all.java.xml}
 
-GEN_FILES_ALL_C=${foreach nm, $(SEP_FILES_BASE_C_ALL), suite/$(nm).all.c.xml} suite/extra.all.c.xml
+GEN_FILES_ALL_C=${foreach nm, $(SEP_FILES_BASE_C_ALL), ../suite/$(nm).all.c.xml} ../suite/extra.all.c.xml
 
-GEN_FILES_ALL= ${foreach nm, $(SEP_FILES_PLUS), suite/$(nm).all.cpp.xml} suite/extra.all.cpp.xml
+GEN_FILES_ALL= ${foreach nm, $(SEP_FILES_PLUS), ../suite/$(nm).all.cpp.xml} ../suite/extra.all.cpp.xml
 
-GEN_FILES_BLOCK= ${foreach nm, $(SEP_FILES_PLUS),          suite/$(nm).block.cpp.xml} \
-                 ${foreach nm, $(SEP_FILES_BASE_C_ALL),    suite/$(nm).block.c.xml} \
-                 ${foreach nm, $(SEP_FILES_BASE_JAVA_ALL), suite/$(nm).block.java.xml} \
-		 suite/extra.block.c.xml suite/extra.block.cpp.xml suite/package.block.java.xml
+GEN_FILES_BLOCK= ${foreach nm, $(SEP_FILES_PLUS),          ../suite/$(nm).block.cpp.xml} \
+                 ${foreach nm, $(SEP_FILES_BASE_C_ALL),    ../suite/$(nm).block.c.xml} \
+                 ${foreach nm, $(SEP_FILES_BASE_JAVA_ALL), ../suite/$(nm).block.java.xml} \
+		 ../suite/extra.block.c.xml ../suite/extra.block.cpp.xml ../suite/package.block.java.xml
 
-GEN_FILES_COMMENT= ${foreach nm, $(SEP_FILES_PLUS),          suite/$(nm).comment.cpp.xml} \
-		   ${foreach nm, $(SEP_FILES_BASE_C_ALL),    suite/$(nm).comment.c.xml} \
-		   ${foreach nm, $(SEP_FILES_BASE_JAVA_ALL), suite/$(nm).comment.java.xml} \
-		   suite/extra.comment.c.xml suite/extra.comment.cpp.xml
+GEN_FILES_COMMENT= ${foreach nm, $(SEP_FILES_PLUS),          ../suite/$(nm).comment.cpp.xml} \
+		   ${foreach nm, $(SEP_FILES_BASE_C_ALL),    ../suite/$(nm).comment.c.xml} \
+		   ${foreach nm, $(SEP_FILES_BASE_JAVA_ALL), ../suite/$(nm).comment.java.xml} \
+		   ../suite/extra.comment.c.xml ../suite/extra.comment.cpp.xml
 
-GEN_FILES_FORMFEED = ${foreach nm, $(SEP_FILES_PLUS),          suite/$(nm).formfeed.cpp.xml} \
-		     ${foreach nm, $(SEP_FILES_BASE_C_ALL),    suite/$(nm).formfeed.c.xml} \
-		     ${foreach nm, $(SEP_FILES_BASE_JAVA_ALL), suite/$(nm).formfeed.java.xml} \
-		     suite/extra.formfeed.c.xml suite/extra.formfeed.cpp.xml
+GEN_FILES_FORMFEED = ${foreach nm, $(SEP_FILES_PLUS),          ../suite/$(nm).formfeed.cpp.xml} \
+		     ${foreach nm, $(SEP_FILES_BASE_C_ALL),    ../suite/$(nm).formfeed.c.xml} \
+		     ${foreach nm, $(SEP_FILES_BASE_JAVA_ALL), ../suite/$(nm).formfeed.java.xml} \
+		     ../suite/extra.formfeed.c.xml ../suite/extra.formfeed.cpp.xml
 
-GEN_FILES_PREPROC= ${foreach nm, $(SEP_FILES_PLUS), suite/$(nm).preproc.cpp.xml} \
-	           ${foreach nm, $(SEP_FILES_BASE_C_ALL), suite/$(nm).preproc.c.xml} \
-		   suite/extra.preproc.c.xml suite/extra.preproc.cpp.xml
+GEN_FILES_PREPROC= ${foreach nm, $(SEP_FILES_PLUS), ../suite/$(nm).preproc.cpp.xml} \
+	           ${foreach nm, $(SEP_FILES_BASE_C_ALL), ../suite/$(nm).preproc.c.xml} \
+		   ../suite/extra.preproc.c.xml ../suite/extra.preproc.cpp.xml
 
 get_language=srcml2src -l $1
 
@@ -187,70 +187,70 @@ language2extension=./get_extension.py $1
 %.c.xml : %.cpp.xml
 	${XSLT_SETLANGUAGE_C} $< > $@
 
-GEN_FILES=${GEN_FILES_PART} ${GEN_FILES_ALL} ${GEN_FILES_BLOCK} ${GEN_FILES_COMMENT} ${GEN_FILES_PREPROC} ${GEN_FILES_FORMFEED} suite/constructor.cpp.xml $(GEN_FILES_JAVA) $(GEN_FILES_ALL_JAVA) $(GEN_FILES_C) $(GEN_FILES_ALL_C)
+GEN_FILES=${GEN_FILES_PART} ${GEN_FILES_ALL} ${GEN_FILES_BLOCK} ${GEN_FILES_COMMENT} ${GEN_FILES_PREPROC} ${GEN_FILES_FORMFEED} ../suite/constructor.cpp.xml $(GEN_FILES_JAVA) $(GEN_FILES_ALL_JAVA) $(GEN_FILES_C) $(GEN_FILES_ALL_C)
 
 GEN_FILES_CPP_BASE=${GEN_FILES_SEP} ${foreach nm, $(SEP_FILES_PLUS), $(nm).all} ${foreach nm, $(SEP_FILES_PLUS), $(nm).block} ${foreach nm, $(SEP_FILES_PLUS), $(nm).comment} ${foreach nm, $(SEP_FILES_PLUS), $(nm).preproc}
 
-GEN_FILES_CPP= ${foreach nm, $(GEN_FILES_CPP_BASE), suite/$(nm).cpp}
+GEN_FILES_CPP= ${foreach nm, $(GEN_FILES_CPP_BASE), ../suite/$(nm).cpp}
 
 all : ${GEN_FILES} ${GEN_FILES_CPP}
-	rm -f suite/preprocessor.preproc.cpp.xml
+	rm -f ../suite/preprocessor.preproc.cpp.xml
 	./testsuite.py
 
 gencpp : ${GEN_FILES_CPP}
 
 gen : ${GEN_FILES}
-	rm -f suite/preprocessor.preproc.cpp.xml
-	rm -f suite/class_java.preproc.cpp.xml
+	rm -f ../suite/preprocessor.preproc.cpp.xml
+	rm -f ../suite/class_java.preproc.cpp.xml
 
 #  Test cases generated from other test cases
 
 # function declaration from function
-suite/function_decl.cpp.xml : suite/function.cpp.xml ${XSLT_DEFN2DECL_XSL}
+../suite/function_decl.cpp.xml : ../suite/function.cpp.xml ${XSLT_DEFN2DECL_XSL}
 	${XSLT_DEFN2DECL} $< > $@
 
 # const function from function
-suite/function_const.cpp.xml : suite/function.cpp.xml ${XSLT_DEFN2DECL_XSL}
+../suite/function_const.cpp.xml : ../suite/function.cpp.xml ${XSLT_DEFN2DECL_XSL}
 	${XSLT_ADDCONST} $< > $@
 
 # while from if
-suite/while.cpp.xml : suite/if.cpp.xml ${XSLT_IF2WHILE_XSL}
+../suite/while.cpp.xml : ../suite/if.cpp.xml ${XSLT_IF2WHILE_XSL}
 	${XSLT_IF2WHILE} $< > $@
 
 # if with a nested conditional from if
-suite/ifnestcond.cpp.xml : suite/if.cpp.xml ${XSLT_NESTCOND_XSL}
+../suite/ifnestcond.cpp.xml : ../suite/if.cpp.xml ${XSLT_NESTCOND_XSL}
 	${XSLT_NESTCOND} $< > $@
 
 # return from return base
-suite/return.cpp.xml : suite/return_base.cpp.xml ${XSLT_INSRT_XSL}
+../suite/return.cpp.xml : ../suite/return_base.cpp.xml ${XSLT_INSRT_XSL}
 	${XSLT_INSERTEXPR} $< > $@
 
 # constructor from constructor base
-suite/constructor.cpp.xml : suite/constructor_base.cpp.xml ${XSLT_DECL_XSL}
+../suite/constructor.cpp.xml : ../suite/constructor_base.cpp.xml ${XSLT_DECL_XSL}
 	${XSLT_INSERTDECL} $< > $@
 
 # explicit constructor from constructor
-suite/constructor_explicit.cpp.xml : suite/constructor.cpp.xml ${XSLT_INSRT_XSL}
+../suite/constructor_explicit.cpp.xml : ../suite/constructor.cpp.xml ${XSLT_INSRT_XSL}
 	${XSLT_ADDEXPLICIT} $< > $@
 
 # virtual destructor from destructor
-suite/destructor_virtual.cpp.xml : suite/destructor.cpp.xml ${XSLT_INSRT_XSL}
+../suite/destructor_virtual.cpp.xml : ../suite/destructor.cpp.xml ${XSLT_INSRT_XSL}
 	${XSLT_ADDVIRTUAL} $< > $@
 
 # throw from throw base
-suite/throw.cpp.xml : suite/throw_base.cpp.xml ${XSLT_INSRT_XSL}
+../suite/throw.cpp.xml : ../suite/throw_base.cpp.xml ${XSLT_INSRT_XSL}
 	${XSLT_INSERTEXPR} $< > $@
 
 # struct from class
-suite/struct.cpp.xml : suite/class.cpp.xml ${XSLT_CLASS2STRUCT_XSL}
+../suite/struct.cpp.xml : ../suite/class.cpp.xml ${XSLT_CLASS2STRUCT_XSL}
 	${XSLT_CLASS2STRUCT} $< > $@
 
 # union from struct
-suite/union.cpp.xml : suite/struct.cpp.xml ${XSLT_STRUCT2UNION_XSL}
+../suite/union.cpp.xml : ../suite/struct.cpp.xml ${XSLT_STRUCT2UNION_XSL}
 	${XSLT_STRUCT2UNION} $< > $@
 
 # interface from class
-suite/interface_java.cpp.xml : suite/class_java.cpp.xml ${XSLT_CLASS2INTERFACE_XSL}
+../suite/interface_java.cpp.xml : ../suite/class_java.cpp.xml ${XSLT_CLASS2INTERFACE_XSL}
 	${XSLT_CLASS2INTERFACE} $< > $@
 
 
