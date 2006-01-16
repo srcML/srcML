@@ -88,6 +88,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   process_table[SCHAR] = &srcMLOutput::processChar;
   process_table[SLITERAL] = &srcMLOutput::processLiteral;
   process_table[FORMFEED] = &srcMLOutput::processFormFeed;
+  process_table[SINTERFACE] = &srcMLOutput::processInterface;
 }
 
 xmlTextWriterPtr xout;
@@ -378,6 +379,25 @@ void srcMLOutput::processMarker(const antlr::RefToken& token) {
   xmlTextWriterEndElement(xout);
 }
 
+void srcMLOutput::processInterface(const antlr::RefToken& token) {
+  static const char* INTERFACE_ATTR = "interface";
+
+  const char* s = token2name(token);
+
+  if (s[0] == 0)
+    return;
+
+  if (isstart(token) || isempty(token)) {
+    xmlTextWriterStartElement(xout, BAD_CAST s);
+
+    xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST INTERFACE_ATTR);
+  }
+
+  if (!isstart(token) || isempty(token))
+    xmlTextWriterEndElement(xout);
+
+}
+
 inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
 
   // use the array of pointers to methods to call the correct output routine
@@ -526,6 +546,7 @@ void srcMLOutput::fillElementNames() {
   ElementNames[SIMPLEMENTS]    = "implements";
   ElementNames[SIMPORT]        = "import";
   ElementNames[SPACKAGE]       = "package";
+  ElementNames[SINTERFACE]     = "class";
 
   // special characters
   ElementNames[FORMFEED]       = "formfeed";

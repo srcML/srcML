@@ -332,6 +332,7 @@ tokens {
     SEXTENDS;
     SIMPORT;
     SPACKAGE;
+    SINTERFACE;
 
     // Last token used for boundary
     END_ELEMENT_TOKEN;
@@ -1163,6 +1164,8 @@ exception_statement {}:
 class_struct_union[int token] {} :
 
         { token == LCURLY }? (
+            (interface_definition)=> interface_definition |
+
             class_definition |
 
             struct_definition |
@@ -1184,6 +1187,9 @@ class_struct_union_check[int& finaltoken] { finaltoken = 0; } :
 
         { inLanguage(LANGUAGE_C_FAMILY) }?
         (CLASS | STRUCT | UNION) class_header check_end[finaltoken] |
+
+        { inLanguage(LANGUAGE_JAVA) }?
+        (interface_definition_header_java)=> interface_definition_header_java check_end[finaltoken] |
 
         { inLanguage(LANGUAGE_JAVA) }?
         class_definition_header_java check_end[finaltoken]
@@ -1240,8 +1246,26 @@ class_definition :
         )
 ;
 
+interface_definition :
+        {
+            // statement
+            startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_CLASS);
+
+            // start the interface definition
+            startElement(SINTERFACE);
+
+            // java interfaces end at the end of the block
+            setMode(MODE_END_AT_BLOCK); 
+        }
+        interface_definition_header_java lcurly
+;
+
 class_definition_header_java :
             (access_specifier_mark)* (final_specifier_mark)* CLASS class_header
+;
+
+interface_definition_header_java :
+            (access_specifier_mark)* (final_specifier_mark)* INTERFACE class_header
 ;
 
 /*

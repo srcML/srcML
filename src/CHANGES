@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Put in full handling of Java interfaces.
+
 	Fix regression error for Java packages.
 
 	Output source encoding in src2srcml when in verbose mode.

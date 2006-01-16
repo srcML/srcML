@@ -111,6 +111,7 @@ class srcMLOutput : public srcMLParserTokenTypes {
   void processChar(const antlr::RefToken& token);
   void processLiteral(const antlr::RefToken& token);
   void processFormFeed(const antlr::RefToken& token);
+  void processInterface(const antlr::RefToken& token);
 
   static PROCESS_PTR process_table[END_ELEMENT_TOKEN];
 };
