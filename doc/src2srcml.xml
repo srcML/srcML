@@ -236,13 +236,14 @@
 </refsect1>
 <refsect1>
   <title>AUTHOR</title>
-  <para>
+  <para>Written by 
     <author>
       <firstname>Michael</firstname>
       <othername role="mi">L.</othername>
       <surname>Collard</surname>
       <contrib>Original author</contrib>
-    </author>
+    </author> 
+    and
     <author>
       <firstname>Huzefa</firstname>
       <surname>Kagdi</surname>
