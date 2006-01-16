@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" dir="package" language="Java">
+
+<unit>
+<package>package <name>a</name>;</package>
+</unit>
+
+<unit>
+<package>package <name>a</name>.<name>b</name>;</package>
+</unit>
+
+</unit>
