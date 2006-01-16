@@ -151,9 +151,7 @@ int srcMLOutput::consume_next() {
 
   const antlr::RefToken& token = input->nextToken();
 
-  if (!(token->getType() == antlr::Token::EOF_TYPE)) {
-    outputToken(token);
-  }
+  outputToken(token);
 
   return token->getType();
 }
