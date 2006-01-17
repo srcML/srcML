@@ -621,7 +621,7 @@ call_check[int& postnametoken, int& argumenttoken, int& postcalltoken] {} :
 
         // process the arguments.  may fail if a macro
         ( options { greedy = true; } : { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }? 
-            ( (full_parameter[true])=> guessing_endGuessing match_next_then_fail | expression_part | comma) )* 
+            ( { LA(1) != MULTOPS }? (full_parameter[true])=> guessing_endGuessing match_next_then_fail | expression_part | comma) )* 
 
         guessing_endGuessing
 

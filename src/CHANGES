@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Fix misidentification of call as macro with starting '&' operator.
+
 	Put in full handling of Java interfaces.
 
 	Fix regression error for Java packages.
