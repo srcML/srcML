@@ -297,6 +297,7 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
   // "-" filename is standard output
   xmlTextWriterPtr writer = xmlNewTextWriterFilename(ofilename, isoption(options, OPTION_COMPRESSED));
 
+  bool first = true;
   // process the nodes in this unit
   while (1) {
 
@@ -310,6 +311,11 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
 
       // special case for formfeed element
     case XML_READER_TYPE_ELEMENT:
+
+      if (first && strcmp((const char*) xmlTextReaderConstName(reader), "unit") == 0)
+	throw TranslateCompoundError();
+      first = false;
+
       if (strcmp((const char*) xmlTextReaderConstName(reader), "formfeed") == 0)
 	    xmlTextWriterWriteRawLen(writer, BAD_CAST "\f", 1);
       break;

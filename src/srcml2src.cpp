@@ -445,7 +445,12 @@ int main(int argc, char* argv[]) {
       */
     } else {
 
-      su.translate(ofilename);
+      try {
+	su.translate(ofilename);
+      } catch (TranslateCompoundError) {
+	throw "Attempting to translate entire compound srcML file without specifying nested unit";
+      }
+
     }
   } catch (const char* s) {
     

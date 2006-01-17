@@ -34,6 +34,8 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
+class TranslateCompoundError {};
+
 class LibXMLError {
  public:
   LibXMLError(int errnum)
