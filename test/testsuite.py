@@ -243,11 +243,11 @@ for root, dirs, files in os.walk(source_dir):
 		
 		# extract the number of units
 		number = getnested(xml_filename)
-		if number == 0:
-			number = 1
+		#if number == 0:
+		#	number = 1
 
 		count = 0
-		while count < number:
+		while count == 0 or count < number:
 
 			count = count + 1
 
@@ -263,7 +263,7 @@ for root, dirs, files in os.walk(source_dir):
 			pfilename = ufilename + str(count)
 
 			# save the particular nested unit
-			if number == 1:
+			if number == 0:
 				unit_xml_file_sub = name2file(xml_filename)
 			else:
 				unit_xml_file_sub = extract_unit(xml_filename, count)
