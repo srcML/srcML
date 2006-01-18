@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" dir="class_java" language="Java">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Java" dir="keyword_java">
 
 <unit>
 <decl_stmt><decl><type><name>void</name></type> <name>struct</name></decl>;</decl_stmt>
