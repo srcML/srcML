@@ -309,7 +309,7 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
   }
 
   if (unit_directory) {
-    xmlTextWriterWriteAttribute(writer, BAD_CAST "directory", unit_directory);
+    xmlTextWriterWriteAttribute(writer, BAD_CAST "dir", unit_directory);
     xmlFree(unit_directory);
   }
 
