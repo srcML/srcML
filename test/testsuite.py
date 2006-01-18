@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2.4
 #
 # update.py
 #
@@ -9,6 +9,7 @@ import os.path
 import string
 import tempfile
 import re
+import subprocess
 
 debug = 0
 
@@ -34,7 +35,8 @@ def extract_unit(src_filename, count):
 	command = startcmd + srcmlutility + " --xml --unit=" + str(count) + " " + src_filename + " " + filename.name
 	if debug:
 		print command
-	p = os.system(command)
+	p = subprocess.Popen(command, shell=True)
+	os.waitpid(p.pid, 0)
 	
 	return filename
 
@@ -50,7 +52,9 @@ def xml2txt(xml_filename, encoding):
 	command = startcmd + srcmlutility + " --src-encoding=" + encoding + " " + xml_filename + " " + filename.name
 	if debug:
 		print command
-	p = os.system(command)
+
+	p = subprocess.Popen(command, shell=True)
+	os.waitpid(p.pid, 0)
 
 	#os.system("cat " + filename.name)
 	
@@ -60,8 +64,10 @@ def xml2txt(xml_filename, encoding):
 def remove_firstline(xml_filename):
 	filename = tempfile.NamedTemporaryFile()
 
+	#command = "/bin/cp " + xml_filename  + " " + filename.name
 	command = "/bin/sed -n '2,$p' " + xml_filename  + " > " + filename.name
-	os.system(command)
+	p = subprocess.Popen(command, shell=True)
+	os.waitpid(p.pid, 0)
 	if debug:
 		print command
 
@@ -112,7 +118,10 @@ def src2srcML(text_file, encoding):
 	command = command + " " + text_file.name + " " + xml_file.name
 	if debug:
 		print command
-	os.system(command)
+
+	p = subprocess.Popen(command, shell=True)
+	os.waitpid(p.pid, 0)
+
 	return xml_file
 
 # find differences of two files
