@@ -226,8 +226,8 @@ gen : ${GEN_FILES}
 	${XSLT_INSERTEXPR} $< > $@
 
 # constructor from constructor base
-../suite/constructor.cpp.xml : ../suite/constructor_base.cpp.xml ${XSLT_DECL_XSL}
-	${XSLT_INSERTDECL} $< > $@
+../suite/constructor.cpp.xml : ../suite/constructor_base.cpp.xml ${XSLT_DEFN2DECL_XSL}
+	cp $< $@
 
 # explicit constructor from constructor
 ../suite/constructor_explicit.cpp.xml : ../suite/constructor.cpp.xml ${XSLT_INSRT_XSL}

@@ -20,7 +20,7 @@
 
 <xsl:param name="expr_filename"/>
 
-<xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="ISO-8859-1"/>
+<xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8"/>
 
 <xsl:variable name="expressions" select="document($expr_filename)//src:expr"/>
 

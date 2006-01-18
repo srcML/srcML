@@ -20,7 +20,7 @@
 
 <xsl:param name="decl_filename"/>
 
-<xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="ISO-8859-1"/>
+<xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8"/>
 
 <xsl:variable name="declarations" select="document($decl_filename)//src:decl_stmt[not(.//src:block) and not(.//src:call)]"/>
 

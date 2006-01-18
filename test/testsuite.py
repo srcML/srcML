@@ -104,14 +104,14 @@ def xmldiff(text_filename, xml_filename1, xml_filename2):
 	return error_count
 
 # find differences of two files
-def src2srcML(text_file, encoding, directory):
+def src2srcML(text_file, encoding, directory, filename):
 	pfilename = ""
 
 	# get the text output filename
 	xml_file = tempfile.NamedTemporaryFile()
 
 	# run the srcml processorn
-	command = startcmd + srcmltranslator + " -l " + ulanguage + " -d " + directory + " --filename=\"\""
+	command = startcmd + srcmltranslator + " -l " + ulanguage + " -d " + directory + " --filename=\"" + filename + "\""
 	if handles_src_encoding != None:
 		command = command + " --src-encoding=" + encoding
 		command = command + " --xml-encoding=" + encoding
@@ -201,6 +201,17 @@ def getfilename(xml_file):
 
 	# run the srcml processor
 	command = startcmd + srcmlutility + " --filename " + " " + xml_file
+	if debug:
+		print command
+	p = os.popen(command, 'r')
+	return string.strip(p.readline())
+
+
+# find differences of two files
+def getfilename_unit(xml_file, num):
+
+	# run the srcml processor
+	command = startcmd + srcmlutility + " --unit=" + str(num) + " --filename " + " " + xml_file
 	if debug:
 		print command
 	p = os.popen(command, 'r')
@@ -319,7 +330,7 @@ for root, dirs, files in os.walk(source_dir):
 			unit_text_file = xml2txt(unit_xml_file_sub.name, encoding)
 
 			# convert the text unit to srcML
-			unit_srcml_file = src2srcML(unit_text_file, encoding, directory)
+			unit_srcml_file = src2srcML(unit_text_file, encoding, directory, getfilename_unit(xml_filename, count))
 
 			# find the difference
 			error = xmldiff(unit_text_file.name, unit_xml_file.name, unit_srcml_file.name)

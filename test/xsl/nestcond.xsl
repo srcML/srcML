@@ -18,7 +18,7 @@
 	collard@cs.kent.edu
 -->
 
-<xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="ISO-8859-1"/>
+<xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8"/>
 
 <!-- change the directory attribute on any unit from "if" to "while" -->
 <xsl:template match="src:condition/src:expr">
