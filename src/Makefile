@@ -18,8 +18,8 @@ SRCMLPARSER_CXX_FLAGS =
 CXX = /usr/bin/g++
 
 # compiler optimizations
-CXXFLAGS = -O3 -Wall -march=nocona
-# -minline-all-stringops -fno-rtti -fno-enforce-eh-specs
+CXXFLAGS = -O3 -Wall -march=nocona -minline-all-stringops -fno-rtti 
+#-fno-enforce-eh-specs
 
 # compiler gcc linking flags
 CXX_LINK_FLAGS = -s
