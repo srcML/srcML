@@ -57,4 +57,13 @@
 <expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><name>a</name></expr></argument>,<argument><expr>(<name>b</name>,<name>c</name>)</expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
+
+<unit>
+<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr>&amp;<name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><name>a</name>&amp;</expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
 </unit>
