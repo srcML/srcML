@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	More intelligent handling of unit attributes for units inside of compound nested documents.
+
 	Output error when translating entire compound document (without extracting or specifying nested unit).
 
 	Fix misidentification of call as macro with starting '&' operator.

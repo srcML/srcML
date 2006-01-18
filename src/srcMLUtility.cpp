@@ -44,6 +44,11 @@ bool srcMLUtility::checkEncoding(const char* encoding) {
 
 }
 
+xmlChar* unit_filename = 0;
+xmlChar* unit_directory = 0;
+xmlChar* unit_version = 0;
+xmlChar* unit_language = 0;
+
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* enc, int op)
   : infile(infilename), encoding(enc), options(op), reader(0), handler(0) {
@@ -66,6 +71,12 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* enc, int op)
   } catch (...) {
     throw "Unable to find starting unit element";
   }
+
+  // record the current attributes for use in subunits
+  unit_filename = xmlTextReaderGetAttribute(reader, BAD_CAST "filename");
+  unit_directory = xmlTextReaderGetAttribute(reader, BAD_CAST "dir");
+  unit_version = xmlTextReaderGetAttribute(reader, BAD_CAST "version");
+  unit_language = xmlTextReaderGetAttribute(reader, BAD_CAST "language");
 }
 
 // destructor
@@ -264,11 +275,55 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
   if (isoption(options, OPTION_DEBUG))
       xmlTextWriterWriteAttribute(writer, BAD_CAST "xmlns:srcerr", BAD_CAST SRCML_ERR_NS_URI);
 
+  xmlChar* attribute = 0;
+  attribute = xmlTextReaderGetAttribute(reader, BAD_CAST "filename");
+  if (attribute)
+    unit_filename = attribute;
+
+  attribute = xmlTextReaderGetAttribute(reader, BAD_CAST "dir");
+  if (attribute)
+    unit_directory = attribute;
+
+  attribute = xmlTextReaderGetAttribute(reader, BAD_CAST "version");
+  if (attribute)
+    unit_version = attribute;
+
+  attribute = xmlTextReaderGetAttribute(reader, BAD_CAST "language");
+  if (attribute)
+    unit_language = attribute;
+  /*
   // copy all attributes from current unit (may be main unit)
   while (xmlTextReaderMoveToNextAttribute(reader)) {
     xmlTextWriterWriteAttribute(writer, xmlTextReaderConstName(reader), xmlTextReaderConstValue(reader));
+
+    if (strcmp((char*) xmlTextReaderConstName(reader), "language") == 0)
+      language_flag = true;
+
+    if (strcmp((char*) xmlTextReaderConstName(reader), "version") == 0)
+      version_flag = true;
+  }
+  */
+  if (unit_language) {
+    xmlTextWriterWriteAttribute(writer, BAD_CAST "language", unit_language);
+    xmlFree(unit_language);
   }
 
+  if (unit_directory) {
+    xmlTextWriterWriteAttribute(writer, BAD_CAST "directory", unit_directory);
+    xmlFree(unit_directory);
+  }
+
+  if (unit_filename) {
+    xmlTextWriterWriteAttribute(writer, BAD_CAST "filename", unit_filename);
+    xmlFree(unit_filename);
+  }
+
+  if (unit_version) {
+    xmlTextWriterWriteAttribute(writer, BAD_CAST "version", unit_version);
+    xmlFree(unit_version);
+  }
+
+  
   // process the nodes in this unit
   while (1) {
 
