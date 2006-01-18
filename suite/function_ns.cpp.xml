@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" dir="function_ns" language="C++">
+
+<unit>
+<function><type><name>int</name></type> <name><name>A</name>::<name>B</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>inline</name> <name><name>a</name>::<name>b</name>::<name>c</name></name></type> <name>f</name><parameter_list>(<param><decl><type><name>const</name> <name><name>std</name>::<name>s</name></name>&amp;</type> <name>a</name></decl></param>)</parameter_list> <block>{}</block></function>
+</unit>
+
+</unit>

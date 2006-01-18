@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="variable_names_ns">
+
+<unit>
+<expr_stmt><expr><name><name>a</name>::</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>::<name>a</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name><name>a</name>::<name>b</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name><name>_a</name>::<name>b</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name><name>a</name>::<name>_b</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name><name>_a</name>::<name>_b</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name><name>a</name>::<name>b</name>::<name>c</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name><name>a</name>::<name>b</name>[<expr>0</expr>]</name></expr>;</expr_stmt>
+</unit>
+
+</unit>

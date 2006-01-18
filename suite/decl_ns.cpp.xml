@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="decl_struct">
+
+<unit>
+<decl_stmt><decl><type><name>const</name> <name><name>std</name>::<name>string</name></name></type> <name>s</name></decl>;</decl_stmt>
+</unit>
+
+<!-- Duplication due to bug in test program that doesn't work well with single example files -->
+<unit>
+<decl_stmt><decl><type><name>const</name> <name><name>std</name>::<name>string</name></name></type> <name>s</name></decl>;</decl_stmt>
+</unit>
+
+</unit>
