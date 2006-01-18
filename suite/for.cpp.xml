@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" dir="for" language="C++">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="for">
 
 <unit>
 <for>for (<init><expr><type><name>int</name></type> <name>i</name> =<init> <expr>0</expr></init></expr>;</init> <condition><expr><name>i</name> &lt; 5</expr>;</condition> <incr><expr>++<name>i</name></expr></incr>)
