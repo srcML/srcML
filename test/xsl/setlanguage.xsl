@@ -26,6 +26,7 @@
 <xsl:param name="language" select="'Java'"/>
 
 <!-- trap the current language attribute -->
+<!--
 <xsl:template match="/src:unit">
   <unit>
     <xsl:copy-of select="@*[name()!='language']"/>
@@ -33,6 +34,11 @@
 
     <xsl:apply-templates select="node()"/>
   </unit>
+</xsl:template>
+-->
+
+<xsl:template match="/src:unit/@language">
+    <xsl:attribute name="language"><xsl:value-of select="$language"/></xsl:attribute>
 </xsl:template>
 
 <!-- default identity copy -->

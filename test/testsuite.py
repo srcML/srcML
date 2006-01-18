@@ -64,8 +64,8 @@ def xml2txt(xml_filename, encoding):
 def remove_firstline(xml_filename):
 	filename = tempfile.NamedTemporaryFile()
 
-	#command = "/bin/cp " + xml_filename  + " " + filename.name
-	command = "/bin/sed -n '2,$p' " + xml_filename  + " > " + filename.name
+	command = "/bin/cp " + xml_filename  + " " + filename.name
+	#command = "/bin/sed -n '2,$p' " + xml_filename  + " > " + filename.name
 	p = subprocess.Popen(command, shell=True)
 	os.waitpid(p.pid, 0)
 	if debug:
@@ -80,20 +80,20 @@ def xmldiff(text_filename, xml_filename1, xml_filename2):
 	error_count = 0
 	
 	# remove the first line from the first file
-	xml_file_c1 = remove_firstline(xml_filename1)
+	#xml_file_c1 = remove_firstline(xml_filename1)
 
 	# remove the first two lines from the second file
-	xml_file_c2sub = remove_firstline(xml_filename2)
-	xml_file_c2 = remove_firstline(xml_file_c2sub.name)
+	#xml_file_c2sub = remove_firstline(xml_filename2)
+	#xml_file_c2 = remove_firstline(xml_file_c2sub.name)
 	
-	command = "cat " + xml_file_c1.name
+	#command = "cat " + xml_file_c1.name
 #	os.system(command)
-	command = "cat " + xml_file_c2.name
+	#command = "cat " + xml_file_c2.name
 #	os.system(command)
 
 	# run diff
 	diff_result_file = tempfile.NamedTemporaryFile()
-	command = "/usr/bin/diff " + xml_file_c1.name + " " + xml_file_c2.name + " > " + diff_result_file.name
+	command = "/usr/bin/diff " + xml_filename1 + " " + xml_filename2 + " > " + diff_result_file.name
 	result = os.system(command)
 	if result == 256:
 		print pfilename
@@ -104,14 +104,14 @@ def xmldiff(text_filename, xml_filename1, xml_filename2):
 	return error_count
 
 # find differences of two files
-def src2srcML(text_file, encoding):
+def src2srcML(text_file, encoding, directory):
 	pfilename = ""
 
 	# get the text output filename
 	xml_file = tempfile.NamedTemporaryFile()
 
-	# run the srcml processor
-	command = startcmd + srcmltranslator + " -l " + ulanguage
+	# run the srcml processorn
+	command = startcmd + srcmltranslator + " -l " + ulanguage + " -d " + directory + " --filename=\"\""
 	if handles_src_encoding != None:
 		command = command + " --src-encoding=" + encoding
 		command = command + " --xml-encoding=" + encoding
@@ -171,6 +171,36 @@ def getencoding(xml_file):
 
 	# run the srcml processor
 	command = startcmd + srcmlutility + " -x " + " " + xml_file
+	if debug:
+		print command
+	p = os.popen(command, 'r')
+	return string.strip(p.readline())
+
+# find differences of two files
+def getversion(xml_file):
+
+	# run the srcml processor
+	command = startcmd + srcmlutility + " -s " + " " + xml_file
+	if debug:
+		print command
+	p = os.popen(command, 'r')
+	return string.strip(p.readline())
+
+# find differences of two files
+def getdirectory(xml_file):
+
+	# run the srcml processor
+	command = startcmd + srcmlutility + " --directory " + " " + xml_file
+	if debug:
+		print command
+	p = os.popen(command, 'r')
+	return string.strip(p.readline())
+
+# find differences of two files
+def getfilename(xml_file):
+
+	# run the srcml processor
+	command = startcmd + srcmlutility + " --filename " + " " + xml_file
 	if debug:
 		print command
 	p = os.popen(command, 'r')
@@ -247,8 +277,14 @@ for root, dirs, files in os.walk(source_dir):
 		print
 		print ulanguage, "\t", ufilename,
 
-		# store the encoding
+		# store the encoding of the outer unit
 		encoding = getencoding(xml_filename)
+		
+		# store the encoding of the outer unit
+		directory = getdirectory(xml_filename)
+		
+		# store the version of the outer unit
+		version = getversion(xml_filename)
 		
 		# extract the number of units
 		number = getnested(xml_filename)
@@ -283,7 +319,7 @@ for root, dirs, files in os.walk(source_dir):
 			unit_text_file = xml2txt(unit_xml_file_sub.name, encoding)
 
 			# convert the text unit to srcML
-			unit_srcml_file = src2srcML(unit_text_file, encoding)
+			unit_srcml_file = src2srcML(unit_text_file, encoding, directory)
 
 			# find the difference
 			error = xmldiff(unit_text_file.name, unit_xml_file.name, unit_srcml_file.name)

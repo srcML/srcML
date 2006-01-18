@@ -18,7 +18,7 @@
 	collard@mcs.kent.edu
 -->
 
-<xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="ISO-8859-1"/>
+<xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="ISO-8859-1" standalone="yes"/>
 
 <!-- filter out start and end elements  -->
 <xsl:template match="/src:unit/src:unit">
