@@ -134,13 +134,9 @@ def getversion(xml_file):
 # find differences of two files
 def getfilename(xml_file):
 
-	# run the srcml processor
-	command = startcmd + srcmlutility + " --filename " + " " + xml_file
-	if debug:
-		print command
-	p = os.popen(command, 'r')
-	return string.strip(p.readline())
+	last_line=subprocess.Popen([startcmd + srcmlutility, "-f", xml_file], stdout=subprocess.PIPE).communicate()[0]
 
+	return string.strip(last_line)
 
 # find differences of two files
 def getfilename_unit(xml_file, num):
