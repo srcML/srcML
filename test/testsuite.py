@@ -105,12 +105,9 @@ def getlanguage(xml_file):
 # find differences of two files
 def getnested(xml_file):
 
-	# run the srcml processor
-	command = startcmd + srcmlutility + " -n " + " " + xml_file
-	if debug:
-		print command
-	p = os.popen(command, 'r')
-	return int(string.strip(p.readline()))
+	last_line=subprocess.Popen([startcmd + srcmlutility, "-n", xml_file], stdout=subprocess.PIPE).communicate()[0]
+
+	return int(last_line)
 
 
 # find differences of two files
