@@ -185,13 +185,11 @@ for root, dirs, files in os.walk(source_dir):
 			continue
 		
 		# read file into string
-		entire_file = open(xml_filename, 'r').read()
+		#entire_file = open(xml_filename, 'r').read()
 		
 		# extract the language of the entire document
-		res = getlanguage(xml_filename)
-		if len(res) > 0:
-			ulanguage = res # res[0].content
-		else:
+		ulanguage = getlanguage(xml_filename)
+		if len(ulanguage) == 0:
 			ulanguage = "C++"
 
 		if speclang != "" and ulanguage != speclang:
@@ -211,8 +209,6 @@ for root, dirs, files in os.walk(source_dir):
 		
 		# extract the number of units
 		number = getnested(xml_filename)
-		#if number == 0:
-		#	number = 1
 
 		count = 0
 		while count == 0 or count < number:
