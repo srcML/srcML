@@ -46,16 +46,7 @@ def name2filestr(src_filename):
 	return file
 
 # converts a srcML file back to text
-def srcml2src(xml_filename, encoding):
-	filename = tempfile.NamedTemporaryFile()
-
-	# run the srcml processor
-	subprocess.call([startcmd+srcmlutility, "--src-encoding=" + encoding, xml_filename, filename.name])
-	
-	return filename
-
-# converts a srcML file back to text
-def srcml2srcsrc(srctext, encoding):
+def srcml2src(srctext, encoding):
 
 	last_line=subprocess.Popen([startcmd + srcmlutility, "--src-encoding=" + encoding], stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(srctext)[0]
 
@@ -241,7 +232,7 @@ for root, dirs, files in os.walk(source_dir):
 				unit_xml_file_sub_str = extract_unit(entire_file, count)
 
 			# convert the nested unit to text
-			unit_text_file_str = srcml2srcsrc(unit_xml_file_sub_str, encoding)
+			unit_text_file_str = srcml2src(unit_xml_file_sub_str, encoding)
 
 			# convert the text unit to srcML
 			unit_srcml_file = src2srcML(unit_text_file_str, encoding, directory, getfilename(unit_xml_file_sub_str))
