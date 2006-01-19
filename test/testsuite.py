@@ -35,12 +35,12 @@ def extract_unit(src_filename, count):
 
 	return filename
 
-# extracts a particular unit from a srcML file
 def name2file(src_filename):
 	file = open(src_filename)
 	return file
 
-def xml2txt(xml_filename, encoding):
+# converts a srcML file back to text
+def srcml2src(xml_filename, encoding):
 	filename = tempfile.NamedTemporaryFile()
 
 	# run the srcml processor
@@ -57,8 +57,7 @@ def xmldiff(text_filename, xml_filename1, xml_filename2):
 	
 	if trimmed != "":
 		print pfilename
-		error_count = error_count + 1
-		errors[ufilename] = count
+		errors[ufilename] = 1
 		os.system("cat " + text_filename)
 		print trimmed
 		return 1
@@ -84,51 +83,49 @@ def src2srcML(text_file, encoding, directory, filename):
 	return xml_file
 
 # find differences of two files
-def srcversion():
+def getsrcmlattribute(xml_file, command):
 
-	last_line=subprocess.Popen([startcmd + srcmltranslator, "-V"], stdout=subprocess.PIPE).communicate()[0]
-	
+	last_line=subprocess.Popen([startcmd + srcmlutility, command, xml_file], stdout=subprocess.PIPE).communicate()[0]
 	return string.strip(last_line)
 
-# find differences of two files
+# directory attribute
 def getdirectory(xml_file):
 
-	last_line=subprocess.Popen([startcmd + srcmlutility, "-d", xml_file], stdout=subprocess.PIPE).communicate()[0]
-	return string.strip(last_line)
+	return getsrcmlattribute(xml_file, "-d")
 
-# find differences of two files
+# language attribute
 def getlanguage(xml_file):
 	
-	last_line=subprocess.Popen([startcmd + srcmlutility, "-l", xml_file], stdout=subprocess.PIPE).communicate()[0]
+	return getsrcmlattribute(xml_file, "-l")
+
+# xml encoding
+def getencoding(xml_file):
+
+	return getsrcmlattribute(xml_file, "-x")
+
+# version attribute
+def getversion(xml_file):
+
+	return getsrcmlattribute(xml_file, "-x")
+
+# filename attribute
+def getfilename(xml_file):
+
+	return getsrcmlattribute(xml_file, "-f")
+
+# version of the srcML tools
+def srcversion():
+
+	last_line=subprocess.Popen([startcmd + srcmlutility, "-V"], stdout=subprocess.PIPE).communicate()[0]
+
 	return string.strip(last_line)
 
-# find differences of two files
+# number of nested units
 def getnested(xml_file):
 
 	last_line=subprocess.Popen([startcmd + srcmlutility, "-n", xml_file], stdout=subprocess.PIPE).communicate()[0]
 
 	return int(last_line)
-
-
-# find differences of two files
-def getencoding(xml_file):
-
-	last_line=subprocess.Popen([startcmd + srcmlutility, "-x", xml_file], stdout=subprocess.PIPE).communicate()[0]
-	return string.strip(last_line)
-
-# find differences of two files
-def getversion(xml_file):
-
-	last_line=subprocess.Popen([startcmd + srcmlutility, "-s", xml_file], stdout=subprocess.PIPE).communicate()[0]
-	return string.strip(last_line)
-
-# find differences of two files
-def getfilename(xml_file):
-
-	last_line=subprocess.Popen([startcmd + srcmlutility, "-f", xml_file], stdout=subprocess.PIPE).communicate()[0]
-
-	return string.strip(last_line)
-
 
 startcmd = ""
 
@@ -233,7 +230,7 @@ for root, dirs, files in os.walk(source_dir):
 				unit_xml_file_sub = extract_unit(xml_filename, count)
 
 			# convert the nested unit to text
-			unit_text_file = xml2txt(unit_xml_file_sub.name, encoding)
+			unit_text_file = srcml2src(unit_xml_file_sub.name, encoding)
 
 			# convert the text unit to srcML
 			unit_srcml_file = src2srcML(unit_text_file, encoding, directory, getfilename(unit_xml_file_sub.name))
