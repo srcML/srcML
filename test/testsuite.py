@@ -9,12 +9,11 @@ import os.path
 import string
 import re
 import subprocess
-import StringIO
 import difflib
 
 debug = 0
 
-maxcount = 40
+maxcount = 500
 
 srcmltranslator = os.environ.get("SRC2SRCML_BIN")
 if srcmltranslator == "":
@@ -202,16 +201,20 @@ for root, dirs, files in os.walk(source_dir):
 		# extract the number of units
 		number = getnested(entire_file)
 
-		count = 0
+		if specnum == 0:
+			count = 0
+		else:
+			count = specnum - 1
+
 		while count == 0 or count < number:
 
 			count = count + 1
 
-			if specnum != 0 and specnum != count:
-				continue
+			if specnum != 0 and count > specnum:
+				break
 
 			if count > maxcount:
-				break;
+				break
 			
 			total_count = total_count + 1
 			print count, 
