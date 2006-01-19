@@ -51,19 +51,19 @@ def xml2txt(xml_filename, encoding):
 # find differences of two files
 def xmldiff(text_filename, xml_filename1, xml_filename2):
 
-	error_count = 0
+	last_line=subprocess.Popen(["/usr/bin/diff", xml_filename1, xml_filename2], stdout=subprocess.PIPE).communicate()[0]
+
+	trimmed = string.strip(last_line)
 	
-	# run diff
-	diff_result_file = tempfile.NamedTemporaryFile()
-	command = "/usr/bin/diff " + xml_filename1 + " " + xml_filename2 + " > " + diff_result_file.name
-	result = os.system(command)
-	if result == 256:
+	if trimmed != "":
 		print pfilename
 		error_count = error_count + 1
 		errors[ufilename] = count
 		os.system("cat " + text_filename)
-		os.system("cat " + diff_result_file.name)
-	return error_count
+		print trimmed
+		return 1
+	else:
+		return 0
 
 # find differences of two files
 def src2srcML(text_file, encoding, directory, filename):
