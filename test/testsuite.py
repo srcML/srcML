@@ -73,16 +73,13 @@ def src2srcML(text_file, encoding, directory, filename):
 	xml_file = tempfile.NamedTemporaryFile()
 
 	# run the srcml processorn
-	command = startcmd + srcmltranslator + " -l " + ulanguage + " -d " + directory + " --filename=\"" + filename + "\""
 	if handles_src_encoding != None:
-		command = command + " --src-encoding=" + encoding
-		command = command + " --xml-encoding=" + encoding
-	command = command + " " + text_file.name + " " + xml_file.name
-	if debug:
-		print command
 
-	p = subprocess.Popen(command, shell=True)
-	os.waitpid(p.pid, 0)
+		subprocess.call([startcmd + srcmltranslator, "-l", ulanguage, "-d", directory, "--src-encoding=" + encoding, "--xml-encoding=" + encoding, "--filename=" + filename, text_file.name, xml_file.name])
+
+	else:
+		
+		subprocess.call([startcmd + srcmltranslator, "-l", ulanguage, "-d", directory, "--filename=" + filename, text_file.name, xml_file.name])
 
 	return xml_file
 
@@ -137,16 +134,6 @@ def getfilename(xml_file):
 	last_line=subprocess.Popen([startcmd + srcmlutility, "-f", xml_file], stdout=subprocess.PIPE).communicate()[0]
 
 	return string.strip(last_line)
-
-# find differences of two files
-def getfilename_unit(xml_file, num):
-
-	# run the srcml processor
-	command = startcmd + srcmlutility + " --unit=" + str(num) + " --filename " + " " + xml_file
-	if debug:
-		print command
-	p = os.popen(command, 'r')
-	return string.strip(p.readline())
 
 
 startcmd = ""
