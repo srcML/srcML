@@ -86,12 +86,9 @@ def src2srcML(text_file, encoding, directory, filename):
 # find differences of two files
 def srcversion():
 
-	# run the srcml processor
-	command = startcmd + srcmltranslator + " -V"
-	if debug:
-		print command
-	p = os.popen(command, 'r')
-	return string.strip(p.readline())
+	last_line=subprocess.Popen([startcmd + srcmltranslator, "-V"], stdout=subprocess.PIPE).communicate()[0]
+	
+	return string.strip(last_line)
 
 # find differences of two files
 def getdirectory(xml_file):
