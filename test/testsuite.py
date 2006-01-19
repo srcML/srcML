@@ -11,6 +11,7 @@ import tempfile
 import re
 import subprocess
 import StringIO
+import difflib
 
 debug = 0
 
@@ -37,9 +38,9 @@ def extract_unit(src_filename, count):
 	return filename
 
 # extracts a particular unit from a srcML file
-def extract_unit_str(src_filename, count):
+def extract_unit_str(src, count):
 
-	last_line=subprocess.Popen([startcmd + srcmlutility, "--xml", "--unit=" + str(count), src_filename], stdout=subprocess.PIPE).communicate()[0]
+	last_line=subprocess.Popen([startcmd + srcmlutility, "--xml", "--unit=" + str(count)], stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(src)[0]
 
 	return last_line
 
@@ -70,18 +71,14 @@ def srcml2srcsrc(srctext, encoding):
 
 # find differences of two files
 def xmldiff(xml_filename1, xml_filename2):
+			      
 
-	last_line=subprocess.Popen(["/usr/bin/diff", xml_filename1, xml_filename2], stdout=subprocess.PIPE).communicate()[0]
-
-	trimmed = string.strip(last_line)
-	
-	if trimmed != "":
-		print pfilename
-		errors[ufilename] = 1
-		print last_line
-		print trimmed
+	if xml_filename1 != xml_filename2:
+		print xml_filename1
+		print xml_filename2
 		return 1
 	else:
+
 		return 0
 
 # find differences of two files
@@ -94,13 +91,14 @@ def src2srcML(text_file, encoding, directory, filename):
 	# run the srcml processorn
 	if handles_src_encoding != None:
 
-		subprocess.Popen([startcmd + srcmltranslator, "-l", ulanguage, "-d", directory, "--src-encoding=" + encoding, "--xml-encoding=" + encoding, "--filename=" + filename, "-", xml_file.name], stdin=subprocess.PIPE).communicate(text_file)
+		last_line = subprocess.Popen([startcmd + srcmltranslator, "-l", ulanguage, "-d", directory, "--src-encoding=" + encoding, "--xml-encoding=" + encoding, "--filename=" + filename], stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(text_file)[0]
+		
+		return last_line
 
 	else:
 		
 		subprocess.call([startcmd + srcmltranslator, "-l", ulanguage, "-d", directory, "--filename=" + filename, text_file.name, xml_file.name])
 
-	return xml_file
 
 #
 def getsrcmlattribute(xml_file, command):
@@ -246,21 +244,17 @@ for root, dirs, files in os.walk(source_dir):
 
 			# save the particular nested unit
 			if number == 0:
-				unit_xml_file_sub = name2file(xml_filename)
-				unit_xml_file_sub_str = name2filestr(xml_filename)
+				unit_xml_file_sub_str = entire_file
 			else:
-				unit_xml_file_sub = extract_unit(xml_filename, count)
-				unit_xml_file_sub_str = extract_unit_str(xml_filename, count)
+				unit_xml_file_sub_str = extract_unit_str(entire_file, count)
 
 			# convert the nested unit to text
-			unit_text_file = srcml2src(unit_xml_file_sub.name, encoding)
 			unit_text_file_str = srcml2srcsrc(unit_xml_file_sub_str, encoding)
 
 			# convert the text unit to srcML
 			unit_srcml_file = src2srcML(unit_text_file_str, encoding, directory, getfilename(unit_xml_file_sub_str))
-
 			# find the difference
-			error = xmldiff(unit_xml_file_sub.name, unit_srcml_file.name)
+			error = xmldiff(unit_xml_file_sub_str, unit_srcml_file)
 			error_count += error
 			if error == 1:
 				errorlist.append((ufilename + " " + ulanguage, count))
