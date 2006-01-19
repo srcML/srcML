@@ -114,7 +114,7 @@ def getfilename(xml_file):
 	return getsrcmlattribute(xml_file, "-f")
 
 # version of the srcML tools
-def srcversion():
+def srcmlversion():
 
 	last_line=subprocess.Popen([startcmd + srcmlutility, "-V"], stdout=subprocess.PIPE).communicate()[0]
 
@@ -244,9 +244,9 @@ for root, dirs, files in os.walk(source_dir):
 
 if error_count == 0:
 	print
-	print srcversion() + ":  No errors out of " + str(total_count) + " cases" 
+	print srcmlversion() + ":  No errors out of " + str(total_count) + " cases" 
 else:
-	print srcversion() + ":  Errors:  " + str(error_count) + " out of " + str(total_count) + " cases"
+	print srcmlversion() + ":  Errors:  " + str(error_count) + " out of " + str(total_count) + " cases"
 	print "Errorlist:"
 	for e in errorlist:
 		print e[0], e[1]
