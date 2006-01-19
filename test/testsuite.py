@@ -30,15 +30,7 @@ handles_src_encoding = os.environ.get("SRC2SRCML_SRC_ENCODING")
 entire_file = ""
 
 # extracts a particular unit from a srcML file
-def extract_unit(src_filename, count):
-	filename = tempfile.NamedTemporaryFile()
-
-	subprocess.call([startcmd+srcmlutility, "--xml", "--unit=" + str(count), src_filename, filename.name])
-
-	return filename
-
-# extracts a particular unit from a srcML file
-def extract_unit_str(src, count):
+def extract_unit(src, count):
 
 	last_line=subprocess.Popen([startcmd + srcmlutility, "--xml", "--unit=" + str(count)], stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(src)[0]
 
@@ -246,7 +238,7 @@ for root, dirs, files in os.walk(source_dir):
 			if number == 0:
 				unit_xml_file_sub_str = entire_file
 			else:
-				unit_xml_file_sub_str = extract_unit_str(entire_file, count)
+				unit_xml_file_sub_str = extract_unit(entire_file, count)
 
 			# convert the nested unit to text
 			unit_text_file_str = srcml2srcsrc(unit_xml_file_sub_str, encoding)
