@@ -7,7 +7,6 @@
 import sys
 import os.path
 import string
-import tempfile
 import re
 import subprocess
 import StringIO
@@ -66,21 +65,15 @@ def xmldiff(xml_filename1, xml_filename2):
 
 # find differences of two files
 def src2srcML(text_file, encoding, directory, filename):
-	pfilename = ""
-
-	# get the text output filename
-	xml_file = tempfile.NamedTemporaryFile()
 
 	# run the srcml processorn
 	if handles_src_encoding != None:
 
 		last_line = subprocess.Popen([startcmd + srcmltranslator, "-l", ulanguage, "-d", directory, "--src-encoding=" + encoding, "--xml-encoding=" + encoding, "--filename=" + filename], stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(text_file)[0]
-		
-		return last_line
-
 	else:
+		last_line = subprocess.Popen([startcmd + srcmltranslator, "-l", ulanguage, "-d", directory, "--filename=" + filename], stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(text_file)[0]
 		
-		subprocess.call([startcmd + srcmltranslator, "-l", ulanguage, "-d", directory, "--filename=" + filename, text_file.name, xml_file.name])
+	return last_line
 
 
 #
