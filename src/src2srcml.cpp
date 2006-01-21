@@ -198,7 +198,7 @@ int main(int argc, char* argv[]) {
       if (position == original_position) ++curarg;
 #else
       std::cerr << NAME << ": The compression option, i.e., " << COMPRESSED_FLAG << ", is only supported in the libxml version." << '\n';
-      exit(0);
+      exit(STATUS_LIBXML2_FEATURE);
 #endif
     }
 
@@ -229,7 +229,7 @@ int main(int argc, char* argv[]) {
       } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
 	std::cerr << NAME << ": invalid option -- Language flag must one of the following values:  "
 		  << LANGUAGE_C << " " << LANGUAGE_CXX << " " << LANGUAGE_JAVA << '\n';
-	exit(0);
+	exit(STATUS_INVALID_LANGUAGE);
       } else {
 
 	// move to parameter
@@ -252,7 +252,7 @@ int main(int argc, char* argv[]) {
       else {
 	std::cerr << NAME << ": invalid option -- Language flag must one of the following values:  "
 		  << LANGUAGE_C << " " << LANGUAGE_CXX << " " << LANGUAGE_JAVA << '\n';
-	exit(0);
+	exit(STATUS_INVALID_LANGUAGE);
       }
     }
 
@@ -272,7 +272,7 @@ int main(int argc, char* argv[]) {
       // check for encoding flag with missing encoding
       } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
 	std::cerr << NAME << ": encoding selected but not specified." << '\n';
-	exit(0);
+	exit(STATUS_XMLENCODING_MISSING);
       } else {
 
 	// move to parameter
@@ -288,7 +288,7 @@ int main(int argc, char* argv[]) {
       // validate xml encoding
       if (!srcMLOutput::checkEncoding(xml_encoding)) {
 	std::cerr << NAME << ": xml encoding \"" << xml_encoding << "\" is not supported." << '\n';
-	exit(0);
+	exit(STATUS_UNKNOWN_ENCODING);
       }
     }
 
@@ -309,7 +309,7 @@ int main(int argc, char* argv[]) {
       // check for text encoding flag with missing text encoding
       } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
 	std::cerr << NAME << ": text encoding selected but not specified." << '\n';
-	exit(0);
+	exit(STATUS_SRCENCODING_MISSING);
       } else {
 	// move to parameter
 	++curarg;
@@ -324,11 +324,11 @@ int main(int argc, char* argv[]) {
       // validate source encoding
       if (!srcMLOutput::checkEncoding(src_encoding)) {
 	std::cerr << NAME << ": text encoding \"" << src_encoding << "\" is not supported." << '\n';
-	exit(0);
+	exit(STATUS_UNKNOWN_ENCODING);
       }
 #else
       std::cerr << NAME << ": The source encoding option, i.e., " << TEXTENCODING_FLAG << ", is only supported in the libxml version." << '\n';
-      exit(0);
+      exit(STATUS_LIBXML2_FEATURE);
 #endif
     }
 
@@ -348,7 +348,7 @@ int main(int argc, char* argv[]) {
       // validate that the filename is given and is not another flag
       } else if (argc <= curarg + 1 || argv[curarg + 1][0] == '-') {
 	std::cerr << NAME << ": invalid option -- Directory must be specified.\n";
-	exit(0);
+	exit(STATUS_DIRECTORY_MISSING);
       } else {
 	// move to parameter
 	++curarg;
@@ -377,7 +377,7 @@ int main(int argc, char* argv[]) {
       // validate that the filename is given and is not another flag
       } else if (argc <= curarg + 1 || argv[curarg + 1][0] == '-') {
 	std::cerr << NAME << ": invalid option -- Filename must be specified.\n";
-	exit(0);
+	exit(STATUS_FILENAME_MISSING);
 
       // filename is separate parameter
       } else {
@@ -405,10 +405,10 @@ int main(int argc, char* argv[]) {
 	given_version = embedded + 1;
 	++curarg;
 
-      // validate that the filename is given and is not another flag
+      // validate that the version is given and is not another flag
       } else if (argc <= curarg + 1 || argv[curarg + 1][0] == '-') {
 	std::cerr << NAME << ": invalid option -- Version must be specified.\n";
-	exit(0);
+	exit(STATUS_VERSION_MISSING);
 
       // filename is separate parameter
       } else {
@@ -433,20 +433,20 @@ int main(int argc, char* argv[]) {
 
       std::cerr << NAME << ": unrecognized option '" << argv[curarg] << "'\n";
       std::cerr << "try '" << NAME << " " << HELP_FLAG << "' for more information." << "\n";
-      exit(0);
+      exit(STATUS_UNKNOWN_OPTION);
     }
   }
 
   // help flag trumps all other options
   if (isoption(options, OPTION_HELP)) {
     output_help(NAME);
-    exit(0);
+    exit(STATUS_SUCCESS);
   }
 
   // version flag trumps all other options except for help
   if (isoption(options, OPTION_PVERSION)) {
     output_version(NAME);
-    exit(0);
+    exit(STATUS_SUCCESS);
   }
 
   // eat optional option separator
@@ -567,7 +567,7 @@ int main(int argc, char* argv[]) {
     } catch (FileError e) {
 
       std::cerr << NAME << " error: file \'" << path << "\' does not exist." << "\n";
-      exit(0);
+      exit(STATUS_INPUTFILE_PROBLEM);
     }
 
   // translate multiple input filenames on command line
@@ -589,6 +589,7 @@ int main(int argc, char* argv[]) {
   }
   } catch (srcEncodingException) {
     std::cerr << "Translation encoding problem" << '\n';
+    exit(STATUS_UNKNOWN_ENCODING);
   }
 
   return exit_status;
