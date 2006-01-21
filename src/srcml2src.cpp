@@ -208,7 +208,7 @@ int main(int argc, char* argv[]) {
       // check for unit flag with missing unit number
       } else if (argc <= curarg + 2 || strcmp(argv[curarg], OPTION_SEPARATOR) == 0) {
 	std::cerr << NAME << ": unit option selected but no number specified." << '\n';
-	exit(0);
+	exit(STATUS_UNIT_MISSING);
       } else {
 	++curarg;
 	unit = pstd::atoi(argv[curarg]);
@@ -218,7 +218,7 @@ int main(int argc, char* argv[]) {
       // validate unit number
       if (unit < 0) {
 	std::cerr << NAME << ": unit \"" << unit << "\" is not valid." << '\n';
-	exit(0);
+	exit(STATUS_UNIT_INVALID);
       }
     }
 
@@ -238,7 +238,7 @@ int main(int argc, char* argv[]) {
       // check for encoding flag with missing encoding
       } else if (argc <= curarg + 2 || strcmp(argv[curarg], OPTION_SEPARATOR) == 0) {
 	std::cerr << NAME << ": encoding selected but not specified." << '\n';
-	exit(0);
+	exit(STATUS_XMLENCODING_MISSING);
       } else {
 	++curarg;
 	encoding = argv[curarg];
@@ -248,7 +248,7 @@ int main(int argc, char* argv[]) {
       // validate xml encoding
       if (!srcMLUtility::checkEncoding(encoding)) {
 	std::cerr << NAME << ": encoding \"" << encoding << "\" is not supported." << '\n';
-	exit(0);
+	exit(STATUS_UNKNOWN_ENCODING);
       }
     }
 
@@ -268,7 +268,7 @@ int main(int argc, char* argv[]) {
       // check for text encoding flag with missing text encoding
       } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
 	std::cerr << NAME << ": text encoding selected but not specified." << '\n';
-	exit(0);
+	exit(STATUS_SRCENCODING_MISSING);
       } else {
 	// move to parameter
 	++curarg;
@@ -283,7 +283,7 @@ int main(int argc, char* argv[]) {
       // validate source encoding
       if (!srcMLUtility::checkEncoding(src_encoding)) {
 	std::cerr << NAME << ": text encoding \"" << src_encoding << "\" is not supported." << '\n';
-	exit(0);
+	exit(STATUS_UNKNOWN_ENCODING);
       }
 
     // reached the end of a multi-short form option
@@ -296,7 +296,7 @@ int main(int argc, char* argv[]) {
 
       std::cerr << NAME << ": unrecognized option '" << argv[curarg] << "'\n";
       std::cerr << "try '" << NAME << " " << HELP_FLAG << "' for more information." << "\n";
-      exit(0);
+      exit(STATUS_UNKNOWN_OPTION);
     }
   }
 
@@ -317,7 +317,7 @@ int main(int argc, char* argv[]) {
 
     if (!fin) {
       std::cerr << "Error:  Input srcML file \"" << argv[curarg] << "\" does not exist.\n";
-      exit(0);
+      exit(STATUS_INPUTFILE_PROBLEM);
     }
 
     pin = &fin;
@@ -355,13 +355,13 @@ int main(int argc, char* argv[]) {
   // help flag
   if (isoption(options, OPTION_HELP)) {
     output_help(NAME);
-    exit(0);
+    exit(STATUS_SUCCESS);
   }
 
   // version flag
   if (isoption(options, OPTION_PVERSION)) {
     output_version(NAME);
-    exit(0);
+    exit(STATUS_SUCCESS);
   }
 
   try {
