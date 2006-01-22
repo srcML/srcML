@@ -49,6 +49,10 @@ xmlChar* unit_directory = 0;
 xmlChar* unit_version = 0;
 xmlChar* unit_language = 0;
 
+void skiptonextunit(xmlTextReaderPtr reader) throw (LibXMLError);
+void skiptounit(xmlTextReaderPtr reader, const char* filename) throw (LibXMLError);
+void skiptounit(xmlTextReaderPtr reader, int number) throw (LibXMLError);
+
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* enc, int op)
   : infile(infilename), encoding(enc), options(op), reader(0), handler(0) {
@@ -161,6 +165,19 @@ void srcMLUtility::extract_xml(const char* ofilename, int unitnumber) {
 
   // skip to the proper nested unit
   skiptounit(reader, unitnumber);
+
+  // output entire unit element
+  outputUnit(ofilename, reader);
+}
+
+// extract a given unit specified by filename
+void srcMLUtility::extract_xml(const char* ofilename, const char* filename) {
+
+  // Set the encoding to that of the outer, root unit element
+  encoding = (const char*) xmlTextReaderConstEncoding(reader);
+
+  // skip to the proper nested unit
+  skiptounit(reader, filename);
 
   // output entire unit element
   outputUnit(ofilename, reader);
@@ -477,7 +494,7 @@ void srcMLUtility::outputText(const xmlChar* s, xmlTextWriterPtr writer, bool es
   }
 
   // skip to the next unit
-  void srcMLUtility::skiptonextunit(xmlTextReaderPtr reader) throw (LibXMLError) {
+  void skiptonextunit(xmlTextReaderPtr reader) throw (LibXMLError) {
 
     // skip to the correct unit
     while (1) {
@@ -494,7 +511,7 @@ void srcMLUtility::outputText(const xmlChar* s, xmlTextWriterPtr writer, bool es
   }
 
   // skip to a particular unit
-  void srcMLUtility::skiptounit(xmlTextReaderPtr reader, int number) throw (LibXMLError) {
+  void skiptounit(xmlTextReaderPtr reader, int number) throw (LibXMLError) {
 
     // skip to the correct unit
     int count = 0;
@@ -505,6 +522,19 @@ void srcMLUtility::outputText(const xmlChar* s, xmlTextWriterPtr writer, bool es
 
       // did we find it?
       if (count == number)
+	break;
+    }
+  }
+
+  // skip to a particular unit
+  void skiptounit(xmlTextReaderPtr reader, const char* filename) throw (LibXMLError) {
+
+    // skip to the correct unit
+    while (1) {
+      skiptonextunit(reader);
+
+      // did we find it?
+      if (strcmp((const char*) xmlTextReaderGetAttribute(reader, BAD_CAST "filename"), filename) == 0)
 	break;
     }
   }

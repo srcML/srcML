@@ -76,6 +76,9 @@ class srcMLUtility {
   // extract (intact) a given unit
   virtual void extract_xml(const char* ofilename, int);
 
+  // extract (intact) a given unit specified by filename
+  virtual void extract_xml(const char* ofilename, const char*);
+
   // extract (intact) a given unit
   virtual void extract_text(const char* ofilename, int);
 
@@ -106,12 +109,6 @@ class srcMLUtility {
 
   // output current text-only XML node in reader
   void outputText(const xmlChar* s, xmlTextWriterPtr writer, bool escape = true);
-
-  // skip to the next unit
-  void skiptonextunit(xmlTextReaderPtr reader) throw (LibXMLError);
-
-  // skip to a particular unit
-  void skiptounit(xmlTextReaderPtr reader, int number) throw (LibXMLError);
 
  private:
   const char* infile;
