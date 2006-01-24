@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Fix bug with processing include directive correctly in guessing mode.
+
 	Return status codes for src2srcml and srcml2src.
 
 	More intelligent handling of unit attributes for units inside of compound nested documents.

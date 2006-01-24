@@ -3660,6 +3660,9 @@ eof :
         EOF
 ;
 
+mark_directive[int& directive_token] { directive_token = LA(1); } :
+    ;
+
 /*
     Preprocessor
 
@@ -3684,13 +3687,11 @@ preprocessor {
 
             tp = getTokenPosition();
         }
-        PREPROC
+        PREPROC mark_directive[directive_token]
         {
             startNewMode(MODE_LOCAL);
 
             startElement(SCPP_DIRECTIVE);
-
-            directive_token = LA(1);
         }
         (
         INCLUDE
