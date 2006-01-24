@@ -150,4 +150,12 @@
 <cpp:define>#<cpp:directive>define</cpp:directive> <name>a</name> "abc" "def</cpp:define>
 </unit>
 
+<unit filename="via-rhine.c">
+<expr_stmt><expr><call><name>printk</name><argument_list>(<argument><expr><name>name</name></expr></argument>, <argument><expr><call><name>memaddr</name>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>0</expr></cpp:if>
+              ()
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+     <argument_list>,<argument><expr><name>b</name></expr></argument>		 )</argument_list></call></expr></argument>;
+</argument_list></call></expr></expr_stmt></unit>
+
 </unit>
