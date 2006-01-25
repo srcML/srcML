@@ -235,7 +235,7 @@ testbase :
 
 PHONY : shorttest
 shorttest : testbase
-	cd ../test; export SRC2SRCML_BIN=${SRC2SRCML_BIN}; export SRCML2SRC_BIN=${SRCML2SRC_BIN};  time ./testsuite.py ".*\.all"; cd ../src
+	cd ../test; export SRC2SRCML_BIN=${SRC2SRCML_BIN}; export SRCML2SRC_BIN=${SRCML2SRC_BIN};  time ./testsuite.py ".*\.all|macro"; cd ../src
 
 PHONY : longtest
 longtest : testbase
