@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Fix bug with else bound to wrong if.
+
 	Fix bug with misidentification of no parameter macro as call when followed by end of file.
 
 	Fix bug with misidentification of macro as call when followed by end of file.

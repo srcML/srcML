@@ -867,7 +867,7 @@ if_statement { setFinalToken(); } :
 else_statement { setFinalToken(); } :
         {
             // treat as a statement with a nested statement
-            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_STATEMENT);
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_STATEMENT | MODE_ELSE);
 
             // start the else part of the if statement
             startElement(SELSE);
@@ -1596,15 +1596,25 @@ terminate_post {} :
             // special case when ending then of if statement
             if ((!inMode(MODE_EXPRESSION_BLOCK) || inMode(MODE_EXPECT)) && !inMode(MODE_INTERNAL_END_CURLY) && !inMode(MODE_INTERNAL_END_PAREN)) {
                 // end down to either a block or top section, or to an if
-                endDownToFirstMode(MODE_TOP | MODE_IF);
+                
+                bool endedelse = false;
+                while (!inMode(MODE_TOP) && !inMode(MODE_IF)) {
+                    if (inMode(MODE_ELSE))
+                        endedelse = true;
+                    endCurrentMode();
+                }
 
                 // special handling for if statement due to detection of else
                 if (inMode(MODE_IF)) {
 
+                    // when an else is ended, always end the if
+                    if (endedelse)
+                        endCurrentMode(MODE_IF);
+
                     // move to the next non-skipped token
                     consumeSkippedTokens();
 
-                    // end mode for anything besides an else
+                    // end mode for anything besides an else as the next token
                     if (LA(1) != ELSE)
                         endDownToMode(MODE_TOP);
                 }
