@@ -3660,7 +3660,7 @@ eof :
         EOF
 ;
 
-mark_directive[int& directive_token] { directive_token = LA(1); } :
+mark_directive[int& directive_token] { directive_token = LA(1); markblockzero = false; } :
     ;
 
 /*
@@ -3922,8 +3922,19 @@ cpp_condition { LocalMode lm; } :
                 markblockzero = true;
             }
         }
+        mark_block
+
         full_expression
 ;
+
+mark_block {
+
+        if (LA(1) == CONSTANTS && LT(1)->getText() == "0") {
+            markblockzero = true;
+        }
+
+} :
+    ;
 
 cpp_symbol { LocalMode lm; } :
         {

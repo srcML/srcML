@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Fix bug with processing #if 0 block correctly in guessing mode.
+
 	Fix bug with processing include directive correctly in guessing mode.
 
 	Return status codes for src2srcml and srcml2src.
