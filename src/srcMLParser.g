@@ -1525,18 +1525,9 @@ block_end {} :
 
             // end down to either a block or top section, or to an if, whichever is reached first
             endDownToFirstMode(MODE_BLOCK | MODE_TOP | MODE_IF | MODE_ELSE);
-
-            // special handling for if statement due to detection of else
-            if (inTransparentMode(MODE_IF)) {
-
-               // move to the next non-skipped token
-               consumeSkippedTokens();
-
-               // end mode for anything besides an else
-               if (LA(1) != ELSE && !inMode(MODE_BLOCK | MODE_NEST))
-                  endDownToMode(MODE_TOP);
-            }
-
+        }
+        else_handling
+        {
             // some statements end with the block
             if (inMode(MODE_END_AT_BLOCK))
                 endCurrentMode(MODE_LOCAL);
