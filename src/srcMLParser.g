@@ -1595,28 +1595,39 @@ terminate_post {} :
             // end all statements this statement is nested in
             // special case when ending then of if statement
             if ((!inMode(MODE_EXPRESSION_BLOCK) || inMode(MODE_EXPECT)) && !inMode(MODE_INTERNAL_END_CURLY) && !inMode(MODE_INTERNAL_END_PAREN)) {
-                // end down to either a block or top section, or to an if
-                
-                bool endedelse = false;
-                while (!inMode(MODE_TOP) && !inMode(MODE_IF)) {
-                    if (inMode(MODE_ELSE))
-                        endedelse = true;
-                    endCurrentMode();
-                }
 
-                // special handling for if statement due to detection of else
-                if (inMode(MODE_IF)) {
+                // end down to either a block or top section, or to an if or else
+                endDownToFirstMode(MODE_TOP | MODE_IF | MODE_ELSE);
 
-                    // when an else is ended, always end the if
-                    if (endedelse)
-                        endCurrentMode(MODE_IF);
+                // handle parts of if
+                if (inTransparentMode(MODE_IF)) {
 
                     // move to the next non-skipped token
                     consumeSkippedTokens();
 
-                    // end mode for anything besides an else as the next token
-                    if (LA(1) != ELSE)
+                    // find out if the next token is an else
+                    bool nestedelse = LA(1) == ELSE;
+
+                    // if there isn't an ELSE next, then just end like other statements
+                    if (!nestedelse) {
                         endDownToMode(MODE_TOP);
+
+                    // when an ELSE is next and already in an else, must end properly (not needed for then)
+                    } else if (inMode(MODE_ELSE)) {
+
+                        while (inMode(MODE_ELSE)) {
+
+                            // end the else
+                            endCurrentMode(MODE_ELSE);
+
+                            // ending an else means ending an if
+                            endCurrentMode(MODE_IF);
+
+                        }  
+
+                        // following ELSE indicates end of outer then
+                        endCurrentMode();
+                    }
                 }
             }
         }
