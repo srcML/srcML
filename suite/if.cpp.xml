@@ -2,10 +2,6 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="if">
 
 <unit>
-<if>if <condition>(<expr><name>a</name></expr>)</condition><then> <block>{}</block></then></if>
-</unit>
-
-<unit>
 <if>if <condition>(<expr><name>a</name></expr>)</condition><then> <expr_stmt><expr><name>b</name></expr>;</expr_stmt></then></if>
 </unit>
 
@@ -14,19 +10,11 @@
 </unit>
 
 <unit>
-<if>if <condition>(<expr>1</expr>)</condition><then> <block>{}</block></then></if>
-</unit>
-
-<unit>
 <if>if <condition>(<expr>1</expr>)</condition><then> <expr_stmt><expr>2</expr>;</expr_stmt></then></if>
 </unit>
 
 <unit>
 <if>if <condition>(<expr>1</expr>)</condition><then> ;</then></if>
-</unit>
-
-<unit>
-<if>if <condition>(<expr><name>a</name> == <name>b</name></expr>)</condition><then> <block>{}</block></then></if>
 </unit>
 
 <unit>
@@ -50,8 +38,8 @@
 </unit>
 
 <unit>
-<if>if <condition>(<expr><name>a</name></expr>)</condition><then> <block>{}</block></then>
-<else>else <block>{}</block></else></if>
+<if>if <condition>(<expr><name>a</name></expr>)</condition><then> ;</then>
+<else>else ;</else></if>
 </unit>
 
 <unit>
@@ -82,6 +70,55 @@
 <if>if <condition>(<expr>1</expr>)</condition><then> 
   <while>while <condition>(<expr>2</expr>)</condition>
     ;</while></then></if>
+</unit>
+
+<unit filename="A.cc">
+  <if>if <condition>(<expr>1</expr>)</condition><then> 
+    <if>if <condition>(<expr>2</expr>)</condition><then>
+      <expr_stmt><expr><name>x</name> = 1</expr>;</expr_stmt></then>
+    <else>else
+      <expr_stmt><expr><name>x</name> = 2</expr>;</expr_stmt></else></if></then>
+  <else>else
+    <if>if <condition>(<expr>3</expr>)</condition><then> 
+      <expr_stmt><expr><name>x</name> = 3</expr>;</expr_stmt></then>
+    <else>else
+      <expr_stmt><expr><name>x</name> = 4</expr>;</expr_stmt></else></if></else></if>
+</unit>
+
+<unit>
+  <if>if <condition>(<expr>1</expr>)</condition><then> 
+    <if>if <condition>(<expr>2</expr>)</condition><then>
+      <expr_stmt><expr><name>x</name> = 1</expr>;</expr_stmt></then>
+  <else>else
+    <if>if <condition>(<expr>3</expr>)</condition><then> 
+      <expr_stmt><expr><name>x</name> = 3</expr>;</expr_stmt></then>
+    <else>else
+      <expr_stmt><expr><name>x</name> = 4</expr>;</expr_stmt></else></if></else></if></then></if>
+</unit>
+
+<unit>
+  <if>if <condition>(<expr>1</expr>)</condition><then> 
+    <if>if <condition>(<expr>2</expr>)</condition><then>
+      <if>if <condition>(<expr>3</expr>)</condition><then>
+	<break>break;</break></then>
+      <else>else
+	<break>break;</break></else></if></then>
+    <else>else
+      <if>if <condition>(<expr>4</expr>)</condition><then>
+	<break>break;</break></then>
+      <else>else
+	<break>break;</break></else></if></else></if></then>
+  <else>else
+    <if>if <condition>(<expr>5</expr>)</condition><then> 
+      <if>if <condition>(<expr>6</expr>)</condition><then>
+	<break>break;</break></then>
+      <else>else
+	<break>break;</break></else></if></then>
+    <else>else
+      <if>if <condition>(<expr>7</expr>)</condition><then>
+	<break>break;</break></then>
+      <else>else
+	<break>break;</break></else></if></else></if></else></if>
 </unit>
 
 </unit>
