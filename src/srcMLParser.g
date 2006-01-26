@@ -1524,10 +1524,10 @@ block_end {} :
             // special case when ending then of if statement
 
             // end down to either a block or top section, or to an if, whichever is reached first
-            endDownToFirstMode(MODE_BLOCK | MODE_TOP | MODE_IF);
+            endDownToFirstMode(MODE_BLOCK | MODE_TOP | MODE_IF | MODE_ELSE);
 
             // special handling for if statement due to detection of else
-            if (inMode(MODE_IF)) {
+            if (inTransparentMode(MODE_IF)) {
 
                // move to the next non-skipped token
                consumeSkippedTokens();
@@ -1598,7 +1598,13 @@ terminate_post {} :
 
                 // end down to either a block or top section, or to an if or else
                 endDownToFirstMode(MODE_TOP | MODE_IF | MODE_ELSE);
+            }
+        }
+        else_handling
+;
 
+else_handling {} :
+        {
                 // handle parts of if
                 if (inTransparentMode(MODE_IF)) {
 
@@ -1629,7 +1635,6 @@ terminate_post {} :
                         endCurrentMode();
                     }
                 }
-            }
         }
 ;
 
