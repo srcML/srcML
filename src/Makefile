@@ -51,7 +51,6 @@ TIMING_JAVA=timing_java.java
 
 # default
 all : ${EXE_DIR}src2srcml ${EXE_DIR}srcml2src
-#all : ${EXE_DIR}src2srcml ${EXE_DIR}srcml2src ${EXE_DIR}srcmllexer
 
 # setup
 setup : version.cpp
