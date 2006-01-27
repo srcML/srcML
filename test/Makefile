@@ -1,3 +1,23 @@
+##
+# Makefile for srcML translator, src2srcml
+
+EXE_DIR = ../bin/
+OBJ_DIR = ../obj/
+
+SRC2SRCML_BIN=../bin/src2srcml
+SRCML2SRC_BIN=../bin/srcml2src
+
+PHONY : testbase
+testbase : gen
+
+PHONY : shorttest
+shorttest : testbase
+	export SRC2SRCML_BIN=${SRC2SRCML_BIN}; export SRCML2SRC_BIN=${SRCML2SRC_BIN}; time ./testsuite.py ".*\.all|macro"
+
+PHONY : longtest
+longtest : testbase
+	export SRC2SRCML_BIN=${SRC2SRCML_BIN}; export SRCML2SRC_BIN=${SRCML2SRC_BIN}; time ./testsuite.py
+
 XSLT=/usr/bin/xsltproc
 
 # merge separate srcML units into one
@@ -42,6 +62,9 @@ XSLT_CLASS2STRUCT=${XSLT} ${XSLT_CLASS2STRUCT_XSL}
 XSLT_CLASS2INTERFACE_XSL=xsl/class2interface.xsl
 XSLT_CLASS2INTERFACE=${XSLT} ${XSLT_CLASS2INTERFACE_XSL}
 
+XSLT_IF2IFBLOCK_XSL=xsl/if2ifblock.xsl
+XSLT_IF2IFBLOCK=${XSLT} ${XSLT_IF2IFBLOCK_XSL}
+
 ##
 # Comments and preprocessor statements are handled out of the normal grammar rules
 # in src2srcml.  In order to test the handling of these tokens, special cases are
@@ -77,7 +100,7 @@ GEN_FILES_SEP=while ifnestcond return throw function_decl constructor_explicit d
 
 GEN_FILES_PART=${foreach nm, $(GEN_FILES_SEP), ../suite/$(nm).cpp.xml}
 
-SEP_FILES_BASE_COMMON=comment string variable_names expression decl_simple if for do switch call function enum return_base problem
+SEP_FILES_BASE_COMMON=comment string variable_names expression decl_simple if for do switch call function enum return_base problem ifblock
 
 SEP_FILES_BASE_C=functionkr 
 
@@ -87,7 +110,7 @@ SEP_FILES_BASE_OO=function_ns decl_ns variable_names_ns
 
 SEP_FILES_BASE_CXX=friend try namespace template typedef_template constructor destructor throw_base function_throw catch_form class
 
-SEP_FILES_BASE_JAVA=class_java keyword_java interface_java
+SEP_FILES_BASE_JAVA=class_java keyword_java interface_java package
 
 SEP_FILES_BASE=$(SEP_FILES_BASE_COMMON) $(SEP_FILES_BASE_C) $(SEP_FILES_BASE_C_FAMILY) $(SEP_FILES_BASE_CXX) $(SEP_FILES_BASE_JAVA)
 
@@ -113,7 +136,7 @@ GEN_FILES_ALL= ${foreach nm, $(SEP_FILES_PLUS), ../suite/$(nm).all.cpp.xml} ../s
 GEN_FILES_BLOCK= ${foreach nm, $(SEP_FILES_PLUS),          ../suite/$(nm).block.cpp.xml} \
                  ${foreach nm, $(SEP_FILES_BASE_C_ALL),    ../suite/$(nm).block.c.xml} \
                  ${foreach nm, $(SEP_FILES_BASE_JAVA_ALL), ../suite/$(nm).block.java.xml} \
-		 ../suite/extra.block.c.xml ../suite/extra.block.cpp.xml ../suite/package.block.java.xml
+		 ../suite/extra.block.c.xml ../suite/extra.block.cpp.xml
 
 GEN_FILES_COMMENT= ${foreach nm, $(SEP_FILES_PLUS),          ../suite/$(nm).comment.cpp.xml} \
 		   ${foreach nm, $(SEP_FILES_BASE_C_ALL),    ../suite/$(nm).comment.c.xml} \
@@ -253,6 +276,9 @@ gen : ${GEN_FILES}
 ../suite/interface_java.cpp.xml : ../suite/class_java.cpp.xml ${XSLT_CLASS2INTERFACE_XSL}
 	${XSLT_CLASS2INTERFACE} $< > $@
 
+# if with blocks from if
+../suite/ifblock.cpp.xml : ../suite/if.cpp.xml ${XSLT_IF2IFBLOCK_XSL}
+	${XSLT_IF2IFBLOCK} $< > $@
 
 cleangen :
 	rm -f ${GEN_FILES}
