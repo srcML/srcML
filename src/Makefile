@@ -43,8 +43,8 @@ XML_PRE=-DLIBXML_ENABLED
 LIBXML_VERSION= (libxml2 enabled)
 endif
 
-SRC2SRCML_BIN=/home/collard/svnsrcml/srcML/trunk/bin/src2srcml
-SRCML2SRC_BIN=/home/collard/svnsrcml/srcML/trunk/bin/srcml2src.test
+SRC2SRCML_BIN=../bin/src2srcml
+SRCML2SRC_BIN=../bin/srcml2src
 
 TIMING_MED=timing_med.h
 TIMING_JAVA=timing_java.java
