@@ -1,5 +1,5 @@
 ##
-# Makefile for srcML translator, src2srcml
+# Makefile for testing srcML translator, src2srcml and srcml2src
 
 EXE_DIR = ../bin/
 OBJ_DIR = ../obj/
