@@ -82,9 +82,9 @@
 <!--
   formfeed
 
-  Special representation for formfeed character.
+  Special empty element for the formfeed character.
 -->
-<!ELEMENT formfeed          ANY >
+<!ELEMENT formfeed         EMPTY >
 
 <!-- block, compound statement; -->
 <!ENTITY % access_specifier "public | private | protected" >
