@@ -212,29 +212,6 @@ version.cpp : VERSION
 	echo -n " ${LIBXML_VERSION}"   >> $@
 	echo '"; return Version; }'   >> $@
 
-PHONY : time
-time : ../bin/src2srcml
-	cd .; time ../bin/src2srcml ../timing/${TIMING_MED} ../timing/${TIMING_MED}.xml
-
-PHONY : javatime
-javatime :
-	cd .; time ../bin/src2srcml --language Java ../timing/${TIMING_JAVA} ../timing/${TIMING_JAVA}.xml
-
-PHONY : testbase
-testbase :
-	@rm -f ../bin/src2srcml.test ../bin/srcml2src.test
-	@cp ../bin/src2srcml ../bin/src2srcml.test
-	@cp ../bin/srcml2src ../bin/srcml2src.test
-	cd ../test; make -f Makefile gen;
-
-PHONY : shorttest
-shorttest : testbase
-	cd ../test; export SRC2SRCML_BIN=${SRC2SRCML_BIN}; export SRCML2SRC_BIN=${SRCML2SRC_BIN};  time ./testsuite.py ".*\.all|macro"; cd ../src
-
-PHONY : longtest
-longtest : testbase
-	cd ../test; export SRC2SRCML_BIN=${SRC2SRCML_BIN}; export SRCML2SRC_BIN=${SRCML2SRC_BIN};  time ./testsuite.py; cd ../src
-
 # changes use of 64 bit integer using transformation
 visual :
 	perl -pi -e "s|ULL;|i64;|g" Mode.cpp
