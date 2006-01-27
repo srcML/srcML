@@ -25,7 +25,7 @@
 
 <!-- Common elements -->
 <!ENTITY % common.extra "">
-<!ENTITY % common "comment | %cpp; | macro %common.extra;">
+<!ENTITY % common "comment | formfeed | %cpp; | macro %common.extra;">
 
 <!-- Basic elements -->
 <!ENTITY % basic_elements "%common; | block">
@@ -78,6 +78,13 @@
 -->
 <!ELEMENT comment          ANY >
 <!ATTLIST comment type ( block | line ) #REQUIRED >
+
+<!--
+  formfeed
+
+  Special representation for formfeed character.
+-->
+<!ELEMENT formfeed          ANY >
 
 <!-- block, compound statement; -->
 <!ENTITY % access_specifier "public | private | protected" >
