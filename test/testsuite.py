@@ -10,6 +10,7 @@ import string
 import re
 import subprocess
 import difflib
+import pprint
 
 debug = 0
 
@@ -55,8 +56,7 @@ def xmldiff(xml_filename1, xml_filename2):
 			      
 
 	if xml_filename1 != xml_filename2:
-		print xml_filename1
-		print xml_filename2
+		print sys.stdout.writelines(list(difflib.unified_diff(xml_filename1.splitlines(1), xml_filename2.splitlines(1))))
 		return 1
 	else:
 
@@ -158,15 +158,14 @@ m = re.compile(specname + "$")
 source_dir = base_dir
 error_count = 0
 total_count = 0
-for root, dirs, files in os.walk(source_dir):
+for root, dirs, files in os.walk(source_dir, topdown=True):
 
-	save_dirs = dirs
 	for name in files:
-		froot, fext = os.path.splitext(name)
-		xml_filename = os.path.join(root, name)
 
-		if fext != ".xml":
+		if os.path.splitext(name)[1] != ".xml":
 			continue
+
+		xml_filename = os.path.join(root, name)
 
 		# read file into string
 		entire_file = name2filestr(xml_filename)
@@ -200,7 +199,7 @@ for root, dirs, files in os.walk(source_dir):
 		
 		# extract the number of units
 		number = getnested(entire_file)
-
+		
 		if specnum == 0:
 			count = 0
 		else:
@@ -238,6 +237,7 @@ for root, dirs, files in os.walk(source_dir):
 			if error == 1:
 				errorlist.append((ufilename + " " + ulanguage, count))
 				
+	break
 
 if error_count == 0:
 	print
