@@ -93,11 +93,6 @@ WSLEXER_GENS = 	\
 # ANTLR generated cpp, hpp and txt files
 $(SRCMLPARSER_GENS): srcMLParser.g KeywordCPPLexerTokenTypes.txt
 	$(ANTLR) ${SRCMLPARSER_ANTLR_FLAGS} -glib "WSLexer.g;CommentLexer.g;OperatorLexer.g;TextLexer.g;KeywordLexer.g;KeywordCPPLexer.g" $<
-	@echo "/*"
-	@echo "   The ANTLR-generated file KeywordCPPLexer.cpp contains an unintentional multi-line comment due to a bug in ANTLR."
-	@echo "   This will be fixed by the following transformation:"
-	@echo "*/"
-	perl -pi -e "s|(^\/\/ .*? \\\\\ )|\1 FIX FOR ANTLR GENERATED MULTI-LINE COMMENT|g" $<
 
 $(KEYWORDCPPLEXER_GENS): KeywordCPPLexer.g KeywordLexerTokenTypes.txt
 	$(ANTLR) -glib "WSLexer.g;CommentLexer.g;OperatorLexer.g;TextLexer.g;KeywordLexer.g" ${SRCMLLEXER_ANTLR_FLAGS} $<

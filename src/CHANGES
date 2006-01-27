@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Remove special handling for ANTLR bug in 2.7.5.
+
 	Fix bug with else bound to wrong if.
 
 	Fix bug with misidentification of no parameter macro as call when followed by end of file.
