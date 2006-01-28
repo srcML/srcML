@@ -150,3 +150,13 @@ int xmlCharEncodingHandler::input(unsigned char out[], int* poutsize, const unsi
 
   return *poutsize; 
 }
+
+int xmlCharEncodingHandler::output(unsigned char out[], int* poutsize, const unsigned char* in , int* pinsize) { 
+
+  for (int i = 0; i < *pinsize; ++i)
+    out[i] = in[i];
+
+  *poutsize = *pinsize;
+
+  return *poutsize; 
+}

@@ -32,12 +32,14 @@
 
 #include <stack>
 #include <string>
+#include "project.h"
 
 #define BAD_CAST
 
 typedef char xmlChar;
 
 struct xmlTextReader {
+  std::istream* pin;
   /*
   std::ostream* pout;
   std::stack<std::string> elements;

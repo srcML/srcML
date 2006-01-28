@@ -30,7 +30,7 @@ LIBXML_DISABLED=a
 # object code for xml
 ifdef LIBXML_DISABLED
 LIBXML_INCLUDE=
-XML_OBJ=${OBJ_DIR}xmlwriter.o
+XML_OBJ=${OBJ_DIR}xmlwriter.o ${OBJ_DIR}xmlreader.o
 XML_LIB=
 XML_PRE=
 LIBXML_VERSION=
@@ -167,6 +167,9 @@ ${OBJ_DIR}version.o : version.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 ${OBJ_DIR}srcmlapps.o : srcmlapps.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+${OBJ_DIR}xmlreader.o : xmlreader.cpp xmlreader.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 ${OBJ_DIR}xmlwriter.o : xmlwriter.cpp xmlwriter.h
