@@ -65,6 +65,8 @@ xmlTextReaderPtr xmlNewTextReaderFilename(const char* filename) {
   else
     reader->pin = new std::ifstream(filename);
 
+  reader->depth = 0;
+
   return reader; 
 }
 
@@ -80,28 +82,53 @@ int xmlTextReaderRead(xmlTextReaderPtr reader) {
 
 	process_PI(is);
 
+	reader->value = "";
+
       // comment
       } else if (c == '<' && is.peek() == '!') {
 
 	process_comment(is);
 
+	reader->value = "";
+
       // tag
       } else if (c == '<') {
 
-	std::string tagname;
-	std::vector<std::pair<std::string, std::string> > m;
+	switch (process_tag(is, reader->tagname, reader->attributes)) {
+	case 0:
+	  reader->type = XML_READER_TYPE_ELEMENT;
+	  reader->isempty = false;
+	  reader->depth += 1;
+	  break;
 
-	process_tag(is, tagname, m);
+	case 1:
+	  reader->type = XML_READER_TYPE_ELEMENT;
+	  reader->isempty = true;
+	  break;
+
+	case 2:
+	  reader->type = XML_READER_TYPE_END_ELEMENT;
+	  reader->depth -= 1;
+	  break;
+	}
+
+	reader->value = "";
+
 
       // entity
       } else if (c == '&') {
 
 	process_entity(is);
 
+	reader->value = "";
+
       // regular text
       } else {
 
 	// add to current text
+	reader->value += c;
+
+	reader->type = XML_READER_TYPE_TEXT;
       }
 
       return 1;
@@ -109,8 +136,8 @@ int xmlTextReaderRead(xmlTextReaderPtr reader) {
       return -1; 
 }
 
-int xmlTextReaderNodeType(xmlTextReaderPtr) {
-  return 1;
+int xmlTextReaderNodeType(xmlTextReaderPtr reader) {
+  return reader->type;
 }
 
 int xmlTextReaderReadState(xmlTextReaderPtr) {
@@ -133,21 +160,23 @@ xmlChar* xmlTextReaderGetAttribute(xmlTextReaderPtr, const xmlChar*) {
   return BAD_CAST "";
 }
 
-const xmlChar* xmlTextReaderConstName(xmlTextReaderPtr) {
-  return BAD_CAST "";
+const xmlChar* xmlTextReaderConstName(xmlTextReaderPtr reader) {
+  return BAD_CAST reader->tagname.c_str();
 }
 
-const xmlChar* xmlTextReaderConstValue(xmlTextReaderPtr) {
-  return BAD_CAST "";
+const xmlChar* xmlTextReaderConstValue(xmlTextReaderPtr reader) {
+  return BAD_CAST reader->value.c_str();
 }
 
-int xmlTextReaderIsEmptyElement(xmlTextReaderPtr) {
-  return false; 
+int xmlTextReaderIsEmptyElement(xmlTextReaderPtr reader) {
+  return reader->isempty; 
 }
 
 void xmlFreeTextReader(xmlTextReaderPtr reader) {
 
-  //  delete reader->pin;
+  // delete the input file object, unless it is standard input
+  if (reader->pin != &std::cin)
+    delete reader->pin;
 
   delete reader;
 }

@@ -32,6 +32,7 @@
 
 #include <stack>
 #include <string>
+#include <vector>
 #include "project.h"
 
 #define BAD_CAST
@@ -40,24 +41,16 @@ typedef char xmlChar;
 
 struct xmlTextReader {
   std::istream* pin;
-  /*
-  std::ostream* pout;
-  std::stack<std::string> elements;
-  bool open_start;
-  */
+
+  std::string value;
+  int type;
+  std::string tagname;
+  bool isempty;
+  int depth;
+  std::vector<std::pair<std::string, std::string> > attributes;
 };
 
 typedef xmlTextReader* xmlTextReaderPtr;
-
-/*
-struct xmlCharEncodingHandler {
-  int input(unsigned char [512], int*, const unsigned char*, int*);
-};
-
-typedef xmlCharEncodingHandler* xmlCharEncodingHandlerPtr;
-
-xmlCharEncodingHandlerPtr xmlFindCharEncodingHandler(const char*);
-*/
 
 const int XML_READER_TYPE_ELEMENT = 1;
 const int XML_READER_TYPE_END_ELEMENT = 15;
