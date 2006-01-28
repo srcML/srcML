@@ -31,8 +31,13 @@
 #include "Language.h"
 #include "Options.h"
 
+#ifdef LIBXML_ENABLED
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
+#else
+#include "xmlreader.h"
+#include "xmlwriter.h"
+#endif
 
 class TranslateCompoundError {};
 
