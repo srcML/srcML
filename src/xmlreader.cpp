@@ -76,7 +76,7 @@ int xmlTextReaderRead(xmlTextReaderPtr reader) {
     char c;
     std::istream& is = *(reader->pin);
 
-    if (is >> c) {
+    while (is >> c) {
 
       // processing instruction
       if (c == '<' && is.peek() == '?') {
@@ -92,12 +92,20 @@ int xmlTextReaderRead(xmlTextReaderPtr reader) {
 
 	reader->value = "";
 
+	reader->state = 1;
+	return 1;
+
       // comment
       } else if (c == '<' && is.peek() == '!') {
 
 	process_comment(is);
 
 	reader->value = "";
+
+	reader->state = 1;
+	return 1;
+
+	break;
 
       // tag
       } else if (c == '<') {
@@ -110,17 +118,22 @@ int xmlTextReaderRead(xmlTextReaderPtr reader) {
 	  break;
 
 	case 1:
-	  reader->type = XML_READER_TYPE_ELEMENT;
-	  reader->isempty = true;
+	  reader->type = XML_READER_TYPE_END_ELEMENT;
+	  reader->depth -= 1;
 	  break;
 
 	case 2:
-	  reader->type = XML_READER_TYPE_END_ELEMENT;
-	  reader->depth -= 1;
+	  reader->type = XML_READER_TYPE_ELEMENT;
+	  reader->isempty = true;
 	  break;
 	}
 
 	reader->value = "";
+
+	reader->state = 1;
+	return 1;
+
+	break;
 
       // entity
       } else if (c == '&') {
@@ -136,13 +149,11 @@ int xmlTextReaderRead(xmlTextReaderPtr reader) {
 	reader->type = XML_READER_TYPE_TEXT;
       }
 
-      reader->state = 1;
-      return 1;
-    } else {
 
-      reader->state = 0;
-      return -1; 
     }
+
+    reader->state = 0;
+    return -1; 
 }
 
 int xmlTextReaderNodeType(xmlTextReaderPtr reader) {

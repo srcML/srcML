@@ -104,7 +104,7 @@ void srcMLUtility::translate_xml(const char* ofilename) {
   encoding = (const char*) xmlTextReaderConstEncoding(reader);
 
   while (xmlTextReaderReadState(reader) == 1) {
-    std::cout << "HERE" << std::endl;
+
     // output entire unit element
     outputUnit(ofilename, reader);
 
