@@ -408,9 +408,7 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
 
   // Problem with call to xmlTextWriterEndDocument.  When indentation is 0 it wants to write out a final newline.
   // Setting the indentation will only affect the end
-#ifdef LIBXML_ENABLED
   xmlTextWriterSetIndent(writer, 1);
-#endif
 
   xmlTextWriterEndDocument(writer);
 

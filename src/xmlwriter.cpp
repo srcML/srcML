@@ -141,6 +141,9 @@ xmlTextWriterPtr xmlNewTextWriterFilename(const char* filename, int compression)
 
 xmlCharEncodingHandlerPtr xmlFindCharEncodingHandler(const char*) { return new xmlCharEncodingHandler; }
 
+// nop since indent is not used
+void xmlTextWriterSetIndent(xmlTextWriterPtr, int) {}
+
 int xmlCharEncodingHandler::input(unsigned char out[], int* poutsize, const unsigned char* in , int* pinsize) { 
 
   for (int i = 0; i < *pinsize; ++i)

@@ -71,4 +71,6 @@ void xmlFreeTextWriter(xmlTextWriterPtr writer);
 
 xmlTextWriterPtr xmlNewTextWriterFilename(const char* filename, int);
 
+void xmlTextWriterSetIndent(xmlTextWriterPtr, int);
+
 #endif
