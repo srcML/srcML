@@ -65,6 +65,8 @@ xmlTextReaderPtr xmlNewTextReaderFilename(const char* filename) {
   else
     reader->pin = new std::ifstream(filename);
 
+  reader->pin->unsetf(std::ios::skipws);
+
   reader->depth = -1;
   reader->encoding = "UTF-8";
 
@@ -76,10 +78,17 @@ int xmlTextReaderRead(xmlTextReaderPtr reader) {
     char c;
     std::istream& is = *(reader->pin);
 
+    bool hastext = false;
     while (is >> c) {
 
       // processing instruction
       if (c == '<' && is.peek() == '?') {
+
+	if (hastext) {
+	  reader->type = XML_READER_TYPE_TEXT;
+	  is.putback(c);
+	  return 1;
+	}
 
 	std::vector<std::pair<std::string, std::string> > m;
 	process_pi(is, m);
@@ -98,6 +107,12 @@ int xmlTextReaderRead(xmlTextReaderPtr reader) {
       // comment
       } else if (c == '<' && is.peek() == '!') {
 
+	if (hastext) {
+	  reader->type = XML_READER_TYPE_TEXT;
+	  is.putback(c);
+	  return 1;
+	}
+
 	process_comment(is);
 
 	reader->value = "";
@@ -109,6 +124,12 @@ int xmlTextReaderRead(xmlTextReaderPtr reader) {
 
       // tag
       } else if (c == '<') {
+
+	if (hastext) {
+	  reader->type = XML_READER_TYPE_TEXT;
+	  is.putback(c);
+	  return 1;
+	}
 
 	switch (process_tag(is, reader->tagname, reader->attributes)) {
 	case 0:
@@ -139,6 +160,7 @@ int xmlTextReaderRead(xmlTextReaderPtr reader) {
       } else if (c == '&') {
 
 	reader->value += process_entity(is);
+	hastext = true;
 
       // regular text
       } else {
@@ -147,9 +169,9 @@ int xmlTextReaderRead(xmlTextReaderPtr reader) {
 	reader->value += c;
 
 	reader->type = XML_READER_TYPE_TEXT;
+	hastext = true;
+
       }
-
-
     }
 
     reader->state = 0;
