@@ -65,7 +65,7 @@ xmlTextReaderPtr xmlNewTextReaderFilename(const char* filename) {
   else
     reader->pin = new std::ifstream(filename);
 
-  reader->depth = 0;
+  reader->depth = -1;
   reader->encoding = "UTF-8";
 
   return reader; 
