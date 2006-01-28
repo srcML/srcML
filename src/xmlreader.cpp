@@ -67,7 +67,7 @@ xmlTextReaderPtr xmlNewTextReaderFilename(const char* filename) {
 
   reader->pin->unsetf(std::ios::skipws);
 
-  reader->depth = -1;
+  reader->depth = 0;
   reader->encoding = "UTF-8";
 
   return reader; 
@@ -160,6 +160,8 @@ int xmlTextReaderRead(xmlTextReaderPtr reader) {
       } else if (c == '&') {
 
 	reader->value += process_entity(is);
+	reader->type = XML_READER_TYPE_TEXT;
+	reader->tagname = "";
 	hastext = true;
 
       // regular text
@@ -169,6 +171,7 @@ int xmlTextReaderRead(xmlTextReaderPtr reader) {
 	reader->value += c;
 
 	reader->type = XML_READER_TYPE_TEXT;
+	reader->tagname = "";
 	hastext = true;
 
       }
