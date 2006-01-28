@@ -46,6 +46,7 @@ typedef xmlTextWriter* xmlTextWriterPtr;
 
 struct xmlCharEncodingHandler {
   int input(unsigned char [512], int*, const unsigned char*, int*);
+  int output(unsigned char [512], int*, const unsigned char*, int*);
 };
 
 typedef xmlCharEncodingHandler* xmlCharEncodingHandlerPtr;
