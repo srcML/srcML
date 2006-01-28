@@ -25,18 +25,17 @@ CXXFLAGS = -O3 -Wall -march=nocona -minline-all-stringops -fno-rtti
 CXX_LINK_FLAGS = -s
 
 # libxml use
-LIBXML_INCLUDE=-I/usr/include/libxml2
-
 #LIBXML_DISABLED=a
 
 # object code for xml
 ifdef LIBXML_DISABLED
-LIBXML_SRC2SRCML_INCLUDE=
+LIBXML_INCLUDE=
 XML_OBJ=${OBJ_DIR}xmlwriter.o
 XML_LIB=
 XML_PRE=
+LIBXML_VERSION=
 else
-LIBXML_SRC2SRCML_INCLUDE=-I/usr/include/libxml2
+LIBXML_INCLUDE=-I/usr/include/libxml2
 XML_OBJ=
 XML_LIB=-lxml2
 XML_PRE=-DLIBXML_ENABLED
@@ -156,7 +155,7 @@ ${OBJ_DIR}KeywordLexer.o : $(firstword $(KEYWORDLEXER_GENS))
 #	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(SRCMLPARSER_CXX_FLAGS) -c $< -o $@
 
 ${OBJ_DIR}srcMLOutput.o : srcMLOutput.cpp srcMLOutput.h srcMLOutputPR.h
-	$(CXX) ${XML_PRE} $(ANTLR_INC) $(CXXFLAGS) $(SRCMLPARSER_CXX_FLAGS) $(LIBXML_SRC2SRCML_INCLUDE) -c $< -o $@
+	$(CXX) ${XML_PRE} $(ANTLR_INC) $(CXXFLAGS) $(SRCMLPARSER_CXX_FLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}Mode.o : Mode.cpp Mode.h
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(SRCMLPARSER_CXX_FLAGS) -c $< -o $@
