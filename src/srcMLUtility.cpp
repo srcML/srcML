@@ -389,7 +389,7 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
       first = false;
 
       if (strcmp((const char*) xmlTextReaderConstName(reader), "formfeed") == 0)
-	    xmlTextWriterWriteRawLen(writer, BAD_CAST "\f", 1);
+	    xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "\f", 1);
       break;
     case XML_READER_TYPE_TEXT:
     case XML_READER_TYPE_SIGNIFICANT_WHITESPACE:
@@ -437,13 +437,13 @@ void srcMLUtility::outputText(const xmlChar* s, xmlTextWriterPtr writer, bool es
       if (escape) {
       for (unsigned char* p = utf8buffer; *p != 0; ++p) {
 	  if (*p == '&')
-	    xmlTextWriterWriteRawLen(writer, BAD_CAST "&amp;", 5);
+	    xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&amp;", 5);
 	  else if (*p == '<')
-	    xmlTextWriterWriteRawLen(writer, BAD_CAST "&lt;", 4);
+	    xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&lt;", 4);
 	  else if (*p == '>')
-	    xmlTextWriterWriteRawLen(writer, BAD_CAST "&gt;", 4);
+	    xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&gt;", 4);
 	  else
-	    xmlTextWriterWriteRawLen(writer, BAD_CAST p, 1);
+	    xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) p, 1);
       }
       } else {
 	xmlTextWriterWriteRawLen(writer, BAD_CAST utf8buffer, utf8buffer_newsize);
