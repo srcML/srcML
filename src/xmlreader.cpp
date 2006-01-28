@@ -131,21 +131,25 @@ int xmlTextReaderRead(xmlTextReaderPtr reader) {
 	reader->type = XML_READER_TYPE_TEXT;
       }
 
+      reader->state = 1;
       return 1;
-    } else
+    } else {
+
+      reader->state = 0;
       return -1; 
+    }
 }
 
 int xmlTextReaderNodeType(xmlTextReaderPtr reader) {
   return reader->type;
 }
 
-int xmlTextReaderReadState(xmlTextReaderPtr) {
-  return 1;
+int xmlTextReaderReadState(xmlTextReaderPtr reader) {
+  return reader->state;
 }
 
-int xmlTextReaderDepth(xmlTextReaderPtr) {
-  return 1; 
+int xmlTextReaderDepth(xmlTextReaderPtr reader) {
+  return reader->depth; 
 }
 
 int xmlTextReaderMoveToNextAttribute(xmlTextReaderPtr) {
@@ -156,8 +160,20 @@ const xmlChar* xmlTextReaderConstEncoding(xmlTextReaderPtr) {
   return BAD_CAST ""; 
 }
 
-xmlChar* xmlTextReaderGetAttribute(xmlTextReaderPtr, const xmlChar*) {
-  return BAD_CAST "";
+xmlChar* xmlTextReaderGetAttribute(xmlTextReaderPtr reader, const xmlChar* attr_name) {
+
+  for (unsigned int i = 0; i < reader->attributes.size(); ++i) {
+      if (reader->attributes[i].first == attr_name) {
+	const char* s = reader->attributes[i].second.c_str();
+	char* ns = new char[strlen(s) + 1];
+	std::strcpy(ns, s);
+	return BAD_CAST ns;
+      }
+  }
+
+  char* ns = new char[1];
+  ns[0] = '\0';
+  return BAD_CAST ns;
 }
 
 const xmlChar* xmlTextReaderConstName(xmlTextReaderPtr reader) {

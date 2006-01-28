@@ -48,6 +48,7 @@ struct xmlTextReader {
   bool isempty;
   int depth;
   std::vector<std::pair<std::string, std::string> > attributes;
+  int state;
 };
 
 typedef xmlTextReader* xmlTextReaderPtr;
