@@ -49,6 +49,7 @@ struct xmlTextReader {
   int depth;
   std::vector<std::pair<std::string, std::string> > attributes;
   int state;
+  std::string encoding;
 };
 
 typedef xmlTextReader* xmlTextReaderPtr;

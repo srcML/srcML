@@ -52,7 +52,7 @@ void skipws(std::istream&in) {
 
   std::string process_entity(std::istream& in);
 
-  void process_PI(std::istream& is);
+  int process_pi(std::istream& is, std::vector<std::pair<std::string, std::string> >& m);
 
   void process_comment(std::istream& is);
 };
@@ -66,6 +66,7 @@ xmlTextReaderPtr xmlNewTextReaderFilename(const char* filename) {
     reader->pin = new std::ifstream(filename);
 
   reader->depth = 0;
+  reader->encoding = "UTF-8";
 
   return reader; 
 }
@@ -80,7 +81,14 @@ int xmlTextReaderRead(xmlTextReaderPtr reader) {
       // processing instruction
       if (c == '<' && is.peek() == '?') {
 
-	process_PI(is);
+	std::vector<std::pair<std::string, std::string> > m;
+	process_pi(is, m);
+
+	for (unsigned int i = 0; i < m.size(); ++i) {
+	  if (m[i].first == "encoding") {
+	    reader->encoding = m[i].second.c_str();
+	  }
+	}
 
 	reader->value = "";
 
@@ -114,13 +122,10 @@ int xmlTextReaderRead(xmlTextReaderPtr reader) {
 
 	reader->value = "";
 
-
       // entity
       } else if (c == '&') {
 
-	process_entity(is);
-
-	reader->value = "";
+	reader->value += process_entity(is);
 
       // regular text
       } else {
@@ -156,8 +161,8 @@ int xmlTextReaderMoveToNextAttribute(xmlTextReaderPtr) {
   return 0;
 }
 
-const xmlChar* xmlTextReaderConstEncoding(xmlTextReaderPtr) {
-  return BAD_CAST ""; 
+const xmlChar* xmlTextReaderConstEncoding(xmlTextReaderPtr reader) {
+  return BAD_CAST reader->encoding.c_str(); 
 }
 
 xmlChar* xmlTextReaderGetAttribute(xmlTextReaderPtr reader, const xmlChar* attr_name) {
@@ -198,7 +203,7 @@ void xmlFreeTextReader(xmlTextReaderPtr reader) {
 }
 
 void xmlFree(xmlChar* p) {
-  //  delete p;
+  delete p;
 }
 
 namespace {
@@ -326,23 +331,49 @@ std::string process_entity(std::istream& in) {
     }
     is.get();
   }
-  /*
-  bool processTag(xmlTextReaderPtr reader) {
-      std::string tagname;
-      std::vector<std::pair<std::string, std::string> > m;
 
-      process_tag(is, tagname, m);
+int process_pi(std::istream& in, std::vector<std::pair<std::string, std::string> >& m) {
 
-      return true;
-  }
-  */
-  void process_PI(std::istream& is) {
-      is.ignore(1000, '>');
-      is.get();
+  // assume start tag
+  int tagtype = 0;
+
+  // skip whitespace
+  skipws(in);
+
+  // read '?'
+  in.get();
+
+  // skip whitespace
+  skipws(in);
+
+  // read in tag name
+  std::string tagname = "";
+  while (!pstd::isspace(in.peek()) && in.peek() != '/' && in.peek() != '>')
+    push_back(tagname, in.get());
+
+  // skip whitespace
+  skipws(in);
+
+  // process any attributes
+  m.clear();
+  while (in.peek() != '>' && in.peek() != '/') {
+    std::string attrname;
+    std::string attrvalue;
+    read_attribute(in, attrname, attrvalue);
+
+    m.push_back(std::pair<std::string, std::string>(attrname, attrvalue));
   }
 
-  void processEntity() {
-    //      if (!entity(process_entity(is)))
-	return;
-  }
+  // skip whitespace
+  skipws(in);
+
+  // skip end of tag, i.e., '?'
+  in.get();
+
+  // skip end of tag, i.e., '>'
+  in.get();
+
+  // result is the type of the tag
+  return tagtype;
+}
 }
