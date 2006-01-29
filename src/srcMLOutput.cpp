@@ -244,6 +244,10 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     if (version[0]) {
       xmlTextWriterWriteAttribute(xout, BAD_CAST "version", BAD_CAST version);
     }
+
+    // leave space for nested unit
+    if (outer && isoption(OPTION_NESTED))
+      processText("\n\n");
 }
 
 void srcMLOutput::endUnit() {
