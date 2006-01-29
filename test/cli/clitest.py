@@ -72,7 +72,6 @@ srcml = """
 """
 check([srcmltranslator, "--debug"], "", srcml)
 
-
 ##
 # language flag
 srcml = """
@@ -144,5 +143,91 @@ srcml = """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 """
 checkallforms(srcmltranslator, option.ENCODING_FLAG_SHORT, option.ENCODING_FLAG, "ISO-8859-1", "", srcml)
+
+##
+# create testing files
+#os.system("mkdir sub");
+
+sfile1 = """
+a;
+"""
+
+sxmlfile1 = """
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+"""
+check([srcmltranslator], sfile1, sxmlfile1)
+
+sfile2 = """
+b;
+"""
+
+sxmlfile2 = """
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</unit>
+"""
+check([srcmltranslator], sfile2, sxmlfile2)
+
+check([srcmltranslator, "-", "sub/a.cpp.xml"], sfile1, "")
+
+check([srcmltranslator, "-", "sub/b.cpp.xml"], sfile2, "")
+
+nestedfile1 = """
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+
+<unit language="C++" dir="sub" filename="a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+"""
+
+nestedfile = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+
+<unit language="C++" dir="sub" filename="a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++" dir="sub" filename="b.cpp">
+<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+"""
+check([srcmltranslator, "sub/a.cpp", "sub/b.cpp", "-"], "", nestedfile)
+
+check([srcmltranslator, "--nested", "sub/a.cpp", "-"], "", nestedfile1)
+
+filelist = """
+sub/a.cpp
+sub/b.cpp
+"""
+
+os.system('echo -e "\nsub/a.cpp\nsub/b.cpp\n" > filelistab')
+
+check([srcmltranslator, "--input-file", "filelistab"], "", nestedfile)
+
+####
+# srcml2src
+
+srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="bar" filename="foo" version="1.2"/>
+"""
+
+check([srcmlutility, "--language"], srcml, "C++")
+check([srcmlutility, "--directory"], srcml, "bar")
+check([srcmlutility, "--filename"], srcml, "foo")
+check([srcmlutility, "--src-version"], srcml, "1.2")
+check([srcmlutility, "--xml-encoding"], srcml, "UTF-8")
+
+check([srcmlutility, "--nested"], srcml, "0")
+check([srcmlutility, "--nested"], nestedfile, "2")
+
 
 exit
