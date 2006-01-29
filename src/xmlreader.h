@@ -51,6 +51,8 @@ struct xmlTextReader {
   int state;
   std::string encoding;
   bool incrementnext;
+  int attribute_count;
+  bool inattribute;
 };
 
 typedef xmlTextReader* xmlTextReaderPtr;

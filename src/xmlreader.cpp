@@ -136,6 +136,8 @@ int xmlTextReaderRead(xmlTextReaderPtr reader) {
 	  return 1;
 	}
 
+	reader->attribute_count = -1;
+	reader->inattribute = false;
 	switch (process_tag(is, reader->tagname, reader->attributes)) {
 	case 0:
 	  reader->type = XML_READER_TYPE_ELEMENT;
@@ -198,8 +200,19 @@ int xmlTextReaderDepth(xmlTextReaderPtr reader) {
   return reader->depth; 
 }
 
-int xmlTextReaderMoveToNextAttribute(xmlTextReaderPtr) {
-  return 0;
+int xmlTextReaderMoveToNextAttribute(xmlTextReaderPtr reader) {
+  reader->attribute_count += 1;
+
+  if ((unsigned int) reader->attribute_count < reader->attributes.size()) {
+
+    reader->inattribute = true;
+
+    return 1;
+  } else {
+    reader->inattribute = false;
+
+    return 0;
+  }
 }
 
 const xmlChar* xmlTextReaderConstEncoding(xmlTextReaderPtr reader) {
@@ -221,11 +234,17 @@ xmlChar* xmlTextReaderGetAttribute(xmlTextReaderPtr reader, const xmlChar* attr_
 }
 
 const xmlChar* xmlTextReaderConstName(xmlTextReaderPtr reader) {
-  return BAD_CAST reader->tagname.c_str();
+  if (reader->inattribute)
+    return BAD_CAST reader->attributes[reader->attribute_count].first.c_str();
+  else
+    return BAD_CAST reader->tagname.c_str();
 }
 
 const xmlChar* xmlTextReaderConstValue(xmlTextReaderPtr reader) {
-  return BAD_CAST reader->value.c_str();
+  if (reader->inattribute)
+    return BAD_CAST reader->attributes[reader->attribute_count].second.c_str();
+  else
+    return BAD_CAST reader->value.c_str();
 }
 
 int xmlTextReaderIsEmptyElement(xmlTextReaderPtr reader) {
