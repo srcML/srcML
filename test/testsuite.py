@@ -107,8 +107,15 @@ def getfilename(xml_file):
 
 	return getsrcmlattribute(xml_file, "-f")
 
-# version of the srcML tools
-def srcmlversion():
+# version of src2srcml
+def src2srcmlversion():
+
+	last_line=subprocess.Popen([startcmd + srcmltranslator, "-V"], stdout=subprocess.PIPE).communicate()[0]
+
+	return string.strip(last_line)
+
+# version of srcml2src
+def srcml2srcversion():
 
 	last_line=subprocess.Popen([startcmd + srcmlutility, "-V"], stdout=subprocess.PIPE).communicate()[0]
 
@@ -239,12 +246,18 @@ for root, dirs, files in os.walk(source_dir, topdown=True):
 				
 	break
 
+print
 if error_count == 0:
-	print
-	print srcmlversion() + ":  No errors out of " + str(total_count) + " cases" 
+	print "No errors out of " + str(total_count) + " cases" 
 else:
-	print srcmlversion() + ":  Errors:  " + str(error_count) + " out of " + str(total_count) + " cases"
+	print "Errors:  " + str(error_count) + " out of " + str(total_count) + " cases"
 	print "Errorlist:"
 	for e in errorlist:
 		print e[0], e[1]
+print
+print src2srcmlversion()
+print srcml2srcversion()
+print "src2srcml:  ", srcmltranslator
+print "srcml2src:  ", srcmlutility
+
 exit
