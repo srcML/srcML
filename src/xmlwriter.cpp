@@ -47,7 +47,8 @@ void close_start_tag(xmlTextWriterPtr writer) {
 
 // starts document with xml declaration
 void xmlTextWriterStartDocument(xmlTextWriterPtr writer, const char* xml_version, const char* xml_encoding, const char* xml_declaration_standalone) {
-  *(writer->pout) << "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" << '\n';
+  *(writer->pout) << "<?xml version=\"" << xml_version << "\" encoding=\"" << xml_encoding << "\" standalone=\""
+		  << xml_declaration_standalone << "\"?>" << '\n';
 
   writer->open_start = false;
 }
