@@ -217,9 +217,7 @@ xmlChar* xmlTextReaderGetAttribute(xmlTextReaderPtr reader, const xmlChar* attr_
       }
   }
 
-  char* ns = new char[1];
-  ns[0] = '\0';
-  return BAD_CAST ns;
+  return 0;
 }
 
 const xmlChar* xmlTextReaderConstName(xmlTextReaderPtr reader) {
