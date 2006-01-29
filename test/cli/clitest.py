@@ -57,6 +57,23 @@ if srcmlutility == "":
 handles_src_encoding = os.environ.get("SRC2SRCML_SRC_ENCODING")
 
 ##
+# empty default
+srcml = """
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
+"""
+check([srcmltranslator], "", srcml)
+
+##
+# empty with debug
+srcml = """
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:srcerr="http://www.sdml.info/srcML/srcerr" language="C++"/>
+"""
+check([srcmltranslator, "--debug"], "", srcml)
+
+
+##
 # language flag
 srcml = """
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
