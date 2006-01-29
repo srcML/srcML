@@ -13,6 +13,8 @@ import subprocess
 import difflib
 import pprint
 
+import option
+
 debug = 0
 
 def check(command, input, output):
@@ -32,12 +34,12 @@ def execute(incommand, input):
 
 	return last_line
 
-def checkallforms(base, shortflag, longflag, optionvalue, src, srcml):
-	check([base, shortflag, optionvalue], src, srcml)
+def checkallforms(base, shortflag, longflag, optionvalue, progin, progout):
+	check([base, shortflag, optionvalue], progin, progout)
 
-	check([base, longflag, optionvalue], src, srcml)
+	check([base, longflag, optionvalue], progin, progout)
 
-	check([base, longflag + "=" + optionvalue], src, srcml)
+	check([base, longflag + "=" + optionvalue], progin, progout)
 
 	return
 	
@@ -51,33 +53,63 @@ if srcmlutility == "":
 
 handles_src_encoding = os.environ.get("SRC2SRCML_SRC_ENCODING")
 
+##
+# language flag
 srcml = """
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 """
-
-checkallforms(srcmltranslator, "-l", "--language", "C++", "", srcml)
-
+checkallforms(srcmltranslator, option.LANGUAGE_FLAG_SHORT, option.LANGUAGE_FLAG, "C++", "", srcml)
 
 srcml = """
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C"/>
 """
-check([srcmltranslator, "-l", "C"], "", srcml)
-
-check([srcmltranslator, "--language", "C"], "", srcml)
-
-check([srcmltranslator, "--language=C"], "", srcml)
-
+checkallforms(srcmltranslator, option.LANGUAGE_FLAG_SHORT, option.LANGUAGE_FLAG, "C", "", srcml)
 
 srcml = """
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Java"/>
 """
-check([srcmltranslator, "-l", "Java"], "", srcml)
+checkallforms(srcmltranslator, option.LANGUAGE_FLAG_SHORT, option.LANGUAGE_FLAG, "Java", "", srcml)
 
-check([srcmltranslator, "--language", "Java"], "", srcml)
+##
+# filename flag
+srcml = """
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="foo"/>
+"""
+checkallforms(srcmltranslator, option.FILENAME_FLAG_SHORT, option.FILENAME_FLAG, "foo", "", srcml)
 
-check([srcmltranslator, "--language=Java"], "", srcml)
+# filenames are not expanded if specified (unlike when extracted from name)
+srcml = """
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="bar/foo"/>
+"""
+checkallforms(srcmltranslator, option.FILENAME_FLAG_SHORT, option.FILENAME_FLAG, "bar/foo", "", srcml)
+
+##
+# directory flag
+srcml = """
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="bar"/>
+"""
+checkallforms(srcmltranslator, option.DIRECTORY_FLAG_SHORT, option.DIRECTORY_FLAG, "bar", "", srcml)
+
+##
+# version flag
+srcml = """
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" version="1.0"/>
+"""
+checkallforms(srcmltranslator, option.SRCVERSION_FLAG_SHORT, option.SRCVERSION_FLAG, "1.0", "", srcml)
+
+##
+# xml encoding flag
+srcml = """
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
+"""
+checkallforms(srcmltranslator, option.ENCODING_FLAG_SHORT, option.ENCODING_FLAG, "ISO-8859-1", "", srcml)
 
 exit
