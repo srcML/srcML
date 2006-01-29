@@ -79,6 +79,11 @@ int xmlTextReaderRead(xmlTextReaderPtr reader) {
     std::istream& is = *(reader->pin);
 
     bool hastext = false;
+    if (reader->incrementnext) {
+      reader->incrementnext = false;
+      reader->depth += 1;
+    }
+
     while (is >> c) {
 
       // processing instruction
@@ -135,7 +140,7 @@ int xmlTextReaderRead(xmlTextReaderPtr reader) {
 	case 0:
 	  reader->type = XML_READER_TYPE_ELEMENT;
 	  reader->isempty = false;
-	  reader->depth += 1;
+	  reader->incrementnext = true;
 	  break;
 
 	case 1:
@@ -161,7 +166,7 @@ int xmlTextReaderRead(xmlTextReaderPtr reader) {
 
 	reader->value += process_entity(is);
 	reader->type = XML_READER_TYPE_TEXT;
-	reader->tagname = "";
+	reader->tagname = "#text";
 	hastext = true;
 
       // regular text
@@ -171,7 +176,7 @@ int xmlTextReaderRead(xmlTextReaderPtr reader) {
 	reader->value += c;
 
 	reader->type = XML_READER_TYPE_TEXT;
-	reader->tagname = "";
+	reader->tagname = "#text";
 	hastext = true;
 
       }

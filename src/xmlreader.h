@@ -50,6 +50,7 @@ struct xmlTextReader {
   std::vector<std::pair<std::string, std::string> > attributes;
   int state;
   std::string encoding;
+  bool incrementnext;
 };
 
 typedef xmlTextReader* xmlTextReaderPtr;
