@@ -237,13 +237,13 @@
     macros this may lead to incorrect markup.
   </para>
   <para>
-    Line endings are normalized in XML and in the srcML format.
+    Line endings are normalized in XML formats including srcML.
   </para>
 </refsect1>
 <refsect1>
   <title>BUGS</title>
   <para>
-    Java language mode does not contain all of the Java 1.5 language elements.
+    Java language mode does not contain all of Java 1.5 language elements.
   </para>
 </refsect1>
 <refsect1>
