@@ -67,7 +67,7 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* enc, int op)
   // create the reader
   reader = xmlNewTextReaderFilename(infile);
   if (reader == NULL)
-    throw "Unable to open file as XML";
+    throw LibXMLError(0);
 
   // read the outer unit
   try {

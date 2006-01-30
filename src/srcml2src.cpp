@@ -463,6 +463,13 @@ int main(int argc, char* argv[]) {
       }
 
     }
+  } catch (LibXMLError error) {
+
+    if (error.getErrorNum() == 0) {
+      exit_status = STATUS_INPUTFILE_PROBLEM;
+      std::cerr << NAME << ": " << "Unable to open input file as XML" << "\n";
+    }
+
   } catch (const char* s) {
     
     std::cerr << NAME << ": " << s << "\n";
