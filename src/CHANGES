@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Better error detection for unit numbers greater than the number of units.
+
 	Remove special handling for ANTLR bug in 2.7.5.
 
 	Fix bug with else bound to wrong if.

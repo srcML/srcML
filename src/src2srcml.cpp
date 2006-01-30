@@ -47,7 +47,11 @@ const char* COMPRESSED_FLAG_SHORT = "-z";
 const char* INTERACTIVE_FLAG = "--interactive";
 const char* INTERACTIVE_FLAG_SHORT = "-c";
 
+#ifdef LIBXML_ENABLED
 const char* DEFAULT_XML_ENCODING = "UTF-8";
+#else
+const char* DEFAULT_XML_ENCODING = "ISO-8859-1";
+#endif
 
 const char* FILELIST_FLAG = "--input-file";
 const char* FILELIST_FLAG_SHORT = "-i";
