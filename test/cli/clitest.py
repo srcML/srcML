@@ -27,8 +27,8 @@ def check(command, input, output):
 def validate(org, gen):
 	if org != gen:
 		print "ERROR"
-		print "org|" + org + "|"
-		print "gen|" + gen + "|"
+		print "org|" + str(org) + "|"
+		print "gen|" + str(gen) + "|"
 	return
 
 def execute(incommand, input):
@@ -269,8 +269,49 @@ check([srcmlutility, "--extract-all"], nestedfile, "")
 validate(open("sub/a.cpp", "r").read(), sfile1)
 validate(open("sub/b.cpp", "r").read(), sfile2)
 
+##
+# src2srcml error return
 
-# check for invalid unit value
+# invalid input filename
+validate(getreturn([srcmltranslator, "foobar"], nestedfile), 2)
+
+# unknown option
+validate(getreturn([srcmltranslator, "--strip"], nestedfile), 3)
+
+# missing value
+validate(getreturn([srcmltranslator, "--language", "Python++"], nestedfile), 6)
+validate(getreturn([srcmltranslator, "--language"], nestedfile), 7)
+validate(getreturn([srcmltranslator, "--filename"], nestedfile), 8)
+validate(getreturn([srcmltranslator, "--directory"], nestedfile), 9)
+validate(getreturn([srcmltranslator, "--src-version"], nestedfile), 10)
+
+# unknown encoding
+validate(getreturn([srcmltranslator, "--src-encoding=ISO"], nestedfile), 4)
+validate(getreturn([srcmltranslator, "--xml-encoding=ISO"], nestedfile), 4)
+
+# source encoding not given
+validate(getreturn([srcmltranslator, "--src-encoding"], nestedfile), 11)
+validate(getreturn([srcmltranslator, "--xml-encoding"], nestedfile), 12)
+
+##
+# srcml2src error return
+
+# invalid input filename
+validate(getreturn([srcmlutility, "foobar"], nestedfile), 2)
+
+# unknown option
+validate(getreturn([srcmlutility, "--strip"], nestedfile), 3)
+
+# unknown encoding
+validate(getreturn([srcmlutility, "--src-encoding=ISO"], nestedfile), 4)
+
+# source encoding not given
+validate(getreturn([srcmlutility, "--src-encoding"], nestedfile), 11)
+
+# unit option selected but no value
+validate(getreturn([srcmlutility, "--unit"], nestedfile), 13)
+
+# unit value too large
 validate(getreturn([srcmlutility, "--unit", "3"], nestedfile), 14)
 validate(getreturn([srcmlutility, "--unit", "3", "--xml"], nestedfile), 14)
 validate(getreturn([srcmlutility, "--unit", "3", "--filename"], nestedfile), 14)
