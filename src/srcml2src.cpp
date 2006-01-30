@@ -304,45 +304,18 @@ int main(int argc, char* argv[]) {
   if (argc > curarg && strcmp(argv[curarg], OPTION_SEPARATOR) == 0)
       ++curarg;
 
-  // assume stdin and stdout unless filenames on command line
-  std::istream* pin = &std::cin;
-  std::ostream* pout = &std::cout;
-
   // first command line parameter is input filename
-  std::ifstream fin;
-  char* filename = 0;
+  char* filename = "-";
   if (argc > curarg && !compare_flags(argv[curarg], STDIN, STDIN)) {
     filename = argv[curarg];
-    fin.open(argv[curarg]);
-
-    if (!fin) {
-      std::cerr << "Error:  Input srcML file \"" << argv[curarg] << "\" does not exist.\n";
-      exit(STATUS_INPUTFILE_PROBLEM);
-    }
-
-    pin = &fin;
-
     ++curarg;
   }
 
   // second command line parameter is output filename
-  std::ofstream fout;
+  //  std::ofstream fout;
   char* ofilename = "-";
   if (argc == curarg + 1) {
     ofilename = argv[curarg];
-
-    // open the file if it is not a src code or xml output
-    if (isoption(options, OPTION_FILENAME) 
-    || isoption(options, OPTION_DIRECTORY)
-    || isoption(options, OPTION_LANGUAGE)
-    || isoption(options, OPTION_VERSION)
-    || isoption(options, OPTION_NESTED)
-    || isoption(options, OPTION_XML_ENCODING)) {
-
-      fout.open(ofilename);
-      pout = &fout;
-    }
-
     ++curarg;
 
   } else if (argc > curarg + 1) {
@@ -374,57 +347,57 @@ int main(int argc, char* argv[]) {
 
       std::string l = su.unit_attribute(unit, "filename");
       if (l != "")
-	*pout << l << '\n';
+	std::cout << l << '\n';
 
     } else if (isoption(options, OPTION_FILENAME)) {
 
       std::string l = su.attribute("filename");
       if (l != "")
-	*pout << l << '\n';
+	std::cout << l << '\n';
 
     } else if (isoption(options, OPTION_DIRECTORY) && isoption(options, OPTION_UNIT)) {
 
       std::string l = su.unit_attribute(unit, "dir");
       if (l != "")
-	*pout << l << '\n';
+	std::cout << l << '\n';
 
     } else if (isoption(options, OPTION_DIRECTORY)) {
 
       std::string l = su.attribute("dir");
       if (l != "")
-	*pout << l << '\n';
+	std::cout << l << '\n';
 
     } else if (isoption(options, OPTION_LANGUAGE) && isoption(options, OPTION_UNIT)) {
 
       std::string l = su.unit_attribute(unit, "language");
       if (l != "")
-	*pout << l << '\n';
+	std::cout << l << '\n';
 
     } else if (isoption(options, OPTION_LANGUAGE)) {
 
       std::string l = su.attribute("language");
       if (l != "")
-	*pout << l << '\n';
+	std::cout << l << '\n';
 
     } else if (isoption(options, OPTION_VERSION) && isoption(options, OPTION_UNIT)) {
 
       std::string l = su.unit_attribute(unit, "version");
       if (l != "")
-	*pout << l << '\n';
+	std::cout << l << '\n';
 
     } else if (isoption(options, OPTION_VERSION)) {
 
       std::string l = su.attribute("version");
       if (l != "")
-	*pout << l << '\n';
+	std::cout << l << '\n';
 
     } else if (isoption(options, OPTION_NESTED)) {
 
-      (*pout) << su.unit_count() << '\n';
+      std::cout << su.unit_count() << '\n';
 
     } else if (isoption(options, OPTION_XML_ENCODING)) {
 
-      (*pout) << su.getencoding() << '\n';
+      std::cout << su.getencoding() << '\n';
 
     } else if (isoption(options, OPTION_UNIT) && isoption(options, OPTION_XML)) {
 

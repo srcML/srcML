@@ -25,7 +25,7 @@ CXXFLAGS = -O3 -Wall -march=nocona -minline-all-stringops -fno-rtti
 CXX_LINK_FLAGS = -s
 
 # libxml use
-LIBXML_DISABLED=a
+#LIBXML_DISABLED=a
 
 # object code for xml
 ifdef LIBXML_DISABLED
