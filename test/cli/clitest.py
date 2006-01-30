@@ -18,7 +18,7 @@ debug = 0
 
 def check(command, input, output):
 
-	print ' '.join(command)
+	print os.path.basename(command[0]), ' '.join(command[1:])
 	
 	line = execute(command, input)
 
@@ -31,14 +31,19 @@ def validate(org, gen):
 		print "gen|" + str(gen) + "|"
 	return
 
-def execute(incommand, input):
-	last_line=subprocess.Popen(incommand, stdin=subprocess.PIPE, stdout=subprocess.PIPE).communicate(input)[0]
+def execute(command, input):
+	p = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+	last_line = p.communicate(input)[0]
 
+	if p.returncode != 0:
+		print "Status error:  ", p.returncode
+		
 	return last_line
 
-def getreturn(incommand, input):
-	p = subprocess.Popen(incommand, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+def getreturn(command, input):
+	p = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 	p.communicate(input)
+	print "Status: ", p.returncode, "\t", os.path.basename(command[0]), ' '.join(command[1:])
 	return p.returncode
 
 def checkallforms(base, shortflag, longflag, optionvalue, progin, progout):
@@ -62,82 +67,80 @@ if srcmlutility == "":
 
 handles_src_encoding = os.environ.get("SRC2SRCML_SRC_ENCODING")
 
+if handles_src_encoding == "":
+	default_encoding = "UTF-8"
+else:
+	default_encoding = "ISO-8859-1"
+
+xml_declaration= '<?xml version="1.0" encoding="' + default_encoding + '" standalone="yes"?>'
+
+print xml_declaration
+	
 ##
 # empty default
-srcml = """
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 """
 check([srcmltranslator], "", srcml)
 
 ##
 # empty with debug
-srcml = """
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:srcerr="http://www.sdml.info/srcML/srcerr" language="C++"/>
 """
 check([srcmltranslator, "--debug"], "", srcml)
 
 ##
 # language flag
-srcml = """
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 """
 checkallforms(srcmltranslator, option.LANGUAGE_FLAG_SHORT, option.LANGUAGE_FLAG, "C++", "", srcml)
 
-srcml = """
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C"/>
 """
 checkallforms(srcmltranslator, option.LANGUAGE_FLAG_SHORT, option.LANGUAGE_FLAG, "C", "", srcml)
 
-srcml = """
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Java"/>
 """
 checkallforms(srcmltranslator, option.LANGUAGE_FLAG_SHORT, option.LANGUAGE_FLAG, "Java", "", srcml)
 
 ##
 # filename flag
-srcml = """
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="foo"/>
 """
 checkallforms(srcmltranslator, option.FILENAME_FLAG_SHORT, option.FILENAME_FLAG, "foo", "", srcml)
 
 # filenames are not expanded if specified (unlike when extracted from name)
-srcml = """
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="bar/foo"/>
 """
 checkallforms(srcmltranslator, option.FILENAME_FLAG_SHORT, option.FILENAME_FLAG, "bar/foo", "", srcml)
 
 # filename and directory specified
-srcml = """
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="bar" filename="foo"/>
 """
 check([srcmltranslator, option.FILENAME_FLAG_SHORT, "foo", option.DIRECTORY_FLAG_SHORT, "bar"], "", srcml)
 
-srcml = """
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="bar" filename="foo"/>
 """
 check([srcmltranslator, option.DIRECTORY_FLAG_SHORT, "bar", option.FILENAME_FLAG_SHORT, "foo"], "", srcml)
 
 ##
 # directory flag
-srcml = """
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="bar"/>
 """
 checkallforms(srcmltranslator, option.DIRECTORY_FLAG_SHORT, option.DIRECTORY_FLAG, "bar", "", srcml)
 
 ##
 # version flag
-srcml = """
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" version="1.0"/>
 """
 checkallforms(srcmltranslator, option.SRCVERSION_FLAG_SHORT, option.SRCVERSION_FLAG, "1.0", "", srcml)
@@ -158,8 +161,7 @@ sfile1 = """
 a;
 """
 
-sxmlfile1 = """
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+sxmlfile1 = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
@@ -170,8 +172,7 @@ sfile2 = """
 b;
 """
 
-sxmlfile2 = """
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+sxmlfile2 = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 </unit>
@@ -182,8 +183,7 @@ check([srcmltranslator, "-", "sub/a.cpp.xml"], sfile1, "")
 
 check([srcmltranslator, "-", "sub/b.cpp.xml"], sfile2, "")
 
-nestedfile1 = """
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+nestedfile1 = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
 
 <unit language="C++" dir="sub" filename="a.cpp">
@@ -193,7 +193,7 @@ nestedfile1 = """
 </unit>
 """
 
-nestedfile = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+nestedfile = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
 
 <unit language="C++" dir="sub" filename="a.cpp">
@@ -225,7 +225,7 @@ check([srcmltranslator, "--input-file", "filelistab"], "", nestedfile)
 ####
 # srcml2src
 
-srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="bar" filename="foo" version="1.2"/>
 """
 
@@ -233,7 +233,7 @@ checkallforms(srcmlutility, "-l", "--language", "", srcml, "C++")
 checkallforms(srcmlutility, "-d", "--directory", "", srcml, "bar")
 checkallforms(srcmlutility, "-f", "--filename", "", srcml, "foo")
 checkallforms(srcmlutility, "-s", "--src-version", "", srcml, "1.2")
-checkallforms(srcmlutility, "-x", "--xml-encoding", "", srcml, "UTF-8")
+checkallforms(srcmlutility, "-x", "--xml-encoding", "", srcml, default_encoding)
 
 check([srcmlutility, "--nested"], srcml, "0")
 check([srcmlutility, "--nested"], nestedfile, "2")
@@ -244,8 +244,7 @@ check([srcmlutility, "--unit", "1", "-"], nestedfile, sfile1)
 checkallforms(srcmlutility, "-U", "--unit", "2", nestedfile, sfile2)
 check([srcmlutility, "--unit", "2"], nestedfile, sfile2)
 
-sxmlfile1 = """
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+sxmlfile1 = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
@@ -253,8 +252,7 @@ sxmlfile1 = """
 check([srcmlutility, "--xml", "--unit", "1", "-"], nestedfile, sxmlfile1)
 check([srcmlutility, "--xml", "--unit", "1"], nestedfile, sxmlfile1)
 
-sxmlfile2 = """
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+sxmlfile2 = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="b.cpp">
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 </unit>
@@ -278,6 +276,12 @@ validate(getreturn([srcmltranslator, "foobar"], nestedfile), 2)
 # unknown option
 validate(getreturn([srcmltranslator, "--strip"], nestedfile), 3)
 
+# unknown encoding
+
+if handles_src_encoding == "":
+	validate(getreturn([srcmltranslator, "--src-encoding=ISO"], nestedfile), 4)
+	validate(getreturn([srcmltranslator, "--xml-encoding=ISO"], nestedfile), 4)
+
 # missing value
 validate(getreturn([srcmltranslator, "--language", "Python++"], nestedfile), 6)
 validate(getreturn([srcmltranslator, "--language"], nestedfile), 7)
@@ -285,12 +289,9 @@ validate(getreturn([srcmltranslator, "--filename"], nestedfile), 8)
 validate(getreturn([srcmltranslator, "--directory"], nestedfile), 9)
 validate(getreturn([srcmltranslator, "--src-version"], nestedfile), 10)
 
-# unknown encoding
-validate(getreturn([srcmltranslator, "--src-encoding=ISO"], nestedfile), 4)
-validate(getreturn([srcmltranslator, "--xml-encoding=ISO"], nestedfile), 4)
-
 # source encoding not given
-validate(getreturn([srcmltranslator, "--src-encoding"], nestedfile), 11)
+if handles_src_encoding == "":
+	validate(getreturn([srcmltranslator, "--src-encoding"], nestedfile), 11)
 validate(getreturn([srcmltranslator, "--xml-encoding"], nestedfile), 12)
 
 ##
@@ -303,7 +304,8 @@ validate(getreturn([srcmlutility, "foobar"], nestedfile), 2)
 validate(getreturn([srcmlutility, "--strip"], nestedfile), 3)
 
 # unknown encoding
-validate(getreturn([srcmlutility, "--src-encoding=ISO"], nestedfile), 4)
+if handles_src_encoding == "":
+	validate(getreturn([srcmlutility, "--src-encoding=ISO"], nestedfile), 4)
 
 # source encoding not given
 validate(getreturn([srcmlutility, "--src-encoding"], nestedfile), 11)
