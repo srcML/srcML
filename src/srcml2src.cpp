@@ -206,7 +206,7 @@ int main(int argc, char* argv[]) {
 	++curarg;
 
       // check for unit flag with missing unit number
-      } else if (argc <= curarg + 2 || strcmp(argv[curarg], OPTION_SEPARATOR) == 0) {
+      } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
 	std::cerr << NAME << ": unit option selected but no number specified." << '\n';
 	exit(STATUS_UNIT_MISSING);
       } else {
@@ -236,7 +236,7 @@ int main(int argc, char* argv[]) {
 	++curarg;
 
       // check for encoding flag with missing encoding
-      } else if (argc <= curarg + 2 || strcmp(argv[curarg], OPTION_SEPARATOR) == 0) {
+      } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
 	std::cerr << NAME << ": encoding selected but not specified." << '\n';
 	exit(STATUS_XMLENCODING_MISSING);
       } else {
