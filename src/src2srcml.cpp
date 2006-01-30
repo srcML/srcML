@@ -73,7 +73,7 @@ void output_help(const char* name) {
               << '\n'
 	      << "Translates source-code files into the XML source-code representation srcML." << '\n'
               << '\n'
-	      << "When no filenames are given read from standard input." << '\n'
+	      << "When no filenames are given read from standard input and write to standard output." << '\n'
 	      << "When only one filename is given write to standard output."  << '\n'
 	      << "An input filename of '-' also reads from standard input." << '\n'
               << '\n'
