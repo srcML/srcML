@@ -231,9 +231,8 @@ int main(int argc, char* argv[]) {
 
       // check for language flag with missing language value
       } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
-	std::cerr << NAME << ": invalid option -- Language flag must one of the following values:  "
-		  << LANGUAGE_C << " " << LANGUAGE_CXX << " " << LANGUAGE_JAVA << '\n';
-	exit(STATUS_INVALID_LANGUAGE);
+	std::cerr << NAME << ": language option selected but not specified." << '\n';
+	exit(STATUS_LANGUAGE_MISSING);
       } else {
 
 	// move to parameter
