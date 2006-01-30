@@ -75,7 +75,8 @@
       <term>&LANGUAGE_FLAG_SHORT;, &LANGUAGE_FLAG;</term>
       <listitem>
 	<para>
-	  Output the language of the srcML file as stored in the unit element attribute language.
+	  Output the language of the srcML file as stored in the attribute language in the unit element
+	  on standard output.
 	  The language is the value of the attribute of the root element unit, unless
 	  a particular unit is specified with the &UNIT_FLAG; option.
 	</para>
@@ -85,7 +86,8 @@
       <term>&DIRECTORY_FLAG_SHORT;, &DIRECTORY_FLAG;</term>
       <listitem>
 	<para>
-	  Output the directory of the srcML file as stored in the unit element attribute dir.
+	  Output the directory of the srcML file as stored in the attribute dir in the unit element
+	  on standard output.
 	  The directory is the value of the attribute of the root element unit, unless
 	  a particular unit is specified with the &UNIT_FLAG; option.
 	</para>
@@ -95,7 +97,8 @@
       <term>&FILENAME_FLAG_SHORT;, &FILENAME_FLAG;</term>
       <listitem>
 	<para>
-	  Output the filename of the srcML file as stored in the unit element attribute filename.
+	  Output the filename of the srcML file as stored in the attribute filename in the unit element
+	  on standard output.
 	  The filename is the value of the attribute of the root element unit, unless
 	  a particular unit is specified with the &UNIT_FLAG; option.
 	</para>
@@ -105,7 +108,8 @@
       <term>&SRCVERSION_FLAG_SHORT;, &SRCVERSION_FLAG;</term>
       <listitem>
 	<para>
-	  Output the version of the srcML file as stored in the unit element attribute filename.
+	  Output the version of the srcML file as stored attribute version in the unit element
+	  on standard output.
 	  The version is the value of the attribute of the root element unit, unless
 	  a particular unit is specified with the &UNIT_FLAG; option.
 	</para>
@@ -115,8 +119,8 @@
       <term>&NESTED_FLAG_SHORT;, &NESTED_FLAG;</term>
       <listitem>
 	<para>
-	  Count the number of nested units in a compound srcML file.  Result is 0 if the srcML file is not
-	  compound.
+	  Output the number of nested units in a compound srcML file on standard output.
+	  Result is 0 if the srcML file is not compound.
 	</para>
       </listitem>
     </varlistentry>

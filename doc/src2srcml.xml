@@ -213,6 +213,24 @@
   </para>
 </refsect1>
 <refsect1>
+  <title>RETURN STATUS</title>
+
+  <para>0: Normal</para>
+  <para>1: Error </para>
+  <para>2: Problem with input file</para>
+  <para>3: Unknown option</para>
+  <para>4: Unknown encoding</para>
+  <para>5: Libxml2-only feature (not libxml2 enabled)</para>
+  <para>6: Invalid language</para>
+  <para>7: Language option specified, but value missing</para>
+  <para>8: Filename option specified, but value missing</para>
+  <para>9: Directory option specified, but value missing</para>
+  <para>10: Version option specified, but value missing</para>
+  <para>11: Text encoding option specified, but value missing</para>
+  <para>12: XML encoding option specified, but value missing</para>
+
+</refsect1>
+<refsect1>
   <title>CAVEATS</title>
   <para>
     Translation is performed based on local information with no symbol table.  For non-CFG languages, i.e., C/C++, and with
