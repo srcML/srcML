@@ -11,7 +11,6 @@ import string
 import re
 import subprocess
 import difflib
-import pprint
 
 import option
 
@@ -28,8 +27,8 @@ def check(command, input, output):
 def validate(org, gen):
 	if org != gen:
 		print "ERROR"
-		print "|" + org + "|"
-		print "|" + gen + "|"
+		print "org|" + org + "|"
+		print "gen|" + gen + "|"
 	return
 
 def execute(incommand, input):
@@ -37,12 +36,19 @@ def execute(incommand, input):
 
 	return last_line
 
+def getreturn(incommand, input):
+	p = subprocess.Popen(incommand, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+	p.communicate(input)
+	return p.returncode
+
 def checkallforms(base, shortflag, longflag, optionvalue, progin, progout):
-	check([base, shortflag, optionvalue], progin, progout)
-
-	check([base, longflag, optionvalue], progin, progout)
-
-	check([base, longflag + "=" + optionvalue], progin, progout)
+	if optionvalue != "":
+		check([base, shortflag, optionvalue], progin, progout)
+		check([base, longflag, optionvalue], progin, progout)
+		check([base, longflag + "=" + optionvalue], progin, progout)
+	else:
+		check([base, shortflag], progin, progout)
+		check([base, longflag], progin, progout)
 
 	return
 	
@@ -200,6 +206,9 @@ nestedfile = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
 </unit>
 """
+os.system('echo -e "\na;" > sub/a.cpp')
+os.system('echo -e "\nb;" > sub/b.cpp')
+
 check([srcmltranslator, "sub/a.cpp", "sub/b.cpp", "-"], "", nestedfile)
 
 check([srcmltranslator, "--nested", "sub/a.cpp", "-"], "", nestedfile1)
@@ -220,14 +229,52 @@ srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="bar" filename="foo" version="1.2"/>
 """
 
-check([srcmlutility, "--language"], srcml, "C++")
-check([srcmlutility, "--directory"], srcml, "bar")
-check([srcmlutility, "--filename"], srcml, "foo")
-check([srcmlutility, "--src-version"], srcml, "1.2")
-check([srcmlutility, "--xml-encoding"], srcml, "UTF-8")
+checkallforms(srcmlutility, "-l", "--language", "", srcml, "C++")
+checkallforms(srcmlutility, "-d", "--directory", "", srcml, "bar")
+checkallforms(srcmlutility, "-f", "--filename", "", srcml, "foo")
+checkallforms(srcmlutility, "-s", "--src-version", "", srcml, "1.2")
+checkallforms(srcmlutility, "-x", "--xml-encoding", "", srcml, "UTF-8")
 
 check([srcmlutility, "--nested"], srcml, "0")
 check([srcmlutility, "--nested"], nestedfile, "2")
 
+checkallforms(srcmlutility, "-U", "--unit", "1", nestedfile, sfile1)
+check([srcmlutility, "--unit", "1", "-"], nestedfile, sfile1)
+
+checkallforms(srcmlutility, "-U", "--unit", "2", nestedfile, sfile2)
+check([srcmlutility, "--unit", "2"], nestedfile, sfile2)
+
+sxmlfile1 = """
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+"""
+check([srcmlutility, "--xml", "--unit", "1", "-"], nestedfile, sxmlfile1)
+check([srcmlutility, "--xml", "--unit", "1"], nestedfile, sxmlfile1)
+
+sxmlfile2 = """
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="b.cpp">
+<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</unit>
+"""
+check([srcmlutility, "--xml", "--unit", "2", "-"], nestedfile, sxmlfile2)
+check([srcmlutility, "--xml", "--unit", "2"], nestedfile, sxmlfile2)
+
+os.system("rm -f sub/a.cpp sub/b.cpp")
+
+check([srcmlutility, "--extract-all"], nestedfile, "")
+
+validate(open("sub/a.cpp", "r").read(), sfile1)
+validate(open("sub/b.cpp", "r").read(), sfile2)
+
+
+# check for invalid unit value
+validate(getreturn([srcmlutility, "--unit", "3"], nestedfile), 14)
+validate(getreturn([srcmlutility, "--unit", "3", "--xml"], nestedfile), 14)
+validate(getreturn([srcmlutility, "--unit", "3", "--filename"], nestedfile), 14)
+validate(getreturn([srcmlutility, "--unit", "3", "--directory"], nestedfile), 14)
+validate(getreturn([srcmlutility, "--unit", "3", "--src-version"], nestedfile), 14)
 
 exit
