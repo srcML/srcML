@@ -80,7 +80,7 @@ const char* LANGUAGE_JAVA = "Java";
 
 /* Return Status */
 
-enum {
+enum RETURN_STATUS {
   STATUS_SUCCESS = 0,
   STATUS_ERROR = 1,
   STATUS_INPUTFILE_PROBLEM = 2,
