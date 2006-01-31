@@ -65,6 +65,9 @@ xmlTextReaderPtr xmlNewTextReaderFilename(const char* filename) {
   else
     reader->pin = new std::ifstream(filename);
 
+  if (reader->pin->fail())
+    return 0;
+
   reader->pin->unsetf(std::ios::skipws);
 
   reader->depth = 0;
