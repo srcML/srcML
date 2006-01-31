@@ -115,10 +115,10 @@ void output_help(const char* name) {
 	      << "  " << name << " - main.cpp.xml       " << GAP << "(read from standard input, write to file main.cpp.xml)" << '\n'
 	      << "  " << name << " --directory=src --filename=main.cpp - main.cpp.xml     "
 	      << "(element unit attributes dir \"src\", filename \"main.cpp\")" << '\n'
-
+#ifdef LIBXML_ENABLED
 	      << "  " << name << " --src-encoding=UTF-8 main.cpp main.cpp.xml             "
 	      << "(encoding of input text file is UTF-8)" << '\n'
-
+#endif
 	      << "  " << name << " --xml-encoding=ISO-8859-1 main.cpp main.cpp.xml        "
 	      << "(set encoding of srcML file to ISO-8859-1)" << '\n'
 
