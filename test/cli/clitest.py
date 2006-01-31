@@ -75,7 +75,10 @@ else:
 xml_declaration= '<?xml version="1.0" encoding="' + default_encoding + '" standalone="yes"?>'
 
 print xml_declaration
-	
+
+bad_encoding = "ISO"
+bad_language = "Python++"
+
 ##
 # empty default
 srcml = xml_declaration + """
@@ -279,11 +282,11 @@ validate(getreturn([srcmltranslator, "--strip"], nestedfile), 3)
 # unknown encoding
 
 if handles_src_encoding == "":
-	validate(getreturn([srcmltranslator, "--src-encoding=ISO"], nestedfile), 4)
-	validate(getreturn([srcmltranslator, option.ENCODING_FLAG + "=ISO"], nestedfile), 4)
+	validate(getreturn([srcmltranslator, option.TEXTENCODING_FLAG + "=" + bad_encoding], nestedfile), 4)
+	validate(getreturn([srcmltranslator, option.ENCODING_FLAG + "=" + bad_encoding], nestedfile), 4)
 
 # missing value
-validate(getreturn([srcmltranslator, option.LANGUAGE_FLAG, "Python++"], nestedfile), 6)
+validate(getreturn([srcmltranslator, option.LANGUAGE_FLAG, bad_language], nestedfile), 6)
 validate(getreturn([srcmltranslator, option.LANGUAGE_FLAG], nestedfile), 7)
 validate(getreturn([srcmltranslator, option.FILENAME_FLAG], nestedfile), 8)
 validate(getreturn([srcmltranslator, option.DIRECTORY_FLAG], nestedfile), 9)
@@ -305,7 +308,7 @@ validate(getreturn([srcmlutility, "--strip"], nestedfile), 3)
 
 # unknown encoding
 if handles_src_encoding == "":
-	validate(getreturn([srcmlutility, "--src-encoding=ISO"], nestedfile), 4)
+	validate(getreturn([srcmlutility, option.TEXTENCODING_FLAG + "=" + bad_encoding], nestedfile), 4)
 
 # source encoding not given
 validate(getreturn([srcmlutility, option.TEXTENCODING_FLAG], nestedfile), 11)
@@ -315,7 +318,7 @@ validate(getreturn([srcmlutility, option.UNIT_FLAG], nestedfile), 13)
 
 # unit value too large
 validate(getreturn([srcmlutility, option.UNIT_FLAG, "3"], nestedfile), 14)
-validate(getreturn([srcmlutility, option.UNIT_FLAG, "3", "--xml"], nestedfile), 14)
+validate(getreturn([srcmlutility, option.UNIT_FLAG, "3", option.XML_FLAG], nestedfile), 14)
 validate(getreturn([srcmlutility, option.UNIT_FLAG, "3", option.FILENAME_FLAG], nestedfile), 14)
 validate(getreturn([srcmlutility, option.UNIT_FLAG, "3", option.DIRECTORY_FLAG], nestedfile), 14)
 validate(getreturn([srcmlutility, option.UNIT_FLAG, "3", option.SRCVERSION_FLAG], nestedfile), 14)
