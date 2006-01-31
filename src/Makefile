@@ -24,7 +24,7 @@ CXXFLAGS = -O3 -Wall -march=nocona -minline-all-stringops -fno-rtti
 # compiler gcc linking flags
 CXX_LINK_FLAGS = -s
 
-# libxml use
+# Uncomment to generate non-libxml version
 #LIBXML_DISABLED=a
 
 # object code for xml
@@ -39,7 +39,7 @@ LIBXML_INCLUDE=-I/usr/include/libxml2
 XML_OBJ=
 XML_LIB=-lxml2
 XML_PRE=-DLIBXML_ENABLED
-LIBXML_VERSION= (libxml2 enabled)
+LIBXML_VERSION= Libxml2 enabled
 endif
 
 SRC2SRCML_BIN=../bin/src2srcml
