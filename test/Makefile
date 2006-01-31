@@ -4,8 +4,10 @@
 EXE_DIR = ../bin/
 OBJ_DIR = ../obj/
 
-SRC2SRCML_BIN=../bin/src2srcml
-SRCML2SRC_BIN=../bin/srcml2src
+WD=${shell pwd}
+
+SRC2SRCML_BIN=${WD}/../bin/src2srcml
+SRCML2SRC_BIN=${WD}/../bin/srcml2src
 
 PHONY : testbase
 testbase : gen
@@ -225,6 +227,9 @@ gencpp : ${GEN_FILES_CPP}
 gen : ${GEN_FILES}
 	rm -f ../suite/preprocessor.preproc.cpp.xml
 	rm -f ../suite/class_java.preproc.cpp.xml
+	rm -f ../suite/keyword_java.preproc.cpp.xml
+	rm -f ../suite/interface_java.preproc.cpp.xml
+	rm -f ../suite/package.preproc.cpp.xml
 
 #  Test cases generated from other test cases
 

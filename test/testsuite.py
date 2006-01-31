@@ -70,8 +70,8 @@ def src2srcML(text_file, encoding, directory, filename):
 
 		last_line = subprocess.Popen([startcmd + srcmltranslator, "-l", ulanguage, "-d", directory, "--src-encoding=" + encoding, "--xml-encoding=" + encoding, "--filename=" + filename], stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(text_file)[0]
 	else:
-		last_line = subprocess.Popen([startcmd + srcmltranslator, "-l", ulanguage, "-d", directory, "--filename=" + filename], stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(text_file)[0]
-		
+		last_line = subprocess.Popen([startcmd + srcmltranslator, "-l", ulanguage, "-d", directory, "--xml-encoding=" + encoding, "--filename=" + filename], stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(text_file)[0]
+
 	return last_line
 
 

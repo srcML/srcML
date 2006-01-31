@@ -13,6 +13,7 @@ TIMING_JAVA=timing_java.java
 PHONY : time
 time : ../bin/src2srcml
 	cd .; time ../bin/src2srcml ${TIMING_MED} ${TIMING_MED}.xml
+	cd .; time ../bin/srcml2src ${TIMING_MED}.xml ${TIMING_MED}v2
 
 PHONY : javatime
 javatime :
