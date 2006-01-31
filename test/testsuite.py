@@ -24,7 +24,7 @@ srcmlutility = os.environ.get("SRCML2SRC_BIN")
 if srcmlutility == "":
 	srcmlutility = "../bin/src2srcml"
 
-handles_src_encoding = os.environ.get("SRC2SRCML_SRC_ENCODING")
+handles_src_encoding = None #os.environ.get("SRC2SRCML_SRC_ENCODING")
 
 entire_file = ""
 
@@ -47,7 +47,14 @@ def name2filestr(src_filename):
 # converts a srcML file back to text
 def srcml2src(srctext, encoding):
 
-	last_line=subprocess.Popen([startcmd + srcmlutility, "--src-encoding=" + encoding], stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(srctext)[0]
+
+	# run the srcml processorn
+	if handles_src_encoding != None:
+
+		last_line=subprocess.Popen([startcmd + srcmlutility, "--src-encoding=" + encoding], stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(srctext)[0]
+
+	else:
+		last_line=subprocess.Popen([startcmd + srcmlutility], stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(srctext)[0]
 
 	return last_line
 
