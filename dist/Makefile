@@ -1,7 +1,7 @@
-VERSION=beta-jan-30-2006
-VERSION_DIR=tags
+VERSION=tirawireless
+VERSION_DIR=branches/commercial
 
-DEST_DIR=/var/www/sdml/projects/srcml/beta-Jan-30-2006/.
+DEST_DIR=/var/www/sdml/projects/srcml/commercial/tirawireless1.2/.
 
 SRC=srcML
 SRC_TAR=${SRC}.tar
