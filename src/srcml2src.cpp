@@ -81,9 +81,11 @@ void output_help(const char* name) {
 	       << "  " << XML_FLAG_SHORT        << ", " << setw(COL) << XML_FLAG        << "output is in XML instead of text\n"
 	       << "  " << EXPAND_FLAG_SHORT     << ", " << setw(COL) << EXPAND_FLAG     << "extract all files from a compound srcML document\n"
 	       << '\n'
+#ifdef LIBXML_ENABLED
 	       << "  " << TEXTENCODING_FLAG_SHORT << ", " << setw(COL) <<  TEXTENCODING_FLAG_FULL  << "set the output source encoding to ENC (default:  "
 	      << "based on locale" << ") \n"
 	       << '\n'
+#endif
                << "  " << VERBOSE_FLAG_SHORT    << ", " << setw(COL) << VERBOSE_FLAG    << "verbose output\n"
 	       << '\n'
 	       << "Examples:  " << '\n'
@@ -254,7 +256,7 @@ int main(int argc, char* argv[]) {
 
     // text encoding
     else if (compare_flags(argv[curarg], TEXTENCODING_FLAG, TEXTENCODING_FLAG_SHORT)) {
-
+#ifdef LIBXML_ENABLED
       options |= OPTION_TEXT_ENCODING;
 
       char* embedded = extract_option(argv[curarg]);
@@ -285,6 +287,10 @@ int main(int argc, char* argv[]) {
 	std::cerr << NAME << ": text encoding \"" << src_encoding << "\" is not supported." << '\n';
 	exit(STATUS_UNKNOWN_ENCODING);
       }
+#else
+      std::cerr << NAME << ": The source encoding option, i.e., " << TEXTENCODING_FLAG << ", is only supported in the libxml version." << '\n';
+      exit(STATUS_LIBXML2_FEATURE);
+#endif
 
     // reached the end of a multi-short form option
     } else if (position > 0 && argv[curarg][position + 1] == '\0') {
