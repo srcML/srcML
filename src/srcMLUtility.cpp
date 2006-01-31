@@ -66,8 +66,9 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* enc, int op)
 
   // create the reader
   reader = xmlNewTextReaderFilename(infile);
-  if (reader == NULL)
+  if (reader == NULL) {
     throw LibXMLError(0);
+  }
 
   // read the outer unit
   try {
@@ -230,7 +231,7 @@ void srcMLUtility::expand(const char* root_filename) {
     xmlChar* directory = xmlTextReaderGetAttribute(reader, BAD_CAST "dir");
 
     if (!filename) {
-      std::cout << "Missing filename" << '\n';
+      std::cerr << "Missing filename" << '\n';
       continue;
     }
 
@@ -242,7 +243,7 @@ void srcMLUtility::expand(const char* root_filename) {
       // make the directory path if there is one
       int ret = mkpath(directory_filename.c_str(), EXPAND_DIR_PERM);
       if (ret != 0 && errno != EEXIST) {
-	std::cout << "Error " << errno  << " creating directory:  " << directory_filename << '\n';
+	std::cerr << "Error " << errno  << " creating directory:  " << directory_filename << '\n';
       }
     }
 
