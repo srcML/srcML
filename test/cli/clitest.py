@@ -13,6 +13,7 @@ import subprocess
 import difflib
 
 import option
+import status
 
 debug = 0
 
@@ -274,19 +275,19 @@ validate(open("sub/b.cpp", "r").read(), sfile2)
 # src2srcml error return
 
 # invalid input filename
-validate(getreturn([srcmltranslator, "foobar"], nestedfile), 2)
+validate(getreturn([srcmltranslator, "foobar"], nestedfile), status.STATUS_INPUTFILE_PROBLEM)
 
 # unknown option
-validate(getreturn([srcmltranslator, "--strip"], nestedfile), 3)
+validate(getreturn([srcmltranslator, "--strip"], nestedfile), status.STATUS_UNKNOWN_OPTION)
 
 # unknown encoding
 
 if handles_src_encoding == "":
-	validate(getreturn([srcmltranslator, option.TEXTENCODING_FLAG + "=" + bad_encoding], nestedfile), 4)
-	validate(getreturn([srcmltranslator, option.ENCODING_FLAG + "=" + bad_encoding], nestedfile), 4)
+	validate(getreturn([srcmltranslator, option.TEXTENCODING_FLAG + "=" + bad_encoding], nestedfile), status.STATUS_UNKNOWN_ENCODING)
+	validate(getreturn([srcmltranslator, option.ENCODING_FLAG + "=" + bad_encoding], nestedfile), status.STATUS_UNKNOWN_ENCODING)
 
 # missing value
-validate(getreturn([srcmltranslator, option.LANGUAGE_FLAG, bad_language], nestedfile), 6)
+validate(getreturn([srcmltranslator, option.LANGUAGE_FLAG, bad_language], nestedfile), status.STATUS_INVALID_LANGUAGE)
 validate(getreturn([srcmltranslator, option.LANGUAGE_FLAG], nestedfile), 7)
 validate(getreturn([srcmltranslator, option.FILENAME_FLAG], nestedfile), 8)
 validate(getreturn([srcmltranslator, option.DIRECTORY_FLAG], nestedfile), 9)
@@ -301,26 +302,26 @@ validate(getreturn([srcmltranslator, option.ENCODING_FLAG], nestedfile), 12)
 # srcml2src error return
 
 # invalid input filename
-validate(getreturn([srcmlutility, "foobar"], nestedfile), 2)
+validate(getreturn([srcmlutility, "foobar"], nestedfile), status.STATUS_INPUTFILE_PROBLEM)
 
 # unknown option
-validate(getreturn([srcmlutility, "--strip"], nestedfile), 3)
+validate(getreturn([srcmlutility, "--strip"], nestedfile), status.STATUS_UNKNOWN_OPTION)
 
 # unknown encoding
 if handles_src_encoding == "":
-	validate(getreturn([srcmlutility, option.TEXTENCODING_FLAG + "=" + bad_encoding], nestedfile), 4)
+	validate(getreturn([srcmlutility, option.TEXTENCODING_FLAG + "=" + bad_encoding], nestedfile), status.STATUS_UNKNOWN_ENCODING)
 
 # source encoding not given
-validate(getreturn([srcmlutility, option.TEXTENCODING_FLAG], nestedfile), 11)
+validate(getreturn([srcmlutility, option.TEXTENCODING_FLAG], nestedfile), status.STATUS_SRCENCODING_MISSING)
 
 # unit option selected but no value
-validate(getreturn([srcmlutility, option.UNIT_FLAG], nestedfile), 13)
+validate(getreturn([srcmlutility, option.UNIT_FLAG], nestedfile), status.STATUS_UNIT_MISSING)
 
 # unit value too large
-validate(getreturn([srcmlutility, option.UNIT_FLAG, "3"], nestedfile), 14)
-validate(getreturn([srcmlutility, option.UNIT_FLAG, "3", option.XML_FLAG], nestedfile), 14)
-validate(getreturn([srcmlutility, option.UNIT_FLAG, "3", option.FILENAME_FLAG], nestedfile), 14)
-validate(getreturn([srcmlutility, option.UNIT_FLAG, "3", option.DIRECTORY_FLAG], nestedfile), 14)
-validate(getreturn([srcmlutility, option.UNIT_FLAG, "3", option.SRCVERSION_FLAG], nestedfile), 14)
+validate(getreturn([srcmlutility, option.UNIT_FLAG, "3"], nestedfile), status.STATUS_UNIT_INVALID)
+validate(getreturn([srcmlutility, option.UNIT_FLAG, "3", option.XML_FLAG], nestedfile), status.STATUS_UNIT_INVALID)
+validate(getreturn([srcmlutility, option.UNIT_FLAG, "3", option.FILENAME_FLAG], nestedfile), status.STATUS_UNIT_INVALID)
+validate(getreturn([srcmlutility, option.UNIT_FLAG, "3", option.DIRECTORY_FLAG], nestedfile), status.STATUS_UNIT_INVALID)
+validate(getreturn([srcmlutility, option.UNIT_FLAG, "3", option.SRCVERSION_FLAG], nestedfile), status.STATUS_UNIT_INVALID)
 
 exit
