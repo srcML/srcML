@@ -94,9 +94,10 @@ void output_help(const char* name) {
 	       << "  " << name << " main.cpp.xml main.cpp " << "(read from file main.cpp.xml, write to file main.cpp)" << '\n'
 	       << "  " << name << " -                     " << "(read from standard input, write to standard output)" << '\n'
 	       << "  " << name << " - main.cpp            " << "(read from standard input, write to file main.cpp)" << '\n'
-	       << "  " << name << " --filename            " << "(read from standard input, output filename)" << '\n'
-	       << "  " << name << " --directory           " << "(read from standard input, output directory)" << '\n'
-	       << "  " << name << " --language            " << "(read from standard input, output language)" << '\n'
+	       << "  " << name << " --language            " << "(read from standard input, output language attribute)" << '\n'
+	       << "  " << name << " --directory           " << "(read from standard input, output directory attribute)" << '\n'
+	       << "  " << name << " --filename            " << "(read from standard input, output filename attribute)" << '\n'
+	       << "  " << name << " --src-version         " << "(read from standard input, output version attribute)" << '\n'
        //	       << "  " << name << " " << ATTRIBUTE_FILENAME_FLAG_SHORT << "                  "
        //	       << "(read from standard input, write to filename given in srcML attributes)" << '\n'
 	       << '\n'
