@@ -288,11 +288,13 @@ int main(int argc, char* argv[]) {
 	++curarg;
       }
 
+#ifdef LIBXML_ENABLED
       // validate xml encoding
       if (!srcMLOutput::checkEncoding(xml_encoding)) {
 	std::cerr << NAME << ": xml encoding \"" << xml_encoding << "\" is not supported." << '\n';
 	exit(STATUS_UNKNOWN_ENCODING);
       }
+#endif
     }
 
     // text encoding
