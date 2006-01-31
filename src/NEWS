@@ -1,11 +1,70 @@
 NEWS
 
-Trunk
+Release of Jan-30-2006-Beta
 
-	Changed srcml2src to use libxml2.  This allows it to handle the full range
-	of XML including CDATA, processing instructions, etc.  It also allows for
-	improved handling of XML currently used including XML declarations.  In short,
-	it is much more robust, a lot smaller, and almost twice as fast.	
+This version of the srcML translator include numerous bug fixes, improved set of features
+using using libxml2, and many more options.  In addition, the documentation has been
+greatly improved with particular emphasis on the name/usage of options.
+
+Major changes:
+
+	* Support for compound srcML documents (i.e., many individual srcML documents
+	nested in one large srcML document) both for creation and extraction.  As an example,
+	the entire linux kernel can be translated (and extracted) to/from a single srcML
+	file.
+
+	* A compound srcML file can be specified using a file that contains a list of multiple
+	input files.
+
+New libxml2 features:
+
+	* Automatic conversion from source encoding to XML encoding for src2srcml,
+	and XML encoding to source encoding for srcml2src.  Both encodings can be
+	specified
+
+	* Compressed (gzip) output from src2srcml.  These compressed files are automatically
+	detected and used with srcml2src.
+
+Markup changes:
+
+	* Default xml encoding (libxml2 version) is now UTF-8 with default source encoding based on locale.
+	The non-libxml2 version still uses ISO-8859-1 for the default encoding with no automatic 
+	encoding conversion done.
+
+	* Form feeds are now stored using new empty element <formfeed/>.  Extraction
+	using srcml2src will convert this element back to a form feed character.
+
+	* New optional attribute "version" on unit element allows for differentiation between
+	individual units in compound srcML.
+
+	* The attribute "standalone" with a value of "yes" has been added to the XML declaration.
+
+Misc changes:
+
+	* New option for srcml2src to extract encoding.
+
+	* Reworking of options with more consistency between src2srcml and srcml2src.
+
+	* Improved verbose option.
+
+	* Removed append handling.  New options for specifying multiple input files make it unnecessary.
+
+	* More intelligent handling of unit attributes for units inside of compound nested documents.
+
+	* Return status codes for src2srcml and srcml2src.
+
+	* Manual pages are available.
+
+Build changes:
+
+	* Allow for libxml and non-libxml builds of src2srcml.  Currently, srcml2src is only available with a
+	libxml build.
+
+	* Remove special handling for ANTLR bug in 2.7.5.
+
+And (as always) bug fixes.
+
+
 
 Release of Aug-29-2005-Beta
 
