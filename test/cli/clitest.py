@@ -215,7 +215,7 @@ os.system('echo -e "\nb;" > sub/b.cpp')
 
 check([srcmltranslator, "sub/a.cpp", "sub/b.cpp", "-"], "", nestedfile)
 
-check([srcmltranslator, "--nested", "sub/a.cpp", "-"], "", nestedfile1)
+check([srcmltranslator, option.NESTED_FLAG, "sub/a.cpp", "-"], "", nestedfile1)
 
 filelist = """
 sub/a.cpp
@@ -224,7 +224,7 @@ sub/b.cpp
 
 os.system('echo -e "\nsub/a.cpp\nsub/b.cpp\n" > filelistab')
 
-check([srcmltranslator, "--input-file", "filelistab"], "", nestedfile)
+check([srcmltranslator, option.FILELIST_FLAG, "filelistab"], "", nestedfile)
 
 ####
 # srcml2src
@@ -253,20 +253,21 @@ sxmlfile1 = xml_declaration + """
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 """
-check([srcmlutility, "--xml", option.UNIT_FLAG, "1", "-"], nestedfile, sxmlfile1)
-check([srcmlutility, "--xml", option.UNIT_FLAG, "1"], nestedfile, sxmlfile1)
+check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "1", "-"], nestedfile, sxmlfile1)
+check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "1"], nestedfile, sxmlfile1)
 
 sxmlfile2 = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="b.cpp">
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 </unit>
 """
-check([srcmlutility, "--xml", option.UNIT_FLAG, "2", "-"], nestedfile, sxmlfile2)
-check([srcmlutility, "--xml", option.UNIT_FLAG, "2"], nestedfile, sxmlfile2)
+check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "2", "-"], nestedfile, sxmlfile2)
+check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "2"], nestedfile, sxmlfile2)
 
 os.system("rm -f sub/a.cpp sub/b.cpp")
 
-check([srcmlutility, "--extract-all"], nestedfile, "")
+check([srcmlutility, option.EXPAND_FLAG], nestedfile, "")
+check([srcmlutility, option.EXPAND_FLAG_SHORT], nestedfile, "")
 
 validate(open("sub/a.cpp", "r").read(), sfile1)
 validate(open("sub/b.cpp", "r").read(), sfile2)
@@ -288,15 +289,15 @@ if handles_src_encoding == "":
 
 # missing value
 validate(getreturn([srcmltranslator, option.LANGUAGE_FLAG, bad_language], nestedfile), status.STATUS_INVALID_LANGUAGE)
-validate(getreturn([srcmltranslator, option.LANGUAGE_FLAG], nestedfile), 7)
-validate(getreturn([srcmltranslator, option.FILENAME_FLAG], nestedfile), 8)
-validate(getreturn([srcmltranslator, option.DIRECTORY_FLAG], nestedfile), 9)
-validate(getreturn([srcmltranslator, option.SRCVERSION_FLAG], nestedfile), 10)
+validate(getreturn([srcmltranslator, option.LANGUAGE_FLAG], nestedfile), status.STATUS_LANGUAGE_MISSING)
+validate(getreturn([srcmltranslator, option.FILENAME_FLAG], nestedfile), status.STATUS_FILENAME_MISSING)
+validate(getreturn([srcmltranslator, option.DIRECTORY_FLAG], nestedfile), status.STATUS_DIRECTORY_MISSING)
+validate(getreturn([srcmltranslator, option.SRCVERSION_FLAG], nestedfile), status.STATUS_VERSION_MISSING)
 
 # source encoding not given
 if handles_src_encoding == "":
-	validate(getreturn([srcmltranslator, option.TEXTENCODING_FLAG], nestedfile), 11)
-validate(getreturn([srcmltranslator, option.ENCODING_FLAG], nestedfile), 12)
+	validate(getreturn([srcmltranslator, option.TEXTENCODING_FLAG], nestedfile), status.STATUS_SRCENCODING_MISSING)
+validate(getreturn([srcmltranslator, option.ENCODING_FLAG], nestedfile), status.STATUS_XMLENCODING_MISSING)
 
 ##
 # srcml2src error return
@@ -318,10 +319,11 @@ validate(getreturn([srcmlutility, option.TEXTENCODING_FLAG], nestedfile), status
 validate(getreturn([srcmlutility, option.UNIT_FLAG], nestedfile), status.STATUS_UNIT_MISSING)
 
 # unit value too large
-validate(getreturn([srcmlutility, option.UNIT_FLAG, "3"], nestedfile), status.STATUS_UNIT_INVALID)
-validate(getreturn([srcmlutility, option.UNIT_FLAG, "3", option.XML_FLAG], nestedfile), status.STATUS_UNIT_INVALID)
-validate(getreturn([srcmlutility, option.UNIT_FLAG, "3", option.FILENAME_FLAG], nestedfile), status.STATUS_UNIT_INVALID)
-validate(getreturn([srcmlutility, option.UNIT_FLAG, "3", option.DIRECTORY_FLAG], nestedfile), status.STATUS_UNIT_INVALID)
-validate(getreturn([srcmlutility, option.UNIT_FLAG, "3", option.SRCVERSION_FLAG], nestedfile), status.STATUS_UNIT_INVALID)
+missing_unit = "3";
+validate(getreturn([srcmlutility, option.UNIT_FLAG, missing_unit], nestedfile), status.STATUS_UNIT_INVALID)
+validate(getreturn([srcmlutility, option.UNIT_FLAG, missing_unit, option.XML_FLAG], nestedfile), status.STATUS_UNIT_INVALID)
+validate(getreturn([srcmlutility, option.UNIT_FLAG, missing_unit, option.FILENAME_FLAG], nestedfile), status.STATUS_UNIT_INVALID)
+validate(getreturn([srcmlutility, option.UNIT_FLAG, missing_unit, option.DIRECTORY_FLAG], nestedfile), status.STATUS_UNIT_INVALID)
+validate(getreturn([srcmlutility, option.UNIT_FLAG, missing_unit, option.SRCVERSION_FLAG], nestedfile), status.STATUS_UNIT_INVALID)
 
 exit
