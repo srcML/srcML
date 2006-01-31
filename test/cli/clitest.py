@@ -286,7 +286,10 @@ validate(getreturn([srcmltranslator, "--strip"], nestedfile), status.STATUS_UNKN
 if handles_src_encoding == "":
 	validate(getreturn([srcmltranslator, option.TEXTENCODING_FLAG + "=" + bad_encoding], nestedfile), status.STATUS_UNKNOWN_ENCODING)
 	validate(getreturn([srcmltranslator, option.ENCODING_FLAG + "=" + bad_encoding], nestedfile), status.STATUS_UNKNOWN_ENCODING)
-
+else:
+	validate(getreturn([srcmltranslator, option.TEXTENCODING_FLAG + "=" + bad_encoding], nestedfile), status.STATUS_LIBXML2_FEATURE)
+	validate(getreturn([srcmltranslator, option.ENCODING_FLAG + "=" + bad_encoding], nestedfile), status.STATUS_SUCCESS)
+	
 # missing value
 validate(getreturn([srcmltranslator, option.LANGUAGE_FLAG, bad_language], nestedfile), status.STATUS_INVALID_LANGUAGE)
 validate(getreturn([srcmltranslator, option.LANGUAGE_FLAG], nestedfile), status.STATUS_LANGUAGE_MISSING)
@@ -297,6 +300,9 @@ validate(getreturn([srcmltranslator, option.SRCVERSION_FLAG], nestedfile), statu
 # source encoding not given
 if handles_src_encoding == "":
 	validate(getreturn([srcmltranslator, option.TEXTENCODING_FLAG], nestedfile), status.STATUS_SRCENCODING_MISSING)
+else:
+	validate(getreturn([srcmltranslator, option.TEXTENCODING_FLAG], nestedfile), status.STATUS_LIBXML2_FEATURE)
+
 validate(getreturn([srcmltranslator, option.ENCODING_FLAG], nestedfile), status.STATUS_XMLENCODING_MISSING)
 
 ##
@@ -311,9 +317,12 @@ validate(getreturn([srcmlutility, "--strip"], nestedfile), status.STATUS_UNKNOWN
 # unknown encoding
 if handles_src_encoding == "":
 	validate(getreturn([srcmlutility, option.TEXTENCODING_FLAG + "=" + bad_encoding], nestedfile), status.STATUS_UNKNOWN_ENCODING)
-
+	validate(getreturn([srcmlutility, option.TEXTENCODING_FLAG], nestedfile), status.STATUS_SRCENCODING_MISSING)
+else:
+	validate(getreturn([srcmlutility, option.TEXTENCODING_FLAG + "=" + bad_encoding], nestedfile), status.STATUS_LIBXML2_FEATURE)
+	validate(getreturn([srcmlutility, option.TEXTENCODING_FLAG], nestedfile), status.STATUS_LIBXML2_FEATURE)
+	
 # source encoding not given
-validate(getreturn([srcmlutility, option.TEXTENCODING_FLAG], nestedfile), status.STATUS_SRCENCODING_MISSING)
 
 # unit option selected but no value
 validate(getreturn([srcmlutility, option.UNIT_FLAG], nestedfile), status.STATUS_UNIT_MISSING)
