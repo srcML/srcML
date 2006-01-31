@@ -473,9 +473,11 @@ int main(int argc, char* argv[]) {
   } catch (const char* s) {
     
     std::cerr << NAME << ": " << s << "\n";
-
+    if (!exit_status)
+      exit_status = STATUS_ERROR;
   } catch (...) {
-
+    if (!exit_status)
+      exit_status = STATUS_ERROR;
   }
 
   return exit_status;
