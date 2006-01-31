@@ -2,7 +2,7 @@
 
 <refentry>
 <refentryinfo>
-    <date>2006-01-04</date>
+    <date>&DATE;</date>
 </refentryinfo>
 <refmeta>
   <refentrytitle><application>src2srcml</application></refentrytitle><manvolnum>1</manvolnum><refmiscinfo>src2srcml 1.0</refmiscinfo>
@@ -215,19 +215,19 @@
 <refsect1>
   <title>RETURN STATUS</title>
 
-  <para>0: Normal</para>
-  <para>1: Error </para>
-  <para>2: Problem with input file</para>
-  <para>3: Unknown option</para>
-  <para>4: Unknown encoding</para>
-  <para>5: Libxml2-only feature (not libxml2 enabled)</para>
-  <para>6: Invalid language</para>
-  <para>7: Language option specified, but value missing</para>
-  <para>8: Filename option specified, but value missing</para>
-  <para>9: Directory option specified, but value missing</para>
-  <para>10: Version option specified, but value missing</para>
-  <para>11: Text encoding option specified, but value missing</para>
-  <para>12: XML encoding option specified, but value missing</para>
+  <para>&STATUS_SUCCESS;: Normal</para>
+  <para>&STATUS_ERROR;: Error </para>
+  <para>&STATUS_INPUTFILE_PROBLEM;: Problem with input file</para>
+  <para>&STATUS_UNKNOWN_OPTION;: Unknown option</para>
+  <para>&STATUS_UNKNOWN_ENCODING;: Unknown encoding</para>
+  <para>&STATUS_LIBXML2_FEATURE;: Libxml2-only feature (not libxml2 enabled)</para>
+  <para>&STATUS_INVALID_LANGUAGE;: Invalid language</para>
+  <para>&STATUS_LANGUAGE_MISSING;: Language option specified, but value missing</para>
+  <para>&STATUS_FILENAME_MISSING;: Filename option specified, but value missing</para>
+  <para>&STATUS_DIRECTORY_MISSING;: Directory option specified, but value missing</para>
+  <para>&STATUS_VERSION_MISSING;: Version option specified, but value missing</para>
+  <para>&STATUS_SRCENCODING_MISSING;: Text encoding option specified, but value missing</para>
+  <para>&STATUS_XMLENCODING_MISSING;: XML encoding option specified, but value missing</para>
 
 </refsect1>
 <refsect1>

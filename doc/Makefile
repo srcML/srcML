@@ -5,10 +5,10 @@ all : man gzip
 
 man : ${MAN_PAGES}
 
-src2srcml.1 : src2srcml.xml option.dtd
+src2srcml.1 : src2srcml.xml option.dtd option.dtd
 	docbook2x-man src2srcml.xml
 
-srcml2src.1 : srcml2src.xml option.dtd
+srcml2src.1 : srcml2src.xml option.dtd option.dtd
 	docbook2x-man srcml2src.xml
 
 view : man
@@ -22,7 +22,11 @@ srcml2src.1.gz : srcml2src.1
 
 OPTION_SRC= ../src/src2srcml.cpp ../src/srcml2src.cpp ../src/srcmlapps.h
 option.dtd : ${OPTION_SRC}
-	src2srcml ${OPTION_SRC} - | xsltproc extract_options.xsl - > option.dtd
+	echo -n "<!ENTITY DATE \"" > option.dtd
+	date >> option.dtd
+	echo -n "\" >" >> option.dtd
+	src2srcml ${OPTION_SRC} - | xsltproc extract_options.xsl - >> option.dtd
+	src2srcml --extended ${OPTION_SRC} - | xsltproc extract_return_status.xsl - >> option.dtd
 
 gzip : src2srcml.1.gz srcml2src.1.gz
 
@@ -30,5 +34,6 @@ install : ${MAN_GZIP}
 	#cp src2srcml.1.gz srcml2src.1.gz /usr/share/man/man1/.
 
 clean :
-	rm -f ${MAN_PAGES} ${MAN_GZIP} option.dtd
+	rm -f ${MAN_PAGES} ${MAN_GZIP} option.dtd status.dtd
+
 

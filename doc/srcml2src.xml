@@ -2,7 +2,7 @@
 
 <refentry>
 <refentryinfo>
-    <date>2006-01-04</date>
+    <date>&DATE;</date>
 </refentryinfo>
 <refmeta>
   <refentrytitle><application>srcml2src</application></refentrytitle><manvolnum>1</manvolnum><refmiscinfo>srcml2src 1.0</refmiscinfo>
@@ -213,15 +213,15 @@
 <refsect1>
   <title>RETURN STATUS</title>
 
-  <para>0: Normal</para>
-  <para>1: Error </para>
-  <para>2: Problem with input file</para>
-  <para>3: Unknown option</para>
-  <para>4: Unknown encoding</para>
-  <para>5: Libxml2-only feature (not libxml2 enabled)</para>
-  <para>11: Text encoding option specified, but value missing</para>
-  <para>13: Unit option specified, but value missing</para>
-  <para>14: Unit option value is not valid</para>
+  <para>&STATUS_SUCCESS;: Normal</para>
+  <para>&STATUS_ERROR;: Error </para>
+  <para>&STATUS_INPUTFILE_PROBLEM;: Problem with input file</para>
+  <para>&STATUS_UNKNOWN_OPTION;: Unknown option</para>
+  <para>&STATUS_UNKNOWN_ENCODING;: Unknown encoding</para>
+  <para>&STATUS_LIBXML2_FEATURE;: Libxml2-only feature (not libxml2 enabled)</para>
+  <para>&STATUS_SRCENCODING_MISSING;: Text encoding option specified, but value missing</para>
+  <para>&STATUS_UNIT_MISSING;: Unit option specified, but value missing</para>
+  <para>&STATUS_UNIT_INVALID;: Unit option value is not valid</para>
 
 </refsect1>
 <refsect1>
