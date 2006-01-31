@@ -229,36 +229,36 @@ srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="bar" filename="foo" version="1.2"/>
 """
 
-checkallforms(srcmlutility, "-l", "--language", "", srcml, "C++")
-checkallforms(srcmlutility, "-d", "--directory", "", srcml, "bar")
-checkallforms(srcmlutility, "-f", "--filename", "", srcml, "foo")
-checkallforms(srcmlutility, "-s", "--src-version", "", srcml, "1.2")
-checkallforms(srcmlutility, "-x", "--xml-encoding", "", srcml, default_encoding)
+checkallforms(srcmlutility, option.LANGUAGE_FLAG_SHORT, option.LANGUAGE_FLAG, "", srcml, "C++")
+checkallforms(srcmlutility, option.DIRECTORY_FLAG_SHORT, option.DIRECTORY_FLAG, "", srcml, "bar")
+checkallforms(srcmlutility, option.FILENAME_FLAG_SHORT, option.FILENAME_FLAG, "", srcml, "foo")
+checkallforms(srcmlutility, option.SRCVERSION_FLAG_SHORT, option.SRCVERSION_FLAG, "", srcml, "1.2")
+checkallforms(srcmlutility, option.ENCODING_FLAG_SHORT, option.ENCODING_FLAG, "", srcml, default_encoding)
 
-check([srcmlutility, "--nested"], srcml, "0")
-check([srcmlutility, "--nested"], nestedfile, "2")
+check([srcmlutility, option.NESTED_FLAG], srcml, "0")
+check([srcmlutility, option.NESTED_FLAG], nestedfile, "2")
 
-checkallforms(srcmlutility, "-U", "--unit", "1", nestedfile, sfile1)
-check([srcmlutility, "--unit", "1", "-"], nestedfile, sfile1)
+checkallforms(srcmlutility, "-U", option.UNIT_FLAG, "1", nestedfile, sfile1)
+check([srcmlutility, option.UNIT_FLAG, "1", "-"], nestedfile, sfile1)
 
-checkallforms(srcmlutility, "-U", "--unit", "2", nestedfile, sfile2)
-check([srcmlutility, "--unit", "2"], nestedfile, sfile2)
+checkallforms(srcmlutility, "-U", option.UNIT_FLAG, "2", nestedfile, sfile2)
+check([srcmlutility, option.UNIT_FLAG, "2"], nestedfile, sfile2)
 
 sxmlfile1 = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 """
-check([srcmlutility, "--xml", "--unit", "1", "-"], nestedfile, sxmlfile1)
-check([srcmlutility, "--xml", "--unit", "1"], nestedfile, sxmlfile1)
+check([srcmlutility, "--xml", option.UNIT_FLAG, "1", "-"], nestedfile, sxmlfile1)
+check([srcmlutility, "--xml", option.UNIT_FLAG, "1"], nestedfile, sxmlfile1)
 
 sxmlfile2 = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="b.cpp">
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 </unit>
 """
-check([srcmlutility, "--xml", "--unit", "2", "-"], nestedfile, sxmlfile2)
-check([srcmlutility, "--xml", "--unit", "2"], nestedfile, sxmlfile2)
+check([srcmlutility, "--xml", option.UNIT_FLAG, "2", "-"], nestedfile, sxmlfile2)
+check([srcmlutility, "--xml", option.UNIT_FLAG, "2"], nestedfile, sxmlfile2)
 
 os.system("rm -f sub/a.cpp sub/b.cpp")
 
@@ -280,19 +280,19 @@ validate(getreturn([srcmltranslator, "--strip"], nestedfile), 3)
 
 if handles_src_encoding == "":
 	validate(getreturn([srcmltranslator, "--src-encoding=ISO"], nestedfile), 4)
-	validate(getreturn([srcmltranslator, "--xml-encoding=ISO"], nestedfile), 4)
+	validate(getreturn([srcmltranslator, option.ENCODING_FLAG + "=ISO"], nestedfile), 4)
 
 # missing value
-validate(getreturn([srcmltranslator, "--language", "Python++"], nestedfile), 6)
-validate(getreturn([srcmltranslator, "--language"], nestedfile), 7)
-validate(getreturn([srcmltranslator, "--filename"], nestedfile), 8)
-validate(getreturn([srcmltranslator, "--directory"], nestedfile), 9)
-validate(getreturn([srcmltranslator, "--src-version"], nestedfile), 10)
+validate(getreturn([srcmltranslator, option.LANGUAGE_FLAG, "Python++"], nestedfile), 6)
+validate(getreturn([srcmltranslator, option.LANGUAGE_FLAG], nestedfile), 7)
+validate(getreturn([srcmltranslator, option.FILENAME_FLAG], nestedfile), 8)
+validate(getreturn([srcmltranslator, option.DIRECTORY_FLAG], nestedfile), 9)
+validate(getreturn([srcmltranslator, option.SRCVERSION_FLAG], nestedfile), 10)
 
 # source encoding not given
 if handles_src_encoding == "":
-	validate(getreturn([srcmltranslator, "--src-encoding"], nestedfile), 11)
-validate(getreturn([srcmltranslator, "--xml-encoding"], nestedfile), 12)
+	validate(getreturn([srcmltranslator, option.TEXTENCODING_FLAG], nestedfile), 11)
+validate(getreturn([srcmltranslator, option.ENCODING_FLAG], nestedfile), 12)
 
 ##
 # srcml2src error return
@@ -308,16 +308,16 @@ if handles_src_encoding == "":
 	validate(getreturn([srcmlutility, "--src-encoding=ISO"], nestedfile), 4)
 
 # source encoding not given
-validate(getreturn([srcmlutility, "--src-encoding"], nestedfile), 11)
+validate(getreturn([srcmlutility, option.TEXTENCODING_FLAG], nestedfile), 11)
 
 # unit option selected but no value
-validate(getreturn([srcmlutility, "--unit"], nestedfile), 13)
+validate(getreturn([srcmlutility, option.UNIT_FLAG], nestedfile), 13)
 
 # unit value too large
-validate(getreturn([srcmlutility, "--unit", "3"], nestedfile), 14)
-validate(getreturn([srcmlutility, "--unit", "3", "--xml"], nestedfile), 14)
-validate(getreturn([srcmlutility, "--unit", "3", "--filename"], nestedfile), 14)
-validate(getreturn([srcmlutility, "--unit", "3", "--directory"], nestedfile), 14)
-validate(getreturn([srcmlutility, "--unit", "3", "--src-version"], nestedfile), 14)
+validate(getreturn([srcmlutility, option.UNIT_FLAG, "3"], nestedfile), 14)
+validate(getreturn([srcmlutility, option.UNIT_FLAG, "3", "--xml"], nestedfile), 14)
+validate(getreturn([srcmlutility, option.UNIT_FLAG, "3", option.FILENAME_FLAG], nestedfile), 14)
+validate(getreturn([srcmlutility, option.UNIT_FLAG, "3", option.DIRECTORY_FLAG], nestedfile), 14)
+validate(getreturn([srcmlutility, option.UNIT_FLAG, "3", option.SRCVERSION_FLAG], nestedfile), 14)
 
 exit
