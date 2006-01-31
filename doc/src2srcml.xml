@@ -17,11 +17,12 @@
   <cmdsynopsis>
     <command>src2srcml</command>
 <arg><option>-hVnizcgv</option></arg>
-<arg><option>&LANGUAGE_FLAG_SHORT; <replaceable class="parameter">language</replaceable></option></arg>
-<arg><option>&FILENAME_FLAG_SHORT; <replaceable class="parameter">filename</replaceable></option></arg>
-<arg><option>&DIRECTORY_FLAG_SHORT; <replaceable class="parameter">directory</replaceable></option></arg>
+<arg><option>&LANGUAGE_FLAG_SHORT;     <replaceable class="parameter">language</replaceable></option></arg>
+<arg><option>&DIRECTORY_FLAG_SHORT;    <replaceable class="parameter">directory</replaceable></option></arg>
+<arg><option>&FILENAME_FLAG_SHORT;     <replaceable class="parameter">filename</replaceable></option></arg>
+<arg><option>&SRCVERSION_FLAG_SHORT;   <replaceable class="parameter">version</replaceable></option></arg>
 <arg><option>&TEXTENCODING_FLAG_SHORT; <replaceable class="parameter">encoding</replaceable></option></arg>
-<arg><option>&ENCODING_FLAG_SHORT; <replaceable class="parameter">encoding</replaceable></option></arg>
+<arg><option>&ENCODING_FLAG_SHORT;     <replaceable class="parameter">encoding</replaceable></option></arg>
 <arg rep="repeat"><replaceable class="parameter">input-source-code-file</replaceable></arg>
 <arg><replaceable class="parameter">output-srcML-file</replaceable></arg>
   </cmdsynopsis>
@@ -32,15 +33,19 @@
   </refsect1info>
   <title>DESCRIPTION</title>
   <para>
-    The program <command>src2srcml</command> translates source-code files into the XML source-code representation srcML.  The srcML format
-    allows for XML addressing, querying, and transformation of source code.
-    All text from the original source-code file is preserved including white-space, comments and preprocessor
-    statements.  No preprocessing of the source code is done.  In addition it can be applied to invidual source-code files, or code
+    The program <command>src2srcml</command> translates source-code
+    files into the XML source-code representation srcML.  The srcML
+    format allows for XML addressing, querying, and transformation of
+    source code.  All text from the original source-code file is
+    preserved including white-space, comments and preprocessor
+    statements.  No preprocessing of the source code is done.  In
+    addition it can be applied to invidual source-code files, or code
     fragments.
   </para>
   <para>
-    The translation is fast and uses a stream-parsing approach where parsing is done top-down and elements are issued as soon
-    as they are detected.
+    The translation is fast and uses a stream-parsing approach where
+    parsing is done top-down and elements are issued as soon as they
+    are detected.
   </para>
   <para>
     Some options are only available in the libxml2 version.
@@ -69,9 +74,11 @@
       <term>&LANGUAGE_FLAG_SHORT;, &LANGUAGE_FLAG;=<replaceable class="parameter">language</replaceable></term>
       <listitem>
 	<para>
-	  The programming language of the source-code file.  Allowable values are C, C++, or Java.
-	  The language affects parsing, the allowed markup, and what is considered a keyword.  The default
-	  is C++.  The value is also stored as an attribute of the root element unit.
+	  The programming language of the source-code file.  Allowable
+	  values are C, C++, or Java.  The language affects parsing,
+	  the allowed markup, and what is considered a keyword.  The
+	  default is C++.  The value is also stored as an attribute of
+	  the root element unit.
 	</para>
       </listitem>
     </varlistentry>
@@ -79,9 +86,12 @@
       <term>&DIRECTORY_FLAG_SHORT;, &DIRECTORY_FLAG;=<replaceable class="parameter">directory</replaceable></term>
       <listitem>
 	<para>
-	  The unit element includes an optional, descriptive attribute, directory.  The value is typically obtained from
-	  the path of the input filename.  This option allows you to specify a different directory for standard
-	  input or where the directory is not contained in the path of the input filename.
+	  The unit element includes an optional, descriptive
+	  attribute, directory.  The value is typically obtained from
+	  the path of the input filename.  This option allows you to
+	  specify a different directory for standard input or where
+	  the directory is not contained in the path of the input
+	  filename.
 	</para>
       </listitem>
     </varlistentry>
@@ -89,9 +99,11 @@
       <term>&FILENAME_FLAG_SHORT;, &FILENAME_FLAG;=<replaceable class="parameter">filename</replaceable></term>
       <listitem>
 	<para>
-	  The unit element includes an optional, descriptive attribute, filename.  The value is typically obtained from
-	  the input filename.  This option allows you to specify a different filename for standard
-	  input or where a different filename is wanted.
+	  The unit element includes an optional, descriptive
+	  attribute, filename.  The value is typically obtained from
+	  the input filename.  This option allows you to specify a
+	  different filename for standard input or where a different
+	  filename is wanted.
 	</para>
       </listitem>
     </varlistentry>
@@ -99,9 +111,11 @@
       <term>&SRCVERSION_FLAG_SHORT;, &SRCVERSION_FLAG;=<replaceable class="parameter">version</replaceable></term>
       <listitem>
 	<para>
-	  The unit element includes the version, an optional, purely-descriptive attribute.
-	  Sets the value of the attribute version to <replaceable>version</replaceable>.  The value is a string with no interpretation
-	  by the srcML tools.
+	  The unit element includes the version, an optional,
+	  purely-descriptive attribute.  Sets the value of the
+	  attribute version to <replaceable>version</replaceable>.
+	  The value is a string with no interpretation by the srcML
+	  tools.
 	</para>
       </listitem>
     </varlistentry>
@@ -109,8 +123,10 @@
       <term>&TEXTENCODING_FLAG_SHORT;, &TEXTENCODING_FLAG;=<replaceable class="parameter">encoding</replaceable></term>
       <listitem>
 	<para>
-	  Sets the input encoding of the source-code file to <replaceable>encoding</replaceable>.  The default is based on the locale.
-	  Not stored, but used for any necessary source-code text translation in the libxml2-enabled version.  
+	  Sets the input encoding of the source-code file to
+	  <replaceable>encoding</replaceable>.  The default is based
+	  on the locale.  Not stored, but used for any necessary
+	  source-code text translation in the libxml2-enabled version.
 	</para>
       </listitem>
     </varlistentry>
@@ -118,9 +134,13 @@
       <term>&ENCODING_FLAG_SHORT;, &ENCODING_FLAG;=<replaceable class="parameter">encoding</replaceable></term>
       <listitem>
 	<para>
-	  Sets the xml encoding of the output srcML file to <replaceable class="parameter">encoding</replaceable>.  The default is UTF-8.
-	  Conversion to the xml encoding from the source encoding is only performed in the libxml2-enabled version.
-	  Possible encodings with the libxml2-enabled version can be obtained by using the command <command>iconv -l</command>.
+	  Sets the xml encoding of the output srcML file to
+	  <replaceable class="parameter">encoding</replaceable>.  The
+	  default is UTF-8.  Conversion to the xml encoding from the
+	  source encoding is only performed in the libxml2-enabled
+	  version.  Possible encodings with the libxml2-enabled
+	  version can be obtained by using the command <command>iconv
+	  -l</command>.
 	</para>
       </listitem>
     </varlistentry>
@@ -128,7 +148,8 @@
       <term>&NESTED_FLAG_SHORT;, &NESTED_FLAG;</term>
       <listitem>
 	<para>
-	  Stores all input source files into one compound srcML document.  Default with &FILELIST_FLAG; mode.
+	  Stores all input source files into one compound srcML
+	  document.  Default with &FILELIST_FLAG; mode.
 	</para>
       </listitem>
     </varlistentry>
@@ -136,10 +157,13 @@
       <term>&FILELIST_FLAG_SHORT;, &FILELIST_FLAG;</term>
       <listitem>
 	<para>
-	  Treats the input file as a list of source files.
-	  Each file is separately translated and collectively stored into a single compound srcML document.
-	  The list has a single filename on each line starting at the beginning of the line.  Blank lines are
-	  ignored.  A line with the character '#' at the start of a line is regarded as a comment character and the line is ignored.
+	  Treats the input file as a list of source files.  Each file
+	  is separately translated and collectively stored into a
+	  single compound srcML document.  The list has a single
+	  filename on each line starting at the beginning of the line.
+	  Blank lines are ignored.  A line with the character '#' at
+	  the start of a line is regarded as a comment character and
+	  the line is ignored.
 	</para>
       </listitem>
     </varlistentry>
@@ -147,7 +171,8 @@
       <term>&COMPRESSED_FLAG_SHORT;, &COMPRESSED_FLAG;</term>
       <listitem>
 	<para>
-	  Output is in compressed gzip format.  Only available in the libxml2-enabled version.
+	  Output is in compressed gzip format.  Only available in the
+	  libxml2-enabled version.
 	</para>
       </listitem>
     </varlistentry>
@@ -155,7 +180,8 @@
       <term>&INTERACTIVE_FLAG_SHORT;, &INTERACTIVE_FLAG;</term>
       <listitem>
 	<para>
-	  Default is to use buffered output for speed.  For interactive applications output is issued as soon as parsed.
+	  Default is to use buffered output for speed.  For
+	  interactive applications output is issued as soon as parsed.
 	</para>
       </listitem>
     </varlistentry>
@@ -163,9 +189,11 @@
       <term>&DEBUG_FLAG_SHORT;, &DEBUG_FLAG;</term>
       <listitem>
 	<para>
-	  When translation errors occur src2srcml preserves all text, but may issue incorrect markup.  In debug mode
-	  the text with the translation error is marked with a special set of tags with the prefix srcerr
-	  from the namesepace http://www.sdml.info/srcml/srcerr.
+	  When translation errors occur src2srcml preserves all text,
+	  but may issue incorrect markup.  In debug mode the text with
+	  the translation error is marked with a special set of tags
+	  with the prefix srcerr from the namesepace
+	  http://www.sdml.info/srcml/srcerr.
 	</para>
       </listitem>
     </varlistentry>
@@ -182,7 +210,8 @@
 <refsect1>
   <title>USAGE</title>
   <para>
-    To translate the C++ source-code file main.cpp into the srcML file main.cpp.xml:
+    To translate the C++ source-code file main.cpp into the srcML file
+    main.cpp.xml:
   </para>
   <para>
     <command>src2srcml</command> main.cpp main.cpp.xml
@@ -233,8 +262,9 @@
 <refsect1>
   <title>CAVEATS</title>
   <para>
-    Translation is performed based on local information with no symbol table.  For non-CFG languages, i.e., C/C++, and with
-    macros this may lead to incorrect markup.
+    Translation is performed based on local information with no symbol
+    table.  For non-CFG languages, i.e., C/C++, and with macros this
+    may lead to incorrect markup.
   </para>
   <para>
     Line endings are normalized in XML formats including srcML.

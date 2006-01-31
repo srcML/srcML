@@ -16,12 +16,12 @@
   </refsynopsisdivinfo>
   <cmdsynopsis>
     <command>srcml2src</command>
-<arg><option>&LANGUAGE_FLAG_SHORT; </option></arg>
-<arg><option>&FILENAME_FLAG_SHORT; </option></arg>
-<arg><option>&DIRECTORY_FLAG_SHORT; </option></arg>
-<arg><option>&ENCODING_FLAG_SHORT; </option></arg>
-<arg><option>&TEXTENCODING_FLAG_SHORT; <replaceable class="parameter">encoding</replaceable></option></arg>
 <arg><option>-nizcgv </option></arg>
+<arg><option>&LANGUAGE_FLAG; </option></arg>
+<arg><option>&FILENAME_FLAG; </option></arg>
+<arg><option>&DIRECTORY_FLAG; </option></arg>
+<arg><option>&ENCODING_FLAG; </option></arg>
+<arg><option>&TEXTENCODING_FLAG; <replaceable class="parameter">encoding</replaceable></option></arg>
 <arg><replaceable class="parameter">input-srcML-file</replaceable></arg>
 <arg><replaceable class="parameter">output-source-code-file</replaceable></arg>
   </cmdsynopsis>
@@ -32,24 +32,33 @@
   </refsect1info>
   <title>DESCRIPTION</title>
   <para>
-    The program <command>srcml2src</command> translates from the XML source-code representation srcML into source code.  The srcML format
-    allows for XML addressing, querying, and transformation of source code.
+    The program <command>srcml2src</command> translates from the XML
+    source-code representation srcML into source code.  The srcML
+    format allows for XML addressing, querying, and transformation of
+    source code.
   </para>
   <para>
-    The combination of src2srcml and srcml2src allows for full round-trip transformation of source-code files without any loss of comments,
-    white space, and preprocessing statements.
+    The combination of src2srcml and srcml2src allows for full
+    round-trip transformation of source-code files without any loss of
+    comments, white space, and preprocessing statements.
   </para>
   <para>
-    Conversion from the srcML format to source code is relatively straightforward.  All XML tags are removed and escaped characters are
-    unescaped.  In addition, the special srcML element for a formfeed is converted back to a form-feed character (form-feed characters
-    are not allowed in XML, even escaped).
+    Conversion from the srcML format to source code is relatively
+    straightforward.  All XML tags are removed and escaped characters
+    are unescaped.  In addition, the special srcML element for a
+    formfeed is converted back to a form-feed character (form-feed
+    characters are not allowed in XML, even escaped).
   </para>
   <para>
-    In addition to conversion, srcml2src provides various srcML utilities such as extracting metadata, extracting individual parts of compound
-    srcML files, and extracting metadata from individual parts of compound srcML files.
+    In addition to conversion, srcml2src provides various srcML
+    utilities such as extracting metadata, extracting individual parts
+    of compound srcML files, and extracting metadata from individual
+    parts of compound srcML files.
   </para>
   <para>
-    Using the character - in the place of an input source-code filename uses standard input, and in place of an output srcML file uses standard output.
+    Using the character - in the place of an input source-code
+    filename uses standard input, and in place of an output srcML file
+    uses standard output.
   </para>
 </refsect1>
 <refsect1>
@@ -75,10 +84,11 @@
       <term>&LANGUAGE_FLAG_SHORT;, &LANGUAGE_FLAG;</term>
       <listitem>
 	<para>
-	  Output the language of the srcML file as stored in the attribute language in the unit element
-	  on standard output.
-	  The language is the value of the attribute of the root element unit, unless
-	  a particular unit is specified with the &UNIT_FLAG; option.
+	  Output the language of the srcML file as stored in the
+	  attribute language in the unit element on standard output.
+	  The language is the value of the attribute of the root
+	  element unit, unless a particular unit is specified with the
+	  &UNIT_FLAG; option.
 	</para>
       </listitem>
     </varlistentry>
@@ -86,10 +96,11 @@
       <term>&DIRECTORY_FLAG_SHORT;, &DIRECTORY_FLAG;</term>
       <listitem>
 	<para>
-	  Output the directory of the srcML file as stored in the attribute dir in the unit element
-	  on standard output.
-	  The directory is the value of the attribute of the root element unit, unless
-	  a particular unit is specified with the &UNIT_FLAG; option.
+	  Output the directory of the srcML file as stored in the
+	  attribute dir in the unit element on standard output.  The
+	  directory is the value of the attribute of the root element
+	  unit, unless a particular unit is specified with the
+	  &UNIT_FLAG; option.
 	</para>
       </listitem>
     </varlistentry>
@@ -97,10 +108,11 @@
       <term>&FILENAME_FLAG_SHORT;, &FILENAME_FLAG;</term>
       <listitem>
 	<para>
-	  Output the filename of the srcML file as stored in the attribute filename in the unit element
-	  on standard output.
-	  The filename is the value of the attribute of the root element unit, unless
-	  a particular unit is specified with the &UNIT_FLAG; option.
+	  Output the filename of the srcML file as stored in the
+	  attribute filename in the unit element on standard output.
+	  The filename is the value of the attribute of the root
+	  element unit, unless a particular unit is specified with the
+	  &UNIT_FLAG; option.
 	</para>
       </listitem>
     </varlistentry>
@@ -108,10 +120,11 @@
       <term>&SRCVERSION_FLAG_SHORT;, &SRCVERSION_FLAG;</term>
       <listitem>
 	<para>
-	  Output the version of the srcML file as stored attribute version in the unit element
-	  on standard output.
-	  The version is the value of the attribute of the root element unit, unless
-	  a particular unit is specified with the &UNIT_FLAG; option.
+	  Output the version of the srcML file as stored attribute
+	  version in the unit element on standard output.  The version
+	  is the value of the attribute of the root element unit,
+	  unless a particular unit is specified with the &UNIT_FLAG;
+	  option.
 	</para>
       </listitem>
     </varlistentry>
@@ -119,8 +132,9 @@
       <term>&NESTED_FLAG_SHORT;, &NESTED_FLAG;</term>
       <listitem>
 	<para>
-	  Output the number of nested units in a compound srcML file on standard output.
-	  Result is 0 if the srcML file is not compound.
+	  Output the number of nested units in a compound srcML file
+	  on standard output.  Result is 0 if the srcML file is not
+	  compound.
 	</para>
       </listitem>
     </varlistentry>
@@ -128,8 +142,12 @@
       <term>&UNIT_FLAG_SHORT;, &UNIT_FLAG;=<replaceable class="parameter">number</replaceable></term>
       <listitem>
 	<para>
-	  Refers to a specific nested unit in a compound srcML file.  The numbering starts at 1.  If the number is outside
-	  of the range of nested units then the command is ignored.
+	  Refers to a specific nested unit in a compound srcML file.
+	  The numbering starts at 1.  If the number is outside of the
+	  range of nested units then the command is ignored.  In
+	  combination with the attribute flags, outputs the attribute
+	  of that particular unit.  In combination with the &XML_FLAG;
+	  outputs the unit in xml (not as text as is the default).
 	</para>
       </listitem>
     </varlistentry>
@@ -137,8 +155,10 @@
       <term>&XML_FLAG_SHORT;, &XML_FLAG;</term>
       <listitem>
 	<para>
-	  Output is in srcML format.  Used in combination with the &UNIT_FLAG; to output a particular nested
-	  unit in XML.
+	  Output is in srcML format.  Used in combination with the
+	  &UNIT_FLAG; to output a particular nested unit in XML.
+	  The output unit has attributes formed by the merger of the
+	  attributes of the individual unit and the overall unit.
 	</para>
       </listitem>
     </varlistentry>
@@ -146,9 +166,12 @@
       <term>&EXPAND_FLAG_SHORT;, &EXPAND_FLAG;</term>
       <listitem>
 	<para>
-	  Extracts all units from a compound srcML file back into source-code files.  The directory and filename
-	  used is based on that stored in the directory and filename attributes.  Any necessary subdirectories are
-	  created and the file itself is created.  Any existing file with the same path will be overwritten.
+	  Extracts all units from a compound srcML file back into
+	  source-code files.  The directory and filename used is based
+	  on that stored in the directory and filename attributes.
+	  Any necessary subdirectories are created and the file itself
+	  is created.  Any existing file with the same path will be
+	  overwritten.
 	</para>
       </listitem>
     </varlistentry>
@@ -156,8 +179,9 @@
       <term>&TEXTENCODING_FLAG_SHORT;, &TEXTENCODING_FLAG;=<replaceable class="parameter">encoding</replaceable></term>
       <listitem>
 	<para>
-	  Sets the encoding used for the output text source-code files to <replaceable>encoding</replaceable>.
-	  The default is based on the locale.
+	  Sets the encoding used for the output text source-code files
+	  to <replaceable>encoding</replaceable>.  The default is
+	  based on the locale.
 	</para>
       </listitem>
     </varlistentry>
