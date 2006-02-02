@@ -233,17 +233,19 @@ for root, dirs, files in os.walk(source_dir, topdown=True):
 
 			# save the particular nested unit
 			if number == 0:
-				unit_xml_file_sub_str = entire_file
+				unitxml = entire_file
 			else:
-				unit_xml_file_sub_str = extract_unit(entire_file, count)
+				unitxml = extract_unit(entire_file, count)
 
 			# convert the nested unit to text
-			unit_text_file_str = srcml2src(unit_xml_file_sub_str, encoding)
+			unittext = srcml2src(unitxml, encoding)
 
 			# convert the text unit to srcML
-			unit_srcml_file = src2srcML(unit_text_file_str, encoding, language, directory, getfilename(unit_xml_file_sub_str))
+			unit_srcml_file = src2srcML(unittext, encoding, language, directory,
+						    getfilename(unitxml))
+			
 			# find the difference
-			error = xmldiff(unit_xml_file_sub_str, unit_srcml_file)
+			error = xmldiff(unitxml, unit_srcml_file)
 			error_count += error
 			if error == 1:
 				errorlist.append((directory + " " + language, count))
