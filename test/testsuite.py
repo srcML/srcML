@@ -44,11 +44,9 @@ def name2filestr(src_filename):
 def srcml2src(srctext, encoding):
 
 	# run the srcml processor
+	command = [startcmd + srcmlutility]
 	if srcml2src_src_encoding:
-
-		command = [startcmd + srcmlutility, "--src-encoding=" + encoding]
-	else:
-		command = [startcmd + srcmlutility]
+		command.append("--src-encoding=" + encoding)
 
 	return subprocess.Popen(command, stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(srctext)[0]
 
@@ -66,14 +64,12 @@ def xmldiff(xml_filename1, xml_filename2):
 # find differences of two files
 def src2srcML(text_file, encoding, directory, filename):
 
+	command = [startcmd + srcmltranslator, "-l", ulanguage, "-d", directory,
+			   "--xml-encoding=" + encoding, "--filename=" + filename]
+
 	# run the srcml processorn
 	if src2srcml_src_encoding:
-		command = [startcmd + srcmltranslator, "-l", ulanguage, "-d", directory, "--src-encoding=" + encoding,
-			   "--xml-encoding=" + encoding, "--filename=" + filename]
-		
-	else:
-		command = [startcmd + srcmltranslator, "-l", ulanguage, "-d", directory,
-			   "--xml-encoding=" + encoding, "--filename=" + filename]
+		command.append("--src-encoding=" + encoding)
 
 	return subprocess.Popen(command, stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(text_file)[0]
 
