@@ -180,17 +180,17 @@ for root, dirs, files in os.walk(source_dir, topdown=True):
 		xml_filename = os.path.join(root, name)
 
 		# read file into string
-		entire_file = name2filestr(xml_filename)
+		filexml = name2filestr(xml_filename)
 		
 		# store the directory of the outer unit element
-		directory = getdirectory(entire_file)
+		directory = getdirectory(filexml)
 		
 		# only process if directory name matches or is not given
 		if specname != "" and m.match(directory) == None:
 			continue
 		
 		# extract the language of the entire document with a default of C++
-		language = getlanguage(entire_file)
+		language = getlanguage(filexml)
 		if len(language) == 0:
 			language = "C++"
 
@@ -203,13 +203,13 @@ for root, dirs, files in os.walk(source_dir, topdown=True):
 		print language, "\t", directory,
 
 		# store the encoding of the outer unit
-		encoding = getencoding(entire_file)
+		encoding = getencoding(filexml)
 		
 		# store the version of the outer unit
-		version = getversion(entire_file)
+		version = getversion(filexml)
 		
 		# extract the number of units
-		number = getnested(entire_file)
+		number = getnested(filexml)
 		
 		if specnum == 0:
 			count = 0
@@ -233,9 +233,9 @@ for root, dirs, files in os.walk(source_dir, topdown=True):
 
 			# save the particular nested unit
 			if number == 0:
-				unitxml = entire_file
+				unitxml = filexml
 			else:
-				unitxml = extract_unit(entire_file, count)
+				unitxml = extract_unit(filexml, count)
 
 			# convert the nested unit to text
 			unittext = srcml2src(unitxml, encoding)
@@ -251,6 +251,7 @@ for root, dirs, files in os.walk(source_dir, topdown=True):
 				
 	break
 
+# output error counts
 print
 if error_count == 0:
 	print "No errors out of " + str(total_count) + " cases" 
@@ -259,10 +260,12 @@ else:
 	print "Errorlist:"
 	for e in errorlist:
 		print e[0], e[1]
+
+# output tool version
 print
+print "src2srcml: ", srcmltranslator
 print src2srcmlversion()
+print "srcml2src: ", srcmlutility
 print srcml2srcversion()
-print "src2srcml:  ", srcmltranslator
-print "srcml2src:  ", srcmlutility
 
 exit
