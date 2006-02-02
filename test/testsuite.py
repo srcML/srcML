@@ -241,11 +241,11 @@ for root, dirs, files in os.walk(source_dir, topdown=True):
 			unittext = srcml2src(unitxml, encoding)
 
 			# convert the text unit to srcML
-			unit_srcml_file = src2srcML(unittext, encoding, language, directory,
+			unitsrcml = src2srcML(unittext, encoding, language, directory,
 						    getfilename(unitxml))
 			
 			# find the difference
-			error = xmldiff(unitxml, unit_srcml_file)
+			error = xmldiff(unitxml, unitsrcml)
 			error_count += error
 			if error == 1:
 				errorlist.append((directory + " " + language, count))
