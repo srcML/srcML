@@ -220,7 +220,7 @@ for root, dirs, files in os.walk(source_dir, topdown=True):
 
 			count = count + 1
 
-			if count > specnum:
+			if specnum!= 0 and count > specnum:
 				break
 
 			if count > maxcount:
