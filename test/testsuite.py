@@ -74,13 +74,14 @@ def src2srcML(text_file, encoding, directory, filename):
 
 	# run the srcml processorn
 	if src2srcml_src_encoding:
-
-		last_line = subprocess.Popen([startcmd + srcmltranslator, "-l", ulanguage, "-d", directory, "--src-encoding=" + encoding, "--xml-encoding=" + encoding, "--filename=" + filename], stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(text_file)[0]
+		command = [startcmd + srcmltranslator, "-l", ulanguage, "-d", directory, "--src-encoding=" + encoding,
+			   "--xml-encoding=" + encoding, "--filename=" + filename]
+		
 	else:
-		last_line = subprocess.Popen([startcmd + srcmltranslator, "-l", ulanguage, "-d", directory, "--xml-encoding=" + encoding, "--filename=" + filename], stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(text_file)[0]
+		command = [startcmd + srcmltranslator, "-l", ulanguage, "-d", directory, "--xml-encoding=" + encoding,
+			   "--filename=" + filename]
 
-	return last_line
-
+	return subprocess.Popen(command, stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(text_file)[0]
 
 #
 def getsrcmlattribute(xml_file, command):
