@@ -182,14 +182,14 @@ for root, dirs, files in os.walk(source_dir, topdown=True):
 		# read file into string
 		entire_file = name2filestr(xml_filename)
 		
-		# extract the directory name from the srcML document
-		ufilename = getdirectory(entire_file)
+		# store the directory of the outer unit element
+		directory = getdirectory(entire_file)
 		
 		# only process if directory name matches or is not given
-		if specname != "" and m.match(ufilename) == None:
+		if specname != "" and m.match(directory) == None:
 			continue
 		
-		# extract the language of the entire document
+		# extract the language of the entire document with a default of C++
 		ulanguage = getlanguage(entire_file)
 		if len(ulanguage) == 0:
 			ulanguage = "C++"
@@ -198,15 +198,12 @@ for root, dirs, files in os.walk(source_dir, topdown=True):
 		if speclang != "" and ulanguage != speclang:
 			continue
 		
-		# output language and directory name
+		# output language and directory
 		print
-		print ulanguage, "\t", ufilename,
+		print ulanguage, "\t", directory,
 
 		# store the encoding of the outer unit
 		encoding = getencoding(entire_file)
-		
-		# store the directory of the outer unit
-		directory = ufilename
 		
 		# store the version of the outer unit
 		version = getversion(entire_file)
@@ -232,7 +229,7 @@ for root, dirs, files in os.walk(source_dir, topdown=True):
 			total_count = total_count + 1
 			print count, 
 
-			pfilename = ufilename + str(count)
+			pfilename = directory + str(count)
 
 			# save the particular nested unit
 			if number == 0:
@@ -249,7 +246,7 @@ for root, dirs, files in os.walk(source_dir, topdown=True):
 			error = xmldiff(unit_xml_file_sub_str, unit_srcml_file)
 			error_count += error
 			if error == 1:
-				errorlist.append((ufilename + " " + ulanguage, count))
+				errorlist.append((directory + " " + ulanguage, count))
 				
 	break
 
