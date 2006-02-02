@@ -31,13 +31,9 @@ if srcmlutility == "":
 # extracts a particular unit from a srcML file
 def extract_unit(src, count):
 
-	last_line=subprocess.Popen([startcmd + srcmlutility, "--xml", "--unit=" + str(count)], stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(src)[0]
+	command = [startcmd + srcmlutility, "--unit=" + str(count), "--xml"]
 
-	return last_line
-
-def name2file(src_filename):
-	file = open(src_filename)
-	return file
+	return subprocess.Popen(command, stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(src)[0]
 
 def name2filestr(src_filename):
 	file = open(src_filename).read()
@@ -47,8 +43,7 @@ def name2filestr(src_filename):
 # converts a srcML file back to text
 def srcml2src(srctext, encoding):
 
-
-	# run the srcml processorn
+	# run the srcml processor
 	if srcml2src_src_encoding:
 
 		command = [startcmd + srcmlutility, "--src-encoding=" + encoding]
@@ -59,10 +54,10 @@ def srcml2src(srctext, encoding):
 
 # find differences of two files
 def xmldiff(xml_filename1, xml_filename2):
-			      
 
 	if xml_filename1 != xml_filename2:
-		print sys.stdout.writelines(list(difflib.unified_diff(xml_filename1.splitlines(1), xml_filename2.splitlines(1))))
+		print sys.stdout.writelines(list(
+			difflib.unified_diff(xml_filename1.splitlines(1), xml_filename2.splitlines(1))))
 		return 1
 	else:
 
@@ -77,15 +72,16 @@ def src2srcML(text_file, encoding, directory, filename):
 			   "--xml-encoding=" + encoding, "--filename=" + filename]
 		
 	else:
-		command = [startcmd + srcmltranslator, "-l", ulanguage, "-d", directory, "--xml-encoding=" + encoding,
-			   "--filename=" + filename]
+		command = [startcmd + srcmltranslator, "-l", ulanguage, "-d", directory,
+			   "--xml-encoding=" + encoding, "--filename=" + filename]
 
 	return subprocess.Popen(command, stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(text_file)[0]
 
 #
 def getsrcmlattribute(xml_file, command):
 
-	last_line=subprocess.Popen([startcmd + srcmlutility, command], stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(xml_file)[0]
+	last_line = subprocess.Popen([startcmd + srcmlutility, command],
+				     stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(xml_file)[0]
 	
 	return string.strip(last_line)
 
@@ -117,21 +113,24 @@ def getfilename(xml_file):
 # version of src2srcml
 def src2srcmlversion():
 
-	last_line=subprocess.Popen([startcmd + srcmltranslator, "-V"], stdout=subprocess.PIPE).communicate()[0]
+	last_line = subprocess.Popen([startcmd + srcmltranslator, "-V"],
+				     stdout=subprocess.PIPE).communicate()[0]
 
 	return string.strip(last_line)
 
 # version of srcml2src
 def srcml2srcversion():
 
-	last_line=subprocess.Popen([startcmd + srcmlutility, "-V"], stdout=subprocess.PIPE).communicate()[0]
+	last_line = subprocess.Popen([startcmd + srcmlutility, "-V"],
+				     stdout=subprocess.PIPE).communicate()[0]
 
 	return string.strip(last_line)
 
 # number of nested units
 def getnested(xml_file):
 
-	last_line=subprocess.Popen([startcmd + srcmlutility, "-n"], stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(xml_file)[0]
+	last_line = subprocess.Popen([startcmd + srcmlutility, "-n"],
+				     stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(xml_file)[0]
 
 	return int(last_line)
 
