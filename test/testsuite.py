@@ -55,9 +55,9 @@ def xmldiff(xml_filename1, xml_filename2):
 		return 0
 
 # find differences of two files
-def src2srcML(text_file, encoding, directory, filename):
+def src2srcML(text_file, encoding, language, directory, filename):
 
-	command = [srcmltranslator, "-l", ulanguage, "-d", directory,
+	command = [srcmltranslator, "-l", language, "-d", directory,
 			   "--xml-encoding=" + encoding, "--filename=" + filename]
 
 	# run the srcml processorn
@@ -190,17 +190,17 @@ for root, dirs, files in os.walk(source_dir, topdown=True):
 			continue
 		
 		# extract the language of the entire document with a default of C++
-		ulanguage = getlanguage(entire_file)
-		if len(ulanguage) == 0:
-			ulanguage = "C++"
+		language = getlanguage(entire_file)
+		if len(language) == 0:
+			language = "C++"
 
 		# only process if language matches or is not given
-		if speclang != "" and ulanguage != speclang:
+		if speclang != "" and language != speclang:
 			continue
 		
 		# output language and directory
 		print
-		print ulanguage, "\t", directory,
+		print language, "\t", directory,
 
 		# store the encoding of the outer unit
 		encoding = getencoding(entire_file)
@@ -241,12 +241,12 @@ for root, dirs, files in os.walk(source_dir, topdown=True):
 			unit_text_file_str = srcml2src(unit_xml_file_sub_str, encoding)
 
 			# convert the text unit to srcML
-			unit_srcml_file = src2srcML(unit_text_file_str, encoding, directory, getfilename(unit_xml_file_sub_str))
+			unit_srcml_file = src2srcML(unit_text_file_str, encoding, language, directory, getfilename(unit_xml_file_sub_str))
 			# find the difference
 			error = xmldiff(unit_xml_file_sub_str, unit_srcml_file)
 			error_count += error
 			if error == 1:
-				errorlist.append((directory + " " + ulanguage, count))
+				errorlist.append((directory + " " + language, count))
 				
 	break
 
