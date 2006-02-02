@@ -176,20 +176,20 @@ for root, dirs, files in os.walk(source_dir, topdown=True):
 		if os.path.splitext(name)[1] != ".xml":
 			continue
 
-		# form the full path to the file
+		# full path of the file
 		xml_filename = os.path.join(root, name)
 
-		# read file into string
+		# read entire file into a string
 		filexml = name2filestr(xml_filename)
 		
-		# store the directory of the outer unit element
+		# directory of the outer unit element
 		directory = getdirectory(filexml)
 		
 		# only process if directory name matches or is not given
 		if specname != "" and m.match(directory) == None:
 			continue
 		
-		# extract the language of the entire document with a default of C++
+		# language of the entire document with a default of C++
 		language = getlanguage(filexml)
 		if len(language) == 0:
 			language = "C++"
@@ -202,13 +202,13 @@ for root, dirs, files in os.walk(source_dir, topdown=True):
 		print
 		print language, "\t", directory,
 
-		# store the encoding of the outer unit
+		# encoding of the outer unit
 		encoding = getencoding(filexml)
 		
-		# store the version of the outer unit
+		# version of the outer unit
 		version = getversion(filexml)
 		
-		# extract the number of units
+		# number of nested units
 		number = getnested(filexml)
 		
 		if specnum == 0:
@@ -220,16 +220,17 @@ for root, dirs, files in os.walk(source_dir, topdown=True):
 
 			count = count + 1
 
-			if specnum != 0 and count > specnum:
+			if count > specnum:
 				break
 
 			if count > maxcount:
 				break
-			
-			total_count = total_count + 1
-			print count, 
 
-			pfilename = directory + str(count)
+			# total count of test cases
+			total_count = total_count + 1
+
+			# part of list of nested unit number in output
+			print count, 
 
 			# save the particular nested unit
 			if number == 0:
@@ -237,10 +238,10 @@ for root, dirs, files in os.walk(source_dir, topdown=True):
 			else:
 				unitxml = extract_unit(filexml, count)
 
-			# convert the nested unit to text
+			# convert the unit in xml to text
 			unittext = srcml2src(unitxml, encoding)
 
-			# convert the text unit to srcML
+			# convert the text to srcML
 			unitsrcml = src2srcML(unittext, encoding, language, directory, getfilename(unitxml))
 			
 			# find the difference
