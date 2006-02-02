@@ -157,7 +157,7 @@ void Mode::endDownToMode(const State::MODE_TYPE& mode) {
 // end elements down to a specific mode
 void Mode::endDownToFirstMode(const State::MODE_TYPE& mode) {
 
-  if (state.getTransparentMode() & mode == 0)
+  if (state.getTransparentMode() & (mode == 0))
       return;
 
   while (state.size() > 1 && (state.getMode() & mode) == 0) {

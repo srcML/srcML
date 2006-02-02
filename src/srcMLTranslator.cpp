@@ -78,7 +78,7 @@ void srcMLTranslator::translate(const char* src_filename, const char* adir, cons
       out.setTokenStream(parser);
       out.consume(fdir.c_str(), ffilename.c_str(), version);
 
-  } catch (FileError e) {
+  } catch (FileError) {
     throw FileError();
 
   } catch (const std::exception& e) {

@@ -537,7 +537,7 @@ int main(int argc, char* argv[]) {
       try {
 	translator.translate(path, get_directory(path).c_str(), get_filename(path).c_str(), given_version);
 
-      } catch (FileError e) {
+      } catch (FileError) {
 
 	if (isoption(options, OPTION_VERBOSE))
 	  std::cerr << "\t\terror: file \'" << path << "\' does not exist.";
@@ -569,7 +569,7 @@ int main(int argc, char* argv[]) {
     try {
       translator.translate(path, directory.c_str(), filename.c_str(), given_version);
 
-    } catch (FileError e) {
+    } catch (FileError) {
 
       std::cerr << NAME << " error: file \'" << path << "\' does not exist." << "\n";
       exit(STATUS_INPUTFILE_PROBLEM);
@@ -587,7 +587,7 @@ int main(int argc, char* argv[]) {
 
       try {
 	translator.translate(path, sdirectory.c_str(), sfilename.c_str());
-      } catch (FileError e) {
+      } catch (FileError) {
 	std::cerr << NAME << " error: file \'" << path << "\' does not exist." << "\n";
       }
     }
@@ -604,7 +604,7 @@ int main(int argc, char* argv[]) {
 std::string get_filename(const std::string& path) {
 
   // filename is only part of the path
-  unsigned int posslash = path.rfind('/');
+  size_t posslash = path.rfind('/');
   if (posslash != std::string::npos)
     return path.substr(posslash + 1);
 
@@ -616,7 +616,7 @@ std::string get_filename(const std::string& path) {
 std::string get_directory(const std::string& path) {
 
   // directory in path
-  unsigned int posslash = path.rfind('/');
+  size_t posslash = path.rfind('/');
   if (posslash != std::string::npos)
     return path.substr(0, posslash);
 

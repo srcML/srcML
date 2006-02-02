@@ -27,7 +27,7 @@
 
 #include "srcMLException.h"
 
-extern "C" void handle_segmentation(int);
+extern "C" void handle_segmentation(int) throw (Segmentation_Fault);
 
 // empty namespace to keep class and variable private
 namespace {
@@ -46,7 +46,7 @@ namespace {
   StartException st;
 }
 
-extern "C" void handle_segmentation(int) {
+extern "C" void handle_segmentation(int) throw (Segmentation_Fault) {
   pstd::signal(SIGSEGV, SIG_IGN);
   pstd::signal(SIGABRT, SIG_IGN);
 

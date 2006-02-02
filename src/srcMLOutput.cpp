@@ -177,10 +177,10 @@ void srcMLOutput::processText(const std::string& str) {
 
   // extract c string from c++ string
   const char* inputbuffer = str.c_str();
-  const int inputbuffer_size = str.size();
+  const unsigned int inputbuffer_size = (unsigned int) str.size();
 
   // write out all of input buffer converted to utf8
-  int pos = 0;
+  unsigned int pos = 0;
   while (pos < inputbuffer_size) {
 
     int utf8buffer_size = UTF8BUFFER_MAXSIZE;

@@ -358,7 +358,7 @@ int main(int argc, char* argv[]) {
 	if (l != "")
 	  std::cout << l << '\n';
 
-      } catch (LibXMLError error) {
+      } catch (LibXMLError) {
 	exit_status = STATUS_UNIT_INVALID;
 	throw "unit selected is out of range for this compound srcML document";
       }
@@ -377,7 +377,7 @@ int main(int argc, char* argv[]) {
 	if (l != "")
 	  std::cout << l << '\n';
 
-      } catch (LibXMLError error) {
+      } catch (LibXMLError) {
 	exit_status = STATUS_UNIT_INVALID;
 	throw "unit selected is out of range for this compound srcML document";
       }
@@ -396,7 +396,7 @@ int main(int argc, char* argv[]) {
 	if (l != "")
 	  std::cout << l << '\n';
 
-      } catch (LibXMLError error) {
+      } catch (LibXMLError) {
 	exit_status = STATUS_UNIT_INVALID;
 	throw "unit selected is out of range for this compound srcML document";
       }
@@ -415,7 +415,7 @@ int main(int argc, char* argv[]) {
 	if (l != "")
 	  std::cout << l << '\n';
 
-      } catch (LibXMLError error) {
+      } catch (LibXMLError) {
 	exit_status = STATUS_UNIT_INVALID;
 	throw "unit selected is out of range for this compound srcML document";
       }
@@ -438,7 +438,7 @@ int main(int argc, char* argv[]) {
 
       try {
 	su.extract_xml(ofilename, unit);
-      } catch (LibXMLError error) {
+      } catch (LibXMLError) {
 	exit_status = STATUS_UNIT_INVALID;
 	throw "unit selected is out of range for this compound srcML document";
       }
@@ -447,7 +447,7 @@ int main(int argc, char* argv[]) {
 
       try {
 	su.extract_text(ofilename, unit);
-      } catch (LibXMLError error) {
+      } catch (LibXMLError) {
 	exit_status = STATUS_UNIT_INVALID;
 	throw "unit selected is out of range for this compound srcML document";
       }

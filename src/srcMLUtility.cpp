@@ -26,13 +26,20 @@
 #include <iostream>
 #include <fstream>
 #include "srcmlns.h"
+
+#ifdef __GNUC__
 #include <sys/stat.h>
 #include <sys/errno.h>
+#else
+#include <direct.h>
+#endif
 
 #include "Options.h"
 
 // directory permission for expand
+#ifdef __GNUC__
 const int EXPAND_DIR_PERM = S_IRWXU | S_IRWXG;
+#endif
 
 const char* XML_DECLARATION_STANDALONE = "yes";
 const char* XML_VERSION = "1.0";
@@ -194,17 +201,25 @@ void srcMLUtility::extract_text(const char* ofilename, int unitnumber) {
   outputSrc(ofilename, reader);
 }
 
-int mkpath(const char* path, mode_t mode) {
+int mkpath(const char* path
+#ifdef __GNUC__		   
+		   , mode_t mode
+#endif		   
+		   ) {
  
   const std::string spath = path;
 
-  unsigned pos = 0;
-  while ((pos = spath.find('/', pos + 1)) != std::string::npos) {
+  int pos = 0;
+  while ((pos = (int) spath.find('/', pos + 1)) != std::string::npos) {
 
     // make the directory path so far
     if (spath.substr(0, pos).c_str() != ".") {
 
+#ifdef __GNUC__
       int ret = mkdir(spath.substr(0, pos).c_str(), mode);
+#else
+      int ret = mkdir(spath.substr(0, pos).c_str());
+#endif
       if (ret != 0 && errno != EEXIST)
 	return ret;
     }
@@ -214,7 +229,11 @@ int mkpath(const char* path, mode_t mode) {
   }
 
   // make the directory path if there is one
+#ifdef __GNUC__
   return mkdir(spath.c_str(), mode);
+#else
+  return mkdir(spath.c_str());
+#endif
 }
 
 // expand the compound srcML to individual files
@@ -241,8 +260,12 @@ void srcMLUtility::expand(const char* root_filename) {
       directory_filename += (const char*) directory;
 
       // make the directory path if there is one
+#ifdef __GNUC__
       int ret = mkpath(directory_filename.c_str(), EXPAND_DIR_PERM);
-      if (ret != 0 && errno != EEXIST) {
+#else
+      int ret = mkpath(directory_filename.c_str());
+#endif
+	  if (ret != 0 && errno != EEXIST) {
 	std::cerr << "Error " << errno  << " creating directory:  " << directory_filename << '\n';
       }
     }
@@ -428,7 +451,7 @@ void srcMLUtility::outputText(const xmlChar* s, xmlTextWriterPtr writer, bool es
 
     // extract c string from c++ string
     const xmlChar* inputbuffer = s;
-    int inputbuffer_size = strlen((const char*) s);
+    int inputbuffer_size = (int) strlen((const char*) s);
 
     // write out all of input buffer converted to utf8
     int pos = 0;
@@ -469,7 +492,7 @@ void srcMLUtility::outputText(const xmlChar* s, xmlTextWriterPtr writer, bool es
     case XML_READER_TYPE_ELEMENT:
 
       // record if this is an empty element since it will be erased by the attribute copying
-      isemptyelement = xmlTextReaderIsEmptyElement(reader);
+      isemptyelement = xmlTextReaderIsEmptyElement(reader) > 0;
 
       // start the element
       xmlTextWriterStartElement(writer, xmlTextReaderConstName(reader));

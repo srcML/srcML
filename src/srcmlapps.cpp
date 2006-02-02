@@ -24,14 +24,21 @@
 
 #include <cstring>
 #include <clocale>
+
+#ifdef __GNUC__
 #include <langinfo.h>
+#endif
 
 // current environment encoding
 const char* getencoding() {
 
+#ifdef __GNUC__
   setlocale(LC_ALL, "");
 
   return nl_langinfo(CODESET);
+#else
+  return "ISO-8859-1";
+#endif
 }
 
 // compare flags to arguments

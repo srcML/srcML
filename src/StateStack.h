@@ -136,7 +136,7 @@ class StateStack {
     if (st.empty())
       throw Segmentation_Fault();
 
-    st.top().push(id);
+    st.top().push((int) id);
   }
 
   void pop() {
