@@ -23,7 +23,7 @@ def check(command, input, output):
 	
 	line = execute(command, input)
 
-	validate(string.strip(output), string.strip(line))
+	return validate(string.strip(output), string.strip(line))
 	
 def validate(org, gen):
 	if org != gen:
@@ -38,7 +38,7 @@ def execute(command, input):
 
 	if p.returncode != 0:
 		print "Status error:  ", p.returncode
-		
+
 	return last_line
 
 def getreturn(command, input):

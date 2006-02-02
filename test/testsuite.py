@@ -16,6 +16,10 @@ debug = 0
 
 maxcount = 500
 
+entire_file = ""
+
+startcmd = ""
+
 srcmltranslator = os.environ.get("SRC2SRCML_BIN")
 if srcmltranslator == "":
 	srcmltranslator = "../bin/src2srcml"
@@ -23,10 +27,6 @@ if srcmltranslator == "":
 srcmlutility = os.environ.get("SRCML2SRC_BIN")
 if srcmlutility == "":
 	srcmlutility = "../bin/src2srcml"
-
-handles_src_encoding = None #os.environ.get("SRC2SRCML_SRC_ENCODING")
-
-entire_file = ""
 
 # extracts a particular unit from a srcML file
 def extract_unit(src, count):
@@ -49,7 +49,7 @@ def srcml2src(srctext, encoding):
 
 
 	# run the srcml processorn
-	if handles_src_encoding != None:
+	if srcml2src_src_encoding:
 
 		last_line=subprocess.Popen([startcmd + srcmlutility, "--src-encoding=" + encoding], stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(srctext)[0]
 
@@ -73,7 +73,7 @@ def xmldiff(xml_filename1, xml_filename2):
 def src2srcML(text_file, encoding, directory, filename):
 
 	# run the srcml processorn
-	if handles_src_encoding != None:
+	if src2srcml_src_encoding:
 
 		last_line = subprocess.Popen([startcmd + srcmltranslator, "-l", ulanguage, "-d", directory, "--src-encoding=" + encoding, "--xml-encoding=" + encoding, "--filename=" + filename], stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(text_file)[0]
 	else:
@@ -135,7 +135,8 @@ def getnested(xml_file):
 
 	return int(last_line)
 
-startcmd = ""
+src2srcml_src_encoding = src2srcmlversion().find("Libxml2") != -1;
+srcml2src_src_encoding = srcml2srcversion().find("Libxml2") != -1;
 
 specname = ""
 if len(sys.argv) > 1:

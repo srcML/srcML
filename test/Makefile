@@ -6,8 +6,8 @@ OBJ_DIR = ../obj/
 
 WD=${shell pwd}
 
-SRC2SRCML_BIN=${WD}/../bin/src2srcml
-SRCML2SRC_BIN=${WD}/../bin/srcml2src
+#SRC2SRCML_BIN=${WD}/../bin/src2srcml
+#SRCML2SRC_BIN=${WD}/../bin/srcml2src
 
 PHONY : testbase
 testbase : gen
