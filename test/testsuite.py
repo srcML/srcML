@@ -10,15 +10,8 @@ import string
 import re
 import subprocess
 import difflib
-import pprint
-
-debug = 0
 
 maxcount = 500
-
-entire_file = ""
-
-startcmd = ""
 
 srcmltranslator = os.environ.get("SRC2SRCML_BIN")
 if srcmltranslator == "":
@@ -31,7 +24,7 @@ if srcmlutility == "":
 # extracts a particular unit from a srcML file
 def extract_unit(src, count):
 
-	command = [startcmd + srcmlutility, "--unit=" + str(count), "--xml"]
+	command = [srcmlutility, "--unit=" + str(count), "--xml"]
 
 	return subprocess.Popen(command, stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(src)[0]
 
@@ -44,7 +37,7 @@ def name2filestr(src_filename):
 def srcml2src(srctext, encoding):
 
 	# run the srcml processor
-	command = [startcmd + srcmlutility]
+	command = [srcmlutility]
 	if srcml2src_src_encoding:
 		command.append("--src-encoding=" + encoding)
 
@@ -64,7 +57,7 @@ def xmldiff(xml_filename1, xml_filename2):
 # find differences of two files
 def src2srcML(text_file, encoding, directory, filename):
 
-	command = [startcmd + srcmltranslator, "-l", ulanguage, "-d", directory,
+	command = [srcmltranslator, "-l", ulanguage, "-d", directory,
 			   "--xml-encoding=" + encoding, "--filename=" + filename]
 
 	# run the srcml processorn
@@ -76,7 +69,7 @@ def src2srcML(text_file, encoding, directory, filename):
 #
 def getsrcmlattribute(xml_file, command):
 
-	last_line = subprocess.Popen([startcmd + srcmlutility, command],
+	last_line = subprocess.Popen([srcmlutility, command],
 				     stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(xml_file)[0]
 	
 	return string.strip(last_line)
@@ -109,7 +102,7 @@ def getfilename(xml_file):
 # version of src2srcml
 def src2srcmlversion():
 
-	last_line = subprocess.Popen([startcmd + srcmltranslator, "-V"],
+	last_line = subprocess.Popen([srcmltranslator, "-V"],
 				     stdout=subprocess.PIPE).communicate()[0]
 
 	return string.strip(last_line)
@@ -117,7 +110,7 @@ def src2srcmlversion():
 # version of srcml2src
 def srcml2srcversion():
 
-	last_line = subprocess.Popen([startcmd + srcmlutility, "-V"],
+	last_line = subprocess.Popen([srcmlutility, "-V"],
 				     stdout=subprocess.PIPE).communicate()[0]
 
 	return string.strip(last_line)
@@ -125,7 +118,7 @@ def srcml2srcversion():
 # number of nested units
 def getnested(xml_file):
 
-	last_line = subprocess.Popen([startcmd + srcmlutility, "-n"],
+	last_line = subprocess.Popen([srcmlutility, "-n"],
 				     stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(xml_file)[0]
 
 	return int(last_line)
@@ -166,24 +159,33 @@ m = re.compile(specname + "$")
 
 # source directory
 source_dir = base_dir
+
+# total number of errors
 error_count = 0
+
+# total test cases
 total_count = 0
+
+# process all files
 for root, dirs, files in os.walk(source_dir, topdown=True):
 
+	# process all files
 	for name in files:
 
+		# only process xml files
 		if os.path.splitext(name)[1] != ".xml":
 			continue
 
+		# form the full path to the file
 		xml_filename = os.path.join(root, name)
 
 		# read file into string
 		entire_file = name2filestr(xml_filename)
 		
-		# extract the filename of the entire document
+		# extract the directory name from the srcML document
 		ufilename = getdirectory(entire_file)
 		
-		# only perform for specname if given
+		# only process if directory name matches or is not given
 		if specname != "" and m.match(ufilename) == None:
 			continue
 		
@@ -192,9 +194,11 @@ for root, dirs, files in os.walk(source_dir, topdown=True):
 		if len(ulanguage) == 0:
 			ulanguage = "C++"
 
+		# only process if language matches or is not given
 		if speclang != "" and ulanguage != speclang:
 			continue
 		
+		# output language and directory name
 		print
 		print ulanguage, "\t", ufilename,
 
