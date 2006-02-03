@@ -114,6 +114,9 @@ void xmlTextWriterWriteAttribute(xmlTextWriterPtr writer, const char* attribute_
 
 int xmlTextWriterWriteComment(xmlTextWriterPtr writer, const char* s) {
 
+  // close any current start tag
+  close_start_tag(writer);
+
   *(writer->pout) << "<!--" << s << "-->";
 
   return 1;

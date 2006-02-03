@@ -54,7 +54,7 @@ void skipws(std::istream&in) {
 
   int process_pi(std::istream& is, std::vector<std::pair<std::string, std::string> >& m);
 
-  void process_comment(std::istream& is);
+  void process_comment(std::istream& is, std::string& content);
 };
 
 xmlTextReaderPtr xmlNewTextReaderFilename(const char* filename) {
@@ -87,6 +87,7 @@ int xmlTextReaderRead(xmlTextReaderPtr reader) {
       reader->depth += 1;
     }
 
+    bool firsttext = true;
     while (is >> c) {
 
       // processing instruction
@@ -121,9 +122,8 @@ int xmlTextReaderRead(xmlTextReaderPtr reader) {
 	  return 1;
 	}
 
-	process_comment(is);
-
-	reader->value = "";
+	reader->type = XML_READER_TYPE_COMMENT;
+	process_comment(is, reader->value);
 
 	reader->state = 1;
 	return 1;
@@ -169,6 +169,11 @@ int xmlTextReaderRead(xmlTextReaderPtr reader) {
       // entity
       } else if (c == '&') {
 
+	if (firsttext) {
+	  reader->value = "";
+	  firsttext = false;
+	}
+
 	reader->value += process_entity(is);
 	reader->type = XML_READER_TYPE_TEXT;
 	reader->tagname = "#text";
@@ -176,6 +181,11 @@ int xmlTextReaderRead(xmlTextReaderPtr reader) {
 
       // regular text
       } else {
+
+	if (firsttext) {
+	  reader->value = "";
+	  firsttext = false;
+	}
 
 	// add to current text
 	reader->value += c;
@@ -377,7 +387,7 @@ std::string process_entity(std::istream& in) {
     return "&" + ename + ";";
 }
 
-  void process_comment(std::istream& is) {
+  void process_comment(std::istream& is, std::string& content) {
     char c = '<';
 
     is.get();
@@ -385,11 +395,18 @@ std::string process_entity(std::istream& in) {
     is.get();
 
     char last = c;
+    content = "";
     c = is.get();
     while (!(last == '-' && c == '-' && is.peek() == '>')) {
+      push_back(content, c);
       last = c;
       c = is.get();
     }
+
+    // remove the last two characters
+    content = content.substr(0, content.size() - 1);
+
+    // read last '>'
     is.get();
   }
 

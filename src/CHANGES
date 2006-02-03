@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Add comment handling to srcml2src extraction.
+
 	Copy non-standard attributes on nested unit in srcml2src.
 
 	Add preliminary option "--info" to srcml2src.
