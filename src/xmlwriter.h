@@ -73,4 +73,6 @@ xmlTextWriterPtr xmlNewTextWriterFilename(const char* filename, int);
 
 void xmlTextWriterSetIndent(xmlTextWriterPtr, int);
 
+int xmlTextWriterWriteComment(xmlTextWriterPtr, const char*);
+
 #endif

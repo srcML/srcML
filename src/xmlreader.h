@@ -59,6 +59,7 @@ typedef xmlTextReader* xmlTextReaderPtr;
 
 const int XML_READER_TYPE_ELEMENT = 1;
 const int XML_READER_TYPE_END_ELEMENT = 15;
+const int XML_READER_TYPE_COMMENT = 8;
 const int XML_READER_TYPE_TEXT = 3;
 const int XML_READER_TYPE_SIGNIFICANT_WHITESPACE = 14;
 

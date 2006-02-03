@@ -112,6 +112,13 @@ void xmlTextWriterWriteAttribute(xmlTextWriterPtr writer, const char* attribute_
   *(writer->pout) << ' ' << attribute_name << "=\"" << attribute_value << "\"";
 }
 
+int xmlTextWriterWriteComment(xmlTextWriterPtr writer, const char* s) {
+
+  *(writer->pout) << "<!--" << s << "-->";
+
+  return 1;
+}
+
 void xmlTextWriterWriteRawLen(xmlTextWriterPtr writer, unsigned char* data, int size) {
 
   // close any current start tag

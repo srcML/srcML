@@ -510,6 +510,10 @@ void srcMLUtility::outputText(const xmlChar* s, xmlTextWriterPtr writer, bool es
       xmlTextWriterEndElement(writer);
       break;
 
+    case XML_READER_TYPE_COMMENT:
+      xmlTextWriterWriteComment(writer, xmlTextReaderConstValue(reader));
+      break;
+
     case XML_READER_TYPE_TEXT:
     case XML_READER_TYPE_SIGNIFICANT_WHITESPACE:
       outputText(xmlTextReaderConstValue(reader), writer);
