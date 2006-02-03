@@ -87,6 +87,9 @@ enum Options {
 
   // output is xml
   OPTION_XML          = 0x40000,
+
+  // info
+  OPTION_INFO         = 0x80000,
 };
 
 #endif

@@ -72,6 +72,9 @@ class srcMLUtility {
   // attribute of a nested unit
   std::string unit_attribute(int unitnumber, const char* attribute_name);
 
+  // move to a particular nested unit
+  void move_to_unit(int unitnumber);
+
   // encoding
   const char* getencoding();
 

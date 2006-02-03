@@ -50,6 +50,9 @@ const char* XML_FLAG_SHORT = "-X";
 const char* ATTRIBUTE_FILENAME_FLAG = "--attributefilename";
 const char* ATTRIBUTE_FILENAME_FLAG_SHORT = "-a";
 
+const char* INFO_FLAG = "--info";
+const char* INFO_FLAG_SHORT = "-o";
+
 using std::setw;
 
 // output help message
@@ -193,6 +196,12 @@ int main(int argc, char* argv[]) {
     // xml output flag
     else if (compare_flags(argv[curarg], XML_FLAG, XML_FLAG_SHORT, position)) {
       options |= OPTION_XML;
+      if (position == original_position) ++curarg;
+    }
+
+    // info flag
+    else if (compare_flags(argv[curarg], INFO_FLAG, INFO_FLAG_SHORT, position)) {
+      options |= OPTION_INFO;
       if (position == original_position) ++curarg;
     }
 
@@ -401,6 +410,30 @@ int main(int argc, char* argv[]) {
 	throw "unit selected is out of range for this compound srcML document";
       }
 
+    } else if (isoption(options, OPTION_INFO)) {
+
+      if (isoption(options, OPTION_UNIT)) {
+      try {
+
+	su.move_to_unit(unit);
+
+      } catch (LibXMLError) {
+	exit_status = STATUS_UNIT_INVALID;
+	throw "unit selected is out of range for this compound srcML document";
+      }
+      }
+
+      std::cout << "Language: " << su.attribute("language") << '\n';
+      std::cout << "Directory: " << su.attribute("dir") << '\n';
+      std::cout << "Filename: " << su.attribute("filename") << '\n';
+      std::cout << "Version: " << su.attribute("version") << '\n';
+      /*
+      if (!isoption(options, OPTION_UNIT))
+	std::cout << "Nested: " << su.unit_count() << '\n';
+      else
+	std::cout << "Nested: " << 0 << '\n';
+      */
+
     } else if (isoption(options, OPTION_LANGUAGE)) {
 
       std::string l = su.attribute("language");
@@ -411,7 +444,9 @@ int main(int argc, char* argv[]) {
 
       try {
 
-	std::string l = su.unit_attribute(unit, "version");
+	su.move_to_unit(unit);
+
+	std::string l = su.attribute("version");
 	if (l != "")
 	  std::cout << l << '\n';
 

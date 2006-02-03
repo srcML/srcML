@@ -145,6 +145,14 @@ std::string srcMLUtility::unit_attribute(int unitnumber, const char* attribute_n
   return attribute(attribute_name);
 }
 
+// move to a particular nested unit
+void srcMLUtility::move_to_unit(int unitnumber) {
+
+  // skip to the proper nested unit
+  skiptounit(reader, unitnumber);
+}
+
+
 // count of nested units
 int srcMLUtility::unit_count() {
 
