@@ -58,6 +58,22 @@ def checkallforms(base, shortflag, longflag, optionvalue, progin, progout):
 
 	return
 	
+# version of src2srcml
+def src2srcmlversion():
+
+	last_line = subprocess.Popen([srcmltranslator, "-V"],
+				     stdout=subprocess.PIPE).communicate()[0]
+
+	return string.strip(last_line)
+
+# version of srcml2src
+def srcml2srcversion():
+
+	last_line = subprocess.Popen([srcmlutility, "-V"],
+				     stdout=subprocess.PIPE).communicate()[0]
+
+	return string.strip(last_line)
+
 srcmltranslator = os.environ.get("SRC2SRCML_BIN")
 if srcmltranslator == "":
 	srcmltranslator = "../../bin/src2srcml"
@@ -66,14 +82,20 @@ srcmlutility = os.environ.get("SRCML2SRC_BIN")
 if srcmlutility == "":
 	srcmlutility = "../../bin/src2srcml"
 
-handles_src_encoding = os.environ.get("SRC2SRCML_SRC_ENCODING")
+src2srcml_src_encoding = src2srcmlversion().find("Libxml2") != -1;
+srcml2src_src_encoding = srcml2srcversion().find("Libxml2") != -1;
 
-if handles_src_encoding == "":
-	default_encoding = "UTF-8"
+if src2srcml_src_encoding:
+	default_src2srcml_encoding = "UTF-8"
 else:
-	default_encoding = "ISO-8859-1"
+	default_src2srcml_encoding = "ISO-8859-1"
 
-xml_declaration= '<?xml version="1.0" encoding="' + default_encoding + '" standalone="yes"?>'
+if srcml2src_src_encoding:
+	default_srcml2src_encoding = "UTF-8"
+else:
+	default_srcml2src_encoding = "ISO-8859-1"
+
+xml_declaration= '<?xml version="1.0" encoding="' + default_src2srcml_encoding + '" standalone="yes"?>'
 
 print xml_declaration
 
@@ -237,7 +259,7 @@ checkallforms(srcmlutility, option.LANGUAGE_FLAG_SHORT, option.LANGUAGE_FLAG, ""
 checkallforms(srcmlutility, option.DIRECTORY_FLAG_SHORT, option.DIRECTORY_FLAG, "", srcml, "bar")
 checkallforms(srcmlutility, option.FILENAME_FLAG_SHORT, option.FILENAME_FLAG, "", srcml, "foo")
 checkallforms(srcmlutility, option.SRCVERSION_FLAG_SHORT, option.SRCVERSION_FLAG, "", srcml, "1.2")
-checkallforms(srcmlutility, option.ENCODING_FLAG_SHORT, option.ENCODING_FLAG, "", srcml, default_encoding)
+checkallforms(srcmlutility, option.ENCODING_FLAG_SHORT, option.ENCODING_FLAG, "", srcml, default_srcml2src_encoding)
 
 check([srcmlutility, option.NESTED_FLAG], srcml, "0")
 check([srcmlutility, option.NESTED_FLAG], nestedfile, "2")
@@ -283,7 +305,7 @@ validate(getreturn([srcmltranslator, "--strip"], nestedfile), status.STATUS_UNKN
 
 # unknown encoding
 
-if handles_src_encoding == "":
+if src2srcml_src_encoding:
 	validate(getreturn([srcmltranslator, option.TEXTENCODING_FLAG + "=" + bad_encoding], nestedfile), status.STATUS_UNKNOWN_ENCODING)
 	validate(getreturn([srcmltranslator, option.ENCODING_FLAG + "=" + bad_encoding], nestedfile), status.STATUS_UNKNOWN_ENCODING)
 else:
@@ -298,7 +320,7 @@ validate(getreturn([srcmltranslator, option.DIRECTORY_FLAG], nestedfile), status
 validate(getreturn([srcmltranslator, option.SRCVERSION_FLAG], nestedfile), status.STATUS_VERSION_MISSING)
 
 # source encoding not given
-if handles_src_encoding == "":
+if src2srcml_src_encoding:
 	validate(getreturn([srcmltranslator, option.TEXTENCODING_FLAG], nestedfile), status.STATUS_SRCENCODING_MISSING)
 else:
 	validate(getreturn([srcmltranslator, option.TEXTENCODING_FLAG], nestedfile), status.STATUS_LIBXML2_FEATURE)
@@ -315,7 +337,7 @@ validate(getreturn([srcmlutility, "foobar"], nestedfile), status.STATUS_INPUTFIL
 validate(getreturn([srcmlutility, "--strip"], nestedfile), status.STATUS_UNKNOWN_OPTION)
 
 # unknown encoding
-if handles_src_encoding == "":
+if srcml2src_src_encoding:
 	validate(getreturn([srcmlutility, option.TEXTENCODING_FLAG + "=" + bad_encoding], nestedfile), status.STATUS_UNKNOWN_ENCODING)
 	validate(getreturn([srcmlutility, option.TEXTENCODING_FLAG], nestedfile), status.STATUS_SRCENCODING_MISSING)
 else:
