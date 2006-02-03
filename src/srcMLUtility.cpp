@@ -44,6 +44,12 @@ const int EXPAND_DIR_PERM = S_IRWXU | S_IRWXG;
 const char* XML_DECLARATION_STANDALONE = "yes";
 const char* XML_VERSION = "1.0";
 
+/* srcML unit attributes */
+const char* UNIT_ATTRIBUTE_LANGUAGE = "language";
+const char* UNIT_ATTRIBUTE_DIRECTORY = "dir";
+const char* UNIT_ATTRIBUTE_FILENAME = "filename";
+const char* UNIT_ATTRIBUTE_VERSION = "version";
+
 // check if encoding is supported
 bool srcMLUtility::checkEncoding(const char* encoding) {
 
@@ -85,10 +91,10 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* enc, int op)
   }
 
   // record the current attributes for use in subunits
-  unit_filename = xmlTextReaderGetAttribute(reader, BAD_CAST "filename");
-  unit_directory = xmlTextReaderGetAttribute(reader, BAD_CAST "dir");
-  unit_version = xmlTextReaderGetAttribute(reader, BAD_CAST "version");
-  unit_language = xmlTextReaderGetAttribute(reader, BAD_CAST "language");
+  unit_filename = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_FILENAME);
+  unit_directory = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_DIRECTORY);
+  unit_version = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_VERSION);
+  unit_language = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_LANGUAGE);
 }
 
 // destructor
@@ -238,8 +244,8 @@ void srcMLUtility::expand(const char* root_filename) {
     skiptounit(reader, 1);
 
     // extract the attributes from the unit for filename and directory
-    xmlChar* filename = xmlTextReaderGetAttribute(reader, BAD_CAST "filename");
-    xmlChar* directory = xmlTextReaderGetAttribute(reader, BAD_CAST "dir");
+    xmlChar* filename = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_FILENAME);
+    xmlChar* directory = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_DIRECTORY);
 
     if (!filename) {
       std::cerr << "Missing filename" << '\n';
@@ -309,49 +315,49 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
       xmlTextWriterWriteAttribute(writer, BAD_CAST "xmlns:srcerr", BAD_CAST SRCML_ERR_NS_URI);
 
   xmlChar* attribute = 0;
-  attribute = xmlTextReaderGetAttribute(reader, BAD_CAST "filename");
+  attribute = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_FILENAME);
   if (attribute)
     unit_filename = attribute;
 
-  attribute = xmlTextReaderGetAttribute(reader, BAD_CAST "dir");
+  attribute = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_DIRECTORY);
   if (attribute)
     unit_directory = attribute;
 
-  attribute = xmlTextReaderGetAttribute(reader, BAD_CAST "version");
+  attribute = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_VERSION);
   if (attribute)
     unit_version = attribute;
 
-  attribute = xmlTextReaderGetAttribute(reader, BAD_CAST "language");
+  attribute = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_LANGUAGE);
   if (attribute)
     unit_language = attribute;
 
   if (unit_language) {
-    xmlTextWriterWriteAttribute(writer, BAD_CAST "language", unit_language);
+    xmlTextWriterWriteAttribute(writer, BAD_CAST UNIT_ATTRIBUTE_LANGUAGE, unit_language);
     xmlFree(unit_language);
   }
 
   if (unit_directory) {
-    xmlTextWriterWriteAttribute(writer, BAD_CAST "dir", unit_directory);
+    xmlTextWriterWriteAttribute(writer, BAD_CAST UNIT_ATTRIBUTE_DIRECTORY, unit_directory);
     xmlFree(unit_directory);
   }
 
   if (unit_filename) {
-    xmlTextWriterWriteAttribute(writer, BAD_CAST "filename", unit_filename);
+    xmlTextWriterWriteAttribute(writer, BAD_CAST UNIT_ATTRIBUTE_FILENAME, unit_filename);
     xmlFree(unit_filename);
   }
 
   if (unit_version) {
-    xmlTextWriterWriteAttribute(writer, BAD_CAST "version", unit_version);
+    xmlTextWriterWriteAttribute(writer, BAD_CAST UNIT_ATTRIBUTE_VERSION, unit_version);
     xmlFree(unit_version);
   }
 
   // copy all other attributes from current unit (may be main unit)
   while (xmlTextReaderMoveToNextAttribute(reader)) {
 
-    if ((strcmp((char*) xmlTextReaderConstName(reader), "language") != 0) &&
-	(strcmp((char*) xmlTextReaderConstName(reader), "dir") != 0) &&
-	(strcmp((char*) xmlTextReaderConstName(reader), "filename") != 0) &&
-	(strcmp((char*) xmlTextReaderConstName(reader), "version") != 0))
+    if ((strcmp((char*) xmlTextReaderConstName(reader), UNIT_ATTRIBUTE_LANGUAGE) != 0) &&
+	(strcmp((char*) xmlTextReaderConstName(reader), UNIT_ATTRIBUTE_DIRECTORY) != 0) &&
+	(strcmp((char*) xmlTextReaderConstName(reader), UNIT_ATTRIBUTE_FILENAME) != 0) &&
+	(strcmp((char*) xmlTextReaderConstName(reader), UNIT_ATTRIBUTE_VERSION) != 0))
 
       xmlTextWriterWriteAttribute(writer, xmlTextReaderConstName(reader), xmlTextReaderConstValue(reader));
   }
@@ -555,7 +561,7 @@ void srcMLUtility::outputText(const xmlChar* s, xmlTextWriterPtr writer, bool es
       skiptonextunit(reader);
 
       // did we find it?
-      if (strcmp((const char*) xmlTextReaderGetAttribute(reader, BAD_CAST "filename"), filename) == 0)
+      if (strcmp((const char*) xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_FILENAME), filename) == 0)
 	break;
     }
   }
