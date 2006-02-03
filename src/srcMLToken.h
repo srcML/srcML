@@ -39,9 +39,6 @@ class srcMLToken : public antlr::Token {
   srcMLToken(int t)
     : Token(t) {}
 
-  srcMLToken()
-    : Token() {}
-
   int getLine() const { return T; }
 };
 
@@ -58,16 +55,5 @@ inline bool isempty(const antlr::RefToken& token) {
 
   return token->getLine() == EMPTYTOKEN;
 }
-
-class MarkerToken : public EmptyToken {
-
- public:
-
-  MarkerToken(int t, char* s)
-    : EmptyToken(t) { setText(s); }
-
-  MarkerToken()
-    : EmptyToken() {}
-};
 
 #endif

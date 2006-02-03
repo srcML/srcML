@@ -1,6 +1,9 @@
 CHANGES
 
 Trunk
+
+	Removed unused MarkerToken.
+
 	Add comment handling to srcml2src extraction.
 
 	Copy non-standard attributes on nested unit in srcml2src.
