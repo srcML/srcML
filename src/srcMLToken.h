@@ -64,17 +64,10 @@ class MarkerToken : public EmptyToken {
  public:
 
   MarkerToken(int t, char* s)
-    : EmptyToken(t), text(s) {}
+    : EmptyToken(t) { setText(s); }
 
   MarkerToken()
     : EmptyToken() {}
-
-  std::string getText() const {
-    return text;
-  }
-
- private:
-  std::string text;
 };
 
 #endif
