@@ -84,7 +84,6 @@ XSLT_INSERTFORMFEED=${XSLT} xsl/insertformfeed.xsl
 ##
 # Test cases for one language are generated from test cases for another language.
 
-
 XSLT_SETLANGUAGE_XSL=xsl/setlanguage.xsl
 
 XSLT_SETLANGUAGE=${XSLT} ${XSLT_SETLANGUAGE_XSL}
@@ -98,21 +97,27 @@ XSLT_SETLANGUAGE_JAVA=${XSLT} --stringparam language "Java" ${XSLT_SETLANGUAGE_X
 ##
 # General lists of test cases
 
-GEN_FILES_SEP=while ifnestcond return throw function_decl constructor_explicit destructor_virtual function_const struct union 
+# original cases for all languages
+SEP_FILES_BASE_COMMON=comment string variable_names expression decl_simple if for do switch call function enum return_base problem
 
-GEN_FILES_PART=${foreach nm, $(GEN_FILES_SEP), ../suite/$(nm).cpp.xml}
+# cases generated from other original cases
+GEN_FILES_SEP=while ifnestcond return throw function_decl constructor_explicit destructor_virtual function_const struct union ifblock
 
-SEP_FILES_BASE_COMMON=comment string variable_names expression decl_simple if for do switch call function enum return_base problem ifblock
-
+# cases for C language only
 SEP_FILES_BASE_C=functionkr 
 
+# cases for C family of languages
 SEP_FILES_BASE_C_FAMILY=asm macro cstruct typedef extern main function_pointer decl_struct
 
+# cases for object-oriented languages
 SEP_FILES_BASE_OO=function_ns decl_ns variable_names_ns
 
+# cases for C++ only
 SEP_FILES_BASE_CXX=friend try namespace template typedef_template constructor destructor throw_base function_throw catch_form class
 
 SEP_FILES_BASE_JAVA=class_java keyword_java interface_java package
+
+GEN_FILES_PART=${foreach nm, $(GEN_FILES_SEP), ../suite/$(nm).cpp.xml}
 
 SEP_FILES_BASE=$(SEP_FILES_BASE_COMMON) $(SEP_FILES_BASE_C) $(SEP_FILES_BASE_C_FAMILY) $(SEP_FILES_BASE_CXX) $(SEP_FILES_BASE_JAVA)
 
