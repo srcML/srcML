@@ -100,39 +100,44 @@ XSLT_SETLANGUAGE_JAVA=${XSLT} --stringparam language "Java" ${XSLT_SETLANGUAGE_X
 # original base of cases for all languages
 SEP_FILES_BASE_COMMON=comment string variable_names expression decl_simple if for do switch call function enum return_base problem
 
-# base of cases generated from other original cases
-GEN_FILES_SEP=while ifnestcond return throw function_decl constructor_explicit destructor_virtual function_const struct union ifblock
+# base for all languages generated from original cases
+GEN_FILES_SEP_BASE=while ifnestcond return function_decl ifblock
 
-# base of cases for C language only
-SEP_FILES_BASE_C=functionkr 
+# base for C++ language generated from original cases
+GEN_FILES_SEP_BASE_CXX=throw constructor_explicit destructor_virtual function_const struct union
 
-# base of cases for C family of languages
-SEP_FILES_BASE_C_FAMILY=asm macro cstruct typedef extern main function_pointer decl_struct
-
-# base of cases for object-oriented languages
-SEP_FILES_BASE_OO=function_ns decl_ns variable_names_ns
-
-# base of cases for C++ only
-SEP_FILES_BASE_CXX=friend try namespace template typedef_template constructor destructor throw_base function_throw catch_form class
-
-# base of cases for Java only
-SEP_FILES_BASE_JAVA=class_java keyword_java interface_java package
+# basic generated C++ files
+GEN_FILES_SEP= $(GEN_FILES_SEP_BASE) $(GEN_FILES_SEP_BASE_CXX)
 
 # generated cases for C++ from base
 GEN_FILES_PART=${foreach nm, $(GEN_FILES_SEP), ../suite/$(nm).cpp.xml}
+
+# base for C language only
+SEP_FILES_BASE_C=functionkr 
+
+# base for C family of languages
+SEP_FILES_BASE_C_FAMILY=asm macro cstruct typedef extern main function_pointer decl_struct
+
+# base for object-oriented languages
+SEP_FILES_BASE_OO=function_ns decl_ns variable_names_ns
+
+# base for C++ only
+SEP_FILES_BASE_CXX=friend try namespace template typedef_template constructor destructor throw_base function_throw catch_form class
+
+# base for Java only
+SEP_FILES_BASE_JAVA=class_java keyword_java interface_java package
 
 SEP_FILES_BASE=$(SEP_FILES_BASE_COMMON) $(SEP_FILES_BASE_C) $(SEP_FILES_BASE_C_FAMILY) $(SEP_FILES_BASE_CXX) $(SEP_FILES_BASE_JAVA)
 
 SEP_FILES=$(SEP_FILES_BASE) preprocessor
 
+# base for all of Java
+SEP_FILES_BASE_JAVA_ALL = $(SEP_FILES_BASE_COMMON) $(GEN_FILES_SEP_BASE) $(SEP_FILES_BASE_00)
 
-SEP_FILES_BASE_JAVA_ALL = $(SEP_FILES_BASE_COMMON) $(SEP_FILES_BASE_00)
 GEN_FILES_JAVA= ${foreach nm, $(SEP_FILES_BASE_JAVA_ALL), ../suite/$(nm).java.xml}
 
 SEP_FILES_BASE_C_ALL = $(SEP_FILES_BASE_COMMON) $(SEP_FILES_BASE_C_FAMILY)
 GEN_FILES_C= ${foreach nm, $(SEP_FILES_BASE_C_ALL), ../suite/$(nm).c.xml}
-
-GEN_FILES_ALL_PART= ${foreach nm, $(SEP_FILES), $(nm).all}
 
 SEP_FILES_PLUS= ${SEP_FILES} ${GEN_FILES_SEP}
 
@@ -142,21 +147,25 @@ GEN_FILES_ALL_C=${foreach nm, $(SEP_FILES_BASE_C_ALL), ../suite/$(nm).all.c.xml}
 
 GEN_FILES_ALL= ${foreach nm, $(SEP_FILES_PLUS), ../suite/$(nm).all.cpp.xml} ../suite/extra.all.cpp.xml
 
+# generated test cases for blocks
 GEN_FILES_BLOCK= ${foreach nm, $(SEP_FILES_PLUS),          ../suite/$(nm).block.cpp.xml} \
                  ${foreach nm, $(SEP_FILES_BASE_C_ALL),    ../suite/$(nm).block.c.xml} \
                  ${foreach nm, $(SEP_FILES_BASE_JAVA_ALL), ../suite/$(nm).block.java.xml} \
 		 ../suite/extra.block.c.xml ../suite/extra.block.cpp.xml
 
+# generated test cases for comments
 GEN_FILES_COMMENT= ${foreach nm, $(SEP_FILES_PLUS),          ../suite/$(nm).comment.cpp.xml} \
 		   ${foreach nm, $(SEP_FILES_BASE_C_ALL),    ../suite/$(nm).comment.c.xml} \
 		   ${foreach nm, $(SEP_FILES_BASE_JAVA_ALL), ../suite/$(nm).comment.java.xml} \
 		   ../suite/extra.comment.c.xml ../suite/extra.comment.cpp.xml
 
+# generated test cases for formfeed
 GEN_FILES_FORMFEED = ${foreach nm, $(SEP_FILES_PLUS),          ../suite/$(nm).formfeed.cpp.xml} \
 		     ${foreach nm, $(SEP_FILES_BASE_C_ALL),    ../suite/$(nm).formfeed.c.xml} \
 		     ${foreach nm, $(SEP_FILES_BASE_JAVA_ALL), ../suite/$(nm).formfeed.java.xml} \
 		     ../suite/extra.formfeed.c.xml ../suite/extra.formfeed.cpp.xml
 
+# generated test cases for preproc
 GEN_FILES_PREPROC= ${foreach nm, $(SEP_FILES_PLUS), ../suite/$(nm).preproc.cpp.xml} \
 	           ${foreach nm, $(SEP_FILES_BASE_C_ALL), ../suite/$(nm).preproc.c.xml} \
 		   ../suite/extra.preproc.c.xml ../suite/extra.preproc.cpp.xml
