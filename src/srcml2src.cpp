@@ -66,38 +66,67 @@ void output_help(const char* name) {
                << '\n'
 	       << "Options:"  << '\n'
                << std::left
-	       << "  " << HELP_FLAG_SHORT       << ", " << setw(COL) << HELP_FLAG       << "display this help and exit\n"
-	       << "  " << VERSION_FLAG_SHORT    << ", " << setw(COL) << VERSION_FLAG    << "display version number and exit\n"
+	       << "  " << HELP_FLAG_SHORT       << ", " << setw(COL) << HELP_FLAG       
+	       << "display this help and exit\n"
+	       << "  " << VERSION_FLAG_SHORT    << ", " << setw(COL) << VERSION_FLAG    
+	       << "display version number and exit\n"
 	       << '\n'
 	       << "  " << LANGUAGE_FLAG_SHORT   << ", " << setw(COL) << LANGUAGE_FLAG
-	       << "display source language (e.g., " << LANGUAGE_C << ", " << LANGUAGE_CXX << ", " << LANGUAGE_JAVA << ") and exit\n"
-	       << "  " << DIRECTORY_FLAG_SHORT  << ", " << setw(COL) << DIRECTORY_FLAG  << "display source directory name and exit\n"
-	       << "  " << FILENAME_FLAG_SHORT   << ", " << setw(COL) << FILENAME_FLAG   << "display source filename and exit\n"
-	       << "  " << SRCVERSION_FLAG_SHORT << ", " << setw(COL) << SRCVERSION_FLAG << "display source version and exit\n"
-	       << "  " << ENCODING_FLAG_SHORT   << ", " << setw(COL) << ENCODING_FLAG   << "display xml encoding and exit\n"
+	       << "display source language (e.g., " << LANGUAGE_C << ", " << LANGUAGE_CXX << ", "
+	       << LANGUAGE_JAVA << ") and exit\n"
+	       << "  " << DIRECTORY_FLAG_SHORT  << ", " << setw(COL) << DIRECTORY_FLAG
+	       << "display source directory name and exit\n"
+	       << "  " << FILENAME_FLAG_SHORT   << ", " << setw(COL) << FILENAME_FLAG   
+	       << "display source filename and exit\n"
+	       << "  " << SRCVERSION_FLAG_SHORT << ", " << setw(COL) << SRCVERSION_FLAG
+	       << "display source version and exit\n"
+	       << "  " << ENCODING_FLAG_SHORT   << ", " << setw(COL) << ENCODING_FLAG
+	       << "display xml encoding and exit\n"
 	       << '\n'
-	       << "  " << NESTED_FLAG_SHORT     << ", " << setw(COL) << NESTED_FLAG     << "display number of nested units and exit\n"
-	       << "  " << UNIT_FLAG_SHORT       << ", " << setw(COL) << UNIT_FLAG_FULL  << "process nested unit NUM from a compound srcML document\n"
-	       << "  " << XML_FLAG_SHORT        << ", " << setw(COL) << XML_FLAG        << "output is in XML instead of text\n"
-	       << "  " << EXPAND_FLAG_SHORT     << ", " << setw(COL) << EXPAND_FLAG     << "extract all files from a compound srcML document\n"
+	       << "  " << NESTED_FLAG_SHORT     << ", " << setw(COL) << NESTED_FLAG     
+	       << "display number of nested units and exit\n"
+	       << "  " << UNIT_FLAG_SHORT       << ", " << setw(COL) << UNIT_FLAG_FULL  
+	       << "process nested unit NUM from a compound srcML document\n"
+	       << "  " << XML_FLAG_SHORT        << ", " << setw(COL) << XML_FLAG        
+	       << "output is in XML instead of text\n"
+	       << "  " << EXPAND_FLAG_SHORT     << ", " << setw(COL) << EXPAND_FLAG     
+	       << "extract all files from a compound srcML document\n"
 	       << '\n'
 #ifdef LIBXML_ENABLED
-	       << "  " << TEXTENCODING_FLAG_SHORT << ", " << setw(COL) <<  TEXTENCODING_FLAG_FULL  << "set the output source encoding to ENC (default:  "
-	      << "based on locale" << ") \n"
+	       << "  " << TEXTENCODING_FLAG_SHORT << ", " << setw(COL) <<  TEXTENCODING_FLAG_FULL  
+	       << "set the output source encoding to ENC (default:  " << "based on locale" << ") \n"
 	       << '\n'
 #endif
                << "  " << VERBOSE_FLAG_SHORT    << ", " << setw(COL) << VERBOSE_FLAG    << "verbose output\n"
 	       << '\n'
 	       << "Examples:  " << '\n'
-	       << "  " << name << "                       " << "(read from standard input, write to standard output)" << '\n'
-	       << "  " << name << " main.cpp.xml          " << "(read from file main.cpp.xml, write to standard output)" << '\n'
-	       << "  " << name << " main.cpp.xml main.cpp " << "(read from file main.cpp.xml, write to file main.cpp)" << '\n'
-	       << "  " << name << " -                     " << "(read from standard input, write to standard output)" << '\n'
-	       << "  " << name << " - main.cpp            " << "(read from standard input, write to file main.cpp)" << '\n'
-	       << "  " << name << " --language            " << "(read from standard input, output language attribute)" << '\n'
-	       << "  " << name << " --directory           " << "(read from standard input, output directory attribute)" << '\n'
-	       << "  " << name << " --filename            " << "(read from standard input, output filename attribute)" << '\n'
-	       << "  " << name << " --src-version         " << "(read from standard input, output version attribute)" << '\n'
+	       << "  " << name << "                       "
+	       << "(read from standard input, write to standard output)" << '\n'
+
+	       << "  " << name << " main.cpp.xml          "
+	       << "(read from file main.cpp.xml, write to standard output)" << '\n'
+
+	       << "  " << name << " main.cpp.xml main.cpp "
+	       << "(read from file main.cpp.xml, write to file main.cpp)" << '\n'
+
+	       << "  " << name << " -                     "
+	       << "(read from standard input, write to standard output)" << '\n'
+
+	       << "  " << name << " - main.cpp            "
+	       << "(read from standard input, write to file main.cpp)" << '\n'
+
+	       << "  " << name << " --language            "
+	       << "(read from standard input, output language attribute)" << '\n'
+
+	       << "  " << name << " --directory           "
+	       << "(read from standard input, output directory attribute)" << '\n'
+
+	       << "  " << name << " --filename            "
+	       << "(read from standard input, output filename attribute)" << '\n'
+
+	       << "  " << name << " --src-version         "
+	       << "(read from standard input, output version attribute)" << '\n'
+
 	       << '\n'
 	       << "www.sdml.info" << '\n'
                << "Report bugs to " << EMAIL_ADDRESS << '\n';
