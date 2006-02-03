@@ -6,7 +6,6 @@
 
 import sys
 import os.path
-import string
 import re
 import subprocess
 import difflib
@@ -72,7 +71,7 @@ def getsrcmlattribute(xml_file, command):
 	last_line = subprocess.Popen([srcmlutility, command],
 				     stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(xml_file)[0]
 	
-	return string.strip(last_line)
+	return last_line.strip()
 
 # directory attribute
 def getdirectory(xml_file):
@@ -105,7 +104,7 @@ def src2srcmlversion():
 	last_line = subprocess.Popen([srcmltranslator, "-V"],
 				     stdout=subprocess.PIPE).communicate()[0]
 
-	return string.strip(last_line)
+	return last_line.strip()
 
 # version of srcml2src
 def srcml2srcversion():
@@ -113,7 +112,7 @@ def srcml2srcversion():
 	last_line = subprocess.Popen([srcmlutility, "-V"],
 				     stdout=subprocess.PIPE).communicate()[0]
 
-	return string.strip(last_line)
+	return last_line.strip()
 
 # number of nested units
 def getnested(xml_file):
