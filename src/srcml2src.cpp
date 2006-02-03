@@ -47,9 +47,6 @@ const char* UNIT_FLAG_FULL = "--unit=NUM";
 const char* XML_FLAG = "--xml";
 const char* XML_FLAG_SHORT = "-X";
 
-const char* ATTRIBUTE_FILENAME_FLAG = "--attributefilename";
-const char* ATTRIBUTE_FILENAME_FLAG_SHORT = "-a";
-
 const char* INFO_FLAG = "--info";
 const char* INFO_FLAG_SHORT = "-o";
 
@@ -101,8 +98,6 @@ void output_help(const char* name) {
 	       << "  " << name << " --directory           " << "(read from standard input, output directory attribute)" << '\n'
 	       << "  " << name << " --filename            " << "(read from standard input, output filename attribute)" << '\n'
 	       << "  " << name << " --src-version         " << "(read from standard input, output version attribute)" << '\n'
-       //	       << "  " << name << " " << ATTRIBUTE_FILENAME_FLAG_SHORT << "                  "
-       //	       << "(read from standard input, write to filename given in srcML attributes)" << '\n'
 	       << '\n'
 	       << "www.sdml.info" << '\n'
                << "Report bugs to " << EMAIL_ADDRESS << '\n';
