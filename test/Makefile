@@ -97,26 +97,28 @@ XSLT_SETLANGUAGE_JAVA=${XSLT} --stringparam language "Java" ${XSLT_SETLANGUAGE_X
 ##
 # General lists of test cases
 
-# original cases for all languages
+# original base of cases for all languages
 SEP_FILES_BASE_COMMON=comment string variable_names expression decl_simple if for do switch call function enum return_base problem
 
-# cases generated from other original cases
+# base of cases generated from other original cases
 GEN_FILES_SEP=while ifnestcond return throw function_decl constructor_explicit destructor_virtual function_const struct union ifblock
 
-# cases for C language only
+# base of cases for C language only
 SEP_FILES_BASE_C=functionkr 
 
-# cases for C family of languages
+# base of cases for C family of languages
 SEP_FILES_BASE_C_FAMILY=asm macro cstruct typedef extern main function_pointer decl_struct
 
-# cases for object-oriented languages
+# base of cases for object-oriented languages
 SEP_FILES_BASE_OO=function_ns decl_ns variable_names_ns
 
-# cases for C++ only
+# base of cases for C++ only
 SEP_FILES_BASE_CXX=friend try namespace template typedef_template constructor destructor throw_base function_throw catch_form class
 
+# base of cases for Java only
 SEP_FILES_BASE_JAVA=class_java keyword_java interface_java package
 
+# generated cases for C++ from base
 GEN_FILES_PART=${foreach nm, $(GEN_FILES_SEP), ../suite/$(nm).cpp.xml}
 
 SEP_FILES_BASE=$(SEP_FILES_BASE_COMMON) $(SEP_FILES_BASE_C) $(SEP_FILES_BASE_C_FAMILY) $(SEP_FILES_BASE_CXX) $(SEP_FILES_BASE_JAVA)
@@ -158,10 +160,6 @@ GEN_FILES_FORMFEED = ${foreach nm, $(SEP_FILES_PLUS),          ../suite/$(nm).fo
 GEN_FILES_PREPROC= ${foreach nm, $(SEP_FILES_PLUS), ../suite/$(nm).preproc.cpp.xml} \
 	           ${foreach nm, $(SEP_FILES_BASE_C_ALL), ../suite/$(nm).preproc.c.xml} \
 		   ../suite/extra.preproc.c.xml ../suite/extra.preproc.cpp.xml
-
-get_language=srcml2src -l $1
-
-language2extension=./get_extension.py $1
 
 %.cpp : %.cpp.xml
 	${XSLT_IDENTITY} $< > $@
