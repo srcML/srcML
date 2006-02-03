@@ -5,14 +5,11 @@
 # Michael L. Collard
 # collard@cs.kent.edu
 
-import sys
 import os.path
 import subprocess
 
 import option
 import status
-
-debug = 0
 
 def check(command, input, output):
 
