@@ -7,10 +7,7 @@
 
 import sys
 import os.path
-import string
-import re
 import subprocess
-import difflib
 
 import option
 import status
@@ -23,7 +20,7 @@ def check(command, input, output):
 	
 	line = execute(command, input)
 
-	return validate(string.strip(output), string.strip(line))
+	return validate(output.strip(), line.strip())
 	
 def validate(org, gen):
 	if org != gen:
@@ -64,7 +61,7 @@ def src2srcmlversion():
 	last_line = subprocess.Popen([srcmltranslator, "-V"],
 				     stdout=subprocess.PIPE).communicate()[0]
 
-	return string.strip(last_line)
+	return last_line.strip()
 
 # version of srcml2src
 def srcml2srcversion():
@@ -72,7 +69,7 @@ def srcml2srcversion():
 	last_line = subprocess.Popen([srcmlutility, "-V"],
 				     stdout=subprocess.PIPE).communicate()[0]
 
-	return string.strip(last_line)
+	return last_line.strip()
 
 srcmltranslator = os.environ.get("SRC2SRCML_BIN")
 if srcmltranslator == "":
