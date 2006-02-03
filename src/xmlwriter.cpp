@@ -142,6 +142,9 @@ xmlTextWriterPtr xmlNewTextWriterFilename(const char* filename, int compression)
   else
     writer->pout = new std::ofstream(filename);
 
+  // no open elements
+  writer->open_start = false;
+
   return writer; 
 }
 
