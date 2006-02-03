@@ -1,6 +1,13 @@
 CHANGES
 
 Trunk
+	Copy non-standard attributes on nested unit in srcml2src.
+
+	Add preliminary option "--info" to srcml2src.
+
+
+Jan-30-2006-Beta
+
 	Better error detection for unit numbers greater than the number of units.
 
 	Remove special handling for ANTLR bug in 2.7.5.

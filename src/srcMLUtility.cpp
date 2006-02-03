@@ -324,18 +324,7 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
   attribute = xmlTextReaderGetAttribute(reader, BAD_CAST "language");
   if (attribute)
     unit_language = attribute;
-  /*
-  // copy all attributes from current unit (may be main unit)
-  while (xmlTextReaderMoveToNextAttribute(reader)) {
-    xmlTextWriterWriteAttribute(writer, xmlTextReaderConstName(reader), xmlTextReaderConstValue(reader));
 
-    if (strcmp((char*) xmlTextReaderConstName(reader), "language") == 0)
-      language_flag = true;
-
-    if (strcmp((char*) xmlTextReaderConstName(reader), "version") == 0)
-      version_flag = true;
-  }
-  */
   if (unit_language) {
     xmlTextWriterWriteAttribute(writer, BAD_CAST "language", unit_language);
     xmlFree(unit_language);
@@ -356,6 +345,16 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
     xmlFree(unit_version);
   }
 
+  // copy all other attributes from current unit (may be main unit)
+  while (xmlTextReaderMoveToNextAttribute(reader)) {
+
+    if ((strcmp((char*) xmlTextReaderConstName(reader), "language") != 0) &&
+	(strcmp((char*) xmlTextReaderConstName(reader), "dir") != 0) &&
+	(strcmp((char*) xmlTextReaderConstName(reader), "filename") != 0) &&
+	(strcmp((char*) xmlTextReaderConstName(reader), "version") != 0))
+
+      xmlTextWriterWriteAttribute(writer, xmlTextReaderConstName(reader), xmlTextReaderConstValue(reader));
+  }
   
   // process the nodes in this unit
   while (1) {
