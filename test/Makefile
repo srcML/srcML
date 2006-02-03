@@ -103,7 +103,7 @@ SEP_FILES_BASE_COMMON=comment string variable_names expression decl_simple if fo
 # base for all languages generated from original cases
 GEN_FILES_SEP_BASE=while ifnestcond return function_decl ifblock
 
-# base for C++ language generated from original cases
+# base for C++ generated from original cases
 GEN_FILES_SEP_BASE_CXX=throw constructor_explicit destructor_virtual function_const struct union
 
 # basic generated C++ files
@@ -112,10 +112,10 @@ GEN_FILES_SEP= $(GEN_FILES_SEP_BASE) $(GEN_FILES_SEP_BASE_CXX)
 # generated cases for C++ from base
 GEN_FILES_PART=${foreach nm, $(GEN_FILES_SEP), ../suite/$(nm).cpp.xml}
 
-# base for C language only
+# base for C only
 SEP_FILES_BASE_C=functionkr 
 
-# base for C family of languages
+# base for C family
 SEP_FILES_BASE_C_FAMILY=asm macro cstruct typedef extern main function_pointer decl_struct
 
 # base for object-oriented languages
@@ -141,25 +141,25 @@ GEN_FILES_C= ${foreach nm, $(SEP_FILES_BASE_C_ALL), ../suite/$(nm).c.xml}
 
 SEP_FILES_PLUS= ${SEP_FILES} ${GEN_FILES_SEP}
 
-GEN_FILES_ALL_JAVA=${foreach nm, $(SEP_FILES_BASE_JAVA_ALL), ../suite/$(nm).all.java.xml}
+##
+# generate cases for all
+GEN_FILES_ALL= ${foreach nm, $(SEP_FILES_PLUS), ../suite/$(nm).all.cpp.xml} ../suite/extra.all.cpp.xml \
+	       ${foreach nm, $(SEP_FILES_BASE_JAVA_ALL), ../suite/$(nm).all.java.xml} \
+	       ${foreach nm, $(SEP_FILES_BASE_C_ALL), ../suite/$(nm).all.c.xml} ../suite/extra.all.c.xml
 
-GEN_FILES_ALL_C=${foreach nm, $(SEP_FILES_BASE_C_ALL), ../suite/$(nm).all.c.xml} ../suite/extra.all.c.xml
-
-GEN_FILES_ALL= ${foreach nm, $(SEP_FILES_PLUS), ../suite/$(nm).all.cpp.xml} ../suite/extra.all.cpp.xml
-
-# generated test cases for blocks
+# generated cases for blocks
 GEN_FILES_BLOCK= ${foreach nm, $(SEP_FILES_PLUS),          ../suite/$(nm).block.cpp.xml} \
                  ${foreach nm, $(SEP_FILES_BASE_C_ALL),    ../suite/$(nm).block.c.xml} \
                  ${foreach nm, $(SEP_FILES_BASE_JAVA_ALL), ../suite/$(nm).block.java.xml} \
 		 ../suite/extra.block.c.xml ../suite/extra.block.cpp.xml
 
-# generated test cases for comments
+# generated cases for comments
 GEN_FILES_COMMENT= ${foreach nm, $(SEP_FILES_PLUS),          ../suite/$(nm).comment.cpp.xml} \
 		   ${foreach nm, $(SEP_FILES_BASE_C_ALL),    ../suite/$(nm).comment.c.xml} \
 		   ${foreach nm, $(SEP_FILES_BASE_JAVA_ALL), ../suite/$(nm).comment.java.xml} \
 		   ../suite/extra.comment.c.xml ../suite/extra.comment.cpp.xml
 
-# generated test cases for formfeed
+# generated cases for formfeed
 GEN_FILES_FORMFEED = ${foreach nm, $(SEP_FILES_PLUS),          ../suite/$(nm).formfeed.cpp.xml} \
 		     ${foreach nm, $(SEP_FILES_BASE_C_ALL),    ../suite/$(nm).formfeed.c.xml} \
 		     ${foreach nm, $(SEP_FILES_BASE_JAVA_ALL), ../suite/$(nm).formfeed.java.xml} \
@@ -224,7 +224,7 @@ GEN_FILES_PREPROC= ${foreach nm, $(SEP_FILES_PLUS), ../suite/$(nm).preproc.cpp.x
 %.c.xml : %.cpp.xml
 	${XSLT_SETLANGUAGE_C} $< > $@
 
-GEN_FILES=${GEN_FILES_PART} ${GEN_FILES_ALL} ${GEN_FILES_BLOCK} ${GEN_FILES_COMMENT} ${GEN_FILES_PREPROC} ${GEN_FILES_FORMFEED} ../suite/constructor.cpp.xml $(GEN_FILES_JAVA) $(GEN_FILES_ALL_JAVA) $(GEN_FILES_C) $(GEN_FILES_ALL_C)
+GEN_FILES=${GEN_FILES_PART} ${GEN_FILES_ALL} ${GEN_FILES_BLOCK} ${GEN_FILES_COMMENT} ${GEN_FILES_PREPROC} ${GEN_FILES_FORMFEED} ../suite/constructor.cpp.xml $(GEN_FILES_JAVA) $(GEN_FILES_C)
 
 GEN_FILES_CPP_BASE=${GEN_FILES_SEP} ${foreach nm, $(SEP_FILES_PLUS), $(nm).all} ${foreach nm, $(SEP_FILES_PLUS), $(nm).block} ${foreach nm, $(SEP_FILES_PLUS), $(nm).comment} ${foreach nm, $(SEP_FILES_PLUS), $(nm).preproc}
 
