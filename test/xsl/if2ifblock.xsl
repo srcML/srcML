@@ -22,10 +22,6 @@
 
 <xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8" standalone="yes"/>
 
-<xsl:template match="/src:unit/src:unit">
-
-</xsl:template>
-
 <!-- change the filename attribute on the unit from "if" to "while" -->
 <xsl:template match="src:unit/@dir">
 	<xsl:attribute name="dir">if</xsl:attribute>
@@ -33,7 +29,7 @@
 
 
 <!-- filter the then elements, but not the contents of the then -->
-<xsl:template match="src:if/src:then[not(.//src:if)]/src:* | src:if/src:else[not(.//src:if)]/src:*">
+<xsl:template match="src:if/src:then[not(.//src:if)]/src* | src:if/src:else[not(.//src:if)]/src:*">
   <src:block>{ <xsl:copy-of select="."/> }</src:block>
 </xsl:template>
 
