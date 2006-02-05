@@ -168,6 +168,7 @@ void srcMLUtility::extract_xml(const char* ofilename, int unitnumber) {
 
   // Set the encoding to that of the outer, root unit element
   encoding = (const char*) xmlTextReaderConstEncoding(reader);
+  handler = xmlFindCharEncodingHandler(encoding);
 
   // skip to the proper nested unit
   skiptounit(reader, unitnumber);
@@ -208,7 +209,11 @@ int mkpath(const char* path
   const std::string spath = path;
 
   int pos = 0;
+#ifdef __GNUC__
+  while ((unsigned int) (pos = spath.find('/', pos + 1)) != std::string::npos) {
+#else
   while ((pos = (int) spath.find('/', pos + 1)) != std::string::npos) {
+#endif
 
     // make the directory path so far
     if (spath.substr(0, pos).c_str() != ".") {
@@ -299,7 +304,18 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
   xmlTextWriterPtr writer = xmlNewTextWriterFilename(filename, isoption(options, OPTION_COMPRESSED));
 
   // issue the xml declaration
+  /** FIXME Cannot use xmlTextWriterStartDocument due to problem with my own conversion */
+#ifdef LIBXML_ENABLED
+  outputText(BAD_CAST "<?xml version=\"", writer, false);
+  outputText(BAD_CAST XML_VERSION, writer, false);
+  outputText(BAD_CAST "\" encoding=\"", writer, false);
+  outputText(BAD_CAST encoding, writer, false);
+  outputText(BAD_CAST "\" standalone=\"", writer, false);
+  outputText(BAD_CAST XML_DECLARATION_STANDALONE, writer, false);
+  outputText(BAD_CAST "\"?>\n", writer, false);
+#else
   xmlTextWriterStartDocument(writer, XML_VERSION, encoding, XML_DECLARATION_STANDALONE);
+#endif
 
   // output main unit tag
   xmlTextWriterStartElement(writer, BAD_CAST "unit");
