@@ -12,16 +12,16 @@ WD=${shell pwd}
 PHONY : testbase
 testbase : gen
 
-PHONY : shorttest
-shorttest : testbase
+PHONY : short
+short : testbase
 	export SRC2SRCML=${SRC2SRCML}; export SRCML2SRC=${SRCML2SRC}; time ./testsuite.py ".*\.all|macro"
 
-PHONY : longtest
-longtest : testbase
+PHONY : 
+full : testbase
 	export SRC2SRCML=${SRC2SRCML}; export SRCML2SRC=${SRCML2SRC}; time ./testsuite.py
 
-PHONY : cpptest
-cpptest : testbase
+PHONY : cpp
+cpp : testbase
 	export SRC2SRCML=${SRC2SRCML}; export SRCML2SRC=${SRCML2SRC}; time ./testsuite.py ".*" C++
 
 XSLT=/usr/bin/xsltproc
@@ -302,5 +302,5 @@ gen : ${GEN_FILES}
 ../suite/ifblock.cpp.xml : ../suite/if.cpp.xml ${XSLT_IF2IFBLOCK_XSL}
 	${XSLT_IF2IFBLOCK} $< > $@
 
-cleangen :
+clean :
 	rm -f ${GEN_FILES}

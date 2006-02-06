@@ -235,6 +235,7 @@ check([srcmltranslator, option.NESTED_FLAG, "sub/a.cpp", "-"], "", nestedfile1)
 
 filelist = """
 sub/a.cpp
+# fff
 sub/b.cpp
 """
 
