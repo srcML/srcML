@@ -1,6 +1,7 @@
 CHANGES
 
 Trunk
+	Put (temporary) fix for encoding problem with srcml2src --xml mode.
 
 	Removed unused MarkerToken.
 
