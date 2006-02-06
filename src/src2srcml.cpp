@@ -155,12 +155,12 @@ int main(int argc, char* argv[]) {
 
   int exit_status = EXIT_SUCCESS;
 
+  const char* src_encoding = DEFAULT_TEXT_ENCODING;
   int language = DEFAULT_LANGUAGE;
   const char* xml_encoding = DEFAULT_XML_ENCODING;
   const char* given_directory = "";
   const char* given_filename = "";
   const char* given_version = "";
-  const char* src_encoding = DEFAULT_TEXT_ENCODING;
 
   // process all command line options
   int options = 0;
@@ -253,14 +253,8 @@ int main(int argc, char* argv[]) {
 	exit(STATUS_LANGUAGE_MISSING);
       } else {
 
-	// move to parameter
-	++curarg;
-
 	// extract parameter
-	langparam = argv[curarg];
-
-	// move over parameter
-	++curarg;
+	langparam = argv[(++curarg)++];
       }
 
       // validate language selected
@@ -296,14 +290,8 @@ int main(int argc, char* argv[]) {
 	exit(STATUS_XMLENCODING_MISSING);
       } else {
 
-	// move to parameter
-	++curarg;
-
 	// extract parameter
-	xml_encoding = argv[curarg];
-
-	// move over parameter
-	++curarg;
+	xml_encoding = argv[(++curarg)++];
       }
 
 #ifdef LIBXML_ENABLED
@@ -334,14 +322,9 @@ int main(int argc, char* argv[]) {
 	std::cerr << NAME << ": text encoding selected but not specified." << '\n';
 	exit(STATUS_SRCENCODING_MISSING);
       } else {
-	// move to parameter
-	++curarg;
 
 	// extract parameter
-	src_encoding = argv[curarg];
-
-	// move over parameter
-	++curarg;
+	src_encoding = argv[(++curarg)++];
       }
 
       // validate source encoding
@@ -373,14 +356,9 @@ int main(int argc, char* argv[]) {
 	std::cerr << NAME << ": invalid option -- Directory must be specified.\n";
 	exit(STATUS_DIRECTORY_MISSING);
       } else {
-	// move to parameter
-	++curarg;
 
 	// extract parameter
-	given_directory = argv[curarg];
-
-	// move over parameter
-	++curarg;
+	given_directory = argv[(++curarg)++];
       }
     }
 
@@ -404,14 +382,9 @@ int main(int argc, char* argv[]) {
 
       // filename is separate parameter
       } else {
-	// move to parameter
-	++curarg;
 
 	// extract parameter
-	given_filename = argv[curarg];
-
-	// move over parameter
-	++curarg;
+	given_filename = argv[(++curarg)++];
       }
     }
 
@@ -435,14 +408,9 @@ int main(int argc, char* argv[]) {
 
       // filename is separate parameter
       } else {
-	// move to parameter
-	++curarg;
 
 	// extract parameter
-	given_version = argv[curarg];
-
-	// move over parameter
-	++curarg;
+	given_version = argv[(++curarg)++];
       }
     }
 
