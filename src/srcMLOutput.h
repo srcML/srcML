@@ -89,10 +89,13 @@ class srcMLOutput : public srcMLParserTokenTypes {
   // fill the element names array
   static void fillElementNames();
 
+  // standard processing of text
   void processText(const std::string&);
 
+  // handler for optional literal tokens
   void processOptional(const antlr::RefToken& token, const char* attr_name, const char* attr_value);
 
+  // token handlers
   void processText(const antlr::RefToken& token);
   void processUnit(const antlr::RefToken& token);
   void processAccess(const antlr::RefToken& token);
@@ -109,6 +112,7 @@ class srcMLOutput : public srcMLParserTokenTypes {
   // method pointer for token processing dispatch
   typedef void (srcMLOutput::*PROCESS_PTR)(const antlr::RefToken & );
 
+  // table of method pointers for token processing dispatch
   static PROCESS_PTR process_table[END_ELEMENT_TOKEN];
 };
 
