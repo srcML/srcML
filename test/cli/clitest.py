@@ -242,6 +242,7 @@ os.system('echo -e "\nsub/a.cpp\nsub/b.cpp\n" > filelistab')
 
 check([srcmltranslator, option.FILELIST_FLAG, "filelistab"], "", nestedfile)
 
+
 ####
 # srcml2src
 
@@ -350,5 +351,8 @@ validate(getreturn([srcmlutility, option.UNIT_FLAG, missing_unit, option.XML_FLA
 validate(getreturn([srcmlutility, option.UNIT_FLAG, missing_unit, option.FILENAME_FLAG], nestedfile), status.STATUS_UNIT_INVALID)
 validate(getreturn([srcmlutility, option.UNIT_FLAG, missing_unit, option.DIRECTORY_FLAG], nestedfile), status.STATUS_UNIT_INVALID)
 validate(getreturn([srcmlutility, option.UNIT_FLAG, missing_unit, option.SRCVERSION_FLAG], nestedfile), status.STATUS_UNIT_INVALID)
+
+print src2srcmlversion()
+print srcml2srcversion()
 
 exit
