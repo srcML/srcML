@@ -85,10 +85,10 @@ void srcMLTranslator::translate(const char* src_filename,
       throw FileError();
 
   } catch (const std::exception& e) {
-      std::cout << "SRCML Exception: " << e.what() << std::endl;
+      std::cerr << "SRCML Exception: " << e.what() << std::endl;
   }
   catch (...) {
-      std::cout << "ERROR" << std::endl;
+      std::cerr << "ERROR" << std::endl;
   }
 }
 

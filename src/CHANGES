@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Change output of errors in srcMLTranslator to std::cerr.
+	
 	Put (temporary) fix for encoding problem with srcml2src --xml mode.
 
 	Removed unused MarkerToken.
