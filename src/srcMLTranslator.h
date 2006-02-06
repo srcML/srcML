@@ -45,7 +45,8 @@ class srcMLTranslator : public Language {
 		  int options);
 
   // translate from input stream to output stream
-  virtual void translate(const char* fullfilename, const char* directory = "", const char* filename = "", const char* version ="");
+  virtual void translate(const char* srcml_filename, const char* unit_directory = "",
+			 const char* unit_filename = "", const char* unit_version ="");
 
   // destructor
   virtual ~srcMLTranslator();
