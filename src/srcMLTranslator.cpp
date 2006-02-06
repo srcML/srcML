@@ -40,8 +40,7 @@ srcMLTranslator::srcMLTranslator(int language,
 				 int op
 				 )
   : Language(language), options(op),
-    out(0, getLanguageString(), src_encoding, options, filename, xml_encoding) {
-
+    out(0, getLanguageString(), src_encoding, options, xml_encoding) {
 
    out.startconsumeAll(filename);
 

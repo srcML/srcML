@@ -48,7 +48,6 @@ class srcMLOutput : public srcMLParserTokenTypes {
 	      const char* language, 
 	      const char* encoding,
 	      int op = 0, 
-	      const char* filename = "",
 	      const char* src_encoding = ""
 	      );
 
