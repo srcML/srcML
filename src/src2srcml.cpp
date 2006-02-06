@@ -63,6 +63,8 @@ const char* EXAMPLE_XML_FILENAME="foo.cpp.xml";
 
 const char* GAP = "                                  ";
 
+const char FILELIST_COMMENT = '#';
+
 // filename part of path
 std::string get_filename(const std::string& path);
 
@@ -508,8 +510,8 @@ int main(int argc, char* argv[]) {
       // extract the filename from the line
       std::string infilename = line.substr(0, line.find_first_of(' '));
 
-      // skip blank lines
-      if (infilename == "" || infilename[0] == '#')
+      // skip blank lines or comment lines
+      if (infilename == "" || infilename[0] == FILELIST_COMMENT)
 	continue;
 
       // in verbose mode output the currently processed filename
