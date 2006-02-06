@@ -124,8 +124,10 @@ void srcMLOutput::consume(const char* directory, const char* filename, const cha
   unit_filename = filename;
   unit_version = version;
 
+  // consume all input until EOF
   while (consume_next() != antlr::Token::EOF_TYPE) {
 
+    // in interactive mode flush after each token is discovered
     if (isoption(OPTION_INTERACTIVE))
       xmlTextWriterFlush(xout);
   }
