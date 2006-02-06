@@ -20,6 +20,10 @@ PHONY : longtest
 longtest : testbase
 	export SRC2SRCML=${SRC2SRCML}; export SRCML2SRC=${SRCML2SRC}; time ./testsuite.py
 
+PHONY : cpptest
+cpptest : testbase
+	export SRC2SRCML=${SRC2SRCML}; export SRCML2SRC=${SRCML2SRC}; time ./testsuite.py ".*" C++
+
 XSLT=/usr/bin/xsltproc
 
 # merge separate srcML units into one
