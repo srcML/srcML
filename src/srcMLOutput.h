@@ -37,9 +37,6 @@
 #include "srcMLException.h"
 
 class srcMLOutput : public srcMLParserTokenTypes {
- private:
-  TokenStream* input;
-
  public:
 
   srcMLOutput(TokenStream* ints, 
@@ -66,7 +63,8 @@ class srcMLOutput : public srcMLParserTokenTypes {
 
   ~srcMLOutput() {}
 
- protected:
+ private:
+  TokenStream* input;
 
   const char* unit_language;
   const char* unit_dir;
