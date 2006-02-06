@@ -83,36 +83,54 @@ void output_help(const char* name) {
               << '\n'
 	      << "Options:"  << '\n'
               << std::left
-	      << "  " << HELP_FLAG_SHORT        << ", " << setw(COL) <<  HELP_FLAG        << "display this help and exit\n"
-	      << "  " << VERSION_FLAG_SHORT     << ", " << setw(COL) <<  VERSION_FLAG     << "display version number and exit\n"
+	      << "  " << HELP_FLAG_SHORT        << ", " << setw(COL) <<  HELP_FLAG
+	      << "display this help and exit\n"
+	      << "  " << VERSION_FLAG_SHORT     << ", " << setw(COL) <<  VERSION_FLAG
+	      << "display version number and exit\n"
               << '\n'
-	      << "  " << LANGUAGE_FLAG_SHORT    << ", " << setw(COL) <<  LANGUAGE_FLAG_FULL 
+	      << "  " << LANGUAGE_FLAG_SHORT    << ", " << setw(COL) << LANGUAGE_FLAG_FULL 
 	      << "set the language to " << LANGUAGE_C << ", " << LANGUAGE_CXX << ", or " << LANGUAGE_JAVA << "\n"
-	      << "  " << DIRECTORY_FLAG_SHORT   << ", " << setw(COL) <<  DIRECTORY_FLAG_FULL << "set the directory attribute to DIR\n"
-	      << "  " << FILENAME_FLAG_SHORT    << ", " << setw(COL) <<  FILENAME_FLAG_FULL  << "set the filename attribute to FILE\n"
-	      << "  " << SRCVERSION_FLAG_SHORT  << ", " << setw(COL) <<  SRCVERSION_FLAG_FULL  << "set the version attribute to VER\n"
+	      << "  " << DIRECTORY_FLAG_SHORT   << ", " << setw(COL) <<  DIRECTORY_FLAG_FULL
+	      << "set the directory attribute to DIR\n"
+	      << "  " << FILENAME_FLAG_SHORT    << ", " << setw(COL) <<  FILENAME_FLAG_FULL
+	      << "set the filename attribute to FILE\n"
+	      << "  " << SRCVERSION_FLAG_SHORT  << ", " << setw(COL) <<  SRCVERSION_FLAG_FULL
+	      << "set the version attribute to VER\n"
 #ifdef LIBXML_ENABLED
-	      << "  " << TEXTENCODING_FLAG_SHORT        << ", " << setw(COL) <<  TEXTENCODING_FLAG_FULL      << "set the input source encoding to ENC (default:  based on locale" << ") \n"
+	      << "  " << TEXTENCODING_FLAG_SHORT        << ", " << setw(COL) <<  TEXTENCODING_FLAG_FULL
+	      << "set the input source encoding to ENC (default:  based on locale" << ") \n"
 #endif
-	      << "  " << ENCODING_FLAG_SHORT    << ", " << setw(COL) <<  ENCODING_FLAG_FULL << "set the output XML encoding to ENC (default:  "
+	      << "  " << ENCODING_FLAG_SHORT    << ", " << setw(COL) <<  ENCODING_FLAG_FULL
+	      << "set the output XML encoding to ENC (default:  "
 	      << DEFAULT_XML_ENCODING << ") \n"
               << '\n'
-	      << "  " << NESTED_FLAG_SHORT      << ", " << setw(COL) <<  NESTED_FLAG      << "store all input source files in one compound srcML document\n"
-	      << "  " << FILELIST_FLAG_SHORT    << ", " << setw(COL) <<  FILELIST_FLAG    << "treat input file as a list of source files\n"
+	      << "  " << NESTED_FLAG_SHORT      << ", " << setw(COL) <<  NESTED_FLAG
+	      << "store all input source files in one compound srcML document\n"
+	      << "  " << FILELIST_FLAG_SHORT    << ", " << setw(COL) <<  FILELIST_FLAG
+	      << "treat input file as a list of source files\n"
 	      << '\n'
 #ifdef LIBXML_ENABLED
-	      << "  " << COMPRESSED_FLAG_SHORT  << ", " << setw(COL) <<  COMPRESSED_FLAG  << "output in gzip format\n"
+	      << "  " << COMPRESSED_FLAG_SHORT  << ", " << setw(COL) <<  COMPRESSED_FLAG
+	      << "output in gzip format\n"
 #endif
-	      << "  " << INTERACTIVE_FLAG_SHORT << ", " << setw(COL) <<  INTERACTIVE_FLAG << "low-latency output\n"
-	      << "  " << DEBUG_FLAG_SHORT       << ", " << setw(COL) <<  DEBUG_FLAG       << "debug translation errors with special namespace\n"
-              << "  " << VERBOSE_FLAG_SHORT     << ", " << setw(COL) << VERBOSE_FLAG      << "verbose output to standard error\n"
+	      << "  " << INTERACTIVE_FLAG_SHORT << ", " << setw(COL) <<  INTERACTIVE_FLAG
+	      << "low-latency output\n"
+	      << "  " << DEBUG_FLAG_SHORT       << ", " << setw(COL) <<  DEBUG_FLAG
+	      << "debug translation errors with special namespace\n"
+              << "  " << VERBOSE_FLAG_SHORT     << ", " << setw(COL) << VERBOSE_FLAG
+	      << "verbose output to standard error\n"
 	      << '\n'
 	      << "Examples:  " << '\n'
-	      << "  " << name << "                      " << GAP << "(read from standard input, write to standard output)" << '\n'
-	      << "  " << name << " main.cpp             " << GAP << "(read from file main.cpp, write to standard output)" << '\n'
-	      << "  " << name << " main.cpp main.cpp.xml" << GAP << "(read from file main.cpp, write to file main.cpp.xml)" << '\n'
-	      << "  " << name << " -                    " << GAP << "(read from standard input, write to standard output)" << '\n'
-	      << "  " << name << " - main.cpp.xml       " << GAP << "(read from standard input, write to file main.cpp.xml)" << '\n'
+	      << "  " << name << "                      " << GAP
+	      << "(read from standard input, write to standard output)" << '\n'
+	      << "  " << name << " main.cpp             " << GAP
+	      << "(read from file main.cpp, write to standard output)" << '\n'
+	      << "  " << name << " main.cpp main.cpp.xml" << GAP
+	      << "(read from file main.cpp, write to file main.cpp.xml)" << '\n'
+	      << "  " << name << " -                    " << GAP
+	      << "(read from standard input, write to standard output)" << '\n'
+	      << "  " << name << " - main.cpp.xml       " << GAP
+	      << "(read from standard input, write to file main.cpp.xml)" << '\n'
 	      << "  " << name << " --directory=src --filename=main.cpp - main.cpp.xml     "
 	      << "(element unit attributes dir \"src\", filename \"main.cpp\")" << '\n'
 #ifdef LIBXML_ENABLED
