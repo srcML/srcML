@@ -38,14 +38,14 @@
 srcMLTranslator::srcMLTranslator(int language,
 				 const char* src_encoding,
 				 const char* xml_encoding,
-				 const char* ofilename,
+				 const char* filename,
 				 int op
 				 )
   : Language(language), options(op),
-    out(0, getLanguageString(), src_encoding, options, ofilename, xml_encoding) {
+    out(0, getLanguageString(), src_encoding, options, filename, xml_encoding) {
 
 
-   out.startconsumeAll(ofilename);
+   out.startconsumeAll(filename);
 
    if ((options & OPTION_NESTED) > 0)
 
