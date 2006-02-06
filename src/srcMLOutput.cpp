@@ -209,38 +209,35 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     // start of main tag
     xmlTextWriterStartElement(xout, BAD_CAST "unit");
 
+    // outer units have namespaces
     if (outer) {
-    // main srcML namespace declaration
-    xmlTextWriterWriteAttribute(xout, BAD_CAST "xmlns", BAD_CAST SRCML_SRC_NS_URI);
 
-    // main cpp namespace declaration
-    xmlTextWriterWriteAttribute(xout, BAD_CAST "xmlns:cpp", BAD_CAST SRCML_CPP_NS_URI);
+      // main srcML namespace declaration
+      xmlTextWriterWriteAttribute(xout, BAD_CAST "xmlns", BAD_CAST SRCML_SRC_NS_URI);
 
-    // optional debugging xml namespace
-    if (isoption(OPTION_DEBUG))
-      xmlTextWriterWriteAttribute(xout, BAD_CAST "xmlns:srcerr", BAD_CAST SRCML_ERR_NS_URI);
+      // main cpp namespace declaration
+      xmlTextWriterWriteAttribute(xout, BAD_CAST "xmlns:cpp", BAD_CAST SRCML_CPP_NS_URI);
 
+      // optional debugging xml namespace
+      if (isoption(OPTION_DEBUG))
+	xmlTextWriterWriteAttribute(xout, BAD_CAST "xmlns:srcerr", BAD_CAST SRCML_ERR_NS_URI);
     }
 
     // language attribute
-    if (language[0]) {
+    if (language[0])
       xmlTextWriterWriteAttribute(xout, BAD_CAST "language", BAD_CAST language);
-    }
 
     // directory attribute
-    if (dir[0]) {
+    if (dir[0])
       xmlTextWriterWriteAttribute(xout, BAD_CAST "dir", BAD_CAST dir);
-    }
 
     // filename attribute
-    if (filename[0]) {
+    if (filename[0])
       xmlTextWriterWriteAttribute(xout, BAD_CAST "filename", BAD_CAST filename);
-    }
 
     // version attribute
-    if (version[0]) {
+    if (version[0])
       xmlTextWriterWriteAttribute(xout, BAD_CAST "version", BAD_CAST version);
-    }
 
     // leave space for nested unit
     if (outer && isoption(OPTION_NESTED))
