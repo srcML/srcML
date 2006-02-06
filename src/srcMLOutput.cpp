@@ -247,12 +247,6 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
       processText("\n\n");
 }
 
-void srcMLOutput::endUnit() {
-
-  // end the unit
-  xmlTextWriterEndElement(xout);
-}
-
 void srcMLOutput::processUnit(const antlr::RefToken& token) {
 
   if (isstart(token)) {
@@ -261,7 +255,8 @@ void srcMLOutput::processUnit(const antlr::RefToken& token) {
 
   } else {
 
-    endUnit();
+    // end the unit
+    xmlTextWriterEndElement(xout);
 
     // leave a blank line before next nested unit even the last one
     if (isoption(OPTION_NESTED))

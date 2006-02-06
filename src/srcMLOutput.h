@@ -66,8 +66,6 @@ class srcMLOutput : public srcMLParserTokenTypes {
 
   void startUnit(const char* language, const char* dir, const char* filename, const char* version, bool outer);
 
-  void endUnit();
-
   ~srcMLOutput() {}
 
  protected:
