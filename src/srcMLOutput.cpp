@@ -53,7 +53,8 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 			 int op, 
 			 const char* filename,
 			 const char* xml_enc)
-  : input(ints), dir(""), version(""), language(l), options(op), xml_encoding(xml_enc)
+  : input(ints), unit_language(l), unit_dir(""), unit_filename(""),
+    unit_version(""), options(op), xml_encoding(xml_enc)
 {
   // setup an output handler
   handler = xmlFindCharEncodingHandler(src_encoding);
@@ -120,9 +121,9 @@ void srcMLOutput::consume(const char* ndir, const char* nfilename, const char* n
 
   // store directory and filename so that first occurrence of unit element
   // will be correct
-  dir = ndir;
-  filename = nfilename;
-  version = nversion;
+  unit_dir = ndir;
+  unit_filename = nfilename;
+  unit_version = nversion;
 
   while (consume_next() != antlr::Token::EOF_TYPE) {
 
@@ -254,7 +255,7 @@ void srcMLOutput::processUnit(const antlr::RefToken& token) {
 
   if (isstart(token)) {
 
-    startUnit(language, dir, filename, version, !isoption(OPTION_NESTED));
+    startUnit(unit_language, unit_dir, unit_filename, unit_version, !isoption(OPTION_NESTED));
 
   } else {
 
@@ -325,7 +326,7 @@ void srcMLOutput::processBlockComment(const antlr::RefToken& token) {
   xmlTextWriterStartElement(xout, BAD_CAST s);
 
   xmlTextWriterWriteAttribute(xout, BAD_CAST "type",
-     BAD_CAST (strcmp(language, "Java") == 0 && token->getText().substr(0, 3) == "/**" ? JAVADOC_COMMENT_ATTR : BLOCK_COMMENT_ATTR));
+     BAD_CAST (strcmp(unit_language, "Java") == 0 && token->getText().substr(0, 3) == "/**" ? JAVADOC_COMMENT_ATTR : BLOCK_COMMENT_ATTR));
 
   processText(token);
 

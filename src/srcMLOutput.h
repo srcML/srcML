@@ -72,10 +72,10 @@ class srcMLOutput : public srcMLParserTokenTypes {
 
  protected:
 
-  const char* filename;
-  const char* dir;
-  const char* version;
-  const char* language;
+  const char* unit_language;
+  const char* unit_dir;
+  const char* unit_filename;
+  const char* unit_version;
   int options;
   const char* rfilename;
   const char* xml_encoding;
