@@ -33,20 +33,21 @@
 #include "SegException.h"
 
 // constructor
-srcMLTranslator::srcMLTranslator(int language,
-				 const char* src_encoding,
-				 const char* xml_encoding,
-				 const char* filename,
+srcMLTranslator::srcMLTranslator(int language,                // programming language of source code
+				 const char* src_encoding,    // text encoding of source code
+				 const char* xml_encoding,    // xml encoding of result srcML file
+				 const char* srcml_filename,  // filename of result srcML file
 				 int op
 				 )
   : Language(language), options(op),
     out(0, getLanguageString(), src_encoding, xml_encoding, options) {
 
-   out.startconsumeAll(filename);
+  // start formation of output srcml document
+  out.startconsumeAll(srcml_filename);
 
-   if ((options & OPTION_NESTED) > 0)
-
-     out.startUnit(getLanguageString(), "", "", "", true);
+  // root unit for compound srcML documents
+  if ((options & OPTION_NESTED) > 0)
+    out.startUnit(getLanguageString(), "", "", "", true);
 }
 
 // translate from input stream to output stream
