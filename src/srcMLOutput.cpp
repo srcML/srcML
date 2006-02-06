@@ -124,10 +124,7 @@ void srcMLOutput::consume(const char* ndir, const char* nfilename, const char* n
   filename = nfilename;
   version = nversion;
 
-  while (true) {
-
-    if (consume_next() == antlr::Token::EOF_TYPE)
-      break;
+  while (consume_next() != antlr::Token::EOF_TYPE) {
 
     if (isoption(OPTION_INTERACTIVE))
       xmlTextWriterFlush(xout);
