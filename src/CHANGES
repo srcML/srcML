@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	With multiple input file and in verbose mode output name of file (as in file list mode).
+	
 	Change output of errors in srcMLTranslator to std::cerr.
 	
 	Put (temporary) fix for encoding problem with srcml2src --xml mode.

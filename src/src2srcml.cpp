@@ -565,6 +565,8 @@ int main(int argc, char* argv[]) {
   // translate multiple input filenames on command line
   } else {
 
+    int count = 0;    // keep count for verbose mode
+
     // translate in batch the input files on the command line extracting the directory and filename attributes
     // from the full path
     for (int i = input_arg_start; i <= input_arg_end; ++i) {
@@ -572,10 +574,19 @@ int main(int argc, char* argv[]) {
       std::string sdirectory = get_directory(path);
       std::string sfilename = get_filename(path);
 
+      // in verbose mode output the currently processed filename
+      if (isoption(options, OPTION_VERBOSE)) {
+	++count;
+	std::cerr << count << '\t' << path;
+      }
       try {
 	translator.translate(path, sdirectory.c_str(), sfilename.c_str());
       } catch (FileError) {
 	std::cerr << NAME << " error: file \'" << path << "\' does not exist." << "\n";
+      }
+
+      if (isoption(options, OPTION_VERBOSE)) {
+	std::cerr << '\n';
       }
     }
   }
