@@ -47,8 +47,8 @@ class srcMLOutput : public srcMLParserTokenTypes {
   srcMLOutput(TokenStream* ints, 
 	      const char* language, 
 	      const char* encoding,
-	      int op = 0, 
-	      const char* src_encoding = ""
+	      const char* src_encoding = "",
+	      int option = 0
 	      );
 
   static bool checkEncoding(const char* encoding);
