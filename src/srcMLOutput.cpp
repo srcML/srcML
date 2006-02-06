@@ -117,13 +117,12 @@ void srcMLOutput::endconsumeAll() {
   xmlFreeTextWriter(xout);
 }
 
-void srcMLOutput::consume(const char* ndir, const char* nfilename, const char* nversion) {
+void srcMLOutput::consume(const char* directory, const char* filename, const char* version) {
 
-  // store directory and filename so that first occurrence of unit element
-  // will be correct
-  unit_dir = ndir;
-  unit_filename = nfilename;
-  unit_version = nversion;
+  // store attributes so that first occurrence of unit element will be correct
+  unit_dir = directory;
+  unit_filename = filename;
+  unit_version = version;
 
   while (consume_next() != antlr::Token::EOF_TYPE) {
 
