@@ -6,19 +6,19 @@ OBJ_DIR = ../obj/
 
 WD=${shell pwd}
 
-#SRC2SRCML_BIN=${WD}/../bin/src2srcml
-#SRCML2SRC_BIN=${WD}/../bin/srcml2src
+#SRC2SRCML=${WD}/../bin/src2srcml
+#SRCML2SRC=${WD}/../bin/srcml2src
 
 PHONY : testbase
 testbase : gen
 
 PHONY : shorttest
 shorttest : testbase
-	export SRC2SRCML_BIN=${SRC2SRCML_BIN}; export SRCML2SRC_BIN=${SRCML2SRC_BIN}; time ./testsuite.py ".*\.all|macro"
+	export SRC2SRCML=${SRC2SRCML}; export SRCML2SRC=${SRCML2SRC}; time ./testsuite.py ".*\.all|macro"
 
 PHONY : longtest
 longtest : testbase
-	export SRC2SRCML_BIN=${SRC2SRCML_BIN}; export SRCML2SRC_BIN=${SRCML2SRC_BIN}; time ./testsuite.py
+	export SRC2SRCML=${SRC2SRCML}; export SRCML2SRC=${SRCML2SRC}; time ./testsuite.py
 
 XSLT=/usr/bin/xsltproc
 
