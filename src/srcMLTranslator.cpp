@@ -93,5 +93,6 @@ void srcMLTranslator::translate(const char* src_filename, const char* unit_direc
 // destructor
 srcMLTranslator::~srcMLTranslator() {
 
+  // end the srcML document
   out.endconsumeAll();
 }
