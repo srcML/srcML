@@ -49,10 +49,10 @@ bool srcMLOutput::checkEncoding(const char* encoding) {
 
 srcMLOutput::srcMLOutput(TokenStream* ints, 
 			 const char* l, 
-			 const char* xml_enc, 
+			 const char* src_encoding,
 			 int op, 
 			 const char* filename,
-			 const char* src_encoding)
+			 const char* xml_enc)
   : input(ints), dir(""), version(""), language(l), options(op), xml_encoding(xml_enc)
 {
   // setup an output handler
