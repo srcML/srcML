@@ -148,6 +148,7 @@ bool srcMLOutput::isoption(int flag) const {
 
 int srcMLOutput::consume_next() {
 
+
   const antlr::RefToken& token = input->nextToken();
 
   outputToken(token);
@@ -178,7 +179,7 @@ void srcMLOutput::processText(const std::string& str) {
   const char* inputbuffer = str.c_str();
   const unsigned int inputbuffer_size = (unsigned int) str.size();
 
-  // write out all of input buffer converted to utf8
+  // write out all of input buffer converted to utf8 in chunks
   unsigned int pos = 0;
   while (pos < inputbuffer_size) {
 
@@ -186,7 +187,7 @@ void srcMLOutput::processText(const std::string& str) {
     int buffer_left = inputbuffer_size - pos;
     int partialinputbuffer_size = buffer_left < UTF8BUFFER_SPACE ? buffer_left : UTF8BUFFER_SPACE;
     int utf8buffer_newsize = handler->input(utf8buffer, &utf8buffer_size,
-					    (const unsigned char*) (inputbuffer + pos), &partialinputbuffer_size);
+			    (const unsigned char*) (inputbuffer + pos), &partialinputbuffer_size);
 
     xmlTextWriterWriteRawLen(xout, BAD_CAST utf8buffer, utf8buffer_newsize);
 
