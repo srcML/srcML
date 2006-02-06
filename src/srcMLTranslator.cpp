@@ -57,8 +57,11 @@ void srcMLTranslator::translate(const char* src_filename,
 				const char* directory, const char* filename, const char* version) {
 
   try {
-      std::ifstream srcfile;
+      // assume standard input
       std::istream* pin = &std::cin;
+
+      // file input
+      std::ifstream srcfile;
       if (strcmp("-", src_filename) != 0) {
 	srcfile.open(src_filename);
 	if (!srcfile)
@@ -72,11 +75,14 @@ void srcMLTranslator::translate(const char* src_filename,
       // base stream parser srcML connected to lexical analyzer
       StreamMLParser<srcMLParser> parser(lexer, getLanguage());
 
+      // connect local parser to attribute for output
       out.setTokenStream(parser);
+
+      // parse and form srcML output with unit attributes
       out.consume(directory, filename, version);
 
   } catch (FileError) {
-    throw FileError();
+      throw FileError();
 
   } catch (const std::exception& e) {
       std::cout << "SRCML Exception: " << e.what() << std::endl;
@@ -89,5 +95,5 @@ void srcMLTranslator::translate(const char* src_filename,
 // destructor
 srcMLTranslator::~srcMLTranslator() {
 
-      out.endconsumeAll();
+  out.endconsumeAll();
 }
