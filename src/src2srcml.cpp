@@ -26,7 +26,6 @@
 #include <iomanip>
 #include <fstream>
 #include <string>
-#include <cstdlib>
 #include "version.h"
 #include "srcmlapps.h"
 #include "Options.h"
