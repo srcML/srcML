@@ -76,7 +76,7 @@ void srcMLTranslator::translate(const char* src_filename, const char* adir, cons
       StreamMLParser<srcMLParser> parser(lexer, getLanguage());
 
       out.setTokenStream(parser);
-      out.consume(fdir.c_str(), ffilename.c_str(), version);
+      out.consume(adir, afilename, version);
 
   } catch (FileError) {
     throw FileError();
