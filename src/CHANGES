@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Output encoding with new option "--info" in srcml2src.
+
 	With multiple input file and in verbose mode output name of file (as in file list mode).
 	
 	Change output of errors in srcMLTranslator to std::cerr.

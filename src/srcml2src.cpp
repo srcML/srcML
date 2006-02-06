@@ -447,6 +447,7 @@ int main(int argc, char* argv[]) {
       }
       }
 
+      std::cout << "Encoding: " << su.getencoding() << '\n';
       std::cout << "Language: " << su.attribute("language") << '\n';
       std::cout << "Directory: " << su.attribute("dir") << '\n';
       std::cout << "Filename: " << su.attribute("filename") << '\n';
