@@ -53,7 +53,8 @@ srcMLTranslator::srcMLTranslator(int language,
 }
 
 // translate from input stream to output stream
-void srcMLTranslator::translate(const char* src_filename, const char* adir, const char* afilename, const char* version) {
+void srcMLTranslator::translate(const char* src_filename,
+				const char* directory, const char* filename, const char* version) {
 
   try {
       std::ifstream srcfile;
@@ -65,10 +66,6 @@ void srcMLTranslator::translate(const char* src_filename, const char* adir, cons
 	pin = &srcfile;
       }
 
-      // hack to fix overwriting of parameters
-      std::string fdir(adir);
-      std::string ffilename(afilename);
-
       // srcML lexical analyzer from standard input
       KeywordCPPLexer lexer(*pin, getLanguage());
 
@@ -76,7 +73,7 @@ void srcMLTranslator::translate(const char* src_filename, const char* adir, cons
       StreamMLParser<srcMLParser> parser(lexer, getLanguage());
 
       out.setTokenStream(parser);
-      out.consume(adir, afilename, version);
+      out.consume(directory, filename, version);
 
   } catch (FileError) {
     throw FileError();
