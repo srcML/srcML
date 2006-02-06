@@ -51,8 +51,8 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
 }
 
 // translate from input stream to output stream
-void srcMLTranslator::translate(const char* src_filename,
-				const char* directory, const char* filename, const char* version) {
+void srcMLTranslator::translate(const char* src_filename, const char* unit_directory,
+				const char* unit_filename, const char* unit_version) {
 
   try {
       // assume standard input
@@ -77,7 +77,7 @@ void srcMLTranslator::translate(const char* src_filename,
       out.setTokenStream(parser);
 
       // parse and form srcML output with unit attributes
-      out.consume(directory, filename, version);
+      out.consume(unit_directory, unit_filename, unit_version);
 
   } catch (FileError) {
       throw FileError();
