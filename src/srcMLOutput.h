@@ -52,19 +52,20 @@ class srcMLOutput : public srcMLParserTokenTypes {
 	      const char* src_encoding = ""
 	      );
 
-  static bool checkEncoding(const char*);
+  static bool checkEncoding(const char* encoding);
 
   void setTokenStream(TokenStream& ints);
 
-  void consumeAll(const char* ofilename);
+  void consumeAll(const char* srcml_filename);
 
-  void startconsumeAll(const char* ofilename);
+  void startconsumeAll(const char* srcml_filename);
 
-  void consume(const char* dir, const char* filename, const char* version = "");
+  void consume(const char* unit_directory, const char* unit_filename, const char* unit_version = "");
 
   void endconsumeAll();
 
-  void startUnit(const char* language, const char* dir, const char* filename, const char* version, bool outer);
+  void startUnit(const char* language,
+		 const char* directory, const char* filename, const char* version, bool outer);
 
   ~srcMLOutput() {}
 
