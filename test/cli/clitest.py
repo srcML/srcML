@@ -68,11 +68,11 @@ def srcml2srcversion():
 
 	return last_line.strip()
 
-srcmltranslator = os.environ.get("SRC2SRCML_BIN")
+srcmltranslator = os.environ.get("SRC2SRCML")
 if srcmltranslator == "":
 	srcmltranslator = "../../bin/src2srcml"
 	
-srcmlutility = os.environ.get("SRCML2SRC_BIN")
+srcmlutility = os.environ.get("SRCML2SRC")
 if srcmlutility == "":
 	srcmlutility = "../../bin/src2srcml"
 
