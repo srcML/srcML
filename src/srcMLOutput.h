@@ -42,8 +42,6 @@ class srcMLOutput : public srcMLParserTokenTypes {
 
  public:
 
-  typedef void (srcMLOutput::*PROCESS_PTR)(const antlr::RefToken & );
-
   srcMLOutput(TokenStream* ints, 
 	      const char* language, 
 	      const char* encoding,
@@ -109,6 +107,9 @@ class srcMLOutput : public srcMLParserTokenTypes {
   void processLiteral(const antlr::RefToken& token);
   void processFormFeed(const antlr::RefToken& token);
   void processInterface(const antlr::RefToken& token);
+
+  // method pointer for token processing dispatch
+  typedef void (srcMLOutput::*PROCESS_PTR)(const antlr::RefToken & );
 
   static PROCESS_PTR process_table[END_ELEMENT_TOKEN];
 };
