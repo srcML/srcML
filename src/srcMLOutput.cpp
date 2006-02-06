@@ -99,11 +99,11 @@ void srcMLOutput::setTokenStream(TokenStream& ints) {
 }
 
 
-void srcMLOutput::startconsumeAll(const char* ofilename) {
+void srcMLOutput::startconsumeAll(const char* xml_filename) {
 
   // open the output text writer stream
   // "-" filename is standard output
-  xout = xmlNewTextWriterFilename(ofilename, isoption(OPTION_COMPRESSED));
+  xout = xmlNewTextWriterFilename(xml_filename, isoption(OPTION_COMPRESSED));
 
   // issue the xml declaration
   xmlTextWriterStartDocument(xout, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
