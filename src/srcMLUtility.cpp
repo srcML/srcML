@@ -186,8 +186,7 @@ void srcMLUtility::extract_xml(const char* ofilename, const char* filename) {
   // skip to the proper nested unit
   skiptounit(reader, filename);
 
-  // output entire unit element
-  outputUnit(ofilename, reader);
+  extract_xml(ofilename, 0);
 }
 
 // extract a given unit
