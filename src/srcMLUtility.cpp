@@ -507,7 +507,7 @@ void srcMLUtility::outputText(const xmlChar* s, std::ostream& out) {
 
       // output the UTF-8 buffer escaping the characters.  Note that the output encoding
       // is handled by libxml
-      for (unsigned char* p = xmlTextReaderValue(reader); *p != 0; ++p) {
+      for (unsigned char* p = (unsigned char*) xmlTextReaderConstValue(reader); *p != 0; ++p) {
 	  if (*p == '&')
 	    xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&amp;", 5);
 	  else if (*p == '<')
