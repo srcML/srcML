@@ -168,7 +168,6 @@ void srcMLUtility::extract_xml(const char* ofilename, int unitnumber) {
 
   // Set the encoding to that of the outer, root unit element
   encoding = (const char*) xmlTextReaderConstEncoding(reader);
-  handler = xmlFindCharEncodingHandler(encoding);
 
   // skip to the proper nested unit
   skiptounit(reader, unitnumber);
@@ -303,18 +302,7 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
   xmlTextWriterPtr writer = xmlNewTextWriterFilename(filename, isoption(options, OPTION_COMPRESSED));
 
   // issue the xml declaration
-  /** FIXME Cannot use xmlTextWriterStartDocument due to problem with my own conversion */
-#ifdef LIBXML_ENABLED
-  outputText(BAD_CAST "<?xml version=\"", writer, false);
-  outputText(BAD_CAST XML_VERSION, writer, false);
-  outputText(BAD_CAST "\" encoding=\"", writer, false);
-  outputText(BAD_CAST encoding, writer, false);
-  outputText(BAD_CAST "\" standalone=\"", writer, false);
-  outputText(BAD_CAST XML_DECLARATION_STANDALONE, writer, false);
-  outputText(BAD_CAST "\"?>\n", writer, false);
-#else
   xmlTextWriterStartDocument(writer, XML_VERSION, encoding, XML_DECLARATION_STANDALONE);
-#endif
 
   // output main unit tag
   xmlTextWriterStartElement(writer, BAD_CAST "unit");
@@ -430,7 +418,6 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
     case XML_READER_TYPE_TEXT:
     case XML_READER_TYPE_SIGNIFICANT_WHITESPACE:
       outputText(xmlTextReaderConstValue(reader), writer, false);
-      //    xmlTextWriterWriteString(writer, xmlTextReaderConstValue(reader));
       break;
     default:
       break;
@@ -531,7 +518,19 @@ void srcMLUtility::outputText(const xmlChar* s, xmlTextWriterPtr writer, bool es
 
     case XML_READER_TYPE_TEXT:
     case XML_READER_TYPE_SIGNIFICANT_WHITESPACE:
-      outputText(xmlTextReaderConstValue(reader), writer);
+
+      // output the UTF-8 buffer escaping the characters.  Note that the output encoding
+      // is handled by libxml
+      for (unsigned char* p = xmlTextReaderValue(reader); *p != 0; ++p) {
+	  if (*p == '&')
+	    xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&amp;", 5);
+	  else if (*p == '<')
+	    xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&lt;", 4);
+	  else if (*p == '>')
+	    xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&gt;", 4);
+	  else
+	    xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) p, 1);
+      }
       break;
 
     default:
