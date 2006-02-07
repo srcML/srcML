@@ -389,6 +389,7 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
 // output current unit element as text
 void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
 
+  // point to standard input or open file
   std::ostream* pout = &std::cout;
   if (!(ofilename[0] == '-' && ofilename[1] == 0)) {
     pout = new std::ofstream(ofilename);
@@ -406,13 +407,14 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
     // output text
     switch (xmlTextReaderNodeType(reader)) {
 
-      // special case for formfeed element
     case XML_READER_TYPE_ELEMENT:
 
+      // check that we really have a nested unit
       if (first && strcmp((const char*) xmlTextReaderConstName(reader), "unit") == 0)
 	throw TranslateCompoundError();
       first = false;
 
+      // special case for formfeed element
       if (strcmp((const char*) xmlTextReaderConstName(reader), "formfeed") == 0)
 	outputText(BAD_CAST "\f", *pout);
       break;
@@ -430,6 +432,7 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
       break;
   }
 
+  // delete ofstream if not standard input
   if (!(ofilename[0] == '-' && ofilename[1] == 0))
     delete pout;
 }
