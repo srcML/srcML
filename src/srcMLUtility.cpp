@@ -389,9 +389,10 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
 // output current unit element as text
 void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
 
-  // open the output text writer stream
-  // "-" filename is standard output
-  xmlTextWriterPtr writer = xmlNewTextWriterFilename(ofilename, isoption(options, OPTION_COMPRESSED));
+  std::ostream* pout = &std::cout;
+  if (!(ofilename[0] == '-' && ofilename[1] == 0)) {
+    pout = new std::ofstream(ofilename);
+  }
 
   bool first = true;
   // process the nodes in this unit
@@ -413,11 +414,11 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
       first = false;
 
       if (strcmp((const char*) xmlTextReaderConstName(reader), "formfeed") == 0)
-	    xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "\f", 1);
+	outputText(BAD_CAST "\f", *pout);
       break;
     case XML_READER_TYPE_TEXT:
     case XML_READER_TYPE_SIGNIFICANT_WHITESPACE:
-      outputText(xmlTextReaderConstValue(reader), writer, false);
+      outputText(xmlTextReaderConstValue(reader), *pout);
       break;
     default:
       break;
@@ -429,17 +430,12 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
       break;
   }
 
-  // Problem with call to xmlTextWriterEndDocument.  When indentation is 0 it wants to write out a final newline.
-  // Setting the indentation will only affect the end
-  xmlTextWriterSetIndent(writer, 1);
-
-  xmlTextWriterEndDocument(writer);
-
-  xmlFreeTextWriter(writer);
+  if (!(ofilename[0] == '-' && ofilename[1] == 0))
+    delete pout;
 }
 
 // output text in proper format
-void srcMLUtility::outputText(const xmlChar* s, xmlTextWriterPtr writer, bool escape) {
+void srcMLUtility::outputText(const xmlChar* s, std::ostream& out) {
 
     // buffer of output utf8 characters
     const int UTF8BUFFER_MAXSIZE = 512;
@@ -463,20 +459,7 @@ void srcMLUtility::outputText(const xmlChar* s, xmlTextWriterPtr writer, bool es
 					       (const unsigned char*) (inputbuffer + pos), &partialinputbuffer_size);
       utf8buffer[utf8buffer_newsize] = 0;
 
-      if (escape) {
-      for (unsigned char* p = utf8buffer; *p != 0; ++p) {
-	  if (*p == '&')
-	    xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&amp;", 5);
-	  else if (*p == '<')
-	    xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&lt;", 4);
-	  else if (*p == '>')
-	    xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&gt;", 4);
-	  else
-	    xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) p, 1);
-      }
-      } else {
-	xmlTextWriterWriteRawLen(writer, BAD_CAST utf8buffer, utf8buffer_newsize);
-      }
+      out << utf8buffer;
 
       pos += partialinputbuffer_size;
     }

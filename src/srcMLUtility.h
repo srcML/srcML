@@ -113,7 +113,7 @@ class srcMLUtility {
   void outputText(xmlTextReaderPtr reader);
 
   // output current text-only XML node in reader
-  void outputText(const xmlChar* s, xmlTextWriterPtr writer, bool escape = true);
+  void outputText(const xmlChar* s, std::ostream& out);
 
  private:
   const char* infile;
