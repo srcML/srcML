@@ -70,9 +70,6 @@ void skiptounit(xmlTextReaderPtr reader, int number) throw (LibXMLError);
 srcMLUtility::srcMLUtility(const char* infilename, const char* enc, int op)
   : infile(infilename), encoding(enc), options(op), reader(0), handler(0) {
 
-  // setup an output handler
-  handler = xmlFindCharEncodingHandler(enc);
-
   // empty filename indicates standard input
   if (infile == 0)
     infile = "-";
@@ -388,6 +385,9 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
 
 // output current unit element as text
 void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
+
+  // setup an output handler
+  handler = xmlFindCharEncodingHandler(encoding);
 
   // point to standard input or open file
   std::ostream* pout = &std::cout;
