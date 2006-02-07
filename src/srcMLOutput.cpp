@@ -166,7 +166,7 @@ const char* srcMLOutput::type2name(int token_type) const {
 }
 
 // buffer of output utf8 characters
-const int UTF8BUFFER_MAXSIZE = 512;
+const int UTF8BUFFER_MAXSIZE = 5120;
 unsigned char utf8buffer[UTF8BUFFER_MAXSIZE];
 
 // amount of space for expanded characters.  assume a maximum of four bytes for every original single byte
@@ -178,7 +178,8 @@ void srcMLOutput::processText(const std::string& str) {
   const char* inputbuffer = str.c_str();
   const unsigned int inputbuffer_size = (unsigned int) str.size();
 
-  // write out all of input buffer converted to utf8 in chunks
+  // convert all of the input buffer to UTF-8 in chunks
+  // conversion from libxml internal UTF-8 to output encoding is handled automatically
   unsigned int pos = 0;
   while (pos < inputbuffer_size) {
 
