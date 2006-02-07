@@ -440,6 +440,8 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
 // output text in proper format
 void srcMLUtility::outputText(const xmlChar* s, std::ostream& out) {
 
+#ifdef LIBXML_ENABLED
+
     // buffer of output utf8 characters
     const int UTF8BUFFER_MAXSIZE = 512;
     static unsigned char utf8buffer[UTF8BUFFER_MAXSIZE];
@@ -466,6 +468,12 @@ void srcMLUtility::outputText(const xmlChar* s, std::ostream& out) {
 
       pos += partialinputbuffer_size;
     }
+
+#else
+
+    // output string directly with no encoding
+    out << s;
+#endif
 }
 
   // output current XML node in reader

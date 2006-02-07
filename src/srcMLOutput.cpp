@@ -178,6 +178,8 @@ void srcMLOutput::processText(const std::string& str) {
   const char* inputbuffer = str.c_str();
   const unsigned int inputbuffer_size = (unsigned int) str.size();
 
+#ifdef LIBXML_ENABLED
+
   // convert all of the input buffer to UTF-8 in chunks
   // conversion from libxml internal UTF-8 to output encoding is handled automatically
   unsigned int pos = 0;
@@ -193,6 +195,11 @@ void srcMLOutput::processText(const std::string& str) {
 
     pos += partialinputbuffer_size;
   }
+#else
+
+  // output the buffer
+  xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) inputbuffer, inputbuffer_size);
+#endif
 }
 
 void srcMLOutput::processText(const antlr::RefToken& token) {
