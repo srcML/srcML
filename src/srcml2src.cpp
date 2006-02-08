@@ -339,6 +339,15 @@ int main(int argc, char* argv[]) {
     exit(STATUS_SUCCESS);
   }
 
+  /* Special checks for illegal combinations */
+
+  // xml output and src-encoding (switch to encoding?)
+  if (isoption(options, OPTION_XML) && isoption(options, OPTION_TEXT_ENCODING)) {
+
+    std::cerr << NAME << ": Options for xml output and specifying source encoding are incompatible.\n";
+    exit(STATUS_INVALID_OPTION_COMBINATION);
+  }
+
   try {
 
     // setup for processing
