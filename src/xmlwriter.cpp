@@ -128,8 +128,7 @@ void xmlTextWriterWriteRawLen(xmlTextWriterPtr writer, unsigned char* data, int 
   close_start_tag(writer);
 
   // output the date directly
-  for (int i = 0; i < size; ++i)
-    *(writer->pout) << data[i];
+  writer->pout->write((char*) data, size);
 }
 
 void xmlTextWriterFlush(xmlTextWriterPtr writer) {
@@ -162,7 +161,7 @@ xmlCharEncodingHandlerPtr xmlFindCharEncodingHandler(const char*) { return new x
 
 // nop since indent is not used
 void xmlTextWriterSetIndent(xmlTextWriterPtr, int) {}
-
+/*
 int xmlCharEncodingHandler::input(unsigned char out[], int* poutsize, const unsigned char* in , int* pinsize) { 
 
   for (int i = 0; i < *pinsize; ++i)
@@ -182,3 +181,4 @@ int xmlCharEncodingHandler::output(unsigned char out[], int* poutsize, const uns
 
   return *poutsize; 
 }
+*/
