@@ -165,92 +165,97 @@ error_count = 0
 # total test cases
 total_count = 0
 
-# process all files
-for root, dirs, files in os.walk(source_dir, topdown=True):
-
-	# process all files
-	for name in files:
-
-		# only process xml files
-		if os.path.splitext(name)[1] != ".xml":
-			continue
-
-		# full path of the file
-		xml_filename = os.path.join(root, name)
-
-		# read entire file into a string
-		filexml = name2filestr(xml_filename)
-		
-		# directory of the outer unit element
-		directory = getdirectory(filexml)
-		
-		# only process if directory name matches or is not given
-		if specname != "" and m.match(directory) == None:
-			continue
-		
-		# language of the entire document with a default of C++
-		language = getlanguage(filexml)
-		if len(language) == 0:
-			language = "C++"
-
-		# only process if language matches or is not given
-		if speclang != "" and language != speclang:
-			continue
-		
-		# output language and directory
-		print
-		print language, "\t", directory,
-
-		# encoding of the outer unit
-		encoding = getencoding(filexml)
-		
-		# version of the outer unit
-		version = getversion(filexml)
-		
-		# number of nested units
-		number = getnested(filexml)
-		
-		if specnum == 0:
-			count = 0
-		else:
-			count = specnum - 1
-
-		while count == 0 or count < number:
-
-			count = count + 1
-
-			if specnum!= 0 and count > specnum:
-				break
-
-			if count > maxcount:
-				break
-
-			# total count of test cases
-			total_count = total_count + 1
-
-			# part of list of nested unit number in output
-			print count, 
-
-			# save the particular nested unit
-			if number == 0:
-				unitxml = filexml
-			else:
-				unitxml = extract_unit(filexml, count)
-
-			# convert the unit in xml to text
-			unittext = srcml2src(unitxml, encoding)
-
-			# convert the text to srcML
-			unitsrcml = src2srcML(unittext, encoding, language, directory, getfilename(unitxml))
+try:
 			
-			# find the difference
-			error = xmldiff(unitxml, unitsrcml)
-			error_count += error
-			if error == 1:
-				errorlist.append((directory + " " + language, count))
-				
-	break
+	# process all files		
+	for root, dirs, files in os.walk(source_dir, topdown=True):		
 
+		# process all files
+		for name in files:
+
+			# only process xml files
+			if os.path.splitext(name)[1] != ".xml":
+				continue
+
+			# full path of the file
+			xml_filename = os.path.join(root, name)
+
+			# read entire file into a string
+			filexml = name2filestr(xml_filename)
+			
+			# directory of the outer unit element
+			directory = getdirectory(filexml)
+			
+			# only process if directory name matches or is not given
+			if specname != "" and m.match(directory) == None:
+				continue
+			
+			# language of the entire document with a default of C++
+			language = getlanguage(filexml)
+			if len(language) == 0:
+				language = "C++"
+
+			# only process if language matches or is not given
+			if speclang != "" and language != speclang:
+				continue
+			
+			# output language and directory
+			print
+			print language, "\t", directory,
+
+			# encoding of the outer unit
+			encoding = getencoding(filexml)
+			
+			# version of the outer unit
+			version = getversion(filexml)
+		
+			# number of nested units
+			number = getnested(filexml)
+		
+			if specnum == 0:
+				count = 0
+			else:
+				count = specnum - 1
+
+			while count == 0 or count < number:
+
+				count = count + 1
+
+				if specnum!= 0 and count > specnum:
+					break
+
+				if count > maxcount:
+					break
+
+				# total count of test cases
+				total_count = total_count + 1
+
+				# part of list of nested unit number in output
+				print count, 
+
+				# save the particular nested unit
+				if number == 0:
+					unitxml = filexml
+				else:
+					unitxml = extract_unit(filexml, count)
+
+				# convert the unit in xml to text
+				unittext = srcml2src(unitxml, encoding)
+
+				# convert the text to srcML
+				unitsrcml = src2srcML(unittext, encoding, language, directory, getfilename(unitxml))
+			
+				# find the difference
+				error = xmldiff(unitxml, unitsrcml)
+				error_count += error
+				if error == 1:
+					errorlist.append((directory + " " + language, count))
+				
+except KeyboardInterrupt:
+	print
+	print
+	print "Stopped by keyboard"
+	
 # output error counts
 print
 if error_count == 0:
