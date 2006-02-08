@@ -353,6 +353,9 @@ validate(getreturn([srcmlutility, option.UNIT_FLAG, missing_unit, option.FILENAM
 validate(getreturn([srcmlutility, option.UNIT_FLAG, missing_unit, option.DIRECTORY_FLAG], nestedfile), status.STATUS_UNIT_INVALID)
 validate(getreturn([srcmlutility, option.UNIT_FLAG, missing_unit, option.SRCVERSION_FLAG], nestedfile), status.STATUS_UNIT_INVALID)
 
+# invalid combinations
+validate(getreturn([srcmlutility, option.XML_FLAG, option.TEXTENCODING_FLAG, "UTF-8"], nestedfile), status.STATUS_INVALID_OPTION_COMBINATION)
+
 print src2srcmlversion()
 print srcml2srcversion()
 
