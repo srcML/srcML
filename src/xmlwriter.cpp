@@ -63,6 +63,9 @@ void xmlTextWriterEndDocument(xmlTextWriterPtr writer) {
   if (!writer->elements.empty())
    xmlTextWriterEndElement(writer);
 
+  // output a newline after the last element
+  *(writer->pout) << "\n";
+
   if (writer->pout != &std::cout)
     delete writer->pout;
 }
@@ -102,10 +105,6 @@ void xmlTextWriterEndElement(xmlTextWriterPtr writer) {
 
   // no open start tags
   writer->open_start = false;
-
-  // output a newline after the last element
-  if (writer->elements.empty())
-    *(writer->pout) << "\n";
 }
 
 void xmlTextWriterWriteAttribute(xmlTextWriterPtr writer, const char* attribute_name, const char* attribute_value) {
