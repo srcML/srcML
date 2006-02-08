@@ -40,17 +40,17 @@ class Language {
     {}
 
   // gets the current language
-  virtual bool inLanguage(int l) const {
+  bool inLanguage(int l) const {
     return (l & language) > 0;
   }
 
   // gets the current language
-  virtual int getLanguage() const {
+  int getLanguage() const {
     return language;
   }
 
   // gets the current language
-  virtual const char* getLanguageString() const {
+  const char* getLanguageString() const {
     char* lstring = "";
 
     switch (language) {
@@ -70,7 +70,7 @@ class Language {
     return lstring;
   }
 
-  virtual ~Language() {}
+  ~Language() {}
 
  private:
 
