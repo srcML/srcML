@@ -158,6 +158,7 @@ SEP_FILES=$(SEP_BASE) preprocessor
 
 # base for all of Java
 BASE_JAVA_ALL_GEN = $(BASE_COMMON) $(GEN_BASE) $(BASE_00)
+
 BASE_JAVA_ALL = $(BASE_COMMON) $(GEN_BASE) $(BASE_00) $(BASE_JAVA)
 
 GEN_JAVA= ${foreach nm, $(BASE_JAVA_ALL_GEN), ../suite/$(nm).java.xml}
@@ -196,6 +197,42 @@ GEN_FORMFEED = ${foreach nm, $(SEP_PLUS),          ../suite/$(nm).formfeed.cpp.x
 GEN_PREPROC= ${foreach nm, $(SEP_PLUSNOPREPROC), ../suite/$(nm).preproc.cpp.xml} \
 	           ${foreach nm, $(BASE_C_ALL), ../suite/$(nm).preproc.c.xml} \
 		   ../suite/extra.preproc.c.xml ../suite/extra.preproc.cpp.xml
+
+../suite/allinall.c.xml :
+	@echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" > ../suite/allinall.c.xml
+	@echo "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C\">" >> ../suite/allinall.c.xml
+
+	find ../suite -name "*.all.c.xml" | xargs -i tail +3 {} | sed "s|</unit>||">> ../suite/allinall.c.xml
+	@echo "</unit>" >> ../suite/allinall.c.xml
+
+../suite/allinall.java.xml :
+	@echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" > ../suite/allinall.java.xml
+	@echo "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"Java\">" >> ../suite/allinall.java.xml
+
+	find ../suite -name "*.all.java.xml" | xargs -i tail +3 {} | sed "s|</unit>||">> ../suite/allinall.java.xml
+	@echo "</unit>" >> ../suite/allinall.java.xml
+
+../suite/allinall.cpp.xml :
+	@echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" > ../suite/allinall.cpp.xml
+	@echo "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\">" >> ../suite/allinall.cpp.xml
+
+	@find ../suite -name "*.all.cpp.xml" | sed "s|../suite/cstruct.all.cpp.xml||" | sed "s|../suite/functionkr.all.cpp.xml||" | xargs -i tail +3 {} | sed "s|</unit>||" >> ../suite/allinall.cpp.xml
+	@echo "</unit>" >> ../suite/allinall.cpp.xml
+
+allinone : allinonecpp allinonec allinonejava
+	#@make cleanall
+
+allinonec : ../suite/allinall.c.xml
+	${SRCML2SRC} --src-encoding=ISO-8859-1 ../suite/allinall.c.xml | ${SRC2SRCML} -l C --src-encoding=ISO-8859-1 | diff - ../suite/allinall.c.xml
+
+allinonecpp : ../suite/allinall.cpp.xml
+	${SRCML2SRC} --src-encoding=ISO-8859-1 ../suite/allinall.cpp.xml | ${SRC2SRCML} -l C++ --src-encoding=ISO-8859-1 | diff - ../suite/allinall.cpp.xml
+
+allinonejava : ../suite/allinall.java.xml
+	${SRCML2SRC} --src-encoding=ISO-8859-1 ../suite/allinall.java.xml | ${SRC2SRCML} -l Java --src-encoding=ISO-8859-1 | diff - ../suite/allinall.java.xml
+
+cleanall :
+	rm -f ../suite/allinall.*
 
 %.cpp : %.cpp.xml
 	${XSLT_IDENTITY} $< > $@
