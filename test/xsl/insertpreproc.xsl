@@ -47,7 +47,7 @@
   <xsl:copy-of select="."/>
 </xsl:template>
 
-<xsl:template match="text()[contains(., ' ')]" mode="replace">
+<xsl:template match="text()[not(../cpp:*)][contains(., ' ')]" mode="replace">
   <xsl:value-of select="substring-before(., ' ')"/>
   <xsl:value-of select="' '"/>
   <xsl:copy-of select="$cmt"/>
