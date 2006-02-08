@@ -145,14 +145,6 @@ elif len(sys.argv) > 2:
 	if len(sys.argv) > 3:
 		speclang = sys.argv[3]
 
-# output tool version
-print
-print "src2srcml: ", srcmltranslator
-print src2srcmlversion()
-print
-print "srcml2src: ", srcmlutility
-print srcml2srcversion()
-
 # base directory
 base_dir = "../suite"
 
@@ -163,8 +155,6 @@ errorlist = []
 #	exit
 
 m = re.compile(specname + "$")
-
-n = re.compile(speclang + "$")
 
 # source directory
 source_dir = base_dir
@@ -204,7 +194,7 @@ for root, dirs, files in os.walk(source_dir, topdown=True):
 			language = "C++"
 
 		# only process if language matches or is not given
-		if speclang != "" and n.match(language) == None:
+		if speclang != "" and language != speclang:
 			continue
 		
 		# output language and directory
