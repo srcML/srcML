@@ -245,9 +245,7 @@ int main(int argc, char* argv[]) {
 	std::cerr << NAME << ": unit option selected but no number specified." << '\n';
 	exit(STATUS_UNIT_MISSING);
       } else {
-	++curarg;
-	unit = pstd::atoi(argv[curarg]);
-	++curarg;
+	unit = pstd::atoi(argv[(++curarg)++]);
       }
 
       // validate unit number
@@ -275,14 +273,9 @@ int main(int argc, char* argv[]) {
 	std::cerr << NAME << ": text encoding selected but not specified." << '\n';
 	exit(STATUS_SRCENCODING_MISSING);
       } else {
-	// move to parameter
-	++curarg;
 
 	// extract parameter
-	src_encoding = argv[curarg];
-
-	// move over parameter
-	++curarg;
+	src_encoding = argv[(++curarg)++];
       }
 
       // validate source encoding
