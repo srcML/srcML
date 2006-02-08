@@ -104,7 +104,7 @@ def src2srcmlversion():
 	last_line = subprocess.Popen([srcmltranslator, "-V"],
 				     stdout=subprocess.PIPE).communicate()[0]
 
-	return last_line.strip()
+	return last_line.splitlines()[0].strip()
 
 # version of srcml2src
 def srcml2srcversion():
@@ -112,7 +112,7 @@ def srcml2srcversion():
 	last_line = subprocess.Popen([srcmlutility, "-V"],
 				     stdout=subprocess.PIPE).communicate()[0]
 
-	return last_line.strip()
+	return last_line.splitlines()[0].strip()
 
 # number of nested units
 def getnested(xml_file):
@@ -265,6 +265,7 @@ else:
 print
 print "src2srcml: ", srcmltranslator
 print src2srcmlversion()
+print
 print "srcml2src: ", srcmlutility
 print srcml2srcversion()
 
