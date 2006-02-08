@@ -74,7 +74,7 @@ class Language {
 
  private:
 
-  int language;
+  const int language;
 };
 
 #endif
