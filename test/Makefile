@@ -152,19 +152,21 @@ BASE_CXX=friend try namespace template typedef_template constructor destructor t
 # base for Java only
 BASE_JAVA=class_java keyword_java interface_java package
 
-SEP_BASE=$(BASE_COMMON) $(BASE_C) $(BASE_C_FAMILY) $(BASE_CXX) $(BASE_JAVA)
+SEP_BASE=$(BASE_COMMON) $(BASE_C) $(BASE_C_FAMILY) $(BASE_CXX)
 
 SEP_FILES=$(SEP_BASE) preprocessor
 
 # base for all of Java
-BASE_JAVA_ALL = $(BASE_COMMON) $(GEN_BASE) $(BASE_00)
+BASE_JAVA_ALL_GEN = $(BASE_COMMON) $(GEN_BASE) $(BASE_00)
+BASE_JAVA_ALL = $(BASE_COMMON) $(GEN_BASE) $(BASE_00) $(BASE_JAVA)
 
-GEN_JAVA= ${foreach nm, $(BASE_JAVA_ALL), ../suite/$(nm).java.xml}
+GEN_JAVA= ${foreach nm, $(BASE_JAVA_ALL_GEN), ../suite/$(nm).java.xml}
 
 BASE_C_ALL = $(BASE_COMMON) $(BASE_C_FAMILY)
 GEN_C= ${foreach nm, $(BASE_C_ALL), ../suite/$(nm).c.xml}
 
 SEP_PLUS= ${SEP_FILES} ${GEN_SEP}
+SEP_PLUSNOPREPROC= ${SEP_BASE} ${GEN_SEP}
 
 ##
 # generate cases for all
@@ -191,7 +193,7 @@ GEN_FORMFEED = ${foreach nm, $(SEP_PLUS),          ../suite/$(nm).formfeed.cpp.x
 		     ../suite/extra.formfeed.c.xml ../suite/extra.formfeed.cpp.xml
 
 # generated test cases for preproc
-GEN_PREPROC= ${foreach nm, $(SEP_PLUS), ../suite/$(nm).preproc.cpp.xml} \
+GEN_PREPROC= ${foreach nm, $(SEP_PLUSNOPREPROC), ../suite/$(nm).preproc.cpp.xml} \
 	           ${foreach nm, $(BASE_C_ALL), ../suite/$(nm).preproc.c.xml} \
 		   ../suite/extra.preproc.c.xml ../suite/extra.preproc.cpp.xml
 
@@ -256,17 +258,11 @@ GEN_CPP_BASE=${GEN_SEP} ${foreach nm, $(SEP_PLUS), $(nm).all} ${foreach nm, $(SE
 GEN_CPP= ${foreach nm, $(GEN_CPP_BASE), ../suite/$(nm).cpp}
 
 all : ${GEN_FILES} ${GEN_CPP}
-	rm -f ../suite/preprocessor.preproc.cpp.xml
 	./testsuite.py
 
 gencpp : ${GEN_CPP}
 
 gen : ${GEN_FILES}
-	rm -f ../suite/preprocessor.preproc.cpp.xml
-	rm -f ../suite/class_java.preproc.cpp.xml
-	rm -f ../suite/keyword_java.preproc.cpp.xml
-	rm -f ../suite/interface_java.preproc.cpp.xml
-	rm -f ../suite/package.preproc.cpp.xml
 
 #  Test cases generated from other test cases
 
@@ -315,7 +311,7 @@ gen : ${GEN_FILES}
 	${XSLT_STRUCT2UNION} $< > $@
 
 # interface from class
-../suite/interface_java.cpp.xml : ../suite/class_java.cpp.xml ${XSLT_CLASS2INTERFACE_XSL}
+../suite/interface_java.java.xml : ../suite/class_java.java.xml ${XSLT_CLASS2INTERFACE_XSL}
 	${XSLT_CLASS2INTERFACE} $< > $@
 
 # if with blocks from if

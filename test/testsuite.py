@@ -125,11 +125,16 @@ def getnested(xml_file):
 src2srcml_src_encoding = src2srcmlversion().find("Libxml2") != -1;
 srcml2src_src_encoding = srcml2srcversion().find("Libxml2") != -1;
 
+print src2srcmlversion()
+print srcml2srcversion()
+print
+
 specname = ""
 if len(sys.argv) > 1:
 	specname = sys.argv[1]
 
-print specname
+if specname != "":
+	print specname
 
 specnum = 0
 speclang = ""
