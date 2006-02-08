@@ -40,12 +40,12 @@ class Language {
     {}
 
   // gets the current language
-  bool inLanguage(int l) const {
+  inline bool inLanguage(int l) const {
     return (l & language) > 0;
   }
 
   // gets the current language
-  int getLanguage() const {
+  inline int getLanguage() const {
     return language;
   }
 
