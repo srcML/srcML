@@ -3,7 +3,7 @@ MAN_GZIP= src2srcml.1.gz srcml2src.1.gz
 
 all : man gzip
 
-man : ${MAN_PAGES}
+man : ${MAN_PAGES} src2srcml.html srcml2src.html
 
 src2srcml.1 : src2srcml.xml option.dtd option.dtd
 	docbook2x-man src2srcml.xml
@@ -19,6 +19,12 @@ src2srcml.1.gz : src2srcml.1
 
 srcml2src.1.gz : srcml2src.1
 	gzip -f srcml2src.1
+
+src2srcml.html : src2srcml.1
+	man2html src2srcml.1 > src2srcml.html
+
+srcml2src.html : srcml2src.1
+	man2html srcml2src.1 > srcml2src.html
 
 OPTION_SRC= ../src/src2srcml.cpp ../src/srcml2src.cpp ../src/srcmlapps.h
 option.dtd : ${OPTION_SRC}
