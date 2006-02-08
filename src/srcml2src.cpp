@@ -144,7 +144,6 @@ int main(int argc, char* argv[]) {
   int exit_status = EXIT_SUCCESS;
 
   // option values
-  const char* encoding = DEFAULT_TEXT_ENCODING;
   const char* src_encoding = DEFAULT_TEXT_ENCODING;
   int unit = 0;
 
@@ -255,36 +254,6 @@ int main(int argc, char* argv[]) {
       if (unit < 0) {
 	std::cerr << NAME << ": unit option value \"" << unit << "\" must be >= 0." << '\n';
 	exit(STATUS_UNIT_INVALID);
-      }
-    }
-
-    // encoding
-    else if (compare_flags(argv[curarg], ENCODING_FLAG, ENCODING_FLAG_SHORT)) {
-
-      options |= OPTION_TEXT_ENCODING;
-
-      char* embedded = extract_option(argv[curarg]);
-
-      // filename is embedded parameter
-      if (embedded) {
-
-	encoding = embedded + 1;
-	++curarg;
-
-      // check for encoding flag with missing encoding
-      } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
-	std::cerr << NAME << ": encoding selected but not specified." << '\n';
-	exit(STATUS_XMLENCODING_MISSING);
-      } else {
-	++curarg;
-	encoding = argv[curarg];
-	++curarg;
-      }
-
-      // validate xml encoding
-      if (!srcMLUtility::checkEncoding(encoding)) {
-	std::cerr << NAME << ": encoding \"" << encoding << "\" is not supported." << '\n';
-	exit(STATUS_UNKNOWN_ENCODING);
       }
     }
 
