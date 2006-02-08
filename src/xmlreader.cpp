@@ -214,18 +214,12 @@ int xmlTextReaderDepth(xmlTextReaderPtr reader) {
 }
 
 int xmlTextReaderMoveToNextAttribute(xmlTextReaderPtr reader) {
+
   reader->attribute_count += 1;
 
-  if ((unsigned int) reader->attribute_count < reader->attributes.size()) {
+  reader->inattribute = (unsigned int) reader->attribute_count < reader->attributes.size();
 
-    reader->inattribute = true;
-
-    return 1;
-  } else {
-    reader->inattribute = false;
-
-    return 0;
-  }
+  return reader->inattribute;
 }
 
 const xmlChar* xmlTextReaderConstEncoding(xmlTextReaderPtr reader) {
