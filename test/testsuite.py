@@ -125,6 +125,9 @@ def getnested(xml_file):
 src2srcml_src_encoding = src2srcmlversion().find("Libxml2") != -1;
 srcml2src_src_encoding = srcml2srcversion().find("Libxml2") != -1;
 
+print "Testing:"
+print 
+
 print src2srcmlversion()
 print srcml2srcversion()
 print
@@ -255,11 +258,16 @@ try:
 				error_count += error
 				if error == 1:
 					errorlist.append((directory + " " + language, count))
-				
+	ki = False
 except KeyboardInterrupt:
+	ki = True
+	
+print
+print
+print "Report:"
+if ki:
 	print
-	print
-	print "Stopped by keyboard"
+	print "Testing stopped by keyboard"
 	
 # output error counts
 print
@@ -273,10 +281,7 @@ else:
 
 # output tool version
 print
-print "src2srcml: ", srcmltranslator
-print src2srcmlversion()
-print
-print "srcml2src: ", srcmlutility
-print srcml2srcversion()
+print src2srcmlversion(), srcmltranslator
+print srcml2srcversion(), srcmlutility
 
 exit
