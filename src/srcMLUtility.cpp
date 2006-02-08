@@ -461,7 +461,8 @@ void srcMLUtility::outputText(const xmlChar* s, std::ostream& out) {
       int buffer_left = inputbuffer_size - pos;
       int partialinputbuffer_size = buffer_left > UTF8BUFFER_SPACE ? UTF8BUFFER_SPACE : buffer_left;
       int utf8buffer_newsize = handler->output(utf8buffer, &utf8buffer_size,
-					       (const unsigned char*) (inputbuffer + pos), &partialinputbuffer_size);
+			       (const unsigned char*) (inputbuffer + pos), &partialinputbuffer_size);
+
       utf8buffer[utf8buffer_newsize] = 0;
 
       out << utf8buffer;
