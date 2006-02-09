@@ -395,6 +395,9 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
   // setup an output handler
   handler = xmlFindCharEncodingHandler(output_encoding);
 
+  // starting depth tells us when to end
+  int startingDepth = xmlTextReaderDepth(reader);
+
   // point to standard input or open file
   std::ostream* pout = &std::cout;
   if (!(ofilename[0] == '-' && ofilename[1] == 0)) {
@@ -432,9 +435,8 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
       break;
     };
 
-    // found end element of this unit
-    if (xmlTextReaderDepth(reader) == 1 && xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT
-	&& strcmp((const char*) xmlTextReaderConstName(reader), "unit") == 0)
+    // stop when it is the same depth as the start
+    if (xmlTextReaderDepth(reader) == startingDepth)
       break;
   }
 
@@ -548,9 +550,8 @@ void srcMLUtility::outputText(const xmlChar* s, std::ostream& out) {
 	throw LibXMLError(ret);
 
       if (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT &&
-	  strcmp((const char*) xmlTextReaderConstName(reader), "unit") == 0) {
+	  strcmp((const char*) xmlTextReaderConstName(reader), "unit") == 0)
 	break;
-      }
     }
   }
 
