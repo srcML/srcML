@@ -27,12 +27,6 @@
 #include "project.h"
 #include "srcmlns.h"
 
-#ifdef LIBXML_ENABLED
-#include <libxml/xmlwriter.h>
-#else
-#include "xmlwriter.h"
-#endif
-
 #include "srcMLOutputPR.h"
 
 const char* XML_DECLARATION_STANDALONE = "yes";
@@ -47,15 +41,13 @@ bool srcMLOutput::checkEncoding(const char* encoding) {
   return xmlFindCharEncodingHandler(encoding) != 0;
 }
 
-xmlTextWriterPtr xout;
-
 srcMLOutput::srcMLOutput(TokenStream* ints, 
 			 const char* filename,
 			 const char* language, 
 			 const char* src_encoding,
 			 const char* xml_enc,
 			 int op)
-  : input(ints), srcml_filename(filename), unit_language(language), unit_dir(""), unit_filename(""),
+  : input(ints), xout(0), srcml_filename(filename), unit_language(language), unit_dir(""), unit_filename(""),
     unit_version(""), options(op), xml_encoding(xml_enc)
 {
   // setup an output handler

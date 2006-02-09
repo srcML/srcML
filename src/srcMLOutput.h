@@ -36,6 +36,12 @@
 #include "Options.h"
 #include "srcMLException.h"
 
+#ifdef LIBXML_ENABLED
+#include <libxml/xmlwriter.h>
+#else
+#include "xmlwriter.h"
+#endif
+
 class srcMLOutput : public srcMLParserTokenTypes {
 
  public:
@@ -65,6 +71,8 @@ class srcMLOutput : public srcMLParserTokenTypes {
 
  private:
   TokenStream* input;
+
+  xmlTextWriter* xout;
 
   const char* srcml_filename;
   const char* unit_language;
