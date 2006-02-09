@@ -453,8 +453,6 @@ int main(int argc, char* argv[]) {
       if (isoption(options, OPTION_LONG_INFO)) {
 	if (!isoption(options, OPTION_UNIT))
 	  std::cout << "Nested: " << su.unit_count() << '\n';
-	else
-	  std::cout << "Nested: " << 0 << '\n';
       }
 
     } else if (isoption(options, OPTION_LANGUAGE)) {
