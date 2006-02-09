@@ -68,7 +68,7 @@ void skiptounit(xmlTextReaderPtr reader, int number) throw (LibXMLError);
 
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* enc, int op)
-  : infile(infilename), encoding(enc), options(op), reader(0), handler(0) {
+  : infile(infilename), output_encoding(enc), options(op), reader(0), handler(0) {
 
   // empty filename indicates standard input
   if (infile == 0)
@@ -164,7 +164,7 @@ int srcMLUtility::unit_count() {
 void srcMLUtility::extract_xml(const char* ofilename, int unitnumber) {
 
   // Set the encoding to that of the outer, root unit element
-  encoding = (const char*) xmlTextReaderConstEncoding(reader);
+  output_encoding = (const char*) xmlTextReaderConstEncoding(reader);
 
   // skip to the proper nested unit
   skiptounit(reader, unitnumber);
@@ -177,7 +177,7 @@ void srcMLUtility::extract_xml(const char* ofilename, int unitnumber) {
 void srcMLUtility::extract_xml(const char* ofilename, const char* filename) {
 
   // Set the encoding to that of the outer, root unit element
-  encoding = (const char*) xmlTextReaderConstEncoding(reader);
+  output_encoding = (const char*) xmlTextReaderConstEncoding(reader);
 
   // skip to the proper nested unit
   skiptounit(reader, filename);
@@ -299,7 +299,7 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
   xmlTextWriterPtr writer = xmlNewTextWriterFilename(filename, isoption(options, OPTION_COMPRESSED));
 
   // issue the xml declaration
-  xmlTextWriterStartDocument(writer, XML_VERSION, encoding, XML_DECLARATION_STANDALONE);
+  xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
 
   // output main unit tag
   xmlTextWriterStartElement(writer, BAD_CAST "unit");
@@ -387,7 +387,7 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
 void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
 
   // setup an output handler
-  handler = xmlFindCharEncodingHandler(encoding);
+  handler = xmlFindCharEncodingHandler(output_encoding);
 
   // point to standard input or open file
   std::ostream* pout = &std::cout;
