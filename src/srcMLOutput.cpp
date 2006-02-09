@@ -129,12 +129,6 @@ void srcMLOutput::consume(const char* directory, const char* filename, const cha
   }
 }
 
-void srcMLOutput::consumeAll(const char* ofilename) {
-
-  consume("", ofilename);
-
-}
-
 bool srcMLOutput::isoption(int flag) const {
   return (flag & options) > 0;
 }
