@@ -42,9 +42,6 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
   : Language(language), options(op),
     out(0, srcml_filename, getLanguageString(), src_encoding, xml_encoding, options) {
 
-  // start formation of output srcml document
-  out.startconsumeAll(srcml_filename);
-
   // root unit for compound srcML documents
   if ((options & OPTION_NESTED) > 0)
     out.startUnit(getLanguageString(), "", "", "", true);
@@ -91,8 +88,4 @@ void srcMLTranslator::translate(const char* src_filename, const char* unit_direc
 }
 
 // destructor
-srcMLTranslator::~srcMLTranslator() {
-
-  // end the srcML document
-  out.endconsumeAll();
-}
+srcMLTranslator::~srcMLTranslator() {}

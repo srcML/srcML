@@ -47,6 +47,8 @@ bool srcMLOutput::checkEncoding(const char* encoding) {
   return xmlFindCharEncodingHandler(encoding) != 0;
 }
 
+xmlTextWriterPtr xout;
+
 srcMLOutput::srcMLOutput(TokenStream* ints, 
 			 const char* filename,
 			 const char* language, 
@@ -90,31 +92,25 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   process_table[SLITERAL] = &srcMLOutput::processLiteral;
   process_table[FORMFEED] = &srcMLOutput::processFormFeed;
   process_table[SINTERFACE] = &srcMLOutput::processInterface;
-}
-
-xmlTextWriterPtr xout;
-
-void srcMLOutput::setTokenStream(TokenStream& ints) {
-
-  input = &ints;
-}
-
-
-void srcMLOutput::startconsumeAll(const char* xml_filename) {
 
   // open the output text writer stream
   // "-" filename is standard output
-  xout = xmlNewTextWriterFilename(xml_filename, isoption(OPTION_COMPRESSED));
+  xout = xmlNewTextWriterFilename(srcml_filename, isoption(OPTION_COMPRESSED));
 
   // issue the xml declaration
   xmlTextWriterStartDocument(xout, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
 }
 
-void srcMLOutput::endconsumeAll() {
+srcMLOutput::~srcMLOutput() {
 
   xmlTextWriterEndDocument(xout);
 
   xmlFreeTextWriter(xout);
+}
+
+void srcMLOutput::setTokenStream(TokenStream& ints) {
+
+  input = &ints;
 }
 
 void srcMLOutput::consume(const char* directory, const char* filename, const char* version) {
@@ -135,11 +131,8 @@ void srcMLOutput::consume(const char* directory, const char* filename, const cha
 
 void srcMLOutput::consumeAll(const char* ofilename) {
 
-  startconsumeAll(ofilename);
-
   consume("", ofilename);
 
-  endconsumeAll();
 }
 
 bool srcMLOutput::isoption(int flag) const {
