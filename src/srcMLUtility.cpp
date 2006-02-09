@@ -154,8 +154,12 @@ int srcMLUtility::unit_count() {
     if (ret != 1)
       break;
 
-    if (xmlTextReaderDepth(reader) == 1 && (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT)
-	&& strcmp((const char*) xmlTextReaderConstName(reader), "unit") == 0)
+    if (count == 0 && 
+	xmlTextReaderDepth(reader) == 1 && (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT)
+	&& strcmp((const char*) xmlTextReaderConstName(reader), "unit") != 0)
+      break;
+
+    if (xmlTextReaderDepth(reader) == 1 && (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT))
       ++count;
   }
 
