@@ -424,8 +424,9 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
       first = false;
 
       // special case for formfeed element
-      if (strcmp((const char*) xmlTextReaderConstName(reader), "formfeed") == 0)
-	outputText(BAD_CAST "\f", *pout);
+      if (xmlTextReaderIsEmptyElement(reader) > 0 &&
+	  strcmp((const char*) xmlTextReaderConstName(reader), "formfeed") == 0)
+      	outputText(BAD_CAST "\f", *pout);
       break;
     case XML_READER_TYPE_TEXT:
     case XML_READER_TYPE_SIGNIFICANT_WHITESPACE:
@@ -550,7 +551,7 @@ void srcMLUtility::outputText(const xmlChar* s, std::ostream& out) {
 	throw LibXMLError(ret);
 
       if (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT &&
-	  strcmp((const char*) xmlTextReaderConstName(reader), "unit") == 0)
+	  xmlTextReaderDepth(reader) <= 1)
 	break;
     }
   }
