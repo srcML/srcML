@@ -148,7 +148,7 @@ ${OBJ_DIR}srcMLParser.o : $(firstword $(SRCMLPARSER_GENS)) Mode.h TokenParser.h 
 
 # hack for antlr bug when it generate unintentional multi-line comment
 ${OBJ_DIR}KeywordCPPLexer.o : $(firstword $(KEYWORDCPPLEXER_GENS)) Language.h
-	$(CXX) $(ANTLR_INC) $(CXXFLAGS) -c $< -o $@;
+	$(CXX) $(ANTLR_INC) $(CXXFLAGS) -c $< -o $@
 
 ${OBJ_DIR}KeywordLexer.o : $(firstword $(KEYWORDLEXER_GENS))
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) -c $< -o $@
