@@ -9,6 +9,9 @@ WD=${shell pwd}
 #SRC2SRCML=${WD}/../bin/src2srcml
 #SRCML2SRC=${WD}/../bin/srcml2src
 
+SRCENCODING=
+#SRCENCODING=--src-encoding=ISO-8859-1
+
 PHONY : testbase
 testbase : gen
 
@@ -223,13 +226,13 @@ allinone : allinonecpp allinonec allinonejava
 	#@make cleanall
 
 allinonec : ../suite/allinall.c.xml
-	${SRCML2SRC} --src-encoding=ISO-8859-1 ../suite/allinall.c.xml | ${SRC2SRCML} -l C --src-encoding=ISO-8859-1 | diff - ../suite/allinall.c.xml
+	${SRCML2SRC} ${SRCENCODING} ../suite/allinall.c.xml | ${SRC2SRCML} -l C ${SRCENCODING} | diff -w  - ../suite/allinall.c.xml
 
 allinonecpp : ../suite/allinall.cpp.xml
-	${SRCML2SRC} --src-encoding=ISO-8859-1 ../suite/allinall.cpp.xml | ${SRC2SRCML} -l C++ --src-encoding=ISO-8859-1 | diff - ../suite/allinall.cpp.xml
+	${SRCML2SRC} ${SRCENCODING} ../suite/allinall.cpp.xml | ${SRC2SRCML} -l C++ ${SRCENCODING} | diff -w  - ../suite/allinall.cpp.xml
 
 allinonejava : ../suite/allinall.java.xml
-	${SRCML2SRC} --src-encoding=ISO-8859-1 ../suite/allinall.java.xml | ${SRC2SRCML} -l Java --src-encoding=ISO-8859-1 | diff - ../suite/allinall.java.xml
+	${SRCML2SRC} ${SRCENCODING} ../suite/allinall.java.xml | ${SRC2SRCML} -l Java ${SRCENCODING} | diff -w  - ../suite/allinall.java.xml
 
 cleanall :
 	rm -f ../suite/allinall.*
