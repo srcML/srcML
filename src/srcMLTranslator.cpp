@@ -40,7 +40,7 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
 				 int op
 				 )
   : Language(language), options(op),
-    out(0, getLanguageString(), src_encoding, xml_encoding, options) {
+    out(0, srcml_filename, getLanguageString(), src_encoding, xml_encoding, options) {
 
   // start formation of output srcml document
   out.startconsumeAll(srcml_filename);

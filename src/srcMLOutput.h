@@ -40,6 +40,7 @@ class srcMLOutput : public srcMLParserTokenTypes {
  public:
 
   srcMLOutput(TokenStream* ints, 
+	      const char* srcml_filename,
 	      const char* language, 
 	      const char* encoding,
 	      const char* src_encoding = "",
@@ -66,6 +67,7 @@ class srcMLOutput : public srcMLParserTokenTypes {
  private:
   TokenStream* input;
 
+  const char* srcml_filename;
   const char* unit_language;
   const char* unit_dir;
   const char* unit_filename;
