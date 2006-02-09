@@ -37,8 +37,9 @@
 #include "srcMLException.h"
 
 class srcMLOutput : public srcMLParserTokenTypes {
- public:
 
+ public:
+  // constructor
   srcMLOutput(TokenStream* ints, 
 	      const char* srcml_filename,
 	      const char* language, 
@@ -49,13 +50,17 @@ class srcMLOutput : public srcMLParserTokenTypes {
 
   static bool checkEncoding(const char* encoding);
 
+  // same srcml file can be generated from multiple input token streams
   void setTokenStream(TokenStream& ints);
 
+  // start a unit element with the passed metadata
+  void startUnit(const char* unit_language,
+		 const char* unit_directory, const char* unit_filename, const char* unit_version, bool outer);
+
+  // consume the entire tokenstream with output of srcml
   void consume(const char* unit_directory, const char* unit_filename, const char* unit_version = "");
 
-  void startUnit(const char* language,
-		 const char* directory, const char* filename, const char* version, bool outer);
-
+  // destructor
   ~srcMLOutput();
 
  private:
