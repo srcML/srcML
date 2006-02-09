@@ -226,13 +226,13 @@ allinone : allinonecpp allinonec allinonejava
 	#@make cleanall
 
 allinonec : ../suite/allinall.c.xml
-	${SRCML2SRC} ${SRCENCODING} ../suite/allinall.c.xml | ${SRC2SRCML} -l C ${SRCENCODING} | diff -w  - ../suite/allinall.c.xml
+	-${SRCML2SRC} ${SRCENCODING} ../suite/allinall.c.xml | ${SRC2SRCML} -l C ${SRCENCODING} | diff -w  - ../suite/allinall.c.xml
 
 allinonecpp : ../suite/allinall.cpp.xml
-	${SRCML2SRC} ${SRCENCODING} ../suite/allinall.cpp.xml | ${SRC2SRCML} -l C++ ${SRCENCODING} | diff -w  - ../suite/allinall.cpp.xml
+	-${SRCML2SRC} ${SRCENCODING} ../suite/allinall.cpp.xml | ${SRC2SRCML} -l C++ ${SRCENCODING} | diff -w  - ../suite/allinall.cpp.xml
 
 allinonejava : ../suite/allinall.java.xml
-	${SRCML2SRC} ${SRCENCODING} ../suite/allinall.java.xml | ${SRC2SRCML} -l Java ${SRCENCODING} | diff -w  - ../suite/allinall.java.xml
+	-${SRCML2SRC} ${SRCENCODING} ../suite/allinall.java.xml | ${SRC2SRCML} -l Java ${SRCENCODING} | diff -w  - ../suite/allinall.java.xml
 
 cleanall :
 	rm -f ../suite/allinall.*
