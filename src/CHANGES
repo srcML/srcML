@@ -1,6 +1,7 @@
 CHANGES
 
 Trunk
+	Added hidden long info option.
 
 	Check for invalid combination of xml output and source encoding on srcml2src.
 

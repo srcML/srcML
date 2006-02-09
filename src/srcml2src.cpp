@@ -50,6 +50,9 @@ const char* XML_FLAG_SHORT = "-X";
 const char* INFO_FLAG = "--info";
 const char* INFO_FLAG_SHORT = "-o";
 
+const char* LONG_INFO_FLAG = "--longinfo";
+const char* LONG_INFO_FLAG_SHORT = "-l";
+
 using std::setw;
 
 // output help message
@@ -225,6 +228,12 @@ int main(int argc, char* argv[]) {
     // info flag
     else if (compare_flags(argv[curarg], INFO_FLAG, INFO_FLAG_SHORT, position)) {
       options |= OPTION_INFO;
+      if (position == original_position) ++curarg;
+    }
+
+    // long info flag
+    else if (compare_flags(argv[curarg], LONG_INFO_FLAG, LONG_INFO_FLAG_SHORT, position)) {
+      options |= OPTION_LONG_INFO;
       if (position == original_position) ++curarg;
     }
 
@@ -405,7 +414,7 @@ int main(int argc, char* argv[]) {
 	throw "unit selected is out of range for this compound srcML document";
       }
 
-    } else if (isoption(options, OPTION_INFO)) {
+    } else if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {
 
       if (isoption(options, OPTION_UNIT)) {
       try {
@@ -423,12 +432,13 @@ int main(int argc, char* argv[]) {
       std::cout << "Directory: " << su.attribute("dir") << '\n';
       std::cout << "Filename: " << su.attribute("filename") << '\n';
       std::cout << "Version: " << su.attribute("version") << '\n';
-      /*
-      if (!isoption(options, OPTION_UNIT))
-	std::cout << "Nested: " << su.unit_count() << '\n';
-      else
-	std::cout << "Nested: " << 0 << '\n';
-      */
+
+      if (isoption(options, OPTION_LONG_INFO)) {
+	if (!isoption(options, OPTION_UNIT))
+	  std::cout << "Nested: " << su.unit_count() << '\n';
+	else
+	  std::cout << "Nested: " << 0 << '\n';
+      }
 
     } else if (isoption(options, OPTION_LANGUAGE)) {
 

@@ -90,6 +90,9 @@ enum Options {
 
   // info
   OPTION_INFO         = 0x80000,
+
+  // long info
+  OPTION_LONG_INFO    = 0x00100000,
 };
 
 #endif
