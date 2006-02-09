@@ -67,8 +67,8 @@ void skiptounit(xmlTextReaderPtr reader, const char* filename) throw (LibXMLErro
 void skiptounit(xmlTextReaderPtr reader, int number) throw (LibXMLError);
 
 // constructor
-srcMLUtility::srcMLUtility(const char* infilename, const char* enc, int op)
-  : infile(infilename), output_encoding(enc), options(op), reader(0), handler(0) {
+srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int op)
+  : infile(infilename), output_encoding(encoding), options(op), reader(0), handler(0) {
 
   // empty filename indicates standard input
   if (infile == 0)
