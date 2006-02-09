@@ -109,7 +109,7 @@ void srcMLUtility::translate(const char* ofilename) {
 }
 
 // attribute
-std::string srcMLUtility::attribute(const char* attribute_name) {
+std::string srcMLUtility::attribute(const char* attribute_name, bool& nonnull) {
 
   // extract attribute from unit tag
   xmlChar* value = xmlTextReaderGetAttribute(reader, BAD_CAST attribute_name);
@@ -117,19 +117,21 @@ std::string srcMLUtility::attribute(const char* attribute_name) {
   // return the extracted attribute or a blank string if it doesn't exist
   std::string s(value != 0 ? (const char*)value : "");
 
+  nonnull = value != 0;
+
   xmlFree(value);
 
   return s;
 }
 
 // attribute
-std::string srcMLUtility::unit_attribute(int unitnumber, const char* attribute_name) {
+std::string srcMLUtility::unit_attribute(int unitnumber, const char* attribute_name, bool& nonnull) {
 
   // skip to the proper nested unit
   skiptounit(reader, unitnumber);
 
   // extract attribute from unit tag
-  return attribute(attribute_name);
+  return attribute(attribute_name, nonnull);
 }
 
 // move to a particular nested unit

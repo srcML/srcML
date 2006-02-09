@@ -64,10 +64,10 @@ class srcMLUtility {
   int process_tag(std::istream& in, std::string& tagname, std::vector<std::pair<std::string, std::string> >& m);
 
   // attribute
-  std::string attribute(const char* attribute_name);
+  std::string attribute(const char* attribute_name, bool& nonnull);
 
   // attribute of a nested unit
-  std::string unit_attribute(int unitnumber, const char* attribute_name);
+  std::string unit_attribute(int unitnumber, const char* attribute_name, bool& nonnull);
 
   // move to a particular nested unit
   void move_to_unit(int unitnumber);

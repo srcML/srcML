@@ -366,8 +366,8 @@ int main(int argc, char* argv[]) {
     if (isoption(options, OPTION_FILENAME) && isoption(options, OPTION_UNIT)) {
 
       try {
-
-	std::string l = su.unit_attribute(unit, "filename");
+	bool nonnull;
+	std::string l = su.unit_attribute(unit, "filename", nonnull);
 	if (l != "")
 	  std::cout << l << '\n';
 
@@ -378,7 +378,8 @@ int main(int argc, char* argv[]) {
 
     } else if (isoption(options, OPTION_FILENAME)) {
 
-      std::string l = su.attribute("filename");
+      bool nonnull;
+      std::string l = su.attribute("filename", nonnull);
       if (l != "")
 	std::cout << l << '\n';
 
@@ -386,7 +387,8 @@ int main(int argc, char* argv[]) {
 
       try {
 
-	std::string l = su.unit_attribute(unit, "dir");
+	bool nonnull;
+	std::string l = su.unit_attribute(unit, "dir", nonnull);
 	if (l != "")
 	  std::cout << l << '\n';
 
@@ -397,15 +399,17 @@ int main(int argc, char* argv[]) {
 
     } else if (isoption(options, OPTION_DIRECTORY)) {
 
-      std::string l = su.attribute("dir");
-      if (l != "")
-	std::cout << l << '\n';
+	bool nonnull;
+	std::string l = su.attribute("dir", nonnull);
+	if (l != "")
+	  std::cout << l << '\n';
 
     } else if (isoption(options, OPTION_LANGUAGE) && isoption(options, OPTION_UNIT)) {
 
       try {
 
-	std::string l = su.unit_attribute(unit, "language");
+	bool nonnull;
+	std::string l = su.unit_attribute(unit, "language", nonnull);
 	if (l != "")
 	  std::cout << l << '\n';
 
@@ -427,11 +431,24 @@ int main(int argc, char* argv[]) {
       }
       }
 
+      bool nonnull;
       std::cout << "Encoding: " << su.getencoding() << '\n';
-      std::cout << "Language: " << su.attribute("language") << '\n';
-      std::cout << "Directory: " << su.attribute("dir") << '\n';
-      std::cout << "Filename: " << su.attribute("filename") << '\n';
-      std::cout << "Version: " << su.attribute("version") << '\n';
+
+      std::string language = su.attribute("language", nonnull);
+      if (nonnull)
+	std::cout << "Language: " << language << '\n';
+
+      std::string directory = su.attribute("dir", nonnull);
+      if (nonnull)
+	std::cout << "Directory: " << directory << '\n';
+
+      std::string filename = su.attribute("filename", nonnull);
+      if (nonnull)
+	std::cout << "Filename: " << filename << '\n';
+
+      std::string version = su.attribute("version", nonnull);
+      if (nonnull)
+	std::cout << "Version: " << version << '\n';
 
       if (isoption(options, OPTION_LONG_INFO)) {
 	if (!isoption(options, OPTION_UNIT))
@@ -442,7 +459,8 @@ int main(int argc, char* argv[]) {
 
     } else if (isoption(options, OPTION_LANGUAGE)) {
 
-      std::string l = su.attribute("language");
+      bool nonnull;
+      std::string l = su.attribute("language", nonnull);
       if (l != "")
 	std::cout << l << '\n';
 
@@ -452,7 +470,8 @@ int main(int argc, char* argv[]) {
 
 	su.move_to_unit(unit);
 
-	std::string l = su.attribute("version");
+	bool nonnull;
+	std::string l = su.attribute("version", nonnull);
 	if (l != "")
 	  std::cout << l << '\n';
 
@@ -463,7 +482,8 @@ int main(int argc, char* argv[]) {
 
     } else if (isoption(options, OPTION_VERSION)) {
 
-      std::string l = su.attribute("version");
+      bool nonnull;
+      std::string l = su.attribute("version", nonnull);
       if (l != "")
 	std::cout << l << '\n';
 
