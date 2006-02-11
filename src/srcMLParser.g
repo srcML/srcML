@@ -589,7 +589,7 @@ call_macro_expression[int secondtoken, bool statement] { int postnametoken = 0; 
                 || postcalltoken == EXTERN || postcalltoken == STRUCT || postcalltoken == UNION
                 || postcalltoken == RCURLY || postcalltoken == 1 /* EOF ? */
                 || postcalltoken == TEMPLATE || postcalltoken == PUBLIC || postcalltoken == PRIVATE
-                || postcalltoken == PROTECTED }?
+                || postcalltoken == PROTECTED || postcalltoken == NAMESPACE }?
             macro_call |
 
             // call syntax succeeded and post call token is legitimate for an expression
