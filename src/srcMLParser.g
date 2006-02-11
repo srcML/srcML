@@ -346,14 +346,14 @@ public:
 
 friend class LocalMode;
 
-virtual ~srcMLParser() {}
+~srcMLParser() {}
 
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang = LANGUAGE_CXX);
 
 bool markblockzero;
 int cppifcount;
 
-virtual void startUnit() {
+void startUnit() {
 
    startElement(SUNIT);
    emptyElement(SUNIT);
@@ -378,7 +378,7 @@ void setTokenPosition(TokenPosition& tp, int type) {
 public:
 
 // ends all currently open modes
-virtual void endAllModes() {
+void endAllModes() {
 
      // should only be one mode
      if (state.size() > 1)
