@@ -587,8 +587,9 @@ call_macro_expression[int secondtoken, bool statement] { int postnametoken = 0; 
             // call syntax succeeded, however post call token is not legitimate
             { _tokenSet_12.member(postcalltoken) || postcalltoken == NAME || postcalltoken == LCURLY
                 || postcalltoken == EXTERN || postcalltoken == STRUCT || postcalltoken == UNION
-                || postcalltoken == RCURLY || postcalltoken == 1 
-                || postcalltoken == TEMPLATE /* EOF */ }?
+                || postcalltoken == RCURLY || postcalltoken == 1 /* EOF ? */
+                || postcalltoken == TEMPLATE || postcalltoken == PUBLIC || postcalltoken == PRIVATE
+                || postcalltoken == PROTECTED }?
             macro_call |
 
             // call syntax succeeded and post call token is legitimate for an expression
@@ -600,8 +601,9 @@ call_macro_expression[int secondtoken, bool statement] { int postnametoken = 0; 
         { argumenttoken != 0 && postcalltoken == 0 }? guessing_endGuessing macro_call |
 
         // single macro call followed by statement_cfg
-        { secondtoken != -1 && (_tokenSet_12.member(secondtoken) || secondtoken == LCURLY || secondtoken == 1 
-                || secondtoken == PUBLIC || secondtoken == PRIVATE || secondtoken == PROTECTED /* EOF */) }?
+        { secondtoken != -1
+            && (_tokenSet_12.member(secondtoken) || secondtoken == LCURLY || secondtoken == 1 /* EOF */
+            || secondtoken == PUBLIC || secondtoken == PRIVATE || secondtoken == PROTECTED) }?
         macro_call |
 
         // expression statement
