@@ -598,7 +598,8 @@ call_macro_expression[int secondtoken, bool statement] { int postnametoken = 0; 
         { argumenttoken != 0 && postcalltoken == 0 }? guessing_endGuessing macro_call |
 
         // single macro call followed by statement_cfg
-        { secondtoken != -1 && (_tokenSet_12.member(secondtoken) || secondtoken == LCURLY || secondtoken == 1 /* EOF */) }?
+        { secondtoken != -1 && (_tokenSet_12.member(secondtoken) || secondtoken == LCURLY || secondtoken == 1 
+                || secondtoken == PUBLIC || secondtoken == PRIVATE || secondtoken == PROTECTED /* EOF */) }?
         macro_call |
 
         // expression statement
