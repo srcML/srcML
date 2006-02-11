@@ -375,16 +375,6 @@ void setTokenPosition(TokenPosition& tp, int type) {
         *tp.sp = type;
 }
 
-void traceIn(const char* name) {
-        std::cout << "Stack size in:  " << state.size() << " " << inTransparentMode(MODE_INTERNAL_END_CURLY) << std::endl;
-        LLkParser::traceIn(name);
-}
-
-void traceOut(const char* name) {
-        LLkParser::traceOut(name);
-        std::cout << "Stack size out:  " << state.size() << " " << inTransparentMode(MODE_INTERNAL_END_CURLY) << std::endl;
-}
-
 public:
 
 // ends all currently open modes
