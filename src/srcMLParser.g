@@ -1645,13 +1645,15 @@ statement_part { int type_count; } :
         // finds type count for next case.  Should always fail, but fill type_count with the correct value
         { inLanguage(LANGUAGE_C_FAMILY) && inMode(MODE_FUNCTION_TAIL) }?
         (
-            (function_type_check[type_count] EOL)=> (~ (EOL | LINECOMMENT | BLOCKCOMMENT | BLOCKCOMMENTEOL | EOL_BACKSLASH | COMMA)) |
+            (function_type_check[type_count] EOL)=>
+            (~ (EOL | LINECOMMENT | BLOCKCOMMENT | BLOCKCOMMENTEOL | EOL_BACKSLASH | COMMA)) |
 
             (
                 (NAME LCURLY)=> NAME |
             // parameter declaration for a K&R old style function parameter declaration
             { startNewMode(MODE_TOP); }
-            variable_declaration_statement[type_count] variable_declaration_nameinit (COMMA variable_declaration_nameinit)* terminate
+            variable_declaration_statement[type_count] variable_declaration_nameinit
+                (COMMA variable_declaration_nameinit)* terminate
             { endCurrentMode(MODE_TOP); } 
             )
         ) |
