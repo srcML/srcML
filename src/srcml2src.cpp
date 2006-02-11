@@ -368,7 +368,7 @@ int main(int argc, char* argv[]) {
       try {
 	bool nonnull;
 	std::string l = su.unit_attribute(unit, "filename", nonnull);
-	if (l != "")
+	if (nonnull)
 	  std::cout << l << '\n';
 
       } catch (LibXMLError) {
@@ -380,7 +380,7 @@ int main(int argc, char* argv[]) {
 
       bool nonnull;
       std::string l = su.attribute("filename", nonnull);
-      if (l != "")
+      if (nonnull)
 	std::cout << l << '\n';
 
     } else if (isoption(options, OPTION_DIRECTORY) && isoption(options, OPTION_UNIT)) {
@@ -389,7 +389,7 @@ int main(int argc, char* argv[]) {
 
 	bool nonnull;
 	std::string l = su.unit_attribute(unit, "dir", nonnull);
-	if (l != "")
+	if (nonnull)
 	  std::cout << l << '\n';
 
       } catch (LibXMLError) {
@@ -401,7 +401,7 @@ int main(int argc, char* argv[]) {
 
 	bool nonnull;
 	std::string l = su.attribute("dir", nonnull);
-	if (l != "")
+	if (nonnull)
 	  std::cout << l << '\n';
 
     } else if (isoption(options, OPTION_LANGUAGE) && isoption(options, OPTION_UNIT)) {
@@ -410,7 +410,7 @@ int main(int argc, char* argv[]) {
 
 	bool nonnull;
 	std::string l = su.unit_attribute(unit, "language", nonnull);
-	if (l != "")
+	if (nonnull)
 	  std::cout << l << '\n';
 
       } catch (LibXMLError) {
@@ -459,7 +459,7 @@ int main(int argc, char* argv[]) {
 
       bool nonnull;
       std::string l = su.attribute("language", nonnull);
-      if (l != "")
+      if (nonnull)
 	std::cout << l << '\n';
 
     } else if (isoption(options, OPTION_VERSION) && isoption(options, OPTION_UNIT)) {
@@ -470,7 +470,7 @@ int main(int argc, char* argv[]) {
 
 	bool nonnull;
 	std::string l = su.attribute("version", nonnull);
-	if (l != "")
+	if (nonnull)
 	  std::cout << l << '\n';
 
       } catch (LibXMLError) {
@@ -482,7 +482,7 @@ int main(int argc, char* argv[]) {
 
       bool nonnull;
       std::string l = su.attribute("version", nonnull);
-      if (l != "")
+      if (nonnull)
 	std::cout << l << '\n';
 
     } else if (isoption(options, OPTION_NESTED)) {

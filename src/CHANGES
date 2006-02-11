@@ -1,6 +1,9 @@
 CHANGES
 
 Trunk
+	Attribute info for srcml2src now has output of nothing for missing attribute,
+	and output of empty line for blank value of attribute.
+	
 	Added hidden long info option.
 
 	Check for invalid combination of xml output and source encoding on srcml2src.
