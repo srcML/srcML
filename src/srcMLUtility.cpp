@@ -164,7 +164,7 @@ int srcMLUtility::unit_count() {
       // found another unit
       ++count;
 
-      // skipt past this unit
+      // skip past this unit
       xmlTextReaderNext(reader);
     }
   }
@@ -576,7 +576,8 @@ void srcMLUtility::outputText(const xmlChar* s, std::ostream& out) {
       if (count == number)
 	break;
 
-      //      xmlTextReaderNext(reader);
+      // skip past this unit
+      xmlTextReaderNext(reader);
     }
   }
 
