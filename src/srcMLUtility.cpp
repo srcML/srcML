@@ -589,7 +589,11 @@ void srcMLUtility::outputText(const xmlChar* s, std::ostream& out) {
       skiptonextunit(reader);
 
       // did we find it?
-      if (strcmp((const char*) xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_FILENAME), filename) == 0)
+      if (strcmp((const char*)
+		 xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_FILENAME), filename) == 0)
 	break;
+
+      // skip past this unit
+      xmlTextReaderNext(reader);
     }
   }
