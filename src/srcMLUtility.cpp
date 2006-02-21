@@ -154,13 +154,19 @@ int srcMLUtility::unit_count() {
     if (ret != 1)
       break;
 
-    if (count == 0 && 
-	xmlTextReaderDepth(reader) == 1 && (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT)
-	&& strcmp((const char*) xmlTextReaderConstName(reader), "unit") != 0)
-      break;
+    // process unit
+    if (xmlTextReaderDepth(reader) == 1 && (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT)) {
 
-    if (xmlTextReaderDepth(reader) == 1 && (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT))
+      // make sure first nested element is unit
+      if (count == 0 && strcmp((const char*) xmlTextReaderConstName(reader), "unit") != 0)
+         break;
+      
+      // found another unit
       ++count;
+
+      // skipt past this unit
+      xmlTextReaderNext(reader);
+    }
   }
 
   return count;
@@ -569,6 +575,8 @@ void srcMLUtility::outputText(const xmlChar* s, std::ostream& out) {
       // did we find it?
       if (count == number)
 	break;
+
+      //      xmlTextReaderNext(reader);
     }
   }
 
