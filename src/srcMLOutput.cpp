@@ -146,8 +146,9 @@ const char* srcMLOutput::type2name(int token_type) const {
 }
 
 // buffer of output utf8 characters
-const int UTF8BUFFER_MAXSIZE = 5120;
-unsigned char utf8buffer[UTF8BUFFER_MAXSIZE];
+const int UTF8BUFFER_MAXSIZE = 512;
+
+xmlBufferPtr poutbuffer = xmlBufferCreateSize(UTF8BUFFER_MAXSIZE);
 
 // amount of space for expanded characters.  assume a maximum of four bytes for every original single byte
 const int UTF8BUFFER_SPACE = UTF8BUFFER_MAXSIZE / 4;
@@ -155,23 +156,49 @@ const int UTF8BUFFER_SPACE = UTF8BUFFER_MAXSIZE / 4;
 void srcMLOutput::processText(const std::string& str) {
 
   // extract c string from c++ string
-  const char* inputbuffer = str.c_str();
+  char* inputbuffer = (char*) str.c_str();
   const unsigned int inputbuffer_size = (unsigned int) str.size();
 
+  xmlTextWriterWriteRawLen(xout, BAD_CAST inputbuffer, inputbuffer_size);
+}
+
+void srcMLOutput::processEncodedText(const std::string& str) {
+
+  // extract c string from c++ string
+  char* inputbuffer = (char*) str.c_str();
+  const unsigned int inputbuffer_size = (unsigned int) str.size();
+
+  if (strcmp(handler->name, "UTF-8") == 0) {
+    xmlTextWriterWriteRawLen(xout, BAD_CAST inputbuffer, inputbuffer_size);
+    return;
+  }
+
 #ifdef LIBXML_ENABLED
+
+  // input buffer created from C++ string
+  xmlBufferPtr pinbuffer = xmlBufferCreateStatic(inputbuffer, inputbuffer_size);
 
   // convert all of the input buffer to UTF-8 in chunks
   // conversion from libxml internal UTF-8 to output encoding is handled automatically
   unsigned int pos = 0;
   while (pos < inputbuffer_size) {
 
-    int utf8buffer_size = UTF8BUFFER_MAXSIZE;
-    int buffer_left = inputbuffer_size - pos;
-    int partialinputbuffer_size = buffer_left < UTF8BUFFER_SPACE ? buffer_left : UTF8BUFFER_SPACE;
-    int utf8buffer_newsize = handler->input(utf8buffer, &utf8buffer_size,
-			    (const unsigned char*) (inputbuffer + pos), &partialinputbuffer_size);
+    // reset resusable output buffer
+    poutbuffer->use = 0;
 
-    xmlTextWriterWriteRawLen(xout, BAD_CAST utf8buffer, utf8buffer_newsize);
+    int utf8buffer_size = UTF8BUFFER_MAXSIZE;
+    int buffer_left = pinbuffer->size - pos;
+    int partialinputbuffer_size = buffer_left < UTF8BUFFER_SPACE ? buffer_left : UTF8BUFFER_SPACE;
+
+    //    int utf8buffer_newsize = handler->input(utf8buffer, &utf8buffer_size,
+    //			    (const unsigned char*) (inputbuffer + pos), &partialinputbuffer_size);
+
+    pinbuffer->content += pos;
+    pinbuffer->size -= pos;
+
+    int utf8buffer_newsize = xmlCharEncInFunc(handler, poutbuffer, pinbuffer);
+    
+    xmlTextWriterWriteRawLen(xout, poutbuffer->content, poutbuffer->use);
 
     pos += partialinputbuffer_size;
   }
