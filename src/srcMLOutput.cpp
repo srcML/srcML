@@ -153,64 +153,55 @@ xmlBufferPtr poutbuffer = xmlBufferCreateSize(UTF8BUFFER_MAXSIZE);
 // amount of space for expanded characters.  assume a maximum of four bytes for every original single byte
 const int UTF8BUFFER_SPACE = UTF8BUFFER_MAXSIZE / 4;
 
+// output text
 void srcMLOutput::processText(const std::string& str) {
 
-  // extract c string from c++ string
-  char* inputbuffer = (char*) str.c_str();
-  const unsigned int inputbuffer_size = (unsigned int) str.size();
-
-  xmlTextWriterWriteRawLen(xout, BAD_CAST inputbuffer, inputbuffer_size);
+  xmlTextWriterWriteRawLen(xout, BAD_CAST str.c_str(), str.size());
 }
 
+// output encoded text
 void srcMLOutput::processEncodedText(const std::string& str) {
 
-  // extract c string from c++ string
-  char* inputbuffer = (char*) str.c_str();
-  const unsigned int inputbuffer_size = (unsigned int) str.size();
-
-  if (strcmp(handler->name, "UTF-8") == 0) {
-    xmlTextWriterWriteRawLen(xout, BAD_CAST inputbuffer, inputbuffer_size);
-    return;
-  }
-
+  // no encoding needed for conversion from UTF-8
 #ifdef LIBXML_ENABLED
+  if (strcmp(handler->name, "UTF-8") == 0) {
+#endif
+    processText(str);
+    return;
+#ifdef LIBXML_ENABLED
+  }
+#endif
 
   // input buffer created from C++ string
-  xmlBufferPtr pinbuffer = xmlBufferCreateStatic(inputbuffer, inputbuffer_size);
-
+  xmlBufferPtr pinbuffer = xmlBufferCreateStatic((char*) str.c_str(), str.size());
   // convert all of the input buffer to UTF-8 in chunks
   // conversion from libxml internal UTF-8 to output encoding is handled automatically
   unsigned int pos = 0;
-  while (pos < inputbuffer_size) {
+  while (pos < str.size()) {
 
     // reset resusable output buffer
     poutbuffer->use = 0;
 
-    int utf8buffer_size = UTF8BUFFER_MAXSIZE;
     int buffer_left = pinbuffer->size - pos;
     int partialinputbuffer_size = buffer_left < UTF8BUFFER_SPACE ? buffer_left : UTF8BUFFER_SPACE;
-
-    //    int utf8buffer_newsize = handler->input(utf8buffer, &utf8buffer_size,
-    //			    (const unsigned char*) (inputbuffer + pos), &partialinputbuffer_size);
 
     pinbuffer->content += pos;
     pinbuffer->size -= pos;
 
-    int utf8buffer_newsize = xmlCharEncInFunc(handler, poutbuffer, pinbuffer);
+    xmlCharEncInFunc(handler, poutbuffer, pinbuffer);
     
     xmlTextWriterWriteRawLen(xout, poutbuffer->content, poutbuffer->use);
 
     pos += partialinputbuffer_size;
   }
-#else
-
-  // output the buffer
-  xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) inputbuffer, inputbuffer_size);
-#endif
 }
 
 void srcMLOutput::processText(const antlr::RefToken& token) {
   processText(token->getText());
+}
+
+void srcMLOutput::processEncodedText(const antlr::RefToken& token) {
+  processEncodedText(token->getText());
 }
 
 void srcMLOutput::processFormFeed(const antlr::RefToken& token) {
@@ -320,7 +311,7 @@ void srcMLOutput::processLineComment(const antlr::RefToken& token) {
 
   xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST "line");
 
-  processText(token);
+  processEncodedText(token);
 
   xmlTextWriterEndElement(xout);
 }
@@ -339,7 +330,7 @@ void srcMLOutput::processBlockComment(const antlr::RefToken& token) {
   xmlTextWriterWriteAttribute(xout, BAD_CAST "type",
      BAD_CAST (strcmp(unit_language, "Java") == 0 && token->getText().substr(0, 3) == "/**" ? JAVADOC_COMMENT_ATTR : BLOCK_COMMENT_ATTR));
 
-  processText(token);
+  processEncodedText(token);
 
   xmlTextWriterEndElement(xout);
 }

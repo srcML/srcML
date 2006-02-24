@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Fixed problem with encodings handled by iconv and not by
+	libxml2 (directly).  Also made encoding changes more efficient in src2srcml.
 	Attribute info for srcml2src now has output of nothing for missing attribute,
 	and output of empty line for blank value of attribute.
 	
