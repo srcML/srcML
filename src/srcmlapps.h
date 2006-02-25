@@ -77,6 +77,8 @@ const char* LANGUAGE_C = "C";
 const char* LANGUAGE_CXX = "C++";
 const char* LANGUAGE_JAVA = "Java";
 
+const char* SKIP_ENCODING_FLAG = "--skip-encoding";
+const char* SKIP_ENCODING_FLAG_SHORT = "-j";
 
 /* Return Status */
 

@@ -101,6 +101,10 @@ void output_help(const char* name) {
 	      << "  " << TEXTENCODING_FLAG_SHORT        << ", " << setw(COL) <<  TEXTENCODING_FLAG_FULL
 	      << "set the input source encoding to ENC (default:  based on locale" << ") \n"
 #endif
+#ifdef LIBXML_ENABLED
+	      << "  " << SKIP_ENCODING_FLAG_SHORT        << ", " << setw(COL) <<  SKIP_ENCODING_FLAG
+	      << "skip text encoding" << "\n"
+#endif
 	      << "  " << ENCODING_FLAG_SHORT    << ", " << setw(COL) <<  ENCODING_FLAG_FULL
 	      << "set the output XML encoding to ENC (default:  "
 	      << DEFAULT_XML_ENCODING << ") \n"
@@ -223,6 +227,12 @@ int main(int argc, char* argv[]) {
       std::cerr << NAME << ": The compression option, i.e., " << COMPRESSED_FLAG << ", is only supported in the libxml version." << '\n';
       exit(STATUS_LIBXML2_FEATURE);
 #endif
+    }
+
+    // skip encoding mode
+    else if (compare_flags(argv[curarg], SKIP_ENCODING_FLAG, SKIP_ENCODING_FLAG_SHORT, position)) {
+      options |= OPTION_SKIP_ENCODING;
+      if (position == original_position) ++curarg;
     }
 
     // filelist mode

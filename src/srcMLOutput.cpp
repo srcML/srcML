@@ -55,6 +55,10 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   if (!handler)
     throw srcEncodingException();
 
+  // if the source encoding is to UTF-8, skip any encoding
+  if (strcmp(handler->name, "UTF-8"))
+    op |= OPTION_SKIP_ENCODING;
+
   // fill the elements
   fillElementNames();
 
@@ -166,7 +170,7 @@ void srcMLOutput::processEncodedText(const std::string& str) {
 
   // no encoding needed for conversion from UTF-8
 #ifdef LIBXML_ENABLED
-  if (strcmp(handler->name, "UTF-8") == 0) {
+  if (isoption(OPTION_SKIP_ENCODING)) {
 #endif
     processText(str);
     return;

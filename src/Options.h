@@ -93,6 +93,9 @@ enum Options {
 
   // long info
   OPTION_LONG_INFO    = 0x00100000,
+
+  // skip encoding
+  OPTION_SKIP_ENCODING = 0x00200000,
 };
 
 #endif

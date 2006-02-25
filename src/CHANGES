@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Add skip encoding option to src2srcml.
+
 	Fixed problem with encodings handled by iconv and not by
 	libxml2 (directly) in srcml2src.
 
