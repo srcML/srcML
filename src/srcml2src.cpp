@@ -100,6 +100,10 @@ void output_help(const char* name) {
 	       << "set the output source encoding to ENC (default:  " << "based on locale" << ") \n"
 	       << '\n'
 #endif
+#ifdef LIBXML_ENABLED
+	      << "  " << SKIP_ENCODING_FLAG_SHORT        << ", " << setw(COL) <<  SKIP_ENCODING_FLAG
+	      << "skip text encoding" << "\n"
+#endif
                << "  " << VERBOSE_FLAG_SHORT    << ", " << setw(COL) << VERBOSE_FLAG    << "verbose output\n"
 	       << '\n'
 	       << "Examples:  " << '\n'
@@ -198,6 +202,12 @@ int main(int argc, char* argv[]) {
     // nested flag
     else if (compare_flags(argv[curarg], NESTED_FLAG, NESTED_FLAG_SHORT, position)) {
       options |= OPTION_NESTED;
+      if (position == original_position) ++curarg;
+    }
+
+    // skip encoding mode
+    else if (compare_flags(argv[curarg], SKIP_ENCODING_FLAG, SKIP_ENCODING_FLAG_SHORT, position)) {
+      options |= OPTION_SKIP_ENCODING;
       if (position == original_position) ++curarg;
     }
 

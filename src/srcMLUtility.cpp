@@ -92,6 +92,7 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int op)
   unit_directory = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_DIRECTORY);
   unit_version = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_VERSION);
   unit_language = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_LANGUAGE);
+
 }
 
 // destructor
@@ -401,6 +402,10 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
   // setup an output handler
   handler = xmlFindCharEncodingHandler(output_encoding);
 
+  // no need for encoding change
+  if (strcmp(handler->name, (char*) xmlTextReaderConstEncoding(reader)) == 0)
+    options |= OPTION_SKIP_ENCODING;
+
   // starting depth tells us when to end
   int startingDepth = xmlTextReaderDepth(reader);
 
@@ -467,7 +472,7 @@ void srcMLUtility::outputText(const xmlChar* s, std::ostream& out) {
 
   // no encoding needed for conversion from UTF-8
 #ifdef LIBXML_ENABLED
-  if (strcmp(handler->name, "UTF-8") == 0) {
+  if (isoption(options, OPTION_SKIP_ENCODING)) {
 #endif
     out << s;
     return;
