@@ -452,42 +452,51 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
     delete pout;
 }
 
+// buffer of output utf8 characters
+const int UTF8BUFFER_MAXSIZE = 4;
+
+xmlBufferPtr poutbuffer = xmlBufferCreateSize(UTF8BUFFER_MAXSIZE);
+
+// amount of space for expanded characters.  assume a maximum of four bytes for every original single byte
+const int UTF8BUFFER_SPACE = UTF8BUFFER_MAXSIZE / 4;
+
 // output text in proper format
 void srcMLUtility::outputText(const xmlChar* s, std::ostream& out) {
 
+  // no encoding needed for conversion from UTF-8
 #ifdef LIBXML_ENABLED
-
-    // buffer of output utf8 characters
-    const int UTF8BUFFER_MAXSIZE = 512;
-    static unsigned char utf8buffer[UTF8BUFFER_MAXSIZE];
-
-    // amount of space for expanded characters.  assume two bytes for every original one byte
-    const int UTF8BUFFER_SPACE = UTF8BUFFER_MAXSIZE / 2;
-
-    // extract c string from c++ string
-    const xmlChar* inputbuffer = s;
-    int inputbuffer_size = (int) strlen((const char*) s);
-
-    // write out all of input buffer converted to utf8
-    int pos = 0;
-    while (pos < inputbuffer_size) {
-
-      int utf8buffer_size = UTF8BUFFER_MAXSIZE;
-      int buffer_left = inputbuffer_size - pos;
-      int partialinputbuffer_size = buffer_left > UTF8BUFFER_SPACE ? UTF8BUFFER_SPACE : buffer_left;
-      int utf8buffer_newsize = handler->output(utf8buffer, &utf8buffer_size,
-			       (const unsigned char*) (inputbuffer + pos), &partialinputbuffer_size);
-
-      out.write((char*) utf8buffer, utf8buffer_newsize);
-
-      pos += partialinputbuffer_size;
-    }
-
-#else
-
-    // output string directly with no encoding
-    out << s;
+  if (strcmp(handler->name, "UTF-8") == 0) {
 #endif
+    out << s;
+    return;
+#ifdef LIBXML_ENABLED
+  }
+#endif
+
+  unsigned int len = strlen((const char*) s);
+
+  // input buffer created from C++ string
+  xmlBufferPtr pinbuffer = xmlBufferCreateStatic((char*) s, len);
+
+  // convert all of the UTF-8 to output encoding in chunks
+  unsigned int pos = 0;
+  while (pos < len) {
+
+    // reset resusable output buffer
+    poutbuffer->use = 0;
+
+    int buffer_left = pinbuffer->size - pos;
+    int partialinputbuffer_size = buffer_left < UTF8BUFFER_SPACE ? buffer_left : UTF8BUFFER_SPACE;
+
+    pinbuffer->content += pos;
+    pinbuffer->size -= pos;
+
+    xmlCharEncOutFunc(handler, poutbuffer, pinbuffer);
+    
+    out.write((char*) poutbuffer->content, poutbuffer->use);
+
+    pos += partialinputbuffer_size;
+  }
 }
 
   // output current XML node in reader
