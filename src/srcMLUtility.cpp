@@ -452,6 +452,7 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
     delete pout;
 }
 
+#ifdef LIBXML_ENABLED
 // buffer of output utf8 characters
 const int UTF8BUFFER_MAXSIZE = 4;
 
@@ -459,6 +460,7 @@ xmlBufferPtr poutbuffer = xmlBufferCreateSize(UTF8BUFFER_MAXSIZE);
 
 // amount of space for expanded characters.  assume a maximum of four bytes for every original single byte
 const int UTF8BUFFER_SPACE = UTF8BUFFER_MAXSIZE / 4;
+#endif
 
 // output text in proper format
 void srcMLUtility::outputText(const xmlChar* s, std::ostream& out) {
@@ -471,7 +473,6 @@ void srcMLUtility::outputText(const xmlChar* s, std::ostream& out) {
     return;
 #ifdef LIBXML_ENABLED
   }
-#endif
 
   unsigned int len = strlen((const char*) s);
 
@@ -497,6 +498,7 @@ void srcMLUtility::outputText(const xmlChar* s, std::ostream& out) {
 
     pos += partialinputbuffer_size;
   }
+#endif
 }
 
   // output current XML node in reader

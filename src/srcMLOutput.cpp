@@ -145,6 +145,7 @@ const char* srcMLOutput::type2name(int token_type) const {
   return ElementNames[token_type];
 }
 
+#ifdef LIBXML_ENABLED
 // buffer of output utf8 characters
 const int UTF8BUFFER_MAXSIZE = 512;
 
@@ -152,11 +153,12 @@ xmlBufferPtr poutbuffer = xmlBufferCreateSize(UTF8BUFFER_MAXSIZE);
 
 // amount of space for expanded characters.  assume a maximum of four bytes for every original single byte
 const int UTF8BUFFER_SPACE = UTF8BUFFER_MAXSIZE / 4;
+#endif
 
 // output text
 void srcMLOutput::processText(const std::string& str) {
 
-  xmlTextWriterWriteRawLen(xout, BAD_CAST str.c_str(), str.size());
+  xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) str.c_str(), str.size());
 }
 
 // output encoded text
@@ -170,7 +172,6 @@ void srcMLOutput::processEncodedText(const std::string& str) {
     return;
 #ifdef LIBXML_ENABLED
   }
-#endif
 
   // input buffer created from C++ string
   xmlBufferPtr pinbuffer = xmlBufferCreateStatic((char*) str.c_str(), str.size());
@@ -194,6 +195,7 @@ void srcMLOutput::processEncodedText(const std::string& str) {
 
     pos += partialinputbuffer_size;
   }
+#endif
 }
 
 void srcMLOutput::processText(const antlr::RefToken& token) {
