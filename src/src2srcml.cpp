@@ -450,6 +450,15 @@ int main(int argc, char* argv[]) {
     exit(STATUS_SUCCESS);
   }
 
+  /* Special checks for illegal combinations */
+
+  // skip encoding and specifying encoding
+  if (isoption(options, OPTION_SKIP_ENCODING) && isoption(options, OPTION_TEXT_ENCODING)) {
+
+    std::cerr << NAME << ": Options for skipping encoding and specifying source encoding are incompatible.\n";
+    exit(STATUS_INVALID_OPTION_COMBINATION);
+  }
+
   // eat optional option separator
   if (argc > (curarg) && strcmp(argv[curarg], OPTION_SEPARATOR) == 0)
       ++curarg;
