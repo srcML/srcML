@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Add xml encoding to verbose output.
+
 	Add skip encoding option to srcml2src.
 
 	Add skip encoding option to src2srcml.
