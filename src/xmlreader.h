@@ -85,6 +85,8 @@ const xmlChar* xmlTextReaderConstValue(xmlTextReaderPtr);
 
 int xmlTextReaderRead(xmlTextReaderPtr);
 
+void xmlTextReaderNext(xmlTextReaderPtr);
+
 int xmlTextReaderIsEmptyElement(xmlTextReaderPtr);
 
 void xmlFreeTextReader(xmlTextReaderPtr);

@@ -201,6 +201,10 @@ int xmlTextReaderRead(xmlTextReaderPtr reader) {
     return -1; 
 }
 
+// nop in this mode
+void xmlTextReaderNext(xmlTextReaderPtr reader) {
+}
+
 int xmlTextReaderNodeType(xmlTextReaderPtr reader) {
   return reader->type;
 }
