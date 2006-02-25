@@ -97,13 +97,12 @@ void output_help(const char* name) {
 	      << "set the filename attribute to FILE\n"
 	      << "  " << SRCVERSION_FLAG_SHORT  << ", " << setw(COL) <<  SRCVERSION_FLAG_FULL
 	      << "set the version attribute to VER\n"
+	      << '\n'
 #ifdef LIBXML_ENABLED
 	      << "  " << TEXTENCODING_FLAG_SHORT        << ", " << setw(COL) <<  TEXTENCODING_FLAG_FULL
 	      << "set the input source encoding to ENC (default:  based on locale" << ") \n"
-#endif
-#ifdef LIBXML_ENABLED
 	      << "  " << SKIP_ENCODING_FLAG_SHORT        << ", " << setw(COL) <<  SKIP_ENCODING_FLAG
-	      << "skip text encoding" << "\n"
+	      << "skip any text encoding transformation" << "\n"
 #endif
 	      << "  " << ENCODING_FLAG_SHORT    << ", " << setw(COL) <<  ENCODING_FLAG_FULL
 	      << "set the output XML encoding to ENC (default:  "

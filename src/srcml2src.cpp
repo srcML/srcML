@@ -98,11 +98,9 @@ void output_help(const char* name) {
 #ifdef LIBXML_ENABLED
 	       << "  " << TEXTENCODING_FLAG_SHORT << ", " << setw(COL) <<  TEXTENCODING_FLAG_FULL  
 	       << "set the output source encoding to ENC (default:  " << "based on locale" << ") \n"
+ 	       << "  " << SKIP_ENCODING_FLAG_SHORT        << ", " << setw(COL) <<  SKIP_ENCODING_FLAG
+	       << "skip any text encoding transformation" << "\n"
 	       << '\n'
-#endif
-#ifdef LIBXML_ENABLED
-	      << "  " << SKIP_ENCODING_FLAG_SHORT        << ", " << setw(COL) <<  SKIP_ENCODING_FLAG
-	      << "skip text encoding" << "\n"
 #endif
                << "  " << VERBOSE_FLAG_SHORT    << ", " << setw(COL) << VERBOSE_FLAG    << "verbose output\n"
 	       << '\n'

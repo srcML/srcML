@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Change short flag of new option and improve help messages.
+
 	Add xml encoding to verbose output.
 
 	Add skip encoding option to srcml2src.

@@ -401,10 +401,11 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
 
   // setup an output handler
   handler = xmlFindCharEncodingHandler(output_encoding);
-
+#ifdef LIBXML_ENABLED
   // no need for encoding change
   if (strcmp(handler->name, (char*) xmlTextReaderConstEncoding(reader)) == 0)
     options |= OPTION_SKIP_ENCODING;
+#endif
 
   // starting depth tells us when to end
   int startingDepth = xmlTextReaderDepth(reader);
