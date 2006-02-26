@@ -432,7 +432,8 @@ start {} :
         { !inMode(MODE_IGNORE_TERMINATE) }? terminate[true] |
 
         // don't confuse with expression block
-        { inTransparentMode(MODE_CONDITION) || !inMode(MODE_EXPRESSION) && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT) }? lcurly | 
+        { inTransparentMode(MODE_CONDITION) ||
+            !inMode(MODE_EXPRESSION) && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT) }? lcurly | 
 
         // process template operator correctly @test template
         { inTransparentMode(MODE_TEMPLATE) }? tempope[true] |
@@ -538,7 +539,7 @@ statements_non_cfg { int type_count = 0; int token = 0; int secondtoken = 0; } :
         (declaration_check[secondtoken])=> (
 
             // function
-            (function_check[token /* token after header */, type_count /* number of names detected in type */])=> (
+            (function_check[token /* token after header */, type_count /* count of names in type */])=> (
 
                 // function definition based on the token after the header
                 { token == LCURLY }? function[type_count] |
@@ -568,7 +569,8 @@ statements_non_cfg { int type_count = 0; int token = 0; int secondtoken = 0; } :
         call_macro_expression[secondtoken, true]
 ;
 
-call_macro_expression[int secondtoken, bool statement] { int postnametoken = 0; int argumenttoken = 0; int postcalltoken = 0; } :
+call_macro_expression[int secondtoken, bool statement]
+        { int postnametoken = 0; int argumenttoken = 0; int postcalltoken = 0; } :
 
         // call
         // check here instead of in expression_statement to distinguish between a call and a macro
@@ -616,7 +618,8 @@ call_check[int& postnametoken, int& argumenttoken, int& postcalltoken] {} :
 
         // process the arguments.  may fail if a macro
         ( options { greedy = true; } : { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }? 
-            ( { LA(1) != MULTOPS }? (full_parameter[true])=> guessing_endGuessing match_next_then_fail | expression_part | comma) )* 
+            ( { LA(1) != MULTOPS }?
+                (full_parameter[true])=> guessing_endGuessing match_next_then_fail | expression_part | comma) )* 
 
         guessing_endGuessing
 
@@ -724,7 +727,7 @@ for_group { setFinalToken(); } :
         {
             // start the for group mode that will end at the next matching
             // parentheses
-            replaceMode(MODE_FOR_GROUP, /*MODE_LIST |*/ MODE_TOP | MODE_FOR_INITIALIZATION | MODE_IGNORE_TERMINATE);
+            replaceMode(MODE_FOR_GROUP, MODE_TOP | MODE_FOR_INITIALIZATION | MODE_IGNORE_TERMINATE);
 
             // start the for heading group element
             startElement(SFOR_GROUP);
@@ -1572,7 +1575,8 @@ terminate_pre {} :
         {
             // end any elements inside of the statement
             if (!inMode(MODE_TOP | MODE_NEST | MODE_STATEMENT))
-                endDownToFirstMode(MODE_STATEMENT | MODE_EXPRESSION_BLOCK | MODE_INTERNAL_END_CURLY | MODE_INTERNAL_END_PAREN);
+                endDownToFirstMode(MODE_STATEMENT | MODE_EXPRESSION_BLOCK |
+                                   MODE_INTERNAL_END_CURLY | MODE_INTERNAL_END_PAREN);
         }
 ;
 
@@ -1580,7 +1584,8 @@ terminate_post {} :
         {
             // end all statements this statement is nested in
             // special case when ending then of if statement
-            if ((!inMode(MODE_EXPRESSION_BLOCK) || inMode(MODE_EXPECT)) && !inMode(MODE_INTERNAL_END_CURLY) && !inMode(MODE_INTERNAL_END_PAREN)) {
+            if ((!inMode(MODE_EXPRESSION_BLOCK) || inMode(MODE_EXPECT)) &&
+                !inMode(MODE_INTERNAL_END_CURLY) && !inMode(MODE_INTERNAL_END_PAREN)) {
 
                 // end down to either a block or top section, or to an if or else
                 endDownToFirstMode(MODE_TOP | MODE_IF | MODE_ELSE);
@@ -2069,7 +2074,9 @@ declaration_check_end[int& token] { token = LA(1); } :
 ;
 
 function_check[int& fla, int& type_count] { fla = 0; type_count = 0; } :
-        function_header_check[type_count] function_tail /* { LA(1) == NAME }? (krparameter_list)* */ check_end[fla]
+        function_header_check[type_count] function_tail
+        /* { LA(1) == NAME }? (krparameter_list)* */
+        check_end[fla]
 ;
 
 /*
@@ -2543,7 +2550,11 @@ function_specifier { LocalMode lm; } :
             // start the function specifier
             startElement(SFUNCTION_SPECIFIER);
         }
-        (standard_specifiers | (pure_virtual_specifier)=> pure_virtual_specifier | simple_name_optional_template[false])
+        (standard_specifiers |
+
+            (pure_virtual_specifier)=> pure_virtual_specifier |
+
+            simple_name_optional_template[false])
 ;
 
 /*
@@ -2664,7 +2675,8 @@ constructor_name { LocalMode lm; antlr::RefToken s[2]; } :
 
 constructor_name_base[antlr::RefToken s[]] { LocalMode lm; } :
 
-        identifier_stack[s] optional_template_argument_list (DCOLON identifier_stack[s] optional_template_argument_list)*
+        identifier_stack[s] optional_template_argument_list
+        (DCOLON identifier_stack[s] optional_template_argument_list)*
 ;
 
 identifier_stack[antlr::RefToken s[]] { s[1] = s[0]; s[0] = LT(1); } :
