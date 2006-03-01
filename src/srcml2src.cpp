@@ -26,6 +26,7 @@
 #include <iomanip>
 #include <fstream>
 #include <string>
+#include <sys/stat.h>
 #include "version.h"
 #include "srcmlapps.h"
 #include "project.h"
@@ -373,7 +374,11 @@ int main(int argc, char* argv[]) {
   }
 
   // verify that the output filename is not the same as the input filename
-  if (strcmp(ofilename, filename) == 0) {
+  struct stat instat;
+  stat(filename, &instat);
+  struct stat outstat;
+  stat(ofilename, &outstat);
+  if (instat.st_ino == outstat.st_ino) {
     std::cerr << NAME << ": Input file '" << filename << "'"
 	      << " is the same as the output file '" << ofilename << "'\n";
     exit(STATUS_INPUTFILE_PROBLEM);

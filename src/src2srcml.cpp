@@ -26,6 +26,7 @@
 #include <iomanip>
 #include <fstream>
 #include <string>
+#include <sys/stat.h>
 #include "version.h"
 #include "srcmlapps.h"
 #include "Options.h"
@@ -498,13 +499,17 @@ int main(int argc, char* argv[]) {
   }
 
   // verify that the output filename is not the same as any of the input filenames
+  struct stat outstat;
+  stat(srcml_filename, &outstat);
   for (int i = input_arg_start; i <= input_arg_end; ++i) {
 
-      if (strcmp(srcml_filename, argv[i]) == 0) {
+    struct stat instat;
+    stat(argv[i], &instat);
+    if (instat.st_ino == outstat.st_ino) {
 	std::cerr << NAME << ": Input file '" << argv[i] << "'"
 		  << " is the same as the output file '" << srcml_filename << "'\n";
 	exit(STATUS_INPUTFILE_PROBLEM);
-      }
+    }
   }
 
   try {

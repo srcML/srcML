@@ -1,7 +1,7 @@
 CHANGES
 
 Trunk
-	Detect input and output files when they are the same.
+	Detect input and output files when they are the same file.
 
 	Detect incompatible options with encoding.
 
