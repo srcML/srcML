@@ -497,6 +497,16 @@ int main(int argc, char* argv[]) {
     ++curarg;
   }
 
+  // verify that the output filename is not the same as any of the input filenames
+  for (int i = input_arg_start; i <= input_arg_end; ++i) {
+
+      if (strcmp(srcml_filename, argv[i]) == 0) {
+	std::cerr << NAME << ": Input file '" << argv[i] << "'"
+		  << " is the same as the output file '" << srcml_filename << "'\n";
+	exit(STATUS_INPUTFILE_PROBLEM);
+      }
+  }
+
   try {
 
   // translator from input to output using determined language

@@ -372,6 +372,13 @@ int main(int argc, char* argv[]) {
     exit(STATUS_INVALID_OPTION_COMBINATION);
   }
 
+  // verify that the output filename is not the same as the input filename
+  if (strcmp(ofilename, filename) == 0) {
+    std::cerr << NAME << ": Input file '" << filename << "'"
+	      << " is the same as the output file '" << ofilename << "'\n";
+    exit(STATUS_INPUTFILE_PROBLEM);
+  }
+
   try {
 
     // setup for processing
