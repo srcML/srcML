@@ -505,7 +505,7 @@ int main(int argc, char* argv[]) {
 
     struct stat instat;
     stat(argv[i], &instat);
-    if (instat.st_ino == outstat.st_ino) {
+    if (instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
 	std::cerr << NAME << ": Input file '" << argv[i] << "'"
 		  << " is the same as the output file '" << srcml_filename << "'\n";
 	exit(STATUS_INPUTFILE_PROBLEM);

@@ -378,7 +378,7 @@ int main(int argc, char* argv[]) {
   stat(filename, &instat);
   struct stat outstat;
   stat(ofilename, &outstat);
-  if (instat.st_ino == outstat.st_ino) {
+  if (instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
     std::cerr << NAME << ": Input file '" << filename << "'"
 	      << " is the same as the output file '" << ofilename << "'\n";
     exit(STATUS_INPUTFILE_PROBLEM);
