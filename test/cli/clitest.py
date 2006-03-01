@@ -314,6 +314,9 @@ validate(open("sub/b.cpp", "r").read(), sfile2)
 # invalid input filename
 validate(getreturn([srcmltranslator, "foobar"], nestedfile), status.STATUS_INPUTFILE_PROBLEM)
 
+# invalid input filename (repeat in output)
+validate(getreturn([srcmltranslator, "sub/a.cpp", "sub/a.cpp"], nestedfile), status.STATUS_INPUTFILE_PROBLEM)
+
 # unknown option
 validate(getreturn([srcmltranslator, "--strip"], nestedfile), status.STATUS_UNKNOWN_OPTION)
 
@@ -340,6 +343,29 @@ else:
 	validate(getreturn([srcmltranslator, option.TEXTENCODING_FLAG], nestedfile), status.STATUS_LIBXML2_FEATURE)
 
 validate(getreturn([srcmltranslator, option.ENCODING_FLAG], nestedfile), status.STATUS_XMLENCODING_MISSING)
+
+nestedfileextra = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+
+<unit language="C++" dir="sub" filename="a.cpp" mytag="foo">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++" dir="sub" mytag="foo" filename="b.cpp">
+<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+"""
+
+sxmlfile1extra = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp" mytag="foo">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+"""
+
+check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "1", "-"], nestedfileextra, sxmlfile1extra)
+check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "1"], nestedfileextra, sxmlfile1extra)
 
 ##
 # srcml2src error return
