@@ -203,21 +203,21 @@ GEN_PREPROC= ${foreach nm, $(SEP_PLUSNOPREPROC), ../suite/$(nm).preproc.cpp.xml}
 
 ../suite/allinall.c.xml :
 	@echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" > ../suite/allinall.c.xml
-	@echo "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C\">" >> ../suite/allinall.c.xml
+	@echo "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C\" dir=\"allinall.c\">" >> ../suite/allinall.c.xml
 
 	find ../suite -name "*.all.c.xml" | xargs -i tail +3 {} | sed "s|</unit>||">> ../suite/allinall.c.xml
 	@echo "</unit>" >> ../suite/allinall.c.xml
 
 ../suite/allinall.java.xml :
 	@echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" > ../suite/allinall.java.xml
-	@echo "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"Java\">" >> ../suite/allinall.java.xml
+	@echo "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"Java\" dir=\"allinall.java\">" >> ../suite/allinall.java.xml
 
 	find ../suite -name "*.all.java.xml" | xargs -i tail +3 {} | sed "s|</unit>||">> ../suite/allinall.java.xml
 	@echo "</unit>" >> ../suite/allinall.java.xml
 
 ../suite/allinall.cpp.xml :
 	@echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" > ../suite/allinall.cpp.xml
-	@echo "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\">" >> ../suite/allinall.cpp.xml
+	@echo "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"allinall.cpp\">" >> ../suite/allinall.cpp.xml
 
 	@find ../suite -name "*.all.cpp.xml" | sed "s|../suite/cstruct.all.cpp.xml||" | sed "s|../suite/functionkr.all.cpp.xml||" | xargs -i tail +3 {} | sed "s|</unit>||" >> ../suite/allinall.cpp.xml
 	@echo "</unit>" >> ../suite/allinall.cpp.xml
@@ -226,13 +226,13 @@ allinone : allinonecpp allinonec allinonejava
 	#@make cleanall
 
 allinonec : ../suite/allinall.c.xml
-	-${SRCML2SRC} ${SRCENCODING} ../suite/allinall.c.xml | ${SRC2SRCML} -l C ${SRCENCODING} | diff -w  - ../suite/allinall.c.xml
+	-${SRCML2SRC} ${SRCENCODING} ../suite/allinall.c.xml | ${SRC2SRCML} -l C ${SRCENCODING} --directory="allinall.c" | diff -w  - ../suite/allinall.c.xml
 
 allinonecpp : ../suite/allinall.cpp.xml
-	-${SRCML2SRC} ${SRCENCODING} ../suite/allinall.cpp.xml | ${SRC2SRCML} -l C++ ${SRCENCODING} | diff -w  - ../suite/allinall.cpp.xml
+	-${SRCML2SRC} ${SRCENCODING} ../suite/allinall.cpp.xml | ${SRC2SRCML} -l C++ ${SRCENCODING} --directory="allinall.cpp" | diff -w  - ../suite/allinall.cpp.xml
 
 allinonejava : ../suite/allinall.java.xml
-	-${SRCML2SRC} ${SRCENCODING} ../suite/allinall.java.xml | ${SRC2SRCML} -l Java ${SRCENCODING} | diff -w  - ../suite/allinall.java.xml
+	-${SRCML2SRC} ${SRCENCODING} ../suite/allinall.java.xml | ${SRC2SRCML} -l Java ${SRCENCODING} --directory="allinall.java" | diff -w  - ../suite/allinall.java.xml
 
 cleanall :
 	rm -f ../suite/allinall.*
