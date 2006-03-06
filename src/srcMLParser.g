@@ -348,7 +348,7 @@ friend class LocalMode;
 
 ~srcMLParser() {}
 
-srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang = LANGUAGE_CXX);
+srcMLParser(antlr::TokenStream& lexer, int lang = LANGUAGE_CXX);
 
 bool markblockzero;
 int cppifcount;

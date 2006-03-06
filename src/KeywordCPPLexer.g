@@ -89,7 +89,7 @@ public:
 bool onpreprocline;
 bool justws;
 
-KeywordCPPLexer::KeywordCPPLexer(std::istream& in, int language = LANGUAGE_CXX)
+KeywordCPPLexer(std::istream& in, int language = LANGUAGE_CXX)
 	: antlr::CharScanner(new antlr::CharBuffer(in),true), Language(language), onpreprocline(false), justws(true)
 {
     initLiterals();
