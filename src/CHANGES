@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Allow multiple namespaces for operator methods for implicit casting.
+
 	Fix bug with operator methods for implicit casting.  Removes 
 	empty type element.
 
