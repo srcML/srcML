@@ -12,6 +12,8 @@ WD=${shell pwd}
 SRCENCODING=
 #SRCENCODING=--src-encoding=ISO-8859-1
 
+ALLINALLCUTOFF=35
+
 PHONY : testbase
 testbase : gen
 
@@ -132,7 +134,7 @@ BASE_COMMON=comment string variable_names expression decl_simple \
 GEN_BASE=while ifnestcond return function_decl ifblock
 
 # base for C++ generated from original cases
-GEN_BASE_CXX=throw constructor_explicit destructor_virtual function_const struct union
+GEN_BASE_CXX=throw constructor_explicit destructor_virtual function_const struct union function_operator
 
 # basic generated C++ files
 GEN_SEP= $(GEN_BASE) $(GEN_BASE_CXX)
@@ -215,12 +217,19 @@ GEN_PREPROC= ${foreach nm, $(SEP_PLUSNOPREPROC), ../suite/$(nm).preproc.cpp.xml}
 	find ../suite -name "*.all.java.xml" | xargs -i tail +3 {} | sed "s|</unit>||">> ../suite/allinall.java.xml
 	@echo "</unit>" >> ../suite/allinall.java.xml
 
-../suite/allinall.cpp.xml :
-	@echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" > ../suite/allinall.cpp.xml
-	@echo "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"allinall.cpp\">" >> ../suite/allinall.cpp.xml
+../suite/allinall.1.cpp.xml :
+	@echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" > ../suite/allinall.1.cpp.xml
+	@echo "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"allinall.1.cpp\">" >> ../suite/allinall.1.cpp.xml
 
-	@find ../suite -name "*.all.cpp.xml" | sed "s|../suite/cstruct.all.cpp.xml||" | sed "s|../suite/functionkr.all.cpp.xml||" | xargs -i tail +3 {} | sed "s|</unit>||" >> ../suite/allinall.cpp.xml
-	@echo "</unit>" >> ../suite/allinall.cpp.xml
+	@find ../suite -name "*.all.cpp.xml" | sed "s|../suite/cstruct.all.cpp.xml||" | sed "s|../suite/functionkr.all.cpp.xml||" | head -30 | xargs -i tail +3 {} | sed "s|</unit>||" >> ../suite/allinall.1.cpp.xml
+	@echo "</unit>" >> ../suite/allinall.1.cpp.xml
+
+../suite/allinall.2.cpp.xml :
+	@echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" > ../suite/allinall.2.cpp.xml
+	@echo "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"allinall.2.cpp\">" >> ../suite/allinall.2.cpp.xml
+
+	@find ../suite -name "*.all.cpp.xml" | sed "s|../suite/cstruct.all.cpp.xml||" | sed "s|../suite/functionkr.all.cpp.xml||" | tail -18 | xargs -i tail +3 {} | sed "s|</unit>||" >> ../suite/allinall.2.cpp.xml
+	@echo "</unit>" >> ../suite/allinall.2.cpp.xml
 
 allinone : allinonecpp allinonec allinonejava
 	#@make cleanall
@@ -228,8 +237,9 @@ allinone : allinonecpp allinonec allinonejava
 allinonec : ../suite/allinall.c.xml
 	-${SRCML2SRC} ${SRCENCODING} ../suite/allinall.c.xml | ${SRC2SRCML} -l C ${SRCENCODING} --directory="allinall.c" | diff -w  - ../suite/allinall.c.xml
 
-allinonecpp : ../suite/allinall.cpp.xml
-	-${SRCML2SRC} ${SRCENCODING} ../suite/allinall.cpp.xml | ${SRC2SRCML} -l C++ ${SRCENCODING} --directory="allinall.cpp" | diff -w  - ../suite/allinall.cpp.xml
+allinonecpp : ../suite/allinall.1.cpp.xml ../suite/allinall.2.cpp.xml
+	-${SRCML2SRC} ${SRCENCODING} ../suite/allinall.1.cpp.xml | ${SRC2SRCML} -l C++ ${SRCENCODING} --directory="allinall.1.cpp" | diff -w  - ../suite/allinall.1.cpp.xml
+	-${SRCML2SRC} ${SRCENCODING} ../suite/allinall.2.cpp.xml | ${SRC2SRCML} -l C++ ${SRCENCODING} --directory="allinall.2.cpp" | diff -w  - ../suite/allinall.2.cpp.xml
 
 allinonejava : ../suite/allinall.java.xml
 	-${SRCML2SRC} ${SRCENCODING} ../suite/allinall.java.xml | ${SRC2SRCML} -l Java ${SRCENCODING} --directory="allinall.java" | diff -w  - ../suite/allinall.java.xml
