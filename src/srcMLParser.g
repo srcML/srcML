@@ -2013,6 +2013,8 @@ function_header[int type_count] {} :
             // no return value functions:  casting operator method and main
             { LA(1) == OPERATOR || LA(1) == MAIN }? function_identifier[true] |
 
+            (NAME DCOLON OPERATOR)=> function_identifier[true] |
+
             function_type[type_count]
             {
                 consumeSkippedTokens();
@@ -2031,6 +2033,8 @@ function_header_check[int& type_count] {} :
         (
             // no return value functions:  casting operator method and main
             { LA(1) == OPERATOR || LA(1) == MAIN }? function_identifier[true] |
+
+            (NAME DCOLON OPERATOR)=> function_identifier[true] |
 
            function_type_check[type_count]
         )
@@ -2064,6 +2068,8 @@ declaration_check[int& token] { token = 0; } :
 
         // no return value functions:  casting operator method and main
         { LA(1) == OPERATOR || LA(1) == MAIN }? function_identifier[true] |
+
+        (NAME DCOLON OPERATOR)=> function_identifier[true] |
 
         (options { greedy = true; } : (VIRTUAL | INLINE))* lead_type_identifier declaration_check_end[token]
 ;

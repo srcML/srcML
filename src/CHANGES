@@ -1,6 +1,9 @@
 CHANGES
 
 Trunk
+	Fix bug with operator methods for implicit casting.  Removes 
+	empty type element.
+
 	Detect input and output files when they are the same file.
 
 	Detect incompatible options with encoding.
