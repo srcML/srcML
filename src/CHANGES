@@ -1,6 +1,10 @@
 CHANGES
 
 Trunk
+	Fix for literals as arguments in template instantiation.
+
+	Start of new handling for operator method names.
+
 	Allow multiple namespaces for operator methods for implicit casting.
 
 	Fix bug with operator methods for implicit casting.  Removes 

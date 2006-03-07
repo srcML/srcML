@@ -2474,10 +2474,13 @@ simple_name_cpp {} :
 complex_name[bool marked] { LocalMode lm; TokenPosition tp = { 0, 0 }; TokenPosition tp2 = { 0, 0 }; bool iscomplex_name = false; } :
         {
             if (marked) {
-                // local mode for special case of operator name
+                // There is a problem detecting complex names from
+                // complex names of operator methods in namespaces or
+                // classes for implicit casting, e.g., A::operator String // () {}.
+                // Detecting before here means lookahead on all A::B::... names
+                // causing a slowdown of almost 20%.  Solution (hack) is to start all complex
+                // names as operator methods, then replace by NOP if not.
                 startNewMode(MODE_LOCAL);
-
-                // start outer name
                 startElement(STYPE);
 
                 // record the name token so we can replace it if necessary
@@ -2505,6 +2508,7 @@ complex_name[bool marked] { LocalMode lm; TokenPosition tp = { 0, 0 }; TokenPosi
                 // set the token to NOP
                 setTokenPosition(tp, SNOP);
 
+            // not an operator
             if (marked)
                 // set the token to NOP
                 setTokenPosition(tp2, SNOP);
@@ -3580,7 +3584,7 @@ template_argument { LocalMode lm; } :
 
             startElement(STEMPLATE_ARGUMENT);
         }
-        ( options { greedy = true; } : type_identifier)+
+        ( options { greedy = true; } : type_identifier | literal | char_literal | string_literal)+
 ;
 
 tempops {} :
