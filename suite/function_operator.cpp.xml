@@ -181,4 +181,8 @@
 <function><type><name>int</name></type> <name><name>a</name>::<name>operator+</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
+<unit>
+<function><name><name>a</name>::<name>operator A</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
 </unit>
