@@ -1,6 +1,11 @@
 CHANGES
 
 Trunk
+	A statement following a preprocessor else was getting ignored.  Since we were
+	skipping all parsing after an else (until the endif) this was not a problem.
+	However, now that we are moving to allowing parsing of the else part, this
+	was a problem.  Solved by using a separate stack to keep track of else and endif.
+
 	Remove fix for multiple namespaces for operators methods and implicit casting
 	because of speed problems until new handling can be implemented.
 

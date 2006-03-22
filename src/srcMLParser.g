@@ -354,6 +354,8 @@ srcMLParser(antlr::TokenStream& lexer, int lang = LANGUAGE_CXX);
 bool markblockzero;
 int cppifcount;
 
+SimpleStack<State::MODE_TYPE, 500> cppstate;
+
 void startUnit() {
 
    startElement(SUNIT);
@@ -3887,7 +3889,7 @@ eol_pre {
 
 eol_post[int directive_token] {
         // already in mode inelse
-        if (inMode(MODE_SKIP_PARSE)) {
+        if (!cppstate.empty()) {
 
             switch (directive_token) {
 
@@ -3902,7 +3904,7 @@ eol_post[int directive_token] {
 
                     // #endif reached for #if 0 or #else that started this mode
                     if (cppifcount == 0) {
-                        endCurrentMode(MODE_SKIP_PARSE);
+                        cppstate.pop();
                     } else
                         --cppifcount;
 
@@ -3911,8 +3913,8 @@ eol_post[int directive_token] {
                 case ELSE :
 
                     // #else reached for #if 0 that started this mode
-                    if (inMode(MODE_IF) && cppifcount == 0) {
-                        endCurrentMode(MODE_SKIP_PARSE);
+                    if (!cppstate.empty() && cppstate.top() == MODE_IF && cppifcount == 0) {
+                        cppstate.pop();
                     }
                     break;
 
@@ -3931,7 +3933,7 @@ eol_post[int directive_token] {
 
                         // start a new blank mode for if
                         cppifcount = 0;
-                        startNewMode(MODE_SKIP_PARSE | MODE_IF);
+                        cppstate.push(MODE_IF);
                     }
                     break;
 
@@ -3940,7 +3942,7 @@ eol_post[int directive_token] {
 
                     // start a new blank mode for else
                     cppifcount = 0;
-                    startNewMode(MODE_SKIP_PARSE);
+                    cppstate.push(0);
                     break;
 
                 default :
@@ -3950,7 +3952,7 @@ eol_post[int directive_token] {
         }
 
         // consume all skipped elements
-        if (checkOption(OPTION_PREPROCESS_ONLY_IF) && inMode(MODE_SKIP_PARSE)) {
+        if (checkOption(OPTION_PREPROCESS_ONLY_IF) && !cppstate.empty()) {
             while (LA(1) != PREPROC)
                 consume();
         }
