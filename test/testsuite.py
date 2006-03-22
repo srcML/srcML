@@ -187,10 +187,10 @@ try:
 
 			# full path of the file
 			xml_filename = os.path.join(root, name)
-
+			
 			# read entire file into a string
 			filexml = name2filestr(xml_filename)
-			
+
 			# directory of the outer unit element
 			directory = getdirectory(filexml)
 			
