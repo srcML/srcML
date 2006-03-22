@@ -40,11 +40,14 @@ class StreamMLParser : public StreamParser<Base> {
   // Follow example of ANTLR generated parsers
  public:
 
-  StreamMLParser(antlr::TokenStream& lexer, int language)
-    : StreamParser<Base>(lexer, language) { 
+  StreamMLParser(antlr::TokenStream& lexer, int language, int parsing_options = 0)
+    : StreamParser<Base>(lexer, language), options(parsing_options) { 
 
     Base::startUnit();
   }
+
+ private:
+  int options;
 
  public:
 
