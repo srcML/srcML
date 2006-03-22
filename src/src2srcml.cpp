@@ -168,7 +168,7 @@ int main(int argc, char* argv[]) {
   const char* given_version = "";
 
   // process all command line options
-  int options = 0;
+  int options = OPTION_PREPROCESS_ONLY_IF;
   int position = 0;
   int curarg = 1;  // current argument
   while (argc > curarg && strlen(argv[curarg]) > 1 && argv[curarg][0] == '-' &&
