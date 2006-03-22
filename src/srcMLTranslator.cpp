@@ -68,7 +68,7 @@ void srcMLTranslator::translate(const char* src_filename, const char* unit_direc
       KeywordCPPLexer lexer(*pin, getLanguage());
 
       // base stream parser srcML connected to lexical analyzer
-      StreamMLParser<srcMLParser> parser(lexer, getLanguage());
+      StreamMLParser<srcMLParser> parser(lexer, getLanguage(), options);
 
       // connect local parser to attribute for output
       out.setTokenStream(parser);
