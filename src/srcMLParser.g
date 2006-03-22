@@ -2014,7 +2014,7 @@ function_header[int type_count] {} :
             // no return value functions:  casting operator method and main
             { LA(1) == OPERATOR || LA(1) == MAIN }? function_identifier[true] |
 
-            { inLanguage(LANGUAGE_CXX) }? ((NAME DCOLON)* OPERATOR)=> function_identifier[true] |
+//            { inLanguage(LANGUAGE_CXX) }? ((NAME DCOLON)* OPERATOR)=> function_identifier[true] |
 
             function_type[type_count]
             {
@@ -2035,7 +2035,7 @@ function_header_check[int& type_count] {} :
             // no return value functions:  casting operator method and main
             { LA(1) == OPERATOR || LA(1) == MAIN }? function_identifier[true] |
 
-            { inLanguage(LANGUAGE_CXX) }? ((NAME DCOLON)* OPERATOR)=> function_identifier[true] |
+//            { inLanguage(LANGUAGE_CXX) }? ((NAME DCOLON)* OPERATOR)=> function_identifier[true] |
 
            function_type_check[type_count]
         )
@@ -2070,7 +2070,7 @@ declaration_check[int& token] { token = 0; } :
         // no return value functions:  casting operator method and main
         { LA(1) == OPERATOR || LA(1) == MAIN }? function_identifier[true] |
 
-        { inLanguage(LANGUAGE_CXX) }? ((NAME DCOLON)* OPERATOR)=> function_identifier[true] |
+//        { inLanguage(LANGUAGE_CXX) }? ((NAME DCOLON)* OPERATOR)=> function_identifier[true] |
 
         (options { greedy = true; } : (VIRTUAL | INLINE))* lead_type_identifier declaration_check_end[token]
 ;
@@ -2471,7 +2471,7 @@ simple_name_cpp {} :
 /*
   identifier name marked with name element
 */
-complex_name[bool marked] { LocalMode lm; TokenPosition tp = { 0, 0 }; TokenPosition tp2 = { 0, 0 }; bool iscomplex_name = false; } :
+complex_name[bool marked] { LocalMode lm; TokenPosition tp = { 0, 0 }; /* TokenPosition tp2 = { 0, 0 };*/ bool iscomplex_name = false; } :
         {
             if (marked) {
                 // There is a problem detecting complex names from
@@ -2480,11 +2480,11 @@ complex_name[bool marked] { LocalMode lm; TokenPosition tp = { 0, 0 }; TokenPosi
                 // Detecting before here means lookahead on all A::B::... names
                 // causing a slowdown of almost 20%.  Solution (hack) is to start all complex
                 // names as operator methods, then replace by NOP if not.
-                startNewMode(MODE_LOCAL);
-                startElement(STYPE);
+//                startNewMode(MODE_LOCAL);
+//                startElement(STYPE);
 
                 // record the name token so we can replace it if necessary
-                tp2 = getTokenPosition();
+//                tp2 = getTokenPosition();
 
                 // local mode that is automatically ended by leaving this function
                 startNewMode(MODE_LOCAL);
@@ -2507,11 +2507,12 @@ complex_name[bool marked] { LocalMode lm; TokenPosition tp = { 0, 0 }; TokenPosi
             if (marked && !iscomplex_name)
                 // set the token to NOP
                 setTokenPosition(tp, SNOP);
-
+/*
             // not an operator
             if (marked)
                 // set the token to NOP
                 setTokenPosition(tp2, SNOP);
+*/
         }
 ;
 
