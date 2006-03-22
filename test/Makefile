@@ -31,7 +31,7 @@ shortcpp : testbase
 
 PHONY : shortjava
 shortjava : testbase
-	@export SRC2SRCML=${SRC2SRCML}; export SRCML2SRC=${SRCML2SRC}; time ./testsuite.py ".*\.all|macro" Java
+	@export SRC2SRCML=${SRC2SRCML}; export SRCML2SRC=${SRCML2SRC}; time ./testsuite.py ".*\.all" Java
 
 PHONY : 
 full : testbase
