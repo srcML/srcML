@@ -127,6 +127,7 @@ header "post_include_hpp" {
 #include <iomanip>
 
 #include "Mode.h"
+#include "Options.h"
 
 #define assertMode(m)
 
