@@ -1,7 +1,10 @@
 OPTION_SRC= ../../src/src2srcml.cpp ../../src/srcml2src.cpp ../../src/srcmlapps.h
 STATUS_SRC= ../../src/srcmlapps.h
 
-all : option.py status.py
+all : test
+
+test : option.py status.py
+	./clitest.py
 
 option.py : ${OPTION_SRC}
 	src2srcml ${OPTION_SRC} - | xsltproc extract_options.xsl - > option.py
