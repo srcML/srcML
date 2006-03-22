@@ -37,9 +37,6 @@
   Any tokens that don't match a case reachable from start
   will be passed along unchanged
 
-  To add a new token to the output token buffer, use pushToken:
-  case1 : { pushToken(S); } ITEM { pushToken(E); }
-
   All whitespace tokens, WS, are passed along unchanged
 
   Will be overridden in stream parser version.
