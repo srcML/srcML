@@ -3950,7 +3950,7 @@ eol_post[int directive_token] {
         }
 
         // consume all skipped elements
-        if (inMode(MODE_SKIP_PARSE)) {
+        if (checkOption(OPTION_PREPROCESS_ONLY_IF) && inMode(MODE_SKIP_PARSE)) {
             while (LA(1) != PREPROC)
                 consume();
         }
