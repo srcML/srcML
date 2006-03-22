@@ -55,9 +55,11 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   if (!handler)
     throw srcEncodingException();
 
+#ifdef LIBXML_ENABLED
   // if the source encoding is to UTF-8, skip any encoding
   if (strcmp(handler->name, "UTF-8"))
     op |= OPTION_SKIP_ENCODING;
+#endif
 
   // fill the elements
   fillElementNames();
