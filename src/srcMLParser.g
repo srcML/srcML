@@ -356,6 +356,8 @@ int cppifcount;
 
 SimpleStack<State::MODE_TYPE, 500> cppstate;
 
+SimpleStack<std::vector<int>, 500> cppmode;
+
 void startUnit() {
 
    startElement(SUNIT);
@@ -3898,6 +3900,13 @@ eol_post[int directive_token] {
                 case IFDEF :
                 case IFNDEF :
                     ++cppifcount;
+
+                    // create new context for #if (and possible #else)
+                    {
+                        std::vector<int> v(1, state.size());
+                        cppmode.push(v);
+                    }
+
                     break;
 
                 case ENDIF :
@@ -3908,6 +3917,21 @@ eol_post[int directive_token] {
                     } else
                         --cppifcount;
 
+                    // add new context for #endif in current #if
+                    cppmode.top().push_back(state.size()); 
+
+                    // remove any finished ones
+                    {
+                        bool equal = true;
+                        for (int i = 0; i < cppmode.top().size(); ++i)
+                            if (cppmode.top()[i] != cppmode.top()[0])
+                                equal = false;
+                        ;
+
+                        if (!cppmode.empty() && (equal || cppmode.size() == 2))
+                            cppmode.pop();
+                    }
+
                     break;
 
                 case ELSE :
@@ -3916,6 +3940,10 @@ eol_post[int directive_token] {
                     if (!cppstate.empty() && cppstate.top() == MODE_IF && cppifcount == 0) {
                         cppstate.pop();
                     }
+
+                    // add new context for #else in current #if
+                    cppmode.top().push_back(state.size()); 
+
                     break;
 
                 default :
@@ -3935,6 +3963,13 @@ eol_post[int directive_token] {
                         cppifcount = 0;
                         cppstate.push(MODE_IF);
                     }
+
+                    // create new context for #if (and possible #else)
+                    {
+                        std::vector<int> v(1, state.size());
+                        cppmode.push(v);
+                    }
+
                     break;
 
                 case ELSE :
@@ -3943,6 +3978,10 @@ eol_post[int directive_token] {
                     // start a new blank mode for else
                     cppifcount = 0;
                     cppstate.push(0);
+
+                    // add new context for #else in current #if
+                    cppmode.top().push_back(state.size()); 
+
                     break;
 
                 default :
@@ -3950,7 +3989,13 @@ eol_post[int directive_token] {
             }
 
         }
+/*
+        std::cout << cppmode.size();
+        if (!cppmode.empty())
+            std::cout << " " << cppmode.top().size() << " " << cppmode.top().back();
 
+        std::cout << std::endl;
+*/
         // consume all skipped elements
         if (checkOption(OPTION_PREPROCESS_ONLY_IF) && !cppstate.empty()) {
             while (LA(1) != PREPROC)
