@@ -65,11 +65,7 @@ class StateStack {
     if (st.size() == 1)
       throw Segmentation_Fault();
 
-    // end all open elements
-    endElementStack();
-
-    // delete the top of the mode stack
-    deleteTop();
+    popMode();
   }
 
   void endCurrentMode(State::MODE_TYPE m) {
@@ -77,20 +73,12 @@ class StateStack {
     if (st.size() <= 1)
       throw Segmentation_Fault();
 
-    // end all open elements
-    endElementStack();
-
-    // delete the top of the mode stack
-    deleteTop();
+    popMode();
   }
 
   void endLastMode() {
 
-    // end all open elements
-    endElementStack();
-
-    // delete the top of the mode stack
-    deleteTop();
+    popMode();
   }
 
   void endCurrentModeSafely(State::MODE_TYPE m) {
@@ -207,7 +195,7 @@ class StateStack {
     }
   }
 
-  void endElementStack() {
+  void popMode() {
     if (st.empty())
       throw Segmentation_Fault();
 
@@ -215,14 +203,8 @@ class StateStack {
     while (!st.empty() && !st.top().callstack.empty()) {
       parser->endElement(st.top().callstack.top());
     }
-  }
 
-  // destructor
-  void deleteTop() {
-    // delete the top of the mode stack
-    //    Base* pb = st.top();
     st.pop();
-    //    delete pb;
   }
 
  private:
