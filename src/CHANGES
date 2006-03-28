@@ -1,6 +1,10 @@
 CHANGES
 
 Trunk
+	Start of handling of partial entities in #if #else #end sections.
+
+	Fix detection of #ifdef and #ifndef for storing cppmode.
+
 	A statement following a preprocessor else was getting ignored.  Since we were
 	skipping all parsing after an else (until the endif) this was not a problem.
 	However, now that we are moving to allowing parsing of the else part, this

@@ -1538,6 +1538,13 @@ block_end {} :
             // some statements end with the block if there is no terminate
             if (inMode(MODE_END_AT_BLOCK_NO_TERMINATE) && LA(1) != TERMINATE)
                 endCurrentMode(MODE_LOCAL);
+
+            // just ended else part of cppmode
+            if (!cppmode.empty() && state.size() == cppmode.top()[1])
+                
+                // end if part of cppmode
+                while (state.size() > cppmode.top()[0])
+                    endCurrentMode();
         }
 ;
 
@@ -3955,6 +3962,8 @@ eol_post[int directive_token] {
 
             switch (directive_token) {
                 case IF :
+                case IFDEF :
+                case IFNDEF :
 
                     // start a new blank mode for zero'ed blocks
                     if (markblockzero) {
