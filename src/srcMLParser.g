@@ -3865,9 +3865,17 @@ catch[antlr::RecognitionException] {
         eol_skip(directive_token);
 }
 
-eol_skip[int directive_token] {} :
+eol_skip[int directive_token] { 
 
-        (options { greedy = true; } : ~(EOL | LINECOMMENT | BLOCKCOMMENT | EOF))* eol[directive_token]
+    while (LA(1) != EOL && 
+           LA(1) != LINECOMMENT && 
+           LA(1) != BLOCKCOMMENT && 
+           LA(1) != EOF && 
+           LA(1) != 1
+        )
+                consume();
+    } :
+    eol[directive_token]
 ;
 
 /*
@@ -3878,7 +3886,7 @@ eol_skip[int directive_token] {} :
 */
 eol[int directive_token = 0] { /* setFinalToken(); */ } :
         eol_pre
-        (EOL | LINECOMMENT | BLOCKCOMMENTEOL | eof)
+        (EOL | LINECOMMENT | BLOCKCOMMENTEOL | eof | EOF_TYPE)
         eol_post[directive_token]
 ;
 

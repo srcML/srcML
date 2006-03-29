@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Fix for no newline before EOF on preprocessor line.
+
 	Start of handling of partial entities in #if #else #end sections.
 
 	Fix detection of #ifdef and #ifndef for storing cppmode.
