@@ -1540,12 +1540,17 @@ block_end {} :
                 endCurrentMode(MODE_LOCAL);
 
             // just ended else part of cppmode
-            if (!cppmode.empty() && state.size() == cppmode.top()[1])
+            if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !cppmode.empty() && state.size() == cppmode.top()[1]) {
                 
                 // end if part of cppmode
                 while (state.size() > cppmode.top()[0])
                     endCurrentMode();
+
+                // done with this cppmode
+                cppmode.pop();
+             }
         }
+
 ;
 
 /*
