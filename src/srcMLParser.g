@@ -356,7 +356,7 @@ int cppifcount;
 
 SimpleStack<State::MODE_TYPE, 500> cppstate;
 
-SimpleStack<std::vector<int>, 500> cppmode;
+SimpleStack<std::pair<std::vector<int>, bool>, 500> cppmode;
 
 void startUnit() {
 
@@ -1540,10 +1540,10 @@ block_end {} :
                 endCurrentMode(MODE_LOCAL);
 
             // just ended else part of cppmode
-            if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !cppmode.empty() && state.size() == cppmode.top()[1]) {
+            if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !cppmode.empty() && state.size() == cppmode.top().first.back()) {
                 
                 // end if part of cppmode
-                while (state.size() > cppmode.top()[0])
+                while (state.size() > cppmode.top().first.front())
                     endCurrentMode();
 
                 // done with this cppmode
@@ -3924,7 +3924,8 @@ eol_post[int directive_token] {
                     // create new context for #if (and possible #else)
                     {
                         std::vector<int> v(1, state.size());
-                        cppmode.push(v);
+                        std::pair<std::vector<int>, bool> p(v, false);
+                        cppmode.push(p);
                     }
 
                     break;
@@ -3938,17 +3939,17 @@ eol_post[int directive_token] {
                         --cppifcount;
 
                     // add new context for #endif in current #if
-                    cppmode.top().push_back(state.size()); 
+                    cppmode.top().first.push_back(state.size()); 
 
                     // remove any finished ones
                     {
                         bool equal = true;
-                        for (int i = 0; i < cppmode.top().size(); ++i)
-                            if (cppmode.top()[i] != cppmode.top()[0])
+                        for (int i = 0; i < cppmode.top().first.size(); ++i)
+                            if (cppmode.top().first[i] != cppmode.top().first[0])
                                 equal = false;
                         ;
 
-                        if (!cppmode.empty() && (equal || cppmode.size() == 2))
+                        if (!cppmode.empty() && (equal || cppmode.top().first.size() == 2))
                             cppmode.pop();
                     }
 
@@ -3962,7 +3963,7 @@ eol_post[int directive_token] {
                     }
 
                     // add new context for #else in current #if
-                    cppmode.top().push_back(state.size()); 
+                    cppmode.top().first.push_back(state.size()); 
 
                     break;
 
@@ -3989,7 +3990,8 @@ eol_post[int directive_token] {
                     // create new context for #if (and possible #else)
                     {
                         std::vector<int> v(1, state.size());
-                        cppmode.push(v);
+                        std::pair<std::vector<int>, bool> p(v, false);
+                        cppmode.push(p);
                     }
 
                     break;
@@ -4002,7 +4004,7 @@ eol_post[int directive_token] {
                     cppstate.push(0);
 
                     // add new context for #else in current #if
-                    cppmode.top().push_back(state.size()); 
+                    cppmode.top().first.push_back(state.size()); 
 
                     break;
 
