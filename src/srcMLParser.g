@@ -1542,7 +1542,7 @@ block_end {} :
             // just ended else part of cppmode
             if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !cppmode.empty() && 
                 cppmode.top().second == true &&
-                state.size() == cppmode.top().first.back()) {
+                state.size() < cppmode.top().first.back()) {
                 
                 // end if part of cppmode
                 while (state.size() > cppmode.top().first.front())
@@ -4024,7 +4024,7 @@ eol_post[int directive_token] {
         std::cout << std::endl;
 */
         // consume all skipped elements
-        if (checkOption(OPTION_PREPROCESS_ONLY_IF) && !cppstate.empty()) {
+        if ((checkOption(OPTION_PREPROCESS_ONLY_IF) || markblockzero) && !cppstate.empty()) {
             while (LA(1) != PREPROC)
                 consume();
         }
