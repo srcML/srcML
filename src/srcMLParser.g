@@ -1549,6 +1549,8 @@ block_end {} :
             if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !cppmode.empty() && 
                 cppmode.top().second == true &&
                 state.size() < cppmode.top().first.back()) {
+
+                if (state.size() == cppmode.top().first[cppmode.top().first.size() - 1 - 1]) {
                 
                 // end if part of cppmode
                 while (state.size() > cppmode.top().first.front())
@@ -1556,6 +1558,8 @@ block_end {} :
 
                 // done with this cppmode
                 cppmode.pop();
+
+                }
              }
         }
 
@@ -1621,6 +1625,11 @@ terminate_post {} :
 
 else_handling {} :
         {
+                // record the current size of the top of the cppmode stack to detect
+                // any #else or #endif in the consumeSkippedTokens
+                // see below
+                unsigned int cppmode_size = !cppmode.empty() ? cppmode.top().first.size() : 0;
+
                 // handle parts of if
                 if (inTransparentMode(MODE_IF)) {
 
@@ -1651,6 +1660,27 @@ else_handling {} :
                         endCurrentMode();
                     }
                 }
+
+
+            // update the state size in cppmode if changed from using consumeSkippedTokens
+            if (!cppmode.empty() && cppmode_size != cppmode.top().first.size()) {
+
+                cppmode.top().first.back() = state.size();
+
+                    // remove any finished ones
+                if (cppmode.top().second)    {
+                        bool equal = true;
+                        for (unsigned int i = 0; i < cppmode.top().first.size(); ++i) {
+                            if (cppmode.top().first[i] != cppmode.top().first[0])
+                                equal = false;
+                        }
+
+                        if (!cppmode.empty() && (equal || cppmode.top().first.size() == 2)) {
+                            cppmode.pop();
+                        }
+                    }
+
+            }
         }
 ;
 
@@ -3954,13 +3984,14 @@ eol_post[int directive_token] {
                     // remove any finished ones
                     {
                         bool equal = true;
-                        for (int i = 0; i < cppmode.top().first.size(); ++i)
+                        for (unsigned int i = 0; i < cppmode.top().first.size(); ++i) {
                             if (cppmode.top().first[i] != cppmode.top().first[0])
                                 equal = false;
-                        ;
+                        }
 
-                        if (!cppmode.empty() && (equal || cppmode.top().first.size() == 2))
+                        if (!cppmode.empty() && (equal || cppmode.top().first.size() == 2)) {
                             cppmode.pop();
+                        }
                     }
 
                     break;
