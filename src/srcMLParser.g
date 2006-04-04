@@ -356,7 +356,13 @@ int cppifcount;
 
 SimpleStack<State::MODE_TYPE, 500> cppstate;
 
-SimpleStack<std::pair<std::vector<int>, bool>, 500> cppmode;
+struct cppmodeitem {
+        std::vector<int> first;
+        bool second;
+        int undone;
+};
+
+SimpleStack<cppmodeitem, 500> cppmode;
 
 void startUnit() {
 
@@ -3925,9 +3931,10 @@ eol_post[int directive_token] {
 
                     // create new context for #if (and possible #else)
                     {
-                        std::vector<int> v(1, state.size());
-                        std::pair<std::vector<int>, bool> p(v, false);
-                        cppmode.push(p);
+                        cppmodeitem cp;
+                        cp.first = std::vector<int>(1, state.size());
+                        cp.second = false;
+                        cppmode.push(cp);
                     }
 
                     break;
@@ -3992,9 +3999,10 @@ eol_post[int directive_token] {
 
                     // create new context for #if (and possible #else)
                     {
-                        std::vector<int> v(1, state.size());
-                        std::pair<std::vector<int>, bool> p(v, false);
-                        cppmode.push(p);
+                        cppmodeitem cp;
+                        cp.first = std::vector<int>(1, state.size());
+                        cp.second = false;
+                        cppmode.push(cp);
                     }
 
                     break;
