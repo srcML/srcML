@@ -1540,7 +1540,9 @@ block_end {} :
                 endCurrentMode(MODE_LOCAL);
 
             // just ended else part of cppmode
-            if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !cppmode.empty() && state.size() == cppmode.top().first.back()) {
+            if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !cppmode.empty() && 
+                cppmode.top().second == true &&
+                state.size() == cppmode.top().first.back()) {
                 
                 // end if part of cppmode
                 while (state.size() > cppmode.top().first.front())
@@ -3940,6 +3942,7 @@ eol_post[int directive_token] {
 
                     // add new context for #endif in current #if
                     cppmode.top().first.push_back(state.size()); 
+                    cppmode.top().second = true;
 
                     // remove any finished ones
                     {
