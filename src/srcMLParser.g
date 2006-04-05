@@ -360,6 +360,7 @@ struct cppmodeitem {
         std::vector<int> first;
         bool second;
         int undone;
+        bool skipelse;
 };
 
 SimpleStack<cppmodeitem, 500> cppmode;
@@ -3965,6 +3966,7 @@ eol_post[int directive_token] {
                         cppmodeitem cp;
                         cp.first = std::vector<int>(1, state.size());
                         cp.second = false;
+                        cp.skipelse = false;
                         cppmode.push(cp);
                     }
 
@@ -4043,6 +4045,7 @@ eol_post[int directive_token] {
                         cppmodeitem cp;
                         cp.first = std::vector<int>(1, state.size());
                         cp.second = false;
+                        cp.skipelse = false;
                         cppmode.push(cp);
                     }
 
@@ -4058,7 +4061,10 @@ eol_post[int directive_token] {
                     if (!inputState->guessing) {
 
                         // add new context for #else in current #if
-                        cppmode.top().first.push_back(state.size()); 
+                        cppmode.top().first.push_back(state.size());
+
+                        if (cppmode.top().first.front() > state.size())
+                            cppmode.top().skipelse = true;
                     }
 
                     break;
@@ -4076,7 +4082,12 @@ eol_post[int directive_token] {
         std::cout << std::endl;
 */
         // consume all skipped elements
-        if ((checkOption(OPTION_PREPROCESS_ONLY_IF) && !cppstate.empty()) || (!cppstate.empty() && cppstate.top() == MODE_IF)) {
+        if ((checkOption(OPTION_PREPROCESS_ONLY_IF) && !cppstate.empty()) ||
+            (!cppstate.empty() && cppstate.top() == MODE_IF) ||
+            (!cppmode.empty() && !cppmode.top().second && cppmode.top().skipelse) ||
+            (inputState->guessing && !cppstate.empty())
+
+        ) {
             while (LA(1) != PREPROC)
                 consume();
         }
