@@ -1,6 +1,10 @@
 CHANGES
 
 Trunk
+
+	Add option --cpp-nomark-else for controlling whether cpp #else sections are
+	parsed and marked.
+
 	Fix skipping of #if 0 blocks regression caused by handling of #else sections.
 
 	Use partial cppmode entity handling.

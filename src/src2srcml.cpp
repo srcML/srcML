@@ -47,6 +47,9 @@ const char* COMPRESSED_FLAG_SHORT = "-z";
 const char* INTERACTIVE_FLAG = "--interactive";
 const char* INTERACTIVE_FLAG_SHORT = "-c";
 
+const char* CPPSKIPELSE_FLAG = "--cpp_nomark_else";
+const char* CPPSKIPELSE_FLAG_SHORT = "-e";
+
 #ifdef LIBXML_ENABLED
 const char* DEFAULT_XML_ENCODING = "UTF-8";
 #else
@@ -168,7 +171,7 @@ int main(int argc, char* argv[]) {
   const char* given_version = "";
 
   // process all command line options
-  int options = 0; //OPTION_PREPROCESS_ONLY_IF;
+  int options = 0;
   int position = 0;
   int curarg = 1;  // current argument
   while (argc > curarg && strlen(argv[curarg]) > 1 && argv[curarg][0] == '-' &&
@@ -232,6 +235,12 @@ int main(int argc, char* argv[]) {
     // skip encoding mode
     else if (compare_flags(argv[curarg], SKIP_ENCODING_FLAG, SKIP_ENCODING_FLAG_SHORT, position)) {
       options |= OPTION_SKIP_ENCODING;
+      if (position == original_position) ++curarg;
+    }
+
+    // cpp skip else mode
+    else if (compare_flags(argv[curarg], CPPSKIPELSE_FLAG, CPPSKIPELSE_FLAG_SHORT, position)) {
+      options |= OPTION_PREPROCESS_ONLY_IF;
       if (position == original_position) ++curarg;
     }
 
