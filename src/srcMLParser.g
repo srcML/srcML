@@ -4076,7 +4076,7 @@ eol_post[int directive_token] {
         std::cout << std::endl;
 */
         // consume all skipped elements
-        if ((checkOption(OPTION_PREPROCESS_ONLY_IF) || markblockzero) && !cppstate.empty()) {
+        if ((checkOption(OPTION_PREPROCESS_ONLY_IF) && !cppstate.empty()) || (!cppstate.empty() && cppstate.top() == MODE_IF)) {
             while (LA(1) != PREPROC)
                 consume();
         }

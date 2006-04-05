@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Fix skipping of #if 0 blocks regression caused by handling of #else sections.
+
 	Use partial cppmode entity handling.
 
 	Fix for no newline before EOF on preprocessor line.
