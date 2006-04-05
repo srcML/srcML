@@ -3960,7 +3960,8 @@ eol_post[int directive_token] {
                     ++cppifcount;
 
                     // create new context for #if (and possible #else)
-                    {
+                    if (!inputState->guessing) {
+
                         cppmodeitem cp;
                         cp.first = std::vector<int>(1, state.size());
                         cp.second = false;
@@ -3976,6 +3977,8 @@ eol_post[int directive_token] {
                         cppstate.pop();
                     } else
                         --cppifcount;
+
+                    if (!inputState->guessing) {
 
                     // add new context for #endif in current #if
                     cppmode.top().first.push_back(state.size()); 
@@ -3994,6 +3997,8 @@ eol_post[int directive_token] {
                         }
                     }
 
+                    }
+
                     break;
 
                 case ELSE :
@@ -4003,8 +4008,12 @@ eol_post[int directive_token] {
                         cppstate.pop();
                     }
 
+                    if (!inputState->guessing) {
+
                     // add new context for #else in current #if
                     cppmode.top().first.push_back(state.size()); 
+
+                    }
 
                     break;
 
@@ -4029,7 +4038,8 @@ eol_post[int directive_token] {
                     }
 
                     // create new context for #if (and possible #else)
-                    {
+                    if (!inputState->guessing) {
+
                         cppmodeitem cp;
                         cp.first = std::vector<int>(1, state.size());
                         cp.second = false;
@@ -4045,8 +4055,11 @@ eol_post[int directive_token] {
                     cppifcount = 0;
                     cppstate.push(0);
 
-                    // add new context for #else in current #if
-                    cppmode.top().first.push_back(state.size()); 
+                    if (!inputState->guessing) {
+
+                        // add new context for #else in current #if
+                        cppmode.top().first.push_back(state.size()); 
+                    }
 
                     break;
 
