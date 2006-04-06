@@ -358,13 +358,13 @@ SimpleStack<State::MODE_TYPE, 500> cppstate;
 
 struct cppmodeitem {
         cppmodeitem(int current_size, bool sec, bool skip_else)
-            : first(1, current_size), second(sec), skipelse(skip_else)
+            : statesize(1, current_size), second(sec), skipelse(skip_else)
         {}
 
         cppmodeitem()
         {}
 
-        std::vector<int> first;
+        std::vector<int> statesize;
         bool second;
         int undone;
         bool skipelse;
@@ -1556,12 +1556,12 @@ block_end {} :
             // just ended else part of cppmode
             if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !cppmode.empty() && 
                 cppmode.top().second == true &&
-                state.size() < cppmode.top().first.back()) {
+                state.size() < cppmode.top().statesize.back()) {
 
-                if (state.size() == cppmode.top().first[cppmode.top().first.size() - 1 - 1]) {
+                if (state.size() == cppmode.top().statesize[cppmode.top().statesize.size() - 1 - 1]) {
                 
                 // end if part of cppmode
-                while (state.size() > cppmode.top().first.front())
+                while (state.size() > cppmode.top().statesize.front())
                     endCurrentMode();
 
                 // done with this cppmode
@@ -1636,7 +1636,7 @@ else_handling {} :
                 // record the current size of the top of the cppmode stack to detect
                 // any #else or #endif in the consumeSkippedTokens
                 // see below
-                unsigned int cppmode_size = !cppmode.empty() ? cppmode.top().first.size() : 0;
+                unsigned int cppmode_size = !cppmode.empty() ? cppmode.top().statesize.size() : 0;
 
                 // handle parts of if
                 if (inTransparentMode(MODE_IF)) {
@@ -1671,19 +1671,19 @@ else_handling {} :
 
 
             // update the state size in cppmode if changed from using consumeSkippedTokens
-            if (!cppmode.empty() && cppmode_size != cppmode.top().first.size()) {
+            if (!cppmode.empty() && cppmode_size != cppmode.top().statesize.size()) {
 
-                cppmode.top().first.back() = state.size();
+                cppmode.top().statesize.back() = state.size();
 
                     // remove any finished ones
                 if (cppmode.top().second)    {
                         bool equal = true;
-                        for (unsigned int i = 0; i < cppmode.top().first.size(); ++i) {
-                            if (cppmode.top().first[i] != cppmode.top().first[0])
+                        for (unsigned int i = 0; i < cppmode.top().statesize.size(); ++i) {
+                            if (cppmode.top().statesize[i] != cppmode.top().statesize[0])
                                 equal = false;
                         }
 
-                        if (!cppmode.empty() && (equal || cppmode.top().first.size() == 2)) {
+                        if (!cppmode.empty() && (equal || cppmode.top().statesize.size() == 2)) {
                             cppmode.pop();
                         }
                     }
@@ -3986,18 +3986,18 @@ eol_post[int directive_token] {
                     if (!inputState->guessing) {
 
                     // add new context for #endif in current #if
-                    cppmode.top().first.push_back(state.size()); 
+                    cppmode.top().statesize.push_back(state.size()); 
                     cppmode.top().second = true;
 
                     // remove any finished ones
                     {
                         bool equal = true;
-                        for (unsigned int i = 0; i < cppmode.top().first.size(); ++i) {
-                            if (cppmode.top().first[i] != cppmode.top().first[0])
+                        for (unsigned int i = 0; i < cppmode.top().statesize.size(); ++i) {
+                            if (cppmode.top().statesize[i] != cppmode.top().statesize[0])
                                 equal = false;
                         }
 
-                        if (!cppmode.empty() && (equal || cppmode.top().first.size() == 2)) {
+                        if (!cppmode.empty() && (equal || cppmode.top().statesize.size() == 2)) {
                             cppmode.pop();
                         }
                     }
@@ -4016,7 +4016,7 @@ eol_post[int directive_token] {
                     if (!inputState->guessing) {
 
                     // add new context for #else in current #if
-                    cppmode.top().first.push_back(state.size()); 
+                    cppmode.top().statesize.push_back(state.size()); 
 
                     }
 
@@ -4060,9 +4060,9 @@ eol_post[int directive_token] {
                     if (!inputState->guessing) {
 
                         // add new context for #else in current #if
-                        cppmode.top().first.push_back(state.size());
+                        cppmode.top().statesize.push_back(state.size());
 
-                        if (cppmode.top().first.front() > state.size())
+                        if (cppmode.top().statesize.front() > state.size())
                             cppmode.top().skipelse = true;
                     }
 
@@ -4079,18 +4079,18 @@ eol_post[int directive_token] {
                     if (!inputState->guessing) {
 
                     // add new context for #endif in current #if
-                    cppmode.top().first.push_back(state.size()); 
+                    cppmode.top().statesize.push_back(state.size()); 
                     cppmode.top().second = true;
 
                     // remove any finished ones
                     {
                         bool equal = true;
-                        for (unsigned int i = 0; i < cppmode.top().first.size(); ++i) {
-                            if (cppmode.top().first[i] != cppmode.top().first[0])
+                        for (unsigned int i = 0; i < cppmode.top().statesize.size(); ++i) {
+                            if (cppmode.top().statesize[i] != cppmode.top().statesize[0])
                                 equal = false;
                         }
 
-                        if (!cppmode.empty() && (equal || cppmode.top().first.size() == 2)) {
+                        if (!cppmode.empty() && (equal || cppmode.top().statesize.size() == 2)) {
                             cppmode.pop();
                         }
                     }
