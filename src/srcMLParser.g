@@ -1553,22 +1553,8 @@ block_end {} :
             if (inMode(MODE_END_AT_BLOCK_NO_TERMINATE) && LA(1) != TERMINATE)
                 endCurrentMode(MODE_LOCAL);
 
-            // just ended else part of cppmode
-            if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !cppmode.empty() && 
-                cppmode.top().isclosed == true &&
-                state.size() < cppmode.top().statesize.back()) {
-
-                if (state.size() == cppmode.top().statesize[cppmode.top().statesize.size() - 1 - 1]) {
-                
-                // end if part of cppmode
-                while (state.size() > cppmode.top().statesize.front())
-                    endCurrentMode();
-
-                // done with this cppmode
-                cppmode.pop();
-
-                }
-             }
+            // end of block may lead to adjustment of cpp modes
+            cppmode_adjust();
         }
 
 ;
@@ -4112,6 +4098,26 @@ cppmode_cleanup {
         } :
 ;
 
+// ended modes that may lead to needed updates
+cppmode_adjust {
+
+    if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !cppmode.empty() && 
+        cppmode.top().isclosed == true &&
+        state.size() < cppmode.top().statesize.back()) {
+
+           if (state.size() == cppmode.top().statesize[cppmode.top().statesize.size() - 1 - 1]) {
+                
+                // end if part of cppmode
+                while (state.size() > cppmode.top().statesize.front())
+                    endCurrentMode();
+
+                // done with this cppmode
+                cppmode.pop();
+           }
+    }
+
+    } :
+;
 
 line_continuation { setFinalToken(); } :
         {
