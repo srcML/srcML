@@ -3983,6 +3983,10 @@ eol_post[int directive_token] {
 
                     if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !inputState->guessing) {
 
+                        // create an empty cppmode for #if if one doesn't exist
+                        if (cppmode.empty())
+                            cppmode.push(cppmodeitem(state.size()));
+
                         // add new context for #else in current #if
                         cppmode.top().statesize.push_back(state.size()); 
                     }
@@ -4025,6 +4029,10 @@ eol_post[int directive_token] {
                     cppstate.push(0);
 
                     if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !inputState->guessing) {
+
+                        // create an empty cppmode for #if if one doesn't exist
+                        if (cppmode.empty())
+                            cppmode.push(cppmodeitem(state.size()));
 
                         // add new context for #else in current #if
                         cppmode.top().statesize.push_back(state.size());

@@ -1,6 +1,7 @@
 CHANGES
 
 Trunk
+	Fix new cppmode and missing #if.
 
 	Add option --cpp-nomark-else for controlling whether cpp #else sections are
 	parsed and marked.
