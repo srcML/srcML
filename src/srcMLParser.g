@@ -357,8 +357,8 @@ int cppifcount;
 SimpleStack<State::MODE_TYPE, 500> cppstate;
 
 struct cppmodeitem {
-        cppmodeitem(int current_size, bool sec, bool skip_else)
-            : statesize(1, current_size), isclosed(sec), skipelse(skip_else)
+        cppmodeitem(int current_size)
+            : statesize(1, current_size), isclosed(false), skipelse(false)
         {}
 
         cppmodeitem()
@@ -3961,7 +3961,7 @@ eol_post[int directive_token] {
                     // create new context for #if (and possible #else)
                     if (!inputState->guessing) {
 
-                        cppmode.push(cppmodeitem(state.size(), false, false));
+                        cppmode.push(cppmodeitem(state.size()));
                     }
 
                     break;
@@ -4026,7 +4026,7 @@ eol_post[int directive_token] {
                     // create new context for #if (and possible #else)
                     if (!inputState->guessing) {
 
-                        cppmode.push(cppmodeitem(state.size(), false, false));
+                        cppmode.push(cppmodeitem(state.size()));
                     }
 
                     break;
