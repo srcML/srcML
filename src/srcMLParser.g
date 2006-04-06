@@ -1675,19 +1675,10 @@ else_handling {} :
 
                 cppmode.top().statesize.back() = state.size();
 
-                    // remove any finished ones
+                // remove any finished ones
                 if (cppmode.top().isclosed)    {
-                        bool equal = true;
-                        for (unsigned int i = 0; i < cppmode.top().statesize.size(); ++i) {
-                            if (cppmode.top().statesize[i] != cppmode.top().statesize[0])
-                                equal = false;
-                        }
-
-                        if (!cppmode.empty() && (equal || cppmode.top().statesize.size() == 2)) {
-                            cppmode.pop();
-                        }
-                    }
-
+                        cppmode_cleanup();
+                }
             }
         }
 ;
@@ -3990,17 +3981,7 @@ eol_post[int directive_token] {
                     cppmode.top().isclosed = true;
 
                     // remove any finished ones
-                    {
-                        bool equal = true;
-                        for (unsigned int i = 0; i < cppmode.top().statesize.size(); ++i) {
-                            if (cppmode.top().statesize[i] != cppmode.top().statesize[0])
-                                equal = false;
-                        }
-
-                        if (!cppmode.empty() && (equal || cppmode.top().statesize.size() == 2)) {
-                            cppmode.pop();
-                        }
-                    }
+                    cppmode_cleanup();
 
                     }
 
@@ -4083,17 +4064,7 @@ eol_post[int directive_token] {
                     cppmode.top().isclosed = true;
 
                     // remove any finished ones
-                    {
-                        bool equal = true;
-                        for (unsigned int i = 0; i < cppmode.top().statesize.size(); ++i) {
-                            if (cppmode.top().statesize[i] != cppmode.top().statesize[0])
-                                equal = false;
-                        }
-
-                        if (!cppmode.empty() && (equal || cppmode.top().statesize.size() == 2)) {
-                            cppmode.pop();
-                        }
-                    }
+                    cppmode_cleanup();
 
                     }
 
@@ -4124,6 +4095,23 @@ eol_post[int directive_token] {
 
         } :
 ;
+
+// remove any finished or unneeded cppmodes
+cppmode_cleanup {
+
+        bool equal = true;
+        for (unsigned int i = 0; i < cppmode.top().statesize.size(); ++i) {
+            if (cppmode.top().statesize[i] != cppmode.top().statesize[0])
+                equal = false;
+            }
+
+        if (!cppmode.empty() && (equal || cppmode.top().statesize.size() == 2)) {
+            cppmode.pop();
+        }
+
+        } :
+;
+
 
 line_continuation { setFinalToken(); } :
         {
