@@ -358,14 +358,14 @@ SimpleStack<State::MODE_TYPE, 500> cppstate;
 
 struct cppmodeitem {
         cppmodeitem(int current_size, bool sec, bool skip_else)
-            : statesize(1, current_size), second(sec), skipelse(skip_else)
+            : statesize(1, current_size), isclosed(sec), skipelse(skip_else)
         {}
 
         cppmodeitem()
         {}
 
         std::vector<int> statesize;
-        bool second;
+        bool isclosed;
         int undone;
         bool skipelse;
 };
@@ -1555,7 +1555,7 @@ block_end {} :
 
             // just ended else part of cppmode
             if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !cppmode.empty() && 
-                cppmode.top().second == true &&
+                cppmode.top().isclosed == true &&
                 state.size() < cppmode.top().statesize.back()) {
 
                 if (state.size() == cppmode.top().statesize[cppmode.top().statesize.size() - 1 - 1]) {
@@ -1676,7 +1676,7 @@ else_handling {} :
                 cppmode.top().statesize.back() = state.size();
 
                     // remove any finished ones
-                if (cppmode.top().second)    {
+                if (cppmode.top().isclosed)    {
                         bool equal = true;
                         for (unsigned int i = 0; i < cppmode.top().statesize.size(); ++i) {
                             if (cppmode.top().statesize[i] != cppmode.top().statesize[0])
@@ -3987,7 +3987,7 @@ eol_post[int directive_token] {
 
                     // add new context for #endif in current #if
                     cppmode.top().statesize.push_back(state.size()); 
-                    cppmode.top().second = true;
+                    cppmode.top().isclosed = true;
 
                     // remove any finished ones
                     {
@@ -4080,7 +4080,7 @@ eol_post[int directive_token] {
 
                     // add new context for #endif in current #if
                     cppmode.top().statesize.push_back(state.size()); 
-                    cppmode.top().second = true;
+                    cppmode.top().isclosed = true;
 
                     // remove any finished ones
                     {
@@ -4114,7 +4114,7 @@ eol_post[int directive_token] {
         // consume all skipped elements
         if ((checkOption(OPTION_PREPROCESS_ONLY_IF) && !cppstate.empty()) ||
             (!cppstate.empty() && cppstate.top() == MODE_IF) ||
-            (!cppmode.empty() && !cppmode.top().second && cppmode.top().skipelse) ||
+            (!cppmode.empty() && !cppmode.top().isclosed && cppmode.top().skipelse) ||
             (inputState->guessing && !cppstate.empty())
 
         ) {
