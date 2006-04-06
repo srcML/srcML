@@ -357,6 +357,13 @@ int cppifcount;
 SimpleStack<State::MODE_TYPE, 500> cppstate;
 
 struct cppmodeitem {
+        cppmodeitem(int current_size, bool sec, bool skip_else)
+            : first(1, current_size), second(sec), skipelse(skip_else)
+        {}
+
+        cppmodeitem()
+        {}
+
         std::vector<int> first;
         bool second;
         int undone;
@@ -3963,11 +3970,7 @@ eol_post[int directive_token] {
                     // create new context for #if (and possible #else)
                     if (!inputState->guessing) {
 
-                        cppmodeitem cp;
-                        cp.first = std::vector<int>(1, state.size());
-                        cp.second = false;
-                        cp.skipelse = false;
-                        cppmode.push(cp);
+                        cppmode.push(cppmodeitem(state.size(), false, false));
                     }
 
                     break;
@@ -4042,11 +4045,7 @@ eol_post[int directive_token] {
                     // create new context for #if (and possible #else)
                     if (!inputState->guessing) {
 
-                        cppmodeitem cp;
-                        cp.first = std::vector<int>(1, state.size());
-                        cp.second = false;
-                        cp.skipelse = false;
-                        cppmode.push(cp);
+                        cppmode.push(cppmodeitem(state.size(), false, false));
                     }
 
                     break;
@@ -4065,6 +4064,37 @@ eol_post[int directive_token] {
 
                         if (cppmode.top().first.front() > state.size())
                             cppmode.top().skipelse = true;
+                    }
+
+                    break;
+
+                case ENDIF :
+/*
+                    // #endif reached for #if 0 or #else that started this mode
+                    if (cppifcount == 0) {
+                        cppstate.pop();
+                    } else
+                        --cppifcount;
+*/
+                    if (!inputState->guessing) {
+
+                    // add new context for #endif in current #if
+                    cppmode.top().first.push_back(state.size()); 
+                    cppmode.top().second = true;
+
+                    // remove any finished ones
+                    {
+                        bool equal = true;
+                        for (unsigned int i = 0; i < cppmode.top().first.size(); ++i) {
+                            if (cppmode.top().first[i] != cppmode.top().first[0])
+                                equal = false;
+                        }
+
+                        if (!cppmode.empty() && (equal || cppmode.top().first.size() == 2)) {
+                            cppmode.pop();
+                        }
+                    }
+
                     }
 
                     break;
