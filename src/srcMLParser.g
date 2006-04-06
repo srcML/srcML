@@ -3960,7 +3960,8 @@ eol_post[int directive_token] {
                     } else
                         --cppifcount;
 
-                    if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !inputState->guessing) {
+                    if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !inputState->guessing &&
+                        !cppmode.empty()) {
 
                         // add new context for #endif in current #if
                         cppmode.top().statesize.push_back(state.size()); 
@@ -4042,7 +4043,8 @@ eol_post[int directive_token] {
                     } else
                         --cppifcount;
 */
-                    if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !inputState->guessing) {
+                    if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !inputState->guessing &&
+                        !cppmode.empty()) {
 
                         // add new context for #endif in current #if
                         cppmode.top().statesize.push_back(state.size()); 
