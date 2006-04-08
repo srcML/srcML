@@ -3940,19 +3940,19 @@ eol_post[int directive_token] {
                 case IF :
                 case IFDEF :
                 case IFNDEF :
-                    if (!cppstate.empty()) {
 
-                        ++cppifcount;
+                    // another if reached
+                    ++cppifcount;
 
-                    } else {
+                    // start a new blank mode for new zero'ed blocks
+                    if (cppstate.empty() && markblockzero) {
 
-                        // start a new blank mode for zero'ed blocks
-                        if (markblockzero) {
+                        // start a new blank mode for if
+                        cppstate.push(MODE_IF);
 
-                            // start a new blank mode for if
-                            cppifcount = 0;
-                            cppstate.push(MODE_IF);
-                        }
+                        // keep track of nested if's (inside the #if 0) so we know when
+                        // we reach the proper #endif
+                        cppifcount = 0;
                     }
 
                     // create new context for #if (and possible #else)
