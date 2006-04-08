@@ -3944,6 +3944,16 @@ eol_post[int directive_token] {
                 case IFNDEF :
                     if (!cppstate.empty()) {
                         ++cppifcount;
+                    } else {
+
+                    // start a new blank mode for zero'ed blocks
+                    if (markblockzero) {
+
+                        // start a new blank mode for if
+                        cppifcount = 0;
+                        cppstate.push(MODE_IF);
+                    }
+
                     }
 
                     // create new context for #if (and possible #else)
