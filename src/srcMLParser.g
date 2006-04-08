@@ -3933,19 +3933,19 @@ eol_pre {
 ;
 
 eol_post[int directive_token] {
+            static bool zeromode = false;
 
             switch (directive_token) {
 
-                // track the number of open #if's
                 case IF :
                 case IFDEF :
                 case IFNDEF :
 
                     // start a new blank mode for new zero'ed blocks
-                    if (cppstate.empty() && markblockzero) {
+                    if (!zeromode && markblockzero) {
 
                         // start a new blank mode for if
-                        cppstate.push(MODE_IF);
+                        zeromode = true;
 
                         // keep track of nested if's (inside the #if 0) so we know when
                         // we reach the proper #endif
@@ -3967,16 +3967,16 @@ eol_post[int directive_token] {
                 case ELIF :
 
                     // #else reached for #if 0 that started this mode
-                    if (!cppstate.empty() && cppstate.top() == MODE_IF && cppifcount == 0)
-                        cppstate.pop();
-
+                    if (zeromode && cppifcount == 1)
+                        zeromode = false;
+/*
                     if (cppstate.empty()) {
 
                         // start a new blank mode for else
-                        cppifcount = 0;
+                        cppifcount = 1;
                         cppstate.push(0);
                     }
-
+*/
                     if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !inputState->guessing) {
 
                         // create an empty cppmode for #if if one doesn't exist
@@ -4000,19 +4000,20 @@ eol_post[int directive_token] {
                     --cppifcount;
 
                     // #endif reached for #if 0 or #else that started this mode
-                    if (!cppstate.empty() && cppifcount == 0)
-                        cppstate.pop();
+                    if (zeromode && cppifcount == 0)
+                        zeromode = false;
 
                     if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !inputState->guessing &&
                         !cppmode.empty()) {
 
                         // add new context for #endif in current #if
                         cppmode.top().statesize.push_back(state.size()); 
+
+                        // reached #endif so finished adding to this mode
                         cppmode.top().isclosed = true;
 
-                        // remove any finished ones
+                        // remove any finished modes
                         cppmode_cleanup();
-
                     }
 
                 default :
@@ -4026,10 +4027,11 @@ eol_post[int directive_token] {
         std::cout << std::endl;
 */
         // consume all skipped elements
-        if ((checkOption(OPTION_PREPROCESS_ONLY_IF) && !cppstate.empty()) ||
-            (!cppstate.empty() && cppstate.top() == MODE_IF) ||
+
+        if ((checkOption(OPTION_PREPROCESS_ONLY_IF) && zeromode) ||
+            (zeromode) ||
             (!cppmode.empty() && !cppmode.top().isclosed && cppmode.top().skipelse) ||
-            (inputState->guessing && !cppstate.empty())
+            (inputState->guessing && zeromode)
 
         ) {
             while (LA(1) != PREPROC)
