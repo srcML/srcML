@@ -64,14 +64,14 @@ class StreamMLParser : public StreamParser<Base> {
   // starts an element
   void startElement(int id) {
 
-    Base::state.push(id);
+    Base::currentState().push(id);
     pushSToken(id, true);
   }
 
   // starts an element
   void startNoSkipElement(int id) {
 
-    Base::state.push(id);
+    Base::currentState().push(id);
     pushSToken(id, false);
   }
 
@@ -79,7 +79,7 @@ class StreamMLParser : public StreamParser<Base> {
   void endElement(int id) {
 
     pushEToken(id);
-    Base::state.pop();
+    Base::currentState().pop();
   }
 
   // starts an element
