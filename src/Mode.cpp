@@ -75,106 +75,106 @@ const State::MODE_TYPE Mode::MODE_ELSE                = 0x0000200000000000ULL;
 
 srcMLState& Mode::currentState() {
 
-  return state.currentState();
+  return pstate->currentState();
 }
 
 int Mode::size() const {
 
-  return state.size();
+  return pstate->size();
 }
 
 int Mode::getParen() const {
 
-  return state.getParen();
+  return pstate->getParen();
 }
 
 void Mode::incParen() {
 
-  state.incParen();
+  pstate->incParen();
 }
 
 void Mode::decParen() {
 
-  state.decParen();
+  pstate->decParen();
 }
 
 State::MODE_TYPE Mode::getMode() const {
 
-  return state.getMode();
+  return pstate->getMode();
 }
 
 State::MODE_TYPE Mode::getTransparentMode() const {
 
-  return state.getTransparentMode();
+  return pstate->getTransparentMode();
 }
 
 void Mode::startNewMode(const State::MODE_TYPE& m) {
 
-  state.startNewMode(m);
+  pstate->startNewMode(m);
 }
 
 void Mode::endCurrentMode() {
 
   // remove the mode
-  state.endCurrentMode();
+  pstate->endCurrentMode();
 }
 
 void Mode::endCurrentMode(const State::MODE_TYPE& m) {
 
   // remove the mode
-  state.endCurrentMode(m);
+  pstate->endCurrentMode(m);
 }
 
 void Mode::endLastMode() {
 
   // remove the mode
-  state.endLastMode();
+  pstate->endLastMode();
 }
 
 void Mode::endTopMode() {
 
   // remove the mode
-  state.endCurrentMode();
+  pstate->endCurrentMode();
 }
 
 void Mode::endCurrentModeSafely(const State::MODE_TYPE& m) {
 
   // remove the mode
-  state.endCurrentModeSafely(m);
+  pstate->endCurrentModeSafely(m);
 }
 
 void Mode::setMode(const State::MODE_TYPE& m) {
 
-  state.setMode(m);
+  pstate->setMode(m);
 }
 
 void Mode::clearMode(const State::MODE_TYPE& m) {
 
-  state.clearMode(m);
+  pstate->clearMode(m);
 }
 
 void Mode::replaceMode(const State::MODE_TYPE& o, const State::MODE_TYPE& n) {
 
-  state.replaceMode(o, n);
+  pstate->replaceMode(o, n);
 }
 
 bool Mode::inMode(const State::MODE_TYPE& m) const {
 
-  return state.inMode(m);
+  return pstate->inMode(m);
 }
 
 bool Mode::inTransparentMode(const State::MODE_TYPE& m) const {
 
-  return state.inTransparentMode(m);
+  return pstate->inTransparentMode(m);
 }
 
 // end elements down to a specific mode
 void Mode::endDownToMode(const State::MODE_TYPE& mode) {
 
-  if (!state.inTransparentMode(mode))
+  if (!pstate->inTransparentMode(mode))
       return;
 
-  while (state.size() > 1 && !state.inMode(mode)) {
+  while (pstate->size() > 1 && !pstate->inMode(mode)) {
       endCurrentMode();
   }
 }
@@ -182,10 +182,10 @@ void Mode::endDownToMode(const State::MODE_TYPE& mode) {
 // end elements down to a specific mode
 void Mode::endDownToFirstMode(const State::MODE_TYPE& mode) {
 
-  //  if (state.getTransparentMode() & (mode == 0))
+  //  if (pstate->getTransparentMode() & (mode == 0))
   //      return;
 
-  while (state.size() > 1 && (state.getMode() & mode) == 0) {
+  while (pstate->size() > 1 && (pstate->getMode() & mode) == 0) {
       endCurrentMode();
   }
 }
@@ -193,7 +193,7 @@ void Mode::endDownToFirstMode(const State::MODE_TYPE& mode) {
 // end elements down to a specific mode
 void Mode::endDownOverMode(const State::MODE_TYPE& mode) {
 
-  while (state.size() > 1 && state.inMode(mode)) {
+  while (pstate->size() > 1 && pstate->inMode(mode)) {
       endCurrentMode();
   }
 }

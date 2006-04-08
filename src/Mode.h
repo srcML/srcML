@@ -138,11 +138,15 @@ class Mode : public TokenParser, public Language {
 
   Mode(TokenParser* ptp, int lang)
     : Language(lang), state(ptp)
-    {}
+    {
+      pstate = &state;
+    }
 
   ~Mode() {}
 
   srcMLStateStack state;
+
+  srcMLStateStack* pstate;
 
 protected:
 
