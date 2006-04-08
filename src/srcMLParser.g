@@ -3966,13 +3966,11 @@ eol_post[int directive_token] {
                 case ELSE :
                 case ELIF :
 
-                    if (!cppstate.empty()) {
+                    // #else reached for #if 0 that started this mode
+                    if (!cppstate.empty() && cppstate.top() == MODE_IF && cppifcount == 0)
+                        cppstate.pop();
 
-                        // #else reached for #if 0 that started this mode
-                        if (!cppstate.empty() && cppstate.top() == MODE_IF && cppifcount == 0)
-                            cppstate.pop();
-
-                    } else {
+                    if (cppstate.empty()) {
 
                         // start a new blank mode for else
                         cppifcount = 0;
