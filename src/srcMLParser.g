@@ -3934,7 +3934,8 @@ eol_pre {
 
 eol_post[int directive_token] {
         // already in mode inelse
-        if (!cppstate.empty()) {
+        if (true) {
+//        if (!cppstate.empty()) {
 
             switch (directive_token) {
 
@@ -4010,6 +4011,11 @@ eol_post[int directive_token] {
 
                         // add new context for #else in current #if
                         cppmode.top().statesize.push_back(state.size()); 
+                    
+                        if (cppstate.empty()) {
+                            if (cppmode.top().statesize.front() > state.size())
+                                cppmode.top().skipelse = true;
+                        }
                     }
 
                     break;
