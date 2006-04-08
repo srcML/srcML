@@ -3980,6 +3980,8 @@ eol_post[int directive_token] {
 
                 case ELSE :
 
+                    if (!cppstate.empty()) {
+
                     // #else reached for #if 0 that started this mode
                     if (!cppstate.empty() && cppstate.top() == MODE_IF && cppifcount == 0) {
                         cppstate.pop();
@@ -3993,6 +3995,7 @@ eol_post[int directive_token] {
 
                         // add new context for #else in current #if
                         cppmode.top().statesize.push_back(state.size()); 
+                    }
                     }
 
                     break;
