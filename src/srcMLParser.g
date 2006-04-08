@@ -3986,8 +3986,6 @@ eol_post[int directive_token] {
 
                     }
 
-                    break;
-
                 case ELSE :
 
                     if (!cppstate.empty()) {
