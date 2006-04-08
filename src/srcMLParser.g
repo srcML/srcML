@@ -3987,6 +3987,7 @@ eol_post[int directive_token] {
                     }
 
                 case ELSE :
+                case ELIF :
 
                     if (!cppstate.empty()) {
 
