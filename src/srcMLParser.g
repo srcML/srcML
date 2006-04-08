@@ -1794,7 +1794,7 @@ statement_part { int type_count; } :
 */
 lparen {} :
         {
-            state.incParen();
+            incParen();
         }
         LPAREN  
 ;
