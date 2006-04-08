@@ -68,7 +68,7 @@ def src2srcML(text_file, encoding, language, directory, filename):
 #
 def getsrcmlattribute(xml_file, command):
 
-	last_line = subprocess.Popen([srcmlutility, command],
+	last_line = subprocess.Popen([srcmlutility, command], bufsize=-1,
 				     stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(xml_file)[0]
 	
 	return last_line.strip()
