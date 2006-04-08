@@ -3933,9 +3933,6 @@ eol_pre {
 ;
 
 eol_post[int directive_token] {
-        // already in mode inelse
-        if (true) {
-//        if (!cppstate.empty()) {
 
             switch (directive_token) {
 
@@ -4023,79 +4020,6 @@ eol_post[int directive_token] {
                 default :
                     break;
             }
-
-        // not in mode inelse
-        } else {
-
-            switch (directive_token) {
-                case IF :
-                case IFDEF :
-                case IFNDEF :
-
-                    // start a new blank mode for zero'ed blocks
-                    if (markblockzero) {
-
-                        // start a new blank mode for if
-                        cppifcount = 0;
-                        cppstate.push(MODE_IF);
-                    }
-
-                    // create new context for #if (and possible #else)
-                    if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !inputState->guessing) {
-
-                        cppmode.push(cppmodeitem(state.size()));
-                    }
-
-                    break;
-
-                case ELSE :
-                case ELIF :
-
-                    // start a new blank mode for else
-                    cppifcount = 0;
-                    cppstate.push(0);
-
-                    if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !inputState->guessing) {
-
-                        // create an empty cppmode for #if if one doesn't exist
-                        if (cppmode.empty())
-                            cppmode.push(cppmodeitem(state.size()));
-
-                        // add new context for #else in current #if
-                        cppmode.top().statesize.push_back(state.size());
-
-                        if (cppmode.top().statesize.front() > state.size())
-                            cppmode.top().skipelse = true;
-                    }
-
-                    break;
-
-                case ENDIF :
-/*
-                    // #endif reached for #if 0 or #else that started this mode
-                    if (cppifcount == 0) {
-                        cppstate.pop();
-                    } else
-                        --cppifcount;
-*/
-                    if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !inputState->guessing &&
-                        !cppmode.empty()) {
-
-                        // add new context for #endif in current #if
-                        cppmode.top().statesize.push_back(state.size()); 
-                        cppmode.top().isclosed = true;
-
-                        // remove any finished ones
-                        cppmode_cleanup();
-                    }
-
-                    break;
-
-                default :
-                    break;
-            }
-
-        }
 /*
         std::cout << cppmode.size();
         if (!cppmode.empty())
