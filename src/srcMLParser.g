@@ -3942,7 +3942,9 @@ eol_post[int directive_token] {
                 case IF :
                 case IFDEF :
                 case IFNDEF :
-                    ++cppifcount;
+                    if (!cppstate.empty()) {
+                        ++cppifcount;
+                    }
 
                     // create new context for #if (and possible #else)
                     if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !inputState->guessing) {
@@ -3954,11 +3956,13 @@ eol_post[int directive_token] {
 
                 case ENDIF :
 
-                    // #endif reached for #if 0 or #else that started this mode
-                    if (cppifcount == 0) {
-                        cppstate.pop();
-                    } else
-                        --cppifcount;
+                    if (!cppstate.empty()) {
+                        // #endif reached for #if 0 or #else that started this mode
+                        if (cppifcount == 0) {
+                            cppstate.pop();
+                        } else
+                            --cppifcount;
+                    }
 
                     if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !inputState->guessing &&
                         !cppmode.empty()) {
