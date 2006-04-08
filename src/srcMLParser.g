@@ -3993,6 +3993,12 @@ eol_post[int directive_token] {
                     // #else reached for #if 0 that started this mode
                     if (!cppstate.empty() && cppstate.top() == MODE_IF && cppifcount == 0) {
                         cppstate.pop();
+                    } }
+                    else {
+
+                        // start a new blank mode for else
+                        cppifcount = 0;
+                        cppstate.push(0);
                     }
 
                     if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !inputState->guessing) {
@@ -4003,7 +4009,6 @@ eol_post[int directive_token] {
 
                         // add new context for #else in current #if
                         cppmode.top().statesize.push_back(state.size()); 
-                    }
                     }
 
                     break;
