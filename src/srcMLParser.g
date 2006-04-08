@@ -377,7 +377,7 @@ void startUnit() {
 
 // returns the current token in the output token stream
 TokenPosition getTokenPosition() {
-        TokenPosition tp = { CurrentToken(), &(state.currentState().callstack.top()) };
+        TokenPosition tp = { CurrentToken(), &(currentState().callstack.top()) };
         return tp;
 }
 
