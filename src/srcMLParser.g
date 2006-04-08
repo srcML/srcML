@@ -354,8 +354,6 @@ srcMLParser(antlr::TokenStream& lexer, int lang = LANGUAGE_CXX);
 bool markblockzero;
 int cppifcount;
 
-SimpleStack<State::MODE_TYPE, 500> cppstate;
-
 struct cppmodeitem {
         cppmodeitem(int current_size)
             : statesize(1, current_size), isclosed(false), skipelse(false)
@@ -3934,6 +3932,7 @@ eol_pre {
 
 eol_post[int directive_token] {
             static bool zeromode = false;
+            static bool skipelse = false;
 
             switch (directive_token) {
 
@@ -3969,14 +3968,13 @@ eol_post[int directive_token] {
                     // #else reached for #if 0 that started this mode
                     if (zeromode && cppifcount == 1)
                         zeromode = false;
-/*
-                    if (cppstate.empty()) {
 
-                        // start a new blank mode for else
+                    // not in skipped #if, so skip #else until #endif of #if is reached
+                    if (!zeromode) {
+                        skipelse = true;
                         cppifcount = 1;
-                        cppstate.push(0);
                     }
-*/
+
                     if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !inputState->guessing) {
 
                         // create an empty cppmode for #if if one doesn't exist
@@ -3986,7 +3984,7 @@ eol_post[int directive_token] {
                         // add new context for #else in current #if
                         cppmode.top().statesize.push_back(state.size()); 
                     
-                        if (cppstate.empty()) {
+                        if (!zeromode) {
                             if (cppmode.top().statesize.front() > state.size())
                                 cppmode.top().skipelse = true;
                         }
@@ -3999,9 +3997,13 @@ eol_post[int directive_token] {
                     // another #if ended
                     --cppifcount;
 
-                    // #endif reached for #if 0 or #else that started this mode
+                    // #endif reached for #if 0 that started this mode
                     if (zeromode && cppifcount == 0)
                         zeromode = false;
+
+                    // #endif reached for #else that started this mode
+                    if (skipelse && cppifcount == 0)
+                        skipelse = false;
 
                     if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !inputState->guessing &&
                         !cppmode.empty()) {
@@ -4028,11 +4030,18 @@ eol_post[int directive_token] {
 */
         // consume all skipped elements
 
-        if ((checkOption(OPTION_PREPROCESS_ONLY_IF) && zeromode) ||
-            (zeromode) ||
-            (!cppmode.empty() && !cppmode.top().isclosed && cppmode.top().skipelse) ||
-            (inputState->guessing && zeromode)
+        /*
+            Skip elements when:
+                - in zero block (zeromode)
+                - when processing only #if part, not #else
+                - when guessing and in else (unless in zero block)
+                - when ??? for cppmode
 
+        */
+        if ((zeromode) ||
+            (checkOption(OPTION_PREPROCESS_ONLY_IF) && skipelse) ||
+            (inputState->guessing && skipelse) ||
+            (!cppmode.empty() && !cppmode.top().isclosed && cppmode.top().skipelse)
         ) {
             while (LA(1) != PREPROC)
                 consume();
