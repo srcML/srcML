@@ -78,6 +78,11 @@ srcMLState& Mode::currentState() {
   return state.currentState();
 }
 
+int Mode::size() const {
+
+  return state.size();
+}
+
 State::MODE_TYPE Mode::getMode() const {
 
   return state.getMode();

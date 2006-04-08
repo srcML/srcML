@@ -156,6 +156,8 @@ protected:
 
   srcMLState& currentState();
 
+  int size() const;
+
   void startNewMode(const State::MODE_TYPE& m);
 
   void endCurrentMode();

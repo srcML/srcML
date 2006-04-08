@@ -148,12 +148,12 @@ srcMLParser* pparser;
 
      public:
      LocalMode()
-        : oldsize(pparser->state.size())
+        : oldsize(pparser->size())
      {}
 
      ~LocalMode() {
          srcMLParser& fp = *pparser;
-         while (fp.state.size() > oldsize) {
+         while (fp.size() > oldsize) {
            fp.endCurrentMode();
          }
      }
@@ -397,11 +397,11 @@ public:
 void endAllModes() {
 
      // should only be one mode
-     if (state.size() > 1)
+     if (size() > 1)
         emptyElement(SERROR_MODE);
 
     // end all modes except the last
-    while (state.size() > 1) {
+    while (size() > 1) {
         endCurrentMode();
     }
 
@@ -1656,7 +1656,7 @@ else_handling {} :
             // update the state size in cppmode if changed from using consumeSkippedTokens
             if (!cppmode.empty() && cppmode_size != cppmode.top().statesize.size()) {
 
-                cppmode.top().statesize.back() = state.size();
+                cppmode.top().statesize.back() = size();
 
                 // remove any finished ones
                 if (cppmode.top().isclosed)    {
@@ -3960,7 +3960,7 @@ eol_post[int directive_token] {
                     // create new context for #if (and possible #else)
                     if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !inputState->guessing) {
 
-                        cppmode.push(cppmodeitem(state.size()));
+                        cppmode.push(cppmodeitem(size()));
                     }
 
                     break;
@@ -3982,13 +3982,13 @@ eol_post[int directive_token] {
 
                         // create an empty cppmode for #if if one doesn't exist
                         if (cppmode.empty())
-                            cppmode.push(cppmodeitem(state.size()));
+                            cppmode.push(cppmodeitem(size()));
 
                         // add new context for #else in current #if
-                        cppmode.top().statesize.push_back(state.size()); 
+                        cppmode.top().statesize.push_back(size()); 
                     
                         if (!zeromode) {
-                            if (cppmode.top().statesize.front() > state.size())
+                            if (cppmode.top().statesize.front() > size())
                                 cppmode.top().skipelse = true;
                         }
                     }
@@ -4012,7 +4012,7 @@ eol_post[int directive_token] {
                         !cppmode.empty()) {
 
                         // add new context for #endif in current #if
-                        cppmode.top().statesize.push_back(state.size()); 
+                        cppmode.top().statesize.push_back(size()); 
 
                         // reached #endif so finished adding to this mode
                         cppmode.top().isclosed = true;
@@ -4074,12 +4074,12 @@ cppmode_adjust {
 
     if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !cppmode.empty() && 
         cppmode.top().isclosed == true &&
-        state.size() < cppmode.top().statesize.back()) {
+        size() < cppmode.top().statesize.back()) {
 
-           if (state.size() == cppmode.top().statesize[cppmode.top().statesize.size() - 1 - 1]) {
+           if (size() == cppmode.top().statesize[cppmode.top().statesize.size() - 1 - 1]) {
                 
                 // end if part of cppmode
-                while (state.size() > cppmode.top().statesize.front())
+                while (size() > cppmode.top().statesize.front())
                     endCurrentMode();
 
                 // done with this cppmode
