@@ -154,6 +154,8 @@ protected:
 
   State::MODE_TYPE getTransparentMode() const;
 
+  srcMLState& currentState();
+
   void startNewMode(const State::MODE_TYPE& m);
 
   void endCurrentMode();
