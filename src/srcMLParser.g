@@ -3941,9 +3941,6 @@ eol_post[int directive_token] {
                 case IFDEF :
                 case IFNDEF :
 
-                    // another if reached
-                    ++cppifcount;
-
                     // start a new blank mode for new zero'ed blocks
                     if (cppstate.empty() && markblockzero) {
 
@@ -3954,6 +3951,9 @@ eol_post[int directive_token] {
                         // we reach the proper #endif
                         cppifcount = 0;
                     }
+
+                    // another if reached
+                    ++cppifcount;
 
                     // create new context for #if (and possible #else)
                     if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !inputState->guessing) {
@@ -3998,14 +3998,12 @@ eol_post[int directive_token] {
 
                 case ENDIF :
 
-                    if (!cppstate.empty()) {
+                    // another #if ended
+                    --cppifcount;
 
-                        // #endif reached for #if 0 or #else that started this mode
-                        if (cppifcount == 0)
-                            cppstate.pop();
-                        else
-                            --cppifcount;
-                    }
+                    // #endif reached for #if 0 or #else that started this mode
+                    if (!cppstate.empty() && cppifcount == 0)
+                        cppstate.pop();
 
                     if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !inputState->guessing &&
                         !cppmode.empty()) {
