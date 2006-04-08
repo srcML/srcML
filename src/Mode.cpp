@@ -83,6 +83,21 @@ int Mode::size() const {
   return state.size();
 }
 
+int Mode::getParen() const {
+
+  return state.getParen();
+}
+
+void Mode::incParen() {
+
+  state.incParen();
+}
+
+void Mode::decParen() {
+
+  state.decParen();
+}
+
 State::MODE_TYPE Mode::getMode() const {
 
   return state.getMode();

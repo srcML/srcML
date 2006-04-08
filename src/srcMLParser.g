@@ -1821,13 +1821,13 @@ colon[bool final = false] { if (final) setFinalToken(); } :
 ;
 
 rparen[bool final = false] {} :
-        { state.getParen() == 0 }? empty_rparen[final]
+        { getParen() == 0 }? empty_rparen[final]
 
         | rparen_base[final]
 ;
 
 empty_rparen[bool final = false] {} :
-//        { state.getParen() == 0 }?
+//        { getParen() == 0 }?
         {
             // additional right parentheses indicates end of non-list modes
             endDownToFirstMode(MODE_LIST | MODE_PREPROC | MODE_END_ONLY_AT_RPAREN);
@@ -1849,7 +1849,7 @@ empty_rparen[bool final = false] {} :
 
 rparen_base[bool final = false] { if (final) setFinalToken(); }:
         {
-            state.decParen();
+            decParen();
         }
         RPAREN  
 ;
@@ -3442,7 +3442,7 @@ full_parameter[bool single = false] {} :
 ;
 
 argument {} :
-        { state.getParen() == 0 }? empty_rparen |
+        { getParen() == 0 }? empty_rparen |
         {
             // argument with nested expression
             startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);

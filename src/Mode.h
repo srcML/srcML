@@ -158,6 +158,12 @@ protected:
 
   int size() const;
 
+  int getParen() const;
+
+  void incParen();
+
+  void decParen();
+
   void startNewMode(const State::MODE_TYPE& m);
 
   void endCurrentMode();
