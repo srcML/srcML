@@ -3941,17 +3941,18 @@ eol_post[int directive_token] {
                 case IFDEF :
                 case IFNDEF :
                     if (!cppstate.empty()) {
+
                         ++cppifcount;
+
                     } else {
 
-                    // start a new blank mode for zero'ed blocks
-                    if (markblockzero) {
+                        // start a new blank mode for zero'ed blocks
+                        if (markblockzero) {
 
-                        // start a new blank mode for if
-                        cppifcount = 0;
-                        cppstate.push(MODE_IF);
-                    }
-
+                            // start a new blank mode for if
+                            cppifcount = 0;
+                            cppstate.push(MODE_IF);
+                        }
                     }
 
                     // create new context for #if (and possible #else)
@@ -3967,11 +3968,11 @@ eol_post[int directive_token] {
 
                     if (!cppstate.empty()) {
 
-                    // #else reached for #if 0 that started this mode
-                    if (!cppstate.empty() && cppstate.top() == MODE_IF && cppifcount == 0) {
-                        cppstate.pop();
-                    } }
-                    else {
+                        // #else reached for #if 0 that started this mode
+                        if (!cppstate.empty() && cppstate.top() == MODE_IF && cppifcount == 0)
+                            cppstate.pop();
+
+                    } else {
 
                         // start a new blank mode for else
                         cppifcount = 0;
@@ -3998,10 +3999,11 @@ eol_post[int directive_token] {
                 case ENDIF :
 
                     if (!cppstate.empty()) {
+
                         // #endif reached for #if 0 or #else that started this mode
-                        if (cppifcount == 0) {
+                        if (cppifcount == 0)
                             cppstate.pop();
-                        } else
+                        else
                             --cppifcount;
                     }
 
