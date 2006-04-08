@@ -164,7 +164,7 @@ srcMLParser* pparser;
 
 
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang)
-   : antlr::LLkParser(lexer,1), Mode(this, lang), markblockzero(false), cppifcount(0)
+   : antlr::LLkParser(lexer,1), Mode(this, lang), markblockzero(false)
 {
     pparser = this;
 
@@ -352,7 +352,6 @@ friend class LocalMode;
 srcMLParser(antlr::TokenStream& lexer, int lang = LANGUAGE_CXX);
 
 bool markblockzero;
-int cppifcount;
 
 struct cppmodeitem {
         cppmodeitem(int current_size)
@@ -3931,8 +3930,12 @@ eol_pre {
 ;
 
 eol_post[int directive_token] {
+            // Flags to control skipping of #if 0 and #else.
+            // Once in these modes, stay in these modes until the matching #endif is reached
+            // cppifcount used to indicate which #endif matches the #if or #else
             static bool zeromode = false;
             static bool skipelse = false;
+            static int cppifcount = 0;
 
             switch (directive_token) {
 
