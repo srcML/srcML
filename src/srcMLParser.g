@@ -3962,28 +3962,6 @@ eol_post[int directive_token] {
 
                     break;
 
-                case ENDIF :
-
-                    if (!cppstate.empty()) {
-                        // #endif reached for #if 0 or #else that started this mode
-                        if (cppifcount == 0) {
-                            cppstate.pop();
-                        } else
-                            --cppifcount;
-                    }
-
-                    if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !inputState->guessing &&
-                        !cppmode.empty()) {
-
-                        // add new context for #endif in current #if
-                        cppmode.top().statesize.push_back(state.size()); 
-                        cppmode.top().isclosed = true;
-
-                        // remove any finished ones
-                        cppmode_cleanup();
-
-                    }
-
                 case ELSE :
                 case ELIF :
 
@@ -4016,6 +3994,28 @@ eol_post[int directive_token] {
                     }
 
                     break;
+
+                case ENDIF :
+
+                    if (!cppstate.empty()) {
+                        // #endif reached for #if 0 or #else that started this mode
+                        if (cppifcount == 0) {
+                            cppstate.pop();
+                        } else
+                            --cppifcount;
+                    }
+
+                    if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !inputState->guessing &&
+                        !cppmode.empty()) {
+
+                        // add new context for #endif in current #if
+                        cppmode.top().statesize.push_back(state.size()); 
+                        cppmode.top().isclosed = true;
+
+                        // remove any finished ones
+                        cppmode_cleanup();
+
+                    }
 
                 default :
                     break;
