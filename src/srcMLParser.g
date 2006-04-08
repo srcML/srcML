@@ -3909,7 +3909,7 @@ eol_skip[int directive_token] {
   Only used for ending preprocessor, and only those directives who end on the current
   line.
 */
-eol[int directive_token = 0] { /* setFinalToken(); */ } :
+eol[int directive_token] { /* setFinalToken(); */ } :
         eol_pre
         (EOL | LINECOMMENT | BLOCKCOMMENTEOL | eof | EOF_TYPE)
         eol_post[directive_token]
