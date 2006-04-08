@@ -203,7 +203,6 @@ cleanantlr :
 	rm -f $(TEXTLEXER_GENS)
 	rm -f $(WSLEXER_GENS)
 	rm -f $(GENERATED_GRAMMARS)
-	rm -f genchars genunicode genunicodesafe
 
 # on every build, record the version number
 version.cpp : VERSION
