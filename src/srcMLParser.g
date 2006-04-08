@@ -164,7 +164,7 @@ srcMLParser* pparser;
 
 
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang)
-   : antlr::LLkParser(lexer,1), Mode(this, lang), markblockzero(false)
+   : antlr::LLkParser(lexer,1), Mode(this, lang)
 {
     pparser = this;
 
@@ -350,8 +350,6 @@ friend class LocalMode;
 ~srcMLParser() {}
 
 srcMLParser(antlr::TokenStream& lexer, int lang = LANGUAGE_CXX);
-
-bool markblockzero;
 
 struct cppmodeitem {
         cppmodeitem(int current_size)
@@ -3748,7 +3746,7 @@ eof :
         EOF
 ;
 
-mark_directive[int& directive_token] { directive_token = LA(1); markblockzero = false; } :
+mark_directive[int& directive_token] { directive_token = LA(1); } :
     ;
 
 /*
@@ -3758,6 +3756,7 @@ mark_directive[int& directive_token] { directive_token = LA(1); markblockzero = 
 */
 preprocessor {
         int directive_token = 0;
+        bool markblockzero = false;
 
         TokenPosition tp = { 0, 0 };
 
@@ -3821,7 +3820,7 @@ preprocessor {
 
             setTokenPosition(tp, SCPP_IF);
         }
-        cpp_condition |
+        cpp_condition[markblockzero] |
 
         ELIF
         {
@@ -3829,7 +3828,7 @@ preprocessor {
 
             setTokenPosition(tp, SCPP_ELIF);
         }
-        cpp_condition |
+        cpp_condition[markblockzero] |
 
         ELSE
         {
@@ -3883,14 +3882,14 @@ preprocessor {
             setTokenPosition(tp, SCPP_ERROR);
         }
         )
-        eol_skip[directive_token]
+        eol_skip[directive_token, markblockzero]
 ;
 exception
 catch[antlr::RecognitionException] {
-        eol_skip(directive_token);
+        eol_skip(directive_token, markblockzero);
 }
 
-eol_skip[int directive_token] { 
+eol_skip[int directive_token, bool markblockzero] { 
 
     while (LA(1) != EOL && 
            LA(1) != LINECOMMENT && 
@@ -3900,7 +3899,7 @@ eol_skip[int directive_token] {
         )
                 consume();
     } :
-    eol[directive_token]
+    eol[directive_token, markblockzero]
 ;
 
 /*
@@ -3909,10 +3908,10 @@ eol_skip[int directive_token] {
   Only used for ending preprocessor, and only those directives who end on the current
   line.
 */
-eol[int directive_token] { /* setFinalToken(); */ } :
+eol[int directive_token, bool markblockzero] { /* setFinalToken(); */ } :
         eol_pre
         (EOL | LINECOMMENT | BLOCKCOMMENTEOL | eof | EOF_TYPE)
-        eol_post[directive_token]
+        eol_post[directive_token, markblockzero]
 ;
 
 eol_pure {} :
@@ -3929,7 +3928,7 @@ eol_pre {
         } :
 ;
 
-eol_post[int directive_token] {
+eol_post[int directive_token, bool markblockzero] {
             // Flags to control skipping of #if 0 and #else.
             // Once in these modes, stay in these modes until the matching #endif is reached
             // cppifcount used to indicate which #endif matches the #if or #else
@@ -4098,7 +4097,7 @@ line_continuation { setFinalToken(); } :
         EOL_BACKSLASH
 ;
 
-cpp_condition { LocalMode lm; } :
+cpp_condition[bool& markblockzero] { LocalMode lm; } :
         {
             startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_TOP);
 
@@ -4106,12 +4105,12 @@ cpp_condition { LocalMode lm; } :
                 markblockzero = true;
             }
         }
-        mark_block
+        mark_block[markblockzero]
 
         full_expression
 ;
 
-mark_block {
+mark_block[bool& markblockzero] {
 
         if (LA(1) == CONSTANTS && LT(1)->getText() == "0") {
             markblockzero = true;
