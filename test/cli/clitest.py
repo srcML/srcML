@@ -433,10 +433,10 @@ return;
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 </unit>
 """
-check([srcmltranslator, option.CPP_TEXT_ELSE_FLAG], cpp_src, cpp_textonly_srcml)
+check([srcmltranslator, option.CPP_TEXTONLY_ELSE_FLAG], cpp_src, cpp_textonly_srcml)
 
-validate(getreturn([srcmltranslator, option.CPP_MARKUP_ELSE_FLAG, option.CPP_TEXT_ELSE_FLAG], cpp_src), status.STATUS_INVALID_OPTION_COMBINATION)
-validate(getreturn([srcmltranslator, option.CPP_TEXT_ELSE_FLAG, option.CPP_MARKUP_ELSE_FLAG], cpp_src), status.STATUS_INVALID_OPTION_COMBINATION)
+validate(getreturn([srcmltranslator, option.CPP_MARKUP_ELSE_FLAG, option.CPP_TEXTONLY_ELSE_FLAG], cpp_src), status.STATUS_INVALID_OPTION_COMBINATION)
+validate(getreturn([srcmltranslator, option.CPP_TEXTONLY_ELSE_FLAG, option.CPP_MARKUP_ELSE_FLAG], cpp_src), status.STATUS_INVALID_OPTION_COMBINATION)
 
 print src2srcmlversion()
 print srcml2srcversion()
