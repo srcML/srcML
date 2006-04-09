@@ -64,9 +64,19 @@ class SimpleStack {
     return size() == 0;
   }
 
- private:
+  SimpleStack<Type, N>& operator=(const SimpleStack<Type, N>& st) {
+
+    for (int i = 0; i < st.size(); ++i)
+      ar[i] = st.ar[i];
+
+    topindex = st.topindex;
+
+    return *this;
+  }
+
   Type ar[N];
   int topindex;
+ private:
 };
 
 #endif
