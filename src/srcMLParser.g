@@ -3957,7 +3957,7 @@ eol_post[int directive_token, bool markblockzero] {
                     ++cppifcount;
 
                     // create new context for #if (and possible #else)
-                    if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !inputState->guessing) {
+                    if (checkOption(OPTION_CPP_MARKUP_ELSE) && !inputState->guessing) {
 
                         cppmode.push(cppmodeitem(size()));
                     }
@@ -3977,7 +3977,7 @@ eol_post[int directive_token, bool markblockzero] {
                         cppifcount = 1;
                     }
 
-                    if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !inputState->guessing) {
+                    if (!checkOption(OPTION_CPP_MARKUP_ELSE) && !inputState->guessing) {
 
                         // create an empty cppmode for #if if one doesn't exist
                         if (cppmode.empty())
@@ -4007,7 +4007,7 @@ eol_post[int directive_token, bool markblockzero] {
                     if (skipelse && cppifcount == 0)
                         skipelse = false;
 
-                    if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !inputState->guessing &&
+                    if (!checkOption(OPTION_CPP_MARKUP_ELSE) && !inputState->guessing &&
                         !cppmode.empty()) {
 
                         // add new context for #endif in current #if
@@ -4041,7 +4041,7 @@ eol_post[int directive_token, bool markblockzero] {
 
         */
         if ((zeromode) ||
-            (checkOption(OPTION_PREPROCESS_ONLY_IF) && skipelse) ||
+            (!checkOption(OPTION_CPP_MARKUP_ELSE) && skipelse) ||
             (inputState->guessing && skipelse) ||
             (!cppmode.empty() && !cppmode.top().isclosed && cppmode.top().skipelse)
         ) {
@@ -4071,7 +4071,7 @@ cppmode_cleanup {
 // ended modes that may lead to needed updates
 cppmode_adjust {
 
-    if (!checkOption(OPTION_PREPROCESS_ONLY_IF) && !cppmode.empty() && 
+    if (checkOption(OPTION_CPP_MARKUP_ELSE) && !cppmode.empty() && 
         cppmode.top().isclosed == true &&
         size() < cppmode.top().statesize.back()) {
 

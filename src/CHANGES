@@ -1,6 +1,9 @@
 CHANGES
 
 Trunk
+	Change option --cpp_nomark_else to --cpp_textonly_else and add --cpp_markup_else
+	for controlling whether cpp #else sections are parsed and marked.
+
 	Fix new cppmode and missing #if.
 
 	Add option --cpp-nomark-else for controlling whether cpp #else sections are

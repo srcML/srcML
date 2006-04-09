@@ -97,8 +97,8 @@ enum Options {
   // skip encoding
   OPTION_SKIP_ENCODING = 0x00200000,
 
-  // preprocess only if
-  OPTION_PREPROCESS_ONLY_IF = 0x00400000,
+  // cpp markup #else sections
+  OPTION_CPP_MARKUP_ELSE = 0x00400000,
 };
 
 #endif

@@ -47,8 +47,11 @@ const char* COMPRESSED_FLAG_SHORT = "-z";
 const char* INTERACTIVE_FLAG = "--interactive";
 const char* INTERACTIVE_FLAG_SHORT = "-c";
 
-const char* CPPSKIPELSE_FLAG = "--cpp_nomark_else";
-const char* CPPSKIPELSE_FLAG_SHORT = "-e";
+const char* CPP_MARKUP_ELSE_FLAG = "--cpp_markup_else";
+const char* CPP_MARKUP_ELSE_FLAG_SHORT = "";
+
+const char* CPP_TEXT_ELSE_FLAG = "--cpp_textonly_else";
+const char* CPP_TEXT_ELSE_FLAG_SHORT = "";
 
 #ifdef LIBXML_ENABLED
 const char* DEFAULT_XML_ENCODING = "UTF-8";
@@ -111,12 +114,17 @@ void output_help(const char* name) {
 	      << "  " << ENCODING_FLAG_SHORT    << ", " << setw(COL) <<  ENCODING_FLAG_FULL
 	      << "set the output XML encoding to ENC (default:  "
 	      << DEFAULT_XML_ENCODING << ") \n"
-              << '\n'
+	      << '\n'
 	      << "  " << NESTED_FLAG_SHORT      << ", " << setw(COL) <<  NESTED_FLAG
 	      << "store all input source files in one compound srcML document\n"
 	      << "  " << FILELIST_FLAG_SHORT    << ", " << setw(COL) <<  FILELIST_FLAG
 	      << "treat input file as a list of source files\n"
-	      << '\n'
+              << '\n'
+	      << "  " << CPP_MARKUP_ELSE_FLAG   << "  " << /* setw(COL) <<*/ "     "
+	      << "markup cpp #else regions (default)\n"
+	      << "  " << CPP_TEXT_ELSE_FLAG     << "  " << /* setw(COL) <<*/ "   "
+	      << "leave cpp #else regions as text\n"
+              << '\n'
 #ifdef LIBXML_ENABLED
 	      << "  " << COMPRESSED_FLAG_SHORT  << ", " << setw(COL) <<  COMPRESSED_FLAG
 	      << "output in gzip format\n"
@@ -171,9 +179,10 @@ int main(int argc, char* argv[]) {
   const char* given_version = "";
 
   // process all command line options
-  int options = 0;
+  int options = OPTION_CPP_MARKUP_ELSE;
   int position = 0;
   int curarg = 1;  // current argument
+  bool cpp_markup = false;
   while (argc > curarg && strlen(argv[curarg]) > 1 && argv[curarg][0] == '-' &&
 	 strcmp(argv[curarg], OPTION_SEPARATOR) != 0) {
 
@@ -238,10 +247,34 @@ int main(int argc, char* argv[]) {
       if (position == original_position) ++curarg;
     }
 
-    // cpp skip else mode
-    else if (compare_flags(argv[curarg], CPPSKIPELSE_FLAG, CPPSKIPELSE_FLAG_SHORT, position)) {
-      options |= OPTION_PREPROCESS_ONLY_IF;
-      if (position == original_position) ++curarg;
+    // markup of cpp #else mode
+    else if (compare_flags(argv[curarg], CPP_MARKUP_ELSE_FLAG, CPP_MARKUP_ELSE_FLAG_SHORT, position)) {
+      if (!cpp_markup) {
+	options |= OPTION_CPP_MARKUP_ELSE;
+	if (position == original_position) ++curarg;
+
+	cpp_markup = true;
+
+      } else {
+	std::cerr << NAME << ": Conflicting options " << CPP_MARKUP_ELSE_FLAG << " and " 
+		  << CPP_TEXT_ELSE_FLAG << " selected." << '\n';
+	exit(STATUS_INVALID_OPTION_COMBINATION);
+      }
+    }
+
+    // text-only cpp #else mode
+    else if (compare_flags(argv[curarg], CPP_TEXT_ELSE_FLAG, CPP_TEXT_ELSE_FLAG_SHORT, position)) {
+
+      if (!cpp_markup) {
+	options &= ~OPTION_CPP_MARKUP_ELSE;
+	if (position == original_position) ++curarg;
+
+	cpp_markup = true;
+      } else {
+	std::cerr << NAME << ": Conflicting options " << CPP_MARKUP_ELSE_FLAG << " and " 
+		  << CPP_TEXT_ELSE_FLAG << " selected." << '\n';
+	exit(STATUS_INVALID_OPTION_COMBINATION);
+      }
     }
 
     // filelist mode
