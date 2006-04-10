@@ -208,6 +208,48 @@
   </variablelist>
 </refsect1>
 <refsect1>
+  <title>CPP MARKUP OPTIONS</title>
+  <para>
+    This set of options allows control over how preprocessing regions are handled,
+    i.e., whether parsing and markup occur.  In all cases the text is preserved.
+  </para>
+  <variablelist>
+    <varlistentry>
+      <term>&CPP_MARKUP_ELSE_FLAG;</term>
+      <listitem>
+	<para>
+	  Place markup in #else and #elif regions.  Default.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>&CPP_TEXTONLY_ELSE_FLAG;</term>
+      <listitem>
+	<para>
+	  Only place text in #else and #elif regions leaving out markup.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>&CPP_MARKUP_IF0_FLAG;</term>
+      <listitem>
+	<para>
+	  Place markup in #if 0 regions.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>&CPP_TEXTONLY_IF0_FLAG;</term>
+      <listitem>
+	<para>
+	  Only place text in #else and #elif regions leaving out markup.
+	  Default.
+	</para>
+      </listitem>
+    </varlistentry>
+  </variablelist>
+</refsect1>
+<refsect1>
   <title>USAGE</title>
   <para>
     To translate the C++ source-code file main.cpp into the srcML file
