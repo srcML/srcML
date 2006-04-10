@@ -4023,18 +4023,10 @@ eol_post[int directive_token, bool markblockzero] {
                 default :
                     break;
             }
-/*
-        std::cout << cppmode.size();
-        if (!cppmode.empty())
-            std::cout << " " << cppmode.top().size() << " " << cppmode.top().back();
-
-        std::cout << std::endl;
-*/
-        // consume all skipped elements
 
         /*
             Skip elements when:
-                - in zero block (zeromode)
+                - in zero block (zeromode) and not marking #if 0
                 - when processing only #if part, not #else
                 - when guessing and in else (unless in zero block)
                 - when ??? for cppmode
