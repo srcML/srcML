@@ -1,6 +1,9 @@
 CHANGES
 
 Trunk
+	Default (in all cases) is now ISO-8859-1 for input format.  Changes default
+	in libxml2 version.
+
 	Fix wrong return code on expand in srcml2src.
 
 	Add options --cpp_markup_if0 and --cpp_textonly_if0 for controlling whether

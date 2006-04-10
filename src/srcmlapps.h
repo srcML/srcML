@@ -108,7 +108,7 @@ const int COL = 20;
 // current environment encoding
 const char* getencoding();
 
-const char* DEFAULT_TEXT_ENCODING = getencoding();  // "ISO-8859-1";
+const char* DEFAULT_TEXT_ENCODING = "ISO-8859-1";
 
 // extract option from full argument
 inline char* extract_option(char* full_argument) { return strchr(full_argument, '='); }
