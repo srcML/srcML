@@ -129,10 +129,10 @@ ${EXE_DIR}srcmllexer : ${OBJ_DIR}srcmllexer.o ${OBJ_DIR}KeywordCPPLexer.o ${OBJ_
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) -o $@
 
 # Object files
-${OBJ_DIR}src2srcml.o : src2srcml.cpp srcMLTranslator.h version.h srcmlapps.h
+${OBJ_DIR}src2srcml.o : src2srcml.cpp srcMLTranslator.h version.h srcmlapps.h Options.h
 	$(CXX) $(XML_PRE) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}srcml2src.o : srcml2src.cpp version.h srcmlapps.h
+${OBJ_DIR}srcml2src.o : srcml2src.cpp version.h srcmlapps.h Options.h
 	$(CXX) $(XML_PRE) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}srcmllexer.o : srcmllexer.cpp version.h srcmlapps.h
@@ -143,7 +143,7 @@ ${OBJ_DIR}srcMLTranslator.o : srcMLTranslator.cpp srcMLTranslator.h StreamMLPars
 
 Mode.h : srcMLStateStack.h State.h StateStack.h
 
-${OBJ_DIR}srcMLParser.o : $(firstword $(SRCMLPARSER_GENS)) Mode.h TokenParser.h State.h
+${OBJ_DIR}srcMLParser.o : $(firstword $(SRCMLPARSER_GENS)) Mode.h TokenParser.h State.h Options.h
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(SRCMLPARSER_CXX_FLAGS) -c $< -o $@
 
 # hack for antlr bug when it generate unintentional multi-line comment
@@ -160,7 +160,7 @@ ${OBJ_DIR}srcMLOutput.o : srcMLOutput.cpp srcMLOutput.h srcMLOutputPR.h
 ${OBJ_DIR}Mode.o : Mode.cpp Mode.h
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(SRCMLPARSER_CXX_FLAGS) -c $< -o $@
 
-${OBJ_DIR}srcMLUtility.o : srcMLUtility.cpp srcMLUtility.h
+${OBJ_DIR}srcMLUtility.o : srcMLUtility.cpp srcMLUtility.h Options.h
 	$(CXX) $(XML_PRE) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}version.o : version.cpp
