@@ -32,7 +32,7 @@ def execute(command, input):
 	last_line = p.communicate(input)[0]
 
 	if p.returncode != 0:
-		print "Status error:  ", p.returncode
+		print "Status error:  ", p.returncode, command
 
 	return last_line
 
@@ -303,6 +303,12 @@ check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "2"], nestedfile, sxmlfi
 os.system("rm -f sub/a.cpp sub/b.cpp")
 
 check([srcmlutility, option.EXPAND_FLAG], nestedfile, "")
+
+validate(open("sub/a.cpp", "r").read(), sfile1)
+validate(open("sub/b.cpp", "r").read(), sfile2)
+
+os.system("rm -f sub/a.cpp sub/b.cpp")
+
 check([srcmlutility, option.EXPAND_FLAG_SHORT], nestedfile, "")
 
 validate(open("sub/a.cpp", "r").read(), sfile1)
