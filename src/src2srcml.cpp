@@ -53,6 +53,12 @@ const char* CPP_MARKUP_ELSE_FLAG_SHORT = "";
 const char* CPP_TEXTONLY_ELSE_FLAG = "--cpp_textonly_else";
 const char* CPP_TEXTONLY_ELSE_FLAG_SHORT = "";
 
+const char* CPP_MARKUP_IF0_FLAG = "--cpp_markup_if0";
+const char* CPP_MARKUP_IF0_FLAG_SHORT = "";
+
+const char* CPP_TEXTONLY_IF0_FLAG = "--cpp_textonly_if0";
+const char* CPP_TEXTONLY_IF0_FLAG_SHORT = "";
+
 #ifdef LIBXML_ENABLED
 const char* DEFAULT_XML_ENCODING = "UTF-8";
 #else
@@ -124,6 +130,11 @@ void output_help(const char* name) {
 	      << "markup cpp #else regions (default)\n"
 	      << "  " << CPP_TEXTONLY_ELSE_FLAG     << "  " << /* setw(COL) <<*/ "   "
 	      << "leave cpp #else regions as text\n"
+              << '\n'
+	      << "  " << CPP_MARKUP_IF0_FLAG   << "  " << /* setw(COL) <<*/ "      "
+	      << "markup cpp #if 0 regions\n"
+	      << "  " << CPP_TEXTONLY_IF0_FLAG     << "  " << /* setw(COL) <<*/ "    "
+	      << "leave cpp #if 0 regions as text (default)\n"
               << '\n'
 #ifdef LIBXML_ENABLED
 	      << "  " << COMPRESSED_FLAG_SHORT  << ", " << setw(COL) <<  COMPRESSED_FLAG
@@ -273,6 +284,37 @@ int main(int argc, char* argv[]) {
       } else {
 	std::cerr << NAME << ": Conflicting options " << CPP_MARKUP_ELSE_FLAG << " and " 
 		  << CPP_TEXTONLY_ELSE_FLAG << " selected." << '\n';
+	exit(STATUS_INVALID_OPTION_COMBINATION);
+      }
+    }
+
+    // markup of cpp #if 0 mode
+    else if (compare_flags(argv[curarg], CPP_MARKUP_IF0_FLAG, CPP_MARKUP_IF0_FLAG_SHORT, position)) {
+      if (!cpp_markup) {
+	options |= OPTION_CPP_MARKUP_IF0;
+	if (position == original_position) ++curarg;
+
+	cpp_markup = true;
+
+      } else {
+	std::cerr << NAME << ": Conflicting options " << CPP_MARKUP_IF0_FLAG << " and " 
+		  << CPP_TEXTONLY_IF0_FLAG << " selected." << '\n';
+	exit(STATUS_INVALID_OPTION_COMBINATION);
+      }
+    }
+
+    // text-only cpp #if 0 mode
+    else if (compare_flags(argv[curarg], CPP_TEXTONLY_IF0_FLAG, CPP_TEXTONLY_IF0_FLAG_SHORT, position)) {
+
+      if (!cpp_markup) {
+	// clear if previously marked
+	options &= ~OPTION_CPP_MARKUP_IF0;
+	if (position == original_position) ++curarg;
+
+	cpp_markup = true;
+      } else {
+	std::cerr << NAME << ": Conflicting options " << CPP_MARKUP_IF0_FLAG << " and " 
+		  << CPP_TEXTONLY_IF0_FLAG << " selected." << '\n';
 	exit(STATUS_INVALID_OPTION_COMBINATION);
       }
     }

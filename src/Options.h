@@ -99,6 +99,9 @@ enum Options {
 
   // cpp markup #else sections
   OPTION_CPP_MARKUP_ELSE = 0x00400000,
+
+  // cpp markup #if 0 sections
+  OPTION_CPP_MARKUP_IF0 = 0x00800000,
 };
 
 #endif
