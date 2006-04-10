@@ -1,6 +1,9 @@
 CHANGES
 
 Trunk
+	Add options --cpp_markup_if0 and --cpp_textonly_if0 for controlling whether
+	cpp #else sections are parsed and marked up.  --cpp_textonly_if0 is default.
+
 	Change option --cpp_nomark_else to --cpp_textonly_else and add --cpp_markup_else
 	for controlling whether cpp #else sections are parsed and marked.
 

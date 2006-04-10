@@ -193,7 +193,8 @@ int main(int argc, char* argv[]) {
   int options = OPTION_CPP_MARKUP_ELSE;
   int position = 0;
   int curarg = 1;  // current argument
-  bool cpp_markup = false;
+  bool cpp_else = false;
+  bool cpp_if0 = false;
   while (argc > curarg && strlen(argv[curarg]) > 1 && argv[curarg][0] == '-' &&
 	 strcmp(argv[curarg], OPTION_SEPARATOR) != 0) {
 
@@ -260,11 +261,11 @@ int main(int argc, char* argv[]) {
 
     // markup of cpp #else mode
     else if (compare_flags(argv[curarg], CPP_MARKUP_ELSE_FLAG, CPP_MARKUP_ELSE_FLAG_SHORT, position)) {
-      if (!cpp_markup) {
+      if (!cpp_else) {
 	options |= OPTION_CPP_MARKUP_ELSE;
 	if (position == original_position) ++curarg;
 
-	cpp_markup = true;
+	cpp_else = true;
 
       } else {
 	std::cerr << NAME << ": Conflicting options " << CPP_MARKUP_ELSE_FLAG << " and " 
@@ -276,11 +277,11 @@ int main(int argc, char* argv[]) {
     // text-only cpp #else mode
     else if (compare_flags(argv[curarg], CPP_TEXTONLY_ELSE_FLAG, CPP_TEXTONLY_ELSE_FLAG_SHORT, position)) {
 
-      if (!cpp_markup) {
+      if (!cpp_else) {
 	options &= ~OPTION_CPP_MARKUP_ELSE;
 	if (position == original_position) ++curarg;
 
-	cpp_markup = true;
+	cpp_else = true;
       } else {
 	std::cerr << NAME << ": Conflicting options " << CPP_MARKUP_ELSE_FLAG << " and " 
 		  << CPP_TEXTONLY_ELSE_FLAG << " selected." << '\n';
@@ -290,11 +291,11 @@ int main(int argc, char* argv[]) {
 
     // markup of cpp #if 0 mode
     else if (compare_flags(argv[curarg], CPP_MARKUP_IF0_FLAG, CPP_MARKUP_IF0_FLAG_SHORT, position)) {
-      if (!cpp_markup) {
+      if (!cpp_if0) {
 	options |= OPTION_CPP_MARKUP_IF0;
 	if (position == original_position) ++curarg;
 
-	cpp_markup = true;
+	cpp_if0 = true;
 
       } else {
 	std::cerr << NAME << ": Conflicting options " << CPP_MARKUP_IF0_FLAG << " and " 
@@ -306,12 +307,12 @@ int main(int argc, char* argv[]) {
     // text-only cpp #if 0 mode
     else if (compare_flags(argv[curarg], CPP_TEXTONLY_IF0_FLAG, CPP_TEXTONLY_IF0_FLAG_SHORT, position)) {
 
-      if (!cpp_markup) {
+      if (!cpp_if0) {
 	// clear if previously marked
 	options &= ~OPTION_CPP_MARKUP_IF0;
 	if (position == original_position) ++curarg;
 
-	cpp_markup = true;
+	cpp_if0 = true;
       } else {
 	std::cerr << NAME << ": Conflicting options " << CPP_MARKUP_IF0_FLAG << " and " 
 		  << CPP_TEXTONLY_IF0_FLAG << " selected." << '\n';
