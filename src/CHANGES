@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Fix wrong return code on expand in srcml2src.
+
 	Add options --cpp_markup_if0 and --cpp_textonly_if0 for controlling whether
 	cpp #else sections are parsed and marked up.  --cpp_textonly_if0 is default.
 

@@ -537,7 +537,14 @@ int main(int argc, char* argv[]) {
 
     } else if (isoption(options, OPTION_EXPAND)) {
 
-      su.expand();
+      try {
+	su.expand();
+
+      } catch (LibXMLError error) {
+
+	if (error.getErrorNum() != 0)
+	  throw error;
+      }
 
     } else {
 
