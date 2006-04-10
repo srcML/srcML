@@ -444,6 +444,37 @@ check([srcmltranslator, option.CPP_TEXTONLY_ELSE_FLAG], cpp_src, cpp_textonly_sr
 validate(getreturn([srcmltranslator, option.CPP_MARKUP_ELSE_FLAG, option.CPP_TEXTONLY_ELSE_FLAG], cpp_src), status.STATUS_INVALID_OPTION_COMBINATION)
 validate(getreturn([srcmltranslator, option.CPP_TEXTONLY_ELSE_FLAG, option.CPP_MARKUP_ELSE_FLAG], cpp_src), status.STATUS_INVALID_OPTION_COMBINATION)
 
+##
+# cpp markup if0
+
+cpp_if0 = """
+#if 0
+break;
+#endif
+"""
+
+cpp_textonly_srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>0</expr></cpp:if>
+break;
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+"""
+check([srcmltranslator], cpp_if0, cpp_textonly_srcml)
+check([srcmltranslator, option.CPP_TEXTONLY_IF0_FLAG], cpp_if0, cpp_textonly_srcml)
+
+cpp_marked_srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>0</expr></cpp:if>
+<break>break;</break>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+"""
+check([srcmltranslator, option.CPP_MARKUP_IF0_FLAG], cpp_if0, cpp_marked_srcml)
+
+validate(getreturn([srcmltranslator, option.CPP_MARKUP_IF0_FLAG, option.CPP_TEXTONLY_IF0_FLAG], cpp_if0), status.STATUS_INVALID_OPTION_COMBINATION)
+validate(getreturn([srcmltranslator, option.CPP_TEXTONLY_IF0_FLAG, option.CPP_MARKUP_IF0_FLAG], cpp_if0), status.STATUS_INVALID_OPTION_COMBINATION)
+
 print src2srcmlversion()
 print srcml2srcversion()
 
