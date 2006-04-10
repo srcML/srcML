@@ -73,7 +73,7 @@ const int DEFAULT_LANGUAGE = srcMLTranslator::LANGUAGE_CXX;
 const char* EXAMPLE_TEXT_FILENAME="foo.cpp";
 const char* EXAMPLE_XML_FILENAME="foo.cpp.xml";
 
-const char* GAP = "                                  ";
+const char* GAP = "                              ";
 
 const char FILELIST_COMMENT = '#';
 
@@ -150,23 +150,23 @@ void output_help(const char* name) {
 	      << "leave cpp #if 0 regions as text (default)\n"
 	      << '\n'
 	      << "Examples:  " << '\n'
-	      << "  " << name << "                      " << GAP
+	      << "  " << name << "                " << GAP
 	      << "(read from standard input, write to standard output)" << '\n'
-	      << "  " << name << " main.cpp             " << GAP
-	      << "(read from file main.cpp, write to standard output)" << '\n'
-	      << "  " << name << " main.cpp main.cpp.xml" << GAP
-	      << "(read from file main.cpp, write to file main.cpp.xml)" << '\n'
-	      << "  " << name << " -                    " << GAP
+	      << "  " << name << " m.cpp          " << GAP
+	      << "(read from file m.cpp, write to standard output)" << '\n'
+	      << "  " << name << " m.cpp m.cpp.xml" << GAP
+	      << "(read from file m.cpp, write to file m.cpp.xml)" << '\n'
+	      << "  " << name << " -              " << GAP
 	      << "(read from standard input, write to standard output)" << '\n'
-	      << "  " << name << " - main.cpp.xml       " << GAP
-	      << "(read from standard input, write to file main.cpp.xml)" << '\n'
-	      << "  " << name << " --directory=src --filename=main.cpp - main.cpp.xml     "
-	      << "(element unit attributes dir \"src\", filename \"main.cpp\")" << '\n'
+	      << "  " << name << " - m.cpp.xml    " << GAP
+	      << "(read from standard input, write to file m.cpp.xml)" << '\n'
+	      << "  " << name << " --directory=src --filename=m.cpp - m.cpp.xml "
+	      << "(element unit attributes dir \"src\", filename \"m.cpp\")" << '\n'
 #ifdef LIBXML_ENABLED
-	      << "  " << name << " --src-encoding=UTF-8 main.cpp main.cpp.xml             "
+	      << "  " << name << " --src-encoding=UTF-8 m.cpp m.cpp.xml         "
 	      << "(encoding of input text file is UTF-8)" << '\n'
 #endif
-	      << "  " << name << " --xml-encoding=ISO-8859-1 main.cpp main.cpp.xml        "
+	      << "  " << name << " --xml-encoding=ISO-8859-1 m.cpp m.cpp.xml    "
 	      << "(set encoding of srcML file to ISO-8859-1)" << '\n'
 
 	      << '\n'
