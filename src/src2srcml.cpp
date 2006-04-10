@@ -126,16 +126,6 @@ void output_help(const char* name) {
 	      << "  " << FILELIST_FLAG_SHORT    << ", " << setw(COL) <<  FILELIST_FLAG
 	      << "treat input file as a list of source files\n"
               << '\n'
-	      << "  " << CPP_MARKUP_ELSE_FLAG   << "  " << /* setw(COL) <<*/ "     "
-	      << "markup cpp #else regions (default)\n"
-	      << "  " << CPP_TEXTONLY_ELSE_FLAG     << "  " << /* setw(COL) <<*/ "   "
-	      << "leave cpp #else regions as text\n"
-              << '\n'
-	      << "  " << CPP_MARKUP_IF0_FLAG   << "  " << /* setw(COL) <<*/ "      "
-	      << "markup cpp #if 0 regions\n"
-	      << "  " << CPP_TEXTONLY_IF0_FLAG     << "  " << /* setw(COL) <<*/ "    "
-	      << "leave cpp #if 0 regions as text (default)\n"
-              << '\n'
 #ifdef LIBXML_ENABLED
 	      << "  " << COMPRESSED_FLAG_SHORT  << ", " << setw(COL) <<  COMPRESSED_FLAG
 	      << "output in gzip format\n"
@@ -146,6 +136,18 @@ void output_help(const char* name) {
 	      << "debug translation errors with special namespace\n"
               << "  " << VERBOSE_FLAG_SHORT     << ", " << setw(COL) << VERBOSE_FLAG
 	      << "verbose output to standard error\n"
+              << '\n'
+	      << "CPP Markup Options:"  << '\n'
+              << '\n'
+	      << "  " << CPP_MARKUP_ELSE_FLAG   << "  " << /* setw(COL) <<*/ "     "
+	      << "markup cpp #else regions (default)\n"
+	      << "  " << CPP_TEXTONLY_ELSE_FLAG     << "  " << /* setw(COL) <<*/ "   "
+	      << "leave cpp #else regions as text\n"
+              << '\n'
+	      << "  " << CPP_MARKUP_IF0_FLAG   << "  " << /* setw(COL) <<*/ "      "
+	      << "markup cpp #if 0 regions\n"
+	      << "  " << CPP_TEXTONLY_IF0_FLAG     << "  " << /* setw(COL) <<*/ "    "
+	      << "leave cpp #if 0 regions as text (default)\n"
 	      << '\n'
 	      << "Examples:  " << '\n'
 	      << "  " << name << "                      " << GAP
