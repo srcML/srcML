@@ -44,7 +44,7 @@ DOC_FILES= ${DOC_DIR}/src2srcml.1 ${DOC_DIR}/srcml2src.1 ${SRC_DIR}/NEWS ${SRC_D
 SRC_FILES= ${SRC_DIR} ${DOC_FILES} ${DTD_FILES}
 
 # some doc files are copied from src
-EXP_DOC_FILES= ${DOC_DIR}/LICENSE.pdf ${DOC_DIR}/README
+EXP_DOC_FILES= ${DOC_FILES} ${DOC_DIR}/LICENSE.pdf ${DOC_DIR}/README
 
 # all generated files
 GEN_FILES=${SRC_TAR_GZ} ${DOC_TAR_GZ} ${EXE_TAR_GZ} ${SRC_ZIP} ${DOC_ZIP}
@@ -133,7 +133,7 @@ bintest :
 	@cd tmp; tar xzf ${EXE_TAR_GZ}
 	@tmp/srcml-1.3/bin/src2srcml --version
 	@tmp/srcml-1.3/bin/srcml2src --version
-	@echo "statement;" | tmp/srcml-1.3/bin/src2srcml | tmp/srcml-1.3/bin/srcml2src
+	@echo "Hello World;" | tmp/srcml-1.3/bin/src2srcml | tmp/srcml-1.3/bin/srcml2src
 
 # windows (must be called explicitly)
 winbin : ${WIN_ZIP}
