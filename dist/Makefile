@@ -83,7 +83,7 @@ ${SRC_ZIP} : export
 	rm -f $@
 	zip -rql $@ ${SRC_FILES} -x ${SRC_DIR}/LICENSE.pdf
 	zip -q $@ ${SRC_DIR}/LICENSE.pdf
-	unzip -t $@
+	unzip -qt $@
 
 ##
 # doc
@@ -105,7 +105,7 @@ ${DOC_ZIP} : export doc_files
 	rm -f $@
 	zip -rql $@ ${EXP_DOC_FILES} -x ${DOC_DIR}/LICENSE.pdf
 	zip -q $@ ${DOC_DIR}/LICENSE.pdf
-	unzip -t $@
+	unzip -qt $@
 
 # files not directly available in doc dir
 doc_files :
@@ -122,17 +122,25 @@ ${EXE_TAR_GZ} : export
 	cd ${SRC_DIR}; make
 	./${SRC2SRCML_PATH} --version
 	./${SRCML2SRC_PATH} --version
-	gzip ${SRC2SRCML_PATH} ${SRCML2SRC_PATH}
 	rm -f $@
-	tar czf $@ ${SRC2SRCML_PATH}.gz ${SRCML2SRC_PATH}.gz
+	tar czf $@ ${SRC2SRCML_PATH} ${SRCML2SRC_PATH}
 	gunzip --test $@
+
+bintest :
+	@rm -fR tmp
+	@mkdir tmp
+	@cp ${EXE_TAR_GZ} tmp/.
+	@cd tmp; tar xzf ${EXE_TAR_GZ}
+	@tmp/srcml-1.3/bin/src2srcml --version
+	@tmp/srcml-1.3/bin/srcml2src --version
+	@echo "statement;" | tmp/srcml-1.3/bin/src2srcml | tmp/srcml-1.3/bin/srcml2src
 
 # windows (must be called explicitly)
 winbin : ${WIN_ZIP}
 
 ${WIN_ZIP} :
 	zip -rql $@ ${SRC2SRCML_PATH}.gz ${SRCML2SRC_PATH}.gz
-	unzip -t $@
+	unzip -qt $@
 
 ##
 # test
@@ -141,8 +149,8 @@ test :
 	gunzip --test ${SRC_TAR_GZ}
 	gunzip --test ${DOC_TAR_GZ}
 	gunzip --test ${EXE_TAR_GZ}
-	unzip -t ${SRC_ZIP}
-	unzip -t ${DOC_ZIP}
+	unzip -qt ${SRC_ZIP}
+	unzip -qt ${DOC_ZIP}
 
 ##
 # installation
