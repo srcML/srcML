@@ -28,6 +28,7 @@ SRC_DIR=${SRC_DIR_BASE}/src
 BIN_DIR=${BASE}-bin
 DTD_DIR=${BASE}-dtd
 DOC_DIR=${BASE}-doc
+WINBIN_DIR=${BASE}-windows
 
 # executables
 SRC2SRCML_EXE=src2srcml
@@ -145,7 +146,10 @@ bintest :
 winbin : ${WIN_ZIP}
 
 ${WIN_ZIP} :
-	zip -rql $@ ${SRC2SRCML_PATH}.gz ${SRCML2SRC_PATH}.gz
+	rm -fR ${WINBIN_DIR}
+	mkdir -p ${WINBIN_DIR}
+	cp ${SRC2SRCML} ${SRCML2SRC} ${WINBIN_DIR}
+	zip -rql $@ ${WINBIN_DIR}
 	unzip -qt $@
 
 ##

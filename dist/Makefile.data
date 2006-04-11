@@ -3,6 +3,6 @@ VERSION=tirawireless
 VERSION_DIR=commercial
 
 DEST_DIR=/var/www/sdml/projects/srcml/commercial/tirawireless${VERSION_NUM}/.
-DEST_URL=collard\@gehry.sdml.cs.kent.edu:${DEST_DIR}
+DEST_URL=collard@gehry.sdml.cs.kent.edu:${DEST_DIR}
 
 SVN_URL=http://www.sdml.info/svn/srcML/branches/${VERSION_DIR}/${VERSION}
