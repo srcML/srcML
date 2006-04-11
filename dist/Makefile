@@ -63,14 +63,15 @@ export :
 # src tar gz
 ${SRC_TAR_GZ} : export
 	rm -f $@
-	tar czvf $@ ${SRC_FILES}
+	tar czf $@ ${SRC_FILES}
+	gunzip --test $@
 
 # src zip file for Windows with Windows line ending
 ${SRC_ZIP} : export
 	@echo BUILDING:  $@
 	rm -f $@
-	zip -rl $@ ${SRC_FILES} -x ${SRC_DIR}/LICENSE.pdf
-	zip $@ ${SRC_DIR}/LICENSE.pdf
+	zip -rql $@ ${SRC_FILES} -x ${SRC_DIR}/LICENSE.pdf
+	zip -q $@ ${SRC_DIR}/LICENSE.pdf
 	unzip -t $@
 
 ##
@@ -79,13 +80,15 @@ ${SRC_ZIP} : export
 # doc tar gz
 ${DOC_TAR_GZ} : export doc_files
 	rm -f $@
-	tar czvf $@ ${EXP_DOC_FILES}
+	tar czf $@ ${EXP_DOC_FILES}
+	gunzip --test $@
 
 # doc zip file for Windows with Windows line ending
 ${DOC_ZIP} : export doc_files
 	rm -f $@
-	zip -rl $@ ${EXP_DOC_FILES} -x ${DOC_DIR}/LICENSE.pdf
-	zip $@ ${DOC_DIR}/LICENSE.pdf
+	zip -rql $@ ${EXP_DOC_FILES} -x ${DOC_DIR}/LICENSE.pdf
+	zip -q $@ ${DOC_DIR}/LICENSE.pdf
+	unzip -t $@
 
 # files not directly available in doc dir
 doc_files :
@@ -98,9 +101,22 @@ doc_files :
 # linux binaries
 ${EXE_TAR_GZ} : export
 	cd ${SRC_DIR}; make
+	./${SRC2SRCML_PATH} --version
+	./${SRCML2SRC_PATH} --version
 	gzip ${SRC2SRCML_PATH} ${SRCML2SRC_PATH}
 	rm -f $@
-	tar czvf $@ ${SRC2SRCML_PATH}.gz ${SRCML2SRC_PATH}.gz
+	tar czf $@ ${SRC2SRCML_PATH}.gz ${SRCML2SRC_PATH}.gz
+	gunzip --test $@
+
+##
+# test
+
+test :
+	gunzip --test ${SRC_TAR_GZ}
+	gunzip --test ${DOC_TAR_GZ}
+	gunzip --test ${EXE_TAR_GZ}
+	unzip -t ${SRC_ZIP}
+	unzip -t ${DOC_ZIP}
 
 ##
 # installation
