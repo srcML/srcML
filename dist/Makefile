@@ -20,6 +20,8 @@ DOC_ZIP=${BASE}-doc.zip
 
 EXE_TAR_GZ=${BASE}-linux.tar.gz
 
+WIN_ZIP=${BASE}-windows.zip
+
 # directories
 SRC_DIR=${BASE}/src
 BIN_DIR=${BASE}/bin
@@ -32,6 +34,9 @@ SRCML2SRC_EXE=srcml2src
 
 SRC2SRCML_PATH=${BASE}/bin/${SRC2SRCML_EXE}
 SRCML2SRC_PATH=${BASE}/bin/${SRCML2SRC_EXE}
+
+WIN_SRC2SRCML_PATH=
+WIN_SRCML2SRC_PATH=
 
 # files
 DTD_FILES= ${DTD_DIR}/srcml.dtd ${DTD_DIR}/srcmlj.dtd
@@ -96,9 +101,9 @@ doc_files :
 	cp ${SRC_DIR}/README ${DOC_DIR}/README
 
 ##
-# linux
+# binaries
 
-# linux binaries
+# linux
 ${EXE_TAR_GZ} : export
 	cd ${SRC_DIR}; make
 	./${SRC2SRCML_PATH} --version
@@ -107,6 +112,11 @@ ${EXE_TAR_GZ} : export
 	rm -f $@
 	tar czf $@ ${SRC2SRCML_PATH}.gz ${SRCML2SRC_PATH}.gz
 	gunzip --test $@
+
+# windows (must be called explicitly)
+${WIN_ZIP} :
+	zip -rql $@ ${SRC2SRCML_PATH}.gz ${SRCML2SRC_PATH}.gz
+	unzip -t $@
 
 ##
 # test
@@ -125,6 +135,9 @@ test :
 install :
 	scp ${GEN_FILES} ${DEST_URL}
 
+installwin :
+	scp ${WIN_ZIP} ${DEST_URL}
+
 clean :
-	rm -fR ${GEN_FILES} ${BASE}
+	rm -fR ${GEN_FILES} ${WIN_ZIP} ${BASE}
 
