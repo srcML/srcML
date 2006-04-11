@@ -23,17 +23,18 @@ EXE_TAR_GZ=${BASE}-linux.tar.gz
 WIN_ZIP=${BASE}-windows.zip
 
 # directories
-SRC_DIR=${BASE}/src
-BIN_DIR=${BASE}/bin
-DTD_DIR=${BASE}/dtd
-DOC_DIR=${BASE}/doc
+SRC_DIR_BASE=${BASE}-src
+SRC_DIR=${SRC_DIR_BASE}/src
+BIN_DIR=${BASE}-bin
+DTD_DIR=${BASE}-dtd
+DOC_DIR=${BASE}-doc
 
 # executables
 SRC2SRCML_EXE=src2srcml
 SRCML2SRC_EXE=srcml2src
 
-SRC2SRCML_PATH=${BASE}/bin/${SRC2SRCML_EXE}
-SRCML2SRC_PATH=${BASE}/bin/${SRCML2SRC_EXE}
+SRC2SRCML_PATH=${BIN_DIR}/${SRC2SRCML_EXE}
+SRCML2SRC_PATH=${BIN_DIR}/${SRCML2SRC_EXE}
 
 WIN_SRC2SRCML_PATH=
 WIN_SRCML2SRC_PATH=
@@ -56,11 +57,13 @@ all : ${GEN_FILES}
 PHONY : export
 export :
 	make clean
-	mkdir ${BASE}
-	svn export ${SVN_URL}/src ${BASE}/src
-	svn export ${SVN_URL}/dtd ${BASE}/dtd
-	svn export ${SVN_URL}/doc ${BASE}/doc
-	mkdir ${BASE}/obj ${BASE}/bin
+	mkdir ${BASE}-src
+	svn export ${SVN_URL}/src ${BASE}-src/src
+	svn export ${SVN_URL}/dtd ${BASE}-src/dtd
+	svn export ${SVN_URL}/doc ${BASE}-src/doc
+	svn export ${SVN_URL}/dtd ${BASE}-dtd
+	svn export ${SVN_URL}/doc ${BASE}-doc
+	mkdir ${BASE}-src/obj ${BASE}-src/bin
 
 ##
 # src
@@ -120,10 +123,13 @@ bin : ${EXE_TAR_GZ}
 
 ${EXE_TAR_GZ} : export
 	cd ${SRC_DIR}; make
-	./${SRC2SRCML_PATH} --version
-	./${SRCML2SRC_PATH} --version
+	mkdir -p ${BIN_DIR}
+	cp ${SRC_DIR_BASE}/bin/src2srcml ${BIN_DIR}/.
+	cp ${SRC_DIR_BASE}/bin/srcml2src ${BIN_DIR}/.
+	${SRC2SRCML_PATH} --version
+	${SRCML2SRC_PATH} --version
 	rm -f $@
-	tar czf $@ ${SRC2SRCML_PATH} ${SRCML2SRC_PATH}
+	tar czf $@ ${BIN_DIR}
 	gunzip --test $@
 
 bintest :
@@ -131,9 +137,9 @@ bintest :
 	@mkdir tmp
 	@cp ${EXE_TAR_GZ} tmp/.
 	@cd tmp; tar xzf ${EXE_TAR_GZ}
-	@tmp/srcml-1.3/bin/src2srcml --version
-	@tmp/srcml-1.3/bin/srcml2src --version
-	@echo "Hello World;" | tmp/srcml-1.3/bin/src2srcml | tmp/srcml-1.3/bin/srcml2src
+	${SRC2SRCML_PATH} --version
+	${SRCML2SRC_PATH} --version
+	@echo "Hello World;" | ${SRC2SRCML_PATH} | ${SRCML2SRC_PATH}
 
 # windows (must be called explicitly)
 winbin : ${WIN_ZIP}
@@ -163,5 +169,4 @@ installwin :
 	scp ${WIN_ZIP} ${DEST_URL}
 
 clean :
-	rm -fR ${GEN_FILES} ${WIN_ZIP} ${BASE}
-
+	rm -fR ${GEN_FILES} ${WIN_ZIP} ${SRC_DIR_BASE} ${BIN_DIR} ${DTD_DIR} ${DOC_DIR}
