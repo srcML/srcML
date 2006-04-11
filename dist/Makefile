@@ -49,7 +49,7 @@ all : ${GEN_FILES}
 # file extraction
 PHONY : export
 export :
-	rm -fR ${BASE}
+	make clean
 	mkdir ${BASE}
 	svn export ${SVN_URL}/src ${BASE}/src
 	svn export ${SVN_URL}/dtd ${BASE}/dtd
@@ -61,7 +61,8 @@ export :
 
 # src tar gz
 ${SRC_TAR_GZ} : export
-	rm -f ${SRC_TAR_GZ}; tar czvf ${SRC_TAR_GZ} ${SRC_FILES}
+	rm -f ${SRC_TAR_GZ}
+	tar czvf ${SRC_TAR_GZ} ${SRC_FILES}
 
 # src zip file for Windows with Windows line ending
 ${SRC_ZIP} : export
@@ -74,7 +75,8 @@ ${SRC_ZIP} : export
 
 # doc tar gz
 ${DOC_TAR_GZ} : export doc_files
-	rm -f ${DOC_TAR_GZ}; tar czvf ${DOC_TAR_GZ} ${EXP_DOC_FILES}
+	rm -f ${DOC_TAR_GZ}
+	tar czvf ${DOC_TAR_GZ} ${EXP_DOC_FILES}
 
 # doc zip file for Windows with Windows line ending
 ${DOC_ZIP} : export doc_files
