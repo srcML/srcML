@@ -66,12 +66,18 @@ export :
 # src
 
 # src tar gz
+src : srctar srczip
+
+srctar : ${SRC_TAR_GZ}
+
 ${SRC_TAR_GZ} : export
 	rm -f $@
 	tar czf $@ ${SRC_FILES}
 	gunzip --test $@
 
 # src zip file for Windows with Windows line ending
+srczip : ${SRC_ZIP}
+
 ${SRC_ZIP} : export
 	@echo BUILDING:  $@
 	rm -f $@
@@ -83,12 +89,18 @@ ${SRC_ZIP} : export
 # doc
 
 # doc tar gz
+doc : doctar doczip
+
+doctar : ${DOC_TAR_GZ}
+
 ${DOC_TAR_GZ} : export doc_files
 	rm -f $@
 	tar czf $@ ${EXP_DOC_FILES}
 	gunzip --test $@
 
 # doc zip file for Windows with Windows line ending
+doczip : ${DOC_ZIP}
+
 ${DOC_ZIP} : export doc_files
 	rm -f $@
 	zip -rql $@ ${EXP_DOC_FILES} -x ${DOC_DIR}/LICENSE.pdf
@@ -104,6 +116,8 @@ doc_files :
 # binaries
 
 # linux
+bin : ${EXE_TAR_GZ}
+
 ${EXE_TAR_GZ} : export
 	cd ${SRC_DIR}; make
 	./${SRC2SRCML_PATH} --version
@@ -114,6 +128,8 @@ ${EXE_TAR_GZ} : export
 	gunzip --test $@
 
 # windows (must be called explicitly)
+winbin : ${WIN_ZIP}
+
 ${WIN_ZIP} :
 	zip -rql $@ ${SRC2SRCML_PATH}.gz ${SRCML2SRC_PATH}.gz
 	unzip -t $@
