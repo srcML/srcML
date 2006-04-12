@@ -26,7 +26,9 @@ WIN_ZIP=${BASE}-windows.zip
 SRC_DIR_BASE=${BASE}-src
 SRC_DIR=${SRC_DIR_BASE}/src
 BIN_DIR=${BASE}-bin
+SRC_DTD_DIR=${SRC_DIR_BASE}/dtd
 DTD_DIR=${BASE}-dtd
+SRC_DOC_DIR=${SRC_DIR_BASE}/doc
 DOC_DIR=${BASE}-doc
 WINBIN_DIR=${BASE}-windows
 
@@ -42,11 +44,13 @@ WIN_SRCML2SRC_PATH=
 
 # files
 DTD_FILES= ${DTD_DIR}/srcml.dtd ${DTD_DIR}/srcmlj.dtd
-DOC_FILES= ${DOC_DIR}/src2srcml.1 ${DOC_DIR}/srcml2src.1 ${SRC_DIR}/NEWS ${SRC_DIR}/CHANGES ${DOC_DIR}/src2srcml.html ${DOC_DIR}/srcml2src.html
-SRC_FILES= ${SRC_DIR} ${DOC_FILES} ${DTD_FILES}
+
+DOC_FILES= ${DOC_DIR}/src2srcml.1 ${DOC_DIR}/srcml2src.1 ${DOC_DIR}/src2srcml.html ${DOC_DIR}/srcml2src.html
+
+SRC_FILES= ${SRC_DIR} ${SRC_DTD_DIR}/srcml.dtd ${SRC_DTD_DIR}/srcmlj.dtd ${SRC_DOC_DIR}/src2srcml.1 ${SRC_DOC_DIR}/srcml2src.1 ${SRC_DOC_DIR}/src2srcml.html ${SRC_DOC_DIR}/srcml2src.html
 
 # some doc files are copied from src
-EXP_DOC_FILES= ${DOC_FILES} ${DOC_DIR}/LICENSE.pdf ${DOC_DIR}/README
+EXP_DOC_FILES= ${DOC_FILES} ${DOC_DIR}/LICENSE.pdf ${DOC_DIR}/README ${DOC_DIR}/NEWS ${DOC_DIR}/CHANGES
 
 # all generated files
 GEN_FILES=${SRC_TAR_GZ} ${DOC_TAR_GZ} ${EXE_TAR_GZ} ${SRC_ZIP} ${DOC_ZIP}
@@ -113,8 +117,10 @@ ${DOC_ZIP} : export doc_files
 
 # files not directly available in doc dir
 doc_files :
-	cp ${SRC_DIR}/LICENSE.pdf ${DOC_DIR}/LICENSE.pdf
-	cp ${SRC_DIR}/README ${DOC_DIR}/README
+	cp ${SRC_DIR}/LICENSE.pdf ${DOC_DIR}/.
+	cp ${SRC_DIR}/README ${DOC_DIR}/.
+	cp ${SRC_DIR}/NEWS ${DOC_DIR}/.
+	cp ${SRC_DIR}/CHANGES ${DOC_DIR}/.
 
 ##
 # binaries
