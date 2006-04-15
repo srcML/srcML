@@ -34,6 +34,13 @@ class SimpleStack {
     : topindex(-1)
     {}
 
+  SimpleStack(const SimpleStack& st)
+    : topindex(st.topindex) {
+
+    for (int i = 0; i < st.size(); ++i)
+      ar[i] = st.ar[i];
+  }
+
   Type& top() {
     if (topindex < 0)
       throw Segmentation_Fault();
@@ -64,7 +71,7 @@ class SimpleStack {
     return size() == 0;
   }
 
-  SimpleStack<Type, N>& operator=(const SimpleStack<Type, N>& st) {
+  SimpleStack& operator=(const SimpleStack& st) {
 
     for (int i = 0; i < st.size(); ++i)
       ar[i] = st.ar[i];
