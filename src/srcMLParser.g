@@ -536,12 +536,12 @@ statement_cfg {} :
 */
 statements_non_cfg { int type_count = 0; int token = 0; int secondtoken = 0; } :
 
+        // class forms for class declarations/definitions as opposed to part of a declaration types
+        (class_struct_union_check[token /* token after header */])=> class_struct_union[token] |
+
         // class forms sections
         { inLanguage(LANGUAGE_CXX) }?
         access_specifier_region |
-
-        // class forms for class declarations/definitions as opposed to part of a declaration types
-        (class_struct_union_check[token /* token after header */])=> class_struct_union[token] |
 
         // enum definition as opposed to part of type or declaration
         (enum_definition_whole terminate)=> enum_definition |
@@ -1200,6 +1200,9 @@ class_struct_union_check[int& finaltoken] { finaltoken = 0; } :
         { inLanguage(LANGUAGE_C_FAMILY) }?
         (CLASS | STRUCT | UNION) class_header check_end[finaltoken] |
 
+        { inLanguage(LANGUAGE_CXX) }?
+        access_specifier_mark CLASS class_header check_end[finaltoken] |
+
         { inLanguage(LANGUAGE_JAVA) }?
         (interface_definition_header_java)=> interface_definition_header_java check_end[finaltoken] |
 
@@ -1247,7 +1250,7 @@ class_definition :
         }
         (
             { inLanguage(LANGUAGE_CXX) }?
-            CLASS class_header lcurly class_default_access_action[SPRIVATE_ACCESS_DEFAULT] |
+            (access_specifier_mark)* CLASS class_header lcurly class_default_access_action[SPRIVATE_ACCESS_DEFAULT] |
 
             { inLanguage(LANGUAGE_JAVA) }?
 

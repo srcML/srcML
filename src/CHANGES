@@ -1,6 +1,9 @@
 CHANGES
 
 Trunk
+	Allow for access specifier on classes, e.g., private class A {}
+
+Trunk
 	Default (in all cases) is now ISO-8859-1 for input format.  Changes default
 	in libxml2 version.
 
