@@ -35,13 +35,13 @@
 
 <unit filename="urb.c">
 <block>{
-<return>return <macro><name>snprintf</name> <argument_list>(buf, size,
-		 ({ char *s;
+<return>return <macro><name>snprintf</name> <argument_list>(<argument>buf</argument>, <argument>size</argument>,
+		 <argument>({ char *s;
                  switch (urb-&gt;dev-&gt;speed) {
                  case USB_SPEED_LOW:    s = "ls"; break;
                  default:               s = "?"; break;
-                 }; s; }),
-		 urb-&gt;actual_length, urb-&gt;transfer_buffer_length)</argument_list></macro>;</return>
+                 }; s; })</argument>,
+		 <argument>urb-&gt;actual_length</argument>, <argument>urb-&gt;transfer_buffer_length</argument>)</argument_list></macro>;</return>
 }</block>
 </unit>
 
