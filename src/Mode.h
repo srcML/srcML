@@ -138,7 +138,7 @@ class Mode : public TokenParser, public Language {
  public:
 
   Mode(TokenParser* ptp, int lang)
-    : Language(lang), statev(1, ptp)
+    : Language(lang), statev(2, ptp)
     {
       pstate = &statev[0];
     }
@@ -148,6 +148,10 @@ class Mode : public TokenParser, public Language {
   std::vector<srcMLStateStack> statev;
 
   srcMLStateStack* pstate;
+
+  void reserve() {
+    
+  }
 
 protected:
 

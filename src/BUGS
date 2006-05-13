@@ -1,6 +1,8 @@
 BUGS
 
 Trunk
+	Literal "0L" marked as 0<name>L</name>.
+
 	Put examples with spaces into name and template instantiation detection.
 
 	Check for required output handler in src2srcml before start of translation
