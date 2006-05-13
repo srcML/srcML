@@ -15,7 +15,7 @@ SRCMLLEXER_ANTLR_FLAGS =
 SRCMLPARSER_CXX_FLAGS = 
 
 # set compiler version to match that of antlr library
-CXX = /usr/bin/g++-4.1
+CXX = /usr/bin/g++
 
 # compiler optimizations
 CXXFLAGS = -O3 -Wall -march=nocona -minline-all-stringops -fno-rtti 
