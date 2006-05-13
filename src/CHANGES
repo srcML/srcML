@@ -1,9 +1,11 @@
 CHANGES
 
 Trunk
-	Allow for access specifier on classes, e.g., private class A {}.
+	Markup macro arguments.
 
 	Markup macro name.
+
+	Allow for access specifier on classes, e.g., private class A {}.
 
 Trunk
 	Default (in all cases) is now ISO-8859-1 for input format.  Changes default

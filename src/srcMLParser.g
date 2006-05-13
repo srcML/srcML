@@ -2945,6 +2945,7 @@ macro_call_check {} :
 
 macro_call {} :
         macro_call_name
+
         (options { greedy = true; } :
 
         macro_call_lparen
@@ -3004,8 +3005,48 @@ macro_call_name {} :
         simple_name
 ;
 
+/*
 macro_call_contents {} :
         ( options { greedy = true; } : ~(LPAREN | RPAREN) | LPAREN macro_call_contents RPAREN)*
+;
+*/
+
+macro_call_contents {} :
+        {
+            int parencount = 0;
+            bool start = true;
+            bool empty = true;
+            while (!(parencount == 0 && LT(1)->getType() == RPAREN)) {
+
+                if (LT(1)->getType() == LPAREN)
+                    ++parencount;
+
+                if (LT(1)->getType() == RPAREN)
+                    --parencount;
+
+                if (start) {
+                       // argument with nested expression
+                       startNewMode(MODE_ARGUMENT);
+
+                       // start of the try statement
+                       startElement(SARGUMENT);
+
+                       start = false;
+                       empty = false;
+                }
+
+                if (LT(1)->getType() == COMMA && parencount == 0) {
+                    endCurrentMode();
+                    start = true;
+                }
+                consume();
+            }
+
+            if (!empty)
+                endCurrentMode();
+
+        }
+//        ( options { greedy = true; } : ~(LPAREN | RPAREN) | LPAREN macro_call_contents RPAREN)*
 ;
 
 try_statement {} :
