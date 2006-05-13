@@ -3001,7 +3001,7 @@ macro_call_name {} :
             // start the macro call element
             startElement(SMACRO_CALL);
         }
-        NAME
+        simple_name
 ;
 
 macro_call_contents {} :
