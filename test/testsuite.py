@@ -11,6 +11,7 @@ import subprocess
 import difflib
 
 maxcount = 500
+error_filename = ".suitelist"
 
 srcmltranslator = os.environ.get("SRC2SRCML")
 if srcmltranslator == "":
@@ -271,13 +272,17 @@ if ki:
 	
 # output error counts
 print
+f = open(error_filename, "w")
 if error_count == 0:
 	print "No errors out of " + str(total_count) + " cases" 
 else:
 	print "Errors:  " + str(error_count) + " out of " + str(total_count) + " cases"
 	print "Errorlist:"
 	for e in errorlist:
+		f.write(str(e[0]) + " " + str(e[1]) + "\n")
 		print e[0], e[1]
+f.close()
+
 
 # output tool version
 print
