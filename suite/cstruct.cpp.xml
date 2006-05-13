@@ -10,7 +10,7 @@
 </unit>
 
 <unit>
-<struct>struct <macro>M</macro> <name>A</name> <block>{}</block>;</struct>
+<struct>struct <macro><name>M</name></macro> <name>A</name> <block>{}</block>;</struct>
 </unit>
 
 <unit>

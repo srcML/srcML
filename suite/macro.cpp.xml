@@ -2,89 +2,89 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="macro">
 
 <unit>
-<macro>D<argument_list>( if (a) b;)</argument_list></macro>;
+<macro><name>D</name><argument_list>( if (a) b;)</argument_list></macro>;
 </unit>
 
 <!--
 <unit>
-<macro>D<argument_list>( <if>if <condition>(<expr><name>a</name></expr>)</condition> <then><expr_stmt><expr><name>b</name></expr>;</expr_stmt></then></if>)</argument_list></macro>;
+<macro><name>D</name><argument_list>( <if>if <condition>(<expr><name>a</name></expr>)</condition> <then><expr_stmt><expr><name>b</name></expr>;</expr_stmt></then></if>)</argument_list></macro>;
 </unit>
 -->
 
 <unit>
-<macro>D<argument_list>(int i = 0;)</argument_list></macro>;
+<macro><name>D</name><argument_list>(int i = 0;)</argument_list></macro>;
 </unit>
 
 <!--
 <unit>
-<macro>D<argument_list>(<decl_stmt><type>int</type> <name>i</name>=<init><expr>0</expr></init>;</decl_stmt>)</argument_list></macro>;
+<macro><name>D</name><argument_list>(<decl_stmt><type>int</type> <name>i</name>=<init><expr>0</expr></init>;</decl_stmt>)</argument_list></macro>;
 </unit>
 -->
 
 <unit>
-<macro>D<argument_list>({ int i = 0;})</argument_list></macro>;
+<macro><name>D</name><argument_list>({ int i = 0;})</argument_list></macro>;
 </unit>
 
 <!--
 <unit>
-<macro>D<argument_list>(<block>{ <decl_stmt><type>int</type> <name>i</name>=<init><expr>0</expr></init>;</decl_stmt> }</block>)</argument_list></macro>;
+<macro><name>D</name><argument_list>(<block>{ <decl_stmt><type>int</type> <name>i</name>=<init><expr>0</expr></init>;</decl_stmt> }</block>)</argument_list></macro>;
 </unit>
 -->
 
 <unit>
-<macro>D<argument_list>(if (a) b)</argument_list></macro>;
+<macro><name>D</name><argument_list>(if (a) b)</argument_list></macro>;
 </unit>
 
 <unit>
-<macro>D<argument_list>((if (a) b))</argument_list></macro>;
+<macro><name>D</name><argument_list>((if (a) b))</argument_list></macro>;
 </unit>
 
 <unit>
-<macro>D<argument_list>(a, if (a) b)</argument_list></macro>;
+<macro><name>D</name><argument_list>(a, if (a) b)</argument_list></macro>;
 </unit>
 
 <unit>
-<macro>D<argument_list>(a, (if (a) b))</argument_list></macro>;
+<macro><name>D</name><argument_list>(a, (if (a) b))</argument_list></macro>;
 </unit>
 
 <unit>
-<macro>D<argument_list>(int i = 0)</argument_list></macro>;
+<macro><name>D</name><argument_list>(int i = 0)</argument_list></macro>;
 </unit>
 
 <unit>
-<macro>D<argument_list>((int i = 0))</argument_list></macro>;
+<macro><name>D</name><argument_list>((int i = 0))</argument_list></macro>;
 </unit>
 
 <unit>
-<macro>D<argument_list>(a, int i = 0)</argument_list></macro>;
+<macro><name>D</name><argument_list>(a, int i = 0)</argument_list></macro>;
 </unit>
 
 <unit>
-<macro>D<argument_list>(int i = 0, a)</argument_list></macro>;
+<macro><name>D</name><argument_list>(int i = 0, a)</argument_list></macro>;
 </unit>
 
 <unit>
-<macro>D<argument_list>(a, (int i = 0))</argument_list></macro>;
+<macro><name>D</name><argument_list>(a, (int i = 0))</argument_list></macro>;
 </unit>
 
 <unit>
-<macro>D<argument_list>((int i = 0), a)</argument_list></macro>;
+<macro><name>D</name><argument_list>((int i = 0), a)</argument_list></macro>;
 </unit>
 
 <unit>
-<block>{<macro>D<argument_list>(a)</argument_list></macro>}</block>
+<block>{<macro><name>D</name><argument_list>(a)</argument_list></macro>}</block>
 </unit>
 
 <unit>
-<macro>D<argument_list>(a)</argument_list></macro><if>if;</if>
+<macro><name>D</name><argument_list>(a)</argument_list></macro><if>if;</if>
 </unit>
 
 <unit>
-<macro>D<argument_list>(a)</argument_list></macro><block>{}</block>
+<macro><name>D</name><argument_list>(a)</argument_list></macro><block>{}</block>
 </unit>
 
 <unit>
-<macro>A<argument_list>(1)</argument_list></macro> <function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<macro><name>A</name><argument_list>(1)</argument_list></macro> <function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
 </unit>

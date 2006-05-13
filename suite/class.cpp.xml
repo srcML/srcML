@@ -22,7 +22,7 @@
 </unit>
 
 <unit>
-<class>class <macro>M</macro> <name>A</name> <block>{<private type="default"/>}</block>;</class>
+<class>class <macro><name>M</name></macro> <name>A</name> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
 <unit>

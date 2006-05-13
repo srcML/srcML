@@ -35,7 +35,7 @@
 
 <unit filename="urb.c">
 <block>{
-<return>return <macro>snprintf <argument_list>(buf, size,
+<return>return <macro><name>snprintf</name> <argument_list>(buf, size,
 		 ({ char *s;
                  switch (urb-&gt;dev-&gt;speed) {
                  case USB_SPEED_LOW:    s = "ls"; break;

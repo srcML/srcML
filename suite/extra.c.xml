@@ -1,5 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" dir="extra">
+
+<unit>
+<constructor><name>A::A</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>int</name>[]</type></decl></param>)</parameter_list> <block>{}</block></constructor> 
+</unit>
 
 <unit>
 <function_decl><type><name>int</name></type> (*<name>a</name>)<parameter_list>(<param><decl><type><name>int</name></type> <name>b</name></decl></param>, <param><decl><type><name>int</name>[]</type></decl></param>)</parameter_list>;</function_decl>
@@ -31,7 +35,7 @@
 
 <unit filename="urb.c">
 <block>{
-<return>return <macro>snprintf <argument_list>(buf, size,
+<return>return <macro><name>snprintf</name> <argument_list>(buf, size,
 		 ({ char *s;
                  switch (urb-&gt;dev-&gt;speed) {
                  case USB_SPEED_LOW:    s = "ls"; break;
