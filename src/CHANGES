@@ -1,6 +1,9 @@
 CHANGES
 
 Trunk
+	Allow specification of attributes on outer unit of compound srcML document, e.g.,
+	directory, filename, version.
+
 	Markup macro arguments.
 
 	Markup macro name.
