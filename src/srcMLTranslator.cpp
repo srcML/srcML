@@ -37,14 +37,17 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
 				 const char* src_encoding,    // text encoding of source code
 				 const char* xml_encoding,    // xml encoding of result srcML file
 				 const char* srcml_filename,  // filename of result srcML file
-				 int op
+				 int op,
+				 const char* directory,       // 
+				 const char* filename,        // 
+				 const char* version          // 
 				 )
   : Language(language), options(op),
     out(0, srcml_filename, getLanguageString(), src_encoding, xml_encoding, options) {
 
   // root unit for compound srcML documents
   if ((options & OPTION_NESTED) > 0)
-    out.startUnit(getLanguageString(), "", "", "", true);
+    out.startUnit(getLanguageString(), directory, filename, version, true);
 }
 
 // translate from input stream to output stream

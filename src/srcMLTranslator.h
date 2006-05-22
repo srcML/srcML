@@ -42,7 +42,11 @@ class srcMLTranslator : public Language {
 		  const char* src_encoding,
 		  const char* xml_encoding,
 		  const char* srcml_filename,
-		  int options);
+		  int options,
+		  const char* directory = "",
+		  const char* filename = "",
+		  const char* version = ""
+		  );
 
   // translate from input stream to output stream
   virtual void translate(const char* srcml_filename, const char* unit_directory = "",
