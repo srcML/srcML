@@ -652,6 +652,7 @@ call_check_2[int& postnametoken, int& argumenttoken, int& postcalltoken] {} :
         // fails
         markend[postnametoken]
 
+        // check for proper form of argument list
         call_check_paren_pair[argumenttoken]
 
         guessing_endGuessing
@@ -667,13 +668,15 @@ call_check_paren_pair[int& argumenttoken] {} :
         markend[argumenttoken]
 
         ( options { greedy = true; } : 
-        
+
+            // recursive nested parentheses
             call_check_paren_pair[argumenttoken] | 
 
-            { LA(1) != LPAREN }?
-            (statement_cfg | NAME NAME | TERMINATE)=> guessing_endGuessing match_next_then_fail | 
+            // special case for something that looks like a declaration
+            (NAME NAME)=> NAME guessing_endGuessing fail |
 
-            ~(LPAREN | RPAREN)
+            // forbid parentheses (handled in recursion) and cfg tokens
+            ~(LPAREN | RPAREN | IF | TERMINATE)
         )* 
 
         RPAREN
@@ -684,7 +687,14 @@ call_check_paren_pair[int& argumenttoken] {} :
   are at one token from the end-of-file)
 */
 match_next_then_fail {} :
-        . EOF
+        . CLASS
+;
+
+/*
+  Fail
+*/
+fail {} :
+        CLASS
 ;
 
 markend[int& token] { token = LA(1); } :
@@ -3051,7 +3061,7 @@ macro_call_contents {} :
             int parencount = 0;
             bool start = true;
             bool empty = true;
-            while (!(parencount == 0 && LT(1)->getType() == RPAREN)) {
+            while (LA(1) != 1 /* EOF? */ && !(parencount == 0 && LT(1)->getType() == RPAREN)) {
 
                 if (LT(1)->getType() == LPAREN)
                     ++parencount;
