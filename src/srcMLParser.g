@@ -660,9 +660,6 @@ call_check_2[int& postnametoken, int& argumenttoken, int& postcalltoken] {} :
         markend[postcalltoken]
 ;
 
-call_check_part :
-;
-
 call_check_paren_pair[int& argumenttoken] {} :
         LPAREN
 
