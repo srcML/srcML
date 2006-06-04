@@ -661,7 +661,7 @@ call_check_2[int& postnametoken, int& argumenttoken, int& postcalltoken] {} :
         // process the arguments.  may fail if a macro
         ( options { greedy = true; } : 
            (statement_cfg | NAME NAME | TERMINATE)=> guessing_endGuessing match_next_then_fail | 
-           call_check_paren_pair |
+           call_check_paren_pair[argumenttoken] |
            ~(LPAREN | RPAREN)
         )*
 
@@ -677,12 +677,15 @@ call_check_2[int& postnametoken, int& argumenttoken, int& postcalltoken] {} :
 call_check_part :
 ;
 
-call_check_paren_pair {} :
+call_check_paren_pair[int& argumenttoken] {} :
         LPAREN
+
+        // record token after the start of the argument list
+        markend[argumenttoken]
 
         ( options { greedy = true; } : 
         
-            call_check_paren_pair | 
+            call_check_paren_pair[argumenttoken] | 
 
             { LA(1) != LPAREN }?
             (statement_cfg | NAME NAME | TERMINATE)=> guessing_endGuessing match_next_then_fail | 
