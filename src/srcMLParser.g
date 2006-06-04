@@ -652,21 +652,7 @@ call_check_2[int& postnametoken, int& argumenttoken, int& postcalltoken] {} :
         // fails
         markend[postnametoken]
 
-        // left parentheses of argument list
-        LPAREN
-
-        // record token after the start of the argument list
-        markend[argumenttoken]
-
-        // process the arguments.  may fail if a macro
-        ( options { greedy = true; } : 
-           (statement_cfg | NAME NAME | TERMINATE)=> guessing_endGuessing match_next_then_fail | 
-           call_check_paren_pair[argumenttoken] |
-           ~(LPAREN | RPAREN)
-        )*
-
-        // right parentheses of argument list
-        RPAREN
+        call_check_paren_pair[argumenttoken]
 
         guessing_endGuessing
 
