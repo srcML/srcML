@@ -660,18 +660,15 @@ call_check_2[int& postnametoken, int& argumenttoken, int& postcalltoken] {} :
 
         // process the arguments.  may fail if a macro
         ( options { greedy = true; } : 
-        { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }? 
-            ( { LA(1) != MULTOPS }?
-                (statement_cfg | NAME NAME | TERMINATE)=> guessing_endGuessing match_next_then_fail | 
-                call_check_paren_pair |
-                .
-            ) 
+           (statement_cfg | NAME NAME | TERMINATE)=> guessing_endGuessing match_next_then_fail | 
+           call_check_paren_pair |
+           ~(LPAREN | RPAREN)
         )*
-
-        guessing_endGuessing
 
         // right parentheses of argument list
         RPAREN
+
+        guessing_endGuessing
 
         // record token after argument list to differentiate between call and macro
         markend[postcalltoken]
@@ -680,18 +677,20 @@ call_check_2[int& postnametoken, int& argumenttoken, int& postcalltoken] {} :
 call_check_part :
 ;
 
-call_check_paren_pair :
-        LPAREN (call_check_paren_pair | 
+call_check_paren_pair {} :
+        LPAREN
 
-//        ( options { greedy = true; } : 
-        { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }? 
-            ( { LA(1) != MULTOPS }?
-                (statement_cfg | NAME NAME | TERMINATE)=> guessing_endGuessing match_next_then_fail | 
-                call_check_paren_pair |
-                .
-            ) 
+        ( options { greedy = true; } : 
+        
+            call_check_paren_pair | 
 
-/*            ~(LPAREN | RPAREN)*/ )* RPAREN
+            { LA(1) != LPAREN }?
+            (statement_cfg | NAME NAME | TERMINATE)=> guessing_endGuessing match_next_then_fail | 
+
+            ~(LPAREN | RPAREN)
+        )* 
+
+        RPAREN
 ;
 
 /*
