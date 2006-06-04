@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	New call check mechanism.
+
 	Allow specification of attributes on outer unit of compound srcML document, e.g.,
 	directory, filename, version.
 
