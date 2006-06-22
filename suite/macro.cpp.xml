@@ -2,7 +2,7 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="macro">
 
 <unit>
-<macro><name>D</name><argument_list>(<argument> if (a) b;</argument>)</argument_list></macro>;
+<macro><name>D</name><argument_list>( <argument>if (a) b;</argument>)</argument_list></macro>;
 </unit>
 
 <!--
