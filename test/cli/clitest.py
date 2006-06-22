@@ -318,10 +318,10 @@ validate(open("sub/b.cpp", "r").read(), sfile2)
 # src2srcml error return
 
 # invalid input filename
-validate(getreturn([srcmltranslator, "foobar"], nestedfile), status.STATUS_INPUTFILE_PROBLEM)
+validate(getreturn([srcmltranslator, "foobar"], ""), status.STATUS_INPUTFILE_PROBLEM)
 
 # invalid input filename (repeat in output)
-validate(getreturn([srcmltranslator, "sub/a.cpp", "sub/a.cpp"], nestedfile), status.STATUS_INPUTFILE_PROBLEM)
+validate(getreturn([srcmltranslator, "sub/a.cpp", "sub/a.cpp"], ""), status.STATUS_INPUTFILE_PROBLEM)
 
 # unknown option
 validate(getreturn([srcmltranslator, "--strip"], nestedfile), status.STATUS_UNKNOWN_OPTION)
