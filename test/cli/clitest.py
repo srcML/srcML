@@ -75,7 +75,7 @@ if srcmltranslator == "":
 	
 srcmlutility = os.environ.get("SRCML2SRC")
 if srcmlutility == "":
-	srcmlutility = "../../bin/src2srcml"
+	srcmlutility = "../../bin/srcml2src"
 
 src2srcml_src_encoding = src2srcmlversion().find("Libxml2") != -1;
 srcml2src_src_encoding = srcml2srcversion().find("Libxml2") != -1;
