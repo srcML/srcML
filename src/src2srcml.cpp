@@ -185,7 +185,6 @@ int options = OPTION_CPP_MARKUP_ELSE;
 
 extern "C" void verbose_handler(int);
 
-bool terminate = false;
 extern "C" void terminate_handler(int);
 
 int main(int argc, char* argv[]) {
@@ -675,7 +674,7 @@ int main(int argc, char* argv[]) {
 	std::cerr << '\n';
       }
       // compound documents are interrupted gracefully
-      if (terminate)
+      if (isoption(options, OPTION_TERMINATE))
 	return STATUS_INPUT_LIST_TERMINATED;
     }
 
@@ -734,7 +733,7 @@ int main(int argc, char* argv[]) {
       }
 
       // compound documents are interrupted gracefully
-      if (terminate)
+      if (isoption(options, OPTION_TERMINATE))
 	return STATUS_INPUT_LIST_TERMINATED;
     }
   }
@@ -778,13 +777,10 @@ extern "C" void verbose_handler(int) {
     options &= ~OPTION_VERBOSE;
 }
 
-int terminate_count = 0;
 extern "C" void terminate_handler(int) {
 
-  ++terminate_count;
-
-  if (terminate_count == 1)
-    terminate = true;
+  if (!isoption(options, OPTION_TERMINATE))
+    options |= OPTION_TERMINATE;
   else
     kill(getpid(), SIGINT);
 }

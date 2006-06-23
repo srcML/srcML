@@ -102,6 +102,9 @@ enum Options {
 
   // cpp markup #if 0 sections
   OPTION_CPP_MARKUP_IF0 = 0x00800000,
+
+  // terminate after this file
+  OPTION_TERMINATE = 0x01000000,
 };
 
 #endif

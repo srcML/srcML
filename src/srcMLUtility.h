@@ -118,7 +118,7 @@ class srcMLUtility {
  private:
   const char* infile;
   const char* output_encoding;
-  int options;
+  int& options;
   xmlTextReaderPtr reader;
   xmlCharEncodingHandlerPtr handler;
 }; 
