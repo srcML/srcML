@@ -299,6 +299,7 @@
   <para>&STATUS_VERSION_MISSING;: Version option specified, but value missing</para>
   <para>&STATUS_SRCENCODING_MISSING;: Text encoding option specified, but value missing</para>
   <para>&STATUS_XMLENCODING_MISSING;: XML encoding option specified, but value missing</para>
+  <para>&STATUS_INPUT_LIST_TERMINATED;: Incomplete input list due to termination</para>
 
 </refsect1>
 <refsect1>
