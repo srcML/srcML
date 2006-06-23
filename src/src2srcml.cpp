@@ -186,13 +186,17 @@ int options = OPTION_CPP_MARKUP_ELSE;
 extern "C" void flip_verbose(int);
 
 bool terminate = false;
-int terminate_count = 0;
 extern "C" void terminate_handler(int);
 
 int main(int argc, char* argv[]) {
 
-  // handle signal
+  /* signal handling */
+
+  // toggling verbose flag
   pstd::signal(SIGUSR1, flip_verbose);
+
+  // gracefully finish current file in compound document mode
+  pstd::signal(SIGINT, terminate_handler);
 
   int exit_status = EXIT_SUCCESS;
 
@@ -772,4 +776,15 @@ extern "C" void flip_verbose(int) {
     options |= OPTION_VERBOSE;
   else
     options &= ~OPTION_VERBOSE;
+}
+
+int terminate_count = 0;
+extern "C" void terminate_handler(int) {
+
+  ++terminate_count;
+
+  if (terminate_count == 1)
+    terminate = true;
+  else
+    kill(getpid(), SIGINT);
 }

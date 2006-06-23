@@ -1,6 +1,9 @@
 CHANGES
 
 Trunk
+	For multiple input files, the first SIGINT signal lets the current file finish.
+	Multiple SIGINT signals allows the default behavior.
+
 	SIGUSR1 now toggles verbose setting.
 
 	New call check mechanism.
