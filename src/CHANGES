@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	SIGUSR1 now toggles verbose setting.
+
 	New call check mechanism.
 
 	Allow specification of attributes on outer unit of compound srcML document, e.g.,

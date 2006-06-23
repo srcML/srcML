@@ -30,6 +30,7 @@
 #include "version.h"
 #include "srcmlapps.h"
 #include "Options.h"
+#include "project.h"
 
 #include "srcMLTranslator.h"
 
@@ -182,7 +183,12 @@ void output_version(const char* name) {
 
 int options = OPTION_CPP_MARKUP_ELSE;
 
+extern "C" void flip_verbose(int);
+
 int main(int argc, char* argv[]) {
+
+  // handle signal
+  pstd::signal(SIGUSR1, flip_verbose);
 
   int exit_status = EXIT_SUCCESS;
 
@@ -745,4 +751,12 @@ std::string get_directory(const std::string& path) {
 
   // no directory in path
   return "";
+}
+
+extern "C" void flip_verbose(int) {
+
+  if ((options &= OPTION_VERBOSE) == 0)
+    options |= OPTION_VERBOSE;
+  else
+    options &= ~OPTION_VERBOSE;
 }
