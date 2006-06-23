@@ -180,6 +180,8 @@ void output_version(const char* name) {
 	      << COPYRIGHT << '\n';
 }
 
+int options = OPTION_CPP_MARKUP_ELSE;
+
 int main(int argc, char* argv[]) {
 
   int exit_status = EXIT_SUCCESS;
@@ -192,7 +194,6 @@ int main(int argc, char* argv[]) {
   const char* given_version = "";
 
   // process all command line options
-  int options = OPTION_CPP_MARKUP_ELSE;
   int position = 0;
   int curarg = 1;  // current argument
   bool cpp_else = false;
