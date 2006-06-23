@@ -646,9 +646,11 @@ int main(int argc, char* argv[]) {
       if (infilename == "" || infilename[0] == FILELIST_COMMENT)
 	continue;
 
+      // another file
+      ++count;
+
       // in verbose mode output the currently processed filename
       if (isoption(options, OPTION_VERBOSE)) {
-	++count;
 	std::cerr << count << '\t' << infilename;
       }
 
