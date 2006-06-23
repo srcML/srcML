@@ -318,37 +318,37 @@ validate(open("sub/b.cpp", "r").read(), sfile2)
 # src2srcml error return
 
 # invalid input filename
-validate(getreturn([srcmltranslator, "foobar"], ""), status.STATUS_INPUTFILE_PROBLEM)
+validate(getreturn([srcmltranslator, "foobar"], None), status.STATUS_INPUTFILE_PROBLEM)
 
 # invalid input filename (repeat in output)
-validate(getreturn([srcmltranslator, "sub/a.cpp", "sub/a.cpp"], ""), status.STATUS_INPUTFILE_PROBLEM)
+validate(getreturn([srcmltranslator, "sub/a.cpp", "sub/a.cpp"], None), status.STATUS_INPUTFILE_PROBLEM)
 
 # unknown option
-validate(getreturn([srcmltranslator, "--strip"], nestedfile), status.STATUS_UNKNOWN_OPTION)
+validate(getreturn([srcmltranslator, "--strip", "foobar"], None), status.STATUS_UNKNOWN_OPTION)
 
 # unknown encoding
 
 if src2srcml_src_encoding:
-	validate(getreturn([srcmltranslator, option.TEXTENCODING_FLAG + "=" + bad_encoding], nestedfile), status.STATUS_UNKNOWN_ENCODING)
-	validate(getreturn([srcmltranslator, option.ENCODING_FLAG + "=" + bad_encoding], nestedfile), status.STATUS_UNKNOWN_ENCODING)
+	validate(getreturn([srcmltranslator, option.TEXTENCODING_FLAG + "=" + bad_encoding, "foobar"], None), status.STATUS_UNKNOWN_ENCODING)
+	validate(getreturn([srcmltranslator, option.ENCODING_FLAG + "=" + bad_encoding, "foobar"], None), status.STATUS_UNKNOWN_ENCODING)
 else:
 	validate(getreturn([srcmltranslator, option.TEXTENCODING_FLAG + "=" + bad_encoding], nestedfile), status.STATUS_LIBXML2_FEATURE)
 	validate(getreturn([srcmltranslator, option.ENCODING_FLAG + "=" + bad_encoding], nestedfile), status.STATUS_SUCCESS)
 	
 # missing value
-validate(getreturn([srcmltranslator, option.LANGUAGE_FLAG, bad_language], nestedfile), status.STATUS_INVALID_LANGUAGE)
-validate(getreturn([srcmltranslator, option.LANGUAGE_FLAG], nestedfile), status.STATUS_LANGUAGE_MISSING)
-validate(getreturn([srcmltranslator, option.FILENAME_FLAG], nestedfile), status.STATUS_FILENAME_MISSING)
-validate(getreturn([srcmltranslator, option.DIRECTORY_FLAG], nestedfile), status.STATUS_DIRECTORY_MISSING)
-validate(getreturn([srcmltranslator, option.SRCVERSION_FLAG], nestedfile), status.STATUS_VERSION_MISSING)
+validate(getreturn([srcmltranslator, option.LANGUAGE_FLAG, bad_language, "foobar"], None), status.STATUS_INVALID_LANGUAGE)
+validate(getreturn([srcmltranslator, option.LANGUAGE_FLAG], ""), status.STATUS_LANGUAGE_MISSING)
+validate(getreturn([srcmltranslator, option.FILENAME_FLAG], ""), status.STATUS_FILENAME_MISSING)
+validate(getreturn([srcmltranslator, option.DIRECTORY_FLAG], ""), status.STATUS_DIRECTORY_MISSING)
+validate(getreturn([srcmltranslator, option.SRCVERSION_FLAG], ""), status.STATUS_VERSION_MISSING)
 
 # source encoding not given
 if src2srcml_src_encoding:
-	validate(getreturn([srcmltranslator, option.TEXTENCODING_FLAG], nestedfile), status.STATUS_SRCENCODING_MISSING)
+	validate(getreturn([srcmltranslator, option.TEXTENCODING_FLAG, "foobar"], None), status.STATUS_SRCENCODING_MISSING)
 else:
-	validate(getreturn([srcmltranslator, option.TEXTENCODING_FLAG], nestedfile), status.STATUS_LIBXML2_FEATURE)
+	validate(getreturn([srcmltranslator, option.TEXTENCODING_FLAG, "foobar"], None), status.STATUS_LIBXML2_FEATURE)
 
-validate(getreturn([srcmltranslator, option.ENCODING_FLAG], nestedfile), status.STATUS_XMLENCODING_MISSING)
+validate(getreturn([srcmltranslator, option.ENCODING_FLAG, "foobar"], None), status.STATUS_XMLENCODING_MISSING)
 
 nestedfileextra = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
@@ -377,18 +377,18 @@ check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "1"], nestedfileextra, s
 # srcml2src error return
 
 # invalid input filename
-validate(getreturn([srcmlutility, "foobar"], nestedfile), status.STATUS_INPUTFILE_PROBLEM)
+validate(getreturn([srcmlutility, "foobar"], None), status.STATUS_INPUTFILE_PROBLEM)
 
 # unknown option
-validate(getreturn([srcmlutility, "--strip"], nestedfile), status.STATUS_UNKNOWN_OPTION)
+validate(getreturn([srcmlutility, "--strip", "foobar"], None), status.STATUS_UNKNOWN_OPTION)
 
 # unknown encoding
 if srcml2src_src_encoding:
-	validate(getreturn([srcmlutility, option.TEXTENCODING_FLAG + "=" + bad_encoding], nestedfile), status.STATUS_UNKNOWN_ENCODING)
-	validate(getreturn([srcmlutility, option.TEXTENCODING_FLAG], nestedfile), status.STATUS_SRCENCODING_MISSING)
+	validate(getreturn([srcmlutility, option.TEXTENCODING_FLAG + "=" + bad_encoding, "foobar"], None), status.STATUS_UNKNOWN_ENCODING)
+	validate(getreturn([srcmlutility, option.TEXTENCODING_FLAG, "foobar"], None), status.STATUS_SRCENCODING_MISSING)
 else:
-	validate(getreturn([srcmlutility, option.TEXTENCODING_FLAG + "=" + bad_encoding], nestedfile), status.STATUS_LIBXML2_FEATURE)
-	validate(getreturn([srcmlutility, option.TEXTENCODING_FLAG], nestedfile), status.STATUS_LIBXML2_FEATURE)
+	validate(getreturn([srcmlutility, option.TEXTENCODING_FLAG + "=" + bad_encoding, "foobar"], None), status.STATUS_LIBXML2_FEATURE)
+	validate(getreturn([srcmlutility, option.TEXTENCODING_FLAG, "foobar"], None), status.STATUS_LIBXML2_FEATURE)
 	
 # source encoding not given
 
@@ -397,14 +397,14 @@ validate(getreturn([srcmlutility, option.UNIT_FLAG], nestedfile), status.STATUS_
 
 # unit value too large
 missing_unit = "3";
-validate(getreturn([srcmlutility, option.UNIT_FLAG, missing_unit], nestedfile), status.STATUS_UNIT_INVALID)
-validate(getreturn([srcmlutility, option.UNIT_FLAG, missing_unit, option.XML_FLAG], nestedfile), status.STATUS_UNIT_INVALID)
-validate(getreturn([srcmlutility, option.UNIT_FLAG, missing_unit, option.FILENAME_FLAG], nestedfile), status.STATUS_UNIT_INVALID)
-validate(getreturn([srcmlutility, option.UNIT_FLAG, missing_unit, option.DIRECTORY_FLAG], nestedfile), status.STATUS_UNIT_INVALID)
-validate(getreturn([srcmlutility, option.UNIT_FLAG, missing_unit, option.SRCVERSION_FLAG], nestedfile), status.STATUS_UNIT_INVALID)
+validate(getreturn([srcmlutility, option.UNIT_FLAG, missing_unit, "foobar"], None), status.STATUS_UNIT_INVALID)
+validate(getreturn([srcmlutility, option.UNIT_FLAG, missing_unit, option.XML_FLAG, "foobar"], None), status.STATUS_UNIT_INVALID)
+validate(getreturn([srcmlutility, option.UNIT_FLAG, missing_unit, option.FILENAME_FLAG], ""), status.STATUS_UNIT_INVALID)
+validate(getreturn([srcmlutility, option.UNIT_FLAG, missing_unit, option.DIRECTORY_FLAG], ""), status.STATUS_UNIT_INVALID)
+validate(getreturn([srcmlutility, option.UNIT_FLAG, missing_unit, option.SRCVERSION_FLAG], ""), status.STATUS_UNIT_INVALID)
 
 # invalid combinations
-validate(getreturn([srcmlutility, option.XML_FLAG, option.TEXTENCODING_FLAG, "UTF-8"], nestedfile), status.STATUS_INVALID_OPTION_COMBINATION)
+validate(getreturn([srcmlutility, option.XML_FLAG, option.TEXTENCODING_FLAG, "UTF-8", "foobar"], None), status.STATUS_INVALID_OPTION_COMBINATION)
 
 ##
 # cpp markup else
@@ -441,8 +441,8 @@ return;
 """
 check([srcmltranslator, option.CPP_TEXTONLY_ELSE_FLAG], cpp_src, cpp_textonly_srcml)
 
-validate(getreturn([srcmltranslator, option.CPP_MARKUP_ELSE_FLAG, option.CPP_TEXTONLY_ELSE_FLAG], cpp_src), status.STATUS_INVALID_OPTION_COMBINATION)
-validate(getreturn([srcmltranslator, option.CPP_TEXTONLY_ELSE_FLAG, option.CPP_MARKUP_ELSE_FLAG], cpp_src), status.STATUS_INVALID_OPTION_COMBINATION)
+validate(getreturn([srcmltranslator, option.CPP_MARKUP_ELSE_FLAG, option.CPP_TEXTONLY_ELSE_FLAG, "foobar"], None), status.STATUS_INVALID_OPTION_COMBINATION)
+validate(getreturn([srcmltranslator, option.CPP_TEXTONLY_ELSE_FLAG, option.CPP_MARKUP_ELSE_FLAG, "foobar"], None), status.STATUS_INVALID_OPTION_COMBINATION)
 
 ##
 # cpp markup if0
@@ -472,8 +472,8 @@ cpp_marked_srcml = xml_declaration + """
 """
 check([srcmltranslator, option.CPP_MARKUP_IF0_FLAG], cpp_if0, cpp_marked_srcml)
 
-validate(getreturn([srcmltranslator, option.CPP_MARKUP_IF0_FLAG, option.CPP_TEXTONLY_IF0_FLAG], cpp_if0), status.STATUS_INVALID_OPTION_COMBINATION)
-validate(getreturn([srcmltranslator, option.CPP_TEXTONLY_IF0_FLAG, option.CPP_MARKUP_IF0_FLAG], cpp_if0), status.STATUS_INVALID_OPTION_COMBINATION)
+validate(getreturn([srcmltranslator, option.CPP_MARKUP_IF0_FLAG, option.CPP_TEXTONLY_IF0_FLAG, "foobar"], None), status.STATUS_INVALID_OPTION_COMBINATION)
+validate(getreturn([srcmltranslator, option.CPP_TEXTONLY_IF0_FLAG, option.CPP_MARKUP_IF0_FLAG, "foobar"], None), status.STATUS_INVALID_OPTION_COMBINATION)
 
 print src2srcmlversion()
 print srcml2srcversion()
