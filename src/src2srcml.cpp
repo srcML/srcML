@@ -696,9 +696,11 @@ int main(int argc, char* argv[]) {
       std::string sdirectory = get_directory(path);
       std::string sfilename = get_filename(path);
 
+      // another file
+      ++count;
+
       // in verbose mode output the currently processed filename
       if (isoption(options, OPTION_VERBOSE)) {
-	++count;
 	std::cerr << count << '\t' << path;
       }
       try {
