@@ -183,7 +183,7 @@ void output_version(const char* name) {
 
 int options = OPTION_CPP_MARKUP_ELSE;
 
-extern "C" void flip_verbose(int);
+extern "C" void verbose_handler(int);
 
 bool terminate = false;
 extern "C" void terminate_handler(int);
@@ -193,7 +193,7 @@ int main(int argc, char* argv[]) {
   /* signal handling */
 
   // toggling verbose flag
-  pstd::signal(SIGUSR1, flip_verbose);
+  pstd::signal(SIGUSR1, verbose_handler);
 
   // gracefully finish current file in compound document mode
   pstd::signal(SIGINT, terminate_handler);
@@ -676,7 +676,7 @@ int main(int argc, char* argv[]) {
       }
       // compound documents are interrupted gracefully
       if (terminate)
-	return exit_status;
+	return STATUS_INPUT_LIST_TERMINATED;
     }
 
   // translate from standard input
@@ -735,7 +735,7 @@ int main(int argc, char* argv[]) {
 
       // compound documents are interrupted gracefully
       if (terminate)
-	return exit_status;
+	return STATUS_INPUT_LIST_TERMINATED;
     }
   }
   } catch (srcEncodingException) {
@@ -770,7 +770,7 @@ std::string get_directory(const std::string& path) {
   return "";
 }
 
-extern "C" void flip_verbose(int) {
+extern "C" void verbose_handler(int) {
 
   if ((options &= OPTION_VERBOSE) == 0)
     options |= OPTION_VERBOSE;

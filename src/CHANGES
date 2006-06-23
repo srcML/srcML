@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	New status 16 for prematurely terminated input lists.
+
 	For multiple input files, the first SIGINT signal lets the current file finish.
 	Multiple SIGINT signals allows the default behavior.
 
