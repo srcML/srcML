@@ -185,6 +185,10 @@ int options = OPTION_CPP_MARKUP_ELSE;
 
 extern "C" void flip_verbose(int);
 
+bool terminate = false;
+int terminate_count = 0;
+extern "C" void terminate_handler(int);
+
 int main(int argc, char* argv[]) {
 
   // handle signal
@@ -664,6 +668,9 @@ int main(int argc, char* argv[]) {
       if (isoption(options, OPTION_VERBOSE)) {
 	std::cerr << '\n';
       }
+      // compound documents are interrupted gracefully
+      if (terminate)
+	return exit_status;
     }
 
   // translate from standard input
@@ -719,6 +726,10 @@ int main(int argc, char* argv[]) {
       if (isoption(options, OPTION_VERBOSE)) {
 	std::cerr << '\n';
       }
+
+      // compound documents are interrupted gracefully
+      if (terminate)
+	return exit_status;
     }
   }
   } catch (srcEncodingException) {
