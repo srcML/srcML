@@ -142,7 +142,18 @@ void output_version(const char* name) {
 	      << COPYRIGHT << '\n';
 }
 
+int options = 0;
+
+extern "C" void verbose_handler(int);
+
+extern "C" void terminate_handler(int);
+
 int main(int argc, char* argv[]) {
+
+  /* signal handling */
+
+  // toggling verbose flag
+  pstd::signal(SIGUSR1, verbose_handler);
 
   int exit_status = EXIT_SUCCESS;
 
@@ -152,7 +163,6 @@ int main(int argc, char* argv[]) {
 
   // process all flags
   int position = 0;
-  int options = 0;
   int curarg = 1;
   while (argc > curarg && strlen(argv[curarg]) > 1 && argv[curarg][0] == '-' && strcmp(argv[curarg], OPTION_SEPARATOR) != 0) {
 
@@ -538,6 +548,10 @@ int main(int argc, char* argv[]) {
     } else if (isoption(options, OPTION_EXPAND)) {
 
       try {
+
+	// gracefully finish current file in compound document mode
+	pstd::signal(SIGINT, terminate_handler);
+
 	su.expand();
 
       } catch (LibXMLError error) {
@@ -573,4 +587,21 @@ int main(int argc, char* argv[]) {
   }
 
   return exit_status;
+}
+
+extern "C" void verbose_handler(int) {
+
+  if ((options &= OPTION_VERBOSE) == 0)
+    options |= OPTION_VERBOSE;
+  else
+    options &= ~OPTION_VERBOSE;
+}
+
+extern "C" void terminate_handler(int) {
+
+  // setup to terminate after current file
+  options |= OPTION_TERMINATE;
+
+  // turn off handler for this signal
+  pstd::signal(SIGINT, SIG_DFL);
 }

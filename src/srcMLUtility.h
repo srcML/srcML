@@ -56,7 +56,7 @@ class srcMLUtility {
  public:
 
   // constructor
-  srcMLUtility(const char* infilename, const char* encoding, int op = 0);
+  srcMLUtility(const char* infilename, const char* encoding, int& op);
 
   // translate from input stream to output stream as text
   virtual void translate(const char* ofilename);
