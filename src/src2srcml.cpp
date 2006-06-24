@@ -194,9 +194,6 @@ int main(int argc, char* argv[]) {
   // toggling verbose flag
   pstd::signal(SIGUSR1, verbose_handler);
 
-  // gracefully finish current file in compound document mode
-  pstd::signal(SIGINT, terminate_handler);
-
   int exit_status = EXIT_SUCCESS;
 
   const char* src_encoding = DEFAULT_TEXT_ENCODING;
@@ -642,6 +639,9 @@ int main(int argc, char* argv[]) {
     int count = 0;    // keep count for verbose mode
     while (getline(*pinfilelist, line)) {
 
+      // setup so we can gracefully stop after a file at a time
+      pstd::signal(SIGINT, terminate_handler);
+      
       // extract the filename from the line
       std::string infilename = line.substr(0, line.find_first_of(' '));
 
@@ -711,6 +711,10 @@ int main(int argc, char* argv[]) {
     // translate in batch the input files on the command line extracting the directory and filename attributes
     // from the full path
     for (int i = input_arg_start; i <= input_arg_end; ++i) {
+
+      // setup so we can gracefully stop after a file at a time
+      pstd::signal(SIGINT, terminate_handler);
+      
       const char* path = argv[i];
       std::string sdirectory = get_directory(path);
       std::string sfilename = get_filename(path);
@@ -779,8 +783,9 @@ extern "C" void verbose_handler(int) {
 
 extern "C" void terminate_handler(int) {
 
-  if (!isoption(options, OPTION_TERMINATE))
-    options |= OPTION_TERMINATE;
-  else
-    kill(getpid(), SIGINT);
+  // setup to terminate after current file
+  options |= OPTION_TERMINATE;
+
+  // turn off handler for this signal
+  pstd::signal(SIGINT, SIG_DFL);
 }
