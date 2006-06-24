@@ -556,7 +556,9 @@ int main(int argc, char* argv[]) {
 
       } catch (LibXMLError error) {
 
-	if (error.getErrorNum() != 0)
+	if (error.getErrorNum() == 3)
+	  exit_status = STATUS_INPUT_LIST_TERMINATED;
+	else if (error.getErrorNum() != 0)
 	  throw error;
       }
 

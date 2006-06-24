@@ -299,7 +299,7 @@ void srcMLUtility::expand(const char* root_filename) {
 
     // stop after this file (and end gracefully) with ctrl-c
     if (isoption(options, OPTION_TERMINATE))
-      return;
+      throw LibXMLError(3);
   }
 }
 
