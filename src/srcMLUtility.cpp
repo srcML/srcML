@@ -405,9 +405,10 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
 
   // setup an output handler
   handler = xmlFindCharEncodingHandler(output_encoding);
+
 #ifdef LIBXML_ENABLED
   // no need for encoding change
-  if (strcmp(handler->name, (char*) xmlTextReaderConstEncoding(reader)) == 0)
+  if (strcmp(handler->name, "UTF-8") == 0)
     options |= OPTION_SKIP_ENCODING;
 #endif
 
