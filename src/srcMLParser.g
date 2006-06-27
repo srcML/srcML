@@ -591,11 +591,11 @@ call_macro_expression[int secondtoken, bool statement]
         (call_check[postnametoken, argumenttoken, postcalltoken])=> guessing_endGuessing (
 
             // call syntax succeeded, however post call token is not legitimate
-            { _tokenSet_12.member(postcalltoken) || postcalltoken == NAME || postcalltoken == LCURLY
+            { _tokenSet_2.member(postcalltoken) || postcalltoken == NAME || postcalltoken == LCURLY
                 || postcalltoken == EXTERN || postcalltoken == STRUCT || postcalltoken == UNION
                 || postcalltoken == RCURLY || postcalltoken == 1 /* EOF ? */
                 || postcalltoken == TEMPLATE || postcalltoken == PUBLIC || postcalltoken == PRIVATE
-                || postcalltoken == PROTECTED || postcalltoken == NAMESPACE }?
+                || postcalltoken == PROTECTED }?
             macro_call |
 
             // call syntax succeeded and post call token is legitimate for an expression
