@@ -52,6 +52,13 @@ class LibXMLError {
   int error;
 };
 
+class TerminateLibXMLError : public LibXMLError {
+ public:
+  TerminateLibXMLError()
+    : LibXMLError(0)
+    {}
+};
+
 class srcMLUtility {
  public:
 

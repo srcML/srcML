@@ -554,11 +554,13 @@ int main(int argc, char* argv[]) {
 
 	su.expand();
 
+      } catch (TerminateLibXMLError error) {
+
+	exit_status = STATUS_INPUT_LIST_TERMINATED;
+
       } catch (LibXMLError error) {
 
-	if (error.getErrorNum() == 3)
-	  exit_status = STATUS_INPUT_LIST_TERMINATED;
-	else if (error.getErrorNum() != 0)
+	if (error.getErrorNum() != 0)
 	  throw error;
       }
 
