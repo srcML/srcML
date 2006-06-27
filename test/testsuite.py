@@ -13,13 +13,13 @@ import difflib
 maxcount = 500
 error_filename = ".suitelist"
 
-srcmltranslator = os.environ.get("SRC2SRCML")
+srcmltranslator = "" # os.environ.get("SRC2SRCML")
 if srcmltranslator == "":
 	srcmltranslator = "../bin/src2srcml"
 	
-srcmlutility = os.environ.get("SRCML2SRC")
+srcmlutility = "" # os.environ.get("SRCML2SRC")
 if srcmlutility == "":
-	srcmlutility = "../bin/src2srcml"
+	srcmlutility = "../bin/srcml2src"
 
 # extracts a particular unit from a srcML file
 def extract_unit(src, count):
