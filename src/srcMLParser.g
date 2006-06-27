@@ -648,7 +648,7 @@ call_check_paren_pair[int& argumenttoken] {} :
             (NAME NAME)=> NAME guessing_endGuessing fail |
 
             // forbid parentheses (handled in recursion) and cfg tokens
-            ~(LPAREN | RPAREN | IF | TERMINATE)
+            { !_tokenSet_2.member(LA(1)) }? ~(LPAREN | RPAREN | TERMINATE)
         )* 
 
         RPAREN
