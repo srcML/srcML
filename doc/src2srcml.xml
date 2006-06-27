@@ -201,7 +201,8 @@
       <term>&VERBOSE_FLAG_SHORT;, &VERBOSE_FLAG;</term>
       <listitem>
 	<para>
-	  Verbose output to standard error in &FILELIST_FLAG; mode.
+	  Verbose output to standard error in &FILELIST_FLAG; mode.  The signal SIGUSR1 can
+	  be used to toggle this option.
 	</para>
       </listitem>
     </varlistentry>
@@ -248,6 +249,38 @@
       </listitem>
     </varlistentry>
   </variablelist>
+</refsect1>
+<refsect1>
+  <title>SIGNAL PROCESSING</title>
+
+  <para>
+    The following signals may be used to control src2srcml:
+  </para>
+  <variablelist>
+    <varlistentry>
+      <term>SIGUSR1</term>
+      <listitem>
+	<para>
+	  Toggles verbose option.  Useful with multiple input files (nested mode).
+	</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>SIGINT</term>
+      <listitem>
+	<para>
+	  Completes current file translation (and output) with multiple input files (nested mode).
+	  The input file currently being translated is allowed to complete, the nested document is
+	  closed, and then the program stops.  More than one SIGINT causes default behavior.
+	</para>
+	<para>
+	  This special SIGINT handling only occurs with multiple input files in compound srcML documents.
+	</para>
+      </listitem>
+    </varlistentry>
+  </variablelist>
+
 </refsect1>
 <refsect1>
   <title>USAGE</title>
