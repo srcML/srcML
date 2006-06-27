@@ -124,9 +124,8 @@
       <listitem>
 	<para>
 	  Sets the input encoding of the source-code file to
-	  <replaceable>encoding</replaceable>.  The default is based
-	  on the locale.  Not stored, but used for any necessary
-	  source-code text translation in the libxml2-enabled version.
+	  <replaceable>encoding</replaceable>.  The default is &DEFAULT_TEXT_ENCODING;.
+	  Not stored, but used for any necessary source-code text translation in the libxml2-enabled version.
 	</para>
       </listitem>
     </varlistentry>
