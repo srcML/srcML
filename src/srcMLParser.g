@@ -588,7 +588,7 @@ call_macro_expression[int secondtoken, bool statement]
 
         // call
         // check here instead of in expression_statement to distinguish between a call and a macro
-        (call_check_2[postnametoken, argumenttoken, postcalltoken])=> guessing_endGuessing (
+        (call_check[postnametoken, argumenttoken, postcalltoken])=> guessing_endGuessing (
 
             // call syntax succeeded, however post call token is not legitimate
             { _tokenSet_12.member(postcalltoken) || postcalltoken == NAME || postcalltoken == LCURLY
@@ -617,34 +617,6 @@ call_macro_expression[int secondtoken, bool statement]
 ;
 
 call_check[int& postnametoken, int& argumenttoken, int& postcalltoken] {} :
-        // detect name, which may be name of macro or even an expression
-        function_identifier[true]
-
-        // record token after the function identifier for future use if this
-        // fails
-        markend[postnametoken]
-
-        // left parentheses of argument list
-        LPAREN
-
-        // record token after the start of the argument list
-        markend[argumenttoken]
-
-        // process the arguments.  may fail if a macro
-        ( options { greedy = true; } : { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }? 
-            ( { LA(1) != MULTOPS }?
-                (full_parameter[true])=> guessing_endGuessing match_next_then_fail | expression_part | comma) )* 
-
-        guessing_endGuessing
-
-        // right parentheses of argument list
-        RPAREN
-
-        // record token after argument list to differentiate between call and macro
-        markend[postcalltoken]
-;
-
-call_check_2[int& postnametoken, int& argumenttoken, int& postcalltoken] {} :
         // detect name, which may be name of macro or even an expression
         function_identifier[true]
 
