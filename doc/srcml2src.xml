@@ -180,8 +180,7 @@
       <listitem>
 	<para>
 	  Sets the encoding used for the output text source-code files
-	  to <replaceable>encoding</replaceable>.  The default is
-	  based on the locale.
+	  to <replaceable>encoding</replaceable>.  The default is &DEFAULT_TEXT_ENCODING;.
 	</para>
       </listitem>
     </varlistentry>
