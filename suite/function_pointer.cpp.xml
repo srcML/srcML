@@ -26,7 +26,7 @@
 </unit>
 
 <unit>
-<macro>A<argument_list>(1)</argument_list></macro> <function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<macro><name>A</name><argument_list>(<argument>1</argument>)</argument_list></macro> <function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
 </unit>
