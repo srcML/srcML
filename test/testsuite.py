@@ -123,7 +123,12 @@ def srcml2srcversion():
 # number of nested units
 def getnested(xml_file):
 
-	return int(safe_communicate([srcmlutility, "-n"], xml_file))
+	snumber = safe_communicate([srcmlutility, "-n"], xml_file)
+
+	if snumber != "":
+		return int(snumber)
+	else:
+		return 0
 
 src2srcml_src_encoding = src2srcmlversion().find("Libxml2") != -1;
 srcml2src_src_encoding = srcml2srcversion().find("Libxml2") != -1;
