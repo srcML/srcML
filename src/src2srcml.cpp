@@ -114,7 +114,7 @@ void output_help(const char* name) {
 	      << '\n'
 #ifdef LIBXML_ENABLED
 	      << "  " << TEXTENCODING_FLAG_SHORT        << ", " << setw(COL) <<  TEXTENCODING_FLAG_FULL
-	      << "set the input source encoding to ENC (default:  based on locale" << ") \n"
+	      << "set the input source encoding to ENC (default:  " << DEFAULT_TEXT_ENCODING << ") \n"
 	      << "  " << SKIP_ENCODING_FLAG_SHORT        << ", " << setw(COL) <<  SKIP_ENCODING_FLAG
 	      << "skip any text encoding transformation" << "\n"
 #endif
