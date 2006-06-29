@@ -13,6 +13,8 @@ import difflib
 maxcount = 500
 error_filename = ".suitelist"
 
+sperrorlist = []
+
 srcmltranslator = "" # os.environ.get("SRC2SRCML")
 if srcmltranslator == "":
 	srcmltranslator = "../bin/src2srcml"
@@ -26,8 +28,9 @@ def safe_communicate(command, inp):
 
 	try:
 		return subprocess.Popen(command, stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(inp)[0]
-	except OSError:
-		print "\nError on", xml_filename, command
+	except OSError, (errornum, strerror):
+		sperrorlist.append((command, xml_filename, errornum, strerror))
+		raise
 		return ""
 
 # extracts a particular unit from a srcML file
@@ -164,8 +167,8 @@ elif len(sys.argv) > 2:
 # base directory
 base_dir = "../suite"
 
-errors = {}
 errorlist = []
+
 #if not(os.path.isfile(srcmltranslator)):
 #	print srcmltranslator + " does not exist."
 #	exit
@@ -188,84 +191,94 @@ try:
 
 		# process all files
 		for name in files:
+			try: 
+	
+				# only process xml files
+				if os.path.splitext(name)[1] != ".xml":
+					continue
 
-			# only process xml files
-			if os.path.splitext(name)[1] != ".xml":
-				continue
+				# full path of the file
+				xml_filename = os.path.join(root, name)
+			
+				# read entire file into a string
+				filexml = name2filestr(xml_filename)
 
-			# full path of the file
-			xml_filename = os.path.join(root, name)
+				# directory of the outer unit element
+				directory = getdirectory(filexml)
 			
-			# read entire file into a string
-			filexml = name2filestr(xml_filename)
+				# only process if directory name matches or is not given
+				if specname != "" and m.match(directory) == None:
+					continue
+			
+				# language of the entire document with a default of C++
+				language = getlanguage(filexml)
+				if len(language) == 0:
+					language = "C++"
 
-			# directory of the outer unit element
-			directory = getdirectory(filexml)
+				# only process if language matches or is not given
+				if speclang != "" and language != speclang:
+					continue
 			
-			# only process if directory name matches or is not given
-			if specname != "" and m.match(directory) == None:
-				continue
-			
-			# language of the entire document with a default of C++
-			language = getlanguage(filexml)
-			if len(language) == 0:
-				language = "C++"
+				# output language and directory
+				print
+				print language, "\t", directory,
 
-			# only process if language matches or is not given
-			if speclang != "" and language != speclang:
-				continue
+				# encoding of the outer unit
+				encoding = getencoding(filexml)
 			
-			# output language and directory
-			print
-			print language, "\t", directory,
-
-			# encoding of the outer unit
-			encoding = getencoding(filexml)
-			
-			# version of the outer unit
-			version = getversion(filexml)
+				# version of the outer unit
+				version = getversion(filexml)
 		
-			# number of nested units
-			number = getnested(filexml)
+				# number of nested units
+				number = getnested(filexml)
 		
-			if specnum == 0:
-				count = 0
-			else:
-				count = specnum - 1
-
-			while count == 0 or count < number:
-
-				count = count + 1
-
-				if specnum!= 0 and count > specnum:
-					break
-
-				if count > maxcount:
-					break
-
-				# total count of test cases
-				total_count = total_count + 1
-
-				# part of list of nested unit number in output
-				print count, 
-
-				# save the particular nested unit
-				if number == 0:
-					unitxml = filexml
+				if specnum == 0:
+					count = 0
 				else:
-					unitxml = extract_unit(filexml, count)
+					count = specnum - 1
 
-				# convert the unit in xml to text
-				unittext = srcml2src(unitxml, encoding)
+				while count == 0 or count < number:
 
-				# convert the text to srcML
-				unitsrcml = src2srcML(unittext, encoding, language, directory, getfilename(unitxml))
+					try: 
+
+						count = count + 1
+
+						if specnum!= 0 and count > specnum:
+							break
+
+						if count > maxcount:
+							break
+
+						# total count of test cases
+						total_count = total_count + 1
+
+						# save the particular nested unit
+						if number == 0:
+							unitxml = filexml
+						else:
+							unitxml = extract_unit(filexml, count)
+
+						# convert the unit in xml to text
+						unittext = srcml2src(unitxml, encoding)
+
+						# convert the text to srcML
+						unitsrcml = src2srcML(unittext, encoding, language, directory, getfilename(unitxml))
 			
-				# find the difference
-				error = xmldiff(unitxml, unitsrcml)
-				error_count += error
-				if error == 1:
-					errorlist.append((directory + " " + language, count))
+						# find the difference
+						error = xmldiff(unitxml, unitsrcml)
+						error_count += error
+						if error == 1:
+							errorlist.append((directory + " " + language, count))
+
+						# part of list of nested unit number in output
+						print "\[\033[01;30m\] mapply.py \033[00;30m\]", count
+	
+					except OSError, (errornum, strerror):
+						continue
+
+			except OSError, (errornum, strerror):
+				continue
+
 	ki = False
 except KeyboardInterrupt:
 	ki = True
@@ -286,6 +299,17 @@ else:
 	print "Errors:  " + str(error_count) + " out of " + str(total_count) + " cases"
 	print "Errorlist:"
 	for e in errorlist:
+		f.write(str(e[0]) + " " + str(e[1]) + "\n")
+		print e[0], e[1]
+
+# output tool errors counts
+print
+if len(sperrorlist) == 0:
+	print "No tool errors"
+else:
+	print "Tool errors:  " + str(len(sperrorlist))
+	print "Tool Errorlist:"
+	for e in sperrorlist:
 		f.write(str(e[0]) + " " + str(e[1]) + "\n")
 		print e[0], e[1]
 f.close()
