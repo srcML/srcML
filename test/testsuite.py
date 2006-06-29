@@ -264,15 +264,15 @@ try:
 						# convert the text to srcML
 						unitsrcml = src2srcML(unittext, encoding, language, directory, getfilename(unitxml))
 			
+						# part of list of nested unit number in output
+						print "\033[0;33m" + str(count) + "\033[0m",
+	
 						# find the difference
 						error = xmldiff(unitxml, unitsrcml)
 						error_count += error
 						if error == 1:
 							errorlist.append((directory + " " + language, count))
 
-						# part of list of nested unit number in output
-						print "\[\033[01;30m\] mapply.py \033[00;30m\]", count
-	
 					except OSError, (errornum, strerror):
 						continue
 
