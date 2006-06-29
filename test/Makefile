@@ -134,7 +134,7 @@ BASE_COMMON=comment string variable_names expression decl_simple \
 GEN_BASE=while ifnestcond return function_decl ifblock
 
 # base for C++ generated from original cases
-GEN_BASE_CXX=throw constructor_explicit destructor_virtual function_const struct union function_operator
+GEN_BASE_CXX=throw constructor_explicit destructor_virtual function_const struct union
 
 # basic generated C++ files
 GEN_SEP= $(GEN_BASE) $(GEN_BASE_CXX)
@@ -152,7 +152,7 @@ BASE_C_FAMILY=asm macro cstruct typedef extern main function_pointer decl_struct
 BASE_OO=function_ns decl_ns variable_names_ns
 
 # base for C++ only
-BASE_CXX=friend try namespace template typedef_template constructor destructor throw_base function_throw catch_form class
+BASE_CXX=friend try namespace template typedef_template constructor destructor throw_base function_throw catch_form class function_operator
 
 # base for Java only
 BASE_JAVA=class_java keyword_java interface_java package
