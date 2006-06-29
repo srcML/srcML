@@ -105,6 +105,9 @@ enum Options {
 
   // terminate after this file
   OPTION_TERMINATE = 0x01000000,
+
+  // expression mode
+  OPTION_EXPRESSION = 0x02000000,
 };
 
 #endif

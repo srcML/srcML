@@ -60,6 +60,9 @@ const char* CPP_MARKUP_IF0_FLAG_SHORT = "";
 const char* CPP_TEXTONLY_IF0_FLAG = "--cpp_textonly_if0";
 const char* CPP_TEXTONLY_IF0_FLAG_SHORT = "";
 
+const char* EXPRESSION_MODE_FLAG = "--expression";
+const char* EXPRESSION_MODE_FLAG_SHORT = "-e";
+
 #ifdef LIBXML_ENABLED
 const char* DEFAULT_XML_ENCODING = "UTF-8";
 #else
@@ -521,6 +524,12 @@ int main(int argc, char* argv[]) {
 	// extract parameter
 	given_version = argv[(++curarg)++];
       }
+    }
+
+    // expression mode
+    else if (compare_flags(argv[curarg], EXPRESSION_MODE_FLAG, EXPRESSION_MODE_FLAG_SHORT, position)) {
+      options |= OPTION_EXPRESSION;
+      if (position == original_position) ++curarg;
     }
 
     // reached the end of a multi-short form option
