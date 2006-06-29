@@ -265,6 +265,7 @@ try:
 						result = xmldiff(unitxml, unitsrcml)
 						if result != "":
 							error_count += 1
+							
 							errorlist.append((directory + " " + language, count, result))
 
 							# part of list of nested unit number in output
