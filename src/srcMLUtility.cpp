@@ -547,19 +547,32 @@ void srcMLUtility::outputText(const xmlChar* s, std::ostream& out) {
       break;
 
     case XML_READER_TYPE_TEXT:
+    case XML_READER_TYPE_WHITESPACE:
     case XML_READER_TYPE_SIGNIFICANT_WHITESPACE:
+      {
 
       // output the UTF-8 buffer escaping the characters.  Note that the output encoding
       // is handled by libxml
-      for (unsigned char* p = (unsigned char*) xmlTextReaderConstValue(reader); *p != 0; ++p) {
-	  if (*p == '&')
-	    xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&amp;", 5);
-	  else if (*p == '<')
-	    xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&lt;", 4);
-	  else if (*p == '>')
-	    xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&gt;", 4);
-	  else
-	    xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) p, 1);
+      unsigned char* p = (unsigned char*) xmlTextReaderConstValue(reader);
+      unsigned char* startp = p;
+      for (; *p != 0; ++p) {
+	if (*p == '&') {
+	  xmlTextWriterWriteRawLen(writer, BAD_CAST startp, p - startp);
+	  xmlTextWriterWriteRawLen(writer, BAD_CAST "&amp;", 5);
+	  startp = p + 1;
+	} else if (*p == '<') {
+	  xmlTextWriterWriteRawLen(writer, BAD_CAST startp, p - startp);
+	  xmlTextWriterWriteRawLen(writer, BAD_CAST "&lt;", 4);
+	  startp = p + 1;
+	} else if (*p == '>') {
+	  xmlTextWriterWriteRawLen(writer, BAD_CAST startp, p - startp);
+	  xmlTextWriterWriteRawLen(writer, BAD_CAST "&gt;", 4);
+	  startp = p + 1;
+	}
+      }
+
+      xmlTextWriterWriteRawLen(writer, BAD_CAST startp, p - startp);
+
       }
       break;
 
