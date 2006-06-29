@@ -59,11 +59,9 @@ def srcml2src(srctext, encoding):
 def xmldiff(xml_filename1, xml_filename2):
 
 	if xml_filename1 != xml_filename2:
-		print sys.stdout.writelines(list(
-			difflib.unified_diff(xml_filename1.splitlines(1), xml_filename2.splitlines(1))))
-		return 1
+		return list(difflib.unified_diff(xml_filename1.splitlines(1), xml_filename2.splitlines(1)))
 	else:
-		return 0
+		return ""
 
 # find differences of two files
 def src2srcML(text_file, encoding, language, directory, filename):
@@ -263,16 +261,18 @@ try:
 
 						# convert the text to srcML
 						unitsrcml = src2srcML(unittext, encoding, language, directory, getfilename(unitxml))
-			
-						# part of list of nested unit number in output
-						print "\033[0;33m" + str(count) + "\033[0m",
-	
 						# find the difference
-						error = xmldiff(unitxml, unitsrcml)
-						error_count += error
-						if error == 1:
-							errorlist.append((directory + " " + language, count))
+						result = xmldiff(unitxml, unitsrcml)
+						if result != "":
+							error_count += 1
+							errorlist.append((directory + " " + language, count, result))
 
+							# part of list of nested unit number in output
+							print "\033[0;31m" + str(count) + "\033[0m",
+						else:
+							# part of list of nested unit number in output
+							print "\033[0;33m" + str(count) + "\033[0m",
+	
 					except OSError, (errornum, strerror):
 						continue
 
@@ -296,11 +296,11 @@ f = open(error_filename, "w")
 if error_count == 0:
 	print "No errors out of " + str(total_count) + " cases" 
 else:
-	print "Errors:  " + str(error_count) + " out of " + str(total_count) + " cases"
+	print "Errors:  " + str(error_count) + " out of " + str(total_count) + " cases", "\n"
 	print "Errorlist:"
 	for e in errorlist:
-		f.write(str(e[0]) + " " + str(e[1]) + "\n")
-		print e[0], e[1]
+		f.write(str(e[0]) + " " + str(e[1]) + "\n" + "".join(e[2][3:]))
+		print e[0], e[1], "\n", "".join(e[2][3:])
 
 # output tool errors counts
 print
