@@ -270,7 +270,7 @@ try:
 
 							# part of list of nested unit number in output
 							print "\033[0;31m" + str(count) + "\033[0m",
-						else:
+						elif number != 0:
 							# part of list of nested unit number in output
 							print "\033[0;33m" + str(count) + "\033[0m",
 	
