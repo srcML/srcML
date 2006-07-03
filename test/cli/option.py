@@ -1,7 +1,6 @@
 DEBUG_FLAG="--debug"
 DEBUG_FLAG_SHORT="-g"
-EXTENDED_FLAG="--extension"
-EXTENDED_FLAG_SHORT="-t"
+LITERAL_FLAG="--literal"
 COMPRESSED_FLAG="--compressed"
 COMPRESSED_FLAG_SHORT="-z"
 INTERACTIVE_FLAG="--interactive"

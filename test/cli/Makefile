@@ -10,7 +10,7 @@ option.py : ${OPTION_SRC}
 	src2srcml ${OPTION_SRC} - | xsltproc extract_options.xsl - > option.py
 
 status.py : ${OPTION_SRC}
-	src2srcml --extension ${STATUS_SRC} | xsltproc extract_return_status.xsl - > status.py
+	src2srcml --literal ${STATUS_SRC} | xsltproc extract_return_status.xsl - > status.py
 
 clean :
 	rm -f option.py
