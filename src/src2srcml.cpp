@@ -114,17 +114,17 @@ void output_help(const char* name) {
 	      << "set the filename attribute to FILE\n"
 	      << "  " << SRCVERSION_FLAG_SHORT  << ", " << setw(COL) <<  SRCVERSION_FLAG_FULL
 	      << "set the version attribute to VER\n"
+	      << "  " << ENCODING_FLAG_SHORT    << ", " << setw(COL) <<  ENCODING_FLAG_FULL
+	      << "set the output XML encoding to ENC (default:  "
+	      << DEFAULT_XML_ENCODING << ") \n"
 	      << '\n'
 #ifdef LIBXML_ENABLED
 	      << "  " << TEXTENCODING_FLAG_SHORT        << ", " << setw(COL) <<  TEXTENCODING_FLAG_FULL
 	      << "set the input source encoding to ENC (default:  " << DEFAULT_TEXT_ENCODING << ") \n"
 	      << "  " << SKIP_ENCODING_FLAG_SHORT        << ", " << setw(COL) <<  SKIP_ENCODING_FLAG
 	      << "skip any text encoding transformation" << "\n"
-#endif
-	      << "  " << ENCODING_FLAG_SHORT    << ", " << setw(COL) <<  ENCODING_FLAG_FULL
-	      << "set the output XML encoding to ENC (default:  "
-	      << DEFAULT_XML_ENCODING << ") \n"
 	      << '\n'
+#endif
 	      << "  " << NESTED_FLAG_SHORT      << ", " << setw(COL) <<  NESTED_FLAG
 	      << "store all input source files in one compound srcML document\n"
 	      << "  " << FILELIST_FLAG_SHORT    << ", " << setw(COL) <<  FILELIST_FLAG
