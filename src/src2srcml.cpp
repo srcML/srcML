@@ -39,8 +39,8 @@ const char* NAME = "src2srcml";
 const char* DEBUG_FLAG = "--debug";
 const char* DEBUG_FLAG_SHORT = "-g";
 
-const char* EXTENDED_FLAG = "--extended";
-const char* EXTENDED_FLAG_SHORT = "-t";
+const char* EXTENSION_FLAG = "--extended";
+const char* EXTENSION_FLAG_SHORT = "-t";
 
 const char* COMPRESSED_FLAG = "--compressed";
 const char* COMPRESSED_FLAG_SHORT = "-z";
@@ -241,8 +241,8 @@ int main(int argc, char* argv[]) {
     }
 
     // extended mode
-    else if (compare_flags(argv[curarg], EXTENDED_FLAG, EXTENDED_FLAG_SHORT, position)) {
-      options |= OPTION_EXTENDED;
+    else if (compare_flags(argv[curarg], EXTENSION_FLAG, EXTENSION_FLAG_SHORT, position)) {
+      options |= OPTION_EXTENSION;
       if (position == original_position) ++curarg;
     }
 
