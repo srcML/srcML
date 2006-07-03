@@ -187,6 +187,17 @@ void output_version(const char* name) {
 }
 
 int options = OPTION_CPP_MARKUP_ELSE;
+const char* src_encoding = DEFAULT_TEXT_ENCODING;
+int language = DEFAULT_LANGUAGE;
+const char* xml_encoding = DEFAULT_XML_ENCODING;
+const char* given_directory = "";
+const char* given_filename = "";
+const char* given_version = "";
+bool cpp_else = false;
+bool cpp_if0 = false;
+
+// setup options and collect info from arguments
+int process_args(int argc, char* argv[]);
 
 extern "C" void verbose_handler(int);
 
@@ -201,18 +212,227 @@ int main(int argc, char* argv[]) {
 
   int exit_status = EXIT_SUCCESS;
 
-  const char* src_encoding = DEFAULT_TEXT_ENCODING;
-  int language = DEFAULT_LANGUAGE;
-  const char* xml_encoding = DEFAULT_XML_ENCODING;
-  const char* given_directory = "";
-  const char* given_filename = "";
-  const char* given_version = "";
+  // process command-line arguments
+  int curarg = process_args(argc, argv);
+
+  // help flag trumps all other options
+  if (isoption(options, OPTION_HELP)) {
+    output_help(NAME);
+    exit(STATUS_SUCCESS);
+  }
+
+  // version flag trumps all other options except for help
+  if (isoption(options, OPTION_PVERSION)) {
+    output_version(NAME);
+    exit(STATUS_SUCCESS);
+  }
+
+  /* Special checks for illegal combinations */
+
+  // skip encoding and specifying encoding
+  if (isoption(options, OPTION_SKIP_ENCODING) && isoption(options, OPTION_TEXT_ENCODING)) {
+
+    std::cerr << NAME << ": Options for skipping encoding and specifying source encoding are incompatible.\n";
+    exit(STATUS_INVALID_OPTION_COMBINATION);
+  }
+
+  // eat optional option separator
+  if (argc > (curarg) && strcmp(argv[curarg], OPTION_SEPARATOR) == 0)
+      ++curarg;
+
+  // first command line parameter after options are the input filenames
+  int input_arg_start = 0;
+  int input_arg_end = -1;
+  int input_arg_count = 0;
+  if ((argc - (curarg - 1)) > 1) {
+
+    // mark first input filename 
+    input_arg_start = curarg;
+
+    // mark last input filename assuming output srcml filename is last
+    if ((argc - (curarg - 1)) > 2)
+      input_arg_end = argc - 2;
+    else
+      input_arg_end = curarg;
+
+    // calculate the total number of input files
+    input_arg_count = input_arg_end - input_arg_start + 1;
+
+    // if more than one input filename assume nested
+    if (input_arg_count > 1)
+      options |= OPTION_NESTED;
+
+    // update the argument count with the input filenames
+    curarg += input_arg_count;
+  }
+
+  // last command line parameter is output srcml filename
+  char* srcml_filename = "-";
+  if ((argc - (curarg - 1)) > 1) {
+    srcml_filename = argv[curarg];
+
+    ++curarg;
+  }
+
+  // verify that the output filename is not the same as any of the input filenames
+  struct stat outstat;
+  stat(srcml_filename, &outstat);
+  for (int i = input_arg_start; i <= input_arg_end; ++i) {
+
+    struct stat instat;
+    stat(argv[i], &instat);
+    if (instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
+	std::cerr << NAME << ": Input file '" << argv[i] << "'"
+		  << " is the same as the output file '" << srcml_filename << "'\n";
+	exit(STATUS_INPUTFILE_PROBLEM);
+    }
+  }
+
+  try {
+
+  // translator from input to output using determined language
+  srcMLTranslator translator(language, src_encoding, xml_encoding, srcml_filename, options, given_directory, given_filename, given_version);
+
+  // output source encoding
+  if (isoption(options, OPTION_VERBOSE)) {
+    std::cerr << "Source encoding:  " << src_encoding << '\n';
+    std::cerr << "XML encoding:  " << xml_encoding << '\n';
+  }
+
+  // translate input filenames from list in file
+  if (isoption(options, OPTION_FILELIST)) {
+
+    // assume file with list of filenames is from standard input
+    std::istream* pinfilelist = &std::cin;
+
+    // open the input file (if not standard input) that contains the list of filenames
+    std::ifstream infile;
+    if (input_arg_count > 0) {
+      infile.open(argv[input_arg_start]);
+      pinfilelist = &infile;
+    }
+
+    // translate all the filenames listed in the named file
+    std::string line;
+    int count = 0;    // keep count for verbose mode
+    while (getline(*pinfilelist, line)) {
+
+      // setup so we can gracefully stop after a file at a time
+      pstd::signal(SIGINT, terminate_handler);
+      
+      // extract the filename from the line
+      std::string infilename = line.substr(0, line.find_first_of(' '));
+
+      // skip blank lines or comment lines
+      if (infilename == "" || infilename[0] == FILELIST_COMMENT)
+	continue;
+
+      // another file
+      ++count;
+
+      // in verbose mode output the currently processed filename
+      if (isoption(options, OPTION_VERBOSE)) {
+	std::cerr << count << '\t' << infilename;
+      }
+
+      // translate the file listed in the input file using the directory and filename extracted from the path
+      const char* path = infilename.c_str();
+      try {
+	translator.translate(path, get_directory(path).c_str(), get_filename(path).c_str(), given_version);
+
+      } catch (FileError) {
+
+	if (isoption(options, OPTION_VERBOSE))
+	  std::cerr << "\t\terror: file \'" << path << "\' does not exist.";
+	else
+	  std::cerr << NAME << " error: file \'" << path << "\' does not exist." << "\n";
+      }
+
+      if (isoption(options, OPTION_VERBOSE)) {
+	std::cerr << '\n';
+      }
+      // compound documents are interrupted gracefully
+      if (isoption(options, OPTION_TERMINATE))
+	return STATUS_INPUT_LIST_TERMINATED;
+    }
+
+  // translate from standard input
+  } else if (input_arg_count == 0 || strcmp(argv[input_arg_start], STDIN) == 0) {
+
+    // translate from standard input using any directory, filename and version given on the command line
+    translator.translate(STDIN, given_directory, given_filename, given_version);
+
+  // translate single input filename from command line
+  }  else if (input_arg_count == 1) {
+
+    // translate from path given on command line using directory given on the command line or extracted
+    // from full path
+    const char* path = argv[input_arg_start];
+
+    std::string directory = isoption(options, OPTION_DIRECTORY) ? given_directory : get_directory(path);
+    std::string filename  = isoption(options, OPTION_FILENAME)  ? given_filename  : get_filename(path);
+
+    try {
+      translator.translate(path, directory.c_str(), filename.c_str(), given_version);
+
+    } catch (FileError) {
+
+      std::cerr << NAME << " error: file \'" << path << "\' does not exist." << "\n";
+      exit(STATUS_INPUTFILE_PROBLEM);
+    }
+
+  // translate multiple input filenames on command line
+  } else {
+
+    int count = 0;    // keep count for verbose mode
+
+    // translate in batch the input files on the command line extracting the directory and filename attributes
+    // from the full path
+    for (int i = input_arg_start; i <= input_arg_end; ++i) {
+
+      // setup so we can gracefully stop after a file at a time
+      pstd::signal(SIGINT, terminate_handler);
+      
+      const char* path = argv[i];
+      std::string sdirectory = get_directory(path);
+      std::string sfilename = get_filename(path);
+
+      // another file
+      ++count;
+
+      // in verbose mode output the currently processed filename
+      if (isoption(options, OPTION_VERBOSE)) {
+	std::cerr << count << '\t' << path;
+      }
+      try {
+	translator.translate(path, sdirectory.c_str(), sfilename.c_str());
+      } catch (FileError) {
+	std::cerr << NAME << " error: file \'" << path << "\' does not exist." << "\n";
+      }
+
+      if (isoption(options, OPTION_VERBOSE)) {
+	std::cerr << '\n';
+      }
+
+      // compound documents are interrupted gracefully
+      if (isoption(options, OPTION_TERMINATE))
+	return STATUS_INPUT_LIST_TERMINATED;
+    }
+  }
+  } catch (srcEncodingException) {
+    std::cerr << "Translation encoding problem" << '\n';
+    exit(STATUS_UNKNOWN_ENCODING);
+  }
+
+  return exit_status;
+}
+
+// setup options and collect info from arguments
+int process_args(int argc, char* argv[]) {
 
   // process all command line options
   int position = 0;
   int curarg = 1;  // current argument
-  bool cpp_else = false;
-  bool cpp_if0 = false;
   while (argc > curarg && strlen(argv[curarg]) > 1 && argv[curarg][0] == '-' &&
 	 strcmp(argv[curarg], OPTION_SEPARATOR) != 0) {
 
@@ -548,216 +768,7 @@ int main(int argc, char* argv[]) {
     }
   }
 
-  // help flag trumps all other options
-  if (isoption(options, OPTION_HELP)) {
-    output_help(NAME);
-    exit(STATUS_SUCCESS);
-  }
-
-  // version flag trumps all other options except for help
-  if (isoption(options, OPTION_PVERSION)) {
-    output_version(NAME);
-    exit(STATUS_SUCCESS);
-  }
-
-  /* Special checks for illegal combinations */
-
-  // skip encoding and specifying encoding
-  if (isoption(options, OPTION_SKIP_ENCODING) && isoption(options, OPTION_TEXT_ENCODING)) {
-
-    std::cerr << NAME << ": Options for skipping encoding and specifying source encoding are incompatible.\n";
-    exit(STATUS_INVALID_OPTION_COMBINATION);
-  }
-
-  // eat optional option separator
-  if (argc > (curarg) && strcmp(argv[curarg], OPTION_SEPARATOR) == 0)
-      ++curarg;
-
-  // first command line parameter after options are the input filenames
-  int input_arg_start = 0;
-  int input_arg_end = -1;
-  int input_arg_count = 0;
-  if ((argc - (curarg - 1)) > 1) {
-
-    // mark first input filename 
-    input_arg_start = curarg;
-
-    // mark last input filename assuming output srcml filename is last
-    if ((argc - (curarg - 1)) > 2)
-      input_arg_end = argc - 2;
-    else
-      input_arg_end = curarg;
-
-    // calculate the total number of input files
-    input_arg_count = input_arg_end - input_arg_start + 1;
-
-    // if more than one input filename assume nested
-    if (input_arg_count > 1)
-      options |= OPTION_NESTED;
-
-    // update the argument count with the input filenames
-    curarg += input_arg_count;
-  }
-
-  // last command line parameter is output srcml filename
-  char* srcml_filename = "-";
-  if ((argc - (curarg - 1)) > 1) {
-    srcml_filename = argv[curarg];
-
-    ++curarg;
-  }
-
-  // verify that the output filename is not the same as any of the input filenames
-  struct stat outstat;
-  stat(srcml_filename, &outstat);
-  for (int i = input_arg_start; i <= input_arg_end; ++i) {
-
-    struct stat instat;
-    stat(argv[i], &instat);
-    if (instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
-	std::cerr << NAME << ": Input file '" << argv[i] << "'"
-		  << " is the same as the output file '" << srcml_filename << "'\n";
-	exit(STATUS_INPUTFILE_PROBLEM);
-    }
-  }
-
-  try {
-
-  // translator from input to output using determined language
-  srcMLTranslator translator(language, src_encoding, xml_encoding, srcml_filename, options, given_directory, given_filename, given_version);
-
-  // output source encoding
-  if (isoption(options, OPTION_VERBOSE)) {
-    std::cerr << "Source encoding:  " << src_encoding << '\n';
-    std::cerr << "XML encoding:  " << xml_encoding << '\n';
-  }
-
-  // translate input filenames from list in file
-  if (isoption(options, OPTION_FILELIST)) {
-
-    // assume file with list of filenames is from standard input
-    std::istream* pinfilelist = &std::cin;
-
-    // open the input file (if not standard input) that contains the list of filenames
-    std::ifstream infile;
-    if (input_arg_count > 0) {
-      infile.open(argv[input_arg_start]);
-      pinfilelist = &infile;
-    }
-
-    // translate all the filenames listed in the named file
-    std::string line;
-    int count = 0;    // keep count for verbose mode
-    while (getline(*pinfilelist, line)) {
-
-      // setup so we can gracefully stop after a file at a time
-      pstd::signal(SIGINT, terminate_handler);
-      
-      // extract the filename from the line
-      std::string infilename = line.substr(0, line.find_first_of(' '));
-
-      // skip blank lines or comment lines
-      if (infilename == "" || infilename[0] == FILELIST_COMMENT)
-	continue;
-
-      // another file
-      ++count;
-
-      // in verbose mode output the currently processed filename
-      if (isoption(options, OPTION_VERBOSE)) {
-	std::cerr << count << '\t' << infilename;
-      }
-
-      // translate the file listed in the input file using the directory and filename extracted from the path
-      const char* path = infilename.c_str();
-      try {
-	translator.translate(path, get_directory(path).c_str(), get_filename(path).c_str(), given_version);
-
-      } catch (FileError) {
-
-	if (isoption(options, OPTION_VERBOSE))
-	  std::cerr << "\t\terror: file \'" << path << "\' does not exist.";
-	else
-	  std::cerr << NAME << " error: file \'" << path << "\' does not exist." << "\n";
-      }
-
-      if (isoption(options, OPTION_VERBOSE)) {
-	std::cerr << '\n';
-      }
-      // compound documents are interrupted gracefully
-      if (isoption(options, OPTION_TERMINATE))
-	return STATUS_INPUT_LIST_TERMINATED;
-    }
-
-  // translate from standard input
-  } else if (input_arg_count == 0 || strcmp(argv[input_arg_start], STDIN) == 0) {
-
-    // translate from standard input using any directory, filename and version given on the command line
-    translator.translate(STDIN, given_directory, given_filename, given_version);
-
-  // translate single input filename from command line
-  }  else if (input_arg_count == 1) {
-
-    // translate from path given on command line using directory given on the command line or extracted
-    // from full path
-    const char* path = argv[input_arg_start];
-
-    std::string directory = isoption(options, OPTION_DIRECTORY) ? given_directory : get_directory(path);
-    std::string filename  = isoption(options, OPTION_FILENAME)  ? given_filename  : get_filename(path);
-
-    try {
-      translator.translate(path, directory.c_str(), filename.c_str(), given_version);
-
-    } catch (FileError) {
-
-      std::cerr << NAME << " error: file \'" << path << "\' does not exist." << "\n";
-      exit(STATUS_INPUTFILE_PROBLEM);
-    }
-
-  // translate multiple input filenames on command line
-  } else {
-
-    int count = 0;    // keep count for verbose mode
-
-    // translate in batch the input files on the command line extracting the directory and filename attributes
-    // from the full path
-    for (int i = input_arg_start; i <= input_arg_end; ++i) {
-
-      // setup so we can gracefully stop after a file at a time
-      pstd::signal(SIGINT, terminate_handler);
-      
-      const char* path = argv[i];
-      std::string sdirectory = get_directory(path);
-      std::string sfilename = get_filename(path);
-
-      // another file
-      ++count;
-
-      // in verbose mode output the currently processed filename
-      if (isoption(options, OPTION_VERBOSE)) {
-	std::cerr << count << '\t' << path;
-      }
-      try {
-	translator.translate(path, sdirectory.c_str(), sfilename.c_str());
-      } catch (FileError) {
-	std::cerr << NAME << " error: file \'" << path << "\' does not exist." << "\n";
-      }
-
-      if (isoption(options, OPTION_VERBOSE)) {
-	std::cerr << '\n';
-      }
-
-      // compound documents are interrupted gracefully
-      if (isoption(options, OPTION_TERMINATE))
-	return STATUS_INPUT_LIST_TERMINATED;
-    }
-  }
-  } catch (srcEncodingException) {
-    std::cerr << "Translation encoding problem" << '\n';
-    exit(STATUS_UNKNOWN_ENCODING);
-  }
-
-  return exit_status;
+  return curarg;
 }
 
 // filename part of path
