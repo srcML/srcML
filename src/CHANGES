@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Short flag for --extract-all in srcml2src has been changed from -e to -a.
+
 	New status 16 for prematurely terminated input lists.
 
 	For multiple input files, the first SIGINT signal lets the current file finish.

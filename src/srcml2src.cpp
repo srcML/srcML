@@ -36,7 +36,7 @@
 const char* NAME = "srcml2src";
 
 const char* EXPAND_FLAG = "--extract-all";
-const char* EXPAND_FLAG_SHORT = "-e";
+const char* EXPAND_FLAG_SHORT = "-a";
 
 const char* UNIT_FLAG = "--unit";
 const char* UNIT_FLAG_SHORT = "-U";
