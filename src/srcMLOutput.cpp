@@ -64,7 +64,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   // fill the elements
   fillElementNames();
 
-  if (isoption(OPTION_EXTENDED)) {
+  if (isoption(OPTION_LITERAL)) {
     // literal values
     ElementNames[SSTRING] = "literal";
     ElementNames[SCHAR] = "literal";

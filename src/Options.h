@@ -37,8 +37,8 @@ enum Options {
   // unit is nested a root unit
   OPTION_NESTED      = 0x2,
 
-  // extensions
-  OPTION_EXTENSION   = 0x4,
+  // markup literal values
+  OPTION_LITERAL     = 0x4,
 
   // output is compressed (gzip)
   OPTION_COMPRESSED  = 0x8,

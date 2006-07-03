@@ -39,8 +39,7 @@ const char* NAME = "src2srcml";
 const char* DEBUG_FLAG = "--debug";
 const char* DEBUG_FLAG_SHORT = "-g";
 
-const char* EXTENSION_FLAG = "--extended";
-const char* EXTENSION_FLAG_SHORT = "-t";
+const char* LITERAL_FLAG = "--literal";
 
 const char* COMPRESSED_FLAG = "--compressed";
 const char* COMPRESSED_FLAG_SHORT = "-z";
@@ -129,6 +128,9 @@ void output_help(const char* name) {
 	      << "store all input source files in one compound srcML document\n"
 	      << "  " << FILELIST_FLAG_SHORT    << ", " << setw(COL) <<  FILELIST_FLAG
 	      << "treat input file as a list of source files\n"
+              << '\n'
+	      << "  " << LITERAL_FLAG   << "  " << /* setw(COL) <<*/ "             "
+	      << "markup literal values (number, character, string)\n"
               << '\n'
 #ifdef LIBXML_ENABLED
 	      << "  " << COMPRESSED_FLAG_SHORT  << ", " << setw(COL) <<  COMPRESSED_FLAG
@@ -241,8 +243,8 @@ int main(int argc, char* argv[]) {
     }
 
     // extended mode
-    else if (compare_flags(argv[curarg], EXTENSION_FLAG, EXTENSION_FLAG_SHORT, position)) {
-      options |= OPTION_EXTENSION;
+    else if (compare_flags(argv[curarg], LITERAL_FLAG, "", position)) {
+      options |= OPTION_LITERAL;
       if (position == original_position) ++curarg;
     }
 

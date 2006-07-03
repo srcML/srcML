@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Change hidden --extended option to public --literal option.
+
 	Move --xml-encoding to help section dealing with output srcML settings.
 
 	Short flag for --extract-all in srcml2src has been changed from -e to -a.
