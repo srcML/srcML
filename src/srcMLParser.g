@@ -217,6 +217,7 @@ tokens {
     STYPE;
 	SCONDITION;
 	SBLOCK;
+    SINDEX;
 
     // statements
 	STYPEDEF;
@@ -2380,9 +2381,15 @@ variable_identifier_grammar[bool& iscomplex] { LocalMode lm; } :
 /*
    Grammar of arrays with variable identifiers
 */
-variable_identifier_array_grammar[bool& iscomplex] {} :
+variable_identifier_array_grammar[bool& iscomplex] { LocalMode lm; } :
 
       (options { greedy = true; } :
+        {
+            // start a mode to end at right bracket with expressions inside
+            startNewMode(MODE_LOCAL);
+
+            startElement(SINDEX);
+        }
         LBRACKET
         {
             // start a mode to end at right bracket with expressions inside

@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Generate internal tokens for indexes.
+
 	Change hidden --extended option to public --literal option.
 
 	Move --xml-encoding to help section dealing with output srcML settings.
