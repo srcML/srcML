@@ -354,7 +354,7 @@
   <para>
     Libxml2 directly supports many encodings beyond UTF-8, UTF-16, and ISO-8859-1 through iconv.
     However, the BOM (Byte Order Mark) immediately before the XML declaration may not be processed
-    correctly by srcml2src by other libxml2-based tools (e.g., xmllint).
+    correctly by srcml2src and by other libxml2-based tools (e.g., xmllint).
     Use the LE or BE version of the encoding, e.g., UTF-32BE, UTF-32LE, instead.
   </para>
 </refsect1>
