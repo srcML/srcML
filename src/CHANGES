@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Change cpp markup to text instead of textonly.
+
 	Generate internal tokens for indexes.
 
 	Change hidden --extended option to public --literal option.

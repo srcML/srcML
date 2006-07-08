@@ -50,13 +50,13 @@ const char* INTERACTIVE_FLAG_SHORT = "-c";
 const char* CPP_MARKUP_ELSE_FLAG = "--cpp_markup_else";
 const char* CPP_MARKUP_ELSE_FLAG_SHORT = "";
 
-const char* CPP_TEXTONLY_ELSE_FLAG = "--cpp_textonly_else";
+const char* CPP_TEXTONLY_ELSE_FLAG = "--cpp_text_else";
 const char* CPP_TEXTONLY_ELSE_FLAG_SHORT = "";
 
 const char* CPP_MARKUP_IF0_FLAG = "--cpp_markup_if0";
 const char* CPP_MARKUP_IF0_FLAG_SHORT = "";
 
-const char* CPP_TEXTONLY_IF0_FLAG = "--cpp_textonly_if0";
+const char* CPP_TEXTONLY_IF0_FLAG = "--cpp_text_if0";
 const char* CPP_TEXTONLY_IF0_FLAG_SHORT = "";
 
 const char* EXPRESSION_MODE_FLAG = "--expression";
