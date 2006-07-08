@@ -32,7 +32,7 @@ option.dtd : ${OPTION_SRC}
 	date >> option.dtd
 	echo -n "\" >" >> option.dtd
 	src2srcml ${OPTION_SRC} - | xsltproc extract_options.xsl - >> option.dtd
-	src2srcml --extended ${OPTION_SRC} - | xsltproc extract_return_status.xsl - >> option.dtd
+	src2srcml --literal ${OPTION_SRC} - | xsltproc extract_return_status.xsl - >> option.dtd
 
 gzip : src2srcml.1.gz srcml2src.1.gz
 
