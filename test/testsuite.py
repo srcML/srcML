@@ -29,9 +29,11 @@ def safe_communicate(command, inp):
 	try:
 		return subprocess.Popen(command, stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(inp)[0]
 	except OSError, (errornum, strerror):
-		sperrorlist.append((command, xml_filename, errornum, strerror))
-		raise
-		return ""
+		try:
+			return subprocess.Popen(command, stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(inp)[0]
+		except OSError, (errornum, strerror):
+			sperrorlist.append((command, xml_filename, errornum, strerror))
+			raise
 
 # extracts a particular unit from a srcML file
 def extract_unit(src, count):
@@ -311,8 +313,8 @@ else:
 	print "Tool errors:  " + str(len(sperrorlist))
 	print "Tool Errorlist:"
 	for e in sperrorlist:
-		f.write(str(e[0]) + " " + str(e[1]) + "\n")
-		print e[0], e[1]
+		f.write(str(e[0]) + " " + str(e[1]) + " " + str(e[2]) + " " + str(e[3]) + "\n")
+		print e[0], e[1], e[2], e[3]
 f.close()
 
 
