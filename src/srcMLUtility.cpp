@@ -558,15 +558,15 @@ void srcMLUtility::outputText(const xmlChar* s, std::ostream& out) {
       for (; *p != 0; ++p) {
 	if (*p == '&') {
 	  xmlTextWriterWriteRawLen(writer, BAD_CAST startp, p - startp);
-	  xmlTextWriterWriteRawLen(writer, BAD_CAST "&amp;", 5);
+	  xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&amp;", 5);
 	  startp = p + 1;
 	} else if (*p == '<') {
 	  xmlTextWriterWriteRawLen(writer, BAD_CAST startp, p - startp);
-	  xmlTextWriterWriteRawLen(writer, BAD_CAST "&lt;", 4);
+	  xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&lt;", 4);
 	  startp = p + 1;
 	} else if (*p == '>') {
 	  xmlTextWriterWriteRawLen(writer, BAD_CAST startp, p - startp);
-	  xmlTextWriterWriteRawLen(writer, BAD_CAST "&gt;", 4);
+	  xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&gt;", 4);
 	  startp = p + 1;
 	}
       }
