@@ -147,12 +147,12 @@ void output_help(const char* name) {
               << '\n'
 	      << "  " << CPP_MARKUP_ELSE_FLAG   << "  " << /* setw(COL) <<*/ "     "
 	      << "markup cpp #else regions (default)\n"
-	      << "  " << CPP_TEXTONLY_ELSE_FLAG     << "  " << /* setw(COL) <<*/ "   "
+	      << "  " << CPP_TEXTONLY_ELSE_FLAG     << "  " << /* setw(COL) <<*/ "       "
 	      << "leave cpp #else regions as text\n"
               << '\n'
 	      << "  " << CPP_MARKUP_IF0_FLAG   << "  " << /* setw(COL) <<*/ "      "
 	      << "markup cpp #if 0 regions\n"
-	      << "  " << CPP_TEXTONLY_IF0_FLAG     << "  " << /* setw(COL) <<*/ "    "
+	      << "  " << CPP_TEXTONLY_IF0_FLAG     << "  " << /* setw(COL) <<*/ "        "
 	      << "leave cpp #if 0 regions as text (default)\n"
 	      << '\n'
 	      << "Examples:  " << '\n'

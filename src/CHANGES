@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Fix help formatting error.
+
 	Change cpp markup to text instead of textonly.
 
 	Generate internal tokens for indexes.
