@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	SIGINT handling for unit count.
+
 	Fix help formatting error.
 
 	Change cpp markup to text instead of textonly.

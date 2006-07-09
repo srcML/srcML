@@ -418,7 +418,7 @@ int main(int argc, char* argv[]) {
 	std::cout << l << '\n';
 
     } else if (isoption(options, OPTION_DIRECTORY) && isoption(options, OPTION_UNIT)) {
-
+      
       try {
 
 	bool nonnull;
@@ -521,7 +521,23 @@ int main(int argc, char* argv[]) {
 
     } else if (isoption(options, OPTION_NESTED)) {
 
-      std::cout << su.unit_count() << '\n';
+      try {
+
+	// gracefully finish current file in compound document mode
+	pstd::signal(SIGINT, terminate_handler);
+
+	std::cout << su.unit_count() << '\n';
+
+	// if we terminated early, output the correct status
+        if (isoption(options, OPTION_TERMINATE))
+
+	  exit_status = STATUS_INPUT_LIST_TERMINATED;
+
+      } catch (LibXMLError error) {
+
+	if (error.getErrorNum() != 0)
+	  throw error;
+      }
 
     } else if (isoption(options, OPTION_XML_ENCODING)) {
 

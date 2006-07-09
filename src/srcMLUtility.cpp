@@ -167,6 +167,10 @@ int srcMLUtility::unit_count() {
 
       // skip past this unit
       xmlTextReaderNext(reader);
+
+      // stop after this file (and end gracefully) with ctrl-c
+      if (isoption(options, OPTION_TERMINATE))
+	break;
     }
   }
 
