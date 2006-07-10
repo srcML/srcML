@@ -11,6 +11,8 @@ import subprocess
 import option
 import status
 
+error_count = 0;
+
 def check(command, input, output):
 
 	print os.path.basename(command[0]), ' '.join(command[1:])
@@ -22,6 +24,7 @@ def check(command, input, output):
 	
 def validate(org, gen):
 	if org != gen:
+		error_count = error_count + 1
 		print "ERROR"
 		print "org|" + str(org) + "|"
 		print "gen|" + str(gen) + "|"
@@ -32,6 +35,7 @@ def execute(command, input):
 	last_line = p.communicate(input)[0]
 
 	if p.returncode != 0:
+		error_count = error_count + 1
 		print "Status error:  ", p.returncode, command
 
 	return last_line
@@ -486,6 +490,10 @@ check([srcmltranslator, option.CPP_MARKUP_IF0_FLAG], cpp_if0, cpp_marked_srcml)
 validate(getreturn([srcmltranslator, option.CPP_MARKUP_IF0_FLAG, option.CPP_TEXTONLY_IF0_FLAG, "foobar"], None), status.STATUS_INVALID_OPTION_COMBINATION)
 validate(getreturn([srcmltranslator, option.CPP_TEXTONLY_IF0_FLAG, option.CPP_MARKUP_IF0_FLAG, "foobar"], None), status.STATUS_INVALID_OPTION_COMBINATION)
 
+# footer
+print
+print "Error count: ", error_count
+print
 print src2srcmlversion()
 print srcml2srcversion()
 
