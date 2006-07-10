@@ -410,10 +410,10 @@ int main(int argc, char* argv[]) {
     }
 
     // process the option
-    if (isoption(options, OPTION_FILENAME)) {
+    if (isoption(options, OPTION_LANGUAGE)) {
 
       bool nonnull;
-      std::string l = su.attribute("filename", nonnull);
+      std::string l = su.attribute("language", nonnull);
       if (nonnull)
 	std::cout << l << '\n';
 
@@ -424,12 +424,23 @@ int main(int argc, char* argv[]) {
 	if (nonnull)
 	  std::cout << l << '\n';
 
-    } else if (isoption(options, OPTION_LANGUAGE)) {
+    } else if (isoption(options, OPTION_FILENAME)) {
 
       bool nonnull;
-      std::string l = su.attribute("language", nonnull);
+      std::string l = su.attribute("filename", nonnull);
       if (nonnull)
 	std::cout << l << '\n';
+
+    } else if (isoption(options, OPTION_VERSION)) {
+
+      bool nonnull;
+      std::string l = su.attribute("version", nonnull);
+      if (nonnull)
+	std::cout << l << '\n';
+
+    } else if (isoption(options, OPTION_XML_ENCODING)) {
+
+      std::cout << su.getencoding() << '\n';
 
     } else if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {
 
@@ -457,13 +468,6 @@ int main(int argc, char* argv[]) {
 	  std::cout << "Nested: " << su.unit_count() << '\n';
       }
 
-    } else if (isoption(options, OPTION_VERSION)) {
-
-      bool nonnull;
-      std::string l = su.attribute("version", nonnull);
-      if (nonnull)
-	std::cout << l << '\n';
-
     } else if (isoption(options, OPTION_NESTED)) {
 
       try {
@@ -483,10 +487,6 @@ int main(int argc, char* argv[]) {
 	if (error.getErrorNum() != 0)
 	  throw error;
       }
-
-    } else if (isoption(options, OPTION_XML_ENCODING)) {
-
-      std::cout << su.getencoding() << '\n';
 
     } else if (isoption(options, OPTION_UNIT) && isoption(options, OPTION_XML)) {
 
