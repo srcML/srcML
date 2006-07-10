@@ -24,7 +24,7 @@ def check(command, input, output):
 	
 def validate(org, gen):
 	if org != gen:
-		error_count = error_count + 1
+		globals()["error_count"] = globals()["error_count"] + 1
 		print "ERROR"
 		print "org|" + str(org) + "|"
 		print "gen|" + str(gen) + "|"
@@ -35,7 +35,7 @@ def execute(command, input):
 	last_line = p.communicate(input)[0]
 
 	if p.returncode != 0:
-		error_count = error_count + 1
+		globals()["error_count"] = globals()["error_count"] + 1
 		print "Status error:  ", p.returncode, command
 
 	return last_line
@@ -329,6 +329,36 @@ check([srcmlutility, option.EXPAND_FLAG_SHORT], nestedfile, "")
 validate(open("sub/a.cpp", "r").read(), sfile1)
 validate(open("sub/b.cpp", "r").read(), sfile2)
 
+# srcml2src extract nested unit
+nestedfileextra = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+
+<unit language="C" dir="sub" filename="a.cpp" mytag="foo">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="Java" dir="sub" mytag="foo" filename="b.cpp">
+<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+"""
+
+sxmlfile1extra = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" dir="sub" filename="a.cpp" mytag="foo">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+"""
+
+check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "1", "-"], nestedfileextra, sxmlfile1extra)
+check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "1"], nestedfileextra, sxmlfile1extra)
+check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "1", option.FILENAME_FLAG], nestedfileextra, "a.cpp\n")
+check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "2", option.FILENAME_FLAG], nestedfileextra, "b.cpp\n")
+check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "1", option.DIRECTORY_FLAG], nestedfileextra, "sub\n")
+check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "2", option.DIRECTORY_FLAG], nestedfileextra, "sub\n")
+check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "1", option.LANGUAGE_FLAG], nestedfileextra, "C\n")
+check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "2", option.LANGUAGE_FLAG], nestedfileextra, "Java\n")
+
 ##
 # src2srcml error return
 
@@ -364,29 +394,6 @@ else:
 	validate(getreturn([srcmltranslator, option.TEXTENCODING_FLAG], ""), status.STATUS_LIBXML2_FEATURE)
 
 validate(getreturn([srcmltranslator, option.ENCODING_FLAG], ""), status.STATUS_XMLENCODING_MISSING)
-
-nestedfileextra = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
-
-<unit language="C++" dir="sub" filename="a.cpp" mytag="foo">
-<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-</unit>
-
-<unit language="Java" dir="sub" mytag="foo" filename="b.cpp">
-<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
-</unit>
-
-</unit>
-"""
-
-sxmlfile1extra = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp" mytag="foo">
-<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-</unit>
-"""
-
-check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "1", "-"], nestedfileextra, sxmlfile1extra)
-check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "1"], nestedfileextra, sxmlfile1extra)
 
 ##
 # srcml2src error return
