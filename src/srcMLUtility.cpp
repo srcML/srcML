@@ -598,6 +598,7 @@ void srcMLUtility::outputText(const xmlChar* s, std::ostream& out) {
 	}
       }
 
+      // write anything left over
       xmlTextWriterWriteRawLen(writer, BAD_CAST startp, p - startp);
 
       }
