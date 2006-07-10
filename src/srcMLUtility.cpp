@@ -466,6 +466,7 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
       	outputText(BAD_CAST "\f", *pout);
       break;
     case XML_READER_TYPE_TEXT:
+    case XML_READER_TYPE_WHITESPACE:
     case XML_READER_TYPE_SIGNIFICANT_WHITESPACE:
       outputText(xmlTextReaderConstValue(reader), *pout);
       break;
