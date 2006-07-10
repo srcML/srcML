@@ -53,6 +53,17 @@ def checkallforms(base, shortflag, longflag, optionvalue, progin, progout):
 
 	return
 	
+def checkallformsext(base, shortflag, longflag, optionvalue, other, progin, progout):
+	if optionvalue != "":
+		check([base, shortflag, optionvalue, other], progin, progout)
+		check([base, longflag, optionvalue, other], progin, progout)
+		check([base, longflag + "=" + optionvalue, other], progin, progout)
+	else:
+		check([base, shortflag, other], progin, progout)
+		check([base, longflag, other], progin, progout)
+
+	return
+	
 # version of src2srcml
 def src2srcmlversion():
 
@@ -357,7 +368,7 @@ nestedfileextra = xml_declaration + """
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
-<unit language="C++" dir="sub" mytag="foo" filename="b.cpp">
+<unit language="Java" dir="sub" mytag="foo" filename="b.cpp">
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 </unit>
 
