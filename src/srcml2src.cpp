@@ -531,7 +531,7 @@ int main(int argc, char* argv[]) {
 	// if we terminated early, output the correct status
         if (isoption(options, OPTION_TERMINATE))
 
-	  exit_status = STATUS_INPUT_LIST_TERMINATED;
+	  exit_status = STATUS_TERMINATED;
 
       } catch (LibXMLError error) {
 
@@ -572,7 +572,7 @@ int main(int argc, char* argv[]) {
 
       } catch (TerminateLibXMLError error) {
 
-	exit_status = STATUS_INPUT_LIST_TERMINATED;
+	exit_status = STATUS_TERMINATED;
 
       } catch (LibXMLError error) {
 

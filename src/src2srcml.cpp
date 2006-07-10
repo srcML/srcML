@@ -353,7 +353,7 @@ int main(int argc, char* argv[]) {
       }
       // compound documents are interrupted gracefully
       if (isoption(options, OPTION_TERMINATE))
-	return STATUS_INPUT_LIST_TERMINATED;
+	return STATUS_TERMINATED;
     }
 
   // translate from standard input
@@ -416,7 +416,7 @@ int main(int argc, char* argv[]) {
 
       // compound documents are interrupted gracefully
       if (isoption(options, OPTION_TERMINATE))
-	return STATUS_INPUT_LIST_TERMINATED;
+	return STATUS_TERMINATED;
     }
   }
   } catch (srcEncodingException) {
