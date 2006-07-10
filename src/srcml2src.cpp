@@ -454,15 +454,16 @@ int main(int argc, char* argv[]) {
 
     } else if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {
 
+      // move to the proper unit
       if (isoption(options, OPTION_UNIT)) {
-      try {
+	try {
 
-	su.move_to_unit(unit);
+	  su.move_to_unit(unit);
 
-      } catch (LibXMLError) {
-	exit_status = STATUS_UNIT_INVALID;
-	throw "unit selected is out of range for this compound srcML document";
-      }
+	} catch (LibXMLError) {
+	  exit_status = STATUS_UNIT_INVALID;
+	  throw "unit selected is out of range for this compound srcML document";
+	}
       }
 
       bool nonnull;

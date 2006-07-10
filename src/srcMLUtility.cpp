@@ -92,7 +92,6 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op
   unit_directory = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_DIRECTORY);
   unit_version = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_VERSION);
   unit_language = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_LANGUAGE);
-
 }
 
 // destructor
@@ -335,52 +334,69 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
   if (isoption(options, OPTION_DEBUG))
       xmlTextWriterWriteAttribute(writer, BAD_CAST "xmlns:srcerr", BAD_CAST SRCML_ERR_NS_URI);
 
+  // update attributes from root unit element with attributes from this nested unit
   xmlChar* attribute = 0;
-  attribute = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_FILENAME);
-  if (attribute)
-    unit_filename = attribute;
 
-  attribute = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_DIRECTORY);
-  if (attribute)
-    unit_directory = attribute;
-
-  attribute = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_VERSION);
-  if (attribute)
-    unit_version = attribute;
-
+  // updated attribute language
   attribute = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_LANGUAGE);
   if (attribute)
     unit_language = attribute;
 
-  if (unit_language) {
+  if (unit_language)
     xmlTextWriterWriteAttribute(writer, BAD_CAST UNIT_ATTRIBUTE_LANGUAGE, unit_language);
-    xmlFree(unit_language);
-  }
 
-  if (unit_directory) {
+  if (attribute)
+    xmlFree(attribute);
+
+  // updated attribute directory
+  attribute = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_DIRECTORY);
+  if (attribute)
+    unit_directory = attribute;
+
+  if (unit_directory)
     xmlTextWriterWriteAttribute(writer, BAD_CAST UNIT_ATTRIBUTE_DIRECTORY, unit_directory);
-    xmlFree(unit_directory);
-  }
+
+  if (attribute)
+    xmlFree(attribute);
+
+  // updated attribute filename
+  attribute = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_FILENAME);
+
+  if (attribute)
+    unit_filename = attribute;
 
   if (unit_filename) {
     xmlTextWriterWriteAttribute(writer, BAD_CAST UNIT_ATTRIBUTE_FILENAME, unit_filename);
-    xmlFree(unit_filename);
   }
 
-  if (unit_version) {
+  if (attribute)
+    xmlFree(attribute);
+
+  // updated attribute version
+  attribute = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_VERSION);
+  if (attribute)
+    unit_version = attribute;
+
+  if (unit_version)
     xmlTextWriterWriteAttribute(writer, BAD_CAST UNIT_ATTRIBUTE_VERSION, unit_version);
-    xmlFree(unit_version);
-  }
+
+  if (attribute)
+    xmlFree(attribute);
 
   // copy all other attributes from current unit (may be main unit)
   while (xmlTextReaderMoveToNextAttribute(reader)) {
 
-    if ((strcmp((char*) xmlTextReaderConstName(reader), UNIT_ATTRIBUTE_LANGUAGE) != 0) &&
-	(strcmp((char*) xmlTextReaderConstName(reader), UNIT_ATTRIBUTE_DIRECTORY) != 0) &&
-	(strcmp((char*) xmlTextReaderConstName(reader), UNIT_ATTRIBUTE_FILENAME) != 0) &&
-	(strcmp((char*) xmlTextReaderConstName(reader), UNIT_ATTRIBUTE_VERSION) != 0))
+    const char* name = (const char*) xmlTextReaderConstName(reader);
 
-      xmlTextWriterWriteAttribute(writer, xmlTextReaderConstName(reader), xmlTextReaderConstValue(reader));
+    // skip standard attributes since they are already output
+    if ((strcmp(name, UNIT_ATTRIBUTE_LANGUAGE) == 0) ||
+	(strcmp(name, UNIT_ATTRIBUTE_DIRECTORY) == 0) ||
+	(strcmp(name, UNIT_ATTRIBUTE_FILENAME) == 0) ||
+	(strcmp(name, UNIT_ATTRIBUTE_VERSION) == 0))
+      continue;
+
+    // output current attribute
+    xmlTextWriterWriteAttribute(writer, BAD_CAST name, xmlTextReaderConstValue(reader));
   }
   
   // process the nodes in this unit
