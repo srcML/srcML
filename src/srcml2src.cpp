@@ -490,21 +490,11 @@ int main(int argc, char* argv[]) {
 
     } else if (isoption(options, OPTION_UNIT) && isoption(options, OPTION_XML)) {
 
-      try {
-	su.extract_xml(ofilename);
-      } catch (LibXMLError) {
-	exit_status = STATUS_UNIT_INVALID;
-	throw "unit selected is out of range for this compound srcML document";
-      }
+      su.extract_xml(ofilename);
 
     } else if (isoption(options, OPTION_UNIT)) {
 
-      try {
-	su.extract_text(ofilename);
-      } catch (LibXMLError) {
-	exit_status = STATUS_UNIT_INVALID;
-	throw "unit selected is out of range for this compound srcML document";
-      }
+      su.extract_text(ofilename);
 
     } else if (isoption(options, OPTION_EXPAND)) {
 
