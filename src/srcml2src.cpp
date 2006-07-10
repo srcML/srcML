@@ -400,15 +400,18 @@ int main(int argc, char* argv[]) {
     if (isoption(options, OPTION_FILENAME) && isoption(options, OPTION_UNIT)) {
 
       try {
-	bool nonnull;
-	std::string l = su.unit_attribute(unit, "filename", nonnull);
-	if (nonnull)
-	  std::cout << l << '\n';
+
+	su.move_to_unit(unit);
 
       } catch (LibXMLError) {
 	exit_status = STATUS_UNIT_INVALID;
 	throw "unit selected is out of range for this compound srcML document";
       }
+
+      bool nonnull;
+      std::string l = su.attribute("filename", nonnull);
+      if (nonnull)
+	std::cout << l << '\n';
 
     } else if (isoption(options, OPTION_FILENAME)) {
 
@@ -421,15 +424,17 @@ int main(int argc, char* argv[]) {
       
       try {
 
-	bool nonnull;
-	std::string l = su.unit_attribute(unit, "dir", nonnull);
-	if (nonnull)
-	  std::cout << l << '\n';
+	su.move_to_unit(unit);
 
       } catch (LibXMLError) {
 	exit_status = STATUS_UNIT_INVALID;
 	throw "unit selected is out of range for this compound srcML document";
       }
+
+      bool nonnull;
+      std::string l = su.attribute("dir", nonnull);
+      if (nonnull)
+	std::cout << l << '\n';
 
     } else if (isoption(options, OPTION_DIRECTORY)) {
 
@@ -442,15 +447,17 @@ int main(int argc, char* argv[]) {
 
       try {
 
-	bool nonnull;
-	std::string l = su.unit_attribute(unit, "language", nonnull);
-	if (nonnull)
-	  std::cout << l << '\n';
+	su.move_to_unit(unit);
 
       } catch (LibXMLError) {
 	exit_status = STATUS_UNIT_INVALID;
 	throw "unit selected is out of range for this compound srcML document";
       }
+
+      bool nonnull;
+      std::string l = su.attribute("language", nonnull);
+      if (nonnull)
+	std::cout << l << '\n';
 
     } else if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {
 
