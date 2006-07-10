@@ -396,43 +396,24 @@ int main(int argc, char* argv[]) {
     // setup for processing
     srcMLUtility su(filename, src_encoding, options);
 
+    // move to the appropriate unit
+    if (isoption(options, OPTION_UNIT)) {
+
+      try {
+
+	su.move_to_unit(unit);
+
+      } catch (LibXMLError) {
+	exit_status = STATUS_UNIT_INVALID;
+	throw "unit selected is out of range for this compound srcML document";
+      }
+    }
+
     // process the option
-    if (isoption(options, OPTION_FILENAME) && isoption(options, OPTION_UNIT)) {
-
-      try {
-
-	su.move_to_unit(unit);
-
-      } catch (LibXMLError) {
-	exit_status = STATUS_UNIT_INVALID;
-	throw "unit selected is out of range for this compound srcML document";
-      }
+    if (isoption(options, OPTION_FILENAME)) {
 
       bool nonnull;
       std::string l = su.attribute("filename", nonnull);
-      if (nonnull)
-	std::cout << l << '\n';
-
-    } else if (isoption(options, OPTION_FILENAME)) {
-
-      bool nonnull;
-      std::string l = su.attribute("filename", nonnull);
-      if (nonnull)
-	std::cout << l << '\n';
-
-    } else if (isoption(options, OPTION_DIRECTORY) && isoption(options, OPTION_UNIT)) {
-      
-      try {
-
-	su.move_to_unit(unit);
-
-      } catch (LibXMLError) {
-	exit_status = STATUS_UNIT_INVALID;
-	throw "unit selected is out of range for this compound srcML document";
-      }
-
-      bool nonnull;
-      std::string l = su.attribute("dir", nonnull);
       if (nonnull)
 	std::cout << l << '\n';
 
@@ -443,16 +424,7 @@ int main(int argc, char* argv[]) {
 	if (nonnull)
 	  std::cout << l << '\n';
 
-    } else if (isoption(options, OPTION_LANGUAGE) && isoption(options, OPTION_UNIT)) {
-
-      try {
-
-	su.move_to_unit(unit);
-
-      } catch (LibXMLError) {
-	exit_status = STATUS_UNIT_INVALID;
-	throw "unit selected is out of range for this compound srcML document";
-      }
+    } else if (isoption(options, OPTION_LANGUAGE)) {
 
       bool nonnull;
       std::string l = su.attribute("language", nonnull);
@@ -460,18 +432,6 @@ int main(int argc, char* argv[]) {
 	std::cout << l << '\n';
 
     } else if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {
-
-      // move to the proper unit
-      if (isoption(options, OPTION_UNIT)) {
-	try {
-
-	  su.move_to_unit(unit);
-
-	} catch (LibXMLError) {
-	  exit_status = STATUS_UNIT_INVALID;
-	  throw "unit selected is out of range for this compound srcML document";
-	}
-      }
 
       bool nonnull;
       std::cout << "Encoding: " << su.getencoding() << '\n';
@@ -495,29 +455,6 @@ int main(int argc, char* argv[]) {
       if (isoption(options, OPTION_LONG_INFO)) {
 	if (!isoption(options, OPTION_UNIT))
 	  std::cout << "Nested: " << su.unit_count() << '\n';
-      }
-
-    } else if (isoption(options, OPTION_LANGUAGE)) {
-
-      bool nonnull;
-      std::string l = su.attribute("language", nonnull);
-      if (nonnull)
-	std::cout << l << '\n';
-
-    } else if (isoption(options, OPTION_VERSION) && isoption(options, OPTION_UNIT)) {
-
-      try {
-
-	su.move_to_unit(unit);
-
-	bool nonnull;
-	std::string l = su.attribute("version", nonnull);
-	if (nonnull)
-	  std::cout << l << '\n';
-
-      } catch (LibXMLError) {
-	exit_status = STATUS_UNIT_INVALID;
-	throw "unit selected is out of range for this compound srcML document";
       }
 
     } else if (isoption(options, OPTION_VERSION)) {
@@ -554,7 +491,7 @@ int main(int argc, char* argv[]) {
     } else if (isoption(options, OPTION_UNIT) && isoption(options, OPTION_XML)) {
 
       try {
-	su.extract_xml(ofilename, unit);
+	su.extract_xml(ofilename);
       } catch (LibXMLError) {
 	exit_status = STATUS_UNIT_INVALID;
 	throw "unit selected is out of range for this compound srcML document";
@@ -563,7 +500,7 @@ int main(int argc, char* argv[]) {
     } else if (isoption(options, OPTION_UNIT)) {
 
       try {
-	su.extract_text(ofilename, unit);
+	su.extract_text(ofilename);
       } catch (LibXMLError) {
 	exit_status = STATUS_UNIT_INVALID;
 	throw "unit selected is out of range for this compound srcML document";

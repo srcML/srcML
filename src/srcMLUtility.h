@@ -73,9 +73,6 @@ class srcMLUtility {
   // attribute
   std::string attribute(const char* attribute_name, bool& nonnull);
 
-  // attribute of a nested unit
-  std::string unit_attribute(int unitnumber, const char* attribute_name, bool& nonnull);
-
   // move to a particular nested unit
   void move_to_unit(int unitnumber);
 
@@ -85,14 +82,11 @@ class srcMLUtility {
   // count of nested units
   int unit_count();
 
-  // extract (intact) a given unit
-  virtual void extract_xml(const char* ofilename, int);
+  // extract (intact) current unit as XML
+  virtual void extract_xml(const char* ofilename);
 
-  // extract (intact) a given unit specified by filename
-  virtual void extract_xml(const char* ofilename, const char*);
-
-  // extract (intact) a given unit
-  virtual void extract_text(const char* ofilename, int);
+  // extract (intact) current unit as text
+  virtual void extract_text(const char* ofilename);
 
   // expand the compound srcML to individual files
   virtual void expand(const char* root_filename = "");

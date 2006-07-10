@@ -124,16 +124,6 @@ std::string srcMLUtility::attribute(const char* attribute_name, bool& nonnull) {
   return s;
 }
 
-// attribute
-std::string srcMLUtility::unit_attribute(int unitnumber, const char* attribute_name, bool& nonnull) {
-
-  // skip to the proper nested unit
-  skiptounit(reader, unitnumber);
-
-  // extract attribute from unit tag
-  return attribute(attribute_name, nonnull);
-}
-
 // move to a particular nested unit
 void srcMLUtility::move_to_unit(int unitnumber) {
 
@@ -177,35 +167,17 @@ int srcMLUtility::unit_count() {
 }
 
 // extract a given unit
-void srcMLUtility::extract_xml(const char* ofilename, int unitnumber) {
+void srcMLUtility::extract_xml(const char* ofilename) {
 
   // Set the encoding to that of the outer, root unit element
   output_encoding = (const char*) xmlTextReaderConstEncoding(reader);
-
-  // skip to the proper nested unit
-  skiptounit(reader, unitnumber);
 
   // output entire unit element
   outputUnit(ofilename, reader);
 }
 
-// extract a given unit specified by filename
-void srcMLUtility::extract_xml(const char* ofilename, const char* filename) {
-
-  // Set the encoding to that of the outer, root unit element
-  output_encoding = (const char*) xmlTextReaderConstEncoding(reader);
-
-  // skip to the proper nested unit
-  skiptounit(reader, filename);
-
-  extract_xml(ofilename, 0);
-}
-
 // extract a given unit
-void srcMLUtility::extract_text(const char* ofilename, int unitnumber) {
-
-  // skip to the proper nested unit
-  skiptounit(reader, unitnumber);
+void srcMLUtility::extract_text(const char* ofilename) {
 
   // output entire unit element as text
   outputSrc(ofilename, reader);
