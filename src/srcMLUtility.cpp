@@ -567,9 +567,15 @@ void srcMLUtility::outputText(const xmlChar* s, std::ostream& out) {
       xmlTextWriterWriteComment(writer, xmlTextReaderConstValue(reader));
       break;
 
-    case XML_READER_TYPE_TEXT:
     case XML_READER_TYPE_WHITESPACE:
     case XML_READER_TYPE_SIGNIFICANT_WHITESPACE:
+      {
+	const xmlChar* s = xmlTextReaderConstValue(reader);
+	xmlTextWriterWriteRawLen(writer, s, strlen((const char*) s));
+      }
+      break;
+
+    case XML_READER_TYPE_TEXT:
       {
 
       // output the UTF-8 buffer escaping the characters.  Note that the output encoding
