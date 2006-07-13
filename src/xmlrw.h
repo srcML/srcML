@@ -23,8 +23,6 @@
 #ifndef _INCLUDED_XMLRW_H
 #define _INCLUDED_XMLRW_H
 
-#include <string>
-
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
