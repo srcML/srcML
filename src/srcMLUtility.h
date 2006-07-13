@@ -107,9 +107,6 @@ class srcMLUtility {
   // output text in proper format
   void outputText(const xmlChar* s, bool escape = false);
 
-  // output current XML node in reader
-  void outputXML(xmlTextReaderPtr reader, xmlTextWriterPtr writer);
-
   // output current text-only XML node in reader
   void outputText(xmlTextReaderPtr reader);
 

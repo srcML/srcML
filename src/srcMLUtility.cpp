@@ -26,6 +26,7 @@
 #include <iostream>
 #include <fstream>
 #include "srcmlns.h"
+#include "xmlrw.h"
 
 #ifdef __GNUC__
 #include <sys/stat.h>
@@ -504,82 +505,6 @@ void srcMLUtility::outputText(const xmlChar* s, std::ostream& out) {
   }
 #endif
 }
-
-  // output current XML node in reader
-  void srcMLUtility::outputXML(xmlTextReaderPtr reader, xmlTextWriterPtr writer) {
-
-    bool isemptyelement = false;
-
-    switch (xmlTextReaderNodeType(reader)) {
-    case XML_READER_TYPE_ELEMENT:
-
-      // record if this is an empty element since it will be erased by the attribute copying
-      isemptyelement = xmlTextReaderIsEmptyElement(reader) > 0;
-
-      // start the element
-      xmlTextWriterStartElement(writer, xmlTextReaderConstName(reader));
-
-      // copy all the attributes
-      while (xmlTextReaderMoveToNextAttribute(reader)) {
-	xmlTextWriterWriteAttribute(writer, xmlTextReaderConstName(reader), xmlTextReaderConstValue(reader));
-      }
-
-      // end now if this is an empty element
-      if (isemptyelement) {
-	xmlTextWriterEndElement(writer);
-      }
-
-      break;
-
-    case XML_READER_TYPE_END_ELEMENT:
-      xmlTextWriterEndElement(writer);
-      break;
-
-    case XML_READER_TYPE_COMMENT:
-      xmlTextWriterWriteComment(writer, xmlTextReaderConstValue(reader));
-      break;
-
-    case XML_READER_TYPE_WHITESPACE:
-    case XML_READER_TYPE_SIGNIFICANT_WHITESPACE:
-      {
-	const xmlChar* s = xmlTextReaderConstValue(reader);
-	xmlTextWriterWriteRawLen(writer, s, strlen((const char*) s));
-      }
-      break;
-
-    case XML_READER_TYPE_TEXT:
-      {
-
-      // output the UTF-8 buffer escaping the characters.  Note that the output encoding
-      // is handled by libxml
-      unsigned char* p = (unsigned char*) xmlTextReaderConstValue(reader);
-      unsigned char* startp = p;
-      for (; *p != 0; ++p) {
-	if (*p == '&') {
-	  xmlTextWriterWriteRawLen(writer, BAD_CAST startp, p - startp);
-	  xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&amp;", 5);
-	  startp = p + 1;
-	} else if (*p == '<') {
-	  xmlTextWriterWriteRawLen(writer, BAD_CAST startp, p - startp);
-	  xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&lt;", 4);
-	  startp = p + 1;
-	} else if (*p == '>') {
-	  xmlTextWriterWriteRawLen(writer, BAD_CAST startp, p - startp);
-	  xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&gt;", 4);
-	  startp = p + 1;
-	}
-      }
-
-      // write anything left over
-      xmlTextWriterWriteRawLen(writer, BAD_CAST startp, p - startp);
-
-      }
-      break;
-
-    default:
-      break;
-    }
-  }
 
   // skip to the next unit
   void skiptonextunit(xmlTextReaderPtr reader) throw (LibXMLError) {
