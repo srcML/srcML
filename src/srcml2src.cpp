@@ -148,6 +148,9 @@ extern "C" void verbose_handler(int);
 
 extern "C" void terminate_handler(int);
 
+int optionorder[5];
+int optioncount = 0;
+
 int main(int argc, char* argv[]) {
 
   /* signal handling */
@@ -185,24 +188,28 @@ int main(int argc, char* argv[]) {
     else if (compare_flags(argv[curarg], FILENAME_FLAG, FILENAME_FLAG_SHORT, position)) {
       options |= OPTION_FILENAME;
       if (position == original_position) ++curarg;
+      optionorder[optioncount++] = OPTION_FILENAME;
     }
 
     // dir flag
     else if (compare_flags(argv[curarg], DIRECTORY_FLAG, DIRECTORY_FLAG_SHORT, position)) {
       options |= OPTION_DIRECTORY;
       if (position == original_position) ++curarg;
+      optionorder[optioncount++] = OPTION_DIRECTORY;
     }
 
     // language flag
     else if (compare_flags(argv[curarg], LANGUAGE_FLAG, LANGUAGE_FLAG_SHORT, position)) {
       options |= OPTION_LANGUAGE;
       if (position == original_position) ++curarg;
+      optionorder[optioncount++] = OPTION_LANGUAGE;
     }
 
     // version flag
     else if (compare_flags(argv[curarg], SRCVERSION_FLAG, SRCVERSION_FLAG_SHORT, position)) {
       options |= OPTION_VERSION;
       if (position == original_position) ++curarg;
+      optionorder[optioncount++] = OPTION_VERSION;
     }
 
     // nested flag
@@ -409,35 +416,28 @@ int main(int argc, char* argv[]) {
       }
     }
 
-    // process the option
-    if (isoption(options, OPTION_LANGUAGE)) {
+    // process get attribute options
+    if (optioncount > 0) {
 
+      // find attribute name from option
+      char* attribute_name = "";
+      int option = optionorder[0];
+      if (option == OPTION_LANGUAGE)
+	attribute_name = "language";
+      else if (option == OPTION_DIRECTORY)
+	attribute_name = "dir";
+      else if (option == OPTION_FILENAME)
+	attribute_name = "filename";
+      else if (option == OPTION_VERSION)
+	attribute_name = "version";
+
+      // output the option
       bool nonnull;
-      std::string l = su.attribute("language", nonnull);
+      std::string l = su.attribute(attribute_name, nonnull);
       if (nonnull)
 	std::cout << l << '\n';
 
-    } else if (isoption(options, OPTION_DIRECTORY)) {
-
-	bool nonnull;
-	std::string l = su.attribute("dir", nonnull);
-	if (nonnull)
-	  std::cout << l << '\n';
-
-    } else if (isoption(options, OPTION_FILENAME)) {
-
-      bool nonnull;
-      std::string l = su.attribute("filename", nonnull);
-      if (nonnull)
-	std::cout << l << '\n';
-
-    } else if (isoption(options, OPTION_VERSION)) {
-
-      bool nonnull;
-      std::string l = su.attribute("version", nonnull);
-      if (nonnull)
-	std::cout << l << '\n';
-
+    // process non-attribute options
     } else if (isoption(options, OPTION_XML_ENCODING)) {
 
       std::cout << su.getencoding() << '\n';
