@@ -121,7 +121,7 @@ ${EXE_DIR}src2srcml : ${OBJ_DIR}srcMLParser.o ${OBJ_DIR}KeywordCPPLexer.o ${OBJ_
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) ${XML_LIB} -o $@
 
 # srcML to source code translator program
-${EXE_DIR}srcml2src : ${OBJ_DIR}srcml2src.o ${OBJ_DIR}srcMLUtility.o ${OBJ_DIR}version.o ${OBJ_DIR}srcmlapps.o ${XML_OBJ}
+${EXE_DIR}srcml2src : ${OBJ_DIR}srcml2src.o ${OBJ_DIR}srcMLUtility.o ${OBJ_DIR}xmlrw.o ${OBJ_DIR}version.o ${OBJ_DIR}srcmlapps.o ${XML_OBJ}
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) ${XML_LIB} -o $@
 
 # source code lexical analysis
@@ -160,7 +160,10 @@ ${OBJ_DIR}srcMLOutput.o : srcMLOutput.cpp srcMLOutput.h srcMLOutputPR.h
 ${OBJ_DIR}Mode.o : Mode.cpp Mode.h
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(SRCMLPARSER_CXX_FLAGS) -c $< -o $@
 
-${OBJ_DIR}srcMLUtility.o : srcMLUtility.cpp srcMLUtility.h Options.h
+${OBJ_DIR}srcMLUtility.o : srcMLUtility.cpp srcMLUtility.h xmlrw.h Options.h
+	$(CXX) $(XML_PRE) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
+
+${OBJ_DIR}xmlrw.o : xmlrw.cpp xmlrw.h
 	$(CXX) $(XML_PRE) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}version.o : version.cpp
@@ -190,7 +193,7 @@ cleanbuild :
 # clean non-generated object files
 PHONY : cleanobject
 cleanobject :
-	rm -f ${OBJ_DIR}src2srcml.o ${OBJ_DIR}srcMLOutput.o ${OBJ_DIR}Mode.o ${OBJ_DIR}srcMLTranslator.o ${OBJ_DIR}srcMLParser.o ${OBJ_DIR}KeywordLexer.o ${OBJ_DIR}KeywordCPPLexer.o ${OBJ_DIR}srcml2src.o ${OBJ_DIR}srcMLUtility.o ${OBJ_DIR}version.o ${OBJ_DIR}filetrim.o ${OBJ_DIR}srcmlapps.o ${OBJ_DIR}srcmllexer.o ${OBJ_DIR}xmlwriter.o ${OBJ_DIR}xmlreader.o version.cpp
+	rm -f ${OBJ_DIR}src2srcml.o ${OBJ_DIR}srcMLOutput.o ${OBJ_DIR}Mode.o ${OBJ_DIR}srcMLTranslator.o ${OBJ_DIR}srcMLParser.o ${OBJ_DIR}KeywordLexer.o ${OBJ_DIR}KeywordCPPLexer.o ${OBJ_DIR}srcml2src.o ${OBJ_DIR}srcMLUtility.o ${OBJ_DIR}xmlrw.o ${OBJ_DIR}version.o ${OBJ_DIR}filetrim.o ${OBJ_DIR}srcmlapps.o ${OBJ_DIR}srcmllexer.o ${OBJ_DIR}xmlwriter.o ${OBJ_DIR}xmlreader.o version.cpp
 
 # clean ANTLR generated files
 PHONY : cleanantlr
