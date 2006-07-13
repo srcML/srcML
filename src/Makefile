@@ -29,13 +29,13 @@ CXX_LINK_FLAGS = -s
 
 # object code for xml
 ifdef LIBXML_DISABLED
-LIBXML_INCLUDE=
+LIBXML_INCLUDE=-I .
 XML_OBJ=${OBJ_DIR}xmlwriter.o ${OBJ_DIR}xmlreader.o
 XML_LIB=
 XML_PRE=
 LIBXML_VERSION=
 else
-LIBXML_INCLUDE=-I/usr/include/libxml2
+LIBXML_INCLUDE=-I/usr/include/libxml2 -I/usr/include/libxml2/libxml
 XML_OBJ=
 XML_LIB=-lxml2
 XML_PRE=-DLIBXML_ENABLED
