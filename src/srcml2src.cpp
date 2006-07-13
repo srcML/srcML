@@ -380,7 +380,7 @@ int main(int argc, char* argv[]) {
     exit(STATUS_INVALID_OPTION_COMBINATION);
   }
 
-  // verify that the output filename is not the same as the input filename
+  // verify that the output file is not the same as the input file
   struct stat instat;
   stat(filename, &instat);
   struct stat outstat;
