@@ -221,7 +221,7 @@ try:
 			
 				# output language and directory
 				print
-				print language, "\t", directory,
+				print language, "\t", directory.ljust(25), "\t",
 
 				# encoding of the outer unit
 				encoding = getencoding(filexml)
