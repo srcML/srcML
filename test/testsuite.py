@@ -13,6 +13,10 @@ import difflib
 maxcount = 500
 error_filename = ".suitelist"
 
+FIELD_WIDTH_LANGUAGE = 7
+FIELD_WIDTH_DIRECTORY = 29
+MAX_COUNT = 46
+
 sperrorlist = []
 
 srcmltranslator = "" # os.environ.get("SRC2SRCML")
@@ -221,7 +225,7 @@ try:
 			
 				# output language and directory
 				print
-				print language, "\t", directory.ljust(25), "\t",
+				print language.ljust(FIELD_WIDTH_LANGUAGE), " ", directory.ljust(FIELD_WIDTH_DIRECTORY), " ",
 
 				# encoding of the outer unit
 				encoding = getencoding(filexml)
@@ -265,6 +269,8 @@ try:
 						unitsrcml = src2srcML(unittext, encoding, language, directory, getfilename(unitxml))
 						# find the difference
 						result = xmldiff(unitxml, unitsrcml)
+						if count == MAX_COUNT:
+							print "\n", "".rjust(FIELD_WIDTH_LANGUAGE), " ", "".rjust(FIELD_WIDTH_DIRECTORY), " ",
 						if result != "":
 							error_count += 1
 							
