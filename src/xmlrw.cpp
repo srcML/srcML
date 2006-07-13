@@ -26,41 +26,6 @@
 #include "xmlrw.h"
 #include <iostream>
 
-bool operator==(const xmlNode& n1, const xmlNode& n2) {
-
-  return n1.type == n2.type && 
-    (strcmp((char*) n1.name, (char*) n2.name) == 0) && (
-    (n1.type != XML_READER_TYPE_TEXT && n1.type != XML_READER_TYPE_SIGNIFICANT_WHITESPACE) ||
-    (strcmp((char*) n1.content, (char*) n2.content) == 0)
-    );
-}
-
-xmlNode* getRealCurrentNode(xmlTextReaderPtr reader) {
-
-  xmlNode* pnode = getCurrentNode(reader);
-
-  pnode->extra = xmlTextReaderIsEmptyElement(reader);
-
-  return pnode;
-}
-
-xmlNode* getCurrentNode(xmlTextReaderPtr reader) {
-
-  xmlNode* node = xmlCopyNode(xmlTextReaderCurrentNode(reader), 1);
-
-  node->type = (xmlElementType) xmlTextReaderNodeType(reader);
-
-  return node;
-}
-
-void eat_element(xmlTextReaderPtr& reader) {
-  int depth = xmlTextReaderDepth(reader);
-  xmlTextReaderRead(reader);
-  while (xmlTextReaderDepth(reader) > depth)
-    xmlTextReaderRead(reader);
-  xmlTextReaderRead(reader);
-}
-
   // output current XML node in reader
   void outputXML(xmlTextReaderPtr reader, xmlTextWriterPtr writer) {
 
@@ -137,74 +102,41 @@ void eat_element(xmlTextReaderPtr& reader) {
     }
   }
 
-  // output current XML node in reader
-  void outputXML(xmlTextReaderPtr reader, xmlTextWriterPtr writer, const char* name) {
+#ifdef LIBXML_ENABLED
+bool operator==(const xmlNode& n1, const xmlNode& n2) {
 
-    bool isemptyelement = false;
+  return n1.type == n2.type && 
+    (strcmp((char*) n1.name, (char*) n2.name) == 0) && (
+    (n1.type != XML_READER_TYPE_TEXT && n1.type != XML_READER_TYPE_SIGNIFICANT_WHITESPACE) ||
+    (strcmp((char*) n1.content, (char*) n2.content) == 0)
+    );
+}
 
-    switch (xmlTextReaderNodeType(reader)) {
-    case XML_READER_TYPE_ELEMENT:
+xmlNode* getRealCurrentNode(xmlTextReaderPtr reader) {
 
-      // record if this is an empty element since it will be erased by the attribute copying
-      isemptyelement = xmlTextReaderIsEmptyElement(reader) > 0;
+  xmlNode* pnode = getCurrentNode(reader);
 
-      // start the element
-      xmlTextWriterStartElement(writer, BAD_CAST name);
+  pnode->extra = xmlTextReaderIsEmptyElement(reader);
 
-      // copy all the attributes
-      while (xmlTextReaderMoveToNextAttribute(reader)) {
-	xmlTextWriterWriteAttribute(writer, xmlTextReaderConstName(reader), xmlTextReaderConstValue(reader));
-      }
+  return pnode;
+}
 
-      // end now if this is an empty element
-      if (isemptyelement) {
-	xmlTextWriterEndElement(writer);
-      }
+xmlNode* getCurrentNode(xmlTextReaderPtr reader) {
 
-      break;
+  xmlNode* node = xmlCopyNode(xmlTextReaderCurrentNode(reader), 1);
 
-    case XML_READER_TYPE_END_ELEMENT:
-      xmlTextWriterEndElement(writer);
-      break;
+  node->type = (xmlElementType) xmlTextReaderNodeType(reader);
 
-    case XML_READER_TYPE_COMMENT:
-      xmlTextWriterWriteComment(writer, xmlTextReaderConstValue(reader));
-      break;
+  return node;
+}
 
-    case XML_READER_TYPE_TEXT:
-    case XML_READER_TYPE_WHITESPACE:
-    case XML_READER_TYPE_SIGNIFICANT_WHITESPACE:
-      {
-
-      // output the UTF-8 buffer escaping the characters.  Note that the output encoding
-      // is handled by libxml
-      unsigned char* p = (unsigned char*) xmlTextReaderConstValue(reader);
-      unsigned char* startp = p;
-      for (; *p != 0; ++p) {
-	if (*p == '&') {
-	  xmlTextWriterWriteRawLen(writer, BAD_CAST startp, p - startp);
-	  xmlTextWriterWriteRawLen(writer, BAD_CAST "&amp;", 5);
-	  startp = p + 1;
-	} else if (*p == '<') {
-	  xmlTextWriterWriteRawLen(writer, BAD_CAST startp, p - startp);
-	  xmlTextWriterWriteRawLen(writer, BAD_CAST "&lt;", 4);
-	  startp = p + 1;
-	} else if (*p == '>') {
-	  xmlTextWriterWriteRawLen(writer, BAD_CAST startp, p - startp);
-	  xmlTextWriterWriteRawLen(writer, BAD_CAST "&gt;", 4);
-	  startp = p + 1;
-	}
-      }
-
-      xmlTextWriterWriteRawLen(writer, BAD_CAST startp, p - startp);
-
-      }
-      break;
-
-    default:
-      break;
-    }
-  }
+void eat_element(xmlTextReaderPtr& reader) {
+  int depth = xmlTextReaderDepth(reader);
+  xmlTextReaderRead(reader);
+  while (xmlTextReaderDepth(reader) > depth)
+    xmlTextReaderRead(reader);
+  xmlTextReaderRead(reader);
+}
 
   // output current XML node in reader
   void outputNode(xmlNode& node, xmlTextWriterPtr writer) {
@@ -275,5 +207,6 @@ void eat_element(xmlTextReaderPtr& reader) {
       break;
     }
   }
+#endif
 
 #endif

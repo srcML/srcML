@@ -23,9 +23,17 @@
 #ifndef _INCLUDED_XMLRW_H
 #define _INCLUDED_XMLRW_H
 
+#ifdef LIBXML_ENABLED
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
+#else
+#include "xmlreader.h"
+#include "xmlwriter.h"
+#endif
 
+void outputXML(xmlTextReaderPtr reader, xmlTextWriterPtr writer);
+
+#ifdef LIBXML_ENABLED
 bool operator==(const xmlNode& n1, const xmlNode& n2);
 
 xmlNode* getRealCurrentNode(xmlTextReaderPtr reader);
@@ -56,8 +64,7 @@ xmlNode* getCurrentNode(xmlTextReaderPtr reader);
 
 void eat_element(xmlTextReaderPtr& reader);
 
-void outputXML(xmlTextReaderPtr reader, xmlTextWriterPtr writer);
-
 void outputNode(xmlNode& node, xmlTextWriterPtr writer);
+#endif
 
 #endif
