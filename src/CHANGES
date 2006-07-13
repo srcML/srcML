@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Change --info option in srcml2src to use new multiple output options.
+
 	Allow for multiple output (in order) of attributes.
 
 	SIGINT handling for unit count.

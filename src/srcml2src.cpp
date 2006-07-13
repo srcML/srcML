@@ -212,6 +212,25 @@ int main(int argc, char* argv[]) {
       optionorder[optioncount++] = OPTION_VERSION;
     }
 
+    // encoding flag
+    else if (compare_flags(argv[curarg], ENCODING_FLAG, ENCODING_FLAG_SHORT, position)) {
+      options |= OPTION_XML_ENCODING;
+      if (position == original_position) ++curarg;
+      optionorder[optioncount++] = OPTION_XML_ENCODING;
+    }
+
+    // info flag
+    else if (compare_flags(argv[curarg], INFO_FLAG, INFO_FLAG_SHORT, position)) {
+      options |= OPTION_INFO;
+      if (position == original_position) ++curarg;
+    }
+
+    // long info flag
+    else if (compare_flags(argv[curarg], LONG_INFO_FLAG, LONG_INFO_FLAG_SHORT, position)) {
+      options |= OPTION_LONG_INFO;
+      if (position == original_position) ++curarg;
+    }
+
     // nested flag
     else if (compare_flags(argv[curarg], NESTED_FLAG, NESTED_FLAG_SHORT, position)) {
       options |= OPTION_NESTED;
@@ -221,12 +240,6 @@ int main(int argc, char* argv[]) {
     // skip encoding mode
     else if (compare_flags(argv[curarg], SKIP_ENCODING_FLAG, SKIP_ENCODING_FLAG_SHORT, position)) {
       options |= OPTION_SKIP_ENCODING;
-      if (position == original_position) ++curarg;
-    }
-
-    // encoding flag
-    else if (compare_flags(argv[curarg], ENCODING_FLAG, ENCODING_FLAG_SHORT, position)) {
-      options |= OPTION_XML_ENCODING;
       if (position == original_position) ++curarg;
     }
 
@@ -245,18 +258,6 @@ int main(int argc, char* argv[]) {
     // xml output flag
     else if (compare_flags(argv[curarg], XML_FLAG, XML_FLAG_SHORT, position)) {
       options |= OPTION_XML;
-      if (position == original_position) ++curarg;
-    }
-
-    // info flag
-    else if (compare_flags(argv[curarg], INFO_FLAG, INFO_FLAG_SHORT, position)) {
-      options |= OPTION_INFO;
-      if (position == original_position) ++curarg;
-    }
-
-    // long info flag
-    else if (compare_flags(argv[curarg], LONG_INFO_FLAG, LONG_INFO_FLAG_SHORT, position)) {
-      options |= OPTION_LONG_INFO;
       if (position == original_position) ++curarg;
     }
 
@@ -416,6 +417,16 @@ int main(int argc, char* argv[]) {
       }
     }
 
+    // info options are convenience functions for multiple options
+    if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {
+      optionorder[0] = OPTION_XML_ENCODING;
+      optionorder[1] = OPTION_LANGUAGE;
+      optionorder[2] = OPTION_DIRECTORY;
+      optionorder[3] = OPTION_FILENAME;
+      optionorder[4] = OPTION_VERSION;
+      optioncount = 5;
+    }
+
     // process get attribute options
     if (optioncount > 0) {
 
@@ -426,7 +437,10 @@ int main(int argc, char* argv[]) {
 	char* attribute_name = "";
 	char* attribute_title = "";
 	int option = optionorder[i];
-	if (option == OPTION_LANGUAGE) {
+	if (option == OPTION_XML_ENCODING) {
+	  attribute_name = "";
+	  attribute_title = "Encoding:";
+	} else if (option == OPTION_LANGUAGE) {
 	  attribute_name = "language";
 	  attribute_title = "Language:";
 	} else if (option == OPTION_DIRECTORY) {
@@ -441,8 +455,8 @@ int main(int argc, char* argv[]) {
 	}
 
 	// output the option
-	bool nonnull;
-	std::string l = su.attribute(attribute_name, nonnull);
+	bool nonnull = true;
+	std::string l = option != OPTION_XML_ENCODING ? su.attribute(attribute_name, nonnull) : su.getencoding();
 	if (nonnull) {
 	  if (optioncount > 1)
 	    std::cout << attribute_title << " ";
@@ -450,37 +464,12 @@ int main(int argc, char* argv[]) {
 	}
       }
 
-    // process non-attribute options
-    } else if (isoption(options, OPTION_XML_ENCODING)) {
-
-      std::cout << su.getencoding() << '\n';
-
-    } else if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {
-
-      bool nonnull;
-      std::cout << "Encoding: " << su.getencoding() << '\n';
-
-      std::string language = su.attribute("language", nonnull);
-      if (nonnull)
-	std::cout << "Language: " << language << '\n';
-
-      std::string directory = su.attribute("dir", nonnull);
-      if (nonnull)
-	std::cout << "Directory: " << directory << '\n';
-
-      std::string filename = su.attribute("filename", nonnull);
-      if (nonnull)
-	std::cout << "Filename: " << filename << '\n';
-
-      std::string version = su.attribute("version", nonnull);
-      if (nonnull)
-	std::cout << "Version: " << version << '\n';
-
       if (isoption(options, OPTION_LONG_INFO)) {
 	if (!isoption(options, OPTION_UNIT))
 	  std::cout << "Nested: " << su.unit_count() << '\n';
       }
 
+    // process non-attribute options
     } else if (isoption(options, OPTION_NESTED)) {
 
       try {
