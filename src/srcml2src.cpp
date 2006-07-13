@@ -419,23 +419,36 @@ int main(int argc, char* argv[]) {
     // process get attribute options
     if (optioncount > 0) {
 
-      // find attribute name from option
-      char* attribute_name = "";
-      int option = optionorder[0];
-      if (option == OPTION_LANGUAGE)
-	attribute_name = "language";
-      else if (option == OPTION_DIRECTORY)
-	attribute_name = "dir";
-      else if (option == OPTION_FILENAME)
-	attribute_name = "filename";
-      else if (option == OPTION_VERSION)
-	attribute_name = "version";
+      // output get attributes in order
+      for (int i = 0; i < optioncount; ++i) {
 
-      // output the option
-      bool nonnull;
-      std::string l = su.attribute(attribute_name, nonnull);
-      if (nonnull)
-	std::cout << l << '\n';
+	// find attribute name from option
+	char* attribute_name = "";
+	char* attribute_title = "";
+	int option = optionorder[i];
+	if (option == OPTION_LANGUAGE) {
+	  attribute_name = "language";
+	  attribute_title = "Language:";
+	} else if (option == OPTION_DIRECTORY) {
+	  attribute_name = "dir";
+	  attribute_title = "Directory:";
+	} else if (option == OPTION_FILENAME) {
+	  attribute_name = "filename";
+	  attribute_title = "Filename:";
+	} else if (option == OPTION_VERSION) {
+	  attribute_name = "version";
+	  attribute_title = "Version:";
+	}
+
+	// output the option
+	bool nonnull;
+	std::string l = su.attribute(attribute_name, nonnull);
+	if (nonnull) {
+	  if (optioncount > 1)
+	    std::cout << attribute_title << " ";
+	  std::cout << l << '\n';
+	}
+      }
 
     // process non-attribute options
     } else if (isoption(options, OPTION_XML_ENCODING)) {

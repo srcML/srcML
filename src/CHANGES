@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Allow for multiple output (in order) of attributes.
+
 	SIGINT handling for unit count.
 
 	Fix help formatting error.
