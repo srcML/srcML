@@ -97,7 +97,9 @@
       }
       break;
 
+    // catch all, just output the node
     default:
+      outputNode(*xmlTextReaderCurrentNode(reader), writer);
       break;
     }
   }
@@ -185,21 +187,40 @@ void eat_element(xmlTextReaderPtr& reader) {
       xmlTextWriterWriteComment(writer, node.content);
       break;
 
-    case XML_READER_TYPE_TEXT:
     case XML_READER_TYPE_WHITESPACE:
     case XML_READER_TYPE_SIGNIFICANT_WHITESPACE:
+      {
+	const xmlChar* s = node.content;
+	xmlTextWriterWriteRawLen(writer, s, strlen((const char*) s));
+      }
+      break;
+
+    case XML_READER_TYPE_TEXT:
+      {
 
       // output the UTF-8 buffer escaping the characters.  Note that the output encoding
       // is handled by libxml
-      for (unsigned char* p = (unsigned char*) node.content; *p != 0; ++p) {
-	  if (*p == '&')
-	    xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&amp;", 5);
-	  else if (*p == '<')
-	    xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&lt;", 4);
-	  else if (*p == '>')
-	    xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&gt;", 4);
-	  else
-	    xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) p, 1);
+      unsigned char* p = (unsigned char*) node.content;
+      unsigned char* startp = p;
+      for (; *p != 0; ++p) {
+	if (*p == '&') {
+	  xmlTextWriterWriteRawLen(writer, BAD_CAST startp, p - startp);
+	  xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&amp;", 5);
+	  startp = p + 1;
+	} else if (*p == '<') {
+	  xmlTextWriterWriteRawLen(writer, BAD_CAST startp, p - startp);
+	  xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&lt;", 4);
+	  startp = p + 1;
+	} else if (*p == '>') {
+	  xmlTextWriterWriteRawLen(writer, BAD_CAST startp, p - startp);
+	  xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&gt;", 4);
+	  startp = p + 1;
+	}
+      }
+
+      // write anything left over
+      xmlTextWriterWriteRawLen(writer, BAD_CAST startp, p - startp);
+
       }
       break;
 
