@@ -109,7 +109,7 @@ bool operator==(const xmlNode& n1, const xmlNode& n2) {
 
   return n1.type == n2.type && 
     (strcmp((char*) n1.name, (char*) n2.name) == 0) && (
-    (n1.type != XML_READER_TYPE_TEXT && n1.type != XML_READER_TYPE_SIGNIFICANT_WHITESPACE) ||
+    (n1.type != XML_TEXT_NODE && n1.type) ||
     (strcmp((char*) n1.content, (char*) n2.content) == 0)
     );
 }
