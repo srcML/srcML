@@ -47,8 +47,8 @@ template <typename Base>
 class StreamParser : public Base, public TokenStream {
 
  public:
-  StreamParser(antlr::TokenStream& lexer, int language)
-    : Base(lexer, language), inskip(false), finaltoken(false), _lexer(lexer) /* , saveguess(false) */ {
+  StreamParser(antlr::TokenStream& lexer, int language, int options)
+    : Base(lexer, language, options), inskip(false), finaltoken(false), _lexer(lexer) /* , saveguess(false) */ {
     pouttb = &tb;
     pskiptb = &skiptb;
   }

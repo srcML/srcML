@@ -143,6 +143,7 @@ struct TokenPosition {
 header "post_include_cpp" {
 
 srcMLParser* pparser;
+int parseoptions;
 
     class LocalMode {
 
@@ -163,10 +164,12 @@ srcMLParser* pparser;
     };
 
 
-srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang)
+srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options)
    : antlr::LLkParser(lexer,1), Mode(this, lang)
 {
     pparser = this;
+
+    parseoptions = parser_options;
 
   // start with a single mode that allows statements to be nested
   startNewMode(MODE_TOP | MODE_NEST | MODE_STATEMENT);
@@ -350,7 +353,7 @@ friend class LocalMode;
 
 ~srcMLParser() {}
 
-srcMLParser(antlr::TokenStream& lexer, int lang = LANGUAGE_CXX);
+srcMLParser(antlr::TokenStream& lexer, int lang = LANGUAGE_CXX, int options = 0);
 
 struct cppmodeitem {
         cppmodeitem(int current_size)

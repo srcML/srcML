@@ -41,7 +41,7 @@ class StreamMLParser : public StreamParser<Base> {
  public:
 
   StreamMLParser(antlr::TokenStream& lexer, int language, int parsing_options = 0)
-    : StreamParser<Base>(lexer, language), options(parsing_options) { 
+    : StreamParser<Base>(lexer, language, parsing_options), options(parsing_options) { 
 
     Base::startUnit();
   }
