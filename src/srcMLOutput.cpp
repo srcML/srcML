@@ -420,8 +420,8 @@ char* srcMLOutput::ElementNames[];
 // fill the element names array
 void srcMLOutput::fillElementNames() {
 
-  ElementNames[SUNIT] = "unit";
-  ElementNames[LINECOMMENT] = "comment";
+  ElementNames[SUNIT] = SRC_PREFIX "unit";
+  ElementNames[LINECOMMENT] = SRC_PREFIX "comment";
   ElementNames[BLOCKCOMMENT] = ElementNames[LINECOMMENT];
 
   // No op
@@ -433,99 +433,99 @@ void srcMLOutput::fillElementNames() {
   ElementNames[SLITERAL] = "";
 
   // sub-statement elements
-  ElementNames[SNAME] = "name";
+  ElementNames[SNAME] = SRC_PREFIX "name";
   ElementNames[SONAME] = "";
-  ElementNames[SCNAME] = "name";
-  ElementNames[STYPE] = "type";
-  ElementNames[SCONDITION] = "condition";
-  ElementNames[SBLOCK] = "block";
+  ElementNames[SCNAME] = SRC_PREFIX "name";
+  ElementNames[STYPE] = SRC_PREFIX "type";
+  ElementNames[SCONDITION] = SRC_PREFIX "condition";
+  ElementNames[SBLOCK] = SRC_PREFIX "block";
   ElementNames[SINDEX] = "";
 
-  ElementNames[SEXPRESSION_STATEMENT] = "expr_stmt";
-  ElementNames[SEXPRESSION] = "expr";
+  ElementNames[SEXPRESSION_STATEMENT] = SRC_PREFIX "expr_stmt";
+  ElementNames[SEXPRESSION] = SRC_PREFIX "expr";
 
-  ElementNames[SDECLARATION_STATEMENT] = "decl_stmt";
-  ElementNames[SDECLARATION] = "decl";
-  ElementNames[SDECLARATION_INITIALIZATION] = "init";
+  ElementNames[SDECLARATION_STATEMENT] = SRC_PREFIX "decl_stmt";
+  ElementNames[SDECLARATION] = SRC_PREFIX "decl";
+  ElementNames[SDECLARATION_INITIALIZATION] = SRC_PREFIX "init";
 
-  ElementNames[SBREAK_STATEMENT] = "break";
-  ElementNames[SCONTINUE_STATEMENT] = "continue";
-  ElementNames[SGOTO_STATEMENT] = "goto";
-  ElementNames[SLABEL_STATEMENT] = "label";
+  ElementNames[SBREAK_STATEMENT] = SRC_PREFIX "break";
+  ElementNames[SCONTINUE_STATEMENT] = SRC_PREFIX "continue";
+  ElementNames[SGOTO_STATEMENT] = SRC_PREFIX "goto";
+  ElementNames[SLABEL_STATEMENT] = SRC_PREFIX "label";
 
-  ElementNames[STYPEDEF] = "typedef";
-  ElementNames[SASM] = "asm";
-  ElementNames[SMACRO_CALL] = "macro";
-  ElementNames[SENUM] = "enum";
+  ElementNames[STYPEDEF] = SRC_PREFIX "typedef";
+  ElementNames[SASM] = SRC_PREFIX "asm";
+  ElementNames[SMACRO_CALL] = SRC_PREFIX "macro";
+  ElementNames[SENUM] = SRC_PREFIX "enum";
 
-  ElementNames[SIF_STATEMENT] = "if";
-  ElementNames[STHEN] = "then";
-  ElementNames[SELSE] = "else";
+  ElementNames[SIF_STATEMENT] = SRC_PREFIX "if";
+  ElementNames[STHEN] = SRC_PREFIX "then";
+  ElementNames[SELSE] = SRC_PREFIX "else";
 
-  ElementNames[SWHILE_STATEMENT] = "while";
-  ElementNames[SDO_STATEMENT] = "do";
+  ElementNames[SWHILE_STATEMENT] = SRC_PREFIX "while";
+  ElementNames[SDO_STATEMENT] = SRC_PREFIX "do";
 
-  ElementNames[SSWITCH] = "switch";
-  ElementNames[SCASE] = "case";
-  ElementNames[SDEFAULT] = "default";
+  ElementNames[SSWITCH] = SRC_PREFIX "switch";
+  ElementNames[SCASE] = SRC_PREFIX "case";
+  ElementNames[SDEFAULT] = SRC_PREFIX "default";
 
-  ElementNames[SFOR_STATEMENT] = "for";
+  ElementNames[SFOR_STATEMENT] = SRC_PREFIX "for";
   ElementNames[SFOR_GROUP] = "";
-  ElementNames[SFOR_INITIALIZATION] = "init";
+  ElementNames[SFOR_INITIALIZATION] = SRC_PREFIX "init";
   ElementNames[SFOR_CONDITION] = ElementNames[SCONDITION];
-  ElementNames[SFOR_INCREMENT] = "incr";
+  ElementNames[SFOR_INCREMENT] = SRC_PREFIX "incr";
 
   // functions
-  ElementNames[SFUNCTION_DEFINITION]  = "function";
-  ElementNames[SFUNCTION_DECLARATION] = "function_decl";
-  ElementNames[SFUNCTION_SPECIFIER]   = "specifier";
-  ElementNames[SRETURN_STATEMENT]     = "return";
-  ElementNames[SFUNCTION_CALL]        = "call";
-  ElementNames[SPARAMETER_LIST]       = "parameter_list";
-  ElementNames[SPARAMETER]            = "param";
-  ElementNames[SARGUMENT_LIST]        = "argument_list";
-  ElementNames[SARGUMENT]             = "argument";
+  ElementNames[SFUNCTION_DEFINITION]  = SRC_PREFIX "function";
+  ElementNames[SFUNCTION_DECLARATION] = SRC_PREFIX "function_decl";
+  ElementNames[SFUNCTION_SPECIFIER]   = SRC_PREFIX "specifier";
+  ElementNames[SRETURN_STATEMENT]     = SRC_PREFIX "return";
+  ElementNames[SFUNCTION_CALL]        = SRC_PREFIX "call";
+  ElementNames[SPARAMETER_LIST]       = SRC_PREFIX "parameter_list";
+  ElementNames[SPARAMETER]            = SRC_PREFIX "param";
+  ElementNames[SARGUMENT_LIST]        = SRC_PREFIX "argument_list";
+  ElementNames[SARGUMENT]             = SRC_PREFIX "argument";
 
   // struct, union
-  ElementNames[SSTRUCT] = "struct";
-  ElementNames[SSTRUCT_DECLARATION]   = "struct_decl";
-  ElementNames[SUNION]  = "union";
-  ElementNames[SUNION_DECLARATION]    = "union_decl";
+  ElementNames[SSTRUCT] = SRC_PREFIX "struct";
+  ElementNames[SSTRUCT_DECLARATION]   = SRC_PREFIX "struct_decl";
+  ElementNames[SUNION]  = SRC_PREFIX "union";
+  ElementNames[SUNION_DECLARATION]    = SRC_PREFIX "union_decl";
 
   // class
-  ElementNames[SCLASS]                   = "class";
-  ElementNames[SCLASS_DECLARATION]       = "class_decl";
-  ElementNames[SPUBLIC_ACCESS]           = "public";
-  ElementNames[SPUBLIC_ACCESS_DEFAULT]   = "public";
-  ElementNames[SPRIVATE_ACCESS]          = "private";
-  ElementNames[SPRIVATE_ACCESS_DEFAULT]  = "private";
-  ElementNames[SPROTECTED_ACCESS]        = "protected";
+  ElementNames[SCLASS]                   = SRC_PREFIX "class";
+  ElementNames[SCLASS_DECLARATION]       = SRC_PREFIX "class_decl";
+  ElementNames[SPUBLIC_ACCESS]           = SRC_PREFIX "public";
+  ElementNames[SPUBLIC_ACCESS_DEFAULT]   = SRC_PREFIX "public";
+  ElementNames[SPRIVATE_ACCESS]          = SRC_PREFIX "private";
+  ElementNames[SPRIVATE_ACCESS_DEFAULT]  = SRC_PREFIX "private";
+  ElementNames[SPROTECTED_ACCESS]        = SRC_PREFIX "protected";
 
-  ElementNames[SMEMBER_INITIALIZATION_LIST]  = "member_list";
-  ElementNames[SCONSTRUCTOR_DEFINITION]  = "constructor";
-  ElementNames[SCONSTRUCTOR_DECLARATION] = "constructor_decl";
-  ElementNames[SDESTRUCTOR_DEFINITION]   = "destructor";
-  ElementNames[SDESTRUCTOR_DECLARATION]  = "destructor_decl";
-  ElementNames[SDERIVATION_LIST]         = "super";
-  ElementNames[SFRIEND]                  = "friend";
-  ElementNames[SCLASS_SPECIFIER]         = "specifier";
+  ElementNames[SMEMBER_INITIALIZATION_LIST]  = SRC_PREFIX "member_list";
+  ElementNames[SCONSTRUCTOR_DEFINITION]  = SRC_PREFIX "constructor";
+  ElementNames[SCONSTRUCTOR_DECLARATION] = SRC_PREFIX "constructor_decl";
+  ElementNames[SDESTRUCTOR_DEFINITION]   = SRC_PREFIX "destructor";
+  ElementNames[SDESTRUCTOR_DECLARATION]  = SRC_PREFIX "destructor_decl";
+  ElementNames[SDERIVATION_LIST]         = SRC_PREFIX "super";
+  ElementNames[SFRIEND]                  = SRC_PREFIX "friend";
+  ElementNames[SCLASS_SPECIFIER]         = SRC_PREFIX "specifier";
 
   // extern definition
-  ElementNames[SEXTERN] = "extern";
+  ElementNames[SEXTERN] = SRC_PREFIX "extern";
 
   // namespaces
-  ElementNames[SNAMESPACE] = "namespace";
-  ElementNames[SUSING_DIRECTIVE] = "using";
+  ElementNames[SNAMESPACE] = SRC_PREFIX "namespace";
+  ElementNames[SUSING_DIRECTIVE] = SRC_PREFIX "using";
 
   // exception handling
-  ElementNames[STRY_BLOCK]       = "try";
-  ElementNames[SCATCH_BLOCK]     = "catch";
-  ElementNames[STHROW_STATEMENT] = "throw";
-  ElementNames[STHROW_SPECIFIER] = "throw";
-  ElementNames[STHROW_SPECIFIER_JAVA] = "throws";
+  ElementNames[STRY_BLOCK]       = SRC_PREFIX "try";
+  ElementNames[SCATCH_BLOCK]     = SRC_PREFIX "catch";
+  ElementNames[STHROW_STATEMENT] = SRC_PREFIX "throw";
+  ElementNames[STHROW_SPECIFIER] = SRC_PREFIX "throw";
+  ElementNames[STHROW_SPECIFIER_JAVA] = SRC_PREFIX "throws";
 
   // template
-  ElementNames[STEMPLATE] = "template";
+  ElementNames[STEMPLATE] = SRC_PREFIX "template";
   ElementNames[STEMPLATE_ARGUMENT] = ElementNames[SARGUMENT];
   ElementNames[STEMPLATE_ARGUMENT_LIST] = ElementNames[SARGUMENT_LIST];
   ElementNames[STEMPLATE_PARAMETER] = ElementNames[SPARAMETER];
@@ -553,12 +553,12 @@ void srcMLOutput::fillElementNames() {
   ElementNames[SERROR_MODE]    = "srcerr:mode";
 
   // Java elements
-  ElementNames[SEXTENDS]       = "extends";
-  ElementNames[SIMPLEMENTS]    = "implements";
-  ElementNames[SIMPORT]        = "import";
-  ElementNames[SPACKAGE]       = "package";
-  ElementNames[SINTERFACE]     = "class";
+  ElementNames[SEXTENDS]       = SRC_PREFIX "extends";
+  ElementNames[SIMPLEMENTS]    = SRC_PREFIX "implements";
+  ElementNames[SIMPORT]        = SRC_PREFIX "import";
+  ElementNames[SPACKAGE]       = SRC_PREFIX "package";
+  ElementNames[SINTERFACE]     = SRC_PREFIX "class";
 
   // special characters
-  ElementNames[FORMFEED]       = "formfeed";
+  ElementNames[FORMFEED]       = SRC_PREFIX "formfeed";
 }
