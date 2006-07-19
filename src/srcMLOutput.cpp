@@ -32,6 +32,9 @@
 const char* XML_DECLARATION_STANDALONE = "yes";
 const char* XML_VERSION = "1.0";
 
+#define SRC_PREFIX ""
+#define CPP_PREFIX "cpp:"
+
 // encoding handler
 xmlCharEncodingHandlerPtr handler = 0;
 
@@ -529,21 +532,21 @@ void srcMLOutput::fillElementNames() {
   ElementNames[STEMPLATE_PARAMETER_LIST] = ElementNames[SPARAMETER_LIST];
 
   // cpp
-  ElementNames[SCPP_DIRECTIVE] = "cpp:directive";
-  ElementNames[SCPP_FILENAME]  = "cpp:file";
-  ElementNames[SCPP_INCLUDE]   = "cpp:include";
-  ElementNames[SCPP_DEFINE]    = "cpp:define";
-  ElementNames[SCPP_UNDEF]     = "cpp:undef";
-  ElementNames[SCPP_LINE]      = "cpp:line";
-  ElementNames[SCPP_IF]        = "cpp:if";
-  ElementNames[SCPP_IFDEF]     = "cpp:ifdef";
-  ElementNames[SCPP_IFNDEF]    = "cpp:ifndef";
-  ElementNames[SCPP_ELSE]      = "cpp:else";
-  ElementNames[SCPP_ELIF]      = "cpp:elif";
-  ElementNames[SCPP_ENDIF]     = "cpp:endif";
-  ElementNames[SCPP_THEN]      = "cpp:then";
-  ElementNames[SCPP_PRAGMA]    = "cpp:pragma";
-  ElementNames[SCPP_ERROR]     = "cpp:error";
+  ElementNames[SCPP_DIRECTIVE] = CPP_PREFIX "directive";
+  ElementNames[SCPP_FILENAME]  = CPP_PREFIX "file";
+  ElementNames[SCPP_INCLUDE]   = CPP_PREFIX "include";
+  ElementNames[SCPP_DEFINE]    = CPP_PREFIX "define";
+  ElementNames[SCPP_UNDEF]     = CPP_PREFIX "undef";
+  ElementNames[SCPP_LINE]      = CPP_PREFIX "line";
+  ElementNames[SCPP_IF]        = CPP_PREFIX "if";
+  ElementNames[SCPP_IFDEF]     = CPP_PREFIX "ifdef";
+  ElementNames[SCPP_IFNDEF]    = CPP_PREFIX "ifndef";
+  ElementNames[SCPP_ELSE]      = CPP_PREFIX "else";
+  ElementNames[SCPP_ELIF]      = CPP_PREFIX "elif";
+  ElementNames[SCPP_ENDIF]     = CPP_PREFIX "endif";
+  ElementNames[SCPP_THEN]      = CPP_PREFIX "then";
+  ElementNames[SCPP_PRAGMA]    = CPP_PREFIX "pragma";
+  ElementNames[SCPP_ERROR]     = CPP_PREFIX "error";
 
   ElementNames[SMARKER]        = "srcerr:marker";
   ElementNames[SERROR_PARSE]   = "srcerr:parse";
