@@ -51,6 +51,9 @@ const char* INFO_FLAG_SHORT = "-o";
 const char* LONG_INFO_FLAG = "--longinfo";
 const char* LONG_INFO_FLAG_SHORT = "-l";
 
+const char* NAMESPACE_FLAG = "--namespace";
+const char* NAMESPACE_FLAG_SHORT = "";
+
 using std::setw;
 
 // output help message
@@ -163,6 +166,7 @@ int main(int argc, char* argv[]) {
   // option values
   const char* src_encoding = DEFAULT_TEXT_ENCODING;
   int unit = 0;
+  std::vector<std::string> ns;
 
   // process all flags
   int position = 0;
@@ -259,6 +263,27 @@ int main(int argc, char* argv[]) {
     else if (compare_flags(argv[curarg], XML_FLAG, XML_FLAG_SHORT, position)) {
       options |= OPTION_XML;
       if (position == original_position) ++curarg;
+    }
+
+    // namespace
+    else if (compare_flags(argv[curarg], NAMESPACE_FLAG, NAMESPACE_FLAG_SHORT)) {
+      options |= OPTION_NAMESPACE;
+
+      char* embedded = extract_option(argv[curarg]);
+
+      // filename is embedded parameter
+      if (embedded) {
+
+	ns.push_back(embedded + 1);
+	++curarg;
+
+      // check for namespace flag with missing namespace
+      } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
+	std::cerr << NAME << ": namespace option selected but no namespace specified." << '\n';
+	exit(STATUS_UNIT_MISSING);
+      } else {
+	ns.push_back(argv[(++curarg)++]);
+      }
     }
 
     // extract unit flag

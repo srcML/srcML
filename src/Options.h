@@ -108,6 +108,9 @@ enum Options {
 
   // expression mode
   OPTION_EXPRESSION = 0x02000000,
+
+  // namespace mode
+  OPTION_NAMESPACE = 0x04000000,
 };
 
 #endif
