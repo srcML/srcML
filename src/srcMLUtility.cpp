@@ -58,18 +58,14 @@ bool srcMLUtility::checkEncoding(const char* encoding) {
 
 }
 
-xmlChar* unit_filename = 0;
-xmlChar* unit_directory = 0;
-xmlChar* unit_version = 0;
-xmlChar* unit_language = 0;
-
 void skiptonextunit(xmlTextReaderPtr reader) throw (LibXMLError);
 void skiptounit(xmlTextReaderPtr reader, const char* filename) throw (LibXMLError);
 void skiptounit(xmlTextReaderPtr reader, int number) throw (LibXMLError);
 
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op)
-  : infile(infilename), output_encoding(encoding), options(op), reader(0), handler(0) {
+  : infile(infilename), output_encoding(encoding), options(op), reader(0), handler(0),
+    unit_language(0), unit_directory(0), unit_filename(0), unit_version(0) {
 
   // empty filename indicates standard input
   if (infile == 0)

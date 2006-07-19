@@ -119,6 +119,12 @@ class srcMLUtility {
   xmlTextReaderPtr reader;
   xmlCharEncodingHandlerPtr handler;
   std::map<std::string, std::string> ns;
+
+  // record attributes
+  xmlChar* unit_language;
+  xmlChar* unit_directory;
+  xmlChar* unit_filename;
+  xmlChar* unit_version;
 }; 
 
 #endif
