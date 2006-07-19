@@ -25,7 +25,6 @@
 #include "srcMLUtility.h"
 #include <iostream>
 #include <fstream>
-#include <map>
 #include "srcmlns.h"
 #include "xmlrw.h"
 
@@ -67,8 +66,6 @@ xmlChar* unit_language = 0;
 void skiptonextunit(xmlTextReaderPtr reader) throw (LibXMLError);
 void skiptounit(xmlTextReaderPtr reader, const char* filename) throw (LibXMLError);
 void skiptounit(xmlTextReaderPtr reader, int number) throw (LibXMLError);
-
-std::map<std::string, std::string> ns;
 
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op)

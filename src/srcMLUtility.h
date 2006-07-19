@@ -27,6 +27,7 @@
 
 #include <iostream>
 #include <string>
+#include <map>
 #include <vector>
 #include "Language.h"
 #include "Options.h"
@@ -117,6 +118,7 @@ class srcMLUtility {
   int& options;
   xmlTextReaderPtr reader;
   xmlCharEncodingHandlerPtr handler;
+  std::map<std::string, std::string> ns;
 }; 
 
 #endif
