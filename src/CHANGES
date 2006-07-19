@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Add option to extract prefix of a namespace from srcml2src.
+
 	Change --info option in srcml2src to use new multiple output options.
 
 	Allow for multiple output (in order) of attributes.

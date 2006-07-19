@@ -52,7 +52,8 @@ const char* LONG_INFO_FLAG = "--longinfo";
 const char* LONG_INFO_FLAG_SHORT = "-l";
 
 const char* NAMESPACE_FLAG = "--namespace";
-const char* NAMESPACE_FLAG_SHORT = "";
+const char* NAMESPACE_FLAG_SHORT = "-p";
+const char* NAMESPACE_FLAG_FULL = "--namespace=URI";
 
 using std::setw;
 
@@ -86,6 +87,8 @@ void output_help(const char* name) {
 	       << "display source version and exit\n"
 	       << "  " << ENCODING_FLAG_SHORT   << ", " << setw(COL) << ENCODING_FLAG
 	       << "display xml encoding and exit\n"
+	       << "  " << NAMESPACE_FLAG_SHORT  << ", " << setw(COL) << NAMESPACE_FLAG_FULL
+	       << "display prefix of namespace given by URI and exit\n"
 	       << '\n'
 	       << "  " << NESTED_FLAG_SHORT     << ", " << setw(COL) << NESTED_FLAG     
 	       << "display number of nested units and exit\n"
@@ -497,9 +500,13 @@ int main(int argc, char* argv[]) {
     // namespace
     } else if (isoption(options, OPTION_NAMESPACE)) {
 
-	// output the option
-	std::string l = su.namespace_ext(ns[0]);
-	std::cout << l << '\n';
+	bool nonnull = true;
+	std::string l = su.namespace_ext(ns[0], nonnull);
+	if (nonnull) {
+	  //	  if (optioncount > 1)
+	  //	    std::cout << attribute_title << " ";
+	  std::cout << l << '\n';
+	}
 
     // process non-attribute options
     } else if (isoption(options, OPTION_NESTED)) {

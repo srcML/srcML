@@ -25,6 +25,7 @@
 #include "srcMLUtility.h"
 #include <iostream>
 #include <fstream>
+#include <map>
 #include "srcmlns.h"
 #include "xmlrw.h"
 
@@ -67,6 +68,8 @@ void skiptonextunit(xmlTextReaderPtr reader) throw (LibXMLError);
 void skiptounit(xmlTextReaderPtr reader, const char* filename) throw (LibXMLError);
 void skiptounit(xmlTextReaderPtr reader, int number) throw (LibXMLError);
 
+std::map<std::string, std::string> ns;
+
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op)
   : infile(infilename), output_encoding(encoding), options(op), reader(0), handler(0) {
@@ -93,6 +96,12 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op
   unit_directory = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_DIRECTORY);
   unit_version = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_VERSION);
   unit_language = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_LANGUAGE);
+
+  // record the namespace attributes if we are going to use them later on
+  if (isoption(options, OPTION_NAMESPACE))
+    while (xmlTextReaderMoveToNextAttribute(reader))
+      if (xmlTextReaderIsNamespaceDecl(reader))
+	ns.insert (std::make_pair((const char*) xmlTextReaderConstValue(reader), (const char*) xmlTextReaderConstName(reader)));
 }
 
 // destructor
@@ -125,9 +134,25 @@ std::string srcMLUtility::attribute(const char* attribute_name, bool& nonnull) {
   return s;
 }
 
-// namespace
-std::string srcMLUtility::namespace_ext(const std::string& uri) {
-  return "http://www.sdml.info/srcML";
+// prefix of given namespace
+// return blank for default namespace
+// return blank
+std::string srcMLUtility::namespace_ext(const std::string& uri, bool& nonnull) {
+
+  std::string prefix;
+
+  if (ns[uri].size() == 0) {
+    nonnull = false;
+    prefix = "";
+  } else if (ns[uri].size() == 5) {
+    nonnull = true;
+    prefix = "";
+  } else {
+    nonnull = true;
+    prefix = ns[uri].substr(6);
+  }
+
+  return prefix;
 }
 
 // move to a particular nested unit

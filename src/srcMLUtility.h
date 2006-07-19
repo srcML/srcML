@@ -69,7 +69,7 @@ class srcMLUtility {
   std::string attribute(const char* attribute_name, bool& nonnull);
 
   // namespace
-  std::string namespace_ext(const std::string& uri);
+  std::string namespace_ext(const std::string& uri, bool& nonnull);
 
   // move to a particular nested unit
   void move_to_unit(int unitnumber);
