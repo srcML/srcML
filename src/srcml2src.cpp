@@ -494,6 +494,13 @@ int main(int argc, char* argv[]) {
 	  std::cout << "Nested: " << su.unit_count() << '\n';
       }
 
+    // namespace
+    } else if (isoption(options, OPTION_NAMESPACE)) {
+
+	// output the option
+	std::string l = su.namespace_ext(ns[0]);
+	std::cout << l << '\n';
+
     // process non-attribute options
     } else if (isoption(options, OPTION_NESTED)) {
 

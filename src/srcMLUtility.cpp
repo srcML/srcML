@@ -125,6 +125,11 @@ std::string srcMLUtility::attribute(const char* attribute_name, bool& nonnull) {
   return s;
 }
 
+// namespace
+std::string srcMLUtility::namespace_ext(const std::string& uri) {
+  return "http://www.sdml.info/srcML";
+}
+
 // move to a particular nested unit
 void srcMLUtility::move_to_unit(int unitnumber) {
 
