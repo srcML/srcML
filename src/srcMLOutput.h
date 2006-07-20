@@ -47,7 +47,10 @@ class srcMLOutput : public srcMLParserTokenTypes {
 	      const char* language, 
 	      const char* encoding,
 	      const char* src_encoding = "",
-	      int option = 0
+	      int option = 0,
+	      const char* ns_prefix_src = "",
+	      const char* ns_prefix_cpp = "",
+	      const char* ns_prefix_err = ""
 	      );
 
   static bool checkEncoding(const char* encoding);
@@ -77,6 +80,10 @@ class srcMLOutput : public srcMLParserTokenTypes {
   const char* unit_version;
   int options;
   const char* xml_encoding;
+
+  const char* prefix_src;
+  const char* prefix_cpp;
+  const char* prefix_err;
 
   int consume_next();
 

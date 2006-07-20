@@ -49,9 +49,12 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 			 const char* language, 
 			 const char* src_encoding,
 			 const char* xml_enc,
-			 int op)
+			 int op,
+			 const char* ns_prefix_src,
+			 const char* ns_prefix_cpp,
+			 const char* ns_prefix_err)
   : input(ints), xout(0), srcml_filename(filename), unit_language(language), unit_dir(""), unit_filename(""),
-    unit_version(""), options(op), xml_encoding(xml_enc)
+    unit_version(""), options(op), xml_encoding(xml_enc), prefix_src(ns_prefix_src), prefix_cpp(ns_prefix_cpp), prefix_err(ns_prefix_err)
 {
   // setup an output handler
   handler = xmlFindCharEncodingHandler(src_encoding);

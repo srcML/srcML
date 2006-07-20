@@ -45,7 +45,10 @@ class srcMLTranslator : public Language {
 		  int options,
 		  const char* directory = "",
 		  const char* filename = "",
-		  const char* version = ""
+		  const char* version = "",
+ 		  const char* ns_prefix_src = "",
+		  const char* ns_prefix_cpp = "",
+		  const char* ns_prefix_err = ""
 		  );
 
   // translate from input stream to output stream

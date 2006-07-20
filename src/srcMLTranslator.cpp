@@ -40,7 +40,10 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
 				 int op,
 				 const char* directory,       // 
 				 const char* filename,        // 
-				 const char* version          // 
+				 const char* version,         //
+				 const char* ns_prefix_src,
+				 const char* ns_prefix_cpp,
+				 const char* ns_prefix_err
 				 )
   : Language(language), options(op),
     out(0, srcml_filename, getLanguageString(), src_encoding, xml_encoding, options) {
