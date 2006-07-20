@@ -111,6 +111,9 @@ enum Options {
 
   // namespace mode
   OPTION_NAMESPACE = 0x04000000,
+
+  // xmlns mode
+  OPTION_XMLNS = 0x08000000,
 };
 
 #endif

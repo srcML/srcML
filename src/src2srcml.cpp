@@ -71,6 +71,9 @@ const char* DEFAULT_XML_ENCODING = "ISO-8859-1";
 const char* FILELIST_FLAG = "--input-file";
 const char* FILELIST_FLAG_SHORT = "-i";
 
+const char* XMLNS_FLAG = "--xmlns";
+const char* XMLNS_FLAG_FULL = "--xmlns=";
+
 const int DEFAULT_LANGUAGE = srcMLTranslator::LANGUAGE_CXX;
 
 const char* EXAMPLE_TEXT_FILENAME="foo.cpp";
@@ -195,6 +198,8 @@ const char* given_filename = "";
 const char* given_version = "";
 bool cpp_else = false;
 bool cpp_if0 = false;
+std::string ns_prefix;
+std::string ns_uri;
 
 // setup options and collect info from arguments
 int process_args(int argc, char* argv[]);
@@ -605,6 +610,33 @@ int process_args(int argc, char* argv[]) {
 		  << LANGUAGE_C << " " << LANGUAGE_CXX << " " << LANGUAGE_JAVA << '\n';
 	exit(STATUS_INVALID_LANGUAGE);
       }
+    }
+
+    // xml namespace specifications
+    else if (compare_flags(argv[curarg], XMLNS_FLAG, "") || strncmp(argv[curarg], XMLNS_FLAG, strlen(XMLNS_FLAG)) == 0) {
+
+      options |= OPTION_XMLNS;
+
+      char* embedded = extract_option(argv[curarg]);
+
+      // filename is embedded parameter
+      if (embedded) {
+
+	ns_prefix.assign(argv[curarg] + strlen(XMLNS_FLAG) + 1, embedded);
+	ns_uri = embedded + 1;
+	
+      // check for language flag with missing language value
+      } /* else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
+	std::cerr << NAME << ": language option selected but not specified." << '\n';
+	exit(STATUS_LANGUAGE_MISSING);
+	}*/ else {
+
+	// extract parameter
+	ns_prefix.assign(argv[curarg] + strlen(XMLNS_FLAG) + 1);
+	ns_uri = argv[++curarg];
+      }
+      std::cout << "|" << ns_prefix << "|" << ns_uri << std::endl;
+      ++curarg;
     }
 
     // xml_encoding
