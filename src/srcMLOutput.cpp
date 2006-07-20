@@ -158,24 +158,24 @@ int srcMLOutput::consume_next() {
 
 const char* srcMLOutput::token2name(const antlr::RefToken& token) const {
 
-  static char s[512];
-
-  if (ElementNames[token->getType()][0] == '\0')
-    return "";
-
-  strcpy(s, ElementPrefix[token->getType()]);
-  if (ElementPrefix[token->getType()][0] != '\0') {
-    strcat(s, ":");
-  }
-
-  strcat(s, ElementNames[token->getType()]);
-
-  return s;
+  return type2name(token->getType());
 }
 
 const char* srcMLOutput::type2name(int token_type) const {
 
-  return ElementNames[token_type];
+  static char s[512];
+
+  if (ElementNames[token_type][0] == '\0')
+    return "";
+
+  strcpy(s, ElementPrefix[token_type]);
+  if (ElementPrefix[token_type][0] != '\0') {
+    strcat(s, ":");
+  }
+
+  strcat(s, ElementNames[token_type]);
+
+  return s;
 }
 
 #ifdef LIBXML_ENABLED
@@ -250,7 +250,7 @@ void srcMLOutput::processFormFeed(const antlr::RefToken& token) {
 void srcMLOutput::startUnit(const char* language, const char* dir, const char* filename, const char* version, bool outer) {
 
     // start of main tag
-    xmlTextWriterStartElement(xout, BAD_CAST "unit");
+    xmlTextWriterStartElement(xout, BAD_CAST type2name(SUNIT));
 
     // outer units have namespaces
     if (outer) {
@@ -272,8 +272,13 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
       xmlTextWriterWriteAttribute(xout, BAD_CAST cpp_prefix.c_str(), BAD_CAST SRCML_CPP_NS_URI);
 
       // optional debugging xml namespace
+      std::string err_prefix = "xmlns";
+      if (prefix_err[0] != '\0') {
+	err_prefix += ":";
+	err_prefix += prefix_err;
+      }
       if (isoption(OPTION_DEBUG))
-	xmlTextWriterWriteAttribute(xout, BAD_CAST "xmlns:srcerr", BAD_CAST SRCML_ERR_NS_URI);
+	xmlTextWriterWriteAttribute(xout, BAD_CAST err_prefix.c_str(), BAD_CAST SRCML_ERR_NS_URI);
     }
 
     // language attribute
