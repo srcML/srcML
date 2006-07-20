@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Check for non-unique namespace prefixes.
+
 	Add option to src2srcml to allow for specification of namespace prefix.
 
 	Add option to extract prefix of a namespace from srcml2src.

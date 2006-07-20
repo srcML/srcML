@@ -247,6 +247,13 @@ int main(int argc, char* argv[]) {
     exit(STATUS_INVALID_OPTION_COMBINATION);
   }
 
+  // make sure namespace prefixes are unique
+  if (isoption(options, OPTION_XMLNS) && (ns_prefix_src == ns_prefix_cpp || ns_prefix_src == ns_prefix_err || ns_prefix_cpp == ns_prefix_err)) {
+
+    std::cerr << NAME << ": Namespace prefixes must be unique.\n";
+    exit(STATUS_INVALID_OPTION_COMBINATION);
+  }
+
   // eat optional option separator
   if (argc > (curarg) && strcmp(argv[curarg], OPTION_SEPARATOR) == 0)
       ++curarg;
