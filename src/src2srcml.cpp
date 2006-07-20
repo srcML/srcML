@@ -29,6 +29,7 @@
 #include <sys/stat.h>
 #include "version.h"
 #include "srcmlapps.h"
+#include "srcmlns.h"
 #include "Options.h"
 #include "project.h"
 
@@ -198,8 +199,11 @@ const char* given_filename = "";
 const char* given_version = "";
 bool cpp_else = false;
 bool cpp_if0 = false;
-std::string ns_prefix;
-std::string ns_uri;
+
+// namespace prefixes
+std::string ns_prefix_src="";
+std::string ns_prefix_cpp="cpp";
+std::string ns_prefix_err="srcerr";
 
 // setup options and collect info from arguments
 int process_args(int argc, char* argv[]);
@@ -606,7 +610,7 @@ int process_args(int argc, char* argv[]) {
       else if (strcmp(langparam, LANGUAGE_JAVA) == 0)
 	language = srcMLTranslator::LANGUAGE_JAVA;
       else {
-	std::cerr << NAME << ": invalid option -- Language flag must one of the following values:  "
+	std::cerr << NAME << ": invalid option -- Language flag must one of the following:  "
 		  << LANGUAGE_C << " " << LANGUAGE_CXX << " " << LANGUAGE_JAVA << '\n';
 	exit(STATUS_INVALID_LANGUAGE);
       }
@@ -619,6 +623,9 @@ int process_args(int argc, char* argv[]) {
 
       char* embedded = extract_option(argv[curarg]);
 
+      std::string ns_prefix;
+      std::string ns_uri;
+
       // filename is embedded parameter
       if (embedded) {
 
@@ -626,10 +633,10 @@ int process_args(int argc, char* argv[]) {
 	ns_uri = embedded + 1;
 	
       // check for language flag with missing language value
-      } /* else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
-	std::cerr << NAME << ": language option selected but not specified." << '\n';
+      } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
+	std::cerr << NAME << ": xmlns option selected but not specified." << '\n';
 	exit(STATUS_LANGUAGE_MISSING);
-	}*/ else {
+      } else {
 
 	// extract parameter
 	ns_prefix.assign(argv[curarg] + strlen(XMLNS_FLAG) + 1);
@@ -637,6 +644,19 @@ int process_args(int argc, char* argv[]) {
       }
       std::cout << "|" << ns_prefix << "|" << ns_uri << std::endl;
       ++curarg;
+
+      // validate uri
+      if (ns_uri == SRCML_SRC_NS_URI)
+	ns_prefix_src = ns_prefix;
+      else if (ns_uri == SRCML_CPP_NS_URI)
+	ns_prefix_cpp = ns_prefix;
+      else if (ns_uri == SRCML_ERR_NS_URI)
+	ns_prefix_err = ns_prefix;
+      else {
+	std::cerr << NAME << ": invalid namespace -- uri must be on of the following:  "
+		  << SRCML_SRC_NS_URI << " " << SRCML_CPP_NS_URI << " " << SRCML_ERR_NS_URI << '\n';
+	exit(STATUS_INVALID_LANGUAGE);
+      }
     }
 
     // xml_encoding
