@@ -160,6 +160,9 @@ const char* srcMLOutput::token2name(const antlr::RefToken& token) const {
 
   static char s[512];
 
+  if (ElementNames[token->getType()][0] == '\0')
+    return "";
+
   strcpy(s, ElementPrefix[token->getType()]);
   if (ElementPrefix[token->getType()][0] != '\0') {
     strcat(s, ":");
@@ -253,10 +256,20 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     if (outer) {
 
       // main srcML namespace declaration
-      xmlTextWriterWriteAttribute(xout, BAD_CAST "xmlns", BAD_CAST SRCML_SRC_NS_URI);
+      std::string src_prefix = "xmlns";
+      if (prefix_src[0] != '\0') {
+	src_prefix += ":";
+	src_prefix += prefix_src;
+      }
+      xmlTextWriterWriteAttribute(xout, BAD_CAST src_prefix.c_str(), BAD_CAST SRCML_SRC_NS_URI);
 
       // main cpp namespace declaration
-      xmlTextWriterWriteAttribute(xout, BAD_CAST "xmlns:cpp", BAD_CAST SRCML_CPP_NS_URI);
+      std::string cpp_prefix = "xmlns";
+      if (prefix_cpp[0] != '\0') {
+	cpp_prefix += ":";
+	cpp_prefix += prefix_cpp;
+      }
+      xmlTextWriterWriteAttribute(xout, BAD_CAST cpp_prefix.c_str(), BAD_CAST SRCML_CPP_NS_URI);
 
       // optional debugging xml namespace
       if (isoption(OPTION_DEBUG))
@@ -558,21 +571,21 @@ void srcMLOutput::fillElementNames() {
   ElementNames[STEMPLATE_PARAMETER_LIST] = ElementNames[SPARAMETER_LIST];
 
   // cpp
-  ElementNames[SCPP_DIRECTIVE] = CPP_PREFIX "directive";
-  ElementNames[SCPP_FILENAME]  = CPP_PREFIX "file";
-  ElementNames[SCPP_INCLUDE]   = CPP_PREFIX "include";
-  ElementNames[SCPP_DEFINE]    = CPP_PREFIX "define";
-  ElementNames[SCPP_UNDEF]     = CPP_PREFIX "undef";
-  ElementNames[SCPP_LINE]      = CPP_PREFIX "line";
-  ElementNames[SCPP_IF]        = CPP_PREFIX "if";
-  ElementNames[SCPP_IFDEF]     = CPP_PREFIX "ifdef";
-  ElementNames[SCPP_IFNDEF]    = CPP_PREFIX "ifndef";
-  ElementNames[SCPP_ELSE]      = CPP_PREFIX "else";
-  ElementNames[SCPP_ELIF]      = CPP_PREFIX "elif";
-  ElementNames[SCPP_ENDIF]     = CPP_PREFIX "endif";
-  ElementNames[SCPP_THEN]      = CPP_PREFIX "then";
-  ElementNames[SCPP_PRAGMA]    = CPP_PREFIX "pragma";
-  ElementNames[SCPP_ERROR]     = CPP_PREFIX "error";
+  ElementNames[SCPP_DIRECTIVE] = "directive";
+  ElementNames[SCPP_FILENAME]  = "file";
+  ElementNames[SCPP_INCLUDE]   = "include";
+  ElementNames[SCPP_DEFINE]    = "define";
+  ElementNames[SCPP_UNDEF]     = "undef";
+  ElementNames[SCPP_LINE]      = "line";
+  ElementNames[SCPP_IF]        = "if";
+  ElementNames[SCPP_IFDEF]     = "ifdef";
+  ElementNames[SCPP_IFNDEF]    = "ifndef";
+  ElementNames[SCPP_ELSE]      = "else";
+  ElementNames[SCPP_ELIF]      = "elif";
+  ElementNames[SCPP_ENDIF]     = "endif";
+  ElementNames[SCPP_THEN]      = "then";
+  ElementNames[SCPP_PRAGMA]    = "pragma";
+  ElementNames[SCPP_ERROR]     = "error";
 
   for (int i = SCPP_DIRECTIVE; i <= SCPP_ENDIF; ++i)
     ElementPrefix[i] = prefix_cpp;
