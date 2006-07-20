@@ -574,9 +574,15 @@ void srcMLOutput::fillElementNames() {
   ElementNames[SCPP_PRAGMA]    = CPP_PREFIX "pragma";
   ElementNames[SCPP_ERROR]     = CPP_PREFIX "error";
 
-  ElementNames[SMARKER]        = "srcerr:marker";
-  ElementNames[SERROR_PARSE]   = "srcerr:parse";
-  ElementNames[SERROR_MODE]    = "srcerr:mode";
+  for (int i = SCPP_DIRECTIVE; i <= SCPP_ENDIF; ++i)
+    ElementPrefix[i] = prefix_cpp;
+
+  ElementNames[SMARKER]        = "marker";
+  ElementNames[SERROR_PARSE]   = "parse";
+  ElementNames[SERROR_MODE]    = "mode";
+
+  for (int i = SMARKER; i <= SERROR_MODE; ++i)
+    ElementPrefix[i] = prefix_err;
 
   // Java elements
   ElementNames[SEXTENDS]       = "extends";
