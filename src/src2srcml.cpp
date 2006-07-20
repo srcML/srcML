@@ -629,7 +629,11 @@ int process_args(int argc, char* argv[]) {
       // filename is embedded parameter
       if (embedded) {
 
-	ns_prefix.assign(argv[curarg] + strlen(XMLNS_FLAG) + 1, embedded);
+	if (argv[curarg][strlen(XMLNS_FLAG)] != ':')
+	  ns_prefix = "";
+	else
+	  ns_prefix.assign(argv[curarg] + strlen(XMLNS_FLAG) + 1, embedded);
+
 	ns_uri = embedded + 1;
 	
       // check for language flag with missing language value
@@ -638,11 +642,16 @@ int process_args(int argc, char* argv[]) {
 	exit(STATUS_LANGUAGE_MISSING);
       } else {
 
-	// extract parameter
-	ns_prefix.assign(argv[curarg] + strlen(XMLNS_FLAG) + 1);
+	// extract prefix
+	if (strlen(argv[curarg]) == strlen(XMLNS_FLAG))
+	  ns_prefix = "";
+	else
+	  ns_prefix.assign(argv[curarg] + strlen(XMLNS_FLAG) + 1);
+
+	// uri is next argument
 	ns_uri = argv[++curarg];
       }
-      std::cout << "|" << ns_prefix << "|" << ns_uri << std::endl;
+
       ++curarg;
 
       // validate uri
