@@ -158,7 +158,16 @@ int srcMLOutput::consume_next() {
 
 const char* srcMLOutput::token2name(const antlr::RefToken& token) const {
 
-  return ElementNames[token->getType()];
+  static char s[512];
+
+  strcpy(s, ElementPrefix[token->getType()]);
+  if (ElementPrefix[token->getType()][0] != '\0') {
+    strcat(s, ":");
+  }
+
+  strcat(s, ElementNames[token->getType()]);
+
+  return s;
 }
 
 const char* srcMLOutput::type2name(int token_type) const {
@@ -433,6 +442,7 @@ char* srcMLOutput::ElementPrefix[];
 // fill the element names array
 void srcMLOutput::fillElementNames() {
 
+  // assume they are all src
   for (int i = 0; i < END_ELEMENT_TOKEN; ++i)
     ElementPrefix[i] = prefix_src;
 

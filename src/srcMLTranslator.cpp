@@ -31,7 +31,6 @@
 #include "srcMLOutput.h"
 
 #include "SegException.h"
-
 // constructor
 srcMLTranslator::srcMLTranslator(int language,                // programming language of source code
 				 const char* src_encoding,    // text encoding of source code
@@ -46,7 +45,7 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
 				 const char* ns_prefix_err
 				 )
   : Language(language), options(op),
-    out(0, srcml_filename, getLanguageString(), src_encoding, xml_encoding, options) {
+    out(0, srcml_filename, getLanguageString(), src_encoding, xml_encoding, options, (char*) ns_prefix_src, (char*) ns_prefix_cpp, (char*) ns_prefix_err) {
 
   // root unit for compound srcML documents
   if ((options & OPTION_NESTED) > 0)
