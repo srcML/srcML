@@ -48,9 +48,9 @@ class srcMLOutput : public srcMLParserTokenTypes {
 	      const char* encoding,
 	      const char* src_encoding = "",
 	      int option = 0,
-	      const char* ns_prefix_src = "",
-	      const char* ns_prefix_cpp = "",
-	      const char* ns_prefix_err = ""
+	      char* ns_prefix_src = "",
+	      char* ns_prefix_cpp = "",
+	      char* ns_prefix_err = ""
 	      );
 
   static bool checkEncoding(const char* encoding);
@@ -81,9 +81,9 @@ class srcMLOutput : public srcMLParserTokenTypes {
   int options;
   const char* xml_encoding;
 
-  const char* prefix_src;
-  const char* prefix_cpp;
-  const char* prefix_err;
+  static char* prefix_src;
+  static char* prefix_cpp;
+  static char* prefix_err;
 
   int consume_next();
 
@@ -97,6 +97,7 @@ class srcMLOutput : public srcMLParserTokenTypes {
 
   // List of element names
   static char* ElementNames[END_ELEMENT_TOKEN];
+  static char* ElementPrefix[END_ELEMENT_TOKEN];
 
   // fill the element names array
   static void fillElementNames();
