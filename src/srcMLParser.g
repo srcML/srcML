@@ -1282,6 +1282,35 @@ class_definition :
         )
 ;
 
+anonymous_class_definition :
+        {
+            // statement
+            startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_CLASS);
+
+            // start the class definition
+            startElement(SCLASS);
+
+        }
+        anonymous_class_super LPAREN RPAREN
+        (
+            // java classes end at the end of the block
+            { setMode(MODE_END_AT_BLOCK); }
+
+            lcurly
+        )
+;
+
+anonymous_class_super { LocalMode lm; }:
+        {
+            // statement
+            startNewMode(MODE_LOCAL);
+
+            // start the super name of an anonymous class
+            startElement(SDERIVATION_LIST);
+        }
+        complex_name[true]
+;
+
 interface_definition :
         {
             // statement
@@ -1298,6 +1327,10 @@ interface_definition :
 
 class_definition_header_java :
             (access_specifier_mark)* (final_specifier_mark)* CLASS class_header
+;
+
+anonymous_class_definition_header_java :
+            (access_specifier_mark)* (final_specifier_mark)* class_header
 ;
 
 interface_definition_header_java :
@@ -3292,8 +3325,11 @@ guessing_end
 expression_part[bool checkmacro = false] { guessing_end();
         int token = 0; int type_count = 0; int postnametoken = 0; int argumenttoken = 0; int postcalltoken = 0; } :
 
+        { inLanguage(LANGUAGE_JAVA) }?
+        (NEW NAME LPAREN RPAREN LCURLY)=> NEW anonymous_class_definition |
+
         // general math operators
-        general_operators | MULTOPS | NEW | DELETE | PERIOD |
+        general_operators | MULTOPS | /* NEW |*/ DELETE | PERIOD |
 
         // call
         // distinguish between a call and a macro

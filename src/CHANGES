@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Fix incorrect markup of anonymous Java classes.
+
 	Check for non-unique namespace prefixes.
 
 	Add option to src2srcml to allow for specification of namespace prefix.
