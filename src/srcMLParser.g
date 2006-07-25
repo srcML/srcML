@@ -438,7 +438,7 @@ start {} :
 
         comma[true] |
 
-        { !inTransparentMode(MODE_INTERNAL_END_PAREN) }? rparen[true] |
+        { !inTransparentMode(MODE_INTERNAL_END_PAREN) || inPrevMode(MODE_CONDITION) }? rparen[true] |
 
         // characters with special actions that usually end currently open elements
         { !inTransparentMode(MODE_INTERNAL_END_CURLY) }? block_end |
