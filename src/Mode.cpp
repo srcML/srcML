@@ -103,6 +103,11 @@ State::MODE_TYPE Mode::getMode() const {
   return pstate->getMode();
 }
 
+State::MODE_TYPE Mode::getPrevMode() const {
+
+  return pstate->getMode();
+}
+
 State::MODE_TYPE Mode::getTransparentMode() const {
 
   return pstate->getTransparentMode();
@@ -161,6 +166,11 @@ void Mode::replaceMode(const State::MODE_TYPE& o, const State::MODE_TYPE& n) {
 bool Mode::inMode(const State::MODE_TYPE& m) const {
 
   return pstate->inMode(m);
+}
+
+bool Mode::inPrevMode(const State::MODE_TYPE& m) const {
+
+  return pstate->inPrevMode(m);
 }
 
 bool Mode::inTransparentMode(const State::MODE_TYPE& m) const {

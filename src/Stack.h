@@ -55,6 +55,13 @@ class SimpleStack {
     return ar[topindex];
   }
 
+  const Type& prev() const {
+    if (topindex < 1)
+      throw Segmentation_Fault();
+
+    return ar[topindex - 1];
+  }
+
   void pop() {
     --topindex;
   }

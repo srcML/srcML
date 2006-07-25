@@ -96,6 +96,11 @@ class StateStack {
     return !st.empty() ? st.top().getMode() : 0;
   }
 
+  State::MODE_TYPE getPrevMode() const {
+
+    return !st.size() > 1 ? st.top().getMode() : 0;
+  }
+
   State::MODE_TYPE getTransparentMode() const {
 
     return !st.empty() ? st.top().getTransparentMode() : 0;
@@ -149,6 +154,11 @@ class StateStack {
   bool inMode(State::MODE_TYPE m) const {
    
     return !st.empty() ? st.top().inMode(m) : false;
+  }
+
+  bool inPrevMode(State::MODE_TYPE m) const {
+   
+    return st.size() > 1 ? st.prev().inMode(m) : false;
   }
 
   bool inTransparentMode(State::MODE_TYPE m) const {

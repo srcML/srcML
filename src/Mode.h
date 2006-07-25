@@ -161,6 +161,8 @@ protected:
 
   State::MODE_TYPE getMode() const;
 
+  State::MODE_TYPE getPrevMode() const;
+
   State::MODE_TYPE getTransparentMode() const;
 
   srcMLState& currentState();
@@ -192,6 +194,8 @@ protected:
   void replaceMode(const State::MODE_TYPE& o, const State::MODE_TYPE& n);
 
   bool inMode(const State::MODE_TYPE& m) const;
+
+  bool inPrevMode(const State::MODE_TYPE& m) const;
 
   bool inTransparentMode(const State::MODE_TYPE& m) const;
 
