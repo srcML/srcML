@@ -307,6 +307,11 @@ const char* srcMLUtility::getencoding() {
   return (const char*) xmlTextReaderConstEncoding(reader);
 }
 
+// namespaces and prefixes
+const std::map<std::string, std::string> srcMLUtility::getNS() const {
+  return ns;
+}
+
 // output current unit element in XML
 void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
 

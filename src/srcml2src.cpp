@@ -461,18 +461,14 @@ int main(int argc, char* argv[]) {
     // process get attribute options
     if (optioncount > 0) {
 
-      bool nonnull = false;
-      std::string l = su.namespace_ext(SRCML_SRC_NS_URI, nonnull);
-      if (nonnull)
-	std::cout << "xmlns" << (l != "" ? ":" : "") << l << "=\"" << SRCML_SRC_NS_URI << std::endl;
+      const std::map<std::string, std::string> ns = su.getNS();
 
-      l = su.namespace_ext(SRCML_CPP_NS_URI, nonnull);
-      if (nonnull)
-	std::cout << "xmlns" << (l != "" ? ":" : "") << l << "=\"" << SRCML_CPP_NS_URI << std::endl;
+      for(std::map<std::string, std::string>::const_iterator iter = ns.begin(); iter != ns.end(); iter++) {
+	std::string uri = (*iter).first;
+	std::string prefix = (*iter).second;
 
-      l = su.namespace_ext(SRCML_ERR_NS_URI, nonnull);
-      if (nonnull)
-	std::cout << "xmlns" << (l != "" ? ":" : "") << l << "=\"" << SRCML_ERR_NS_URI << std::endl;
+	std::cout << prefix << "=\"" << uri << "\"" << std::endl;
+      }
 
       // output get attributes in order
       for (int i = 0; i < optioncount; ++i) {
