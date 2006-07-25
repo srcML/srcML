@@ -51,9 +51,9 @@ const char* INFO_FLAG_SHORT = "-o";
 const char* LONG_INFO_FLAG = "--longinfo";
 const char* LONG_INFO_FLAG_SHORT = "-l";
 
-const char* NAMESPACE_FLAG = "--namespace";
+const char* NAMESPACE_FLAG = "--prefix";
 const char* NAMESPACE_FLAG_SHORT = "-p";
-const char* NAMESPACE_FLAG_FULL = "--namespace=URI";
+const char* NAMESPACE_FLAG_FULL = "--prefixURI";
 
 using std::setw;
 

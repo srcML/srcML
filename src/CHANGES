@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Change srcml2src namespace prefix flag to "prefix" instead of "namespace".
+
 	Fix incorrect markup of anonymous Java classes.
 
 	Check for non-unique namespace prefixes.
