@@ -91,7 +91,7 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op
   unit_language = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_LANGUAGE);
 
   // record the namespace attributes if we are going to use them later on
-  if (isoption(options, OPTION_NAMESPACE))
+  //  if (isoption(options, OPTION_NAMESPACE))
     while (xmlTextReaderMoveToNextAttribute(reader))
       if (xmlTextReaderIsNamespaceDecl(reader))
 	ns.insert (std::make_pair((const char*) xmlTextReaderConstValue(reader), (const char*) xmlTextReaderConstName(reader)));

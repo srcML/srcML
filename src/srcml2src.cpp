@@ -29,6 +29,7 @@
 #include <sys/stat.h>
 #include "version.h"
 #include "srcmlapps.h"
+#include "srcmlns.h"
 #include "project.h"
 #include "srcMLUtility.h"
 #include "Options.h"
@@ -453,10 +454,25 @@ int main(int argc, char* argv[]) {
       optionorder[3] = OPTION_FILENAME;
       optionorder[4] = OPTION_VERSION;
       optioncount = 5;
+
+      options |= OPTION_NAMESPACE;
     }
 
     // process get attribute options
     if (optioncount > 0) {
+
+      bool nonnull = false;
+      std::string l = su.namespace_ext(SRCML_SRC_NS_URI, nonnull);
+      if (nonnull)
+	std::cout << "xmlns" << (l != "" ? ":" : "") << l << "=\"" << SRCML_SRC_NS_URI << std::endl;
+
+      l = su.namespace_ext(SRCML_CPP_NS_URI, nonnull);
+      if (nonnull)
+	std::cout << "xmlns" << (l != "" ? ":" : "") << l << "=\"" << SRCML_CPP_NS_URI << std::endl;
+
+      l = su.namespace_ext(SRCML_ERR_NS_URI, nonnull);
+      if (nonnull)
+	std::cout << "xmlns" << (l != "" ? ":" : "") << l << "=\"" << SRCML_ERR_NS_URI << std::endl;
 
       // output get attributes in order
       for (int i = 0; i < optioncount; ++i) {

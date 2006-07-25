@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Output prefixes on info.
+
 	Change srcml2src namespace prefix flag to "prefix" instead of "namespace".
 
 	Fix incorrect markup of anonymous Java classes.
