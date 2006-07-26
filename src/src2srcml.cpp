@@ -73,7 +73,8 @@ const char* FILELIST_FLAG = "--input-file";
 const char* FILELIST_FLAG_SHORT = "-i";
 
 const char* XMLNS_FLAG = "--xmlns";
-const char* XMLNS_FLAG_FULL = "--xmlns=";
+const char* XMLNS_DEFAULT_FLAG_FULL = "--xmlns=URI";
+const char* XMLNS_FLAG_FULL = "--xmlns:PREFIX=URI";
 
 const int DEFAULT_LANGUAGE = srcMLTranslator::LANGUAGE_CXX;
 
@@ -121,6 +122,12 @@ void output_help(const char* name) {
 	      << "set the output XML encoding to ENC (default:  "
 	      << DEFAULT_XML_ENCODING << ") \n"
 	      << '\n'
+	      << "  " << setw(COL) <<  XMLNS_DEFAULT_FLAG_FULL << "    "
+	      << "set the default namespace URI (default:  xmlns=\"" << SRCML_SRC_NS_URI << "\")\n"
+	      << "  " << setw(COL) <<  XMLNS_FLAG_FULL << "    "
+	      << "set the PREFIX for the URI (defaults:  xmlns:cpp=\"" << SRCML_CPP_NS_URI << "\",\n"
+	      << "                          " << "xmlns:srcerr=\"" << SRCML_ERR_NS_URI << "\")\n"
+	      << '\n'
 #ifdef LIBXML_ENABLED
 	      << "  " << TEXTENCODING_FLAG_SHORT        << ", " << setw(COL) <<  TEXTENCODING_FLAG_FULL
 	      << "set the input source encoding to ENC (default:  " << DEFAULT_TEXT_ENCODING << ") \n"
@@ -143,7 +150,7 @@ void output_help(const char* name) {
 	      << "  " << INTERACTIVE_FLAG_SHORT << ", " << setw(COL) <<  INTERACTIVE_FLAG
 	      << "low-latency output\n"
 	      << "  " << DEBUG_FLAG_SHORT       << ", " << setw(COL) <<  DEBUG_FLAG
-	      << "debug translation errors with special namespace\n"
+	      << "markup translation errors with namespace \"" << SRCML_ERR_NS_URI << "\"\n"
               << "  " << VERBOSE_FLAG_SHORT     << ", " << setw(COL) << VERBOSE_FLAG
 	      << "verbose output to standard error\n"
               << '\n'
