@@ -497,6 +497,43 @@ check([srcmltranslator, option.CPP_MARKUP_IF0_FLAG], cpp_if0, cpp_marked_srcml)
 validate(getreturn([srcmltranslator, option.CPP_MARKUP_IF0_FLAG, option.CPP_TEXTONLY_IF0_FLAG, "foobar"], None), status.STATUS_INVALID_OPTION_COMBINATION)
 validate(getreturn([srcmltranslator, option.CPP_TEXTONLY_IF0_FLAG, option.CPP_MARKUP_IF0_FLAG, "foobar"], None), status.STATUS_INVALID_OPTION_COMBINATION)
 
+##
+# xmlns options
+
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
+"""
+
+# separate
+check([srcmltranslator, "--xmlns=http://www.sdml.info/srcML/src"], "", srcml)
+check([srcmltranslator, "--xmlns:cpp=http://www.sdml.info/srcML/cpp"], "", srcml)
+
+# multiple
+check([srcmltranslator, "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:cpp=http://www.sdml.info/srcML/cpp"], "", srcml)
+
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:srcerr="http://www.sdml.info/srcML/srcerr" language="C++"/>
+"""
+
+# separate
+check([srcmltranslator, "--debug", "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:cpp=http://www.sdml.info/srcML/cpp", "--xmlns:srcerr=http://www.sdml.info/srcML/srcerr"], "", srcml)
+
+# multiple
+check([srcmltranslator, "--debug", "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:cpp=http://www.sdml.info/srcML/cpp"], "", srcml)
+
+check([srcmltranslator, "--debug", "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:srcerr=http://www.sdml.info/srcML/srcerr"], "", srcml)
+
+check([srcmltranslator, "--debug", "--xmlns:cpp=http://www.sdml.info/srcML/cpp", "--xmlns:srcerr=http://www.sdml.info/srcML/srcerr"], "", srcml)
+
+srcml = xml_declaration + """
+<src:unit xmlns:src="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
+"""
+
+srcml = xml_declaration + """
+<src:unit xmlns:src="http://www.sdml.info/srcML/src" xmlns="http://www.sdml.info/srcML/cpp" language="C++"/>
+"""
+check([srcmltranslator, "--xmlns:src=http://www.sdml.info/srcML/src", "--xmlns=http://www.sdml.info/srcML/cpp"], "", srcml)
+
 # footer
 print
 print "Error count: ", error_count
