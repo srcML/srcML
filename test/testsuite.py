@@ -10,7 +10,7 @@ import re
 import subprocess
 import difflib
 
-maxcount = 500
+maxcount = 700
 error_filename = ".suitelist"
 
 FIELD_WIDTH_LANGUAGE = 7
@@ -70,10 +70,19 @@ def xmldiff(xml_filename1, xml_filename2):
 		return ""
 
 # find differences of two files
-def src2srcML(text_file, encoding, language, directory, filename):
+def src2srcML(text_file, encoding, language, directory, filename, prefixlist):
 
-	command = [srcmltranslator, "-l", language, "-d", directory,
-			   "--xml-encoding=" + encoding, "--filename=" + filename]
+	command = [srcmltranslator, "-l", language, "--xml-encoding=" + encoding]
+
+	if directory != "":
+		command.extend(["--directory", directory])
+
+       	if filename != "":
+		command.extend(["--filename", filename])
+
+	command.extend(prefixlist)
+
+	print command
 
 	# run the srcml processorn
 	if src2srcml_src_encoding:
@@ -112,6 +121,36 @@ def getversion(xml_file):
 def getfilename(xml_file):
 
 	return getsrcmlattribute(xml_file, "-f")
+
+# xmlns attribute
+def getfullxmlns(xml_file):
+	print "HERE", xml_file
+
+	t = getsrcmlattribute(xml_file, "--info")
+
+	l = []
+	for a in t.split():
+		if a[0:5] == "xmlns":
+			l.append("--" + a.replace('"', ""))
+	
+	return l
+
+# xmlns attribute
+def defaultxmlns(l):
+
+	ldef = []
+	ns_src_uri = "http://www.sdml.info/srcML/src"
+	ns_cpp_uri = "http://www.sdml.info/srcML/cpp"
+	ns_err_uri = "http://www.sdml.info/srcML/srcerr"
+	for a in l:
+		if a[len(a) - len(ns_src_uri):] == ns_src_uri:
+			ldef.append(a)
+		elif a[len(a) - len(ns_cpp_uri):] == ns_cpp_uri:
+			ldef.append(a)
+		elif a[len(a) - len(ns_err_uri):] == ns_err_uri:
+			ldef.append(a)
+
+	return ldef
 
 # version of src2srcml
 def src2srcmlversion():
@@ -262,11 +301,12 @@ try:
 						else:
 							unitxml = extract_unit(filexml, count)
 
+						print "HERE2", filexml
 						# convert the unit in xml to text
 						unittext = srcml2src(unitxml, encoding)
 
 						# convert the text to srcML
-						unitsrcml = src2srcML(unittext, encoding, language, directory, getfilename(unitxml))
+						unitsrcml = src2srcML(unittext, encoding, language, directory, getfilename(unitxml), defaultxmlns(getfullxmlns(unitxml)))
 						# find the difference
 						result = xmldiff(unitxml, unitsrcml)
 						if count == MAX_COUNT:
