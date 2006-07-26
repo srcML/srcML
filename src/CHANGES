@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Fix missing markup of exception handling for Java.
+
 	Output prefixes on info.
 
 	Change srcml2src namespace prefix flag to "prefix" instead of "namespace".

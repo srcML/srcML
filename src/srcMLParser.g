@@ -474,7 +474,12 @@ cfg {} :
         // C++ additional cfg statements
         { inLanguage(LANGUAGE_CXX) }? (
 
-            namespace_statement | exception_statement | template_declaration
+            namespace_statement | template_declaration
+        ) |
+
+        { inLanguage(LANGUAGE_OO) }? (
+
+            exception_statement
         ) |
 
         statement_cfg |
@@ -573,7 +578,7 @@ statements_non_cfg { int type_count = 0; int token = 0; int secondtoken = 0; } :
         ) |
 
         // constructor
-        { inLanguage(LANGUAGE_CXX) }?
+        { inLanguage(LANGUAGE_OO) }?
         (constructor_check[token /* token after header */])=> constructor[token] |
 
         // destructor
