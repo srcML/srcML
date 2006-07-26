@@ -1,5 +1,63 @@
 NEWS
 
+Release of Apr-12-2006
+
+The major change is the control of parsing and markup of preprocessing sections, e.g., #else ... #endif.
+src2srcml will now mark these sections by default.  Previously they were stored only as text due to
+difficulties in marking the multi-hierarchical view that these sections provide.  Not all of these sections
+are sucessfully parsed yet, and this change will uncover some previously missed bugs.  However, the change
+also fixes some previous bugs.
+
+The other major change is an encoding handling bug in the libxml2 version.
+
+CPP Markup Changes:
+
+	* The #else (#elif) of preprocessing sections now have markup.  Previously they were stored
+	only as text.
+
+	* New options, --cpp_markup_else and --cpp_textonly_else, allow control of how these
+	sections are parsed.  New default is to markup these sections (--cpp_markup_else).
+	Previous default was equivalent to --cpp_textonly_else.
+
+	* New options, --cpp_markup_if0 and --cpp_textonly_if0, allow control of how preprocessor
+	sections of the form #if 0 ... #endif are handled.  With the option --cpp_textonly_if0 these
+	sections are not parsed and no markup was inserted.  This is the default and always has been.
+	With the option --cpp_markup_if0 these sections are parsed and markup inserted.
+
+Other Major Changes:
+
+	* Fix of crashing problem due to encoding selection for libxml2 version.  Full range of
+	encodings (in libxml2 version) is now supported.
+
+	* Default (in all cases) is now ISO-8859-1 for input format.  Changes default
+	in libxml2 version only (previous default based on locale).
+
+Misc Changes:
+
+	* CLI now detects input and output files when they are the same file.
+
+	* CLI now detect incompatible options with encoding.
+
+	* srcml2src extraction of nested unit now also extract XML comments.
+
+	* srcml2src now copies non-standard attributes on nested units.
+
+	* src2srcml now has the XML encoding in the verbose output.
+
+	* src2srcml now includes the name of the file in the output of verbose mode (as in input list mode)
+	
+Other Fixes:
+
+	* Return code on --extract-all option in srcml2src now correct.
+
+	* Fix for missing newline before EOF on preprocessor line, e.g., file ends with #endif with no final
+	newline.
+
+	* Now allows literals as arguments in template instantiation.
+
+	* Change output of some errors in src2srcml to std::cerr.
+
+
 Release of Jan-30-2006-Beta
 
 This version of the srcML translator include numerous bug fixes, improved set of features
