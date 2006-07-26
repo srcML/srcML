@@ -65,7 +65,7 @@ void skiptounit(xmlTextReaderPtr reader, int number) throw (LibXMLError);
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op)
   : infile(infilename), output_encoding(encoding), options(op), reader(0), handler(0),
-    unit_language(0), unit_directory(0), unit_filename(0), unit_version(0) {
+    unit_language(0), unit_directory(0), unit_filename(0), unit_version(0), moved(false) {
 
   // empty filename indicates standard input
   if (infile == 0)
@@ -115,6 +115,18 @@ void srcMLUtility::translate(const char* ofilename) {
 
 // attribute
 std::string srcMLUtility::attribute(const char* attribute_name, bool& nonnull) {
+
+  if (moved) {
+    // extract attribute from unit tag
+    xmlChar* value = xmlTextReaderGetAttribute(reader, BAD_CAST attribute_name);
+ 
+    // return the extracted attribute or a blank string if it doesn't exist
+    std::string s(value != 0 ? (const char*)value : "");
+ 
+    nonnull = value != 0;
+
+    return s;
+  }
 
   // extract attribute from unit tag
   int pos = -1;
@@ -169,6 +181,8 @@ std::string srcMLUtility::namespace_ext(const std::string& uri, bool& nonnull) {
 
 // move to a particular nested unit
 void srcMLUtility::move_to_unit(int unitnumber) {
+
+  moved = true;
 
   // skip to the proper nested unit
   skiptounit(reader, unitnumber);

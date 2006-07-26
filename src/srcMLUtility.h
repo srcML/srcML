@@ -128,6 +128,8 @@ class srcMLUtility {
   xmlChar* unit_directory;
   xmlChar* unit_filename;
   xmlChar* unit_version;
+
+  bool moved;
 }; 
 
 #endif
