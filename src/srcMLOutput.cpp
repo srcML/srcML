@@ -269,7 +269,8 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
 	cpp_prefix += ":";
 	cpp_prefix += prefix_cpp;
       }
-      xmlTextWriterWriteAttribute(xout, BAD_CAST cpp_prefix.c_str(), BAD_CAST SRCML_CPP_NS_URI);
+      if (isoption(OPTION_CPP))
+	xmlTextWriterWriteAttribute(xout, BAD_CAST cpp_prefix.c_str(), BAD_CAST SRCML_CPP_NS_URI);
 
       // optional debugging xml namespace
       std::string err_prefix = "xmlns";

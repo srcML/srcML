@@ -197,7 +197,7 @@ void output_version(const char* name) {
 	      << COPYRIGHT << '\n';
 }
 
-int options = OPTION_CPP_MARKUP_ELSE;
+int options = OPTION_CPP_MARKUP_ELSE | OPTION_CPP;
 const char* src_encoding = DEFAULT_TEXT_ENCODING;
 int language = DEFAULT_LANGUAGE;
 const char* xml_encoding = DEFAULT_XML_ENCODING;
@@ -622,9 +622,13 @@ int process_args(int argc, char* argv[]) {
 	language = srcMLTranslator::LANGUAGE_C;
       else if (strcmp(langparam, LANGUAGE_CXX) == 0)
 	language = srcMLTranslator::LANGUAGE_CXX;
-      else if (strcmp(langparam, LANGUAGE_JAVA) == 0)
+      else if (strcmp(langparam, LANGUAGE_JAVA) == 0) {
+
+	// turnoff default cpp reference
+	options &= ~OPTION_CPP;
+
 	language = srcMLTranslator::LANGUAGE_JAVA;
-      else {
+      } else {
 	std::cerr << NAME << ": invalid option -- Language flag must one of the following:  "
 		  << LANGUAGE_C << " " << LANGUAGE_CXX << " " << LANGUAGE_JAVA << '\n';
 	exit(STATUS_INVALID_LANGUAGE);

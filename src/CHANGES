@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Don't include cpp namespace declaration for languages other than C or C++.
+
 	Fix missing markup of exception handling for Java.
 
 	Output prefixes on info.

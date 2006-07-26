@@ -114,6 +114,9 @@ enum Options {
 
   // xmlns mode
   OPTION_XMLNS = 0x08000000,
+
+  // cpp mode
+  OPTION_CPP = 0x10000000,
 };
 
 #endif
