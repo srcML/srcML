@@ -428,6 +428,18 @@ int main(int argc, char* argv[]) {
     exit(STATUS_INPUTFILE_PROBLEM);
   }
 
+  // info options are convenience functions for multiple options
+  if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {
+    optionorder[0] = OPTION_XML_ENCODING;
+    optionorder[1] = OPTION_LANGUAGE;
+    optionorder[2] = OPTION_DIRECTORY;
+    optionorder[3] = OPTION_FILENAME;
+    optionorder[4] = OPTION_VERSION;
+    optioncount = 5;
+
+    options |= OPTION_NAMESPACE;
+  }
+
   try {
 
     // setup for processing
@@ -446,24 +458,12 @@ int main(int argc, char* argv[]) {
       }
     }
 
-    // info options are convenience functions for multiple options
-    if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {
-      optionorder[0] = OPTION_XML_ENCODING;
-      optionorder[1] = OPTION_LANGUAGE;
-      optionorder[2] = OPTION_DIRECTORY;
-      optionorder[3] = OPTION_FILENAME;
-      optionorder[4] = OPTION_VERSION;
-      optioncount = 5;
-
-      options |= OPTION_NAMESPACE;
-    }
-
     // process get attribute options
     if (optioncount > 0) {
 
-      const std::map<std::string, std::string> ns = su.getNS();
+      const std::vector<std::pair<std::string, std::string> > ns = su.getNS();
 
-      for(std::map<std::string, std::string>::const_iterator iter = ns.begin(); iter != ns.end(); iter++) {
+      for (std::vector<std::pair<std::string, std::string> >::const_iterator iter = ns.begin(); iter != ns.end(); iter++) {
 	std::string uri = (*iter).first;
 	std::string prefix = (*iter).second;
 

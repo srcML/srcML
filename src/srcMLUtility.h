@@ -27,7 +27,6 @@
 
 #include <iostream>
 #include <string>
-#include <map>
 #include <vector>
 #include "Language.h"
 #include "Options.h"
@@ -79,7 +78,7 @@ class srcMLUtility {
   const char* getencoding();
 
   // namespaces and prefixes
-  const std::map<std::string, std::string> getNS() const;
+  const std::vector<std::pair<std::string, std::string> > getNS() const;
 
   // count of nested units
   int unit_count();
@@ -121,7 +120,7 @@ class srcMLUtility {
   int& options;
   xmlTextReaderPtr reader;
   xmlCharEncodingHandlerPtr handler;
-  std::map<std::string, std::string> ns;
+  std::vector<std::pair<std::string, std::string> > nsv;
 
   // record attributes
   xmlChar* unit_language;

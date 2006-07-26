@@ -91,10 +91,10 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op
   unit_language = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_LANGUAGE);
 
   // record the namespace attributes if we are going to use them later on
-  //  if (isoption(options, OPTION_NAMESPACE))
+  if (isoption(options, OPTION_NAMESPACE))
     while (xmlTextReaderMoveToNextAttribute(reader))
       if (xmlTextReaderIsNamespaceDecl(reader))
-	ns.insert (std::make_pair((const char*) xmlTextReaderConstValue(reader), (const char*) xmlTextReaderConstName(reader)));
+	nsv.push_back(std::make_pair((const char*) xmlTextReaderConstValue(reader), (const char*) xmlTextReaderConstName(reader)));
 }
 
 // destructor
@@ -132,17 +132,30 @@ std::string srcMLUtility::attribute(const char* attribute_name, bool& nonnull) {
 // return blank
 std::string srcMLUtility::namespace_ext(const std::string& uri, bool& nonnull) {
 
+  // find the raw prefix
+  std::string raw_prefix;
+  for (std::vector<std::pair<std::string, std::string> >::const_iterator iter = nsv.begin(); iter != nsv.end(); iter++) {
+	std::string vuri = (*iter).first;
+	std::string vprefix = (*iter).second;
+
+	if (vuri == uri) {
+	  raw_prefix = vprefix;
+	  break;
+	}
+  }
+
+  // calculate the real prefix
   std::string prefix;
 
-  if (ns[uri].size() == 0) {
+  if (raw_prefix.size() == 0) {
     nonnull = false;
     prefix = "";
-  } else if (ns[uri].size() == 5) {
+  } else if (raw_prefix.size() == 5) {
     nonnull = true;
     prefix = "";
   } else {
     nonnull = true;
-    prefix = ns[uri].substr(6);
+    prefix = raw_prefix.substr(6);
   }
 
   return prefix;
@@ -308,8 +321,8 @@ const char* srcMLUtility::getencoding() {
 }
 
 // namespaces and prefixes
-const std::map<std::string, std::string> srcMLUtility::getNS() const {
-  return ns;
+const std::vector<std::pair<std::string, std::string> > srcMLUtility::getNS() const {
+  return nsv;
 }
 
 // output current unit element in XML
