@@ -149,22 +149,22 @@ BASE_C=functionkr
 BASE_C_FAMILY=asm macro cstruct typedef extern main function_pointer decl_struct
 
 # base for object-oriented languages
-BASE_OO=function_ns decl_ns variable_names_ns
+BASE_OO=function_ns decl_ns variable_names_ns try catch_form
 
 # base for C++ only
-BASE_CXX=friend try namespace template typedef_template constructor destructor throw_base function_throw catch_form class function_operator
+BASE_CXX=friend namespace template typedef_template constructor destructor throw_base function_throw class function_operator
 
 # base for Java only
 BASE_JAVA=class_java keyword_java interface_java package
 
-SEP_BASE=$(BASE_COMMON) $(BASE_C) $(BASE_C_FAMILY) $(BASE_CXX)
+SEP_BASE=$(BASE_COMMON) $(BASE_C) $(BASE_C_FAMILY) $(BASE_CXX) $(BASE_OO)
 
 SEP_FILES=$(SEP_BASE) preprocessor
 
 # base for all of Java
-BASE_JAVA_ALL_GEN = $(BASE_COMMON) $(GEN_BASE) $(BASE_00)
+BASE_JAVA_ALL_GEN = $(BASE_COMMON) $(GEN_BASE) $(BASE_OO)
 
-BASE_JAVA_ALL = $(BASE_COMMON) $(GEN_BASE) $(BASE_00) $(BASE_JAVA)
+BASE_JAVA_ALL = $(BASE_COMMON) $(GEN_BASE) $(BASE_OO) $(BASE_JAVA)
 
 GEN_JAVA= ${foreach nm, $(BASE_JAVA_ALL_GEN), ../suite/$(nm).java.xml}
 
