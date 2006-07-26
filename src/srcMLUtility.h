@@ -121,6 +121,7 @@ class srcMLUtility {
   xmlTextReaderPtr reader;
   xmlCharEncodingHandlerPtr handler;
   std::vector<std::pair<std::string, std::string> > nsv;
+  std::vector<std::pair<std::string, std::string> > attrv;
 
   // record attributes
   xmlChar* unit_language;

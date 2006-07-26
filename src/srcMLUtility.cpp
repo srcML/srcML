@@ -90,11 +90,13 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op
   unit_version = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_VERSION);
   unit_language = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_LANGUAGE);
 
-  // record the namespace attributes if we are going to use them later on
-  if (isoption(options, OPTION_NAMESPACE))
-    while (xmlTextReaderMoveToNextAttribute(reader))
-      if (xmlTextReaderIsNamespaceDecl(reader))
-	nsv.push_back(std::make_pair((const char*) xmlTextReaderConstValue(reader), (const char*) xmlTextReaderConstName(reader)));
+  // record all attributes for future use
+  while (xmlTextReaderMoveToNextAttribute(reader)) {
+    if (xmlTextReaderIsNamespaceDecl(reader))
+      nsv.push_back(std::make_pair((const char*) xmlTextReaderConstValue(reader), (const char*) xmlTextReaderConstName(reader)));
+    else
+      attrv.push_back(std::make_pair((const char*) xmlTextReaderConstValue(reader), (const char*) xmlTextReaderConstName(reader)));
+  }
 }
 
 // destructor
@@ -115,16 +117,19 @@ void srcMLUtility::translate(const char* ofilename) {
 std::string srcMLUtility::attribute(const char* attribute_name, bool& nonnull) {
 
   // extract attribute from unit tag
-  xmlChar* value = xmlTextReaderGetAttribute(reader, BAD_CAST attribute_name);
+  //xmlChar* value = xmlTextReaderGetAttribute(reader, BAD_CAST attribute_name);
+  unsigned int i = 0;
+  for ( ; i < attrv.size(); ++i)
+    if (attrv[i].second == attribute_name)
+      break;
 
-  // return the extracted attribute or a blank string if it doesn't exist
-  std::string s(value != 0 ? (const char*)value : "");
+  if (attrv[i].second != attribute_name) {
+    nonnull = false;
+    return "";
+  }
 
-  nonnull = value != 0;
-
-  xmlFree(value);
-
-  return s;
+  nonnull = true;
+  return attrv[i].first;
 }
 
 // prefix of given namespace
@@ -338,15 +343,23 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
   // output main unit tag
   xmlTextWriterStartElement(writer, BAD_CAST "unit");
 
+  // output namespaces from outer unit tag
+  for (std::vector<std::pair<std::string, std::string> >::const_iterator iter = nsv.begin(); iter != nsv.end(); iter++) {
+	std::string uri = (*iter).first;
+	std::string prefix = (*iter).second;
+
+	xmlTextWriterWriteAttribute(writer, BAD_CAST prefix.c_str(), BAD_CAST uri.c_str());
+  }
+
   // output src namespace
-  xmlTextWriterWriteAttribute(writer, BAD_CAST "xmlns", BAD_CAST SRCML_SRC_NS_URI);
+  //  xmlTextWriterWriteAttribute(writer, BAD_CAST "xmlns", BAD_CAST SRCML_SRC_NS_URI);
 
   // output cpp namespace
-  xmlTextWriterWriteAttribute(writer, BAD_CAST "xmlns:cpp", BAD_CAST SRCML_CPP_NS_URI);
+  //  xmlTextWriterWriteAttribute(writer, BAD_CAST "xmlns:cpp", BAD_CAST SRCML_CPP_NS_URI);
 
   // output debugging namespace
-  if (isoption(options, OPTION_DEBUG))
-      xmlTextWriterWriteAttribute(writer, BAD_CAST "xmlns:srcerr", BAD_CAST SRCML_ERR_NS_URI);
+  //  if (isoption(options, OPTION_DEBUG))
+  //      xmlTextWriterWriteAttribute(writer, BAD_CAST "xmlns:srcerr", BAD_CAST SRCML_ERR_NS_URI);
 
   // update attributes from root unit element with attributes from this nested unit
   xmlChar* attribute = 0;
