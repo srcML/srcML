@@ -117,19 +117,20 @@ void srcMLUtility::translate(const char* ofilename) {
 std::string srcMLUtility::attribute(const char* attribute_name, bool& nonnull) {
 
   // extract attribute from unit tag
-  //xmlChar* value = xmlTextReaderGetAttribute(reader, BAD_CAST attribute_name);
-  unsigned int i = 0;
-  for ( ; i < attrv.size(); ++i)
-    if (attrv[i].second == attribute_name)
+  int pos = -1;
+  for (unsigned int i = 0 ; i < attrv.size(); ++i)
+    if (attrv[i].second == attribute_name) {
+      pos = i;
       break;
+    }
 
-  if (attrv[i].second != attribute_name) {
+  if (pos < 0 || attrv[pos].second != attribute_name) {
     nonnull = false;
     return "";
   }
 
   nonnull = true;
-  return attrv[i].first;
+  return attrv[pos].first;
 }
 
 // prefix of given namespace

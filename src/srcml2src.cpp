@@ -464,13 +464,16 @@ int main(int argc, char* argv[]) {
     // process get attribute options
     if (optioncount > 0) {
 
-      const std::vector<std::pair<std::string, std::string> > ns = su.getNS();
+      if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {
 
-      for (std::vector<std::pair<std::string, std::string> >::const_iterator iter = ns.begin(); iter != ns.end(); iter++) {
-	std::string uri = (*iter).first;
-	std::string prefix = (*iter).second;
+	const std::vector<std::pair<std::string, std::string> > ns = su.getNS();
 
-	std::cout << prefix << "=\"" << uri << "\"" << std::endl;
+	for (std::vector<std::pair<std::string, std::string> >::const_iterator iter = ns.begin(); iter != ns.end(); iter++) {
+	  std::string uri = (*iter).first;
+	  std::string prefix = (*iter).second;
+
+	  std::cout << prefix << "=\"" << uri << "\"" << std::endl;
+	}
       }
 
       // output get attributes in order
