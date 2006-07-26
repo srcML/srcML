@@ -54,7 +54,7 @@ const char* LONG_INFO_FLAG_SHORT = "-l";
 
 const char* NAMESPACE_FLAG = "--prefix";
 const char* NAMESPACE_FLAG_SHORT = "-p";
-const char* NAMESPACE_FLAG_FULL = "--prefixURI";
+const char* NAMESPACE_FLAG_FULL = "--prefix=URI";
 
 using std::setw;
 
@@ -64,7 +64,8 @@ void output_help(const char* name) {
      std::cout << "Usage: " << name << " [options] <infile> <outfile>" << '\n'
 	       << "Translates program files from the the XML source-code representation srcML to text files." << '\n'
 	       << "The srcML files can be in xml or gzip compressed xml (detected automatically)." << '\n'
-	       << "Also provides various utilities for working with srcML documents." << '\n'
+	       << "Also provides various utilities for accessing metadata about the srcML document, " << '\n'
+	       << "and extracting parts of compound srcML documents." << '\n'
                << '\n'
 	       << "When no filenames are given read from standard input and write to standard output." << '\n'
 	       << "When only one filename is given write to standard output."  << '\n'
@@ -90,6 +91,8 @@ void output_help(const char* name) {
 	       << "display xml encoding and exit\n"
 	       << "  " << NAMESPACE_FLAG_SHORT  << ", " << setw(COL) << NAMESPACE_FLAG_FULL
 	       << "display prefix of namespace given by URI and exit\n"
+	       << "  " << INFO_FLAG_SHORT  << ", " << setw(COL) << INFO_FLAG
+	       << "display all metadata and exit\n"
 	       << '\n'
 	       << "  " << NESTED_FLAG_SHORT     << ", " << setw(COL) << NESTED_FLAG     
 	       << "display number of nested units and exit\n"
