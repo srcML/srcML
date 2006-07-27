@@ -115,6 +115,8 @@ XSLT_INSERTFORMFEED=${XSLT} xsl/insertformfeed.xsl
 
 XSLT_SETLANGUAGE_XSL=xsl/setlanguage.xsl
 
+XSLT_REMOVECPP_XSL=xsl/removecpp.xsl
+
 XSLT_SETLANGUAGE=${XSLT} ${XSLT_SETLANGUAGE_XSL}
 
 XSLT_SETLANGUAGE_C=${XSLT} --stringparam language "C" ${XSLT_SETLANGUAGE_XSL}
@@ -122,6 +124,8 @@ XSLT_SETLANGUAGE_C=${XSLT} --stringparam language "C" ${XSLT_SETLANGUAGE_XSL}
 XSLT_SETLANGUAGE_CXX=${XSLT} --stringparam language "CXX" ${XSLT_SETLANGUAGE_XSL}
 
 XSLT_SETLANGUAGE_JAVA=${XSLT} --stringparam language "Java" ${XSLT_SETLANGUAGE_XSL}
+
+XSLT_REMOVECPP=${XSLT} ${XSLT_REMOVECPP_XSL}
 
 ##
 # General lists of test cases
@@ -266,7 +270,7 @@ cleanall :
 	${XSLT_BLOCKUNIT} $< > $@
 
 %.block.java.xml : %.java.xml
-	${XSLT_BLOCKUNIT} $< > $@
+	${XSLT_BLOCKUNIT} $< | ${XSLT_REMOVECPP} - > $@
 
 %.comment.cpp.xml : %.cpp.xml
 	${XSLT_INSERTCOMMENT} $< > $@
@@ -296,7 +300,7 @@ cleanall :
 	${XSLT_INSERTFORMFEED} $< > $@
 
 %.java.xml : %.cpp.xml
-	${XSLT_SETLANGUAGE_JAVA} $< > $@
+	${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP} - > $@
 
 %.c.xml : %.cpp.xml
 	${XSLT_SETLANGUAGE_C} $< > $@

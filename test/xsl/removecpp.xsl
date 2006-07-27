@@ -11,9 +11,9 @@
 	version="1.0">
 
 <!--
-	setlanguage.xsl
+	removecpp.xsl
 
-	Converts srcML if statement test cases to while statement test cases
+	Remove http://www.sdml.info/srcML/cpp namespace
 
 	Michael L. Collard
 	collard@cs.kent.edu
@@ -26,19 +26,13 @@
 <xsl:param name="language" select="'Java'"/>
 
 <!-- trap the current language attribute -->
-<!--
+
 <xsl:template match="/src:unit">
   <unit>
-    <xsl:copy-of select="@*[name()!='language']"/>
-    <xsl:attribute name="language"><xsl:value-of select="$language"/></xsl:attribute>
+    <xsl:copy-of select="@*"/>
 
     <xsl:apply-templates select="node()"/>
   </unit>
-</xsl:template>
--->
-
-<xsl:template match="/src:unit/@language">
-    <xsl:attribute name="language"><xsl:value-of select="$language"/></xsl:attribute>
 </xsl:template>
 
 <!-- default identity copy -->

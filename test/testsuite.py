@@ -82,7 +82,7 @@ def src2srcML(text_file, encoding, language, directory, filename, prefixlist):
 
 	command.extend(prefixlist)
 
-	print command
+	#print command
 
 	# run the srcml processorn
 	if src2srcml_src_encoding:
@@ -124,12 +124,9 @@ def getfilename(xml_file):
 
 # xmlns attribute
 def getfullxmlns(xml_file):
-	print "HERE", xml_file
-
-	t = getsrcmlattribute(xml_file, "--info")
 
 	l = []
-	for a in t.split():
+	for a in getsrcmlattribute(xml_file, "--info").split():
 		if a[0:5] == "xmlns":
 			l.append("--" + a.replace('"', ""))
 	
@@ -301,7 +298,6 @@ try:
 						else:
 							unitxml = extract_unit(filexml, count)
 
-						print "HERE2", filexml
 						# convert the unit in xml to text
 						unittext = srcml2src(unitxml, encoding)
 
