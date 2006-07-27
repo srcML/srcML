@@ -332,7 +332,7 @@
   <para>&STATUS_SRCENCODING_MISSING;: Text encoding option specified, but value missing</para>
   <para>&STATUS_XMLENCODING_MISSING;: XML encoding option specified, but value missing</para>
   <para>&STATUS_INVALID_OPTION_COMBINATION;: Invalid combination of options</para>
-  <para>&STATUS_INPUT_LIST_TERMINATED;: Incomplete input list due to termination</para>
+  <para>&STATUS_TERMINATED;: Incomplete output due to termination</para>
 
 </refsect1>
 <refsect1>

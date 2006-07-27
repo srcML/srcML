@@ -246,7 +246,7 @@
   <para>&STATUS_UNIT_MISSING;: Unit option specified, but value missing</para>
   <para>&STATUS_UNIT_INVALID;: Unit option value is not valid</para>
   <para>&STATUS_INVALID_OPTION_COMBINATION;: Invalid combination of options</para>
-  <para>&STATUS_INPUT_LIST_TERMINATED;: Extract all incomplete due to termination</para>
+  <para>&STATUS_TERMINATED;: Incomplete output due to termination</para>
 
 </refsect1>
 <refsect1>
