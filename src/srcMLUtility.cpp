@@ -25,7 +25,6 @@
 #include "srcMLUtility.h"
 #include <iostream>
 #include <fstream>
-#include "srcmlns.h"
 #include "xmlrw.h"
 
 #ifdef __GNUC__
@@ -104,13 +103,6 @@ srcMLUtility::~srcMLUtility() {
 
   // free reader
   xmlFreeTextReader(reader);
-}
-
-// translate from input stream to output stream
-void srcMLUtility::translate(const char* ofilename) {
-
-  // output entire unit element as text
-  outputSrc(ofilename, reader);
 }
 
 // attribute
@@ -475,8 +467,8 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
 #endif
 
   // starting depth tells us when to end
-  int startingDepth = xmlTextReaderDepth(reader);
-
+  int startingDepth = moved ? 1 : 0;
+  
   // point to standard input or open file
   std::ostream* pout = &std::cout;
   if (!(ofilename[0] == '-' && ofilename[1] == 0)) {

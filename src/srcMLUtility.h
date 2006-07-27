@@ -60,9 +60,6 @@ class srcMLUtility {
   // constructor
   srcMLUtility(const char* infilename, const char* encoding, int& op);
 
-  // translate from input stream to output stream as text
-  virtual void translate(const char* ofilename);
-
   int process_tag(std::istream& in, std::string& tagname, std::vector<std::pair<std::string, std::string> >& m);
 
   // attribute

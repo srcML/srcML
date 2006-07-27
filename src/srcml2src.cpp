@@ -547,14 +547,6 @@ int main(int argc, char* argv[]) {
 	  throw error;
       }
 
-    } else if (isoption(options, OPTION_UNIT) && isoption(options, OPTION_XML)) {
-
-      su.extract_xml(ofilename);
-
-    } else if (isoption(options, OPTION_UNIT)) {
-
-      su.extract_text(ofilename);
-
     } else if (isoption(options, OPTION_EXPAND)) {
 
       try {
@@ -574,15 +566,16 @@ int main(int argc, char* argv[]) {
 	  throw error;
       }
 
+    } else if (isoption(options, OPTION_XML)) {
+
+      su.extract_xml(ofilename);
+
     } else {
 
-      try {
-	su.translate(ofilename);
-      } catch (TranslateCompoundError) {
-	throw "Attempting to translate entire compound srcML file without specifying nested unit";
-      }
+      su.extract_text(ofilename);
 
     }
+
   } catch (LibXMLError error) {
 
     if (error.getErrorNum() == 0) {
