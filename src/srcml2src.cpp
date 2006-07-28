@@ -29,7 +29,6 @@
 #include <sys/stat.h>
 #include "version.h"
 #include "srcmlapps.h"
-#include "srcmlns.h"
 #include "project.h"
 #include "srcMLUtility.h"
 #include "Options.h"
