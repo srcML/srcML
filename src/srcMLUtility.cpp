@@ -274,6 +274,8 @@ int mkpath(const char* path
 // expand the compound srcML to individual files
 void srcMLUtility::expand(const char* root_filename) {
 
+  moved = true;
+
   // process each nested unit element individually
   while (1) {
 
