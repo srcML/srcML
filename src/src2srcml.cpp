@@ -678,9 +678,13 @@ int process_args(int argc, char* argv[]) {
 	ns_prefix_src = ns_prefix;
       else if (ns_uri == SRCML_CPP_NS_URI)
 	ns_prefix_cpp = ns_prefix;
-      else if (ns_uri == SRCML_ERR_NS_URI)
+      else if (ns_uri == SRCML_ERR_NS_URI) {
 	ns_prefix_err = ns_prefix;
-      else {
+
+	// specifying the error prefix automatically turns on debugging
+	options |= OPTION_DEBUG;
+
+      } else {
 	std::cerr << NAME << ": invalid namespace -- uri must be on of the following:  "
 		  << SRCML_SRC_NS_URI << " " << SRCML_CPP_NS_URI << " " << SRCML_ERR_NS_URI << '\n';
 	exit(STATUS_INVALID_LANGUAGE);
