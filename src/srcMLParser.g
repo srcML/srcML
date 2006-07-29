@@ -2174,7 +2174,10 @@ declaration_check[int& token] { token = 0; } :
 
 declaration_check_end[int& token] { token = LA(1); } : 
 
-        pure_type_identifier | function_identifier[true]
+        pure_type_identifier | function_identifier[true] |
+
+        // allow for arraysin Java types
+        { inLanguage(LANGUAGE_JAVA) }? LBRACKET
 ;
 
 function_check[int& fla, int& type_count] { fla = 0; type_count = 0; } :
