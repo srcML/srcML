@@ -70,6 +70,8 @@ XSLT_DEFN2DECL=${XSLT} ${XSLT_DEFN2DECL_XSL}
 # wrap in a block
 XSLT_BLOCKUNIT=${XSLT} xsl/insertblock.xsl
 
+XSLT_BLOCKUNIT_JAVA=${XSLT} xsl/insertblock.java.xsl
+
 XSLT_ADDEXPLICIT=${XSLT} xsl/addexplicit.xsl
 
 XSLT_ADDVIRTUAL=${XSLT} xsl/addvirtual.xsl
@@ -270,7 +272,7 @@ cleanall :
 	${XSLT_BLOCKUNIT} $< > $@
 
 %.block.java.xml : %.java.xml
-	${XSLT_BLOCKUNIT} $< | ${XSLT_REMOVECPP} - > $@
+	${XSLT_BLOCKUNIT_JAVA} $< > $@
 
 %.comment.cpp.xml : %.cpp.xml
 	${XSLT_INSERTCOMMENT} $< > $@
