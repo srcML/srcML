@@ -31,12 +31,13 @@ class Language {
     LANGUAGE_C = 1,
     LANGUAGE_CXX = 2,
     LANGUAGE_JAVA = 4,
+    LANGUAGE_ASPECTJ = 8,
     LANGUAGE_C_FAMILY = LANGUAGE_C | LANGUAGE_CXX,
-    LANGUAGE_OO = LANGUAGE_CXX | LANGUAGE_JAVA
+    LANGUAGE_OO = LANGUAGE_CXX | LANGUAGE_JAVA | LANGUAGE_ASPECTJ,
   };
 
   Language(int lang)
-    : language(lang)
+    : language(lang != LANGUAGE_ASPECTJ ? lang : lang | LANGUAGE_JAVA)
     {}
 
   // gets the current language
@@ -64,6 +65,10 @@ class Language {
 
     case LANGUAGE_JAVA:
       lstring = "Java";
+      break;
+
+    case LANGUAGE_ASPECTJ | LANGUAGE_JAVA:
+      lstring = "AspectJ";
       break;
     };
 

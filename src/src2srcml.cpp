@@ -628,9 +628,16 @@ int process_args(int argc, char* argv[]) {
 	options &= ~OPTION_CPP;
 
 	language = srcMLTranslator::LANGUAGE_JAVA;
+      } else if (strcmp(langparam, LANGUAGE_ASPECTJ) == 0) {
+
+	// turnoff default cpp reference
+	options &= ~OPTION_CPP;
+
+	language = srcMLTranslator::LANGUAGE_ASPECTJ;
       } else {
-	std::cerr << NAME << ": invalid option -- Language flag must one of the following:  "
-		  << LANGUAGE_C << " " << LANGUAGE_CXX << " " << LANGUAGE_JAVA << '\n';
+	std::cerr << NAME << ": invalid option -- Language flag must one of the following values:  "
+		  << LANGUAGE_C << " " << LANGUAGE_CXX << " " << LANGUAGE_JAVA << " "
+		  << LANGUAGE_ASPECTJ << '\n';
 	exit(STATUS_INVALID_LANGUAGE);
       }
     }
