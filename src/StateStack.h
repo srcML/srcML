@@ -37,7 +37,7 @@ class StateStack {
 
   // token parser constructor
   StateStack(TokenParser* ptp)
-    : parser(ptp)
+    : parser(ptp), st()
     {}
 
   const Base& currentState() const {
