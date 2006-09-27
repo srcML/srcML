@@ -117,6 +117,9 @@ enum Options {
 
   // cpp mode
   OPTION_CPP = 0x10000000,
+
+  // xml declaration
+  OPTION_XMLDECL = 0x20000000,
 };
 
 #endif

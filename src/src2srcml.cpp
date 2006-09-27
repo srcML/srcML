@@ -72,6 +72,9 @@ const char* DEFAULT_XML_ENCODING = "ISO-8859-1";
 const char* FILELIST_FLAG = "--input-file";
 const char* FILELIST_FLAG_SHORT = "-i";
 
+const char* NO_XML_DECLARATION_FLAG = "--no-xml-declaration";
+//const char* FILELIST_FLAG_SHORT = "-";
+
 const char* XMLNS_FLAG = "--xmlns";
 const char* XMLNS_DEFAULT_FLAG_FULL = "--xmlns=URI";
 const char* XMLNS_FLAG_FULL = "--xmlns:PREFIX=URI";
@@ -197,7 +200,7 @@ void output_version(const char* name) {
 	      << COPYRIGHT << '\n';
 }
 
-int options = OPTION_CPP_MARKUP_ELSE | OPTION_CPP;
+int options = OPTION_CPP_MARKUP_ELSE | OPTION_CPP | OPTION_XMLDECL;
 const char* src_encoding = DEFAULT_TEXT_ENCODING;
 int language = DEFAULT_LANGUAGE;
 const char* xml_encoding = DEFAULT_XML_ENCODING;
@@ -591,6 +594,14 @@ int process_args(int argc, char* argv[]) {
 
       // filelist mode is default nested mode
       options |= OPTION_NESTED;
+    }
+
+    // filelist mode
+    else if (compare_flags(argv[curarg], NO_XML_DECLARATION_FLAG, NO_XML_DECLARATION_FLAG, position)) {
+      if (position == original_position) ++curarg;
+
+      // turnoff default xml declaration
+      options &= ~OPTION_XMLDECL;
     }
 
     // language is based on parameter
