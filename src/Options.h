@@ -120,6 +120,9 @@ enum Options {
 
   // xml declaration
   OPTION_XMLDECL = 0x20000000,
+
+  // namespace declaration
+  OPTION_NAMESPACEDECL = 0x40000000,
 };
 
 #endif

@@ -73,7 +73,8 @@ const char* FILELIST_FLAG = "--input-file";
 const char* FILELIST_FLAG_SHORT = "-i";
 
 const char* NO_XML_DECLARATION_FLAG = "--no-xml-declaration";
-//const char* FILELIST_FLAG_SHORT = "-";
+
+const char* NO_NAMESPACE_DECLARATION_FLAG = "--no-namespace-declaration";
 
 const char* XMLNS_FLAG = "--xmlns";
 const char* XMLNS_DEFAULT_FLAG_FULL = "--xmlns=URI";
@@ -200,7 +201,7 @@ void output_version(const char* name) {
 	      << COPYRIGHT << '\n';
 }
 
-int options = OPTION_CPP_MARKUP_ELSE | OPTION_CPP | OPTION_XMLDECL;
+int options = OPTION_CPP_MARKUP_ELSE | OPTION_CPP | OPTION_XMLDECL | OPTION_NAMESPACEDECL;
 const char* src_encoding = DEFAULT_TEXT_ENCODING;
 int language = DEFAULT_LANGUAGE;
 const char* xml_encoding = DEFAULT_XML_ENCODING;
@@ -596,12 +597,20 @@ int process_args(int argc, char* argv[]) {
       options |= OPTION_NESTED;
     }
 
-    // filelist mode
+    // no xml declaration mode
     else if (compare_flags(argv[curarg], NO_XML_DECLARATION_FLAG, NO_XML_DECLARATION_FLAG, position)) {
       if (position == original_position) ++curarg;
 
       // turnoff default xml declaration
       options &= ~OPTION_XMLDECL;
+    }
+
+    // no namespace declaration mode
+    else if (compare_flags(argv[curarg], NO_NAMESPACE_DECLARATION_FLAG, NO_NAMESPACE_DECLARATION_FLAG, position)) {
+      if (position == original_position) ++curarg;
+
+      // turnoff default xml declaration
+      options &= ~OPTION_NAMESPACEDECL;
     }
 
     // language is based on parameter

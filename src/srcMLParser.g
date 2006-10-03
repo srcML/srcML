@@ -2273,6 +2273,21 @@ pure_lead_type_identifier {} :
         // specifiers that occur in a type
         standard_specifiers |
 
+        // anonymous struct definition in a type
+        (STRUCT LCURLY)=> // STRUCT LCURLY RCURLY 
+        {
+            // statement
+//            startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST);
+
+            // start the struct definition
+//            startElement(SSTRUCT);
+        } 
+        STRUCT //LCURLY //lcurly
+
+//        class_default_access_action[SPUBLIC_ACCESS_DEFAULT]
+
+        |
+
         // various forms of using struct in a type
         (STRUCT | UNION)
         {
