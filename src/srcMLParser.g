@@ -2224,7 +2224,7 @@ eat_type_first[int count] { /* if (count == 1 && !inputState->guessing) setFinal
 
 eat_type[int count] { /* if (count == 1 && !inputState->guessing) setFinalToken();*/ } :
 
-        { count == 1 }? type_identifier |
+        { count == 1 || count == 0 }? type_identifier |
 
         type_identifier eat_type[count - 1]
 ;
