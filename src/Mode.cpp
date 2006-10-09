@@ -72,6 +72,7 @@ const State::MODE_TYPE Mode::MODE_NEG_BLOCK           = 0x0000040000000000ULL;
 const State::MODE_TYPE Mode::MODE_IF_COND             = 0x0000080000000000ULL;
 const State::MODE_TYPE Mode::MODE_FUNCTION_NAME       = 0x0000100000000000ULL;
 const State::MODE_TYPE Mode::MODE_ELSE                = 0x0000200000000000ULL;
+const State::MODE_TYPE Mode::MODE_TYPEDEF             = 0x0000400000000000ULL;
 
 srcMLState& Mode::currentState() {
 

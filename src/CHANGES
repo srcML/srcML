@@ -1,6 +1,10 @@
 CHANGES
 
 Trunk
+	Start of markup of structs in typedefs.
+
+	Fixed typedef ending error.
+
 	Added option to turn off XML declaration.
 
 	Specifying prefix for http://www.sdml.info/srcML/srcerr automatically turns on debugging

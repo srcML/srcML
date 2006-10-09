@@ -1268,15 +1268,21 @@ final_specifier_mark { LocalMode lm; } :
 */
 class_definition :
         {
+            bool intypedef = inMode(MODE_TYPEDEF);
+
             // statement
             startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_CLASS);
 
             // start the class definition
             startElement(SCLASS);
+
+            if (intypedef) {
+                setMode(MODE_END_AT_BLOCK);
+            }
         }
         (
             { inLanguage(LANGUAGE_CXX) }?
-            (access_specifier_mark)* CLASS class_header lcurly class_default_access_action[SPRIVATE_ACCESS_DEFAULT] |
+            (access_specifier_mark)* CLASS (class_header lcurly | lcurly) class_default_access_action[SPRIVATE_ACCESS_DEFAULT] |
 
             { inLanguage(LANGUAGE_JAVA) }?
 
@@ -1359,12 +1365,18 @@ struct_declaration :
 */
 struct_definition :
         {
+            bool intypedef = inMode(MODE_TYPEDEF);
+
             // statement
             startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST);
 
             // start the struct definition
             startElement(SSTRUCT);
-        } 
+
+            if (intypedef) {
+                setMode(MODE_END_AT_BLOCK);
+            }
+        }
         STRUCT (class_header lcurly | lcurly)
 
         class_default_access_action[SPUBLIC_ACCESS_DEFAULT]
@@ -3792,7 +3804,7 @@ label_statement { LocalMode lm; } :
 typedef_statement { int type_count = 0; } :
         {
             // statement
-            startNewMode(MODE_STATEMENT);
+            startNewMode(MODE_STATEMENT | MODE_EXPECT | MODE_VARIABLE_NAME);
 
             // start the typedef element
             startElement(STYPEDEF);
@@ -3801,7 +3813,42 @@ typedef_statement { int type_count = 0; } :
         (
             (function_pointer_declaration_check[type_count])=>
                 function_pointer_declaration[type_count] |
+            (STRUCT NAME LCURLY)=>
+                {
+                    // end all elements started in this rule
+                    startNewMode(MODE_LOCAL | MODE_TYPEDEF | MODE_END_AT_BLOCK_NO_TERMINATE);
 
+                    // start of the type
+                    startElement(STYPE);
+                }
+                struct_definition |
+            (STRUCT LCURLY)=>
+                {
+                    // end all elements started in this rule
+                    startNewMode(MODE_LOCAL | MODE_TYPEDEF | MODE_END_AT_BLOCK_NO_TERMINATE);
+
+                    // start of the type
+                    startElement(STYPE);
+                }
+                struct_definition |
+            (CLASS NAME LCURLY)=>
+                {
+                    // end all elements started in this rule
+                    startNewMode(MODE_LOCAL | MODE_TYPEDEF | MODE_END_AT_BLOCK_NO_TERMINATE);
+
+                    // start of the type
+                    startElement(STYPE);
+                }
+                class_definition |
+            (CLASS LCURLY)=>
+                {
+                    // end all elements started in this rule
+                    startNewMode(MODE_LOCAL | MODE_TYPEDEF | MODE_END_AT_BLOCK_NO_TERMINATE);
+
+                    // start of the type
+                    startElement(STYPE);
+                }
+                class_definition |
             {
                 // variable declarations may be in a list
                 startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT);
