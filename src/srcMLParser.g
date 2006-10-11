@@ -1282,7 +1282,7 @@ class_definition :
         }
         (
             { inLanguage(LANGUAGE_CXX) }?
-            (access_specifier_mark)* CLASS (class_header lcurly | lcurly) class_default_access_action[SPRIVATE_ACCESS_DEFAULT] |
+            (access_specifier_mark)* CLASS class_header lcurly class_default_access_action[SPRIVATE_ACCESS_DEFAULT] |
 
             { inLanguage(LANGUAGE_JAVA) }?
 
@@ -1399,12 +1399,18 @@ union_declaration :
 */
 union_definition :
         {
+            bool intypedef = inMode(MODE_TYPEDEF);
+
             // statement
             startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST);
 
             // start the struct definition
             startElement(SUNION);
-        } 
+
+            if (intypedef) {
+                setMode(MODE_END_AT_BLOCK);
+            }
+        }
         UNION (class_header lcurly | lcurly)
 
         class_default_access_action[SPUBLIC_ACCESS_DEFAULT]
@@ -3849,6 +3855,24 @@ typedef_statement { int type_count = 0; } :
                     startElement(STYPE);
                 }
                 class_definition |
+            (UNION NAME LCURLY)=>
+                {
+                    // end all elements started in this rule
+                    startNewMode(MODE_LOCAL | MODE_TYPEDEF | MODE_END_AT_BLOCK_NO_TERMINATE);
+
+                    // start of the type
+                    startElement(STYPE);
+                }
+                union_definition |
+            (UNION LCURLY)=>
+                {
+                    // end all elements started in this rule
+                    startNewMode(MODE_LOCAL | MODE_TYPEDEF | MODE_END_AT_BLOCK_NO_TERMINATE);
+
+                    // start of the type
+                    startElement(STYPE);
+                }
+                union_definition |
             {
                 // variable declarations may be in a list
                 startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT);
