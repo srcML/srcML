@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Make variable with class/struct/union definition as type a declaration in type.
+
 	Start of markup of structs in typedefs.
 
 	Fixed typedef ending error.

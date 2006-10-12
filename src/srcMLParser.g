@@ -1271,7 +1271,7 @@ class_definition :
             bool intypedef = inMode(MODE_TYPEDEF);
 
             // statement
-            startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_CLASS);
+            startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_CLASS | MODE_DECL);
 
             // start the class definition
             startElement(SCLASS);
@@ -1368,7 +1368,7 @@ struct_definition :
             bool intypedef = inMode(MODE_TYPEDEF);
 
             // statement
-            startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST);
+            startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_DECL);
 
             // start the struct definition
             startElement(SSTRUCT);
@@ -1402,7 +1402,7 @@ union_definition :
             bool intypedef = inMode(MODE_TYPEDEF);
 
             // statement
-            startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST);
+            startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_DECL);
 
             // start the struct definition
             startElement(SUNION);
@@ -1628,6 +1628,11 @@ block_end {} :
             if (inMode(MODE_END_AT_BLOCK_NO_TERMINATE) && LA(1) != TERMINATE)
                 endCurrentMode(MODE_LOCAL);
 
+            if (inMode(MODE_DECL) && LA(1) != TERMINATE) {
+                consumeSkippedTokens();
+                short_variable_declaration();
+            }
+
             // end of block may lead to adjustment of cpp modes
             cppmode_adjust();
         }
@@ -1748,6 +1753,7 @@ else_handling {} :
   Handling when mid-statement
 */
 statement_part { int type_count; } :
+
         { inMode(MODE_NAMESPACE) }?
             namespace_alias |
 
@@ -3216,6 +3222,25 @@ variable_declaration_statement[int type_count] {} :
             startElement(SDECLARATION);
         }
         variable_declaration[type_count]
+;
+
+/*
+  Statement for the declaration of a variable or group of variables
+*/
+short_variable_declaration {} :
+        {
+            // statement
+//            startNewMode(MODE_STATEMENT);
+
+            // declaration
+            startNewMode(MODE_LOCAL);
+
+            // start the declaration
+            startElement(SDECLARATION);
+
+            // variable declarations may be in a list
+            startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+        }
 ;
 
 /*
