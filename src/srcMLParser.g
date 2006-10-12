@@ -3819,7 +3819,7 @@ typedef_statement { int type_count = 0; } :
         (
             (function_pointer_declaration_check[type_count])=>
                 function_pointer_declaration[type_count] |
-            (STRUCT NAME LCURLY)=>
+            (STRUCT (NAME)* LCURLY)=>
                 {
                     // end all elements started in this rule
                     startNewMode(MODE_LOCAL | MODE_TYPEDEF | MODE_END_AT_BLOCK_NO_TERMINATE);
@@ -3828,16 +3828,7 @@ typedef_statement { int type_count = 0; } :
                     startElement(STYPE);
                 }
                 struct_definition |
-            (STRUCT LCURLY)=>
-                {
-                    // end all elements started in this rule
-                    startNewMode(MODE_LOCAL | MODE_TYPEDEF | MODE_END_AT_BLOCK_NO_TERMINATE);
-
-                    // start of the type
-                    startElement(STYPE);
-                }
-                struct_definition |
-            (CLASS NAME LCURLY)=>
+            (CLASS (NAME)* LCURLY)=>
                 {
                     // end all elements started in this rule
                     startNewMode(MODE_LOCAL | MODE_TYPEDEF | MODE_END_AT_BLOCK_NO_TERMINATE);
@@ -3846,25 +3837,7 @@ typedef_statement { int type_count = 0; } :
                     startElement(STYPE);
                 }
                 class_definition |
-            (CLASS LCURLY)=>
-                {
-                    // end all elements started in this rule
-                    startNewMode(MODE_LOCAL | MODE_TYPEDEF | MODE_END_AT_BLOCK_NO_TERMINATE);
-
-                    // start of the type
-                    startElement(STYPE);
-                }
-                class_definition |
-            (UNION NAME LCURLY)=>
-                {
-                    // end all elements started in this rule
-                    startNewMode(MODE_LOCAL | MODE_TYPEDEF | MODE_END_AT_BLOCK_NO_TERMINATE);
-
-                    // start of the type
-                    startElement(STYPE);
-                }
-                union_definition |
-            (UNION LCURLY)=>
+            (UNION (NAME)* LCURLY)=>
                 {
                     // end all elements started in this rule
                     startNewMode(MODE_LOCAL | MODE_TYPEDEF | MODE_END_AT_BLOCK_NO_TERMINATE);
