@@ -141,7 +141,7 @@ ${OBJ_DIR}srcmllexer.o : srcmllexer.cpp version.h srcmlapps.h
 ${OBJ_DIR}srcMLTranslator.o : srcMLTranslator.cpp srcMLTranslator.h StreamMLParser.h StreamParser.h srcMLToken.h Language.h
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-Mode.h : srcMLStateStack.h State.h StateStack.h
+Mode.h : srcMLStateStack.h State.h StateStack.h srcMLState.h
 
 ${OBJ_DIR}srcMLParser.o : $(firstword $(SRCMLPARSER_GENS)) Mode.h TokenParser.h State.h Options.h
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(SRCMLPARSER_CXX_FLAGS) -c $< -o $@

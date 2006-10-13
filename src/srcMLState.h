@@ -29,14 +29,14 @@ class srcMLState : public State {
  public:
 
   srcMLState(State::MODE_TYPE mode, State::MODE_TYPE transmode)
-    : State(mode, transmode), parencount(0)
+    : State(mode, transmode), parencount(0), typecount(0)
     {}
 
   srcMLState()
-    : State(), parencount(0)
+    : State(), parencount(0), typecount(0)
     {}
 
-  // increment the parentheses count
+  // parentheses count
   int getParen() const {
     return parencount;
   }
@@ -51,11 +51,32 @@ class srcMLState : public State {
     --parencount;
   }
 
+  // type count
+  int getTypeCount() const {
+    return typecount;
+  }
+
+  // set type count
+  void setTypeCount(int n) {
+    typecount = n;
+  }
+
+  // increment the type count
+  void incTypeCount() {
+    ++typecount;
+  }
+
+  // decrement the type count
+  void decTypeCount() {
+    --typecount;
+  }
+
   ~srcMLState() {
   }
 
  private:
   int parencount;
+  int typecount;
 };
 
 #endif

@@ -179,6 +179,14 @@ protected:
 
   void decParen();
 
+  int getTypeCount() const;
+
+  void setTypeCount(int n);
+
+  void incTypeCount();
+
+  void decTypeCount();
+
   void startNewMode(const State::MODE_TYPE& m);
 
   void endCurrentMode();

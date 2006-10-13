@@ -166,7 +166,7 @@ class StateStack {
     return !st.empty() ? st.top().inTransparentMode(m) : false;
   }
 
-  // increment the parentheses count
+  // parentheses count
   int getParen() const {
     return !st.empty() ? st.top().getParen() : 0;
   }
@@ -185,6 +185,35 @@ class StateStack {
       throw Segmentation_Fault();
 
     st.top().decParen();
+  }
+
+  // type count
+  int getTypeCount() const {
+    return !st.empty() ? st.top().getTypeCount() : 0;
+  }
+
+  // set type count
+  void setTypeCount(int n) {
+    if (st.empty())
+      throw Segmentation_Fault();
+
+    st.top().setTypeCount(n);
+  }
+
+  // increment the type count
+  void incTypeCount() {
+    if (st.empty())
+      throw Segmentation_Fault();
+
+    st.top().incTypeCount();
+  }
+
+  // decrement the type count
+  void decTypeCount() {
+    if (st.empty())
+      throw Segmentation_Fault();
+
+    st.top().decTypeCount();
   }
 
   // destructor

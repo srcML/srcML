@@ -101,6 +101,26 @@ void Mode::decParen() {
   pstate->decParen();
 }
 
+int Mode::getTypeCount() const {
+
+  return pstate->getTypeCount();
+}
+
+void Mode::setTypeCount(int n) {
+
+  pstate->setTypeCount(n);
+}
+
+void Mode::incTypeCount() {
+
+  pstate->incTypeCount();
+}
+
+void Mode::decTypeCount() {
+
+  pstate->decTypeCount();
+}
+
 State::MODE_TYPE Mode::getMode() const {
 
   return pstate->getMode();
