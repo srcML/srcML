@@ -145,6 +145,9 @@ class StreamMLParser : public StreamParser<Base> {
       // more partial parsing to do
       Base::start();
 
+      // allow parsing cleanup
+      Base::end();
+
     } catch (const std::exception&) {
 
       // when an error occurs just insert an error element

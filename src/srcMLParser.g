@@ -468,6 +468,14 @@ catch[antlr::RecognitionException] {
 }
 
 /*
+  end
+
+  Called by nextToken after every call to start.  Allows post-parsing cleanup.
+*/
+end {} :
+;
+
+/*
   context-free grammar statements
 */
 cfg {} :
