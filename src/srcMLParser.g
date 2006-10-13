@@ -1282,7 +1282,7 @@ class_definition :
         }
         (
             { inLanguage(LANGUAGE_CXX) }?
-            (access_specifier_mark)* CLASS class_header lcurly class_default_access_action[SPRIVATE_ACCESS_DEFAULT] |
+            (access_specifier_mark)* CLASS (class_header lcurly | lcurly) class_default_access_action[SPRIVATE_ACCESS_DEFAULT] |
 
             { inLanguage(LANGUAGE_JAVA) }?
 
@@ -1624,14 +1624,17 @@ block_end {} :
             if (inMode(MODE_END_AT_BLOCK))
                 endCurrentMode(MODE_LOCAL);
 
+            // looking for a terminate (';').  may have some whitespace before it
+            consumeSkippedTokens();
+
             // some statements end with the block if there is no terminate
             if (inMode(MODE_END_AT_BLOCK_NO_TERMINATE) && LA(1) != TERMINATE)
                 endCurrentMode(MODE_LOCAL);
 
-            if (inMode(MODE_DECL) && LA(1) != TERMINATE) {
-                consumeSkippedTokens();
+            // if we are in a declaration (as part of a class/struct/union definition)
+            // then we needed to markup the (abbreviated) variable declaration
+            if (inMode(MODE_DECL) && LA(1) != TERMINATE)
                 short_variable_declaration();
-            }
 
             // end of block may lead to adjustment of cpp modes
             cppmode_adjust();
@@ -2292,25 +2295,30 @@ complete_throw_list {} :
 */
 pure_lead_type_identifier {} :
 
-        CLASS |
+        (CLASS NAME)=> CLASS |
 
         // specifiers that occur in a type
         standard_specifiers |
 
+        // anonymous struct definition in a type (guessing)
+        { inputState->guessing }?
+        (STRUCT LCURLY)=>
+        STRUCT balanced_parentheses |
+
         // anonymous struct definition in a type
-        (STRUCT LCURLY)=> // STRUCT LCURLY RCURLY 
-        {
-            // statement
-//            startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST);
+        { !inputState->guessing }?
+        (STRUCT LCURLY)=>
+        struct_definition unbalanced_parentheses rcurly |
 
-            // start the struct definition
-//            startElement(SSTRUCT);
-        } 
-        STRUCT //LCURLY //lcurly
+        // anonymous struct definition in a type (guessing)
+        { inputState->guessing }?
+        (CLASS LCURLY)=>
+        CLASS balanced_parentheses |
 
-//        class_default_access_action[SPUBLIC_ACCESS_DEFAULT]
-
-        |
+        // anonymous struct definition in a type
+        { !inputState->guessing }?
+        (CLASS LCURLY)=>
+        class_definition unbalanced_parentheses rcurly |
 
         // various forms of using struct in a type
         (STRUCT | UNION)
@@ -2373,6 +2381,10 @@ balanced_parentheses :
         LCURLY
         (balanced_parentheses | ~(LCURLY | RCURLY))*
         RCURLY
+;
+
+unbalanced_parentheses :
+        (balanced_parentheses | ~(LCURLY | RCURLY))*
 ;
 
 /*
