@@ -139,6 +139,10 @@ class Mode : public TokenParser, public Language {
 
   const static State::MODE_TYPE MODE_DECL;
 
+  const static State::MODE_TYPE MODE_EAT_TYPE;
+
+  const static State::MODE_TYPE MODE_FUNCTION_PARAMETER;
+
  public:
 
   Mode(TokenParser* ptp, int lang)

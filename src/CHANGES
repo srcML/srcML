@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Markup function header incrementally.
+
 	Add post-parsing grammar rule for cleanup.
 
 	Make variable with class/struct/union definition as type a declaration in type.

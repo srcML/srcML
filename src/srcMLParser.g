@@ -1765,6 +1765,9 @@ else_handling {} :
 */
 statement_part { int type_count; } :
 
+        { inMode(MODE_EAT_TYPE) }?
+            type_identifier { decTypeCount(); if (getTypeCount() <= 0) { endCurrentMode(MODE_LOCAL); setMode(MODE_FUNCTION_NAME); } } |
+
         { inMode(MODE_NAMESPACE) }?
             namespace_alias |
 
@@ -1834,7 +1837,11 @@ statement_part { int type_count; } :
 
         // function identifier
         { inMode(MODE_FUNCTION_NAME) }?
-             function_identifier[true] |
+             function_identifier[true] { replaceMode(MODE_FUNCTION_NAME, MODE_FUNCTION_PARAMETER); } |
+
+        // function identifier
+        { inMode(MODE_FUNCTION_PARAMETER) }?
+             parameter_list { replaceMode(MODE_FUNCTION_PARAMETER, MODE_FUNCTION_TAIL); } |
 
         // start of argument for return or throw statement
         { inMode(MODE_INIT | MODE_EXPECT) }?
@@ -2033,7 +2040,7 @@ condition_rparen[bool final = false] {} :
 function[int type_count] {} :
 		{
             // function definitions have a "nested" block statement
-            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_FUNCTION_TAIL);
+            startNewMode(MODE_STATEMENT);
 
             // start the function definition element
             startElement(SFUNCTION_DEFINITION);
@@ -2047,7 +2054,7 @@ function[int type_count] {} :
 function_declaration[int type_count] {} :
         {
             // statement
-            startNewMode(MODE_STATEMENT | MODE_FUNCTION_TAIL);
+            startNewMode(MODE_STATEMENT);
 
             // start the function declaration element
             startElement(SFUNCTION_DECLARATION);
@@ -2142,20 +2149,13 @@ operator_multiplication :
   function definition
 */
 function_header[int type_count] {} : 
-        (
-            // no return value functions:  casting operator method and main
-            { LA(1) == OPERATOR || LA(1) == MAIN }? function_identifier[true] |
 
-//            { inLanguage(LANGUAGE_CXX) }? ((NAME DCOLON)* OPERATOR)=> function_identifier[true] |
+        // no return value functions:  casting operator method and main
+        { LA(1) == OPERATOR || LA(1) == MAIN }? function_identifier[true] { setMode(MODE_FUNCTION_PARAMETER); } |
 
-            function_type[type_count]
-            {
-                consumeSkippedTokens();
-            }
-            function_identifier[true]
-        )
+//      { inLanguage(LANGUAGE_CXX) }? ((NAME DCOLON)* OPERATOR)=> function_identifier[true] |
 
-        parameter_list
+        function_type[type_count]
 ;
 
 /*
@@ -2221,15 +2221,18 @@ function_check[int& fla, int& type_count] { fla = 0; type_count = 0; } :
 /*
   Type of a function.  Includes specifiers
 */
-function_type[int type_count] { LocalMode lm; } :
+function_type[int type_count] {} :
         {
             // start a mode for the type that will end in this grammar rule
-            startNewMode(MODE_LOCAL);
+            startNewMode(MODE_EAT_TYPE);
+
+            setTypeCount(type_count - 1);
 
             // type element begins
-             startElement(STYPE);
-         }
-        eat_type_first[type_count - 1]
+            startElement(STYPE);
+        }
+        lead_type_identifier
+        { decTypeCount(); if (getTypeCount() <= 0) { endCurrentMode(MODE_LOCAL); setMode(MODE_FUNCTION_NAME); } }
 ;
 
 /*
