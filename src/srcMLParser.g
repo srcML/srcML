@@ -2306,41 +2306,48 @@ complete_throw_list {} :
 */
 pure_lead_type_identifier {} :
 
-        (CLASS NAME)=> CLASS |
+        // class/struct/union before a name in a type, e.g., class A f();
+        ((CLASS | STRUCT | UNION) NAME)=> (CLASS | STRUCT | UNION) |
 
         // specifiers that occur in a type
         standard_specifiers |
 
-        // anonymous struct definition in a type (guessing)
-        { inputState->guessing }?
-        (STRUCT LCURLY)=>
-        STRUCT balanced_parentheses |
-
-        // anonymous struct definition in a type
-        { !inputState->guessing }?
-        (STRUCT LCURLY)=>
-        struct_definition unbalanced_parentheses rcurly |
+        /*
+           Anonymous class/struct/union in guessing mode processes
+           the entire block
+        */
 
         // anonymous struct definition in a type (guessing)
         { inputState->guessing }?
-        (CLASS LCURLY)=>
-        CLASS balanced_parentheses |
+        (STRUCT LCURLY)=> STRUCT balanced_parentheses |
+
+        // anonymous struct definition in a type (guessing)
+        { inputState->guessing }?
+        (CLASS LCURLY)=> CLASS balanced_parentheses |
+
+        // anonymous union definition in a type (guessing)
+        { inputState->guessing }?
+        (UNION LCURLY)=> UNION balanced_parentheses |
+
+        /*
+           Anonymous class/struct/union in non-guessing mode only
+           starts the markup so that the contents of the block
+           can be marked.
+        */
 
         // anonymous struct definition in a type
         { !inputState->guessing }?
-        (CLASS LCURLY)=>
-        class_definition unbalanced_parentheses rcurly |
+        (STRUCT LCURLY)=> struct_definition |
 
-        // various forms of using struct in a type
-        (STRUCT | UNION)
-        {
-            consumeSkippedTokens();
-        }
-        ( options { greedy = true; } : variable_identifier)?
-        ( options { greedy = true; } : balanced_parentheses)* 
+        // anonymous class definition in a type
+        { !inputState->guessing }?
+        (CLASS LCURLY)=> class_definition |
 
-        |
+        // anonymous union definition in a type
+        { !inputState->guessing }?
+        (UNION LCURLY)=> UNION_definition |
 
+        // enum use in a type
         (ENUM variable_identifier (variable_identifier | MULTOPS | INLINE))=> ENUM |
 
         // entire enum definition
