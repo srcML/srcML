@@ -86,10 +86,10 @@
 </unit>
 
 <unit>
-<typedef>typedef <type>struct <name>pidmap</name> {
-	atomic_t nr_free;
-	void *page;
-}</type> <name>pidmap_t</name>;</typedef>
+<typedef>typedef <type><struct>struct <name>pidmap</name> <block>{<public type="default">
+	<decl_stmt><decl><type><name>atomic_t</name></type> <name>nr_free</name></decl>;</decl_stmt>
+	<decl_stmt><decl><type><name>void</name> *</type><name>page</name></decl>;</decl_stmt>
+</public>}</block></struct></type> <name>pidmap_t</name>;</typedef>
 </unit>
 
 <unit>
