@@ -120,6 +120,15 @@
       </listitem>
     </varlistentry>
     <varlistentry>
+      <term>&SELF_VERSION_FLAG;</term>
+      <listitem>
+	<para>
+	  Sets the value of the version attribute on the unit element
+	  to the src2srcml version.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
       <term>&TEXTENCODING_FLAG_SHORT;, &TEXTENCODING_FLAG;=<replaceable class="parameter">encoding</replaceable></term>
       <listitem>
 	<para>
