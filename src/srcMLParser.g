@@ -1766,7 +1766,10 @@ else_handling {} :
 statement_part { int type_count; } :
 
         { inMode(MODE_EAT_TYPE) }?
-            type_identifier { decTypeCount(); if (getTypeCount() <= 0) { endCurrentMode(MODE_LOCAL); setMode(MODE_FUNCTION_NAME); } } |
+            consume_type_identifier |
+
+        { inMode(MODE_EAT_VAR_TYPE) }?
+            consume_var_type_identifier |
 
         { inMode(MODE_NAMESPACE) }?
             namespace_alias |
@@ -1837,11 +1840,11 @@ statement_part { int type_count; } :
 
         // function identifier
         { inMode(MODE_FUNCTION_NAME) }?
-             function_identifier[true] { replaceMode(MODE_FUNCTION_NAME, MODE_FUNCTION_PARAMETER); } |
+             process_function_identifier[true] |
 
         // function identifier
         { inMode(MODE_FUNCTION_PARAMETER) }?
-             parameter_list { replaceMode(MODE_FUNCTION_PARAMETER, MODE_FUNCTION_TAIL); } |
+             process_parameter_list |
 
         // start of argument for return or throw statement
         { inMode(MODE_INIT | MODE_EXPECT) }?
@@ -2158,6 +2161,22 @@ function_header[int type_count] {} :
         function_type[type_count]
 ;
 
+process_function_identifier[bool status] {} :
+
+        function_identifier[true]
+        {
+            replaceMode(MODE_FUNCTION_NAME, MODE_FUNCTION_PARAMETER); 
+        }
+;
+
+process_parameter_list {} :
+
+        parameter_list
+        {
+            replaceMode(MODE_FUNCTION_PARAMETER, MODE_FUNCTION_TAIL);
+        }
+;
+
 /*
   Everything except the ";" of a function declaration or the block of a
   function definition
@@ -2231,8 +2250,58 @@ function_type[int type_count] {} :
             // type element begins
             startElement(STYPE);
         }
+        consume_lead_type_identifier
+;
+
+
+consume_type_identifier {} :
+
+        type_identifier
+
+        update_typecount
+;
+
+consume_var_type_identifier {} :
+
+        type_identifier
+
+        update_var_typecount
+;
+
+consume_lead_type_identifier {} :
+
         lead_type_identifier
-        { decTypeCount(); if (getTypeCount() <= 0) { endCurrentMode(MODE_LOCAL); setMode(MODE_FUNCTION_NAME); } }
+
+        update_typecount
+;
+
+consume_var_lead_type_identifier {} :
+
+        lead_type_identifier
+
+        update_var_typecount
+;
+
+update_typecount {} :
+        {
+            decTypeCount();
+
+            if (getTypeCount() <= 0) {
+                endCurrentMode(MODE_LOCAL);
+                setMode(MODE_FUNCTION_NAME); 
+            } 
+        }
+;
+
+update_var_typecount {} :
+        {
+            decTypeCount();
+
+            if (getTypeCount() <= 0) {
+                endCurrentMode(MODE_LOCAL);
+                setMode(MODE_VARIABLE_NAME | MODE_INIT); 
+            } 
+        }
 ;
 
 /*
@@ -3289,7 +3358,7 @@ variable_declaration[int type_count] {} :
         }
         variable_declaration_type[type_count]
         {
-            consumeSkippedTokens();
+//            consumeSkippedTokens();
         }
 ;
 
@@ -3297,7 +3366,19 @@ variable_declaration[int type_count] {} :
   A simple variable declaration of a single variable including the type,
   name, and initialization block.
 */
-variable_declaration_type[int type_count] { LocalMode lm; } :
+variable_declaration_type[int type_count] {} :
+        {
+            // start a mode for the type that will end in this grammar rule
+            startNewMode(MODE_EAT_VAR_TYPE);
+
+            setTypeCount(type_count - 1);
+
+            // type element begins
+            startElement(STYPE);
+        }
+        consume_var_lead_type_identifier
+
+/*
         {
             // end all elements started in this rule
             startNewMode(MODE_LOCAL);
@@ -3306,6 +3387,7 @@ variable_declaration_type[int type_count] { LocalMode lm; } :
             startElement(STYPE);
         }
         eat_type[type_count - 1]
+*/
 ;
 
 /*

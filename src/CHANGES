@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Convert variable declarations to also allow markup of anonymous structs.
+
 	New option to self version according to the src2srcml version.
 
 	Markup function header incrementally.

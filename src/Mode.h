@@ -143,6 +143,8 @@ class Mode : public TokenParser, public Language {
 
   const static State::MODE_TYPE MODE_FUNCTION_PARAMETER;
 
+  const static State::MODE_TYPE MODE_EAT_VAR_TYPE;
+
  public:
 
   Mode(TokenParser* ptp, int lang)
