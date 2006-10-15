@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" dir="typedef">
+
+<unit>
+<typedef>typedef <type><name>int</name></type> <name>a</name>;</typedef>
+</unit>
+
+<unit>
+<typedef>typedef <type><name>long</name> <name>int</name></type> <name>a</name>;</typedef>
+</unit>
+
+<unit>
+<typedef>typedef <type><name>signed</name> <name>char</name></type> <name>a</name>;</typedef>
+</unit>
+
+<unit>
+<typedef>typedef <type><name>short</name> <name>int</name></type> <name>a</name>;</typedef>
+</unit>
+
+<unit>
+<typedef>typedef <type><name>unsigned</name> <name>char</name></type> <name>a</name>;</typedef>
+</unit>
+
+<unit>
+<typedef>typedef <type><name>unsigned</name> <name>short</name> <name>int</name></type> <name>a</name>;</typedef>
+</unit>
+
+<unit>
+<typedef>typedef <type><name>unsigned</name> <name>int</name></type> <name>a</name>;</typedef>
+</unit>
+
+<unit>
+<typedef>typedef <type><name>unsigned</name> <name>long</name> <name>int</name></type> <name>a</name>;</typedef>
+</unit>
+
+<unit>
+<typedef>typedef <type><name>bool</name></type> <name>a</name>;</typedef>
+</unit>
+
+<unit>
+<typedef>typedef <type><name>char</name></type> <name>a</name>;</typedef>
+</unit>
+
+<unit>
+<typedef>typedef <type><name>wchar_t</name></type> <name>a</name>;</typedef>
+</unit>
+
+<unit>
+<typedef>typedef <type><name>float</name></type> <name>a</name>;</typedef>
+</unit>
+
+<unit>
+<typedef>typedef <type><name>double</name></type> <name>a</name>;</typedef>
+</unit>
+
+<unit>
+<typedef>typedef <type><name>long</name> <name>double</name></type> <name>a</name>;</typedef>
+</unit>
+
+<unit>
+<typedef>typedef <type><name>void</name></type> <name>a</name>;</typedef>
+</unit>
+
+<unit>
+<typedef>typedef <type><name>int</name>*</type> <name>a</name>;</typedef>
+</unit>
+
+<unit>
+<typedef>typedef <type><name>int</name></type> <name>a</name>, <name>b</name>;</typedef>
+</unit>
+
+<unit>
+<typedef>typedef <type><name>const</name> <name>int</name></type> <name>a</name>;</typedef>
+</unit>
+
+<unit>
+<typedef>typedef <type><name>const</name> <name>int</name>*</type> <name>a</name>;</typedef>
+</unit>
+
+<unit>
+<typedef>typedef <type><name>const</name> <name>int</name> *</type> <name>a</name>;</typedef>
+</unit>
+
+<unit>
+<typedef>typedef <type><name>const</name> * <name>int</name> *</type> <name>a</name>;</typedef>
+</unit>
+
+<unit>
+<typedef>typedef <type><struct>struct <name>pidmap</name> <block>{
+	<decl_stmt><decl><type><name>atomic_t</name></type> <name>nr_free</name></decl>;</decl_stmt>
+	<decl_stmt><decl><type><name>void</name> *</type><name>page</name></decl>;</decl_stmt>
+}</block></struct></type> <name>pidmap_t</name>;</typedef>
+</unit>
+
+<unit>
+<typedef>typedef <function_decl><type><name>int</name></type> (*<name>ENGINE_CTRL_FUNC_PTR</name>)<parameter_list>(<param><decl><type><name>ENGINE</name> *</type></decl></param>, <param><decl><type><name>int</name></type></decl></param>, <param><decl><type><name>long</name></type></decl></param>, <param><decl><type><name>void</name> *</type></decl></param>, <param><function_decl><type><name>void</name></type> (*<name>f</name>)<parameter_list>()</parameter_list></function_decl></param>)</parameter_list>;</function_decl></typedef>
+</unit>
+
+<unit>
+<typedef>typedef <function_decl><type><name>int</name></type> (FRED::*<name>ENGINE_CTRL_FUNC_PTR</name>)<parameter_list>()</parameter_list>;</function_decl></typedef>
+</unit>
+
+<unit>
+<typedef>typedef <function_decl><type><name>int</name></type> (*<name>ENGINE_CTRL_FUNC_PTR</name>) D(a) <parameter_list>(<param><decl><type><name>ENGINE</name> *</type></decl></param>, <param><decl><type><name>int</name></type></decl></param>, <param><decl><type><name>long</name></type></decl></param>, <param><decl><type><name>void</name> *</type></decl></param>, <param><function_decl><type><name>void</name></type> (*<name>f</name>)<parameter_list>()</parameter_list></function_decl></param>)</parameter_list>;</function_decl></typedef>
+</unit>
+
+<unit>
+<typedef>typedef <type><enum>enum <block>{ <expr><name>a</name></expr> }</block></enum></type> <name>a</name>;</typedef>
+</unit>
+
+<unit>
+<typedef>typedef <type><enum>enum <block>{ <expr><name>a</name></expr>, <expr><name>b</name></expr> }</block></enum></type> <name>a</name>;</typedef>
+</unit>
+
+<unit>
+<typedef>typedef <type><enum>enum <block>{ <expr><name>a</name></expr>, <expr><name>b</name> = <name>c</name></expr> }</block></enum></type> <name>a</name>;</typedef>
+</unit>
+
+
+</unit>
+
