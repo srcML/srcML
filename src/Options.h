@@ -123,6 +123,9 @@ enum Options {
 
   // namespace declaration
   OPTION_NAMESPACEDECL = 0x40000000,
+
+  // self version
+  OPTION_SELF_VERSION = 0x02000000,
 };
 
 #endif
