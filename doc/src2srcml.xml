@@ -76,9 +76,10 @@
 	<para>
 	  The programming language of the source-code file.  Allowable
 	  values are C, C++, or Java.  The language affects parsing,
-	  the allowed markup, and what is considered a keyword.  The
-	  default is C++.  The value is also stored as an attribute of
+	  the allowed markup, and what is considered a keyword.  
+	  The value is also stored as an attribute of
 	  the root element unit.
+	  The default is C++.
 	</para>
       </listitem>
     </varlistentry>
@@ -123,8 +124,7 @@
       <term>&SELF_VERSION_FLAG;</term>
       <listitem>
 	<para>
-	  Sets the value of the version attribute on the unit element
-	  to the src2srcml version.
+	  Sets the value of the version attribute on the root unit element to the src2srcml version.
 	</para>
       </listitem>
     </varlistentry>
