@@ -2856,7 +2856,7 @@ constructor_check[int& token] { antlr::RefToken s[2]; } :
         (specifier_explicit)*
         (
         
-        { inTransparentMode(MODE_ACCESS_REGION) }?
+        { inTransparentMode(MODE_ACCESS_REGION) || inLanguage(LANGUAGE_JAVA) }?
         constructor_name parameter_list check_end[token] |
 
         constructor_name_external_check[s] constructor_check_lparen[s] check_end[token]
