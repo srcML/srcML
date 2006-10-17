@@ -3657,7 +3657,7 @@ extends_list { LocalMode lm; } :
         (
             (derive_access)*
 
-            variable_identifier
+            complex_name_java[true]
         |
             COMMA
         )*

@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Fix bug with fully qualified class names for extends.
+
 	Convert variable declarations to also allow markup of anonymous structs.
 
 	New option to self version according to the src2srcml version.
