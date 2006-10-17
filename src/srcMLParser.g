@@ -625,7 +625,7 @@ call_macro_expression[int secondtoken, bool statement]
 
         // single macro call followed by statement_cfg
         { secondtoken != -1
-            && (_tokenSet_12.member(secondtoken) || secondtoken == LCURLY || secondtoken == 1 /* EOF */
+            && (_tokenSet_13.member(secondtoken) || secondtoken == LCURLY || secondtoken == 1 /* EOF */
             || secondtoken == PUBLIC || secondtoken == PRIVATE || secondtoken == PROTECTED) }?
         macro_call |
 
@@ -2450,7 +2450,7 @@ type_identifier {} :
 ;
 
 non_lead_type_identifier {} :
-        MULTOPS
+        MULTOPS | { inLanguage(LANGUAGE_JAVA) }? (LBRACKET RBRACKET)=> LBRACKET RBRACKET
 ;
 
 pure_type_identifier {} :
