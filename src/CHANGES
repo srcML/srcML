@@ -1,7 +1,7 @@
 CHANGES
 
 Trunk
-	Fix bug with fully qualified class names for extends.
+	Fix bug with fully qualified class names for extends and implements.
 
 	Convert variable declarations to also allow markup of anonymous structs.
 
