@@ -42,6 +42,8 @@ const char* DEBUG_FLAG_SHORT = "-g";
 
 const char* LITERAL_FLAG = "--literal";
 
+const char* OPERATOR_FLAG = "--operator";
+
 const char* COMPRESSED_FLAG = "--compressed";
 const char* COMPRESSED_FLAG_SHORT = "-z";
 
@@ -512,6 +514,12 @@ int process_args(int argc, char* argv[]) {
     // extended mode
     else if (compare_flags(argv[curarg], LITERAL_FLAG, "", position)) {
       options |= OPTION_LITERAL;
+      if (position == original_position) ++curarg;
+    }
+
+    // extended mode
+    else if (compare_flags(argv[curarg], OPERATOR_FLAG, "", position)) {
+      options |= OPTION_OPERATOR;
       if (position == original_position) ++curarg;
     }
 
