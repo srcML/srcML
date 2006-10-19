@@ -213,6 +213,9 @@ tokens {
     SCHAR;          // string or char marked by single quotes
     SLITERAL;       // literal number, constant
 
+    // operators
+    SOPERATOR;
+
     // internal statement elements used in multiple statements
     SNAME;
     SONAME;
@@ -3455,8 +3458,25 @@ pure_expression_block {} :
 /*
   All possible operators
 */
-general_operators {} :
-        OPERATORS | TEMPOPS | TEMPOPE | EQUAL | MULTIMM | DESTOP
+general_operators { LocalMode lm; } :
+        {
+            startNewMode(MODE_LOCAL);
+
+            startElement(SOPERATOR);
+        }
+        (OPERATORS | TEMPOPS | TEMPOPE | EQUAL | MULTIMM | DESTOP)
+;
+
+/*
+  All possible operators
+*/
+multi_operator { LocalMode lm; } :
+        {
+            startNewMode(MODE_LOCAL);
+
+            startElement(SOPERATOR);
+        }
+        MULTOPS
 ;
 
 /*
@@ -3504,7 +3524,7 @@ expression_part[bool checkmacro = false] { guessing_end();
         (NEW NAME LPAREN RPAREN LCURLY)=> NEW anonymous_class_definition |
 
         // general math operators
-        general_operators | MULTOPS | /* NEW |*/ DELETE | PERIOD |
+        general_operators | multi_operator | /* NEW |*/ DELETE | PERIOD |
 
         // call
         // distinguish between a call and a macro
