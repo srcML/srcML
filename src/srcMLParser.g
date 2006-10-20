@@ -569,6 +569,10 @@ statements_non_cfg { int type_count = 0; int token = 0; int secondtoken = 0; } :
         // extern block as opposed to enum as part of declaration
         (extern_definition_header)=> extern_definition |
 
+        // constructor
+        { inLanguage(LANGUAGE_JAVA) }?
+        (constructor_check[token /* token after header */])=> constructor[token] |
+
         // declarations of all sorts
         (declaration_check[secondtoken])=> (
 
@@ -589,7 +593,7 @@ statements_non_cfg { int type_count = 0; int token = 0; int secondtoken = 0; } :
         ) |
 
         // constructor
-        { inLanguage(LANGUAGE_OO) }?
+        { inLanguage(LANGUAGE_CXX) }?
         (constructor_check[token /* token after header */])=> constructor[token] |
 
         // destructor
@@ -2856,11 +2860,14 @@ constructor[int token] {} :
 
 constructor_check[int& token] { antlr::RefToken s[2]; } :
 
-        (specifier_explicit)*
+        (specifier_explicit | { inLanguage(LANGUAGE_JAVA) }? access_specifier)*
         (
         
-        { inTransparentMode(MODE_ACCESS_REGION) || inLanguage(LANGUAGE_JAVA) }?
+        { inTransparentMode(MODE_ACCESS_REGION) && inLanguage(LANGUAGE_CXX) }?
         constructor_name parameter_list check_end[token] |
+
+        { inLanguage(LANGUAGE_JAVA) }?
+        constructor_name parameter_list LCURLY |
 
         constructor_name_external_check[s] constructor_check_lparen[s] check_end[token]
 
@@ -2900,7 +2907,7 @@ constructor_definition {} :
 // constructor definition
 constructor_header {} :
 
-        (specifier_explicit)*
+        (specifier_explicit | { inLanguage(LANGUAGE_JAVA) }? access_specifier)*
 
         constructor_name
 
