@@ -17,7 +17,8 @@
   along with the srcML translator; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-  A set of convenience functions for libxml2
+  A set of convenience functions for use with the libxml2 TextReader and
+  TextWriter interfaces.
 */
 
 #ifndef _INCLUDED_XMLRW_H
@@ -31,40 +32,7 @@
 #include "xmlwriter.h"
 #endif
 
+// output the current node in reader to writer in XML
 void outputXML(xmlTextReaderPtr reader, xmlTextWriterPtr writer);
-
-#ifdef LIBXML_ENABLED
-bool operator==(const xmlNode& n1, const xmlNode& n2);
-
-xmlNode* getRealCurrentNode(xmlTextReaderPtr reader);
-
-inline bool iselement(const xmlTextReaderPtr& reader, const xmlChar* element_name) {
-
-  return xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT &&
-    xmlStrEqual(xmlTextReaderConstName(reader), element_name);
-}
-
-inline bool isendelement(const xmlTextReaderPtr& reader, const xmlChar* element_name) {
-
-  return xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT &&
-    xmlStrEqual(xmlTextReaderConstName(reader), element_name);
-}
-
-inline bool iselement(const xmlTextReaderPtr& reader) {
-
-  return xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT;
-}
-
-inline bool isendelement(const xmlTextReaderPtr& reader) {
-
-  return xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT;
-}
-
-xmlNode* getCurrentNode(xmlTextReaderPtr reader);
-
-void eat_element(xmlTextReaderPtr& reader);
-
-void outputNode(xmlNode& node, xmlTextWriterPtr writer);
-#endif
 
 #endif
