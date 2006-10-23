@@ -53,7 +53,10 @@ TERMINATE = ";";
 PREPROC;
 //PREPROC = "#";
 COLON = ":";
-DCOLON = "::";
+
+// define value in master grammar so that it depends on language
+DCOLON;
+
 PERIOD = ".";
 MULTOPS = "*";
 MULTIMM = "*=";
@@ -93,6 +96,9 @@ OPERATORS :
         '-'  | "->" { $setText("-&gt;"); } |
         '/'  |
 
+        { inLanguage(LANGUAGE_JAVA) }?
+        ("<<<")=>
+        "<<<" { $setText("&lt;&lt;&lt;"); } |
         "<<" { $setText("&lt;&lt;"); } |
         "<=" { $setText("&lt;="); } |
         '<'  { $setText("&lt;"); $setType(TEMPOPS); } | 

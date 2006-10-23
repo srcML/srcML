@@ -176,6 +176,8 @@ KeywordCPPLexer(std::istream& in, int language = LANGUAGE_CXX)
 
         literals["delete"] = DELETE;
 
+        // special C++ operators
+        literals["::"] = DCOLON;
         // specifiers that are not needed for parsing
         /*
         literals["mutable"] = MUTABLE;
