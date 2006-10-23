@@ -1,5 +1,5 @@
 /*
-  xmlrw.h
+  xmloutput.h
 
   Copyright (C) 2006  SDML (www.sdml.info)
 
@@ -17,8 +17,7 @@
   along with the srcML translator; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-  A set of convenience functions for use with the libxml2 TextReader and
-  TextWriter interfaces.
+  An identity output function for libxml2 TextReader and TextWriter.
 */
 
 #ifndef _INCLUDED_XMLRW_H
