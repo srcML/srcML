@@ -258,7 +258,7 @@ int main(int argc, char* argv[]) {
 
   // setup self-versioning
   if (isoption(options, OPTION_SELF_VERSION)) {
-    given_version = version();
+    //    given_version = version();
   }
 
   /* Special checks for illegal combinations */

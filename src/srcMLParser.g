@@ -2720,6 +2720,8 @@ simple_name_cpp {} :
   identifier name marked with name element
 */
 complex_name[bool marked] { LocalMode lm; TokenPosition tp = { 0, 0 }; /* TokenPosition tp2 = { 0, 0 };*/ bool iscomplex_name = false; } :
+        { inLanguage(LANGUAGE_JAVA) }? complex_name_java[marked] |
+        (
         {
             if (marked) {
                 // There is a problem detecting complex names from
@@ -2755,6 +2757,7 @@ complex_name[bool marked] { LocalMode lm; TokenPosition tp = { 0, 0 }; /* TokenP
             if (marked && !iscomplex_name)
                 // set the token to NOP
                 setTokenPosition(tp, SNOP);
+
 /*
             // not an operator
             if (marked)
@@ -2762,6 +2765,7 @@ complex_name[bool marked] { LocalMode lm; TokenPosition tp = { 0, 0 }; /* TokenP
                 setTokenPosition(tp2, SNOP);
 */
         }
+            )
 ;
 
 /*
@@ -2784,8 +2788,7 @@ complex_name_java[bool marked] { LocalMode lm; TokenPosition tp = { 0, 0 }; bool
             }
         }
         simple_name_optional_template[marked]
-        ( options { greedy = true; } : PERIOD { iscomplex_name = true; } |
-        simple_name_optional_template[marked])*
+        (options { greedy = true; } : (PERIOD { iscomplex_name = true; } simple_name_optional_template[marked]))*
         {
             // if we marked it as a complex name and it isn't, fix
             if (marked && !iscomplex_name)

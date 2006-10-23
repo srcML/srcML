@@ -93,6 +93,10 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
     ElementNames[SERROR_MODE] = "";
   }
 
+  if (isoption(OPTION_OPERATOR)) {
+    ElementNames[SOPERATOR] = "operator";
+  }
+
   // assign for special processing
   //  process_table[SUNIT] = &srcMLOutput::processUnit;
   process_table[BLOCKCOMMENT] = &srcMLOutput::processBlockComment;
@@ -477,6 +481,9 @@ void srcMLOutput::fillElementNames() {
   ElementNames[SSTRING] = "";
   ElementNames[SCHAR] = "";
   ElementNames[SLITERAL] = "";
+
+  // operators
+  ElementNames[SOPERATOR] = "";
 
   // sub-statement elements
   ElementNames[SNAME] = "name";
