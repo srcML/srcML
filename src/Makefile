@@ -129,7 +129,7 @@ ${EXE_DIR}srcmllexer : ${OBJ_DIR}srcmllexer.o ${OBJ_DIR}KeywordCPPLexer.o ${OBJ_
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) -o $@
 
 # Object files
-${OBJ_DIR}src2srcml.o : src2srcml.cpp srcMLTranslator.h version.h srcmlapps.h Options.h
+${OBJ_DIR}src2srcml.o : src2srcml.cpp srcMLTranslator.h version.h srcmlapps.h Options.h srcmlns.h
 	$(CXX) $(XML_PRE) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}srcml2src.o : srcml2src.cpp version.h srcmlapps.h Options.h
@@ -154,7 +154,7 @@ ${OBJ_DIR}KeywordLexer.o : $(firstword $(KEYWORDLEXER_GENS))
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) -c $< -o $@
 #	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(SRCMLPARSER_CXX_FLAGS) -c $< -o $@
 
-${OBJ_DIR}srcMLOutput.o : srcMLOutput.cpp srcMLOutput.h srcMLOutputPR.h
+${OBJ_DIR}srcMLOutput.o : srcMLOutput.cpp srcMLOutput.h srcMLOutputPR.h srcmlns.h
 	$(CXX) ${XML_PRE} $(ANTLR_INC) $(CXXFLAGS) $(SRCMLPARSER_CXX_FLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}Mode.o : Mode.cpp Mode.h
