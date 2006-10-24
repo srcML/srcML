@@ -47,10 +47,7 @@ class srcMLTranslator : public Language {
 		  const char* directory,
 		  const char* filename,
 		  const char* version,
- 		  const char* ns_prefix_src,
-		  const char* ns_prefix_cpp,
-		  const char* ns_prefix_err,
-		  const std::map<std::string, std::string>& uri
+		  std::map<std::string, std::string>& uri
 		  );
 
   // translate from input stream to output stream

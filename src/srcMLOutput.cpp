@@ -32,9 +32,6 @@
 const char* XML_DECLARATION_STANDALONE = "yes";
 const char* XML_VERSION = "1.0";
 
-#define SRC_PREFIX ""
-#define CPP_PREFIX "cpp:"
-
 // encoding handler
 xmlCharEncodingHandlerPtr handler = 0;
 
@@ -44,27 +41,17 @@ bool srcMLOutput::checkEncoding(const char* encoding) {
   return xmlFindCharEncodingHandler(encoding) != 0;
 }
 
-char* srcMLOutput::prefix_src = "";
-char* srcMLOutput::prefix_cpp = "";
-char* srcMLOutput::prefix_err = "";
-
 srcMLOutput::srcMLOutput(TokenStream* ints, 
 			 const char* filename,
 			 const char* language, 
 			 const char* src_encoding,
 			 const char* xml_enc,
 			 int op,
-			 char* ns_prefix_src,
-			 char* ns_prefix_cpp,
-			 char* ns_prefix_err)
+			 std::map<std::string, std::string>& curi
+			 )
   : input(ints), xout(0), srcml_filename(filename), unit_language(language), unit_dir(""), unit_filename(""),
-    unit_version(""), options(op), xml_encoding(xml_enc)
+    unit_version(""), options(op), xml_encoding(xml_enc), uri(curi)
 {
-
-  prefix_src = ns_prefix_src;
-  prefix_cpp = ns_prefix_cpp;
-  prefix_err = ns_prefix_err;
-
   // setup an output handler
   handler = xmlFindCharEncodingHandler(src_encoding);
   if (!handler)
@@ -76,8 +63,18 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
     op |= OPTION_SKIP_ENCODING;
 #endif
 
+  // fill the prefixes
+  for (int i = 0; i < END_ELEMENT_TOKEN; ++i)
+    ElementPrefix[i] = (char*) uri[SRCML_SRC_NS_URI].c_str();
+
   // fill the elements
   fillElementNames();
+
+  for (int i = SCPP_DIRECTIVE; i <= SCPP_ENDIF; ++i)
+    ElementPrefix[i] = (char*) uri[SRCML_CPP_NS_URI].c_str();
+
+  for (int i = SMARKER; i <= SERROR_MODE; ++i)
+    ElementPrefix[i] = (char*) uri[SRCML_ERR_NS_URI].c_str();
 
   if (isoption(OPTION_LITERAL)) {
     // literal values
@@ -262,26 +259,26 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
 
       // main srcML namespace declaration
       std::string src_prefix = "xmlns";
-      if (prefix_src[0] != '\0') {
+      if (uri[SRCML_SRC_NS_URI][0] != '\0') {
 	src_prefix += ":";
-	src_prefix += prefix_src;
+	src_prefix += uri[SRCML_SRC_NS_URI];
       }
       xmlTextWriterWriteAttribute(xout, BAD_CAST src_prefix.c_str(), BAD_CAST SRCML_SRC_NS_URI);
 
       // main cpp namespace declaration
       std::string cpp_prefix = "xmlns";
-      if (prefix_cpp[0] != '\0') {
+      if (uri[SRCML_CPP_NS_URI][0] != '\0') {
 	cpp_prefix += ":";
-	cpp_prefix += prefix_cpp;
+	cpp_prefix += uri[SRCML_CPP_NS_URI];
       }
       if (isoption(OPTION_CPP))
 	xmlTextWriterWriteAttribute(xout, BAD_CAST cpp_prefix.c_str(), BAD_CAST SRCML_CPP_NS_URI);
 
       // optional debugging xml namespace
       std::string err_prefix = "xmlns";
-      if (prefix_err[0] != '\0') {
+      if (uri[SRCML_ERR_NS_URI][0] != '\0') {
 	err_prefix += ":";
-	err_prefix += prefix_err;
+	err_prefix += uri[SRCML_SRC_NS_URI];
       }
       if (isoption(OPTION_DEBUG))
 	xmlTextWriterWriteAttribute(xout, BAD_CAST err_prefix.c_str(), BAD_CAST SRCML_ERR_NS_URI);
@@ -466,10 +463,6 @@ char* srcMLOutput::ElementPrefix[];
 // fill the element names array
 void srcMLOutput::fillElementNames() {
 
-  // assume they are all src
-  for (int i = 0; i < END_ELEMENT_TOKEN; ++i)
-    ElementPrefix[i] = prefix_src;
-
   ElementNames[SUNIT] = "unit";
   ElementNames[LINECOMMENT] = "comment";
   ElementNames[BLOCKCOMMENT] = ElementNames[LINECOMMENT];
@@ -601,15 +594,9 @@ void srcMLOutput::fillElementNames() {
   ElementNames[SCPP_PRAGMA]    = "pragma";
   ElementNames[SCPP_ERROR]     = "error";
 
-  for (int i = SCPP_DIRECTIVE; i <= SCPP_ENDIF; ++i)
-    ElementPrefix[i] = prefix_cpp;
-
   ElementNames[SMARKER]        = "marker";
   ElementNames[SERROR_PARSE]   = "parse";
   ElementNames[SERROR_MODE]    = "mode";
-
-  for (int i = SMARKER; i <= SERROR_MODE; ++i)
-    ElementPrefix[i] = prefix_err;
 
   // Java elements
   ElementNames[SEXTENDS]       = "extends";

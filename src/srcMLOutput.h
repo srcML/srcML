@@ -26,6 +26,7 @@
 #define SRCMLOUTPUT_H
 
 #include <iostream>
+#include <map>
 #include "antlr/Token.hpp"
 #include "srcMLParserTokenTypes.hpp"
 #include <antlr/MismatchedTokenException.hpp>
@@ -46,11 +47,9 @@ class srcMLOutput : public srcMLParserTokenTypes {
 	      const char* srcml_filename,
 	      const char* language, 
 	      const char* encoding,
-	      const char* src_encoding = "",
-	      int option = 0,
-	      char* ns_prefix_src = "",
-	      char* ns_prefix_cpp = "",
-	      char* ns_prefix_err = ""
+	      const char* src_encoding,
+	      int option,
+	      std::map<std::string, std::string>& uri
 	      );
 
   static bool checkEncoding(const char* encoding);
@@ -84,6 +83,8 @@ class srcMLOutput : public srcMLParserTokenTypes {
   static char* prefix_src;
   static char* prefix_cpp;
   static char* prefix_err;
+
+  std::map<std::string, std::string>& uri;
 
   int consume_next();
 

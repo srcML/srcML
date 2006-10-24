@@ -40,13 +40,10 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
 				 const char* directory,       // 
 				 const char* filename,        // 
 				 const char* version,         //
-				 const char* ns_prefix_src,
-				 const char* ns_prefix_cpp,
-				 const char* ns_prefix_err,
-				 const std::map<std::string, std::string>& uri
+				 std::map<std::string, std::string>& uri
 				 )
   : Language(language), options(op),
-    out(0, srcml_filename, getLanguageString(), src_encoding, xml_encoding, options, (char*) ns_prefix_src, (char*) ns_prefix_cpp, (char*) ns_prefix_err) {
+    out(0, srcml_filename, getLanguageString(), src_encoding, xml_encoding, options, uri) {
 
   // root unit for compound srcML documents
   if ((options & OPTION_NESTED) > 0)

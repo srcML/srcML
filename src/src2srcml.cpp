@@ -361,8 +361,7 @@ int main(int argc, char* argv[]) {
   try {
 
   // translator from input to output using determined language
-  srcMLTranslator translator(language, src_encoding, xml_encoding, srcml_filename, options, given_directory, given_filename, given_version,
-			     ns_prefix_src.c_str(), ns_prefix_cpp.c_str(), ns_prefix_err.c_str(), uri);
+  srcMLTranslator translator(language, src_encoding, xml_encoding, srcml_filename, options, given_directory, given_filename, given_version, uri);
 
   // output source encoding
   if (isoption(options, OPTION_VERBOSE)) {
