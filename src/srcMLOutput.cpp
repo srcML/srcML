@@ -81,6 +81,10 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
     ElementNames[SSTRING] = "literal";
     ElementNames[SCHAR] = "literal";
     ElementNames[SLITERAL] = "literal";
+
+    ElementPrefix[SSTRING] = (char*) uri[SRCML_EXT_LITERAL_NS_URI].c_str();
+    ElementPrefix[SCHAR] = ElementPrefix[SSTRING];
+    ElementPrefix[SLITERAL] = ElementPrefix[SSTRING];
   }
 
   // only allow debug tags in debug
@@ -91,6 +95,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   }
 
   if (isoption(OPTION_OPERATOR)) {
+    ElementPrefix[SOPERATOR] = (char*) uri[SRCML_EXT_OPERATOR_NS_URI].c_str();
     ElementNames[SOPERATOR] = "operator";
   }
 
