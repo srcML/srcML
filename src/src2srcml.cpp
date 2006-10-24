@@ -348,7 +348,9 @@ int main(int argc, char* argv[]) {
       uri[SRCML_EXT_LITERAL_NS_URI] = ns_prefix_literal;
 
   if (uri.count(SRCML_EXT_OPERATOR_NS_URI) == 0)
-      uri[SRCML_EXT_OPERATOR_NS_URI] = ns_prefix_literal;
+      uri[SRCML_EXT_OPERATOR_NS_URI] = ns_prefix_operator;
+
+  // make sure we have no duplicate prefixes
 
   try {
 
