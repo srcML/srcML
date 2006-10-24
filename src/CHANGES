@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Markup parentheses in expressions as operators.
+
 	Rework internal handling of URI's.
 
 	Fix bug with fully qualified class names for extends and implements.

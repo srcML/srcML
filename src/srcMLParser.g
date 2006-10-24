@@ -1944,13 +1944,13 @@ colon[bool final = false] { if (final) setFinalToken(); } :
         COLON
 ;
 
-rparen[bool final = false] {} :
-        { getParen() == 0 }? empty_rparen[final]
+rparen[bool final = false, bool mark = false] {} :
+        { getParen() == 0 }? empty_rparen[final, mark]
 
-        | rparen_base[final]
+        | rparen_base[final, mark]
 ;
 
-empty_rparen[bool final = false] {} :
+empty_rparen[bool final = false, bool mark = false] {} :
 //        { getParen() == 0 }?
         {
             // additional right parentheses indicates end of non-list modes
@@ -1967,13 +1967,19 @@ empty_rparen[bool final = false] {} :
             }
             list_end_rparen[final] |
 
-            rparen_base[final]
+            rparen_base[final, mark]
         )
 ;
 
-rparen_base[bool final = false] { if (final) setFinalToken(); }:
+rparen_base[bool final = false, bool mark = false] { if (final) setFinalToken(); LocalMode lm; }:
         {
             decParen();
+
+            if (mark) {
+                startNewMode(MODE_LOCAL);
+
+                startElement(SOPERATOR);
+            }
         }
         RPAREN  
 ;
@@ -3595,7 +3601,7 @@ expression_part[bool checkmacro = false] { guessing_end();
         guessing_endDownToMode[MODE_INTERNAL_END_PAREN]
 
         guessing_endCurrentModeSafely[MODE_INTERNAL_END_PAREN]
-        rparen |
+        rparen[false, true] |
 
         // left curly brace
         {
