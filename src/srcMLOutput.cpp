@@ -282,6 +282,24 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
       }
       if (isoption(OPTION_DEBUG))
 	xmlTextWriterWriteAttribute(xout, BAD_CAST err_prefix.c_str(), BAD_CAST SRCML_ERR_NS_URI);
+
+      // optional literal xml namespace
+      std::string lit_prefix = "xmlns";
+      if (uri[SRCML_EXT_LITERAL_NS_URI][0] != '\0') {
+	lit_prefix += ":";
+	lit_prefix += uri[SRCML_EXT_LITERAL_NS_URI];
+      }
+      if (isoption(OPTION_LITERAL))
+	xmlTextWriterWriteAttribute(xout, BAD_CAST lit_prefix.c_str(), BAD_CAST SRCML_EXT_LITERAL_NS_URI);
+
+      // optional operator xml namespace
+      std::string opr_prefix = "xmlns";
+      if (uri[SRCML_EXT_OPERATOR_NS_URI][0] != '\0') {
+	opr_prefix += ":";
+	opr_prefix += uri[SRCML_EXT_OPERATOR_NS_URI];
+      }
+      if (isoption(OPTION_OPERATOR))
+	xmlTextWriterWriteAttribute(xout, BAD_CAST opr_prefix.c_str(), BAD_CAST SRCML_EXT_OPERATOR_NS_URI);
     }
 
     // language attribute
