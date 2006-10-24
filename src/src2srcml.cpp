@@ -226,7 +226,9 @@ std::string ns_prefix_err="srcerr";
 std::string ns_prefix_literal="lit";
 std::string ns_prefix_operator="op";
 
-std::map<std::string, std::string> uri;
+typedef std::map<std::string, std::string> URI_TYPE;
+
+URI_TYPE uri;
 
 // setup options and collect info from arguments
 int process_args(int argc, char* argv[]);
@@ -274,14 +276,8 @@ int main(int argc, char* argv[]) {
     std::cerr << NAME << ": Options for skipping encoding and specifying source encoding are incompatible.\n";
     exit(STATUS_INVALID_OPTION_COMBINATION);
   }
-
-  // make sure namespace prefixes are unique
-  if (isoption(options, OPTION_XMLNS) && (ns_prefix_src == ns_prefix_cpp || ns_prefix_src == ns_prefix_err || ns_prefix_cpp == ns_prefix_err)) {
-
-    std::cerr << NAME << ": Namespace prefixes must be unique.\n";
-    exit(STATUS_INVALID_OPTION_COMBINATION);
-  }
-
+  /*
+  */
   // eat optional option separator
   if (argc > (curarg) && strcmp(argv[curarg], OPTION_SEPARATOR) == 0)
       ++curarg;
@@ -351,6 +347,16 @@ int main(int argc, char* argv[]) {
       uri[SRCML_EXT_OPERATOR_NS_URI] = ns_prefix_operator;
 
   // make sure we have no duplicate prefixes
+  for (URI_TYPE::iterator po = uri.begin(); po != uri.end(); ++po) {
+    URI_TYPE::iterator pi = po;
+    ++pi;
+    for ( ; pi != uri.end(); ++pi) {
+      if (pi->second == po->second) {
+	std::cerr << NAME << ": Namespace prefixes must be unique.\n";
+	exit(STATUS_INVALID_OPTION_COMBINATION);
+      }
+    }
+  }
 
   try {
 
@@ -782,9 +788,14 @@ int process_args(int argc, char* argv[]) {
 	options |= OPTION_OPERATOR;
 
       } else {
-	std::cerr << NAME << ": invalid namespace -- uri must be on of the following:  "
-		  << SRCML_SRC_NS_URI << " " << SRCML_CPP_NS_URI << " " << SRCML_ERR_NS_URI << '\n'
-	          << "or the extension URI's " << SRCML_EXT_LITERAL_NS_URI << " " << SRCML_EXT_OPERATOR_NS_URI << '\n';
+	std::cerr << NAME << ": invalid namespace \"" << ns_uri << "\"" << '\n' << '\n'
+		  << "Namespace URI must be on of the following:  " << '\n' << '\n'
+		  << '\t' << SRCML_SRC_NS_URI << "\t\t" << "primary srcML namespace" << '\n'
+		  << '\t' << SRCML_CPP_NS_URI << "\t\t" << "namespace for cpreprocessing elements" << '\n'
+		  << '\t' << SRCML_ERR_NS_URI << '\t' << "namespace for srcML debugging elements" << '\n' << '\n'
+	          << "or an extension namespace:" << '\n' << '\n'
+		  << '\t' << SRCML_EXT_LITERAL_NS_URI << '\t' << "optional literal elements" << '\n'
+		  << '\t' << SRCML_EXT_OPERATOR_NS_URI << '\t' << "optional operator element" << '\n' << '\n';
 	exit(STATUS_INVALID_LANGUAGE);
       }
     }
