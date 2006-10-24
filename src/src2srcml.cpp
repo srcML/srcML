@@ -26,6 +26,7 @@
 #include <iomanip>
 #include <fstream>
 #include <string>
+#include <map>
 #include <sys/stat.h>
 #include "version.h"
 #include "srcmlapps.h"
@@ -222,6 +223,10 @@ bool cpp_if0 = false;
 std::string ns_prefix_src="";
 std::string ns_prefix_cpp="cpp";
 std::string ns_prefix_err="srcerr";
+std::string ns_prefix_literal="lit";
+std::string ns_prefix_operator="op";
+
+std::map<std::string, std::string> uri;
 
 // setup options and collect info from arguments
 int process_args(int argc, char* argv[]);
@@ -329,11 +334,27 @@ int main(int argc, char* argv[]) {
     }
   }
 
+  // update the uri's specified by the user with the standard prefixes
+  if (uri.count(SRCML_SRC_NS_URI) == 0)
+      uri[SRCML_SRC_NS_URI] = ns_prefix_src;
+
+  if (uri.count(SRCML_CPP_NS_URI) == 0)
+      uri[SRCML_CPP_NS_URI] = ns_prefix_cpp;
+
+  if (uri.count(SRCML_ERR_NS_URI) == 0)
+      uri[SRCML_ERR_NS_URI] = ns_prefix_err;
+
+  if (uri.count(SRCML_EXT_LITERAL_NS_URI) == 0)
+      uri[SRCML_EXT_LITERAL_NS_URI] = ns_prefix_literal;
+
+  if (uri.count(SRCML_EXT_OPERATOR_NS_URI) == 0)
+      uri[SRCML_EXT_OPERATOR_NS_URI] = ns_prefix_literal;
+
   try {
 
   // translator from input to output using determined language
   srcMLTranslator translator(language, src_encoding, xml_encoding, srcml_filename, options, given_directory, given_filename, given_version,
-			     ns_prefix_src.c_str(), ns_prefix_cpp.c_str(), ns_prefix_err.c_str());
+			     ns_prefix_src.c_str(), ns_prefix_cpp.c_str(), ns_prefix_err.c_str(), uri);
 
   // output source encoding
   if (isoption(options, OPTION_VERBOSE)) {
@@ -355,7 +376,7 @@ int main(int argc, char* argv[]) {
     }
 
     // translate all the filenames listed in the named file
-    std::string line;
+   std::string line;
     int count = 0;    // keep count for verbose mode
     while (getline(*pinfilelist, line)) {
 
@@ -724,25 +745,48 @@ int process_args(int argc, char* argv[]) {
       }
 
       ++curarg;
+     
+      // check for existing namespaces
+      if (uri.count(ns_uri) > 0) {
+	  std::cerr << NAME << ": namespace listed more than once." << '\n';
+	  exit(STATUS_INVALID_LANGUAGE);
+	}
 
-      // validate uri
-      if (ns_uri == SRCML_SRC_NS_URI)
-	ns_prefix_src = ns_prefix;
-      else if (ns_uri == SRCML_CPP_NS_URI)
-	ns_prefix_cpp = ns_prefix;
-      else if (ns_uri == SRCML_ERR_NS_URI) {
-	ns_prefix_err = ns_prefix;
+      // update the uri's
+      // check for standard namespaces, store them, and update any flags
+      uri[ns_uri] = ns_prefix;
+      if (ns_uri == SRCML_SRC_NS_URI) {
+
+	  // default
+
+      } else if (ns_uri == SRCML_CPP_NS_URI) {
+
+	// specifying the cpp prefix automatically turns on preprocessor
+	options |= OPTION_CPP;
+
+      } else if (ns_uri == SRCML_ERR_NS_URI) {
 
 	// specifying the error prefix automatically turns on debugging
 	options |= OPTION_DEBUG;
 
+      } else if (ns_uri == SRCML_EXT_LITERAL_NS_URI) {
+
+	// specifying the literal prefix automatically turns on literal markup
+	options |= OPTION_LITERAL;
+
+      } else if (ns_uri == SRCML_EXT_OPERATOR_NS_URI) {
+
+	// specifying the operator prefix automatically turns on operator markup
+	options |= OPTION_OPERATOR;
+
       } else {
 	std::cerr << NAME << ": invalid namespace -- uri must be on of the following:  "
-		  << SRCML_SRC_NS_URI << " " << SRCML_CPP_NS_URI << " " << SRCML_ERR_NS_URI << '\n';
+		  << SRCML_SRC_NS_URI << " " << SRCML_CPP_NS_URI << " " << SRCML_ERR_NS_URI << '\n'
+	          << "or the extension URI's " << SRCML_EXT_LITERAL_NS_URI << " " << SRCML_EXT_OPERATOR_NS_URI << '\n';
 	exit(STATUS_INVALID_LANGUAGE);
       }
     }
-
+    
     // xml_encoding
     else if (compare_flags(argv[curarg], ENCODING_FLAG, ENCODING_FLAG_SHORT)) {
 
