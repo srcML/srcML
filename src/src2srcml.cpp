@@ -511,13 +511,13 @@ int process_args(int argc, char* argv[]) {
       if (position == original_position) ++curarg;
     }
 
-    // extended mode
+    // literal mode
     else if (compare_flags(argv[curarg], LITERAL_FLAG, "", position)) {
       options |= OPTION_LITERAL;
       if (position == original_position) ++curarg;
     }
 
-    // extended mode
+    // operator mode
     else if (compare_flags(argv[curarg], OPERATOR_FLAG, "", position)) {
       options |= OPTION_OPERATOR;
       if (position == original_position) ++curarg;
