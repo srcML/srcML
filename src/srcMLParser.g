@@ -1911,6 +1911,18 @@ lparen {} :
         LPAREN  
 ;
 
+lparen_marked { LocalMode lm; } :
+        {
+            incParen();
+        }
+        {
+            startNewMode(MODE_LOCAL);
+
+            startElement(SOPERATOR);
+        }
+        LPAREN  
+;
+
 comma[bool final = false] { if (final) setFinalToken(); }:
         {
             // comma ends the current item in a list
@@ -3565,7 +3577,7 @@ expression_part[bool checkmacro = false] { guessing_end();
                 function[type_count] |
 
         // left parentheses
-        lparen
+        lparen_marked
         guessing_startNewMode[MODE_INTERNAL_END_PAREN]
         {
             startNewMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN);
