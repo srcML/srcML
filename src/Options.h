@@ -128,7 +128,7 @@ enum Options {
   OPTION_SELF_VERSION = 0x02000000,
 
   // markup operators
-  OPTION_OPERATOR     = 0x4,
+  OPTION_OPERATOR     = 0x04000000,
 };
 
 #endif
