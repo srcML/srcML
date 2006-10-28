@@ -152,9 +152,6 @@ void output_help(const char* name) {
 	      << "  " << FILELIST_FLAG_SHORT    << ", " << setw(COL) <<  FILELIST_FLAG
 	      << "treat input file as a list of source files\n"
               << '\n'
-	      << "  " << LITERAL_FLAG   << "  " << /* setw(COL) <<*/ "             "
-	      << "markup literal values (number, character, string)\n"
-              << '\n'
 #ifdef LIBXML_ENABLED
 	      << "  " << COMPRESSED_FLAG_SHORT  << ", " << setw(COL) <<  COMPRESSED_FLAG
 	      << "output in gzip format\n"
@@ -165,6 +162,13 @@ void output_help(const char* name) {
 	      << "markup translation errors with namespace \"" << SRCML_ERR_NS_URI << "\"\n"
               << "  " << VERBOSE_FLAG_SHORT     << ", " << setw(COL) << VERBOSE_FLAG
 	      << "verbose output to standard error\n"
+              << '\n'
+	      << "Markup Extensions:"  << '\n'
+              << '\n'
+	      << "  " << LITERAL_FLAG   << "  " << /* setw(COL) <<*/ "             "
+	      << "markup literal values with namespace \"http://www.sdml.info/srcML/literal\"\n"
+	      << "  " << OPERATOR_FLAG  << " " << /* setw(COL) <<*/ "             "
+	      << "markup operators with namespace \"http://www.sdml.info/srcML/operator\"\n"
               << '\n'
 	      << "CPP Markup Options:"  << '\n'
               << '\n'
