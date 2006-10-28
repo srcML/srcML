@@ -139,6 +139,23 @@
       </listitem>
     </varlistentry>
     <varlistentry>
+      <term>&XMLNS_FLAG;=<replaceable class="parameter">URI</replaceable></term>
+      <listitem>
+	<para>
+	  Sets the URI for the default namespace.  Default is xmlns=http://www.sdml.info/srcML/src.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>&XMLNS_FLAG;:<replaceable class="parameter">PREFIX</replaceable>=<replaceable class="parameter">URI</replaceable></term>
+      <listitem>
+	<para>
+	  Sets the URI for the namespace with the prefix PREFIX.  Defaults are xmlns:cpp=http://www.sdml.info/srcML/cpp,
+	  and xmlns:srcerr=http://www.sdml.info/srcML/srcerr.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
       <term>&ENCODING_FLAG_SHORT;, &ENCODING_FLAG;=<replaceable class="parameter">encoding</replaceable></term>
       <listitem>
 	<para>
@@ -172,6 +189,24 @@
 	  Blank lines are ignored.  A line with the character '#' at
 	  the start of a line is regarded as a comment character and
 	  the line is ignored.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>&LITERAL_FLAG;</term>
+      <listitem>
+	<para>
+	  Extension to srcML markup for literal values.  Can also
+	  be specified by using the &XMLNS_FLAG; option with a URI of http://www.sdml.info/srcML/literal
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>&OPERATOR_FLAG;</term>
+      <listitem>
+	<para>
+	  Extension to srcML markup for operators.  Can also
+	  be specified by using the &XMLNS_FLAG; option with a URI of http://www.sdml.info/srcML/operator
 	</para>
       </listitem>
     </varlistentry>
