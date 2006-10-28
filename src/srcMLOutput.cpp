@@ -283,7 +283,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
       std::string err_prefix = "xmlns";
       if (uri[SRCML_ERR_NS_URI][0] != '\0') {
 	err_prefix += ":";
-	err_prefix += uri[SRCML_SRC_NS_URI];
+	err_prefix += uri[SRCML_ERR_NS_URI];
       }
       if (isoption(OPTION_DEBUG))
 	xmlTextWriterWriteAttribute(xout, BAD_CAST err_prefix.c_str(), BAD_CAST SRCML_ERR_NS_URI);
