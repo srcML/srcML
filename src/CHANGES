@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Change compressed option flag to "--compress".
+
 	Improved error message for out of range unit error in srcml2src.
 
 	Markup parentheses in expressions as operators.
