@@ -2333,7 +2333,7 @@ update_var_typecount {} :
   Type of a function.  Includes specifiers
 */
 function_type_check[int& type_count] { type_count = 1; } :
-        lead_type_identifier (type_identifier_count[type_count])*
+        lead_type_identifier ( { inLanguage(LANGUAGE_JAVA) || LA(1) != LBRACKET }? type_identifier_count[type_count])*
 ;
 
 type_identifier_count[int& type_count] { ++type_count; } :
