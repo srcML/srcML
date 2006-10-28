@@ -93,12 +93,17 @@ void output_help(const char* name) {
 	       << "  " << INFO_FLAG_SHORT  << ", " << setw(COL) << INFO_FLAG
 	       << "display all metadata and exit\n"
 	       << '\n'
+	       << "  " << XML_FLAG_SHORT        << ", " << setw(COL) << XML_FLAG        
+	       << "output in XML instead of text\n"
+#ifdef LIBXML_ENABLED
+	      << "  " << COMPRESSED_FLAG_SHORT  << ", " << setw(COL) <<  COMPRESSED_FLAG
+	      << "output XML in gzip format\n"
+#endif
+	       << '\n'
 	       << "  " << NESTED_FLAG_SHORT     << ", " << setw(COL) << NESTED_FLAG     
 	       << "display number of nested units and exit\n"
 	       << "  " << UNIT_FLAG_SHORT       << ", " << setw(COL) << UNIT_FLAG_FULL  
 	       << "extract nested unit NUM from a compound srcML document\n"
-	       << "  " << XML_FLAG_SHORT        << ", " << setw(COL) << XML_FLAG        
-	       << "output is in XML instead of text\n"
 	       << "  " << EXPAND_FLAG_SHORT     << ", " << setw(COL) << EXPAND_FLAG     
 	       << "extract all files from a compound srcML document\n"
 	       << '\n'
@@ -269,6 +274,17 @@ int main(int argc, char* argv[]) {
     else if (compare_flags(argv[curarg], XML_FLAG, XML_FLAG_SHORT, position)) {
       options |= OPTION_XML;
       if (position == original_position) ++curarg;
+    }
+
+    // compressed mode
+    else if (compare_flags(argv[curarg], COMPRESSED_FLAG, COMPRESSED_FLAG_SHORT, position)) {
+#ifdef LIBXML_ENABLED
+      options |= OPTION_COMPRESSED;
+      if (position == original_position) ++curarg;
+#else
+      std::cerr << NAME << ": The compression option, i.e., " << COMPRESSED_FLAG << ", is only supported in the libxml version." << '\n';
+      exit(STATUS_LIBXML2_FEATURE);
+#endif
     }
 
     // namespace

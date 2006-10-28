@@ -81,6 +81,9 @@ const char* LANGUAGE_ASPECTJ = "AspectJ";
 const char* SKIP_ENCODING_FLAG = "--skip-encoding";
 const char* SKIP_ENCODING_FLAG_SHORT = "-k";
 
+const char* COMPRESSED_FLAG = "--compress";
+const char* COMPRESSED_FLAG_SHORT = "-z";
+
 /* Return Status */
 
 enum RETURN_STATUS {

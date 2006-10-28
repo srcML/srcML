@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Allow compressed output of XML for srcml2src also.
+
 	Change compressed option flag to "--compress".
 
 	Improved error message for out of range unit error in srcml2src.

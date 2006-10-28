@@ -45,9 +45,6 @@ const char* LITERAL_FLAG = "--literal";
 
 const char* OPERATOR_FLAG = "--operator";
 
-const char* COMPRESSED_FLAG = "--compress";
-const char* COMPRESSED_FLAG_SHORT = "-z";
-
 const char* INTERACTIVE_FLAG = "--interactive";
 const char* INTERACTIVE_FLAG_SHORT = "-c";
 
