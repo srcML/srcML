@@ -481,6 +481,8 @@ int main(int argc, char* argv[]) {
 		  << " nested " << (e.size > 1 ? "units" : "unit") << '\n';
 	exit_status = STATUS_UNIT_INVALID;
 
+	return exit_status;
+
       } catch (LibXMLError) {
 	exit_status = STATUS_UNIT_INVALID;
 	throw "XML error";
