@@ -54,6 +54,15 @@ class TerminateLibXMLError : public LibXMLError {
     {}
 };
 
+class OutOfRangeUnitError : public LibXMLError {
+ public:
+  OutOfRangeUnitError(int s)
+    : LibXMLError(0), size(s)
+    {}
+
+  int size;
+};
+
 class srcMLUtility {
  public:
 

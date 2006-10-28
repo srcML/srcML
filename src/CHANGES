@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Improved error message for out of range unit error in srcml2src.
+
 	Markup parentheses in expressions as operators.
 
 	Rework internal handling of URI's.

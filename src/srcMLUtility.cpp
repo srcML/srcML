@@ -590,6 +590,7 @@ void srcMLUtility::outputText(const xmlChar* s, std::ostream& out) {
 
     // skip to the correct unit
     int count = 0;
+    try {
     while (1) {
       skiptonextunit(reader);
 
@@ -601,6 +602,9 @@ void srcMLUtility::outputText(const xmlChar* s, std::ostream& out) {
 
       // skip past this unit
       xmlTextReaderNext(reader);
+    }
+    } catch (...) {
+      throw OutOfRangeUnitError(count);
     }
   }
 

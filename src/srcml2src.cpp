@@ -454,9 +454,15 @@ int main(int argc, char* argv[]) {
 
 	su.move_to_unit(unit);
 
+      } catch (const OutOfRangeUnitError& e) {
+
+	std::cerr << NAME << ": " << "unit " << unit << " was selected from a compound srcML document that contains " << e.size
+		  << " nested " << (e.size > 1 ? "units" : "unit") << '\n';
+	exit_status = STATUS_UNIT_INVALID;
+
       } catch (LibXMLError) {
 	exit_status = STATUS_UNIT_INVALID;
-	throw "unit selected is out of range for this compound srcML document";
+	throw "XML error";
       }
     }
 
