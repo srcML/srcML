@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Expose info and longinfo options for srcml2src.
+
 	Allow compressed output of XML for srcml2src also.
 
 	Change compressed option flag to "--compress".

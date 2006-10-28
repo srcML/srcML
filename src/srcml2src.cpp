@@ -46,7 +46,7 @@ const char* XML_FLAG = "--xml";
 const char* XML_FLAG_SHORT = "-X";
 
 const char* INFO_FLAG = "--info";
-const char* INFO_FLAG_SHORT = "-o";
+const char* INFO_FLAG_SHORT = "-i";
 
 const char* LONG_INFO_FLAG = "--longinfo";
 const char* LONG_INFO_FLAG_SHORT = "-l";
@@ -77,6 +77,29 @@ void output_help(const char* name) {
 	       << "  " << VERSION_FLAG_SHORT    << ", " << setw(COL) << VERSION_FLAG    
 	       << "display version number and exit\n"
 	       << '\n'
+	       << "  " << XML_FLAG_SHORT        << ", " << setw(COL) << XML_FLAG        
+	       << "output in XML instead of text\n"
+#ifdef LIBXML_ENABLED
+	      << "  " << COMPRESSED_FLAG_SHORT  << ", " << setw(COL) <<  COMPRESSED_FLAG
+	      << "output XML in gzip format\n"
+#endif
+	       << '\n'
+#ifdef LIBXML_ENABLED
+	       << "  " << TEXTENCODING_FLAG_SHORT << ", " << setw(COL) <<  TEXTENCODING_FLAG_FULL  
+	       << "set the output source encoding to ENC (default:  " << DEFAULT_TEXT_ENCODING << ") \n"
+ 	       << "  " << SKIP_ENCODING_FLAG_SHORT        << ", " << setw(COL) <<  SKIP_ENCODING_FLAG
+	       << "skip any text encoding transformation" << "\n"
+	       << '\n'
+#endif
+	       << "  " << UNIT_FLAG_SHORT       << ", " << setw(COL) << UNIT_FLAG_FULL  
+	       << "extract nested unit NUM from a compound srcML document\n"
+	       << "  " << EXPAND_FLAG_SHORT     << ", " << setw(COL) << EXPAND_FLAG     
+	       << "extract all files from a compound srcML document\n"
+	       << '\n'
+               << "  " << VERBOSE_FLAG_SHORT    << ", " << setw(COL) << VERBOSE_FLAG    << "verbose output\n"
+	       << '\n'
+	       << "Metadata Options:  " << '\n'
+	       << '\n'
 	       << "  " << LANGUAGE_FLAG_SHORT   << ", " << setw(COL) << LANGUAGE_FLAG
 	       << "display source language (e.g., " << LANGUAGE_C << ", " << LANGUAGE_CXX << ", "
 	       << LANGUAGE_JAVA << ") and exit\n"
@@ -90,31 +113,13 @@ void output_help(const char* name) {
 	       << "display xml encoding and exit\n"
 	       << "  " << NAMESPACE_FLAG_SHORT  << ", " << setw(COL) << NAMESPACE_FLAG_FULL
 	       << "display prefix of namespace given by URI and exit\n"
-	       << "  " << INFO_FLAG_SHORT  << ", " << setw(COL) << INFO_FLAG
-	       << "display all metadata and exit\n"
-	       << '\n'
-	       << "  " << XML_FLAG_SHORT        << ", " << setw(COL) << XML_FLAG        
-	       << "output in XML instead of text\n"
-#ifdef LIBXML_ENABLED
-	      << "  " << COMPRESSED_FLAG_SHORT  << ", " << setw(COL) <<  COMPRESSED_FLAG
-	      << "output XML in gzip format\n"
-#endif
-	       << '\n'
 	       << "  " << NESTED_FLAG_SHORT     << ", " << setw(COL) << NESTED_FLAG     
 	       << "display number of nested units and exit\n"
-	       << "  " << UNIT_FLAG_SHORT       << ", " << setw(COL) << UNIT_FLAG_FULL  
-	       << "extract nested unit NUM from a compound srcML document\n"
-	       << "  " << EXPAND_FLAG_SHORT     << ", " << setw(COL) << EXPAND_FLAG     
-	       << "extract all files from a compound srcML document\n"
 	       << '\n'
-#ifdef LIBXML_ENABLED
-	       << "  " << TEXTENCODING_FLAG_SHORT << ", " << setw(COL) <<  TEXTENCODING_FLAG_FULL  
-	       << "set the output source encoding to ENC (default:  " << DEFAULT_TEXT_ENCODING << ") \n"
- 	       << "  " << SKIP_ENCODING_FLAG_SHORT        << ", " << setw(COL) <<  SKIP_ENCODING_FLAG
-	       << "skip any text encoding transformation" << "\n"
-	       << '\n'
-#endif
-               << "  " << VERBOSE_FLAG_SHORT    << ", " << setw(COL) << VERBOSE_FLAG    << "verbose output\n"
+	       << "  " << INFO_FLAG_SHORT  << ", " << setw(COL) << INFO_FLAG
+	       << "display most metadata (except nested unit count) and exit\n"
+	       << "  " << LONG_INFO_FLAG_SHORT  << ", " << setw(COL) << LONG_INFO_FLAG
+	       << "display all metadata (including nested unit count) and exit\n"
 	       << '\n'
 	       << "Examples:  " << '\n'
 	       << "  " << name << "                       "
