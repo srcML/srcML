@@ -96,7 +96,7 @@ void output_help(const char* name) {
 	       << "  " << NESTED_FLAG_SHORT     << ", " << setw(COL) << NESTED_FLAG     
 	       << "display number of nested units and exit\n"
 	       << "  " << UNIT_FLAG_SHORT       << ", " << setw(COL) << UNIT_FLAG_FULL  
-	       << "process nested unit NUM from a compound srcML document\n"
+	       << "extract nested unit NUM from a compound srcML document\n"
 	       << "  " << XML_FLAG_SHORT        << ", " << setw(COL) << XML_FLAG        
 	       << "output is in XML instead of text\n"
 	       << "  " << EXPAND_FLAG_SHORT     << ", " << setw(COL) << EXPAND_FLAG     
