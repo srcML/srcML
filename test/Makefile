@@ -149,16 +149,16 @@ GEN_SEP= $(GEN_BASE) $(GEN_BASE_CXX)
 GEN_PART=${foreach nm, $(GEN_SEP), ../suite/$(nm).cpp.xml}
 
 # base for C only
-BASE_C=functionkr 
+BASE_C=functionkr
 
 # base for C family
-BASE_C_FAMILY=asm macro cstruct typedef extern main function_pointer decl_struct
+BASE_C_FAMILY=asm macro cstruct extern main function_pointer decl_struct typedef
 
 # base for object-oriented languages
 BASE_OO=function_ns decl_ns variable_names_ns try catch_form
 
 # base for C++ only
-BASE_CXX=friend namespace template typedef_template constructor destructor throw_base function_throw class function_operator
+BASE_CXX=friend namespace template typedef_template constructor destructor throw_base function_throw class function_operator typedef
 
 # base for Java only
 BASE_JAVA=class_java keyword_java interface_java package

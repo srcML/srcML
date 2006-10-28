@@ -16,10 +16,7 @@
 <xsl:output method="text"/>
 
 <!-- output an entity for a declaration -->
-<xsl:template match="src:decl[
-		     substring(src:name, string-length(src:name) - 4)='_FLAG' or
-		     substring(src:name, string-length(src:name) - 10)='_FLAG_SHORT'
-]">
+<xsl:template match="src:decl[contains(src:name, '_FLAG')]">
 
   <xsl:value-of select="concat(src:name, '=', src:init/src:expr)"/><xsl:text>
 </xsl:text>

@@ -135,19 +135,7 @@ def getfullxmlns(xml_file):
 # xmlns attribute
 def defaultxmlns(l):
 
-	ldef = []
-	ns_src_uri = "http://www.sdml.info/srcML/src"
-	ns_cpp_uri = "http://www.sdml.info/srcML/cpp"
-	ns_err_uri = "http://www.sdml.info/srcML/srcerr"
-	for a in l:
-		if a[len(a) - len(ns_src_uri):] == ns_src_uri:
-			ldef.append(a)
-		elif a[len(a) - len(ns_cpp_uri):] == ns_cpp_uri:
-			ldef.append(a)
-		elif a[len(a) - len(ns_err_uri):] == ns_err_uri:
-			ldef.append(a)
-
-	return ldef
+	return l
 
 # version of src2srcml
 def src2srcmlversion():
@@ -341,6 +329,15 @@ f = open(error_filename, "w")
 if error_count == 0:
 	print "No errors out of " + str(total_count) + " cases" 
 else:
+	# break errorlist into two, one with original name, one with a name with a dot in it
+	oerrorlist = []
+	xerrorlist = []
+	for e in errorlist:
+		if str(e[0]).count(".") == 0:
+			oerrorlist.append(e);
+		else:
+			xerrorlist.append(e);
+	
 	print "Errors:  " + str(error_count) + " out of " + str(total_count) + " cases", "\n"
 	print "Errorlist:"
 	for e in errorlist:
