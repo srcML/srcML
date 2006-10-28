@@ -152,6 +152,9 @@ void output_help(const char* name) {
 	      << "  " << FILELIST_FLAG_SHORT    << ", " << setw(COL) <<  FILELIST_FLAG
 	      << "treat input file as a list of source files\n"
               << '\n'
+	      << "  " << NO_XML_DECLARATION_FLAG  << "    " 
+	      << "do not output the default XML declaration\n"
+              << '\n'
 #ifdef LIBXML_ENABLED
 	      << "  " << COMPRESSED_FLAG_SHORT  << ", " << setw(COL) <<  COMPRESSED_FLAG
 	      << "output in gzip format\n"
