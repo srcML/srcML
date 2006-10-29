@@ -77,7 +77,7 @@ const char* FILELIST_FLAG_SHORT = "-i";
 
 const char* NO_XML_DECLARATION_FLAG = "--no-xml-declaration";
 
-const char* NO_NAMESPACE_DECLARATION_FLAG = "--no-namespace-declaration";
+const char* NO_NAMESPACE_DECLARATION_FLAG = "--no-namespace_decl";
 
 const char* XMLNS_FLAG = "--xmlns";
 const char* XMLNS_DEFAULT_FLAG_FULL = "--xmlns=URI";
@@ -151,6 +151,8 @@ void output_help(const char* name) {
               << '\n'
 	      << "  " << NO_XML_DECLARATION_FLAG  << "    " 
 	      << "do not output the default XML declaration\n"
+	      << "  " << NO_NAMESPACE_DECLARATION_FLAG  << "     " 
+	      << "do not output any namespace declarations\n"
               << '\n'
 #ifdef LIBXML_ENABLED
 	      << "  " << COMPRESSED_FLAG_SHORT  << ", " << setw(COL) <<  COMPRESSED_FLAG

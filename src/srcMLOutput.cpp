@@ -260,7 +260,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     xmlTextWriterStartElement(xout, BAD_CAST type2name(SUNIT));
 
     // outer units have namespaces
-    if (outer) {
+    if (outer && isoption(OPTION_NAMESPACEDECL)) {
 
       // main srcML namespace declaration
       std::string src_prefix = "xmlns";

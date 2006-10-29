@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Finish no namespace declaration for src2srcml.
+
 	Expose info and longinfo options for srcml2src.
 
 	Allow compressed output of XML for srcml2src also.
