@@ -241,8 +241,8 @@ nestedfile = xml_declaration + """
 
 </unit>
 """
-os.system('echo -e "\na;" > sub/a.cpp')
-os.system('echo -e "\nb;" > sub/b.cpp')
+os.system('/bin/echo -e "\na;" > sub/a.cpp')
+os.system('/bin/echo -e "\nb;" > sub/b.cpp')
 
 check([srcmltranslator, "sub/a.cpp", "sub/b.cpp", "-"], "", nestedfile)
 
@@ -254,7 +254,7 @@ sub/a.cpp
 sub/b.cpp
 """
 
-os.system('echo -e "\nsub/a.cpp\nsub/b.cpp\n" > filelistab')
+os.system('/bin/echo -e "\nsub/a.cpp\nsub/b.cpp\n" > filelistab')
 
 check([srcmltranslator, option.FILELIST_FLAG, "filelistab"], "", nestedfile)
 
