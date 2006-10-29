@@ -84,6 +84,10 @@ const char* SKIP_ENCODING_FLAG_SHORT = "-k";
 const char* COMPRESSED_FLAG = "--compress";
 const char* COMPRESSED_FLAG_SHORT = "-z";
 
+const char* NO_XML_DECLARATION_FLAG = "--no-xml-declaration";
+
+const char* NO_NAMESPACE_DECLARATION_FLAG = "--no-namespace-decl";
+
 /* Return Status */
 
 enum RETURN_STATUS {

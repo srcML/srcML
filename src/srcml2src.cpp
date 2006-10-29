@@ -96,6 +96,11 @@ void output_help(const char* name) {
 	       << "  " << EXPAND_FLAG_SHORT     << ", " << setw(COL) << EXPAND_FLAG     
 	       << "extract all files from a compound srcML document\n"
 	       << '\n'
+	      << "  " << NO_XML_DECLARATION_FLAG  << "    " 
+	      << "do not output the default XML declaration in XML output\n"
+	      << "  " << NO_NAMESPACE_DECLARATION_FLAG  << "     " 
+	      << "do not output any namespace declarations in XML output\n"
+              << '\n'
                << "  " << VERBOSE_FLAG_SHORT    << ", " << setw(COL) << VERBOSE_FLAG    << "verbose output\n"
 	       << '\n'
 	       << "Metadata Options:  " << '\n'
@@ -161,7 +166,7 @@ void output_version(const char* name) {
 	      << COPYRIGHT << '\n';
 }
 
-int options = 0;
+int options = OPTION_XMLDECL | OPTION_NAMESPACEDECL;
 
 extern "C" void verbose_handler(int);
 
@@ -290,6 +295,22 @@ int main(int argc, char* argv[]) {
       std::cerr << NAME << ": The compression option, i.e., " << COMPRESSED_FLAG << ", is only supported in the libxml version." << '\n';
       exit(STATUS_LIBXML2_FEATURE);
 #endif
+    }
+
+    // no xml declaration mode
+    else if (compare_flags(argv[curarg], NO_XML_DECLARATION_FLAG, NO_XML_DECLARATION_FLAG, position)) {
+      if (position == original_position) ++curarg;
+
+      // turnoff default xml declaration
+      options &= ~OPTION_XMLDECL;
+    }
+
+    // no namespace declaration mode
+    else if (compare_flags(argv[curarg], NO_NAMESPACE_DECLARATION_FLAG, NO_NAMESPACE_DECLARATION_FLAG, position)) {
+      if (position == original_position) ++curarg;
+
+      // turnoff default xml declaration
+      options &= ~OPTION_NAMESPACEDECL;
     }
 
     // namespace

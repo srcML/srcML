@@ -347,17 +347,20 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
   xmlTextWriterPtr writer = xmlNewTextWriterFilename(filename, isoption(options, OPTION_COMPRESSED));
 
   // issue the xml declaration
-  xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
+  if (isoption(options, OPTION_XMLDECL))
+    xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
 
   // output main unit tag
   xmlTextWriterStartElement(writer, BAD_CAST "unit");
 
   // output namespaces from outer unit tag
-  for (std::vector<std::pair<std::string, std::string> >::const_iterator iter = nsv.begin(); iter != nsv.end(); iter++) {
-	std::string uri = (*iter).first;
-	std::string prefix = (*iter).second;
+  if (isoption(options, OPTION_NAMESPACEDECL)) {
+    for (std::vector<std::pair<std::string, std::string> >::const_iterator iter = nsv.begin(); iter != nsv.end(); iter++) {
+      std::string uri = (*iter).first;
+      std::string prefix = (*iter).second;
 
-	xmlTextWriterWriteAttribute(writer, BAD_CAST prefix.c_str(), BAD_CAST uri.c_str());
+      xmlTextWriterWriteAttribute(writer, BAD_CAST prefix.c_str(), BAD_CAST uri.c_str());
+    }
   }
 
   // output src namespace

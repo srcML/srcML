@@ -75,10 +75,6 @@ const char* DEFAULT_XML_ENCODING = "ISO-8859-1";
 const char* FILELIST_FLAG = "--input-file";
 const char* FILELIST_FLAG_SHORT = "-i";
 
-const char* NO_XML_DECLARATION_FLAG = "--no-xml-declaration";
-
-const char* NO_NAMESPACE_DECLARATION_FLAG = "--no-namespace_decl";
-
 const char* XMLNS_FLAG = "--xmlns";
 const char* XMLNS_DEFAULT_FLAG_FULL = "--xmlns=URI";
 const char* XMLNS_FLAG_FULL = "--xmlns:PREFIX=URI";
