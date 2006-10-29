@@ -163,7 +163,6 @@ int parseoptions;
        const int oldsize;
     };
 
-
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options)
    : antlr::LLkParser(lexer,1), Mode(this, lang)
 {
@@ -171,8 +170,34 @@ srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options
 
     parseoptions = parser_options;
 
-  // start with a single mode that allows statements to be nested
-  startNewMode(MODE_TOP | MODE_NEST | MODE_STATEMENT);
+    if (parseoptions & OPTION_EXPRESSION)
+        startNewMode(MODE_TOP | MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
+    else
+       // start with a single mode that allows statements to be nested
+       startNewMode(MODE_TOP | MODE_NEST | MODE_STATEMENT);
+}
+
+// ends all currently open modes
+void srcMLParser::endAllModes() {
+
+     // expression mode has an extra mode
+     if (parseoptions & OPTION_EXPRESSION)
+        endCurrentMode();
+
+     // should only be one mode
+     if (size() > 1)
+        emptyElement(SERROR_MODE);
+
+    // end all modes except the last
+    while (size() > 1) {
+        endCurrentMode();
+    }
+
+    // flush any skipped characters
+    flushSkip();
+
+    // end the very last mode which forms the entire unit
+    endLastMode();
 }
 
 }
@@ -398,24 +423,7 @@ void setTokenPosition(TokenPosition& tp, int type) {
 
 public:
 
-// ends all currently open modes
-void endAllModes() {
-
-     // should only be one mode
-     if (size() > 1)
-        emptyElement(SERROR_MODE);
-
-    // end all modes except the last
-    while (size() > 1) {
-        endCurrentMode();
-    }
-
-    // flush any skipped characters
-    flushSkip();
-
-    // end the very last mode which forms the entire unit
-    endLastMode();
-}
+void endAllModes();
 
 }
 
