@@ -334,8 +334,8 @@ int main(int argc, char* argv[]) {
       }
 
       // validate unit number
-      if (unit < 0) {
-	std::cerr << NAME << ": unit option value \"" << unit << "\" must be >= 0." << '\n';
+      if (unit <= 0) {
+	std::cerr << NAME << ": unit option value \"" << unit << "\" must be > 0." << '\n';
 	exit(STATUS_UNIT_INVALID);
       }
     }
