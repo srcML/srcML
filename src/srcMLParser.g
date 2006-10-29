@@ -3323,15 +3323,20 @@ throw_statement {} :
 
 expression_statement[bool statement = true] {} :
         {
-            if (statement) {
-                // statement with an embedded expression
-                startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
-
-                // start the element which will end after the terminate
-                startElement(SEXPRESSION_STATEMENT);
-            }
+            if (statement)
+                expression_setup();
         }
         expression
+;
+
+expression_setup {} :
+        {
+            // statement with an embedded expression
+            startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
+
+            // start the element which will end after the terminate
+            startElement(SEXPRESSION_STATEMENT);
+        }
 ;
 
 /*
