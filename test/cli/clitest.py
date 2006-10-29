@@ -564,6 +564,21 @@ srcml = xml_declaration + """
 """
 check([srcmltranslator, "--xmlns:src=http://www.sdml.info/srcML/src", "--xmlns=http://www.sdml.info/srcML/cpp"], "", srcml)
 
+# prefix extraction
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp"/>
+"""
+
+checkallforms(srcmlutility, option.NAMESPACE_FLAG_SHORT, option.NAMESPACE_FLAG, "http://www.sdml.info/srcML/src", srcml, """
+""")
+
+checkallforms(srcmlutility, option.NAMESPACE_FLAG_SHORT, option.NAMESPACE_FLAG, "http://www.sdml.info/srcML/cpp", srcml, """cpp
+""")
+
+checkallforms(srcmlutility, option.NAMESPACE_FLAG_SHORT, option.NAMESPACE_FLAG, "http://www.sdml.info/srcML/literal", srcml, "")
+
+checkallforms(srcmlutility, option.NAMESPACE_FLAG_SHORT, option.NAMESPACE_FLAG, "http://www.ashland.edu/~mcollard/foo", srcml, "")
+
 # footer
 print
 print "Error count: ", error_count
