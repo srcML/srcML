@@ -564,6 +564,7 @@ srcml = xml_declaration + """
 """
 check([srcmltranslator, "--xmlns:src=http://www.sdml.info/srcML/src", "--xmlns=http://www.sdml.info/srcML/cpp"], "", srcml)
 
+##
 # prefix extraction
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp"/>
@@ -578,6 +579,31 @@ checkallforms(srcmlutility, option.NAMESPACE_FLAG_SHORT, option.NAMESPACE_FLAG, 
 checkallforms(srcmlutility, option.NAMESPACE_FLAG_SHORT, option.NAMESPACE_FLAG, "http://www.sdml.info/srcML/literal", srcml, "")
 
 checkallforms(srcmlutility, option.NAMESPACE_FLAG_SHORT, option.NAMESPACE_FLAG, "http://www.ashland.edu/~mcollard/foo", srcml, "")
+
+srcml = xml_declaration + """
+<unit xmlns:cpp="http://www.sdml.info/srcML/src" xmlns="http://www.sdml.info/srcML/cpp"/>
+"""
+
+checkallforms(srcmlutility, option.NAMESPACE_FLAG_SHORT, option.NAMESPACE_FLAG, "http://www.sdml.info/srcML/src", srcml, """cpp
+""")
+
+checkallforms(srcmlutility, option.NAMESPACE_FLAG_SHORT, option.NAMESPACE_FLAG, "http://www.sdml.info/srcML/cpp", srcml, """
+""")
+
+##
+# no xml declaration
+srcml = """<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
+"""
+
+check([srcmltranslator, option.NO_XML_DECLARATION_FLAG], "", srcml)
+
+##
+# no namespace declaration
+srcml = xml_declaration + """
+<unit language="C++"/>
+"""
+
+check([srcmltranslator, option.NO_NAMESPACE_DECLARATION_FLAG], "", srcml)
 
 # footer
 print
