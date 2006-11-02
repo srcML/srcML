@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Expose expression mode.
+
 	No xml declaration and no namespace declaration for srcml2src.
 
 	Finish no namespace declaration for src2srcml.

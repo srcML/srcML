@@ -145,6 +145,9 @@ void output_help(const char* name) {
 	      << "  " << FILELIST_FLAG_SHORT    << ", " << setw(COL) <<  FILELIST_FLAG
 	      << "treat input file as a list of source files\n"
               << '\n'
+	      << "  " << EXPRESSION_MODE_FLAG_SHORT    << ", " << setw(COL) <<  EXPRESSION_MODE_FLAG
+	      << "translates an individual expression outside of a statement\n"
+              << '\n'
 	      << "  " << NO_XML_DECLARATION_FLAG  << "    " 
 	      << "do not output the default XML declaration\n"
 	      << "  " << NO_NAMESPACE_DECLARATION_FLAG  << "     " 
