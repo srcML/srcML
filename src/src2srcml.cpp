@@ -121,8 +121,10 @@ void output_help(const char* name) {
 	      << "set the filename attribute to FILE\n"
 	      << "  " << SRCVERSION_FLAG_SHORT  << ", " << setw(COL) <<  SRCVERSION_FLAG_FULL
 	      << "set the version attribute to VER\n"
+      /*
 	      << "  " << SELF_VERSION_FLAG <<  "  " << "        "
 	      << "set the version attribute to the src2srcml version\n"
+      */
 	      << "  " << ENCODING_FLAG_SHORT    << ", " << setw(COL) <<  ENCODING_FLAG_FULL
 	      << "set the output XML encoding to ENC (default:  "
 	      << DEFAULT_XML_ENCODING << ") \n"
@@ -268,10 +270,12 @@ int main(int argc, char* argv[]) {
     exit(STATUS_SUCCESS);
   }
 
+  /*
   // setup self-versioning
   if (isoption(options, OPTION_SELF_VERSION)) {
     //    given_version = version();
   }
+  */
 
   /* Special checks for illegal combinations */
 
@@ -526,11 +530,13 @@ int process_args(int argc, char* argv[]) {
       if (position == original_position) ++curarg;
     }
 
+    /*
     // version mode
     else if (compare_flags(argv[curarg], SELF_VERSION_FLAG, SELF_VERSION_FLAG_SHORT, position)) {
       options |= OPTION_SELF_VERSION;
       if (position == original_position) ++curarg;
     }
+    */
 
     // debug mode
     else if (compare_flags(argv[curarg], DEBUG_FLAG, DEBUG_FLAG_SHORT, position)) {
