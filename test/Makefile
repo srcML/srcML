@@ -158,7 +158,7 @@ BASE_C_FAMILY=asm macro cstruct extern main function_pointer decl_struct typedef
 BASE_OO=catch_form
 
 # base for C++ only
-BASE_CXX=friend namespace template typedef_template constructor destructor throw_base function_throw class function_operator typedef variable_names_ns function_ns decl_ns try 
+BASE_CXX=friend namespace template typedef_template constructor destructor throw_base function_throw class function_operator typedef_ns variable_names_ns function_ns decl_ns try 
 
 # base for Java only
 BASE_JAVA=class_java keyword_java interface_java package
