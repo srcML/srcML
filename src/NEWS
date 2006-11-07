@@ -53,7 +53,7 @@ Option changes for srcml2src
 
 Markup Changes
 
-	* The automatic declaration of the cpp namespace has been removed for languages other than C or C++.
+	* New element "index" to mark pairs of brackets.
 
 	* Macro names and arguments now have markup.
 
@@ -61,6 +61,8 @@ Markup Changes
 
 	* More consistent handling of structs in definitions.  Anonymous structs are treated as part of
 	the type of a declaration.
+
+	* The automatic declaration of the cpp namespace has been removed for languages other than C or C++.
 
 Fixes
 	* Fix encoding problems in strings.

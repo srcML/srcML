@@ -512,7 +512,7 @@ void srcMLOutput::fillElementNames() {
   ElementNames[STYPE] = "type";
   ElementNames[SCONDITION] = "condition";
   ElementNames[SBLOCK] = "block";
-  ElementNames[SINDEX] = "";
+  ElementNames[SINDEX] = "index";
 
   ElementNames[SEXPRESSION_STATEMENT] = "expr_stmt";
   ElementNames[SEXPRESSION] = "expr";

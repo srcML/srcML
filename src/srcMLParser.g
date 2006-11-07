@@ -2482,8 +2482,16 @@ type_identifier {} :
         non_lead_type_identifier
 ;
 
-non_lead_type_identifier {} :
-        MULTOPS | { inLanguage(LANGUAGE_JAVA) }? (LBRACKET RBRACKET)=> LBRACKET RBRACKET
+non_lead_type_identifier { LocalMode lm; } :
+        MULTOPS |
+
+        { inLanguage(LANGUAGE_JAVA) }? (LBRACKET RBRACKET)=> 
+        {
+            startNewMode(MODE_LOCAL);
+
+            startElement(SINDEX);
+        }
+        LBRACKET RBRACKET
 ;
 
 pure_type_identifier {} :
@@ -2596,6 +2604,11 @@ variable_identifier_grammar[bool& iscomplex] { LocalMode lm; } :
 variable_identifier_array_grammar[bool& iscomplex] { LocalMode lm; } :
 
       (options { greedy = true; } :
+            variable_identifier_array_grammar_sub[iscomplex]
+      )*
+;
+
+variable_identifier_array_grammar_sub[bool& iscomplex] { LocalMode lm; } :
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
@@ -2616,7 +2629,6 @@ variable_identifier_array_grammar[bool& iscomplex] { LocalMode lm; } :
         {
             iscomplex = true;
         }
-      )*
 ;
 
 /*

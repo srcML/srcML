@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	New "index" element to mark pairs of brackets.
+
 	Fix regression bug with encoding conversion not happening in strings or char literals.
 
 	Expose expression mode.
