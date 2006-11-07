@@ -56,7 +56,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   handler = xmlFindCharEncodingHandler(src_encoding);
   if (!handler)
     throw srcEncodingException();
-
+  
 #ifdef LIBXML_ENABLED
   // if the source encoding is to UTF-8, skip any encoding
   if (strcmp(handler->name, "UTF-8") == 0)
@@ -111,6 +111,10 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   process_table[SLITERAL] = &srcMLOutput::processLiteral;
   process_table[FORMFEED] = &srcMLOutput::processFormFeed;
   process_table[SINTERFACE] = &srcMLOutput::processInterface;
+
+  // make sure that strings and literals go through encoded text
+  process_table[STRING] = &srcMLOutput::processEncodedText;
+  process_table[CHAR] = &srcMLOutput::processEncodedText;
 
   // open the output text writer stream
   // "-" filename is standard output

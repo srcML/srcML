@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Fix regression bug with encoding conversion not happening in strings or char literals.
+
 	Expose expression mode.
 
 	No xml declaration and no namespace declaration for srcml2src.
