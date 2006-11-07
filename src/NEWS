@@ -2,18 +2,19 @@ NEWS
 
 Release of Nov-1-2006-RC
 
-The major changes include many Java bug fixes, complete markup of struct definitions in typedefs,
-more control of namespaces, and new options for extensions, information and control.
+The major changes include many Java bug fixes, complete markup of struct definitions in typedefs, more control
+of namespaces, and new options for extensions, information and control.
 
 New options for src2srcml
 
-	* Namespace prefixes can be specified with the options "--xmlns=URI" and "--xmlns:PREFIX=URI.
+	* Namespace prefixes can be specified with the options
+	"--xmlns=URI" and "--xmlns:PREFIX=URI.
 
 	* Literal values can be marked with the option "--literal" or by specifying a prefix for the
 	namespace "http://www.sdml.info/srcML/literal".
 
-	* Operators can be marked using the option "--operator" or by specifying a prefix for the namespace
-	"http://www.sdml.info/srcML/operator".
+	* Operators can be marked using the option "--operator" or by specifying a prefix for the
+	namespace "http://www.sdml.info/srcML/operator".
 
 	* A mode specified by the option "--expression" allows for the markup of individual
 	expressions that are not contained in a statement.
@@ -30,8 +31,7 @@ New options for srcml2src
 	the "--info" option.
 
 	* The option "--longinfo" produces the same information as the option "--info", but
-	additionally includes the number of nested elements in compound srcML.  This requires a complete
-	traversal of the srcML document.
+	additionally includes the number of nested elements in compound srcML.
 
 	* Option "--compress" allows compressed output of XML for srcml2src (as it does
 	for src2srcml)
@@ -41,10 +41,11 @@ Option changes for src2srcml
 	* The names of the options "--cpp_textonly_else" and "--cpp_textonly_if0" have been changed
 	to "--cpp_text_else" and "--cpp_text_if0" for consistency.
 
-	* Attribute options, e.g., directory, filename, version, can now be specified on the outer unit of a compound srcML document.
+	* Attribute options, e.g., directory, filename, version, can now be specified on the outer unit of a
+	compound srcML document.
 
-	* Specifying a namespace prefix using "--xmlns" for "http://www.sdml.info/srcML/srcerr" automatically turns on debugging
-	equivalent to using the "--debug" option.
+	* Specifying a namespace prefix using "--xmlns" for "http://www.sdml.info/srcML/srcerr" automatically
+	turns on debugging equivalent to using the "--debug" option.
 
 Option changes for srcml2src
 
@@ -58,8 +59,11 @@ Markup Changes
 
 	* Structs/classes/unions in typedefs and anonymous structs/classes/unions are now marked.
 
+	* More consistent handling of structs in definitions.  Anonymous structs are treated as part of
+	the type of a declaration.
+
 Fixes
-	* Missing markup of exception handling for Java.
+	* Fix encoding problems in strings.
 
 	* Missing markup of exception handling for Java.
 
