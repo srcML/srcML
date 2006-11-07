@@ -1,9 +1,9 @@
 NEWS
 
-Release of Nov-1-2006-RC
+Release of Nov-3-2006-RC1
 
 The major changes include many Java bug fixes, complete markup of struct definitions in typedefs, more control
-of namespaces, and new options for extensions, information and control.
+of namespaces, new index element, and new options for extensions, information and control.
 
 New options for src2srcml
 
