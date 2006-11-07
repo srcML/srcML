@@ -1325,7 +1325,7 @@ anonymous_class_definition :
             startElement(SCLASS);
 
         }
-        anonymous_class_super LPAREN RPAREN
+        anonymous_class_super paren_pair
         (
             // java classes end at the end of the block
             { setMode(MODE_END_AT_BLOCK); }
@@ -3574,7 +3574,7 @@ expression_part[bool checkmacro = false] { guessing_end();
         int token = 0; int type_count = 0; int postnametoken = 0; int argumenttoken = 0; int postcalltoken = 0; } :
 
         { inLanguage(LANGUAGE_JAVA) }?
-        (NEW NAME LPAREN RPAREN LCURLY)=> NEW anonymous_class_definition |
+        (NEW function_identifier[true] paren_pair LCURLY)=> NEW anonymous_class_definition |
 
         // general math operators
         general_operators | multi_operator | /* NEW |*/ DELETE | PERIOD |
