@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="typedef_ns">
+
+<unit>
+<typedef>typedef <function_decl><type><name>int</name></type> (FRED::*<name>ENGINE_CTRL_FUNC_PTR</name>)<parameter_list>()</parameter_list>;</function_decl></typedef>
+</unit>
+
+</unit>
+

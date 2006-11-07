@@ -97,10 +97,6 @@
 </unit>
 
 <unit>
-<typedef>typedef <function_decl><type><name>int</name></type> (FRED::*<name>ENGINE_CTRL_FUNC_PTR</name>)<parameter_list>()</parameter_list>;</function_decl></typedef>
-</unit>
-
-<unit>
 <typedef>typedef <function_decl><type><name>int</name></type> (*<name>ENGINE_CTRL_FUNC_PTR</name>) D(a) <parameter_list>(<param><decl><type><name>ENGINE</name> *</type></decl></param>, <param><decl><type><name>int</name></type></decl></param>, <param><decl><type><name>long</name></type></decl></param>, <param><decl><type><name>void</name> *</type></decl></param>, <param><function_decl><type><name>void</name></type> (*<name>f</name>)<parameter_list>()</parameter_list></function_decl></param>)</parameter_list>;</function_decl></typedef>
 </unit>
 
