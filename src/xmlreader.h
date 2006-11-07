@@ -90,6 +90,8 @@ void xmlTextReaderNext(xmlTextReaderPtr);
 
 int xmlTextReaderIsEmptyElement(xmlTextReaderPtr);
 
+int xmlTextReaderIsNamespaceDecl(xmlTextReaderPtr);
+
 void xmlFreeTextReader(xmlTextReaderPtr);
 
 void xmlFree(xmlChar*);

@@ -57,6 +57,12 @@ void skipws(std::istream&in) {
   void process_comment(std::istream& is, std::string& content);
 };
 
+
+int xmlTextReaderIsNamespaceDecl(xmlTextReaderPtr reader) {
+
+  return strcmp("xmlns", (const char*) xmlTextReaderConstName(reader)) == 0 || strncmp("xmlns:", (const char*) xmlTextReaderConstName(reader), 6) == 0;
+}
+
 xmlTextReaderPtr xmlNewTextReaderFilename(const char* filename) {
   xmlTextReaderPtr reader = new xmlTextReader;
 

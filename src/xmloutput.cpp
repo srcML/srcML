@@ -61,7 +61,7 @@ void outputXML(xmlTextReaderPtr reader, xmlTextWriterPtr writer) {
   case XML_READER_TYPE_SIGNIFICANT_WHITESPACE:
     {
       const xmlChar* s = xmlTextReaderConstValue(reader);
-      xmlTextWriterWriteRawLen(writer, s, strlen((const char*) s));
+      xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) s, strlen((const char*) s));
     }
     break;
 
