@@ -1,6 +1,8 @@
 CHANGES
 
 Trunk
+	Fix anonymous class in call detection.
+
 	New "index" element to mark pairs of brackets.
 
 	Fix regression bug with encoding conversion not happening in strings or char literals.

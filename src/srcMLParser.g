@@ -618,6 +618,8 @@ statements_non_cfg { int type_count = 0; int token = 0; int secondtoken = 0; } :
 call_macro_expression[int secondtoken, bool statement]
         { int postnametoken = 0; int argumenttoken = 0; int postcalltoken = 0; } :
 
+        { inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX) }?
+        (
         // call
         // check here instead of in expression_statement to distinguish between a call and a macro
         (call_check[postnametoken, argumenttoken, postcalltoken])=> guessing_endGuessing (
@@ -645,6 +647,9 @@ call_macro_expression[int secondtoken, bool statement]
         macro_call |
 
         // expression statement
+        expression_statement[statement]) |
+
+        { inLanguage(LANGUAGE_JAVA) || inLanguage(LANGUAGE_ASPECTJ) }?
         expression_statement[statement]
 ;
 
