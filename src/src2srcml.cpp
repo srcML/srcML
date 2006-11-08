@@ -114,45 +114,34 @@ void output_help(const char* name) {
 	      << "  " << VERSION_FLAG_SHORT     << ", " << setw(COL) <<  VERSION_FLAG
 	      << "display version number and exit\n"
               << '\n'
-	      << "  " << LANGUAGE_FLAG_SHORT    << ", " << setw(COL) << LANGUAGE_FLAG_FULL 
-	      << "set the language to " << LANGUAGE_C << ", " << LANGUAGE_CXX << " (default), " << LANGUAGE_JAVA << ", or " << LANGUAGE_ASPECTJ << "\n"
-	      << "  " << DIRECTORY_FLAG_SHORT   << ", " << setw(COL) <<  DIRECTORY_FLAG_FULL
-	      << "set the directory attribute to DIR\n"
-	      << "  " << FILENAME_FLAG_SHORT    << ", " << setw(COL) <<  FILENAME_FLAG_FULL
-	      << "set the filename attribute to FILE\n"
-	      << "  " << SRCVERSION_FLAG_SHORT  << ", " << setw(COL) <<  SRCVERSION_FLAG_FULL
-	      << "set the version attribute to VER\n"
-      /*
-	      << "  " << SELF_VERSION_FLAG <<  "  " << "        "
-	      << "set the version attribute to the src2srcml version\n"
-      */
-	      << "  " << ENCODING_FLAG_SHORT    << ", " << setw(COL) <<  ENCODING_FLAG_FULL
-	      << "set the output XML encoding to ENC (default:  "
-	      << DEFAULT_XML_ENCODING << ") \n"
-	      << '\n'
+	      << "  " << EXPRESSION_MODE_FLAG_SHORT    << ", " << setw(COL) <<  EXPRESSION_MODE_FLAG
+	      << "translates a single, individual expression outside of any statement\n"
+              << '\n'
+	      << "  " << NESTED_FLAG_SHORT      << ", " << setw(COL) <<  NESTED_FLAG
+	      << "store all input source files in one compound srcML document\n"
+	      << "  " << FILELIST_FLAG_SHORT    << ", " << setw(COL) <<  FILELIST_FLAG
+	      << "treat input file as a list of source files for one compound srcML document\n"
+              << '\n'
 #ifdef LIBXML_ENABLED
 	      << "  " << TEXTENCODING_FLAG_SHORT        << ", " << setw(COL) <<  TEXTENCODING_FLAG_FULL
 	      << "set the input source encoding to ENC (default:  " << DEFAULT_TEXT_ENCODING << ") \n"
+#endif
+	      << "  " << ENCODING_FLAG_SHORT    << ", " << setw(COL) <<  ENCODING_FLAG_FULL
+	      << "set the output XML encoding to ENC (default:  "
+	      << DEFAULT_XML_ENCODING << ") \n"
+#ifdef LIBXML_ENABLED
 	      << "  " << SKIP_ENCODING_FLAG_SHORT        << ", " << setw(COL) <<  SKIP_ENCODING_FLAG
 	      << "store the text without any text encoding changes" << "\n"
-	      << '\n'
 #endif
+	      << '\n'
 	      << "  " << setw(COL) <<  XMLNS_DEFAULT_FLAG_FULL << "    "
 	      << "set the default namespace URI" << '\n'
 	      << "      " << setw(COL) << " " << "(default:  xmlns=\"" << SRCML_SRC_NS_URI << "\")\n"
 	      << "  " << setw(COL) <<  XMLNS_FLAG_FULL << "    "
-	      << "set the PREFIX for the URI" << '\n'
+	      << "set the namespace PREFIX for the namespace URI" << '\n'
 	      << "      " << setw(COL) << " " << "(defaults:  xmlns:cpp=\"" << SRCML_CPP_NS_URI << "\",\n"
 	      << "                          " << "            xmlns:srcerr=\"" << SRCML_ERR_NS_URI << "\")\n"
 	      << '\n'
-	      << "  " << NESTED_FLAG_SHORT      << ", " << setw(COL) <<  NESTED_FLAG
-	      << "store all input source files in one compound srcML document\n"
-	      << "  " << FILELIST_FLAG_SHORT    << ", " << setw(COL) <<  FILELIST_FLAG
-	      << "treat input file as a list of source files\n"
-              << '\n'
-	      << "  " << EXPRESSION_MODE_FLAG_SHORT    << ", " << setw(COL) <<  EXPRESSION_MODE_FLAG
-	      << "translates an individual expression outside of a statement\n"
-              << '\n'
 	      << "  " << NO_XML_DECLARATION_FLAG  << "    " 
 	      << "do not output the default XML declaration\n"
 	      << "  " << NO_NAMESPACE_DECLARATION_FLAG  << "     " 
@@ -165,16 +154,31 @@ void output_help(const char* name) {
 	      << "  " << INTERACTIVE_FLAG_SHORT << ", " << setw(COL) <<  INTERACTIVE_FLAG
 	      << "low-latency output\n"
 	      << "  " << DEBUG_FLAG_SHORT       << ", " << setw(COL) <<  DEBUG_FLAG
-	      << "markup translation errors with namespace \"" << SRCML_ERR_NS_URI << "\"\n"
+	      << "markup translation errors in namespace \"" << SRCML_ERR_NS_URI << "\"\n"
               << "  " << VERBOSE_FLAG_SHORT     << ", " << setw(COL) << VERBOSE_FLAG
 	      << "verbose output to standard error\n"
+              << '\n'
+	      << "Metadata Options:"  << '\n'
+              << '\n'
+	      << "  " << LANGUAGE_FLAG_SHORT    << ", " << setw(COL) << LANGUAGE_FLAG_FULL 
+	      << "set the language to " << LANGUAGE_C << ", " << LANGUAGE_CXX << " (default), " << LANGUAGE_JAVA << ", or " << LANGUAGE_ASPECTJ << "\n"
+	      << "  " << DIRECTORY_FLAG_SHORT   << ", " << setw(COL) <<  DIRECTORY_FLAG_FULL
+	      << "set the directory attribute to DIR\n"
+	      << "  " << FILENAME_FLAG_SHORT    << ", " << setw(COL) <<  FILENAME_FLAG_FULL
+	      << "set the filename attribute to FILE\n"
+	      << "  " << SRCVERSION_FLAG_SHORT  << ", " << setw(COL) <<  SRCVERSION_FLAG_FULL
+	      << "set the version attribute to VER\n"
+      /*
+	      << "  " << SELF_VERSION_FLAG <<  "  " << "        "
+	      << "set the version attribute to the src2srcml version\n"
+      */
               << '\n'
 	      << "Markup Extensions:"  << '\n'
               << '\n'
 	      << "  " << LITERAL_FLAG   << "  " << /* setw(COL) <<*/ "             "
-	      << "markup literal values with namespace \"http://www.sdml.info/srcML/literal\"\n"
+	      << "markup literal values in namespace \"http://www.sdml.info/srcML/literal\"\n"
 	      << "  " << OPERATOR_FLAG  << " " << /* setw(COL) <<*/ "             "
-	      << "markup operators with namespace \"http://www.sdml.info/srcML/operator\"\n"
+	      << "markup operators in namespace \"http://www.sdml.info/srcML/operator\"\n"
               << '\n'
 	      << "CPP Markup Options:"  << '\n'
               << '\n'
