@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="anonymous_class_java">
+
+<unit>
+<comment type="line">// anonymous class expression</comment>
+<expr_stmt><expr>new <class><super><name>ActionListener</name></super>() <block>{
+      <decl_stmt><decl><type><name>int</name></type> <name>i</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+
+      <function><type>public <name>void</name></type> <name>a</name><parameter_list>()</parameter_list> <block>{
+        <decl_stmt><decl><type><name>int</name></type> <name>a</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+      }</block></function>
+}</block></class></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<comment type="line">// anonymous class as an argument </comment>
+<expr_stmt><expr><call><name>addActionListener</name><argument_list>(<argument><expr>new <class><super><name>ActionListener</name></super>() <block>{
+      <decl_stmt><decl><type><name>int</name></type> <name>i</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+      <function><type>public <name>void</name></type> <name>a</name><parameter_list>()</parameter_list> <block>{
+        <decl_stmt><decl><type><name>int</name></type> <name>a</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+      }</block></function>
+    }</block></class></expr></argument>
+)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<comment type="line">// complex name on call with anonymous class as an argument </comment>
+      <expr_stmt><expr><call><name><name>jbutton1</name>.<name>addActionListener</name></name><argument_list>(<argument><expr>new <class><super><name>ActionListener</name></super>() <block>{
+      <decl_stmt><decl><type><name>int</name></type> <name>i</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+      <function><type>public <name>void</name></type> <name>a</name><parameter_list>()</parameter_list> <block>{
+        <decl_stmt><decl><type><name>int</name></type> <name>a</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+      }</block></function>
+    }</block></class></expr></argument>
+)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<comment type="line">// complex name on call with anonymous class with complex nameas an argument </comment>
+<expr_stmt><expr><call><name><name>jButton1</name>.<name>addActionListener</name></name><argument_list>(<argument><expr>new <class><super><name><name>java</name>.<name>awt</name>.<name>event</name>.<name>ActionListener</name></name></super>() <block>{
+      <decl_stmt><decl><type><name>int</name></type> <name>i</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+      <function><type>public <name>void</name></type> <name>a</name><parameter_list>()</parameter_list> <block>{
+        <decl_stmt><decl><type><name>int</name></type> <name>a</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+      }</block></function>
+    }</block></class></expr></argument>
+)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+</unit>
