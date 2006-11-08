@@ -100,7 +100,8 @@ using std::setw;
 void output_help(const char* name) {
     std::cout << "Usage: " << name << " [options] <infile>... <outfile>" << '\n'
               << '\n'
-	      << "Translates source-code files into the XML source-code representation srcML." << '\n'
+	      << "Translates source-code files into the XML source-code representation srcML" << '\n'
+	      << "with support for creating compound srcML documents." << '\n'
               << '\n'
 	      << "When no filenames are given read from standard input and write to standard output." << '\n'
 	      << "When only one filename is given write to standard output."  << '\n'
@@ -114,7 +115,7 @@ void output_help(const char* name) {
 	      << "display version number and exit\n"
               << '\n'
 	      << "  " << LANGUAGE_FLAG_SHORT    << ", " << setw(COL) << LANGUAGE_FLAG_FULL 
-	      << "set the language to " << LANGUAGE_C << ", " << LANGUAGE_CXX << ", or " << LANGUAGE_JAVA << "\n"
+	      << "set the language to " << LANGUAGE_C << ", " << LANGUAGE_CXX << " (default), " << LANGUAGE_JAVA << ", or " << LANGUAGE_ASPECTJ << "\n"
 	      << "  " << DIRECTORY_FLAG_SHORT   << ", " << setw(COL) <<  DIRECTORY_FLAG_FULL
 	      << "set the directory attribute to DIR\n"
 	      << "  " << FILENAME_FLAG_SHORT    << ", " << setw(COL) <<  FILENAME_FLAG_FULL
@@ -129,19 +130,21 @@ void output_help(const char* name) {
 	      << "set the output XML encoding to ENC (default:  "
 	      << DEFAULT_XML_ENCODING << ") \n"
 	      << '\n'
-	      << "  " << setw(COL) <<  XMLNS_DEFAULT_FLAG_FULL << "    "
-	      << "set the default namespace URI (default:  xmlns=\"" << SRCML_SRC_NS_URI << "\")\n"
-	      << "  " << setw(COL) <<  XMLNS_FLAG_FULL << "    "
-	      << "set the PREFIX for the URI (defaults:  xmlns:cpp=\"" << SRCML_CPP_NS_URI << "\",\n"
-	      << "                          " << "xmlns:srcerr=\"" << SRCML_ERR_NS_URI << "\")\n"
-	      << '\n'
 #ifdef LIBXML_ENABLED
 	      << "  " << TEXTENCODING_FLAG_SHORT        << ", " << setw(COL) <<  TEXTENCODING_FLAG_FULL
 	      << "set the input source encoding to ENC (default:  " << DEFAULT_TEXT_ENCODING << ") \n"
 	      << "  " << SKIP_ENCODING_FLAG_SHORT        << ", " << setw(COL) <<  SKIP_ENCODING_FLAG
-	      << "skip any text encoding transformation" << "\n"
+	      << "store the text without any text encoding changes" << "\n"
 	      << '\n'
 #endif
+	      << "  " << setw(COL) <<  XMLNS_DEFAULT_FLAG_FULL << "    "
+	      << "set the default namespace URI" << '\n'
+	      << "      " << setw(COL) << " " << "(default:  xmlns=\"" << SRCML_SRC_NS_URI << "\")\n"
+	      << "  " << setw(COL) <<  XMLNS_FLAG_FULL << "    "
+	      << "set the PREFIX for the URI" << '\n'
+	      << "      " << setw(COL) << " " << "(defaults:  xmlns:cpp=\"" << SRCML_CPP_NS_URI << "\",\n"
+	      << "                          " << "            xmlns:srcerr=\"" << SRCML_ERR_NS_URI << "\")\n"
+	      << '\n'
 	      << "  " << NESTED_FLAG_SHORT      << ", " << setw(COL) <<  NESTED_FLAG
 	      << "store all input source files in one compound srcML document\n"
 	      << "  " << FILELIST_FLAG_SHORT    << ", " << setw(COL) <<  FILELIST_FLAG
