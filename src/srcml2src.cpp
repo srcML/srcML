@@ -62,7 +62,7 @@ void output_help(const char* name) {
 
      std::cout << "Usage: " << name << " [options] <infile> <outfile>" << '\n'
                << '\n'
-	       << "Translates program files from the the XML source-code representation srcML to text files." << '\n'
+	       << "Translates from the the XML source-code representation srcML to source-code text files." << '\n'
 	       << "The srcML files can be in xml or gzip compressed xml (detected automatically)." << '\n'
 	       << "Also provides various utilities for accessing metadata about the srcML document, " << '\n'
 	       << "and extracting parts of compound srcML documents." << '\n'
@@ -107,8 +107,7 @@ void output_help(const char* name) {
 	       << "Metadata Options:  " << '\n'
 	       << '\n'
 	       << "  " << LANGUAGE_FLAG_SHORT   << ", " << setw(COL) << LANGUAGE_FLAG
-	       << "display source language (e.g., " << LANGUAGE_C << ", " << LANGUAGE_CXX << ", "
-	       << LANGUAGE_JAVA << ") and exit\n"
+	       << "display source language and exit\n"
 	       << "  " << DIRECTORY_FLAG_SHORT  << ", " << setw(COL) << DIRECTORY_FLAG
 	       << "display source directory name and exit\n"
 	       << "  " << FILENAME_FLAG_SHORT   << ", " << setw(COL) << FILENAME_FLAG   
