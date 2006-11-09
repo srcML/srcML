@@ -50,7 +50,8 @@ DOC_FILES= ${DOC_DIR}/src2srcml.1 ${DOC_DIR}/srcml2src.1 ${DOC_DIR}/src2srcml.ht
 SRC_FILES= ${SRC_DIR} ${SRC_DTD_DIR}/srcml.dtd ${SRC_DTD_DIR}/srcmlj.dtd ${SRC_DOC_DIR}/src2srcml.1 ${SRC_DOC_DIR}/srcml2src.1 ${SRC_DOC_DIR}/src2srcml.html ${SRC_DOC_DIR}/srcml2src.html
 
 # some doc files are copied from src
-EXP_DOC_FILES= ${DOC_FILES} ${DOC_DIR}/LICENSE.pdf ${DOC_DIR}/README ${DOC_DIR}/NEWS ${DOC_DIR}/CHANGES
+EXP_DOC_FILES= ${DOC_FILES} ${DOC_DIR}/README ${DOC_DIR}/NEWS ${DOC_DIR}/CHANGES
+#EXP_DOC_FILES= ${DOC_FILES} ${DOC_DIR}/LICENSE.pdf ${DOC_DIR}/README ${DOC_DIR}/NEWS ${DOC_DIR}/CHANGES
 
 # all generated files
 GEN_FILES=${SRC_TAR_GZ} ${DOC_TAR_GZ} ${EXE_TAR_GZ} ${SRC_ZIP} ${DOC_ZIP}
@@ -86,11 +87,12 @@ ${SRC_TAR_GZ} : export
 # src zip file for Windows with Windows line ending
 srczip : ${SRC_ZIP}
 
+#zip -rql $@ ${SRC_FILES} -x ${SRC_DIR}/LICENSE.pdf
+#zip -q $@ ${SRC_DIR}/LICENSE.pdf
 ${SRC_ZIP} : export
 	@echo BUILDING:  $@
 	rm -f $@
-	zip -rql $@ ${SRC_FILES} -x ${SRC_DIR}/LICENSE.pdf
-	zip -q $@ ${SRC_DIR}/LICENSE.pdf
+	zip -rql $@ ${SRC_FILES}
 	unzip -qt $@
 
 ##
@@ -109,15 +111,16 @@ ${DOC_TAR_GZ} : export doc_files
 # doc zip file for Windows with Windows line ending
 doczip : ${DOC_ZIP}
 
+#zip -rql $@ ${EXP_DOC_FILES} -x ${DOC_DIR}/LICENSE.pdf
+#zip -q $@ ${DOC_DIR}/LICENSE.pdf
 ${DOC_ZIP} : export doc_files
 	rm -f $@
-	zip -rql $@ ${EXP_DOC_FILES} -x ${DOC_DIR}/LICENSE.pdf
-	zip -q $@ ${DOC_DIR}/LICENSE.pdf
+	zip -rql $@ ${EXP_DOC_FILES}
 	unzip -qt $@
 
 # files not directly available in doc dir
+#cp ${SRC_DIR}/LICENSE.pdf ${DOC_DIR}/.
 doc_files :
-	cp ${SRC_DIR}/LICENSE.pdf ${DOC_DIR}/.
 	cp ${SRC_DIR}/README ${DOC_DIR}/.
 	cp ${SRC_DIR}/NEWS ${DOC_DIR}/.
 	cp ${SRC_DIR}/CHANGES ${DOC_DIR}/.
