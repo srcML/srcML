@@ -1,6 +1,7 @@
 CHANGES
 
-Trunk
+Nov-09-2006-Beta
+
 	Fix anonymous class in call detection.
 
 	New "index" element to mark pairs of brackets.
@@ -96,7 +97,8 @@ Trunk
 
 	Allow for access specifier on classes, e.g., private class A {}.
 
-Trunk
+Apr-12-2006-Beta
+
 	Default (in all cases) is now ISO-8859-1 for input format.  Changes default
 	in libxml2 version.
 

@@ -1,6 +1,6 @@
 NEWS
 
-Release of Nov-3-2006-RC1
+Release of Nov-9-2006-RC1
 
 The major changes include many Java bug fixes, complete markup of struct definitions in typedefs, more control
 of namespaces, new index element, and new options for extensions, information and control.
@@ -8,7 +8,8 @@ of namespaces, new index element, and new options for extensions, information an
 New options for src2srcml
 
 	* Namespace prefixes can be specified with the options
-	"--xmlns=URI" and "--xmlns:PREFIX=URI.
+	"--xmlns=URI" and "--xmlns:PREFIX=URI.  So instead of the default namespace prefixes (default
+	prefix for srcML and "cpp:" for preprocessing elements) you can define your own.
 
 	* Literal values can be marked with the option "--literal" or by specifying a prefix for the
 	namespace "http://www.sdml.info/srcML/literal".
@@ -49,7 +50,8 @@ Option changes for src2srcml
 
 Option changes for srcml2src
 
-	* Short flag for option "--extract-all" in srcml2src has been changed from -e to -a.
+	* Short flag for option "--extract-all" in srcml2src has been changed from -e to -a.  The short flag
+	-e is now used for the expression option
 
 Markup Changes
 
@@ -63,6 +65,7 @@ Markup Changes
 	the type of a declaration.
 
 	* The automatic declaration of the cpp namespace has been removed for languages other than C or C++.
+	It can be added by defining a prefix for the namespace http://www.sdml.info/srcML/cpp
 
 Fixes
 	* Fix encoding problems in strings.
