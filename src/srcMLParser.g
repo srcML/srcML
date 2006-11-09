@@ -1324,19 +1324,21 @@ class_definition :
 anonymous_class_definition :
         {
             // statement
-            startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_CLASS);
+            startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_CLASS | MODE_END_AT_BLOCK);
 
             // start the class definition
             startElement(SCLASS);
 
         }
-        anonymous_class_super paren_pair
-        (
-            // java classes end at the end of the block
-            { setMode(MODE_END_AT_BLOCK); }
+        // first name in an anonymous class definition is the class it extends
+        // or the interface that it implements
+        anonymous_class_super 
 
-            lcurly
-        )
+        // argument list for creation of object
+        paren_pair
+
+        // start of definition block
+        lcurly
 ;
 
 anonymous_class_super { LocalMode lm; }:
