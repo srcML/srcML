@@ -1330,15 +1330,17 @@ anonymous_class_definition :
             startElement(SCLASS);
 
         }
+
         // first name in an anonymous class definition is the class it extends
         // or the interface that it implements
         anonymous_class_super 
 
-        // argument list for creation of object
-        paren_pair
-
-        // start of definition block
-        lcurly
+        // argument list
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST);
+        }
+        call_argument_list
 ;
 
 anonymous_class_super { LocalMode lm; }:
