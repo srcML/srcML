@@ -72,7 +72,7 @@ def xmldiff(xml_filename1, xml_filename2):
 # find differences of two files
 def src2srcML(text_file, encoding, language, directory, filename, prefixlist):
 
-	command = [srcmltranslator, "-l", language, "--xml-encoding=" + encoding]
+	command = [srcmltranslator, "-l", language, "--encoding=" + encoding]
 
 	if directory != "":
 		command.extend(["--directory", directory])
@@ -212,6 +212,11 @@ error_count = 0
 # total test cases
 total_count = 0
 
+dre = re.compile("directory=\"([^\"]*)\"", re.M)
+lre = re.compile("language=\"([^\"]*)\"", re.M)
+vre = re.compile("src-version=\"([^\"]*)\"", re.M)
+ere = re.compile("encoding=\"([^\"]*)\"", re.M)
+
 try:
 			
 	# process all files		
@@ -231,15 +236,18 @@ try:
 				# read entire file into a string
 				filexml = name2filestr(xml_filename)
 
+				# get all the info
+				info = getsrcmlattribute(filexml, "--info")
+
 				# directory of the outer unit element
-				directory = getdirectory(filexml)
-			
+				directory = dre.search(info).group(1)
+
 				# only process if directory name matches or is not given
 				if specname != "" and m.match(directory) == None:
 					continue
 			
 				# language of the entire document with a default of C++
-				language = getlanguage(filexml)
+				language = lre.search(info).group(1)
 				if len(language) == 0:
 					language = "C++"
 
@@ -252,10 +260,13 @@ try:
 				print language.ljust(FIELD_WIDTH_LANGUAGE), " ", directory.ljust(FIELD_WIDTH_DIRECTORY), " ",
 
 				# encoding of the outer unit
-				encoding = getencoding(filexml)
+				encoding = ere.search(info).group(1)
 			
 				# version of the outer unit
-				version = getversion(filexml)
+				version = ""
+				vre_result = vre.search(info)
+				if vre_result:
+					version = vre_result.group(1)
 		
 				# number of nested units
 				number = getnested(filexml)
