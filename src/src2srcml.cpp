@@ -227,9 +227,9 @@ int options = OPTION_CPP_MARKUP_ELSE | OPTION_CPP | OPTION_XMLDECL | OPTION_NAME
 const char* src_encoding = DEFAULT_TEXT_ENCODING;
 int language = DEFAULT_LANGUAGE;
 const char* xml_encoding = DEFAULT_XML_ENCODING;
-const char* given_directory = "";
-const char* given_filename = "";
-const char* given_version = "";
+const char* given_directory = 0;
+const char* given_filename = 0;
+const char* given_version = 0;
 bool cpp_else = false;
 bool cpp_if0 = false;
 

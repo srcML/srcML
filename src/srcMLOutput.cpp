@@ -312,19 +312,19 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     }
 
     // language attribute
-    if (language[0])
+    if (language)
       xmlTextWriterWriteAttribute(xout, BAD_CAST "language", BAD_CAST language);
 
     // directory attribute
-    if (dir[0])
+    if (dir)
       xmlTextWriterWriteAttribute(xout, BAD_CAST "dir", BAD_CAST dir);
 
     // filename attribute
-    if (filename[0])
+    if (filename)
       xmlTextWriterWriteAttribute(xout, BAD_CAST "filename", BAD_CAST filename);
 
     // version attribute
-    if (version[0])
+    if (version)
       xmlTextWriterWriteAttribute(xout, BAD_CAST "version", BAD_CAST version);
 
     // leave space for nested unit
