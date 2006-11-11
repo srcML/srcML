@@ -534,19 +534,19 @@ int main(int argc, char* argv[]) {
 	int option = optionorder[i];
 	if (option == OPTION_XML_ENCODING) {
 	  attribute_name = "";
-	  attribute_title = "Encoding:";
+	  attribute_title = "encoding=";
 	} else if (option == OPTION_LANGUAGE) {
 	  attribute_name = "language";
-	  attribute_title = "Language:";
+	  attribute_title = "language=";
 	} else if (option == OPTION_DIRECTORY) {
 	  attribute_name = "dir";
-	  attribute_title = "Directory:";
+	  attribute_title = "directory=";
 	} else if (option == OPTION_FILENAME) {
 	  attribute_name = "filename";
-	  attribute_title = "Filename:";
+	  attribute_title = "filename=";
 	} else if (option == OPTION_VERSION) {
 	  attribute_name = "version";
-	  attribute_title = "Version:";
+	  attribute_title = "version=";
 	}
 
 	// output the option
@@ -554,8 +554,8 @@ int main(int argc, char* argv[]) {
 	std::string l = option != OPTION_XML_ENCODING ? su.attribute(attribute_name, nonnull) : su.getencoding();
 	if (nonnull) {
 	  if (optioncount > 1)
-	    std::cout << attribute_title << " ";
-	  std::cout << l << '\n';
+	    std::cout << attribute_title << "\"";
+	  std::cout << l << "\"" << '\n';
 	}
       }
 

@@ -2,6 +2,8 @@ CHANGES
 
 Nov-09-2006-Beta
 
+	Use metadata extraction names for info.
+
 	Allow for blank metadata attribute values.
 
 	Fix anonymous class in call detection.
