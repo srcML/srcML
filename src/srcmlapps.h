@@ -55,9 +55,9 @@ const char* DIRECTORY_FLAG = "--directory";
 const char* DIRECTORY_FLAG_SHORT = "-d";
 const char* DIRECTORY_FLAG_FULL = "--directory=DIR";
 
-const char* ENCODING_FLAG = "--xml-encoding";
+const char* ENCODING_FLAG = "--encoding";
 const char* ENCODING_FLAG_SHORT = "-x";
-const char* ENCODING_FLAG_FULL = "--xml-encoding=ENC";
+const char* ENCODING_FLAG_FULL = "--encoding=ENC";
 
 const char* TEXTENCODING_FLAG = "--src-encoding";
 const char* TEXTENCODING_FLAG_SHORT = "-t";

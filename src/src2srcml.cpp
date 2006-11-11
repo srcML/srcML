@@ -122,14 +122,12 @@ void output_help(const char* name) {
 	      << "  " << FILELIST_FLAG_SHORT    << ", " << setw(COL) <<  FILELIST_FLAG
 	      << "treat input file as a list of source files for one compound srcML document\n"
               << '\n'
-#ifdef LIBXML_ENABLED
-	      << "  " << TEXTENCODING_FLAG_SHORT        << ", " << setw(COL) <<  TEXTENCODING_FLAG_FULL
-	      << "set the input source encoding to ENC (default:  " << DEFAULT_TEXT_ENCODING << ") \n"
-#endif
 	      << "  " << ENCODING_FLAG_SHORT    << ", " << setw(COL) <<  ENCODING_FLAG_FULL
 	      << "set the output XML encoding to ENC (default:  "
 	      << DEFAULT_XML_ENCODING << ") \n"
 #ifdef LIBXML_ENABLED
+	      << "  " << TEXTENCODING_FLAG_SHORT        << ", " << setw(COL) <<  TEXTENCODING_FLAG_FULL
+	      << "set the input source encoding to ENC (default:  " << DEFAULT_TEXT_ENCODING << ") \n"
 	      << "  " << SKIP_ENCODING_FLAG_SHORT        << ", " << setw(COL) <<  SKIP_ENCODING_FLAG
 	      << "store the text without any text encoding changes" << "\n"
 #endif
