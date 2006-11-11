@@ -49,8 +49,8 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 			 int op,
 			 std::map<std::string, std::string>& curi
 			 )
-  : input(ints), xout(0), srcml_filename(filename), unit_language(language), unit_dir(""), unit_filename(""),
-    unit_version(""), options(op), xml_encoding(xml_enc), uri(curi)
+  : input(ints), xout(0), srcml_filename(filename), unit_language(language), unit_dir(0), unit_filename(0),
+    unit_version(0), options(op), xml_encoding(xml_enc), uri(curi)
 {
   // setup an output handler
   handler = xmlFindCharEncodingHandler(src_encoding);
