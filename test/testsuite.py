@@ -337,11 +337,31 @@ else:
 			oerrorlist.append(e);
 		else:
 			xerrorlist.append(e);
-	
+
 	print "Errors:  " + str(error_count) + " out of " + str(total_count) + " cases", "\n"
 	print "Errorlist:"
-	for e in errorlist:
-		f.write(str(e[0]) + " " + str(e[1]) + "\n" + "".join(e[2][3:]))
+	nxerrorlist = xerrorlist[:]
+	for e in oerrorlist:
+		othererror = ""
+		for x in xerrorlist[:]:
+			if str(e[0]).split(' ')[1] != str(x[0]).split(' ')[1]:
+				continue
+
+			if str(e[1]) != str(x[1]):
+				continue
+
+			if str(x[0]).split('.')[0] == str(e[0]).split(' ')[0]:
+				othererror = othererror + " " + str(x[0]).split(' ')[0].split('.')[1]
+
+			xerrorlist.remove(x)
+
+		f.write(str(e[0]) + " " + str(e[1]) + othererror + "\n" + "".join(e[2][3:]))
+		print e[0], e[1], othererror, "\n", "".join(e[2][3:])
+
+	for e in nxerrorlist:
+		f.write(str(e[0]) + " " + str(e[1]) + "\n" + "".join(e[2][3:]) + "\n")
+
+	for e in xerrorlist:
 		print e[0], e[1], "\n", "".join(e[2][3:])
 
 # output tool errors counts
