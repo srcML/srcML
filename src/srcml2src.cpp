@@ -555,7 +555,10 @@ int main(int argc, char* argv[]) {
 	if (nonnull) {
 	  if (optioncount > 1)
 	    std::cout << attribute_title << "\"";
-	  std::cout << l << "\"" << '\n';
+	  std::cout << l;
+	  if (optioncount > 1)
+	    std::cout << "\"";
+	  std::cout << '\n';
 	}
       }
 
