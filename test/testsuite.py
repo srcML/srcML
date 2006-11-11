@@ -40,6 +40,20 @@ def safe_communicate(command, inp):
 			raise
 
 # extracts a particular unit from a srcML file
+def safe_communicate_file(command, filename):
+
+	newcommand = command[:]
+	newcommand.append(filename)
+	try:
+		return subprocess.Popen(newcommand, stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate()[0]
+	except OSError, (errornum, strerror):
+		try:
+			return subprocess.Popen(newcommand, stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate()[0]
+		except OSError, (errornum, strerror):
+			sperrorlist.append((command, xml_filename, errornum, strerror))
+			raise
+
+# extracts a particular unit from a srcML file
 def extract_unit(src, count):
 
 	command = [srcmlutility, "--unit=" + str(count), "--xml"]
@@ -94,6 +108,12 @@ def src2srcML(text_file, encoding, language, directory, filename, prefixlist):
 def getsrcmlattribute(xml_file, command):
 
 	last_line = safe_communicate([srcmlutility, command], xml_file)
+
+	return last_line.strip()
+
+def getsrcmlattributefile(xml_file, command):
+
+	last_line = safe_communicate_file([srcmlutility, command], xml_file)
 
 	return last_line.strip()
 
@@ -216,6 +236,7 @@ dre = re.compile("directory=\"([^\"]*)\"", re.M)
 lre = re.compile("language=\"([^\"]*)\"", re.M)
 vre = re.compile("src-version=\"([^\"]*)\"", re.M)
 ere = re.compile("encoding=\"([^\"]*)\"", re.M)
+nre = re.compile("nested=\"([^\"]*)\"", re.M)
 
 try:
 			
@@ -233,11 +254,8 @@ try:
 				# full path of the file
 				xml_filename = os.path.join(root, name)
 			
-				# read entire file into a string
-				filexml = name2filestr(xml_filename)
-
 				# get all the info
-				info = getsrcmlattribute(filexml, "--info")
+				info = getsrcmlattributefile(xml_filename, "--longinfo")
 
 				# directory of the outer unit element
 				directory = dre.search(info).group(1)
@@ -269,12 +287,15 @@ try:
 					version = vre_result.group(1)
 		
 				# number of nested units
-				number = getnested(filexml)
+				number = int(nre.search(info).group(1))
 		
 				if specnum == 0:
 					count = 0
 				else:
 					count = specnum - 1
+
+				# read entire file into a string
+				filexml = name2filestr(xml_filename)
 
 				while count == 0 or count < number:
 
