@@ -81,26 +81,6 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&XML_FLAG_SHORT;, &XML_FLAG;</term>
-      <listitem>
-	<para>
-	  Output is in srcML format.  Used in combination with the
-	  &UNIT_FLAG; option to output a particular nested unit in XML.
-	  The output unit has attributes formed by the merger of the
-	  attributes of the individual unit and the overall unit.
-	</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>&COMPRESSED_FLAG_SHORT;, &COMPRESSED_FLAG;</term>
-      <listitem>
-	<para>
-	  Output is in compressed gzip format.  Only available in the
-	  libxml2-enabled version.
-	</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
       <term>&TEXTENCODING_FLAG_SHORT;, &TEXTENCODING_FLAG;=<replaceable class="parameter">encoding</replaceable></term>
       <listitem>
 	<para>
@@ -132,6 +112,26 @@
 	  Any necessary subdirectories are created and the file itself
 	  is created.  Any existing file with the same path will be
 	  overwritten.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>&XML_FLAG_SHORT;, &XML_FLAG;</term>
+      <listitem>
+	<para>
+	  Output is in srcML format.  Used in combination with the
+	  &UNIT_FLAG; option to output a particular nested unit in XML.
+	  The output unit has attributes formed by the merger of the
+	  attributes of the individual unit and the overall unit.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>&COMPRESSED_FLAG_SHORT;, &COMPRESSED_FLAG;</term>
+      <listitem>
+	<para>
+	  Output is in compressed gzip format.  Only available in the
+	  libxml2-enabled version.
 	</para>
       </listitem>
     </varlistentry>
