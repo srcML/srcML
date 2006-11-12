@@ -81,6 +81,94 @@
       </listitem>
     </varlistentry>
     <varlistentry>
+      <term>&XML_FLAG_SHORT;, &XML_FLAG;</term>
+      <listitem>
+	<para>
+	  Output is in srcML format.  Used in combination with the
+	  &UNIT_FLAG; option to output a particular nested unit in XML.
+	  The output unit has attributes formed by the merger of the
+	  attributes of the individual unit and the overall unit.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>&COMPRESSED_FLAG_SHORT;, &COMPRESSED_FLAG;</term>
+      <listitem>
+	<para>
+	  Output is in compressed gzip format.  Only available in the
+	  libxml2-enabled version.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>&TEXTENCODING_FLAG_SHORT;, &TEXTENCODING_FLAG;=<replaceable class="parameter">encoding</replaceable></term>
+      <listitem>
+	<para>
+	  Sets the encoding used for the output text source-code files
+	  to <replaceable>encoding</replaceable>.  The default is &DEFAULT_TEXT_ENCODING;.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>&UNIT_FLAG_SHORT;, &UNIT_FLAG;=<replaceable class="parameter">number</replaceable></term>
+      <listitem>
+	<para>
+	  Refers to a specific nested unit in a compound srcML file.
+	  The numbering starts at 1.  If the number is outside of the
+	  range of nested units then the command is ignored.  In
+	  combination with the attribute flags, outputs the attribute
+	  of that particular unit.  In combination with the &XML_FLAG;
+	  outputs the unit in xml (not as text as is the default).
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>&EXPAND_FLAG_SHORT;, &EXPAND_FLAG;</term>
+      <listitem>
+	<para>
+	  Extracts all units from a compound srcML file back into
+	  source-code files.  The directory and filename used is based
+	  on that stored in the directory and filename attributes.
+	  Any necessary subdirectories are created and the file itself
+	  is created.  Any existing file with the same path will be
+	  overwritten.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>&NO_XML_DECLARATION_FLAG;</term>
+      <listitem>
+	<para>
+	  No output of the default XML declaration.  Only applies to XML output.  Useful when the output of the translator is to be placed inside
+	  another XML document.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>&NO_NAMESPACE_DECLARATION_FLAG;</term>
+      <listitem>
+	<para>
+	  No output of namespace declarations.  Only applies to XML output.  Useful when the output of the translator is to be placed inside
+	  another XML document.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>&VERBOSE_FLAG_SHORT;, &VERBOSE_FLAG;</term>
+      <listitem>
+	<para>
+	  Verbose output to standard error.  Especially useful in &FILELIST_FLAG; mode.
+	</para>
+      </listitem>
+    </varlistentry>
+  </variablelist>
+</refsect1>
+<refsect1>
+  <title>Metadata Options</title>
+  <para>
+    This set of options allows access to the metadata stored in the srcML document.
+  </para>
+    <varlistentry>
       <term>&LANGUAGE_FLAG_SHORT;, &LANGUAGE_FLAG;</term>
       <listitem>
 	<para>
@@ -150,60 +238,28 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&UNIT_FLAG_SHORT;, &UNIT_FLAG;=<replaceable class="parameter">number</replaceable></term>
+      <term>&INFO_FLAG_SHORT;, &INFO_FLAG;</term>
       <listitem>
 	<para>
-	  Refers to a specific nested unit in a compound srcML file.
-	  The numbering starts at 1.  If the number is outside of the
-	  range of nested units then the command is ignored.  In
-	  combination with the attribute flags, outputs the attribute
-	  of that particular unit.  In combination with the &XML_FLAG;
-	  outputs the unit in xml (not as text as is the default).
+	  Output most of the metadata of the srcML file.  Each individual piece
+	  of data, i.e., namespaces, encoding, language, directory, filename, and version,
+	  is on a separate line.  The form of the information is that same as that of the
+	  full flag option to src2srcml to form it, without the leading "--".
+	  This information is very fast to access and only requires examination
+	  of the start of the root element unit.
 	</para>
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&XML_FLAG_SHORT;, &XML_FLAG;</term>
+      <term>&LONG_INFO_FLAG_SHORT;, &LONG_INFO_FLAG;</term>
       <listitem>
 	<para>
-	  Output is in srcML format.  Used in combination with the
-	  &UNIT_FLAG; to output a particular nested unit in XML.
-	  The output unit has attributes formed by the merger of the
-	  attributes of the individual unit and the overall unit.
+	  Output the metadata of the &INFO_FLAG; option along with the
+	  count of the nested units in a compound srcML document.
+	  This information requires the examination of the entire srcML document.
 	</para>
       </listitem>
     </varlistentry>
-    <varlistentry>
-      <term>&EXPAND_FLAG_SHORT;, &EXPAND_FLAG;</term>
-      <listitem>
-	<para>
-	  Extracts all units from a compound srcML file back into
-	  source-code files.  The directory and filename used is based
-	  on that stored in the directory and filename attributes.
-	  Any necessary subdirectories are created and the file itself
-	  is created.  Any existing file with the same path will be
-	  overwritten.
-	</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>&TEXTENCODING_FLAG_SHORT;, &TEXTENCODING_FLAG;=<replaceable class="parameter">encoding</replaceable></term>
-      <listitem>
-	<para>
-	  Sets the encoding used for the output text source-code files
-	  to <replaceable>encoding</replaceable>.  The default is &DEFAULT_TEXT_ENCODING;.
-	</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>&VERBOSE_FLAG_SHORT;, &VERBOSE_FLAG;</term>
-      <listitem>
-	<para>
-	  Verbose output to standard error.  Especially useful in &FILELIST_FLAG; mode.
-	</para>
-      </listitem>
-    </varlistentry>
-  </variablelist>
 </refsect1>
 <refsect1>
   <title>USAGE</title>

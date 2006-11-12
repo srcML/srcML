@@ -21,8 +21,8 @@
 <arg><option>&DIRECTORY_FLAG_SHORT;    <replaceable class="parameter">directory</replaceable></option></arg>
 <arg><option>&FILENAME_FLAG_SHORT;     <replaceable class="parameter">filename</replaceable></option></arg>
 <arg><option>&SRCVERSION_FLAG_SHORT;   <replaceable class="parameter">version</replaceable></option></arg>
-<arg><option>&TEXTENCODING_FLAG_SHORT; <replaceable class="parameter">encoding</replaceable></option></arg>
 <arg><option>&ENCODING_FLAG_SHORT;     <replaceable class="parameter">encoding</replaceable></option></arg>
+<arg><option>&TEXTENCODING_FLAG_SHORT; <replaceable class="parameter">encoding</replaceable></option></arg>
 <arg rep="repeat"><replaceable class="parameter">input-source-code-file</replaceable></arg>
 <arg><replaceable class="parameter">output-srcML-file</replaceable></arg>
   </cmdsynopsis>
@@ -352,8 +352,8 @@
       <term>SIGINT</term>
       <listitem>
 	<para>
-	  Completes current file translation (and output) with multiple input files (nested mode).
-	  The input file currently being translated is allowed to complete, the nested document is
+	  Completes current file translation (and output) with multiple input files.
+	  The input file currently being translated is allowed to complete, the complex document is
 	  closed, and then the program stops.  More than one SIGINT causes default behavior.
 	</para>
 	<para>
