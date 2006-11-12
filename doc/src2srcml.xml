@@ -229,6 +229,8 @@
 	  specify a different directory for standard input or where
 	  the directory is not contained in the path of the input
 	  filename.
+	  For compound srcML documents this option sets
+	  the attribute on the root element.
 	</para>
       </listitem>
     </varlistentry>
@@ -241,6 +243,8 @@
 	  the input filename.  This option allows you to specify a
 	  different filename for standard input or where a different
 	  filename is wanted.
+	  For compound srcML documents this option sets
+	  the attribute on the root element.
 	</para>
       </listitem>
     </varlistentry>
@@ -253,6 +257,8 @@
 	  attribute version to <replaceable>version</replaceable>.
 	  The value is a string with no interpretation by the srcML
 	  tools.
+	  For compound srcML documents this option sets
+	  the attribute on the root element.
 	</para>
       </listitem>
     </varlistentry>
@@ -266,8 +272,9 @@
       <term>&LITERAL_FLAG;</term>
       <listitem>
 	<para>
-	  Extension to srcML markup for literal values.  Can also
-	  be specified by using the &XMLNS_FLAG; option with a URI of "http://www.sdml.info/srcML/literal"
+	  Additional markup of literal values using the element literal in the namespace "http://www.sdml.info/srcML/literal" with 
+	  a default prefix of "lit".  Can also be specified by declaring a prefix for this namespace using the xmlns option, e.g.,
+	  &XMLNS_FLAG;:lit="http://www.sdml.info/srcML/literal"
 	</para>
       </listitem>
     </varlistentry>
@@ -275,8 +282,9 @@
       <term>&OPERATOR_FLAG;</term>
       <listitem>
 	<para>
-	  Extension to srcML markup for operators.  Can also
-	  be specified by using the &XMLNS_FLAG; option with a URI of "http://www.sdml.info/srcML/operator"
+	  Additional markup of operator values using the element operator in the namespace "http://www.sdml.info/srcML/operator" with 
+	  a default prefix of "lit".  Can also be specified by declaring a prefix for this namespace using the xmlns option, e.g.,
+	  &XMLNS_FLAG;:op="http://www.sdml.info/srcML/operator"
 	</para>
       </listitem>
     </varlistentry>
