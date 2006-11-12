@@ -39,7 +39,7 @@
     source code.  All text from the original source-code file is
     preserved including white-space, comments and preprocessor
     statements.  No preprocessing of the source code is done.  In
-    addition it can be applied to invidual source-code files, or code
+    addition it can be applied to individual source-code files, or code
     fragments.
   </para>
   <para>
@@ -146,8 +146,8 @@
       <term>&NO_XML_DECLARATION_FLAG;</term>
       <listitem>
 	<para>
-	  No output of the default XML declaration.  Useful when the output of the translator is to be nested inside
-	  of another XML document.
+	  No output of the default XML declaration.  Useful when the output of the translator is to be placed inside
+	  another XML document.
 	</para>
       </listitem>
     </varlistentry>
@@ -155,8 +155,8 @@
       <term>&NO_NAMESPACE_DECLARATION_FLAG;</term>
       <listitem>
 	<para>
-	  No output of namespace declarations.  Useful when the output of the translator is to be nested inside
-	  of another XML document.
+	  No output of namespace declarations.  Useful when the output of the translator is to be placed inside
+	  another XML document.
 	</para>
       </listitem>
     </varlistentry>
@@ -185,7 +185,7 @@
 	  When translation errors occur src2srcml preserves all text,
 	  but may issue incorrect markup.  In debug mode the text with
 	  the translation error is marked with a special set of tags
-	  with the prefix srcerr from the namesepace
+	  with the prefix srcerr from the namespace
 	  http://www.sdml.info/srcml/srcerr.
 	</para>
       </listitem>
@@ -194,7 +194,7 @@
       <term>&VERBOSE_FLAG_SHORT;, &VERBOSE_FLAG;</term>
       <listitem>
 	<para>
-	  Verbose output to standard error in &FILELIST_FLAG; mode.  The signal SIGUSR1 can
+	  Verbose output to standard error.  Especially useful with the &FILELIST_FLAG; option.  The signal SIGUSR1 can
 	  be used to toggle this option.
 	</para>
       </listitem>
@@ -272,8 +272,8 @@
       <term>&LITERAL_FLAG;</term>
       <listitem>
 	<para>
-	  Additional markup of literal values using the element literal in the namespace "http://www.sdml.info/srcML/literal" with 
-	  a default prefix of "lit".  Can also be specified by declaring a prefix for this namespace using the xmlns option, e.g.,
+	  Additional markup of literal values using the element literal with the prefix "lit" in the namespace "http://www.sdml.info/srcML/literal".
+	  Can also be specified by declaring a prefix for this namespace using the xmlns option, e.g.,
 	  &XMLNS_FLAG;:lit="http://www.sdml.info/srcML/literal"
 	</para>
       </listitem>
@@ -282,8 +282,8 @@
       <term>&OPERATOR_FLAG;</term>
       <listitem>
 	<para>
-	  Additional markup of operator values using the element operator in the namespace "http://www.sdml.info/srcML/operator" with 
-	  a default prefix of "lit".  Can also be specified by declaring a prefix for this namespace using the xmlns option, e.g.,
+	  Additional markup of literal values using the element operator with the prefix "op" in the namespace "http://www.sdml.info/srcML/operator".
+	  Can also be specified by declaring a prefix for this namespace using the xmlns option, e.g.,
 	  &XMLNS_FLAG;:op="http://www.sdml.info/srcML/operator"
 	</para>
       </listitem>
