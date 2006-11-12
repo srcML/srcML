@@ -546,7 +546,7 @@ int main(int argc, char* argv[]) {
 	  attribute_title = "filename=";
 	} else if (option == OPTION_VERSION) {
 	  attribute_name = "version";
-	  attribute_title = "version=";
+	  attribute_title = "src-version=";
 	}
 
 	// output the option
@@ -564,7 +564,7 @@ int main(int argc, char* argv[]) {
 
       if (isoption(options, OPTION_LONG_INFO)) {
 	if (!isoption(options, OPTION_UNIT))
-	  std::cout << "Nested: " << su.unit_count() << '\n';
+	  std::cout << "nested=\"" << su.unit_count() << "\"" << '\n';
       }
 
     // namespace
