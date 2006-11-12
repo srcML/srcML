@@ -74,7 +74,7 @@
       <term>&EXPRESSION_MODE_FLAG_SHORT;, &EXPRESSION_MODE_FLAG;</term>
       <listitem>
 	<para>
-	  Translates a single, standalone expression outside of any statement.
+	  Translates a single, standalone expression.
 	</para>
       </listitem>
     </varlistentry>
@@ -101,6 +101,111 @@
 	</para>
       </listitem>
     </varlistentry>
+    <varlistentry>
+      <term>&ENCODING_FLAG_SHORT;, &ENCODING_FLAG;=<replaceable class="parameter">encoding</replaceable></term>
+      <listitem>
+	<para>
+	  Sets the xml encoding of the output srcML file to
+	  <replaceable class="parameter">encoding</replaceable>.  The
+	  default is UTF-8.  Conversion to the xml encoding from the
+	  source encoding is only performed in the libxml2-enabled
+	  version.  Possible encodings with the libxml2-enabled
+	  version can be obtained by using the command <command>iconv
+	  -l</command>.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>&TEXTENCODING_FLAG_SHORT;, &TEXTENCODING_FLAG;=<replaceable class="parameter">encoding</replaceable></term>
+      <listitem>
+	<para>
+	  Sets the input encoding of the source-code file to
+	  <replaceable>encoding</replaceable>.  The default is &DEFAULT_TEXT_ENCODING;.
+	  Not stored, but used for any necessary source-code text translation in the libxml2-enabled version.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>&XMLNS_FLAG;=<replaceable class="parameter">URI</replaceable></term>
+      <listitem>
+	<para>
+	  Sets the URI for the default namespace.  Default is xmlns="http://www.sdml.info/srcML/src".
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>&XMLNS_FLAG;:<replaceable class="parameter">PREFIX</replaceable>=<replaceable class="parameter">URI</replaceable></term>
+      <listitem>
+	<para>
+	  Sets the namespace prefix PREFIX for the namespace URI.  Defaults are xmlns:cpp="http://www.sdml.info/srcML/cpp",
+	  and "xmlns:srcerr=http://www.sdml.info/srcML/srcerr".
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>&NO_XML_DECLARATION_FLAG;</term>
+      <listitem>
+	<para>
+	  No output of the default XML declaration.  Useful when the output of the translator is to be nested inside
+	  of another XML document.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>&NO_NAMESPACE_DECLARATION_FLAG;</term>
+      <listitem>
+	<para>
+	  No output of namespace declarations.  Useful when the output of the translator is to be nested inside
+	  of another XML document.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>&COMPRESSED_FLAG_SHORT;, &COMPRESSED_FLAG;</term>
+      <listitem>
+	<para>
+	  Output is in compressed gzip format.  Only available in the
+	  libxml2-enabled version.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>&INTERACTIVE_FLAG_SHORT;, &INTERACTIVE_FLAG;</term>
+      <listitem>
+	<para>
+	  Default is to use buffered output for speed.  For
+	  interactive applications output is issued as soon as parsed.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>&DEBUG_FLAG_SHORT;, &DEBUG_FLAG;</term>
+      <listitem>
+	<para>
+	  When translation errors occur src2srcml preserves all text,
+	  but may issue incorrect markup.  In debug mode the text with
+	  the translation error is marked with a special set of tags
+	  with the prefix srcerr from the namesepace
+	  http://www.sdml.info/srcml/srcerr.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>&VERBOSE_FLAG_SHORT;, &VERBOSE_FLAG;</term>
+      <listitem>
+	<para>
+	  Verbose output to standard error in &FILELIST_FLAG; mode.  The signal SIGUSR1 can
+	  be used to toggle this option.
+	</para>
+      </listitem>
+    </varlistentry>
+  </variablelist>
+</refsect1>
+<refsect1>
+  <title>Metadata Options</title>
+  <para>
+    This set of options allows control over various metadata stored in the srcML document.
+  </para>
     <varlistentry>
       <term>&LANGUAGE_FLAG_SHORT;, &LANGUAGE_FLAG;=<replaceable class="parameter">language</replaceable></term>
       <listitem>
@@ -151,53 +256,18 @@
 	</para>
       </listitem>
     </varlistentry>
-    <varlistentry>
-      <term>&TEXTENCODING_FLAG_SHORT;, &TEXTENCODING_FLAG;=<replaceable class="parameter">encoding</replaceable></term>
-      <listitem>
-	<para>
-	  Sets the input encoding of the source-code file to
-	  <replaceable>encoding</replaceable>.  The default is &DEFAULT_TEXT_ENCODING;.
-	  Not stored, but used for any necessary source-code text translation in the libxml2-enabled version.
-	</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>&XMLNS_FLAG;=<replaceable class="parameter">URI</replaceable></term>
-      <listitem>
-	<para>
-	  Sets the URI for the default namespace.  Default is xmlns="http://www.sdml.info/srcML/src".
-	</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>&XMLNS_FLAG;:<replaceable class="parameter">PREFIX</replaceable>=<replaceable class="parameter">URI</replaceable></term>
-      <listitem>
-	<para>
-	  Sets the namespace prefix PREFIX for the namespace URI.  Defaults are xmlns:cpp="http://www.sdml.info/srcML/cpp",
-	  and "xmlns:srcerr=http://www.sdml.info/srcML/srcerr".
-	</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>&ENCODING_FLAG_SHORT;, &ENCODING_FLAG;=<replaceable class="parameter">encoding</replaceable></term>
-      <listitem>
-	<para>
-	  Sets the xml encoding of the output srcML file to
-	  <replaceable class="parameter">encoding</replaceable>.  The
-	  default is UTF-8.  Conversion to the xml encoding from the
-	  source encoding is only performed in the libxml2-enabled
-	  version.  Possible encodings with the libxml2-enabled
-	  version can be obtained by using the command <command>iconv
-	  -l</command>.
-	</para>
-      </listitem>
-    </varlistentry>
+</refsect1>
+<refsect1>
+  <title>Markup Extensions</title>
+  <para>
+    Extensions to the srcML markup are available.
+  </para>
     <varlistentry>
       <term>&LITERAL_FLAG;</term>
       <listitem>
 	<para>
 	  Extension to srcML markup for literal values.  Can also
-	  be specified by using the &XMLNS_FLAG; option with a URI of http://www.sdml.info/srcML/literal
+	  be specified by using the &XMLNS_FLAG; option with a URI of "http://www.sdml.info/srcML/literal"
 	</para>
       </listitem>
     </varlistentry>
@@ -206,50 +276,11 @@
       <listitem>
 	<para>
 	  Extension to srcML markup for operators.  Can also
-	  be specified by using the &XMLNS_FLAG; option with a URI of http://www.sdml.info/srcML/operator
+	  be specified by using the &XMLNS_FLAG; option with a URI of "http://www.sdml.info/srcML/operator"
 	</para>
       </listitem>
     </varlistentry>
-    <varlistentry>
-      <term>&COMPRESSED_FLAG_SHORT;, &COMPRESSED_FLAG;</term>
-      <listitem>
-	<para>
-	  Output is in compressed gzip format.  Only available in the
-	  libxml2-enabled version.
-	</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>&INTERACTIVE_FLAG_SHORT;, &INTERACTIVE_FLAG;</term>
-      <listitem>
-	<para>
-	  Default is to use buffered output for speed.  For
-	  interactive applications output is issued as soon as parsed.
-	</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>&DEBUG_FLAG_SHORT;, &DEBUG_FLAG;</term>
-      <listitem>
-	<para>
-	  When translation errors occur src2srcml preserves all text,
-	  but may issue incorrect markup.  In debug mode the text with
-	  the translation error is marked with a special set of tags
-	  with the prefix srcerr from the namesepace
-	  http://www.sdml.info/srcml/srcerr.
-	</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>&VERBOSE_FLAG_SHORT;, &VERBOSE_FLAG;</term>
-      <listitem>
-	<para>
-	  Verbose output to standard error in &FILELIST_FLAG; mode.  The signal SIGUSR1 can
-	  be used to toggle this option.
-	</para>
-      </listitem>
-    </varlistentry>
-  </variablelist>
+
 </refsect1>
 <refsect1>
   <title>CPP MARKUP OPTIONS</title>
