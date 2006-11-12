@@ -343,7 +343,7 @@
       <term>SIGUSR1</term>
       <listitem>
 	<para>
-	  Toggles verbose option.  Useful with multiple input files (nested mode).
+	  Toggles verbose option.  Useful with multiple input files as in the &FILELIST_FLAG; option.
 	</para>
       </listitem>
     </varlistentry>
