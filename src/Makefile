@@ -1,6 +1,12 @@
 ##
 # Makefile for testing srcML translator, src2srcml and srcml2src
 
+# Uncomment to generate non-libxml version
+#LIBXML_DISABLED=a
+
+# Uncomment to generate a static build
+#STATIC
+
 EXE_DIR = ../bin/
 OBJ_DIR = ../obj/
 
@@ -21,11 +27,15 @@ CXX = /usr/bin/g++
 CXXFLAGS = -O3 -Wall -march=nocona -minline-all-stringops -fno-rtti 
 #-fno-enforce-eh-specs
 
+# compiler optimizations
+ifdef STATIC
+CXXFLAGS = -O3 -Wall -march=nocona -minline-all-stringops -fno-rtti -static-libgcc -L ../lib
+else
+CXXFLAGS = -O3 -Wall -march=nocona -minline-all-stringops -fno-rtti 
+endif
+
 # compiler gcc linking flags
 CXX_LINK_FLAGS = -s
-
-# Uncomment to generate non-libxml version
-#LIBXML_DISABLED=a
 
 # object code for xml
 ifdef LIBXML_DISABLED
