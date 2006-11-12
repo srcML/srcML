@@ -626,7 +626,7 @@ call_macro_expression[int secondtoken, bool statement]
 
             // call syntax succeeded, however post call token is not legitimate
             { _tokenSet_2.member(postcalltoken) || postcalltoken == NAME || postcalltoken == LCURLY
-                || postcalltoken == EXTERN || postcalltoken == STRUCT || postcalltoken == UNION
+                || postcalltoken == EXTERN || postcalltoken == STRUCT || postcalltoken == UNION || postcalltoken == CLASS
                 || postcalltoken == RCURLY || postcalltoken == 1 /* EOF ? */
                 || postcalltoken == TEMPLATE || postcalltoken == PUBLIC || postcalltoken == PRIVATE
                 || postcalltoken == PROTECTED }?
