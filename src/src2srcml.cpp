@@ -128,8 +128,10 @@ void output_help(const char* name) {
 #ifdef LIBXML_ENABLED
 	      << "  " << TEXTENCODING_FLAG_SHORT        << ", " << setw(COL) <<  TEXTENCODING_FLAG_FULL
 	      << "set the input source encoding to ENC (default:  " << DEFAULT_TEXT_ENCODING << ") \n"
+      /*
 	      << "  " << SKIP_ENCODING_FLAG_SHORT        << ", " << setw(COL) <<  SKIP_ENCODING_FLAG
 	      << "store the text without any text encoding changes" << "\n"
+      */
 #endif
 	      << '\n'
 	      << "  " << setw(COL) <<  XMLNS_DEFAULT_FLAG_FULL << "    "
@@ -284,12 +286,15 @@ int main(int argc, char* argv[]) {
 
   /* Special checks for illegal combinations */
 
+  /*
   // skip encoding and specifying encoding
   if (isoption(options, OPTION_SKIP_ENCODING) && isoption(options, OPTION_TEXT_ENCODING)) {
 
     std::cerr << NAME << ": Options for skipping encoding and specifying source encoding are incompatible.\n";
     exit(STATUS_INVALID_OPTION_COMBINATION);
   }
+  */
+
   /*
   */
   // eat optional option separator
@@ -589,13 +594,13 @@ int process_args(int argc, char* argv[]) {
       exit(STATUS_LIBXML2_FEATURE);
 #endif
     }
-
+    /*
     // skip encoding mode
     else if (compare_flags(argv[curarg], SKIP_ENCODING_FLAG, SKIP_ENCODING_FLAG_SHORT, position)) {
       options |= OPTION_SKIP_ENCODING;
       if (position == original_position) ++curarg;
     }
-
+    */
     // markup of cpp #else mode
     else if (compare_flags(argv[curarg], CPP_MARKUP_ELSE_FLAG, CPP_MARKUP_ELSE_FLAG_SHORT, position)) {
       if (!cpp_else) {

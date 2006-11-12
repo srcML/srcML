@@ -88,8 +88,10 @@ void output_help(const char* name) {
 #ifdef LIBXML_ENABLED
 	       << "  " << TEXTENCODING_FLAG_SHORT << ", " << setw(COL) <<  TEXTENCODING_FLAG_FULL  
 	       << "set the output source encoding to ENC (default:  " << DEFAULT_TEXT_ENCODING << ") \n"
+       /*
  	       << "  " << SKIP_ENCODING_FLAG_SHORT        << ", " << setw(COL) <<  SKIP_ENCODING_FLAG
 	       << "skip any text encoding transformation" << "\n"
+       */
 	       << '\n'
 #endif
 	       << "  " << UNIT_FLAG_SHORT       << ", " << setw(COL) << UNIT_FLAG_FULL  
@@ -261,13 +263,13 @@ int main(int argc, char* argv[]) {
       options |= OPTION_NESTED;
       if (position == original_position) ++curarg;
     }
-
+    /*
     // skip encoding mode
     else if (compare_flags(argv[curarg], SKIP_ENCODING_FLAG, SKIP_ENCODING_FLAG_SHORT, position)) {
       options |= OPTION_SKIP_ENCODING;
       if (position == original_position) ++curarg;
     }
-
+    */
     // expand flag
     else if (compare_flags(argv[curarg], EXPAND_FLAG, EXPAND_FLAG_SHORT, position)) {
       options |= OPTION_EXPAND;
@@ -454,13 +456,14 @@ int main(int argc, char* argv[]) {
     exit(STATUS_INVALID_OPTION_COMBINATION);
   }
 
+  /*
   // skip encoding and specifying encoding
   if (isoption(options, OPTION_SKIP_ENCODING) && isoption(options, OPTION_TEXT_ENCODING)) {
 
     std::cerr << NAME << ": Options for skipping encoding and specifying source encoding are incompatible.\n";
     exit(STATUS_INVALID_OPTION_COMBINATION);
   }
-
+  */
   // verify that the output file is not the same as the input file
   struct stat instat;
   stat(filename, &instat);
