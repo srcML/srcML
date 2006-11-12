@@ -20,6 +20,8 @@ DOC_ZIP=${BASE}-doc.zip
 
 EXE_TAR_GZ=${BASE}-linux.tar.gz
 
+EXE_STATIC_TAR_GZ=${BASE}-linux-static.tar.gz
+
 WIN_ZIP=${BASE}-windows.zip
 
 # directories
@@ -54,7 +56,7 @@ EXP_DOC_FILES= ${DOC_FILES} ${DOC_DIR}/README ${DOC_DIR}/NEWS ${DOC_DIR}/CHANGES
 #EXP_DOC_FILES= ${DOC_FILES} ${DOC_DIR}/LICENSE.pdf ${DOC_DIR}/README ${DOC_DIR}/NEWS ${DOC_DIR}/CHANGES
 
 # all generated files
-GEN_FILES=${SRC_TAR_GZ} ${DOC_TAR_GZ} ${EXE_TAR_GZ} ${SRC_ZIP} ${DOC_ZIP}
+GEN_FILES=${SRC_TAR_GZ} ${DOC_TAR_GZ} ${EXE_TAR_GZ} ${EXE_STATIC_TAR_GZ} ${SRC_ZIP} ${DOC_ZIP}
 
 # generate files
 all : ${GEN_FILES}
@@ -133,6 +135,17 @@ bin : ${EXE_TAR_GZ}
 
 ${EXE_TAR_GZ} : export
 	cd ${SRC_DIR}; make
+	mkdir -p ${BIN_DIR}
+	cp ${SRC_DIR_BASE}/bin/src2srcml ${BIN_DIR}/.
+	cp ${SRC_DIR_BASE}/bin/srcml2src ${BIN_DIR}/.
+	${SRC2SRCML_PATH} --version
+	${SRCML2SRC_PATH} --version
+	rm -f $@
+	tar czf $@ ${BIN_DIR}
+	gunzip --test $@
+
+${EXE_STATIC_TAR_GZ} : export
+	cd ${SRC_DIR}; mkdir ../lib; make STATIC=true
 	mkdir -p ${BIN_DIR}
 	cp ${SRC_DIR_BASE}/bin/src2srcml ${BIN_DIR}/.
 	cp ${SRC_DIR_BASE}/bin/srcml2src ${BIN_DIR}/.
