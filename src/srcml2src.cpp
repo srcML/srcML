@@ -78,13 +78,6 @@ void output_help(const char* name) {
 	       << "  " << VERSION_FLAG_SHORT    << ", " << setw(COL) << VERSION_FLAG    
 	       << "display version number and exit\n"
 	       << '\n'
-	       << "  " << XML_FLAG_SHORT        << ", " << setw(COL) << XML_FLAG        
-	       << "output in XML instead of text\n"
-#ifdef LIBXML_ENABLED
-	      << "  " << COMPRESSED_FLAG_SHORT  << ", " << setw(COL) <<  COMPRESSED_FLAG
-	      << "output XML in gzip format\n"
-#endif
-	       << '\n'
 #ifdef LIBXML_ENABLED
 	       << "  " << TEXTENCODING_FLAG_SHORT << ", " << setw(COL) <<  TEXTENCODING_FLAG_FULL  
 	       << "set the output source encoding to ENC (default:  " << DEFAULT_TEXT_ENCODING << ") \n"
@@ -98,6 +91,13 @@ void output_help(const char* name) {
 	       << "extract nested unit NUM from a compound srcML document\n"
 	       << "  " << EXPAND_FLAG_SHORT     << ", " << setw(COL) << EXPAND_FLAG     
 	       << "extract all files from a compound srcML document\n"
+	       << '\n'
+	       << "  " << XML_FLAG_SHORT        << ", " << setw(COL) << XML_FLAG        
+	       << "output in XML instead of text\n"
+#ifdef LIBXML_ENABLED
+	      << "  " << COMPRESSED_FLAG_SHORT  << ", " << setw(COL) <<  COMPRESSED_FLAG
+	      << "output XML in gzip format\n"
+#endif
 	       << '\n'
 	      << "  " << NO_XML_DECLARATION_FLAG  << "    " 
 	      << "do not output the default XML declaration in XML output\n"
