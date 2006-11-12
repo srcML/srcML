@@ -71,11 +71,42 @@
       </listitem>
     </varlistentry>
     <varlistentry>
+      <term>&EXPRESSION_MODE_FLAG_SHORT;, &EXPRESSION_MODE_FLAG;</term>
+      <listitem>
+	<para>
+	  Translates a single, standalone expression outside of any statement.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>&NESTED_FLAG_SHORT;, &NESTED_FLAG;</term>
+      <listitem>
+	<para>
+	  Stores all input source files into one compound srcML
+	  document.  Default with &FILELIST_FLAG; mode.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>&FILELIST_FLAG_SHORT;, &FILELIST_FLAG;</term>
+      <listitem>
+	<para>
+	  Treats the input file as a list of source files.  Each file
+	  is separately translated and collectively stored into a
+	  single compound srcML document.  The list has a single
+	  filename on each line starting at the beginning of the line.
+	  Blank lines are ignored.  A line with the character '#' at
+	  the start of a line is regarded as a comment character and
+	  the line is ignored.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
       <term>&LANGUAGE_FLAG_SHORT;, &LANGUAGE_FLAG;=<replaceable class="parameter">language</replaceable></term>
       <listitem>
 	<para>
 	  The programming language of the source-code file.  Allowable
-	  values are C, C++, or Java.  The language affects parsing,
+	  values are C, C++, Java, or AspectJ.  The language affects parsing,
 	  the allowed markup, and what is considered a keyword.  
 	  The value is also stored as an attribute of
 	  the root element unit.
@@ -121,14 +152,6 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&SELF_VERSION_FLAG;</term>
-      <listitem>
-	<para>
-	  Sets the value of the version attribute on the root unit element to the src2srcml version.
-	</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
       <term>&TEXTENCODING_FLAG_SHORT;, &TEXTENCODING_FLAG;=<replaceable class="parameter">encoding</replaceable></term>
       <listitem>
 	<para>
@@ -142,7 +165,7 @@
       <term>&XMLNS_FLAG;=<replaceable class="parameter">URI</replaceable></term>
       <listitem>
 	<para>
-	  Sets the URI for the default namespace.  Default is xmlns=http://www.sdml.info/srcML/src.
+	  Sets the URI for the default namespace.  Default is xmlns="http://www.sdml.info/srcML/src".
 	</para>
       </listitem>
     </varlistentry>
@@ -150,8 +173,8 @@
       <term>&XMLNS_FLAG;:<replaceable class="parameter">PREFIX</replaceable>=<replaceable class="parameter">URI</replaceable></term>
       <listitem>
 	<para>
-	  Sets the URI for the namespace with the prefix PREFIX.  Defaults are xmlns:cpp=http://www.sdml.info/srcML/cpp,
-	  and xmlns:srcerr=http://www.sdml.info/srcML/srcerr.
+	  Sets the namespace prefix PREFIX for the namespace URI.  Defaults are xmlns:cpp="http://www.sdml.info/srcML/cpp",
+	  and "xmlns:srcerr=http://www.sdml.info/srcML/srcerr".
 	</para>
       </listitem>
     </varlistentry>
@@ -166,29 +189,6 @@
 	  version.  Possible encodings with the libxml2-enabled
 	  version can be obtained by using the command <command>iconv
 	  -l</command>.
-	</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>&NESTED_FLAG_SHORT;, &NESTED_FLAG;</term>
-      <listitem>
-	<para>
-	  Stores all input source files into one compound srcML
-	  document.  Default with &FILELIST_FLAG; mode.
-	</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>&FILELIST_FLAG_SHORT;, &FILELIST_FLAG;</term>
-      <listitem>
-	<para>
-	  Treats the input file as a list of source files.  Each file
-	  is separately translated and collectively stored into a
-	  single compound srcML document.  The list has a single
-	  filename on each line starting at the beginning of the line.
-	  Blank lines are ignored.  A line with the character '#' at
-	  the start of a line is regarded as a comment character and
-	  the line is ignored.
 	</para>
       </listitem>
     </varlistentry>

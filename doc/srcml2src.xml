@@ -129,6 +129,17 @@
       </listitem>
     </varlistentry>
     <varlistentry>
+      <term>&NAMESPACE_FLAG_SHORT;, &NAMESPACE_FLAG;=<replaceable class="parameter">uri</replaceable></term>
+      <listitem>
+	<para>
+	  Output the prefix of the namespace given by uri.  The name of
+	  the prefix is output with a newline character.  The default
+	  namespace is a blank line.  If the URI does not match a
+	  namespace declaration then no line is output.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
       <term>&NESTED_FLAG_SHORT;, &NESTED_FLAG;</term>
       <listitem>
 	<para>
