@@ -1,0 +1,281 @@
+NEWS
+
+Release of Nov-9-2006-RC1
+
+The major changes include many Java bug fixes, complete markup of struct definitions in typedefs, more control
+of namespaces, new index element, and new options for extensions, information and control.
+
+New options for src2srcml
+
+	* Namespace prefixes can be specified with the options
+	"--xmlns=URI" and "--xmlns:PREFIX=URI.  So instead of the default namespace prefixes (default
+	prefix for srcML and "cpp:" for preprocessing elements) you can define your own.
+
+	* Literal values can be marked with the option "--literal" or by specifying a prefix for the
+	namespace "http://www.sdml.info/srcML/literal".
+
+	* Operators can be marked using the option "--operator" or by specifying a prefix for the
+	namespace "http://www.sdml.info/srcML/operator".
+
+	* A mode specified by the option "--expression" allows for the markup of individual
+	expressions that are not contained in a statement.
+
+	* The default XML declaration is skipped with the option "--no-xml-declaration".
+
+	* Namespace declarations are skipped with the option "--no-namespace-decl".
+
+New options for srcml2src
+
+	* Namespaces (and their prefixes) can be extracted with the option "--prefix=URI".
+
+	* Metadata stored as attributes in the outer element "unit" can be extracted as a group with
+	the "--info" option.
+
+	* The option "--longinfo" produces the same information as the option "--info", but
+	additionally includes the number of nested elements in compound srcML.
+
+	* Option "--compress" allows compressed output of XML for srcml2src (as it does
+	for src2srcml)
+
+Option changes for src2srcml
+
+	* The names of the options "--cpp_textonly_else" and "--cpp_textonly_if0" have been changed
+	to "--cpp_text_else" and "--cpp_text_if0" for consistency.
+
+	* Attribute options, e.g., directory, filename, version, can now be specified on the outer unit of a
+	compound srcML document.
+
+	* Specifying a namespace prefix using "--xmlns" for "http://www.sdml.info/srcML/srcerr" automatically
+	turns on debugging equivalent to using the "--debug" option.
+
+Option changes for srcml2src
+
+	* Short flag for option "--extract-all" in srcml2src has been changed from -e to -a.  The short flag
+	-e is now used for the expression option
+
+Markup Changes
+
+	* New element "index" to mark pairs of brackets.
+
+	* Macro names and arguments now have markup.
+
+	* Structs/classes/unions in typedefs and anonymous structs/classes/unions are now marked.
+
+	* More consistent handling of structs in definitions.  Anonymous structs are treated as part of
+	the type of a declaration.
+
+	* The automatic declaration of the cpp namespace has been removed for languages other than C or C++.
+	It can be added by defining a prefix for the namespace http://www.sdml.info/srcML/cpp
+
+Fixes
+	* Fix encoding problems in strings.
+
+	* Missing markup of exception handling for Java.
+
+	* Incorrect markup of anonymous Java classes.
+
+	* Typedef ending error.
+
+	* Errors due to fully qualified class names.
+
+	* Access specifiers on classes are allowed, e.g., private class A {}.
+
+Signal Handling
+
+	* For compound srcML documents the first SIGINT signal finishes translating the current file and
+	then gracefully ends the srcML.  Additional SIGINT signals allow the default behavior.
+
+	* The verbose setting can be toggled with the signal SIGUSR1.
+
+Other Fixes
+
+	* Improved error message for out of range unit error in srcml2src.
+
+	* Check for non-unique namespace prefixes.
+
+	* New status 16 for prematurely terminated input lists.
+
+
+Release of Apr-12-2006
+
+The major change is the control of parsing and markup of preprocessing sections, e.g., #else ... #endif.
+src2srcml will now mark these sections by default.  Previously they were stored only as text due to
+difficulties in marking the multi-hierarchical view that these sections provide.  Not all of these sections
+are sucessfully parsed yet, and this change will uncover some previously missed bugs.  However, the change
+also fixes some previous bugs.
+
+The other major change is an encoding handling bug in the libxml2 version.
+
+CPP Markup Changes:
+
+	* The #else (#elif) of preprocessing sections now have markup.  Previously they were stored
+	only as text.
+
+	* New options, --cpp_markup_else and --cpp_textonly_else, allow control of how these
+	sections are parsed.  New default is to markup these sections (--cpp_markup_else).
+	Previous default was equivalent to --cpp_textonly_else.
+
+	* New options, --cpp_markup_if0 and --cpp_textonly_if0, allow control of how preprocessor
+	sections of the form #if 0 ... #endif are handled.  With the option --cpp_textonly_if0 these
+	sections are not parsed and no markup was inserted.  This is the default and always has been.
+	With the option --cpp_markup_if0 these sections are parsed and markup inserted.
+
+Other Major Changes:
+
+	* Fix of crashing problem due to encoding selection for libxml2 version.  Full range of
+	encodings (in libxml2 version) is now supported.
+
+	* Default (in all cases) is now ISO-8859-1 for input format.  Changes default
+	in libxml2 version only (previous default based on locale).
+
+Misc Changes:
+
+	* CLI now detects input and output files when they are the same file.
+
+	* CLI now detect incompatible options with encoding.
+
+	* srcml2src extraction of nested unit now also extract XML comments.
+
+	* srcml2src now copies non-standard attributes on nested units.
+
+	* src2srcml now has the XML encoding in the verbose output.
+
+	* src2srcml now includes the name of the file in the output of verbose mode (as in input list mode)
+	
+Other Fixes:
+
+	* Return code on --extract-all option in srcml2src now correct.
+
+	* Fix for missing newline before EOF on preprocessor line, e.g., file ends with #endif with no final
+	newline.
+
+	* Now allows literals as arguments in template instantiation.
+
+	* Change output of some errors in src2srcml to std::cerr.
+
+
+Release of Jan-30-2006-Beta
+
+This version of the srcML translator include numerous bug fixes, improved set of features
+using using libxml2, and many more options.  In addition, the documentation has been
+greatly improved with particular emphasis on the name/usage of options.
+
+Major changes:
+
+	* Support for compound srcML documents (i.e., many individual srcML documents
+	nested in one large srcML document) both for creation and extraction.  As an example,
+	the entire linux kernel can be translated (and extracted) to/from a single srcML
+	file.
+
+	* A compound srcML file can be specified using a file that contains a list of multiple
+	input files.
+
+New libxml2 features:
+
+	* Automatic conversion from source encoding to XML encoding for src2srcml,
+	and XML encoding to source encoding for srcml2src.  Both encodings can be
+	specified
+
+	* Compressed (gzip) output from src2srcml.  These compressed files are automatically
+	detected and used with srcml2src.
+
+Markup changes:
+
+	* Default xml encoding (libxml2 version) is now UTF-8 with default source encoding based on locale.
+	The non-libxml2 version still uses ISO-8859-1 for the default encoding with no automatic 
+	encoding conversion done.
+
+	* Form feeds are now stored using new empty element <formfeed/>.  Extraction
+	using srcml2src will convert this element back to a form feed character.
+
+	* New optional attribute "version" on unit element allows for differentiation between
+	individual units in compound srcML.
+
+	* The attribute "standalone" with a value of "yes" has been added to the XML declaration.
+
+Misc changes:
+
+	* New option for srcml2src to extract encoding.
+
+	* Reworking of options with more consistency between src2srcml and srcml2src.
+
+	* Improved verbose option.
+
+	* Removed append handling.  New options for specifying multiple input files make it unnecessary.
+
+	* More intelligent handling of unit attributes for units inside of compound nested documents.
+
+	* Return status codes for src2srcml and srcml2src.
+
+	* Manual pages are available.
+
+Build changes:
+
+	* Allow for libxml and non-libxml builds of src2srcml.  Currently, srcml2src is only available with a
+	libxml build.
+
+	* Remove special handling for ANTLR bug in 2.7.5.
+
+And (as always) bug fixes.
+
+
+
+Release of Aug-29-2005-Beta
+
+It has been a long time between releases.  Development continued during that 
+time especially with regards to robustness.  In spite of increased robustness,
+speed of translation remains over 11,000 LOC/second.
+
+Major New Features
+
+	* There is preliminary support for Java.  It is available using the 
+	options "--language Java" or "-l Java".  Most of the common statements
+	between Java and C++ work, the import and package statements work, and
+	classes work.  	More work needs to be done on testing on large Java
+	code bases.
+
+	* Old K&R C function parameter declarations are now handled.  This is 
+	only available in C mode under the options "--language C" and "-l C".
+
+	* srcml2src is now available in a Windows build.
+
+There have been some markup changes:
+
+	* A macro statement (a macro with a terminating semicolon) now does not 
+	include the semicolon
+
+	* Line comments no longer include the end-of-line character inside of 
+	the element
+
+	* Remove initial special newline whitespace after the start element of 
+	unit
+
+	* Language attribute on element unit is now always inserted
+
+	* The translator now outputs a default XML declaration.  This allows 
+	for proper encoding type to be given and clears up some problems with
+	special characters.  An alternate encoding can be specified
+	on the command line using the option "--encoding UTF-8 or "-e UTF-8".
+	If a blank encoding is specified using the option '--encoding ""' or 
+	'-i UTF-8' then no XML declaration is issued.
+
+The debug mode is now more properly integrated:
+
+	* New option for marking translation errors with proper namespace
+
+	* Changed names of error mode elements to "srcmlerr:parse" and 
+	"srcmlerr:mode" to better reflect different problems
+
+Translator interface has been improved:
+
+	* Options can now be specified in any order
+
+	* Unrecognized options are properly handled
+
+	* Single options (those without parameters) can be grouped 
+	
+Extended Mode
+
+	* Hidden extended mode for marking literals "--extended" or "-x"
+
+	* More options will follow

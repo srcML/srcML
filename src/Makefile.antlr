@@ -1,0 +1,37 @@
+##
+# General Makefile for antlr project
+#
+
+# Standard antlr project settings
+JAVA_HOME =/usr/lib/j2sdk1.3
+
+CXX=/usr/bin/g++
+
+JAVA_CC =/usr/bin/java
+
+ANTLR_VERSION =antlr
+
+# antlr directory
+ANTLR_HOME =/usr/share/$(ANTLR_VERSION)
+
+# antlr jar file
+ANTLR_TOOL =/usr/share/java/antlrall.jar
+
+# antlr c++ include files
+ANTLR_INC =-I/usr/include/$(ANTLR_VERSION)
+
+# antlr c++ library
+ANTLR_LIB =-L/usr/lib -lantlr
+
+# antlr command
+ANTLR = /usr/bin/cantlr
+#ANTLR =$(JAVA_CC) -classpath $(ANTLR_TOOL) antlr.Tool
+
+# compilation flags
+DEBUGFLAGS :=
+OPTFLAGS   :=
+STDFLAGS   := -W -Wall
+CXXFLAGS = $(DEBUGFLAGS) $(STDFLAGS) $(OPTFLAGS)
+
+# linking flags
+LDFLAGS  = $(ANTLR_LIB)
