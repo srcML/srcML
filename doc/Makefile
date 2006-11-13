@@ -22,11 +22,11 @@ srcml2src.1.gz : srcml2src.1
 
 src2srcml.html : src2srcml.1
 	man2html $< > $@.tmp
-	tail +3 $@.tmp > $@
+	tail -n +3 $@.tmp > $@
 
 srcml2src.html : srcml2src.1
 	man2html $< > $@.tmp
-	tail +3 $@.tmp > $@
+	tail -n +3 $@.tmp > $@
 
 OPTION_SRC= ../src/src2srcml.cpp ../src/srcml2src.cpp ../src/srcmlapps.h
 option.dtd : ${OPTION_SRC}
