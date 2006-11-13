@@ -1,6 +1,6 @@
 NEWS
 
-Release of Nov-9-2006-RC1
+Release of Nov-9-2006
 
 The major changes include many Java bug fixes, complete markup of struct definitions in typedefs, more control
 of namespaces, new index element, and new options for extensions, information and control.
