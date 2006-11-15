@@ -2456,7 +2456,7 @@ pure_lead_type_identifier {} :
 
         // anonymous union definition in a type
         { !inputState->guessing }?
-        (UNION LCURLY)=> UNION_definition |
+        (UNION LCURLY)=> union_definition |
 
         // enum use in a type
         (ENUM variable_identifier (variable_identifier | MULTOPS | INLINE))=> ENUM |
