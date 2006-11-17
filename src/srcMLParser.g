@@ -2196,8 +2196,7 @@ operator_multiplication :
 function_header[int type_count] {} : 
 
         // no return value functions:  casting operator method and main
-        { LA(1) == OPERATOR || LA(1) == MAIN || inLanguage(LANGUAGE_CXX) && isoperatorfunction == 1 }?
-            function_identifier[true] { setMode(MODE_FUNCTION_PARAMETER); } |
+        { isoperatorfunction == 1 }? function_identifier[true] { setMode(MODE_FUNCTION_PARAMETER); } |
 
         function_type[type_count]
 ;
@@ -2225,7 +2224,7 @@ process_parameter_list {} :
 function_header_check[int& type_count] {} : 
         (
             // no return value functions:  casting operator method and main
-            { LA(1) == OPERATOR || LA(1) == MAIN || inLanguage(LANGUAGE_CXX) && isoperatorfunction == 1 }? function_identifier[true] |
+            { isoperatorfunction == 1 }? function_identifier[true] |
 
            function_type_check[type_count]
         )
@@ -2255,10 +2254,17 @@ function_tail {} :
         )*
 ;
 
+/*
+Determine (as quickly as possible) whether we have a declaration.  In the majority of cases we can tell a declaration
+by the occurrence of two names in sequence.  For functions that do not have types (overloaded operators, main, etc.)
+we have to look further.
+
+As a side effect, we record the token right for faster checking of label (name followed by colon)
+*/
 declaration_check[int& token] { token = 0; } : 
 
         // no return value functions:  casting operator method and main
-        (OPERATOR (NAME)* | MAIN) paren_pair LCURLY |
+        (OPERATOR (NAME)* | MAIN) paren_pair record[isoperatorfunction, 1] LCURLY |
 
         { inLanguage(LANGUAGE_CXX) }? (NAME DCOLON)=> operator_function_name record[isoperatorfunction, 1] paren_pair LCURLY |
 
