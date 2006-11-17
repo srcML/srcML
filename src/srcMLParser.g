@@ -1468,6 +1468,10 @@ class_default_access_action[int access_token] :
                     startNoSkipElement(access_token);
                     setMode(MODE_ACCESS_REGION);
                 }
+
+            /* Have to setup an empty section for anonymouse structs, not sure why */
+            } else if (inLanguage(LANGUAGE_C)) {
+                section_entry_action_first();
             }
         }
 ;

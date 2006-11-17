@@ -1,5 +1,9 @@
 CHANGES
 
+Trunk
+
+	Fix anonymous struct/union with declaration in C mode.
+
 Nov-09-2006-Beta
 
 	Use metadata extraction names for info.
