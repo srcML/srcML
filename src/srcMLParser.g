@@ -1809,9 +1809,10 @@ statement_part { int type_count; } :
         { inLanguage(LANGUAGE_CXX) && inMode(MODE_FUNCTION_TAIL) }?
              function_specifier |
 
-        // finds type count for next case.  Should always fail, but fill type_count with the correct value
+        // K&R function parameters
         { inLanguage(LANGUAGE_C_FAMILY) && inMode(MODE_FUNCTION_TAIL) }?
         (
+            // finds type count for next case.  Should always fail, but fill type_count with the correct value
             (function_type_check[type_count] EOL)=>
             (~ (EOL | LINECOMMENT | BLOCKCOMMENT | BLOCKCOMMENTEOL | EOL_BACKSLASH | COMMA)) |
 
