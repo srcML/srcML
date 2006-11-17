@@ -380,6 +380,8 @@ public:
 
 friend class LocalMode;
 
+int isoperatorfunction;
+
 ~srcMLParser() {}
 
 srcMLParser(antlr::TokenStream& lexer, int lang = LANGUAGE_CXX, int options = 0);
@@ -563,7 +565,7 @@ statement_cfg {} :
   Important to keep semantic checks, e.g., (constructor)=>, in place.  Most of these rules
   can start with a name which leaves it ambiguous which to choose.
 */
-statements_non_cfg { int type_count = 0; int token = 0; int secondtoken = 0; } :
+statements_non_cfg { int type_count = 0; int token = 0; int secondtoken = 0; isoperatorfunction = 0; } :
 
         // class forms for class declarations/definitions as opposed to part of a declaration types
         (class_struct_union_check[token /* token after header */])=> class_struct_union[token] |
@@ -2194,9 +2196,8 @@ operator_multiplication :
 function_header[int type_count] {} : 
 
         // no return value functions:  casting operator method and main
-        { LA(1) == OPERATOR || LA(1) == MAIN }? function_identifier[true] { setMode(MODE_FUNCTION_PARAMETER); } |
-
-//      { inLanguage(LANGUAGE_CXX) }? ((NAME DCOLON)* OPERATOR)=> function_identifier[true] |
+        { LA(1) == OPERATOR || LA(1) == MAIN || inLanguage(LANGUAGE_CXX) && isoperatorfunction == 1 }?
+            function_identifier[true] { setMode(MODE_FUNCTION_PARAMETER); } |
 
         function_type[type_count]
 ;
@@ -2224,9 +2225,7 @@ process_parameter_list {} :
 function_header_check[int& type_count] {} : 
         (
             // no return value functions:  casting operator method and main
-            { LA(1) == OPERATOR || LA(1) == MAIN }? function_identifier[true] |
-
-//            { inLanguage(LANGUAGE_CXX) }? ((NAME DCOLON)* OPERATOR)=> function_identifier[true] |
+            { LA(1) == OPERATOR || LA(1) == MAIN || inLanguage(LANGUAGE_CXX) && isoperatorfunction == 1 }? function_identifier[true] |
 
            function_type_check[type_count]
         )
@@ -2259,11 +2258,18 @@ function_tail {} :
 declaration_check[int& token] { token = 0; } : 
 
         // no return value functions:  casting operator method and main
-        { LA(1) == OPERATOR || LA(1) == MAIN }? function_identifier[true] |
+        (OPERATOR (NAME)* | MAIN) paren_pair LCURLY |
 
-//        { inLanguage(LANGUAGE_CXX) }? ((NAME DCOLON)* OPERATOR)=> function_identifier[true] |
+        { inLanguage(LANGUAGE_CXX) }? (NAME DCOLON)=> operator_function_name record[isoperatorfunction, 1] paren_pair LCURLY |
 
         (options { greedy = true; } : (VIRTUAL | INLINE))* lead_type_identifier declaration_check_end[token]
+;
+
+record[int& variable, int value] { variable = value; } :
+;
+
+operator_function_name :
+        NAME DCOLON (NAME DCOLON)* overloaded_operator_grammar
 ;
 
 declaration_check_end[int& token] { token = LA(1); } : 
