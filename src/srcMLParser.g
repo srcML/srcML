@@ -171,6 +171,7 @@ srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options
     parseoptions = parser_options;
 
     if (parseoptions & OPTION_EXPRESSION)
+        // start with expectation of an expression
         startNewMode(MODE_TOP | MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
     else
        // start with a single mode that allows statements to be nested
@@ -689,14 +690,6 @@ call_check_paren_pair[int& argumenttoken] {} :
         )* 
 
         RPAREN
-;
-
-/*
-  Match next token always, then fail.  Due to one token lookahead, this will always fail (unless you
-  are at one token from the end-of-file)
-*/
-match_next_then_fail {} :
-        . CLASS
 ;
 
 /*
