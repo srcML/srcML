@@ -31,6 +31,8 @@
 #include "State.h"
 #include "Stack.h"
 
+const int MAXSIZE = 500;
+
 template <class Base>
 class StateStack {
  public:
@@ -55,6 +57,9 @@ class StateStack {
   }
 
   void startNewMode(State::MODE_TYPE m) {
+
+    if (st.size() > MAXSIZE)
+      throw Segmentation_Fault();
 
     // prepare for the new stack
     st.push(Base(m, !empty() ? getTransparentMode() : 0));
@@ -248,7 +253,7 @@ class StateStack {
 
  private:
   TokenParser* parser;
-  SimpleStack<Base, 500> st;
+  SimpleStack<Base, MAXSIZE> st;
 
   //  std::stack<Base*, std::list<Base*> > st;
 };
