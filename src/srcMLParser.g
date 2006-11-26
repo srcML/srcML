@@ -2935,7 +2935,7 @@ constructor_check[int& token] { antlr::RefToken s[2]; } :
 ;
 
 constructor_check_lparen[antlr::RefToken s[]] {} :
-        { s[0] != 0 && s[1] != 0 && s[0]->getText() == s[1]->getText() }? parameter_list | RCURLY
+        { s[0] != 0 && s[1] != 0 && s[0]->getText() == s[1]->getText() }? paren_pair | RCURLY
 ;
 
 // constructor definition
