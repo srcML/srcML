@@ -2924,10 +2924,10 @@ constructor_check[int& token] { antlr::RefToken s[2]; } :
         (
         
         { inTransparentMode(MODE_ACCESS_REGION) && inLanguage(LANGUAGE_CXX) }?
-        constructor_name parameter_list check_end[token] |
+        constructor_name paren_pair check_end[token] |
 
         { inLanguage(LANGUAGE_JAVA) }?
-        constructor_name parameter_list LCURLY |
+        constructor_name paren_pair LCURLY |
 
         constructor_name_external_check[s] constructor_check_lparen[s] check_end[token]
 
