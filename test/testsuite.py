@@ -27,6 +27,9 @@ srcmlutility = os.environ.get("SRCML2SRC")
 if srcmlutility == "":
 	srcmlutility = "../bin/srcml2src"
 
+# srcExpr translator
+srcexprtranslator = '/home/collard/srcML/trunk/srcexpr/src/srcexpr'
+
 # extracts a particular unit from a srcML file
 def safe_communicate(command, inp):
 
@@ -104,6 +107,18 @@ def src2srcML(text_file, encoding, language, directory, filename, prefixlist):
 
 	return safe_communicate(command, text_file)
 
+# additional processing stages
+def srcML2srcMLStages(srcmlfile, otherxmlns):
+
+	newfile = srcmlfile
+	for a in otherxmlns:
+		url = a.split('=')[1]
+		if url == 'http://www.sdml.info/srcExpr':
+			command = [srcexprtranslator]
+			newfile = safe_communicate(command, newfile)
+		
+	return newfile
+
 #
 def getsrcmlattribute(xml_file, command):
 
@@ -155,7 +170,21 @@ def getfullxmlns(xml_file):
 # xmlns attribute
 def defaultxmlns(l):
 
-	return l
+	newl = []
+	for a in l:
+		url = a.split('=')[1]
+		if url == 'http://www.sdml.info/srcML/src' or url == 'http://www.sdml.info/srcML/cpp' or url == 'http://www.sdml.info/srcML/srcerr' or url == 'http://www.sdml.info/srcML/literal' or url == 'http://www.sdml.info/srcML/operator':
+			newl.append(a)
+	return newl
+
+def nondefaultxmlns(l):
+
+	newl = []
+	for a in l:
+		url = a.split('=')[1]
+		if not(url == 'http://www.sdml.info/srcML/src' or url == 'http://www.sdml.info/srcML/cpp' or url == 'http://www.sdml.info/srcML/srcerr' or url == 'http://www.sdml.info/srcML/literal' or url == 'http://www.sdml.info/srcML/operator'):
+			newl.append(a)
+	return newl
 
 # version of src2srcml
 def src2srcmlversion():
@@ -322,7 +351,11 @@ try:
 						unittext = srcml2src(unitxml, encoding)
 
 						# convert the text to srcML
-						unitsrcml = src2srcML(unittext, encoding, language, directory, getfilename(unitxml), defaultxmlns(getfullxmlns(unitxml)))
+						unitsrcmlraw = src2srcML(unittext, encoding, language, directory, getfilename(unitxml), defaultxmlns(getfullxmlns(unitxml)))
+
+						# additional, later stage processing
+						unitsrcml = srcML2srcMLStages(unitsrcmlraw, nondefaultxmlns(getfullxmlns(unitxml)))
+						
 						# find the difference
 						result = xmldiff(unitxml, unitsrcml)
 						if count == MAX_COUNT:
