@@ -58,7 +58,8 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
     throw srcEncodingException();
   
 #ifdef LIBXML_ENABLED
-  // if the source encoding is to UTF-8, skip any encoding
+  // source must be converted to UTF-8 (since libxml stores text in UTF-8)
+  // if the source encoding is already in UTF-8, skip any encoding
   if (strcmp(handler->name, "UTF-8") == 0)
     op |= OPTION_SKIP_ENCODING;
 #endif
