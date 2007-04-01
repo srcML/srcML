@@ -242,6 +242,9 @@ tokens {
     // operators
     SOPERATOR;
 
+    // type modifiers
+    SMODIFIER;
+
     // internal statement elements used in multiple statements
     SNAME;
     SONAME;

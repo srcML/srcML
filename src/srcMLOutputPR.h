@@ -78,5 +78,5 @@ srcMLOutput::PROCESS_PTR srcMLOutput::process_table[] = {
   &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken,
   &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken,
   &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken,
-  &srcMLOutput::processToken, &srcMLOutput::processToken,
+  &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken
 };

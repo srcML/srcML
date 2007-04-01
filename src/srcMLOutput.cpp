@@ -506,6 +506,9 @@ void srcMLOutput::fillElementNames() {
   // operators
   ElementNames[SOPERATOR] = "";
 
+  // type modifier
+  ElementNames[SMODIFIER] = "";
+
   // sub-statement elements
   ElementNames[SNAME] = "name";
   ElementNames[SONAME] = "";
