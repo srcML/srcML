@@ -45,6 +45,8 @@ const char* LITERAL_FLAG = "--literal";
 
 const char* OPERATOR_FLAG = "--operator";
 
+const char* MODIFIER_FLAG = "--modifier";
+
 const char* INTERACTIVE_FLAG = "--interactive";
 const char* INTERACTIVE_FLAG_SHORT = "-c";
 
@@ -239,6 +241,7 @@ std::string ns_prefix_cpp="cpp";
 std::string ns_prefix_err="srcerr";
 std::string ns_prefix_literal="lit";
 std::string ns_prefix_operator="op";
+std::string ns_prefix_modifier="type";
 
 typedef std::map<std::string, std::string> URI_TYPE;
 
@@ -364,6 +367,9 @@ int main(int argc, char* argv[]) {
 
   if (uri.count(SRCML_EXT_OPERATOR_NS_URI) == 0)
       uri[SRCML_EXT_OPERATOR_NS_URI] = ns_prefix_operator;
+
+  if (uri.count(SRCML_EXT_MODIFIER_NS_URI) == 0)
+      uri[SRCML_EXT_MODIFIER_NS_URI] = ns_prefix_modifier;
 
   // make sure we have no duplicate prefixes
   for (URI_TYPE::iterator po = uri.begin(); po != uri.end(); ++po) {
@@ -806,6 +812,11 @@ int process_args(int argc, char* argv[]) {
 
 	// specifying the operator prefix automatically turns on operator markup
 	options |= OPTION_OPERATOR;
+
+      } else if (ns_uri == SRCML_EXT_MODIFIER_NS_URI) {
+
+	// specifying the operator prefix automatically turns on type modifier markup
+	options |= OPTION_MODIFIER;
 
       } else {
 	std::cerr << NAME << ": invalid namespace \"" << ns_uri << "\"" << '\n' << '\n'

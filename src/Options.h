@@ -129,6 +129,9 @@ enum Options {
 
   // markup operators
   OPTION_OPERATOR     = 0x04000000,
+
+  // markup type modifiers
+  OPTION_MODIFIER     = 0x08000000,
 };
 
 #endif

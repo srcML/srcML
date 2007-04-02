@@ -33,5 +33,6 @@ static const char* SRCML_ERR_NS_URI = "http://www.sdml.info/srcML/srcerr";
 // srcML extension namespace URI's
 static const char* SRCML_EXT_LITERAL_NS_URI = "http://www.sdml.info/srcML/literal";
 static const char* SRCML_EXT_OPERATOR_NS_URI = "http://www.sdml.info/srcML/operator";
+static const char* SRCML_EXT_MODIFIER_NS_URI = "http://www.sdml.info/srcML/modifier";
 
 #endif

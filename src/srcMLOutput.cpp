@@ -100,6 +100,11 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
     ElementNames[SOPERATOR] = "operator";
   }
 
+  if (isoption(OPTION_MODIFIER)) {
+    ElementPrefix[SMODIFIER] = (char*) uri[SRCML_EXT_MODIFIER_NS_URI].c_str();
+    ElementNames[SMODIFIER] = "modifier";
+  }
+
   // assign for special processing
   //  process_table[SUNIT] = &srcMLOutput::processUnit;
   process_table[BLOCKCOMMENT] = &srcMLOutput::processBlockComment;
