@@ -315,6 +315,15 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
       }
       if (isoption(OPTION_OPERATOR))
 	xmlTextWriterWriteAttribute(xout, BAD_CAST opr_prefix.c_str(), BAD_CAST SRCML_EXT_OPERATOR_NS_URI);
+
+      // optional modifier xml namespace
+      std::string mod_prefix = "xmlns";
+      if (uri[SRCML_EXT_MODIFIER_NS_URI][0] != '\0') {
+	mod_prefix += ":";
+	mod_prefix += uri[SRCML_EXT_MODIFIER_NS_URI];
+      }
+      if (isoption(OPTION_MODIFIER))
+	xmlTextWriterWriteAttribute(xout, BAD_CAST mod_prefix.c_str(), BAD_CAST SRCML_EXT_MODIFIER_NS_URI);
     }
 
     // language attribute
