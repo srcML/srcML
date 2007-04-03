@@ -578,6 +578,12 @@ int process_args(int argc, char* argv[]) {
       if (position == original_position) ++curarg;
     }
 
+    // modifier mode
+    else if (compare_flags(argv[curarg], MODIFIER_FLAG, "", position)) {
+      options |= OPTION_MODIFIER;
+      if (position == original_position) ++curarg;
+    }
+
     // interactive mode
     else if (compare_flags(argv[curarg], INTERACTIVE_FLAG, INTERACTIVE_FLAG_SHORT, position)) {
       options |= OPTION_INTERACTIVE;

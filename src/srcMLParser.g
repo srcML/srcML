@@ -2505,6 +2505,11 @@ type_identifier {} :
 ;
 
 non_lead_type_identifier { LocalMode lm; } :
+        {
+            startNewMode(MODE_LOCAL);
+
+            startElement(SMODIFIER);
+        }
         MULTOPS |
 
         { inLanguage(LANGUAGE_JAVA) }? (LBRACKET RBRACKET)=> 
