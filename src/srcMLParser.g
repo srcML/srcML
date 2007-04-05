@@ -3900,7 +3900,16 @@ parameter_type_count[int type_count] { LocalMode lm; } :
         }
 
         // sometimes there is no parameter name.  if so, we need to eat it
-        ( options { greedy = true; } : MULTOPS | LBRACKET RBRACKET)*
+        ( options { greedy = true; } : multops | LBRACKET RBRACKET)*
+;
+
+multops { LocalMode lm; } :
+        {
+            startNewMode(MODE_LOCAL);
+
+            startElement(SMODIFIER);
+        }
+        MULTOPS
 ;
 
 /*
