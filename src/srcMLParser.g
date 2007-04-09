@@ -1857,6 +1857,10 @@ statement_part { int type_count; } :
         { inMode(MODE_CALL | MODE_LIST) }?
              call |
 
+        // special case for type modifiers
+        { (LT(1)->getText() == "*" || LT(1)->getText() == "&amp;") && inMode(MODE_VARIABLE_NAME | MODE_INIT) }?
+             multops |
+
         // start of argument for return or throw statement
         { inMode(MODE_VARIABLE_NAME | MODE_INIT) }?
              variable_declaration_nameinit |
