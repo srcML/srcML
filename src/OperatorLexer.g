@@ -92,10 +92,11 @@ OPERATORS :
         "&&" { $setText("&amp;&amp;"); } |
         "&=" { $setText("&amp;="); } |
         '&'  { $setText("&amp;"); $setType(MULTOPS); } |
-        "++"  |
+        "+=" |
         '+'  |
-        "--"  |
+        "--" |
         '-'  |
+        "-=" |
         "->" { $setText("-&gt;"); } |
         '/'  |
 
@@ -118,5 +119,6 @@ OPERATORS :
         '^'  |
 
         "||" |
+        "|=" |
         '|'
 ;

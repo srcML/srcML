@@ -3601,10 +3601,10 @@ expression_part[bool checkmacro = false] { guessing_end();
         int token = 0; int type_count = 0; int postnametoken = 0; int argumenttoken = 0; int postcalltoken = 0; } :
 
         { inLanguage(LANGUAGE_JAVA) }?
-        (NEW function_identifier[true] paren_pair LCURLY)=> NEW anonymous_class_definition |
+        (NEW function_identifier[true] paren_pair LCURLY)=> newop anonymous_class_definition |
 
         // general math operators
-        general_operators | multi_operator | /* NEW |*/ DELETE | PERIOD |
+        general_operators | multi_operator | newop | deleteop | /* PERIOD | */
 
         // call
         // distinguish between a call and a macro
@@ -3910,6 +3910,24 @@ multops { LocalMode lm; } :
             startElement(SMODIFIER);
         }
         MULTOPS
+;
+
+newop { LocalMode lm; } :
+        {
+            startNewMode(MODE_LOCAL);
+
+            startElement(SMODIFIER);
+        }
+        NEW
+;
+
+deleteop { LocalMode lm; } :
+        {
+            startNewMode(MODE_LOCAL);
+
+            startElement(SMODIFIER);
+        }
+        DELETE
 ;
 
 /*
