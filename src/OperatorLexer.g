@@ -98,11 +98,14 @@ OPERATORS :
         '-'  |
         "-=" |
         "->" { $setText("-&gt;"); } |
+        "/=" |
         '/'  |
 
         { inLanguage(LANGUAGE_JAVA) }?
         ("<<<")=>
         "<<<" { $setText("&lt;&lt;&lt;"); } |
+        ("<<=")=>
+        "<<=" { $setText("&lt;&lt;="); } |
         "<<" { $setText("&lt;&lt;"); } |
         "<=" { $setText("&lt;="); } |
         '<'  { $setText("&lt;"); $setType(TEMPOPS); } | 
@@ -116,6 +119,7 @@ OPERATORS :
         '?'  |
 
         '\\' |
+        "^="  |
         '^'  |
 
         "||" |
