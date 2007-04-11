@@ -73,56 +73,63 @@ SPECIAL :
 
 ALLOPERATORS options { testLiterals = true; } : 
         '#' { if (justws) { $setType(PREPROC); onpreprocline = true; } } |
-        '*' | "*=" |
+        "*=" |  // immediate multiplication
+        '*' |   // multiplication/pointer
         ',' |
+        ".*" |  // member pointer selector
         '.' | 
         ':' | "::" |
         ';' |
         '('..')' |
         '[' | ']' |
         '{' | '}' |
-        '~' |
+        '~' |   // bitwise complement
         '`'
 ;
 
 OPERATORS : 
-        '!'  |
-        '$'  |
-        '%'  |
-        "&&" { $setText("&amp;&amp;"); } |
-        "&=" { $setText("&amp;="); } |
-        '&'  { $setText("&amp;"); $setType(MULTOPS); } |
-        "+=" |
-        '+'  |
-        "--" |
-        '-'  |
-        "-=" |
-        "->" { $setText("-&gt;"); } |
-        "/=" |
-        '/'  |
+        "!=" |    // not equal
+        '!'  |    // logical negation
+        '$'  |    // not an operator (why is it here?)
+        "%=" |    // immediate modulus
+        '%'  |    // modulus 
+        "&&" { $setText("&amp;&amp;"); } | // logical and
+        "&=" { $setText("&amp;="); } | // immediate
+        '&'  { $setText("&amp;"); $setType(MULTOPS); } |   // bitwise and / address of
+        "+=" |    // immediate addition
+        '+'  |    // addition (binary and unary)
+        "--" |    // decrement (pre and post)
+        '-'  |    // subtraction/unary minus
+        "-=" |    // immediate subtraction
+        ("->*")=> "->*" { $setText("-&gt;*"); } |   // member pointer selector
+        "->"  { $setText("-&gt;"); } |   // member access
+        "/=" |    // immediate division
+        '/'  |    // division
 
         { inLanguage(LANGUAGE_JAVA) }?
         ("<<<")=>
         "<<<" { $setText("&lt;&lt;&lt;"); } |
-        ("<<=")=>
-        "<<=" { $setText("&lt;&lt;="); } |
-        "<<" { $setText("&lt;&lt;"); } |
-        "<=" { $setText("&lt;="); } |
-        '<'  { $setText("&lt;"); $setType(TEMPOPS); } | 
 
-        "==" | '=' { $setType(EQUAL); } |
+        ("<<=")=> "<<=" { $setText("&lt;&lt;="); } |    // immediate left shift
+        "<<" { $setText("&lt;&lt;"); } |                // left shift
+        "<=" { $setText("&lt;="); } |                   // less than or equal to
+        '<'  { $setText("&lt;"); $setType(TEMPOPS); } | // less than
 
-        ">>" { $setText("&gt;&gt;"); } |
-        ">=" { $setText("&gt;="); } |
-        '>'  { $setText("&gt;"); $setType(TEMPOPE); } | 
+        "==" | // equals
+        '=' { $setType(EQUAL); } |   // assignment
 
-        '?'  |
+        (">>=")=> ">>=" { $setText("&gt;&gt;="); } |    // immediate right shift
+        ">>" { $setText("&gt;&gt;"); } |                // right shift
+        ">=" { $setText("&gt;="); } |                   // greater than or equal to
+        '>'  { $setText("&gt;"); $setType(TEMPOPE); } | // greater than
 
-        '\\' |
-        "^="  |
-        '^'  |
+        '?'  | // part of ternary
 
-        "||" |
-        "|=" |
-        '|'
+        '\\' | // 
+        "^=" | // immediate bitwise exclusive or
+        '^'  | // bitwise exclusive or
+
+        "||" | // logical or
+        "|=" | // immediate bitwise inclusive or
+        '|'    // bitwise inclusive or
 ;
