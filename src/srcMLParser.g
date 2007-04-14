@@ -2775,6 +2775,19 @@ identifier :
 ;
 
 /*
+  Basic single token names
+*/
+identifier_marked { LocalMode lm; } :
+        {
+            // local mode that is automatically ended by leaving this function
+            startNewMode(MODE_LOCAL);
+
+            startElement(SNAME);
+        }
+        identifier
+;
+
+/*
   preprocessor tokens that can also be used as identifiers
 */
 simple_name_cpp {} :
@@ -2997,34 +3010,47 @@ member_initialization_list {} :
   Detects a constructor definition name outside of a class.  It has to be in the form
   x::y where x and y are identical
 */
-constructor_name_check[antlr::RefToken s[]] { LocalMode lm; } :
+constructor_name_check[antlr::RefToken s[]] { LocalMode lm; bool iscomplex; } :
         {
             // local mode that is automatically ended by leaving this function
             startNewMode(MODE_LOCAL);
 
             startElement(SNAME);
         }
-        constructor_name_base[s]
+        constructor_name_base[s, iscomplex]
 ;
 
-constructor_name { LocalMode lm; antlr::RefToken s[2]; } :
+constructor_name { LocalMode lm; antlr::RefToken s[2]; bool iscomplex; TokenPosition tp = { 0, 0 }; } :
         {
             // local mode that is automatically ended by leaving this function
             startNewMode(MODE_LOCAL);
 
-            startElement(SNAME);
+            // outer name
+            startElement(SONAME);
+
+            // inner name that may be replaced by a NOP
+            startElement(SCNAME);
+
+            // record the token position so we can replace it if necessary
+            tp = getTokenPosition();
         }
-        constructor_name_base[s]
+        constructor_name_base[s, iscomplex]
+        {
+            // non-complex names need to be simplified
+            if (!iscomplex)
+                // set the token to NOP
+                setTokenPosition(tp, SNOP);
+        }
 ;
 
-constructor_name_base[antlr::RefToken s[]] { LocalMode lm; } :
+constructor_name_base[antlr::RefToken s[], bool& iscomplex] { LocalMode lm; iscomplex = false; } :
 
         identifier_stack[s] optional_template_argument_list
-        (DCOLON identifier_stack[s] optional_template_argument_list)*
+        (DCOLON { iscomplex = true; } identifier_stack[s] optional_template_argument_list)*
 ;
 
 identifier_stack[antlr::RefToken s[]] { s[1] = s[0]; s[0] = LT(1); } :
-        identifier
+        identifier_marked
 ;
 
 /*
