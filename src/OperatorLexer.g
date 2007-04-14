@@ -96,11 +96,12 @@ OPERATORS :
         "&&" { $setText("&amp;&amp;"); } | // logical and
         "&=" { $setText("&amp;="); } | // immediate
         '&'  { $setText("&amp;"); $setType(MULTOPS); } |   // bitwise and / address of
+        "++" |    // increment
         "+=" |    // immediate addition
         '+'  |    // addition (binary and unary)
         "--" |    // decrement (pre and post)
-        '-'  |    // subtraction/unary minus
         "-=" |    // immediate subtraction
+        '-'  |    // subtraction/unary minus
         ("->*")=> "->*" { $setText("-&gt;*"); } |   // member pointer selector
         "->"  { $setText("-&gt;"); } |   // member access
         "/=" |    // immediate division
