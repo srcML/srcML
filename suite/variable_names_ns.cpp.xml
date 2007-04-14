@@ -30,7 +30,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name><name>a</name>::<name>b</name>[<expr>0</expr>]</name></expr>;</expr_stmt>
+<expr_stmt><expr><name><name>a</name>::<name>b</name><index>[<expr>0</expr>]</index></name></expr>;</expr_stmt>
 </unit>
 
 </unit>

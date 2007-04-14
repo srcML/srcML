@@ -46,27 +46,27 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name><name>a</name>[<expr>0</expr>]</name></expr>;</expr_stmt>
+<expr_stmt><expr><name><name>a</name><index>[<expr>0</expr>]</index></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name><name>a_b</name>[<expr>0</expr>]</name></expr>;</expr_stmt>
+<expr_stmt><expr><name><name>a_b</name><index>[<expr>0</expr>]</index></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name><name>_a</name>[<expr>0</expr>]</name></expr>;</expr_stmt>
+<expr_stmt><expr><name><name>_a</name><index>[<expr>0</expr>]</index></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name><name>a</name>[<expr><name>b</name></expr>]</name></expr>;</expr_stmt>
+<expr_stmt><expr><name><name>a</name><index>[<expr><name>b</name></expr>]</index></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name><name>a</name>[<expr>0</expr>][<expr>1</expr>]</name></expr>;</expr_stmt>
+<expr_stmt><expr><name><name>a</name><index>[<expr>0</expr>]</index><index>[<expr>1</expr>]</index></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name><name>a</name>[<expr>0</expr>][<expr>1</expr>][<expr>2</expr>]</name></expr>;</expr_stmt>
+<expr_stmt><expr><name><name>a</name><index>[<expr>0</expr>]</index><index>[<expr>1</expr>]</index><index>[<expr>2</expr>]</index></name></expr>;</expr_stmt>
 </unit>
 
 </unit>
