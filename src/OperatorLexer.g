@@ -57,6 +57,8 @@ COLON = ":";
 // define value in master grammar so that it depends on language
 DCOLON;
 
+MEMBPOINT; //  = ".*";
+
 PERIOD = ".";
 MULTOPS = "*";
 MULTIMM = "*=";
@@ -76,8 +78,7 @@ ALLOPERATORS options { testLiterals = true; } :
         "*=" |  // immediate multiplication
         '*' |   // multiplication/pointer
         ',' |
-        ".*" |  // member pointer selector
-        '.' | 
+//        '.' | 
         ':' | "::" |
         ';' |
         '('..')' |
@@ -88,6 +89,8 @@ ALLOPERATORS options { testLiterals = true; } :
 ;
 
 OPERATORS : 
+        (".*")=>
+        ".*" | 
         "!=" |    // not equal
         '!'  |    // logical negation
         '$'  |    // not an operator (why is it here?)

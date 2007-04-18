@@ -3630,7 +3630,7 @@ expression_part[bool checkmacro = false] { guessing_end();
         (NEW function_identifier[true] paren_pair LCURLY)=> newop anonymous_class_definition |
 
         // general math operators
-        general_operators | multi_operator | newop | deleteop | /* PERIOD | */
+        general_operators | multi_operator | newop | deleteop |
 
         // call
         // distinguish between a call and a macro
