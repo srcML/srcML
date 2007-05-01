@@ -63,6 +63,8 @@ PERIOD = ".";
 MULTOPS = "*";
 MULTIMM = "*=";
 
+DOTDOTDOT = "...";
+
 EOL_PLACEHOLD;
 }
 
@@ -89,6 +91,8 @@ ALLOPERATORS options { testLiterals = true; } :
 ;
 
 OPERATORS : 
+        ("...")=>
+        "..."  { $setType(DOTDOTDOT); } |   // bitwise and / address of
         (".*")=>
         ".*" | 
         "!=" |    // not equal

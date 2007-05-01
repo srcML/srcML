@@ -3878,7 +3878,8 @@ parameter [bool single = false] { int type_count = 0; } :
             startElement(SPARAMETER);
         }
         (
-        PERIOD PERIOD ( options { greedy = true;} : PERIOD)* |
+        DOTDOTDOT |
+//        PERIOD PERIOD ( options { greedy = true;} : PERIOD)* |
         (function_pointer_declaration_check[type_count])=>
             function_pointer_declaration[type_count] |
         {
