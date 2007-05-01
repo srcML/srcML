@@ -48,8 +48,13 @@ catch[...] {
 }
 
 // Multiple-line comments
-BLOCKCOMMENT 
-    :   "/*" (options { greedy = false; } : COMMENT_CHAR_NEWLINE)* "*/"      { justws = false; }
+BLOCKCOMMENT :
+        ("/*")=> "/*" (options { greedy = false; } : COMMENT_CHAR_NEWLINE)* "*/"      { justws = false; } |
+
+        // operators that being with a slash are detected here to disambiguate them from block comments
+        ("/=")=>
+        "/=" { $setType(OPERATORS); } |    // immediate division
+        '/'  { $setType(OPERATORS); }      // division
 //    :   "/*" (options { greedy = false; } : ~('\n' | '\r') | (EOL { $setType(BLOCKCOMMENTEOL); }) )* "*/"
 ;
 exception

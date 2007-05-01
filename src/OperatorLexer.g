@@ -107,8 +107,10 @@ OPERATORS :
         '-'  |    // subtraction/unary minus
         ("->*")=> "->*" { $setText("-&gt;*"); } |   // member pointer selector
         "->"  { $setText("-&gt;"); } |   // member access
-        "/=" |    // immediate division
-        '/'  |    // division
+
+        // operators that begin with a slash are found in OperatorLexer.g under BLOCKCOMMENT
+//        "/=" |    // immediate division
+//        '/'  |    // division
 
         { inLanguage(LANGUAGE_JAVA) }?
         ("<<<")=>
