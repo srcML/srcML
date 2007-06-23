@@ -6,7 +6,7 @@
 <expr_stmt><expr>new <class><super><name>ActionListener</name></super><argument_list>()</argument_list> <block>{
       <decl_stmt><decl><type><name>int</name></type> <name>i</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
 
-      <function><type>public <name>void</name></type> <name>a</name><parameter_list>()</parameter_list> <block>{
+      <function><type><specifier>public</specifier> <name>void</name></type> <name>a</name><parameter_list>()</parameter_list> <block>{
         <decl_stmt><decl><type><name>int</name></type> <name>a</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
       }</block></function>
 }</block></class></expr>;</expr_stmt>
@@ -16,7 +16,7 @@
 <comment type="line">// anonymous class as an argument </comment>
 <expr_stmt><expr><call><name>addActionListener</name><argument_list>(<argument><expr>new <class><super><name>ActionListener</name></super><argument_list>()</argument_list> <block>{
       <decl_stmt><decl><type><name>int</name></type> <name>i</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
-      <function><type>public <name>void</name></type> <name>a</name><parameter_list>()</parameter_list> <block>{
+      <function><type><specifier>public</specifier> <name>void</name></type> <name>a</name><parameter_list>()</parameter_list> <block>{
         <decl_stmt><decl><type><name>int</name></type> <name>a</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
       }</block></function>
     }</block></class></expr></argument>
@@ -27,7 +27,7 @@
 <comment type="line">// complex name on call with anonymous class as an argument </comment>
       <expr_stmt><expr><call><name><name>jbutton1</name>.<name>addActionListener</name></name><argument_list>(<argument><expr>new <class><super><name>ActionListener</name></super><argument_list>()</argument_list> <block>{
       <decl_stmt><decl><type><name>int</name></type> <name>i</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
-      <function><type>public <name>void</name></type> <name>a</name><parameter_list>()</parameter_list> <block>{
+      <function><type><specifier>public</specifier> <name>void</name></type> <name>a</name><parameter_list>()</parameter_list> <block>{
         <decl_stmt><decl><type><name>int</name></type> <name>a</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
       }</block></function>
     }</block></class></expr></argument>
@@ -38,7 +38,7 @@
 <comment type="line">// complex name on call with anonymous class with complex nameas an argument </comment>
 <expr_stmt><expr><call><name><name>jButton1</name>.<name>addActionListener</name></name><argument_list>(<argument><expr>new <class><super><name><name>java</name>.<name>awt</name>.<name>event</name>.<name>ActionListener</name></name></super><argument_list>()</argument_list> <block>{
       <decl_stmt><decl><type><name>int</name></type> <name>i</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
-      <function><type>public <name>void</name></type> <name>a</name><parameter_list>()</parameter_list> <block>{
+      <function><type><specifier>public</specifier> <name>void</name></type> <name>a</name><parameter_list>()</parameter_list> <block>{
         <decl_stmt><decl><type><name>int</name></type> <name>a</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
       }</block></function>
     }</block></class></expr></argument>
