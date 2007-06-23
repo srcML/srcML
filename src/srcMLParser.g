@@ -2488,7 +2488,7 @@ pure_lead_type_identifier {} :
 */
 lead_type_identifier {} :
 
-        { inLanguage(LANGUAGE_JAVA) }? access_specifier |
+        { inLanguage(LANGUAGE_JAVA) }? access_specifier_mark |
 
         inline_marked |
 
@@ -2941,7 +2941,7 @@ constructor[int token] {} :
 
 constructor_check[int& token] { antlr::RefToken s[2]; } :
 
-        (specifier_explicit | { inLanguage(LANGUAGE_JAVA) }? access_specifier)*
+        (specifier_explicit | { inLanguage(LANGUAGE_JAVA) }? access_specifier_mark)*
         (
         
         { inTransparentMode(MODE_ACCESS_REGION) && inLanguage(LANGUAGE_CXX) }?
