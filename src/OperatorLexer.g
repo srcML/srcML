@@ -57,13 +57,9 @@ COLON = ":";
 // define value in master grammar so that it depends on language
 DCOLON;
 
-//MEMBPOINT; //  = ".*";
-
 PERIOD = ".";
 MULTOPS = "*";
 MULTIMM = "*=";
-
-DOTDOTDOT = "...";
 
 EOL_PLACEHOLD;
 }
@@ -80,7 +76,8 @@ ALLOPERATORS options { testLiterals = true; } :
         "*=" |  // immediate multiplication
         '*' |   // multiplication/pointer
         ',' |
-//        '.' | 
+        ".*" |  // member pointer selector
+        '.' | 
         ':' | "::" |
         ';' |
         '('..')' |
@@ -91,10 +88,6 @@ ALLOPERATORS options { testLiterals = true; } :
 ;
 
 OPERATORS : 
-        ("...")=>
-        "..."  { $setType(DOTDOTDOT); } |   // bitwise and / address of
-        (".*")=>
-        ".*" | 
         "!=" |    // not equal
         '!'  |    // logical negation
         '$'  |    // not an operator (why is it here?)
@@ -111,10 +104,8 @@ OPERATORS :
         '-'  |    // subtraction/unary minus
         ("->*")=> "->*" { $setText("-&gt;*"); } |   // member pointer selector
         "->"  { $setText("-&gt;"); } |   // member access
-
-        // operators that begin with a slash are found in OperatorLexer.g under BLOCKCOMMENT
-//        "/=" |    // immediate division
-//        '/'  |    // division
+        "/=" |    // immediate division
+        '/'  |    // division
 
         { inLanguage(LANGUAGE_JAVA) }?
         ("<<<")=>

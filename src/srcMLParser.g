@@ -3630,7 +3630,7 @@ expression_part[bool checkmacro = false] { guessing_end();
         (NEW function_identifier[true] paren_pair LCURLY)=> newop anonymous_class_definition |
 
         // general math operators
-        general_operators | multi_operator | newop | deleteop |
+        general_operators | multi_operator | newop | deleteop | /* PERIOD | */
 
         // call
         // distinguish between a call and a macro
@@ -3878,8 +3878,7 @@ parameter [bool single = false] { int type_count = 0; } :
             startElement(SPARAMETER);
         }
         (
-        DOTDOTDOT |
-//        PERIOD PERIOD ( options { greedy = true;} : PERIOD)* |
+        PERIOD PERIOD ( options { greedy = true;} : PERIOD)* |
         (function_pointer_declaration_check[type_count])=>
             function_pointer_declaration[type_count] |
         {

@@ -83,11 +83,6 @@ NAME options { testLiterals = true; } :  { justws = false; }
         NAMECHARNOEL (DIGITS | NAMECHAR)*
 ;
 
-// make sure to match strange characters so that they don't cause errors
-//OTHER : 
-//        '\177'..'\377'
-//;
-
 EOL_BACKSLASH :
         '\\' EOL
 ;
