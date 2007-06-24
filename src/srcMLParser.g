@@ -1290,6 +1290,17 @@ final_specifier_mark { LocalMode lm; } :
         FINAL
 ;
 
+static_specifier_mark { LocalMode lm; } : 
+        {
+            // statement
+            startNewMode(MODE_LOCAL);
+
+            // start the function specifier
+            startElement(SFUNCTION_SPECIFIER);
+        }
+        STATIC
+;
+
 /*
 */
 class_definition :
@@ -2483,7 +2494,7 @@ pure_lead_type_identifier {} :
 ;
 
 java_specifier_mark {} :
-        access_specifier_mark | final_specifier_mark
+        access_specifier_mark | final_specifier_mark | static_specifier_mark
 ;
 
 /*
