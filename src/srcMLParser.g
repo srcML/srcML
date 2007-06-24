@@ -1367,15 +1367,15 @@ interface_definition :
 ;
 
 class_definition_header_java :
-            (access_specifier_mark)* (final_specifier_mark)* CLASS class_header
+            (java_specifier_mark)* CLASS class_header
 ;
 
 anonymous_class_definition_header_java :
-            (access_specifier_mark)* (final_specifier_mark)* class_header
+            (java_specifier_mark)* class_header
 ;
 
 interface_definition_header_java :
-            (access_specifier_mark)* (final_specifier_mark)* INTERFACE class_header
+            (java_specifier_mark)* INTERFACE class_header
 ;
 
 /*
@@ -2482,15 +2482,17 @@ pure_lead_type_identifier {} :
         enum_definition_whole
 ;
 
+java_specifier_mark {} :
+        access_specifier_mark | final_specifier_mark
+;
+
 /*
    type identifier
 
 */
 lead_type_identifier {} :
 
-        { inLanguage(LANGUAGE_JAVA) }? access_specifier_mark |
-
-        { inLanguage(LANGUAGE_JAVA) }? final_specifier_mark |
+        { inLanguage(LANGUAGE_JAVA) }? java_specifier_mark |
 
         inline_marked |
 
@@ -2963,7 +2965,7 @@ constructor[int token] {} :
 
 constructor_check[int& token] { antlr::RefToken s[2]; } :
 
-        (specifier_explicit | { inLanguage(LANGUAGE_JAVA) }? access_specifier_mark)*
+        (specifier_explicit | { inLanguage(LANGUAGE_JAVA) }? java_specifier_mark)*
         (
         
         { inTransparentMode(MODE_ACCESS_REGION) && inLanguage(LANGUAGE_CXX) }?
