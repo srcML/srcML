@@ -2937,6 +2937,9 @@ pure_virtual_specifier {} :
   Specifiers for functions, methods, and variables
 */
 standard_specifiers { LocalMode lm; } :
+        { inLanguage(LANGUAGE_JAVA) }? 
+            java_specifier_mark |
+
         {
             // local mode that is automatically ended by leaving this function
             startNewMode(MODE_LOCAL);
