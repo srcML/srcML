@@ -3012,7 +3012,7 @@ constructor_definition {} :
 // constructor definition
 constructor_header {} :
 
-        (specifier_explicit | { inLanguage(LANGUAGE_JAVA) }? access_specifier)*
+        (specifier_explicit | { inLanguage(LANGUAGE_JAVA) }? java_specifier_mark)*
 
         constructor_name
 
