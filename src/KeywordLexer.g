@@ -89,11 +89,11 @@ tokens {
     /*
 	AUTO = "auto";
     REGISTER = "register";
-    STATIC = "static";
     MUTABLE = "mutable";
 	CONST = "const";
     VOLATILE = "volatile";
     */
+    STATIC; // = "static";
 
     // Standard type keywords do not need to be identified
     /*
