@@ -2737,16 +2737,6 @@ simple_name_optional_template[bool marked] { LocalMode lm; } :
   Grammar for single token names
 */
 simple_name { LocalMode lm; } :
-/*
-        { LT(1)->getText() == "static" }?
-        {
-            // local mode that is automatically ended by leaving this function
-            startNewMode(MODE_LOCAL);
-
-            startElement(SFUNCTION_SPECIFIER);
-        }
-        simple_name_grammar |
-*/
         {
             // local mode that is automatically ended by leaving this function
             startNewMode(MODE_LOCAL);
@@ -2792,16 +2782,6 @@ identifier :
   Basic single token names
 */
 identifier_marked { LocalMode lm; } :
-/*
-        { LT(1)->getText() == "static" }?
-        {
-            // local mode that is automatically ended by leaving this function
-            startNewMode(MODE_LOCAL);
-
-            startElement(SFUNCTION_SPECIFIER);
-        }
-        identifier |
-*/
         {
             // local mode that is automatically ended by leaving this function
             startNewMode(MODE_LOCAL);
