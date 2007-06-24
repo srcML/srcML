@@ -29,7 +29,7 @@
 
 const char* VERSION = version();
 
-const char* COPYRIGHT = "Copyright (C) 2006 SDML";
+const char* COPYRIGHT = "Copyright (C) 2007 SDML";
 
 const char* EMAIL_ADDRESS = "srcmlbugs@sdml.info";
 
