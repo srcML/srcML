@@ -1,0 +1,6 @@
+- Do we want access to (currently unmarked) keywords?  E.g., class, if, while, etc.?
+
+Construct is marked, not the keyword.
+
+Should at least mark internally with tokens (or could generate at output stage, since always simple.
+
