@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="package">
+
+<unit>
+<class>class <name>A</name> <block>{}</block></class>
+</unit>
+
+<unit>
+<class>class <name>A</name> <super><extends>extends <name>B</name>, <name>C</name></extends></super> <block>{}</block></class>
+</unit>
+
+<unit>
+<class><specifier>public</specifier> class <name>A</name> <super><extends>extends <name>B</name>, <name>C</name></extends></super> <block>{}</block></class>
+</unit>
+
+<unit>
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>A</name> <super><extends>extends <name>B</name>, <name>C</name></extends></super> <block>{}</block></class>
+</unit>
+
+<unit>
+<class>class <name>A</name> <super><implements>implements <name>D</name>, <name>E</name></implements></super> <block>{}</block></class>
+</unit>
+
+<unit>
+<class><specifier>public</specifier> class <name>A</name> <super><implements>implements <name>D</name>, <name>E</name></implements></super> <block>{}</block></class>
+</unit>
+
+<unit>
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>A</name> <super><implements>implements <name>D</name>, <name>E</name></implements></super> <block>{}</block></class>
+</unit>
+
+<unit>
+<class>class <name>A</name> <super><extends>extends <name>B</name>, <name>C</name></extends> <implements>implements <name>D</name>, <name>E</name></implements></super> <block>{}</block></class>
+</unit>
+
+<unit>
+<class><specifier>public</specifier> class <name>A</name> <super><extends>extends <name>B</name>, <name>C</name></extends> <implements>implements <name>D</name>, <name>E</name></implements></super> <block>{}</block></class>
+</unit>
+
+<unit>
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>A</name> <super><extends>extends <name>B</name>, <name>C</name></extends> <implements>implements <name>D</name>, <name>E</name></implements></super> <block>{}</block></class>
+</unit>
+
+</unit>
