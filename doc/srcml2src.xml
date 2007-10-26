@@ -166,7 +166,8 @@
 <refsect1>
   <title>Metadata Options</title>
   <para>
-    This set of options allows access to the metadata stored in the srcML document.
+    This set of options allows access to the metadata stored in the srcML document.  Unless otherwise noted, the metadata is extracted
+    from the start root element or the XML declaration and does not require traversing the entired document.
   </para>
     <varlistentry>
       <term>&LANGUAGE_FLAG_SHORT;, &LANGUAGE_FLAG;</term>
@@ -233,7 +234,7 @@
 	<para>
 	  Output the number of nested units in a compound srcML file
 	  on standard output.  Result is 0 if the srcML file is not
-	  compound.
+	  compound.  Requires traversal of the entire document.
 	</para>
       </listitem>
     </varlistentry>
@@ -245,8 +246,6 @@
 	  of data, i.e., namespaces, encoding, language, directory, filename, and version,
 	  is on a separate line.  The form of the information is that same as that of the
 	  full flag option to src2srcml to form it, without the leading "--".
-	  This information is very fast to access and only requires examination
-	  of the start of the root element unit.
 	</para>
       </listitem>
     </varlistentry>
