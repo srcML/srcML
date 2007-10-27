@@ -167,7 +167,8 @@
   <title>Metadata Options</title>
   <para>
     This set of options allows access to the metadata stored in the srcML document.  Unless otherwise noted, the metadata is extracted
-    from the start root element or the XML declaration and does not require traversing the entired document.
+    from the root element unit or the XML declaration, which does not
+    require the traversal of the entire document.
   </para>
     <varlistentry>
       <term>&LANGUAGE_FLAG_SHORT;, &LANGUAGE_FLAG;</term>
