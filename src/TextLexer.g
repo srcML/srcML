@@ -76,7 +76,7 @@ ESC :
 ;
 
 CONSTANTS : { justws = false; }
-        DIGITS (".")? (DIGITS)?
+        DIGITS (".")? (DIGITS)? ('u' | 'U' | 'f' | 'F' | 'l' | 'L')?
 ;
 
 NAME options { testLiterals = true; } :  { justws = false; }
