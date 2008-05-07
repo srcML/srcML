@@ -194,7 +194,7 @@
       <term><option>&VERBOSE_FLAG_SHORT;, &VERBOSE_FLAG;</option></term>
       <listitem>
 	<para>
-	  Verbose output to standard error.  Especially useful with the &FILELIST_FLAG; option.  The signal SIGUSR1 can
+	  Verbose output to standard error.  Especially useful with the <option>&FILELIST_FLAG;</option> option.  The signal SIGUSR1 can
 	  be used to toggle this option.
 	</para>
       </listitem>
@@ -274,7 +274,7 @@
 	<para>
 	  Additional markup of literal values using the element literal with the prefix "lit" in the namespace "http://www.sdml.info/srcML/literal".
 	  Can also be specified by declaring a prefix for this namespace using the xmlns option, e.g.,
-	  &XMLNS_FLAG;:lit="http://www.sdml.info/srcML/literal"
+	  <option>&XMLNS_FLAG;:lit="http://www.sdml.info/srcML/literal"</option>
 	</para>
       </listitem>
     </varlistentry>
@@ -284,7 +284,7 @@
 	<para>
 	  Additional markup of literal values using the element operator with the prefix "op" in the namespace "http://www.sdml.info/srcML/operator".
 	  Can also be specified by declaring a prefix for this namespace using the xmlns option, e.g.,
-	  &XMLNS_FLAG;:op="http://www.sdml.info/srcML/operator"
+	  <option>&XMLNS_FLAG;:op="http://www.sdml.info/srcML/operator"</option>
 	</para>
       </listitem>
     </varlistentry>
@@ -343,7 +343,7 @@
       <term>SIGUSR1</term>
       <listitem>
 	<para>
-	  Toggles verbose option.  Useful with multiple input files as in the &FILELIST_FLAG; option.
+	  Toggles verbose option.  Useful with multiple input files as in the <option>&FILELIST_FLAG;</option> option.
 	</para>
       </listitem>
     </varlistentry>
