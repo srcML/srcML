@@ -55,7 +55,7 @@
   <title>OPTIONS</title>
   <variablelist>
     <varlistentry>
-      <term>&HELP_FLAG_SHORT;, &HELP_FLAG;</term>
+      <term><option>&HELP_FLAG_SHORT;, &HELP_FLAG;</option></term>
       <listitem>
 	<para>
 	  Output the help and exit.
@@ -63,7 +63,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&VERSION_FLAG_SHORT;, &VERSION_FLAG;</term>
+      <term><option>&VERSION_FLAG_SHORT;, &VERSION_FLAG;</option></term>
       <listitem>
 	<para>
 	  Output the version of src2srcml, including whether libxml2 enabled, then exit.
@@ -71,7 +71,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&EXPRESSION_MODE_FLAG_SHORT;, &EXPRESSION_MODE_FLAG;</term>
+      <term><option>&EXPRESSION_MODE_FLAG_SHORT;, &EXPRESSION_MODE_FLAG;</option></term>
       <listitem>
 	<para>
 	  Translates a single, standalone expression.
@@ -79,7 +79,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&NESTED_FLAG_SHORT;, &NESTED_FLAG;</term>
+      <term><option>&NESTED_FLAG_SHORT;, &NESTED_FLAG;</option></term>
       <listitem>
 	<para>
 	  Stores all input source files into one compound srcML
@@ -88,7 +88,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&FILELIST_FLAG_SHORT;, &FILELIST_FLAG;</term>
+      <term><option>&FILELIST_FLAG_SHORT;, &FILELIST_FLAG;</option></term>
       <listitem>
 	<para>
 	  Treats the input file as a list of source files.  Each file
@@ -102,7 +102,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&ENCODING_FLAG_SHORT;, &ENCODING_FLAG;=<replaceable class="parameter">encoding</replaceable></term>
+      <term><option>&ENCODING_FLAG_SHORT;, &ENCODING_FLAG;=<replaceable class="parameter">encoding</replaceable></option></term>
       <listitem>
 	<para>
 	  Sets the xml encoding of the output srcML file to
@@ -116,7 +116,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&TEXTENCODING_FLAG_SHORT;, &TEXTENCODING_FLAG;=<replaceable class="parameter">encoding</replaceable></term>
+      <term><option>&TEXTENCODING_FLAG_SHORT;, &TEXTENCODING_FLAG;=<replaceable class="parameter">encoding</replaceable></option></term>
       <listitem>
 	<para>
 	  Sets the input encoding of the source-code file to
@@ -126,7 +126,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&XMLNS_FLAG;=<replaceable class="parameter">URI</replaceable></term>
+      <term><option>&XMLNS_FLAG;=<replaceable class="parameter">URI</replaceable></option></term>
       <listitem>
 	<para>
 	  Sets the URI for the default namespace.  Default is xmlns="http://www.sdml.info/srcML/src".
@@ -134,7 +134,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&XMLNS_FLAG;:<replaceable class="parameter">PREFIX</replaceable>=<replaceable class="parameter">URI</replaceable></term>
+      <term><option>&XMLNS_FLAG;:<replaceable class="parameter">PREFIX</replaceable>=<replaceable class="parameter">URI</replaceable></option></term>
       <listitem>
 	<para>
 	  Sets the namespace prefix PREFIX for the namespace URI.  Defaults are xmlns:cpp="http://www.sdml.info/srcML/cpp",
@@ -143,7 +143,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&NO_XML_DECLARATION_FLAG;</term>
+      <term><option>&NO_XML_DECLARATION_FLAG;</option></term>
       <listitem>
 	<para>
 	  No output of the default XML declaration.  Useful when the output of the translator is to be placed inside
@@ -152,7 +152,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&NO_NAMESPACE_DECLARATION_FLAG;</term>
+      <term><option>&NO_NAMESPACE_DECLARATION_FLAG;</option></term>
       <listitem>
 	<para>
 	  No output of namespace declarations.  Useful when the output of the translator is to be placed inside
@@ -161,7 +161,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&COMPRESSED_FLAG_SHORT;, &COMPRESSED_FLAG;</term>
+      <term><option>&COMPRESSED_FLAG_SHORT;, &COMPRESSED_FLAG;</option></term>
       <listitem>
 	<para>
 	  Output is in compressed gzip format.  Only available in the
@@ -170,7 +170,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&INTERACTIVE_FLAG_SHORT;, &INTERACTIVE_FLAG;</term>
+      <term><option>&INTERACTIVE_FLAG_SHORT;, &INTERACTIVE_FLAG;</option></term>
       <listitem>
 	<para>
 	  Default is to use buffered output for speed.  For
@@ -179,7 +179,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&DEBUG_FLAG_SHORT;, &DEBUG_FLAG;</term>
+      <term><option>&DEBUG_FLAG_SHORT;, &DEBUG_FLAG;</option></term>
       <listitem>
 	<para>
 	  When translation errors occur src2srcml preserves all text,
@@ -191,7 +191,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&VERBOSE_FLAG_SHORT;, &VERBOSE_FLAG;</term>
+      <term><option>&VERBOSE_FLAG_SHORT;, &VERBOSE_FLAG;</option></term>
       <listitem>
 	<para>
 	  Verbose output to standard error.  Especially useful with the &FILELIST_FLAG; option.  The signal SIGUSR1 can
@@ -207,7 +207,7 @@
     This set of options allows control over various metadata stored in the srcML document.
   </para>
     <varlistentry>
-      <term>&LANGUAGE_FLAG_SHORT;, &LANGUAGE_FLAG;=<replaceable class="parameter">language</replaceable></term>
+      <term><option>&LANGUAGE_FLAG_SHORT;, &LANGUAGE_FLAG;=<replaceable class="parameter">language</replaceable></option></term>
       <listitem>
 	<para>
 	  The programming language of the source-code file.  Allowable
@@ -220,7 +220,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&DIRECTORY_FLAG_SHORT;, &DIRECTORY_FLAG;=<replaceable class="parameter">directory</replaceable></term>
+      <term><option>&DIRECTORY_FLAG_SHORT;, &DIRECTORY_FLAG;=<replaceable class="parameter">directory</replaceable></option></term>
       <listitem>
 	<para>
 	  The unit element includes an optional, descriptive
@@ -235,7 +235,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&FILENAME_FLAG_SHORT;, &FILENAME_FLAG;=<replaceable class="parameter">filename</replaceable></term>
+      <term><option>&FILENAME_FLAG_SHORT;, &FILENAME_FLAG;=<replaceable class="parameter">filename</replaceable></option></term>
       <listitem>
 	<para>
 	  The unit element includes an optional, descriptive
@@ -249,7 +249,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&SRCVERSION_FLAG_SHORT;, &SRCVERSION_FLAG;=<replaceable class="parameter">version</replaceable></term>
+      <term><option>&SRCVERSION_FLAG_SHORT;, &SRCVERSION_FLAG;=<replaceable class="parameter">version</replaceable></option></term>
       <listitem>
 	<para>
 	  The unit element includes the version, an optional,
@@ -269,7 +269,7 @@
     Extensions to the srcML markup are available.
   </para>
     <varlistentry>
-      <term>&LITERAL_FLAG;</term>
+      <term><option>&LITERAL_FLAG;</option></term>
       <listitem>
 	<para>
 	  Additional markup of literal values using the element literal with the prefix "lit" in the namespace "http://www.sdml.info/srcML/literal".
@@ -279,7 +279,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&OPERATOR_FLAG;</term>
+      <term><option>&OPERATOR_FLAG;</option></term>
       <listitem>
 	<para>
 	  Additional markup of literal values using the element operator with the prefix "op" in the namespace "http://www.sdml.info/srcML/operator".
@@ -298,7 +298,7 @@
   </para>
   <variablelist>
     <varlistentry>
-      <term>&CPP_MARKUP_ELSE_FLAG;</term>
+      <term><option>&CPP_MARKUP_ELSE_FLAG;</option></term>
       <listitem>
 	<para>
 	  Place markup in #else and #elif regions.  Default.
@@ -306,7 +306,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&CPP_TEXTONLY_ELSE_FLAG;</term>
+      <term><option>&CPP_TEXTONLY_ELSE_FLAG;</option></term>
       <listitem>
 	<para>
 	  Only place text in #else and #elif regions leaving out markup.
@@ -314,7 +314,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&CPP_MARKUP_IF0_FLAG;</term>
+      <term><option>&CPP_MARKUP_IF0_FLAG;</option></term>
       <listitem>
 	<para>
 	  Place markup in #if 0 regions.
@@ -322,7 +322,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&CPP_TEXTONLY_IF0_FLAG;</term>
+      <term><option>&CPP_TEXTONLY_IF0_FLAG;</option></term>
       <listitem>
 	<para>
 	  Only place text in #else and #elif regions leaving out markup.
