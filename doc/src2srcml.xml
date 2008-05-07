@@ -83,7 +83,7 @@
       <listitem>
 	<para>
 	  Stores all input source files into one compound srcML
-	  document.  Default with &FILELIST_FLAG; mode.
+	  document.  Default with <option>&FILELIST_FLAG;</option> option.
 	</para>
       </listitem>
     </varlistentry>
@@ -129,7 +129,7 @@
       <term><option>&XMLNS_FLAG;=<replaceable class="parameter">URI</replaceable></option></term>
       <listitem>
 	<para>
-	  Sets the URI for the default namespace.  Default is xmlns="http://www.sdml.info/srcML/src".
+	  Sets the URI for the default namespace.  Default is <option>&XMLNS_FLAG;="http://www.sdml.info/srcML/src"</option>.
 	</para>
       </listitem>
     </varlistentry>
@@ -137,8 +137,9 @@
       <term><option>&XMLNS_FLAG;:<replaceable class="parameter">PREFIX</replaceable>=<replaceable class="parameter">URI</replaceable></option></term>
       <listitem>
 	<para>
-	  Sets the namespace prefix PREFIX for the namespace URI.  Defaults are xmlns:cpp="http://www.sdml.info/srcML/cpp",
-	  and xmlns:srcerr="http://www.sdml.info/srcML/srcerr".
+	  Sets the namespace prefix PREFIX for the namespace URI.
+	  Defaults are <option>&XMLNS_FLAG;:cpp="http://www.sdml.info/srcML/cpp"</option>,
+	  and <option>&XMLNS_FLAG;:srcerr="http://www.sdml.info/srcML/srcerr"</option>.
 	</para>
       </listitem>
     </varlistentry>
