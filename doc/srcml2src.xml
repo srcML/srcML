@@ -65,7 +65,7 @@
   <title>OPTIONS</title>
   <variablelist>
     <varlistentry>
-      <term>&HELP_FLAG_SHORT;, &HELP_FLAG;</term>
+      <term><option>&HELP_FLAG_SHORT;, &HELP_FLAG;</option></term>
       <listitem>
 	<para>
 	  Output the help and exit.
@@ -73,7 +73,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&VERSION_FLAG_SHORT;, &VERSION_FLAG;</term>
+      <term><option>&VERSION_FLAG_SHORT;, &VERSION_FLAG;</option></term>
       <listitem>
 	<para>
 	  Output the version of srcml2src and exit.
@@ -81,7 +81,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&TEXTENCODING_FLAG_SHORT;, &TEXTENCODING_FLAG;=<replaceable class="parameter">encoding</replaceable></term>
+      <term><option>&TEXTENCODING_FLAG_SHORT;, &TEXTENCODING_FLAG;=<replaceable class="parameter">encoding</replaceable></option></term>
       <listitem>
 	<para>
 	  Sets the encoding used for the output text source-code files
@@ -90,20 +90,20 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&UNIT_FLAG_SHORT;, &UNIT_FLAG;=<replaceable class="parameter">number</replaceable></term>
+      <term><option>&UNIT_FLAG_SHORT;, &UNIT_FLAG;=<replaceable class="parameter">number</replaceable></option></term>
       <listitem>
 	<para>
 	  Refers to a specific nested unit in a compound srcML file.
 	  The numbering starts at 1.  If the number is outside of the
 	  range of nested units then the command is ignored.  In
 	  combination with the attribute flags, outputs the attribute
-	  of that particular unit.  In combination with the &XML_FLAG;
+	  of that particular unit.  In combination with the <option>&XML_FLAG;</option> option
 	  outputs the unit in xml (not as text as is the default).
 	</para>
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&EXPAND_FLAG_SHORT;, &EXPAND_FLAG;</term>
+      <term><option>&EXPAND_FLAG_SHORT;, &EXPAND_FLAG;</option></term>
       <listitem>
 	<para>
 	  Extracts all units from a compound srcML file back into
@@ -116,18 +116,18 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&XML_FLAG_SHORT;, &XML_FLAG;</term>
+      <term><option>&XML_FLAG_SHORT;, &XML_FLAG;</option></term>
       <listitem>
 	<para>
 	  Output is in srcML format.  Used in combination with the
-	  &UNIT_FLAG; option to output a particular nested unit in XML.
+	  <option>&UNIT_FLAG;</option> option to output a particular nested unit in XML.
 	  The output unit has attributes formed by the merger of the
 	  attributes of the individual unit and the overall unit.
 	</para>
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&COMPRESSED_FLAG_SHORT;, &COMPRESSED_FLAG;</term>
+      <term><option>&COMPRESSED_FLAG_SHORT;, &COMPRESSED_FLAG;</option></term>
       <listitem>
 	<para>
 	  Output is in compressed gzip format.  Only available in the
@@ -136,7 +136,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&NO_XML_DECLARATION_FLAG;</term>
+      <term><option>&NO_XML_DECLARATION_FLAG;</option></term>
       <listitem>
 	<para>
 	  No output of the default XML declaration.  Only applies to XML output.  Useful when the output of the translator is to be placed inside
@@ -145,19 +145,21 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&NO_NAMESPACE_DECLARATION_FLAG;</term>
+      <term><option>&NO_NAMESPACE_DECLARATION_FLAG;</option></term>
       <listitem>
 	<para>
-	  No output of namespace declarations.  Only applies to XML output.  Useful when the output of the translator is to be placed inside
-	  another XML document.
+	  No output of namespace declarations.  Only applies to XML
+	  output.  Useful when the output of the translator is to be
+	  placed inside another XML document.
 	</para>
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&VERBOSE_FLAG_SHORT;, &VERBOSE_FLAG;</term>
+      <term><option>&VERBOSE_FLAG_SHORT;, &VERBOSE_FLAG;</option></term>
       <listitem>
 	<para>
-	  Verbose output to standard error.  Especially useful in &FILELIST_FLAG; mode.
+	  Verbose output to standard error.  Especially useful with
+	  the <option>&FILELIST_FLAG;</option> option.
 	</para>
       </listitem>
     </varlistentry>
@@ -166,60 +168,61 @@
 <refsect1>
   <title>Metadata Options</title>
   <para>
-    This set of options allows access to the metadata stored in the srcML document.  Unless otherwise noted, the metadata is extracted
-    from the root element unit or the XML declaration, which does not
-    require the traversal of the entire document.
+    This set of options allows access to the metadata stored in the
+    srcML document.  Unless otherwise noted, the metadata is extracted
+    from the start root element or the XML declaration and does not
+    require traversing the entired document.
   </para>
     <varlistentry>
-      <term>&LANGUAGE_FLAG_SHORT;, &LANGUAGE_FLAG;</term>
+      <term><option>&LANGUAGE_FLAG_SHORT;, &LANGUAGE_FLAG;</option></term>
       <listitem>
 	<para>
 	  Output the language of the srcML file as stored in the
 	  attribute language in the unit element on standard output.
 	  The language is the value of the attribute of the root
 	  element unit, unless a particular unit is specified with the
-	  &UNIT_FLAG; option.
+	  <option>&UNIT_FLAG;</option> option.
 	</para>
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&DIRECTORY_FLAG_SHORT;, &DIRECTORY_FLAG;</term>
+      <term><option>&DIRECTORY_FLAG_SHORT;, &DIRECTORY_FLAG;</option></term>
       <listitem>
 	<para>
 	  Output the directory of the srcML file as stored in the
 	  attribute dir in the unit element on standard output.  The
 	  directory is the value of the attribute of the root element
 	  unit, unless a particular unit is specified with the
-	  &UNIT_FLAG; option.
+	  <option>&UNIT_FLAG;</option> option.
 	</para>
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&FILENAME_FLAG_SHORT;, &FILENAME_FLAG;</term>
+      <term><option>&FILENAME_FLAG_SHORT;, &FILENAME_FLAG;</option></term>
       <listitem>
 	<para>
 	  Output the filename of the srcML file as stored in the
 	  attribute filename in the unit element on standard output.
 	  The filename is the value of the attribute of the root
 	  element unit, unless a particular unit is specified with the
-	  &UNIT_FLAG; option.
+	  <option>&UNIT_FLAG;</option> option.
 	</para>
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&SRCVERSION_FLAG_SHORT;, &SRCVERSION_FLAG;</term>
+      <term><option>&SRCVERSION_FLAG_SHORT;, &SRCVERSION_FLAG;</option></term>
       <listitem>
 	<para>
 	  Output the version of the srcML file as stored attribute
 	  version in the unit element on standard output.  The version
 	  is the value of the attribute of the root element unit,
-	  unless a particular unit is specified with the &UNIT_FLAG;
-	  option.
+	  unless a particular unit is specified with the
+	  <option>&UNIT_FLAG;</option> option.
 	</para>
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&NAMESPACE_FLAG_SHORT;, &NAMESPACE_FLAG;=<replaceable class="parameter">uri</replaceable></term>
+      <term><option>&NAMESPACE_FLAG_SHORT;, &NAMESPACE_FLAG;=<replaceable class="parameter">uri</replaceable></option></term>
       <listitem>
 	<para>
 	  Output the prefix of the namespace given by uri.  The name of
@@ -230,7 +233,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&NESTED_FLAG_SHORT;, &NESTED_FLAG;</term>
+      <term><option>&NESTED_FLAG_SHORT;, &NESTED_FLAG;</option></term>
       <listitem>
 	<para>
 	  Output the number of nested units in a compound srcML file
@@ -240,23 +243,26 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&INFO_FLAG_SHORT;, &INFO_FLAG;</term>
+      <term><option>&INFO_FLAG_SHORT;, &INFO_FLAG;</option></term>
       <listitem>
 	<para>
-	  Output most of the metadata of the srcML file.  Each individual piece
-	  of data, i.e., namespaces, encoding, language, directory, filename, and version,
-	  is on a separate line.  The form of the information is that same as that of the
-	  full flag option to src2srcml to form it, without the leading "--".
+	  Output most of the metadata of the srcML file.  Each
+	  individual piece of data, i.e., namespaces, encoding,
+	  language, directory, filename, and version, is on a separate
+	  line.  The form of the information is that same as that of
+	  the full flag option to src2srcml to form it, without the
+	  leading "--".
 	</para>
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>&LONG_INFO_FLAG_SHORT;, &LONG_INFO_FLAG;</term>
+      <term><option>&LONG_INFO_FLAG_SHORT;, &LONG_INFO_FLAG;</option></term>
       <listitem>
 	<para>
-	  Output the metadata of the &INFO_FLAG; option along with the
-	  count of the nested units in a compound srcML document.
-	  This information requires the examination of the entire srcML document.
+	  Output the metadata of the <option>&INFO_FLAG;</option>
+	  option along with the count of the nested units in a
+	  compound srcML document.  This information requires the
+	  examination of the entire srcML document.
 	</para>
       </listitem>
     </varlistentry>
@@ -326,7 +332,7 @@
   <title>BUGS</title>
   <para>
     There may be some parts of XML (e.g., comments) unused in the srcML format (i.e., not generated by src2srcml)
-    which are not preserved in the output with the --xml option.
+    which are not preserved in the output with the <option>&XML_FLAG;</option> option.
   </para>
 </refsect1>
 <refsect1>
