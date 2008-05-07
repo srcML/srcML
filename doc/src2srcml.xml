@@ -138,7 +138,7 @@
       <listitem>
 	<para>
 	  Sets the namespace prefix PREFIX for the namespace URI.  Defaults are xmlns:cpp="http://www.sdml.info/srcML/cpp",
-	  and "xmlns:srcerr=http://www.sdml.info/srcML/srcerr".
+	  and xmlns:srcerr="http://www.sdml.info/srcML/srcerr".
 	</para>
       </listitem>
     </varlistentry>
