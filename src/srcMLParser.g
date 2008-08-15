@@ -3960,7 +3960,7 @@ newop { LocalMode lm; } :
         {
             startNewMode(MODE_LOCAL);
 
-            startElement(SMODIFIER);
+            startElement(SOPERATOR);
         }
         NEW
 ;
@@ -3969,7 +3969,7 @@ deleteop { LocalMode lm; } :
         {
             startNewMode(MODE_LOCAL);
 
-            startElement(SMODIFIER);
+            startElement(SOPERATOR);
         }
         DELETE
 ;
