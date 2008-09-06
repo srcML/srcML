@@ -31,7 +31,7 @@ const char* VERSION = version();
 
 const char* COPYRIGHT = "Copyright (C) 2008 SDML";
 
-const char* EMAIL_ADDRESS = "srcmlbugs@sdml.info";
+const char* EMAIL_ADDRESS = "srcml@sdml.info";
 
 const char* STDIN = "-";
 
