@@ -1,6 +1,7 @@
 <xsl:stylesheet
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:src="http://www.sdml.info/srcML/src"
+	xmlns="http://www.sdml.info/srcML/src"
 	xmlns:cpp="http://www.sdml.info/srcML/cpp"
 	xmlns:str="http://exslt.org/strings"
 	xmlns:func="http://exslt.org/functions"
@@ -45,23 +46,23 @@
 
 <!-- change the if element to a while element -->
 <xsl:template match="src:class">
-	<src:struct>
+	<struct>
 		<xsl:apply-templates/> <!-- select="*|@*|text()"/> -->
-	</src:struct>
+	</struct>
 </xsl:template>
 
 <!-- change the if element to a while element -->
 <xsl:template match="src:class_decl">
-	<src:struct_decl>
+	<struct_decl>
 		<xsl:apply-templates/> <!-- select="*|@*|text()"/> -->
-	</src:struct_decl>
+	</struct_decl>
 </xsl:template>
 
 <!-- change the if element to a while element -->
 <xsl:template match="src:private[@type='default']">
-	<src:public type="default">
+	<public type="default">
 		<xsl:apply-templates/> <!-- select="*|@*|text()"/> -->
-	</src:public>
+	</public>
 </xsl:template>
 
 <!-- change the class keyword to a struct keyword -->

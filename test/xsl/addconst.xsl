@@ -1,6 +1,7 @@
 <xsl:stylesheet
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:src="http://www.sdml.info/srcML/src"
+	xmlns="http://www.sdml.info/srcML/src"
 	xmlns:cpp="http://www.sdml.info/srcML/cpp"
 	xmlns:str="http://exslt.org/strings"
 	xmlns:func="http://exslt.org/functions"
@@ -33,7 +34,7 @@
 	<xsl:copy-of select="."/>
 
 	<xsl:text> </xsl:text>
-	<src:specifier>const</src:specifier>
+	<specifier>const</specifier>
 </xsl:template>
 
 <xsl:template match="@*|node()">

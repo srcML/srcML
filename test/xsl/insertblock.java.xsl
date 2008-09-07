@@ -1,6 +1,7 @@
 <xsl:stylesheet
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:src="http://www.sdml.info/srcML/src"
+	xmlns="http://www.sdml.info/srcML/src"
 	xmlns:str="http://exslt.org/strings"
 	xmlns:func="http://exslt.org/functions"
 	xmlns:exsl="http://exslt.org/common"
@@ -30,11 +31,11 @@
 
 <!-- filter out any if statements with an else -->
 <xsl:template match="src:unit/src:unit" xml:space="preserve">
-<src:unit>
-<src:block>{
+<unit>
+<block>{
 <xsl:copy-of select="*|text()"/>
-}</src:block>
-</src:unit>
+}</block>
+</unit>
 </xsl:template>
 
 <!-- default identity copy -->

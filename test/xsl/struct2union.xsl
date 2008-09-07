@@ -1,6 +1,7 @@
 <xsl:stylesheet
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:src="http://www.sdml.info/srcML/src"
+	xmlns="http://www.sdml.info/srcML/src"
 	xmlns:cpp="http://www.sdml.info/srcML/cpp"
 	xmlns:str="http://exslt.org/strings"
 	xmlns:func="http://exslt.org/functions"
@@ -45,9 +46,9 @@
 
 <!-- change the if element to a while element -->
 <xsl:template match="src:struct">
-	<src:union>
+	<union>
 		<xsl:apply-templates/> <!-- select="*|@*|text()"/> -->
-	</src:union>
+	</union>
 </xsl:template>
 
 <!-- change the struct keyword to a union keyword -->

@@ -1,6 +1,7 @@
 <xsl:stylesheet
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:src="http://www.sdml.info/srcML/src"
+	xmlns="http://www.sdml.info/srcML/src"
 	xmlns:cpp="http://www.sdml.info/srcML/cpp"
 	xmlns:str="http://exslt.org/strings"
 	xmlns:func="http://exslt.org/functions"
@@ -46,15 +47,15 @@
 
 <!-- change the for element to a while element -->
 <xsl:template match="src:for">
-        <src:expr_stmt><xsl:apply-templates select="src:init/*"/></src:expr_stmt>
-	<src:while>
+        <expr_stmt><xsl:apply-templates select="src:init/*"/></expr_stmt>
+	<while>
 	        <xsl:apply-templates s
-	        <src:block>{
+	        <block>{
 		<xsl:apply-templates select="src:block/*"/>
 
-		<src:expr_stmt><xsl:apply-templates select="src:incr/*"/></src:expr_stmt>
-	        }</src:block>
-	</src:while>
+		<expr_stmt><xsl:apply-templates select="src:incr/*"/></expr_stmt>
+	        }</block>
+	</while>
 </xsl:template>
 
 <!-- change the if keyword to a while keyword -->

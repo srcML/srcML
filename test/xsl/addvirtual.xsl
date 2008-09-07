@@ -1,6 +1,7 @@
 <xsl:stylesheet
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:src="http://www.sdml.info/srcML/src"
+	xmlns="http://www.sdml.info/srcML/src"
 	xmlns:cpp="http://www.sdml.info/srcML/cpp"
 	xmlns:str="http://exslt.org/strings"
 	xmlns:func="http://exslt.org/functions"
@@ -30,7 +31,7 @@
 </xsl:template>
 
 <!-- filter the then elements, but not the contents of the then -->
-<xsl:template match="src:destructor" xml:space="preserve"><src:destructor><src:specifier>virtual</src:specifier> <xsl:apply-templates/></src:destructor></xsl:template>
+<xsl:template match="src:destructor" xml:space="preserve"><destructor><specifier>virtual</specifier> <xsl:apply-templates/></destructor></xsl:template>
 
 <xsl:template match="@*|node()">
 	<xsl:copy>

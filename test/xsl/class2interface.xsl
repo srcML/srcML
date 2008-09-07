@@ -1,6 +1,7 @@
 <xsl:stylesheet
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:src="http://www.sdml.info/srcML/src"
+	xmlns="http://www.sdml.info/srcML/src"
 	xmlns:cpp="http://www.sdml.info/srcML/cpp"
 	xmlns:str="http://exslt.org/strings"
 	xmlns:func="http://exslt.org/functions"
@@ -44,21 +45,21 @@
 </xsl:template>
 
 <xsl:template match="src:class">
-	<src:class type="interface">
+	<class type="interface">
 		<xsl:apply-templates/>
-	</src:class>
+	</class>
 </xsl:template>
 
 <xsl:template match="src:class_decl">
-	<src:interface_decl>
+	<interface_decl>
 		<xsl:apply-templates/>
-	</src:interface_decl>
+	</interface_decl>
 </xsl:template>
 
 <xsl:template match="src:private[@type='default']">
-	<src:public type="default">
+	<public type="default">
 		<xsl:apply-templates/>
-	</src:public>
+	</public>
 </xsl:template>
 
 <!-- change the class keyword to a interface keyword -->

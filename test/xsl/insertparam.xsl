@@ -1,6 +1,7 @@
 <xsl:stylesheet
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:src="http://www.sdml.info/srcML/src"
+	xmlns="http://www.sdml.info/srcML/src"
 	xmlns:cpp="http://www.sdml.info/srcML/cpp"
 	xmlns:str="http://exslt.org/strings"
 	xmlns:func="http://exslt.org/functions"
@@ -63,7 +64,7 @@
 
 	<xsl:choose>
 	<xsl:when test="name()='formal_params'">
-	        <src:formal_params>(<src:param><xsl:copy-of select="$newdecl"/></src:param>)</src:formal_params>
+	        <formal_params>(<param><xsl:copy-of select="$newdecl"/></param>)</formal_params>
 	</xsl:when>
 	<xsl:otherwise>
 		<xsl:copy>
