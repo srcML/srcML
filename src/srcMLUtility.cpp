@@ -25,6 +25,7 @@
 #include "srcMLUtility.h"
 #include <iostream>
 #include <fstream>
+#include <cstring>
 #include "xmloutput.h"
 
 #ifdef __GNUC__

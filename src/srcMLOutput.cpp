@@ -29,6 +29,8 @@
 
 #include "srcMLOutputPR.h"
 
+#include <cstring>
+
 const char* XML_DECLARATION_STANDALONE = "yes";
 const char* XML_VERSION = "1.0";
 

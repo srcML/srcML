@@ -22,6 +22,7 @@
 
 #include "xmloutput.h"
 #include <iostream>
+#include <cstring>
 
 // output current reader node to the writer in XML
 void outputXML(xmlTextReaderPtr reader, xmlTextWriterPtr writer) {

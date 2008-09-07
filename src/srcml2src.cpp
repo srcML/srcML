@@ -26,6 +26,7 @@
 #include <iomanip>
 #include <fstream>
 #include <string>
+#include <cstring>
 #include <sys/stat.h>
 #include "version.h"
 #include "srcmlapps.h"
@@ -423,7 +424,7 @@ int main(int argc, char* argv[]) {
 
   // second command line parameter is output filename
   //  std::ofstream fout;
-  char* ofilename = "-";
+  const char* ofilename = "-";
   if (argc == curarg + 1) {
     ofilename = argv[curarg];
     ++curarg;
@@ -532,8 +533,8 @@ int main(int argc, char* argv[]) {
       for (int i = 0; i < optioncount; ++i) {
 
 	// find attribute name from option
-	char* attribute_name = "";
-	char* attribute_title = "";
+	const char* attribute_name = "";
+	const char* attribute_title = "";
 	int option = optionorder[i];
 	if (option == OPTION_XML_ENCODING) {
 	  attribute_name = "";

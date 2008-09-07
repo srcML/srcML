@@ -26,6 +26,7 @@
 #include <iomanip>
 #include <fstream>
 #include <string>
+#include <cstring>
 #include <map>
 #include <sys/stat.h>
 #include "version.h"
@@ -331,7 +332,7 @@ int main(int argc, char* argv[]) {
   }
 
   // last command line parameter is output srcml filename
-  char* srcml_filename = "-";
+  const char* srcml_filename = "-";
   if ((argc - (curarg - 1)) > 1) {
     srcml_filename = argv[curarg];
 
