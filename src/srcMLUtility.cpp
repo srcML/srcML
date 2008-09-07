@@ -249,7 +249,7 @@ int mkpath(const char* path
 #endif
 
     // make the directory path so far
-    if (spath.substr(0, pos).c_str() != ".") {
+    if (strcmp(spath.substr(0, pos).c_str(), ".") != 0) {
 
 #ifdef __GNUC__
       int ret = mkdir(spath.substr(0, pos).c_str(), mode);
