@@ -52,7 +52,7 @@ class Language {
 
   // gets the current language
   const char* getLanguageString() const {
-    char* lstring = "";
+    const char* lstring = "";
 
     switch (language) {
     case LANGUAGE_C:

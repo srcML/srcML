@@ -415,7 +415,7 @@ int main(int argc, char* argv[]) {
       ++curarg;
 
   // first command line parameter is input filename
-  char* filename = "-";
+  const char* filename = "-";
   if (argc > curarg && !compare_flags(argv[curarg], STDIN, STDIN)) {
     filename = argv[curarg];
     ++curarg;
