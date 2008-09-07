@@ -468,7 +468,7 @@ start {} :
 
         // don't confuse with expression block
         { inTransparentMode(MODE_CONDITION) ||
-            !inMode(MODE_EXPRESSION) && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT) }? lcurly | 
+            (!inMode(MODE_EXPRESSION) && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT)) }? lcurly | 
 
         // process template operator correctly @test template
         { inTransparentMode(MODE_TEMPLATE) }? tempope[true] |
