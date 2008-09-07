@@ -61,7 +61,7 @@ bool compare_flags(const char* arg, const char* flag , const char* short_flag, i
       strcmp(arg, short_flag) == 0 ||
 
       // match to flag but with immediate value
-      strncmp(arg, flag, strlen(flag)) == 0 && arg[strlen(flag)] == '=')
+      (strncmp(arg, flag, strlen(flag)) == 0 && arg[strlen(flag)] == '='))
 
     return true;
 
