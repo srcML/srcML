@@ -501,8 +501,8 @@ inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
 }
 
 // element names array
-char* srcMLOutput::ElementNames[];
-char* srcMLOutput::ElementPrefix[];
+const char* srcMLOutput::ElementNames[];
+const char* srcMLOutput::ElementPrefix[];
 
 // fill the element names array
 void srcMLOutput::fillElementNames() {

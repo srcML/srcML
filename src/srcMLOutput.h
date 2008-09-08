@@ -97,8 +97,8 @@ class srcMLOutput : public srcMLParserTokenTypes {
   bool isoption(int) const;
 
   // List of element names
-  static char* ElementNames[END_ELEMENT_TOKEN];
-  static char* ElementPrefix[END_ELEMENT_TOKEN];
+  static const char* ElementNames[END_ELEMENT_TOKEN];
+  static const char* ElementPrefix[END_ELEMENT_TOKEN];
 
   // fill the element names array
   static void fillElementNames();
