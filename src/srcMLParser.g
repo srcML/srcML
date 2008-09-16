@@ -3197,7 +3197,7 @@ destructor_name { LocalMode lm; } :
 
 /*
   Detects a destructor definition name outside of a class.  It has to be in the form
-  x::y where x and y are identical
+  x::~y where x and y are identical
 */
 destructor_name_check[antlr::RefToken s[]] { LocalMode lm; } :
         {
