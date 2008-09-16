@@ -205,7 +205,7 @@ KeywordCPPLexer(std::istream& in, int language = LANGUAGE_CXX)
 
         // final
         literals["final"] = FINAL;
-        literals["static"] = STATIC;
+//        literals["static"] = STATIC;
     }
 }
 
