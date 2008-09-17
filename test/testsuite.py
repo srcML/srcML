@@ -1,4 +1,4 @@
-#!/usr/bin/python2.4
+#!/usr/bin/python
 #
 # update.py
 #
@@ -20,11 +20,11 @@ MAX_COUNT = 46
 sperrorlist = []
 
 srcmltranslator = os.environ.get("SRC2SRCML")
-if srcmltranslator == "":
+if srcmltranslator == "" or srcmltranslator == None:
 	srcmltranslator = "../bin/src2srcml"
-	
+
 srcmlutility = os.environ.get("SRCML2SRC")
-if srcmlutility == "":
+if srcmlutility == "" or srcmlutility == None:
 	srcmlutility = "../bin/srcml2src"
 
 # srcExpr translator
@@ -188,15 +188,14 @@ def nondefaultxmlns(l):
 
 # version of src2srcml
 def src2srcmlversion():
-
-	last_line = safe_communicate([srcmltranslator, "-V"], None)
+	last_line = safe_communicate([srcmltranslator, "-V"], "")
 
 	return last_line.splitlines()[0].strip()
 
 # version of srcml2src
 def srcml2srcversion():
 
-	last_line = safe_communicate([srcmlutility, "-V"], None)
+	last_line = safe_communicate([srcmlutility, "-V"], "")
 
 	return last_line.splitlines()[0].strip()
 
