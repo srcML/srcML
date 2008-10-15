@@ -15,6 +15,9 @@ PRINTF_FORMAT="\%1.0f lines/second\\n"
 
 PHONY : time
 time : ../bin/src2srcml
+	@../bin/src2srcml --version
+	@../bin/srcml2src --version
+	@echo
 	@echo -n "src2srcml:\t"
 	@cd .; ${TIME} ../bin/src2srcml ${TIMING_MED} ${TIMING_MED}.xml | sed 's/[0-9\.]*/ 10872 \/ &/' | bc -l |  xargs printf "%'7.0f lines/second\n"
 	@echo -n "srcml2src:\t"
