@@ -11,14 +11,16 @@ TIME=/usr/bin/time --output=/dev/stdout --format="%U"
 TIMING_MED=timing_med.h
 TIMING_JAVA=timing_java.java
 
+PRINTF_FORMAT="\%1.0f lines/second\\n"
+
 PHONY : time
 time : ../bin/src2srcml
-	@echo "src2srcml:  "
-	@cd .; ${TIME} ../bin/src2srcml ${TIMING_MED} ${TIMING_MED}.xml | sed 's/[0-9\.]*/ 10872 \/ &/' | bc -l
-	@echo "srcml2src:  "
-	@cd .; ${TIME} ../bin/srcml2src ${TIMING_MED}.xml ${TIMING_MED}v2 | sed 's/[0-9\.]*/10872 \/ &/' | bc -l
+	@echo -n "src2srcml:\t"
+	@cd .; ${TIME} ../bin/src2srcml ${TIMING_MED} ${TIMING_MED}.xml | sed 's/[0-9\.]*/ 10872 \/ &/' | bc -l |  xargs printf "%'7.0f lines/second\n"
+	@echo -n "srcml2src:\t"
+	@cd .; ${TIME} ../bin/srcml2src ${TIMING_MED}.xml ${TIMING_MED}v2 | sed 's/[0-9\.]*/10872 \/ &/' | bc -l  |  xargs printf "%'7.0f lines/second\n"
 
 PHONY : javatime
 javatime :
-	@echo "src2srcml --language=Java:  "
-	@cd .; ${TIME} ../bin/src2srcml --language Java ${TIMING_JAVA} ${TIMING_JAVA}.xml | sed 's/[0-9\.]*/32628 \/ &/' | bc -l
+	@echo -n "srcml2src Java:\t"
+	@cd .; ${TIME} ../bin/src2srcml --language Java ${TIMING_JAVA} ${TIMING_JAVA}.xml | sed 's/[0-9\.]*/32628 \/ &/' | bc -l | xargs printf "%'7.0f lines/second\n"
