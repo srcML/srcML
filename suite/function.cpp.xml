@@ -50,6 +50,10 @@
 </unit>
 
 <unit>
+<function><type><name><name>Iter</name>::<name>value_type</name></name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
 <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
