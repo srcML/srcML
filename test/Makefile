@@ -149,7 +149,7 @@ GEN_SEP= $(GEN_BASE) $(GEN_BASE_CXX)
 GEN_PART=${foreach nm, $(GEN_SEP), ../suite/$(nm).cpp.xml}
 
 # base for C only
-BASE_C=functionkr typedef_cstruct
+BASE_C=functionkr # typedef_cstruct
 
 # base for C family
 BASE_C_FAMILY=asm macro cstruct extern main function_pointer decl_struct typedef

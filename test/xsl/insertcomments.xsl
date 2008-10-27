@@ -47,7 +47,7 @@
   <xsl:copy-of select="$cmt"/>
   <xsl:value-of select="' '"/>
   <xsl:value-of select="substring-after(., ' ')"/>
-  <xsl:apply-templates select="substring-after(., ' ')" mode="replace"/>
+<!--  <xsl:apply-templates select="substring-after(., ' ')" mode="replace"/> -->
 </xsl:template>
 
 <xsl:template match="text()" mode="replace">

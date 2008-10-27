@@ -7,7 +7,7 @@
 	xmlns:func="http://exslt.org/functions"
 	xmlns:exsl="http://exslt.org/common"
 	extension-element-prefixes="str exsl func"
-	exclude-result-prefixes="src"
+	exclude-result-prefixes="src cpp"
 	version="1.0">
 
 <!--

@@ -13,10 +13,9 @@ import difflib
 maxcount = 700
 error_filename = ".suitelist"
 
-FIELD_WIDTH_LANGUAGE = 7
-FIELD_WIDTH_DIRECTORY = 29
-MAX_COUNT = 46
-
+FIELD_WIDTH_LANGUAGE = 4
+FIELD_WIDTH_DIRECTORY = 27
+MAX_COUNT = 29
 sperrorlist = []
 
 srcmltranslator = os.environ.get("SRC2SRCML")
@@ -358,7 +357,7 @@ try:
 						# find the difference
 						result = xmldiff(unitxml, unitsrcml)
 						if count == MAX_COUNT:
-							print "\n", "".rjust(FIELD_WIDTH_LANGUAGE), " ", "".rjust(FIELD_WIDTH_DIRECTORY), " ",
+							print "\n", "".rjust(FIELD_WIDTH_LANGUAGE), " ", "...".ljust(FIELD_WIDTH_DIRECTORY), " ",
 						if result != "":
 							error_count += 1
 							
