@@ -133,6 +133,21 @@ header "post_include_hpp" {
 
 // position in output stream
 struct TokenPosition {
+
+    TokenPosition()
+        : token(0), sp(0) {}
+
+    TokenPosition(antlr::RefToken* p_token, int* p_sp)
+        : token(p_token), sp(p_sp) {}
+
+    void clear() {
+        token = 0;
+        sp = 0;
+    }
+
+    ~TokenPosition() {
+    }
+
     antlr::RefToken* token;
     int* sp;
 };
@@ -413,7 +428,7 @@ void startUnit() {
 
 // returns the current token in the output token stream
 TokenPosition getTokenPosition() {
-        TokenPosition tp = { CurrentToken(), &(currentState().callstack.top()) };
+        TokenPosition tp(CurrentToken(), &(currentState().callstack.top()));
         return tp;
 }
 
@@ -2702,7 +2717,7 @@ full_expression_base[bool checkmacro = false] {} :
    A variable name in an expression.  Includes array names, but not
    function calls
 */
-variable_identifier { LocalMode lm; bool iscomplex = false; TokenPosition tp = { 0, 0 }; } :
+variable_identifier { LocalMode lm; bool iscomplex = false; TokenPosition tp; } :
         {
             // local mode that is automatically ended by leaving this function
             startNewMode(MODE_LOCAL);
@@ -2728,7 +2743,7 @@ variable_identifier { LocalMode lm; bool iscomplex = false; TokenPosition tp = {
 /*
   Name including template argument list
 */
-simple_name_optional_template[bool marked] { LocalMode lm; TokenPosition tp = { 0, 0 }; } :
+simple_name_optional_template[bool marked] { LocalMode lm; TokenPosition tp; } :
         {
             if (marked) {
                 // local mode that is automatically ended by leaving this function
@@ -2835,7 +2850,7 @@ simple_name_cpp {} :
 /*
   identifier name marked with name element
 */
-complex_name[bool marked] { LocalMode lm; TokenPosition tp = { 0, 0 }; /* TokenPosition tp2 = { 0, 0 };*/ bool iscomplex_name = false; } :
+complex_name[bool marked] { LocalMode lm; TokenPosition tp; /* TokenPosition tp2 = { 0, 0 };*/ bool iscomplex_name = false; } :
         { inLanguage(LANGUAGE_JAVA) }? complex_name_java[marked] |
         (
         {
@@ -2887,7 +2902,7 @@ complex_name[bool marked] { LocalMode lm; TokenPosition tp = { 0, 0 }; /* TokenP
 /*
   identifier name marked with name element
 */
-complex_name_java[bool marked] { LocalMode lm; TokenPosition tp = { 0, 0 }; bool iscomplex_name = false; } :
+complex_name_java[bool marked] { LocalMode lm; TokenPosition tp; bool iscomplex_name = false; } :
         {
             if (marked) {
                 // local mode that is automatically ended by leaving this function
@@ -3061,7 +3076,7 @@ constructor_name_check[antlr::RefToken s[]] { LocalMode lm; bool iscomplex; } :
         constructor_name_base[s, iscomplex]
 ;
 
-constructor_name { LocalMode lm; antlr::RefToken s[2]; bool iscomplex; TokenPosition tp = { 0, 0 }; } :
+constructor_name { LocalMode lm; antlr::RefToken s[2]; bool iscomplex; TokenPosition tp; } :
         {
             // local mode that is automatically ended by leaving this function
             startNewMode(MODE_LOCAL);
@@ -4260,7 +4275,7 @@ preprocessor {
         int directive_token = 0;
         bool markblockzero = false;
 
-        TokenPosition tp = { 0, 0 };
+        TokenPosition tp;
 
         // parse end of line
         startNewMode(MODE_PARSE_EOL);
