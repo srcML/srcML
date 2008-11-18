@@ -2284,7 +2284,7 @@ declaration_check[int& token] { token = 0; } :
         // no return value functions:  casting operator method and main
         (OPERATOR (NAME)* | MAIN) paren_pair record[isoperatorfunction, 1] LCURLY |
 
-        { inLanguage(LANGUAGE_CXX) }? (NAME DCOLON)=> operator_function_name record[isoperatorfunction, 1] paren_pair LCURLY |
+        { inLanguage(LANGUAGE_CXX) }? (operator_function_name)=> operator_function_name record[isoperatorfunction, 1] paren_pair LCURLY |
 
         (options { greedy = true; } : (VIRTUAL | INLINE))* lead_type_identifier declaration_check_end[token]
 ;
@@ -2728,20 +2728,31 @@ variable_identifier { LocalMode lm; bool iscomplex = false; TokenPosition tp = {
 /*
   Name including template argument list
 */
-simple_name_optional_template[bool marked] { LocalMode lm; } :
+simple_name_optional_template[bool marked] { LocalMode lm; TokenPosition tp = { 0, 0 }; } :
         {
             if (marked) {
                 // local mode that is automatically ended by leaving this function
                 startNewMode(MODE_LOCAL);
 
+                // start outer name
                 startElement(SCNAME);
+
+                // record the name token so we can replace it if necessary
+                tp = getTokenPosition();
             }
         }
-        simple_name_grammar (
+        simple_name_marked[marked] (
             { inLanguage(LANGUAGE_CXX) }?
             (template_argument_list)=>
-                template_argument_list | 
-        )
+                template_argument_list |
+
+            {
+               // if we marked it as a complex name and it isn't, fix
+               if (marked)
+                   // set the token to NOP
+                   setTokenPosition(tp, SNOP);
+            }
+       )
 ;
 
 /*
@@ -2753,6 +2764,18 @@ simple_name { LocalMode lm; } :
             startNewMode(MODE_LOCAL);
 
             startElement(SNAME);
+        }
+        simple_name_grammar
+;
+
+simple_name_marked[bool marked] { LocalMode lm; } :
+        {
+            if (marked) {
+                // local mode that is automatically ended by leaving this function
+                startNewMode(MODE_LOCAL);
+
+                startElement(SNAME);
+            }
         }
         simple_name_grammar
 ;
