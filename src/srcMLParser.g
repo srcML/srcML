@@ -2919,7 +2919,7 @@ complex_name_java[bool marked] { LocalMode lm; TokenPosition tp; bool iscomplex_
             }
         }
         simple_name_optional_template[marked]
-        (options { greedy = true; } : (PERIOD { iscomplex_name = true; } simple_name_optional_template[marked]))*
+        (options { greedy = true; } : (period { iscomplex_name = true; } simple_name_optional_template[marked]))*
         {
             // if we marked it as a complex name and it isn't, fix
             if (marked && !iscomplex_name)
@@ -3642,6 +3642,18 @@ multi_operator { LocalMode lm; } :
 ;
 
 /*
+  Dot (period) operator
+*/
+period { LocalMode lm; } :
+        {
+            startNewMode(MODE_LOCAL);
+
+            startElement(SOPERATOR);
+        }
+        PERIOD
+;
+
+/*
    An expression
 */
 expression[bool checkmacro = false] {} : 
@@ -3686,7 +3698,7 @@ expression_part[bool checkmacro = false] { guessing_end();
         (NEW function_identifier[true] paren_pair LCURLY)=> newop anonymous_class_definition |
 
         // general math operators
-        general_operators | multi_operator | newop | deleteop | /* PERIOD | */
+        general_operators | multi_operator | newop | deleteop | period |
 
         // call
         // distinguish between a call and a macro
