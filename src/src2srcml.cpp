@@ -179,9 +179,11 @@ void output_help(const char* name) {
 	      << "Markup Extensions:"  << '\n'
               << '\n'
 	      << "  " << LITERAL_FLAG   << "  " << /* setw(COL) <<*/ "             "
-	      << "markup literal values in namespace \"http://www.sdml.info/srcML/literal\"\n"
+	      << "markup literal values in namespace \"" << SRCML_EXT_LITERAL_NS_URI << "\"\n"
 	      << "  " << OPERATOR_FLAG  << " " << /* setw(COL) <<*/ "             "
-	      << "markup operators in namespace \"http://www.sdml.info/srcML/operator\"\n"
+	      << "markup operators in namespace \"" << SRCML_EXT_OPERATOR_NS_URI << "\"\n"
+	      << "  " << MODIFIER_FLAG  << " " << /* setw(COL) <<*/ "             "
+	      << "markup type modifiers in namespace \"" << SRCML_EXT_MODIFIER_NS_URI << "\"\n"
               << '\n'
 	      << "CPP Markup Options:"  << '\n'
               << '\n'
