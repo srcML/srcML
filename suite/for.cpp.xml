@@ -2,12 +2,12 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="for">
 
 <unit>
-<for>for (<init><expr><type><name>int</name></type> <name>i</name> =<init> <expr>0</expr></init></expr>;</init> <condition><expr><name>i</name> &lt; 5</expr>;</condition> <incr><expr>++<name>i</name></expr></incr>)
+<for>for (<init><decl><type><name>int</name></type> <name>i</name> =<init> <expr>0</expr></init></decl>;</init> <condition><expr><name>i</name> &lt; 5</expr>;</condition> <incr><expr>++<name>i</name></expr></incr>)
 ;</for>
 </unit>
 
 <unit>
-<for>for (<init><expr><type><name>int</name></type> <name>i</name> =<init> <expr>0</expr></init></expr>;</init> <condition><expr><name>i</name> &lt; 5</expr>;</condition> <incr><expr>++<name>i</name></expr></incr>)
+<for>for (<init><decl><type><name>int</name></type> <name>i</name> =<init> <expr>0</expr></init></decl>;</init> <condition><expr><name>i</name> &lt; 5</expr>;</condition> <incr><expr>++<name>i</name></expr></incr>)
 <block>{}</block></for>
 </unit>
 
@@ -32,7 +32,7 @@
 </unit>
 
 <unit>
-<for>for (<init><expr><type><name>int</name></type> <name>i</name> =<init> <expr>0</expr></init></expr>;</init> <condition><expr><name>i</name> &lt; 5</expr>;</condition> <incr><expr>++<name>i</name></expr>, <expr>++<name>s</name></expr></incr>)
+<for>for (<init><decl><type><name>int</name></type> <name>i</name> =<init> <expr>0</expr></init></decl>;</init> <condition><expr><name>i</name> &lt; 5</expr>;</condition> <incr><expr>++<name>i</name></expr>, <expr>++<name>s</name></expr></incr>)
   <expr_stmt><expr><name>a</name></expr>;</expr_stmt></for>
 </unit>
 
