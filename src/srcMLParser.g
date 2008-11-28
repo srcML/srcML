@@ -636,13 +636,30 @@ declaration { int token = 0; int type_count = 0; } :
 ;
 
 // functions
-function[int token, int type_count] {} :
+function[int token, int type_count] { TokenPosition tp; } :
+		{
+            // function definitions have a "nested" block statement
+            startNewMode(MODE_STATEMENT);
 
+            // start the function definition element
+            startElement(SFUNCTION_DEFINITION);
+
+            // record the token position so we can replace it if necessary
+            tp = getTokenPosition();
+        }
+        function_header[type_count]
+        {
+            if (token != LCURLY)
+                setTokenPosition(tp, SFUNCTION_DECLARATION);
+        }
+
+/*
         // function definition based on the token after the header
         { token == LCURLY }? function_definition[type_count] |
 
         // function declaration
         function_declaration[type_count]
+*/
 ;
 
 call_macro_expression[int secondtoken, bool statement]
