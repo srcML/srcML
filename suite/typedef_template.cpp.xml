@@ -2,11 +2,11 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="typedef_template">
 
 <unit>
-<typedef>typedef <type><name>a<argument_list>&lt;<argument><name>b</name></argument>&gt;</argument_list></name></type> <name>a</name>;</typedef>
+<typedef>typedef <type><name><name>a</name><argument_list>&lt;<argument><name>b</name></argument>&gt;</argument_list></name></type> <name>a</name>;</typedef>
 </unit>
 
 <unit>
-<typedef>typedef <type><name>a<argument_list>&lt;<argument><name>b</name></argument>,<argument><name>c</name></argument>&gt;</argument_list></name></type> <name>a</name>;</typedef>
+<typedef>typedef <type><name><name>a</name><argument_list>&lt;<argument><name>b</name></argument>,<argument><name>c</name></argument>&gt;</argument_list></name></type> <name>a</name>;</typedef>
 </unit>
 
 </unit>
