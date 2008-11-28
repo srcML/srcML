@@ -629,7 +629,7 @@ declaration { int token = 0; int type_count = 0; } :
             function[token, type_count] |
 
         // function pointer declaration
-        (function_pointer_declaration[type_count])=> function_pointer_declaration[type_count] |
+        (function_pointer_declaration[type_count])=> function[token, type_count] |
 
         // declaration statement
         variable_declaration_statement[type_count]
@@ -652,14 +652,6 @@ function[int token, int type_count] { TokenPosition tp; } :
             if (token != LCURLY)
                 setTokenPosition(tp, SFUNCTION_DECLARATION);
         }
-
-/*
-        // function definition based on the token after the header
-        { token == LCURLY }? function_definition[type_count] |
-
-        // function declaration
-        function_declaration[type_count]
-*/
 ;
 
 call_macro_expression[int secondtoken, bool statement]
@@ -2630,12 +2622,12 @@ function_identifier[bool function_pointer] { LocalMode lm; } :
             INLINE |
 
             // overloaded operators
-            overloaded_operator_grammar |
+            overloaded_operator_grammar
+        ) |
 
-            // function pointer identifier
-            { function_pointer }?
-            LPAREN operator_multiplication (simple_name_grammar)* RPAREN LPAREN
-        )
+        // function pointer identifier with name marked separately
+        { function_pointer }?
+        LPAREN operator_multiplication (simple_name)* RPAREN
 ;
 
 /*
