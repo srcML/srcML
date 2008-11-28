@@ -24,19 +24,18 @@ SRCMLPARSER_CXX_FLAGS =
 CXX = /usr/bin/g++
 
 # compiler optimizations
-CXXFLAGS = -O3 -Wall -march=nocona -minline-all-stringops -fno-rtti
+CXXFLAGS = -O3 -Wall -march=nocona -minline-all-stringops -fno-rtti 
 #-fno-enforce-eh-specs
 
 # compiler optimizations
 ifdef STATIC
 CXXFLAGS = -O3 -Wall -march=nocona -minline-all-stringops -fno-rtti -static-libgcc -L ../lib
 else
-CXXFLAGS = -O3 -Wall -march=nocona -minline-all-stringops -fno-rtti -pg
+CXXFLAGS = -O3 -Wall -march=nocona -minline-all-stringops -fno-rtti 
 endif
 
 # compiler gcc linking flags
-CXX_LINK_FLAGS =
-#CXX_LINK_FLAGS = -s
+CXX_LINK_FLAGS = -s
 
 # object code for xml
 ifdef LIBXML_DISABLED
@@ -220,10 +219,10 @@ cleanantlr :
 
 # on every build, record the version number
 version.cpp : VERSION
-	/bin/echo -n 'const char* version() { const char* Version = "' > $@
+	echo -n 'const char* version() { const char* Version = "' > $@
 	cat VERSION	              >> $@
-	/bin/echo -n " ${LIBXML_VERSION}"   >> $@
-	/bin/echo '"; return Version; }'   >> $@
+	echo -n " ${LIBXML_VERSION}"   >> $@
+	echo '"; return Version; }'   >> $@
 
 # changes use of 64 bit integer using transformation
 visual :
