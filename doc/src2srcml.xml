@@ -289,6 +289,16 @@
 	</para>
       </listitem>
     </varlistentry>
+    <varlistentry>
+      <term><option>&MODIFIER_FLAG;</option></term>
+      <listitem>
+	<para>
+	  Additional markup of type modifiers using the element modifier with the prefix "type" in the namespace "http://www.sdml.info/srcML/modifier".
+	  Can also be specified by declaring a prefix for this namespace using the xmlns option, e.g.,
+	  <option>&XMLNS_FLAG;:type="http://www.sdml.info/srcML/modifier"</option>
+	</para>
+      </listitem>
+    </varlistentry>
 
 </refsect1>
 <refsect1>

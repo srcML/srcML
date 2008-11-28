@@ -39,7 +39,7 @@ option.dtd : ${OPTION_SRC}
 gzip : src2srcml.1.gz srcml2src.1.gz
 
 install : ${MAN_GZIP}
-	#cp src2srcml.1.gz srcml2src.1.gz /usr/share/man/man1/.
+	cp src2srcml.1.gz srcml2src.1.gz /usr/share/man/man1/.
 
 clean :
 	rm -f ${MAN_PAGES} ${MAN_GZIP} option.dtd status.dtd
