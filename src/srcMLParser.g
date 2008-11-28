@@ -624,19 +624,25 @@ statements_non_cfg { int token = 0; int secondtoken = 0; isoperatorfunction = 0;
 declaration { int token = 0; int type_count = 0; } :
 
         // function
-        (function_check[token /* token after header */, type_count /* count of names in type */])=> (
-
-            // function definition based on the token after the header
-            { token == LCURLY }? function_definition[type_count] |
-
-            // function declaration
-            function_declaration[type_count]) |
+        (function_check[token /* token after header */, type_count /* count of names in type */])=>
+        
+            function[token, type_count] |
 
         // function pointer declaration
         (function_pointer_declaration[type_count])=> function_pointer_declaration[type_count] |
 
         // declaration statement
         variable_declaration_statement[type_count]
+;
+
+// functions
+function[int token, int type_count] {} :
+
+        // function definition based on the token after the header
+        { token == LCURLY }? function_definition[type_count] |
+
+        // function declaration
+        function_declaration[type_count]
 ;
 
 call_macro_expression[int secondtoken, bool statement]
