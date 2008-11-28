@@ -57,6 +57,7 @@ COLON = ":";
 // define value in master grammar so that it depends on language
 DCOLON;
 
+MEMBERPOINTER = ".*";
 PERIOD = ".";
 MULTOPS = "*";
 MULTIMM = "*=";

@@ -3626,7 +3626,7 @@ general_operators { LocalMode lm; } :
 
             startElement(SOPERATOR);
         }
-        (OPERATORS | TEMPOPS | TEMPOPE | EQUAL | MULTIMM | DESTOP)
+        (OPERATORS | TEMPOPS | TEMPOPE | EQUAL | MULTIMM | DESTOP | MEMBERPOINTER)
 ;
 
 /*
