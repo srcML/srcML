@@ -627,7 +627,7 @@ declaration { int token = 0; int type_count = 0; } :
         (function_check[token /* token after header */, type_count /* count of names in type */])=> (
 
             // function definition based on the token after the header
-            { token == LCURLY }? function[type_count] |
+            { token == LCURLY }? function_definition[type_count] |
 
             // function declaration
             function_declaration[type_count]) |
@@ -2118,7 +2118,7 @@ condition_rparen[bool final = false] {} :
 /*
    function definition
 */
-function[int type_count] {} :
+function_definition[int type_count] {} :
 		{
             // function definitions have a "nested" block statement
             startNewMode(MODE_STATEMENT);
@@ -3729,7 +3729,7 @@ expression_part[bool checkmacro = false] { guessing_end();
         (function_check[token /* token after header */, type_count /* number of names detected in type */])=>
 
                 // function definition based on the token after the header
-                function[type_count] |
+                function_definition[type_count] |
 
         // left parentheses
         lparen_marked
