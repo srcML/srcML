@@ -877,7 +877,7 @@ for_initialization_variable_declaration[int type_count] {} :
             // inside of the terminate
             startNewMode(MODE_LIST);
 
-            startElement(SEXPRESSION);
+            startElement(SDECLARATION);
         }
         variable_declaration[type_count]
 ;
