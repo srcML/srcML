@@ -583,7 +583,7 @@ statement_cfg {} :
   Important to keep semantic checks, e.g., (constructor)=>, in place.  Most of these rules
   can start with a name which leaves it ambiguous which to choose.
 */
-statements_non_cfg { int type_count = 0; int token = 0; int secondtoken = 0; isoperatorfunction = 0; } :
+statements_non_cfg { int token = 0; int secondtoken = 0; isoperatorfunction = 0; } :
 
         // class forms for class declarations/definitions as opposed to part of a declaration types
         (class_struct_union_check[token /* token after header */])=> class_struct_union[token] |
@@ -603,23 +603,7 @@ statements_non_cfg { int type_count = 0; int token = 0; int secondtoken = 0; iso
         (constructor_check[token /* token after header */])=> constructor[token] |
 
         // declarations of all sorts
-        (declaration_check[secondtoken])=> (
-
-            // function
-            (function_check[token /* token after header */, type_count /* count of names in type */])=> (
-
-                // function definition based on the token after the header
-                { token == LCURLY }? function[type_count] |
-
-                // function declaration
-                function_declaration[type_count]) |
-
-            // function pointer declaration
-            (function_pointer_declaration[type_count])=> function_pointer_declaration[type_count] |
-
-            // declaration statement
-            variable_declaration_statement[type_count]
-        ) |
+        (declaration_check[secondtoken])=> declaration |
 
         // constructor
         { inLanguage(LANGUAGE_CXX) }?
@@ -634,6 +618,25 @@ statements_non_cfg { int type_count = 0; int token = 0; int secondtoken = 0; iso
 
         // call
         call_macro_expression[secondtoken, true]
+;
+
+// declarations of all sorts
+declaration { int token = 0; int type_count = 0; } :
+
+        // function
+        (function_check[token /* token after header */, type_count /* count of names in type */])=> (
+
+            // function definition based on the token after the header
+            { token == LCURLY }? function[type_count] |
+
+            // function declaration
+            function_declaration[type_count]) |
+
+        // function pointer declaration
+        (function_pointer_declaration[type_count])=> function_pointer_declaration[type_count] |
+
+        // declaration statement
+        variable_declaration_statement[type_count]
 ;
 
 call_macro_expression[int secondtoken, bool statement]
