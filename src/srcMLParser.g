@@ -2306,9 +2306,10 @@ function_tail {} :
 ;
 
 /*
-Determine (as quickly as possible) whether we have a declaration.  In the majority of cases we can tell a declaration
-by the occurrence of two names in sequence.  For functions that do not have types (overloaded operators, main, etc.)
-we have to look further.
+Determine (as quickly as possible) whether we have a declaration.  In
+the majority of cases we can tell a declaration by the occurrence of
+two names in sequence.  For functions that do not have types
+(overloaded operators, main, etc.)  we have to look further.
 
 As a side effect, we record the token right for faster checking of label (name followed by colon)
 */
@@ -2317,7 +2318,8 @@ declaration_check[int& token] { token = 0; } :
         // no return value functions:  casting operator method and main
         (OPERATOR (NAME)* | MAIN) paren_pair record[isoperatorfunction, 1] LCURLY |
 
-        { inLanguage(LANGUAGE_CXX) }? (operator_function_name)=> operator_function_name record[isoperatorfunction, 1] paren_pair LCURLY |
+        { inLanguage(LANGUAGE_CXX) }?
+        (operator_function_name)=> operator_function_name record[isoperatorfunction, 1] paren_pair LCURLY |
 
         (options { greedy = true; } : (VIRTUAL | INLINE))* lead_type_identifier declaration_check_end[token]
 ;
