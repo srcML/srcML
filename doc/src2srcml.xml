@@ -35,17 +35,26 @@
   <para>
     The program <command>src2srcml</command> translates source-code
     files into the XML source-code representation srcML.  The srcML
-    format allows for XML addressing, querying, and transformation of
-    source code.  All text from the original source-code file is
-    preserved including white-space, comments and preprocessor
-    statements.  No preprocessing of the source code is done.  In
-    addition it can be applied to individual source-code files, or code
-    fragments.
+    format allows the use of XML for addressing, querying, and
+    transformation of source code.  All text from the original
+    source-code file is preserved including white-space, comments and
+    preprocessor statements.  No preprocessing of the source code is
+    done.  In addition it can be applied to individual source-code
+    files, or code fragments.
   </para>
   <para>
     The translation is fast and uses a stream-parsing approach where
     parsing is done top-down and elements are issued as soon as they
     are detected.
+  </para>
+  <para>
+    This program is typically used with <command>srcml2src</command>
+    which converts from the srcML format back to source code.
+    Conversion of a source-code file through
+    <command>src2srcml</command> and then through
+    <command>srcml2src</command> produces the original source-code
+    file.  The program <command>srcml2src</command> also provides a
+    set of utilities for working with srcML files.
   </para>
   <para>
     Some options are only available in the libxml2 version.
@@ -104,11 +113,12 @@
       <listitem>
 	<para>
 	  Sets the input encoding of the source-code file to
-	  <replaceable>encoding</replaceable>.  The default is &DEFAULT_TEXT_ENCODING;.
-	  Not stored, but used for any necessary source-code text translation in the libxml2-enabled version.
-	  Possible encodings with the libxml2-enabled
-	  version can be obtained by using the command <command>iconv
-	  -l</command>.
+	  <replaceable>encoding</replaceable>.  The default is
+	  &DEFAULT_TEXT_ENCODING;.  Not stored, but used for any
+	  necessary source-code text translation in the
+	  libxml2-enabled version.  Possible encodings with the
+	  libxml2-enabled version can be obtained by using the command
+	  <command>iconv -l</command>.
 	</para>
       </listitem>
     </varlistentry>
@@ -131,7 +141,8 @@
       <term><option>&XMLNS_FLAG;=<replaceable class="parameter">URI</replaceable></option></term>
       <listitem>
 	<para>
-	  Sets the URI for the default namespace.  Default is <option>&XMLNS_FLAG;="http://www.sdml.info/srcML/src"</option>.
+	  Sets the URI for the default namespace.  Default is
+	  <option>&XMLNS_FLAG;="&SRCML_SRC_NS_URI;"</option>.
 	</para>
       </listitem>
     </varlistentry>
@@ -140,8 +151,10 @@
       <listitem>
 	<para>
 	  Sets the namespace prefix PREFIX for the namespace URI.
-	  Defaults are <option>&XMLNS_FLAG;:cpp="http://www.sdml.info/srcML/cpp"</option>,
-	  and <option>&XMLNS_FLAG;:srcerr="http://www.sdml.info/srcML/srcerr"</option>.
+	  Defaults are
+	  <option>&XMLNS_FLAG;:&SRCML_CPP_NS_PREFIX_DEFAULT;="&SRCML_CPP_NS_URI;"</option>,
+	  and
+	  <option>&XMLNS_FLAG;:&SRCML_ERR_NS_PREFIX_DEFAULT;="&SRCML_ERR_NS_URI;"</option>.
 	</para>
       </listitem>
     </varlistentry>
@@ -149,8 +162,9 @@
       <term><option>&NO_XML_DECLARATION_FLAG;</option></term>
       <listitem>
 	<para>
-	  No output of the default XML declaration.  Useful when the output of the translator is to be placed inside
-	  another XML document.
+	  No output of the default XML declaration.  Useful when the
+	  output of the translator is to be placed inside another XML
+	  document.
 	</para>
       </listitem>
     </varlistentry>
@@ -158,8 +172,9 @@
       <term><option>&NO_NAMESPACE_DECLARATION_FLAG;</option></term>
       <listitem>
 	<para>
-	  No output of namespace declarations.  Useful when the output of the translator is to be placed inside
-	  another XML document.
+	  No output of namespace declarations.  Useful when the output
+	  of the translator is to be placed inside another XML
+	  document.
 	</para>
       </listitem>
     </varlistentry>
@@ -167,7 +182,8 @@
       <term><option>&COMPRESSED_FLAG_SHORT;, &COMPRESSED_FLAG;</option></term>
       <listitem>
 	<para>
-	  Output is in compressed gzip format.  Only available in the
+	  Output is in compressed gzip format.  This format can be directly
+	  read by <command>srcml2src</command>. Only available in the
 	  libxml2-enabled version.
 	</para>
       </listitem>
@@ -188,8 +204,10 @@
 	  When translation errors occur src2srcml preserves all text,
 	  but may issue incorrect markup.  In debug mode the text with
 	  the translation error is marked with a special set of tags
-	  with the prefix srcerr from the namespace
-	  http://www.sdml.info/srcml/srcerr.
+	  with the prefix &SRCML_ERR_NS_PREFIX_DEFAULT; from the namespace
+	  &SRCML_ERR_NS_URI;.  Debug mode can also be indicated by defining
+	  a prefix for this namespace URL, e.g., 
+	  <option>&XMLNS_FLAG;:&SRCML_ERR_NS_PREFIX_DEFAULT;="&SRCML_ERR_NS_URI;"</option>.
 	</para>
       </listitem>
     </varlistentry>
@@ -197,8 +215,9 @@
       <term><option>&VERBOSE_FLAG_SHORT;, &VERBOSE_FLAG;</option></term>
       <listitem>
 	<para>
-	  Verbose output to standard error.  Especially useful with the <option>&FILELIST_FLAG;</option> option.  The signal SIGUSR1 can
-	  be used to toggle this option.
+	  Verbose output to standard error.  Especially useful with
+	  the <option>&FILELIST_FLAG;</option> option.  The signal
+	  SIGUSR1 can be used to toggle this option.
 	</para>
       </listitem>
     </varlistentry>
@@ -275,9 +294,13 @@
       <term><option>&LITERAL_FLAG;</option></term>
       <listitem>
 	<para>
-	  Additional markup of literal values using the element literal with the prefix "lit" in the namespace "http://www.sdml.info/srcML/literal".
-	  Can also be specified by declaring a prefix for this namespace using the xmlns option, e.g.,
-	  <option>&XMLNS_FLAG;:lit="http://www.sdml.info/srcML/literal"</option>
+	  Additional markup of literal values using the element
+	  literal with the prefix
+	  "&SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT;" in the namespace
+	  "&SRCML_EXT_LITERAL_NS_URI;".  Can also be
+	  specified by declaring a prefix for this namespace using the
+	  xmlns option, e.g.,
+	  <option>&XMLNS_FLAG;:&SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT;="&SRCML_EXT_LITERAL_NS_URI;"</option>
 	</para>
       </listitem>
     </varlistentry>
@@ -285,9 +308,13 @@
       <term><option>&OPERATOR_FLAG;</option></term>
       <listitem>
 	<para>
-	  Additional markup of literal values using the element operator with the prefix "op" in the namespace "http://www.sdml.info/srcML/operator".
-	  Can also be specified by declaring a prefix for this namespace using the xmlns option, e.g.,
-	  <option>&XMLNS_FLAG;:op="http://www.sdml.info/srcML/operator"</option>
+	  Additional markup of operators values using the element
+	  operator with the prefix
+	  "&SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT;" in the namespace
+	  "&SRCML_EXT_OPERATOR_NS_URI;".  Can also be
+	  specified by declaring a prefix for this namespace using the
+	  xmlns option, e.g.,
+	  <option>&XMLNS_FLAG;:&SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT;="&SRCML_EXT_OPERATOR_NS_URI;"</option>
 	</para>
       </listitem>
     </varlistentry>
@@ -295,9 +322,13 @@
       <term><option>&MODIFIER_FLAG;</option></term>
       <listitem>
 	<para>
-	  Additional markup of type modifiers using the element modifier with the prefix "type" in the namespace "http://www.sdml.info/srcML/modifier".
-	  Can also be specified by declaring a prefix for this namespace using the xmlns option, e.g.,
-	  <option>&XMLNS_FLAG;:type="http://www.sdml.info/srcML/modifier"</option>
+	  Additional markup of type modifiers using the element
+	  modifier with the prefix
+	  "&SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT;" in the namespace
+	  "&SRCML_EXT_MODIFIER_NS_URI;".  Can also be specified by
+	  declaring a prefix for this namespace using the xmlns
+	  option, e.g.,
+	  <option>&XMLNS_FLAG;:&SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT;="&SRCML_EXT_MODIFIER_NS_URI;"</option>
 	</para>
       </listitem>
     </varlistentry>
@@ -450,7 +481,7 @@
   <para>
     Libxml2 directly supports many encodings beyond UTF-8, UTF-16, and ISO-8859-1 through iconv.
     However, the BOM (Byte Order Mark) immediately before the XML declaration may not be processed
-    correctly by srcml2src and by other libxml2-based tools (e.g., xmllint).
+    correctly by <command>srcml2src</command> and by other libxml2-based tools (e.g., xmllint).
     Use the LE or BE version of the encoding, e.g., UTF-32BE, UTF-32LE, instead.
   </para>
 </refsect1>
