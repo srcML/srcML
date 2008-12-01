@@ -629,7 +629,8 @@ declaration { int token = 0; int type_count = 0; } :
             function[token, type_count] |
 
         // function pointer declaration
-        (function_pointer_declaration[type_count])=> function[token, type_count] |
+        // type count is not high enough, since function rule expects name of function in type_count
+        (function_pointer_declaration[type_count])=> { ++type_count;} function[token, type_count] |
 
         // declaration statement
         variable_declaration_statement[type_count]
