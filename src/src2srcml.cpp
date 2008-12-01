@@ -239,12 +239,12 @@ bool cpp_else = false;
 bool cpp_if0 = false;
 
 // namespace prefixes
-std::string ns_prefix_src="";
-std::string ns_prefix_cpp="cpp";
-std::string ns_prefix_err="srcerr";
-std::string ns_prefix_literal="lit";
-std::string ns_prefix_operator="op";
-std::string ns_prefix_modifier="type";
+std::string ns_prefix_src      = SRCML_SRC_NS_PREFIX_DEFAULT;
+std::string ns_prefix_cpp      = SRCML_CPP_NS_PREFIX_DEFAULT;
+std::string ns_prefix_err      = SRCML_ERR_NS_PREFIX_DEFAULT;
+std::string ns_prefix_literal  = SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT;
+std::string ns_prefix_operator = SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT;
+std::string ns_prefix_modifier = SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT;
 
 typedef std::map<std::string, std::string> URI_TYPE;
 
