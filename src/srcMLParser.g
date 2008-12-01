@@ -2956,8 +2956,8 @@ name_tail[bool& iscomplex, bool marked] { LocalMode lm; } :
 
         // "a::" will cause an exception to be thrown
         ( options { greedy = true; } : 
-            (DCOLON { iscomplex = true; })
-            ( options { greedy = true; } : DCOLON)*
+            (dcolon { iscomplex = true; })
+            ( options { greedy = true; } : dcolon)*
             (simple_name_optional_template[marked] | overloaded_operator)
         )*
 ;
@@ -3672,6 +3672,18 @@ period { LocalMode lm; } :
             startElement(SOPERATOR);
         }
         PERIOD
+;
+
+/*
+  Namespace operator '::'
+*/
+dcolon { LocalMode lm; } :
+        {
+            startNewMode(MODE_LOCAL);
+
+            startElement(SOPERATOR);
+        }
+        DCOLON
 ;
 
 /*
