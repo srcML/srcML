@@ -13,6 +13,7 @@ srcml2src.1 : srcml2src.xml option.dtd option.dtd
 
 view : man
 	man -l src2srcml.1
+	man -l srcml2src.1
 
 src2srcml.1.gz : src2srcml.1
 	gzip -f src2srcml.1

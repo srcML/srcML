@@ -35,29 +35,32 @@
     The program <command>srcml2src</command> translates from the XML
     source-code representation srcML into source code.  The srcML
     format allows for XML addressing, querying, and transformation of
-    source code.
+    source code.  The srcML format for a source-code file is typically
+    produced by <command>src2srcml</command>.
   </para>
   <para>
-    The combination of src2srcml and srcml2src allows for full
-    round-trip transformation of source-code files without any loss of
-    comments, white space, and preprocessing statements.
+    The combination of <command>src2srcml</command> and
+    <command>srcml2src</command> allows for full round-trip
+    transformation of source-code files without any loss of comments,
+    white space, and preprocessing statements.
   </para>
   <para>
     Conversion from the srcML format to source code is relatively
     straightforward.  All XML tags are removed and escaped characters
-    are unescaped.  In addition, the special srcML element for a
+    are unescaped.  The special srcML element for a
     formfeed is converted back to a form-feed character (form-feed
     characters are not allowed in XML, even escaped).
   </para>
   <para>
     In addition to conversion, srcml2src provides various srcML
     utilities such as extracting metadata, extracting individual parts
-    of compound srcML files, and extracting metadata from individual
-    parts of compound srcML files.
+    of compound srcML files (as both text and XML), and extracting
+    metadata from individual parts of compound srcML files.  It can also
+    be used to extract all the individual files in a compound srcML file.
   </para>
   <para>
-    Using the character - in the place of an input source-code
-    filename uses standard input, and in place of an output srcML file
+    Using the character - in the place of an input srcML file
+    filename uses standard input, and in place of an output source-code file
     uses standard output.
   </para>
 </refsect1>
@@ -109,9 +112,8 @@
 	  Extracts all units from a compound srcML file back into
 	  source-code files.  The directory and filename used is based
 	  on that stored in the directory and filename attributes.
-	  Any necessary subdirectories are created and the file itself
-	  is created.  Any existing file with the same path will be
-	  overwritten.
+	  Necessary subdirectories are created.  Existing files with
+	  the same path will be overwritten.
 	</para>
       </listitem>
     </varlistentry>
@@ -120,9 +122,10 @@
       <listitem>
 	<para>
 	  Output is in srcML format.  Used in combination with the
-	  <option>&UNIT_FLAG;</option> option to output a particular nested unit in XML.
-	  The output unit has attributes formed by the merger of the
-	  attributes of the individual unit and the overall unit.
+	  <option>&UNIT_FLAG;</option> option to output a particular
+	  nested unit in XML.  The output unit has attributes formed
+	  by the merger of the attributes of the individual unit and
+	  the root unit.
 	</para>
       </listitem>
     </varlistentry>
@@ -139,8 +142,9 @@
       <term><option>&NO_XML_DECLARATION_FLAG;</option></term>
       <listitem>
 	<para>
-	  No output of the default XML declaration.  Only applies to XML output.  Useful when the output of the translator is to be placed inside
-	  another XML document.
+	  No output of the default XML declaration.  Only applies to
+	  XML output.  Useful when the output is to
+	  be placed inside another XML document.
 	</para>
       </listitem>
     </varlistentry>
@@ -149,7 +153,7 @@
       <listitem>
 	<para>
 	  No output of namespace declarations.  Only applies to XML
-	  output.  Useful when the output of the translator is to be
+	  output.  Useful when the output is to be
 	  placed inside another XML document.
 	</para>
       </listitem>
