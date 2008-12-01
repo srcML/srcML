@@ -95,9 +95,20 @@
 	  is separately translated and collectively stored into a
 	  single compound srcML document.  The list has a single
 	  filename on each line starting at the beginning of the line.
-	  Blank lines are ignored.  A line with the character '#' at
-	  the start of a line is regarded as a comment character and
-	  the line is ignored.
+	  Blank lines and lines that begin with the character '#' are ignored.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><option>&TEXTENCODING_FLAG_SHORT;, &TEXTENCODING_FLAG;=<replaceable class="parameter">encoding</replaceable></option></term>
+      <listitem>
+	<para>
+	  Sets the input encoding of the source-code file to
+	  <replaceable>encoding</replaceable>.  The default is &DEFAULT_TEXT_ENCODING;.
+	  Not stored, but used for any necessary source-code text translation in the libxml2-enabled version.
+	  Possible encodings with the libxml2-enabled
+	  version can be obtained by using the command <command>iconv
+	  -l</command>.
 	</para>
       </listitem>
     </varlistentry>
@@ -109,19 +120,10 @@
 	  <replaceable class="parameter">encoding</replaceable>.  The
 	  default is UTF-8.  Conversion to the xml encoding from the
 	  source encoding is only performed in the libxml2-enabled
-	  version.  Possible encodings with the libxml2-enabled
+	  version.
+	  Possible encodings with the libxml2-enabled
 	  version can be obtained by using the command <command>iconv
 	  -l</command>.
-	</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term><option>&TEXTENCODING_FLAG_SHORT;, &TEXTENCODING_FLAG;=<replaceable class="parameter">encoding</replaceable></option></term>
-      <listitem>
-	<para>
-	  Sets the input encoding of the source-code file to
-	  <replaceable>encoding</replaceable>.  The default is &DEFAULT_TEXT_ENCODING;.
-	  Not stored, but used for any necessary source-code text translation in the libxml2-enabled version.
 	</para>
       </listitem>
     </varlistentry>
