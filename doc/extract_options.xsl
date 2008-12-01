@@ -19,7 +19,8 @@
 <xsl:template match="src:decl[
 		     substring(src:name, string-length(src:name) - 4)='_FLAG' or
 		     substring(src:name, string-length(src:name) - 10)='_FLAG_SHORT' or
-		     (contains(src:name, 'DEFAULT') and contains(src:name, 'ENCODING'))
+		     (contains(src:name, 'DEFAULT') and contains(src:name, 'ENCODING')) or
+		     contains(src:name, 'SRCML')
 ]">
 
   <xsl:value-of select="concat('&lt;!ENTITY ', src:name, ' ' , src:init/src:expr, '&gt;')"/><xsl:text>

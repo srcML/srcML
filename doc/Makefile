@@ -28,7 +28,7 @@ srcml2src.html : srcml2src.1
 	man2html $< > $@.tmp
 	tail -n +3 $@.tmp > $@
 
-OPTION_SRC= ../src/src2srcml.cpp ../src/srcml2src.cpp ../src/srcmlapps.h
+OPTION_SRC= ../src/src2srcml.cpp ../src/srcml2src.cpp ../src/srcmlapps.h ../src/srcmlns.h
 option.dtd : ${OPTION_SRC}
 	echo -n "<!ENTITY DATE \"" > option.dtd
 	date | perl -p -e "s|\n||" >> option.dtd
