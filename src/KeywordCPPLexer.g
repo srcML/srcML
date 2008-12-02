@@ -178,6 +178,11 @@ KeywordCPPLexer(std::istream& in, int language = LANGUAGE_CXX)
 
         // special C++ operators
         literals["::"] = DCOLON;
+
+        // special C++ constant values
+        literals["false"] = FALSE;
+        literals["true"] = TRUE;
+
         // specifiers that are not needed for parsing
         /*
         literals["mutable"] = MUTABLE;

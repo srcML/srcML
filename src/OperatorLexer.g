@@ -62,6 +62,9 @@ PERIOD = ".";
 MULTOPS = "*";
 MULTIMM = "*=";
 
+FALSE;
+TRUE;
+
 EOL_PLACEHOLD;
 }
 

@@ -84,10 +84,12 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
     ElementNames[SSTRING] = "literal";
     ElementNames[SCHAR] = "literal";
     ElementNames[SLITERAL] = "literal";
+    ElementNames[SBOOLEAN] = "literal";
 
     ElementPrefix[SSTRING] = (char*) uri[SRCML_EXT_LITERAL_NS_URI].c_str();
     ElementPrefix[SCHAR] = ElementPrefix[SSTRING];
     ElementPrefix[SLITERAL] = ElementPrefix[SSTRING];
+    ElementPrefix[SBOOLEAN] = ElementPrefix[SSTRING];
   }
 
   // only allow debug tags in debug
@@ -117,6 +119,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   process_table[SSTRING] = &srcMLOutput::processString;
   process_table[SCHAR] = &srcMLOutput::processChar;
   process_table[SLITERAL] = &srcMLOutput::processLiteral;
+  process_table[SBOOLEAN] = &srcMLOutput::processBoolean;
   process_table[FORMFEED] = &srcMLOutput::processFormFeed;
   process_table[SINTERFACE] = &srcMLOutput::processInterface;
 
@@ -461,6 +464,11 @@ void srcMLOutput::processLiteral(const antlr::RefToken& token) {
   processOptional(token, "type", "number");
 }
 
+void srcMLOutput::processBoolean(const antlr::RefToken& token) {
+
+  processOptional(token, "type", "boolean");
+}
+
 void srcMLOutput::processMarker(const antlr::RefToken& token) {
 
   const char* s = token2name(token);
@@ -518,6 +526,7 @@ void srcMLOutput::fillElementNames() {
   ElementNames[SSTRING] = "";
   ElementNames[SCHAR] = "";
   ElementNames[SLITERAL] = "";
+  ElementNames[SBOOLEAN] = "";
 
   // operators
   ElementNames[SOPERATOR] = "";

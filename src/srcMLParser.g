@@ -253,6 +253,7 @@ tokens {
     SSTRING;        // string marked by double quotes
     SCHAR;          // string or char marked by single quotes
     SLITERAL;       // literal number, constant
+    SBOOLEAN;       // boolean literal, i.e., true, false
 
     // operators
     SOPERATOR;
@@ -2598,7 +2599,7 @@ unbalanced_parentheses :
 
 */
 expression_identifier :
-      variable_identifier | string_literal | char_literal | literal
+      variable_identifier | string_literal | char_literal | literal | boolean
 ;
 
 /*
@@ -3842,6 +3843,17 @@ literal { LocalMode lm; } :
         CONSTANTS
 ;
 
+boolean { LocalMode lm; } :
+        {
+            // end all elements at end of rule automatically
+            startNewMode(MODE_LOCAL);
+
+            // start the literal value
+            startElement(SBOOLEAN);
+        }
+        (TRUE | FALSE)
+;
+
 derived { LocalMode lm; } :
         {
             // end all elements at end of rule automatically
@@ -4156,7 +4168,7 @@ template_argument { LocalMode lm; } :
 
             startElement(STEMPLATE_ARGUMENT);
         }
-        ( options { greedy = true; } : type_identifier | literal | char_literal | string_literal)+
+        ( options { greedy = true; } : type_identifier | literal | char_literal | string_literal | boolean)+
 ;
 
 tempops {} :
