@@ -27,6 +27,8 @@
 #include <fstream>
 #include <cstring>
 #include "xmloutput.h"
+#include <xmlsave.h>
+#include "srcmlns.h"
 
 #ifdef __GNUC__
 #include <sys/stat.h>
@@ -36,6 +38,8 @@
 #endif
 
 #include "Options.h"
+
+xmlAttrPtr root_attributes;
 
 // directory permission for expand
 #ifdef __GNUC__
@@ -343,16 +347,22 @@ const std::vector<std::pair<std::string, std::string> > srcMLUtility::getNS() co
 // output current unit element in XML
 void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
 
-  // open the output text writer stream
-  // "-" filename is standard output
-  xmlTextWriterPtr writer = xmlNewTextWriterFilename(filename, isoption(options, OPTION_COMPRESSED));
+  // new document
+  xmlDocPtr doc;
+  xmlTextWriterPtr writer = xmlNewTextWriterDoc(&doc, isoption(options, OPTION_COMPRESSED));
 
   // issue the xml declaration
-  if (isoption(options, OPTION_XMLDECL))
-    xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
+  int save_options = XML_SAVE_NO_DECL;
+  if (isoption(options, OPTION_XMLDECL)) {
+      xmlTextWriterStartDocument(writer, XML_VERSION, output_encoding, XML_DECLARATION_STANDALONE);
+      save_options = 0;
+  }
 
-  // output main unit tag
-  xmlTextWriterStartElement(writer, BAD_CAST "unit");
+  // end the document so we get the correct xml declaration
+  xmlTextWriterEndDocument(writer);
+
+  // set the expanded reader as the root element of the new document
+  xmlDocSetRootElement(doc, xmlTextReaderCurrentNode(reader));
 
   // output namespaces from outer unit tag
   if (isoption(options, OPTION_NAMESPACEDECL)) {
@@ -360,69 +370,44 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
       std::string uri = (*iter).first;
       std::string prefix = (*iter).second;
 
-      xmlTextWriterWriteAttribute(writer, BAD_CAST prefix.c_str(), BAD_CAST uri.c_str());
+      // prefix currently include "xmlns:"
+      prefix.erase(0, 6);
+
+      xmlNewNs(xmlDocGetRootElement(doc), BAD_CAST uri.c_str(), prefix == "" ? NULL : BAD_CAST prefix.c_str());
     }
   }
 
-  // output src namespace
-  //  xmlTextWriterWriteAttribute(writer, BAD_CAST "xmlns", BAD_CAST SRCML_SRC_NS_URI);
+  // generate the full tree in the reader of the unit
+  // so that we can move it to the output
+  xmlTextReaderExpand(reader);
 
-  // output cpp namespace
-  //  xmlTextWriterWriteAttribute(writer, BAD_CAST "xmlns:cpp", BAD_CAST SRCML_CPP_NS_URI);
-
-  // output debugging namespace
-  //  if (isoption(options, OPTION_DEBUG))
-  //      xmlTextWriterWriteAttribute(writer, BAD_CAST "xmlns:srcerr", BAD_CAST SRCML_ERR_NS_URI);
-
-  // update attributes from root unit element with attributes from this nested unit
-  xmlChar* attribute = 0;
-
+/*
   // updated attribute language
-  attribute = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_LANGUAGE);
-  if (attribute)
-    unit_language = attribute;
+  if (unit_language && !xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_LANGUAGE))
+	  xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_LANGUAGE, BAD_CAST unit_language);
 
-  if (unit_language)
-    xmlTextWriterWriteAttribute(writer, BAD_CAST UNIT_ATTRIBUTE_LANGUAGE, unit_language);
+  // update attribute directory
+  if (unit_directory && !xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_DIRECTORY))
+	  xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_DIRECTORY, BAD_CAST unit_directory);
 
-  if (attribute)
-    xmlFree(attribute);
+  // update attribute filename
+  if (unit_filename && !xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_FILENAME))
+	  xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_FILENAME, BAD_CAST unit_filename);
 
-  // updated attribute directory
-  attribute = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_DIRECTORY);
-  if (attribute)
-    unit_directory = attribute;
+  // update attribute version
+  if (unit_version && !xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_VERSION))
+	  xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_VERSION, BAD_CAST unit_version);
+*/
 
-  if (unit_directory)
-    xmlTextWriterWriteAttribute(writer, BAD_CAST UNIT_ATTRIBUTE_DIRECTORY, unit_directory);
+  // set attributes from outer unit tag
+  for (std::vector<std::pair<std::string, std::string> >::const_iterator iter = attrv.begin(); iter != attrv.end(); iter++) {
+      std::string value = (*iter).first;
+      std::string name = (*iter).second;
 
-  if (attribute)
-    xmlFree(attribute);
-
-  // updated attribute filename
-  attribute = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_FILENAME);
-
-  if (attribute)
-    unit_filename = attribute;
-
-  if (unit_filename) {
-    xmlTextWriterWriteAttribute(writer, BAD_CAST UNIT_ATTRIBUTE_FILENAME, unit_filename);
+      if (!xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST name.c_str()))
+	      xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST name.c_str(), BAD_CAST value.c_str());
   }
-
-  if (attribute)
-    xmlFree(attribute);
-
-  // updated attribute version
-  attribute = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_VERSION);
-  if (attribute)
-    unit_version = attribute;
-
-  if (unit_version)
-    xmlTextWriterWriteAttribute(writer, BAD_CAST UNIT_ATTRIBUTE_VERSION, unit_version);
-
-  if (attribute)
-    xmlFree(attribute);
-
+/*
   // copy all other attributes from current unit (may be main unit)
   while (xmlTextReaderMoveToNextAttribute(reader)) {
 
@@ -438,26 +423,12 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
     // output current attribute
     xmlTextWriterWriteAttribute(writer, BAD_CAST name, xmlTextReaderConstValue(reader));
   }
-  
-  // process the nodes in this unit
-  while (1) {
-
-    // read a node
-    int ret = xmlTextReaderRead(reader);
-    if (ret != 1)
-      return;
-
-    // output text and all elements
-    outputXML(reader, writer);
-
-    // found end element of this unit
-    if (xmlTextReaderDepth(reader) == 1 && xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT)
-      break;
-  }
-
-  xmlTextWriterEndDocument(writer);
-
-  xmlFreeTextWriter(writer);
+*/
+  // save the created document
+  // "-" filename is standard output
+  xmlSaveCtxtPtr saver = xmlSaveToFilename(filename, output_encoding, save_options);
+  xmlSaveDoc(saver, doc);
+  xmlSaveClose(saver);
 }
 
 // output current unit element as text
