@@ -361,6 +361,10 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
   // end the document so we get the correct xml declaration
   xmlTextWriterEndDocument(writer);
 
+  // generate the full tree in the reader of the unit
+  // so that we can move it to the output
+  xmlTextReaderExpand(reader);
+
   // set the expanded reader as the root element of the new document
   xmlDocSetRootElement(doc, xmlTextReaderCurrentNode(reader));
 
@@ -377,35 +381,46 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
     }
   }
 
-  // generate the full tree in the reader of the unit
-  // so that we can move it to the output
-  xmlTextReaderExpand(reader);
-
   // record the standard attributes and remove them so we can insert them in the
   // proper order
 
   // updated attribute language
-  if (unit_language && xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_LANGUAGE)) {
+  if (xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_LANGUAGE))
 	  unit_language = xmlGetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_LANGUAGE);
-	  xmlRemoveProp(xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_LANGUAGE));
-  }
 
   // update attribute directory
-  if (unit_directory && xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_DIRECTORY)) {
+  if (xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_DIRECTORY))
 	  unit_directory = xmlGetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_DIRECTORY);
-	  xmlRemoveProp(xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_DIRECTORY));
-  }
 
   // update attribute filename
-  if (unit_filename && xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_FILENAME)) {
+  if (xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_FILENAME))
 	  unit_filename = xmlGetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_FILENAME);
-	  xmlRemoveProp(xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_FILENAME));
-  }
 
   // update attribute version
-  if (unit_version && xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_VERSION)) {
+  if (xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_VERSION))
 	  unit_version = xmlGetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_VERSION);
-	  xmlRemoveProp(xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_VERSION));
+
+  // save a copy of all the non-standard attributes
+  std::vector<std::pair<std::string, std::string> > nattrv;
+  for (xmlAttrPtr pAttr = xmlDocGetRootElement(doc)->properties; pAttr; pAttr = pAttr->next) {
+
+     // skip standard attributes since they are already output
+     if ((strcmp((char*) pAttr->name, UNIT_ATTRIBUTE_LANGUAGE) == 0) ||
+	 (strcmp((char*) pAttr->name, UNIT_ATTRIBUTE_DIRECTORY) == 0) ||
+	 (strcmp((char*) pAttr->name, UNIT_ATTRIBUTE_FILENAME) == 0) ||
+	 (strcmp((char*) pAttr->name, UNIT_ATTRIBUTE_VERSION) == 0))
+      continue;
+
+      char* ac = (char*) xmlGetProp(xmlDocGetRootElement(doc), pAttr->name);
+
+      nattrv.push_back(std::make_pair((const char*) ac, (const char*) pAttr->name));
+  }
+
+  // wipe out all the attributes
+  xmlAttrPtr pAttr;
+  while ((pAttr = xmlDocGetRootElement(doc)->properties)) {
+	  xmlDocGetRootElement(doc)->properties = pAttr->next;
+	  xmlRemoveProp(pAttr);
   }
 
   // now put back the attributes based on a merge of the root unit and this unit
@@ -421,7 +436,7 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
   if (unit_version)
 	  xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_VERSION, BAD_CAST unit_version);
 
-  // set attributes from outer unit tag
+  // put in attributes from root unit element
   for (std::vector<std::pair<std::string, std::string> >::const_iterator iter = attrv.begin(); iter != attrv.end(); iter++) {
       std::string value = (*iter).first;
       std::string name = (*iter).second;
@@ -429,6 +444,16 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
       if (!xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST name.c_str()))
 	      xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST name.c_str(), BAD_CAST value.c_str());
   }
+
+  // put in attributes from original unit element
+  for (std::vector<std::pair<std::string, std::string> >::const_iterator iter = nattrv.begin(); iter != nattrv.end(); iter++) {
+      std::string value = (*iter).first;
+      std::string name = (*iter).second;
+
+      if (!xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST name.c_str()))
+	      xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST name.c_str(), BAD_CAST value.c_str());
+  }
+
 /*
   // copy all other attributes from current unit (may be main unit)
   while (xmlTextReaderMoveToNextAttribute(reader)) {
