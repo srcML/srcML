@@ -381,23 +381,45 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
   // so that we can move it to the output
   xmlTextReaderExpand(reader);
 
-/*
+  // record the standard attributes and remove them so we can insert them in the
+  // proper order
+
   // updated attribute language
-  if (unit_language && !xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_LANGUAGE))
-	  xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_LANGUAGE, BAD_CAST unit_language);
+  if (unit_language && xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_LANGUAGE)) {
+	  unit_language = xmlGetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_LANGUAGE);
+	  xmlRemoveProp(xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_LANGUAGE));
+  }
 
   // update attribute directory
-  if (unit_directory && !xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_DIRECTORY))
-	  xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_DIRECTORY, BAD_CAST unit_directory);
+  if (unit_directory && xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_DIRECTORY)) {
+	  unit_directory = xmlGetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_DIRECTORY);
+	  xmlRemoveProp(xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_DIRECTORY));
+  }
 
   // update attribute filename
-  if (unit_filename && !xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_FILENAME))
-	  xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_FILENAME, BAD_CAST unit_filename);
+  if (unit_filename && xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_FILENAME)) {
+	  unit_filename = xmlGetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_FILENAME);
+	  xmlRemoveProp(xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_FILENAME));
+  }
 
   // update attribute version
-  if (unit_version && !xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_VERSION))
+  if (unit_version && xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_VERSION)) {
+	  unit_version = xmlGetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_VERSION);
+	  xmlRemoveProp(xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_VERSION));
+  }
+
+  // now put back the attributes based on a merge of the root unit and this unit
+  if (unit_language)
+	  xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_LANGUAGE, BAD_CAST unit_language);
+
+  if (unit_directory)
+	  xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_DIRECTORY, BAD_CAST unit_directory);
+
+  if (unit_filename)
+	  xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_FILENAME, BAD_CAST unit_filename);
+
+  if (unit_version)
 	  xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_VERSION, BAD_CAST unit_version);
-*/
 
   // set attributes from outer unit tag
   for (std::vector<std::pair<std::string, std::string> >::const_iterator iter = attrv.begin(); iter != attrv.end(); iter++) {
