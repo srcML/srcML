@@ -498,6 +498,11 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
     std::cerr << "Unable to register srcerr" << std::endl;
   xmlXPathObjectPtr result_nodes = xmlXPathEval(BAD_CAST "//src:formfeed", context);
 
+  for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
+	  xmlNodePtr formfeed = xmlNewText(BAD_CAST "\f");
+	  xmlReplaceNode(result_nodes->nodesetval->nodeTab[i], formfeed);
+  }
+
   xmlChar* s = xmlNodeGetContent(xmlTextReaderCurrentNode(reader));
   outputText(s, *pout);
 
