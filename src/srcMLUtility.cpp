@@ -448,8 +448,7 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
       std::string value = (*iter).first;
       std::string name = (*iter).second;
 
-      if (!xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST name.c_str()))
-	      xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST name.c_str(), BAD_CAST value.c_str());
+      xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST name.c_str(), BAD_CAST value.c_str());
   }
 
   // put in attributes from original unit element
@@ -457,8 +456,7 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
       std::string value = (*iter).first;
       std::string name = (*iter).second;
 
-      if (!xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST name.c_str()))
-	      xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST name.c_str(), BAD_CAST value.c_str());
+      xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST name.c_str(), BAD_CAST value.c_str());
   }
 
   // save the created document
