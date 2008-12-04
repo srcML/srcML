@@ -29,6 +29,8 @@
 #include "xmloutput.h"
 #include <xmlsave.h>
 #include "srcmlns.h"
+#include <xpath.h>
+#include <xpathInternals.h>
 
 #ifdef __GNUC__
 #include <sys/stat.h>
@@ -95,12 +97,35 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op
   unit_language = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_LANGUAGE);
 
   // record all attributes for future use
+  // don't use the TextReaderMoveToNextAttribute as it messes up the future expand
+  for (xmlAttrPtr pAttr = xmlTextReaderCurrentNode(reader)->properties; pAttr; pAttr = pAttr->next) {
+
+     // skip standard attributes since they are already output
+     if ((strcmp((char*) pAttr->name, UNIT_ATTRIBUTE_LANGUAGE) == 0) ||
+	 (strcmp((char*) pAttr->name, UNIT_ATTRIBUTE_DIRECTORY) == 0) ||
+	 (strcmp((char*) pAttr->name, UNIT_ATTRIBUTE_FILENAME) == 0) ||
+	 (strcmp((char*) pAttr->name, UNIT_ATTRIBUTE_VERSION) == 0))
+      continue;
+
+      char* ac = (char*) xmlGetProp(xmlTextReaderCurrentNode(reader), pAttr->name);
+
+      attrv.push_back(std::make_pair((const char*) ac, (const char*) pAttr->name));
+  }
+
+  // record all attributes for future use
+  // don't use the TextReaderMoveToNextAttribute as it messes up the future expand
+  for (xmlNsPtr pAttr = xmlTextReaderCurrentNode(reader)->nsDef; pAttr; pAttr = pAttr->next) {
+	  
+      nsv.push_back(std::make_pair((const char*) pAttr->href, pAttr->prefix ? (const char*) pAttr->prefix : ""));
+  }
+/*
   while (xmlTextReaderMoveToNextAttribute(reader)) {
     if (xmlTextReaderIsNamespaceDecl(reader))
       nsv.push_back(std::make_pair((const char*) xmlTextReaderConstValue(reader), (const char*) xmlTextReaderConstName(reader)));
     else
       attrv.push_back(std::make_pair((const char*) xmlTextReaderConstValue(reader), (const char*) xmlTextReaderConstName(reader)));
   }
+*/
 }
 
 // destructor
@@ -151,7 +176,7 @@ std::string srcMLUtility::namespace_ext(const std::string& uri, bool& nonnull) {
   std::string raw_prefix;
   for (std::vector<std::pair<std::string, std::string> >::const_iterator iter = nsv.begin(); iter != nsv.end(); iter++) {
 	std::string vuri = (*iter).first;
-	std::string vprefix = (*iter).second;
+	std::string vprefix = std::string("xmlns:") + (*iter).second;
 
 	if (vuri == uri) {
 	  raw_prefix = vprefix;
@@ -481,6 +506,10 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
 // output current unit element as text
 void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
 
+  // generate the full tree in the reader of the unit
+  // so that we can move it to the output
+  xmlTextReaderExpand(reader);
+
   // setup an output handler
   handler = xmlFindCharEncodingHandler(output_encoding);
 
@@ -499,6 +528,20 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
     pout = new std::ofstream(ofilename);
   }
 
+  // evaluate the xpath on the context from the current document
+  xmlXPathContextPtr context = xmlXPathNewContext(xmlTextReaderCurrentDoc(reader));
+  if (xmlXPathRegisterNs(context, BAD_CAST "src" , BAD_CAST "http://www.sdml.info/srcML/src") == -1)
+    std::cerr << "Unable to register src" << std::endl;
+  if (xmlXPathRegisterNs(context, BAD_CAST "cpp" , BAD_CAST "http://www.sdml.info/srcML/cpp") == -1)
+    std::cerr << "Unable to register cpp" << std::endl;
+  if (xmlXPathRegisterNs(context, BAD_CAST "srcerr" , BAD_CAST "http://www.sdml.info/srcML/srcerr") == -1)
+    std::cerr << "Unable to register srcerr" << std::endl;
+  xmlXPathObjectPtr result_nodes = xmlXPathEval(BAD_CAST "//src:formfeed", context);
+
+  xmlChar* s = xmlNodeGetContent(xmlTextReaderCurrentNode(reader));
+  outputText(s, *pout);
+
+/*
   bool first = true;
   // process the nodes in this unit
   while (1) {
@@ -536,7 +579,7 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
     if (xmlTextReaderDepth(reader) == startingDepth)
       break;
   }
-
+*/
   // delete ofstream if not standard input
   if (!(ofilename[0] == '-' && ofilename[1] == 0))
     delete pout;
@@ -563,7 +606,6 @@ void srcMLUtility::outputText(const xmlChar* s, std::ostream& out) {
     return;
 #ifdef LIBXML_ENABLED
   }
-
   unsigned int len = strlen((const char*) s);
 
   // input buffer created from C++ string

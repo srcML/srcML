@@ -524,6 +524,10 @@ int main(int argc, char* argv[]) {
 	for (std::vector<std::pair<std::string, std::string> >::const_iterator iter = ns.begin(); iter != ns.end(); iter++) {
 	  std::string uri = (*iter).first;
 	  std::string prefix = (*iter).second;
+	  if (prefix == "")
+		  prefix = "xmlns";
+	  else
+		  prefix = "xmlns:" + prefix;
 
 	  std::cout << prefix << "=\"" << uri << "\"" << std::endl;
 	}
