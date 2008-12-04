@@ -68,6 +68,8 @@ void skiptonextunit(xmlTextReaderPtr reader) throw (LibXMLError);
 void skiptounit(xmlTextReaderPtr reader, const char* filename) throw (LibXMLError);
 void skiptounit(xmlTextReaderPtr reader, int number) throw (LibXMLError);
 
+xmlXPathCompExprPtr compiled_xpath;
+
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op)
   : infile(infilename), output_encoding(encoding), options(op), reader(0), handler(0), nsv(0), attrv(0),
@@ -111,6 +113,9 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op
 
       nsv.push_back(std::make_pair((const char*) pAttr->href, pAttr->prefix ? (const char*) pAttr->prefix : ""));
   }
+
+  // setup the compiled xpath
+  compiled_xpath = xmlXPathCompile(BAD_CAST "//formfeed");
 }
 
 // destructor
@@ -496,13 +501,14 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
     std::cerr << "Unable to register cpp" << std::endl;
   if (xmlXPathRegisterNs(context, BAD_CAST "srcerr" , BAD_CAST "http://www.sdml.info/srcML/srcerr") == -1)
     std::cerr << "Unable to register srcerr" << std::endl;
-  xmlXPathObjectPtr result_nodes = xmlXPathEval(BAD_CAST "//src:formfeed", context);
+  xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, context);
 
   for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
 	  xmlNodePtr formfeed = xmlNewText(BAD_CAST "\f");
 	  xmlReplaceNode(result_nodes->nodesetval->nodeTab[i], formfeed);
   }
 
+  // output all the content
   xmlChar* s = xmlNodeGetContent(xmlTextReaderCurrentNode(reader));
   outputText(s, *pout);
 
