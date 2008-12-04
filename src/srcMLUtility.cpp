@@ -494,9 +494,9 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
     pout = new std::ofstream(ofilename);
   }
 
-  // evaluate the xpath on the context from the current document
+  // find the formfeed nodes and replace them with text nodes with the
+  // formfeed character
   xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, context);
-
   for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
 	  xmlNodePtr formfeed = xmlNewText(BAD_CAST "\f");
 	  xmlReplaceNode(result_nodes->nodesetval->nodeTab[i], formfeed);
