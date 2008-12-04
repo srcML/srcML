@@ -384,9 +384,6 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
       std::string uri = (*iter).first;
       std::string prefix = (*iter).second;
 
-      // prefix currently include "xmlns:"
-//      prefix.erase(0, 6);
-
       xmlNewNs(xmlDocGetRootElement(doc), BAD_CAST uri.c_str(), prefix == "" ? NULL : BAD_CAST prefix.c_str());
     }
   }
