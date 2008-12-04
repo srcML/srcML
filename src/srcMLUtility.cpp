@@ -481,9 +481,6 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
   if (strcmp(handler->name, "UTF-8") == 0)
     options |= OPTION_SKIP_ENCODING;
 #endif
-
-  // starting depth tells us when to end
-  int startingDepth = moved ? 1 : 0;
   
   // point to standard input or open file
   std::ostream* pout = &std::cout;
@@ -504,45 +501,6 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
   xmlChar* s = xmlNodeGetContent(xmlTextReaderCurrentNode(reader));
   outputText(s, *pout);
 
-/*
-  bool first = true;
-  // process the nodes in this unit
-  while (1) {
-
-    // read a node
-    int ret = xmlTextReaderRead(reader);
-    if (ret != 1)
-      break;
-
-    // output text
-    switch (xmlTextReaderNodeType(reader)) {
-
-    case XML_READER_TYPE_ELEMENT:
-
-      // check that we really have a nested unit
-      if (first && strcmp((const char*) xmlTextReaderConstName(reader), "unit") == 0)
-	throw TranslateCompoundError();
-      first = false;
-
-      // special case for formfeed element
-      if (xmlTextReaderIsEmptyElement(reader) > 0 &&
-	  strcmp((const char*) xmlTextReaderConstName(reader), "formfeed") == 0)
-      	outputText(BAD_CAST "\f", *pout);
-      break;
-    case XML_READER_TYPE_TEXT:
-    case XML_READER_TYPE_WHITESPACE:
-    case XML_READER_TYPE_SIGNIFICANT_WHITESPACE:
-      outputText(xmlTextReaderConstValue(reader), *pout);
-      break;
-    default:
-      break;
-    };
-
-    // stop when it is the same depth as the start
-    if (xmlTextReaderDepth(reader) == startingDepth)
-      break;
-  }
-*/
   // delete ofstream if not standard input
   if (!(ofilename[0] == '-' && ofilename[1] == 0))
     delete pout;
