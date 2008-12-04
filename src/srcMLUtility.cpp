@@ -100,32 +100,17 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op
   // don't use the TextReaderMoveToNextAttribute as it messes up the future expand
   for (xmlAttrPtr pAttr = xmlTextReaderCurrentNode(reader)->properties; pAttr; pAttr = pAttr->next) {
 
-     // skip standard attributes since they are already output
-     if ((strcmp((char*) pAttr->name, UNIT_ATTRIBUTE_LANGUAGE) == 0) ||
-	 (strcmp((char*) pAttr->name, UNIT_ATTRIBUTE_DIRECTORY) == 0) ||
-	 (strcmp((char*) pAttr->name, UNIT_ATTRIBUTE_FILENAME) == 0) ||
-	 (strcmp((char*) pAttr->name, UNIT_ATTRIBUTE_VERSION) == 0))
-      continue;
-
       char* ac = (char*) xmlGetProp(xmlTextReaderCurrentNode(reader), pAttr->name);
 
       attrv.push_back(std::make_pair((const char*) ac, (const char*) pAttr->name));
   }
 
-  // record all attributes for future use
+  // record all namespaces for future use
   // don't use the TextReaderMoveToNextAttribute as it messes up the future expand
   for (xmlNsPtr pAttr = xmlTextReaderCurrentNode(reader)->nsDef; pAttr; pAttr = pAttr->next) {
-	  
+
       nsv.push_back(std::make_pair((const char*) pAttr->href, pAttr->prefix ? (const char*) pAttr->prefix : ""));
   }
-/*
-  while (xmlTextReaderMoveToNextAttribute(reader)) {
-    if (xmlTextReaderIsNamespaceDecl(reader))
-      nsv.push_back(std::make_pair((const char*) xmlTextReaderConstValue(reader), (const char*) xmlTextReaderConstName(reader)));
-    else
-      attrv.push_back(std::make_pair((const char*) xmlTextReaderConstValue(reader), (const char*) xmlTextReaderConstName(reader)));
-  }
-*/
 }
 
 // destructor
@@ -400,7 +385,7 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
       std::string prefix = (*iter).second;
 
       // prefix currently include "xmlns:"
-      prefix.erase(0, 6);
+//      prefix.erase(0, 6);
 
       xmlNewNs(xmlDocGetRootElement(doc), BAD_CAST uri.c_str(), prefix == "" ? NULL : BAD_CAST prefix.c_str());
     }
@@ -479,23 +464,6 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
 	      xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST name.c_str(), BAD_CAST value.c_str());
   }
 
-/*
-  // copy all other attributes from current unit (may be main unit)
-  while (xmlTextReaderMoveToNextAttribute(reader)) {
-
-    const char* name = (const char*) xmlTextReaderConstName(reader);
-
-    // skip standard attributes since they are already output
-    if ((strcmp(name, UNIT_ATTRIBUTE_LANGUAGE) == 0) ||
-	(strcmp(name, UNIT_ATTRIBUTE_DIRECTORY) == 0) ||
-	(strcmp(name, UNIT_ATTRIBUTE_FILENAME) == 0) ||
-	(strcmp(name, UNIT_ATTRIBUTE_VERSION) == 0))
-      continue;
-
-    // output current attribute
-    xmlTextWriterWriteAttribute(writer, BAD_CAST name, xmlTextReaderConstValue(reader));
-  }
-*/
   // save the created document
   // "-" filename is standard output
   xmlSaveCtxtPtr saver = xmlSaveToFilename(filename, output_encoding, save_options);
