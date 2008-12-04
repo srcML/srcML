@@ -25,5 +25,5 @@ time : ../bin/src2srcml
 
 PHONY : javatime
 javatime :
-	@echo -n "srcml2src Java:\t"
+	@echo -n "src2srcml Java:\t"
 	@cd .; ${TIME} ../bin/src2srcml --language Java ${TIMING_JAVA} ${TIMING_JAVA}.xml | sed 's/[0-9\.]*/32628 \/ &/' | bc -l | xargs printf "%'7.0f lines/second\n"
