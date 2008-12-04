@@ -43,6 +43,7 @@
 
 xmlAttrPtr root_attributes;
 xmlXPathCompExprPtr compiled_xpath = xmlXPathCompile(BAD_CAST "//src:formfeed");
+xmlXPathContextPtr context;
 
 // directory permission for expand
 #ifdef __GNUC__
@@ -113,6 +114,13 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op
       nsv.push_back(std::make_pair((const char*) pAttr->href, pAttr->prefix ? (const char*) pAttr->prefix : ""));
   }
 
+  context = xmlXPathNewContext(xmlTextReaderCurrentDoc(reader));
+  if (xmlXPathRegisterNs(context, BAD_CAST "src" , BAD_CAST "http://www.sdml.info/srcML/src") == -1)
+    std::cerr << "Unable to register src" << std::endl;
+  if (xmlXPathRegisterNs(context, BAD_CAST "cpp" , BAD_CAST "http://www.sdml.info/srcML/cpp") == -1)
+    std::cerr << "Unable to register cpp" << std::endl;
+  if (xmlXPathRegisterNs(context, BAD_CAST "srcerr" , BAD_CAST "http://www.sdml.info/srcML/srcerr") == -1)
+    std::cerr << "Unable to register srcerr" << std::endl;
 //  xmlXPathCompExprPtr compiled_xpath = xmlXPathCompile(BAD_CAST "//src:formfeed");
 }
 
@@ -492,13 +500,6 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
   }
 
   // evaluate the xpath on the context from the current document
-  xmlXPathContextPtr context = xmlXPathNewContext(xmlTextReaderCurrentDoc(reader));
-  if (xmlXPathRegisterNs(context, BAD_CAST "src" , BAD_CAST "http://www.sdml.info/srcML/src") == -1)
-    std::cerr << "Unable to register src" << std::endl;
-  if (xmlXPathRegisterNs(context, BAD_CAST "cpp" , BAD_CAST "http://www.sdml.info/srcML/cpp") == -1)
-    std::cerr << "Unable to register cpp" << std::endl;
-  if (xmlXPathRegisterNs(context, BAD_CAST "srcerr" , BAD_CAST "http://www.sdml.info/srcML/srcerr") == -1)
-    std::cerr << "Unable to register srcerr" << std::endl;
   xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, context);
 
   for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
