@@ -475,25 +475,25 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
 // output current unit element as text
 void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
 
+  // setup an output handler
+  handler = xmlFindCharEncodingHandler(output_encoding);
+
   // generate the full tree in the reader of the unit
   // so that we can move it to the output
   xmlTextReaderExpand(reader);
-
-  // setup an output handler
-  handler = xmlFindCharEncodingHandler(output_encoding);
 
 #ifdef LIBXML_ENABLED
   // no need for encoding change
   if (strcmp(handler->name, "UTF-8") == 0)
     options |= OPTION_SKIP_ENCODING;
 #endif
-  
+/*  
   // point to standard input or open file
   std::ostream* pout = &std::cout;
   if (!(ofilename[0] == '-' && ofilename[1] == 0)) {
     pout = new std::ofstream(ofilename);
   }
-
+*/
   // find the formfeed nodes and replace them with text nodes with the
   // formfeed character
   xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, context);
@@ -504,11 +504,22 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
 
   // output all the content
   xmlChar* s = xmlNodeGetContent(xmlTextReaderCurrentNode(reader));
-  outputText(s, *pout);
+//  outputText(s, *pout);
 
+  /*                                                                                                            
+   * save the content to a temp buffer.                                                                         
+   */
+  xmlOutputBufferPtr buf;
+  buf = xmlOutputBufferCreateFilename(ofilename, handler, 0);
+  if (buf == NULL) return;
+  xmlOutputBufferWrite(buf, strlen((char*) s), (char*) s);
+  xmlOutputBufferClose(buf);
+
+/*
   // delete ofstream if not standard input
   if (!(ofilename[0] == '-' && ofilename[1] == 0))
     delete pout;
+*/
 }
 
 #ifdef LIBXML_ENABLED
@@ -520,7 +531,7 @@ xmlBufferPtr poutbuffer = xmlBufferCreateSize(UTF8BUFFER_MAXSIZE);
 // amount of space for expanded characters.  assume a maximum of four bytes for every original single byte
 const int UTF8BUFFER_SPACE = UTF8BUFFER_MAXSIZE / 4;
 #endif
-
+/*
 // output text in proper format
 void srcMLUtility::outputText(const xmlChar* s, std::ostream& out) {
 
@@ -558,7 +569,7 @@ void srcMLUtility::outputText(const xmlChar* s, std::ostream& out) {
   }
 #endif
 }
-
+*/
   // skip to the next unit
   void skiptonextunit(xmlTextReaderPtr reader) throw (LibXMLError) {
 
