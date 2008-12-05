@@ -454,6 +454,12 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
       std::string value = (*iter).first;
       std::string name = (*iter).second;
 
+      if (name == UNIT_ATTRIBUTE_LANGUAGE ||
+	  name == UNIT_ATTRIBUTE_DIRECTORY ||
+	  name == UNIT_ATTRIBUTE_FILENAME ||
+	  name == UNIT_ATTRIBUTE_VERSION)
+	      continue;
+
       xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST name.c_str(), BAD_CAST value.c_str());
   }
 
