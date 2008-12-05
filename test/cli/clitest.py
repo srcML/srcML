@@ -1,4 +1,4 @@
-#!/usr/bin/python2.4
+#!/usr/bin/python
 #
 # clitest.py
 #
@@ -85,11 +85,11 @@ def srcml2srcversion():
 	return last_line.strip()
 
 srcmltranslator = os.environ.get("SRC2SRCML")
-if srcmltranslator == "":
+if srcmltranslator == "" or srcmltranslator == None:
 	srcmltranslator = "../../bin/src2srcml"
 	
 srcmlutility = os.environ.get("SRCML2SRC")
-if srcmlutility == "":
+if srcmlutility == "" or srcmlutility == None:
 	srcmlutility = "../../bin/srcml2src"
 
 src2srcml_src_encoding = src2srcmlversion().find("Libxml2") != -1;
