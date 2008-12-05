@@ -368,7 +368,11 @@ nestedfileextra = xml_declaration + """
 </unit>
 
 <unit language="Java" dir="sub" mytag="foo" filename="b.cpp">
-<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+<expr_stmt lc:line="1"><expr><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit dir="sub" mytag="foo" filename="c.cpp">
+<expr_stmt lc:line="1"><expr><name>c</name></expr>;</expr_stmt>
 </unit>
 
 </unit>
@@ -380,8 +384,24 @@ sxmlfile1extra = xml_declaration + """
 </unit>
 """
 
+sxmlfile2extra = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lc="http://www.sdml.info/srcML/linecol" language="Java" dir="sub" filename="b.cpp" mytag="foo">
+<expr_stmt lc:line="1"><expr><name>b</name></expr>;</expr_stmt>
+</unit>
+"""
+
+sxmlfile3extra = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lc="http://www.sdml.info/srcML/linecol" language="C++" dir="sub" filename="c.cpp" mytag="foo">
+<expr_stmt lc:line="1"><expr><name>c</name></expr>;</expr_stmt>
+</unit>
+"""
+
 check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "1", "-"], nestedfileextra, sxmlfile1extra)
 check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "1"], nestedfileextra, sxmlfile1extra)
+check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "2", "-"], nestedfileextra, sxmlfile2extra)
+check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "2"], nestedfileextra, sxmlfile2extra)
+check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "3", "-"], nestedfileextra, sxmlfile3extra)
+check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "3"], nestedfileextra, sxmlfile3extra)
 check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "1", option.FILENAME_FLAG], nestedfileextra, "a.cpp\n")
 check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "2", option.FILENAME_FLAG], nestedfileextra, "b.cpp\n")
 check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "1", option.DIRECTORY_FLAG], nestedfileextra, "sub\n")
