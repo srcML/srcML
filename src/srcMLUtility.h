@@ -34,34 +34,9 @@
 #include <xmlreader.h>
 #include <xmlwriter.h>
 
-class TranslateCompoundError {};
-
-class LibXMLError {
- public:
-  LibXMLError(int errnum)
-    : error(errnum) {}
-
-  int getErrorNum() const { return error; }
-
- private:
-  int error;
-};
-
-class TerminateLibXMLError : public LibXMLError {
- public:
-  TerminateLibXMLError()
-    : LibXMLError(0)
-    {}
-};
-
-class OutOfRangeUnitError : public LibXMLError {
- public:
-  OutOfRangeUnitError(int s)
-    : LibXMLError(0), size(s)
-    {}
-
-  int size;
-};
+class LibXMLError;
+class TerminateLibXMLError;
+class OutOfRangeUnitError;
 
 class srcMLUtility {
  public:
@@ -137,5 +112,28 @@ class srcMLUtility {
 
   bool moved;
 }; 
+
+class LibXMLError {
+ public:
+  LibXMLError(int errnum)
+    : error(errnum) {}
+
+  int getErrorNum() const { return error; }
+
+ private:
+  int error;
+};
+
+class TerminateLibXMLError : public LibXMLError {
+ public:
+  TerminateLibXMLError() : LibXMLError(0) {}
+};
+
+class OutOfRangeUnitError : public LibXMLError {
+ public:
+  OutOfRangeUnitError(int s) : LibXMLError(0), size(s) {}
+
+  int size;
+};
 
 #endif

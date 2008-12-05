@@ -1,3 +1,9 @@
+Handle instanceof in Java as operator.
+
+"transient" as type modifier.
+
+false, true, null for Java
+
 - Do we want access to (currently unmarked) keywords?  E.g., class, if, while, etc.?
 
 Construct is marked, not the keyword.
