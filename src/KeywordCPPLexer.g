@@ -88,9 +88,10 @@ public:
 
 bool onpreprocline;
 bool justws;
+std::string srcuri;
 
-KeywordCPPLexer(std::istream& in, int language = LANGUAGE_CXX)
-	: antlr::CharScanner(new antlr::CharBuffer(in),true), Language(language), onpreprocline(false), justws(true)
+KeywordCPPLexer(std::istream& in, const std::string& src, int language = LANGUAGE_CXX)
+	: antlr::CharScanner(new antlr::CharBuffer(in),true), Language(language), onpreprocline(false), justws(true), srcuri(src != "" ? src + ":" : "")
 {
     initLiterals();
 

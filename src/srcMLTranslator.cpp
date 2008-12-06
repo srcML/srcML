@@ -29,6 +29,7 @@
 #include "srcMLParser.hpp"
 #include "StreamMLParser.h"
 #include "srcMLOutput.h"
+#include "srcmlns.h"
 
 #include "SegException.h"
 // constructor
@@ -44,6 +45,10 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
 				 )
   : Language(language), options(op),
     out(0, srcml_filename, getLanguageString(), src_encoding, xml_encoding, options, uri) {
+
+  // record the uri for the src namespace since we need it in the
+  // lexer for formfeed elements in strings
+  srcuri = uri[SRCML_SRC_NS_URI];
 
   // root unit for compound srcML documents
   if ((options & OPTION_NESTED) > 0)
@@ -68,7 +73,7 @@ void srcMLTranslator::translate(const char* src_filename, const char* unit_direc
       }
 
       // srcML lexical analyzer from standard input
-      KeywordCPPLexer lexer(*pin, getLanguage());
+      KeywordCPPLexer lexer(*pin, srcuri, getLanguage());
 
       // base stream parser srcML connected to lexical analyzer
       StreamMLParser<srcMLParser> parser(lexer, getLanguage(), options);

@@ -54,7 +54,7 @@ bool onpreprocline;
 STRING :
         (
         // double quoted string
-        '"' (ESC | STRING_CHARACTER | { !onpreprocline }? EOL)* ('"')? |
+        '"' (ESC | STRING_CHARACTER | { !onpreprocline }? EOL )* ('"')? |
         'L' '"' (ESC | STRING_CHARACTER | { !onpreprocline }? EOL)* ('"')? |
         'L' (DIGITS | NAMECHAR)* { $setType(NAME); }
         )
@@ -90,7 +90,7 @@ EOL_BACKSLASH :
 protected
 STRING_CHARACTER
 // leave out newline, \012, carriage return, \015, double quote , \042, and backslash, \134.  Also, leave out escaped characters
-    : '\0'..'\011' | '\013'..'\014' | '\016'..'\041' | '\043'..'\045' | '\047'..';' | '=' | '?'..'\133' | '\135'..'\377' | ESCAPED_CHAR
+    : '\0'..'\011' | '\013' | '\016'..'\041' | '\043'..'\045' | '\047'..';' | '=' | '?'..'\133' | '\135'..'\377' | ESCAPED_CHAR | '\014' { $setText("<" + srcuri + "formfeed/>"); } 
 ;
 
 protected

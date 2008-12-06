@@ -61,6 +61,7 @@ class srcMLTranslator : public Language {
   int language;
   int options;
   srcMLOutput out;
+  std::string srcuri;
 }; 
 
 #endif
