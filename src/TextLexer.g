@@ -90,30 +90,48 @@ EOL_BACKSLASH :
 protected
 STRING_CHARACTER
 // leave out newline, \012, carriage return, \015, double quote , \042, and backslash, \134.  Also, leave out escaped characters
-    : '\011' | '\016'..'\041' | '\043'..'\045' | '\047'..';' | '=' | '?'..'\133' | '\135'..'\377' | 
+    : '\040'..'\041' | '\043'..'\045' | '\047'..';' | '=' | '?'..'\133' | '\135'..'\377' | 
         ESCAPED_CHAR | CONTROL_CHAR
 ;
 
 protected
 CHAR_CHARACTER
 // leave out newline, \012, carriage return, \015, single quote , \047, and backslash, \134.  Also, leave out escaped characters
-    : '\011' | '\016'..'\045' | '\050'..';' | '=' | '?'..'\133' | '\135'..'\377' |
+    : '\040'..'\045' | '\050'..';' | '=' | '?'..'\133' | '\135'..'\377' |
         ESCAPED_CHAR | CONTROL_CHAR
 ;
 
 protected
 CONTROL_CHAR :
-        '\000' { $setText("<" + srcuri + "escape" + " char=\"0x0\"/>"); }     |
-        '\001' { $setText("<" + srcuri + "escape" + " char=\"0x1\"/>"); }      |
-        '\002' { $setText("<" + srcuri + "escape" + " char=\"0x2\"/>"); }      |
-        '\003' { $setText("<" + srcuri + "escape" + " char=\"0x3\"/>"); }      |
-        '\004' { $setText("<" + srcuri + "escape" + " char=\"0x4\"/>"); }      |
-        '\005' { $setText("<" + srcuri + "escape" + " char=\"0x5\"/>"); }      |
-        '\006' { $setText("<" + srcuri + "escape" + " char=\"0x6\"/>"); }      |
-        '\007' { $setText("<" + srcuri + "escape" + " char=\"0x7\"/>"); }      |
-        '\010' { $setText("<" + srcuri + "escape" + " char=\"0x8\"/>"); }      |
-        '\013' { $setText("<" + srcuri + "escape" + " char=\"0xB\"/>"); }     |
-        '\014' { $setText("<" + srcuri + "escape" + " char=\"0xC\"/>"); }
+        '\000' { $setText("<" + srcuri + "escape" + " char=\"0x0\"/>"); }  |
+        '\001' { $setText("<" + srcuri + "escape" + " char=\"0x1\"/>"); }  |
+        '\002' { $setText("<" + srcuri + "escape" + " char=\"0x2\"/>"); }  |
+        '\003' { $setText("<" + srcuri + "escape" + " char=\"0x3\"/>"); }  |
+        '\004' { $setText("<" + srcuri + "escape" + " char=\"0x4\"/>"); }  |
+        '\005' { $setText("<" + srcuri + "escape" + " char=\"0x5\"/>"); }  |
+        '\006' { $setText("<" + srcuri + "escape" + " char=\"0x6\"/>"); }  |
+        '\007' { $setText("<" + srcuri + "escape" + " char=\"0x7\"/>"); }  |
+        '\010' { $setText("<" + srcuri + "escape" + " char=\"0x8\"/>"); }  |
+        '\013' { $setText("<" + srcuri + "escape" + " char=\"0xB\"/>"); }  |
+        '\014' { $setText("<" + srcuri + "escape" + " char=\"0xC\"/>"); }  |
+        '\016' { $setText("<" + srcuri + "escape" + " char=\"0xE\"/>"); }  |
+        '\017' { $setText("<" + srcuri + "escape" + " char=\"0xF\"/>"); }  |
+        '\020' { $setText("<" + srcuri + "escape" + " char=\"0x10\"/>"); } |
+        '\021' { $setText("<" + srcuri + "escape" + " char=\"0x11\"/>"); } |
+        '\022' { $setText("<" + srcuri + "escape" + " char=\"0x12\"/>"); } |
+        '\023' { $setText("<" + srcuri + "escape" + " char=\"0x13\"/>"); } |
+        '\024' { $setText("<" + srcuri + "escape" + " char=\"0x14\"/>"); } |
+        '\025' { $setText("<" + srcuri + "escape" + " char=\"0x15\"/>"); } |
+        '\026' { $setText("<" + srcuri + "escape" + " char=\"0x16\"/>"); } |
+        '\027' { $setText("<" + srcuri + "escape" + " char=\"0x17\"/>"); } |
+        '\030' { $setText("<" + srcuri + "escape" + " char=\"0x18\"/>"); } |
+        '\031' { $setText("<" + srcuri + "escape" + " char=\"0x19\"/>"); } |
+        '\032' { $setText("<" + srcuri + "escape" + " char=\"0x1A\"/>"); } |
+        '\033' { $setText("<" + srcuri + "escape" + " char=\"0x1B\"/>"); } |
+        '\034' { $setText("<" + srcuri + "escape" + " char=\"0x1C\"/>"); } |
+        '\035' { $setText("<" + srcuri + "escape" + " char=\"0x1D\"/>"); } |
+        '\036' { $setText("<" + srcuri + "escape" + " char=\"0x1E\"/>"); } |
+        '\037' { $setText("<" + srcuri + "escape" + " char=\"0x1F\"/>"); }
     ;
 
 protected   
