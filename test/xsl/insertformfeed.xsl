@@ -23,7 +23,7 @@
 
 <xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8" standalone="yes"/>
 
-<xsl:variable name="cmt" xml:space="preserve"> <formfeed/></xsl:variable> 
+<xsl:variable name="cmt" xml:space="preserve"> <escape char="formfeed"/></xsl:variable> 
 
 <!-- change dir name -->
 <xsl:template match="src:unit/@dir">
