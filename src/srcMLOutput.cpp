@@ -270,7 +270,7 @@ void srcMLOutput::processFormFeed(const antlr::RefToken& token) {
 
   xmlTextWriterStartElement(xout, BAD_CAST s);
 
-  xmlTextWriterWriteAttribute(xout, BAD_CAST "char", BAD_CAST "formfeed");
+  xmlTextWriterWriteAttribute(xout, BAD_CAST "char", BAD_CAST "0xC");
 
   xmlTextWriterEndElement(xout);
 }

@@ -1,7 +1,7 @@
 /*
   TextLexer.g
 
-  Copyright (C) 2002, 2003, 2004, 2005  SDML (www.sdml.info)
+  Copyright (C) 2002-2008  SDML (www.sdml.info)
 
   This file is part of the srcML translator.
 
@@ -103,17 +103,17 @@ CHAR_CHARACTER
 
 protected
 CONTROL_CHAR :
-        '\000' { $setText("<" + srcuri + "escape" + " char=\"null\"/>"); }     |
-        '\001' { $setText("<" + srcuri + "escape" + " char=\"soh\"/>"); }      |
-        '\002' { $setText("<" + srcuri + "escape" + " char=\"stx\"/>"); }      |
-        '\003' { $setText("<" + srcuri + "escape" + " char=\"etx\"/>"); }      |
-        '\004' { $setText("<" + srcuri + "escape" + " char=\"eot\"/>"); }      |
-        '\005' { $setText("<" + srcuri + "escape" + " char=\"enq\"/>"); }      |
-        '\006' { $setText("<" + srcuri + "escape" + " char=\"ack\"/>"); }      |
-        '\007' { $setText("<" + srcuri + "escape" + " char=\"bel\"/>"); }      |
-        '\010' { $setText("<" + srcuri + "escape" + " char=\"bs\"/>"); }      |
-        '\013' { $setText("<" + srcuri + "escape" + " char=\"vtab\"/>"); }     |
-        '\014' { $setText("<" + srcuri + "escape" + " char=\"formfeed\"/>"); }
+        '\000' { $setText("<" + srcuri + "escape" + " char=\"0x0\"/>"); }     |
+        '\001' { $setText("<" + srcuri + "escape" + " char=\"0x1\"/>"); }      |
+        '\002' { $setText("<" + srcuri + "escape" + " char=\"0x2\"/>"); }      |
+        '\003' { $setText("<" + srcuri + "escape" + " char=\"0x3\"/>"); }      |
+        '\004' { $setText("<" + srcuri + "escape" + " char=\"0x4\"/>"); }      |
+        '\005' { $setText("<" + srcuri + "escape" + " char=\"0x5\"/>"); }      |
+        '\006' { $setText("<" + srcuri + "escape" + " char=\"0x6\"/>"); }      |
+        '\007' { $setText("<" + srcuri + "escape" + " char=\"0x7\"/>"); }      |
+        '\010' { $setText("<" + srcuri + "escape" + " char=\"0x8\"/>"); }      |
+        '\013' { $setText("<" + srcuri + "escape" + " char=\"0xB\"/>"); }     |
+        '\014' { $setText("<" + srcuri + "escape" + " char=\"0xC\"/>"); }
     ;
 
 protected   

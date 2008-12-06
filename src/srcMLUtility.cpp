@@ -510,28 +510,19 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
     xmlReplaceNode(result_nodes->nodesetval->nodeTab[i], formfeed);
   }
 
-  // find the escaped character nodes and replace them with text nodes with the
-  // property character
+  // find the escaped element nodes and replace them with a text nodes with the
+  // unescaped value of the attribute char
   result_nodes = xmlXPathCompiledEval(xpath_escape, context);
   for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
 
     // from the char attribute, find out which character was escaped
     char* ac = (char*) xmlGetProp(result_nodes->nodesetval->nodeTab[i], BAD_CAST "char");
 
-    // find the associated value
-    std::string value;
-    if (strcmp(ac, "null") == 0)
-      value = "\000";
-    else if (strcmp(ac, "soh") == 0)
-      value = "\001";
-    else if (strcmp(ac, "stx") == 0)
-      value = "\002";
-    else if (strcmp(ac, "etx") == 0)
-      value = "\003";
-    else
-      value = "\f";
+    // convert from the escaped to the unescaped value
+    char values[2] = { strtod(ac, NULL), '\0' };
 
-    xmlNodePtr escape = xmlNewText(BAD_CAST value.c_str());
+    // replace the escape element node with a text node of the unescaped value
+    xmlNodePtr escape = xmlNewText(BAD_CAST values);
     xmlReplaceNode(result_nodes->nodesetval->nodeTab[i], escape);
   }
 
