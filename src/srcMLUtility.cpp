@@ -115,9 +115,12 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op
       nsv.push_back(std::make_pair((const char*) pAttr->href, pAttr->prefix ? (const char*) pAttr->prefix : ""));
   }
 
-  context = xmlXPathNewContext(xmlTextReaderCurrentDoc(reader));
-  if (xmlXPathRegisterNs(context, BAD_CAST "src" , BAD_CAST "http://www.sdml.info/srcML/src") == -1)
-    std::cerr << "Unable to register src" << std::endl;
+  // setupt a context for xpath if conversion to src
+  if (!isoption(options, OPTION_XML)) {
+    context = xmlXPathNewContext(xmlTextReaderCurrentDoc(reader));
+    if (xmlXPathRegisterNs(context, BAD_CAST "src" , BAD_CAST "http://www.sdml.info/srcML/src") == -1)
+      std::cerr << "Unable to register src" << std::endl;
+  }
 }
 
 // destructor
@@ -494,13 +497,6 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
   if (strcmp(handler->name, "UTF-8") == 0)
     options |= OPTION_SKIP_ENCODING;
 #endif
-/*  
-  // point to standard input or open file
-  std::ostream* pout = &std::cout;
-  if (!(ofilename[0] == '-' && ofilename[1] == 0)) {
-    pout = new std::ofstream(ofilename);
-  }
-*/
 
   // find the old markup for formfeed nodes and replace them with text nodes with the
   // formfeed character
@@ -528,7 +524,6 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
 
   // output all the content
   xmlChar* s = xmlNodeGetContent(xmlTextReaderCurrentNode(reader));
-//  outputText(s, *pout);
 
   /*                                                                                                            
    * save the content to a temp buffer.                                                                         
@@ -538,62 +533,8 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
   if (buf == NULL) return;
   xmlOutputBufferWrite(buf, strlen((char*) s), (char*) s);
   xmlOutputBufferClose(buf);
-
-/*
-  // delete ofstream if not standard input
-  if (!(ofilename[0] == '-' && ofilename[1] == 0))
-    delete pout;
-*/
 }
 
-#ifdef LIBXML_ENABLED
-// buffer of output utf8 characters
-const int UTF8BUFFER_MAXSIZE = 4;
-
-xmlBufferPtr poutbuffer = xmlBufferCreateSize(UTF8BUFFER_MAXSIZE);
-
-// amount of space for expanded characters.  assume a maximum of four bytes for every original single byte
-const int UTF8BUFFER_SPACE = UTF8BUFFER_MAXSIZE / 4;
-#endif
-/*
-// output text in proper format
-void srcMLUtility::outputText(const xmlChar* s, std::ostream& out) {
-
-  // no encoding needed for conversion from UTF-8
-#ifdef LIBXML_ENABLED
-  if (isoption(options, OPTION_SKIP_ENCODING)) {
-#endif
-    out << s;
-    return;
-#ifdef LIBXML_ENABLED
-  }
-  unsigned int len = strlen((const char*) s);
-
-  // input buffer created from C++ string
-  xmlBufferPtr pinbuffer = xmlBufferCreateStatic((char*) s, len);
-
-  // convert all of the UTF-8 to output encoding in chunks
-  unsigned int pos = 0;
-  while (pos < len) {
-
-    // reset resusable output buffer
-    poutbuffer->use = 0;
-
-    int buffer_left = pinbuffer->size - pos;
-    int partialinputbuffer_size = buffer_left < UTF8BUFFER_SPACE ? buffer_left : UTF8BUFFER_SPACE;
-
-    pinbuffer->content += pos;
-    pinbuffer->size -= pos;
-
-    xmlCharEncOutFunc(handler, poutbuffer, pinbuffer);
-    
-    out.write((char*) poutbuffer->content, poutbuffer->use);
-
-    pos += partialinputbuffer_size;
-  }
-#endif
-}
-*/
   // skip to the next unit
   void skiptonextunit(xmlTextReaderPtr reader) throw (LibXMLError) {
 
