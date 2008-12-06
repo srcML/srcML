@@ -42,7 +42,8 @@
 #include "Options.h"
 
 xmlAttrPtr root_attributes;
-xmlXPathCompExprPtr compiled_xpath = xmlXPathCompile(BAD_CAST "//src:formfeed");
+xmlXPathCompExprPtr xpath_formfeed = xmlXPathCompile(BAD_CAST "//src:formfeed");
+xmlXPathCompExprPtr xpath_escape = xmlXPathCompile(BAD_CAST "//src:escape");
 xmlXPathContextPtr context;
 
 // directory permission for expand
@@ -500,12 +501,38 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
     pout = new std::ofstream(ofilename);
   }
 */
-  // find the formfeed nodes and replace them with text nodes with the
+
+  // find the old markup for formfeed nodes and replace them with text nodes with the
   // formfeed character
-  xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, context);
+  xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(xpath_formfeed, context);
   for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
-	  xmlNodePtr formfeed = xmlNewText(BAD_CAST "\f");
-	  xmlReplaceNode(result_nodes->nodesetval->nodeTab[i], formfeed);
+    xmlNodePtr formfeed = xmlNewText(BAD_CAST "\f");
+    xmlReplaceNode(result_nodes->nodesetval->nodeTab[i], formfeed);
+  }
+
+  // find the escaped character nodes and replace them with text nodes with the
+  // property character
+  result_nodes = xmlXPathCompiledEval(xpath_escape, context);
+  for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
+
+    // from the char attribute, find out which character was escaped
+    char* ac = (char*) xmlGetProp(result_nodes->nodesetval->nodeTab[i], BAD_CAST "char");
+
+    // find the associated value
+    std::string value;
+    if (strcmp(ac, "null") == 0)
+      value = "\000";
+    else if (strcmp(ac, "soh") == 0)
+      value = "\001";
+    else if (strcmp(ac, "stx") == 0)
+      value = "\002";
+    else if (strcmp(ac, "etx") == 0)
+      value = "\003";
+    else
+      value = "\f";
+
+    xmlNodePtr escape = xmlNewText(BAD_CAST value.c_str());
+    xmlReplaceNode(result_nodes->nodesetval->nodeTab[i], escape);
   }
 
   // output all the content

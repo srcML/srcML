@@ -263,8 +263,14 @@ void srcMLOutput::processEncodedText(const antlr::RefToken& token) {
 
 void srcMLOutput::processFormFeed(const antlr::RefToken& token) {
 
-  // start the element
-  xmlTextWriterStartElement(xout, BAD_CAST token2name(token));
+  const char* s = "escape"; //token2name(token);
+
+  if (s[0] == 0)
+    return;
+
+  xmlTextWriterStartElement(xout, BAD_CAST s);
+
+  xmlTextWriterWriteAttribute(xout, BAD_CAST "char", BAD_CAST "formfeed");
 
   xmlTextWriterEndElement(xout);
 }
