@@ -41,6 +41,7 @@
 
 #include "Options.h"
 
+static const char* SRCML_SRC_NS_PREFIX = "src";
 xmlAttrPtr root_attributes;
 xmlXPathCompExprPtr xpath_formfeed = xmlXPathCompile(BAD_CAST "//src:formfeed");
 xmlXPathCompExprPtr xpath_escape = xmlXPathCompile(BAD_CAST "//src:escape");
@@ -82,9 +83,8 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op
 
   // create the reader
   reader = xmlNewTextReaderFilename(infile);
-  if (reader == NULL) {
+  if (reader == NULL)
     throw LibXMLError(0);
-  }
 
   // read the outer unit
   try {
@@ -118,8 +118,8 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op
   // setupt a context for xpath if conversion to src
   if (!isoption(options, OPTION_XML)) {
     context = xmlXPathNewContext(xmlTextReaderCurrentDoc(reader));
-    if (xmlXPathRegisterNs(context, BAD_CAST "src" , BAD_CAST "http://www.sdml.info/srcML/src") == -1)
-      std::cerr << "Unable to register src" << std::endl;
+    if (xmlXPathRegisterNs(context, BAD_CAST SRCML_SRC_NS_PREFIX , BAD_CAST SRCML_SRC_NS_URI) == -1)
+      throw "Unable to register srcML namespace";
   }
 }
 
@@ -312,7 +312,7 @@ void srcMLUtility::expand(const char* root_filename) {
     xmlChar* directory = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_DIRECTORY);
 
     if (!filename) {
-      std::cerr << "Missing filename" << '\n';
+      std::cerr << "Missing filename attribute" << '\n';
       continue;
     }
 
@@ -400,37 +400,25 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
 
   // record the standard attributes and remove them so we can insert them in the
   // proper order
-
-  // updated attribute language
-  if (xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_LANGUAGE))
-	  unit_language = xmlGetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_LANGUAGE);
-
-  // update attribute directory
-  if (xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_DIRECTORY))
-	  unit_directory = xmlGetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_DIRECTORY);
-
-  // update attribute filename
-  if (xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_FILENAME))
-	  unit_filename = xmlGetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_FILENAME);
-
-  // update attribute version
-  if (xmlHasProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_VERSION))
-	  unit_version = xmlGetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_VERSION);
-
   // save a copy of all the non-standard attributes
   std::vector<std::pair<std::string, std::string> > nattrv;
   for (xmlAttrPtr pAttr = xmlDocGetRootElement(doc)->properties; pAttr; pAttr = pAttr->next) {
 
      // skip standard attributes since they are already output
-     if ((strcmp((char*) pAttr->name, UNIT_ATTRIBUTE_LANGUAGE) == 0) ||
-	 (strcmp((char*) pAttr->name, UNIT_ATTRIBUTE_DIRECTORY) == 0) ||
-	 (strcmp((char*) pAttr->name, UNIT_ATTRIBUTE_FILENAME) == 0) ||
-	 (strcmp((char*) pAttr->name, UNIT_ATTRIBUTE_VERSION) == 0))
-      continue;
+    if ((strcmp((char*) pAttr->name, UNIT_ATTRIBUTE_LANGUAGE) == 0))
+      unit_language = xmlGetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_LANGUAGE);
+    else if ((strcmp((char*) pAttr->name, UNIT_ATTRIBUTE_DIRECTORY) == 0))
+      unit_directory = xmlGetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_DIRECTORY);
+    else if ((strcmp((char*) pAttr->name, UNIT_ATTRIBUTE_FILENAME) == 0))
+      unit_filename = xmlGetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_FILENAME);
+    else if ((strcmp((char*) pAttr->name, UNIT_ATTRIBUTE_VERSION) == 0))
+      unit_version = xmlGetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_VERSION);
+    else {
 
       char* ac = (char*) xmlGetProp(xmlDocGetRootElement(doc), pAttr->name);
 
       nattrv.push_back(std::make_pair((const char*) ac, (const char*) pAttr->name));
+    }
   }
 
   // wipe out all the attributes
