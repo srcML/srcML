@@ -82,6 +82,11 @@ tokens {
     IMPLEMENTS;
     INTERFACE;
     FINAL;
+
+    // C++0x tokens
+    CONCEPT;
+    CONCEPTMAP;
+    REQUIRES;
 }
 
 {
@@ -161,7 +166,7 @@ KeywordCPPLexer(std::istream& in, const std::string& src, int language = LANGUAG
     }
 
     // add all C++ specific keywords to the literals table
-    if (inLanguage(LANGUAGE_CXX)) {
+    if (inLanguage(LANGUAGE_CXX_FAMILY)) {
 
         // class
         literals["virtual"]= VIRTUAL; 

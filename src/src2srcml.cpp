@@ -737,6 +737,8 @@ int process_args(int argc, char* argv[]) {
 	options &= ~OPTION_CPP;
 
 	language = srcMLTranslator::LANGUAGE_JAVA;
+      } else if (strcmp(langparam, LANGUAGE_CXX_0X) == 0) {
+	language = srcMLTranslator::LANGUAGE_CXX_0X;
       } else if (strcmp(langparam, LANGUAGE_ASPECTJ) == 0) {
 
 	// turnoff default cpp reference

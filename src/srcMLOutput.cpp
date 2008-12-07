@@ -202,7 +202,7 @@ const char* srcMLOutput::type2name(int token_type) const {
 
 #ifdef LIBXML_ENABLED
 // buffer of output utf8 characters
-const int UTF8BUFFER_MAXSIZE = 512;
+const int UTF8BUFFER_MAXSIZE = 2048;
 
 xmlBufferPtr poutbuffer = xmlBufferCreateSize(UTF8BUFFER_MAXSIZE);
 

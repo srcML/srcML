@@ -75,6 +75,7 @@ const char* VERBOSE_FLAG_SHORT = "-v";
 
 const char* LANGUAGE_C = "C";
 const char* LANGUAGE_CXX = "C++";
+const char* LANGUAGE_CXX_0X = "C++0x";
 const char* LANGUAGE_JAVA = "Java";
 const char* LANGUAGE_ASPECTJ = "AspectJ";
 
