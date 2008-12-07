@@ -401,7 +401,12 @@ else:
 		else:
 			xerrorlist.append(e);
 
-	print "Errors:  " + str(error_count) + " out of " + str(total_count) + " cases", "\n"
+	print "Errors:  " + str(error_count) + " out of " + str(total_count),
+	if str(total_count) == "1":
+		print " case", 
+	else:
+		print " cases", 
+	print "\n"
 	print "Errorlist:"
 	nxerrorlist = xerrorlist[:]
 	for e in oerrorlist:
