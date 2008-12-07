@@ -519,9 +519,9 @@ int main(int argc, char* argv[]) {
 
       if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {
 
-	const std::vector<std::pair<std::string, std::string> > ns = su.getNS();
+	const std::map<std::string, std::string> ns = su.getNS();
 
-	for (std::vector<std::pair<std::string, std::string> >::const_iterator iter = ns.begin(); iter != ns.end(); iter++) {
+	for (std::map<std::string, std::string>::const_iterator iter = ns.begin(); iter != ns.end(); ++iter) {
 	  std::string uri = (*iter).first;
 	  std::string prefix = (*iter).second;
 	  if (prefix == "")

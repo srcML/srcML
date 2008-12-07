@@ -74,7 +74,7 @@ void skiptounit(xmlTextReaderPtr reader, int number) throw (LibXMLError);
 
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op)
-  : infile(infilename), output_encoding(encoding), options(op), reader(0), handler(0), nsv(0), moved(false) {
+  : infile(infilename), output_encoding(encoding), options(op), reader(0), handler(0), moved(false) {
 
   // empty filename indicates standard input
   if (infile == 0)
@@ -94,19 +94,13 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op
 
   // record all attributes for future use
   // don't use the TextReaderMoveToNextAttribute as it messes up the future expand
-  for (xmlAttrPtr pAttr = xmlTextReaderCurrentNode(reader)->properties; pAttr; pAttr = pAttr->next) {
-
-      char* ac = (char*) xmlGetProp(xmlTextReaderCurrentNode(reader), pAttr->name);
-
-      attrv[(const char*) pAttr->name] = (const char*) ac;
-  }
+  for (xmlAttrPtr pAttr = xmlTextReaderCurrentNode(reader)->properties; pAttr; pAttr = pAttr->next)
+      attrv[(const char*) pAttr->name] = (const char*) xmlGetProp(xmlTextReaderCurrentNode(reader), pAttr->name);
 
   // record all namespaces for future use
   // don't use the TextReaderMoveToNextAttribute as it messes up the future expand
-  for (xmlNsPtr pAttr = xmlTextReaderCurrentNode(reader)->nsDef; pAttr; pAttr = pAttr->next) {
-
-      nsv.push_back(std::make_pair((const char*) pAttr->href, pAttr->prefix ? (const char*) pAttr->prefix : ""));
-  }
+  for (xmlNsPtr pAttr = xmlTextReaderCurrentNode(reader)->nsDef; pAttr; pAttr = pAttr->next)
+    nsv[(const char*) pAttr->href] = pAttr->prefix ? (const char*) pAttr->prefix : "";
 
   // setupt a context for xpath if conversion to src
   if (!isoption(options, OPTION_XML)) {
@@ -155,7 +149,7 @@ std::string srcMLUtility::namespace_ext(const std::string& uri, bool& nonnull) {
 
   // find the raw prefix
   std::string raw_prefix;
-  for (std::vector<std::pair<std::string, std::string> >::const_iterator iter = nsv.begin(); iter != nsv.end(); iter++) {
+  for (std::map<std::string, std::string>::const_iterator iter = nsv.begin(); iter != nsv.end(); iter++) {
 	std::string vuri = (*iter).first;
 	std::string vprefix = std::string("xmlns:") + (*iter).second;
 
@@ -346,7 +340,7 @@ const char* srcMLUtility::getencoding() {
 }
 
 // namespaces and prefixes
-const std::vector<std::pair<std::string, std::string> > srcMLUtility::getNS() const {
+const std::map<std::string, std::string> srcMLUtility::getNS() const {
   return nsv;
 }
 
@@ -376,7 +370,27 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
 
   // output namespaces from outer unit tag
   if (isoption(options, OPTION_NAMESPACEDECL)) {
-    for (std::vector<std::pair<std::string, std::string> >::const_iterator iter = nsv.begin(); iter != nsv.end(); iter++) {
+
+    // starting with the namespaces on the root element, update the namespaces
+    // with the ones from this unit
+    std::map<std::string, std::string> nnsv = nsv;
+    for (xmlNsPtr pAttr = xmlTextReaderCurrentNode(reader)->nsDef; pAttr; pAttr = pAttr->next)
+      nnsv[(const char*) pAttr->href] = pAttr->prefix ? (const char*) pAttr->prefix : "";
+
+    // output the standard namespaces, if they exist
+    const char* stdns[] = { SRCML_SRC_NS_URI, SRCML_CPP_NS_URI, SRCML_ERR_NS_URI };
+    for (int i = 0; i < 3; ++i) {
+
+      if (nnsv.count(stdns[i])) {
+
+	xmlNewNs(xmlDocGetRootElement(doc), BAD_CAST stdns[i],
+		 nnsv[stdns[i]] == "" ? NULL : BAD_CAST nnsv[stdns[i]].c_str());
+
+	nnsv.erase(stdns[i]);
+      }
+    }
+
+    for (std::map<std::string, std::string>::const_iterator iter = nsv.begin(); iter != nsv.end(); ++iter) {
       std::string uri = (*iter).first;
       std::string prefix = (*iter).second;
 
@@ -387,12 +401,8 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
   // starting with the attributes on the root element, update the attributes
   // with the ones from this unit
   std::map<std::string, std::string> nattrv = attrv;
-  for (xmlAttrPtr pAttr = xmlDocGetRootElement(doc)->properties; pAttr; pAttr = pAttr->next) {
-
-    char* ac = (char*) xmlGetProp(xmlDocGetRootElement(doc), pAttr->name);
-
-    nattrv[(const char*) pAttr->name] = (const char*) ac;
-  }
+  for (xmlAttrPtr pAttr = xmlDocGetRootElement(doc)->properties; pAttr; pAttr = pAttr->next)
+    nattrv[(const char*) pAttr->name] = (const char*) xmlGetProp(xmlDocGetRootElement(doc), pAttr->name);
 
   // wipe out all the attributes
   xmlAttrPtr pAttr;
@@ -402,42 +412,20 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
   }
 
   // put back the standard attributes based on a merge of the root unit and this unit
+  const char* stdattr[] = { UNIT_ATTRIBUTE_LANGUAGE, UNIT_ATTRIBUTE_DIRECTORY,
+			    UNIT_ATTRIBUTE_FILENAME, UNIT_ATTRIBUTE_VERSION };
+  for (int i = 0; i < 4; ++i) {
 
-  // language
-  if (nattrv.count(UNIT_ATTRIBUTE_LANGUAGE)) {
-    xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_LANGUAGE,
-	       BAD_CAST nattrv[UNIT_ATTRIBUTE_LANGUAGE].c_str());
-    nattrv.erase(UNIT_ATTRIBUTE_LANGUAGE);
-  }
-
-  // directory
-  if (nattrv.count(UNIT_ATTRIBUTE_DIRECTORY)) {
-    xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_DIRECTORY,
-	       BAD_CAST nattrv[UNIT_ATTRIBUTE_DIRECTORY].c_str());
-    nattrv.erase(UNIT_ATTRIBUTE_DIRECTORY);
-  }
-
-  // filename
-  if (nattrv.count(UNIT_ATTRIBUTE_FILENAME)) {
-    xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_FILENAME,
-	       BAD_CAST nattrv[UNIT_ATTRIBUTE_FILENAME].c_str());
-    nattrv.erase(UNIT_ATTRIBUTE_FILENAME);
-  }
-
-  // version
-  if (nattrv.count(UNIT_ATTRIBUTE_VERSION)) {
-    xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_VERSION,
-	       BAD_CAST nattrv[UNIT_ATTRIBUTE_VERSION].c_str());
-    nattrv.erase(UNIT_ATTRIBUTE_VERSION);
+    if (nattrv.count(stdattr[i])) {
+      xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST stdattr[i],
+		 BAD_CAST nattrv[stdattr[i]].c_str());
+      nattrv.erase(stdattr[i]);
+    }
   }
 
   // put in the rest of the attributes
-  for (std::map<std::string, std::string>::const_iterator iter = nattrv.begin(); iter != nattrv.end(); iter++) {
-      std::string name = (*iter).first;
-      std::string value = (*iter).second;
-
-      xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST name.c_str(), BAD_CAST value.c_str());
-  }
+  for (std::map<std::string, std::string>::const_iterator iter = nattrv.begin(); iter != nattrv.end(); iter++)
+      xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST (*iter).first.c_str(), BAD_CAST (*iter).second.c_str());
 
   // save the created document
   // "-" filename is standard output
