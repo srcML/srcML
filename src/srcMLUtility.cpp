@@ -74,7 +74,7 @@ void skiptounit(xmlTextReaderPtr reader, int number) throw (LibXMLError);
 
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op)
-  : infile(infilename), output_encoding(encoding), options(op), reader(0), handler(0), nsv(0), attrv(0),
+  : infile(infilename), output_encoding(encoding), options(op), reader(0), handler(0), nsv(0), /* attrv(0), */
     unit_language(0), unit_directory(0), unit_filename(0), unit_version(0), moved(false) {
 
   // empty filename indicates standard input
@@ -105,7 +105,8 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op
 
       char* ac = (char*) xmlGetProp(xmlTextReaderCurrentNode(reader), pAttr->name);
 
-      attrv.push_back(std::make_pair((const char*) ac, (const char*) pAttr->name));
+      attrv[(const char*) pAttr->name] = (const char*) ac;
+      //      attrv.push_back(std::make_pair((const char*) ac, (const char*) pAttr->name));
   }
 
   // record all namespaces for future use
@@ -146,20 +147,13 @@ std::string srcMLUtility::attribute(const char* attribute_name, bool& nonnull) {
   }
 
   // extract attribute from unit tag
-  int pos = -1;
-  for (unsigned int i = 0 ; i < attrv.size(); ++i)
-    if (attrv[i].second == attribute_name) {
-      pos = i;
-      break;
-    }
-
-  if (pos < 0 || attrv[pos].second != attribute_name) {
+  if (attrv.count(attribute_name)) {
+    nonnull = true;
+    return attrv[attribute_name];
+  } else {
     nonnull = false;
     return "";
   }
-
-  nonnull = true;
-  return attrv[pos].first;
 }
 
 // prefix of given namespace
@@ -442,9 +436,9 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
 	  xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_VERSION, BAD_CAST unit_version);
 
   // put in attributes from root unit element
-  for (std::vector<std::pair<std::string, std::string> >::const_iterator iter = attrv.begin(); iter != attrv.end(); iter++) {
-      std::string value = (*iter).first;
-      std::string name = (*iter).second;
+  for (std::map<std::string, std::string>::const_iterator iter = attrv.begin(); iter != attrv.end(); iter++) {
+      std::string name = (*iter).first;
+      std::string value = (*iter).second;
 
       if (name == UNIT_ATTRIBUTE_LANGUAGE ||
 	  name == UNIT_ATTRIBUTE_DIRECTORY ||

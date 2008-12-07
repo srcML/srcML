@@ -28,6 +28,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <map>
 #include "Language.h"
 #include "Options.h"
 
@@ -102,7 +103,7 @@ class srcMLUtility {
   xmlTextReaderPtr reader;
   xmlCharEncodingHandlerPtr handler;
   std::vector<std::pair<std::string, std::string> > nsv;
-  std::vector<std::pair<std::string, std::string> > attrv;
+  std::map<std::string, std::string> attrv;
 
   // record attributes
   xmlChar* unit_language;
