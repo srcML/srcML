@@ -22,6 +22,7 @@
 
 header {
    #include <iostream>
+   #include <sstream>
    #include "Language.h"
 }
 
