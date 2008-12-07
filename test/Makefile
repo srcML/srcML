@@ -125,6 +125,8 @@ XSLT_SETLANGUAGE_C=${XSLT} --stringparam language "C" ${XSLT_SETLANGUAGE_XSL}
 
 XSLT_SETLANGUAGE_CXX=${XSLT} --stringparam language "CXX" ${XSLT_SETLANGUAGE_XSL}
 
+XSLT_SETLANGUAGE_CXX_0X=${XSLT} --stringparam language "C++0x" ${XSLT_SETLANGUAGE_XSL}
+
 XSLT_SETLANGUAGE_JAVA=${XSLT} --stringparam language "Java" ${XSLT_SETLANGUAGE_XSL}
 
 XSLT_REMOVECPP=${XSLT} ${XSLT_REMOVECPP_XSL}
@@ -174,6 +176,12 @@ BASE_JAVA_ALL = $(BASE_COMMON) $(GEN_BASE) $(BASE_OO) $(BASE_JAVA)
 
 GEN_JAVA= ${foreach nm, $(BASE_JAVA_ALL_GEN), ../suite/$(nm).java.xml}
 
+BASE_CXX_0X_ALL_GEN = $(BASE_COMMON) $(BASE_CXX) $(BASE_OO)
+
+BASE_CXX_0X_ALL = $(BASE_COMMON) $(BASE_CXX) $(BASE_OO)
+
+GEN_CXX_0X= ${foreach nm, $(BASE_CXX_0X_ALL_GEN), ../suite/$(nm).cpp0x.xml}
+
 BASE_C_ALL = $(BASE_COMMON) $(BASE_C_FAMILY)
 GEN_C= ${foreach nm, $(BASE_C_ALL), ../suite/$(nm).c.xml}
 
@@ -184,28 +192,33 @@ SEP_PLUSNOPREPROC= ${SEP_BASE} ${GEN_SEP}
 # generate cases for all
 GEN_ALL= ${foreach nm, $(SEP_PLUS), ../suite/$(nm).all.cpp.xml} ../suite/extra.all.cpp.xml \
 	       ${foreach nm, $(BASE_JAVA_ALL), ../suite/$(nm).all.java.xml} \
+	       ${foreach nm, $(BASE_CXX_0X_ALL), ../suite/$(nm).all.cpp0x.xml} \
 	       ${foreach nm, $(BASE_C_ALL), ../suite/$(nm).all.c.xml} ../suite/extra.all.c.xml
 
 # generated cases for blocks
 GEN_BLOCK= ${foreach nm, $(SEP_PLUS),          ../suite/$(nm).block.cpp.xml} \
-                 ${foreach nm, $(BASE_C_ALL),    ../suite/$(nm).block.c.xml} \
-                 ${foreach nm, $(BASE_JAVA_ALL), ../suite/$(nm).block.java.xml} \
+               ${foreach nm, $(BASE_C_ALL),    ../suite/$(nm).block.c.xml} \
+ 	       ${foreach nm, $(BASE_CXX_0X_ALL), ../suite/$(nm).block.cpp0x.xml} \
+               ${foreach nm, $(BASE_JAVA_ALL), ../suite/$(nm).block.java.xml} \
 		 ../suite/extra.block.c.xml ../suite/extra.block.cpp.xml
 
 # generated cases for comments
 GEN_COMMENT= ${foreach nm, $(SEP_PLUS),          ../suite/$(nm).comment.cpp.xml} \
-		   ${foreach nm, $(BASE_C_ALL),    ../suite/$(nm).comment.c.xml} \
-		   ${foreach nm, $(BASE_JAVA_ALL), ../suite/$(nm).comment.java.xml} \
+	       ${foreach nm, $(BASE_C_ALL),    ../suite/$(nm).comment.c.xml} \
+ 	       ${foreach nm, $(BASE_CXX_0X_ALL), ../suite/$(nm).comment.cpp0x.xml} \
+	       ${foreach nm, $(BASE_JAVA_ALL), ../suite/$(nm).comment.java.xml} \
 		   ../suite/extra.comment.c.xml ../suite/extra.comment.cpp.xml
 
 # generated cases for formfeed
 GEN_FORMFEED = ${foreach nm, $(SEP_PLUS),          ../suite/$(nm).formfeed.cpp.xml} \
 		     ${foreach nm, $(BASE_C_ALL),    ../suite/$(nm).formfeed.c.xml} \
+ 	       ${foreach nm, $(BASE_CXX_0X_ALL), ../suite/$(nm).formfeed.cpp0x.xml} \
 		     ${foreach nm, $(BASE_JAVA_ALL), ../suite/$(nm).formfeed.java.xml} \
 		     ../suite/extra.formfeed.c.xml ../suite/extra.formfeed.cpp.xml
 
 # generated test cases for preproc
 GEN_PREPROC= ${foreach nm, $(SEP_PLUSNOPREPROC), ../suite/$(nm).preproc.cpp.xml} \
+ 	       ${foreach nm, $(BASE_CXX_0X_ALL), ../suite/$(nm).preproc.cpp0x.xml} \
 	           ${foreach nm, $(BASE_C_ALL), ../suite/$(nm).preproc.c.xml} \
 		   ../suite/extra.preproc.c.xml ../suite/extra.preproc.cpp.xml
 
@@ -307,7 +320,10 @@ cleanall :
 %.c.xml : %.cpp.xml
 	${XSLT_SETLANGUAGE_C} $< > $@
 
-GEN_FILES=${GEN_PART} ${GEN_ALL} ${GEN_BLOCK} ${GEN_COMMENT} ${GEN_PREPROC} ${GEN_FORMFEED} ../suite/constructor.cpp.xml $(GEN_JAVA) $(GEN_C)
+%.cpp0x.xml : %.cpp.xml
+	${XSLT_SETLANGUAGE_CXX_0X} $< > $@
+
+GEN_FILES=${GEN_PART} ${GEN_ALL} ${GEN_BLOCK} ${GEN_COMMENT} ${GEN_PREPROC} ${GEN_FORMFEED} ../suite/constructor.cpp.xml $(GEN_JAVA) $(GEN_C) $(GEN_CXX_0X)
 
 GEN_CPP_BASE=${GEN_SEP} ${foreach nm, $(SEP_PLUS), $(nm).all} ${foreach nm, $(SEP_PLUS), $(nm).block} ${foreach nm, $(SEP_PLUS), $(nm).comment} ${foreach nm, $(SEP_PLUS), $(nm).preproc}
 
