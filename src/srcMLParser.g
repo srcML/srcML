@@ -387,6 +387,10 @@ tokens {
     SPACKAGE;
     SINTERFACE;
 
+    // C++0x elements
+    SCONCEPT;
+    SCONCEPTMAP;
+
     // Last token used for boundary
     END_ELEMENT_TOKEN;
 }
@@ -512,6 +516,12 @@ end {} :
   context-free grammar statements
 */
 cfg {} :
+        // C++0x additional cfg statements
+        { inLanguage(LANGUAGE_CXX_0X) }? (
+
+            concept_definition
+        ) |
+
         // C++ additional cfg statements
         { inLanguage(LANGUAGE_CXX_FAMILY) }? (
 
@@ -1362,6 +1372,26 @@ class_definition :
             { setMode(MODE_END_AT_BLOCK); }
 
             class_definition_header_java lcurly
+        )
+;
+
+concept_definition :
+        {
+            bool intypedef = inMode(MODE_TYPEDEF);
+
+            // statement
+            startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_CLASS | MODE_DECL | MODE_END_AT_BLOCK);
+
+            // start the class definition
+            startElement(SCONCEPT);
+
+            if (intypedef) {
+                setMode(MODE_END_AT_BLOCK);
+            }
+        }
+        { inLanguage(LANGUAGE_CXX_0X) }?
+        (
+            CONCEPT (class_header lcurly | lcurly)
         )
 ;
 

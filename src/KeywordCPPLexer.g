@@ -197,6 +197,14 @@ KeywordCPPLexer(std::istream& in, const std::string& src, int language = LANGUAG
         */
     }
 
+    // add all C++ specific keywords to the literals table
+    if (inLanguage(LANGUAGE_CXX_0X)) {
+
+        // concepts
+        literals["concept"] = CONCEPT;
+        literals["conceptmap"] = CONCEPTMAP;
+    }
+
     // add all Java specific keywords to the literals table
     if (inLanguage(LANGUAGE_JAVA)) {
 
