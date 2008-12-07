@@ -105,12 +105,6 @@ class srcMLUtility {
   std::vector<std::pair<std::string, std::string> > nsv;
   std::map<std::string, std::string> attrv;
 
-  // record attributes
-  xmlChar* unit_language;
-  xmlChar* unit_directory;
-  xmlChar* unit_filename;
-  xmlChar* unit_version;
-
   bool moved;
 }; 
 

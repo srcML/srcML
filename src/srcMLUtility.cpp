@@ -74,8 +74,7 @@ void skiptounit(xmlTextReaderPtr reader, int number) throw (LibXMLError);
 
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op)
-  : infile(infilename), output_encoding(encoding), options(op), reader(0), handler(0), nsv(0), /* attrv(0), */
-    unit_language(0), unit_directory(0), unit_filename(0), unit_version(0), moved(false) {
+  : infile(infilename), output_encoding(encoding), options(op), reader(0), handler(0), nsv(0), moved(false) {
 
   // empty filename indicates standard input
   if (infile == 0)
@@ -92,12 +91,6 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op
   } catch (...) {
     throw "Unable to find starting unit element";
   }
-
-  // record the current attributes for use in subunits
-  unit_filename = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_FILENAME);
-  unit_directory = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_DIRECTORY);
-  unit_version = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_VERSION);
-  unit_language = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_LANGUAGE);
 
   // record all attributes for future use
   // don't use the TextReaderMoveToNextAttribute as it messes up the future expand
@@ -391,64 +384,54 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
     }
   }
 
-  // record the standard attributes and remove them so we can insert them in the
-  // proper order
-  // save a copy of all the non-standard attributes
-  std::map<std::string, std::string> nattrv;
+  // starting with the attributes on the root element, update the attributes
+  // with the ones from this unit
+  std::map<std::string, std::string> nattrv = attrv;
   for (xmlAttrPtr pAttr = xmlDocGetRootElement(doc)->properties; pAttr; pAttr = pAttr->next) {
 
-     // skip standard attributes since they are already output
-    if ((strcmp((char*) pAttr->name, UNIT_ATTRIBUTE_LANGUAGE) == 0))
-      unit_language = xmlGetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_LANGUAGE);
-    else if ((strcmp((char*) pAttr->name, UNIT_ATTRIBUTE_DIRECTORY) == 0))
-      unit_directory = xmlGetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_DIRECTORY);
-    else if ((strcmp((char*) pAttr->name, UNIT_ATTRIBUTE_FILENAME) == 0))
-      unit_filename = xmlGetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_FILENAME);
-    else if ((strcmp((char*) pAttr->name, UNIT_ATTRIBUTE_VERSION) == 0))
-      unit_version = xmlGetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_VERSION);
-    else {
+    char* ac = (char*) xmlGetProp(xmlDocGetRootElement(doc), pAttr->name);
 
-      char* ac = (char*) xmlGetProp(xmlDocGetRootElement(doc), pAttr->name);
-
-      nattrv[(const char*) pAttr->name] = (const char*) ac;
-    }
+    nattrv[(const char*) pAttr->name] = (const char*) ac;
   }
 
   // wipe out all the attributes
   xmlAttrPtr pAttr;
   while ((pAttr = xmlDocGetRootElement(doc)->properties)) {
-	  xmlDocGetRootElement(doc)->properties = pAttr->next;
-	  xmlRemoveProp(pAttr);
+    xmlDocGetRootElement(doc)->properties = pAttr->next;
+    xmlRemoveProp(pAttr);
   }
 
-  // now put back the attributes based on a merge of the root unit and this unit
-  if (unit_language)
-	  xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_LANGUAGE, BAD_CAST unit_language);
+  // put back the standard attributes based on a merge of the root unit and this unit
 
-  if (unit_directory)
-	  xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_DIRECTORY, BAD_CAST unit_directory);
-
-  if (unit_filename)
-	  xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_FILENAME, BAD_CAST unit_filename);
-
-  if (unit_version)
-	  xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_VERSION, BAD_CAST unit_version);
-
-  // put in attributes from root unit element
-  for (std::map<std::string, std::string>::const_iterator iter = attrv.begin(); iter != attrv.end(); iter++) {
-      std::string name = (*iter).first;
-      std::string value = (*iter).second;
-
-      if (name == UNIT_ATTRIBUTE_LANGUAGE ||
-	  name == UNIT_ATTRIBUTE_DIRECTORY ||
-	  name == UNIT_ATTRIBUTE_FILENAME ||
-	  name == UNIT_ATTRIBUTE_VERSION)
-	      continue;
-
-      xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST name.c_str(), BAD_CAST value.c_str());
+  // language
+  if (nattrv.count(UNIT_ATTRIBUTE_LANGUAGE)) {
+    xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_LANGUAGE,
+	       BAD_CAST nattrv[UNIT_ATTRIBUTE_LANGUAGE].c_str());
+    nattrv.erase(UNIT_ATTRIBUTE_LANGUAGE);
   }
 
-  // put in attributes from original unit element
+  // directory
+  if (nattrv.count(UNIT_ATTRIBUTE_DIRECTORY)) {
+    xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_DIRECTORY,
+	       BAD_CAST nattrv[UNIT_ATTRIBUTE_DIRECTORY].c_str());
+    nattrv.erase(UNIT_ATTRIBUTE_DIRECTORY);
+  }
+
+  // filename
+  if (nattrv.count(UNIT_ATTRIBUTE_FILENAME)) {
+    xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_FILENAME,
+	       BAD_CAST nattrv[UNIT_ATTRIBUTE_FILENAME].c_str());
+    nattrv.erase(UNIT_ATTRIBUTE_FILENAME);
+  }
+
+  // version
+  if (nattrv.count(UNIT_ATTRIBUTE_VERSION)) {
+    xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST UNIT_ATTRIBUTE_VERSION,
+	       BAD_CAST nattrv[UNIT_ATTRIBUTE_VERSION].c_str());
+    nattrv.erase(UNIT_ATTRIBUTE_VERSION);
+  }
+
+  // put in the rest of the attributes
   for (std::map<std::string, std::string>::const_iterator iter = nattrv.begin(); iter != nattrv.end(); iter++) {
       std::string name = (*iter).first;
       std::string value = (*iter).second;
