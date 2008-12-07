@@ -513,7 +513,7 @@ end {} :
 */
 cfg {} :
         // C++ additional cfg statements
-        { inLanguage(LANGUAGE_CXX) }? (
+        { inLanguage(LANGUAGE_CXX_FAMILY) }? (
 
             namespace_statement | template_declaration
         ) |
@@ -590,7 +590,7 @@ statements_non_cfg { int token = 0; int secondtoken = 0; isoperatorfunction = 0;
         (class_struct_union_check[token /* token after header */])=> class_struct_union[token] |
 
         // class forms sections
-        { inLanguage(LANGUAGE_CXX) }?
+        { inLanguage(LANGUAGE_CXX_FAMILY) }?
         access_specifier_region |
 
         // enum definition as opposed to part of type or declaration
@@ -607,11 +607,11 @@ statements_non_cfg { int token = 0; int secondtoken = 0; isoperatorfunction = 0;
         (declaration_check[secondtoken])=> declaration |
 
         // constructor
-        { inLanguage(LANGUAGE_CXX) }?
+        { inLanguage(LANGUAGE_CXX_FAMILY) }?
         (constructor_check[token /* token after header */])=> constructor[token] |
 
         // destructor
-        { inLanguage(LANGUAGE_CXX) }?
+        { inLanguage(LANGUAGE_CXX_FAMILY) }?
         (destructor_check[token /* token after header */])=> destructor[token] |
 
         // labels to goto
@@ -659,7 +659,7 @@ function[int token, int type_count] { TokenPosition tp; } :
 call_macro_expression[int secondtoken, bool statement]
         { int postnametoken = 0; int argumenttoken = 0; int postcalltoken = 0; } :
 
-        { inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX) }?
+        { inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_FAMILY) }?
         (
         // call
         // check here instead of in expression_statement to distinguish between a call and a macro
@@ -1287,7 +1287,7 @@ class_struct_union_check[int& finaltoken] { finaltoken = 0; } :
         { inLanguage(LANGUAGE_C_FAMILY) }?
         (CLASS | STRUCT | UNION) class_header check_end[finaltoken] |
 
-        { inLanguage(LANGUAGE_CXX) }?
+        { inLanguage(LANGUAGE_CXX_FAMILY) }?
         access_specifier_mark CLASS class_header check_end[finaltoken] |
 
         { inLanguage(LANGUAGE_JAVA) }?
@@ -1353,7 +1353,7 @@ class_definition :
             }
         }
         (
-            { inLanguage(LANGUAGE_CXX) }?
+            { inLanguage(LANGUAGE_CXX_FAMILY) }?
             (access_specifier_mark)* CLASS (class_header lcurly | lcurly) class_default_access_action[SPRIVATE_ACCESS_DEFAULT] |
 
             { inLanguage(LANGUAGE_JAVA) }?
@@ -1497,7 +1497,7 @@ union_definition :
 */
 class_default_access_action[int access_token] :
         {
-            if (inLanguage(LANGUAGE_CXX) && (SkipBufferSize() > 0 ||
+            if (inLanguage(LANGUAGE_CXX_FAMILY) && (SkipBufferSize() > 0 ||
                 !(LA(1) == PUBLIC || LA(1) == PRIVATE || LA(1) == PROTECTED))) {
 
                 // setup block section
@@ -1854,7 +1854,7 @@ statement_part { int type_count; } :
              throw_list |
 
         // function specifier at end of function header
-        { inLanguage(LANGUAGE_CXX) && inMode(MODE_FUNCTION_TAIL) }?
+        { inLanguage(LANGUAGE_CXX_FAMILY) && inMode(MODE_FUNCTION_TAIL) }?
              function_specifier |
 
         // K&R function parameters
@@ -2294,7 +2294,7 @@ function_tail {} :
 
             /* order is important */
 
-            { inLanguage(LANGUAGE_CXX) }?
+            { inLanguage(LANGUAGE_CXX_FAMILY) }?
             function_specifier |
 
             { inLanguage(LANGUAGE_OO) }?
@@ -2320,7 +2320,7 @@ declaration_check[int& token] { token = 0; } :
         // no return value functions:  casting operator method and main
         (OPERATOR (NAME)* | MAIN) paren_pair record[isoperatorfunction, 1] LCURLY |
 
-        { inLanguage(LANGUAGE_CXX) }?
+        { inLanguage(LANGUAGE_CXX_FAMILY) }?
         (operator_function_name)=> operator_function_name record[isoperatorfunction, 1] paren_pair LCURLY |
 
         (options { greedy = true; } : (VIRTUAL | INLINE))* lead_type_identifier declaration_check_end[token]
@@ -2779,7 +2779,7 @@ simple_name_optional_template[bool marked] { LocalMode lm; TokenPosition tp; } :
             }
         }
         simple_name_marked[marked] (
-            { inLanguage(LANGUAGE_CXX) }?
+            { inLanguage(LANGUAGE_CXX_FAMILY) }?
             (template_argument_list)=>
                 template_argument_list |
 
@@ -3022,7 +3022,7 @@ constructor_check[int& token] { antlr::RefToken s[2]; } :
         (specifier_explicit | { inLanguage(LANGUAGE_JAVA) }? java_specifier_mark)*
         (
         
-        { inTransparentMode(MODE_ACCESS_REGION) && inLanguage(LANGUAGE_CXX) }?
+        { inTransparentMode(MODE_ACCESS_REGION) && inLanguage(LANGUAGE_CXX_FAMILY) }?
         constructor_name paren_pair check_end[token] |
 
         { inLanguage(LANGUAGE_JAVA) }?
