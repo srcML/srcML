@@ -519,7 +519,7 @@ cfg {} :
         // C++0x additional cfg statements
         { inLanguage(LANGUAGE_CXX_0X) }? (
 
-            concept_definition
+            concept_definition | conceptmap_definition
         ) |
 
         // C++ additional cfg statements
@@ -1392,6 +1392,26 @@ concept_definition :
         { inLanguage(LANGUAGE_CXX_0X) }?
         (
             CONCEPT (class_header lcurly | lcurly)
+        )
+;
+
+conceptmap_definition :
+        {
+            bool intypedef = inMode(MODE_TYPEDEF);
+
+            // statement
+            startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_CLASS | MODE_DECL);
+
+            // start the class definition
+            startElement(SCONCEPTMAP);
+
+            if (intypedef) {
+                setMode(MODE_END_AT_BLOCK);
+            }
+        }
+        { inLanguage(LANGUAGE_CXX_0X) }?
+        (
+            CONCEPTMAP (class_header lcurly | lcurly)
         )
 ;
 

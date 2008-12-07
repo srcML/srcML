@@ -672,5 +672,5 @@ void srcMLOutput::fillElementNames() {
 
   // C++0x elements
   ElementNames[SCONCEPT]       = "concept";
-  ElementNames[SCONCEPTMAP]    = "conceptmap";
+  ElementNames[SCONCEPTMAP]    = "concept_map";
 }

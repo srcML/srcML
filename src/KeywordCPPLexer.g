@@ -202,7 +202,7 @@ KeywordCPPLexer(std::istream& in, const std::string& src, int language = LANGUAG
 
         // concepts
         literals["concept"] = CONCEPT;
-        literals["conceptmap"] = CONCEPTMAP;
+        literals["concept_map"] = CONCEPTMAP;
     }
 
     // add all Java specific keywords to the literals table
