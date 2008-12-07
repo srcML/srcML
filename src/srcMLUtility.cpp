@@ -371,6 +371,7 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
       }
     }
 
+    // output any other namespaces that may exist
     for (std::map<std::string, std::string>::const_iterator iter = nsv.begin(); iter != nsv.end(); ++iter) {
       std::string uri = (*iter).first;
       std::string prefix = (*iter).second;
