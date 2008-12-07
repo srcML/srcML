@@ -33,8 +33,8 @@ class Language {
     LANGUAGE_CXX_0X = 4,
     LANGUAGE_JAVA = 8,
     LANGUAGE_ASPECTJ = 16,
-    LANGUAGE_C_FAMILY = LANGUAGE_C | LANGUAGE_CXX,
     LANGUAGE_CXX_FAMILY = LANGUAGE_CXX | LANGUAGE_CXX_0X,
+    LANGUAGE_C_FAMILY = LANGUAGE_C | LANGUAGE_CXX_FAMILY,
     LANGUAGE_OO = LANGUAGE_CXX_FAMILY | LANGUAGE_JAVA | LANGUAGE_ASPECTJ,
   };
 
@@ -67,6 +67,10 @@ class Language {
 
     case LANGUAGE_JAVA:
       lstring = "Java";
+      break;
+
+    case LANGUAGE_CXX_0X:
+      lstring = "C++0x";
       break;
 
     case LANGUAGE_ASPECTJ | LANGUAGE_JAVA:
