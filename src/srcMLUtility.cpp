@@ -106,7 +106,6 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op
       char* ac = (char*) xmlGetProp(xmlTextReaderCurrentNode(reader), pAttr->name);
 
       attrv[(const char*) pAttr->name] = (const char*) ac;
-      //      attrv.push_back(std::make_pair((const char*) ac, (const char*) pAttr->name));
   }
 
   // record all namespaces for future use
@@ -395,7 +394,7 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
   // record the standard attributes and remove them so we can insert them in the
   // proper order
   // save a copy of all the non-standard attributes
-  std::vector<std::pair<std::string, std::string> > nattrv;
+  std::map<std::string, std::string> nattrv;
   for (xmlAttrPtr pAttr = xmlDocGetRootElement(doc)->properties; pAttr; pAttr = pAttr->next) {
 
      // skip standard attributes since they are already output
@@ -411,7 +410,7 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
 
       char* ac = (char*) xmlGetProp(xmlDocGetRootElement(doc), pAttr->name);
 
-      nattrv.push_back(std::make_pair((const char*) ac, (const char*) pAttr->name));
+      nattrv[(const char*) pAttr->name] = (const char*) ac;
     }
   }
 
@@ -450,9 +449,9 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
   }
 
   // put in attributes from original unit element
-  for (std::vector<std::pair<std::string, std::string> >::const_iterator iter = nattrv.begin(); iter != nattrv.end(); iter++) {
-      std::string value = (*iter).first;
-      std::string name = (*iter).second;
+  for (std::map<std::string, std::string>::const_iterator iter = nattrv.begin(); iter != nattrv.end(); iter++) {
+      std::string name = (*iter).first;
+      std::string value = (*iter).second;
 
       xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST name.c_str(), BAD_CAST value.c_str());
   }
