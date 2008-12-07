@@ -144,36 +144,17 @@ std::string srcMLUtility::attribute(const char* attribute_name, bool& nonnull) {
 
 // prefix of given namespace
 // return blank for default namespace
-// return blank
 std::string srcMLUtility::namespace_ext(const std::string& uri, bool& nonnull) {
 
   // find the raw prefix
   std::string raw_prefix;
-  for (std::map<std::string, std::string>::const_iterator iter = nsv.begin(); iter != nsv.end(); iter++) {
-	std::string vuri = (*iter).first;
-	std::string vprefix = std::string("xmlns:") + (*iter).second;
-
-	if (vuri == uri) {
-	  raw_prefix = vprefix;
-	  break;
-	}
-  }
-
-  // calculate the real prefix
-  std::string prefix;
-
-  if (raw_prefix.size() == 0) {
-    nonnull = false;
-    prefix = "";
-  } else if (raw_prefix.size() == 5) {
+  if (nsv.count(uri)) {
     nonnull = true;
-    prefix = "";
+    return nsv[uri];
   } else {
-    nonnull = true;
-    prefix = raw_prefix.substr(6);
+    nonnull = false;
+    return "";
   }
-
-  return prefix;
 }
 
 // move to a particular nested unit
