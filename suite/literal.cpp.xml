@@ -17,4 +17,12 @@
 <expr_stmt><expr><lit:literal type="number">2.5F</lit:literal></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><lit:literal type="boolean">false</lit:literal></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><lit:literal type="boolean">true</lit:literal></expr>;</expr_stmt>
+</unit>
+
 </unit>

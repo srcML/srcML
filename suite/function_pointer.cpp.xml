@@ -29,4 +29,16 @@
 <macro><name>A</name><argument_list>(<argument>1</argument>)</argument_list></macro> <function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
+<unit>
+<function_decl><type><name>double</name>*</type> (*)<parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>const</name> <name>double</name>*</type> (*)<parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function_decl><type><name>const</name> <name>double</name>*</type> (*<name>f</name>)<parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list>;</function_decl>
+</unit>
+
 </unit>

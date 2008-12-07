@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++0x" dir="concept_map">
+
+<unit>
+<concept_map>concept_map <name><name>InputIterator</name><argument_list>&lt;<argument><name>char</name>*</argument>&gt;</argument_list></name>
+<block>{
+  <typedef>typedef <type><name>char</name></type> <name>value_type</name> ;</typedef>
+  <typedef>typedef <type><name>char</name>&amp;</type> <name>reference</name> ;</typedef>
+  <typedef>typedef <type><name>char</name>*</type> <name>pointer</name> ;</typedef>
+  <typedef>typedef <type><name><name>std</name>::<name>ptrdiff_t</name></name></type> <name>difference_type</name> ;</typedef>
+}</block>;</concept_map>
+</unit>
+
+</unit>
