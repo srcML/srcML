@@ -212,7 +212,7 @@ int srcMLUtility::unit_count() {
       // found another unit
       ++count;
 
-      // skip past this unit
+      // skip past this unit node
       xmlTextReaderNext(reader);
 
       // stop after this file (and end gracefully) with ctrl-c
@@ -383,7 +383,7 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
 
     // output the standard namespaces, if they exist
     const char* stdns[] = { SRCML_SRC_NS_URI, SRCML_CPP_NS_URI, SRCML_ERR_NS_URI };
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < (int) (sizeof(stdns) / sizeof(stdns[0])); ++i) {
 
       if (nnsv.count(stdns[i])) {
 
@@ -419,7 +419,7 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
   // put back the standard attributes based on a merge of the root unit and this unit
   const char* stdattr[] = { UNIT_ATTRIBUTE_LANGUAGE, UNIT_ATTRIBUTE_DIRECTORY,
 			    UNIT_ATTRIBUTE_FILENAME, UNIT_ATTRIBUTE_VERSION };
-  for (int i = 0; i < 4; ++i) {
+  for (int i = 0; i < (int) (sizeof(stdattr) / sizeof(stdattr[0])); ++i) {
 
     if (nattrv.count(stdattr[i])) {
       xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST stdattr[i],
