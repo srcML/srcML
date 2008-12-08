@@ -390,6 +390,7 @@ tokens {
     // C++0x elements
     SCONCEPT;
     SCONCEPTMAP;
+    SAUTO;
 
     // Last token used for boundary
     END_ELEMENT_TOKEN;
@@ -516,12 +517,6 @@ end {} :
   context-free grammar statements
 */
 cfg {} :
-        // C++0x additional cfg statements
-        { inLanguage(LANGUAGE_CXX_0X) }? (
-
-            concept_definition | conceptmap_definition
-        ) |
-
         // C++ additional cfg statements
         { inLanguage(LANGUAGE_CXX_FAMILY) }? (
 
@@ -626,6 +621,14 @@ statements_non_cfg { int token = 0; int secondtoken = 0; isoperatorfunction = 0;
 
         // labels to goto
         { secondtoken == COLON }? label_statement |
+
+        // C++0x additional non-cfg statements
+        { inLanguage(LANGUAGE_CXX_0X) }? (
+
+            ((AUTO)* CONCEPT)=> concept_definition |
+
+            conceptmap_definition
+        ) |
 
         // call
         call_macro_expression[secondtoken, true]
@@ -1391,7 +1394,7 @@ concept_definition :
         }
         { inLanguage(LANGUAGE_CXX_0X) }?
         (
-            CONCEPT (class_header lcurly | lcurly)
+            (auto_keyword)* CONCEPT (class_header lcurly | lcurly)
         )
 ;
 
@@ -2532,6 +2535,8 @@ complete_throw_list {} :
 */
 pure_lead_type_identifier {} :
 
+        auto_keyword |
+
         // class/struct/union before a name in a type, e.g., class A f();
         ((CLASS | STRUCT | UNION) NAME)=> (CLASS | STRUCT | UNION) |
 
@@ -3057,6 +3062,16 @@ standard_specifiers { LocalMode lm; } :
             startElement(SNAME);
         }
         (VIRTUAL | EXTERN)
+;
+
+auto_keyword { LocalMode lm; } :
+        {
+            // local mode that is automatically ended by leaving this function
+            startNewMode(MODE_LOCAL);
+
+            startElement(SNAME);
+        }
+        AUTO
 ;
 
 // constructor

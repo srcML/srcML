@@ -87,6 +87,7 @@ tokens {
     CONCEPT;
     CONCEPTMAP;
     REQUIRES;
+    AUTO;
 }
 
 {
@@ -203,6 +204,7 @@ KeywordCPPLexer(std::istream& in, const std::string& src, int language = LANGUAG
         // concepts
         literals["concept"] = CONCEPT;
         literals["concept_map"] = CONCEPTMAP;
+        literals["auto"] = AUTO;
     }
 
     // add all Java specific keywords to the literals table
