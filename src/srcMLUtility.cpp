@@ -45,7 +45,6 @@ static const char* SRCML_SRC_NS_PREFIX = "src";
 xmlAttrPtr root_attributes;
 xmlXPathCompExprPtr xpath_formfeed = xmlXPathCompile(BAD_CAST "//src:formfeed");
 xmlXPathCompExprPtr xpath_escape = xmlXPathCompile(BAD_CAST "//src:escape");
-xmlXPathContextPtr context;
 
 // directory permission for expand
 #ifdef __GNUC__
@@ -74,7 +73,7 @@ void skiptounit(xmlTextReaderPtr reader, int number) throw (LibXMLError);
 
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op)
-  : infile(infilename), output_encoding(encoding), options(op), reader(0), handler(0), moved(false) {
+  : infile(infilename), output_encoding(encoding), options(op), reader(0), handler(0), context(0), moved(false) {
 
   // empty filename indicates standard input
   if (infile == 0)
@@ -112,6 +111,10 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op
 
 // destructor
 srcMLUtility::~srcMLUtility() {
+
+  // free xpath context (if it exists)
+  if (context)
+    xmlXPathFreeContext(context);
 
   // free reader
   xmlFreeTextReader(reader);
