@@ -64,11 +64,21 @@ COMMENT_CHAR_NEWLINE
 protected
 COMMENT_CHAR
 // leave out newline, \012, and carriage return, \015.  Also, leave out escaped characters
-    : '\0'..'\011' | '\013'..'\014' | '\016'..'\045' | '\047'..';' | '=' | '?'..'\377' | ESCAPED_CHAR
+    : '\011' | '\040'..'\045' | '\047'..';' | '=' | '?'..'\377' | ESCAPED_CHAR | CONTROL_CHAR
 ;
 
 protected
 ESCAPED_CHAR
     : '<' { $setText("&lt;"); } | '>' { $setText("&gt;"); } | '&' { $setText("&amp;"); }
+;
+
+protected
+CONTROL_CHAR :
+        ('\000'..'\010' | '\013' | '\014' | '\016'..'\037')
+        {
+            std::ostringstream out; 
+            out << "<" + srcuri + "escape" + " char=\"0x" << std::hex << (int) text.substr(text.size() - 1)[0] << "\"/>";
+            $setText(out.str());
+        }
 ;
 

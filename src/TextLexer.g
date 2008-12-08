@@ -102,16 +102,6 @@ CHAR_CHARACTER
         ESCAPED_CHAR | CONTROL_CHAR
 ;
 
-protected
-CONTROL_CHAR :
-        ('\000'..'\010' | '\013' | '\014' | '\016'..'\037')
-        {
-            std::ostringstream out; 
-            out << "<" + srcuri + "escape" + " char=\"0x" << std::hex << (int) text[1] << "\"/>";
-            $setText(out.str());
-        }
-    ;
-
 protected   
 DIGITS :
         DIGIT
