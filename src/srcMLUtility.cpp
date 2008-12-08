@@ -206,7 +206,7 @@ int srcMLUtility::unit_count() {
     if (xmlTextReaderDepth(reader) == 1 && (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT)) {
 
       // make sure first nested element is unit
-      if (count == 0 && strcmp((const char*) xmlTextReaderConstName(reader), "unit") != 0)
+      if (count == 0 && strcmp((const char*) xmlTextReaderConstLocalName(reader), "unit") != 0)
          break;
       
       // found another unit
