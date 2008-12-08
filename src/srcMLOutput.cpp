@@ -292,49 +292,54 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
       xmlTextWriterWriteAttribute(xout, BAD_CAST src_prefix.c_str(), BAD_CAST SRCML_SRC_NS_URI);
 
       // main cpp namespace declaration
-      std::string cpp_prefix = "xmlns";
-      if (uri[SRCML_CPP_NS_URI][0] != '\0') {
-	cpp_prefix += ":";
-	cpp_prefix += uri[SRCML_CPP_NS_URI];
-      }
-      if (isoption(OPTION_CPP))
+      if (isoption(OPTION_CPP)) {
+	std::string cpp_prefix = "xmlns";
+	if (uri[SRCML_CPP_NS_URI][0] != '\0') {
+	  cpp_prefix += ":";
+	  cpp_prefix += uri[SRCML_CPP_NS_URI];
+	}
 	xmlTextWriterWriteAttribute(xout, BAD_CAST cpp_prefix.c_str(), BAD_CAST SRCML_CPP_NS_URI);
+      }
 
       // optional debugging xml namespace
-      std::string err_prefix = "xmlns";
-      if (uri[SRCML_ERR_NS_URI][0] != '\0') {
-	err_prefix += ":";
-	err_prefix += uri[SRCML_ERR_NS_URI];
-      }
-      if (isoption(OPTION_DEBUG))
+      if (isoption(OPTION_DEBUG)) {
+	std::string err_prefix = "xmlns";
+	if (uri[SRCML_ERR_NS_URI][0] != '\0') {
+	  err_prefix += ":";
+	  err_prefix += uri[SRCML_ERR_NS_URI];
+	}
 	xmlTextWriterWriteAttribute(xout, BAD_CAST err_prefix.c_str(), BAD_CAST SRCML_ERR_NS_URI);
+      }
 
       // optional literal xml namespace
-      std::string lit_prefix = "xmlns";
-      if (uri[SRCML_EXT_LITERAL_NS_URI][0] != '\0') {
-	lit_prefix += ":";
-	lit_prefix += uri[SRCML_EXT_LITERAL_NS_URI];
-      }
-      if (isoption(OPTION_LITERAL))
+      if (isoption(OPTION_LITERAL)) {
+	std::string lit_prefix = "xmlns";
+	if (uri[SRCML_EXT_LITERAL_NS_URI][0] != '\0') {
+	  lit_prefix += ":";
+	  lit_prefix += uri[SRCML_EXT_LITERAL_NS_URI];
+	}
 	xmlTextWriterWriteAttribute(xout, BAD_CAST lit_prefix.c_str(), BAD_CAST SRCML_EXT_LITERAL_NS_URI);
+      }
 
       // optional operator xml namespace
-      std::string opr_prefix = "xmlns";
-      if (uri[SRCML_EXT_OPERATOR_NS_URI][0] != '\0') {
-	opr_prefix += ":";
-	opr_prefix += uri[SRCML_EXT_OPERATOR_NS_URI];
-      }
-      if (isoption(OPTION_OPERATOR))
+      if (isoption(OPTION_OPERATOR)) {
+	std::string opr_prefix = "xmlns";
+	if (uri[SRCML_EXT_OPERATOR_NS_URI][0] != '\0') {
+	  opr_prefix += ":";
+	  opr_prefix += uri[SRCML_EXT_OPERATOR_NS_URI];
+	}
 	xmlTextWriterWriteAttribute(xout, BAD_CAST opr_prefix.c_str(), BAD_CAST SRCML_EXT_OPERATOR_NS_URI);
+      }
 
       // optional modifier xml namespace
-      std::string mod_prefix = "xmlns";
-      if (uri[SRCML_EXT_MODIFIER_NS_URI][0] != '\0') {
-	mod_prefix += ":";
-	mod_prefix += uri[SRCML_EXT_MODIFIER_NS_URI];
-      }
-      if (isoption(OPTION_MODIFIER))
+      if (isoption(OPTION_MODIFIER)) {
+	std::string mod_prefix = "xmlns";
+	if (uri[SRCML_EXT_MODIFIER_NS_URI][0] != '\0') {
+	  mod_prefix += ":";
+	  mod_prefix += uri[SRCML_EXT_MODIFIER_NS_URI];
+	}
 	xmlTextWriterWriteAttribute(xout, BAD_CAST mod_prefix.c_str(), BAD_CAST SRCML_EXT_MODIFIER_NS_URI);
+      }
     }
 
     // language attribute
