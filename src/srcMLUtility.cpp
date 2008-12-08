@@ -474,6 +474,8 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
     // convert from the escaped to the unescaped value
     char values[2] = { strtod(ac, NULL), '\0' };
 
+    xmlFree(ac);
+
     // replace the escape element node with a text node of the unescaped value
     xmlNodePtr escape = xmlNewText(BAD_CAST values);
     xmlReplaceNode(result_nodes->nodesetval->nodeTab[i], escape);
@@ -490,6 +492,8 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
   if (buf == NULL) return;
   xmlOutputBufferWrite(buf, strlen((char*) s), (char*) s);
   xmlOutputBufferClose(buf);
+
+  xmlFree(s);
 }
 
   // skip to the next unit
