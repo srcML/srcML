@@ -150,6 +150,8 @@ std::string srcMLUtility::attribute(const char* attribute_name, bool& nonnull) {
  
     nonnull = value != 0;
 
+    xmlFree(value);
+
     return s;
   }
 
