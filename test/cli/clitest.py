@@ -241,6 +241,21 @@ nestedfile = xml_declaration + """
 
 </unit>
 """
+
+nestedfilesrc = xml_declaration + """
+<src:unit xmlns:src="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+
+<src:unit language="C++" dir="sub" filename="a.cpp">
+<src:expr_stmt><src:expr><src:name>a</src:name></src:expr>;</src:expr_stmt>
+</src:unit>
+
+<src:unit language="C++" dir="sub" filename="b.cpp">
+<src:expr_stmt><src:expr><src:name>b</src:name></src:expr>;</src:expr_stmt>
+</src:unit>
+
+</src:unit>
+"""
+
 os.system('/bin/echo -e "\na;" > sub/a.cpp')
 os.system('/bin/echo -e "\nb;" > sub/b.cpp')
 
@@ -292,6 +307,8 @@ checkallforms(srcmlutility, option.SRCVERSION_FLAG_SHORT, option.SRCVERSION_FLAG
 
 check([srcmlutility, option.NESTED_FLAG], srcml, "0\n")
 check([srcmlutility, option.NESTED_FLAG], nestedfile, "2\n")
+
+check([srcmlutility, option.NESTED_FLAG], nestedfilesrc, "2\n")
 
 checkallforms(srcmlutility, "-U", option.UNIT_FLAG, "1", nestedfile, sfile1)
 check([srcmlutility, option.UNIT_FLAG, "1", "-"], nestedfile, sfile1)
