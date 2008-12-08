@@ -197,28 +197,25 @@ int srcMLUtility::unit_count() {
   int count = 0;
   while (1) {
 
-    // read a node
-    int ret = xmlTextReaderRead(reader);
-    if (ret != 1)
+    try {
+      skiptonextunit(reader);
+    } catch(LibXMLError) {
+      break;
+    }
+
+    // make sure first nested element is unit
+    if (count == 0 && strcmp((const char*) xmlTextReaderConstLocalName(reader), "unit") != 0)
       break;
 
-    // process unit
-    if (xmlTextReaderDepth(reader) == 1 && (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT)) {
+    // found another unit
+    ++count;
 
-      // make sure first nested element is unit
-      if (count == 0 && strcmp((const char*) xmlTextReaderConstLocalName(reader), "unit") != 0)
-         break;
-      
-      // found another unit
-      ++count;
+    // skip past this unit node
+    xmlTextReaderNext(reader);
 
-      // skip past this unit node
-      xmlTextReaderNext(reader);
-
-      // stop after this file (and end gracefully) with ctrl-c
-      if (isoption(options, OPTION_TERMINATE))
-	break;
-    }
+    // stop after this file (and end gracefully) with ctrl-c
+    if (isoption(options, OPTION_TERMINATE))
+      break;
   }
 
   return count;
