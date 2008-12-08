@@ -42,9 +42,9 @@
 #include "Options.h"
 
 static const char* SRCML_SRC_NS_PREFIX = "src";
-xmlAttrPtr root_attributes;
-xmlXPathCompExprPtr xpath_formfeed = xmlXPathCompile(BAD_CAST "//src:formfeed");
-xmlXPathCompExprPtr xpath_escape = xmlXPathCompile(BAD_CAST "//src:escape");
+
+xmlXPathCompExprPtr srcMLUtility::xpath_formfeed;
+xmlXPathCompExprPtr srcMLUtility::xpath_escape;
 
 // directory permission for expand
 #ifdef __GNUC__
@@ -103,7 +103,19 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op
 
   // setupt a context for xpath if conversion to src
   if (!isoption(options, OPTION_XML)) {
+
+    xpath_formfeed = xmlXPathCompile(BAD_CAST "//src:formfeed");
+    if (!xpath_formfeed)
+      throw LibXMLError(0);
+
+    xpath_escape = xmlXPathCompile(BAD_CAST "//src:escape");
+    if (!xpath_escape)
+      throw LibXMLError(0);
+
     context = xmlXPathNewContext(xmlTextReaderCurrentDoc(reader));
+    if (!context)
+      throw LibXMLError(0);
+
     if (xmlXPathRegisterNs(context, BAD_CAST SRCML_SRC_NS_PREFIX , BAD_CAST SRCML_SRC_NS_URI) == -1)
       throw "Unable to register srcML namespace";
   }
@@ -115,6 +127,12 @@ srcMLUtility::~srcMLUtility() {
   // free xpath context (if it exists)
   if (context)
     xmlXPathFreeContext(context);
+
+  if (xpath_formfeed)
+    xmlXPathFreeCompExpr(xpath_formfeed);
+
+  if (xpath_escape)
+    xmlXPathFreeCompExpr(xpath_escape);
 
   // free reader
   xmlFreeTextReader(reader);

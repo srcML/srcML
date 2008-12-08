@@ -106,6 +106,8 @@ class srcMLUtility {
   std::map<std::string, std::string> nsv;
   std::map<std::string, std::string> attrv;
   xmlXPathContextPtr context;
+  static xmlXPathCompExprPtr xpath_formfeed;
+  static xmlXPathCompExprPtr xpath_escape;
 
   bool moved;
 }; 
