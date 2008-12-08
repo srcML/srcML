@@ -301,7 +301,7 @@
 	  "&SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT;" in the namespace
 	  "&SRCML_EXT_LITERAL_NS_URI;".  Can also be
 	  specified by declaring a prefix for this namespace using the
-	  xmlns option, e.g.,
+	  <option>&XMLNS_FLAG;</option> option, e.g.,
 	  <option>&XMLNS_FLAG;:&SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT;="&SRCML_EXT_LITERAL_NS_URI;"</option>
 	</para>
       </listitem>
@@ -315,7 +315,7 @@
 	  "&SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT;" in the namespace
 	  "&SRCML_EXT_OPERATOR_NS_URI;".  Can also be
 	  specified by declaring a prefix for this namespace using the
-	  xmlns option, e.g.,
+	  <option>&XMLNS_FLAG;</option> option, e.g.,
 	  <option>&XMLNS_FLAG;:&SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT;="&SRCML_EXT_OPERATOR_NS_URI;"</option>
 	</para>
       </listitem>
@@ -328,8 +328,8 @@
 	  modifier with the prefix
 	  "&SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT;" in the namespace
 	  "&SRCML_EXT_MODIFIER_NS_URI;".  Can also be specified by
-	  declaring a prefix for this namespace using the xmlns
-	  option, e.g.,
+	  declaring a prefix for this namespace using the
+	  <option>&XMLNS_FLAG;</option> option, e.g.,
 	  <option>&XMLNS_FLAG;:&SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT;="&SRCML_EXT_MODIFIER_NS_URI;"</option>
 	</para>
       </listitem>

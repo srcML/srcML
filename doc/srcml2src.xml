@@ -47,20 +47,21 @@
   <para>
     Conversion from the srcML format to source code is relatively
     straightforward.  All XML tags are removed and escaped characters
-    are unescaped.  The special srcML element for a
-    formfeed is converted back to a form-feed character (form-feed
-    characters are not allowed in XML, even escaped).
+    are unescaped.  Special srcML elements for characters not
+    permitted in XML, e.g., formfeed, are converted back to their
+    original characters.
   </para>
   <para>
-    In addition to conversion, srcml2src provides various srcML
-    utilities such as extracting metadata, extracting individual parts
-    of compound srcML files (as both text and XML), and extracting
-    metadata from individual parts of compound srcML files.  It can also
-    be used to extract all the individual files in a compound srcML file.
+    In addition to conversion, <command>srcml2src</command> provides
+    various srcML utilities such as extracting metadata, extracting
+    individual parts of compound srcML files (as either text or XML),
+    and extracting metadata from individual parts of compound srcML
+    files.  It can also be used to extract all the individual files in
+    a compound srcML file.
   </para>
   <para>
-    Using the character - in the place of an input srcML file
-    filename uses standard input, and in place of an output source-code file
+    Using the character - in the place of an input srcML file filename
+    uses standard input, and in place of an output source-code file
     uses standard output.
   </para>
 </refsect1>
@@ -113,7 +114,7 @@
 	  source-code files.  The directory and filename used is based
 	  on that stored in the directory and filename attributes.
 	  Necessary subdirectories are created.  Existing files with
-	  the same path will be overwritten.
+	  the same path are overwritten.
 	</para>
       </listitem>
     </varlistentry>
