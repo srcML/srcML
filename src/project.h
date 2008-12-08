@@ -27,6 +27,7 @@
 
 #include <cstdlib>
 #include <csignal>
+#include <cerrno>
 
 namespace pstd {
 

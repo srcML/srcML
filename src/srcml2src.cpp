@@ -344,20 +344,30 @@ int main(int argc, char* argv[]) {
       char* embedded = extract_option(argv[curarg]);
 
       // filename is embedded parameter
+      char* value = 0;
       if (embedded) {
 
-	unit = pstd::atoi(embedded + 1);
+	value = embedded + 1;
 	++curarg;
 
-      // check for unit flag with missing unit number
+      // check for unit flag with missing, separate unit number
       } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
 	std::cerr << NAME << ": unit option selected but no number specified." << '\n';
 	exit(STATUS_UNIT_MISSING);
       } else {
-	unit = pstd::atoi(argv[(++curarg)++]);
+	value = argv[(++curarg)++];
       }
 
-      // validate unit number
+      char *end;
+      unit = pstd::strtol(value, &end, 10);
+
+      // validate type of unit number
+      if (errno == EINVAL || strlen(end) == strlen(value)) {
+	std::cerr << NAME << ": unit option value \"" <<  value << "\" must be numeric." << '\n';
+	exit(STATUS_UNIT_INVALID);
+      }
+
+      // validate range of unit number
       if (unit <= 0) {
 	std::cerr << NAME << ": unit option value \"" << unit << "\" must be > 0." << '\n';
 	exit(STATUS_UNIT_INVALID);
