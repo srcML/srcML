@@ -11,4 +11,14 @@
 }</block>;</concept_map>
 </unit>
 
+<unit>
+<template>template<parameter_list>&lt;<param><type><name>typename</name></type> <name>T</name></param>&gt;</parameter_list> <concept_map>concept_map <name><name>InputIterator</name><argument_list>&lt;<argument><name>T</name>*</argument>&gt;</argument_list></name>
+<block>{
+  <typedef>typedef <type><name>T</name></type> <name>value_type</name> ;</typedef>
+  <typedef>typedef <type><name>T</name>&amp;</type> <name>reference</name> ;</typedef>
+  <typedef>typedef <type><name>T</name>*</type> <name>pointer</name> ;</typedef>
+  <typedef>typedef <type><name><name>std</name>::<name>ptrdiff_t</name></name></type> <name>difference_type</name> ;</typedef>
+}</block>;</concept_map></template>
+</unit>
+
 </unit>
