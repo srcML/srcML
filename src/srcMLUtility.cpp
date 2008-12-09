@@ -273,11 +273,15 @@ void srcMLUtility::expand(const char* root_filename) {
 
   moved = true;
 
+  int count = 0;
+
   // process each nested unit element individually
   while (1) {
 
     // skip to the proper nested unit
     skiptounit(reader, 1);
+
+    ++count;
 
     // extract the attributes from the unit for filename and directory
     xmlChar* filename = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_FILENAME);
@@ -312,7 +316,7 @@ void srcMLUtility::expand(const char* root_filename) {
 
     // output file status message if in verbose mode
     if (isoption(options, OPTION_VERBOSE))
-      std::cerr << "Creating file:  " << output_filename << '\n';
+      std::cerr << count << '\t' << output_filename << '\n';
 
     // output this particular unit
     outputSrc(output_filename.c_str(), reader);
