@@ -156,13 +156,11 @@ std::string srcMLUtility::attribute(const char* attribute_name, bool& nonnull) {
   }
 
   // extract attribute from unit tag
-  if (attrv.count(attribute_name)) {
-    nonnull = true;
+  nonnull = attrv.count(attribute_name) > 0;
+  if (nonnull)
     return attrv[attribute_name];
-  } else {
-    nonnull = false;
+  else
     return "";
-  }
 }
 
 // prefix of given namespace
