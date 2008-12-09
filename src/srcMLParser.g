@@ -4394,7 +4394,6 @@ preprocessor {
         startNewMode(MODE_PREPROC);
 
         } :
-
         {
             // assume error.  will set to proper one later
             startElement(SCPP_ERROR);
@@ -4507,7 +4506,9 @@ preprocessor {
             endCurrentMode(MODE_LOCAL);
 
             setTokenPosition(tp, SCPP_ERROR);
-        }
+        } | 
+
+        /* blank preproc */
         )
         eol_skip[directive_token, markblockzero]
 ;
@@ -4522,7 +4523,7 @@ eol_skip[int directive_token, bool markblockzero] {
            LA(1) != LINECOMMENT && 
            LA(1) != BLOCKCOMMENT && 
            LA(1) != EOF && 
-           LA(1) != 1
+           LA(1) != 1 /* EOF? */
         )
                 consume();
     } :
