@@ -8,7 +8,7 @@
   <typedef>typedef <type><name>char</name>&amp;</type> <name>reference</name> ;</typedef>
   <typedef>typedef <type><name>char</name>*</type> <name>pointer</name> ;</typedef>
   <typedef>typedef <type><name><name>std</name>::<name>ptrdiff_t</name></name></type> <name>difference_type</name> ;</typedef>
-}</block>;</concept_map>
+}</block></concept_map>
 </unit>
 
 <unit>
@@ -18,7 +18,7 @@
   <typedef>typedef <type><name>T</name>&amp;</type> <name>reference</name> ;</typedef>
   <typedef>typedef <type><name>T</name>*</type> <name>pointer</name> ;</typedef>
   <typedef>typedef <type><name><name>std</name>::<name>ptrdiff_t</name></name></type> <name>difference_type</name> ;</typedef>
-}</block>;</concept_map></template>
+}</block></concept_map></template>
 </unit>
 
 </unit>
