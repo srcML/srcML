@@ -675,6 +675,9 @@ void srcMLOutput::fillElementNames() {
   // special characters
   ElementNames[FORMFEED]       = "formfeed";
 
+  // 
+  ElementNames[SEMPTY]         = "empty_stmt";
+
   // C++0x elements
   ElementNames[SCONCEPT]       = "concept";
   ElementNames[SCONCEPTMAP]    = "concept_map";

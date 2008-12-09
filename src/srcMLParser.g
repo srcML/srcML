@@ -392,6 +392,9 @@ tokens {
     SCONCEPTMAP;
     SAUTO;
 
+    // misc
+    SEMPTY;  // empty statement
+
     // Last token used for boundary
     END_ELEMENT_TOKEN;
 }
@@ -1794,9 +1797,21 @@ rcurly { setFinalToken(); } :
 terminate[bool final = false] { if(final) setFinalToken(); } :
 
         terminate_pre
-        TERMINATE
+        terminate_token
         terminate_post
 ;
+
+terminate_token { LocalMode lm; } :
+        {
+            if (inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_DECL) && !inMode(MODE_IF)) {
+
+                startNewMode(MODE_LOCAL);
+
+                startElement(SEMPTY);
+            }
+        }
+        TERMINATE
+    ;
 
 terminate_pre {} :
         {
