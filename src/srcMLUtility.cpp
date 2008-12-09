@@ -157,10 +157,8 @@ std::string srcMLUtility::attribute(const char* attribute_name, bool& nonnull) {
 
   // extract attribute from unit tag
   nonnull = attrv.count(attribute_name) > 0;
-  if (nonnull)
-    return attrv[attribute_name];
-  else
-    return "";
+
+  return nonnull ? attrv[attribute_name] : "";
 }
 
 // prefix of given namespace
@@ -169,10 +167,8 @@ std::string srcMLUtility::namespace_ext(const std::string& uri, bool& nonnull) {
 
   // find the raw prefix
   nonnull = nsv.count(uri) > 0;
-  if (nonnull)
-    return nsv[uri];
-  else
-    return "";
+
+  return nonnull ? nsv[uri] : "";
 }
 
 // move to a particular nested unit
