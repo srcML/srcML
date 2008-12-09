@@ -104,11 +104,11 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op
   // setupt a context for xpath if conversion to src
   if (!isoption(options, OPTION_XML)) {
 
-    xpath_formfeed = xmlXPathCompile(BAD_CAST "//src:formfeed");
+    xpath_formfeed = xmlXPathCompile(BAD_CAST ".//src:formfeed");
     if (!xpath_formfeed)
       throw LibXMLError(0);
 
-    xpath_escape = xmlXPathCompile(BAD_CAST "//src:escape");
+    xpath_escape = xmlXPathCompile(BAD_CAST ".//src:escape");
     if (!xpath_escape)
       throw LibXMLError(0);
 
@@ -442,6 +442,9 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
   if (strcmp(handler->name, "UTF-8") == 0)
     options |= OPTION_SKIP_ENCODING;
 #endif
+
+  // reset the context to the current subtree
+  context->node = xmlTextReaderCurrentNode(reader);
 
   // find the old markup for formfeed nodes and replace them with text nodes with the
   // formfeed character
