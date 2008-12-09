@@ -1380,17 +1380,11 @@ class_definition :
 
 concept_definition :
         {
-            bool intypedef = inMode(MODE_TYPEDEF);
-
             // statement
-            startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_CLASS | MODE_DECL | MODE_END_AT_BLOCK);
+            startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_CLASS | MODE_END_AT_BLOCK_NO_TERMINATE);
 
             // start the class definition
             startElement(SCONCEPT);
-
-            if (intypedef) {
-                setMode(MODE_END_AT_BLOCK);
-            }
         }
         { inLanguage(LANGUAGE_CXX_0X) }?
         (
@@ -1400,17 +1394,11 @@ concept_definition :
 
 conceptmap_definition :
         {
-            bool intypedef = inMode(MODE_TYPEDEF);
-
             // statement
-            startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_CLASS | MODE_DECL);
+            startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_CLASS | MODE_END_AT_BLOCK_NO_TERMINATE);
 
             // start the class definition
             startElement(SCONCEPTMAP);
-
-            if (intypedef) {
-                setMode(MODE_END_AT_BLOCK);
-            }
         }
         { inLanguage(LANGUAGE_CXX_0X) }?
         (
