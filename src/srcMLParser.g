@@ -4657,14 +4657,13 @@ eol_post[int directive_token, bool markblockzero] {
                 - when processing only #if part, not #else
                 - when guessing and in else (unless in zero block)
                 - when ??? for cppmode
-
         */
         if ((!checkOption(OPTION_CPP_MARKUP_IF0) && zeromode) ||
             (!checkOption(OPTION_CPP_MARKUP_ELSE) && skipelse) ||
             (inputState->guessing && skipelse) ||
             (!cppmode.empty() && !cppmode.top().isclosed && cppmode.top().skipelse)
         ) {
-            while (LA(1) != PREPROC)
+            while (LA(1) != PREPROC && LA(1) != 1 /* EOF */)
                 consume();
         }
 
