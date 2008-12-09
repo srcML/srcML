@@ -72,13 +72,4 @@ ESCAPED_CHAR
     : '<' { $setText("&lt;"); } | '>' { $setText("&gt;"); } | '&' { $setText("&amp;"); }
 ;
 
-protected
-CONTROL_CHAR :
-        ('\000'..'\010' | '\013' | '\014' | '\016'..'\037')
-        {
-            std::ostringstream out; 
-            out << "<" + srcuri + "escape" + " char=\"0x" << std::hex << (int) text.substr(text.size() - 1)[0] << "\"/>";
-            $setText(out.str());
-        }
-;
 

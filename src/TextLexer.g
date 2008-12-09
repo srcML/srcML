@@ -91,14 +91,14 @@ EOL_BACKSLASH :
 protected
 STRING_CHARACTER
 // leave out newline, \012, carriage return, \015, double quote , \042, and backslash, \134.  Also, leave out escaped characters
-    : '\040'..'\041' | '\043'..'\045' | '\047'..';' | '=' | '?'..'\133' | '\135'..'\377' | 
+    : '\011' | '\040'..'\041' | '\043'..'\045' | '\047'..';' | '=' | '?'..'\133' | '\135'..'\377' | 
         ESCAPED_CHAR | CONTROL_CHAR
 ;
 
 protected
 CHAR_CHARACTER
 // leave out newline, \012, carriage return, \015, single quote , \047, and backslash, \134.  Also, leave out escaped characters
-    : '\040'..'\045' | '\050'..';' | '=' | '?'..'\133' | '\135'..'\377' |
+    : '\011' | '\040'..'\045' | '\050'..';' | '=' | '?'..'\133' | '\135'..'\377' |
         ESCAPED_CHAR | CONTROL_CHAR
 ;
 

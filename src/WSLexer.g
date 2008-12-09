@@ -38,11 +38,6 @@ tokens {
     FORMFEED;
 }
 
-// formfeed
-FORMFEED :
-         '\f'
-;
-
 // whitespace (except for newline)
 WS :
         (
@@ -51,8 +46,7 @@ WS :
             // horizontal tab
             '\t' |
 
-            // vertical tab replaced by space
-            '\13' { $setText(' '); }
+            CONTROL_CHAR
         )+
 ;
 
@@ -69,4 +63,14 @@ EOL :   { justws = true; }
         // platform used
         { $setText('\n'); }
         ) { onpreprocline = false; }
+;
+
+protected
+CONTROL_CHAR :
+        ('\000'..'\010' | '\013'..'\014' | '\016'..'\037')
+        {
+            std::ostringstream out; 
+            out << "<" + srcuri + "escape" + " char=\"0x" << std::hex << (int) text.substr(text.size() - 1)[0] << "\"/>";
+            $setText(out.str());
+        }
 ;
