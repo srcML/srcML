@@ -170,14 +170,11 @@ std::string srcMLUtility::attribute(const char* attribute_name, bool& nonnull) {
 std::string srcMLUtility::namespace_ext(const std::string& uri, bool& nonnull) {
 
   // find the raw prefix
-  std::string raw_prefix;
-  if (nsv.count(uri)) {
-    nonnull = true;
+  nonnull = nsv.count(uri) > 0;
+  if (nonnull)
     return nsv[uri];
-  } else {
-    nonnull = false;
+  else
     return "";
-  }
 }
 
 // move to a particular nested unit
