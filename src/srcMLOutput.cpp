@@ -170,7 +170,6 @@ bool srcMLOutput::isoption(int flag) const {
 
 int srcMLOutput::consume_next() {
 
-
   const antlr::RefToken& token = input->nextToken();
 
   outputToken(token);
@@ -187,17 +186,21 @@ const char* srcMLOutput::type2name(int token_type) const {
 
   static char s[512];
 
+  // no element name
   if (ElementNames[token_type][0] == '\0')
     return "";
 
-  strcpy(s, ElementPrefix[token_type]);
+  // non-default namespace name
   if (ElementPrefix[token_type][0] != '\0') {
+    
+    strcpy(s, ElementPrefix[token_type]);
     strcat(s, ":");
+    strcat(s, ElementNames[token_type]);
+    return s;
   }
 
-  strcat(s, ElementNames[token_type]);
-
-  return s;
+  // default namespace name
+  return ElementNames[token_type];
 }
 
 #ifdef LIBXML_ENABLED
