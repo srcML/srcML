@@ -222,6 +222,9 @@ void srcMLOutput::processText(const std::string& str) {
 // output encoded text
 void srcMLOutput::processEncodedText(const std::string& str) {
 
+  processText(str);
+  return;
+
   // no encoding needed for conversion from UTF-8
 #ifdef LIBXML_ENABLED
   if (isoption(OPTION_SKIP_ENCODING)) {

@@ -1,37 +1,55 @@
 #include <iostream>
 #include "UTF8CharBuffer.h"
+#include <xmlwriter.h>
+
+// size of the original character buffer
+const int SRCBUFSIZE = 512;
+
+// size of the resulting utf-8 character buffer
+const int UTF8BUFSIZE = SRCBUFSIZE * 4;
 
 // Get the next character from the stream
 int UTF8CharBuffer::getChar() {
-  static int buffer[4];
-  static int bufcount = 0;
-  static int bufpos = 0;
+
+  static xmlBufferPtr buffer = xmlBufferCreateSize(SRCBUFSIZE);
+  static xmlBufferPtr utf8buffer = xmlBufferCreateSize(UTF8BUFSIZE);
+  static unsigned int bufpos = 0;
   static bool eof = false;
 
-  // if we found eof and are all out of
-  // buffer, then just get out
-  if (eof && bufpos == bufcount)
-    return -1;
+  // maybe no need to even be doing this, ever
+  if (skipencoding)
+    return CharBuffer::getChar();
 
-  // fill up the buffer if needed
-  if (bufpos == bufcount) {
+  // load up the input, original character buffer if all out
+  if (!eof && bufpos == utf8buffer->use) {
+
+    // fill up the original character buffer stopping at eof
+    buffer->use = 0;
     int i;
-    for (i = 0; i < 4; ++i) {
-      buffer[i] = CharBuffer::getChar();
-      //      std::cout << "READ " << buffer[i] << std::endl;
-      if (buffer[i] == -1) {
+    for (i = 0; i < SRCBUFSIZE; ++i) {
+      int c = CharBuffer::getChar();
+      if (c != -1) {
+	buffer->content[i] = (char) c;
+	++(buffer->use);
+      } else {
 	eof = true;
 	break;
       }
-
     }
 
-    bufcount = i;
+    // convert from the original source encoding to UTF-8
+    utf8buffer->use = 0;
+    xmlCharEncInFunc(handler, utf8buffer, buffer);
+
+    // reset start of where we get characters
     bufpos = 0;
   }
 
-  int stuff = buffer[bufpos++];
+  // if we found eof and are all out of
+  // buffer, then just get out
+  if (eof && bufpos == utf8buffer->use)
+    return -1;
 
-  //  std::cout << stuff << std::endl;
-  return stuff;
+  // return the next unused byte
+  return utf8buffer->content[bufpos++];
 }
