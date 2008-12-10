@@ -34,9 +34,6 @@
 const char* XML_DECLARATION_STANDALONE = "yes";
 const char* XML_VERSION = "1.0";
 
-// encoding handler
-xmlCharEncodingHandlerPtr handler = 0;
-
 // check if encoding is supported
 bool srcMLOutput::checkEncoding(const char* encoding) {
 
@@ -46,7 +43,6 @@ bool srcMLOutput::checkEncoding(const char* encoding) {
 srcMLOutput::srcMLOutput(TokenStream* ints, 
 			 const char* filename,
 			 const char* language, 
-			 const char* src_encoding,
 			 const char* xml_enc,
 			 int op,
 			 std::map<std::string, std::string>& curi
@@ -54,18 +50,6 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   : input(ints), xout(0), srcml_filename(filename), unit_language(language), unit_dir(0), unit_filename(0),
     unit_version(0), options(op), xml_encoding(xml_enc), uri(curi)
 {
-  // setup an output handler
-  handler = xmlFindCharEncodingHandler(src_encoding);
-  if (!handler)
-    throw srcEncodingException();
-  
-#ifdef LIBXML_ENABLED
-  // source must be converted to UTF-8 (since libxml stores text in UTF-8)
-  // if the source encoding is already in UTF-8, skip any encoding
-  if (strcmp(handler->name, "UTF-8") == 0)
-    op |= OPTION_SKIP_ENCODING;
-#endif
-
   // fill the prefixes
   for (int i = 0; i < END_ELEMENT_TOKEN; ++i)
     ElementPrefix[i] = (char*) uri[SRCML_SRC_NS_URI].c_str();

@@ -24,7 +24,7 @@ int UTF8CharBuffer::getChar() {
   if (!eof && bufpos == utf8buffer->use) {
 
     // fill up the original character buffer stopping at eof
-    buffer->use = 0;
+    //    buffer->use = 0;
     int i;
     for (i = 0; i < SRCBUFSIZE; ++i) {
       int c = CharBuffer::getChar();
@@ -39,7 +39,9 @@ int UTF8CharBuffer::getChar() {
 
     // convert from the original source encoding to UTF-8
     utf8buffer->use = 0;
-    xmlCharEncInFunc(handler, utf8buffer, buffer);
+    int result = xmlCharEncInFunc(handler, utf8buffer, buffer);
+    if (result < 0)
+      std::cerr << "XMLCHARENCINFUNC ERROR: " << buffer->use << " " << result << std::endl;
 
     // reset start of where we get characters
     bufpos = 0;

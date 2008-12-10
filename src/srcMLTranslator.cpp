@@ -44,7 +44,7 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
 				 std::map<std::string, std::string>& uri
 				 )
   : Language(language), encoding(src_encoding), options(op),
-    out(0, srcml_filename, getLanguageString(), src_encoding, xml_encoding, options, uri) {
+    out(0, srcml_filename, getLanguageString(), xml_encoding, options, uri) {
 
   // record the uri for the src namespace since we need it in the
   // lexer for formfeed elements in strings

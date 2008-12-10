@@ -47,7 +47,6 @@ class srcMLOutput : public srcMLParserTokenTypes {
 	      const char* srcml_filename,
 	      const char* language, 
 	      const char* encoding,
-	      const char* src_encoding,
 	      int option,
 	      std::map<std::string, std::string>& uri
 	      );
