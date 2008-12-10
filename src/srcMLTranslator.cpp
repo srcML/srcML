@@ -43,7 +43,7 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
 				 const char* version,         //
 				 std::map<std::string, std::string>& uri
 				 )
-  : Language(language), options(op),
+  : Language(language), encoding(src_encoding), options(op),
     out(0, srcml_filename, getLanguageString(), src_encoding, xml_encoding, options, uri) {
 
   // record the uri for the src namespace since we need it in the
@@ -73,7 +73,7 @@ void srcMLTranslator::translate(const char* src_filename, const char* unit_direc
       }
 
       // srcML lexical analyzer from standard input
-      KeywordCPPLexer lexer(*pin, srcuri, getLanguage());
+      KeywordCPPLexer lexer(*pin, encoding, srcuri, getLanguage());
 
       // base stream parser srcML connected to lexical analyzer
       StreamMLParser<srcMLParser> parser(lexer, getLanguage(), options);

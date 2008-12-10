@@ -58,6 +58,7 @@ class srcMLTranslator : public Language {
   virtual ~srcMLTranslator();
 
  private:
+  const char* encoding;
   int language;
   int options;
   srcMLOutput out;
