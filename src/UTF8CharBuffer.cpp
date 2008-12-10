@@ -3,7 +3,7 @@
 #include <xmlwriter.h>
 
 // size of the original character buffer
-const int SRCBUFSIZE = 512;
+const int SRCBUFSIZE = 1024;
 
 // size of the resulting utf-8 character buffer
 const int UTF8BUFSIZE = SRCBUFSIZE * 4;
@@ -21,7 +21,7 @@ int UTF8CharBuffer::getChar() {
     return CharBuffer::getChar();
 
   // load up the input, original character buffer if all out
-  if (!eof && pos == utf8buffer->use) {
+  if (pos == utf8buffer->use && !eof) {
 
     // fill up the original character buffer stopping at eof
     int i;
