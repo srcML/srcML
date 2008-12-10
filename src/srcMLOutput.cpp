@@ -183,16 +183,6 @@ const char* srcMLOutput::type2name(int token_type) const {
   return ElementNames[token_type];
 }
 
-#ifdef LIBXML_ENABLED
-// buffer of output utf8 characters
-const int UTF8BUFFER_MAXSIZE = 2048;
-
-xmlBufferPtr poutbuffer = xmlBufferCreateSize(UTF8BUFFER_MAXSIZE);
-
-// amount of space for expanded characters.  assume a maximum of four bytes for every original single byte
-const int UTF8BUFFER_SPACE = UTF8BUFFER_MAXSIZE / 4;
-#endif
-
 // output text
 void srcMLOutput::processText(const std::string& str) {
 
