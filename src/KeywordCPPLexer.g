@@ -24,6 +24,7 @@ header {
    #include <iostream>
    #include <sstream>
    #include "Language.h"
+   #include "UTF8CharBuffer.h"
 }
 
 options {
@@ -100,7 +101,7 @@ bool justws;
 std::string srcuri;
 
 KeywordCPPLexer(std::istream& in, const std::string& src, int language = LANGUAGE_CXX)
-	: antlr::CharScanner(new antlr::CharBuffer(in),true), Language(language), onpreprocline(false), justws(true), srcuri(src != "" ? src + ":" : "")
+	: antlr::CharScanner(new UTF8CharBuffer(in),true), Language(language), onpreprocline(false), justws(true), srcuri(src != "" ? src + ":" : "")
 {
     initLiterals();
 
