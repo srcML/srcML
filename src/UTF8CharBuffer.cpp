@@ -13,7 +13,7 @@ int UTF8CharBuffer::getChar() {
 
   static xmlBufferPtr buffer = xmlBufferCreateSize(SRCBUFSIZE);
   static xmlBufferPtr utf8buffer = xmlBufferCreateSize(UTF8BUFSIZE);
-  static unsigned int bufpos = 0;
+  static unsigned int pos = 0;
   static bool eof = false;
 
   // maybe no need to even be doing this, ever
@@ -21,10 +21,9 @@ int UTF8CharBuffer::getChar() {
     return CharBuffer::getChar();
 
   // load up the input, original character buffer if all out
-  if (!eof && bufpos == utf8buffer->use) {
+  if (!eof && pos == utf8buffer->use) {
 
     // fill up the original character buffer stopping at eof
-    //    buffer->use = 0;
     int i;
     for (i = 0; i < SRCBUFSIZE; ++i) {
       int c = CharBuffer::getChar();
@@ -41,17 +40,17 @@ int UTF8CharBuffer::getChar() {
     utf8buffer->use = 0;
     int result = xmlCharEncInFunc(handler, utf8buffer, buffer);
     if (result < 0)
-      std::cerr << "XMLCHARENCINFUNC ERROR: " << buffer->use << " " << result << std::endl;
+      throw "Source encoding error";
 
     // reset start of where we get characters
-    bufpos = 0;
+    pos = 0;
   }
 
   // if we found eof and are all out of
   // buffer, then just get out
-  if (eof && bufpos == utf8buffer->use)
+  if (eof && pos == utf8buffer->use)
     return -1;
 
   // return the next unused byte
-  return utf8buffer->content[bufpos++];
+  return utf8buffer->content[pos++];
 }
