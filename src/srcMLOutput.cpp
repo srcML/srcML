@@ -123,10 +123,6 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   process_table[FORMFEED] = &srcMLOutput::processFormFeed;
   process_table[SINTERFACE] = &srcMLOutput::processInterface;
 
-  // make sure that strings and literals go through encoded text
-  process_table[STRING] = &srcMLOutput::processEncodedText;
-  process_table[CHAR] = &srcMLOutput::processEncodedText;
-
   // open the output text writer stream
   // "-" filename is standard output
   xout = xmlNewTextWriterFilename(srcml_filename, isoption(OPTION_COMPRESSED));
@@ -219,52 +215,8 @@ void srcMLOutput::processText(const std::string& str) {
   xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) str.c_str(), str.size());
 }
 
-// output encoded text
-void srcMLOutput::processEncodedText(const std::string& str) {
-
-  processText(str);
-  return;
-
-  // no encoding needed for conversion from UTF-8
-#ifdef LIBXML_ENABLED
-  if (isoption(OPTION_SKIP_ENCODING)) {
-#endif
-    processText(str);
-    return;
-#ifdef LIBXML_ENABLED
-  }
-
-  // input buffer created from C++ string
-  xmlBufferPtr pinbuffer = xmlBufferCreateStatic((char*) str.c_str(), str.size());
-  // convert all of the input buffer to UTF-8 in chunks
-  // conversion from libxml internal UTF-8 to output encoding is handled automatically
-  unsigned int pos = 0;
-  while (pos < str.size()) {
-
-    // reset resusable output buffer
-    poutbuffer->use = 0;
-
-    int buffer_left = pinbuffer->size - pos;
-    int partialinputbuffer_size = buffer_left < UTF8BUFFER_SPACE ? buffer_left : UTF8BUFFER_SPACE;
-
-    pinbuffer->content += pos;
-    pinbuffer->size -= pos;
-
-    xmlCharEncInFunc(handler, poutbuffer, pinbuffer);
-    
-    xmlTextWriterWriteRawLen(xout, poutbuffer->content, poutbuffer->use);
-
-    pos += partialinputbuffer_size;
-  }
-#endif
-}
-
 void srcMLOutput::processText(const antlr::RefToken& token) {
   processText(token->getText());
-}
-
-void srcMLOutput::processEncodedText(const antlr::RefToken& token) {
-  processEncodedText(token->getText());
 }
 
 void srcMLOutput::processFormFeed(const antlr::RefToken& token) {
@@ -428,7 +380,7 @@ void srcMLOutput::processLineComment(const antlr::RefToken& token) {
 
   xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST "line");
 
-  processEncodedText(token);
+  processText(token);
 
   xmlTextWriterEndElement(xout);
 }
@@ -447,7 +399,7 @@ void srcMLOutput::processBlockComment(const antlr::RefToken& token) {
   xmlTextWriterWriteAttribute(xout, BAD_CAST "type",
      BAD_CAST (strcmp(unit_language, "Java") == 0 && token->getText().substr(0, 3) == "/**" ? JAVADOC_COMMENT_ATTR : BLOCK_COMMENT_ATTR));
 
-  processEncodedText(token);
+  processText(token);
 
   xmlTextWriterEndElement(xout);
 }
