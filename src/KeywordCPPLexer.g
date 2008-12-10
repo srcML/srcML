@@ -28,6 +28,8 @@ header {
 
 options {
 	language="Cpp";
+    namespaceAntlr="antlr";
+    namespaceStd="std";
 }
 
 class KeywordCPPLexer extends KeywordLexer;

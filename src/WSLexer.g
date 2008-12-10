@@ -26,6 +26,8 @@
 
 options {
 	language="Cpp";
+    namespaceAntlr="antlr";
+    namespaceStd="std";
 }
 
 class WSLexer extends Lexer;

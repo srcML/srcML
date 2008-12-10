@@ -27,6 +27,8 @@ header {
 
 options {
 	language="Cpp";
+    namespaceAntlr="antlr";
+    namespaceStd="std";
 }
 
 class OperatorLexer extends CommentLexer;
