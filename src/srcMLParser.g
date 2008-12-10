@@ -220,6 +220,8 @@ void srcMLParser::endAllModes() {
 
 options {
 	language="Cpp";
+    namespaceAntlr="antlr";
+    namespaceStd="std";
 }
 
 class srcMLParser extends Parser;
