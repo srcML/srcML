@@ -2,19 +2,8 @@
 #include "UTF8CharBuffer.h"
 #include <xmlwriter.h>
 
-// size of the original character buffer
-const int SRCBUFSIZE = 1024;
-
-// size of the resulting utf-8 character buffer
-const int UTF8BUFSIZE = SRCBUFSIZE * 4;
-
 // Get the next character from the stream
 int UTF8CharBuffer::getChar() {
-
-  static xmlBufferPtr buffer = xmlBufferCreateSize(SRCBUFSIZE);
-  static xmlBufferPtr utf8buffer = xmlBufferCreateSize(UTF8BUFSIZE);
-  static unsigned int pos = 0;
-  static bool eof = false;
 
   // maybe no need to even be doing this, ever
   if (skipencoding)
