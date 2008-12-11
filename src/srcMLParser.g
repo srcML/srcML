@@ -2691,6 +2691,7 @@ function_identifier[bool function_pointer] { LocalMode lm; } :
 
         // function pointer identifier with name marked separately
         { function_pointer }?
+        (LPAREN operator_multiplication (simple_name)* RPAREN LPAREN)=>
         LPAREN operator_multiplication (simple_name)* RPAREN
 ;
 
