@@ -1386,7 +1386,7 @@ class_definition :
 concept_definition :
         {
             // statement
-            startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_CLASS | MODE_END_AT_BLOCK_NO_TERMINATE);
+            startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_CLASS | MODE_END_AT_BLOCK);
 
             // start the class definition
             startElement(SCONCEPT);
@@ -1400,7 +1400,7 @@ concept_definition :
 conceptmap_definition :
         {
             // statement
-            startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_CLASS | MODE_END_AT_BLOCK_NO_TERMINATE);
+            startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_CLASS | MODE_END_AT_BLOCK);
 
             // start the class definition
             startElement(SCONCEPTMAP);
