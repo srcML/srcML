@@ -572,11 +572,11 @@ statement_cfg {} :
         return_statement | break_statement | continue_statement | goto_statement |
 
         // java import - keyword only detected for Java
-        // { inLanguage(LANGUAGE_JAVA) }?
+        // { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         import_statement |
 
         // java import - keyword only detected for Java
-        // { inLanguage(LANGUAGE_JAVA) }?
+        // { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         package_statement |
 
         // assembly block
@@ -610,7 +610,7 @@ statements_non_cfg { int token = 0; int secondtoken = 0; isoperatorfunction = 0;
         (extern_definition_header)=> extern_definition |
 
         // constructor
-        { inLanguage(LANGUAGE_JAVA) }?
+        { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (constructor_check[token /* token after header */])=> constructor[token] |
 
         // declarations of all sorts
@@ -677,7 +677,7 @@ function[int token, int type_count] { TokenPosition tp; } :
 call_macro_expression[int secondtoken, bool statement]
         { int postnametoken = 0; int argumenttoken = 0; int postcalltoken = 0; } :
 
-        { inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_FAMILY) }?
+        { inLanguage(LANGUAGE_C_FAMILY) }?
         (
         // call
         // check here instead of in expression_statement to distinguish between a call and a macro
@@ -708,7 +708,7 @@ call_macro_expression[int secondtoken, bool statement]
         // expression statement
         expression_statement[statement]) |
 
-        { inLanguage(LANGUAGE_JAVA) || inLanguage(LANGUAGE_ASPECTJ) }?
+        { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         expression_statement[statement]
 ;
 
@@ -1308,10 +1308,10 @@ class_struct_union_check[int& finaltoken] { finaltoken = 0; } :
         { inLanguage(LANGUAGE_CXX_FAMILY) }?
         access_specifier_mark CLASS class_header check_end[finaltoken] |
 
-        { inLanguage(LANGUAGE_JAVA) }?
+        { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (interface_definition_header_java)=> interface_definition_header_java check_end[finaltoken] |
 
-        { inLanguage(LANGUAGE_JAVA) }?
+        { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         class_definition_header_java check_end[finaltoken]
 ;
 
@@ -1374,7 +1374,7 @@ class_definition :
             { inLanguage(LANGUAGE_CXX_FAMILY) }?
             (access_specifier_mark)* CLASS (class_header lcurly | lcurly) class_default_access_action[SPRIVATE_ACCESS_DEFAULT] |
 
-            { inLanguage(LANGUAGE_JAVA) }?
+            { inLanguage(LANGUAGE_JAVA_FAMILY) }?
 
             // java classes end at the end of the block
             { setMode(MODE_END_AT_BLOCK); }
@@ -1587,7 +1587,7 @@ class_header_base { bool insuper = false; } :
             { inLanguage(LANGUAGE_C_FAMILY) }?
             (options { greedy = true; } : derived)* | 
 
-            { inLanguage(LANGUAGE_JAVA) }?
+            { inLanguage(LANGUAGE_JAVA_FAMILY) }?
             (options { greedy = true; } : super_list_java { insuper = true; } extends_list)* 
                 ( { if (!insuper) { insuper = true; super_list_java(); } } implements_list)*
                 {
@@ -2473,7 +2473,7 @@ update_var_typecount {} :
   Type of a function.  Includes specifiers
 */
 function_type_check[int& type_count] { type_count = 1; } :
-        lead_type_identifier ( { inLanguage(LANGUAGE_JAVA) || LA(1) != LBRACKET }? type_identifier_count[type_count])*
+        lead_type_identifier ( { inLanguage(LANGUAGE_JAVA_FAMILY) || LA(1) != LBRACKET }? type_identifier_count[type_count])*
 ;
 
 type_identifier_count[int& type_count] { ++type_count; } :
@@ -2600,7 +2600,7 @@ java_specifier_mark {} :
 */
 lead_type_identifier {} :
 
-        { inLanguage(LANGUAGE_JAVA) }? java_specifier_mark |
+        { inLanguage(LANGUAGE_JAVA_FAMILY) }? java_specifier_mark |
 
         inline_marked |
 
@@ -2624,7 +2624,7 @@ non_lead_type_identifier { LocalMode lm; } :
 
         multops |
 
-        { inLanguage(LANGUAGE_JAVA) }? (LBRACKET RBRACKET)=> 
+        { inLanguage(LANGUAGE_JAVA_FAMILY) }? (LBRACKET RBRACKET)=> 
         {
             startNewMode(MODE_LOCAL);
 
@@ -2933,7 +2933,7 @@ simple_name_cpp {} :
   identifier name marked with name element
 */
 complex_name[bool marked] { LocalMode lm; TokenPosition tp; /* TokenPosition tp2 = { 0, 0 };*/ bool iscomplex_name = false; } :
-        { inLanguage(LANGUAGE_JAVA) }? complex_name_java[marked] |
+        { inLanguage(LANGUAGE_JAVA_FAMILY) }? complex_name_java[marked] |
         (
         {
             if (marked) {
@@ -3057,7 +3057,7 @@ pure_virtual_specifier {} :
   Specifiers for functions, methods, and variables
 */
 standard_specifiers { LocalMode lm; } :
-        { inLanguage(LANGUAGE_JAVA) }? 
+        { inLanguage(LANGUAGE_JAVA_FAMILY) }? 
             java_specifier_mark |
 
         {
@@ -3089,13 +3089,13 @@ constructor[int token] {} :
 
 constructor_check[int& token] { antlr::RefToken s[2]; } :
 
-        (specifier_explicit | { inLanguage(LANGUAGE_JAVA) }? java_specifier_mark)*
+        (specifier_explicit | { inLanguage(LANGUAGE_JAVA_FAMILY) }? java_specifier_mark)*
         (
         
         { inTransparentMode(MODE_ACCESS_REGION) && inLanguage(LANGUAGE_CXX_FAMILY) }?
         constructor_name paren_pair check_end[token] |
 
-        { inLanguage(LANGUAGE_JAVA) }?
+        { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         constructor_name paren_pair LCURLY |
 
         constructor_name_external_check[s] constructor_check_lparen[s] check_end[token]
@@ -3136,7 +3136,7 @@ constructor_definition {} :
 // constructor definition
 constructor_header {} :
 
-        (specifier_explicit | { inLanguage(LANGUAGE_JAVA) }? java_specifier_mark)*
+        (specifier_explicit | { inLanguage(LANGUAGE_JAVA_FAMILY) }? java_specifier_mark)*
 
         constructor_name
 
@@ -3798,7 +3798,7 @@ guessing_end
 expression_part[bool checkmacro = false] { guessing_end();
         int token = 0; int type_count = 0; int postnametoken = 0; int argumenttoken = 0; int postcalltoken = 0; } :
 
-        { inLanguage(LANGUAGE_JAVA) }?
+        { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (NEW function_identifier[true] paren_pair LCURLY)=> newop anonymous_class_definition |
 
         // general math operators
@@ -3826,7 +3826,7 @@ expression_part[bool checkmacro = false] { guessing_end();
 
             guessing_startNewMode[MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN] |
 
-        { inLanguage(LANGUAGE_JAVA) }?
+        { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (function_check[token /* token after header */, type_count /* number of names detected in type */])=>
 
                 // function definition based on the token after the header
