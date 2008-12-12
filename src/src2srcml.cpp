@@ -411,7 +411,7 @@ int main(int argc, char* argv[]) {
     }
 
     // translate all the filenames listed in the named file
-   std::string line;
+    std::string line;
     int count = 0;    // keep count for verbose mode
     while (getline(*pinfilelist, line)) {
 
