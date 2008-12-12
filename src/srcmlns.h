@@ -26,21 +26,21 @@
 #define INCLUDED_SRCMLNS_H
 
 // srcML namespace URIs
-static const char* SRCML_SRC_NS_URI = "http://www.sdml.info/srcML/src";
-static const char* SRCML_CPP_NS_URI = "http://www.sdml.info/srcML/cpp";
-static const char* SRCML_ERR_NS_URI = "http://www.sdml.info/srcML/srcerr";
+const char* const SRCML_SRC_NS_URI = "http://www.sdml.info/srcML/src";
+const char* const SRCML_CPP_NS_URI = "http://www.sdml.info/srcML/cpp";
+const char* const SRCML_ERR_NS_URI = "http://www.sdml.info/srcML/srcerr";
 
-static const char* SRCML_SRC_NS_PREFIX_DEFAULT = "";
-static const char* SRCML_CPP_NS_PREFIX_DEFAULT = "cpp";
-static const char* SRCML_ERR_NS_PREFIX_DEFAULT = "srcerr";
+const char* const SRCML_SRC_NS_PREFIX_DEFAULT = "";
+const char* const SRCML_CPP_NS_PREFIX_DEFAULT = "cpp";
+const char* const SRCML_ERR_NS_PREFIX_DEFAULT = "srcerr";
 
 // srcML extension namespace URI's
-static const char* SRCML_EXT_LITERAL_NS_URI = "http://www.sdml.info/srcML/literal";
-static const char* SRCML_EXT_OPERATOR_NS_URI = "http://www.sdml.info/srcML/operator";
-static const char* SRCML_EXT_MODIFIER_NS_URI = "http://www.sdml.info/srcML/modifier";
+const char* const SRCML_EXT_LITERAL_NS_URI = "http://www.sdml.info/srcML/literal";
+const char* const SRCML_EXT_OPERATOR_NS_URI = "http://www.sdml.info/srcML/operator";
+const char* const SRCML_EXT_MODIFIER_NS_URI = "http://www.sdml.info/srcML/modifier";
 
-static const char* SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT = "lit";
-static const char* SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT = "op";
-static const char* SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT = "type";
+const char* const SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT = "lit";
+const char* const SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT = "op";
+const char* const SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT = "type";
 
 #endif
