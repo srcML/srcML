@@ -238,15 +238,9 @@ const char* given_version = 0;
 bool cpp_else = false;
 bool cpp_if0 = false;
 
-// namespace prefixes
-std::string ns_prefix_src      = SRCML_SRC_NS_PREFIX_DEFAULT;
-std::string ns_prefix_cpp      = SRCML_CPP_NS_PREFIX_DEFAULT;
-std::string ns_prefix_err      = SRCML_ERR_NS_PREFIX_DEFAULT;
-std::string ns_prefix_literal  = SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT;
-std::string ns_prefix_operator = SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT;
-std::string ns_prefix_modifier = SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT;
-
 typedef std::map<std::string, std::string> URI_TYPE;
+
+URI_TYPE option_uri;
 
 URI_TYPE uri;
 
@@ -355,24 +349,19 @@ int main(int argc, char* argv[]) {
     }
   }
 
-  // update the uri's specified by the user with the standard prefixes
-  if (uri.count(SRCML_SRC_NS_URI) == 0)
-      uri[SRCML_SRC_NS_URI] = ns_prefix_src;
+  // default uri prefixes
+  URI_TYPE stduri;
+  stduri[SRCML_SRC_NS_URI] = SRCML_SRC_NS_PREFIX_DEFAULT;
+  stduri[SRCML_CPP_NS_URI] = SRCML_CPP_NS_PREFIX_DEFAULT;
+  stduri[SRCML_ERR_NS_URI] = SRCML_ERR_NS_PREFIX_DEFAULT;
+  stduri[SRCML_EXT_LITERAL_NS_URI] = SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT;
+  stduri[SRCML_EXT_OPERATOR_NS_URI] = SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT;
+  stduri[SRCML_EXT_MODIFIER_NS_URI] = SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT;
 
-  if (uri.count(SRCML_CPP_NS_URI) == 0)
-      uri[SRCML_CPP_NS_URI] = ns_prefix_cpp;
-
-  if (uri.count(SRCML_ERR_NS_URI) == 0)
-      uri[SRCML_ERR_NS_URI] = ns_prefix_err;
-
-  if (uri.count(SRCML_EXT_LITERAL_NS_URI) == 0)
-      uri[SRCML_EXT_LITERAL_NS_URI] = ns_prefix_literal;
-
-  if (uri.count(SRCML_EXT_OPERATOR_NS_URI) == 0)
-      uri[SRCML_EXT_OPERATOR_NS_URI] = ns_prefix_operator;
-
-  if (uri.count(SRCML_EXT_MODIFIER_NS_URI) == 0)
-      uri[SRCML_EXT_MODIFIER_NS_URI] = ns_prefix_modifier;
+  // form the final set of uri prefixes by starting with the user
+  // defined options, and filling it in with the standard prefixes
+  uri.insert(option_uri.begin(), option_uri.end());
+  uri.insert(stduri.begin(), stduri.end());
 
   // make sure we have no duplicate prefixes
   for (URI_TYPE::iterator po = uri.begin(); po != uri.end(); ++po) {
@@ -799,7 +788,7 @@ int process_args(int argc, char* argv[]) {
 
       // update the uri's
       // check for standard namespaces, store them, and update any flags
-      uri[ns_uri] = ns_prefix;
+      option_uri[ns_uri] = ns_prefix;
       if (ns_uri == SRCML_SRC_NS_URI) {
 
 	  // default
