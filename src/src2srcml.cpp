@@ -405,7 +405,7 @@ int main(int argc, char* argv[]) {
 
     // open the input file (if not standard input) that contains the list of filenames
     std::ifstream infile;
-    if (input_arg_count > 0) {
+    if (input_arg_count > 0 && strcmp(argv[input_arg_start], "-")) {
       infile.open(argv[input_arg_start]);
       pinfilelist = &infile;
     }
