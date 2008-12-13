@@ -477,13 +477,13 @@ int main(int argc, char* argv[]) {
 
     int count = 0;    // keep count for verbose mode
 
+    // setup so we can gracefully stop after a file at a time
+    pstd::signal(SIGINT, terminate_handler);
+      
     // translate in batch the input files on the command line extracting the directory and filename attributes
     // from the full path
     for (int i = input_arg_start; i <= input_arg_end; ++i) {
 
-      // setup so we can gracefully stop after a file at a time
-      pstd::signal(SIGINT, terminate_handler);
-      
       char* path = argv[i];
       const int MAXFILENAME = 512;
       char spath[MAXFILENAME];
