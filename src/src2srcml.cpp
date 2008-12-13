@@ -37,65 +37,62 @@
 
 #include "srcMLTranslator.h"
 
-const char* NAME = "src2srcml";
+const char* const NAME = "src2srcml";
 
-const char* DEBUG_FLAG = "--debug";
-const char* DEBUG_FLAG_SHORT = "-g";
+const char* const DEBUG_FLAG = "--debug";
+const char* const DEBUG_FLAG_SHORT = "-g";
 
-const char* LITERAL_FLAG = "--literal";
+const char* const LITERAL_FLAG = "--literal";
 
-const char* OPERATOR_FLAG = "--operator";
+const char* const OPERATOR_FLAG = "--operator";
 
-const char* MODIFIER_FLAG = "--modifier";
+const char* const MODIFIER_FLAG = "--modifier";
 
-const char* INTERACTIVE_FLAG = "--interactive";
-const char* INTERACTIVE_FLAG_SHORT = "-c";
+const char* const INTERACTIVE_FLAG = "--interactive";
+const char* const INTERACTIVE_FLAG_SHORT = "-c";
 
-const char* CPP_MARKUP_ELSE_FLAG = "--cpp_markup_else";
-const char* CPP_MARKUP_ELSE_FLAG_SHORT = "";
+const char* const CPP_MARKUP_ELSE_FLAG = "--cpp_markup_else";
+const char* const CPP_MARKUP_ELSE_FLAG_SHORT = "";
 
-const char* CPP_TEXTONLY_ELSE_FLAG = "--cpp_text_else";
-const char* CPP_TEXTONLY_ELSE_FLAG_SHORT = "";
+const char* const CPP_TEXTONLY_ELSE_FLAG = "--cpp_text_else";
+const char* const CPP_TEXTONLY_ELSE_FLAG_SHORT = "";
 
-const char* CPP_MARKUP_IF0_FLAG = "--cpp_markup_if0";
-const char* CPP_MARKUP_IF0_FLAG_SHORT = "";
+const char* const CPP_MARKUP_IF0_FLAG = "--cpp_markup_if0";
+const char* const CPP_MARKUP_IF0_FLAG_SHORT = "";
 
-const char* CPP_TEXTONLY_IF0_FLAG = "--cpp_text_if0";
-const char* CPP_TEXTONLY_IF0_FLAG_SHORT = "";
+const char* const CPP_TEXTONLY_IF0_FLAG = "--cpp_text_if0";
+const char* const CPP_TEXTONLY_IF0_FLAG_SHORT = "";
 
-const char* EXPRESSION_MODE_FLAG = "--expression";
-const char* EXPRESSION_MODE_FLAG_SHORT = "-e";
+const char* const EXPRESSION_MODE_FLAG = "--expression";
+const char* const EXPRESSION_MODE_FLAG_SHORT = "-e";
 
-const char* SELF_VERSION_FLAG = "--self-version";
-const char* SELF_VERSION_FLAG_SHORT = "";
+const char* const SELF_VERSION_FLAG = "--self-version";
+const char* const SELF_VERSION_FLAG_SHORT = "";
 
 #ifdef LIBXML_ENABLED
-const char* DEFAULT_XML_ENCODING = "UTF-8";
+const char* const DEFAULT_XML_ENCODING = "UTF-8";
 #else
-const char* DEFAULT_XML_ENCODING = "ISO-8859-1";
+const char* const DEFAULT_XML_ENCODING = "ISO-8859-1";
 #endif
 
-const char* FILELIST_FLAG = "--input-file";
-const char* FILELIST_FLAG_SHORT = "-i";
+const char* const FILELIST_FLAG = "--input-file";
+const char* const FILELIST_FLAG_SHORT = "-i";
 
-const char* XMLNS_FLAG = "--xmlns";
-const char* XMLNS_DEFAULT_FLAG_FULL = "--xmlns=URI";
-const char* XMLNS_FLAG_FULL = "--xmlns:PREFIX=URI";
+const char* const XMLNS_FLAG = "--xmlns";
+const char* const XMLNS_DEFAULT_FLAG_FULL = "--xmlns=URI";
+const char* const XMLNS_FLAG_FULL = "--xmlns:PREFIX=URI";
 
 const int DEFAULT_LANGUAGE = srcMLTranslator::LANGUAGE_CXX;
 
-const char* EXAMPLE_TEXT_FILENAME="foo.cpp";
-const char* EXAMPLE_XML_FILENAME="foo.cpp.xml";
+const char* const EXAMPLE_TEXT_FILENAME="foo.cpp";
+const char* const EXAMPLE_XML_FILENAME="foo.cpp.xml";
 
-const char* GAP = "                              ";
+const char* const GAP = "                              ";
 
 const char FILELIST_COMMENT = '#';
 
-// filename part of path
-std::string get_filename(const std::string& path);
-
-// directory part of path
-std::string get_directory(const std::string& path);
+// split path into directory and filename
+char* split_path(char* path);
 
 using std::setw;
 
@@ -399,19 +396,17 @@ int main(int argc, char* argv[]) {
       pinfilelist = &infile;
     }
 
-    // translate all the filenames listed in the named file
-    std::string line;
-    int count = 0;    // keep count for verbose mode
-    while (getline(*pinfilelist, line)) {
-
-      // setup so we can gracefully stop after a file at a time
-      pstd::signal(SIGINT, terminate_handler);
+    // setup so we can gracefully stop after a file at a time
+    pstd::signal(SIGINT, terminate_handler);
       
-      // extract the filename from the line
-      std::string infilename = line.substr(0, line.find_first_of(' '));
+    // translate all the filenames listed in the named file
+    const int MAXFILENAME = 512;
+    char line[MAXFILENAME];
+    int count = 0;    // keep count for verbose mode
+    while (pinfilelist->getline(line, MAXFILENAME)) {
 
       // skip blank lines or comment lines
-      if (infilename == "" || infilename[0] == FILELIST_COMMENT)
+      if (line == '\0' || line[0] == FILELIST_COMMENT)
 	continue;
 
       // another file
@@ -419,20 +414,24 @@ int main(int argc, char* argv[]) {
 
       // in verbose mode output the currently processed filename
       if (isoption(options, OPTION_VERBOSE)) {
-	std::cerr << count << '\t' << infilename;
+	std::cerr << count << '\t' << line;
       }
 
       // translate the file listed in the input file using the directory and filename extracted from the path
-      const char* path = infilename.c_str();
+      const int MAXFILENAME = 512;
+      char spath[MAXFILENAME];
+      strncpy(spath, line, MAXFILENAME);
+      char* path_filename = split_path(spath);
+      char* path_directory = spath;
       try {
-	translator.translate(path, get_directory(path).c_str(), get_filename(path).c_str(), given_version);
+	translator.translate(line, path_directory, path_filename, given_version);
 
       } catch (FileError) {
 
 	if (isoption(options, OPTION_VERBOSE))
-	  std::cerr << "\t\terror: file \'" << path << "\' does not exist.";
+	  std::cerr << "\t\terror: file \'" << line << "\' does not exist.";
 	else
-	  std::cerr << NAME << " error: file \'" << path << "\' does not exist." << "\n";
+	  std::cerr << NAME << " error: file \'" << line << "\' does not exist." << "\n";
       }
 
       if (isoption(options, OPTION_VERBOSE)) {
@@ -454,13 +453,18 @@ int main(int argc, char* argv[]) {
 
     // translate from path given on command line using directory given on the command line or extracted
     // from full path
-    const char* path = argv[input_arg_start];
-
-    std::string directory = isoption(options, OPTION_DIRECTORY) ? given_directory : get_directory(path);
-    std::string filename  = isoption(options, OPTION_FILENAME)  ? given_filename  : get_filename(path);
+    char* path = argv[input_arg_start];
+    const int MAXFILENAME = 512;
+    char spath[MAXFILENAME];
+    strncpy(spath, path, MAXFILENAME);
+    char* path_filename = split_path(spath);
+    char* path_directory = spath;
 
     try {
-      translator.translate(path, directory.c_str(), filename.c_str(), given_version);
+      translator.translate(path,
+			   isoption(options, OPTION_DIRECTORY) ? given_directory : path_directory,
+			   isoption(options, OPTION_FILENAME)  ? given_filename  : path_filename,
+			   given_version);
 
     } catch (FileError) {
 
@@ -480,9 +484,12 @@ int main(int argc, char* argv[]) {
       // setup so we can gracefully stop after a file at a time
       pstd::signal(SIGINT, terminate_handler);
       
-      const char* path = argv[i];
-      std::string sdirectory = get_directory(path);
-      std::string sfilename = get_filename(path);
+      char* path = argv[i];
+      const int MAXFILENAME = 512;
+      char spath[MAXFILENAME];
+      strncpy(spath, path, MAXFILENAME);
+      char* path_filename = split_path(spath);
+      char* path_directory = spath;
 
       // another file
       ++count;
@@ -492,7 +499,7 @@ int main(int argc, char* argv[]) {
 	std::cerr << count << '\t' << path;
       }
       try {
-	translator.translate(path, sdirectory.c_str(), sfilename.c_str());
+	translator.translate(path, path_directory, path_filename);
       } catch (FileError) {
 	std::cerr << NAME << " error: file \'" << path << "\' does not exist." << "\n";
       }
@@ -998,27 +1005,22 @@ int process_args(int argc, char* argv[]) {
 }
 
 // filename part of path
-std::string get_filename(const std::string& path) {
+char* split_path(char* path) {
 
-  // filename is only part of the path
-  size_t posslash = path.rfind('/');
-  if (posslash != std::string::npos)
-    return path.substr(posslash + 1);
+  char* lastslash = 0;
+  char* cur = path;
+  while (*cur) {
+    if (*cur == '/')
+      lastslash = cur;
+    ++cur;
+  }
 
-  // filename is full path
-  return path;
-}
+  if (lastslash) {
+    *lastslash = '\0';
+    return lastslash + 1;
+  }
 
-// directory part of path
-std::string get_directory(const std::string& path) {
-
-  // directory in path
-  size_t posslash = path.rfind('/');
-  if (posslash != std::string::npos)
-    return path.substr(0, posslash);
-
-  // no directory in path
-  return "";
+  return cur;
 }
 
 extern "C" void verbose_handler(int) {
