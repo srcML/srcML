@@ -34,27 +34,27 @@
 #include "srcMLUtility.h"
 #include "Options.h"
 
-const char* NAME = "srcml2src";
+char const * const NAME = "srcml2src";
 
-const char* EXPAND_FLAG = "--extract-all";
-const char* EXPAND_FLAG_SHORT = "-a";
+char const * const EXPAND_FLAG = "--extract-all";
+char const * const EXPAND_FLAG_SHORT = "-a";
 
-const char* UNIT_FLAG = "--unit";
-const char* UNIT_FLAG_SHORT = "-U";
-const char* UNIT_FLAG_FULL = "--unit=NUM";
+char const * const UNIT_FLAG = "--unit";
+char const * const UNIT_FLAG_SHORT = "-U";
+char const * const UNIT_FLAG_FULL = "--unit=NUM";
 
-const char* XML_FLAG = "--xml";
-const char* XML_FLAG_SHORT = "-X";
+char const * const XML_FLAG = "--xml";
+char const * const XML_FLAG_SHORT = "-X";
 
-const char* INFO_FLAG = "--info";
-const char* INFO_FLAG_SHORT = "-i";
+char const * const INFO_FLAG = "--info";
+char const * const INFO_FLAG_SHORT = "-i";
 
-const char* LONG_INFO_FLAG = "--longinfo";
-const char* LONG_INFO_FLAG_SHORT = "-l";
+char const * const LONG_INFO_FLAG = "--longinfo";
+char const * const LONG_INFO_FLAG_SHORT = "-l";
 
-const char* NAMESPACE_FLAG = "--prefix";
-const char* NAMESPACE_FLAG_SHORT = "-p";
-const char* NAMESPACE_FLAG_FULL = "--prefix=URI";
+char const * const NAMESPACE_FLAG = "--prefix";
+char const * const NAMESPACE_FLAG_SHORT = "-p";
+char const * const NAMESPACE_FLAG_FULL = "--prefix=URI";
 
 using std::setw;
 
