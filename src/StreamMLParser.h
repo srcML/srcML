@@ -18,10 +18,6 @@
   You should have received a copy of the GNU General Public License
   along with the srcML translator; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
-
-
-/*
 
   Adds markup language capabilities and stream parsing to a Parser
   class.  The stream parsing is added by the base class, StreamParser.
@@ -167,6 +163,7 @@ class StreamMLParser : public StreamParser<Base> {
     // push a new end token
     pushToken(antlr::RefToken(new EndToken(token)), false);
   }
+
 };
 
 #endif
