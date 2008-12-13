@@ -55,8 +55,13 @@ bool onpreprocline;
 
 STRING :
         (
-        // double quoted string
-        '"' (ESC | STRING_CHARACTER | { !onpreprocline }? EOL )* ('"')? |
+            // double quoted string
+            // strings are allowed to span multiple lines
+            // special case is when it is one a preprocessor line, e.g.,
+            // #define a "abc
+            // note that the "abc does not end at the end of this line,
+            // but the #define must end, so EOL is not a valid string character
+            '"' (ESC | STRING_CHARACTER | { !onpreprocline }? EOL )* ('"')? |
         'L' '"' (ESC | STRING_CHARACTER | { !onpreprocline }? EOL)* ('"')? |
         'L' (DIGITS | NAMECHAR)* { $setType(NAME); }
         )

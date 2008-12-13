@@ -78,7 +78,17 @@ SPECIAL :
 ;
 
 ALLOPERATORS options { testLiterals = true; } : 
-        '#' { if (justws) { $setType(PREPROC); onpreprocline = true; } } |
+        '#' {
+            if (justws) {
+
+                $setType(PREPROC); 
+
+                // record that we are on a preprocessor line,
+                // primarily so that unterminated strings in
+                // a preprocessor line will end at the right spot
+                onpreprocline = true; 
+            } 
+        }    |
         "*=" |  // immediate multiplication
         '*' |   // multiplication/pointer
         ',' |

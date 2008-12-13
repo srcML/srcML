@@ -52,7 +52,6 @@ catch[...] {
 // Multiple-line comments
 BLOCKCOMMENT 
     :   "/*" (options { greedy = false; } : COMMENT_CHAR_NEWLINE)* "*/"      { justws = false; }
-//    :   "/*" (options { greedy = false; } : ~('\n' | '\r') | (EOL { $setType(BLOCKCOMMENTEOL); }) )* "*/"
 ;
 exception
 catch[...] {

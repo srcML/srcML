@@ -64,7 +64,13 @@ EOL :   { justws = true; }
         // when output on a platform will be the correct one for the
         // platform used
         { $setText('\n'); }
-        ) { onpreprocline = false; }
+        )
+        { 
+            // onpreprocline is turned on when on a preprocessor line
+            // to prevent mostly string ending problems.
+            // it has to be turned back on when the EOL is reached
+            onpreprocline = false;
+        }
 ;
 
 protected
