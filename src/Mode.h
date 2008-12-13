@@ -159,10 +159,6 @@ class Mode : public TokenParser, public Language {
 
   srcMLStateStack* pstate;
 
-  void reserve() {
-    
-  }
-
 protected:
 
   // flush any skipped tokens to the output token stream
