@@ -27,10 +27,8 @@
 #ifndef SRCMLTRANSLATOR_H
 #define SRCMLTRANSLATOR_H
 
-#include <iostream>
 #include <map>
 #include "Language.h"
-#include "Options.h"
 #include "srcMLOutput.h"
 
 class FileError {};
