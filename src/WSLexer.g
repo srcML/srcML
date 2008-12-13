@@ -71,8 +71,7 @@ protected
 CONTROL_CHAR { std::string s = "<"; int n = 0; char ns[3] = { 0, 0, 0 }; } :
         { 
             s += srcuri;
-            s += "escape";
-            s += " char=\"0x"; 
+            s += "escape char=\"0x"; 
             n = LA(1);
         }
         (
