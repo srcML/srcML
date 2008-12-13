@@ -247,12 +247,12 @@ extern "C" void terminate_handler(int);
 
 int main(int argc, char* argv[]) {
 
+  int exit_status = EXIT_SUCCESS;
+
   /* signal handling */
 
-  // toggling verbose flag
+  // signal to toggle verbose flag
   pstd::signal(SIGUSR1, verbose_handler);
-
-  int exit_status = EXIT_SUCCESS;
 
   // process command-line arguments
   int curarg = process_args(argc, argv);
@@ -343,12 +343,12 @@ int main(int argc, char* argv[]) {
 
   // default uri prefixes
   URI_TYPE stduri;
-  stduri[SRCML_SRC_NS_URI] = SRCML_SRC_NS_PREFIX_DEFAULT;
-  stduri[SRCML_CPP_NS_URI] = SRCML_CPP_NS_PREFIX_DEFAULT;
-  stduri[SRCML_ERR_NS_URI] = SRCML_ERR_NS_PREFIX_DEFAULT;
-  stduri[SRCML_EXT_LITERAL_NS_URI] = SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT;
-  stduri[SRCML_EXT_OPERATOR_NS_URI] = SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT;
-  stduri[SRCML_EXT_MODIFIER_NS_URI] = SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT;
+  stduri.insert(std::make_pair(SRCML_SRC_NS_URI, SRCML_SRC_NS_PREFIX_DEFAULT));
+  stduri.insert(std::make_pair(SRCML_CPP_NS_URI, SRCML_CPP_NS_PREFIX_DEFAULT));
+  stduri.insert(std::make_pair(SRCML_ERR_NS_URI, SRCML_ERR_NS_PREFIX_DEFAULT));
+  stduri.insert(std::make_pair(SRCML_EXT_LITERAL_NS_URI, SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT));
+  stduri.insert(std::make_pair(SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT));
+  stduri.insert(std::make_pair(SRCML_EXT_MODIFIER_NS_URI, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT));
 
   // form the final set of uri prefixes by starting with the user
   // defined options, and filling it in with the standard prefixes
