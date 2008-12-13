@@ -97,30 +97,14 @@ class StreamMLParser : public StreamParser<Base> {
     switch (token_type) {
     case Base::WS: 
     case Base::FORMFEED:
+    case Base::EOL_BACKSLASH:
+    case Base::BLOCKCOMMENT:
       return true;
       break;
 
     case Base::LINECOMMENT:
-
-      return !StreamParser<Base>::inskip;
-      break;
-
-    case Base::BLOCKCOMMENT:
-
-      return true;
-      break;
-
-    case Base::BLOCKCOMMENTEOL:
-
-      return !StreamParser<Base>::inskip;
-      break;
-
-    case Base::EOL_BACKSLASH:
-
-      return true;
-      break;
-
     case Base::EOL:
+    case Base::BLOCKCOMMENTEOL:
 
       return !StreamParser<Base>::inskip;
       break;
