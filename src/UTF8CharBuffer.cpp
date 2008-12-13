@@ -13,16 +13,15 @@ int UTF8CharBuffer::getChar() {
   if (pos == utf8buffer->use && !eof) {
 
     // fill up the original character buffer stopping at eof
-    int i;
-    for (i = 0; i < SRCBUFSIZE; ++i) {
+    for (int i = 0; i < SRCBUFSIZE; ++i) {
       int c = CharBuffer::getChar();
-      if (c != -1) {
-	buffer->content[i] = (char) c;
-	++(buffer->use);
-      } else {
+      if (c == -1) {
 	eof = true;
 	break;
       }
+
+      buffer->content[i] = (char) c;
+      ++(buffer->use);
     }
 
     // convert from the original source encoding to UTF-8
