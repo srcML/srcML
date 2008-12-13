@@ -42,7 +42,11 @@ tokens {
 
 // Single-line comments (no EOL)
 LINECOMMENT
-    :   "//" (COMMENT_CHAR)*     { justws = false; }
+    :   "//" (COMMENT_CHAR)*
+        { 
+            // have to reset, since we may eat/get eol
+            justws = false;
+        }
 ;
 exception
 catch[...] {
@@ -51,7 +55,11 @@ catch[...] {
 
 // Multiple-line comments
 BLOCKCOMMENT 
-    :   "/*" (options { greedy = false; } : COMMENT_CHAR_NEWLINE)* "*/"      { justws = false; }
+    :   "/*" (options { greedy = false; } : COMMENT_CHAR_NEWLINE)* "*/"
+        { 
+            // have to reset, since we may eat/get eol
+            justws = false;
+        }
 ;
 exception
 catch[...] {

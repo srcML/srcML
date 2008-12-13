@@ -73,6 +73,19 @@ EOL :   { justws = true; }
         }
 ;
 
+/*
+  Encode the control character in the element escape, e.g., for control
+  character \001:
+
+    <escape char="0x1"/>
+
+  where the element is prefixed with the src uri prefix (which can be
+  changed by options).
+
+  This has to be done here in the lexer because if the character occurs
+  in a string or in a comment, they are completely detected and formed
+  in the lexer.
+*/
 protected
 CONTROL_CHAR { std::string s = "<"; int n = 0; char ns[3] = { 0, 0, 0 }; } :
         { 
