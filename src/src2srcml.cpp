@@ -232,13 +232,10 @@ const char* xml_encoding = DEFAULT_XML_ENCODING;
 const char* given_directory = 0;
 const char* given_filename = 0;
 const char* given_version = 0;
-bool cpp_else = false;
-bool cpp_if0 = false;
 
 typedef std::map<std::string, std::string> URI_TYPE;
 
 URI_TYPE option_uri;
-
 URI_TYPE uri;
 
 // setup options and collect info from arguments
@@ -523,6 +520,9 @@ int main(int argc, char* argv[]) {
 
 // setup options and collect info from arguments
 int process_args(int argc, char* argv[]) {
+
+  bool cpp_if0 = false;
+  bool cpp_else = false;
 
   // process all command line options
   int position = 0;
