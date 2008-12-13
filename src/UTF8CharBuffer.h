@@ -30,6 +30,11 @@ public:
 	/// Get the next character from the stream
 	int getChar();
 
+	~UTF8CharBuffer() {
+
+	  xmlBufferFree(buffer);
+	  xmlBufferFree(utf8buffer);
+	}
 private:
 	bool skipencoding;
 	const char* encoding;
