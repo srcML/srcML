@@ -357,13 +357,24 @@ int main(int argc, char* argv[]) {
   uri.insert(option_uri.begin(), option_uri.end());
   uri.insert(stduri.begin(), stduri.end());
 
-  // make sure we have no duplicate prefixes
-  for (URI_TYPE::iterator po = uri.begin(); po != uri.end(); ++po) {
-    URI_TYPE::iterator pi = po;
+  // make sure user did not specify duplicate prefixes as an option
+  for (URI_TYPE::const_iterator po = uri.begin(); po != uri.end(); ++po) {
+    URI_TYPE::const_iterator pi = po;
     ++pi;
     for ( ; pi != uri.end(); ++pi) {
       if (pi->second == po->second) {
-	std::cerr << NAME << ": Namespace prefixes must be unique.\n";
+	std::cerr << NAME << ": Namespace conflict for prefix \'" << po->second << "\' for the namespaces:\n";
+
+	if (option_uri.count(pi->first))
+	  std::cerr << "\t" << pi->first << '\n';
+	else
+	  std::cerr << "\t" << pi->first << " (default)\n";
+
+	if (option_uri.count(po->first))
+	  std::cerr << "\t" << po->first << '\n';
+	else
+	  std::cerr << "\t" << po->first << " (default)\n";
+
 	exit(STATUS_INVALID_OPTION_COMBINATION);
       }
     }
