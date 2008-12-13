@@ -23,6 +23,8 @@
 #ifndef LANGUAGE_H
 #define LANGUAGE_H
 
+#include <cstring>
+
 class Language {
 
  public:
@@ -51,6 +53,25 @@ class Language {
   // gets the current language
   inline int getLanguage() const {
     return language;
+  }
+
+  // gets the current language
+  static int getLanguage(const char* const s) {
+
+    int lang = 0;
+
+    if (strcmp(s, "C") == 0)
+      lang = LANGUAGE_C;
+    else if (strcmp(s, "C++") == 0)
+      lang = LANGUAGE_CXX;
+    else if (strcmp(s, "Java") == 0)
+      lang = LANGUAGE_JAVA;
+    else if (strcmp(s, "C++0x") == 0)
+      lang = LANGUAGE_CXX_0X;
+    else if (strcmp(s, "AspectJ") == 0)
+      lang = LANGUAGE_ASPECTJ;
+
+    return lang;
   }
 
   // gets the current language

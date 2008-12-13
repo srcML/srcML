@@ -34,7 +34,7 @@
 #include "srcmlns.h"
 #include "Options.h"
 #include "project.h"
-
+#include "Language.h"
 #include "srcMLTranslator.h"
 
 const char* const NAME = "src2srcml";
@@ -729,34 +729,21 @@ int process_args(int argc, char* argv[]) {
       }
 
       // validate language selected
-      if (strcmp(langparam, LANGUAGE_C) == 0)
-	language = srcMLTranslator::LANGUAGE_C;
-      else if (strcmp(langparam, LANGUAGE_CXX) == 0)
-	language = srcMLTranslator::LANGUAGE_CXX;
-      else if (strcmp(langparam, LANGUAGE_JAVA) == 0) {
-
-	// turnoff default cpp reference
-	options &= ~OPTION_CPP;
-
-	language = srcMLTranslator::LANGUAGE_JAVA;
-      } else if (strcmp(langparam, LANGUAGE_CXX_0X) == 0) {
-	language = srcMLTranslator::LANGUAGE_CXX_0X;
-      } else if (strcmp(langparam, LANGUAGE_ASPECTJ) == 0) {
-
-	// turnoff default cpp reference
-	options &= ~OPTION_CPP;
-
-	language = srcMLTranslator::LANGUAGE_ASPECTJ;
-      } else {
+      language = Language::getLanguage(langparam);
+      if (language == 0) {
 	std::cerr << NAME << ": invalid option -- Language flag must one of the following values:  "
 		  << LANGUAGE_C << " " << LANGUAGE_CXX << " " << LANGUAGE_JAVA << " "
 		  << LANGUAGE_ASPECTJ << '\n';
 	exit(STATUS_INVALID_LANGUAGE);
+	break;
       }
-    }
+
+      // turnoff default cpp reference for Java-based languages
+      if (language == srcMLTranslator::LANGUAGE_JAVA || language == srcMLTranslator::LANGUAGE_ASPECTJ)
+	options &= ~OPTION_CPP;
 
     // xml namespace specifications
-    else if (compare_flags(argv[curarg], XMLNS_FLAG, "") || strncmp(argv[curarg], XMLNS_FLAG, strlen(XMLNS_FLAG)) == 0) {
+    } else if (compare_flags(argv[curarg], XMLNS_FLAG, "") || strncmp(argv[curarg], XMLNS_FLAG, strlen(XMLNS_FLAG)) == 0) {
 
       options |= OPTION_XMLNS;
 
