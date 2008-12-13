@@ -43,6 +43,7 @@ tokens {
 // whitespace (except for newline)
 WS :
         (
+            // single space
             ' '  |
 
             // horizontal tab

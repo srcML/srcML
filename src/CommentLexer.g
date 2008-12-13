@@ -72,13 +72,15 @@ COMMENT_CHAR_NEWLINE
 
 protected
 COMMENT_CHAR
-// leave out newline, \012, and carriage return, \015.  Also, leave out escaped characters
+    // leave out newline, \012, and carriage return, \015.  Also, leave out escaped characters
     : '\011' | '\040'..'\045' | '\047'..';' | '=' | '?'..'\377' | ESCAPED_CHAR | CONTROL_CHAR
 ;
 
+/*
+  Escaping character happens in the lexer.  This is for escaped characters that are part of
+  comments, strings, etc.  The regular use of angle brackets and '&' are handled as operators
+*/
 protected
 ESCAPED_CHAR
     : '<' { $setText("&lt;"); } | '>' { $setText("&gt;"); } | '&' { $setText("&amp;"); }
 ;
-
-
