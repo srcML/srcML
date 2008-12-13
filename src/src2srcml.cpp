@@ -365,15 +365,15 @@ int main(int argc, char* argv[]) {
       if (pi->second == po->second) {
 	std::cerr << NAME << ": Namespace conflict for prefix \'" << po->second << "\' for the namespaces:\n";
 
-	if (option_uri.count(pi->first))
-	  std::cerr << "\t" << pi->first << '\n';
-	else
-	  std::cerr << "\t" << pi->first << " (default)\n";
+        std::cerr << "\t" << pi->first;
+	if (!option_uri.count(pi->first))
+	  std::cerr << " (default)";
+	std::cerr << '\n';
 
-	if (option_uri.count(po->first))
-	  std::cerr << "\t" << po->first << '\n';
-	else
-	  std::cerr << "\t" << po->first << " (default)\n";
+        std::cerr << "\t" << po->first;
+	if (!option_uri.count(po->first))
+	  std::cerr << " (default)";
+	std::cerr << '\n';
 
 	exit(STATUS_INVALID_OPTION_COMBINATION);
       }
