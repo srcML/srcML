@@ -34,6 +34,7 @@ class WSLexer extends Lexer;
 
 options {
     k = 1;
+    charVocabulary = '\000'..'\377';
 }
 
 tokens {

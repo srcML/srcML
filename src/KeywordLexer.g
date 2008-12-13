@@ -124,3 +124,4 @@ protected
 SPECIAL_CHARS :
         '\3'..'\377'
 ;
+
