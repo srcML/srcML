@@ -341,19 +341,16 @@ int main(int argc, char* argv[]) {
     }
   }
 
-  // default uri prefixes
-  URI_TYPE stduri;
-  stduri.insert(std::make_pair(SRCML_SRC_NS_URI, SRCML_SRC_NS_PREFIX_DEFAULT));
-  stduri.insert(std::make_pair(SRCML_CPP_NS_URI, SRCML_CPP_NS_PREFIX_DEFAULT));
-  stduri.insert(std::make_pair(SRCML_ERR_NS_URI, SRCML_ERR_NS_PREFIX_DEFAULT));
-  stduri.insert(std::make_pair(SRCML_EXT_LITERAL_NS_URI, SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT));
-  stduri.insert(std::make_pair(SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT));
-  stduri.insert(std::make_pair(SRCML_EXT_MODIFIER_NS_URI, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT));
-
-  // form the final set of uri prefixes by starting with the user
-  // defined options, and filling it in with the standard prefixes
+  // start with the user defined options
   uri.insert(option_uri.begin(), option_uri.end());
-  uri.insert(stduri.begin(), stduri.end());
+
+  // fill in any missing standard prefixes
+  uri.insert(std::make_pair(SRCML_SRC_NS_URI, SRCML_SRC_NS_PREFIX_DEFAULT));
+  uri.insert(std::make_pair(SRCML_CPP_NS_URI, SRCML_CPP_NS_PREFIX_DEFAULT));
+  uri.insert(std::make_pair(SRCML_ERR_NS_URI, SRCML_ERR_NS_PREFIX_DEFAULT));
+  uri.insert(std::make_pair(SRCML_EXT_LITERAL_NS_URI, SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT));
+  uri.insert(std::make_pair(SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT));
+  uri.insert(std::make_pair(SRCML_EXT_MODIFIER_NS_URI, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT));
 
   // make sure user did not specify duplicate prefixes as an option
   for (URI_TYPE::const_iterator po = uri.begin(); po != uri.end(); ++po) {
