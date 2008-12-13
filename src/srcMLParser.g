@@ -1902,10 +1902,7 @@ statement_part { int type_count; } :
             consume_var_type_identifier |
 
         { inMode(MODE_NAMESPACE) }?
-            namespace_alias |
-
-        { inMode(MODE_NAMESPACE) }?
-            namespace_block |
+        (  namespace_alias | namespace_block) |
 
         // throw list at end of function header
         { (inLanguage(LANGUAGE_OO)) && inMode(MODE_FUNCTION_TAIL) }?
