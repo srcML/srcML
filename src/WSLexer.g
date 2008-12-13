@@ -30,7 +30,7 @@ options {
     namespaceStd="std";
 }
 
-class WSLexer extends Lexer("Foo");
+class WSLexer extends Lexer;
 
 options {
     k = 1;
