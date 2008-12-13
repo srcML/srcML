@@ -41,8 +41,6 @@
 
 #include "Options.h"
 
-static const char* SRCML_SRC_NS_PREFIX = "src";
-
 xmlXPathCompExprPtr srcMLUtility::xpath_formfeed;
 xmlXPathCompExprPtr srcMLUtility::xpath_escape;
 
@@ -116,7 +114,7 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op
     if (!context)
       throw LibXMLError(0);
 
-    if (xmlXPathRegisterNs(context, BAD_CAST SRCML_SRC_NS_PREFIX , BAD_CAST SRCML_SRC_NS_URI) == -1)
+    if (xmlXPathRegisterNs(context, BAD_CAST "src" , BAD_CAST SRCML_SRC_NS_URI) == -1)
       throw "Unable to register srcML namespace";
   }
 }
