@@ -71,8 +71,29 @@ protected
 CONTROL_CHAR :
         ('\000'..'\010' | '\013'..'\014' | '\016'..'\037')
         {
-            std::ostringstream out; 
-            out << "<" + srcuri + "escape" + " char=\"0x" << std::hex << (int) text.substr(text.size() - 1)[0] << "\"/>";
-            $setText(out.str());
+            std::string s = "<";
+            s += srcuri;
+            s += "escape";
+            s += " char=\"0x";
+
+            int n = text.substr(text.size() - 1)[0];
+            char ns[3] = { 0, 0, 0 };
+            if (n < 10)
+                ns[0] = n + '0';
+            else if (n < 16)
+                ns[0] = (n - 10) + 'a';
+            else if (n < 26) {
+                ns[0] = '1';
+                ns[1] = (n - 16) + '0';
+            }
+            else {
+                ns[0] = '1';
+                ns[1] = (n - 26) + 'a';
+            }
+
+            s += ns;
+            s += "\"/>";
+
+            $setText(s);
         }
 ;

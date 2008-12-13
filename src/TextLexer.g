@@ -32,7 +32,6 @@
 header {
 
     #include <iostream>
-    #include <sstream>
 }
 
 options {
