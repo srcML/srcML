@@ -241,8 +241,6 @@ URI_TYPE uri;
 // setup options and collect info from arguments
 int process_args(int argc, char* argv[]);
 
-int process_args(char* one, char* two);
-
 extern "C" void verbose_handler(int);
 
 extern "C" void terminate_handler(int);
