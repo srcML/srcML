@@ -37,6 +37,8 @@
 #include "Language.h"
 #include "srcMLTranslator.h"
 
+using namespace LanguageName;
+
 const char* const NAME = "src2srcml";
 
 const char* const DEBUG_FLAG = "--debug";

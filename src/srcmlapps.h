@@ -73,11 +73,15 @@ const char* const SRCVERSION_FLAG_FULL = "--src-version=VER";
 const char* const VERBOSE_FLAG = "--verbose";
 const char* const VERBOSE_FLAG_SHORT = "-v";
 
+namespace LanguageName {
+
 const char* const LANGUAGE_C = "C";
 const char* const LANGUAGE_CXX = "C++";
 const char* const LANGUAGE_CXX_0X = "C++0x";
 const char* const LANGUAGE_JAVA = "Java";
 const char* const LANGUAGE_ASPECTJ = "AspectJ";
+
+};
 
 const char* const SKIP_ENCODING_FLAG = "--skip-encoding";
 const char* const SKIP_ENCODING_FLAG_SHORT = "-k";
@@ -118,7 +122,7 @@ const int COL = 20;
 // current environment encoding
 const char* getencoding();
 
-const char* DEFAULT_TEXT_ENCODING = "ISO-8859-1";
+const char* const DEFAULT_TEXT_ENCODING = "ISO-8859-1";
 
 // extract option from full argument
 inline char* extract_option(char* full_argument) { return strchr(full_argument, '='); }

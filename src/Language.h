@@ -23,7 +23,9 @@
 #ifndef LANGUAGE_H
 #define LANGUAGE_H
 
+#include <map>
 #include <cstring>
+#include "srcmlapps.h"
 
 class Language {
 
@@ -42,8 +44,14 @@ class Language {
   };
 
   Language(int lang)
-    : language(lang != LANGUAGE_ASPECTJ ? lang : lang | LANGUAGE_JAVA)
-    {}
+    : language(lang != LANGUAGE_ASPECTJ ? lang : lang | LANGUAGE_JAVA) {
+
+    lang2int.insert(std::make_pair(LanguageName::LANGUAGE_C, LANGUAGE_C));
+    lang2int.insert(std::make_pair(LanguageName::LANGUAGE_CXX, LANGUAGE_CXX));
+    lang2int.insert(std::make_pair(LanguageName::LANGUAGE_JAVA, LANGUAGE_JAVA));
+    lang2int.insert(std::make_pair(LanguageName::LANGUAGE_CXX_0X, LANGUAGE_CXX_0X));
+    lang2int.insert(std::make_pair(LanguageName::LANGUAGE_ASPECTJ, LANGUAGE_ASPECTJ));
+  }
 
   // gets the current language
   inline bool inLanguage(int l) const {
@@ -60,15 +68,15 @@ class Language {
 
     int lang = 0;
 
-    if (strcmp(s, "C") == 0)
+    if (strcmp(s, LanguageName::LANGUAGE_C) == 0)
       lang = LANGUAGE_C;
-    else if (strcmp(s, "C++") == 0)
+    else if (strcmp(s, LanguageName::LANGUAGE_CXX) == 0)
       lang = LANGUAGE_CXX;
-    else if (strcmp(s, "Java") == 0)
+    else if (strcmp(s, LanguageName::LANGUAGE_JAVA) == 0)
       lang = LANGUAGE_JAVA;
-    else if (strcmp(s, "C++0x") == 0)
+    else if (strcmp(s, LanguageName::LANGUAGE_CXX_0X) == 0)
       lang = LANGUAGE_CXX_0X;
-    else if (strcmp(s, "AspectJ") == 0)
+    else if (strcmp(s, LanguageName::LANGUAGE_ASPECTJ) == 0)
       lang = LANGUAGE_ASPECTJ;
 
     return lang;
@@ -80,23 +88,23 @@ class Language {
 
     switch (language) {
     case LANGUAGE_C:
-      lstring = "C";
+      lstring = LanguageName::LANGUAGE_C;
       break;
 
     case LANGUAGE_CXX:
-      lstring = "C++";
+      lstring = LanguageName::LANGUAGE_CXX;
       break;
 
     case LANGUAGE_JAVA:
-      lstring = "Java";
+      lstring = LanguageName::LANGUAGE_JAVA;
       break;
 
     case LANGUAGE_CXX_0X:
-      lstring = "C++0x";
+      lstring = LanguageName::LANGUAGE_CXX_0X;
       break;
 
     case LANGUAGE_ASPECTJ | LANGUAGE_JAVA:
-      lstring = "AspectJ";
+      lstring = LanguageName::LANGUAGE_ASPECTJ;
       break;
     };
 
@@ -108,6 +116,8 @@ class Language {
  private:
 
   const int language;
+
+  std::map<std::string, int> lang2int;
 };
 
 #endif
