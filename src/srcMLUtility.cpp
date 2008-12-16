@@ -117,6 +117,9 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op
     if (xmlXPathRegisterNs(context, BAD_CAST "src" , BAD_CAST SRCML_SRC_NS_URI) == -1)
       throw "Unable to register srcML namespace";
   }
+
+  // setup an output handler
+  handler = xmlFindCharEncodingHandler(output_encoding);
 }
 
 // destructor
@@ -431,9 +434,6 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
 
 // output current unit element as text
 void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
-
-  // setup an output handler
-  handler = xmlFindCharEncodingHandler(output_encoding);
 
   // generate the full tree in the reader of the unit
   // so that we can move it to the output
