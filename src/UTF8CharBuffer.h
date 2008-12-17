@@ -6,14 +6,12 @@
 #include <xmlwriter.h>
 #include <cstring>
 
-// size of the original character buffer
-const int SRCBUFSIZE = 4;
-
-// size of the resulting utf-8 character buffer
-const int UTF8BUFSIZE = SRCBUFSIZE * 4;
 
 class UTF8CharBuffer : public antlr::CharBuffer {
 public:
+        // size of the original character buffer
+        static const int SRCBUFSIZE = 512;
+
 	/// Create a character buffer
         UTF8CharBuffer(const char* encoding, std::istream& inp)
 	  : antlr::CharBuffer(inp), skipencoding(false), encoding(encoding), pos(0), eof(false)
@@ -24,7 +22,7 @@ public:
 	    skipencoding = true;
 
 	  buffer = xmlBufferCreateSize(SRCBUFSIZE);
-	  utf8buffer = xmlBufferCreateSize(UTF8BUFSIZE);
+	  utf8buffer = xmlBufferCreate();
 	}
 
 	/// Get the next character from the stream
