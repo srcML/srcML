@@ -7,7 +7,7 @@
 #include <cstring>
 
 // size of the original character buffer
-const int SRCBUFSIZE = 1024;
+const int SRCBUFSIZE = 4;
 
 // size of the resulting utf-8 character buffer
 const int UTF8BUFSIZE = SRCBUFSIZE * 4;

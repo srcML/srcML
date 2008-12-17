@@ -2,26 +2,33 @@
 #include "UTF8CharBuffer.h"
 #include <xmlwriter.h>
 
-// Get the next character from the stream
+/*
+ Get the next character from the stream
+
+ Grab characters one byte at a time from the input stream and place
+ them in the original source encoding buffer.  Then convert from the
+ original encoding to UTF-8 in the utf8 buffer.
+*/
 int UTF8CharBuffer::getChar() {
 
   // maybe no need to even be doing this, ever
   if (skipencoding)
     return CharBuffer::getChar();
 
-  // load up the input, original character buffer if all out
+  // load up the original source encoding buffer
+  // if all out in the utf8 buffer
   if (pos == utf8buffer->use && !eof) {
 
-    // fill up the original character buffer stopping at eof
-    for (int i = 0; i < SRCBUFSIZE; ++i) {
+    // fill up the input buffer starting from where
+    // encoding left off
+    while (buffer->use < SRCBUFSIZE) {
       int c = CharBuffer::getChar();
       if (c == -1) {
 	eof = true;
 	break;
       }
 
-      buffer->content[i] = (char) c;
-      ++(buffer->use);
+      buffer->content[buffer->use++] = (char) c;
     }
 
     // convert from the original source encoding to UTF-8
@@ -30,7 +37,7 @@ int UTF8CharBuffer::getChar() {
     if (result < 0)
       throw "Source encoding error";
 
-    // reset start of where we get characters
+    // start grabbing UTF-8 characters at the beginning
     pos = 0;
   }
 
