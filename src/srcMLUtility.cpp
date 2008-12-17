@@ -44,14 +44,14 @@
 const int EXPAND_DIR_PERM = S_IRWXU | S_IRWXG;
 #endif
 
-const char* XML_DECLARATION_STANDALONE = "yes";
-const char* XML_VERSION = "1.0";
+const char* const XML_DECLARATION_STANDALONE = "yes";
+const char* const XML_VERSION = "1.0";
 
 /* srcML unit attributes */
-const char* UNIT_ATTRIBUTE_LANGUAGE = "language";
-const char* UNIT_ATTRIBUTE_DIRECTORY = "dir";
-const char* UNIT_ATTRIBUTE_FILENAME = "filename";
-const char* UNIT_ATTRIBUTE_VERSION = "version";
+const char* const UNIT_ATTRIBUTE_LANGUAGE = "language";
+const char* const UNIT_ATTRIBUTE_DIRECTORY = "dir";
+const char* const UNIT_ATTRIBUTE_FILENAME = "filename";
+const char* const UNIT_ATTRIBUTE_VERSION = "version";
 
 // check if encoding is supported
 bool srcMLUtility::checkEncoding(const char* encoding) {
