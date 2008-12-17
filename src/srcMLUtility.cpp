@@ -29,8 +29,6 @@
 #include "xmloutput.h"
 #include <xmlsave.h>
 #include "srcmlns.h"
-#include <xpath.h>
-#include <xpathInternals.h>
 
 #ifdef __GNUC__
 #include <sys/stat.h>
@@ -40,9 +38,6 @@
 #endif
 
 #include "Options.h"
-
-xmlXPathCompExprPtr srcMLUtility::xpath_formfeed;
-xmlXPathCompExprPtr srcMLUtility::xpath_escape;
 
 // directory permission for expand
 #ifdef __GNUC__
@@ -71,7 +66,7 @@ void skiptounit(xmlTextReaderPtr reader, int number) throw (LibXMLError);
 
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op)
-  : infile(infilename), output_encoding(encoding), options(op), reader(0), handler(0), context(0), moved(false) {
+  : infile(infilename), output_encoding(encoding), options(op), reader(0), handler(0), moved(false) {
 
   // empty filename indicates standard input
   if (infile == 0)
@@ -99,41 +94,12 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op
   for (xmlNsPtr pAttr = xmlTextReaderCurrentNode(reader)->nsDef; pAttr; pAttr = pAttr->next)
     nsv[(const char*) pAttr->href] = pAttr->prefix ? (const char*) pAttr->prefix : "";
 
-  // setupt a context for xpath if conversion to src
-  if (!isoption(options, OPTION_XML)) {
-
-    xpath_formfeed = xmlXPathCompile(BAD_CAST ".//src:formfeed");
-    if (!xpath_formfeed)
-      throw LibXMLError(0);
-
-    xpath_escape = xmlXPathCompile(BAD_CAST ".//src:escape");
-    if (!xpath_escape)
-      throw LibXMLError(0);
-
-    context = xmlXPathNewContext(xmlTextReaderCurrentDoc(reader));
-    if (!context)
-      throw LibXMLError(0);
-
-    if (xmlXPathRegisterNs(context, BAD_CAST "src" , BAD_CAST SRCML_SRC_NS_URI) == -1)
-      throw "Unable to register srcML namespace";
-  }
-
   // setup an output handler
   handler = xmlFindCharEncodingHandler(output_encoding);
 }
 
 // destructor
 srcMLUtility::~srcMLUtility() {
-
-  // free xpath context (if it exists)
-  if (context)
-    xmlXPathFreeContext(context);
-
-  if (xpath_formfeed)
-    xmlXPathFreeCompExpr(xpath_formfeed);
-
-  if (xpath_escape)
-    xmlXPathFreeCompExpr(xpath_escape);
 
   // free reader
   xmlFreeTextReader(reader);
@@ -435,58 +401,63 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
 // output current unit element as text
 void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
 
-  // generate the full tree in the reader of the unit
-  // so that we can move it to the output
-  xmlTextReaderExpand(reader);
-
 #ifdef LIBXML_ENABLED
   // no need for encoding change
   if (strcmp(handler->name, "UTF-8") == 0)
     options |= OPTION_SKIP_ENCODING;
 #endif
 
-  // reset the context to the current subtree
-  context->node = xmlTextReaderCurrentNode(reader);
-
-  // find the old markup for formfeed nodes and replace them with text nodes with the
-  // formfeed character
-  xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(xpath_formfeed, context);
-  for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
-    xmlNodePtr formfeed = xmlNewText(BAD_CAST "\f");
-    xmlReplaceNode(result_nodes->nodesetval->nodeTab[i], formfeed);
-  }
-
-  // find the escaped element nodes and replace them with a text nodes with the
-  // unescaped value of the attribute char
-  result_nodes = xmlXPathCompiledEval(xpath_escape, context);
-  for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
-
-    // from the char attribute, find out which character was escaped
-    char* ac = (char*) xmlGetProp(result_nodes->nodesetval->nodeTab[i], BAD_CAST "char");
-
-    // convert from the escaped to the unescaped value
-    char values[2] = { strtod(ac, NULL), '\0' };
-
-    xmlFree(ac);
-
-    // replace the escape element node with a text node of the unescaped value
-    xmlNodePtr escape = xmlNewText(BAD_CAST values);
-    xmlReplaceNode(result_nodes->nodesetval->nodeTab[i], escape);
-  }
-
   // output all the content
-  xmlChar* s = xmlNodeGetContent(xmlTextReaderCurrentNode(reader));
+  xmlOutputBufferPtr buf;
+  buf = xmlOutputBufferCreateFilename(ofilename, handler, 0);
+  if (buf == NULL) return;
+
+  std::string s;
+  while (1) {
+
+    // read a node
+    int ret = xmlTextReaderRead(reader);
+    if (ret != 1)
+      throw LibXMLError(ret);
+
+    if (xmlTextReaderDepth(reader) <= 0 + moved)
+      break;
+
+    const char* s;
+    const char* name;
+    switch(xmlTextReaderNodeType(reader)) {
+    case XML_READER_TYPE_TEXT :
+    case XML_READER_TYPE_WHITESPACE :
+    case XML_READER_TYPE_SIGNIFICANT_WHITESPACE :
+
+      s = (const char*) xmlTextReaderConstValue(reader);
+      xmlOutputBufferWrite(buf, strlen(s), s);
+      break;
+
+    case XML_READER_TYPE_ELEMENT :
+      name = (const char*) xmlTextReaderConstLocalName(reader);
+      if (strcmp(name, "escape") == 0) {
+      
+	// convert from the escaped to the unescaped value
+	char values[2] = { strtod((char*) xmlTextReaderGetAttribute(reader, BAD_CAST "char"), NULL), '\0' };
+
+	xmlOutputBufferWrite(buf, 1, values);
+
+      } else if (strcmp(name, "formfeed") == 0) {
+      
+	xmlOutputBufferWrite(buf, 1, "\f");
+      }
+      break;
+    default:
+      break;
+    }
+
+  }
 
   /*                                                                                                            
    * save the content to a temp buffer.                                                                         
    */
-  xmlOutputBufferPtr buf;
-  buf = xmlOutputBufferCreateFilename(ofilename, handler, 0);
-  if (buf == NULL) return;
-  xmlOutputBufferWrite(buf, strlen((char*) s), (char*) s);
   xmlOutputBufferClose(buf);
-
-  xmlFree(s);
 }
 
   // skip to the next unit
@@ -543,4 +514,4 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
       // skip past this unit
       xmlTextReaderNext(reader);
     }
-  }
+}
