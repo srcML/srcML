@@ -125,7 +125,7 @@ header "post_include_hpp" {
 
 #include <iostream>
 #include <iomanip>
-
+#include <stack>
 #include "Mode.h"
 #include "Options.h"
 
@@ -428,7 +428,7 @@ struct cppmodeitem {
         bool skipelse;
 };
 
-SimpleStack<cppmodeitem, 500> cppmode;
+std::stack<cppmodeitem> cppmode;
 
 void startUnit() {
 
