@@ -425,7 +425,6 @@ struct cppmodeitem {
 
         std::vector<int> statesize;
         bool isclosed;
-        int undone;
         bool skipelse;
 };
 
