@@ -75,6 +75,7 @@ void srcMLTranslator::translate(const char* src_filename, const char* unit_direc
 	pin = &srcfile;
       }
 
+      // master lexer with multiple streams
       antlr::TokenStreamSelector selector;
 
       // srcML lexical analyzer from standard input

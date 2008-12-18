@@ -48,10 +48,6 @@ LINECOMMENT
             justws = false;
         }
 ;
-exception
-catch[...] {
-        consume();
-}
 
 // Multiple-line comments
 BLOCKCOMMENT 
@@ -61,9 +57,6 @@ BLOCKCOMMENT
             justws = false;
         }
 ;
-exception
-catch[...] {
-}
 
 COMMENT_START
     :   "/*" { selector->push("comment"); }
@@ -72,9 +65,6 @@ COMMENT_START
             justws = false;
         }
 ;
-exception
-catch[...] {
-}
 
 protected
 COMMENT_CHAR_NEWLINE
