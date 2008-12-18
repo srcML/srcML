@@ -197,7 +197,11 @@ class StreamParser : public Base, public TokenStream {
       fillTokenBuffer();
 
     // pop and send back the top token
-    return tb.front();
+    const antlr::RefToken& tok = tb.front();
+
+    //std::cerr << tok->getType() << " " << tok->getText() << std::endl;
+
+    return tok;
   }
 
 

@@ -89,12 +89,31 @@ class StreamMLParser : public StreamParser<Base> {
 
   // token skipped during parsing
   bool isSkipToken(int token_type) const {
+    static bool incomment = false;
+
+    if (incomment && token_type != Base::COMMENT_END)
+      return true;
 
     switch (token_type) {
     case Base::WS: 
     case Base::FORMFEED:
     case Base::EOL_BACKSLASH:
     case Base::BLOCKCOMMENT:
+      return true;
+      break;
+
+    case Base::COMMENT_START:
+      incomment = true;
+      return true;
+      break;
+
+    case Base::COMMENT_TEXT:
+      incomment = true;
+      return true;
+      break;
+
+    case Base::COMMENT_END:
+      incomment = false;
       return true;
       break;
 

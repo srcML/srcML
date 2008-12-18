@@ -30,8 +30,11 @@
 #include "StreamMLParser.h"
 #include "srcMLOutput.h"
 #include "srcmlns.h"
+#include "PureCommentLexer.hpp"
 
 #include "SegException.h"
+#include "antlr/TokenStreamSelector.hpp"
+
 // constructor
 srcMLTranslator::srcMLTranslator(int language,                // programming language of source code
 				 const char* src_encoding,    // text encoding of source code
@@ -72,11 +75,23 @@ void srcMLTranslator::translate(const char* src_filename, const char* unit_direc
 	pin = &srcfile;
       }
 
+      antlr::TokenStreamSelector selector;
+
       // srcML lexical analyzer from standard input
       KeywordCPPLexer lexer(*pin, encoding, srcuri, getLanguage());
+      lexer.setSelector(&selector);
+
+      // pure comment lexer
+      PureCommentLexer commentlexer(lexer.getInputState());
+      commentlexer.setSelector(&selector);
+
+      // switching between lexers
+      selector.addInputStream(&lexer, "main");
+      selector.addInputStream(&commentlexer, "comment");
+      selector.select("main");
 
       // base stream parser srcML connected to lexical analyzer
-      StreamMLParser<srcMLParser> parser(lexer, getLanguage(), options);
+      StreamMLParser<srcMLParser> parser(selector, getLanguage(), options);
 
       // connect local parser to attribute for output
       out.setTokenStream(parser);

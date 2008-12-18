@@ -24,6 +24,7 @@ header {
    #include <iostream>
    #include "Language.h"
    #include "UTF8CharBuffer.h"
+   #include "antlr/TokenStreamSelector.hpp"
 }
 
 options {
@@ -231,8 +232,15 @@ KeywordCPPLexer(std::istream& in, const char* encoding, const std::string& src, 
         literals["final"] = FINAL;
 //        literals["static"] = STATIC;
     }
+
 }
 
+private:
+    antlr::TokenStreamSelector* selector;
+public:
+    void setSelector(antlr::TokenStreamSelector* selector_) {
+        selector=selector_;
+    }
 }
 
 protected

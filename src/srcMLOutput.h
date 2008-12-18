@@ -116,6 +116,8 @@ class srcMLOutput : public srcMLParserTokenTypes {
   void processToken(const antlr::RefToken& token);
   void processLineComment(const antlr::RefToken& token);
   void processBlockComment(const antlr::RefToken& token);
+  void processBlockCommentStart(const antlr::RefToken& token);
+  void processBlockCommentEnd(const antlr::RefToken& token);
   void processMarker(const antlr::RefToken& token);
   void processString(const antlr::RefToken& token);
   void processChar(const antlr::RefToken& token);

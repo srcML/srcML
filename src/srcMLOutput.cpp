@@ -95,6 +95,9 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 
   // assign for special processing
   //  process_table[SUNIT] = &srcMLOutput::processUnit;
+  process_table[COMMENT_START] = &srcMLOutput::processBlockCommentStart;
+  process_table[COMMENT_END] = &srcMLOutput::processBlockCommentEnd;
+
   process_table[BLOCKCOMMENT] = &srcMLOutput::processBlockComment;
   process_table[LINECOMMENT] = &srcMLOutput::processLineComment;
   process_table[SMARKER] = &srcMLOutput::processMarker;
@@ -378,6 +381,35 @@ void srcMLOutput::processBlockComment(const antlr::RefToken& token) {
   xmlTextWriterEndElement(xout);
 }
 
+void srcMLOutput::processBlockCommentStart(const antlr::RefToken& token) {
+  static const char* BLOCK_COMMENT_ATTR = "block";
+  static const char* JAVADOC_COMMENT_ATTR = "javadoc";
+
+  const char* s = token2name(token);
+
+  if (s[0] == 0)
+    return;
+
+  xmlTextWriterStartElement(xout, BAD_CAST s);
+
+  xmlTextWriterWriteAttribute(xout, BAD_CAST "type",
+     BAD_CAST (strcmp(unit_language, "Java") == 0 && token->getText().substr(0, 3) == "/**" ? JAVADOC_COMMENT_ATTR : BLOCK_COMMENT_ATTR));
+
+  processText(token);
+}
+
+void srcMLOutput::processBlockCommentEnd(const antlr::RefToken& token) {
+
+  const char* s = token2name(token);
+
+  if (s[0] == 0)
+    return;
+
+  processText(token);
+
+  xmlTextWriterEndElement(xout);
+}
+
 void srcMLOutput::processOptional(const antlr::RefToken& token, const char* attr_name, const char* attr_value) {
 
   const char* s = token2name(token);
@@ -461,6 +493,8 @@ void srcMLOutput::fillElementNames() {
   ElementNames[SUNIT] = "unit";
   ElementNames[LINECOMMENT] = "comment";
   ElementNames[BLOCKCOMMENT] = ElementNames[LINECOMMENT];
+  ElementNames[COMMENT_START] = ElementNames[BLOCKCOMMENT];
+  ElementNames[COMMENT_END] = ElementNames[COMMENT_START];
 
   // No op
   ElementNames[SNOP] = "";

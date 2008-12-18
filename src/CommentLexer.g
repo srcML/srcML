@@ -55,7 +55,18 @@ catch[...] {
 
 // Multiple-line comments
 BLOCKCOMMENT 
-    :   "/*" (options { greedy = false; } : COMMENT_CHAR_NEWLINE)* "*/"
+    :   { false }? "/*" (options { greedy = false; } : COMMENT_CHAR_NEWLINE)* "*/"
+        { 
+            // have to reset, since we may eat/get eol
+            justws = false;
+        }
+;
+exception
+catch[...] {
+}
+
+COMMENT_START
+    :   "/*" { selector->push("comment"); }
         { 
             // have to reset, since we may eat/get eol
             justws = false;

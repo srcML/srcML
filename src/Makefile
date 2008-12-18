@@ -94,13 +94,17 @@ COMMENTLEXER_GENS = \
 	CommentLexer.cpp CommentLexer.hpp \
 	CommentLexerTokenTypes.txt CommentLexerTokenTypes.hpp
 
+PURECOMMENTLEXER_GENS = \
+	PureCommentLexer.cpp PureCommentLexer.hpp \
+	PureCommentLexerTokenTypes.txt PureCommentLexerTokenTypes.hpp
+
 WSLEXER_GENS = 	\
 	WSLexer.cpp WSLexer.hpp \
 	WSLexerTokenTypes.txt WSLexerTokenTypes.hpp
 
 # ANTLR generated cpp, hpp and txt files
-$(SRCMLPARSER_GENS): srcMLParser.g KeywordCPPLexerTokenTypes.txt
-	$(ANTLR) ${SRCMLPARSER_ANTLR_FLAGS} -glib "WSLexer.g;CommentLexer.g;OperatorLexer.g;TextLexer.g;KeywordLexer.g;KeywordCPPLexer.g" $<
+$(SRCMLPARSER_GENS): srcMLParser.g KeywordCPPLexerTokenTypes.txt PureCommentLexerTokenTypes.txt
+	$(ANTLR) ${SRCMLPARSER_ANTLR_FLAGS} -glib "WSLexer.g;CommentLexer.g;OperatorLexer.g;TextLexer.g;KeywordLexer.g;KeywordCPPLexer.g;PureCommentLexer.g" $<
 
 $(KEYWORDCPPLEXER_GENS): KeywordCPPLexer.g KeywordLexerTokenTypes.txt
 	$(ANTLR) -glib "WSLexer.g;CommentLexer.g;OperatorLexer.g;TextLexer.g;KeywordLexer.g" ${SRCMLLEXER_ANTLR_FLAGS} $<
@@ -117,17 +121,20 @@ $(OPERATORLEXER_GENS): OperatorLexer.g CommentLexerTokenTypes.txt
 $(COMMENTLEXER_GENS): CommentLexer.g WSLexerTokenTypes.txt
 	$(ANTLR) -glib "WSLexer.g" ${SRCMLLEXER_ANTLR_FLAGS} $<
 
-$(WSLEXER_GENS): WSLexer.g
-	$(ANTLR) ${SRCMLLEXER_ANTLR_FLAGS} $< 
+$(PURECOMMENTLEXER_GENS): PureCommentLexer.g
+	$(ANTLR) ${SRCMLLEXER_ANTLR_FLAGS} $<
+
+$(WSLEXER_GENS): WSLexer.g PureCommentLexerTokenTypes.txt
+	$(ANTLR) -glib "PureCommentLexer.g" ${SRCMLLEXER_ANTLR_FLAGS} $< 
 
 # User created grammars
-CREATED_GRAMMARS = WSLexer.g CommentLexer.g OperatorLexer.g TextLexer.g KeywordLexer.g KeywordCPPLexer.g
+CREATED_GRAMMARS = WSLexer.g CommentLexer.g OperatorLexer.g TextLexer.g KeywordLexer.g KeywordCPPLexer.g PureCommentLexer.g
 
 # ANTLR generated grammars (name "expanded" at the front)
 GENERATED_GRAMMARS = $(patsubst %.g, expanded%.g, $(CREATED_GRAMMARS))
 
 # source code to srcML translator program
-${EXE_DIR}src2srcml : ${OBJ_DIR}srcMLParser.o ${OBJ_DIR}KeywordCPPLexer.o ${OBJ_DIR}src2srcml.o ${OBJ_DIR}srcMLTranslator.o ${OBJ_DIR}srcMLOutput.o ${OBJ_DIR}Mode.o ${OBJ_DIR}version.o ${OBJ_DIR}srcmlapps.o ${OBJ_DIR}UTF8CharBuffer.o ${XML_OBJ}
+${EXE_DIR}src2srcml : ${OBJ_DIR}srcMLParser.o ${OBJ_DIR}KeywordCPPLexer.o ${OBJ_DIR}src2srcml.o ${OBJ_DIR}srcMLTranslator.o ${OBJ_DIR}srcMLOutput.o ${OBJ_DIR}Mode.o ${OBJ_DIR}version.o ${OBJ_DIR}srcmlapps.o ${OBJ_DIR}UTF8CharBuffer.o ${OBJ_DIR}PureCommentLexer.o ${XML_OBJ}
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) ${XML_LIB} -o $@
 
 # srcML to source code translator program
@@ -158,6 +165,9 @@ ${OBJ_DIR}srcMLParser.o : $(firstword $(SRCMLPARSER_GENS)) Mode.h TokenParser.h 
 
 # hack for antlr bug when it generate unintentional multi-line comment
 ${OBJ_DIR}KeywordCPPLexer.o : $(firstword $(KEYWORDCPPLEXER_GENS)) Language.h
+	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
+
+${OBJ_DIR}PureCommentLexer.o : $(firstword $(PURECOMMENTLEXER_GENS))
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}KeywordLexer.o : $(firstword $(KEYWORDLEXER_GENS))
@@ -206,7 +216,7 @@ cleanbuild :
 # clean non-generated object files
 PHONY : cleanobject
 cleanobject :
-	rm -f ${OBJ_DIR}src2srcml.o ${OBJ_DIR}srcMLOutput.o ${OBJ_DIR}Mode.o ${OBJ_DIR}srcMLTranslator.o ${OBJ_DIR}srcMLParser.o ${OBJ_DIR}KeywordLexer.o ${OBJ_DIR}KeywordCPPLexer.o ${OBJ_DIR}srcml2src.o ${OBJ_DIR}srcMLUtility.o ${OBJ_DIR}xmloutput.o ${OBJ_DIR}version.o ${OBJ_DIR}filetrim.o ${OBJ_DIR}srcmlapps.o ${OBJ_DIR}srcmllexer.o ${OBJ_DIR}xmlwriter.o ${OBJ_DIR}xmlreader.o ${OBJ_DIR}UTF8CharBuffer.o version.cpp
+	rm -f ${OBJ_DIR}src2srcml.o ${OBJ_DIR}srcMLOutput.o ${OBJ_DIR}Mode.o ${OBJ_DIR}srcMLTranslator.o ${OBJ_DIR}srcMLParser.o ${OBJ_DIR}KeywordLexer.o ${OBJ_DIR}KeywordCPPLexer.o ${OBJ_DIR}srcml2src.o ${OBJ_DIR}srcMLUtility.o ${OBJ_DIR}xmloutput.o ${OBJ_DIR}version.o ${OBJ_DIR}filetrim.o ${OBJ_DIR}srcmlapps.o ${OBJ_DIR}srcmllexer.o ${OBJ_DIR}xmlwriter.o ${OBJ_DIR}xmlreader.o ${OBJ_DIR}UTF8CharBuffer.o ${OBJ_DIR}PureCommentLexer.o version.cpp
 
 # clean ANTLR generated files
 PHONY : cleanantlr
@@ -219,6 +229,7 @@ cleanantlr :
 	rm -f $(TEXTLEXER_GENS)
 	rm -f $(WSLEXER_GENS)
 	rm -f $(GENERATED_GRAMMARS)
+	rm -f $(PURECOMMENTLEXER_GENS)
 
 # on every build, record the version number
 version.cpp : VERSION
