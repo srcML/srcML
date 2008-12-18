@@ -49,3 +49,9 @@ int UTF8CharBuffer::getChar() {
   // return the next unused byte
   return utf8buffer->content[pos++];
 }
+
+UTF8CharBuffer::~UTF8CharBuffer() {
+
+  xmlBufferFree(buffer);
+  xmlBufferFree(utf8buffer);
+}

@@ -10,7 +10,7 @@
 class UTF8CharBuffer : public antlr::CharBuffer {
 public:
         // size of the original character buffer
-        static const int SRCBUFSIZE = 512;
+        static const int SRCBUFSIZE = 4;
 
 	/// Create a character buffer
         UTF8CharBuffer(const char* encoding, std::istream& inp)
@@ -28,11 +28,8 @@ public:
 	/// Get the next character from the stream
 	int getChar();
 
-	~UTF8CharBuffer() {
+	~UTF8CharBuffer();
 
-	  xmlBufferFree(buffer);
-	  xmlBufferFree(utf8buffer);
-	}
 private:
 	bool skipencoding;
 	const char* encoding;
