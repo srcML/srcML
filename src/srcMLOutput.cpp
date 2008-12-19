@@ -109,6 +109,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   process_table[SBOOLEAN] = &srcMLOutput::processBoolean;
   process_table[FORMFEED] = &srcMLOutput::processFormFeed;
   process_table[SINTERFACE] = &srcMLOutput::processInterface;
+  process_table[CONTROL_CHAR] = &srcMLOutput::processEscape;
 
   // open the output text writer stream
   // "-" filename is standard output
@@ -196,9 +197,23 @@ void srcMLOutput::processText(const antlr::RefToken& token) {
   processText(token->getText());
 }
 
+void srcMLOutput::processEscape(const antlr::RefToken& token) {
+
+  const char* s = token2name(token);
+
+  if (s[0] == 0)
+    return;
+
+  xmlTextWriterStartElement(xout, BAD_CAST s);
+  
+  xmlTextWriterWriteAttribute(xout, BAD_CAST "char", BAD_CAST token->getText().c_str());
+
+  xmlTextWriterEndElement(xout);
+}
+
 void srcMLOutput::processFormFeed(const antlr::RefToken& token) {
 
-  const char* s = "escape"; //token2name(token);
+  const char* s = token2name(token);
 
   if (s[0] == 0)
     return;
@@ -624,7 +639,8 @@ void srcMLOutput::fillElementNames() {
   ElementNames[SINTERFACE]     = "class";
 
   // special characters
-  ElementNames[FORMFEED]       = "formfeed";
+  ElementNames[FORMFEED]       = "escape";
+  ElementNames[CONTROL_CHAR]   = "escape";
 
   // 
   ElementNames[SEMPTY]         = "empty_stmt";
