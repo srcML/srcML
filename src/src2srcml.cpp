@@ -828,7 +828,8 @@ int process_args(int argc, char* argv[]) {
 		  << '\t' << SRCML_ERR_NS_URI << '\t' << "namespace for srcML debugging elements" << '\n' << '\n'
 	          << "or an extension namespace:" << '\n' << '\n'
 		  << '\t' << SRCML_EXT_LITERAL_NS_URI << '\t' << "optional literal elements" << '\n'
-		  << '\t' << SRCML_EXT_OPERATOR_NS_URI << '\t' << "optional operator element" << '\n' << '\n';
+		  << '\t' << SRCML_EXT_OPERATOR_NS_URI << '\t' << "optional operator element" << '\n'
+		  << '\t' << SRCML_EXT_MODIFIER_NS_URI << '\t' << "optional modifier element" << '\n' << '\n';
 	exit(STATUS_INVALID_LANGUAGE);
       }
     }
