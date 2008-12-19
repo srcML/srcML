@@ -49,9 +49,9 @@ WS :
             ' '  |
 
             // horizontal tab
-            '\t' |
+            '\t'// |
 
-            CONTROL_CHAR
+//            CONTROL_CHAR
         )+
 ;
 
@@ -89,23 +89,17 @@ EOL :   { justws = true; }
   in a string or in a comment, they are completely detected and formed
   in the lexer.
 */
-protected
-CONTROL_CHAR { std::string s = "<"; int n = 0; char ns[3] = { 0, 0, 0 }; } :
+CONTROL_CHAR { int n = 0; char ns[] = { '0', 'x', 0, 0, 0 }; } :
         { 
-            s += srcuri;
-            s += "escape char=\"0x"; 
             n = LA(1);
         }
         (
-        ('\000'..'\010')                  { ns[0] = n + '0'; } |
-        ('\013'..'\014' | '\016'..'\017') { ns[0] = (n - 10) + 'a'; } |
-        ('\020'..'\031')                  { ns[0] = '1'; ns[1] = (n - 16) + '0'; } |
-        ('\032'..'\037')                  { ns[0] = '1'; ns[1] = (n - 26) + 'a'; }
+        ('\000'..'\010')                  { ns[2] = n + '0'; } |
+        ('\013'..'\014' | '\016'..'\017') { ns[2] = (n - 0xa) + 'a'; } |
+        ('\020'..'\031')                  { ns[2] = '1'; ns[3] = (n - 0x10) + '0'; } |
+        ('\032'..'\037')                  { ns[2] = '1'; ns[3] = (n - 0x10 - 0xa) + 'a'; }
         )
         {
-            s += ns;
-            s += "\"/>";
-
-            $setText(s);
+            $setText(ns);
         }
 ;

@@ -1,7 +1,7 @@
 /*
-  CommentLexer.g
+  PureCommentLexer.g
 
-  Copyright (C) 2002, 2003, 2004, 2005  SDML (www.sdml.info)
+  Copyright (C) 2008  SDML (www.sdml.info)
 
   This file is part of the srcML translator.
 
@@ -18,10 +18,8 @@
   You should have received a copy of the GNU General Public License
   along with the srcML translator; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
 
-/*
-  Identifies comments in the character stream.
+  Handles comments as separate tokens in the character stream.
 */
 
 header {
@@ -38,10 +36,16 @@ class PureCommentLexer extends Lexer;
 
 options {
     k = 2;
+    noConstructors = true;
     defaultErrorHandler=false;
 }
 
 {
+public:
+PureCommentLexer(const antlr::LexerSharedInputState& state)
+	: antlr::CharScanner(state,true)
+{}
+
 private:
     antlr::TokenStreamSelector* selector;
 public:
