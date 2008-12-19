@@ -123,7 +123,6 @@ class srcMLOutput : public srcMLParserTokenTypes {
   void processChar(const antlr::RefToken& token);
   void processLiteral(const antlr::RefToken& token);
   void processBoolean(const antlr::RefToken& token);
-  void processFormFeed(const antlr::RefToken& token);
   void processInterface(const antlr::RefToken& token);
   void processEscape(const antlr::RefToken& token);
 

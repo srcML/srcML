@@ -110,7 +110,6 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   process_table[SCHAR] = &srcMLOutput::processChar;
   process_table[SLITERAL] = &srcMLOutput::processLiteral;
   process_table[SBOOLEAN] = &srcMLOutput::processBoolean;
-  process_table[FORMFEED] = &srcMLOutput::processFormFeed;
   process_table[SINTERFACE] = &srcMLOutput::processInterface;
   process_table[CONTROL_CHAR] = &srcMLOutput::processEscape;
 
@@ -210,20 +209,6 @@ void srcMLOutput::processEscape(const antlr::RefToken& token) {
   xmlTextWriterStartElement(xout, BAD_CAST s);
   
   xmlTextWriterWriteAttribute(xout, BAD_CAST "char", BAD_CAST token->getText().c_str());
-
-  xmlTextWriterEndElement(xout);
-}
-
-void srcMLOutput::processFormFeed(const antlr::RefToken& token) {
-
-  const char* s = token2name(token);
-
-  if (s[0] == 0)
-    return;
-
-  xmlTextWriterStartElement(xout, BAD_CAST s);
-
-  xmlTextWriterWriteAttribute(xout, BAD_CAST "char", BAD_CAST "0xC");
 
   xmlTextWriterEndElement(xout);
 }
@@ -642,7 +627,6 @@ void srcMLOutput::fillElementNames() {
   ElementNames[SINTERFACE]     = "class";
 
   // special characters
-  ElementNames[FORMFEED]       = "escape";
   ElementNames[CONTROL_CHAR]   = "escape";
 
   // 

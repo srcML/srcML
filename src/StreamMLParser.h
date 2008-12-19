@@ -93,7 +93,6 @@ class StreamMLParser : public StreamParser<Base> {
     switch (token_type) {
     case Base::WS: 
     case Base::CONTROL_CHAR:
-    case Base::FORMFEED:
     case Base::EOL_BACKSLASH:
     case Base::BLOCKCOMMENT:
     case Base::COMMENT_START:

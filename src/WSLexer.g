@@ -38,10 +38,6 @@ options {
     importVocab=PureCommentLexer;
 }
 
-tokens {
-    FORMFEED;
-}
-
 // whitespace (except for newline)
 WS :
         (
@@ -75,17 +71,8 @@ EOL :   { justws = true; }
 ;
 
 /*
-  Encode the control character in the element escape, e.g., for control
-  character \001:
-
-    <escape char="0x1"/>
-
-  where the element is prefixed with the src uri prefix (which can be
-  changed by options).
-
-  This has to be done here in the lexer because if the character occurs
-  in a string or in a comment, they are completely detected and formed
-  in the lexer.
+  Encode the control character in the text, so that is can be
+  issued in an escape character.
 */
 CONTROL_CHAR :
         '\000' { $setText("0x0"); } |
