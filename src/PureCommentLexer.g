@@ -67,7 +67,7 @@ COMMENT_TEXT
 COMMENT_END
     :   "*/"
         {
-            selector->select("main");
+            selector->pop();
         }
 ;
 
