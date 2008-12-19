@@ -98,6 +98,9 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   process_table[COMMENT_START] = &srcMLOutput::processBlockCommentStart;
   process_table[COMMENT_END] = &srcMLOutput::processBlockCommentEnd;
 
+  process_table[LINECOMMENT_START] = &srcMLOutput::processBlockCommentStart;
+  process_table[LINECOMMENT_END] = &srcMLOutput::processBlockCommentEnd;
+
   process_table[BLOCKCOMMENT] = &srcMLOutput::processBlockComment;
   process_table[LINECOMMENT] = &srcMLOutput::processLineComment;
   process_table[SMARKER] = &srcMLOutput::processMarker;

@@ -3885,7 +3885,7 @@ string_literal { LocalMode lm; } :
             // start the string
             startElement(SSTRING);
         }
-        STRING
+        (STRING | STRING_START STRING_END)
 ;
 
 char_literal { LocalMode lm; } :
@@ -3896,7 +3896,7 @@ char_literal { LocalMode lm; } :
             // start the character(s)
             startElement(SCHAR);
         }
-        CHAR
+        (CHAR | CHAR_START CHAR_END)
 ;
 
 literal { LocalMode lm; } :

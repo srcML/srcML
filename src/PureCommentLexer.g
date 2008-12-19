@@ -23,6 +23,7 @@
 */
 
 header {
+   #include <iostream>
    #include "antlr/TokenStreamSelector.hpp"
 }
 
@@ -37,14 +38,32 @@ class PureCommentLexer extends Lexer;
 options {
     k = 2;
     noConstructors = true;
-    defaultErrorHandler=false;
+    defaultErrorHandler = false;
+    testLiterals = false;
+}
+
+tokens {
+    COMMENT_TEXT;
+    COMMENT_START;
+    CONTROL_CHAR;
+    COMMENT_END;
+    LINECOMMENT_END;
+    STRING_END;
+    CHAR_END;
 }
 
 {
+int mode;
+
 public:
-PureCommentLexer(const antlr::LexerSharedInputState& state)
-	: antlr::CharScanner(state,true)
-{}
+
+bool escaped;
+bool flipescaped;
+
+PureCommentLexer(const antlr::LexerSharedInputState& state, int _mode)
+	: antlr::CharScanner(state,true), mode(_mode), escaped(false), flipescaped(false)
+{
+}
 
 private:
     antlr::TokenStreamSelector* selector;
@@ -57,39 +76,61 @@ public:
 /*
   Any text inside a comment
 */
-COMMENT_TEXT
-    :   COMMENT_CHAR_NEWLINE
+COMMENT_TEXT { std::cerr << "HERE2" << std::endl; if (!flipescaped) escaped = false; flipescaped = false; }
+    :   { mode == COMMENT_END   }? "*/"             { $setType(COMMENT_END); selector->pop(); } |
+
+        '\000' { $setType(CONTROL_CHAR); $setText("0x0"); } |
+        '\001' { $setType(CONTROL_CHAR); $setText("0x1"); } |
+        '\002' { $setType(CONTROL_CHAR); $setText("0x2"); } |
+        '\003' { $setType(CONTROL_CHAR); $setText("0x3"); } |
+        '\004' { $setType(CONTROL_CHAR); $setText("0x4"); } |
+        '\005' { $setType(CONTROL_CHAR); $setText("0x5"); } |
+        '\006' { $setType(CONTROL_CHAR); $setText("0x6"); } |
+        '\007' { $setType(CONTROL_CHAR); $setText("0x7"); } |
+        '\010' { $setType(CONTROL_CHAR); $setText("0x8"); } |
+        '\011' /* '\t' */ |
+        '\012' /* '\n' */ { if (mode == LINECOMMENT_END) { $setType(LINECOMMENT_END); selector->pop(); } } |
+        '\013' { $setType(CONTROL_CHAR); $setText("0xb"); } |
+        '\014' { $setType(CONTROL_CHAR); $setText("0xc"); } |
+        '\015' /* '\r' */ { if (mode == LINECOMMENT_END) { $setType(LINECOMMENT_END); selector->pop(); } } |
+        '\016' { $setType(CONTROL_CHAR); $setText("0xe"); } |
+        '\017' { $setType(CONTROL_CHAR); $setText("0xf"); } |
+        '\020' { $setType(CONTROL_CHAR); $setText("0x10"); } |
+        '\021' { $setType(CONTROL_CHAR); $setText("0x11"); } |
+        '\022' { $setType(CONTROL_CHAR); $setText("0x12"); } |
+        '\023' { $setType(CONTROL_CHAR); $setText("0x13"); } |
+        '\024' { $setType(CONTROL_CHAR); $setText("0x14"); } |
+        '\025' { $setType(CONTROL_CHAR); $setText("0x15"); } |
+        '\026' { $setType(CONTROL_CHAR); $setText("0x16"); } |
+        '\027' { $setType(CONTROL_CHAR); $setText("0x17"); } |
+        '\030' { $setType(CONTROL_CHAR); $setText("0x18"); } |
+        '\031' { $setType(CONTROL_CHAR); $setText("0x19"); } |
+        '\032' { $setType(CONTROL_CHAR); $setText("0x1a"); } |
+        '\033' { $setType(CONTROL_CHAR); $setText("0x1b"); } |
+        '\034' { $setType(CONTROL_CHAR); $setText("0x1c"); } |
+        '\035' { $setType(CONTROL_CHAR); $setText("0x1d"); } |
+        '\036' { $setType(CONTROL_CHAR); $setText("0x1e"); } |
+        '\037' { $setType(CONTROL_CHAR); $setText("0x1f"); } |
+        '\040' |
+        '\041' |
+        '\042' /* '\"' */ { if (!escaped && mode == STRING_END) { $setType(STRING_END); selector->pop(); } } |
+        '\043' |
+        '\044' |
+        '\045' | 
+        '&' { $setText("&amp;"); } |
+        '\047' /* '\'' */ { if (!escaped && mode == CHAR_END) { $setType(CHAR_END); selector->pop(); } } |
+        '\050'..';' | 
+        '<' { $setText("&lt;"); } | 
+        '=' | 
+        '>' { $setText("&gt;"); } |
+        '?'..'[' |
+        '\\' { escaped = true; flipescaped = true; } |
+        ']'..'\377'
 ;
 
 /*
   Finished with comment, so handle and switch back to main lexer
 */
-COMMENT_END
-    :   "*/"
-        {
-            selector->pop();
-        }
-;
-
-protected
-COMMENT_CHAR_NEWLINE
-    : '\n' | '\r' | COMMENT_CHAR
-;
-
-protected
-COMMENT_CHAR
-    // leave out newline, \012, and carriage return, \015.  Also, leave out escaped characters
-    : '\011' | '\040'..'\045' | '\047'..';' | '=' | '?'..'\377' | ESCAPED_CHAR
-;
-
-/*
-  Escaping character happens in the lexer.  This is for escaped characters that are part of
-  comments, strings, etc.  The regular use of angle brackets and '&' are handled as operators
-*/
-protected
-ESCAPED_CHAR
-    : '<' { $setText("&lt;"); } | '>' { $setText("&gt;"); } | '&' { $setText("&amp;"); }
-;
 
 /*
   Encode the control character in the element escape, e.g., for control
@@ -104,17 +145,3 @@ ESCAPED_CHAR
   in a string or in a comment, they are completely detected and formed
   in the lexer.
 */
-CONTROL_CHAR { int n = 0; char ns[] = { '0', 'x', 0, 0, 0 }; } :
-        { 
-            n = LA(1);
-        }
-        (
-        ('\000'..'\010')                  { ns[2] = n + '0'; } |
-        ('\013'..'\014' | '\016'..'\017') { ns[2] = (n - 0xa) + 'a'; } |
-        ('\020'..'\031')                  { ns[2] = '1'; ns[3] = (n - 0x10) + '0'; } |
-        ('\032'..'\037')                  { ns[2] = '1'; ns[3] = (n - 0x10 - 0xa) + 'a'; }
-        )
-        {
-            $setText(ns);
-        }
-;

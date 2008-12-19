@@ -47,13 +47,17 @@ options {
 	testLiterals = false; 
 }
 
+tokens {
+    CHAR;
+}
+
 {
 public:
 
 bool onpreprocline;
 }
 
-STRING :
+STRING_START :
         (
             // double quoted string
             // strings are allowed to span multiple lines
@@ -61,25 +65,17 @@ STRING :
             // #define a "abc
             // note that the "abc does not end at the end of this line,
             // but the #define must end, so EOL is not a valid string character
-            '"' (ESC | STRING_CHARACTER | { !onpreprocline }? EOL )* ('"')? |
-        'L' '"' (ESC | STRING_CHARACTER | { !onpreprocline }? EOL)* ('"')? |
+            '"' { selector->push("string"); } |
+        'L' '"' { selector->push("string"); } |
         'L' (DIGITS | NAMECHAR)* { $setType(NAME); }
         )
         { justws = false; }
 ;
 
-CHAR :
+CHAR_START :
         // character literal or single quoted string
-        '\'' (
-                ESC |
-                CHAR_CHARACTER
-        )* ('\'')?
+        '\'' { selector->push("char"); }
         { justws = false; }
-;
-
-protected
-ESC :
-        '\\' .
 ;
 
 CONSTANTS : { justws = false; }
@@ -88,24 +84,6 @@ CONSTANTS : { justws = false; }
 
 NAME options { testLiterals = true; } :  { justws = false; }
         NAMECHARNOEL (DIGITS | NAMECHAR)*
-;
-
-EOL_BACKSLASH :
-        '\\' EOL
-;
-
-protected
-STRING_CHARACTER
-// leave out newline, \012, carriage return, \015, double quote , \042, and backslash, \134.  Also, leave out escaped characters
-    : '\011' | '\040'..'\041' | '\043'..'\045' | '\047'..';' | '=' | '?'..'\133' | '\135'..'\377' | 
-        ESCAPED_CHAR | CONTROL_CHAR
-;
-
-protected
-CHAR_CHARACTER
-// leave out newline, \012, carriage return, \015, single quote , \047, and backslash, \134.  Also, leave out escaped characters
-    : '\011' | '\040'..'\045' | '\050'..';' | '=' | '?'..'\133' | '\135'..'\377' |
-        ESCAPED_CHAR | CONTROL_CHAR
 ;
 
 protected   

@@ -38,20 +38,13 @@ options {
 
 tokens {
     BLOCKCOMMENTEOL;
+    BLOCKCOMMENT;
+    LINECOMMENT;
 }
 
 // Single-line comments (no EOL)
-LINECOMMENT
-    :   "//" (COMMENT_CHAR)*
-        { 
-            // have to reset, since we may eat/get eol
-            justws = false;
-        }
-;
-
-// Multiple-line comments
-BLOCKCOMMENT 
-    :   { false }? "/*" (options { greedy = false; } : COMMENT_CHAR_NEWLINE)* "*/"
+LINECOMMENT_START
+    :   "//"  { selector->push("linecomment"); }
         { 
             // have to reset, since we may eat/get eol
             justws = false;
@@ -59,16 +52,11 @@ BLOCKCOMMENT
 ;
 
 COMMENT_START
-    :   "/*" { selector->push("comment"); }
+    :   "/*" { selector->push("blockcomment"); }
         { 
             // have to reset, since we may eat/get eol
             justws = false;
         }
-;
-
-protected
-COMMENT_CHAR_NEWLINE
-    : '\n' | '\r' | COMMENT_CHAR
 ;
 
 protected
