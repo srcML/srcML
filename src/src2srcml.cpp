@@ -238,7 +238,6 @@ const char* given_version = 0;
 typedef std::map<std::string, std::string> URI_TYPE;
 
 URI_TYPE option_uri;
-URI_TYPE uri;
 
 // setup options and collect info from arguments
 int process_args(int argc, char* argv[]);
@@ -344,7 +343,7 @@ int main(int argc, char* argv[]) {
   }
 
   // start with the user defined options
-  uri.insert(option_uri.begin(), option_uri.end());
+  URI_TYPE uri(option_uri.begin(), option_uri.end());
 
   // fill in any missing standard prefixes
   uri.insert(std::make_pair(SRCML_SRC_NS_URI, SRCML_SRC_NS_PREFIX_DEFAULT));
@@ -783,7 +782,7 @@ int process_args(int argc, char* argv[]) {
       ++curarg;
      
       // check for existing namespaces
-      if (uri.count(ns_uri) > 0) {
+      if (option_uri.count(ns_uri) > 0) {
 	  std::cerr << NAME << ": namespace listed more than once." << '\n';
 	  exit(STATUS_INVALID_LANGUAGE);
 	}
