@@ -36,12 +36,6 @@ options {
     k = 2;
 }
 
-tokens {
-    BLOCKCOMMENTEOL;
-    BLOCKCOMMENT;
-    LINECOMMENT;
-}
-
 // Single-line comments (no EOL)
 LINECOMMENT_START
     :   "//"  { selector->push("linecomment"); }

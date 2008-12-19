@@ -76,7 +76,7 @@ public:
 /*
   Any text inside a comment
 */
-COMMENT_TEXT { std::cerr << "HERE2" << std::endl; if (!flipescaped) escaped = false; flipescaped = false; }
+COMMENT_TEXT { if (!flipescaped) escaped = false; flipescaped = false; }
     :   { mode == COMMENT_END   }? "*/"             { $setType(COMMENT_END); selector->pop(); } |
 
         '\000' { $setType(CONTROL_CHAR); $setText("0x0"); } |

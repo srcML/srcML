@@ -46,9 +46,8 @@ srcMLOutput::PROCESS_PTR srcMLOutput::process_table[] = {
   &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText,
 
   &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText,
-  &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText,
-  &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText,
-
+  &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText,
+ 
   /* process_table[SUNIT] = */ &srcMLOutput::processUnit,
 
   &srcMLOutput::processText,

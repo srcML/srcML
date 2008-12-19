@@ -101,8 +101,6 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   process_table[LINECOMMENT_START] = &srcMLOutput::processBlockCommentStart;
   process_table[LINECOMMENT_END] = &srcMLOutput::processBlockCommentEnd;
 
-  process_table[BLOCKCOMMENT] = &srcMLOutput::processBlockComment;
-  process_table[LINECOMMENT] = &srcMLOutput::processLineComment;
   process_table[SMARKER] = &srcMLOutput::processMarker;
   process_table[SPUBLIC_ACCESS_DEFAULT] = &srcMLOutput::processAccess;
   process_table[SPRIVATE_ACCESS_DEFAULT] = &srcMLOutput::processAccess;
@@ -334,41 +332,6 @@ void srcMLOutput::processToken(const antlr::RefToken& token) {
     xmlTextWriterEndElement(xout);
 }
 
-void srcMLOutput::processLineComment(const antlr::RefToken& token) {
-
-  const char* s = token2name(token);
-
-  if (s[0] == 0)
-    return;
-
-  xmlTextWriterStartElement(xout, BAD_CAST s);
-
-  xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST "line");
-
-  processText(token);
-
-  xmlTextWriterEndElement(xout);
-}
-
-void srcMLOutput::processBlockComment(const antlr::RefToken& token) {
-  static const char* BLOCK_COMMENT_ATTR = "block";
-  static const char* JAVADOC_COMMENT_ATTR = "javadoc";
-
-  const char* s = token2name(token);
-
-  if (s[0] == 0)
-    return;
-
-  xmlTextWriterStartElement(xout, BAD_CAST s);
-
-  xmlTextWriterWriteAttribute(xout, BAD_CAST "type",
-     BAD_CAST (strcmp(unit_language, "Java") == 0 && token->getText().substr(0, 3) == "/**" ? JAVADOC_COMMENT_ATTR : BLOCK_COMMENT_ATTR));
-
-  processText(token);
-
-  xmlTextWriterEndElement(xout);
-}
-
 void srcMLOutput::processBlockCommentStart(const antlr::RefToken& token) {
   static const char* BLOCK_COMMENT_ATTR = "block";
   static const char* JAVADOC_COMMENT_ATTR = "javadoc";
@@ -479,10 +442,10 @@ const char* srcMLOutput::ElementPrefix[];
 void srcMLOutput::fillElementNames() {
 
   ElementNames[SUNIT] = "unit";
-  ElementNames[LINECOMMENT] = "comment";
-  ElementNames[BLOCKCOMMENT] = ElementNames[LINECOMMENT];
-  ElementNames[COMMENT_START] = ElementNames[BLOCKCOMMENT];
+  ElementNames[COMMENT_START] = "comment";
   ElementNames[COMMENT_END] = ElementNames[COMMENT_START];
+  ElementNames[LINECOMMENT_START] = ElementNames[COMMENT_START];
+  ElementNames[LINECOMMENT_END] = ElementNames[COMMENT_START];
 
   // No op
   ElementNames[SNOP] = "";

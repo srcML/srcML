@@ -3885,7 +3885,7 @@ string_literal { LocalMode lm; } :
             // start the string
             startElement(SSTRING);
         }
-        (STRING | STRING_START STRING_END)
+        (STRING_START STRING_END)
 ;
 
 char_literal { LocalMode lm; } :
@@ -3896,7 +3896,7 @@ char_literal { LocalMode lm; } :
             // start the character(s)
             startElement(SCHAR);
         }
-        (CHAR | CHAR_START CHAR_END)
+        (CHAR_START CHAR_END)
 ;
 
 literal { LocalMode lm; } :
@@ -4534,8 +4534,8 @@ catch[antlr::RecognitionException] {
 eol_skip[int directive_token, bool markblockzero] { 
 
     while (LA(1) != EOL && 
-           LA(1) != LINECOMMENT && 
-           LA(1) != BLOCKCOMMENT && 
+           LA(1) != LINECOMMENT_START && 
+           LA(1) != COMMENT_START && 
            LA(1) != EOF && 
            LA(1) != 1 /* EOF? */
         )

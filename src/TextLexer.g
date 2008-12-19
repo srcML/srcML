@@ -47,10 +47,6 @@ options {
 	testLiterals = false; 
 }
 
-tokens {
-    CHAR;
-}
-
 {
 public:
 
