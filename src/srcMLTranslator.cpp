@@ -89,7 +89,7 @@ void srcMLTranslator::translate(const char* src_filename, const char* unit_direc
       // switching between lexers
       selector.addInputStream(&lexer, "main");
       selector.addInputStream(&commentlexer, "comment");
-      selector.select("main");
+      selector.select(&lexer);
 
       // base stream parser srcML connected to lexical analyzer
       StreamMLParser<srcMLParser> parser(selector, getLanguage(), options);
