@@ -254,21 +254,29 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
       }
     }
 
-    // language attribute
-    if (language)
-      xmlTextWriterWriteAttribute(xout, BAD_CAST "language", BAD_CAST language);
+    // list of attributes
+    const char* attrs[][2] = {
 
-    // directory attribute
-    if (dir)
-      xmlTextWriterWriteAttribute(xout, BAD_CAST "dir", BAD_CAST dir);
+      // language attribute
+      { language, "language" },
 
-    // filename attribute
-    if (filename)
-      xmlTextWriterWriteAttribute(xout, BAD_CAST "filename", BAD_CAST filename);
+      // directory attribute
+      { dir, "dir" },
 
-    // version attribute
-    if (version)
-      xmlTextWriterWriteAttribute(xout, BAD_CAST "version", BAD_CAST version);
+      // filename attribute
+      { filename, "filename" },
+
+      // version attribute
+      { version, "version" },
+    };
+
+    // output attributes
+    for (unsigned int i = 0; i < sizeof(attrs) / sizeof(attrs[0]); ++i) {
+      if (!attrs[i][0])
+	continue;
+
+      xmlTextWriterWriteAttribute(xout, BAD_CAST attrs[i][1], BAD_CAST attrs[i][0]);
+    }
 
     // leave space for nested unit
     if (outer && isoption(OPTION_NESTED))
