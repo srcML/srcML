@@ -218,62 +218,39 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     // outer units have namespaces
     if (outer && isoption(OPTION_NAMESPACEDECL)) {
 
-      // main srcML namespace declaration
-      std::string src_prefix = "xmlns";
-      if (uri[SRCML_SRC_NS_URI][0] != '\0') {
-	src_prefix += ":";
-	src_prefix += uri[SRCML_SRC_NS_URI];
-      }
-      xmlTextWriterWriteAttribute(xout, BAD_CAST src_prefix.c_str(), BAD_CAST SRCML_SRC_NS_URI);
+      // figure out which namespaces are needed
+      const char* const ns[] = { 
 
-      // main cpp namespace declaration
-      if (isoption(OPTION_CPP)) {
-	std::string cpp_prefix = "xmlns";
-	if (uri[SRCML_CPP_NS_URI][0] != '\0') {
-	  cpp_prefix += ":";
-	  cpp_prefix += uri[SRCML_CPP_NS_URI];
-	}
-	xmlTextWriterWriteAttribute(xout, BAD_CAST cpp_prefix.c_str(), BAD_CAST SRCML_CPP_NS_URI);
-      }
+	                    // main srcML namespace declaration always used
+	                    SRCML_SRC_NS_URI, 
 
-      // optional debugging xml namespace
-      if (isoption(OPTION_DEBUG)) {
-	std::string err_prefix = "xmlns";
-	if (uri[SRCML_ERR_NS_URI][0] != '\0') {
-	  err_prefix += ":";
-	  err_prefix += uri[SRCML_ERR_NS_URI];
-	}
-	xmlTextWriterWriteAttribute(xout, BAD_CAST err_prefix.c_str(), BAD_CAST SRCML_ERR_NS_URI);
-      }
+			    // main cpp namespace declaration
+			    isoption(OPTION_CPP)      ? SRCML_CPP_NS_URI : 0,
 
-      // optional literal xml namespace
-      if (isoption(OPTION_LITERAL)) {
-	std::string lit_prefix = "xmlns";
-	if (uri[SRCML_EXT_LITERAL_NS_URI][0] != '\0') {
-	  lit_prefix += ":";
-	  lit_prefix += uri[SRCML_EXT_LITERAL_NS_URI];
-	}
-	xmlTextWriterWriteAttribute(xout, BAD_CAST lit_prefix.c_str(), BAD_CAST SRCML_EXT_LITERAL_NS_URI);
-      }
+			    // optional debugging xml namespace
+			    isoption(OPTION_DEBUG)    ? SRCML_ERR_NS_URI : 0,
 
-      // optional operator xml namespace
-      if (isoption(OPTION_OPERATOR)) {
-	std::string opr_prefix = "xmlns";
-	if (uri[SRCML_EXT_OPERATOR_NS_URI][0] != '\0') {
-	  opr_prefix += ":";
-	  opr_prefix += uri[SRCML_EXT_OPERATOR_NS_URI];
-	}
-	xmlTextWriterWriteAttribute(xout, BAD_CAST opr_prefix.c_str(), BAD_CAST SRCML_EXT_OPERATOR_NS_URI);
-      }
+			    // optional literal xml namespace
+			    isoption(OPTION_LITERAL)  ? SRCML_EXT_LITERAL_NS_URI : 0,
 
-      // optional modifier xml namespace
-      if (isoption(OPTION_MODIFIER)) {
-	std::string mod_prefix = "xmlns";
-	if (uri[SRCML_EXT_MODIFIER_NS_URI][0] != '\0') {
-	  mod_prefix += ":";
-	  mod_prefix += uri[SRCML_EXT_MODIFIER_NS_URI];
+			    // optional operator xml namespace
+			    isoption(OPTION_OPERATOR) ? SRCML_EXT_OPERATOR_NS_URI : 0,
+
+			    // optional modifier xml namespace
+			    isoption(OPTION_MODIFIER) ? SRCML_EXT_MODIFIER_NS_URI : 0,
+			  };
+
+      // output the namespaces
+      for (unsigned int i = 0; i < sizeof(ns) / sizeof(ns[0]); ++i) {
+	if (!ns[i])
+	  continue;
+
+	std::string src_prefix = "xmlns";
+	if (uri[ns[i]][0] != '\0') {
+	  src_prefix += ":";
+	  src_prefix += uri[ns[i]];
 	}
-	xmlTextWriterWriteAttribute(xout, BAD_CAST mod_prefix.c_str(), BAD_CAST SRCML_EXT_MODIFIER_NS_URI);
+	xmlTextWriterWriteAttribute(xout, BAD_CAST src_prefix.c_str(), BAD_CAST ns[i]);
       }
     }
 
