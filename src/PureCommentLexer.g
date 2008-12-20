@@ -60,8 +60,8 @@ public:
 bool escaped;
 bool flipescaped;
 
-PureCommentLexer(const antlr::LexerSharedInputState& state, int _mode)
-	: antlr::CharScanner(state,true), mode(_mode), escaped(false), flipescaped(false)
+PureCommentLexer(const antlr::LexerSharedInputState& state)
+	: antlr::CharScanner(state,true), mode(0), escaped(false), flipescaped(false)
 {
 }
 
@@ -70,6 +70,13 @@ private:
 public:
     void setSelector(antlr::TokenStreamSelector* selector_) {
         selector=selector_;
+    }
+
+    void init(int m) {
+        escaped = false;
+        flipescaped = false;
+
+        mode = m;
     }
 }
 

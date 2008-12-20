@@ -83,27 +83,12 @@ void srcMLTranslator::translate(const char* src_filename, const char* unit_direc
       lexer.setSelector(&selector);
 
       // pure block comment lexer
-      PureCommentLexer blockcommentlexer(lexer.getInputState(), PureCommentLexer::COMMENT_END);
-      blockcommentlexer.setSelector(&selector);
-
-      // pure line comment lexer
-      PureCommentLexer linecommentlexer(lexer.getInputState(), PureCommentLexer::LINECOMMENT_END);
-      linecommentlexer.setSelector(&selector);
-
-      // pure string lexer
-      PureCommentLexer stringlexer(lexer.getInputState(), PureCommentLexer::STRING_END);
-      stringlexer.setSelector(&selector);
-
-      // pure char lexer
-      PureCommentLexer charlexer(lexer.getInputState(), PureCommentLexer::CHAR_END);
-      charlexer.setSelector(&selector);
+      PureCommentLexer textlexer(lexer.getInputState());
+      textlexer.setSelector(&selector);
 
       // switching between lexers
       selector.addInputStream(&lexer, "main");
-      selector.addInputStream(&blockcommentlexer, "blockcomment");
-      selector.addInputStream(&linecommentlexer, "linecomment");
-      selector.addInputStream(&stringlexer, "string");
-      selector.addInputStream(&charlexer, "char");
+      selector.addInputStream(&textlexer, "text");
       selector.select(&lexer);
 
       // base stream parser srcML connected to lexical analyzer

@@ -61,17 +61,29 @@ STRING_START :
             // #define a "abc
             // note that the "abc does not end at the end of this line,
             // but the #define must end, so EOL is not a valid string character
-            '"' { selector->push("string"); } |
-        'L' '"' { selector->push("string"); } |
-        'L' (DIGITS | NAMECHAR)* { $setType(NAME); }
+            '"' { 
+                selector->push("text"); 
+                ((PureCommentLexer* ) (selector->getStream("text")))->init(STRING_END);
+            } |
+
+            'L' '"' { 
+                selector->push("text"); 
+                ((PureCommentLexer* ) (selector->getStream("text")))->init(STRING_END);
+            } |
+
+            'L' (DIGITS | NAMECHAR)* { $setType(NAME); }
         )
         { justws = false; }
 ;
 
+// character literal or single quoted string
 CHAR_START :
-        // character literal or single quoted string
-        '\'' { selector->push("char"); }
-        { justws = false; }
+        '\'' { 
+            selector->push("text"); 
+            ((PureCommentLexer* ) (selector->getStream("text")))->init(CHAR_END);
+
+            justws = false;
+        }
 ;
 
 CONSTANTS : { justws = false; }

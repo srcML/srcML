@@ -25,6 +25,7 @@ header {
    #include "Language.h"
    #include "UTF8CharBuffer.h"
    #include "antlr/TokenStreamSelector.hpp"
+   #include "PureCommentLexer.hpp"
 }
 
 options {

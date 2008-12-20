@@ -36,27 +36,31 @@ options {
     k = 2;
 }
 
+{
+    #include "PureCommentLexer.hpp"
+}
+
 // Single-line comments (no EOL)
 LINECOMMENT_START
-    :   "//"  { selector->push("linecomment"); }
-        { 
+    :   "//"  { 
+
+            selector->push("text"); 
+            ((PureCommentLexer* ) (selector->getStream("text")))->init(LINECOMMENT_END);
+
             // have to reset, since we may eat/get eol
             justws = false;
         }
 ;
 
 COMMENT_START
-    :   "/*" { selector->push("blockcomment"); }
-        { 
+    :   "/*" { 
+
+            selector->push("text"); 
+            ((PureCommentLexer* ) (selector->getStream("text")))->init(COMMENT_END);
+
             // have to reset, since we may eat/get eol
             justws = false;
         }
-;
-
-protected
-COMMENT_CHAR
-    // leave out newline, \012, and carriage return, \015.  Also, leave out escaped characters
-    : '\011' | '\040'..'\045' | '\047'..';' | '=' | '?'..'\377' | ESCAPED_CHAR | CONTROL_CHAR
 ;
 
 /*
