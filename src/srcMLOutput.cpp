@@ -101,7 +101,9 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   process_table[LINECOMMENT_START] = &srcMLOutput::processLineCommentStart;
   process_table[LINECOMMENT_END] = &srcMLOutput::processEndToken;
 
+#if DEBUG
   process_table[SMARKER] = &srcMLOutput::processMarker;
+#endif
   process_table[SPUBLIC_ACCESS_DEFAULT] = &srcMLOutput::processAccess;
   process_table[SPRIVATE_ACCESS_DEFAULT] = &srcMLOutput::processAccess;
   process_table[SSTRING] = &srcMLOutput::processString;
@@ -408,6 +410,7 @@ void srcMLOutput::processBoolean(const antlr::RefToken& token) {
   processOptional(token, "type", "boolean");
 }
 
+#if DEBUG
 void srcMLOutput::processMarker(const antlr::RefToken& token) {
 
   const char* s = token2name(token);
@@ -421,24 +424,11 @@ void srcMLOutput::processMarker(const antlr::RefToken& token) {
 
   xmlTextWriterEndElement(xout);
 }
+#endif
 
 void srcMLOutput::processInterface(const antlr::RefToken& token) {
-  static const char* INTERFACE_ATTR = "interface";
 
-  const char* s = token2name(token);
-
-  if (s[0] == 0)
-    return;
-
-  if (isstart(token) || isempty(token)) {
-    xmlTextWriterStartElement(xout, BAD_CAST s);
-
-    xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST INTERFACE_ATTR);
-  }
-
-  if (!isstart(token) || isempty(token))
-    xmlTextWriterEndElement(xout);
-
+  processOptional(token, "type", "interface");
 }
 
 inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
