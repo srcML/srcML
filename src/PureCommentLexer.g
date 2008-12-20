@@ -43,13 +43,14 @@ options {
 }
 
 tokens {
-    COMMENT_TEXT;
-    COMMENT_START;
-    CONTROL_CHAR;
+
+    // never explicitly given (only set to)
+    // so must be declared
     COMMENT_END;
     LINECOMMENT_END;
     STRING_END;
     CHAR_END;
+    CONTROL_CHAR;
 }
 
 {
