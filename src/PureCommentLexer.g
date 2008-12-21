@@ -36,7 +36,7 @@ options {
 class PureCommentLexer extends Lexer;
 
 options {
-    k = 1;
+    k = 2;
     noConstructors = true;
     defaultErrorHandler = false;
     testLiterals = false;
@@ -62,6 +62,8 @@ bool onpreprocline;
 
 int escapecount;
 int asteriskcount;
+
+int n;
 
 PureCommentLexer(const antlr::LexerSharedInputState& state)
 	: antlr::CharScanner(state,true), mode(0), onpreprocline(false), escapecount(0), asteriskcount(0)
@@ -99,6 +101,7 @@ COMMENT_TEXT {
 
         }
     :
+(
         '\000' { $setType(CONTROL_CHAR); $setText("0x0"); } |
         '\001' { $setType(CONTROL_CHAR); $setText("0x1"); } |
         '\002' { $setType(CONTROL_CHAR); $setText("0x2"); } |
@@ -109,16 +112,14 @@ COMMENT_TEXT {
         '\007' { $setType(CONTROL_CHAR); $setText("0x7"); } |
         '\010' { $setType(CONTROL_CHAR); $setText("0x8"); } |
         '\011' /* '\t' */ |
-        '\012' /* '\n' */ { if (mode == LINECOMMENT_END) { $setType(LINECOMMENT_END); selector->pop(); }
-                            else if (mode == STRING_END && !onpreprocline) { $setType(STRING_END); selector->pop(); }
-
+        '\012' /* '\n' */ { 
+                            if (mode == LINECOMMENT_END) { $setType(LINECOMMENT_END); selector->pop(); }
+                            else if (mode == STRING_END && onpreprocline) { $setType(STRING_END); selector->pop(); }
         } |
 
         '\013' { $setType(CONTROL_CHAR); $setText("0xb"); } |
         '\014' { $setType(CONTROL_CHAR); $setText("0xc"); } |
-        '\015' /* '\r' */ { if (mode == LINECOMMENT_END) { $setType(LINECOMMENT_END); selector->pop(); } 
-                            else if (mode == STRING_END && !onpreprocline) { $setType(STRING_END); selector->pop(); }
-        } |
+        '\015' /* '\r' - misc character since converted to '\n' in input buffer */ |
         '\016' { $setType(CONTROL_CHAR); $setText("0xe"); } |
         '\017' { $setType(CONTROL_CHAR); $setText("0xf"); } |
         '\020' { $setType(CONTROL_CHAR); $setText("0x10"); } |
@@ -160,4 +161,6 @@ COMMENT_TEXT {
         '?'..'[' |
         '\\' { if (escapecount == 0) { escapecount = 2; } } |
         ']'..'\377'
+)
+{ if (LA(2) == '\n' && mode == STRING_END && onpreprocline) selector->pop(); }
 ;
