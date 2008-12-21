@@ -62,12 +62,3 @@ COMMENT_START
             justws = false;
         }
 ;
-
-/*
-  Escaping character happens in the lexer.  This is for escaped characters that are part of
-  comments, strings, etc.  The regular use of angle brackets and '&' are handled as operators
-*/
-protected
-ESCAPED_CHAR
-    : '<' { $setText("&lt;"); } | '>' { $setText("&gt;"); } | '&' { $setText("&amp;"); }
-;
