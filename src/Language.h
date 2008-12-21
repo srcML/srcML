@@ -64,22 +64,14 @@ class Language {
   }
 
   // gets the current language
-  static int getLanguage(const char* const s) {
+  int getLanguage(const char* const s) {
 
-    int lang = 0;
-
-    if (strcmp(s, LanguageName::LANGUAGE_C) == 0)
-      lang = LANGUAGE_C;
-    else if (strcmp(s, LanguageName::LANGUAGE_CXX) == 0)
-      lang = LANGUAGE_CXX;
-    else if (strcmp(s, LanguageName::LANGUAGE_JAVA) == 0)
-      lang = LANGUAGE_JAVA;
-    else if (strcmp(s, LanguageName::LANGUAGE_CXX_0X) == 0)
-      lang = LANGUAGE_CXX_0X;
-    else if (strcmp(s, LanguageName::LANGUAGE_ASPECTJ) == 0)
-      lang = LANGUAGE_ASPECTJ;
-
-    return lang;
+    std::map<std::string, int>::const_iterator pos = lang2int.find(s);
+  
+    if (pos != lang2int.end())
+      return pos->second;
+    else
+      return 0;
   }
 
   // gets the current language
