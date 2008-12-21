@@ -343,13 +343,14 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
     // output the standard namespaces, if they exist
     const char* stdns[] = { SRCML_SRC_NS_URI, SRCML_CPP_NS_URI, SRCML_ERR_NS_URI };
     for (int i = 0; i < (int) (sizeof(stdns) / sizeof(stdns[0])); ++i) {
-
-      if (nnsv.count(stdns[i])) {
+      
+      std::map<std::string, std::string>::iterator pos = nnsv.find(stdns[i]);
+      if (pos != nnsv.end()) {
 
 	xmlNewNs(xmlDocGetRootElement(doc), BAD_CAST stdns[i],
-		 nnsv[stdns[i]] == "" ? NULL : BAD_CAST nnsv[stdns[i]].c_str());
+		 pos->second == "" ? NULL : BAD_CAST pos->second.c_str());
 
-	nnsv.erase(stdns[i]);
+	nnsv.erase(pos);
       }
     }
 
@@ -380,10 +381,12 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
 			    UNIT_ATTRIBUTE_FILENAME, UNIT_ATTRIBUTE_VERSION };
   for (int i = 0; i < (int) (sizeof(stdattr) / sizeof(stdattr[0])); ++i) {
 
-    if (nattrv.count(stdattr[i])) {
-      xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST stdattr[i],
-		 BAD_CAST nattrv[stdattr[i]].c_str());
-      nattrv.erase(stdattr[i]);
+    std::map<std::string, std::string>::iterator pos = nattrv.find(stdattr[i]);
+    if (pos != nattrv.end()) {
+
+	xmlSetProp(xmlDocGetRootElement(doc), BAD_CAST stdattr[i], BAD_CAST pos->second.c_str());
+
+	nattrv.erase(pos);
     }
   }
 
