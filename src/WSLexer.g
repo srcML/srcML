@@ -51,17 +51,7 @@ WS :
 
 // end of line
 EOL :   { justws = true; }
-        (
-        // UNIX
-        '\n' | 
-
-        // Mac and DOS
-        '\r' (options { greedy = true; } : '\n')?
-        // Mac and DOS line endings converted to single newline
-        // when output on a platform will be the correct one for the
-        // platform used
-        { $setText('\n'); }
-        )
+        '\n'
         { 
             // onpreprocline is turned on when on a preprocessor line
             // to prevent mostly string ending problems.

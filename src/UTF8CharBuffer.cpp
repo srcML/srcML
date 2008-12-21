@@ -28,6 +28,19 @@ int UTF8CharBuffer::getChar() {
 	break;
       }
 
+      // sequence "\r\n" where the '\r'
+      // has already been converted to a '\n'
+      if (c == '\n' && lastcr) {
+	lastcr = false;
+	continue;
+      }
+
+      // convert carriage returns to a line feed
+      if (c == '\r') {
+	lastcr = true;
+	c = '\n';
+      }
+
       buffer->content[buffer->use++] = (char) c;
     }
 

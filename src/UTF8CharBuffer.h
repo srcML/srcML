@@ -14,7 +14,7 @@ public:
 
 	/// Create a character buffer
         UTF8CharBuffer(const char* encoding, std::istream& inp)
-	  : antlr::CharBuffer(inp), skipencoding(false), encoding(encoding), pos(0), eof(false)
+	  : antlr::CharBuffer(inp), skipencoding(false), encoding(encoding), pos(0), eof(false), lastcr(false)
 	{
 	  handler = xmlFindCharEncodingHandler(encoding);
 
@@ -38,5 +38,6 @@ private:
 	xmlBufferPtr utf8buffer;
 	unsigned int pos;
 	bool eof;
+	bool lastcr;
 };
 #endif
