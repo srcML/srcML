@@ -105,7 +105,6 @@ class StreamMLParser : public StreamParser<Base> {
 
     case Base::LINECOMMENT:
     case Base::EOL:
-    case Base::BLOCKCOMMENTEOL:
 
       return !StreamParser<Base>::inskip;
       break;

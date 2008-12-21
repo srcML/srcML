@@ -1916,7 +1916,7 @@ statement_part { int type_count; } :
         (
             // finds type count for next case.  Should always fail, but fill type_count with the correct value
             (function_type_check[type_count] EOL)=>
-            (~ (EOL | LINECOMMENT | BLOCKCOMMENT | BLOCKCOMMENTEOL | EOL_BACKSLASH | COMMA)) |
+            (~ (EOL | LINECOMMENT | BLOCKCOMMENT | EOL_BACKSLASH | COMMA)) |
 
             (
                 (NAME LCURLY)=> NAME |
@@ -4552,12 +4552,12 @@ eol_skip[int directive_token, bool markblockzero] {
 */
 eol[int directive_token, bool markblockzero] { /* setFinalToken(); */ } :
         eol_pre
-        (EOL | LINECOMMENT | BLOCKCOMMENTEOL | eof | EOF_TYPE)
+        (EOL | LINECOMMENT | eof | EOF_TYPE)
         eol_post[directive_token, markblockzero]
 ;
 
 eol_pure {} :
-        (EOL | LINECOMMENT | BLOCKCOMMENTEOL)
+        (EOL | LINECOMMENT)
 ;
 
 eol_pre {
