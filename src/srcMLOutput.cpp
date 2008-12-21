@@ -96,10 +96,10 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   // assign for special processing
   //  process_table[SUNIT] = &srcMLOutput::processUnit;
   process_table[COMMENT_START] = &srcMLOutput::processBlockCommentStart;
-  process_table[COMMENT_END] = &srcMLOutput::processEndToken;
+  process_table[COMMENT_END] = &srcMLOutput::processEndBlockToken;
 
   process_table[LINECOMMENT_START] = &srcMLOutput::processLineCommentStart;
-  process_table[LINECOMMENT_END] = &srcMLOutput::processEndToken;
+  process_table[LINECOMMENT_END] = &srcMLOutput::processEndLineToken;
 
 #if DEBUG
   process_table[SMARKER] = &srcMLOutput::processMarker;
@@ -366,7 +366,21 @@ void srcMLOutput::processLineCommentStart(const antlr::RefToken& token) {
   processText(token);
 }
 
-void srcMLOutput::processEndToken(const antlr::RefToken& token) {
+void srcMLOutput::processEndLineToken(const antlr::RefToken& token) {
+
+  const char* s = token2name(token);
+
+  if (s[0] == 0)
+    return;
+
+  xmlTextWriterEndElement(xout);
+
+  processText(token);
+}
+
+void srcMLOutput::processEndBlockToken(const antlr::RefToken& token) {
+
+  processText(token);
 
   const char* s = token2name(token);
 

@@ -63,12 +63,12 @@ STRING_START :
             // but the #define must end, so EOL is not a valid string character
             '"' { 
                 selector->push("text"); 
-                ((PureCommentLexer* ) (selector->getStream("text")))->init(STRING_END);
+                ((PureCommentLexer* ) (selector->getStream("text")))->init(STRING_END, onpreprocline);
             } |
 
             'L' '"' { 
                 selector->push("text"); 
-                ((PureCommentLexer* ) (selector->getStream("text")))->init(STRING_END);
+                ((PureCommentLexer* ) (selector->getStream("text")))->init(STRING_END, onpreprocline);
             } |
 
             'L' (DIGITS | NAMECHAR)* { $setType(NAME); }
@@ -80,7 +80,7 @@ STRING_START :
 CHAR_START :
         '\'' { 
             selector->push("text"); 
-            ((PureCommentLexer* ) (selector->getStream("text")))->init(CHAR_END);
+            ((PureCommentLexer* ) (selector->getStream("text")))->init(CHAR_END, onpreprocline);
 
             justws = false;
         }

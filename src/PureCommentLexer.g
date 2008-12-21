@@ -36,7 +36,7 @@ options {
 class PureCommentLexer extends Lexer;
 
 options {
-    k = 2;
+    k = 1;
     noConstructors = true;
     defaultErrorHandler = false;
     testLiterals = false;
@@ -54,15 +54,21 @@ tokens {
 }
 
 {
-int mode;
-
 public:
+
+int mode;
 
 bool escaped;
 bool flipescaped;
 
+bool asterisk;
+bool flipasterisk;
+
+bool onpreprocline;
+
 PureCommentLexer(const antlr::LexerSharedInputState& state)
-	: antlr::CharScanner(state,true), mode(0), escaped(false), flipescaped(false)
+	: antlr::CharScanner(state,true), mode(0), escaped(false), flipescaped(false),
+      asterisk(false), flipasterisk(false), onpreprocline(false)
 {
 }
 
@@ -73,9 +79,14 @@ public:
         selector=selector_;
     }
 
-    void init(int m) {
+    void init(int m, bool onpreproclinestate) {
         escaped = false;
         flipescaped = false;
+
+        asterisk = false;
+        flipasterisk = false;
+
+        onpreprocline = onpreproclinestate;
 
         mode = m;
     }
@@ -84,8 +95,13 @@ public:
 /*
   Any text inside a comment
 */
-COMMENT_TEXT { if (!flipescaped) escaped = false; flipescaped = false; }
-    :   { mode == COMMENT_END   }? "*/"             { $setType(COMMENT_END); selector->pop(); } |
+COMMENT_TEXT { 
+
+    if (!flipescaped) escaped = false; flipescaped = false; 
+    if (!flipasterisk) asterisk = false; flipasterisk = false; 
+
+        }
+    ://   { mode == COMMENT_END   }? "*/"             { std::cerr << "HERE" << std::endl; $setType(COMMENT_END); selector->pop(); } |
 
         '\000' { $setType(CONTROL_CHAR); $setText("0x0"); } |
         '\001' { $setType(CONTROL_CHAR); $setText("0x1"); } |
@@ -97,10 +113,16 @@ COMMENT_TEXT { if (!flipescaped) escaped = false; flipescaped = false; }
         '\007' { $setType(CONTROL_CHAR); $setText("0x7"); } |
         '\010' { $setType(CONTROL_CHAR); $setText("0x8"); } |
         '\011' /* '\t' */ |
-        '\012' /* '\n' */ { if (mode == LINECOMMENT_END) { $setType(LINECOMMENT_END); selector->pop(); } } |
+        '\012' /* '\n' */ { if (mode == LINECOMMENT_END) { $setType(LINECOMMENT_END); selector->pop(); }
+                            if (mode == STRING_END && onpreprocline) { $setType(STRING_END); selector->pop(); }
+
+        } |
+
         '\013' { $setType(CONTROL_CHAR); $setText("0xb"); } |
         '\014' { $setType(CONTROL_CHAR); $setText("0xc"); } |
-        '\015' /* '\r' */ { if (mode == LINECOMMENT_END) { $setType(LINECOMMENT_END); selector->pop(); } } |
+        '\015' /* '\r' */ { if (mode == LINECOMMENT_END) { $setType(LINECOMMENT_END); selector->pop(); } 
+                            if (mode == STRING_END && onpreprocline) { $setType(STRING_END); selector->pop(); }
+        } |
         '\016' { $setType(CONTROL_CHAR); $setText("0xe"); } |
         '\017' { $setType(CONTROL_CHAR); $setText("0xf"); } |
         '\020' { $setType(CONTROL_CHAR); $setText("0x10"); } |
@@ -121,18 +143,26 @@ COMMENT_TEXT { if (!flipescaped) escaped = false; flipescaped = false; }
         '\037' { $setType(CONTROL_CHAR); $setText("0x1f"); } |
         '\040' |
         '\041' |
-        '\042' /* '\"' */ { if (!escaped && mode == STRING_END) { $setType(STRING_END); selector->pop(); } } |
+        '\042' /* '\"' */ { if (!escaped && mode == STRING_END) { $setType(STRING_END); selector->pop();; } } |
         '\043' |
         '\044' |
         '\045' | 
         '&' { $setText("&amp;"); } |
         '\047' /* '\'' */ { if (!escaped && mode == CHAR_END) { $setType(CHAR_END); selector->pop(); } } |
-        '\050'..';' | 
+        '\050' |
+        '\051' |
+        '\052' /* '*' */ { asterisk = true; flipasterisk = true; } |
+        '\053' |
+        '\054' |
+        '\055' |
+        '\056' |
+        '\057' /* '/' */ { if (asterisk && mode == COMMENT_END) {  $setType(COMMENT_END); selector->pop(); } } |
+        '\060'..';' | 
         '<' { $setText("&lt;"); } | 
         '=' | 
         '>' { $setText("&gt;"); } |
         '?'..'[' |
-        '\\' { escaped = true; flipescaped = true; } |
+        '\\' { if (!escaped) { escaped = true; flipescaped = true; } } |
         ']'..'\377'
 ;
 
