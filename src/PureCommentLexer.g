@@ -58,17 +58,13 @@ public:
 
 int mode;
 
-bool escaped;
-bool flipescaped;
-
-bool asterisk;
-bool flipasterisk;
-
 bool onpreprocline;
 
+int escapecount;
+int asteriskcount;
+
 PureCommentLexer(const antlr::LexerSharedInputState& state)
-	: antlr::CharScanner(state,true), mode(0), escaped(false), flipescaped(false),
-      asterisk(false), flipasterisk(false), onpreprocline(false)
+	: antlr::CharScanner(state,true), mode(0), onpreprocline(false), escapecount(0), asteriskcount(0)
 {
 }
 
@@ -80,11 +76,9 @@ public:
     }
 
     void init(int m, bool onpreproclinestate) {
-        escaped = false;
-        flipescaped = false;
 
-        asterisk = false;
-        flipasterisk = false;
+        escapecount = 0;
+        asteriskcount = 0;
 
         onpreprocline = onpreproclinestate;
 
@@ -97,8 +91,11 @@ public:
 */
 COMMENT_TEXT { 
 
-    if (!flipescaped) escaped = false; flipescaped = false; 
-    if (!flipasterisk) asterisk = false; flipasterisk = false; 
+    if (escapecount > 0)
+        --escapecount;
+
+    if (asteriskcount > 0)
+        --asteriskcount;
 
         }
     :
@@ -142,43 +139,25 @@ COMMENT_TEXT {
         '\037' { $setType(CONTROL_CHAR); $setText("0x1f"); } |
         '\040' |
         '\041' |
-        '\042' /* '\"' */ { if (!escaped && mode == STRING_END) { $setType(STRING_END); selector->pop();; } } |
+        '\042' /* '\"' */ { if (escapecount == 0 && mode == STRING_END) { $setType(STRING_END); selector->pop();; } } |
         '\043' |
         '\044' |
         '\045' | 
         '&' { $setText("&amp;"); } |
-        '\047' /* '\'' */ { if (!escaped && mode == CHAR_END) { $setType(CHAR_END); selector->pop(); } } |
+        '\047' /* '\'' */ { if (escapecount == 0 && mode == CHAR_END) { $setType(CHAR_END); selector->pop(); } } |
         '\050' |
         '\051' |
-        '\052' /* '*' */ { asterisk = true; flipasterisk = true; } |
+        '\052' /* '*' */ { asteriskcount = 2; } |
         '\053' |
         '\054' |
         '\055' |
         '\056' |
-        '\057' /* '/' */ { if (asterisk && mode == COMMENT_END) {  $setType(COMMENT_END); selector->pop(); } } |
+        '\057' /* '/' */ { if (asteriskcount == 1 && mode == COMMENT_END) {  $setType(COMMENT_END); selector->pop(); } } |
         '\060'..';' | 
         '<' { $setText("&lt;"); } | 
         '=' | 
         '>' { $setText("&gt;"); } |
         '?'..'[' |
-        '\\' { if (!escaped) { escaped = true; flipescaped = true; } } |
+        '\\' { if (escapecount == 0) { escapecount = 2; } } |
         ']'..'\377'
 ;
-
-/*
-  Finished with comment, so handle and switch back to main lexer
-*/
-
-/*
-  Encode the control character in the element escape, e.g., for control
-  character \001:
-
-    <escape char="0x1"/>
-
-  where the element is prefixed with the src uri prefix (which can be
-  changed by options).
-
-  This has to be done here in the lexer because if the character occurs
-  in a string or in a comment, they are completely detected and formed
-  in the lexer.
-*/
