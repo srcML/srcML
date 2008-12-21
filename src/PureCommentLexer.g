@@ -101,8 +101,7 @@ COMMENT_TEXT {
     if (!flipasterisk) asterisk = false; flipasterisk = false; 
 
         }
-    ://   { mode == COMMENT_END   }? "*/"             { std::cerr << "HERE" << std::endl; $setType(COMMENT_END); selector->pop(); } |
-
+    :
         '\000' { $setType(CONTROL_CHAR); $setText("0x0"); } |
         '\001' { $setType(CONTROL_CHAR); $setText("0x1"); } |
         '\002' { $setType(CONTROL_CHAR); $setText("0x2"); } |
