@@ -49,10 +49,6 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
   : Language(language), encoding(src_encoding), options(op),
     out(0, srcml_filename, getLanguageString(), xml_encoding, options, uri) {
 
-  // record the uri for the src namespace since we need it in the
-  // lexer for formfeed elements in strings
-  srcuri = uri[SRCML_SRC_NS_URI];
-
   // root unit for compound srcML documents
   if ((options & OPTION_NESTED) > 0)
     out.startUnit(getLanguageString(), directory, filename, version, true);
@@ -79,7 +75,7 @@ void srcMLTranslator::translate(const char* src_filename, const char* unit_direc
       antlr::TokenStreamSelector selector;
 
       // srcML lexical analyzer from standard input
-      KeywordCPPLexer lexer(*pin, encoding, srcuri, getLanguage());
+      KeywordCPPLexer lexer(*pin, encoding, getLanguage());
       lexer.setSelector(&selector);
 
       // pure block comment lexer
