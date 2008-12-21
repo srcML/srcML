@@ -76,31 +76,12 @@ class Language {
 
   // gets the current language
   const char* getLanguageString() const {
-    char const* lstring = "";
 
-    switch (language) {
-    case LANGUAGE_C:
-      lstring = LanguageName::LANGUAGE_C;
-      break;
+    for (std::map<std::string, int>::const_iterator pos = lang2int.begin(); pos != lang2int.end(); ++pos)
+      if (pos->second == language)
+	return pos->first.c_str();
 
-    case LANGUAGE_CXX:
-      lstring = LanguageName::LANGUAGE_CXX;
-      break;
-
-    case LANGUAGE_JAVA:
-      lstring = LanguageName::LANGUAGE_JAVA;
-      break;
-
-    case LANGUAGE_CXX_0X:
-      lstring = LanguageName::LANGUAGE_CXX_0X;
-      break;
-
-    case LANGUAGE_ASPECTJ | LANGUAGE_JAVA:
-      lstring = LanguageName::LANGUAGE_ASPECTJ;
-      break;
-    };
-
-    return lstring;
+    return "";
   }
 
   ~Language() {}
