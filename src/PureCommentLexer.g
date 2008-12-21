@@ -110,14 +110,14 @@ COMMENT_TEXT {
         '\010' { $setType(CONTROL_CHAR); $setText("0x8"); } |
         '\011' /* '\t' */ |
         '\012' /* '\n' */ { if (mode == LINECOMMENT_END) { $setType(LINECOMMENT_END); selector->pop(); }
-                            if (mode == STRING_END && onpreprocline) { $setType(STRING_END); selector->pop(); }
+                            else if (mode == STRING_END && onpreprocline) { $setType(STRING_END); selector->pop(); }
 
         } |
 
         '\013' { $setType(CONTROL_CHAR); $setText("0xb"); } |
         '\014' { $setType(CONTROL_CHAR); $setText("0xc"); } |
         '\015' /* '\r' */ { if (mode == LINECOMMENT_END) { $setType(LINECOMMENT_END); selector->pop(); } 
-                            if (mode == STRING_END && onpreprocline) { $setType(STRING_END); selector->pop(); }
+                            else if (mode == STRING_END && onpreprocline) { $setType(STRING_END); selector->pop(); }
         } |
         '\016' { $setType(CONTROL_CHAR); $setText("0xe"); } |
         '\017' { $setType(CONTROL_CHAR); $setText("0xf"); } |
