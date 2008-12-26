@@ -1923,7 +1923,7 @@ statement_part { int type_count; } :
             (
                 (NAME LCURLY)=> NAME |
             // parameter declaration for a K&R old style function parameter declaration
-            { startNewMode(MODE_TOP); }
+            { startNewMode(MODE_TOP); std::cerr << "TYPE_COUNT " << type_count << std::endl; }
             variable_declaration_statement[type_count] variable_declaration_nameinit
                 (COMMA variable_declaration_nameinit)* terminate
             { endCurrentMode(MODE_TOP); } 
@@ -2396,7 +2396,7 @@ declaration_check_end[int& token] { token = LA(1); } :
 
 function_check[int& fla, int& type_count] { fla = 0; type_count = 0; } :
         function_header_check[type_count] function_tail
-        /* { LA(1) == NAME }? (krparameter_list)* */
+
         check_end[fla]
 ;
 
@@ -3997,19 +3997,6 @@ derive_access { LocalMode lm; } :
             startElement(SCLASS_SPECIFIER);
         }
         (VIRTUAL)* access_specifier
-;
-
-krparameter_list { LocalMode lm; } :
-        {
-            // list of parameters
-            startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
-
-            // start the parameter list element
-            startElement(SPARAMETER_LIST);
-        }
-        // parameter list must include all possible parts since it is part of
-        // function detection
-        (parameter (comma variable_identifier)* terminate)*
 ;
 
 parameter_list { LocalMode lm; } :
