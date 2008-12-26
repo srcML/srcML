@@ -1933,13 +1933,13 @@ statement_part { int type_count; } :
             call_macro_expression[-1, false] |
 
         // already in an expression
-        { inMode(MODE_EXPRESSION) && LA(1) == IF }?
+        { inMode(MODE_EXPRESSION) }?
              terminate_pre
              terminate_post
              if_statement |
 
         // already in an expression
-        { inMode(MODE_EXPRESSION) && LA(1) == FOR }?
+        { inMode(MODE_EXPRESSION) }?
              terminate_pre
              terminate_post
              for_statement |
