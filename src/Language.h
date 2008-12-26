@@ -46,11 +46,16 @@ class Language {
   Language(int lang)
     : language(lang != LANGUAGE_ASPECTJ ? lang : lang | LANGUAGE_JAVA) {
 
+  }
+
+  static bool filledLang() {
     lang2int.insert(std::make_pair(LanguageName::LANGUAGE_C, LANGUAGE_C));
     lang2int.insert(std::make_pair(LanguageName::LANGUAGE_CXX, LANGUAGE_CXX));
     lang2int.insert(std::make_pair(LanguageName::LANGUAGE_JAVA, LANGUAGE_JAVA));
     lang2int.insert(std::make_pair(LanguageName::LANGUAGE_CXX_0X, LANGUAGE_CXX_0X));
     lang2int.insert(std::make_pair(LanguageName::LANGUAGE_ASPECTJ, LANGUAGE_ASPECTJ));
+
+    return true;
   }
 
   // gets the current language
@@ -64,7 +69,7 @@ class Language {
   }
 
   // gets the current language
-  int getLanguage(const char* const s) {
+  static int getLanguage(const char* const s) {
 
     std::map<std::string, int>::const_iterator pos = lang2int.find(s);
   
@@ -90,6 +95,7 @@ class Language {
 
   const int language;
 
+  static bool filled;
   static std::map<std::string, int> lang2int;
 };
 

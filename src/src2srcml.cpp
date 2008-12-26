@@ -730,8 +730,7 @@ int process_args(int argc, char* argv[]) {
       }
 
       // validate language selected
-      Language l(0);
-      language = l.getLanguage(langparam);
+      language = Language::getLanguage(langparam);
       if (language == 0) {
 	std::cerr << NAME << ": invalid option -- Language flag must one of the following values:  "
 		  << LANGUAGE_C << " " << LANGUAGE_CXX << " " << LANGUAGE_JAVA << " "
