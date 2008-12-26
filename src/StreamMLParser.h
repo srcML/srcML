@@ -94,7 +94,7 @@ class StreamMLParser : public StreamParser<Base> {
     case Base::WS: 
     case Base::CONTROL_CHAR:
     case Base::EOL_BACKSLASH:
-    case Base::BLOCKCOMMENT:
+      //    case Base::BLOCKCOMMENT:
     case Base::COMMENT_START:
     case Base::COMMENT_END:
     case Base::LINECOMMENT_START:
@@ -106,7 +106,7 @@ class StreamMLParser : public StreamParser<Base> {
       return true;
       break;
 
-    case Base::LINECOMMENT:
+      //    case Base::LINECOMMENT:
     case Base::EOL:
 
       return !StreamParser<Base>::inskip;
