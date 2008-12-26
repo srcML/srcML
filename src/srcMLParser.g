@@ -472,6 +472,8 @@ void endAllModes();
 */
 start {} :
 
+        COMMENT_TEXT |
+
         // end of file
         eof |
 

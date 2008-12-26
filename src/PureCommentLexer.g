@@ -36,7 +36,7 @@ options {
 class PureCommentLexer extends Lexer;
 
 options {
-    k = 2;
+    k = 1;
     noConstructors = true;
     defaultErrorHandler = false;
     testLiterals = false;
@@ -113,8 +113,10 @@ COMMENT_TEXT {
         '\010' { $setType(CONTROL_CHAR); $setText("0x8"); } |
         '\011' /* '\t' */ |
         '\012' /* '\n' */ { 
-                            if (mode == LINECOMMENT_END) { $setType(LINECOMMENT_END); selector->pop(); }
-                            else if (mode == STRING_END && onpreprocline) { $setType(STRING_END); selector->pop(); }
+              // end at EOL when for line comment, or the end of a string or char on a preprocessor line
+              if (mode == LINECOMMENT_END || ((mode == STRING_END || mode == CHAR_END) && onpreprocline)) {
+                  $setType(mode); selector->pop(); 
+              }
         } |
 
         '\013' { $setType(CONTROL_CHAR); $setText("0xb"); } |
@@ -140,12 +142,12 @@ COMMENT_TEXT {
         '\037' { $setType(CONTROL_CHAR); $setText("0x1f"); } |
         '\040' |
         '\041' |
-        '\042' /* '\"' */ { if (escapecount == 0 && mode == STRING_END) { $setType(STRING_END); selector->pop();; } } |
+        '\042' /* '\"' */ {/* std::cerr << "HEREREALLYFIRST" << std::endl;*/ if (escapecount == 0 && mode == STRING_END) { /* std::cerr << "HEREFIRST" << std::endl; */ $setType(mode); selector->pop();; } } |
         '\043' |
         '\044' |
         '\045' | 
         '&' { $setText("&amp;"); } |
-        '\047' /* '\'' */ { if (escapecount == 0 && mode == CHAR_END) { $setType(CHAR_END); selector->pop(); } } |
+        '\047' /* '\'' */ { if (escapecount == 0 && mode == CHAR_END) { $setType(mode); selector->pop(); } } |
         '\050' |
         '\051' |
         '\052' /* '*' */ { asteriskcount = 2; } |
@@ -153,7 +155,7 @@ COMMENT_TEXT {
         '\054' |
         '\055' |
         '\056' |
-        '\057' /* '/' */ { if (asteriskcount == 1 && mode == COMMENT_END) {  $setType(COMMENT_END); selector->pop(); } } |
+        '\057' /* '/' */ { if (asteriskcount == 1 && mode == COMMENT_END) {  $setType(mode); selector->pop(); } } |
         '\060'..';' | 
         '<' { $setText("&lt;"); } | 
         '=' | 
@@ -162,5 +164,4 @@ COMMENT_TEXT {
         '\\' { if (escapecount == 0) { escapecount = 2; } } |
         ']'..'\377'
 )
-{ if (LA(2) == '\n' && mode == STRING_END && onpreprocline) selector->pop(); }
 ;

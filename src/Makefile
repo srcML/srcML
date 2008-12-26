@@ -168,7 +168,10 @@ ${OBJ_DIR}KeywordCPPLexer.o : $(firstword $(KEYWORDCPPLEXER_GENS)) Language.h
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}PureCommentLexer.o : $(firstword $(PURECOMMENTLEXER_GENS))
-	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
+	$(CXX) $(ANTLR_INC) $(CXXFLAGS) -fno-jump-tables $(LIBXML_INCLUDE) -c $< -o $@
+
+${OBJ_DIR}PureCommentLexer.S : $(firstword $(PURECOMMENTLEXER_GENS))
+	$(CXX) $(ANTLR_INC) $(CXXFLAGS) -S $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}KeywordLexer.o : $(firstword $(KEYWORDLEXER_GENS))
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) -c $< -o $@

@@ -96,10 +96,13 @@ class StreamMLParser : public StreamParser<Base> {
     case Base::EOL_BACKSLASH:
     case Base::BLOCKCOMMENT:
     case Base::COMMENT_START:
-    case Base::COMMENT_TEXT:
     case Base::COMMENT_END:
     case Base::LINECOMMENT_START:
     case Base::LINECOMMENT_END:
+      return true;
+      break;
+
+    case Base::COMMENT_TEXT:
       return true;
       break;
 
