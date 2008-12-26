@@ -24,7 +24,7 @@
 #define LANGUAGE_H
 
 #include <map>
-#include <cstring>
+#include <string>
 #include "srcmlapps.h"
 
 class Language {
@@ -90,7 +90,7 @@ class Language {
 
   const int language;
 
-  std::map<std::string, int> lang2int;
+  static std::map<std::string, int> lang2int;
 };
 
 #endif

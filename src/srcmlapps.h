@@ -25,6 +25,8 @@
 #ifndef INCLUDED_SRCMLAPPS_H
 #define INCLUDED_SRCMLAPPS_H
 
+#include <cstring>
+
 #include "version.h"
 
 const char* const VERSION = version();
