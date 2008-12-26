@@ -60,6 +60,10 @@ EOL :   { justws = true; }
         }
 ;
 
+EOL_BACKSLASH :
+        '\\' EOL
+    ;
+
 /*
   Encode the control character in the text, so that is can be
   issued in an escape character.
