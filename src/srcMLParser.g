@@ -2366,11 +2366,16 @@ As a side effect, we record the token right for faster checking of label (name f
 */
 declaration_check[int& token] { token = 0; } : 
 
-        // no return value functions:  casting operator method and main
-        (OPERATOR (NAME)* | MAIN) paren_pair record[isoperatorfunction, 1] LCURLY |
+        // no return value function:  main
+        { inLanguage(LANGUAGE_C_FAMILY) }?
+        MAIN paren_pair record[isoperatorfunction, 1] |
+
+        // no return value function:  casting operator method
+        { inLanguage(LANGUAGE_CXX_FAMILY) }?
+        OPERATOR (NAME)* paren_pair record[isoperatorfunction, 1] |
 
         { inLanguage(LANGUAGE_CXX_FAMILY) }?
-        (operator_function_name)=> operator_function_name record[isoperatorfunction, 1] paren_pair LCURLY |
+        (operator_function_name)=> operator_function_name record[isoperatorfunction, 1] paren_pair |
 
         (options { greedy = true; } : (VIRTUAL | INLINE))* lead_type_identifier declaration_check_end[token]
 ;
