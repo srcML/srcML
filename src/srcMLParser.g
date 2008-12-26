@@ -1932,17 +1932,12 @@ statement_part { int type_count; } :
         { inMode(MODE_EXPRESSION | MODE_EXPECT) }?
             call_macro_expression[-1, false] |
 
-        // already in an expression
+        // already in an expression, and run into a keyword
+        // so stop the expression, and markup the keyword statement
         { inMode(MODE_EXPRESSION) }?
              terminate_pre
              terminate_post
-             if_statement |
-
-        // already in an expression
-        { inMode(MODE_EXPRESSION) }?
-             terminate_pre
-             terminate_post
-             for_statement |
+             cfg |
 
         // already in an expression
         { inMode(MODE_EXPRESSION) }?
