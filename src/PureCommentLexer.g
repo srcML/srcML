@@ -36,7 +36,7 @@ options {
 class PureCommentLexer extends Lexer;
 
 options {
-    k = 1;
+    k = 2;
     noConstructors = true;
     defaultErrorHandler = false;
     testLiterals = false;
@@ -65,8 +65,10 @@ int asteriskcount;
 
 int n;
 
+bool lasttoken;
+
 PureCommentLexer(const antlr::LexerSharedInputState& state)
-	: antlr::CharScanner(state,true), mode(0), onpreprocline(false), escapecount(0), asteriskcount(0)
+	: antlr::CharScanner(state,true), mode(0), onpreprocline(false), escapecount(0), asteriskcount(0), lasttoken(false)
 {
 }
 
@@ -84,6 +86,8 @@ public:
 
         onpreprocline = onpreproclinestate;
 
+        lasttoken = false;
+
         mode = m;
     }
 }
@@ -92,6 +96,12 @@ public:
   Any text inside a comment
 */
 COMMENT_TEXT { 
+
+    lasttoken = LA(2) == '\n' && (mode == STRING_END || mode == CHAR_END) && onpreprocline;
+    if (lasttoken) {
+       $setType(mode);
+       selector->pop(); 
+    }
 
     if (escapecount > 0)
         --escapecount;
@@ -142,12 +152,12 @@ COMMENT_TEXT {
         '\037' { $setType(CONTROL_CHAR); $setText("0x1f"); } |
         '\040' |
         '\041' |
-        '\042' /* '\"' */ {/* std::cerr << "HEREREALLYFIRST" << std::endl;*/ if (escapecount == 0 && mode == STRING_END) { /* std::cerr << "HEREFIRST" << std::endl; */ $setType(mode); selector->pop();; } } |
+        '\042' /* '\"' */ { if (escapecount == 0 && mode == STRING_END && !lasttoken) { $setType(mode); selector->pop();; } } |
         '\043' |
         '\044' |
         '\045' | 
         '&' { $setText("&amp;"); } |
-        '\047' /* '\'' */ { if (escapecount == 0 && mode == CHAR_END) { $setType(mode); selector->pop(); } } |
+        '\047' /* '\'' */ { if (escapecount == 0 && mode == CHAR_END && !lasttoken) { $setType(mode); selector->pop(); } } |
         '\050' |
         '\051' |
         '\052' /* '*' */ { asteriskcount = 2; } |
@@ -155,7 +165,7 @@ COMMENT_TEXT {
         '\054' |
         '\055' |
         '\056' |
-        '\057' /* '/' */ { if (asteriskcount == 1 && mode == COMMENT_END) {  $setType(mode); selector->pop(); } } |
+        '\057' /* '/' */ { if (asteriskcount == 1 && mode == COMMENT_END) { $setType(mode); selector->pop(); } } |
         '\060'..';' | 
         '<' { $setText("&lt;"); } | 
         '=' | 
