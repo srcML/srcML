@@ -79,10 +79,6 @@ class srcMLOutput : public srcMLParserTokenTypes {
   int options;
   const char* xml_encoding;
 
-  static char* prefix_src;
-  static char* prefix_cpp;
-  static char* prefix_err;
-
   std::map<std::string, std::string>& uri;
 
   int consume_next();
