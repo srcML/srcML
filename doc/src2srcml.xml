@@ -110,6 +110,8 @@
 	  single compound srcML document.  The list has a single
 	  filename on each line starting at the beginning of the line.
 	  Blank lines and lines that begin with the character '#' are ignored.
+	  As with input and output files, using the character - in
+	  place of a file name takes the input list from standard input.
 	</para>
       </listitem>
     </varlistentry>
@@ -197,6 +199,9 @@
 	<para>
 	  Default is to use buffered output for speed.  For
 	  interactive applications output is issued as soon as parsed.
+	</para>
+	<para>
+	  For input from terminal, interactive is default.
 	</para>
       </listitem>
     </varlistentry>
