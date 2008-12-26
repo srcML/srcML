@@ -1923,7 +1923,7 @@ statement_part { int type_count; } :
             (
                 (NAME LCURLY)=> NAME |
             // parameter declaration for a K&R old style function parameter declaration
-            { startNewMode(MODE_TOP); std::cerr << "TYPE_COUNT " << type_count << std::endl; }
+            { startNewMode(MODE_TOP); }
             variable_declaration_statement[type_count] variable_declaration_nameinit
                 (COMMA variable_declaration_nameinit)* terminate
             { endCurrentMode(MODE_TOP); } 
