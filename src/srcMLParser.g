@@ -4002,7 +4002,7 @@ parameter_list { LocalMode lm; } :
         }
         // parameter list must include all possible parts since it is part of
         // function detection
-        LPAREN (full_parameter)* (comma full_parameter)* rparen
+        LPAREN (comma | full_parameter)* rparen
 ;
 
 full_parameter[bool single = false] {} :
