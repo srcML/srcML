@@ -2525,6 +2525,10 @@ complete_throw_list {} :
         THROW paren_pair | THROWS ( options { greedy = true; } : complex_name_java[true] | COMMA)*
 ;
 
+structures {} :
+CLASS | STRUCT | UNION
+;
+
 /*
    type identifier
 
@@ -2534,7 +2538,7 @@ pure_lead_type_identifier {} :
         auto_keyword |
 
         // class/struct/union before a name in a type, e.g., class A f();
-        ((CLASS | STRUCT | UNION) NAME)=> (CLASS | STRUCT | UNION) |
+        (structures NAME)=> structures |
 
         // specifiers that occur in a type
         standard_specifiers |
@@ -2546,15 +2550,7 @@ pure_lead_type_identifier {} :
 
         // anonymous struct definition in a type (guessing)
         { inputState->guessing }?
-        (STRUCT LCURLY)=> STRUCT balanced_parentheses |
-
-        // anonymous struct definition in a type (guessing)
-        { inputState->guessing }?
-        (CLASS LCURLY)=> CLASS balanced_parentheses |
-
-        // anonymous union definition in a type (guessing)
-        { inputState->guessing }?
-        (UNION LCURLY)=> UNION balanced_parentheses |
+        structures balanced_parentheses |
 
         /*
            Anonymous class/struct/union in non-guessing mode only
@@ -2564,15 +2560,15 @@ pure_lead_type_identifier {} :
 
         // anonymous struct definition in a type
         { !inputState->guessing }?
-        (STRUCT LCURLY)=> struct_definition |
+        struct_definition |
 
         // anonymous class definition in a type
         { !inputState->guessing }?
-        (CLASS LCURLY)=> class_definition |
+        class_definition |
 
         // anonymous union definition in a type
         { !inputState->guessing }?
-        (UNION LCURLY)=> union_definition |
+        union_definition |
 
         // enum use in a type
         (ENUM variable_identifier (variable_identifier | MULTOPS | INLINE))=> ENUM |
