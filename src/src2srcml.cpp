@@ -383,7 +383,6 @@ int main(int argc, char* argv[]) {
     fstat(0, &instat);
     if (S_ISCHR(instat.st_mode))
       options |= OPTION_INTERACTIVE;
-    std::cerr << S_ISCHR(instat.st_mode) << std::endl;
   }
 
   try {
