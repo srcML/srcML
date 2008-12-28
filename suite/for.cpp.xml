@@ -3,7 +3,7 @@
 
 <unit>
 <for>for (<init><decl><type><name>int</name></type> <name>i</name> =<init> <expr>0</expr></init></decl>;</init> <condition><expr><name>i</name> &lt; 5</expr>;</condition> <incr><expr>++<name>i</name></expr></incr>)
-;</for>
+<empty_stmt>;</empty_stmt></for>
 </unit>
 
 <unit>
@@ -13,7 +13,7 @@
 
 <unit>
 <for>for (<init><expr><name>i</name> = 0</expr>;</init> <condition><expr><name>i</name> &lt; 5</expr>;</condition> <incr><expr>++<name>i</name></expr></incr>)
-;</for>
+<empty_stmt>;</empty_stmt></for>
 </unit>
 
 <unit>
@@ -23,7 +23,7 @@
 
 <unit>
 <for>for (<init>;</init><condition>;</condition><incr/>)
-;</for>
+<empty_stmt>;</empty_stmt></for>
 </unit>
 
 <unit>
@@ -38,12 +38,12 @@
 
 <unit>
 <for>for (<init><expr><name>depth</name> = 0</expr>, <expr><name>p</name> = <name>r</name></expr>;</init> <condition><expr><name>depth</name> &lt; <name>MAX_IORES_LEVEL</name></expr>;</condition> <incr><expr><name>depth</name>++</expr>, <expr><name>p</name> = <name>p</name>-&gt;<name>parent</name></expr></incr>)
-     ;</for>
+     <empty_stmt>;</empty_stmt></for>
 </unit>
 
 <unit>
 <for>for (<init>;</init><condition><expr>1</expr>, <expr>2</expr>;</condition><incr/>)
-;</for>
+<empty_stmt>;</empty_stmt></for>
 </unit>
 
 </unit>

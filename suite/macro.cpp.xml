@@ -2,73 +2,73 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="macro">
 
 <unit>
-<macro><name>D</name><argument_list>( <argument>if (a) b;</argument>)</argument_list></macro>;
+<macro><name>D</name><argument_list>( <argument>if (a) b;</argument>)</argument_list></macro>
 </unit>
 
 <!--
 <unit>
-<macro><name>D</name><argument_list>(<argument> <if>if <condition>(<expr><name>a</name></expr>)</condition> <then><expr_stmt><expr><name>b</name></expr>;</expr_stmt></then></if></argument>)</argument_list></macro>;
+<macro><name>D</name><argument_list>(<argument> <if>if <condition>(<expr><name>a</name></expr>)</condition> <then><expr_stmt><expr><name>b</name></expr>;</expr_stmt></then></if></argument>)</argument_list></macro>
 </unit>
 -->
 
 <unit>
-<macro><name>D</name><argument_list>(<argument>int i = 0;</argument>)</argument_list></macro>;
+<macro><name>D</name><argument_list>(<argument>int i = 0;</argument>)</argument_list></macro>
 </unit>
 
 <!--
 <unit>
-<macro><name>D</name><argument_list>(<argument><decl_stmt><type>int</type> <name>i</name>=<init><expr>0</expr></init>;</decl_stmt></argument>)</argument_list></macro>;
+<macro><name>D</name><argument_list>(<argument><decl_stmt><type>int</type> <name>i</name>=<init><expr>0</expr></init>;</decl_stmt></argument>)</argument_list></macro>
 </unit>
 -->
 
 <unit>
-<macro><name>D</name><argument_list>(<argument>{ int i = 0;}</argument>)</argument_list></macro>;
+<macro><name>D</name><argument_list>(<argument>{ int i = 0;}</argument>)</argument_list></macro>
 </unit>
 
 <!--
 <unit>
-<macro><name>D</name><argument_list>(<argument><block>{ <decl_stmt><type>int</type> <name>i</name>=<init><expr>0</expr></init>;</decl_stmt> }</block></argument>)</argument_list></macro>;
+<macro><name>D</name><argument_list>(<argument><block>{ <decl_stmt><type>int</type> <name>i</name>=<init><expr>0</expr></init>;</decl_stmt> }</block></argument>)</argument_list></macro>
 </unit>
 -->
 
 <unit>
-<macro><name>D</name><argument_list>(<argument>if (a) b</argument>)</argument_list></macro>;
+<macro><name>D</name><argument_list>(<argument>if (a) b</argument>)</argument_list></macro>
 </unit>
 
 <unit>
-<macro><name>D</name><argument_list>(<argument>(if (a) b)</argument>)</argument_list></macro>;
+<macro><name>D</name><argument_list>(<argument>(if (a) b)</argument>)</argument_list></macro>
 </unit>
 
 <unit>
-<macro><name>D</name><argument_list>(<argument>a</argument>, <argument>if (a) b</argument>)</argument_list></macro>;
+<macro><name>D</name><argument_list>(<argument>a</argument>, <argument>if (a) b</argument>)</argument_list></macro>
 </unit>
 
 <unit>
-<macro><name>D</name><argument_list>(<argument>a</argument>, <argument>(if (a) b)</argument>)</argument_list></macro>;
+<macro><name>D</name><argument_list>(<argument>a</argument>, <argument>(if (a) b)</argument>)</argument_list></macro>
 </unit>
 
 <unit>
-<macro><name>D</name><argument_list>(<argument>int i = 0</argument>)</argument_list></macro>;
+<macro><name>D</name><argument_list>(<argument>int i = 0</argument>)</argument_list></macro>
 </unit>
 
 <unit>
-<macro><name>D</name><argument_list>(<argument>(int i = 0)</argument>)</argument_list></macro>;
+<macro><name>D</name><argument_list>(<argument>(int i = 0)</argument>)</argument_list></macro>
 </unit>
 
 <unit>
-<macro><name>D</name><argument_list>(<argument>a</argument>, <argument>int i = 0</argument>)</argument_list></macro>;
+<macro><name>D</name><argument_list>(<argument>a</argument>, <argument>int i = 0</argument>)</argument_list></macro>
 </unit>
 
 <unit>
-<macro><name>D</name><argument_list>(<argument>int i = 0</argument>, <argument>a</argument>)</argument_list></macro>;
+<macro><name>D</name><argument_list>(<argument>int i = 0</argument>, <argument>a</argument>)</argument_list></macro>
 </unit>
 
 <unit>
-<macro><name>D</name><argument_list>(<argument>a</argument>, <argument>(int i = 0)</argument>)</argument_list></macro>;
+<macro><name>D</name><argument_list>(<argument>a</argument>, <argument>(int i = 0)</argument>)</argument_list></macro>
 </unit>
 
 <unit>
-<macro><name>D</name><argument_list>(<argument>(int i = 0)</argument>, <argument>a</argument>)</argument_list></macro>;
+<macro><name>D</name><argument_list>(<argument>(int i = 0)</argument>, <argument>a</argument>)</argument_list></macro>
 </unit>
 
 <unit>

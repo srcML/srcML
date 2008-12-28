@@ -14,7 +14,7 @@
 </unit>
 
 <unit>
-<do>do <while>while <condition>(<expr><name>b</name></expr>)</condition>;</while> while <condition>(<expr><name>a</name></expr>)</condition>;</do>
+<do>do <while>while <condition>(<expr><name>b</name></expr>)</condition><empty_stmt>;</empty_stmt></while> while <condition>(<expr><name>a</name></expr>)</condition>;</do>
 </unit>
 
 </unit>

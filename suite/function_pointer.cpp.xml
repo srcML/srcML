@@ -41,4 +41,12 @@
 <function_decl><type><name>const</name> <name>double</name>*</type> (*<name>f</name>)<parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list>;</function_decl>
 </unit>
 
+<unit>
+<function_decl><type><name>f</name></type>(*<name>a</name>)<parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr>*<name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
 </unit>

@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" dir="extra">
 
-<!--
-<unit>
-<constructor><name>A::A</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>int</name>[]</type></decl></param>)</parameter_list> <block>{}</block></constructor> 
-</unit>
--->
-
 <unit>
 <function_decl><type><name>int</name></type> (*<name>a</name>)<parameter_list>(<param><decl><type><name>int</name></type> <name>b</name></decl></param>, <param><decl><type><name>int</name>[]</type></decl></param>)</parameter_list>;</function_decl>
 </unit>
@@ -56,7 +50,7 @@
 
 <unit filename="if_vlan.h">
 <if>if <condition>(<expr><call><name>a</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call> &lt; <name>t</name></expr>)</condition><then>
-     ;</then></if>
+     <empty_stmt>;</empty_stmt></then></if>
 </unit>
 
 <unit filename="cs461x_image.h">

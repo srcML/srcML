@@ -54,7 +54,7 @@
 
 <unit filename="if_vlan.h">
 <if>if <condition>(<expr><call><name>a</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call> &lt; <name>t</name></expr>)</condition><then>
-     ;</then></if>
+     <empty_stmt>;</empty_stmt></then></if>
 </unit>
 
 <unit filename="cs461x_image.h">

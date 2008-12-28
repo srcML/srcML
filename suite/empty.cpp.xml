@@ -2,11 +2,11 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="empty">
 
 <unit>
-<expr_stmt><expr><name>a</name></expr>;</expr_stmt>;
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt><empty_stmt>;</empty_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>b</name></expr>;</expr_stmt>;
+<expr_stmt><expr><name>b</name></expr>;</expr_stmt><empty_stmt>;</empty_stmt>
 </unit>
 
 </unit>
