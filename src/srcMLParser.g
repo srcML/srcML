@@ -2552,7 +2552,7 @@ pure_lead_type_identifier {} :
         (structures NAME)=> structures |
 
         // specifiers that occur in a type
-        standard_specifiers |
+        (standard_specifiers)=> standard_specifiers |
 
         /*
            Anonymous class/struct/union in guessing mode processes

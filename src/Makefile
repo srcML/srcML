@@ -163,6 +163,9 @@ Mode.h : srcMLStateStack.h State.h StateStack.h srcMLState.h
 ${OBJ_DIR}srcMLParser.o : $(firstword $(SRCMLPARSER_GENS)) Mode.h TokenParser.h State.h Options.h
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(SRCMLPARSER_CXX_FLAGS) -c $< -o $@
 
+${OBJ_DIR}srcMLParser.S : $(firstword $(SRCMLPARSER_GENS))
+	$(CXX) $(ANTLR_INC) $(CXXFLAGS) -S $(LIBXML_INCLUDE) $< -o $@
+
 # hack for antlr bug when it generate unintentional multi-line comment
 ${OBJ_DIR}KeywordCPPLexer.o : $(firstword $(KEYWORDCPPLEXER_GENS)) Language.h
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
