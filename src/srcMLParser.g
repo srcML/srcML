@@ -1920,8 +1920,7 @@ statement_part { int type_count; } :
 
             // parameter declaration for a K&R old style function parameter declaration
             { startNewMode(MODE_TOP); }
-            variable_declaration_statement[type_count] variable_declaration_nameinit
-                (COMMA variable_declaration_nameinit)* terminate
+            variable_declaration_statement[type_count] (COMMA | variable_declaration_nameinit)* terminate
             { endCurrentMode(MODE_TOP); } |
 
         /*
