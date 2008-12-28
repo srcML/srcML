@@ -4504,13 +4504,11 @@ catch[antlr::RecognitionException] {
 
 eol_skip[int directive_token, bool markblockzero] { 
 
-    int token = LA(1);
-
-    while (token != EOL && 
-           token != LINECOMMENT_START && 
-           token != COMMENT_START && 
-           token != EOF && 
-           token != 1 /* EOF? */
+    while (LA(1) != EOL && 
+           LA(1) != LINECOMMENT_START && 
+           LA(1) != COMMENT_START && 
+           LA(1) != EOF && 
+           LA(1) != 1 /* EOF? */
         )
                 consume();
     } :
