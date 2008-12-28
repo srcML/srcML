@@ -173,7 +173,9 @@ protected:
 
   srcMLState& currentState();
 
-  int size() const;
+  int size() const {
+   return pstate->size();
+  }
 
   int getParen() const;
 

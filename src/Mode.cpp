@@ -83,12 +83,12 @@ srcMLState& Mode::currentState() {
 
   return pstate->currentState();
 }
-
+/*
 int Mode::size() const {
 
   return pstate->size();
 }
-
+*/
 int Mode::getParen() const {
 
   return pstate->getParen();

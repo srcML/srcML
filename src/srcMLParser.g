@@ -1902,9 +1902,6 @@ statement_part { int type_count; } :
         { inMode(MODE_EAT_VAR_TYPE) }?
             consume_var_type_identifier |
 
-        { inMode(MODE_NAMESPACE) }?
-        (  namespace_alias | namespace_block) |
-
         // throw list at end of function header
         { (inLanguage(LANGUAGE_OO)) && inMode(MODE_FUNCTION_TAIL) }?
              throw_list |
@@ -2009,6 +2006,9 @@ statement_part { int type_count; } :
         // while part of do statement
         { inMode(MODE_DO_STATEMENT) }?
              do_while |
+
+        { inMode(MODE_NAMESPACE) }?
+        (  namespace_alias | namespace_block) |
 
         // string literal of extern
         { inMode(MODE_EXTERN) }?
