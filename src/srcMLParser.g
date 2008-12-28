@@ -1902,6 +1902,10 @@ statement_part { int type_count; } :
         { inMode(MODE_EAT_VAR_TYPE) }?
             consume_var_type_identifier |
 
+        /*
+          MODE_FUNCTION_TAIL
+        */
+
         // throw list at end of function header
         { (inLanguage(LANGUAGE_OO)) && inMode(MODE_FUNCTION_TAIL) }?
              throw_list |
@@ -1919,6 +1923,10 @@ statement_part { int type_count; } :
             variable_declaration_statement[type_count] variable_declaration_nameinit
                 (COMMA variable_declaration_nameinit)* terminate
             { endCurrentMode(MODE_TOP); } |
+
+        /*
+          MODE_EXPRESSION
+        */
 
         // expression block or expressions
         // must check before expression
@@ -1943,6 +1951,10 @@ statement_part { int type_count; } :
         // call list in member initialization list
         { inMode(MODE_CALL | MODE_LIST) }?
              call |
+
+        /*
+          MODE_VARIABLE_NAME
+        */
 
         // special case for type modifiers
         { (LT(1)->getText() == "*" || LT(1)->getText() == "&amp;") && inMode(MODE_VARIABLE_NAME | MODE_INIT) }?
