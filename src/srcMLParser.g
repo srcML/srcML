@@ -920,8 +920,8 @@ for_condition {} :
             startElement(SFOR_CONDITION);
         }
         (
-            // explicitly check for terminate to eliminate large switch statement
-            { LA(1) != TERMINATE }? expression |
+            // non-empty condition
+            expression |
 
             // empty condition
             terminate
