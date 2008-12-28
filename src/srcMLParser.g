@@ -3470,12 +3470,12 @@ macro_call_contents {} :
             int parencount = 0;
             bool start = true;
             bool empty = true;
-            while (LA(1) != 1 /* EOF? */ && !(parencount == 0 && LT(1)->getType() == RPAREN)) {
+            while (LA(1) != 1 /* EOF? */ && !(parencount == 0 && LA(1) == RPAREN)) {
 
-                if (LT(1)->getType() == LPAREN)
+                if (LA(1) == LPAREN)
                     ++parencount;
 
-                if (LT(1)->getType() == RPAREN)
+                if (LA(1) == RPAREN)
                     --parencount;
 
                 if (start) {
@@ -3489,7 +3489,7 @@ macro_call_contents {} :
                        empty = false;
                 }
 
-                if (LT(1)->getType() == COMMA && parencount == 0) {
+                if (LA(1) == COMMA && parencount == 0) {
                     endCurrentMode();
                     start = true;
                 }
