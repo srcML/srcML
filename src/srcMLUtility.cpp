@@ -437,9 +437,9 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
       if (strcmp((const char*) node->name, "escape") == 0) {
       
 	// convert from the escaped to the unescaped value
-	char values[2] = { strtod((char*) xmlTextReaderGetAttribute(reader, BAD_CAST "char"), NULL), '\0' };
+	char value = strtod((char*) xmlTextReaderGetAttribute(reader, BAD_CAST "char"), NULL);
 
-	xmlOutputBufferWrite(buf, 1, values);
+	xmlOutputBufferWrite(buf, 1, &value);
 
       } else if (strcmp((const char*) node->name, "formfeed") == 0) {
       
