@@ -426,35 +426,26 @@ void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
     if (xmlTextReaderDepth(reader) <= 0 + moved)
       break;
 
-    const char* s;
-    const char* name;
-    switch(xmlTextReaderNodeType(reader)) {
-    case XML_READER_TYPE_TEXT :
-    case XML_READER_TYPE_WHITESPACE :
-    case XML_READER_TYPE_SIGNIFICANT_WHITESPACE :
+    xmlNode* node = xmlTextReaderCurrentNode(reader);
+    if (node->type == XML_TEXT_NODE) {
 
-      s = (const char*) xmlTextReaderConstValue(reader);
+      const char* s = (const char*) node->content;
       xmlOutputBufferWrite(buf, strlen(s), s);
-      break;
 
-    case XML_READER_TYPE_ELEMENT :
-      name = (const char*) xmlTextReaderConstLocalName(reader);
-      if (strcmp(name, "escape") == 0) {
+    } else if (node->type == XML_ELEMENT_NODE && xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT) {
+
+      if (strcmp((const char*) node->name, "escape") == 0) {
       
 	// convert from the escaped to the unescaped value
 	char values[2] = { strtod((char*) xmlTextReaderGetAttribute(reader, BAD_CAST "char"), NULL), '\0' };
 
 	xmlOutputBufferWrite(buf, 1, values);
 
-      } else if (strcmp(name, "formfeed") == 0) {
+      } else if (strcmp((const char*) node->name, "formfeed") == 0) {
       
 	xmlOutputBufferWrite(buf, 1, "\f");
       }
-      break;
-    default:
-      break;
     }
-
   }
 
   /*                                                                                                            
