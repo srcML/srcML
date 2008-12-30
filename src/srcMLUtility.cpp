@@ -67,8 +67,7 @@ void skiptounit(xmlTextReaderPtr reader, const char* filename) throw (LibXMLErro
 void skiptounit(xmlTextReaderPtr reader, int number) throw (LibXMLError);
 
 #include "SAX2ExtractUnitsSrc.h"
-
-using namespace SAX2ExtractUnitsSrc;
+#include "SAX2ExtractRootSrc.h"
 
 xmlCharEncodingHandlerPtr ghandler;
 
