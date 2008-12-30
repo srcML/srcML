@@ -72,6 +72,9 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op
   if (infile == 0)
     infile = "-";
 
+  // setup an output handler
+  handler = xmlFindCharEncodingHandler(output_encoding);
+
   // create the reader
   reader = xmlNewTextReaderFilename(infile);
   if (reader == NULL)
@@ -93,9 +96,6 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op
   // don't use the TextReaderMoveToNextAttribute as it messes up the future expand
   for (xmlNsPtr pAttr = xmlTextReaderCurrentNode(reader)->nsDef; pAttr; pAttr = pAttr->next)
     nsv[(const char*) pAttr->href] = pAttr->prefix ? (const char*) pAttr->prefix : "";
-
-  // setup an output handler
-  handler = xmlFindCharEncodingHandler(output_encoding);
 }
 
 // destructor
