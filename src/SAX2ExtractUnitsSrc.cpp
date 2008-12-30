@@ -113,6 +113,8 @@ namespace SAX2ExtractUnitsSrc {
 
     State* pstate = (State*) ctx;
 
+    ++(pstate->count);
+
     // start up the output unit
     startUnit(pstate, nb_attributes, attributes);
 
@@ -143,8 +145,6 @@ namespace SAX2ExtractUnitsSrc {
 
   // start a new output buffer and corresponding file for a unit element
   void startUnit(State* pstate, int nb_attributes, const xmlChar** attributes) {
-
-    ++(pstate->count);
 
     std::string filename;
     bool foundfilename = false;

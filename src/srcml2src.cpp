@@ -642,7 +642,7 @@ int main(int argc, char* argv[]) {
 
     } else {
 
-      su.extract_text(ofilename);
+      su.extract_text(ofilename, unit);
 
     }
 

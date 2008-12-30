@@ -217,7 +217,7 @@ void srcMLUtility::extract_xml(const char* ofilename, int unit) {
 void srcMLUtility::extract_text(const char* ofilename, int unit) {
 
   // not able to handle single unit in compound document with SAX handlers (yet)
-  if (moved) {
+  if (unit) {
     outputSrc(ofilename, reader);
     return;
   }
@@ -225,6 +225,7 @@ void srcMLUtility::extract_text(const char* ofilename, int unit) {
   SAX2ExtractUnitsSrc::State state;
   state.ofilename = ofilename;
   state.poptions = &options;
+  state.unit = unit;
 
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
 
