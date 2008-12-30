@@ -216,9 +216,13 @@ void srcMLUtility::extract_xml(const char* ofilename) {
 // extract a given unit
 void srcMLUtility::extract_text(const char* ofilename) {
 
-  if (!moved) {
+  // not able to handle single unit in compound document with SAX handlers (yet)
+  if (moved) {
+    outputSrc(ofilename, reader);
+    return;
+  }
 
-  ParsingState state;
+  SAX2ExtractUnitsSrc::State state;
   state.ofilename = ofilename;
   state.poptions = &options;
 
@@ -235,23 +239,16 @@ void srcMLUtility::extract_text(const char* ofilename) {
   ctxt->sax = NULL;
 
   xmlFreeParserCtxt(ctxt);
-
-  } else
-
-    // output entire unit element as text
-    outputSrc(ofilename, reader);
 }
 
 // expand the compound srcML to individual files
 void srcMLUtility::expand(const char* root_filename) {
 
-  ParsingState state;
+  SAX2ExtractUnitsSrc::State state;
   state.root_filename = root_filename;
   state.poptions = &options;
 
-  xmlSAXHandler sax = { 0 };
-  sax.initialized = XML_SAX2_MAGIC;
-  sax.startElementNs = &startElementNsRoot;
+  xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
 
   xmlParserCtxtPtr ctxt = xmlCreateFileParserCtxt(infile);
   if (ctxt == NULL) return;

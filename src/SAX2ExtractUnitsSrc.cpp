@@ -79,7 +79,7 @@ namespace SAX2ExtractUnitsSrc {
     xmlSAXHandler sax = { 0 };
 
     sax.initialized    = XML_SAX2_MAGIC;
-    sax.startElementNs = &SAX2ExtractUnitsSrc::startElementNsSingleUnit;
+    sax.startElementNs = &startElementNsRoot;
 
     return sax;
   }
@@ -87,7 +87,7 @@ namespace SAX2ExtractUnitsSrc {
   // output all characters to output buffer
   void characters(void* user_data, const xmlChar* ch, int len) {
 
-    ParsingState* pstate = (ParsingState*) user_data;
+    State* pstate = (State*) user_data;
 
     xmlOutputBufferWrite(pstate->output, len, (const char*) ch);
   }
@@ -97,7 +97,7 @@ namespace SAX2ExtractUnitsSrc {
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
 		    const xmlChar** attributes) {
 
-    ParsingState* pstate = (ParsingState*) ctx;
+    State* pstate = (State*) ctx;
 
     // start counting units after the root
     pstate->count = 0;
@@ -111,7 +111,7 @@ namespace SAX2ExtractUnitsSrc {
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
 		    const xmlChar** attributes) {
 
-    ParsingState* pstate = (ParsingState*) ctx;
+    State* pstate = (State*) ctx;
 
     // start up the output unit
     startUnit(pstate, nb_attributes, attributes);
@@ -127,7 +127,7 @@ namespace SAX2ExtractUnitsSrc {
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
 		    const xmlChar** attributes) {
 
-    ParsingState* pstate = (ParsingState*) ctx;
+    State* pstate = (State*) ctx;
 
     pstate->output = xmlOutputBufferCreateFilename(pstate->ofilename, ghandler, 0);
     if (pstate->output == NULL) {
@@ -142,7 +142,7 @@ namespace SAX2ExtractUnitsSrc {
   }
 
   // start a new output buffer and corresponding file for a unit element
-  void startUnit(ParsingState* pstate, int nb_attributes, const xmlChar** attributes) {
+  void startUnit(State* pstate, int nb_attributes, const xmlChar** attributes) {
 
     ++(pstate->count);
 
@@ -213,7 +213,7 @@ namespace SAX2ExtractUnitsSrc {
   // end unit element and current file/buffer (started by startElementNsUnit
   void endElementNsSingleUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
-    ParsingState* pstate = (ParsingState*) ctx;
+    State* pstate = (State*) ctx;
 
     if (pstate->ctxt->nameNr != 1)
       return;
@@ -233,7 +233,7 @@ namespace SAX2ExtractUnitsSrc {
   // end unit element and current file/buffer (started by startElementNsUnit
   void endElementNsUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
-    ParsingState* pstate = (ParsingState*) ctx;
+    State* pstate = (State*) ctx;
 
     if (pstate->ctxt->nameNr != 2)
       return;
@@ -261,7 +261,7 @@ namespace SAX2ExtractUnitsSrc {
 			    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
 			    const xmlChar** attributes) {
 
-    ParsingState* pstate = (ParsingState*) ctx;
+    State* pstate = (State*) ctx;
 
     // in the proper unit
     if (localname[0] == 'e' && strcmp((const char*) localname, "escape") == 0 &&

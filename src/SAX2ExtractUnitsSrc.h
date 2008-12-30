@@ -46,7 +46,7 @@ namespace SAX2ExtractUnitsSrc {
 
   xmlSAXHandler factory();
 
-  struct ParsingState {
+  struct State {
     long count;
     const char * root_filename;
     const char * ofilename;
@@ -74,7 +74,7 @@ namespace SAX2ExtractUnitsSrc {
 				     const xmlChar** attributes);
 
   // start a new output buffer and corresponding file for a unit element
-  void startUnit(ParsingState* pstate, int nb_attributes, const xmlChar** attributes);
+  void startUnit(State* pstate, int nb_attributes, const xmlChar** attributes);
 
   void endElementNsUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
 
