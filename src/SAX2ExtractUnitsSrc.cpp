@@ -31,8 +31,6 @@ const int EXPAND_DIR_PERM = S_IRWXU | S_IRWXG;
 
 using namespace SAX2ExtractUnitsSrc;
 
-extern xmlCharEncodingHandlerPtr ghandler;
-
 static int mkpath(const char* path
 #ifdef __GNUC__		   
 		   , mode_t mode
@@ -185,7 +183,7 @@ namespace SAX2ExtractUnitsSrc {
     if (isoption(*(pstate->poptions), OPTION_VERBOSE))
       std::cerr << pstate->count << '\t' << output_filename << '\n';
 
-    pstate->output = xmlOutputBufferCreateFilename(output_filename.c_str(), ghandler, 0);
+    pstate->output = xmlOutputBufferCreateFilename(output_filename.c_str(), pstate->handler, 0);
     if (pstate->output == NULL) {
       std::cerr << "Output buffer error" << std::endl;
       xmlStopParser(pstate->ctxt);

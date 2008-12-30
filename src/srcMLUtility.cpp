@@ -69,8 +69,6 @@ void skiptounit(xmlTextReaderPtr reader, int number) throw (LibXMLError);
 #include "SAX2ExtractUnitsSrc.h"
 #include "SAX2ExtractRootSrc.h"
 
-xmlCharEncodingHandlerPtr ghandler;
-
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op)
   : infile(infilename), output_encoding(encoding), options(op), reader(0), handler(0), moved(false) {
@@ -80,7 +78,7 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op
     infile = "-";
 
   // setup an output handler
-  ghandler = handler = xmlFindCharEncodingHandler(output_encoding);
+  handler = xmlFindCharEncodingHandler(output_encoding);
 
   // get out now for expand since switched to sax handling
   if (isoption(options, OPTION_EXPAND) || !(
@@ -224,6 +222,7 @@ void srcMLUtility::extract_text(const char* ofilename, int unit) {
   SAX2ExtractRootSrc::State state;
   state.ofilename = ofilename;
   state.poptions = &options;
+  state.handler = handler;
   state.unit = unit;
 
   xmlSAXHandler sax = SAX2ExtractRootSrc::factory();

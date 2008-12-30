@@ -51,6 +51,7 @@ namespace SAX2ExtractUnitsSrc {
     long count;
     const char * root_filename;
     const char * ofilename;
+    xmlCharEncodingHandlerPtr handler;
     int* poptions;
     xmlOutputBufferPtr output;
     xmlParserCtxtPtr ctxt;
