@@ -84,95 +84,92 @@ namespace SAX2ExtractUnitsSrc {
     return sax;
   }
 
-// output all characters to output buffer
-void characters(void* user_data, const xmlChar* ch, int len) {
+  // output all characters to output buffer
+  void characters(void* user_data, const xmlChar* ch, int len) {
 
-  ParsingState* pstate = (ParsingState*) user_data;
+    ParsingState* pstate = (ParsingState*) user_data;
 
-  xmlOutputBufferWrite(pstate->output, len, (const char*) ch);
-}
-
-// handle root unit of compound document
-void startElementNsRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-		    const xmlChar** attributes) {
-
-  ParsingState* pstate = (ParsingState*) ctx;
-
-  // start counting units after the root
-  pstate->count = 0;
-
-  // handle nested units
-  pstate->ctxt->sax->startElementNs = &startElementNsUnit;
-}
-
-// start a new output buffer and corresponding file for a
-// unit element
-void startElementNsUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-		    const xmlChar** attributes) {
-
-  ParsingState* pstate = (ParsingState*) ctx;
-
-  // start up the output unit
-  startUnit(pstate, nb_attributes, attributes);
-
-  // next state is to copy the unit contents, finishing when needed
-  pstate->ctxt->sax->startElementNs = &startElementNsEscape;
-  pstate->ctxt->sax->characters = &characters;
-  pstate->ctxt->sax->endElementNs = &endElementNsUnit;
-}
-
-// start a new output buffer and corresponding file for a
-// unit element
-void startElementNsSingleUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-		    const xmlChar** attributes) {
-
-  ParsingState* pstate = (ParsingState*) ctx;
-
-  pstate->output = xmlOutputBufferCreateFilename(pstate->ofilename, ghandler, 0);
-  if (pstate->output == NULL) {
-    std::cerr << "Output buffer error" << std::endl;
-    xmlStopParser(pstate->ctxt);
+    xmlOutputBufferWrite(pstate->output, len, (const char*) ch);
   }
 
-  // next state is to copy the unit contents, finishing when needed
-  pstate->ctxt->sax->startElementNs = &startElementNsEscape;
-  pstate->ctxt->sax->characters = &characters;
-  pstate->ctxt->sax->endElementNs = &endElementNsSingleUnit;
-}
+  // handle root unit of compound document
+  void startElementNsRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+		    const xmlChar** attributes) {
 
-// start a new output buffer and corresponding file for a
-// unit element
-void startUnit(ParsingState* pstate, int nb_attributes, const xmlChar** attributes) {
+    ParsingState* pstate = (ParsingState*) ctx;
 
-  ++(pstate->count);
+    // start counting units after the root
+    pstate->count = 0;
 
-  std::string filename;
-  bool foundfilename = false;
-  std::string directory;
-  bool founddirectory = false;
+    // handle nested units
+    pstate->ctxt->sax->startElementNs = &startElementNsUnit;
+  }
 
-  // extract the attributes from the unit for filename and directory
-  unsigned int index = 0;
-  for (int i = 0; i < nb_attributes; ++i, index += 5)
-    if (strcmp((const char*) attributes[index], "filename") == 0) {
+  // start a new output buffer and corresponding file for a unit element
+  void startElementNsUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+		    const xmlChar** attributes) {
 
-      filename.assign((const char*) attributes[index + 3], (const char*) attributes[index + 4]);
-      foundfilename = true;
+    ParsingState* pstate = (ParsingState*) ctx;
 
-      if (founddirectory)
-	break;
+    // start up the output unit
+    startUnit(pstate, nb_attributes, attributes);
 
-    } else if (strcmp((const char*) attributes[index], "dir") == 0) {
+    // next state is to copy the unit contents, finishing when needed
+    pstate->ctxt->sax->startElementNs = &startElementNsEscape;
+    pstate->ctxt->sax->characters = &characters;
+    pstate->ctxt->sax->endElementNs = &endElementNsUnit;
+  }
 
-      directory.assign((const char*) attributes[index + 3], (const char*) attributes[index + 4]);
-      founddirectory = true;
+  // start a new output buffer and corresponding file for a unit element
+  void startElementNsSingleUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+		    const xmlChar** attributes) {
 
-      if (foundfilename)
-	break;
+    ParsingState* pstate = (ParsingState*) ctx;
+
+    pstate->output = xmlOutputBufferCreateFilename(pstate->ofilename, ghandler, 0);
+    if (pstate->output == NULL) {
+      std::cerr << "Output buffer error" << std::endl;
+      xmlStopParser(pstate->ctxt);
     }
+
+    // next state is to copy the unit contents, finishing when needed
+    pstate->ctxt->sax->startElementNs = &startElementNsEscape;
+    pstate->ctxt->sax->characters = &characters;
+    pstate->ctxt->sax->endElementNs = &endElementNsSingleUnit;
+  }
+
+  // start a new output buffer and corresponding file for a unit element
+  void startUnit(ParsingState* pstate, int nb_attributes, const xmlChar** attributes) {
+
+    ++(pstate->count);
+
+    std::string filename;
+    bool foundfilename = false;
+    std::string directory;
+    bool founddirectory = false;
+
+    // extract the attributes from the unit for filename and directory
+    unsigned int index = 0;
+    for (int i = 0; i < nb_attributes; ++i, index += 5)
+      if (strcmp((const char*) attributes[index], "filename") == 0) {
+
+	filename.assign((const char*) attributes[index + 3], (const char*) attributes[index + 4]);
+	foundfilename = true;
+
+	if (founddirectory)
+	  break;
+
+      } else if (strcmp((const char*) attributes[index], "dir") == 0) {
+
+	directory.assign((const char*) attributes[index + 3], (const char*) attributes[index + 4]);
+	founddirectory = true;
+
+	if (foundfilename)
+	  break;
+      }
 
     if (!foundfilename) {
       std::cerr << "Missing filename attribute" << '\n';
@@ -191,39 +188,39 @@ void startUnit(ParsingState* pstate, int nb_attributes, const xmlChar** attribut
 #else
       int ret = mkpath(directory_filename.c_str());
 #endif
-	if (ret != 0 && errno != EEXIST) {
-	  std::cerr << "Error " << errno  << " creating directory:  " << directory_filename << '\n';
-	}
+      if (ret != 0 && errno != EEXIST) {
+	std::cerr << "Error " << errno  << " creating directory:  " << directory_filename << '\n';
       }
+    }
 
-      // filename is based on directory
-      std::string output_filename = directory_filename;
-      if (output_filename != "")
-	output_filename += "/";
-      output_filename += filename;
+    // filename is based on directory
+    std::string output_filename = directory_filename;
+    if (output_filename != "")
+      output_filename += "/";
+    output_filename += filename;
 
-      // output file status message if in verbose mode
-      if (isoption(*(pstate->poptions), OPTION_VERBOSE))
-	std::cerr << pstate->count << '\t' << output_filename << '\n';
+    // output file status message if in verbose mode
+    if (isoption(*(pstate->poptions), OPTION_VERBOSE))
+      std::cerr << pstate->count << '\t' << output_filename << '\n';
 
-      pstate->output = xmlOutputBufferCreateFilename(output_filename.c_str(), ghandler, 0);
-      if (pstate->output == NULL) {
-	std::cerr << "Output buffer error" << std::endl;
-	xmlStopParser(pstate->ctxt);
-      }
+    pstate->output = xmlOutputBufferCreateFilename(output_filename.c_str(), ghandler, 0);
+    if (pstate->output == NULL) {
+      std::cerr << "Output buffer error" << std::endl;
+      xmlStopParser(pstate->ctxt);
+    }
 }
 
-// end unit element and current file/buffer (started by startElementNsUnit
-void endElementNsSingleUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+  // end unit element and current file/buffer (started by startElementNsUnit
+  void endElementNsSingleUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
-  ParsingState* pstate = (ParsingState*) ctx;
+    ParsingState* pstate = (ParsingState*) ctx;
 
-  if (pstate->ctxt->nameNr != 1)
-    return;
+    if (pstate->ctxt->nameNr != 1)
+      return;
 
-  // found the end of this unit
-  //  if (strcmp((const char*) localname, "unit") == 0 &&
-  //      strcmp((const char*) URI, "http://www.sdml.info/srcML/src") == 0) {
+    // found the end of this unit
+    //  if (strcmp((const char*) localname, "unit") == 0 &&
+    //      strcmp((const char*) URI, "http://www.sdml.info/srcML/src") == 0) {
 
     xmlOutputBufferClose(pstate->output);
 
@@ -231,19 +228,19 @@ void endElementNsSingleUnit(void *ctx, const xmlChar *localname, const xmlChar *
     pstate->ctxt->sax->characters = 0;
     pstate->ctxt->sax->endElementNs = 0;
     //  }
-}
+  }
 
-// end unit element and current file/buffer (started by startElementNsUnit
-void endElementNsUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+  // end unit element and current file/buffer (started by startElementNsUnit
+  void endElementNsUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
-  ParsingState* pstate = (ParsingState*) ctx;
+    ParsingState* pstate = (ParsingState*) ctx;
 
-  if (pstate->ctxt->nameNr != 2)
-    return;
+    if (pstate->ctxt->nameNr != 2)
+      return;
 
-  // found the end of this unit
-  //  if (strcmp((const char*) localname, "unit") == 0 &&
-  //      strcmp((const char*) URI, "http://www.sdml.info/srcML/src") == 0) {
+    // found the end of this unit
+    //  if (strcmp((const char*) localname, "unit") == 0 &&
+    //      strcmp((const char*) URI, "http://www.sdml.info/srcML/src") == 0) {
 
     xmlOutputBufferClose(pstate->output);
 
@@ -257,30 +254,30 @@ void endElementNsUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix
     pstate->ctxt->sax->characters = 0;
     pstate->ctxt->sax->endElementNs = 0;
     //  }
-}
-
-// escape control character elements
-void startElementNsEscape(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-		    const xmlChar** attributes) {
-
-  ParsingState* pstate = (ParsingState*) ctx;
-
-  // in the proper unit
-  if (localname[0] == 'e' && strcmp((const char*) localname, "escape") == 0 &&
-      strcmp((const char*) URI, "http://www.sdml.info/srcML/src") == 0) {
-      
-    // convert from the escaped to the unescaped value
-    std::string avalue((const char*) attributes[3], (const char*) attributes[4]);
-    char value = strtod((const char*) avalue.c_str(), NULL);
-    xmlOutputBufferWrite(pstate->output, 1, &value);
-
-  } else if (localname[0] == 'f' && strcmp((const char*) localname, "formfeed") == 0 &&
-	     strcmp((const char*) URI, "http://www.sdml.info/srcML/src") == 0) {
-   
-    char value = '\f';
-    xmlOutputBufferWrite(pstate->output, 1, &value);
   }
-}
 
-  };
+  // escape control character elements
+  void startElementNsEscape(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+			    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+			    const xmlChar** attributes) {
+
+    ParsingState* pstate = (ParsingState*) ctx;
+
+    // in the proper unit
+    if (localname[0] == 'e' && strcmp((const char*) localname, "escape") == 0 &&
+	strcmp((const char*) URI, "http://www.sdml.info/srcML/src") == 0) {
+      
+      // convert from the escaped to the unescaped value
+      std::string avalue((const char*) attributes[3], (const char*) attributes[4]);
+      char value = strtod((const char*) avalue.c_str(), NULL);
+      xmlOutputBufferWrite(pstate->output, 1, &value);
+
+    } else if (localname[0] == 'f' && strcmp((const char*) localname, "formfeed") == 0 &&
+	       strcmp((const char*) URI, "http://www.sdml.info/srcML/src") == 0) {
+   
+      char value = '\f';
+      xmlOutputBufferWrite(pstate->output, 1, &value);
+    }
+  }
+
+};
