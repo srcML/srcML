@@ -69,6 +69,7 @@ void skiptounit(xmlTextReaderPtr reader, int number) throw (LibXMLError);
 struct ParsingState {
   long count;
   const char * root_filename;
+  const char * ofilename;
   int* poptions;
   xmlOutputBufferPtr output;
   xmlParserCtxtPtr ctxt;
@@ -88,11 +89,17 @@ static void startElementNsUnit(void* ctx, const xmlChar* localname, const xmlCha
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
 		    const xmlChar** attributes);
 
+static void startElementNsSingleUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+				     const xmlChar** attributes);
+
 // start a new output buffer and corresponding file for a
 // unit element
  static void startUnit(ParsingState* pstate, int nb_attributes, const xmlChar** attributes);
 
 static void endElementNsUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
+
+static void endElementNsSingleUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
 
 static void startElementNsEscape(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
@@ -112,7 +119,19 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op
   ghandler = handler = xmlFindCharEncodingHandler(output_encoding);
 
   // get out now for expand since switched to sax handling
-  if (isoption(options, OPTION_EXPAND))
+  if (isoption(options, OPTION_EXPAND) || !(
+      isoption(options, OPTION_UNIT) ||
+      isoption(options, OPTION_INFO) ||
+      isoption(options, OPTION_LONG_INFO) ||
+      isoption(options, OPTION_NAMESPACE) ||
+      isoption(options, OPTION_XML) ||
+      isoption(options, OPTION_LANGUAGE) ||
+      isoption(options, OPTION_FILENAME) ||
+      isoption(options, OPTION_DIRECTORY) ||
+      isoption(options, OPTION_VERSION) ||
+      isoption(options, OPTION_XML_ENCODING) ||
+      isoption(options, OPTION_NESTED)
+					    ) )
     return;
 
   // create the reader
@@ -232,8 +251,32 @@ void srcMLUtility::extract_xml(const char* ofilename) {
 // extract a given unit
 void srcMLUtility::extract_text(const char* ofilename) {
 
-  // output entire unit element as text
-  outputSrc(ofilename, reader);
+  if (!moved) {
+
+  ParsingState state;
+  state.ofilename = ofilename;
+  state.poptions = &options;
+
+  xmlSAXHandler sax = { 0 };
+  sax.initialized = XML_SAX2_MAGIC;
+  sax.startElementNs = &startElementNsSingleUnit;
+
+  xmlParserCtxtPtr ctxt = xmlCreateFileParserCtxt(infile);
+  if (ctxt == NULL) return;
+  ctxt->sax = &sax;
+  ctxt->userData = &state;
+  state.ctxt = ctxt;
+
+  xmlParseDocument(ctxt);
+
+  ctxt->sax = NULL;
+
+  xmlFreeParserCtxt(ctxt);
+
+  } else
+
+    // output entire unit element as text
+    outputSrc(ofilename, reader);
 }
 
 int mkpath(const char* path
@@ -553,6 +596,26 @@ static void startElementNsUnit(void* ctx, const xmlChar* localname, const xmlCha
 
 // start a new output buffer and corresponding file for a
 // unit element
+static void startElementNsSingleUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+		    const xmlChar** attributes) {
+
+  ParsingState* pstate = (ParsingState*) ctx;
+
+  pstate->output = xmlOutputBufferCreateFilename(pstate->ofilename, ghandler, 0);
+  if (pstate->output == NULL) {
+    std::cerr << "Output buffer error" << std::endl;
+    xmlStopParser(pstate->ctxt);
+  }
+
+  // next state is to copy the unit contents, finishing when needed
+  pstate->ctxt->sax->startElementNs = &startElementNsEscape;
+  pstate->ctxt->sax->characters = &characters_copy;
+  pstate->ctxt->sax->endElementNs = &endElementNsSingleUnit;
+}
+
+// start a new output buffer and corresponding file for a
+// unit element
 static void startUnit(ParsingState* pstate, int nb_attributes, const xmlChar** attributes) {
 
   ++(pstate->count);
@@ -619,6 +682,26 @@ static void startUnit(ParsingState* pstate, int nb_attributes, const xmlChar** a
 	std::cerr << "Output buffer error" << std::endl;
 	xmlStopParser(pstate->ctxt);
       }
+}
+
+// end unit element and current file/buffer (started by startElementNsUnit
+static void endElementNsSingleUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+
+  ParsingState* pstate = (ParsingState*) ctx;
+
+  if (pstate->ctxt->nameNr != 1)
+    return;
+
+  // found the end of this unit
+  //  if (strcmp((const char*) localname, "unit") == 0 &&
+  //      strcmp((const char*) URI, "http://www.sdml.info/srcML/src") == 0) {
+
+    xmlOutputBufferClose(pstate->output);
+
+    pstate->ctxt->sax->startElementNs = 0;
+    pstate->ctxt->sax->characters = 0;
+    pstate->ctxt->sax->endElementNs = 0;
+    //  }
 }
 
 // end unit element and current file/buffer (started by startElementNsUnit
