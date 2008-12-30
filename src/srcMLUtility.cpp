@@ -69,7 +69,7 @@ void skiptounit(xmlTextReaderPtr reader, int number) throw (LibXMLError);
 struct ParsingState {
   long count;
   const char * root_filename;
-  int options;
+  int* poptions;
   xmlOutputBufferPtr output;
   xmlParserCtxtPtr ctxt;
 };
@@ -280,7 +280,7 @@ void srcMLUtility::expand(const char* root_filename) {
 
   ParsingState state;
   state.root_filename = root_filename;
-  state.options = options;
+  state.poptions = &options;
 
   xmlSAXHandler sax = { 0 };
   sax.initialized = XML_SAX2_MAGIC;
@@ -297,11 +297,6 @@ void srcMLUtility::expand(const char* root_filename) {
   ctxt->sax = NULL;
 
   xmlFreeParserCtxt(ctxt);
-  /*
-    // stop after this file (and end gracefully) with ctrl-c
-    if (isoption(options, OPTION_TERMINATE))
-      throw TerminateLibXMLError();
-  */
 }
 
 const char* srcMLUtility::getencoding() {
@@ -616,7 +611,7 @@ static void startUnit(ParsingState* pstate, int nb_attributes, const xmlChar** a
       output_filename += filename;
 
       // output file status message if in verbose mode
-      if (isoption(pstate->options, OPTION_VERBOSE))
+      if (isoption(*(pstate->poptions), OPTION_VERBOSE))
 	std::cerr << pstate->count << '\t' << output_filename << '\n';
 
       pstate->output = xmlOutputBufferCreateFilename(output_filename.c_str(), ghandler, 0);
@@ -639,6 +634,12 @@ static void endElementNsUnit(void *ctx, const xmlChar *localname, const xmlChar 
   //      strcmp((const char*) URI, "http://www.sdml.info/srcML/src") == 0) {
 
     xmlOutputBufferClose(pstate->output);
+
+    // stop after this file (and end gracefully) with ctrl-c
+    if (isoption(*(pstate->poptions), OPTION_TERMINATE)) {
+      xmlStopParser(pstate->ctxt);
+      throw TerminateLibXMLError();
+    }
 
     pstate->ctxt->sax->startElementNs = &startElementNsUnit;
     pstate->ctxt->sax->characters = 0;
