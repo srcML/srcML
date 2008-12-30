@@ -44,6 +44,8 @@
 
 namespace SAX2ExtractUnitsSrc {
 
+  xmlSAXHandler factory();
+
   struct ParsingState {
     long count;
     const char * root_filename;

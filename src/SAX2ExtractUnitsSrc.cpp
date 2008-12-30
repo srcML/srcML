@@ -74,6 +74,16 @@ static int mkpath(const char* path
 
 namespace SAX2ExtractUnitsSrc {
 
+  xmlSAXHandler factory() {
+
+    xmlSAXHandler sax = { 0 };
+
+    sax.initialized    = XML_SAX2_MAGIC;
+    sax.startElementNs = &SAX2ExtractUnitsSrc::startElementNsSingleUnit;
+
+    return sax;
+  }
+
 // output all characters to output buffer
 void characters(void* user_data, const xmlChar* ch, int len) {
 

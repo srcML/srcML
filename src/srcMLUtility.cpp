@@ -222,9 +222,7 @@ void srcMLUtility::extract_text(const char* ofilename) {
   state.ofilename = ofilename;
   state.poptions = &options;
 
-  xmlSAXHandler sax = { 0 };
-  sax.initialized = XML_SAX2_MAGIC;
-  sax.startElementNs = &startElementNsSingleUnit;
+  xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
 
   xmlParserCtxtPtr ctxt = xmlCreateFileParserCtxt(infile);
   if (ctxt == NULL) return;
