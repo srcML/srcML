@@ -103,10 +103,7 @@ namespace SAX2ExtractUnitsSrc {
     pstate->count = 0;
 
     // handle nested units
-    if (pstate->unit == -1)
-      pstate->ctxt->sax->startElementNs = &startElementNsUnit;
-    else
-      startElementNsSingleUnit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
+    pstate->ctxt->sax->startElementNs = &startElementNsUnit;
   }
 
   // start a new output buffer and corresponding file for a unit element
@@ -126,26 +123,6 @@ namespace SAX2ExtractUnitsSrc {
     pstate->ctxt->sax->characters = &characters;
     pstate->ctxt->sax->ignorableWhitespace = &characters;
     pstate->ctxt->sax->endElementNs = &endElementNsUnit;
-  }
-
-  // start a new output buffer and corresponding file for a unit element
-  void startElementNsSingleUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-		    const xmlChar** attributes) {
-
-    State* pstate = (State*) ctx;
-
-    pstate->output = xmlOutputBufferCreateFilename(pstate->ofilename, ghandler, 0);
-    if (pstate->output == NULL) {
-      std::cerr << "Output buffer error" << std::endl;
-      xmlStopParser(pstate->ctxt);
-    }
-
-    // next state is to copy the unit contents, finishing when needed
-    pstate->ctxt->sax->startElementNs = &startElementNsEscape;
-    pstate->ctxt->sax->characters = &characters;
-    pstate->ctxt->sax->ignorableWhitespace = &characters;
-    pstate->ctxt->sax->endElementNs = &endElementNsSingleUnit;
   }
 
   // start a new output buffer and corresponding file for a unit element
@@ -214,27 +191,6 @@ namespace SAX2ExtractUnitsSrc {
       xmlStopParser(pstate->ctxt);
     }
 }
-
-  // end unit element and current file/buffer (started by startElementNsUnit
-  void endElementNsSingleUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
-
-    State* pstate = (State*) ctx;
-
-    if (pstate->ctxt->nameNr != 1)
-      return;
-
-    // found the end of this unit
-    //  if (strcmp((const char*) localname, "unit") == 0 &&
-    //      strcmp((const char*) URI, "http://www.sdml.info/srcML/src") == 0) {
-
-    xmlOutputBufferClose(pstate->output);
-
-    pstate->ctxt->sax->startElementNs = 0;
-    pstate->ctxt->sax->characters = 0;
-    pstate->ctxt->sax->ignorableWhitespace = 0;
-    pstate->ctxt->sax->endElementNs = 0;
-    //  }
-  }
 
   // end unit element and current file/buffer (started by startElementNsUnit
   void endElementNsUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {

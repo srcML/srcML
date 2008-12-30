@@ -221,12 +221,12 @@ void srcMLUtility::extract_text(const char* ofilename, int unit) {
     return;
   }
 
-  SAX2ExtractUnitsSrc::State state;
+  SAX2ExtractRootSrc::State state;
   state.ofilename = ofilename;
   state.poptions = &options;
   state.unit = unit;
 
-  xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
+  xmlSAXHandler sax = SAX2ExtractRootSrc::factory();
 
   xmlParserCtxtPtr ctxt = xmlCreateFileParserCtxt(infile);
   if (ctxt == NULL) return;
