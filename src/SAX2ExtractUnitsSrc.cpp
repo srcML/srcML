@@ -103,11 +103,11 @@ namespace SAX2ExtractUnitsSrc {
     pstate->count = 0;
 
     // handle nested units
-    pstate->ctxt->sax->startElementNs = &startElementNsUnit;
+    pstate->ctxt->sax->startElementNs = &startElementNs;
   }
 
   // start a new output buffer and corresponding file for a unit element
-  void startElementNsUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+  void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
 		    const xmlChar** attributes) {
 
@@ -122,7 +122,7 @@ namespace SAX2ExtractUnitsSrc {
     pstate->ctxt->sax->startElementNs = &startElementNsEscape;
     pstate->ctxt->sax->characters = &characters;
     pstate->ctxt->sax->ignorableWhitespace = &characters;
-    pstate->ctxt->sax->endElementNs = &endElementNsUnit;
+    pstate->ctxt->sax->endElementNs = &endElementNs;
   }
 
   // start a new output buffer and corresponding file for a unit element
@@ -192,8 +192,8 @@ namespace SAX2ExtractUnitsSrc {
     }
 }
 
-  // end unit element and current file/buffer (started by startElementNsUnit
-  void endElementNsUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+  // end unit element and current file/buffer (started by startElementNs
+  void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
     State* pstate = (State*) ctx;
 
@@ -212,7 +212,7 @@ namespace SAX2ExtractUnitsSrc {
       throw TerminateLibXMLError();
     }
 
-    pstate->ctxt->sax->startElementNs = &startElementNsUnit;
+    pstate->ctxt->sax->startElementNs = &startElementNs;
     pstate->ctxt->sax->characters = 0;
     pstate->ctxt->sax->endElementNs = 0;
     //  }
