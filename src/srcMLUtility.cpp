@@ -248,6 +248,7 @@ void srcMLUtility::expand(const char* root_filename) {
   SAX2ExtractUnitsSrc::State state;
   state.root_filename = root_filename;
   state.poptions = &options;
+  state.unit = -1;
 
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
 

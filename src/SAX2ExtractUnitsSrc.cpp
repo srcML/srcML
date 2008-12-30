@@ -103,7 +103,10 @@ namespace SAX2ExtractUnitsSrc {
     pstate->count = 0;
 
     // handle nested units
-    pstate->ctxt->sax->startElementNs = &startElementNsUnit;
+    if (pstate->unit == -1)
+      pstate->ctxt->sax->startElementNs = &startElementNsUnit;
+    else
+      startElementNsSingleUnit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
   }
 
   // start a new output buffer and corresponding file for a unit element
@@ -121,6 +124,7 @@ namespace SAX2ExtractUnitsSrc {
     // next state is to copy the unit contents, finishing when needed
     pstate->ctxt->sax->startElementNs = &startElementNsEscape;
     pstate->ctxt->sax->characters = &characters;
+    pstate->ctxt->sax->ignorableWhitespace = &characters;
     pstate->ctxt->sax->endElementNs = &endElementNsUnit;
   }
 
@@ -140,6 +144,7 @@ namespace SAX2ExtractUnitsSrc {
     // next state is to copy the unit contents, finishing when needed
     pstate->ctxt->sax->startElementNs = &startElementNsEscape;
     pstate->ctxt->sax->characters = &characters;
+    pstate->ctxt->sax->ignorableWhitespace = &characters;
     pstate->ctxt->sax->endElementNs = &endElementNsSingleUnit;
   }
 
@@ -226,6 +231,7 @@ namespace SAX2ExtractUnitsSrc {
 
     pstate->ctxt->sax->startElementNs = 0;
     pstate->ctxt->sax->characters = 0;
+    pstate->ctxt->sax->ignorableWhitespace = 0;
     pstate->ctxt->sax->endElementNs = 0;
     //  }
   }
