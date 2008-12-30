@@ -244,45 +244,6 @@ void srcMLUtility::extract_text(const char* ofilename) {
     outputSrc(ofilename, reader);
 }
 
-int mkpath(const char* path
-#ifdef __GNUC__		   
-		   , mode_t mode
-#endif		   
-		   ) {
- 
-  const std::string spath = path;
-
-  int pos = 0;
-#ifdef __GNUC__
-  while ((unsigned int) (pos = spath.find('/', pos + 1)) != std::string::npos) {
-#else
-  while ((pos = (int) spath.find('/', pos + 1)) != std::string::npos) {
-#endif
-
-    // make the directory path so far
-    if (strcmp(spath.substr(0, pos).c_str(), ".") != 0) {
-
-#ifdef __GNUC__
-      int ret = mkdir(spath.substr(0, pos).c_str(), mode);
-#else
-      int ret = mkdir(spath.substr(0, pos).c_str());
-#endif
-      if (ret != 0 && errno != EEXIST)
-	return ret;
-    }
-
-    // move beyond this mark
-    ++pos;
-  }
-
-  // make the directory path if there is one
-#ifdef __GNUC__
-  return mkdir(spath.c_str(), mode);
-#else
-  return mkdir(spath.c_str());
-#endif
-}
-
 // expand the compound srcML to individual files
 void srcMLUtility::expand(const char* root_filename) {
 
