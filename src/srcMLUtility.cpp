@@ -204,7 +204,7 @@ int srcMLUtility::unit_count() {
 }
 
 // extract a given unit
-void srcMLUtility::extract_xml(const char* ofilename) {
+void srcMLUtility::extract_xml(const char* ofilename, int unit) {
 
   // Set the encoding to that of the outer, root unit element
   output_encoding = (const char*) xmlTextReaderConstEncoding(reader);
@@ -214,7 +214,7 @@ void srcMLUtility::extract_xml(const char* ofilename) {
 }
 
 // extract a given unit
-void srcMLUtility::extract_text(const char* ofilename) {
+void srcMLUtility::extract_text(const char* ofilename, int unit) {
 
   // not able to handle single unit in compound document with SAX handlers (yet)
   if (moved) {
