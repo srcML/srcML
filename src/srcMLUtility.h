@@ -85,9 +85,6 @@ class srcMLUtility {
   // output current unit element in XML
   void outputUnit(const char* filename, xmlTextReaderPtr reader);
 
-  // output current unit element as text
-  void outputSrc(const char* ofilename, xmlTextReaderPtr reader);
-
   // output text in proper format
   void outputText(const xmlChar* s, bool escape = false);
 

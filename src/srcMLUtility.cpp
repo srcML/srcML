@@ -214,14 +214,6 @@ void srcMLUtility::extract_xml(const char* ofilename, int unit) {
 // extract a given unit
 void srcMLUtility::extract_text(const char* ofilename, int unit) {
 
-  /*
-  // not able to handle single unit in compound document with SAX handlers (yet)
-  if (unit) {
-    outputSrc(ofilename, reader);
-    return;
-  } 
-  */
-
   xmlSAXHandler sax = unit == 0 ? SAX2ExtractRootSrc::factory() : SAX2ExtractUnitSrc::factory();
 
   SAX2ExtractRootSrc::State state;
@@ -368,59 +360,6 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
   xmlSaveCtxtPtr saver = xmlSaveToFilename(filename, output_encoding, save_options);
   xmlSaveDoc(saver, doc);
   xmlSaveClose(saver);
-}
-
-// output current unit element as text
-void srcMLUtility::outputSrc(const char* ofilename, xmlTextReaderPtr reader) {
-
-#ifdef LIBXML_ENABLED
-  // no need for encoding change
-  if (strcmp(handler->name, "UTF-8") == 0)
-    options |= OPTION_SKIP_ENCODING;
-#endif
-
-  // output all the content
-  xmlOutputBufferPtr buf;
-  buf = xmlOutputBufferCreateFilename(ofilename, handler, 0);
-  if (buf == NULL) return;
-
-  std::string s;
-  while (1) {
-
-    // read a node
-    int ret = xmlTextReaderRead(reader);
-    if (ret != 1)
-      throw LibXMLError(ret);
-
-    if (xmlTextReaderDepth(reader) <= 0 + moved)
-      break;
-
-    xmlNode* node = xmlTextReaderCurrentNode(reader);
-    if (node->type == XML_TEXT_NODE) {
-
-      const char* s = (const char*) node->content;
-      xmlOutputBufferWrite(buf, strlen(s), s);
-
-    } else if (node->type == XML_ELEMENT_NODE && xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT) {
-
-      if (strcmp((const char*) node->name, "escape") == 0) {
-      
-	// convert from the escaped to the unescaped value
-	char value = strtod((char*) xmlTextReaderGetAttribute(reader, BAD_CAST "char"), NULL);
-
-	xmlOutputBufferWrite(buf, 1, &value);
-
-      } else if (strcmp((const char*) node->name, "formfeed") == 0) {
-      
-	xmlOutputBufferWrite(buf, 1, "\f");
-      }
-    }
-  }
-
-  /*                                                                                                            
-   * save the content to a temp buffer.                                                                         
-   */
-  xmlOutputBufferClose(buf);
 }
 
   // skip to the next unit
