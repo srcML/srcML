@@ -83,7 +83,7 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op
 
   // get out now for expand since switched to sax handling
   if (isoption(options, OPTION_EXPAND) || !(
-      isoption(options, OPTION_UNIT) ||
+					    //      isoption(options, OPTION_UNIT) ||
       isoption(options, OPTION_INFO) ||
       isoption(options, OPTION_LONG_INFO) ||
       isoption(options, OPTION_NAMESPACE) ||
@@ -162,6 +162,21 @@ std::string srcMLUtility::namespace_ext(const std::string& uri, bool& nonnull) {
 
 // move to a particular nested unit
 void srcMLUtility::move_to_unit(int unitnumber) {
+
+  // hack while we move to sax handling
+  if (isoption(options, OPTION_EXPAND) || !(
+      isoption(options, OPTION_INFO) ||
+      isoption(options, OPTION_LONG_INFO) ||
+      isoption(options, OPTION_NAMESPACE) ||
+      isoption(options, OPTION_XML) ||
+      isoption(options, OPTION_LANGUAGE) ||
+      isoption(options, OPTION_FILENAME) ||
+      isoption(options, OPTION_DIRECTORY) ||
+      isoption(options, OPTION_VERSION) ||
+      isoption(options, OPTION_XML_ENCODING) ||
+      isoption(options, OPTION_NESTED)
+					    ) )
+    return;
 
   moved = true;
 
