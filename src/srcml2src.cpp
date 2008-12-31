@@ -638,7 +638,7 @@ int main(int argc, char* argv[]) {
 
     } else if (isoption(options, OPTION_XML)) {
 
-      su.extract_xml(ofilename);
+      su.extract_xml(ofilename, unit);
 
     } else {
 
