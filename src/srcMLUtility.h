@@ -85,15 +85,6 @@ class srcMLUtility {
   // output current unit element in XML
   void outputUnit(const char* filename, xmlTextReaderPtr reader);
 
-  // output text in proper format
-  void outputText(const xmlChar* s, bool escape = false);
-
-  // output current text-only XML node in reader
-  void outputText(xmlTextReaderPtr reader);
-
-  // output current text-only XML node in reader
-  void outputText(const xmlChar* s, std::ostream& out);
-
  private:
   const char* infile;
   const char* output_encoding;
