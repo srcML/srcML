@@ -52,12 +52,10 @@ namespace SAX2ExtractUnitSrc {
     xmlParserCtxtPtr ctxt;
   };
 
-  using SAX2ExtractUnitsSrc::characters;
-  using SAX2ExtractUnitsSrc::startElementNsEscape;
-
-  void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+  // handle root unit of compound document
+  void startElementNsRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-				     const xmlChar** attributes);
+			  const xmlChar** attributes);
 
   void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
 };

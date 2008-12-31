@@ -67,6 +67,7 @@ void skiptounit(xmlTextReaderPtr reader, const char* filename) throw (LibXMLErro
 void skiptounit(xmlTextReaderPtr reader, int number) throw (LibXMLError);
 
 #include "SAX2ExtractUnitsSrc.h"
+#include "SAX2ExtractUnitSrc.h"
 #include "SAX2ExtractRootSrc.h"
 
 // constructor
@@ -213,19 +214,21 @@ void srcMLUtility::extract_xml(const char* ofilename, int unit) {
 // extract a given unit
 void srcMLUtility::extract_text(const char* ofilename, int unit) {
 
+  /*
   // not able to handle single unit in compound document with SAX handlers (yet)
   if (unit) {
     outputSrc(ofilename, reader);
     return;
-  }
+  } 
+  */
+
+  xmlSAXHandler sax = unit == 0 ? SAX2ExtractRootSrc::factory() : SAX2ExtractUnitSrc::factory();
 
   SAX2ExtractRootSrc::State state;
   state.ofilename = ofilename;
   state.poptions = &options;
   state.handler = handler;
   state.unit = unit;
-
-  xmlSAXHandler sax = SAX2ExtractRootSrc::factory();
 
   xmlParserCtxtPtr ctxt = xmlCreateFileParserCtxt(infile);
   if (ctxt == NULL) return;

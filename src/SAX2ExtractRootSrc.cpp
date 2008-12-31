@@ -61,12 +61,12 @@ namespace SAX2ExtractRootSrc {
 
     State* pstate = (State*) ctx;
 
-    if (pstate->ctxt->nameNr != 1)
-      return;
+    int stop = 1;
+    if (pstate->unit)
+      ++stop;
 
-    // found the end of this unit
-    //  if (strcmp((const char*) localname, "unit") == 0 &&
-    //      strcmp((const char*) URI, "http://www.sdml.info/srcML/src") == 0) {
+    if (pstate->ctxt->nameNr > stop)
+      return;
 
     xmlOutputBufferClose(pstate->output);
 
@@ -74,6 +74,8 @@ namespace SAX2ExtractRootSrc {
     pstate->ctxt->sax->characters = 0;
     pstate->ctxt->sax->ignorableWhitespace = 0;
     pstate->ctxt->sax->endElementNs = 0;
+
+    xmlStopParser(pstate->ctxt);
     //  }
   }
 };
