@@ -31,6 +31,7 @@
 #include <libxml/xmlwriter.h>
 #include <libxml/parser.h>
 #include <libxml/parserInternals.h>
+#include "Options.h"
 #include "srcmlns.h"
 
 /* srcML unit attributes */
@@ -162,6 +163,10 @@ namespace SAX2ExtractUnitXML {
       return;
 
     ++(pstate->count);
+
+    // output file status message if in verbose mode
+    if (isoption(*(pstate->poptions), OPTION_VERBOSE))
+      std::cerr << "Count:  " << pstate->count << '\r';
 
     if (pstate->count < pstate->unit - 1)
       return;
