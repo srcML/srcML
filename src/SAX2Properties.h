@@ -51,6 +51,7 @@ namespace SAX2Properties {
     xmlParserCtxtPtr ctxt;
     std::map<std::string, std::string> nsv;
     std::map<std::string, std::string> attrv;
+    std::string encoding;
   };
 
   // startElement for root

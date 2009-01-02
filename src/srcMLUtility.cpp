@@ -62,14 +62,15 @@ bool srcMLUtility::checkEncoding(const char* encoding) {
 
 }
 
-void skiptonextunit(xmlTextReaderPtr reader) throw (LibXMLError);
-void skiptounit(xmlTextReaderPtr reader, const char* filename) throw (LibXMLError);
-void skiptounit(xmlTextReaderPtr reader, int number) throw (LibXMLError);
+//void skiptonextunit(xmlTextReaderPtr reader) throw (LibXMLError);
+//void skiptounit(xmlTextReaderPtr reader, const char* filename) throw (LibXMLError);
+//void skiptounit(xmlTextReaderPtr reader, int number) throw (LibXMLError);
 
 #include "SAX2ExtractUnitsSrc.h"
 #include "SAX2ExtractUnitSrc.h"
 #include "SAX2ExtractRootSrc.h"
 #include "SAX2ExtractUnitXML.h"
+#include "SAX2Properties.h"
 
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op)
@@ -81,7 +82,7 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op
 
   // setup an output handler
   handler = xmlFindCharEncodingHandler(output_encoding);
-
+  /*
   // get out now for expand since switched to sax handling
   if (isoption(options, OPTION_EXPAND) || !(
 					    //      isoption(options, OPTION_UNIT) ||
@@ -89,7 +90,7 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op
       isoption(options, OPTION_LONG_INFO) ||
       isoption(options, OPTION_NAMESPACE) ||
       //      isoption(options, OPTION_XML) ||
-      isoption(options, OPTION_LANGUAGE) ||
+      //      isoption(options, OPTION_LANGUAGE) ||
       isoption(options, OPTION_FILENAME) ||
       isoption(options, OPTION_DIRECTORY) ||
       isoption(options, OPTION_VERSION) ||
@@ -119,6 +120,7 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op
   // don't use the TextReaderMoveToNextAttribute as it messes up the future expand
   for (xmlNsPtr pAttr = xmlTextReaderCurrentNode(reader)->nsDef; pAttr; pAttr = pAttr->next)
     nsv[(const char*) pAttr->href] = pAttr->prefix ? (const char*) pAttr->prefix : "";
+  */
 }
 
 // destructor
@@ -130,7 +132,7 @@ srcMLUtility::~srcMLUtility() {
 
 // attribute
 std::string srcMLUtility::attribute(const char* attribute_name, bool& nonnull) {
-
+  /*
   if (moved) {
     // extract attribute from unit tag
     xmlChar* value = xmlTextReaderGetAttribute(reader, BAD_CAST attribute_name);
@@ -144,7 +146,7 @@ std::string srcMLUtility::attribute(const char* attribute_name, bool& nonnull) {
 
     return s;
   }
-
+  */
   // extract attribute from unit tag
   nonnull = attrv.count(attribute_name) > 0;
 
@@ -166,14 +168,40 @@ void srcMLUtility::move_to_unit(int unitnumber) {
 
   moved = true;
 
-  // skip to the proper nested unit
-  skiptounit(reader, unitnumber);
+  // Set the encoding to that of the outer, root unit element
+  //  output_encoding = (const char*) xmlTextReaderConstEncoding(reader);
+
+  // output entire unit element
+  xmlSAXHandler sax = SAX2Properties::factory();
+
+  SAX2Properties::State state;
+  state.ofilename = infile;
+  state.filename = infile;
+  state.poptions = &options;
+  state.unit = unitnumber;
+
+  xmlParserCtxtPtr ctxt = xmlCreateFileParserCtxt(infile);
+  if (ctxt == NULL) return;
+  ctxt->sax = &sax;
+  ctxt->userData = &state;
+  state.ctxt = ctxt;
+
+  xmlParseDocument(ctxt);
+
+  encoding = (const char*) state.ctxt->encoding;
+
+  ctxt->sax = NULL;
+
+  xmlFreeParserCtxt(ctxt);
+
+  nsv = state.nsv;
+  attrv = state.attrv;
 }
 
 
 // count of nested units
 int srcMLUtility::unit_count() {
-
+  /*
   // process all nodes counting units
   int count = 0;
   while (1) {
@@ -200,6 +228,8 @@ int srcMLUtility::unit_count() {
   }
 
   return count;
+  */
+  return 0;
 }
 
 // extract a given unit
@@ -280,7 +310,7 @@ void srcMLUtility::expand(const char* root_filename) {
 
 const char* srcMLUtility::getencoding() {
 
-  return (const char*) xmlTextReaderConstEncoding(reader);
+  return encoding.c_str();
 }
 
 // namespaces and prefixes
@@ -383,6 +413,7 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
   xmlSaveClose(saver);
 }
 */
+/*
   // skip to the next unit
   void skiptonextunit(xmlTextReaderPtr reader) throw (LibXMLError) {
 
@@ -438,3 +469,5 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
       xmlTextReaderNext(reader);
     }
 }
+
+*/

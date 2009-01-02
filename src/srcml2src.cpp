@@ -507,7 +507,7 @@ int main(int argc, char* argv[]) {
     if (optioncount > 0) {
 
       // move to the appropriate unit
-      if (isoption(options, OPTION_UNIT))
+      //      if (isoption(options, OPTION_UNIT))
 	su.move_to_unit(unit);
 
       if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {
@@ -517,10 +517,12 @@ int main(int argc, char* argv[]) {
 	for (std::map<std::string, std::string>::const_iterator iter = ns.begin(); iter != ns.end(); ++iter) {
 	  std::string uri = (*iter).first;
 	  std::string prefix = (*iter).second;
+	  /*
 	  if (prefix == "")
 		  prefix = "xmlns";
 	  else
 		  prefix = "xmlns:" + prefix;
+	  */
 
 	  std::cout << prefix << "=\"" << uri << "\"" << std::endl;
 	}
@@ -571,9 +573,7 @@ int main(int argc, char* argv[]) {
     // namespace
     } else if (isoption(options, OPTION_NAMESPACE)) {
 
-	// move to the appropriate unit
-	if (isoption(options, OPTION_UNIT))
-	  su.move_to_unit(unit);
+      su.move_to_unit(unit);
 
 	bool nonnull = true;
 	std::string l = su.namespace_ext(ns[0], nonnull);

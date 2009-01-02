@@ -156,16 +156,6 @@ namespace SAX2TextWriter {
 
     xmlTextWriterEndElement(pstate->writer);
 
-    if (pstate->unit > 0 && pstate->ctxt->nameNr == 2) {
-
-      pstate->ctxt->sax->startDocument  = 0;
-      pstate->ctxt->sax->endDocument    = &SAX2TextWriter::endDocument;
-      pstate->ctxt->sax->startElementNs = 0;
-      pstate->ctxt->sax->endElementNs   = 0;
-      pstate->ctxt->sax->characters     = 0;
-
-      xmlStopParser(pstate->ctxt);
-    }
   }
 
 };

@@ -94,7 +94,7 @@ class srcMLUtility {
   xmlCharEncodingHandlerPtr handler;
   std::map<std::string, std::string> nsv;
   std::map<std::string, std::string> attrv;
-
+  std::string encoding;
   bool moved;
 }; 
 
