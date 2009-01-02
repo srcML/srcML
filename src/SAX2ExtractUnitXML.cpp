@@ -175,14 +175,15 @@ namespace SAX2ExtractUnitXML {
     ++(pstate->count);
 
     // output file status message if in verbose mode
-    if (isoption(*(pstate->poptions), OPTION_VERBOSE))
+    if (isoption(*(pstate->poptions), OPTION_VERBOSE)) {
       for (int i = 0; i < placescount; ++i)
 	std::cerr << '\b';
       std::cerr << pstate->count;
 
-    if (pstate->count == placesunit) {
-      placesunit *= 10;
-      ++placescount;
+      if (pstate->count == placesunit) {
+	placesunit *= 10;
+	++placescount;
+      }
     }
 
     if (pstate->count < pstate->unit - 1)

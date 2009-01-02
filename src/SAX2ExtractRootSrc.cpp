@@ -52,7 +52,6 @@ namespace SAX2ExtractRootSrc {
     // next state is to copy the unit contents, finishing when needed
     pstate->ctxt->sax->startElementNs = &startElementNsEscape;
     pstate->ctxt->sax->characters = &characters;
-    pstate->ctxt->sax->ignorableWhitespace = &characters;
     pstate->ctxt->sax->endElementNs = &endElementNs;
   }
 
