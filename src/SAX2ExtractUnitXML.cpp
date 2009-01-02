@@ -42,6 +42,9 @@ const char* const UNIT_ATTRIBUTE_VERSION = "version";
 
 namespace SAX2ExtractUnitXML {
 
+  static int placescount = 0;
+  static int placesunit = 0;
+
   xmlSAXHandler factory() {
 
     xmlSAXHandler sax = { 0 };
@@ -81,6 +84,13 @@ namespace SAX2ExtractUnitXML {
     // handle nested units
     pstate->ctxt->sax->startElementNs = pstate->unit == 1 ? &startElementNsUnit : 0;
     pstate->ctxt->sax->endElementNs   = pstate->unit == 1 ? 0 : &endElementNs;
+
+    placescount = 1;
+    placesunit = 10;
+
+    // output file status message if in verbose mode
+    if (isoption(*(pstate->poptions), OPTION_VERBOSE))
+      std::cerr << "Count:  ";
   }
 
   // start a new output buffer and corresponding file for a
@@ -166,7 +176,14 @@ namespace SAX2ExtractUnitXML {
 
     // output file status message if in verbose mode
     if (isoption(*(pstate->poptions), OPTION_VERBOSE))
-      std::cerr << "Count:  " << pstate->count << '\r';
+      for (int i = 0; i < placescount; ++i)
+	std::cerr << '\b';
+      std::cerr << pstate->count;
+
+    if (pstate->count == placesunit) {
+      placesunit *= 10;
+      ++placescount;
+    }
 
     if (pstate->count < pstate->unit - 1)
       return;
