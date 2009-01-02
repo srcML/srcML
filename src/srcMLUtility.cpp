@@ -65,7 +65,7 @@ bool srcMLUtility::checkEncoding(const char* encoding) {
 
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op)
-  : infile(infilename), output_encoding(encoding), options(op), reader(0), handler(0), moved(false) {
+  : infile(infilename), output_encoding(encoding), options(op), handler(0), moved(false) {
 
   // empty filename indicates standard input
   if (infile == 0)
@@ -138,9 +138,6 @@ int srcMLUtility::unit_count() {
 
 // extract a given unit
 void srcMLUtility::extract_xml(const char* ofilename, int unit) {
-
-  // Set the encoding to that of the outer, root unit element
-  output_encoding = (const char*) xmlTextReaderConstEncoding(reader);
 
   // output entire unit element
   xmlSAXHandler sax = SAX2ExtractUnitXML::factory();

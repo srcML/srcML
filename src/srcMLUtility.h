@@ -32,7 +32,6 @@
 #include "Language.h"
 #include "Options.h"
 
-#include <xmlreader.h>
 #include <xmlwriter.h>
 #include <xpath.h>
 
@@ -80,17 +79,10 @@ class srcMLUtility {
   // destructor
   virtual ~srcMLUtility();
 
- protected:
-  /*
-  // output current unit element in XML
-  void outputUnit(const char* filename, xmlTextReaderPtr reader);
-  */
-
  private:
   const char* infile;
   const char* output_encoding;
   int& options;
-  xmlTextReaderPtr reader;
   xmlCharEncodingHandlerPtr handler;
   std::map<std::string, std::string> nsv;
   std::map<std::string, std::string> attrv;
