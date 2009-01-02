@@ -61,6 +61,7 @@ bool srcMLUtility::checkEncoding(const char* encoding) {
 #include "SAX2ExtractUnitSrc.h"
 #include "SAX2ExtractRootSrc.h"
 #include "SAX2ExtractUnitXML.h"
+#include "SAX2CountUnits.h"
 #include "SAX2Properties.h"
 
 // constructor
@@ -133,7 +134,25 @@ void srcMLUtility::move_to_unit(int unitnumber) {
 // count of nested units
 int srcMLUtility::unit_count() {
 
-  return 0;
+  // output entire unit element
+  xmlSAXHandler sax = SAX2CountUnits::factory();
+
+  SAX2CountUnits::State state;
+  //  state.poptions = &options;
+
+  xmlParserCtxtPtr ctxt = xmlCreateFileParserCtxt(infile);
+  if (ctxt == NULL) return -1;
+  ctxt->sax = &sax;
+  ctxt->userData = &state;
+  state.ctxt = ctxt;
+
+  xmlParseDocument(ctxt);
+
+  ctxt->sax = NULL;
+
+  xmlFreeParserCtxt(ctxt);
+
+  return state.count;
 }
 
 // extract a given unit
