@@ -33,7 +33,6 @@
 #include "Options.h"
 
 #include <xmlwriter.h>
-#include <xpath.h>
 
 class LibXMLError;
 class TerminateLibXMLError;
@@ -87,7 +86,6 @@ class srcMLUtility {
   std::map<std::string, std::string> nsv;
   std::map<std::string, std::string> attrv;
   std::string encoding;
-  bool moved;
 }; 
 
 class LibXMLError {
