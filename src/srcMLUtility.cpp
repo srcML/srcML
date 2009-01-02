@@ -126,6 +126,10 @@ void srcMLUtility::move_to_unit(int unitnumber) {
 
   xmlFreeParserCtxt(ctxt);
 
+  // make sure we did not end early
+  if (state.unit && state.count + 1 != state.unit)
+    throw OutOfRangeUnitError(state.count);
+
   nsv = state.nsv;
   attrv = state.attrv;
 }
@@ -179,6 +183,10 @@ void srcMLUtility::extract_xml(const char* ofilename, int unit) {
   ctxt->sax = NULL;
 
   xmlFreeParserCtxt(ctxt);
+
+  // make sure we did not end early
+  if (state.unit && state.count + 1 != state.unit)
+    throw OutOfRangeUnitError(state.count);
 }
 
 // extract a given unit
@@ -203,6 +211,10 @@ void srcMLUtility::extract_text(const char* ofilename, int unit) {
   ctxt->sax = NULL;
 
   xmlFreeParserCtxt(ctxt);
+
+  // make sure we did not end early
+  if (state.unit && state.count + 1 != state.unit)
+    throw OutOfRangeUnitError(state.count);
 }
 
 // expand the compound srcML to individual files
