@@ -130,7 +130,7 @@ namespace SAX2ExtractUnitXML {
 	prefix = xmlns;
       }
 
-      pstate->nsv.insert(std::make_pair<std::string, std::string>((const char*) namespaces[index + 1], prefix));
+      pstate->nsv[(const char*) namespaces[index + 1]] = prefix;
     }
 
     // output the standard namespaces, if they exist
@@ -167,7 +167,7 @@ namespace SAX2ExtractUnitXML {
       }
       std::string value((const char*) attributes[index + 3], (const char*)  attributes[index + 4]);
 
-      pstate->attrv.insert(std::make_pair<std::string, std::string>((const char*) name, value));
+      pstate->attrv[name] = value;
     }
 
     // put back the standard attributes based on a merge of the root unit and this unit
