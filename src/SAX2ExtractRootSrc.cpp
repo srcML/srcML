@@ -77,6 +77,5 @@ namespace SAX2ExtractRootSrc {
     pstate->ctxt->sax->endElementNs = 0;
 
     xmlStopParser(pstate->ctxt);
-    //  }
   }
 };
