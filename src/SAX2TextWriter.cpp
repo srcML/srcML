@@ -32,6 +32,7 @@
 #include <iostream>
 
 #include "SAX2TextWriter.h"
+#include "SAX2Utilities.h"
 
 namespace SAX2TextWriter {
 
@@ -123,42 +124,21 @@ namespace SAX2TextWriter {
     State* pstate = (State*) ctx;
 
     // start element with proper prefix
-    const char* name = (const char*) localname;
-    if (prefix) {
-      static char tag[256];
-      strcpy(tag, (const char*) prefix);
-      strcat(tag, ":");
-      strcat(tag, (const char*) localname);
-      name = tag;
-    }
+    const char* name = qname((const char*) prefix, (const char*) localname);
     xmlTextWriterStartElement(pstate->writer, BAD_CAST name);
 
     // copy namespaces
-    int index = 0;
-    for (int i = 0; i < nb_namespaces; ++i, index += 2) {
+    for (int i = 0, index = 0; i < nb_namespaces; ++i, index += 2) {
 
-      const char* name = "xmlns";
-      if (namespaces[index]) {
-	static char xmlns[256] = "xmlns:";
-	strcpy(xmlns + 6, (const char*) namespaces[index]);
+      const char* name = xmlnsprefix((const char*) namespaces[index]);
 
-	name = xmlns;
-      }
       xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST name, namespaces[index + 1]);
     }
 
     // copy attributes
-    index = 0;
-    for (int i = 0; i < nb_attributes; ++i, index += 5) {
+    for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
 
-      const char* name = (const char*) attributes[index];
-      if (attributes[index + 1]) {
-	static char tag[256];
-	strcpy(tag, (const char*) attributes[index + 1]);
-	strcat(tag, ":");
-	strcat(tag, (const char*) attributes[index]);
-	name = tag;
-      }
+      const char* name = qname((const char*) attributes[index + 1], (const char*) attributes[index]);
 
       // write the attribute raw so we don't have to convert
       // the begin/end pointers of the attribute value to a string

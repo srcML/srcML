@@ -24,6 +24,7 @@
 
 #include "SAX2TextWriter.h"
 #include "SAX2ExtractUnitXML.h"
+#include "SAX2Utilities.h"
 
 #include <iostream>
 #include <cstring>
@@ -62,32 +63,15 @@ namespace SAX2ExtractUnitXML {
     pstate->count = 0;
 
     // collect namespaces
-    int index = 0;
-    for (int i = 0; i < nb_namespaces; ++i, index += 2) {
-
-      const char* prefix = "xmlns";
-      if (namespaces[index]) {
-	static char xmlns[256] = "xmlns:";
-	strcpy(xmlns + 6, (const char*) namespaces[index]);
-
-	prefix = xmlns;
-      }
-
-      pstate->nsv.insert(std::make_pair<std::string, std::string>((const char*) namespaces[index + 1], prefix));
-    }
+    for (int i = 0, index = 0; i < nb_namespaces; ++i, index += 2)
+      pstate->nsv.insert(std::make_pair<std::string, std::string>((const char*) namespaces[index + 1],
+				  xmlnsprefix((const char*) namespaces[index])));
 
     // collect attributes
-    index = 0;
-    for (int i = 0; i < nb_attributes; ++i, index += 5) {
-      
-      const char* name = (const char*) attributes[index];
-      if (attributes[index + 1]) {
-	static char tag[256];
-	strcpy(tag, (const char*) attributes[index + 1]);
-	strcat(tag, ":");
-	strcat(tag, (const char*) attributes[index]);
-	name = tag;
-      }
+    for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
+
+      const char* name = qname((const char*) attributes[index + 1], (const char*) attributes[index]);
+
       std::string value((const char*) attributes[index + 3], (const char*)  attributes[index + 4]);
 
       pstate->attrv.insert(std::make_pair<std::string, std::string>((const char*) name, value));
@@ -107,31 +91,12 @@ namespace SAX2ExtractUnitXML {
     State* pstate = (State*) ctx;
 
     // start element with proper prefix
-    const char* name = 0;
-    if (prefix) {
-      static char tag[256];
-      strcpy(tag, (const char*) prefix);
-      strcat(tag, ":");
-      strcat(tag, (const char*) localname);
-      name = tag;
-    } else
-      name = (const char*) localname;
+    const char* name = qname((const char*) prefix, (const char*) localname);
     xmlTextWriterStartElement(pstate->writer, BAD_CAST name);
 
     // collect namespaces
-    int index = 0;
-    for (int i = 0; i < nb_namespaces; ++i, index += 2) {
-
-      const char* prefix = "xmlns";
-      if (namespaces[index]) {
-	static char xmlns[256] = "xmlns:";
-	strcpy(xmlns + 6, (const char*) namespaces[index]);
-
-	prefix = xmlns;
-      }
-
-      pstate->nsv[(const char*) namespaces[index + 1]] = prefix;
-    }
+    for (int i = 0, index = 0; i < nb_namespaces; ++i, index += 2)
+      pstate->nsv[(const char*) namespaces[index + 1]] = xmlnsprefix((const char*) namespaces[index]);
 
     // output the standard namespaces, if they exist
     const char* stdns[] = { SRCML_SRC_NS_URI, SRCML_CPP_NS_URI, SRCML_ERR_NS_URI };
@@ -154,17 +119,10 @@ namespace SAX2ExtractUnitXML {
       xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST iter->second.c_str(), BAD_CAST iter->first.c_str());
 
     // copy attributes
-    index = 0;
-    for (int i = 0; i < nb_attributes; ++i, index += 5) {
+    for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
 
-      const char* name = (const char*) attributes[index];
-      if (attributes[index + 1]) {
-	static char tag[256];
-	strcpy(tag, (const char*) attributes[index + 1]);
-	strcat(tag, ":");
-	strcat(tag, (const char*) attributes[index]);
-	name = tag;
-      }
+      const char* name = qname((const char*) attributes[index + 1], (const char*) attributes[index]);
+
       std::string value((const char*) attributes[index + 3], (const char*)  attributes[index + 4]);
 
       pstate->attrv[name] = value;
