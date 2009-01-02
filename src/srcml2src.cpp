@@ -503,14 +503,12 @@ int main(int argc, char* argv[]) {
     // setup for processing
     srcMLUtility su(filename, src_encoding, options);
 
-    // move to the appropriate unit
-    if (isoption(options, OPTION_UNIT)) {
-
-	su.move_to_unit(unit);
-    }
-
     // process get attribute options
     if (optioncount > 0) {
+
+      // move to the appropriate unit
+      if (isoption(options, OPTION_UNIT))
+	su.move_to_unit(unit);
 
       if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {
 
@@ -572,6 +570,10 @@ int main(int argc, char* argv[]) {
 
     // namespace
     } else if (isoption(options, OPTION_NAMESPACE)) {
+
+	// move to the appropriate unit
+	if (isoption(options, OPTION_UNIT))
+	  su.move_to_unit(unit);
 
 	bool nonnull = true;
 	std::string l = su.namespace_ext(ns[0], nonnull);
