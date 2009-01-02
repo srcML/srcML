@@ -138,7 +138,7 @@ int srcMLUtility::unit_count() {
   xmlSAXHandler sax = SAX2CountUnits::factory();
 
   SAX2CountUnits::State state;
-  //  state.poptions = &options;
+  state.poptions = &options;
 
   xmlParserCtxtPtr ctxt = xmlCreateFileParserCtxt(infile);
   if (ctxt == NULL) return -1;
