@@ -23,6 +23,7 @@
 */
 
 #include "SAX2ExtractRootSrc.h"
+#include "Options.h"
 
 namespace SAX2ExtractRootSrc {
 
@@ -43,7 +44,9 @@ namespace SAX2ExtractRootSrc {
 
     State* pstate = (State*) ctx;
 
-    pstate->output = xmlOutputBufferCreateFilename(pstate->ofilename, pstate->handler, 0);
+    pstate->output = xmlOutputBufferCreateFilename(pstate->ofilename, pstate->handler, 
+			      isoption(*(pstate->poptions), OPTION_COMPRESSED) ? 1 : 0);
+
     if (pstate->output == NULL) {
       std::cerr << "Output buffer error" << std::endl;
       xmlStopParser(pstate->ctxt);
