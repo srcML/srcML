@@ -78,8 +78,6 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op
 // destructor
 srcMLUtility::~srcMLUtility() {
 
-  // free reader
-  xmlFreeTextReader(reader);
 }
 
 // attribute
@@ -103,11 +101,6 @@ std::string srcMLUtility::namespace_ext(const std::string& uri, bool& nonnull) {
 
 // move to a particular nested unit
 void srcMLUtility::move_to_unit(int unitnumber) {
-
-  moved = true;
-
-  // Set the encoding to that of the outer, root unit element
-  //  output_encoding = (const char*) xmlTextReaderConstEncoding(reader);
 
   // output entire unit element
   xmlSAXHandler sax = SAX2Properties::factory();
@@ -139,34 +132,7 @@ void srcMLUtility::move_to_unit(int unitnumber) {
 
 // count of nested units
 int srcMLUtility::unit_count() {
-  /*
-  // process all nodes counting units
-  int count = 0;
-  while (1) {
 
-    try {
-      skiptonextunit(reader);
-    } catch(LibXMLError) {
-      break;
-    }
-
-    // make sure first nested element is unit
-    if (count == 0 && strcmp((const char*) xmlTextReaderConstLocalName(reader), "unit") != 0)
-      break;
-
-    // found another unit
-    ++count;
-
-    // skip past this unit node
-    xmlTextReaderNext(reader);
-
-    // stop after this file (and end gracefully) with ctrl-c
-    if (isoption(options, OPTION_TERMINATE))
-      break;
-  }
-
-  return count;
-  */
   return 0;
 }
 
