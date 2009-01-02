@@ -71,9 +71,6 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op
   // empty filename indicates standard input
   if (infile == 0)
     infile = "-";
-
-  // setup an output handler
-  handler = xmlFindCharEncodingHandler(output_encoding);
 }
 
 // destructor
@@ -166,10 +163,8 @@ void srcMLUtility::extract_xml(const char* ofilename, int unit) {
   xmlSAXHandler sax = SAX2ExtractUnitXML::factory();
 
   SAX2ExtractUnitXML::State state;
-  state.ofilename = ofilename;
   state.filename = ofilename;
   state.poptions = &options;
-  state.handler = handler;
   state.unit = unit;
 
   xmlParserCtxtPtr ctxt = xmlCreateFileParserCtxt(infile);
@@ -197,7 +192,7 @@ void srcMLUtility::extract_text(const char* ofilename, int unit) {
   SAX2ExtractRootSrc::State state;
   state.ofilename = ofilename;
   state.poptions = &options;
-  state.handler = handler;
+  state.handler = xmlFindCharEncodingHandler(output_encoding);
   state.unit = unit;
 
   xmlParserCtxtPtr ctxt = xmlCreateFileParserCtxt(infile);
