@@ -29,6 +29,7 @@
 #include <libxml/xmlwriter.h>
 #include <libxml/parser.h>
 #include <libxml/parserInternals.h>
+#include <iostream>
 
 #include "SAX2TextWriter.h"
 
@@ -123,7 +124,7 @@ namespace SAX2TextWriter {
 
     // start element with proper prefix
     if (prefix) {
-      static char tag[512];
+      static char tag[256];
       strcpy(tag, (const char*) prefix);
       strcat(tag, ":");
       strcat(tag, (const char*) localname);
@@ -136,7 +137,7 @@ namespace SAX2TextWriter {
     for (int i = 0; i < nb_namespaces; ++i, index += 2) {
 
       if (namespaces[index]) {
-	static char xmlns[512] = "xmlns:";
+	static char xmlns[256] = "xmlns:";
 	strcpy(xmlns + 6, (const char*) namespaces[index]);
 
 	xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST xmlns, namespaces[index + 1]);
@@ -163,6 +164,17 @@ namespace SAX2TextWriter {
     State* pstate = (State*) ctx;
 
     xmlTextWriterEndElement(pstate->writer);
+
+    if (pstate->unit > 0 && pstate->ctxt->nameNr == 2) {
+
+      pstate->ctxt->sax->startDocument  = 0;
+      pstate->ctxt->sax->endDocument    = &SAX2TextWriter::endDocument;
+      pstate->ctxt->sax->startElementNs = 0;
+      pstate->ctxt->sax->endElementNs   = 0;
+      pstate->ctxt->sax->characters     = 0;
+
+      xmlStopParser(pstate->ctxt);
+    }
   }
 
 };

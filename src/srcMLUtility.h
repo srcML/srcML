@@ -81,9 +81,10 @@ class srcMLUtility {
   virtual ~srcMLUtility();
 
  protected:
-
+  /*
   // output current unit element in XML
   void outputUnit(const char* filename, xmlTextReaderPtr reader);
+  */
 
  private:
   const char* infile;

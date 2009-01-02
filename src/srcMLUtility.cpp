@@ -69,6 +69,7 @@ void skiptounit(xmlTextReaderPtr reader, int number) throw (LibXMLError);
 #include "SAX2ExtractUnitsSrc.h"
 #include "SAX2ExtractUnitSrc.h"
 #include "SAX2ExtractRootSrc.h"
+#include "SAX2ExtractUnitXML.h"
 
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op)
@@ -87,7 +88,7 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op
       isoption(options, OPTION_INFO) ||
       isoption(options, OPTION_LONG_INFO) ||
       isoption(options, OPTION_NAMESPACE) ||
-      isoption(options, OPTION_XML) ||
+      //      isoption(options, OPTION_XML) ||
       isoption(options, OPTION_LANGUAGE) ||
       isoption(options, OPTION_FILENAME) ||
       isoption(options, OPTION_DIRECTORY) ||
@@ -168,7 +169,6 @@ void srcMLUtility::move_to_unit(int unitnumber) {
       isoption(options, OPTION_INFO) ||
       isoption(options, OPTION_LONG_INFO) ||
       isoption(options, OPTION_NAMESPACE) ||
-      isoption(options, OPTION_XML) ||
       isoption(options, OPTION_LANGUAGE) ||
       isoption(options, OPTION_FILENAME) ||
       isoption(options, OPTION_DIRECTORY) ||
@@ -223,7 +223,26 @@ void srcMLUtility::extract_xml(const char* ofilename, int unit) {
   output_encoding = (const char*) xmlTextReaderConstEncoding(reader);
 
   // output entire unit element
-  outputUnit(ofilename, reader);
+  xmlSAXHandler sax = SAX2ExtractUnitXML::factory();
+
+  SAX2ExtractUnitXML::State state;
+  state.ofilename = ofilename;
+  state.filename = ofilename;
+  state.poptions = &options;
+  state.handler = handler;
+  state.unit = unit;
+
+  xmlParserCtxtPtr ctxt = xmlCreateFileParserCtxt(infile);
+  if (ctxt == NULL) return;
+  ctxt->sax = &sax;
+  ctxt->userData = &state;
+  state.ctxt = ctxt;
+
+  xmlParseDocument(ctxt);
+
+  ctxt->sax = NULL;
+
+  xmlFreeParserCtxt(ctxt);
 }
 
 // extract a given unit
@@ -283,6 +302,7 @@ const std::map<std::string, std::string> srcMLUtility::getNS() const {
   return nsv;
 }
 
+/*
 // output current unit element in XML
 void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
 
@@ -376,7 +396,7 @@ void srcMLUtility::outputUnit(const char* filename, xmlTextReaderPtr reader) {
   xmlSaveDoc(saver, doc);
   xmlSaveClose(saver);
 }
-
+*/
   // skip to the next unit
   void skiptonextunit(xmlTextReaderPtr reader) throw (LibXMLError) {
 

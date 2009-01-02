@@ -29,15 +29,23 @@
 #define INCLUDED_SAX2TEXTWRITER_H
 
 #include <libxml/parser.h>
+#include <libxml/xmlwriter.h>
 
 namespace SAX2TextWriter {
 
   xmlSAXHandler factory();
 
   struct State {
+    int unit;
+    long count;
+    const char * root_filename;
+    const char * ofilename;
+    xmlCharEncodingHandlerPtr handler;
+    int* poptions;
     const char* filename;      // output filename
     xmlTextWriterPtr writer;   // output text writer
-    xmlParserCtxtPtr ctxt;     // parsing context
+    xmlOutputBufferPtr output;
+    xmlParserCtxtPtr ctxt;
   };
 
   // start document
