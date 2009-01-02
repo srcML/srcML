@@ -33,6 +33,7 @@
 
 #include "SAX2TextWriter.h"
 #include "SAX2Utilities.h"
+#include "Options.h"
 
 namespace SAX2TextWriter {
 
@@ -57,7 +58,8 @@ namespace SAX2TextWriter {
 
     // open the output text writer stream
     // "-" filename is standard output
-    pstate->writer = xmlNewTextWriterFilename(pstate->filename, 0);
+    pstate->writer = xmlNewTextWriterFilename(pstate->filename,
+					      isoption(*(pstate->poptions), OPTION_COMPRESSED) ? 1 : 0);
 
     // start this document the same as the current document
     xmlTextWriterStartDocument(pstate->writer,
