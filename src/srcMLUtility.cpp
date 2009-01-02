@@ -96,7 +96,7 @@ std::string srcMLUtility::namespace_ext(const std::string& uri, bool& nonnull) {
   // find the raw prefix
   nonnull = nsv.count(uri) > 0;
 
-  return nonnull ? nsv[uri] : "";
+  return nonnull ? nsv[uri].substr(6) : "";
 }
 
 // move to a particular nested unit
