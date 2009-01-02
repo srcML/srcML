@@ -506,22 +506,7 @@ int main(int argc, char* argv[]) {
     // move to the appropriate unit
     if (isoption(options, OPTION_UNIT)) {
 
-      try {
-
 	su.move_to_unit(unit);
-
-      } catch (const OutOfRangeUnitError& e) {
-
-	std::cerr << NAME << ": " << "unit " << unit << " was selected from a compound srcML document that contains " << e.size
-		  << " nested " << (e.size > 1 ? "units" : "unit") << '\n';
-	exit_status = STATUS_UNIT_INVALID;
-
-	return exit_status;
-
-      } catch (LibXMLError) {
-	exit_status = STATUS_UNIT_INVALID;
-	throw "XML error";
-      }
     }
 
     // process get attribute options
@@ -646,6 +631,18 @@ int main(int argc, char* argv[]) {
 
     }
 
+  } catch (const OutOfRangeUnitError& e) {
+
+    std::cerr << NAME << ": " << "unit " << unit << " was selected from a compound srcML document that contains " << e.size
+	      << " nested " << (e.size > 1 ? "units" : "unit") << '\n';
+    exit_status = STATUS_UNIT_INVALID;
+
+    return exit_status;
+    /*
+  } catch (LibXMLError) {
+    exit_status = STATUS_UNIT_INVALID;
+    throw "XML error";
+    */
   } catch (LibXMLError error) {
 
     if (error.getErrorNum() == 0) {
