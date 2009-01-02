@@ -507,8 +507,7 @@ int main(int argc, char* argv[]) {
     if (optioncount > 0) {
 
       // move to the appropriate unit
-      //      if (isoption(options, OPTION_UNIT))
-	su.move_to_unit(unit);
+      su.move_to_unit(unit);
 
       if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {
 
@@ -517,12 +516,6 @@ int main(int argc, char* argv[]) {
 	for (std::map<std::string, std::string>::const_iterator iter = ns.begin(); iter != ns.end(); ++iter) {
 	  std::string uri = (*iter).first;
 	  std::string prefix = (*iter).second;
-	  /*
-	  if (prefix == "")
-		  prefix = "xmlns";
-	  else
-		  prefix = "xmlns:" + prefix;
-	  */
 
 	  std::cout << prefix << "=\"" << uri << "\"" << std::endl;
 	}
@@ -535,22 +528,29 @@ int main(int argc, char* argv[]) {
 	const char* attribute_name = "";
 	const char* attribute_title = "";
 	int option = optionorder[i];
-	if (option == OPTION_XML_ENCODING) {
+
+	switch (option) {
+	case OPTION_XML_ENCODING:
 	  attribute_name = "";
 	  attribute_title = "encoding=";
-	} else if (option == OPTION_LANGUAGE) {
+	  break;
+	case OPTION_LANGUAGE:
 	  attribute_name = "language";
 	  attribute_title = "language=";
-	} else if (option == OPTION_DIRECTORY) {
+	  break;
+	case OPTION_DIRECTORY:
 	  attribute_name = "dir";
 	  attribute_title = "directory=";
-	} else if (option == OPTION_FILENAME) {
+	  break;
+	case OPTION_FILENAME:
 	  attribute_name = "filename";
 	  attribute_title = "filename=";
-	} else if (option == OPTION_VERSION) {
+	  break;
+	case OPTION_VERSION:
 	  attribute_name = "version";
 	  attribute_title = "src-version=";
-	}
+	  break;
+	};
 
 	// output the option
 	bool nonnull = true;
