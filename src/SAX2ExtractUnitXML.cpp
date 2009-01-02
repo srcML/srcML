@@ -32,6 +32,12 @@
 #include <libxml/parserInternals.h>
 #include "srcmlns.h"
 
+/* srcML unit attributes */
+const char* const UNIT_ATTRIBUTE_LANGUAGE = "language";
+const char* const UNIT_ATTRIBUTE_DIRECTORY = "dir";
+const char* const UNIT_ATTRIBUTE_FILENAME = "filename";
+const char* const UNIT_ATTRIBUTE_VERSION = "version";
+
 namespace SAX2ExtractUnitXML {
 
   xmlSAXHandler factory() {
@@ -55,24 +61,37 @@ namespace SAX2ExtractUnitXML {
     // start counting units after the root
     pstate->count = 0;
 
-    // collect namespaces and attributes
-    // copy namespaces
+    // collect namespaces
     int index = 0;
     for (int i = 0; i < nb_namespaces; ++i, index += 2) {
 
+      const char* prefix = "xmlns";
       if (namespaces[index]) {
 	static char xmlns[256] = "xmlns:";
 	strcpy(xmlns + 6, (const char*) namespaces[index]);
 
-	pstate->nsv.insert(std::make_pair<std::string, std::string>((const char*) namespaces[index + 1], xmlns));
-      } else
-	pstate->nsv.insert(std::make_pair<std::string, std::string>((const char*) namespaces[index + 1], "xmlns"));
+	prefix = xmlns;
+      }
+
+      pstate->nsv.insert(std::make_pair<std::string, std::string>((const char*) namespaces[index + 1], prefix));
     }
 
+    // collect attributes
+    index = 0;
+    for (int i = 0; i < nb_attributes; ++i, index += 5) {
+      
+      const char* name = (const char*) attributes[index];
+      if (attributes[index + 1]) {
+	static char tag[256];
+	strcpy(tag, (const char*) attributes[index + 1]);
+	strcat(tag, ":");
+	strcat(tag, (const char*) attributes[index]);
+	name = tag;
+      }
+      std::string value((const char*) attributes[index + 3], (const char*)  attributes[index + 4]);
 
-    // record all namespaces for future use
-    //    for (xmlNsPtr pAttr = xmlTextReaderCurrentNode(reader)->nsDef; pAttr; pAttr = pAttr->next)
-    //      pstate->attrv();
+      pstate->attrv.insert(std::make_pair<std::string, std::string>((const char*) name, value));
+    }
 
     // handle nested units
     pstate->ctxt->sax->startElementNs = pstate->unit == 1 ? &startElementNsUnit : 0;
@@ -88,26 +107,30 @@ namespace SAX2ExtractUnitXML {
     State* pstate = (State*) ctx;
 
     // start element with proper prefix
+    const char* name = 0;
     if (prefix) {
       static char tag[256];
       strcpy(tag, (const char*) prefix);
       strcat(tag, ":");
       strcat(tag, (const char*) localname);
-      xmlTextWriterStartElement(pstate->writer, BAD_CAST tag);
+      name = tag;
     } else
-      xmlTextWriterStartElement(pstate->writer, localname);
+      name = (const char*) localname;
+    xmlTextWriterStartElement(pstate->writer, BAD_CAST name);
 
-    // copy namespaces
+    // collect namespaces
     int index = 0;
     for (int i = 0; i < nb_namespaces; ++i, index += 2) {
 
+      const char* prefix = "xmlns";
       if (namespaces[index]) {
 	static char xmlns[256] = "xmlns:";
 	strcpy(xmlns + 6, (const char*) namespaces[index]);
 
-	xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST xmlns, namespaces[index + 1]);
-      } else
-	xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST "xmlns", namespaces[index + 1]);
+	prefix = xmlns;
+      }
+
+      pstate->nsv.insert(std::make_pair<std::string, std::string>((const char*) namespaces[index + 1], prefix));
     }
 
     // output the standard namespaces, if they exist
@@ -134,13 +157,36 @@ namespace SAX2ExtractUnitXML {
     index = 0;
     for (int i = 0; i < nb_attributes; ++i, index += 5) {
 
-      // write the attribute raw so we don't have to convert
-      // the begin/end pointers of the attribute value to a string
-      xmlTextWriterStartAttribute(pstate->writer, attributes[index]);
-      xmlTextWriterWriteRawLen(pstate->writer, attributes[index + 3],
-			       attributes[index + 4] - attributes[index + 3]);
-      xmlTextWriterEndAttribute(pstate->writer);
+      const char* name = (const char*) attributes[index];
+      if (attributes[index + 1]) {
+	static char tag[256];
+	strcpy(tag, (const char*) attributes[index + 1]);
+	strcat(tag, ":");
+	strcat(tag, (const char*) attributes[index]);
+	name = tag;
+      }
+      std::string value((const char*) attributes[index + 3], (const char*)  attributes[index + 4]);
+
+      pstate->attrv.insert(std::make_pair<std::string, std::string>((const char*) name, value));
     }
+
+    // put back the standard attributes based on a merge of the root unit and this unit
+    const char* stdattr[] = { UNIT_ATTRIBUTE_LANGUAGE, UNIT_ATTRIBUTE_DIRECTORY,
+			    UNIT_ATTRIBUTE_FILENAME, UNIT_ATTRIBUTE_VERSION };
+    for (int i = 0; i < (int) (sizeof(stdattr) / sizeof(stdattr[0])); ++i) {
+
+      std::map<std::string, std::string>::iterator pos = pstate->attrv.find(stdattr[i]);
+      if (pos != pstate->attrv.end()) {
+
+	xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST pos->first.c_str(), BAD_CAST pos->second.c_str());
+
+	pstate->attrv.erase(pos);
+      }
+    }
+
+    // put in the rest of the attributes
+    for (std::map<std::string, std::string>::const_iterator iter = pstate->attrv.begin(); iter != pstate->attrv.end(); iter++)
+      xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST iter->first.c_str(), BAD_CAST iter->second.c_str());
 
     // now really start
     pstate->ctxt->sax->endDocument    = &SAX2TextWriter::endDocument;

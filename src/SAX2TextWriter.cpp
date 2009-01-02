@@ -149,9 +149,18 @@ namespace SAX2TextWriter {
     index = 0;
     for (int i = 0; i < nb_attributes; ++i, index += 5) {
 
+      const char* name = (const char*) attributes[index];
+      if (attributes[index + 1]) {
+	static char tag[256];
+	strcpy(tag, (const char*) attributes[index + 1]);
+	strcat(tag, ":");
+	strcat(tag, (const char*) attributes[index]);
+	name = tag;
+      }
+
       // write the attribute raw so we don't have to convert
       // the begin/end pointers of the attribute value to a string
-      xmlTextWriterStartAttribute(pstate->writer, attributes[index]);
+      xmlTextWriterStartAttribute(pstate->writer, BAD_CAST name);
       xmlTextWriterWriteRawLen(pstate->writer, attributes[index + 3],
 			       attributes[index + 4] - attributes[index + 3]);
       xmlTextWriterEndAttribute(pstate->writer);
