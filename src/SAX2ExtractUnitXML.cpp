@@ -137,21 +137,21 @@ namespace SAX2ExtractUnitXML {
     const char* stdns[] = { SRCML_SRC_NS_URI, SRCML_CPP_NS_URI, SRCML_ERR_NS_URI };
     for (int i = 0; i < (int) (sizeof(stdns) / sizeof(stdns[0])); ++i) {
 
+      // handle standard namespaces
       std::map<std::string, std::string>::iterator pos = pstate->nsv.find(stdns[i]);
       if (pos != pstate->nsv.end()) {
+
+	// output the standard namespace
 	xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST pos->second.c_str(), BAD_CAST pos->first.c_str());
 
+	// remove it so that only non-standard namespaces are left
 	pstate->nsv.erase(pos);
       }
     }
 
     // output any other namespaces that may exist
-    for (std::map<std::string, std::string>::const_iterator iter = pstate->nsv.begin(); iter != pstate->nsv.end(); ++iter) {
-      std::string uri = (*iter).first;
-      std::string prefix = (*iter).second;
-      
-      xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST prefix.c_str(), BAD_CAST uri.c_str());
-    }
+    for (std::map<std::string, std::string>::const_iterator iter = pstate->nsv.begin(); iter != pstate->nsv.end(); ++iter)
+      xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST iter->second.c_str(), BAD_CAST iter->first.c_str());
 
     // copy attributes
     index = 0;

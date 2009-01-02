@@ -123,26 +123,28 @@ namespace SAX2TextWriter {
     State* pstate = (State*) ctx;
 
     // start element with proper prefix
+    const char* name = (const char*) localname;
     if (prefix) {
       static char tag[256];
       strcpy(tag, (const char*) prefix);
       strcat(tag, ":");
       strcat(tag, (const char*) localname);
-      xmlTextWriterStartElement(pstate->writer, BAD_CAST tag);
-    } else
-      xmlTextWriterStartElement(pstate->writer, localname);
+      name = tag;
+    }
+    xmlTextWriterStartElement(pstate->writer, BAD_CAST name);
 
     // copy namespaces
     int index = 0;
     for (int i = 0; i < nb_namespaces; ++i, index += 2) {
 
+      const char* name = "xmlns";
       if (namespaces[index]) {
 	static char xmlns[256] = "xmlns:";
 	strcpy(xmlns + 6, (const char*) namespaces[index]);
 
-	xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST xmlns, namespaces[index + 1]);
-      } else
-	xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST "xmlns", namespaces[index + 1]);
+	name = xmlns;
+      }
+      xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST name, namespaces[index + 1]);
     }
 
     // copy attributes
