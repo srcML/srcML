@@ -77,6 +77,17 @@ namespace SAX2Properties {
       pstate->attrv.insert(std::make_pair<std::string, std::string>((const char*) name, value));
     }
 
+    if (pstate->unit == 0) {
+      pstate->ctxt->sax->startDocument  = 0;
+      pstate->ctxt->sax->endDocument    = 0;
+      pstate->ctxt->sax->startElementNs = 0;
+      pstate->ctxt->sax->endElementNs   = 0;
+      pstate->ctxt->sax->characters     = 0;
+
+      xmlStopParser(pstate->ctxt);
+      return;
+    }
+
     // handle nested units
     pstate->ctxt->sax->startElementNs = pstate->unit == 1 ? &startElementNsUnit : 0;
     pstate->ctxt->sax->endElementNs   = pstate->unit == 1 ? 0 : &endElementNs;
