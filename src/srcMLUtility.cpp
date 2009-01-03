@@ -111,7 +111,7 @@ void srcMLUtility::move_to_unit(int unitnumber) {
   state.poptions = &options;
   state.unit = unitnumber;
 
-  xmlParserCtxtPtr ctxt = xmlCreateFileParserCtxt(infile);
+  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
   if (ctxt == NULL) return;
   ctxt->sax = &sax;
   ctxt->userData = &state;
@@ -143,7 +143,7 @@ int srcMLUtility::unit_count() {
   SAX2CountUnits::State state;
   state.poptions = &options;
 
-  xmlParserCtxtPtr ctxt = xmlCreateFileParserCtxt(infile);
+  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
   if (ctxt == NULL) return -1;
   ctxt->sax = &sax;
   ctxt->userData = &state;
@@ -169,7 +169,7 @@ void srcMLUtility::extract_xml(const char* ofilename, int unit) {
   state.poptions = &options;
   state.unit = unit;
 
-  xmlParserCtxtPtr ctxt = xmlCreateFileParserCtxt(infile);
+  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
   if (ctxt == NULL) return;
   ctxt->sax = &sax;
   ctxt->userData = &state;
@@ -197,7 +197,7 @@ void srcMLUtility::extract_text(const char* ofilename, int unit) {
   state.handler = xmlFindCharEncodingHandler(output_encoding);
   state.unit = unit;
 
-  xmlParserCtxtPtr ctxt = xmlCreateFileParserCtxt(infile);
+  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
   if (ctxt == NULL) return;
   ctxt->sax = &sax;
   ctxt->userData = &state;
@@ -224,7 +224,7 @@ void srcMLUtility::expand(const char* root_filename) {
 
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
 
-  xmlParserCtxtPtr ctxt = xmlCreateFileParserCtxt(infile);
+  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
   if (ctxt == NULL) return;
   ctxt->sax = &sax;
   ctxt->userData = &state;
