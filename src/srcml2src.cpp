@@ -191,7 +191,7 @@ int main(int argc, char* argv[]) {
   // option values
   const char* src_encoding = DEFAULT_TEXT_ENCODING;
   int unit = 0;
-  std::list<std::string> ns;
+  std::list<const char*> ns;
 
   // process all flags
   int position = 0;
@@ -576,7 +576,7 @@ int main(int argc, char* argv[]) {
 
       su.move_to_unit(unit);
 
-      for (std::list<std::string>::const_iterator iter = ns.begin(); iter != ns.end(); ++iter) {
+      for (std::list<const char*>::const_iterator iter = ns.begin(); iter != ns.end(); ++iter) {
 
 	bool nonnull = true;
 	std::string prefix = su.namespace_ext(*iter, nonnull);
