@@ -135,8 +135,10 @@ namespace SAX2ExtractUnitsSrc {
 
     std::string filename;
     bool foundfilename = false;
-    std::string directory;
     bool founddirectory = false;
+
+    const char* root_filename = "";
+    std::string directory_filename = root_filename;
 
     // extract the attributes from the unit for filename and directory
     unsigned int index = 0;
@@ -151,7 +153,7 @@ namespace SAX2ExtractUnitsSrc {
 
       } else if (strcmp((const char*) attributes[index], "dir") == 0) {
 
-	directory.assign((const char*) attributes[index + 3], (const char*) attributes[index + 4]);
+	directory_filename += std::string((const char*) attributes[index + 3], (const char*) attributes[index + 4]);
 	founddirectory = true;
 
 	if (foundfilename)
@@ -164,10 +166,7 @@ namespace SAX2ExtractUnitsSrc {
     }
 
     // construct the directory if needed
-    const char* root_filename = "";
-    std::string directory_filename = root_filename;
     if (founddirectory) {
-      directory_filename += directory;
 
       // make the directory path if there is one
 #ifdef __GNUC__
