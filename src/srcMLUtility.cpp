@@ -82,9 +82,15 @@ srcMLUtility::~srcMLUtility() {
 std::string srcMLUtility::attribute(const char* attribute_name, bool& nonnull) {
 
   // extract attribute from unit tag
-  nonnull = attrv.count(attribute_name) > 0;
+  std::map<std::string, std::string>::const_iterator pos = attrv.find(attribute_name);
 
-  return nonnull ? attrv[attribute_name] : "";
+  if (pos != attrv.end()) {
+      nonnull = false;
+      return pos->second;
+  } else {
+      nonnull = true;
+      return "";
+  }
 }
 
 // prefix of given namespace
@@ -104,7 +110,6 @@ void srcMLUtility::move_to_unit(int unitnumber) {
   xmlSAXHandler sax = SAX2Properties::factory();
 
   SAX2Properties::State state;
-  state.ofilename = infile;
   state.filename = infile;
   state.poptions = &options;
   state.unit = unitnumber;
