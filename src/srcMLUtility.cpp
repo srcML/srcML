@@ -97,10 +97,15 @@ std::string srcMLUtility::attribute(const char* attribute_name, bool& nonnull) {
 // return blank for default namespace
 std::string srcMLUtility::namespace_ext(const std::string& uri, bool& nonnull) {
 
-  // find the raw prefix
-  nonnull = nsv.count(uri) > 0;
+  std::map<std::string, std::string>::const_iterator pos = nsv.find(uri);
 
-  return nonnull ? nsv[uri].substr(nsv[uri].size() > 5 ? 6 : 5 ) : "";
+  if (pos != nsv.end()) {
+      nonnull = false;
+      return pos->second.substr(pos->second.size() > 5 ? 6 : 5);
+  } else {
+      nonnull = true;
+      return "";
+  }
 }
 
 // move to a particular nested unit
