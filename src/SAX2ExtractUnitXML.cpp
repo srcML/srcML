@@ -68,8 +68,8 @@ namespace SAX2ExtractUnitXML {
 
     // collect namespaces
     for (int i = 0, index = 0; i < nb_namespaces; ++i, index += 2)
-      pstate->nsv.insert(std::make_pair<std::string, std::string>((const char*) namespaces[index + 1],
-				  xmlnsprefix((const char*) namespaces[index])));
+      pstate->nsv.insert(std::make_pair((const char*) namespaces[index + 1],
+					xmlnsprefix((const char*) namespaces[index])));
 
     // collect attributes
     for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
@@ -78,7 +78,7 @@ namespace SAX2ExtractUnitXML {
 
       std::string value((const char*) attributes[index + 3], (const char*)  attributes[index + 4]);
 
-      pstate->attrv.insert(std::make_pair<std::string, std::string>((const char*) name, value));
+      pstate->attrv.insert(std::make_pair((const char*) name, value));
     }
 
     // handle nested units
