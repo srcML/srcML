@@ -68,14 +68,7 @@ namespace SAX2Properties {
 				  xmlnsprefix((const char*) namespaces[index])));
 
     // collect attributes
-    for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
-
-      const char* name = qname((const char*) attributes[index + 1], (const char*) attributes[index]);
-
-      std::string value((const char*) attributes[index + 3], (const char*)  attributes[index + 4]);
-
-      pstate->attrv.insert(std::make_pair<std::string, std::string>((const char*) name, value));
-    }
+    collect_attributes(nb_attributes, attributes, pstate->attrv);
 
     if (pstate->unit == 0) {
       pstate->ctxt->sax->startDocument  = 0;

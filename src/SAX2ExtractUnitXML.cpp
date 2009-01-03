@@ -72,14 +72,7 @@ namespace SAX2ExtractUnitXML {
 					xmlnsprefix((const char*) namespaces[index])));
 
     // collect attributes
-    for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
-
-      const char* name = qname((const char*) attributes[index + 1], (const char*) attributes[index]);
-
-      std::string value((const char*) attributes[index + 3], (const char*)  attributes[index + 4]);
-
-      pstate->attrv.insert(std::make_pair((const char*) name, value));
-    }
+    collect_attributes(nb_attributes, attributes, pstate->attrv);
 
     // handle nested units
     pstate->ctxt->sax->startElementNs = pstate->unit == 1 ? &startElementNsUnit : 0;
@@ -130,14 +123,7 @@ namespace SAX2ExtractUnitXML {
       xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST iter->second.c_str(), BAD_CAST iter->first.c_str());
 
     // copy attributes
-    for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
-
-      const char* name = qname((const char*) attributes[index + 1], (const char*) attributes[index]);
-
-      std::string value((const char*) attributes[index + 3], (const char*)  attributes[index + 4]);
-
-      pstate->attrv[name] = value;
-    }
+    collect_attributes(nb_attributes, attributes, pstate->attrv);
 
     // put back the standard attributes based on a merge of the root unit and this unit
     const char* stdattr[] = { UNIT_ATTRIBUTE_LANGUAGE, UNIT_ATTRIBUTE_DIRECTORY,
