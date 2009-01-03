@@ -84,13 +84,9 @@ std::string srcMLUtility::attribute(const char* attribute_name, bool& nonnull) {
   // extract attribute from unit tag
   std::map<std::string, std::string>::const_iterator pos = attrv.find(attribute_name);
 
-  if (pos != attrv.end()) {
-      nonnull = true;
-      return pos->second;
-  } else {
-      nonnull = false;
-      return "";
-  }
+  nonnull = pos != attrv.end();
+
+  return nonnull ? pos->second : "";
 }
 
 // prefix of given namespace
@@ -99,13 +95,9 @@ std::string srcMLUtility::namespace_ext(const std::string& uri, bool& nonnull) {
 
   std::map<std::string, std::string>::const_iterator pos = nsv.find(uri);
 
-  if (pos != nsv.end()) {
-      nonnull = true;
-      return pos->second.substr(pos->second.size() > 5 ? 6 : 5);
-  } else {
-      nonnull = false;
-      return "";
-  }
+  nonnull = pos != nsv.end();
+
+  return nonnull ? pos->second.substr(pos->second.size() > 5 ? 6 : 5) : "";
 }
 
 // move to a particular nested unit
