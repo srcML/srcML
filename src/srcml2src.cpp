@@ -575,10 +575,22 @@ int main(int argc, char* argv[]) {
 
       su.move_to_unit(unit);
 
+      for (std::vector<std::string>::const_iterator iter = ns.begin(); iter != ns.end(); ++iter) {
+
 	bool nonnull = true;
-	std::string l = su.namespace_ext(ns[0], nonnull);
-	if (nonnull)
-	  std::cout << l << '\n';
+	std::string prefix = su.namespace_ext(*iter, nonnull);
+	if (nonnull) {
+	  if (ns.size() > 1) {
+	    std::cout << "xmlns";
+	    if (prefix != "")
+	      std::cout << ":";
+	  }
+	  std::cout << prefix;
+	  if (ns.size() > 1)
+	    std::cout << "=\"" << *iter << "\"";
+	  std::cout << '\n';
+	}
+      }
 
     // process non-attribute options
     } else if (isoption(options, OPTION_NESTED)) {
