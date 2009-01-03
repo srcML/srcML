@@ -24,6 +24,13 @@
 
 #include "SAX2ExtractUnitsSrc.h"
 
+#ifdef __GNUC__
+#include <sys/stat.h>
+#include <sys/errno.h>
+#else
+#include <direct.h>
+#endif
+
 // directory permission for expand
 #ifdef __GNUC__
 const int EXPAND_DIR_PERM = S_IRWXU | S_IRWXG;
@@ -174,7 +181,7 @@ namespace SAX2ExtractUnitsSrc {
     }
 
     // filename is based on directory
-    std::string output_filename = directory_filename;
+    std::string& output_filename = directory_filename;
     if (output_filename != "")
       output_filename += "/";
     output_filename += filename;
