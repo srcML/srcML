@@ -63,7 +63,7 @@ namespace SAX2Properties {
     pstate->count = 0;
 
     // collect namespaces
-    collect_attributes(nb_namespaces, namespaces, pstate->nsv);
+    collect_namespaces(nb_namespaces, namespaces, pstate->nsv);
 
     // collect attributes
     collect_attributes(nb_attributes, attributes, pstate->attrv);
@@ -94,7 +94,7 @@ namespace SAX2Properties {
     State* pstate = (State*) ctx;
 
     // collect namespaces
-    collect_attributes(nb_namespaces, namespaces, pstate->nsv);
+    collect_namespaces(nb_namespaces, namespaces, pstate->nsv);
 
     // collect attributes
     collect_attributes(nb_attributes, attributes, pstate->attrv);
