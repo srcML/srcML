@@ -63,9 +63,7 @@ namespace SAX2Properties {
     pstate->count = 0;
 
     // collect namespaces
-    for (int i = 0, index = 0; i < nb_namespaces; ++i, index += 2)
-      pstate->nsv.insert(std::make_pair<std::string, std::string>((const char*) namespaces[index + 1],
-				  xmlnsprefix((const char*) namespaces[index])));
+    collect_attributes(nb_namespaces, namespaces, pstate->nsv);
 
     // collect attributes
     collect_attributes(nb_attributes, attributes, pstate->attrv);
@@ -95,18 +93,10 @@ namespace SAX2Properties {
     State* pstate = (State*) ctx;
 
     // collect namespaces
-    for (int i = 0, index = 0; i < nb_namespaces; ++i, index += 2)
-      pstate->nsv[(const char*) namespaces[index + 1]] = xmlnsprefix((const char*) namespaces[index]);
+    collect_attributes(nb_namespaces, namespaces, pstate->nsv);
 
-    // copy attributes
-    for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
-
-      const char* name = qname((const char*) attributes[index + 1], (const char*) attributes[index]);
-
-      std::string value((const char*) attributes[index + 3], (const char*)  attributes[index + 4]);
-
-      pstate->attrv[name] = value;
-    }
+    // collect attributes
+    collect_attributes(nb_attributes, attributes, pstate->attrv);
 
     pstate->ctxt->sax->startDocument  = 0;
     pstate->ctxt->sax->endDocument    = 0;

@@ -67,9 +67,7 @@ namespace SAX2ExtractUnitXML {
     pstate->count = 0;
 
     // collect namespaces
-    for (int i = 0, index = 0; i < nb_namespaces; ++i, index += 2)
-      pstate->nsv.insert(std::make_pair((const char*) namespaces[index + 1],
-					xmlnsprefix((const char*) namespaces[index])));
+    collect_attributes(nb_namespaces, namespaces, pstate->nsv);
 
     // collect attributes
     collect_attributes(nb_attributes, attributes, pstate->attrv);
@@ -99,8 +97,7 @@ namespace SAX2ExtractUnitXML {
     xmlTextWriterStartElement(pstate->writer, BAD_CAST name);
 
     // collect namespaces
-    for (int i = 0, index = 0; i < nb_namespaces; ++i, index += 2)
-      pstate->nsv[(const char*) namespaces[index + 1]] = xmlnsprefix((const char*) namespaces[index]);
+    collect_attributes(nb_namespaces, namespaces, pstate->nsv);
 
     // output the standard namespaces, if they exist
     const char* stdns[] = { SRCML_SRC_NS_URI, SRCML_CPP_NS_URI, SRCML_ERR_NS_URI };

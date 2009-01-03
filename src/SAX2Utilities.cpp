@@ -41,3 +41,11 @@ void collect_attributes(int nb_attributes, const xmlChar** attributes,
       attrv[name] = value;
     }
 }
+
+// collect namespaces
+void collect_namespaces(int nb_namespaces, const xmlChar** namespaces,
+			std::map<std::string, std::string>& nsv) {
+
+    for (int i = 0, index = 0; i < nb_namespaces; ++i, index += 2)
+      nsv[(const char*) namespaces[index + 1]] = xmlnsprefix((const char*) namespaces[index]);
+}
