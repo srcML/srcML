@@ -68,20 +68,21 @@ namespace SAX2Properties {
     // collect attributes
     collect_attributes(nb_attributes, attributes, pstate->attrv);
 
-    if (pstate->unit == 0) {
-      pstate->ctxt->sax->startDocument  = 0;
-      pstate->ctxt->sax->endDocument    = 0;
-      pstate->ctxt->sax->startElementNs = 0;
-      pstate->ctxt->sax->endElementNs   = 0;
-      pstate->ctxt->sax->characters     = 0;
-
-      xmlStopParser(pstate->ctxt);
+    // extract from nested unit if needed
+    if (pstate->unit) {
+      pstate->ctxt->sax->startElementNs = pstate->unit == 1 ? &startElementNsUnit : 0;
+      pstate->ctxt->sax->endElementNs   = pstate->unit == 1 ? 0 : &endElementNs;
       return;
     }
 
-    // handle nested units
-    pstate->ctxt->sax->startElementNs = pstate->unit == 1 ? &startElementNsUnit : 0;
-    pstate->ctxt->sax->endElementNs   = pstate->unit == 1 ? 0 : &endElementNs;
+    // done if only from root
+    pstate->ctxt->sax->startDocument  = 0;
+    pstate->ctxt->sax->endDocument    = 0;
+    pstate->ctxt->sax->startElementNs = 0;
+    pstate->ctxt->sax->endElementNs   = 0;
+    pstate->ctxt->sax->characters     = 0;
+
+    xmlStopParser(pstate->ctxt);
   }
 
   // start a new output buffer and corresponding file for a
