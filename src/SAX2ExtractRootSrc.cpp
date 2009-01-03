@@ -62,10 +62,10 @@ namespace SAX2ExtractRootSrc {
 
     State* pstate = (State*) ctx;
 
+    // only need to process end element of current unit
     int stop = 1;
     if (pstate->unit)
       ++stop;
-
     if (pstate->ctxt->nameNr > stop)
       return;
 

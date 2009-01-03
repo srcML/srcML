@@ -195,6 +195,7 @@ namespace SAX2ExtractUnitsSrc {
 
     State* pstate = (State*) ctx;
 
+    // only process nested unit start elements
     if (pstate->ctxt->nameNr != 2)
       return;
 
@@ -202,6 +203,7 @@ namespace SAX2ExtractUnitsSrc {
     //  if (strcmp((const char*) localname, "unit") == 0 &&
     //      strcmp((const char*) URI, "http://www.sdml.info/srcML/src") == 0) {
 
+    // finish up this file
     xmlOutputBufferClose(pstate->output);
 
     // stop after this file (and end gracefully) with ctrl-c
@@ -210,10 +212,10 @@ namespace SAX2ExtractUnitsSrc {
       throw TerminateLibXMLError();
     }
 
+    // now waiting for start of next unit
     pstate->ctxt->sax->startElementNs = &startElementNs;
     pstate->ctxt->sax->characters = 0;
     pstate->ctxt->sax->endElementNs = 0;
-    //  }
   }
 
   // escape control character elements
