@@ -577,11 +577,8 @@ int main(int argc, char* argv[]) {
 
 	bool nonnull = true;
 	std::string l = su.namespace_ext(ns[0], nonnull);
-	if (nonnull) {
-	  //	  if (optioncount > 1)
-	  //	    std::cout << attribute_title << " ";
+	if (nonnull)
 	  std::cout << l << '\n';
-	}
 
     // process non-attribute options
     } else if (isoption(options, OPTION_NESTED)) {
