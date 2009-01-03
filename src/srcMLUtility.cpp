@@ -85,10 +85,10 @@ std::string srcMLUtility::attribute(const char* attribute_name, bool& nonnull) {
   std::map<std::string, std::string>::const_iterator pos = attrv.find(attribute_name);
 
   if (pos != attrv.end()) {
-      nonnull = false;
+      nonnull = true;
       return pos->second;
   } else {
-      nonnull = true;
+      nonnull = false;
       return "";
   }
 }
@@ -100,10 +100,10 @@ std::string srcMLUtility::namespace_ext(const std::string& uri, bool& nonnull) {
   std::map<std::string, std::string>::const_iterator pos = nsv.find(uri);
 
   if (pos != nsv.end()) {
-      nonnull = false;
+      nonnull = true;
       return pos->second.substr(pos->second.size() > 5 ? 6 : 5);
   } else {
-      nonnull = true;
+      nonnull = false;
       return "";
   }
 }
