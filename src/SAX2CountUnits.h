@@ -37,6 +37,7 @@ namespace SAX2CountUnits {
 
   struct State {
     xmlParserCtxtPtr ctxt;
+    int unit;
     long count;
     bool verbose;
   };
