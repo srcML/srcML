@@ -64,15 +64,15 @@ void output_help(const char* name) {
 
      std::cout << "Usage: " << name << " [options] <infile> <outfile>\n\n"
 	       << "Translates from the the XML source-code representation srcML to source-code text files.\n"
-	       << "The srcML files can be in xml or gzip compressed xml (detected automatically).\n"
-	       << "Also provides various utilities for accessing metadata about the srcML document, \n"
-	       << "and extracting parts of compound srcML documents.\n"
-               << '\n'
-	       << "When no filenames are given read from standard input and write to standard output.\n"
-	       << "When only one filename is given write to standard output.\n"
-	       << "An input filename of '-' also reads from standard input.\n\n"
+                  "The srcML files can be in xml or gzip compressed xml (detected automatically).\n"
+	          "Also provides various utilities for accessing metadata about the srcML document, \n"
+	          "and extracting parts of compound srcML documents.\n\n"
 
-	       << "Options:"  << '\n'
+	          "When no filenames are given read from standard input and write to standard output.\n"
+	          "When only one filename is given write to standard output.\n"
+	          "An input filename of '-' also reads from standard input.\n\n"
+
+	          "Options:\n"
                << std::left
 	       << "  " << HELP_FLAG_SHORT       << ", " << setw(COL) << HELP_FLAG       
 	       << "display this help and exit\n"
@@ -493,6 +493,7 @@ int main(int argc, char* argv[]) {
       // move to the appropriate unit
       su.move_to_unit(unit);
 
+      // output all the namespaces
       if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {
 
 	const PROPERTIES_TYPE& ns = su.getNS();
@@ -638,7 +639,7 @@ int main(int argc, char* argv[]) {
 
     if (error.getErrorNum() == 0) {
       exit_status = STATUS_INPUTFILE_PROBLEM;
-      std::cerr << NAME << ": " << "Unable to open input file as XML" << "\n";
+      std::cerr << NAME << ": " << "Unable to open input file as XML\n";
     }
 
   } catch (const char* s) {
