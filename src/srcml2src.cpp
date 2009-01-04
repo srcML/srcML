@@ -496,7 +496,6 @@ int main(int argc, char* argv[]) {
       if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {
 
 	const PROPERTIES_TYPE& ns = su.getNS();
-
 	for (PROPERTIES_TYPE::const_iterator iter = ns.begin(); iter != ns.end(); ++iter)
 	  std::cout << iter->second << "=\"" << iter->first << "\"" << std::endl;
       }
@@ -561,8 +560,8 @@ int main(int argc, char* argv[]) {
 	  else {
 	    std::cout << "xmlns";
 	    if (prefix[0] != '\0')
-	      std::cout << ":";
-	    std::cout << prefix << "=\"" << *iter << "\"\n";
+	      std::cout << ":" << prefix;
+	    std::cout << "=\"" << *iter << "\"\n";
 	  }
 	}
       }
@@ -570,22 +569,25 @@ int main(int argc, char* argv[]) {
     // process non-attribute options
     } else if (isoption(options, OPTION_NESTED)) {
 
-	// gracefully finish current file in compound document mode
-	pstd::signal(SIGINT, terminate_handler);
+      // gracefully finish current file in compound document mode
+      pstd::signal(SIGINT, terminate_handler);
 
-	std::cout << su.unit_count() << '\n';
+      std::cout << su.unit_count() << '\n';
 
-	// if we terminated early, output the correct status
-        if (isoption(options, OPTION_TERMINATE))
-
-	  exit_status = STATUS_TERMINATED;
+      // if we terminated early, output the correct status
+      if (isoption(options, OPTION_TERMINATE))
+	exit_status = STATUS_TERMINATED;
 
     } else if (isoption(options, OPTION_EXPAND)) {
 
-	// gracefully finish current file in compound document mode
-	pstd::signal(SIGINT, terminate_handler);
+      // gracefully finish current file in compound document mode
+      pstd::signal(SIGINT, terminate_handler);
 
-	su.expand();
+      su.expand();
+
+      // if we terminated early, output the correct status
+      if (isoption(options, OPTION_TERMINATE))
+	exit_status = STATUS_TERMINATED;
 
     } else if (isoption(options, OPTION_XML)) {
 
