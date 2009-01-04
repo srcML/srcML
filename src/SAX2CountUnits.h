@@ -39,11 +39,8 @@ namespace SAX2CountUnits {
   xmlSAXHandler factory();
 
   struct State {
-    int* poptions;
-    long count;
     xmlParserCtxtPtr ctxt;
-    std::map<std::string, std::string> nsv;
-    std::map<std::string, std::string> attrv;
+    long count;
     bool verbose;
   };
 
