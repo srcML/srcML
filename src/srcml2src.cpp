@@ -425,8 +425,8 @@ int main(int argc, char* argv[]) {
 
   } else if (argc > curarg + 1) {
 
-      std::cerr << NAME << ": More than one output file specified.\n";
-      std::cerr << "try '" << NAME << " --help' for more information." << "\n";
+      std::cerr << NAME << ": More than one output file specified.\n"
+		<< "try '" << NAME << " --help' for more information." << "\n";
       exit(0);
   }
 
@@ -495,14 +495,10 @@ int main(int argc, char* argv[]) {
 
       if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {
 
-	const PROPERTIES_TYPE ns = su.getNS();
+	const PROPERTIES_TYPE& ns = su.getNS();
 
-	for (PROPERTIES_TYPE::const_iterator iter = ns.begin(); iter != ns.end(); ++iter) {
-	  std::string uri = (*iter).first;
-	  std::string prefix = (*iter).second;
-
-	  std::cout << prefix << "=\"" << uri << "\"" << std::endl;
-	}
+	for (PROPERTIES_TYPE::const_iterator iter = ns.begin(); iter != ns.end(); ++iter)
+	  std::cout << iter->second << "=\"" << iter->first << "\"" << std::endl;
       }
 
       // output get attributes in order
