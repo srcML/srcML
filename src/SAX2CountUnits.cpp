@@ -31,9 +31,7 @@
 
 namespace SAX2CountUnits {
 
-  static int placescount = 1;
-  static int placesunit = 10;
-  static int fieldwidth = 5;
+  static const int fieldwidth = 5;
 
   xmlSAXHandler factory() {
 
@@ -41,19 +39,8 @@ namespace SAX2CountUnits {
 
     sax.initialized    = XML_SAX2_MAGIC;
     sax.endElementNs = &endElementNs;
-    //    sax.endDocument  = &endDocument;
 
     return sax;
-  }
-
-  // end document
-  void endDocument(void *user_data) {
-
-    State* pstate = (State*) user_data;
-
-    // output file status message if in verbose mode
-    if (pstate->verbose)
-      std::cerr << '\r';
   }
 
   // end unit element and current file/buffer (started by startElementNs

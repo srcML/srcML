@@ -53,8 +53,6 @@ namespace SAX2CountUnits {
     bool verbose;
   };
 
-  void endDocument(void *user_data);
-
   void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
 };
 
