@@ -43,8 +43,8 @@ namespace SAX2Properties {
     int unit;
     long count;
     const char* filename;
-    std::map<std::string, std::string> nsv;
-    std::map<std::string, std::string> attrv;
+    std::map<std::string, std::string>* nsv;
+    std::map<std::string, std::string>* attrv;
   };
 
   // startElement for root

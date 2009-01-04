@@ -109,6 +109,8 @@ void srcMLUtility::move_to_unit(int unitnumber) {
   SAX2Properties::State state;
   state.filename = infile;
   state.unit = unitnumber;
+  state.nsv = &nsv;
+  state.attrv = &attrv;
 
   xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
   if (ctxt == NULL) return;
@@ -127,9 +129,6 @@ void srcMLUtility::move_to_unit(int unitnumber) {
   // make sure we did not end early
   if (state.unit && state.count + 1 != state.unit)
     throw OutOfRangeUnitError(state.count);
-
-  nsv = state.nsv;
-  attrv = state.attrv;
 }
 
 

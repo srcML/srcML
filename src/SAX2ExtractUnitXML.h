@@ -49,8 +49,8 @@ namespace SAX2ExtractUnitXML {
     const char* filename;      // output filename
     xmlTextWriterPtr writer;   // output text writer
     xmlOutputBufferPtr output;
-    std::map<std::string, std::string> nsv;
-    std::map<std::string, std::string> attrv;
+    std::map<std::string, std::string>* nsv;
+    std::map<std::string, std::string>* attrv;
   };
 
   // startElement for root

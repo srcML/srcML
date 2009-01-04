@@ -63,10 +63,10 @@ namespace SAX2Properties {
     pstate->count = 0;
 
     // collect namespaces
-    collect_namespaces(nb_namespaces, namespaces, pstate->nsv);
+    collect_namespaces(nb_namespaces, namespaces, *(pstate->nsv));
 
     // collect attributes
-    collect_attributes(nb_attributes, attributes, pstate->attrv);
+    collect_attributes(nb_attributes, attributes, *(pstate->attrv));
 
     // extract from nested unit if needed
     if (pstate->unit) {
@@ -94,10 +94,10 @@ namespace SAX2Properties {
     State* pstate = (State*) ctx;
 
     // collect namespaces
-    collect_namespaces(nb_namespaces, namespaces, pstate->nsv);
+    collect_namespaces(nb_namespaces, namespaces, *(pstate->nsv));
 
     // collect attributes
-    collect_attributes(nb_attributes, attributes, pstate->attrv);
+    collect_attributes(nb_attributes, attributes, *(pstate->attrv));
 
     pstate->ctxt->sax->startDocument  = 0;
     pstate->ctxt->sax->endDocument    = 0;

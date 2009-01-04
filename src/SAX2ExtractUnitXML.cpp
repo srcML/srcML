@@ -67,10 +67,10 @@ namespace SAX2ExtractUnitXML {
     pstate->count = 0;
 
     // collect namespaces
-    collect_namespaces(nb_namespaces, namespaces, pstate->nsv);
+    collect_namespaces(nb_namespaces, namespaces, *(pstate->nsv));
 
     // collect attributes
-    collect_attributes(nb_attributes, attributes, pstate->attrv);
+    collect_attributes(nb_attributes, attributes, *(pstate->attrv));
 
     // handle nested units
     pstate->ctxt->sax->startElementNs = pstate->unit == 1 ? &startElementNsUnit : 0;
@@ -97,47 +97,47 @@ namespace SAX2ExtractUnitXML {
     xmlTextWriterStartElement(pstate->writer, BAD_CAST name);
 
     // collect namespaces
-    collect_namespaces(nb_namespaces, namespaces, pstate->nsv);
+    collect_namespaces(nb_namespaces, namespaces, *(pstate->nsv));
 
     // output the standard namespaces, if they exist
     const char* stdns[] = { SRCML_SRC_NS_URI, SRCML_CPP_NS_URI, SRCML_ERR_NS_URI };
     for (int i = 0; i < (int) (sizeof(stdns) / sizeof(stdns[0])); ++i) {
 
       // handle standard namespaces
-      std::map<std::string, std::string>::iterator pos = pstate->nsv.find(stdns[i]);
-      if (pos != pstate->nsv.end()) {
+      std::map<std::string, std::string>::iterator pos = pstate->nsv->find(stdns[i]);
+      if (pos != pstate->nsv->end()) {
 
 	// output the standard namespace
 	xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST pos->second.c_str(), BAD_CAST pos->first.c_str());
 
 	// remove it so that only non-standard namespaces are left
-	pstate->nsv.erase(pos);
+	pstate->nsv->erase(pos);
       }
     }
 
     // output any other namespaces that may exist
-    for (std::map<std::string, std::string>::const_iterator iter = pstate->nsv.begin(); iter != pstate->nsv.end(); ++iter)
+    for (std::map<std::string, std::string>::const_iterator iter = pstate->nsv->begin(); iter != pstate->nsv->end(); ++iter)
       xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST iter->second.c_str(), BAD_CAST iter->first.c_str());
 
     // copy attributes
-    collect_attributes(nb_attributes, attributes, pstate->attrv);
+    collect_attributes(nb_attributes, attributes, *(pstate->attrv));
 
     // put back the standard attributes based on a merge of the root unit and this unit
     const char* stdattr[] = { UNIT_ATTRIBUTE_LANGUAGE, UNIT_ATTRIBUTE_DIRECTORY,
 			    UNIT_ATTRIBUTE_FILENAME, UNIT_ATTRIBUTE_VERSION };
     for (int i = 0; i < (int) (sizeof(stdattr) / sizeof(stdattr[0])); ++i) {
 
-      std::map<std::string, std::string>::iterator pos = pstate->attrv.find(stdattr[i]);
-      if (pos != pstate->attrv.end()) {
+      std::map<std::string, std::string>::iterator pos = pstate->attrv->find(stdattr[i]);
+      if (pos != pstate->attrv->end()) {
 
 	xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST pos->first.c_str(), BAD_CAST pos->second.c_str());
 
-	pstate->attrv.erase(pos);
+	pstate->attrv->erase(pos);
       }
     }
 
     // put in the rest of the attributes
-    for (std::map<std::string, std::string>::const_iterator iter = pstate->attrv.begin(); iter != pstate->attrv.end(); iter++)
+    for (std::map<std::string, std::string>::const_iterator iter = pstate->attrv->begin(); iter != pstate->attrv->end(); iter++)
       xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST iter->first.c_str(), BAD_CAST iter->second.c_str());
 
     // now really start
