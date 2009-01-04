@@ -192,7 +192,7 @@ ${OBJ_DIR}Language.o : Language.cpp Language.h
 ${OBJ_DIR}UTF8CharBuffer.o : UTF8CharBuffer.cpp UTF8CharBuffer.h
 	$(CXX) ${XML_PRE} $(ANTLR_INC) $(CXXFLAGS) $(SRCMLPARSER_CXX_FLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}srcMLUtility.o : srcMLUtility.cpp srcMLUtility.h xmloutput.h Options.h
+${OBJ_DIR}srcMLUtility.o : srcMLUtility.cpp srcMLUtility.h SAX2CountUnits.h SAX2ExtractRootSrc.h SAX2ExtractUnitSrc.h SAX2ExtractUnitsSrc.h SAX2ExtractUnitXML.h SAX2Properties.h SAX2TextWriter.h SAX2Utilities.h xmloutput.h Options.h
 	$(CXX) $(XML_PRE) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}SAX2TextWriter.o : SAX2TextWriter.cpp SAX2TextWriter.h
