@@ -104,7 +104,7 @@ namespace SAX2ExtractUnitXML {
     for (int i = 0; i < (int) (sizeof(stdns) / sizeof(stdns[0])); ++i) {
 
       // handle standard namespaces
-      std::map<std::string, std::string>::iterator pos = pstate->nsv->find(stdns[i]);
+      PROPERTIES_TYPE::iterator pos = pstate->nsv->find(stdns[i]);
       if (pos != pstate->nsv->end()) {
 
 	// output the standard namespace
@@ -116,7 +116,7 @@ namespace SAX2ExtractUnitXML {
     }
 
     // output any other namespaces that may exist
-    for (std::map<std::string, std::string>::const_iterator iter = pstate->nsv->begin(); iter != pstate->nsv->end(); ++iter)
+    for (PROPERTIES_TYPE::const_iterator iter = pstate->nsv->begin(); iter != pstate->nsv->end(); ++iter)
       xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST iter->second.c_str(), BAD_CAST iter->first.c_str());
 
     // copy attributes
@@ -127,7 +127,7 @@ namespace SAX2ExtractUnitXML {
 			    UNIT_ATTRIBUTE_FILENAME, UNIT_ATTRIBUTE_VERSION };
     for (int i = 0; i < (int) (sizeof(stdattr) / sizeof(stdattr[0])); ++i) {
 
-      std::map<std::string, std::string>::iterator pos = pstate->attrv->find(stdattr[i]);
+      PROPERTIES_TYPE::iterator pos = pstate->attrv->find(stdattr[i]);
       if (pos != pstate->attrv->end()) {
 
 	xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST pos->first.c_str(), BAD_CAST pos->second.c_str());
@@ -137,7 +137,7 @@ namespace SAX2ExtractUnitXML {
     }
 
     // put in the rest of the attributes
-    for (std::map<std::string, std::string>::const_iterator iter = pstate->attrv->begin(); iter != pstate->attrv->end(); iter++)
+    for (PROPERTIES_TYPE::const_iterator iter = pstate->attrv->begin(); iter != pstate->attrv->end(); iter++)
       xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST iter->first.c_str(), BAD_CAST iter->second.c_str());
 
     // now really start

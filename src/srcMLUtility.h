@@ -34,6 +34,8 @@
 
 #include <xmlwriter.h>
 
+#include "SAX2Utilities.h"
+
 class LibXMLError;
 class TerminateLibXMLError;
 class OutOfRangeUnitError;
@@ -59,7 +61,7 @@ class srcMLUtility {
   const char* getencoding();
 
   // namespaces and prefixes
-  const std::map<std::string, std::string>& getNS() const;
+  const PROPERTIES_TYPE& getNS() const;
 
   // count of nested units
   int unit_count();
@@ -83,8 +85,8 @@ class srcMLUtility {
   const char* output_encoding;
   int& options;
   xmlCharEncodingHandlerPtr handler;
-  std::map<std::string, std::string> nsv;
-  std::map<std::string, std::string> attrv;
+  PROPERTIES_TYPE nsv;
+  PROPERTIES_TYPE attrv;
   std::string encoding;
 }; 
 

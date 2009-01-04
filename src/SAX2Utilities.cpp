@@ -30,7 +30,7 @@ const char* qname(const char* prefix, const char* localname) {
 
 // collect attributes
 void collect_attributes(int nb_attributes, const xmlChar** attributes,
-			std::map<std::string, std::string>& attrv) {
+			PROPERTIES_TYPE& attrv) {
     // collect attributes
     for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
          const char* name = qname((const char*) attributes[index + 1], (const char*) attributes[index]);
@@ -41,7 +41,7 @@ void collect_attributes(int nb_attributes, const xmlChar** attributes,
 
 // collect namespaces
 void collect_namespaces(int nb_namespaces, const xmlChar** namespaces,
-			std::map<std::string, std::string>& nsv) {
+			PROPERTIES_TYPE& nsv) {
 
     for (int i = 0, index = 0; i < nb_namespaces; ++i, index += 2)
       nsv[(const char*) namespaces[index + 1]] = xmlnsprefix((const char*) namespaces[index]);

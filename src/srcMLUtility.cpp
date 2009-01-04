@@ -82,7 +82,7 @@ srcMLUtility::~srcMLUtility() {
 std::string srcMLUtility::attribute(const char* attribute_name, bool& nonnull) {
 
   // extract attribute from unit tag
-  std::map<std::string, std::string>::const_iterator pos = attrv.find(attribute_name);
+  PROPERTIES_TYPE::const_iterator pos = attrv.find(attribute_name);
 
   nonnull = pos != attrv.end();
 
@@ -93,7 +93,7 @@ std::string srcMLUtility::attribute(const char* attribute_name, bool& nonnull) {
 // return blank for default namespace
 std::string srcMLUtility::namespace_ext(const std::string& uri, bool& nonnull) {
 
-  std::map<std::string, std::string>::const_iterator pos = nsv.find(uri);
+  PROPERTIES_TYPE::const_iterator pos = nsv.find(uri);
 
   nonnull = pos != nsv.end();
 
@@ -242,6 +242,6 @@ const char* srcMLUtility::getencoding() {
 }
 
 // namespaces and prefixes
-const std::map<std::string, std::string>& srcMLUtility::getNS() const {
+const PROPERTIES_TYPE& srcMLUtility::getNS() const {
   return nsv;
 }

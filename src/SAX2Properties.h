@@ -28,11 +28,9 @@
 #ifndef INCLUDED_SAX2PROPERTIES_H
 #define INCLUDED_SAX2PROPERTIES_H
 
+#include "SAX2Utilities.h"
 #include <libxml/parser.h>
 #include <libxml/xmlwriter.h>
-
-#include <string>
-#include <map>
 
 namespace SAX2Properties {
 
@@ -43,8 +41,8 @@ namespace SAX2Properties {
     int unit;
     long count;
     const char* filename;
-    std::map<std::string, std::string>* nsv;
-    std::map<std::string, std::string>* attrv;
+    PROPERTIES_TYPE* nsv;
+    PROPERTIES_TYPE* attrv;
   };
 
   // startElement for root

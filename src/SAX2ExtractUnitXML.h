@@ -28,6 +28,7 @@
 #ifndef INCLUDED_SAX2EXTRACTUNITXML_H
 #define INCLUDED_SAX2EXTRACTUNITXML_H
 
+#include "SAX2Utilities.h"
 #include <libxml/parser.h>
 #include <libxml/xmlwriter.h>
 
@@ -49,8 +50,8 @@ namespace SAX2ExtractUnitXML {
     const char* filename;      // output filename
     xmlTextWriterPtr writer;   // output text writer
     xmlOutputBufferPtr output;
-    std::map<std::string, std::string>* nsv;
-    std::map<std::string, std::string>* attrv;
+    PROPERTIES_TYPE* nsv;
+    PROPERTIES_TYPE* attrv;
   };
 
   // startElement for root

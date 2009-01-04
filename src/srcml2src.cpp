@@ -495,9 +495,9 @@ int main(int argc, char* argv[]) {
 
       if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {
 
-	const std::map<std::string, std::string> ns = su.getNS();
+	const PROPERTIES_TYPE ns = su.getNS();
 
-	for (std::map<std::string, std::string>::const_iterator iter = ns.begin(); iter != ns.end(); ++iter) {
+	for (PROPERTIES_TYPE::const_iterator iter = ns.begin(); iter != ns.end(); ++iter) {
 	  std::string uri = (*iter).first;
 	  std::string prefix = (*iter).second;
 
