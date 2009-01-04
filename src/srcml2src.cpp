@@ -70,15 +70,15 @@ void output_help(const char* name) {
                << '\n'
 	       << "When no filenames are given read from standard input and write to standard output.\n"
 	       << "When only one filename is given write to standard output.\n"
-	       << "An input filename of '-' also reads from standard input.\n"
-               << '\n'
+	       << "An input filename of '-' also reads from standard input.\n\n"
+
 	       << "Options:"  << '\n'
                << std::left
 	       << "  " << HELP_FLAG_SHORT       << ", " << setw(COL) << HELP_FLAG       
 	       << "display this help and exit\n"
 	       << "  " << VERSION_FLAG_SHORT    << ", " << setw(COL) << VERSION_FLAG    
-	       << "display version number and exit\n"
-	       << '\n'
+	       << "display version number and exit\n\n"
+
 #ifdef LIBXML_ENABLED
 	       << "  " << TEXTENCODING_FLAG_SHORT << ", " << setw(COL) <<  TEXTENCODING_FLAG_FULL  
 	       << "set the output source encoding to ENC (default:  " << DEFAULT_TEXT_ENCODING << ") \n"
