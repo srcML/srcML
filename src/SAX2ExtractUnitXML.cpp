@@ -96,47 +96,17 @@ namespace SAX2ExtractUnitXML {
     const char* name = qname((const char*) prefix, (const char*) localname);
     xmlTextWriterStartElement(pstate->writer, BAD_CAST name);
 
-    // collect namespaces
+    // merge this units namespaces
     collect_namespaces(nb_namespaces, namespaces, *(pstate->nsv));
-    /*
-    // output the standard namespaces, if they exist
-    const char* stdns[] = { SRCML_SRC_NS_URI, SRCML_CPP_NS_URI, SRCML_ERR_NS_URI };
-    for (int i = 0; i < (int) (sizeof(stdns) / sizeof(stdns[0])); ++i) {
 
-      // handle standard namespaces
-      PROPERTIES_TYPE::iterator pos = find(*(pstate->nsv), stdns[i]);
-      if (pos != pstate->nsv->end()) {
-
-	// output the standard namespace
-	xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST pos->second.c_str(), BAD_CAST pos->first.c_str());
-
-	// remove it so that only non-standard namespaces are left
-	pstate->nsv->erase(pos);
-      }
-    }
-    */
-    // output any other namespaces that may exist
+    // output the merged namespaces
     for (PROPERTIES_TYPE::const_iterator iter = pstate->nsv->begin(); iter != pstate->nsv->end(); ++iter)
       xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST iter->second.c_str(), BAD_CAST iter->first.c_str());
 
-    // copy attributes
+    // merge this units attributes
     collect_attributes(nb_attributes, attributes, *(pstate->attrv));
-    /*
-    // put back the standard attributes based on a merge of the root unit and this unit
-    const char* stdattr[] = { UNIT_ATTRIBUTE_LANGUAGE, UNIT_ATTRIBUTE_DIRECTORY,
-			    UNIT_ATTRIBUTE_FILENAME, UNIT_ATTRIBUTE_VERSION };
-    for (int i = 0; i < (int) (sizeof(stdattr) / sizeof(stdattr[0])); ++i) {
 
-      PROPERTIES_TYPE::iterator pos = find(*(pstate->attrv), stdattr[i]);
-      if (pos != pstate->attrv->end()) {
-
-	xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST pos->first.c_str(), BAD_CAST pos->second.c_str());
-
-	pstate->attrv->erase(pos);
-      }
-    }
-    */
-    // put in the rest of the attributes
+    // output the merged attributes
     for (PROPERTIES_TYPE::const_iterator iter = pstate->attrv->begin(); iter != pstate->attrv->end(); iter++)
       xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST iter->first.c_str(), BAD_CAST iter->second.c_str());
 
