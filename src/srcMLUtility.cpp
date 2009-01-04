@@ -142,7 +142,6 @@ int srcMLUtility::unit_count() {
 
   SAX2CountUnits::State state;
   state.verbose = isoption(options, OPTION_VERBOSE);
-  state.poptions = &options;
 
   xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
   if (ctxt == NULL) return -1;

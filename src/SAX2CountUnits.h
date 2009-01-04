@@ -39,13 +39,7 @@ namespace SAX2CountUnits {
   xmlSAXHandler factory();
 
   struct State {
-    const char * root_filename;
-    const char * ofilename;
-    xmlCharEncodingHandlerPtr handler;
     int* poptions;
-    const char* filename;      // output filename
-    xmlTextWriterPtr writer;   // output text writer
-    xmlOutputBufferPtr output;
     long count;
     xmlParserCtxtPtr ctxt;
     std::map<std::string, std::string> nsv;
