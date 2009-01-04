@@ -50,6 +50,7 @@ namespace SAX2CountUnits {
     xmlParserCtxtPtr ctxt;
     std::map<std::string, std::string> nsv;
     std::map<std::string, std::string> attrv;
+    bool verbose;
   };
 
   void endDocument(void *user_data);

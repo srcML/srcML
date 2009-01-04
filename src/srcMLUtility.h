@@ -59,7 +59,7 @@ class srcMLUtility {
   const char* getencoding();
 
   // namespaces and prefixes
-  const std::map<std::string, std::string> getNS() const;
+  const std::map<std::string, std::string>& getNS() const;
 
   // count of nested units
   int unit_count();

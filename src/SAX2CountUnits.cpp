@@ -26,12 +26,14 @@
 #include "SAX2Utilities.h"
 
 #include <iostream>
+#include <iomanip>
 #include "Options.h"
 
 namespace SAX2CountUnits {
 
   static int placescount = 1;
   static int placesunit = 10;
+  static int fieldwidth = 5;
 
   xmlSAXHandler factory() {
 
@@ -39,7 +41,7 @@ namespace SAX2CountUnits {
 
     sax.initialized    = XML_SAX2_MAGIC;
     sax.endElementNs = &endElementNs;
-    sax.endDocument  = &endDocument;
+    //    sax.endDocument  = &endDocument;
 
     return sax;
   }
@@ -50,10 +52,8 @@ namespace SAX2CountUnits {
     State* pstate = (State*) user_data;
 
     // output file status message if in verbose mode
-    if (isoption(*(pstate->poptions), OPTION_VERBOSE)) {
-      for (int i = 0; i < placescount; ++i)
-	std::clog << '\b';
-    }
+    if (pstate->verbose)
+      std::cerr << '\r';
   }
 
   // end unit element and current file/buffer (started by startElementNs
@@ -67,15 +67,7 @@ namespace SAX2CountUnits {
     ++(pstate->count);
 
     // output file status message if in verbose mode
-    if (isoption(*(pstate->poptions), OPTION_VERBOSE)) {
-      for (int i = 0; i < placescount; ++i)
-	std::clog << '\b';
-      std::clog << pstate->count;
-
-      if (pstate->count == placesunit) {
-	placesunit *= 10;
-	++placescount;
-      }
-    }
+    if (pstate->verbose)
+      std::cerr << '\r' << std::setw(fieldwidth) << pstate->count;
   }
 };

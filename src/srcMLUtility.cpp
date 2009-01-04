@@ -141,6 +141,7 @@ int srcMLUtility::unit_count() {
   xmlSAXHandler sax = SAX2CountUnits::factory();
 
   SAX2CountUnits::State state;
+  state.verbose = isoption(options, OPTION_VERBOSE);
   state.poptions = &options;
 
   xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
@@ -243,6 +244,6 @@ const char* srcMLUtility::getencoding() {
 }
 
 // namespaces and prefixes
-const std::map<std::string, std::string> srcMLUtility::getNS() const {
+const std::map<std::string, std::string>& srcMLUtility::getNS() const {
   return nsv;
 }
