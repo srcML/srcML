@@ -66,18 +66,18 @@ class srcMLUtility {
   int unit_count();
 
   // extract (intact) current unit as XML
-  virtual void extract_xml(const char* ofilename, int unit = 0);
+  void extract_xml(const char* ofilename, int unit = 0);
 
   // extract (intact) current unit as text
-  virtual void extract_text(const char* ofilename, int unit = 0);
+  void extract_text(const char* ofilename, int unit = 0);
 
   // expand the compound srcML to individual files
-  virtual void expand(const char* root_filename = "");
+  void expand(const char* root_filename = "");
 
   static bool checkEncoding(const char*);
 
   // destructor
-  virtual ~srcMLUtility();
+  ~srcMLUtility();
 
  private:
   const char* infile;
