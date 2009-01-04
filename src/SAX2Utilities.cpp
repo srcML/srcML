@@ -35,9 +35,7 @@ void collect_attributes(int nb_attributes, const xmlChar** attributes,
     for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
          const char* name = qname((const char*) attributes[index + 1], (const char*) attributes[index]);
 
-         std::string value((const char*) attributes[index + 3], (const char*)  attributes[index + 4]);
-
-         attrv[name] = value;
+	 attrv[name].assign((const char*) attributes[index + 3], (const char*)  attributes[index + 4]);
     }
 }
 
