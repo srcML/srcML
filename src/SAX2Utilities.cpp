@@ -47,9 +47,8 @@ PROPERTIES_TYPE::iterator find(PROPERTIES_TYPE& pv, const char* name) {
 }
 
 // collect attributes
-void collect_attributes(int nb_attributes, const xmlChar** attributes,
-			PROPERTIES_TYPE& attrv) {
-    // collect attributes
+void collect_attributes(int nb_attributes, const xmlChar** attributes, PROPERTIES_TYPE& attrv) {
+
     for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
 
       const char* name = qname((const char*) attributes[index + 1], (const char*) attributes[index]);
@@ -62,8 +61,7 @@ void collect_attributes(int nb_attributes, const xmlChar** attributes,
 }
 
 // collect namespaces
-void collect_namespaces(int nb_namespaces, const xmlChar** namespaces,
-			PROPERTIES_TYPE& nsv) {
+void collect_namespaces(int nb_namespaces, const xmlChar** namespaces, PROPERTIES_TYPE& nsv) {
 
   for (int i = 0, index = 0; i < nb_namespaces; ++i, index += 2) {
 
