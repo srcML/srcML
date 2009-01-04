@@ -83,25 +83,25 @@ int srcMLUtility::curunits() const {
 }
 
 // attribute
-std::string srcMLUtility::attribute(const char* attribute_name, bool& nonnull) {
+const char* srcMLUtility::attribute(const char* attribute_name) {
 
   // extract attribute from unit tag
   PROPERTIES_TYPE::const_iterator pos = find(attrv, attribute_name);
 
-  nonnull = pos != attrv.end();
+  bool nonnull = pos != attrv.end();
 
-  return nonnull ? pos->second : "";
+  return nonnull ? pos->second.c_str() : 0;
 }
 
 // prefix of given namespace
 // return blank for default namespace
-std::string srcMLUtility::namespace_ext(const std::string& uri, bool& nonnull) {
+const char* srcMLUtility::namespace_ext(const char* uri) {
 
-  PROPERTIES_TYPE::const_iterator pos = find(nsv, uri.c_str());
+  PROPERTIES_TYPE::const_iterator pos = find(nsv, uri);
 
-  nonnull = pos != nsv.end();
+  bool nonnull = pos != nsv.end();
 
-  return nonnull ? pos->second.substr(pos->second.size() > 5 ? 6 : 5) : "";
+  return nonnull ? pos->second.substr(pos->second.size() > 5 ? 6 : 5).c_str() : 0;
 }
 
 // move to a particular nested unit

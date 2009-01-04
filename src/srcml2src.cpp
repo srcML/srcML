@@ -417,7 +417,6 @@ int main(int argc, char* argv[]) {
   }
 
   // second command line parameter is output filename
-  //  std::ofstream fout;
   const char* ofilename = "-";
   if (argc == curarg + 1) {
     ofilename = argv[curarg];
@@ -534,15 +533,12 @@ int main(int argc, char* argv[]) {
 	};
 
 	// output the option
-	bool nonnull = true;
-	std::string l = option != OPTION_XML_ENCODING ? su.attribute(attribute_name, nonnull) : su.getencoding();
-	if (nonnull) {
-	  if (optioncount > 1)
-	    std::cout << attribute_title << "\"";
-	  std::cout << l;
-	  if (optioncount > 1)
-	    std::cout << "\"";
-	  std::cout << '\n';
+	const char* l = option != OPTION_XML_ENCODING ? su.attribute(attribute_name) : su.getencoding();
+	if (l) {
+	  if (optioncount == 0)
+	    std::cout << l << '\n';
+	  else
+	    std::cout << attribute_title << "\"" << l << "\"\n";
 	}
       }
 
@@ -558,18 +554,16 @@ int main(int argc, char* argv[]) {
 
       for (std::list<const char*>::const_iterator iter = ns.begin(); iter != ns.end(); ++iter) {
 
-	bool nonnull = true;
-	std::string prefix = su.namespace_ext(*iter, nonnull);
-	if (nonnull) {
-	  if (ns.size() > 1) {
+	const char* prefix = su.namespace_ext(*iter);
+	if (prefix) {
+	  if (ns.size() == 1)
+	    std::cout << prefix << '\n';
+	  else {
 	    std::cout << "xmlns";
-	    if (prefix != "")
+	    if (prefix[0] != '\0')
 	      std::cout << ":";
+	    std::cout << prefix << "=\"" << *iter << "\"\n";
 	  }
-	  std::cout << prefix;
-	  if (ns.size() > 1)
-	    std::cout << "=\"" << *iter << "\"";
-	  std::cout << '\n';
 	}
       }
 
