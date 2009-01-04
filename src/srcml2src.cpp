@@ -570,8 +570,6 @@ int main(int argc, char* argv[]) {
     // process non-attribute options
     } else if (isoption(options, OPTION_NESTED)) {
 
-      try {
-
 	// gracefully finish current file in compound document mode
 	pstd::signal(SIGINT, terminate_handler);
 
@@ -582,30 +580,12 @@ int main(int argc, char* argv[]) {
 
 	  exit_status = STATUS_TERMINATED;
 
-      } catch (LibXMLError error) {
-
-	if (error.getErrorNum() != 0)
-	  throw error;
-      }
-
     } else if (isoption(options, OPTION_EXPAND)) {
-
-      try {
 
 	// gracefully finish current file in compound document mode
 	pstd::signal(SIGINT, terminate_handler);
 
 	su.expand();
-
-      } catch (TerminateLibXMLError error) {
-
-	exit_status = STATUS_TERMINATED;
-
-      } catch (LibXMLError error) {
-
-	if (error.getErrorNum() != 0)
-	  throw error;
-      }
 
     } else if (isoption(options, OPTION_XML)) {
 
@@ -629,6 +609,12 @@ int main(int argc, char* argv[]) {
     exit_status = STATUS_UNIT_INVALID;
     throw "XML error";
     */
+  } catch (TerminateLibXMLError error) {
+
+    exit_status = STATUS_TERMINATED;
+
+    return exit_status;
+
   } catch (LibXMLError error) {
 
     if (error.getErrorNum() == 0) {
