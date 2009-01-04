@@ -42,6 +42,7 @@ namespace SAX2ExtractRootSrc {
   xmlSAXHandler factory();
 
   struct State {
+    xmlParserCtxtPtr ctxt;
     int unit;
     long count;
     const char * root_filename;
@@ -49,7 +50,6 @@ namespace SAX2ExtractRootSrc {
     xmlCharEncodingHandlerPtr handler;
     int* poptions;
     xmlOutputBufferPtr output;
-    xmlParserCtxtPtr ctxt;
   };
 
   using SAX2ExtractUnitsSrc::characters;

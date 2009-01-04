@@ -39,6 +39,7 @@ namespace SAX2ExtractUnitXML {
   xmlSAXHandler factory();
 
   struct State {
+    xmlParserCtxtPtr ctxt;
     int unit;
     long count;
     const char * root_filename;
@@ -48,7 +49,6 @@ namespace SAX2ExtractUnitXML {
     const char* filename;      // output filename
     xmlTextWriterPtr writer;   // output text writer
     xmlOutputBufferPtr output;
-    xmlParserCtxtPtr ctxt;
     std::map<std::string, std::string> nsv;
     std::map<std::string, std::string> attrv;
   };

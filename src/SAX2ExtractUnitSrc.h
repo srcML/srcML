@@ -32,6 +32,7 @@ namespace SAX2ExtractUnitSrc {
   xmlSAXHandler factory();
 
   struct State {
+    xmlParserCtxtPtr ctxt;
     int unit;
     long count;
     const char * root_filename;
@@ -39,7 +40,6 @@ namespace SAX2ExtractUnitSrc {
     xmlCharEncodingHandlerPtr handler;
     int* poptions;
     xmlOutputBufferPtr output;
-    xmlParserCtxtPtr ctxt;
   };
 
   // handle root unit of compound document
