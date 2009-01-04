@@ -31,9 +31,6 @@
 #include <libxml/parser.h>
 #include <libxml/xmlwriter.h>
 
-#include <string>
-#include <map>
-
 namespace SAX2CountUnits {
 
   xmlSAXHandler factory();
