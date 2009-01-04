@@ -108,7 +108,6 @@ void srcMLUtility::move_to_unit(int unitnumber) {
 
   SAX2Properties::State state;
   state.filename = infile;
-  state.poptions = &options;
   state.unit = unitnumber;
 
   xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);

@@ -39,19 +39,12 @@ namespace SAX2Properties {
   xmlSAXHandler factory();
 
   struct State {
+    xmlParserCtxtPtr ctxt;
     int unit;
     long count;
-    const char * root_filename;
-    const char * ofilename;
-    xmlCharEncodingHandlerPtr handler;
-    int* poptions;
-    const char* filename;      // output filename
-    xmlTextWriterPtr writer;   // output text writer
-    xmlOutputBufferPtr output;
-    xmlParserCtxtPtr ctxt;
+    const char* filename;
     std::map<std::string, std::string> nsv;
     std::map<std::string, std::string> attrv;
-    std::string encoding;
   };
 
   // startElement for root
