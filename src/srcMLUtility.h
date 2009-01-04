@@ -76,6 +76,8 @@ class srcMLUtility {
 
   static bool checkEncoding(const char*);
 
+  int curunits() const;
+
   // destructor
   ~srcMLUtility();
 
@@ -87,6 +89,7 @@ class srcMLUtility {
   PROPERTIES_TYPE nsv;
   PROPERTIES_TYPE attrv;
   std::string encoding;
+  int units;
 }; 
 
 class LibXMLError {

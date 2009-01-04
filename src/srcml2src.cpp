@@ -63,7 +63,7 @@ using std::setw;
 void output_help(const char* name) {
 
      std::cout << "Usage: " << name << " [options] <infile> <outfile>\n\n"
-	       << "Translates from the the XML source-code representation srcML to source-code text files.\n"
+	          "Translates from the the XML source-code representation srcML to source-code text files.\n"
                   "The srcML files can be in xml or gzip compressed xml (detected automatically).\n"
 	          "Also provides various utilities for accessing metadata about the srcML document, \n"
 	          "and extracting parts of compound srcML documents.\n\n"
@@ -502,7 +502,7 @@ int main(int argc, char* argv[]) {
 	  std::cout << iter->second << "=\"" << iter->first << "\"" << std::endl;
       }
 
-      // output get attributes in order
+      // output get attributes in order specified
       for (int i = 0; i < optioncount; ++i) {
 
 	// find attribute name from option
@@ -548,7 +548,7 @@ int main(int argc, char* argv[]) {
 
       if (isoption(options, OPTION_LONG_INFO)) {
 	if (!isoption(options, OPTION_UNIT))
-	  std::cout << "nested=\"" << su.unit_count() << "\"\n";
+	  std::cout << "nested=\"" << su.curunits() << "\"\n";
       }
 
     // namespace

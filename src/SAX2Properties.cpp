@@ -24,8 +24,10 @@
 
 #include "SAX2TextWriter.h"
 #include "SAX2Properties.h"
+#include "SAX2CountUnits.h"
 #include "SAX2Utilities.h"
 
+#include "Options.h"
 #include <iostream>
 #include <cstring>
 #include <libxml/xmlwriter.h>
@@ -81,6 +83,11 @@ namespace SAX2Properties {
     pstate->ctxt->sax->startElementNs = 0;
     pstate->ctxt->sax->endElementNs   = 0;
     pstate->ctxt->sax->characters     = 0;
+
+    if (isoption(*(pstate->poptions), OPTION_LONG_INFO)) {
+      pstate->ctxt->sax->endElementNs = &SAX2CountUnits::endElementNs;
+      return;
+    }
 
     xmlStopParser(pstate->ctxt);
   }

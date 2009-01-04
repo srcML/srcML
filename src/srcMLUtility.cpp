@@ -66,7 +66,7 @@ bool srcMLUtility::checkEncoding(const char* encoding) {
 
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op)
-  : infile(infilename), output_encoding(encoding), options(op), handler(0) {
+  : infile(infilename), output_encoding(encoding), options(op), handler(0), units(0) {
 
   // empty filename indicates standard input
   if (infile == 0)
@@ -76,6 +76,10 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op
 // destructor
 srcMLUtility::~srcMLUtility() {
 
+}
+
+int srcMLUtility::curunits() const {
+  return units;
 }
 
 // attribute
@@ -109,6 +113,7 @@ void srcMLUtility::move_to_unit(int unitnumber) {
   SAX2Properties::State state;
   state.filename = infile;
   state.unit = unitnumber;
+  state.poptions = &options;
   state.nsv = &nsv;
   state.attrv = &attrv;
 
@@ -125,10 +130,12 @@ void srcMLUtility::move_to_unit(int unitnumber) {
   ctxt->sax = NULL;
 
   xmlFreeParserCtxt(ctxt);
-
+  /*
   // make sure we did not end early
   if (state.unit && state.count + 1 != state.unit)
     throw OutOfRangeUnitError(state.count);
+  */
+  units = state.count;
 }
 
 

@@ -40,6 +40,7 @@ namespace SAX2Properties {
     xmlParserCtxtPtr ctxt;
     int unit;
     long count;
+    int* poptions;
     const char* filename;
     PROPERTIES_TYPE* nsv;
     PROPERTIES_TYPE* attrv;
