@@ -98,13 +98,13 @@ namespace SAX2ExtractUnitXML {
 
     // collect namespaces
     collect_namespaces(nb_namespaces, namespaces, *(pstate->nsv));
-
+    /*
     // output the standard namespaces, if they exist
     const char* stdns[] = { SRCML_SRC_NS_URI, SRCML_CPP_NS_URI, SRCML_ERR_NS_URI };
     for (int i = 0; i < (int) (sizeof(stdns) / sizeof(stdns[0])); ++i) {
 
       // handle standard namespaces
-      PROPERTIES_TYPE::iterator pos = pstate->nsv->find(stdns[i]);
+      PROPERTIES_TYPE::iterator pos = find(*(pstate->nsv), stdns[i]);
       if (pos != pstate->nsv->end()) {
 
 	// output the standard namespace
@@ -114,20 +114,20 @@ namespace SAX2ExtractUnitXML {
 	pstate->nsv->erase(pos);
       }
     }
-
+    */
     // output any other namespaces that may exist
     for (PROPERTIES_TYPE::const_iterator iter = pstate->nsv->begin(); iter != pstate->nsv->end(); ++iter)
       xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST iter->second.c_str(), BAD_CAST iter->first.c_str());
 
     // copy attributes
     collect_attributes(nb_attributes, attributes, *(pstate->attrv));
-
+    /*
     // put back the standard attributes based on a merge of the root unit and this unit
     const char* stdattr[] = { UNIT_ATTRIBUTE_LANGUAGE, UNIT_ATTRIBUTE_DIRECTORY,
 			    UNIT_ATTRIBUTE_FILENAME, UNIT_ATTRIBUTE_VERSION };
     for (int i = 0; i < (int) (sizeof(stdattr) / sizeof(stdattr[0])); ++i) {
 
-      PROPERTIES_TYPE::iterator pos = pstate->attrv->find(stdattr[i]);
+      PROPERTIES_TYPE::iterator pos = find(*(pstate->attrv), stdattr[i]);
       if (pos != pstate->attrv->end()) {
 
 	xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST pos->first.c_str(), BAD_CAST pos->second.c_str());
@@ -135,7 +135,7 @@ namespace SAX2ExtractUnitXML {
 	pstate->attrv->erase(pos);
       }
     }
-
+    */
     // put in the rest of the attributes
     for (PROPERTIES_TYPE::const_iterator iter = pstate->attrv->begin(); iter != pstate->attrv->end(); iter++)
       xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST iter->first.c_str(), BAD_CAST iter->second.c_str());

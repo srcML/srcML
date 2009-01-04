@@ -82,7 +82,7 @@ srcMLUtility::~srcMLUtility() {
 std::string srcMLUtility::attribute(const char* attribute_name, bool& nonnull) {
 
   // extract attribute from unit tag
-  PROPERTIES_TYPE::const_iterator pos = attrv.find(attribute_name);
+  PROPERTIES_TYPE::const_iterator pos = find(attrv, attribute_name);
 
   nonnull = pos != attrv.end();
 
@@ -93,7 +93,7 @@ std::string srcMLUtility::attribute(const char* attribute_name, bool& nonnull) {
 // return blank for default namespace
 std::string srcMLUtility::namespace_ext(const std::string& uri, bool& nonnull) {
 
-  PROPERTIES_TYPE::const_iterator pos = nsv.find(uri);
+  PROPERTIES_TYPE::const_iterator pos = find(nsv, uri.c_str());
 
   nonnull = pos != nsv.end();
 

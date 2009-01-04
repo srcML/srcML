@@ -2,15 +2,19 @@
 #define INCLUDED_SAX2UTILITIES_H
 
 #include <string>
-#include <map>
+#include <list>
 #include <libxml/parser.h>
 
-typedef std::map<std::string, std::string> PROPERTIES_TYPE;
+typedef std::list<std::pair<std::string, std::string> > PROPERTIES_TYPE;
 
 // expanded prefix for xmlns declaration
 const char* xmlnsprefix(const char* prefix);
 
 const char* qname(const char* prefix, const char* localname);
+
+PROPERTIES_TYPE::const_iterator find(const PROPERTIES_TYPE& pv, const char* name);
+
+PROPERTIES_TYPE::iterator find(PROPERTIES_TYPE& pv, const char* name);
 
 // collect attributes
 void collect_attributes(int nb_attributes, const xmlChar** attributes,
