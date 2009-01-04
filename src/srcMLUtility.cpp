@@ -116,6 +116,7 @@ void srcMLUtility::move_to_unit(int unitnumber) {
   state.poptions = &options;
   state.nsv = &nsv;
   state.attrv = &attrv;
+  state.verbose = false;
 
   xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
   if (ctxt == NULL) return;

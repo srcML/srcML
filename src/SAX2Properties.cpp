@@ -85,6 +85,7 @@ namespace SAX2Properties {
     pstate->ctxt->sax->characters     = 0;
 
     if (isoption(*(pstate->poptions), OPTION_LONG_INFO)) {
+
       pstate->ctxt->sax->endElementNs = &SAX2CountUnits::endElementNs;
       return;
     }
