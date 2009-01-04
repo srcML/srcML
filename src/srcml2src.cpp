@@ -62,16 +62,15 @@ using std::setw;
 // output help message
 void output_help(const char* name) {
 
-     std::cout << "Usage: " << name << " [options] <infile> <outfile>" << '\n'
+     std::cout << "Usage: " << name << " [options] <infile> <outfile>\n\n"
+	       << "Translates from the the XML source-code representation srcML to source-code text files.\n"
+	       << "The srcML files can be in xml or gzip compressed xml (detected automatically).\n"
+	       << "Also provides various utilities for accessing metadata about the srcML document, \n"
+	       << "and extracting parts of compound srcML documents.\n"
                << '\n'
-	       << "Translates from the the XML source-code representation srcML to source-code text files." << '\n'
-	       << "The srcML files can be in xml or gzip compressed xml (detected automatically)." << '\n'
-	       << "Also provides various utilities for accessing metadata about the srcML document, " << '\n'
-	       << "and extracting parts of compound srcML documents." << '\n'
-               << '\n'
-	       << "When no filenames are given read from standard input and write to standard output." << '\n'
-	       << "When only one filename is given write to standard output."  << '\n'
-	       << "An input filename of '-' also reads from standard input." << '\n'
+	       << "When no filenames are given read from standard input and write to standard output.\n"
+	       << "When only one filename is given write to standard output.\n"
+	       << "An input filename of '-' also reads from standard input.\n"
                << '\n'
 	       << "Options:"  << '\n'
                << std::left
@@ -92,8 +91,7 @@ void output_help(const char* name) {
 	       << "  " << UNIT_FLAG_SHORT       << ", " << setw(COL) << UNIT_FLAG_FULL  
 	       << "extract nested unit NUM from a compound srcML document\n"
 	       << "  " << EXPAND_FLAG_SHORT     << ", " << setw(COL) << EXPAND_FLAG     
-	       << "extract all files from a compound srcML document\n"
-	       << '\n'
+	       << "extract all files from a compound srcML document\n\n"
 	       << "  " << XML_FLAG_SHORT        << ", " << setw(COL) << XML_FLAG        
 	       << "output in XML instead of text\n"
 #ifdef LIBXML_ENABLED
@@ -104,12 +102,9 @@ void output_help(const char* name) {
 	      << "  " << NO_XML_DECLARATION_FLAG  << "    " 
 	      << "do not output the default XML declaration in XML output\n"
 	      << "  " << NO_NAMESPACE_DECLARATION_FLAG  << "     " 
-	      << "do not output any namespace declarations in XML output\n"
-              << '\n'
-               << "  " << VERBOSE_FLAG_SHORT    << ", " << setw(COL) << VERBOSE_FLAG    << "verbose output\n"
-	       << '\n'
-	       << "Metadata Options:  " << '\n'
-	       << '\n'
+	      << "do not output any namespace declarations in XML output\n\n"
+               << "  " << VERBOSE_FLAG_SHORT    << ", " << setw(COL) << VERBOSE_FLAG    << "verbose output\n\n"
+	       << "Metadata Options:  \n\n"
 	       << "  " << LANGUAGE_FLAG_SHORT   << ", " << setw(COL) << LANGUAGE_FLAG
 	       << "display source language and exit\n"
 	       << "  " << DIRECTORY_FLAG_SHORT  << ", " << setw(COL) << DIRECTORY_FLAG
@@ -123,43 +118,41 @@ void output_help(const char* name) {
 	       << "  " << NAMESPACE_FLAG_SHORT  << ", " << setw(COL) << NAMESPACE_FLAG_FULL
 	       << "display prefix of namespace given by URI and exit\n"
 	       << "  " << NESTED_FLAG_SHORT     << ", " << setw(COL) << NESTED_FLAG     
-	       << "display number of nested units and exit\n"
-	       << '\n'
+	       << "display number of nested units and exit\n\n"
 	       << "  " << INFO_FLAG_SHORT  << ", " << setw(COL) << INFO_FLAG
 	       << "display most metadata (except nested unit count) and exit\n"
 	       << "  " << LONG_INFO_FLAG_SHORT  << ", " << setw(COL) << LONG_INFO_FLAG
-	       << "display all metadata (including nested unit count) and exit\n"
-	       << '\n'
-	       << "Examples:  " << '\n'
+	       << "display all metadata (including nested unit count) and exit\n\n"
+	       << "Examples:  \n"
 	       << "  " << name << "                       "
-	       << "(read from standard input, write to standard output)" << '\n'
+	       << "(read from standard input, write to standard output)\n"
 
 	       << "  " << name << " main.cpp.xml          "
-	       << "(read from file main.cpp.xml, write to standard output)" << '\n'
+	       << "(read from file main.cpp.xml, write to standard output)\n"
 
 	       << "  " << name << " main.cpp.xml main.cpp "
-	       << "(read from file main.cpp.xml, write to file main.cpp)" << '\n'
+	       << "(read from file main.cpp.xml, write to file main.cpp)\n"
 
 	       << "  " << name << " -                     "
-	       << "(read from standard input, write to standard output)" << '\n'
+	       << "(read from standard input, write to standard output)\n"
 
 	       << "  " << name << " - main.cpp            "
-	       << "(read from standard input, write to file main.cpp)" << '\n'
+	       << "(read from standard input, write to file main.cpp)\n"
 
 	       << "  " << name << " --language            "
-	       << "(read from standard input, output language attribute)" << '\n'
+	       << "(read from standard input, output language attribute)\n"
 
 	       << "  " << name << " --directory           "
-	       << "(read from standard input, output directory attribute)" << '\n'
+	       << "(read from standard input, output directory attribute)\n"
 
 	       << "  " << name << " --filename            "
-	       << "(read from standard input, output filename attribute)" << '\n'
+	       << "(read from standard input, output filename attribute)\n"
 
 	       << "  " << name << " --src-version         "
-	       << "(read from standard input, output version attribute)" << '\n'
+	       << "(read from standard input, output version attribute)\n"
 
 	       << '\n'
-	       << "www.sdml.info" << '\n'
+	       << "www.sdml.info\n"
                << "Report bugs to " << EMAIL_ADDRESS << '\n';
 }
 
@@ -296,7 +289,7 @@ int main(int argc, char* argv[]) {
       options |= OPTION_COMPRESSED;
       if (position == original_position) ++curarg;
 #else
-      std::cerr << NAME << ": The compression option, i.e., " << COMPRESSED_FLAG << ", is only supported in the libxml version." << '\n';
+      std::cerr << NAME << ": The compression option, i.e., " << COMPRESSED_FLAG << ", is only supported in the libxml version.\n";
       exit(STATUS_LIBXML2_FEATURE);
 #endif
     }
@@ -331,7 +324,7 @@ int main(int argc, char* argv[]) {
 
       // check for namespace flag with missing namespace
       } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
-	std::cerr << NAME << ": namespace option selected but no namespace specified." << '\n';
+	std::cerr << NAME << ": namespace option selected but no namespace specified.\n";
 	exit(STATUS_UNIT_MISSING);
       } else {
 	ns.push_back(argv[(++curarg)++]);
@@ -353,7 +346,7 @@ int main(int argc, char* argv[]) {
 
       // check for unit flag with missing, separate unit number
       } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
-	std::cerr << NAME << ": unit option selected but no number specified." << '\n';
+	std::cerr << NAME << ": unit option selected but no number specified.\n";
 	exit(STATUS_UNIT_MISSING);
       } else {
 	value = argv[(++curarg)++];
@@ -364,13 +357,13 @@ int main(int argc, char* argv[]) {
 
       // validate type of unit number
       if (errno == EINVAL || strlen(end) == strlen(value)) {
-	std::cerr << NAME << ": unit option value \"" <<  value << "\" must be numeric." << '\n';
+	std::cerr << NAME << ": unit option value \"" <<  value << "\" must be numeric.\n";
 	exit(STATUS_UNIT_INVALID);
       }
 
       // validate range of unit number
       if (unit <= 0) {
-	std::cerr << NAME << ": unit option value \"" << unit << "\" must be > 0." << '\n';
+	std::cerr << NAME << ": unit option value \"" << unit << "\" must be > 0.\n";
 	exit(STATUS_UNIT_INVALID);
       }
     }
@@ -390,7 +383,7 @@ int main(int argc, char* argv[]) {
 
       // check for text encoding flag with missing text encoding
       } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
-	std::cerr << NAME << ": text encoding selected but not specified." << '\n';
+	std::cerr << NAME << ": text encoding selected but not specified.\n";
 	exit(STATUS_SRCENCODING_MISSING);
       } else {
 
@@ -400,11 +393,11 @@ int main(int argc, char* argv[]) {
 
       // validate source encoding
       if (!srcMLUtility::checkEncoding(src_encoding)) {
-	std::cerr << NAME << ": text encoding \"" << src_encoding << "\" is not supported." << '\n';
+	std::cerr << NAME << ": text encoding \"" << src_encoding << "\" is not supported.\n";
 	exit(STATUS_UNKNOWN_ENCODING);
       }
 #else
-      std::cerr << NAME << ": The source encoding option, i.e., " << TEXTENCODING_FLAG << ", is only supported in the libxml version." << '\n';
+      std::cerr << NAME << ": The source encoding option, i.e., " << TEXTENCODING_FLAG << ", is only supported in the libxml version.\n";
       exit(STATUS_LIBXML2_FEATURE);
 #endif
 
@@ -568,7 +561,7 @@ int main(int argc, char* argv[]) {
 
       if (isoption(options, OPTION_LONG_INFO)) {
 	if (!isoption(options, OPTION_UNIT))
-	  std::cout << "nested=\"" << su.unit_count() << "\"" << '\n';
+	  std::cout << "nested=\"" << su.unit_count() << "\"\n";
       }
 
     // namespace
