@@ -66,7 +66,7 @@ bool srcMLUtility::checkEncoding(const char* encoding) {
 
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op)
-  : infile(infilename), output_encoding(encoding), options(op), handler(0), units(0) {
+  : infile(infilename), output_encoding(encoding), options(op), units(0) {
 
   // empty filename indicates standard input
   if (infile == 0)

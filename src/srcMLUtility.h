@@ -85,7 +85,6 @@ class srcMLUtility {
   const char* infile;
   const char* output_encoding;
   int& options;
-  xmlCharEncodingHandlerPtr handler;
   PROPERTIES_TYPE nsv;
   PROPERTIES_TYPE attrv;
   std::string encoding;

@@ -34,6 +34,7 @@
 
 namespace SAX2ExtractUnitXML {
 
+
   xmlSAXHandler factory();
 
   struct State {

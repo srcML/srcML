@@ -28,6 +28,7 @@
 #ifndef INCLUDED_SAX2TEXTWRITER_H
 #define INCLUDED_SAX2TEXTWRITER_H
 
+#include "SAX2Utilities.h"
 #include <libxml/parser.h>
 #include <libxml/xmlwriter.h>
 
@@ -46,6 +47,8 @@ namespace SAX2TextWriter {
     const char* filename;      // output filename
     xmlTextWriterPtr writer;   // output text writer
     xmlOutputBufferPtr output;
+    PROPERTIES_TYPE* nsv;
+    PROPERTIES_TYPE* attrv;
   };
 
   // start document
