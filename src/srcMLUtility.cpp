@@ -111,7 +111,6 @@ void srcMLUtility::move_to_unit(int unitnumber) {
   xmlSAXHandler sax = SAX2Properties::factory();
 
   SAX2Properties::State state;
-  state.filename = infile;
   state.unit = unitnumber;
   state.poptions = &options;
   state.nsv = &nsv;
