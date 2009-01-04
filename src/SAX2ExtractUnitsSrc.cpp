@@ -188,6 +188,7 @@ namespace SAX2ExtractUnitsSrc {
       std::cerr << "Output buffer error" << std::endl;
       xmlStopParser(pstate->ctxt);
     }
+
 }
 
   // end unit element and current file/buffer (started by startElementNs
