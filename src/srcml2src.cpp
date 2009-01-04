@@ -124,34 +124,24 @@ void output_help(const char* name) {
 	       << "  " << LONG_INFO_FLAG_SHORT  << ", " << setw(COL) << LONG_INFO_FLAG
 	       << "display all metadata (including nested unit count) and exit\n\n"
 	       << "Examples:  \n"
-	       << "  " << name << "                       "
-	       << "(read from standard input, write to standard output)\n"
+	       << "  " << name << "                       (read from standard input, write to standard output)\n"
 
-	       << "  " << name << " main.cpp.xml          "
-	       << "(read from file main.cpp.xml, write to standard output)\n"
+	       << "  " << name << " main.cpp.xml          (read from file main.cpp.xml, write to standard output)\n"
 
-	       << "  " << name << " main.cpp.xml main.cpp "
-	       << "(read from file main.cpp.xml, write to file main.cpp)\n"
+	       << "  " << name << " main.cpp.xml main.cpp (read from file main.cpp.xml, write to file main.cpp)\n"
 
-	       << "  " << name << " -                     "
-	       << "(read from standard input, write to standard output)\n"
+	       << "  " << name << " -                     (read from standard input, write to standard output)\n"
 
-	       << "  " << name << " - main.cpp            "
-	       << "(read from standard input, write to file main.cpp)\n"
+	       << "  " << name << " - main.cpp            (read from standard input, write to file main.cpp)\n"
 
-	       << "  " << name << " --language            "
-	       << "(read from standard input, output language attribute)\n"
+	       << "  " << name << " --language            (read from standard input, output language attribute)\n"
 
-	       << "  " << name << " --directory           "
-	       << "(read from standard input, output directory attribute)\n"
+	       << "  " << name << " --directory           (read from standard input, output directory attribute)\n"
 
-	       << "  " << name << " --filename            "
-	       << "(read from standard input, output filename attribute)\n"
+	       << "  " << name << " --filename            (read from standard input, output filename attribute)\n"
 
-	       << "  " << name << " --src-version         "
-	       << "(read from standard input, output version attribute)\n"
+	       << "  " << name << " --src-version         (read from standard input, output version attribute)\n\n"
 
-	       << '\n'
 	       << "www.sdml.info\n"
                << "Report bugs to " << EMAIL_ADDRESS << '\n';
 }
