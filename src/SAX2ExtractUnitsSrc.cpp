@@ -1,7 +1,7 @@
 /*
-  srcMLUtility.cpp
+  SAX2ExtractUnitsSrc.cpp
 
-  Copyright (C) 2004-2006  SDML (www.sdml.info)
+  Copyright (C) 2008  SDML (www.sdml.info)
 
   This file is part of the srcML translator.
 

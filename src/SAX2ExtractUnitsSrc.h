@@ -25,10 +25,8 @@
 #ifndef INCLUDED_SAX2EXTRACTUNITSSRC
 #define INCLUDED_SAX2EXTRACTUNITSSRC
 
-#include "srcMLUtility.h"
-#include "srcmlns.h"
-#include <iostream>
 #include <libxml/parser.h>
+#include "srcMLUtility.h"
 
 namespace SAX2ExtractUnitsSrc {
 
