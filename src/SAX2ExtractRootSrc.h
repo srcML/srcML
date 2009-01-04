@@ -25,15 +25,8 @@
 #ifndef INCLUDED_SAX2EXTRACTROOTSRC
 #define INCLUDED_SAX2EXTRACTROOTSRC
 
-#include "srcMLUtility.h"
-#include <iostream>
-#include <fstream>
-#include <cstring>
-#include "xmloutput.h"
-#include <xmlsave.h>
-#include "srcmlns.h"
 #include <libxml/parser.h>
-#include <libxml/parserInternals.h>
+#include "srcMLUtility.h"
 
 #include "SAX2ExtractUnitsSrc.h"
 
