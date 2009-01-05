@@ -218,7 +218,7 @@ void srcMLUtility::extract_text(const char* ofilename, int unit) {
   xmlFreeParserCtxt(ctxt);
 
   // make sure we did not end early
-  if (state.unit && state.count + 1 != state.unit)
+  if (state.unit && state.count != state.unit)
     throw OutOfRangeUnitError(state.count);
 }
 

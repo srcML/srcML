@@ -44,6 +44,9 @@ namespace SAX2ExtractRootSrc {
 
     State* pstate = (State*) ctx;
 
+    // update count for this buffer
+    ++(pstate->count);
+
     pstate->output = xmlOutputBufferCreateFilename(pstate->ofilename,
 						   pstate->handler, 
 						   isoption(*(pstate->poptions), OPTION_COMPRESSED) ? 1 : 0);
