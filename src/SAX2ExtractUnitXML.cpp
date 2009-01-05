@@ -118,6 +118,7 @@ namespace SAX2ExtractUnitXML {
     pstate->ctxt->sax->startElementNs = &SAX2TextWriter::startElementNs;
     pstate->ctxt->sax->endElementNs   = &SAX2TextWriter::endElementNs;
     pstate->ctxt->sax->characters     = &SAX2TextWriter::characters;
+    pstate->ctxt->sax->comment        = &SAX2TextWriter::comments;
   }
 
   // end unit element and current file/buffer (started by startElementNs

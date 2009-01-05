@@ -47,6 +47,7 @@ namespace SAX2TextWriter {
     sax.startElementNs = &SAX2TextWriter::startElementNs;
     sax.endElementNs   = &SAX2TextWriter::endElementNs;
     sax.characters     = &SAX2TextWriter::characters;
+    sax.comment        = &SAX2TextWriter::comments;
 
     return sax;
   }
@@ -115,6 +116,14 @@ namespace SAX2TextWriter {
     }
 
     xmlTextWriterWriteRawLen(pstate->writer, BAD_CAST c - pos, pos);
+  }
+
+  // comments
+  void comments(void* user_data, const xmlChar* ch) {
+
+    State* pstate = (State*) user_data;
+
+    xmlTextWriterWriteComment(pstate->writer, ch);
   }
 
   // start a new output buffer and corresponding file for a

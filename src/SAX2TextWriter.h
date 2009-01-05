@@ -68,6 +68,9 @@ namespace SAX2TextWriter {
   // endElement
   void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
 
+  // comments
+  void comments(void* user_data, const xmlChar* ch);
+
 };
 
 #endif

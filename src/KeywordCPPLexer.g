@@ -41,6 +41,7 @@ options {
     k = 2;
     testLiterals = false;
     noConstructors = true;
+    defaultErrorHandler = false;
 //    codeGenBitsetTestThreshold=20; 
 }
 
