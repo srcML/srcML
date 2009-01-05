@@ -92,6 +92,9 @@ namespace SAX2ExtractUnitXML {
 
     State* pstate = (State*) ctx;
 
+    // mostly we count the end elements for units, but now count the start
+    ++(pstate->count);
+
     // start element with proper prefix
     const char* name = qname((const char*) prefix, (const char*) localname);
     xmlTextWriterStartElement(pstate->writer, BAD_CAST name);

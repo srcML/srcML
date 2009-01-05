@@ -130,11 +130,11 @@ void srcMLUtility::move_to_unit(int unitnumber) {
   ctxt->sax = NULL;
 
   xmlFreeParserCtxt(ctxt);
-  /*
+
   // make sure we did not end early
-  if (state.unit && state.count + 1 != state.unit)
+  if (state.unit && state.count != state.unit)
     throw OutOfRangeUnitError(state.count);
-  */
+
   units = state.count;
 }
 
@@ -190,7 +190,7 @@ void srcMLUtility::extract_xml(const char* ofilename, int unit) {
   xmlFreeParserCtxt(ctxt);
 
   // make sure we did not end early
-  if (state.unit && state.count + 1 != state.unit)
+  if (state.unit && state.count != state.unit)
     throw OutOfRangeUnitError(state.count);
 }
 

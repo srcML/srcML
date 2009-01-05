@@ -101,6 +101,9 @@ namespace SAX2Properties {
 
     State* pstate = (State*) ctx;
 
+    // mostly we count the end elements for units, but now count the start
+    ++(pstate->count);
+
     // collect namespaces
     collect_namespaces(nb_namespaces, namespaces, *(pstate->nsv));
 
