@@ -121,7 +121,8 @@ void srcMLUtility::move_to_unit(int unitnumber) {
 
   xmlParseDocument(ctxt);
 
-  attrv.insert(attrv.end(), PROPERTIES_TYPE::value_type(".encoding", (const char*) state.ctxt->encoding));
+  attrv.insert(attrv.end(),
+	       PROPERTIES_TYPE::value_type(".encoding", (const char*) (state.ctxt->encoding ? state.ctxt->encoding : state.ctxt->input->encoding)));
 
   ctxt->sax = NULL;
 

@@ -65,7 +65,7 @@ namespace SAX2TextWriter {
     // start this document the same as the current document
     xmlTextWriterStartDocument(pstate->writer,
 			       (const char*) pstate->ctxt->version,
-			       (const char*) pstate->ctxt->myDoc->encoding,
+			       (const char*) (pstate->ctxt->encoding ? pstate->ctxt->encoding : pstate->ctxt->input->encoding),
 			       pstate->ctxt->standalone ? "yes" : "no");
   }
 
