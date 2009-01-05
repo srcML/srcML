@@ -458,9 +458,16 @@ int main(int argc, char* argv[]) {
     exit(STATUS_INVALID_OPTION_COMBINATION);
   }
   */
-  // verify that the output file is not the same as the input file
+
+  // verify that the input file exists
   struct stat instat;
-  stat(filename, &instat);
+  int result = stat(filename, &instat);
+  if (filename[0] != '-' && result == -1) {
+    std::cerr << NAME << ": Problem with Input file '" << filename << "'\n";
+    exit(STATUS_INPUTFILE_PROBLEM);
+  }
+
+  // verify that the output file is not the same as the input file
   struct stat outstat;
   stat(ofilename, &outstat);
   if (instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
