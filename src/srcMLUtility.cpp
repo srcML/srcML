@@ -88,9 +88,7 @@ const char* srcMLUtility::attribute(const char* attribute_name) {
   // extract attribute from unit tag
   PROPERTIES_TYPE::const_iterator pos = find(attrv, attribute_name);
 
-  bool nonnull = pos != attrv.end();
-
-  return nonnull ? pos->second.c_str() : 0;
+  return pos != attrv.end() ? pos->second.c_str() : 0;
 }
 
 // prefix of given namespace
@@ -99,9 +97,7 @@ const char* srcMLUtility::namespace_ext(const char* uri) {
 
   PROPERTIES_TYPE::const_iterator pos = find(nsv, uri);
 
-  bool nonnull = pos != nsv.end();
-
-  return nonnull ? pos->second.substr(pos->second.size() > 5 ? 6 : 5).c_str() : 0;
+  return pos != nsv.end() ? pos->second.substr(pos->second.size() > 5 ? 6 : 5).c_str() : 0;
 }
 
 // move to a particular nested unit
