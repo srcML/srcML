@@ -56,9 +56,6 @@ class srcMLUtility {
   // move to a particular nested unit
   void move_to_unit(int unitnumber);
 
-  // encoding
-  const char* getencoding();
-
   // namespaces and prefixes
   const PROPERTIES_TYPE& getNS() const;
 
@@ -87,7 +84,6 @@ class srcMLUtility {
   int& options;
   PROPERTIES_TYPE nsv;
   PROPERTIES_TYPE attrv;
-  std::string encoding;
   int units;
 }; 
 

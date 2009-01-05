@@ -517,7 +517,7 @@ int main(int argc, char* argv[]) {
 
 	switch (option) {
 	case OPTION_XML_ENCODING:
-	  attribute_name = "";
+	  attribute_name = ".encoding";
 	  attribute_title = "encoding=";
 	  break;
 	case OPTION_LANGUAGE:
@@ -539,7 +539,7 @@ int main(int argc, char* argv[]) {
 	};
 
 	// output the option
-	const char* l = option != OPTION_XML_ENCODING ? su.attribute(attribute_name) : su.getencoding();
+	const char* l = su.attribute(attribute_name);
 	if (l) {
 	  if (optioncount == 1)
 	    std::cout << l << '\n';
