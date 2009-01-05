@@ -534,7 +534,7 @@ int main(int argc, char* argv[]) {
 	// output the option
 	const char* l = option != OPTION_XML_ENCODING ? su.attribute(attribute_name) : su.getencoding();
 	if (l) {
-	  if (optioncount == 0)
+	  if (optioncount == 1)
 	    std::cout << l << '\n';
 	  else
 	    std::cout << attribute_title << "\"" << l << "\"\n";
