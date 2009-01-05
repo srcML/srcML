@@ -127,6 +127,13 @@ namespace SAX2Properties {
     if (pstate->ctxt->nameNr != 2)
       return;
 
+    // check that this is a nested file
+    if (pstate->count == 0 && !(strcmp((const char*) localname, "unit") == 0 &&
+	  strcmp((const char*) URI, "http://www.sdml.info/srcML/src") == 0)) {
+      xmlStopParser(pstate->ctxt);
+      return;
+    }
+
     ++(pstate->count);
 
     if (pstate->count < pstate->unit - 1)

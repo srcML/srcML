@@ -112,6 +112,14 @@ namespace SAX2ExtractUnitsSrc {
 
     State* pstate = (State*) ctx;
 
+    // check that this is a nested file
+    if (pstate->count == 0 && !(strcmp((const char*) localname, "unit") == 0 &&
+	  strcmp((const char*) URI, "http://www.sdml.info/srcML/src") == 0)) {
+      std::cerr << "Options only valid for nested srcML documents\n";
+      xmlStopParser(pstate->ctxt);
+      return;
+    }
+
     ++(pstate->count);
 
     // start up the output unit
@@ -199,10 +207,6 @@ namespace SAX2ExtractUnitsSrc {
     // only process nested unit start elements
     if (pstate->ctxt->nameNr != 2)
       return;
-
-    // found the end of this unit
-    //  if (strcmp((const char*) localname, "unit") == 0 &&
-    //      strcmp((const char*) URI, "http://www.sdml.info/srcML/src") == 0) {
 
     // finish up this file
     xmlOutputBufferClose(pstate->output);
