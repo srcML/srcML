@@ -50,7 +50,7 @@ WS :
 ;
 
 // end of line
-EOL :   { justws = true; }
+EOL :
         '\n'
         { 
             // onpreprocline is turned on when on a preprocessor line

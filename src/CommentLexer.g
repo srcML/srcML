@@ -46,9 +46,6 @@ LINECOMMENT_START
 
             selector->push("text"); 
             ((PureCommentLexer* ) (selector->getStream("text")))->init(LINECOMMENT_END, onpreprocline);
-
-            // have to reset, since we may eat/get eol
-            justws = false;
         }
 ;
 
@@ -57,8 +54,5 @@ COMMENT_START
 
             selector->push("text"); 
             ((PureCommentLexer* ) (selector->getStream("text")))->init(COMMENT_END, onpreprocline);
-
-            // have to reset, since we may eat/get eol
-            justws = false;
         }
 ;

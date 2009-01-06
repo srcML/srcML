@@ -73,7 +73,6 @@ STRING_START :
 
             'L' (DIGITS | NAMECHAR)* { $setType(NAME); }
         )
-        { justws = false; }
 ;
 
 // character literal or single quoted string
@@ -81,16 +80,14 @@ CHAR_START :
         '\'' { 
             selector->push("text"); 
             ((PureCommentLexer* ) (selector->getStream("text")))->init(CHAR_END, onpreprocline);
-
-            justws = false;
         }
 ;
 
-CONSTANTS : { justws = false; }
+CONSTANTS : {}
         DIGITS (".")? (DIGITS)? ('u' | 'U' | 'f' | 'F' | 'l' | 'L')?
 ;
 
-NAME options { testLiterals = true; } :  { justws = false; }
+NAME options { testLiterals = true; } :
         NAMECHARNOEL (DIGITS | NAMECHAR)*
 ;
 
