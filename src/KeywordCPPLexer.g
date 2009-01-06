@@ -99,9 +99,10 @@ tokens {
 public:
 
 bool onpreprocline;
+bool startline;
 
 KeywordCPPLexer(std::istream& in, const char* encoding, int language = LANGUAGE_CXX)
-	: antlr::CharScanner(new UTF8CharBuffer(encoding, in),true), Language(language), onpreprocline(false)
+	: antlr::CharScanner(new UTF8CharBuffer(encoding, in),true), Language(language), onpreprocline(false), startline(true)
 {
     initLiterals();
 

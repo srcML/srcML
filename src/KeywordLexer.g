@@ -109,7 +109,6 @@ tokens {
     FLOAT = "float";
     */
 }
-
 {
 public:
 KeywordLexer::KeywordLexer(std::istream& in)
@@ -121,7 +120,7 @@ KeywordLexer::KeywordLexer(std::istream& in)
 }
 
 protected
-SPECIAL_CHARS :
+SPECIAL_CHARS : { startline = false; }
         '\3'..'\377'
 ;
 

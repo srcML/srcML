@@ -46,6 +46,9 @@ LINECOMMENT_START
 
             selector->push("text"); 
             ((PureCommentLexer* ) (selector->getStream("text")))->init(LINECOMMENT_END, onpreprocline);
+
+            // when we return, we may have eaten the EOL, so we will turn back on startline
+            startline = true;
         }
 ;
 
@@ -54,5 +57,8 @@ COMMENT_START
 
             selector->push("text"); 
             ((PureCommentLexer* ) (selector->getStream("text")))->init(COMMENT_END, onpreprocline);
+
+            // comment are removed before includes are processed, so we are at the start of a line
+            startline = true;
         }
 ;

@@ -54,6 +54,7 @@ bool onpreprocline;
 }
 
 STRING_START :
+        { startline = false; }
         (
             // double quoted string
             // strings are allowed to span multiple lines
@@ -77,17 +78,20 @@ STRING_START :
 
 // character literal or single quoted string
 CHAR_START :
+        { startline = false; }
         '\'' { 
             selector->push("text"); 
             ((PureCommentLexer* ) (selector->getStream("text")))->init(CHAR_END, onpreprocline);
         }
 ;
 
-CONSTANTS : {}
+CONSTANTS :
+        { startline = false; }
         DIGITS (".")? (DIGITS)? ('u' | 'U' | 'f' | 'F' | 'l' | 'L')?
 ;
 
 NAME options { testLiterals = true; } :
+        { startline = false; }
         NAMECHARNOEL (DIGITS | NAMECHAR)*
 ;
 

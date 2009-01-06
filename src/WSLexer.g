@@ -57,6 +57,10 @@ EOL :
             // to prevent mostly string ending problems.
             // it has to be turned back on when the EOL is reached
             onpreprocline = false;
+
+            // mark that we are starting a new line, so preproc
+            // can be detected
+            startline = true;
         }
 ;
 
@@ -69,6 +73,8 @@ EOL_BACKSLASH :
   issued in an escape character.
 */
 CONTROL_CHAR :
+        { startline = true; }
+        (
         '\000' { $setText("0x0"); } |
         '\001' { $setText("0x1"); } |
         '\002' { $setText("0x2"); } |
@@ -100,4 +106,5 @@ CONTROL_CHAR :
         '\035' { $setText("0x1d"); } |
         '\036' { $setText("0x1e"); } |
         '\037' { $setText("0x1f"); }
+        )
 ;

@@ -77,13 +77,18 @@ SPECIAL :
 ;
 
 ALLOPERATORS options { testLiterals = true; } : 
-        '#' {
-            $setType(PREPROC); 
+        (
+            '#' {
 
-            // record that we are on a preprocessor line,
-            // primarily so that unterminated strings in
-            // a preprocessor line will end at the right spot
-            onpreprocline = true; 
+            if (startline) {
+
+                $setType(PREPROC); 
+
+                // record that we are on a preprocessor line,
+                // primarily so that unterminated strings in
+                // a preprocessor line will end at the right spot
+                onpreprocline = true; 
+            }
         }    |
         "*=" |  // immediate multiplication
         '*' |   // multiplication/pointer
@@ -96,10 +101,12 @@ ALLOPERATORS options { testLiterals = true; } :
         '[' | ']' |
         '{' | '}' |
         '~' |   // bitwise complement
-        '`'
+        '`')
+        { startline = false; }
 ;
 
 OPERATORS : 
+        (
         "!=" |    // not equal
         '!'  |    // logical negation
         '$'  |    // not an operator (why is it here?)
@@ -145,4 +152,6 @@ OPERATORS :
         "||" | // logical or
         "|=" | // immediate bitwise inclusive or
         '|'    // bitwise inclusive or
+        )
+        { startline = false; }
 ;
