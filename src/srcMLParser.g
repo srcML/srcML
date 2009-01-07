@@ -158,6 +158,7 @@ struct TokenPosition {
 header "post_include_cpp" {
 
 srcMLParser* pparser;
+
 int parseoptions;
 
     class LocalMode {
@@ -179,7 +180,8 @@ int parseoptions;
     };
 
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options)
-   : antlr::LLkParser(lexer,1), Mode(this, lang)
+   : antlr::LLkParser(lexer,1), Mode(this, lang), zeromode(false), skipelse(false), cppifcount(0)
+
 {
     pparser = this;
 
@@ -409,6 +411,9 @@ public:
 
 friend class LocalMode;
 
+bool zeromode;
+bool skipelse;
+int cppifcount;
 int isoperatorfunction;
 
 ~srcMLParser() {}
@@ -4545,10 +4550,6 @@ eol_post[int directive_token, bool markblockzero] {
             // Flags to control skipping of #if 0 and #else.
             // Once in these modes, stay in these modes until the matching #endif is reached
             // cppifcount used to indicate which #endif matches the #if or #else
-            static bool zeromode = false;
-            static bool skipelse = false;
-            static int cppifcount = 0;
-
             switch (directive_token) {
 
                 case IF :
