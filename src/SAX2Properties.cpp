@@ -28,12 +28,9 @@
 #include "SAX2Utilities.h"
 
 #include "Options.h"
-#include <iostream>
-#include <cstring>
-#include <libxml/xmlwriter.h>
-#include <libxml/parser.h>
-#include <libxml/parserInternals.h>
 #include "srcmlns.h"
+#include <cstring>
+#include <libxml/parser.h>
 
 // constructor
 SAX2Properties::SAX2Properties(int unit, int& options, PROPERTIES_TYPE& nsv, PROPERTIES_TYPE& attrv) 
@@ -118,7 +115,7 @@ void SAX2Properties::endElementNs(void *ctx, const xmlChar *localname, const xml
     if (pstate->ctxt->nameNr != 2)
       return;
 
-    // double check that this is a nested file
+    // double check that this is a nested file (only done the first time)
     if (pstate->count == 0 && !(strcmp((const char*) localname, "unit") == 0 &&
 	  strcmp((const char*) URI, "http://www.sdml.info/srcML/src") == 0)) {
       xmlStopParser(pstate->ctxt);
@@ -128,7 +125,7 @@ void SAX2Properties::endElementNs(void *ctx, const xmlChar *localname, const xml
     // found another unit
     ++(pstate->count);
 
-    // still not to the right unit yet
+    // still not to the right unit yet (need to pause right before)
     if (pstate->count < pstate->unit - 1)
       return;
 
