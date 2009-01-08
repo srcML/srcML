@@ -71,7 +71,10 @@ class srcMLUtility {
   // expand the compound srcML to individual files
   void expand(const char* root_filename = "");
 
-  static bool checkEncoding(const char*);
+  static bool checkEncoding(const char* encoding) {
+
+    return xmlFindCharEncodingHandler(encoding) != 0;
+  }
 
   int curunits() const;
 

@@ -50,13 +50,6 @@ const char* const UNIT_ATTRIBUTE_DIRECTORY = "dir";
 const char* const UNIT_ATTRIBUTE_FILENAME = "filename";
 const char* const UNIT_ATTRIBUTE_VERSION = "version";
 
-// check if encoding is supported
-bool srcMLUtility::checkEncoding(const char* encoding) {
-
-  return xmlFindCharEncodingHandler(encoding) != 0;
-
-}
-
 #include "SAX2ExtractUnitsSrc.h"
 #include "SAX2ExtractUnitSrc.h"
 #include "SAX2ExtractRootSrc.h"
