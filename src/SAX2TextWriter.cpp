@@ -36,7 +36,7 @@
 #include "Options.h"
 
 SAX2TextWriter::SAX2TextWriter(const char* ofilename, int& options, int unit):
-  unit(unit), poptions(&options), filename(ofilename) {
+  unit(unit), options(options), filename(ofilename) {
 
 }
 
@@ -63,7 +63,7 @@ void SAX2TextWriter::startDocument(void *user_data) {
     // open the output text writer stream
     // "-" filename is standard output
     pstate->writer = xmlNewTextWriterFilename(pstate->filename,
-					      isoption(*(pstate->poptions), OPTION_COMPRESSED) ? 1 : 0);
+					      isoption(pstate->options, OPTION_COMPRESSED) ? 1 : 0);
 
     // start this document the same as the current document
     xmlTextWriterStartDocument(pstate->writer,

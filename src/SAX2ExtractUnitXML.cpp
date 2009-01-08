@@ -80,7 +80,7 @@ void SAX2ExtractUnitXML::startElementNsRoot(void* ctx, const xmlChar* localname,
     pstate->placesunit = 10;
 
     // output file status message if in verbose mode
-    if (isoption(*(pstate->poptions), OPTION_VERBOSE))
+    if (isoption(pstate->options, OPTION_VERBOSE))
       std::cerr << "Count:  ";
 }
 
@@ -139,7 +139,7 @@ void SAX2ExtractUnitXML::endElementNs(void *ctx, const xmlChar *localname, const
     ++(pstate->count);
 
     // output file status message if in verbose mode
-    if (isoption(*(pstate->poptions), OPTION_VERBOSE)) {
+    if (isoption(pstate->options, OPTION_VERBOSE)) {
       for (int i = 0; i < pstate->placescount; ++i)
 	std::cerr << '\b';
       std::cerr << pstate->count;

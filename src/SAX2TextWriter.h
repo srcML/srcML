@@ -65,7 +65,7 @@ class SAX2TextWriter {
 
  protected:
 
-  int* poptions;
+  int options;
   const char* filename;      // output filename
   xmlTextWriterPtr writer;   // output text writer
 
