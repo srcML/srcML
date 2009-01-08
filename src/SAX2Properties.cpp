@@ -92,9 +92,8 @@ SAX2Properties::SAX2Properties(int unit, int& options, PROPERTIES_TYPE& nsv, PRO
     xmlStopParser(pstate->ctxt);
   }
 
-  // start a new output buffer and corresponding file for a
-  // unit element
-  void SAX2Properties::startElementNsUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+// collect namespace and attribute information about this unit
+void SAX2Properties::startElementNsUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
 		    const xmlChar** attributes) {
 
@@ -108,37 +107,34 @@ SAX2Properties::SAX2Properties(int unit, int& options, PROPERTIES_TYPE& nsv, PRO
 
     // collect attributes
     collect_attributes(nb_attributes, attributes, pstate->attrv);
-    /*
-    pstate->ctxt->sax->startDocument  = 0;
-    pstate->ctxt->sax->endDocument    = 0;
-    pstate->ctxt->sax->startElementNs = 0;
-    pstate->ctxt->sax->endElementNs   = 0;
-    pstate->ctxt->sax->characters     = 0;
-    */
-    xmlStopParser(pstate->ctxt);
-  }
 
-  // end unit element and current file/buffer (started by startElementNs
-  void SAX2Properties::endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+    xmlStopParser(pstate->ctxt);
+}
+
+// end unit element and current file/buffer (started by startElementNs)
+void SAX2Properties::endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
     SAX2Properties* pstate = (SAX2Properties*) ctx;
 
+    // only counting unit elements nested at depth of 2
     if (pstate->ctxt->nameNr != 2)
       return;
 
-    // check that this is a nested file
+    // double check that this is a nested file
     if (pstate->count == 0 && !(strcmp((const char*) localname, "unit") == 0 &&
 	  strcmp((const char*) URI, "http://www.sdml.info/srcML/src") == 0)) {
       xmlStopParser(pstate->ctxt);
       return;
     }
 
+    // found another unit
     ++(pstate->count);
 
+    // still not to the right unit yet
     if (pstate->count < pstate->unit - 1)
       return;
 
-    // now ready for the next unit, to treat as root
+    // next unit is the one we want, treat as root
     pstate->ctxt->sax->startElementNs = &startElementNsUnit;
     pstate->ctxt->sax->endElementNs = 0;
   }
