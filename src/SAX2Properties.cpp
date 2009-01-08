@@ -53,8 +53,8 @@ SAX2Properties::SAX2Properties(int unit, int& options, PROPERTIES_TYPE& nsv, PRO
     return sax;
   }
 
-  // handle root unit of compound document
-  void SAX2Properties::startElementNsRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+// extract namespace and attributes from root unit element
+void SAX2Properties::startElementNsRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
 		    const xmlChar** attributes) {
 
@@ -69,26 +69,22 @@ SAX2Properties::SAX2Properties(int unit, int& options, PROPERTIES_TYPE& nsv, PRO
     // collect attributes
     collect_attributes(nb_attributes, attributes, pstate->attrv);
 
-    // extract from nested unit if needed
+    // if a unit is specified, then move to that unit
     if (pstate->unit) {
       pstate->ctxt->sax->startElementNs = pstate->unit == 1 ? &startElementNsUnit : 0;
       pstate->ctxt->sax->endElementNs   = pstate->unit == 1 ? 0 : &endElementNs;
       return;
     }
 
-    // done if only from root
-    pstate->ctxt->sax->startDocument  = 0;
-    pstate->ctxt->sax->endDocument    = 0;
-    pstate->ctxt->sax->startElementNs = 0;
-    pstate->ctxt->sax->endElementNs   = 0;
-    pstate->ctxt->sax->characters     = 0;
-
+    // done collecting unit information
     if (isoption(pstate->options, OPTION_LONG_INFO)) {
 
+      pstate->ctxt->sax->startElementNs = 0;
       pstate->ctxt->sax->endElementNs = &SAX2CountUnits::endElementNs;
       return;
     }
 
+    // really done, only wanted the root unit
     xmlStopParser(pstate->ctxt);
   }
 
@@ -100,14 +96,16 @@ void SAX2Properties::startElementNsUnit(void* ctx, const xmlChar* localname, con
     SAX2Properties* pstate = (SAX2Properties*) ctx;
 
     // mostly we count the end elements for units, but now count the start
+    // so that we know we got here
     ++(pstate->count);
 
-    // collect namespaces
+    // merge namespace info with root namespace info
     collect_namespaces(nb_namespaces, namespaces, pstate->nsv);
 
-    // collect attributes
+    // merge attribute info with root attribute info
     collect_attributes(nb_attributes, attributes, pstate->attrv);
 
+    // reached the unit we wanted, so we are finished
     xmlStopParser(pstate->ctxt);
 }
 
