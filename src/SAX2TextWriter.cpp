@@ -56,9 +56,9 @@ xmlSAXHandler SAX2TextWriter::factory() {
 }
 
 // start document
-void SAX2TextWriter::startDocument(void *user_data) {
+void SAX2TextWriter::startDocument(void *ctx) {
 
-    SAX2TextWriter* pstate = (SAX2TextWriter*) user_data;
+    SAX2TextWriter* pstate = (SAX2TextWriter*) ctx;
 
     // open the output text writer stream
     // "-" filename is standard output
@@ -73,9 +73,9 @@ void SAX2TextWriter::startDocument(void *user_data) {
 }
 
 // end document
-void SAX2TextWriter::endDocument(void *user_data) {
+void SAX2TextWriter::endDocument(void *ctx) {
 
-    SAX2TextWriter* pstate = (SAX2TextWriter*) user_data;
+    SAX2TextWriter* pstate = (SAX2TextWriter*) ctx;
 
     xmlTextWriterEndDocument(pstate->writer);
 
@@ -83,9 +83,9 @@ void SAX2TextWriter::endDocument(void *user_data) {
 }
 
 // characters
-void SAX2TextWriter::characters(void* user_data, const xmlChar* ch, int len) {
+void SAX2TextWriter::characters(void* ctx, const xmlChar* ch, int len) {
 
-    SAX2TextWriter* pstate = (SAX2TextWriter*) user_data;
+    SAX2TextWriter* pstate = (SAX2TextWriter*) ctx;
 
     const char* c = (const char*) ch;
     int pos = 0;
@@ -122,9 +122,9 @@ void SAX2TextWriter::characters(void* user_data, const xmlChar* ch, int len) {
 }
 
 // comments
-void SAX2TextWriter::comments(void* user_data, const xmlChar* ch) {
+void SAX2TextWriter::comments(void* ctx, const xmlChar* ch) {
 
-    SAX2TextWriter* pstate = (SAX2TextWriter*) user_data;
+    SAX2TextWriter* pstate = (SAX2TextWriter*) ctx;
 
     xmlTextWriterWriteComment(pstate->writer, ch);
 }

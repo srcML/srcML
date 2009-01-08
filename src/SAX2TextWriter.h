@@ -43,13 +43,13 @@ class SAX2TextWriter {
   static xmlSAXHandler factory();
 
   // start document
-  static void startDocument(void *user_data);
+  static void startDocument(void *ctx);
 
   // end document
-  static void endDocument(void *user_data);
+  static void endDocument(void *ctx);
 
   // characters
-  static void characters(void* user_data, const xmlChar* ch, int len);
+  static void characters(void* ctx, const xmlChar* ch, int len);
 
   // startElement
   static void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
@@ -60,7 +60,7 @@ class SAX2TextWriter {
   static void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
 
   // comments
-  static void comments(void* user_data, const xmlChar* ch);
+  static void comments(void* ctx, const xmlChar* ch);
 
   xmlParserCtxtPtr ctxt;
   int unit;
