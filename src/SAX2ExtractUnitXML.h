@@ -38,9 +38,6 @@ class SAX2ExtractUnitXML : public SAX2TextWriter {
 
   SAX2ExtractUnitXML(const char* ofilename, int& options, PROPERTIES_TYPE& nsv, PROPERTIES_TYPE& attrv, int unit);
 
-  static int placescount;
-  static int placesunit;
-
   static xmlSAXHandler factory();
 
   long count;
@@ -58,6 +55,10 @@ class SAX2ExtractUnitXML : public SAX2TextWriter {
 		    const xmlChar** attributes);
 
   static void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
+
+ private:
+  int placescount;
+  int placesunit;
 };
 
 #endif

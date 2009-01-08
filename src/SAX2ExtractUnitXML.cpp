@@ -40,11 +40,8 @@ const char* const UNIT_ATTRIBUTE_DIRECTORY = "dir";
 const char* const UNIT_ATTRIBUTE_FILENAME = "filename";
 const char* const UNIT_ATTRIBUTE_VERSION = "version";
 
-int SAX2ExtractUnitXML::placescount = 0;
-int SAX2ExtractUnitXML::placesunit = 0;
-
 SAX2ExtractUnitXML::SAX2ExtractUnitXML(const char* ofilename, int& options, PROPERTIES_TYPE& nsv, PROPERTIES_TYPE& attrv, int unit):
-  SAX2TextWriter(ofilename, options, unit), nsv(&nsv), attrv(&attrv) {
+  SAX2TextWriter(ofilename, options, unit), nsv(&nsv), attrv(&attrv), placescount(0), placesunit(0) {
 
 }
 
@@ -79,8 +76,8 @@ void SAX2ExtractUnitXML::startElementNsRoot(void* ctx, const xmlChar* localname,
     pstate->ctxt->sax->startElementNs = pstate->unit == 1 ? &startElementNsUnit : 0;
     pstate->ctxt->sax->endElementNs   = pstate->unit == 1 ? 0 : &endElementNs;
 
-    placescount = 1;
-    placesunit = 10;
+    pstate->placescount = 1;
+    pstate->placesunit = 10;
 
     // output file status message if in verbose mode
     if (isoption(*(pstate->poptions), OPTION_VERBOSE))
@@ -143,13 +140,13 @@ void SAX2ExtractUnitXML::endElementNs(void *ctx, const xmlChar *localname, const
 
     // output file status message if in verbose mode
     if (isoption(*(pstate->poptions), OPTION_VERBOSE)) {
-      for (int i = 0; i < placescount; ++i)
+      for (int i = 0; i < pstate->placescount; ++i)
 	std::cerr << '\b';
       std::cerr << pstate->count;
 
-      if (pstate->count == placesunit) {
-	placesunit *= 10;
-	++placescount;
+      if (pstate->count == pstate->placesunit) {
+	pstate->placesunit *= 10;
+	++pstate->placescount;
       }
     }
 
