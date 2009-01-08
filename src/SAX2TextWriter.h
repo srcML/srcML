@@ -38,11 +38,13 @@ class SAX2TextWriter {
 
   static xmlSAXHandler factory();
 
-    xmlParserCtxtPtr ctxt;
-    int unit;
-    int* poptions;
-    const char* filename;      // output filename
-    xmlTextWriterPtr writer;   // output text writer
+  SAX2TextWriter(const char* ofilename, int& options, int unit);
+
+  xmlParserCtxtPtr ctxt;
+  int unit;
+  int* poptions;
+  const char* filename;      // output filename
+  xmlTextWriterPtr writer;   // output text writer
 
   // start document
   static void startDocument(void *user_data);

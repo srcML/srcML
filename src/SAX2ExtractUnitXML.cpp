@@ -43,6 +43,11 @@ const char* const UNIT_ATTRIBUTE_VERSION = "version";
 int SAX2ExtractUnitXML::placescount = 0;
 int SAX2ExtractUnitXML::placesunit = 0;
 
+SAX2ExtractUnitXML::SAX2ExtractUnitXML(const char* ofilename, int& options, PROPERTIES_TYPE& nsv, PROPERTIES_TYPE& attrv, int unit):
+  SAX2TextWriter(ofilename, options, unit), nsv(&nsv), attrv(&attrv) {
+
+}
+
 xmlSAXHandler SAX2ExtractUnitXML::factory() {
 
     xmlSAXHandler sax = { 0 };
@@ -55,9 +60,9 @@ xmlSAXHandler SAX2ExtractUnitXML::factory() {
 }
 
 // handle root unit of compound document
-void SAX2ExtractUnitXML::startElementNsRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-		    const xmlChar** attributes) {
+void SAX2ExtractUnitXML::startElementNsRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix,
+		    const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces, int nb_attributes,
+		    int nb_defaulted, const xmlChar** attributes) {
 
     SAX2ExtractUnitXML* pstate = (SAX2ExtractUnitXML*) ctx;
 

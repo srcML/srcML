@@ -167,12 +167,7 @@ void srcMLUtility::extract_xml(const char* ofilename, int unit) {
   // output entire unit element
   xmlSAXHandler sax = SAX2ExtractUnitXML::factory();
 
-  SAX2ExtractUnitXML state;
-  state.filename = ofilename;
-  state.poptions = &options;
-  state.nsv = &nsv;
-  state.attrv = &attrv;
-  state.unit = unit;
+  SAX2ExtractUnitXML state(ofilename, options, nsv, attrv, unit);
 
   xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
   if (ctxt == NULL) return;

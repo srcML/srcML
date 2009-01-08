@@ -36,6 +36,8 @@
 class SAX2ExtractUnitXML : public SAX2TextWriter {
  public:
 
+  SAX2ExtractUnitXML(const char* ofilename, int& options, PROPERTIES_TYPE& nsv, PROPERTIES_TYPE& attrv, int unit);
+
   static int placescount;
   static int placesunit;
 

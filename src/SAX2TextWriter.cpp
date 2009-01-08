@@ -35,6 +35,11 @@
 #include "SAX2Utilities.h"
 #include "Options.h"
 
+SAX2TextWriter::SAX2TextWriter(const char* ofilename, int& options, int unit):
+  filename(ofilename), poptions(&options), unit(unit) {
+
+}
+
 xmlSAXHandler SAX2TextWriter::factory() {
 
     xmlSAXHandler sax = { 0 };
