@@ -34,6 +34,7 @@
 #include "srcMLUtility.h"
 #include "Options.h"
 #include <list>
+#include "srcmlns.h"
 
 char const * const NAME = "srcml2src";
 
@@ -521,19 +522,19 @@ int main(int argc, char* argv[]) {
 	  attribute_title = "encoding=";
 	  break;
 	case OPTION_LANGUAGE:
-	  attribute_name = "language";
+	  attribute_name = UNIT_ATTRIBUTE_LANGUAGE;
 	  attribute_title = "language=";
 	  break;
 	case OPTION_DIRECTORY:
-	  attribute_name = "dir";
+	  attribute_name = UNIT_ATTRIBUTE_DIRECTORY;
 	  attribute_title = "directory=";
 	  break;
 	case OPTION_FILENAME:
-	  attribute_name = "filename";
+	  attribute_name = UNIT_ATTRIBUTE_FILENAME;
 	  attribute_title = "filename=";
 	  break;
 	case OPTION_VERSION:
-	  attribute_name = "version";
+	  attribute_name = UNIT_ATTRIBUTE_VERSION;
 	  attribute_title = "src-version=";
 	  break;
 	};
