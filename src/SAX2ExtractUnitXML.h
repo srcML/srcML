@@ -36,7 +36,7 @@
 class SAX2ExtractUnitXML : public SAX2TextWriter {
  public:
 
-  SAX2ExtractUnitXML(const char* ofilename, int& options, PROPERTIES_TYPE& nsv, PROPERTIES_TYPE& attrv, int unit);
+  SAX2ExtractUnitXML(const char* ofilename, int unit, int& options, PROPERTIES_TYPE& nsv, PROPERTIES_TYPE& attrv);
 
   static xmlSAXHandler factory();
 

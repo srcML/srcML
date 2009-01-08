@@ -162,12 +162,12 @@ int srcMLUtility::unit_count() {
 }
 
 // extract a given unit
-void srcMLUtility::extract_xml(const char* ofilename, int unit) {
+void srcMLUtility::extract_xml(const char* filename, int unit) {
 
   // output entire unit element
   xmlSAXHandler sax = SAX2ExtractUnitXML::factory();
 
-  SAX2ExtractUnitXML state(ofilename, options, nsv, attrv, unit);
+  SAX2ExtractUnitXML state(filename, unit, options, nsv, attrv);
 
   xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
   if (ctxt == NULL) return;

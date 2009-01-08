@@ -40,7 +40,7 @@ const char* const UNIT_ATTRIBUTE_DIRECTORY = "dir";
 const char* const UNIT_ATTRIBUTE_FILENAME = "filename";
 const char* const UNIT_ATTRIBUTE_VERSION = "version";
 
-SAX2ExtractUnitXML::SAX2ExtractUnitXML(const char* ofilename, int& options, PROPERTIES_TYPE& nsv, PROPERTIES_TYPE& attrv, int unit):
+SAX2ExtractUnitXML::SAX2ExtractUnitXML(const char* ofilename, int unit, int& options, PROPERTIES_TYPE& nsv, PROPERTIES_TYPE& attrv):
   SAX2TextWriter(ofilename, options, unit), nsv(&nsv), attrv(&attrv), placescount(0), placesunit(0) {
 
 }
