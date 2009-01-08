@@ -43,4 +43,10 @@ const char* const SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT = "lit";
 const char* const SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT = "op";
 const char* const SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT = "type";
 
+// srcML standard attributes
+const char* const UNIT_ATTRIBUTE_LANGUAGE = "language";
+const char* const UNIT_ATTRIBUTE_DIRECTORY = "dir";
+const char* const UNIT_ATTRIBUTE_FILENAME = "filename";
+const char* const UNIT_ATTRIBUTE_VERSION = "version";
+
 #endif

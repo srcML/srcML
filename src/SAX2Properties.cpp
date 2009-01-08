@@ -35,12 +35,6 @@
 #include <libxml/parserInternals.h>
 #include "srcmlns.h"
 
-/* srcML unit attributes */
-const char* const UNIT_ATTRIBUTE_LANGUAGE = "language";
-const char* const UNIT_ATTRIBUTE_DIRECTORY = "dir";
-const char* const UNIT_ATTRIBUTE_FILENAME = "filename";
-const char* const UNIT_ATTRIBUTE_VERSION = "version";
-
 namespace SAX2Properties {
 
   xmlSAXHandler factory() {

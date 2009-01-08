@@ -45,10 +45,12 @@ const char* const XML_DECLARATION_STANDALONE = "yes";
 const char* const XML_VERSION = "1.0";
 
 /* srcML unit attributes */
+/*
 const char* const UNIT_ATTRIBUTE_LANGUAGE = "language";
 const char* const UNIT_ATTRIBUTE_DIRECTORY = "dir";
 const char* const UNIT_ATTRIBUTE_FILENAME = "filename";
 const char* const UNIT_ATTRIBUTE_VERSION = "version";
+*/
 
 #include "SAX2ExtractUnitsSrc.h"
 #include "SAX2ExtractUnitSrc.h"
