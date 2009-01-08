@@ -40,12 +40,6 @@ class SAX2TextWriter {
 
   SAX2TextWriter(const char* ofilename, int& options, int unit);
 
-  xmlParserCtxtPtr ctxt;
-  int unit;
-  int* poptions;
-  const char* filename;      // output filename
-  xmlTextWriterPtr writer;   // output text writer
-
   // start document
   static void startDocument(void *user_data);
 
@@ -65,6 +59,15 @@ class SAX2TextWriter {
 
   // comments
   static void comments(void* user_data, const xmlChar* ch);
+
+  xmlParserCtxtPtr ctxt;
+  int unit;
+
+ protected:
+
+  int* poptions;
+  const char* filename;      // output filename
+  xmlTextWriterPtr writer;   // output text writer
 
 };
 
