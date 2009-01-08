@@ -29,10 +29,11 @@
 #define INCLUDED_SAX2EXTRACTUNITXML_H
 
 #include "SAX2Utilities.h"
+#include "SAX2TextWriter.h"
 #include <libxml/parser.h>
 #include <libxml/xmlwriter.h>
 
-class SAX2ExtractUnitXML {
+class SAX2ExtractUnitXML : public SAX2TextWriter {
  public:
 
   static int placescount;
@@ -40,20 +41,9 @@ class SAX2ExtractUnitXML {
 
   static xmlSAXHandler factory();
 
-  struct State {
-    xmlParserCtxtPtr ctxt;
-    int unit;
-    long count;
-    const char * root_filename;
-    const char * ofilename;
-    xmlCharEncodingHandlerPtr handler;
-    int* poptions;
-    const char* filename;      // output filename
-    xmlTextWriterPtr writer;   // output text writer
-    xmlOutputBufferPtr output;
-    PROPERTIES_TYPE* nsv;
-    PROPERTIES_TYPE* attrv;
-  };
+  long count;
+  PROPERTIES_TYPE* nsv;
+  PROPERTIES_TYPE* attrv;
 
   // startElement for root
   static void startElementNsRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,

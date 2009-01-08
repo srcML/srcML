@@ -53,7 +53,7 @@ xmlSAXHandler SAX2TextWriter::factory() {
 // start document
 void SAX2TextWriter::startDocument(void *user_data) {
 
-    State* pstate = (State*) user_data;
+    SAX2TextWriter* pstate = (SAX2TextWriter*) user_data;
 
     // open the output text writer stream
     // "-" filename is standard output
@@ -70,7 +70,7 @@ void SAX2TextWriter::startDocument(void *user_data) {
 // end document
 void SAX2TextWriter::endDocument(void *user_data) {
 
-    State* pstate = (State*) user_data;
+    SAX2TextWriter* pstate = (SAX2TextWriter*) user_data;
 
     xmlTextWriterEndDocument(pstate->writer);
 
@@ -80,7 +80,7 @@ void SAX2TextWriter::endDocument(void *user_data) {
 // characters
 void SAX2TextWriter::characters(void* user_data, const xmlChar* ch, int len) {
 
-    State* pstate = (State*) user_data;
+    SAX2TextWriter* pstate = (SAX2TextWriter*) user_data;
 
     const char* c = (const char*) ch;
     int pos = 0;
@@ -119,7 +119,7 @@ void SAX2TextWriter::characters(void* user_data, const xmlChar* ch, int len) {
 // comments
 void SAX2TextWriter::comments(void* user_data, const xmlChar* ch) {
 
-    State* pstate = (State*) user_data;
+    SAX2TextWriter* pstate = (SAX2TextWriter*) user_data;
 
     xmlTextWriterWriteComment(pstate->writer, ch);
 }
@@ -130,7 +130,7 @@ void SAX2TextWriter::startElementNs(void* ctx, const xmlChar* localname, const x
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
 		    const xmlChar** attributes) {
 
-    State* pstate = (State*) ctx;
+    SAX2TextWriter* pstate = (SAX2TextWriter*) ctx;
 
     // start element with proper prefix
     const char* name = qname((const char*) prefix, (const char*) localname);
@@ -161,7 +161,7 @@ void SAX2TextWriter::startElementNs(void* ctx, const xmlChar* localname, const x
 // end unit element and current file/buffer (started by startElementNs
 void SAX2TextWriter::endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
-    State* pstate = (State*) ctx;
+    SAX2TextWriter* pstate = (SAX2TextWriter*) ctx;
 
     xmlTextWriterEndElement(pstate->writer);
 

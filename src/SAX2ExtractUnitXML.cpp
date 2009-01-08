@@ -59,7 +59,7 @@ void SAX2ExtractUnitXML::startElementNsRoot(void* ctx, const xmlChar* localname,
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
 		    const xmlChar** attributes) {
 
-    State* pstate = (State*) ctx;
+    SAX2ExtractUnitXML* pstate = (SAX2ExtractUnitXML*) ctx;
 
     // start counting units after the root
     pstate->count = 0;
@@ -88,7 +88,7 @@ void SAX2ExtractUnitXML::startElementNsUnit(void* ctx, const xmlChar* localname,
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
 		    const xmlChar** attributes) {
 
-    State* pstate = (State*) ctx;
+    SAX2ExtractUnitXML* pstate = (SAX2ExtractUnitXML*) ctx;
 
     // mostly we count the end elements for units, but now count the start
     ++(pstate->count);
@@ -122,7 +122,7 @@ void SAX2ExtractUnitXML::startElementNsUnit(void* ctx, const xmlChar* localname,
 // end unit element and current file/buffer (started by startElementNs
 void SAX2ExtractUnitXML::endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
-    State* pstate = (State*) ctx;
+    SAX2ExtractUnitXML* pstate = (SAX2ExtractUnitXML*) ctx;
 
     if (pstate->ctxt->nameNr != 2)
       return;

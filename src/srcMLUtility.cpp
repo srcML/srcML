@@ -167,7 +167,7 @@ void srcMLUtility::extract_xml(const char* ofilename, int unit) {
   // output entire unit element
   xmlSAXHandler sax = SAX2ExtractUnitXML::factory();
 
-  SAX2ExtractUnitXML::State state;
+  SAX2ExtractUnitXML state;
   state.filename = ofilename;
   state.poptions = &options;
   state.nsv = &nsv;
