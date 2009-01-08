@@ -1,7 +1,7 @@
 /*
-  srcMLUtility.cpp
+  SAX2Properties.cpp
 
-  Copyright (C) 2004-2006  SDML (www.sdml.info)
+  Copyright (C) 2008  SDML (www.sdml.info)
 
   This file is part of the srcML translator.
 
@@ -35,9 +35,7 @@
 #include <libxml/parserInternals.h>
 #include "srcmlns.h"
 
-namespace SAX2Properties {
-
-  xmlSAXHandler factory() {
+  xmlSAXHandler SAX2Properties::factory() {
 
     xmlSAXHandler sax = { 0 };
 
@@ -49,11 +47,11 @@ namespace SAX2Properties {
   }
 
   // handle root unit of compound document
-  void startElementNsRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+  void SAX2Properties::startElementNsRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
 		    const xmlChar** attributes) {
 
-    State* pstate = (State*) ctx;
+    SAX2Properties* pstate = (SAX2Properties*) ctx;
 
     // start counting units after the root
     pstate->count = 0;
@@ -89,11 +87,11 @@ namespace SAX2Properties {
 
   // start a new output buffer and corresponding file for a
   // unit element
-  void startElementNsUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+  void SAX2Properties::startElementNsUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
 		    const xmlChar** attributes) {
 
-    State* pstate = (State*) ctx;
+    SAX2Properties* pstate = (SAX2Properties*) ctx;
 
     // mostly we count the end elements for units, but now count the start
     ++(pstate->count);
@@ -114,9 +112,9 @@ namespace SAX2Properties {
   }
 
   // end unit element and current file/buffer (started by startElementNs
-  void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+  void SAX2Properties::endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
-    State* pstate = (State*) ctx;
+    SAX2Properties* pstate = (SAX2Properties*) ctx;
 
     if (pstate->ctxt->nameNr != 2)
       return;
@@ -137,4 +135,3 @@ namespace SAX2Properties {
     pstate->ctxt->sax->startElementNs = &startElementNsUnit;
     pstate->ctxt->sax->endElementNs = 0;
   }
-};

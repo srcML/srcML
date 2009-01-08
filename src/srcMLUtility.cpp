@@ -90,7 +90,7 @@ void srcMLUtility::move_to_unit(int unitnumber) {
   // output entire unit element
   xmlSAXHandler sax = SAX2Properties::factory();
 
-  SAX2Properties::State state;
+  SAX2Properties state;
   state.unit = unitnumber;
   state.poptions = &options;
   state.nsv = &nsv;
