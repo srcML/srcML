@@ -47,13 +47,13 @@ SAX2ExtractUnitXML::SAX2ExtractUnitXML(const char* ofilename, int unit, int& opt
 
 xmlSAXHandler SAX2ExtractUnitXML::factory() {
 
-    xmlSAXHandler sax = { 0 };
+  xmlSAXHandler sax = { 0 };
 
-    sax.initialized    = XML_SAX2_MAGIC;
-    sax.startElementNs = &startElementNsRoot;
-    sax.startDocument  = &SAX2TextWriter::startDocument;
+  sax.initialized    = XML_SAX2_MAGIC;
+  sax.startElementNs = &startElementNsRoot;
+  sax.startDocument  = &SAX2TextWriter::startDocument;
 
-    return sax;
+  return sax;
 }
 
 // handle root unit of compound document

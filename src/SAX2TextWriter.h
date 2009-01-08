@@ -36,9 +36,11 @@ class SAX2TextWriter {
 
  public:
 
-  static xmlSAXHandler factory();
-
+  // constructor
   SAX2TextWriter(const char* ofilename, int& options, int unit);
+
+  // sax factory
+  static xmlSAXHandler factory();
 
   // start document
   static void startDocument(void *user_data);
