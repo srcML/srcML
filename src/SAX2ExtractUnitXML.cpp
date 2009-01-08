@@ -40,12 +40,10 @@ const char* const UNIT_ATTRIBUTE_DIRECTORY = "dir";
 const char* const UNIT_ATTRIBUTE_FILENAME = "filename";
 const char* const UNIT_ATTRIBUTE_VERSION = "version";
 
-namespace SAX2ExtractUnitXML {
+int SAX2ExtractUnitXML::placescount = 0;
+int SAX2ExtractUnitXML::placesunit = 0;
 
-  static int placescount = 0;
-  static int placesunit = 0;
-
-  xmlSAXHandler factory() {
+xmlSAXHandler SAX2ExtractUnitXML::factory() {
 
     xmlSAXHandler sax = { 0 };
 
@@ -54,10 +52,10 @@ namespace SAX2ExtractUnitXML {
     sax.startDocument  = &SAX2TextWriter::startDocument;
 
     return sax;
-  }
+}
 
-  // handle root unit of compound document
-  void startElementNsRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+// handle root unit of compound document
+void SAX2ExtractUnitXML::startElementNsRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
 		    const xmlChar** attributes) {
 
@@ -82,11 +80,11 @@ namespace SAX2ExtractUnitXML {
     // output file status message if in verbose mode
     if (isoption(*(pstate->poptions), OPTION_VERBOSE))
       std::cerr << "Count:  ";
-  }
+}
 
-  // start a new output buffer and corresponding file for a
-  // unit element
-  void startElementNsUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+// start a new output buffer and corresponding file for a
+// unit element
+void SAX2ExtractUnitXML::startElementNsUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
 		    const xmlChar** attributes) {
 
@@ -119,10 +117,10 @@ namespace SAX2ExtractUnitXML {
     pstate->ctxt->sax->endElementNs   = &SAX2TextWriter::endElementNs;
     pstate->ctxt->sax->characters     = &SAX2TextWriter::characters;
     pstate->ctxt->sax->comment        = &SAX2TextWriter::comments;
-  }
+}
 
-  // end unit element and current file/buffer (started by startElementNs
-  void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+// end unit element and current file/buffer (started by startElementNs
+void SAX2ExtractUnitXML::endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
     State* pstate = (State*) ctx;
 
@@ -156,5 +154,4 @@ namespace SAX2ExtractUnitXML {
     // now ready for the next unit, to treat as root
     pstate->ctxt->sax->startElementNs = &startElementNsUnit;
     pstate->ctxt->sax->endElementNs = 0;
-  }
-};
+}

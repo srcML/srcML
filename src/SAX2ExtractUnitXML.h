@@ -32,10 +32,13 @@
 #include <libxml/parser.h>
 #include <libxml/xmlwriter.h>
 
-namespace SAX2ExtractUnitXML {
+class SAX2ExtractUnitXML {
+ public:
 
+  static int placescount;
+  static int placesunit;
 
-  xmlSAXHandler factory();
+  static xmlSAXHandler factory();
 
   struct State {
     xmlParserCtxtPtr ctxt;
@@ -53,16 +56,16 @@ namespace SAX2ExtractUnitXML {
   };
 
   // startElement for root
-  void startElementNsRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+  static void startElementNsRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
 		    const xmlChar** attributes);
 
   // startElement for root
-  void startElementNsUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+  static void startElementNsUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
 		    const xmlChar** attributes);
 
-  void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
+  static void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
 };
 
 #endif

@@ -35,9 +35,7 @@
 #include "SAX2Utilities.h"
 #include "Options.h"
 
-namespace SAX2TextWriter {
-
-  xmlSAXHandler factory() {
+xmlSAXHandler SAX2TextWriter::factory() {
 
     xmlSAXHandler sax = { 0 };
 
@@ -50,10 +48,10 @@ namespace SAX2TextWriter {
     sax.comment        = &SAX2TextWriter::comments;
 
     return sax;
-  }
+}
 
-  // start document
-  void startDocument(void *user_data) {
+// start document
+void SAX2TextWriter::startDocument(void *user_data) {
 
     State* pstate = (State*) user_data;
 
@@ -67,20 +65,20 @@ namespace SAX2TextWriter {
 			       (const char*) pstate->ctxt->version,
 			       (const char*) (pstate->ctxt->encoding ? pstate->ctxt->encoding : pstate->ctxt->input->encoding),
 			       pstate->ctxt->standalone ? "yes" : "no");
-  }
+}
 
-  // end document
-  void endDocument(void *user_data) {
+// end document
+void SAX2TextWriter::endDocument(void *user_data) {
 
     State* pstate = (State*) user_data;
 
     xmlTextWriterEndDocument(pstate->writer);
 
     xmlFreeTextWriter(pstate->writer);
-  }
+}
 
-  // characters
-  void characters(void* user_data, const xmlChar* ch, int len) {
+// characters
+void SAX2TextWriter::characters(void* user_data, const xmlChar* ch, int len) {
 
     State* pstate = (State*) user_data;
 
@@ -116,19 +114,19 @@ namespace SAX2TextWriter {
     }
 
     xmlTextWriterWriteRawLen(pstate->writer, BAD_CAST c - pos, pos);
-  }
+}
 
-  // comments
-  void comments(void* user_data, const xmlChar* ch) {
+// comments
+void SAX2TextWriter::comments(void* user_data, const xmlChar* ch) {
 
     State* pstate = (State*) user_data;
 
     xmlTextWriterWriteComment(pstate->writer, ch);
-  }
+}
 
-  // start a new output buffer and corresponding file for a
-  // unit element
-  void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+// start a new output buffer and corresponding file for a
+// unit element
+void SAX2TextWriter::startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
 		    const xmlChar** attributes) {
 
@@ -158,10 +156,10 @@ namespace SAX2TextWriter {
 			       attributes[index + 4] - attributes[index + 3]);
       xmlTextWriterEndAttribute(pstate->writer);
     }
-  }
+}
 
-  // end unit element and current file/buffer (started by startElementNs
-  void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+// end unit element and current file/buffer (started by startElementNs
+void SAX2TextWriter::endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
     State* pstate = (State*) ctx;
 
@@ -177,6 +175,4 @@ namespace SAX2TextWriter {
 
       xmlStopParser(pstate->ctxt);
     }
-  }
-
-};
+}

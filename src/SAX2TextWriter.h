@@ -32,9 +32,11 @@
 #include <libxml/parser.h>
 #include <libxml/xmlwriter.h>
 
-namespace SAX2TextWriter {
+class SAX2TextWriter {
 
-  xmlSAXHandler factory();
+ public:
+
+  static xmlSAXHandler factory();
 
   struct State {
     xmlParserCtxtPtr ctxt;
@@ -52,24 +54,24 @@ namespace SAX2TextWriter {
   };
 
   // start document
-  void startDocument(void *user_data);
+  static void startDocument(void *user_data);
 
   // end document
-  void endDocument(void *user_data);
+  static void endDocument(void *user_data);
 
   // characters
-  void characters(void* user_data, const xmlChar* ch, int len);
+  static void characters(void* user_data, const xmlChar* ch, int len);
 
   // startElement
-  void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+  static void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
 		    const xmlChar** attributes);
 
   // endElement
-  void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
+  static void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
 
   // comments
-  void comments(void* user_data, const xmlChar* ch);
+  static void comments(void* user_data, const xmlChar* ch);
 
 };
 
