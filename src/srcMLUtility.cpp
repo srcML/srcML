@@ -90,12 +90,15 @@ void srcMLUtility::move_to_unit(int unitnumber) {
   // output entire unit element
   xmlSAXHandler sax = SAX2Properties::factory();
 
+  SAX2Properties state(unitnumber, options, nsv, attrv);
+  /*
   SAX2Properties state;
   state.unit = unitnumber;
   state.poptions = &options;
   state.nsv = &nsv;
   state.attrv = &attrv;
   state.verbose = false;
+  */
 
   xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
   if (ctxt == NULL) return;

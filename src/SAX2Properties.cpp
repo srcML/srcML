@@ -35,6 +35,13 @@
 #include <libxml/parserInternals.h>
 #include "srcmlns.h"
 
+// constructor
+SAX2Properties::SAX2Properties(int unit, int& options, PROPERTIES_TYPE& nsv, PROPERTIES_TYPE& attrv) 
+  : unit(unit), options(options), nsv(nsv), attrv(attrv)
+{
+  verbose = isoption(options, OPTION_VERBOSE);
+}
+
   xmlSAXHandler SAX2Properties::factory() {
 
     xmlSAXHandler sax = { 0 };
@@ -57,10 +64,10 @@
     pstate->count = 0;
 
     // collect namespaces
-    collect_namespaces(nb_namespaces, namespaces, *(pstate->nsv));
+    collect_namespaces(nb_namespaces, namespaces, pstate->nsv);
 
     // collect attributes
-    collect_attributes(nb_attributes, attributes, *(pstate->attrv));
+    collect_attributes(nb_attributes, attributes, pstate->attrv);
 
     // extract from nested unit if needed
     if (pstate->unit) {
@@ -76,7 +83,7 @@
     pstate->ctxt->sax->endElementNs   = 0;
     pstate->ctxt->sax->characters     = 0;
 
-    if (isoption(*(pstate->poptions), OPTION_LONG_INFO)) {
+    if (isoption(pstate->options, OPTION_LONG_INFO)) {
 
       pstate->ctxt->sax->endElementNs = &SAX2CountUnits::endElementNs;
       return;
@@ -97,17 +104,17 @@
     ++(pstate->count);
 
     // collect namespaces
-    collect_namespaces(nb_namespaces, namespaces, *(pstate->nsv));
+    collect_namespaces(nb_namespaces, namespaces, pstate->nsv);
 
     // collect attributes
-    collect_attributes(nb_attributes, attributes, *(pstate->attrv));
-
+    collect_attributes(nb_attributes, attributes, pstate->attrv);
+    /*
     pstate->ctxt->sax->startDocument  = 0;
     pstate->ctxt->sax->endDocument    = 0;
     pstate->ctxt->sax->startElementNs = 0;
     pstate->ctxt->sax->endElementNs   = 0;
     pstate->ctxt->sax->characters     = 0;
-
+    */
     xmlStopParser(pstate->ctxt);
   }
 
