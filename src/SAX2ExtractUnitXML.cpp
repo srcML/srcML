@@ -41,7 +41,7 @@ const char* const UNIT_ATTRIBUTE_FILENAME = "filename";
 const char* const UNIT_ATTRIBUTE_VERSION = "version";
 
 SAX2ExtractUnitXML::SAX2ExtractUnitXML(const char* ofilename, int unit, int& options, PROPERTIES_TYPE& nsv, PROPERTIES_TYPE& attrv):
-  SAX2TextWriter(ofilename, options, unit), nsv(&nsv), attrv(&attrv), placescount(0), placesunit(0) {
+  SAX2TextWriter(ofilename, options, unit), nsv(nsv), attrv(attrv), placescount(0), placesunit(0) {
 
 }
 
@@ -67,10 +67,10 @@ void SAX2ExtractUnitXML::startElementNsRoot(void* ctx, const xmlChar* localname,
     pstate->count = 0;
 
     // collect namespaces
-    collect_namespaces(nb_namespaces, namespaces, *(pstate->nsv));
+    collect_namespaces(nb_namespaces, namespaces, pstate->nsv);
 
     // collect attributes
-    collect_attributes(nb_attributes, attributes, *(pstate->attrv));
+    collect_attributes(nb_attributes, attributes, pstate->attrv);
 
     // handle nested units
     pstate->ctxt->sax->startElementNs = pstate->unit == 1 ? &startElementNsUnit : 0;
@@ -100,17 +100,17 @@ void SAX2ExtractUnitXML::startElementNsUnit(void* ctx, const xmlChar* localname,
     xmlTextWriterStartElement(pstate->writer, BAD_CAST name);
 
     // merge this units namespaces
-    collect_namespaces(nb_namespaces, namespaces, *(pstate->nsv));
+    collect_namespaces(nb_namespaces, namespaces, pstate->nsv);
 
     // output the merged namespaces
-    for (PROPERTIES_TYPE::const_iterator iter = pstate->nsv->begin(); iter != pstate->nsv->end(); ++iter)
+    for (PROPERTIES_TYPE::const_iterator iter = pstate->nsv.begin(); iter != pstate->nsv.end(); ++iter)
       xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST iter->second.c_str(), BAD_CAST iter->first.c_str());
 
     // merge this units attributes
-    collect_attributes(nb_attributes, attributes, *(pstate->attrv));
+    collect_attributes(nb_attributes, attributes, pstate->attrv);
 
     // output the merged attributes
-    for (PROPERTIES_TYPE::const_iterator iter = pstate->attrv->begin(); iter != pstate->attrv->end(); iter++)
+    for (PROPERTIES_TYPE::const_iterator iter = pstate->attrv.begin(); iter != pstate->attrv.end(); iter++)
       xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST iter->first.c_str(), BAD_CAST iter->second.c_str());
 
     // now really start

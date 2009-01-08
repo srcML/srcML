@@ -41,8 +41,8 @@ class SAX2ExtractUnitXML : public SAX2TextWriter {
   static xmlSAXHandler factory();
 
   long count;
-  PROPERTIES_TYPE* nsv;
-  PROPERTIES_TYPE* attrv;
+  PROPERTIES_TYPE& nsv;
+  PROPERTIES_TYPE& attrv;
 
   // startElement for root
   static void startElementNsRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
