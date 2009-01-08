@@ -31,9 +31,6 @@
 
 #include <cstring>
 
-const char* const XML_DECLARATION_STANDALONE = "yes";
-const char* const XML_VERSION = "1.0";
-
 // check if encoding is supported
 bool srcMLOutput::checkEncoding(const char* encoding) {
 

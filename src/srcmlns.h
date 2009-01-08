@@ -25,6 +25,9 @@
 #ifndef INCLUDED_SRCMLNS_H
 #define INCLUDED_SRCMLNS_H
 
+const char* const XML_DECLARATION_STANDALONE = "yes";
+const char* const XML_VERSION = "1.0";
+
 // srcML namespace URIs
 const char* const SRCML_SRC_NS_URI = "http://www.sdml.info/srcML/src";
 const char* const SRCML_CPP_NS_URI = "http://www.sdml.info/srcML/cpp";

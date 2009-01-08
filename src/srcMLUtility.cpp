@@ -41,9 +41,6 @@
 
 #include "Options.h"
 
-const char* const XML_DECLARATION_STANDALONE = "yes";
-const char* const XML_VERSION = "1.0";
-
 #include "SAX2ExtractUnitsSrc.h"
 #include "SAX2ExtractUnitSrc.h"
 #include "SAX2ExtractRootSrc.h"
