@@ -45,7 +45,6 @@ SAX2Properties::SAX2Properties(int unit, int& options, PROPERTIES_TYPE& nsv, PRO
 
     sax.initialized    = XML_SAX2_MAGIC;
     sax.startElementNs = &startElementNsRoot;
-    //    sax.startDocument  = &SAX2TextWriter::startDocument;
 
     return sax;
   }
