@@ -40,12 +40,12 @@ class SAX2Properties {
 
   static xmlSAXHandler factory();
 
-    xmlParserCtxtPtr ctxt;
-    int unit;
-    long count;
-    int& options;
-    PROPERTIES_TYPE& nsv;
-    PROPERTIES_TYPE& attrv;
+  xmlParserCtxtPtr ctxt;
+  int unit;
+  long count;
+
+  PROPERTIES_TYPE& nsv;
+  PROPERTIES_TYPE& attrv;
 
   // startElement for root
   static void startElementNsRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
@@ -61,7 +61,7 @@ class SAX2Properties {
 
  private:
   bool verbose;
-
+  const int& options;
 };
 
 #endif

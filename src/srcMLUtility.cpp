@@ -91,14 +91,6 @@ void srcMLUtility::move_to_unit(int unitnumber) {
   xmlSAXHandler sax = SAX2Properties::factory();
 
   SAX2Properties state(unitnumber, options, nsv, attrv);
-  /*
-  SAX2Properties state;
-  state.unit = unitnumber;
-  state.poptions = &options;
-  state.nsv = &nsv;
-  state.attrv = &attrv;
-  state.verbose = false;
-  */
 
   xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
   if (ctxt == NULL) return;
@@ -108,16 +100,19 @@ void srcMLUtility::move_to_unit(int unitnumber) {
 
   xmlParseDocument(ctxt);
 
+  // encoding is entered as a property
   attrv.insert(attrv.end(),
-	       PROPERTIES_TYPE::value_type(".encoding", (const char*) (state.ctxt->encoding ? state.ctxt->encoding : state.ctxt->input->encoding)));
+         PROPERTIES_TYPE::value_type(".encoding", (const char*) (state.ctxt->encoding ? state.ctxt->encoding : state.ctxt->input->encoding)));
 
+  // don't let the context free the static sax handler
   ctxt->sax = NULL;
 
+  // now free the context
   xmlFreeParserCtxt(ctxt);
 
   // make sure we did not end early
   if (state.unit && state.count != state.unit)
-    throw OutOfRangeUnitError(state.count);
+     throw OutOfRangeUnitError(state.count);
 
   units = state.count;
 }
