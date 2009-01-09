@@ -54,7 +54,7 @@ void collect_attributes(int nb_attributes, const xmlChar** attributes, PROPERTIE
       const char* name = qname((const char*) attributes[index + 1], (const char*) attributes[index]);
       PROPERTIES_TYPE::iterator pos = find(attrv, name);
       if (pos == attrv.end())
-	pos = attrv.insert(attrv.end(), PROPERTIES_TYPE::value_type(name, ""));
+	pos = attrv.insert(pos, PROPERTIES_TYPE::value_type(name, ""));
 
       pos->second.assign((const char*) attributes[index + 3], (const char*)  attributes[index + 4]);
     }
@@ -68,8 +68,8 @@ void collect_namespaces(int nb_namespaces, const xmlChar** namespaces, PROPERTIE
     const char* uri = (const char*) namespaces[index + 1];
     PROPERTIES_TYPE::iterator pos = find(nsv, uri);
     if (pos == nsv.end())
-      pos = nsv.insert(nsv.end(), PROPERTIES_TYPE::value_type(uri, ""));
+      pos = nsv.insert(pos, PROPERTIES_TYPE::value_type(uri, ""));
 
-    pos->second = xmlnsprefix((const char*) namespaces[index]);
+    pos->second.assign(xmlnsprefix((const char*) namespaces[index]));
   }
 }
