@@ -26,10 +26,187 @@
 #include "srcMLToken.h"
 #include "project.h"
 #include "srcmlns.h"
+#include <boost/preprocessor/iteration/local.hpp>
 
 #include "srcMLOutputPR.h"
 
 #include <cstring>
+
+#define ELEMENT_MAP_CALL_NAME element_name
+#define ELEMENT_MAP_FIRST_TYPE int
+#define ELEMENT_MAP_SECOND_TYPE const char*
+#define ELEMENT_MAP_DEFAULT(s) template <ELEMENT_MAP_FIRST_TYPE n> inline ELEMENT_MAP_SECOND_TYPE \
+  ELEMENT_MAP_CALL_NAME() { s }
+
+#define ELEMENT_MAP_CALL(t) ELEMENT_MAP_CALL_NAME <srcMLParserTokenTypes::t>()
+#define ELEMENT_MAP(t, s) template <> inline ELEMENT_MAP_SECOND_TYPE ELEMENT_MAP_CALL(t) { return s; }
+
+// map the token types to specific strings
+namespace {
+
+  // base member
+  ELEMENT_MAP_DEFAULT(return "";)
+
+  // map tokens to strings
+  // order matters if referring to previous definition
+  ELEMENT_MAP(SUNIT, "unit")
+  ELEMENT_MAP(COMMENT_START, "comment")
+  ELEMENT_MAP(COMMENT_END, ELEMENT_MAP_CALL(COMMENT_START))
+  ELEMENT_MAP(LINECOMMENT_START, ELEMENT_MAP_CALL(COMMENT_START))
+  ELEMENT_MAP(LINECOMMENT_END, ELEMENT_MAP_CALL(COMMENT_START))
+
+  // No op
+  ELEMENT_MAP(SNOP, "")
+
+  // literal values
+  ELEMENT_MAP(SSTRING, "")
+  ELEMENT_MAP(SCHAR, "")
+  ELEMENT_MAP(SLITERAL, "")
+  ELEMENT_MAP(SBOOLEAN, "")
+
+  // operators
+  ELEMENT_MAP(SOPERATOR, "")
+
+  // type modifier
+  ELEMENT_MAP(SMODIFIER, "")
+
+  // sub-statement elements
+  ELEMENT_MAP(SNAME, "name")
+  ELEMENT_MAP(SONAME, "")
+  ELEMENT_MAP(SCNAME, "name")
+  ELEMENT_MAP(STYPE, "type")
+  ELEMENT_MAP(SCONDITION, "condition")
+  ELEMENT_MAP(SBLOCK, "block")
+  ELEMENT_MAP(SINDEX, "index")
+
+  ELEMENT_MAP(SEXPRESSION_STATEMENT, "expr_stmt")
+  ELEMENT_MAP(SEXPRESSION, "expr")
+
+  ELEMENT_MAP(SDECLARATION_STATEMENT, "decl_stmt")
+  ELEMENT_MAP(SDECLARATION, "decl")
+  ELEMENT_MAP(SDECLARATION_INITIALIZATION, "init")
+
+  ELEMENT_MAP(SBREAK_STATEMENT, "break")
+  ELEMENT_MAP(SCONTINUE_STATEMENT, "continue")
+  ELEMENT_MAP(SGOTO_STATEMENT, "goto")
+  ELEMENT_MAP(SLABEL_STATEMENT, "label")
+
+  ELEMENT_MAP(STYPEDEF, "typedef")
+  ELEMENT_MAP(SASM, "asm")
+  ELEMENT_MAP(SMACRO_CALL, "macro")
+  ELEMENT_MAP(SENUM, "enum")
+
+  ELEMENT_MAP(SIF_STATEMENT, "if")
+  ELEMENT_MAP(STHEN, "then")
+  ELEMENT_MAP(SELSE, "else")
+
+  ELEMENT_MAP(SWHILE_STATEMENT, "while")
+  ELEMENT_MAP(SDO_STATEMENT, "do")
+
+  ELEMENT_MAP(SSWITCH, "switch")
+  ELEMENT_MAP(SCASE, "case")
+  ELEMENT_MAP(SDEFAULT, "default")
+
+  ELEMENT_MAP(SFOR_STATEMENT, "for")
+  ELEMENT_MAP(SFOR_GROUP, "")
+  ELEMENT_MAP(SFOR_INITIALIZATION, "init")
+  ELEMENT_MAP(SFOR_CONDITION, ELEMENT_MAP_CALL(SCONDITION))
+  ELEMENT_MAP(SFOR_INCREMENT, "incr")
+
+  // functions
+  ELEMENT_MAP(SFUNCTION_DEFINITION,  "function")
+  ELEMENT_MAP(SFUNCTION_DECLARATION, "function_decl")
+  ELEMENT_MAP(SFUNCTION_SPECIFIER,   "specifier")
+  ELEMENT_MAP(SRETURN_STATEMENT,     "return")
+  ELEMENT_MAP(SFUNCTION_CALL,        "call")
+  ELEMENT_MAP(SPARAMETER_LIST,       "parameter_list")
+  ELEMENT_MAP(SPARAMETER,            "param")
+  ELEMENT_MAP(SARGUMENT_LIST,        "argument_list")
+  ELEMENT_MAP(SARGUMENT,             "argument")
+
+  // struct, union
+  ELEMENT_MAP(SSTRUCT, "struct")
+  ELEMENT_MAP(SSTRUCT_DECLARATION,   "struct_decl")
+  ELEMENT_MAP(SUNION, "union")
+  ELEMENT_MAP(SUNION_DECLARATION,    "union_decl")
+
+  // class
+  ELEMENT_MAP(SCLASS,                   "class")
+  ELEMENT_MAP(SCLASS_DECLARATION,       "class_decl")
+  ELEMENT_MAP(SPUBLIC_ACCESS,           "public")
+  ELEMENT_MAP(SPUBLIC_ACCESS_DEFAULT,   "public")
+  ELEMENT_MAP(SPRIVATE_ACCESS,          "private")
+  ELEMENT_MAP(SPRIVATE_ACCESS_DEFAULT, "private")
+  ELEMENT_MAP(SPROTECTED_ACCESS,        "protected")
+
+  ELEMENT_MAP(SMEMBER_INITIALIZATION_LIST, "member_list")
+  ELEMENT_MAP(SCONSTRUCTOR_DEFINITION, "constructor")
+  ELEMENT_MAP(SCONSTRUCTOR_DECLARATION, "constructor_decl")
+  ELEMENT_MAP(SDESTRUCTOR_DEFINITION,   "destructor")
+  ELEMENT_MAP(SDESTRUCTOR_DECLARATION, "destructor_decl")
+  ELEMENT_MAP(SDERIVATION_LIST,         "super")
+  ELEMENT_MAP(SFRIEND,                  "friend")
+  ELEMENT_MAP(SCLASS_SPECIFIER,         "specifier")
+
+  // extern definition
+  ELEMENT_MAP(SEXTERN, "extern")
+
+  // namespaces
+  ELEMENT_MAP(SNAMESPACE, "namespace")
+  ELEMENT_MAP(SUSING_DIRECTIVE, "using")
+
+  // exception handling
+  ELEMENT_MAP(STRY_BLOCK,       "try")
+  ELEMENT_MAP(SCATCH_BLOCK,     "catch")
+  ELEMENT_MAP(STHROW_STATEMENT, "throw")
+  ELEMENT_MAP(STHROW_SPECIFIER, "throw")
+  ELEMENT_MAP(STHROW_SPECIFIER_JAVA, "throws")
+
+  // template
+  ELEMENT_MAP(STEMPLATE, "template")
+  ELEMENT_MAP(STEMPLATE_ARGUMENT,       ELEMENT_MAP_CALL(SARGUMENT))
+  ELEMENT_MAP(STEMPLATE_ARGUMENT_LIST,  ELEMENT_MAP_CALL(SARGUMENT_LIST))
+  ELEMENT_MAP(STEMPLATE_PARAMETER,      ELEMENT_MAP_CALL(SPARAMETER))
+  ELEMENT_MAP(STEMPLATE_PARAMETER_LIST, ELEMENT_MAP_CALL(SPARAMETER_LIST))
+
+  // cpp
+  ELEMENT_MAP(SCPP_DIRECTIVE, "directive")
+  ELEMENT_MAP(SCPP_FILENAME,  "file")
+  ELEMENT_MAP(SCPP_INCLUDE,   "include")
+  ELEMENT_MAP(SCPP_DEFINE,    "define")
+  ELEMENT_MAP(SCPP_UNDEF,     "undef")
+  ELEMENT_MAP(SCPP_LINE,      "line")
+  ELEMENT_MAP(SCPP_IF,        "if")
+  ELEMENT_MAP(SCPP_IFDEF,     "ifdef")
+  ELEMENT_MAP(SCPP_IFNDEF,    "ifndef")
+  ELEMENT_MAP(SCPP_ELSE,      "else")
+  ELEMENT_MAP(SCPP_ELIF,      "elif")
+  ELEMENT_MAP(SCPP_ENDIF,     "endif")
+  ELEMENT_MAP(SCPP_THEN,      "then")
+  ELEMENT_MAP(SCPP_PRAGMA,    "pragma")
+  ELEMENT_MAP(SCPP_ERROR,     "error")
+
+  ELEMENT_MAP(SMARKER,        "marker")
+  ELEMENT_MAP(SERROR_PARSE,   "parse")
+  ELEMENT_MAP(SERROR_MODE,    "mode")
+
+  // Java elements
+  ELEMENT_MAP(SEXTENDS,       "extends")
+  ELEMENT_MAP(SIMPLEMENTS,    "implements")
+  ELEMENT_MAP(SIMPORT,        "import")
+  ELEMENT_MAP(SPACKAGE,       "package")
+  ELEMENT_MAP(SINTERFACE,     "class")
+
+  // special characters
+  ELEMENT_MAP(CONTROL_CHAR,   "escape")
+
+  // 
+  ELEMENT_MAP(SEMPTY,         "empty_stmt")
+
+  // C++0x elements
+  ELEMENT_MAP(SCONCEPT,       "concept")
+  ELEMENT_MAP(SCONCEPTMAP,    "concept_map")
+};
 
 // check if encoding is supported
 bool srcMLOutput::checkEncoding(const char* encoding) {
@@ -51,9 +228,6 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   for (int i = 0; i < END_ELEMENT_TOKEN; ++i)
     ElementPrefix[i] = (char*) uri[SRCML_SRC_NS_URI].c_str();
 
-  // fill the elements
-  fillElementNames();
-
   for (int i = SCPP_DIRECTIVE; i <= SCPP_ENDIF; ++i)
     ElementPrefix[i] = (char*) uri[SRCML_CPP_NS_URI].c_str();
 
@@ -67,8 +241,8 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
     ElementNames[SLITERAL] = "literal";
     ElementNames[SBOOLEAN] = "literal";
 
-    ElementPrefix[SSTRING] = (char*) uri[SRCML_EXT_LITERAL_NS_URI].c_str();
-    ElementPrefix[SCHAR] = ElementPrefix[SSTRING];
+    ElementPrefix[SSTRING]  = (char*) uri[SRCML_EXT_LITERAL_NS_URI].c_str();
+    ElementPrefix[SCHAR]    = ElementPrefix[SSTRING];
     ElementPrefix[SLITERAL] = ElementPrefix[SSTRING];
     ElementPrefix[SBOOLEAN] = ElementPrefix[SSTRING];
   }
@@ -76,7 +250,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   // only allow debug tags in debug
   if (!isoption(OPTION_DEBUG)) {
     ElementNames[SMARKER] = "";
-    ElementNames[SERROR_PARSE]  = "";
+    ElementNames[SERROR_PARSE] = "";
     ElementNames[SERROR_MODE] = "";
   }
 
@@ -449,167 +623,14 @@ inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
 }
 
 // element names array
-const char* srcMLOutput::ElementNames[];
+const char* srcMLOutput::ElementNames[] = {
+
+  // fill the array in order of token numbers
+  #define BOOST_PP_LOCAL_MACRO(n)   ELEMENT_MAP_CALL_NAME<n>(),
+  #define BOOST_PP_LOCAL_LIMITS     (0, 219 - 1)
+  #include BOOST_PP_LOCAL_ITERATE()
+  #undef BOOST_PP_LOCAL_MACRO
+  #undef BOOST_PP_LOCAL_LIMITS
+};
+
 const char* srcMLOutput::ElementPrefix[];
-
-// fill the element names array
-void srcMLOutput::fillElementNames() {
-
-  ElementNames[SUNIT] = "unit";
-  ElementNames[COMMENT_START] = "comment";
-  ElementNames[COMMENT_END] = ElementNames[COMMENT_START];
-  ElementNames[LINECOMMENT_START] = ElementNames[COMMENT_START];
-  ElementNames[LINECOMMENT_END] = ElementNames[COMMENT_START];
-
-  // No op
-  ElementNames[SNOP] = "";
-
-  // literal values
-  ElementNames[SSTRING] = "";
-  ElementNames[SCHAR] = "";
-  ElementNames[SLITERAL] = "";
-  ElementNames[SBOOLEAN] = "";
-
-  // operators
-  ElementNames[SOPERATOR] = "";
-
-  // type modifier
-  ElementNames[SMODIFIER] = "";
-
-  // sub-statement elements
-  ElementNames[SNAME] = "name";
-  ElementNames[SONAME] = "";
-  ElementNames[SCNAME] = "name";
-  ElementNames[STYPE] = "type";
-  ElementNames[SCONDITION] = "condition";
-  ElementNames[SBLOCK] = "block";
-  ElementNames[SINDEX] = "index";
-
-  ElementNames[SEXPRESSION_STATEMENT] = "expr_stmt";
-  ElementNames[SEXPRESSION] = "expr";
-
-  ElementNames[SDECLARATION_STATEMENT] = "decl_stmt";
-  ElementNames[SDECLARATION] = "decl";
-  ElementNames[SDECLARATION_INITIALIZATION] = "init";
-
-  ElementNames[SBREAK_STATEMENT] = "break";
-  ElementNames[SCONTINUE_STATEMENT] = "continue";
-  ElementNames[SGOTO_STATEMENT] = "goto";
-  ElementNames[SLABEL_STATEMENT] = "label";
-
-  ElementNames[STYPEDEF] = "typedef";
-  ElementNames[SASM] = "asm";
-  ElementNames[SMACRO_CALL] = "macro";
-  ElementNames[SENUM] = "enum";
-
-  ElementNames[SIF_STATEMENT] = "if";
-  ElementNames[STHEN] = "then";
-  ElementNames[SELSE] = "else";
-
-  ElementNames[SWHILE_STATEMENT] = "while";
-  ElementNames[SDO_STATEMENT] = "do";
-
-  ElementNames[SSWITCH] = "switch";
-  ElementNames[SCASE] = "case";
-  ElementNames[SDEFAULT] = "default";
-
-  ElementNames[SFOR_STATEMENT] = "for";
-  ElementNames[SFOR_GROUP] = "";
-  ElementNames[SFOR_INITIALIZATION] = "init";
-  ElementNames[SFOR_CONDITION] = ElementNames[SCONDITION];
-  ElementNames[SFOR_INCREMENT] = "incr";
-
-  // functions
-  ElementNames[SFUNCTION_DEFINITION]  = "function";
-  ElementNames[SFUNCTION_DECLARATION] = "function_decl";
-  ElementNames[SFUNCTION_SPECIFIER]   = "specifier";
-  ElementNames[SRETURN_STATEMENT]     = "return";
-  ElementNames[SFUNCTION_CALL]        = "call";
-  ElementNames[SPARAMETER_LIST]       = "parameter_list";
-  ElementNames[SPARAMETER]            = "param";
-  ElementNames[SARGUMENT_LIST]        = "argument_list";
-  ElementNames[SARGUMENT]             = "argument";
-
-  // struct, union
-  ElementNames[SSTRUCT] = "struct";
-  ElementNames[SSTRUCT_DECLARATION]   = "struct_decl";
-  ElementNames[SUNION]  = "union";
-  ElementNames[SUNION_DECLARATION]    = "union_decl";
-
-  // class
-  ElementNames[SCLASS]                   = "class";
-  ElementNames[SCLASS_DECLARATION]       = "class_decl";
-  ElementNames[SPUBLIC_ACCESS]           = "public";
-  ElementNames[SPUBLIC_ACCESS_DEFAULT]   = "public";
-  ElementNames[SPRIVATE_ACCESS]          = "private";
-  ElementNames[SPRIVATE_ACCESS_DEFAULT]  = "private";
-  ElementNames[SPROTECTED_ACCESS]        = "protected";
-
-  ElementNames[SMEMBER_INITIALIZATION_LIST]  = "member_list";
-  ElementNames[SCONSTRUCTOR_DEFINITION]  = "constructor";
-  ElementNames[SCONSTRUCTOR_DECLARATION] = "constructor_decl";
-  ElementNames[SDESTRUCTOR_DEFINITION]   = "destructor";
-  ElementNames[SDESTRUCTOR_DECLARATION]  = "destructor_decl";
-  ElementNames[SDERIVATION_LIST]         = "super";
-  ElementNames[SFRIEND]                  = "friend";
-  ElementNames[SCLASS_SPECIFIER]         = "specifier";
-
-  // extern definition
-  ElementNames[SEXTERN] = "extern";
-
-  // namespaces
-  ElementNames[SNAMESPACE] = "namespace";
-  ElementNames[SUSING_DIRECTIVE] = "using";
-
-  // exception handling
-  ElementNames[STRY_BLOCK]       = "try";
-  ElementNames[SCATCH_BLOCK]     = "catch";
-  ElementNames[STHROW_STATEMENT] = "throw";
-  ElementNames[STHROW_SPECIFIER] = "throw";
-  ElementNames[STHROW_SPECIFIER_JAVA] = "throws";
-
-  // template
-  ElementNames[STEMPLATE] = "template";
-  ElementNames[STEMPLATE_ARGUMENT] = ElementNames[SARGUMENT];
-  ElementNames[STEMPLATE_ARGUMENT_LIST] = ElementNames[SARGUMENT_LIST];
-  ElementNames[STEMPLATE_PARAMETER] = ElementNames[SPARAMETER];
-  ElementNames[STEMPLATE_PARAMETER_LIST] = ElementNames[SPARAMETER_LIST];
-
-  // cpp
-  ElementNames[SCPP_DIRECTIVE] = "directive";
-  ElementNames[SCPP_FILENAME]  = "file";
-  ElementNames[SCPP_INCLUDE]   = "include";
-  ElementNames[SCPP_DEFINE]    = "define";
-  ElementNames[SCPP_UNDEF]     = "undef";
-  ElementNames[SCPP_LINE]      = "line";
-  ElementNames[SCPP_IF]        = "if";
-  ElementNames[SCPP_IFDEF]     = "ifdef";
-  ElementNames[SCPP_IFNDEF]    = "ifndef";
-  ElementNames[SCPP_ELSE]      = "else";
-  ElementNames[SCPP_ELIF]      = "elif";
-  ElementNames[SCPP_ENDIF]     = "endif";
-  ElementNames[SCPP_THEN]      = "then";
-  ElementNames[SCPP_PRAGMA]    = "pragma";
-  ElementNames[SCPP_ERROR]     = "error";
-
-  ElementNames[SMARKER]        = "marker";
-  ElementNames[SERROR_PARSE]   = "parse";
-  ElementNames[SERROR_MODE]    = "mode";
-
-  // Java elements
-  ElementNames[SEXTENDS]       = "extends";
-  ElementNames[SIMPLEMENTS]    = "implements";
-  ElementNames[SIMPORT]        = "import";
-  ElementNames[SPACKAGE]       = "package";
-  ElementNames[SINTERFACE]     = "class";
-
-  // special characters
-  ElementNames[CONTROL_CHAR]   = "escape";
-
-  // 
-  ElementNames[SEMPTY]         = "empty_stmt";
-
-  // C++0x elements
-  ElementNames[SCONCEPT]       = "concept";
-  ElementNames[SCONCEPTMAP]    = "concept_map";
-}
