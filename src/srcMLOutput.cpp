@@ -65,10 +65,10 @@ namespace {
   ELEMENT_MAP(SBOOLEAN, "literal")
 
   // operators
-  ELEMENT_MAP(SOPERATOR, "")
+  ELEMENT_MAP(SOPERATOR, "operator")
 
   // type modifier
-  ELEMENT_MAP(SMODIFIER, "")
+  ELEMENT_MAP(SMODIFIER, "modifier")
 
   // sub-statement elements
   ELEMENT_MAP(SNAME, "name")
@@ -248,15 +248,11 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
     ElementNames[SERROR_MODE] = "";
   }
 
-  if (isoption(OPTION_OPERATOR)) {
+  if (isoption(OPTION_OPERATOR))
     ElementPrefix[SOPERATOR] = (char*) uri[SRCML_EXT_OPERATOR_NS_URI].c_str();
-    ElementNames[SOPERATOR] = "operator";
-  }
 
-  if (isoption(OPTION_MODIFIER)) {
+  if (isoption(OPTION_MODIFIER))
     ElementPrefix[SMODIFIER] = (char*) uri[SRCML_EXT_MODIFIER_NS_URI].c_str();
-    ElementNames[SMODIFIER] = "modifier";
-  }
 
   // assign for special processing
   //  process_table[SUNIT] = &srcMLOutput::processUnit;

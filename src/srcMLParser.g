@@ -2046,9 +2046,14 @@ lparen_marked { LocalMode lm; } :
             incParen();
         }
         {
-            startNewMode(MODE_LOCAL);
+            if (isoption(parseoptions, OPTION_OPERATOR)) {
 
-            startElement(SOPERATOR);
+                // end all elements at end of rule automatically
+                startNewMode(MODE_LOCAL);
+
+                // start the modifier
+                startElement(SOPERATOR);
+            }
         }
         LPAREN  
 ;
@@ -2105,7 +2110,7 @@ rparen_base[bool final = false, bool mark = false] { if (final) setFinalToken();
         {
             decParen();
 
-            if (mark) {
+            if (mark && isoption(parseoptions, OPTION_OPERATOR)) {
                 startNewMode(MODE_LOCAL);
 
                 startElement(SOPERATOR);
@@ -3718,9 +3723,14 @@ pure_expression_block {} :
 */
 general_operators { LocalMode lm; } :
         {
-            startNewMode(MODE_LOCAL);
+            if (isoption(parseoptions, OPTION_OPERATOR)) {
 
-            startElement(SOPERATOR);
+                // end all elements at end of rule automatically
+                startNewMode(MODE_LOCAL);
+
+                // start the modifier
+                startElement(SOPERATOR);
+            }
         }
         (OPERATORS | TEMPOPS | TEMPOPE | EQUAL | MULTIMM | DESTOP | MEMBERPOINTER)
 ;
@@ -3730,9 +3740,14 @@ general_operators { LocalMode lm; } :
 */
 multi_operator { LocalMode lm; } :
         {
-            startNewMode(MODE_LOCAL);
+            if (isoption(parseoptions, OPTION_OPERATOR)) {
 
-            startElement(SOPERATOR);
+                // end all elements at end of rule automatically
+                startNewMode(MODE_LOCAL);
+
+                // start the modifier
+                startElement(SOPERATOR);
+            }
         }
         MULTOPS
 ;
@@ -3742,9 +3757,14 @@ multi_operator { LocalMode lm; } :
 */
 period { LocalMode lm; } :
         {
-            startNewMode(MODE_LOCAL);
+            if (isoption(parseoptions, OPTION_OPERATOR)) {
 
-            startElement(SOPERATOR);
+                // end all elements at end of rule automatically
+                startNewMode(MODE_LOCAL);
+
+                // start the modifier
+                startElement(SOPERATOR);
+            }
         }
         PERIOD
 ;
@@ -3754,9 +3774,14 @@ period { LocalMode lm; } :
 */
 dcolon { LocalMode lm; } :
         {
-            startNewMode(MODE_LOCAL);
+            if (isoption(parseoptions, OPTION_OPERATOR)) {
 
-            startElement(SOPERATOR);
+                // end all elements at end of rule automatically
+                startNewMode(MODE_LOCAL);
+
+                // start the modifier
+                startElement(SOPERATOR);
+            }
         }
         DCOLON
 ;
@@ -4118,27 +4143,42 @@ parameter_type_count[int type_count] { LocalMode lm; } :
 
 multops { LocalMode lm; } :
         {
-            startNewMode(MODE_LOCAL);
+            if (isoption(parseoptions, OPTION_MODIFIER)) {
 
-            startElement(SMODIFIER);
+                // end all elements at end of rule automatically
+                startNewMode(MODE_LOCAL);
+
+                // start the modifier
+                startElement(SMODIFIER);
+            }
         }
         MULTOPS
 ;
 
 newop { LocalMode lm; } :
         {
-            startNewMode(MODE_LOCAL);
+            if (isoption(parseoptions, OPTION_OPERATOR)) {
 
-            startElement(SOPERATOR);
+                // end all elements at end of rule automatically
+                startNewMode(MODE_LOCAL);
+
+                // start the modifier
+                startElement(SOPERATOR);
+            }
         }
         NEW
 ;
 
 deleteop { LocalMode lm; } :
         {
-            startNewMode(MODE_LOCAL);
+            if (isoption(parseoptions, OPTION_OPERATOR)) {
 
-            startElement(SOPERATOR);
+                // end all elements at end of rule automatically
+                startNewMode(MODE_LOCAL);
+
+                // start the modifier
+                startElement(SOPERATOR);
+            }
         }
         DELETE
 ;
