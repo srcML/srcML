@@ -203,7 +203,7 @@ void srcMLParser::endAllModes() {
         endCurrentMode();
 
      // should only be one mode
-     if (size() > 1)
+     if (size() > 1 && isoption(parseoptions, OPTION_DEBUG))
         emptyElement(SERROR_MODE);
 
     // end all modes except the last
@@ -3425,7 +3425,8 @@ exception
 catch[antlr::RecognitionException] {
 
         // no end found to macro
-        emptyElement(SERROR_PARSE);
+        if (isoption(parseoptions, OPTION_DEBUG))
+            emptyElement(SERROR_PARSE);
 }
 
 macro_call_lparen {} :

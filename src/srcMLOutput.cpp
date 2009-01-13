@@ -241,13 +241,6 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
     ElementPrefix[SBOOLEAN] = ElementPrefix[SSTRING];
   }
 
-  // only allow debug tags in debug
-  if (!isoption(OPTION_DEBUG)) {
-    ElementNames[SMARKER] = "";
-    ElementNames[SERROR_PARSE] = "";
-    ElementNames[SERROR_MODE] = "";
-  }
-
   if (isoption(OPTION_OPERATOR))
     ElementPrefix[SOPERATOR] = (char*) uri[SRCML_EXT_OPERATOR_NS_URI].c_str();
 
