@@ -59,10 +59,10 @@ namespace {
   ELEMENT_MAP(SNOP, "")
 
   // literal values
-  ELEMENT_MAP(SSTRING, "")
-  ELEMENT_MAP(SCHAR, "")
-  ELEMENT_MAP(SLITERAL, "")
-  ELEMENT_MAP(SBOOLEAN, "")
+  ELEMENT_MAP(SSTRING,  "literal")
+  ELEMENT_MAP(SCHAR,    "literal")
+  ELEMENT_MAP(SLITERAL, "literal")
+  ELEMENT_MAP(SBOOLEAN, "literal")
 
   // operators
   ELEMENT_MAP(SOPERATOR, "")
@@ -235,12 +235,6 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
     ElementPrefix[i] = (char*) uri[SRCML_ERR_NS_URI].c_str();
 
   if (isoption(OPTION_LITERAL)) {
-    // literal values
-    ElementNames[SSTRING] = "literal";
-    ElementNames[SCHAR] = "literal";
-    ElementNames[SLITERAL] = "literal";
-    ElementNames[SBOOLEAN] = "literal";
-
     ElementPrefix[SSTRING]  = (char*) uri[SRCML_EXT_LITERAL_NS_URI].c_str();
     ElementPrefix[SCHAR]    = ElementPrefix[SSTRING];
     ElementPrefix[SLITERAL] = ElementPrefix[SSTRING];

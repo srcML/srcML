@@ -3886,44 +3886,57 @@ expression_part[bool checkmacro = false] { guessing_end();
 
 string_literal { LocalMode lm; } :
         {
-            // end all elements at end of rule automatically
-            startNewMode(MODE_LOCAL);
+            if (isoption(parseoptions, OPTION_LITERAL)) {
 
-            // start the string
-            startElement(SSTRING);
+                // end all elements at end of rule automatically
+                startNewMode(MODE_LOCAL);
+
+                // start the string
+                startElement(SSTRING);
+            }
         }
         (STRING_START STRING_END)
 ;
 
 char_literal { LocalMode lm; } :
         {
-            // end all elements at end of rule automatically
-            startNewMode(MODE_LOCAL);
+            if (isoption(parseoptions, OPTION_LITERAL)) {
 
-            // start the character(s)
-            startElement(SCHAR);
+                // end all elements at end of rule automatically
+                startNewMode(MODE_LOCAL);
+
+                // start the string
+                startElement(SCHAR);
+            }
         }
         (CHAR_START CHAR_END)
 ;
 
 literal { LocalMode lm; } :
         {
-            // end all elements at end of rule automatically
-            startNewMode(MODE_LOCAL);
+            if (isoption(parseoptions, OPTION_LITERAL)) {
 
-            // start the literal value
-            startElement(SLITERAL);
+                // end all elements at end of rule automatically
+                startNewMode(MODE_LOCAL);
+
+                // start the literal value
+                startElement(SLITERAL);
+
+            }
         }
         CONSTANTS
 ;
 
 boolean { LocalMode lm; } :
         {
-            // end all elements at end of rule automatically
-            startNewMode(MODE_LOCAL);
+            if (isoption(parseoptions, OPTION_LITERAL)) {
 
-            // start the literal value
-            startElement(SBOOLEAN);
+                // end all elements at end of rule automatically
+                startNewMode(MODE_LOCAL);
+
+                // start the literal value
+                startElement(SBOOLEAN);
+            }
         }
         (TRUE | FALSE)
 ;
