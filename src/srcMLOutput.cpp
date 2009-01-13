@@ -226,26 +226,26 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 {
   // fill the prefixes
   for (int i = 0; i < END_ELEMENT_TOKEN; ++i)
-    ElementPrefix[i] = (char*) uri[SRCML_SRC_NS_URI].c_str();
+    ElementPrefix[i] = SRCML_SRC_NS_URI;
 
   for (int i = SCPP_DIRECTIVE; i <= SCPP_ENDIF; ++i)
-    ElementPrefix[i] = (char*) uri[SRCML_CPP_NS_URI].c_str();
+    ElementPrefix[i] = SRCML_CPP_NS_URI;
 
   for (int i = SMARKER; i <= SERROR_MODE; ++i)
-    ElementPrefix[i] = (char*) uri[SRCML_ERR_NS_URI].c_str();
+    ElementPrefix[i] = SRCML_ERR_NS_URI;
 
   if (isoption(OPTION_LITERAL)) {
-    ElementPrefix[SSTRING]  = (char*) uri[SRCML_EXT_LITERAL_NS_URI].c_str();
+    ElementPrefix[SSTRING]  = SRCML_EXT_LITERAL_NS_URI;
     ElementPrefix[SCHAR]    = ElementPrefix[SSTRING];
     ElementPrefix[SLITERAL] = ElementPrefix[SSTRING];
     ElementPrefix[SBOOLEAN] = ElementPrefix[SSTRING];
   }
 
   if (isoption(OPTION_OPERATOR))
-    ElementPrefix[SOPERATOR] = (char*) uri[SRCML_EXT_OPERATOR_NS_URI].c_str();
+    ElementPrefix[SOPERATOR] = SRCML_EXT_OPERATOR_NS_URI;
 
   if (isoption(OPTION_MODIFIER))
-    ElementPrefix[SMODIFIER] = (char*) uri[SRCML_EXT_MODIFIER_NS_URI].c_str();
+    ElementPrefix[SMODIFIER] = SRCML_EXT_MODIFIER_NS_URI;
 
   // assign for special processing
   //  process_table[SUNIT] = &srcMLOutput::processUnit;
@@ -331,9 +331,9 @@ const char* srcMLOutput::type2name(int token_type) const {
     return "";
 
   // non-default namespace name
-  if (ElementPrefix[token_type][0] != '\0') {
+  if (uri[ElementPrefix[token_type]].c_str()[0] != '\0') {
     
-    strcpy(s, ElementPrefix[token_type]);
+    strcpy(s, uri[ElementPrefix[token_type]].c_str());
     strcat(s, ":");
     strcat(s, ElementNames[token_type]);
     return s;
