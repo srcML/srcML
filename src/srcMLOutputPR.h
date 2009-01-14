@@ -22,63 +22,63 @@
   Declaration of process pointer table for srcMLOutput.
 */
 
+#define ELEMENT_MAP_CALL_NAME element_process
+#define ELEMENT_MAP_FIRST_TYPE int
+#define ELEMENT_MAP_SECOND_TYPE srcMLOutput::PROCESS_PTR
+#define ELEMENT_MAP_DEFAULT(s) template <ELEMENT_MAP_FIRST_TYPE n> inline ELEMENT_MAP_SECOND_TYPE \
+  ELEMENT_MAP_CALL_NAME() { s }
+
+#define ELEMENT_MAP_CALL(t) ELEMENT_MAP_CALL_NAME <srcMLParserTokenTypes::t>()
+#define ELEMENT_MAP(t, s) template <> inline ELEMENT_MAP_SECOND_TYPE ELEMENT_MAP_CALL(t) { return s; }
+
+// map the token types to specific strings
+namespace {
+
+  // base member
+  ELEMENT_MAP_DEFAULT(return &srcMLOutput::processToken;)
+
+  ELEMENT_MAP(SUNIT, &srcMLOutput::processUnit)
+  ELEMENT_MAP(SSINGLE, &srcMLOutput::processText)
+  ELEMENT_MAP(START_ELEMENT_TOKEN, &srcMLOutput::processText)
+  ELEMENT_MAP(COMMENT_START, &srcMLOutput::processBlockCommentStart)
+  ELEMENT_MAP(COMMENT_END, &srcMLOutput::processEndBlockToken)
+
+  ELEMENT_MAP(LINECOMMENT_START, &srcMLOutput::processLineCommentStart)
+  ELEMENT_MAP(LINECOMMENT_END, &srcMLOutput::processEndLineToken)
+
+#if DEBUG
+  ELEMENT_MAP(SMARKER, &srcMLOutput::processMarker)
+#endif
+  ELEMENT_MAP(SPUBLIC_ACCESS_DEFAULT, &srcMLOutput::processAccess)
+  ELEMENT_MAP(SPRIVATE_ACCESS_DEFAULT, &srcMLOutput::processAccess)
+  ELEMENT_MAP(SSTRING, &srcMLOutput::processString)
+  ELEMENT_MAP(SCHAR, &srcMLOutput::processChar)
+  ELEMENT_MAP(SLITERAL, &srcMLOutput::processLiteral)
+  ELEMENT_MAP(SBOOLEAN, &srcMLOutput::processBoolean)
+  ELEMENT_MAP(SINTERFACE, &srcMLOutput::processInterface)
+  ELEMENT_MAP(CONTROL_CHAR, &srcMLOutput::processEscape)
+};
+
+#undef ELEMENT_MAP_CALL_NAME
+#undef ELEMENT_MAP_FIRST_TYPE
+#undef ELEMENT_MAP_SECOND_TYPE
+#undef ELEMENT_MAP_DEFAULT
+#undef ELEMENT_MAP_CALL
+#undef ELEMENT_MAP
+
 srcMLOutput::PROCESS_PTR srcMLOutput::process_table[] = {
 
-  &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, 
-  &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, 
-  &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, 
-  &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, 
-  &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, 
-  &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, 
-  &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, 
-  &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, 
-  &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, 
-  &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, 
-  &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, 
-  &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, 
-  &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, 
-  &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, 
-  &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, 
-  &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, 
-  &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, 
-  &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText,
-  &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText,
-  &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText,
+  // fill the array with the prefixes
+  #define BOOST_PP_LOCAL_MACRO(n) &srcMLOutput::processText,
+  #define BOOST_PP_LOCAL_LIMITS     (0, 107)
+  #include BOOST_PP_LOCAL_ITERATE()
+  #undef BOOST_PP_LOCAL_MACRO
+  #undef BOOST_PP_LOCAL_LIMITS
 
-  &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText,
-  &srcMLOutput::processText, &srcMLOutput::processText, &srcMLOutput::processText,
- 
-  /* process_table[SUNIT] = */ &srcMLOutput::processUnit,
-
-  &srcMLOutput::processText,
-
-  &srcMLOutput::processText,
-
-  &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken,
-  &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken,
-  &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken,
-  &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken,
-  &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken,
-  &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken,
-  &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken,
-  &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken,
-  &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken,
-  &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken,
-  &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken,
-  &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken,
-  &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken,
-  &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken,
-  &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken,
-  &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken,
-  &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken,
-  &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken,
-  &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken,
-  &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken,
-  &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken,
-  &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken,
-  &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken,
-  &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken,
-  &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken,
-  &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken,
-  &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken, &srcMLOutput::processToken,
+  // fill the array with the prefixes
+  #define BOOST_PP_LOCAL_MACRO(n) element_process<n>(),
+  #define BOOST_PP_LOCAL_LIMITS     (108, 218)
+  #include BOOST_PP_LOCAL_ITERATE()
+  #undef BOOST_PP_LOCAL_MACRO
+  #undef BOOST_PP_LOCAL_LIMITS
 };

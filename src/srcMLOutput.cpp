@@ -281,26 +281,6 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   num2prefix[SRCML_EXT_OPERATOR_NS_URI_POS] = uri[SRCML_EXT_OPERATOR_NS_URI].c_str();
   num2prefix[SRCML_EXT_MODIFIER_NS_URI_POS] = uri[SRCML_EXT_MODIFIER_NS_URI].c_str();
 
-  // assign for special processing
-  //  process_table[SUNIT] = &srcMLOutput::processUnit;
-  process_table[COMMENT_START] = &srcMLOutput::processBlockCommentStart;
-  process_table[COMMENT_END] = &srcMLOutput::processEndBlockToken;
-
-  process_table[LINECOMMENT_START] = &srcMLOutput::processLineCommentStart;
-  process_table[LINECOMMENT_END] = &srcMLOutput::processEndLineToken;
-
-#if DEBUG
-  process_table[SMARKER] = &srcMLOutput::processMarker;
-#endif
-  process_table[SPUBLIC_ACCESS_DEFAULT] = &srcMLOutput::processAccess;
-  process_table[SPRIVATE_ACCESS_DEFAULT] = &srcMLOutput::processAccess;
-  process_table[SSTRING] = &srcMLOutput::processString;
-  process_table[SCHAR] = &srcMLOutput::processChar;
-  process_table[SLITERAL] = &srcMLOutput::processLiteral;
-  process_table[SBOOLEAN] = &srcMLOutput::processBoolean;
-  process_table[SINTERFACE] = &srcMLOutput::processInterface;
-  process_table[CONTROL_CHAR] = &srcMLOutput::processEscape;
-
   // open the output text writer stream
   // "-" filename is standard output
   xout = xmlNewTextWriterFilename(srcml_filename, isoption(OPTION_COMPRESSED));
@@ -651,11 +631,8 @@ const char* const srcMLOutput::ElementNames[] = {
 };
 
 const char srcMLOutput::ElementPrefix[] = {
-  // fill the prefixes
-  //  for (int i = 0; i < END_ELEMENT_TOKEN; ++i)
-  //    ElementPrefix[i] = SRCML_SRC_NS_URI_POS;
 
-  // fill the array with default namespace
+  // fill the array with the prefixes
   #define BOOST_PP_LOCAL_MACRO(n)   element_prefix<n>(),
   #define BOOST_PP_LOCAL_LIMITS     (0, 219 - 1)
   #include BOOST_PP_LOCAL_ITERATE()

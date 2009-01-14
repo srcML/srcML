@@ -95,6 +95,7 @@ class srcMLOutput : public srcMLParserTokenTypes {
   static const char* const ElementNames[];
   static const char ElementPrefix[];
 
+ public:
   void processText(const antlr::RefToken& token);
 
   // standard processing of text
@@ -124,6 +125,7 @@ class srcMLOutput : public srcMLParserTokenTypes {
   // method pointer for token processing dispatch
   typedef void (srcMLOutput::*PROCESS_PTR)(const antlr::RefToken & );
 
+ private:
   // table of method pointers for token processing dispatch
   static PROCESS_PTR process_table[END_ELEMENT_TOKEN];
 };
