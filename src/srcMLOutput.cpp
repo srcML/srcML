@@ -271,16 +271,6 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   : input(ints), xout(0), srcml_filename(filename), unit_language(language), unit_dir(0), unit_filename(0),
     unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(curi)
 {
-  /*
-  // setup the conversion between the uri number and the prefix
-  num2prefix[SRCML_SRC_NS_URI_POS] = uri[SRCML_SRC_NS_URI_POS];
-  num2prefix[SRCML_CPP_NS_URI_POS] = uri[SRCML_CPP_NS_URI_POS];
-  num2prefix[SRCML_ERR_NS_URI_POS] = uri[SRCML_ERR_NS_URI_POS];
-  num2prefix[SRCML_EXT_LITERAL_NS_URI_POS] = uri[SRCML_EXT_LITERAL_NS_URI_POS];
-  num2prefix[SRCML_EXT_OPERATOR_NS_URI_POS] = uri[SRCML_EXT_OPERATOR_NS_URI_POS];
-  num2prefix[SRCML_EXT_MODIFIER_NS_URI_POS] = uri[SRCML_EXT_MODIFIER_NS_URI_POS];
-  */
-
   // open the output text writer stream
   // "-" filename is standard output
   xout = xmlNewTextWriterFilename(srcml_filename, isoption(OPTION_COMPRESSED));
@@ -417,9 +407,9 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
 	  continue;
 
 	std::string src_prefix = "xmlns";
-	if (uri[i][0] != '\0') {
+	if (num2prefix[i][0] != '\0') {
 	  src_prefix += ":";
-	  src_prefix += uri[i];
+	  src_prefix += num2prefix[i];
 	}
 	xmlTextWriterWriteAttribute(xout, BAD_CAST src_prefix.c_str(), BAD_CAST ns[i]);
       }

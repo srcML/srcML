@@ -82,9 +82,6 @@ class srcMLOutput : public srcMLParserTokenTypes {
 
   const char** num2prefix;
 
-  const char* uri[];
-    //  std::map<std::string, std::string>& uri;
-
   int consume_next();
 
   const char* type2name(int token_type) const;
