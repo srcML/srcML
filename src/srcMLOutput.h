@@ -127,7 +127,7 @@ class srcMLOutput : public srcMLParserTokenTypes {
 
  private:
   // table of method pointers for token processing dispatch
-  static char process_table[];
+  static const char process_table[];
 };
 
 #endif

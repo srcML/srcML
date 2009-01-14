@@ -616,7 +616,7 @@ void srcMLOutput::processInterface(const antlr::RefToken& token) {
 inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
 
   // use the array of pointers to methods to call the correct output routine
-  ((*this).*(num2process[process_table[token->getType()]]))(token);
+  ((*this).*(num2process[(int)process_table[token->getType()]]))(token);
 }
 
 // element names array

@@ -41,7 +41,7 @@ enum {
 };
 
 
-srcMLOutput::PROCESS_PTR num2process[] = {
+static srcMLOutput::PROCESS_PTR num2process[] = {
   &srcMLOutput::processToken,
   &srcMLOutput::processUnit,
   &srcMLOutput::processText,
@@ -104,7 +104,7 @@ namespace {
 #undef ELEMENT_MAP_CALL
 #undef ELEMENT_MAP
 
-char srcMLOutput::process_table[] = {
+const char srcMLOutput::process_table[] = {
 
   // fill the array with the prefixes
   #define BOOST_PP_LOCAL_MACRO(n) PROCESSTEXT,
