@@ -244,27 +244,20 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   num2prefix[SRCML_EXT_MODIFIER_NS_URI_POS] = uri[SRCML_EXT_MODIFIER_NS_URI].c_str();
 
   // fill the prefixes
-  for (int i = 0; i < END_ELEMENT_TOKEN; ++i)
-    ElementPrefix[i] = SRCML_SRC_NS_URI_POS;
-
   for (int i = SCPP_DIRECTIVE; i <= SCPP_ENDIF; ++i)
     ElementPrefix[i] = SRCML_CPP_NS_URI_POS;
 
   for (int i = SMARKER; i <= SERROR_MODE; ++i)
     ElementPrefix[i] = SRCML_ERR_NS_URI_POS;
 
-  if (isoption(OPTION_LITERAL)) {
-    ElementPrefix[SSTRING]  = SRCML_EXT_LITERAL_NS_URI_POS;
-    ElementPrefix[SCHAR]    = ElementPrefix[SSTRING];
-    ElementPrefix[SLITERAL] = ElementPrefix[SSTRING];
-    ElementPrefix[SBOOLEAN] = ElementPrefix[SSTRING];
-  }
+  ElementPrefix[SSTRING]  = SRCML_EXT_LITERAL_NS_URI_POS;
+  ElementPrefix[SCHAR]    = ElementPrefix[SSTRING];
+  ElementPrefix[SLITERAL] = ElementPrefix[SSTRING];
+  ElementPrefix[SBOOLEAN] = ElementPrefix[SSTRING];
 
-  if (isoption(OPTION_OPERATOR))
-    ElementPrefix[SOPERATOR] = SRCML_EXT_OPERATOR_NS_URI_POS;
+  ElementPrefix[SOPERATOR] = SRCML_EXT_OPERATOR_NS_URI_POS;
 
-  if (isoption(OPTION_MODIFIER))
-    ElementPrefix[SMODIFIER] = SRCML_EXT_MODIFIER_NS_URI_POS;
+  ElementPrefix[SMODIFIER] = SRCML_EXT_MODIFIER_NS_URI_POS;
 
   // assign for special processing
   //  process_table[SUNIT] = &srcMLOutput::processUnit;
@@ -635,4 +628,15 @@ const char* srcMLOutput::ElementNames[] = {
   #undef BOOST_PP_LOCAL_LIMITS
 };
 
-int srcMLOutput::ElementPrefix[];
+int srcMLOutput::ElementPrefix[] = {
+  // fill the prefixes
+  //  for (int i = 0; i < END_ELEMENT_TOKEN; ++i)
+  //    ElementPrefix[i] = SRCML_SRC_NS_URI_POS;
+
+  // fill the array with default namespace
+  #define BOOST_PP_LOCAL_MACRO(n)   SRCML_SRC_NS_URI_POS,
+  #define BOOST_PP_LOCAL_LIMITS     (0, 219 - 1)
+  #include BOOST_PP_LOCAL_ITERATE()
+  #undef BOOST_PP_LOCAL_MACRO
+  #undef BOOST_PP_LOCAL_LIMITS
+};
