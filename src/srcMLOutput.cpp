@@ -272,7 +272,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   : input(ints), xout(0), srcml_filename(filename), unit_language(language), unit_dir(0), unit_filename(0),
     unit_version(0), options(op), xml_encoding(xml_enc), uri(curi)
 {
-  /*
+
   // setup the conversion between the uri number and the prefix
   num2prefix[SRCML_SRC_NS_URI_POS] = uri[SRCML_SRC_NS_URI].c_str();
   num2prefix[SRCML_CPP_NS_URI_POS] = uri[SRCML_CPP_NS_URI].c_str();
@@ -280,7 +280,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   num2prefix[SRCML_EXT_LITERAL_NS_URI_POS] = uri[SRCML_EXT_LITERAL_NS_URI].c_str();
   num2prefix[SRCML_EXT_OPERATOR_NS_URI_POS] = uri[SRCML_EXT_OPERATOR_NS_URI].c_str();
   num2prefix[SRCML_EXT_MODIFIER_NS_URI_POS] = uri[SRCML_EXT_MODIFIER_NS_URI].c_str();
-  */
+
   // open the output text writer stream
   // "-" filename is standard output
   xout = xmlNewTextWriterFilename(srcml_filename, isoption(OPTION_COMPRESSED));
@@ -616,7 +616,7 @@ void srcMLOutput::processInterface(const antlr::RefToken& token) {
 inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
 
   // use the array of pointers to methods to call the correct output routine
-  ((*this).*(num2process[(int)process_table[token->getType()]]))(token);
+  ((*this).*(process_table[token->getType()]))(token);
 }
 
 // element names array
