@@ -365,9 +365,9 @@ const char* srcMLOutput::type2name(int token_type) const {
     return "";
 
   // non-default namespace name
-  if (num2prefix[ElementPrefix[token_type]][0] != '\0') {
+  if (num2prefix[(int)ElementPrefix[token_type]][0] != '\0') {
     
-    strcpy(s, num2prefix[ElementPrefix[token_type]]);
+    strcpy(s, num2prefix[(int)ElementPrefix[token_type]]);
     strcat(s, ":");
     strcat(s, ElementNames[token_type]);
     return s;
@@ -640,7 +640,7 @@ inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
 }
 
 // element names array
-const char* srcMLOutput::ElementNames[] = {
+const char* const srcMLOutput::ElementNames[] = {
 
   // fill the array in order of token numbers
   #define BOOST_PP_LOCAL_MACRO(n)   element_name<n>(),
@@ -650,7 +650,7 @@ const char* srcMLOutput::ElementNames[] = {
   #undef BOOST_PP_LOCAL_LIMITS
 };
 
-int srcMLOutput::ElementPrefix[] = {
+const char srcMLOutput::ElementPrefix[] = {
   // fill the prefixes
   //  for (int i = 0; i < END_ELEMENT_TOKEN; ++i)
   //    ElementPrefix[i] = SRCML_SRC_NS_URI_POS;

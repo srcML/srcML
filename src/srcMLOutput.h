@@ -92,8 +92,8 @@ class srcMLOutput : public srcMLParserTokenTypes {
   bool isoption(int) const;
 
   // List of element names
-  static const char* ElementNames[];
-  static int ElementPrefix[];
+  static const char* const ElementNames[];
+  static const char ElementPrefix[];
 
   void processText(const antlr::RefToken& token);
 
