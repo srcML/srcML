@@ -22,9 +22,47 @@
   Declaration of process pointer table for srcMLOutput.
 */
 
+enum {
+  PROCESSTOKEN,
+  PROCESSUNIT,
+  PROCESSTEXT,
+  PROCESSBLOCKCOMMENTSTART,
+  PROCESSENDBLOCKTOKEN,
+  PROCESSLINECOMMENTSTART,
+  PROCESSENDLINETOKEN,
+  //  PROCESSMARKER,
+  PROCESSACCESS,
+  PROCESSSTRING,
+  PROCESSCHAR,
+  PROCESSLITERAL,
+  PROCESSBOOLEAN,
+  PROCESSINTERFACE,
+  PROCESSESCAPE,
+};
+
+
+srcMLOutput::PROCESS_PTR num2process[] = {
+  &srcMLOutput::processToken,
+  &srcMLOutput::processUnit,
+  &srcMLOutput::processText,
+  &srcMLOutput::processBlockCommentStart,
+  &srcMLOutput::processEndBlockToken,
+  &srcMLOutput::processLineCommentStart,
+  &srcMLOutput::processEndLineToken,
+  //  &srcMLOutput::processMarker,
+  &srcMLOutput::processAccess,
+  &srcMLOutput::processString,
+  &srcMLOutput::processChar,
+  &srcMLOutput::processLiteral,
+  &srcMLOutput::processBoolean,
+  &srcMLOutput::processInterface,
+  &srcMLOutput::processEscape,
+};
+
+
 #define ELEMENT_MAP_CALL_NAME element_process
 #define ELEMENT_MAP_FIRST_TYPE int
-#define ELEMENT_MAP_SECOND_TYPE srcMLOutput::PROCESS_PTR
+#define ELEMENT_MAP_SECOND_TYPE int
 #define ELEMENT_MAP_DEFAULT(s) template <ELEMENT_MAP_FIRST_TYPE n> inline ELEMENT_MAP_SECOND_TYPE \
   ELEMENT_MAP_CALL_NAME() { s }
 
@@ -35,28 +73,28 @@
 namespace {
 
   // base member
-  ELEMENT_MAP_DEFAULT(return &srcMLOutput::processToken;)
+  ELEMENT_MAP_DEFAULT(return PROCESSTOKEN;)
 
-  ELEMENT_MAP(SUNIT, &srcMLOutput::processUnit)
-  ELEMENT_MAP(SSINGLE, &srcMLOutput::processText)
-  ELEMENT_MAP(START_ELEMENT_TOKEN, &srcMLOutput::processText)
-  ELEMENT_MAP(COMMENT_START, &srcMLOutput::processBlockCommentStart)
-  ELEMENT_MAP(COMMENT_END, &srcMLOutput::processEndBlockToken)
+  ELEMENT_MAP(SUNIT, PROCESSUNIT)
+  ELEMENT_MAP(SSINGLE, PROCESSTEXT)
+  ELEMENT_MAP(START_ELEMENT_TOKEN, PROCESSTEXT)
+  ELEMENT_MAP(COMMENT_START, PROCESSBLOCKCOMMENTSTART)
+  ELEMENT_MAP(COMMENT_END, PROCESSENDBLOCKTOKEN)
 
-  ELEMENT_MAP(LINECOMMENT_START, &srcMLOutput::processLineCommentStart)
-  ELEMENT_MAP(LINECOMMENT_END, &srcMLOutput::processEndLineToken)
+  ELEMENT_MAP(LINECOMMENT_START, PROCESSLINECOMMENTSTART)
+  ELEMENT_MAP(LINECOMMENT_END, PROCESSENDLINETOKEN)
 
 #if DEBUG
-  ELEMENT_MAP(SMARKER, &srcMLOutput::processMarker)
+  ELEMENT_MAP(SMARKER, PROCESSMARKER)
 #endif
-  ELEMENT_MAP(SPUBLIC_ACCESS_DEFAULT, &srcMLOutput::processAccess)
-  ELEMENT_MAP(SPRIVATE_ACCESS_DEFAULT, &srcMLOutput::processAccess)
-  ELEMENT_MAP(SSTRING, &srcMLOutput::processString)
-  ELEMENT_MAP(SCHAR, &srcMLOutput::processChar)
-  ELEMENT_MAP(SLITERAL, &srcMLOutput::processLiteral)
-  ELEMENT_MAP(SBOOLEAN, &srcMLOutput::processBoolean)
-  ELEMENT_MAP(SINTERFACE, &srcMLOutput::processInterface)
-  ELEMENT_MAP(CONTROL_CHAR, &srcMLOutput::processEscape)
+  ELEMENT_MAP(SPUBLIC_ACCESS_DEFAULT, PROCESSACCESS)
+  ELEMENT_MAP(SPRIVATE_ACCESS_DEFAULT, PROCESSACCESS)
+  ELEMENT_MAP(SSTRING, PROCESSSTRING)
+  ELEMENT_MAP(SCHAR, PROCESSCHAR)
+  ELEMENT_MAP(SLITERAL, PROCESSLITERAL)
+  ELEMENT_MAP(SBOOLEAN, PROCESSBOOLEAN)
+  ELEMENT_MAP(SINTERFACE, PROCESSINTERFACE)
+  ELEMENT_MAP(CONTROL_CHAR, PROCESSESCAPE)
 };
 
 #undef ELEMENT_MAP_CALL_NAME
@@ -66,10 +104,10 @@ namespace {
 #undef ELEMENT_MAP_CALL
 #undef ELEMENT_MAP
 
-srcMLOutput::PROCESS_PTR srcMLOutput::process_table[] = {
+char srcMLOutput::process_table[] = {
 
   // fill the array with the prefixes
-  #define BOOST_PP_LOCAL_MACRO(n) &srcMLOutput::processText,
+  #define BOOST_PP_LOCAL_MACRO(n) PROCESSTEXT,
   #define BOOST_PP_LOCAL_LIMITS     (0, 107)
   #include BOOST_PP_LOCAL_ITERATE()
   #undef BOOST_PP_LOCAL_MACRO
