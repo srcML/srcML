@@ -93,7 +93,7 @@ class srcMLOutput : public srcMLParserTokenTypes {
 
   // List of element names
   static const char* const ElementNames[];
-  static const char ElementPrefix[END_ELEMENT_TOKEN];
+  static const char ElementPrefix[];
 
  public:
   void processText(const antlr::RefToken& token);
