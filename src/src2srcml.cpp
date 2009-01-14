@@ -387,8 +387,27 @@ int main(int argc, char* argv[]) {
 
   try {
 
-  // translator from input to output using determined language
-  srcMLTranslator translator(language, src_encoding, xml_encoding, srcml_filename, options, given_directory, given_filename, given_version, uri);
+    // translator from input to output using determined language
+    // setup the conversion between the uri number and the prefix
+    enum { SRCML_SRC_NS_URI_POS, 
+       SRCML_CPP_NS_URI_POS,
+       SRCML_ERR_NS_URI_POS,
+       SRCML_EXT_LITERAL_NS_URI_POS,
+       SRCML_EXT_OPERATOR_NS_URI_POS,
+       SRCML_EXT_MODIFIER_NS_URI_POS,
+    };
+
+    const char* num2prefix[] = {
+
+      uri[SRCML_SRC_NS_URI].c_str(),
+      uri[SRCML_CPP_NS_URI].c_str(),
+      uri[SRCML_ERR_NS_URI].c_str(),
+      uri[SRCML_EXT_LITERAL_NS_URI].c_str(),
+      uri[SRCML_EXT_OPERATOR_NS_URI].c_str(),
+      uri[SRCML_EXT_MODIFIER_NS_URI].c_str(),
+    };
+
+    srcMLTranslator translator(language, src_encoding, xml_encoding, srcml_filename, options, given_directory, given_filename, given_version, num2prefix);
 
   // output source encoding
   if (isoption(options, OPTION_VERBOSE)) {

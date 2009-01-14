@@ -45,7 +45,8 @@ class srcMLTranslator : public Language {
 		  const char* directory,
 		  const char* filename,
 		  const char* version,
-		  std::map<std::string, std::string>& uri
+		  const char* uri[]
+		  //		  std::map<std::string, std::string>& uri
 		  );
 
   // translate from input stream to output stream

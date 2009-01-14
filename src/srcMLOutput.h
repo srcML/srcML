@@ -48,7 +48,8 @@ class srcMLOutput : public srcMLParserTokenTypes {
 	      const char* language, 
 	      const char* encoding,
 	      int option,
-	      std::map<std::string, std::string>& uri
+	      const char* uri[]
+	      //	      std::map<std::string, std::string>& uri
 	      );
 
   static bool checkEncoding(const char* encoding);
@@ -79,7 +80,10 @@ class srcMLOutput : public srcMLParserTokenTypes {
   int options;
   const char* xml_encoding;
 
-  std::map<std::string, std::string>& uri;
+  const char** num2prefix;
+
+  const char* uri[];
+    //  std::map<std::string, std::string>& uri;
 
   int consume_next();
 

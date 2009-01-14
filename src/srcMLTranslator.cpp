@@ -44,7 +44,8 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
 				 const char* directory,       // 
 				 const char* filename,        // 
 				 const char* version,         //
-				 std::map<std::string, std::string>& uri
+				 const char* uri[]
+				 //				 std::map<std::string, std::string>& uri
 				 )
   : Language(language), encoding(src_encoding), options(op),
     out(0, srcml_filename, getLanguageString(), xml_encoding, options, uri) {
