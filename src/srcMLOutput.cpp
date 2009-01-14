@@ -216,6 +216,44 @@ enum { SRCML_SRC_NS_URI_POS,
        SRCML_EXT_MODIFIER_NS_URI_POS,
 };
 
+#undef ELEMENT_MAP_CALL_NAME
+#undef ELEMENT_MAP_SECOND_TYPE
+
+#define ELEMENT_MAP_CALL_NAME element_prefix
+#define ELEMENT_MAP_FIRST_TYPE int
+#define ELEMENT_MAP_SECOND_TYPE int
+#define ELEMENT_MAP_DEFAULT(s) template <ELEMENT_MAP_FIRST_TYPE n> inline ELEMENT_MAP_SECOND_TYPE \
+  ELEMENT_MAP_CALL_NAME() { s }
+
+#define ELEMENT_MAP_CALL(t) ELEMENT_MAP_CALL_NAME <srcMLParserTokenTypes::t>()
+#define ELEMENT_MAP(t, s) template <> inline ELEMENT_MAP_SECOND_TYPE ELEMENT_MAP_CALL(t) { return s; }
+
+static const int SCPP_START = 192; //srcMLParserTokenTypes::SCPP_DIRECTIVE;
+static const int SCPP_END   = 206; //srcMLParserTokenTypes::SCPP_ENDIF;
+
+namespace {
+
+  // default is the srcML namespace
+  ELEMENT_MAP_DEFAULT(return SRCML_SRC_NS_URI_POS;)
+
+  // cpp prefix
+  #define BOOST_PP_LOCAL_MACRO(n) template<> inline int element_prefix<n>() { return SRCML_CPP_NS_URI_POS; }
+  //  #define BOOST_PP_LOCAL_MACRO(n) ELEMENT_MAP(n, SRCML_CPP_NS_URI_POS),
+  #define BOOST_PP_LOCAL_LIMITS (192, 206)
+  #include BOOST_PP_LOCAL_ITERATE()
+  #undef BOOST_PP_LOCAL_MACRO
+  #undef BOOST_PP_LOCAL_LIMITS
+
+  ELEMENT_MAP(SSTRING, SRCML_EXT_LITERAL_NS_URI_POS)
+  ELEMENT_MAP(SCHAR, SRCML_EXT_LITERAL_NS_URI_POS)
+  ELEMENT_MAP(SLITERAL, SRCML_EXT_LITERAL_NS_URI_POS)
+  ELEMENT_MAP(SBOOLEAN, SRCML_EXT_LITERAL_NS_URI_POS)
+
+  ELEMENT_MAP(SOPERATOR, SRCML_EXT_OPERATOR_NS_URI_POS)
+
+  ELEMENT_MAP(SMODIFIER, SRCML_EXT_MODIFIER_NS_URI_POS)
+};
+
 const char* num2prefix[6];
 
 // check if encoding is supported
@@ -242,22 +280,6 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   num2prefix[SRCML_EXT_LITERAL_NS_URI_POS] = uri[SRCML_EXT_LITERAL_NS_URI].c_str();
   num2prefix[SRCML_EXT_OPERATOR_NS_URI_POS] = uri[SRCML_EXT_OPERATOR_NS_URI].c_str();
   num2prefix[SRCML_EXT_MODIFIER_NS_URI_POS] = uri[SRCML_EXT_MODIFIER_NS_URI].c_str();
-
-  // fill the prefixes
-  for (int i = SCPP_DIRECTIVE; i <= SCPP_ENDIF; ++i)
-    ElementPrefix[i] = SRCML_CPP_NS_URI_POS;
-
-  for (int i = SMARKER; i <= SERROR_MODE; ++i)
-    ElementPrefix[i] = SRCML_ERR_NS_URI_POS;
-
-  ElementPrefix[SSTRING]  = SRCML_EXT_LITERAL_NS_URI_POS;
-  ElementPrefix[SCHAR]    = ElementPrefix[SSTRING];
-  ElementPrefix[SLITERAL] = ElementPrefix[SSTRING];
-  ElementPrefix[SBOOLEAN] = ElementPrefix[SSTRING];
-
-  ElementPrefix[SOPERATOR] = SRCML_EXT_OPERATOR_NS_URI_POS;
-
-  ElementPrefix[SMODIFIER] = SRCML_EXT_MODIFIER_NS_URI_POS;
 
   // assign for special processing
   //  process_table[SUNIT] = &srcMLOutput::processUnit;
@@ -621,7 +643,7 @@ inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
 const char* srcMLOutput::ElementNames[] = {
 
   // fill the array in order of token numbers
-  #define BOOST_PP_LOCAL_MACRO(n)   ELEMENT_MAP_CALL_NAME<n>(),
+  #define BOOST_PP_LOCAL_MACRO(n)   element_name<n>(),
   #define BOOST_PP_LOCAL_LIMITS     (0, 219 - 1)
   #include BOOST_PP_LOCAL_ITERATE()
   #undef BOOST_PP_LOCAL_MACRO
@@ -634,7 +656,7 @@ int srcMLOutput::ElementPrefix[] = {
   //    ElementPrefix[i] = SRCML_SRC_NS_URI_POS;
 
   // fill the array with default namespace
-  #define BOOST_PP_LOCAL_MACRO(n)   SRCML_SRC_NS_URI_POS,
+  #define BOOST_PP_LOCAL_MACRO(n)   element_prefix<n>(),
   #define BOOST_PP_LOCAL_LIMITS     (0, 219 - 1)
   #include BOOST_PP_LOCAL_ITERATE()
   #undef BOOST_PP_LOCAL_MACRO
