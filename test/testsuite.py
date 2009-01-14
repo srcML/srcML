@@ -13,7 +13,7 @@ import difflib
 maxcount = 700
 error_filename = ".suitelist"
 
-FIELD_WIDTH_LANGUAGE = 4
+FIELD_WIDTH_LANGUAGE = 5
 FIELD_WIDTH_DIRECTORY = 27
 MAX_COUNT = 29
 sperrorlist = []
@@ -292,7 +292,12 @@ try:
 				info = getsrcmlattributefile(xml_filename, "--longinfo")
 
 				# directory of the outer unit element
-				directory = dre.search(info).group(1)
+				dreinfo = dre.search(info)
+				if dreinfo == None:
+					print "Problem with", xml_filename
+					continue
+
+				directory = dreinfo.group(1)
 
 				# only process if directory name matches or is not given
 				if specname != "" and m.match(directory) == None:
