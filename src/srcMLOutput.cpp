@@ -208,6 +208,16 @@ namespace {
   ELEMENT_MAP(SCONCEPTMAP,    "concept_map")
 };
 
+enum { SRCML_SRC_NS_URI_POS, 
+       SRCML_CPP_NS_URI_POS,
+       SRCML_ERR_NS_URI_POS,
+       SRCML_EXT_LITERAL_NS_URI_POS,
+       SRCML_EXT_OPERATOR_NS_URI_POS,
+       SRCML_EXT_MODIFIER_NS_URI_POS,
+};
+
+const char* num2prefix[6];
+
 // check if encoding is supported
 bool srcMLOutput::checkEncoding(const char* encoding) {
 
@@ -224,28 +234,37 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   : input(ints), xout(0), srcml_filename(filename), unit_language(language), unit_dir(0), unit_filename(0),
     unit_version(0), options(op), xml_encoding(xml_enc), uri(curi)
 {
+
+  // setup the conversion between the uri number and the prefix
+  num2prefix[SRCML_SRC_NS_URI_POS] = uri[SRCML_SRC_NS_URI].c_str();
+  num2prefix[SRCML_CPP_NS_URI_POS] = uri[SRCML_CPP_NS_URI].c_str();
+  num2prefix[SRCML_ERR_NS_URI_POS] = uri[SRCML_ERR_NS_URI].c_str();
+  num2prefix[SRCML_EXT_LITERAL_NS_URI_POS] = uri[SRCML_EXT_LITERAL_NS_URI].c_str();
+  num2prefix[SRCML_EXT_OPERATOR_NS_URI_POS] = uri[SRCML_EXT_OPERATOR_NS_URI].c_str();
+  num2prefix[SRCML_EXT_MODIFIER_NS_URI_POS] = uri[SRCML_EXT_MODIFIER_NS_URI].c_str();
+
   // fill the prefixes
   for (int i = 0; i < END_ELEMENT_TOKEN; ++i)
-    ElementPrefix[i] = SRCML_SRC_NS_URI;
+    ElementPrefix[i] = SRCML_SRC_NS_URI_POS;
 
   for (int i = SCPP_DIRECTIVE; i <= SCPP_ENDIF; ++i)
-    ElementPrefix[i] = SRCML_CPP_NS_URI;
+    ElementPrefix[i] = SRCML_CPP_NS_URI_POS;
 
   for (int i = SMARKER; i <= SERROR_MODE; ++i)
-    ElementPrefix[i] = SRCML_ERR_NS_URI;
+    ElementPrefix[i] = SRCML_ERR_NS_URI_POS;
 
   if (isoption(OPTION_LITERAL)) {
-    ElementPrefix[SSTRING]  = SRCML_EXT_LITERAL_NS_URI;
+    ElementPrefix[SSTRING]  = SRCML_EXT_LITERAL_NS_URI_POS;
     ElementPrefix[SCHAR]    = ElementPrefix[SSTRING];
     ElementPrefix[SLITERAL] = ElementPrefix[SSTRING];
     ElementPrefix[SBOOLEAN] = ElementPrefix[SSTRING];
   }
 
   if (isoption(OPTION_OPERATOR))
-    ElementPrefix[SOPERATOR] = SRCML_EXT_OPERATOR_NS_URI;
+    ElementPrefix[SOPERATOR] = SRCML_EXT_OPERATOR_NS_URI_POS;
 
   if (isoption(OPTION_MODIFIER))
-    ElementPrefix[SMODIFIER] = SRCML_EXT_MODIFIER_NS_URI;
+    ElementPrefix[SMODIFIER] = SRCML_EXT_MODIFIER_NS_URI_POS;
 
   // assign for special processing
   //  process_table[SUNIT] = &srcMLOutput::processUnit;
@@ -331,9 +350,9 @@ const char* srcMLOutput::type2name(int token_type) const {
     return "";
 
   // non-default namespace name
-  if (uri[ElementPrefix[token_type]].c_str()[0] != '\0') {
+  if (num2prefix[ElementPrefix[token_type]][0] != '\0') {
     
-    strcpy(s, uri[ElementPrefix[token_type]].c_str());
+    strcpy(s, num2prefix[ElementPrefix[token_type]]);
     strcat(s, ":");
     strcat(s, ElementNames[token_type]);
     return s;
@@ -616,4 +635,4 @@ const char* srcMLOutput::ElementNames[] = {
   #undef BOOST_PP_LOCAL_LIMITS
 };
 
-const char* srcMLOutput::ElementPrefix[];
+int srcMLOutput::ElementPrefix[];
