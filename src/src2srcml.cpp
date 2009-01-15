@@ -387,8 +387,7 @@ int main(int argc, char* argv[]) {
 
   try {
 
-    // translator from input to output using determined language
-    // setup the conversion between the uri number and the prefix
+    // convert from the map to an array to pass to the translator
     enum { SRCML_SRC_NS_URI_POS, 
        SRCML_CPP_NS_URI_POS,
        SRCML_ERR_NS_URI_POS,
@@ -407,6 +406,7 @@ int main(int argc, char* argv[]) {
       uri[SRCML_EXT_MODIFIER_NS_URI].c_str(),
     };
 
+    // translator from input to output using determined language
     srcMLTranslator translator(language, src_encoding, xml_encoding, srcml_filename, options, given_directory, given_filename, given_version, num2prefix);
 
   // output source encoding
