@@ -262,7 +262,6 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 			 const char* language, 
 			 const char* xml_enc,
 			 int op,
-			 //			 std::map<std::string, std::string>& curi
 			 const char* curi[]
 			 )
   : input(ints), xout(0), srcml_filename(filename), unit_language(language), unit_dir(0), unit_filename(0),
@@ -327,16 +326,19 @@ const char* srcMLOutput::type2name(int token_type) const {
 
   static char s[512];
 
+  const char* tagname = ElementNames[token_type];
+
   // no element name
-  if (ElementNames[token_type][0] == '\0')
+  if (tagname[0] == '\0')
     return "";
 
   // non-default namespace name
-  if (num2prefix[(int)ElementPrefix[token_type]][0] != '\0') {
+  const char* prefix = num2prefix[(int)ElementPrefix[token_type]];
+  if (prefix[0] != '\0') {
     
-    strcpy(s, num2prefix[(int)ElementPrefix[token_type]]);
+    strcpy(s, prefix);
     strcat(s, ":");
-    strcat(s, ElementNames[token_type]);
+    strcat(s, tagname);
     return s;
   }
 
