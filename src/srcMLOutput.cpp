@@ -343,7 +343,7 @@ const char* srcMLOutput::type2name(int token_type) const {
   }
 
   // default namespace name
-  return ElementNames[token_type];
+  return tagname;
 }
 
 // output text
