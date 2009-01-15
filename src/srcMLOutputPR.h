@@ -22,6 +22,8 @@
   Declaration of process pointer table for srcMLOutput.
 */
 
+#include "srcMLParserTokenTypesMacro.hpp"
+
 enum {
   PROCESSTOKEN,
   PROCESSUNIT,
@@ -208,7 +210,7 @@ char srcMLOutput::process_table[] = {
 
   // fill the array with the prefixes
   #define BOOST_PP_LOCAL_MACRO(n) element_process<n>(),
-  #define BOOST_PP_LOCAL_LIMITS     (0, 218)
+  #define BOOST_PP_LOCAL_LIMITS     (0, TOKEN_END_ELEMENT_TOKEN - 1)
   #include BOOST_PP_LOCAL_ITERATE()
   #undef BOOST_PP_LOCAL_MACRO
   #undef BOOST_PP_LOCAL_LIMITS

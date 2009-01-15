@@ -228,9 +228,6 @@ enum { SRCML_SRC_NS_URI_POS,
 #define ELEMENT_MAP_CALL(t) ELEMENT_MAP_CALL_NAME <srcMLParserTokenTypes::t>()
 #define ELEMENT_MAP(t, s) template <> inline ELEMENT_MAP_SECOND_TYPE ELEMENT_MAP_CALL(t) { return s; }
 
-static const int SCPP_START = 192; //srcMLParserTokenTypes::SCPP_DIRECTIVE;
-static const int SCPP_END   = 206; //srcMLParserTokenTypes::SCPP_ENDIF;
-
 namespace {
 
   // default is the srcML namespace
@@ -239,7 +236,7 @@ namespace {
   // cpp prefix
   #define BOOST_PP_LOCAL_MACRO(n) template<> inline int element_prefix<n>() { return SRCML_CPP_NS_URI_POS; }
   //  #define BOOST_PP_LOCAL_MACRO(n) ELEMENT_MAP(n, SRCML_CPP_NS_URI_POS),
-  #define BOOST_PP_LOCAL_LIMITS (192, 206)
+  #define BOOST_PP_LOCAL_LIMITS (TOKEN_SCPP_DIRECTIVE, TOKEN_SCPP_ENDIF)
   #include BOOST_PP_LOCAL_ITERATE()
   #undef BOOST_PP_LOCAL_MACRO
   #undef BOOST_PP_LOCAL_LIMITS
@@ -614,7 +611,7 @@ const char* const srcMLOutput::ElementNames[] = {
 
   // fill the array in order of token numbers
   #define BOOST_PP_LOCAL_MACRO(n)   element_name<n>(),
-  #define BOOST_PP_LOCAL_LIMITS     (0, 219 - 1)
+  #define BOOST_PP_LOCAL_LIMITS     (0, TOKEN_END_ELEMENT_TOKEN - 1)
   #include BOOST_PP_LOCAL_ITERATE()
   #undef BOOST_PP_LOCAL_MACRO
   #undef BOOST_PP_LOCAL_LIMITS
@@ -624,7 +621,7 @@ const char srcMLOutput::ElementPrefix[] = {
 
   // fill the array with the prefixes
   #define BOOST_PP_LOCAL_MACRO(n)   element_prefix<n>(),
-  #define BOOST_PP_LOCAL_LIMITS     (0, 219 - 1)
+  #define BOOST_PP_LOCAL_LIMITS     (0, TOKEN_END_ELEMENT_TOKEN - 1)
   #include BOOST_PP_LOCAL_ITERATE()
   #undef BOOST_PP_LOCAL_MACRO
   #undef BOOST_PP_LOCAL_LIMITS
