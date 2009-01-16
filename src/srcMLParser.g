@@ -157,7 +157,7 @@ struct TokenPosition {
 // Included in the generated srcMLParser.cpp file after antlr includes
 header "post_include_cpp" {
 
-srcMLParser* pparser;
+//srcMLParser* pparser;
 
 int parseoptions;
 
@@ -175,15 +175,19 @@ int parseoptions;
          }
      }
 
+        static void setParser(srcMLParser* opparser) { pparser = opparser; }
      private:
+       static srcMLParser* pparser;
        const int oldsize;
     };
+
+srcMLParser* LocalMode::pparser = 0;
 
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options)
    : antlr::LLkParser(lexer,1), Mode(this, lang), zeromode(false), skipelse(false), cppifcount(0)
 
 {
-    pparser = this;
+    LocalMode::setParser(this);
 
     parseoptions = parser_options;
 
