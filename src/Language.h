@@ -23,9 +23,12 @@
 #ifndef LANGUAGE_H
 #define LANGUAGE_H
 
-#include <map>
-#include <string>
 #include "srcmlapps.h"
+
+struct pair {
+  const char* s;
+  int n;
+};
 
 class Language {
 
@@ -63,20 +66,19 @@ class Language {
   // gets the current language
   static int getLanguage(const char* const s) {
 
-    std::map<std::string, int>::const_iterator pos = lang2int.find(s);
-  
-    if (pos != lang2int.end())
-      return pos->second;
-    else
-      return 0;
+    for (const pair* pos = lang2int; pos != lang2int + 5; ++pos)
+      if (strcmp(pos->s, s) == 0)
+	return pos->n;
+
+    return 0;
   }
 
   // gets the current language
   const char* getLanguageString() const {
 
-    for (std::map<std::string, int>::const_iterator pos = lang2int.begin(); pos != lang2int.end(); ++pos)
-      if (pos->second == language)
-	return pos->first.c_str();
+    for (const pair* pos = lang2int; pos != lang2int + 5; ++pos)
+      if (pos->n == language)
+	return pos->s;
 
     return "";
   }
@@ -87,8 +89,7 @@ class Language {
 
   const int language;
 
-  static bool filled;
-  static std::map<std::string, int> lang2int;
+  static pair lang2int[];
 };
 
 #endif

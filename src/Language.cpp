@@ -22,16 +22,10 @@
 
 #include "Language.h"
 
-std::map<std::string, int> Language::lang2int;
-bool Language::filled = Language::filledLang();
-
-bool Language::filledLang() {
-    lang2int.insert(std::make_pair(LanguageName::LANGUAGE_C, LANGUAGE_C));
-    lang2int.insert(std::make_pair(LanguageName::LANGUAGE_CXX, LANGUAGE_CXX));
-    lang2int.insert(std::make_pair(LanguageName::LANGUAGE_JAVA, LANGUAGE_JAVA));
-    lang2int.insert(std::make_pair(LanguageName::LANGUAGE_CXX_0X, LANGUAGE_CXX_0X));
-    lang2int.insert(std::make_pair(LanguageName::LANGUAGE_ASPECTJ, LANGUAGE_ASPECTJ));
-
-    return true;
-}
-
+pair Language::lang2int[] = {
+    { LanguageName::LANGUAGE_C, LANGUAGE_C },
+    { LanguageName::LANGUAGE_CXX, LANGUAGE_CXX },
+    { LanguageName::LANGUAGE_JAVA, LANGUAGE_JAVA },
+    { LanguageName::LANGUAGE_CXX_0X, LANGUAGE_CXX_0X },
+    { LanguageName::LANGUAGE_ASPECTJ, LANGUAGE_ASPECTJ },
+};
