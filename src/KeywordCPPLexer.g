@@ -104,7 +104,22 @@ bool startline;
 KeywordCPPLexer(std::istream& in, const char* encoding, int language = LANGUAGE_CXX)
 	: antlr::CharScanner(new UTF8CharBuffer(encoding, in),true), Language(language), onpreprocline(false), startline(true)
 {
-    initLiterals();
+    // previously in initLiterals
+	literals[")"] = RPAREN;
+	literals[";"] = TERMINATE;
+	literals["("] = LPAREN;
+	literals["~"] = DESTOP;
+	literals[":"] = COLON;
+	literals["}"] = RCURLY;
+	literals[","] = COMMA;
+	literals["]"] = RBRACKET;
+	literals["{"] = LCURLY;
+	literals["["] = LBRACKET;
+
+    literals["."] = PERIOD;
+    literals[".*"] = MEMBERPOINTER;
+    literals["*"] = MULTOPS;
+    literals["*="] = MULTIMM;
 
     // common keywords
     literals["if"] = IF;

@@ -35,7 +35,7 @@ CXXFLAGS = -O3 -Wall -march=nocona -minline-all-stringops -fno-rtti
 endif
 
 # compiler gcc linking flags
-CXX_LINK_FLAGS = #-s
+CXX_LINK_FLAGS = -s
 
 # object code for xml
 ifdef LIBXML_DISABLED

@@ -43,25 +43,25 @@ tokens {
 TEMPOPS;
 TEMPOPE;
 EQUAL;
-LPAREN = "(";
-DESTOP = "~";
-LCURLY = "{";
-RCURLY = "}";
-LBRACKET = "[";
-RBRACKET = "]";
-COMMA = ",";
-RPAREN = ")";
-TERMINATE = ";";
+LPAREN; // = "(";
+DESTOP; // = "~";
+LCURLY; // = "{";
+RCURLY; // = "}";
+LBRACKET; // = "[";
+RBRACKET; // = "]";
+COMMA; // = ",";
+RPAREN; // = ")";
+TERMINATE; // = ";";
 PREPROC;
-COLON = ":";
+COLON; // = ":";
 
 // define value in master grammar so that it depends on language
 DCOLON;
 
-MEMBERPOINTER = ".*";
-PERIOD = ".";
-MULTOPS = "*";
-MULTIMM = "*=";
+MEMBERPOINTER; // = ".*";
+PERIOD; // = ".";
+MULTOPS; // = "*";
+MULTIMM; // = "*=";
 
 FALSE;
 TRUE;
