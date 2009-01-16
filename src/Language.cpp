@@ -25,3 +25,13 @@
 std::map<std::string, int> Language::lang2int;
 bool Language::filled = Language::filledLang();
 
+bool Language::filledLang() {
+    lang2int.insert(std::make_pair(LanguageName::LANGUAGE_C, LANGUAGE_C));
+    lang2int.insert(std::make_pair(LanguageName::LANGUAGE_CXX, LANGUAGE_CXX));
+    lang2int.insert(std::make_pair(LanguageName::LANGUAGE_JAVA, LANGUAGE_JAVA));
+    lang2int.insert(std::make_pair(LanguageName::LANGUAGE_CXX_0X, LANGUAGE_CXX_0X));
+    lang2int.insert(std::make_pair(LanguageName::LANGUAGE_ASPECTJ, LANGUAGE_ASPECTJ));
+
+    return true;
+}
+
