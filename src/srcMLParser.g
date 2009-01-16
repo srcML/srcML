@@ -157,8 +157,6 @@ struct TokenPosition {
 // Included in the generated srcMLParser.cpp file after antlr includes
 header "post_include_cpp" {
 
-int parseoptions;
-
     class LocalMode {
 
      public:
@@ -417,6 +415,7 @@ bool zeromode;
 bool skipelse;
 int cppifcount;
 int isoperatorfunction;
+int parseoptions;
 
 ~srcMLParser() {}
 
