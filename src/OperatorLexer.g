@@ -115,9 +115,11 @@ OPERATORS :
         '%' ('='| ) |    // immediate modulus
 //        '%'  |    // modulus 
 
-        "&&" { $setText("&amp;&amp;"); } | // logical and
-        "&=" { $setText("&amp;="); } | // immediate
-        '&'  { $setText("&amp;"); $setType(MULTOPS); } |   // bitwise and / address of
+        '&' ( '&' { $setText("&amp;&amp;"); } |
+              '=' { $setText("&amp;="); } |
+            { $setText("&amp;"); $setType(MULTOPS); } ) |   // bitwise and / address of
+//        "&&" { $setText("&amp;&amp;"); } | // logical and
+//        "&=" { $setText("&amp;="); } | // immediate
 
 //        "++" |    // increment
 //        "+=" |    // immediate addition
@@ -127,8 +129,8 @@ OPERATORS :
 //        "-=" |    // immediate subtraction
         '-' ('-' | '=' |)  |    // subtraction/unary minus
 
-        ("->*")=> "->*" { $setText("-&gt;*"); } |   // member pointer selector
-        "->"  { $setText("-&gt;"); } |   // member access
+//        ("->*")=> "->*" { $setText("-&gt;*"); } |   // member pointer selector
+        "->" ( '*' { $setText("-&gt;*"); } | { $setText("-&gt;"); } ) |   // member access
 
 //        "/=" |    // immediate division
         '/' ('=' | )  |    // division
