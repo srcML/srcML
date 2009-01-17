@@ -28,6 +28,16 @@ header {
    #include "PureCommentLexer.hpp"
 }
 
+header "post_include_cpp" {
+
+void KeywordCPPLexer::fillliterals(const pair litarr[], unsigned int size) {
+
+    for (unsigned int i = 0; i < size; ++i)
+        literals[litarr[i].s] = litarr[i].n;
+}
+
+}
+
 options {
 	language="Cpp";
     namespaceAntlr="antlr";
@@ -103,11 +113,7 @@ bool startline;
 
 struct pair { char const * const s; int n; };
 
-void fillliterals(const pair litarr[], unsigned int size) {
-
-    for (unsigned int i = 0; i < size; ++i)
-        literals[litarr[i].s] = litarr[i].n;
-}
+void fillliterals(const pair litarr[], unsigned int size);
 
 KeywordCPPLexer(std::istream& in, const char* encoding, int language = LANGUAGE_CXX)
 	: antlr::CharScanner(new UTF8CharBuffer(encoding, in),true), Language(language), onpreprocline(false), startline(true)
