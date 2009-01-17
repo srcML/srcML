@@ -462,7 +462,7 @@ int main(int argc, char* argv[]) {
 	if (isoption(options, OPTION_VERBOSE))
 	  std::cerr << "\t\terror: file \'" << line << "\' does not exist.";
 	else
-	  std::cerr << NAME << " error: file \'" << line << "\' does not exist." << "\n";
+	  std::cerr << NAME << " error: file \'" << line << "\' does not exist.\n";
       }
 
       if (isoption(options, OPTION_VERBOSE)) {
@@ -499,7 +499,7 @@ int main(int argc, char* argv[]) {
 
     } catch (FileError) {
 
-      std::cerr << NAME << " error: file \'" << path << "\' does not exist." << "\n";
+      std::cerr << NAME << " error: file \'" << path << "\' does not exist.\n";
       exit(STATUS_INPUTFILE_PROBLEM);
     }
 
@@ -532,7 +532,7 @@ int main(int argc, char* argv[]) {
       try {
 	translator.translate(path, path_directory, path_filename);
       } catch (FileError) {
-	std::cerr << NAME << " error: file \'" << path << "\' does not exist." << "\n";
+	std::cerr << NAME << " error: file \'" << path << "\' does not exist.\n";
       }
 
       if (isoption(options, OPTION_VERBOSE)) {
@@ -847,15 +847,15 @@ int process_args(int argc, char* argv[]) {
 	options |= OPTION_MODIFIER;
 
       } else {
-	std::cerr << NAME << ": invalid namespace \"" << ns_uri << "\"\n" << '\n'
-		  << "Namespace URI must be on of the following:  \n" << '\n'
+	std::cerr << NAME << ": invalid namespace \"" << ns_uri << "\"\n\n"
+		  << "Namespace URI must be on of the following:  \n\n"
 		  << '\t' << SRCML_SRC_NS_URI << "\t\t" << "primary srcML namespace\n"
 		  << '\t' << SRCML_CPP_NS_URI << "\t\t" << "namespace for cpreprocessing elements\n"
-		  << '\t' << SRCML_ERR_NS_URI << '\t' << "namespace for srcML debugging elements\n" << '\n'
+		  << '\t' << SRCML_ERR_NS_URI << '\t' << "namespace for srcML debugging elements\n\n"
 	          << "or an extension namespace:\n" << '\n'
 		  << '\t' << SRCML_EXT_LITERAL_NS_URI << '\t' << "optional literal elements\n"
 		  << '\t' << SRCML_EXT_OPERATOR_NS_URI << '\t' << "optional operator element\n"
-		  << '\t' << SRCML_EXT_MODIFIER_NS_URI << '\t' << "optional modifier element\n" << '\n';
+		  << '\t' << SRCML_EXT_MODIFIER_NS_URI << '\t' << "optional modifier element\n\n";
 	exit(STATUS_INVALID_LANGUAGE);
       }
     }
@@ -1018,7 +1018,7 @@ int process_args(int argc, char* argv[]) {
     } else {
 
       std::cerr << NAME << ": unrecognized option '" << argv[curarg] << "'\n";
-      std::cerr << "try '" << NAME << " " << HELP_FLAG << "' for more information." << "\n";
+      std::cerr << "try '" << NAME << " " << HELP_FLAG << "' for more information.\n";
       exit(STATUS_UNKNOWN_OPTION);
     }
   }
