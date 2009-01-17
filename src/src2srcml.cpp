@@ -358,9 +358,9 @@ int main(int argc, char* argv[]) {
     struct stat instat;
     stat(argv[i], &instat);
     if (instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
-	std::cerr << NAME << ": Input file '" << argv[i] << "'"
-		  << " is the same as the output file '" << srcml_filename << "'\n";
-	exit(STATUS_INPUTFILE_PROBLEM);
+      fprintf(stderr, "%s: Input file '%s' is the same as the output file '%s'\n",
+	      NAME, argv[i], srcml_filename);
+      exit(STATUS_INPUTFILE_PROBLEM);
     }
   }
 
@@ -369,7 +369,7 @@ int main(int argc, char* argv[]) {
     for (int j = i + 1; j < 6; ++j)
       if(strcmp(num2prefix[i], num2prefix[j]) == 0) {
 
-	std::cerr << NAME << ": Namespace conflict for prefix \'" << num2prefix[i] << "\'\n";
+	fprintf(stderr, "%s: Namespace conflict for prefix \'%s\'\n", NAME, num2prefix[i]);
 	exit(STATUS_INVALID_OPTION_COMBINATION);
       }
   }
@@ -416,8 +416,8 @@ int main(int argc, char* argv[]) {
 
   // output source encoding
   if (isoption(options, OPTION_VERBOSE)) {
-    std::cerr << "Source encoding:  " << src_encoding << '\n';
-    std::cerr << "XML encoding:  " << xml_encoding << '\n';
+    fprintf(stderr, "Source encoding:  %s\n", src_encoding);
+    fprintf(stderr, "XML encoding:  %s\n", xml_encoding);
   }
 
   // translate input filenames from list in file
@@ -451,7 +451,8 @@ int main(int argc, char* argv[]) {
 
       // in verbose mode output the currently processed filename
       if (isoption(options, OPTION_VERBOSE)) {
-	std::cerr << count << '\t' << line;
+
+	fprintf(stderr, "%d\t%s", count, line);
       }
 
       // translate the file listed in the input file using the directory and filename extracted from the path
@@ -466,13 +467,13 @@ int main(int argc, char* argv[]) {
       } catch (FileError) {
 
 	if (isoption(options, OPTION_VERBOSE))
-	  std::cerr << "\t\terror: file \'" << line << "\' does not exist.";
+	  fprintf(stderr, "\t\terror: file \'%s\' does not exist.\n", line);
 	else
-	  std::cerr << NAME << " error: file \'" << line << "\' does not exist.\n";
+	  fprintf(stderr, " error: file \'%s\' does not exist.\n", line);
       }
 
       if (isoption(options, OPTION_VERBOSE)) {
-	std::cerr << '\n';
+	fprintf(stderr, "\n");
       }
       // compound documents are interrupted gracefully
       if (isoption(options, OPTION_TERMINATE))
@@ -505,7 +506,7 @@ int main(int argc, char* argv[]) {
 
     } catch (FileError) {
 
-      std::cerr << NAME << " error: file \'" << path << "\' does not exist.\n";
+      fprintf(stderr, "%s error: file \'%s\' does not exist.\n", NAME, path);
       exit(STATUS_INPUTFILE_PROBLEM);
     }
 
@@ -533,16 +534,16 @@ int main(int argc, char* argv[]) {
 
       // in verbose mode output the currently processed filename
       if (isoption(options, OPTION_VERBOSE)) {
-	std::cerr << count << '\t' << path;
+	fprintf(stderr, "%d\t%s", count, path);
       }
       try {
 	translator.translate(path, path_directory, path_filename);
       } catch (FileError) {
-	std::cerr << NAME << " error: file \'" << path << "\' does not exist.\n";
+	fprintf(stderr, "%s error: file \'%s\' does not exist.\n", NAME, path);
       }
 
       if (isoption(options, OPTION_VERBOSE)) {
-	std::cerr << '\n';
+	fprintf(stderr, "\n");
       }
 
       // compound documents are interrupted gracefully
@@ -551,7 +552,7 @@ int main(int argc, char* argv[]) {
     }
   }
   } catch (srcEncodingException) {
-    std::cerr << "Translation encoding problem\n";
+    fprintf(stderr, "Translation encoding problem\n");
     exit(STATUS_UNKNOWN_ENCODING);
   }
 
@@ -661,8 +662,8 @@ int process_args(int argc, char* argv[]) {
 	cpp_else = true;
 
       } else {
-	std::cerr << NAME << ": Conflicting options " << CPP_MARKUP_ELSE_FLAG << " and " 
-		  << CPP_TEXTONLY_ELSE_FLAG << " selected.\n";
+	fprintf(stderr, "%s: Conflicting options %s and %s selected.\n",
+		NAME, CPP_MARKUP_ELSE_FLAG, CPP_TEXTONLY_ELSE_FLAG);
 	exit(STATUS_INVALID_OPTION_COMBINATION);
       }
     }
@@ -676,8 +677,8 @@ int process_args(int argc, char* argv[]) {
 
 	cpp_else = true;
       } else {
-	std::cerr << NAME << ": Conflicting options " << CPP_MARKUP_ELSE_FLAG << " and " 
-		  << CPP_TEXTONLY_ELSE_FLAG << " selected.\n";
+	fprintf(stderr, "%s: Conflicting options %s and %s selected.\n",
+		NAME, CPP_MARKUP_ELSE_FLAG, CPP_TEXTONLY_ELSE_FLAG);
 	exit(STATUS_INVALID_OPTION_COMBINATION);
       }
     }
@@ -691,8 +692,8 @@ int process_args(int argc, char* argv[]) {
 	cpp_if0 = true;
 
       } else {
-	std::cerr << NAME << ": Conflicting options " << CPP_MARKUP_IF0_FLAG << " and " 
-		  << CPP_TEXTONLY_IF0_FLAG << " selected.\n";
+	fprintf(stderr, "%s: Conflicting options %s and %s selected.\n",
+		NAME, CPP_MARKUP_IF0_FLAG, CPP_TEXTONLY_IF0_FLAG);
 	exit(STATUS_INVALID_OPTION_COMBINATION);
       }
     }
@@ -707,8 +708,8 @@ int process_args(int argc, char* argv[]) {
 
 	cpp_if0 = true;
       } else {
-	std::cerr << NAME << ": Conflicting options " << CPP_MARKUP_IF0_FLAG << " and " 
-		  << CPP_TEXTONLY_IF0_FLAG << " selected.\n";
+	fprintf(stderr, "%s: Conflicting options %s and %s selected.\n",
+		NAME, CPP_MARKUP_IF0_FLAG, CPP_TEXTONLY_IF0_FLAG);
 	exit(STATUS_INVALID_OPTION_COMBINATION);
       }
     }
@@ -754,7 +755,7 @@ int process_args(int argc, char* argv[]) {
 
       // check for language flag with missing language value
       } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
-	std::cerr << NAME << ": language option selected but not specified.\n";
+	fprintf(stderr, "%s: language option selected but not specified.\n", NAME);
 	exit(STATUS_LANGUAGE_MISSING);
       } else {
 
@@ -765,9 +766,9 @@ int process_args(int argc, char* argv[]) {
       // validate language selected
       language = Language::getLanguage(langparam);
       if (language == 0) {
-	std::cerr << NAME << ": invalid option -- Language flag must one of the following values:  "
-		  << LANGUAGE_C << " " << LANGUAGE_CXX << " " << LANGUAGE_JAVA << " "
-		  << LANGUAGE_ASPECTJ << '\n';
+	fprintf(stderr, "%s: invalid option -- Language flag must one of the following values:  "
+		"%s %s %s %s\n", NAME, LANGUAGE_C, LANGUAGE_CXX, LANGUAGE_JAVA, LANGUAGE_ASPECTJ);
+
 	exit(STATUS_INVALID_LANGUAGE);
 	break;
       }
@@ -800,7 +801,7 @@ int process_args(int argc, char* argv[]) {
 	
       // check for language flag with missing language value
       } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
-	std::cerr << NAME << ": xmlns option selected but not specified.\n";
+	fprintf(stderr, "%s: xmlns option selected but not specified.\n", NAME);
 	exit(STATUS_LANGUAGE_MISSING);
       } else {
 
@@ -872,15 +873,19 @@ int process_args(int argc, char* argv[]) {
 	prefixchange[SRCML_EXT_MODIFIER_NS_URI_POS] = true;
 
       } else {
-	std::cerr << NAME << ": invalid namespace \"" << ns_uri << "\"\n\n"
-		  << "Namespace URI must be on of the following:  \n\n"
-		  << '\t' << SRCML_SRC_NS_URI << "\t\t" << "primary srcML namespace\n"
-		  << '\t' << SRCML_CPP_NS_URI << "\t\t" << "namespace for cpreprocessing elements\n"
-		  << '\t' << SRCML_ERR_NS_URI << '\t' << "namespace for srcML debugging elements\n\n"
-	          << "or an extension namespace:\n" << '\n'
-		  << '\t' << SRCML_EXT_LITERAL_NS_URI << '\t' << "optional literal elements\n"
-		  << '\t' << SRCML_EXT_OPERATOR_NS_URI << '\t' << "optional operator element\n"
-		  << '\t' << SRCML_EXT_MODIFIER_NS_URI << '\t' << "optional modifier element\n\n";
+	fprintf(stderr, "%s: invalid namespace \"%s\"\n\n"
+		"Namespace URI must be on of the following:  \n\n"
+		"\t%s\t\tprimary srcML namespace\n"
+		"\t%s\t\tnamespace for cpreprocessing elements\n"
+		"\t%s\tnamespace for srcML debugging elements\n\n"
+	        "or an extension namespace:\n\n"
+		"\t%s\toptional literal elements\n"
+		"\t%s\toptional operator element\n"
+		"\t%s\toptional modifier element\n\n",
+		NAME, ns_uri,
+		SRCML_SRC_NS_URI, SRCML_CPP_NS_URI, SRCML_ERR_NS_URI,
+		SRCML_EXT_LITERAL_NS_URI, SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_MODIFIER_NS_URI
+		);
 	exit(STATUS_INVALID_LANGUAGE);
       }
     }
@@ -900,7 +905,7 @@ int process_args(int argc, char* argv[]) {
 
       // check for encoding flag with missing encoding
       } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
-	std::cerr << NAME << ": encoding selected but not specified.\n";
+	fprintf(stderr, "%s: encoding selected but not specified.\n", NAME);
 	exit(STATUS_XMLENCODING_MISSING);
       } else {
 
@@ -911,7 +916,7 @@ int process_args(int argc, char* argv[]) {
 #ifdef LIBXML_ENABLED
       // validate xml encoding
       if (!srcMLOutput::checkEncoding(xml_encoding)) {
-	std::cerr << NAME << ": xml encoding \"" << xml_encoding << "\" is not supported.\n";
+	fprintf(stderr, "%s: xml encoding \"%s\" is not supported.\n", NAME, xml_encoding);
 	exit(STATUS_UNKNOWN_ENCODING);
       }
 #endif
@@ -933,7 +938,7 @@ int process_args(int argc, char* argv[]) {
 
       // check for text encoding flag with missing text encoding
       } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
-	std::cerr << NAME << ": text encoding selected but not specified.\n";
+	fprintf(stderr, "%s: text encoding selected but not specified.\n", NAME);
 	exit(STATUS_SRCENCODING_MISSING);
       } else {
 
@@ -943,7 +948,7 @@ int process_args(int argc, char* argv[]) {
 
       // validate source encoding
       if (!srcMLOutput::checkEncoding(src_encoding)) {
-	std::cerr << NAME << ": text encoding \"" << src_encoding << "\" is not supported.\n";
+	fprintf(stderr, "%s: text encoding \"%s\" is not supported.\n", NAME, src_encoding);
 	exit(STATUS_UNKNOWN_ENCODING);
       }
 #else
@@ -967,7 +972,7 @@ int process_args(int argc, char* argv[]) {
 
       // validate that the filename is given and is not another flag
       } else if (argc <= curarg + 1 || argv[curarg + 1][0] == '-') {
-	std::cerr << NAME << ": invalid option -- Directory must be specified.\n";
+	fprintf(stderr, "%s: invalid option -- Directory must be specified.\n", NAME);
 	exit(STATUS_DIRECTORY_MISSING);
       } else {
 
@@ -991,7 +996,7 @@ int process_args(int argc, char* argv[]) {
 
       // validate that the filename is given and is not another flag
       } else if (argc <= curarg + 1 || argv[curarg + 1][0] == '-') {
-	std::cerr << NAME << ": invalid option -- Filename must be specified.\n";
+	fprintf(stderr, "%s: invalid option -- Filename must be specified.\n", NAME);
 	exit(STATUS_FILENAME_MISSING);
 
       // filename is separate parameter
@@ -1017,7 +1022,7 @@ int process_args(int argc, char* argv[]) {
 
       // validate that the version is given and is not another flag
       } else if (argc <= curarg + 1 || argv[curarg + 1][0] == '-') {
-	std::cerr << NAME << ": invalid option -- Version must be specified.\n";
+	fprintf(stderr, "%s: invalid option -- Version must be specified.\n", NAME);
 	exit(STATUS_VERSION_MISSING);
 
       // filename is separate parameter
@@ -1042,8 +1047,8 @@ int process_args(int argc, char* argv[]) {
     // invalid option
     } else {
 
-      std::cerr << NAME << ": unrecognized option '" << argv[curarg] << "'\n";
-      std::cerr << "try '" << NAME << " " << HELP_FLAG << "' for more information.\n";
+      fprintf(stderr, "%s: unrecognized option '%s'\n", NAME, argv[curarg]);
+      fprintf(stderr, "try '%s %s' for more information.\n", NAME, HELP_FLAG);
       exit(STATUS_UNKNOWN_OPTION);
     }
   }
