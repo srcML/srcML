@@ -233,7 +233,7 @@ namespace {
   // default is the srcML namespace
   ELEMENT_MAP_DEFAULT(return SRCML_SRC_NS_URI_POS;)
 
-  // cpp prefix
+  // cpp namespace
   #define BOOST_PP_LOCAL_MACRO(n) template<> inline int element_prefix<n>() { return SRCML_CPP_NS_URI_POS; }
   //  #define BOOST_PP_LOCAL_MACRO(n) ELEMENT_MAP(n, SRCML_CPP_NS_URI_POS),
   #define BOOST_PP_LOCAL_LIMITS (TOKEN_SCPP_DIRECTIVE, TOKEN_SCPP_ENDIF)
@@ -241,13 +241,16 @@ namespace {
   #undef BOOST_PP_LOCAL_MACRO
   #undef BOOST_PP_LOCAL_LIMITS
 
+  // literal namespace
   ELEMENT_MAP(SSTRING,   SRCML_EXT_LITERAL_NS_URI_POS)
   ELEMENT_MAP(SCHAR,     SRCML_EXT_LITERAL_NS_URI_POS)
   ELEMENT_MAP(SLITERAL,  SRCML_EXT_LITERAL_NS_URI_POS)
   ELEMENT_MAP(SBOOLEAN,  SRCML_EXT_LITERAL_NS_URI_POS)
 
+  // operator namespace
   ELEMENT_MAP(SOPERATOR, SRCML_EXT_OPERATOR_NS_URI_POS)
 
+  // modifier namespace
   ELEMENT_MAP(SMODIFIER, SRCML_EXT_MODIFIER_NS_URI_POS)
 };
 
@@ -509,7 +512,7 @@ void srcMLOutput::processBlockCommentStart(const antlr::RefToken& token) {
 }
 
 void srcMLOutput::processLineCommentStart(const antlr::RefToken& token) {
-  static const char* LINE_COMMENT_ATTR = "line";
+  static const char* const LINE_COMMENT_ATTR = "line";
 
   const char* s = token2name(token);
 
@@ -619,6 +622,7 @@ const char* const srcMLOutput::ElementNames[] = {
   #undef BOOST_PP_LOCAL_LIMITS
 };
 
+// element prefix number
 const char srcMLOutput::ElementPrefix[] = {
 
   // fill the array with the prefixes

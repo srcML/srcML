@@ -26,7 +26,6 @@
 #define SRCMLOUTPUT_H
 
 #include <iostream>
-#include <map>
 #include "antlr/Token.hpp"
 #include "srcMLParserTokenTypes.hpp"
 #include <antlr/MismatchedTokenException.hpp>
@@ -49,7 +48,6 @@ class srcMLOutput : public srcMLParserTokenTypes {
 	      const char* encoding,
 	      int option,
 	      const char* uri[]
-	      //	      std::map<std::string, std::string>& uri
 	      );
 
   static bool checkEncoding(const char* encoding);
