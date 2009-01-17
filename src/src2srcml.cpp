@@ -102,12 +102,12 @@ using std::setw;
 void output_help(const char* name) {
     std::cout << "Usage: " << name << " [options] <infile>... <outfile>" << '\n'
               << '\n'
-	      << "Translates source-code files into the XML source-code representation srcML" << '\n'
-	      << "with support for creating compound srcML documents." << '\n'
+	      << "Translates source-code files into the XML source-code representation srcML\n"
+	      << "with support for creating compound srcML documents.\n"
               << '\n'
-	      << "When no filenames are given read from standard input and write to standard output." << '\n'
+	      << "When no filenames are given read from standard input and write to standard output.\n"
 	      << "When only one filename is given write to standard output."  << '\n'
-	      << "An input filename of '-' also reads from standard input." << '\n'
+	      << "An input filename of '-' also reads from standard input.\n"
               << '\n'
 	      << "Options:"  << '\n'
               << std::left
@@ -137,10 +137,10 @@ void output_help(const char* name) {
 #endif
 	      << '\n'
 	      << "  " << setw(COL) <<  XMLNS_DEFAULT_FLAG_FULL << "    "
-	      << "set the default namespace URI" << '\n'
+	      << "set the default namespace URI\n"
 	      << "      " << setw(COL) << " " << "(default:  xmlns=\"" << SRCML_SRC_NS_URI << "\")\n"
 	      << "  " << setw(COL) <<  XMLNS_FLAG_FULL << "    "
-	      << "set the namespace PREFIX for the namespace URI" << '\n'
+	      << "set the namespace PREFIX for the namespace URI\n"
 	      << "      " << setw(COL) << " " << "(defaults:  xmlns:cpp=\"" << SRCML_CPP_NS_URI << "\",\n"
 	      << "                          " << "            xmlns:srcerr=\"" << SRCML_ERR_NS_URI << "\")\n"
 	      << '\n'
@@ -196,28 +196,28 @@ void output_help(const char* name) {
 	      << "  " << CPP_TEXTONLY_IF0_FLAG     << "  " << /* setw(COL) <<*/ "        "
 	      << "leave cpp #if 0 regions as text (default)\n"
 	      << '\n'
-	      << "Examples:  " << '\n'
+	      << "Examples:  \n"
 	      << "  " << name << "                " << GAP
-	      << "(read from standard input, write to standard output)" << '\n'
+	      << "(read from standard input, write to standard output)\n"
 	      << "  " << name << " m.cpp          " << GAP
-	      << "(read from file m.cpp, write to standard output)" << '\n'
+	      << "(read from file m.cpp, write to standard output)\n"
 	      << "  " << name << " m.cpp m.cpp.xml" << GAP
-	      << "(read from file m.cpp, write to file m.cpp.xml)" << '\n'
+	      << "(read from file m.cpp, write to file m.cpp.xml)\n"
 	      << "  " << name << " -              " << GAP
-	      << "(read from standard input, write to standard output)" << '\n'
+	      << "(read from standard input, write to standard output)\n"
 	      << "  " << name << " - m.cpp.xml    " << GAP
-	      << "(read from standard input, write to file m.cpp.xml)" << '\n'
+	      << "(read from standard input, write to file m.cpp.xml)\n"
 	      << "  " << name << " --directory=src --filename=m.cpp - m.cpp.xml "
-	      << "(element unit attributes dir \"src\", filename \"m.cpp\")" << '\n'
+	      << "(element unit attributes dir \"src\", filename \"m.cpp\")\n"
 #ifdef LIBXML_ENABLED
 	      << "  " << name << " --src-encoding=UTF-8 m.cpp m.cpp.xml         "
-	      << "(encoding of input text file is UTF-8)" << '\n'
+	      << "(encoding of input text file is UTF-8)\n"
 #endif
 	      << "  " << name << " --xml-encoding=ISO-8859-1 m.cpp m.cpp.xml    "
-	      << "(set encoding of srcML file to ISO-8859-1)" << '\n'
+	      << "(set encoding of srcML file to ISO-8859-1)\n"
 
 	      << '\n'
-	      << "www.sdml.info" << '\n'
+	      << "www.sdml.info\n"
 	      << "Report bugs to " << EMAIL_ADDRESS << '\n';
 }
 
@@ -546,7 +546,7 @@ int main(int argc, char* argv[]) {
     }
   }
   } catch (srcEncodingException) {
-    std::cerr << "Translation encoding problem" << '\n';
+    std::cerr << "Translation encoding problem\n";
     exit(STATUS_UNKNOWN_ENCODING);
   }
 
@@ -636,7 +636,7 @@ int process_args(int argc, char* argv[]) {
       options |= OPTION_COMPRESSED;
       if (position == original_position) ++curarg;
 #else
-      std::cerr << NAME << ": The compression option, i.e., " << COMPRESSED_FLAG << ", is only supported in the libxml version." << '\n';
+      std::cerr << NAME << ": The compression option, i.e., " << COMPRESSED_FLAG << ", is only supported in the libxml version.\n";
       exit(STATUS_LIBXML2_FEATURE);
 #endif
     }
@@ -657,7 +657,7 @@ int process_args(int argc, char* argv[]) {
 
       } else {
 	std::cerr << NAME << ": Conflicting options " << CPP_MARKUP_ELSE_FLAG << " and " 
-		  << CPP_TEXTONLY_ELSE_FLAG << " selected." << '\n';
+		  << CPP_TEXTONLY_ELSE_FLAG << " selected.\n";
 	exit(STATUS_INVALID_OPTION_COMBINATION);
       }
     }
@@ -672,7 +672,7 @@ int process_args(int argc, char* argv[]) {
 	cpp_else = true;
       } else {
 	std::cerr << NAME << ": Conflicting options " << CPP_MARKUP_ELSE_FLAG << " and " 
-		  << CPP_TEXTONLY_ELSE_FLAG << " selected." << '\n';
+		  << CPP_TEXTONLY_ELSE_FLAG << " selected.\n";
 	exit(STATUS_INVALID_OPTION_COMBINATION);
       }
     }
@@ -687,7 +687,7 @@ int process_args(int argc, char* argv[]) {
 
       } else {
 	std::cerr << NAME << ": Conflicting options " << CPP_MARKUP_IF0_FLAG << " and " 
-		  << CPP_TEXTONLY_IF0_FLAG << " selected." << '\n';
+		  << CPP_TEXTONLY_IF0_FLAG << " selected.\n";
 	exit(STATUS_INVALID_OPTION_COMBINATION);
       }
     }
@@ -703,7 +703,7 @@ int process_args(int argc, char* argv[]) {
 	cpp_if0 = true;
       } else {
 	std::cerr << NAME << ": Conflicting options " << CPP_MARKUP_IF0_FLAG << " and " 
-		  << CPP_TEXTONLY_IF0_FLAG << " selected." << '\n';
+		  << CPP_TEXTONLY_IF0_FLAG << " selected.\n";
 	exit(STATUS_INVALID_OPTION_COMBINATION);
       }
     }
@@ -749,7 +749,7 @@ int process_args(int argc, char* argv[]) {
 
       // check for language flag with missing language value
       } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
-	std::cerr << NAME << ": language option selected but not specified." << '\n';
+	std::cerr << NAME << ": language option selected but not specified.\n";
 	exit(STATUS_LANGUAGE_MISSING);
       } else {
 
@@ -793,7 +793,7 @@ int process_args(int argc, char* argv[]) {
 	
       // check for language flag with missing language value
       } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
-	std::cerr << NAME << ": xmlns option selected but not specified." << '\n';
+	std::cerr << NAME << ": xmlns option selected but not specified.\n";
 	exit(STATUS_LANGUAGE_MISSING);
       } else {
 
@@ -811,7 +811,7 @@ int process_args(int argc, char* argv[]) {
      
       // check for existing namespaces
       if (option_uri.count(ns_uri) > 0) {
-	  std::cerr << NAME << ": namespace listed more than once." << '\n';
+	  std::cerr << NAME << ": namespace listed more than once.\n";
 	  exit(STATUS_INVALID_LANGUAGE);
 	}
 
@@ -848,15 +848,15 @@ int process_args(int argc, char* argv[]) {
 	options |= OPTION_MODIFIER;
 
       } else {
-	std::cerr << NAME << ": invalid namespace \"" << ns_uri << "\"" << '\n' << '\n'
-		  << "Namespace URI must be on of the following:  " << '\n' << '\n'
-		  << '\t' << SRCML_SRC_NS_URI << "\t\t" << "primary srcML namespace" << '\n'
-		  << '\t' << SRCML_CPP_NS_URI << "\t\t" << "namespace for cpreprocessing elements" << '\n'
-		  << '\t' << SRCML_ERR_NS_URI << '\t' << "namespace for srcML debugging elements" << '\n' << '\n'
-	          << "or an extension namespace:" << '\n' << '\n'
-		  << '\t' << SRCML_EXT_LITERAL_NS_URI << '\t' << "optional literal elements" << '\n'
-		  << '\t' << SRCML_EXT_OPERATOR_NS_URI << '\t' << "optional operator element" << '\n'
-		  << '\t' << SRCML_EXT_MODIFIER_NS_URI << '\t' << "optional modifier element" << '\n' << '\n';
+	std::cerr << NAME << ": invalid namespace \"" << ns_uri << "\"\n" << '\n'
+		  << "Namespace URI must be on of the following:  \n" << '\n'
+		  << '\t' << SRCML_SRC_NS_URI << "\t\t" << "primary srcML namespace\n"
+		  << '\t' << SRCML_CPP_NS_URI << "\t\t" << "namespace for cpreprocessing elements\n"
+		  << '\t' << SRCML_ERR_NS_URI << '\t' << "namespace for srcML debugging elements\n" << '\n'
+	          << "or an extension namespace:\n" << '\n'
+		  << '\t' << SRCML_EXT_LITERAL_NS_URI << '\t' << "optional literal elements\n"
+		  << '\t' << SRCML_EXT_OPERATOR_NS_URI << '\t' << "optional operator element\n"
+		  << '\t' << SRCML_EXT_MODIFIER_NS_URI << '\t' << "optional modifier element\n" << '\n';
 	exit(STATUS_INVALID_LANGUAGE);
       }
     }
@@ -876,7 +876,7 @@ int process_args(int argc, char* argv[]) {
 
       // check for encoding flag with missing encoding
       } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
-	std::cerr << NAME << ": encoding selected but not specified." << '\n';
+	std::cerr << NAME << ": encoding selected but not specified.\n";
 	exit(STATUS_XMLENCODING_MISSING);
       } else {
 
@@ -887,7 +887,7 @@ int process_args(int argc, char* argv[]) {
 #ifdef LIBXML_ENABLED
       // validate xml encoding
       if (!srcMLOutput::checkEncoding(xml_encoding)) {
-	std::cerr << NAME << ": xml encoding \"" << xml_encoding << "\" is not supported." << '\n';
+	std::cerr << NAME << ": xml encoding \"" << xml_encoding << "\" is not supported.\n";
 	exit(STATUS_UNKNOWN_ENCODING);
       }
 #endif
@@ -909,7 +909,7 @@ int process_args(int argc, char* argv[]) {
 
       // check for text encoding flag with missing text encoding
       } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
-	std::cerr << NAME << ": text encoding selected but not specified." << '\n';
+	std::cerr << NAME << ": text encoding selected but not specified.\n";
 	exit(STATUS_SRCENCODING_MISSING);
       } else {
 
@@ -919,11 +919,11 @@ int process_args(int argc, char* argv[]) {
 
       // validate source encoding
       if (!srcMLOutput::checkEncoding(src_encoding)) {
-	std::cerr << NAME << ": text encoding \"" << src_encoding << "\" is not supported." << '\n';
+	std::cerr << NAME << ": text encoding \"" << src_encoding << "\" is not supported.\n";
 	exit(STATUS_UNKNOWN_ENCODING);
       }
 #else
-      std::cerr << NAME << ": The source encoding option, i.e., " << TEXTENCODING_FLAG << ", is only supported in the libxml version." << '\n';
+      std::cerr << NAME << ": The source encoding option, i.e., " << TEXTENCODING_FLAG << ", is only supported in the libxml version.\n";
       exit(STATUS_LIBXML2_FEATURE);
 #endif
     }
