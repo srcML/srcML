@@ -363,9 +363,6 @@ void srcMLOutput::processEscape(const antlr::RefToken& token) {
 
   const char* s = token2name(token);
 
-  if (s[0] == 0)
-    return;
-
   xmlTextWriterStartElement(xout, BAD_CAST s);
   
   xmlTextWriterWriteAttribute(xout, BAD_CAST "char", BAD_CAST token->getText().c_str());
@@ -500,9 +497,6 @@ void srcMLOutput::processBlockCommentStart(const antlr::RefToken& token) {
 
   const char* s = token2name(token);
 
-  if (s[0] == 0)
-    return;
-
   xmlTextWriterStartElement(xout, BAD_CAST s);
 
   xmlTextWriterWriteAttribute(xout, BAD_CAST "type",
@@ -516,9 +510,6 @@ void srcMLOutput::processLineCommentStart(const antlr::RefToken& token) {
 
   const char* s = token2name(token);
 
-  if (s[0] == 0)
-    return;
-
   xmlTextWriterStartElement(xout, BAD_CAST s);
 
   xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST LINE_COMMENT_ATTR);
@@ -527,11 +518,6 @@ void srcMLOutput::processLineCommentStart(const antlr::RefToken& token) {
 }
 
 void srcMLOutput::processEndLineToken(const antlr::RefToken& token) {
-
-  const char* s = token2name(token);
-
-  if (s[0] == 0)
-    return;
 
   xmlTextWriterEndElement(xout);
 
@@ -542,20 +528,12 @@ void srcMLOutput::processEndBlockToken(const antlr::RefToken& token) {
 
   processText(token);
 
-  const char* s = token2name(token);
-
-  if (s[0] == 0)
-    return;
-
   xmlTextWriterEndElement(xout);
 }
 
 void srcMLOutput::processOptional(const antlr::RefToken& token, const char* attr_name, const char* attr_value) {
 
   const char* s = token2name(token);
-
-  if (s[0] == 0)
-    return;
 
   if (isstart(token)) {
     xmlTextWriterStartElement(xout, BAD_CAST s);
