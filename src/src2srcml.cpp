@@ -144,8 +144,8 @@ void output_help(const char* name) {
   printf("        (default:  xmlns=\"%s\")\n", SRCML_SRC_NS_URI);
 
   printf("  %s set the namespace PREFIX for the namespace URI\n", XMLNS_FLAG_FULL);
-  printf("        (defaults:  xmlns:cpp=\"%s\"\n", SRCML_CPP_NS_URI);
-  printf("        (defaults:  xmlns:srcerr=\"%s\"\n", SRCML_ERR_NS_URI);
+  printf("        (defaults:  xmlns:cpp=\"%s\")\n", SRCML_CPP_NS_URI);
+  printf("        (defaults:  xmlns:srcerr=\"%s\")\n", SRCML_ERR_NS_URI);
 
   printf("  %s	do not output the default XML declaration\n", NO_XML_DECLARATION_FLAG);
   printf("  %s	do not output any namespace declarations\n\n", NO_NAMESPACE_DECLARATION_FLAG);
@@ -161,9 +161,8 @@ void output_help(const char* name) {
 
   printf("  %s, %s verbose output to standard error\n\n", VERBOSE_FLAG_SHORT, VERBOSE_FLAG);
 
-  printf("Metadata Options:\n\n");
-
-  printf("  %s, %s set the language to %s, %s (default), %s, or %s\n",
+  printf("Metadata Options:\n\n"
+	 "  %s, %s set the language to %s, %s (default), %s, or %s\n",
 	 LANGUAGE_FLAG_SHORT, LANGUAGE_FLAG_FULL,
 	 LANGUAGE_C, LANGUAGE_CXX, LANGUAGE_JAVA, LANGUAGE_ASPECTJ);
 
