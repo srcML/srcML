@@ -147,16 +147,16 @@ OPERATORS :
                 ) | '=' { $setText("&lt;="); }
             | { $setText("&lt;"); $setType(TEMPOPS); } )  | // less than
 
-        "==" | // equals
-        '=' { $setType(EQUAL); } |   // assignment
+//        "==" | // equals
+        '=' ( '=' | { $setType(EQUAL); }) |   // assignment
 
-        (">>=")=> ">>=" { $setText("&gt;&gt;="); } |    // immediate right shift
+//        (">>=")=> ">>=" { $setText("&gt;&gt;="); } |    // immediate right shift
 
 //        ">>" { $setText("&gt;&gt;"); } |                // right shift
 //        ">=" { $setText("&gt;="); } |                   // greater than or equal to
 
         '>' 
-            ('>' { $setText("&gt;&gt;"); } |
+            ('>' ( '=' { $setText("&gt;&gt;="); } | { $setText("&gt;&gt;"); }) |
              '=' { $setText("&gt;="); } | 
              { $setText("&gt;"); $setType(TEMPOPE); }    
             ) |
