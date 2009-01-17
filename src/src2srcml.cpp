@@ -231,8 +231,7 @@ void output_help(const char* name) {
 
 // output version message
 void output_version(const char* name) {
-    std::cout << name << " Version " << VERSION << '\n'
-	      << COPYRIGHT << '\n';
+  printf("%s Version %s\n%s\n", name, VERSION,COPYRIGHT);
 }
 
 int options = OPTION_CPP_MARKUP_ELSE | OPTION_CPP | OPTION_XMLDECL | OPTION_NAMESPACEDECL;
