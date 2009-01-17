@@ -128,11 +128,11 @@ void output_help(const char* name) {
   printf("  %s, %s treat input file as a list of source files for one compound srcML document\n\n",
 	  FILELIST_FLAG_SHORT, FILELIST_FLAG);
 
-  printf("  %s, %s set the output XML encoding to ENC (default:  %s\n",
+  printf("  %s, %s set the output XML encoding to ENC (default:  %s)\n",
 	  ENCODING_FLAG_SHORT, ENCODING_FLAG, DEFAULT_XML_ENCODING);
 
 #ifdef LIBXML_ENABLED
-  printf("  %s, %s set the input source encoding to ENC (default:  %s\n\n",
+  printf("  %s, %s set the input source encoding to ENC (default:  %s)\n\n",
 	  TEXTENCODING_FLAG_SHORT, TEXTENCODING_FLAG, DEFAULT_TEXT_ENCODING);
 
       /*
@@ -200,23 +200,22 @@ void output_help(const char* name) {
   printf("  %s  markup cpp #if 0 regions\n", CPP_MARKUP_IF0_FLAG);
   printf("  %s  leave cpp #if 0 regions as text (default)\n\n", CPP_TEXTONLY_IF0_FLAG);
 
-  printf("Examples:  \n");
-
-  printf("  %1s                (read from standard input, write to standard output)\n"
-	 "  %1s m.cpp          (read from file m.cpp, write to standard output)\n"
-	 "  %1s m.cpp m.cpp.xml (read from file m.cpp, write to file m.cpp.xml)\n"
-	 "  %1s -              (read from standard input, write to standard output)\n"
-	 "  %1s - m.cpp.xml    (read from standard input, write to file m.cpp.xml)\n"
-	 "  %1s --directory=src --filename=m.cpp - m.cpp.xml "
+  printf("Examples:  \n"
+	 "  %1$s                (read from standard input, write to standard output)\n"
+	 "  %1$s m.cpp          (read from file m.cpp, write to standard output)\n"
+	 "  %1$s m.cpp m.cpp.xml (read from file m.cpp, write to file m.cpp.xml)\n"
+	 "  %1$s -              (read from standard input, write to standard output)\n"
+	 "  %1$s - m.cpp.xml    (read from standard input, write to file m.cpp.xml)\n"
+	 "  %1$s --directory=src --filename=m.cpp - m.cpp.xml "
 	 "(element unit attributes dir \"src\", filename \"m.cpp\")\n"
 
 #ifdef LIBXML_ENABLED
 
-	 "  %1s --src-encoding=UTF-8 m.cpp m.cpp.xml         "
+	 "  %1$s --src-encoding=UTF-8 m.cpp m.cpp.xml         "
 	 "(encoding of input text file is UTF-8)\n"
 #endif
 
-	 "  %s --xml-encoding=ISO-8859-1 m.cpp m.cpp.xml    "
+	 "  %1$s --xml-encoding=ISO-8859-1 m.cpp m.cpp.xml    "
 	 "(set encoding of srcML file to ISO-8859-1)\n\n", name);
 
   printf("www.sdml.info\n"
