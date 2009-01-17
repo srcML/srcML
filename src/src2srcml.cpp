@@ -100,30 +100,30 @@ using std::setw;
 
 // output help
 void output_help(const char* name) {
-    std::cout << "Usage: " << name << " [options] <infile>... <outfile>" << '\n'
-              << '\n'
+    std::cout << "Usage: " << name << " [options] <infile>... <outfile>\n\n"
+
 	      << "Translates source-code files into the XML source-code representation srcML\n"
-	      << "with support for creating compound srcML documents.\n"
-              << '\n'
+	      << "with support for creating compound srcML documents.\n\n"
+
 	      << "When no filenames are given read from standard input and write to standard output.\n"
 	      << "When only one filename is given write to standard output."  << '\n'
-	      << "An input filename of '-' also reads from standard input.\n"
-              << '\n'
-	      << "Options:"  << '\n'
+	      << "An input filename of '-' also reads from standard input.\n\n"
+
+	      << "Options:\n"
               << std::left
 	      << "  " << HELP_FLAG_SHORT        << ", " << setw(COL) <<  HELP_FLAG
 	      << "display this help and exit\n"
 	      << "  " << VERSION_FLAG_SHORT     << ", " << setw(COL) <<  VERSION_FLAG
-	      << "display version number and exit\n"
-              << '\n'
+	      << "display version number and exit\n\n"
+
 	      << "  " << EXPRESSION_MODE_FLAG_SHORT    << ", " << setw(COL) <<  EXPRESSION_MODE_FLAG
-	      << "translates a single, individual expression outside of any statement\n"
-              << '\n'
+	      << "translates a single, individual expression outside of any statement\n\n"
+
 	      << "  " << NESTED_FLAG_SHORT      << ", " << setw(COL) <<  NESTED_FLAG
 	      << "store all input source files in one compound srcML document\n"
 	      << "  " << FILELIST_FLAG_SHORT    << ", " << setw(COL) <<  FILELIST_FLAG
-	      << "treat input file as a list of source files for one compound srcML document\n"
-              << '\n'
+	      << "treat input file as a list of source files for one compound srcML document\n\n"
+
 	      << "  " << ENCODING_FLAG_SHORT    << ", " << setw(COL) <<  ENCODING_FLAG_FULL
 	      << "set the output XML encoding to ENC (default:  "
 	      << DEFAULT_XML_ENCODING << ") \n"
@@ -142,13 +142,13 @@ void output_help(const char* name) {
 	      << "  " << setw(COL) <<  XMLNS_FLAG_FULL << "    "
 	      << "set the namespace PREFIX for the namespace URI\n"
 	      << "      " << setw(COL) << " " << "(defaults:  xmlns:cpp=\"" << SRCML_CPP_NS_URI << "\",\n"
-	      << "                          " << "            xmlns:srcerr=\"" << SRCML_ERR_NS_URI << "\")\n"
-	      << '\n'
+	      << "                          " << "            xmlns:srcerr=\"" << SRCML_ERR_NS_URI << "\")\n\n"
+
 	      << "  " << NO_XML_DECLARATION_FLAG  << "    " 
 	      << "do not output the default XML declaration\n"
 	      << "  " << NO_NAMESPACE_DECLARATION_FLAG  << "     " 
-	      << "do not output any namespace declarations\n"
-              << '\n'
+	      << "do not output any namespace declarations\n\n"
+
 #ifdef LIBXML_ENABLED
 	      << "  " << COMPRESSED_FLAG_SHORT  << ", " << setw(COL) <<  COMPRESSED_FLAG
 	      << "output in gzip format\n"
@@ -158,10 +158,10 @@ void output_help(const char* name) {
 	      << "  " << DEBUG_FLAG_SHORT       << ", " << setw(COL) <<  DEBUG_FLAG
 	      << "markup translation errors in namespace \"" << SRCML_ERR_NS_URI << "\"\n"
               << "  " << VERBOSE_FLAG_SHORT     << ", " << setw(COL) << VERBOSE_FLAG
-	      << "verbose output to standard error\n"
-              << '\n'
-	      << "Metadata Options:"  << '\n'
-              << '\n'
+	      << "verbose output to standard error\n\n"
+
+	      << "Metadata Options:\n\n"
+
 	      << "  " << LANGUAGE_FLAG_SHORT    << ", " << setw(COL) << LANGUAGE_FLAG_FULL 
 	      << "set the language to " << LANGUAGE_C << ", " << LANGUAGE_CXX << " (default), " << LANGUAGE_JAVA << ", or " << LANGUAGE_ASPECTJ << "\n"
 	      << "  " << DIRECTORY_FLAG_SHORT   << ", " << setw(COL) <<  DIRECTORY_FLAG_FULL
@@ -169,14 +169,14 @@ void output_help(const char* name) {
 	      << "  " << FILENAME_FLAG_SHORT    << ", " << setw(COL) <<  FILENAME_FLAG_FULL
 	      << "set the filename attribute to FILE\n"
 	      << "  " << SRCVERSION_FLAG_SHORT  << ", " << setw(COL) <<  SRCVERSION_FLAG_FULL
-	      << "set the version attribute to VER\n"
+	      << "set the version attribute to VER\n\n"
       /*
 	      << "  " << SELF_VERSION_FLAG <<  "  " << "        "
 	      << "set the version attribute to the src2srcml version\n"
       */
-              << '\n'
-	      << "Markup Extensions:"  << '\n'
-              << '\n'
+
+	      << "Markup Extensions\n\n:"
+
 	      << "  " << LITERAL_FLAG   << "  " << /* setw(COL) <<*/ "             "
 	      << "markup literal values in namespace \"" << SRCML_EXT_LITERAL_NS_URI << "\"\n"
 	      << "  " << OPERATOR_FLAG  << " " << /* setw(COL) <<*/ "             "
@@ -184,18 +184,18 @@ void output_help(const char* name) {
 	      << "  " << MODIFIER_FLAG  << " " << /* setw(COL) <<*/ "             "
 	      << "markup type modifiers in namespace \"" << SRCML_EXT_MODIFIER_NS_URI << "\"\n"
               << '\n'
-	      << "CPP Markup Options:"  << '\n'
-              << '\n'
+	      << "CPP Markup Options:\n\n"
+
 	      << "  " << CPP_MARKUP_ELSE_FLAG   << "  " << /* setw(COL) <<*/ "     "
 	      << "markup cpp #else regions (default)\n"
 	      << "  " << CPP_TEXTONLY_ELSE_FLAG     << "  " << /* setw(COL) <<*/ "       "
-	      << "leave cpp #else regions as text\n"
-              << '\n'
+	      << "leave cpp #else regions as text\n\n"
+
 	      << "  " << CPP_MARKUP_IF0_FLAG   << "  " << /* setw(COL) <<*/ "      "
 	      << "markup cpp #if 0 regions\n"
 	      << "  " << CPP_TEXTONLY_IF0_FLAG     << "  " << /* setw(COL) <<*/ "        "
-	      << "leave cpp #if 0 regions as text (default)\n"
-	      << '\n'
+	      << "leave cpp #if 0 regions as text (default)\n\n"
+
 	      << "Examples:  \n"
 	      << "  " << name << "                " << GAP
 	      << "(read from standard input, write to standard output)\n"
@@ -214,9 +214,8 @@ void output_help(const char* name) {
 	      << "(encoding of input text file is UTF-8)\n"
 #endif
 	      << "  " << name << " --xml-encoding=ISO-8859-1 m.cpp m.cpp.xml    "
-	      << "(set encoding of srcML file to ISO-8859-1)\n"
+	      << "(set encoding of srcML file to ISO-8859-1)\n\n"
 
-	      << '\n'
 	      << "www.sdml.info\n"
 	      << "Report bugs to " << EMAIL_ADDRESS << '\n';
 }
