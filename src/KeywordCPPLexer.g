@@ -104,151 +104,183 @@ bool startline;
 KeywordCPPLexer(std::istream& in, const char* encoding, int language = LANGUAGE_CXX)
 	: antlr::CharScanner(new UTF8CharBuffer(encoding, in),true), Language(language), onpreprocline(false), startline(true)
 {
-    // previously in initLiterals
-	literals[")"] = RPAREN;
-	literals[";"] = TERMINATE;
-	literals["("] = LPAREN;
-	literals["~"] = DESTOP;
-	literals[":"] = COLON;
-	literals["}"] = RCURLY;
-	literals[","] = COMMA;
-	literals["]"] = RBRACKET;
-	literals["{"] = LCURLY;
-	literals["["] = LBRACKET;
+    struct pair { char const * const s; int n; };
 
-    literals["."] = PERIOD;
-    literals[".*"] = MEMBERPOINTER;
-    literals["*"] = MULTOPS;
-    literals["*="] = MULTIMM;
+    pair common[] = {
+        { ")", RPAREN },
+	    { ";", TERMINATE },
+	    { "(", LPAREN },
+	    { "~", DESTOP },
+	    { ":", COLON },
+	    { "}", RCURLY },
+	    { ",", COMMA },
+	    { "]", RBRACKET },
+	    { "{", LCURLY },
+	    { "[", LBRACKET },
 
-    // common keywords
-    literals["if"] = IF;
-    literals["else"] = ELSE;
+        { ".", PERIOD },
+        { ".*", MEMBERPOINTER },
+        { "*", MULTOPS },
+        { "*=", MULTIMM },
 
-    literals["while"] = WHILE;
-    literals["for"] = FOR;
-    literals["do"] = DO;
+        // common keywords
+        { "if", IF },
+        { "else", ELSE },
 
-    literals["break"] = BREAK;
-    literals["continue"] = CONTINUE;
+        { "while", WHILE },
+        { "for", FOR },
+        { "do", DO },
 
-    literals["switch"] = SWITCH;
-    literals["case"] = CASE;
-    literals["default"] = DEFAULT;
+        { "break", BREAK },
+        { "continue", CONTINUE },
 
-    literals["return"] = RETURN;
+        { "switch", SWITCH },
+        { "case", CASE },
+        { "default", DEFAULT },
 
-    literals["enum"] = ENUM;
+        { "return", RETURN },
+
+        { "enum", ENUM },
+    };
+
+    for (unsigned int i = 0; i < sizeof(common) / sizeof(common[0]); ++i)
+             literals[common[i].s] = common[i].n;
 
     // add all C and C++ specific keywords to the literals table
     if (inLanguage(LANGUAGE_C_FAMILY)) {
 
-        literals["main"] = MAIN;
+        pair cfamily[] = {
+            { "main", MAIN },
 
-        literals["typedef"] = TYPEDEF;
+            { "typedef", TYPEDEF },
 
-        literals["include"] = INCLUDE;
-        literals["define"] = DEFINE;
-        literals["elif"] = ELIF;
-        literals["endif"] = ENDIF;
-        literals["error"] = ERRORPREC;
-        literals["ifdef"] = IFDEF;
-        literals["ifndef"] = IFNDEF;
-        literals["line"] = LINE;
-        literals["pragma"] = PRAGMA;
-        literals["undef"] = UNDEF;
+            { "include", INCLUDE },
+            { "define", DEFINE },
+            { "elif", ELIF },
+            { "endif", ENDIF },
+            { "error", ERRORPREC },
+            { "ifdef", IFDEF },
+            { "ifndef", IFNDEF },
+            { "line", LINE },
+            { "pragma", PRAGMA },
+            { "undef", UNDEF },
 
-        literals["union"] = UNION;
-        literals["struct"] = STRUCT;
+            { "union", UNION },
+            { "struct", STRUCT },
 
-        literals["inline"] = INLINE;
-        literals["extern"] = EXTERN;
+            { "inline", INLINE },
+            { "extern", EXTERN },
 
-        literals["asm"] = ASM;
+            { "asm", ASM },
 
-        literals["goto"] = GOTO;
+            { "goto", GOTO },
+
+        };
+        for (unsigned int i = 0; i < sizeof(cfamily) / sizeof(cfamily[0]); ++i)
+             literals[cfamily[i].s] = cfamily[i].n;
     }
 
     // add all C++ and Java specific keywords to the literals table
     if (inLanguage(LANGUAGE_OO)) {
-        // exception handling
-        literals["try"] = TRY;
-        literals["catch"] = CATCH;
-        literals["throw"] = THROW;
 
-        // class
-        literals["class"] = CLASS;
-        literals["public"] = PUBLIC;
-        literals["private"] = PRIVATE;
-        literals["protected"] = PROTECTED;
+        pair language_oo[] = {
 
-        literals["new"] = NEW;
+            // exception handling
+            { "try", TRY },
+            { "catch", CATCH },
+            { "throw", THROW },
+
+            // class
+            { "class", CLASS },
+            { "public", PUBLIC },
+            { "private", PRIVATE },
+            { "protected", PROTECTED },
+
+            { "new", NEW },
+        };
+        for (unsigned int i = 0; i < sizeof(language_oo) / sizeof(language_oo[0]); ++i)
+             literals[language_oo[i].s] = language_oo[i].n;
     }
 
     // add all C++ specific keywords to the literals table
     if (inLanguage(LANGUAGE_CXX_FAMILY)) {
 
-        // class
-        literals["virtual"]= VIRTUAL; 
-        // literals["friend"]= FRIEND;
-        literals["operator"]= OPERATOR;
-        literals["explicit"]= EXPLICIT;
+        pair language_cxx_family[] = {
 
-        // namespaces
-        literals["namespace"] = NAMESPACE;
-        literals["using"] = USING;
+            // class
+            { "virtual", VIRTUAL }, 
+            //     { "friend", FRIEND },
+            { "operator", OPERATOR },
+            { "explicit", EXPLICIT },
 
-        // templates
-        literals["template"] = TEMPLATE;
+            // namespaces
+            { "namespace", NAMESPACE },
+            { "using", USING },
 
-        literals["delete"] = DELETE;
+            // templates
+            { "template", TEMPLATE },
 
-        // special C++ operators
-        literals["::"] = DCOLON;
+            { "delete", DELETE },
 
-        // special C++ constant values
-        literals["false"] = FALSE;
-        literals["true"] = TRUE;
+            // special C++ operators
+            { "::", DCOLON },
 
-        // specifiers that are not needed for parsing
+            // special C++ constant values
+            { "false", FALSE },
+            { "true", TRUE },
+
+            // specifiers that are not needed for parsing
         /*
-        literals["mutable"] = MUTABLE;
-        literals["volatile"] = VOLATILE;
+            { "mutable", MUTABLE },
+            { "volatile", VOLATILE },
         */
+        };
+        for (unsigned int i = 0; i < sizeof(language_cxx_family) / sizeof(language_cxx_family[0]); ++i)
+             literals[language_cxx_family[i].s] = language_cxx_family[i].n;
     }
 
     // add all C++ specific keywords to the literals table
     if (inLanguage(LANGUAGE_CXX_0X)) {
 
-        // concepts
-        literals["concept"] = CONCEPT;
-        literals["concept_map"] = CONCEPTMAP;
-        literals["auto"] = AUTO;
+        pair language_cxx_0x[] = {
+
+            // concepts
+            { "concept", CONCEPT },
+            { "concept_map", CONCEPTMAP },
+            { "auto", AUTO },
+        };
+        for (unsigned int i = 0; i < sizeof(language_cxx_0x) / sizeof(language_cxx_0x[0]); ++i)
+             literals[language_cxx_0x[i].s] = language_cxx_0x[i].n;
     }
 
     // add all Java specific keywords to the literals table
     if (inLanguage(LANGUAGE_JAVA)) {
 
-        // exception handling
-        literals["throws"] = THROWS;
-        literals["finally"] = FINALLY;
+        pair language_java[] = {
 
-        // class
-        literals["interface"] = INTERFACE;
-        literals["extends"] = EXTENDS;
-        literals["implements"] = IMPLEMENTS;
+            // exception handling
+            { "throws", THROWS },
+            { "finally", FINALLY },
+
+            // class
+            { "interface", INTERFACE },
+            { "extends", EXTENDS },
+            { "implements", IMPLEMENTS },
         
-        // import
-        literals["import"] = IMPORT;
+            // import
+            { "import", IMPORT },
 
-        // package
-        literals["package"] = PACKAGE;
+            // package
+            { "package", PACKAGE },
 
-        // final
-        literals["final"] = FINAL;
-//        literals["static"] = STATIC;
+            // final
+            { "final", FINAL },
+//            { "static", STATIC },
+
+        };
+        for (unsigned int i = 0; i < sizeof(language_java) / sizeof(language_java[0]); ++i)
+             literals[language_java[i].s] = language_java[i].n;
     }
-
 }
 
 private:
