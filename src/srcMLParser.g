@@ -1288,6 +1288,7 @@ exception_statement {}:
 class_struct_union[int token] {} :
 
         { token == LCURLY }? (
+            { inLanguage(LANGUAGE_JAVA) }?
             (interface_definition)=> interface_definition |
 
             class_definition |
