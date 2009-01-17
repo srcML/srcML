@@ -98,6 +98,15 @@ char* split_path(char* path);
 
 using std::setw;
 
+enum {
+  SRCML_SRC_NS_URI_POS, 
+  SRCML_CPP_NS_URI_POS,
+  SRCML_ERR_NS_URI_POS,
+  SRCML_EXT_LITERAL_NS_URI_POS,
+  SRCML_EXT_OPERATOR_NS_URI_POS,
+  SRCML_EXT_MODIFIER_NS_URI_POS,
+};
+
 // output help
 void output_help(const char* name) {
     std::cout << "Usage: " << name << " [options] <infile>... <outfile>\n\n"
@@ -234,9 +243,24 @@ const char* given_directory = 0;
 const char* given_filename = 0;
 const char* given_version = 0;
 
-typedef std::map<std::string, std::string> URI_TYPE;
+const char* num2prefix[] = {
 
-URI_TYPE option_uri;
+  SRCML_SRC_NS_PREFIX_DEFAULT,
+  SRCML_CPP_NS_PREFIX_DEFAULT,
+  SRCML_ERR_NS_PREFIX_DEFAULT,
+  SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT,
+  SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT,
+  SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT,
+};
+
+bool prefixchange[] = {
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+};
 
 // setup options and collect info from arguments
 int process_args(int argc, char* argv[]);
@@ -341,18 +365,17 @@ int main(int argc, char* argv[]) {
     }
   }
 
-  // start with the user defined options
-  URI_TYPE uri(option_uri.begin(), option_uri.end());
-
-  // fill in any missing standard prefixes
-  uri.insert(std::make_pair(SRCML_SRC_NS_URI, SRCML_SRC_NS_PREFIX_DEFAULT));
-  uri.insert(std::make_pair(SRCML_CPP_NS_URI, SRCML_CPP_NS_PREFIX_DEFAULT));
-  uri.insert(std::make_pair(SRCML_ERR_NS_URI, SRCML_ERR_NS_PREFIX_DEFAULT));
-  uri.insert(std::make_pair(SRCML_EXT_LITERAL_NS_URI, SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT));
-  uri.insert(std::make_pair(SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT));
-  uri.insert(std::make_pair(SRCML_EXT_MODIFIER_NS_URI, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT));
-
   // make sure user did not specify duplicate prefixes as an option
+  for (int i = 0; i < 6 - 1; ++i) {
+    for (int j = i + 1; j < 6; ++j)
+      if(strcmp(num2prefix[i], num2prefix[j]) == 0) {
+
+	std::cerr << NAME << ": Namespace conflict for prefix \'" << num2prefix[i] << "\'\n";
+	exit(STATUS_INVALID_OPTION_COMBINATION);
+      }
+  }
+
+  /*
   for (URI_TYPE::const_iterator po = uri.begin(); po != uri.end(); ++po) {
     URI_TYPE::const_iterator pi = po;
     ++pi;
@@ -374,6 +397,7 @@ int main(int argc, char* argv[]) {
       }
     }
   }
+  */
 
   // automatic interactive use from stdin (not on redirect or pipe)
   if (input_arg_count == 0 || strcmp(argv[input_arg_start], STDIN) == 0) {
@@ -387,23 +411,6 @@ int main(int argc, char* argv[]) {
   try {
 
     // convert from the map to an array to pass to the translator
-    enum { SRCML_SRC_NS_URI_POS, 
-       SRCML_CPP_NS_URI_POS,
-       SRCML_ERR_NS_URI_POS,
-       SRCML_EXT_LITERAL_NS_URI_POS,
-       SRCML_EXT_OPERATOR_NS_URI_POS,
-       SRCML_EXT_MODIFIER_NS_URI_POS,
-    };
-
-    const char* num2prefix[] = {
-
-      uri[SRCML_SRC_NS_URI].c_str(),
-      uri[SRCML_CPP_NS_URI].c_str(),
-      uri[SRCML_ERR_NS_URI].c_str(),
-      uri[SRCML_EXT_LITERAL_NS_URI].c_str(),
-      uri[SRCML_EXT_OPERATOR_NS_URI].c_str(),
-      uri[SRCML_EXT_MODIFIER_NS_URI].c_str(),
-    };
 
     // translator from input to output using determined language
     srcMLTranslator translator(language, src_encoding, xml_encoding, srcml_filename, options, given_directory, given_filename, given_version, num2prefix);
@@ -777,16 +784,18 @@ int process_args(int argc, char* argv[]) {
 
       char* embedded = extract_option(argv[curarg]);
 
-      std::string ns_prefix;
-      std::string ns_uri;
+      const char* ns_prefix;
+      const char* ns_uri;
 
       // filename is embedded parameter
       if (embedded) {
 
 	if (argv[curarg][strlen(XMLNS_FLAG)] != ':')
 	  ns_prefix = "";
-	else
-	  ns_prefix.assign(argv[curarg] + strlen(XMLNS_FLAG) + 1, embedded);
+	else {
+	  *embedded = '\0';
+	  ns_prefix = argv[curarg] + strlen(XMLNS_FLAG) + 1;
+	}
 
 	ns_uri = embedded + 1;
 	
@@ -800,7 +809,7 @@ int process_args(int argc, char* argv[]) {
 	if (strlen(argv[curarg]) == strlen(XMLNS_FLAG))
 	  ns_prefix = "";
 	else
-	  ns_prefix.assign(argv[curarg] + strlen(XMLNS_FLAG) + 1);
+	  ns_prefix = argv[curarg] + strlen(XMLNS_FLAG) + 1;
 
 	// uri is next argument
 	ns_uri = argv[++curarg];
@@ -808,43 +817,60 @@ int process_args(int argc, char* argv[]) {
 
       ++curarg;
      
+      /*
       // check for existing namespaces
       if (option_uri.count(ns_uri) > 0) {
 	  std::cerr << NAME << ": namespace listed more than once.\n";
 	  exit(STATUS_INVALID_LANGUAGE);
 	}
+      */
 
       // update the uri's
       // check for standard namespaces, store them, and update any flags
-      option_uri[ns_uri] = ns_prefix;
-      if (ns_uri == SRCML_SRC_NS_URI) {
+      if (strcmp(ns_uri, SRCML_SRC_NS_URI) == 0) {
 
-	  // default
+	num2prefix[SRCML_SRC_NS_URI_POS] = ns_prefix;
+	prefixchange[SRCML_SRC_NS_URI_POS] = true;
 
-      } else if (ns_uri == SRCML_CPP_NS_URI) {
+      } else if (strcmp(ns_uri, SRCML_CPP_NS_URI)) {
 
 	// specifying the cpp prefix automatically turns on preprocessor
 	options |= OPTION_CPP;
 
-      } else if (ns_uri == SRCML_ERR_NS_URI) {
+	num2prefix[SRCML_CPP_NS_URI_POS] = ns_prefix;
+	prefixchange[SRCML_CPP_NS_URI_POS] = true;
+
+      } else if (strcmp(ns_uri, SRCML_ERR_NS_URI)) {
 
 	// specifying the error prefix automatically turns on debugging
 	options |= OPTION_DEBUG;
 
-      } else if (ns_uri == SRCML_EXT_LITERAL_NS_URI) {
+	num2prefix[SRCML_ERR_NS_URI_POS] = ns_prefix;
+	prefixchange[SRCML_ERR_NS_URI_POS] = true;
+
+      } else if (strcmp(ns_uri, SRCML_EXT_LITERAL_NS_URI)) {
 
 	// specifying the literal prefix automatically turns on literal markup
 	options |= OPTION_LITERAL;
 
-      } else if (ns_uri == SRCML_EXT_OPERATOR_NS_URI) {
+	num2prefix[SRCML_EXT_LITERAL_NS_URI_POS] = ns_prefix;
+	prefixchange[SRCML_EXT_LITERAL_NS_URI_POS] = true;
+
+      } else if (strcmp(ns_uri, SRCML_EXT_OPERATOR_NS_URI)) {
 
 	// specifying the operator prefix automatically turns on operator markup
 	options |= OPTION_OPERATOR;
 
-      } else if (ns_uri == SRCML_EXT_MODIFIER_NS_URI) {
+	num2prefix[SRCML_EXT_OPERATOR_NS_URI_POS] = ns_prefix;
+	prefixchange[SRCML_EXT_OPERATOR_NS_URI_POS] = true;
+
+      } else if (strcmp(ns_uri, SRCML_EXT_MODIFIER_NS_URI)) {
 
 	// specifying the operator prefix automatically turns on type modifier markup
 	options |= OPTION_MODIFIER;
+
+	num2prefix[SRCML_EXT_MODIFIER_NS_URI_POS] = ns_prefix;
+	prefixchange[SRCML_EXT_MODIFIER_NS_URI_POS] = true;
 
       } else {
 	std::cerr << NAME << ": invalid namespace \"" << ns_uri << "\"\n\n"
