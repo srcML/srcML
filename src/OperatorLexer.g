@@ -107,51 +107,73 @@ ALLOPERATORS options { testLiterals = true; } :
 
 OPERATORS : 
         (
-        "!=" |    // not equal
-        '!'  |    // logical negation
+//        "!=" |    // not equal
+        '!' ('=' | )  |    // logical negation
+
         '$'  |    // not an operator (why is it here?)
-        "%=" |    // immediate modulus
-        '%'  |    // modulus 
+
+        '%' ('='| ) |    // immediate modulus
+//        '%'  |    // modulus 
+
         "&&" { $setText("&amp;&amp;"); } | // logical and
         "&=" { $setText("&amp;="); } | // immediate
         '&'  { $setText("&amp;"); $setType(MULTOPS); } |   // bitwise and / address of
-        "++" |    // increment
-        "+=" |    // immediate addition
-        '+'  |    // addition (binary and unary)
-        "--" |    // decrement (pre and post)
-        "-=" |    // immediate subtraction
-        '-'  |    // subtraction/unary minus
+
+//        "++" |    // increment
+//        "+=" |    // immediate addition
+        '+' ('+' | '=' | )  |    // addition (binary and unary)
+
+//        "--" |    // decrement (pre and post)
+//        "-=" |    // immediate subtraction
+        '-' ('-' | '=' |)  |    // subtraction/unary minus
+
         ("->*")=> "->*" { $setText("-&gt;*"); } |   // member pointer selector
         "->"  { $setText("-&gt;"); } |   // member access
-        "/=" |    // immediate division
-        '/'  |    // division
 
-        { inLanguage(LANGUAGE_JAVA) }?
-        ("<<<")=>
-        "<<<" { $setText("&lt;&lt;&lt;"); } |
+//        "/=" |    // immediate division
+        '/' ('=' | )  |    // division
 
-        ("<<=")=> "<<=" { $setText("&lt;&lt;="); } |    // immediate left shift
-        "<<" { $setText("&lt;&lt;"); } |                // left shift
-        "<=" { $setText("&lt;="); } |                   // less than or equal to
-        '<'  { $setText("&lt;"); $setType(TEMPOPS); } | // less than
+//        { inLanguage(LANGUAGE_JAVA) }?
+//        ("<<<")=>
+//        "<<<" { $setText("&lt;&lt;&lt;"); } |
+
+//        ("<<=")=> "<<=" { $setText("&lt;&lt;="); } |    // immediate left shift
+
+//        "<<" { $setText("&lt;&lt;"); } |                // left shift
+//        "<=" { $setText("&lt;="); } |                   // less than or equal to
+        '<' ( ('<' (
+                        { inLanguage(LANGUAGE_JAVA) }? '<' { $setText("&lt;&lt;&lt;"); } |
+                        '=' { $setText("&lt;&lt;="); } | { $setText("&lt;&lt;"); } ) 
+                ) | '=' { $setText("&lt;="); }
+            | { $setText("&lt;"); $setType(TEMPOPS); } )  | // less than
 
         "==" | // equals
         '=' { $setType(EQUAL); } |   // assignment
 
         (">>=")=> ">>=" { $setText("&gt;&gt;="); } |    // immediate right shift
-        ">>" { $setText("&gt;&gt;"); } |                // right shift
-        ">=" { $setText("&gt;="); } |                   // greater than or equal to
-        '>'  { $setText("&gt;"); $setType(TEMPOPE); } | // greater than
+
+//        ">>" { $setText("&gt;&gt;"); } |                // right shift
+//        ">=" { $setText("&gt;="); } |                   // greater than or equal to
+
+        '>' 
+            ('>' { $setText("&gt;&gt;"); } |
+             '=' { $setText("&gt;="); } | 
+             { $setText("&gt;"); $setType(TEMPOPE); }    
+            ) |
+
+// { $setText("&gt;"); $setType(TEMPOPE); } | // greater than
 
         '?'  | // part of ternary
 
         '\\' | // 
-        "^=" | // immediate bitwise exclusive or
-        '^'  | // bitwise exclusive or
 
-        "||" | // logical or
-        "|=" | // immediate bitwise inclusive or
-        '|'    // bitwise inclusive or
+//        "^=" | // immediate bitwise exclusive or
+        '^' ('=' | )  | // bitwise exclusive or
+
+//        "||" | // logical or
+//        "|=" | // immediate bitwise inclusive or
+        '|' ('|' | '=' | )    // bitwise inclusive or
+
         )
         { startline = false; }
 ;
