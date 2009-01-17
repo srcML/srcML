@@ -1,7 +1,7 @@
 /*
   srcMLOutput.cpp
 
-  Copyright (C) 2002-2006  SDML (www.sdml.info)
+  Copyright (C) 2002-2009  SDML (www.sdml.info)
 
   This file is part of the srcML translator.
 
@@ -19,7 +19,7 @@
   along with the srcML translator; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-  XML output
+  Output of the XML format based on srcMLParser
 */
 
 #include "srcMLOutput.h"
