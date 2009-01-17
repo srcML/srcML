@@ -106,7 +106,7 @@ void output_help(const char* name) {
 	      << "with support for creating compound srcML documents.\n\n"
 
 	      << "When no filenames are given read from standard input and write to standard output.\n"
-	      << "When only one filename is given write to standard output."  << '\n'
+	      << "When only one filename is given write to standard output.\n"
 	      << "An input filename of '-' also reads from standard input.\n\n"
 
 	      << "Options:\n"
