@@ -109,34 +109,35 @@ enum {
 
 // output help
 void output_help(const char* name) {
-    std::cout << "Usage: " << name << " [options] <infile>... <outfile>\n\n"
+  fprintf(stdout,
+	  "Usage: %s ( [options] <infile>... <outfile>\n\n"
 
-	      << "Translates source-code files into the XML source-code representation srcML\n"
-	      << "with support for creating compound srcML documents.\n\n"
+	  "Translates source-code files into the XML source-code representation srcML\n"
+	  "with support for creating compound srcML documents.\n\n"
 
-	      << "When no filenames are given read from standard input and write to standard output.\n"
-	      << "When only one filename is given write to standard output.\n"
-	      << "An input filename of '-' also reads from standard input.\n\n"
+	  "When no filenames are given read from standard input and write to standard output.\n"
+	  "When only one filename is given write to standard output.\n"
+	  "An input filename of '-' also reads from standard input.\n\n"
 
-	      << "Options:\n"
-              << std::left
-	      << "  " << HELP_FLAG_SHORT        << ", " << setw(COL) <<  HELP_FLAG
-	      << "display this help and exit\n"
-	      << "  " << VERSION_FLAG_SHORT     << ", " << setw(COL) <<  VERSION_FLAG
-	      << "display version number and exit\n\n"
+	  "Options:\n", name);
 
-	      << "  " << EXPRESSION_MODE_FLAG_SHORT    << ", " << setw(COL) <<  EXPRESSION_MODE_FLAG
-	      << "translates a single, individual expression outside of any statement\n\n"
+  fprintf(stdout, "  %s, %3s display this help and exit\n",      HELP_FLAG_SHORT, HELP_FLAG);
+  fprintf(stdout, "  %s, %3s display version number and exit\n", VERSION_FLAG_SHORT, VERSION_FLAG);
 
-	      << "  " << NESTED_FLAG_SHORT      << ", " << setw(COL) <<  NESTED_FLAG
-	      << "store all input source files in one compound srcML document\n"
-	      << "  " << FILELIST_FLAG_SHORT    << ", " << setw(COL) <<  FILELIST_FLAG
-	      << "treat input file as a list of source files for one compound srcML document\n\n"
+  fprintf(stdout, "  %s, %3s translates a single, individual expression outside of any statement\n",
+	  EXPRESSION_MODE_FLAG_SHORT, EXPRESSION_MODE_FLAG);
 
-	      << "  " << ENCODING_FLAG_SHORT    << ", " << setw(COL) <<  ENCODING_FLAG_FULL
-	      << "set the output XML encoding to ENC (default:  "
-	      << DEFAULT_XML_ENCODING << ") \n"
+  fprintf(stdout, "  %s, %3s store all input source files in one compound srcML document\n",
+	  NESTED_FLAG_SHORT, NESTED_FLAG);
+
+  fprintf(stdout, "  %s, %3s treat input file as a list of source files for one compound srcML document\n\n",
+	  FILELIST_FLAG_SHORT, FILELIST_FLAG);
+
+  fprintf(stdout, "  %s, %3s set the output XML encoding to ENC (default:  %s\n",
+	  ENCODING_FLAG_SHORT, ENCODING_FLAG, DEFAULT_XML_ENCODING);
+
 #ifdef LIBXML_ENABLED
+  std::cout   << std::left
 	      << "  " << TEXTENCODING_FLAG_SHORT        << ", " << setw(COL) <<  TEXTENCODING_FLAG_FULL
 	      << "set the input source encoding to ENC (default:  " << DEFAULT_TEXT_ENCODING << ") \n"
       /*
