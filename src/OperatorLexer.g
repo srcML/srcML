@@ -127,10 +127,13 @@ OPERATORS :
 
 //        "--" |    // decrement (pre and post)
 //        "-=" |    // immediate subtraction
-        '-' ('-' | '=' |)  |    // subtraction/unary minus
+//        '-' ('-' | '=' |)  |    // subtraction/unary minus
 
 //        ("->*")=> "->*" { $setText("-&gt;*"); } |   // member pointer selector
-        "->" ( '*' { $setText("-&gt;*"); } | { $setText("-&gt;"); } ) |   // member access
+
+        '-' ('-' | '=' |
+                '>' ( '*' { $setText("-&gt;*"); } | { $setText("-&gt;"); } ) | ) |   // member access
+
 
 //        "/=" |    // immediate division
         '/' ('=' | )  |    // division
