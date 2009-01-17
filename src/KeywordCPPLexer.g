@@ -101,11 +101,17 @@ public:
 bool onpreprocline;
 bool startline;
 
+struct pair { char const * const s; int n; };
+
+void fillliterals(const pair litarr[], unsigned int size) {
+
+    for (unsigned int i = 0; i < size; ++i)
+        literals[litarr[i].s] = litarr[i].n;
+}
+
 KeywordCPPLexer(std::istream& in, const char* encoding, int language = LANGUAGE_CXX)
 	: antlr::CharScanner(new UTF8CharBuffer(encoding, in),true), Language(language), onpreprocline(false), startline(true)
 {
-    struct pair { char const * const s; int n; };
-
     pair common[] = {
         { ")", RPAREN },
 	    { ";", TERMINATE },
@@ -143,8 +149,7 @@ KeywordCPPLexer(std::istream& in, const char* encoding, int language = LANGUAGE_
         { "enum", ENUM },
     };
 
-    for (unsigned int i = 0; i < sizeof(common) / sizeof(common[0]); ++i)
-             literals[common[i].s] = common[i].n;
+    fillliterals(common, sizeof(common) / sizeof(common[0]));
 
     // add all C and C++ specific keywords to the literals table
     if (inLanguage(LANGUAGE_C_FAMILY)) {
@@ -176,8 +181,8 @@ KeywordCPPLexer(std::istream& in, const char* encoding, int language = LANGUAGE_
             { "goto", GOTO },
 
         };
-        for (unsigned int i = 0; i < sizeof(cfamily) / sizeof(cfamily[0]); ++i)
-             literals[cfamily[i].s] = cfamily[i].n;
+
+        fillliterals(cfamily, sizeof(cfamily) / sizeof(cfamily[0]));
     }
 
     // add all C++ and Java specific keywords to the literals table
@@ -198,8 +203,8 @@ KeywordCPPLexer(std::istream& in, const char* encoding, int language = LANGUAGE_
 
             { "new", NEW },
         };
-        for (unsigned int i = 0; i < sizeof(language_oo) / sizeof(language_oo[0]); ++i)
-             literals[language_oo[i].s] = language_oo[i].n;
+
+        fillliterals(language_oo, sizeof(language_oo) / sizeof(language_oo[0]));
     }
 
     // add all C++ specific keywords to the literals table
@@ -235,8 +240,8 @@ KeywordCPPLexer(std::istream& in, const char* encoding, int language = LANGUAGE_
             { "volatile", VOLATILE },
         */
         };
-        for (unsigned int i = 0; i < sizeof(language_cxx_family) / sizeof(language_cxx_family[0]); ++i)
-             literals[language_cxx_family[i].s] = language_cxx_family[i].n;
+
+        fillliterals(language_cxx_family, sizeof(language_cxx_family) / sizeof(language_cxx_family[0]));
     }
 
     // add all C++ specific keywords to the literals table
@@ -249,8 +254,8 @@ KeywordCPPLexer(std::istream& in, const char* encoding, int language = LANGUAGE_
             { "concept_map", CONCEPTMAP },
             { "auto", AUTO },
         };
-        for (unsigned int i = 0; i < sizeof(language_cxx_0x) / sizeof(language_cxx_0x[0]); ++i)
-             literals[language_cxx_0x[i].s] = language_cxx_0x[i].n;
+
+        fillliterals(language_cxx_0x, sizeof(language_cxx_0x) / sizeof(language_cxx_0x[0]));
     }
 
     // add all Java specific keywords to the literals table
@@ -278,8 +283,8 @@ KeywordCPPLexer(std::istream& in, const char* encoding, int language = LANGUAGE_
 //            { "static", STATIC },
 
         };
-        for (unsigned int i = 0; i < sizeof(language_java) / sizeof(language_java[0]); ++i)
-             literals[language_java[i].s] = language_java[i].n;
+
+        fillliterals(language_java, sizeof(language_java) / sizeof(language_java[0]));
     }
 }
 
