@@ -22,12 +22,9 @@
   Main program to run the srcML translator.
 */
 
-#include <iostream>
-#include <iomanip>
 #include <fstream>
 #include <string>
 #include <cstring>
-#include <map>
 #include <sys/stat.h>
 #include "version.h"
 #include "srcmlapps.h"
@@ -95,8 +92,6 @@ const char FILELIST_COMMENT = '#';
 
 // split path into directory and filename
 char* split_path(char* path);
-
-using std::setw;
 
 enum {
   SRCML_SRC_NS_URI_POS, 
