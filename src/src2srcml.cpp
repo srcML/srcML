@@ -121,113 +121,111 @@ void output_help(const char* name) {
 
 	  "Options:\n", name);
 
-  fprintf(stdout, "  %s, %3s display this help and exit\n",      HELP_FLAG_SHORT, HELP_FLAG);
-  fprintf(stdout, "  %s, %3s display version number and exit\n", VERSION_FLAG_SHORT, VERSION_FLAG);
+  printf("  %s, %s display this help and exit\n",      HELP_FLAG_SHORT, HELP_FLAG);
+  printf("  %s, %s display version number and exit\n", VERSION_FLAG_SHORT, VERSION_FLAG);
 
-  fprintf(stdout, "  %s, %3s translates a single, individual expression outside of any statement\n",
+  printf("  %s, %s translates a single, individual expression outside of any statement\n",
 	  EXPRESSION_MODE_FLAG_SHORT, EXPRESSION_MODE_FLAG);
 
-  fprintf(stdout, "  %s, %3s store all input source files in one compound srcML document\n",
+  printf("  %s, %s store all input source files in one compound srcML document\n",
 	  NESTED_FLAG_SHORT, NESTED_FLAG);
 
-  fprintf(stdout, "  %s, %3s treat input file as a list of source files for one compound srcML document\n\n",
+  printf("  %s, %s treat input file as a list of source files for one compound srcML document\n\n",
 	  FILELIST_FLAG_SHORT, FILELIST_FLAG);
 
-  fprintf(stdout, "  %s, %3s set the output XML encoding to ENC (default:  %s\n",
+  printf("  %s, %s set the output XML encoding to ENC (default:  %s\n",
 	  ENCODING_FLAG_SHORT, ENCODING_FLAG, DEFAULT_XML_ENCODING);
 
 #ifdef LIBXML_ENABLED
-  std::cout   << std::left
-	      << "  " << TEXTENCODING_FLAG_SHORT        << ", " << setw(COL) <<  TEXTENCODING_FLAG_FULL
-	      << "set the input source encoding to ENC (default:  " << DEFAULT_TEXT_ENCODING << ") \n"
+  printf("  %s, %s set the input source encoding to ENC (default:  %s\n\n",
+	  TEXTENCODING_FLAG_SHORT, TEXTENCODING_FLAG, DEFAULT_TEXT_ENCODING);
+
       /*
 	      << "  " << SKIP_ENCODING_FLAG_SHORT        << ", " << setw(COL) <<  SKIP_ENCODING_FLAG
 	      << "store the text without any text encoding changes" << "\n"
       */
 #endif
-	      << '\n'
-	      << "  " << setw(COL) <<  XMLNS_DEFAULT_FLAG_FULL << "    "
-	      << "set the default namespace URI\n"
-	      << "      " << setw(COL) << " " << "(default:  xmlns=\"" << SRCML_SRC_NS_URI << "\")\n"
-	      << "  " << setw(COL) <<  XMLNS_FLAG_FULL << "    "
-	      << "set the namespace PREFIX for the namespace URI\n"
-	      << "      " << setw(COL) << " " << "(defaults:  xmlns:cpp=\"" << SRCML_CPP_NS_URI << "\",\n"
-	      << "                          " << "            xmlns:srcerr=\"" << SRCML_ERR_NS_URI << "\")\n\n"
+  printf("  %s set the default namespace URI\n", XMLNS_DEFAULT_FLAG_FULL);
+  printf("        (default:  xmlns=\"%s\")\n", SRCML_SRC_NS_URI);
 
-	      << "  " << NO_XML_DECLARATION_FLAG  << "    " 
-	      << "do not output the default XML declaration\n"
-	      << "  " << NO_NAMESPACE_DECLARATION_FLAG  << "     " 
-	      << "do not output any namespace declarations\n\n"
+  printf("  %s set the namespace PREFIX for the namespace URI\n", XMLNS_FLAG_FULL);
+  printf("        (defaults:  xmlns:cpp=\"%s\"\n", SRCML_CPP_NS_URI);
+  printf("        (defaults:  xmlns:srcerr=\"%s\"\n", SRCML_ERR_NS_URI);
+
+  printf("  %s	do not output the default XML declaration\n", NO_XML_DECLARATION_FLAG);
+  printf("  %s	do not output any namespace declarations\n\n", NO_NAMESPACE_DECLARATION_FLAG);
 
 #ifdef LIBXML_ENABLED
-	      << "  " << COMPRESSED_FLAG_SHORT  << ", " << setw(COL) <<  COMPRESSED_FLAG
-	      << "output in gzip format\n"
+  printf("  %s, %s output in gzip format\n", COMPRESSED_FLAG_SHORT, COMPRESSED_FLAG);
 #endif
-	      << "  " << INTERACTIVE_FLAG_SHORT << ", " << setw(COL) <<  INTERACTIVE_FLAG
-	      << "low-latency output\n"
-	      << "  " << DEBUG_FLAG_SHORT       << ", " << setw(COL) <<  DEBUG_FLAG
-	      << "markup translation errors in namespace \"" << SRCML_ERR_NS_URI << "\"\n"
-              << "  " << VERBOSE_FLAG_SHORT     << ", " << setw(COL) << VERBOSE_FLAG
-	      << "verbose output to standard error\n\n"
 
-	      << "Metadata Options:\n\n"
+  printf("  %s, %s low-latency output\n", INTERACTIVE_FLAG_SHORT, INTERACTIVE_FLAG);
 
-	      << "  " << LANGUAGE_FLAG_SHORT    << ", " << setw(COL) << LANGUAGE_FLAG_FULL 
-	      << "set the language to " << LANGUAGE_C << ", " << LANGUAGE_CXX << " (default), " << LANGUAGE_JAVA << ", or " << LANGUAGE_ASPECTJ << "\n"
-	      << "  " << DIRECTORY_FLAG_SHORT   << ", " << setw(COL) <<  DIRECTORY_FLAG_FULL
-	      << "set the directory attribute to DIR\n"
-	      << "  " << FILENAME_FLAG_SHORT    << ", " << setw(COL) <<  FILENAME_FLAG_FULL
-	      << "set the filename attribute to FILE\n"
-	      << "  " << SRCVERSION_FLAG_SHORT  << ", " << setw(COL) <<  SRCVERSION_FLAG_FULL
-	      << "set the version attribute to VER\n\n"
+  printf("  %s, %s markup translation errors in namespace \"%s\"\n",
+	  DEBUG_FLAG_SHORT, DEBUG_FLAG, SRCML_ERR_NS_URI);
+
+  printf("  %s, %s verbose output to standard error\n\n", VERBOSE_FLAG_SHORT, VERBOSE_FLAG);
+
+  printf("Metadata Options:\n\n");
+
+  printf("  %s, %s set the language to %s, %s (default), %s, or %s\n",
+	 LANGUAGE_FLAG_SHORT, LANGUAGE_FLAG_FULL,
+	 LANGUAGE_C, LANGUAGE_CXX, LANGUAGE_JAVA, LANGUAGE_ASPECTJ);
+
+  printf("  %s, %s set the directory attribute to DIR\n",
+	 DIRECTORY_FLAG_SHORT, DIRECTORY_FLAG_FULL);
+
+  printf("  %s, %s set the filename attribute to FILE\n",
+	 FILENAME_FLAG_SHORT, FILENAME_FLAG_FULL);
+
+  printf("  %s, %s set the version attribute to VER\n\n",
+	 SRCVERSION_FLAG_SHORT, SRCVERSION_FLAG_FULL);
+
       /*
 	      << "  " << SELF_VERSION_FLAG <<  "  " << "        "
 	      << "set the version attribute to the src2srcml version\n"
       */
 
-	      << "Markup Extensions\n\n:"
+  printf("Markup Extensions:\n\n");
 
-	      << "  " << LITERAL_FLAG   << "  " << /* setw(COL) <<*/ "             "
-	      << "markup literal values in namespace \"" << SRCML_EXT_LITERAL_NS_URI << "\"\n"
-	      << "  " << OPERATOR_FLAG  << " " << /* setw(COL) <<*/ "             "
-	      << "markup operators in namespace \"" << SRCML_EXT_OPERATOR_NS_URI << "\"\n"
-	      << "  " << MODIFIER_FLAG  << " " << /* setw(COL) <<*/ "             "
-	      << "markup type modifiers in namespace \"" << SRCML_EXT_MODIFIER_NS_URI << "\"\n"
-              << '\n'
-	      << "CPP Markup Options:\n\n"
+  printf("  %s markup literal values in namespace \"%s\"\n",
+	 LITERAL_FLAG, SRCML_EXT_LITERAL_NS_URI);
 
-	      << "  " << CPP_MARKUP_ELSE_FLAG   << "  " << /* setw(COL) <<*/ "     "
-	      << "markup cpp #else regions (default)\n"
-	      << "  " << CPP_TEXTONLY_ELSE_FLAG     << "  " << /* setw(COL) <<*/ "       "
-	      << "leave cpp #else regions as text\n\n"
+  printf("  %s markup operators in namespace \"%s\"\n",
+	 OPERATOR_FLAG, SRCML_EXT_OPERATOR_NS_URI);
 
-	      << "  " << CPP_MARKUP_IF0_FLAG   << "  " << /* setw(COL) <<*/ "      "
-	      << "markup cpp #if 0 regions\n"
-	      << "  " << CPP_TEXTONLY_IF0_FLAG     << "  " << /* setw(COL) <<*/ "        "
-	      << "leave cpp #if 0 regions as text (default)\n\n"
+  printf("  %s markup type modifiers in namespace \"%s\"\n",
+	 MODIFIER_FLAG, SRCML_EXT_MODIFIER_NS_URI);
 
-	      << "Examples:  \n"
-	      << "  " << name << "                " << GAP
-	      << "(read from standard input, write to standard output)\n"
-	      << "  " << name << " m.cpp          " << GAP
-	      << "(read from file m.cpp, write to standard output)\n"
-	      << "  " << name << " m.cpp m.cpp.xml" << GAP
-	      << "(read from file m.cpp, write to file m.cpp.xml)\n"
-	      << "  " << name << " -              " << GAP
-	      << "(read from standard input, write to standard output)\n"
-	      << "  " << name << " - m.cpp.xml    " << GAP
-	      << "(read from standard input, write to file m.cpp.xml)\n"
-	      << "  " << name << " --directory=src --filename=m.cpp - m.cpp.xml "
-	      << "(element unit attributes dir \"src\", filename \"m.cpp\")\n"
+  printf("\nCPP Markup Options:\n\n");
+
+  printf("  %s  markup cpp #else regions (default)\n", CPP_MARKUP_ELSE_FLAG);
+  printf("  %s  leave cpp #else regions as text\n\n", CPP_TEXTONLY_ELSE_FLAG);
+
+  printf("  %s  markup cpp #if 0 regions\n", CPP_MARKUP_IF0_FLAG);
+  printf("  %s  leave cpp #if 0 regions as text (default)\n\n", CPP_TEXTONLY_IF0_FLAG);
+
+  printf("Examples:  \n");
+
+  printf("  %1s                (read from standard input, write to standard output)\n"
+	 "  %1s m.cpp          (read from file m.cpp, write to standard output)\n"
+	 "  %1s m.cpp m.cpp.xml (read from file m.cpp, write to file m.cpp.xml)\n"
+	 "  %1s -              (read from standard input, write to standard output)\n"
+	 "  %1s - m.cpp.xml    (read from standard input, write to file m.cpp.xml)\n"
+	 "  %1s --directory=src --filename=m.cpp - m.cpp.xml "
+	 "(element unit attributes dir \"src\", filename \"m.cpp\")\n"
+
 #ifdef LIBXML_ENABLED
-	      << "  " << name << " --src-encoding=UTF-8 m.cpp m.cpp.xml         "
-	      << "(encoding of input text file is UTF-8)\n"
-#endif
-	      << "  " << name << " --xml-encoding=ISO-8859-1 m.cpp m.cpp.xml    "
-	      << "(set encoding of srcML file to ISO-8859-1)\n\n"
 
-	      << "www.sdml.info\n"
-	      << "Report bugs to " << EMAIL_ADDRESS << '\n';
+	 "  %1s --src-encoding=UTF-8 m.cpp m.cpp.xml         "
+	 "(encoding of input text file is UTF-8)\n"
+#endif
+
+	 "  %s --xml-encoding=ISO-8859-1 m.cpp m.cpp.xml    "
+	 "(set encoding of srcML file to ISO-8859-1)\n\n", name);
+
+  printf("www.sdml.info\n"
+	 "Report bugs to %s\n", EMAIL_ADDRESS);
 }
 
 // output version message
