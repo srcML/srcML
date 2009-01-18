@@ -361,7 +361,10 @@ int main(int argc, char* argv[]) {
     for (int j = i + 1; j < 6; ++j)
       if(strcmp(num2prefix[i], num2prefix[j]) == 0) {
 
-	fprintf(stderr, "%s: Namespace conflict for prefix \'%s\'\n", NAME, num2prefix[i]);
+	if (num2prefix[i] == '\0')
+	  fprintf(stderr, "%s: Namespace conflict for default prefix\n", NAME);
+	else
+	  fprintf(stderr, "%s: Namespace conflict for prefix \'%s\'\n", NAME, num2prefix[i]);
 	exit(STATUS_INVALID_OPTION_COMBINATION);
       }
   }
