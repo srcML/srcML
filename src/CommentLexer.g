@@ -36,22 +36,42 @@ options {
     k = 2;
 }
 
+tokens {
+
+    COMMENT_START;
+}
+
 {
     #include "PureCommentLexer.hpp"
 }
 
 // Single-line comments (no EOL)
 LINECOMMENT_START
-    :   "//"  { 
+    :   '/' ('/' { 
 
             selector->push("text"); 
             ((PureCommentLexer* ) (selector->getStream("text")))->init(LINECOMMENT_END, onpreprocline);
 
             // when we return, we may have eaten the EOL, so we will turn back on startline
             startline = true;
-        }
-;
+            } |
+            '*'
+            { 
+                $setType(COMMENT_START);
 
+                selector->push("text"); 
+                ((PureCommentLexer* ) (selector->getStream("text")))->init(COMMENT_END, onpreprocline);
+
+                // comment are removed before includes are processed, so we are at the start of a line
+                startline = true;
+            } |
+
+            '=' { $setType(OPERATORS); } |
+
+            { $setType(OPERATORS); }
+        )
+;
+/*
 COMMENT_START
     :   "/*" { 
 
@@ -62,3 +82,4 @@ COMMENT_START
             startline = true;
         }
 ;
+*/

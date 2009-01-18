@@ -136,7 +136,7 @@ OPERATORS :
 
 
 //        "/=" |    // immediate division
-        '/' ('=' | )  |    // division
+//        '/' ('=' | )  |    // division
 
 //        { inLanguage(LANGUAGE_JAVA) }?
 //        ("<<<")=>
