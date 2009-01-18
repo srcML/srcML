@@ -124,27 +124,20 @@ void output_help(const char* name) {
 	       << "display most metadata (except nested unit count) and exit\n"
 	       << "  " << LONG_INFO_FLAG_SHORT  << ", " << setw(COL) << LONG_INFO_FLAG
 	       << "display all metadata (including nested unit count) and exit\n\n"
-	       << "Examples:  \n"
-	       << "  " << name << "                       (read from standard input, write to standard output)\n"
+	       << "Examples:  \n";
 
-	       << "  " << name << " main.cpp.xml          (read from file main.cpp.xml, write to standard output)\n"
+     printf("  %1$s                       (read from standard input, write to standard output)\n"
+	    "  %1$s main.cpp.xml          (read from file main.cpp.xml, write to standard output)\n"
+	    "  %1$s main.cpp.xml main.cpp (read from file main.cpp.xml, write to file main.cpp)\n"
+	    "  %1$s -                     (read from standard input, write to standard output)\n"
+	    "  %1$s - main.cpp            (read from standard input, write to file main.cpp)\n"
+	    "  %1$s --language            (read from standard input, output language attribute)\n"
+	    "  %1$s --directory           (read from standard input, output directory attribute)\n"
+	    "  %1$s --filename            (read from standard input, output filename attribute)\n"
+	    "  %1$s --src-version         (read from standard input, output version attribute)\n\n", name);
 
-	       << "  " << name << " main.cpp.xml main.cpp (read from file main.cpp.xml, write to file main.cpp)\n"
-
-	       << "  " << name << " -                     (read from standard input, write to standard output)\n"
-
-	       << "  " << name << " - main.cpp            (read from standard input, write to file main.cpp)\n"
-
-	       << "  " << name << " --language            (read from standard input, output language attribute)\n"
-
-	       << "  " << name << " --directory           (read from standard input, output directory attribute)\n"
-
-	       << "  " << name << " --filename            (read from standard input, output filename attribute)\n"
-
-	       << "  " << name << " --src-version         (read from standard input, output version attribute)\n\n"
-
-	       << "www.sdml.info\n"
-               << "Report bugs to " << EMAIL_ADDRESS << '\n';
+     printf("www.sdml.info\n"
+            "Report bugs to %s\n", EMAIL_ADDRESS);
 }
 
 // output version message
@@ -354,7 +347,7 @@ int main(int argc, char* argv[]) {
 
       // validate range of unit number
       if (unit <= 0) {
-	std::cerr << NAME << ": unit option value \"" << unit << "\" must be > 0.\n";
+	fprintf(stderr, "%s: unit option value \"%d\" must be > 0.\n", NAME, unit);
 	exit(STATUS_UNIT_INVALID);
       }
     }
