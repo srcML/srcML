@@ -143,8 +143,8 @@ void output_help(const char* name) {
 // output version message
 void output_version(const char* name) {
 
-    std::cout << name << " Version " << VERSION << '\n'
-	      << COPYRIGHT << '\n';
+  printf("%s Version %s\n"
+	 "%s\n", name, VERSION, COPYRIGHT);
 }
 
 int options = OPTION_XMLDECL | OPTION_NAMESPACEDECL;
@@ -308,7 +308,7 @@ int main(int argc, char* argv[]) {
 
       // check for namespace flag with missing namespace
       } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
-	std::cerr << NAME << ": namespace option selected but no namespace specified.\n";
+	fprintf(stderr, "%s: namespace option selected but no namespace specified.\n", NAME);
 	exit(STATUS_UNIT_MISSING);
       } else {
 	ns.push_back(argv[(++curarg)++]);
@@ -330,7 +330,7 @@ int main(int argc, char* argv[]) {
 
       // check for unit flag with missing, separate unit number
       } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
-	std::cerr << NAME << ": unit option selected but no number specified.\n";
+	fprintf(stderr, "%s: unit option selected but no number specified.\n", NAME);
 	exit(STATUS_UNIT_MISSING);
       } else {
 	value = argv[(++curarg)++];
@@ -341,7 +341,7 @@ int main(int argc, char* argv[]) {
 
       // validate type of unit number
       if (errno == EINVAL || strlen(end) == strlen(value)) {
-	std::cerr << NAME << ": unit option value \"" <<  value << "\" must be numeric.\n";
+	fprintf(stderr, "%s: unit option value \"%s\" must be numeric.\n", NAME, value);
 	exit(STATUS_UNIT_INVALID);
       }
 
@@ -367,7 +367,7 @@ int main(int argc, char* argv[]) {
 
       // check for text encoding flag with missing text encoding
       } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
-	std::cerr << NAME << ": text encoding selected but not specified.\n";
+	fprintf(stderr, "%s: text encoding selected but not specified.\n", NAME);
 	exit(STATUS_SRCENCODING_MISSING);
       } else {
 
@@ -377,7 +377,7 @@ int main(int argc, char* argv[]) {
 
       // validate source encoding
       if (!srcMLUtility::checkEncoding(src_encoding)) {
-	std::cerr << NAME << ": text encoding \"" << src_encoding << "\" is not supported.\n";
+	fprintf(stderr, "%s: text encoding \"%s\" is not supported.\n", NAME, src_encoding);
 	exit(STATUS_UNKNOWN_ENCODING);
       }
 #else
@@ -393,8 +393,8 @@ int main(int argc, char* argv[]) {
     // invalid option
     } else {
 
-      std::cerr << NAME << ": unrecognized option '" << argv[curarg] << "'\n";
-      std::cerr << "try '" << NAME << " " << HELP_FLAG << "' for more information." << "\n";
+      fprintf(stderr, "%s: unrecognized option '%s'\n", NAME, argv[curarg]);
+      fprintf(stderr, "try '%s %s' for more information.\n", NAME, HELP_FLAG);
       exit(STATUS_UNKNOWN_OPTION);
     }
   }
@@ -418,8 +418,8 @@ int main(int argc, char* argv[]) {
 
   } else if (argc > curarg + 1) {
 
-      std::cerr << NAME << ": More than one output file specified.\n"
-		<< "try '" << NAME << " --help' for more information." << "\n";
+      fprintf(stderr, "%1$s: More than one output file specified.\n"
+	              "try '%1$s --help' for more information.\n", NAME);
       exit(0);
   }
 
@@ -440,7 +440,7 @@ int main(int argc, char* argv[]) {
   // xml output and src-encoding (switch to encoding?)
   if (isoption(options, OPTION_XML) && isoption(options, OPTION_TEXT_ENCODING)) {
 
-    std::cerr << NAME << ": Options for xml output and specifying source encoding are incompatible.\n";
+    fprintf(stderr, "%s: Options for xml output and specifying source encoding are incompatible.\n", NAME);
     exit(STATUS_INVALID_OPTION_COMBINATION);
   }
 
@@ -457,7 +457,7 @@ int main(int argc, char* argv[]) {
   struct stat instat;
   int result = stat(filename, &instat);
   if (filename[0] != '-' && result == -1) {
-    std::cerr << NAME << ": Problem with Input file '" << filename << "'\n";
+    fprintf(stderr, "%s: Problem with Input file '%s'\n", NAME, filename);
     exit(STATUS_INPUTFILE_PROBLEM);
   }
 
@@ -465,8 +465,7 @@ int main(int argc, char* argv[]) {
   struct stat outstat;
   stat(ofilename, &outstat);
   if (instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
-    std::cerr << NAME << ": Input file '" << filename << "'"
-	      << " is the same as the output file '" << ofilename << "'\n";
+    fprintf(stderr, "%s: Input file '%s' is the same as the output file '%s'\n", NAME, filename, ofilename);
     exit(STATUS_INPUTFILE_PROBLEM);
   }
 
@@ -498,7 +497,7 @@ int main(int argc, char* argv[]) {
 
 	const PROPERTIES_TYPE& ns = su.getNS();
 	for (PROPERTIES_TYPE::const_iterator iter = ns.begin(); iter != ns.end(); ++iter)
-	  std::cout << iter->second << "=\"" << iter->first << "\"" << std::endl;
+	  printf("%s=\"%s\"\n", iter->second.c_str(), iter->first.c_str());
       }
 
       // output get attributes in order specified
@@ -536,15 +535,15 @@ int main(int argc, char* argv[]) {
 	const char* l = su.attribute(attribute_name);
 	if (l) {
 	  if (optioncount == 1)
-	    std::cout << l << '\n';
+	    printf("%s\n", l);
 	  else
-	    std::cout << attribute_title << "\"" << l << "\"\n";
+	    printf("%s=\"%s\"\n", attribute_title, l);
 	}
       }
 
       if (isoption(options, OPTION_LONG_INFO)) {
 	if (!isoption(options, OPTION_UNIT))
-	  std::cout << "nested=\"" << su.curunits() << "\"\n";
+	  printf("nested=\"%d\"\n", su.curunits());
       }
 
     // namespace
@@ -557,12 +556,12 @@ int main(int argc, char* argv[]) {
 	const char* prefix = su.namespace_ext(*iter);
 	if (prefix) {
 	  if (ns.size() == 1)
-	    std::cout << prefix << '\n';
+	    printf("%s\n", prefix);
 	  else {
-	    std::cout << "xmlns";
+	    printf("xmlns");
 	    if (prefix[0] != '\0')
-	      std::cout << ":" << prefix;
-	    std::cout << "=\"" << *iter << "\"\n";
+	      printf(":%s", prefix);
+	    printf("=\"%s\"\n", *iter);
 	  }
 	}
       }
@@ -573,7 +572,7 @@ int main(int argc, char* argv[]) {
       // gracefully finish current file in compound document mode
       pstd::signal(SIGINT, terminate_handler);
 
-      std::cout << su.unit_count() << '\n';
+      printf("%d\n", su.unit_count());
 
       // if we terminated early, output the correct status
       if (isoption(options, OPTION_TERMINATE))
@@ -622,12 +621,12 @@ int main(int argc, char* argv[]) {
 
     if (error.getErrorNum() == 0) {
       exit_status = STATUS_INPUTFILE_PROBLEM;
-      std::cerr << NAME << ": " << "Unable to open input file as XML\n";
+      fprintf(stderr, "%s: Unable to open input file as XML\n", NAME);
     }
 
   } catch (const char* s) {
     
-    std::cerr << NAME << ": " << s << "\n";
+    fprintf(stderr, "%s: %s\n", NAME, s);
     if (!exit_status)
       exit_status = STATUS_ERROR;
   } catch (...) {
