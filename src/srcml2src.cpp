@@ -502,6 +502,7 @@ int main(int argc, char* argv[]) {
       // output all the namespaces
       if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {
 
+	printf("\r");
 	const PROPERTIES_TYPE& ns = su.getNS();
 	for (PROPERTIES_TYPE::const_iterator iter = ns.begin(); iter != ns.end(); ++iter)
 	  printf("%s=\"%s\"\n", iter->second.c_str(), iter->first.c_str());
