@@ -297,7 +297,7 @@ int main(int argc, char* argv[]) {
   // skip encoding and specifying encoding
   if (isoption(options, OPTION_SKIP_ENCODING) && isoption(options, OPTION_TEXT_ENCODING)) {
 
-    std::cerr << NAME << ": Options for skipping encoding and specifying source encoding are incompatible.\n";
+    fprintf(stderr, "%: Options for skipping encoding and specifying source encoding are incompatible.\n", NAME);
     exit(STATUS_INVALID_OPTION_COMBINATION);
   }
   */
@@ -613,7 +613,7 @@ int process_args(int argc, char* argv[]) {
       options |= OPTION_COMPRESSED;
       if (position == original_position) ++curarg;
 #else
-      std::cerr << NAME << ": The compression option, i.e., " << COMPRESSED_FLAG << ", is only supported in the libxml version.\n";
+      fprintf(stderr, "%s: The compression option, i.e., %s, is only supported in the libxml version.\n", NAME, COMPRESSED_FLAG);
       exit(STATUS_LIBXML2_FEATURE);
 #endif
     }
@@ -787,14 +787,6 @@ int process_args(int argc, char* argv[]) {
       }
 
       ++curarg;
-     
-      /*
-      // check for existing namespaces
-      if (option_uri.count(ns_uri) > 0) {
-	  std::cerr << NAME << ": namespace listed more than once.\n";
-	  exit(STATUS_INVALID_LANGUAGE);
-	}
-      */
 
       // update the uri's
       // check for standard namespaces, store them, and update any flags
@@ -923,7 +915,7 @@ int process_args(int argc, char* argv[]) {
 	exit(STATUS_UNKNOWN_ENCODING);
       }
 #else
-      std::cerr << NAME << ": The source encoding option, i.e., " << TEXTENCODING_FLAG << ", is only supported in the libxml version.\n";
+      fprintf(stderr, "%s: The source encoding option, i.e., %s, is only supported in the libxml version.\n", NAME, TEXTENCODING_FLAG);
       exit(STATUS_LIBXML2_FEATURE);
 #endif
     }
