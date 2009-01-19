@@ -102,6 +102,15 @@ enum {
   SRCML_EXT_MODIFIER_NS_URI_POS,
 };
 
+char const * const num2uri[] = {
+  SRCML_SRC_NS_URI,
+  SRCML_CPP_NS_URI,
+  SRCML_ERR_NS_URI,
+  SRCML_EXT_LITERAL_NS_URI,
+  SRCML_EXT_OPERATOR_NS_URI,
+  SRCML_EXT_MODIFIER_NS_URI,
+};
+
 // output help
 void output_help(const char* name) {
   fprintf(stdout,
@@ -361,10 +370,13 @@ int main(int argc, char* argv[]) {
     for (int j = i + 1; j < 6; ++j)
       if(strcmp(num2prefix[i], num2prefix[j]) == 0) {
 
-	if (num2prefix[i] == '\0')
+	if (num2prefix[i] == '\0') {
 	  fprintf(stderr, "%s: Namespace conflict for default prefix\n", NAME);
-	else
+	} else {
 	  fprintf(stderr, "%s: Namespace conflict for prefix \'%s\'\n", NAME, num2prefix[i]);
+	}
+	fprintf(stderr, "Prefix URI conflicts:\n  %s\n  %s\n", num2uri[i], num2uri[j]);
+
 	exit(STATUS_INVALID_OPTION_COMBINATION);
       }
   }
