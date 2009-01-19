@@ -356,7 +356,8 @@ void srcMLOutput::processText(const std::string& str) {
 }
 
 void srcMLOutput::processText(const antlr::RefToken& token) {
-  processText(token->getText());
+
+  xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) token->getText().data(), token->getText().size());
 }
 
 void srcMLOutput::processEscape(const antlr::RefToken& token) {
