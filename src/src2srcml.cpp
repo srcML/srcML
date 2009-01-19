@@ -837,14 +837,13 @@ int process_args(int argc, char* argv[]) {
 
       } else {
 	fprintf(stderr, "%s: invalid namespace \"%s\"\n\n"
-		"Namespace URI must be on of the following:  \n\n"
-		"\t%s\t\tprimary srcML namespace\n"
-		"\t%s\t\tnamespace for cpreprocessing elements\n"
-		"\t%s\tnamespace for srcML debugging elements\n\n"
-	        "or an extension namespace:\n\n"
-		"\t%s\toptional literal elements\n"
-		"\t%s\toptional operator element\n"
-		"\t%s\toptional modifier element\n\n",
+		"Namespace URI must be on of the following:  \n"
+		"  %-35s primary srcML namespace\n"
+		"  %-35s namespace for cpreprocessing elements\n"
+		"  %-35s namespace for srcML debugging elements\n"
+		"  %-35s namespace for optional literal elements\n"
+		"  %-35s namespace for optional operator element\n"
+		"  %-35s namespace for optional modifier element\n",
 		NAME, ns_uri,
 		SRCML_SRC_NS_URI, SRCML_CPP_NS_URI, SRCML_ERR_NS_URI,
 		SRCML_EXT_LITERAL_NS_URI, SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_MODIFIER_NS_URI
