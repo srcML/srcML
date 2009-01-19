@@ -63,6 +63,6 @@ namespace SAX2CountUnits {
 
     // output file status message if in verbose mode
     if (pstate->verbose)
-      std::cerr << '\r' << std::setw(5) << pstate->count;
+      fprintf(stderr, "\r%5ld", pstate->count);
   }
 };

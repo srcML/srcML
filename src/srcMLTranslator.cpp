@@ -22,7 +22,7 @@
   Class for straightforward translation from source code to srcML
 */
 
-#include <iostream>
+#include <cstdio>
 #include <fstream>
 #include "srcMLTranslator.h"
 #include "KeywordCPPLexer.hpp"
@@ -100,10 +100,10 @@ void srcMLTranslator::translate(const char* src_filename, const char* unit_direc
       throw FileError();
 
   } catch (const std::exception& e) {
-      std::cerr << "SRCML Exception: " << e.what() << std::endl;
+    fprintf(stderr, "SRCML Exception: %s\n", e.what());
   }
   catch (...) {
-      std::cerr << "ERROR" << std::endl;
+    fprintf(stderr, "ERROR\n");
   }
 }
 

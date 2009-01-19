@@ -51,7 +51,7 @@ namespace SAX2ExtractRootSrc {
 						   pstate->handler, 
 						   isoption(*(pstate->poptions), OPTION_COMPRESSED) ? 1 : 0);
     if (pstate->output == NULL) {
-      std::cerr << "Output buffer error" << std::endl;
+      fprintf(stderr, "Output buffer error\n");
       xmlStopParser(pstate->ctxt);
     }
 

@@ -369,30 +369,6 @@ int main(int argc, char* argv[]) {
       }
   }
 
-  /*
-  for (URI_TYPE::const_iterator po = uri.begin(); po != uri.end(); ++po) {
-    URI_TYPE::const_iterator pi = po;
-    ++pi;
-    for ( ; pi != uri.end(); ++pi) {
-      if (pi->second == po->second) {
-	std::cerr << NAME << ": Namespace conflict for prefix \'" << po->second << "\' for the namespaces:\n";
-
-        std::cerr << "\t" << pi->first;
-	if (!option_uri.count(pi->first))
-	  std::cerr << " (default)";
-	std::cerr << '\n';
-
-        std::cerr << "\t" << po->first;
-	if (!option_uri.count(po->first))
-	  std::cerr << " (default)";
-	std::cerr << '\n';
-
-	exit(STATUS_INVALID_OPTION_COMBINATION);
-      }
-    }
-  }
-  */
-
   // automatic interactive use from stdin (not on redirect or pipe)
   if (input_arg_count == 0 || strcmp(argv[input_arg_start], STDIN) == 0) {
 
