@@ -73,3 +73,17 @@ void collect_namespaces(int nb_namespaces, const xmlChar** namespaces, PROPERTIE
     pos->second.assign(xmlnsprefix((const char*) namespaces[index]));
   }
 }
+
+// collect namespaces
+void collect_anothernamespaces(int nb_namespaces, const xmlChar** namespaces, PROPERTIES_TYPE& nsv) {
+
+  for (int i = 0, index = 0; i < nb_namespaces; ++i, index += 2) {
+
+    const char* uri = (const char*) namespaces[index + 1];
+    PROPERTIES_TYPE::iterator pos = find(nsv, uri);
+    if (pos == nsv.end())
+      pos = nsv.insert(pos, PROPERTIES_TYPE::value_type(uri, ""));
+
+    pos->second.assign(xmlnsprefix((const char*) namespaces[index]));
+  }
+}

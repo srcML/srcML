@@ -352,7 +352,7 @@ const char* srcMLOutput::type2name(int token_type) const {
 // output text
 void srcMLOutput::processText(const std::string& str) {
 
-  xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) str.c_str(), str.size());
+  xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) str.data(), str.size());
 }
 
 void srcMLOutput::processText(const antlr::RefToken& token) {
