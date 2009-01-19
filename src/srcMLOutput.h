@@ -82,9 +82,9 @@ class srcMLOutput : public srcMLParserTokenTypes {
 
   int consume_next();
 
-  const char* type2name(int token_type) const;
+  inline const char* type2name(int token_type) const;
 
-  const char* token2name(const antlr::RefToken& token) const;
+  inline const char* token2name(const antlr::RefToken& token) const;
 
   void outputToken(const antlr::RefToken& token);
 
