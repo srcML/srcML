@@ -38,24 +38,25 @@ const int EXPAND_DIR_PERM = S_IRWXU | S_IRWXG;
 
 using namespace SAX2ExtractUnitsSrc;
 
-static int mkpath(const char* path
+static int mkpath(char* path
 #ifdef __GNUC__		   
 		   , mode_t mode
 #endif		   
 		   ) {
 
-  for (char* c = const_cast<char*>(path); *c; ++c) {
+  for (char* c = path; *c; ++c) {
 
     // make the directory path so far
     if (*c == '/') {
 
       *c = '\0';
 
+      int ret = mkdir(path
 #ifdef __GNUC__		   
-      int ret = mkdir(path, mode);
-#else
-      int ret = mkdir(path);
+		      , mode
 #endif		   
+		      );
+
       if (ret != 0 && errno != EEXIST)
 	return ret;
 
@@ -63,12 +64,7 @@ static int mkpath(const char* path
     }
   }
 
-  // make the directory path if there is one
-#ifdef __GNUC__		   
-  return mkdir(path, mode);
-#else
-  return mkdir(path);
-#endif		   
+  return 0;
 }
 
 namespace SAX2ExtractUnitsSrc {
@@ -176,11 +172,12 @@ namespace SAX2ExtractUnitsSrc {
     if (founddirectory) {
 
       // make the directory path if there is one
+      int ret = mkpath(path
 #ifdef __GNUC__
-      int ret = mkpath(path, EXPAND_DIR_PERM);
-#else
-      int ret = mkpath(path);
+		       , EXPAND_DIR_PERM
 #endif
+		       );
+
       if (ret != 0 && errno != EEXIST) {
 	fprintf(stderr, "Error %d creating directory:  %s\n", errno, path);
       }
