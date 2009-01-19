@@ -519,23 +519,23 @@ int main(int argc, char* argv[]) {
 	switch (option) {
 	case OPTION_XML_ENCODING:
 	  attribute_name = ".encoding";
-	  attribute_title = "encoding=";
+	  attribute_title = "encoding";
 	  break;
 	case OPTION_LANGUAGE:
 	  attribute_name = UNIT_ATTRIBUTE_LANGUAGE;
-	  attribute_title = "language=";
+	  attribute_title = "language";
 	  break;
 	case OPTION_DIRECTORY:
 	  attribute_name = UNIT_ATTRIBUTE_DIRECTORY;
-	  attribute_title = "directory=";
+	  attribute_title = "directory";
 	  break;
 	case OPTION_FILENAME:
 	  attribute_name = UNIT_ATTRIBUTE_FILENAME;
-	  attribute_title = "filename=";
+	  attribute_title = "filename";
 	  break;
 	case OPTION_VERSION:
 	  attribute_name = UNIT_ATTRIBUTE_VERSION;
-	  attribute_title = "src-version=";
+	  attribute_title = "src-version";
 	  break;
 	};
 
