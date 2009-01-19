@@ -100,11 +100,9 @@ void srcMLUtility::move_to_unit(int unitnumber) {
 
   xmlParseDocument(ctxt);
 
-  /*
   // encoding is entered as a property
   attrv.insert(attrv.end(),
          PROPERTIES_TYPE::value_type(".encoding", (const char*) (state.ctxt->encoding ? state.ctxt->encoding : state.ctxt->input->encoding)));
-  */
 
   // don't let the context free the static sax handler
   ctxt->sax = NULL;
