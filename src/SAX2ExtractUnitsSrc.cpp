@@ -156,7 +156,8 @@ namespace SAX2ExtractUnitsSrc {
     for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5)
       if (strcmp((const char*) attributes[index], "filename") == 0) {
 
-	strcat(path, (const char*) attributes[index + 3]);
+	strncpy(path + startfilename, (const char*) attributes[index + 3],
+		(const char*) attributes[index + 4] - (const char*) attributes[index + 3]);
 
 	foundfilename = true;
 	break;
