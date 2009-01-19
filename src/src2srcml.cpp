@@ -94,7 +94,7 @@ const char FILELIST_COMMENT = '#';
 char* split_path(char* path);
 
 enum {
-  SRCML_SRC_NS_URI_POS, 
+  SRCML_SRC_NS_URI_POS = 0, 
   SRCML_CPP_NS_URI_POS,
   SRCML_ERR_NS_URI_POS,
   SRCML_EXT_LITERAL_NS_URI_POS,
@@ -795,7 +795,7 @@ int process_args(int argc, char* argv[]) {
 	num2prefix[SRCML_SRC_NS_URI_POS] = ns_prefix;
 	prefixchange[SRCML_SRC_NS_URI_POS] = true;
 
-      } else if (strcmp(ns_uri, SRCML_CPP_NS_URI)) {
+      } else if (strcmp(ns_uri, SRCML_CPP_NS_URI) == 0) {
 
 	// specifying the cpp prefix automatically turns on preprocessor
 	options |= OPTION_CPP;
@@ -803,7 +803,7 @@ int process_args(int argc, char* argv[]) {
 	num2prefix[SRCML_CPP_NS_URI_POS] = ns_prefix;
 	prefixchange[SRCML_CPP_NS_URI_POS] = true;
 
-      } else if (strcmp(ns_uri, SRCML_ERR_NS_URI)) {
+      } else if (strcmp(ns_uri, SRCML_ERR_NS_URI) == 0) {
 
 	// specifying the error prefix automatically turns on debugging
 	options |= OPTION_DEBUG;
@@ -811,7 +811,7 @@ int process_args(int argc, char* argv[]) {
 	num2prefix[SRCML_ERR_NS_URI_POS] = ns_prefix;
 	prefixchange[SRCML_ERR_NS_URI_POS] = true;
 
-      } else if (strcmp(ns_uri, SRCML_EXT_LITERAL_NS_URI)) {
+      } else if (strcmp(ns_uri, SRCML_EXT_LITERAL_NS_URI) == 0) {
 
 	// specifying the literal prefix automatically turns on literal markup
 	options |= OPTION_LITERAL;
@@ -819,7 +819,7 @@ int process_args(int argc, char* argv[]) {
 	num2prefix[SRCML_EXT_LITERAL_NS_URI_POS] = ns_prefix;
 	prefixchange[SRCML_EXT_LITERAL_NS_URI_POS] = true;
 
-      } else if (strcmp(ns_uri, SRCML_EXT_OPERATOR_NS_URI)) {
+      } else if (strcmp(ns_uri, SRCML_EXT_OPERATOR_NS_URI) == 0) {
 
 	// specifying the operator prefix automatically turns on operator markup
 	options |= OPTION_OPERATOR;
@@ -827,7 +827,7 @@ int process_args(int argc, char* argv[]) {
 	num2prefix[SRCML_EXT_OPERATOR_NS_URI_POS] = ns_prefix;
 	prefixchange[SRCML_EXT_OPERATOR_NS_URI_POS] = true;
 
-      } else if (strcmp(ns_uri, SRCML_EXT_MODIFIER_NS_URI)) {
+      } else if (strcmp(ns_uri, SRCML_EXT_MODIFIER_NS_URI) == 0) {
 
 	// specifying the operator prefix automatically turns on type modifier markup
 	options |= OPTION_MODIFIER;
