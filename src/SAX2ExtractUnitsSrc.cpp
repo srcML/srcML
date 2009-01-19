@@ -115,7 +115,7 @@ namespace SAX2ExtractUnitsSrc {
     // check that this is a nested file
     if (pstate->count == 0 && !(strcmp((const char*) localname, "unit") == 0 &&
 	  strcmp((const char*) URI, "http://www.sdml.info/srcML/src") == 0)) {
-      std::cerr << "Options only valid for nested srcML documents\n";
+      fprintf(stderr, "Options only valid for nested srcML documents\n");
       xmlStopParser(pstate->ctxt);
       return;
     }
@@ -163,7 +163,7 @@ namespace SAX2ExtractUnitsSrc {
       }
 
     if (!foundfilename) {
-      std::cerr << "Missing filename attribute" << '\n';
+      fprintf(stderr, "Missing filename attribute\n");
       return;
     }
 
@@ -189,11 +189,11 @@ namespace SAX2ExtractUnitsSrc {
 
     // output file status message if in verbose mode
     if (isoption(*(pstate->poptions), OPTION_VERBOSE))
-      std::cerr << pstate->count << '\t' << output_filename << '\n';
+      fprintf(stderr, "%ld\t%s\n", pstate->count, output_filename.c_str());
 
     pstate->output = xmlOutputBufferCreateFilename(output_filename.c_str(), pstate->handler, 0);
     if (pstate->output == NULL) {
-      std::cerr << "Output buffer error" << std::endl;
+      fprintf(stderr, "Output buffer error\n");
       xmlStopParser(pstate->ctxt);
     }
 
