@@ -601,8 +601,8 @@ int main(int argc, char* argv[]) {
 
   } catch (const OutOfRangeUnitError& e) {
 
-    std::cerr << NAME << ": " << "unit " << unit << " was selected from a compound srcML document that contains " << e.size
-	      << " nested " << (e.size > 1 ? "units" : "unit") << '\n';
+    fprintf(stderr, "%s: unit %d  was selected from compound srcML document that contains "
+	    "%d nested units\n", NAME, unit, e.size);
     exit_status = STATUS_UNIT_INVALID;
 
     return exit_status;
