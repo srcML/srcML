@@ -135,33 +135,38 @@ namespace SAX2ExtractUnitsSrc {
   // start a new output buffer and corresponding file for a unit element
   void startUnit(State* pstate, int nb_attributes, const xmlChar** attributes) {
 
-    std::string filename;
-    bool foundfilename = false;
+    char path[512] = "";
+
+    // find the directory
     bool founddirectory = false;
+    int startfilename = 0;
+    for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5)
+      if (strcmp((const char*) attributes[index], "dir") == 0) {
 
-    const char* root_filename = "";
-    std::string directory_filename = root_filename;
+	int filename_size = (const char*) attributes[index + 4] - (const char*) attributes[index + 3];
+	if (filename_size > 0) {
+	  strncpy(path, (const char*) attributes[index + 3], filename_size);
+	  path[filename_size] = '/';
+	  path[filename_size + 1] = '\0';
+	  startfilename = filename_size + 1;
+	}
 
-    // extract the attributes from the unit for filename and directory
-    unsigned int index = 0;
-    for (int i = 0; i < nb_attributes; ++i, index += 5)
-      if (strcmp((const char*) attributes[index], "filename") == 0) {
-
-	filename.assign((const char*) attributes[index + 3], (const char*) attributes[index + 4]);
-	foundfilename = true;
-
-	if (founddirectory)
-	  break;
-
-      } else if (strcmp((const char*) attributes[index], "dir") == 0) {
-
-	directory_filename += std::string((const char*) attributes[index + 3], (const char*) attributes[index + 4]);
 	founddirectory = true;
-
-	if (foundfilename)
-	  break;
+	break;
       }
 
+    // find the filename
+    bool foundfilename = false;
+    for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5)
+      if (strcmp((const char*) attributes[index], "filename") == 0) {
+
+	strcat(path, (const char*) attributes[index + 3]);
+
+	foundfilename = true;
+	break;
+      }
+
+    // filename is required
     if (!foundfilename) {
       fprintf(stderr, "Missing filename attribute\n");
       return;
@@ -172,26 +177,20 @@ namespace SAX2ExtractUnitsSrc {
 
       // make the directory path if there is one
 #ifdef __GNUC__
-      int ret = mkpath(directory_filename.c_str(), EXPAND_DIR_PERM);
+      int ret = mkpath(path, EXPAND_DIR_PERM);
 #else
-      int ret = mkpath(directory_filename.c_str());
+      int ret = mkpath(path);
 #endif
       if (ret != 0 && errno != EEXIST) {
-	fprintf(stderr, "Error %d creating directory:  %s\n", errno, directory_filename.c_str());
+	fprintf(stderr, "Error %d creating directory:  %s\n", errno, path);
       }
     }
 
-    // filename is based on directory
-    std::string& output_filename = directory_filename;
-    if (output_filename != "")
-      output_filename += "/";
-    output_filename += filename;
-
     // output file status message if in verbose mode
     if (isoption(*(pstate->poptions), OPTION_VERBOSE))
-      fprintf(stderr, "%ld\t%s\n", pstate->count, output_filename.c_str());
+      fprintf(stderr, "%ld\t%s\n", pstate->count, path);
 
-    pstate->output = xmlOutputBufferCreateFilename(output_filename.c_str(), pstate->handler, 0);
+    pstate->output = xmlOutputBufferCreateFilename(path, pstate->handler, 0);
     if (pstate->output == NULL) {
       fprintf(stderr, "Output buffer error\n");
       xmlStopParser(pstate->ctxt);
