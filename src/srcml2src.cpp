@@ -72,10 +72,10 @@ void output_help(const char* name) {
 
 	 "Options:\n", name);
 
-  printf("  %s, %s display this help and exit\n", HELP_FLAG_SHORT, HELP_FLAG);
-  printf("  %s, %s display version number and exit\n", VERSION_FLAG_SHORT, VERSION_FLAG);
+  printf("  %s, %-19s display this help and exit\n", HELP_FLAG_SHORT, HELP_FLAG);
+  printf("  %s, %-19s display version number and exit\n", VERSION_FLAG_SHORT, VERSION_FLAG);
 
-  printf("  %s, %s set the output source encoding to ENC (default:  %s) \n\n",
+  printf("  %s, %-19s set the output source encoding to ENC (default:  %s) \n\n",
 	  TEXTENCODING_FLAG_SHORT, TEXTENCODING_FLAG_FULL, DEFAULT_TEXT_ENCODING);
 
 #ifdef LIBXML_ENABLED
@@ -86,57 +86,50 @@ void output_help(const char* name) {
        */
 
 #endif
-  printf("  %s, %s extract nested unit NUM from a compound srcML document\n",
+  printf("  %s, %-19s extract nested unit NUM from a compound srcML document\n",
 	  UNIT_FLAG_SHORT, UNIT_FLAG_FULL);
 
-  printf("  %s, %s extract all files from a compound srcML document\n\n",
+  printf("  %s, %-19s extract all files from a compound srcML document\n\n",
 	  EXPAND_FLAG_SHORT, EXPAND_FLAG);
 
 
-  printf("  %s, %s output in XML instead of text\n",
+  printf("  %s, %-19s output in XML instead of text\n",
 	  XML_FLAG_SHORT, XML_FLAG);
 
 #ifdef LIBXML_ENABLED
-  printf("  %s, %s output XML in gzip format\n\n",
+  printf("  %s, %-19s output XML in gzip format\n\n",
 	  COMPRESSED_FLAG_SHORT, COMPRESSED_FLAG);
 #endif
 
-  printf("  %s do not output the default XML declaration in XML output\n",
+  printf("  %-23s do not output the default XML declaration in XML output\n",
 	  NO_XML_DECLARATION_FLAG);
 
-  printf("  %s do not output any namespace declarations in XML output\n\n",
+  printf("  %-23s do not output any namespace declarations in XML output\n\n",
 	  NO_NAMESPACE_DECLARATION_FLAG);
 
-  printf("  %s, %s verbose output\n\n",
+  printf("  %s, %-19s verbose output\n\n",
 	  VERBOSE_FLAG_SHORT, VERBOSE_FLAG);
 
-  printf("Metadata Options:  \n\n");
+  printf("Metadata Options:  \n\n"
+	 "  %s, %-19s display source language and exit\n", LANGUAGE_FLAG_SHORT, LANGUAGE_FLAG);
 
-  printf("  %s, %s display source language and exit\n",
-	  LANGUAGE_FLAG_SHORT, LANGUAGE_FLAG);
+  printf("  %s, %-19s display source directory name and exit\n", DIRECTORY_FLAG_SHORT, DIRECTORY_FLAG);
 
-  printf("  %s, %s display source directory name and exit\n",
-	  DIRECTORY_FLAG_SHORT, DIRECTORY_FLAG);
+  printf("  %s, %-19s display source filename and exit\n", FILENAME_FLAG_SHORT, FILENAME_FLAG   );
 
-  printf("  %s, %s display source filename and exit\n",
-	  FILENAME_FLAG_SHORT, FILENAME_FLAG   );
+  printf("  %s, %-19s display source version and exit\n", SRCVERSION_FLAG_SHORT, SRCVERSION_FLAG);
 
-  printf("  %s, %s display source version and exit\n",
-	  SRCVERSION_FLAG_SHORT, SRCVERSION_FLAG);
+  printf("  %s, %-19s display xml encoding and exit\n", ENCODING_FLAG_SHORT, ENCODING_FLAG);
 
-  printf("  %s, %s display xml encoding and exit\n",
-	  ENCODING_FLAG_SHORT, ENCODING_FLAG);
-
-  printf("  %s, %s display prefix of namespace given by URI and exit\n",
+  printf("  %s, %-19s display prefix of namespace given by URI and exit\n",
 	  NAMESPACE_FLAG_SHORT, NAMESPACE_FLAG_FULL);
 
-  printf("  %s, %s display number of nested units and exit\n\n",
-	    NESTED_FLAG_SHORT, NESTED_FLAG     );
+  printf("  %s, %-19s display number of nested units and exit\n\n", NESTED_FLAG_SHORT, NESTED_FLAG);
 
-  printf("  %s, %s display most metadata (except nested unit count) and exit\n",
+  printf("  %s, %-19s display most metadata (except nested unit count) and exit\n",
 	  INFO_FLAG_SHORT, INFO_FLAG);
 
-  printf("  %s, %s display all metadata (including nested unit count) and exit\n\n",
+  printf("  %s, %-19s display all metadata (including nested unit count) and exit\n\n",
 	  LONG_INFO_FLAG_SHORT, LONG_INFO_FLAG);
 
   printf("Examples:  \n"
@@ -151,7 +144,7 @@ void output_help(const char* name) {
 	    "  %1$s --src-version         (read from standard input, output version attribute)\n\n", name);
 
   printf("www.sdml.info\n"
-            "Report bugs to %s\n", EMAIL_ADDRESS);
+         "Report bugs to %s\n", EMAIL_ADDRESS);
 }
 
 // output version message
@@ -433,7 +426,7 @@ int main(int argc, char* argv[]) {
   } else if (argc > curarg + 1) {
 
       fprintf(stderr, "%1$s: More than one output file specified.\n"
-	              "try '%1$s --help' for more information.\n", NAME);
+	      "try '%1$s %2$s' for more information.\n", NAME, HELP_FLAG);
       exit(0);
   }
 
