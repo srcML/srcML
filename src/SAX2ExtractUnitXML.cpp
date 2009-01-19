@@ -26,7 +26,7 @@
 #include "SAX2ExtractUnitXML.h"
 #include "SAX2Utilities.h"
 
-#include <iostream>
+#include <cstdio>
 #include <cstring>
 #include <libxml/xmlwriter.h>
 #include <libxml/parser.h>
@@ -75,7 +75,7 @@ void SAX2ExtractUnitXML::startElementNsRoot(void* ctx, const xmlChar* localname,
 
     // output file status message if in verbose mode
     if (isoption(pstate->options, OPTION_VERBOSE))
-      std::cerr << "Count:  ";
+      fprintf(stderr, "Count:  ");
 }
 
 // start a new output buffer and corresponding file for a
@@ -135,8 +135,8 @@ void SAX2ExtractUnitXML::endElementNs(void *ctx, const xmlChar *localname, const
     // output file status message if in verbose mode
     if (isoption(pstate->options, OPTION_VERBOSE)) {
       for (int i = 0; i < pstate->placescount; ++i)
-	std::cerr << '\b';
-      std::cerr << pstate->count;
+	fprintf(stderr, "\b");
+      fprintf(stderr, "%ld", pstate->count);
 
       if (pstate->count == pstate->placesunit) {
 	pstate->placesunit *= 10;
