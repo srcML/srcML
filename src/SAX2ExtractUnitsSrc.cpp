@@ -177,7 +177,7 @@ namespace SAX2ExtractUnitsSrc {
       int ret = mkpath(directory_filename.c_str());
 #endif
       if (ret != 0 && errno != EEXIST) {
-	std::cerr << "Error " << errno  << " creating directory:  " << directory_filename << '\n';
+	fprintf(stderr, "Error %d creating directory:  %s\n", errno, directory_filename.c_str());
       }
     }
 

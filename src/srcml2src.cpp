@@ -63,17 +63,19 @@ using std::setw;
 // output help message
 void output_help(const char* name) {
 
-     std::cout << "Usage: " << name << " [options] <infile> <outfile>\n\n"
-	          "Translates from the the XML source-code representation srcML to source-code text files.\n"
-                  "The srcML files can be in xml or gzip compressed xml (detected automatically).\n"
-	          "Also provides various utilities for accessing metadata about the srcML document, \n"
-	          "and extracting parts of compound srcML documents.\n\n"
+  printf("Usage: %s [options] <infile> <outfile>\n\n"
+         "Translates from the the XML source-code representation srcML to source-code text files.\n"
+         "The srcML files can be in xml or gzip compressed xml (detected automatically).\n"
+         "Also provides various utilities for accessing metadata about the srcML document, \n"
+         "and extracting parts of compound srcML documents.\n\n"
 
-	          "When no filenames are given read from standard input and write to standard output.\n"
-	          "When only one filename is given write to standard output.\n"
-	          "An input filename of '-' also reads from standard input.\n\n"
+         "When no filenames are given read from standard input and write to standard output.\n"
+         "When only one filename is given write to standard output.\n"
+	 "An input filename of '-' also reads from standard input.\n\n"
 
-	          "Options:\n"
+	 "Options:\n", name);
+
+     std::cout
                << std::left
 	       << "  " << HELP_FLAG_SHORT       << ", " << setw(COL) << HELP_FLAG       
 	       << "display this help and exit\n"
@@ -83,10 +85,12 @@ void output_help(const char* name) {
 #ifdef LIBXML_ENABLED
 	       << "  " << TEXTENCODING_FLAG_SHORT << ", " << setw(COL) <<  TEXTENCODING_FLAG_FULL  
 	       << "set the output source encoding to ENC (default:  " << DEFAULT_TEXT_ENCODING << ") \n"
+
        /*
  	       << "  " << SKIP_ENCODING_FLAG_SHORT        << ", " << setw(COL) <<  SKIP_ENCODING_FLAG
 	       << "skip any text encoding transformation" << "\n"
        */
+
 	       << '\n'
 #endif
 	       << "  " << UNIT_FLAG_SHORT       << ", " << setw(COL) << UNIT_FLAG_FULL  
