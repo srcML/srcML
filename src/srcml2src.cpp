@@ -523,15 +523,15 @@ int main(int argc, char* argv[]) {
 	  break;
 	case OPTION_LANGUAGE:
 	  attribute_name = UNIT_ATTRIBUTE_LANGUAGE;
-	  attribute_title = "language";
+	  attribute_title = attribute_name;
 	  break;
 	case OPTION_DIRECTORY:
 	  attribute_name = UNIT_ATTRIBUTE_DIRECTORY;
-	  attribute_title = "directory";
+	  attribute_title = attribute_name;
 	  break;
 	case OPTION_FILENAME:
 	  attribute_name = UNIT_ATTRIBUTE_FILENAME;
-	  attribute_title = "filename";
+	  attribute_title = attribute_name;
 	  break;
 	case OPTION_VERSION:
 	  attribute_name = UNIT_ATTRIBUTE_VERSION;
