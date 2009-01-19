@@ -370,10 +370,11 @@ int main(int argc, char* argv[]) {
     for (int j = i + 1; j < 6; ++j)
       if(strcmp(num2prefix[i], num2prefix[j]) == 0) {
 
+	fprintf(stderr, "%s: Namespace conflict for ", NAME);
 	if (num2prefix[i] == '\0') {
-	  fprintf(stderr, "%s: Namespace conflict for default prefix\n", NAME);
+	  fprintf(stderr, "default prefix\n");
 	} else {
-	  fprintf(stderr, "%s: Namespace conflict for prefix \'%s\'\n", NAME, num2prefix[i]);
+	  fprintf(stderr, "prefix \'%s\'\n", num2prefix[i]);
 	}
 	fprintf(stderr, "Prefix URI conflicts:\n  %s\n  %s\n", num2uri[i], num2uri[j]);
 
