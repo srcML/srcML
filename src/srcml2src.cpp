@@ -22,8 +22,7 @@
   Main program to translate from srcML to source code
 */
 
-#include <iostream>
-#include <iomanip>
+#include <cstdio>
 #include <fstream>
 #include <string>
 #include <cstring>
@@ -57,8 +56,6 @@ char const * const LONG_INFO_FLAG_SHORT = "-l";
 char const * const NAMESPACE_FLAG = "--prefix";
 char const * const NAMESPACE_FLAG_SHORT = "-p";
 char const * const NAMESPACE_FLAG_FULL = "--prefix=URI";
-
-using std::setw;
 
 // output help message
 void output_help(const char* name) {
