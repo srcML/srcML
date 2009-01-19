@@ -75,62 +75,75 @@ void output_help(const char* name) {
 
 	 "Options:\n", name);
 
-     std::cout
-               << std::left
-	       << "  " << HELP_FLAG_SHORT       << ", " << setw(COL) << HELP_FLAG       
-	       << "display this help and exit\n"
-	       << "  " << VERSION_FLAG_SHORT    << ", " << setw(COL) << VERSION_FLAG    
-	       << "display version number and exit\n\n"
+  printf("  %s, %s display this help and exit\n", HELP_FLAG_SHORT, HELP_FLAG);
+  printf("  %s, %s display version number and exit\n", VERSION_FLAG_SHORT, VERSION_FLAG);
+
+  printf("  %s, %s set the output source encoding to ENC (default:  %s) \n\n",
+	  TEXTENCODING_FLAG_SHORT, TEXTENCODING_FLAG_FULL, DEFAULT_TEXT_ENCODING);
 
 #ifdef LIBXML_ENABLED
-	       << "  " << TEXTENCODING_FLAG_SHORT << ", " << setw(COL) <<  TEXTENCODING_FLAG_FULL  
-	       << "set the output source encoding to ENC (default:  " << DEFAULT_TEXT_ENCODING << ") \n"
 
        /*
  	       << "  " << SKIP_ENCODING_FLAG_SHORT        << ", " << setw(COL) <<  SKIP_ENCODING_FLAG
 	       << "skip any text encoding transformation" << "\n"
        */
 
-	       << '\n'
 #endif
-	       << "  " << UNIT_FLAG_SHORT       << ", " << setw(COL) << UNIT_FLAG_FULL  
-	       << "extract nested unit NUM from a compound srcML document\n"
-	       << "  " << EXPAND_FLAG_SHORT     << ", " << setw(COL) << EXPAND_FLAG     
-	       << "extract all files from a compound srcML document\n\n"
-	       << "  " << XML_FLAG_SHORT        << ", " << setw(COL) << XML_FLAG        
-	       << "output in XML instead of text\n"
-#ifdef LIBXML_ENABLED
-	      << "  " << COMPRESSED_FLAG_SHORT  << ", " << setw(COL) <<  COMPRESSED_FLAG
-	      << "output XML in gzip format\n"
-#endif
-	       << '\n'
-	      << "  " << NO_XML_DECLARATION_FLAG  << "    " 
-	      << "do not output the default XML declaration in XML output\n"
-	      << "  " << NO_NAMESPACE_DECLARATION_FLAG  << "     " 
-	      << "do not output any namespace declarations in XML output\n\n"
-               << "  " << VERBOSE_FLAG_SHORT    << ", " << setw(COL) << VERBOSE_FLAG    << "verbose output\n\n"
-	       << "Metadata Options:  \n\n"
-	       << "  " << LANGUAGE_FLAG_SHORT   << ", " << setw(COL) << LANGUAGE_FLAG
-	       << "display source language and exit\n"
-	       << "  " << DIRECTORY_FLAG_SHORT  << ", " << setw(COL) << DIRECTORY_FLAG
-	       << "display source directory name and exit\n"
-	       << "  " << FILENAME_FLAG_SHORT   << ", " << setw(COL) << FILENAME_FLAG   
-	       << "display source filename and exit\n"
-	       << "  " << SRCVERSION_FLAG_SHORT << ", " << setw(COL) << SRCVERSION_FLAG
-	       << "display source version and exit\n"
-	       << "  " << ENCODING_FLAG_SHORT   << ", " << setw(COL) << ENCODING_FLAG
-	       << "display xml encoding and exit\n"
-	       << "  " << NAMESPACE_FLAG_SHORT  << ", " << setw(COL) << NAMESPACE_FLAG_FULL
-	       << "display prefix of namespace given by URI and exit\n"
-	       << "  " << NESTED_FLAG_SHORT     << ", " << setw(COL) << NESTED_FLAG     
-	       << "display number of nested units and exit\n\n"
-	       << "  " << INFO_FLAG_SHORT  << ", " << setw(COL) << INFO_FLAG
-	       << "display most metadata (except nested unit count) and exit\n"
-	       << "  " << LONG_INFO_FLAG_SHORT  << ", " << setw(COL) << LONG_INFO_FLAG
-	       << "display all metadata (including nested unit count) and exit\n\n"
-	       << "Examples:  \n";
+  printf("  %s, %s extract nested unit NUM from a compound srcML document\n",
+	  UNIT_FLAG_SHORT, UNIT_FLAG_FULL);
 
-     printf("  %1$s                       (read from standard input, write to standard output)\n"
+  printf("  %s, %s extract all files from a compound srcML document\n\n",
+	  EXPAND_FLAG_SHORT, EXPAND_FLAG);
+
+
+  printf("  %s, %s output in XML instead of text\n",
+	  XML_FLAG_SHORT, XML_FLAG);
+
+#ifdef LIBXML_ENABLED
+  printf("  %s, %s output XML in gzip format\n\n",
+	  COMPRESSED_FLAG_SHORT, COMPRESSED_FLAG);
+#endif
+
+  printf("  %s do not output the default XML declaration in XML output\n",
+	  NO_XML_DECLARATION_FLAG);
+
+  printf("  %s do not output any namespace declarations in XML output\n\n",
+	  NO_NAMESPACE_DECLARATION_FLAG);
+
+  printf("  %s, %s verbose output\n\n",
+	  VERBOSE_FLAG_SHORT, VERBOSE_FLAG);
+
+  printf("Metadata Options:  \n\n");
+
+  printf("  %s, %s display source language and exit\n",
+	  LANGUAGE_FLAG_SHORT, LANGUAGE_FLAG);
+
+  printf("  %s, %s display source directory name and exit\n",
+	  DIRECTORY_FLAG_SHORT, DIRECTORY_FLAG);
+
+  printf("  %s, %s display source filename and exit\n",
+	  FILENAME_FLAG_SHORT, FILENAME_FLAG   );
+
+  printf("  %s, %s display source version and exit\n",
+	  SRCVERSION_FLAG_SHORT, SRCVERSION_FLAG);
+
+  printf("  %s, %s display xml encoding and exit\n",
+	  ENCODING_FLAG_SHORT, ENCODING_FLAG);
+
+  printf("  %s, %s display prefix of namespace given by URI and exit\n",
+	  NAMESPACE_FLAG_SHORT, NAMESPACE_FLAG_FULL);
+
+  printf("  %s, %s display number of nested units and exit\n\n",
+	    NESTED_FLAG_SHORT, NESTED_FLAG     );
+
+  printf("  %s, %s display most metadata (except nested unit count) and exit\n",
+	  INFO_FLAG_SHORT, INFO_FLAG);
+
+  printf("  %s, %s display all metadata (including nested unit count) and exit\n\n",
+	  LONG_INFO_FLAG_SHORT, LONG_INFO_FLAG);
+
+  printf("Examples:  \n"
+	    "  %1$s                       (read from standard input, write to standard output)\n"
 	    "  %1$s main.cpp.xml          (read from file main.cpp.xml, write to standard output)\n"
 	    "  %1$s main.cpp.xml main.cpp (read from file main.cpp.xml, write to file main.cpp)\n"
 	    "  %1$s -                     (read from standard input, write to standard output)\n"
@@ -140,7 +153,7 @@ void output_help(const char* name) {
 	    "  %1$s --filename            (read from standard input, output filename attribute)\n"
 	    "  %1$s --src-version         (read from standard input, output version attribute)\n\n", name);
 
-     printf("www.sdml.info\n"
+  printf("www.sdml.info\n"
             "Report bugs to %s\n", EMAIL_ADDRESS);
 }
 
