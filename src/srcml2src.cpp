@@ -527,7 +527,7 @@ int main(int argc, char* argv[]) {
 	  break;
 	case OPTION_DIRECTORY:
 	  attribute_name = UNIT_ATTRIBUTE_DIRECTORY;
-	  attribute_title = attribute_name;
+	  attribute_title = "directory";
 	  break;
 	case OPTION_FILENAME:
 	  attribute_name = UNIT_ATTRIBUTE_FILENAME;
