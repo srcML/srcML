@@ -1401,7 +1401,12 @@ concept_definition :
         }
         { inLanguage(LANGUAGE_CXX_0X) }?
         (
-            (auto_keyword)* CONCEPT (class_header lcurly | lcurly)
+            (auto_keyword)* CONCEPT
+
+            simple_name 
+                {
+                    startNewMode(MODE_TEMPLATE | MODE_LIST | MODE_EXPECT);
+                }
         )
 ;
 
