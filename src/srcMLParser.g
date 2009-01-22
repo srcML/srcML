@@ -1420,7 +1420,12 @@ conceptmap_definition :
         }
         { inLanguage(LANGUAGE_CXX_0X) }?
         (
-            CONCEPTMAP (class_header lcurly | lcurly)
+            (auto_keyword)* CONCEPTMAP
+
+            simple_name 
+                {
+                    startNewMode(MODE_TEMPLATE | MODE_LIST | MODE_EXPECT);
+                }
         )
 ;
 
