@@ -77,6 +77,7 @@ const State::MODE_TYPE Mode::MODE_DECL                = 0x0000800000000000ULL;
 const State::MODE_TYPE Mode::MODE_EAT_TYPE            = 0x0001000000000000ULL;
 const State::MODE_TYPE Mode::MODE_FUNCTION_PARAMETER  = 0x0002000000000000ULL;
 const State::MODE_TYPE Mode::MODE_EAT_VAR_TYPE        = 0x0004000000000000ULL;
+const State::MODE_TYPE Mode::MODE_DERIVED             = 0x0008000000000000ULL;
 
 
 srcMLState& Mode::currentState() {

@@ -494,7 +494,8 @@ start {} :
         { !inTransparentMode(MODE_INTERNAL_END_CURLY) }? block_end |
 
         // switch cases @test switch
-        { !inMode(MODE_EXPRESSION) || inTransparentMode(MODE_DETECT_COLON) }? colon[true] |
+        { !inMode(MODE_DERIVED) && (!inMode(MODE_EXPRESSION) || inTransparentMode(MODE_DETECT_COLON)) }? 
+        { std::cerr << "BCOLON" << inMode(MODE_DERIVED) << std::endl; } colon[true] |
 
         // terminate is used specially with for loop @test for
         { !inMode(MODE_IGNORE_TERMINATE) }? terminate[true] |
@@ -1405,7 +1406,9 @@ concept_definition :
 
             simple_name 
                 {
-                    startNewMode(MODE_TEMPLATE | MODE_LIST | MODE_EXPECT);
+                    startNewMode(MODE_EXPECT | MODE_DERIVED);
+
+                    startNewMode(MODE_TEMPLATE | MODE_LIST | MODE_EXPECT | MODE_DERIVED);
                 }
         )
 ;
@@ -2011,6 +2014,10 @@ statement_part { int type_count; } :
         { inTransparentMode(MODE_TEMPLATE) && inMode(MODE_LIST) }?
              template_param |
 
+        // expecting a template parameter
+        { inLanguage(LANGUAGE_CXX_FAMILY) && inMode(MODE_DERIVED) && inMode(MODE_EXPECT) }?
+             derived |
+
         // start of condition for if/while/switch
         { inMode(MODE_CONDITION | MODE_EXPECT) }?
              condition |
@@ -2082,7 +2089,7 @@ comma[bool final = false] { if (final) setFinalToken(); }:
         COMMA
 ;
 
-colon[bool final = false] { if (final) setFinalToken(); } :
+colon[bool final = false] { if (final) setFinalToken(); std::cerr << "HERE" << std::endl; } :
         {
             if (inTransparentMode(MODE_TOP_SECTION))
                 // colon ends the current item in a list
