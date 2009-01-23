@@ -3752,7 +3752,14 @@ general_operators { LocalMode lm; } :
                 startElement(SOPERATOR);
             }
         }
-        (OPERATORS | TEMPOPS | TEMPOPE | EQUAL | MULTIMM | DESTOP | MEMBERPOINTER | RSHIFT)
+        (OPERATORS | TEMPOPS | 
+
+            { !inMode(MODE_TEMPLATE) }? (TEMPOPE TEMPOPE)=>
+            TEMPOPE TEMPOPE |
+
+            TEMPOPE | 
+
+            EQUAL | MULTIMM | DESTOP | MEMBERPOINTER | RSHIFT)
 ;
 
 /*

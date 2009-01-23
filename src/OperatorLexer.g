@@ -54,7 +54,6 @@ RPAREN; // = ")";
 TERMINATE; // = ";";
 PREPROC;
 COLON; // = ":";
-RSHIFT; // = ">>";
 
 // define value in master grammar so that it depends on language
 DCOLON;
@@ -156,15 +155,13 @@ OPERATORS :
 //        "==" | // equals
         '=' ( '=' | { $setType(EQUAL); }) |   // assignment
 
-//        (">>=")=> ">>=" { $setText("&gt;&gt;="); } |    // immediate right shift
+        (">>=")=> ">>=" { $setText("&gt;&gt;="); } |    // immediate right shift
 
 //        ">>" { $setText("&gt;&gt;"); } |                // right shift
 //        ">=" { $setText("&gt;="); } |                   // greater than or equal to
 
         '>' 
-            ('>' ( '=' { $setText("&gt;&gt;="); } | { $setText("&gt;&gt;"); $setType(RSHIFT); }) |
-             '=' { $setText("&gt;="); } | 
-             { $setText("&gt;"); $setType(TEMPOPE); }    
+            ( '=' { $setText("&gt;="); } | { $setText("&gt;"); $setType(TEMPOPE); }    
             ) |
 
 // { $setText("&gt;"); $setType(TEMPOPE); } | // greater than
