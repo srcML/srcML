@@ -495,7 +495,7 @@ start {} :
 
         // switch cases @test switch
         { !inMode(MODE_DERIVED) && (!inMode(MODE_EXPRESSION) || inTransparentMode(MODE_DETECT_COLON)) }? 
-        { std::cerr << "BCOLON" << inMode(MODE_DERIVED) << std::endl; } colon[true] |
+        colon[true] |
 
         // terminate is used specially with for loop @test for
         { !inMode(MODE_IGNORE_TERMINATE) }? terminate[true] |
@@ -2089,7 +2089,7 @@ comma[bool final = false] { if (final) setFinalToken(); }:
         COMMA
 ;
 
-colon[bool final = false] { if (final) setFinalToken(); std::cerr << "HERE" << std::endl; } :
+colon[bool final = false] { if (final) setFinalToken(); } :
         {
             if (inTransparentMode(MODE_TOP_SECTION))
                 // colon ends the current item in a list
