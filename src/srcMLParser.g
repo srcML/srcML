@@ -4746,10 +4746,9 @@ cppmode_cleanup {
                 equal = false;
             }
 
-        if (!cppmode.empty() && (equal || cppmode.top().statesize.size() == 2)) {
-            cppmode.pop();
-        }
-
+            if (!cppmode.empty() && (equal || cppmode.top().statesize.size() == 2)) {
+                cppmode.pop();
+            }
         } :
 ;
 
