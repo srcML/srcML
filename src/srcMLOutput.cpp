@@ -355,6 +355,11 @@ void srcMLOutput::processText(const std::string& str) {
   xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) str.data(), str.size());
 }
 
+void srcMLOutput::processText(const char* s, int size) {
+
+  xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) s, size);
+}
+
 void srcMLOutput::processText(const antlr::RefToken& token) {
 
   xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) token->getText().data(), token->getText().size());
@@ -441,7 +446,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
 
     // leave space for nested unit
     if (outer && isoption(OPTION_NESTED))
-      processText("\n\n");
+      processText("\n\n", 2);
 }
 
 void srcMLOutput::processUnit(const antlr::RefToken& token) {
@@ -457,7 +462,7 @@ void srcMLOutput::processUnit(const antlr::RefToken& token) {
 
     // leave a blank line before next nested unit even the last one
     if (isoption(OPTION_NESTED))
-      processText("\n\n");
+      processText("\n\n", 2);
   }
 }
 

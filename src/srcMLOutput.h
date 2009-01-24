@@ -100,6 +100,8 @@ class srcMLOutput : public srcMLParserTokenTypes {
   // standard processing of text
   void processText(const std::string&);
 
+  void processText(const char* s, int size);
+
   // handler for optional literal tokens
   void processOptional(const antlr::RefToken& token, const char* attr_name, const char* attr_value);
 
