@@ -140,9 +140,14 @@ struct TokenPosition {
     TokenPosition(antlr::RefToken* p_token, int* p_sp)
         : token(p_token), sp(p_sp) {}
 
-    void clear() {
-        token = 0;
-        sp = 0;
+    // sets a particular token in the output token stream
+    void setType(int type) {
+
+        // set the inner name token to type
+        (*token)->setType(type);
+
+        // set this position in the element stack to type
+        *sp = type;
     }
 
     ~TokenPosition() {
@@ -448,16 +453,6 @@ TokenPosition getTokenPosition() {
         return tp;
 }
 
-// sets a particular token in the output token stream
-void setTokenPosition(TokenPosition& tp, int type) {
-
-        // set the inner name token to type
-        (*tp.token)->setType(type);
-
-        // set this position in the element stack to type
-        *tp.sp = type;
-}
-
 public:
 
 void endAllModes();
@@ -678,7 +673,7 @@ function[int token, int type_count] { TokenPosition tp; } :
         function_header[type_count]
         {
             if (token != LCURLY)
-                setTokenPosition(tp, SFUNCTION_DECLARATION);
+                tp.setType(SFUNCTION_DECLARATION);
         }
 ;
 
@@ -2846,7 +2841,7 @@ variable_identifier { LocalMode lm; bool iscomplex = false; TokenPosition tp; } 
             // non-complex names need to be simplified
             if (!iscomplex)
                 // set the token to NOP
-                setTokenPosition(tp, SNOP);
+                tp.setType(SNOP);
         }
 ;
 
@@ -2875,7 +2870,7 @@ simple_name_optional_template[bool marked] { LocalMode lm; TokenPosition tp; } :
                // if we marked it as a complex name and it isn't, fix
                if (marked)
                    // set the token to NOP
-                   setTokenPosition(tp, SNOP);
+                   tp.setType(SNOP);
             }
        )
 ;
@@ -2997,7 +2992,7 @@ complex_name[bool marked] { LocalMode lm; TokenPosition tp; /* TokenPosition tp2
             // if we marked it as a complex name and it isn't, fix
             if (marked && !iscomplex_name)
                 // set the token to NOP
-                setTokenPosition(tp, SNOP);
+                tp.setType(SNOP);
 
 /*
             // not an operator
@@ -3034,7 +3029,7 @@ complex_name_java[bool marked] { LocalMode lm; TokenPosition tp; bool iscomplex_
             // if we marked it as a complex name and it isn't, fix
             if (marked && !iscomplex_name)
                 // set the token to NOP
-                setTokenPosition(tp, SNOP);
+                tp.setType(SNOP);
         }
 ;
 
@@ -3215,7 +3210,7 @@ constructor_name { LocalMode lm; antlr::RefToken s[2]; bool iscomplex; TokenPosi
             // non-complex names need to be simplified
             if (!iscomplex)
                 // set the token to NOP
-                setTokenPosition(tp, SNOP);
+                tp.setType(SNOP);
         }
 ;
 
@@ -4481,7 +4476,7 @@ preprocessor {
         {
             endCurrentMode(MODE_LOCAL);
 
-            setTokenPosition(tp, SCPP_INCLUDE);
+            tp.setType(SCPP_INCLUDE);
         }
         cpp_filename_list |
 
@@ -4489,7 +4484,7 @@ preprocessor {
         {
             endCurrentMode(MODE_LOCAL);
 
-            setTokenPosition(tp, SCPP_DEFINE);
+            tp.setType(SCPP_DEFINE);
         }
         cpp_symbol_optional |
 
@@ -4497,7 +4492,7 @@ preprocessor {
         {
             endCurrentMode(MODE_LOCAL);
 
-            setTokenPosition(tp, SCPP_IFNDEF);
+            tp.setType(SCPP_IFNDEF);
         }
         cpp_symbol_optional |
 
@@ -4505,7 +4500,7 @@ preprocessor {
         {
             endCurrentMode(MODE_LOCAL);
 
-            setTokenPosition(tp, SCPP_UNDEF);
+            tp.setType(SCPP_UNDEF);
         }
         cpp_symbol_optional |
 
@@ -4514,7 +4509,7 @@ preprocessor {
         {
             endCurrentMode(MODE_LOCAL);
 
-            setTokenPosition(tp, SCPP_IF);
+            tp.setType(SCPP_IF);
         }
         cpp_condition[markblockzero] |
 
@@ -4522,7 +4517,7 @@ preprocessor {
         {
             endCurrentMode(MODE_LOCAL);
 
-            setTokenPosition(tp, SCPP_ELIF);
+            tp.setType(SCPP_ELIF);
         }
         cpp_condition[markblockzero] |
 
@@ -4530,21 +4525,21 @@ preprocessor {
         {
             endCurrentMode(MODE_LOCAL);
 
-            setTokenPosition(tp, SCPP_ELSE);
+            tp.setType(SCPP_ELSE);
         } |
 
         ENDIF
         {
             endCurrentMode(MODE_LOCAL);
 
-            setTokenPosition(tp, SCPP_ENDIF);
+            tp.setType(SCPP_ENDIF);
         } |
 
         IFDEF
         {
             endCurrentMode(MODE_LOCAL);
 
-            setTokenPosition(tp, SCPP_IFDEF);
+            tp.setType(SCPP_IFDEF);
         }
             cpp_symbol_optional |
 
@@ -4552,7 +4547,7 @@ preprocessor {
         {
             endCurrentMode(MODE_LOCAL);
 
-            setTokenPosition(tp, SCPP_LINE);
+            tp.setType(SCPP_LINE);
         }
             cpp_linenumber
             cpp_filename_list |
@@ -4561,21 +4556,21 @@ preprocessor {
         {
             endCurrentMode(MODE_LOCAL);
 
-            setTokenPosition(tp, SCPP_PRAGMA);
+            tp.setType(SCPP_PRAGMA);
         } |
 
         ERRORPREC
         {
             endCurrentMode(MODE_LOCAL);
 
-            setTokenPosition(tp, SCPP_ERROR);
+            tp.setType(SCPP_ERROR);
         } |
 
         NAME
         {
             endCurrentMode(MODE_LOCAL);
 
-            setTokenPosition(tp, SCPP_ERROR);
+            tp.setType(SCPP_ERROR);
         } | 
 
         /* blank preproc */
