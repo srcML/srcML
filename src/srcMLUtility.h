@@ -25,9 +25,6 @@
 #ifndef SRCMLUTILITY_H
 #define SRCMLUTILITY_H
 
-#include <iostream>
-#include <string>
-#include <vector>
 #include "Language.h"
 #include "Options.h"
 
@@ -44,8 +41,6 @@ class srcMLUtility {
 
   // constructor
   srcMLUtility(const char* infilename, const char* encoding, int& op);
-
-  int process_tag(std::istream& in, std::string& tagname, std::vector<std::pair<std::string, std::string> >& m);
 
   // attribute
   const char* attribute(const char* attribute_name);
