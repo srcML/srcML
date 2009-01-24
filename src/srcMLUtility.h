@@ -28,8 +28,6 @@
 #include "Language.h"
 #include "Options.h"
 
-#include <xmlwriter.h>
-
 #include "SAX2Utilities.h"
 
 class LibXMLError;
