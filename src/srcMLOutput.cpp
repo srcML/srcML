@@ -407,16 +407,17 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
 			  };
 
       // output the namespaces
+      char prefix[512] = "xmlns";
       for (unsigned int i = 0; i < sizeof(ns) / sizeof(ns[0]); ++i) {
 	if (!ns[i])
 	  continue;
 
-	std::string src_prefix = "xmlns";
+	prefix[5] = '\0';
 	if (num2prefix[i][0] != '\0') {
-	  src_prefix += ":";
-	  src_prefix += num2prefix[i];
+	  strcpy(prefix + 5, ":");
+	  strcpy(prefix + 6, num2prefix[i]);
 	}
-	xmlTextWriterWriteAttribute(xout, BAD_CAST src_prefix.c_str(), BAD_CAST ns[i]);
+	xmlTextWriterWriteAttribute(xout, BAD_CAST prefix, BAD_CAST ns[i]);
       }
     }
 
