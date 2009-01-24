@@ -112,8 +112,7 @@ char const * const num2uri[] = {
 
 // output help
 void output_help(const char* name) {
-  fprintf(stdout,
-	  "Usage: %s ( [options] <infile>... <outfile>\n\n"
+  printf( "Usage: %s ( [options] <infile>... <outfile>\n\n"
 
 	  "Translates source-code files into the XML source-code representation srcML\n"
 	  "with support for creating compound srcML documents.\n\n"
