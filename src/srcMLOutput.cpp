@@ -419,24 +419,24 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     const char* const attrs[][2] = {
 
       // language attribute
-      { language, UNIT_ATTRIBUTE_LANGUAGE },
+      { UNIT_ATTRIBUTE_LANGUAGE, language },
 
       // directory attribute
-      { dir, UNIT_ATTRIBUTE_DIRECTORY },
+      { UNIT_ATTRIBUTE_DIRECTORY, dir },
 
       // filename attribute
-      { filename, UNIT_ATTRIBUTE_FILENAME },
+      { UNIT_ATTRIBUTE_FILENAME, filename },
 
       // version attribute
-      { version, UNIT_ATTRIBUTE_VERSION },
+      { UNIT_ATTRIBUTE_VERSION, version },
     };
 
     // output attributes
     for (unsigned int i = 0; i < sizeof(attrs) / sizeof(attrs[0]); ++i) {
-      if (!attrs[i][0])
+      if (!attrs[i][1])
 	continue;
 
-      xmlTextWriterWriteAttribute(xout, BAD_CAST attrs[i][1], BAD_CAST attrs[i][0]);
+      xmlTextWriterWriteAttribute(xout, BAD_CAST attrs[i][0], BAD_CAST attrs[i][1]);
     }
 
     // leave space for nested unit
