@@ -380,7 +380,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     if (outer && isoption(OPTION_NAMESPACEDECL)) {
 
       // figure out which namespaces are needed
-      const char* const ns[] = { 
+      char const * const ns[] = { 
 
 	                    // main srcML namespace declaration always used
 	                    SRCML_SRC_NS_URI, 
@@ -416,19 +416,19 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     }
 
     // list of attributes
-    const char* attrs[][2] = {
+    const char* const attrs[][2] = {
 
       // language attribute
-      { language, "language" },
+      { language, UNIT_ATTRIBUTE_LANGUAGE },
 
       // directory attribute
-      { dir, "dir" },
+      { dir, UNIT_ATTRIBUTE_DIRECTORY },
 
       // filename attribute
-      { filename, "filename" },
+      { filename, UNIT_ATTRIBUTE_FILENAME },
 
       // version attribute
-      { version, "version" },
+      { version, UNIT_ATTRIBUTE_VERSION },
     };
 
     // output attributes
