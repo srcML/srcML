@@ -24,7 +24,6 @@
 
 #include <cstdio>
 #include <fstream>
-#include <string>
 #include <cstring>
 #include <sys/stat.h>
 #include "version.h"
