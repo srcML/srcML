@@ -50,11 +50,11 @@ class srcMLTranslator : public Language {
 		  );
 
   // translate from input stream to output stream
-  virtual void translate(const char* srcml_filename, const char* unit_directory = 0,
+  void translate(const char* srcml_filename, const char* unit_directory = 0,
 			 const char* unit_filename = 0, const char* unit_version = 0);
 
   // destructor
-  virtual ~srcMLTranslator();
+  ~srcMLTranslator();
 
  private:
   const char* encoding;
