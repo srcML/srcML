@@ -228,26 +228,16 @@ namespace SAX2ExtractUnitsSrc {
 
     State* pstate = (State*) ctx;
 
-    // quick tests for start of element name
-    if (!((localname[0] == 'e' && localname[1] == 's') || localname[0] == 'f'))
-      return;
-
-    // correct prefix part of srcML namespace
-    if (strcmp((const char*) URI + 27, "src"))
-      return;
-
-    // correct overall namespace
-    if (strcmp((const char*) URI, "http://www.sdml.info/srcML/src"))
-      return;
-
     // in the proper unit
-    if (strcmp((const char*) localname, "escape") == 0) {
+    if (strcmp((const char*) localname, "escape") == 0 &&
+ 	strcmp((const char*) URI, "http://www.sdml.info/srcML/src") == 0) {
       
       // convert from the escaped to the unescaped value
       char value = strtod((const char*) attributes[3], NULL);
       xmlOutputBufferWrite(pstate->output, 1, &value);
 
-    } else if (strcmp((const char*) localname, "formfeed") == 0) {
+    } else if (strcmp((const char*) localname, "formfeed") == 0 &&
+	       strcmp((const char*) URI, "http://www.sdml.info/srcML/src") == 0) {
    
       char value = '\f';
       xmlOutputBufferWrite(pstate->output, 1, &value);
