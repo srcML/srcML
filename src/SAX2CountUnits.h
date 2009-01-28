@@ -31,18 +31,21 @@
 #include <libxml/parser.h>
 #include <libxml/xmlwriter.h>
 
-namespace SAX2CountUnits {
+class SAX2CountUnits {
+ public:
 
-  xmlSAXHandler factory();
+  // constructor
+  SAX2CountUnits(int unit, int& options);
 
-  struct State {
-    xmlParserCtxtPtr ctxt;
-    int unit;
-    long count;
-    bool verbose;
-  };
+  static xmlSAXHandler factory();
 
-  void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
+  xmlParserCtxtPtr ctxt;
+  int unit;
+  long count;
+  int options;
+  bool verbose;
+
+  static void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
 };
 
 #endif

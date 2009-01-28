@@ -23,6 +23,7 @@
 */
 
 #include "SAX2ExtractUnitsSrc.h"
+#include <iostream>
 
 #ifdef __GNUC__
 #include <sys/stat.h>
@@ -227,18 +228,26 @@ namespace SAX2ExtractUnitsSrc {
 
     State* pstate = (State*) ctx;
 
+    // quick tests for start of element name
+    if ((localname[0] != 'e' || localname[1] != 's') && localname[0] != 'f')
+      return;
+
+    // correct prefix part of srcML namespace
+    if (strcmp((const char*) URI + 29, "src"))
+      return;
+
+    // correct overall namespace
+    if (strcmp((const char*) URI, "http://www.sdml.info/srcML/src"))
+      return;
+
     // in the proper unit
-    if (localname[0] == 'e' && strcmp((const char*) localname, "escape") == 0 &&
-	strcmp((const char*) URI, "http://www.sdml.info/srcML/src") == 0) {
+    if (strcmp((const char*) localname, "escape") == 0) {
       
       // convert from the escaped to the unescaped value
-      char avalue[10];
-      strncpy(avalue, (const char*) attributes[3], (const char*) attributes[4] - (const char*) attributes[3]);
-      char value = strtod(avalue, NULL);
+      char value = strtod((const char*) attributes[3], NULL);
       xmlOutputBufferWrite(pstate->output, 1, &value);
 
-    } else if (localname[0] == 'f' && strcmp((const char*) localname, "formfeed") == 0 &&
-	       strcmp((const char*) URI, "http://www.sdml.info/srcML/src") == 0) {
+    } else if (strcmp((const char*) localname, "formfeed") == 0) {
    
       char value = '\f';
       xmlOutputBufferWrite(pstate->output, 1, &value);

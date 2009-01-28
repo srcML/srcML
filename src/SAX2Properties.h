@@ -29,20 +29,17 @@
 #define INCLUDED_SAX2PROPERTIES_H
 
 #include "SAX2Utilities.h"
+#include "SAX2CountUnits.h"
 #include <libxml/parser.h>
 #include <libxml/xmlwriter.h>
 
-class SAX2Properties {
+class SAX2Properties : public SAX2CountUnits {
  public:
 
   // constructor
   SAX2Properties(int unit, int& options, PROPERTIES_TYPE& nsv, PROPERTIES_TYPE& attrv);
 
   static xmlSAXHandler factory();
-
-  xmlParserCtxtPtr ctxt;
-  int unit;
-  long count;
 
   PROPERTIES_TYPE& nsv;
   PROPERTIES_TYPE& attrv;
@@ -59,9 +56,6 @@ class SAX2Properties {
 
   static void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
 
- private:
-  bool verbose;
-  const int& options;
 };
 
 #endif

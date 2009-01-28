@@ -30,11 +30,16 @@
 #include <cstring>
 #include "Options.h"
 
-namespace SAX2CountUnits {
+static const int fieldwidth = 5;
 
-  static const int fieldwidth = 5;
+// constructor
+SAX2CountUnits::SAX2CountUnits(int unit, int& options)
+  : unit(unit), options(options)
+{
+  //  verbose = isoption(options, OPTION_VERBOSE);
+}
 
-  xmlSAXHandler factory() {
+xmlSAXHandler SAX2CountUnits::factory() {
 
     xmlSAXHandler sax = { 0 };
 
@@ -42,12 +47,12 @@ namespace SAX2CountUnits {
     sax.endElementNs = &endElementNs;
 
     return sax;
-  }
+}
 
-  // end unit element and current file/buffer (started by startElementNs
-  void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+// end unit element and current file/buffer (started by startElementNs
+void SAX2CountUnits::endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
-    State* pstate = (State*) ctx;
+    SAX2CountUnits* pstate = (SAX2CountUnits*) ctx;
 
     if (pstate->ctxt->nameNr != 2)
       return;
@@ -65,4 +70,3 @@ namespace SAX2CountUnits {
     if (pstate->verbose)
       fprintf(stderr, "\r%5ld", pstate->count);
   }
-};

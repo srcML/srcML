@@ -34,7 +34,7 @@
 
 // constructor
 SAX2Properties::SAX2Properties(int unit, int& options, PROPERTIES_TYPE& nsv, PROPERTIES_TYPE& attrv) 
-  : unit(unit), nsv(nsv), attrv(attrv), options(options)
+  : SAX2CountUnits(unit, options), nsv(nsv), attrv(attrv)
 {
   verbose = isoption(options, OPTION_VERBOSE);
 }
