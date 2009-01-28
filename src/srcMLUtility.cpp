@@ -125,8 +125,6 @@ int srcMLUtility::unit_count() {
   xmlSAXHandler sax = SAX2CountUnits::factory();
 
   SAX2CountUnits state(0, options);
-  //  state.verbose = isoption(options, OPTION_VERBOSE);
-  state.count = 0;
 
   xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
   if (ctxt == NULL) return -1;

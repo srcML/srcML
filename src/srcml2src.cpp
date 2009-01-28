@@ -579,6 +579,11 @@ int main(int argc, char* argv[]) {
       // gracefully finish current file in compound document mode
       pstd::signal(SIGINT, terminate_handler);
 
+      // in verbose mode, the current counter is displayed
+      // as it counts.  Need to overwrite this
+      if (isoption(options, OPTION_VERBOSE))
+	puts("\r");
+
       printf("%d\n", su.unit_count());
 
       // if we terminated early, output the correct status

@@ -41,8 +41,8 @@ class SAX2CountUnits {
 
   xmlParserCtxtPtr ctxt;
   int unit;
-  long count;
   int options;
+  long count;
   bool verbose;
 
   static void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);

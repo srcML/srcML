@@ -34,9 +34,9 @@ static const int fieldwidth = 5;
 
 // constructor
 SAX2CountUnits::SAX2CountUnits(int unit, int& options)
-  : unit(unit), options(options)
+  : unit(unit), options(options), count(0)
 {
-  //  verbose = isoption(options, OPTION_VERBOSE);
+  verbose = isoption(options, OPTION_VERBOSE);
 }
 
 xmlSAXHandler SAX2CountUnits::factory() {
