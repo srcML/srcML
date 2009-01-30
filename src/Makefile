@@ -250,6 +250,7 @@ srcMLParserTokenTypesMacro.hpp : srcMLParserTokenTypes.hpp
 	/bin/cat srcMLParserTokenTypes.hpp | /bin/grep '=' | /bin/sed 's/^[ \t]*//' | /usr/bin/cut -d'=' -f 1 | xargs -I% echo "#define TOKEN_%" > .first
 	cat srcMLParserTokenTypes.hpp | grep '=' | cut -d'=' -f 2 | cut -d',' -f1 | sed 's/^[ \t]*//' > .second
 	paste -d' ' .first .second > $@
+	rm -f .first .second
 
 PHONY : install
 install :
