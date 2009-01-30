@@ -90,10 +90,6 @@ class StateStack {
 
     if (inMode(m))
       endCurrentMode(m);
-#ifdef ASSERT_ENDMODE
-    else
-      std::cout << "End mode problem" << std::endl;
-#endif
   }
 
   State::MODE_TYPE getMode() const {

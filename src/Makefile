@@ -14,9 +14,6 @@ include Makefile.antlr
 SRCMLPARSER_ANTLR_FLAGS =
 SRCMLLEXER_ANTLR_FLAGS =
 
-# compiler processing flags
-SRCMLPARSER_CXX_FLAGS = 
-
 # set compiler version to match that of antlr library
 CXX = /usr/bin/g++
 
@@ -48,11 +45,6 @@ all : ${EXE_DIR}src2srcml ${EXE_DIR}srcml2src
 
 # setup
 setup : version.cpp
-
-# EOF check for open tags
-asserteof :
-	make cleanobject
-	make SRCMLPARSER_CXX_FLAGS="-DASSERT_EOF -DASSERT_ENDMODE -DODEBUG"
 
 # ANTLR generated files
 SRCMLPARSER_GENS = \
@@ -146,7 +138,7 @@ ${OBJ_DIR}srcMLTranslator.o : srcMLTranslator.cpp srcMLTranslator.h StreamMLPars
 Mode.h : srcMLStateStack.h State.h StateStack.h srcMLState.h
 
 ${OBJ_DIR}srcMLParser.o : $(firstword $(SRCMLPARSER_GENS)) Mode.h TokenParser.h State.h Options.h
-	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(SRCMLPARSER_CXX_FLAGS) -c $< -o $@
+	$(CXX) $(ANTLR_INC) $(CXXFLAGS) -c $< -o $@
 
 ${OBJ_DIR}srcMLParser.S : $(firstword $(SRCMLPARSER_GENS))
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) -S $(LIBXML_INCLUDE) $< -o $@
@@ -163,19 +155,19 @@ ${OBJ_DIR}PureCommentLexer.S : $(firstword $(PURECOMMENTLEXER_GENS))
 
 ${OBJ_DIR}KeywordLexer.o : $(firstword $(KEYWORDLEXER_GENS))
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) -c $< -o $@
-#	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(SRCMLPARSER_CXX_FLAGS) -c $< -o $@
+#	$(CXX) $(ANTLR_INC) $(CXXFLAGS) -c $< -o $@
 
 ${OBJ_DIR}srcMLOutput.o : srcMLOutput.cpp srcMLOutput.h srcMLOutputPR.h srcMLParserTokenTypesMacro.hpp srcmlns.h
-	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(SRCMLPARSER_CXX_FLAGS) $(LIBXML_INCLUDE) -c $< -o $@
+	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}Mode.o : Mode.cpp Mode.h
-	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(SRCMLPARSER_CXX_FLAGS) -c $< -o $@
+	$(CXX) $(ANTLR_INC) $(CXXFLAGS) -c $< -o $@
 
 ${OBJ_DIR}Language.o : Language.cpp Language.h
-	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(SRCMLPARSER_CXX_FLAGS) -c $< -o $@
+	$(CXX) $(ANTLR_INC) $(CXXFLAGS) -c $< -o $@
 
 ${OBJ_DIR}UTF8CharBuffer.o : UTF8CharBuffer.cpp UTF8CharBuffer.h
-	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(SRCMLPARSER_CXX_FLAGS) $(LIBXML_INCLUDE) -c $< -o $@
+	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}srcMLUtility.o : srcMLUtility.cpp srcMLUtility.h SAX2CountUnits.h SAX2ExtractRootSrc.h SAX2ExtractUnitSrc.h SAX2ExtractUnitsSrc.h SAX2ExtractUnitXML.h SAX2Properties.h SAX2TextWriter.h SAX2Utilities.h Options.h
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
