@@ -65,14 +65,7 @@ STRING_START :
             '"' { 
                 selector->push("text"); 
                 ((PureCommentLexer* ) (selector->getStream("text")))->init(STRING_END, onpreprocline);
-            } |
-
-            'L' ( '"' { 
-                selector->push("text"); 
-                ((PureCommentLexer* ) (selector->getStream("text")))->init(STRING_END, onpreprocline);
-            } |
-
-            (DIGITS | NAMECHAR)* { $setType(NAME); } )
+            }
         )
 ;
 
@@ -90,21 +83,27 @@ CONSTANTS :
         DIGITS (".")? (DIGITS)? ('u' | 'U' | 'f' | 'F' | 'l' | 'L')?
 ;
 
-NAME options { testLiterals = true; } :
+NAME options { testLiterals = true; } { char save = LA(1); } :
         { startline = false; }
-        NAMECHARNOEL (DIGITS | NAMECHAR)*
+        NAMECHAR
+            ( { save == 'L' }?
+              '"' { 
+                $setType(STRING_START);
+                selector->push("text"); 
+                ((PureCommentLexer* ) (selector->getStream("text")))->init(STRING_END, onpreprocline);
+            } | RESTNAME)
 ;
+
+protected
+RESTNAME :
+        (DIGITS | NAMECHAR)*
+    ;
 
 protected   
 DIGITS :
         DIGIT
         (options { greedy = true; } : HEX_DIGIT)*
 ; 
-
-protected
-NAMECHARNOEL :
-        'a'..'z' | 'A'..'K' | 'M'..'Z' | '_'
-;
 
 protected
 NAMECHAR :
