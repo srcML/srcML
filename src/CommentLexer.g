@@ -69,15 +69,3 @@ LINECOMMENT_START
             { $setType(OPERATORS); }
         )
 ;
-/*
-COMMENT_START
-    :   "/*" { 
-
-            selector->push("text"); 
-            ((PureCommentLexer* ) (selector->getStream("text")))->init(COMMENT_END, onpreprocline);
-
-            // comment are removed before includes are processed, so we are at the start of a line
-            startline = true;
-        }
-;
-*/

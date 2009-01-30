@@ -36,7 +36,7 @@ options {
 class PureCommentLexer extends Lexer;
 
 options {
-    k = 2;
+    k = 1;
     noConstructors = true;
     defaultErrorHandler = false;
     testLiterals = false;
@@ -97,8 +97,9 @@ public:
 */
 COMMENT_TEXT { 
 
-    lasttoken = LA(2) == '\n' && (mode == STRING_END || mode == CHAR_END) && onpreprocline;
+    lasttoken = LA(1) == '\n' && (mode == STRING_END || mode == CHAR_END) && onpreprocline;
     if (lasttoken) {
+        std::cerr << "ENDING HERE" << std::endl;
        $setType(mode);
        selector->pop(); 
     }
