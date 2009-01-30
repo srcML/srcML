@@ -34,7 +34,7 @@ options {
 class OperatorLexer extends CommentLexer;
 
 options {
-    k = 2;
+    k = 1;
     testLiterals = false;
 }
 

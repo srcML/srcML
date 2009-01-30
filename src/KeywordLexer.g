@@ -34,7 +34,7 @@ options {
 class KeywordLexer extends TextLexer;
 
 options {
-    k = 2;
+    k = 1;
     testLiterals = false;
     noConstructors = true;
 //    codeGenBitsetTestThreshold=20; 

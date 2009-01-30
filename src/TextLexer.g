@@ -43,7 +43,7 @@ options {
 class TextLexer extends OperatorLexer;
 
 options {
-	k = 2;
+	k = 1;
 	testLiterals = false; 
 }
 
