@@ -112,15 +112,7 @@ COMMENT_TEXT {
         }
     :
 (
-        '\000' { $setType(CONTROL_CHAR); $setText("0x0"); } |
-        '\001' { $setType(CONTROL_CHAR); $setText("0x1"); } |
-        '\002' { $setType(CONTROL_CHAR); $setText("0x2"); } |
-        '\003' { $setType(CONTROL_CHAR); $setText("0x3"); } |
-        '\004' { $setType(CONTROL_CHAR); $setText("0x4"); } |
-        '\005' { $setType(CONTROL_CHAR); $setText("0x5"); } |
-        '\006' { $setType(CONTROL_CHAR); $setText("0x6"); } |
-        '\007' { $setType(CONTROL_CHAR); $setText("0x7"); } |
-        '\010' { $setType(CONTROL_CHAR); $setText("0x8"); } |
+        '\000'..'\010' { $setType(CONTROL_CHAR); } |
         '\011' /* '\t' */ |
         '\012' /* '\n' */ { 
               // end at EOL when for line comment, or the end of a string or char on a preprocessor line
@@ -129,42 +121,16 @@ COMMENT_TEXT {
               }
         } |
 
-        '\013' { $setType(CONTROL_CHAR); $setText("0xb"); } |
-        '\014' { $setType(CONTROL_CHAR); $setText("0xc"); } |
-        '\015' /* '\r' - misc character since converted to '\n' in input buffer */ |
-        '\016' { $setType(CONTROL_CHAR); $setText("0xe"); } |
-        '\017' { $setType(CONTROL_CHAR); $setText("0xf"); } |
-        '\020' { $setType(CONTROL_CHAR); $setText("0x10"); } |
-        '\021' { $setType(CONTROL_CHAR); $setText("0x11"); } |
-        '\022' { $setType(CONTROL_CHAR); $setText("0x12"); } |
-        '\023' { $setType(CONTROL_CHAR); $setText("0x13"); } |
-        '\024' { $setType(CONTROL_CHAR); $setText("0x14"); } |
-        '\025' { $setType(CONTROL_CHAR); $setText("0x15"); } |
-        '\026' { $setType(CONTROL_CHAR); $setText("0x16"); } |
-        '\027' { $setType(CONTROL_CHAR); $setText("0x17"); } |
-        '\030' { $setType(CONTROL_CHAR); $setText("0x18"); } |
-        '\031' { $setType(CONTROL_CHAR); $setText("0x19"); } |
-        '\032' { $setType(CONTROL_CHAR); $setText("0x1a"); } |
-        '\033' { $setType(CONTROL_CHAR); $setText("0x1b"); } |
-        '\034' { $setType(CONTROL_CHAR); $setText("0x1c"); } |
-        '\035' { $setType(CONTROL_CHAR); $setText("0x1d"); } |
-        '\036' { $setType(CONTROL_CHAR); $setText("0x1e"); } |
-        '\037' { $setType(CONTROL_CHAR); $setText("0x1f"); } |
-        '\040' |
-        '\041' |
+//        '\015' /* '\r' - misc character since converted to '\n' in input buffer */ |
+        '\013'..'\037' { $setType(CONTROL_CHAR); } |
+        '\040'..'\041' |
         '\042' /* '\"' */ { if (escapecount == 0 && mode == STRING_END && !lasttoken) { $setType(mode); selector->pop();; } } |
-        '\043' |
-        '\044' |
-        '\045' | 
+        '\043'..'\045' | 
         '&' { $setText("&amp;"); } |
         '\047' /* '\'' */ { if (escapecount == 0 && mode == CHAR_END && !lasttoken) { $setType(mode); selector->pop(); } } |
-        '\050' |
-        '\051' |
+        '\050'..'\051' |
         '\052' /* '*' */ { asteriskcount = 2; } |
-        '\053' |
-        '\054' |
-        '\055' |
-        '\056' |
+        '\053'..'\056' |
         '\057' /* '/' */ { if (asteriskcount == 1 && mode == COMMENT_END) { $setType(mode); selector->pop(); } } |
         '\060'..';' | 
         '<' { $setText("&lt;"); } | 

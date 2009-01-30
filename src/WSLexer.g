@@ -75,36 +75,8 @@ EOL_BACKSLASH :
 CONTROL_CHAR :
         { startline = true; }
         (
-        '\000' { $setText("0x0"); } |
-        '\001' { $setText("0x1"); } |
-        '\002' { $setText("0x2"); } |
-        '\003' { $setText("0x3"); } |
-        '\004' { $setText("0x4"); } |
-        '\005' { $setText("0x5"); } |
-        '\006' { $setText("0x6"); } |
-        '\007' { $setText("0x7"); } |
-        '\010' { $setText("0x8"); } |
-
-        '\013' { $setText("0xb"); } |
-        '\014' { $setText("0xc"); } |
-
-        '\016' { $setText("0xe"); } |
-        '\017' { $setText("0xf"); } |
-        '\020' { $setText("0x10"); } |
-        '\021' { $setText("0x11"); } |
-        '\022' { $setText("0x12"); } |
-        '\023' { $setText("0x13"); } |
-        '\024' { $setText("0x14"); } |
-        '\025' { $setText("0x15"); } |
-        '\026' { $setText("0x16"); } |
-        '\027' { $setText("0x17"); } |
-        '\030' { $setText("0x18"); } |
-        '\031' { $setText("0x19"); } |
-        '\032' { $setText("0x1a"); } |
-        '\033' { $setText("0x1b"); } |
-        '\034' { $setText("0x1c"); } |
-        '\035' { $setText("0x1d"); } |
-        '\036' { $setText("0x1e"); } |
-        '\037' { $setText("0x1f"); }
+        '\000'..'\010' |
+        '\013'..'\014' |
+        '\016'..'\037'
         )
 ;

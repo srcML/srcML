@@ -370,8 +370,11 @@ void srcMLOutput::processEscape(const antlr::RefToken& token) {
   const char* s = token2name(token);
 
   xmlTextWriterStartElement(xout, BAD_CAST s);
+
+  char buf[20];
+  sprintf(buf, "0x%0x", token->getText()[0]);
   
-  xmlTextWriterWriteAttribute(xout, BAD_CAST "char", BAD_CAST token->getText().c_str());
+  xmlTextWriterWriteAttribute(xout, BAD_CAST "char", BAD_CAST buf);
 
   xmlTextWriterEndElement(xout);
 }
