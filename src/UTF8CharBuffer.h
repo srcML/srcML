@@ -3,9 +3,8 @@
 
 #include <istream>
 #include <antlr/CharBuffer.hpp>
-#include <xmlwriter.h>
+#include <libxml/xmlwriter.h>
 #include <cstring>
-
 
 class UTF8CharBuffer : public antlr::CharBuffer {
 public:

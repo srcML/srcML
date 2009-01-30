@@ -38,7 +38,6 @@ CXX_LINK_FLAGS = -s
 LIBXML_INCLUDE=-I/usr/include/libxml2 -I/usr/include/libxml2/libxml
 XML_OBJ=
 XML_LIB=-lxml2
-XML_PRE=-DLIBXML_ENABLED
 LIBXML_VERSION= Libxml2 enabled
 
 SRC2SRCML_BIN=../bin/src2srcml

@@ -36,7 +36,7 @@
 #include "Options.h"
 #include "srcMLException.h"
 
-#include <xmlwriter.h>
+#include <libxml/xmlwriter.h>
 
 class srcMLOutput : public srcMLParserTokenTypes {
 

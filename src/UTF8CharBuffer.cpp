@@ -1,6 +1,6 @@
 #include <iostream>
 #include "UTF8CharBuffer.h"
-#include <xmlwriter.h>
+#include <libxml/xmlwriter.h>
 
 /*
  Get the next character from the stream
