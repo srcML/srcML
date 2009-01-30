@@ -192,7 +192,7 @@ ${OBJ_DIR}Language.o : Language.cpp Language.h
 ${OBJ_DIR}UTF8CharBuffer.o : UTF8CharBuffer.cpp UTF8CharBuffer.h
 	$(CXX) ${XML_PRE} $(ANTLR_INC) $(CXXFLAGS) $(SRCMLPARSER_CXX_FLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}srcMLUtility.o : srcMLUtility.cpp srcMLUtility.h SAX2CountUnits.h SAX2ExtractRootSrc.h SAX2ExtractUnitSrc.h SAX2ExtractUnitsSrc.h SAX2ExtractUnitXML.h SAX2Properties.h SAX2TextWriter.h SAX2Utilities.h xmloutput.h Options.h
+${OBJ_DIR}srcMLUtility.o : srcMLUtility.cpp srcMLUtility.h SAX2CountUnits.h SAX2ExtractRootSrc.h SAX2ExtractUnitSrc.h SAX2ExtractUnitsSrc.h SAX2ExtractUnitXML.h SAX2Properties.h SAX2TextWriter.h SAX2Utilities.h Options.h
 	$(CXX) $(XML_PRE) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}SAX2TextWriter.o : SAX2TextWriter.cpp SAX2TextWriter.h
@@ -217,9 +217,6 @@ ${OBJ_DIR}SAX2ExtractUnitsSrc.o : SAX2ExtractUnitsSrc.cpp SAX2ExtractUnitsSrc.h
 	$(CXX) $(XML_PRE) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}SAX2ExtractRootSrc.o : SAX2ExtractRootSrc.cpp SAX2ExtractRootSrc.h
-	$(CXX) $(XML_PRE) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
-
-${OBJ_DIR}xmloutput.o : xmloutput.cpp xmloutput.h
 	$(CXX) $(XML_PRE) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}version.o : version.cpp
@@ -249,7 +246,7 @@ cleanbuild :
 # clean non-generated object files
 PHONY : cleanobject
 cleanobject :
-	rm -f ${OBJ_DIR}src2srcml.o ${OBJ_DIR}srcMLOutput.o ${OBJ_DIR}Mode.o ${OBJ_DIR}srcMLTranslator.o ${OBJ_DIR}srcMLParser.o ${OBJ_DIR}KeywordLexer.o ${OBJ_DIR}KeywordCPPLexer.o ${OBJ_DIR}srcml2src.o ${OBJ_DIR}srcMLUtility.o ${OBJ_DIR}xmloutput.o ${OBJ_DIR}version.o ${OBJ_DIR}filetrim.o ${OBJ_DIR}srcmlapps.o ${OBJ_DIR}srcmllexer.o ${OBJ_DIR}xmlwriter.o ${OBJ_DIR}xmlreader.o ${OBJ_DIR}UTF8CharBuffer.o ${OBJ_DIR}PureCommentLexer.o ${OBJ_DIR}Language.o ${OBJ_DIR}SAX2TextWriter.o ${OBJ_DIR}SAX2ExtractUnitsSrc.o ${OBJ_DIR}SAX2ExtractUnitSrc.o ${OBJ_DIR}SAX2ExtractRootSrc.o ${OBJ_DIR}SAX2ExtractUnitXML.o ${OBJ_DIR}SAX2Utilities.o ${OBJ_DIR}SAX2Properties.o ${OBJ_DIR}SAX2CountUnits.o version.cpp srcMLParserTokenTypesMacro.hpp
+	rm -f ${OBJ_DIR}src2srcml.o ${OBJ_DIR}srcMLOutput.o ${OBJ_DIR}Mode.o ${OBJ_DIR}srcMLTranslator.o ${OBJ_DIR}srcMLParser.o ${OBJ_DIR}KeywordLexer.o ${OBJ_DIR}KeywordCPPLexer.o ${OBJ_DIR}srcml2src.o ${OBJ_DIR}srcMLUtility.o ${OBJ_DIR}version.o ${OBJ_DIR}filetrim.o ${OBJ_DIR}srcmlapps.o ${OBJ_DIR}srcmllexer.o ${OBJ_DIR}xmlwriter.o ${OBJ_DIR}xmlreader.o ${OBJ_DIR}UTF8CharBuffer.o ${OBJ_DIR}PureCommentLexer.o ${OBJ_DIR}Language.o ${OBJ_DIR}SAX2TextWriter.o ${OBJ_DIR}SAX2ExtractUnitsSrc.o ${OBJ_DIR}SAX2ExtractUnitSrc.o ${OBJ_DIR}SAX2ExtractRootSrc.o ${OBJ_DIR}SAX2ExtractUnitXML.o ${OBJ_DIR}SAX2Utilities.o ${OBJ_DIR}SAX2Properties.o ${OBJ_DIR}SAX2CountUnits.o version.cpp srcMLParserTokenTypesMacro.hpp
 
 # clean ANTLR generated files
 PHONY : cleanantlr

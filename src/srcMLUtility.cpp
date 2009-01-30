@@ -26,7 +26,6 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
-#include "xmloutput.h"
 #include <xmlsave.h>
 #include "srcmlns.h"
 #include <libxml/parser.h>
