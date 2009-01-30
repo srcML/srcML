@@ -18,10 +18,6 @@ SRCMLLEXER_ANTLR_FLAGS =
 CXX = /usr/bin/g++
 
 # compiler optimizations
-CXXFLAGS = -O3 -Wall -march=nocona -minline-all-stringops -fno-rtti
-#-fno-enforce-eh-specs
-
-# compiler optimizations
 ifdef STATIC
 CXXFLAGS = -O3 -Wall -march=nocona -minline-all-stringops -fno-rtti -static-libgcc -L ../lib
 else
