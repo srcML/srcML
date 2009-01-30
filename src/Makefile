@@ -18,11 +18,7 @@ SRCMLLEXER_ANTLR_FLAGS =
 CXX = /usr/bin/g++
 
 # compiler optimizations
-ifdef STATIC
-CXXFLAGS = -O3 -Wall -march=nocona -minline-all-stringops -fno-rtti -static-libgcc -L ../lib
-else
 CXXFLAGS = -O3 -Wall -march=nocona -minline-all-stringops -fno-rtti
-endif
 
 # compiler gcc linking flags
 CXX_LINK_FLAGS = -s
