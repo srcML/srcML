@@ -77,14 +77,11 @@ void output_help(const char* name) {
   printf("  %s, %-19s set the output source encoding to ENC (default:  %s) \n\n",
 	  TEXTENCODING_FLAG_SHORT, TEXTENCODING_FLAG_FULL, DEFAULT_TEXT_ENCODING);
 
-#ifdef LIBXML_ENABLED
-
        /*
  	       << "  " << SKIP_ENCODING_FLAG_SHORT        << ", " << setw(COL) <<  SKIP_ENCODING_FLAG
 	       << "skip any text encoding transformation" << "\n"
        */
 
-#endif
   printf("  %s, %-19s extract nested unit NUM from a compound srcML document\n",
 	  UNIT_FLAG_SHORT, UNIT_FLAG_FULL);
 
@@ -95,10 +92,8 @@ void output_help(const char* name) {
   printf("  %s, %-19s output in XML instead of text\n",
 	  XML_FLAG_SHORT, XML_FLAG);
 
-#ifdef LIBXML_ENABLED
   printf("  %s, %-19s output XML in gzip format\n\n",
 	  COMPRESSED_FLAG_SHORT, COMPRESSED_FLAG);
-#endif
 
   printf("  %-23s do not output the default XML declaration in XML output\n",
 	  NO_XML_DECLARATION_FLAG);
@@ -275,13 +270,9 @@ int main(int argc, char* argv[]) {
 
     // compressed mode
     else if (compare_flags(argv[curarg], COMPRESSED_FLAG, COMPRESSED_FLAG_SHORT, position)) {
-#ifdef LIBXML_ENABLED
+
       options |= OPTION_COMPRESSED;
       if (position == original_position) ++curarg;
-#else
-      std::cerr << NAME << ": The compression option, i.e., " << COMPRESSED_FLAG << ", is only supported in the libxml version.\n";
-      exit(STATUS_LIBXML2_FEATURE);
-#endif
     }
 
     // no xml declaration mode
@@ -360,7 +351,7 @@ int main(int argc, char* argv[]) {
 
     // text encoding
     else if (compare_flags(argv[curarg], TEXTENCODING_FLAG, TEXTENCODING_FLAG_SHORT)) {
-#ifdef LIBXML_ENABLED
+
       options |= OPTION_TEXT_ENCODING;
 
       char* embedded = extract_option(argv[curarg]);
@@ -386,10 +377,6 @@ int main(int argc, char* argv[]) {
 	fprintf(stderr, "%s: text encoding \"%s\" is not supported.\n", NAME, src_encoding);
 	exit(STATUS_UNKNOWN_ENCODING);
       }
-#else
-      std::cerr << NAME << ": The source encoding option, i.e., " << TEXTENCODING_FLAG << ", is only supported in the libxml version.\n";
-      exit(STATUS_LIBXML2_FEATURE);
-#endif
 
     // reached the end of a multi-short form option
     } else if (position > 0 && argv[curarg][position + 1] == '\0') {

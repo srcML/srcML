@@ -67,11 +67,7 @@ const char* const EXPRESSION_MODE_FLAG_SHORT = "-e";
 const char* const SELF_VERSION_FLAG = "--self-version";
 const char* const SELF_VERSION_FLAG_SHORT = "";
 
-#ifdef LIBXML_ENABLED
 const char* const DEFAULT_XML_ENCODING = "UTF-8";
-#else
-const char* const DEFAULT_XML_ENCODING = "ISO-8859-1";
-#endif
 
 const char* const FILELIST_FLAG = "--input-file";
 const char* const FILELIST_FLAG_SHORT = "-i";
@@ -138,7 +134,6 @@ void output_help(const char* name) {
   printf("  %s, %s set the output XML encoding to ENC (default:  %s)\n",
 	  ENCODING_FLAG_SHORT, ENCODING_FLAG, DEFAULT_XML_ENCODING);
 
-#ifdef LIBXML_ENABLED
   printf("  %s, %s set the input source encoding to ENC (default:  %s)\n\n",
 	  TEXTENCODING_FLAG_SHORT, TEXTENCODING_FLAG, DEFAULT_TEXT_ENCODING);
 
@@ -146,7 +141,7 @@ void output_help(const char* name) {
 	      << "  " << SKIP_ENCODING_FLAG_SHORT        << ", " << setw(COL) <<  SKIP_ENCODING_FLAG
 	      << "store the text without any text encoding changes" << "\n"
       */
-#endif
+
   printf("  %s set the default namespace URI\n", XMLNS_DEFAULT_FLAG_FULL);
   printf("        (default:  xmlns=\"%s\")\n", SRCML_SRC_NS_URI);
 
@@ -157,9 +152,7 @@ void output_help(const char* name) {
   printf("  %s	do not output the default XML declaration\n", NO_XML_DECLARATION_FLAG);
   printf("  %s	do not output any namespace declarations\n\n", NO_NAMESPACE_DECLARATION_FLAG);
 
-#ifdef LIBXML_ENABLED
   printf("  %s, %s output in gzip format\n", COMPRESSED_FLAG_SHORT, COMPRESSED_FLAG);
-#endif
 
   printf("  %s, %s low-latency output\n", INTERACTIVE_FLAG_SHORT, INTERACTIVE_FLAG);
 
@@ -214,13 +207,8 @@ void output_help(const char* name) {
 	 "  %1$s - m.cpp.xml    (read from standard input, write to file m.cpp.xml)\n"
 	 "  %1$s --directory=src --filename=m.cpp - m.cpp.xml "
 	 "(element unit attributes dir \"src\", filename \"m.cpp\")\n"
-
-#ifdef LIBXML_ENABLED
-
 	 "  %1$s --src-encoding=UTF-8 m.cpp m.cpp.xml         "
 	 "(encoding of input text file is UTF-8)\n"
-#endif
-
 	 "  %1$s --xml-encoding=ISO-8859-1 m.cpp m.cpp.xml    "
 	 "(set encoding of srcML file to ISO-8859-1)\n\n", name);
 
@@ -620,13 +608,9 @@ int process_args(int argc, char* argv[]) {
 
     // compressed mode
     else if (compare_flags(argv[curarg], COMPRESSED_FLAG, COMPRESSED_FLAG_SHORT, position)) {
-#ifdef LIBXML_ENABLED
+
       options |= OPTION_COMPRESSED;
       if (position == original_position) ++curarg;
-#else
-      fprintf(stderr, "%s: The compression option, i.e., %s, is only supported in the libxml version.\n", NAME, COMPRESSED_FLAG);
-      exit(STATUS_LIBXML2_FEATURE);
-#endif
     }
     /*
     // skip encoding mode
@@ -886,19 +870,16 @@ int process_args(int argc, char* argv[]) {
 	xml_encoding = argv[(++curarg)++];
       }
 
-#ifdef LIBXML_ENABLED
       // validate xml encoding
       if (!srcMLOutput::checkEncoding(xml_encoding)) {
 	fprintf(stderr, "%s: xml encoding \"%s\" is not supported.\n", NAME, xml_encoding);
 	exit(STATUS_UNKNOWN_ENCODING);
       }
-#endif
     }
 
     // text encoding
     else if (compare_flags(argv[curarg], TEXTENCODING_FLAG, TEXTENCODING_FLAG_SHORT)) {
 
-#ifdef LIBXML_ENABLED
       options |= OPTION_TEXT_ENCODING;
 
       char* embedded = extract_option(argv[curarg]);
@@ -924,10 +905,6 @@ int process_args(int argc, char* argv[]) {
 	fprintf(stderr, "%s: text encoding \"%s\" is not supported.\n", NAME, src_encoding);
 	exit(STATUS_UNKNOWN_ENCODING);
       }
-#else
-      fprintf(stderr, "%s: The source encoding option, i.e., %s, is only supported in the libxml version.\n", NAME, TEXTENCODING_FLAG);
-      exit(STATUS_LIBXML2_FEATURE);
-#endif
     }
 
     // optional directory specification
