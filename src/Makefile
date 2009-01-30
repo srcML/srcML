@@ -43,9 +43,6 @@ LIBXML_VERSION= Libxml2 enabled
 SRC2SRCML_BIN=../bin/src2srcml
 SRCML2SRC_BIN=../bin/srcml2src
 
-TIMING_MED=timing_med.h
-TIMING_JAVA=timing_java.java
-
 # default
 all : ${EXE_DIR}src2srcml ${EXE_DIR}srcml2src
 
