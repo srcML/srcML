@@ -67,12 +67,12 @@ STRING_START :
                 ((PureCommentLexer* ) (selector->getStream("text")))->init(STRING_END, onpreprocline);
             } |
 
-            'L' '"' { 
+            'L' ( '"' { 
                 selector->push("text"); 
                 ((PureCommentLexer* ) (selector->getStream("text")))->init(STRING_END, onpreprocline);
             } |
 
-            'L' (DIGITS | NAMECHAR)* { $setType(NAME); }
+            (DIGITS | NAMECHAR)* { $setType(NAME); } )
         )
 ;
 
