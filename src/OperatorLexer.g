@@ -90,12 +90,15 @@ ALLOPERATORS options { testLiterals = true; } :
                 onpreprocline = true; 
             }
         }    |
-        "*=" |  // immediate multiplication
-        '*' |   // multiplication/pointer
+//        "*=" |  // immediate multiplication
+//        '*' |   // multiplication/pointer
+        '*' ( '=' | ) |
         ',' |
-        ".*" |  // member pointer selector
-        '.' | 
-        ':' | "::" |
+//        ".*" |  // member pointer selector
+//        '.' | 
+        '.' ( '*' | ) |
+//        ':' | "::" |
+        ':' ( ':' | ) |
         ';' |
         '('..')' |
         '[' | ']' |
