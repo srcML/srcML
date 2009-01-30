@@ -83,21 +83,16 @@ CONSTANTS :
         DIGITS (".")? (DIGITS)? ('u' | 'U' | 'f' | 'F' | 'l' | 'L')?
 ;
 
-NAME options { testLiterals = true; } { char save = LA(1); } :
+NAME options { testLiterals = true; } { char lastchar = LA(1); } :
         { startline = false; }
-        NAMECHAR
-            ( { save == 'L' }?
-              '"' { 
-                $setType(STRING_START);
-                selector->push("text"); 
-                ((PureCommentLexer* ) (selector->getStream("text")))->init(STRING_END, onpreprocline);
-            } | RESTNAME)
-;
+        NAMECHAR (
 
-protected
-RESTNAME :
-        (DIGITS | NAMECHAR)*
-    ;
+            { lastchar == 'L' }?
+            { $setType(STRING_START); } STRING_START |
+
+            (DIGIT | NAMECHAR)*
+        )
+;
 
 protected   
 DIGITS :
