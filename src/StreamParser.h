@@ -182,10 +182,6 @@ class StreamParser : public Base, public TokenStream {
 
  public:
 
-  const antlr::RefToken& currentToken() const {
-    return tb.front();
-  }
-
   // returns the next token in the output token stream
   const antlr::RefToken& nextToken() {
 

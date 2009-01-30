@@ -45,8 +45,6 @@ class TokenStream {
 
   virtual const antlr::RefToken& nextToken() = 0;
 
-  virtual const antlr::RefToken& currentToken() const = 0;
-
   virtual ~TokenStream() {}
 };
 
