@@ -33,7 +33,7 @@ options {
 class CommentLexer extends WSLexer;
 
 options {
-    k = 2;
+    k = 1;
 }
 
 tokens {
