@@ -51,6 +51,7 @@ options {
 public:
 
 bool onpreprocline;
+
 }
 
 STRING_START :
@@ -62,20 +63,14 @@ STRING_START :
             // #define a "abc
             // note that the "abc does not end at the end of this line,
             // but the #define must end, so EOL is not a valid string character
-            '"' { 
-                selector->push("text"); 
-                ((PureCommentLexer* ) (selector->getStream("text")))->init(STRING_END, onpreprocline);
-            }
+            '"' { changetotextlexer(STRING_END); }
         )
 ;
 
 // character literal or single quoted string
 CHAR_START :
         { startline = false; }
-        '\'' { 
-            selector->push("text"); 
-            ((PureCommentLexer* ) (selector->getStream("text")))->init(CHAR_END, onpreprocline);
-        }
+        '\'' { changetotextlexer(CHAR_END); }
 ;
 
 CONSTANTS :

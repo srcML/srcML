@@ -36,6 +36,11 @@ void KeywordCPPLexer::fillliterals(const pair litarr[], unsigned int size) {
         literals[litarr[i].s] = litarr[i].n;
 }
 
+void KeywordCPPLexer::changetotextlexer(int typeend) {
+          selector->push("text"); 
+           ((PureCommentLexer* ) (selector->getStream("text")))->init(typeend, onpreprocline);
+}
+
 }
 
 options {
@@ -114,6 +119,8 @@ bool startline;
 struct pair { char const * const s; int n; };
 
 void fillliterals(const pair litarr[], unsigned int size);
+
+void changetotextlexer(int typeend);
 
 KeywordCPPLexer(std::istream& in, const char* encoding, int language = LANGUAGE_CXX)
 	: antlr::CharScanner(new UTF8CharBuffer(encoding, in),true), Language(language), onpreprocline(false), startline(true)
