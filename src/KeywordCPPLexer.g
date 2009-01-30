@@ -48,7 +48,7 @@ class KeywordCPPLexer extends KeywordLexer;
 
 options {
     classHeaderSuffix="public Language";
-    k = 2;
+    k = 1;
     testLiterals = false;
     noConstructors = true;
     defaultErrorHandler = false;

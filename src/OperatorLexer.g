@@ -39,6 +39,7 @@ options {
 }
 
 tokens {
+EOL_BACKSLASH;
 
 TEMPOPS;
 TEMPOPE;
@@ -171,7 +172,7 @@ OPERATORS :
 
         '?'  | // part of ternary
 
-        '\\' | // 
+        '\\' ( EOL { $setType(EOL_BACKSLASH); } | ) | // 
 
 //        "^=" | // immediate bitwise exclusive or
         '^' ('=' | )  | // bitwise exclusive or
