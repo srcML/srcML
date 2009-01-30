@@ -247,10 +247,7 @@ trunkversion :
 	echo -n `date` >> VERSION
 
 srcMLParserTokenTypesMacro.hpp : srcMLParserTokenTypes.hpp
-	/bin/grep '=' srcMLParserTokenTypes.hpp | /bin/sed 's/^[ \t]*//' | /usr/bin/cut -d'=' -f 1 | xargs -I% echo "#define TOKEN_%" > .first
-	/bin/grep '=' srcMLParserTokenTypes.hpp | cut -d'=' -f 2 | cut -d',' -f1 | sed 's/^[ \t]*//' > .second
-	paste -d' ' .first .second > $@
-	rm -f .first .second
+	/bin/grep '=' srcMLParserTokenTypes.hpp | /bin/sed -e 's/,//g' -e 's/= //g' -e 's/^[ \t]*//' -e 's/^/#define TOKEN_/g' > $@
 
 PHONY : install
 install :
