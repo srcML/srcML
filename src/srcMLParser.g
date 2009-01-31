@@ -4407,19 +4407,24 @@ enum_definition_whole { LocalMode lm; } :
 
         (variable_identifier)*
         (
+
+        // start of enum definition block
         {
             startNewMode(MODE_TOP | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_BLOCK | MODE_NEST);
 
             startElement(SBLOCK);
         }
         LCURLY
+
+        // contents of enum definition block
         ( options { greedy = false; } :
         { LA(1) != RCURLY || inTransparentMode(MODE_INTERNAL_END_CURLY) }?
         expression | comma | LPAREN | RPAREN )*
-//        full_expression
+
+
+        // end of enum definition block
         {
             endDownToMode(MODE_TOP | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_BLOCK | MODE_NEST);
-//            endDownToMode(MODE_BLOCK | MODE_NEST);
         }
         RCURLY
         )
