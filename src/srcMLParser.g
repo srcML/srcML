@@ -4413,7 +4413,9 @@ enum_definition_whole { LocalMode lm; } :
             startElement(SBLOCK);
         }
         LCURLY
-        ( options { greedy = false; } : { LA(1) != RCURLY || inTransparentMode(MODE_INTERNAL_END_PAREN) }? expression | comma | LPAREN | RPAREN )*
+        ( options { greedy = false; } :
+        { LA(1) != RCURLY || inTransparentMode(MODE_INTERNAL_END_CURLY) }?
+        expression | comma | LPAREN | RPAREN )*
 //        full_expression
         {
             endDownToMode(MODE_TOP | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_BLOCK | MODE_NEST);
