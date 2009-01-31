@@ -114,7 +114,7 @@ void SAX2Properties::endElementNs(void *ctx, const xmlChar *localname, const xml
 
     // double check that this is a nested file (only done the first time)
     if (pstate->count == 0 && !(strcmp((const char*) localname, "unit") == 0 &&
-	  strcmp((const char*) URI, "http://www.sdml.info/srcML/src") == 0)) {
+	  strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0)) {
       xmlStopParser(pstate->ctxt);
       return;
     }

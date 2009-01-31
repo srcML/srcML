@@ -23,6 +23,8 @@
 */
 
 #include "SAX2ExtractUnitsSrc.h"
+#include "srcmlns.h"
+
 #include <iostream>
 
 #ifdef __GNUC__
@@ -111,7 +113,7 @@ namespace SAX2ExtractUnitsSrc {
 
     // check that this is a nested file
     if (pstate->count == 0 && !(strcmp((const char*) localname, "unit") == 0 &&
-	  strcmp((const char*) URI, "http://www.sdml.info/srcML/src") == 0)) {
+	  strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0)) {
       fprintf(stderr, "Options only valid for nested srcML documents\n");
       xmlStopParser(pstate->ctxt);
       return;
@@ -230,14 +232,14 @@ namespace SAX2ExtractUnitsSrc {
 
     // in the proper unit
     if (strcmp((const char*) localname, "escape") == 0 &&
- 	strcmp((const char*) URI, "http://www.sdml.info/srcML/src") == 0) {
+ 	strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0) {
       
       // convert from the escaped to the unescaped value
       char value = strtod((const char*) attributes[3], NULL);
       xmlOutputBufferWrite(pstate->output, 1, &value);
 
     } else if (strcmp((const char*) localname, "formfeed") == 0 &&
-	       strcmp((const char*) URI, "http://www.sdml.info/srcML/src") == 0) {
+	       strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0) {
    
       char value = '\f';
       xmlOutputBufferWrite(pstate->output, 1, &value);

@@ -24,6 +24,7 @@
 
 #include "SAX2ExtractUnitSrc.h"
 #include "SAX2ExtractRootSrc.h"
+#include "srcmlns.h"
 
 namespace SAX2ExtractUnitSrc {
 
@@ -62,7 +63,7 @@ namespace SAX2ExtractUnitSrc {
 
     // check that this is a nested file
     if (pstate->count == 0 && !(strcmp((const char*) localname, "unit") == 0 &&
-	  strcmp((const char*) URI, "http://www.sdml.info/srcML/src") == 0)) {
+	  strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0)) {
       xmlStopParser(pstate->ctxt);
       return;
     }

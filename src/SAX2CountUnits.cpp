@@ -24,6 +24,7 @@
 
 #include "SAX2CountUnits.h"
 #include "SAX2Utilities.h"
+#include "srcmlns.h"
 
 #include <iostream>
 #include <iomanip>
@@ -59,7 +60,7 @@ void SAX2CountUnits::endElementNs(void *ctx, const xmlChar *localname, const xml
 
     // check that this is a nested file
     if (pstate->count == 0 && !(strcmp((const char*) localname, "unit") == 0 &&
-	  strcmp((const char*) URI, "http://www.sdml.info/srcML/src") == 0)) {
+	  strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0)) {
       xmlStopParser(pstate->ctxt);
       return;
     }
