@@ -439,7 +439,7 @@ struct cppmodeitem {
         bool skipelse;
 };
 
-std::stack<cppmodeitem> cppmode;
+std::stack<cppmodeitem, std::list<cppmodeitem> > cppmode;
 
 void startUnit() {
 
