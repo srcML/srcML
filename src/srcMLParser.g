@@ -2406,7 +2406,7 @@ declaration_check[int& token] { token = 0; } :
         OPERATOR (NAME)* paren_pair record[isoperatorfunction, true] |
 
         { inLanguage(LANGUAGE_CXX_FAMILY) }?
-        (operator_function_name)=> operator_function_name record[isoperatorfunction, true] paren_pair |
+        (operator_function_name)=> operator_function_name record[isoperatorfunction, true] |
 
         (options { greedy = true; } : (VIRTUAL | INLINE))* lead_type_identifier declaration_check_end[token]
 ;
