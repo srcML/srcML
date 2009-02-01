@@ -613,15 +613,11 @@ statements_non_cfg { int token = 0; int secondtoken = 0; isoperatorfunction = fa
         (extern_definition_header)=> extern_definition |
 
         // constructor
-        { inLanguage(LANGUAGE_JAVA_FAMILY) }?
+        { inLanguage(LANGUAGE_OO) }?
         (constructor_check[token /* token after header */])=> constructor[token] |
 
         // declarations of all sorts
         (declaration_check[secondtoken])=> declaration |
-
-        // constructor
-        { inLanguage(LANGUAGE_CXX_FAMILY) }?
-        (constructor_check[token /* token after header */])=> constructor[token] |
 
         // destructor
         { inLanguage(LANGUAGE_CXX_FAMILY) }?
