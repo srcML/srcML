@@ -3750,10 +3750,7 @@ general_operators { LocalMode lm; } :
         }
         (OPERATORS | TEMPOPS | 
 
-            { !inMode(MODE_TEMPLATE) }? (TEMPOPE TEMPOPE)=>
-            TEMPOPE TEMPOPE |
-
-            TEMPOPE | 
+            TEMPOPE ( { !inMode(MODE_TEMPLATE) }? TEMPOPE | ) | 
 
             EQUAL | MULTIMM | DESTOP | MEMBERPOINTER | RSHIFT)
 ;
