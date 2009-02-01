@@ -876,15 +876,13 @@ for_initialization { int type_count = 0; } :
         (
             // explicitly check for a variable declaration since it can easily
             // be confused with an expression
-            (function_type_check[type_count])=> ({ type_count > 1 }?
-
-                for_initialization_variable_declaration[type_count] |
-
-                expression
-            ) |
+            { perform_function_type_check(type_count) > 1 }?
+            for_initialization_variable_declaration[type_count] |
+            
             // explicitly check for non-terminate so that a large switch statement
             // isn't needed
-            { LA(1) != TERMINATE }? expression |
+            { type_count == 1 || LA(1) != TERMINATE }?
+            expression |
 
             // only thing left is an empty initialization
             terminate
@@ -1931,8 +1929,8 @@ statement_part { int type_count; } :
              function_specifier |
 
         // K&R function parameters
-        { inLanguage(LANGUAGE_C_FAMILY) && inMode(MODE_FUNCTION_TAIL) }?
-        (function_type_check[type_count])=>
+        { inLanguage(LANGUAGE_C_FAMILY) && inMode(MODE_FUNCTION_TAIL) && 
+          perform_function_type_check(type_count) > 0 }?
 
             // parameter declaration for a K&R old style function parameter declaration
             { startNewMode(MODE_TOP); }
@@ -2494,6 +2492,25 @@ update_var_typecount {} :
                 setMode(MODE_VARIABLE_NAME | MODE_INIT); 
             } 
         }
+;
+
+
+perform_function_type_check[int& type_count] returns [int count] {
+
+    int start = mark();
+    inputState->guessing++;
+
+    try {
+        function_type_check(type_count);
+    } catch (...) {
+        type_count = 0;
+    }
+
+    inputState->guessing--;
+    rewind(start);
+
+    count = type_count;
+} :
 ;
 
 /*
@@ -4213,10 +4230,12 @@ parameter_type { LocalMode lm; int type_count = 0; } :
             // start of type
             startElement(STYPE);
         }
-        (function_type_check[type_count])=>
-            eat_type[type_count > 1 ? type_count - 1 : 1] |
+        (
+        { perform_function_type_check(type_count) > 0 }?
+        eat_type[type_count > 1 ? type_count - 1 : 1] |
 
         lead_type_identifier
+        )
 ;
 
 /*
