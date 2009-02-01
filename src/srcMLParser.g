@@ -4359,7 +4359,7 @@ typedef_statement { int type_count = 0; } :
         (
             (function_pointer_declaration_check[type_count])=>
                 function_pointer_declaration[type_count] |
-            (structures)=>
+            { LA(1) == CLASS || LA(1) == UNION || LA(1) == STRUCT }?    
                 {
                     // end all elements started in this rule
                     startNewMode(MODE_LOCAL | MODE_TYPEDEF | MODE_END_AT_BLOCK_NO_TERMINATE);
