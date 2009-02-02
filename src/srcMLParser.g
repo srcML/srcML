@@ -1907,10 +1907,12 @@ else_handling {} :
 statement_part { int type_count; } :
 
         { inMode(MODE_EAT_TYPE) }?
-            consume_type_identifier |
+            type_identifier
+            update_typecount |
 
         { inMode(MODE_EAT_VAR_TYPE) }?
-            consume_var_type_identifier |
+            type_identifier
+            update_typecount |
 
         /*
           MODE_FUNCTION_TAIL
@@ -2436,36 +2438,8 @@ function_type[int type_count] {} :
             // type element begins
             startElement(STYPE);
         }
-        consume_lead_type_identifier
-;
-
-
-consume_type_identifier {} :
-
-        type_identifier
-
-        update_typecount
-;
-
-consume_var_type_identifier {} :
-
-        type_identifier
-
-        update_var_typecount
-;
-
-consume_lead_type_identifier {} :
-
         lead_type_identifier
-
         update_typecount
-;
-
-consume_var_lead_type_identifier {} :
-
-        lead_type_identifier
-
-        update_var_typecount
 ;
 
 update_typecount {} :
@@ -2489,7 +2463,6 @@ update_var_typecount {} :
             } 
         }
 ;
-
 
 perform_function_type_check[int& type_count] returns [int count] {
 
@@ -3671,7 +3644,8 @@ variable_declaration_type[int type_count] {} :
             // type element begins
             startElement(STYPE);
         }
-        consume_var_lead_type_identifier
+        lead_type_identifier
+        update_var_typecount
 ;
 
 /*
