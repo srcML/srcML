@@ -3672,17 +3672,6 @@ variable_declaration_type[int type_count] {} :
             startElement(STYPE);
         }
         consume_var_lead_type_identifier
-
-/*
-        {
-            // end all elements started in this rule
-            startNewMode(MODE_LOCAL);
-
-            // start of the type
-            startElement(STYPE);
-        }
-        eat_type[type_count - 1]
-*/
 ;
 
 /*
