@@ -2527,18 +2527,18 @@ type_identifier_count[int& type_count] { ++type_count; } :
 deduct[int& type_count] { --type_count; } :
 ;
 
-eat_type_first[int count] { /* if (count == 1 && !inputState->guessing) setFinalToken();*/ } :
+eat_type[int count] { if (count <= 0) return; } :
 
-        { count == 1 }? lead_type_identifier |
+        type_identifier
+        { 
+            --count;
+            while (count) {
 
-        lead_type_identifier eat_type[count - 1]
-;
+                type_identifier();
+                --count;
+            }
 
-eat_type[int count] { /* if (count == 1 && !inputState->guessing) setFinalToken();*/ } :
-
-        { count == 1 || count == 0 }? type_identifier |
-
-        type_identifier eat_type[count - 1]
+        }
 ;
 
 /*
@@ -4226,12 +4226,8 @@ parameter_type { LocalMode lm; int type_count = 0; } :
             // start of type
             startElement(STYPE);
         }
-        (
-        { perform_function_type_check(type_count) > 0 }?
-        eat_type[type_count > 1 ? type_count - 1 : 1] |
-
-        lead_type_identifier
-        )
+        { perform_function_type_check(type_count); }
+        eat_type[type_count > 1 ? type_count - 1 : 1]
 ;
 
 /*
