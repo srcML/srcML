@@ -4077,7 +4077,7 @@ argument_grammar {} :
 /*
   Parameter for a function declaration or definition
 */                
-parameter [bool single = false] { int type_count = 0; } :
+parameter[bool single = false] { int type_count = 0; } :
         {
             // end parameter correctly
             startNewMode(MODE_PARAMETER);
