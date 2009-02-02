@@ -4051,8 +4051,8 @@ parameter_list { LocalMode lm; } :
         LPAREN (comma | full_parameter)* rparen
 ;
 
-full_parameter[bool single = false] {} :
-        parameter[single] (variable_declaration_initialization expression)*
+full_parameter {} :
+        parameter (variable_declaration_initialization expression)*
 ;
 
 argument {} :
@@ -4077,7 +4077,7 @@ argument_grammar {} :
 /*
   Parameter for a function declaration or definition
 */                
-parameter[bool single = false] { int type_count = 0; } :
+parameter { int type_count = 0; } :
         {
             // end parameter correctly
             startNewMode(MODE_PARAMETER);
@@ -4100,12 +4100,8 @@ parameter[bool single = false] { int type_count = 0; } :
             // expect a name initialization
             setMode(MODE_VARIABLE_NAME | MODE_INIT);
         }
-        (
+        ( options { greedy = true; } : variable_declaration_nameinit)*
 
-                { !single }?
-                ( options { greedy = true; } : variable_declaration_nameinit)* | 
-
-                variable_declaration_nameinit)
         )
 ;
 
