@@ -21,10 +21,10 @@ CXX = /usr/bin/g++
 CXXFLAGS = -O3 -Wall -march=nocona -minline-all-stringops -fno-rtti
 
 # compiler gcc linking flags
-CXX_LINK_FLAGS = #-s
+CXX_LINK_FLAGS = -s
 
 # object code for xml
-LIBXML_INCLUDE=-I/usr/include/libxml2 -I/usr/include/libxml2/libxml
+LIBXML_INCLUDE=-I/usr/include/libxml2
 XML_OBJ=
 XML_LIB=-lxml2
 LIBXML_VERSION= Libxml2 enabled
