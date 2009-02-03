@@ -492,8 +492,6 @@ start {} :
         { !inMode(MODE_DERIVED) && (!inMode(MODE_EXPRESSION) || inTransparentMode(MODE_DETECT_COLON)) }? 
         colon[true] |
 
-        // terminate is used specially with for loop @test for
-//        { !inMode(MODE_IGNORE_TERMINATE) }? terminate[true] |
         terminate[true] |
 
         // don't confuse with expression block
