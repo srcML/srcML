@@ -3726,6 +3726,25 @@ general_operators { LocalMode lm; } :
             EQUAL | MULTIMM | DESTOP | MEMBERPOINTER | RSHIFT)
 ;
 
+
+general_operatorsVquestion { LocalMode lm; } :
+        {
+            if (isoption(parseoptions, OPTION_OPERATOR)) {
+
+                // end all elements at end of rule automatically
+                startNewMode(MODE_LOCAL);
+
+                // start the modifier
+                startElement(SOPERATOR);
+            }
+        }
+        (OPERATORS | TEMPOPS | 
+
+            TEMPOPE ({ !inMode(MODE_TEMPLATE) }? TEMPOPE)* | 
+
+            EQUAL | MULTIMM | DESTOP | MEMBERPOINTER | RSHIFT)
+;
+
 /*
   All possible operators
 */
