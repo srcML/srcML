@@ -2974,7 +2974,7 @@ complex_name[bool marked] { LocalMode lm; TokenPosition tp; /* TokenPosition tp2
         }
         (DCOLON { iscomplex_name = true; })*
         simple_name_optional_template[marked]
-        ({ inLanguage(LANGUAGE_OO) }? name_tail[iscomplex_name, marked] |)
+        name_tail[iscomplex_name, marked]
         {
             // if we marked it as a complex name and it isn't, fix
             if (marked && !iscomplex_name)
