@@ -2742,7 +2742,7 @@ variable_identifier_grammar[bool& iscomplex] { LocalMode lm; } :
 
         simple_name_optional_template[true]
 
-        ({ inLanguage(LANGUAGE_OO) }? name_tail[iscomplex, true] |)
+        name_tail[iscomplex, true]
 
         variable_identifier_array_grammar[iscomplex]
 ;
