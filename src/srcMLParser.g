@@ -493,7 +493,8 @@ start {} :
         colon[true] |
 
         // terminate is used specially with for loop @test for
-        { !inMode(MODE_IGNORE_TERMINATE) }? terminate[true] |
+//        { !inMode(MODE_IGNORE_TERMINATE) }? terminate[true] |
+        terminate[true] |
 
         // don't confuse with expression block
         { inTransparentMode(MODE_CONDITION) ||
@@ -857,7 +858,7 @@ for_group { setFinalToken(); } :
 /*
   for parameter list initialization
 */
-for_initialization { int type_count = 0; } :
+for_initialization_action {} :
         {
             assertMode(MODE_FOR_INITIALIZATION | MODE_EXPECT);
 
@@ -869,6 +870,10 @@ for_initialization { int type_count = 0; } :
 
             startElement(SFOR_INITIALIZATION);
         }
+    ;
+
+for_initialization { int type_count = 0; } :
+        for_initialization_action
         (
             // explicitly check for a variable declaration since it can easily
             // be confused with an expression
@@ -877,11 +882,7 @@ for_initialization { int type_count = 0; } :
             
             // explicitly check for non-terminate so that a large switch statement
             // isn't needed
-            { type_count == 1 || LA(1) != TERMINATE }?
-            expression |
-
-            // only thing left is an empty initialization
-            terminate
+            expression
         )
 ;
 
@@ -904,7 +905,7 @@ for_initialization_variable_declaration[int type_count] {} :
 /*
   for parameter list condition
 */
-for_condition {} :
+for_condition_action {} :
         {
             assertMode(MODE_FOR_CONDITION | MODE_EXPECT);
 
@@ -916,13 +917,13 @@ for_condition {} :
 
             startElement(SFOR_CONDITION);
         }
-        (
-            // non-empty condition
-            expression |
+    ;
 
-            // empty condition
-            terminate
-        )
+for_condition {} :
+        for_condition_action
+
+        // non-empty condition
+        expression
 ;
 
 /*
@@ -1809,6 +1810,15 @@ rcurly { setFinalToken(); } :
 */
 terminate[bool final = false] { if(final) setFinalToken(); } :
 
+        {
+            if (inMode(MODE_IGNORE_TERMINATE)) {
+
+                if (inMode(MODE_FOR_INITIALIZATION | MODE_EXPECT))
+                    for_initialization_action();
+                else
+                    for_condition_action();
+            }
+        }
         terminate_pre
         terminate_token
         terminate_post
