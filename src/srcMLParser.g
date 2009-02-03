@@ -3538,8 +3538,6 @@ catch_statement {} :
             startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
         }
         CATCH
-
-        LPAREN
 ;
 
 throw_statement {} :
