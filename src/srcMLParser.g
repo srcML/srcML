@@ -3594,9 +3594,6 @@ variable_declaration_statement[int type_count] {} :
 */
 short_variable_declaration {} :
         {
-            // statement
-//            startNewMode(MODE_STATEMENT);
-
             // declaration
             startNewMode(MODE_LOCAL);
 
