@@ -21,7 +21,7 @@ ANTLR_TOOL =/usr/share/java/antlrall.jar
 ANTLR_INC =-I/usr/include/$(ANTLR_VERSION)
 
 # antlr c++ library
-ANTLR_LIB =-L/usr/lib -lantlrsmall
+ANTLR_LIB =-L/usr/lib -lantlr
 
 # antlr command
 ANTLR = /usr/bin/cantlr
