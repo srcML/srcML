@@ -136,6 +136,7 @@ KeywordCPPLexer(std::istream& in, const char* encoding, int language = LANGUAGE_
 	    { "]", RBRACKET },
 	    { "{", LCURLY },
 	    { "[", LBRACKET },
+	    { "@", SPECIAL },
 
         { ".", PERIOD },
         { ".*", MEMBERPOINTER },

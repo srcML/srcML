@@ -67,16 +67,18 @@ MULTIMM; // = "*=";
 FALSE;
 TRUE;
 
+SPECIAL;
+
 EOL_PLACEHOLD;
 }
 
 {
 }
-
+/*
 SPECIAL :
         '@'
 ;
-
+*/
 ALLOPERATORS options { testLiterals = true; } : 
         (
             '#' {
@@ -105,7 +107,8 @@ ALLOPERATORS options { testLiterals = true; } :
         '[' | ']' |
         '{' | '}' |
         '~' |   // bitwise complement
-        '`')
+        '`' |
+        '@')
         { startline = false; }
 ;
 

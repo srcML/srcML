@@ -3211,7 +3211,7 @@ constructor_name_external { std::string s[2]; } :
 
 constructor_name_external_base[std::string s[]] {} :
 
-        identifier_stack[s] optional_template_argument_list DCOLON
+        identifier_stack[s] optional_template_argument_list
         identifier_stack[s] optional_template_argument_list
         (DCOLON identifier_stack[s] optional_template_argument_list)*
 ;
