@@ -620,7 +620,14 @@ statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; isoperat
 
         // destructor
         { inLanguage(LANGUAGE_CXX_FAMILY) }?
-        (destructor_check[token /* token after header */])=> destructor[token] |
+        (destructor_check[token /* token after header */])=> (
+
+            { token != TERMINATE }?
+            destructor_definition |
+
+            destructor_declaration
+
+        ) |
 
         // labels to goto
         { secondtoken == COLON }? label_statement |
@@ -3222,15 +3229,6 @@ specifier_explicit { LocalMode lm; } :
 // destructor
 destructor_check[int& token] { token = 0; } :
         destructor_header_check function_tail check_end[token]
-;              
-
-// destructor
-destructor[int token] {} :
-
-        { token != TERMINATE }?
-        destructor_definition |
-
-        destructor_declaration
 ;              
 
 // destructor definition
