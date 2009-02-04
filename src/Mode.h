@@ -28,7 +28,6 @@
 #include "TokenParser.h"
 #include "Language.h"
 #include "srcMLStateStack.h"
-#include <vector>
 
 class Mode : public TokenParser, public Language {
 
@@ -150,14 +149,14 @@ class Mode : public TokenParser, public Language {
  public:
 
   Mode(TokenParser* ptp, int lang)
-    : Language(lang), statev(2, ptp)
+    : Language(lang), statev(ptp)
     {
-      pstate = &statev[0];
+      pstate = &statev;
     }
 
   ~Mode() {}
 
-  std::vector<srcMLStateStack> statev;
+  srcMLStateStack statev;
 
   srcMLStateStack* pstate;
 
