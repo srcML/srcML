@@ -75,7 +75,7 @@ CHAR_START :
 
 CONSTANTS :
         { startline = false; }
-        DIGITS (".")? (DIGITS)? ('u' | 'U' | 'f' | 'F' | 'l' | 'L')?
+        DIGITS ("." | DIGIT)* (NAMECHAR)* //('u' | 'U' | 'f' | 'F' | 'l' | 'L')?
 ;
 
 NAME options { testLiterals = true; } { char lastchar = LA(1); } :
