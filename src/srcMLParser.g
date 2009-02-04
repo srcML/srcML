@@ -596,10 +596,10 @@ statement_cfg {} :
   Important to keep semantic checks, e.g., (constructor)=>, in place.  Most of these rules
   can start with a name which leaves it ambiguous which to choose.
 */
-statements_non_cfg { int token = 0; int secondtoken = 0; isoperatorfunction = false; } :
+statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; isoperatorfunction = false; } :
 
         // class forms for class declarations/definitions as opposed to part of a declaration types
-        (class_struct_union_check[token /* token after header */])=> class_struct_union[token] |
+        (class_struct_union_check[token /* token after header */, place])=> class_struct_union[token, place] |
 
         // class forms sections
         { inLanguage(LANGUAGE_CXX_FAMILY) }?
@@ -1275,43 +1275,42 @@ exception_statement {}:
 /*
   class structures and unions
 */
-class_struct_union[int token] {} :
+class_struct_union[int token, int place] {} :
 
         { token == LCURLY }? (
-            { inLanguage(LANGUAGE_JAVA) }?
-            (interface_definition)=> interface_definition |
 
+            { place == INTERFACE }?
+            interface_definition |
+
+            { place == CLASS }?
             class_definition |
 
+            { place == STRUCT }?
             struct_definition |
 
+            { place == UNION }?
             union_definition
         ) |
 
+        { place == CLASS }?
         class_declaration |
 
+        { place == STRUCT }?
         struct_declaration |
 
+        { place == UNION }?
         union_declaration
 ;
 
 /*
   class structures and unions
 */
-class_struct_union_check[int& finaltoken] { finaltoken = 0; } :
+class_struct_union_check[int& finaltoken, int& othertoken] { finaltoken = 0; othertoken = 0; } :
 
-        { inLanguage(LANGUAGE_C_FAMILY) }?
-        (CLASS | STRUCT | UNION) class_header check_end[finaltoken] |
-
-        { inLanguage(LANGUAGE_CXX_FAMILY) }?
-        access_specifier_mark CLASS class_header check_end[finaltoken] |
-
-        { inLanguage(LANGUAGE_JAVA_FAMILY) }?
-        (interface_definition_header_java)=> interface_definition_header_java check_end[finaltoken] |
-
-        { inLanguage(LANGUAGE_JAVA_FAMILY) }?
-        class_definition_header_java check_end[finaltoken]
+        (java_specifier_mark)* mark_end[othertoken] (CLASS | STRUCT | UNION | INTERFACE) class_header check_end[finaltoken]
 ;
+
+mark_end[int& token] { /* setFinalToken(); // problem with class */ token = LA(1); } :;
 
 check_end[int& token] { /* setFinalToken(); // problem with class */ token = LA(1); } :
         LCURLY | TERMINATE | COLON
