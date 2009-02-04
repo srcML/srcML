@@ -122,6 +122,16 @@ void fillliterals(const pair litarr[], unsigned int size);
 
 void changetotextlexer(int typeend);
 
+std::map<std::string,int> literals;
+
+virtual int testLiteralsTable(int ttype) const
+{
+   std::map<std::string,int>::const_iterator i = literals.find(text);
+   if (i != literals.end())
+          ttype = (*i).second;
+   return ttype;
+}
+
 KeywordCPPLexer(std::istream& in, const char* encoding, int language = LANGUAGE_CXX)
 	: antlr::CharScanner(new UTF8CharBuffer(encoding, in),true), Language(language), onpreprocline(false), startline(true)
 {
