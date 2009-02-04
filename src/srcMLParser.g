@@ -3064,7 +3064,7 @@ constructor[int token] {} :
         constructor_declaration
 ;              
 
-constructor_check[int& token] { antlr::RefToken s[2]; } :
+constructor_check[int& token] { std::string s[2]; } :
 
         (specifier_explicit | { inLanguage(LANGUAGE_JAVA_FAMILY) }? java_specifier_mark)*
         (
@@ -3080,8 +3080,8 @@ constructor_check[int& token] { antlr::RefToken s[2]; } :
         )
 ;
 
-constructor_check_lparen[antlr::RefToken s[]] {} :
-        { s[0] != 0 && s[1] != 0 && s[0]->getText() == s[1]->getText() }? paren_pair | RCURLY
+constructor_check_lparen[std::string s[]] {} :
+        { s[0] != "" && s[1] != "" && s[0] == s[1] }? paren_pair | RCURLY
 ;
 
 // constructor definition
@@ -3135,7 +3135,7 @@ member_initialization_list {} :
   Detects a constructor definition name outside of a class.  It has to be in the form
   x::y where x and y are identical
 */
-constructor_name_check[antlr::RefToken s[]] { LocalMode lm; bool iscomplex; } :
+constructor_name_check[std::string s[]] { LocalMode lm; bool iscomplex; } :
         {
             // local mode that is automatically ended by leaving this function
             startNewMode(MODE_LOCAL);
@@ -3145,7 +3145,7 @@ constructor_name_check[antlr::RefToken s[]] { LocalMode lm; bool iscomplex; } :
         constructor_name_base[s, iscomplex]
 ;
 
-constructor_name { LocalMode lm; antlr::RefToken s[2]; bool iscomplex; TokenPosition tp; } :
+constructor_name { LocalMode lm; std::string s[2]; bool iscomplex; TokenPosition tp; } :
         {
             // local mode that is automatically ended by leaving this function
             startNewMode(MODE_LOCAL);
@@ -3168,13 +3168,13 @@ constructor_name { LocalMode lm; antlr::RefToken s[2]; bool iscomplex; TokenPosi
         }
 ;
 
-constructor_name_base[antlr::RefToken s[], bool& iscomplex] { LocalMode lm; iscomplex = false; } :
+constructor_name_base[std::string s[], bool& iscomplex] { LocalMode lm; iscomplex = false; } :
 
         identifier_stack[s] optional_template_argument_list
         (DCOLON { iscomplex = true; } identifier_stack[s] optional_template_argument_list)*
 ;
 
-identifier_stack[antlr::RefToken s[]] { s[1] = s[0]; s[0] = LT(1); } :
+identifier_stack[std::string s[]] { s[1] = s[0]; s[0] = LT(1)->getText(); } :
         identifier_marked
 ;
 
@@ -3182,7 +3182,7 @@ identifier_stack[antlr::RefToken s[]] { s[1] = s[0]; s[0] = LT(1); } :
   Detects a constructor definition name outside of a class.  It has to be in the form
   x::y where x and y are identical
 */
-constructor_name_external_check[antlr::RefToken s[]] {} :
+constructor_name_external_check[std::string s[]] {} :
         {
             // local mode that is automatically ended by leaving this function
             startNewMode(MODE_LOCAL);
@@ -3192,7 +3192,7 @@ constructor_name_external_check[antlr::RefToken s[]] {} :
         constructor_name_external_base[s]
 ;
 
-constructor_name_external { antlr::RefToken s[2]; } :
+constructor_name_external { std::string s[2]; } :
         {
             // local mode that is automatically ended by leaving this function
             startNewMode(MODE_LOCAL);
@@ -3202,7 +3202,7 @@ constructor_name_external { antlr::RefToken s[2]; } :
         constructor_name_external_base[s]
 ;
 
-constructor_name_external_base[antlr::RefToken s[]] {} :
+constructor_name_external_base[std::string s[]] {} :
 
         identifier_stack[s] optional_template_argument_list DCOLON
         identifier_stack[s] optional_template_argument_list
@@ -3272,7 +3272,7 @@ destructor_header {} :
 ;              
 
 // destructor header
-destructor_header_check { antlr::RefToken s[2]; } :
+destructor_header_check { std::string s[2]; } :
 
         (specifier_explicit)*
 
@@ -3283,9 +3283,9 @@ destructor_header_check { antlr::RefToken s[2]; } :
         (parameter)* (comma parameter)* rparen
 ;              
 
-destructor_check_lparen[antlr::RefToken s[]] {} :
+destructor_check_lparen[std::string s[]] {} :
 
-        { s[1] == 0 || s[0]->getText() == s[1]->getText() }? LPAREN | RCURLY
+        { s[1] == "" || s[0] == s[1] }? LPAREN | RCURLY
 ;
 
 /*
@@ -3306,7 +3306,7 @@ destructor_name { LocalMode lm; } :
   Detects a destructor definition name outside of a class.  It has to be in the form
   x::~y where x and y are identical
 */
-destructor_name_check[antlr::RefToken s[]] { LocalMode lm; } :
+destructor_name_check[std::string s[]] { LocalMode lm; } :
         {
             // local mode that is automatically ended by leaving this function
             startNewMode(MODE_LOCAL);
@@ -3316,13 +3316,13 @@ destructor_name_check[antlr::RefToken s[]] { LocalMode lm; } :
         destructor_name_base_check[s]
 ;
 
-destructor_name_base_check[antlr::RefToken s[]] {} :
+destructor_name_base_check[std::string s[]] {} :
 
         (identifier_stack[s] optional_template_argument_list DCOLON)*
         DESTOP identifier_stack[s] optional_template_argument_list
 ;
 
-destructor_name_base { LocalMode lm; antlr::RefToken s[2]; } :
+destructor_name_base { LocalMode lm; std::string s[2]; } :
         destructor_name_base_check[s]
 ;
 
