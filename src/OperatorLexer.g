@@ -69,6 +69,8 @@ TRUE;
 
 SPECIAL;
 
+ALLOPERATORS;
+
 EOL_PLACEHOLD;
 }
 
@@ -79,7 +81,10 @@ SPECIAL :
         '@'
 ;
 */
-ALLOPERATORS options { testLiterals = true; } : 
+//ALLOPERATORS options { testLiterals = true; } : 
+
+
+OPERATORS options { testLiterals = true; } : 
         (
             '#' {
 
@@ -108,12 +113,8 @@ ALLOPERATORS options { testLiterals = true; } :
         '{' | '}' |
         '~' |   // bitwise complement
         '`' |
-        '@')
-        { startline = false; }
-;
+        '@' |
 
-OPERATORS : 
-        (
 //        "!=" |    // not equal
         '!' ('=' | )  |    // logical negation
 
