@@ -3040,11 +3040,8 @@ constructor_check[int& token] { antlr::RefToken s[2]; } :
         (specifier_explicit | { inLanguage(LANGUAGE_JAVA_FAMILY) }? java_specifier_mark)*
         (
         
-        { inMode(MODE_ACCESS_REGION) && inLanguage(LANGUAGE_CXX_FAMILY) }?
+        { (inMode(MODE_ACCESS_REGION) && inLanguage(LANGUAGE_CXX_FAMILY)) || inLanguage(LANGUAGE_JAVA_FAMILY) }?
         constructor_name paren_pair check_end[token] |
-
-        { inLanguage(LANGUAGE_JAVA_FAMILY) }?
-        constructor_name paren_pair LCURLY |
 
         constructor_name_external_check[s] constructor_check_lparen[s] check_end[token]
 
