@@ -3073,7 +3073,7 @@ constructor[int token] {} :
 
 constructor_check[int& token] { std::string s[2]; } :
 
-        (specifier_explicit | { inLanguage(LANGUAGE_JAVA_FAMILY) }? java_specifier_mark)*
+        (specifier_explicit | java_specifier_mark)*
         (
         
         { inMode(MODE_ACCESS_REGION) && inLanguage(LANGUAGE_CXX_FAMILY) }?
