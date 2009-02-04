@@ -628,7 +628,8 @@ statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; isoperat
         // C++0x additional non-cfg statements
         { inLanguage(LANGUAGE_CXX_0X) }? (
 
-            ((AUTO)* CONCEPT)=> concept_definition |
+            { look_past(AUTO) == CONCEPT }?
+            concept_definition |
 
             conceptmap_definition
         ) |
@@ -636,6 +637,34 @@ statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; isoperat
         // call
         call_macro_expression[secondtoken, true]
 ;
+
+look_past[int skiptoken] returns [int token] {
+    
+    int place = mark();
+    inputState->guessing++;
+
+    while (LA(1) != antlr::Token::EOF_TYPE && LA(1) == skiptoken)
+        consume();
+
+    token = LA(1);
+
+    inputState->guessing--;
+    rewind(place);
+}:;
+
+look_past_set[const antlr::BitSet& skipset] returns [int token] {
+
+    int place = mark();
+    inputState->guessing++;
+
+    while (LA(1) != antlr::Token::EOF_TYPE && skipset.member(LA(1)))
+        consume();
+
+    token = LA(1);
+
+    inputState->guessing--;
+    rewind(place);
+}:;
 
 // declarations of all sorts
 declaration { int token = 0; int type_count = 0; } :
@@ -3040,8 +3069,11 @@ constructor_check[int& token] { antlr::RefToken s[2]; } :
         (specifier_explicit | { inLanguage(LANGUAGE_JAVA_FAMILY) }? java_specifier_mark)*
         (
         
-        { (inMode(MODE_ACCESS_REGION) && inLanguage(LANGUAGE_CXX_FAMILY)) || inLanguage(LANGUAGE_JAVA_FAMILY) }?
+        { inMode(MODE_ACCESS_REGION) && inLanguage(LANGUAGE_CXX_FAMILY) }?
         constructor_name paren_pair check_end[token] |
+
+        { inLanguage(LANGUAGE_JAVA_FAMILY) }?
+        constructor_name paren_pair LCURLY |
 
         constructor_name_external_check[s] constructor_check_lparen[s] check_end[token]
 
