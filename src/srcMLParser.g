@@ -1307,10 +1307,8 @@ class_struct_union[int token, int place] {} :
 */
 class_struct_union_check[int& finaltoken, int& othertoken] { finaltoken = 0; othertoken = 0; } :
 
-        (java_specifier_mark)* mark_end[othertoken] (CLASS | STRUCT | UNION | INTERFACE) class_header check_end[finaltoken]
+        (java_specifier_mark)* markend[othertoken] (CLASS | STRUCT | UNION | INTERFACE) class_header check_end[finaltoken]
 ;
-
-mark_end[int& token] { /* setFinalToken(); // problem with class */ token = LA(1); } :;
 
 check_end[int& token] { /* setFinalToken(); // problem with class */ token = LA(1); } :
         LCURLY | TERMINATE | COLON
@@ -1327,28 +1325,6 @@ class_declaration :
             startElement(SCLASS_DECLARATION);
         }
         CLASS class_header
-;
-
-final_specifier_mark { LocalMode lm; } : 
-        {
-            // statement
-            startNewMode(MODE_LOCAL);
-
-            // start the function specifier
-            startElement(SFUNCTION_SPECIFIER);
-        }
-        FINAL
-;
-
-static_specifier_mark { LocalMode lm; } : 
-        {
-            // statement
-            startNewMode(MODE_LOCAL);
-
-            // start the function specifier
-            startElement(SFUNCTION_SPECIFIER);
-        }
-        STATIC
 ;
 
 /*
@@ -2567,8 +2543,15 @@ pure_lead_type_identifier {} :
         enum_definition_whole
 ;
 
-java_specifier_mark {} :
-        access_specifier_mark | final_specifier_mark | static_specifier_mark
+java_specifier_mark { LocalMode lm; } : 
+        {
+            // statement
+            startNewMode(MODE_LOCAL);
+
+            // start the function specifier
+            startElement(SFUNCTION_SPECIFIER);
+        }
+        (access_specifier | FINAL | STATIC)
 ;
 
 /*
