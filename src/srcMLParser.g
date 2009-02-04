@@ -1286,10 +1286,10 @@ class_struct_union[int token, int place] {} :
             class_definition |
 
             { place == STRUCT }?
-            struct_definition |
+            struct_union_definition[SSTRUCT] |
 
             { place == UNION }?
-            union_definition
+            struct_union_definition[SUNION]
         ) |
 
         { place == CLASS }?
@@ -1476,9 +1476,7 @@ struct_declaration :
         STRUCT class_header
 ;
 
-/*
-*/
-struct_definition :
+struct_union_definition[int element_token] :
         {
             bool intypedef = inMode(MODE_TYPEDEF);
 
@@ -1486,13 +1484,13 @@ struct_definition :
             startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_DECL);
 
             // start the struct definition
-            startElement(SSTRUCT);
+            startElement(element_token);
 
             if (intypedef) {
                 setMode(MODE_END_AT_BLOCK);
             }
         }
-        STRUCT (class_header lcurly | lcurly)
+        (STRUCT | UNION) (class_header lcurly | lcurly)
 
         class_default_access_action[SPUBLIC_ACCESS_DEFAULT]
 ;
@@ -1508,27 +1506,6 @@ union_declaration :
             startElement(SUNION_DECLARATION);
         }
         UNION class_header
-;
-
-/*
-*/
-union_definition :
-        {
-            bool intypedef = inMode(MODE_TYPEDEF);
-
-            // statement
-            startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_DECL);
-
-            // start the struct definition
-            startElement(SUNION);
-
-            if (intypedef) {
-                setMode(MODE_END_AT_BLOCK);
-            }
-        }
-        UNION (class_header lcurly | lcurly)
-
-        class_default_access_action[SPUBLIC_ACCESS_DEFAULT]
 ;
 
 /*
@@ -2573,7 +2550,7 @@ pure_lead_type_identifier {} :
 
         // anonymous struct definition in a type
         { !inputState->guessing }?
-        struct_definition |
+        struct_union_definition[SSTRUCT] |
 
         // anonymous class definition in a type
         { !inputState->guessing }?
@@ -2581,7 +2558,7 @@ pure_lead_type_identifier {} :
 
         // anonymous union definition in a type
         { !inputState->guessing }?
-        union_definition |
+        struct_union_definition[SUNION] |
 
         // enum use in a type
         (ENUM variable_identifier (variable_identifier | MULTOPS | INLINE))=> ENUM |
@@ -4320,7 +4297,7 @@ typedef_statement { int type_count = 0; } :
                     // start of the type
                     startElement(STYPE);
                 }
-               ( struct_definition | class_definition | union_definition) |
+               ( class_definition | struct_union_definition[LA(1) == STRUCT ? SSTRUCT : SUNION]) |
             {
                 // variable declarations may be in a list
                 startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT);
