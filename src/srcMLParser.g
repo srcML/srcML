@@ -1550,19 +1550,6 @@ access_specifier {} :
 ;
 
 /*
-*/
-access_specifier_mark { LocalMode lm; } : 
-        {
-            // statement
-            startNewMode(MODE_LOCAL);
-
-            // start the function specifier
-            startElement(SFUNCTION_SPECIFIER);
-        }
-        access_specifier
-;
-
-/*
   Each instance of an access specifier defines a region in the class
 */
 access_specifier_region {} : 
