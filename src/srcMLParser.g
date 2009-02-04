@@ -1363,21 +1363,17 @@ class_definition :
             // start the class definition
             startElement(SCLASS);
 
-            if (intypedef) {
+            // java classes end at the end of the block
+            if (intypedef || inLanguage(LANGUAGE_JAVA_FAMILY)) {
                 setMode(MODE_END_AT_BLOCK);
             }
         }
-        (
-            { inLanguage(LANGUAGE_CXX_FAMILY) }?
-            (access_specifier_mark)* CLASS (class_header lcurly | lcurly) class_default_access_action[SPRIVATE_ACCESS_DEFAULT] |
+        (java_specifier_mark)* CLASS (class_header lcurly | lcurly) 
+        {
 
-            { inLanguage(LANGUAGE_JAVA_FAMILY) }?
-
-            // java classes end at the end of the block
-            { setMode(MODE_END_AT_BLOCK); }
-
-            class_definition_header_java lcurly
-        )
+            if (inLanguage(LANGUAGE_CXX_FAMILY))
+                class_default_access_action(SPRIVATE_ACCESS_DEFAULT);
+        }
 ;
 
 concept_definition :
@@ -1464,19 +1460,7 @@ interface_definition :
             // java interfaces end at the end of the block
             setMode(MODE_END_AT_BLOCK); 
         }
-        interface_definition_header_java lcurly
-;
-
-class_definition_header_java :
-            (java_specifier_mark)* CLASS class_header
-;
-
-anonymous_class_definition_header_java :
-            (java_specifier_mark)* class_header
-;
-
-interface_definition_header_java :
-            (java_specifier_mark)* INTERFACE class_header
+        (java_specifier_mark)* INTERFACE class_header lcurly
 ;
 
 /*
