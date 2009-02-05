@@ -2584,10 +2584,6 @@ balanced_parentheses :
         RCURLY
 ;
 
-unbalanced_parentheses :
-        (balanced_parentheses | ~(LCURLY | RCURLY))*
-;
-
 /*
    expression identifier
 
