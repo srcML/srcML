@@ -524,16 +524,12 @@ end {} :
   context-free grammar statements
 */
 cfg {} :
-        // C++ additional cfg statements
-        { inLanguage(LANGUAGE_CXX_FAMILY) }? (
 
-            namespace_statement | template_declaration
-        ) |
+        namespace_statement |
 
-        { inLanguage(LANGUAGE_OO) }? (
+        template_declaration |
 
-            exception_statement
-        ) |
+        exception_statement |
 
         statement_cfg |
 
@@ -574,11 +570,9 @@ statement_cfg {} :
         return_statement | break_statement | continue_statement | goto_statement |
 
         // java import - keyword only detected for Java
-        // { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         import_statement |
 
-        // java import - keyword only detected for Java
-        // { inLanguage(LANGUAGE_JAVA_FAMILY) }?
+        // java package - keyword only detected for Java
         package_statement |
 
         // assembly block
@@ -633,13 +627,11 @@ statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; isoperat
         { secondtoken == COLON }? label_statement |
 
         // C++0x additional non-cfg statements
-        { inLanguage(LANGUAGE_CXX_0X) }? (
+        { look_past(AUTO) == CONCEPT }?
+        concept_definition |
 
-            { look_past(AUTO) == CONCEPT }?
-            concept_definition |
-
-            conceptmap_definition
-        ) |
+        { look_past(AUTO) == CONCEPTMAP }?
+        conceptmap_definition |
 
         // call
         call_macro_expression[secondtoken, true]
