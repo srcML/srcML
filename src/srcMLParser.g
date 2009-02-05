@@ -4308,9 +4308,6 @@ eof :
         EOF
 ;
 
-mark_directive[int& directive_token] { directive_token = LA(1); } :
-    ;
-
 /*
     Preprocessor
 
@@ -4335,7 +4332,7 @@ preprocessor {
 
             tp = getTokenPosition();
         }
-        PREPROC mark_directive[directive_token]
+        PREPROC markend[directive_token]
         {
             startNewMode(MODE_LOCAL);
 
