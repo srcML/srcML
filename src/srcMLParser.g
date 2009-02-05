@@ -2558,7 +2558,8 @@ non_lead_type_identifier { LocalMode lm; } :
 
         multops |
 
-        { inLanguage(LANGUAGE_JAVA_FAMILY) }? (LBRACKET RBRACKET)=> 
+        { inLanguage(LANGUAGE_JAVA_FAMILY) }? 
+        { look_past(LBRACKET) == RBRACKET }?
         {
             startNewMode(MODE_LOCAL);
 
