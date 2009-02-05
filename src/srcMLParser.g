@@ -1935,7 +1935,7 @@ statement_part { int type_count; } :
         */
 
         // special case for type modifiers
-        { (LT(1)->getText() == "*" || LT(1)->getText() == "&amp;") && inMode(MODE_VARIABLE_NAME | MODE_INIT) }?
+        { inMode(MODE_VARIABLE_NAME | MODE_INIT) }?
              multops |
 
         // start of argument for return or throw statement
