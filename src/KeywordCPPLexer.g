@@ -30,17 +30,33 @@ header {
 
 header "post_include_cpp" {
 
+const char* literals[110];
+
+void KeywordCPPLexer::setupliterals() {
+
+    for (unsigned int i = 0; i < sizeof(literals) / sizeof(literals[0]); ++i)
+        literals[i] = "";
+}
+
 void KeywordCPPLexer::fillliterals(const pair litarr[], unsigned int size) {
 
     for (unsigned int i = 0; i < size; ++i)
-        literals.push_back(std::make_pair(litarr[i].s, litarr[i].n));
+        literals[litarr[i].n] = litarr[i].s;
 }
 
 void KeywordCPPLexer::changetotextlexer(int typeend) {
           selector->push("text"); 
            ((PureCommentLexer* ) (selector->getStream("text")))->init(typeend, onpreprocline);
 }
+int KeywordCPPLexer::testLiteralsTable(int ttype) const
+{
+    for (unsigned int i = 0; i < sizeof(literals) / sizeof(literals[0]); ++i) {
+        if (strcmp(literals[i], text.c_str()) == 0)
+            return i;
+    }
 
+    return ttype;
+}
 }
 
 options {
@@ -118,34 +134,18 @@ bool startline;
 
 struct pair { char const * const s; int n; };
 
+void setupliterals();
 void fillliterals(const pair litarr[], unsigned int size);
 
 void changetotextlexer(int typeend);
 
-std::vector<std::pair<const char*, int> > literals;
-//std::map<std::string,int> literals;
-
-virtual int testLiteralsTable(int ttype) const
-{
-    for (std::vector<std::pair<const char*, int> >::const_iterator i = literals.begin();
-         i != literals.end(); ++i)
-        if (strcmp((*i).first, text.c_str()) == 0)
-            return (*i).second;
-        ;
-    return ttype;
-
-
-/*
-   std::map<std::string,int>::const_iterator i = literals.find(text);
-   if (i != literals.end())
-          ttype = (*i).second;
-   return ttype;
-*/
-}
+virtual int testLiteralsTable(int ttype) const;
 
 KeywordCPPLexer(std::istream& in, const char* encoding, int language = LANGUAGE_CXX)
 	: antlr::CharScanner(new UTF8CharBuffer(encoding, in),true), Language(language), onpreprocline(false), startline(true)
 {
+    setupliterals();
+
     pair common[] = {
         { ")", RPAREN },
 	    { ";", TERMINATE },
