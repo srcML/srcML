@@ -33,7 +33,7 @@ header "post_include_cpp" {
 void KeywordCPPLexer::fillliterals(const pair litarr[], unsigned int size) {
 
     for (unsigned int i = 0; i < size; ++i)
-        literals[litarr[i].s] = litarr[i].n;
+        literals.push_back(std::make_pair(litarr[i].s, litarr[i].n));
 }
 
 void KeywordCPPLexer::changetotextlexer(int typeend) {
@@ -122,14 +122,25 @@ void fillliterals(const pair litarr[], unsigned int size);
 
 void changetotextlexer(int typeend);
 
-std::map<std::string,int> literals;
+std::vector<std::pair<const char*, int> > literals;
+//std::map<std::string,int> literals;
 
 virtual int testLiteralsTable(int ttype) const
 {
+    for (std::vector<std::pair<const char*, int> >::const_iterator i = literals.begin();
+         i != literals.end(); ++i)
+        if (strcmp((*i).first, text.c_str()) == 0)
+            return (*i).second;
+        ;
+    return ttype;
+
+
+/*
    std::map<std::string,int>::const_iterator i = literals.find(text);
    if (i != literals.end())
           ttype = (*i).second;
    return ttype;
+*/
 }
 
 KeywordCPPLexer(std::istream& in, const char* encoding, int language = LANGUAGE_CXX)
