@@ -2322,7 +2322,8 @@ declaration_check[int& token] { token = 0; } :
         { inLanguage(LANGUAGE_CXX_FAMILY) }?
         (operator_function_name)=> operator_function_name record[isoperatorfunction, true] |
 
-        (options { greedy = true; } : (VIRTUAL | INLINE))* lead_type_identifier declaration_check_end[token]
+        (options { greedy = true; } : (VIRTUAL | INLINE))* lead_type_identifier markend[token]
+                                      (pure_type_identifier | function_identifier[true])
 ;
 
 record[bool& variable, bool value] { variable = value; } :
@@ -2330,11 +2331,6 @@ record[bool& variable, bool value] { variable = value; } :
 
 operator_function_name :
         NAME DCOLON (NAME DCOLON)* overloaded_operator_grammar
-;
-
-declaration_check_end[int& token] { token = LA(1); } : 
-
-        pure_type_identifier | function_identifier[true]
 ;
 
 function_check[int& fla, int& type_count] { fla = 0; type_count = 0; } :
@@ -2478,10 +2474,10 @@ pure_lead_type_identifier {} :
         auto_keyword |
 
         // class/struct/union before a name in a type, e.g., class A f();
-        (structures NAME)=> structures |
+        structures |
 
         // specifiers that occur in a type
-        (standard_specifiers)=> standard_specifiers |
+        standard_specifiers |
 
         /*
            Anonymous class/struct/union in guessing mode processes
@@ -2489,8 +2485,8 @@ pure_lead_type_identifier {} :
         */
 
         // anonymous struct definition in a type (guessing)
-        { inputState->guessing }?
-        structures balanced_parentheses |
+//        { inputState->guessing }?
+//        structures balanced_parentheses |
 
         /*
            Anonymous class/struct/union in non-guessing mode only
@@ -2499,16 +2495,16 @@ pure_lead_type_identifier {} :
         */
 
         // anonymous struct definition in a type
-        { !inputState->guessing }?
-        struct_union_definition[SSTRUCT] |
+//        { !inputState->guessing }?
+//        struct_union_definition[SSTRUCT] |
 
         // anonymous class definition in a type
-        { !inputState->guessing }?
-        class_definition |
+//        { !inputState->guessing }?
+//        class_definition |
 
         // anonymous union definition in a type
-        { !inputState->guessing }?
-        struct_union_definition[SUNION] |
+//        { !inputState->guessing }?
+//        struct_union_definition[SUNION] |
 
         // enum use in a type
         (ENUM variable_identifier (variable_identifier | MULTOPS | INLINE))=> ENUM |
@@ -2534,7 +2530,7 @@ java_specifier_mark { LocalMode lm; } :
 */
 lead_type_identifier {} :
 
-        { inLanguage(LANGUAGE_JAVA_FAMILY) }? java_specifier_mark |
+        java_specifier_mark |
 
         inline_marked |
 
