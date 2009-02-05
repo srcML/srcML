@@ -30,18 +30,18 @@ header {
 
 header "post_include_cpp" {
 
-const char* literals[110];
+const char* lits[110];
 
 void KeywordCPPLexer::setupliterals() {
 
-    for (unsigned int i = 0; i < sizeof(literals) / sizeof(literals[0]); ++i)
-        literals[i] = "";
+    for (unsigned int i = 0; i < sizeof(lits) / sizeof(lits[0]); ++i)
+        lits[i] = "";
 }
 
 void KeywordCPPLexer::fillliterals(const pair litarr[], unsigned int size) {
 
     for (unsigned int i = 0; i < size; ++i)
-        literals[litarr[i].n] = litarr[i].s;
+        lits[litarr[i].n] = litarr[i].s;
 }
 
 void KeywordCPPLexer::changetotextlexer(int typeend) {
@@ -50,8 +50,8 @@ void KeywordCPPLexer::changetotextlexer(int typeend) {
 }
 int KeywordCPPLexer::testLiteralsTable(int ttype) const
 {
-    for (unsigned int i = 0; i < sizeof(literals) / sizeof(literals[0]); ++i) {
-        if (strcmp(literals[i], text.c_str()) == 0)
+    for (unsigned int i = 0; i < sizeof(lits) / sizeof(lits[0]); ++i) {
+        if (strcmp(lits[i], text.c_str()) == 0)
             return i;
     }
 

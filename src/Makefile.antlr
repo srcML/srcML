@@ -18,10 +18,10 @@ ANTLR_HOME =/usr/share/$(ANTLR_VERSION)
 ANTLR_TOOL =/usr/share/java/antlrall.jar
 
 # antlr c++ include files
-ANTLR_INC = -I/home/collard/antlr-2.7.7/lib/cpp/
+ANTLR_INC =
 
 # antlr c++ library
-ANTLR_LIB =-L/usr/lib -lantlrsmall
+ANTLR_LIB =-L/usr/lib -lantlr
 
 # antlr command
 ANTLR = /usr/bin/cantlr
