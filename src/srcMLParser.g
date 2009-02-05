@@ -2170,19 +2170,6 @@ condition_rparen[bool final = false] {} :
 /*
    function pointer declaration
 */
-function_pointer_declaration_check[int& type_count] {} :
-        function_pointer_type[type_count]
-
-        function_pointer_name_grammar
-
-        macro_call_optional_check
-
-        parameter_list
-; 
-
-/*
-   function pointer declaration
-*/
 function_pointer_declaration[int& type_count] {} :
         {
             // statement
@@ -4001,7 +3988,7 @@ parameter { int type_count = 0; } :
         }
         (
         PERIOD PERIOD ( options { greedy = true;} : PERIOD)* |
-        (function_pointer_declaration_check[type_count])=>
+        (function_pointer_header[type_count])=>
             function_pointer_declaration[type_count] |
         {
             // start the declaration element
@@ -4020,7 +4007,7 @@ parameter { int type_count = 0; } :
 ;
 
 parameter_kr { int type_count = 0; } :
-        (function_pointer_declaration_check[type_count])=>
+        (function_pointer_header[type_count])=>
             function_pointer_declaration[type_count] |
 
         parameter_type_count[type_count]
@@ -4238,7 +4225,7 @@ typedef_statement { int type_count = 0; } :
         }
         TYPEDEF
         (
-            (function_pointer_declaration_check[type_count])=>
+            (function_pointer_header[type_count])=>
                 function_pointer_declaration[type_count] |
             { LA(1) == CLASS || LA(1) == UNION || LA(1) == STRUCT }?    
                 {
