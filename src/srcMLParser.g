@@ -2295,7 +2295,7 @@ function_tail {} :
             complete_throw_list |
 
             { inLanguage(LANGUAGE_C) }? (
-                (NAME LCURLY)=> NAME |
+            { look_past(NAME) == LCURLY }? NAME |
                 parameter_kr terminate
             )
         )*
@@ -2596,6 +2596,7 @@ expression_identifier :
    Name of a function
 */
 function_identifier[bool function_pointer] { LocalMode lm; } :
+
         // typical name
         complex_name[true] |
 
