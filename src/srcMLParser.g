@@ -3199,16 +3199,6 @@ constructor_name_external_check[std::string s[]] {} :
         constructor_name_external_base[s]
 ;
 
-constructor_name_external { std::string s[2]; } :
-        {
-            // local mode that is automatically ended by leaving this function
-            startNewMode(MODE_LOCAL);
-
-            startElement(SNAME);
-        }
-        constructor_name_external_base[s]
-;
-
 constructor_name_external_base[std::string s[]] {} :
 
         identifier_stack[s] optional_template_argument_list
