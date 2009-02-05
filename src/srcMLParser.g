@@ -2590,7 +2590,7 @@ lead_type_identifier {} :
 //        (macro_call_paren identifier)=> macro_call |
 
         // typical type name
-        { LT(1)->getText() != "CRITFLAGS" && LT(1)->getText() != "CRITBEGIN" }? complex_name[true] |
+        complex_name[true] |
 
         pure_lead_type_identifier
 ;
