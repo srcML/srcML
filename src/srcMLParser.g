@@ -2168,34 +2168,6 @@ condition_rparen[bool final = false] {} :
 /* Function */
 
 /*
-   function definition
-*/
-function_definition[int type_count] {} :
-		{
-            // function definitions have a "nested" block statement
-            startNewMode(MODE_STATEMENT);
-
-            // start the function definition element
-            startElement(SFUNCTION_DEFINITION);
-        }
-        function_header[type_count]
-;
-
-/*
-   function declaration
-*/
-function_declaration[int type_count] {} :
-        {
-            // statement
-            startNewMode(MODE_STATEMENT);
-
-            // start the function declaration element
-            startElement(SFUNCTION_DECLARATION);
-        }
-        function_header[type_count]
-; 
-
-/*
    function pointer declaration
 */
 function_pointer_declaration_check[int& type_count] {} :
@@ -3797,7 +3769,7 @@ expression_part[bool checkmacro = false] { guessing_end();
         (function_check[token /* token after header */, type_count /* number of names detected in type */])=>
 
                 // function definition based on the token after the header
-                function_definition[type_count] |
+                function[token, type_count] |
 
         // left parentheses
         lparen_marked
