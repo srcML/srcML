@@ -533,7 +533,7 @@ cfg {} :
 
         statement_cfg |
 
-        declarations_definitions_cfg
+        typedef_statement
 ;
 
 /*
@@ -784,13 +784,6 @@ fail {} :
 ;
 
 markend[int& token] { token = LA(1); } :
-;
-
-/*
-  Declarations and definitions that uniquely begin with a keyword or unique character
-*/
-declarations_definitions_cfg :
-        typedef_statement
 ;
 
 /* Statements CFG */
