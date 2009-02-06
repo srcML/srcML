@@ -609,9 +609,6 @@ statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; isoperat
         { inLanguage(LANGUAGE_OO) }?
         (constructor_check[token /* token after header */])=> constructor[token] |
 
-        // declarations of all sorts
-        (declaration_check[secondtoken])=> declaration |
-
         // destructor
         { inLanguage(LANGUAGE_CXX_FAMILY) }?
         (destructor_check[token /* token after header */])=> (
@@ -622,6 +619,9 @@ statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; isoperat
             destructor_declaration
 
         ) |
+
+        // declarations of all sorts
+        (declaration_check[secondtoken])=> declaration |
 
         // labels to goto
         { secondtoken == COLON }? label_statement |
@@ -2232,24 +2232,35 @@ the majority of cases we can tell a declaration by the occurrence of
 two names in sequence.  For functions that do not have types
 (overloaded operators, main, etc.)  we have to look further.
 
-As a side effect, we record the token right for faster checking of label (name followed by colon)
+As a side effect, we record the token right for faster checking of
+label (name followed by colon)
 */
 declaration_check[int& token] { token = 0; } : 
 
         // no return value function:  main
-        { inLanguage(LANGUAGE_C_FAMILY) }?
-        MAIN paren_pair record[isoperatorfunction, true] |
+        // distinguish from call
+        MAIN function_paren_pair record[isoperatorfunction, true] |
 
         // no return value function:  casting operator method
-        { inLanguage(LANGUAGE_CXX_FAMILY) }?
-        OPERATOR (NAME)* paren_pair record[isoperatorfunction, true] |
+        // distinguish from call
+        overloaded_operator_grammar function_paren_pair record[isoperatorfunction, true] |
 
-        { inLanguage(LANGUAGE_CXX_FAMILY) }?
-        (operator_function_name)=> operator_function_name record[isoperatorfunction, true] |
+        // has to be a declaration
+        VIRTUAL | 
 
-        (options { greedy = true; } : (VIRTUAL | INLINE))* lead_type_identifier markend[token]
-                                      (pure_type_identifier | function_identifier[true])
+        // has to be a declaration
+        INLINE | 
+
+        // more complex operator name
+        (operator_function_name)=> operator_function_name function_paren_pair record[isoperatorfunction, true] |
+
+        // typical type declaration
+        lead_type_identifier markend[token] (pure_type_identifier | function_identifier[true])
 ;
+
+function_paren_pair {} :
+        paren_pair (LCURLY | TERMINATE)
+    ;
 
 record[bool& variable, bool value] { variable = value; } :
 ;
