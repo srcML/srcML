@@ -529,7 +529,7 @@ cfg {} :
 
         template_declaration |
 
-        exception_statement |
+        try_statement | catch_statement | throw_statement |
 
         statement_cfg |
 
@@ -1204,8 +1204,7 @@ namespace_statement {} :
  Past name handled as expression
 */
 extern_definition_header {} :
-        EXTERN
-        string_literal
+        EXTERN string_literal
 ;
 
 extern_definition {} :
@@ -1280,16 +1279,6 @@ namespace_directive { setFinalToken(); } :
         }
         USING
 ;
-
-/*
-  Exception handling statements
-*/
-exception_statement {}:
-        try_statement | catch_statement | throw_statement
-;
-
-/* Statements CFG end */
-
 
 /* Declarations Definitions CFG */
 
