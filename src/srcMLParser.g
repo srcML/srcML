@@ -651,6 +651,7 @@ look_past[int skiptoken] returns [int token] {
     rewind(place);
 }:;
 
+/*
 look_past_set[const antlr::BitSet& skipset] returns [int token] {
 
     int place = mark();
@@ -664,6 +665,7 @@ look_past_set[const antlr::BitSet& skipset] returns [int token] {
     inputState->guessing--;
     rewind(place);
 }:;
+*/
 
 // declarations of all sorts
 declaration { int token = 0; int type_count = 0; } :
