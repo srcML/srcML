@@ -1591,13 +1591,6 @@ access_specifier_region {} :
   Marks the start of a block.  End of the block is handled in right curly brace
 */
 lcurly {} :
-        block_start
-;
-
-/*
-  Marks the start of a block.  End of the block is handled in right curly brace
-*/
-block_start {} :
         {
             // special end for conditions
             if (inTransparentMode(MODE_CONDITION)) {
