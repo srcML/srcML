@@ -1565,45 +1565,24 @@ access_specifier_region {} :
             setMode(MODE_ACCESS_REGION);
         }
         (
-            access_specifier_public_region |
-            access_specifier_private_region |
-            access_specifier_protected_region
+            {
+                // start of case element
+                startElement(SPUBLIC_ACCESS);
+            }
+            PUBLIC |
+            {
+                // start of case element
+                startElement(SPRIVATE_ACCESS);
+            }
+            PRIVATE |
+            {
+                // start of case element
+                startElement(SPROTECTED_ACCESS);
+            }
+            PROTECTED
         )
         { setFinalToken(); }
         COLON
-;
-
-/*
- public access specifier
-*/
-access_specifier_public_region :
-        {
-            // start of case element
-            startElement(SPUBLIC_ACCESS);
-        }
-        PUBLIC
-;
-
-/*
- private access specifier
-*/
-access_specifier_private_region :
-        {
-            // start of case element
-            startElement(SPRIVATE_ACCESS);
-        }
-        PRIVATE
-;
-
-/*
- protected access specifier
-*/
-access_specifier_protected_region :
-        {
-            // start of case element
-            startElement(SPROTECTED_ACCESS);
-        }
-        PROTECTED
 ;
 
 /*
