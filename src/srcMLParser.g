@@ -1984,8 +1984,7 @@ statement_part { int type_count; } :
 lparen_marked { LocalMode lm; } :
         {
             incParen();
-        }
-        {
+
             if (isoption(parseoptions, OPTION_OPERATOR)) {
 
                 // end all elements at end of rule automatically
@@ -2026,7 +2025,6 @@ rparen[bool final = false, bool mark = false] {} :
 ;
 
 empty_rparen[bool final = false, bool mark = false] {} :
-//        { getParen() == 0 }?
         {
             // additional right parentheses indicates end of non-list modes
             endDownToFirstMode(MODE_LIST | MODE_PREPROC | MODE_END_ONLY_AT_RPAREN);
@@ -2191,14 +2189,10 @@ function_pointer_name_base { LocalMode lm; } :
             complex_name[true] |
 
         // special name prefix of namespace or class
-        function_pointer_name_prefix function_pointer_name_base |
+        identifier optional_template_argument_list DCOLON function_pointer_name_base |
 
         // typical function pointer name
         operator_multiplication (complex_name[true])*
-;
-
-function_pointer_name_prefix { LocalMode lm; } :
-         identifier optional_template_argument_list DCOLON
 ;
 
 operator_multiplication :
