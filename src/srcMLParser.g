@@ -2374,17 +2374,14 @@ throw_list {} :
 
             startElement(STHROW_SPECIFIER);
         }
-        THROW
-
-        LPAREN |
-
+        THROW LPAREN |
         {
             // start a new mode that will end after the argument list
             startNewMode(MODE_LIST | MODE_EXPECT);
 
             startElement(STHROW_SPECIFIER_JAVA);
         }
-        THROWS (complex_name_java[true] | PERIOD | COMMA)*
+        THROWS
         {
             endCurrentMode(MODE_LIST | MODE_EXPECT);
         }
