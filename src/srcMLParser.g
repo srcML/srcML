@@ -3877,13 +3877,7 @@ extends_list { LocalMode lm; } :
             startElement(SEXTENDS);
         }
         EXTENDS
-        (
-            (derive_access)*
-
-            complex_name_java[true]
-        |
-            COMMA
-        )*
+        super_list
 ;
 
 implements_list { LocalMode lm; } :
@@ -3895,6 +3889,10 @@ implements_list { LocalMode lm; } :
             startElement(SIMPLEMENTS);
         }
         IMPLEMENTS
+        super_list
+;
+
+super_list {} :
         (
             (derive_access)*
 
