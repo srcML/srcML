@@ -1573,13 +1573,9 @@ access_specifier_region {} :
             access_specifier_private_region |
             access_specifier_protected_region
         )
-        access_specifier_colon
-;
-
-access_specifier_colon { setFinalToken(); } : 
+        { setFinalToken(); }
         COLON
 ;
-
 
 /*
  public access specifier
