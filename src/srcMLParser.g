@@ -479,7 +479,7 @@ start {} :
         eof |
 
         // end of line
-        line_continuation | eol_pure |
+        line_continuation | EOL | LINECOMMENT_START |
 
         comma[true] |
 
@@ -4465,10 +4465,6 @@ eol[int directive_token, bool markblockzero] { /* setFinalToken(); */ } :
         eol_pre
         (EOL | LINECOMMENT_START | eof)
         eol_post[directive_token, markblockzero]
-;
-
-eol_pure {} :
-        (EOL | LINECOMMENT_START)
 ;
 
 eol_pre {
