@@ -2158,13 +2158,8 @@ function_pointer_name_base { LocalMode lm; } :
         identifier optional_template_argument_list DCOLON function_pointer_name_base |
 
         // typical function pointer name
-        operator_multiplication (complex_name[true])*
+        MULTOPS (complex_name[true])*
 ;
-
-operator_multiplication :
-        { LT(1)->getText() == "*" }? MULTOPS
-;
-
 
 /*
   Everything except the ";" of a function declaration or the block of a
@@ -2549,8 +2544,8 @@ function_identifier[bool function_pointer] { LocalMode lm; } :
 
         // function pointer identifier with name marked separately
         { function_pointer }?
-        (LPAREN operator_multiplication (simple_name)* RPAREN LPAREN)=>
-        LPAREN operator_multiplication (simple_name)* RPAREN
+        (LPAREN MULTOPS (simple_name)* RPAREN LPAREN)=>
+        LPAREN MULTOPS (simple_name)* RPAREN
 ;
 
 /*
@@ -3962,7 +3957,7 @@ multops { LocalMode lm; } :
                 startElement(SMODIFIER);
             }
         }
-        MULTOPS
+        (MULTOPS | REFOPS)
 ;
 
 newop { LocalMode lm; } :

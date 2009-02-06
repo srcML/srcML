@@ -62,6 +62,7 @@ DCOLON;
 MEMBERPOINTER; // = ".*";
 PERIOD; // = ".";
 MULTOPS; // = "*";
+REFOPS;  // = "&";
 MULTIMM; // = "*=";
 
 FALSE;
@@ -125,7 +126,7 @@ OPERATORS options { testLiterals = true; } :
 
         '&' ( '&' { $setText("&amp;&amp;"); } |
               '=' { $setText("&amp;="); } |
-            { $setText("&amp;"); $setType(MULTOPS); } ) |   // bitwise and / address of
+            { $setText("&amp;"); $setType(REFOPS); } ) |   // bitwise and / address of
 //        "&&" { $setText("&amp;&amp;"); } | // logical and
 //        "&=" { $setText("&amp;="); } | // immediate
 
