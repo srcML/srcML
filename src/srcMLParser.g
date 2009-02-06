@@ -3770,8 +3770,13 @@ expression_part[bool checkmacro = false] { guessing_end();
         expression_identifier
 ;
 
+/*
+  Only start and end of strings are put directly through the parser.
+  The contents of the string are handled as is whitespace.
+*/
 string_literal { LocalMode lm; } :
         {
+            // only markup strings in literal option
             if (isoption(parseoptions, OPTION_LITERAL)) {
 
                 // end all elements at end of rule automatically
@@ -3784,14 +3789,19 @@ string_literal { LocalMode lm; } :
         (STRING_START STRING_END)
 ;
 
+/*
+  Only start and end of character are put directly through the parser.
+  The contents of the character are handled as is whitespace.
+*/
 char_literal { LocalMode lm; } :
         {
+            // only markup characters in literal option
             if (isoption(parseoptions, OPTION_LITERAL)) {
 
                 // end all elements at end of rule automatically
                 startNewMode(MODE_LOCAL);
 
-                // start the string
+                // start the character
                 startElement(SCHAR);
             }
         }
@@ -3800,6 +3810,7 @@ char_literal { LocalMode lm; } :
 
 literal { LocalMode lm; } :
         {
+            // only markup literals in literal option
             if (isoption(parseoptions, OPTION_LITERAL)) {
 
                 // end all elements at end of rule automatically
@@ -3807,7 +3818,6 @@ literal { LocalMode lm; } :
 
                 // start the literal value
                 startElement(SLITERAL);
-
             }
         }
         CONSTANTS
@@ -3815,6 +3825,7 @@ literal { LocalMode lm; } :
 
 boolean { LocalMode lm; } :
         {
+            // only markup boolean values in literal option
             if (isoption(parseoptions, OPTION_LITERAL)) {
 
                 // end all elements at end of rule automatically
