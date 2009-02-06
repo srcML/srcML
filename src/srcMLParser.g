@@ -2437,7 +2437,7 @@ pure_lead_type_identifier {} :
 //        struct_union_definition[SUNION] |
 
         // enum use in a type
-        (ENUM variable_identifier (variable_identifier | MULTOPS | INLINE))=> ENUM |
+        (ENUM variable_identifier (variable_identifier | multops | INLINE))=> ENUM |
 
         // entire enum definition
         enum_definition_whole
