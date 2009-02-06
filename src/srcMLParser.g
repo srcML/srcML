@@ -4009,6 +4009,7 @@ parameter_type_count[int type_count] { LocalMode lm; } :
 
 multops { LocalMode lm; } :
         {
+            // markup type modifiers if option is on
             if (isoption(parseoptions, OPTION_MODIFIER)) {
 
                 // end all elements at end of rule automatically
@@ -4023,6 +4024,7 @@ multops { LocalMode lm; } :
 
 newop { LocalMode lm; } :
         {
+            // markup new operator if option is on
             if (isoption(parseoptions, OPTION_OPERATOR)) {
 
                 // end all elements at end of rule automatically
@@ -4037,6 +4039,7 @@ newop { LocalMode lm; } :
 
 deleteop { LocalMode lm; } :
         {
+            // markup delete operator if option is on
             if (isoption(parseoptions, OPTION_OPERATOR)) {
 
                 // end all elements at end of rule automatically
