@@ -2394,10 +2394,6 @@ complete_throw_list {} :
         THROW paren_pair | THROWS ( options { greedy = true; } : complex_name_java[true] | COMMA)*
 ;
 
-structures {} :
-CLASS | STRUCT | UNION
-;
-
 /*
    type identifier
 
@@ -2407,7 +2403,7 @@ pure_lead_type_identifier {} :
         auto_keyword |
 
         // class/struct/union before a name in a type, e.g., class A f();
-        structures |
+        CLASS | STRUCT | UNION |
 
         // specifiers that occur in a type
         standard_specifiers |
