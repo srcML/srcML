@@ -1979,16 +1979,6 @@ statement_part { int type_count; } :
              extern_name
 ;
 
-/*
-  left parentheses
-*/
-lparen {} :
-        {
-            incParen();
-        }
-        LPAREN  
-;
-
 lparen_marked { LocalMode lm; } :
         {
             incParen();
