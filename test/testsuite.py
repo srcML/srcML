@@ -290,13 +290,12 @@ try:
 			
 				# get all the info
 				info = getsrcmlattributefile(xml_filename, "--longinfo")
-
-				# directory of the outer unit element
-				dreinfo = dre.search(info)
-				if dreinfo == None:
+				if info == None:
 					print "Problem with", xml_filename
 					continue
 
+				# directory of the outer unit element
+				dreinfo = dre.search(info)
 				directory = dreinfo.group(1)
 
 				# only process if directory name matches or is not given
@@ -364,7 +363,7 @@ try:
 						unitsrcmlraw = src2srcML(unittext, encoding, language, directory, getfilename(unitxml), defaultxmlns(getfullxmlns(unitxml)))
 
 						# additional, later stage processing
-						unitsrcml = srcML2srcMLStages(unitsrcmlraw, nondefaultxmlns(getfullxmlns(unitxml)))
+						unitsrcml = unitsrcmlraw # srcML2srcMLStages(unitsrcmlraw, nondefaultxmlns(getfullxmlns(unitxml)))
 						
 						# find the difference
 						result = xmldiff(unitxml, unitsrcml)
