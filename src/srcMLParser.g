@@ -1556,12 +1556,6 @@ class_header_base { bool insuper = false; } :
 ;
 
 /*
-*/
-access_specifier {} : 
-        PUBLIC | PRIVATE | PROTECTED
-;
-
-/*
   Each instance of an access specifier defines a region in the class
 */
 access_specifier_region {} : 
@@ -2485,7 +2479,7 @@ java_specifier_mark { LocalMode lm; } :
             // start the function specifier
             startElement(SFUNCTION_SPECIFIER);
         }
-        (access_specifier | FINAL | STATIC)
+        (PUBLIC | PRIVATE | PROTECTED | FINAL | STATIC)
 ;
 
 /*
@@ -3886,7 +3880,7 @@ derive_access { LocalMode lm; } :
 
             startElement(SCLASS_SPECIFIER);
         }
-        (VIRTUAL)* access_specifier
+        (VIRTUAL)* (PUBLIC | PRIVATE | PROTECTED)
 ;
 
 parameter_list { LocalMode lm; } :
