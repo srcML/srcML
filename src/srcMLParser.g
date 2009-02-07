@@ -590,7 +590,8 @@ statement_cfg {} :
   Important to keep semantic checks, e.g., (constructor)=>, in place.  Most of these rules
   can start with a name which leaves it ambiguous which to choose.
 */
-statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; isoperatorfunction = false; } :
+statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; isoperatorfunction = false; int fla = 0;
+        int type_count = 0; } :
 
         // class forms for class declarations/definitions as opposed to part of a declaration types
         (class_struct_union_check[token /* token after header */, place])=> class_struct_union[token, place] |
@@ -621,7 +622,9 @@ statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; isoperat
         ) |
 
         // declarations of all sorts
-        (declaration_check[secondtoken])=> declaration |
+//        (declaration_check[secondtoken])=> declaration |
+        { perform_declaration_check2(secondtoken, fla, type_count) }?
+        declaration |
 
         // labels to goto
         { secondtoken == COLON }? label_statement |
@@ -2249,7 +2252,8 @@ two names in sequence.  For functions that do not have types
 As a side effect, we record the token right for faster checking of
 label (name followed by colon)
 */
-declaration_check[int& token] { token = 0; } : 
+/*
+declaration_check[int& token] { token = 0; int fla; } : 
 
         // no return value function:  main
         // distinguish from call
@@ -2267,10 +2271,71 @@ declaration_check[int& token] { token = 0; } :
 
         // more complex operator name
         (operator_function_name)=>
-        operator_function_name function_paren_pair record[isoperatorfunction, true] |
+        operator_function_name function_rest[fla] record[isoperatorfunction, true] |
 
         // typical type declaration
         lead_type_identifier markend[token] (pure_type_identifier | function_identifier[true])
+;
+*/
+
+perform_declaration_check2[int& token, int& fla, int& type_count] returns [bool isdecl] {
+
+    int start = mark();
+    inputState->guessing++;
+
+    try {
+        declaration_check2(token, fla, type_count, isdecl);
+        isdecl = true;
+    } catch (...) {
+        type_count = 0;
+    }
+
+    inputState->guessing--;
+    rewind(start);
+} :
+;
+
+/*
+  Figures out if we have a declaration, either variable or function.
+
+  This is pretty complicated as it has to figure out whether it is a declaration or not,
+  and whether it is a function or a variable declaration.
+*/
+declaration_check2[int& token,      /* second token, after name (always returned) */
+                   int& fla,        /* for a function, TERMINATE or LCURLY, 0 for a variable */
+                   int& type_count, /* number of tokens in type (not including name) */
+                   bool& isdecl     /* is a declaration */
+        ] { token = 0; fla = 0; type_count = 0; isdecl = false; } : 
+
+        // no return value function:  main
+        // distinguish from call
+        MAIN function_rest[fla] record[isdecl, true] record[isoperatorfunction, true] |
+
+        // no return value function:  casting operator method
+        // distinguish from call
+        (operator_function_name)=>
+        operator_function_name /*overloaded_operator_grammar*/ function_rest[fla] record[isdecl, true] record[isoperatorfunction, true] |
+
+        // main pattern for variable declarations, and most function declaration/definitions
+        // trick is to look for function declarations/definitions, and along the way record
+        // if a declaration
+
+        // found first token of type, so record the second token and update the count
+        lead_type_identifier markend[token] setcount[type_count, 1] 
+
+        ({ inLanguage(LANGUAGE_JAVA_FAMILY) || LA(1) != LBRACKET }? type_identifier_count[type_count]
+        record[isdecl, true]
+         | (function_pointer_name_grammar)=> function_pointer_name_grammar)+
+
+        function_rest[fla] record[isdecl, true]
+;
+
+setcount[int& name, int value] { name = value; } :
+    ;
+
+function_rest[int& fla] {} :
+
+        parameter_list function_tail check_end[fla]
 ;
 
 function_paren_pair {} :
@@ -2281,7 +2346,7 @@ record[bool& variable, bool value] { variable = value; } :
 ;
 
 operator_function_name :
-        NAME DCOLON (NAME DCOLON)* overloaded_operator_grammar
+       /* NAME DCOLON  */ (NAME DCOLON)* overloaded_operator_grammar
 ;
 
 function_check[int& fla, int& type_count] { fla = 0; type_count = 0; } :
