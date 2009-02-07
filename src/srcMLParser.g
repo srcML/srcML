@@ -2266,7 +2266,7 @@ declaration_check[int& token] { token = 0; } :
         INLINE | 
 
         // more complex operator name
-        { look_past2(NAME, DCOLON) == OPERATOR }?
+        (operator_function_name)=>
         operator_function_name function_paren_pair record[isoperatorfunction, true] |
 
         // typical type declaration
