@@ -651,6 +651,20 @@ look_past[int skiptoken] returns [int token] {
     rewind(place);
 }:;
 
+look_past2[int skiptoken1, int skiptoken2] returns [int token] {
+    
+    int place = mark();
+    inputState->guessing++;
+
+    while (LA(1) != antlr::Token::EOF_TYPE && (LA(1) == skiptoken1 || LA(1) == skiptoken2))
+        consume();
+
+    token = LA(1);
+
+    inputState->guessing--;
+    rewind(place);
+}:;
+
 /*
 look_past_set[const antlr::BitSet& skipset] returns [int token] {
 
@@ -2252,7 +2266,8 @@ declaration_check[int& token] { token = 0; } :
         INLINE | 
 
         // more complex operator name
-        (operator_function_name)=> operator_function_name function_paren_pair record[isoperatorfunction, true] |
+        { look_past2(NAME, DCOLON) == OPERATOR }?
+        operator_function_name function_paren_pair record[isoperatorfunction, true] |
 
         // typical type declaration
         lead_type_identifier markend[token] (pure_type_identifier | function_identifier[true])
