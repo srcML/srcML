@@ -187,18 +187,18 @@ header "post_include_cpp" {
 srcMLParser* LocalMode::pparser = 0;
 
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options)
-   : antlr::LLkParser(lexer,1), Mode(this, lang), zeromode(false), skipelse(false), cppifcount(0)
+   : antlr::LLkParser(lexer,1), Mode(this, lang), zeromode(false), skipelse(false), cppifcount(0), parseoptions(parser_options)
 
 {
+    // LocalMode objects need access to the current parser
     LocalMode::setParser(this);
 
-    parseoptions = parser_options;
-
+    // root, single mode
     if (parseoptions & OPTION_EXPRESSION)
-        // start with expectation of an expression
+        // root, single mode to allows for an expression without a statement
         startNewMode(MODE_TOP | MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
     else
-       // start with a single mode that allows statements to be nested
+       // root, single mode that allows statements to be nested
        startNewMode(MODE_TOP | MODE_NEST | MODE_STATEMENT);
 }
 
@@ -614,7 +614,7 @@ statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; isoperat
         declaration[fla, type_count] |
 
         // destructor
-        { false && inLanguage(LANGUAGE_CXX_FAMILY) }?
+        { inLanguage(LANGUAGE_CXX_FAMILY) }?
         (destructor_check[token /* token after header */])=> (
 
             { token != TERMINATE }?
@@ -2319,7 +2319,7 @@ declaration_check2[int& token,      /* second token, after name (always returned
                    int& fla,        /* for a function, TERMINATE or LCURLY, 0 for a variable */
                    int& type_count, /* number of tokens in type (not including name) */
                    bool& isdecl,    /* is a declaration */
-                   int specifier_count
+                   int& specifier_count
         ] { token = 0; fla = 0; type_count = 0; isdecl = false; specifier_count = 0; } : 
 
         // no return value function:  main
@@ -2337,7 +2337,7 @@ declaration_check2[int& token,      /* second token, after name (always returned
 
         // found first token of type, so record the second token and update the count
         update_specifier_count[specifier_count]
-        lead_type_identifier markend[token] setcount[type_count, 1] 
+        lead_type_identifier markend[token] setcount[type_count, 1]
 
         // process as many type identifiers as we find
         // if we find even 1, then we have a declaration
