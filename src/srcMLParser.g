@@ -2329,6 +2329,7 @@ declaration_check2[int& token,      /* second token, after name (always returned
                 function_pointer_name_grammar function_rest[fla] record[isdecl, true] setcount[type_count, type_count + 1] |
 
             // POF (Plain Old Function)
+            { type_count > 1 }?
             function_rest[fla] record[isdecl, true]
         )
 ;
