@@ -131,6 +131,8 @@ header "post_include_hpp" {
 
 #define assertMode(m)
 
+enum DECLTYPE { NONE, VARIABLE, FUNCTION, CONSTRUCTOR, DESTRUCTOR };
+
 // position in output stream
 struct TokenPosition {
 
@@ -591,7 +593,7 @@ statement_cfg {} :
   can start with a name which leaves it ambiguous which to choose.
 */
 statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; isoperatorfunction = false; int fla = 0;
-        int type_count = 0; } :
+        int type_count = 0; DECLTYPE decl_type = NONE; } :
 
         // class forms for class declarations/definitions as opposed to part of a declaration types
         (class_struct_union_check[token /* token after header */, place])=> class_struct_union[token, place] |
@@ -606,16 +608,13 @@ statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; isoperat
         // extern block as opposed to enum as part of declaration
         (extern_definition_header)=> extern_definition |
 
-        // constructor
-        { inLanguage(LANGUAGE_OO) }?
-        (constructor_check[token /* token after header */])=> constructor[token] |
-
         // declarations of all sorts
-        { perform_declaration_check2(secondtoken, fla, type_count) }?
+        { perform_declaration_check2(decl_type, secondtoken, fla, type_count) && 
+          (decl_type == FUNCTION || decl_type == VARIABLE) }?
         declaration[fla, type_count] |
 
         // destructor
-        { inLanguage(LANGUAGE_CXX_FAMILY) }?
+        { false && inLanguage(LANGUAGE_CXX_FAMILY) }?
         (destructor_check[token /* token after header */])=> (
 
             { token != TERMINATE }?
@@ -624,6 +623,10 @@ statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; isoperat
             destructor_declaration
 
         ) |
+
+        // constructor
+        { inLanguage(LANGUAGE_OO) && decl_type == CONSTRUCTOR }?
+        (constructor_check[token /* token after header */])=> constructor[token] |
 
         // labels to goto
         { secondtoken == COLON }? label_statement |
@@ -2273,15 +2276,32 @@ declaration_check[int& token] { token = 0; int fla; } :
 ;
 */
 
-perform_declaration_check2[int& token, int& fla, int& type_count] returns [bool isdecl] {
+perform_declaration_check2[DECLTYPE& type, int& token, int& fla, int& type_count] returns [bool isdecl] {
+
+    int specifier_count = 0;
+
+    type = NONE;
 
     int start = mark();
     inputState->guessing++;
 
     try {
-        declaration_check2(token, fla, type_count, isdecl);
-        isdecl = true;
+        declaration_check2(token, fla, type_count, isdecl, specifier_count);
+
+        // got here, then looks like a function
+        type = FUNCTION;
+
+        // only function if isdecl is true
+        if (type_count - specifier_count == 1) {
+            isdecl = false;
+            type = CONSTRUCTOR;
+        }
+
     } catch (...) {
+
+        // failed function checks, but still may be a variable
+        if (isdecl)
+            type = VARIABLE;
     }
 
     inputState->guessing--;
@@ -2298,8 +2318,9 @@ perform_declaration_check2[int& token, int& fla, int& type_count] returns [bool 
 declaration_check2[int& token,      /* second token, after name (always returned) */
                    int& fla,        /* for a function, TERMINATE or LCURLY, 0 for a variable */
                    int& type_count, /* number of tokens in type (not including name) */
-                   bool& isdecl     /* is a declaration */
-        ] { token = 0; fla = 0; type_count = 0; isdecl = false; } : 
+                   bool& isdecl,    /* is a declaration */
+                   int specifier_count
+        ] { token = 0; fla = 0; type_count = 0; isdecl = false; specifier_count = 0; } : 
 
         // no return value function:  main
         // distinguish from call
@@ -2315,12 +2336,14 @@ declaration_check2[int& token,      /* second token, after name (always returned
         // if a declaration
 
         // found first token of type, so record the second token and update the count
+        update_specifier_count[specifier_count]
         lead_type_identifier markend[token] setcount[type_count, 1] 
 
         // process as many type identifiers as we find
         // if we find even 1, then we have a declaration
         ({ inLanguage(LANGUAGE_JAVA_FAMILY) || LA(1) != LBRACKET }?
-            type_identifier_count[type_count] record[isdecl, true])*
+            update_specifier_count[specifier_count]
+            type_identifier_count[type_count] recordisdecl[isdecl])*
 
         // we have a type, so do we have a function?
         (
@@ -2329,12 +2352,20 @@ declaration_check2[int& token,      /* second token, after name (always returned
                 function_pointer_name_grammar function_rest[fla] record[isdecl, true] setcount[type_count, type_count + 1] |
 
             // POF (Plain Old Function)
-            { type_count > 1 }?
+            // need at least one non-specifier
+//            { type_count - specifier_count > 1 }?
             function_rest[fla] record[isdecl, true]
         )
 ;
 
+recordisdecl[bool& variable] { if ((LA(1) != VIRTUAL) && (LA(1) != INLINE) && LA(1) != EXPLICIT) variable = true; } :
+;
+
+
 setcount[int& name, int value] { name = value; } :
+    ;
+
+update_specifier_count[int& name] { if ((LA(1) == VIRTUAL) || (LA(1) == INLINE) || (LA(1) == EXPLICIT)) { ++name; }} :
     ;
 
 function_rest[int& fla] {} :
