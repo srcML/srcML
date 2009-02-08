@@ -608,10 +608,13 @@ statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; isoperat
         // extern block as opposed to enum as part of declaration
         (extern_definition_header)=> extern_definition |
 
-        // declarations of all sorts
-        { perform_declaration_check2(decl_type, secondtoken, fla, type_count) && 
-          (decl_type == FUNCTION || decl_type == VARIABLE) }?
-        declaration[fla, type_count] |
+        // variable declaration
+        { perform_declaration_check2(decl_type, secondtoken, fla, type_count) && decl_type == VARIABLE }?
+        variable_declaration_statement[type_count] |
+
+        // function declaration
+        { decl_type == FUNCTION }?
+        function[fla, type_count] |
 
         // destructor
         { inLanguage(LANGUAGE_CXX_FAMILY) }?
@@ -685,15 +688,6 @@ look_past_set[const antlr::BitSet& skipset] returns [int token] {
     rewind(place);
 }:;
 */
-
-// declarations of all sorts
-declaration[int fla, int type_count] {} :
-
-        // declaration statement
-        { fla == 0 }? variable_declaration_statement[type_count] |
-
-        function[fla, type_count]
-;
 
 // functions
 function[int token, int type_count] { /* TokenPosition tp; */} :
@@ -2349,7 +2343,7 @@ declaration_check2[int& token,      /* second token, after name (always returned
         (
             // check for function pointer
             (function_pointer_name_grammar)=>
-                function_pointer_name_grammar function_rest[fla] record[isdecl, true] setcount[type_count, type_count + 1] |
+             function_pointer_name_grammar function_rest[fla] record[isdecl, true] setcount[type_count, type_count + 1] |
 
             // POF (Plain Old Function)
             // need at least one non-specifier
