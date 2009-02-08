@@ -609,7 +609,7 @@ statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; isoperat
         (extern_definition_header)=> extern_definition |
 
         // variable declaration
-        { perform_declaration_check2(decl_type, secondtoken, fla, type_count) && decl_type == VARIABLE }?
+        { perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type == VARIABLE }?
         variable_declaration_statement[type_count] |
 
         // function declaration
@@ -2241,7 +2241,7 @@ declaration_check[int& token] { token = 0; int fla; } :
 ;
 */
 
-perform_declaration_check2[DECLTYPE& type, int& token, int& fla, int& type_count] returns [bool isdecl] {
+perform_noncfg_check[DECLTYPE& type, int& token, int& fla, int& type_count] returns [bool isdecl] {
 
     int specifier_count = 0;
 
@@ -2251,7 +2251,7 @@ perform_declaration_check2[DECLTYPE& type, int& token, int& fla, int& type_count
     inputState->guessing++;
 
     try {
-        declaration_check2(token, fla, type_count, isdecl, specifier_count);
+        noncfg_check(token, fla, type_count, isdecl, specifier_count);
 
         // got here, then looks like a function
         type = FUNCTION;
@@ -2280,7 +2280,7 @@ perform_declaration_check2[DECLTYPE& type, int& token, int& fla, int& type_count
   This is pretty complicated as it has to figure out whether it is a declaration or not,
   and whether it is a function or a variable declaration.
 */
-declaration_check2[int& token,      /* second token, after name (always returned) */
+noncfg_check[int& token,      /* second token, after name (always returned) */
                    int& fla,        /* for a function, TERMINATE or LCURLY, 0 for a variable */
                    int& type_count, /* number of tokens in type (not including name) */
                    bool& isdecl,    /* is a declaration */
