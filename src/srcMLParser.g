@@ -2220,11 +2220,11 @@ declaration_check[int& token] { token = 0; int fla; } :
 
         // no return value function:  main
         // distinguish from call
-        MAIN function_paren_pair record[isoperatorfunction, true] |
+        MAIN function_paren_pair set_bool[isoperatorfunction, true] |
 
         // no return value function:  casting operator method
         // distinguish from call
-        overloaded_operator_grammar function_paren_pair record[isoperatorfunction, true] |
+        overloaded_operator_grammar function_paren_pair set_bool[isoperatorfunction, true] |
 
         // has to be a declaration
         VIRTUAL | 
@@ -2234,7 +2234,7 @@ declaration_check[int& token] { token = 0; int fla; } :
 
         // more complex operator name
         (operator_function_name)=>
-        operator_function_name function_rest[fla] record[isoperatorfunction, true] |
+        operator_function_name function_rest[fla] set_bool[isoperatorfunction, true] |
 
         // typical type declaration
         lead_type_identifier markend[token] (pure_type_identifier | function_identifier[true])
@@ -2289,12 +2289,12 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
 
         // no return value function:  main
         // distinguish from call
-        MAIN function_rest[fla] record[isdecl, true] record[isoperatorfunction, true] |
+        MAIN function_rest[fla] set_bool[isdecl, true] set_bool[isoperatorfunction, true] |
 
         // no return value function:  casting operator method
         // distinguish from call
         (operator_function_name)=>
-        operator_function_name /*overloaded_operator_grammar*/ function_rest[fla] record[isdecl, true] record[isoperatorfunction, true] |
+        operator_function_name /*overloaded_operator_grammar*/ function_rest[fla] set_bool[isdecl, true] set_bool[isoperatorfunction, true] |
 
         // main pattern for variable declarations, and most function declaration/definitions.
         // trick is to look for function declarations/definitions, and along the way record
@@ -2302,7 +2302,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
 
         // found first token of type, so record the second token and update the count
         update_specifier_count[specifier_count]
-        lead_type_identifier markend[token] setcount[type_count, 1]
+        lead_type_identifier markend[token] set_int[type_count, 1]
 
         // process as many type identifiers as we find
         // if we find even 1, then we have a declaration
@@ -2314,21 +2314,24 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
         (
             // check for function pointer
             (function_pointer_name_grammar)=>
-             function_pointer_name_grammar function_rest[fla] record[isdecl, true] setcount[type_count, type_count + 1] |
+             function_pointer_name_grammar function_rest[fla] set_bool[isdecl, true] set_int[type_count, type_count + 1] |
 
             // POF (Plain Old Function)
             // need at least one non-specifier
 //            { type_count - specifier_count > 1 }?
-            function_rest[fla] record[isdecl, true]
+            function_rest[fla] set_bool[isdecl, true]
         )
 ;
 
+/*
+  Record if we have a declaration (ignoring specifiers)
+*/
 recordisdecl[bool& variable] { if ((LA(1) != VIRTUAL) && (LA(1) != INLINE) && LA(1) != EXPLICIT) variable = true; } :
 ;
 
+set_int[int& name, int value] { name = value; } :;
 
-setcount[int& name, int value] { name = value; } :
-    ;
+set_bool[bool& variable, bool value] { variable = value; } :;
 
 update_specifier_count[int& name] { if ((LA(1) == VIRTUAL) || (LA(1) == INLINE) || (LA(1) == EXPLICIT)) { ++name; }} :
     ;
@@ -2341,9 +2344,6 @@ function_rest[int& fla] {} :
 function_paren_pair {} :
         paren_pair (LCURLY | TERMINATE)
     ;
-
-record[bool& variable, bool value] { variable = value; } :
-;
 
 operator_function_name :
        /* NAME DCOLON  */ (NAME DCOLON)* overloaded_operator_grammar
