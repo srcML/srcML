@@ -3717,7 +3717,7 @@ expression_part[bool checkmacro = false] { guessing_end();
         (NEW function_identifier[true] paren_pair LCURLY)=> newop anonymous_class_definition |
 
         // general math operators
-        general_operators | multops | newop | deleteop | period |
+        general_operators | multops_expr | newop | deleteop | period |
 
         // call
         // distinguish between a call and a macro
@@ -4042,6 +4042,21 @@ multops { LocalMode lm; } :
 
                 // start the modifier
                 startElement(SMODIFIER);
+            }
+        }
+        (MULTOPS | REFOPS)
+;
+
+multops_expr { LocalMode lm; } :
+        {
+            // markup type modifiers if option is on
+            if (isoption(parseoptions, OPTION_OPERATOR)) {
+
+                // end all elements at end of rule automatically
+                startNewMode(MODE_LOCAL);
+
+                // start the operator
+                startElement(SOPERATOR);
             }
         }
         (MULTOPS | REFOPS)
