@@ -610,6 +610,10 @@ statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; isoperat
         { inLanguage(LANGUAGE_OO) }?
         (constructor_check[token /* token after header */])=> constructor[token] |
 
+        // declarations of all sorts
+        { perform_declaration_check2(secondtoken, fla, type_count) }?
+        declaration[fla, type_count] |
+
         // destructor
         { inLanguage(LANGUAGE_CXX_FAMILY) }?
         (destructor_check[token /* token after header */])=> (
@@ -621,19 +625,14 @@ statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; isoperat
 
         ) |
 
-        // declarations of all sorts
-//        (declaration_check[secondtoken])=> declaration |
-        { perform_declaration_check2(secondtoken, fla, type_count) }?
-        declaration |
-
         // labels to goto
         { secondtoken == COLON }? label_statement |
 
         // C++0x additional non-cfg statements
-        { look_past(AUTO) == CONCEPT }?
+        { inLanguage(LANGUAGE_CXX_0X) && look_past(AUTO) == CONCEPT }?
         concept_definition |
 
-        { look_past(AUTO) == CONCEPTMAP }?
+        { inLanguage(LANGUAGE_CXX_0X) && look_past(AUTO) == CONCEPT }?
         conceptmap_definition |
 
         // call
@@ -685,37 +684,33 @@ look_past_set[const antlr::BitSet& skipset] returns [int token] {
 */
 
 // declarations of all sorts
-declaration { int token = 0; int type_count = 0; } :
-
-        // function
-        (function_check[token /* token after header */, type_count /* count of names in type */])=>
-        
-            function[token, type_count] |
-
-        // function pointer declaration
-        // type count is not high enough, since function rule expects name of function in type_count
-        { token == LPAREN && type_count > 0 }? { ++type_count;} function[token, type_count] |
+declaration[int fla, int type_count] {} :
 
         // declaration statement
-        { type_count > 1 }? variable_declaration_statement[type_count]
+        { fla == 0 }? variable_declaration_statement[type_count] |
+
+        function[fla, type_count]
 ;
 
 // functions
-function[int token, int type_count] { TokenPosition tp; } :
+function[int token, int type_count] { /* TokenPosition tp; */} :
 		{
             // function definitions have a "nested" block statement
             startNewMode(MODE_STATEMENT);
 
-            // start the function definition element
-            startElement(SFUNCTION_DEFINITION);
+            if (token != LCURLY)
+                startElement(SFUNCTION_DECLARATION);
+            else
+                // start the function definition element
+                startElement(SFUNCTION_DEFINITION);
 
             // record the token position so we can replace it if necessary
-            tp = getTokenPosition();
+//            tp = getTokenPosition();
         }
         function_header[type_count]
         {
-            if (token != LCURLY)
-                tp.setType(SFUNCTION_DECLARATION);
+//            if (token != LCURLY)
+//                tp.setType(SFUNCTION_DECLARATION);
         }
 ;
 
@@ -2287,7 +2282,6 @@ perform_declaration_check2[int& token, int& fla, int& type_count] returns [bool 
         declaration_check2(token, fla, type_count, isdecl);
         isdecl = true;
     } catch (...) {
-        type_count = 0;
     }
 
     inputState->guessing--;
@@ -2316,18 +2310,27 @@ declaration_check2[int& token,      /* second token, after name (always returned
         (operator_function_name)=>
         operator_function_name /*overloaded_operator_grammar*/ function_rest[fla] record[isdecl, true] record[isoperatorfunction, true] |
 
-        // main pattern for variable declarations, and most function declaration/definitions
+        // main pattern for variable declarations, and most function declaration/definitions.
         // trick is to look for function declarations/definitions, and along the way record
         // if a declaration
 
         // found first token of type, so record the second token and update the count
         lead_type_identifier markend[token] setcount[type_count, 1] 
 
-        ({ inLanguage(LANGUAGE_JAVA_FAMILY) || LA(1) != LBRACKET }? type_identifier_count[type_count]
-        record[isdecl, true]
-         | (function_pointer_name_grammar)=> function_pointer_name_grammar)+
+        // process as many type identifiers as we find
+        // if we find even 1, then we have a declaration
+        ({ inLanguage(LANGUAGE_JAVA_FAMILY) || LA(1) != LBRACKET }?
+            type_identifier_count[type_count] record[isdecl, true])*
 
-        function_rest[fla] record[isdecl, true]
+        // we have a type, so do we have a function?
+        (
+            // check for function pointer
+            (function_pointer_name_grammar)=>
+                function_pointer_name_grammar function_rest[fla] record[isdecl, true] setcount[type_count, type_count + 1] |
+
+            // POF (Plain Old Function)
+            function_rest[fla] record[isdecl, true]
+        )
 ;
 
 setcount[int& name, int value] { name = value; } :
