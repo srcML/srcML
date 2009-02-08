@@ -645,6 +645,7 @@ statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; isoperat
         call_macro_expression[secondtoken, true]
 ;
 
+
 look_past[int skiptoken] returns [int token] {
     
     int place = mark();
@@ -658,36 +659,6 @@ look_past[int skiptoken] returns [int token] {
     inputState->guessing--;
     rewind(place);
 }:;
-
-look_past2[int skiptoken1, int skiptoken2] returns [int token] {
-    
-    int place = mark();
-    inputState->guessing++;
-
-    while (LA(1) != antlr::Token::EOF_TYPE && (LA(1) == skiptoken1 || LA(1) == skiptoken2))
-        consume();
-
-    token = LA(1);
-
-    inputState->guessing--;
-    rewind(place);
-}:;
-
-/*
-look_past_set[const antlr::BitSet& skipset] returns [int token] {
-
-    int place = mark();
-    inputState->guessing++;
-
-    while (LA(1) != antlr::Token::EOF_TYPE && skipset.member(LA(1)))
-        consume();
-
-    token = LA(1);
-
-    inputState->guessing--;
-    rewind(place);
-}:;
-*/
 
 // functions
 function[int token, int type_count] { /* TokenPosition tp; */} :
