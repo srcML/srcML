@@ -2293,9 +2293,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                    int& type_count, /* number of tokens in type (not including name) */
                    bool& isdecl,    /* is a declaration */
                    int& specifier_count
-        ] { token = 0; fla = 0; type_count = 0; isdecl = false; specifier_count = 0; isdestructor = false; 
-
-std::cout << LA(1) << std::endl; } : 
+        ] { token = 0; fla = 0; type_count = 0; isdecl = false; specifier_count = 0; isdestructor = false; } : 
 
         // no return value function:  main
         // distinguish from call
