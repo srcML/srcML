@@ -422,6 +422,7 @@ bool zeromode;
 bool skipelse;
 int cppifcount;
 bool isoperatorfunction;
+bool isdestructor;
 int parseoptions;
 
 ~srcMLParser() {}
@@ -617,7 +618,7 @@ statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; isoperat
         function[fla, type_count] |
 
         // destructor
-        { inLanguage(LANGUAGE_CXX_FAMILY) }?
+        { decl_type == DESTRUCTOR && inLanguage(LANGUAGE_CXX_FAMILY) }?
         (destructor_check[token /* token after header */])=> (
 
             { token != TERMINATE }?
@@ -714,7 +715,9 @@ call_macro_expression[int secondtoken, bool statement]
         macro_call |
 
         // expression statement
-        expression_statement[statement]) |
+        expression_statement[statement]
+
+        ) |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         expression_statement[statement]
@@ -2131,8 +2134,8 @@ function_pointer_name_grammar { LocalMode lm; } :
 function_pointer_name_base { LocalMode lm; } :
 
         // special case for function pointer names that don't have '*'
-        (complex_name[true] RPAREN)=>
-            complex_name[true] |
+        (complex_name[true] MULTOP RPAREN)=>
+            complex_name[true] MULTOP |
 
         // special name prefix of namespace or class
         identifier optional_template_argument_list DCOLON function_pointer_name_base |
@@ -2262,6 +2265,11 @@ perform_noncfg_check[DECLTYPE& type, int& token, int& fla, int& type_count] retu
             type = CONSTRUCTOR;
         }
 
+        if (isdestructor) {
+            isdecl = false;
+            type = DESTRUCTOR;
+        }
+
     } catch (...) {
 
         // failed function checks, but still may be a variable
@@ -2285,7 +2293,9 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                    int& type_count, /* number of tokens in type (not including name) */
                    bool& isdecl,    /* is a declaration */
                    int& specifier_count
-        ] { token = 0; fla = 0; type_count = 0; isdecl = false; specifier_count = 0; } : 
+        ] { token = 0; fla = 0; type_count = 0; isdecl = false; specifier_count = 0; isdestructor = false; 
+
+std::cout << LA(1) << std::endl; } : 
 
         // no return value function:  main
         // distinguish from call
@@ -2335,6 +2345,12 @@ set_bool[bool& variable, bool value] { variable = value; } :;
 
 update_specifier_count[int& name] { if ((LA(1) == VIRTUAL) || (LA(1) == INLINE) || (LA(1) == EXPLICIT)) { ++name; }} :
     ;
+
+/*
+message[const char* s] { std::cerr << s << std::endl; } :;
+
+message_int[const char* s, int n]  { std::cerr << s << n << std::endl; } :;
+*/
 
 function_rest[int& fla] {} :
 
@@ -2416,7 +2432,9 @@ perform_function_type_check[int& type_count] returns [int count] {
   Type of a function.  Includes specifiers
 */
 function_type_check[int& type_count] { type_count = 1; } :
-        lead_type_identifier ( { inLanguage(LANGUAGE_JAVA_FAMILY) || LA(1) != LBRACKET }? type_identifier_count[type_count])*
+
+        lead_type_identifier
+        ( { inLanguage(LANGUAGE_JAVA_FAMILY) || LA(1) != LBRACKET }? type_identifier_count[type_count])*
 ;
 
 type_identifier_count[int& type_count] { ++type_count; } :
@@ -2901,6 +2919,7 @@ complex_name[bool marked] { LocalMode lm; TokenPosition tp; /* TokenPosition tp2
             }
         }
         (DCOLON { iscomplex_name = true; })*
+        (DESTOP set_bool[isdestructor, true])*
         simple_name_optional_template[marked]
         name_tail[iscomplex_name, marked]
         {
@@ -2956,7 +2975,7 @@ name_tail[bool& iscomplex, bool marked] { LocalMode lm; } :
         // "a::" will cause an exception to be thrown
         ( options { greedy = true; } : 
             (dcolon { iscomplex = true; })
-            ( options { greedy = true; } : dcolon)*
+            ( options { greedy = true; } : dcolon)* (DESTOP set_bool[isdestructor, true])*
             (simple_name_optional_template[marked] | overloaded_operator)
         )*
 ;
@@ -3990,6 +4009,7 @@ parameter { int type_count = 0; } :
             startElement(SDECLARATION);
         }
         parameter_type_count[type_count]
+
         {
             consumeSkippedTokens();
 
