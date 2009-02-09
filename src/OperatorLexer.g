@@ -85,7 +85,7 @@ SPECIAL :
 //ALLOPERATORS options { testLiterals = true; } : 
 
 
-OPERATORS options { testLiterals = true; } : 
+OPERATORS options { testLiterals = true; } { int realbegin = _begin; } : 
         (
             '#' {
 
@@ -98,94 +98,34 @@ OPERATORS options { testLiterals = true; } :
                 // a preprocessor line will end at the right spot
                 onpreprocline = true; 
             }
-        }    |
-//        "*=" |  // immediate multiplication
-//        '*' |   // multiplication/pointer
-        '*' ( '=' | ) |
+        }   |
+
+            (( '*' | '|' | '.' | ':' | '~' | '`' | '=' | '!' | '%' | '+' | '^' | '-' |
+                '&' { text.erase(realbegin); text += "&amp;"; realbegin += 4; } | 
+                '<' { text.erase(realbegin); text += "&lt;"; realbegin += 3;  }) { ++realbegin; } )
+
+            (( '*' | '|' | '.' | ':' | '~' | '`' | '=' | '!' | '%' | '+' | '^' | '-' |
+                '&' { text.erase(realbegin); text += "&amp;"; realbegin += 4; } | 
+                '>' { text.erase(realbegin); text += "&gt;"; realbegin += 3; } | 
+                '<' { text.erase(realbegin); text += "&lt;"; realbegin += 3;  }) { ++realbegin; } )* |
+
         ',' |
-//        ".*" |  // member pointer selector
-//        '.' | 
-        '.' ( '*' | ) |
-//        ':' | "::" |
-        ':' ( ':' | ) |
         ';' |
         '('..')' |
         '[' | ']' |
         '{' | '}' |
-        '~' |   // bitwise complement
-        '`' |
         '@' |
 
-//        "!=" |    // not equal
-        '!' ('=' | )  |    // logical negation
-
         '$'  |    // not an operator (why is it here?)
-
-        '%' ('='| ) |    // immediate modulus
-//        '%'  |    // modulus 
-
-        '&' ( '&' { $setText("&amp;&amp;"); } |
-              '=' { $setText("&amp;="); } |
-            { $setText("&amp;"); $setType(REFOPS); } ) |   // bitwise and / address of
-//        "&&" { $setText("&amp;&amp;"); } | // logical and
-//        "&=" { $setText("&amp;="); } | // immediate
-
-//        "++" |    // increment
-//        "+=" |    // immediate addition
-        '+' ('+' | '=' | )  |    // addition (binary and unary)
-
-//        "--" |    // decrement (pre and post)
-//        "-=" |    // immediate subtraction
-//        '-' ('-' | '=' |)  |    // subtraction/unary minus
-
-//        ("->*")=> "->*" { $setText("-&gt;*"); } |   // member pointer selector
-
-        '-' ('-' | '=' |
-                '>' ( '*' { $setText("-&gt;*"); } | { $setText("-&gt;"); } ) | ) |   // member access
-
-
-//        "/=" |    // immediate division
-//        '/' ('=' | )  |    // division
-
-//        { inLanguage(LANGUAGE_JAVA) }?
-//        ("<<<")=>
-//        "<<<" { $setText("&lt;&lt;&lt;"); } |
-
-//        ("<<=")=> "<<=" { $setText("&lt;&lt;="); } |    // immediate left shift
-
-//        "<<" { $setText("&lt;&lt;"); } |                // left shift
-//        "<=" { $setText("&lt;="); } |                   // less than or equal to
-        '<' ( ('<' (
-                        { inLanguage(LANGUAGE_JAVA) }? '<' { $setText("&lt;&lt;&lt;"); } |
-                        '=' { $setText("&lt;&lt;="); } | { $setText("&lt;&lt;"); } ) 
-                ) | '=' { $setText("&lt;="); }
-            | { $setText("&lt;"); $setType(TEMPOPS); } )  | // less than
-
-//        "==" | // equals
-        '=' ( '=' | { $setType(EQUAL); }) |   // assignment
+        '?'  | // part of ternary
 
         (">>=")=> ">>=" { $setText("&gt;&gt;="); } |    // immediate right shift
 
-//        ">>" { $setText("&gt;&gt;"); } |                // right shift
-//        ">=" { $setText("&gt;="); } |                   // greater than or equal to
+        (">=")=> ">=" { $setText("&gt;="); } |    // immediate right shift
 
-        '>' 
-            ( '=' { $setText("&gt;="); } | { $setText("&gt;"); $setType(TEMPOPE); }    
-            ) |
+        '>' { $setText("&gt;"); } |
 
-// { $setText("&gt;"); $setType(TEMPOPE); } | // greater than
-
-        '?'  | // part of ternary
-
-        '\\' ( EOL { $setType(EOL_BACKSLASH); } | ) | // 
-
-//        "^=" | // immediate bitwise exclusive or
-        '^' ('=' | )  | // bitwise exclusive or
-
-//        "||" | // logical or
-//        "|=" | // immediate bitwise inclusive or
-        '|' ('|' | '=' | )    // bitwise inclusive or
-
+        '\\' ( EOL { $setType(EOL_BACKSLASH); } )
         )
         { startline = false; }
 ;
