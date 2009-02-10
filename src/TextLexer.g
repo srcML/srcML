@@ -75,7 +75,7 @@ CHAR_START :
 
 CONSTANTS :
         { startline = false; }
-        DIGIT (options { greedy = true; } : HEX_DIGIT)*
+        DIGIT (options { greedy = true; } : DIGIT | 'x' | 'A'..'F' | 'a'..'f')*
         ("." | DIGIT)* (NAMECHAR)*
 ;
 
@@ -98,9 +98,4 @@ NAMECHAR :
 protected
 DIGIT :
         '0'..'9'
-;
-
-protected
-HEX_DIGIT :
-        DIGIT | 'x' | 'A'..'F' | 'a'..'f'
 ;
