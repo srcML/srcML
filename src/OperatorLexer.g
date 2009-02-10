@@ -84,7 +84,7 @@ SPECIAL :
 */
 //ALLOPERATORS options { testLiterals = true; } : 
 
-OPERATORS options { testLiterals = true; } { int realbegin = _begin; } : 
+OPERATORS options { testLiterals = true; } { int realbegin = _begin; bool gt = false; } : 
         (
             '#' {
 
@@ -99,20 +99,13 @@ OPERATORS options { testLiterals = true; } { int realbegin = _begin; } :
             }
         }   |
 
-        ( '>' (~( '*' | '|' | '.' | ':' | '~' | '`' | '=' | '!' | '%' | '+' | '^' | '-' | '&' | '<' )))=>
-        '>' { $setText("&gt;"); } |
-
-        (( '*' | '|' | '.' | ':' | '~' | '`' | '=' | '!' | '%' | '+' | '^' | '-' |
+        ({ !(gt && LA(1) == '>') }? ( '*' | '|' | '.' | ':' | '~' | '`' | '=' | '!' | '%' | '+' | '^' | '-' |
            '&' { text.erase(realbegin); text += "&amp;"; realbegin += 4; } | 
-           '>' { text.erase(realbegin); text += "&gt;"; realbegin += 3; } | 
+           '>' { if (realbegin == _begin) gt = true; text.erase(realbegin); text += "&gt;"; realbegin += 3; } | 
            '<' { text.erase(realbegin); text += "&lt;"; realbegin += 3;  }) { ++realbegin; } )+ |
 
-        ',' |
-        ';' |
-        '('..')' |
-        '[' | ']' |
-        '{' | '}' |
-        '@' |
+        // match these as individual operators only
+        ',' | ';' | '('..')' | '[' | ']' | '{' | '}' | '@' |
 
         '$'  |    // not an operator (why is it here?)
         '?'  | // part of ternary
