@@ -75,8 +75,8 @@ CHAR_START :
 
 CONSTANTS :
         { startline = false; }
-        DIGIT (options { greedy = true; } : DIGIT | 'x' | 'A'..'F' | 'a'..'f')*
-        ("." | DIGIT)* (NAMECHAR)*
+        ('0'..'9') (options { greedy = true; } : '0'..'9' | 'x' | 'A'..'F' | 'a'..'f')*
+        ("." | '0'..'9')* (NAMECHAR)*
 ;
 
 NAME options { testLiterals = true; } { char lastchar = LA(1); } :
@@ -86,16 +86,11 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); } :
             { lastchar == 'L' }?
             { $setType(STRING_START); } STRING_START |
 
-            (DIGIT | NAMECHAR)*
+            ('0'..'9' | NAMECHAR)*
         )
 ;
 
 protected
 NAMECHAR :
         'a'..'z' | 'A'..'Z' | '_'
-;
-
-protected
-DIGIT :
-        '0'..'9'
 ;
