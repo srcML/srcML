@@ -75,7 +75,8 @@ CHAR_START :
 
 CONSTANTS :
         { startline = false; }
-        DIGITS ("." | DIGIT)* (NAMECHAR)*
+        DIGIT (options { greedy = true; } : HEX_DIGIT)*
+        ("." | DIGIT)* (NAMECHAR)*
 ;
 
 NAME options { testLiterals = true; } { char lastchar = LA(1); } :
@@ -88,12 +89,6 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); } :
             (DIGIT | NAMECHAR)*
         )
 ;
-
-protected   
-DIGITS :
-        DIGIT
-        (options { greedy = true; } : HEX_DIGIT)*
-; 
 
 protected
 NAMECHAR :
