@@ -84,7 +84,6 @@ SPECIAL :
 */
 //ALLOPERATORS options { testLiterals = true; } : 
 
-
 OPERATORS options { testLiterals = true; } { int realbegin = _begin; } : 
         (
             '#' {
@@ -100,14 +99,13 @@ OPERATORS options { testLiterals = true; } { int realbegin = _begin; } :
             }
         }   |
 
-            (( '*' | '|' | '.' | ':' | '~' | '`' | '=' | '!' | '%' | '+' | '^' | '-' |
-                '&' { text.erase(realbegin); text += "&amp;"; realbegin += 4; } | 
-                '<' { text.erase(realbegin); text += "&lt;"; realbegin += 3;  }) { ++realbegin; } )
+        ( '>' (~( '*' | '|' | '.' | ':' | '~' | '`' | '=' | '!' | '%' | '+' | '^' | '-' | '&' | '<' )))=>
+        '>' { $setText("&gt;"); } |
 
-            (( '*' | '|' | '.' | ':' | '~' | '`' | '=' | '!' | '%' | '+' | '^' | '-' |
-                '&' { text.erase(realbegin); text += "&amp;"; realbegin += 4; } | 
-                '>' { text.erase(realbegin); text += "&gt;"; realbegin += 3; } | 
-                '<' { text.erase(realbegin); text += "&lt;"; realbegin += 3;  }) { ++realbegin; } )* |
+        (( '*' | '|' | '.' | ':' | '~' | '`' | '=' | '!' | '%' | '+' | '^' | '-' |
+           '&' { text.erase(realbegin); text += "&amp;"; realbegin += 4; } | 
+           '>' { text.erase(realbegin); text += "&gt;"; realbegin += 3; } | 
+           '<' { text.erase(realbegin); text += "&lt;"; realbegin += 3;  }) { ++realbegin; } )+ |
 
         ',' |
         ';' |
@@ -118,12 +116,6 @@ OPERATORS options { testLiterals = true; } { int realbegin = _begin; } :
 
         '$'  |    // not an operator (why is it here?)
         '?'  | // part of ternary
-
-        (">>=")=> ">>=" { $setText("&gt;&gt;="); } |    // immediate right shift
-
-        (">=")=> ">=" { $setText("&gt;="); } |    // immediate right shift
-
-        '>' { $setText("&gt;"); } |
 
         '\\' ( EOL { $setType(EOL_BACKSLASH); } )
         )

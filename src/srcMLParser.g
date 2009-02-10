@@ -3643,9 +3643,11 @@ general_operators { LocalMode lm; } :
         }
         (OPERATORS | TEMPOPS | 
 
-            TEMPOPE (options { greedy = true; } : { !inMode(MODE_TEMPLATE) }? TEMPOPE)* | 
+            TEMPOPE (options { greedy = true; } : { !inMode(MODE_TEMPLATE) }?
+                (TEMPOPE | OPERATORS | EQUAL))* | 
 
-            EQUAL | MULTIMM | DESTOP | MEMBERPOINTER | RSHIFT)
+            EQUAL | MULTIMM | DESTOP | MEMBERPOINTER
+        )
 ;
 
 /*

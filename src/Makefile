@@ -133,7 +133,7 @@ ${OBJ_DIR}srcMLParser.o : $(firstword $(SRCMLPARSER_GENS)) Mode.h TokenParser.h 
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) -c $< -o $@
 
 srcMLParserClean.cpp : srcMLParser.cpp
-	/bin/sed '/\"<0>\"/,/\"RSHIFT\"/ d' srcMLParser.cpp > srcMLParserClean.cpp
+	/bin/sed '/\"<0>\"/,/\"END_ELEMENT_TOKEN\"/ d' srcMLParser.cpp > srcMLParserClean.cpp
 
 ${OBJ_DIR}srcMLParserClean.o : srcMLParserClean.cpp Mode.h TokenParser.h State.h Options.h
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) -c $< -o $@
