@@ -75,8 +75,8 @@ CHAR_START :
 
 CONSTANTS :
         { startline = false; }
-        ('0'..'9') (options { greedy = true; } : '0'..'9' | 'x' | 'A'..'F' | 'a'..'f')*
-        ("." | '0'..'9')* ('a'..'z' | 'A'..'Z' | '_')*
+        ('0'..'9') (options { greedy = true; } : '0'..'9' | 'x' | 'A'..'F' | 'a'..'f' )*
+        (options { greedy = true; } : "." | '0'..'9')* ('0'..'9' | 'a'..'z' | 'A'..'Z' | '_')*
 ;
 
 NAME options { testLiterals = true; } { char lastchar = LA(1); } :
