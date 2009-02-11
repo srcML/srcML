@@ -610,12 +610,12 @@ statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; isoperat
         (extern_definition_header)=> extern_definition |
 
         // variable declaration
-        { perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type == VARIABLE }?
-        variable_declaration_statement[type_count] |
+        { perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type == FUNCTION }?
+        function[fla, type_count] |
 
         // function declaration
-        { decl_type == FUNCTION }?
-        function[fla, type_count] |
+        { decl_type == VARIABLE }?
+        variable_declaration_statement[type_count] |
 
         // destructor
         { decl_type == DESTRUCTOR && inLanguage(LANGUAGE_CXX_FAMILY) }?
