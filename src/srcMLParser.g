@@ -609,33 +609,27 @@ statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; isoperat
         // extern block as opposed to enum as part of declaration
         (extern_definition_header)=> extern_definition |
 
+        // function declaration
+        { perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type == FUNCTION }?
+        function[fla, type_count] |
+
         // variable declaration
-        { perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type != NONE }?
-        (
+        { decl_type == VARIABLE }?
+        variable_declaration_statement[type_count] |
 
-            { decl_type == FUNCTION }?
-            function[fla, type_count] |
+        // destructor
+        { decl_type == DESTRUCTOR && inLanguage(LANGUAGE_CXX_FAMILY) }?
+        (destructor_check[token /* token after header */])=> (
 
-            // function declaration
-            { decl_type == VARIABLE }?
-            variable_declaration_statement[type_count] |
+             { token != TERMINATE }?
+             destructor_definition |
 
-            // destructor
-            { decl_type == DESTRUCTOR && inLanguage(LANGUAGE_CXX_FAMILY) }?
-            (destructor_check[token /* token after header */])=> (
-
-                { token != TERMINATE }?
-                destructor_definition |
-
-                destructor_declaration
-
-             ) |
-
-             // constructor
-             { decl_type == CONSTRUCTOR && inLanguage(LANGUAGE_OO) }?
-             (constructor_check[token /* token after header */])=> constructor[token]
+             destructor_declaration
 
         ) |
+
+        // constructor
+        { decl_type == CONSTRUCTOR && inLanguage(LANGUAGE_OO) }? constructor[fla] |
 
         // labels to goto
         { secondtoken == COLON }? label_statement |
@@ -2259,19 +2253,13 @@ perform_noncfg_check[DECLTYPE& type, int& token, int& fla, int& type_count] retu
     inputState->guessing++;
 
     try {
-        noncfg_check(token, fla, type_count, isdecl, specifier_count);
+        noncfg_check(token, fla, type_count, isdecl, specifier_count, type);
 
         // got here, then looks like a function
-        type = FUNCTION;
-
-        // only function if isdecl is true
-        if (type_count - specifier_count == 1) {
-            isdecl = false;
-            type = CONSTRUCTOR;
-        }
+        if (type == NONE)
+            type = FUNCTION;
 
         if (isdestructor) {
-            isdecl = false;
             type = DESTRUCTOR;
         }
 
@@ -2297,8 +2285,10 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                    int& fla,        /* for a function, TERMINATE or LCURLY, 0 for a variable */
                    int& type_count, /* number of tokens in type (not including name) */
                    bool& isdecl,    /* is a declaration */
-                   int& specifier_count
-        ] { token = 0; fla = 0; type_count = 0; isdecl = false; specifier_count = 0; isdestructor = false; } : 
+                   int& specifier_count,
+                   DECLTYPE& type
+        ] { token = 0; fla = 0; type_count = 0; isdecl = false; specifier_count = 0; isdestructor = false;
+        std::string s[2]; type = NONE; } :
 
         // no return value function:  main
         // distinguish from call
@@ -2308,6 +2298,22 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
         // distinguish from call
         (operator_function_name)=>
         operator_function_name /*overloaded_operator_grammar*/ function_rest[fla] set_bool[isdecl, true] set_bool[isoperatorfunction, true] |
+
+        // constructors
+        (
+        (specifier_explicit | java_specifier_mark)*
+        (
+        
+        { inMode(MODE_ACCESS_REGION) && inLanguage(LANGUAGE_CXX_FAMILY) }?
+        constructor_name paren_pair check_end[fla] |
+
+        { inLanguage(LANGUAGE_JAVA_FAMILY) }?
+        constructor_name paren_pair LCURLY |
+
+        constructor_name_external_check[s] constructor_check_lparen[s] check_end[fla]
+
+        ))=> (specifier_explicit | java_specifier_mark | NAME) set_type[type, CONSTRUCTOR]
+        set_bool[isdecl, true] set_int[type_count, 1] |
 
         // main pattern for variable declarations, and most function declaration/definitions.
         // trick is to look for function declarations/definitions, and along the way record
@@ -2326,7 +2332,8 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
         // we have a type, so do we have a function?
         (
             // check for function pointer
-            (function_pointer_name_grammar)=>
+            (function_pointer_name_grammar LPAREN)=>
+
              function_pointer_name_grammar function_rest[fla] set_bool[isdecl, true] set_int[type_count, type_count + 1] |
 
             // POF (Plain Old Function)
@@ -2336,11 +2343,16 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
         )
 ;
 
+
+trace[const char*s ] { std::cerr << s << std::endl; } :;
+
 /*
   Record if we have a declaration (ignoring specifiers)
 */
 recordisdecl[bool& variable] { if ((LA(1) != VIRTUAL) && (LA(1) != INLINE) && LA(1) != EXPLICIT) variable = true; } :
 ;
+
+set_type[DECLTYPE& name, DECLTYPE value] { name = value; } :;
 
 set_int[int& name, int value] { name = value; } :;
 
@@ -3046,22 +3058,6 @@ constructor[int token] {} :
 
         constructor_declaration
 ;              
-
-constructor_check[int& token] { std::string s[2]; } :
-
-        (specifier_explicit | java_specifier_mark)*
-        (
-        
-        { inMode(MODE_ACCESS_REGION) && inLanguage(LANGUAGE_CXX_FAMILY) }?
-        constructor_name paren_pair check_end[token] |
-
-        { inLanguage(LANGUAGE_JAVA_FAMILY) }?
-        constructor_name paren_pair LCURLY |
-
-        constructor_name_external_check[s] constructor_check_lparen[s] check_end[token]
-
-        )
-;
 
 constructor_check_lparen[std::string s[]] {} :
         { s[0] != "" && s[1] != "" && s[0] == s[1] }? paren_pair | RCURLY
