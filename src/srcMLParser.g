@@ -610,27 +610,32 @@ statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; isoperat
         (extern_definition_header)=> extern_definition |
 
         // variable declaration
-        { perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type == FUNCTION }?
-        function[fla, type_count] |
+        { perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type != NONE }?
+        (
 
-        // function declaration
-        { decl_type == VARIABLE }?
-        variable_declaration_statement[type_count] |
+            { decl_type == FUNCTION }?
+            function[fla, type_count] |
 
-        // destructor
-        { decl_type == DESTRUCTOR && inLanguage(LANGUAGE_CXX_FAMILY) }?
-        (destructor_check[token /* token after header */])=> (
+            // function declaration
+            { decl_type == VARIABLE }?
+            variable_declaration_statement[type_count] |
 
-            { token != TERMINATE }?
-            destructor_definition |
+            // destructor
+            { decl_type == DESTRUCTOR && inLanguage(LANGUAGE_CXX_FAMILY) }?
+            (destructor_check[token /* token after header */])=> (
 
-            destructor_declaration
+                { token != TERMINATE }?
+                destructor_definition |
+
+                destructor_declaration
+
+             ) |
+
+             // constructor
+             { decl_type == CONSTRUCTOR && inLanguage(LANGUAGE_OO) }?
+             (constructor_check[token /* token after header */])=> constructor[token]
 
         ) |
-
-        // constructor
-        { inLanguage(LANGUAGE_OO) && decl_type == CONSTRUCTOR }?
-        (constructor_check[token /* token after header */])=> constructor[token] |
 
         // labels to goto
         { secondtoken == COLON }? label_statement |
