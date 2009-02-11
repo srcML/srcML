@@ -2134,8 +2134,8 @@ function_pointer_name_grammar { LocalMode lm; } :
 function_pointer_name_base { LocalMode lm; } :
 
         // special case for function pointer names that don't have '*'
-        (complex_name[true] MULTOP RPAREN)=>
-            complex_name[true] MULTOP |
+        (complex_name[true] RPAREN)=>
+            complex_name[true] |
 
         // special name prefix of namespace or class
         identifier optional_template_argument_list DCOLON function_pointer_name_base |
