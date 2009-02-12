@@ -424,6 +424,7 @@ int cppifcount;
 bool isoperatorfunction;
 bool isdestructor;
 int parseoptions;
+std::string namestack[2];
 
 ~srcMLParser() {}
 
@@ -2247,6 +2248,8 @@ perform_noncfg_check[DECLTYPE& type, int& token, int& fla, int& type_count] retu
 
     int specifier_count = 0;
 
+    isdecl = true;
+
     type = NONE;
 
     int start = mark();
@@ -2255,20 +2258,11 @@ perform_noncfg_check[DECLTYPE& type, int& token, int& fla, int& type_count] retu
     try {
         noncfg_check(token, fla, type_count, isdecl, specifier_count, type);
 
-        // got here, then looks like a function
-        if (type == NONE)
-            type = FUNCTION;
-
-        if (isdestructor) {
-            type = DESTRUCTOR;
-        }
-
     } catch (...) {
 
-        // failed function checks, but still may be a variable
-        if (isdecl)
-            type = VARIABLE;
     }
+
+    isdecl = true;
 
     inputState->guessing--;
     rewind(start);
@@ -2288,17 +2282,17 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                    int& specifier_count,
                    DECLTYPE& type
         ] { token = 0; fla = 0; type_count = 0; isdecl = false; specifier_count = 0; isdestructor = false;
-        std::string s[2]; type = NONE; } :
-
+        std::string s[2]; type = NONE; bool foundpure = false; bool early_return = false; } :
+/*
         // no return value function:  main
         // distinguish from call
         MAIN function_rest[fla] set_bool[isdecl, true] set_bool[isoperatorfunction, true] |
-
+*/
         // no return value function:  casting operator method
         // distinguish from call
-        (operator_function_name)=>
-        operator_function_name /*overloaded_operator_grammar*/ function_rest[fla] set_bool[isdecl, true] set_bool[isoperatorfunction, true] |
-
+//        (operator_function_name)=>
+//        operator_function_name /*overloaded_operator_grammar*/ function_rest[fla] set_bool[isdecl, true] set_bool[isoperatorfunction, true] |
+/*
         // constructors
         (
         (specifier_explicit | java_specifier_mark)*
@@ -2314,37 +2308,78 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
 
         ))=> (specifier_explicit | java_specifier_mark | NAME) set_type[type, CONSTRUCTOR]
         set_bool[isdecl, true] set_int[type_count, 1] |
-
+*/
         // main pattern for variable declarations, and most function declaration/definitions.
         // trick is to look for function declarations/definitions, and along the way record
         // if a declaration
 
-        // found first token of type, so record the second token and update the count
-        update_specifier_count[specifier_count]
-        lead_type_identifier markend[token] set_int[type_count, 1]
+        // int -> NONE
+        // int f -> VARIABLE
+        // int f(); -> FUNCTION
+        // int f() {} -> FUNCTION
 
-        // process as many type identifiers as we find
-        // if we find even 1, then we have a declaration
-        ({ inLanguage(LANGUAGE_JAVA_FAMILY) || LA(1) != LBRACKET }?
-            update_specifier_count[specifier_count]
-            type_identifier_count[type_count] recordisdecl[isdecl])*
+        /*
+          Process all the parts of a potential type.  Keep track of total
+          parts, specifier parts, and second token
+        */
+        ({ !early_return && (inLanguage(LANGUAGE_JAVA_FAMILY) || LA(1) != LBRACKET) }?
+            (
+                // specifiers
+                standard_specifiers set_int[specifier_count, specifier_count + 1] |
 
-        // we have a type, so do we have a function?
+                inline_marked set_int[specifier_count, specifier_count + 1] |
+
+                // typical type name
+                complex_name[true] set_bool[foundpure, true] |
+
+                // special function name
+                MAIN set_bool[isoperatorfunction, type_count == 0] |
+
+                // type parts that can occur before other type parts (excluding specifiers)
+                pure_lead_type_identifier_no_specifiers set_bool[foundpure, true] |
+
+                // type parts that must only occur after other type parts (excluding specifiers)
+                non_lead_type_identifier set_bool[early_return, !foundpure]
+            )
+
+            // another type part
+            set_int[type_count, type_count + 1]
+
+            // record second (before we parse it) for label detection
+            set_int[token, LA(1), type_count == 1]
+        )*
+
+        // we have a declaration (at this point a variable) if we have more then
+        // one non-specifier part of the type
+        set_type[type, VARIABLE, !early_return && (type_count - specifier_count > 1)]
+
+        // we have a declaration, so do we have a function?
         (
-            // check for function pointer
+            // check for function pointer, which must have a non-specifier part of the type
+            { type_count - specifier_count > 0 }?
             (function_pointer_name_grammar LPAREN)=>
 
-             function_pointer_name_grammar function_rest[fla] set_bool[isdecl, true] set_int[type_count, type_count + 1] |
+             function_pointer_name_grammar set_int[type_count, type_count + 1] function_rest[fla] |
 
             // POF (Plain Old Function)
-            // need at least one non-specifier
-//            { type_count - specifier_count > 1 }?
-            function_rest[fla] set_bool[isdecl, true]
+            // need at least one non-specifier and a name
+            { (type_count - specifier_count > 1) || isoperatorfunction }?
+            function_rest[fla]
         )
+
+        // since we got this far, we have a function
+        set_type[type, FUNCTION]
+
+        // however, we could have a destructor
+        set_type[type, DESTRUCTOR, isdestructor]
 ;
 
 
+set_type[DECLTYPE& name, DECLTYPE value, bool result = true] { if (result) name = value; } :;
+
 trace[const char*s ] { std::cerr << s << std::endl; } :;
+
+traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
 
 /*
   Record if we have a declaration (ignoring specifiers)
@@ -2352,9 +2387,9 @@ trace[const char*s ] { std::cerr << s << std::endl; } :;
 recordisdecl[bool& variable] { if ((LA(1) != VIRTUAL) && (LA(1) != INLINE) && LA(1) != EXPLICIT) variable = true; } :
 ;
 
-set_type[DECLTYPE& name, DECLTYPE value] { name = value; } :;
+//set_type[DECLTYPE& name, DECLTYPE value] { name = value; } :;
 
-set_int[int& name, int value] { name = value; } :;
+set_int[int& name, int value, bool result = true] { if (result) name = value; } :;
 
 set_bool[bool& variable, bool value] { variable = value; } :;
 
@@ -2547,6 +2582,18 @@ pure_lead_type_identifier {} :
         // anonymous union definition in a type
 //        { !inputState->guessing }?
 //        struct_union_definition[SUNION] |
+
+        // enum use in a type
+        (ENUM variable_identifier (variable_identifier | multops | INLINE))=> ENUM |
+
+        // entire enum definition
+        enum_definition_whole
+;
+
+pure_lead_type_identifier_no_specifiers {} :
+
+        // class/struct/union before a name in a type, e.g., class A f();
+        CLASS | STRUCT | UNION |
 
         // enum use in a type
         (ENUM variable_identifier (variable_identifier | multops | INLINE))=> ENUM |
