@@ -2388,10 +2388,6 @@ function_rest[int& fla] {} :
         parameter_list function_tail check_end[fla]
 ;
 
-function_paren_pair {} :
-        paren_pair (LCURLY | TERMINATE)
-    ;
-
 operator_function_name :
        /* NAME DCOLON  */ (NAME DCOLON)* overloaded_operator_grammar
 ;
@@ -2531,11 +2527,11 @@ pure_lead_type_identifier {} :
 
         auto_keyword |
 
-        // class/struct/union before a name in a type, e.g., class A f();
-        CLASS | STRUCT | UNION |
-
         // specifiers that occur in a type
         standard_specifiers |
+
+        pure_lead_type_identifier_no_specifiers
+
 
         /*
            Anonymous class/struct/union in guessing mode processes
@@ -2563,12 +2559,6 @@ pure_lead_type_identifier {} :
         // anonymous union definition in a type
 //        { !inputState->guessing }?
 //        struct_union_definition[SUNION] |
-
-        // enum use in a type
-        (ENUM variable_identifier (variable_identifier | multops | INLINE))=> ENUM |
-
-        // entire enum definition
-        enum_definition_whole
 ;
 
 pure_lead_type_identifier_no_specifiers {} :
@@ -4143,7 +4133,7 @@ label_statement { LocalMode lm; } :
 /*
   typedef_statement
 */
-typedef_statement { int type_count = 0; } :
+typedef_statement { int type_count = 0; DECLTYPE decl_type = NONE; int secondtoken = 0; int fla = 0;} :
         {
             // statement
             startNewMode(MODE_STATEMENT | MODE_EXPECT | MODE_VARIABLE_NAME);
@@ -4152,9 +4142,17 @@ typedef_statement { int type_count = 0; } :
             startElement(STYPEDEF);
         }
         TYPEDEF
-        (
-            (function_pointer_header[type_count])=>
-                function_pointer_declaration[type_count] |
+        (    
+            { perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type == FUNCTION }?
+            function_pointer_declaration[type_count] |
+
+            { decl_type == VARIABLE }?
+            {
+                // variable declarations may be in a list
+                startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT);
+            }
+            variable_declaration[type_count] |
+
             { LA(1) == CLASS || LA(1) == UNION || LA(1) == STRUCT }?    
                 {
                     // end all elements started in this rule
@@ -4163,12 +4161,7 @@ typedef_statement { int type_count = 0; } :
                     // start of the type
                     startElement(STYPE);
                 }
-               ( class_definition | struct_union_definition[LA(1) == STRUCT ? SSTRUCT : SUNION]) |
-            {
-                // variable declarations may be in a list
-                startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT);
-            }
-            variable_declaration[type_count]
+               ( class_definition | struct_union_definition[LA(1) == STRUCT ? SSTRUCT : SUNION])
         )
 ;
 
