@@ -2938,7 +2938,7 @@ simple_name_cpp {} :
 /*
   identifier name marked with name element
 */
-complex_name[bool marked] { LocalMode lm; TokenPosition tp; /* TokenPosition tp2 = { 0, 0 };*/ bool iscomplex_name = false; namestack[0] = ""; namestack[1] = "";} :
+complex_name[bool marked] { LocalMode lm; TokenPosition tp; /* TokenPosition tp2 = { 0, 0 };*/ bool iscomplex_name = false; namestack[0] = ""; namestack[1] = ""; bool founddestop = false; } :
         { inLanguage(LANGUAGE_JAVA_FAMILY) }? complex_name_java[marked] |
         (
         {
@@ -2969,9 +2969,12 @@ complex_name[bool marked] { LocalMode lm; TokenPosition tp; /* TokenPosition tp2
             }
         }
         (DCOLON { iscomplex_name = true; })*
-        (DESTOP set_bool[isdestructor])*
+        (DESTOP set_bool[isdestructor] {
+            founddestop = true;
+        })*
         simple_name_optional_template[marked] 
         name_tail[iscomplex_name, marked]
+        { if (founddestop) iscomplex_name = true; founddestop = false; }
         {
             // if we marked it as a complex name and it isn't, fix
             if (marked && !iscomplex_name)
@@ -3020,12 +3023,13 @@ complex_name_java[bool marked] { LocalMode lm; TokenPosition tp; bool iscomplex_
 /*
   sequences of "::" and names
 */
-name_tail[bool& iscomplex, bool marked] { LocalMode lm; } :
+name_tail[bool& iscomplex, bool marked] { LocalMode lm; bool founddestop = false; } :
 
         // "a::" will cause an exception to be thrown
         ( options { greedy = true; } : 
             (dcolon { iscomplex = true; })
-            ( options { greedy = true; } : dcolon)* (DESTOP set_bool[isdestructor])*
+            ( options { greedy = true; } : dcolon)*
+            (DESTOP set_bool[isdestructor])*
             (simple_name_optional_template[marked] | overloaded_operator)
         )*
 ;
