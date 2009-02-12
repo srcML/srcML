@@ -619,15 +619,11 @@ statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; isoperat
         variable_declaration_statement[type_count] |
 
         // destructor
-        { decl_type == DESTRUCTOR && inLanguage(LANGUAGE_CXX_FAMILY) }?
-        (destructor_check[token /* token after header */])=> (
+        { decl_type == DESTRUCTOR && inLanguage(LANGUAGE_CXX_FAMILY) && fla != TERMINATE }?
+        destructor_definition |
 
-             { token != TERMINATE }?
-             destructor_definition |
-
-             destructor_declaration
-
-        ) |
+        { decl_type == DESTRUCTOR && inLanguage(LANGUAGE_CXX_FAMILY) && fla == TERMINATE }?
+        destructor_declaration |
 
         // constructor
         { decl_type == CONSTRUCTOR && inLanguage(LANGUAGE_OO) }? constructor[fla] |
@@ -2335,6 +2331,8 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                 // special function name
                 MAIN set_bool[isoperatorfunction, type_count == 0] |
 
+                operator_function_name set_bool[isoperatorfunction, type_count == 0] |
+
                 // type parts that can occur before other type parts (excluding specifiers)
                 pure_lead_type_identifier_no_specifiers set_bool[foundpure, true] |
 
@@ -2348,6 +2346,8 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
             // record second (before we parse it) for label detection
             set_int[token, LA(1), type_count == 1]
         )*
+
+        set_bool[isoperatorfunction, isoperatorfunction || isdestructor]
 
         // we have a declaration (at this point a variable) if we have more then
         // one non-specifier part of the type
@@ -2374,6 +2374,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
         set_type[type, DESTRUCTOR, isdestructor]
 ;
 
+other[bool flag] { std::cerr << flag << std::endl; } :;
 
 set_type[DECLTYPE& name, DECLTYPE value, bool result = true] { if (result) name = value; } :;
 
@@ -2982,7 +2983,7 @@ complex_name[bool marked] { LocalMode lm; TokenPosition tp; /* TokenPosition tp2
         }
         (DCOLON { iscomplex_name = true; })*
         (DESTOP set_bool[isdestructor, true])*
-        simple_name_optional_template[marked]
+        simple_name_optional_template[marked] 
         name_tail[iscomplex_name, marked]
         {
             // if we marked it as a complex name and it isn't, fix
