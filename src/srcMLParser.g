@@ -2374,28 +2374,17 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
         set_type[type, DESTRUCTOR, isdestructor]
 ;
 
-other[bool flag] { std::cerr << flag << std::endl; } :;
+//other[bool flag] { std::cerr << flag << std::endl; } :;
 
 set_type[DECLTYPE& name, DECLTYPE value, bool result = true] { if (result) name = value; } :;
 
-trace[const char*s ] { std::cerr << s << std::endl; } :;
+//trace[const char*s ] { std::cerr << s << std::endl; } :;
 
-traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
-
-/*
-  Record if we have a declaration (ignoring specifiers)
-*/
-recordisdecl[bool& variable] { if ((LA(1) != VIRTUAL) && (LA(1) != INLINE) && LA(1) != EXPLICIT) variable = true; } :
-;
-
-//set_type[DECLTYPE& name, DECLTYPE value] { name = value; } :;
+//traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
 
 set_int[int& name, int value, bool result = true] { if (result) name = value; } :;
 
 set_bool[bool& variable, bool value] { variable = value; } :;
-
-update_specifier_count[int& name] { if ((LA(1) == VIRTUAL) || (LA(1) == INLINE) || (LA(1) == EXPLICIT)) { ++name; }} :
-    ;
 
 /*
 message[const char* s] { std::cerr << s << std::endl; } :;
