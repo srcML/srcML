@@ -2173,21 +2173,6 @@ process_parameter_list {} :
 ;
 
 /*
-  Everything except the ";" of a function declaration or the block of a
-  function definition
-*/
-function_header_check[int& type_count] {} : 
-        (
-            // no return value functions:  casting operator method and main
-            { isoperatorfunction }? function_identifier[true] |
-
-           function_type_check[type_count]
-        )
-
-        parameter_list
-;
-
-/*
 Guessing mode only
 */
 function_tail {} :
@@ -2394,12 +2379,6 @@ function_rest[int& fla] {} :
 
 operator_function_name :
        /* NAME DCOLON  */ (NAME DCOLON)* overloaded_operator_grammar
-;
-
-function_check[int& fla, int& type_count] { fla = 0; type_count = 0; } :
-        function_header_check[type_count] function_tail
-
-        check_end[fla]
 ;
 
 /*
@@ -3635,11 +3614,11 @@ expression_part[bool checkmacro = false] { guessing_end();
 
             guessing_startNewMode[MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN] |
 
-        { inLanguage(LANGUAGE_JAVA_FAMILY) }?
-        (function_check[token /* token after header */, type_count /* number of names detected in type */])=>
-
-                // function definition based on the token after the header
-                function[token, type_count] |
+//        { inLanguage(LANGUAGE_JAVA_FAMILY) }?
+//        (function_check[token /* token after header */, type_count /* number of names detected in type */])=>
+//
+//                // function definition based on the token after the header
+//               function[token, type_count] |
 
         // left parentheses
         lparen_marked
