@@ -2878,19 +2878,6 @@ simple_name_grammar {} :
 ;
 
 /*
- inline_marked
-*/
-inline_marked { LocalMode lm; } :
-        {
-            // local mode that is automatically ended by leaving this function
-            startNewMode(MODE_LOCAL);
-
-            startElement(SNAME);
-        }
-        INLINE
-;
-
-/*
   Basic single token names
 */
 identifier :
