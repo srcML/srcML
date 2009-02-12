@@ -2922,7 +2922,7 @@ simple_name_cpp {} :
 /*
   identifier name marked with name element
 */
-complex_name[bool marked] { LocalMode lm; TokenPosition tp; /* TokenPosition tp2 = { 0, 0 };*/ bool iscomplex_name = false; } :
+complex_name[bool marked] { LocalMode lm; TokenPosition tp; /* TokenPosition tp2 = { 0, 0 };*/ bool iscomplex_name = false; namestack[0] = ""; namestack[1] = "";} :
         { inLanguage(LANGUAGE_JAVA_FAMILY) }? complex_name_java[marked] |
         (
         {
