@@ -626,7 +626,11 @@ statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; isoperat
         destructor_declaration |
 
         // constructor
-        { decl_type == CONSTRUCTOR && inLanguage(LANGUAGE_OO) }? constructor[fla] |
+        { decl_type == CONSTRUCTOR && inLanguage(LANGUAGE_OO) && fla != TERMINATE }?
+        constructor_definition |
+
+        { decl_type == CONSTRUCTOR && inLanguage(LANGUAGE_OO) && fla == TERMINATE }?
+        constructor_declaration |
 
         // labels to goto
         { secondtoken == COLON }? label_statement |
@@ -3079,18 +3083,6 @@ auto_keyword { LocalMode lm; } :
         AUTO
 ;
 
-// constructor
-constructor[int token] {} :
-        { token != TERMINATE }?
-            constructor_definition |
-
-        constructor_declaration
-;              
-
-constructor_check_lparen[std::string s[]] {} :
-        { s[0] != "" && s[1] != "" && s[0] == s[1] }? paren_pair | RCURLY
-;
-
 // constructor definition
 constructor_declaration {} :
         {
@@ -3122,7 +3114,7 @@ constructor_header {} :
 
         (specifier_explicit | { inLanguage(LANGUAGE_JAVA_FAMILY) }? java_specifier_mark)*
 
-        constructor_name
+        complex_name[true]
 
         parameter_list
 ;
@@ -3138,74 +3130,10 @@ member_initialization_list {} :
         COLON
 ;
 
-/*
-  Detects a constructor definition name outside of a class.  It has to be in the form
-  x::y where x and y are identical
-*/
-constructor_name_check[std::string s[]] { LocalMode lm; bool iscomplex; } :
-        {
-            // local mode that is automatically ended by leaving this function
-            startNewMode(MODE_LOCAL);
-
-            startElement(SNAME);
-        }
-        constructor_name_base[s, iscomplex]
-;
-
-constructor_name { LocalMode lm; std::string s[2]; bool iscomplex; TokenPosition tp; } :
-        {
-            // local mode that is automatically ended by leaving this function
-            startNewMode(MODE_LOCAL);
-
-            // outer name
-            startElement(SONAME);
-
-            // inner name that may be replaced by a NOP
-            startElement(SCNAME);
-
-            // record the token position so we can replace it if necessary
-            tp = getTokenPosition();
-        }
-        constructor_name_base[s, iscomplex]
-        {
-            // non-complex names need to be simplified
-            if (!iscomplex)
-                // set the token to NOP
-                tp.setType(SNOP);
-        }
-;
-
-constructor_name_base[std::string s[], bool& iscomplex] { LocalMode lm; iscomplex = false; } :
-
-        identifier_stack[s] optional_template_argument_list
-        (DCOLON { iscomplex = true; } identifier_stack[s] optional_template_argument_list)*
-;
-
 mark_namestack { namestack[1] = namestack[0]; namestack[0] = LT(1)->getText(); } :;
 
 identifier_stack[std::string s[]] { s[1] = s[0]; s[0] = LT(1)->getText(); } :
         identifier_marked
-;
-
-/*
-  Detects a constructor definition name outside of a class.  It has to be in the form
-  x::y where x and y are identical
-*/
-constructor_name_external_check[std::string s[]] {} :
-        {
-            // local mode that is automatically ended by leaving this function
-            startNewMode(MODE_LOCAL);
-
-            startElement(SNAME);
-        }
-        constructor_name_external_base[s]
-;
-
-constructor_name_external_base[std::string s[]] {} :
-
-        identifier_stack[s] optional_template_argument_list
-         DCOLON identifier_stack[s] optional_template_argument_list
-        (DCOLON identifier_stack[s] optional_template_argument_list)*
 ;
 
 specifier_explicit { LocalMode lm; } :
