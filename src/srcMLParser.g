@@ -2328,6 +2328,22 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
         // one non-specifier part of the type
         set_type[type, VARIABLE, !early_return && (type_count - specifier_count > 1)]
 
+        // need to see if we possibly have a constructor/destructor name, with no type
+        set_bool[isoperatorfunction,
+
+                 // may already have an operator
+                 isoperatorfunction || (
+
+                 // nothing in the type (besides the name) except for specifiers
+                 (type_count == (specifier_count + 1)) &&
+
+                 // inside of a class definition
+                 ((inMode(MODE_ACCESS_REGION) && inLanguage(LANGUAGE_CXX_FAMILY)) ||
+                  inLanguage(LANGUAGE_JAVA_FAMILY) ||
+
+                 // outside of a class definition, but with properly prefixed name
+                 (namestack[0] != "" && namestack[1] != "" && namestack[0] == namestack[1])))]
+
         // we have a declaration, so do we have a function?
         (
             // check for function pointer, which must have a non-specifier part of the type
@@ -2368,9 +2384,9 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
 
 set_type[DECLTYPE& name, DECLTYPE value, bool result = true] { if (result) name = value; } :;
 
-//trace[const char*s ] { std::cerr << s << std::endl; } :;
+trace[const char*s ] { std::cerr << s << std::endl; } :;
 
-//traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
+traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
 
 set_int[int& name, int value, bool result = true] { if (result) name = value; } :;
 
