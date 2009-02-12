@@ -3236,11 +3236,6 @@ specifier_explicit { LocalMode lm; } :
         (EXPLICIT | INLINE | VIRTUAL)
 ;
 
-// destructor
-destructor_check[int& token] { token = 0; } :
-        destructor_header_check function_tail check_end[token]
-;              
-
 // destructor definition
 destructor_definition {} :
         {
@@ -3271,68 +3266,13 @@ destructor_header {} :
 
         (specifier_explicit)*
 
-        destructor_name
+        complex_name[true]
 
         parameter_list
         {
             setMode(MODE_FUNCTION_TAIL);
         }
 ;              
-
-// destructor header
-destructor_header_check { std::string s[2]; } :
-
-        (specifier_explicit)*
-
-        destructor_name_check[s]
-
-        destructor_check_lparen[s]
-
-        (parameter)* (comma parameter)* rparen
-;              
-
-destructor_check_lparen[std::string s[]] {} :
-
-        { s[1] == "" || s[0] == s[1] }? LPAREN | RCURLY
-;
-
-/*
-  Detects a destructor definition name outside of a class.  It has to be in the form
-  x::y where x and y are identical
-*/
-destructor_name { LocalMode lm; } :
-        {
-            // local mode that is automatically ended by leaving this function
-            startNewMode(MODE_LOCAL);
-
-            startElement(SNAME);
-        }
-        destructor_name_base
-;
-
-/*
-  Detects a destructor definition name outside of a class.  It has to be in the form
-  x::~y where x and y are identical
-*/
-destructor_name_check[std::string s[]] { LocalMode lm; } :
-        {
-            // local mode that is automatically ended by leaving this function
-            startNewMode(MODE_LOCAL);
-
-            startElement(SNAME);
-        }
-        destructor_name_base_check[s]
-;
-
-destructor_name_base_check[std::string s[]] {} :
-
-        (identifier_stack[s] optional_template_argument_list DCOLON)*
-        DESTOP identifier_stack[s] optional_template_argument_list
-;
-
-destructor_name_base { LocalMode lm; std::string s[2]; } :
-        destructor_name_base_check[s]
-;
 
 /*
   call  function call, macro, etc.
