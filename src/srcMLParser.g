@@ -2596,8 +2596,6 @@ lead_type_identifier {} :
 
         java_specifier_mark |
 
-        inline_marked |
-
 //        (macro_call_paren identifier)=> macro_call |
 
         // typical type name
