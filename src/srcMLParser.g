@@ -2278,33 +2278,8 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                    int& specifier_count,
                    DECLTYPE& type
         ] { token = 0; fla = 0; type_count = 0; isdecl = false; specifier_count = 0; isdestructor = false;
-        std::string s[2]; type = NONE; bool foundpure = false; bool early_return = false; } :
-/*
-        // no return value function:  main
-        // distinguish from call
-        MAIN function_rest[fla] set_bool[isdecl, true] set_bool[isoperatorfunction, true] |
-*/
-        // no return value function:  casting operator method
-        // distinguish from call
-//        (operator_function_name)=>
-//        operator_function_name /*overloaded_operator_grammar*/ function_rest[fla] set_bool[isdecl, true] set_bool[isoperatorfunction, true] |
-/*
-        // constructors
-        (
-        (specifier_explicit | java_specifier_mark)*
-        (
-        
-        { inMode(MODE_ACCESS_REGION) && inLanguage(LANGUAGE_CXX_FAMILY) }?
-        constructor_name paren_pair check_end[fla] |
+        type = NONE; bool foundpure = false; bool early_return = false; } :
 
-        { inLanguage(LANGUAGE_JAVA_FAMILY) }?
-        constructor_name paren_pair LCURLY |
-
-        constructor_name_external_check[s] constructor_check_lparen[s] check_end[fla]
-
-        ))=> (specifier_explicit | java_specifier_mark | NAME) set_type[type, CONSTRUCTOR]
-        set_bool[isdecl, true] set_int[type_count, 1] |
-*/
         // main pattern for variable declarations, and most function declaration/definitions.
         // trick is to look for function declarations/definitions, and along the way record
         // if a declaration
@@ -2372,6 +2347,22 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
 
         // however, we could have a destructor
         set_type[type, DESTRUCTOR, isdestructor]
+
+        // could also have a constructor
+        set_type[type, CONSTRUCTOR, 
+
+                 // not a destructor
+                 !isdestructor &&
+
+                 // nothing in the type except for specifiers
+                 (type_count == (specifier_count + 1)) &&
+
+                 // inside of class
+                 ((inMode(MODE_ACCESS_REGION) && inLanguage(LANGUAGE_CXX_FAMILY)) ||
+                  inLanguage(LANGUAGE_JAVA_FAMILY) ||
+
+                 // outside of class, but with properly prefixed name
+                 (namestack[0] != "" && namestack[1] != "" && namestack[0] == namestack[1]))]
 ;
 
 //other[bool flag] { std::cerr << flag << std::endl; } :;
@@ -2846,7 +2837,7 @@ simple_name_optional_template[bool marked] { LocalMode lm; TokenPosition tp; } :
                 tp = getTokenPosition();
             }
         }
-        simple_name_marked[marked] (
+        mark_namestack simple_name_marked[marked] (
             { inLanguage(LANGUAGE_CXX_FAMILY) }?
             (template_argument_list)=>
                 template_argument_list |
@@ -3189,6 +3180,8 @@ constructor_name_base[std::string s[], bool& iscomplex] { LocalMode lm; iscomple
         identifier_stack[s] optional_template_argument_list
         (DCOLON { iscomplex = true; } identifier_stack[s] optional_template_argument_list)*
 ;
+
+mark_namestack { namestack[1] = namestack[0]; namestack[0] = LT(1)->getText(); } :;
 
 identifier_stack[std::string s[]] { s[1] = s[0]; s[0] = LT(1)->getText(); } :
         identifier_marked
