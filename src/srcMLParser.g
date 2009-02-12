@@ -3003,7 +3003,7 @@ function_specifier { LocalMode lm; } :
         }
         (standard_specifiers |
 
-            (pure_virtual_specifier)=> pure_virtual_specifier |
+            pure_virtual_specifier |
 
             simple_name_optional_template[false])
 ;
