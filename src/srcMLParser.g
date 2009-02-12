@@ -2298,8 +2298,6 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                 // specifiers
                 standard_specifiers set_int[specifier_count, specifier_count + 1] |
 
-                inline_marked set_int[specifier_count, specifier_count + 1] |
-
                 // typical type name
                 complex_name[true] set_bool[foundpure] |
 
@@ -3066,7 +3064,7 @@ standard_specifiers { LocalMode lm; } :
 
             startElement(SNAME);
         }
-        (VIRTUAL | EXTERN)
+        (VIRTUAL | EXTERN | INLINE | EXPLICIT)
 ;
 
 auto_keyword { LocalMode lm; } :
