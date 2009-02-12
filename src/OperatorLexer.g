@@ -110,7 +110,7 @@ OPERATORS options { testLiterals = true; } { int realbegin = _begin; bool gt = f
         '$'  |    // not an operator (why is it here?)
         '?'  | // part of ternary
         '~'  | // has to be separate if part of name
-        '.'  | // for parameter of catch
+        '.' ('*' |) | // for parameter of catch
 
         '\\' ( EOL { $setType(EOL_BACKSLASH); } )
         )
