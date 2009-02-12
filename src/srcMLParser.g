@@ -2278,7 +2278,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
              int& type_count, /* number of tokens in type (not including name) */
              DECLTYPE& type
         ] { token = 0; fla = 0; type_count = 0; int specifier_count = 0; isdestructor = false;
-        type = NONE; bool foundpure = false; bool early_return = false; } :
+        type = NONE; bool foundpure = false; bool early_return = false; isoperatorfunction = false; } :
 
         // main pattern for variable declarations, and most function declaration/definitions.
         // trick is to look for function declarations/definitions, and along the way record
@@ -2301,7 +2301,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                 inline_marked set_int[specifier_count, specifier_count + 1] |
 
                 // typical type name
-                complex_name[true] set_bool[foundpure, true] |
+                complex_name[true] set_bool[foundpure] |
 
                 // special function name
                 MAIN set_bool[isoperatorfunction, type_count == 0] |
@@ -2309,7 +2309,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                 operator_function_name set_bool[isoperatorfunction, type_count == 0] |
 
                 // type parts that can occur before other type parts (excluding specifiers)
-                pure_lead_type_identifier_no_specifiers set_bool[foundpure, true] |
+                pure_lead_type_identifier_no_specifiers set_bool[foundpure] |
 
                 // type parts that must only occur after other type parts (excluding specifiers)
                 non_lead_type_identifier set_bool[early_return, !foundpure]
@@ -2374,7 +2374,7 @@ set_type[DECLTYPE& name, DECLTYPE value, bool result = true] { if (result) name 
 
 set_int[int& name, int value, bool result = true] { if (result) name = value; } :;
 
-set_bool[bool& variable, bool value] { variable = value; } :;
+set_bool[bool& variable, bool value = true] { variable = value; } :;
 
 /*
 message[const char* s] { std::cerr << s << std::endl; } :;
@@ -2953,7 +2953,7 @@ complex_name[bool marked] { LocalMode lm; TokenPosition tp; /* TokenPosition tp2
             }
         }
         (DCOLON { iscomplex_name = true; })*
-        (DESTOP set_bool[isdestructor, true])*
+        (DESTOP set_bool[isdestructor])*
         simple_name_optional_template[marked] 
         name_tail[iscomplex_name, marked]
         {
@@ -3009,7 +3009,7 @@ name_tail[bool& iscomplex, bool marked] { LocalMode lm; } :
         // "a::" will cause an exception to be thrown
         ( options { greedy = true; } : 
             (dcolon { iscomplex = true; })
-            ( options { greedy = true; } : dcolon)* (DESTOP set_bool[isdestructor, true])*
+            ( options { greedy = true; } : dcolon)* (DESTOP set_bool[isdestructor])*
             (simple_name_optional_template[marked] | overloaded_operator)
         )*
 ;
