@@ -2256,7 +2256,7 @@ perform_noncfg_check[DECLTYPE& type, int& token, int& fla, int& type_count] retu
     inputState->guessing++;
 
     try {
-        noncfg_check(token, fla, type_count, isdecl, specifier_count, type);
+        noncfg_check(token, fla, type_count, specifier_count, type);
 
     } catch (...) {
 
@@ -2278,10 +2278,9 @@ perform_noncfg_check[DECLTYPE& type, int& token, int& fla, int& type_count] retu
 noncfg_check[int& token,      /* second token, after name (always returned) */
                    int& fla,        /* for a function, TERMINATE or LCURLY, 0 for a variable */
                    int& type_count, /* number of tokens in type (not including name) */
-                   bool& isdecl,    /* is a declaration */
                    int& specifier_count,
                    DECLTYPE& type
-        ] { token = 0; fla = 0; type_count = 0; isdecl = false; specifier_count = 0; isdestructor = false;
+        ] { token = 0; fla = 0; type_count = 0; specifier_count = 0; isdestructor = false;
         type = NONE; bool foundpure = false; bool early_return = false; } :
 
         // main pattern for variable declarations, and most function declaration/definitions.
