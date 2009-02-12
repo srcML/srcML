@@ -2350,15 +2350,15 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
         set_type[type, CONSTRUCTOR, !isdestructor && isconstructor]
 ;
 
-monitor { std::cerr << namestack[0] << " " << namestack[1] << std::endl; } :;
+//monitor { std::cerr << namestack[0] << " " << namestack[1] << std::endl; } :;
 
 //other[bool flag] { std::cerr << flag << std::endl; } :;
 
 set_type[DECLTYPE& name, DECLTYPE value, bool result = true] { if (result) name = value; } :;
 
-trace[const char*s ] { std::cerr << s << std::endl; } :;
+//trace[const char*s ] { std::cerr << s << std::endl; } :;
 
-traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
+//traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
 
 set_int[int& name, int value, bool result = true] { if (result) name = value; } :;
 
@@ -2974,7 +2974,7 @@ complex_name_java[bool marked] { LocalMode lm; TokenPosition tp; bool iscomplex_
 /*
   sequences of "::" and names
 */
-name_tail[bool& iscomplex, bool marked] { LocalMode lm; bool founddestop = false; } :
+name_tail[bool& iscomplex, bool marked] { LocalMode lm; } :
 
         // "a::" will cause an exception to be thrown
         ( options { greedy = true; } : 
@@ -3584,7 +3584,7 @@ guessing_end
    elements such as names and function calls are marked up.
 */
 expression_part[bool checkmacro = false] { guessing_end();
-        int token = 0; int type_count = 0; int postnametoken = 0; int argumenttoken = 0; int postcalltoken = 0; } :
+        int postnametoken = 0; int argumenttoken = 0; int postcalltoken = 0; } :
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (NEW function_identifier[true] paren_pair LCURLY)=> newop anonymous_class_definition |
