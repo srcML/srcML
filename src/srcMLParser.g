@@ -2334,7 +2334,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
 
                  // inside of a class definition
                  ((inMode(MODE_ACCESS_REGION) && inLanguage(LANGUAGE_CXX_FAMILY)) ||
-                  inLanguage(LANGUAGE_JAVA_FAMILY) ||
+                  (inMode(MODE_CLASS) && inLanguage(LANGUAGE_JAVA_FAMILY)) ||
 
                  // outside of a class definition, but with properly prefixed name
                  (namestack[0] != "" && namestack[1] != "" && namestack[0] == namestack[1]))]
