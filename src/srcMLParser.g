@@ -2332,9 +2332,8 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
         (
             // check for function pointer, which must have a non-specifier part of the type
             { type_count - specifier_count > 0 }?
-            (function_pointer_name_grammar LPAREN)=>
-
-             function_pointer_name_grammar set_int[type_count, type_count + 1] function_rest[fla] |
+            (function_pointer_name_grammar (LPAREN | NAME))=>
+            function_pointer_name_grammar set_int[type_count, type_count + 1] function_rest[fla] |
 
             // POF (Plain Old Function)
             // need at least one non-specifier and a name
@@ -2354,14 +2353,14 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                  // not a destructor
                  !isdestructor &&
 
-                 // nothing in the type except for specifiers
+                 // nothing in the type (besides the name) except for specifiers
                  (type_count == (specifier_count + 1)) &&
 
-                 // inside of class
+                 // inside of a class definition
                  ((inMode(MODE_ACCESS_REGION) && inLanguage(LANGUAGE_CXX_FAMILY)) ||
                   inLanguage(LANGUAGE_JAVA_FAMILY) ||
 
-                 // outside of class, but with properly prefixed name
+                 // outside of a class definition, but with properly prefixed name
                  (namestack[0] != "" && namestack[1] != "" && namestack[0] == namestack[1]))]
 ;
 
@@ -2384,6 +2383,8 @@ message_int[const char* s, int n]  { std::cerr << s << n << std::endl; } :;
 */
 
 function_rest[int& fla] {} :
+
+        macro_call_optional_check
 
         parameter_list function_tail check_end[fla]
 ;
