@@ -600,27 +600,27 @@ statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; isoperat
         variable_declaration_statement[type_count] |
 
         // destructor
-        { decl_type == DESTRUCTOR && inLanguage(LANGUAGE_CXX_FAMILY) && fla != TERMINATE }?
+        { decl_type == DESTRUCTOR && fla != TERMINATE }?
         destructor_definition |
 
-        { decl_type == DESTRUCTOR && inLanguage(LANGUAGE_CXX_FAMILY) && fla == TERMINATE }?
+        { decl_type == DESTRUCTOR && fla == TERMINATE }?
         destructor_declaration |
 
         // constructor
-        { decl_type == CONSTRUCTOR && inLanguage(LANGUAGE_OO) && fla != TERMINATE }?
+        { decl_type == CONSTRUCTOR && fla != TERMINATE }?
         constructor_definition |
 
-        { decl_type == CONSTRUCTOR && inLanguage(LANGUAGE_OO) && fla == TERMINATE }?
+        { decl_type == CONSTRUCTOR && fla == TERMINATE }?
         constructor_declaration |
 
         // labels to goto
         { secondtoken == COLON }? label_statement |
 
         // C++0x additional non-cfg statements
-        { inLanguage(LANGUAGE_CXX_0X) && look_past(AUTO) == CONCEPT }?
+        { look_past(AUTO) == CONCEPT }?
         concept_definition |
 
-        { inLanguage(LANGUAGE_CXX_0X) && look_past(AUTO) == CONCEPT }?
+        { look_past(AUTO) == CONCEPTMAP }?
         conceptmap_definition |
 
         // call
