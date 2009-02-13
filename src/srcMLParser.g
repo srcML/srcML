@@ -579,9 +579,11 @@ statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; isoperat
         int type_count = 0; DECLTYPE decl_type = NONE; } :
 
         // class forms for class declarations/definitions as opposed to part of a declaration types
+        // must be before checking access_specifier_region
         (class_struct_union_check[token /* token after header */, place])=> class_struct_union[token, place] |
 
         // class forms sections
+        // must be after class_struct_union_check
         { inLanguage(LANGUAGE_CXX_FAMILY) }?
         access_specifier_region |
 
