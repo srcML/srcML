@@ -2310,7 +2310,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
         (
             // check for function pointer, which must have a non-specifier part of the type
             { type_count - specifier_count > 0 }?
-            (function_pointer_name_grammar (LPAREN | NAME))=>
+            (function_pointer_name_grammar LPAREN)=>
             function_pointer_name_grammar set_int[type_count, type_count + 1] function_rest[fla] |
 
             // POF (Plain Old Function)
