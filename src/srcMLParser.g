@@ -2224,12 +2224,12 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                 standard_specifiers set_int[specifier_count, specifier_count + 1] |
 
                 // typical type name
-                complex_name[true] set_bool[foundpure] |
+                complex_name[true] set_bool[foundpure]
+                    set_bool[isoperatorfunction, isoperatorfunction ||
+                             (namestack[0] == "operator" && type_count == 0)] |
 
                 // special function name
                 MAIN set_bool[isoperatorfunction, type_count == 0] |
-
-                operator_function_name set_bool[isoperatorfunction, type_count == 0] |
 
                 // type parts that can occur before other type parts (excluding specifiers)
                 pure_lead_type_identifier_no_specifiers set_bool[foundpure] |
@@ -2863,7 +2863,7 @@ complex_name[bool marked] { LocalMode lm; TokenPosition tp; /* TokenPosition tp2
         (DESTOP set_bool[isdestructor] {
             founddestop = true;
         })*
-        simple_name_optional_template[marked] 
+        (simple_name_optional_template[marked] | mark_namestack overloaded_operator)
         name_tail[iscomplex_name, marked]
         { if (founddestop) iscomplex_name = true; founddestop = false; }
         {
@@ -2921,7 +2921,7 @@ name_tail[bool& iscomplex, bool marked] { LocalMode lm; } :
             (dcolon { iscomplex = true; })
             ( options { greedy = true; } : dcolon)*
             (DESTOP set_bool[isdestructor])*
-            (simple_name_optional_template[marked] | overloaded_operator)
+            (simple_name_optional_template[marked] | mark_namestack overloaded_operator)
         )*
 ;
 exception
