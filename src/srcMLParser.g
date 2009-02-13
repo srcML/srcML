@@ -2587,21 +2587,13 @@ function_identifier[bool function_pointer] { LocalMode lm; } :
             // start of the name element
             startElement(SNAME);
         }
-        (
-            // main program
-            MAIN |
-
-            // with inline we know we have a function
-            INLINE |
-
-            // overloaded operators
-            overloaded_operator_grammar
-        ) |
+        // main program
+        MAIN |
 
         // function pointer identifier with name marked separately
         { function_pointer }?
-        (LPAREN MULTOPS (simple_name)* RPAREN LPAREN)=>
-        LPAREN MULTOPS (simple_name)* RPAREN
+        (function_pointer_name_grammar)=>
+            function_pointer_name_grammar
 ;
 
 /*
