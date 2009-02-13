@@ -1897,7 +1897,10 @@ statement_part { int type_count; } :
              do_while |
 
         { inMode(MODE_NAMESPACE) }?
-        (  namespace_alias | namespace_block) |
+        namespace_alias |
+
+        { inMode(MODE_NAMESPACE) }?
+        namespace_block |
 
         // string literal of extern
         { inMode(MODE_EXTERN) }?
