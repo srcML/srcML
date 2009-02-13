@@ -535,32 +535,7 @@ cfg {} :
 
         try_statement | catch_statement | throw_statement |
 
-        statement_cfg |
-
-        typedef_statement
-;
-
-/*
-  All top level statements, declarations, definitions, etc.
-  All of them start a new mode used to translate the rest
-  of the statement
-*/
-statement {} :
-
-        // context-free grammar statements
-        cfg |
-
-        // statements without a context free grammar
-        // last chance to match to a syntactical structure
-        statements_non_cfg
-;
-
-/*
-  statement_cfg
-
-  Statements that uniquely begin with a keyword or unique character
-*/
-statement_cfg {} :
+        typedef_statement |
 
         switch_default |
 
@@ -581,6 +556,21 @@ statement_cfg {} :
 
         // assembly block
         asm_declaration
+;
+
+/*
+  All top level statements, declarations, definitions, etc.
+  All of them start a new mode used to translate the rest
+  of the statement
+*/
+statement {} :
+
+        // context-free grammar statements
+        cfg |
+
+        // statements without a context free grammar
+        // last chance to match to a syntactical structure
+        statements_non_cfg
 ;
 
 /*
