@@ -505,8 +505,12 @@ start {} :
         // process template operator correctly @test template
         { inTransparentMode(MODE_TEMPLATE) }? tempope[true] |
 
-        // statements and declarations of all kinds
-        { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) }? statement |
+        // context-free grammar statements
+        { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) }? cfg |
+
+        // statements without a context free grammar
+        // last chance to match to a syntactical structure
+        { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) }? statements_non_cfg |
 
         // in the middle of a statement
         statement_part
@@ -556,21 +560,6 @@ cfg {} :
 
         // assembly block
         asm_declaration
-;
-
-/*
-  All top level statements, declarations, definitions, etc.
-  All of them start a new mode used to translate the rest
-  of the statement
-*/
-statement {} :
-
-        // context-free grammar statements
-        cfg |
-
-        // statements without a context free grammar
-        // last chance to match to a syntactical structure
-        statements_non_cfg
 ;
 
 /*
@@ -683,7 +672,7 @@ call_macro_expression[int secondtoken, bool statement]
         (call_check[postnametoken, argumenttoken, postcalltoken])=> guessing_endGuessing (
 
             // call syntax succeeded, however post call token is not legitimate
-            { _tokenSet_2.member(postcalltoken) || postcalltoken == NAME || postcalltoken == LCURLY
+            { _tokenSet_0.member(postcalltoken) || postcalltoken == NAME || postcalltoken == LCURLY
                 || postcalltoken == EXTERN || postcalltoken == STRUCT || postcalltoken == UNION || postcalltoken == CLASS
                 || postcalltoken == RCURLY || postcalltoken == 1 /* EOF ? */
                 || postcalltoken == TEMPLATE || postcalltoken == PUBLIC || postcalltoken == PRIVATE
@@ -700,7 +689,7 @@ call_macro_expression[int secondtoken, bool statement]
 
         // single macro call followed by statement_cfg
         { secondtoken != -1
-            && (_tokenSet_13.member(secondtoken) || secondtoken == LCURLY || secondtoken == 1 /* EOF */
+            && (_tokenSet_17.member(secondtoken) || secondtoken == LCURLY || secondtoken == 1 /* EOF */
             || secondtoken == PUBLIC || secondtoken == PRIVATE || secondtoken == PROTECTED) }?
         macro_call |
 
@@ -745,7 +734,7 @@ call_check_paren_pair[int& argumenttoken] {} :
             (NAME NAME)=> NAME guessing_endGuessing fail |
 
             // forbid parentheses (handled in recursion) and cfg tokens
-            { !_tokenSet_2.member(LA(1)) }? ~(LPAREN | RPAREN | TERMINATE)
+            { !_tokenSet_0.member(LA(1)) }? ~(LPAREN | RPAREN | TERMINATE)
         )* 
 
         RPAREN
