@@ -505,14 +505,8 @@ start {} :
         // process template operator correctly @test template
         { inTransparentMode(MODE_TEMPLATE) }? tempope[true] |
 
-        // context-free grammar statements
-        { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) }?
-        cfg |
-
-        // statements without a context free grammar
-        // last chance to match to a syntactical structure
-        { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) }?
-        statements_non_cfg
+        // statements and declarations of all kinds
+        { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) }? statement |
 
         // in the middle of a statement
         statement_part
@@ -544,6 +538,21 @@ cfg {} :
         statement_cfg |
 
         typedef_statement
+;
+
+/*
+  All top level statements, declarations, definitions, etc.
+  All of them start a new mode used to translate the rest
+  of the statement
+*/
+statement {} :
+
+        // context-free grammar statements
+        cfg |
+
+        // statements without a context free grammar
+        // last chance to match to a syntactical structure
+        statements_non_cfg
 ;
 
 /*
