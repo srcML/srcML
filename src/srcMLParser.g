@@ -516,7 +516,7 @@ start {} :
         statement_part
 ;
 exception
-catch[antlr::RecognitionException] {
+catch[...] {
         consume();
 }
 
