@@ -2173,41 +2173,6 @@ function_tail {} :
         )*
 ;
 
-/*
-Determine (as quickly as possible) whether we have a declaration.  In
-the majority of cases we can tell a declaration by the occurrence of
-two names in sequence.  For functions that do not have types
-(overloaded operators, main, etc.)  we have to look further.
-
-As a side effect, we record the token right for faster checking of
-label (name followed by colon)
-*/
-/*
-declaration_check[int& token] { token = 0; int fla; } : 
-
-        // no return value function:  main
-        // distinguish from call
-        MAIN function_paren_pair set_bool[isoperatorfunction, true] |
-
-        // no return value function:  casting operator method
-        // distinguish from call
-        overloaded_operator_grammar function_paren_pair set_bool[isoperatorfunction, true] |
-
-        // has to be a declaration
-        VIRTUAL | 
-
-        // has to be a declaration
-        INLINE | 
-
-        // more complex operator name
-        (operator_function_name)=>
-        operator_function_name function_rest[fla] set_bool[isoperatorfunction, true] |
-
-        // typical type declaration
-        lead_type_identifier markend[token] (pure_type_identifier | function_identifier[true])
-;
-*/
-
 perform_noncfg_check[DECLTYPE& type, int& token, int& fla, int& type_count] returns [bool isdecl] {
 
     isdecl = true;
@@ -2219,12 +2184,8 @@ perform_noncfg_check[DECLTYPE& type, int& token, int& fla, int& type_count] retu
 
     try {
         noncfg_check(token, fla, type_count, type);
-
     } catch (...) {
-
     }
-
-    isdecl = true;
 
     inputState->guessing--;
     rewind(start);
