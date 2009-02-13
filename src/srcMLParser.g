@@ -4045,7 +4045,7 @@ label_statement { LocalMode lm; } :
 /*
   typedef_statement
 */
-typedef_statement { int type_count = 0; DECLTYPE decl_type = NONE; int secondtoken = 0; int fla = 0;} :
+typedef_statement { int type_count = 0; } :
         {
             // statement
             startNewMode(MODE_STATEMENT | MODE_EXPECT | MODE_VARIABLE_NAME);
@@ -4054,17 +4054,9 @@ typedef_statement { int type_count = 0; DECLTYPE decl_type = NONE; int secondtok
             startElement(STYPEDEF);
         }
         TYPEDEF
-        (    
-            { perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type == FUNCTION }?
-            function_pointer_declaration[type_count] |
-
-            { decl_type == VARIABLE }?
-            {
-                // variable declarations may be in a list
-                startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT);
-            }
-            variable_declaration[type_count] |
-
+        (
+            (function_pointer_declaration[type_count])=>
+                function_pointer_declaration[type_count] |
             { LA(1) == CLASS || LA(1) == UNION || LA(1) == STRUCT }?    
                 {
                     // end all elements started in this rule
@@ -4073,7 +4065,12 @@ typedef_statement { int type_count = 0; DECLTYPE decl_type = NONE; int secondtok
                     // start of the type
                     startElement(STYPE);
                 }
-               ( class_definition | struct_union_definition[LA(1) == STRUCT ? SSTRUCT : SUNION])
+               ( class_definition | struct_union_definition[LA(1) == STRUCT ? SSTRUCT : SUNION]) |
+            {
+                // variable declarations may be in a list
+                startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT);
+            }
+            variable_declaration[type_count]
         )
 ;
 
