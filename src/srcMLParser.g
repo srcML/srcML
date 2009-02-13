@@ -533,7 +533,9 @@ end {} :
 */
 cfg {} :
 
-        namespace_statement |
+        namespace_definition |
+
+        namespace_directive |
 
         template_declaration |
 
@@ -1150,13 +1152,6 @@ asm_declaration {} :
         }
         ASM
         (balanced_parentheses | ~(LCURLY | RCURLY | TERMINATE))*
-;
-
-/*
-  namespace statements
-*/
-namespace_statement {} :
-        namespace_definition | namespace_directive
 ;
 
 /*
