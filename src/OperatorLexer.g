@@ -112,7 +112,7 @@ OPERATORS options { testLiterals = true; } { int realbegin = _begin; bool gt = f
         '~'  | // has to be separate if part of name
         '.' ('*' |) | // for parameter of catch
 
-        '\\' ( EOL { $setType(EOL_BACKSLASH); } )
+        '\\' ( EOL { $setType(EOL_BACKSLASH); } )*
         )
         { startline = false; }
 ;
