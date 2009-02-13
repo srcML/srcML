@@ -2578,8 +2578,7 @@ function_identifier[bool function_pointer] { LocalMode lm; } :
         // typical name
         complex_name[true] |
 
-        // special cases
-        { inLanguage(LANGUAGE_C_FAMILY) }?
+        // special cases for main
         {
             // end all started elements in this rule
             startNewMode(MODE_LOCAL);
