@@ -2317,10 +2317,6 @@ function_rest[int& fla] {} :
         parameter_list function_tail check_end[fla]
 ;
 
-operator_function_name :
-       /* NAME DCOLON  */ (NAME DCOLON)* overloaded_operator_grammar
-;
-
 /*
   Type of a function.  Includes specifiers
 */
@@ -2618,7 +2614,7 @@ overloaded_operator_grammar {} :
             // special case for 'operator()'
             { LA(1) == LPAREN }? LPAREN RPAREN |
 
-            // general operator name case is anything from 'operator' to '('
+            // general operator name case is anything from 'operator', operators, or names
             (options { greedy = true; } : ~(LPAREN))*
         )
 ;
