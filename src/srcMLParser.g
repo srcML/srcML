@@ -2592,8 +2592,7 @@ function_identifier[bool function_pointer] { LocalMode lm; } :
 
         // function pointer identifier with name marked separately
         { function_pointer }?
-        (function_pointer_name_grammar)=>
-            function_pointer_name_grammar
+        function_pointer_name_grammar
 ;
 
 /*
