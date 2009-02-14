@@ -2203,7 +2203,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
              int& type_count, /* number of tokens in type (not including name) */
              DECLTYPE& type
         ] { token = 0; fla = 0; type_count = 0; int specifier_count = 0; isdestructor = false;
-        type = NONE; bool foundpure = false; bool early_return = false; isoperatorfunction = false; bool isconstructor = false; } :
+        type = NONE; bool foundpure = false; bool early_return = false; isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; } :
 
         // main pattern for variable declarations, and most function declaration/definitions.
         // trick is to look for function declarations/definitions, and along the way record
@@ -2267,6 +2267,10 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
         // need to see if we possibly have a constructor/destructor name, with no type
         set_bool[isoperatorfunction, isoperatorfunction || isconstructor]
 
+        // detecting a destructor name uses a data member, since it is detected in during the
+        // name detection.  If the parameters use this method, it is reentrant, so cache it
+        set_bool[saveisdestructor, isdestructor]
+
         // we have a declaration, so do we have a function?
         (
             // check for function pointer, which must have a non-specifier part of the type
@@ -2284,10 +2288,10 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
         set_type[type, FUNCTION]
 
         // however, we could have a destructor
-        set_type[type, DESTRUCTOR, isdestructor]
+        set_type[type, DESTRUCTOR, saveisdestructor]
 
         // could also have a constructor
-        set_type[type, CONSTRUCTOR, !isdestructor && isconstructor]
+        set_type[type, CONSTRUCTOR, !saveisdestructor && isconstructor]
 ;
 
 //monitor { std::cerr << namestack[0] << " " << namestack[1] << std::endl; } :;
