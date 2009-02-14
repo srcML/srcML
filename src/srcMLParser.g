@@ -3088,7 +3088,7 @@ macro_call_optional_check {} :
 ;
 
 macro_call_check {} :
-        NAME ( options { greedy = true; } : paren_pair)?
+        NAME ( options { greedy = true; } : paren_pair)*
 ;
 
 macro_call {} :
