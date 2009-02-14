@@ -859,12 +859,12 @@ for_initialization_action {} :
         }
     ;
 
-for_initialization { int type_count = 0; } :
+for_initialization { int type_count = 0; int fla = 0; int secondtoken = 0; DECLTYPE decl_type = NONE; } :
         for_initialization_action
         (
             // explicitly check for a variable declaration since it can easily
             // be confused with an expression
-            { perform_function_type_check(type_count) > 1 }?
+            { perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type == VARIABLE }?
             for_initialization_variable_declaration[type_count] |
             
             // explicitly check for non-terminate so that a large switch statement
@@ -1282,7 +1282,7 @@ class_struct_union_check[int& finaltoken, int& othertoken] { finaltoken = 0; oth
 ;
 
 check_end[int& token] { /* setFinalToken(); // problem with class */ token = LA(1); } :
-        LCURLY | TERMINATE | COLON
+        LCURLY | TERMINATE | COLON | COMMA | RPAREN
 ;
 
 /*
@@ -1768,7 +1768,7 @@ else_handling {} :
 /*
   Handling when mid-statement
 */
-statement_part { int type_count; } :
+statement_part { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE decl_type = NONE; } :
 
         { inMode(MODE_EAT_TYPE) }?
             type_identifier
@@ -1792,7 +1792,7 @@ statement_part { int type_count; } :
 
         // K&R function parameters
         { inLanguage(LANGUAGE_C_FAMILY) && inMode(MODE_FUNCTION_TAIL) && 
-          perform_function_type_check(type_count) > 0 }?
+          perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type == VARIABLE }?
 
             // parameter declaration for a K&R old style function parameter declaration
             { startNewMode(MODE_TOP); }
@@ -2168,7 +2168,7 @@ function_tail {} :
 
             { inLanguage(LANGUAGE_C) }? (
             { look_past(NAME) == LCURLY }? NAME |
-                parameter_kr terminate
+                parameter terminate
             )
         )*
 ;
@@ -2356,24 +2356,6 @@ update_var_typecount {} :
         }
 ;
 
-perform_function_type_check[int& type_count] returns [int count] {
-
-    int start = mark();
-    inputState->guessing++;
-
-    try {
-        function_type_check(type_count);
-    } catch (...) {
-        type_count = 0;
-    }
-
-    inputState->guessing--;
-    rewind(start);
-
-    count = type_count;
-} :
-;
-
 /*
   Type of a function.  Includes specifiers
 */
@@ -2385,10 +2367,11 @@ function_type_check[int& type_count] { type_count = 1; } :
 
 type_identifier_count[int& type_count] { ++type_count; } :
 
-        type_identifier | MAIN |
-
          // overloaded parentheses operator
-        overloaded_operator_grammar
+        { LA(1) == OPERATOR }?
+        overloaded_operator_grammar |
+
+        type_identifier | MAIN
 ;
 
 deduct[int& type_count] { --type_count; } :
@@ -3775,7 +3758,7 @@ argument_grammar {} :
 /*
   Parameter for a function declaration or definition
 */                
-parameter { int type_count = 0; } :
+parameter { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTYPE decl_type = NONE; } :
         {
             // end parameter correctly
             startNewMode(MODE_PARAMETER);
@@ -3785,7 +3768,7 @@ parameter { int type_count = 0; } :
         }
         (
         PERIOD PERIOD ( options { greedy = true;} : PERIOD)* |
-        (function_pointer_header[type_count])=>
+        { perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type == FUNCTION }?
             function_pointer_declaration[type_count] |
         {
             // start the declaration element
@@ -3802,15 +3785,6 @@ parameter { int type_count = 0; } :
         ( options { greedy = true; } : variable_declaration_nameinit)*
 
         )
-;
-
-parameter_kr { int type_count = 0; } :
-        (function_pointer_header[type_count])=>
-            function_pointer_declaration[type_count] |
-
-        parameter_type_count[type_count]
-        ( options { greedy = true; } :
-            variable_declaration_nameinit | COMMA)*
 ;
 
 /*
@@ -3894,7 +3868,7 @@ deleteop { LocalMode lm; } :
 
 /*
 */
-parameter_type { LocalMode lm; int type_count = 0; } :
+parameter_type { LocalMode lm; int type_count = 0; int fla = 0; int secondtoken = 0; DECLTYPE decl_type = NONE; } :
         {
             // local mode so start element will end correctly
             startNewMode(MODE_LOCAL);
@@ -3902,7 +3876,7 @@ parameter_type { LocalMode lm; int type_count = 0; } :
             // start of type
             startElement(STYPE);
         }
-        { perform_function_type_check(type_count); }
+        { perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type == VARIABLE }?
         eat_type[type_count > 1 ? type_count - 1 : 1]
 ;
 
