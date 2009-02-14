@@ -739,20 +739,13 @@ call_check_paren_pair[int& argumenttoken] { bool name = false; } :
             NAME set_bool[name, true] |
 
             { name }?
-            NAME guessing_endGuessing fail |
+            NAME guessing_endGuessing END_ELEMENT_TOKEN |
 
             // forbid parentheses (handled in recursion) and cfg tokens
             { !_tokenSet_0.member(LA(1)) }? ~(LPAREN | RPAREN | TERMINATE) set_bool[name, false]
         )* 
 
         RPAREN
-;
-
-/*
-  Fail
-*/
-fail {} :
-        CLASS
 ;
 
 markend[int& token] { token = LA(1); } :
