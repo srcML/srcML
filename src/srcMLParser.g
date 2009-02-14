@@ -3998,7 +3998,7 @@ label_statement { LocalMode lm; } :
 /*
   typedef_statement
 */
-typedef_statement { int type_count = 0; } :
+typedef_statement { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTYPE decl_type = NONE; } :
         {
             // statement
             startNewMode(MODE_STATEMENT | MODE_EXPECT | MODE_VARIABLE_NAME);
@@ -4008,7 +4008,7 @@ typedef_statement { int type_count = 0; } :
         }
         TYPEDEF
         (
-            (function_pointer_declaration[type_count])=>
+            { perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type == FUNCTION }?
                 function_pointer_declaration[type_count] |
             { LA(1) == CLASS || LA(1) == UNION || LA(1) == STRUCT }?    
                 {
