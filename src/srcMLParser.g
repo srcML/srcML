@@ -723,7 +723,7 @@ call_check[int& postnametoken, int& argumenttoken, int& postcalltoken] {} :
         markend[postcalltoken]
 ;
 
-call_check_paren_pair[int& argumenttoken] {} :
+call_check_paren_pair[int& argumenttoken] { bool name = false; } :
         LPAREN
 
         // record token after the start of the argument list
@@ -732,13 +732,17 @@ call_check_paren_pair[int& argumenttoken] {} :
         ( options { greedy = true; } : 
 
             // recursive nested parentheses
-            call_check_paren_pair[argumenttoken] | 
+            call_check_paren_pair[argumenttoken] set_bool[name, false] | 
 
             // special case for something that looks like a declaration
-            (NAME NAME)=> NAME guessing_endGuessing fail |
+            { !name }?
+            NAME set_bool[name, true] |
+
+            { name }?
+            NAME guessing_endGuessing fail |
 
             // forbid parentheses (handled in recursion) and cfg tokens
-            { !_tokenSet_0.member(LA(1)) }? ~(LPAREN | RPAREN | TERMINATE)
+            { !_tokenSet_0.member(LA(1)) }? ~(LPAREN | RPAREN | TERMINATE) set_bool[name, false]
         )* 
 
         RPAREN
