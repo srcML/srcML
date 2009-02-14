@@ -2085,7 +2085,7 @@ function_pointer_declaration[int& type_count] {} :
 */
 function_pointer_header[int& type_count] { type_count = 0; } :
 
-        function_pointer_type[type_count]
+        function_type[type_count]
         {
             consumeSkippedTokens();
         }
@@ -2094,16 +2094,6 @@ function_pointer_header[int& type_count] { type_count = 0; } :
         macro_call_optional_check
 
         parameter_list
-;
-
-function_pointer_type[int& type_count] { LocalMode lm; } :
-        {
-             startNewMode(MODE_LOCAL);
-
-             // start of the type
-             startElement(STYPE);
-        }
-        function_type_check[type_count]
 ;
 
 function_pointer_name_grammar { LocalMode lm; } :
