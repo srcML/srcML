@@ -3254,17 +3254,20 @@ expression_statement[bool statement = true] {} :
 */
 variable_declaration_statement[int type_count] {} :
         {
+
             // statement
             startNewMode(MODE_STATEMENT);
 
-            // start the declaration statement
-            startElement(SDECLARATION_STATEMENT);
+            if (!inTransparentMode(MODE_INNER_DECL))
+                    // start the declaration statement
+                    startElement(SDECLARATION_STATEMENT);
 
             // declaration
             startNewMode(MODE_LOCAL);
 
-            // start the declaration
-            startElement(SDECLARATION);
+            if (!inTransparentMode(MODE_INNER_DECL))
+                    // start the declaration
+                    startElement(SDECLARATION);
         }
         variable_declaration[type_count]
 ;
@@ -3997,7 +4000,7 @@ label_statement { LocalMode lm; } :
 /*
   typedef_statement
 */
-typedef_statement { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTYPE decl_type = NONE; } :
+typedef_statement {} :
         {
             // statement
             startNewMode(MODE_STATEMENT | MODE_EXPECT | MODE_VARIABLE_NAME);
@@ -4006,24 +4009,9 @@ typedef_statement { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTY
             startElement(STYPEDEF);
         }
         TYPEDEF
-        (
-            { perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type == FUNCTION }?
-                function_pointer_declaration[type_count] |
-            { LA(1) == CLASS || LA(1) == UNION || LA(1) == STRUCT }?    
-                {
-                    // end all elements started in this rule
-                    startNewMode(MODE_LOCAL | MODE_TYPEDEF | MODE_END_AT_BLOCK_NO_TERMINATE);
-
-                    // start of the type
-                    startElement(STYPE);
-                }
-               ( class_definition | struct_union_definition[LA(1) == STRUCT ? SSTRUCT : SUNION]) |
-            {
-                // variable declarations may be in a list
-                startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT);
-            }
-            variable_declaration[type_count]
-        )
+        {
+            startNewMode(MODE_NEST | MODE_STATEMENT | MODE_INNER_DECL);
+        }
 ;
 
 paren_pair :
