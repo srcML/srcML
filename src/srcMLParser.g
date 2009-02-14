@@ -710,7 +710,7 @@ call_macro_expression[int secondtoken, bool statement]
 
 call_check[int& postnametoken, int& argumenttoken, int& postcalltoken] {} :
         // detect name, which may be name of macro or even an expression
-        function_identifier[true]
+        function_identifier
 
         // record token after the function identifier for future use if this
         // fails
@@ -1844,7 +1844,7 @@ statement_part { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE decl
 
         // function identifier
         { inMode(MODE_FUNCTION_NAME) }?
-             process_function_identifier[true] |
+             process_function_identifier |
 
         // function identifier
         { inMode(MODE_FUNCTION_PARAMETER) }?
@@ -2119,14 +2119,14 @@ function_pointer_name_base { LocalMode lm; } :
 function_header[int type_count] {} : 
 
         // no return value functions:  casting operator method and main
-        { isoperatorfunction }? function_identifier[true] { setMode(MODE_FUNCTION_PARAMETER); } |
+        { isoperatorfunction }? function_identifier { setMode(MODE_FUNCTION_PARAMETER); } |
 
         function_type[type_count]
 ;
 
-process_function_identifier[bool status] {} :
+process_function_identifier {} :
 
-        function_identifier[true]
+        function_identifier
         {
             replaceMode(MODE_FUNCTION_NAME, MODE_FUNCTION_PARAMETER); 
         }
@@ -2545,7 +2545,7 @@ expression_identifier :
 /*
    Name of a function
 */
-function_identifier[bool function_pointer] { LocalMode lm; } :
+function_identifier { LocalMode lm; } :
 
         // typical name
         complex_name[true] |
@@ -2562,7 +2562,6 @@ function_identifier[bool function_pointer] { LocalMode lm; } :
         MAIN |
 
         // function pointer identifier with name marked separately
-        { function_pointer }?
         function_pointer_name_grammar
 ;
 
@@ -3055,7 +3054,7 @@ call {} :
             // start the function call element
             startElement(SFUNCTION_CALL);
         }
-        function_identifier[true]
+        function_identifier
 
         call_argument_list
 ;
@@ -3489,7 +3488,7 @@ expression_part[bool checkmacro = false] { guessing_end();
         int postnametoken = 0; int argumenttoken = 0; int postcalltoken = 0; } :
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
-        (NEW function_identifier[true] paren_pair LCURLY)=> newop anonymous_class_definition |
+        (NEW function_identifier paren_pair LCURLY)=> newop anonymous_class_definition |
 
         // general math operators
         general_operators | multops_expr | newop | deleteop | period |
