@@ -923,19 +923,14 @@ for_increment {} :
 
             // setup a mode for initialization that will end with a ";"
             startNewMode(MODE_FOR_INCREMENT | MODE_EXPRESSION | MODE_EXPECT | MODE_STATEMENT | MODE_LIST);
-        }
-        (
-              { LA(1) != RPAREN }?
-                {
-                    startElement(SFOR_INCREMENT);
-                }
-                expression |
-              {
+
+            if (LA(1) == RPAREN)
                 // empty increment issued as single element
                 emptyElement(SFOR_INCREMENT);
-              }
-              rparen
-        )
+            else
+                startElement(SFOR_INCREMENT);
+        }
+        expression
 ;
 
 /*
@@ -3455,7 +3450,8 @@ dcolon { LocalMode lm; } :
 expression[bool checkmacro = false] {} : 
         {
             // if expecting an expression start one. except if you are at a right curly brace
-            if (inMode(MODE_EXPRESSION | MODE_EXPECT) && LA(1) != RCURLY) {
+            if (inMode(MODE_EXPRESSION | MODE_EXPECT) && LA(1) != RCURLY &&
+                !(inMode(MODE_FOR_INCREMENT) && LA(1) == RPAREN)) {
 
                 // use a new mode without the expect so we don't nest expression parts
                 startNewMode(MODE_EXPRESSION);
