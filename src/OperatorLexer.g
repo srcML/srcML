@@ -84,7 +84,7 @@ SPECIAL :
 */
 //ALLOPERATORS options { testLiterals = true; } : 
 
-OPERATORS options { testLiterals = true; } { int realbegin = _begin; bool gt = false; } : 
+OPERATORS options { testLiterals = true; } { unsigned int realbegin = _begin; bool gt = false; } : 
         (
             '#' {
 
