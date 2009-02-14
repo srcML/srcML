@@ -587,15 +587,17 @@ statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; isoperat
         { inLanguage(LANGUAGE_CXX_FAMILY) }?
         access_specifier_region |
 
-        // enum definition as opposed to part of type or declaration
-        (enum_definition_whole terminate)=> enum_definition |
-
-        // extern block as opposed to enum as part of declaration
-        (extern_definition_header)=> extern_definition |
-
-        // function declaration
+        // check for declaration of some kind (variable, function, constructor, destructor
         { perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type == FUNCTION }?
         function[fla, type_count] |
+
+        // enum definition as opposed to part of type or declaration
+        { decl_type == NONE }?
+        enum_definition |
+
+        // extern block as opposed to enum as part of declaration
+        { decl_type == NONE }?
+        extern_definition |
 
         // variable declaration
         { decl_type == VARIABLE }?
