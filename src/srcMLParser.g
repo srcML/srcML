@@ -421,7 +421,6 @@ friend class LocalMode;
 bool zeromode;
 bool skipelse;
 int cppifcount;
-bool isoperatorfunction;
 bool isdestructor;
 int parseoptions;
 std::string namestack[2];
@@ -575,7 +574,7 @@ cfg {} :
   Important to keep semantic checks, e.g., (constructor)=>, in place.  Most of these rules
   can start with a name which leaves it ambiguous which to choose.
 */
-statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; isoperatorfunction = false; int fla = 0;
+statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; int fla = 0;
         int type_count = 0; DECLTYPE decl_type = NONE; } :
 
         // class forms for class declarations/definitions as opposed to part of a declaration types
@@ -2114,7 +2113,7 @@ function_pointer_name_base { LocalMode lm; } :
 function_header[int type_count] {} : 
 
         // no return value functions:  casting operator method and main
-        { isoperatorfunction }? function_identifier { setMode(MODE_FUNCTION_PARAMETER); } |
+        { type_count == 0 }? function_identifier { setMode(MODE_FUNCTION_PARAMETER); } |
 
         function_type[type_count]
 ;
@@ -2187,7 +2186,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
              int& type_count, /* number of tokens in type (not including name) */
              DECLTYPE& type
         ] { token = 0; fla = 0; type_count = 0; int specifier_count = 0; isdestructor = false;
-        type = NONE; bool foundpure = false; bool early_return = false; isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; } :
+        type = NONE; bool foundpure = false; bool early_return = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; } :
 
         // main pattern for variable declarations, and most function declaration/definitions.
         // trick is to look for function declarations/definitions, and along the way record
