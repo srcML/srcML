@@ -695,7 +695,7 @@ call_macro_expression[int secondtoken, bool statement]
 
         // single macro call followed by statement_cfg
         { secondtoken != -1
-            && (_tokenSet_17.member(secondtoken) || secondtoken == LCURLY || secondtoken == 1 /* EOF */
+            && (_tokenSet_0.member(secondtoken) || secondtoken == LCURLY || secondtoken == 1 /* EOF */
             || secondtoken == PUBLIC || secondtoken == PRIVATE || secondtoken == PROTECTED) }?
         macro_call |
 
@@ -923,14 +923,19 @@ for_increment {} :
 
             // setup a mode for initialization that will end with a ";"
             startNewMode(MODE_FOR_INCREMENT | MODE_EXPRESSION | MODE_EXPECT | MODE_STATEMENT | MODE_LIST);
-
-            if (LA(1) == RPAREN)
+        }
+        (
+              { LA(1) != RPAREN }?
+                {
+                    startElement(SFOR_INCREMENT);
+                }
+                expression |
+              {
                 // empty increment issued as single element
                 emptyElement(SFOR_INCREMENT);
-            else
-                startElement(SFOR_INCREMENT);
-        }
-        expression
+              }
+              rparen
+        )
 ;
 
 /*
@@ -3249,20 +3254,19 @@ expression_statement[bool statement = true] {} :
 */
 variable_declaration_statement[int type_count] {} :
         {
-
             // statement
             startNewMode(MODE_STATEMENT);
 
             if (!inTransparentMode(MODE_INNER_DECL))
-                    // start the declaration statement
-                    startElement(SDECLARATION_STATEMENT);
+                // start the declaration statement
+                startElement(SDECLARATION_STATEMENT);
 
             // declaration
             startNewMode(MODE_LOCAL);
 
             if (!inTransparentMode(MODE_INNER_DECL))
-                    // start the declaration
-                    startElement(SDECLARATION);
+                // start the declaration
+                startElement(SDECLARATION);
         }
         variable_declaration[type_count]
 ;
@@ -4006,6 +4010,7 @@ typedef_statement {} :
         }
         TYPEDEF
         {
+            // statement
             startNewMode(MODE_NEST | MODE_STATEMENT | MODE_INNER_DECL);
         }
 ;
