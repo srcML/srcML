@@ -3732,15 +3732,12 @@ argument {} :
 
             // start the argument
             startElement(SARGUMENT);
-        }
-        argument_grammar
-;
-
-argument_grammar {} :
-
+        } 
+        (
         { !(LA(1) == RPAREN && inTransparentMode(MODE_INTERNAL_END_PAREN)) }? expression |
 
         type_identifier
+        )
 ;
 
 /*
