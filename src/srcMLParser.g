@@ -2641,13 +2641,9 @@ variable_identifier_array_grammar_sub[bool& iscomplex] { LocalMode lm; } :
   Colon matches range(?) for bits.
 */
 full_expression[bool checkmacro = false] { LocalMode lm; } :
-        (options { greedy = true; } : full_expression_base[checkmacro] | COLON)*
-;
 
-/*
-  Base grammar for full expression.  Only used by full_expression.
-*/
-full_expression_base[bool checkmacro = false] {} :
+        (options { greedy = true; } :
+
         // commas as in a list
         comma |
 
@@ -2658,7 +2654,9 @@ full_expression_base[bool checkmacro = false] {} :
         { inMode(MODE_ARGUMENT) }? argument |
 
         // expression with right parentheses if a previous match is in one
-        { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }? expression[checkmacro]
+        { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }? expression[checkmacro] |
+
+        COLON)*
 ;
 
 /*
