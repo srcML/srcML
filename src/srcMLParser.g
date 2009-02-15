@@ -2060,7 +2060,7 @@ condition_rparen[bool final = false] {} :
 /*
    function pointer declaration
 */
-function_pointer_declaration[int& type_count] {} :
+function_pointer_declaration[int type_count] {} :
         {
             // statement
             startNewMode(MODE_STATEMENT | MODE_FUNCTION_TAIL);
@@ -2077,7 +2077,7 @@ function_pointer_declaration[int& type_count] {} :
   Everything except the ";" of a function declaration or the block of a
   function definition
 */
-function_pointer_header[int& type_count] { type_count = 0; } :
+function_pointer_header[int& type_count] {} :
 
         function_type[type_count]
         {
@@ -2229,17 +2229,21 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
             set_int[token, LA(1), type_count == 1]
         )*
 
+        // have a sequence of type tokens, last one is function/variable name
+        // (except for function pointer, which is handled later)
+        set_int[type_count, type_count > 1 ? type_count - 1 : 0]
+
         set_bool[isoperatorfunction, isoperatorfunction || isdestructor]
 
         // we have a declaration (at this point a variable) if we have more then
         // one non-specifier part of the type
-        set_type[type, VARIABLE, !early_return && (type_count - specifier_count > 1)]
+        set_type[type, VARIABLE, !early_return && (type_count - specifier_count > 0)]
 
         // need to see if we possibly have a constructor/destructor name, with no type
         set_bool[isconstructor,
 
-                 // nothing in the type (besides the name) except for specifiers
-                 (type_count == (specifier_count + 1)) &&
+                 // entire type is specifiers
+                 (type_count == specifier_count) &&
 
                  // inside of a class definition
                  ((inMode(MODE_ACCESS_REGION) && inLanguage(LANGUAGE_CXX_FAMILY)) ||
@@ -2258,13 +2262,17 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
         // we have a declaration, so do we have a function?
         (
             // check for function pointer, which must have a non-specifier part of the type
-            { type_count - specifier_count > 0 }?
             (function_pointer_name_grammar LPAREN)=>
-            function_pointer_name_grammar set_int[type_count, type_count + 1] function_rest[fla] |
+            function_pointer_name_grammar
+        
+            // what was assumed to be the name of the function is actually part of the type
+            set_int[type_count, type_count + 1]
+
+            function_rest[fla] |
 
             // POF (Plain Old Function)
-            // need at least one non-specifier and a name
-            { (type_count - specifier_count > 1) || isoperatorfunction }?
+            // need at least one non-specifier in the type (not including the name)
+            { (type_count - specifier_count > 0) || isoperatorfunction }?
             function_rest[fla]
         )
 
@@ -2313,7 +2321,7 @@ function_type[int type_count] {} :
             // start a mode for the type that will end in this grammar rule
             startNewMode(MODE_EAT_TYPE);
 
-            setTypeCount(type_count - 1);
+            setTypeCount(type_count);
 
             // type element begins
             startElement(STYPE);
@@ -3309,7 +3317,7 @@ variable_declaration_type[int type_count] {} :
             // start a mode for the type that will end in this grammar rule
             startNewMode(MODE_EAT_VAR_TYPE);
 
-            setTypeCount(type_count - 1);
+            setTypeCount(type_count);
 
             // type element begins
             startElement(STYPE);
@@ -3758,6 +3766,9 @@ parameter { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTYPE decl_
         {
             // start the declaration element
             startElement(SDECLARATION);
+
+            if (decl_type != VARIABLE)
+                type_count = 1;
         }
         parameter_type_count[type_count]
 
@@ -3782,7 +3793,7 @@ parameter_type_count[int type_count] { LocalMode lm; } :
             // start of type
             startElement(STYPE);
         }
-        eat_type[type_count > 1 ? type_count - 1 : 1]
+        eat_type[type_count]
         {
             consumeSkippedTokens();
         }
@@ -3862,7 +3873,7 @@ parameter_type { LocalMode lm; int type_count = 0; int fla = 0; int secondtoken 
             startElement(STYPE);
         }
         { perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type == VARIABLE }?
-        eat_type[type_count > 1 ? type_count - 1 : 1]
+        eat_type[type_count]
 ;
 
 /*
