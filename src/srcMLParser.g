@@ -923,19 +923,14 @@ for_increment {} :
 
             // setup a mode for initialization that will end with a ";"
             startNewMode(MODE_FOR_INCREMENT | MODE_EXPRESSION | MODE_EXPECT | MODE_STATEMENT | MODE_LIST);
-        }
-        (
-              { LA(1) != RPAREN }?
-                {
-                    startElement(SFOR_INCREMENT);
-                }
-                expression |
-              {
+
+            if (LA(1) == RPAREN)
                 // empty increment issued as single element
                 emptyElement(SFOR_INCREMENT);
-              }
-              rparen
-        )
+            else
+                startElement(SFOR_INCREMENT);
+        }
+        expression
 ;
 
 /*
