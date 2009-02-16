@@ -1324,7 +1324,6 @@ concept_definition :
             // start the class definition
             startElement(SCONCEPT);
         }
-        { inLanguage(LANGUAGE_CXX_0X) }?
         (
             (auto_keyword)* CONCEPT
 
@@ -1345,7 +1344,6 @@ conceptmap_definition :
             // start the class definition
             startElement(SCONCEPTMAP);
         }
-        { inLanguage(LANGUAGE_CXX_0X) }?
         (
             (auto_keyword)* CONCEPTMAP
 
