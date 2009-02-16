@@ -3695,7 +3695,7 @@ implements_list { LocalMode lm; } :
 ;
 
 super_list {} :
-        (
+        (options { greedy = true; } :
             (derive_access)*
 
             complex_name_java[true]
