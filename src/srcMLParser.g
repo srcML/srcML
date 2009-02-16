@@ -3736,7 +3736,7 @@ parameter { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTYPE decl_
 
         parameter_list 
 
-        (options { greedy = true; } : function_pointer_initialization)*|
+        (options { greedy = true; } : function_pointer_initialization)* |
         {
             // start the declaration element
             startElement(SDECLARATION);
