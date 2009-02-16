@@ -2156,7 +2156,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
              DECLTYPE& type,
              bool inparam     /* are we in a parameter */
         ] { token = 0; fla = 0; type_count = 0; int specifier_count = 0; isdestructor = false;
-        type = NONE; bool foundpure = false; bool early_return = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; } :
+        type = NONE; bool foundpure = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; } :
 
         // main pattern for variable declarations, and most function declaration/definitions.
         // trick is to look for function declarations/definitions, and along the way record
@@ -2171,7 +2171,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
           Process all the parts of a potential type.  Keep track of total
           parts, specifier parts, and second token
         */
-        ({ !early_return && (inLanguage(LANGUAGE_JAVA_FAMILY) || LA(1) != LBRACKET) }?
+        ({ inLanguage(LANGUAGE_JAVA_FAMILY) || LA(1) != LBRACKET }?
             (
                 // specifiers
                 standard_specifiers set_int[specifier_count, specifier_count + 1] |
@@ -2188,7 +2188,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                 pure_lead_type_identifier_no_specifiers set_bool[foundpure] |
 
                 // type parts that must only occur after other type parts (excluding specifiers)
-                non_lead_type_identifier set_bool[early_return, !foundpure]
+                non_lead_type_identifier throw_exception[!foundpure]
             )
 
             // another type part
@@ -2211,9 +2211,8 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
             - There is nothing in the type (what was the name is the type)
               and it is part of a parameter list
         */
-        set_type[type, VARIABLE, !early_return &&
-                 ((type_count - specifier_count > 0) ||
-                  (inparam && (LA(1) == RPAREN || LA(1) == COMMA || LA(1) == LBRACKET)))]
+        set_type[type, VARIABLE, ((type_count - specifier_count > 0) ||
+                                 (inparam && (LA(1) == RPAREN || LA(1) == COMMA || LA(1) == LBRACKET)))]
 
         // need to see if we possibly have a constructor/destructor name, with no type
         set_bool[isconstructor,
@@ -2265,6 +2264,8 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
 //monitor { std::cerr << namestack[0] << " " << namestack[1] << std::endl; } :;
 
 //other[bool flag] { std::cerr << flag << std::endl; } :;
+
+throw_exception[bool cond] { if (cond) throw antlr::RecognitionException(); } :;
 
 set_type[DECLTYPE& name, DECLTYPE value, bool result = true] { if (result) name = value; } :;
 
