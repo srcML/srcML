@@ -3888,7 +3888,7 @@ parameter_type { LocalMode lm; int type_count = 0; int fla = 0; int secondtoken 
             // start of type
             startElement(STYPE);
         }
-        { perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type == VARIABLE }?
+        { perform_noncfg_check(decl_type, secondtoken, fla, type_count) }?
         eat_type[type_count]
 ;
 
