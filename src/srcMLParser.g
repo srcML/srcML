@@ -2121,7 +2121,7 @@ function_tail {} :
         )*
 ;
 
-perform_noncfg_check[DECLTYPE& type, int& token, int& fla, int& type_count] returns [bool isdecl] {
+perform_noncfg_check[DECLTYPE& type, int& token, int& fla, int& type_count, bool inparam = false] returns [bool isdecl] {
 
     isdecl = true;
 
@@ -2131,8 +2131,12 @@ perform_noncfg_check[DECLTYPE& type, int& token, int& fla, int& type_count] retu
     inputState->guessing++;
 
     try {
-        noncfg_check(token, fla, type_count, type);
+        noncfg_check(token, fla, type_count, type, inparam);
+
     } catch (...) {
+
+        if (type == VARIABLE && type_count == 0)
+            type_count = 1;
     }
 
     inputState->guessing--;
@@ -2149,7 +2153,8 @@ perform_noncfg_check[DECLTYPE& type, int& token, int& fla, int& type_count] retu
 noncfg_check[int& token,      /* second token, after name (always returned) */
              int& fla,        /* for a function, TERMINATE or LCURLY, 0 for a variable */
              int& type_count, /* number of tokens in type (not including name) */
-             DECLTYPE& type
+             DECLTYPE& type,
+             bool inparam     /* are we in a parameter */
         ] { token = 0; fla = 0; type_count = 0; int specifier_count = 0; isdestructor = false;
         type = NONE; bool foundpure = false; bool early_return = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; } :
 
@@ -2199,9 +2204,16 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
 
         set_bool[isoperatorfunction, isoperatorfunction || isdestructor]
 
-        // we have a declaration (at this point a variable) if we have more then
-        // one non-specifier part of the type
-        set_type[type, VARIABLE, !early_return && (type_count - specifier_count > 0)]
+        /*
+          We have a declaration (at this point a variable) if we have:
+          
+            - At least one non-specifier in the type
+            - There is nothing in the type (what was the name is the type)
+              and it is part of a parameter list
+        */
+        set_type[type, VARIABLE, !early_return &&
+                 ((type_count - specifier_count > 0) ||
+                  (inparam && (LA(1) == RPAREN || LA(1) == COMMA || LA(1) == LBRACKET)))]
 
         // need to see if we possibly have a constructor/destructor name, with no type
         set_bool[isconstructor,
@@ -2258,7 +2270,7 @@ set_type[DECLTYPE& name, DECLTYPE value, bool result = true] { if (result) name 
 
 //trace[const char*s ] { std::cerr << s << std::endl; } :;
 
-traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
+//traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
 
 set_int[int& name, int value, bool result = true] { if (result) name = value; } :;
 
@@ -3755,7 +3767,7 @@ parameter { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTYPE decl_
         }
         (
         PERIOD PERIOD ( options { greedy = true;} : PERIOD)* |
-        { perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type == FUNCTION }?
+        { perform_noncfg_check(decl_type, secondtoken, fla, type_count, true) && decl_type == FUNCTION }?
         function[TERMINATE, type_count]
 
         function_identifier // pointer_name_grammar
@@ -3765,7 +3777,7 @@ parameter { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTYPE decl_
         parameter_list 
 
         (options { greedy = true; } : function_pointer_initialization)* |
-        { decl_type == VARIABLE || type_count == 0 }?
+        { decl_type == VARIABLE }?
         {
             // start the declaration element
             startElement(SDECLARATION);
