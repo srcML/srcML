@@ -2056,39 +2056,6 @@ condition_rparen[bool final = false] {} :
 
 /* Function */
 
-/*
-   function pointer declaration
-*/
-function_pointer_declaration[int type_count] {} :
-        {
-            // statement
-            startNewMode(MODE_STATEMENT | MODE_FUNCTION_TAIL);
-
-            // start the function declaration element
-            startElement(SFUNCTION_DECLARATION);
-        }
-        function_pointer_header[type_count]
-
-        (options { greedy = true; } : function_pointer_initialization)*
-;
-
-/*
-  Everything except the ";" of a function declaration or the block of a
-  function definition
-*/
-function_pointer_header[int& type_count] {} :
-
-        function_type[type_count]
-        {
-            consumeSkippedTokens();
-        }
-        function_pointer_name_grammar
-
-        macro_call_optional_check
-
-        parameter_list
-;
-
 function_pointer_name_grammar { LocalMode lm; } :
         LPAREN function_pointer_name_base RPAREN
 ;
@@ -2293,7 +2260,7 @@ set_type[DECLTYPE& name, DECLTYPE value, bool result = true] { if (result) name 
 
 //trace[const char*s ] { std::cerr << s << std::endl; } :;
 
-//traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
+traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
 
 set_int[int& name, int value, bool result = true] { if (result) name = value; } :;
 
@@ -3761,7 +3728,15 @@ parameter { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTYPE decl_
         (
         PERIOD PERIOD ( options { greedy = true;} : PERIOD)* |
         { perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type == FUNCTION }?
-            function_pointer_declaration[type_count] |
+        function[TERMINATE, type_count]
+
+        function_identifier // pointer_name_grammar
+
+        macro_call_optional_check
+
+        parameter_list 
+
+        (options { greedy = true; } : function_pointer_initialization)*|
         {
             // start the declaration element
             startElement(SDECLARATION);
