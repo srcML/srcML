@@ -2457,7 +2457,7 @@ java_specifier_mark { LocalMode lm; } :
 */
 lead_type_identifier {} :
 
-        java_specifier_mark |
+//        java_specifier_mark |
 
 //        (macro_call_paren identifier)=> macro_call |
 
