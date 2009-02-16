@@ -1479,7 +1479,9 @@ class_default_access_action[int access_token] :
 */
 class_header {} :
 
-        eat_optional_macro_call
+        (macro_call_check class_header_base LCURLY)=>
+           macro_call class_header_base |
+
         class_header_base
 ;
 
