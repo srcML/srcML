@@ -2353,15 +2353,7 @@ deduct[int& type_count] { --type_count; } :
 eat_type[int count] { if (count <= 0) return; } :
 
         type_identifier
-        { 
-            --count;
-            while (count) {
-
-                type_identifier();
-                --count;
-            }
-
-        }
+        eat_type[count - 1]
 ;
 
 /*
