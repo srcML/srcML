@@ -4027,9 +4027,18 @@ typedef_statement {} :
         }
         TYPEDEF
         {
-            // statement
-            startNewMode(MODE_NEST | MODE_STATEMENT | MODE_INNER_DECL);
+            if (LA(1) == CLASS || LA(1) == UNION || LA(1) == STRUCT) {
+
+                // end all elements started in this rule
+                startNewMode(MODE_LOCAL | MODE_TYPEDEF | MODE_END_AT_BLOCK_NO_TERMINATE);
+
+                // start of the type
+                startElement(STYPE);
+            } else
+                // statement
+                startNewMode(MODE_NEST | MODE_STATEMENT | MODE_INNER_DECL);
         }
+       ( class_definition | struct_union_definition[LA(1) == STRUCT ? SSTRUCT : SUNION])*
 ;
 
 paren_pair :
