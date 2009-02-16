@@ -3493,9 +3493,6 @@ expression_part[bool checkmacro = false] { guessing_end();
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (NEW function_identifier paren_pair LCURLY)=> newop anonymous_class_definition |
 
-        // general math operators
-        general_operators | multops_expr | newop | deleteop | period |
-
         // call
         // distinguish between a call and a macro
         { LA(1) == NAME && checkmacro }?
@@ -3523,6 +3520,9 @@ expression_part[bool checkmacro = false] { guessing_end();
 //
 //                // function definition based on the token after the header
 //               function[token, type_count] |
+
+        // general math operators
+        general_operators | multops_expr | newop | deleteop | period |
 
         // left parentheses
         lparen_marked
