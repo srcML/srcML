@@ -2265,7 +2265,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
 
 //other[bool flag] { std::cerr << flag << std::endl; } :;
 
-throw_exception[bool cond] { if (cond) throw antlr::RecognitionException(); } :;
+throw_exception[bool cond = true] { if (cond) throw antlr::RecognitionException(); } :;
 
 set_type[DECLTYPE& name, DECLTYPE value, bool result = true] { if (result) name = value; } :;
 
