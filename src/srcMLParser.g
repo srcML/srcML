@@ -3745,7 +3745,7 @@ argument {} :
 /*
   Parameter for a function declaration or definition
 */                
-parameter { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTYPE decl_type = NONE; } :
+parameter { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTYPE decl_type = VARIABLE; } :
         {
             // end parameter correctly
             startNewMode(MODE_PARAMETER);
@@ -3765,6 +3765,7 @@ parameter { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTYPE decl_
         parameter_list 
 
         (options { greedy = true; } : function_pointer_initialization)* |
+        { decl_type == VARIABLE || type_count == 0 }?
         {
             // start the declaration element
             startElement(SDECLARATION);
