@@ -1479,9 +1479,7 @@ class_default_access_action[int access_token] :
 */
 class_header {} :
 
-        (macro_call_check class_header_base LCURLY)=>
-            macro_call class_header_base |
-
+        eat_optional_macro_call
         class_header_base
 ;
 
@@ -2272,7 +2270,7 @@ message_int[const char* s, int n]  { std::cerr << s << n << std::endl; } :;
 
 function_rest[int& fla] {} :
 
-        macro_call_optional_check
+        eat_optional_macro_call
 
         parameter_list function_tail check_end[fla]
 ;
@@ -3053,9 +3051,39 @@ macro_call_optional_check {} :
         (macro_call_check)*
 ;
 
+
 macro_call_check {} :
-        NAME ( options { greedy = true; } : paren_pair)*
+        NAME optional_paren_pair
 ;
+
+eat_optional_macro_call {
+
+    bool success = false;
+
+    // find out if we have a macro call
+    int start = mark();
+    inputState->guessing++;
+
+    try {
+        // check for the name
+        match(NAME);
+
+        // handle the parentheses
+        paren_pair();
+
+        success = true;
+
+    } catch (...) {
+    }
+
+    inputState->guessing--;
+    rewind(start);
+
+    // when successfull, eat the macro
+    if (success)
+        macro_call();
+} :;
+
 
 macro_call {} :
         macro_call_name
@@ -3992,6 +4020,25 @@ paren_pair :
         LPAREN (paren_pair | ~(LPAREN | RPAREN))* RPAREN
 ;
 
+optional_paren_pair {
+
+    if (LA(1) != LPAREN)
+        return;
+
+    consume();
+
+    int parencount = 1;
+    while (parencount > 0 && LA(1) != antlr::Token::EOF_TYPE) {
+
+        if (LA(1) == RPAREN)
+            --parencount;
+        else if (LA(1) == LPAREN)
+            ++parencount;
+
+        consume();
+    }
+} :;
+        
 /*
   Definition of an enum.  Start of the enum only
 */
