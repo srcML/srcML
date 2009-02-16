@@ -3186,7 +3186,7 @@ catch_statement {} :
             // expect a parameter list
             startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
         }
-        CATCH
+        CATCH LPAREN
 ;
 
 throw_statement {} :
