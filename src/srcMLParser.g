@@ -3758,7 +3758,7 @@ argument {} :
 /*
   Parameter for a function declaration or definition
 */                
-parameter { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTYPE decl_type = VARIABLE; } :
+parameter { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTYPE decl_type = NONE; } :
         {
             // end parameter correctly
             startNewMode(MODE_PARAMETER);
