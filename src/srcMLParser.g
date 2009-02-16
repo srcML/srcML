@@ -3649,7 +3649,7 @@ derived { LocalMode lm; } :
             startElement(SDERIVATION_LIST);
         }
         COLON
-        (
+        (options { greedy = true; } :
             (derive_access)*
 
             variable_identifier
