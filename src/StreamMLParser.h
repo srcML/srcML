@@ -91,27 +91,31 @@ class StreamMLParser : public StreamParser<Base> {
   bool isSkipToken(int token_type) const {
 
     switch (token_type) {
+
+    // Always handled as white space and hidden from
+    // parsing
     case Base::WS: 
     case Base::CONTROL_CHAR:
     case Base::EOL_BACKSLASH:
-      //    case Base::BLOCKCOMMENT:
     case Base::COMMENT_START:
     case Base::COMMENT_END:
-    case Base::LINECOMMENT_START:
     case Base::LINECOMMENT_END:
-      return true;
-      break;
-
     case Base::COMMENT_TEXT:
       return true;
       break;
 
-      //    case Base::LINECOMMENT:
+    // whether to handle a line comment start or an EOL
+    // depends on whether we are in preprocssing handling or not
+    // where the detection of the end of the preprocessing line
+    // is needed (preprocessing lines end at EOL, or the start of
+    // a line comment)
+    case Base::LINECOMMENT_START:
     case Base::EOL:
 
       return !StreamParser<Base>::inskip;
       break;
 
+    // anything else is passed to the parser
     default:
 
       return false;
