@@ -1786,9 +1786,7 @@ statement_part { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE decl
           perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type == VARIABLE }?
 
             // parameter declaration for a K&R old style function parameter declaration
-            { startNewMode(MODE_TOP); }
-            variable_declaration_statement[type_count] (COMMA | variable_declaration_nameinit)* terminate
-            { endCurrentMode(MODE_TOP); } |
+            variable_declaration_statement[type_count] parameter (variable_declaration_initialization expression)* terminate |
 
         /*
           MODE_EXPRESSION
@@ -2114,9 +2112,10 @@ function_tail {} :
             { inLanguage(LANGUAGE_OO) }?
             complete_throw_list |
 
+            // K&R 
             { inLanguage(LANGUAGE_C) }? (
             { look_past(NAME) == LCURLY }? NAME |
-                parameter terminate
+              parameter (MULTOPS | NAME | COMMA)* TERMINATE
             )
         )*
 ;
