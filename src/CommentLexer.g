@@ -53,6 +53,8 @@ LINECOMMENT_START
 
               // when we return, we may have eaten the EOL, so we will turn back on startline
               startline = true;
+
+              onpreprocline = false;
             } |
             '*'
             { 
