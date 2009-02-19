@@ -3103,11 +3103,26 @@ macro_call {} :
 
         (options { greedy = true; } :
 
-        macro_call_lparen
+        {
+            // start a mode for the macro argument list
+            startNewMode(MODE_LIST | MODE_TOP);
+
+            // start the argument list
+            startElement(SARGUMENT_LIST);
+        }
+        LPAREN
 
         macro_call_contents
 
-        macro_call_rparen
+        {
+            // end anything started inside of the macro argument list
+            endDownToMode(MODE_LIST | MODE_TOP);
+        }
+        RPAREN
+        {
+            // end the macro argument list
+            endCurrentMode(MODE_LIST | MODE_TOP);
+        }
         )*
 
         {
@@ -3122,29 +3137,6 @@ catch[antlr::RecognitionException] {
         if (isoption(parseoptions, OPTION_DEBUG))
             emptyElement(SERROR_PARSE);
 }
-
-macro_call_lparen {} :
-        {
-            // start a mode for the macro argument list
-            startNewMode(MODE_LIST | MODE_TOP);
-
-            // start the argument list
-            startElement(SARGUMENT_LIST);
-        }
-        LPAREN
-;
-
-macro_call_rparen {} :
-        {
-            // end anything started inside of the macro argument list
-            endDownToMode(MODE_LIST | MODE_TOP);
-        }
-        RPAREN
-        {
-            // end the macro argument list
-            endCurrentMode(MODE_LIST | MODE_TOP);
-        }
-;
 
 macro_call_contents {} :
         {
