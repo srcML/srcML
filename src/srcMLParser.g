@@ -3971,7 +3971,7 @@ preprocessor {
 
             tp.setType(SCPP_INCLUDE);
         }
-        cpp_filename_list |
+        cpp_filename |
 
         DEFINE
         {
@@ -4043,7 +4043,8 @@ preprocessor {
             tp.setType(SCPP_LINE);
         }
             cpp_linenumber
-            cpp_filename_list |
+
+            cpp_filename |
 
         PRAGMA
         {
@@ -4302,17 +4303,14 @@ cpp_symbol_optional { LocalMode lm; } :
         (options { greedy = true; } : cpp_symbol)*
 ;
 
-cpp_filename_list { LocalMode lm; } :
-        (options { greedy = true; } : cpp_filename)*
-;
-
 cpp_filename { LocalMode lm; } :
+        (
         {
             startNewMode(MODE_PREPROC);
 
             startElement(SCPP_FILENAME);
         }
-        (string_literal | char_literal | TEMPOPS (~(TEMPOPE))* TEMPOPE)
+        (string_literal | char_literal | TEMPOPS (~(TEMPOPE))* TEMPOPE))*
 ;
 
 cpp_linenumber :
