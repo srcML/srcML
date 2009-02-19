@@ -2568,17 +2568,7 @@ variable_identifier_grammar[bool& iscomplex] { LocalMode lm; } :
 
         name_tail[iscomplex, true]
 
-        variable_identifier_array_grammar[iscomplex]
-;
-
-/*
-   Grammar of arrays with variable identifiers
-*/
-variable_identifier_array_grammar[bool& iscomplex] { LocalMode lm; } :
-
-      (options { greedy = true; } :
-            variable_identifier_array_grammar_sub[iscomplex]
-      )*
+        (options { greedy = true; } : variable_identifier_array_grammar_sub[iscomplex])*
 ;
 
 variable_identifier_array_grammar_sub[bool& iscomplex] { LocalMode lm; } :
