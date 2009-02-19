@@ -590,24 +590,9 @@ statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; int fla 
         { perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type == FUNCTION }?
         function[fla, type_count] |
 
-        // enum definition as opposed to part of type or declaration
-        { decl_type == NONE }?
-        enum_definition |
-
-        // extern block as opposed to enum as part of declaration
-        { decl_type == NONE }?
-        extern_definition |
-
         // variable declaration
         { decl_type == VARIABLE }?
         variable_declaration_statement[type_count] |
-
-        // destructor
-        { decl_type == DESTRUCTOR && fla != TERMINATE }?
-        destructor_definition |
-
-        { decl_type == DESTRUCTOR && fla == TERMINATE }?
-        destructor_declaration |
 
         // constructor
         { decl_type == CONSTRUCTOR && fla != TERMINATE }?
@@ -616,8 +601,23 @@ statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; int fla 
         { decl_type == CONSTRUCTOR && fla == TERMINATE }?
         constructor_declaration |
 
+        // destructor
+        { decl_type == DESTRUCTOR && fla != TERMINATE }?
+        destructor_definition |
+
+        { decl_type == DESTRUCTOR && fla == TERMINATE }?
+        destructor_declaration |
+
         // labels to goto
         { secondtoken == COLON }? label_statement |
+
+        // enum definition as opposed to part of type or declaration
+        { decl_type == NONE }?
+        enum_definition |
+
+        // extern block as opposed to enum as part of declaration
+        { decl_type == NONE }?
+        extern_definition |
 
         // C++0x additional non-cfg statements
         { look_past(AUTO) == CONCEPT }?
