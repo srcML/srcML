@@ -2258,7 +2258,7 @@ set_type[DECLTYPE& name, DECLTYPE value, bool result = true] { if (result) name 
 
 //trace[const char*s ] { std::cerr << s << std::endl; } :;
 
-//traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
+traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
 
 set_int[int& name, int value, bool result = true] { if (result) name = value; } :;
 
@@ -3895,15 +3895,12 @@ enum_definition {} :
   enum must be parsed since it is part of the type.
 */
 enum_definition_whole { LocalMode lm; } :
-        {
-            startNewMode(MODE_LOCAL);
-        }
         enum_definition
 
         (variable_identifier)*
-        (
 
         // start of enum definition block
+
         {
             startNewMode(MODE_TOP | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_BLOCK | MODE_NEST);
 
@@ -3911,17 +3908,14 @@ enum_definition_whole { LocalMode lm; } :
         }
         LCURLY
 
-        // contents of enum definition block
-        ({ LA(1) != RCURLY || inTransparentMode(MODE_INTERNAL_END_CURLY) }?
-           expression | comma | LPAREN | RPAREN )*
-
+        (options { greedy = true; } : { LA(1) != RCURLY || inTransparentMode(MODE_INTERNAL_END_CURLY) }?
+        expression)*
 
         // end of enum definition block
         {
             endDownToMode(MODE_TOP | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_BLOCK | MODE_NEST);
         }
         RCURLY
-        )
 ;
 
 /*
