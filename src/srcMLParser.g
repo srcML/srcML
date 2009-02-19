@@ -3039,9 +3039,10 @@ catch[antlr::RecognitionException] {
 
 macro_call_contents {} :
         {
+            LocalMode lm;
+
             int parencount = 0;
             bool start = true;
-            bool empty = true;
             while (LA(1) != 1 /* EOF? */ && !(parencount == 0 && LA(1) == RPAREN)) {
 
                 if (LA(1) == LPAREN)
@@ -3058,7 +3059,6 @@ macro_call_contents {} :
                        startElement(SARGUMENT);
 
                        start = false;
-                       empty = false;
                 }
 
                 if (LA(1) == COMMA && parencount == 0) {
@@ -3067,9 +3067,6 @@ macro_call_contents {} :
                 }
                 consume();
             }
-
-            if (!empty)
-                endCurrentMode();
 
         }
 ;
