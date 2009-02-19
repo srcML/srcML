@@ -4274,19 +4274,10 @@ cpp_condition[bool& markblockzero] { LocalMode lm; } :
                 markblockzero = true;
             }
         }
-        mark_block[markblockzero]
+        set_bool[markblockzero, LA(1) == CONSTANTS && LT(1)->getText() == "0"]
 
         full_expression
 ;
-
-mark_block[bool& markblockzero] {
-
-        if (LA(1) == CONSTANTS && LT(1)->getText() == "0") {
-            markblockzero = true;
-        }
-
-} :
-    ;
 
 cpp_symbol { LocalMode lm; } :
         {
