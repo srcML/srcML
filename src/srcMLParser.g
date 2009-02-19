@@ -2969,7 +2969,7 @@ eat_optional_macro_call {
 } :;
 
 
-macro_call {} :
+macro_call { LocalMode lm; } :
         {
             // start a mode for the macro that will end after the argument list
             startNewMode(MODE_STATEMENT | MODE_TOP);
@@ -3002,11 +3002,6 @@ macro_call {} :
             endCurrentMode(MODE_LIST | MODE_TOP);
         }
         )*
-
-        {
-            // end the entire macro
-            endCurrentMode(MODE_STATEMENT | MODE_TOP);
-        }
 ;
 exception
 catch[antlr::RecognitionException] {
