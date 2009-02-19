@@ -3173,7 +3173,6 @@ macro_call_contents {} :
                 endCurrentMode();
 
         }
-//        ( options { greedy = true; } : ~(LPAREN | RPAREN) | LPAREN macro_call_contents RPAREN)*
 ;
 
 try_statement {} :
