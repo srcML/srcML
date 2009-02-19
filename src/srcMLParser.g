@@ -2683,6 +2683,8 @@ simple_name[bool marked = true] { LocalMode lm; } :
 
 /*
   Basic single token names
+
+  preprocessor tokens that can also be used as identifiers
 */
 identifier[bool marked = false] { LocalMode lm; } :
         {
@@ -2693,14 +2695,7 @@ identifier[bool marked = false] { LocalMode lm; } :
                 startElement(SNAME);
             }
         }
-        (NAME | simple_name_cpp)
-;
-
-/*
-  preprocessor tokens that can also be used as identifiers
-*/
-simple_name_cpp {} :
-        INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF
+        (NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF)
 ;
 
 /*
