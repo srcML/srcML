@@ -2778,16 +2778,10 @@ function_specifier { LocalMode lm; } :
         }
         (standard_specifiers |
 
-         pure_virtual_specifier |
+        // pure virtual specifier
+        EQUAL literal |
 
-         simple_name_optional_template[false])
-;
-
-/*
-  Special method specifier
-*/
-pure_virtual_specifier {} :
-        EQUAL literal
+        simple_name_optional_template[false])
 ;
 
 /*
