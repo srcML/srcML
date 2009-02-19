@@ -731,10 +731,12 @@ call_check_paren_pair[int& argumenttoken] { bool name = false; } :
             { !name }?
             NAME set_bool[name, true] |
 
+            // found two names in a row, so this is not an expression
+            // cause this to fail by next matching END_ELEMENT_TOKEN
             { name }?
             NAME guessing_endGuessing END_ELEMENT_TOKEN |
 
-            // forbid parentheses (handled in recursion) and cfg tokens
+            // forbid parentheses (handled recursively) and cfg tokens
             { !_tokenSet_0.member(LA(1)) }? ~(LPAREN | RPAREN | TERMINATE) set_bool[name, false]
         )* 
 
@@ -2460,18 +2462,13 @@ type_identifier {} :
         non_lead_type_identifier
 ;
 
-non_lead_type_identifier { LocalMode lm; } :
+non_lead_type_identifier { LocalMode lm; bool iscomplex = false; } :
 
         multops |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) }? 
         { look_past(LBRACKET) == RBRACKET }?
-        {
-            startNewMode(MODE_LOCAL);
-
-            startElement(SINDEX);
-        }
-        LBRACKET RBRACKET
+        variable_identifier_array_grammar_sub[iscomplex]
 ;
 
 pure_type_identifier {} :
