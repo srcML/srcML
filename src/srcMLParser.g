@@ -2492,14 +2492,6 @@ balanced_parentheses :
 ;
 
 /*
-   expression identifier
-
-*/
-expression_identifier :
-      variable_identifier | string_literal | char_literal | literal | boolean
-;
-
-/*
    Name of a function
 */
 function_identifier { LocalMode lm; } :
@@ -3445,7 +3437,7 @@ expression_part { guessing_end();
         } |
 
         // variable or literal
-        expression_identifier
+        variable_identifier | string_literal | char_literal | literal | boolean
 ;
 
 /*
