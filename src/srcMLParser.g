@@ -1327,7 +1327,7 @@ concept_definition :
         (
             (auto_keyword)* CONCEPT
 
-            simple_name 
+            identifier[true] 
                 {
                     startNewMode(MODE_EXPECT | MODE_DERIVED);
 
@@ -1347,7 +1347,7 @@ conceptmap_definition :
         (
             (auto_keyword)* CONCEPTMAP
 
-            simple_name 
+            identifier[true] 
                 {
                     startNewMode(MODE_TEMPLATE | MODE_LIST | MODE_EXPECT);
                 }
@@ -2652,7 +2652,7 @@ simple_name_optional_template[bool marked] { LocalMode lm; TokenPosition tp; } :
                 tp = getTokenPosition();
             }
         }
-        mark_namestack simple_name[marked] (
+        mark_namestack identifier[marked] (
             { inLanguage(LANGUAGE_CXX_FAMILY) }?
             (template_argument_list)=>
                 template_argument_list |
@@ -2664,21 +2664,6 @@ simple_name_optional_template[bool marked] { LocalMode lm; TokenPosition tp; } :
                    tp.setType(SNOP);
             }
        )
-;
-
-/*
-  Grammar for single token names
-*/
-simple_name[bool marked = true] { LocalMode lm; } :
-        {
-            if (marked) {
-                // local mode that is automatically ended by leaving this function
-                startNewMode(MODE_LOCAL);
-
-                startElement(SNAME);
-            }
-        }
-        identifier
 ;
 
 /*
@@ -3041,7 +3026,7 @@ macro_call {} :
             // start the macro call element
             startElement(SMACRO_CALL);
         }
-        simple_name
+        identifier[true]
 
         (options { greedy = true; } :
 
@@ -3921,7 +3906,7 @@ label_statement { LocalMode lm; } :
             // start the label element
             startElement(SLABEL_STATEMENT);
         } 
-        simple_name COLON
+        identifier[true] COLON
 ;
 
 /*
