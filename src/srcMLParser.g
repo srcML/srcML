@@ -2678,15 +2678,6 @@ simple_name[bool marked = true] { LocalMode lm; } :
                 startElement(SNAME);
             }
         }
-        simple_name_grammar
-;
-
-/*
-  Single token names
-*/
-simple_name_grammar {} :
-
-        // typical name
         identifier
 ;
 
