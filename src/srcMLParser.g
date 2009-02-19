@@ -2678,7 +2678,7 @@ simple_name_optional_template[bool marked] { LocalMode lm; TokenPosition tp; } :
                 tp = getTokenPosition();
             }
         }
-        mark_namestack simple_name_marked[marked] (
+        mark_namestack simple_name[marked] (
             { inLanguage(LANGUAGE_CXX_FAMILY) }?
             (template_argument_list)=>
                 template_argument_list |
@@ -2695,17 +2695,7 @@ simple_name_optional_template[bool marked] { LocalMode lm; TokenPosition tp; } :
 /*
   Grammar for single token names
 */
-simple_name { LocalMode lm; } :
-        {
-            // local mode that is automatically ended by leaving this function
-            startNewMode(MODE_LOCAL);
-
-            startElement(SNAME);
-        }
-        simple_name_grammar
-;
-
-simple_name_marked[bool marked] { LocalMode lm; } :
+simple_name[bool marked = true] { LocalMode lm; } :
         {
             if (marked) {
                 // local mode that is automatically ended by leaving this function
