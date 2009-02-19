@@ -2049,7 +2049,7 @@ function_pointer_name_base { LocalMode lm; } :
             complex_name[true] |
 
         // special name prefix of namespace or class
-        identifier optional_template_argument_list DCOLON function_pointer_name_base |
+        identifier (template_argument_list)* DCOLON function_pointer_name_base |
 
         // typical function pointer name
         MULTOPS (complex_name[true])*
@@ -3493,7 +3493,7 @@ derived { LocalMode lm; } :
 
             variable_identifier
 
-            optional_template_argument_list
+            (template_argument_list)*
         |
             COMMA
         )*
@@ -3790,10 +3790,6 @@ template_argument_list { LocalMode lm; } :
             startElement(STEMPLATE_ARGUMENT_LIST);
         }
         tempops (COMMA | template_argument)* tempope
-;
-
-optional_template_argument_list {} : 
-        (template_argument_list)*
 ;
 
 /*
