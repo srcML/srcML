@@ -2947,16 +2947,6 @@ call_argument_list {} :
   function call, macro, etc.
 */
 
-/*
-  macro call allowed by syntax
-
-  allowing a macro call here will not affect syntax
-*/
-macro_call_optional_check {} :
-        (macro_call_check)*
-;
-
-
 macro_call_check {} :
         NAME optional_paren_pair
 ;
@@ -3624,7 +3614,7 @@ parameter { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTYPE decl_
 
         function_identifier // pointer_name_grammar
 
-        macro_call_optional_check
+        (macro_call_check)*
 
         parameter_list 
 
