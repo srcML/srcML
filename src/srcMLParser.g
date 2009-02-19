@@ -2471,14 +2471,6 @@ non_lead_type_identifier { LocalMode lm; bool iscomplex = false; } :
         variable_identifier_array_grammar_sub[iscomplex]
 ;
 
-pure_type_identifier {} :
-
-        // any identifier that can appear first can appear later
-        pure_lead_type_identifier |
-
-        non_lead_type_identifier
-;
-
 /*
   A set of balanced parentheses
 */
