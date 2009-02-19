@@ -2557,20 +2557,6 @@ overloaded_operator { LocalMode lm; } :
         )
 ;
 
-/*
-   Grammar of a complete variable identifier
-*/
-variable_identifier_grammar[bool& iscomplex] { LocalMode lm; } :
-
-        (DCOLON { iscomplex = true; })*
-
-        simple_name_optional_template[true]
-
-        name_tail[iscomplex, true]
-
-        (options { greedy = true; } : variable_identifier_array_grammar_sub[iscomplex])*
-;
-
 variable_identifier_array_grammar_sub[bool& iscomplex] { LocalMode lm; } :
         {
             // start a mode to end at right bracket with expressions inside
@@ -2635,7 +2621,13 @@ variable_identifier { LocalMode lm; bool iscomplex = false; TokenPosition tp; } 
             // record the token position so we can replace it if necessary
             tp = getTokenPosition();
         }
-        variable_identifier_grammar[iscomplex]
+        (DCOLON { iscomplex = true; })*
+
+        simple_name_optional_template[true]
+
+        name_tail[iscomplex, true]
+
+        (options { greedy = true; } : variable_identifier_array_grammar_sub[iscomplex])*
         {
             // non-complex names need to be simplified
             if (!iscomplex)
