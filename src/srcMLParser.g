@@ -2719,24 +2719,16 @@ simple_name_grammar {} :
 /*
   Basic single token names
 */
-identifier :
-        NAME |
-
-        // could also be a preprocessor simple name
-        simple_name_cpp
-;
-
-/*
-  Basic single token names
-*/
-identifier_marked { LocalMode lm; } :
+identifier[bool marked = false] { LocalMode lm; } :
         {
-            // local mode that is automatically ended by leaving this function
-            startNewMode(MODE_LOCAL);
+            if (marked) {
+                // local mode that is automatically ended by leaving this function
+                startNewMode(MODE_LOCAL);
 
-            startElement(SNAME);
+                startElement(SNAME);
+            }
         }
-        identifier
+        (NAME | simple_name_cpp)
 ;
 
 /*
@@ -2951,7 +2943,7 @@ member_initialization_list {} :
 mark_namestack { namestack[1] = namestack[0]; namestack[0] = LT(1)->getText(); } :;
 
 identifier_stack[std::string s[]] { s[1] = s[0]; s[0] = LT(1)->getText(); } :
-        identifier_marked
+        identifier[true]
 ;
 
 specifier_explicit { LocalMode lm; } :
