@@ -2584,7 +2584,7 @@ full_expression[bool checkmacro = false] { LocalMode lm; } :
         { inMode(MODE_ARGUMENT) }? argument |
 
         // expression with right parentheses if a previous match is in one
-        { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }? expression[checkmacro] |
+        { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }? expression |
 
         COLON)*
 ;
@@ -3340,7 +3340,7 @@ dcolon { LocalMode lm; } :
 /*
    An expression
 */
-expression[bool checkmacro = false] {} : 
+expression {} : 
         {
             // if expecting an expression start one. except if you are at a right curly brace
             if (inMode(MODE_EXPRESSION | MODE_EXPECT) && LA(1) != RCURLY &&
@@ -3353,7 +3353,7 @@ expression[bool checkmacro = false] {} :
                 startElement(SEXPRESSION);
             }
         }
-        expression_part[checkmacro]
+        expression_part
 ;
 
 guessing_startNewMode[State::MODE_TYPE mode]
@@ -3376,7 +3376,7 @@ guessing_end
    Occurs only within another expression.  The mode is MODE_EXPRESSION.  Only
    elements such as names and function calls are marked up.
 */
-expression_part[bool checkmacro = false] { guessing_end();
+expression_part { guessing_end();
         int postnametoken = 0; int argumenttoken = 0; int postcalltoken = 0; } :
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
@@ -3384,7 +3384,7 @@ expression_part[bool checkmacro = false] { guessing_end();
 
         // call
         // distinguish between a call and a macro
-        { LA(1) == NAME && checkmacro }?
+        { LA(1) == NAME }?
         (call_check[postnametoken, argumenttoken, postcalltoken])=> (
 
             // call syntax succeeded and post call token is legitimate for an expression
@@ -3395,20 +3395,7 @@ expression_part[bool checkmacro = false] { guessing_end();
 
         // macro call
         // check for call failed internally, i.e., contents of "call" includes statements, etc.
-        { checkmacro && argumenttoken != 0 && postcalltoken == 0 }? macro_call |
-
-        // call
-        { LA(1) == NAME && !checkmacro }?
-        (call)=>
-           call
-
-            guessing_startNewMode[MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN] |
-
-//        { inLanguage(LANGUAGE_JAVA_FAMILY) }?
-//        (function_check[token /* token after header */, type_count /* number of names detected in type */])=>
-//
-//                // function definition based on the token after the header
-//               function[token, type_count] |
+        { argumenttoken != 0 && postcalltoken == 0 }? macro_call |
 
         // general math operators
         general_operators | multops_expr | newop | deleteop | period |
