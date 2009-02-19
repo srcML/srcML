@@ -3103,7 +3103,10 @@ macro_call {} :
         macro_call_rparen
         )*
 
-        macro_call_end
+        {
+            // end the entire macro
+            endCurrentMode(MODE_STATEMENT | MODE_TOP);
+        }
 ;
 exception
 catch[antlr::RecognitionException] {
@@ -3133,13 +3136,6 @@ macro_call_rparen {} :
         {
             // end the macro argument list
             endCurrentMode(MODE_LIST | MODE_TOP);
-        }
-;
-
-macro_call_end {} :
-        {
-            // end the entire macro
-            endCurrentMode(MODE_STATEMENT | MODE_TOP);
         }
 ;
 
