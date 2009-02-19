@@ -3092,7 +3092,14 @@ eat_optional_macro_call {
 
 
 macro_call {} :
-        macro_call_name
+        {
+            // start a mode for the macro that will end after the argument list
+            startNewMode(MODE_STATEMENT | MODE_TOP);
+
+            // start the macro call element
+            startElement(SMACRO_CALL);
+        }
+        simple_name
 
         (options { greedy = true; } :
 
@@ -3137,17 +3144,6 @@ macro_call_rparen {} :
             // end the macro argument list
             endCurrentMode(MODE_LIST | MODE_TOP);
         }
-;
-
-macro_call_name {} :
-        {
-            // start a mode for the macro that will end after the argument list
-            startNewMode(MODE_STATEMENT | MODE_TOP);
-
-            // start the macro call element
-            startElement(SMACRO_CALL);
-        }
-        simple_name
 ;
 
 /*
