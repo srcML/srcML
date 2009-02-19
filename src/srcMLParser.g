@@ -3146,12 +3146,6 @@ macro_call_rparen {} :
         }
 ;
 
-/*
-macro_call_contents {} :
-        ( options { greedy = true; } : ~(LPAREN | RPAREN) | LPAREN macro_call_contents RPAREN)*
-;
-*/
-
 macro_call_contents {} :
         {
             int parencount = 0;
