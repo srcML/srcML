@@ -2341,7 +2341,7 @@ type_identifier_count[int& type_count] { ++type_count; } :
 
          // overloaded parentheses operator
         { LA(1) == OPERATOR }?
-        overloaded_operator_grammar |
+        overloaded_operator |
 
         type_identifier | MAIN
 ;
@@ -2547,14 +2547,6 @@ overloaded_operator { LocalMode lm; } :
             // start of the name element
             startElement(SNAME);
         }
-        overloaded_operator_grammar
-;
-
-/*
-  Grammar for overloaded operator
-*/
-overloaded_operator_grammar {} :
-
         OPERATOR
         (
             // special case for 'operator()'
