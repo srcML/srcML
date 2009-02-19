@@ -1233,28 +1233,22 @@ namespace_directive { setFinalToken(); } :
 */
 class_struct_union[int token, int place] {} :
 
-        { token == LCURLY }? (
+        { token == LCURLY }?
+        interface_definition |
 
-            { place == INTERFACE }?
-            interface_definition |
+        { token == LCURLY }?
+        class_definition |
 
-            { place == CLASS }?
-            class_definition |
+        { token == LCURLY && place == STRUCT }?
+        struct_union_definition[SSTRUCT] |
 
-            { place == STRUCT }?
-            struct_union_definition[SSTRUCT] |
+        { token == LCURLY && place == UNION }?
+        struct_union_definition[SUNION] |
 
-            { place == UNION }?
-            struct_union_definition[SUNION]
-        ) |
-
-        { place == CLASS }?
         class_declaration |
 
-        { place == STRUCT }?
         struct_declaration |
 
-        { place == UNION }?
         union_declaration
 ;
 
