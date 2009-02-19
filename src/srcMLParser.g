@@ -3912,9 +3912,8 @@ enum_definition_whole { LocalMode lm; } :
         LCURLY
 
         // contents of enum definition block
-        ( options { greedy = false; } :
-        { LA(1) != RCURLY || inTransparentMode(MODE_INTERNAL_END_CURLY) }?
-        expression | comma | LPAREN | RPAREN )*
+        ({ LA(1) != RCURLY || inTransparentMode(MODE_INTERNAL_END_CURLY) }?
+           expression | comma | LPAREN | RPAREN )*
 
 
         // end of enum definition block
