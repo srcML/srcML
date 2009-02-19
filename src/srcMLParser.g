@@ -3164,9 +3164,6 @@ variable_declaration[int type_count] {} :
             startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
         }
         variable_declaration_type[type_count]
-        {
-//            consumeSkippedTokens();
-        }
 ;
 
 /*
@@ -3191,18 +3188,11 @@ variable_declaration_type[int type_count] {} :
   Variable declaration name and optional initialization
 */
 variable_declaration_nameinit {} :
-        variable_declaration_identifier
+        variable_identifier
         {
             // expect a possible initialization
             setMode(MODE_INIT | MODE_EXPECT);
         }
-;
-
-/*
-  Name of the variable in a variable declaration.
-*/
-variable_declaration_identifier {} :
-        variable_identifier
 ;
 
 /*
