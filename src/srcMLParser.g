@@ -3238,7 +3238,7 @@ general_operators { LocalMode lm; } :
             }
         }
         (options { greedy = true; } : OPERATORS | TEMPOPS | TEMPOPE |
-         EQUAL | MULTIMM | DESTOP | MEMBERPOINTER | MULTOPS | REFOPS | DELETEOP
+         EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS /* | DELETEOP */
         )+
 ;
 

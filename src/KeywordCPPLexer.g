@@ -165,9 +165,9 @@ KeywordCPPLexer(std::istream& in, const char* encoding, int language = LANGUAGE_
 	    { "=", EQUAL },
 
         { ".", PERIOD },
-        { ".*", MEMBERPOINTER },
+//        { ".*", MEMBERPOINTER },
         { "*", MULTOPS },
-        { "*=", MULTIMM },
+//        { "*=", MULTIMM },
 
         // common keywords
         { "if", IF },
@@ -265,7 +265,7 @@ KeywordCPPLexer(std::istream& in, const char* encoding, int language = LANGUAGE_
             // templates
             { "template", TEMPLATE },
 
-            { "delete", DELETE },
+            { "delete", OPERATORS },
 
             // special C++ operators
             { "::", DCOLON },
