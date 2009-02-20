@@ -3242,7 +3242,7 @@ general_operators { LocalMode lm; } :
             TEMPOPE (options { greedy = true; } : { !inMode(MODE_TEMPLATE) }?
                 (TEMPOPE | OPERATORS | EQUAL))* | 
 
-            EQUAL | MULTIMM | DESTOP | MEMBERPOINTER
+            EQUAL | MULTIMM | DESTOP | MEMBERPOINTER | MULTOPS | REFOPS | DELETEOP
         )
 ;
 
@@ -3345,7 +3345,7 @@ expression_part { guessing_end();
         { argumenttoken != 0 && postcalltoken == 0 }? macro_call |
 
         // general math operators
-        general_operators | multops_expr | newop | deleteop | period |
+        general_operators | newop | period |
 
         // left parentheses
         lparen_marked
@@ -3648,21 +3648,6 @@ multops { LocalMode lm; } :
         (MULTOPS | REFOPS)
 ;
 
-multops_expr { LocalMode lm; } :
-        {
-            // markup type modifiers if option is on
-            if (isoption(parseoptions, OPTION_OPERATOR)) {
-
-                // end all elements at end of rule automatically
-                startNewMode(MODE_LOCAL);
-
-                // start the operator
-                startElement(SOPERATOR);
-            }
-        }
-        (MULTOPS | REFOPS)
-;
-
 newop { LocalMode lm; } :
         {
             // markup new operator if option is on
@@ -3676,21 +3661,6 @@ newop { LocalMode lm; } :
             }
         }
         NEW
-;
-
-deleteop { LocalMode lm; } :
-        {
-            // markup delete operator if option is on
-            if (isoption(parseoptions, OPTION_OPERATOR)) {
-
-                // end all elements at end of rule automatically
-                startNewMode(MODE_LOCAL);
-
-                // start the modifier
-                startElement(SOPERATOR);
-            }
-        }
-        DELETE
 ;
 
 /*
