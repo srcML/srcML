@@ -3238,7 +3238,7 @@ general_operators { LocalMode lm; } :
             }
         }
         (options { greedy = true; } : OPERATORS | TEMPOPS | TEMPOPE |
-         EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS /* | DELETEOP */
+         EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS /* | DELETEOP */ | NEWOP
         )+
 ;
 
@@ -3322,8 +3322,8 @@ guessing_end
 expression_part { guessing_end();
         int postnametoken = 0; int argumenttoken = 0; int postcalltoken = 0; } :
 
-        { inLanguage(LANGUAGE_JAVA_FAMILY) }?
-        (NEW function_identifier paren_pair LCURLY)=> newop anonymous_class_definition |
+        { inLanguage(LANGUAGE_JAVA_FAMILY) && LA(1) == NEW }?
+        (NEW function_identifier paren_pair LCURLY)=> general_operators anonymous_class_definition |
 
         // call
         // distinguish between a call and a macro
@@ -3341,7 +3341,7 @@ expression_part { guessing_end();
         { argumenttoken != 0 && postcalltoken == 0 }? macro_call |
 
         // general math operators
-        general_operators | newop | period |
+        general_operators | /* newop | */ period |
 
         // left parentheses
         lparen_marked
@@ -3642,21 +3642,6 @@ multops { LocalMode lm; } :
             }
         }
         (MULTOPS | REFOPS)
-;
-
-newop { LocalMode lm; } :
-        {
-            // markup new operator if option is on
-            if (isoption(parseoptions, OPTION_OPERATOR)) {
-
-                // end all elements at end of rule automatically
-                startNewMode(MODE_LOCAL);
-
-                // start the modifier
-                startElement(SOPERATOR);
-            }
-        }
-        NEW
 ;
 
 /*
