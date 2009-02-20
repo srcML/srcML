@@ -4269,10 +4269,6 @@ line_continuation { setFinalToken(); } :
 cpp_condition[bool& markblockzero] { LocalMode lm; } :
         {
             startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_TOP);
-
-            if (LA(1) == CONSTANTS && LT(1)->getText() == "0") {
-                markblockzero = true;
-            }
         }
         set_bool[markblockzero, LA(1) == CONSTANTS && LT(1)->getText() == "0"]
 
