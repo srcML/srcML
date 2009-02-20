@@ -3237,13 +3237,9 @@ general_operators { LocalMode lm; } :
                 startElement(SOPERATOR);
             }
         }
-        (OPERATORS | TEMPOPS | 
-
-            TEMPOPE (options { greedy = true; } : { !inMode(MODE_TEMPLATE) }?
-                (TEMPOPE | OPERATORS | EQUAL))* | 
-
-            EQUAL | MULTIMM | DESTOP | MEMBERPOINTER | MULTOPS | REFOPS | DELETEOP
-        )
+        (options { greedy = true; } : OPERATORS | TEMPOPS | TEMPOPE |
+         EQUAL | MULTIMM | DESTOP | MEMBERPOINTER | MULTOPS | REFOPS | DELETEOP
+        )+
 ;
 
 /*
