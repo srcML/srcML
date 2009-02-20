@@ -47,6 +47,11 @@ options {
 	testLiterals = false; 
 }
 
+tokens {
+
+    CHAR_START;
+}
+
 {
 public:
 
@@ -63,14 +68,11 @@ STRING_START :
             // #define a "abc
             // note that the "abc does not end at the end of this line,
             // but the #define must end, so EOL is not a valid string character
-            '"' { changetotextlexer(STRING_END); }
-        )
-;
+            '"' { changetotextlexer(STRING_END); } |
 
-// character literal or single quoted string
-CHAR_START :
-        { startline = false; }
-        '\'' { changetotextlexer(CHAR_END); }
+            // character literal or single quoted string
+            '\'' { $setType(CHAR_START); changetotextlexer(CHAR_END); }
+        )
 ;
 
 CONSTANTS :
