@@ -3704,6 +3704,7 @@ template_param {} :
             // start the parameter element
             startElement(STEMPLATE_PARAMETER);
         }
+        (
         parameter_type
         {
             consumeSkippedTokens();
@@ -3711,7 +3712,9 @@ template_param {} :
         {
             // expect a name initialization
             setMode(MODE_VARIABLE_NAME | MODE_INIT);
-        }
+        } |
+        template_declaration
+    )
 ;
 
 /*
