@@ -132,6 +132,7 @@ header "post_include_hpp" {
 #define assertMode(m)
 
 enum DECLTYPE { NONE, VARIABLE, FUNCTION, CONSTRUCTOR, DESTRUCTOR };
+enum CALLTYPE { NOCALL, CALL, MACRO };
 
 // position in output stream
 struct TokenPosition {
@@ -659,47 +660,70 @@ function[int token, int type_count] { /* TokenPosition tp; */} :
         }
 ;
 
-call_macro_expression[int secondtoken, bool statement]
-        { int postnametoken = 0; int argumenttoken = 0; int postcalltoken = 0; } :
+perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
 
-        { inLanguage(LANGUAGE_C_FAMILY) }?
-        (
-        // call
-        // check here instead of in expression_statement to distinguish between a call and a macro
-        (call_check[postnametoken, argumenttoken, postcalltoken])=> guessing_endGuessing (
+    iscall = true;
 
-            // call syntax succeeded, however post call token is not legitimate
-            { _tokenSet_0.member(postcalltoken) || postcalltoken == NAME || postcalltoken == LCURLY
-                || postcalltoken == EXTERN || postcalltoken == STRUCT || postcalltoken == UNION || postcalltoken == CLASS
-                || postcalltoken == RCURLY || postcalltoken == 1 /* EOF ? */
-                || postcalltoken == TEMPLATE || postcalltoken == PUBLIC || postcalltoken == PRIVATE
-                || postcalltoken == PROTECTED }?
-            macro_call |
+    type = NOCALL;
 
-            // call syntax succeeded and post call token is legitimate for an expression
-            expression_statement[statement]
-        ) |
+    int start = mark();
+    inputState->guessing++;
 
-        // macro call
-        // check for call failed internally, i.e., contents of "call" includes statements, etc.
-        { argumenttoken != 0 && postcalltoken == 0 }? guessing_endGuessing macro_call |
+    int postnametoken = 0;
+    int argumenttoken = 0;
+    int postcalltoken = 0;
+    try {
+        call_check(postnametoken, argumenttoken, postcalltoken);
+
+        guessing_endGuessing();
+
+        // call syntax succeeded
+        type = CALL;
+
+        // call syntax succeeded, however post call token is not legitimate
+        if (_tokenSet_0.member(postcalltoken) || postcalltoken == NAME || postcalltoken == LCURLY
+            || postcalltoken == EXTERN || postcalltoken == STRUCT || postcalltoken == UNION || postcalltoken == CLASS
+            || postcalltoken == RCURLY || postcalltoken == 1 /* EOF ? */
+            || postcalltoken == TEMPLATE || postcalltoken == PUBLIC || postcalltoken == PRIVATE
+            || postcalltoken == PROTECTED)
+
+            type = MACRO;
+
+    } catch (...) {
+
+        type = NOCALL;
+
+        if (argumenttoken != 0 && postcalltoken == 0) {
+
+            guessing_endGuessing();
+
+            type = MACRO;
+        }
 
         // single macro call followed by statement_cfg
-        { secondtoken != -1
-            && (_tokenSet_0.member(secondtoken) || secondtoken == LCURLY || secondtoken == 1 /* EOF */
-            || secondtoken == PUBLIC || secondtoken == PRIVATE || secondtoken == PROTECTED) }?
+        else if (secondtoken != -1
+                 && (_tokenSet_0.member(secondtoken) || secondtoken == LCURLY || secondtoken == 1 /* EOF */
+                     || secondtoken == PUBLIC || secondtoken == PRIVATE || secondtoken == PROTECTED))
+
+            type = MACRO;
+    }
+
+    inputState->guessing--;
+    rewind(start);
+} :
+;
+
+call_macro_expression[int secondtoken, bool statement]
+        { CALLTYPE type = NOCALL; } :
+
+        { inLanguage(LANGUAGE_C_FAMILY) && perform_call_check(type, secondtoken) && type == MACRO }?
         macro_call |
 
-        // expression statement
-        expression_statement[statement]
-
-        ) |
-
-        { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         expression_statement[statement]
 ;
 
 call_check[int& postnametoken, int& argumenttoken, int& postcalltoken] {} :
+
         // detect name, which may be name of macro or even an expression
         function_identifier
 
