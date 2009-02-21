@@ -3297,26 +3297,21 @@ guessing_end
    Occurs only within another expression.  The mode is MODE_EXPRESSION.  Only
    elements such as names and function calls are marked up.
 */
-expression_part { guessing_end();
-        int postnametoken = 0; int argumenttoken = 0; int postcalltoken = 0; } :
+expression_part { guessing_end(); CALLTYPE type = NOCALL; } :
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) && LA(1) == NEW }?
         (NEW function_identifier paren_pair LCURLY)=> general_operators anonymous_class_definition |
 
         // call
         // distinguish between a call and a macro
-        { LA(1) == NAME }?
-        (call_check[postnametoken, argumenttoken, postcalltoken])=> (
+        { LA(1) == NAME && perform_call_check(type, -1) && type == CALL }?
 
-            // call syntax succeeded and post call token is legitimate for an expression
             call
 
-            guessing_startNewMode[MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN]
-        ) |
+            guessing_startNewMode[MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN] |
 
         // macro call
-        // check for call failed internally, i.e., contents of "call" includes statements, etc.
-        { argumenttoken != 0 && postcalltoken == 0 }? macro_call |
+        { type == MACRO }? macro_call |
 
         // general math operators
         general_operators | /* newop | */ period |
