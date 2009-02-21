@@ -6,4 +6,4 @@ s|throw antlr::NoViableAltForCharException(LA(1), getFilename(), getLine(), getC
 s/match('[^']*'[^)]*);/consume();/g
 s/match("[^"]*"[^)]*);/consume();/g
 s/matchRange('[^']*'[^']*'[^']*'[^)]*);/consume();/g
-s/matchRange(']',static_cast<unsigned char>('\\377'));//g
+#s/matchRange(']',static_cast<unsigned char>('\\377'));//g
