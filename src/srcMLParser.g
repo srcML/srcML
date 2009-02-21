@@ -719,7 +719,7 @@ call_macro_expression[int secondtoken, bool statement]
         { inLanguage(LANGUAGE_C_FAMILY) && perform_call_check(type, secondtoken) && type == MACRO }?
         macro_call |
 
-        expression_statement[statement]
+        expression_statement[statement, type]
 ;
 
 call_check[int& postnametoken, int& argumenttoken, int& postcalltoken] {} :
@@ -3059,7 +3059,7 @@ throw_statement {} :
         THROW
 ;
 
-expression_statement[bool statement = true] {} :
+expression_statement[bool statement = true, CALLTYPE type = NOCALL] {} :
         {
             if (statement) {
 
@@ -3070,7 +3070,7 @@ expression_statement[bool statement = true] {} :
                 startElement(SEXPRESSION_STATEMENT);
             }
         }
-        expression
+        expression[type]
 ;
 
 /*
@@ -3261,7 +3261,7 @@ dcolon { LocalMode lm; } :
 /*
    An expression
 */
-expression {} : 
+expression[CALLTYPE type = NOCALL] {} : 
         {
             // if expecting an expression start one. except if you are at a right curly brace
             if (inMode(MODE_EXPRESSION | MODE_EXPECT) && LA(1) != RCURLY &&
@@ -3274,7 +3274,7 @@ expression {} :
                 startElement(SEXPRESSION);
             }
         }
-        expression_part
+        expression_part[type]
 ;
 
 guessing_startNewMode[State::MODE_TYPE mode]
@@ -3297,14 +3297,14 @@ guessing_end
    Occurs only within another expression.  The mode is MODE_EXPRESSION.  Only
    elements such as names and function calls are marked up.
 */
-expression_part { guessing_end(); CALLTYPE type = NOCALL; } :
+expression_part[CALLTYPE type = NOCALL] { guessing_end(); } :
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) && LA(1) == NEW }?
         (NEW function_identifier paren_pair LCURLY)=> general_operators anonymous_class_definition |
 
         // call
         // distinguish between a call and a macro
-        { LA(1) == NAME && perform_call_check(type, -1) && type == CALL }?
+        { type == CALL || (perform_call_check(type, -1) && type == CALL) }?
 
             call
 
