@@ -4003,20 +4003,16 @@ eol_skip[int directive_token, bool markblockzero] {
   Only used for ending preprocessor, and only those directives who end on the current
   line.
 */
-eol[int directive_token, bool markblockzero] { /* setFinalToken(); */ } :
-        eol_pre
-        (EOL | LINECOMMENT_START | eof)
-        eol_post[directive_token, markblockzero]
-;
-
-eol_pre {
+eol[int directive_token, bool markblockzero] {
             // end all preprocessor modes
             endDownToMode(MODE_PREPROC);
 
             endCurrentMode(MODE_PREPROC);
 
             endCurrentMode(MODE_PARSE_EOL);
-        } :
+} :
+        (EOL | LINECOMMENT_START | eof)
+        eol_post[directive_token, markblockzero]
 ;
 
 eol_post[int directive_token, bool markblockzero] {
