@@ -1946,7 +1946,7 @@ colon[bool final = false] { if (final) setFinalToken(); } :
         COLON
 ;
 
-rparen[bool final = false, bool mark = false] { bool isempty = getParen() == 0; } :
+rparen[bool final = false] { bool isempty = getParen() == 0; } :
         {
             if (isempty) {
 
@@ -1955,9 +1955,11 @@ rparen[bool final = false, bool mark = false] { bool isempty = getParen() == 0; 
 
                 if (inMode(MODE_LIST) && inMode(MODE_FOR_INCREMENT))
                     endCurrentMode(MODE_FOR_INCREMENT);
-            }
+            } else
+
+                decParen();
         }
-        rparen_base[final]
+        RPAREN
         {
             if (isempty) {
 
@@ -1979,19 +1981,6 @@ rparen[bool final = false, bool mark = false] { bool isempty = getParen() == 0; 
                     endCurrentMode(MODE_LIST);
             }
         }
-;
-
-rparen_base[bool final = false, bool mark = false] { if (final) setFinalToken(); LocalMode lm; }:
-        {
-            decParen();
-
-            if (mark && isoption(parseoptions, OPTION_OPERATOR)) {
-                startNewMode(MODE_LOCAL);
-
-                startElement(SOPERATOR);
-            }
-        }
-        RPAREN  
 ;
 
 /*
@@ -3331,7 +3320,7 @@ expression_part[CALLTYPE type = NOCALL] { guessing_end(); } :
         guessing_endDownToMode[MODE_INTERNAL_END_PAREN]
 
         guessing_endCurrentModeSafely[MODE_INTERNAL_END_PAREN]
-        rparen[false, true] |
+        rparen[false] |
 
         // left curly brace
         {
