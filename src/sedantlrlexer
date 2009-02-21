@@ -1,0 +1,9 @@
+#!/bin/sed -f
+/\"<0>\"/,/\"END_ELEMENT_TOKEN\"/ d
+s|throw antlr::NoViableAltException(LT(1), getFilename());|throw antlr::RecognitionException();|g
+s|throw antlr::NoViableAltForCharException(LA(1), getFilename(), getLine(), getColumn());|throw antlr::RecognitionException();|g
+/void KeywordCPPLexer::mSPECIAL_CHARS(bool/,+12d
+s/match('[^']*'[^)]*);/consume();/g
+s/match("[^"]*"[^)]*);/consume();/g
+s/matchRange('[^']*'[^']*'[^']*'[^)]*);/consume();/g
+s/matchRange(']',static_cast<unsigned char>('\\377'));//g

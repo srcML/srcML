@@ -142,13 +142,13 @@ ${OBJ_DIR}srcMLParser.S : $(firstword $(SRCMLPARSER_GENS))
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) -S $(LIBXML_INCLUDE) $< -o $@
 
 KeywordCPPLexerClean.cpp : KeywordCPPLexer.cpp
-	./sedantlr < $< > $@
+	./sedantlrlexer < $< > $@
 
 ${OBJ_DIR}KeywordCPPLexerClean.o : KeywordCPPLexerClean.cpp Language.h
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 PureCommentLexerClean.cpp : PureCommentLexer.cpp
-	./sedantlr < $< > $@
+	./sedantlrlexer < $< > $@
 
 ${OBJ_DIR}PureCommentLexerClean.o : PureCommentLexerClean.cpp Language.h
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) -fno-jump-tables $(LIBXML_INCLUDE) -c $< -o $@
