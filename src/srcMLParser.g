@@ -568,7 +568,7 @@ cfg {} :
   can start with a name which leaves it ambiguous which to choose.
 */
 statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; int fla = 0;
-        int type_count = 0; DECLTYPE decl_type = NONE; } :
+        int type_count = 0; DECLTYPE decl_type = NONE; CALLTYPE type = NOCALL; } :
 
         // class forms for class declarations/definitions as opposed to part of a declaration types
         // must be before checking access_specifier_region
@@ -620,7 +620,11 @@ statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; int fla 
         conceptmap_definition |
 
         // call
-        call_macro_expression[secondtoken, true]
+
+        { inLanguage(LANGUAGE_C_FAMILY) && perform_call_check(type, secondtoken) && type == MACRO }?
+        macro_call |
+
+        expression_statement[type]
 ;
 
 
@@ -711,15 +715,6 @@ perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
     inputState->guessing--;
     rewind(start);
 } :
-;
-
-call_macro_expression[int secondtoken, bool statement]
-        { CALLTYPE type = NOCALL; } :
-
-        { inLanguage(LANGUAGE_C_FAMILY) && perform_call_check(type, secondtoken) && type == MACRO }?
-        macro_call |
-
-        expression_statement[statement, type]
 ;
 
 call_check[int& postnametoken, int& argumenttoken, int& postcalltoken] {} :
@@ -1771,7 +1766,7 @@ else_handling {} :
 /*
   Handling when mid-statement
 */
-statement_part { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE decl_type = NONE; } :
+statement_part { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE decl_type = NONE; CALLTYPE type = NOCALL; } :
 
         { inMode(MODE_EAT_TYPE) }?
             type_identifier
@@ -1810,8 +1805,12 @@ statement_part { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE decl
              pure_expression_block |
 
         // start of argument for return or throw statement
+        { inMode(MODE_EXPRESSION | MODE_EXPECT) &&
+            inLanguage(LANGUAGE_C_FAMILY) && perform_call_check(type, secondtoken) && type == MACRO }?
+        macro_call |
+
         { inMode(MODE_EXPRESSION | MODE_EXPECT) }?
-            call_macro_expression[-1, false] |
+        expression[type] |
 
         // already in an expression, and run into a keyword
         // so stop the expression, and markup the keyword statement
@@ -3059,16 +3058,13 @@ throw_statement {} :
         THROW
 ;
 
-expression_statement[bool statement = true, CALLTYPE type = NOCALL] {} :
+expression_statement[CALLTYPE type = NOCALL] {} :
         {
-            if (statement) {
+            // statement with an embedded expression
+            startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
 
-                // statement with an embedded expression
-                startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
-
-                // start the element which will end after the terminate
-                startElement(SEXPRESSION_STATEMENT);
-            }
+            // start the element which will end after the terminate
+            startElement(SEXPRESSION_STATEMENT);
         }
         expression[type]
 ;
