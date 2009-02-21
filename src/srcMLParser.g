@@ -1933,20 +1933,29 @@ empty_rparen[bool final = false, bool mark = false] {} :
         {
             // additional right parentheses indicates end of non-list modes
             endDownToFirstMode(MODE_LIST | MODE_PREPROC | MODE_END_ONLY_AT_RPAREN);
+
+            if (inMode(MODE_LIST) && inMode(MODE_FOR_INCREMENT))
+                endCurrentMode(MODE_FOR_INCREMENT);
         }
-        (
-            { inMode(MODE_CONDITION) && inMode(MODE_IF_COND) }?
-                if_condition_rparen[final] |
+        rparen_base[final]
+        {
+            if (inMode(MODE_CONDITION) && inMode(MODE_IF_COND)) {
 
-            { inMode(MODE_LIST) }?
-            {
-                if (inMode(MODE_FOR_INCREMENT))
-                    endCurrentMode(MODE_FOR_INCREMENT);
+                // end the condition
+                endDownOverMode(MODE_CONDITION);
+
+                // then part of the if statement (after the condition)
+                startNewMode(MODE_STATEMENT | MODE_NEST);
+
+                // start the then element
+                startNoSkipElement(STHEN);
             }
-            list_end_rparen[final] |
 
-            rparen_base[final, mark]
-        )
+            // end the single mode that started the list
+            // don't end more than one since they may be nested
+            if (inMode(MODE_LIST))
+               endCurrentMode(MODE_LIST);
+        }
 ;
 
 rparen_base[bool final = false, bool mark = false] { if (final) setFinalToken(); LocalMode lm; }:
@@ -1960,23 +1969,6 @@ rparen_base[bool final = false, bool mark = false] { if (final) setFinalToken();
             }
         }
         RPAREN  
-;
-
-/*
-  End of a condition.  Detected in rparen when in a condition mode and the paren
-  count is zero
-*/
-list_end_rparen[bool final = false] {} :
-        {
-            assertMode(inMode(MODE_LIST));
-        }
-        rparen_base[final]
-        {
-            // end the single mode that started the list
-            // don't end more than one since they may be nested
-            if (inMode(MODE_LIST))
-                endCurrentMode(MODE_LIST);
-        }
 ;
 
 /*
@@ -1998,44 +1990,6 @@ condition { setFinalToken(); } :
             setMode(MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
         }
         LPAREN
-;
-
-/*
-  End of a condition.  Detected in rparen when in a condition mode and the paren
-  count is zero
-*/
-if_condition_rparen[bool final = false] {} :
-        {
-            assertMode(MODE_CONDITION | MODE_IF);
-        }
-        // handle as a regular condition
-        condition_rparen[final]
-        {
-            assertMode(MODE_IF);
-
-            // then part of the if statement (after the condition)
-            startNewMode(MODE_STATEMENT | MODE_NEST);
-
-            // start the then element
-            startNoSkipElement(STHEN);
-        }
-;
-
-/*
-  End of a condition.  Detected in rparen when in a condition mode and the paren
-  count is zero.
-  Conditions for if statements are handled in if_condition_rparen
-*/
-condition_rparen[bool final = false] {} :
-        {
-            // should only be called when in a condition
-            assertMode(MODE_CONDITION);
-        }
-        rparen_base[final]
-        {
-            // end the condition
-            endDownOverMode(MODE_CONDITION);
-        }
 ;
 
 /* Function */
