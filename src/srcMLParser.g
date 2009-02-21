@@ -1923,38 +1923,38 @@ colon[bool final = false] { if (final) setFinalToken(); } :
         COLON
 ;
 
-rparen[bool final = false, bool mark = false] {} :
-        { getParen() == 0 }? empty_rparen[final, mark]
-
-        | rparen_base[final, mark]
-;
-
-empty_rparen[bool final = false, bool mark = false] {} :
+rparen[bool final = false, bool mark = false] { bool isempty = getParen() == 0; } :
         {
-            // additional right parentheses indicates end of non-list modes
-            endDownToFirstMode(MODE_LIST | MODE_PREPROC | MODE_END_ONLY_AT_RPAREN);
+            if (isempty) {
 
-            if (inMode(MODE_LIST) && inMode(MODE_FOR_INCREMENT))
-                endCurrentMode(MODE_FOR_INCREMENT);
+                // additional right parentheses indicates end of non-list modes
+                endDownToFirstMode(MODE_LIST | MODE_PREPROC | MODE_END_ONLY_AT_RPAREN);
+
+                if (inMode(MODE_LIST) && inMode(MODE_FOR_INCREMENT))
+                    endCurrentMode(MODE_FOR_INCREMENT);
+            }
         }
         rparen_base[final]
         {
-            if (inMode(MODE_CONDITION) && inMode(MODE_IF_COND)) {
+            if (isempty) {
 
-                // end the condition
-                endDownOverMode(MODE_CONDITION);
+                if (inMode(MODE_CONDITION) && inMode(MODE_IF_COND)) {
 
-                // then part of the if statement (after the condition)
-                startNewMode(MODE_STATEMENT | MODE_NEST);
+                    // end the condition
+                    endDownOverMode(MODE_CONDITION);
 
-                // start the then element
-                startNoSkipElement(STHEN);
+                    // then part of the if statement (after the condition)
+                    startNewMode(MODE_STATEMENT | MODE_NEST);
+
+                    // start the then element
+                    startNoSkipElement(STHEN);
+                }
+
+                // end the single mode that started the list
+                // don't end more than one since they may be nested
+                if (inMode(MODE_LIST))
+                    endCurrentMode(MODE_LIST);
             }
-
-            // end the single mode that started the list
-            // don't end more than one since they may be nested
-            if (inMode(MODE_LIST))
-               endCurrentMode(MODE_LIST);
         }
 ;
 
@@ -3505,7 +3505,7 @@ full_parameter {} :
 ;
 
 argument {} :
-        { getParen() == 0 }? empty_rparen |
+        { getParen() == 0 }? rparen |
         {
             // argument with nested expression
             startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
