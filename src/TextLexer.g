@@ -90,6 +90,6 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); } :
             { lastchar == 'L' }?
             { $setType(STRING_START); } STRING_START |
 
-            ('0'..'9' | 'a'..'z' | 'A'..'Z' | '_')*
+            (options { greedy = true; } : '0'..'9' | 'a'..'z' | 'A'..'Z' | '_')*
         )
 ;
