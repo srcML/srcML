@@ -525,26 +525,25 @@ catch[...] {
 */
 cfg {} :
 
-        namespace_definition |
-
-        namespace_directive |
-
-        template_declaration |
-
-        try_statement | catch_statement | throw_statement |
-
-        typedef_statement |
-
-        switch_default |
+        // conditional statements
+        if_statement | else_statement | switch_statement | switch_case | switch_default |
 
         // iterative statements
         while_statement | for_statement | do_statement |
 
-        // conditional statements
-        if_statement | else_statement | switch_statement | switch_case |
-
         // jump statements
         return_statement | break_statement | continue_statement | goto_statement |
+
+        // template declarations - both functions and classes
+        template_declaration |
+
+        // exception statements
+        try_statement | catch_statement | throw_statement |
+
+        // namespace statements
+        namespace_definition | namespace_directive |
+
+        typedef_statement |
 
         // java import - keyword only detected for Java
         import_statement |
