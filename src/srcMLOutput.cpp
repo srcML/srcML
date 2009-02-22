@@ -529,9 +529,9 @@ void srcMLOutput::processLineCommentStart(const antlr::RefToken& token) {
 
 void srcMLOutput::processEndLineToken(const antlr::RefToken& token) {
 
-  xmlTextWriterEndElement(xout);
-
   processText(token);
+
+  xmlTextWriterEndElement(xout);
 }
 
 void srcMLOutput::processEndBlockToken(const antlr::RefToken& token) {

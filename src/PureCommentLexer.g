@@ -56,88 +56,131 @@ tokens {
 {
 public:
 
+// particular mode that this lexer should end in
 int mode;
 
+// preprocessor lines required unterminated strings to end early
 bool onpreprocline;
 
-int escapecount;
-int asteriskcount;
-
-int n;
-
-bool lasttoken;
-
 PureCommentLexer(const antlr::LexerSharedInputState& state)
-	: antlr::CharScanner(state,true), mode(0), onpreprocline(false), escapecount(0), asteriskcount(0), lasttoken(false)
-{
-}
+	: antlr::CharScanner(state,true), mode(0), onpreprocline(false)
+{}
 
 private:
     antlr::TokenStreamSelector* selector;
+
 public:
     void setSelector(antlr::TokenStreamSelector* selector_) {
         selector=selector_;
     }
 
+    // reinitialize comment lexer
     void init(int m, bool onpreproclinestate) {
 
-        escapecount = 0;
-        asteriskcount = 0;
-
         onpreprocline = onpreproclinestate;
-
-        lasttoken = false;
 
         mode = m;
     }
 }
 
 /*
-  Any text inside a comment
+  Any text inside a comment, string, or character
+
+  The idea is to match as much as possible, and put all of that in one token.  If we
+  find an escape character, we need to stop the current node, issue the escape character
+  and go on.
 */
 COMMENT_TEXT { 
 
-    lasttoken = LA(2) == '\n' && (mode == STRING_END || mode == CHAR_END) && onpreprocline;
-    if (lasttoken) {
-       $setType(mode);
-       selector->pop(); 
-    }
+//    std::cerr << "OUTER " << LA(1) << std::endl;
 
-    if (escapecount > 0)
-        --escapecount;
+    // first time through we can match a control character, but not after that
+    // since control characters must be single tokens
+    bool first = true;
 
-    if (asteriskcount > 0)
-        --asteriskcount;
+    // record the previous character
+    int prevLA = 0;
+    int prevprevLA = 0;
+} :
 
-        }
-    :
-(
-        '\000'..'\010' { $setType(CONTROL_CHAR); } |
+/*
+  Changing the type makes it the last token, and only handle a control character
+  token as the first token
+*/
+        ({ _ttype == COMMENT_TEXT &&
+
+            // only allow control characters the first (and only) time through
+            (LA(1) > '\037' || LA(1) == '\011' || LA(1) == '\012' || first) }? {
+
+            prevLA = prevprevLA;
+            prevprevLA = LA(1);
+         }
+         (
+        '\000'..'\010'
+                // will only occur the first time this rule matches, and then will exit
+                { $setType(CONTROL_CHAR); } |
+
         '\011' /* '\t' */ |
+
         '\012' /* '\n' */ { 
               // end at EOL when for line comment, or the end of a string or char on a preprocessor line
               if (mode == LINECOMMENT_END || ((mode == STRING_END || mode == CHAR_END) && onpreprocline)) {
-                  $setType(mode); selector->pop(); 
+                  $setType(mode); selector->pop();
               }
         } |
 
 //        '\015' /* '\r' - misc character since converted to '\n' in input buffer */ |
-        '\013'..'\037' { $setType(CONTROL_CHAR); } |
+
+        '\013'..'\037'
+                // will only occur the first time this rule matches, and then will exit
+                { $setType(CONTROL_CHAR); } |
+
         '\040'..'\041' |
-        '\042' /* '\"' */ { if (escapecount == 0 && mode == STRING_END && !lasttoken) { $setType(mode); selector->pop();; } } |
+
+        '\042' /* '\"' */
+                { if (prevLA != '\\' && mode == STRING_END) { $setType(mode); selector->pop(); } } |
+
         '\043'..'\045' | 
-        '&' { $setText("&amp;"); } |
-        '\047' /* '\'' */ { if (escapecount == 0 && mode == CHAR_END && !lasttoken) { $setType(mode); selector->pop(); } } |
-        '\050'..'\051' |
-        '\052' /* '*' */ { asteriskcount = 2; } |
-        '\053'..'\056' |
-        '\057' /* '/' */ { if (asteriskcount == 1 && mode == COMMENT_END) { $setType(mode); selector->pop(); } } |
+
+        '&'
+                { $setText("&amp;"); } |
+
+        '\047' /* '\'' */
+                { if (prevLA != '\\' && mode == CHAR_END) { $setType(mode); selector->pop(); } } |
+
+        '\050'..'\056' |
+
+        '\057' /* '/' */
+                { if (prevLA == '*' && mode == COMMENT_END) { $setType(mode); selector->pop(); } } |
+
         '\060'..';' | 
-        '<' { $setText("&lt;"); } | 
+
+        '<'
+                { $setText("&lt;"); } |
         '=' | 
-        '>' { $setText("&gt;"); } |
+
+        '>'
+                { $setText("&gt;"); } |
+
         '?'..'[' |
-        '\\' { if (escapecount == 0) { escapecount = 2; } } |
+
+        '\\'    // wipe out previous escape character
+                { if (prevLA == '\\') prevprevLA = 0; } |
+
         ']'..'\377'
-)
+        )
+        {
+
+            // not the first character anymoe
+            first = false;
+
+            // about to read a newline.  Line comments need to end before the newline is consumed.
+            // strings and characters on a preprocessor line also need to end, even if unterminated
+            if (_ttype == COMMENT_TEXT && LA(1) == '\n' &&
+                (((mode == STRING_END || mode == CHAR_END) && onpreprocline)
+                 || (mode == LINECOMMENT_END)))
+
+                $setType(mode);
+
+} )+
 ;
