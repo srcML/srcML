@@ -3505,7 +3505,8 @@ parameter_list { LocalMode lm; } :
 ;
 
 full_parameter {} :
-        parameter (variable_declaration_initialization expression)*
+        parameter
+        (options { greedy = true; } : variable_declaration_initialization expression)*
 ;
 
 argument {} :

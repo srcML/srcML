@@ -529,9 +529,15 @@ void srcMLOutput::processLineCommentStart(const antlr::RefToken& token) {
 
 void srcMLOutput::processEndLineToken(const antlr::RefToken& token) {
 
-  processText(token);
+  int size = token->getText().size();
+
+  if (size > 1)
+    processText(token);
 
   xmlTextWriterEndElement(xout);
+
+  if (size == 1)
+    processText(token);
 }
 
 void srcMLOutput::processEndBlockToken(const antlr::RefToken& token) {
@@ -554,7 +560,13 @@ void srcMLOutput::processOptional(const antlr::RefToken& token, const char* attr
 
 void srcMLOutput::processString(const antlr::RefToken& token) {
 
-  processOptional(token, "type", "string");
+  const char* s = token2name(token);
+
+  if (isstart(token)) {
+    xmlTextWriterStartElement(xout, BAD_CAST s);
+    xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST "string");
+  } else
+    xmlTextWriterEndElement(xout);
 }
 
 void srcMLOutput::processChar(const antlr::RefToken& token) {
