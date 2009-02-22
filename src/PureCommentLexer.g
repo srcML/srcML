@@ -99,6 +99,8 @@ COMMENT_TEXT {
     // record the previous character
     int prevLA = 0;
     int prevprevLA = 0;
+
+    int realbegin = _begin;
 } :
 
 /*
@@ -141,7 +143,9 @@ COMMENT_TEXT {
         '\043'..'\045' | 
 
         '&'
-                { $setText("&amp;"); } |
+                { text.erase(realbegin); text += "&amp;"; realbegin += 4; } | 
+//        '&'
+//                { $setText("&amp;"); } |
 
         '\047' /* '\'' */
                 { if (prevLA != '\\' && mode == CHAR_END) { $setType(mode); selector->pop(); } } |
@@ -154,11 +158,15 @@ COMMENT_TEXT {
         '\060'..';' | 
 
         '<'
-                { $setText("&lt;"); } |
+                { text.erase(realbegin); text += "&lt;"; realbegin += 3; } |
+//        '<'
+//                { $setText("&lt;"); } |
         '=' | 
 
         '>'
-                { $setText("&gt;"); } |
+                { text.erase(realbegin); text += "&gt;"; realbegin += 3; } |
+//        '>'
+//                { $setText("&gt;"); } |
 
         '?'..'[' |
 
@@ -168,6 +176,8 @@ COMMENT_TEXT {
         ']'..'\377'
         )
         {
+
+            ++realbegin;
 
             // not the first character anymoe
             first = false;
