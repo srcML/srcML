@@ -92,8 +92,6 @@ public:
 */
 COMMENT_TEXT { 
 
-//    std::cerr << "OUTER " << LA(1) << std::endl;
-
     // first time through we can match a control character, but not after that
     // since control characters must be single tokens
     bool first = true;
@@ -178,9 +176,10 @@ COMMENT_TEXT {
             // strings and characters on a preprocessor line also need to end, even if unterminated
             if (_ttype == COMMENT_TEXT && LA(1) == '\n' &&
                 (((mode == STRING_END || mode == CHAR_END) && onpreprocline)
-                 || (mode == LINECOMMENT_END)))
+                 || (mode == LINECOMMENT_END))) {
 
                 $setType(mode);
-
+                selector->pop();
+            }
 } )+
 ;
