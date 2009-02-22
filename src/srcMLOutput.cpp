@@ -560,13 +560,7 @@ void srcMLOutput::processOptional(const antlr::RefToken& token, const char* attr
 
 void srcMLOutput::processString(const antlr::RefToken& token) {
 
-  const char* s = token2name(token);
-
-  if (isstart(token)) {
-    xmlTextWriterStartElement(xout, BAD_CAST s);
-    xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST "string");
-  } else
-    xmlTextWriterEndElement(xout);
+  processOptional(token, "type", "string");
 }
 
 void srcMLOutput::processChar(const antlr::RefToken& token) {
