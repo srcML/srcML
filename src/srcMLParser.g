@@ -684,11 +684,11 @@ perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
         type = CALL;
 
         // call syntax succeeded, however post call token is not legitimate
-        if (_tokenSet_0.member(postcalltoken) || postcalltoken == NAME || postcalltoken == LCURLY
+        if (inLanguage(LANGUAGE_C_FAMILY) && (_tokenSet_0.member(postcalltoken) || postcalltoken == NAME || postcalltoken == LCURLY
             || postcalltoken == EXTERN || postcalltoken == STRUCT || postcalltoken == UNION || postcalltoken == CLASS
             || postcalltoken == RCURLY || postcalltoken == 1 /* EOF ? */
             || postcalltoken == TEMPLATE || postcalltoken == PUBLIC || postcalltoken == PRIVATE
-            || postcalltoken == PROTECTED)
+            || postcalltoken == PROTECTED))
 
             type = MACRO;
 
@@ -696,7 +696,7 @@ perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
 
         type = NOCALL;
 
-        if (argumenttoken != 0 && postcalltoken == 0) {
+        if (inLanguage(LANGUAGE_C_FAMILY) && argumenttoken != 0 && postcalltoken == 0) {
 
             guessing_endGuessing();
 
@@ -704,7 +704,7 @@ perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
         }
 
         // single macro call followed by statement_cfg
-        else if (secondtoken != -1
+        else if (inLanguage(LANGUAGE_C_FAMILY) && secondtoken != -1
                  && (_tokenSet_0.member(secondtoken) || secondtoken == LCURLY || secondtoken == 1 /* EOF */
                      || secondtoken == PUBLIC || secondtoken == PRIVATE || secondtoken == PROTECTED))
 
@@ -725,13 +725,18 @@ call_check[int& postnametoken, int& argumenttoken, int& postcalltoken] {} :
         // fails
         markend[postnametoken]
 
+       (
+        { inLanguage(LANGUAGE_C_FAMILY) }?
         // check for proper form of argument list
         call_check_paren_pair[argumenttoken]
 
         guessing_endGuessing
 
         // record token after argument list to differentiate between call and macro
-        markend[postcalltoken]
+        markend[postcalltoken] |
+
+        LPAREN
+       )
 ;
 
 call_check_paren_pair[int& argumenttoken] { bool name = false; } :
