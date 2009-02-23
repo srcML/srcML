@@ -65,6 +65,9 @@ MULTOPS; // = "*";
 REFOPS;  // = "&";
 MULTIMM; // = "*=";
 
+DOTDOT;
+DOTDOTDOT;
+
 FALSE;
 TRUE;
 
@@ -117,7 +120,7 @@ OPERATORS options { testLiterals = true; } { unsigned int realbegin = _begin; bo
         '?'  | // part of ternary
         '~'  | // has to be separate if part of name
 
-        '.' ('*' | { $setType(CONSTANTS); } CONSTANTS | ) |
+        '.' ('*' | '.' ( '.' { $setType(DOTDOTDOT); } | { $setType(DOTDOT); }) | { $setType(CONSTANTS); } CONSTANTS | ) |
 
         '\\' ( EOL { $setType(EOL_BACKSLASH); } )*
         )

@@ -3200,7 +3200,8 @@ general_operators { LocalMode lm; } :
             }
         }
         (options { greedy = true; } : OPERATORS | TEMPOPS | TEMPOPE |
-         EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS /* | DELETEOP */ | NEW
+         EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS /* | DELETEOP */ | NEW |
+         DOTDOT
         )+
 ;
 
@@ -3536,7 +3537,9 @@ parameter { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTYPE decl_
             startElement(SPARAMETER);
         }
         (
-        PERIOD PERIOD ( options { greedy = true;} : PERIOD)* |
+        // variable length parameters
+        DOTDOTDOT |
+
         { perform_noncfg_check(decl_type, secondtoken, fla, type_count, true) && decl_type == FUNCTION }?
         function[TERMINATE, type_count]
 
@@ -3599,7 +3602,7 @@ multops { LocalMode lm; } :
                 startElement(SMODIFIER);
             }
         }
-        (MULTOPS | REFOPS)
+        (MULTOPS | REFOPS | DOTDOTDOT)
 ;
 
 /*
