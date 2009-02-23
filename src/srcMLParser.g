@@ -1253,10 +1253,10 @@ namespace_directive { setFinalToken(); } :
 */
 class_struct_union[int token, int place] {} :
 
-        { token == LCURLY }?
+        { token == LCURLY && place == INTERFACE }?
         interface_definition |
 
-        { token == LCURLY }?
+        { token == LCURLY && place == CLASS }?
         class_definition |
 
         { token == LCURLY && place == STRUCT }?
