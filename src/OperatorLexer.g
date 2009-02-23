@@ -84,6 +84,10 @@ SPECIAL :
 */
 //ALLOPERATORS options { testLiterals = true; } : 
 
+CONSTANTS :
+        '0'..'9'
+    ;
+
 OPERATORS options { testLiterals = true; } { unsigned int realbegin = _begin; bool gt = false; int dcoloncount = 0; } : 
         (
             '#' {
@@ -99,7 +103,9 @@ OPERATORS options { testLiterals = true; } { unsigned int realbegin = _begin; bo
             }
         }   |
 
-        ({ !(gt && LA(1) == '>') && dcoloncount < 2 }? ( '*' | '|' | ':' { ++dcoloncount; } |/* '~' |*/ '`' | '=' | '!' | '%' | '+' | '^' | '-' |
+        ({ !(gt && LA(1) == '>') && dcoloncount < 2 }?
+
+         ( '*' | '|' | ':' { ++dcoloncount; } | '`' | '=' | '!' | '%' | '+' | '^' | '-' |
            '&' { text.erase(realbegin); text += "&amp;"; realbegin += 4; } | 
            '>' { if (realbegin == _begin) gt = true; text.erase(realbegin); text += "&gt;"; realbegin += 3; } | 
            '<' { text.erase(realbegin); text += "&lt;"; realbegin += 3;  }) { ++realbegin; } )+ |
@@ -110,7 +116,8 @@ OPERATORS options { testLiterals = true; } { unsigned int realbegin = _begin; bo
         '$'  |    // not an operator (why is it here?)
         '?'  | // part of ternary
         '~'  | // has to be separate if part of name
-        '.' ('*' |) | // for parameter of catch
+
+        '.' ('*' | { $setType(CONSTANTS); } CONSTANTS | ) |
 
         '\\' ( EOL { $setType(EOL_BACKSLASH); } )*
         )
