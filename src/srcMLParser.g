@@ -3821,7 +3821,7 @@ enum_definition_whole { LocalMode lm; } :
         LCURLY
 
         (options { greedy = true; } : { LA(1) != RCURLY || inTransparentMode(MODE_INTERNAL_END_CURLY) }?
-        expression)*
+        expression | comma)*
 
         // end of enum definition block
         {
