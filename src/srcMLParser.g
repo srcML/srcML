@@ -1853,7 +1853,7 @@ statement_part { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE decl
 
         // function identifier
         { inMode(MODE_FUNCTION_PARAMETER) }?
-             process_parameter_list |
+             parameter_list |
 
         // start of argument for return or throw statement
         { inMode(MODE_INIT | MODE_EXPECT) }?
@@ -2034,17 +2034,10 @@ function_pointer_name_base { LocalMode lm; } :
 function_header[int type_count] {} : 
 
         // no return value functions:  casting operator method and main
-        { type_count == 0 }? function_identifier { replaceMode(MODE_FUNCTION_NAME, MODE_FUNCTION_PARAMETER); } |
+        { type_count == 0 }? function_identifier
+        { replaceMode(MODE_FUNCTION_NAME, MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL); } |
 
         function_type[type_count]
-;
-
-process_parameter_list {} :
-
-        parameter_list
-        {
-            replaceMode(MODE_FUNCTION_PARAMETER, MODE_FUNCTION_TAIL);
-        }
 ;
 
 /*
