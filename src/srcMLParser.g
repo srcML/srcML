@@ -2510,7 +2510,7 @@ variable_identifier_array_grammar_sub[bool& iscomplex] { LocalMode lm; } :
   Full, complete expression matched all at once (no stream).
   Colon matches range(?) for bits.
 */
-full_expression[bool checkmacro = false] { LocalMode lm; } :
+full_expression[bool checkmacro = false] {} :
 
         (options { greedy = true; } :
 
@@ -2697,7 +2697,7 @@ complex_name_java[bool marked] { LocalMode lm; TokenPosition tp; bool iscomplex_
 /*
   sequences of "::" and names
 */
-name_tail[bool& iscomplex, bool marked] { LocalMode lm; } :
+name_tail[bool& iscomplex, bool marked] {} :
 
         // "a::" will cause an exception to be thrown
         ( options { greedy = true; } : 
@@ -4187,7 +4187,7 @@ cpp_symbol { LocalMode lm; } :
         NAME
 ;
 
-cpp_symbol_optional { LocalMode lm; } :
+cpp_symbol_optional {} :
         (options { greedy = true; } : cpp_symbol)*
 ;
 
