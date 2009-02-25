@@ -174,7 +174,8 @@ header "post_include_cpp" {
 
      ~LocalMode() {
          srcMLParser& fp = *pparser;
-         while (fp.size() > oldsize) {
+         int n = fp.size() - oldsize;
+         for (int i = 0; i < n; ++i) {
            fp.endCurrentMode();
          }
      }
