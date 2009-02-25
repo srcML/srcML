@@ -225,12 +225,12 @@ const PROPERTIES_TYPE& srcMLUtility::getNS() const {
 }
 
 // extract a given unit
-void srcMLUtility::xpath(const char* ofilename) {
+void srcMLUtility::xpath(const char* ofilename, const char* xpaths) {
 
   xmlTextReaderPtr reader = xmlNewTextReaderFilename(infile);
 
   // perform xpath evaluation
-  srcpatheval("/src:unit", reader);
+  srcpatheval(xpaths, reader);
 
   xmlFreeTextReader(reader);
 }

@@ -65,7 +65,7 @@ class srcMLUtility {
   void expand(const char* root_filename = "");
 
   // perform xpath evaluation
-  void xpath(const char* ofilename);
+  void xpath(const char* ofilename, const char* xpaths);
 
   static bool checkEncoding(const char* encoding) {
 

@@ -175,6 +175,7 @@ int main(int argc, char* argv[]) {
   // option values
   const char* src_encoding = DEFAULT_TEXT_ENCODING;
   int unit = 0;
+  const char* xpath = "";
   std::list<const char*> ns;
 
   // process all flags
@@ -393,7 +394,7 @@ int main(int argc, char* argv[]) {
       // filename is embedded parameter
       if (embedded) {
 
-	ns.push_back(embedded + 1);
+	xpath = embedded + 1;
 	++curarg;
 
       // check for namespace flag with missing namespace
@@ -401,7 +402,7 @@ int main(int argc, char* argv[]) {
 	fprintf(stderr, "%s: xpath option selected but no xpath expression.\n", NAME);
 	exit(STATUS_UNIT_MISSING); // FIX
       } else {
-	ns.push_back(argv[(++curarg)++]);
+	xpath = argv[(++curarg)++];
       }
 
     // reached the end of a multi-short form option
@@ -621,7 +622,7 @@ int main(int argc, char* argv[]) {
 
     } else if (isoption(options, OPTION_XPATH)) {
 
-      su.xpath(ofilename);
+      su.xpath(ofilename, xpath);
 
     } else {
 

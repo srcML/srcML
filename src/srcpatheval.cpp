@@ -126,6 +126,8 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader) {
        // update the node type
        nodetype = result_nodes->type;
 
+       bool outputunit = true;
+
        // process the resulting nodes
        switch (nodetype) {
 
@@ -139,15 +141,35 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader) {
 	 // output all the found nodes
 	 for (int i = 0; i < xmlXPathNodeSetGetLength(result_nodes->nodesetval); ++i) {
 
-	   xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "<unit");
-	   xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), " dir=\"");
-	   xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), (const char*) unit_directory);
-	   xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "\" filename=\"");
-	   xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), (const char*) unit_filename);
-	   xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "\">");
+	   if (outputunit) {
+
+	     // unit start tag
+	     xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "<unit");
+
+	     if (unit_directory) {
+	       xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), " dir=\"");
+	       xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), (const char*) unit_directory);
+	       xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "\"");
+	     }
+
+	     if (unit_filename) {
+	       xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "\" filename=\"");
+	       xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), (const char*) unit_filename);
+	       xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "\"");
+	     }
+
+	     xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), ">");
+	   }
+
+	   // xpath result
 	   xmlSaveTree(ctxt, xmlXPathNodeSetItem(result_nodes->nodesetval, i));
-	   xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "</unit>\n");
-	   xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "\n");
+
+	   if (outputunit) {
+
+	     // unit end tag
+	     xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "</unit>\n");
+	     xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "\n");
+	   }
 	 }
 
 	 break;
