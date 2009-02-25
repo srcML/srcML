@@ -2010,11 +2010,11 @@ condition { setFinalToken(); } :
 
 /* Function */
 
-function_pointer_name_grammar { LocalMode lm; } :
+function_pointer_name_grammar {} :
         LPAREN function_pointer_name_base RPAREN
 ;
 
-function_pointer_name_base { LocalMode lm; } :
+function_pointer_name_base {} :
 
         // special case for function pointer names that don't have '*'
         (complex_name[true] RPAREN)=>
@@ -2417,7 +2417,7 @@ type_identifier {} :
         non_lead_type_identifier
 ;
 
-non_lead_type_identifier { LocalMode lm; bool iscomplex = false; } :
+non_lead_type_identifier { bool iscomplex = false; } :
 
         multops |
 
@@ -2438,11 +2438,18 @@ balanced_parentheses :
 /*
    Name of a function
 */
-function_identifier { LocalMode lm; } :
+function_identifier {} :
 
         // typical name
         complex_name[true] |
 
+        function_identifier_main |
+
+        // function pointer identifier with name marked separately
+        function_pointer_name_grammar
+;
+
+function_identifier_main { LocalMode lm; } :
         // special cases for main
         {
             // end all started elements in this rule
@@ -2452,10 +2459,7 @@ function_identifier { LocalMode lm; } :
             startElement(SNAME);
         }
         // main program
-        MAIN |
-
-        // function pointer identifier with name marked separately
-        function_pointer_name_grammar
+        MAIN
 ;
 
 /*
