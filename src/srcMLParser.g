@@ -475,7 +475,8 @@ void endAllModes();
 
   Order of evaluation is important.
 */
-start {} :
+start { LocalMode lm; } : { startNewMode(MODE_LOCAL); startElement(SBLOCK); } .
+/*
 
         COMMENT_TEXT |
 
@@ -514,6 +515,7 @@ start {} :
 
         // in the middle of a statement
         statement_part
+*/
 ;
 exception
 catch[...] {
@@ -2211,7 +2213,7 @@ throw_exception[bool cond = true] { if (cond) throw antlr::RecognitionException(
 
 set_type[DECLTYPE& name, DECLTYPE value, bool result = true] { if (result) name = value; } :;
 
-//trace[const char*s ] { std::cerr << s << std::endl; } :;
+trace[const char*s ] { std::cerr << s << std::endl; } :;
 
 //traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
 
@@ -3527,9 +3529,6 @@ parameter { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTYPE decl_
             startElement(SPARAMETER);
         }
         (
-        // variable length parameters
-        DOTDOTDOT |
-
         { perform_noncfg_check(decl_type, secondtoken, fla, type_count, true) && decl_type == FUNCTION }?
         function[TERMINATE, type_count]
 
@@ -3540,7 +3539,6 @@ parameter { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTYPE decl_
         parameter_list 
 
         (options { greedy = true; } : function_pointer_initialization)* |
-        { decl_type == VARIABLE }?
         {
             // start the declaration element
             startElement(SDECLARATION);
@@ -3548,8 +3546,8 @@ parameter { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTYPE decl_
             if (decl_type != VARIABLE)
                 type_count = 1;
         }
+        { decl_type == VARIABLE || LA(1) == DOTDOTDOT}?
         parameter_type_count[type_count]
-
         {
             consumeSkippedTokens();
 
