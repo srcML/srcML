@@ -27,7 +27,7 @@ const char* UNIT_ATTRIBUTE_VERSION = "version";
 
 //typedef std::list<std::pair<std::string, std::string> > PROPERTIES_TYPE;
 
-int srcpatheval(const char* xpath, xmlTextReaderPtr reader) {
+int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilename) {
 
   // compile the xpath that will be applied to each unit
   xmlXPathCompExprPtr compiled_xpath = xmlXPathCompile(BAD_CAST xpath);
@@ -59,8 +59,8 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader) {
   // setup the context up on which the xpath will be evaluated on
   xmlXPathContextPtr context = xmlXPathNewContext(xmlTextReaderCurrentDoc(reader));
 
-  // setup output
-  xmlSaveCtxtPtr ctxt = xmlSaveToFd(STDOUT_FILENO, "UTF-8", 0);
+  xmlSaveCtxtPtr ctxt = xmlSaveToFilename(ofilename, (const char*) xmlTextReaderConstEncoding(reader), 
+					  XML_SAVE_NO_DECL);
 
   // register the namespaces on the root element
   xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "<unit");
