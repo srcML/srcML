@@ -130,6 +130,12 @@ enum Options {
   // markup operators
   OPTION_OPERATOR     = 0x04000000,
 
+  // xpath evaluation
+  OPTION_XPATH        = 0x08000000,
+
+  // xslt evaluation
+  OPTION_XSLT         = 0x10000000,
+
   // markup type modifiers
   OPTION_MODIFIER     = OPTION_TEXT,
 };

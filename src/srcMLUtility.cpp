@@ -47,6 +47,8 @@
 #include "SAX2CountUnits.h"
 #include "SAX2Properties.h"
 
+#include "srcpatheval.h"
+
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op)
   : infile(infilename), output_encoding(encoding), options(op), units(0) {
@@ -221,3 +223,15 @@ void srcMLUtility::expand(const char* root_filename) {
 const PROPERTIES_TYPE& srcMLUtility::getNS() const {
   return nsv;
 }
+
+// extract a given unit
+void srcMLUtility::xpath(const char* ofilename) {
+
+  xmlTextReaderPtr reader = xmlNewTextReaderFilename(infile);
+
+  // perform xpath evaluation
+  srcpatheval("/src:unit", reader);
+
+  xmlFreeTextReader(reader);
+}
+

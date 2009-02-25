@@ -56,6 +56,12 @@ char const * const NAMESPACE_FLAG = "--prefix";
 char const * const NAMESPACE_FLAG_SHORT = "-p";
 char const * const NAMESPACE_FLAG_FULL = "--prefix=URI";
 
+char const * const XPATH_FLAG = "--xpath";
+char const * const XPATH_FLAG_SHORT = "-p";
+
+char const * const XSLT_FLAG = "--xslt";
+char const * const XSLT_FLAG_SHORT = "-s";
+
 // output help message
 void output_help(const char* name) {
 
@@ -378,6 +384,26 @@ int main(int argc, char* argv[]) {
 	exit(STATUS_UNKNOWN_ENCODING);
       }
 
+    // xpath
+    } else if (compare_flags(argv[curarg], XPATH_FLAG, XPATH_FLAG_SHORT)) {
+      options |= OPTION_XPATH;
+
+      char* embedded = extract_option(argv[curarg]);
+
+      // filename is embedded parameter
+      if (embedded) {
+
+	ns.push_back(embedded + 1);
+	++curarg;
+
+      // check for namespace flag with missing namespace
+      } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
+	fprintf(stderr, "%s: xpath option selected but no xpath expression.\n", NAME);
+	exit(STATUS_UNIT_MISSING); // FIX
+      } else {
+	ns.push_back(argv[(++curarg)++]);
+      }
+
     // reached the end of a multi-short form option
     } else if (position > 0 && argv[curarg][position + 1] == '\0') {
 
@@ -390,6 +416,7 @@ int main(int argc, char* argv[]) {
       fprintf(stderr, "try '%s %s' for more information.\n", NAME, HELP_FLAG);
       exit(STATUS_UNKNOWN_OPTION);
     }
+
   }
 
   // eat optional option separator
@@ -591,6 +618,10 @@ int main(int argc, char* argv[]) {
     } else if (isoption(options, OPTION_XML)) {
 
       su.extract_xml(ofilename, unit);
+
+    } else if (isoption(options, OPTION_XPATH)) {
+
+      su.xpath(ofilename);
 
     } else {
 

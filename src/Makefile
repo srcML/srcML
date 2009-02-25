@@ -198,6 +198,9 @@ ${OBJ_DIR}SAX2ExtractUnitsSrc.o : SAX2ExtractUnitsSrc.cpp SAX2ExtractUnitsSrc.h
 ${OBJ_DIR}SAX2ExtractRootSrc.o : SAX2ExtractRootSrc.cpp SAX2ExtractRootSrc.h
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
+${OBJ_DIR}srcpatheval.o : srcpatheval.cpp srcpatheval.h
+	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
+
 ${OBJ_DIR}version.o : version.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
