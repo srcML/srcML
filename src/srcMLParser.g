@@ -475,8 +475,7 @@ void endAllModes();
 
   Order of evaluation is important.
 */
-start { LocalMode lm; } : { startNewMode(MODE_LOCAL); startElement(SBLOCK); } .
-/*
+start {} :
 
         COMMENT_TEXT |
 
@@ -515,7 +514,6 @@ start { LocalMode lm; } : { startNewMode(MODE_LOCAL); startElement(SBLOCK); } .
 
         // in the middle of a statement
         statement_part
-*/
 ;
 exception
 catch[...] {
