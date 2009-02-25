@@ -33,7 +33,7 @@ const char* UNIT_ATTRIBUTE_FILENAME = "filename";
 const char* UNIT_ATTRIBUTE_VERSION = "version";
 */
 
-int srcxslteval(const char* xpath, xmlTextReaderPtr reader) {
+int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilename) {
 
   exsltRegisterAll();
 
@@ -43,7 +43,8 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader) {
   xmlTextReaderRead(reader);
 
   // setup output
-  xmlSaveCtxtPtr ctxt = xmlSaveToFd(STDOUT_FILENO, "UTF-8", 0);
+  xmlSaveCtxtPtr ctxt = xmlSaveToFilename(ofilename, (const char*) xmlTextReaderConstEncoding(reader),
+					  XML_SAVE_NO_DECL);
 
   // register the namespaces on the root element
   xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "<unit");

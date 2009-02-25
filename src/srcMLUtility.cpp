@@ -242,7 +242,7 @@ void srcMLUtility::xslt(const char* ofilename, const char* xslts) {
   xmlTextReaderPtr reader = xmlNewTextReaderFilename(infile);
 
   // perform xpath evaluation
-  srcxslteval(xslts, reader);
+  srcxslteval(xslts, reader, ofilename);
 
   xmlFreeTextReader(reader);
 }

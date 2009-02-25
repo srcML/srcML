@@ -11,6 +11,6 @@
 
 #include <libxml/xmlreader.h>
 
-int srcxslteval(const char* xpath, xmlTextReaderPtr reader);
+int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilename);
 
 #endif
