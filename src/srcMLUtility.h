@@ -67,6 +67,9 @@ class srcMLUtility {
   // perform xpath evaluation
   void xpath(const char* ofilename, const char* xpaths);
 
+  // perform xslt evaluation
+  void xslt(const char* ofilename, const char* xslts);
+
   static bool checkEncoding(const char* encoding) {
 
     return xmlFindCharEncodingHandler(encoding) != 0;

@@ -7,7 +7,7 @@
 */
 
 #include "srcpatheval.h"
-
+#include <iostream>
 #include <string>
 #include <list>
 
@@ -127,6 +127,7 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader) {
        nodetype = result_nodes->type;
 
        bool outputunit = true;
+       xmlNodePtr onode;
 
        // process the resulting nodes
        switch (nodetype) {
@@ -140,6 +141,10 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader) {
 
 	 // output all the found nodes
 	 for (int i = 0; i < xmlXPathNodeSetGetLength(result_nodes->nodesetval); ++i) {
+
+	   onode = xmlXPathNodeSetItem(result_nodes->nodesetval, i);
+
+	   outputunit = strcmp("unit", (const char*) onode->name) != 0;
 
 	   if (outputunit) {
 
@@ -162,7 +167,7 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader) {
 	   }
 
 	   // xpath result
-	   xmlSaveTree(ctxt, xmlXPathNodeSetItem(result_nodes->nodesetval, i));
+	   xmlSaveTree(ctxt, onode);
 
 	   if (outputunit) {
 

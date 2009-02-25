@@ -48,6 +48,7 @@
 #include "SAX2Properties.h"
 
 #include "srcpatheval.h"
+#include "srcxslteval.h"
 
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op)
@@ -224,13 +225,24 @@ const PROPERTIES_TYPE& srcMLUtility::getNS() const {
   return nsv;
 }
 
-// extract a given unit
+// xpath evaluation of the nested units
 void srcMLUtility::xpath(const char* ofilename, const char* xpaths) {
 
   xmlTextReaderPtr reader = xmlNewTextReaderFilename(infile);
 
   // perform xpath evaluation
   srcpatheval(xpaths, reader);
+
+  xmlFreeTextReader(reader);
+}
+
+// xslt evaluation of the nested units
+void srcMLUtility::xslt(const char* ofilename, const char* xslts) {
+
+  xmlTextReaderPtr reader = xmlNewTextReaderFilename(infile);
+
+  // perform xpath evaluation
+  srcxslteval(xslts, reader);
 
   xmlFreeTextReader(reader);
 }

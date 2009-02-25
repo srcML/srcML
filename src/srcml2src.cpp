@@ -405,6 +405,26 @@ int main(int argc, char* argv[]) {
 	xpath = argv[(++curarg)++];
       }
 
+    // xslt
+    } else if (compare_flags(argv[curarg], XSLT_FLAG, XSLT_FLAG_SHORT)) {
+      options |= OPTION_XSLT;
+
+      char* embedded = extract_option(argv[curarg]);
+
+      // filename is embedded parameter
+      if (embedded) {
+
+	xpath = embedded + 1;
+	++curarg;
+
+      // check for namespace flag with missing namespace
+      } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
+	fprintf(stderr, "%s: xpath option selected but no xpath expression.\n", NAME);
+	exit(STATUS_UNIT_MISSING); // FIX
+      } else {
+	xpath = argv[(++curarg)++];
+      }
+
     // reached the end of a multi-short form option
     } else if (position > 0 && argv[curarg][position + 1] == '\0') {
 
@@ -623,6 +643,10 @@ int main(int argc, char* argv[]) {
     } else if (isoption(options, OPTION_XPATH)) {
 
       su.xpath(ofilename, xpath);
+
+    } else if (isoption(options, OPTION_XSLT)) {
+
+      su.xslt(ofilename, xpath);
 
     } else {
 
