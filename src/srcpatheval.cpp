@@ -133,7 +133,7 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 	     }
 
 	     if (unit_filename) {
-	       xmlOutputBufferWriteString(buf, "\" filename=\"");
+	       xmlOutputBufferWriteString(buf, " filename=\"");
 	       xmlOutputBufferWriteString(buf, (const char*) unit_filename);
 	       xmlOutputBufferWriteString(buf, "\"");
 	     }
