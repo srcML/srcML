@@ -70,6 +70,9 @@ class srcMLUtility {
   // perform xslt evaluation
   void xslt(const char* ofilename, const char* xslts);
 
+  // perform relaxng evaluation
+  void relaxng(const char* ofilename, const char* xslts);
+
   static bool checkEncoding(const char* encoding) {
 
     return xmlFindCharEncodingHandler(encoding) != 0;

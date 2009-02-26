@@ -49,6 +49,7 @@
 
 #include "srcpatheval.h"
 #include "srcxslteval.h"
+#include "srcrelaxngeval.h"
 
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op)
@@ -243,6 +244,17 @@ void srcMLUtility::xslt(const char* ofilename, const char* xslts) {
 
   // perform xpath evaluation
   srcxslteval(xslts, reader, ofilename);
+
+  xmlFreeTextReader(reader);
+}
+
+// relaxng evaluation of the nested units
+void srcMLUtility::relaxng(const char* ofilename, const char* xslts) {
+
+  xmlTextReaderPtr reader = xmlNewTextReaderFilename(infile);
+
+  // perform xpath evaluation
+  srcrelaxngeval(xslts, reader, ofilename);
 
   xmlFreeTextReader(reader);
 }

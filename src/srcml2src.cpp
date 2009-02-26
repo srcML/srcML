@@ -62,6 +62,9 @@ char const * const XPATH_FLAG_SHORT = "-p";
 char const * const XSLT_FLAG = "--xslt";
 char const * const XSLT_FLAG_SHORT = "-s";
 
+char const * const RELAXNG_FLAG = "--relaxng";
+char const * const RELAXNG_FLAG_SHORT = "-r";
+
 // output help message
 void output_help(const char* name) {
 
@@ -425,6 +428,26 @@ int main(int argc, char* argv[]) {
 	xpath = argv[(++curarg)++];
       }
 
+    // relaxng
+    } else if (compare_flags(argv[curarg], RELAXNG_FLAG, RELAXNG_FLAG_SHORT)) {
+      options |= OPTION_RELAXNG;
+
+      char* embedded = extract_option(argv[curarg]);
+
+      // filename is embedded parameter
+      if (embedded) {
+
+	xpath = embedded + 1;
+	++curarg;
+
+      // check for namespace flag with missing namespace
+      } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
+	fprintf(stderr, "%s: xpath option selected but no xpath expression.\n", NAME);
+	exit(STATUS_UNIT_MISSING); // FIX
+      } else {
+	xpath = argv[(++curarg)++];
+      }
+
     // reached the end of a multi-short form option
     } else if (position > 0 && argv[curarg][position + 1] == '\0') {
 
@@ -647,6 +670,10 @@ int main(int argc, char* argv[]) {
     } else if (isoption(options, OPTION_XSLT)) {
 
       su.xslt(ofilename, xpath);
+
+    } else if (isoption(options, OPTION_RELAXNG)) {
+
+      su.relaxng(ofilename, xpath);
 
     } else {
 

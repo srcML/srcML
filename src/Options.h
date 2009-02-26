@@ -136,6 +136,9 @@ enum Options {
   // xslt evaluation
   OPTION_XSLT         = 0x10000000,
 
+  // relaxng evaluation
+  OPTION_RELAXNG      = 0x20000000,
+
   // markup type modifiers
   OPTION_MODIFIER     = OPTION_TEXT,
 };
