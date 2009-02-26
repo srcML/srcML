@@ -17,16 +17,6 @@
 
 #include "xmlsavebuf.h"
 
-/* srcML unit attributes */
-/*
-const char* UNIT_ATTRIBUTE_LANGUAGE = "language";
-const char* UNIT_ATTRIBUTE_DIRECTORY = "dir";
-const char* UNIT_ATTRIBUTE_FILENAME = "filename";
-const char* UNIT_ATTRIBUTE_VERSION = "version";
-*/
-
-//typedef std::list<std::pair<std::string, std::string> > PROPERTIES_TYPE;
-
 int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilename) {
 
   // compile the xpath that will be applied to each unit
@@ -38,38 +28,30 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
   // read the first node
   xmlTextReaderRead(reader);
 
-  // record the current attributes for use in subunits
-  //  std::string unit_filename = (char*) xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_FILENAME);
-  //  std::string unit_directory = (char*) xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_DIRECTORY);
-  //  std::string unit_version = (char*) xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_VERSION);
-  //  std::string unit_language = (char*) xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_LANGUAGE);
-
-  // record all attributes for future use
-  // don't use the TextReaderMoveToNextAttribute as it messes up the future expand
-  /*
-  PROPERTIES_TYPE attrv;
-  for (xmlAttrPtr pAttr = xmlTextReaderCurrentNode(reader)->properties; pAttr; pAttr = pAttr->next) {
-
-      char* ac = (char*) xmlGetProp(xmlTextReaderCurrentNode(reader), pAttr->name);
-
-      attrv.push_back(std::make_pair((const char*) ac, (const char*) pAttr->name));
-  }
-  */
-
   // setup the context up on which the xpath will be evaluated on
   xmlXPathContextPtr context = xmlXPathNewContext(xmlTextReaderCurrentDoc(reader));
 
   xmlSaveCtxtPtr ctxt = xmlSaveToFilename(ofilename, (const char*) xmlTextReaderConstEncoding(reader), 
 					  XML_SAVE_NO_DECL);
 
+  // register src since it probably isn't.  Do so first, so that it can be overridden
+  const char* stdprefix = "src";
+  const char* stdurl = "http://www.sdml.info/srcML/src";
+  if (xmlXPathRegisterNs(context, BAD_CAST stdprefix, BAD_CAST stdurl) == -1)
+    fprintf(stderr, "Unable to register prefix %s for namespace %s\n", stdprefix, stdurl);
+
   // register the namespaces on the root element
-  xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "<unit");
   for (xmlNsPtr pAttr = xmlTextReaderCurrentNode(reader)->nsDef; pAttr; pAttr = pAttr->next) {
 
 	if (xmlXPathRegisterNs(context, pAttr->prefix ? pAttr->prefix : BAD_CAST "",
 			       BAD_CAST pAttr->href) == -1)
 	  fprintf(stderr, "Unable to register prefix %s for namespace %s\n",
 		  pAttr->prefix, pAttr->href);
+  }
+
+  // output the start tag of the root element
+  xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "<unit");
+  for (xmlNsPtr pAttr = xmlTextReaderCurrentNode(reader)->nsDef; pAttr; pAttr = pAttr->next) {
 
 	xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), " xmlns");
 	if (pAttr->prefix)
@@ -80,12 +62,6 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 	xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "\"");
   }
   xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), ">\n\n");
-
-  // register src since it probably isn't
-  const char* stdprefix = "src";
-  const char* stdurl = "http://www.sdml.info/srcML/src";
-  if (xmlXPathRegisterNs(context, BAD_CAST stdprefix, BAD_CAST stdurl) == -1)
-    fprintf(stderr, "Unable to register prefix %s for namespace %s\n", stdprefix, stdurl);
 
   // type of the xpath
   int nodetype = 0;
@@ -144,8 +120,11 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 
 	   onode = xmlXPathNodeSetItem(result_nodes->nodesetval, i);
 
+	   // output a unit element around the fragment, unless
+	   // is is already a unit
 	   outputunit = strcmp("unit", (const char*) onode->name) != 0;
 
+	   // if we need a unit, output the start tag
 	   if (outputunit) {
 
 	     // unit start tag
@@ -169,6 +148,7 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 	   // xpath result
 	   xmlSaveTree(ctxt, onode);
 
+	   // if we need a unit, output the end tag
 	   if (outputunit) {
 
 	     // unit end tag
