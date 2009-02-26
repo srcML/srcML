@@ -72,6 +72,9 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
   }
   xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), ">\n\n");
 
+  // doc for applying stylesheet to
+  xmlDocPtr doc = xmlNewDoc(NULL);
+
   while (1) {
 
      // read a node
@@ -87,15 +90,23 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
        // expand this unit to make it the context
        xmlNodePtr node = xmlTextReaderExpand(reader);
 
+       // create a separate document with the expanded unit
+       xmlDocSetRootElement(doc, xmlCopyNode(node, 1));
+
        // apply the style sheet
-       xmlDocPtr res = xsltApplyStylesheet(xslt, node->doc, NULL);
+       xmlDocPtr res = xsltApplyStylesheet(xslt, doc, NULL);
 
        // save the transformed tree
-       xmlSaveTree(ctxt, xmlDocGetRootElement(res));
+       xsltSaveResultTo(xmlSaveGetBuffer(ctxt), res, xslt);
        xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "\n");
 
        // finished with the result of the transformation
        xmlFreeDoc(res);
+
+       // cleanup our doc
+       xmlNodePtr oldnode = xmlDocGetRootElement(doc);
+       xmlUnlinkNode(oldnode);
+       xmlFreeNode(oldnode);
 
        // move over this expanded node
        xmlTextReaderNext(reader);
@@ -107,6 +118,9 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 
   // all done with the buffer
   xmlOutputBufferClose(xmlSaveGetBuffer(ctxt));
+
+  // all done with the doc
+  xmlFreeDoc(doc);
 
   return 0;
 }
