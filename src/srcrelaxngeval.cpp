@@ -66,9 +66,6 @@ int srcrelaxngeval(const char* xpath, xmlTextReaderPtr reader, const char* ofile
   }
   xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), ">\n\n");
 
-  // doc for applying stylesheet to
-  xmlDocPtr doc = xmlNewDoc(NULL);
-
   xmlRelaxNGParserCtxtPtr relaxng = xmlRelaxNGNewParserCtxt(xpath);
 
   xmlRelaxNGPtr rng = xmlRelaxNGParse(relaxng);
@@ -90,17 +87,11 @@ int srcrelaxngeval(const char* xpath, xmlTextReaderPtr reader, const char* ofile
        // expand this unit to make it the context
        xmlNodePtr node = xmlTextReaderExpand(reader);
 
-       xmlDocSetRootElement(doc, xmlCopyNode(node, 1));
-       int n = xmlRelaxNGValidateDoc(rngptr, doc);
+       int n = xmlRelaxNGValidateDoc(rngptr, node->doc);
 
        if (n == 0)
 	 // xpath result
 	 xmlSaveTree(ctxt, node);
-
-       // cleanup our doc
-       xmlNodePtr oldnode = xmlDocGetRootElement(doc);
-       xmlUnlinkNode(oldnode);
-       xmlFreeNode(oldnode);
 
        // move over this expanded node
        xmlTextReaderNext(reader);
@@ -112,9 +103,6 @@ int srcrelaxngeval(const char* xpath, xmlTextReaderPtr reader, const char* ofile
 
   // all done with the buffer
   xmlOutputBufferClose(xmlSaveGetBuffer(ctxt));
-
-  // all done with the doc
-  xmlFreeDoc(doc);
 
   return 0;
 }
