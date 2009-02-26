@@ -96,9 +96,16 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
        // apply the style sheet
        xmlDocPtr res = xsltApplyStylesheet(xslt, doc, NULL);
 
+       // remove and store the namespace
+       xmlNsPtr savens = xmlDocGetRootElement(res)->nsDef;
+       xmlDocGetRootElement(res)->nsDef = 0;
+
        // save the transformed tree
        xsltSaveResultTo(xmlSaveGetBuffer(ctxt), res, xslt);
        xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "\n");
+
+       // put the namespace back in
+       xmlDocGetRootElement(res)->nsDef = savens;
 
        // finished with the result of the transformation
        xmlFreeDoc(res);
