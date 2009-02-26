@@ -21,36 +21,25 @@
 #include <libexslt/exslt.h>
 #include <libexslt/exsltconfig.h>
 
-#include "xmlsavebuf.h"
-
-/* srcML unit attributes */
-/*
-const char* UNIT_ATTRIBUTE_LANGUAGE = "language";
-const char* UNIT_ATTRIBUTE_DIRECTORY = "dir";
-const char* UNIT_ATTRIBUTE_FILENAME = "filename";
-const char* UNIT_ATTRIBUTE_VERSION = "version";
-*/
-
 int srcrelaxngeval(const char* xpath, xmlTextReaderPtr reader, const char* ofilename) {
 
   // read the first node
   xmlTextReaderRead(reader);
 
   // setup output
-  xmlSaveCtxtPtr ctxt = xmlSaveToFilename(ofilename, (const char*) xmlTextReaderConstEncoding(reader),
-					  XML_SAVE_NO_DECL);
+  xmlOutputBufferPtr buf = xmlOutputBufferCreateFilename(ofilename, NULL, 0);
 
   // register the namespaces on the root element
-  xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "<unit");
+  xmlOutputBufferWriteString(buf, "<unit");
   for (xmlNsPtr pAttr = xmlTextReaderCurrentNode(reader)->nsDef; pAttr; pAttr = pAttr->next) {
 
-	xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), " xmlns");
+	xmlOutputBufferWriteString(buf, " xmlns");
 	if (pAttr->prefix)
-	  xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), ":");
-	xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), (const char*) pAttr->prefix);
-	xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "=\"");
-	xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), (const char*) pAttr->href);
-	xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "\"");
+	  xmlOutputBufferWriteString(buf, ":");
+	xmlOutputBufferWriteString(buf, (const char*) pAttr->prefix);
+	xmlOutputBufferWriteString(buf, "=\"");
+	xmlOutputBufferWriteString(buf, (const char*) pAttr->href);
+	xmlOutputBufferWriteString(buf, "\"");
   }
 
   // copy all attributes
@@ -58,13 +47,13 @@ int srcrelaxngeval(const char* xpath, xmlTextReaderPtr reader, const char* ofile
 
         char* ac = (char*) xmlGetProp(xmlTextReaderCurrentNode(reader), pAttr->name);
 
-	xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), " ");
-	xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), (const char*) pAttr->name);
-	xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "=\"");
-	xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), (const char*) ac);
-	xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "\"");
+	xmlOutputBufferWriteString(buf, " ");
+	xmlOutputBufferWriteString(buf, (const char*) pAttr->name);
+	xmlOutputBufferWriteString(buf, "=\"");
+	xmlOutputBufferWriteString(buf, (const char*) ac);
+	xmlOutputBufferWriteString(buf, "\"");
   }
-  xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), ">\n\n");
+  xmlOutputBufferWriteString(buf, ">\n\n");
 
   xmlRelaxNGParserCtxtPtr relaxng = xmlRelaxNGNewParserCtxt(xpath);
 
@@ -87,11 +76,14 @@ int srcrelaxngeval(const char* xpath, xmlTextReaderPtr reader, const char* ofile
        // expand this unit to make it the context
        xmlNodePtr node = xmlTextReaderExpand(reader);
 
+       // validate
        int n = xmlRelaxNGValidateDoc(rngptr, node->doc);
 
-       if (n == 0)
-	 // xpath result
-	 xmlSaveTree(ctxt, node);
+       // output if it validates
+       if (n == 0) {
+	 xmlNodeDumpOutput(buf, xmlTextReaderCurrentDoc(reader), node, 0, 0, 0);
+	 xmlOutputBufferWriteString(buf, "\n\n");
+       }
 
        // move over this expanded node
        xmlTextReaderNext(reader);
@@ -99,10 +91,10 @@ int srcrelaxngeval(const char* xpath, xmlTextReaderPtr reader, const char* ofile
   }
 
   // root unit end tag
-  xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "</unit>\n");
+  xmlOutputBufferWriteString(buf, "</unit>\n");
 
   // all done with the buffer
-  xmlOutputBufferClose(xmlSaveGetBuffer(ctxt));
+  xmlOutputBufferClose(buf);
 
   return 0;
 }
