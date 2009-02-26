@@ -8,9 +8,6 @@
 
 #include "srcxslteval.h"
 
-#include <string>
-#include <list>
-
 #include <libxml/xpath.h>
 #include <libxml/xmlsave.h>
 #include <libxml/xpathInternals.h>
@@ -23,40 +20,31 @@
 #include <libexslt/exslt.h>
 #include <libexslt/exsltconfig.h>
 
-#include "xmlsavebuf.h"
-
-/* srcML unit attributes */
-/*
-const char* UNIT_ATTRIBUTE_LANGUAGE = "language";
-const char* UNIT_ATTRIBUTE_DIRECTORY = "dir";
-const char* UNIT_ATTRIBUTE_FILENAME = "filename";
-const char* UNIT_ATTRIBUTE_VERSION = "version";
-*/
-
 int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilename) {
 
+  // allow for all exslt functions
   exsltRegisterAll();
 
+  // parse the stylesheet
   xsltStylesheetPtr xslt = xsltParseStylesheetFile(BAD_CAST xpath);
 
   // read the first node
   xmlTextReaderRead(reader);
 
   // setup output
-  xmlSaveCtxtPtr ctxt = xmlSaveToFilename(ofilename, (const char*) xmlTextReaderConstEncoding(reader),
-					  XML_SAVE_NO_DECL);
+  xmlOutputBufferPtr buf = xmlOutputBufferCreateFilename(ofilename, NULL, 0);
 
   // register the namespaces on the root element
-  xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "<unit");
+  xmlOutputBufferWriteString(buf, "<unit");
   for (xmlNsPtr pAttr = xmlTextReaderCurrentNode(reader)->nsDef; pAttr; pAttr = pAttr->next) {
 
-	xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), " xmlns");
+	xmlOutputBufferWriteString(buf, " xmlns");
 	if (pAttr->prefix)
-	  xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), ":");
-	xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), (const char*) pAttr->prefix);
-	xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "=\"");
-	xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), (const char*) pAttr->href);
-	xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "\"");
+	  xmlOutputBufferWriteString(buf, ":");
+	xmlOutputBufferWriteString(buf, (const char*) pAttr->prefix);
+	xmlOutputBufferWriteString(buf, "=\"");
+	xmlOutputBufferWriteString(buf, (const char*) pAttr->href);
+	xmlOutputBufferWriteString(buf, "\"");
   }
 
   // copy all attributes
@@ -64,13 +52,13 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 
         char* ac = (char*) xmlGetProp(xmlTextReaderCurrentNode(reader), pAttr->name);
 
-	xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), " ");
-	xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), (const char*) pAttr->name);
-	xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "=\"");
-	xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), (const char*) ac);
-	xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "\"");
+	xmlOutputBufferWriteString(buf, " ");
+	xmlOutputBufferWriteString(buf, (const char*) pAttr->name);
+	xmlOutputBufferWriteString(buf, "=\"");
+	xmlOutputBufferWriteString(buf, (const char*) ac);
+	xmlOutputBufferWriteString(buf, "\"");
   }
-  xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), ">\n\n");
+  xmlOutputBufferWriteString(buf, ">\n\n");
 
   // doc for applying stylesheet to
   xmlDocPtr doc = xmlNewDoc(NULL);
@@ -93,7 +81,7 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
        // create a separate document with the expanded unit
        xmlDocSetRootElement(doc, xmlCopyNode(node, 1));
 
-       // apply the style sheet
+       // apply the style sheet to the extracted doc
        xmlDocPtr res = xsltApplyStylesheet(xslt, doc, NULL);
 
        // remove and store the namespace
@@ -101,8 +89,8 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
        xmlDocGetRootElement(res)->nsDef = 0;
 
        // save the transformed tree
-       xsltSaveResultTo(xmlSaveGetBuffer(ctxt), res, xslt);
-       xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "\n");
+       xsltSaveResultTo(buf, res, xslt);
+       xmlOutputBufferWriteString(buf, "\n");
 
        // put the namespace back in
        xmlDocGetRootElement(res)->nsDef = savens;
@@ -110,7 +98,7 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
        // finished with the result of the transformation
        xmlFreeDoc(res);
 
-       // cleanup our doc
+       // cleanup the extracted doc
        xmlNodePtr oldnode = xmlDocGetRootElement(doc);
        xmlUnlinkNode(oldnode);
        xmlFreeNode(oldnode);
@@ -121,10 +109,10 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
   }
 
   // root unit end tag
-  xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "</unit>\n");
+  xmlOutputBufferWriteString(buf, "</unit>\n");
 
   // all done with the buffer
-  xmlOutputBufferClose(xmlSaveGetBuffer(ctxt));
+  xmlOutputBufferClose(buf);
 
   // all done with the doc
   xmlFreeDoc(doc);
