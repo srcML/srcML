@@ -4,6 +4,8 @@
 
 #include "srcrelaxngeval.h"
 
+#include <iostream>
+
 #include <string>
 #include <list>
 
@@ -67,6 +69,12 @@ int srcrelaxngeval(const char* xpath, xmlTextReaderPtr reader, const char* ofile
   // doc for applying stylesheet to
   xmlDocPtr doc = xmlNewDoc(NULL);
 
+  xmlRelaxNGParserCtxtPtr relaxng = xmlRelaxNGNewParserCtxt(xpath);
+
+  xmlRelaxNGPtr rng = xmlRelaxNGParse(relaxng);
+
+  xmlRelaxNGValidCtxtPtr rngptr = xmlRelaxNGNewValidCtxt(rng);
+
   while (1) {
 
      // read a node
@@ -82,8 +90,17 @@ int srcrelaxngeval(const char* xpath, xmlTextReaderPtr reader, const char* ofile
        // expand this unit to make it the context
        xmlNodePtr node = xmlTextReaderExpand(reader);
 
-       // xpath result
-       xmlSaveTree(ctxt, node);
+       xmlDocSetRootElement(doc, xmlCopyNode(node, 1));
+       int n = xmlRelaxNGValidateDoc(rngptr, doc);
+
+       if (n == 0)
+	 // xpath result
+	 xmlSaveTree(ctxt, node);
+
+       // cleanup our doc
+       xmlNodePtr oldnode = xmlDocGetRootElement(doc);
+       xmlUnlinkNode(oldnode);
+       xmlFreeNode(oldnode);
 
        // move over this expanded node
        xmlTextReaderNext(reader);
