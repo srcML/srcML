@@ -134,10 +134,10 @@ enum Options {
   OPTION_XPATH        = 0x08000000,
 
   // xslt evaluation
-  OPTION_XSLT         = 0x10000000,
+  OPTION_XSLT         = 0x00100000,
 
   // relaxng evaluation
-  OPTION_RELAXNG      = 0x20000000,
+  OPTION_RELAXNG      = 0x00200000,
 
   // markup type modifiers
   OPTION_MODIFIER     = OPTION_TEXT,
