@@ -7,15 +7,11 @@
 */
 
 #include "srcpatheval.h"
-#include <iostream>
-#include <string>
-#include <list>
+#include <cstring>
 
 #include <libxml/xpath.h>
 #include <libxml/xmlsave.h>
 #include <libxml/xpathInternals.h>
-
-#include "xmlsavebuf.h"
 
 int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilename) {
 
@@ -31,8 +27,8 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
   // setup the context up on which the xpath will be evaluated on
   xmlXPathContextPtr context = xmlXPathNewContext(xmlTextReaderCurrentDoc(reader));
 
-  xmlSaveCtxtPtr ctxt = xmlSaveToFilename(ofilename, (const char*) xmlTextReaderConstEncoding(reader), 
-					  XML_SAVE_NO_DECL);
+  // setup output
+  xmlOutputBufferPtr buf = xmlOutputBufferCreateFilename(ofilename, NULL, 0);
 
   // register src since it probably isn't.  Do so first, so that it can be overridden
   const char* stdprefix = "src";
@@ -50,18 +46,18 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
   }
 
   // output the start tag of the root element
-  xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "<unit");
+  xmlOutputBufferWriteString(buf, "<unit");
   for (xmlNsPtr pAttr = xmlTextReaderCurrentNode(reader)->nsDef; pAttr; pAttr = pAttr->next) {
 
-	xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), " xmlns");
+	xmlOutputBufferWriteString(buf, " xmlns");
 	if (pAttr->prefix)
-	  xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), ":");
-	xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), (const char*) pAttr->prefix);
-	xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "=\"");
-	xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), (const char*) pAttr->href);
-	xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "\"");
+	  xmlOutputBufferWriteString(buf, ":");
+	xmlOutputBufferWriteString(buf, (const char*) pAttr->prefix);
+	xmlOutputBufferWriteString(buf, "=\"");
+	xmlOutputBufferWriteString(buf, (const char*) pAttr->href);
+	xmlOutputBufferWriteString(buf, "\"");
   }
-  xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), ">\n\n");
+  xmlOutputBufferWriteString(buf, ">\n\n");
 
   // type of the xpath
   int nodetype = 0;
@@ -128,32 +124,32 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 	   if (outputunit) {
 
 	     // unit start tag
-	     xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "<unit");
+	     xmlOutputBufferWriteString(buf, "<unit");
 
 	     if (unit_directory) {
-	       xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), " dir=\"");
-	       xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), (const char*) unit_directory);
-	       xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "\"");
+	       xmlOutputBufferWriteString(buf, " dir=\"");
+	       xmlOutputBufferWriteString(buf, (const char*) unit_directory);
+	       xmlOutputBufferWriteString(buf, "\"");
 	     }
 
 	     if (unit_filename) {
-	       xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "\" filename=\"");
-	       xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), (const char*) unit_filename);
-	       xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "\"");
+	       xmlOutputBufferWriteString(buf, "\" filename=\"");
+	       xmlOutputBufferWriteString(buf, (const char*) unit_filename);
+	       xmlOutputBufferWriteString(buf, "\"");
 	     }
 
-	     xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), ">");
+	     xmlOutputBufferWriteString(buf, ">");
 	   }
 
 	   // xpath result
-	   xmlSaveTree(ctxt, onode);
+	   xmlNodeDumpOutput(buf, xmlTextReaderCurrentDoc(reader), onode, 0, 0, 0);
 
 	   // if we need a unit, output the end tag
 	   if (outputunit) {
 
 	     // unit end tag
-	     xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "</unit>\n");
-	     xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "\n");
+	     xmlOutputBufferWriteString(buf, "</unit>\n");
+	     xmlOutputBufferWriteString(buf, "\n");
 	   }
 	 }
 
@@ -204,9 +200,9 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
     break;
   }
 
-  xmlOutputBufferWriteString(xmlSaveGetBuffer(ctxt), "</unit>\n");
+  xmlOutputBufferWriteString(buf, "</unit>\n");
 
-  xmlSaveClose(ctxt);
+  xmlOutputBufferClose(buf);
 
   return 0;
 }
