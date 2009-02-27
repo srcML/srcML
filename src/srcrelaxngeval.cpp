@@ -30,16 +30,16 @@ int srcrelaxngeval(const char* xpath, xmlTextReaderPtr reader, const char* ofile
   xmlOutputBufferPtr buf = xmlOutputBufferCreateFilename(ofilename, NULL, 0);
 
   // register the namespaces on the root element
-  xmlOutputBufferWriteString(buf, "<unit");
+  xmlOutputBufferWrite(buf, 5, "<unit");
   for (xmlNsPtr pAttr = xmlTextReaderCurrentNode(reader)->nsDef; pAttr; pAttr = pAttr->next) {
 
-	xmlOutputBufferWriteString(buf, " xmlns");
-	if (pAttr->prefix)
-	  xmlOutputBufferWriteString(buf, ":");
+        xmlOutputBufferWrite(buf, 6, " xmlns");
+        if (pAttr->prefix)
+	  xmlOutputBufferWrite(buf, 1, ":");
 	xmlOutputBufferWriteString(buf, (const char*) pAttr->prefix);
-	xmlOutputBufferWriteString(buf, "=\"");
+	xmlOutputBufferWrite(buf, 2, "=\"");
 	xmlOutputBufferWriteString(buf, (const char*) pAttr->href);
-	xmlOutputBufferWriteString(buf, "\"");
+	xmlOutputBufferWrite(buf, 2, "\"");
   }
 
   // copy all attributes
@@ -47,13 +47,13 @@ int srcrelaxngeval(const char* xpath, xmlTextReaderPtr reader, const char* ofile
 
         char* ac = (char*) xmlGetProp(xmlTextReaderCurrentNode(reader), pAttr->name);
 
-	xmlOutputBufferWriteString(buf, " ");
+	xmlOutputBufferWrite(buf, 1, " ");
 	xmlOutputBufferWriteString(buf, (const char*) pAttr->name);
-	xmlOutputBufferWriteString(buf, "=\"");
+	xmlOutputBufferWrite(buf, 2, "=\"");
 	xmlOutputBufferWriteString(buf, (const char*) ac);
-	xmlOutputBufferWriteString(buf, "\"");
+	xmlOutputBufferWrite(buf, 1, "\"");
   }
-  xmlOutputBufferWriteString(buf, ">\n\n");
+  xmlOutputBufferWrite(buf, 3, ">\n\n");
 
   xmlRelaxNGParserCtxtPtr relaxng = xmlRelaxNGNewParserCtxt(xpath);
 
@@ -82,7 +82,7 @@ int srcrelaxngeval(const char* xpath, xmlTextReaderPtr reader, const char* ofile
        // output if it validates
        if (n == 0) {
 	 xmlNodeDumpOutput(buf, xmlTextReaderCurrentDoc(reader), node, 0, 0, 0);
-	 xmlOutputBufferWriteString(buf, "\n\n");
+	 xmlOutputBufferWrite(buf, 2, "\n\n");
        }
 
        // move over this expanded node
@@ -91,7 +91,7 @@ int srcrelaxngeval(const char* xpath, xmlTextReaderPtr reader, const char* ofile
   }
 
   // root unit end tag
-  xmlOutputBufferWriteString(buf, "</unit>\n");
+  xmlOutputBufferWrite(buf, 8, "</unit>\n");
 
   // all done with the buffer
   xmlOutputBufferClose(buf);
