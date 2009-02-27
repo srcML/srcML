@@ -8,22 +8,22 @@
 
 void xmlAttrDumpOutputBuffer(xmlOutputBufferPtr buf, xmlNodePtr node, xmlAttrPtr pAttr) {
 
-  xmlOutputBufferWriteString(buf, " ");
+  xmlOutputBufferWrite(buf, 1, " ");
   xmlOutputBufferWriteString(buf, (const char*) pAttr->name);
-  xmlOutputBufferWriteString(buf, "=\"");
+  xmlOutputBufferWrite(buf, 2, "=\"");
   xmlOutputBufferWriteString(buf, (const char*) xmlGetProp(node, pAttr->name));
-  xmlOutputBufferWriteString(buf, "\"");
+  xmlOutputBufferWrite(buf, 1, "\"");
 }
 
 void xmlNsDumpOutputBuffer(xmlOutputBufferPtr buf, xmlNsPtr pAttr) {
 
-  xmlOutputBufferWriteString(buf, " xmlns");
+  xmlOutputBufferWrite(buf, 6, " xmlns");
   if (pAttr->prefix)
-    xmlOutputBufferWriteString(buf, ":");
+    xmlOutputBufferWrite(buf, 1, ":");
   xmlOutputBufferWriteString(buf, (const char*) pAttr->prefix);
-  xmlOutputBufferWriteString(buf, "=\"");
+  xmlOutputBufferWrite(buf, 2, "=\"");
   xmlOutputBufferWriteString(buf, (const char*) pAttr->href);
-  xmlOutputBufferWriteString(buf, "\"");
+  xmlOutputBufferWrite(buf, 1, "\"");
 }
 
 void xmlUnitDumpOutputBuffer(xmlOutputBufferPtr buf, xmlNodePtr node) {

@@ -7,6 +7,8 @@
 */
 
 #include "srcpatheval.h"
+#include "srceval.h"
+
 #include <cstring>
 
 #include <libxml/xpath.h>
@@ -46,19 +48,8 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 		  pAttr->prefix, pAttr->href);
   }
 
-  // output the start tag of the root element
-  xmlOutputBufferWrite(buf, 5, "<unit");
-  for (xmlNsPtr pAttr = xmlTextReaderCurrentNode(reader)->nsDef; pAttr; pAttr = pAttr->next) {
-
-        xmlOutputBufferWrite(buf, 6, " xmlns");
-	if (pAttr->prefix)
-	  xmlOutputBufferWrite(buf, 1, ":");
-	xmlOutputBufferWriteString(buf, (const char*) pAttr->prefix);
-	xmlOutputBufferWrite(buf, 2, "=\"");
-	xmlOutputBufferWriteString(buf, (const char*) pAttr->href);
-	xmlOutputBufferWrite(buf, 1, "\"");
-  }
-  xmlOutputBufferWrite(buf, 3, ">\n\n");
+  // copy the start tag of the root element unit
+  xmlUnitDumpOutputBuffer(buf, xmlTextReaderCurrentNode(reader));
 
   // type of the xpath
   int nodetype = 0;
