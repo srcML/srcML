@@ -91,7 +91,7 @@ CONSTANTS :
         '0'..'9'
     ;
 
-OPERATORS options { testLiterals = true; } { unsigned int realbegin = _begin; bool gt = false; int dcoloncount = 0; bool quit = false; } : 
+OPERATORS options { testLiterals = true; } { unsigned int realbegin = _begin; bool gt = false; int dcoloncount = 0; } : 
         (
             '#' {
 
@@ -106,10 +106,10 @@ OPERATORS options { testLiterals = true; } { unsigned int realbegin = _begin; bo
             }
         }   |
 
-        ({ !quit && !(gt && LA(1) == '>') && dcoloncount < 2 }?
+        ({ !(gt && LA(1) == '>') && dcoloncount < 2 }?
 
          ( '*' | '|' | ':' { ++dcoloncount; } | '`' | '=' | '!' | '%' | '+' | '^' | '-' |
-           '&' { text.erase(realbegin); text += "&amp;"; realbegin += 4; quit = true; } | 
+           '&' { text.erase(realbegin); text += "&amp;"; realbegin += 4; } | 
            '>' { if (realbegin == _begin) gt = true; text.erase(realbegin); text += "&gt;"; realbegin += 3; } | 
            '<' { text.erase(realbegin); text += "&lt;"; realbegin += 3;  }) { ++realbegin; } )+ |
 

@@ -2492,15 +2492,9 @@ variable_identifier_array_grammar_sub[bool& iscomplex] { LocalMode lm; } :
             startElement(SINDEX);
         }
         LBRACKET
-        {
-            // start a mode to end at right bracket with expressions inside
-            startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
-        }
-        full_expression[true]
-        {
-            // end mode created at left bracket
-            endDownOverMode(MODE_TOP);
-        }
+
+        full_expression
+
         RBRACKET
         {
             iscomplex = true;
@@ -2511,8 +2505,11 @@ variable_identifier_array_grammar_sub[bool& iscomplex] { LocalMode lm; } :
   Full, complete expression matched all at once (no stream).
   Colon matches range(?) for bits.
 */
-full_expression[bool checkmacro = false] {} :
-
+full_expression { LocalMode lm; } :
+        {
+            // start a mode to end at right bracket with expressions inside
+            startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
+        }
         (options { greedy = true; } :
 
         // commas as in a list
@@ -4169,9 +4166,7 @@ line_continuation { setFinalToken(); } :
 ;
 
 cpp_condition[bool& markblockzero] { LocalMode lm; } :
-        {
-            startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_TOP);
-        }
+
         set_bool[markblockzero, LA(1) == CONSTANTS && LT(1)->getText() == "0"]
 
         full_expression
