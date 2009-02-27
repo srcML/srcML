@@ -7,6 +7,7 @@
 */
 
 #include "srcxslteval.h"
+#include "srceval.h"
 
 #include <libxslt/xslt.h>
 #include <libxslt/transform.h>
@@ -28,31 +29,8 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
   // setup output
   xmlOutputBufferPtr buf = xmlOutputBufferCreateFilename(ofilename, NULL, 0);
 
-  // register the namespaces on the root element
-  xmlOutputBufferWriteString(buf, "<unit");
-  for (xmlNsPtr pAttr = xmlTextReaderCurrentNode(reader)->nsDef; pAttr; pAttr = pAttr->next) {
-
-	xmlOutputBufferWriteString(buf, " xmlns");
-	if (pAttr->prefix)
-	  xmlOutputBufferWriteString(buf, ":");
-	xmlOutputBufferWriteString(buf, (const char*) pAttr->prefix);
-	xmlOutputBufferWriteString(buf, "=\"");
-	xmlOutputBufferWriteString(buf, (const char*) pAttr->href);
-	xmlOutputBufferWriteString(buf, "\"");
-  }
-
-  // copy all attributes
-  for (xmlAttrPtr pAttr = xmlTextReaderCurrentNode(reader)->properties; pAttr; pAttr = pAttr->next) {
-
-        char* ac = (char*) xmlGetProp(xmlTextReaderCurrentNode(reader), pAttr->name);
-
-	xmlOutputBufferWriteString(buf, " ");
-	xmlOutputBufferWriteString(buf, (const char*) pAttr->name);
-	xmlOutputBufferWriteString(buf, "=\"");
-	xmlOutputBufferWriteString(buf, (const char*) ac);
-	xmlOutputBufferWriteString(buf, "\"");
-  }
-  xmlOutputBufferWriteString(buf, ">\n\n");
+  // copy the start tag of the root element unit
+  xmlUnitDumpOutputBuffer(buf, xmlTextReaderCurrentNode(reader));
 
   // doc for applying stylesheet to
   xmlDocPtr doc = xmlNewDoc(NULL);
