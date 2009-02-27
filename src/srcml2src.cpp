@@ -669,7 +669,7 @@ int main(int argc, char* argv[]) {
 
     } else if (isoption(options, OPTION_XSLT)) {
 
-      const char* params[] = { NULL } ;
+      const char* params[] = { "count", "2", NULL } ;
 
       su.xslt(ofilename, xpath, params);
 

@@ -9,6 +9,8 @@
 #include "srcxslteval.h"
 #include "srceval.h"
 
+#include <cstdio>
+
 #include <libxslt/xslt.h>
 #include <libxslt/transform.h>
 #include <libxslt/xsltutils.h>
@@ -35,6 +37,8 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
   // doc for applying stylesheet to
   xmlDocPtr doc = xmlNewDoc(NULL);
 
+  int position = 0;
+
   while (1) {
 
      // read a node
@@ -46,6 +50,12 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
      if (xmlTextReaderDepth(reader) == 1 &&
 	 xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT &&
 	 xmlTextReaderConstName(reader)[0] == 'u') {
+
+       ++position;
+
+       char posstr[50];
+       sprintf(posstr, "%d", position);
+       const char* params[] = { "position", posstr, NULL };
 
        // expand this unit to make it the context
        xmlNodePtr node = xmlTextReaderExpand(reader);
