@@ -37,13 +37,13 @@ enum Options {
   // unit is nested a root unit
   OPTION_NESTED      = 0x00000002,
 
-  // markup literal values
+  // markup literal values @src2srcml
   OPTION_LITERAL     = 0x00000004,
 
   // output is compressed (gzip)
   OPTION_COMPRESSED  = 0x00000008,
 
-  // output is interactive (good for editing applications)
+  // output is interactive (good for editing applications) @src2srcml
   OPTION_INTERACTIVE = 0x00000010,
 
   // input filenames is a file list
@@ -128,7 +128,7 @@ enum Options {
   //  OPTION_SELF_VERSION = 0x02000000,
 
   // markup operators
-  OPTION_OPERATOR     = 0x80000000,
+  OPTION_OPERATOR     = OPTION_INTERACTIVE,
 
   // xpath evaluation
   OPTION_XPATH        = OPTION_LITERAL,
