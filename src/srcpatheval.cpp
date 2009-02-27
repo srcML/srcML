@@ -10,7 +10,6 @@
 #include <cstring>
 
 #include <libxml/xpath.h>
-#include <libxml/xmlsave.h>
 #include <libxml/xpathInternals.h>
 
 int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilename) {
@@ -22,7 +21,9 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
   }
 
   // read the first node
-  xmlTextReaderRead(reader);
+  int ret = xmlTextReaderRead(reader);
+  if (ret != 1)
+    return 1;
 
   // setup the context up on which the xpath will be evaluated on
   xmlXPathContextPtr context = xmlXPathNewContext(xmlTextReaderCurrentDoc(reader));
@@ -46,18 +47,18 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
   }
 
   // output the start tag of the root element
-  xmlOutputBufferWriteString(buf, "<unit");
+  xmlOutputBufferWrite(buf, 5, "<unit");
   for (xmlNsPtr pAttr = xmlTextReaderCurrentNode(reader)->nsDef; pAttr; pAttr = pAttr->next) {
 
-	xmlOutputBufferWriteString(buf, " xmlns");
+        xmlOutputBufferWrite(buf, 6, " xmlns");
 	if (pAttr->prefix)
-	  xmlOutputBufferWriteString(buf, ":");
+	  xmlOutputBufferWrite(buf, 1, ":");
 	xmlOutputBufferWriteString(buf, (const char*) pAttr->prefix);
-	xmlOutputBufferWriteString(buf, "=\"");
+	xmlOutputBufferWrite(buf, 2, "=\"");
 	xmlOutputBufferWriteString(buf, (const char*) pAttr->href);
-	xmlOutputBufferWriteString(buf, "\"");
+	xmlOutputBufferWrite(buf, 1, "\"");
   }
-  xmlOutputBufferWriteString(buf, ">\n\n");
+  xmlOutputBufferWrite(buf, 3, ">\n\n");
 
   // type of the xpath
   int nodetype = 0;
@@ -124,21 +125,21 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 	   if (outputunit) {
 
 	     // unit start tag
-	     xmlOutputBufferWriteString(buf, "<unit");
+	     xmlOutputBufferWrite(buf, 5, "<unit");
 
 	     if (unit_directory) {
-	       xmlOutputBufferWriteString(buf, " dir=\"");
+	       xmlOutputBufferWrite(buf, 6, " dir=\"");
 	       xmlOutputBufferWriteString(buf, (const char*) unit_directory);
-	       xmlOutputBufferWriteString(buf, "\"");
+	       xmlOutputBufferWrite(buf, 1, "\"");
 	     }
 
 	     if (unit_filename) {
-	       xmlOutputBufferWriteString(buf, " filename=\"");
+	       xmlOutputBufferWrite(buf, 11, " filename=\"");
 	       xmlOutputBufferWriteString(buf, (const char*) unit_filename);
-	       xmlOutputBufferWriteString(buf, "\"");
+	       xmlOutputBufferWrite(buf, 1, "\"");
 	     }
 
-	     xmlOutputBufferWriteString(buf, ">");
+	     xmlOutputBufferWrite(buf, 1, ">");
 	   }
 
 	   // xpath result
@@ -148,8 +149,7 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 	   if (outputunit) {
 
 	     // unit end tag
-	     xmlOutputBufferWriteString(buf, "</unit>\n");
-	     xmlOutputBufferWriteString(buf, "\n");
+	     xmlOutputBufferWrite(buf, 9, "</unit>\n\n");
 	   }
 	 }
 
@@ -200,7 +200,7 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
     break;
   }
 
-  xmlOutputBufferWriteString(buf, "</unit>\n");
+  xmlOutputBufferWrite(buf, 8, "</unit>\n");
 
   xmlOutputBufferClose(buf);
 
