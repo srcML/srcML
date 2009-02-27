@@ -32,64 +32,64 @@ inline bool isoption(int options, int flag) {
 enum Options {
 
   // issue debugging elements and declare debugging element namespace
-  OPTION_DEBUG       = 0x1,
+  OPTION_DEBUG       = 0x00000001,
 
   // unit is nested a root unit
-  OPTION_NESTED      = 0x2,
+  OPTION_NESTED      = 0x00000002,
 
   // markup literal values
-  OPTION_LITERAL     = 0x4,
+  OPTION_LITERAL     = 0x00000004,
 
   // output is compressed (gzip)
-  OPTION_COMPRESSED  = 0x8,
+  OPTION_COMPRESSED  = 0x00000008,
 
   // output is interactive (good for editing applications)
-  OPTION_INTERACTIVE = 0x10,
+  OPTION_INTERACTIVE = 0x00000010,
 
   // input filenames is a file list
-  OPTION_FILELIST    = 0x20,
+  OPTION_FILELIST    = 0x00000020,
 
   // declared filename
-  OPTION_FILENAME    = 0x40,
+  OPTION_FILENAME    = 0x00000040,
 
   // declared directory
-  OPTION_DIRECTORY   = 0x80,
+  OPTION_DIRECTORY   = 0x00000080,
 
   // declared version
-  OPTION_VERSION     = 0x100,
+  OPTION_VERSION     = 0x00000100,
 
   // verbose translation
-  OPTION_VERBOSE     = 0x200,
+  OPTION_VERBOSE     = 0x00000200,
 
   // help
-  OPTION_HELP        = 0x400,
+  OPTION_HELP        = 0x00000400,
 
   // program version
-  OPTION_PVERSION    = 0x800,
+  OPTION_PVERSION    = 0x00000800,
 
   // language
-  OPTION_LANGUAGE    = 0x1000,
+  OPTION_LANGUAGE    = 0x00001000,
 
   // xml encoding
-  OPTION_XML_ENCODING= 0x2000,
+  OPTION_XML_ENCODING= 0x00002000,
 
   // language
-  OPTION_TEXT_ENCODING= 0x4000,
+  OPTION_TEXT_ENCODING= 0x00004000,
 
   // text extraction
-  OPTION_TEXT         = 0x8000,
+  OPTION_TEXT         = 0x00008000,
 
   // language
-  OPTION_UNIT         = 0x10000,
+  OPTION_UNIT         = 0x00010000,
 
   // expand nested units into separate files
-  OPTION_EXPAND       = 0x20000,
+  OPTION_EXPAND       = 0x00020000,
 
   // output is xml
-  OPTION_XML          = 0x40000,
+  OPTION_XML          = 0x00040000,
 
   // info
-  OPTION_INFO         = 0x80000,
+  OPTION_INFO         = 0x00080000,
 
   // long info
   OPTION_LONG_INFO    = 0x00100000,
@@ -125,19 +125,19 @@ enum Options {
   OPTION_NAMESPACEDECL = 0x40000000,
 
   // self version
-  OPTION_SELF_VERSION = 0x02000000,
+  //  OPTION_SELF_VERSION = 0x02000000,
 
   // markup operators
-  OPTION_OPERATOR     = 0x04000000,
+  OPTION_OPERATOR     = 0x80000000,
 
   // xpath evaluation
-  OPTION_XPATH        = 0x08000000,
+  OPTION_XPATH        = OPTION_LITERAL,
 
   // xslt evaluation
-  OPTION_XSLT         = 0x00100000,
+  OPTION_XSLT         = OPTION_CPP,
 
   // relaxng evaluation
-  OPTION_RELAXNG      = 0x00200000,
+  OPTION_RELAXNG      = OPTION_EXPRESSION,
 
   // markup type modifiers
   OPTION_MODIFIER     = OPTION_TEXT,
