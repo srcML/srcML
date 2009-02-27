@@ -8,17 +8,11 @@
 
 #include "srcxslteval.h"
 
-#include <libxml/xpath.h>
-#include <libxml/xmlsave.h>
-#include <libxml/xpathInternals.h>
-
 #include <libxslt/xslt.h>
-#include <libxslt/xsltInternals.h>
 #include <libxslt/transform.h>
 #include <libxslt/xsltutils.h>
 
 #include <libexslt/exslt.h>
-#include <libexslt/exsltconfig.h>
 
 int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilename) {
 
@@ -84,16 +78,21 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
        // apply the style sheet to the extracted doc
        xmlDocPtr res = xsltApplyStylesheet(xslt, doc, NULL);
 
-       // remove and store the namespace
-       xmlNsPtr savens = xmlDocGetRootElement(res)->nsDef;
-       xmlDocGetRootElement(res)->nsDef = 0;
-
+       // remove and store the namespace (if we can)
+       xmlNodePtr resroot = xmlDocGetRootElement(res); 
+       xmlNsPtr savens = 0;
+       if (resroot) {
+	 savens = xmlDocGetRootElement(res)->nsDef;
+	 xmlDocGetRootElement(res)->nsDef = 0;
+       }
+       
        // save the transformed tree
        xsltSaveResultTo(buf, res, xslt);
        xmlOutputBufferWriteString(buf, "\n");
 
        // put the namespace back in
-       xmlDocGetRootElement(res)->nsDef = savens;
+       if (savens)
+	 xmlDocGetRootElement(res)->nsDef = savens;
 
        // finished with the result of the transformation
        xmlFreeDoc(res);
