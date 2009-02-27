@@ -3,6 +3,7 @@
 */
 
 #include "srcrelaxngeval.h"
+#include "srceval.h"
 
 #include <iostream>
 
@@ -29,31 +30,8 @@ int srcrelaxngeval(const char* xpath, xmlTextReaderPtr reader, const char* ofile
   // setup output
   xmlOutputBufferPtr buf = xmlOutputBufferCreateFilename(ofilename, NULL, 0);
 
-  // register the namespaces on the root element
-  xmlOutputBufferWrite(buf, 5, "<unit");
-  for (xmlNsPtr pAttr = xmlTextReaderCurrentNode(reader)->nsDef; pAttr; pAttr = pAttr->next) {
-
-        xmlOutputBufferWrite(buf, 6, " xmlns");
-        if (pAttr->prefix)
-	  xmlOutputBufferWrite(buf, 1, ":");
-	xmlOutputBufferWriteString(buf, (const char*) pAttr->prefix);
-	xmlOutputBufferWrite(buf, 2, "=\"");
-	xmlOutputBufferWriteString(buf, (const char*) pAttr->href);
-	xmlOutputBufferWrite(buf, 2, "\"");
-  }
-
-  // copy all attributes
-  for (xmlAttrPtr pAttr = xmlTextReaderCurrentNode(reader)->properties; pAttr; pAttr = pAttr->next) {
-
-        char* ac = (char*) xmlGetProp(xmlTextReaderCurrentNode(reader), pAttr->name);
-
-	xmlOutputBufferWrite(buf, 1, " ");
-	xmlOutputBufferWriteString(buf, (const char*) pAttr->name);
-	xmlOutputBufferWrite(buf, 2, "=\"");
-	xmlOutputBufferWriteString(buf, (const char*) ac);
-	xmlOutputBufferWrite(buf, 1, "\"");
-  }
-  xmlOutputBufferWrite(buf, 3, ">\n\n");
+  // copy the start tag of the root element unit
+  xmlUnitDumpOutputBuffer(buf, xmlTextReaderCurrentNode(reader));
 
   xmlRelaxNGParserCtxtPtr relaxng = xmlRelaxNGNewParserCtxt(xpath);
 
