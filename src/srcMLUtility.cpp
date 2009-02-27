@@ -238,12 +238,12 @@ void srcMLUtility::xpath(const char* ofilename, const char* xpaths) {
 }
 
 // xslt evaluation of the nested units
-void srcMLUtility::xslt(const char* ofilename, const char* xslts) {
+void srcMLUtility::xslt(const char* ofilename, const char* xslts, const char* params[]) {
 
   xmlTextReaderPtr reader = xmlNewTextReaderFilename(infile);
 
   // perform xpath evaluation
-  srcxslteval(xslts, reader, ofilename);
+  srcxslteval(xslts, reader, ofilename, params);
 
   xmlFreeTextReader(reader);
 }

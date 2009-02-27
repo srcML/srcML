@@ -15,7 +15,7 @@
 
 #include <libexslt/exslt.h>
 
-int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilename) {
+int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilename, const char* params[]) {
 
   // allow for all exslt functions
   exsltRegisterAll();
@@ -54,7 +54,7 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
        xmlDocSetRootElement(doc, xmlCopyNode(node, 1));
 
        // apply the style sheet to the extracted doc
-       xmlDocPtr res = xsltApplyStylesheet(xslt, doc, NULL);
+       xmlDocPtr res = xsltApplyStylesheet(xslt, doc, params);
 
        // remove and store the namespace (if we can)
        xmlNodePtr resroot = xmlDocGetRootElement(res); 

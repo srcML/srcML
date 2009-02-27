@@ -669,7 +669,9 @@ int main(int argc, char* argv[]) {
 
     } else if (isoption(options, OPTION_XSLT)) {
 
-      su.xslt(ofilename, xpath);
+      const char* params[] = { NULL } ;
+
+      su.xslt(ofilename, xpath, params);
 
     } else if (isoption(options, OPTION_RELAXNG)) {
 
