@@ -68,19 +68,19 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 
        // remove and store the namespace (if we can)
        xmlNodePtr resroot = xmlDocGetRootElement(res); 
-       xmlNsPtr savens = 0;
        if (resroot) {
-	 savens = xmlDocGetRootElement(res)->nsDef;
-	 xmlDocGetRootElement(res)->nsDef = 0;
-       }
-       
-       // save the transformed tree
-       xsltSaveResultTo(buf, res, xslt);
-       xmlOutputBufferWriteString(buf, "\n");
 
-       // put the namespace back in
-       if (savens)
+	 // get the namespaces out
+	 xmlNsPtr savens = xmlDocGetRootElement(res)->nsDef;
+	 xmlDocGetRootElement(res)->nsDef = 0;
+       
+	 // save the transformed tree
+	 xsltSaveResultTo(buf, res, xslt);
+	 xmlOutputBufferWriteString(buf, "\n");
+
+	 // put the namespace back in
 	 xmlDocGetRootElement(res)->nsDef = savens;
+       }
 
        // finished with the result of the transformation
        xmlFreeDoc(res);
