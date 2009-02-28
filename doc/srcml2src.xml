@@ -60,6 +60,15 @@
     a compound srcML file.
   </para>
   <para>
+    Further, <command>srcml2src</command> allows for querying srcML
+    using XPath expressions and RelaxNG, and transformation using
+    XLST.  When applied to compound srcML documents, each
+    query/transformation is applied to each nested unit individually
+    and the results are combined.  This allows the XPath, XSLT, or RelaxNG
+    to work efficiently on large srcML documents involving entire
+    projects.
+  </para>
+  <para>
     Using the character - in the place of an input srcML file filename
     uses standard input, and in place of an output source-code file
     uses standard output.
