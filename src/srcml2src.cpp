@@ -57,13 +57,16 @@ char const * const NAMESPACE_FLAG_SHORT = "-p";
 char const * const NAMESPACE_FLAG_FULL = "--prefix=URI";
 
 char const * const XPATH_FLAG = "--xpath";
-char const * const XPATH_FLAG_SHORT = "-p";
+char const * const XPATH_FLAG_SHORT = "";
+char const * const XPATH_FLAG_FULL = "--xpath=XPATH";
 
 char const * const XSLT_FLAG = "--xslt";
-char const * const XSLT_FLAG_SHORT = "-s";
+char const * const XSLT_FLAG_SHORT = "";
+char const * const XSLT_FLAG_FULL = "--xslt=XSLT_FILE";
 
 char const * const RELAXNG_FLAG = "--relaxng";
-char const * const RELAXNG_FLAG_SHORT = "-r";
+char const * const RELAXNG_FLAG_SHORT = "";
+char const * const RELAXNG_FLAG_FULL = "--relaxng=RELAXNG_FILE";
 
 char const * const PARAM_FLAG = "--param";
 char const * const PARAM_FLAG_SHORT = "";
@@ -74,8 +77,9 @@ void output_help(const char* name) {
   printf("Usage: %s [options] <infile> <outfile>\n\n"
          "Translates from the the XML source-code representation srcML to source-code text files.\n"
          "The srcML files can be in xml or gzip compressed xml (detected automatically).\n"
-         "Also provides various utilities for accessing metadata about the srcML document, \n"
-         "and extracting parts of compound srcML documents.\n\n"
+         "Also provides for access to metadata about the srcML document, extracting specific\n"
+         "parts of compound srcML documents, querying using XPath and RelaxNG, and\n"
+	 "and transformation with XSLT.\n\n"
 
          "When no filenames are given read from standard input and write to standard output.\n"
          "When only one filename is given write to standard output.\n"
@@ -137,6 +141,11 @@ void output_help(const char* name) {
 
   printf("  %s, %-19s display all metadata (including nested unit count) and exit\n\n",
 	  LONG_INFO_FLAG_SHORT, LONG_INFO_FLAG);
+
+  printf("Query and Tranformation Options:  \n\n"
+	 "  %-23s apply XPATH expression to each nested unit\n", XPATH_FLAG_FULL);
+  printf("  %-23s apply XSLT_FILE transformation to each nested unit\n", XSLT_FLAG_FULL);
+  printf("  %-23s apply RELAXNG_FILE grammar file to each nested unit\n\n", RELAXNG_FLAG_FULL);
 
   printf("Examples:  \n"
 	    "  %1$s                       (read from standard input, write to standard output)\n"
