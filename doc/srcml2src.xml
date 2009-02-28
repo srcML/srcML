@@ -351,6 +351,24 @@
 
       </listitem>
     </varlistentry>
+    <varlistentry>
+      <term><option>&RELAXNG_FLAG;=<replaceable class="parameter">relaxng_file</replaceable></option></term>
+      <listitem>
+	<para>
+	  Apply the RelaxNG grammar <replaceable>relaxng_file</replaceable> to the compound srcML document.
+	  The grammer is applied to each individual unit in
+	  the compound document separately reducing the largest memory requirements
+	  of the query to that of a single, nested file at a time.
+	</para>
+
+	<para>
+	  If the RelaxNG gramar is valid for a unit, then that unit is output.
+	  This results in a compound srcML document with only the files that
+	  are valid based on the given RelaxNG grammar.
+	</para>
+
+      </listitem>
+    </varlistentry>
 </refsect1>
 <refsect1>
   <title>USAGE</title>
