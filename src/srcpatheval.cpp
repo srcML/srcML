@@ -57,12 +57,10 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
   // total of all counts for the separate units
   double total = 0;
 
-  /*
   // resulting boolean
   bool result_bool = false;
-  */
 
-  while (1) {
+  while (!result_bool) {
 
      // read a node
      int ret = xmlTextReaderRead(reader);
@@ -151,12 +149,11 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 	 total += result_nodes->floatval;
 	 break;
 
-	 /*
        // boolean result
        case XPATH_BOOLEAN:
          result_bool |= result_nodes->boolval;
 	 break;
-	 */
+
        default:
 	 fprintf(stderr, "Unhandled type\n");
 	 break;
@@ -178,7 +175,7 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
   case XPATH_NUMBER:
     printf("%f\n", total);
     break;
-    /*
+
   // boolean result
   case XPATH_BOOLEAN:
     if (result_bool)
@@ -186,7 +183,7 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
     else
       puts("false\n");
     break;
-    */
+
   default:
     break;
   }
