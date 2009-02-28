@@ -282,6 +282,38 @@
     </varlistentry>
 </refsect1>
 <refsect1>
+  <title>Querying and Transformation Options</title>
+  <para>
+    This set of options allows queries and transformation on the
+    srcML document.  They are designed to efficiently work with large, compound srcML
+    documents that contain large numbers of files in a project, e.g., tens
+    of thousands of files for a project in a single compound 1 GB file.
+    These capabilities are based on those of libxml2, and should
+    accept what libxml2 accepts.
+  </para>
+    <varlistentry>
+      <term><option>&XPATH_FLAG;=<replaceable class="parameter">xpath</replaceable></option></term>
+      <listitem>
+	<para>
+	  Apply the XPath expression <replaceable>xpath</replaceable> to the compound srcML document.
+	  The XPath is applied separately to each individual unit in
+	  the compound document.  This reduces the memory requirements
+	  to that of a single, nested file at a time.
+	</para>
+
+	<para>
+	  The output is a compound srcML
+	  document with each XPath expression result in its own
+	  individual unit element.  If the XPath expression does not
+	  result in a unit element, one is wrapped around the result.
+	  The output is in a format for repeated application.  The
+	  XPath expression can use any part of XPath 1.0, and many EXSLT
+	  extension functions.
+	</para>
+      </listitem>
+    </varlistentry>
+</refsect1>
+<refsect1>
   <title>USAGE</title>
   <para>
     To translate the srcML file main.cpp.xml into the C++ source-code file main.cpp:
