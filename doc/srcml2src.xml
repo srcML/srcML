@@ -286,11 +286,11 @@
   <para>
     This set of options allows queries and transformation on the
     srcML document.  One problem with using standalone XML tools that
-    are DOM based (XPath, XSLT) is the memory requirements for large
+    are DOM based (XPath, XSLT) is the memory requirements with large
     srcML files.  These options work efficiently with compound srcML
     documents that contain large numbers of files in a project, e.g., tens
     of thousands of files for a project in a single compound 1 GB file.
-    Primarily this is done by performing the query/transformation on a unit
+    This is done by performing the query/transformation on a unit
     by unit basis insided the compound srcML document.
     The capabilities are based on those of libxml2, and should
     accept the features that libxml2 accepts.
@@ -317,6 +317,36 @@
 	  individual unit element.  If the XPath expression does not
 	  result in a unit element, one is wrapped around the result.
 	  The output is in a format for repeated application.
+	</para>
+
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><option>&XSLT_FLAG;=<replaceable class="parameter">xslt_file</replaceable></option></term>
+      <listitem>
+	<para>
+	  Apply the XSLT program <replaceable>xslt_file</replaceable> to the compound srcML document.
+	  The transformation is applied to each individual unit in
+	  the compound document separately reducing the largest memory requirements
+	  of the query to that of a single, nested file at a time.
+	</para>
+
+	<para>
+	  The XSLT program can use any part of XSLT 1.0, and many EXSLT extension functions.
+	  In addition to any parameters specified in the command, the XSLT program
+	  is passed a series of internally generated parameters.  The parameters
+	  src:filename, src:directory, src:version, and src:language are the corresponding
+	  entries from the root unit element of the srcML document and are provided because
+	  the XSLT transformation does not have direct access to them.  The parameter
+	  src:position is the position of an individual unit in the root unit, e.g., the
+	  position of the file in the larger compound srcML document.
+	</para>
+
+	<para>
+	  The output is a srcML document with the combined results of the XSLT transformation
+	  wrapped in an outer unit element.  Typically, each XSLT transformation may or may
+	  not produce a unit element, thereby providing an output format that allows
+	  for repeated application of the tool.
 	</para>
 
       </listitem>
