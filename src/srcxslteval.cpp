@@ -126,7 +126,7 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
        
 	 // save the transformed tree
 	 xsltSaveResultTo(buf, res, xslt);
-	 xmlOutputBufferWriteString(buf, "\n");
+	 xmlOutputBufferWrite(buf, 1, "\n");
 
 	 // put the namespace back in
 	 xmlDocGetRootElement(res)->nsDef = savens;
@@ -146,7 +146,7 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
   }
 
   // root unit end tag
-  xmlOutputBufferWriteString(buf, "</unit>\n");
+  xmlOutputBufferWrite(buf, 8, "</unit>\n");
 
   // all done with the buffer
   xmlOutputBufferClose(buf);
