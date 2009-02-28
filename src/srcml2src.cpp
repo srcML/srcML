@@ -65,6 +65,9 @@ char const * const XSLT_FLAG_SHORT = "-s";
 char const * const RELAXNG_FLAG = "--relaxng";
 char const * const RELAXNG_FLAG_SHORT = "-r";
 
+char const * const PARAM_FLAG = "--param";
+char const * const PARAM_FLAG_SHORT = "";
+
 // output help message
 void output_help(const char* name) {
 
@@ -165,6 +168,10 @@ extern "C" void terminate_handler(int);
 
 int optionorder[5];
 int optioncount = 0;
+
+const int MAXPARAMS = 32;
+int paramcount = 0;
+const char* params[MAXPARAMS * 2 + 1];
 
 int main(int argc, char* argv[]) {
 
@@ -356,6 +363,30 @@ int main(int argc, char* argv[]) {
       if (unit <= 0) {
 	fprintf(stderr, "%s: unit option value \"%d\" must be > 0.\n", NAME, unit);
 	exit(STATUS_UNIT_INVALID);
+      }
+    }
+
+    // parameters (for xslt) flag
+    else if (compare_flags(argv[curarg], PARAM_FLAG, PARAM_FLAG_SHORT)) {
+
+      char* embedded = extract_option(argv[curarg]);
+
+      // filename is embedded parameter
+      char* value = 0;
+      if (embedded) {
+
+	value = embedded + 1;
+	++curarg;
+
+      // check for param flag with missing, separate param name
+      } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
+	fprintf(stderr, "%s: param option selected but no property or value specified.\n", NAME);
+	exit(STATUS_UNIT_MISSING);
+      } else {
+	params[paramcount] = argv[(++curarg)];
+	++paramcount;
+	params[paramcount] = argv[(++curarg)++];
+	++paramcount;
       }
     }
 
@@ -669,9 +700,9 @@ int main(int argc, char* argv[]) {
 
     } else if (isoption(options, OPTION_XSLT)) {
 
-      const char* params[] = { "count", "2", NULL } ;
+      params[paramcount + 1] = NULL;
 
-      su.xslt(ofilename, xpath, params);
+      su.xslt(ofilename, xpath, params, paramcount);
 
     } else if (isoption(options, OPTION_RELAXNG)) {
 
