@@ -128,6 +128,15 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 	       xmlOutputBufferWrite(buf, 1, "\"");
 	     }
 
+	     /*
+	     // TODO:  fix line numbering problem
+	     xmlOutputBufferWrite(buf, 7, " line=\"");
+	     char s[50] = { 0 };
+	     sprintf(s, "%d", onode->line);
+	     xmlOutputBufferWriteString(buf, s);
+	     xmlOutputBufferWrite(buf, 1, "\"");
+	     */
+
 	     xmlOutputBufferWrite(buf, 1, ">");
 	   }
 
