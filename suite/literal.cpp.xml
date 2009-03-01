@@ -6,6 +6,14 @@
 </unit>
 
 <unit>
+<expr_stmt><expr><lit:literal type="number">.1</lit:literal></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><lit:literal type="number">1.</lit:literal></expr>;</expr_stmt>
+</unit>
+
+<unit>
 <expr_stmt><expr><lit:literal type="number">2.5</lit:literal></expr>;</expr_stmt>
 </unit>
 

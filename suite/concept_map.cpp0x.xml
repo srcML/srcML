@@ -2,7 +2,7 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++0x" dir="concept_map">
 
 <unit>
-<concept_map>concept_map <name><name>InputIterator</name><argument_list>&lt;<argument><name>char</name>*</argument>&gt;</argument_list></name>
+<concept_map>concept_map <name>InputIterator</name><parameter_list>&lt;<param><type><name>char</name>*</type></param>&gt;</parameter_list>
 <block>{
   <typedef>typedef <type><name>char</name></type> <name>value_type</name> ;</typedef>
   <typedef>typedef <type><name>char</name>&amp;</type> <name>reference</name> ;</typedef>
@@ -12,7 +12,7 @@
 </unit>
 
 <unit>
-<template>template<parameter_list>&lt;<param><type><name>typename</name></type> <name>T</name></param>&gt;</parameter_list> <concept_map>concept_map <name><name>InputIterator</name><argument_list>&lt;<argument><name>T</name>*</argument>&gt;</argument_list></name>
+<template>template<parameter_list>&lt;<param><type><name>typename</name></type> <name>T</name></param>&gt;</parameter_list> <concept_map>concept_map <name>InputIterator</name><parameter_list>&lt;<param><type><name>T</name>*</type></param>&gt;</parameter_list>
 <block>{
   <typedef>typedef <type><name>T</name></type> <name>value_type</name> ;</typedef>
   <typedef>typedef <type><name>T</name>&amp;</type> <name>reference</name> ;</typedef>

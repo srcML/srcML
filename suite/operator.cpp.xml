@@ -153,4 +153,12 @@
 <expr_stmt><expr><name>a</name><op:operator>.</op:operator><call><name><name>b</name><op:operator>::</op:operator><name>c</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><op:operator>new</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><op:operator>delete</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
 </unit>

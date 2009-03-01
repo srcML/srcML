@@ -2,7 +2,7 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++0x" dir="concept">
 
 <unit>
-<concept>concept <name><name>InputIterator</name><argument_list>&lt;<argument><name>typename</name> <name>Iter</name></argument>&gt;</argument_list></name>
+<concept>concept <name>InputIterator</name><parameter_list>&lt;<param><type><name>typename</name></type> <name>Iter</name></param>&gt;</parameter_list>
 <block>{
   <decl_stmt><decl><type><name>typename</name></type> <name>value_type</name></decl>;</decl_stmt>
   <decl_stmt><decl><type><name>typename</name></type> <name>reference</name></decl>;</decl_stmt>
@@ -18,7 +18,7 @@
 </unit>
 
 <unit>
-<concept><name>auto</name> concept <name><name>InputIterator</name><argument_list>&lt;<argument><name>typename</name> <name>Iter</name></argument>&gt;</argument_list></name>
+<concept><name>auto</name> concept <name>InputIterator</name><parameter_list>&lt;<param><type><name>typename</name></type> <name>Iter</name></param>&gt;</parameter_list>
 <block>{
   <decl_stmt><decl><type><name>typename</name></type> <name>value_type</name></decl>;</decl_stmt>
   <decl_stmt><decl><type><name>typename</name></type> <name>reference</name></decl>;</decl_stmt>

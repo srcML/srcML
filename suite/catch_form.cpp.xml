@@ -14,7 +14,7 @@
 </unit>
 
 <unit>
-<catch>catch (<param>...</param>) <block>{}</block></catch>
+<catch>catch (<param><decl><type>...</type></decl></param>) <block>{}</block></catch>
 </unit>
 
 </unit>
