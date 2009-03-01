@@ -186,7 +186,10 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
   // finalize results
   switch (nodetype) {
   case XPATH_NUMBER:
-    printf("%f\n", total);
+    if ((int)total == total)
+      printf("%d\n", (int)total);
+    else
+      printf("%f\n", total);
     break;
 
   // boolean result
