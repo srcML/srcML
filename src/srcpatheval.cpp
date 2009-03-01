@@ -148,8 +148,8 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 	 if (!result_nodes->nodesetval)
 	   break;
 
+	 // copy the start tag of the root element unit (if we haven't already)
 	 if (first) {
-	   // copy the start tag of the root element unit
 	   xmlUnitDumpOutputBuffer(buf, xmlTextReaderCurrentNode(reader));
 	   first = false;
 	 }
