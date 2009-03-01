@@ -14,6 +14,57 @@
 #include <libxml/xpath.h>
 #include <libxml/xpathInternals.h>
 
+xmlChar* unit_directory = 0;
+xmlChar* unit_filename = 0;
+
+void outputresult(xmlDocPtr doc, xmlNodePtr onode, xmlOutputBufferPtr buf) {
+
+	   // output a unit element around the fragment, unless
+	   // is is already a unit
+           bool outputunit = strcmp("unit", (const char*) onode->name) != 0;
+
+	   // if we need a unit, output the start tag
+	   if (outputunit) {
+
+	     // unit start tag
+	     xmlOutputBufferWrite(buf, 5, "<unit");
+
+	     if (unit_directory) {
+	       xmlOutputBufferWrite(buf, 6, " dir=\"");
+	       xmlOutputBufferWriteString(buf, (const char*) unit_directory);
+	       xmlOutputBufferWrite(buf, 1, "\"");
+	     }
+
+	     if (unit_filename) {
+	       xmlOutputBufferWrite(buf, 11, " filename=\"");
+	       xmlOutputBufferWriteString(buf, (const char*) unit_filename);
+	       xmlOutputBufferWrite(buf, 1, "\"");
+	     }
+
+	     /*
+	     // TODO:  fix line numbering problem
+	     xmlOutputBufferWrite(buf, 7, " line=\"");
+	     char s[50] = { 0 };
+	     sprintf(s, "%d", onode->line);
+	     xmlOutputBufferWriteString(buf, s);
+	     xmlOutputBufferWrite(buf, 1, "\"");
+	     */
+
+	     xmlOutputBufferWrite(buf, 1, ">");
+	   }
+
+	   // xpath result
+	   xmlNodeDumpOutput(buf, doc, onode, 0, 0, 0);
+
+	   // if we need a unit, output the end tag
+	   if (outputunit) {
+
+	     // unit end tag
+	     xmlOutputBufferWrite(buf, 9, "</unit>");
+	   }
+
+}
+
 int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilename) {
 
   // compile the xpath that will be applied to each unit
@@ -72,8 +123,8 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 	 xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT &&
 	 xmlTextReaderConstName(reader)[0] == 'u') {
 
-       xmlChar* unit_directory = xmlTextReaderGetAttribute(reader, BAD_CAST "dir");
-       xmlChar* unit_filename = xmlTextReaderGetAttribute(reader, BAD_CAST "filename");
+       unit_directory = xmlTextReaderGetAttribute(reader, BAD_CAST "dir");
+       unit_filename = xmlTextReaderGetAttribute(reader, BAD_CAST "filename");
 
        // expand this unit to make it the context
        context->node = xmlTextReaderExpand(reader);
@@ -88,9 +139,6 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
        // update the node type
        nodetype = result_nodes->type;
 
-       bool outputunit = true;
-       xmlNodePtr onode;
-
        // process the resulting nodes
        switch (nodetype) {
 
@@ -103,52 +151,8 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 
 	 // output all the found nodes
 	 for (int i = 0; i < xmlXPathNodeSetGetLength(result_nodes->nodesetval); ++i) {
-
-	   onode = xmlXPathNodeSetItem(result_nodes->nodesetval, i);
-
-	   // output a unit element around the fragment, unless
-	   // is is already a unit
-	   outputunit = strcmp("unit", (const char*) onode->name) != 0;
-
-	   // if we need a unit, output the start tag
-	   if (outputunit) {
-
-	     // unit start tag
-	     xmlOutputBufferWrite(buf, 5, "<unit");
-
-	     if (unit_directory) {
-	       xmlOutputBufferWrite(buf, 6, " dir=\"");
-	       xmlOutputBufferWriteString(buf, (const char*) unit_directory);
-	       xmlOutputBufferWrite(buf, 1, "\"");
-	     }
-
-	     if (unit_filename) {
-	       xmlOutputBufferWrite(buf, 11, " filename=\"");
-	       xmlOutputBufferWriteString(buf, (const char*) unit_filename);
-	       xmlOutputBufferWrite(buf, 1, "\"");
-	     }
-
-	     /*
-	     // TODO:  fix line numbering problem
-	     xmlOutputBufferWrite(buf, 7, " line=\"");
-	     char s[50] = { 0 };
-	     sprintf(s, "%d", onode->line);
-	     xmlOutputBufferWriteString(buf, s);
-	     xmlOutputBufferWrite(buf, 1, "\"");
-	     */
-
-	     xmlOutputBufferWrite(buf, 1, ">");
-	   }
-
-	   // xpath result
-	   xmlNodeDumpOutput(buf, xmlTextReaderCurrentDoc(reader), onode, 0, 0, 0);
-
-	   // if we need a unit, output the end tag
-	   if (outputunit) {
-
-	     // unit end tag
-	     xmlOutputBufferWrite(buf, 9, "</unit>\n\n");
-	   }
+	   outputresult(xmlTextReaderCurrentDoc(reader), xmlXPathNodeSetItem(result_nodes->nodesetval, i), buf);
+	   xmlOutputBufferWrite(buf, 2, "\n\n");
 	 }
 
 	 break;
