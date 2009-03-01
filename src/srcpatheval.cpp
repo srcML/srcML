@@ -99,8 +99,7 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 		  pAttr->prefix, pAttr->href);
   }
 
-  // copy the start tag of the root element unit
-  xmlUnitDumpOutputBuffer(buf, xmlTextReaderCurrentNode(reader));
+  bool first = true;
 
   // type of the xpath
   int nodetype = 0;
@@ -149,6 +148,12 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 	 if (!result_nodes->nodesetval)
 	   break;
 
+	 if (first) {
+	   // copy the start tag of the root element unit
+	   xmlUnitDumpOutputBuffer(buf, xmlTextReaderCurrentNode(reader));
+	   first = false;
+	 }
+
 	 // output all the found nodes
 	 for (int i = 0; i < xmlXPathNodeSetGetLength(result_nodes->nodesetval); ++i) {
 	   outputresult(xmlTextReaderCurrentDoc(reader), xmlXPathNodeSetItem(result_nodes->nodesetval, i), buf);
@@ -185,6 +190,11 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 
   // finalize results
   switch (nodetype) {
+  case XPATH_NODESET:
+
+    xmlOutputBufferWrite(buf, 8, "</unit>\n");
+    break;
+
   case XPATH_NUMBER:
     if ((int)total == total)
       printf("%d\n", (int)total);
@@ -203,8 +213,6 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
   default:
     break;
   }
-
-  xmlOutputBufferWrite(buf, 8, "</unit>\n");
 
   xmlOutputBufferClose(buf);
 
