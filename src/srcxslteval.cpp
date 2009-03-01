@@ -8,6 +8,7 @@
 
 #include "srcxslteval.h"
 #include "srceval.h"
+#include "Options.h"
 
 #include <cstring>
 #include <iostream>
@@ -20,7 +21,7 @@
 #include <libexslt/exslt.h>
 
 int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilename, const char* params[],
-		int paramcount) {
+		int paramcount, int options) {
 
   // allow for all exslt functions
   exsltRegisterAll();

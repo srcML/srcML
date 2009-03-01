@@ -192,6 +192,10 @@ enum Options {
   // @srcml2src
   OPTION_XSLT         = OPTION_CPP,
 
+  // xslt all evaluation
+  // @srcml2src
+  OPTION_XSLT_ALL      = OPTION_XMLNS,
+
   // relaxng evaluation
   // @srcml2src
   OPTION_RELAXNG      = OPTION_EXPRESSION,

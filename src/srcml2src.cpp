@@ -64,6 +64,9 @@ char const * const XSLT_FLAG = "--xslt";
 char const * const XSLT_FLAG_SHORT = "";
 char const * const XSLT_FLAG_FULL = "--xslt=XSLT_FILE";
 
+char const * const XSLT_ALL_FLAG = "--xslt-all";
+char const * const XSLT_ALL_FLAG_SHORT = "";
+
 char const * const RELAXNG_FLAG = "--relaxng";
 char const * const RELAXNG_FLAG_SHORT = "";
 char const * const RELAXNG_FLAG_FULL = "--relaxng=RELAXNG_FILE";
@@ -397,6 +400,12 @@ int main(int argc, char* argv[]) {
 	params[paramcount] = argv[(++curarg)++];
 	++paramcount;
       }
+    }
+
+    // xslt apply to entire unit
+    else if (compare_flags(argv[curarg], XSLT_ALL_FLAG, XSLT_ALL_FLAG_SHORT, position)) {
+      options |= OPTION_XSLT_ALL;
+      if (position == original_position) ++curarg;
     }
 
     // text encoding
