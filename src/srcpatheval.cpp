@@ -60,7 +60,7 @@ void outputresult(xmlDocPtr doc, xmlNodePtr onode, xmlOutputBufferPtr buf) {
 	   if (outputunit) {
 
 	     // unit end tag
-	     xmlOutputBufferWrite(buf, 9, "</unit>");
+	     xmlOutputBufferWrite(buf, 7, "</unit>");
 	   }
 
 }
