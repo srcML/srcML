@@ -84,8 +84,11 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 
   params[paramcount] = NULL;
 
-  // copy the start tag of the root element unit
-  xmlUnitDumpOutputBuffer(buf, xmlTextReaderCurrentNode(reader));
+  if (!isoption(options, OPTION_XSLT_ALL)) {
+
+    // copy the start tag of the root element unit
+    xmlUnitDumpOutputBuffer(buf, xmlTextReaderCurrentNode(reader));
+  }
 
   // doc for applying stylesheet to
   xmlDocPtr doc = xmlNewDoc(NULL);
@@ -95,14 +98,16 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
   while (1) {
 
      // read a node
-     int ret = xmlTextReaderRead(reader);
-     if (ret != 1)
-       break;
+    if (!isoption(options, OPTION_XSLT_ALL)) {
+      int ret = xmlTextReaderRead(reader);
+      if (ret != 1)
+	break;
+    }
 
      // nested unit tag
-     if (xmlTextReaderDepth(reader) == 1 &&
+    if (isoption(options, OPTION_XSLT_ALL)  || (xmlTextReaderDepth(reader) == 1 &&
 	 xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT &&
-	 xmlTextReaderConstName(reader)[0] == 'u') {
+       	xmlTextReaderConstName(reader)[0] == 'u')) {
 
        // mark the internal parameter with the position
        ++position;
@@ -123,14 +128,17 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 
 	 // get the namespaces out
 	 xmlNsPtr savens = xmlDocGetRootElement(res)->nsDef;
-	 xmlDocGetRootElement(res)->nsDef = 0;
+	 if (!isoption(options, OPTION_XSLT_ALL))
+	   xmlDocGetRootElement(res)->nsDef = 0;
        
 	 // save the transformed tree
 	 xsltSaveResultTo(buf, res, xslt);
-	 xmlOutputBufferWrite(buf, 1, "\n");
+	 if (!isoption(options, OPTION_XSLT_ALL))
+	   xmlOutputBufferWrite(buf, 1, "\n");
 
 	 // put the namespace back in
-	 xmlDocGetRootElement(res)->nsDef = savens;
+	 if (!isoption(options, OPTION_XSLT_ALL))
+	   xmlDocGetRootElement(res)->nsDef = savens;
        }
 
        // finished with the result of the transformation
@@ -144,10 +152,17 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
        // move over this expanded node
        xmlTextReaderNext(reader);
      }
+
+    if (isoption(options, OPTION_XSLT_ALL)) {
+	break;
+    }
   }
 
   // root unit end tag
-  xmlOutputBufferWrite(buf, 8, "</unit>\n");
+  if (!isoption(options, OPTION_XSLT_ALL)) {
+
+    xmlOutputBufferWrite(buf, 8, "</unit>\n");
+  }
 
   // all done with the buffer
   xmlOutputBufferClose(buf);
