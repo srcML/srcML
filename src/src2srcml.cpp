@@ -468,6 +468,13 @@ int main(int argc, char* argv[]) {
     char* path_filename = split_path(spath);
     char* path_directory = spath;
 
+    // hack to fix where directory, but no filename
+    if (path_directory[0] && !path_filename[0]) {
+      char* t = path_filename;
+      path_filename = path_directory;
+      path_directory = t;
+    }
+
     try {
       translator.translate(path,
 			   isoption(options, OPTION_DIRECTORY) ? given_directory : path_directory,
