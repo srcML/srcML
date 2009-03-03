@@ -57,13 +57,8 @@ void outputresult(xmlDocPtr doc, xmlNodePtr onode, xmlOutputBufferPtr buf) {
 	   xmlNodeDumpOutput(buf, doc, onode, 0, 0, 0);
 
 	   // if we need a unit, output the end tag
-	   if (outputunit) {
-
-	     // unit end tag
+	   if (outputunit)
 	     xmlOutputBufferWrite(buf, 7, "</unit>");
-	   }
-
-	   xmlOutputBufferFlush(buf);
 }
 
 int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilename) {
