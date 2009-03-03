@@ -132,8 +132,8 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 	 xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT &&
 	 xmlTextReaderConstName(reader)[0] == 'u') {
 
-       unit_directory = xmlTextReaderGetAttribute(reader, BAD_CAST "dir");
-       unit_filename = xmlTextReaderGetAttribute(reader, BAD_CAST "filename");
+       unit_directory = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_DIRECTORY);
+       unit_filename = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_FILENAME);
 
        // expand this unit to make it the context
        context->node = xmlTextReaderExpand(reader);
