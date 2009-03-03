@@ -8,6 +8,7 @@
 
 #include "srcpatheval.h"
 #include "srceval.h"
+#include "srcmlns.h"
 
 #include <cstring>
 
@@ -80,19 +81,31 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
   // setup output
   xmlOutputBufferPtr buf = xmlOutputBufferCreateFilename(ofilename, NULL, 0);
 
-  // register src since it probably isn't.  Do so first, so that it can be overridden
-  const char* stdprefix = "src";
-  const char* stdurl = "http://www.sdml.info/srcML/src";
-  if (xmlXPathRegisterNs(context, BAD_CAST stdprefix, BAD_CAST stdurl) == -1)
-    fprintf(stderr, "Unable to register prefix %s for namespace %s\n", stdprefix, stdurl);
+  // register standard prefixes for standard namespaces
+  const char* prefixes[] = {
+    SRCML_SRC_NS_URI, "src",
+    SRCML_CPP_NS_URI, SRCML_CPP_NS_PREFIX_DEFAULT,
+    SRCML_ERR_NS_URI, SRCML_ERR_NS_PREFIX_DEFAULT,
+    SRCML_EXT_LITERAL_NS_URI, SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT,
+    SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT,
+    SRCML_EXT_MODIFIER_NS_URI, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT,
+  };
 
-  // register the namespaces on the root element
+  for (int i = 0; i < sizeof(prefixes) / sizeof(prefixes[0]) / 2; i += 2)
+    if (xmlXPathRegisterNs(context, BAD_CAST prefixes[i + 1], BAD_CAST prefixes[i]) == -1)
+      fprintf(stderr, "Unable to register prefix %s for namespace %s\n", prefixes[i + 1], prefixes[i]);
+
+  // register any additional namespaces on the root element
   for (xmlNsPtr pAttr = xmlTextReaderCurrentNode(reader)->nsDef; pAttr; pAttr = pAttr->next) {
 
-	if (xmlXPathRegisterNs(context, pAttr->prefix ? pAttr->prefix : BAD_CAST "",
-			       BAD_CAST pAttr->href) == -1)
-	  fprintf(stderr, "Unable to register prefix %s for namespace %s\n",
-		  pAttr->prefix, pAttr->href);
+    // get out if the prefix is already defined
+    if (xmlXPathNsLookup(context, pAttr->prefix))
+      continue;
+
+    if (xmlXPathRegisterNs(context, pAttr->prefix ? pAttr->prefix : BAD_CAST "",
+			   BAD_CAST pAttr->href) == -1)
+      fprintf(stderr, "Unable to register prefix %s for namespace %s\n",
+	      pAttr->prefix, pAttr->href);
   }
 
   // output wrapping unit
