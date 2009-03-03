@@ -132,9 +132,9 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 	   xmlDocGetRootElement(res)->nsDef = 0;
        
 	 // save the transformed tree
-	 xsltSaveResultTo(buf, res, xslt);
+	 xmlNodeDumpOutput(buf, res, resroot, 0, 0, 0);
 	 if (!isoption(options, OPTION_XSLT_ALL))
-	   xmlOutputBufferWrite(buf, 1, "\n");
+	   xmlOutputBufferWrite(buf, 2, "\n\n");
 
 	 // put the namespace back in
 	 if (!isoption(options, OPTION_XSLT_ALL))

@@ -63,6 +63,7 @@ void outputresult(xmlDocPtr doc, xmlNodePtr onode, xmlOutputBufferPtr buf) {
 	     xmlOutputBufferWrite(buf, 7, "</unit>");
 	   }
 
+	   xmlOutputBufferFlush(buf);
 }
 
 int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilename) {
@@ -196,6 +197,8 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
       printf("%d\n", (int)total);
     else
       printf("%f\n", total);
+
+    xmlFree(buf);
     break;
 
   // boolean result
@@ -204,13 +207,13 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
       puts("true\n");
     else
       puts("false\n");
+
+    xmlFree(buf);
     break;
 
   default:
     break;
   }
-
-  xmlFree(buf);
 
   return 0;
 }
