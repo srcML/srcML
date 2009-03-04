@@ -90,21 +90,18 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
     xmlUnitDumpOutputBuffer(buf, xmlTextReaderCurrentNode(reader));
   }
 
-  // doc for applying stylesheet to
-  xmlDocPtr doc = xmlNewDoc(NULL);
-
   int position = 0;
 
   while (1) {
 
-     // read a node
+    // read a node
     if (!isoption(options, OPTION_XSLT_ALL)) {
       int ret = xmlTextReaderRead(reader);
       if (ret != 1)
 	break;
     }
 
-     // nested unit tag
+    // nested unit tag
     if (isoption(options, OPTION_XSLT_ALL)  || (xmlTextReaderDepth(reader) == 1 &&
 	 xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT &&
        	xmlTextReaderConstName(reader)[0] == 'u')) {
@@ -114,61 +111,42 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
        sprintf(posstr, "'%d'", position);
 
        // expand this unit to make it the context
-       xmlNodePtr node = xmlTextReaderExpand(reader);
-
-       // create a separate document with the expanded unit
-       xmlDocSetRootElement(doc, xmlCopyNode(node, 1));
+       xmlTextReaderExpand(reader);
 
        // apply the style sheet to the extracted doc
-       xmlDocPtr res = xsltApplyStylesheet(xslt, doc, params);
+       xmlDocPtr res = xsltApplyStylesheet(xslt, xmlTextReaderCurrentDoc(reader), params);
 
-       // remove and store the namespace (if we can)
-       xmlNodePtr resroot = xmlDocGetRootElement(res); 
+       xmlNodePtr resroot = xmlDocGetRootElement(res);
+
        if (resroot) {
 
-	 // get the namespaces out
-	 xmlNsPtr savens = xmlDocGetRootElement(res)->nsDef;
-	 if (!isoption(options, OPTION_XSLT_ALL))
-	   xmlDocGetRootElement(res)->nsDef = 0;
-       
-	 // save the transformed tree
-	 xmlNodeDumpOutput(buf, res, resroot, 0, 0, 0);
+	 // output the result of the stylesheet
+	 xmlNodeDumpOutput(buf, res, resroot->children, 0, 0, 0);
+
+	 // put some space between this unit and the next one
 	 if (!isoption(options, OPTION_XSLT_ALL))
 	   xmlOutputBufferWrite(buf, 2, "\n\n");
-
-	 // put the namespace back in
-	 if (!isoption(options, OPTION_XSLT_ALL))
-	   xmlDocGetRootElement(res)->nsDef = savens;
        }
 
        // finished with the result of the transformation
        xmlFreeDoc(res);
 
-       // cleanup the extracted doc
-       xmlNodePtr oldnode = xmlDocGetRootElement(doc);
-       xmlUnlinkNode(oldnode);
-       xmlFreeNode(oldnode);
-
        // move over this expanded node
        xmlTextReaderNext(reader);
      }
 
+    // only need to do this once if applied to all
     if (isoption(options, OPTION_XSLT_ALL)) {
 	break;
     }
   }
 
   // root unit end tag
-  if (!isoption(options, OPTION_XSLT_ALL)) {
-
+  if (!isoption(options, OPTION_XSLT_ALL))
     xmlOutputBufferWrite(buf, 8, "</unit>\n");
-  }
 
   // all done with the buffer
   xmlOutputBufferClose(buf);
-
-  // all done with the doc
-  xmlFreeDoc(doc);
 
   return 0;
 }
