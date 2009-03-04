@@ -127,8 +127,18 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 	   found = true;
 	 }
 
+	 // if nested unit, top unit is not needed in result
+	 xmlNodePtr resout = resroot;
+         if ((strcmp("unit", (const char*) resout->name) == 0) &&
+	     resout->children != 0 &&
+	     (strcmp("unit", (const char*) resout->children->name) == 0))
+	   resout = resout->children;
+
 	 // output the result of the stylesheet
-	 xmlNodeDumpOutput(buf, res, resroot->children, 0, 0, 0);
+	 xmlNsPtr savens = resout->nsDef;
+	 resout->nsDef = 0;
+	 xmlNodeDumpOutput(buf, res, resout, 0, 0, 0);
+	 resout->nsDef = savens;
 
 	 // put some space between this unit and the next one
 	 if (!isoption(options, OPTION_XSLT_ALL))
