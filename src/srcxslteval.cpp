@@ -122,23 +122,24 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 
        if (resroot) {
 
-	 if (!found) {
+	 if (!found && !isoption(options, OPTION_XSLT_ALL)) {
 	   xmlOutputBufferWrite(buf, 3, ">\n\n");
 	   found = true;
 	 }
 
 	 // if nested unit, top unit is not needed in result
 	 xmlNodePtr resout = resroot;
-         if ((strcmp("unit", (const char*) resout->name) == 0) &&
+         if (!isoption(options, OPTION_XSLT_ALL) &&
+	     (strcmp("unit", (const char*) resout->name) == 0) &&
 	     resout->children != 0 &&
 	     (strcmp("unit", (const char*) resout->children->name) == 0))
 	   resout = resout->children;
 
 	 // output the result of the stylesheet
-	 xmlNsPtr savens = resout->nsDef;
-	 resout->nsDef = 0;
+	 //	 xmlNsPtr savens = resout->nsDef;
+	 //	 resout->nsDef = 0;
 	 xmlNodeDumpOutput(buf, res, resout, 0, 0, 0);
-	 resout->nsDef = savens;
+	 //	 resout->nsDef = savens;
 
 	 // put some space between this unit and the next one
 	 if (!isoption(options, OPTION_XSLT_ALL))
@@ -161,10 +162,11 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
   // root unit end tag
   if (!isoption(options, OPTION_XSLT_ALL)) {
     if (found)
-      xmlOutputBufferWrite(buf, 8, "</unit>\n");
+      xmlOutputBufferWrite(buf, 7, "</unit>");
     else
-      xmlOutputBufferWrite(buf, 3, "/>\n");
+      xmlOutputBufferWrite(buf, 2, "/>");
   }
+  xmlOutputBufferWrite(buf, 1, "\n");
 
   // all done with the buffer
   xmlOutputBufferClose(buf);
