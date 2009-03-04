@@ -88,10 +88,11 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 
     // copy the start tag of the root element unit
     xmlUnitDumpOutputBuffer(buf, xmlTextReaderCurrentNode(reader));
-    xmlOutputBufferWrite(buf, 3, ">\n\n");
   }
 
   int position = 0;
+
+  bool found = false;
 
   while (1) {
 
@@ -121,6 +122,11 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 
        if (resroot) {
 
+	 if (!found) {
+	   xmlOutputBufferWrite(buf, 3, ">\n\n");
+	   found = true;
+	 }
+
 	 // output the result of the stylesheet
 	 xmlNodeDumpOutput(buf, res, resroot->children, 0, 0, 0);
 
@@ -143,8 +149,12 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
   }
 
   // root unit end tag
-  if (!isoption(options, OPTION_XSLT_ALL))
-    xmlOutputBufferWrite(buf, 8, "</unit>\n");
+  if (!isoption(options, OPTION_XSLT_ALL)) {
+    if (found)
+      xmlOutputBufferWrite(buf, 8, "</unit>\n");
+    else
+      xmlOutputBufferWrite(buf, 3, "/>\n");
+  }
 
   // all done with the buffer
   xmlOutputBufferClose(buf);
