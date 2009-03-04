@@ -12,5 +12,5 @@ void xmlUnitDumpOutputBuffer(xmlOutputBufferPtr buf, xmlNodePtr node) {
   for (xmlAttrPtr pAttr = node->properties; pAttr; pAttr = pAttr->next)
     xmlNodeDumpOutput(buf, node->doc, (xmlNodePtr) pAttr, 0, 0, 0);
 
-  xmlOutputBufferWrite(buf, 3, ">\n\n");
+  //  xmlOutputBufferWrite(buf, 3, ">\n\n");
 }

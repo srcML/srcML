@@ -88,6 +88,7 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 
     // copy the start tag of the root element unit
     xmlUnitDumpOutputBuffer(buf, xmlTextReaderCurrentNode(reader));
+    xmlOutputBufferWrite(buf, 3, ">\n\n");
   }
 
   int position = 0;

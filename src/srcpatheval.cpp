@@ -110,6 +110,7 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 
   // output wrapping unit
   xmlUnitDumpOutputBuffer(buf, xmlTextReaderCurrentNode(reader));
+  xmlOutputBufferWrite(buf, 3, ">\n\n");
 
   // type of the xpath
   int nodetype = 0;

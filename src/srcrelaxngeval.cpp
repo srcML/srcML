@@ -32,6 +32,7 @@ int srcrelaxngeval(const char* xpath, xmlTextReaderPtr reader, const char* ofile
 
   // copy the start tag of the root element unit
   xmlUnitDumpOutputBuffer(buf, xmlTextReaderCurrentNode(reader));
+  xmlOutputBufferWrite(buf, 3, ">\n\n");
 
   xmlRelaxNGParserCtxtPtr relaxng = xmlRelaxNGNewParserCtxt(xpath);
 
