@@ -91,7 +91,7 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
     SRCML_EXT_MODIFIER_NS_URI, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT,
   };
 
-  for (int i = 0; i < sizeof(prefixes) / sizeof(prefixes[0]) / 2; i += 2)
+  for (unsigned int i = 0; i < sizeof(prefixes) / sizeof(prefixes[0]) / 2; i += 2)
     if (xmlXPathRegisterNs(context, BAD_CAST prefixes[i + 1], BAD_CAST prefixes[i]) == -1)
       fprintf(stderr, "Unable to register prefix %s for namespace %s\n", prefixes[i + 1], prefixes[i]);
 
@@ -110,7 +110,6 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 
   // output wrapping unit
   xmlUnitDumpOutputBuffer(buf, xmlTextReaderCurrentNode(reader));
-  xmlOutputBufferWrite(buf, 3, ">\n\n");
 
   // type of the xpath
   int nodetype = 0;
@@ -120,6 +119,9 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 
   // resulting boolean
   bool result_bool = false;
+
+  // did we get any results?
+  bool found = false;
 
   while (!result_bool) {
 
@@ -149,6 +151,8 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
        // update the node type
        nodetype = result_nodes->type;
 
+       int result_size = 0;
+
        // process the resulting nodes
        switch (nodetype) {
 
@@ -158,6 +162,17 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 	 // may not have any values
 	 if (!result_nodes->nodesetval)
 	   break;
+
+	 // may not have any results
+	 result_size = xmlXPathNodeSetGetLength(result_nodes->nodesetval);
+	 if (result_size == 0)
+	   break;
+
+	 // first time found a result, so close root unit start tag
+	 if (!found) {
+	   xmlOutputBufferWrite(buf, 3, ">\n\n");
+	   found = true;
+	 }
 
 	 // output all the found nodes
 	 for (int i = 0; i < xmlXPathNodeSetGetLength(result_nodes->nodesetval); ++i) {
@@ -197,7 +212,11 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
   switch (nodetype) {
   case XPATH_NODESET:
 
-    xmlOutputBufferWrite(buf, 8, "</unit>\n");
+    if (found)
+      xmlOutputBufferWrite(buf, 8, "</unit>\n");
+    else
+      xmlOutputBufferWrite(buf, 3, "/>\n");
+
     xmlOutputBufferClose(buf);
     break;
 
