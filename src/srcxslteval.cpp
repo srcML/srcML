@@ -84,15 +84,18 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 
   params[paramcount] = NULL;
 
-  if (!isoption(options, OPTION_XSLT_ALL)) {
-
-    // copy the start tag of the root element unit
+  // copy the start tag of the root element unit for per-unit processing
+  if (!isoption(options, OPTION_XSLT_ALL))
     xmlUnitDumpOutputBuffer(buf, xmlTextReaderCurrentNode(reader));
-  }
 
+  // keep track of current position
   int position = 0;
 
+  // keep track if we actually get any results
   bool found = false;
+
+  // document to apply transform to
+  xmlDocPtr doc = xmlNewDoc(NULL);
 
   while (1) {
 
@@ -115,31 +118,29 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
        // expand this unit to make it the context
        xmlTextReaderExpand(reader);
 
+       // copy the current tree to a new doc
+       xmlDocSetRootElement(doc, xmlCopyNode(xmlTextReaderCurrentNode(reader), 1));
+
        // apply the style sheet to the extracted doc
-       xmlDocPtr res = xsltApplyStylesheet(xslt, xmlTextReaderCurrentDoc(reader), params);
+       xmlDocPtr res = xsltApplyStylesheet(xslt, doc, params);
 
+       // process result of stylesheet transformation
        xmlNodePtr resroot = xmlDocGetRootElement(res);
-
        if (resroot) {
 
+	 // if in per-unit mode and this is the first result found
 	 if (!found && !isoption(options, OPTION_XSLT_ALL)) {
 	   xmlOutputBufferWrite(buf, 3, ">\n\n");
 	   found = true;
 	 }
 
-	 // if nested unit, top unit is not needed in result
-	 xmlNodePtr resout = resroot;
-         if (!isoption(options, OPTION_XSLT_ALL) &&
-	     (strcmp("unit", (const char*) resout->name) == 0) &&
-	     resout->children != 0 &&
-	     (strcmp("unit", (const char*) resout->children->name) == 0))
-	   resout = resout->children;
-
 	 // output the result of the stylesheet
-	 //	 xmlNsPtr savens = resout->nsDef;
-	 //	 resout->nsDef = 0;
-	 xmlNodeDumpOutput(buf, res, resout, 0, 0, 0);
-	 //	 resout->nsDef = savens;
+	 xmlNsPtr savens = resroot->nsDef;
+	 if (!isoption(options, OPTION_XSLT_ALL))
+	   resroot->nsDef = 0;
+	 xmlNodeDumpOutput(buf, res, resroot, 0, 0, 0);
+	 if (!isoption(options, OPTION_XSLT_ALL))
+	   resroot->nsDef = savens;
 
 	 // put some space between this unit and the next one
 	 if (!isoption(options, OPTION_XSLT_ALL))
@@ -148,6 +149,10 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 
        // finished with the result of the transformation
        xmlFreeDoc(res);
+
+       xmlNodePtr oldnode = xmlDocGetRootElement(doc);
+       xmlUnlinkNode(oldnode);
+       xmlFreeNode(oldnode);
 
        // move over this expanded node
        xmlTextReaderNext(reader);
@@ -170,6 +175,8 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 
   // all done with the buffer
   xmlOutputBufferClose(buf);
+
+  xmlFreeDoc(doc);
 
   return 0;
 }
