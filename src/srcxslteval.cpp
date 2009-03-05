@@ -142,13 +142,13 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 	 xmlNsPtr savens = resroot->nsDef;
 	 if (!isoption(options, OPTION_XSLT_ALL))
 	   resroot->nsDef = 0;
-	 xmlNodeDumpOutput(buf, res, resroot, 0, 0, 0);
+	 xsltSaveResultTo(buf, res, xslt);
 	 if (!isoption(options, OPTION_XSLT_ALL))
 	   resroot->nsDef = savens;
 
 	 // put some space between this unit and the next one
 	 if (!isoption(options, OPTION_XSLT_ALL))
-	   xmlOutputBufferWrite(buf, 2, "\n\n");
+	   xmlOutputBufferWrite(buf, 1, "\n");
        }
 
        // finished with the result of the transformation
@@ -176,8 +176,9 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
       xmlOutputBufferWrite(buf, 7, "</unit>");
     else
       xmlOutputBufferWrite(buf, 2, "/>");
+
+    xmlOutputBufferWrite(buf, 1, "\n");
   }
-  xmlOutputBufferWrite(buf, 1, "\n");
 
   // all done with the buffer
   xmlOutputBufferClose(buf);
