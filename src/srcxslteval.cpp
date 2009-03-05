@@ -118,6 +118,10 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
        // expand this unit to make it the context
        xmlTextReaderExpand(reader);
 
+       // save the next pointer
+       xmlNodePtr next = xmlTextReaderCurrentNode(reader)->next;
+       xmlTextReaderCurrentNode(reader)->next = 0;
+
        // copy the current tree to a new doc
        xmlDocSetRootElement(doc, xmlCopyNode(xmlTextReaderCurrentNode(reader), 1));
 
@@ -153,6 +157,8 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
        xmlNodePtr oldnode = xmlDocGetRootElement(doc);
        xmlUnlinkNode(oldnode);
        xmlFreeNode(oldnode);
+
+       xmlTextReaderCurrentNode(reader)->next = next;
 
        // move over this expanded node
        xmlTextReaderNext(reader);
