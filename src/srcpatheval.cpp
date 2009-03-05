@@ -141,6 +141,10 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
        // expand this unit to make it the context
        context->node = xmlTextReaderExpand(reader);
 
+       // save the next pointer
+       xmlNodePtr next = xmlTextReaderCurrentNode(reader)->next;
+       xmlTextReaderCurrentNode(reader)->next = 0;
+
        // evaluate the xpath on the context from the current document
        xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, context);
        if (result_nodes == 0) {
@@ -196,6 +200,8 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 	 fprintf(stderr, "Unhandled type\n");
 	 break;
        };
+
+       xmlTextReaderCurrentNode(reader)->next = next;
 
        // finished with the result nodes
        xmlXPathFreeObject(result_nodes);

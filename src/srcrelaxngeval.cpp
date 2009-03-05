@@ -55,6 +55,10 @@ int srcrelaxngeval(const char* xpath, xmlTextReaderPtr reader, const char* ofile
        // expand this unit to make it the context
        xmlNodePtr node = xmlTextReaderExpand(reader);
 
+       // save the next pointer
+       xmlNodePtr next = xmlTextReaderCurrentNode(reader)->next;
+       xmlTextReaderCurrentNode(reader)->next = 0;
+
        // validate
        int n = xmlRelaxNGValidateDoc(rngptr, node->doc);
 
@@ -63,6 +67,9 @@ int srcrelaxngeval(const char* xpath, xmlTextReaderPtr reader, const char* ofile
 	 xmlNodeDumpOutput(buf, xmlTextReaderCurrentDoc(reader), node, 0, 0, 0);
 	 xmlOutputBufferWrite(buf, 2, "\n\n");
        }
+
+       // restore overparsing
+       xmlTextReaderCurrentNode(reader)->next = next;
 
        // move over this expanded node
        xmlTextReaderNext(reader);
