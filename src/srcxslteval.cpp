@@ -130,7 +130,8 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 
        // process result of stylesheet transformation
        xmlNodePtr resroot = xmlDocGetRootElement(res);
-       if (resroot) {
+
+       if (res) {
 
 	 // if in per-unit mode and this is the first result found
 	 if (!found && !isoption(options, OPTION_XSLT_ALL)) {
@@ -139,11 +140,11 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 	 }
 
 	 // output the result of the stylesheet
-	 xmlNsPtr savens = resroot->nsDef;
-	 if (!isoption(options, OPTION_XSLT_ALL))
+	 xmlNsPtr savens = resroot ? resroot->nsDef : 0;
+	 if (savens && !isoption(options, OPTION_XSLT_ALL))
 	   resroot->nsDef = 0;
 	 xsltSaveResultTo(buf, res, xslt);
-	 if (!isoption(options, OPTION_XSLT_ALL))
+	 if (savens && !isoption(options, OPTION_XSLT_ALL))
 	   resroot->nsDef = savens;
 
 	 // put some space between this unit and the next one
