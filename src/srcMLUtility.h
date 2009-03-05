@@ -65,7 +65,7 @@ class srcMLUtility {
   void expand(const char* root_filename = "");
 
   // perform xpath evaluation
-  void xpath(const char* ofilename, const char* xpaths);
+  void xpath(const char* context_element, const char* ofilename, const char* xpaths);
 
   // perform xslt evaluation
   void xslt(const char* ofilename, const char* xslts, const char* params[], int paramcount);

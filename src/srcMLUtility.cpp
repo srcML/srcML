@@ -228,12 +228,12 @@ const PROPERTIES_TYPE& srcMLUtility::getNS() const {
 }
 
 // xpath evaluation of the nested units
-void srcMLUtility::xpath(const char* ofilename, const char* xpaths) {
+void srcMLUtility::xpath(const char* ofilename, const char* context_element, const char* xpaths) {
 
   xmlTextReaderPtr reader = xmlNewTextReaderFilename(infile);
 
   // perform xpath evaluation
-  srcpatheval(xpaths, reader, ofilename);
+  srcpatheval(context_element, xpaths, reader, ofilename);
 
   xmlFreeTextReader(reader);
 }

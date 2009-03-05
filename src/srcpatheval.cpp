@@ -62,7 +62,7 @@ void outputresult(xmlDocPtr doc, xmlNodePtr onode, xmlOutputBufferPtr buf) {
 	     xmlOutputBufferWrite(buf, 7, "</unit>");
 }
 
-int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilename) {
+int srcpatheval(const char* context_element, const char* xpath, xmlTextReaderPtr reader, const char* ofilename) {
 
   // compile the xpath that will be applied to each unit
   xmlXPathCompExprPtr compiled_xpath = xmlXPathCompile(BAD_CAST xpath);
@@ -131,9 +131,8 @@ int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
        break;
 
      // contine on until we reach a unit tag at the proper depth
-     if (xmlTextReaderDepth(reader) == 1 &&
-	 xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT &&
-	 xmlTextReaderConstName(reader)[0] == 'u') {
+     if (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT &&
+	 strcmp((const char*) xmlTextReaderConstName(reader), context_element) == 0) {
 
        unit_directory = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_DIRECTORY);
        unit_filename = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_FILENAME);

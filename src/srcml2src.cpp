@@ -714,7 +714,7 @@ int main(int argc, char* argv[]) {
 
     } else if (isoption(options, OPTION_XPATH)) {
 
-      su.xpath(ofilename, xpath);
+      su.xpath(ofilename, "unit", xpath);
 
     } else if (isoption(options, OPTION_XSLT)) {
 

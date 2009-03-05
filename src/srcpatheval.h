@@ -9,6 +9,6 @@
 
 #include <libxml/xmlreader.h>
 
-int srcpatheval(const char* xpath, xmlTextReaderPtr reader, const char* ofilename);
+int srcpatheval(const char* context_element, const char* xpath, xmlTextReaderPtr reader, const char* ofilename);
 
 #endif
