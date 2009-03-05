@@ -60,6 +60,10 @@ char const * const XPATH_FLAG = "--xpath";
 char const * const XPATH_FLAG_SHORT = "";
 char const * const XPATH_FLAG_FULL = "--xpath=XPATH";
 
+char const * const CONTEXT_FLAG = "--context";
+char const * const CONTEXT_FLAG_SHORT = "";
+char const * const CONTEXT_FLAG_FULL = "--context=CONTEXT";
+
 char const * const XSLT_FLAG = "--xslt";
 char const * const XSLT_FLAG_SHORT = "";
 char const * const XSLT_FLAG_FULL = "--xslt=XSLT_FILE";
@@ -198,6 +202,7 @@ int main(int argc, char* argv[]) {
   const char* src_encoding = DEFAULT_TEXT_ENCODING;
   int unit = 0;
   const char* xpath = "";
+  const char* context = "";
   std::list<const char*> ns;
 
   // process all flags
@@ -457,6 +462,25 @@ int main(int argc, char* argv[]) {
 	xpath = argv[(++curarg)++];
       }
 
+    // context
+    } else if (compare_flags(argv[curarg], CONTEXT_FLAG, CONTEXT_FLAG_SHORT)) {
+
+      char* embedded = extract_option(argv[curarg]);
+
+      // filename is embedded parameter
+      if (embedded) {
+
+	context = embedded + 1;
+	++curarg;
+
+      // check for namespace flag with missing namespace
+      } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
+	fprintf(stderr, "%s: context option selected but no context given.\n", NAME);
+	exit(STATUS_UNIT_MISSING); // FIX
+      } else {
+	context = argv[(++curarg)++];
+      }
+
     // xslt
     } else if (compare_flags(argv[curarg], XSLT_FLAG, XSLT_FLAG_SHORT)) {
       options |= OPTION_XSLT;
@@ -714,7 +738,7 @@ int main(int argc, char* argv[]) {
 
     } else if (isoption(options, OPTION_XPATH)) {
 
-      su.xpath(ofilename, "unit", xpath);
+      su.xpath(ofilename, context, xpath);
 
     } else if (isoption(options, OPTION_XSLT)) {
 
