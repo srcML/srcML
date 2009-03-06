@@ -28,9 +28,6 @@ void applyxslt(xmlOutputBufferPtr buf, xmlTextReaderPtr reader, xmlDocPtr doc, x
        // apply the style sheet to the extracted doc
        xmlDocPtr res = xsltApplyStylesheet(xslt, doc, params);
 
-       // process result of stylesheet transformation
-       xmlNodePtr resroot = xmlDocGetRootElement(res);
-
        if (res) {
 
 	 // if in per-unit mode and this is the first result found
@@ -40,12 +37,13 @@ void applyxslt(xmlOutputBufferPtr buf, xmlTextReaderPtr reader, xmlDocPtr doc, x
 	 }
 
 	 // output the result of the stylesheet
+	 xmlNodePtr resroot = xmlDocGetRootElement(res);
 	 xmlNsPtr savens = resroot ? resroot->nsDef : 0;
 	 if (savens && !isoption(options, OPTION_XSLT_ALL))
 	   resroot->nsDef = 0;
 	 xsltSaveResultTo(buf, res, xslt);
 	 if (savens && !isoption(options, OPTION_XSLT_ALL))
-	   resroot->nsDef = savens;
+	    resroot->nsDef = savens;
 
 	 // put some space between this unit and the next one
 	 if (!isoption(options, OPTION_XSLT_ALL))
