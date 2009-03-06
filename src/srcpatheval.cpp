@@ -198,8 +198,24 @@ int srcpatheval(const char* context_element, const char* xpath, xmlTextReaderPtr
 
 	 // output all the found nodes
 	 for (int i = 0; i < xmlXPathNodeSetGetLength(result_nodes->nodesetval); ++i) {
-	   outputresult(xmlTextReaderCurrentDoc(reader), xmlXPathNodeSetItem(result_nodes->nodesetval, i),
-			buf, xmlTextReaderGetParserLineNumber(reader) - line);
+
+	   xmlNodePtr onode = xmlXPathNodeSetItem(result_nodes->nodesetval, i);
+
+	   // output a unit element around the fragment, unless
+	   // is is already a unit
+           bool outputunit = strcmp("unit", (const char*) onode->name) != 0;
+
+	   // if we need a unit, output the start tag
+	   if (outputunit)
+	     outputstartunit(buf, xmlTextReaderGetParserLineNumber(reader) - line);
+
+	   // xpath result
+	   xmlNodeDumpOutput(buf, xmlTextReaderCurrentDoc(reader), onode, 0, 0, 0);
+
+	   // if we need a unit, output the end tag
+	   if (outputunit)
+	     outputendunit(buf);
+
 	   xmlOutputBufferWrite(buf, 2, "\n\n");
 	 }
 
