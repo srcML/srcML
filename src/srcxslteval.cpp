@@ -171,6 +171,7 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
        xmlNodePtr next = xmlTextReaderCurrentNode(reader)->next;
        xmlTextReaderCurrentNode(reader)->next = 0;
 
+       // apply the xslt
        applyxslt(buf, reader, doc, xslt, params, options, found);
 
        xmlTextReaderCurrentNode(reader)->next = next;
