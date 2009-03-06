@@ -19,7 +19,7 @@
 xmlChar* unit_directory = 0;
 xmlChar* unit_filename = 0;
 
-void outputresult(xmlDocPtr doc, xmlNodePtr onode, xmlOutputBufferPtr buf) {
+void outputresult(xmlDocPtr doc, xmlNodePtr onode, xmlOutputBufferPtr buf, int line) {
 
 	   // output a unit element around the fragment, unless
 	   // is is already a unit
@@ -43,14 +43,12 @@ void outputresult(xmlDocPtr doc, xmlNodePtr onode, xmlOutputBufferPtr buf) {
 	       xmlOutputBufferWrite(buf, 1, "\"");
 	     }
 
-	     /*
 	     // TODO:  fix line numbering problem
 	     xmlOutputBufferWrite(buf, 7, " line=\"");
 	     char s[50] = { 0 };
-	     sprintf(s, "%d", onode->line);
+	     sprintf(s, "%d", line);
 	     xmlOutputBufferWriteString(buf, s);
 	     xmlOutputBufferWrite(buf, 1, "\"");
-	     */
 
 	     xmlOutputBufferWrite(buf, 1, ">");
 	   }
@@ -64,6 +62,8 @@ void outputresult(xmlDocPtr doc, xmlNodePtr onode, xmlOutputBufferPtr buf) {
 }
 
 int srcpatheval(const char* context_element, const char* xpath, xmlTextReaderPtr reader, const char* ofilename) {
+
+  int line = 0;
 
   // compile the xpath that will be applied to each unit
   xmlXPathCompExprPtr compiled_xpath = xmlXPathCompile(BAD_CAST xpath);
@@ -144,6 +144,8 @@ int srcpatheval(const char* context_element, const char* xpath, xmlTextReaderPtr
 	 strcmp((const char*) xmlTextReaderConstName(reader), context_name) == 0 &&
 	 strcmp((const char*) xmlTextReaderConstNamespaceUri(reader), context_uri) == 0 ) {
 
+       line = xmlTextReaderGetParserLineNumber(reader);
+
        unit_directory = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_DIRECTORY);
        unit_filename = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_FILENAME);
 
@@ -189,7 +191,8 @@ int srcpatheval(const char* context_element, const char* xpath, xmlTextReaderPtr
 
 	 // output all the found nodes
 	 for (int i = 0; i < xmlXPathNodeSetGetLength(result_nodes->nodesetval); ++i) {
-	   outputresult(xmlTextReaderCurrentDoc(reader), xmlXPathNodeSetItem(result_nodes->nodesetval, i), buf);
+	   outputresult(xmlTextReaderCurrentDoc(reader), xmlXPathNodeSetItem(result_nodes->nodesetval, i),
+			buf, xmlTextReaderGetParserLineNumber(reader) - line);
 	   xmlOutputBufferWrite(buf, 2, "\n\n");
 	 }
 
