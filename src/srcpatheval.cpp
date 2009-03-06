@@ -14,30 +14,10 @@
 
 #include <libxml/xpath.h>
 #include <libxml/xpathInternals.h>
+#include <libxml/parserInternals.h>
 
 xmlChar* unit_directory = 0;
 xmlChar* unit_filename = 0;
-
-// filename part of path
-static char* split_prefix(char* path) {
-
-  char* lastslash = 0;
-  char* cur = path;
-  while (*cur) {
-    if (*cur == ':') {
-      lastslash = cur;
-      break;
-    }
-    ++cur;
-  }
-
-  if (lastslash) {
-    *lastslash = '\0';
-    return lastslash + 1;
-  }
-
-  return cur;
-}
 
 void outputresult(xmlDocPtr doc, xmlNodePtr onode, xmlOutputBufferPtr buf) {
 
@@ -130,17 +110,11 @@ int srcpatheval(const char* context_element, const char* xpath, xmlTextReaderPtr
   }
 
   // find the url of the prefix for the context
-  char s[50];
-  strcpy(s, context_element);
-  
-  char* context_name = split_prefix(s);
-  char* context_prefix = s;
-
-  if (!(context_name[0]) && context_prefix[0]) {
-    char* t = context_name;
-    context_name = context_prefix;
-    context_prefix = t;
-  }
+  char* context_prefix;
+  const char* context_name = (const char*) xmlSplitQName((xmlParserCtxtPtr)context,
+			     BAD_CAST context_element, (xmlChar**) &context_prefix);
+  if (!context_prefix)
+    context_prefix = "";
   const char* context_uri = (const char*) xmlXPathNsLookup(context, BAD_CAST context_prefix);
 
   // output wrapping unit
