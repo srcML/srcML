@@ -20,6 +20,46 @@
 
 #include <libexslt/exslt.h>
 
+void applyxslt(xmlOutputBufferPtr buf, xmlTextReaderPtr reader, xmlDocPtr doc, xsltStylesheetPtr xslt, const char* params[], int options, bool& found) {
+
+       // copy the current tree to a new doc
+       xmlDocSetRootElement(doc, xmlCopyNode(xmlTextReaderCurrentNode(reader), 1));
+
+       // apply the style sheet to the extracted doc
+       xmlDocPtr res = xsltApplyStylesheet(xslt, doc, params);
+
+       // process result of stylesheet transformation
+       xmlNodePtr resroot = xmlDocGetRootElement(res);
+
+       if (res) {
+
+	 // if in per-unit mode and this is the first result found
+	 if (!found && !isoption(options, OPTION_XSLT_ALL)) {
+	   xmlOutputBufferWrite(buf, 3, ">\n\n");
+	   found = true;
+	 }
+
+	 // output the result of the stylesheet
+	 xmlNsPtr savens = resroot ? resroot->nsDef : 0;
+	 if (savens && !isoption(options, OPTION_XSLT_ALL))
+	   resroot->nsDef = 0;
+	 xsltSaveResultTo(buf, res, xslt);
+	 if (savens && !isoption(options, OPTION_XSLT_ALL))
+	   resroot->nsDef = savens;
+
+	 // put some space between this unit and the next one
+	 if (!isoption(options, OPTION_XSLT_ALL))
+	   xmlOutputBufferWrite(buf, 1, "\n");
+       }
+
+       // finished with the result of the transformation
+       xmlFreeDoc(res);
+
+       xmlNodePtr oldnode = xmlDocGetRootElement(doc);
+       xmlUnlinkNode(oldnode);
+       xmlFreeNode(oldnode);
+}
+
 int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilename, const char* params[],
 		int paramcount, int options) {
 
@@ -131,42 +171,7 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
        xmlNodePtr next = xmlTextReaderCurrentNode(reader)->next;
        xmlTextReaderCurrentNode(reader)->next = 0;
 
-       // copy the current tree to a new doc
-       xmlDocSetRootElement(doc, xmlCopyNode(xmlTextReaderCurrentNode(reader), 1));
-
-       // apply the style sheet to the extracted doc
-       xmlDocPtr res = xsltApplyStylesheet(xslt, doc, params);
-
-       // process result of stylesheet transformation
-       xmlNodePtr resroot = xmlDocGetRootElement(res);
-
-       if (res) {
-
-	 // if in per-unit mode and this is the first result found
-	 if (!found && !isoption(options, OPTION_XSLT_ALL)) {
-	   xmlOutputBufferWrite(buf, 3, ">\n\n");
-	   found = true;
-	 }
-
-	 // output the result of the stylesheet
-	 xmlNsPtr savens = resroot ? resroot->nsDef : 0;
-	 if (savens && !isoption(options, OPTION_XSLT_ALL))
-	   resroot->nsDef = 0;
-	 xsltSaveResultTo(buf, res, xslt);
-	 if (savens && !isoption(options, OPTION_XSLT_ALL))
-	   resroot->nsDef = savens;
-
-	 // put some space between this unit and the next one
-	 if (!isoption(options, OPTION_XSLT_ALL))
-	   xmlOutputBufferWrite(buf, 1, "\n");
-       }
-
-       // finished with the result of the transformation
-       xmlFreeDoc(res);
-
-       xmlNodePtr oldnode = xmlDocGetRootElement(doc);
-       xmlUnlinkNode(oldnode);
-       xmlFreeNode(oldnode);
+       applyxslt(buf, reader, doc, xslt, params, options, found);
 
        xmlTextReaderCurrentNode(reader)->next = next;
 
