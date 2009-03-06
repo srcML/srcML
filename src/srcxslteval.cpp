@@ -44,42 +44,51 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 
   // filename
   char filename[MAX_ATTR_SIZE] = "'";
-  const char* unit_filename = (const char*) xmlTextReaderGetAttribute(reader, BAD_CAST "filename");
+  char* unit_filename = (char*) xmlTextReaderGetAttribute(reader, BAD_CAST "filename");
   if (unit_filename) {
     params[paramcount++] = "src:filename";
     strcpy(filename + 1, unit_filename);
     strcat(filename, "'");
     params[paramcount++] = filename;
+
+    xmlFree(unit_filename);
   }
 
   // directory
   char directory[MAX_ATTR_SIZE] = "'";
-  const char* unit_directory = (const char*) xmlTextReaderGetAttribute(reader, BAD_CAST "dir");
+  char* unit_directory = (char*) xmlTextReaderGetAttribute(reader, BAD_CAST "dir");
   if (unit_directory) {
     params[paramcount++] = "src:directory";
     strcpy(directory + 1, unit_directory);
     strcat(directory, "'");
     params[paramcount++] = directory;
+
+    xmlFree(unit_directory);
   }
 
   // language
   char language[MAX_ATTR_SIZE] = "'";
-  const char* unit_language = (const char*) xmlTextReaderGetAttribute(reader, BAD_CAST "language");
+  char* unit_language = (char*) xmlTextReaderGetAttribute(reader, BAD_CAST "language");
   if (unit_language) {
     params[paramcount++] = "src:language";
     strcpy(language + 1, unit_language);
     strcat(language, "'");
     params[paramcount++] = language;
+
+    xmlFree(unit_language);
   }
+
 
   // version
   char version[MAX_ATTR_SIZE] = "'";
-  const char* unit_version = (const char*) xmlTextReaderGetAttribute(reader, BAD_CAST "version");
+  char* unit_version = (char*) xmlTextReaderGetAttribute(reader, BAD_CAST "version");
   if (unit_version) {
     params[paramcount++] = "src:version";
     strcpy(version + 1, unit_version);
     strcat(version, "'");
     params[paramcount++] = version;
+
+    xmlFree(unit_version);
   }
 
   params[paramcount] = NULL;
