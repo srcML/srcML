@@ -201,8 +201,8 @@ int main(int argc, char* argv[]) {
   // option values
   const char* src_encoding = DEFAULT_TEXT_ENCODING;
   int unit = 0;
-  const char* xpath = "";
-  const char* context = "";
+  const char* xpath = ".";
+  const char* context = "src:unit";
   std::list<const char*> ns;
 
   // process all flags
@@ -464,6 +464,7 @@ int main(int argc, char* argv[]) {
 
     // context
     } else if (compare_flags(argv[curarg], CONTEXT_FLAG, CONTEXT_FLAG_SHORT)) {
+      options |= OPTION_XPATH;
 
       char* embedded = extract_option(argv[curarg]);
 

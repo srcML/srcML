@@ -18,6 +18,27 @@
 xmlChar* unit_directory = 0;
 xmlChar* unit_filename = 0;
 
+// filename part of path
+static char* split_prefix(char* path) {
+
+  char* lastslash = 0;
+  char* cur = path;
+  while (*cur) {
+    if (*cur == ':') {
+      lastslash = cur;
+      break;
+    }
+    ++cur;
+  }
+
+  if (lastslash) {
+    *lastslash = '\0';
+    return lastslash + 1;
+  }
+
+  return cur;
+}
+
 void outputresult(xmlDocPtr doc, xmlNodePtr onode, xmlOutputBufferPtr buf) {
 
 	   // output a unit element around the fragment, unless
@@ -94,7 +115,7 @@ int srcpatheval(const char* context_element, const char* xpath, xmlTextReaderPtr
   for (unsigned int i = 0; i < sizeof(prefixes) / sizeof(prefixes[0]) / 2; i += 2)
     if (xmlXPathRegisterNs(context, BAD_CAST prefixes[i + 1], BAD_CAST prefixes[i]) == -1)
       fprintf(stderr, "Unable to register prefix %s for namespace %s\n", prefixes[i + 1], prefixes[i]);
-
+  
   // register any additional namespaces on the root element
   for (xmlNsPtr pAttr = xmlTextReaderCurrentNode(reader)->nsDef; pAttr; pAttr = pAttr->next) {
 
@@ -107,6 +128,20 @@ int srcpatheval(const char* context_element, const char* xpath, xmlTextReaderPtr
       fprintf(stderr, "Unable to register prefix %s for namespace %s\n",
 	      pAttr->prefix, pAttr->href);
   }
+
+  // find the url of the prefix for the context
+  char s[50];
+  strcpy(s, context_element);
+  
+  char* context_name = split_prefix(s);
+  char* context_prefix = s;
+
+  if (!(context_name[0]) && context_prefix[0]) {
+    char* t = context_name;
+    context_name = context_prefix;
+    context_prefix = t;
+  }
+  const char* context_uri = (const char*) xmlXPathNsLookup(context, BAD_CAST context_prefix);
 
   // output wrapping unit
   xmlUnitDumpOutputBuffer(buf, xmlTextReaderCurrentNode(reader));
@@ -130,9 +165,10 @@ int srcpatheval(const char* context_element, const char* xpath, xmlTextReaderPtr
      if (ret != 1)
        break;
 
-     // contine on until we reach a unit tag at the proper depth
+     // continue until we reach the context tag with the proper namespace
      if (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT &&
-	 strcmp((const char*) xmlTextReaderConstName(reader), context_element) == 0) {
+	 strcmp((const char*) xmlTextReaderConstName(reader), context_name) == 0 &&
+	 strcmp((const char*) xmlTextReaderConstNamespaceUri(reader), context_uri) == 0 ) {
 
        unit_directory = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_DIRECTORY);
        unit_filename = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_FILENAME);
