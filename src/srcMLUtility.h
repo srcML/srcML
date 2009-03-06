@@ -68,7 +68,7 @@ class srcMLUtility {
   void xpath(const char* context_element, const char* ofilename, const char* xpaths);
 
   // perform xslt evaluation
-  void xslt(const char* ofilename, const char* xslts, const char* params[], int paramcount);
+  void xslt(const char* context_element, const char* ofilename, const char* xslts, const char* params[], int paramcount);
 
   // perform relaxng evaluation
   void relaxng(const char* ofilename, const char* xslts);

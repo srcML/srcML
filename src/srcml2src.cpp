@@ -745,7 +745,7 @@ int main(int argc, char* argv[]) {
 
       params[paramcount + 1] = NULL;
 
-      su.xslt(ofilename, xpath, params, paramcount);
+      su.xslt(context, ofilename, xpath, params, paramcount);
 
     } else if (isoption(options, OPTION_RELAXNG)) {
 

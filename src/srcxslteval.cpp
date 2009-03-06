@@ -13,6 +13,9 @@
 #include <cstring>
 #include <iostream>
 #include <cstdio>
+#include <libxml/parserInternals.h>
+#include <libxml/xpath.h>
+#include <libxml/xpathInternals.h>
 
 #include <libxslt/xslt.h>
 #include <libxslt/transform.h>
@@ -58,7 +61,7 @@ void applyxslt(xmlOutputBufferPtr buf, xmlTextReaderPtr reader, xmlDocPtr doc, x
        xmlFreeNode(oldnode);
 }
 
-int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilename, const char* params[],
+int srcxslteval(const char* context_element, const char* xpath, xmlTextReaderPtr reader, const char* ofilename, const char* params[],
 		int paramcount, int options) {
 
   // allow for all exslt functions
@@ -69,6 +72,16 @@ int srcxslteval(const char* xpath, xmlTextReaderPtr reader, const char* ofilenam
 
   // read the first node
   xmlTextReaderRead(reader);
+
+  // find the url of the prefix for the context
+  /*
+  char* context_prefix;
+  const char* context_name = (const char*) xmlSplitQName((xmlParserCtxtPtr)reader,
+			     BAD_CAST context_element, (xmlChar**) &context_prefix);
+  if (!context_prefix)
+    context_prefix = "";
+  const char* context_uri = (const char*) xmlXPathNsLookup(context, BAD_CAST context_prefix);
+  */
 
   // setup output
   xmlOutputBufferPtr buf = xmlOutputBufferCreateFilename(ofilename, NULL, 0);
