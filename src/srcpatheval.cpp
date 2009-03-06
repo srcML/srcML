@@ -163,17 +163,23 @@ int srcpatheval(const char* context_element, const char* xpath, xmlTextReaderPtr
        xmlNodePtr next = xmlTextReaderCurrentNode(reader)->next;
        xmlTextReaderCurrentNode(reader)->next = 0;
 
+       int startline = xmlTextReaderCurrentNode(reader)->line;
+
        // evaluate the xpath on the context from the current document
        xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, context);
        if (result_nodes == 0) {
 	 fprintf(stderr, "ERROR\n");
 	 return 1;
        }
-
+       
        // update the node type
        nodetype = result_nodes->type;
 
        int result_size = 0;
+
+       xmlNodePtr onode = 0;
+
+       bool outputunit = false;
 
        // process the resulting nodes
        switch (nodetype) {
@@ -196,28 +202,30 @@ int srcpatheval(const char* context_element, const char* xpath, xmlTextReaderPtr
 	   found = true;
 	 }
 
+	 onode = xmlXPathNodeSetItem(result_nodes->nodesetval, 0);
+
+	 // output a unit element around the fragment, unless
+	 // is is already a unit
+         outputunit = strcmp("unit", (const char*) onode->name) != 0;
+
+	 // if we need a unit, output the start tag
+	 if (outputunit)
+	   outputstartunit(buf, onode->line - startline);
+
 	 // output all the found nodes
 	 for (int i = 0; i < xmlXPathNodeSetGetLength(result_nodes->nodesetval); ++i) {
 
-	   xmlNodePtr onode = xmlXPathNodeSetItem(result_nodes->nodesetval, i);
-
-	   // output a unit element around the fragment, unless
-	   // is is already a unit
-           bool outputunit = strcmp("unit", (const char*) onode->name) != 0;
-
-	   // if we need a unit, output the start tag
-	   if (outputunit)
-	     outputstartunit(buf, xmlTextReaderGetParserLineNumber(reader) - line);
+	   onode = xmlXPathNodeSetItem(result_nodes->nodesetval, i);
 
 	   // xpath result
 	   xmlNodeDumpOutput(buf, xmlTextReaderCurrentDoc(reader), onode, 0, 0, 0);
-
-	   // if we need a unit, output the end tag
-	   if (outputunit)
-	     outputendunit(buf);
-
-	   xmlOutputBufferWrite(buf, 2, "\n\n");
 	 }
+
+	 // if we need a unit, output the end tag
+	 if (outputunit)
+	   outputendunit(buf);
+
+	 xmlOutputBufferWrite(buf, 2, "\n\n");
 
 	 break;
 
