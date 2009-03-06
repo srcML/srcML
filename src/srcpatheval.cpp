@@ -19,14 +19,11 @@
 xmlChar* unit_directory = 0;
 xmlChar* unit_filename = 0;
 
-void outputresult(xmlDocPtr doc, xmlNodePtr onode, xmlOutputBufferPtr buf, int line) {
+void outputendunit(xmlOutputBufferPtr buf) {
+	     xmlOutputBufferWrite(buf, 7, "</unit>");
+}
 
-	   // output a unit element around the fragment, unless
-	   // is is already a unit
-           bool outputunit = strcmp("unit", (const char*) onode->name) != 0;
-
-	   // if we need a unit, output the start tag
-	   if (outputunit) {
+void outputstartunit(xmlOutputBufferPtr buf, int line) {
 
 	     // unit start tag
 	     xmlOutputBufferWrite(buf, 5, "<unit");
@@ -51,14 +48,24 @@ void outputresult(xmlDocPtr doc, xmlNodePtr onode, xmlOutputBufferPtr buf, int l
 	     xmlOutputBufferWrite(buf, 1, "\"");
 
 	     xmlOutputBufferWrite(buf, 1, ">");
-	   }
+}
+
+void outputresult(xmlDocPtr doc, xmlNodePtr onode, xmlOutputBufferPtr buf, int line) {
+
+	   // output a unit element around the fragment, unless
+	   // is is already a unit
+           bool outputunit = strcmp("unit", (const char*) onode->name) != 0;
+
+	   // if we need a unit, output the start tag
+	   if (outputunit)
+	     outputstartunit(buf, line);
 
 	   // xpath result
 	   xmlNodeDumpOutput(buf, doc, onode, 0, 0, 0);
 
 	   // if we need a unit, output the end tag
 	   if (outputunit)
-	     xmlOutputBufferWrite(buf, 7, "</unit>");
+	     outputendunit(buf);
 }
 
 int srcpatheval(const char* context_element, const char* xpath, xmlTextReaderPtr reader, const char* ofilename) {
