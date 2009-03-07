@@ -121,7 +121,7 @@ int srcpatheval(const char* context_element, const char* xpath, xmlTextReaderPtr
   const char* context_name = (const char*) xmlSplitQName((xmlParserCtxtPtr)context,
 			     BAD_CAST context_element, (xmlChar**) &context_prefix);
   if (!context_prefix)
-    context_prefix = "";
+    context_prefix = (char*) "";
   const char* context_uri = (const char*) xmlXPathNsLookup(context, BAD_CAST context_prefix);
 
   // output wrapping unit
