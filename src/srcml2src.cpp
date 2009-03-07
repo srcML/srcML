@@ -739,7 +739,10 @@ int main(int argc, char* argv[]) {
 
     } else if (isoption(options, OPTION_XPATH)) {
 
-      su.xpath(ofilename, context, xpath);
+      if (strcmp(xpath, "."))
+	su.xpath(ofilename, context, xpath);
+      else
+	su.extract_element(context, ofilename);
 
     } else if (isoption(options, OPTION_XSLT)) {
 

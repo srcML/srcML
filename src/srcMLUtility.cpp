@@ -46,6 +46,7 @@
 #include "SAX2ExtractUnitXML.h"
 #include "SAX2CountUnits.h"
 #include "SAX2Properties.h"
+#include "SAX2CopyElement.h"
 
 #include "srcpatheval.h"
 #include "srcxslteval.h"
@@ -168,6 +169,29 @@ void srcMLUtility::extract_xml(const char* filename, int unit) {
   // make sure we did not end early
   if (state.unit && state.count != state.unit)
     throw OutOfRangeUnitError(state.count);
+}
+
+// extract a given unit
+void srcMLUtility::extract_element(const char* element, const char* filename) {
+
+  int unit;
+
+  // output entire unit element
+  xmlSAXHandler sax = SAX2CopyElement::factory();
+
+  SAX2CopyElement state(element, filename, unit, options);
+
+  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
+  if (ctxt == NULL) return;
+  ctxt->sax = &sax;
+  ctxt->userData = &state;
+  state.ctxt = ctxt;
+
+  xmlParseDocument(ctxt);
+
+  ctxt->sax = NULL;
+
+  xmlFreeParserCtxt(ctxt);
 }
 
 // extract a given unit
