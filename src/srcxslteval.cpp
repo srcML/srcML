@@ -67,6 +67,8 @@ int srcxslteval(const char* context_element, const char* xpath, xmlTextReaderPtr
   // allow for all exslt functions
   exsltRegisterAll();
 
+  xsltsrcMLRegister();
+
   // parse the stylesheet
   xsltStylesheetPtr xslt = xsltParseStylesheetFile(BAD_CAST xpath);
 
@@ -174,6 +176,7 @@ int srcxslteval(const char* context_element, const char* xpath, xmlTextReaderPtr
        // mark the internal parameter with the position
        ++position;
        sprintf(posstr, "'%d'", position);
+       setPosition(position);
 
        // expand this unit to make it the context
        xmlTextReaderExpand(reader);

@@ -116,6 +116,10 @@ int srcpatheval(const char* context_element, const char* xpath, xmlTextReaderPtr
 	      pAttr->prefix, pAttr->href);
   }
 
+  xmlXPathRegisterFuncNS(context, (const xmlChar *)"context",
+			 BAD_CAST "http://www.sdml.info/srcML/src",
+		       srcContextFunction);
+
   // find the url of the prefix for the context
   char* context_prefix;
   const char* context_name = (const char*) xmlSplitQName((xmlParserCtxtPtr)context,

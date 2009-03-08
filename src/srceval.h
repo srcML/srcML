@@ -12,4 +12,11 @@ int srceval(const char* context_element,
 	    const char* relaxng_filename,
 	    xmlTextReaderPtr reader, const char* ofilename);
 
+void setPosition(int n);
+
+void xsltsrcMLRegister (void);
+
+void
+srcContextFunction (xmlXPathParserContextPtr ctxt, int nargs);
+
 #endif
