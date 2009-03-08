@@ -83,51 +83,55 @@ int srceval(const char* context_element,
 
   int line = 0;
 
-  // compile the xpath that will be applied to each unit
-  xmlXPathCompExprPtr compiled_xpath = 0;
-  if (xpath[0]) {
-    compiled_xpath = xmlXPathCompile(BAD_CAST xpath);
-    if (compiled_xpath == 0) {
-      return 1;
-    }
-  }
-
   // read the first node
   int ret = xmlTextReaderRead(reader);
   if (ret != 1)
     return 1;
 
-  // setup the context up on which the xpath will be evaluated on
-  xmlXPathContextPtr context = xmlXPathNewContext(xmlTextReaderCurrentDoc(reader));
-
   // setup output
   xmlOutputBufferPtr buf = xmlOutputBufferCreateFilename(ofilename, NULL, 0);
 
-  // register standard prefixes for standard namespaces
-  const char* prefixes[] = {
-    SRCML_SRC_NS_URI, "src",
-    SRCML_CPP_NS_URI, SRCML_CPP_NS_PREFIX_DEFAULT,
-    SRCML_ERR_NS_URI, SRCML_ERR_NS_PREFIX_DEFAULT,
-    SRCML_EXT_LITERAL_NS_URI, SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT,
-    SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT,
-    SRCML_EXT_MODIFIER_NS_URI, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT,
-  };
+  // setup the context up on which the xpath will be evaluated on
+  xmlXPathContextPtr context = 0;
 
-  for (unsigned int i = 0; i < sizeof(prefixes) / sizeof(prefixes[0]) / 2; i += 2)
-    if (xmlXPathRegisterNs(context, BAD_CAST prefixes[i + 1], BAD_CAST prefixes[i]) == -1)
-      fprintf(stderr, "Unable to register prefix %s for namespace %s\n", prefixes[i + 1], prefixes[i]);
+  // compile the xpath that will be applied to each unit
+  xmlXPathCompExprPtr compiled_xpath = 0;
+  if (xpath[0]) {
+
+    compiled_xpath = xmlXPathCompile(BAD_CAST xpath);
+    if (compiled_xpath == 0) {
+      return 1;
+    }
+
+    // setup the context up on which the xpath will be evaluated on
+    context = xmlXPathNewContext(xmlTextReaderCurrentDoc(reader));
+
+    // register standard prefixes for standard namespaces
+    const char* prefixes[] = {
+      SRCML_SRC_NS_URI, "src",
+      SRCML_CPP_NS_URI, SRCML_CPP_NS_PREFIX_DEFAULT,
+      SRCML_ERR_NS_URI, SRCML_ERR_NS_PREFIX_DEFAULT,
+      SRCML_EXT_LITERAL_NS_URI, SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT,
+      SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT,
+      SRCML_EXT_MODIFIER_NS_URI, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT,
+    };
+
+    for (unsigned int i = 0; i < sizeof(prefixes) / sizeof(prefixes[0]) / 2; i += 2)
+      if (xmlXPathRegisterNs(context, BAD_CAST prefixes[i + 1], BAD_CAST prefixes[i]) == -1)
+	fprintf(stderr, "Unable to register prefix %s for namespace %s\n", prefixes[i + 1], prefixes[i]);
   
-  // register any additional namespaces on the root element
-  for (xmlNsPtr pAttr = xmlTextReaderCurrentNode(reader)->nsDef; pAttr; pAttr = pAttr->next) {
+    // register any additional namespaces on the root element
+    for (xmlNsPtr pAttr = xmlTextReaderCurrentNode(reader)->nsDef; pAttr; pAttr = pAttr->next) {
 
-    // get out if the prefix is already defined
-    if (xmlXPathNsLookup(context, pAttr->prefix))
-      continue;
+      // get out if the prefix is already defined
+      if (xmlXPathNsLookup(context, pAttr->prefix))
+	continue;
 
-    if (xmlXPathRegisterNs(context, pAttr->prefix ? pAttr->prefix : BAD_CAST "",
+      if (xmlXPathRegisterNs(context, pAttr->prefix ? pAttr->prefix : BAD_CAST "",
 			   BAD_CAST pAttr->href) == -1)
-      fprintf(stderr, "Unable to register prefix %s for namespace %s\n",
-	      pAttr->prefix, pAttr->href);
+	fprintf(stderr, "Unable to register prefix %s for namespace %s\n",
+		pAttr->prefix, pAttr->href);
+    }
   }
 
   // find the url of the prefix for the context
