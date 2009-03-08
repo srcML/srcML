@@ -84,9 +84,12 @@ int srceval(const char* context_element,
   int line = 0;
 
   // compile the xpath that will be applied to each unit
-  xmlXPathCompExprPtr compiled_xpath = xmlXPathCompile(BAD_CAST xpath);
-  if (compiled_xpath == 0) {
-    return 1;
+  xmlXPathCompExprPtr compiled_xpath = 0;
+  if (xpath[0]) {
+    compiled_xpath = xmlXPathCompile(BAD_CAST xpath);
+    if (compiled_xpath == 0) {
+      return 1;
+    }
   }
 
   // read the first node
@@ -132,7 +135,7 @@ int srceval(const char* context_element,
   const char* context_name = (const char*) xmlSplitQName((xmlParserCtxtPtr)context,
 			     BAD_CAST context_element, (xmlChar**) &context_prefix);
   if (!context_prefix)
-    context_prefix = "";
+    context_prefix = (char*) "";
   const char* context_uri = (const char*) xmlXPathNsLookup(context, BAD_CAST context_prefix);
 
   // output wrapping unit
