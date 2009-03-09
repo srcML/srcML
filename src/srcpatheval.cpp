@@ -8,6 +8,7 @@
 
 #include "srcpatheval.h"
 #include "srceval.h"
+#include "srcexfun.h"
 #include "srcmlns.h"
 
 #include <cstring>
@@ -116,9 +117,9 @@ int srcpatheval(const char* context_element, const char* xpath, xmlTextReaderPtr
 	      pAttr->prefix, pAttr->href);
   }
 
-  xmlXPathRegisterFuncNS(context, (const xmlChar *)"context",
-			 BAD_CAST "http://www.sdml.info/srcML/src",
-		       srcContextFunction);
+  // register the XPath extension functions
+  // including exslt functions, and local ones
+  xpathsrcMLRegister(context);
 
   // find the url of the prefix for the context
   char* context_prefix;
