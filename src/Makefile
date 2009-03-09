@@ -107,7 +107,7 @@ ${EXE_DIR}src2srcml : ${OBJ_DIR}srcMLParserClean.o ${OBJ_DIR}KeywordCPPLexerClea
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) ${XML_LIB} -o $@
 
 # srcML to source code translator program
-${EXE_DIR}srcml2src : ${OBJ_DIR}srcml2src.o ${OBJ_DIR}srcMLUtility.o ${OBJ_DIR}SAX2TextWriter.o ${OBJ_DIR}SAX2ExtractUnitsSrc.o ${OBJ_DIR}SAX2ExtractUnitSrc.o ${OBJ_DIR}SAX2ExtractRootSrc.o ${OBJ_DIR}SAX2ExtractUnitXML.o ${OBJ_DIR}version.o ${OBJ_DIR}srcmlapps.o ${OBJ_DIR}SAX2Utilities.o ${OBJ_DIR}SAX2Properties.o ${OBJ_DIR}SAX2CountUnits.o ${XML_OBJ} ${OBJ_DIR}srcpatheval.o ${OBJ_DIR}srcxslteval.o ${OBJ_DIR}srcrelaxngeval.o ${OBJ_DIR}srceval.o ${OBJ_DIR}SAX2CopyElement.o ${OBJ_DIR}srcexfun.o
+${EXE_DIR}srcml2src : ${OBJ_DIR}srcml2src.o ${OBJ_DIR}srcMLUtility.o ${OBJ_DIR}SAX2TextWriter.o ${OBJ_DIR}SAX2ExtractUnitsSrc.o ${OBJ_DIR}SAX2ExtractUnitSrc.o ${OBJ_DIR}SAX2ExtractRootSrc.o ${OBJ_DIR}SAX2ExtractUnitXML.o ${OBJ_DIR}version.o ${OBJ_DIR}srcmlapps.o ${OBJ_DIR}SAX2Utilities.o ${OBJ_DIR}SAX2Properties.o ${OBJ_DIR}SAX2CountUnits.o ${XML_OBJ} ${OBJ_DIR}srcxslteval.o ${OBJ_DIR}srcrelaxngeval.o ${OBJ_DIR}srceval.o ${OBJ_DIR}SAX2CopyElement.o ${OBJ_DIR}srcexfun.o
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) ${XML_LIB} -o $@
 
 # source code lexical analysis
