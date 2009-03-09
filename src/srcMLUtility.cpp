@@ -175,6 +175,16 @@ void srcMLUtility::extract_xml(const char* filename, int unit) {
 // extract a given unit
 void srcMLUtility::extract_element(const char* element, const char* filename) {
 
+  xmlTextReaderPtr reader = xmlNewTextReaderFilename(infile);
+
+  const char* paths[] = { NULL };
+
+  // perform xpath evaluation
+  srceval(element, paths, "", "", reader, filename);
+
+  xmlFreeTextReader(reader);
+
+  /*
   int unit;
 
   // output entire unit element
@@ -193,6 +203,7 @@ void srcMLUtility::extract_element(const char* element, const char* filename) {
   ctxt->sax = NULL;
 
   xmlFreeParserCtxt(ctxt);
+  */
 }
 
 // extract a given unit

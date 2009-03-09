@@ -184,10 +184,14 @@ int srceval(const char* context_element,
        int startline = xmlTextReaderCurrentNode(reader)->line;
 
        // evaluate the xpath on the context from the current document
-       xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, context);
-       if (result_nodes == 0) {
-	 fprintf(stderr, "ERROR\n");
-	 return 1;
+       xmlXPathObjectPtr result_nodes = 0;
+
+       if (compiled_xpath) {
+	 result_nodes = xmlXPathCompiledEval(compiled_xpath, context);
+	 if (result_nodes == 0) {
+	   fprintf(stderr, "ERROR\n");
+	   return 1;
+	 }
        }
        
        // update the node type
