@@ -76,7 +76,7 @@ static void outputresult(xmlDocPtr doc, xmlNodePtr onode, xmlOutputBufferPtr buf
 }
 
 int srceval(const char* context_element,
-	    const char* xpath, 
+	    const char* xpath[], 
 	    const char* xslt_filename,
 	    const char* relaxng_filename,
 	    xmlTextReaderPtr reader, const char* ofilename) {
@@ -96,9 +96,9 @@ int srceval(const char* context_element,
 
   // compile the xpath that will be applied to each unit
   xmlXPathCompExprPtr compiled_xpath = 0;
-  if (xpath[0]) {
+  if (xpath[0][0]) {
 
-    compiled_xpath = xmlXPathCompile(BAD_CAST xpath);
+    compiled_xpath = xmlXPathCompile(BAD_CAST xpath[0]);
     if (compiled_xpath == 0) {
       return 1;
     }

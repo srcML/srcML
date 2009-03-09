@@ -7,7 +7,7 @@
 void xmlUnitDumpOutputBuffer(xmlOutputBufferPtr buf, xmlNodePtr node);
 
 int srceval(const char* context_element,
-	    const char* xpath, 
+	    const char* xpath[], 
 	    const char* xslt_filename,
 	    const char* relaxng_filename,
 	    xmlTextReaderPtr reader, const char* ofilename);

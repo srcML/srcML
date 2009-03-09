@@ -48,6 +48,7 @@
 #include "SAX2Properties.h"
 #include "SAX2CopyElement.h"
 
+#include "srceval.h"
 #include "srcpatheval.h"
 #include "srcxslteval.h"
 #include "srcrelaxngeval.h"
@@ -256,8 +257,10 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
 
   xmlTextReaderPtr reader = xmlNewTextReaderFilename(infile);
 
+  const char* paths[] = { xpaths, NULL };
+
   // perform xpath evaluation
-  srcpatheval(context_element, xpaths, reader, ofilename);
+  srceval(context_element, paths, "", "", reader, ofilename);
 
   xmlFreeTextReader(reader);
 }
