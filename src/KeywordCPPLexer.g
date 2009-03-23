@@ -292,6 +292,7 @@ KeywordCPPLexer(std::istream& in, const char* encoding, int language = LANGUAGE_
             // concepts
             { "concept", CONCEPT },
             { "concept_map", CONCEPTMAP },
+            { "requires", REQUIRES },
             { "auto", AUTO },
         };
 

@@ -148,6 +148,10 @@ class Mode : public TokenParser, public Language {
 
   const static State::MODE_TYPE MODE_INNER_DECL;
 
+  const static State::MODE_TYPE MODE_REQUIRES;
+
+  const static State::MODE_TYPE MODE_CONCEPT;
+
  public:
 
   Mode(TokenParser* ptp, int lang)

@@ -369,6 +369,8 @@ tokens {
     STEMPLATE_ARGUMENT_LIST;
     STEMPLATE_PARAMETER;
     STEMPLATE_PARAMETER_LIST;
+    SREQUIRES;
+    SCLAUSE;
 
     // cpp internal elements
 	SCPP_DIRECTIVE;
@@ -1874,6 +1876,10 @@ statement_part { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE decl
         // expecting a template parameter
         { inTransparentMode(MODE_TEMPLATE) && inMode(MODE_LIST) }?
              template_param |
+
+        // expecting a template parameter
+        { inTransparentMode(MODE_REQUIRES) || inTransparentMode(MODE_CONCEPT) }?
+             requires_clause |
 
         // expecting a template parameter
         { inLanguage(LANGUAGE_CXX_FAMILY) && inMode(MODE_DERIVED) && inMode(MODE_EXPECT) }?
@@ -3640,6 +3646,25 @@ template_param_list {} :
         tempops
 ;
 
+requires_clause { LocalMode lm; } :
+        {
+            startNewMode(MODE_LOCAL);
+
+            startElement(SREQUIRES);
+        }
+        REQUIRES 
+        {
+            startNewMode(MODE_LOCAL);
+
+            startElement(SCLAUSE);
+        }
+        (general_operators)* complex_name[true] (general_operators (general_operators)* complex_name[true])* 
+        {
+            endCurrentMode(MODE_LOCAL);
+        }
+        (TERMINATE)*
+;
+
 /*
   template parameter
 
@@ -3711,6 +3736,8 @@ tempope[bool final = false] { if (final) setFinalToken(); } :
         {
             // end the mode created by the start template operator
             endCurrentModeSafely(MODE_LIST);
+
+            setMode(MODE_REQUIRES);
         }
 ;
 
