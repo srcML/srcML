@@ -23,7 +23,22 @@ void setPosition(int n) {
   Position = n;
 }
 
-void srcContextFunction (xmlXPathParserContextPtr ctxt, int nargs) {
+// 
+static void srcContextFunction (xmlXPathParserContextPtr ctxt, int nargs) {
+
+    if (nargs != 1) {
+	xmlXPathSetArityError(ctxt);
+	return;
+    }
+
+    xmlChar* arg = xmlXPathPopString(ctxt);
+
+    xmlXPathObjectPtr ret = xmlXPathEval(arg, ctxt->context);
+
+    valuePush(ctxt, ret);
+}
+
+static void srcRootFunction (xmlXPathParserContextPtr ctxt, int nargs) {
 
     if (nargs != 1) {
 	xmlXPathSetArityError(ctxt);
