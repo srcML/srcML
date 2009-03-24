@@ -3646,9 +3646,11 @@ template_param_list {} :
         tempops
 ;
 
-requires_clause { LocalMode lm; } :
+requires_clause {/* LocalMode lm;*/ } :
         {
-            startNewMode(MODE_LOCAL);
+            // template with nested statement (function or class)
+            // expect a template parameter list
+            startNewMode(MODE_STATEMENT | MODE_NEST);
 
             startElement(SREQUIRES);
         }
@@ -3662,7 +3664,7 @@ requires_clause { LocalMode lm; } :
         {
             endCurrentMode(MODE_LOCAL);
         }
-        (TERMINATE)*
+        (TERMINATE { endCurrentMode(MODE_STATEMENT | MODE_NEST); } )*
 ;
 
 /*
