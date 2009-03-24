@@ -490,6 +490,9 @@ start {} :
 
         comma[true] |
 
+        // requires clause for C++0x
+        requires_clause |
+
         { !inTransparentMode(MODE_INTERNAL_END_PAREN) || inPrevMode(MODE_CONDITION) }? rparen[true] |
 
         // characters with special actions that usually end currently open elements
@@ -1358,14 +1361,9 @@ conceptmap_definition :
             // start the class definition
             startElement(SCONCEPTMAP);
         }
-        (
-            (auto_keyword)* CONCEPTMAP
+        (auto_keyword)* CONCEPTMAP
 
-            identifier[true] 
-                {
-                    startNewMode(MODE_TEMPLATE | MODE_LIST | MODE_EXPECT);
-                }
-        )
+        complex_name[true] 
 ;
 
 anonymous_class_definition :
@@ -1876,10 +1874,6 @@ statement_part { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE decl
         // expecting a template parameter
         { inTransparentMode(MODE_TEMPLATE) && inMode(MODE_LIST) }?
              template_param |
-
-        // expecting a template parameter
-        { inTransparentMode(MODE_REQUIRES) || inTransparentMode(MODE_CONCEPT) }?
-             requires_clause |
 
         // expecting a template parameter
         { inLanguage(LANGUAGE_CXX_FAMILY) && inMode(MODE_DERIVED) && inMode(MODE_EXPECT) }?
