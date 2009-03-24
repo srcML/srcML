@@ -108,7 +108,7 @@ OPERATORS options { testLiterals = true; } { unsigned int realbegin = _begin; bo
 
         ({ !(gt && LA(1) == '>') && (dcoloncount < 2) }?
 
-         ( '*' | '|' | ':' { ++dcoloncount; } | '`' | '=' | '!' | '%' | '+' | '^' | '-' |
+         ( '*' { gt = true; } | '|' | ':' { ++dcoloncount; } | '`' | '=' | '!' | '%' | '+' | '^' | '-' |
            '&' { text.erase(realbegin); text += "&amp;"; realbegin += 4; } | 
            '>' { if (realbegin == _begin) gt = true; text.erase(realbegin); text += "&gt;"; realbegin += 3; } | 
            '<' { text.erase(realbegin); text += "&lt;"; realbegin += 3; gt = true; }) { ++realbegin; } )+ |
