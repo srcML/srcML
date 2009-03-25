@@ -1615,8 +1615,13 @@ block_end {} :
         }
         else_handling
         {
+            bool endatblock = inMode(MODE_END_AT_BLOCK);
+
             // some statements end with the block
             if (inMode(MODE_END_AT_BLOCK))
+                endCurrentMode(MODE_LOCAL);
+
+            if (endatblock && inTransparentMode(MODE_TEMPLATE))
                 endCurrentMode(MODE_LOCAL);
 
             // looking for a terminate (';').  may have some whitespace before it
@@ -2212,7 +2217,7 @@ throw_exception[bool cond = true] { if (cond) throw antlr::RecognitionException(
 
 set_type[DECLTYPE& name, DECLTYPE value, bool result = true] { if (result) name = value; } :;
 
-trace[const char*s ] { std::cerr << s << std::endl; } :;
+//trace[const char*s ] { std::cerr << s << std::endl; } :;
 
 //traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
 
@@ -3618,7 +3623,7 @@ template_declaration {} :
         {
             // template with nested statement (function or class)
             // expect a template parameter list
-            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_STATEMENT);
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_TEMPLATE);
 
             // start the template
             startElement(STEMPLATE);
