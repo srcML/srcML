@@ -3185,7 +3185,7 @@ pure_expression_block {} :
 /*
   All possible operators
 */
-general_operators { LocalMode lm; } :
+general_operators { LocalMode lm; bool first = true; } :
         {
             if (isoption(parseoptions, OPTION_OPERATOR)) {
 
@@ -3196,10 +3196,10 @@ general_operators { LocalMode lm; } :
                 startElement(SOPERATOR);
             }
         }
-        (options { greedy = true; } : OPERATORS | TEMPOPS | TEMPOPE |
+        ({ first || SkipBufferSize() == 0 }? (options { greedy = true; } : OPERATORS | TEMPOPS | TEMPOPE |
          EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS /* | DELETEOP */ | NEW |
          DOTDOT
-        )+
+        ) { first = false; })+
 ;
 
 /*
