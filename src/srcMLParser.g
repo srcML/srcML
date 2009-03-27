@@ -3595,7 +3595,7 @@ multops { LocalMode lm; } :
                 startElement(SMODIFIER);
             }
         }
-        (MULTOPS | REFOPS | DOTDOTDOT)
+        (MULTOPS | REFOPS | DOTDOTDOT | { LT(1)->getText() == "&amp;&amp;" }? OPERATORS)
 ;
 
 /*
