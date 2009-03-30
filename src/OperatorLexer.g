@@ -106,7 +106,7 @@ OPERATORS options { testLiterals = true; } { unsigned int realbegin = _begin; bo
             }
         }   |
 
-        ({ !(gt && LA(1) == '>') && (dcoloncount < 2) }?
+        ({ !(gt && (LA(1) == '>' || LA(1) == ':' || LA(1) == '&' || LA(1) == '*')) && (dcoloncount < 2) }?
 
          ( '*' { gt = true; } | '|' | ':' { ++dcoloncount; } | '`' | '=' | '!' | '%' | '+' | '^' | '-' |
            '&' { text.erase(realbegin); text += "&amp;"; realbegin += 4; gt = true; } | 
