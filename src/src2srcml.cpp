@@ -25,6 +25,7 @@
 #include <fstream>
 #include <cstring>
 #include <sys/stat.h>
+#include <boost/filesystem.hpp>
 #include "version.h"
 #include "srcmlapps.h"
 #include "srcmlns.h"
@@ -338,17 +339,27 @@ int main(int argc, char* argv[]) {
   }
 
   // verify that the output filename is not the same as any of the input filenames
-  struct stat outstat;
-  stat(srcml_filename, &outstat);
+
+  boost::filesystem::path srcml_filename_path(srcml_filename);
+
+  //  struct stat outstat;
+  //  stat(srcml_filename, &outstat);
   for (int i = input_arg_start; i <= input_arg_end; ++i) {
 
-    struct stat instat;
+    boost::filesystem::path input_filename_path(argv[i]);
+
+    if (equivalent(srcml_filename_path, input_filename_path)) {
+      fprintf(stderr, "%s: Input file '%s' is the same as the output file '%s'\n",
+	      NAME, argv[i], srcml_filename);
+      exit(STATUS_INPUTFILE_PROBLEM);
+    }
+    /*    struct stat instat;
     stat(argv[i], &instat);
     if (instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
       fprintf(stderr, "%s: Input file '%s' is the same as the output file '%s'\n",
 	      NAME, argv[i], srcml_filename);
       exit(STATUS_INPUTFILE_PROBLEM);
-    }
+      }*/
   }
 
   // make sure user did not specify duplicate prefixes as an option
@@ -431,6 +442,9 @@ int main(int argc, char* argv[]) {
       strncpy(spath, line, MAXFILENAME);
       char* path_filename = split_path(spath);
       char* path_directory = spath;
+
+      //      boost::filesystem::path fullpath(spath);
+      //      std::cout << boost::filesystem::basename(fullpath);
       try {
 	translator.translate(line, path_directory, path_filename, given_version);
 
