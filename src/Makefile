@@ -18,10 +18,10 @@ SRCMLLEXER_ANTLR_FLAGS =
 CXX = /usr/bin/g++
 
 # compiler optimizations
-CXXFLAGS = -O3 -Wall -march=nocona -minline-all-stringops -fno-rtti
+CXXFLAGS = -O3 -Wall -march=nocona -minline-all-stringops #-fno-rtti
 
 # compiler gcc linking flags
-CXX_LINK_FLAGS = #-s
+CXX_LINK_FLAGS = -lboost_filesystem #-s
 
 # object code for xml
 LIBXML_INCLUDE=-I/usr/include/libxml2

@@ -182,9 +182,9 @@ COMMENT_TEXT {
             // not the first character anymoe
             first = false;
 
-            // about to read a newline.  Line comments need to end before the newline is consumed.
+            // about to read a newline, or the end of the files.  Line comments need to end before the newline is consumed.
             // strings and characters on a preprocessor line also need to end, even if unterminated
-            if (_ttype == COMMENT_TEXT && LA(1) == '\n' &&
+            if (_ttype == COMMENT_TEXT && (LA(1) == '\n' || LA(1) == EOF_CHAR) &&
                 (((mode == STRING_END || mode == CHAR_END) && onpreprocline)
                  || (mode == LINECOMMENT_END))) {
 

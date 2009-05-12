@@ -339,27 +339,17 @@ int main(int argc, char* argv[]) {
   }
 
   // verify that the output filename is not the same as any of the input filenames
-
-  boost::filesystem::path srcml_filename_path(srcml_filename);
-
-  //  struct stat outstat;
-  //  stat(srcml_filename, &outstat);
+  struct stat outstat;
+  stat(srcml_filename, &outstat);
   for (int i = input_arg_start; i <= input_arg_end; ++i) {
 
-    boost::filesystem::path input_filename_path(argv[i]);
-
-    if (equivalent(srcml_filename_path, input_filename_path)) {
-      fprintf(stderr, "%s: Input file '%s' is the same as the output file '%s'\n",
-	      NAME, argv[i], srcml_filename);
-      exit(STATUS_INPUTFILE_PROBLEM);
-    }
-    /*    struct stat instat;
+    struct stat instat;
     stat(argv[i], &instat);
     if (instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
       fprintf(stderr, "%s: Input file '%s' is the same as the output file '%s'\n",
 	      NAME, argv[i], srcml_filename);
       exit(STATUS_INPUTFILE_PROBLEM);
-      }*/
+    }
   }
 
   // make sure user did not specify duplicate prefixes as an option
