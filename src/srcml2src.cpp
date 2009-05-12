@@ -178,9 +178,11 @@ void output_version(const char* name) {
 
 int options = OPTION_XMLDECL | OPTION_NAMESPACEDECL;
 
+#ifdef __GNUG__
 extern "C" void verbose_handler(int);
 
 extern "C" void terminate_handler(int);
+#endif
 
 int optionorder[5];
 int optioncount = 0;
@@ -193,8 +195,10 @@ int main(int argc, char* argv[]) {
 
   /* signal handling */
 
+#ifdef __GNUG__
   // toggling verbose flag
   pstd::signal(SIGUSR1, verbose_handler);
+#endif
 
   int exit_status = EXIT_SUCCESS;
 
@@ -708,8 +712,10 @@ int main(int argc, char* argv[]) {
     // process non-attribute options
     } else if (isoption(options, OPTION_NESTED)) {
 
+#ifdef __GNUG__
       // gracefully finish current file in compound document mode
       pstd::signal(SIGINT, terminate_handler);
+#endif
 
       // in verbose mode, the current counter is displayed
       // as it counts.  Need to overwrite this
@@ -724,8 +730,10 @@ int main(int argc, char* argv[]) {
 
     } else if (isoption(options, OPTION_EXPAND)) {
 
+#ifdef __GNUG__
       // gracefully finish current file in compound document mode
       pstd::signal(SIGINT, terminate_handler);
+#endif
 
       su.expand();
 
@@ -798,6 +806,7 @@ int main(int argc, char* argv[]) {
   return exit_status;
 }
 
+#ifdef __GNUG__
 extern "C" void verbose_handler(int) {
 
   if ((options &= OPTION_VERBOSE) == 0)
@@ -814,3 +823,4 @@ extern "C" void terminate_handler(int) {
   // turn off handler for this signal
   pstd::signal(SIGINT, SIG_DFL);
 }
+#endif

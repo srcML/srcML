@@ -249,9 +249,11 @@ bool prefixchange[] = {
 // setup options and collect info from arguments
 int process_args(int argc, char* argv[]);
 
+#ifdef __GNUG__
 extern "C" void verbose_handler(int);
 
 extern "C" void terminate_handler(int);
+#endif
 
 int main(int argc, char* argv[]) {
 
@@ -259,8 +261,10 @@ int main(int argc, char* argv[]) {
 
   /* signal handling */
 
+#ifdef __GNUG__
   // signal to toggle verbose flag
   pstd::signal(SIGUSR1, verbose_handler);
+#endif
 
   // process command-line arguments
   int curarg = process_args(argc, argv);
@@ -401,8 +405,10 @@ int main(int argc, char* argv[]) {
       pinfilelist = &infile;
     }
 
+#ifdef __GNUG__
     // setup so we can gracefully stop after a file at a time
     pstd::signal(SIGINT, terminate_handler);
+#endif
       
     // translate all the filenames listed in the named file
     const int MAXFILENAME = 512;
@@ -1003,6 +1009,7 @@ int process_args(int argc, char* argv[]) {
   return curarg;
 }
 
+#ifdef __GNUG__
 extern "C" void verbose_handler(int) {
 
   if ((options &= OPTION_VERBOSE) == 0)
@@ -1019,3 +1026,4 @@ extern "C" void terminate_handler(int) {
   // turn off handler for this signal
   pstd::signal(SIGINT, SIG_DFL);
 }
+#endif
