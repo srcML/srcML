@@ -86,9 +86,6 @@ const char* const GAP = "                              ";
 
 const char FILELIST_COMMENT = '#';
 
-// split path into directory and filename
-char* split_path(char* path);
-
 enum {
   SRCML_SRC_NS_URI_POS = 0, 
   SRCML_CPP_NS_URI_POS,
@@ -427,16 +424,12 @@ int main(int argc, char* argv[]) {
       }
 
       // translate the file listed in the input file using the directory and filename extracted from the path
-      const int MAXFILENAME = 512;
-      char spath[MAXFILENAME];
-      strncpy(spath, line, MAXFILENAME);
-      char* path_filename = split_path(spath);
-      char* path_directory = spath;
-
-      //      boost::filesystem::path fullpath(spath);
-      //      std::cout << boost::filesystem::basename(fullpath);
+      boost::filesystem::path fullpath(line);
       try {
-	translator.translate(line, path_directory, path_filename, given_version);
+	translator.translate(line,
+			     fullpath.branch_path().string().c_str(),
+			     fullpath.leaf().c_str(),
+			     given_version);
 
       } catch (FileError) {
 
@@ -466,23 +459,18 @@ int main(int argc, char* argv[]) {
     // translate from path given on command line using directory given on the command line or extracted
     // from full path
     char* path = argv[input_arg_start];
-    const int MAXFILENAME = 512;
-    char spath[MAXFILENAME];
-    strncpy(spath, path, MAXFILENAME);
-    char* path_filename = split_path(spath);
-    char* path_directory = spath;
+    boost::filesystem::path fullpath(path);
+    std::string path_filename_s = fullpath.leaf();
+    std::string path_directory_s = fullpath.branch_path().string();
 
     // hack to fix where directory, but no filename
-    if (path_directory[0] && !path_filename[0]) {
-      char* t = path_filename;
-      path_filename = path_directory;
-      path_directory = t;
-    }
+    if (path_directory_s != "" && path_filename_s == "")
+      path_directory_s.swap(path_filename_s);
 
     try {
       translator.translate(path,
-			   isoption(options, OPTION_DIRECTORY) ? given_directory : path_directory,
-			   isoption(options, OPTION_FILENAME)  ? given_filename  : path_filename,
+			   isoption(options, OPTION_DIRECTORY) ? given_directory : path_directory_s.c_str(),
+			   isoption(options, OPTION_FILENAME)  ? given_filename  : path_filename_s.c_str(),
 			   given_version);
 
     } catch (FileError) {
@@ -504,11 +492,9 @@ int main(int argc, char* argv[]) {
     for (int i = input_arg_start; i <= input_arg_end; ++i) {
 
       char* path = argv[i];
-      const int MAXFILENAME = 512;
-      char spath[MAXFILENAME];
-      strncpy(spath, path, MAXFILENAME);
-      char* path_filename = split_path(spath);
-      char* path_directory = spath;
+      boost::filesystem::path fullpath(path);
+      std::string path_filename_s = fullpath.leaf();
+      std::string path_directory_s = fullpath.branch_path().string();
 
       // another file
       ++count;
@@ -518,7 +504,7 @@ int main(int argc, char* argv[]) {
 	fprintf(stderr, "%d\t%s", count, path);
       }
       try {
-	translator.translate(path, path_directory, path_filename);
+	translator.translate(path, path_directory_s.c_str(), path_filename_s.c_str());
       } catch (FileError) {
 	fprintf(stderr, "%s error: file \'%s\' does not exist.\n", NAME, path);
       }
@@ -1015,25 +1001,6 @@ int process_args(int argc, char* argv[]) {
   }
 
   return curarg;
-}
-
-// filename part of path
-char* split_path(char* path) {
-
-  char* lastslash = 0;
-  char* cur = path;
-  while (*cur) {
-    if (*cur == '/')
-      lastslash = cur;
-    ++cur;
-  }
-
-  if (lastslash) {
-    *lastslash = '\0';
-    return lastslash + 1;
-  }
-
-  return cur;
 }
 
 extern "C" void verbose_handler(int) {
