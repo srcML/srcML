@@ -371,6 +371,7 @@ int main(int argc, char* argv[]) {
   }
 
   // automatic interactive use from stdin (not on redirect or pipe)
+#ifdef __GNUG__
   if (input_arg_count == 0 || strcmp(argv[input_arg_start], STDIN) == 0) {
 
     struct stat instat;
@@ -378,6 +379,7 @@ int main(int argc, char* argv[]) {
     if (S_ISCHR(instat.st_mode))
       options |= OPTION_INTERACTIVE;
   }
+#endif
 
   try {
 
