@@ -24,6 +24,7 @@
 
 #include "SAX2ExtractUnitsSrc.h"
 #include "srcmlns.h"
+#include <boost/filesystem.hpp>
 
 #include <iostream>
 
@@ -40,35 +41,6 @@ const int EXPAND_DIR_PERM = S_IRWXU | S_IRWXG;
 #endif
 
 using namespace SAX2ExtractUnitsSrc;
-
-static int mkpath(char* path
-#ifdef __GNUC__		   
-		   , mode_t mode
-#endif		   
-		   ) {
-
-  for (char* c = path; *c; ++c) {
-
-    // make the directory path so far
-    if (*c == '/') {
-
-      *c = '\0';
-
-      int ret = mkdir(path
-#ifdef __GNUC__		   
-		      , mode
-#endif		   
-		      );
-
-      if (ret != 0 && errno != EEXIST)
-	return ret;
-
-      *c = '/';
-    }
-  }
-
-  return 0;
-}
 
 namespace SAX2ExtractUnitsSrc {
 
@@ -136,31 +108,35 @@ namespace SAX2ExtractUnitsSrc {
 
     char path[512] = "";
 
+    boost::filesystem::path directory_path;
+
     // find the directory
     bool founddirectory = false;
-    int startfilename = 0;
     for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5)
       if (strcmp((const char*) attributes[index], "dir") == 0) {
 
 	int filename_size = (const char*) attributes[index + 4] - (const char*) attributes[index + 3];
 	if (filename_size > 0) {
 	  strncpy(path, (const char*) attributes[index + 3], filename_size);
-	  path[filename_size] = '/';
-	  path[filename_size + 1] = '\0';
-	  startfilename = filename_size + 1;
+	  path[filename_size] = '\0';
+	  directory_path /= path;
 	}
 
 	founddirectory = true;
 	break;
       }
 
+    boost::filesystem::path filename_path;
+
     // find the filename
     bool foundfilename = false;
     for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5)
       if (strcmp((const char*) attributes[index], "filename") == 0) {
 
-	strncpy(path + startfilename, (const char*) attributes[index + 3],
-		(const char*) attributes[index + 4] - (const char*) attributes[index + 3]);
+	int filename_size = (const char*) attributes[index + 4] - (const char*) attributes[index + 3];
+	strncpy(path, (const char*) attributes[index + 3], filename_size);
+	path[filename_size] = '\0';
+	filename_path /= path;
 
 	foundfilename = true;
 	break;
@@ -172,26 +148,31 @@ namespace SAX2ExtractUnitsSrc {
       return;
     }
 
+    boost::filesystem::path complete_path = directory_path;
+    complete_path /= filename_path;
+
     // construct the directory if needed
     if (founddirectory) {
 
-      // make the directory path if there is one
-      int ret = mkpath(path
-#ifdef __GNUC__
-		       , EXPAND_DIR_PERM
-#endif
-		       );
+      //      std::cerr << path << std::endl;
+      try {
+	boost::filesystem::create_directories(directory_path);
 
-      if (ret != 0 && errno != EEXIST) {
-	fprintf(stderr, "Error %d creating directory:  %s\n", errno, path);
+      } catch (std::exception& e) {
+      
+	fprintf(stderr, "Error %s creating directory:  %s\n", e.what(), directory_path.string().c_str());
+
+      } catch (...) {
+      
+	fprintf(stderr, "Error in creating directory:  %s\n", directory_path.string().c_str());
       }
     }
 
     // output file status message if in verbose mode
     if (isoption(*(pstate->poptions), OPTION_VERBOSE))
-      fprintf(stderr, "%ld\t%s\n", pstate->count, path);
+      fprintf(stderr, "%ld\t%s\n", pstate->count, complete_path.string().c_str());
 
-    pstate->output = xmlOutputBufferCreateFilename(path, pstate->handler, 0);
+    pstate->output = xmlOutputBufferCreateFilename(complete_path.string().c_str(), pstate->handler, 0);
     if (pstate->output == NULL) {
       fprintf(stderr, "Output buffer error\n");
       xmlStopParser(pstate->ctxt);
