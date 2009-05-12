@@ -45,8 +45,6 @@ class StreamMLParser : public StreamParser<Base> {
  private:
   int options;
 
-  void cleanup() { }
-
  public:
 
   ~StreamMLParser() {}

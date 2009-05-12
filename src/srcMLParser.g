@@ -523,7 +523,12 @@ start {} :
 ;
 exception
 catch[...] {
-        consume();
+        // need to consume the token. If we got here because
+        // of an error with EOF token, then call EOF directly
+        if (LA(1) == 1)
+            eof();
+        else
+            consume();
 }
 
 /*
