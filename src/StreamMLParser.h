@@ -45,12 +45,11 @@ class StreamMLParser : public StreamParser<Base> {
  private:
   int options;
 
-  void cleanup() { Base::endAllModes(); if (Base::size() > 1) Base::endCurrentMode(); 
-std::cerr << "CLEANUP" << std::endl; }
+  void cleanup() { }
 
  public:
 
-  ~StreamMLParser() { std::cerr << "DESTRUCTOR STREAMMLPARSER" << std::endl; }
+  ~StreamMLParser() {}
 
  public:
 
