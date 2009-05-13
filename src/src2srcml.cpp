@@ -437,7 +437,7 @@ int main(int argc, char* argv[]) {
       boost::filesystem::path fullpath(line);
       try {
 	translator.translate(line,
-			     fullpath.branch_path().string().c_str(),
+			     fullpath.branch_path().directory_string().c_str(),
 			     fullpath.leaf().c_str(),
 			     given_version);
 
@@ -471,7 +471,7 @@ int main(int argc, char* argv[]) {
     char* path = argv[input_arg_start];
     boost::filesystem::path fullpath(path);
     std::string path_filename_s = fullpath.leaf();
-    std::string path_directory_s = fullpath.branch_path().string();
+    std::string path_directory_s = fullpath.branch_path().directory_string();
 
     // hack to fix where directory, but no filename
     if (path_directory_s != "" && path_filename_s == "")
@@ -506,7 +506,7 @@ int main(int argc, char* argv[]) {
       char* path = argv[i];
       boost::filesystem::path fullpath(path);
       std::string path_filename_s = fullpath.leaf();
-      std::string path_directory_s = fullpath.branch_path().string();
+      std::string path_directory_s = fullpath.branch_path().directory_string();
 
       // another file
       ++count;
