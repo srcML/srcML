@@ -172,7 +172,7 @@ namespace SAX2ExtractUnitsSrc {
     if (isoption(*(pstate->poptions), OPTION_VERBOSE))
       fprintf(stderr, "%ld\t%s\n", pstate->count, complete_path.file_string().c_str());
 
-    pstate->output = xmlOutputBufferCreateFilename(complete_path.string().c_str(), pstate->handler, 0);
+    pstate->output = xmlOutputBufferCreateFilename(complete_path.file_string().c_str(), pstate->handler, 0);
     if (pstate->output == NULL) {
       fprintf(stderr, "Output buffer error\n");
       xmlStopParser(pstate->ctxt);
