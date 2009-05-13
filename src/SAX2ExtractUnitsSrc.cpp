@@ -170,7 +170,7 @@ namespace SAX2ExtractUnitsSrc {
 
     // output file status message if in verbose mode
     if (isoption(*(pstate->poptions), OPTION_VERBOSE))
-      fprintf(stderr, "%ld\t%s\n", pstate->count, complete_path.string().c_str());
+      fprintf(stderr, "%ld\t%s\n", pstate->count, complete_path.file_string().c_str());
 
     pstate->output = xmlOutputBufferCreateFilename(complete_path.string().c_str(), pstate->handler, 0);
     if (pstate->output == NULL) {
