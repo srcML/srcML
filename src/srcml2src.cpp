@@ -604,12 +604,14 @@ int main(int argc, char* argv[]) {
   }
 
   // verify that the output file is not the same as the input file
+#ifdef __GNUG__
   struct stat outstat;
   stat(ofilename, &outstat);
   if (instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
     fprintf(stderr, "%s: Input file '%s' is the same as the output file '%s'\n", NAME, filename, ofilename);
     exit(STATUS_INPUTFILE_PROBLEM);
   }
+#endif
 
   // info options are convenience functions for multiple options
   if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {
