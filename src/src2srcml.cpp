@@ -340,6 +340,7 @@ int main(int argc, char* argv[]) {
   }
 
   // verify that the output filename is not the same as any of the input filenames
+#ifdef __GNUG__
   struct stat outstat;
   stat(srcml_filename, &outstat);
   for (int i = input_arg_start; i <= input_arg_end; ++i) {
@@ -352,6 +353,7 @@ int main(int argc, char* argv[]) {
       exit(STATUS_INPUTFILE_PROBLEM);
     }
   }
+#endif
 
   // make sure user did not specify duplicate prefixes as an option
   for (int i = 0; i < 6 - 1; ++i) {
