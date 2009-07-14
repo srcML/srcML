@@ -2109,7 +2109,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
              DECLTYPE& type,
              bool inparam     /* are we in a parameter */
         ] { token = 0; fla = 0; type_count = 0; int specifier_count = 0; isdestructor = false;
-        type = NONE; bool foundpure = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; } :
+        type = NONE; bool foundpure = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; bool endbracket = false; } :
 
         // main pattern for variable declarations, and most function declaration/definitions.
         // trick is to look for function declarations/definitions, and along the way record
@@ -2125,6 +2125,10 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
           parts, specifier parts, and second token
         */
         ({ inLanguage(LANGUAGE_JAVA_FAMILY) || LA(1) != LBRACKET }?
+
+            // was their a bracket on the end?  Need to know for Java
+            set_bool[endbracket, inLanguage(LANGUAGE_JAVA_FAMILY) && LA(1) == LBRACKET]
+
             (
                 // specifiers
                 standard_specifiers set_int[specifier_count, specifier_count + 1] |
@@ -2149,7 +2153,11 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
 
             // record second (before we parse it) for label detection
             set_int[token, LA(1), type_count == 1]
+
         )*
+    
+        // adjust type tokens to eliminate for last left bracket (only for Java)
+        set_int[type_count, endbracket ? type_count - 1 : type_count]
 
         // have a sequence of type tokens, last one is function/variable name
         // (except for function pointer, which is handled later)
