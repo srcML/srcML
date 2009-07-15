@@ -224,7 +224,8 @@ void srcMLParser::endAllModes() {
     flushSkip();
 
     // end the very last mode which forms the entire unit
-    endLastMode();
+    if (size() == 1)
+        endLastMode();
 }
 
 }
