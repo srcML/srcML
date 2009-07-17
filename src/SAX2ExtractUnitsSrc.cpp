@@ -179,11 +179,11 @@ namespace SAX2ExtractUnitsSrc {
     complete_path /= filename_path;
 
     // construct the directory if needed
-    if (founddirectory) {
+    if (founddirectory && !is_directory(directory_path)) {
 
-      //      std::cerr << path << std::endl;
       try {
-	boost::filesystem::create_directories(directory_path);
+	if (!boost::filesystem::create_directories(directory_path))
+	  fprintf(stderr, "Error in creating directory:  %s\n", directory_path.string().c_str());
 
       } catch (std::exception& e) {
       
