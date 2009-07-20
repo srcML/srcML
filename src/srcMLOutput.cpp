@@ -300,21 +300,12 @@ void srcMLOutput::consume(const char* directory, const char* filename, const cha
   unit_filename = filename;
   unit_version = version;
 
-  openelementcount = 0;
-
   // consume all input until EOF
   while (consume_next() != antlr::Token::EOF_TYPE) {
 
     // in interactive mode flush after each token is discovered
     if (isoption(OPTION_INTERACTIVE))
       xmlTextWriterFlush(xout);
-  }
-
-  // end anything still open
-  while (openelementcount) {
-
-    xmlTextWriterEndElement(xout);
-    --openelementcount;
   }
 }
 
@@ -327,7 +318,6 @@ int srcMLOutput::consume_next() {
   const antlr::RefToken& token = input->nextToken();
 
   outputToken(token);
-  //  std::cerr << "TOKEN " << token->getType() << std::endl; 
 
   return token->getType();
 }
@@ -473,7 +463,17 @@ void srcMLOutput::processUnit(const antlr::RefToken& token) {
 
     startUnit(unit_language, unit_dir, unit_filename, unit_version, !isoption(OPTION_NESTED));
 
+    // keep track of number of open units (probably from comment handling)
+    openelementcount = 0;
+
   } else {
+
+    // end anything still open
+    while (openelementcount) {
+
+      xmlTextWriterEndElement(xout);
+      --openelementcount;
+    }
 
     // end the unit
     xmlTextWriterEndElement(xout);
