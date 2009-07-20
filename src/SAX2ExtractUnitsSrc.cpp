@@ -149,7 +149,8 @@ namespace SAX2ExtractUnitsSrc {
 	  directory_path /= path;
 	}
 
-	founddirectory = true;
+	// found the directory attribute, now make sure it is not empty
+	founddirectory = filename_size > 0;
 	break;
       }
 
