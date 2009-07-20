@@ -270,7 +270,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 			 const char* curi[]
 			 )
   : input(ints), xout(0), srcml_filename(filename), unit_language(language), unit_dir(0), unit_filename(0),
-    unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(curi)
+    unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(curi), openelementcount(0)
 {
   // open the output text writer stream
   // "-" filename is standard output
@@ -300,12 +300,21 @@ void srcMLOutput::consume(const char* directory, const char* filename, const cha
   unit_filename = filename;
   unit_version = version;
 
+  openelementcount = 0;
+
   // consume all input until EOF
   while (consume_next() != antlr::Token::EOF_TYPE) {
 
     // in interactive mode flush after each token is discovered
     if (isoption(OPTION_INTERACTIVE))
       xmlTextWriterFlush(xout);
+  }
+
+  // end anything still open
+  while (openelementcount) {
+
+    xmlTextWriterEndElement(xout);
+    --openelementcount;
   }
 }
 
@@ -318,6 +327,7 @@ int srcMLOutput::consume_next() {
   const antlr::RefToken& token = input->nextToken();
 
   outputToken(token);
+  //  std::cerr << "TOKEN " << token->getType() << std::endl; 
 
   return token->getType();
 }
@@ -372,6 +382,7 @@ void srcMLOutput::processEscape(const antlr::RefToken& token) {
   const char* s = token2name(token);
 
   xmlTextWriterStartElement(xout, BAD_CAST s);
+  ++openelementcount;
 
   char buf[20];
   sprintf(buf, "0x%0x", token->getText()[0]);
@@ -379,6 +390,7 @@ void srcMLOutput::processEscape(const antlr::RefToken& token) {
   xmlTextWriterWriteAttribute(xout, BAD_CAST "char", BAD_CAST buf);
 
   xmlTextWriterEndElement(xout);
+  --openelementcount;
 }
 
 void srcMLOutput::startUnit(const char* language, const char* dir, const char* filename, const char* version, bool outer) {
@@ -482,11 +494,14 @@ void srcMLOutput::processAccess(const antlr::RefToken& token) {
 
   // start the element
   xmlTextWriterStartElement(xout, BAD_CAST token2name(token));
+  ++openelementcount;
 
   xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST type_default);
 
-  if (isempty(token))
+  if (isempty(token)) {
     xmlTextWriterEndElement(xout);
+    --openelementcount;
+  }
 }
 
 void srcMLOutput::processToken(const antlr::RefToken& token) {
@@ -496,11 +511,15 @@ void srcMLOutput::processToken(const antlr::RefToken& token) {
   if (s[0] == 0)
     return;
 
-  if (isstart(token) || isempty(token))
+  if (isstart(token) || isempty(token)) {
     xmlTextWriterStartElement(xout, BAD_CAST s);
+    ++openelementcount;
+  }
 
-  if (!isstart(token) || isempty(token))
+  if (!isstart(token) || isempty(token)) {
     xmlTextWriterEndElement(xout);
+    --openelementcount;
+  }
 }
 
 void srcMLOutput::processBlockCommentStart(const antlr::RefToken& token) {
@@ -510,6 +529,7 @@ void srcMLOutput::processBlockCommentStart(const antlr::RefToken& token) {
   const char* s = token2name(token);
 
   xmlTextWriterStartElement(xout, BAD_CAST s);
+  ++openelementcount;
 
   xmlTextWriterWriteAttribute(xout, BAD_CAST "type",
      BAD_CAST (strcmp(unit_language, "Java") == 0 && token->getText().substr(0, 3) == "/**" ? JAVADOC_COMMENT_ATTR : BLOCK_COMMENT_ATTR));
@@ -523,6 +543,7 @@ void srcMLOutput::processLineCommentStart(const antlr::RefToken& token) {
   const char* s = token2name(token);
 
   xmlTextWriterStartElement(xout, BAD_CAST s);
+  ++openelementcount;
 
   xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST LINE_COMMENT_ATTR);
 
@@ -537,6 +558,7 @@ void srcMLOutput::processEndLineToken(const antlr::RefToken& token) {
     processText(token);
 
   xmlTextWriterEndElement(xout);
+  --openelementcount;
 
   if (size == 1)
     processText(token);
@@ -547,6 +569,7 @@ void srcMLOutput::processEndBlockToken(const antlr::RefToken& token) {
   processText(token);
 
   xmlTextWriterEndElement(xout);
+  --openelementcount;
 }
 
 void srcMLOutput::processOptional(const antlr::RefToken& token, const char* attr_name, const char* attr_value) {
@@ -555,9 +578,12 @@ void srcMLOutput::processOptional(const antlr::RefToken& token, const char* attr
 
   if (isstart(token)) {
     xmlTextWriterStartElement(xout, BAD_CAST s);
+    ++openelementcount;
     xmlTextWriterWriteAttribute(xout, BAD_CAST attr_name, BAD_CAST attr_value);
-  } else
+  } else {
     xmlTextWriterEndElement(xout);
+    --openelementcount;
+  }
 }
 
 void srcMLOutput::processString(const antlr::RefToken& token) {
@@ -589,10 +615,12 @@ void srcMLOutput::processMarker(const antlr::RefToken& token) {
     return;
 
   xmlTextWriterStartElement(xout, BAD_CAST s);
+  ++openelementcount;
 
   xmlTextWriterWriteAttribute(xout, BAD_CAST "location", BAD_CAST token->getText().c_str());
 
   xmlTextWriterEndElement(xout);
+  --openelementcount;
 }
 #endif
 

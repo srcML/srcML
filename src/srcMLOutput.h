@@ -75,8 +75,9 @@ class srcMLOutput : public srcMLParserTokenTypes {
   const char* unit_version;
   int options;
   const char* xml_encoding;
-
   const char** num2prefix;
+
+  int openelementcount;
 
   int consume_next();
 
