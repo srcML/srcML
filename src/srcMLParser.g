@@ -1879,20 +1879,9 @@ statement_part { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE decl
         { inMode(MODE_PARAMETER | MODE_EXPECT) }?
              parameter |
 
-        { inTransparentMode(MODE_TEMPLATE) && inMode(MODE_LIST | MODE_EXPECT) }?
-             template_param_list |
-
-        // expecting a template parameter
-        { inTransparentMode(MODE_TEMPLATE) && inMode(MODE_LIST) }?
-             template_param |
-
-        // expecting a template parameter
-        { inLanguage(LANGUAGE_CXX_FAMILY) && inMode(MODE_DERIVED) && inMode(MODE_EXPECT) }?
-             derived |
-
-        // start of condition for if/while/switch
-        { inMode(MODE_CONDITION | MODE_EXPECT) }?
-             condition |
+        /*
+          Check for MODE_FOR_CONDITION before template stuff, since it can conflict
+        */
 
         // inside of for group expecting initialization
         { inMode(MODE_FOR_GROUP | MODE_EXPECT) }?
@@ -1909,6 +1898,21 @@ statement_part { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE decl
         // inside of for group expecting initialization
         { inMode(MODE_FOR_INCREMENT | MODE_EXPECT) }?
             for_increment |
+
+        { inTransparentMode(MODE_TEMPLATE) && inMode(MODE_LIST | MODE_EXPECT) }?
+             template_param_list |
+
+        // expecting a template parameter
+        { inTransparentMode(MODE_TEMPLATE) && inMode(MODE_LIST) }?
+             template_param |
+
+        // expecting a template parameter
+        { inLanguage(LANGUAGE_CXX_FAMILY) && inMode(MODE_DERIVED) && inMode(MODE_EXPECT) }?
+             derived |
+
+        // start of condition for if/while/switch
+        { inMode(MODE_CONDITION | MODE_EXPECT) }?
+             condition |
 
         // while part of do statement
         { inMode(MODE_DO_STATEMENT) }?
