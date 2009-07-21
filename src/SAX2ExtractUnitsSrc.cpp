@@ -35,6 +35,14 @@
 #include <direct.h>
 #endif
 
+#ifdef __GNUC__
+#define EOL "\n"
+#define EOL_SIZE 1
+#else
+#define EOL "\r\n"
+#define EOL_SIZE 2
+#endif
+
 // directory permission for expand
 #ifdef __GNUC__
 const int EXPAND_DIR_PERM = S_IRWXU | S_IRWXG;
@@ -59,7 +67,26 @@ namespace SAX2ExtractUnitsSrc {
 
     State* pstate = (State*) user_data;
 
-    xmlOutputBufferWrite(pstate->output, len, (const char*)(BAD_CAST ch));
+    const char* c = (const char*) ch;
+    int pos = 0;
+    const char* chend = (const char*) ch + len;
+    while (c < chend) {
+
+      switch (*c) {
+      case '\n' :
+	xmlOutputBufferWrite(pstate->output, pos, (const char*)(BAD_CAST c - pos));
+	pos = 0;
+	xmlOutputBufferWrite(pstate->output, EOL_SIZE, EOL);
+	break;
+
+      default :
+	++pos;
+	break;
+      };
+      ++c;
+    }
+
+    xmlOutputBufferWrite(pstate->output, pos, (const char*)(BAD_CAST c - pos));
   }
 
   // handle root unit of compound document
