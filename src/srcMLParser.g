@@ -3899,7 +3899,6 @@ preprocessor {
 
         // mode for any preprocessor elements
         startNewMode(MODE_PREPROC);
-
         } :
         {
             // assume error.  will set to proper one later
@@ -4014,9 +4013,13 @@ preprocessor {
             endCurrentMode(MODE_LOCAL);
 
             tp.setType(SCPP_ERROR);
-        } | 
+        } |
 
         /* blank preproc */
+
+        /* skip over anything, start with stuff defined before */
+        (~(NAME | ERRORPREC | INCLUDE | DEFINE | IF | ENDIF | IFNDEF | UNDEF | ELIF | ELSE | IFDEF | LINE | PRAGMA | EOL | LINECOMMENT_START | COMMENT_START | EOF))*
+
         )
         eol_skip[directive_token, markblockzero]
 ;
@@ -4036,6 +4039,19 @@ eol_skip[int directive_token, bool markblockzero] {
                 consume();
     } :
     eol[directive_token, markblockzero]
+;
+
+pure_eol_skip {
+
+    while (LA(1) != EOL && 
+           LA(1) != LINECOMMENT_START && 
+           LA(1) != COMMENT_START && 
+           LA(1) != EOF && 
+           LA(1) != 1 /* EOF? */
+        )
+                consume();
+    } :
+
 ;
 
 /*
