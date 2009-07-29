@@ -285,15 +285,13 @@
   <title>Querying and Transformation Options</title>
   <para>
     This set of options allows queries and transformation on the
-    srcML document.  One problem with using standalone XML tools that
+    srcML document.  One problem with standalone XML tools that
     are DOM based (XPath, XSLT) is the memory requirements with large
-    srcML files.  These options work efficiently with compound srcML
+    srcML files.  The <command>srcml2src</command> options work efficiently with compound srcML
     documents that contain large numbers of files in a project, e.g., tens
     of thousands of files for a project in a single compound 1 GB file.
     This is done by performing the query/transformation on a unit
-    by unit basis insided the compound srcML document.
-    The capabilities are based on those of libxml2, and should
-    accept the features that libxml2 accepts.
+    by unit basis inside the compound srcML document.
   </para>
     <varlistentry>
       <term><option>&XPATH_FLAG;=<replaceable class="parameter">xpath</replaceable></option></term>
@@ -309,6 +307,13 @@
 	  XPath expressions use the standard srcML prefixes (see srcml2src).
 	  One exception is that prefix "src" is used for srcML elements, e.g., src:unit.
 	  Note that these prefixes do not have to match the prefixes used in the document.
+	</para>
+
+	<para>
+	  For XPath expressions that return anything other then a set of nodes the
+	  individual unit results are combined.  For numeric results, e.g., counts,
+	  the final result is the sum of the individual accounts.  For boolean values,
+	  the result is the logical or of the individual results.
 	</para>
 
 	<para>
@@ -347,6 +352,23 @@
 	  wrapped in an outer unit element.  Typically, each XSLT transformation may or may
 	  not produce a unit element, thereby providing an output format that allows
 	  for repeated application of the tool.
+	</para>
+
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><option>&PARAM_FLAG; <replaceable class="parameter">parameter_name</replaceable> <replaceable class="parameter">parameter_value</replaceable></option></term>
+
+      <listitem>
+	<para>
+	  Pass the parameter <replaceable>parameter_name</replaceable> and its corresponding
+	  <replaceable>parameter_value</replaceable> to the XSLT transformation.
+	  This is only valid with the <option>&XSLT_FLAG;</option> option.
+	  This is analagous to the &PARAM_FLAG; of xsltproc.  The xsltproc limit of 32
+	  parameters applies here.
+	  Note that the internally generated parameters src:filename, src:directory, src:version,
+	  src:language, and src:position are automatically generated and are not part
+	  of the 32 parameter limit.
 	</para>
 
       </listitem>
