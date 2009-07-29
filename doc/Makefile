@@ -9,7 +9,7 @@ src2srcml.1 : src2srcml.xml option.dtd option.dtd
 	docbook2x-man src2srcml.xml
 
 srcml2src.1 : srcml2src.xml option.dtd option.dtd
-	docbook2x-man srcml2src.xml
+	docbook2x-man --string-param quotes-on-literals=1 srcml2src.xml
 
 view : man
 	man -l src2srcml.1

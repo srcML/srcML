@@ -183,18 +183,18 @@
   <title>Metadata Options</title>
   <para>
     This set of options allows access to the metadata stored in the
-    srcML document.  Unless otherwise noted, the metadata is extracted
+    srcML document.  Unless otherwise noted, the metadata is quickly extracted
     from the start root element or the XML declaration and does not
-    require traversing the entired document.
+    traverse the entire document.  Output is to standard output.
   </para>
     <varlistentry>
       <term><option>&LANGUAGE_FLAG_SHORT;, &LANGUAGE_FLAG;</option></term>
       <listitem>
 	<para>
 	  Output the language of the srcML file as stored in the
-	  attribute language in the unit element on standard output.
+	  attribute <literal>language</literal> in the element <literal>unit</literal>.
 	  The language is the value of the attribute of the root
-	  element unit, unless a particular unit is specified with the
+	  element, unless a particular unit is specified with the
 	  <option>&UNIT_FLAG;</option> option.
 	</para>
       </listitem>
@@ -204,9 +204,9 @@
       <listitem>
 	<para>
 	  Output the directory of the srcML file as stored in the
-	  attribute dir in the unit element on standard output.  The
-	  directory is the value of the attribute of the root element
-	  unit, unless a particular unit is specified with the
+	  attribute <literal>dir</literal> in the element <literal>unit</literal>.  The
+	  directory is the value of the attribute of the root element,
+	  unless a particular unit is specified with the
 	  <option>&UNIT_FLAG;</option> option.
 	</para>
       </listitem>
@@ -216,9 +216,9 @@
       <listitem>
 	<para>
 	  Output the filename of the srcML file as stored in the
-	  attribute filename in the unit element on standard output.
+	  attribute <literal>filename</literal> in the element <literal>unit</literal>.
 	  The filename is the value of the attribute of the root
-	  element unit, unless a particular unit is specified with the
+	  element, unless a particular unit is specified with the
 	  <option>&UNIT_FLAG;</option> option.
 	</para>
       </listitem>
@@ -228,8 +228,8 @@
       <listitem>
 	<para>
 	  Output the version of the srcML file as stored attribute
-	  version in the unit element on standard output.  The version
-	  is the value of the attribute of the root element unit,
+	  <literal>version</literal> in the element <literal>unit</literal>.  The version
+	  is the value of the attribute of the root element,
 	  unless a particular unit is specified with the
 	  <option>&UNIT_FLAG;</option> option.
 	</para>
@@ -251,7 +251,7 @@
       <listitem>
 	<para>
 	  Output the number of nested units in a compound srcML file
-	  on standard output.  Result is 0 if the srcML file is not
+	  .  Result is 0 if the srcML file is not
 	  compound.  Requires traversal of the entire document.
 	</para>
       </listitem>
@@ -275,8 +275,8 @@
 	<para>
 	  Output the metadata of the <option>&INFO_FLAG;</option>
 	  option along with the count of the nested units in a
-	  compound srcML document.  This information requires the
-	  examination of the entire srcML document.
+	  compound srcML document.  Requires
+	  traversal of the entire srcML document.
 	</para>
       </listitem>
     </varlistentry>
@@ -319,8 +319,8 @@
 	<para>
 	  The output is a compound srcML
 	  document with each XPath expression result in its own
-	  individual unit element.  If the XPath expression does not
-	  result in a unit element, one is wrapped around the result.
+	  individual element <literal>unit</literal>.  If the XPath expression does not
+	  result in a element <literal>unit</literal>, one is wrapped around the result.
 	  The output is in a format for repeated application.
 	</para>
 
@@ -341,7 +341,7 @@
 	  In addition to any parameters specified in the command, the XSLT program
 	  is passed a series of internally generated parameters.  The parameters
 	  src:filename, src:directory, src:version, and src:language are the corresponding
-	  entries from the root unit element of the srcML document and are provided because
+	  entries from the root element <literal>unit</literal> of the srcML document and are provided because
 	  the XSLT transformation does not have direct access to them.  The parameter
 	  src:position is the position of an individual unit in the root unit, e.g., the
 	  position of the file in the larger compound srcML document.
@@ -349,8 +349,8 @@
 
 	<para>
 	  The output is a srcML document with the combined results of the XSLT transformation
-	  wrapped in an outer unit element.  Typically, each XSLT transformation may or may
-	  not produce a unit element, thereby providing an output format that allows
+	  wrapped in an outer element <literal>unit</literal>.  Typically, each XSLT transformation may or may
+	  not produce a element <literal>unit</literal>, thereby providing an output format that allows
 	  for repeated application of the tool.
 	</para>
 
