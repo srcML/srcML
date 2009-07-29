@@ -120,10 +120,10 @@
       <listitem>
 	<para>
 	  Extracts all units from a compound srcML file back into
-	  source-code files.  The directory and filename used is based
-	  on that stored in the directory and filename attributes.
-	  Necessary subdirectories are created.  Existing files with
-	  the same path are overwritten.
+	  source-code files.  The file path is based
+	  on the attributes <literal>directory</literal> and <literal>filename</literal>
+	  with necessary subdirectories created.
+	  Existing files with the same path are overwritten.
 	</para>
       </listitem>
     </varlistentry>
@@ -133,9 +133,9 @@
 	<para>
 	  Output is in srcML format.  Used in combination with the
 	  <option>&UNIT_FLAG;</option> option to output a particular
-	  nested unit in XML.  The output unit has attributes formed
-	  by the merger of the attributes of the individual unit and
-	  the root unit.
+	  nested unit in XML.  The attributes on the output element <literal>unit</literal> are
+	  the attributes of the individual unit with any missing attributes
+	  taken from the root unit.
 	</para>
       </listitem>
     </varlistentry>
@@ -143,8 +143,7 @@
       <term><option>&COMPRESSED_FLAG_SHORT;, &COMPRESSED_FLAG;</option></term>
       <listitem>
 	<para>
-	  Output is in compressed gzip format.  Only available in the
-	  libxml2-enabled version.
+	  Output is in compressed gzip format.
 	</para>
       </listitem>
     </varlistentry>
@@ -152,9 +151,8 @@
       <term><option>&NO_XML_DECLARATION_FLAG;</option></term>
       <listitem>
 	<para>
-	  No output of the default XML declaration.  Only applies to
-	  XML output.  Useful when the output is to
-	  be placed inside another XML document.
+	  No output of the default XML declaration for XML output options.
+	  Useful when the output is to be placed inside another XML document.
 	</para>
       </listitem>
     </varlistentry>
@@ -162,9 +160,8 @@
       <term><option>&NO_NAMESPACE_DECLARATION_FLAG;</option></term>
       <listitem>
 	<para>
-	  No output of namespace declarations.  Only applies to XML
-	  output.  Useful when the output is to be
-	  placed inside another XML document.
+	  No output of namespace declarations for XML output options.
+	  Useful when the output is to be placed inside another XML document.
 	</para>
       </listitem>
     </varlistentry>
@@ -182,7 +179,7 @@
 <refsect1>
   <title>Metadata Options</title>
   <para>
-    This set of options allows access to the metadata stored in the
+    Options to access to the metadata stored in the
     srcML document.  Unless otherwise noted, the metadata is quickly extracted
     from the start root element or the XML declaration and does not
     traverse the entire document.  Output is to standard output.
@@ -194,7 +191,7 @@
 	  Output the language of the srcML file as stored in the
 	  attribute <literal>language</literal> in the element <literal>unit</literal>.
 	  The language is the value of the attribute of the root
-	  element, unless a particular unit is specified with the
+	  element, or for a particular unit if specified with the
 	  <option>&UNIT_FLAG;</option> option.
 	</para>
       </listitem>
@@ -205,8 +202,8 @@
 	<para>
 	  Output the directory of the srcML file as stored in the
 	  attribute <literal>dir</literal> in the element <literal>unit</literal>.  The
-	  directory is the value of the attribute of the root element,
-	  unless a particular unit is specified with the
+	  directory is the value of the attribute of the root
+	  element, or for a particular unit if specified with the
 	  <option>&UNIT_FLAG;</option> option.
 	</para>
       </listitem>
@@ -218,7 +215,7 @@
 	  Output the filename of the srcML file as stored in the
 	  attribute <literal>filename</literal> in the element <literal>unit</literal>.
 	  The filename is the value of the attribute of the root
-	  element, unless a particular unit is specified with the
+	  element, or for a particular unit if specified with the
 	  <option>&UNIT_FLAG;</option> option.
 	</para>
       </listitem>
@@ -229,8 +226,8 @@
 	<para>
 	  Output the version of the srcML file as stored attribute
 	  <literal>version</literal> in the element <literal>unit</literal>.  The version
-	  is the value of the attribute of the root element,
-	  unless a particular unit is specified with the
+	  is the value of the attribute of the root
+	  element, or for a particular unit if specified with the
 	  <option>&UNIT_FLAG;</option> option.
 	</para>
       </listitem>
@@ -284,36 +281,33 @@
 <refsect1>
   <title>Querying and Transformation Options</title>
   <para>
-    This set of options allows queries and transformation on the
-    srcML document.  One problem with standalone XML tools that
-    are DOM based (XPath, XSLT) is the memory requirements with large
-    srcML files.  The <command>srcml2src</command> options work efficiently with compound srcML
+    Options for efficiently querying and transformation srcML.
+    Standalone XML tools that are DOM based (XPath, XSLT) have large memory requirements with large
+    srcML files.  The <command>srcml2src</command> options work efficiently with large srcML
     documents that contain large numbers of files in a project, e.g., tens
     of thousands of files for a project in a single compound 1 GB file.
-    This is done by performing the query/transformation on a unit
+    All queries/transformations are performed on a unit
     by unit basis inside the compound srcML document.
   </para>
     <varlistentry>
       <term><option>&XPATH_FLAG;=<replaceable class="parameter">xpath</replaceable></option></term>
       <listitem>
 	<para>
-	  Apply the XPath expression <replaceable>xpath</replaceable> to the compound srcML document.
-	  The XPath is applied to each individual unit in
-	  the compound document separately reducing the largest memory requirements
-	  of the query to that of a single, nested file at a time.
+	  Apply the XPath expression <replaceable>xpath</replaceable> to each individual unit in the
+	  compound srcML document and combine the results of the individual queries.
 	</para>
 
 	<para>
-	  XPath expressions use the standard srcML prefixes (see srcml2src).
-	  One exception is that prefix "src" is used for srcML elements, e.g., src:unit.
+	  To refer to elements standard srcML prefixes (see <command>srcml2src</command>) are used.
+	  One exception is that prefix "src" is used for srcML elements, e.g., <literal>src:unit</literal>.
 	  Note that these prefixes do not have to match the prefixes used in the document.
 	</para>
 
 	<para>
-	  For XPath expressions that return anything other then a set of nodes the
+	  If the result of the expression is anything other then a set of nodes the
 	  individual unit results are combined.  For numeric results, e.g., counts,
-	  the final result is the sum of the individual accounts.  For boolean values,
-	  the result is the logical or of the individual results.
+	  the final result is the sum of the individual results.  For boolean values,
+	  the result is the logical <literal>or</literal> of the individual results.
 	</para>
 
 	<para>
@@ -321,7 +315,7 @@
 	  document with each XPath expression result in its own
 	  individual element <literal>unit</literal>.  If the XPath expression does not
 	  result in a element <literal>unit</literal>, one is wrapped around the result.
-	  The output is in a format for repeated application.
+	  This format allows for repeated queries and transformations.
 	</para>
 
       </listitem>
@@ -330,27 +324,25 @@
       <term><option>&XSLT_FLAG;=<replaceable class="parameter">xslt_file</replaceable></option></term>
       <listitem>
 	<para>
-	  Apply the XSLT program <replaceable>xslt_file</replaceable> to the compound srcML document.
-	  The transformation is applied to each individual unit in
-	  the compound document separately reducing the largest memory requirements
-	  of the query to that of a single, nested file at a time.
+	  Apply the XSLT program <replaceable>xslt_file</replaceable> to each individual unit in the
+	  the compound srcML document and combine the results of the individual transformations.
 	</para>
 
 	<para>
 	  The XSLT program can use any part of XSLT 1.0, and many EXSLT extension functions.
-	  In addition to any parameters specified in the command, the XSLT program
+	  Since the XSLT program doesn't have access to them, the program
 	  is passed a series of internally generated parameters.  The parameters
 	  src:filename, src:directory, src:version, and src:language are the corresponding
-	  entries from the root element <literal>unit</literal> of the srcML document and are provided because
-	  the XSLT transformation does not have direct access to them.  The parameter
+	  entries from the root element <literal>unit</literal>.
+	  The parameter
 	  src:position is the position of an individual unit in the root unit, e.g., the
-	  position of the file in the larger compound srcML document.
+	  position of the file in the larger compound srcML document.  Parameters can also be
+	  passed to the XSLT program from the <command>srcml2src</command> command line.
 	</para>
 
 	<para>
 	  The output is a srcML document with the combined results of the XSLT transformation
-	  wrapped in an outer element <literal>unit</literal>.  Typically, each XSLT transformation may or may
-	  not produce a element <literal>unit</literal>, thereby providing an output format that allows
+	  wrapped in an outer element <literal>unit</literal> thereby providing an output format that allows
 	  for repeated application of the tool.
 	</para>
 
@@ -377,15 +369,14 @@
       <term><option>&RELAXNG_FLAG;=<replaceable class="parameter">relaxng_file</replaceable></option></term>
       <listitem>
 	<para>
-	  Apply the RelaxNG grammar <replaceable>relaxng_file</replaceable> to the compound srcML document.
-	  The grammer is applied to each individual unit in
-	  the compound document separately reducing the largest memory requirements
-	  of the query to that of a single, nested file at a time.
+	  Apply the RelaxNG grammar <replaceable>relaxng_file</replaceable> to each individual unit in the
+	  compound srcML document and combine the parts that match.
 	</para>
 
 	<para>
+	  The RelaxNG grammar acts as a filter for individual units (files).
 	  If the RelaxNG gramar is valid for a unit, then that unit is output.
-	  This results in a compound srcML document with only the files that
+	  The result is a compound srcML document with only the files that
 	  are valid based on the given RelaxNG grammar.
 	</para>
 
