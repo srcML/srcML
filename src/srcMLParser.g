@@ -3221,6 +3221,20 @@ general_operators { LocalMode lm; bool first = true; } :
         ) { first = false; })+
 ;
 
+rparen_general_operators { LocalMode lm; } :
+        {
+            if (isoption(parseoptions, OPTION_OPERATOR)) {
+
+                // end all elements at end of rule automatically
+                startNewMode(MODE_LOCAL);
+
+                // start the modifier
+                startElement(SOPERATOR);
+            }
+        }
+        RPAREN
+;
+
 /*
   All possible operators
 */
@@ -3336,7 +3350,9 @@ expression_part[CALLTYPE type = NOCALL] { guessing_end(); } :
         guessing_endDownToMode[MODE_INTERNAL_END_PAREN]
 
         guessing_endCurrentModeSafely[MODE_INTERNAL_END_PAREN]
-        rparen[false] |
+
+        // treat as operator for operator markup
+        rparen_general_operators |
 
         // left curly brace
         {
