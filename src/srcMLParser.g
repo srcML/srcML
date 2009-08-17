@@ -429,6 +429,7 @@ int cppifcount;
 bool isdestructor;
 int parseoptions;
 std::string namestack[2];
+std::string namestack_save[2];
 
 ~srcMLParser() {}
 
@@ -3720,8 +3721,16 @@ template_argument_list { LocalMode lm; } :
 
             startElement(STEMPLATE_ARGUMENT_LIST);
         }
+        savenamestack
         tempops (COMMA | template_argument)* tempope
+        restorenamestack
 ;
+
+savenamestack { namestack_save[0] = namestack[0]; namestack_save[1] = namestack[1]; } :
+    ;
+
+restorenamestack { namestack[0] = namestack_save[0]; namestack[1] = namestack_save[1]; } :
+    ;
 
 /*
   template argument
