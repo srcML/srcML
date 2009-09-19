@@ -261,10 +261,7 @@ cleanantlr :
 
 # on every build, record the version number
 version.cpp : VERSION
-	echo -n 'const char* version() { const char* Version = "' > $@
-	cat VERSION	              >> $@
-	echo -n " ${LIBXML_VERSION}"   >> $@
-	echo '"; return Version; }'   >> $@
+	echo 'const char* version() { const char* Version = "$(shell cat VERSION) ${LIBXML_VERSION}"; return Version; }'   > $@
 
 # changes use of 64 bit integer using transformation
 visual :
