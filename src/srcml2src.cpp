@@ -598,7 +598,7 @@ int main(int argc, char* argv[]) {
   // verify that the input file exists
   struct stat instat;
   int result = stat(filename, &instat);
-  if (filename[0] != '-' && result == -1) {
+  if ((strcmp(filename, "-") != 0) && result == -1) {
     fprintf(stderr, "%s: Problem with Input file '%s'\n", NAME, filename);
     exit(STATUS_INPUTFILE_PROBLEM);
   }
@@ -607,7 +607,7 @@ int main(int argc, char* argv[]) {
 #ifdef __GNUG__
   struct stat outstat;
   stat(ofilename, &outstat);
-  if (instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
+  if ((strcmp(ofilename, "-") != 0) && instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
     fprintf(stderr, "%s: Input file '%s' is the same as the output file '%s'\n", NAME, filename, ofilename);
     exit(STATUS_INPUTFILE_PROBLEM);
   }
