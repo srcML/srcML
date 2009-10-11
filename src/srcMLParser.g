@@ -3221,8 +3221,19 @@ general_operators { LocalMode lm; bool first = true; } :
         ) { first = false; })+
 ;
 
-rparen_general_operators { LocalMode lm; } :
+rparen_general_operators[bool final = false] { bool isempty = getParen() == 0; } :
         {
+            if (isempty) {
+
+                // additional right parentheses indicates end of non-list modes
+                endDownToFirstMode(MODE_LIST | MODE_PREPROC | MODE_END_ONLY_AT_RPAREN);
+
+                if (inMode(MODE_LIST) && inMode(MODE_FOR_INCREMENT))
+                    endCurrentMode(MODE_FOR_INCREMENT);
+            } else
+
+                decParen();
+
             if (isoption(parseoptions, OPTION_OPERATOR)) {
 
                 // end all elements at end of rule automatically
@@ -3233,6 +3244,32 @@ rparen_general_operators { LocalMode lm; } :
             }
         }
         RPAREN
+        {
+            if (isoption(parseoptions, OPTION_OPERATOR)) {
+
+                endCurrentMode(MODE_LOCAL);
+            }
+
+            if (isempty) {
+
+                if (inMode(MODE_CONDITION) && inMode(MODE_IF_COND)) {
+
+                    // end the condition
+                    endDownOverMode(MODE_CONDITION);
+
+                    // then part of the if statement (after the condition)
+                    startNewMode(MODE_STATEMENT | MODE_NEST);
+
+                    // start the then element
+                    startNoSkipElement(STHEN);
+                }
+
+                // end the single mode that started the list
+                // don't end more than one since they may be nested
+                if (inMode(MODE_LIST))
+                    endCurrentMode(MODE_LIST);
+            }
+        }
 ;
 
 /*
@@ -3352,7 +3389,7 @@ expression_part[CALLTYPE type = NOCALL] { guessing_end(); } :
         guessing_endCurrentModeSafely[MODE_INTERNAL_END_PAREN]
 
         // treat as operator for operator markup
-        rparen_general_operators |
+        rparen_general_operators[false] |
 
         // left curly brace
         {
