@@ -1598,10 +1598,17 @@ lcurly {} :
   Marks the start of a block.  End of the block is handled in right curly brace
 */
 lcurly_base { setFinalToken(); } :
-        {
+        {  
+            // need to pass on class mode to detect constructors for Java
+            bool inclassmode = inLanguage(LANGUAGE_JAVA_FAMILY) && inMode(MODE_CLASS);
+
             startNewMode(MODE_BLOCK);
 
+            if (inclassmode)
+                setMode(MODE_CLASS);
+
             startElement(SBLOCK);
+
         }
         LCURLY
 ;
