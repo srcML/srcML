@@ -84,12 +84,12 @@ CONSTANTS :
 
 NAME options { testLiterals = true; } { char lastchar = LA(1); } :
         { startline = false; }
-        ('a'..'z' | 'A'..'Z' | '_' | '\127'..'\377')
+        ('a'..'z' | 'A'..'Z' | '_' | '\177'..'\377')
         (
 
             { lastchar == 'L' }?
             { $setType(STRING_START); } STRING_START |
 
-            (options { greedy = true; } : '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\127'..'\377')*
+            (options { greedy = true; } : '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\177'..'\377')*
         )
 ;
