@@ -3356,7 +3356,7 @@ guessing_end
    Occurs only within another expression.  The mode is MODE_EXPRESSION.  Only
    elements such as names and function calls are marked up.
 */
-expression_part[CALLTYPE type = NOCALL] { guessing_end(); } :
+expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; } :
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) && LA(1) == NEW }?
         (NEW function_identifier paren_pair LCURLY)=> general_operators anonymous_class_definition |
@@ -3422,7 +3422,9 @@ expression_part[CALLTYPE type = NOCALL] { guessing_end(); } :
         } |
 
         // variable or literal
-        variable_identifier | string_literal | char_literal | literal | boolean
+        variable_identifier | string_literal | char_literal | literal | boolean |
+
+        variable_identifier_array_grammar_sub[flag]
 ;
 
 /*
