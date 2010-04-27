@@ -3241,7 +3241,7 @@ rparen_general_operators[bool final = false] { bool isempty = getParen() == 0; }
 
                 decParen();
 
-            if (isoption(parseoptions, OPTION_OPERATOR)) {
+            if (isoption(parseoptions, OPTION_OPERATOR) && !inMode(MODE_INTERNAL_END_PAREN)) {
 
                 // end all elements at end of rule automatically
                 startNewMode(MODE_LOCAL);
@@ -3252,7 +3252,7 @@ rparen_general_operators[bool final = false] { bool isempty = getParen() == 0; }
         }
         RPAREN
         {
-            if (isoption(parseoptions, OPTION_OPERATOR)) {
+            if (isoption(parseoptions, OPTION_OPERATOR) && !inMode(MODE_INTERNAL_END_PAREN)) {
 
                 endCurrentMode(MODE_LOCAL);
             }
