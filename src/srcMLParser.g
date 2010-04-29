@@ -3228,6 +3228,20 @@ general_operators { LocalMode lm; bool first = true; } :
         ) { first = false; })+
 ;
 
+rparen_operator { LocalMode lm; } :
+        {
+            if (isoption(parseoptions, OPTION_OPERATOR) && !inMode(MODE_END_ONLY_AT_RPAREN)) {
+
+                // end all elements at end of rule automatically
+                startNewMode(MODE_LOCAL);
+
+                // start the modifier
+                startElement(SOPERATOR);
+            }
+        }
+        RPAREN
+    ;
+
 rparen_general_operators[bool final = false] { bool isempty = getParen() == 0; } :
         {
             if (isempty) {
@@ -3240,23 +3254,9 @@ rparen_general_operators[bool final = false] { bool isempty = getParen() == 0; }
             } else
 
                 decParen();
-
-            if (isoption(parseoptions, OPTION_OPERATOR) && !inMode(MODE_INTERNAL_END_PAREN)) {
-
-                // end all elements at end of rule automatically
-                startNewMode(MODE_LOCAL);
-
-                // start the modifier
-                startElement(SOPERATOR);
-            }
         }
-        RPAREN
+        rparen_operator
         {
-            if (isoption(parseoptions, OPTION_OPERATOR) && !inMode(MODE_INTERNAL_END_PAREN)) {
-
-                endCurrentMode(MODE_LOCAL);
-            }
-
             if (isempty) {
 
                 if (inMode(MODE_CONDITION) && inMode(MODE_IF_COND)) {
