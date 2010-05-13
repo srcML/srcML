@@ -4104,7 +4104,6 @@ eol_skip[int directive_token, bool markblockzero] {
     while (LA(1) != EOL && 
            LA(1) != LINECOMMENT_START && 
            LA(1) != COMMENT_START && 
-           LA(1) != EOF && 
            LA(1) != 1 /* EOF? */
         )
                 consume();
