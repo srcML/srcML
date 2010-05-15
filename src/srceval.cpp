@@ -157,12 +157,26 @@ int srceval(const char* context_element,
   // did we get any results?
   bool found = false;
 
+  bool firstelement = true;
+
   while (!result_bool) {
 
      // read a node
      int ret = xmlTextReaderRead(reader);
      if (ret != 1)
        break;
+
+     // non-unit first element inside the root element indicates a non-nested file
+     if (firstelement) {
+
+       if (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT &&
+	   strcmp((const char*) xmlTextReaderConstName(reader), "unit") != 0) {
+	 fprintf(stderr, "Non-nested document.\n");
+	 return 1;
+       }
+
+       firstelement = false;
+     }
 
      // continue until we reach the context tag with the proper namespace
      if (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT &&
