@@ -2451,7 +2451,7 @@ type_identifier {} :
 
 non_lead_type_identifier { bool iscomplex = false; } :
 
-        multops |
+        { inLanguage(LANGUAGE_C_FAMILY) }? multops |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) }? 
         { look_past(LBRACKET) == RBRACKET }?
