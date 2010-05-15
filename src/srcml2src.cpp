@@ -205,7 +205,7 @@ int main(int argc, char* argv[]) {
   // option values
   const char* src_encoding = DEFAULT_TEXT_ENCODING;
   int unit = 0;
-  const char* xpath = ".";
+  const char* xpath = 0;
   const char* context = "src:unit";
   std::list<const char*> ns;
 
@@ -749,10 +749,10 @@ int main(int argc, char* argv[]) {
 
     } else if (isoption(options, OPTION_XPATH)) {
 
-      if (strcmp(xpath, "."))
-	su.xpath(ofilename, context, xpath);
-      else
+      if (xpath == 0)
 	su.extract_element(context, ofilename);
+      else
+	su.xpath(ofilename, context, xpath);
 
     } else if (isoption(options, OPTION_XSLT)) {
 
