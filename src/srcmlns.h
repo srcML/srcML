@@ -35,7 +35,7 @@ const char* const SRCML_ERR_NS_URI = "http://www.sdml.info/srcML/srcerr";
 
 const char* const SRCML_SRC_NS_PREFIX_DEFAULT = "";
 const char* const SRCML_CPP_NS_PREFIX_DEFAULT = "cpp";
-const char* const SRCML_ERR_NS_PREFIX_DEFAULT = "srcerr";
+const char* const SRCML_ERR_NS_PREFIX_DEFAULT = "err";
 
 // srcML extension namespace URI's
 const char* const SRCML_EXT_LITERAL_NS_URI = "http://www.sdml.info/srcML/literal";
