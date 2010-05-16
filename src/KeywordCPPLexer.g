@@ -118,6 +118,7 @@ tokens {
     IMPLEMENTS;
     INTERFACE;
     FINAL;
+    ABSTRACT;
 
     // C++0x tokens
     CONCEPT;
@@ -321,6 +322,9 @@ KeywordCPPLexer(std::istream& in, const char* encoding, int language = LANGUAGE_
 
             // final
             { "final", FINAL },
+
+            // abstract
+            { "abstract", ABSTRACT },
 //            { "static", STATIC },
 
         };

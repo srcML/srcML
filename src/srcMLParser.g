@@ -2422,7 +2422,7 @@ java_specifier_mark { LocalMode lm; } :
             // start the function specifier
             startElement(SFUNCTION_SPECIFIER);
         }
-        (PUBLIC | PRIVATE | PROTECTED | FINAL | STATIC)
+        (PUBLIC | PRIVATE | PROTECTED | FINAL | STATIC | ABSTRACT)
 ;
 
 /*
