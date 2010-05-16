@@ -161,4 +161,44 @@
 <expr_stmt><expr><op:operator>delete</op:operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><op:operator>+</op:operator>1</expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><op:operator>-</op:operator>1</expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><op:operator>*</op:operator><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><op:operator>&amp;</op:operator><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name><op:operator>[]</op:operator></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name><op:operator>[<expr>1</expr>]</op:operator></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name><op:operator>->*</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name><op:operator>,</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name><op:operator>::</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><op:operator>delete[]</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
 </unit>
