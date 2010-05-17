@@ -178,11 +178,11 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name><op:operator>[]</op:operator></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name><index>[]</index></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name><op:operator>[<expr>1</expr>]</op:operator></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name><index>[<expr>1</expr>]</index></expr>;</expr_stmt>
 </unit>
 
 <unit>
