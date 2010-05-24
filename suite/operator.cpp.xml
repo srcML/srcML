@@ -182,7 +182,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name><index>[<expr>1</expr>]</index></expr>;</expr_stmt>
+<expr_stmt><expr><name><name>a</name><index>[<expr>1</expr>]</index></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
