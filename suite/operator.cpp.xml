@@ -237,4 +237,8 @@
 <expr_stmt><expr><call><name>typeid</name><argument_list>(<argument><expr><name>type</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><call><argument_list>(<argument><expr><name>type</name></expr></argument>)</argument_list> <name>a</name></call></expr>;</expr_stmt>
+</unit>
+
 </unit>
