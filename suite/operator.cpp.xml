@@ -201,4 +201,8 @@
 <expr_stmt><expr><op:operator>delete</op:operator><index>[]</index><name>b</name></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><op:operator>(</op:operator><op:operator>)</op:operator></expr>;</expr_stmt>
+</unit>
+
 </unit>
