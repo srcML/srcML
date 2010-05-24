@@ -208,8 +208,24 @@ def getnested(xml_file):
 	else:
 		return 0
 
+class Tee(object):
+    def __init__(self, name):
+        self.file = open(name, "w")
+        self.stdout = sys.stdout
+        sys.stdout = self
+
+    def __del__(self):
+        sys.stdout = self.stdout
+        self.file.close()
+
+    def write(self, data):
+        self.file.write(data)
+        self.stdout.write(data)
+
 src2srcml_src_encoding = src2srcmlversion().find("Libxml2") != -1;
 srcml2src_src_encoding = srcml2srcversion().find("Libxml2") != -1;
+
+Tee(error_filename)
 
 print "Testing:"
 print 
@@ -434,11 +450,7 @@ else:
 
 			xerrorlist.remove(x)
 
-		f.write(str(e[0]) + " " + str(e[1]) + othererror + "\n" + "".join(e[2][3:]))
 		print e[0], e[1], othererror, "\n", "".join(e[2][3:])
-
-	for e in nxerrorlist:
-		f.write(str(e[0]) + " " + str(e[1]) + "\n" + "".join(e[2][3:]) + "\n")
 
 	for e in xerrorlist:
 		print e[0], e[1], "\n", "".join(e[2][3:])
