@@ -9,9 +9,11 @@ import os.path
 import re
 import subprocess
 import difflib
+from datetime import datetime, time
 
 maxcount = 700
-error_filename = ".suitelist"
+error_filename = "srcMLTestReport"
+error_filename_extension = ".txt"
 
 FIELD_WIDTH_LANGUAGE = 5
 FIELD_WIDTH_DIRECTORY = 27
@@ -414,8 +416,17 @@ if ki:
 	print "Testing stopped by keyboard"
 	
 # output error counts
+# and delete error file
 print
-f = open(error_filename, "w")
+
+for oldfile in os.listdir("."):
+	if re.match(error_filename + ".+", oldfile):
+		os.remove(oldfile)
+
+current_time = datetime.now().time()
+
+f = open(error_filename + current_time.isoformat() + error_filename_extension, "w")
+
 if error_count == 0:
 	print "No errors out of " + str(total_count) + " cases" 
 else:
