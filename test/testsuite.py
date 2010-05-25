@@ -425,7 +425,8 @@ for oldfile in os.listdir("."):
 
 current_time = datetime.now().time()
 
-f = open(error_filename + current_time.isoformat() + error_filename_extension, "w")
+f = open(error_filename, "w")
+os.rename(error_filename, error_filename + current_time.isoformat() + error_filename_extension)
 
 if error_count == 0:
 	print "No errors out of " + str(total_count) + " cases" 
