@@ -423,10 +423,10 @@ for oldfile in os.listdir("."):
 	if re.match(error_filename + ".+", oldfile):
 		os.remove(oldfile)
 
-current_time = datetime.now().time()
+current_time = datetime.now()
 
 f = open(error_filename, "w")
-os.rename(error_filename, error_filename + current_time.isoformat() + error_filename_extension)
+os.rename(error_filename, error_filename + current_time.isoformat("_") + error_filename_extension)
 
 if error_count == 0:
 	print "No errors out of " + str(total_count) + " cases" 
