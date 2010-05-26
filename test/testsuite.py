@@ -426,7 +426,6 @@ for oldfile in os.listdir("."):
 current_time = datetime.now()
 
 f = open(error_filename, "w")
-os.rename(error_filename, error_filename + "_" + current_time.isoformat() + error_filename_extension)
 
 if error_count == 0:
 	print "No errors out of " + str(total_count) + " cases" 
@@ -477,6 +476,9 @@ else:
 	for e in sperrorlist:
 		f.write(str(e[0]) + " " + str(e[1]) + " " + str(e[2]) + " " + str(e[3]) + "\n")
 		print e[0], e[1], e[2], e[3]
+
+
+os.rename(error_filename, error_filename + "_" + current_time.isoformat() + error_filename_extension)
 f.close()
 
 
