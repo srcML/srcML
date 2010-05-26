@@ -423,7 +423,7 @@ for oldfile in os.listdir("."):
 	if re.match(error_filename + ".+", oldfile):
 		os.remove(oldfile)
 
-current_time = datetime.now()
+
 
 f = open(error_filename, "w")
 
@@ -477,7 +477,7 @@ else:
 		f.write(str(e[0]) + " " + str(e[1]) + " " + str(e[2]) + " " + str(e[3]) + "\n")
 		print e[0], e[1], e[2], e[3]
 
-
+current_time = datetime.now()
 os.rename(error_filename, error_filename + "_" + current_time.isoformat() + error_filename_extension)
 f.close()
 
