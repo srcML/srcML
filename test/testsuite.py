@@ -419,9 +419,9 @@ if ki:
 # and delete error file
 print
 
-for oldfile in os.listdir("."):
-	if re.match(error_filename + ".+", oldfile):
-		os.remove(oldfile)
+#for oldfile in os.listdir("."):
+#	if re.match(error_filename + ".+", oldfile):
+#		os.remove(oldfile)
 
 
 
