@@ -73,15 +73,17 @@ public class srcMLDTDGenerator extends DefaultHandler {
 		CompositeElement element = new CompositeElement(qName);
 		elements.add(element);
 		if(!lastelement.isEmpty())
+		{
+			String parent = lastelement.peek();
 			for(Element e : elements)
 			{
-				String parent = lastelement.peek();
 				if(e.getName().equals(parent))
 				{
 					((CompositeElement)e).getElements().add(element);
 					break;
 				}
 			}
+		}
 		lastelement.push(qName);
     }
 
@@ -95,5 +97,23 @@ public class srcMLDTDGenerator extends DefaultHandler {
     public void endElement(String uri, String localName, String qName) throws SAXException 
     {
     	lastelement.pop();
+    }
+    
+    public void characters(char[] ch, int start, int length) throws SAXException
+    {
+    	String inside = (new String(ch, start, length)).trim();
+    	if(!inside.equals(""))
+    	{
+    		CompositeElement element = new CompositeElement("PCDATA");
+			String parent = lastelement.peek();
+			for(Element e : elements)
+			{
+				if(e.getName().equals(parent))
+				{
+					((CompositeElement)e).getElements().add(element);
+					break;
+				}
+			}
+    	}
     }
 }
