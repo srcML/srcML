@@ -1,19 +1,34 @@
 import java.util.LinkedHashSet;
 
 
-public class CompositeElement extends Element{
+public class CompositeElement{
 	
-	private LinkedHashSet<Element> elements;
+	private String name;
+	private LinkedHashSet<CompositeElement> elements;
 	
 	public CompositeElement(String name)
 	{
-		super(name);
-		elements = new LinkedHashSet<Element>();
+		this.name = name;
+		elements = new LinkedHashSet<CompositeElement>();
 	}
 	
-	public LinkedHashSet<Element> getElements()
+	public String getName()
+	{
+		return name;
+	}
+	
+	public LinkedHashSet<CompositeElement> getElements()
 	{
 		return elements;
 	}
-
+	
+	public boolean equals(Object e)
+	{
+		return name.equals(((CompositeElement)e).name);
+	}
+	
+	public int hashCode()
+	{
+		return name.hashCode();
+	}
 }

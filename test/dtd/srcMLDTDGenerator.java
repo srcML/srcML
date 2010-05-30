@@ -48,10 +48,10 @@ public class srcMLDTDGenerator extends DefaultHandler {
     */
     public void endDocument() 
     {
-    	for(Element outer : elements)
+    	for(CompositeElement outer : elements)
     	{
     		pw.print(outer.getName() + ": ");
-    		for(Element inner : ((CompositeElement)outer).getElements())
+    		for(CompositeElement inner : outer.getElements())
     		{
     			pw.print(inner.getName() + " ");
     		}
@@ -75,11 +75,11 @@ public class srcMLDTDGenerator extends DefaultHandler {
 		if(!lastelement.isEmpty())
 		{
 			String parent = lastelement.peek();
-			for(Element e : elements)
+			for(CompositeElement e : elements)
 			{
 				if(e.getName().equals(parent))
 				{
-					((CompositeElement)e).getElements().add(element);
+					e.getElements().add(element);
 					break;
 				}
 			}
@@ -106,11 +106,11 @@ public class srcMLDTDGenerator extends DefaultHandler {
     	{
     		CompositeElement element = new CompositeElement("PCDATA");
 			String parent = lastelement.peek();
-			for(Element e : elements)
+			for(CompositeElement e : elements)
 			{
 				if(e.getName().equals(parent))
 				{
-					((CompositeElement)e).getElements().add(element);
+					e.getElements().add(element);
 					break;
 				}
 			}
