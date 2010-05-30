@@ -20,7 +20,7 @@ import java.util.LinkedHashSet;
 public class srcMLDTDGenerator extends DefaultHandler {
 	
 	private PrintWriter pw;
-	private Stack<String> lastelement;
+	private Stack<CompositeElement> lastelement;
 	private LinkedHashSet<CompositeElement> elements;
 	
 	public srcMLDTDGenerator()
@@ -33,7 +33,7 @@ public class srcMLDTDGenerator extends DefaultHandler {
 			System.err.println(e.getMessage());
 		}
 		
-		lastelement = new Stack<String>();
+		lastelement = new Stack<CompositeElement>();
 		elements = new LinkedHashSet<CompositeElement>();
 	}
 
@@ -71,20 +71,21 @@ public class srcMLDTDGenerator extends DefaultHandler {
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException 
     {
 		CompositeElement element = new CompositeElement(qName);
-		elements.add(element);
-		if(!lastelement.isEmpty())
+		boolean added = elements.add(element);
+		if(!added)
 		{
-			String parent = lastelement.peek();
-			for(CompositeElement e : elements)
+			for(CompositeElement matchingelement : elements)
 			{
-				if(e.getName().equals(parent))
+				if(element.equals(matchingelement))
 				{
-					e.getElements().add(element);
+					element = matchingelement;
 					break;
 				}
 			}
 		}
-		lastelement.push(qName);
+		if(!lastelement.isEmpty())
+			lastelement.peek().getElements().add(element);
+		lastelement.push(element);
     }
 
     /**
@@ -105,15 +106,7 @@ public class srcMLDTDGenerator extends DefaultHandler {
     	if(!inside.equals(""))
     	{
     		CompositeElement element = new CompositeElement("PCDATA");
-			String parent = lastelement.peek();
-			for(CompositeElement e : elements)
-			{
-				if(e.getName().equals(parent))
-				{
-					e.getElements().add(element);
-					break;
-				}
-			}
+			lastelement.peek().getElements().add(element);
     	}
     }
 }
