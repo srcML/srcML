@@ -387,6 +387,23 @@ int main(int argc, char* argv[]) {
 
     // convert from the map to an array to pass to the translator
 
+    // for single file specified on command line, grab the language from the extension
+    if (language == 0 && input_arg_count == 1) {
+
+      char* path = argv[input_arg_start];
+      std::string ext = boost::filesystem::extension(path);
+      if (ext == ".c" || ext == ".h")
+	language = srcMLTranslator::LANGUAGE_C;
+
+      /*
+	language = srcMLTranslator::LANGUAGE_CXX;
+	language = srcMLTranslator::LANGUAGE_CXX_0X;
+	language = srcMLTranslator::LANGUAGE_JAVA;
+
+	".aj" for AspectJ
+      */
+    }
+
     // translator from input to output using determined language
     if (language == 0)
 	language = DEFAULT_LANGUAGE;

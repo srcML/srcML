@@ -145,6 +145,9 @@ int srceval(const char* context_element,
   // output wrapping unit
   xmlUnitDumpOutputBuffer(buf, xmlTextReaderCurrentNode(reader));
 
+  // preserve the previous part of the tree for the next unit
+  xmlNodePtr prev = xmlTextReaderCurrentNode(reader)->prev;
+
   // type of the xpath
   int nodetype = 0;
 
@@ -188,14 +191,20 @@ int srceval(const char* context_element,
        unit_directory = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_DIRECTORY);
        unit_filename = xmlTextReaderGetAttribute(reader, BAD_CAST UNIT_ATTRIBUTE_FILENAME);
 
+       // make it seem like this node is from the root
+       xmlTextReaderCurrentNode(reader)->prev = prev;
+
        // expand this unit to make it the context
        context->node = xmlTextReaderExpand(reader);
 
-       // save the next pointer
+       // temporarily remove the next node in case parsing has gone on 
+       // that far, i.e., only want this part of the tree
        xmlNodePtr next = xmlTextReaderCurrentNode(reader)->next;
-       xmlTextReaderCurrentNode(reader)->next = 0;
 
-       int startline = xmlTextReaderCurrentNode(reader)->line;
+       // preserve the previous part of the tree for the next unit
+       //       xmlNodePtr prev = xmlTextReaderCurrentNode(reader)->prev;
+
+       xmlTextReaderCurrentNode(reader)->next = 0;
 
        // evaluate the xpath on the context from the current document
        xmlXPathObjectPtr result_nodes = 0;
@@ -244,9 +253,9 @@ int srceval(const char* context_element,
 	 // is is already a unit
          outputunit = strcmp("unit", (const char*) onode->name) != 0;
 
-	 // if we need a unit, output the start tag
+	 // if we need a unit, output the start tag.  Line number starts at 1, not 0
 	 if (outputunit)
-	   outputstartunit(buf, onode->line - startline);
+	   outputstartunit(buf, xmlGetLineNo(onode) + 1);
 
 	 // output all the found nodes
 	 for (int i = 0; i < xmlXPathNodeSetGetLength(result_nodes->nodesetval); ++i) {
@@ -258,10 +267,11 @@ int srceval(const char* context_element,
 	 }
 
 	 // if we need a unit, output the end tag
-	 if (outputunit)
+	 if (outputunit){
 	   outputendunit(buf);
 
-	 xmlOutputBufferWrite(buf, 2, "\n\n");
+	   xmlOutputBufferWrite(buf, 2, "\n\n");
+	 }
 
 	 break;
 
@@ -280,10 +290,13 @@ int srceval(const char* context_element,
 	 break;
        };
 
-       xmlTextReaderCurrentNode(reader)->next = next;
-
        // finished with the result nodes
        xmlXPathFreeObject(result_nodes);
+
+       // reset next to preserve normal parsing
+       xmlTextReaderCurrentNode(reader)->next = next;
+
+       xmlNodePtr pnode = xmlTextReaderCurrentNode(reader);
 
        // move over this expanded node
        xmlTextReaderNext(reader);

@@ -23,6 +23,8 @@
 
 #include <libexslt/exslt.h>
 
+#include "SAX2UnitDOM.cpp"
+
 void applyxslt(xmlOutputBufferPtr buf, xmlTextReaderPtr reader, xmlDocPtr doc, xsltStylesheetPtr xslt, const char* params[], int options, bool& found) {
 
        // copy the current tree to a new doc
