@@ -221,7 +221,7 @@ void output_version(const char* name) {
 
 int options = OPTION_CPP_MARKUP_ELSE | OPTION_CPP | OPTION_XMLDECL | OPTION_NAMESPACEDECL;
 const char* src_encoding = DEFAULT_TEXT_ENCODING;
-int language = DEFAULT_LANGUAGE;
+int language = 0;
 const char* xml_encoding = DEFAULT_XML_ENCODING;
 const char* given_directory = 0;
 const char* given_filename = 0;
@@ -388,6 +388,8 @@ int main(int argc, char* argv[]) {
     // convert from the map to an array to pass to the translator
 
     // translator from input to output using determined language
+    if (language == 0)
+	language = DEFAULT_LANGUAGE;
     srcMLTranslator translator(language, src_encoding, xml_encoding, srcml_filename, options, given_directory, given_filename, given_version, num2prefix);
 
   // output source encoding
