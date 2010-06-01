@@ -83,6 +83,16 @@ class Language {
     return "";
   }
 
+  // gets the current language based on the extenstion
+  static int getLanguageFromExtension(const char* const ext) {
+
+    for (const pair* pos = ext2int; pos != ext2int + 5; ++pos)
+      if (strcmp(pos->s, ext) == 0)
+	return pos->n;
+
+    return 0;
+  }
+
   ~Language() {}
 
  private:
@@ -90,6 +100,8 @@ class Language {
   const int language;
 
   static pair lang2int[];
+
+  static pair ext2int[];
 };
 
 #endif

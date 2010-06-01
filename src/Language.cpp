@@ -29,3 +29,13 @@ pair Language::lang2int[] = {
     { LanguageName::LANGUAGE_CXX_0X, LANGUAGE_CXX_0X },
     { LanguageName::LANGUAGE_ASPECTJ, LANGUAGE_ASPECTJ },
 };
+
+pair Language::ext2int[] = {
+    { ".c", LANGUAGE_C },
+    { ".h", LANGUAGE_C },
+    { ".cpp", LANGUAGE_CXX },
+    /*
+    { LanguageName::LANGUAGE_JAVA, LANGUAGE_JAVA },
+    { LanguageName::LANGUAGE_CXX_0X, LANGUAGE_CXX_0X },
+    { LanguageName::LANGUAGE_ASPECTJ, LANGUAGE_ASPECTJ },*/
+};
