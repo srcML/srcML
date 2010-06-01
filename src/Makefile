@@ -24,10 +24,9 @@ CXXFLAGS = -O3 -Wall -march=nocona -minline-all-stringops #-fno-rtti
 CXX_LINK_FLAGS = -lboost_filesystem #-s
 
 # object code for xml
-LIBXML_INCLUDE=-I/usr/local/include/libxml2/ -I/usr/local/include/
-#LIBXML_INCLUDE=-I/usr/include/libxml2
+LIBXML_INCLUDE=-I/usr/include/libxml2
 XML_OBJ=
-XML_LIB=-L/usr/local/lib -lxml2 -L/usr/local/lib -lxslt -L/usr/local/lib -lexslt $(ANTLR_LIB)
+XML_LIB=-lxml2 -lxslt -lexslt
 LIBXML_VERSION= Libxml2 enabled
 
 SRC2SRCML_BIN=../bin/src2srcml

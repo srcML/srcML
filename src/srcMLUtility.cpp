@@ -279,30 +279,12 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
 // xslt evaluation of the nested units
 void srcMLUtility::xslt(const char* context_element, const char* ofilename, const char* xslts, const char* params[], int paramcount) {
 
-  xmlSAXHandler sax = SAX2UnitDOM::factory();
-
-  //  SAX2UnitDOM state;
-
-  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
-  if (ctxt == NULL) return;
-  ctxt->sax = &sax;
-  //  ctxt->userData = &state;
-  //  state.ctxt = ctxt;
-
-  xmlParseDocument(ctxt);
-
-  ctxt->sax = NULL;
-
-  xmlFreeParserCtxt(ctxt);
-  /*
   xmlTextReaderPtr reader = xmlNewTextReaderFilename(infile);
 
   // perform xpath evaluation
   srcxslteval(context_element, xslts, reader, ofilename, params, paramcount, options);
 
   xmlFreeTextReader(reader);
-  */
-
 }
 
 // relaxng evaluation of the nested units

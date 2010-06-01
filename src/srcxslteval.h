@@ -11,8 +11,6 @@
 
 #include <libxml/xmlreader.h>
 
-#include "SAX2UnitDOM.h"
-
 int srcxslteval(const char* context, const char* xpath, xmlTextReaderPtr reader, const char* ofilename, const char* params[], int paramcount, int options);
 
 #endif
