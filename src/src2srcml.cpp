@@ -392,8 +392,7 @@ int main(int argc, char* argv[]) {
 
       char* path = argv[input_arg_start];
       std::string ext = boost::filesystem::extension(path);
-      if (ext == ".c" || ext == ".h")
-	language = srcMLTranslator::LANGUAGE_C;
+      language = Language::getLanguageFromExtension(ext.c_str());
 
       /*
 	language = srcMLTranslator::LANGUAGE_CXX;
