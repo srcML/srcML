@@ -103,6 +103,14 @@ void SAX2UnitDOM::endDocument(void *ctx) {
 
   xmlSAX2EndDocument(ctx);
 
+  // root unit end tag
+  if (!isoption(pstate->options, OPTION_XSLT_ALL)) {
+    if (pstate->found)
+      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("</unit>" "\n"));
+    else
+      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("/>" "\n"));
+  }
+
   // all done with the buffer
   xmlOutputBufferClose(pstate->buf);
 }
