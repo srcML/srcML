@@ -15,8 +15,8 @@ static xmlChar* unit_filename = 0;
 
 void xmlUnitDumpOutputBuffer(xmlOutputBufferPtr buf, xmlNodePtr node) {
 
+  // start root element
   xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<unit"));
-  //  xmlOutputBufferWrite(buf, 5, "<unit");
 
   // register the namespaces on the root element
   for (xmlNsPtr pAttr =  node->nsDef; pAttr; pAttr = pAttr->next)
