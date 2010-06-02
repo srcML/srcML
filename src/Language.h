@@ -47,7 +47,7 @@ class Language {
   };
 
   Language(int lang)
-    : language(lang != LANGUAGE_ASPECTJ ? lang : lang | LANGUAGE_JAVA) {
+    : language(lang) {
 
   }
 
