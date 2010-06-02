@@ -23,6 +23,10 @@
 
 #include <libexslt/exslt.h>
 
+#define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
+
+#include "SAX2UnitDOM.cpp"
+
 void applyxslt(xmlOutputBufferPtr buf, xmlTextReaderPtr reader, xmlDocPtr doc, xsltStylesheetPtr xslt, const char* params[], int options, bool& found) {
 
        // copy the current tree to a new doc
@@ -35,7 +39,7 @@ void applyxslt(xmlOutputBufferPtr buf, xmlTextReaderPtr reader, xmlDocPtr doc, x
 
 	 // if in per-unit mode and this is the first result found
 	 if (!found && !isoption(options, OPTION_XSLT_ALL)) {
-	   xmlOutputBufferWrite(buf, 3, ">\n\n");
+	   xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">\n\n"));
 	   found = true;
 	 }
 
@@ -50,7 +54,7 @@ void applyxslt(xmlOutputBufferPtr buf, xmlTextReaderPtr reader, xmlDocPtr doc, x
 
 	 // put some space between this unit and the next one
 	 if (!isoption(options, OPTION_XSLT_ALL))
-	   xmlOutputBufferWrite(buf, 1, "\n");
+	   xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n"));
        }
 
        // finished with the result of the transformation
@@ -203,11 +207,11 @@ int srcxslteval(const char* context_element, const char* xpath, xmlTextReaderPtr
   // root unit end tag
   if (!isoption(options, OPTION_XSLT_ALL)) {
     if (found)
-      xmlOutputBufferWrite(buf, 7, "</unit>");
+      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>"));
     else
-      xmlOutputBufferWrite(buf, 2, "/>");
+      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
 
-    xmlOutputBufferWrite(buf, 1, "\n");
+    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n"));
   }
 
   // all done with the buffer
