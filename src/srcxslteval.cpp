@@ -207,9 +207,9 @@ int srcxslteval(const char* context_element, const char* xpath, xmlTextReaderPtr
   // root unit end tag
   if (!isoption(options, OPTION_XSLT_ALL)) {
     if (found)
-      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>\n"));
+      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>" "\n"));
     else
-      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>\n"));
+      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>" "\n"));
   }
 
   // all done with the buffer
