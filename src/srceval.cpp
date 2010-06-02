@@ -58,6 +58,7 @@ static void outputstartunit(xmlOutputBufferPtr buf, int line) {
   xmlOutputBufferWriteString(buf, s);
   xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
 
+  // end of unit start tag
   xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">"));
 }
 
