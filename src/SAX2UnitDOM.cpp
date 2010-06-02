@@ -1,7 +1,7 @@
 /*
-  srcMLUtility.cpp
+  SAX2UnitDOM.cpp
 
-  Copyright (C) 2004-2006  SDML (www.sdml.info)
+  Copyright (C) 2010  SDML (www.sdml.info)
 
   This file is part of the srcML translator.
 
@@ -49,9 +49,6 @@
 
 #include <libxml/SAX2.h>
 
-static int counter = 0;
-static int tcounter = 0;
-
 SAX2UnitDOM::SAX2UnitDOM()/* :
 			     SAX2TextWriter(ofilename, options, unit), nsv(nsv), attrv(attrv), placescount(0), placesunit(0)*/ {
 
@@ -63,13 +60,12 @@ xmlSAXHandler SAX2UnitDOM::factory() {
 
   sax.initialized    = XML_SAX2_MAGIC;
 
-  sax.startDocument  = &SAX2UnitDOM::startDocument; //xmlSAX2StartDocument;
-  sax.endDocument    = &SAX2UnitDOM::endDocument;   //xmlSAX2EndDocument;
+  sax.startDocument  = &SAX2UnitDOM::startDocument;
+  sax.endDocument    = &SAX2UnitDOM::endDocument;
   sax.startElementNs = &SAX2UnitDOM::startElementNs;
   sax.endElementNs   = &SAX2UnitDOM::endElementNs;
-  sax.characters     = &SAX2UnitDOM::characters;
-  //  sax.characters     = xmlSAX2Characters;
-  //  sax.ignorableWhitespace = &SAX2UnitDOM::ignorableWhitespace;
+  sax.characters     = xmlSAX2Characters;
+  sax.ignorableWhitespace = xmlSAX2Characters;
   sax.comment        = xmlSAX2Comment;
 
   return sax;
@@ -126,23 +122,6 @@ void SAX2UnitDOM::startElementNs(void* ctx, const xmlChar* localname, const xmlC
   if (depth == 1) {
     unitnode = ctxt->node;
     ctxt->sax->startElementNs = xmlSAX2StartElementNs;
-    ++counter;
-
-    fprintf(stderr, "Position:  %d\n", counter);
-    /*
-    if (counter == 13068) {
-      fprintf(stderr, "Turning whitespace off\n");
-      ctxt->sax->ignorableWhitespace = 0; // &SAX2UnitDOM::ignorableWhitespace;
-      ctxt->sax->characters = 0;
-
-    }    else{
-      ctxt->sax->ignorableWhitespace = &SAX2UnitDOM::ignorableWhitespace;
-      ctxt->sax->characters = xmlSAX2Characters;
-    }
-    */
-    fflush(stderr);
-
-    tcounter = 0;
   }
 }
 
@@ -201,63 +180,4 @@ void SAX2UnitDOM::endElementNs(void *ctx, const xmlChar *localname, const xmlCha
 
     unitnode = 0;
   }
-
-  /*
-    SAX2UnitDOM* pstate = (SAX2UnitDOM*) ctx;
-
-    if (pstate->ctxt->nameNr != 2)
-      return;
-
-    // check that this is a nested file
-    if (pstate->count == 0 && !(strcmp((const char*) localname, "unit") == 0 &&
-	  strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0)) {
-      xmlStopParser(pstate->ctxt);
-      return;
-    }
-
-    ++(pstate->count);
-
-    // output file status message if in verbose mode
-    if (isoption(pstate->options, OPTION_VERBOSE)) {
-      for (int i = 0; i < pstate->placescount; ++i)
-	fprintf(stderr, "\b");
-      fprintf(stderr, "%ld", pstate->count);
-
-      if (pstate->count == pstate->placesunit) {
-	pstate->placesunit *= 10;
-	++pstate->placescount;
-      }
-    }
-
-    if (pstate->count < pstate->unit - 1)
-      return;
-
-    // now ready for the next unit, to treat as root
-    pstate->ctxt->sax->startElementNs = &startElementNsUnit;
-    pstate->ctxt->sax->endElementNs = 0;
-  */
-}
-
-void SAX2UnitDOM::ignorableWhitespace(void* ctx, const xmlChar* ch, int len) {
-  /*
-  if (counter >= 13067 && counter <= 14000)
-    fprintf(stderr, "%d: Text: %d\n", tcounter, len);
-
-  fflush(stderr);
-  ++tcounter;
-  if (counter != 13068)
-  */
-      xmlSAX2Characters(ctx, ch, len);
-}
-
-void SAX2UnitDOM::characters(void* ctx, const xmlChar* ch, int len) {
-  /*
-  if (counter >= 13067 && counter <= 14000)
-    fprintf(stderr, "%d: Text: %d\n", tcounter, len);
-
-  fflush(stderr);
-  ++tcounter;
-  if (counter != 13068)
-  */
-      xmlSAX2Characters(ctx, ch, len);
 }
