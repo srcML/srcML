@@ -25,7 +25,7 @@
 
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
 
-#include "SAX2UnitDOM.cpp"
+//#include "SAX2UnitDOM.cpp"
 
 void applyxslt(xmlOutputBufferPtr buf, xmlTextReaderPtr reader, xmlDocPtr doc, xsltStylesheetPtr xslt, const char* params[], int options, bool& found) {
 
