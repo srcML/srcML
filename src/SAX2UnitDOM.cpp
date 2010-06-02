@@ -49,6 +49,8 @@
 
 #include <libxml/SAX2.h>
 
+#define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
+
 SAX2UnitDOM::SAX2UnitDOM(const char* a_context_element, const char* a_fxslt, const char* a_ofilename, const char* params[], int paramcount, int options) 
   : context_element(a_context_element), fxslt(a_fxslt), ofilename(a_ofilename), params(params), paramcount(paramcount), options(options) {
 
@@ -131,58 +133,56 @@ void SAX2UnitDOM::startElementNs(void* ctx, const xmlChar* localname, const xmlC
 // end unit element and current file/buffer (started by startElementNs
 void SAX2UnitDOM::endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
-  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-
+  // DOM building end element
   xmlSAX2EndElementNs(ctx, localname, prefix, URI);
 
+  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2UnitDOM* pstate = (SAX2UnitDOM*) ctxt->_private;
 
-  if (ctxt->nodeNr == 1) {
+  // only care about processing a nested unit
+  if (ctxt->nodeNr != 1)
+    return;
 
-    ctxt->sax->startElementNs = &SAX2UnitDOM::startElementNs;
+  // keep track if we actually get any results
+  bool found = false;
 
-    // keep track if we actually get any results
-    bool found = false;
+  // apply the style sheet to the document, which is the root element
+  // along with the tree of the just-ended unit
+  xmlDocPtr res = xsltApplyStylesheet(pstate->xslt, ctxt->myDoc, NULL);
 
-       // apply the style sheet to the extracted doc
-       xmlDocPtr res = xsltApplyStylesheet(pstate->xslt, ctxt->myDoc, NULL);
+  if (res) {
 
-       if (res) {
+    // if in per-unit mode and this is the first result found
+    if (!found && !isoption(pstate->options, OPTION_XSLT_ALL)) {
+      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(">\n\n"));
+      found = true;
+    }
 
-	 // if in per-unit mode and this is the first result found
-	 if (!found && !isoption(pstate->options, OPTION_XSLT_ALL)) {
-	   xmlOutputBufferWrite(pstate->buf, 3, ">\n\n");
-	   found = true;
-	 }
+    // output the result of the stylesheet
+    xmlNodePtr resroot = xmlDocGetRootElement(res);
+    xmlNsPtr savens = resroot ? resroot->nsDef : 0;
+    if (savens && !isoption(pstate->options, OPTION_XSLT_ALL))
+      resroot->nsDef = 0;
 
-	 // output the result of the stylesheet
-	 xmlNodePtr resroot = xmlDocGetRootElement(res);
-	 xmlNsPtr savens = resroot ? resroot->nsDef : 0;
-	 if (savens && !isoption(pstate->options, OPTION_XSLT_ALL))
-	   resroot->nsDef = 0;
-	 //	 xsltSaveResultTo(buf, res, xslt);
-	 xmlNodeDumpOutput(pstate->buf, res, resroot, 0, 0, 0);
-	 if (savens && !isoption(pstate->options, OPTION_XSLT_ALL))
-	    resroot->nsDef = savens;
+    //	 xsltSaveResultTo(buf, res, xslt);
+    xmlNodeDumpOutput(pstate->buf, res, resroot, 0, 0, 0);
 
-	 // put some space between this unit and the next one
-	 if (!isoption(pstate->options, OPTION_XSLT_ALL))
-	   xmlOutputBufferWrite(pstate->buf, 1, "\n");
-       }
+    if (savens && !isoption(pstate->options, OPTION_XSLT_ALL))
+      resroot->nsDef = savens;
 
-       // finished with the result of the transformation
-       xmlFreeDoc(res);
+    // finished with the result of the transformation
+    xmlFreeDoc(res);
 
-    //    fprintf(stderr, "Line: %d\n", unitnode->line);
-
-    //    xmlDocPtr doc = xmlNewDoc(NULL);
-
-    //    xmlDocSetRootElement(doc, pstate->unitnode);
-
-    xmlUnlinkNode(pstate->unitnode);
-    
-    xmlFreeNode(pstate->unitnode);
-
-    pstate->unitnode = 0;
+    // put some space between this unit and the next one
+    if (!isoption(pstate->options, OPTION_XSLT_ALL))
+      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\n"));
   }
+
+  // done with this unit
+  xmlUnlinkNode(pstate->unitnode);
+  xmlFreeNode(pstate->unitnode);
+  pstate->unitnode = 0;
+
+  // now need to detect the start of the next unit
+  ctxt->sax->startElementNs = &SAX2UnitDOM::startElementNs;
 }
