@@ -53,6 +53,8 @@
 #include "srcxslteval.h"
 #include "srcrelaxngeval.h"
 
+#include "SAX2UnitDOM.h"
+
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op)
   : infile(infilename), output_encoding(encoding), options(op), units(0) {
