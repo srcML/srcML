@@ -283,13 +283,14 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
 
   xmlSAXHandler sax = SAX2UnitDOM::factory();
 
-  //  SAX2UnitDOM state;
+  
+  SAX2UnitDOM state(context_element, xslts, ofilename, params, paramcount, options);
 
   xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
   if (ctxt == NULL) return;
   ctxt->sax = &sax;
-  //  ctxt->userData = &state;
-  //  state.ctxt = ctxt;
+  ctxt->_private = &state;
+  //state.ctxt = ctxt;
 
   xmlParseDocument(ctxt);
 

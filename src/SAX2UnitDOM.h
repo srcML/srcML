@@ -32,20 +32,31 @@
 #include "SAX2TextWriter.h"
 #include <libxml/parser.h>
 #include <libxml/xmlwriter.h>
+#include <libxslt/xslt.h>
+#include <libxslt/transform.h>
+#include <libxslt/xsltutils.h>
 
 class SAX2UnitDOM {
  public:
 
-  SAX2UnitDOM();
-  //  SAX2UnitDOM(const char* ofilename, int unit, int& options, PROPERTIES_TYPE& nsv, PROPERTIES_TYPE& attrv);
+  SAX2UnitDOM(const char* context_element, const char* fxslt, const char* ofilename, const char* params[], int paramcount, int options);
 
   static xmlSAXHandler factory();
 
   xmlNodePtr startunitnode;
 
-  long count;
-  //  PROPERTIES_TYPE& nsv;
-  //  PROPERTIES_TYPE& attrv;
+  const char* context_element;
+  const char* fxslt;
+  const char* ofilename;
+  const char** params;
+  int paramcount;
+  int options;
+
+  xmlNodePtr unitnode;
+
+  xsltStylesheetPtr xslt;
+
+  xmlOutputBufferPtr buf;
 
   // start document
   static void startDocument(void *ctx);
@@ -62,10 +73,6 @@ class SAX2UnitDOM {
   static void ignorableWhitespace(void* ctx, const xmlChar* ch, int len);
 
   static void characters(void* ctx, const xmlChar* ch, int len);
-
- private:
-  int placescount;
-  int placesunit;
 };
 
 #endif

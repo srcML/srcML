@@ -49,8 +49,8 @@
 
 #include <libxml/SAX2.h>
 
-SAX2UnitDOM::SAX2UnitDOM()/* :
-			     SAX2TextWriter(ofilename, options, unit), nsv(nsv), attrv(attrv), placescount(0), placesunit(0)*/ {
+SAX2UnitDOM::SAX2UnitDOM(const char* a_context_element, const char* a_fxslt, const char* a_ofilename, const char* params[], int paramcount, int options) 
+  : context_element(a_context_element), fxslt(a_fxslt), ofilename(a_ofilename), params(params), paramcount(paramcount), options(options) {
 
 }
 
@@ -71,16 +71,12 @@ xmlSAXHandler SAX2UnitDOM::factory() {
   return sax;
 }
 
-static xmlNodePtr unitnode;
-
-xsltStylesheetPtr xslt;
-
-// setup output
-xmlOutputBufferPtr buf;
-
-
 // start document
 void SAX2UnitDOM::startDocument(void *ctx) {
+  
+    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+
+    SAX2UnitDOM* pstate = (SAX2UnitDOM*) ctxt->_private;
 
     // allow for all exslt functions
     exsltRegisterAll();
@@ -88,10 +84,10 @@ void SAX2UnitDOM::startDocument(void *ctx) {
     xsltsrcMLRegister();
 
     // parse the stylesheet
-    xslt = xsltParseStylesheetFile(BAD_CAST "copy.xsl");
+    pstate->xslt = xsltParseStylesheetFile(BAD_CAST pstate->fxslt);
 
     // setup output
-    buf = xmlOutputBufferCreateFilename("/dev/stdout", NULL, 0);
+    pstate->buf = xmlOutputBufferCreateFilename(pstate->ofilename, NULL, 0);
 
     xmlSAX2StartDocument(ctx);
 }
@@ -99,10 +95,14 @@ void SAX2UnitDOM::startDocument(void *ctx) {
 // end document
 void SAX2UnitDOM::endDocument(void *ctx) {
 
+  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+
+  SAX2UnitDOM* pstate = (SAX2UnitDOM*) ctxt->_private;
+
   xmlSAX2EndDocument(ctx);
 
   // all done with the buffer
-  xmlOutputBufferClose(buf);
+  xmlOutputBufferClose(pstate->buf);
 }
 
 // handle root unit of compound document
@@ -112,15 +112,18 @@ void SAX2UnitDOM::startElementNs(void* ctx, const xmlChar* localname, const xmlC
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
 
+  SAX2UnitDOM* pstate = (SAX2UnitDOM*) ctxt->_private;
+
   int depth = ctxt->nodeNr;
 
   if (depth == 1)
     ctxt->input->line = 0;
 
+
   xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes,
-			nb_defaulted, attributes);
+  			nb_defaulted, attributes);
   if (depth == 1) {
-    unitnode = ctxt->node;
+    pstate->unitnode = ctxt->node;
     ctxt->sax->startElementNs = xmlSAX2StartElementNs;
   }
 }
@@ -132,6 +135,8 @@ void SAX2UnitDOM::endElementNs(void *ctx, const xmlChar *localname, const xmlCha
 
   xmlSAX2EndElementNs(ctx, localname, prefix, URI);
 
+  SAX2UnitDOM* pstate = (SAX2UnitDOM*) ctxt->_private;
+
   if (ctxt->nodeNr == 1) {
 
     ctxt->sax->startElementNs = &SAX2UnitDOM::startElementNs;
@@ -140,29 +145,29 @@ void SAX2UnitDOM::endElementNs(void *ctx, const xmlChar *localname, const xmlCha
     bool found = false;
 
        // apply the style sheet to the extracted doc
-       xmlDocPtr res = xsltApplyStylesheet(xslt, ctxt->myDoc, NULL);
+       xmlDocPtr res = xsltApplyStylesheet(pstate->xslt, ctxt->myDoc, NULL);
 
        if (res) {
 
 	 // if in per-unit mode and this is the first result found
-	 //	 if (!found && !isoption(options, OPTION_XSLT_ALL)) {
-	   xmlOutputBufferWrite(buf, 3, ">\n\n");
+	 if (!found && !isoption(pstate->options, OPTION_XSLT_ALL)) {
+	   xmlOutputBufferWrite(pstate->buf, 3, ">\n\n");
 	   found = true;
-	   //	 }
+	 }
 
 	 // output the result of the stylesheet
 	 xmlNodePtr resroot = xmlDocGetRootElement(res);
 	 xmlNsPtr savens = resroot ? resroot->nsDef : 0;
-	 if (savens /* && !isoption(options, OPTION_XSLT_ALL)*/)
+	 if (savens && !isoption(pstate->options, OPTION_XSLT_ALL))
 	   resroot->nsDef = 0;
 	 //	 xsltSaveResultTo(buf, res, xslt);
-	 xmlNodeDumpOutput(buf, res, resroot, 0, 0, 0);
-	 if (savens /* && !isoption(options, OPTION_XSLT_ALL)*/)
+	 xmlNodeDumpOutput(pstate->buf, res, resroot, 0, 0, 0);
+	 if (savens && !isoption(pstate->options, OPTION_XSLT_ALL))
 	    resroot->nsDef = savens;
 
 	 // put some space between this unit and the next one
-	 //	 if (!isoption(options, OPTION_XSLT_ALL))
-	   xmlOutputBufferWrite(buf, 1, "\n");
+	 if (!isoption(pstate->options, OPTION_XSLT_ALL))
+	   xmlOutputBufferWrite(pstate->buf, 1, "\n");
        }
 
        // finished with the result of the transformation
@@ -172,12 +177,12 @@ void SAX2UnitDOM::endElementNs(void *ctx, const xmlChar *localname, const xmlCha
 
     //    xmlDocPtr doc = xmlNewDoc(NULL);
 
-    //    xmlDocSetRootElement(doc, unitnode);
+    //    xmlDocSetRootElement(doc, pstate->unitnode);
 
-    xmlUnlinkNode(unitnode);
+    xmlUnlinkNode(pstate->unitnode);
     
-    xmlFreeNode(unitnode);
+    xmlFreeNode(pstate->unitnode);
 
-    unitnode = 0;
+    pstate->unitnode = 0;
   }
 }
