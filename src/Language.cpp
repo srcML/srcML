@@ -28,6 +28,7 @@ pair Language::lang2int[] = {
     { LanguageName::LANGUAGE_JAVA, LANGUAGE_JAVA },
     { LanguageName::LANGUAGE_CXX_0X, LANGUAGE_CXX_0X },
     { LanguageName::LANGUAGE_ASPECTJ, LANGUAGE_ASPECTJ },
+    { 0, 0 }
 };
 
 pair Language::ext2int[] = {
@@ -51,4 +52,5 @@ pair Language::ext2int[] = {
     /*
     { LanguageName::LANGUAGE_CXX_0X, LANGUAGE_CXX_0X },
     */
+    { 0, 0 }
 };

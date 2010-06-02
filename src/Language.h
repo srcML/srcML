@@ -76,7 +76,7 @@ class Language {
   // gets the current language
   const char* getLanguageString() const {
 
-    for (const pair* pos = lang2int; pos != lang2int + 5; ++pos)
+    for (const pair* pos = lang2int; pos->s != 0; ++pos)
       if (pos->n == language)
 	return pos->s;
 
@@ -86,7 +86,7 @@ class Language {
   // gets the current language based on the extenstion
   static int getLanguageFromExtension(const char* const ext) {
 
-    for (const pair * pos = ext2int; pos != ext2int + 14; ++pos)
+    for (const pair * pos = ext2int; pos->s != 0; ++pos)
       if (strcmp(pos->s, ext) == 0)
 	return pos->n;
 
