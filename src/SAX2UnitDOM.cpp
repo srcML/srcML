@@ -52,7 +52,7 @@
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
 
 SAX2UnitDOM::SAX2UnitDOM(const char* a_context_element, const char* a_fxslt, const char* a_ofilename, const char* params[], int paramcount, int options) 
-  : context_element(a_context_element), fxslt(a_fxslt), ofilename(a_ofilename), params(params), paramcount(paramcount), options(options) {
+  : context_element(a_context_element), fxslt(a_fxslt), ofilename(a_ofilename), params(params), paramcount(paramcount), options(options), found(false) {
 
 }
 
@@ -143,9 +143,6 @@ void SAX2UnitDOM::endElementNs(void *ctx, const xmlChar *localname, const xmlCha
   if (ctxt->nodeNr != 1)
     return;
 
-  // keep track if we actually get any results
-  bool found = false;
-
   // apply the style sheet to the document, which is the root element
   // along with the tree of the just-ended unit
   xmlDocPtr res = xsltApplyStylesheet(pstate->xslt, ctxt->myDoc, NULL);
@@ -153,9 +150,9 @@ void SAX2UnitDOM::endElementNs(void *ctx, const xmlChar *localname, const xmlCha
   if (res) {
 
     // if in per-unit mode and this is the first result found
-    if (!found && !isoption(pstate->options, OPTION_XSLT_ALL)) {
+    if (!pstate->found && !isoption(pstate->options, OPTION_XSLT_ALL)) {
       xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(">\n\n"));
-      found = true;
+      pstate->found = true;
     }
 
     // output the result of the stylesheet

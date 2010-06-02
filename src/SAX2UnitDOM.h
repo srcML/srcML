@@ -51,6 +51,7 @@ class SAX2UnitDOM {
   const char** params;
   int paramcount;
   int options;
+  bool found;
 
   xmlNodePtr unitnode;
 
