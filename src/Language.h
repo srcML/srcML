@@ -66,7 +66,7 @@ class Language {
   // gets the current language
   static int getLanguage(const char* const s) {
 
-    for (const pair* pos = lang2int; pos != lang2int + 5; ++pos)
+    for (const pair* pos = lang2int; pos->s != 0; ++pos)
       if (strcmp(pos->s, s) == 0)
 	return pos->n;
 
