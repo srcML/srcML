@@ -69,6 +69,7 @@ xmlSAXHandler SAX2UnitDOM::factory() {
   sax.characters     = xmlSAX2Characters;
   sax.ignorableWhitespace = xmlSAX2Characters;
   sax.comment        = xmlSAX2Comment;
+  sax.processingInstruction = xmlSAX2ProcessingInstruction;
 
   return sax;
 }
@@ -153,7 +154,7 @@ void SAX2UnitDOM::endElementNs(void *ctx, const xmlChar *localname, const xmlCha
 
   // apply the style sheet to the document, which is the root element
   // along with the tree of the just-ended unit
-  xmlDocPtr res = xsltApplyStylesheet(pstate->xslt, ctxt->myDoc, NULL);
+  xmlDocPtr res = xsltApplyStylesheet(pstate->xslt, ctxt->myDoc, pstate->params);
 
   if (res) {
 
