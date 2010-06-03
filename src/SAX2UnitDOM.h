@@ -38,8 +38,6 @@ class SAX2UnitDOM {
 
   static xmlSAXHandler factory();
 
-  xmlNodePtr startunitnode;
-
   const char* context_element;
   const char* fxslt;
   const char* ofilename;
@@ -47,7 +45,6 @@ class SAX2UnitDOM {
   int paramcount;
   int options;
   bool found;
-  xmlNodePtr unitnode;
   xsltStylesheetPtr xslt;
   xmlOutputBufferPtr buf;
 

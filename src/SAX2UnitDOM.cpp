@@ -32,12 +32,14 @@
 #include "srcmlns.h"
 
 #include "srcexfun.h"
-
+#include <cassert>
 #include <libxslt/xslt.h>
 #include <libxslt/transform.h>
 #include <libxslt/xsltutils.h>
 
 #include <libexslt/exslt.h>
+
+#include <libxml/SAX2.h>
 
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
 
@@ -123,9 +125,12 @@ void SAX2UnitDOM::startElementNs(void* ctx, const xmlChar* localname, const xmlC
   xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes,
   			nb_defaulted, attributes);
   if (depth == 1) {
-    pstate->unitnode = ctxt->node;
     ctxt->sax->startElementNs = xmlSAX2StartElementNs;
   }
+
+  // copy the start tag of the root element unit for per-unit processing
+  //  if (depth == 0 && !isoption(pstate->options, OPTION_XSLT_ALL))
+  //    xmlNodeDumpOutput(pstate->buf, ctxt->myDoc, ctxt->node, 0, 0, 0);
 }
 
 // end unit element and current file/buffer (started by startElementNs
@@ -153,21 +158,36 @@ void SAX2UnitDOM::endElementNs(void *ctx, const xmlChar *localname, const xmlCha
       pstate->found = true;
     }
 
-    // output the result inside the unit
-    xsltSaveResultTo(pstate->buf, res, pstate->xslt);
+    // figure out which node to output
+    xmlNodePtr onode = xmlDocGetRootElement(res);
+    bool isunit = strcmp("unit", (const char*) onode->name) == 0;
+    if (isunit)
+      onode = xmlFirstElementChild(onode);
+
+    // temporarily turn off namespace definitions for non-units
+    xmlNsPtr savens = onode ? onode->nsDef : 0;
+    if (!isunit && savens && !isoption(pstate->options, OPTION_XSLT_ALL))
+	onode->nsDef = 0;
+
+    // dump the invididual unit result
+    xmlNodeDumpOutput(pstate->buf, ctxt->myDoc, onode, 0, 0, 0);
+
+    // turn on namespace definitions for non-units
+    if (!isunit && savens && !isoption(pstate->options, OPTION_XSLT_ALL))
+	onode->nsDef = savens;
 
     // finished with the result of the transformation
     xmlFreeDoc(res);
-
+    
     // put some space between this unit and the next one
     if (!isoption(pstate->options, OPTION_XSLT_ALL))
-      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\n"));
+      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\n\n"));
   }
 
   // done with this unit
-  xmlUnlinkNode(pstate->unitnode);
-  xmlFreeNode(pstate->unitnode);
-  pstate->unitnode = 0;
+  xmlNodePtr unitnode = xmlFirstElementChild(ctxt->node);
+  xmlUnlinkNode(unitnode);
+  xmlFreeNode(unitnode);
 
   // now need to detect the start of the next unit
   ctxt->sax->startElementNs = &SAX2UnitDOM::startElementNs;
