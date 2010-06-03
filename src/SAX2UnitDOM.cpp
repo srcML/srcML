@@ -27,27 +27,17 @@
 #include "SAX2Utilities.h"
 #include "srcmlns.h"
 
-#include <cstdio>
 #include <cstring>
-#include <libxml/xmlwriter.h>
-#include <libxml/parser.h>
-#include <libxml/parserInternals.h>
 #include "Options.h"
 #include "srcmlns.h"
 
 #include "srcexfun.h"
-
-#include <libxml/parserInternals.h>
-#include <libxml/xpath.h>
-#include <libxml/xpathInternals.h>
 
 #include <libxslt/xslt.h>
 #include <libxslt/transform.h>
 #include <libxslt/xsltutils.h>
 
 #include <libexslt/exslt.h>
-
-#include <libxml/SAX2.h>
 
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
 

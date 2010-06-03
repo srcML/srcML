@@ -1,7 +1,7 @@
 /*
   SAX2UnitDOM.h
 
-  Copyright (C) 2008 SDML (www.sdml.info)
+  Copyright (C) 2010 SDML (www.sdml.info)
 
   This file is part of the srcML translator.
 
@@ -28,13 +28,8 @@
 #ifndef INCLUDED_SAX2UNITDOM_H
 #define INCLUDED_SAX2UNITDOM_H
 
-#include "SAX2Utilities.h"
-#include "SAX2TextWriter.h"
 #include <libxml/parser.h>
-#include <libxml/xmlwriter.h>
-#include <libxslt/xslt.h>
 #include <libxslt/transform.h>
-#include <libxslt/xsltutils.h>
 
 class SAX2UnitDOM {
  public:
@@ -52,11 +47,8 @@ class SAX2UnitDOM {
   int paramcount;
   int options;
   bool found;
-
   xmlNodePtr unitnode;
-
   xsltStylesheetPtr xslt;
-
   xmlOutputBufferPtr buf;
 
   // start document
@@ -70,10 +62,6 @@ class SAX2UnitDOM {
 		    const xmlChar** attributes);
 
   static void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
-
-  static void ignorableWhitespace(void* ctx, const xmlChar* ch, int len);
-
-  static void characters(void* ctx, const xmlChar* ch, int len);
 };
 
 #endif
