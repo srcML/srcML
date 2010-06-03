@@ -130,7 +130,6 @@ void SAX2UnitDOM::startElementNs(void* ctx, const xmlChar* localname, const xmlC
   if (depth == 1)
     ctxt->input->line = 0;
 
-
   xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes,
   			nb_defaulted, attributes);
   if (depth == 1) {
