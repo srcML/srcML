@@ -156,7 +156,7 @@ void SAX2UnitDOM::endElementNs(void *ctx, const xmlChar *localname, const xmlCha
   // along with the tree of the just-ended unit
   xmlDocPtr res = xsltApplyStylesheet(pstate->xslt, ctxt->myDoc, pstate->params);
 
-  if (res) {
+  if (res && xmlDocGetRootElement(res)) {
 
     // if in per-unit mode and this is the first result found
     if (!pstate->found && !isoption(pstate->options, OPTION_XSLT_ALL)) {
