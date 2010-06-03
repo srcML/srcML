@@ -156,7 +156,7 @@ void SAX2UnitDOM::endElementNs(void *ctx, const xmlChar *localname, const xmlCha
   // along with the tree of the just-ended unit
   xmlDocPtr res = xsltApplyStylesheet(pstate->xslt, ctxt->myDoc, pstate->params);
 
-  if (res && xmlDocGetRootElement(res)) {
+  if (res && res->children) {
 
     // if in per-unit mode and this is the first result found
     if (!pstate->found && !isoption(pstate->options, OPTION_XSLT_ALL)) {
@@ -164,17 +164,8 @@ void SAX2UnitDOM::endElementNs(void *ctx, const xmlChar *localname, const xmlCha
       pstate->found = true;
     }
 
-    // output the result of the stylesheet
-    xmlNodePtr resroot = xmlDocGetRootElement(res);
-    xmlNsPtr savens = resroot ? resroot->nsDef : 0;
-    if (savens && !isoption(pstate->options, OPTION_XSLT_ALL))
-      resroot->nsDef = 0;
-
-    //	 xsltSaveResultTo(buf, res, xslt);
-    xmlNodeDumpOutput(pstate->buf, res, resroot, 0, 0, 0);
-
-    if (savens && !isoption(pstate->options, OPTION_XSLT_ALL))
-      resroot->nsDef = savens;
+    // output the result inside the unit
+    xsltSaveResultTo(pstate->buf, res, pstate->xslt);
 
     // finished with the result of the transformation
     xmlFreeDoc(res);
