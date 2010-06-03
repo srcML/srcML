@@ -34,12 +34,12 @@
 class SAX2UnitDOM {
  public:
 
-  SAX2UnitDOM(const char* context_element, const char* fxslt, const char* ofilename, const char* params[], int paramcount, int options);
+  SAX2UnitDOM(const char* context_element, const char** fxslt, const char* ofilename, const char* params[], int paramcount, int options);
 
   static xmlSAXHandler factory();
 
   const char* context_element;
-  const char* fxslt;
+  const char** fxslt;
   const char* ofilename;
   const char** params;
   int paramcount;
@@ -54,10 +54,12 @@ class SAX2UnitDOM {
   // end document
   static void endDocument(void *ctx);
 
+  // start unit elements
   static void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
 		    const xmlChar** attributes);
 
+  // end unit elements
   static void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
 };
 

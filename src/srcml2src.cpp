@@ -189,15 +189,15 @@ int optioncount = 0;
 
 const int MAXPARAMS = 32;
 int paramcount = 0;
-const char* params[MAXPARAMS * 2 + 1];
+const char* params[MAXPARAMS * 2 + 1] = { 0 };
 
 const int MAXXSLT = 32;
 int xsltcount = 0;
-const char* xsltfiles[MAXXSLT + 1];
+const char* xsltfiles[MAXXSLT + 1] = { 0 };
 
 const int MAXXPATH = 32;
 int xpathcount = 0;
-const char* xpathexpr[MAXXPATH + 1];
+const char* xpathexpr[MAXXPATH + 1] = { 0 };
 
 int main(int argc, char* argv[]) {
 
@@ -412,10 +412,8 @@ int main(int argc, char* argv[]) {
 	fprintf(stderr, "%s: param option selected but no property or value specified.\n", NAME);
 	exit(STATUS_UNIT_MISSING);
       } else {
-	params[paramcount] = argv[(++curarg)];
-	++paramcount;
-	params[paramcount] = argv[(++curarg)++];
-	++paramcount;
+	params[paramcount++] = argv[(++curarg)];
+	params[paramcount++] = argv[(++curarg)++];
       }
     }
 
@@ -464,6 +462,7 @@ int main(int argc, char* argv[]) {
       if (embedded) {
 
 	xpath = embedded + 1;
+	xpathexpr[xpathcount++] = embedded + 1;
 	++curarg;
 
       // check for namespace flag with missing namespace
@@ -472,6 +471,7 @@ int main(int argc, char* argv[]) {
 	exit(STATUS_UNIT_MISSING); // FIX
       } else {
 	xpath = argv[(++curarg)++];
+	xpathexpr[xpathcount++] = argv[(++curarg)++];
       }
 
     // context
@@ -503,15 +503,15 @@ int main(int argc, char* argv[]) {
       // filename is embedded parameter
       if (embedded) {
 
-	xpath = embedded + 1;
+	xsltfiles[xsltcount++] = embedded + 1;
 	++curarg;
 
       // check for namespace flag with missing namespace
       } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
-	fprintf(stderr, "%s: xpath option selected but no xpath expression.\n", NAME);
+	fprintf(stderr, "%s: xslt option selected but no xslt filename provided.\n", NAME);
 	exit(STATUS_UNIT_MISSING); // FIX
       } else {
-	xpath = argv[(++curarg)++];
+	xsltfiles[xsltcount++] = argv[(++curarg)++];
       }
 
     // relaxng
@@ -757,16 +757,14 @@ int main(int argc, char* argv[]) {
 
     } else if (isoption(options, OPTION_XPATH)) {
 
-      if (xpath == 0)
+      if (xpathexpr[0] == 0)
 	su.extract_element(context, ofilename);
       else
-	su.xpath(ofilename, context, xpath);
+	su.xpath(ofilename, context, xpathexpr);
 
     } else if (isoption(options, OPTION_XSLT)) {
 
-      params[paramcount + 1] = NULL;
-
-      su.xslt(context, ofilename, xpath, params, paramcount);
+      su.xslt(context, ofilename, xsltfiles, params, paramcount);
 
     } else if (isoption(options, OPTION_RELAXNG)) {
 

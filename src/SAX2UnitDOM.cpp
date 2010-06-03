@@ -43,7 +43,7 @@
 
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
 
-SAX2UnitDOM::SAX2UnitDOM(const char* a_context_element, const char* a_fxslt, const char* a_ofilename, const char* params[], int paramcount, int options) 
+SAX2UnitDOM::SAX2UnitDOM(const char* a_context_element, const char* a_fxslt[], const char* a_ofilename, const char* params[], int paramcount, int options) 
   : context_element(a_context_element), fxslt(a_fxslt), ofilename(a_ofilename), params(params), paramcount(paramcount), options(options), found(false) {
 
 }
@@ -79,7 +79,7 @@ void SAX2UnitDOM::startDocument(void *ctx) {
     xsltsrcMLRegister();
 
     // parse the stylesheet
-    pstate->xslt = xsltParseStylesheetFile(BAD_CAST pstate->fxslt);
+    pstate->xslt = xsltParseStylesheetFile(BAD_CAST pstate->fxslt[0]);
 
     // setup output
     pstate->buf = xmlOutputBufferCreateFilename(pstate->ofilename, NULL, 0);
