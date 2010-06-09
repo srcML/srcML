@@ -137,7 +137,7 @@ void SAX2UnitDOM::startElementNs(void* ctx, const xmlChar* localname, const xmlC
     return;
   }
 
-  ctxt->input->line = 0;
+  ctxt->input->line = 1;
 
   xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_ns, (const xmlChar**) ns, nb_attributes,
   			nb_defaulted, attributes);
