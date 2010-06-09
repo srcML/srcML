@@ -320,13 +320,9 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
 	  xmlOutputBufferWriteString(pstate->buf, (const char*) s);
 	}
 
-	// line number
-	// TODO:  fix line numbering problem
+	// line number and clost unit start tag
 	sprintf(s, " line=\"%ld\">", xmlGetLineNo(onode));
 	xmlOutputBufferWriteString(pstate->buf, s);
-
-	// end of unit start tag
-	//	xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(">"));
       }
 
       // xpath result
