@@ -315,7 +315,7 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
 	// line number
 	// TODO:  fix line numbering problem
 	xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(" line=\""));
-	sprintf(s, "%d", line);
+	sprintf(s, "%d", xmlGetLineNo(onode));
 	xmlOutputBufferWriteString(pstate->buf, s);
 	xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\""));
 
