@@ -221,8 +221,14 @@ void SAX2UnitDOM::endElementNs(void *ctx, const xmlChar *localname, const xmlCha
       pstate->found = true;
     }
 
-    // save the result
+    // save the result, but temporarily hide the namespaces
+    xmlNodePtr resroot = xmlDocGetRootElement(res);
+    xmlNsPtr savens = resroot ? resroot->nsDef : 0;
+    if (savens && !isoption(pstate->options, OPTION_XSLT_ALL))
+      resroot->nsDef = 0;
     xsltSaveResultTo(pstate->buf, res, pstate->xslt);
+    if (savens && !isoption(pstate->options, OPTION_XSLT_ALL))
+      resroot->nsDef = savens;
 
     // finished with the result of the transformation
     xmlFreeDoc(res);
