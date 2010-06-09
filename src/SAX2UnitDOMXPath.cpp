@@ -37,14 +37,18 @@
 #include <libxslt/transform.h>
 #include <libxslt/xsltutils.h>
 
+#include <libxml/xpath.h>
+#include <libxml/xpathInternals.h>
+#include <libxml/parserInternals.h>
+
 #include <libexslt/exslt.h>
 
 #include <libxml/SAX2.h>
 
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
 
-SAX2UnitDOMXPath::SAX2UnitDOMXPath(const char* a_context_element, const char* a_fxslt[], const char* a_ofilename, const char* params[], int paramcount, int options) 
-  : context_element(a_context_element), fxslt(a_fxslt), ofilename(a_ofilename), params(params), paramcount(paramcount), options(options), found(false), nb_ns(0), ns(0) {
+SAX2UnitDOMXPath::SAX2UnitDOMXPath(const char* a_context_element, const char* a_fxpath[], const char* a_ofilename, const char* params[], int paramcount, int options) 
+  : context_element(a_context_element), fxpath(a_fxpath), ofilename(a_ofilename), params(params), paramcount(paramcount), options(options), found(false), nb_ns(0), ns(0), context(0) {
 
 }
 
@@ -74,12 +78,38 @@ void SAX2UnitDOMXPath::startDocument(void *ctx) {
     SAX2UnitDOMXPath* pstate = (SAX2UnitDOMXPath*) ctxt->_private;
 
     // allow for all exslt functions
-    exsltRegisterAll();
+    //    exsltRegisterAll();
 
-    xsltsrcMLRegister();
+    //    xsltsrcMLRegister();
+
+    if (!pstate->fxpath[0][0])
+      return;
+
+    // compile the xpath that will be applied to each unit
+    pstate->compiled_xpath = xmlXPathCompile(BAD_CAST pstate->fxpath[0]);
+    if (pstate->compiled_xpath == 0) {
+	return;
+    }
+
+    // setup the context up on which the xpath will be evaluated on
+    pstate->context = xmlXPathNewContext(ctxt->myDoc);
+
+    // register standard prefixes for standard namespaces
+    const char* prefixes[] = {
+      SRCML_SRC_NS_URI, "src",
+      SRCML_CPP_NS_URI, SRCML_CPP_NS_PREFIX_DEFAULT,
+      SRCML_ERR_NS_URI, SRCML_ERR_NS_PREFIX_DEFAULT,
+      SRCML_EXT_LITERAL_NS_URI, SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT,
+      SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT,
+      SRCML_EXT_MODIFIER_NS_URI, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT,
+    };
+
+    for (unsigned int i = 0; i < sizeof(prefixes) / sizeof(prefixes[0]) / 2; i += 2)
+      if (xmlXPathRegisterNs(pstate->context, BAD_CAST prefixes[i + 1], BAD_CAST prefixes[i]) == -1)
+	fprintf(stderr, "Unable to register prefix %s for namespace %s\n", prefixes[i + 1], prefixes[i]);
 
     // parse the stylesheet
-    pstate->xslt = xsltParseStylesheetFile(BAD_CAST pstate->fxslt[0]);
+    //    pstate->xslt = xsltParseStylesheetFile(BAD_CAST pstate->fxslt[0]);
 
     // setup output
     pstate->buf = xmlOutputBufferCreateFilename(pstate->ofilename, NULL, 0);
@@ -206,36 +236,90 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
   if (strcmp((const char*) localname, "unit") != 0)
     return;
 
-  // apply the style sheet to the document, which is the individual unit
-  xmlDocPtr res = xsltApplyStylesheetUser(pstate->xslt, ctxt->myDoc, pstate->params, 0, 0, 0);
+  // evaluate the xpath on the context from the current document
+  xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(pstate->compiled_xpath, pstate->context);
+  if (result_nodes == 0) {
+    fprintf(stderr, "ERROR\n");
+    return;
+  }
+       
+  // update the node type
+  int nodetype = result_nodes->type;
 
-  // has to be a result, and a non-empty result
-  if (res && res->children) {
+  int result_size = 0;
 
-    // if in per-unit mode and this is the first result found
-    if (!pstate->found && !isoption(pstate->options, OPTION_XSLT_ALL)) {
-      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\n\n"));
+  bool outputunit = false;
+
+  xmlNodePtr onode = 0;
+
+  // process the resulting nodes
+  switch (nodetype) {
+
+    // node set result
+  case XPATH_NODESET:
+
+    // may not have any values
+    if (!result_nodes->nodesetval)
+      break;
+
+    // may not have any results
+    result_size = xmlXPathNodeSetGetLength(result_nodes->nodesetval);
+    if (result_size == 0)
+      break;
+
+    // first time found a result, so close root unit start tag
+    if (!pstate->found) {
+      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(">\n\n"));
       pstate->found = true;
     }
 
-    // save the result, but temporarily hide the namespaces
-    xmlNodePtr resroot = xmlDocGetRootElement(res);
-    xmlNsPtr savens = resroot ? resroot->nsDef : 0;
-    if (savens && !isoption(pstate->options, OPTION_XSLT_ALL))
-      resroot->nsDef = 0;
-    xsltSaveResultTo(pstate->buf, res, pstate->xslt);
-    if (savens && !isoption(pstate->options, OPTION_XSLT_ALL))
-      resroot->nsDef = savens;
+    onode = xmlXPathNodeSetItem(result_nodes->nodesetval, 0);
 
-    // finished with the result of the transformation
-    xmlFreeDoc(res);
-    
-    // put some space between this unit and the next one
-    if (!isoption(pstate->options, OPTION_XSLT_ALL))
-      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\n"));
-  }
+    // output a unit element around the fragment, unless
+    // is is already a unit
+    outputunit = strcmp("unit", (const char*) onode->name) != 0;
 
-  xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
+    // if we need a unit, output the start tag.  Line number starts at 1, not 0
+    //    if (outputunit)
+    //      outputstartunit(pstate->buf, xmlGetLineNo(onode) + 1);
+
+    // output all the found nodes
+    for (int i = 0; i < xmlXPathNodeSetGetLength(result_nodes->nodesetval); ++i) {
+
+      onode = xmlXPathNodeSetItem(result_nodes->nodesetval, i);
+
+      // xpath result
+      xmlNodeDumpOutput(pstate->buf, ctxt->myDoc, onode, 0, 0, 0);
+    }
+
+    // if we need a unit, output the end tag
+    if (outputunit){
+      //      outputendunit(buf);
+
+      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\n\n"));
+    }
+
+    break;
+
+    // numeric result
+  case XPATH_NUMBER:
+    pstate->total += result_nodes->floatval;
+    break;
+
+    // boolean result
+  case XPATH_BOOLEAN:
+    pstate->result_bool |= result_nodes->boolval;
+    break;
+
+  default:
+    fprintf(stderr, "Unhandled type\n");
+    break;
+  };
+
+  // finished with the result nodes
+  xmlXPathFreeObject(result_nodes);
+
+  onode = xmlDocGetRootElement(ctxt->myDoc);
 
   // unhook the unit tree from the document, leaving an empty document
   xmlDocSetRootElement(ctxt->myDoc, NULL);
