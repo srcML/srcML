@@ -54,6 +54,7 @@
 #include "srcrelaxngeval.h"
 
 #include "SAX2UnitDOM.h"
+#include "SAX2UnitDOMXPath.h"
 
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op)
@@ -267,14 +268,30 @@ const PROPERTIES_TYPE& srcMLUtility::getNS() const {
 
 // xpath evaluation of the nested units
 void srcMLUtility::xpath(const char* ofilename, const char* context_element, const char* xpaths[]) {
-
+  /*
   xmlTextReaderPtr reader = xmlNewTextReaderFilename(infile);
 
   // perform xpath evaluation
   srceval(context_element, xpaths, "", "", reader, ofilename);
 
   xmlFreeTextReader(reader);
-}
+  */
+
+  xmlSAXHandler sax = SAX2UnitDOMXPath::factory();
+  
+  SAX2UnitDOMXPath state(context_element, xpaths, ofilename, 0, 0, options);
+
+  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
+  if (ctxt == NULL) return;
+  ctxt->sax = &sax;
+  ctxt->_private = &state;
+  //state.ctxt = ctxt;
+
+  xmlParseDocument(ctxt);
+
+  ctxt->sax = NULL;
+
+  xmlFreeParserCtxt(ctxt);}
 
 // xslt evaluation of the nested units
 void srcMLUtility::xslt(const char* context_element, const char* ofilename, const char* xslts[], const char* params[], int paramcount) {

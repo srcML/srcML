@@ -236,13 +236,18 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
   if (strcmp((const char*) localname, "unit") != 0)
     return;
 
+
+    pstate->context = xmlXPathNewContext(ctxt->myDoc);
+
   // evaluate the xpath on the context from the current document
   xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(pstate->compiled_xpath, pstate->context);
   if (result_nodes == 0) {
     fprintf(stderr, "ERROR\n");
     return;
   }
-       
+
+  //  fprintf(stderr, "XPATH: %s %p\n", pstate->fxpath[0], result_nodes->nodesetval);
+
   // update the node type
   int nodetype = result_nodes->type;
 
