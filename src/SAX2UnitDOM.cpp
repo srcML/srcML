@@ -56,7 +56,7 @@ xmlSAXHandler SAX2UnitDOM::factory() {
 
   sax.startDocument  = &SAX2UnitDOM::startDocument;
   sax.endDocument    = &SAX2UnitDOM::endDocument;
-  sax.startElementNs = &SAX2UnitDOM::startElementNs;
+  sax.startElementNs = &SAX2UnitDOM::startElementNsRoot;
   sax.endElementNs   = &SAX2UnitDOM::endElementNs;
   sax.characters     = 0; //xmlSAX2Characters;
   sax.ignorableWhitespace = xmlSAX2Characters;
@@ -108,12 +108,11 @@ void SAX2UnitDOM::endDocument(void *ctx) {
   xmlOutputBufferClose(pstate->buf);
 }
 
-bool first = true;
 int nb_ns;
 char** ns;
 
 // handle unit elements (only) of compound document
-void SAX2UnitDOM::startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix,
+void SAX2UnitDOM::startElementNsRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix,
 		    const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces, int nb_attributes,
 		    int nb_defaulted, const xmlChar** attributes) {
 
@@ -121,35 +120,80 @@ void SAX2UnitDOM::startElementNs(void* ctx, const xmlChar* localname, const xmlC
 
   SAX2UnitDOM* pstate = (SAX2UnitDOM*) ctxt->_private;
 
-  int depth = ctxt->nodeNr;
+  nb_ns = nb_namespaces;
+  ns = (char**) malloc((2 * nb_namespaces + 2) * sizeof(char*));
 
-  // collect the namespaces from the outer unit.  They will be used with nested units
-  if (first) {
+  for (int i = 0; i < 2 * nb_namespaces; ++i)
+    ns[i] = namespaces[i] ? strdup((char*) namespaces[i]) : 0;
 
-    nb_ns = nb_namespaces;
-    ns = (char**) malloc((2 * nb_namespaces + 2) * sizeof(char*));
-
-    for (int i = 0; i < 2 * nb_namespaces; ++i)
-      ns[i] = namespaces[i] ? strdup((char*) namespaces[i]) : 0;
-
-    first = false;
-
-    return;
+  // output the root node
+  xmlOutputBufferWrite(pstate->buf, 1, "<");
+  if (prefix != NULL) {
+    xmlOutputBufferWriteString(pstate->buf, (const char *) prefix);
+    xmlOutputBufferWrite(pstate->buf, 1, ":");
   }
 
+  xmlOutputBufferWriteString(pstate->buf, (const char *) localname);
+
+  for (int i = 0, index = 0; i < nb_namespaces; ++i, index += 2) {
+
+    const char* prefix = (const char*) namespaces[index];
+    const char* uri = (const char*) namespaces[index + 1];
+
+    xmlOutputBufferWrite(pstate->buf, 1, " ");
+    xmlOutputBufferWrite(pstate->buf, 5, "xmlns");
+    if (prefix) {
+      xmlOutputBufferWrite(pstate->buf, 1, ":");
+      xmlOutputBufferWriteString(pstate->buf, prefix);
+    }
+    xmlOutputBufferWrite(pstate->buf, 2, "=\"");
+    xmlOutputBufferWriteString(pstate->buf, uri);
+    xmlOutputBufferWrite(pstate->buf, 1, "\"");
+  }
+
+  for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
+
+    const char* name = qname((const char*) attributes[index + 1], (const char*) attributes[index]);
+
+    xmlOutputBufferWrite(pstate->buf, 1, " ");
+    if (attributes[index + 1]) {
+      xmlOutputBufferWriteString(pstate->buf, (const char*) attributes[index + 1]);
+      xmlOutputBufferWrite(pstate->buf, 1, ":");
+    }
+    xmlOutputBufferWriteString(pstate->buf, (const char*) attributes[index]);
+    xmlOutputBufferWrite(pstate->buf, 2, "=\"");
+    xmlOutputBufferWrite(pstate->buf, attributes[index + 4] - attributes[index + 3], (const char*) attributes[index + 3]);
+    xmlOutputBufferWrite(pstate->buf, 1, "\"");
+  }
+
+  xmlOutputBufferWrite(pstate->buf, 1, ">");
+
+  // look for nested unit
+  ctxt->sax->startElementNs = &SAX2UnitDOM::startElementNsUnit;
+
+  //  if (depth == 0 && !isoption(pstate->options, OPTION_XSLT_ALL))
+  //    xmlNodeDumpOutput(pstate->buf, ctxt->myDoc, ctxt->node, 0, 0, 0);
+}
+
+// handle unit elements (only) of compound document
+void SAX2UnitDOM::startElementNsUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix,
+		    const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces, int nb_attributes,
+		    int nb_defaulted, const xmlChar** attributes) {
+
+  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+
+  SAX2UnitDOM* pstate = (SAX2UnitDOM*) ctxt->_private;
+
+  // reset the line to agree with the line of the original text file
   ctxt->input->line = 1;
 
+  // build the individual unit start element, but use the namespaces from the outer unit
   xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_ns, (const xmlChar**) ns, nb_attributes,
   			nb_defaulted, attributes);
 
   // turn tree building start element back on (instead of this one)
-
   ctxt->sax->startElementNs = xmlSAX2StartElementNs;
   ctxt->sax->characters     = xmlSAX2Characters;
-
-  // copy the start tag of the root element unit for per-unit processing
-  //  if (depth == 0 && !isoption(pstate->options, OPTION_XSLT_ALL))
-  //    xmlNodeDumpOutput(pstate->buf, ctxt->myDoc, ctxt->node, 0, 0, 0);
 }
 
 // end unit element and current file/buffer (started by startElementNs
@@ -173,7 +217,7 @@ void SAX2UnitDOM::endElementNs(void *ctx, const xmlChar *localname, const xmlCha
 
     // if in per-unit mode and this is the first result found
     if (!pstate->found && !isoption(pstate->options, OPTION_XSLT_ALL)) {
-      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(">\n\n"));
+      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\n\n"));
       pstate->found = true;
     }
 
@@ -199,6 +243,6 @@ void SAX2UnitDOM::endElementNs(void *ctx, const xmlChar *localname, const xmlCha
   xmlFreeNode(onode);
 
   // now need to detect the start of the next unit
-  ctxt->sax->startElementNs = &SAX2UnitDOM::startElementNs;
+  ctxt->sax->startElementNs = &SAX2UnitDOM::startElementNsUnit;
   ctxt->sax->characters     = 0;
 }
