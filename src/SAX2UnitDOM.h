@@ -47,6 +47,7 @@ class SAX2UnitDOM {
   bool found;
   xsltStylesheetPtr xslt;
   xmlOutputBufferPtr buf;
+  PROPERTIES_TYPE nsv;
 
   // start document
   static void startDocument(void *ctx);

@@ -44,7 +44,7 @@
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
 
 SAX2UnitDOM::SAX2UnitDOM(const char* a_context_element, const char* a_fxslt[], const char* a_ofilename, const char* params[], int paramcount, int options) 
-  : context_element(a_context_element), fxslt(a_fxslt), ofilename(a_ofilename), params(params), paramcount(paramcount), options(options), found(false) {
+  : context_element(a_context_element), fxslt(a_fxslt), ofilename(a_ofilename), params(params), paramcount(paramcount), options(options), found(false), nsv() {
 
 }
 
@@ -58,7 +58,7 @@ xmlSAXHandler SAX2UnitDOM::factory() {
   sax.endDocument    = &SAX2UnitDOM::endDocument;
   sax.startElementNs = &SAX2UnitDOM::startElementNs;
   sax.endElementNs   = &SAX2UnitDOM::endElementNs;
-  sax.characters     = xmlSAX2Characters;
+  sax.characters     = 0; //xmlSAX2Characters;
   sax.ignorableWhitespace = xmlSAX2Characters;
   sax.comment        = xmlSAX2Comment;
   sax.processingInstruction = xmlSAX2ProcessingInstruction;
@@ -108,7 +108,11 @@ void SAX2UnitDOM::endDocument(void *ctx) {
   xmlOutputBufferClose(pstate->buf);
 }
 
-// handle root unit of compound document
+bool first = true;
+int nb_ns;
+char** ns;
+
+// handle unit elements of compound document
 void SAX2UnitDOM::startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix,
 		    const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces, int nb_attributes,
 		    int nb_defaulted, const xmlChar** attributes) {
@@ -119,13 +123,31 @@ void SAX2UnitDOM::startElementNs(void* ctx, const xmlChar* localname, const xmlC
 
   int depth = ctxt->nodeNr;
 
+  // collect the namespaces from the outer unit.  They will be used with nested units
+  if (first) {
+
+    nb_ns = nb_namespaces;
+    ns = (char**) malloc((2 * nb_namespaces + 2) * sizeof(char*));
+
+    for (int i = 0; i < 2 * nb_namespaces; ++i)
+      ns[i] = namespaces[i] ? strdup((char*) namespaces[i]) : 0;
+
+    first = false;
+
+    return;
+  }
+
   if (depth == 1)
     ctxt->input->line = 0;
 
-  xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes,
+  xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_ns, (const xmlChar**) ns, nb_attributes,
   			nb_defaulted, attributes);
+
+  // turn tree building start element back on (instead of this one)
   if (depth == 1) {
+    //    fprintf(stderr, "STARTING builtin startlement");
     ctxt->sax->startElementNs = xmlSAX2StartElementNs;
+    ctxt->sax->characters     = xmlSAX2Characters;
   }
 
   // copy the start tag of the root element unit for per-unit processing
@@ -136,19 +158,22 @@ void SAX2UnitDOM::startElementNs(void* ctx, const xmlChar* localname, const xmlC
 // end unit element and current file/buffer (started by startElementNs
 void SAX2UnitDOM::endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
-  // DOM building end element
-  xmlSAX2EndElementNs(ctx, localname, prefix, URI);
-
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2UnitDOM* pstate = (SAX2UnitDOM*) ctxt->_private;
+
+  // done when about to end outer unit element
+  if (ctxt->nodeNr == 1) 
+      return;
+
+  // DOM building end element
+  xmlSAX2EndElementNs(ctx, localname, prefix, URI);
 
   // only care about processing a nested unit
   if (ctxt->nodeNr != 1)
     return;
 
-  // apply the style sheet to the document, which is the root element
-  // along with the tree of the just-ended unit
-  xmlDocPtr res = xsltApplyStylesheet(pstate->xslt, ctxt->myDoc, pstate->params);
+  // apply the style sheet to the document, which is the individual unit
+  xmlDocPtr res = xsltApplyStylesheetUser(pstate->xslt, ctxt->myDoc, pstate->params, 0, 0, 0);
 
   if (res && res->children) {
 
@@ -158,23 +183,7 @@ void SAX2UnitDOM::endElementNs(void *ctx, const xmlChar *localname, const xmlCha
       pstate->found = true;
     }
 
-    // figure out which node to output
-    xmlNodePtr onode = xmlDocGetRootElement(res);
-    bool isunit = strcmp("unit", (const char*) onode->name) == 0;
-    if (isunit)
-      onode = xmlFirstElementChild(onode);
-
-    // temporarily turn off namespace definitions for non-units
-    xmlNsPtr savens = onode ? onode->nsDef : 0;
-    if (!isunit && savens && !isoption(pstate->options, OPTION_XSLT_ALL))
-	onode->nsDef = 0;
-
-    // dump the invididual unit result
-    xmlNodeDumpOutput(pstate->buf, ctxt->myDoc, onode, 0, 0, 0);
-
-    // turn on namespace definitions for non-units
-    if (!isunit && savens && !isoption(pstate->options, OPTION_XSLT_ALL))
-	onode->nsDef = savens;
+    xsltSaveResultTo(pstate->buf, res, pstate->xslt);
 
     // finished with the result of the transformation
     xmlFreeDoc(res);
@@ -184,11 +193,15 @@ void SAX2UnitDOM::endElementNs(void *ctx, const xmlChar *localname, const xmlCha
       xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\n\n"));
   }
 
-  // done with this unit
-  xmlNodePtr unitnode = xmlFirstElementChild(ctxt->node);
-  xmlUnlinkNode(unitnode);
-  xmlFreeNode(unitnode);
+  xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
+
+  xmlDocSetRootElement(ctxt->myDoc, NULL);
+  ctxt->node = 0;
+
+  xmlUnlinkNode(onode);
+  xmlFreeNode(onode);
 
   // now need to detect the start of the next unit
   ctxt->sax->startElementNs = &SAX2UnitDOM::startElementNs;
+  ctxt->sax->characters     = 0;
 }
