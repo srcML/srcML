@@ -91,12 +91,6 @@ void SAX2UnitDOMXPath::startDocument(void *ctx) {
 	return;
     }
 
-    // setup the context up on which the xpath will be evaluated on
-    pstate->context = xmlXPathNewContext(ctxt->myDoc);
-
-    // parse the stylesheet
-    //    pstate->xslt = xsltParseStylesheetFile(BAD_CAST pstate->fxslt[0]);
-
     // setup output
     pstate->buf = xmlOutputBufferCreateFilename(pstate->ofilename, NULL, 0);
 
