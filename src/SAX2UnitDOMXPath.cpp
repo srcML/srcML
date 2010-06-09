@@ -255,8 +255,11 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
 
   xmlNodePtr onode = 0;
 
-  const char* unit_directory = "";
-  const char* unit_filename = "";
+  xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
+
+  const char* unit_filename = (const char*) xmlGetProp(a_node, BAD_CAST "filename");
+  const char* unit_directory =  (const char*) xmlGetProp(a_node, BAD_CAST "dir");
+
   char s[50] = { 0 };
   int line = 0;
 
