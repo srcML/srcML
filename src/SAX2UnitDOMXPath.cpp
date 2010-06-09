@@ -255,6 +255,11 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
 
   xmlNodePtr onode = 0;
 
+  const char* unit_directory = "";
+  const char* unit_filename = "";
+  char s[50] = { 0 };
+  int line = 0;
+
   // process the resulting nodes
   switch (nodetype) {
 
@@ -278,28 +283,54 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
 
     onode = xmlXPathNodeSetItem(result_nodes->nodesetval, 0);
 
-    // output a unit element around the fragment, unless
-    // is is already a unit
-    outputunit = strcmp("unit", (const char*) onode->name) != 0;
-
-    // if we need a unit, output the start tag.  Line number starts at 1, not 0
-    //    if (outputunit)
-    //      outputstartunit(pstate->buf, xmlGetLineNo(onode) + 1);
-
     // output all the found nodes
     for (int i = 0; i < xmlXPathNodeSetGetLength(result_nodes->nodesetval); ++i) {
 
       onode = xmlXPathNodeSetItem(result_nodes->nodesetval, i);
 
+      // output a unit element around the fragment, unless
+      // is is already a unit
+      outputunit = strcmp("unit", (const char*) onode->name) != 0;
+
+      // if we need a unit, output the start tag.  Line number starts at 1, not 0
+      if (outputunit) {
+
+	// unit start tag
+	xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("<unit"));
+
+	// directory attribute
+	if (unit_directory) {
+	  xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(" dir=\""));
+	  xmlOutputBufferWriteString(pstate->buf, (const char*) unit_directory);
+	  xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\""));
+	}
+
+	// filename attribute
+	if (unit_filename) {
+	  xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL((" filename=\"")));
+	  xmlOutputBufferWriteString(pstate->buf, (const char*) unit_filename);
+	  xmlOutputBufferWrite(pstate->buf, 1, "\"");
+	}
+
+	// line number
+	// TODO:  fix line numbering problem
+	xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(" line=\""));
+	sprintf(s, "%d", line);
+	xmlOutputBufferWriteString(pstate->buf, s);
+	xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\""));
+
+	// end of unit start tag
+	xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(">"));
+      }
+
       // xpath result
       xmlNodeDumpOutput(pstate->buf, ctxt->myDoc, onode, 0, 0, 0);
-    }
 
-    // if we need a unit, output the end tag
-    if (outputunit){
-      //      outputendunit(buf);
-
-      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\n\n"));
+      // if we need a unit, output the end tag
+      if (outputunit) {
+	xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("</unit>"));
+	xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\n\n"));
+      }
     }
 
     break;
