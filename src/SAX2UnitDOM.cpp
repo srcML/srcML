@@ -112,7 +112,7 @@ bool first = true;
 int nb_ns;
 char** ns;
 
-// handle unit elements of compound document
+// handle unit elements (only) of compound document
 void SAX2UnitDOM::startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix,
 		    const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces, int nb_attributes,
 		    int nb_defaulted, const xmlChar** attributes) {
@@ -137,18 +137,15 @@ void SAX2UnitDOM::startElementNs(void* ctx, const xmlChar* localname, const xmlC
     return;
   }
 
-  if (depth == 1)
-    ctxt->input->line = 0;
+  ctxt->input->line = 0;
 
   xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_ns, (const xmlChar**) ns, nb_attributes,
   			nb_defaulted, attributes);
 
   // turn tree building start element back on (instead of this one)
-  if (depth == 1) {
-    //    fprintf(stderr, "STARTING builtin startlement");
-    ctxt->sax->startElementNs = xmlSAX2StartElementNs;
-    ctxt->sax->characters     = xmlSAX2Characters;
-  }
+
+  ctxt->sax->startElementNs = xmlSAX2StartElementNs;
+  ctxt->sax->characters     = xmlSAX2Characters;
 
   // copy the start tag of the root element unit for per-unit processing
   //  if (depth == 0 && !isoption(pstate->options, OPTION_XSLT_ALL))
@@ -161,20 +158,17 @@ void SAX2UnitDOM::endElementNs(void *ctx, const xmlChar *localname, const xmlCha
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2UnitDOM* pstate = (SAX2UnitDOM*) ctxt->_private;
 
-  // done when about to end outer unit element
-  if (ctxt->nodeNr == 1) 
-      return;
-
   // DOM building end element
   xmlSAX2EndElementNs(ctx, localname, prefix, URI);
 
-  // only care about processing a nested unit
-  if (ctxt->nodeNr != 1)
+  // only handle unit elements
+  if (strcmp((const char*) localname, "unit") != 0)
     return;
 
   // apply the style sheet to the document, which is the individual unit
   xmlDocPtr res = xsltApplyStylesheetUser(pstate->xslt, ctxt->myDoc, pstate->params, 0, 0, 0);
 
+  // has to be a result, and a non-empty result
   if (res && res->children) {
 
     // if in per-unit mode and this is the first result found
@@ -183,6 +177,7 @@ void SAX2UnitDOM::endElementNs(void *ctx, const xmlChar *localname, const xmlCha
       pstate->found = true;
     }
 
+    // save the result
     xsltSaveResultTo(pstate->buf, res, pstate->xslt);
 
     // finished with the result of the transformation
@@ -190,14 +185,16 @@ void SAX2UnitDOM::endElementNs(void *ctx, const xmlChar *localname, const xmlCha
     
     // put some space between this unit and the next one
     if (!isoption(pstate->options, OPTION_XSLT_ALL))
-      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\n\n"));
+      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\n"));
   }
 
   xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
 
+  // unhook the unit tree from the document, leaving an empty document
   xmlDocSetRootElement(ctxt->myDoc, NULL);
   ctxt->node = 0;
 
+  // done with this unit
   xmlUnlinkNode(onode);
   xmlFreeNode(onode);
 
