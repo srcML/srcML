@@ -183,7 +183,7 @@ void srcMLUtility::extract_element(const char* element, const char* filename) {
   const char* paths[] = { NULL };
 
   // perform xpath evaluation
-  srceval(element, paths, "", "", reader, filename);
+  //  srceval(element, paths, "", "", reader, filename);
 
   xmlFreeTextReader(reader);
 
