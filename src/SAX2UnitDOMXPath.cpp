@@ -261,7 +261,6 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
   const char* unit_directory =  (const char*) xmlGetProp(a_node, BAD_CAST "dir");
 
   char s[50] = { 0 };
-  int line = 0;
 
   // process the resulting nodes
   switch (nodetype) {
@@ -316,7 +315,7 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
 	// line number
 	// TODO:  fix line numbering problem
 	xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(" line=\""));
-	sprintf(s, "%d", xmlGetLineNo(onode));
+	sprintf(s, "%ld", xmlGetLineNo(onode));
 	xmlOutputBufferWriteString(pstate->buf, s);
 	xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\""));
 
