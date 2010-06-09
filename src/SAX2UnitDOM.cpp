@@ -44,7 +44,7 @@
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
 
 SAX2UnitDOM::SAX2UnitDOM(const char* a_context_element, const char* a_fxslt[], const char* a_ofilename, const char* params[], int paramcount, int options) 
-  : context_element(a_context_element), fxslt(a_fxslt), ofilename(a_ofilename), params(params), paramcount(paramcount), options(options), found(false), nsv() {
+  : context_element(a_context_element), fxslt(a_fxslt), ofilename(a_ofilename), params(params), paramcount(paramcount), options(options), found(false), nb_ns(0), ns(0) {
 
 }
 
@@ -108,9 +108,6 @@ void SAX2UnitDOM::endDocument(void *ctx) {
   xmlOutputBufferClose(pstate->buf);
 }
 
-int nb_ns;
-char** ns;
-
 // handle unit elements (only) of compound document
 void SAX2UnitDOM::startElementNsRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix,
 		    const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces, int nb_attributes,
@@ -120,11 +117,11 @@ void SAX2UnitDOM::startElementNsRoot(void* ctx, const xmlChar* localname, const 
 
   SAX2UnitDOM* pstate = (SAX2UnitDOM*) ctxt->_private;
 
-  nb_ns = nb_namespaces;
-  ns = (char**) malloc((2 * nb_namespaces + 2) * sizeof(char*));
+  pstate->nb_ns = nb_namespaces;
+  pstate->ns = (char**) malloc((2 * nb_namespaces + 2) * sizeof(char*));
 
   for (int i = 0; i < 2 * nb_namespaces; ++i)
-    ns[i] = namespaces[i] ? strdup((char*) namespaces[i]) : 0;
+    pstate->ns[i] = namespaces[i] ? strdup((char*) namespaces[i]) : 0;
 
   // output the root node
   xmlOutputBufferWrite(pstate->buf, 1, "<");
@@ -188,7 +185,7 @@ void SAX2UnitDOM::startElementNsUnit(void* ctx, const xmlChar* localname, const 
   ctxt->input->line = 1;
 
   // build the individual unit start element, but use the namespaces from the outer unit
-  xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_ns, (const xmlChar**) ns, nb_attributes,
+  xmlSAX2StartElementNs(ctx, localname, prefix, URI, pstate->nb_ns, (const xmlChar**) pstate->ns, nb_attributes,
   			nb_defaulted, attributes);
 
   // turn tree building start element back on (instead of this one)
