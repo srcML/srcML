@@ -268,14 +268,6 @@ const PROPERTIES_TYPE& srcMLUtility::getNS() const {
 
 // xpath evaluation of the nested units
 void srcMLUtility::xpath(const char* ofilename, const char* context_element, const char* xpaths[]) {
-  /*
-  xmlTextReaderPtr reader = xmlNewTextReaderFilename(infile);
-
-  // perform xpath evaluation
-  srceval(context_element, xpaths, "", "", reader, ofilename);
-
-  xmlFreeTextReader(reader);
-  */
 
   xmlSAXHandler sax = SAX2UnitDOMXPath::factory();
   
@@ -291,7 +283,8 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
 
   ctxt->sax = NULL;
 
-  xmlFreeParserCtxt(ctxt);}
+  xmlFreeParserCtxt(ctxt);
+}
 
 // xslt evaluation of the nested units
 void srcMLUtility::xslt(const char* context_element, const char* ofilename, const char* xslts[], const char* params[], int paramcount) {
