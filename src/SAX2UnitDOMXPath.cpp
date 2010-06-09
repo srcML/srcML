@@ -94,20 +94,6 @@ void SAX2UnitDOMXPath::startDocument(void *ctx) {
     // setup the context up on which the xpath will be evaluated on
     pstate->context = xmlXPathNewContext(ctxt->myDoc);
 
-    // register standard prefixes for standard namespaces
-    const char* prefixes[] = {
-      SRCML_SRC_NS_URI, "src",
-      SRCML_CPP_NS_URI, SRCML_CPP_NS_PREFIX_DEFAULT,
-      SRCML_ERR_NS_URI, SRCML_ERR_NS_PREFIX_DEFAULT,
-      SRCML_EXT_LITERAL_NS_URI, SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT,
-      SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT,
-      SRCML_EXT_MODIFIER_NS_URI, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT,
-    };
-
-    for (unsigned int i = 0; i < sizeof(prefixes) / sizeof(prefixes[0]) / 2; i += 2)
-      if (xmlXPathRegisterNs(pstate->context, BAD_CAST prefixes[i + 1], BAD_CAST prefixes[i]) == -1)
-	fprintf(stderr, "Unable to register prefix %s for namespace %s\n", prefixes[i + 1], prefixes[i]);
-
     // parse the stylesheet
     //    pstate->xslt = xsltParseStylesheetFile(BAD_CAST pstate->fxslt[0]);
 
@@ -154,10 +140,10 @@ void SAX2UnitDOMXPath::startElementNsRoot(void* ctx, const xmlChar* localname, c
     pstate->ns[i] = namespaces[i] ? strdup((char*) namespaces[i]) : 0;
 
   // output the root node
-  xmlOutputBufferWrite(pstate->buf, 1, "<");
+  xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("<"));
   if (prefix != NULL) {
     xmlOutputBufferWriteString(pstate->buf, (const char *) prefix);
-    xmlOutputBufferWrite(pstate->buf, 1, ":");
+    xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(":"));
   }
 
   xmlOutputBufferWriteString(pstate->buf, (const char *) localname);
@@ -167,33 +153,33 @@ void SAX2UnitDOMXPath::startElementNsRoot(void* ctx, const xmlChar* localname, c
     const char* prefix = (const char*) namespaces[index];
     const char* uri = (const char*) namespaces[index + 1];
 
-    xmlOutputBufferWrite(pstate->buf, 1, " ");
-    xmlOutputBufferWrite(pstate->buf, 5, "xmlns");
+    xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(" "));
+    xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("xmlns"));
     if (prefix) {
-      xmlOutputBufferWrite(pstate->buf, 1, ":");
+      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(":"));
       xmlOutputBufferWriteString(pstate->buf, prefix);
     }
-    xmlOutputBufferWrite(pstate->buf, 2, "=\"");
+    xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("=\""));
     xmlOutputBufferWriteString(pstate->buf, uri);
-    xmlOutputBufferWrite(pstate->buf, 1, "\"");
+    xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\""));
   }
 
   for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
 
     const char* name = qname((const char*) attributes[index + 1], (const char*) attributes[index]);
 
-    xmlOutputBufferWrite(pstate->buf, 1, " ");
+    xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(" "));
     if (attributes[index + 1]) {
       xmlOutputBufferWriteString(pstate->buf, (const char*) attributes[index + 1]);
-      xmlOutputBufferWrite(pstate->buf, 1, ":");
+      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(":"));
     }
     xmlOutputBufferWriteString(pstate->buf, (const char*) attributes[index]);
-    xmlOutputBufferWrite(pstate->buf, 2, "=\"");
+    xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("=\""));
     xmlOutputBufferWrite(pstate->buf, attributes[index + 4] - attributes[index + 3], (const char*) attributes[index + 3]);
-    xmlOutputBufferWrite(pstate->buf, 1, "\"");
+    xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\""));
   }
 
-  xmlOutputBufferWrite(pstate->buf, 1, ">");
+  xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(">"));
 
   // look for nested unit
   ctxt->sax->startElementNs = &SAX2UnitDOMXPath::startElementNsUnit;
@@ -236,8 +222,22 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
   if (strcmp((const char*) localname, "unit") != 0)
     return;
 
+  pstate->context = xmlXPathNewContext(ctxt->myDoc);
 
-    pstate->context = xmlXPathNewContext(ctxt->myDoc);
+  // register standard prefixes for standard namespaces
+  const char* prefixes[] = {
+    SRCML_SRC_NS_URI, "src",
+    SRCML_CPP_NS_URI, SRCML_CPP_NS_PREFIX_DEFAULT,
+    SRCML_ERR_NS_URI, SRCML_ERR_NS_PREFIX_DEFAULT,
+    SRCML_EXT_LITERAL_NS_URI, SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT,
+    SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT,
+    SRCML_EXT_MODIFIER_NS_URI, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT,
+  };
+
+  for (unsigned int i = 0; i < sizeof(prefixes) / sizeof(prefixes[0]) / 2; i += 2)
+    if (xmlXPathRegisterNs(pstate->context, BAD_CAST prefixes[i + 1], BAD_CAST prefixes[i]) == -1)
+      fprintf(stderr, "Unable to register prefix %s for namespace %s\n", prefixes[i + 1], prefixes[i]);
+
 
   // evaluate the xpath on the context from the current document
   xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(pstate->compiled_xpath, pstate->context);
@@ -245,8 +245,6 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
     fprintf(stderr, "ERROR\n");
     return;
   }
-
-  //  fprintf(stderr, "XPATH: %s %p\n", pstate->fxpath[0], result_nodes->nodesetval);
 
   // update the node type
   int nodetype = result_nodes->type;
@@ -323,6 +321,8 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
 
   // finished with the result nodes
   xmlXPathFreeObject(result_nodes);
+
+  xmlXPathFreeContext(pstate->context);
 
   onode = xmlDocGetRootElement(ctxt->myDoc);
 
