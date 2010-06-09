@@ -163,7 +163,7 @@ void SAX2UnitDOM::startElementNsRoot(void* ctx, const xmlChar* localname, const 
     xmlOutputBufferWrite(pstate->buf, 1, "\"");
   }
 
-  xmlOutputBufferWrite(pstate->buf, 1, ">");
+  //  xmlOutputBufferWrite(pstate->buf, 1, ">");
 
   // look for nested unit
   ctxt->sax->startElementNs = &SAX2UnitDOM::startElementNsUnit;
@@ -214,7 +214,7 @@ void SAX2UnitDOM::endElementNs(void *ctx, const xmlChar *localname, const xmlCha
 
     // if in per-unit mode and this is the first result found
     if (!pstate->found && !isoption(pstate->options, OPTION_XSLT_ALL)) {
-      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\n\n"));
+      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(">\n\n"));
       pstate->found = true;
     }
 
