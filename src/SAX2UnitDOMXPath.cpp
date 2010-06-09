@@ -284,8 +284,6 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
       pstate->found = true;
     }
 
-    onode = xmlXPathNodeSetItem(result_nodes->nodesetval, 0);
-
     // output all the found nodes
     for (int i = 0; i < xmlXPathNodeSetGetLength(result_nodes->nodesetval); ++i) {
 
