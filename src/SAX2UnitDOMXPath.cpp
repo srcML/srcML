@@ -95,6 +95,22 @@ void SAX2UnitDOMXPath::startDocument(void *ctx) {
     pstate->buf = xmlOutputBufferCreateFilename(pstate->ofilename, NULL, 0);
 
     xmlSAX2StartDocument(ctx);
+
+    pstate->context = xmlXPathNewContext(ctxt->myDoc);
+
+  // register standard prefixes for standard namespaces
+  const char* prefixes[] = {
+    SRCML_SRC_NS_URI, "src",
+    SRCML_CPP_NS_URI, SRCML_CPP_NS_PREFIX_DEFAULT,
+    SRCML_ERR_NS_URI, SRCML_ERR_NS_PREFIX_DEFAULT,
+    SRCML_EXT_LITERAL_NS_URI, SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT,
+    SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT,
+    SRCML_EXT_MODIFIER_NS_URI, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT,
+  };
+
+  for (unsigned int i = 0; i < sizeof(prefixes) / sizeof(prefixes[0]) / 2; i += 2)
+    if (xmlXPathRegisterNs(pstate->context, BAD_CAST prefixes[i + 1], BAD_CAST prefixes[i]) == -1)
+      fprintf(stderr, "Unable to register prefix %s for namespace %s\n", prefixes[i + 1], prefixes[i]);
 }
 
 // end document
@@ -116,6 +132,8 @@ void SAX2UnitDOMXPath::endDocument(void *ctx) {
 
   // all done with the buffer
   xmlOutputBufferClose(pstate->buf);
+
+  xmlXPathCompExprPtr(pstate->context);
 }
 
 // handle unit elements (only) of compound document
@@ -216,23 +234,6 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
   if (strcmp((const char*) localname, "unit") != 0)
     return;
 
-  pstate->context = xmlXPathNewContext(ctxt->myDoc);
-
-  // register standard prefixes for standard namespaces
-  const char* prefixes[] = {
-    SRCML_SRC_NS_URI, "src",
-    SRCML_CPP_NS_URI, SRCML_CPP_NS_PREFIX_DEFAULT,
-    SRCML_ERR_NS_URI, SRCML_ERR_NS_PREFIX_DEFAULT,
-    SRCML_EXT_LITERAL_NS_URI, SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT,
-    SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT,
-    SRCML_EXT_MODIFIER_NS_URI, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT,
-  };
-
-  for (unsigned int i = 0; i < sizeof(prefixes) / sizeof(prefixes[0]) / 2; i += 2)
-    if (xmlXPathRegisterNs(pstate->context, BAD_CAST prefixes[i + 1], BAD_CAST prefixes[i]) == -1)
-      fprintf(stderr, "Unable to register prefix %s for namespace %s\n", prefixes[i + 1], prefixes[i]);
-
-
   // evaluate the xpath on the context from the current document
   xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(pstate->compiled_xpath, pstate->context);
   if (result_nodes == 0) {
@@ -254,7 +255,7 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
   const char* unit_filename = (const char*) xmlGetProp(a_node, BAD_CAST "filename");
   const char* unit_directory =  (const char*) xmlGetProp(a_node, BAD_CAST "dir");
 
-  char s[50] = { 0 };
+  char s[1000] = { 0 };
 
   // process the resulting nodes
   switch (nodetype) {
@@ -346,8 +347,6 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
 
   // finished with the result nodes
   xmlXPathFreeObject(result_nodes);
-
-  xmlXPathFreeContext(pstate->context);
 
   onode = xmlDocGetRootElement(ctxt->myDoc);
 
