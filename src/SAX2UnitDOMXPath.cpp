@@ -111,6 +111,8 @@ void SAX2UnitDOMXPath::startDocument(void *ctx) {
   for (unsigned int i = 0; i < sizeof(prefixes) / sizeof(prefixes[0]) / 2; i += 2)
     if (xmlXPathRegisterNs(pstate->context, BAD_CAST prefixes[i + 1], BAD_CAST prefixes[i]) == -1)
       fprintf(stderr, "Unable to register prefix %s for namespace %s\n", prefixes[i + 1], prefixes[i]);
+
+  pstate->total = 0;
 }
 
 // end document
