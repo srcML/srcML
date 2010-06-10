@@ -241,9 +241,6 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
     return;
   }
 
-  // update the node type
-  int nodetype = result_nodes->type;
-
   int result_size = 0;
 
   bool outputunit = false;
@@ -258,7 +255,7 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
   char s[1000] = { 0 };
 
   // process the resulting nodes
-  switch (nodetype) {
+  switch (result_nodes->type) {
 
     // node set result
   case XPATH_NODESET:
