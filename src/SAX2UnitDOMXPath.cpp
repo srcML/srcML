@@ -295,24 +295,20 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
 
 	// directory attribute
 	if (unit_directory) {
-	  sprintf(s, " dir=\"%s\"", unit_directory);
-	  /*
+	  //	  sprintf(s, " dir=\"%s\"", unit_directory);
 	  xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(" dir=\""));
 	  xmlOutputBufferWriteString(pstate->buf, (const char*) unit_directory);
 	  xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\""));
-	  */
-	  xmlOutputBufferWriteString(pstate->buf, (const char*) s);
+	  //	  xmlOutputBufferWriteString(pstate->buf, (const char*) s);
 	}
 
 	// filename attribute
 	if (unit_filename) {
-	  sprintf(s, " dir=\"%s\"", unit_filename);
-	  /*
+	  //	  sprintf(s, " dir=\"%s\"", unit_filename);
 	  xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL((" filename=\"")));
 	  xmlOutputBufferWriteString(pstate->buf, (const char*) unit_filename);
 	  xmlOutputBufferWrite(pstate->buf, 1, "\"");
-	  */
-	  xmlOutputBufferWriteString(pstate->buf, (const char*) s);
+	  //	  xmlOutputBufferWriteString(pstate->buf, (const char*) s);
 	}
 
 	// line number and clost unit start tag
