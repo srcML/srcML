@@ -346,13 +346,11 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
 
   onode = xmlDocGetRootElement(ctxt->myDoc);
 
-  // unhook the unit tree from the document, leaving an empty document
-  xmlDocSetRootElement(ctxt->myDoc, NULL);
-  ctxt->node = 0;
-
-  // done with this unit
   xmlUnlinkNode(onode);
   xmlFreeNode(onode);
+
+  // unhook the unit tree from the document, leaving an empty document
+  ctxt->node = 0;
 
   // now need to detect the start of the next unit
   ctxt->sax->startElementNs = &SAX2UnitDOMXPath::startElementNsUnit;
