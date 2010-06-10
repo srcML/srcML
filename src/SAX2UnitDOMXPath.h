@@ -51,8 +51,9 @@ class SAX2UnitDOMXPath {
   char** ns;
   xmlXPathContextPtr context;
   xmlXPathCompExprPtr compiled_xpath;
-  int total;
+  double total;
   bool result_bool;
+  int nodetype;
 
   // start document
   static void startDocument(void *ctx);

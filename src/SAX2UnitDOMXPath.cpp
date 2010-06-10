@@ -122,16 +122,39 @@ void SAX2UnitDOMXPath::endDocument(void *ctx) {
 
   xmlSAX2EndDocument(ctx);
 
-  // root unit end tag
-  if (!isoption(pstate->options, OPTION_XSLT_ALL)) {
-    if (pstate->found)
-      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("</unit>" "\n"));
+  // finalize results
+  switch (pstate->nodetype) {
+  case XPATH_NODESET:
+
+    // root unit end tag
+    if (!isoption(pstate->options, OPTION_XSLT_ALL)) {
+      if (pstate->found)
+	xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("</unit>" "\n"));
+      else
+	xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("/>" "\n"));
+    }
+    break;
+
+  case XPATH_NUMBER:
+    if ((int)pstate->total == pstate->total)
+      printf("%d\n", (int) pstate->total);
     else
-      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("/>" "\n"));
+      printf("%f\n", pstate->total);
+    break;
+
+  // boolean result
+  case XPATH_BOOLEAN:
+    puts(pstate->result_bool ? "true\n" : "false\n");
+    break;
+
+  default:
+    break;
   }
 
   // all done with the buffer
   xmlOutputBufferClose(pstate->buf);
+
+  //  xmlFree(pstate->buf);
 
   xmlXPathCompExprPtr(pstate->context);
 }
@@ -250,7 +273,9 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
   char s[1000] = { 0 };
 
   // process the resulting nodes
-  switch (result_nodes->type) {
+  pstate->nodetype = result_nodes->type;
+
+  switch (pstate->nodetype) {
 
     // node set result
   case XPATH_NODESET:
