@@ -155,10 +155,6 @@ void SAX2UnitDOMXPath::endDocument(void *ctx) {
 
   // all done with the buffer
   xmlOutputBufferClose(pstate->buf);
-
-  //  xmlFree(pstate->buf);
-
-  xmlXPathCompExprPtr(pstate->context);
 }
 
 // handle unit elements (only) of compound document
