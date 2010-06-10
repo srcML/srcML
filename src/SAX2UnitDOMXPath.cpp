@@ -191,13 +191,8 @@ void SAX2UnitDOMXPath::startElementNsRoot(void* ctx, const xmlChar* localname, c
     xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\""));
   }
 
-  xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(">"));
-
   // look for nested unit
   ctxt->sax->startElementNs = &SAX2UnitDOMXPath::startElementNsUnit;
-
-  //  if (depth == 0 && !isoption(pstate->options, OPTION_XSLT_ALL))
-  //    xmlNodeDumpOutput(pstate->buf, ctxt->myDoc, ctxt->node, 0, 0, 0);
 }
 
 // handle unit elements (only) of compound document
