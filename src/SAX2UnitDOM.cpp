@@ -227,21 +227,19 @@ void SAX2UnitDOM::endElementNs(void *ctx, const xmlChar *localname, const xmlCha
     if (savens && !isoption(pstate->options, OPTION_XSLT_ALL))
       resroot->nsDef = savens;
 
-    // finished with the result of the transformation
-    xmlFreeDoc(res);
-    
     // put some space between this unit and the next one
     if (!isoption(pstate->options, OPTION_XSLT_ALL))
       xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\n"));
+
+    // finished with the result of the transformation
+    xmlFreeDoc(res);
   }
 
-  xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
-
   // unhook the unit tree from the document, leaving an empty document
-  xmlDocSetRootElement(ctxt->myDoc, NULL);
   ctxt->node = 0;
 
   // done with this unit
+  xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
   xmlUnlinkNode(onode);
   xmlFreeNode(onode);
 
