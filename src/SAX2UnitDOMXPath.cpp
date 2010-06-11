@@ -171,22 +171,14 @@ void SAX2UnitDOMXPath::startElementNsFirstUnit(void* ctx, const xmlChar* localna
   xmlOutputBufferWriteString(pstate->buf, (const char *) localname);
 
   // output the namespaces
-  /*
-  for (xmlNsPtr pAttr =  onode->nsDef; pAttr != 0; pAttr = pAttr->next) {
-    fprintf(stderr, "HERE\n");
-    break;
-  }
-  */
-  //  xmlFreeNsList(onode->nsDef);
-  //    xmlNodeDumpOutput(pstate->buf, ctxt->myDoc, (xmlNodePtr) pAttr, 0, 0, 0);
+  for (xmlNsPtr pAttr =  onode->nsDef; pAttr != 0; pAttr = pAttr->next)
+    xmlNodeDumpOutput(pstate->buf, ctxt->myDoc, (xmlNodePtr) pAttr, 0, 0, 0);
 
-  /*
   // output the attributes
   for (xmlAttrPtr pAttr = onode->properties; pAttr; pAttr = pAttr->next)
     xmlNodeDumpOutput(pstate->buf, onode->doc, (xmlNodePtr) pAttr, 0, 0, 0);
-  */
-  // unhook the unit tree from the document, leaving an empty document
 
+  // unhook the unit tree from the document, leaving an empty document
   xmlUnlinkNode(onode);
   ctxt->node = 0;
   xmlFreeNode(onode);
