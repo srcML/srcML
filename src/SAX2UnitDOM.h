@@ -45,15 +45,9 @@ class SAX2UnitDOM {
   int paramcount;
   int options;
   bool found;
-  xsltStylesheetPtr xslt;
   xmlOutputBufferPtr buf;
   int nb_ns;
   char** ns;
-  xmlXPathContextPtr context;
-  xmlXPathCompExprPtr compiled_xpath;
-  double total;
-  bool result_bool;
-  int nodetype;
   xmlBufferPtr rootbuf;
   bool needroot;
 
