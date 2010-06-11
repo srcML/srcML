@@ -87,27 +87,6 @@ void SAX2UnitDOM::startDocument(void *ctx) {
     xmlSAX2StartDocument(ctx);
 }
 
-// end document
-void SAX2UnitDOM::endDocument(void *ctx) {
-
-  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-
-  SAX2UnitDOM* pstate = (SAX2UnitDOM*) ctxt->_private;
-
-  xmlSAX2EndDocument(ctx);
-
-  // root unit end tag
-  if (!isoption(pstate->options, OPTION_XSLT_ALL)) {
-    if (pstate->found)
-      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("</unit>" "\n"));
-    else
-      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("/>" "\n"));
-  }
-
-  // all done with the buffer
-  xmlOutputBufferClose(pstate->buf);
-}
-
 // handle unit elements (only) of compound document
 void SAX2UnitDOM::startElementNsRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix,
 		    const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces, int nb_attributes,
@@ -246,4 +225,25 @@ void SAX2UnitDOM::endElementNs(void *ctx, const xmlChar *localname, const xmlCha
   // now need to detect the start of the next unit
   ctxt->sax->startElementNs = &SAX2UnitDOM::startElementNsUnit;
   ctxt->sax->characters     = 0;
+}
+
+// end document
+void SAX2UnitDOM::endDocument(void *ctx) {
+
+  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+
+  SAX2UnitDOM* pstate = (SAX2UnitDOM*) ctxt->_private;
+
+  xmlSAX2EndDocument(ctx);
+
+  // root unit end tag
+  if (!isoption(pstate->options, OPTION_XSLT_ALL)) {
+    if (pstate->found)
+      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("</unit>" "\n"));
+    else
+      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("/>" "\n"));
+  }
+
+  // all done with the buffer
+  xmlOutputBufferClose(pstate->buf);
 }
