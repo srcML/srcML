@@ -95,6 +95,10 @@ void SAX2UnitDOMXPath::startDocument(void *ctx) {
     // setup output
     pstate->buf = xmlOutputBufferCreateFilename(pstate->ofilename, NULL, 0);
 
+    pstate->rootbuf = xmlBufferCreate();
+
+    pstate->needroot = false;
+
     xmlSAX2StartDocument(ctx);
 
     pstate->context = xmlXPathNewContext(ctxt->myDoc);
@@ -125,13 +129,14 @@ void SAX2UnitDOMXPath::startElementNsRoot(void* ctx, const xmlChar* localname, c
 
   SAX2UnitDOMXPath* pstate = (SAX2UnitDOMXPath*) ctxt->_private;
 
+  // store the namespaces as we will need them later (with the nested unit elements)
   pstate->nb_ns = nb_namespaces;
   pstate->ns = (char**) malloc((2 * nb_namespaces + 2) * sizeof(char*));
 
   for (int i = 0; i < 2 * nb_namespaces; ++i)
     pstate->ns[i] = namespaces[i] ? strdup((char*) namespaces[i]) : 0;
 
-  xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, (const xmlChar**) namespaces, nb_attributes,
+  xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes,
   			nb_defaulted, attributes);
 
   ctxt->input->line = 1;
@@ -150,6 +155,7 @@ void SAX2UnitDOMXPath::startElementNsFirstUnit(void* ctx, const xmlChar* localna
   SAX2UnitDOMXPath* pstate = (SAX2UnitDOMXPath*) ctxt->_private;
 
   // if reached a non-unit as the first nested element, then we have a non-nested xml file
+  // so we need to process normally
   if (isoption(pstate->options, OPTION_XSLT_ALL) || strcmp((const char*) localname, "unit") != 0) {
 
     xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes,
@@ -161,22 +167,21 @@ void SAX2UnitDOMXPath::startElementNsFirstUnit(void* ctx, const xmlChar* localna
   // build the individual unit start element, but use the namespaces from the outer unit
   xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
 
-  // output the root node
-  xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("<"));
+  // store the root start element
+  xmlBufferCat(pstate->rootbuf, BAD_CAST "<");
   if (prefix != NULL) {
-    xmlOutputBufferWriteString(pstate->buf, (const char *) prefix);
-    xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(":"));
+    xmlBufferCat(pstate->rootbuf, prefix);
+    xmlBufferCat(pstate->rootbuf, BAD_CAST ":");
   }
-
-  xmlOutputBufferWriteString(pstate->buf, (const char *) localname);
+  xmlBufferCat(pstate->rootbuf, localname);
 
   // output the namespaces
   for (xmlNsPtr pAttr =  onode->nsDef; pAttr != 0; pAttr = pAttr->next)
-    xmlNodeDumpOutput(pstate->buf, ctxt->myDoc, (xmlNodePtr) pAttr, 0, 0, 0);
+    xmlNodeDump(pstate->rootbuf, ctxt->myDoc, (xmlNodePtr) pAttr, 0, 0);
 
   // output the attributes
   for (xmlAttrPtr pAttr = onode->properties; pAttr; pAttr = pAttr->next)
-    xmlNodeDumpOutput(pstate->buf, onode->doc, (xmlNodePtr) pAttr, 0, 0, 0);
+    xmlNodeDump(pstate->rootbuf, onode->doc, (xmlNodePtr) pAttr, 0, 0);
 
   // unhook the unit tree from the document, leaving an empty document
   xmlUnlinkNode(onode);
@@ -250,6 +255,11 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
     // node set result
   case XPATH_NODESET:
 
+    if (!pstate->needroot) {
+      xmlOutputBufferWrite(pstate->buf, pstate->rootbuf->use, (const char*) pstate->rootbuf->content);
+      pstate->needroot = true;
+    }
+
     // may not have any values
     if (!result_nodes->nodesetval)
       break;
@@ -259,7 +269,7 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
     if (result_size == 0)
       break;
 
-    // first time found a result, so close root unit start tag
+    // first time found a node result, so close root unit start tag
     if (!pstate->found) {
       xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(">\n\n"));
       pstate->found = true;

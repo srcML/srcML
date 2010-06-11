@@ -54,6 +54,8 @@ class SAX2UnitDOMXPath {
   double total;
   bool result_bool;
   int nodetype;
+  xmlBufferPtr rootbuf;
+  bool needroot;
 
   // start document
   static void startDocument(void *ctx);
