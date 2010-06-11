@@ -375,7 +375,7 @@ void SAX2UnitDOMXPath::endDocument(void *ctx) {
     break;
 
   case XPATH_NUMBER:
-    printf((int)pstate->total == pstate->total ? "%.0f\n" : "%d\n", pstate->total);
+    printf((int)pstate->total == pstate->total ? "%.0lg\n" : "%lg\n", pstate->total);
     break;
 
   // boolean result
