@@ -63,7 +63,7 @@ xmlSAXHandler SAX2UnitDOMXPath::factory() {
   sax.endDocument    = &SAX2UnitDOMXPath::endDocument;
   sax.startElementNs = &SAX2UnitDOMXPath::startElementNsRoot;
   sax.endElementNs   = &SAX2UnitDOMXPath::endElementNs;
-  sax.characters     = 0; //xmlSAX2Characters;
+  sax.characters     = xmlSAX2Characters;
   sax.ignorableWhitespace = xmlSAX2Characters;
   sax.comment        = xmlSAX2Comment;
   sax.processingInstruction = xmlSAX2ProcessingInstruction;
@@ -116,45 +116,6 @@ void SAX2UnitDOMXPath::startDocument(void *ctx) {
   pstate->total = 0;
 }
 
-// end document
-void SAX2UnitDOMXPath::endDocument(void *ctx) {
-
-  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-
-  SAX2UnitDOMXPath* pstate = (SAX2UnitDOMXPath*) ctxt->_private;
-
-  xmlSAX2EndDocument(ctx);
-
-  // finalize results
-  switch (pstate->nodetype) {
-  case XPATH_NODESET:
-
-    // root unit end tag
-    if (!isoption(pstate->options, OPTION_XSLT_ALL)) {
-      if (pstate->found)
-	xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("</unit>" "\n"));
-      else
-	xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("/>" "\n"));
-    }
-    break;
-
-  case XPATH_NUMBER:
-    printf((int)pstate->total == pstate->total ? "%.0f\n" : "%d\n", pstate->total);
-    break;
-
-  // boolean result
-  case XPATH_BOOLEAN:
-    puts(pstate->result_bool ? "true\n" : "false\n");
-    break;
-
-  default:
-    break;
-  }
-
-  // all done with the buffer
-  xmlOutputBufferClose(pstate->buf);
-}
-
 // handle unit elements (only) of compound document
 void SAX2UnitDOMXPath::startElementNsRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix,
 		    const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces, int nb_attributes,
@@ -173,6 +134,8 @@ void SAX2UnitDOMXPath::startElementNsRoot(void* ctx, const xmlChar* localname, c
   xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, (const xmlChar**) namespaces, nb_attributes,
   			nb_defaulted, attributes);
 
+  ctxt->input->line = 1;
+
   // look for nested unit
   ctxt->sax->startElementNs = &SAX2UnitDOMXPath::startElementNsFirstUnit;
 }
@@ -186,6 +149,16 @@ void SAX2UnitDOMXPath::startElementNsFirstUnit(void* ctx, const xmlChar* localna
 
   SAX2UnitDOMXPath* pstate = (SAX2UnitDOMXPath*) ctxt->_private;
 
+  // if reached a non-unit as the first nested element, then we have a non-nested xml file
+  if (isoption(pstate->options, OPTION_XSLT_ALL) || strcmp((const char*) localname, "unit") != 0) {
+
+    xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes,
+  			nb_defaulted, attributes);
+    ctxt->sax->startElementNs = xmlSAX2StartElementNs;
+    return;
+  }
+
+  // build the individual unit start element, but use the namespaces from the outer unit
   xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
 
   // output the root node
@@ -377,4 +350,43 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
   // now need to detect the start of the next unit
   ctxt->sax->startElementNs = &SAX2UnitDOMXPath::startElementNsUnit;
   ctxt->sax->characters     = 0;
+}
+
+// end document
+void SAX2UnitDOMXPath::endDocument(void *ctx) {
+
+  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+
+  SAX2UnitDOMXPath* pstate = (SAX2UnitDOMXPath*) ctxt->_private;
+
+  xmlSAX2EndDocument(ctx);
+
+  // finalize results
+  switch (pstate->nodetype) {
+  case XPATH_NODESET:
+
+    // root unit end tag
+    if (!isoption(pstate->options, OPTION_XSLT_ALL)) {
+      if (pstate->found)
+	xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("</unit>" "\n"));
+      else
+	xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("/>" "\n"));
+    }
+    break;
+
+  case XPATH_NUMBER:
+    printf((int)pstate->total == pstate->total ? "%.0f\n" : "%d\n", pstate->total);
+    break;
+
+  // boolean result
+  case XPATH_BOOLEAN:
+    puts(pstate->result_bool ? "true\n" : "false\n");
+    break;
+
+  default:
+    break;
+  }
+
+  // all done with the buffer
+  xmlOutputBufferClose(pstate->buf);
 }
