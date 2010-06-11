@@ -141,6 +141,25 @@ void SAX2UnitDOMXPath::startElementNsRoot(void* ctx, const xmlChar* localname, c
 
   ctxt->input->line = 1;
 
+  // build the individual unit start element, but use the namespaces from the outer unit
+  xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
+
+  // store the root start element
+  xmlBufferCat(pstate->rootbuf, BAD_CAST "<");
+  if (prefix != NULL) {
+    xmlBufferCat(pstate->rootbuf, prefix);
+    xmlBufferCat(pstate->rootbuf, BAD_CAST ":");
+  }
+  xmlBufferCat(pstate->rootbuf, localname);
+
+  // output the namespaces
+  for (xmlNsPtr pAttr =  onode->nsDef; pAttr != 0; pAttr = pAttr->next)
+    xmlNodeDump(pstate->rootbuf, ctxt->myDoc, (xmlNodePtr) pAttr, 0, 0);
+
+  // output the attributes
+  for (xmlAttrPtr pAttr = onode->properties; pAttr; pAttr = pAttr->next)
+    xmlNodeDump(pstate->rootbuf, onode->doc, (xmlNodePtr) pAttr, 0, 0);
+
   // look for nested unit
   ctxt->sax->startElementNs = &SAX2UnitDOMXPath::startElementNsFirstUnit;
 }
@@ -164,31 +183,13 @@ void SAX2UnitDOMXPath::startElementNsFirstUnit(void* ctx, const xmlChar* localna
     return;
   }
 
-  // build the individual unit start element, but use the namespaces from the outer unit
-  xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
-
-  // store the root start element
-  xmlBufferCat(pstate->rootbuf, BAD_CAST "<");
-  if (prefix != NULL) {
-    xmlBufferCat(pstate->rootbuf, prefix);
-    xmlBufferCat(pstate->rootbuf, BAD_CAST ":");
-  }
-  xmlBufferCat(pstate->rootbuf, localname);
-
-  // output the namespaces
-  for (xmlNsPtr pAttr =  onode->nsDef; pAttr != 0; pAttr = pAttr->next)
-    xmlNodeDump(pstate->rootbuf, ctxt->myDoc, (xmlNodePtr) pAttr, 0, 0);
-
-  // output the attributes
-  for (xmlAttrPtr pAttr = onode->properties; pAttr; pAttr = pAttr->next)
-    xmlNodeDump(pstate->rootbuf, onode->doc, (xmlNodePtr) pAttr, 0, 0);
-
   // unhook the unit tree from the document, leaving an empty document
+  xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
   xmlUnlinkNode(onode);
   ctxt->node = 0;
   xmlFreeNode(onode);
 
-  // build the individual unit start element, but use the namespaces from the outer unit
+  // standard unit element handling
   startElementNsUnit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes,
   			nb_defaulted, attributes);
 }
@@ -313,12 +314,19 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
 	xmlOutputBufferWriteString(pstate->buf, s);
       }
 
-      // xpath result
+      // save the result, but temporarily hide the namespaces
+      xmlNsPtr savens = onode ? onode->nsDef : 0;
+      if (savens && !isoption(pstate->options, OPTION_XSLT_ALL))
+	onode->nsDef = 0;
       xmlNodeDumpOutput(pstate->buf, ctxt->myDoc, onode, 0, 0, 0);
+      if (savens && !isoption(pstate->options, OPTION_XSLT_ALL))
+	onode->nsDef = savens;
 
       // if we need a unit, output the end tag
       if (outputunit)
-	xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("</unit>\n\n"));
+	xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("</unit>"));
+
+      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\n\n"));
     }
 
     break;
