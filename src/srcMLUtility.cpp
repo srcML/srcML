@@ -53,7 +53,7 @@
 #include "srcxslteval.h"
 #include "srcrelaxngeval.h"
 
-#include "SAX2UnitDOM.h"
+#include "SAX2UnitDOMXSLT.h"
 #include "SAX2UnitDOMXPath.h"
 
 // constructor
@@ -289,10 +289,10 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
 // xslt evaluation of the nested units
 void srcMLUtility::xslt(const char* context_element, const char* ofilename, const char* xslts[], const char* params[], int paramcount) {
 
-  xmlSAXHandler sax = SAX2UnitDOM::factory();
+  xmlSAXHandler sax = SAX2UnitDOMXSLT::factory();
 
   
-  SAX2UnitDOM state(context_element, xslts, ofilename, params, paramcount, options);
+  SAX2UnitDOMXSLT state(context_element, xslts, ofilename, params, paramcount, options);
 
   xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
   if (ctxt == NULL) return;

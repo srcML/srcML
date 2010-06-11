@@ -1,5 +1,5 @@
 /*
-  SAX2UnitDOM.cpp
+  SAX2UnitDOMXSLT.cpp
 
   Copyright (C) 2010  SDML (www.sdml.info)
 
@@ -23,7 +23,7 @@
 */
 
 #include "SAX2TextWriter.h"
-#include "SAX2UnitDOM.h"
+#include "SAX2UnitDOMXSLT.h"
 #include "SAX2Utilities.h"
 #include "srcmlns.h"
 
@@ -43,21 +43,21 @@
 
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
 
-SAX2UnitDOM::SAX2UnitDOM(const char* a_context_element, const char* a_fxslt[], const char* a_ofilename, const char* params[], int paramcount, int options) 
+SAX2UnitDOMXSLT::SAX2UnitDOMXSLT(const char* a_context_element, const char* a_fxslt[], const char* a_ofilename, const char* params[], int paramcount, int options) 
   : context_element(a_context_element), fxslt(a_fxslt), ofilename(a_ofilename), params(params), paramcount(paramcount), options(options), found(false), nb_ns(0), ns(0) {
 
 }
 
-xmlSAXHandler SAX2UnitDOM::factory() {
+xmlSAXHandler SAX2UnitDOMXSLT::factory() {
 
   xmlSAXHandler sax = { 0 };
 
   sax.initialized    = XML_SAX2_MAGIC;
 
-  sax.startDocument  = &SAX2UnitDOM::startDocument;
-  sax.endDocument    = &SAX2UnitDOM::endDocument;
-  sax.startElementNs = &SAX2UnitDOM::startElementNsRoot;
-  sax.endElementNs   = &SAX2UnitDOM::endElementNs;
+  sax.startDocument  = &SAX2UnitDOMXSLT::startDocument;
+  sax.endDocument    = &SAX2UnitDOMXSLT::endDocument;
+  sax.startElementNs = &SAX2UnitDOMXSLT::startElementNsRoot;
+  sax.endElementNs   = &SAX2UnitDOMXSLT::endElementNs;
   sax.characters     = 0; //xmlSAX2Characters;
   sax.ignorableWhitespace = xmlSAX2Characters;
   sax.comment        = xmlSAX2Comment;
@@ -67,11 +67,11 @@ xmlSAXHandler SAX2UnitDOM::factory() {
 }
 
 // start document
-void SAX2UnitDOM::startDocument(void *ctx) {
+void SAX2UnitDOMXSLT::startDocument(void *ctx) {
   
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
 
-    SAX2UnitDOM* pstate = (SAX2UnitDOM*) ctxt->_private;
+    SAX2UnitDOMXSLT* pstate = (SAX2UnitDOMXSLT*) ctxt->_private;
 
     // allow for all exslt functions
     exsltRegisterAll();
@@ -88,13 +88,13 @@ void SAX2UnitDOM::startDocument(void *ctx) {
 }
 
 // handle unit elements (only) of compound document
-void SAX2UnitDOM::startElementNsRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix,
+void SAX2UnitDOMXSLT::startElementNsRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix,
 		    const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces, int nb_attributes,
 		    int nb_defaulted, const xmlChar** attributes) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
 
-  SAX2UnitDOM* pstate = (SAX2UnitDOM*) ctxt->_private;
+  SAX2UnitDOMXSLT* pstate = (SAX2UnitDOMXSLT*) ctxt->_private;
 
   pstate->nb_ns = nb_namespaces;
   pstate->ns = (char**) malloc((2 * nb_namespaces + 2) * sizeof(char*));
@@ -145,20 +145,20 @@ void SAX2UnitDOM::startElementNsRoot(void* ctx, const xmlChar* localname, const 
   //  xmlOutputBufferWrite(pstate->buf, 1, ">");
 
   // look for nested unit
-  ctxt->sax->startElementNs = &SAX2UnitDOM::startElementNsUnit;
+  ctxt->sax->startElementNs = &SAX2UnitDOMXSLT::startElementNsUnit;
 
   //  if (depth == 0 && !isoption(pstate->options, OPTION_XSLT_ALL))
   //    xmlNodeDumpOutput(pstate->buf, ctxt->myDoc, ctxt->node, 0, 0, 0);
 }
 
 // handle unit elements (only) of compound document
-void SAX2UnitDOM::startElementNsUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix,
+void SAX2UnitDOMXSLT::startElementNsUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix,
 		    const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces, int nb_attributes,
 		    int nb_defaulted, const xmlChar** attributes) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
 
-  SAX2UnitDOM* pstate = (SAX2UnitDOM*) ctxt->_private;
+  SAX2UnitDOMXSLT* pstate = (SAX2UnitDOMXSLT*) ctxt->_private;
 
   // reset the line to agree with the line of the original text file
   ctxt->input->line = 1;
@@ -173,10 +173,10 @@ void SAX2UnitDOM::startElementNsUnit(void* ctx, const xmlChar* localname, const 
 }
 
 // end unit element and current file/buffer (started by startElementNs
-void SAX2UnitDOM::endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+void SAX2UnitDOMXSLT::endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-  SAX2UnitDOM* pstate = (SAX2UnitDOM*) ctxt->_private;
+  SAX2UnitDOMXSLT* pstate = (SAX2UnitDOMXSLT*) ctxt->_private;
 
   // DOM building end element
   xmlSAX2EndElementNs(ctx, localname, prefix, URI);
@@ -223,16 +223,16 @@ void SAX2UnitDOM::endElementNs(void *ctx, const xmlChar *localname, const xmlCha
   xmlFreeNode(onode);
 
   // now need to detect the start of the next unit
-  ctxt->sax->startElementNs = &SAX2UnitDOM::startElementNsUnit;
+  ctxt->sax->startElementNs = &SAX2UnitDOMXSLT::startElementNsUnit;
   ctxt->sax->characters     = 0;
 }
 
 // end document
-void SAX2UnitDOM::endDocument(void *ctx) {
+void SAX2UnitDOMXSLT::endDocument(void *ctx) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
 
-  SAX2UnitDOM* pstate = (SAX2UnitDOM*) ctxt->_private;
+  SAX2UnitDOMXSLT* pstate = (SAX2UnitDOMXSLT*) ctxt->_private;
 
   xmlSAX2EndDocument(ctx);
 

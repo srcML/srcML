@@ -1,5 +1,5 @@
 /*
-  SAX2UnitDOM.h
+  SAX2UnitDOMXSLT.h
 
   Copyright (C) 2010 SDML (www.sdml.info)
 
@@ -31,10 +31,10 @@
 #include <libxml/parser.h>
 #include <libxslt/transform.h>
 
-class SAX2UnitDOM {
+class SAX2UnitDOMXSLT {
  public:
 
-  SAX2UnitDOM(const char* context_element, const char** fxslt, const char* ofilename, const char* params[], int paramcount, int options);
+  SAX2UnitDOMXSLT(const char* context_element, const char** fxslt, const char* ofilename, const char* params[], int paramcount, int options);
 
   static xmlSAXHandler factory();
 
