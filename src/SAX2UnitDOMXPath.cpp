@@ -38,6 +38,7 @@
 #include <libxslt/xsltutils.h>
 
 #include <libxml/xpath.h>
+#include <libxml/xmlsave.h>
 #include <libxml/xpathInternals.h>
 #include <libxml/parserInternals.h>
 
@@ -169,6 +170,24 @@ void SAX2UnitDOMXPath::startElementNsRoot(void* ctx, const xmlChar* localname, c
   for (int i = 0; i < 2 * nb_namespaces; ++i)
     pstate->ns[i] = namespaces[i] ? strdup((char*) namespaces[i]) : 0;
 
+  xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, (const xmlChar**) namespaces, nb_attributes,
+  			nb_defaulted, attributes);
+
+  // look for nested unit
+  ctxt->sax->startElementNs = &SAX2UnitDOMXPath::startElementNsFirstUnit;
+}
+
+// handle unit elements (only) of compound document
+void SAX2UnitDOMXPath::startElementNsFirstUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix,
+		    const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces, int nb_attributes,
+		    int nb_defaulted, const xmlChar** attributes) {
+
+  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+
+  SAX2UnitDOMXPath* pstate = (SAX2UnitDOMXPath*) ctxt->_private;
+
+  xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
+
   // output the root node
   xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("<"));
   if (prefix != NULL) {
@@ -178,39 +197,30 @@ void SAX2UnitDOMXPath::startElementNsRoot(void* ctx, const xmlChar* localname, c
 
   xmlOutputBufferWriteString(pstate->buf, (const char *) localname);
 
-  for (int i = 0, index = 0; i < nb_namespaces; ++i, index += 2) {
-
-    const char* prefix = (const char*) namespaces[index];
-    const char* uri = (const char*) namespaces[index + 1];
-
-    xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(" "));
-    xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("xmlns"));
-    if (prefix) {
-      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(":"));
-      xmlOutputBufferWriteString(pstate->buf, prefix);
-    }
-    xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("=\""));
-    xmlOutputBufferWriteString(pstate->buf, uri);
-    xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\""));
+  // output the namespaces
+  /*
+  for (xmlNsPtr pAttr =  onode->nsDef; pAttr != 0; pAttr = pAttr->next) {
+    fprintf(stderr, "HERE\n");
+    break;
   }
+  */
+  //  xmlFreeNsList(onode->nsDef);
+  //    xmlNodeDumpOutput(pstate->buf, ctxt->myDoc, (xmlNodePtr) pAttr, 0, 0, 0);
 
-  for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
+  /*
+  // output the attributes
+  for (xmlAttrPtr pAttr = onode->properties; pAttr; pAttr = pAttr->next)
+    xmlNodeDumpOutput(pstate->buf, onode->doc, (xmlNodePtr) pAttr, 0, 0, 0);
+  */
+  // unhook the unit tree from the document, leaving an empty document
 
-    const char* name = qname((const char*) attributes[index + 1], (const char*) attributes[index]);
+  xmlUnlinkNode(onode);
+  ctxt->node = 0;
+  xmlFreeNode(onode);
 
-    xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(" "));
-    if (attributes[index + 1]) {
-      xmlOutputBufferWriteString(pstate->buf, (const char*) attributes[index + 1]);
-      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(":"));
-    }
-    xmlOutputBufferWriteString(pstate->buf, (const char*) attributes[index]);
-    xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("=\""));
-    xmlOutputBufferWrite(pstate->buf, attributes[index + 4] - attributes[index + 3], (const char*) attributes[index + 3]);
-    xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\""));
-  }
-
-  // look for nested unit
-  ctxt->sax->startElementNs = &SAX2UnitDOMXPath::startElementNsUnit;
+  // build the individual unit start element, but use the namespaces from the outer unit
+  startElementNsUnit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes,
+  			nb_defaulted, attributes);
 }
 
 // handle unit elements (only) of compound document
