@@ -39,7 +39,6 @@ class SAX2UnitDOMXPath : public SAX2UnitDOM {
 
   static xmlSAXHandler factory();
 
-  bool found;
   xmlXPathContextPtr context;
   xmlXPathCompExprPtr compiled_xpath;
   double total;
@@ -51,11 +50,6 @@ class SAX2UnitDOMXPath : public SAX2UnitDOM {
 
   // end document
   static void endDocument(void *ctx);
-
-  // start unit elements
-  static void startElementNsRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-		    const xmlChar** attributes);
 
   // end unit elements
   static void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);

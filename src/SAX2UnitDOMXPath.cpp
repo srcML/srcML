@@ -60,7 +60,7 @@ xmlSAXHandler SAX2UnitDOMXPath::factory() {
 
   sax.startDocument  = &SAX2UnitDOMXPath::startDocument;
   sax.endDocument    = &SAX2UnitDOMXPath::endDocument;
-  sax.startElementNs = &SAX2UnitDOMXPath::startElementNsRoot;
+  sax.startElementNs = &SAX2UnitDOM::startElementNsRoot;
   sax.endElementNs   = &SAX2UnitDOMXPath::endElementNs;
   sax.characters     = xmlSAX2Characters;
   sax.ignorableWhitespace = xmlSAX2Characters;
@@ -112,50 +112,6 @@ void SAX2UnitDOMXPath::startDocument(void *ctx) {
 
   // initialize total for floating point values
   pstate->total = 0;
-}
-
-// handle unit elements (only) of compound document
-void SAX2UnitDOMXPath::startElementNsRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix,
-		    const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces, int nb_attributes,
-		    int nb_defaulted, const xmlChar** attributes) {
-
-  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-
-  SAX2UnitDOMXPath* pstate = (SAX2UnitDOMXPath*) ctxt->_private;
-
-  // store the namespaces as we will need them later (with the nested unit elements)
-  pstate->nb_ns = nb_namespaces;
-  pstate->ns = (char**) malloc((2 * nb_namespaces + 2) * sizeof(char*));
-
-  for (int i = 0; i < 2 * nb_namespaces; ++i)
-    pstate->ns[i] = namespaces[i] ? strdup((char*) namespaces[i]) : 0;
-
-  xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes,
-  			nb_defaulted, attributes);
-
-  ctxt->input->line = 1;
-
-  // build the individual unit start element, but use the namespaces from the outer unit
-  xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
-
-  // store the root start element
-  xmlBufferCat(pstate->rootbuf, BAD_CAST "<");
-  if (prefix != NULL) {
-    xmlBufferCat(pstate->rootbuf, prefix);
-    xmlBufferCat(pstate->rootbuf, BAD_CAST ":");
-  }
-  xmlBufferCat(pstate->rootbuf, localname);
-
-  // output the namespaces
-  for (xmlNsPtr pAttr =  onode->nsDef; pAttr != 0; pAttr = pAttr->next)
-    xmlNodeDump(pstate->rootbuf, ctxt->myDoc, (xmlNodePtr) pAttr, 0, 0);
-
-  // output the attributes
-  for (xmlAttrPtr pAttr = onode->properties; pAttr; pAttr = pAttr->next)
-    xmlNodeDump(pstate->rootbuf, onode->doc, (xmlNodePtr) pAttr, 0, 0);
-
-  // look for nested unit
-  ctxt->sax->startElementNs = &SAX2UnitDOM::startElementNsFirstUnit;
 }
 
 // end unit element and current file/buffer (started by startElementNs
