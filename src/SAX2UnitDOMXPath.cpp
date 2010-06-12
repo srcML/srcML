@@ -248,17 +248,7 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
   // finished with the result nodes
   xmlXPathFreeObject(result_nodes);
 
-  onode = xmlDocGetRootElement(ctxt->myDoc);
-
-  xmlUnlinkNode(onode);
-  xmlFreeNode(onode);
-
-  // unhook the unit tree from the document, leaving an empty document
-  ctxt->node = 0;
-
-  // now need to detect the start of the next unit
-  ctxt->sax->startElementNs = &SAX2UnitDOM::startElementNsUnit;
-  ctxt->sax->characters     = 0;
+  SAX2UnitDOM::endElementNs(ctx, localname, prefix, URI);
 }
 
 // end document

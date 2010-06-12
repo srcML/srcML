@@ -176,22 +176,7 @@ void SAX2UnitDOM::endElementNs(void *ctx, const xmlChar *localname, const xmlCha
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2UnitDOM* pstate = (SAX2UnitDOM*) ctxt->_private;
 
-  // DOM building end element
-  xmlSAX2EndElementNs(ctx, localname, prefix, URI);
-
-  // only handle unit elements
-  if (strcmp((const char*) localname, "unit") != 0)
-    return;
-
-  xmlNodePtr onode = 0;
-
-  xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
-
-  const char* unit_filename = (const char*) xmlGetProp(a_node, BAD_CAST "filename");
-  const char* unit_directory =  (const char*) xmlGetProp(a_node, BAD_CAST "dir");
-
-
-  onode = xmlDocGetRootElement(ctxt->myDoc);
+  xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
 
   xmlUnlinkNode(onode);
   xmlFreeNode(onode);

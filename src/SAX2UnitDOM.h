@@ -29,7 +29,6 @@
 #define INCLUDED_SAX2UNITDOM_H
 
 #include <libxml/parser.h>
-#include <libxslt/transform.h>
 
 class SAX2UnitDOM {
  public:
