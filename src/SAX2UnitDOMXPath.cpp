@@ -33,9 +33,6 @@
 
 #include "srcexfun.h"
 #include <cassert>
-#include <libxslt/xslt.h>
-#include <libxslt/transform.h>
-#include <libxslt/xsltutils.h>
 
 #include <libxml/xpath.h>
 #include <libxml/xmlsave.h>
