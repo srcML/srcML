@@ -73,34 +73,28 @@ xmlSAXHandler SAX2UnitDOMXPath::factory() {
 // start document
 void SAX2UnitDOMXPath::startDocument(void *ctx) {
   
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
 
-    SAX2UnitDOMXPath* pstate = (SAX2UnitDOMXPath*) ctxt->_private;
+  SAX2UnitDOMXPath* pstate = (SAX2UnitDOMXPath*) ctxt->_private;
 
-    // allow for all exslt functions
-    //    exsltRegisterAll();
+  // standard unit dom handling
+  SAX2UnitDOM::startDocument(ctx);
 
-    //    xsltsrcMLRegister();
+  // allow for all exslt functions
+  //    exsltRegisterAll();
 
-    if (!pstate->fxpath[0][0])
-      return;
+  //    xsltsrcMLRegister();
 
-    // compile the xpath that will be applied to each unit
-    pstate->compiled_xpath = xmlXPathCompile(BAD_CAST pstate->fxpath[0]);
-    if (pstate->compiled_xpath == 0) {
-	return;
-    }
+  //    if (!pstate->fxpath[0][0])
+  //      return;
 
-    // setup output
-    pstate->buf = xmlOutputBufferCreateFilename(pstate->ofilename, NULL, 0);
+  // compile the xpath that will be applied to each unit
+  pstate->compiled_xpath = xmlXPathCompile(BAD_CAST pstate->fxpath[0]);
+  if (pstate->compiled_xpath == 0) {
+    return;
+  }
 
-    pstate->rootbuf = xmlBufferCreate();
-
-    pstate->needroot = false;
-
-    xmlSAX2StartDocument(ctx);
-
-    pstate->context = xmlXPathNewContext(ctxt->myDoc);
+  pstate->context = xmlXPathNewContext(ctxt->myDoc);
 
   // register standard prefixes for standard namespaces
   const char* prefixes[] = {
@@ -116,6 +110,7 @@ void SAX2UnitDOMXPath::startDocument(void *ctx) {
     if (xmlXPathRegisterNs(pstate->context, BAD_CAST prefixes[i + 1], BAD_CAST prefixes[i]) == -1)
       fprintf(stderr, "Unable to register prefix %s for namespace %s\n", prefixes[i + 1], prefixes[i]);
 
+  // initialize total for floating point values
   pstate->total = 0;
 }
 
@@ -396,6 +391,6 @@ void SAX2UnitDOMXPath::endDocument(void *ctx) {
     break;
   }
 
-  // all done with the buffer
-  xmlOutputBufferClose(pstate->buf);
+  // standard end document
+  SAX2UnitDOM::endDocument(ctx);
 }

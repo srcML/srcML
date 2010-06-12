@@ -211,8 +211,6 @@ void SAX2UnitDOM::endDocument(void *ctx) {
 
   SAX2UnitDOM* pstate = (SAX2UnitDOM*) ctxt->_private;
 
-  xmlSAX2EndDocument(ctx);
-
   // all done with the buffer
   xmlOutputBufferClose(pstate->buf);
 }
