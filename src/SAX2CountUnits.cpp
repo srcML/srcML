@@ -44,7 +44,7 @@ xmlSAXHandler SAX2CountUnits::factory() {
 
     xmlSAXHandler sax = { 0 };
 
-    sax.initialized    = XML_SAX2_MAGIC;
+    sax.initialized  = XML_SAX2_MAGIC;
     sax.endElementNs = &endElementNs;
 
     return sax;
@@ -53,21 +53,21 @@ xmlSAXHandler SAX2CountUnits::factory() {
 // end unit element and current file/buffer (started by startElementNs
 void SAX2CountUnits::endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
-    SAX2CountUnits* pstate = (SAX2CountUnits*) ctx;
+  SAX2CountUnits* pstate = (SAX2CountUnits*) ctx;
 
-    if (pstate->ctxt->nameNr != 2)
-      return;
+  if (pstate->ctxt->nameNr != 2)
+    return;
 
-    // check that this is a nested file
-    if (pstate->count == 0 && !(strcmp((const char*) localname, "unit") == 0 &&
-	  strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0)) {
-      xmlStopParser(pstate->ctxt);
-      return;
-    }
-
-    ++(pstate->count);
-
-    // output file status message if in verbose mode
-    if (pstate->verbose)
-      fprintf(stderr, "\r%5ld", pstate->count);
+  // check that this is a nested file
+  if (pstate->count == 0 && !(strcmp((const char*) localname, "unit") == 0 &&
+			      strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0)) {
+    xmlStopParser(pstate->ctxt);
+    return;
   }
+
+  ++(pstate->count);
+
+  // output file status message if in verbose mode
+  if (pstate->verbose)
+    fprintf(stderr, "\r%5ld", pstate->count);
+}
