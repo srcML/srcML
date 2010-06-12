@@ -49,8 +49,7 @@
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
 
 SAX2UnitDOMXPath::SAX2UnitDOMXPath(const char* a_context_element, const char* a_fxpath[], const char* a_ofilename, const char* params[], int paramcount, int options) 
-  : context_element(a_context_element), fxpath(a_fxpath), ofilename(a_ofilename), params(params), paramcount(paramcount), options(options), found(false), nb_ns(0), ns(0), context(0) {
-
+  : SAX2UnitDOM(a_context_element, a_fxpath, a_ofilename, params, paramcount, options) {
 }
 
 xmlSAXHandler SAX2UnitDOMXPath::factory() {

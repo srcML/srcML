@@ -25,8 +25,8 @@
   by overriding individual callbacks.
 */
 
-#ifndef INCLUDED_SAX2UNITDOMXPATH_H
-#define INCLUDED_SAX2UNITDOMXPATH_H
+#ifndef INCLUDED_SAX2UNITDOM_H
+#define INCLUDED_SAX2UNITDOM_H
 
 #include <libxml/parser.h>
 #include <libxslt/transform.h>

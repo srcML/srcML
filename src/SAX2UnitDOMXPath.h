@@ -28,34 +28,24 @@
 #ifndef INCLUDED_SAX2UNITDOMXPATH_H
 #define INCLUDED_SAX2UNITDOMXPATH_H
 
+#include "SAX2UnitDOM.h"
+
 #include <libxml/parser.h>
 #include <libxslt/transform.h>
 
-class SAX2UnitDOMXPath {
+class SAX2UnitDOMXPath : public SAX2UnitDOM {
  public:
 
   SAX2UnitDOMXPath(const char* context_element, const char** fxpath, const char* ofilename, const char* params[], int paramcount, int options);
 
   static xmlSAXHandler factory();
 
-  const char* context_element;
-  const char** fxpath;
-  const char* ofilename;
-  const char** params;
-  int paramcount;
-  int options;
   bool found;
-  xsltStylesheetPtr xslt;
-  xmlOutputBufferPtr buf;
-  int nb_ns;
-  char** ns;
   xmlXPathContextPtr context;
   xmlXPathCompExprPtr compiled_xpath;
   double total;
   bool result_bool;
   int nodetype;
-  xmlBufferPtr rootbuf;
-  bool needroot;
 
   // start document
   static void startDocument(void *ctx);
