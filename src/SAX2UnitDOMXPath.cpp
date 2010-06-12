@@ -155,58 +155,7 @@ void SAX2UnitDOMXPath::startElementNsRoot(void* ctx, const xmlChar* localname, c
     xmlNodeDump(pstate->rootbuf, onode->doc, (xmlNodePtr) pAttr, 0, 0);
 
   // look for nested unit
-  ctxt->sax->startElementNs = &SAX2UnitDOMXPath::startElementNsFirstUnit;
-}
-
-// handle unit elements (only) of compound document
-void SAX2UnitDOMXPath::startElementNsFirstUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix,
-		    const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces, int nb_attributes,
-		    int nb_defaulted, const xmlChar** attributes) {
-
-  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-
-  SAX2UnitDOMXPath* pstate = (SAX2UnitDOMXPath*) ctxt->_private;
-
-  // if reached a non-unit as the first nested element, then we have a non-nested xml file
-  // so we need to process normally
-  if (isoption(pstate->options, OPTION_XSLT_ALL) || strcmp((const char*) localname, "unit") != 0) {
-
-    xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes,
-  			nb_defaulted, attributes);
-    ctxt->sax->startElementNs = xmlSAX2StartElementNs;
-    return;
-  }
-
-  // unhook the unit tree from the document, leaving an empty document
-  xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
-  xmlUnlinkNode(onode);
-  ctxt->node = 0;
-  xmlFreeNode(onode);
-
-  // standard unit element handling
-  startElementNsUnit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes,
-  			nb_defaulted, attributes);
-}
-
-// handle unit elements (only) of compound document
-void SAX2UnitDOMXPath::startElementNsUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix,
-		    const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces, int nb_attributes,
-		    int nb_defaulted, const xmlChar** attributes) {
-
-  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-
-  SAX2UnitDOMXPath* pstate = (SAX2UnitDOMXPath*) ctxt->_private;
-
-  // reset the line to agree with the line of the original text file
-  ctxt->input->line = 1;
-
-  // build the individual unit start element, but use the namespaces from the outer unit
-  xmlSAX2StartElementNs(ctx, localname, prefix, URI, pstate->nb_ns, (const xmlChar**) pstate->ns, nb_attributes,
-  			nb_defaulted, attributes);
-
-  // turn tree building start element back on (instead of this one)
-  ctxt->sax->startElementNs = xmlSAX2StartElementNs;
-  ctxt->sax->characters     = xmlSAX2Characters;
+  ctxt->sax->startElementNs = &SAX2UnitDOM::startElementNsFirstUnit;
 }
 
 // end unit element and current file/buffer (started by startElementNs
@@ -352,7 +301,7 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
   ctxt->node = 0;
 
   // now need to detect the start of the next unit
-  ctxt->sax->startElementNs = &SAX2UnitDOMXPath::startElementNsUnit;
+  ctxt->sax->startElementNs = &SAX2UnitDOM::startElementNsUnit;
   ctxt->sax->characters     = 0;
 }
 
