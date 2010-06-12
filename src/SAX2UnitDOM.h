@@ -33,12 +33,11 @@
 class SAX2UnitDOM {
  public:
 
-  SAX2UnitDOM(const char* context_element, const char** fxpath, const char* ofilename, const char* params[], int paramcount, int options);
+  SAX2UnitDOM(const char* context_element, const char* ofilename, const char* params[], int paramcount, int options);
 
   static xmlSAXHandler factory();
 
   const char* context_element;
-  const char** fxpath;
   const char* ofilename;
   const char** params;
   int paramcount;

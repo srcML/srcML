@@ -35,8 +35,8 @@
 #include <cstring>
 #include <cassert>
 
-SAX2UnitDOM::SAX2UnitDOM(const char* a_context_element, const char* a_fxpath[], const char* a_ofilename, const char* params[], int paramcount, int options) 
-  : context_element(a_context_element), fxpath(a_fxpath), ofilename(a_ofilename), params(params), paramcount(paramcount), options(options), found(false), nb_ns(0), ns(0) {
+SAX2UnitDOM::SAX2UnitDOM(const char* a_context_element, const char* a_ofilename, const char* params[], int paramcount, int options) 
+  : context_element(a_context_element), ofilename(a_ofilename), params(params), paramcount(paramcount), options(options), found(false), nb_ns(0), ns(0) {
 
 }
 

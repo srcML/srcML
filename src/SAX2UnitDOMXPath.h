@@ -40,6 +40,7 @@ class SAX2UnitDOMXPath : public SAX2UnitDOM {
 
   static xmlSAXHandler factory();
 
+  const char** fxpath;
   xmlXPathContextPtr context;
   xmlXPathCompExprPtr compiled_xpath;
   double total;

@@ -31,24 +31,17 @@
 #include <libxml/parser.h>
 #include <libxslt/transform.h>
 
-class SAX2UnitDOMXSLT {
+#include "SAX2UnitDOM.h"
+
+class SAX2UnitDOMXSLT : public SAX2UnitDOM {
  public:
 
   SAX2UnitDOMXSLT(const char* context_element, const char** fxslt, const char* ofilename, const char* params[], int paramcount, int options);
 
   static xmlSAXHandler factory();
 
-  const char* context_element;
   const char** fxslt;
-  const char* ofilename;
-  const char** params;
-  int paramcount;
-  int options;
-  bool found;
   xsltStylesheetPtr xslt;
-  xmlOutputBufferPtr buf;
-  int nb_ns;
-  char** ns;
 
   // start document
   static void startDocument(void *ctx);

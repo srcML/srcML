@@ -44,8 +44,7 @@
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
 
 SAX2UnitDOMXSLT::SAX2UnitDOMXSLT(const char* a_context_element, const char* a_fxslt[], const char* a_ofilename, const char* params[], int paramcount, int options) 
-  : context_element(a_context_element), fxslt(a_fxslt), ofilename(a_ofilename), params(params), paramcount(paramcount), options(options), found(false), nb_ns(0), ns(0) {
-
+  : SAX2UnitDOM(a_context_element, a_ofilename, params, paramcount, options), fxslt(a_fxslt) {
 }
 
 xmlSAXHandler SAX2UnitDOMXSLT::factory() {
