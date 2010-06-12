@@ -31,7 +31,6 @@
 #include "SAX2UnitDOM.h"
 
 #include <libxml/parser.h>
-#include <libxslt/transform.h>
 
 class SAX2UnitDOMXPath : public SAX2UnitDOM {
  public:
