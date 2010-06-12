@@ -50,11 +50,6 @@ class SAX2UnitDOMXSLT : public SAX2UnitDOM {
   static void endDocument(void *ctx);
 
   // start unit elements
-  static void startElementNsRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-		    const xmlChar** attributes);
-
-  // start unit elements
   static void startElementNsUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
 		    const xmlChar** attributes);
