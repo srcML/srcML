@@ -391,16 +391,8 @@ int main(int argc, char* argv[]) {
     if (language == 0 && input_arg_count == 1) {
 
       char* path = argv[input_arg_start];
-      std::string ext = boost::filesystem::extension(path);
-      language = Language::getLanguageFromExtension(ext.c_str());
-
-      /*
-	language = srcMLTranslator::LANGUAGE_CXX;
-	language = srcMLTranslator::LANGUAGE_CXX_0X;
-	language = srcMLTranslator::LANGUAGE_JAVA;
-
-	".aj" for AspectJ
-      */
+      char* ext = rindex(path, '.');
+      language = Language::getLanguageFromExtension(ext);
     }
 
     // translator from input to output using determined language
