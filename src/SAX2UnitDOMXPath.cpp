@@ -35,7 +35,6 @@
 #include <cassert>
 
 #include <libxml/xpath.h>
-#include <libxml/xmlsave.h>
 #include <libxml/xpathInternals.h>
 #include <libxml/parserInternals.h>
 
