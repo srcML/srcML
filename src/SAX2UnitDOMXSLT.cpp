@@ -57,7 +57,7 @@ xmlSAXHandler SAX2UnitDOMXSLT::factory() {
   sax.endDocument    = &SAX2UnitDOMXSLT::endDocument;
   sax.startElementNs = &SAX2UnitDOM::startElementNsRoot;
   sax.endElementNs   = &SAX2UnitDOMXSLT::endElementNs;
-  sax.characters     = 0; //xmlSAX2Characters;
+  sax.characters     = xmlSAX2Characters;
   sax.ignorableWhitespace = xmlSAX2Characters;
   sax.comment        = xmlSAX2Comment;
   sax.processingInstruction = xmlSAX2ProcessingInstruction;
@@ -103,7 +103,7 @@ void SAX2UnitDOMXSLT::endElementNs(void *ctx, const xmlChar *localname, const xm
   if (res && res->children) {
 
     // if in per-unit mode and this is the first result found
-    if (!pstate->found && !isoption(pstate->options, OPTION_XSLT_ALL)) {
+    if (pstate->isnested && !pstate->found && !isoption(pstate->options, OPTION_XSLT_ALL)) {
       xmlOutputBufferWrite(pstate->buf, pstate->rootbuf->use, (const char*) pstate->rootbuf->content);
       xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(">\n\n"));
       pstate->found = true;
@@ -112,10 +112,10 @@ void SAX2UnitDOMXSLT::endElementNs(void *ctx, const xmlChar *localname, const xm
     // save the result, but temporarily hide the namespaces
     xmlNodePtr resroot = xmlDocGetRootElement(res);
     xmlNsPtr savens = resroot ? resroot->nsDef : 0;
-    if (savens && !isoption(pstate->options, OPTION_XSLT_ALL))
+    if (savens && pstate->isnested && !isoption(pstate->options, OPTION_XSLT_ALL))
       resroot->nsDef = 0;
     xsltSaveResultTo(pstate->buf, res, pstate->xslt);
-    if (savens && !isoption(pstate->options, OPTION_XSLT_ALL))
+    if (savens && pstate->isnested && !isoption(pstate->options, OPTION_XSLT_ALL))
       resroot->nsDef = savens;
 
     // put some space between this unit and the next one
@@ -139,7 +139,7 @@ void SAX2UnitDOMXSLT::endDocument(void *ctx) {
   xmlSAX2EndDocument(ctx);
 
   // root unit end tag
-  if (!isoption(pstate->options, OPTION_XSLT_ALL)) {
+  if (pstate->isnested && !isoption(pstate->options, OPTION_XSLT_ALL)) {
     if (pstate->found)
       xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("</unit>" "\n"));
     else

@@ -36,7 +36,7 @@
 #include <cassert>
 
 SAX2UnitDOM::SAX2UnitDOM(const char* a_context_element, const char* a_ofilename, const char* params[], int paramcount, int options) 
-  : context_element(a_context_element), ofilename(a_ofilename), params(params), paramcount(paramcount), options(options), found(false), nb_ns(0), ns(0) {
+  : context_element(a_context_element), ofilename(a_ofilename), params(params), paramcount(paramcount), options(options), found(false), nb_ns(0), ns(0), isnested(false) {
 
 }
 
@@ -137,6 +137,8 @@ void SAX2UnitDOM::startElementNsFirstUnit(void* ctx, const xmlChar* localname, c
     ctxt->sax->startElementNs = xmlSAX2StartElementNs;
     return;
   }
+
+  pstate->isnested = true;
 
   // unhook the unit tree from the document, leaving an empty document
   xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);

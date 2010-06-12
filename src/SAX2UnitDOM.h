@@ -48,6 +48,7 @@ class SAX2UnitDOM {
   char** ns;
   xmlBufferPtr rootbuf;
   bool needroot;
+  bool isnested;
 
   // start document
   static void startDocument(void *ctx);
