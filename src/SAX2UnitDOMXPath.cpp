@@ -36,7 +36,6 @@
 
 #include <libxml/xpath.h>
 #include <libxml/xpathInternals.h>
-#include <libxml/parserInternals.h>
 
 #include <libexslt/exslt.h>
 

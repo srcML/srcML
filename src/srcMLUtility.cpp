@@ -46,7 +46,6 @@
 #include "SAX2ExtractUnitXML.h"
 #include "SAX2CountUnits.h"
 #include "SAX2Properties.h"
-#include "SAX2CopyElement.h"
 
 #include "srceval.h"
 #include "srcpatheval.h"
