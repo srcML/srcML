@@ -224,6 +224,9 @@ const char* given_directory = 0;
 const char* given_filename = 0;
 const char* given_version = 0;
 
+// output filename
+const char* srcml_filename = 0;
+
 const char* num2prefix[] = {
 
   SRCML_SRC_NS_PREFIX_DEFAULT,
@@ -302,37 +305,54 @@ int main(int argc, char* argv[]) {
   if (argc > (curarg) && strcmp(argv[curarg], OPTION_SEPARATOR) == 0)
       ++curarg;
 
-  // output filename
-  const char* srcml_filename = 0;
-
   // first command line parameter after options are the input filenames
-  int input_arg_start = 0;
+  int input_arg_start = curarg;
   int input_arg_end = -1;
   int input_arg_count = 0;
-  if ((argc - (curarg - 1)) > 1) {
-
-    // mark first input filename 
-    input_arg_start = curarg;
+  int numout = srcml_filename ? 0 : 1;
+  if (argc - curarg == 1)
+    numout = 0;
+  while ((argc - curarg) > numout) {
 
     // mark last input filename assuming output srcml filename is last
-    if ((argc - (curarg - 1)) > 2)
-      input_arg_end = argc - 2;
-    else
-      input_arg_end = curarg;
+    input_arg_end = curarg;
 
     // calculate the total number of input files
-    input_arg_count = input_arg_end - input_arg_start + 1;
-
-    // if more than one input filename assume nested
-    if (input_arg_count > 1)
-      options |= OPTION_NESTED;
+    ++input_arg_count;
+    //    input_arg_count = input_arg_end - input_arg_start + 1;
 
     // update the argument count with the input filenames
-    curarg += input_arg_count;
+    //    curarg += input_arg_count;
+    ++curarg;
   }
 
+  /*
+    // language is based on parameter
+    } else if (compare_flags(argv[curarg], OUTPUT_FLAG, OUTPUT_FLAG_SHORT)) {
+
+      char* embedded = extract_option(argv[curarg]);
+
+      // filename is embedded parameter
+      if (embedded) {
+
+	srcml_filename = embedded + 1;
+	++curarg;
+
+      // check for output flag with missing output value
+      } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
+	fprintf(stderr, "%s: output option selected but not specified.\n", NAME);
+	exit(STATUS_LANGUAGE_MISSING);
+      } else {
+
+	// extract parameter
+	srcml_filename = argv[(++curarg)++];
+      }
+*/
   // last command line parameter is output srcml filename
-  if (!srcml_filename) {
+  if (srcml_filename) {
+    ++input_arg_end;
+    ++input_arg_count;
+  } else {
     srcml_filename = "-";
     if ((argc - (curarg - 1)) > 1) {
       srcml_filename = argv[curarg];
@@ -340,6 +360,10 @@ int main(int argc, char* argv[]) {
       ++curarg;
     }
   }
+
+  // if more than one input filename assume nested
+  if (input_arg_count > 1)
+    options |= OPTION_NESTED;
 
   // verify that the output filename is not the same as any of the input filenames
 #ifdef __GNUG__
@@ -771,6 +795,27 @@ int process_args(int argc, char* argv[]) {
       // turnoff default cpp reference for Java-based languages
       if (language == srcMLTranslator::LANGUAGE_JAVA || language == srcMLTranslator::LANGUAGE_ASPECTJ)
 	options &= ~OPTION_CPP;
+
+    // language is based on parameter
+    } else if (compare_flags(argv[curarg], OUTPUT_FLAG, OUTPUT_FLAG_SHORT)) {
+
+      char* embedded = extract_option(argv[curarg]);
+
+      // filename is embedded parameter
+      if (embedded) {
+
+	srcml_filename = embedded + 1;
+	++curarg;
+
+      // check for output flag with missing output value
+      } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
+	fprintf(stderr, "%s: output option selected but not specified.\n", NAME);
+	exit(STATUS_LANGUAGE_MISSING);
+      } else {
+
+	// extract parameter
+	srcml_filename = argv[(++curarg)++];
+      }
 
     // xml namespace specifications
     } else if (compare_flags(argv[curarg], XMLNS_FLAG, "") || strncmp(argv[curarg], XMLNS_FLAG, strlen(XMLNS_FLAG)) == 0) {
