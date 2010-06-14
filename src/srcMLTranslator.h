@@ -49,8 +49,11 @@ class srcMLTranslator : public Language {
 		  //		  std::map<std::string, std::string>& uri
 		  );
 
+  // setup the input source based on the filename
+  std::istream* setupInput(const char* src_filename);
+
   // translate from input stream to output stream
-  void translate(const char* srcml_filename, const char* unit_directory = 0,
+  void translate(std::istream* srcml_input, const char* unit_directory = 0,
 			 const char* unit_filename = 0, const char* unit_version = 0);
 
   // destructor
@@ -61,6 +64,8 @@ class srcMLTranslator : public Language {
   int language;
   int options;
   srcMLOutput out;
+  std::ifstream srcfile;
+  bool open;
 }; 
 
 #endif

@@ -135,17 +135,28 @@ bool compare_flags(const char* arg, const char* flag , const char* short_flag, i
 bool compare_flags(const char* arg, const char* flag , const char* short_flag);
 
 // filename extension
-inline char* filename_ext(char* path) { return rindex(path, '.'); }
+inline char* filename_ext(char* path) {
 
-inline char* filename_split(char* path) {
+  char* pos = rindex(path, '.');
+  if (!pos)
+    pos = path + strlen(path);
+
+  return pos;
+}
+
+inline char* filename_split(char* path, char*& dir, char*& filename) {
 
   char* point = rindex(path, '/'); 
   if (point) {
-    char* filename = point + 1; 
     *point = '\0';
-    return filename; 
-  } else
-    return path;
+    filename = point + 1; 
+    dir = path;
+  } else {
+    filename = path;
+    dir = path + strlen(path);
+  }
+
+  return path;
 }
 
 #endif

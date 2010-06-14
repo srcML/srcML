@@ -47,29 +47,41 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
 				 const char* uri[]
 				 )
   : Language(language), encoding(src_encoding), options(op),
-    out(0, srcml_filename, getLanguageString(), xml_encoding, options, uri) {
+    out(0, srcml_filename, getLanguageString(), xml_encoding, options, uri), open(false) {
 
   // root unit for compound srcML documents
   if ((options & OPTION_NESTED) > 0)
     out.startUnit(getLanguageString(), directory, filename, version, true);
 }
 
-// translate from input stream to output stream
-void srcMLTranslator::translate(const char* src_filename, const char* unit_directory,
-				const char* unit_filename, const char* unit_version) {
+// setup the input source based on the filename
+std::istream* srcMLTranslator::setupInput(const char* src_filename) {
 
   try {
       // assume standard input
       std::istream* pin = &std::cin;
 
       // file input
-      std::ifstream srcfile;
       if (strcmp("-", src_filename) != 0) {
 	srcfile.open(src_filename);
 	if (!srcfile)
 	  throw FileError();
 	pin = &srcfile;
+	open = true;
       }
+
+      return pin;
+
+  } catch (FileError) {
+      throw FileError();
+  }
+}
+
+// translate from input stream to output stream
+void srcMLTranslator::translate(std::istream* pin, const char* unit_directory,
+				const char* unit_filename, const char* unit_version) {
+
+  try {
 
       // master lexer with multiple streams
       antlr::TokenStreamSelector selector;
@@ -96,8 +108,9 @@ void srcMLTranslator::translate(const char* src_filename, const char* unit_direc
       // parse and form srcML output with unit attributes
       out.consume(unit_directory, unit_filename, unit_version);
 
-  } catch (FileError) {
-      throw FileError();
+      if (open)
+	srcfile.close();
+      open = false;
 
   } catch (const std::exception& e) {
     fprintf(stderr, "SRCML Exception: %s\n", e.what());

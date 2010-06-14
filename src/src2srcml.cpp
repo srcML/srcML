@@ -443,14 +443,14 @@ int main(int argc, char* argv[]) {
       }
 
       // translate the file listed in the input file using the directory and filename extracted from the path
-      char s[500];
-      strncpy(s, line, 500);
-      char* fullpath = s;
-      char* fname = filename_split(fullpath);
       try {
-	translator.translate(line,
-			     fullpath,
-			     fname,
+	std::istream* pin = translator.setupInput(line);
+	char* dir = 0;
+	char* filename = 0;
+	filename_split(line, dir, filename);
+	translator.translate(pin,
+			     dir,
+			     filename,
 			     given_version);
       } catch (FileError) {
 
@@ -472,7 +472,7 @@ int main(int argc, char* argv[]) {
   } else if (input_arg_count == 0 || strcmp(argv[input_arg_start], STDIN) == 0) {
 
     // translate from standard input using any directory, filename and version given on the command line
-    translator.translate(STDIN, given_directory, given_filename, given_version);
+    translator.translate(translator.setupInput(STDIN), given_directory, given_filename, given_version);
 
   // translate single input filename from command line
   }  else if (input_arg_count == 1) {
@@ -480,10 +480,10 @@ int main(int argc, char* argv[]) {
     // translate from path given on command line using directory given on the command line or extracted
     // from full path
     char* path = argv[input_arg_start];
-    char s[500];
-    strncpy(path, s, 500);
-    char* path_s = s;
-    char* filename_s = filename_split(s);
+    std::istream* pin = translator.setupInput(path);
+    char* path_s = 0;
+    char* filename_s = 0;
+    filename_split(path, path_s, filename_s);
 
     // hack to fix where directory, but no filename
     if (path_s[0] && !filename_s[0]) {
@@ -493,7 +493,7 @@ int main(int argc, char* argv[]) {
     }
 
     try {
-      translator.translate(path,
+      translator.translate(pin,
 			   isoption(options, OPTION_DIRECTORY) ? given_directory : path_s,
 			   isoption(options, OPTION_FILENAME)  ? given_filename  : filename_s,
 			   given_version);
@@ -519,10 +519,6 @@ int main(int argc, char* argv[]) {
     for (int i = input_arg_start; i <= input_arg_end; ++i) {
 
       char* path = argv[i];
-      char s[500];
-      strncpy(path, s, 500);
-      char* path_s = s;
-      char* filename_s = filename_split(s);
 
       // another file
       ++count;
@@ -532,7 +528,11 @@ int main(int argc, char* argv[]) {
 	fprintf(stderr, "%d\t%s", count, path);
       }
       try {
-	translator.translate(path, path_s, filename_s);
+	std::istream* pin = translator.setupInput(path);
+	char* path_s = 0;
+	char* filename_s = 0;
+	filename_split(path, path_s, filename_s);
+	translator.translate(pin, path_s, filename_s);
       } catch (FileError) {
 	fprintf(stderr, "%s error: file \'%s\' does not exist.\n", NAME, path);
       }
