@@ -103,7 +103,7 @@ char const * const num2uri[] = {
 
 // output help
 void output_help(const char* name) {
-  printf( "Usage: %s ( [options] <infile>... <outfile>\n\n"
+  printf( "Usage: %s ( [options] <infile>... [-o <outfile>]\n\n"
 
 	  "Translates source-code files into the XML source-code representation srcML\n"
 	  "with support for creating compound srcML documents.\n\n"
@@ -114,22 +114,23 @@ void output_help(const char* name) {
 
 	  "Options:\n", name);
 
-  printf("  %s, %s display this help and exit\n",      HELP_FLAG_SHORT, HELP_FLAG);
-  printf("  %s, %s display version number and exit\n", VERSION_FLAG_SHORT, VERSION_FLAG);
+  printf("  %s, %-16s display this help and exit\n",      HELP_FLAG_SHORT, HELP_FLAG);
+  printf("  %s, %-16s display version number and exit\n\n", VERSION_FLAG_SHORT, VERSION_FLAG);
 
-  printf("  %s, %s translates a single, individual expression outside of any statement\n",
-	  EXPRESSION_MODE_FLAG_SHORT, EXPRESSION_MODE_FLAG);
-
-  printf("  %s, %s store all input source files in one compound srcML document\n",
-	  NESTED_FLAG_SHORT, NESTED_FLAG);
-
-  printf("  %s, %s treat input file as a list of source files for one compound srcML document\n\n",
+  printf("  %s, %-16s write result to FILE instead of standard output\n", OUTPUT_FLAG_SHORT, OUTPUT_FLAG);
+  printf("  %s, %-16s treat input file as a list of source files for one compound srcML document\n\n",
 	  FILELIST_FLAG_SHORT, FILELIST_FLAG);
 
-  printf("  %s, %s set the output XML encoding to ENC (default:  %s)\n",
+  printf("  %s, %-16s store all input source files in one compound srcML document\n",
+	  NESTED_FLAG_SHORT, NESTED_FLAG);
+
+  printf("  %s, %-16s translates a single, individual expression outside of any statement\n",
+	  EXPRESSION_MODE_FLAG_SHORT, EXPRESSION_MODE_FLAG);
+
+  printf("  %s, %-16s set the output XML encoding to ENC (default:  %s)\n",
 	  ENCODING_FLAG_SHORT, ENCODING_FLAG, DEFAULT_XML_ENCODING);
 
-  printf("  %s, %s set the input source encoding to ENC (default:  %s)\n\n",
+  printf("  %s, %-16s set the input source encoding to ENC (default:  %s)\n\n",
 	  TEXTENCODING_FLAG_SHORT, TEXTENCODING_FLAG, DEFAULT_TEXT_ENCODING);
 
       /*
@@ -137,37 +138,37 @@ void output_help(const char* name) {
 	      << "store the text without any text encoding changes" << "\n"
       */
 
-  printf("  %s set the default namespace URI\n", XMLNS_DEFAULT_FLAG_FULL);
+  printf("  %-23s set the default namespace URI\n", XMLNS_DEFAULT_FLAG_FULL);
   printf("        (default:  xmlns=\"%s\")\n", SRCML_SRC_NS_URI);
 
-  printf("  %s set the namespace PREFIX for the namespace URI\n", XMLNS_FLAG_FULL);
+  printf("  %-23s set the namespace PREFIX for the namespace URI\n", XMLNS_FLAG_FULL);
   printf("        (defaults:  xmlns:cpp=\"%s\")\n", SRCML_CPP_NS_URI);
   printf("        (defaults:  xmlns:srcerr=\"%s\")\n", SRCML_ERR_NS_URI);
 
-  printf("  %s	do not output the default XML declaration\n", NO_XML_DECLARATION_FLAG);
-  printf("  %s	do not output any namespace declarations\n\n", NO_NAMESPACE_DECLARATION_FLAG);
+  printf("  %-23s	do not output the default XML declaration\n", NO_XML_DECLARATION_FLAG);
+  printf("  %-23s	do not output any namespace declarations\n\n", NO_NAMESPACE_DECLARATION_FLAG);
 
-  printf("  %s, %s output in gzip format\n", COMPRESSED_FLAG_SHORT, COMPRESSED_FLAG);
+  printf("  %s, %-16s output in gzip format\n", COMPRESSED_FLAG_SHORT, COMPRESSED_FLAG);
 
-  printf("  %s, %s low-latency output\n", INTERACTIVE_FLAG_SHORT, INTERACTIVE_FLAG);
+  printf("  %s, %-16s low-latency output\n", INTERACTIVE_FLAG_SHORT, INTERACTIVE_FLAG);
 
-  printf("  %s, %s markup translation errors in namespace \"%s\"\n",
+  printf("  %s, %-16s markup translation errors in namespace \"%s\"\n",
 	  DEBUG_FLAG_SHORT, DEBUG_FLAG, SRCML_ERR_NS_URI);
 
-  printf("  %s, %s verbose output to standard error\n\n", VERBOSE_FLAG_SHORT, VERBOSE_FLAG);
+  printf("  %s, %-16s verbose output to standard error\n\n", VERBOSE_FLAG_SHORT, VERBOSE_FLAG);
 
   printf("Metadata Options:\n\n"
-	 "  %s, %s set the language to %s, %s (default), %s, or %s\n",
+	 "  %s, %-16s set the language to %s, %s (default), %s, or %s\n",
 	 LANGUAGE_FLAG_SHORT, LANGUAGE_FLAG_FULL,
 	 LANGUAGE_C, LANGUAGE_CXX, LANGUAGE_JAVA, LANGUAGE_ASPECTJ);
 
-  printf("  %s, %s set the directory attribute to DIR\n",
+  printf("  %s, %-16s set the directory attribute to DIR\n",
 	 DIRECTORY_FLAG_SHORT, DIRECTORY_FLAG_FULL);
 
-  printf("  %s, %s set the filename attribute to FILE\n",
+  printf("  %s, %-16s set the filename attribute to FILE\n",
 	 FILENAME_FLAG_SHORT, FILENAME_FLAG_FULL);
 
-  printf("  %s, %s set the version attribute to VER\n\n",
+  printf("  %s, %-16s set the version attribute to VER\n\n",
 	 SRCVERSION_FLAG_SHORT, SRCVERSION_FLAG_FULL);
 
       /*
@@ -177,29 +178,29 @@ void output_help(const char* name) {
 
   printf("Markup Extensions:\n\n");
 
-  printf("  %s markup literal values in namespace \"%s\"\n",
+  printf("  %-16s markup literal values in namespace \"%s\"\n",
 	 LITERAL_FLAG, SRCML_EXT_LITERAL_NS_URI);
 
-  printf("  %s markup operators in namespace \"%s\"\n",
+  printf("  %-16s markup operators in namespace \"%s\"\n",
 	 OPERATOR_FLAG, SRCML_EXT_OPERATOR_NS_URI);
 
-  printf("  %s markup type modifiers in namespace \"%s\"\n",
+  printf("  %-16s markup type modifiers in namespace \"%s\"\n",
 	 MODIFIER_FLAG, SRCML_EXT_MODIFIER_NS_URI);
 
   printf("\nCPP Markup Options:\n\n");
 
-  printf("  %s  markup cpp #else regions (default)\n", CPP_MARKUP_ELSE_FLAG);
-  printf("  %s  leave cpp #else regions as text\n\n", CPP_TEXTONLY_ELSE_FLAG);
+  printf("  %-16s  markup cpp #else regions (default)\n", CPP_MARKUP_ELSE_FLAG);
+  printf("  %-16s  leave cpp #else regions as text\n\n", CPP_TEXTONLY_ELSE_FLAG);
 
-  printf("  %s  markup cpp #if 0 regions\n", CPP_MARKUP_IF0_FLAG);
-  printf("  %s  leave cpp #if 0 regions as text (default)\n\n", CPP_TEXTONLY_IF0_FLAG);
+  printf("  %-16s  markup cpp #if 0 regions\n", CPP_MARKUP_IF0_FLAG);
+  printf("  %-16s  leave cpp #if 0 regions as text (default)\n\n", CPP_TEXTONLY_IF0_FLAG);
 
   printf("Examples:  \n"
 	 "  %1$s                (read from standard input, write to standard output)\n"
 	 "  %1$s m.cpp          (read from file m.cpp, write to standard output)\n"
-	 "  %1$s m.cpp m.cpp.xml (read from file m.cpp, write to file m.cpp.xml)\n"
+	 "  %1$s m.cpp -o m.cpp.xml (read from file m.cpp, write to file m.cpp.xml)\n"
 	 "  %1$s -              (read from standard input, write to standard output)\n"
-	 "  %1$s - m.cpp.xml    (read from standard input, write to file m.cpp.xml)\n"
+	 "  %1$s - -o m.cpp.xml    (read from standard input, write to file m.cpp.xml)\n"
 	 "  %1$s --directory=src --filename=m.cpp - m.cpp.xml "
 	 "(element unit attributes dir \"src\", filename \"m.cpp\")\n"
 	 "  %1$s --src-encoding=UTF-8 m.cpp m.cpp.xml         "
