@@ -473,7 +473,8 @@ int main(int argc, char* argv[]) {
   } else if (input_arg_count == 0 || strcmp(argv[input_arg_start], STDIN) == 0) {
 
     // translate from standard input using any directory, filename and version given on the command line
-    translator.translate(translator.setupInput(STDIN), given_directory, given_filename, given_version, language);
+    translator.translate(translator.setupInput(STDIN), given_directory, given_filename, given_version, 
+			 language ? language : DEFAULT_LANGUAGE);
 
   // translate single input filename from command line
   }  else if (input_arg_count == 1) {
