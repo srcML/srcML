@@ -122,7 +122,7 @@ check([srcmltranslator], "", srcml)
 ##
 # empty with debug
 srcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:srcerr="http://www.sdml.info/srcML/srcerr" language="C++"/>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:err="http://www.sdml.info/srcML/srcerr" language="C++"/>
 """
 check([srcmltranslator, "--debug"], "", srcml)
 
@@ -579,18 +579,18 @@ check([srcmltranslator, "--xmlns:cpp=http://www.sdml.info/srcML/cpp"], "", srcml
 check([srcmltranslator, "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:cpp=http://www.sdml.info/srcML/cpp"], "", srcml)
 
 srcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:srcerr="http://www.sdml.info/srcML/srcerr" language="C++"/>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:err="http://www.sdml.info/srcML/srcerr" language="C++"/>
 """
 
 # separate
-check([srcmltranslator, "--debug", "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:cpp=http://www.sdml.info/srcML/cpp", "--xmlns:srcerr=http://www.sdml.info/srcML/srcerr"], "", srcml)
+check([srcmltranslator, "--debug", "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:cpp=http://www.sdml.info/srcML/cpp", "--xmlns:err=http://www.sdml.info/srcML/srcerr"], "", srcml)
 
 # multiple
 check([srcmltranslator, "--debug", "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:cpp=http://www.sdml.info/srcML/cpp"], "", srcml)
 
-check([srcmltranslator, "--debug", "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:srcerr=http://www.sdml.info/srcML/srcerr"], "", srcml)
+check([srcmltranslator, "--debug", "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:err=http://www.sdml.info/srcML/srcerr"], "", srcml)
 
-check([srcmltranslator, "--debug", "--xmlns:cpp=http://www.sdml.info/srcML/cpp", "--xmlns:srcerr=http://www.sdml.info/srcML/srcerr"], "", srcml)
+check([srcmltranslator, "--debug", "--xmlns:cpp=http://www.sdml.info/srcML/cpp", "--xmlns:err=http://www.sdml.info/srcML/srcerr"], "", srcml)
 
 srcml = xml_declaration + """
 <src:unit xmlns:src="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
