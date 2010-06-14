@@ -451,7 +451,8 @@ int main(int argc, char* argv[]) {
 	translator.translate(pin,
 			     dir,
 			     filename,
-			     given_version);
+			     given_version,
+			     language);
       } catch (FileError) {
 
 	if (isoption(options, OPTION_VERBOSE))
@@ -472,7 +473,7 @@ int main(int argc, char* argv[]) {
   } else if (input_arg_count == 0 || strcmp(argv[input_arg_start], STDIN) == 0) {
 
     // translate from standard input using any directory, filename and version given on the command line
-    translator.translate(translator.setupInput(STDIN), given_directory, given_filename, given_version);
+    translator.translate(translator.setupInput(STDIN), given_directory, given_filename, given_version, language);
 
   // translate single input filename from command line
   }  else if (input_arg_count == 1) {
@@ -496,7 +497,8 @@ int main(int argc, char* argv[]) {
       translator.translate(pin,
 			   isoption(options, OPTION_DIRECTORY) ? given_directory : path_s,
 			   isoption(options, OPTION_FILENAME)  ? given_filename  : filename_s,
-			   given_version);
+			   given_version,
+			   language);
 
     } catch (FileError) {
 
@@ -532,7 +534,7 @@ int main(int argc, char* argv[]) {
 	char* path_s = 0;
 	char* filename_s = 0;
 	filename_split(path, path_s, filename_s);
-	translator.translate(pin, path_s, filename_s);
+	translator.translate(pin, path_s, filename_s, 0, language);
       } catch (FileError) {
 	fprintf(stderr, "%s error: file \'%s\' does not exist.\n", NAME, path);
       }

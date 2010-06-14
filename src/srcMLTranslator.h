@@ -54,7 +54,8 @@ class srcMLTranslator : public Language {
 
   // translate from input stream to output stream
   void translate(std::istream* srcml_input, const char* unit_directory = 0,
-			 const char* unit_filename = 0, const char* unit_version = 0);
+		 const char* unit_filename = 0, const char* unit_version = 0,
+		 int language = 0);
 
   // destructor
   ~srcMLTranslator();

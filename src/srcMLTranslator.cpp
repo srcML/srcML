@@ -79,7 +79,8 @@ std::istream* srcMLTranslator::setupInput(const char* src_filename) {
 
 // translate from input stream to output stream
 void srcMLTranslator::translate(std::istream* pin, const char* unit_directory,
-				const char* unit_filename, const char* unit_version) {
+				const char* unit_filename, const char* unit_version,
+				int language) {
 
   try {
 
@@ -87,7 +88,7 @@ void srcMLTranslator::translate(std::istream* pin, const char* unit_directory,
       antlr::TokenStreamSelector selector;
 
       // srcML lexical analyzer from standard input
-      KeywordCPPLexer lexer(*pin, encoding, getLanguage());
+      KeywordCPPLexer lexer(*pin, encoding, language);
       lexer.setSelector(&selector);
 
       // pure block comment lexer
