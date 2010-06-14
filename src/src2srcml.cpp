@@ -349,10 +349,7 @@ int main(int argc, char* argv[]) {
       }
 */
   // last command line parameter is output srcml filename
-  if (srcml_filename) {
-    ++input_arg_end;
-    ++input_arg_count;
-  } else {
+  if (!srcml_filename) {
     srcml_filename = "-";
     if ((argc - (curarg - 1)) > 1) {
       srcml_filename = argv[curarg];
