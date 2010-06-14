@@ -373,9 +373,7 @@ int main(int argc, char* argv[]) {
 #ifdef __GNUG__
   if (input_arg_count == 0 || strcmp(argv[input_arg_start], STDIN) == 0) {
 
-    struct stat instat;
-    fstat(0, &instat);
-    if (S_ISCHR(instat.st_mode))
+    if (isatty(STDIN_FILENO))
       options |= OPTION_INTERACTIVE;
   }
 #endif
