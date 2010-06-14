@@ -81,8 +81,6 @@ const int DEFAULT_LANGUAGE = srcMLTranslator::LANGUAGE_CXX;
 const char* const EXAMPLE_TEXT_FILENAME="foo.cpp";
 const char* const EXAMPLE_XML_FILENAME="foo.cpp.xml";
 
-const char* const GAP = "                              ";
-
 const char FILELIST_COMMENT = '#';
 
 enum {
