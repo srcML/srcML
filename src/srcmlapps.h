@@ -75,6 +75,9 @@ const char* const SRCVERSION_FLAG_FULL = "--src-version=VER";
 const char* const VERBOSE_FLAG = "--verbose";
 const char* const VERBOSE_FLAG_SHORT = "-v";
 
+const char* const OUTPUT_FLAG = "--output";
+const char* const OUTPUT_FLAG_SHORT = "-o";
+
 namespace LanguageName {
 
 const char* const LANGUAGE_C = "C";

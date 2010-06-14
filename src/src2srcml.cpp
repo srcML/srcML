@@ -302,6 +302,9 @@ int main(int argc, char* argv[]) {
   if (argc > (curarg) && strcmp(argv[curarg], OPTION_SEPARATOR) == 0)
       ++curarg;
 
+  // output filename
+  const char* srcml_filename = 0;
+
   // first command line parameter after options are the input filenames
   int input_arg_start = 0;
   int input_arg_end = -1;
@@ -329,11 +332,13 @@ int main(int argc, char* argv[]) {
   }
 
   // last command line parameter is output srcml filename
-  const char* srcml_filename = "-";
-  if ((argc - (curarg - 1)) > 1) {
-    srcml_filename = argv[curarg];
+  if (!srcml_filename) {
+    srcml_filename = "-";
+    if ((argc - (curarg - 1)) > 1) {
+      srcml_filename = argv[curarg];
 
-    ++curarg;
+      ++curarg;
+    }
   }
 
   // verify that the output filename is not the same as any of the input filenames
