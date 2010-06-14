@@ -101,7 +101,7 @@ void srcMLTranslator::translate(std::istream* pin, const char* unit_directory,
       selector.select(&lexer);
 
       // base stream parser srcML connected to lexical analyzer
-      StreamMLParser<srcMLParser> parser(selector, getLanguage(), options);
+      StreamMLParser<srcMLParser> parser(selector, language, options);
 
       // connect local parser to attribute for output
       out.setTokenStream(parser);
