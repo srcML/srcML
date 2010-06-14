@@ -443,10 +443,10 @@ int main(int argc, char* argv[]) {
       }
 
       // translate the file listed in the input file using the directory and filename extracted from the path
+      char* dir = 0;
+      char* filename = 0;
       try {
 	std::istream* pin = translator.setupInput(line);
-	char* dir = 0;
-	char* filename = 0;
 	filename_split(line, dir, filename);
 	translator.translate(pin,
 			     dir,
@@ -455,9 +455,9 @@ int main(int argc, char* argv[]) {
       } catch (FileError) {
 
 	if (isoption(options, OPTION_VERBOSE))
-	  fprintf(stderr, "\t\terror: file \'%s\' does not exist.\n", line);
+	  fprintf(stderr, "\t\terror: file \'%s\%s\' does not exist.\n", dir, filename);
 	else
-	  fprintf(stderr, " error: file \'%s\' does not exist.\n", line);
+	  fprintf(stderr, " error: file \'%s\%s\' does not exist.\n", dir, filename);
       }
 
       if (isoption(options, OPTION_VERBOSE)) {
