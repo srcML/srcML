@@ -209,11 +209,11 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
       }
 
       // save the result, but temporarily hide the namespaces
-      xmlNsPtr savens = onode ? onode->nsDef : 0;
-      if (savens && !isoption(pstate->options, OPTION_XSLT_ALL))
+      xmlNsPtr savens = onode && !isoption(pstate->options, OPTION_XSLT_ALL) ? onode->nsDef : 0;
+      if (savens)
 	onode->nsDef = 0;
       xmlNodeDumpOutput(pstate->buf, ctxt->myDoc, onode, 0, 0, 0);
-      if (savens && !isoption(pstate->options, OPTION_XSLT_ALL))
+      if (savens)
 	onode->nsDef = savens;
 
       // if we need a unit, output the end tag
@@ -260,12 +260,9 @@ void SAX2UnitDOMXPath::endDocument(void *ctx) {
   case XPATH_NODESET:
 
     // root unit end tag
-    if (!isoption(pstate->options, OPTION_XSLT_ALL)) {
-      if (pstate->found)
-	xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("</unit>" "\n"));
-      else
-	xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("/>" "\n"));
-    }
+    if (!isoption(pstate->options, OPTION_XSLT_ALL))
+      xmlOutputBufferWriteString(pstate->buf, pstate->found ? "</unit>\n" : "/>\n");
+
     break;
 
   case XPATH_NUMBER:

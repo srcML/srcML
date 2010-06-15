@@ -198,6 +198,7 @@ const char* xsltfiles[MAXXSLT + 1] = { 0 };
 const int MAXXPATH = 32;
 int xpathcount = 0;
 const char* xpathexpr[MAXXPATH + 1] = { 0 };
+std::list<const char*> xpathexprlist;
 
 int main(int argc, char* argv[]) {
 
@@ -463,6 +464,7 @@ int main(int argc, char* argv[]) {
 
 	xpath = embedded + 1;
 	xpathexpr[xpathcount++] = embedded + 1;
+	xpathexprlist.push_back(embedded + 1);
 	++curarg;
 
       // check for namespace flag with missing namespace
@@ -470,7 +472,7 @@ int main(int argc, char* argv[]) {
 	fprintf(stderr, "%s: xpath option selected but no xpath expression.\n", NAME);
 	exit(STATUS_UNIT_MISSING); // FIX
       } else {
-	xpathexpr[xpathcount++] = xpath = argv[(++curarg)++];
+	xpathexprlist.push_back(xpathexpr[xpathcount++] = xpath = argv[(++curarg)++]);
       }
 
     // context
@@ -523,7 +525,7 @@ int main(int argc, char* argv[]) {
       if (embedded) {
 
 	xpath = embedded + 1;
-	xpathexpr[xpathcount++] = embedded + 1;
+	xpathexprlist.push_back(xpathexpr[xpathcount++] = embedded + 1);
 	++curarg;
 
       // check for namespace flag with missing namespace
@@ -531,7 +533,7 @@ int main(int argc, char* argv[]) {
 	fprintf(stderr, "%s: xpath option selected but no xpath expression.\n", NAME);
 	exit(STATUS_UNIT_MISSING); // FIX
       } else {
-	xpathexpr[xpathcount++] = argv[(++curarg)++];
+	xpathexprlist.push_back(xpathexpr[xpathcount++] = argv[(++curarg)++]);
       }
 
     // reached the end of a multi-short form option
@@ -757,7 +759,7 @@ int main(int argc, char* argv[]) {
 
     } else if (isoption(options, OPTION_XPATH)) {
 
-      if (xpathexpr[0] == 0)
+      if (xpathexprlist.empty())
 	su.extract_element(context, ofilename);
       else
 	su.xpath(ofilename, context, xpathexpr);
