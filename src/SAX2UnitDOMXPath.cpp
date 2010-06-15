@@ -137,8 +137,8 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
 
   xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
 
-  const char* unit_filename = (const char*) xmlGetProp(a_node, BAD_CAST "filename");
-  const char* unit_directory =  (const char*) xmlGetProp(a_node, BAD_CAST "dir");
+  char* unit_filename = (char*) xmlGetNsProp(a_node, BAD_CAST "filename", URI);
+  char* unit_directory = (char*) xmlGetNsProp(a_node, BAD_CAST "dir", URI);
 
   char s[100];
 
@@ -152,6 +152,7 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
 
     if (!pstate->needroot) {
       xmlOutputBufferWrite(pstate->buf, pstate->rootbuf->use, (const char*) pstate->rootbuf->content);
+      xmlBufferFree(pstate->rootbuf);
       pstate->needroot = true;
     }
 
@@ -238,6 +239,9 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
 
   // finished with the result nodes
   xmlXPathFreeObject(result_nodes);
+
+  xmlFree(unit_filename);
+  xmlFree(unit_directory);
 
   SAX2UnitDOM::endElementNs(ctx, localname, prefix, URI);
 }

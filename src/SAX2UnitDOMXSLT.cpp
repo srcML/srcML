@@ -105,6 +105,7 @@ void SAX2UnitDOMXSLT::endElementNs(void *ctx, const xmlChar *localname, const xm
     // if in per-unit mode and this is the first result found
     if (pstate->isnested && !pstate->found && !isoption(pstate->options, OPTION_XSLT_ALL)) {
       xmlOutputBufferWrite(pstate->buf, pstate->rootbuf->use, (const char*) pstate->rootbuf->content);
+      xmlBufferFree(pstate->rootbuf);
       xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(">\n\n"));
       pstate->found = true;
     }
