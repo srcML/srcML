@@ -218,9 +218,9 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
 
       // if we need a unit, output the end tag
       if (outputunit)
-	xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("</unit>"));
-
-      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\n\n"));
+	xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("</unit>\n\n"));
+      else 
+	xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\n\n"));
     }
 
     break;
