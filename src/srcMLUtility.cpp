@@ -304,7 +304,7 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
 // relaxng evaluation of the nested units
 void srcMLUtility::relaxng(const char* ofilename, const char** xslts) {
 
-  xmlSAXHandler sax = SAX2UnitDOMXSLT::factory();
+  xmlSAXHandler sax = SAX2UnitDOMRelaxNG::factory();
   
   SAX2UnitDOMRelaxNG state(0, xslts, ofilename, 0, 0, 0);
 

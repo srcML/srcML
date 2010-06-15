@@ -62,7 +62,7 @@ xmlSAXHandler SAX2UnitDOMRelaxNG::factory() {
 
 // start document
 void SAX2UnitDOMRelaxNG::startDocument(void *ctx) {
-  
+
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
 
     SAX2UnitDOMRelaxNG* pstate = (SAX2UnitDOMRelaxNG*) ctxt->_private;
