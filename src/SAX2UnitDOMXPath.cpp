@@ -140,7 +140,7 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
   const char* unit_filename = (const char*) xmlGetProp(a_node, BAD_CAST "filename");
   const char* unit_directory =  (const char*) xmlGetProp(a_node, BAD_CAST "dir");
 
-  char s[1000] = { 0 };
+  char s[100];
 
   // process the resulting nodes
   pstate->nodetype = result_nodes->type;
@@ -200,7 +200,7 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
 	}
 
 	// line number and clost unit start tag
-	sprintf(s, " line=\"%ld\">", xmlGetLineNo(onode));
+	snprintf(s, sizeof(s) / sizeof(s[0]), " line=\"%ld\">", xmlGetLineNo(onode));
 	xmlOutputBufferWriteString(pstate->buf, s);
       }
 
