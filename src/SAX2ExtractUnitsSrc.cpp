@@ -133,74 +133,63 @@ namespace SAX2ExtractUnitsSrc {
   // start a new output buffer and corresponding file for a unit element
   void startUnit(State* pstate, int nb_attributes, const xmlChar** attributes) {
 
-    char path[512] = "";
-
-    boost::filesystem::path directory_path;
-
     // find the directory
-    bool founddirectory = false;
+    int dir_index = -1;
     for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5)
       if (strcmp((const char*) attributes[index], "dir") == 0) {
 
-	int filename_size = (const char*) attributes[index + 4] - (const char*) attributes[index + 3];
-	if (filename_size > 0) {
-	  strncpy(path, (const char*) attributes[index + 3], filename_size);
-	  path[filename_size] = '\0';
-	  directory_path /= path;
-	}
-
-	// found the directory attribute, now make sure it is not empty
-	founddirectory = filename_size > 0;
+	dir_index = index;
 	break;
       }
-
-    boost::filesystem::path filename_path;
+    int dir_size = dir_index != -1 ? (const char*) attributes[dir_index + 4] - (const char*) attributes[dir_index + 3] : 0;
 
     // find the filename
-    bool foundfilename = false;
+    int filename_index = -1;
     for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5)
       if (strcmp((const char*) attributes[index], "filename") == 0) {
 
-	int filename_size = (const char*) attributes[index + 4] - (const char*) attributes[index + 3];
-	strncpy(path, (const char*) attributes[index + 3], filename_size);
-	path[filename_size] = '\0';
-	filename_path /= path;
-
-	foundfilename = true;
+	filename_index = index;
 	break;
       }
+    int filename_size = filename_index != -1 ? (const char*) attributes[filename_index + 4] - (const char*) attributes[filename_index + 3] : 0;
 
     // filename is required
-    if (!foundfilename) {
+    if (filename_size <= 0) {
       fprintf(stderr, "Missing filename attribute\n");
       return;
     }
 
-    boost::filesystem::path complete_path = directory_path;
-    complete_path /= filename_path;
+    // create a complete path from the two separate directories and filename attributes
+    realloc(pstate->whole_path, dir_size + filename_size + 1);
 
-    // construct the directory if needed
-    if (founddirectory && !is_directory(directory_path)) {
+    if (dir_size > 0) {
 
-      try {
-	if (!boost::filesystem::create_directories(directory_path))
-	  fprintf(stderr, "Error in creating directory:  %s\n", directory_path.string().c_str());
+      memcpy(pstate->whole_path, attributes[dir_index + 3], dir_size);
+      pstate->whole_path[dir_size] = '\0';
 
-      } catch (std::exception& e) {
-      
-	fprintf(stderr, "Error %s creating directory:  %s\n", e.what(), directory_path.string().c_str());
+      // construct the directory if needed
+      for (char* c = pstate->whole_path; *c; ++c)
 
-      } catch (...) {
-      
-	fprintf(stderr, "Error in creating directory:  %s\n", directory_path.string().c_str());
-      }
+	if (*c == '/') {
+	  *c = '\0';
+	  mkdir(pstate->whole_path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+	  *c = '/';
+	}
+
+      mkdir(pstate->whole_path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+      pstate->whole_path[dir_size] = '/';
     }
+
+    strncpy(pstate->whole_path + dir_size + (dir_size > 0 ? 1 : 0), (const char*) attributes[filename_index + 3], filename_size);
+    /*
+	  fprintf(stderr, "Error in creating directory:  %s\n", directory_path.string().c_str());
+    */
 
     // output file status message if in verbose mode
     if (isoption(*(pstate->poptions), OPTION_VERBOSE))
-      fprintf(stderr, "%ld\t%s\n", pstate->count, complete_path.file_string().c_str());
+      fprintf(stderr, "%ld\t%s\n", pstate->count, pstate->whole_path);
 
-    pstate->output = xmlOutputBufferCreateFilename(complete_path.file_string().c_str(), pstate->handler, 0);
+    pstate->output = xmlOutputBufferCreateFilename(pstate->whole_path, pstate->handler, 0);
     if (pstate->output == NULL) {
       fprintf(stderr, "Output buffer error\n");
       xmlStopParser(pstate->ctxt);

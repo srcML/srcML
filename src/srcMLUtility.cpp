@@ -243,6 +243,7 @@ void srcMLUtility::expand(const char* root_filename) {
   state.root_filename = root_filename;
   state.poptions = &options;
   state.handler = xmlFindCharEncodingHandler(output_encoding);
+  state.whole_path = (char*) malloc(0);
   state.unit = -1;
 
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
@@ -256,6 +257,8 @@ void srcMLUtility::expand(const char* root_filename) {
   xmlParseDocument(ctxt);
 
   ctxt->sax = NULL;
+
+  free(state.whole_path);
 
   xmlFreeParserCtxt(ctxt);
 }

@@ -41,6 +41,7 @@ namespace SAX2ExtractUnitsSrc {
     xmlCharEncodingHandlerPtr handler;
     int* poptions;
     xmlOutputBufferPtr output;
+    char* whole_path;
   };
 
   // start a new output buffer and corresponding file for a
