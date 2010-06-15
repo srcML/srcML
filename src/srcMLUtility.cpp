@@ -23,13 +23,8 @@
 */
 
 #include "srcMLUtility.h"
-#include <iostream>
-#include <fstream>
 #include <cstring>
-#include <libxml/xmlsave.h>
 #include "srcmlns.h"
-#include <libxml/parser.h>
-#include <libxml/parserInternals.h>
 
 #ifdef __GNUC__
 #include <sys/stat.h>
@@ -37,6 +32,8 @@
 #else
 #include <direct.h>
 #endif
+
+#include <libxml/parserInternals.h>
 
 #include "Options.h"
 
