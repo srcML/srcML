@@ -604,7 +604,7 @@ int main(int argc, char* argv[]) {
     exit(STATUS_INVALID_OPTION_COMBINATION);
   }
   */
-
+  /*
   // verify that the input file exists
   struct stat instat;
   int result = stat(filename, &instat);
@@ -622,7 +622,7 @@ int main(int argc, char* argv[]) {
     exit(STATUS_INPUTFILE_PROBLEM);
   }
 #endif
-
+  */
   // info options are convenience functions for multiple options
   if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {
     optionorder[0] = OPTION_XML_ENCODING;

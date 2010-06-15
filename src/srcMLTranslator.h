@@ -67,6 +67,7 @@ class srcMLTranslator : public Language {
   srcMLOutput out;
   std::ifstream srcfile;
   bool open;
+  char* ifilename;
 }; 
 
 #endif

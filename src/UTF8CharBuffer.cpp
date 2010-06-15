@@ -11,60 +11,53 @@
 */
 int UTF8CharBuffer::getChar() {
 
-  // maybe no need to even be doing this, ever
-  if (skipencoding)
-    return CharBuffer::getChar();
+  static const xmlChar* content = 0;
 
-  // load up the original source encoding buffer
-  // if all out in the utf8 buffer
-  if (pos == utf8buffer->use && !eof) {
+  // need to refill the buffer
+  if (size == 0 || pos >= size) {
 
-    // fill up the input buffer starting from where
-    // encoding left off
-    while (buffer->use < SRCBUFSIZE) {
-      int c = CharBuffer::getChar();
-      if (c == -1) {
-	eof = true;
-	break;
-      }
+    // previous fill found eof
+    if (eof)
+      return -1;
 
-      // sequence "\r\n" where the '\r'
-      // has already been converted to a '\n'
-      if (c == '\n' && lastcr) {
-	lastcr = false;
-	continue;
-      }
-
-      // convert carriage returns to a line feed
-      if (c == '\r') {
-	lastcr = true;
-	c = '\n';
-      }
-
-      buffer->content[buffer->use++] = (char) c;
+    // refill the buffer
+    input->buffer->use = 0;
+    size = xmlParserInputBufferGrow(input, SRCBUFSIZE);
+	
+    // found problem or eof
+    if (size == -1 || size == 0) {
+      eof = true;
+      return -1;
     }
 
-    // convert from the original source encoding to UTF-8
-    utf8buffer->use = 0;
-    int result = xmlCharEncInFunc(handler, utf8buffer, buffer);
-    if (result < 0)
-      throw "Source encoding error";
+    // shorthand for content buffer
+    content = input->buffer->content;
 
-    // start grabbing UTF-8 characters at the beginning
+    // start at the beginning
     pos = 0;
   }
 
-  // if we found eof and are all out of
-  // buffer, then just get out
-  if (eof && pos == utf8buffer->use)
-    return -1;
+  // individual 8-bit character to return
+  int c = (int) content[pos++];
 
-  // return the next unused byte
-  return utf8buffer->content[pos++];
+  // sequence "\r\n" where the '\r'
+  // has already been converted to a '\n'
+  if (c == '\n' && lastcr) {
+    lastcr = false;
+    if (pos < size)
+      c = (int) content[pos++];
+  }
+
+  // convert carriage returns to a line feed
+  if (c == '\r') {
+    lastcr = true;
+    c = '\n';
+  }
+
+  return c;
 }
 
 UTF8CharBuffer::~UTF8CharBuffer() {
 
-  xmlBufferFree(buffer);
-  xmlBufferFree(utf8buffer);
+  xmlFreeParserInputBuffer(input);
 }

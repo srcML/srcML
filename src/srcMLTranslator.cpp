@@ -47,7 +47,7 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
 				 const char* uri[]
 				 )
   : Language(language), encoding(src_encoding), options(op),
-    out(0, srcml_filename, getLanguageString(), xml_encoding, options, uri), open(false) {
+    out(0, srcml_filename, getLanguageString(), xml_encoding, options, uri), open(false), ifilename(0) {
 
   // root unit for compound srcML documents
   if ((options & OPTION_NESTED) > 0)
@@ -56,6 +56,11 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
 
 // setup the input source based on the filename
 std::istream* srcMLTranslator::setupInput(const char* src_filename) {
+
+  //  fprintf(stderr, "setupInput:  FIlename: %s\n", src_filename);
+  ifilename = strdup(src_filename);
+
+  return &std::cin;
 
   try {
       // assume standard input
@@ -88,7 +93,7 @@ void srcMLTranslator::translate(std::istream* pin, const char* unit_directory,
       antlr::TokenStreamSelector selector;
 
       // srcML lexical analyzer from standard input
-      KeywordCPPLexer lexer(*pin, encoding, language);
+      KeywordCPPLexer lexer(ifilename, *pin, encoding, language);
       lexer.setSelector(&selector);
 
       // pure block comment lexer
@@ -112,6 +117,8 @@ void srcMLTranslator::translate(std::istream* pin, const char* unit_directory,
       if (open)
 	srcfile.close();
       open = false;
+
+      free(ifilename);
 
   } catch (const std::exception& e) {
     fprintf(stderr, "SRCML Exception: %s\n", e.what());
