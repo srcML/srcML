@@ -74,7 +74,7 @@ class srcMLUtility {
   void xslt(const char* context_element, const char* ofilename, const char* xslts[], const char* params[], int paramcount);
 
   // perform relaxng evaluation
-  void relaxng(const char* ofilename, const char* xslts);
+  void relaxng(const char* ofilename, const char** xslts);
 
   static bool checkEncoding(const char* encoding) {
 

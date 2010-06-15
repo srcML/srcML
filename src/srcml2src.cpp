@@ -470,8 +470,7 @@ int main(int argc, char* argv[]) {
 	fprintf(stderr, "%s: xpath option selected but no xpath expression.\n", NAME);
 	exit(STATUS_UNIT_MISSING); // FIX
       } else {
-	xpath = argv[(++curarg)++];
-	xpathexpr[xpathcount++] = argv[(++curarg)++];
+	xpathexpr[xpathcount++] = xpath = argv[(++curarg)++];
       }
 
     // context
@@ -524,6 +523,7 @@ int main(int argc, char* argv[]) {
       if (embedded) {
 
 	xpath = embedded + 1;
+	xpathexpr[xpathcount++] = embedded + 1;
 	++curarg;
 
       // check for namespace flag with missing namespace
@@ -531,7 +531,7 @@ int main(int argc, char* argv[]) {
 	fprintf(stderr, "%s: xpath option selected but no xpath expression.\n", NAME);
 	exit(STATUS_UNIT_MISSING); // FIX
       } else {
-	xpath = argv[(++curarg)++];
+	xpathexpr[xpathcount++] = argv[(++curarg)++];
       }
 
     // reached the end of a multi-short form option
@@ -768,7 +768,7 @@ int main(int argc, char* argv[]) {
 
     } else if (isoption(options, OPTION_RELAXNG)) {
 
-      su.relaxng(ofilename, xpath);
+      su.relaxng(ofilename, xpathexpr);
 
     } else {
 

@@ -50,10 +50,10 @@
 #include "srceval.h"
 #include "srcpatheval.h"
 #include "srcxslteval.h"
-#include "srcrelaxngeval.h"
 
-#include "SAX2UnitDOMXSLT.h"
 #include "SAX2UnitDOMXPath.h"
+#include "SAX2UnitDOMXSLT.h"
+#include "SAX2UnitDOMRelaxNG.h"
 
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op)
@@ -292,7 +292,6 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
 void srcMLUtility::xslt(const char* context_element, const char* ofilename, const char* xslts[], const char* params[], int paramcount) {
 
   xmlSAXHandler sax = SAX2UnitDOMXSLT::factory();
-
   
   SAX2UnitDOMXSLT state(context_element, xslts, ofilename, params, paramcount, options);
 
@@ -307,26 +306,25 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
   ctxt->sax = NULL;
 
   xmlFreeParserCtxt(ctxt);
-  /*
-
-  xmlTextReaderPtr reader = xmlNewTextReaderFilename(infile);
-
-  // perform xpath evaluation
-  srcxslteval(context_element, xslts, reader, ofilename, params, paramcount, options);
-
-  xmlFreeTextReader(reader);
-  */
-
 }
 
 // relaxng evaluation of the nested units
-void srcMLUtility::relaxng(const char* ofilename, const char* xslts) {
+void srcMLUtility::relaxng(const char* ofilename, const char** xslts) {
 
-  xmlTextReaderPtr reader = xmlNewTextReaderFilename(infile);
+  xmlSAXHandler sax = SAX2UnitDOMXSLT::factory();
+  
+  SAX2UnitDOMRelaxNG state(0, xslts, ofilename, 0, 0, 0);
 
-  // perform xpath evaluation
-  srcrelaxngeval(xslts, reader, ofilename);
+  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
+  if (ctxt == NULL) return;
+  ctxt->sax = &sax;
+  ctxt->_private = &state;
+  //state.ctxt = ctxt;
 
-  xmlFreeTextReader(reader);
+  xmlParseDocument(ctxt);
+
+  ctxt->sax = NULL;
+
+  xmlFreeParserCtxt(ctxt);
 }
 
