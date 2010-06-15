@@ -162,14 +162,17 @@ namespace SAX2ExtractUnitsSrc {
     // create a complete path from the two separate directories and filename attributes
     realloc(pstate->whole_path, dir_size + filename_size + 1);
 
+    // if there is a directory, then we need to construct each part of the path
     if (dir_size > 0) {
 
+      // put the directory into the whole path
       memcpy(pstate->whole_path, attributes[dir_index + 3], dir_size);
       pstate->whole_path[dir_size] = '\0';
 
-      // construct the directory if needed
+      // construct the directory subpath by subpath
       for (char* c = pstate->whole_path; *c; ++c)
 
+	// replace the path delimiter with a null, mkdir, then put back
 	if (*c == '/') {
 	  *c = '\0';
 	  mkdir(pstate->whole_path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
@@ -177,9 +180,12 @@ namespace SAX2ExtractUnitsSrc {
 	}
 
       mkdir(pstate->whole_path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+
+      // delimiter for following filename
       pstate->whole_path[dir_size] = '/';
     }
 
+    // add on the filename
     strncpy(pstate->whole_path + dir_size + (dir_size > 0 ? 1 : 0), (const char*) attributes[filename_index + 3], filename_size);
     /*
 	  fprintf(stderr, "Error in creating directory:  %s\n", directory_path.string().c_str());
