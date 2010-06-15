@@ -47,10 +47,6 @@
 #include "SAX2CountUnits.h"
 #include "SAX2Properties.h"
 
-#include "srceval.h"
-#include "srcpatheval.h"
-#include "srcxslteval.h"
-
 #include "SAX2UnitDOMXPath.h"
 #include "SAX2UnitDOMXSLT.h"
 #include "SAX2UnitDOMRelaxNG.h"
@@ -176,7 +172,7 @@ void srcMLUtility::extract_xml(const char* filename, int unit) {
 
 // extract a given unit
 void srcMLUtility::extract_element(const char* element, const char* filename) {
-
+  /*
   xmlTextReaderPtr reader = xmlNewTextReaderFilename(infile);
 
   const char* paths[] = { NULL };
@@ -185,7 +181,7 @@ void srcMLUtility::extract_element(const char* element, const char* filename) {
   //  srceval(element, paths, "", "", reader, filename);
 
   xmlFreeTextReader(reader);
-
+  */
   /*
   int unit;
 
