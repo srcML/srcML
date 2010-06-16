@@ -43,6 +43,42 @@
 
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
 
+static void apply(xmlParserCtxtPtr ctxt) {
+
+  SAX2UnitDOMXSLT* pstate = (SAX2UnitDOMXSLT*) ctxt->_private;
+
+  // apply the style sheet to the document, which is the individual unit
+  xmlDocPtr res = xsltApplyStylesheetUser(pstate->xslt, ctxt->myDoc, pstate->params, 0, 0, 0);
+
+  // has to be a result, and a non-empty result
+  if (res && res->children) {
+
+    // if in per-unit mode and this is the first result found
+    if (pstate->isnested && !pstate->found && !isoption(pstate->options, OPTION_XSLT_ALL)) {
+      xmlOutputBufferWrite(pstate->buf, pstate->rootbuf->use, (const char*) pstate->rootbuf->content);
+      xmlBufferFree(pstate->rootbuf);
+      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(">\n\n"));
+      pstate->found = true;
+    }
+
+    // save the result, but temporarily hide the namespaces
+    xmlNodePtr resroot = xmlDocGetRootElement(res);
+    xmlNsPtr savens = resroot ? resroot->nsDef : 0;
+    if (savens && pstate->isnested && !isoption(pstate->options, OPTION_XSLT_ALL))
+      resroot->nsDef = 0;
+    xsltSaveResultTo(pstate->buf, res, pstate->xslt);
+    if (savens && pstate->isnested && !isoption(pstate->options, OPTION_XSLT_ALL))
+      resroot->nsDef = savens;
+
+    // put some space between this unit and the next one
+    if (!isoption(pstate->options, OPTION_XSLT_ALL))
+      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\n"));
+
+    // finished with the result of the transformation
+    xmlFreeDoc(res);
+  }
+}
+
 SAX2UnitDOMXSLT::SAX2UnitDOMXSLT(const char* a_context_element, const char* a_fxslt[], const char* a_ofilename, const char* a_params[], int a_paramcount, int options)
   : SAX2UnitDOM(a_context_element, a_ofilename, options), params(a_params), paramcount(a_paramcount), fxslt(a_fxslt) {
 }
@@ -77,10 +113,6 @@ void SAX2UnitDOMXSLT::startDocument(void *ctx) {
 
 // end unit element and current file/buffer (started by startElementNs
 void SAX2UnitDOMXSLT::endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
-
-  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-  SAX2UnitDOMXSLT* pstate = (SAX2UnitDOMXSLT*) ctxt->_private;
-
   // DOM building end element
   xmlSAX2EndElementNs(ctx, localname, prefix, URI);
 
@@ -88,37 +120,10 @@ void SAX2UnitDOMXSLT::endElementNs(void *ctx, const xmlChar *localname, const xm
   if (strcmp((const char*) localname, "unit") != 0)
     return;
 
-  // apply the style sheet to the document, which is the individual unit
-  xmlDocPtr res = xsltApplyStylesheetUser(pstate->xslt, ctxt->myDoc, pstate->params, 0, 0, 0);
+  // apply the stylesheet
+  apply((xmlParserCtxtPtr) ctx);
 
-  // has to be a result, and a non-empty result
-  if (res && res->children) {
-
-    // if in per-unit mode and this is the first result found
-    if (pstate->isnested && !pstate->found && !isoption(pstate->options, OPTION_XSLT_ALL)) {
-      xmlOutputBufferWrite(pstate->buf, pstate->rootbuf->use, (const char*) pstate->rootbuf->content);
-      xmlBufferFree(pstate->rootbuf);
-      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(">\n\n"));
-      pstate->found = true;
-    }
-
-    // save the result, but temporarily hide the namespaces
-    xmlNodePtr resroot = xmlDocGetRootElement(res);
-    xmlNsPtr savens = resroot ? resroot->nsDef : 0;
-    if (savens && pstate->isnested && !isoption(pstate->options, OPTION_XSLT_ALL))
-      resroot->nsDef = 0;
-    xsltSaveResultTo(pstate->buf, res, pstate->xslt);
-    if (savens && pstate->isnested && !isoption(pstate->options, OPTION_XSLT_ALL))
-      resroot->nsDef = savens;
-
-    // put some space between this unit and the next one
-    if (!isoption(pstate->options, OPTION_XSLT_ALL))
-      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\n"));
-
-    // finished with the result of the transformation
-    xmlFreeDoc(res);
-  }
-
+  // UnitDom end
   SAX2UnitDOM::endElementNs(ctx, localname, prefix, URI);
 }
 
