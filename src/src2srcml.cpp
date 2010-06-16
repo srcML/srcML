@@ -406,8 +406,6 @@ int main(int argc, char* argv[]) {
 
   try {
 
-    // convert from the map to an array to pass to the translator
-
     // for single file specified on command line, grab the language from the extension
     if (language == 0 && input_arg_count == 1) {
 
