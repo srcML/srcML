@@ -103,13 +103,14 @@ char const * const num2uri[] = {
 
 // output help
 void output_help(const char* name) {
-  printf( "Usage: %s ( [options] <infile>... [-o <outfile>]\n\n"
+  printf( "Usage: %s [options] <infile>... [-o <outfile>]\n\n"
 
-	  "Translates source-code files into the XML source-code representation srcML\n"
-	  "with support for creating compound srcML documents.\n\n"
+	  "Translates source-code files in C, C++, and Java into the XML source-code representation srcML.\n"
+	  //	  "with support for creating compound srcML documents.\n\n"
+	  "Both single and multiple files can be stored in a single srcML documents.\n\n"
 
+	  "All output is to standard output, unless '-o' option is given.\n"
 	  "When no filenames are given read from standard input and write to standard output.\n"
-	  "When only one filename is given write to standard output.\n"
 	  "An input filename of '-' also reads from standard input.\n\n"
 
 	  "Options:\n", name);
