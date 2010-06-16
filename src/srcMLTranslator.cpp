@@ -92,10 +92,6 @@ void srcMLTranslator::translate(const char* unit_directory,
       // parse and form srcML output with unit attributes
       out.consume(unit_directory, unit_filename, unit_version);
 
-      if (open)
-	srcfile.close();
-      open = false;
-
       free(ifilename);
 
   } catch (const std::exception& e) {
