@@ -25,17 +25,19 @@ void setPosition(int n) {
 
 // 
 static void srcContextFunction (xmlXPathParserContextPtr ctxt, int nargs) {
-
+  /*
     if (nargs != 1) {
 	xmlXPathSetArityError(ctxt);
 	return;
     }
 
     xmlChar* arg = xmlXPathPopString(ctxt);
+  */
+    //    xmlXPathObjectPtr ret = xmlXPathEval(arg, ctxt->context);
 
-    xmlXPathObjectPtr ret = xmlXPathEval(arg, ctxt->context);
+    //    valuePush(ctxt, ret);
 
-    valuePush(ctxt, ret);
+  valuePush(ctxt, xmlXPathNewFloat(Position));
 }
 
 static void srcRootFunction (xmlXPathParserContextPtr ctxt, int nargs) {
@@ -54,7 +56,7 @@ static void srcRootFunction (xmlXPathParserContextPtr ctxt, int nargs) {
 
 void xpathsrcMLRegister(xmlXPathContextPtr context) {
 
-  xmlXPathRegisterFuncNS(context, (const xmlChar *)"context",
+  xmlXPathRegisterFuncNS(context, (const xmlChar *)"rootunit",
 			 BAD_CAST "http://www.sdml.info/srcML/src",
 			 srcContextFunction);
 }

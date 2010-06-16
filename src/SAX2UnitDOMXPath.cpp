@@ -78,8 +78,6 @@ void SAX2UnitDOMXPath::startDocument(void *ctx) {
   // allow for all exslt functions
   //    exsltRegisterAll();
 
-  //    xsltsrcMLRegister();
-
   //    if (!pstate->fxpath[0][0])
   //      return;
 
@@ -90,6 +88,8 @@ void SAX2UnitDOMXPath::startDocument(void *ctx) {
   }
 
   pstate->context = xmlXPathNewContext(ctxt->myDoc);
+
+  xpathsrcMLRegister(pstate->context);
 
   // register standard prefixes for standard namespaces
   const char* prefixes[] = {
@@ -121,6 +121,11 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
   // only handle unit elements
   if (strcmp((const char*) localname, "unit") != 0)
     return;
+
+  static int count = 0;
+  ++count;
+  //  fprintf(stderr, "HERE %d\n", count);
+  setPosition(count);
 
   // evaluate the xpath on the context from the current document
   xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(pstate->compiled_xpath, pstate->context);
@@ -232,8 +237,14 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
     pstate->result_bool |= result_nodes->boolval;
     break;
 
+    // string
+  case XPATH_STRING:
+    fprintf(stderr, "%s\n", result_nodes->stringval);
+    //    pstate->result_bool |= result_nodes->boolval;
+    break;
+
   default:
-    fprintf(stderr, "Unhandled type\n");
+    fprintf(stderr, "Unhandled type %d\n", pstate->nodetype);
     break;
   };
 
