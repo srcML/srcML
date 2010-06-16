@@ -89,7 +89,7 @@ xmlSAXHandler SAX2UnitDOMXSLT::factory() {
 
   sax.initialized    = XML_SAX2_MAGIC;
 
-  sax.startDocument  = &SAX2UnitDOMXSLT::startDocument;
+  sax.startDocument  = &SAX2UnitDOM::startDocument;
   sax.endDocument    = &SAX2UnitDOMXSLT::endDocument;
   sax.startElementNs = &SAX2UnitDOM::startElementNsRoot;
   sax.endElementNs   = &SAX2UnitDOMXSLT::endElementNs;
@@ -99,16 +99,6 @@ xmlSAXHandler SAX2UnitDOMXSLT::factory() {
   sax.processingInstruction = xmlSAX2ProcessingInstruction;
 
   return sax;
-}
-
-// start document
-void SAX2UnitDOMXSLT::startDocument(void *ctx) {
-  
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-
-    SAX2UnitDOMXSLT* pstate = (SAX2UnitDOMXSLT*) ctxt->_private;
-
-    SAX2UnitDOM::startDocument(ctx);
 }
 
 // end unit element and current file/buffer (started by startElementNs
@@ -137,12 +127,8 @@ void SAX2UnitDOMXSLT::endDocument(void *ctx) {
   xmlSAX2EndDocument(ctx);
 
   // root unit end tag
-  if (pstate->isnested && !isoption(pstate->options, OPTION_XSLT_ALL)) {
-    if (pstate->found)
-      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("</unit>" "\n"));
-    else
-      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("/>" "\n"));
-  }
+  if (!isoption(pstate->options, OPTION_XSLT_ALL))
+    xmlOutputBufferWriteString(pstate->buf, pstate->found ? "</unit>\n" : "/>\n");
 
   // standard end document
   SAX2UnitDOM::endDocument(ctx);

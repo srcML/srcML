@@ -45,9 +45,6 @@ class SAX2UnitDOMXSLT : public SAX2UnitDOM {
   const char** fxslt;
   xsltStylesheetPtr xslt;
 
-  // start document
-  static void startDocument(void *ctx);
-
   // end document
   static void endDocument(void *ctx);
 
