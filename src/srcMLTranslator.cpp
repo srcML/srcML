@@ -57,6 +57,7 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
 // setup the input source based on the filename
 void srcMLTranslator::setupInput(const char* src_filename) {
 
+  // cache filename for later
   ifilename = strdup(src_filename);
 }
 
@@ -92,6 +93,7 @@ void srcMLTranslator::translate(const char* unit_directory,
       // parse and form srcML output with unit attributes
       out.consume(unit_directory, unit_filename, unit_version);
 
+      // done with filename
       free(ifilename);
 
   } catch (const std::exception& e) {
