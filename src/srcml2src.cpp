@@ -23,7 +23,6 @@
 */
 
 #include <cstdio>
-#include <fstream>
 #include <cstring>
 #include <sys/stat.h>
 #include "version.h"

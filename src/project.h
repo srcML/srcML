@@ -26,6 +26,7 @@
 #define INCLUDED_PROJECT_H
 
 #include <cstdlib>
+#include <cctype>
 #include <csignal>
 #include <cerrno>
 
