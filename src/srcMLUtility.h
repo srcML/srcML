@@ -34,6 +34,15 @@ class LibXMLError;
 class TerminateLibXMLError;
 class OutOfRangeUnitError;
 
+class XMLProcess {
+ public:
+  virtual void process() = 0;
+};
+
+class XSLTProcess : public XMLProcess {
+
+};
+
 class srcMLUtility {
  public:
 

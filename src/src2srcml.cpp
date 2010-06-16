@@ -795,7 +795,7 @@ int process_args(int argc, char* argv[]) {
 	options &= ~OPTION_CPP;
 
     // language is based on parameter
-    } else if (compare_flags(argv[curarg], LANGUAGE_FLAG, LANGUAGE_FLAG_SHORT)) {
+    } else if (compare_flags(argv[curarg], OUTPUT_FLAG, OUTPUT_FLAG_SHORT)) {
 
       char* embedded = extract_option(argv[curarg]);
 
@@ -807,7 +807,7 @@ int process_args(int argc, char* argv[]) {
 
       // check for output flag with missing output value
       } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
-	fprintf(stderr, "%s: language option selected but not specified.\n", NAME);
+	fprintf(stderr, "%s: output option selected but no filename specified.\n", NAME);
 	exit(STATUS_LANGUAGE_MISSING);
       } else {
 
