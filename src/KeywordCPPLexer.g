@@ -21,7 +21,6 @@
 */
 
 header {
-   #include <iostream>
    #include "Language.h"
    #include "UTF8CharBuffer.h"
    #include "antlr/TokenStreamSelector.hpp"

@@ -1,12 +1,11 @@
 #include <iostream>
 #include "UTF8CharBuffer.h"
-#include <libxml/xmlwriter.h>
 
 static std::istream& inp = std::cin;
 
 // Create a character buffer
 UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding)
-	  : antlr::CharBuffer(inp), skipencoding(false), encoding(encoding), pos(0), size(0), eof(false), lastcr(false)
+	  : antlr::CharBuffer(inp), pos(0), size(0), eof(false), lastcr(false)
 {
   // use a libxml2 parser input buffer to support URIs
   input = xmlParserInputBufferCreateFilename(ifilename, xmlParseCharEncoding(encoding));

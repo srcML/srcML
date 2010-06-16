@@ -1,9 +1,8 @@
 #ifndef INCLUDE_UTF8CHARBUFFER_HPP
 #define INCLUDE_UTF8CHARBUFFER_HPP
 
-#include <istream>
 #include <antlr/CharBuffer.hpp>
-#include <libxml/xmlwriter.h>
+#include <libxml/parser.h>
 #include <cstring>
 
 class UTF8CharBuffer : public antlr::CharBuffer {
@@ -20,13 +19,8 @@ public:
 	~UTF8CharBuffer();
 
 private:
-	bool skipencoding;
-	const char* encoding;
-	xmlCharEncodingHandlerPtr handler;
-	xmlBufferPtr buffer;
-	xmlBufferPtr utf8buffer;
-	unsigned int pos;
-	unsigned int size;
+	int pos;
+	int size;
 	bool eof;
 	bool lastcr;
 	xmlParserInputBufferPtr input;
