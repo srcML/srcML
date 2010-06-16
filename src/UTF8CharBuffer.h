@@ -11,13 +11,8 @@ public:
         // size of the original character buffer
         static const unsigned int SRCBUFSIZE = 512;
 
-	/// Create a character buffer
-        UTF8CharBuffer(const char* ifilename, const char* encoding, std::istream& inp)
-	  : antlr::CharBuffer(inp), skipencoding(false), encoding(encoding), pos(0), size(0), eof(false), lastcr(false)
-	{
-	  // use a libxml2 parser input buffer to support URIs
-	  input = xmlParserInputBufferCreateFilename(ifilename, xmlParseCharEncoding(encoding));
-	}
+	// Create a character buffer
+        UTF8CharBuffer(const char* ifilename, const char* encoding);
 
 	/// Get the next character from the stream
 	int getChar();

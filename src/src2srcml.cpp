@@ -485,10 +485,9 @@ int main(int argc, char* argv[]) {
       char* dir = 0;
       char* filename = 0;
       try {
-	std::istream* pin = translator.setupInput(line);
+	translator.setupInput(line);
 	filename_split(line, dir, filename);
-	translator.translate(pin,
-			     dir,
+	translator.translate(dir,
 			     filename,
 			     given_version,
 			     language);
@@ -512,7 +511,8 @@ int main(int argc, char* argv[]) {
   } else if (input_arg_count == 0 || strcmp(argv[input_arg_start], STDIN) == 0) {
 
     // translate from standard input using any directory, filename and version given on the command line
-    translator.translate(translator.setupInput(STDIN), given_directory, given_filename, given_version, 
+    translator.setupInput(STDIN);
+    translator.translate(given_directory, given_filename, given_version, 
 			 language ? language : DEFAULT_LANGUAGE);
 
   // translate single input filename from command line
@@ -521,7 +521,7 @@ int main(int argc, char* argv[]) {
     // translate from path given on command line using directory given on the command line or extracted
     // from full path
     char* path = argv[input_arg_start];
-    std::istream* pin = translator.setupInput(path);
+    translator.setupInput(path);
     char* path_s = 0;
     char* filename_s = 0;
     filename_split(path, path_s, filename_s);
@@ -534,8 +534,7 @@ int main(int argc, char* argv[]) {
     }
 
     try {
-      translator.translate(pin,
-			   isoption(options, OPTION_DIRECTORY) ? given_directory : path_s,
+      translator.translate(isoption(options, OPTION_DIRECTORY) ? given_directory : path_s,
 			   isoption(options, OPTION_FILENAME)  ? given_filename  : filename_s,
 			   given_version,
 			   language);
@@ -573,11 +572,11 @@ int main(int argc, char* argv[]) {
 	fprintf(stderr, "%d\t%s", count, path);
       }
       try {
-	std::istream* pin = translator.setupInput(path);
+	translator.setupInput(path);
 	char* path_s = 0;
 	char* filename_s = 0;
 	filename_split(path, path_s, filename_s);
-	translator.translate(pin, path_s, filename_s, 0, language);
+	translator.translate(path_s, filename_s, 0, language);
       } catch (FileError) {
 	fprintf(stderr, "%s error: file \'%s\' does not exist.\n", NAME, path);
       }

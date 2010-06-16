@@ -55,35 +55,13 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
 }
 
 // setup the input source based on the filename
-std::istream* srcMLTranslator::setupInput(const char* src_filename) {
+void srcMLTranslator::setupInput(const char* src_filename) {
 
-  //  fprintf(stderr, "setupInput:  FIlename: %s\n", src_filename);
   ifilename = strdup(src_filename);
-
-  return &std::cin;
-
-  try {
-      // assume standard input
-      std::istream* pin = &std::cin;
-
-      // file input
-      if (strcmp("-", src_filename) != 0) {
-	srcfile.open(src_filename);
-	if (!srcfile)
-	  throw FileError();
-	pin = &srcfile;
-	open = true;
-      }
-
-      return pin;
-
-  } catch (FileError) {
-      throw FileError();
-  }
 }
 
 // translate from input stream to output stream
-void srcMLTranslator::translate(std::istream* pin, const char* unit_directory,
+void srcMLTranslator::translate(const char* unit_directory,
 				const char* unit_filename, const char* unit_version,
 				int language) {
 
@@ -93,7 +71,7 @@ void srcMLTranslator::translate(std::istream* pin, const char* unit_directory,
       antlr::TokenStreamSelector selector;
 
       // srcML lexical analyzer from standard input
-      KeywordCPPLexer lexer(ifilename, *pin, encoding, language);
+      KeywordCPPLexer lexer(ifilename, encoding, language);
       lexer.setSelector(&selector);
 
       // pure block comment lexer

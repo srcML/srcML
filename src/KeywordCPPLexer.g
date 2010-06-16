@@ -142,8 +142,8 @@ void changetotextlexer(int typeend);
 
 virtual int testLiteralsTable(int ttype) const;
 
-KeywordCPPLexer(const char* ifilename, std::istream& in, const char* encoding, int language = LANGUAGE_CXX)
-	: antlr::CharScanner(new UTF8CharBuffer(ifilename, encoding, in),true), Language(language), onpreprocline(false), startline(true)
+KeywordCPPLexer(const char* ifilename, const char* encoding, int language = LANGUAGE_CXX)
+	: antlr::CharScanner(new UTF8CharBuffer(ifilename, encoding),true), Language(language), onpreprocline(false), startline(true)
 {
     setupliterals();
 
