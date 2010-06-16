@@ -214,7 +214,6 @@ int main(int argc, char* argv[]) {
   // option values
   const char* src_encoding = DEFAULT_TEXT_ENCODING;
   int unit = 0;
-  const char* xpath = 0;
   const char* context = "src:unit";
   std::list<const char*> ns;
 
@@ -462,7 +461,6 @@ int main(int argc, char* argv[]) {
       // filename is embedded parameter
       if (embedded) {
 
-	xpath = embedded + 1;
 	xpathexpr[xpathcount++] = embedded + 1;
 	xpathexprlist.push_back(embedded + 1);
 	++curarg;
@@ -472,7 +470,7 @@ int main(int argc, char* argv[]) {
 	fprintf(stderr, "%s: xpath option selected but no xpath expression.\n", NAME);
 	exit(STATUS_UNIT_MISSING); // FIX
       } else {
-	xpathexprlist.push_back(xpathexpr[xpathcount++] = xpath = argv[(++curarg)++]);
+	xpathexprlist.push_back(xpathexpr[xpathcount++] = argv[(++curarg)++]);
       }
 
     // context
@@ -524,7 +522,6 @@ int main(int argc, char* argv[]) {
       // filename is embedded parameter
       if (embedded) {
 
-	xpath = embedded + 1;
 	xpathexprlist.push_back(xpathexpr[xpathcount++] = embedded + 1);
 	++curarg;
 
