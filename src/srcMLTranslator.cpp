@@ -47,7 +47,7 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
 				 const char* uri[]
 				 )
   : Language(language), encoding(src_encoding), options(op),
-    out(0, srcml_filename, getLanguageString(), xml_encoding, options, uri), open(false), ifilename(0) {
+    out(0, srcml_filename, getLanguageString(), xml_encoding, options, uri), ifilename(0) {
 
   // root unit for compound srcML documents
   if ((options & OPTION_NESTED) > 0)

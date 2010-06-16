@@ -64,7 +64,6 @@ class srcMLTranslator : public Language {
   int language;
   int options;
   srcMLOutput out;
-  bool open;
   char* ifilename;
 }; 
 
