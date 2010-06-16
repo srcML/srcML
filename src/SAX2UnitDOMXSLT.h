@@ -40,6 +40,8 @@ class SAX2UnitDOMXSLT : public SAX2UnitDOM {
 
   static xmlSAXHandler factory();
 
+  const char** params;
+  int paramcount;
   const char** fxslt;
   xsltStylesheetPtr xslt;
 

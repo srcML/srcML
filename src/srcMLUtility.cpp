@@ -266,7 +266,7 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
 
   xmlSAXHandler sax = SAX2UnitDOMXPath::factory();
   
-  SAX2UnitDOMXPath state(context_element, xpaths, ofilename, 0, 0, options);
+  SAX2UnitDOMXPath state(context_element, xpaths, ofilename, options);
 
   xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
   if (ctxt == NULL) return;
@@ -312,7 +312,7 @@ void srcMLUtility::relaxng(const char* ofilename, const char** xslts) {
 
   xmlSAXHandler sax = SAX2UnitDOMRelaxNG::factory();
   
-  SAX2UnitDOMRelaxNG state(0, xslts, ofilename, 0, 0, 0);
+  SAX2UnitDOMRelaxNG state(0, xslts, ofilename, 0);
 
   xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
   if (ctxt == NULL) return;

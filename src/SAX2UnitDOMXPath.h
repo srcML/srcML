@@ -36,7 +36,7 @@
 class SAX2UnitDOMXPath : public SAX2UnitDOM {
  public:
 
-  SAX2UnitDOMXPath(const char* context_element, const char** fxpath, const char* ofilename, const char* params[], int paramcount, int options);
+  SAX2UnitDOMXPath(const char* context_element, const char** fxpath, const char* ofilename, int options);
 
   static xmlSAXHandler factory();
 

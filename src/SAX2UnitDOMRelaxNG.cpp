@@ -38,8 +38,8 @@
 
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
 
-SAX2UnitDOMRelaxNG::SAX2UnitDOMRelaxNG(const char* a_context_element, const char* a_fxslt[], const char* a_ofilename, const char* params[], int paramcount, int options) 
-  : SAX2UnitDOM(a_context_element, a_ofilename, params, paramcount, options), fxslt(a_fxslt) {
+SAX2UnitDOMRelaxNG::SAX2UnitDOMRelaxNG(const char* a_context_element, const char* a_fxslt[], const char* a_ofilename, int options) 
+  : SAX2UnitDOM(a_context_element, a_ofilename, options), fxslt(a_fxslt) {
 }
 
 xmlSAXHandler SAX2UnitDOMRelaxNG::factory() {
