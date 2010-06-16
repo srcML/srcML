@@ -24,7 +24,6 @@
 
 #include "SAX2ExtractUnitsSrc.h"
 #include "srcmlns.h"
-#include <boost/filesystem.hpp>
 
 #include <iostream>
 
