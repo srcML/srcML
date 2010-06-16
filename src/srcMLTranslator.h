@@ -27,7 +27,6 @@
 #ifndef SRCMLTRANSLATOR_H
 #define SRCMLTRANSLATOR_H
 
-#include <map>
 #include "Language.h"
 #include "srcMLOutput.h"
 
@@ -46,7 +45,6 @@ class srcMLTranslator : public Language {
 		  const char* filename,
 		  const char* version,
 		  const char* uri[]
-		  //		  std::map<std::string, std::string>& uri
 		  );
 
   // setup the input source based on the filename
@@ -54,7 +52,8 @@ class srcMLTranslator : public Language {
 
   // translate from input stream to output stream
   void translate(const char* unit_directory = 0,
-		 const char* unit_filename = 0, const char* unit_version = 0,
+		 const char* unit_filename = 0,
+		 const char* unit_version = 0,
 		 int language = 0);
 
   // destructor
