@@ -274,6 +274,12 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
   ctxt->_private = &state;
   //state.ctxt = ctxt;
 
+  // compile the xpath that will be applied to each unit
+  state.compiled_xpath = xmlXPathCompile(BAD_CAST state.fxpath[0]);
+  if (state.compiled_xpath == 0) {
+    return;
+  }
+
   xmlParseDocument(ctxt);
 
   ctxt->sax = NULL;

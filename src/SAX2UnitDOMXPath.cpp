@@ -44,7 +44,7 @@
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
 
 SAX2UnitDOMXPath::SAX2UnitDOMXPath(const char* a_context_element, const char* a_fxpath[], const char* a_ofilename, const char* params[], int paramcount, int options) 
-  : SAX2UnitDOM(a_context_element, a_ofilename, params, paramcount, options), fxpath(a_fxpath) {
+  : SAX2UnitDOM(a_context_element, a_ofilename, params, paramcount, options), fxpath(a_fxpath), total(0) {
 }
 
 xmlSAXHandler SAX2UnitDOMXPath::factory() {
@@ -81,12 +81,6 @@ void SAX2UnitDOMXPath::startDocument(void *ctx) {
   //    if (!pstate->fxpath[0][0])
   //      return;
 
-  // compile the xpath that will be applied to each unit
-  pstate->compiled_xpath = xmlXPathCompile(BAD_CAST pstate->fxpath[0]);
-  if (pstate->compiled_xpath == 0) {
-    return;
-  }
-
   pstate->context = xmlXPathNewContext(ctxt->myDoc);
 
   xpathsrcMLRegister(pstate->context);
@@ -104,9 +98,6 @@ void SAX2UnitDOMXPath::startDocument(void *ctx) {
   for (unsigned int i = 0; i < sizeof(prefixes) / sizeof(prefixes[0]) / 2; i += 2)
     if (xmlXPathRegisterNs(pstate->context, BAD_CAST prefixes[i + 1], BAD_CAST prefixes[i]) == -1)
       fprintf(stderr, "Unable to register prefix %s for namespace %s\n", prefixes[i + 1], prefixes[i]);
-
-  // initialize total for floating point values
-  pstate->total = 0;
 }
 
 // end unit element and current file/buffer (started by startElementNs
