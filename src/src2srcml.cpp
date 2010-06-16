@@ -282,26 +282,9 @@ int main(int argc, char* argv[]) {
     exit(STATUS_SUCCESS);
   }
 
-  /*
-  // setup self-versioning
-  if (isoption(options, OPTION_SELF_VERSION)) {
-    //    given_version = version();
-  }
-  */
-
   /* Special checks for illegal combinations */
 
-  /*
-  // skip encoding and specifying encoding
-  if (isoption(options, OPTION_SKIP_ENCODING) && isoption(options, OPTION_TEXT_ENCODING)) {
 
-    fprintf(stderr, "%: Options for skipping encoding and specifying source encoding are incompatible.\n", NAME);
-    exit(STATUS_INVALID_OPTION_COMBINATION);
-  }
-  */
-
-  /*
-  */
   // eat optional option separator
   if (argc > (curarg) && strcmp(argv[curarg], OPTION_SEPARATOR) == 0)
       ++curarg;
