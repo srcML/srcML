@@ -48,6 +48,13 @@
 #include "SAX2UnitDOMXSLT.h"
 #include "SAX2UnitDOMRelaxNG.h"
 
+#include "srcexfun.h"
+#include <libxslt/xslt.h>
+#include <libxslt/transform.h>
+#include <libxslt/xsltutils.h>
+
+#include <libexslt/exslt.h>
+
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op)
   : infile(infilename), output_encoding(encoding), options(op), units(0) {
@@ -299,6 +306,14 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
   ctxt->sax = &sax;
   ctxt->_private = &state;
   //state.ctxt = ctxt;
+
+  // allow for all exslt functions
+  exsltRegisterAll();
+
+  xsltsrcMLRegister();
+
+  // parse the stylesheet
+  state.xslt = xsltParseStylesheetFile(BAD_CAST xslts[0]);
 
   xmlParseDocument(ctxt);
 

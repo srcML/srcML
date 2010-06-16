@@ -72,14 +72,6 @@ void SAX2UnitDOMXSLT::startDocument(void *ctx) {
 
     SAX2UnitDOMXSLT* pstate = (SAX2UnitDOMXSLT*) ctxt->_private;
 
-    // allow for all exslt functions
-    exsltRegisterAll();
-
-    xsltsrcMLRegister();
-
-    // parse the stylesheet
-    pstate->xslt = xsltParseStylesheetFile(BAD_CAST pstate->fxslt[0]);
-
     SAX2UnitDOM::startDocument(ctx);
 }
 
