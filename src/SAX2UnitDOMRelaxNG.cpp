@@ -104,12 +104,8 @@ void SAX2UnitDOMRelaxNG::endDocument(void *ctx) {
   xmlSAX2EndDocument(ctx);
 
   // root unit end tag
-  if (pstate->isnested && !isoption(pstate->options, OPTION_XSLT_ALL)) {
-    if (pstate->found)
-      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("</unit>" "\n"));
-    else
-      xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("/>" "\n"));
-  }
+  if (pstate->isnested && !isoption(pstate->options, OPTION_XSLT_ALL))
+      xmlOutputBufferWriteString(pstate->buf, pstate->found ? "</unit>\n" : "/>\n");
 
   // standard end document
   SAX2UnitDOM::endDocument(ctx);
