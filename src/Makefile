@@ -32,6 +32,8 @@ LIBXML_VERSION= Libxml2 enabled
 SRC2SRCML_BIN=../bin/src2srcml
 SRCML2SRC_BIN=../bin/srcml2src
 
+SED=/bin/sed
+
 # default
 all : ${EXE_DIR}src2srcml ${EXE_DIR}srcml2src
 
@@ -133,7 +135,7 @@ ${OBJ_DIR}srcMLParser.o : $(firstword $(SRCMLPARSER_GENS)) Mode.h TokenParser.h 
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) -c $< -o $@
 
 srcMLParserClean.cpp : srcMLParser.cpp
-	./sedantlr < $< > $@
+	$(SED) -f sedantlr < $< > $@
 
 ${OBJ_DIR}srcMLParserClean.o : srcMLParserClean.cpp Mode.h TokenParser.h State.h Options.h
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) -c $< -o $@
@@ -142,13 +144,13 @@ ${OBJ_DIR}srcMLParser.S : $(firstword $(SRCMLPARSER_GENS))
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) -S $(LIBXML_INCLUDE) $< -o $@
 
 KeywordCPPLexerClean.cpp : KeywordCPPLexer.cpp
-	./sedantlrlexer < $< > $@
+	$(SED) -f sedantlrlexer < $< > $@
 
 ${OBJ_DIR}KeywordCPPLexerClean.o : KeywordCPPLexerClean.cpp Language.h
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 PureCommentLexerClean.cpp : PureCommentLexer.cpp
-	./sedantlrlexer < $< > $@
+	$(SED) -f sedantlrlexer < $< > $@
 
 ${OBJ_DIR}PureCommentLexerClean.o : PureCommentLexerClean.cpp Language.h
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) -fno-jump-tables $(LIBXML_INCLUDE) -c $< -o $@
