@@ -31,6 +31,7 @@
 #include "project.h"
 #include "Language.h"
 #include "srcMLTranslator.h"
+#include "URIStream.h"
 
 using namespace LanguageName;
 
@@ -437,40 +438,10 @@ int main(int argc, char* argv[]) {
 
     // translate all the filenames listed in the named file
     // Use libxml2 routines so that we can handle http:, file:, and gzipped files automagically
-    xmlParserInputBufferPtr input = xmlParserInputBufferCreateFilename(fname, XML_CHAR_ENCODING_NONE);
-    int size = 0;
-    int startpos = 0;
-    int endpos = 0;
-    bool eof = false;
+    URIStream uriinput(fname);
     int count = 0;
-    while (1) {
-
-      // need to refill the buffer
-      if (size == 0 || endpos >= size) {
-
-	// previous fill found eof
-	if (eof)
-	  break;
-
-	// refill the buffer
-	input->buffer->use = 0;
-	size = xmlParserInputBufferGrow(input, 4096);
-	
-	// found problem or eof
-	if (size == -1 || size == 0) {
-	  eof = true;
-	  break;
-	}
-      }
-
-      // find start of first line
-      while (endpos < size && input->buffer->content[endpos] != '\n')
-	++endpos;
-      input->buffer->content[endpos] = '\0';
-      char* line = (char*) input->buffer->content + startpos;
-
-      if (startpos >= endpos)
-	break;
+    char* line;
+    while ((line = uriinput.getline())) {
 
       // skip blank lines or comment lines
       if (line == '\0' || line[0] == FILELIST_COMMENT)
@@ -480,11 +451,8 @@ int main(int argc, char* argv[]) {
       ++count;
 
       // in verbose mode output the currently processed filename
-      if (isoption(options, OPTION_VERBOSE)) {
-
+      if (isoption(options, OPTION_VERBOSE))
 	fprintf(stderr, "%d\t%s", count, line);
-      }
-      startpos = endpos + 1;
 
       // translate the file listed in the input file using the directory and filename extracted from the path
       char* dir = 0;
@@ -512,8 +480,6 @@ int main(int argc, char* argv[]) {
       if (isoption(options, OPTION_TERMINATE))
 	return STATUS_TERMINATED;
     }
-
-    xmlFreeParserInputBuffer(input);
 
   // translate from standard input
   } else if (input_arg_count == 0 || strcmp(argv[input_arg_start], STDIN) == 0) {
