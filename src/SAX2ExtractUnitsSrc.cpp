@@ -244,8 +244,7 @@ namespace SAX2ExtractUnitsSrc {
     } else if (strcmp((const char*) localname, "formfeed") == 0 &&
 	       strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0) {
    
-      char value = '\f';
-      xmlOutputBufferWrite(pstate->output, 1, &value);
+      xmlOutputBufferWrite(pstate->output, 1, "\f");
     }
   }
 
