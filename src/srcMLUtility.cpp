@@ -335,6 +335,11 @@ void srcMLUtility::relaxng(const char* ofilename, const char** xslts) {
   ctxt->_private = &state;
   //state.ctxt = ctxt;
 
+  // parse the stylesheet
+  state.relaxng = xmlRelaxNGNewParserCtxt(state.fxslt[0]);
+  state.rng = xmlRelaxNGParse(state.relaxng);
+  state.rngptr = xmlRelaxNGNewValidCtxt(state.rng);
+
   xmlParseDocument(ctxt);
 
   ctxt->sax = NULL;

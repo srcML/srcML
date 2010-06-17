@@ -44,9 +44,6 @@ class SAX2UnitDOMRelaxNG : public SAX2UnitDOM {
   xmlRelaxNGPtr rng;
   xmlRelaxNGValidCtxtPtr rngptr;
 
-  // start document
-  static void startDocument(void *ctx);
-
   // end document
   static void endDocument(void *ctx);
 

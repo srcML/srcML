@@ -48,7 +48,7 @@ xmlSAXHandler SAX2UnitDOMRelaxNG::factory() {
 
   sax.initialized    = XML_SAX2_MAGIC;
 
-  sax.startDocument  = &SAX2UnitDOMRelaxNG::startDocument;
+  sax.startDocument  = &SAX2UnitDOM::startDocument;
   sax.endDocument    = &SAX2UnitDOMRelaxNG::endDocument;
   sax.startElementNs = &SAX2UnitDOM::startElementNsRoot;
   sax.endElementNs   = &SAX2UnitDOMRelaxNG::endElementNs;
@@ -58,21 +58,6 @@ xmlSAXHandler SAX2UnitDOMRelaxNG::factory() {
   sax.processingInstruction = xmlSAX2ProcessingInstruction;
 
   return sax;
-}
-
-// start document
-void SAX2UnitDOMRelaxNG::startDocument(void *ctx) {
-
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-
-    SAX2UnitDOMRelaxNG* pstate = (SAX2UnitDOMRelaxNG*) ctxt->_private;
-
-    // parse the stylesheet
-    pstate->relaxng = xmlRelaxNGNewParserCtxt(pstate->fxslt[0]);
-    pstate->rng = xmlRelaxNGParse(pstate->relaxng);
-    pstate->rngptr = xmlRelaxNGNewValidCtxt(pstate->rng);
-
-    SAX2UnitDOM::startDocument(ctx);
 }
 
 // end unit element and current file/buffer (started by startElementNs
