@@ -22,7 +22,6 @@
   Main program to run the srcML translator.
 */
 
-#include <fstream>
 #include <cstring>
 #include <sys/stat.h>
 #include "version.h"
@@ -429,26 +428,49 @@ int main(int argc, char* argv[]) {
   // translate input filenames from list in file
   if (isoption(options, OPTION_FILELIST)) {
 
-    // assume file with list of filenames is from standard input
-    std::istream* pinfilelist = &std::cin;
-
-    // open the input file (if not standard input) that contains the list of filenames
-    std::ifstream infile;
-    if (input_arg_count > 0 && strcmp(argv[input_arg_start], "-")) {
-      infile.open(argv[input_arg_start]);
-      pinfilelist = &infile;
-    }
-
 #ifdef __GNUG__
     // setup so we can gracefully stop after a file at a time
     pstd::signal(SIGINT, terminate_handler);
 #endif
       
+    const char* fname = input_arg_count ? argv[input_arg_start] : "-";
+
     // translate all the filenames listed in the named file
-    const int MAXFILENAME = 512;
-    char line[MAXFILENAME];
-    int count = 0;    // keep count for verbose mode
-    while (pinfilelist->getline(line, MAXFILENAME)) {
+    // Use libxml2 routines so that we can handle http:, file:, and gzipped files automagically
+    xmlParserInputBufferPtr input = xmlParserInputBufferCreateFilename(fname, XML_CHAR_ENCODING_NONE);
+    int size = 0;
+    int startpos = 0;
+    int endpos = 0;
+    bool eof = false;
+    int count = 0;
+    while (1) {
+
+      // need to refill the buffer
+      if (size == 0 || endpos >= size) {
+
+	// previous fill found eof
+	if (eof)
+	  break;
+
+	// refill the buffer
+	input->buffer->use = 0;
+	size = xmlParserInputBufferGrow(input, 4096);
+	
+	// found problem or eof
+	if (size == -1 || size == 0) {
+	  eof = true;
+	  break;
+	}
+      }
+
+      // find start of first line
+      while (endpos < size && input->buffer->content[endpos] != '\n')
+	++endpos;
+      input->buffer->content[endpos] = '\0';
+      char* line = (char*) input->buffer->content + startpos;
+
+      if (startpos >= endpos)
+	break;
 
       // skip blank lines or comment lines
       if (line == '\0' || line[0] == FILELIST_COMMENT)
@@ -462,6 +484,7 @@ int main(int argc, char* argv[]) {
 
 	fprintf(stderr, "%d\t%s", count, line);
       }
+      startpos = endpos + 1;
 
       // translate the file listed in the input file using the directory and filename extracted from the path
       char* dir = 0;
@@ -484,10 +507,13 @@ int main(int argc, char* argv[]) {
       if (isoption(options, OPTION_VERBOSE)) {
 	fprintf(stderr, "\n");
       }
+
       // compound documents are interrupted gracefully
       if (isoption(options, OPTION_TERMINATE))
 	return STATUS_TERMINATED;
     }
+
+    xmlFreeParserInputBuffer(input);
 
   // translate from standard input
   } else if (input_arg_count == 0 || strcmp(argv[input_arg_start], STDIN) == 0) {
