@@ -32,7 +32,7 @@ LIBXML_VERSION= Libxml2 enabled
 SRC2SRCML_BIN=../bin/src2srcml
 SRCML2SRC_BIN=../bin/srcml2src
 
-SED=/bin/sed
+SED=/opt/local/bin/gsed
 
 # default
 all : ${EXE_DIR}src2srcml ${EXE_DIR}srcml2src
@@ -296,7 +296,7 @@ trunkversion :
 	echo -n `date` >> VERSION
 
 srcMLParserTokenTypesMacro.hpp : srcMLParserTokenTypes.hpp
-	/bin/grep '=' srcMLParserTokenTypes.hpp | /bin/sed -e 's/,//g' -e 's/= //g' -e 's/^[ \t]*//' -e 's/^/#define TOKEN_/g' > $@
+	/usr/bin/grep '=' srcMLParserTokenTypes.hpp | /opt/local/bin/gsed -e 's/,//g' -e 's/= //g' -e 's/^[ \t]*//' -e 's/^/#define TOKEN_/g' > $@
 
 PHONY : install
 install :

@@ -18,13 +18,15 @@ ANTLR_HOME =/usr/share/$(ANTLR_VERSION)
 ANTLR_TOOL =/usr/share/java/antlrall.jar
 
 # antlr c++ include files
-ANTLR_INC = -I/usr/include/antlr-2.7.7/lib/cpp/
+ANTLR_INC = -I/opt/local/include/
+#ANTLR_INC = -I/usr/include/antlr-2.7.7/lib/cpp/
 
 # antlr c++ library
-ANTLR_LIB =-L/usr/lib -lantlr
+#ANTLR_LIB =-L/usr/lib -lantlr
+ANTLR_LIB =-L/usr/lib -lxml2 -L/opt/local/lib -lantlr
 
 # antlr command
-ANTLR = /usr/bin/cantlr
+ANTLR = /opt/local/bin/antlr
 #ANTLR =$(JAVA_CC) -classpath $(ANTLR_TOOL) antlr.Tool
 
 # compilation flags
