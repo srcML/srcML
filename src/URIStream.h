@@ -26,6 +26,8 @@
 #ifndef URISTREAM_H
 #define URISTREAM_H
 
+class URIStreamFileError {};
+
 class URIStream {
  public:
   URIStream(const char* uriname);

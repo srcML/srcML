@@ -1,10 +1,12 @@
 
 #include "URIStream.h"
+#include <cstring>
 
 URIStream::URIStream(const char* uriname)
   : startpos(0), endpos(-1), first(true), eof(false)
 {
-    input = xmlParserInputBufferCreateFilename(uriname, XML_CHAR_ENCODING_NONE);
+  if (!(input = xmlParserInputBufferCreateFilename(uriname, XML_CHAR_ENCODING_NONE)))
+    throw URIStreamFileError();
 }
 
 char* URIStream::getline() {
@@ -31,7 +33,8 @@ char* URIStream::getline() {
       startpos -= removed;
 
       // refill the buffer
-      // basically, choice is 4 or 4096, due to MINLIN in libxml
+      // put an appropriate value for the length, but note that libxml
+      // basically uses 4 or a min value (which is currently around 4096)
       int size = xmlParserInputBufferGrow(input, 4096);
 
       // found problem or eof
@@ -42,16 +45,17 @@ char* URIStream::getline() {
     ++endpos;
   }
 
+  // special case
   if (startpos >= input->buffer->use)
     return 0;
 
-  // replace the newline with a null to turn it into single string
+  // replace the newline character with a null to turn it into single string
   input->buffer->content[endpos] = '\0';
 
   // current line starts at the startpos
   char* line = (char*) input->buffer->content + startpos;
 
-  // start over for the next line
+  // skip past for the next line
   startpos = endpos + 1;
 
   return line;

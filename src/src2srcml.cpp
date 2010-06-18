@@ -436,52 +436,59 @@ int main(int argc, char* argv[]) {
       
     const char* fname = input_arg_count ? argv[input_arg_start] : "-";
 
-    // translate all the filenames listed in the named file
-    // Use libxml2 routines so that we can handle http:, file:, and gzipped files automagically
-    URIStream uriinput(fname);
-    int count = 0;
-    char* line;
-    while ((line = uriinput.getline())) {
+    try {
 
-      // skip blank lines or comment lines
-      if (line == '\0' || line[0] == FILELIST_COMMENT)
-	continue;
+      // translate all the filenames listed in the named file
+      // Use libxml2 routines so that we can handle http:, file:, and gzipped files automagically
+      URIStream uriinput(fname);
+      int count = 0;
+      char* line;
+      while ((line = uriinput.getline())) {
 
-      // another file
-      ++count;
+	// skip blank lines or comment lines
+	if (line == '\0' || line[0] == FILELIST_COMMENT)
+	  continue;
 
-      // in verbose mode output the currently processed filename
-      if (isoption(options, OPTION_VERBOSE))
-	fprintf(stderr, "%d\t%s", count, line);
+	// another file
+	++count;
 
-      // translate the file listed in the input file using the directory and filename extracted from the path
-      char* dir = 0;
-      char* filename = 0;
-      try {
-	translator.setupInput(line);
-	filename_split(line, dir, filename);
-	translator.translate(dir,
-			     filename,
-			     given_version,
-			     language);
-      } catch (FileError) {
-
+	// in verbose mode output the currently processed filename
 	if (isoption(options, OPTION_VERBOSE))
-	  fprintf(stderr, "\t\terror: file \'%s\%s\' does not exist.\n", dir, filename);
-	else
-	  fprintf(stderr, " error: file \'%s\%s\' does not exist.\n", dir, filename);
+	  fprintf(stderr, "%d\t%s", count, line);
+
+	// translate the file listed in the input file using the directory and filename extracted from the path
+	char* dir = 0;
+	char* filename = 0;
+	try {
+	  translator.setupInput(line);
+	  filename_split(line, dir, filename);
+	  translator.translate(dir,
+			       filename,
+			       given_version,
+			       language);
+	} catch (FileError) {
+
+	  if (isoption(options, OPTION_VERBOSE))
+	    fprintf(stderr, "\t\terror: file \'%s\%s\' does not exist.\n", dir, filename);
+	  else
+	    fprintf(stderr, " error: file \'%s\%s\' does not exist.\n", dir, filename);
+	}
+
+	if (isoption(options, OPTION_VERBOSE)) {
+	  fprintf(stderr, "\n");
+	}
+
+	// compound documents are interrupted gracefully
+	if (isoption(options, OPTION_TERMINATE))
+	  return STATUS_TERMINATED;
       }
 
-      if (isoption(options, OPTION_VERBOSE)) {
-	fprintf(stderr, "\n");
-      }
-
-      // compound documents are interrupted gracefully
-      if (isoption(options, OPTION_TERMINATE))
-	return STATUS_TERMINATED;
+    } catch (URIStreamFileError) {
+      fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", NAME, fname);
+      exit(1);
     }
 
-  // translate from standard input
+    // translate from standard input
   } else if (input_arg_count == 0 || strcmp(argv[input_arg_start], STDIN) == 0) {
 
     // translate from standard input using any directory, filename and version given on the command line
