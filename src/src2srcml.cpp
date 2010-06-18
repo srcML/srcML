@@ -452,8 +452,8 @@ int main(int argc, char* argv[]) {
 
       // in verbose mode output the currently processed filename
       if (isoption(options, OPTION_VERBOSE))
-	fprintf(stderr, "%d\t%s\n", count, line);
-      continue;
+	fprintf(stderr, "%d\t%s", count, line);
+
       // translate the file listed in the input file using the directory and filename extracted from the path
       char* dir = 0;
       char* filename = 0;

@@ -24,15 +24,16 @@ char* URIStream::getline() {
 	break;
 
       // shrink the part of the buffer that we are not using yet
-      // this is a large buffer, so this will not happen very often
-      xmlBufferShrink(input->buffer, startpos >= 1 ? startpos - 1 : 0);
-      endpos -= startpos;
-      startpos = 0;
+      // this is a large buffer, so this will not happen very often, and
+      // only if libxml decides for this input source it should
+      int removed = xmlBufferShrink(input->buffer, startpos >= 1 ? startpos - 1 : 0);
+      endpos -= removed;
+      startpos -= removed;
 
       // refill the buffer
-      // basically, choice is 4 or 4096
+      // basically, choice is 4 or 4096, due to MINLIN in libxml
       int size = xmlParserInputBufferGrow(input, 4096);
-      fprintf(stderr, "REFILL\n");
+
       // found problem or eof
       if (size == -1 || size == 0)
 	eof = true;
