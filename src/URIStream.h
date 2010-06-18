@@ -36,9 +36,9 @@ class URIStream {
 
  private:
   xmlParserInputBufferPtr input;
-  int size;
-  int startpos;
-  int endpos;
+  unsigned int startpos;
+  unsigned int endpos;
+  bool first;
   bool eof;
 };
 
