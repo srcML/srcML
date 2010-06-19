@@ -301,9 +301,6 @@ int main(int argc, char* argv[]) {
     numout = 0;
   while ((argc - curarg) > numout) {
 
-    //      fprintf(stderr, "HERE %s|%s|%s|%d\n", argv[curarg], OUTPUT_FLAG, OUTPUT_FLAG_SHORT,
-
-    //	      compare_flags(argv[curarg], OUTPUT_FLAG, OUTPUT_FLAG_SHORT));
     // can have an output flag in the list of input filenames
     if (compare_flags(argv[curarg], OUTPUT_FLAG, OUTPUT_FLAG_SHORT)) {
 

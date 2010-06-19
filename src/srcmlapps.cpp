@@ -24,6 +24,7 @@
 
 #include <cstring>
 #include <clocale>
+#include <cstdio>
 
 #ifdef __GNUC__
 #include <langinfo.h>
@@ -43,6 +44,10 @@ const char* getencoding() {
 
 // compare flags to arguments
 bool compare_flags(const char* arg, const char* flag , const char* short_flag, int& pos) {
+
+  // make sure an option
+  if (arg[0] != '-')
+    return false;
 
   // single characters not allowed
   if (strlen(arg) <= 1)
