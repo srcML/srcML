@@ -93,6 +93,9 @@ void srcMLTranslator::translate(const char* unit_directory,
   } catch (const std::exception& e) {
     fprintf(stderr, "SRCML Exception: %s\n", e.what());
   }
+  catch (UTF8FileError) {
+    throw FileError();
+  }
   catch (...) {
     fprintf(stderr, "ERROR\n");
   }

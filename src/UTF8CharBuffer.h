@@ -5,6 +5,8 @@
 #include <libxml/parser.h>
 #include <cstring>
 
+class UTF8FileError {};
+
 class UTF8CharBuffer : public antlr::CharBuffer {
 public:
         // size of the original character buffer
