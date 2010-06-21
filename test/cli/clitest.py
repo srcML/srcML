@@ -21,6 +21,13 @@ def check(command, input, output):
 
 	return validate(output, line)
 	#return validate(output.strip(), line.strip())
+
+def checkError(command, input, error) :
+	print os.path.basename(command[0]), ' '.join(command[1:])
+
+	line = executeWithError(command, input)
+
+	return validate(error, line)
 	
 def validate(org, gen):
 	if org != gen:
@@ -35,6 +42,16 @@ def execute(command, input):
 	last_line = p.communicate(input)[0]
 
 	if p.returncode != 0:
+		globals()["error_count"] = globals()["error_count"] + 1
+		print "Status error:  ", p.returncode, command
+
+	return last_line
+
+def executeWithError(command, input):
+	p = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+	last_line = p.communicate(input)[0]
+
+	if p.returncode == 0:
 		globals()["error_count"] = globals()["error_count"] + 1
 		print "Status error:  ", p.returncode, command
 
@@ -641,6 +658,16 @@ srcml = xml_declaration + """
 """
 
 check([srcmltranslator, option.NO_NAMESPACE_DECLARATION_FLAG], "", srcml)
+
+##
+# check missingfile
+srcml = "src2srcml error: file 'foo.c' does not exist.\n"
+
+checkError([srcmltranslator, 'foo.c'], "", srcml)
+
+srcml = "src2srcml error: file 'abc.c' does not exist.\n"
+
+checkError([srcmltranslator, 'abc.c'], "", srcml)
 
 # footer
 print
