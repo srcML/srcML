@@ -482,7 +482,7 @@ int main(int argc, char* argv[]) {
 
     } catch (URIStreamFileError) {
       fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", NAME, fname);
-      exit(1);
+      exit(STATUS_INPUTFILE_PROBLEM);
     }
 
     // translate from standard input
