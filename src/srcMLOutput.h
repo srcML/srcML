@@ -58,7 +58,7 @@ class srcMLOutput : public srcMLParserTokenTypes {
 		 const char* unit_directory, const char* unit_filename, const char* unit_version, bool outer);
 
   // consume the entire tokenstream with output of srcml
-  void consume(const char* unit_directory, const char* unit_filename, const char* unit_version = "");
+  void consume(const char* language, const char* unit_directory, const char* unit_filename, const char* unit_version = "");
 
   // destructor
   ~srcMLOutput();

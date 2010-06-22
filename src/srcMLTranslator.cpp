@@ -85,7 +85,8 @@ void srcMLTranslator::translate(const char* unit_directory,
       out.setTokenStream(parser);
 
       // parse and form srcML output with unit attributes
-      out.consume(unit_directory, unit_filename, unit_version);
+      Language l(language);
+      out.consume(l.getLanguageString(), unit_directory, unit_filename, unit_version);
 
       // done with filename
       free(ifilename);

@@ -225,6 +225,7 @@ const char* xml_encoding = DEFAULT_XML_ENCODING;
 const char* given_directory = 0;
 const char* given_filename = 0;
 const char* given_version = 0;
+bool specified_cpp_option = false;
 
 // output filename
 const char* srcml_filename = 0;
@@ -410,12 +411,16 @@ int main(int argc, char* argv[]) {
       char* path = argv[input_arg_start];
       char* ext = filename_ext(path);
       language = Language::getLanguageFromExtension(ext);
+
+      // turnoff default cpp reference for Java-based languages
+      if (!specified_cpp_option && (language == srcMLTranslator::LANGUAGE_JAVA || language == srcMLTranslator::LANGUAGE_ASPECTJ))
+	options &= ~OPTION_CPP;
     }
 
     // translator from input to output using determined language
-    if (language == 0)
-	language = DEFAULT_LANGUAGE;
-    srcMLTranslator translator(language, src_encoding, xml_encoding, srcml_filename, options, given_directory, given_filename, given_version, num2prefix);
+    //    if (language == 0)
+    //	language = DEFAULT_LANGUAGE;
+    srcMLTranslator translator(language == 0 ? DEFAULT_LANGUAGE : language, src_encoding, xml_encoding, srcml_filename, options, given_directory, given_filename, given_version, num2prefix);
 
   // output source encoding
   if (isoption(options, OPTION_VERBOSE)) {
@@ -453,11 +458,22 @@ int main(int argc, char* argv[]) {
 	if (isoption(options, OPTION_VERBOSE))
 	  fprintf(stderr, "%d\t%s", count, line);
 
+      // turnoff default cpp reference for Java-based languages
+      if (!specified_cpp_option && (language == srcMLTranslator::LANGUAGE_JAVA || language == srcMLTranslator::LANGUAGE_ASPECTJ))
+	options &= ~OPTION_CPP;
+
 	// translate the file listed in the input file using the directory and filename extracted from the path
 	char* dir = 0;
 	char* filename = 0;
 	try {
 	  translator.setupInput(line);
+
+	  // language based on extension
+	  if (language == 0) {
+	    char* ext = filename_ext(line);
+	    language = Language::getLanguageFromExtension(ext);
+	  }
+
 	  filename_split(line, dir, filename);
 	  translator.translate(dir,
 			       filename,
@@ -786,10 +802,6 @@ int process_args(int argc, char* argv[]) {
 	break;
       }
 
-      // turnoff default cpp reference for Java-based languages
-      if (language == srcMLTranslator::LANGUAGE_JAVA || language == srcMLTranslator::LANGUAGE_ASPECTJ)
-	options &= ~OPTION_CPP;
-
     // output (besides stdout) is based on parameter
     } else if (compare_flags(argv[curarg], OUTPUT_FLAG, OUTPUT_FLAG_SHORT)) {
 
@@ -862,6 +874,7 @@ int process_args(int argc, char* argv[]) {
 
 	// specifying the cpp prefix automatically turns on preprocessor
 	options |= OPTION_CPP;
+	specified_cpp_option = true;
 
 	num2prefix[SRCML_CPP_NS_URI_POS] = ns_prefix;
 	prefixchange[SRCML_CPP_NS_URI_POS] = true;
