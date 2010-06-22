@@ -273,8 +273,15 @@ nestedfilesrc = xml_declaration + """
 </src:unit>
 """
 
-os.system('/bin/echo -e "\na;" > sub/a.cpp')
-os.system('/bin/echo -e "\nb;" > sub/b.cpp')
+if not os.path.exists("sub"):
+	os.mkdir("sub")
+f = open("sub/a.cpp", "w")
+f.write("\na;\n")
+f.close()
+
+f = open("sub/b.cpp", "w")
+f.write("\nb;\n")
+f.close()
 
 check([srcmltranslator, "sub/a.cpp", "sub/b.cpp", "-"], "", nestedfile)
 
