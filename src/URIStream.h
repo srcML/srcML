@@ -42,6 +42,7 @@ class URIStream {
   unsigned int endpos;
   bool first;
   bool eof;
+  bool done;
 };
 
 

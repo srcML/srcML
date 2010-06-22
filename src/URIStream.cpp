@@ -3,20 +3,28 @@
 #include <cstring>
 
 URIStream::URIStream(const char* uriname)
-  : startpos(0), endpos(-1), first(true), eof(false)
+  : startpos(0), endpos(-1), first(true), eof(false), done(false)
 {
   if (!(input = xmlParserInputBufferCreateFilename(uriname, XML_CHAR_ENCODING_NONE)))
     throw URIStreamFileError();
+
+  // get some data into the buffer
+  int size = xmlParserInputBufferGrow(input, 4096);
+
+  // found problem or eof
+  if (size == -1 || size == 0)
+    done = true;
 }
 
 char* URIStream::getline() {
 
+  if (done)
+    return 0;
+
   endpos = startpos;
 
   // find a line in the buffer
-  while (first || input->buffer->content[endpos] != '\n') {
-
-    first = false;
+  while (input->buffer->content[endpos] != '\n') {
 
     // need to refill the buffer
     if (endpos >= input->buffer->use) {
@@ -35,7 +43,7 @@ char* URIStream::getline() {
       // refill the buffer
       // put an appropriate value for the length, but note that libxml
       // basically uses 4 or a min value (which is currently around 4096)
-      int size = xmlParserInputBufferGrow(input, 4096);
+      int size = xmlParserInputBufferGrow(input, 4);
 
       // found problem or eof
       if (size == -1 || size == 0)

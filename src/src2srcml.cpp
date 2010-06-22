@@ -443,7 +443,7 @@ int main(int argc, char* argv[]) {
       while ((line = uriinput.getline())) {
 
 	// skip blank lines or comment lines
-	if (line == '\0' || line[0] == FILELIST_COMMENT)
+	if (line[0] == '\0' || line[0] == FILELIST_COMMENT)
 	  continue;
 
 	// another file
