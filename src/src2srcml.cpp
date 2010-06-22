@@ -466,9 +466,9 @@ int main(int argc, char* argv[]) {
 	} catch (FileError) {
 
 	  if (isoption(options, OPTION_VERBOSE))
-	    fprintf(stderr, "\t\terror: file \'%s\%s\' does not exist.\n", dir, filename);
+	    fprintf(stderr, "\t\terror: file \'%s/%s\' does not exist.\n", dir, filename);
 	  else
-	    fprintf(stderr, " error: file \'%s\%s\' does not exist.\n", dir, filename);
+	    fprintf(stderr, " error: file \'%s/%s\' does not exist.\n", dir, filename);
 	}
 
 	if (isoption(options, OPTION_VERBOSE)) {
@@ -519,7 +519,7 @@ int main(int argc, char* argv[]) {
 
     } catch (FileError) {
 
-      fprintf(stderr, "%s error: file \'%s\' does not exist.\n", NAME, path);
+      fprintf(stderr, "%s error: file \'%s/%s\' does not exist.\n", NAME, path_s, filename_s);
       exit(STATUS_INPUTFILE_PROBLEM);
     }
 
