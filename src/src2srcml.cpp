@@ -482,7 +482,7 @@ int main(int argc, char* argv[]) {
 			       language);
 	} catch (FileError) {
 
-	  if (dir)
+	  if (dir[0])
 	    fprintf(stderr, isoption(options, OPTION_VERBOSE) ? "\t\terror: file \'%s/%s\' does not exist.\n" :
 				   " error: file \'%s/%s\' does not exist.\n", dir, filename);
 	  else
@@ -538,7 +538,7 @@ int main(int argc, char* argv[]) {
 
     } catch (FileError) {
 
-      if (path_s)
+      if (path_s[0])
 	fprintf(stderr, "%s error: file \'%s/%s\' does not exist.\n", NAME, path_s, filename_s);
       else
 	fprintf(stderr, "%s error: file \'%s\' does not exist.\n", NAME, filename_s);
@@ -579,7 +579,7 @@ int main(int argc, char* argv[]) {
 	filename_split(path, path_s, filename_s);
 	translator.translate(path_s, filename_s, 0, language);
       } catch (FileError) {
-	if (path_s)
+	if (path_s[0])
 	  fprintf(stderr, "%s error: file \'%s/%s\' does not exist.\n", NAME, path_s, filename_s);
 	else
 	  fprintf(stderr, "%s error: file \'%s\' does not exist.\n", NAME, filename_s);
