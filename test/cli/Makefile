@@ -15,3 +15,6 @@ status.py : ${OPTION_SRC}
 clean :
 	rm -f option.py
 	rm -f status.py
+	rm -f filelistab
+	rm -f sub/*
+	rmdir sub
