@@ -4,6 +4,13 @@
 # Uncomment to generate a static build
 #STATIC
 
+# detect OS
+OSUPPER = $(shell uname -s 2>/dev/null | tr [:lower:] [:upper:])
+OSLOWER = $(shell uname -s 2>/dev/null | tr [:upper:] [:lower:])
+
+# 'linux' is output for Linux system, 'darwin' for OS X
+DARWIN = $(strip $(findstring DARWIN, $(OSUPPER)))
+
 EXE_DIR = ../bin/
 OBJ_DIR = ../obj/
 
@@ -32,7 +39,11 @@ LIBXML_VERSION= Libxml2 enabled
 SRC2SRCML_BIN=../bin/src2srcml
 SRCML2SRC_BIN=../bin/srcml2src
 
+ifneq(DARWIN,)
+SED=/opt/local/bin/gsed
+else
 SED=/bin/sed
+endif
 
 # default
 all : ${EXE_DIR}src2srcml ${EXE_DIR}srcml2src
