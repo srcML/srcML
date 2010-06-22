@@ -482,10 +482,12 @@ int main(int argc, char* argv[]) {
 			       language);
 	} catch (FileError) {
 
-	  if (isoption(options, OPTION_VERBOSE))
-	    fprintf(stderr, "\t\terror: file \'%s/%s\' does not exist.\n", dir, filename);
+	  if (dir)
+	    fprintf(stderr, isoption(options, OPTION_VERBOSE) ? "\t\terror: file \'%s/%s\' does not exist.\n" :
+				   " error: file \'%s/%s\' does not exist.\n", dir, filename);
 	  else
-	    fprintf(stderr, " error: file \'%s/%s\' does not exist.\n", dir, filename);
+	    fprintf(stderr, isoption(options, OPTION_VERBOSE) ? "\t\terror: file \'%s\' does not exist.\n" :
+				   " error: file \'%s\' does not exist.\n", filename);
 	}
 
 	if (isoption(options, OPTION_VERBOSE)) {
@@ -536,7 +538,11 @@ int main(int argc, char* argv[]) {
 
     } catch (FileError) {
 
-      fprintf(stderr, "%s error: file \'%s/%s\' does not exist.\n", NAME, path_s, filename_s);
+      if (path_s)
+	fprintf(stderr, "%s error: file \'%s/%s\' does not exist.\n", NAME, path_s, filename_s);
+      else
+	fprintf(stderr, "%s error: file \'%s\' does not exist.\n", NAME, filename_s);
+
       exit(STATUS_INPUTFILE_PROBLEM);
     }
 
@@ -573,7 +579,10 @@ int main(int argc, char* argv[]) {
 	filename_split(path, path_s, filename_s);
 	translator.translate(path_s, filename_s, 0, language);
       } catch (FileError) {
-	fprintf(stderr, "%s error: file \'%s/%s\' does not exist.\n", NAME, path_s, filename_s);
+	if (path_s)
+	  fprintf(stderr, "%s error: file \'%s/%s\' does not exist.\n", NAME, path_s, filename_s);
+	else
+	  fprintf(stderr, "%s error: file \'%s\' does not exist.\n", NAME, filename_s);
       }
 
       if (isoption(options, OPTION_VERBOSE)) {
