@@ -46,6 +46,7 @@ else
 SED=/bin/sed
 GREP=/bin/grep
 endif
+ECHO=/bin/echo
 
 # default
 all : ${EXE_DIR}src2srcml ${EXE_DIR}srcml2src
@@ -295,7 +296,7 @@ cleanantlr :
 
 # on every build, record the version number
 version.cpp : VERSION
-	echo 'const char* version() { const char* Version = "$(shell cat VERSION) ${LIBXML_VERSION}"; return Version; }'   > $@
+	$(ECHO) 'const char* version() { const char* Version = "$(shell cat VERSION) ${LIBXML_VERSION}"; return Version; }'   > $@
 
 # changes use of 64 bit integer using transformation
 visual :
@@ -305,8 +306,8 @@ visual :
 # update trunk version
 PHONY : trunkversion
 trunkversion :
-	echo -n "Trunk " > VERSION
-	echo -n `date` >> VERSION
+	$(ECHO) -n "Trunk " > VERSION
+	$(ECHO) -n `date` >> VERSION
 
 srcMLParserTokenTypesMacro.hpp : srcMLParserTokenTypes.hpp
 	$(GREP) '=' srcMLParserTokenTypes.hpp | $(SED) -e 's/,//g' -e 's/= //g' -e 's/^[ \t]*//' -e 's/^/#define TOKEN_/g' > $@
