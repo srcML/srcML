@@ -157,6 +157,7 @@ inline char* filename_split(char* path, char*& dir, char*& filename) {
   } else {
     filename = path;
     dir = path + strlen(path);
+    dir = 0;
   }
 
   return path;
