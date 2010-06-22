@@ -717,6 +717,11 @@ language = 'language="Java" '
 
 check([srcmltranslator, 'emptysrc/empty.java'], "", xmltag + opentag + namespace + language + dir + fileopen + 'empty.java' + fileclose + endtag)
 
+# check aspectj file extension
+language = 'language="AspectJ" '
+
+check([srcmltranslator, 'emptysrc/empty.aj'], "", xmltag + opentag + namespace + language + dir + fileopen + 'empty.aj' + fileclose + endtag)
+
 # footer
 print
 print "Error count: ", error_count
