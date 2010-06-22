@@ -669,6 +669,10 @@ srcml = "src2srcml error: file 'abc.c' does not exist.\n"
 
 checkError([srcmltranslator, 'abc.c'], "", srcml)
 
+srcml = "src2srcml error: file '../src/foo.c' does not exist.\n"
+
+checkError([srcmltranslator, '../src/foo.c'], "", srcml)
+
 # footer
 print
 print "Error count: ", error_count
