@@ -91,9 +91,11 @@ void srcMLTranslator::translate(const char* unit_directory,
       free(ifilename);
 
   } catch (const std::exception& e) {
+    free(ifilename);
     fprintf(stderr, "SRCML Exception: %s\n", e.what());
   }
   catch (UTF8FileError) {
+    free(ifilename);
     throw FileError();
   }
   catch (...) {
