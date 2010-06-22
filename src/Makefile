@@ -39,10 +39,12 @@ LIBXML_VERSION= Libxml2 enabled
 SRC2SRCML_BIN=../bin/src2srcml
 SRCML2SRC_BIN=../bin/srcml2src
 
-ifneq(DARWIN,)
+ifneq ($(DARWIN),) 
 SED=/opt/local/bin/gsed
+GREP=/usr/bin/grep
 else
 SED=/bin/sed
+GREP=/bin/grep
 endif
 
 # default
@@ -307,7 +309,7 @@ trunkversion :
 	echo -n `date` >> VERSION
 
 srcMLParserTokenTypesMacro.hpp : srcMLParserTokenTypes.hpp
-	/bin/grep '=' srcMLParserTokenTypes.hpp | /bin/sed -e 's/,//g' -e 's/= //g' -e 's/^[ \t]*//' -e 's/^/#define TOKEN_/g' > $@
+	$(GREP) '=' srcMLParserTokenTypes.hpp | $(SED) -e 's/,//g' -e 's/= //g' -e 's/^[ \t]*//' -e 's/^/#define TOKEN_/g' > $@
 
 PHONY : install
 install :
