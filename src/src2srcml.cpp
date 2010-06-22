@@ -534,7 +534,7 @@ int main(int argc, char* argv[]) {
       translator.translate(isoption(options, OPTION_DIRECTORY) ? given_directory : path_s,
 			   isoption(options, OPTION_FILENAME)  ? given_filename  : filename_s,
 			   given_version,
-			   language);
+			   language ? language : DEFAULT_LANGUAGE);
 
     } catch (FileError) {
 
