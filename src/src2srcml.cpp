@@ -790,7 +790,7 @@ int process_args(int argc, char* argv[]) {
       if (language == srcMLTranslator::LANGUAGE_JAVA || language == srcMLTranslator::LANGUAGE_ASPECTJ)
 	options &= ~OPTION_CPP;
 
-    // language is based on parameter
+    // output (besides stdout) is based on parameter
     } else if (compare_flags(argv[curarg], OUTPUT_FLAG, OUTPUT_FLAG_SHORT)) {
 
       char* embedded = extract_option(argv[curarg]);
