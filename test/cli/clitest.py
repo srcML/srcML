@@ -711,7 +711,11 @@ check([srcmltranslator, 'emptysrc/empty.hh'], "", xmltag + opentag + namespace +
 check([srcmltranslator, 'emptysrc/empty.hxx'], "", xmltag + opentag + namespace + language + dir + fileopen + 'empty.hxx' + fileclose + endtag)
 check([srcmltranslator, 'emptysrc/empty.h++'], "", xmltag + opentag + namespace + language + dir + fileopen + 'empty.h++' + fileclose + endtag)
 
+# check java file extension
+namespace = 'xmlns="http://www.sdml.info/srcML/src" '
+language = 'language="Java" '
 
+check([srcmltranslator, 'emptysrc/empty.java'], "", xmltag + opentag + namespace + language + dir + fileopen + 'empty.java' + fileclose + endtag)
 
 # footer
 print
