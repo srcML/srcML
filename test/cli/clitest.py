@@ -287,7 +287,7 @@ sub/b.cpp
 """
 
 f = open('filelistab', 'w')
-f.write("\nsub/a.cpp\nsub/b.cpp\n")
+f.write("\nsub/a.cpp\nsub/b.cpp\n\n")
 f.close()
 
 check([srcmltranslator, option.FILELIST_FLAG, "filelistab"], "", nestedfile)
