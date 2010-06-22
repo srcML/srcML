@@ -682,6 +682,25 @@ srcml = "src2srcml error: file '../src/foo.c' does not exist.\n"
 
 checkError([srcmltranslator, '../src/foo.c'], "", srcml)
 
+##
+# check correct language based on file extension
+
+xmltag = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n'
+opentag = '<unit '
+namespace = 'xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" '
+dir = 'dir="emptysrc" '
+fileopen = 'filename="'
+fileclose = '"'
+endtag = '/>\n'
+
+# check c file extensions
+language = 'language="C" '
+
+check([srcmltranslator, 'emptysrc/empty.c'], "", xmltag + opentag + namespace + language + dir + fileopen + 'empty.c' + fileclose + endtag)
+check([srcmltranslator, 'emptysrc/empty.h'], "", xmltag + opentag + namespace + language + dir + fileopen + 'empty.h' + fileclose + endtag)
+
+
+
 # footer
 print
 print "Error count: ", error_count
