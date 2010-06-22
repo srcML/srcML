@@ -459,9 +459,9 @@ int main(int argc, char* argv[]) {
 	if (isoption(options, OPTION_VERBOSE))
 	  fprintf(stderr, "%d\t%s", count, line);
 
-      // turnoff default cpp reference for Java-based languages
-      if (!specified_cpp_option && (language == srcMLTranslator::LANGUAGE_JAVA || language == srcMLTranslator::LANGUAGE_ASPECTJ))
-	options &= ~OPTION_CPP;
+	// turnoff default cpp reference for Java-based languages
+	if (!specified_cpp_option && (language == srcMLTranslator::LANGUAGE_JAVA || language == srcMLTranslator::LANGUAGE_ASPECTJ))
+	  options &= ~OPTION_CPP;
 
 	// translate the file listed in the input file using the directory and filename extracted from the path
 	char* dir = 0;
@@ -482,7 +482,7 @@ int main(int argc, char* argv[]) {
 			       language);
 	} catch (FileError) {
 
-	  if (dir[0])
+	  if (dir)
 	    fprintf(stderr, isoption(options, OPTION_VERBOSE) ? "\t\terror: file \'%s/%s\' does not exist.\n" :
 				   " error: file \'%s/%s\' does not exist.\n", dir, filename);
 	  else
@@ -524,7 +524,7 @@ int main(int argc, char* argv[]) {
     filename_split(path, path_s, filename_s);
 
     // hack to fix where directory, but no filename
-    if (path_s[0] && !filename_s[0]) {
+    if (path_s && !filename_s[0]) {
       char* p = path_s;
       path_s = filename_s;
       filename_s = p;
@@ -538,7 +538,7 @@ int main(int argc, char* argv[]) {
 
     } catch (FileError) {
 
-      if (path_s[0])
+      if (path_s)
 	fprintf(stderr, "%s error: file \'%s/%s\' does not exist.\n", NAME, path_s, filename_s);
       else
 	fprintf(stderr, "%s error: file \'%s\' does not exist.\n", NAME, filename_s);
@@ -579,7 +579,7 @@ int main(int argc, char* argv[]) {
 	filename_split(path, path_s, filename_s);
 	translator.translate(path_s, filename_s, 0, language);
       } catch (FileError) {
-	if (path_s[0])
+	if (path_s)
 	  fprintf(stderr, "%s error: file \'%s/%s\' does not exist.\n", NAME, path_s, filename_s);
 	else
 	  fprintf(stderr, "%s error: file \'%s\' does not exist.\n", NAME, filename_s);
