@@ -549,14 +549,14 @@ int main(int argc, char* argv[]) {
       if (isoption(options, OPTION_VERBOSE)) {
 	fprintf(stderr, "%d\t%s", count, path);
       }
+      char* path_s = 0;
+      char* filename_s = 0;
       try {
 	translator.setupInput(path);
-	char* path_s = 0;
-	char* filename_s = 0;
 	filename_split(path, path_s, filename_s);
 	translator.translate(path_s, filename_s, 0, language);
       } catch (FileError) {
-	fprintf(stderr, "%s error: file \'%s\' does not exist.\n", NAME, path);
+	fprintf(stderr, "%s error: file \'%s/%s\' does not exist.\n", NAME, path_s, filename_s);
       }
 
       if (isoption(options, OPTION_VERBOSE)) {
