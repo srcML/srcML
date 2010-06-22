@@ -577,7 +577,7 @@ int main(int argc, char* argv[]) {
       try {
 	translator.setupInput(path);
 	filename_split(path, path_s, filename_s);
-	translator.translate(path_s, filename_s, 0, language);
+	translator.translate(path_s, filename_s, 0, language ? language : DEFAULT_LANGUAGE);
       } catch (FileError) {
 	if (path_s)
 	  fprintf(stderr, "%s error: file \'%s/%s\' does not exist.\n", NAME, path_s, filename_s);
