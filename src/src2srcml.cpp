@@ -69,8 +69,8 @@ const char* const SELF_VERSION_FLAG_SHORT = "";
 
 const char* const DEFAULT_XML_ENCODING = "UTF-8";
 
-const char* const FILELIST_FLAG = "--input-file";
-const char* const FILELIST_FLAG_SHORT = "-i";
+const char* const FILELIST_FLAG = "--files-from";
+const char* const FILELIST_FLAG_SHORT = "";
 
 const char* const XMLNS_FLAG = "--xmlns";
 const char* const XMLNS_DEFAULT_FLAG_FULL = "--xmlns=URI";
@@ -118,9 +118,9 @@ void output_help(const char* name) {
   printf("  %s, %-16s display this help and exit\n",      HELP_FLAG_SHORT, HELP_FLAG);
   printf("  %s, %-16s display version number and exit\n\n", VERSION_FLAG_SHORT, VERSION_FLAG);
 
-  printf("  %s, %-16s write result to FILE instead of standard output\n", OUTPUT_FLAG_SHORT, OUTPUT_FLAG);
-  printf("  %s, %-16s treat input file as a list of source files for one compound srcML document\n\n",
-	  FILELIST_FLAG_SHORT, FILELIST_FLAG);
+  printf("  %s, %-16s write result to <file|URI> instead of standard output\n", OUTPUT_FLAG_SHORT, OUTPUT_FLAG);
+  printf("  %-20s read list of source file names from <file|URI> to form a compound srcML document\n\n",
+	  FILELIST_FLAG);
 
   printf("  %s, %-16s store all input source files in one compound srcML document\n",
 	  NESTED_FLAG_SHORT, NESTED_FLAG);
@@ -412,10 +412,11 @@ int main(int argc, char* argv[]) {
       char* ext = filename_ext(path);
       language = Language::getLanguageFromExtension(ext);
 
-      // turnoff default cpp reference for Java-based languages
-      if (!specified_cpp_option && (language == srcMLTranslator::LANGUAGE_JAVA || language == srcMLTranslator::LANGUAGE_ASPECTJ))
-	options &= ~OPTION_CPP;
     }
+
+    // turnoff default cpp reference for Java-based languages
+    if (!specified_cpp_option && (language == srcMLTranslator::LANGUAGE_JAVA || language == srcMLTranslator::LANGUAGE_ASPECTJ))
+	options &= ~OPTION_CPP;
 
     // translator from input to output using determined language
     //    if (language == 0)
