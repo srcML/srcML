@@ -699,6 +699,18 @@ language = 'language="C" '
 check([srcmltranslator, 'emptysrc/empty.c'], "", xmltag + opentag + namespace + language + dir + fileopen + 'empty.c' + fileclose + endtag)
 check([srcmltranslator, 'emptysrc/empty.h'], "", xmltag + opentag + namespace + language + dir + fileopen + 'empty.h' + fileclose + endtag)
 
+# check c++ file extensions
+language = 'language="C++" '
+
+check([srcmltranslator, 'emptysrc/empty.cpp'], "", xmltag + opentag + namespace + language + dir + fileopen + 'empty.cpp' + fileclose + endtag)
+check([srcmltranslator, 'emptysrc/empty.cc'], "", xmltag + opentag + namespace + language + dir + fileopen + 'empty.cc' + fileclose + endtag)
+check([srcmltranslator, 'emptysrc/empty.cxx'], "", xmltag + opentag + namespace + language + dir + fileopen + 'empty.cxx' + fileclose + endtag)
+check([srcmltranslator, 'emptysrc/empty.c++'], "", xmltag + opentag + namespace + language + dir + fileopen + 'empty.c++' + fileclose + endtag)
+check([srcmltranslator, 'emptysrc/empty.hpp'], "", xmltag + opentag + namespace + language + dir + fileopen + 'empty.hpp' + fileclose + endtag)
+check([srcmltranslator, 'emptysrc/empty.hh'], "", xmltag + opentag + namespace + language + dir + fileopen + 'empty.hh' + fileclose + endtag)
+check([srcmltranslator, 'emptysrc/empty.hxx'], "", xmltag + opentag + namespace + language + dir + fileopen + 'empty.hxx' + fileclose + endtag)
+check([srcmltranslator, 'emptysrc/empty.h++'], "", xmltag + opentag + namespace + language + dir + fileopen + 'empty.h++' + fileclose + endtag)
+
 
 
 # footer
