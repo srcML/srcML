@@ -220,36 +220,36 @@ int main(int argc, char* argv[]) {
   int curoption = 0;
   struct option cliargs[] = {
     { HELP_FLAG + 2, no_argument, NULL, HELP_FLAG_SHORT[1] },
-    { "version", no_argument, NULL, 'V' },
-    { "filename", no_argument, NULL, 'f' },
-    { "directory", no_argument, NULL, 'd' },
-    { "language", no_argument, NULL, 'l' },
-    { "src-version", no_argument, NULL, 's' },
-    { "encoding", no_argument, NULL, 'x' },
-    { "nested", no_argument, NULL, 'n' },
-    { "info", no_argument, NULL, 'i' },
-    { "longinfo", no_argument, NULL, 'L' },
-    { "extract-all", no_argument, NULL, 'a' },
-    { "verbose", no_argument, NULL, 'v' },
-    { "xml", no_argument, NULL, 'X' },
-    { "compress", no_argument, NULL, 'z' },
-    { "unit", required_argument, NULL, 'U' },
-    { "src-encoding", required_argument, NULL, 't' },
-    { "prefix", required_argument, NULL, 'p' },
-    { "no-xml-declaration", no_argument, &curoption, OPTION_XMLDECL },
-    { "no-namespace-decl", no_argument, &curoption, OPTION_NAMESPACEDECL },
-    { "xslt", required_argument, NULL, 'S' },
-    { "xpath", required_argument, NULL, 'P' },
-    { "relaxng", required_argument, NULL, 'R' },
-    { "context", required_argument, NULL, 'C' },
-    { "param", required_argument, NULL, 'A' },
+    { VERSION_FLAG + 2, no_argument, NULL, VERSION_FLAG_SHORT[1] },
+    { FILENAME_FLAG + 2, no_argument, NULL, FILENAME_FLAG_SHORT[1] },
+    { DIRECTORY_FLAG + 2, no_argument, NULL, DIRECTORY_FLAG_SHORT[1] },
+    { LANGUAGE_FLAG + 2, no_argument, NULL, LANGUAGE_FLAG_SHORT[1] },
+    { SRCVERSION_FLAG + 2, no_argument, NULL, SRCVERSION_FLAG_SHORT[1] },
+    { ENCODING_FLAG + 2, no_argument, NULL, ENCODING_FLAG_SHORT[1] },
+    { NESTED_FLAG + 2, no_argument, NULL, NESTED_FLAG_SHORT[1] },
+    { INFO_FLAG + 2, no_argument, NULL, INFO_FLAG_SHORT[1] },
+    { LONG_INFO_FLAG + 2, no_argument, NULL, LONG_INFO_FLAG_SHORT[1] },
+    { EXPAND_FLAG + 2, no_argument, NULL, EXPAND_FLAG_SHORT[1] },
+    { VERBOSE_FLAG + 2, no_argument, NULL, VERBOSE_FLAG_SHORT[1] },
+    { XML_FLAG + 2, no_argument, NULL, XML_FLAG_SHORT[1] },
+    { COMPRESSED_FLAG + 2, no_argument, NULL, COMPRESSED_FLAG_SHORT[1] },
+    { UNIT_FLAG + 2, required_argument, NULL, UNIT_FLAG_SHORT[1] },
+    { TEXTENCODING_FLAG + 2, required_argument, NULL, TEXTENCODING_FLAG_SHORT[1] },
+    { NAMESPACE_FLAG + 2, required_argument, NULL, NAMESPACE_FLAG_SHORT[1] },
+    { NO_XML_DECLARATION_FLAG + 2, no_argument, &curoption, OPTION_XMLDECL },
+    { NO_NAMESPACE_DECLARATION_FLAG + 2, no_argument, &curoption, OPTION_NAMESPACEDECL },
+    { XSLT_FLAG + 2, required_argument, NULL, 'S' },
+    { XPATH_FLAG + 2, required_argument, NULL, 'P' },
+    { RELAXNG_FLAG + 2, required_argument, NULL, 'R' },
+    { CONTEXT_FLAG + 2, required_argument, NULL, 'C' },
+    { PARAM_FLAG + 2, required_argument, NULL, 'A' },
     { 0, 0, 0, 0 }
   };
 
   while (1) {
     curoption = 0;
     int option_index = 0;
-    int c = getopt_long_only(argc, argv, "hVfdlsxniLavXzU:t:p:", cliargs, &option_index);
+    int c = getopt_long(argc, argv, "hVfdlsxniLavXzU:t:p:", cliargs, &option_index);
     if (c == -1)
       break;
 
