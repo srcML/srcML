@@ -710,12 +710,24 @@ int process_args(int argc, char* argv[]) {
       options |= OPTION_XML_ENCODING;
 
       xml_encoding = optarg;
+
+      // validate xml encoding
+      if (!srcMLOutput::checkEncoding(xml_encoding)) {
+	fprintf(stderr, "%s: xml encoding \"%s\" is not supported.\n", argv[0], xml_encoding);
+	exit(STATUS_UNKNOWN_ENCODING);
+      }
       break;
 
     case 't': 
       options |= OPTION_TEXT_ENCODING;
 
       src_encoding = optarg;
+
+      // validate source encoding
+      if (!srcMLOutput::checkEncoding(src_encoding)) {
+	fprintf(stderr, "%s: text encoding \"%s\" is not supported.\n", NAME, src_encoding);
+	exit(STATUS_UNKNOWN_ENCODING);
+      }
       break;
 
     case 'X': 
