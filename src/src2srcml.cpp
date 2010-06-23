@@ -613,7 +613,7 @@ int process_args(int argc, char* argv[]) {
     { HELP_FLAG + 2, no_argument, NULL, HELP_FLAG_SHORT[1] },
     { VERSION_FLAG + 2, no_argument, NULL, VERSION_FLAG_SHORT[1] },
     { OUTPUT_FLAG + 2, required_argument, NULL, OUTPUT_FLAG_SHORT[1] },
-    { FILELIST_FLAG + 2, no_argument, NULL, 'F' },
+    { FILELIST_FLAG + 2, required_argument, NULL, 'F' },
     { NESTED_FLAG + 2, no_argument, NULL, NESTED_FLAG_SHORT[1] },
     { EXPRESSION_MODE_FLAG + 2, no_argument, NULL, EXPRESSION_MODE_FLAG_SHORT[1] },
     { ENCODING_FLAG + 2, required_argument, NULL, ENCODING_FLAG_SHORT[1] },
@@ -647,7 +647,7 @@ int process_args(int argc, char* argv[]) {
     int option_index = 0;
     bool special = optind < argc && !strncmp(argv[optind], "xmlns:", 6);
     opterr = special;
-    int c = getopt_long(argc, argv, "hVo:Fnex:t:X:zcgvl:d:f:s:TOMmE0p", cliargs, &option_index);
+    int c = getopt_long(argc, argv, "hVo:F:nex:t:X:zcgvl:d:f:s:TOMmE0p", cliargs, &option_index);
 
     if (c == -1)
       break;
