@@ -34,6 +34,8 @@
 #include "srcmlns.h"
 #include <getopt.h>
 
+int option_error_status(int optopt);
+
 char const * const NAME = "srcml2src";
 
 char const * const EXPAND_FLAG = "--extract-all";
@@ -264,7 +266,7 @@ int main(int argc, char* argv[]) {
     // missing or extra option argument
     if (c == '?') {
       fprintf(stderr, "Try '%s %s' for more information.\n", argv[0], HELP_FLAG);
-      exit(1);
+      exit(option_error_status(optopt));
     }
 
     char* end = 0;
@@ -1019,3 +1021,27 @@ extern "C" void terminate_handler(int) {
   pstd::signal(SIGINT, SIG_DFL);
 }
 #endif
+
+int option_error_status(int optopt) {
+
+  switch (optopt) {
+
+  case 'x':
+    return STATUS_XMLENCODING_MISSING;
+    break;
+
+  case 't':
+    return STATUS_SRCENCODING_MISSING;
+    break;
+
+  case 'U':
+    return STATUS_UNIT_MISSING;
+    break;
+
+  case '\0':
+    return STATUS_UNKNOWN_OPTION;
+    break;
+  };
+
+  return 0;
+}
