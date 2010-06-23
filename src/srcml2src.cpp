@@ -200,6 +200,8 @@ int xpathcount = 0;
 const char* xpathexpr[MAXXPATH + 1] = { 0 };
 std::list<const char*> xpathexprlist;
 
+const char* ofilename = "-";
+
 int main(int argc, char* argv[]) {
 
   /* signal handling */
@@ -277,6 +279,7 @@ int main(int argc, char* argv[]) {
       break;
 
     case 'o': 
+      ofilename = optarg;
       break;
 
     case 'f':
@@ -755,19 +758,6 @@ int main(int argc, char* argv[]) {
   if (argc > curarg && !compare_flags(argv[curarg], STDIN, STDIN)) {
     filename = argv[curarg];
     ++curarg;
-  }
-
-  // second command line parameter is output filename
-  const char* ofilename = "-";
-  if (argc == curarg + 1) {
-    ofilename = argv[curarg];
-    ++curarg;
-
-  } else if (argc > curarg + 1) {
-
-      fprintf(stderr, "%1$s: More than one output file specified.\n"
-	      "try '%1$s --%2$s' for more information.\n", NAME, HELP_FLAG);
-      exit(0);
   }
 
   // help flag
