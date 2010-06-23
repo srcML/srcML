@@ -32,6 +32,7 @@
 #include "Options.h"
 #include <list>
 #include "srcmlns.h"
+#include <getopt.h>
 
 char const * const NAME = "srcml2src";
 
@@ -216,14 +217,195 @@ int main(int argc, char* argv[]) {
   const char* context = "src:unit";
   std::list<const char*> ns;
 
+  int curoption = 0;
+  struct option cliargs[] = {
+    { "help", no_argument, NULL, 'h' },
+    { "version", no_argument, NULL, 'V' },
+    { "filename", no_argument, NULL, 'f' },
+    { "directory", no_argument, NULL, 'd' },
+    { "src-version", no_argument, NULL, 's' },
+    { "encoding", no_argument, NULL, 'x' },
+    { "nested", no_argument, NULL, 'n' },
+    { "info", no_argument, NULL, 'i' },
+    { "longinfo", no_argument, NULL, 'l' },
+    { "extract-all", no_argument, NULL, 'a' },
+    { "verbose", no_argument, NULL, 'v' },
+    { "xml", no_argument, NULL, 'X' },
+    { "compress", no_argument, NULL, 'z' },
+    { "no-xml-declaration", no_argument, &curoption, OPTION_XMLDECL },
+    { "no-namespace-decl", no_argument, &curoption, OPTION_NAMESPACEDECL },
+    { "unit", required_argument, NULL, 'U' },
+    { "xslt", required_argument, NULL, 'S' },
+    { "relaxng", required_argument, NULL, 'R' },
+    { "xpath", required_argument, NULL, 'P' },
+    { "context", required_argument, NULL, 'C' },
+    { "src-encoding", required_argument, NULL, 't' },
+    { "prefix", required_argument, NULL, 'p' },
+    { "param", required_argument, NULL, 'A' },
+    { 0, 0, 0, 0 }
+  };
+
+
+  opterr = 0;
+  while (1) {
+    curoption = 0;
+    int option_index = 0;
+    int c = getopt_long_only(argc, argv, "hVfdsxnilavXzU:t:p:",
+		    cliargs, &option_index);
+    if (c == -1)
+      break;
+
+    if (curoption) {
+      options &= ~curoption;
+      continue;
+    }
+
+    char* end = 0;
+    switch(c) {
+
+    case '?':
+      fprintf(stderr, "Error: %c %d\n", optopt, optind);
+      exit(1);
+      break;
+
+    case 'h': 
+      options |= OPTION_HELP;
+      break;
+
+    case 'V': 
+      options |= OPTION_PVERSION;
+      break;
+
+    case 'f':
+      options |= OPTION_FILENAME;
+      optionorder[optioncount++] = OPTION_FILENAME;
+      break;
+
+    case 'd':
+      options |= OPTION_DIRECTORY;
+      optionorder[optioncount++] = OPTION_DIRECTORY;
+      break;
+
+    case 's':
+      options |= OPTION_VERSION;
+      optionorder[optioncount++] = OPTION_VERSION;
+      break;
+
+    case 'x':
+      options |= OPTION_XML_ENCODING;
+      optionorder[optioncount++] = OPTION_XML_ENCODING;
+      break;
+
+    case 'n':
+      options |= OPTION_NESTED;
+      break;
+
+    case 'i':
+      options |= OPTION_INFO;
+      break;
+
+    case 'l':
+      options |= OPTION_LONG_INFO;
+      break;
+
+    case 'a':
+      options |= OPTION_EXPAND;
+      break;
+
+    case 'v':
+      options |= OPTION_VERBOSE;
+      break;
+
+    case 'X':
+      options |= OPTION_XML;
+      break;
+
+    case 'z':
+      options |= OPTION_COMPRESSED;
+      break;
+
+    case 'U':
+      options |= OPTION_UNIT;
+
+      // try to convert to number
+      unit = pstd::strtol(optarg, &end, 10);
+
+      // validate type of unit number
+      if (errno == EINVAL || strlen(end) == strlen(optarg)) {
+	fprintf(stderr, "%s: unit option value \"%s\" must be numeric.\n", NAME, optarg);
+	exit(STATUS_UNIT_INVALID);
+      }
+
+      // validate range of unit number
+      if (unit <= 0) {
+	fprintf(stderr, "%s: unit option value \"%d\" must be > 0.\n", NAME, unit);
+	exit(STATUS_UNIT_INVALID);
+      }
+
+      break;
+
+    case 'S':
+
+      options |= OPTION_XSLT;
+      xsltfiles[xsltcount++] = optarg;
+      break;
+
+    case 'R':
+      options |= OPTION_RELAXNG;
+      xpathexprlist.push_back(xpathexpr[xpathcount++] = optarg);
+      break;
+
+    case 'P':
+      options |= OPTION_XPATH;
+      xpathexprlist.push_back(xpathexpr[xpathcount++] = optarg);
+      break;
+
+    case 'C':
+      options |= OPTION_XPATH;
+      context = optarg;
+      break;
+
+    case 't':
+      options |= OPTION_TEXT_ENCODING;
+
+      src_encoding = optarg;
+
+      // validate source encoding
+      if (!srcMLUtility::checkEncoding(src_encoding)) {
+	fprintf(stderr, "%s: text encoding \"%s\" is not supported.\n", NAME, src_encoding);
+	exit(STATUS_UNKNOWN_ENCODING);
+      }
+      break;
+
+    case 'p':
+      options |= OPTION_NAMESPACE;
+
+      ns.push_back(optarg);
+      break;
+
+    case 'A':
+
+      // param name
+      params[paramcount++] = optarg;
+      
+      // param value
+      params[paramcount++] = argv[optind++];
+      break;
+
+    default:
+      fprintf(stderr, "WHAT: %d\n", c);
+      break;
+    };
+  }
+
   // process all flags
   int position = 0;
   int curarg = 1;
-  while (argc > curarg && strlen(argv[curarg]) > 1 && argv[curarg][0] == '-' && strcmp(argv[curarg], OPTION_SEPARATOR) != 0) {
-
+  /*  while (argc > curarg && strlen(argv[curarg]) > 1 && argv[curarg][0] == '-' && strcmp(argv[curarg], OPTION_SEPARATOR) != 0) {
+   */
     // mark to detect changes
     int original_position = position;
-
+    /*
     // help flag
     if (compare_flags(argv[1], HELP_FLAG, HELP_FLAG_SHORT, position)) {
       options |= OPTION_HELP;
@@ -287,7 +469,7 @@ int main(int argc, char* argv[]) {
     else if (compare_flags(argv[curarg], NESTED_FLAG, NESTED_FLAG_SHORT, position)) {
       options |= OPTION_NESTED;
       if (position == original_position) ++curarg;
-    }
+      }*/
     /*
     // skip encoding mode
     else if (compare_flags(argv[curarg], SKIP_ENCODING_FLAG, SKIP_ENCODING_FLAG_SHORT, position)) {
@@ -296,13 +478,13 @@ int main(int argc, char* argv[]) {
     }
     */
     // expand flag
-    else if (compare_flags(argv[curarg], EXPAND_FLAG, EXPAND_FLAG_SHORT, position)) {
+    /*   else if (compare_flags(argv[curarg], EXPAND_FLAG, EXPAND_FLAG_SHORT, position)) {
       options |= OPTION_EXPAND;
       if (position == original_position) ++curarg;
     }
 
     // verbose flag
-    else if (compare_flags(argv[curarg], VERBOSE_FLAG, VERBOSE_FLAG_SHORT, position)) {
+    else  if (compare_flags(argv[curarg], VERBOSE_FLAG, VERBOSE_FLAG_SHORT, position)) {
       options |= OPTION_VERBOSE;
       if (position == original_position) ++curarg;
     }
@@ -335,7 +517,8 @@ int main(int argc, char* argv[]) {
       // turnoff default xml declaration
       options &= ~OPTION_NAMESPACEDECL;
     }
-
+    */
+    /*
     // namespace
     else if (compare_flags(argv[curarg], NAMESPACE_FLAG, NAMESPACE_FLAG_SHORT)) {
       options |= OPTION_NAMESPACE;
@@ -358,7 +541,7 @@ int main(int argc, char* argv[]) {
     }
 
     // extract unit flag
-    else if (compare_flags(argv[curarg], UNIT_FLAG, UNIT_FLAG_SHORT)) {
+    else*/ /* if (compare_flags(argv[curarg], UNIT_FLAG, UNIT_FLAG_SHORT)) {
       options |= OPTION_UNIT;
 
       char* embedded = extract_option(argv[curarg]);
@@ -393,7 +576,8 @@ int main(int argc, char* argv[]) {
 	exit(STATUS_UNIT_INVALID);
       }
     }
-
+	   */
+    /*
     // parameters (for xslt) flag
     else if (compare_flags(argv[curarg], PARAM_FLAG, PARAM_FLAG_SHORT)) {
 
@@ -415,13 +599,15 @@ int main(int argc, char* argv[]) {
 	params[paramcount++] = argv[(++curarg)++];
       }
     }
-
+    */
+    /*
     // xslt apply to entire unit
     else if (compare_flags(argv[curarg], XSLT_ALL_FLAG, XSLT_ALL_FLAG_SHORT, position)) {
       options |= OPTION_XSLT_ALL;
       if (position == original_position) ++curarg;
     }
-
+    */
+    /*
     // text encoding
     else if (compare_flags(argv[curarg], TEXTENCODING_FLAG, TEXTENCODING_FLAG_SHORT)) {
 
@@ -450,7 +636,8 @@ int main(int argc, char* argv[]) {
 	fprintf(stderr, "%s: text encoding \"%s\" is not supported.\n", NAME, src_encoding);
 	exit(STATUS_UNKNOWN_ENCODING);
       }
-
+    */
+      /*
     // xpath
     } else if (compare_flags(argv[curarg], XPATH_FLAG, XPATH_FLAG_SHORT)) {
       options |= OPTION_XPATH;
@@ -471,7 +658,8 @@ int main(int argc, char* argv[]) {
       } else {
 	xpathexprlist.push_back(xpathexpr[xpathcount++] = argv[(++curarg)++]);
       }
-
+      */
+      /*
     // context
     } else if (compare_flags(argv[curarg], CONTEXT_FLAG, CONTEXT_FLAG_SHORT)) {
       options |= OPTION_XPATH;
@@ -491,7 +679,8 @@ int main(int argc, char* argv[]) {
       } else {
 	context = argv[(++curarg)++];
       }
-
+      */
+      /*
     // xslt
     } else if (compare_flags(argv[curarg], XSLT_FLAG, XSLT_FLAG_SHORT)) {
       options |= OPTION_XSLT;
@@ -511,7 +700,8 @@ int main(int argc, char* argv[]) {
       } else {
 	xsltfiles[xsltcount++] = argv[(++curarg)++];
       }
-
+      */
+      /*
     // relaxng
     } else if (compare_flags(argv[curarg], RELAXNG_FLAG, RELAXNG_FLAG_SHORT)) {
       options |= OPTION_RELAXNG;
@@ -533,23 +723,30 @@ int main(int argc, char* argv[]) {
       }
 
     // reached the end of a multi-short form option
-    } else if (position > 0 && argv[curarg][position + 1] == '\0') {
+    //    } else if (position > 0 && argv[curarg][position + 1] == '\0') {
 
-      ++curarg;
+    //      ++curarg;
 
     // invalid option
-    } else {
-
+    //    } else {
+      ++curarg;
+*/
+      /*
       fprintf(stderr, "%s: unrecognized option '%s'\n", NAME, argv[curarg]);
       fprintf(stderr, "try '%s %s' for more information.\n", NAME, HELP_FLAG);
       exit(STATUS_UNKNOWN_OPTION);
-    }
+      */
+    //   }
 
-  }
-
+	//  }
+    /*
   // eat optional option separator
   if (argc > curarg && strcmp(argv[curarg], OPTION_SEPARATOR) == 0)
       ++curarg;
+    */
+  argc -= optind;
+  argv -= optind;
+  curarg = 0;
 
   // first command line parameter is input filename
   const char* filename = "-";
@@ -567,7 +764,7 @@ int main(int argc, char* argv[]) {
   } else if (argc > curarg + 1) {
 
       fprintf(stderr, "%1$s: More than one output file specified.\n"
-	      "try '%1$s %2$s' for more information.\n", NAME, HELP_FLAG);
+	      "try '%1$s --%2$s' for more information.\n", NAME, HELP_FLAG);
       exit(0);
   }
 
