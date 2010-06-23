@@ -642,11 +642,15 @@ int process_args(int argc, char* argv[]) {
   // process all command line options
   int position = 0;
   int curarg = 1;  // current argument
+  char* embedded;
+  const char* ns_prefix;
+  const char* ns_uri;
+
   while (1) {
     curoption = 0;
     int option_index = 0;
-    bool special = optind < argc && !strncmp(argv[optind], "xmlns:", 6);
-    opterr = special;
+    bool special = optind < argc && !strncmp(argv[optind], "--xmlns:", 8);
+    opterr = !special ? 1 : 0;
     int c = getopt_long(argc, argv, "hVo:F:nex:t:X:zcgvl:d:f:s:TOMmE0p", cliargs, &option_index);
 
     if (c == -1)
@@ -713,7 +717,103 @@ int process_args(int argc, char* argv[]) {
       break;
 
     case 'X': 
-      fprintf(stderr, "XMLNS: %s\n", optarg);
+      curarg = optind - 1;
+      embedded = extract_option(argv[curarg]);
+
+      // filename is embedded parameter
+      if (embedded) {
+
+	if (argv[curarg][strlen(XMLNS_FLAG)] != ':')
+	  ns_prefix = "";
+	else {
+	  *embedded = '\0';
+	  ns_prefix = argv[curarg] + strlen(XMLNS_FLAG) + 1;
+	}
+
+	ns_uri = embedded + 1;
+	
+      // check for language flag with missing language value
+      } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
+	fprintf(stderr, "%s: xmlns option selected but not specified.\n", NAME);
+	exit(STATUS_LANGUAGE_MISSING);
+      } else {
+
+	// extract prefix
+	if (strlen(argv[curarg]) == strlen(XMLNS_FLAG))
+	  ns_prefix = "";
+	else
+	  ns_prefix = argv[curarg] + strlen(XMLNS_FLAG) + 1;
+
+	// uri is next argument
+	ns_uri = argv[++curarg];
+      }
+
+      ++curarg;
+
+      // update the uri's
+      // check for standard namespaces, store them, and update any flags
+      if (strcmp(ns_uri, SRCML_SRC_NS_URI) == 0) {
+
+	num2prefix[SRCML_SRC_NS_URI_POS] = ns_prefix;
+	prefixchange[SRCML_SRC_NS_URI_POS] = true;
+
+      } else if (strcmp(ns_uri, SRCML_CPP_NS_URI) == 0) {
+
+	// specifying the cpp prefix automatically turns on preprocessor
+	options |= OPTION_CPP;
+	specified_cpp_option = true;
+
+	num2prefix[SRCML_CPP_NS_URI_POS] = ns_prefix;
+	prefixchange[SRCML_CPP_NS_URI_POS] = true;
+
+      } else if (strcmp(ns_uri, SRCML_ERR_NS_URI) == 0) {
+
+	// specifying the error prefix automatically turns on debugging
+	options |= OPTION_DEBUG;
+
+	num2prefix[SRCML_ERR_NS_URI_POS] = ns_prefix;
+	prefixchange[SRCML_ERR_NS_URI_POS] = true;
+
+      } else if (strcmp(ns_uri, SRCML_EXT_LITERAL_NS_URI) == 0) {
+
+	// specifying the literal prefix automatically turns on literal markup
+	options |= OPTION_LITERAL;
+
+	num2prefix[SRCML_EXT_LITERAL_NS_URI_POS] = ns_prefix;
+	prefixchange[SRCML_EXT_LITERAL_NS_URI_POS] = true;
+
+      } else if (strcmp(ns_uri, SRCML_EXT_OPERATOR_NS_URI) == 0) {
+
+	// specifying the operator prefix automatically turns on operator markup
+	options |= OPTION_OPERATOR;
+
+	num2prefix[SRCML_EXT_OPERATOR_NS_URI_POS] = ns_prefix;
+	prefixchange[SRCML_EXT_OPERATOR_NS_URI_POS] = true;
+
+      } else if (strcmp(ns_uri, SRCML_EXT_MODIFIER_NS_URI) == 0) {
+
+	// specifying the operator prefix automatically turns on type modifier markup
+	options |= OPTION_MODIFIER;
+
+	num2prefix[SRCML_EXT_MODIFIER_NS_URI_POS] = ns_prefix;
+	prefixchange[SRCML_EXT_MODIFIER_NS_URI_POS] = true;
+
+      } else {
+	fprintf(stderr, "%s: invalid namespace \"%s\"\n\n"
+		"Namespace URI must be on of the following:  \n"
+		"  %-35s primary srcML namespace\n"
+		"  %-35s namespace for cpreprocessing elements\n"
+		"  %-35s namespace for srcML debugging elements\n"
+		"  %-35s namespace for optional literal elements\n"
+		"  %-35s namespace for optional operator element\n"
+		"  %-35s namespace for optional modifier element\n",
+		NAME, ns_uri,
+		SRCML_SRC_NS_URI, SRCML_CPP_NS_URI, SRCML_ERR_NS_URI,
+		SRCML_EXT_LITERAL_NS_URI, SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_MODIFIER_NS_URI
+		);
+	exit(STATUS_INVALID_LANGUAGE);
+      }
+      //      fprintf(stderr, "XMLNS: %s\n", optarg);
       break;
 
     case 'z': 
