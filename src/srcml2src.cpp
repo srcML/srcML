@@ -219,7 +219,7 @@ int main(int argc, char* argv[]) {
 
   int curoption = 0;
   struct option cliargs[] = {
-    { "help", no_argument, NULL, 'h' },
+    { HELP_FLAG + 2, no_argument, NULL, HELP_FLAG_SHORT[1] },
     { "version", no_argument, NULL, 'V' },
     { "filename", no_argument, NULL, 'f' },
     { "directory", no_argument, NULL, 'd' },
@@ -245,13 +245,10 @@ int main(int argc, char* argv[]) {
     { 0, 0, 0, 0 }
   };
 
-
-  opterr = 0;
   while (1) {
     curoption = 0;
     int option_index = 0;
-    int c = getopt_long_only(argc, argv, "hVfdsxnilavXzU:t:p:",
-		    cliargs, &option_index);
+    int c = getopt_long_only(argc, argv, "hVfdsxnilavXzU:t:p:", cliargs, &option_index);
     if (c == -1)
       break;
 
@@ -260,13 +257,14 @@ int main(int argc, char* argv[]) {
       continue;
     }
 
+    // missing or extra option argument
+    if (c == '?') {
+      fprintf(stderr, "Try '%s %s' for more information.\n", argv[0], HELP_FLAG);
+      exit(1);
+    }
+
     char* end = 0;
     switch(c) {
-
-    case '?':
-      fprintf(stderr, "Error: %c %d\n", optopt, optind);
-      exit(1);
-      break;
 
     case 'h': 
       options |= OPTION_HELP;
@@ -332,13 +330,13 @@ int main(int argc, char* argv[]) {
 
       // validate type of unit number
       if (errno == EINVAL || strlen(end) == strlen(optarg)) {
-	fprintf(stderr, "%s: unit option value \"%s\" must be numeric.\n", NAME, optarg);
+	fprintf(stderr, "%s: unit option value \"%s\" must be numeric.\n", argv[0], optarg);
 	exit(STATUS_UNIT_INVALID);
       }
 
       // validate range of unit number
       if (unit <= 0) {
-	fprintf(stderr, "%s: unit option value \"%d\" must be > 0.\n", NAME, unit);
+	fprintf(stderr, "%s: unit option value \"%d\" must be > 0.\n", argv[0], unit);
 	exit(STATUS_UNIT_INVALID);
       }
 
