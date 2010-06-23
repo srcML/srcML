@@ -221,6 +221,7 @@ int main(int argc, char* argv[]) {
   struct option cliargs[] = {
     { HELP_FLAG + 2, no_argument, NULL, HELP_FLAG_SHORT[1] },
     { VERSION_FLAG + 2, no_argument, NULL, VERSION_FLAG_SHORT[1] },
+    { OUTPUT_FLAG + 2, required_argument, NULL, OUTPUT_FLAG_SHORT[1] },
     { FILENAME_FLAG + 2, no_argument, NULL, FILENAME_FLAG_SHORT[1] },
     { DIRECTORY_FLAG + 2, no_argument, NULL, DIRECTORY_FLAG_SHORT[1] },
     { LANGUAGE_FLAG + 2, no_argument, NULL, LANGUAGE_FLAG_SHORT[1] },
@@ -249,7 +250,7 @@ int main(int argc, char* argv[]) {
   while (1) {
     curoption = 0;
     int option_index = 0;
-    int c = getopt_long(argc, argv, "hVfdlsxniLavXzU:t:p:", cliargs, &option_index);
+    int c = getopt_long(argc, argv, "hVofdlsxniLavXzU:t:p:", cliargs, &option_index);
     if (c == -1)
       break;
 
@@ -273,6 +274,9 @@ int main(int argc, char* argv[]) {
 
     case 'V': 
       options |= OPTION_PVERSION;
+      break;
+
+    case 'o': 
       break;
 
     case 'f':
