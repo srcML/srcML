@@ -634,7 +634,7 @@ int process_args(int argc, char* argv[]) {
   while (1) {
     curoption = 0;
     int option_index = 0;
-    int c = getopt_long(argc, argv, "hVfdsxnilavXzU:t:p:L", cliargs, &option_index);
+    int c = getopt_long(argc, argv, "hVo:fdsxnilavXzt:", cliargs, &option_index);
     if (c == -1)
       break;
 
@@ -661,6 +661,69 @@ int process_args(int argc, char* argv[]) {
       break;
 
     case 'o': 
+      break;
+
+    case 'F': 
+      break;
+
+    case 'n': 
+      break;
+
+    case 'e': 
+      break;
+
+    case 'x': 
+      break;
+
+    case 't': 
+      break;
+
+    case 'X': 
+      break;
+
+    case 'z': 
+      break;
+
+    case 'c': 
+      break;
+
+    case 'g': 
+      break;
+
+    case 'v': 
+      break;
+
+    case 'l': 
+      break;
+
+    case 'd': 
+      break;
+
+    case 'f': 
+      break;
+
+    case 's': 
+      break;
+
+    case 'T': 
+      break;
+
+    case 'O': 
+      break;
+
+    case 'M': 
+      break;
+
+    case 'm': 
+      break;
+
+    case 'E': 
+      break;
+
+    case '0': 
+      break;
+
+    case 'p': 
       break;
 
     };
