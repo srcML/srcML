@@ -1423,7 +1423,7 @@ int option_error_status(int optopt) {
     return STATUS_UNIT_MISSING;
     break;
 
-  case '?':
+  case '\0':
     return STATUS_UNKNOWN_OPTION;
     break;
   };
