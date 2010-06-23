@@ -32,6 +32,7 @@
 #include "Language.h"
 #include "srcMLTranslator.h"
 #include "URIStream.h"
+#include <getopt.h>
 
 using namespace LanguageName;
 
@@ -608,9 +609,58 @@ int process_args(int argc, char* argv[]) {
   bool cpp_if0 = false;
   bool cpp_else = false;
 
+  int curoption = 0;
+  struct option cliargs[] = {
+    { HELP_FLAG + 2, no_argument, NULL, HELP_FLAG_SHORT[1] },
+    { VERSION_FLAG + 2, no_argument, NULL, VERSION_FLAG_SHORT[1] },
+    { FILENAME_FLAG + 2, no_argument, NULL, FILENAME_FLAG_SHORT[1] },
+    { DIRECTORY_FLAG + 2, no_argument, NULL, DIRECTORY_FLAG_SHORT[1] },
+    { LANGUAGE_FLAG + 2, no_argument, NULL, LANGUAGE_FLAG_SHORT[1] },
+    { SRCVERSION_FLAG + 2, no_argument, NULL, SRCVERSION_FLAG_SHORT[1] },
+    { ENCODING_FLAG + 2, no_argument, NULL, ENCODING_FLAG_SHORT[1] },
+    { NESTED_FLAG + 2, no_argument, NULL, NESTED_FLAG_SHORT[1] },
+    { VERBOSE_FLAG + 2, no_argument, NULL, VERBOSE_FLAG_SHORT[1] },
+    { COMPRESSED_FLAG + 2, no_argument, NULL, COMPRESSED_FLAG_SHORT[1] },
+    { TEXTENCODING_FLAG + 2, required_argument, NULL, TEXTENCODING_FLAG_SHORT[1] },
+    { NO_XML_DECLARATION_FLAG + 2, no_argument, &curoption, OPTION_XMLDECL },
+    { NO_NAMESPACE_DECLARATION_FLAG + 2, no_argument, &curoption, OPTION_NAMESPACEDECL },
+    { 0, 0, 0, 0 }
+  };
+
   // process all command line options
   int position = 0;
   int curarg = 1;  // current argument
+  while (1) {
+    curoption = 0;
+    int option_index = 0;
+    int c = getopt_long(argc, argv, "hVfdsxnilavXzU:t:p:L", cliargs, &option_index);
+    if (c == -1)
+      break;
+
+    if (curoption) {
+      options &= ~curoption;
+      continue;
+    }
+
+    // missing or extra option argument
+    if (c == '?') {
+      fprintf(stderr, "Try '%s %s' for more information.\n", argv[0], HELP_FLAG);
+      exit(1);
+    }
+
+    char* end = 0;
+    switch(c) {
+
+    case 'h': 
+      options |= OPTION_HELP;
+      break;
+
+    case 'V': 
+      options |= OPTION_PVERSION;
+      break;
+    };
+  }
+  /*
   while (argc > curarg && strlen(argv[curarg]) > 1 && argv[curarg][0] == '-' &&
 	 strcmp(argv[curarg], OPTION_SEPARATOR) != 0) {
 
@@ -628,14 +678,6 @@ int process_args(int argc, char* argv[]) {
       options |= OPTION_PVERSION;
       if (position == original_position) ++curarg;
     }
-
-    /*
-    // version mode
-    else if (compare_flags(argv[curarg], SELF_VERSION_FLAG, SELF_VERSION_FLAG_SHORT, position)) {
-      options |= OPTION_SELF_VERSION;
-      if (position == original_position) ++curarg;
-    }
-    */
 
     // debug mode
     else if (compare_flags(argv[curarg], DEBUG_FLAG, DEBUG_FLAG_SHORT, position)) {
@@ -685,13 +727,7 @@ int process_args(int argc, char* argv[]) {
       options |= OPTION_COMPRESSED;
       if (position == original_position) ++curarg;
     }
-    /*
-    // skip encoding mode
-    else if (compare_flags(argv[curarg], SKIP_ENCODING_FLAG, SKIP_ENCODING_FLAG_SHORT, position)) {
-      options |= OPTION_SKIP_ENCODING;
-      if (position == original_position) ++curarg;
-    }
-    */
+
     // markup of cpp #else mode
     else if (compare_flags(argv[curarg], CPP_MARKUP_ELSE_FLAG, CPP_MARKUP_ELSE_FLAG_SHORT, position)) {
       if (!cpp_else) {
@@ -1093,6 +1129,7 @@ int process_args(int argc, char* argv[]) {
       exit(STATUS_UNKNOWN_OPTION);
     }
   }
+  */
 
   return curarg;
 }
