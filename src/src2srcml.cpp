@@ -634,7 +634,7 @@ int process_args(int argc, char* argv[]) {
   while (1) {
     curoption = 0;
     int option_index = 0;
-    int c = getopt_long(argc, argv, "hVo:fdsxnilavXzt:", cliargs, &option_index);
+    int c = getopt_long(argc, argv, "hVo:next:XzcgvldfsTOMmE0p", cliargs, &option_index);
     if (c == -1)
       break;
 
@@ -661,6 +661,7 @@ int process_args(int argc, char* argv[]) {
       break;
 
     case 'o': 
+      srcml_filename = optarg;
       break;
 
     case 'F': 
@@ -675,12 +676,15 @@ int process_args(int argc, char* argv[]) {
       break;
 
     case 'e': 
+      options |= OPTION_EXPRESSION;
       break;
 
     case 'x': 
+      options |= OPTION_XML_ENCODING;
       break;
 
     case 't': 
+      options |= OPTION_TEXT_ENCODING;
       break;
 
     case 'X': 
@@ -716,12 +720,15 @@ int process_args(int argc, char* argv[]) {
       break;
 
     case 'd': 
+      options |= OPTION_DIRECTORY;
       break;
 
     case 'f': 
+      options |= OPTION_FILENAME;
       break;
 
     case 's': 
+      options |= OPTION_VERSION;
       break;
 
     case 'T': 
@@ -737,15 +744,19 @@ int process_args(int argc, char* argv[]) {
       break;
 
     case 'm': 
+      options |= OPTION_CPP_MARKUP_ELSE;
       break;
 
     case 'E': 
+	options &= ~OPTION_CPP_MARKUP_ELSE;
       break;
 
     case '0': 
+	options |= OPTION_CPP_MARKUP_IF0;
       break;
 
     case 'p': 
+	options &= ~OPTION_CPP_MARKUP_IF0;
       break;
 
     };
