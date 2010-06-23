@@ -233,15 +233,15 @@ int main(int argc, char* argv[]) {
     { "verbose", no_argument, NULL, 'v' },
     { "xml", no_argument, NULL, 'X' },
     { "compress", no_argument, NULL, 'z' },
-    { "no-xml-declaration", no_argument, &curoption, OPTION_XMLDECL },
-    { "no-namespace-decl", no_argument, &curoption, OPTION_NAMESPACEDECL },
     { "unit", required_argument, NULL, 'U' },
-    { "xslt", required_argument, NULL, 'S' },
-    { "relaxng", required_argument, NULL, 'R' },
-    { "xpath", required_argument, NULL, 'P' },
-    { "context", required_argument, NULL, 'C' },
     { "src-encoding", required_argument, NULL, 't' },
     { "prefix", required_argument, NULL, 'p' },
+    { "no-xml-declaration", no_argument, &curoption, OPTION_XMLDECL },
+    { "no-namespace-decl", no_argument, &curoption, OPTION_NAMESPACEDECL },
+    { "xslt", required_argument, NULL, 'S' },
+    { "xpath", required_argument, NULL, 'P' },
+    { "relaxng", required_argument, NULL, 'R' },
+    { "context", required_argument, NULL, 'C' },
     { "param", required_argument, NULL, 'A' },
     { 0, 0, 0, 0 }
   };
@@ -249,7 +249,7 @@ int main(int argc, char* argv[]) {
   while (1) {
     curoption = 0;
     int option_index = 0;
-    int c = getopt_long_only(argc, argv, "hVfdsxnilavXzU:t:p:L", cliargs, &option_index);
+    int c = getopt_long_only(argc, argv, "hVfdlsxniLavXzU:t:p:", cliargs, &option_index);
     if (c == -1)
       break;
 
