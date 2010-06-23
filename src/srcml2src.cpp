@@ -50,7 +50,7 @@ char const * const INFO_FLAG = "--info";
 char const * const INFO_FLAG_SHORT = "-i";
 
 char const * const LONG_INFO_FLAG = "--longinfo";
-char const * const LONG_INFO_FLAG_SHORT = "-l";
+char const * const LONG_INFO_FLAG_SHORT = "-L";
 
 char const * const NAMESPACE_FLAG = "--prefix";
 char const * const NAMESPACE_FLAG_SHORT = "-p";
@@ -223,11 +223,12 @@ int main(int argc, char* argv[]) {
     { "version", no_argument, NULL, 'V' },
     { "filename", no_argument, NULL, 'f' },
     { "directory", no_argument, NULL, 'd' },
+    { "language", no_argument, NULL, 'l' },
     { "src-version", no_argument, NULL, 's' },
     { "encoding", no_argument, NULL, 'x' },
     { "nested", no_argument, NULL, 'n' },
     { "info", no_argument, NULL, 'i' },
-    { "longinfo", no_argument, NULL, 'l' },
+    { "longinfo", no_argument, NULL, 'L' },
     { "extract-all", no_argument, NULL, 'a' },
     { "verbose", no_argument, NULL, 'v' },
     { "xml", no_argument, NULL, 'X' },
@@ -248,7 +249,7 @@ int main(int argc, char* argv[]) {
   while (1) {
     curoption = 0;
     int option_index = 0;
-    int c = getopt_long_only(argc, argv, "hVfdsxnilavXzU:t:p:", cliargs, &option_index);
+    int c = getopt_long_only(argc, argv, "hVfdsxnilavXzU:t:p:L", cliargs, &option_index);
     if (c == -1)
       break;
 
@@ -289,6 +290,11 @@ int main(int argc, char* argv[]) {
       optionorder[optioncount++] = OPTION_VERSION;
       break;
 
+    case 'l':
+      options |= OPTION_LANGUAGE;
+      optionorder[optioncount++] = OPTION_LANGUAGE;
+      break;
+
     case 'x':
       options |= OPTION_XML_ENCODING;
       optionorder[optioncount++] = OPTION_XML_ENCODING;
@@ -302,7 +308,7 @@ int main(int argc, char* argv[]) {
       options |= OPTION_INFO;
       break;
 
-    case 'l':
+    case 'L':
       options |= OPTION_LONG_INFO;
       break;
 
