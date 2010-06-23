@@ -34,6 +34,8 @@
 #include "URIStream.h"
 #include <getopt.h>
 
+int option_error_status(int optopt);
+
 using namespace LanguageName;
 
 const char* const NAME = "src2srcml";
@@ -669,7 +671,7 @@ int process_args(int argc, char* argv[]) {
     // missing or extra option argument
     if (c == '?') {
       fprintf(stderr, "Try '%s %s' for more information.\n", argv[0], HELP_FLAG);
-      exit(1);
+      exit(option_error_status(optopt));
     }
 
     char* end = 0;
@@ -891,6 +893,9 @@ int process_args(int argc, char* argv[]) {
 	options &= ~OPTION_CPP_MARKUP_IF0;
       break;
 
+    default:
+      exit(STATUS_UNKNOWN_OPTION);
+      break;
     };
   }
   /*
@@ -1385,3 +1390,43 @@ extern "C" void terminate_handler(int) {
   pstd::signal(SIGINT, SIG_DFL);
 }
 #endif
+
+int option_error_status(int optopt) {
+
+  switch (optopt) {
+
+  case 'f':
+    return STATUS_FILENAME_MISSING;
+    break;
+
+  case 'l':
+    return STATUS_LANGUAGE_MISSING;
+    break;
+
+  case 'd':
+    return STATUS_DIRECTORY_MISSING;
+    break;
+
+  case 's':
+    return STATUS_VERSION_MISSING;
+    break;
+
+  case 'x':
+    return STATUS_XMLENCODING_MISSING;
+    break;
+
+  case 't':
+    return STATUS_SRCENCODING_MISSING;
+    break;
+
+  case 'U':
+    return STATUS_UNIT_MISSING;
+    break;
+
+  case '?':
+    return STATUS_UNKNOWN_OPTION;
+    break;
+  };
+
+  return 0;
+}
