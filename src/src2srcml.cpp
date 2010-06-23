@@ -646,6 +646,8 @@ int process_args(int argc, char* argv[]) {
   while (1) {
     curoption = 0;
     int option_index = 0;
+    bool special = optind < argc && !strncmp(argv[optind], "xmlns:", 6);
+    opterr = special;
     int c = getopt_long(argc, argv, "hVo:next:XzcgvldfsTOMmE0p", cliargs, &option_index);
     if (c == -1)
       break;
@@ -653,6 +655,11 @@ int process_args(int argc, char* argv[]) {
     if (curoption) {
       options &= ~curoption;
       continue;
+    }
+
+    // treat --xmlns:prefix=url as --xmlns=url for processing
+    if (special && c == '?') {
+      c = 'X';
     }
 
     // missing or extra option argument
@@ -693,13 +700,16 @@ int process_args(int argc, char* argv[]) {
 
     case 'x': 
       options |= OPTION_XML_ENCODING;
+      xml_encoding = optarg;
       break;
 
     case 't': 
       options |= OPTION_TEXT_ENCODING;
+      src_encoding = optarg;
       break;
 
     case 'X': 
+      fprintf(stderr, "XMLNS: %s\n", optarg);
       break;
 
     case 'z': 
