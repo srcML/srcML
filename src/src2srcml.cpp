@@ -225,6 +225,7 @@ int language = 0;
 const char* xml_encoding = DEFAULT_XML_ENCODING;
 const char* given_directory = 0;
 const char* given_filename = 0;
+const char* fname = "-";
 const char* given_version = 0;
 bool specified_cpp_option = false;
 
@@ -438,8 +439,6 @@ int main(int argc, char* argv[]) {
     pstd::signal(SIGINT, terminate_handler);
 #endif
       
-    const char* fname = input_arg_count ? argv[input_arg_start] : "-";
-
     try {
 
       // translate all the filenames listed in the named file
@@ -614,7 +613,7 @@ int process_args(int argc, char* argv[]) {
     { HELP_FLAG + 2, no_argument, NULL, HELP_FLAG_SHORT[1] },
     { VERSION_FLAG + 2, no_argument, NULL, VERSION_FLAG_SHORT[1] },
     { OUTPUT_FLAG + 2, required_argument, NULL, OUTPUT_FLAG_SHORT[1] },
-    { FILELIST_FLAG + 2, required_argument, NULL, 'F' },
+    { FILELIST_FLAG + 2, no_argument, NULL, 'F' },
     { NESTED_FLAG + 2, no_argument, NULL, NESTED_FLAG_SHORT[1] },
     { EXPRESSION_MODE_FLAG + 2, no_argument, NULL, EXPRESSION_MODE_FLAG_SHORT[1] },
     { ENCODING_FLAG + 2, required_argument, NULL, ENCODING_FLAG_SHORT[1] },
@@ -648,7 +647,8 @@ int process_args(int argc, char* argv[]) {
     int option_index = 0;
     bool special = optind < argc && !strncmp(argv[optind], "xmlns:", 6);
     opterr = special;
-    int c = getopt_long(argc, argv, "hVo:next:XzcgvldfsTOMmE0p", cliargs, &option_index);
+    int c = getopt_long(argc, argv, "hVo:Fnex:t:X:zcgvl:d:f:s:TOMmE0p", cliargs, &option_index);
+
     if (c == -1)
       break;
 
@@ -688,6 +688,8 @@ int process_args(int argc, char* argv[]) {
 
       // filelist mode is default nested mode
       options |= OPTION_NESTED;
+
+      fname = optarg;
       break;
 
     case 'n': 
@@ -700,11 +702,13 @@ int process_args(int argc, char* argv[]) {
 
     case 'x': 
       options |= OPTION_XML_ENCODING;
+
       xml_encoding = optarg;
       break;
 
     case 't': 
       options |= OPTION_TEXT_ENCODING;
+
       src_encoding = optarg;
       break;
 
@@ -743,14 +747,20 @@ int process_args(int argc, char* argv[]) {
 
     case 'd': 
       options |= OPTION_DIRECTORY;
+
+      given_directory = optarg;
       break;
 
     case 'f': 
       options |= OPTION_FILENAME;
+
+      given_filename = optarg;
       break;
 
     case 's': 
       options |= OPTION_VERSION;
+
+      given_version = optarg;
       break;
 
     case 'T': 
