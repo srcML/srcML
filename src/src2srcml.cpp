@@ -613,7 +613,7 @@ int process_args(int argc, char* argv[]) {
   struct option cliargs[] = {
     { HELP_FLAG + 2, no_argument, NULL, HELP_FLAG_SHORT[1] },
     { VERSION_FLAG + 2, no_argument, NULL, VERSION_FLAG_SHORT[1] },
-    { OUTPUT_FLAG + 2, no_argument, NULL, OUTPUT_FLAG_SHORT[1] },
+    { OUTPUT_FLAG + 2, required_argument, NULL, OUTPUT_FLAG_SHORT[1] },
     { FILENAME_FLAG + 2, no_argument, NULL, FILENAME_FLAG_SHORT[1] },
     { DIRECTORY_FLAG + 2, no_argument, NULL, DIRECTORY_FLAG_SHORT[1] },
     { LANGUAGE_FLAG + 2, no_argument, NULL, LANGUAGE_FLAG_SHORT[1] },
