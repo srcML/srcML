@@ -626,7 +626,7 @@ int process_args(int argc, char* argv[]) {
     { LANGUAGE_FLAG + 2, required_argument, NULL, LANGUAGE_FLAG_SHORT[1] },
     { DIRECTORY_FLAG + 2, required_argument, NULL, DIRECTORY_FLAG_SHORT[1] },
     { FILENAME_FLAG + 2, required_argument, NULL, FILENAME_FLAG_SHORT[1] },
-    { SRCVERSION_FLAG + 2, no_argument, NULL, SRCVERSION_FLAG_SHORT[1] },
+    { SRCVERSION_FLAG + 2, required_argument, NULL, SRCVERSION_FLAG_SHORT[1] },
     { LITERAL_FLAG + 2, required_argument, NULL, 'T' },
     { OPERATOR_FLAG + 2, required_argument, NULL, 'O' },
     { MODIFIER_FLAG + 2, required_argument, NULL, 'M' },
