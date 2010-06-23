@@ -664,9 +664,14 @@ int process_args(int argc, char* argv[]) {
       break;
 
     case 'F': 
+      options |= OPTION_FILELIST;
+
+      // filelist mode is default nested mode
+      options |= OPTION_NESTED;
       break;
 
     case 'n': 
+      options |= OPTION_NESTED;
       break;
 
     case 'e': 
@@ -682,18 +687,32 @@ int process_args(int argc, char* argv[]) {
       break;
 
     case 'z': 
+      options |= OPTION_COMPRESSED;
       break;
 
     case 'c': 
+      options |= OPTION_INTERACTIVE;
       break;
 
     case 'g': 
+      options |= OPTION_DEBUG;
       break;
 
     case 'v': 
+      options |= OPTION_VERBOSE;
       break;
 
     case 'l': 
+      options |= OPTION_LANGUAGE;
+
+      // validate language selected
+      language = Language::getLanguage(optarg);
+      if (language == 0) {
+	fprintf(stderr, "%s: invalid option -- Language flag must one of the following values:  "
+		"%s %s %s %s\n", NAME, LANGUAGE_C, LANGUAGE_CXX, LANGUAGE_JAVA, LANGUAGE_ASPECTJ);
+
+	exit(STATUS_INVALID_LANGUAGE);
+      }
       break;
 
     case 'd': 
@@ -706,12 +725,15 @@ int process_args(int argc, char* argv[]) {
       break;
 
     case 'T': 
+      options |= OPTION_LITERAL;
       break;
 
     case 'O': 
+      options |= OPTION_OPERATOR;
       break;
 
     case 'M': 
+      options |= OPTION_MODIFIER;
       break;
 
     case 'm': 
