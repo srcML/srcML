@@ -687,7 +687,8 @@ checkError([srcmltranslator, '../src/foo.c'], "", srcml)
 
 xmltag = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n'
 opentag = '<unit '
-namespace = 'xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" '
+namespaceone = 'xmlns="http://www.sdml.info/srcML/src" '
+namespacetwo = 'xmlns:cpp="http://www.sdml.info/srcML/cpp" '
 dir = 'dir="emptysrc" '
 fileopen = 'filename="'
 fileclose = '"'
@@ -696,31 +697,30 @@ endtag = '/>\n'
 # check c file extensions
 language = 'language="C" '
 
-check([srcmltranslator, 'emptysrc/empty.c'], "", xmltag + opentag + namespace + language + dir + fileopen + 'empty.c' + fileclose + endtag)
-check([srcmltranslator, 'emptysrc/empty.h'], "", xmltag + opentag + namespace + language + dir + fileopen + 'empty.h' + fileclose + endtag)
+check([srcmltranslator, 'emptysrc/empty.c'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.c' + fileclose + endtag)
+check([srcmltranslator, 'emptysrc/empty.h'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.h' + fileclose + endtag)
 
 # check c++ file extensions
 language = 'language="C++" '
 
-check([srcmltranslator, 'emptysrc/empty.cpp'], "", xmltag + opentag + namespace + language + dir + fileopen + 'empty.cpp' + fileclose + endtag)
-check([srcmltranslator, 'emptysrc/empty.cc'], "", xmltag + opentag + namespace + language + dir + fileopen + 'empty.cc' + fileclose + endtag)
-check([srcmltranslator, 'emptysrc/empty.cxx'], "", xmltag + opentag + namespace + language + dir + fileopen + 'empty.cxx' + fileclose + endtag)
-check([srcmltranslator, 'emptysrc/empty.c++'], "", xmltag + opentag + namespace + language + dir + fileopen + 'empty.c++' + fileclose + endtag)
-check([srcmltranslator, 'emptysrc/empty.hpp'], "", xmltag + opentag + namespace + language + dir + fileopen + 'empty.hpp' + fileclose + endtag)
-check([srcmltranslator, 'emptysrc/empty.hh'], "", xmltag + opentag + namespace + language + dir + fileopen + 'empty.hh' + fileclose + endtag)
-check([srcmltranslator, 'emptysrc/empty.hxx'], "", xmltag + opentag + namespace + language + dir + fileopen + 'empty.hxx' + fileclose + endtag)
-check([srcmltranslator, 'emptysrc/empty.h++'], "", xmltag + opentag + namespace + language + dir + fileopen + 'empty.h++' + fileclose + endtag)
+check([srcmltranslator, 'emptysrc/empty.cpp'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.cpp' + fileclose + endtag)
+check([srcmltranslator, 'emptysrc/empty.cc'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.cc' + fileclose + endtag)
+check([srcmltranslator, 'emptysrc/empty.cxx'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.cxx' + fileclose + endtag)
+check([srcmltranslator, 'emptysrc/empty.c++'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.c++' + fileclose + endtag)
+check([srcmltranslator, 'emptysrc/empty.hpp'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.hpp' + fileclose + endtag)
+check([srcmltranslator, 'emptysrc/empty.hh'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.hh' + fileclose + endtag)
+check([srcmltranslator, 'emptysrc/empty.hxx'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.hxx' + fileclose + endtag)
+check([srcmltranslator, 'emptysrc/empty.h++'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.h++' + fileclose + endtag)
 
 # check java file extension
-namespace = 'xmlns="http://www.sdml.info/srcML/src" '
 language = 'language="Java" '
 
-check([srcmltranslator, 'emptysrc/empty.java'], "", xmltag + opentag + namespace + language + dir + fileopen + 'empty.java' + fileclose + endtag)
+check([srcmltranslator, 'emptysrc/empty.java'], "", xmltag + opentag + namespaceone + language + dir + fileopen + 'empty.java' + fileclose + endtag)
 
 # check aspectj file extension
 language = 'language="AspectJ" '
 
-check([srcmltranslator, 'emptysrc/empty.aj'], "", xmltag + opentag + namespace + language + dir + fileopen + 'empty.aj' + fileclose + endtag)
+check([srcmltranslator, 'emptysrc/empty.aj'], "", xmltag + opentag + namespaceone + language + dir + fileopen + 'empty.aj' + fileclose + endtag)
 
 # footer
 print
