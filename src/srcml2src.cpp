@@ -404,7 +404,7 @@ int main(int argc, char* argv[]) {
 
   // process all flags
   int position = 0;
-  int curarg = 1;
+  int curarg = 0;
   /*  while (argc > curarg && strlen(argv[curarg]) > 1 && argv[curarg][0] == '-' && strcmp(argv[curarg], OPTION_SEPARATOR) != 0) {
    */
     // mark to detect changes
@@ -743,14 +743,8 @@ int main(int argc, char* argv[]) {
     //   }
 
 	//  }
-    /*
-  // eat optional option separator
-  if (argc > curarg && strcmp(argv[curarg], OPTION_SEPARATOR) == 0)
-      ++curarg;
-    */
-  argc -= optind;
-  argv -= optind;
-  curarg = 0;
+
+  curarg = optind;
 
   // first command line parameter is input filename
   const char* filename = "-";
