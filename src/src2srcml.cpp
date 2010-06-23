@@ -291,10 +291,6 @@ int main(int argc, char* argv[]) {
   /* Special checks for illegal combinations */
 
 
-  // eat optional option separator
-  if (argc > (curarg) && strcmp(argv[curarg], OPTION_SEPARATOR) == 0)
-      ++curarg;
-
   // first command line parameter after options are the input filenames
   int input_arg_start = curarg;
   int input_arg_end = -1;
@@ -305,36 +301,6 @@ int main(int argc, char* argv[]) {
   if (argc - curarg == 1)
     numout = 0;
   while ((argc - curarg) > numout) {
-
-    // can have an output flag in the list of input filenames
-    if (compare_flags(argv[curarg], OUTPUT_FLAG, OUTPUT_FLAG_SHORT)) {
-
-      input_arg_skip_end = input_arg_skip_start = curarg;
-
-      char* embedded = extract_option(argv[curarg]);
-
-      // filename is embedded parameter
-      if (embedded) {
-
-	srcml_filename = embedded + 1;
-	++curarg;
-
-      // check for output flag with missing output value
-      } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
-	fprintf(stderr, "%s: output option selected but not specified.\n", NAME);
-	exit(STATUS_LANGUAGE_MISSING);
-      } else {
-
-	// extract parameter
-	srcml_filename = argv[(++curarg)++];
-
-	++input_arg_skip_end;
-      }
-
-      numout = 0;
-
-      continue;
-    }
 
     // mark last input filename assuming output srcml filename is last
     input_arg_end = curarg;
