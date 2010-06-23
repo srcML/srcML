@@ -375,7 +375,7 @@ int main(int argc, char* argv[]) {
     stat(argv[i], &instat);
     if (instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
       fprintf(stderr, "%s: Input file '%s' is the same as the output file '%s'\n",
-	      NAME, argv[i], srcml_filename);
+	      argv[0], argv[i], srcml_filename);
       exit(STATUS_INPUTFILE_PROBLEM);
     }
   }
@@ -502,7 +502,7 @@ int main(int argc, char* argv[]) {
       }
 
     } catch (URIStreamFileError) {
-      fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", NAME, fname);
+      fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", argv[0], fname);
       exit(STATUS_INPUTFILE_PROBLEM);
     }
 
@@ -541,9 +541,9 @@ int main(int argc, char* argv[]) {
     } catch (FileError) {
 
       if (path_s)
-	fprintf(stderr, "%s error: file \'%s/%s\' does not exist.\n", NAME, path_s, filename_s);
+	fprintf(stderr, "%s error: file \'%s/%s\' does not exist.\n", argv[0], path_s, filename_s);
       else
-	fprintf(stderr, "%s error: file \'%s\' does not exist.\n", NAME, filename_s);
+	fprintf(stderr, "%s error: file \'%s\' does not exist.\n", argv[0], filename_s);
 
       exit(STATUS_INPUTFILE_PROBLEM);
     }
@@ -582,9 +582,9 @@ int main(int argc, char* argv[]) {
 	translator.translate(path_s, filename_s, 0, language ? language : DEFAULT_LANGUAGE);
       } catch (FileError) {
 	if (path_s)
-	  fprintf(stderr, "%s error: file \'%s/%s\' does not exist.\n", NAME, path_s, filename_s);
+	  fprintf(stderr, "%s error: file \'%s/%s\' does not exist.\n", argv[0], path_s, filename_s);
 	else
-	  fprintf(stderr, "%s error: file \'%s\' does not exist.\n", NAME, filename_s);
+	  fprintf(stderr, "%s error: file \'%s\' does not exist.\n", argv[0], filename_s);
       }
 
       if (isoption(options, OPTION_VERBOSE)) {
@@ -725,7 +725,7 @@ int process_args(int argc, char* argv[]) {
 
       // validate source encoding
       if (!srcMLOutput::checkEncoding(src_encoding)) {
-	fprintf(stderr, "%s: text encoding \"%s\" is not supported.\n", NAME, src_encoding);
+	fprintf(stderr, "%s: text encoding \"%s\" is not supported.\n", argv[0], src_encoding);
 	exit(STATUS_UNKNOWN_ENCODING);
       }
       break;
@@ -821,7 +821,7 @@ int process_args(int argc, char* argv[]) {
 		"  %-35s namespace for optional literal elements\n"
 		"  %-35s namespace for optional operator element\n"
 		"  %-35s namespace for optional modifier element\n",
-		NAME, ns_uri,
+		argv[0], ns_uri,
 		SRCML_SRC_NS_URI, SRCML_CPP_NS_URI, SRCML_ERR_NS_URI,
 		SRCML_EXT_LITERAL_NS_URI, SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_MODIFIER_NS_URI
 		);
@@ -853,7 +853,7 @@ int process_args(int argc, char* argv[]) {
       language = Language::getLanguage(optarg);
       if (language == 0) {
 	fprintf(stderr, "%s: invalid option -- Language flag must one of the following values:  "
-		"%s %s %s %s\n", NAME, LANGUAGE_C, LANGUAGE_CXX, LANGUAGE_JAVA, LANGUAGE_ASPECTJ);
+		"%s %s %s %s\n", argv[0], LANGUAGE_C, LANGUAGE_CXX, LANGUAGE_JAVA, LANGUAGE_ASPECTJ);
 
 	exit(STATUS_INVALID_LANGUAGE);
       }
@@ -988,7 +988,7 @@ int process_args(int argc, char* argv[]) {
 
       } else {
 	fprintf(stderr, "%s: Conflicting options %s and %s selected.\n",
-		NAME, CPP_MARKUP_ELSE_FLAG, CPP_TEXTONLY_ELSE_FLAG);
+		argv[0], CPP_MARKUP_ELSE_FLAG, CPP_TEXTONLY_ELSE_FLAG);
 	exit(STATUS_INVALID_OPTION_COMBINATION);
       }
     }
@@ -1003,7 +1003,7 @@ int process_args(int argc, char* argv[]) {
 	cpp_else = true;
       } else {
 	fprintf(stderr, "%s: Conflicting options %s and %s selected.\n",
-		NAME, CPP_MARKUP_ELSE_FLAG, CPP_TEXTONLY_ELSE_FLAG);
+		argv[0], CPP_MARKUP_ELSE_FLAG, CPP_TEXTONLY_ELSE_FLAG);
 	exit(STATUS_INVALID_OPTION_COMBINATION);
       }
     }
@@ -1018,7 +1018,7 @@ int process_args(int argc, char* argv[]) {
 
       } else {
 	fprintf(stderr, "%s: Conflicting options %s and %s selected.\n",
-		NAME, CPP_MARKUP_IF0_FLAG, CPP_TEXTONLY_IF0_FLAG);
+		argv[0], CPP_MARKUP_IF0_FLAG, CPP_TEXTONLY_IF0_FLAG);
 	exit(STATUS_INVALID_OPTION_COMBINATION);
       }
     }
@@ -1034,7 +1034,7 @@ int process_args(int argc, char* argv[]) {
 	cpp_if0 = true;
       } else {
 	fprintf(stderr, "%s: Conflicting options %s and %s selected.\n",
-		NAME, CPP_MARKUP_IF0_FLAG, CPP_TEXTONLY_IF0_FLAG);
+		argv[0], CPP_MARKUP_IF0_FLAG, CPP_TEXTONLY_IF0_FLAG);
 	exit(STATUS_INVALID_OPTION_COMBINATION);
       }
     }
@@ -1092,7 +1092,7 @@ int process_args(int argc, char* argv[]) {
       language = Language::getLanguage(langparam);
       if (language == 0) {
 	fprintf(stderr, "%s: invalid option -- Language flag must one of the following values:  "
-		"%s %s %s %s\n", NAME, LANGUAGE_C, LANGUAGE_CXX, LANGUAGE_JAVA, LANGUAGE_ASPECTJ);
+		"%s %s %s %s\n", argv[0], LANGUAGE_C, LANGUAGE_CXX, LANGUAGE_JAVA, LANGUAGE_ASPECTJ);
 
 	exit(STATUS_INVALID_LANGUAGE);
 	break;
@@ -1216,7 +1216,7 @@ int process_args(int argc, char* argv[]) {
 		"  %-35s namespace for optional literal elements\n"
 		"  %-35s namespace for optional operator element\n"
 		"  %-35s namespace for optional modifier element\n",
-		NAME, ns_uri,
+		argv[0], ns_uri,
 		SRCML_SRC_NS_URI, SRCML_CPP_NS_URI, SRCML_ERR_NS_URI,
 		SRCML_EXT_LITERAL_NS_URI, SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_MODIFIER_NS_URI
 		);
@@ -1249,7 +1249,7 @@ int process_args(int argc, char* argv[]) {
 
       // validate xml encoding
       if (!srcMLOutput::checkEncoding(xml_encoding)) {
-	fprintf(stderr, "%s: xml encoding \"%s\" is not supported.\n", NAME, xml_encoding);
+	fprintf(stderr, "%s: xml encoding \"%s\" is not supported.\n", argv[0], xml_encoding);
 	exit(STATUS_UNKNOWN_ENCODING);
       }
     }
@@ -1279,7 +1279,7 @@ int process_args(int argc, char* argv[]) {
 
       // validate source encoding
       if (!srcMLOutput::checkEncoding(src_encoding)) {
-	fprintf(stderr, "%s: text encoding \"%s\" is not supported.\n", NAME, src_encoding);
+	fprintf(stderr, "%s: text encoding \"%s\" is not supported.\n", argv[0], src_encoding);
 	exit(STATUS_UNKNOWN_ENCODING);
       }
     }
@@ -1374,8 +1374,8 @@ int process_args(int argc, char* argv[]) {
     // invalid option
     } else {
 
-      fprintf(stderr, "%s: unrecognized option '%s'\n", NAME, argv[curarg]);
-      fprintf(stderr, "try '%s %s' for more information.\n", NAME, HELP_FLAG);
+      fprintf(stderr, "%s: unrecognized option '%s'\n", argv[0], argv[curarg]);
+      fprintf(stderr, "try '%s %s' for more information.\n", argv[0], HELP_FLAG);
       exit(STATUS_UNKNOWN_OPTION);
     }
   }
