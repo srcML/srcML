@@ -129,14 +129,6 @@ const char* getencoding();
 
 const char* const DEFAULT_TEXT_ENCODING = "ISO-8859-1";
 
-// extract option from full argument
-inline char* extract_option(char* full_argument) { return strchr(full_argument, '='); }
-
-// compare flags to arguments
-bool compare_flags(const char* arg, const char* flag , const char* short_flag, int& pos);
-
-bool compare_flags(const char* arg, const char* flag , const char* short_flag);
-
 // filename extension
 inline char* filename_ext(char* path) {
 
