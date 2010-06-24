@@ -220,7 +220,7 @@ void srcMLUtility::extract_text(const char* ofilename, int unit) {
   state.unit = unit;
 
   // check for file if local filename
-  if (!xmlIOHTTPMatch(infile) && strncmp(infile, "file:", 5) && !xmlCheckFilename(infile)) {
+  if (strcmp(infile, "-") && !xmlIOHTTPMatch(infile) && strncmp(infile, "file:", 5) && !xmlCheckFilename(infile)) {
     throw LibXMLError(0);
   }
 
