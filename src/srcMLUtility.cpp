@@ -219,6 +219,11 @@ void srcMLUtility::extract_text(const char* ofilename, int unit) {
   state.handler = xmlFindCharEncodingHandler(output_encoding);
   state.unit = unit;
 
+  // check for file if local filename
+  if (!xmlIOHTTPMatch(infile) && strncmp(infile, "file:", 5) && !xmlCheckFilename(infile)) {
+    throw LibXMLError(0);
+  }
+
   xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
   if (ctxt == NULL) return;
   ctxt->sax = &sax;
