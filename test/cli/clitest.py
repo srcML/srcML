@@ -722,6 +722,39 @@ language = 'language="AspectJ" '
 
 check([srcmltranslator, 'emptysrc/empty.aj'], "", xmltag + opentag + namespaceone + language + dir + fileopen + 'empty.aj' + fileclose + endtag)
 
+##
+# Test output options
+
+# src2srcml
+
+sfile = """
+a;
+"""
+
+sxmlfile = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+"""
+
+check([srcmltranslator, 'sub/a.cpp', '--output', 'sub/a.cpp,xml'], "", "")
+check([srcmltranslator, 'sub/a.cpp', '--output=sub/a.cpp,xml'], "", "")
+check([srcmltranslator, 'sub/a.cpp', '-o', 'sub/a.cpp,xml'], "", "")
+
+check([srcmltranslator, '-', '--output', '/dev/stdout'], sfile, sxmlfile)
+check([srcmltranslator, '-', '--output=/dev/stdout'], sfile, sxmlfile)
+check([srcmltranslator, '-', '-o', '/dev/stdout'], sfile, sxmlfile)
+
+# srcml2src
+
+check([srcmlutility, 'sub/a.cpp', '--output', 'sub/a.cpp,xml'], "", "")
+check([srcmlutility, 'sub/a.cpp', '--output=sub/a.cpp,xml'], "", "")
+check([srcmlutility, 'sub/a.cpp', '-o', 'sub/a.cpp,xml'], "", "")
+
+check([srcmlutility, '-', '--output', '/dev/stdout'], sxmlfile, sfile)
+check([srcmlutility, '-', '--output=/dev/stdout'], sxmlfile, sfile)
+check([srcmlutility, '-', '-o', '/dev/stdout'], sxmlfile, sfile)
+
 # footer
 print
 print "Error count: ", error_count
