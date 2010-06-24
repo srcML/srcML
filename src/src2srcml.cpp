@@ -667,38 +667,49 @@ int process_args(int argc, char* argv[]) {
       break;
 
     case 'X': 
-      curarg = optind - 1;
-      embedded = extract_option(argv[curarg]);
+      ns_prefix = 0;
+      ns_uri = 0;
 
-      // filename is embedded parameter
-      if (embedded) {
+      // find the ':' or '=' or end of string
+      for (embedded = argv[optind - 1]; *embedded; ++embedded)
+	if (*embedded == ':' || *embedded == '=')
+	  break;
 
-	if (argv[curarg][strlen(XMLNS_FLAG)] != ':')
-	  ns_prefix = "";
-	else {
-	  *embedded = '\0';
-	  ns_prefix = argv[curarg] + strlen(XMLNS_FLAG) + 1;
-	}
+      // found prefix for sure
+      if (*embedded == '=') {
 
+	ns_prefix = "";
 	ns_uri = embedded + 1;
-	
-      // check for language flag with missing language value
-      } else if (argc <= curarg + 1 || strcmp(argv[curarg + 1], OPTION_SEPARATOR) == 0) {
-	fprintf(stderr, "%s: xmlns option selected but not specified.\n", NAME);
-	exit(STATUS_LANGUAGE_MISSING);
+
+      } else if (*embedded == ':') {
+
+	ns_prefix = embedded + 1;
+
       } else {
 
-	// extract prefix
-	if (strlen(argv[curarg]) == strlen(XMLNS_FLAG))
-	  ns_prefix = "";
-	else
-	  ns_prefix = argv[curarg] + strlen(XMLNS_FLAG) + 1;
-
-	// uri is next argument
-	ns_uri = argv[++curarg];
+	ns_prefix = "";
       }
 
-      ++curarg;
+      // look for uri in rest of this argument
+      if (!ns_uri) {
+
+	for (; *embedded; ++embedded)
+	  if (*embedded == '=') {
+	    ns_uri = embedded + 1;
+	    *embedded = '\0';
+	    break;
+	  }
+      }
+
+      // look for uri in next argument
+      if (!ns_uri) {
+	if (!(optind < argc && argv[optind][0] != '-')) {
+	  fprintf(stderr, "%s: xmlns option selected but not specified.\n", NAME);
+	  exit(STATUS_LANGUAGE_MISSING);
+	}
+
+	ns_uri = argv[optind++];
+      }
 
       // update the uri's
       // check for standard namespaces, store them, and update any flags
