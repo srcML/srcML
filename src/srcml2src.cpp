@@ -273,11 +273,13 @@ int main(int argc, char* argv[]) {
     switch(c) {
 
     case 'h': 
-      options |= OPTION_HELP;
+      output_help(argv[0]);
+      exit(STATUS_SUCCESS);
       break;
 
     case 'V': 
-      options |= OPTION_PVERSION;
+      output_version(argv[0]);
+      exit(STATUS_SUCCESS);
       break;
 
     case 'o': 
@@ -418,18 +420,6 @@ int main(int argc, char* argv[]) {
   if (argc > curarg && !strcmp(argv[curarg], STDIN)) {
     filename = argv[curarg];
     ++curarg;
-  }
-
-  // help flag
-  if (isoption(options, OPTION_HELP)) {
-    output_help(NAME);
-    exit(STATUS_SUCCESS);
-  }
-
-  // version flag
-  if (isoption(options, OPTION_PVERSION)) {
-    output_version(NAME);
-    exit(STATUS_SUCCESS);
   }
 
   /* Special checks for illegal combinations */
