@@ -417,7 +417,7 @@ int main(int argc, char* argv[]) {
 
   // first command line parameter is input filename
   const char* filename = "-";
-  if (argc > curarg && !strcmp(argv[curarg], STDIN)) {
+  if (curarg < argc) {
     filename = argv[curarg];
     ++curarg;
   }
