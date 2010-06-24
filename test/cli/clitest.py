@@ -283,9 +283,9 @@ f = open("sub/b.cpp", "w")
 f.write("\nb;\n")
 f.close()
 
-check([srcmltranslator, "sub/a.cpp", "sub/b.cpp", "-"], "", nestedfile)
+check([srcmltranslator, "sub/a.cpp", "sub/b.cpp", "-o", "-"], "", nestedfile)
 
-check([srcmltranslator, option.NESTED_FLAG, "sub/a.cpp", "-"], "", nestedfile1)
+check([srcmltranslator, option.NESTED_FLAG, "sub/a.cpp", "-o", "-"], "", nestedfile1)
 
 filelist = """
 sub/a.cpp
