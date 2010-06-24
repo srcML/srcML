@@ -80,12 +80,12 @@ enum Options {
   // help
   // @src2srcml
   // @srcml2src
-  OPTION_HELP        = 0x00000400,
+  //  OPTION_HELP        = 0x00000400,
 
   // program version
   // @src2srcml
   // @srcml2src
-  OPTION_PVERSION    = 0x00000800,
+  //  OPTION_PVERSION    = 0x00000800,
 
   // language
   // @src2srcml
