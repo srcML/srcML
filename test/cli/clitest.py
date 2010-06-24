@@ -670,15 +670,15 @@ check([srcmltranslator, option.NO_NAMESPACE_DECLARATION_FLAG], "", srcml)
 
 ##
 # check missingfile
-srcml = "src2srcml error: file 'foo.c' does not exist.\n"
+srcml = srcmltranslator + " error: file 'foo.c' does not exist.\n"
 
 checkError([srcmltranslator, 'foo.c'], "", srcml)
 
-srcml = "src2srcml error: file 'abc.c' does not exist.\n"
+srcml = srcmltranslator + " error: file 'abc.c' does not exist.\n"
 
 checkError([srcmltranslator, 'abc.c'], "", srcml)
 
-srcml = "src2srcml error: file '../src/foo.c' does not exist.\n"
+srcml = srcmltranslator +  " error: file '../src/foo.c' does not exist.\n"
 
 checkError([srcmltranslator, '../src/foo.c'], "", srcml)
 
