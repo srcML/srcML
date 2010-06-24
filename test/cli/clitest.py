@@ -459,7 +459,7 @@ check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "2", option.LANGUAGE_FLA
 validate(getreturn([srcmltranslator, "foobar"], None), status.STATUS_INPUTFILE_PROBLEM)
 
 # invalid input filename (repeat in output)
-validate(getreturn([srcmltranslator, "sub/a.cpp", "sub/a.cpp"], None), status.STATUS_INPUTFILE_PROBLEM)
+validate(getreturn([srcmltranslator, "sub/a.cpp", "-o", "sub/a.cpp"], None), status.STATUS_INPUTFILE_PROBLEM)
 
 # unknown option
 validate(getreturn([srcmltranslator, "--strip", "foobar"], None), status.STATUS_UNKNOWN_OPTION)
