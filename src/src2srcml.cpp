@@ -293,36 +293,12 @@ int main(int argc, char* argv[]) {
 
   // first command line parameter after options are the input filenames
   int input_arg_start = curarg;
-  int input_arg_end = -1;
-  int input_arg_count = 0;
-  int input_arg_skip_start = -1;
-  int input_arg_skip_end = -1;
-  int numout = srcml_filename ? 0 : 1;
-  if (argc - curarg == 1)
-    numout = 0;
-  while ((argc - curarg) > numout) {
+  int input_arg_end = argc - 1;
+  int input_arg_count = input_arg_end - input_arg_start + 1;
 
-    // mark last input filename assuming output srcml filename is last
-    input_arg_end = curarg;
-
-    // calculate the total number of input files
-    ++input_arg_count;
-    //    input_arg_count = input_arg_end - input_arg_start + 1;
-
-    // update the argument count with the input filenames
-    //    curarg += input_arg_count;
-    ++curarg;
-  }
-
-  // last command line parameter is output srcml filename
-  if (!srcml_filename) {
+  // no output specified, so use stdout
+  if (!srcml_filename)
     srcml_filename = "-";
-    if ((argc - (curarg - 1)) > 1) {
-      srcml_filename = argv[curarg];
-
-      ++curarg;
-    }
-  }
 
   // if more than one input filename assume nested
   if (input_arg_count > 1)
@@ -333,9 +309,6 @@ int main(int argc, char* argv[]) {
   struct stat outstat;
   stat(srcml_filename, &outstat);
   for (int i = input_arg_start; i <= input_arg_end; ++i) {
-
-    if (i >= input_arg_skip_start && i <= input_arg_skip_end)
-      continue;
 
     struct stat instat;
     stat(argv[i], &instat);
@@ -527,9 +500,6 @@ int main(int argc, char* argv[]) {
     // translate in batch the input files on the command line extracting the directory and filename attributes
     // from the full path
     for (int i = input_arg_start; i <= input_arg_end; ++i) {
-
-      if (i >= input_arg_skip_start && i <= input_arg_skip_end)
-	continue;
 
       char* path = argv[i];
 
