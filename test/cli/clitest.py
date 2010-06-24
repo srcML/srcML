@@ -231,9 +231,9 @@ sxmlfile2 = xml_declaration + """
 """
 check([srcmltranslator], sfile2, sxmlfile2)
 
-check([srcmltranslator, "-", "sub/a.cpp.xml"], sfile1, "")
+check([srcmltranslator, "-", "-o", "sub/a.cpp.xml"], sfile1, "")
 
-check([srcmltranslator, "-", "sub/b.cpp.xml"], sfile2, "")
+check([srcmltranslator, "-", "-o", "sub/b.cpp.xml"], sfile2, "")
 
 nestedfile1 = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
