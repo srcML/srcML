@@ -109,14 +109,13 @@ void output_help(const char* name) {
   printf( "Usage: %s [options] <infile>... [-o <outfile>]\n\n"
 
 	  "Translates source-code files in C, C++, and Java into the XML source-code representation srcML.\n"
-	  //	  "with support for creating compound srcML documents.\n\n"
-	  "Both single and multiple files can be stored in a single srcML documents.\n\n"
+	  "Both single and multiple files can be stored in a single srcML document.\n\n"
 
-	  "All output is to standard output, unless '-o' option is given.\n"
+	  "All output is to standard output, unless the %s (%s) option is used.\n"
 	  "When no filenames are given read from standard input and write to standard output.\n"
 	  "An input filename of '-' also reads from standard input.\n\n"
 
-	  "Options:\n", name);
+	  "Options:\n", name, OUTPUT_FLAG, OUTPUT_FLAG_SHORT);
 
   printf("  %s, %-16s display this help and exit\n",      HELP_FLAG_SHORT, HELP_FLAG);
   printf("  %s, %-16s display version number and exit\n\n", VERSION_FLAG_SHORT, VERSION_FLAG);
@@ -142,15 +141,15 @@ void output_help(const char* name) {
 	      << "store the text without any text encoding changes" << "\n"
       */
 
-  printf("  %-23s set the default namespace URI\n", XMLNS_DEFAULT_FLAG_FULL);
-  printf("        (default:  xmlns=\"%s\")\n", SRCML_SRC_NS_URI);
+  printf("  %-20s set the default namespace URI\n", XMLNS_DEFAULT_FLAG_FULL);
+  printf("                       (default:  xmlns=\"%s\")\n", SRCML_SRC_NS_URI);
 
-  printf("  %-23s set the namespace PREFIX for the namespace URI\n", XMLNS_FLAG_FULL);
-  printf("        (defaults:  xmlns:cpp=\"%s\")\n", SRCML_CPP_NS_URI);
-  printf("        (defaults:  xmlns:srcerr=\"%s\")\n", SRCML_ERR_NS_URI);
+  printf("  %-20s set the namespace PREFIX for the namespace URI\n", XMLNS_FLAG_FULL);
+  printf("                       (defaults:  xmlns:cpp=\"%s\")\n", SRCML_CPP_NS_URI);
+  printf("                       (defaults:  xmlns:srcerr=\"%s\")\n", SRCML_ERR_NS_URI);
 
-  printf("  %-23s	do not output the default XML declaration\n", NO_XML_DECLARATION_FLAG);
-  printf("  %-23s	do not output any namespace declarations\n\n", NO_NAMESPACE_DECLARATION_FLAG);
+  printf("  %-20s do not output the default XML declaration\n", NO_XML_DECLARATION_FLAG);
+  printf("  %-20s do not output any namespace declarations\n\n", NO_NAMESPACE_DECLARATION_FLAG);
 
   printf("  %s, %-16s output in gzip format\n", COMPRESSED_FLAG_SHORT, COMPRESSED_FLAG);
 
@@ -182,22 +181,22 @@ void output_help(const char* name) {
 
   printf("Markup Extensions:\n\n");
 
-  printf("  %-16s markup literal values in namespace \"%s\"\n",
+  printf("  %-20s markup literal values in namespace \"%s\"\n",
 	 LITERAL_FLAG, SRCML_EXT_LITERAL_NS_URI);
 
-  printf("  %-16s markup operators in namespace \"%s\"\n",
+  printf("  %-20s markup operators in namespace \"%s\"\n",
 	 OPERATOR_FLAG, SRCML_EXT_OPERATOR_NS_URI);
 
-  printf("  %-16s markup type modifiers in namespace \"%s\"\n",
+  printf("  %-20s markup type modifiers in namespace \"%s\"\n",
 	 MODIFIER_FLAG, SRCML_EXT_MODIFIER_NS_URI);
 
   printf("\nCPP Markup Options:\n\n");
 
-  printf("  %-16s  markup cpp #else regions (default)\n", CPP_MARKUP_ELSE_FLAG);
-  printf("  %-16s  leave cpp #else regions as text\n\n", CPP_TEXTONLY_ELSE_FLAG);
+  printf("  %-20s markup cpp #else regions (default)\n", CPP_MARKUP_ELSE_FLAG);
+  printf("  %-20s leave cpp #else regions as text\n\n", CPP_TEXTONLY_ELSE_FLAG);
 
-  printf("  %-16s  markup cpp #if 0 regions\n", CPP_MARKUP_IF0_FLAG);
-  printf("  %-16s  leave cpp #if 0 regions as text (default)\n\n", CPP_TEXTONLY_IF0_FLAG);
+  printf("  %-20s markup cpp #if 0 regions\n", CPP_MARKUP_IF0_FLAG);
+  printf("  %-20s leave cpp #if 0 regions as text (default)\n\n", CPP_TEXTONLY_IF0_FLAG);
 
   printf("Examples:  \n"
 	 "  %1$s                (read from standard input, write to standard output)\n"
@@ -205,7 +204,7 @@ void output_help(const char* name) {
 	 "  %1$s m.cpp -o m.cpp.xml (read from file m.cpp, write to file m.cpp.xml)\n"
 	 "  %1$s -              (read from standard input, write to standard output)\n"
 	 "  %1$s - -o m.cpp.xml    (read from standard input, write to file m.cpp.xml)\n"
-	 "  %1$s --directory=src --filename=m.cpp - m.cpp.xml "
+	 "  %1$s --directory=src --filename=m.cpp m.cpp -o m.cpp.xml "
 	 "(element unit attributes dir \"src\", filename \"m.cpp\")\n"
 	 "  %1$s --src-encoding=UTF-8 m.cpp m.cpp.xml         "
 	 "(encoding of input text file is UTF-8)\n"
