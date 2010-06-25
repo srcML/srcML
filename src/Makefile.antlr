@@ -35,7 +35,7 @@ endif
 ifneq ($(DARWIN),)
 ANTLR = /opt/local/bin/antlr
 else
-ANTLR = /usr/bin/cantlr
+ANTLR = /usr/bin/cantlr.sh
 #ANTLR =$(JAVA_CC) -classpath $(ANTLR_TOOL) antlr.Tool
 endif
 
