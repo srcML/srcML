@@ -162,8 +162,27 @@
 </unit>
 
 <unit>
+<expr_stmt><expr><name>a</name><op:operator>-&gt;</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
 <expr_stmt><expr><op:operator>+</op:operator>1</expr>;</expr_stmt>
 </unit>
+
+<unit>
+<expr_stmt><expr><name><name>a</name><op:operator>::</op:operator><name>b</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name><name><name>A</name><argument_list>&lt;<argument><name>T</name></argument>&gt;</argument_list></name><op:operator>::</op:operator><name>b</name></name></type> <name>c</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name><name><name>A</name><argument_list>&lt;<argument><name>T</name></argument>&gt;</argument_list></name><op:operator>::</op:operator><op:operator>*</op:operator><name>b</name></name></type> <name>c</name></decl>;</decl_stmt>
+</unit>
+
+</unit>
+=======
 
 <unit>
 <expr_stmt><expr><op:operator>-</op:operator>1</expr>;</expr_stmt>
@@ -257,3 +276,4 @@
 </unit>
 
 </unit>
+>>>>>>> .r5003
