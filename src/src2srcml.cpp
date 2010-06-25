@@ -106,7 +106,7 @@ char const * const num2uri[] = {
 
 // output help
 void output_help(const char* name) {
-  printf( "Usage: %s [options] <infile>... [-o <outfile>]\n\n"
+  printf( "Usage: %s [options] <src_infile>... [-o <srcML_outfile>]\n\n"
 
 	  "Translates source-code files in C, C++, and Java into the XML source-code representation srcML.\n"
 	  "Both single and multiple files can be stored in a single srcML document.\n\n"
@@ -115,6 +115,11 @@ void output_help(const char* name) {
 	  "When no filenames are given read from standard input and write to standard output.\n"
 	  "An input filename of '-' also reads from standard input.\n\n"
 
+	  "Any input file can be a local filename or use the protocols http:, ftp:, or file:\n\n"
+
+	  "Language is based on the file extension, with a default of C++.  It can also be directly\n"
+	  "set using the --language option.\n"
+	  "\n"
 	  "Options:\n", name, OUTPUT_FLAG, OUTPUT_FLAG_SHORT);
 
   printf("  %s, %-16s display this help and exit\n",      HELP_FLAG_SHORT, HELP_FLAG);
@@ -202,8 +207,9 @@ void output_help(const char* name) {
 	 "  %1$s                (read from standard input, write to standard output)\n"
 	 "  %1$s m.cpp          (read from file m.cpp, write to standard output)\n"
 	 "  %1$s m.cpp -o m.cpp.xml (read from file m.cpp, write to file m.cpp.xml)\n"
-	 "  %1$s -              (read from standard input, write to standard output)\n"
-	 "  %1$s - -o m.cpp.xml    (read from standard input, write to file m.cpp.xml)\n"
+	 "\n"
+	 "  %1$s http://www.sdml.info/projects/srcml/ex/main.cpp (read from URI)\n"
+	 "\n"
 	 "  %1$s --directory=src --filename=m.cpp m.cpp -o m.cpp.xml "
 	 "(element unit attributes dir \"src\", filename \"m.cpp\")\n"
 	 "  %1$s --src-encoding=UTF-8 m.cpp m.cpp.xml         "

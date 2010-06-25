@@ -83,21 +83,27 @@ char const * const PARAM_FLAG_SHORT = "";
 // output help message
 void output_help(const char* name) {
 
-  printf("Usage: %s [options] <infile> <outfile>\n\n"
+  printf("Usage: %s [options] <srcML_infile>... [-o <src_outfile>]\n\n"
          "Translates from the the XML source-code representation srcML to source-code text files.\n"
          "The srcML files can be in xml or gzip compressed xml (detected automatically).\n"
          "Also provides for access to metadata about the srcML document, extracting specific\n"
          "parts of compound srcML documents, querying using XPath and RelaxNG, and\n"
 	 "and transformation with XSLT.\n\n"
 
+	 "All output is to standard output, unless the %s (%s) option is used.\n"
          "When no filenames are given read from standard input and write to standard output.\n"
          "When only one filename is given write to standard output.\n"
 	 "An input filename of '-' also reads from standard input.\n\n"
 
-	 "Options:\n", name);
+	 "Any input file, including XSLT or RelaxNG file, can be a local\n"
+	 "filename or use the protocols http:, ftp:, or file:\n\n"
+
+	 "Options:\n", name, OUTPUT_FLAG, OUTPUT_FLAG_SHORT);
 
   printf("  %s, %-19s display this help and exit\n", HELP_FLAG_SHORT, HELP_FLAG);
   printf("  %s, %-19s display version number and exit\n", VERSION_FLAG_SHORT, VERSION_FLAG);
+
+  printf("  %s, %-19s write result to <file|URI> instead of standard output\n\n", OUTPUT_FLAG_SHORT, OUTPUT_FLAG);
 
   printf("  %s, %-19s set the output source encoding to ENC (default:  %s) \n\n",
 	  TEXTENCODING_FLAG_SHORT, TEXTENCODING_FLAG_FULL, DEFAULT_TEXT_ENCODING);
@@ -113,11 +119,10 @@ void output_help(const char* name) {
   printf("  %s, %-19s extract all files from a compound srcML document\n\n",
 	  EXPAND_FLAG_SHORT, EXPAND_FLAG);
 
-
-  printf("  %s, %-19s output in XML instead of text\n",
+  printf("  %s, %-19s output in XML instead of text\n\n",
 	  XML_FLAG_SHORT, XML_FLAG);
 
-  printf("  %s, %-19s output XML in gzip format\n\n",
+  printf("  %s, %-19s output text or XML in gzip format\n\n",
 	  COMPRESSED_FLAG_SHORT, COMPRESSED_FLAG);
 
   printf("  %-23s do not output the default XML declaration in XML output\n",
@@ -154,18 +159,19 @@ void output_help(const char* name) {
   printf("Query and Tranformation Options:  \n\n"
 	 "  %-23s apply XPATH expression to each nested unit\n", XPATH_FLAG_FULL);
   printf("  %-23s apply XSLT_FILE transformation to each nested unit\n", XSLT_FLAG_FULL);
-  printf("  %-23s apply RELAXNG_FILE grammar file to each nested unit\n\n", RELAXNG_FLAG_FULL);
+  printf("  %-23s output nested units that match RELAXNG_FILE grammar\n\n", RELAXNG_FLAG_FULL);
 
   printf("Examples:  \n"
-	    "  %1$s                       (read from standard input, write to standard output)\n"
-	    "  %1$s main.cpp.xml          (read from file main.cpp.xml, write to standard output)\n"
-	    "  %1$s main.cpp.xml main.cpp (read from file main.cpp.xml, write to file main.cpp)\n"
-	    "  %1$s -                     (read from standard input, write to standard output)\n"
-	    "  %1$s - main.cpp            (read from standard input, write to file main.cpp)\n"
-	    "  %1$s --language            (read from standard input, output language attribute)\n"
-	    "  %1$s --directory           (read from standard input, output directory attribute)\n"
-	    "  %1$s --filename            (read from standard input, output filename attribute)\n"
-	    "  %1$s --src-version         (read from standard input, output version attribute)\n\n", name);
+	    "  %1$s                          (read from standard input, write to standard output)\n"
+	    "  %1$s main.cpp.xml             (read from file main.cpp.xml, write to standard output)\n"
+	    "  %1$s main.cpp.xml -o main.cpp (read from file main.cpp.xml, write to file main.cpp)\n"
+	    "\n"
+	    "  %1$s http://www.sdml.info/projects/srcml/ex/main.cpp.xml (read from URI)\n"
+	    "\n"
+	    "  %1$s --language               (read from standard input, output language attribute)\n"
+	    "  %1$s --directory              (read from standard input, output directory attribute)\n"
+	    "  %1$s --filename               (read from standard input, output filename attribute)\n"
+	    "  %1$s --src-version            (read from standard input, output version attribute)\n\n", name);
 
   printf("www.sdml.info\n"
          "Report bugs to %s\n", EMAIL_ADDRESS);
