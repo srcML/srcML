@@ -566,8 +566,6 @@ int process_args(int argc, char* argv[]) {
   };
 
   // process all command line options
-  int position = 0;
-  int curarg = 1;  // current argument
   char* embedded;
   const char* ns_prefix;
   const char* ns_uri;
@@ -598,7 +596,6 @@ int process_args(int argc, char* argv[]) {
       exit(option_error_status(optopt));
     }
 
-    char* end = 0;
     switch(c) {
 
     case 'h': 
