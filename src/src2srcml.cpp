@@ -641,6 +641,7 @@ int process_args(int argc, char* argv[]) {
       // validate xml encoding
       if (!srcMLOutput::checkEncoding(xml_encoding)) {
 	fprintf(stderr, "%s: xml encoding \"%s\" is not supported.\n", argv[0], xml_encoding);
+	fprintf(stderr, "Try '%s %s' for more information.\n", argv[0], HELP_FLAG);
 	exit(STATUS_UNKNOWN_ENCODING);
       }
       break;
@@ -653,6 +654,7 @@ int process_args(int argc, char* argv[]) {
       // validate source encoding
       if (!srcMLOutput::checkEncoding(src_encoding)) {
 	fprintf(stderr, "%s: text encoding \"%s\" is not supported.\n", argv[0], src_encoding);
+	fprintf(stderr, "Try '%s %s' for more information.\n", argv[0], HELP_FLAG);
 	exit(STATUS_UNKNOWN_ENCODING);
       }
       break;
