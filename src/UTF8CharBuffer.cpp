@@ -1,12 +1,13 @@
 #include <iostream>
 #include "UTF8CharBuffer.h"
+#include <libxml/encoding.h>
 
 // Create a character buffer
 UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding)
   : antlr::CharBuffer(std::cin), pos(0), size(0), eof(false), lastcr(false)
 {
   // use a libxml2 parser input buffer to support URIs
-  if (!(input = xmlParserInputBufferCreateFilename(ifilename, XML_CHAR_ENCODING_NONE)))
+  if (!(input = xmlParserInputBufferCreateFilename(ifilename, xmlParseCharEncoding(encoding))))
     throw UTF8FileError();
 }
 
