@@ -111,9 +111,9 @@ void output_help(const char* name) {
 	  "Translates source-code files in C, C++, and Java into the XML source-code representation srcML.\n"
 	  "Both single and multiple files can be stored in a single srcML document.\n\n"
 
-	  "All output is to standard output, unless the %s (%s) option is used.\n"
-	  "When no filenames are given read from standard input and write to standard output.\n"
-	  "An input filename of '-' also reads from standard input.\n\n"
+	  "By default, output is to stdout.  You can specify a file for output using the %s or %s option.\n"
+	  "When no filenames are given input is from stdin and output is to stdout.\n"
+	  "An input filename of '-' also reads from stdin.\n\n"
 
 	  "Any input file can be a local filename or use the protocols http:, ftp:, or file:\n\n"
 

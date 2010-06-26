@@ -90,10 +90,9 @@ void output_help(const char* name) {
          "parts of compound srcML documents, querying using XPath and RelaxNG, and\n"
 	 "and transformation with XSLT.\n\n"
 
-	 "All output is to standard output, unless the %s (%s) option is used.\n"
-         "When no filenames are given read from standard input and write to standard output.\n"
-         "When only one filename is given write to standard output.\n"
-	 "An input filename of '-' also reads from standard input.\n\n"
+	 "By default, output is to stdout.  You can specify a file for output using the -o or --output option.\n"
+	 "When no filenames are given input is from stdin and output is to stdout.\n"
+	 "An input filename of '-' also reads from stdin.\n\n"
 
 	 "Any input file, including XSLT or RelaxNG file, can be a local\n"
 	 "filename or use the protocols http:, ftp:, or file:\n\n"
