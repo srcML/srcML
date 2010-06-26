@@ -90,7 +90,7 @@ void output_help(const char* name) {
          "parts of compound srcML documents, querying using XPath and RelaxNG, and\n"
 	 "and transformation with XSLT.\n\n"
 
-	 "By default, output is to stdout.  You can specify a file for output using the -o or --output option.\n"
+	 "By default, output is to stdout.  You can specify a file for output using the %s or %s option.\n"
 	 "When no filenames are given input is from stdin and output is to stdout.\n"
 	 "An input filename of '-' also reads from stdin.\n\n"
 
