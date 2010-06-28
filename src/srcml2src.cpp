@@ -220,13 +220,13 @@ typedef struct process_options
 } process_options;
 
 // setup options and collect info from arguments
-int process_args(int argc, char* argv[], process_options poptions);
+int process_args(int argc, char* argv[], process_options & poptions);
 
 // option values
 //const char* src_encoding = DEFAULT_TEXT_ENCODING;
 int unit = 0;
 //const char* context = "src:unit";
-std::list<const char*> ns;
+//std::list<const char*> ns;
 
 int main(int argc, char* argv[]) {
 
@@ -373,11 +373,11 @@ int main(int argc, char* argv[]) {
 
       su.move_to_unit(unit);
 
-      for (std::list<const char*>::const_iterator iter = ns.begin(); iter != ns.end(); ++iter) {
+      for (std::list<const char*>::const_iterator iter = poptions.ns.begin(); iter != poptions.ns.end(); ++iter) {
 
 	const char* prefix = su.namespace_ext(*iter);
 	if (prefix) {
-	  if (ns.size() == 1)
+	  if (poptions.ns.size() == 1)
 	    printf("%s\n", prefix);
 	  else {
 	    printf("xmlns");
@@ -484,7 +484,7 @@ int main(int argc, char* argv[]) {
 }
 
 // setup options and collect info from arguments
-int process_args(int argc, char* argv[], process_options poptions)
+int process_args(int argc, char* argv[], process_options & poptions)
 {
   int curoption = 0;
   struct option cliargs[] = {
@@ -660,7 +660,7 @@ int process_args(int argc, char* argv[], process_options poptions)
     case 'p':
       options |= OPTION_NAMESPACE;
 
-      ns.push_back(optarg);
+      poptions.ns.push_back(optarg);
       break;
 
     case 'A':
