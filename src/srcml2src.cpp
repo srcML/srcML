@@ -260,7 +260,7 @@ int main(int argc, char* argv[]) {
   // xml output and src-encoding (switch to encoding?)
   if (isoption(options, OPTION_XML) && isoption(options, OPTION_TEXT_ENCODING)) {
 
-    fprintf(stderr, "%s: Options for xml output and specifying source encoding are incompatible.\n", NAME);
+    fprintf(stderr, "%s: Options for xml output and specifying source encoding are incompatible.\n", argv[0]);
     exit(STATUS_INVALID_OPTION_COMBINATION);
   }
 
@@ -448,7 +448,7 @@ int main(int argc, char* argv[]) {
   } catch (const OutOfRangeUnitError& e) {
 
     fprintf(stderr, "%s: unit %d  was selected from compound srcML document that contains "
-	    "%d nested units\n", NAME, poptions.unit, e.size);
+	    "%d nested units\n", argv[0], poptions.unit, e.size);
     exit_status = STATUS_UNIT_INVALID;
 
     return exit_status;
@@ -467,12 +467,12 @@ int main(int argc, char* argv[]) {
 
     if (error.getErrorNum() == 0) {
       exit_status = STATUS_INPUTFILE_PROBLEM;
-      fprintf(stderr, "%s: Unable to open input file as XML\n", NAME);
+      fprintf(stderr, "%s: Unable to open input file as XML\n", argv[0]);
     }
 
   } catch (const char* s) {
     
-    fprintf(stderr, "%s: %s\n", NAME, s);
+    fprintf(stderr, "%s: %s\n", argv[0], s);
     if (!exit_status)
       exit_status = STATUS_ERROR;
   } catch (...) {
@@ -652,7 +652,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
       // validate source encoding
       if (!srcMLUtility::checkEncoding(poptions.src_encoding)) {
-	fprintf(stderr, "%s: text encoding \"%s\" is not supported.\n", NAME, poptions.src_encoding);
+	fprintf(stderr, "%s: text encoding \"%s\" is not supported.\n", argv[0], poptions.src_encoding);
 	exit(STATUS_UNKNOWN_ENCODING);
       }
       break;
