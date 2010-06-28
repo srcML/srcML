@@ -185,8 +185,6 @@ void output_version(const char* name) {
 
 int options = OPTION_XMLDECL | OPTION_NAMESPACEDECL;
 
-// setup options and collect info from arguments
-int process_args(int argc, char* argv[]);
 
 #ifdef __GNUG__
 extern "C" void verbose_handler(int);
@@ -212,13 +210,23 @@ std::list<const char*> xpathexprlist;
 
 const char* ofilename = "-";
 
+typedef struct process_options
+{
+  // option values
+  const char* src_encoding;
+  int unit;
+  const char* context;
+  std::list<const char*> ns;
+} process_options;
+
+// setup options and collect info from arguments
+int process_args(int argc, char* argv[], process_options poptions);
+
 // option values
-const char* src_encoding = DEFAULT_TEXT_ENCODING;
+//const char* src_encoding = DEFAULT_TEXT_ENCODING;
 int unit = 0;
-const char* context = "src:unit";
+//const char* context = "src:unit";
 std::list<const char*> ns;
-
-
 
 int main(int argc, char* argv[]) {
 
@@ -231,8 +239,14 @@ int main(int argc, char* argv[]) {
 
   int exit_status = EXIT_SUCCESS;
 
+  process_options poptions;
+  poptions.src_encoding = DEFAULT_TEXT_ENCODING;
+  poptions.unit = 0;
+  poptions.context = "src:unit";
+  poptions.ns = std::list<const char*>();
+
   // process command-line arguments
-  int curarg = process_args(argc, argv);
+  int curarg = process_args(argc, argv, poptions);
 
   // first command line parameter is input filename
   const char* filename = "-";
@@ -291,7 +305,7 @@ int main(int argc, char* argv[]) {
   try {
 
     // setup for processing
-    srcMLUtility su(filename, src_encoding, options);
+    srcMLUtility su(filename, poptions.src_encoding, options);
 
     // process get attribute options
     if (optioncount > 0) {
@@ -413,13 +427,13 @@ int main(int argc, char* argv[]) {
     } else if (isoption(options, OPTION_XPATH)) {
 
       if (xpathexprlist.empty())
-	su.extract_element(context, ofilename);
+	su.extract_element(poptions.context, ofilename);
       else
-	su.xpath(ofilename, context, xpathexpr);
+	su.xpath(ofilename, poptions.context, xpathexpr);
 
     } else if (isoption(options, OPTION_XSLT)) {
 
-      su.xslt(context, ofilename, xsltfiles, params, paramcount);
+      su.xslt(poptions.context, ofilename, xsltfiles, params, paramcount);
 
     } else if (isoption(options, OPTION_RELAXNG)) {
 
@@ -470,7 +484,7 @@ int main(int argc, char* argv[]) {
 }
 
 // setup options and collect info from arguments
-int process_args(int argc, char* argv[])
+int process_args(int argc, char* argv[], process_options poptions)
 {
   int curoption = 0;
   struct option cliargs[] = {
@@ -628,17 +642,17 @@ int process_args(int argc, char* argv[])
 
     case 'C':
       options |= OPTION_XPATH;
-      context = optarg;
+      poptions.context = optarg;
       break;
 
     case 't':
       options |= OPTION_TEXT_ENCODING;
 
-      src_encoding = optarg;
+      poptions.src_encoding = optarg;
 
       // validate source encoding
-      if (!srcMLUtility::checkEncoding(src_encoding)) {
-	fprintf(stderr, "%s: text encoding \"%s\" is not supported.\n", NAME, src_encoding);
+      if (!srcMLUtility::checkEncoding(poptions.src_encoding)) {
+	fprintf(stderr, "%s: text encoding \"%s\" is not supported.\n", NAME, poptions.src_encoding);
 	exit(STATUS_UNKNOWN_ENCODING);
       }
       break;
