@@ -237,7 +237,7 @@ const char* fname = "-";
 bool specified_cpp_option = false;
 
 // output filename
-const char* srcml_filename = 0;
+//const char* srcml_filename = 0;
 
 const int num_prefixes = 6;
 const char* num2prefix[] = {
@@ -331,15 +331,14 @@ int main(int argc, char* argv[]) {
 
   /* Special checks for illegal combinations */
 
-
   // first command line parameter after options are the input filenames
   int input_arg_start = curarg;
   int input_arg_end = argc - 1;
   int input_arg_count = input_arg_end - input_arg_start + 1;
 
   // no output specified, so use stdout
-  if (!srcml_filename)
-    srcml_filename = "-";
+  if (!poptions.srcml_filename)
+    poptions.srcml_filename = "-";
 
   // if more than one input filename assume nested
   if (input_arg_count > 1)
@@ -348,14 +347,14 @@ int main(int argc, char* argv[]) {
   // verify that the output filename is not the same as any of the input filenames
 #ifdef __GNUG__
   struct stat outstat;
-  stat(srcml_filename, &outstat);
+  stat(poptions.srcml_filename, &outstat);
   for (int i = input_arg_start; i <= input_arg_end; ++i) {
 
     struct stat instat;
     stat(argv[i], &instat);
     if (instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
       fprintf(stderr, "%s: Input file '%s' is the same as the output file '%s'\n",
-	      argv[0], argv[i], srcml_filename);
+	      argv[0], argv[i], poptions.srcml_filename);
       exit(STATUS_INPUTFILE_PROBLEM);
     }
   }
@@ -405,7 +404,7 @@ int main(int argc, char* argv[]) {
     // translator from input to output using determined language
     //    if (language == 0)
     //	language = DEFAULT_LANGUAGE;
-    srcMLTranslator translator(language == 0 ? DEFAULT_LANGUAGE : language, src_encoding, xml_encoding, srcml_filename, options, poptions.given_directory, poptions.given_filename, poptions.given_version, num2prefix);
+    srcMLTranslator translator(language == 0 ? DEFAULT_LANGUAGE : language, src_encoding, xml_encoding, poptions.srcml_filename, options, poptions.given_directory, poptions.given_filename, poptions.given_version, num2prefix);
 
   // output source encoding
   if (isoption(options, OPTION_VERBOSE)) {
@@ -663,7 +662,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       break;
 
     case 'o': 
-      srcml_filename = optarg;
+      poptions.srcml_filename = optarg;
       break;
 
     case 'F': 
