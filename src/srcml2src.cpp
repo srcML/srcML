@@ -206,7 +206,7 @@ const int MAXXSLT = 32;
 const int MAXXPATH = 32;
 //int xpathcount = 0;
 //const char* xpathexpr[MAXXPATH + 1] = { 0 };
-std::list<const char*> xpathexprlist;
+//std::list<const char*> xpathexprlist;
 
 //const char* ofilename = "-";
 
@@ -224,6 +224,7 @@ typedef struct process_options
   const char* xsltfiles[MAXXSLT + 1];
   int xpathcount;
   const char* xpathexpr[MAXXPATH + 1];
+  std::list<const char*> xpathexprlist;
 } process_options;
 
 // setup options and collect info from arguments
@@ -257,7 +258,8 @@ int main(int argc, char* argv[]) {
      0,
      { 0 },
      0,
-     { 0 }
+     { 0 },
+     std::list<const char*>()
   };
 
   // process command-line arguments
@@ -441,7 +443,7 @@ int main(int argc, char* argv[]) {
 
     } else if (isoption(options, OPTION_XPATH)) {
 
-      if (xpathexprlist.empty())
+      if (poptions.xpathexprlist.empty())
 	su.extract_element(poptions.context, poptions.ofilename);
       else
 	su.xpath(poptions.ofilename, poptions.context, poptions.xpathexpr);
@@ -647,12 +649,12 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
     case 'R':
       options |= OPTION_RELAXNG;
-      xpathexprlist.push_back(poptions.xpathexpr[poptions.xpathcount++] = optarg);
+      poptions.xpathexprlist.push_back(poptions.xpathexpr[poptions.xpathcount++] = optarg);
       break;
 
     case 'P':
       options |= OPTION_XPATH;
-      xpathexprlist.push_back(poptions.xpathexpr[poptions.xpathcount++] = optarg);
+      poptions.xpathexprlist.push_back(poptions.xpathexpr[poptions.xpathcount++] = optarg);
       break;
 
     case 'C':
