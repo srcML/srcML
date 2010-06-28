@@ -230,10 +230,10 @@ int options = OPTION_CPP_MARKUP_ELSE | OPTION_CPP | OPTION_XMLDECL | OPTION_NAME
 const char* src_encoding = DEFAULT_TEXT_ENCODING;
 int language = 0;
 const char* xml_encoding = DEFAULT_XML_ENCODING;
-const char* given_directory = 0;
-const char* given_filename = 0;
+//const char* given_directory = 0;
+//const char* given_filename = 0;
 const char* fname = "-";
-const char* given_version = 0;
+//const char* given_version = 0;
 bool specified_cpp_option = false;
 
 // output filename
@@ -405,7 +405,7 @@ int main(int argc, char* argv[]) {
     // translator from input to output using determined language
     //    if (language == 0)
     //	language = DEFAULT_LANGUAGE;
-    srcMLTranslator translator(language == 0 ? DEFAULT_LANGUAGE : language, src_encoding, xml_encoding, srcml_filename, options, given_directory, given_filename, given_version, num2prefix);
+    srcMLTranslator translator(language == 0 ? DEFAULT_LANGUAGE : language, src_encoding, xml_encoding, srcml_filename, options, poptions.given_directory, poptions.given_filename, poptions.given_version, num2prefix);
 
   // output source encoding
   if (isoption(options, OPTION_VERBOSE)) {
@@ -460,7 +460,7 @@ int main(int argc, char* argv[]) {
 	  filename_split(line, dir, filename);
 	  translator.translate(dir,
 			       filename,
-			       given_version,
+			       poptions.given_version,
 			       language);
 	} catch (FileError) {
 
@@ -491,7 +491,7 @@ int main(int argc, char* argv[]) {
 
     // translate from standard input using any directory, filename and version given on the command line
     translator.setupInput(STDIN);
-    translator.translate(given_directory, given_filename, given_version, 
+    translator.translate(poptions.given_directory, poptions.given_filename, poptions.given_version, 
 			 language ? language : DEFAULT_LANGUAGE);
 
   // translate single input filename from command line
@@ -513,9 +513,9 @@ int main(int argc, char* argv[]) {
     }
 
     try {
-      translator.translate(isoption(options, OPTION_DIRECTORY) ? given_directory : path_s,
-			   isoption(options, OPTION_FILENAME)  ? given_filename  : filename_s,
-			   given_version,
+      translator.translate(isoption(options, OPTION_DIRECTORY) ? poptions.given_directory : path_s,
+			   isoption(options, OPTION_FILENAME)  ? poptions.given_filename  : filename_s,
+			   poptions.given_version,
 			   language ? language : DEFAULT_LANGUAGE);
 
     } catch (FileError) {
@@ -852,19 +852,19 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     case 'd': 
       options |= OPTION_DIRECTORY;
 
-      given_directory = optarg;
+      poptions.given_directory = optarg;
       break;
 
     case 'f': 
       options |= OPTION_FILENAME;
 
-      given_filename = optarg;
+      poptions.given_filename = optarg;
       break;
 
     case 's': 
       options |= OPTION_VERSION;
 
-      given_version = optarg;
+      poptions.given_version = optarg;
       break;
 
     case 'T': 
