@@ -234,7 +234,7 @@ int options = OPTION_CPP_MARKUP_ELSE | OPTION_CPP | OPTION_XMLDECL | OPTION_NAME
 //const char* given_filename = 0;
 //const char* fname = "-";
 //const char* given_version = 0;
-bool specified_cpp_option = false;
+//bool specified_cpp_option = false;
 
 // output filename
 //const char* srcml_filename = 0;
@@ -398,7 +398,7 @@ int main(int argc, char* argv[]) {
     }
 
     // turnoff default cpp reference for Java-based languages
-    if (!specified_cpp_option && (poptions.language == srcMLTranslator::LANGUAGE_JAVA || poptions.language == srcMLTranslator::LANGUAGE_ASPECTJ))
+    if (!poptions.specified_cpp_option && (poptions.language == srcMLTranslator::LANGUAGE_JAVA || poptions.language == srcMLTranslator::LANGUAGE_ASPECTJ))
 	options &= ~OPTION_CPP;
 
     // translator from input to output using determined language
@@ -441,7 +441,7 @@ int main(int argc, char* argv[]) {
 	  fprintf(stderr, "%d\t%s", count, line);
 
 	// turnoff default cpp reference for Java-based languages
-	if (!specified_cpp_option && (poptions.language == srcMLTranslator::LANGUAGE_JAVA || poptions.language == srcMLTranslator::LANGUAGE_ASPECTJ))
+	if (!poptions.specified_cpp_option && (poptions.language == srcMLTranslator::LANGUAGE_JAVA || poptions.language == srcMLTranslator::LANGUAGE_ASPECTJ))
 	  options &= ~OPTION_CPP;
 
 	// translate the file listed in the input file using the directory and filename extracted from the path
@@ -764,7 +764,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
 	// specifying the cpp prefix automatically turns on preprocessor
 	options |= OPTION_CPP;
-	specified_cpp_option = true;
+	poptions.specified_cpp_option = true;
 
 	num2prefix[SRCML_CPP_NS_URI_POS] = ns_prefix;
 	prefixchange[SRCML_CPP_NS_URI_POS] = true;
