@@ -248,7 +248,8 @@ int main(int argc, char* argv[]) {
   int exit_status = EXIT_SUCCESS;
 
   process_options poptions = 
-    {"-",
+    {
+     "-",
      DEFAULT_TEXT_ENCODING,
      0,
      "src:unit",

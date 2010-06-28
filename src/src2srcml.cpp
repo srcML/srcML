@@ -239,6 +239,7 @@ bool specified_cpp_option = false;
 // output filename
 const char* srcml_filename = 0;
 
+const int num_prefixes = 6;
 const char* num2prefix[] = {
 
   SRCML_SRC_NS_PREFIX_DEFAULT,
@@ -258,14 +259,32 @@ bool prefixchange[] = {
   false,
 };
 
-// setup options and collect info from arguments
-int process_args(int argc, char* argv[]);
 
 #ifdef __GNUG__
 extern "C" void verbose_handler(int);
 
 extern "C" void terminate_handler(int);
 #endif
+
+typedef struct process_options
+{
+  // options
+  // output filename
+  const char* srcml_filename;
+  const char* fname;
+  int language;
+  const char* src_encoding;
+  const char* xml_encoding;
+  const char* given_directory;
+  const char* given_filename;
+  const char* given_version;
+  bool specified_cpp_option;
+  const char* num2prefix[num_prefixes];
+  bool prefixchange[num_prefixes];
+} process_options;
+
+// setup options and collect info from arguments
+int process_args(int argc, char* argv[], process_options & poptions);
 
 int main(int argc, char* argv[]) {
 
@@ -278,8 +297,37 @@ int main(int argc, char* argv[]) {
   pstd::signal(SIGUSR1, verbose_handler);
 #endif
 
+  process_options poptions =
+    {
+      0,
+      "-",
+      0,
+      DEFAULT_TEXT_ENCODING,
+      DEFAULT_XML_ENCODING,
+      0,
+      0,
+      0,
+      false,
+      {
+	SRCML_SRC_NS_PREFIX_DEFAULT,
+	SRCML_CPP_NS_PREFIX_DEFAULT,
+	SRCML_ERR_NS_PREFIX_DEFAULT,
+	SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT,
+	SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT,
+	SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT,
+      },
+      {
+	false,
+	false,
+	false,
+	false,
+	false,
+	false,
+      }
+    };
+
   // process command-line arguments
-  int curarg = process_args(argc, argv);
+  int curarg = process_args(argc, argv, poptions);
 
   /* Special checks for illegal combinations */
 
@@ -534,7 +582,7 @@ int main(int argc, char* argv[]) {
 }
 
 // setup options and collect info from arguments
-int process_args(int argc, char* argv[]) {
+int process_args(int argc, char* argv[], process_options & poptions) {
 
   bool cpp_if0 = false;
   bool cpp_else = false;
