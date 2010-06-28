@@ -200,8 +200,8 @@ int paramcount = 0;
 const char* params[MAXPARAMS * 2 + 1] = { 0 };
 
 const int MAXXSLT = 32;
-int xsltcount = 0;
-const char* xsltfiles[MAXXSLT + 1] = { 0 };
+//int xsltcount = 0;
+//const char* xsltfiles[MAXXSLT + 1] = { 0 };
 
 const int MAXXPATH = 32;
 int xpathcount = 0;
@@ -440,7 +440,7 @@ int main(int argc, char* argv[]) {
 
     } else if (isoption(options, OPTION_XSLT)) {
 
-      su.xslt(poptions.context, poptions.ofilename, xsltfiles, params, paramcount);
+      su.xslt(poptions.context, poptions.ofilename, poptions.xsltfiles, params, paramcount);
 
     } else if (isoption(options, OPTION_RELAXNG)) {
 
@@ -634,7 +634,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
     case 'S':
 
       options |= OPTION_XSLT;
-      xsltfiles[xsltcount++] = optarg;
+      poptions.xsltfiles[poptions.xsltcount++] = optarg;
       break;
 
     case 'R':
