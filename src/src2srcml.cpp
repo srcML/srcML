@@ -227,9 +227,9 @@ void output_version(const char* name) {
 }
 
 int options = OPTION_CPP_MARKUP_ELSE | OPTION_CPP | OPTION_XMLDECL | OPTION_NAMESPACEDECL;
-const char* src_encoding = DEFAULT_TEXT_ENCODING;
-int language = 0;
-const char* xml_encoding = DEFAULT_XML_ENCODING;
+//const char* src_encoding = DEFAULT_TEXT_ENCODING;
+//int language = 0;
+//const char* xml_encoding = DEFAULT_XML_ENCODING;
 //const char* given_directory = 0;
 //const char* given_filename = 0;
 //const char* fname = "-";
@@ -389,27 +389,27 @@ int main(int argc, char* argv[]) {
   try {
 
     // for single file specified on command line, grab the language from the extension
-    if (language == 0 && input_arg_count == 1) {
+    if (poptions.language == 0 && input_arg_count == 1) {
 
       char* path = argv[input_arg_start];
       char* ext = filename_ext(path);
-      language = Language::getLanguageFromExtension(ext);
+      poptions.language = Language::getLanguageFromExtension(ext);
 
     }
 
     // turnoff default cpp reference for Java-based languages
-    if (!specified_cpp_option && (language == srcMLTranslator::LANGUAGE_JAVA || language == srcMLTranslator::LANGUAGE_ASPECTJ))
+    if (!specified_cpp_option && (poptions.language == srcMLTranslator::LANGUAGE_JAVA || poptions.language == srcMLTranslator::LANGUAGE_ASPECTJ))
 	options &= ~OPTION_CPP;
 
     // translator from input to output using determined language
     //    if (language == 0)
     //	language = DEFAULT_LANGUAGE;
-    srcMLTranslator translator(language == 0 ? DEFAULT_LANGUAGE : language, src_encoding, xml_encoding, poptions.srcml_filename, options, poptions.given_directory, poptions.given_filename, poptions.given_version, num2prefix);
+    srcMLTranslator translator(poptions.language == 0 ? DEFAULT_LANGUAGE : poptions.language, poptions.src_encoding, poptions.xml_encoding, poptions.srcml_filename, options, poptions.given_directory, poptions.given_filename, poptions.given_version, num2prefix);
 
   // output source encoding
   if (isoption(options, OPTION_VERBOSE)) {
-    fprintf(stderr, "Source encoding:  %s\n", src_encoding);
-    fprintf(stderr, "XML encoding:  %s\n", xml_encoding);
+    fprintf(stderr, "Source encoding:  %s\n", poptions.src_encoding);
+    fprintf(stderr, "XML encoding:  %s\n", poptions.xml_encoding);
   }
 
   // translate input filenames from list in file
@@ -441,7 +441,7 @@ int main(int argc, char* argv[]) {
 	  fprintf(stderr, "%d\t%s", count, line);
 
 	// turnoff default cpp reference for Java-based languages
-	if (!specified_cpp_option && (language == srcMLTranslator::LANGUAGE_JAVA || language == srcMLTranslator::LANGUAGE_ASPECTJ))
+	if (!specified_cpp_option && (poptions.language == srcMLTranslator::LANGUAGE_JAVA || poptions.language == srcMLTranslator::LANGUAGE_ASPECTJ))
 	  options &= ~OPTION_CPP;
 
 	// translate the file listed in the input file using the directory and filename extracted from the path
@@ -451,16 +451,16 @@ int main(int argc, char* argv[]) {
 	  translator.setupInput(line);
 
 	  // language based on extension
-	  if (language == 0) {
+	  if (poptions.language == 0) {
 	    char* ext = filename_ext(line);
-	    language = Language::getLanguageFromExtension(ext);
+	    poptions.language = Language::getLanguageFromExtension(ext);
 	  }
 
 	  filename_split(line, dir, filename);
 	  translator.translate(dir,
 			       filename,
 			       poptions.given_version,
-			       language);
+			       poptions.language);
 	} catch (FileError) {
 
 	  if (dir)
@@ -491,7 +491,7 @@ int main(int argc, char* argv[]) {
     // translate from standard input using any directory, filename and version given on the command line
     translator.setupInput(STDIN);
     translator.translate(poptions.given_directory, poptions.given_filename, poptions.given_version, 
-			 language ? language : DEFAULT_LANGUAGE);
+			 poptions.language ? poptions.language : DEFAULT_LANGUAGE);
 
   // translate single input filename from command line
   }  else if (input_arg_count == 1) {
@@ -515,7 +515,7 @@ int main(int argc, char* argv[]) {
       translator.translate(isoption(options, OPTION_DIRECTORY) ? poptions.given_directory : path_s,
 			   isoption(options, OPTION_FILENAME)  ? poptions.given_filename  : filename_s,
 			   poptions.given_version,
-			   language ? language : DEFAULT_LANGUAGE);
+			   poptions.language ? poptions.language : DEFAULT_LANGUAGE);
 
     } catch (FileError) {
 
@@ -555,7 +555,7 @@ int main(int argc, char* argv[]) {
       try {
 	translator.setupInput(path);
 	filename_split(path, path_s, filename_s);
-	translator.translate(path_s, filename_s, 0, language ? language : DEFAULT_LANGUAGE);
+	translator.translate(path_s, filename_s, 0, poptions.language ? poptions.language : DEFAULT_LANGUAGE);
       } catch (FileError) {
 	if (path_s)
 	  fprintf(stderr, "%s error: file \'%s/%s\' does not exist.\n", argv[0], path_s, filename_s);
@@ -685,11 +685,11 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     case 'x': 
       options |= OPTION_XML_ENCODING;
 
-      xml_encoding = optarg;
+      poptions.xml_encoding = optarg;
 
       // validate xml encoding
-      if (!srcMLOutput::checkEncoding(xml_encoding)) {
-	fprintf(stderr, "%s: xml encoding \"%s\" is not supported.\n", argv[0], xml_encoding);
+      if (!srcMLOutput::checkEncoding(poptions.xml_encoding)) {
+	fprintf(stderr, "%s: xml encoding \"%s\" is not supported.\n", argv[0], poptions.xml_encoding);
 	fprintf(stderr, "Try '%s %s' for more information.\n", argv[0], HELP_FLAG);
 	exit(STATUS_UNKNOWN_ENCODING);
       }
@@ -698,11 +698,11 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     case 't': 
       options |= OPTION_TEXT_ENCODING;
 
-      src_encoding = optarg;
+      poptions.src_encoding = optarg;
 
       // validate source encoding
-      if (!srcMLOutput::checkEncoding(src_encoding)) {
-	fprintf(stderr, "%s: text encoding \"%s\" is not supported.\n", argv[0], src_encoding);
+      if (!srcMLOutput::checkEncoding(poptions.src_encoding)) {
+	fprintf(stderr, "%s: text encoding \"%s\" is not supported.\n", argv[0], poptions.src_encoding);
 	fprintf(stderr, "Try '%s %s' for more information.\n", argv[0], HELP_FLAG);
 	exit(STATUS_UNKNOWN_ENCODING);
       }
@@ -839,8 +839,8 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       options |= OPTION_LANGUAGE;
 
       // validate language selected
-      language = Language::getLanguage(optarg);
-      if (language == 0) {
+      poptions.language = Language::getLanguage(optarg);
+      if (poptions.language == 0) {
 	fprintf(stderr, "%s: invalid option -- Language flag must one of the following values:  "
 		"%s %s %s %s\n", argv[0], LANGUAGE_C, LANGUAGE_CXX, LANGUAGE_JAVA, LANGUAGE_ASPECTJ);
 
