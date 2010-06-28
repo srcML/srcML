@@ -218,6 +218,8 @@ typedef struct process_options
   int unit;
   const char* context;
   std::list<const char*> ns;
+  int xsltcount;
+  const char* xsltfiles[MAXXSLT + 1];
 } process_options;
 
 // setup options and collect info from arguments
@@ -240,12 +242,15 @@ int main(int argc, char* argv[]) {
 
   int exit_status = EXIT_SUCCESS;
 
-  process_options poptions;
-  poptions.ofilename = "-";
-  poptions.src_encoding = DEFAULT_TEXT_ENCODING;
-  poptions.unit = 0;
-  poptions.context = "src:unit";
-  poptions.ns = std::list<const char*>();
+  process_options poptions = 
+    {"-",
+     DEFAULT_TEXT_ENCODING,
+     0,
+     "src:unit",
+     std::list<const char*>(),
+     0,
+     { 0 }
+  };
 
   // process command-line arguments
   int curarg = process_args(argc, argv, poptions);
