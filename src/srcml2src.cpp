@@ -196,16 +196,16 @@ int optionorder[5];
 int optioncount = 0;
 
 const int MAXPARAMS = 32;
-int paramcount = 0;
-const char* params[MAXPARAMS * 2 + 1] = { 0 };
+//int paramcount = 0;
+//const char* params[MAXPARAMS * 2 + 1] = { 0 };
 
 const int MAXXSLT = 32;
 //int xsltcount = 0;
 //const char* xsltfiles[MAXXSLT + 1] = { 0 };
 
 const int MAXXPATH = 32;
-int xpathcount = 0;
-const char* xpathexpr[MAXXPATH + 1] = { 0 };
+//int xpathcount = 0;
+//const char* xpathexpr[MAXXPATH + 1] = { 0 };
 std::list<const char*> xpathexprlist;
 
 //const char* ofilename = "-";
@@ -218,8 +218,12 @@ typedef struct process_options
   int unit;
   const char* context;
   std::list<const char*> ns;
+  int paramcount;
+  const char* params[MAXPARAMS * 2 + 1];
   int xsltcount;
   const char* xsltfiles[MAXXSLT + 1];
+  int xpathcount;
+  const char* xpathexpr[MAXXPATH + 1];
 } process_options;
 
 // setup options and collect info from arguments
@@ -248,6 +252,10 @@ int main(int argc, char* argv[]) {
      0,
      "src:unit",
      std::list<const char*>(),
+     0,
+     { 0 },
+     0,
+     { 0 },
      0,
      { 0 }
   };
@@ -436,15 +444,15 @@ int main(int argc, char* argv[]) {
       if (xpathexprlist.empty())
 	su.extract_element(poptions.context, poptions.ofilename);
       else
-	su.xpath(poptions.ofilename, poptions.context, xpathexpr);
+	su.xpath(poptions.ofilename, poptions.context, poptions.xpathexpr);
 
     } else if (isoption(options, OPTION_XSLT)) {
 
-      su.xslt(poptions.context, poptions.ofilename, poptions.xsltfiles, params, paramcount);
+      su.xslt(poptions.context, poptions.ofilename, poptions.xsltfiles, poptions.params, poptions.paramcount);
 
     } else if (isoption(options, OPTION_RELAXNG)) {
 
-      su.relaxng(poptions.ofilename, xpathexpr);
+      su.relaxng(poptions.ofilename, poptions.xpathexpr);
 
     } else {
 
@@ -639,12 +647,12 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
     case 'R':
       options |= OPTION_RELAXNG;
-      xpathexprlist.push_back(xpathexpr[xpathcount++] = optarg);
+      xpathexprlist.push_back(poptions.xpathexpr[poptions.xpathcount++] = optarg);
       break;
 
     case 'P':
       options |= OPTION_XPATH;
-      xpathexprlist.push_back(xpathexpr[xpathcount++] = optarg);
+      xpathexprlist.push_back(poptions.xpathexpr[poptions.xpathcount++] = optarg);
       break;
 
     case 'C':
@@ -673,10 +681,10 @@ int process_args(int argc, char* argv[], process_options & poptions)
     case 'A':
 
       // param name
-      params[paramcount++] = optarg;
+      poptions.params[poptions.paramcount++] = optarg;
       
       // param value
-      params[paramcount++] = argv[optind++];
+      poptions.params[poptions.paramcount++] = argv[optind++];
       break;
 
     default:
