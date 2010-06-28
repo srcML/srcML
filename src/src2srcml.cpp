@@ -250,6 +250,7 @@ const char* num2prefix[] = {
   SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT,
 };
 
+/*
 bool prefixchange[] = {
   false,
   false,
@@ -258,7 +259,7 @@ bool prefixchange[] = {
   false,
   false,
 };
-
+*/
 
 #ifdef __GNUG__
 extern "C" void verbose_handler(int);
@@ -279,7 +280,6 @@ typedef struct process_options
   const char* given_filename;
   const char* given_version;
   bool specified_cpp_option;
-  const char* num2prefix[num_prefixes];
   bool prefixchange[num_prefixes];
 } process_options;
 
@@ -308,14 +308,6 @@ int main(int argc, char* argv[]) {
       0,
       0,
       false,
-      {
-	SRCML_SRC_NS_PREFIX_DEFAULT,
-	SRCML_CPP_NS_PREFIX_DEFAULT,
-	SRCML_ERR_NS_PREFIX_DEFAULT,
-	SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT,
-	SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT,
-	SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT,
-      },
       {
 	false,
 	false,
@@ -758,7 +750,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       if (strcmp(ns_uri, SRCML_SRC_NS_URI) == 0) {
 
 	num2prefix[SRCML_SRC_NS_URI_POS] = ns_prefix;
-	prefixchange[SRCML_SRC_NS_URI_POS] = true;
+	poptions.prefixchange[SRCML_SRC_NS_URI_POS] = true;
 
       } else if (strcmp(ns_uri, SRCML_CPP_NS_URI) == 0) {
 
@@ -767,7 +759,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 	poptions.specified_cpp_option = true;
 
 	num2prefix[SRCML_CPP_NS_URI_POS] = ns_prefix;
-	prefixchange[SRCML_CPP_NS_URI_POS] = true;
+	poptions.prefixchange[SRCML_CPP_NS_URI_POS] = true;
 
       } else if (strcmp(ns_uri, SRCML_ERR_NS_URI) == 0) {
 
@@ -775,7 +767,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 	options |= OPTION_DEBUG;
 
 	num2prefix[SRCML_ERR_NS_URI_POS] = ns_prefix;
-	prefixchange[SRCML_ERR_NS_URI_POS] = true;
+	poptions.prefixchange[SRCML_ERR_NS_URI_POS] = true;
 
       } else if (strcmp(ns_uri, SRCML_EXT_LITERAL_NS_URI) == 0) {
 
@@ -783,7 +775,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 	options |= OPTION_LITERAL;
 
 	num2prefix[SRCML_EXT_LITERAL_NS_URI_POS] = ns_prefix;
-	prefixchange[SRCML_EXT_LITERAL_NS_URI_POS] = true;
+	poptions.prefixchange[SRCML_EXT_LITERAL_NS_URI_POS] = true;
 
       } else if (strcmp(ns_uri, SRCML_EXT_OPERATOR_NS_URI) == 0) {
 
@@ -791,7 +783,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 	options |= OPTION_OPERATOR;
 
 	num2prefix[SRCML_EXT_OPERATOR_NS_URI_POS] = ns_prefix;
-	prefixchange[SRCML_EXT_OPERATOR_NS_URI_POS] = true;
+	poptions.prefixchange[SRCML_EXT_OPERATOR_NS_URI_POS] = true;
 
       } else if (strcmp(ns_uri, SRCML_EXT_MODIFIER_NS_URI) == 0) {
 
@@ -799,7 +791,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 	options |= OPTION_MODIFIER;
 
 	num2prefix[SRCML_EXT_MODIFIER_NS_URI_POS] = ns_prefix;
-	prefixchange[SRCML_EXT_MODIFIER_NS_URI_POS] = true;
+	poptions.prefixchange[SRCML_EXT_MODIFIER_NS_URI_POS] = true;
 
       } else {
 	fprintf(stderr, "%s: invalid namespace \"%s\"\n\n"
