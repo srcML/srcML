@@ -224,7 +224,7 @@ int process_args(int argc, char* argv[], process_options & poptions);
 
 // option values
 //const char* src_encoding = DEFAULT_TEXT_ENCODING;
-int unit = 0;
+//int unit = 0;
 //const char* context = "src:unit";
 //std::list<const char*> ns;
 
@@ -311,7 +311,7 @@ int main(int argc, char* argv[]) {
     if (optioncount > 0) {
 
       // move to the appropriate unit
-      su.move_to_unit(unit);
+      su.move_to_unit(poptions.unit);
 
       // output all the namespaces
       if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {
@@ -371,7 +371,7 @@ int main(int argc, char* argv[]) {
     // namespace
     } else if (isoption(options, OPTION_NAMESPACE)) {
 
-      su.move_to_unit(unit);
+      su.move_to_unit(poptions.unit);
 
       for (std::list<const char*>::const_iterator iter = poptions.ns.begin(); iter != poptions.ns.end(); ++iter) {
 
@@ -422,7 +422,7 @@ int main(int argc, char* argv[]) {
 
     } else if (isoption(options, OPTION_XML)) {
 
-      su.extract_xml(ofilename, unit);
+      su.extract_xml(ofilename, poptions.unit);
 
     } else if (isoption(options, OPTION_XPATH)) {
 
@@ -441,14 +441,14 @@ int main(int argc, char* argv[]) {
 
     } else {
 
-      su.extract_text(ofilename, unit);
+      su.extract_text(ofilename, poptions.unit);
 
     }
 
   } catch (const OutOfRangeUnitError& e) {
 
     fprintf(stderr, "%s: unit %d  was selected from compound srcML document that contains "
-	    "%d nested units\n", NAME, unit, e.size);
+	    "%d nested units\n", NAME, poptions.unit, e.size);
     exit_status = STATUS_UNIT_INVALID;
 
     return exit_status;
@@ -608,7 +608,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
       options |= OPTION_UNIT;
 
       // try to convert to number
-      unit = pstd::strtol(optarg, &end, 10);
+      poptions.unit = pstd::strtol(optarg, &end, 10);
 
       // validate type of unit number
       if (errno == EINVAL || strlen(end) == strlen(optarg)) {
@@ -617,8 +617,8 @@ int process_args(int argc, char* argv[], process_options & poptions)
       }
 
       // validate range of unit number
-      if (unit <= 0) {
-	fprintf(stderr, "%s: unit option value \"%d\" must be > 0.\n", argv[0], unit);
+      if (poptions.unit <= 0) {
+	fprintf(stderr, "%s: unit option value \"%d\" must be > 0.\n", argv[0], poptions.unit);
 	exit(STATUS_UNIT_INVALID);
       }
 
