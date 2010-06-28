@@ -208,11 +208,12 @@ int xpathcount = 0;
 const char* xpathexpr[MAXXPATH + 1] = { 0 };
 std::list<const char*> xpathexprlist;
 
-const char* ofilename = "-";
+//const char* ofilename = "-";
 
 typedef struct process_options
 {
   // option values
+  const char* ofilename;
   const char* src_encoding;
   int unit;
   const char* context;
@@ -240,6 +241,7 @@ int main(int argc, char* argv[]) {
   int exit_status = EXIT_SUCCESS;
 
   process_options poptions;
+  poptions.ofilename = "-";
   poptions.src_encoding = DEFAULT_TEXT_ENCODING;
   poptions.unit = 0;
   poptions.context = "src:unit";
@@ -422,26 +424,26 @@ int main(int argc, char* argv[]) {
 
     } else if (isoption(options, OPTION_XML)) {
 
-      su.extract_xml(ofilename, poptions.unit);
+      su.extract_xml(poptions.ofilename, poptions.unit);
 
     } else if (isoption(options, OPTION_XPATH)) {
 
       if (xpathexprlist.empty())
-	su.extract_element(poptions.context, ofilename);
+	su.extract_element(poptions.context, poptions.ofilename);
       else
-	su.xpath(ofilename, poptions.context, xpathexpr);
+	su.xpath(poptions.ofilename, poptions.context, xpathexpr);
 
     } else if (isoption(options, OPTION_XSLT)) {
 
-      su.xslt(poptions.context, ofilename, xsltfiles, params, paramcount);
+      su.xslt(poptions.context, poptions.ofilename, xsltfiles, params, paramcount);
 
     } else if (isoption(options, OPTION_RELAXNG)) {
 
-      su.relaxng(ofilename, xpathexpr);
+      su.relaxng(poptions.ofilename, xpathexpr);
 
     } else {
 
-      su.extract_text(ofilename, poptions.unit);
+      su.extract_text(poptions.ofilename, poptions.unit);
 
     }
 
@@ -548,7 +550,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
       break;
 
     case 'o': 
-      ofilename = optarg;
+      poptions.ofilename = optarg;
       break;
 
     case 'f':
