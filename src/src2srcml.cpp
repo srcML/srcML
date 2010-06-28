@@ -232,7 +232,7 @@ int language = 0;
 const char* xml_encoding = DEFAULT_XML_ENCODING;
 //const char* given_directory = 0;
 //const char* given_filename = 0;
-const char* fname = "-";
+//const char* fname = "-";
 //const char* given_version = 0;
 bool specified_cpp_option = false;
 
@@ -424,7 +424,7 @@ int main(int argc, char* argv[]) {
 
       // translate all the filenames listed in the named file
       // Use libxml2 routines so that we can handle http:, file:, and gzipped files automagically
-      URIStream uriinput(fname);
+      URIStream uriinput(poptions.fname);
       int count = 0;
       char* line;
       while ((line = uriinput.getline())) {
@@ -481,7 +481,7 @@ int main(int argc, char* argv[]) {
       }
 
     } catch (URIStreamFileError) {
-      fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", argv[0], fname);
+      fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", argv[0], poptions.fname);
       exit(STATUS_INPUTFILE_PROBLEM);
     }
 
@@ -671,7 +671,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       // filelist mode is default nested mode
       options |= OPTION_NESTED;
 
-      fname = optarg;
+      poptions.fname = optarg;
       break;
 
     case 'n': 
