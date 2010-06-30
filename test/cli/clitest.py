@@ -73,6 +73,17 @@ def checkallforms(base, shortflag, longflag, optionvalue, progin, progout):
 		check([base, longflag], progin, progout)
 
 	return
+
+def checkallformsfile(base, inputfile, shortflag, longflag, optionvalue, progin, progout):
+	if optionvalue != "":
+		check([base, inputfile, shortflag, optionvalue], progin, progout)
+		check([base, inputfile, longflag, optionvalue], progin, progout)
+		check([base, inputfile, longflag + "=" + optionvalue], progin, progout)
+	else:
+		check([base, inputfile, shortflag], progin, progout)
+		check([base, inputfile, longflag], progin, progout)
+
+	return
 	
 def checkallformsext(base, shortflag, longflag, optionvalue, other, progin, progout):
 	if optionvalue != "":
@@ -776,6 +787,16 @@ validate(open('sub/a.cpp', 'r').read(), sfile)
 check([srcmlutility, '-', '--output', '/dev/stdout'], sxmlfile, sfile)
 check([srcmlutility, '-', '--output=/dev/stdout'], sxmlfile, sfile)
 check([srcmlutility, '-', '-o', '/dev/stdout'], sxmlfile, sfile)
+
+##
+# Test srcml2src options with files
+execute([srcmltranslator, 'sub/a.cpp', '-s', '1.2', '-o', 'sub/a.cpp.xml'], "")
+
+checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.LANGUAGE_FLAG_SHORT, option.LANGUAGE_FLAG, "", "", "C++\n")
+checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.DIRECTORY_FLAG_SHORT, option.DIRECTORY_FLAG, "", "", "sub\n")
+checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.FILENAME_FLAG_SHORT, option.FILENAME_FLAG, "", "", "a.cpp\n")
+checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.SRCVERSION_FLAG_SHORT, option.SRCVERSION_FLAG, "", "", "1.2\n")
+checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.ENCODING_FLAG_SHORT, option.ENCODING_FLAG, "", "", default_srcml2src_encoding + "\n")
 
 # footer
 print
