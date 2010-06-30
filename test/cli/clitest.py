@@ -917,12 +917,27 @@ sxmlfile1 = xml_declaration + """
 </unit>
 """
 
+execute([srcmltranslator, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "")
 check([srcmlutility, option.COMPRESSED_FLAG_SHORT, 'sub/a.cpp.xml', '-o', 'sub/a.cpp.gz'], "", "")
 check(['gunzip', '-c', 'sub/a.cpp.gz'], "", open('sub/a.cpp', 'r').read())
 check([srcmlutility, option.COMPRESSED_FLAG, 'sub/a.cpp.xml', '-o', 'sub/a.cpp.gz'], "", "")
 check(['gunzip', '-c', 'sub/a.cpp.gz'], "", open('sub/a.cpp', 'r').read())
 check([srcmlutility, option.COMPRESSED_FLAG_SHORT, '-o', 'sub/a.cpp.gz'], sxmlfile1, "")
 check(['gunzip', '-c', 'sub/a.cpp.gz'], "", open('sub/a.cpp', 'r').read())
+
+##
+# test info and longinfo
+
+info = """xmlns="http://www.sdml.info/srcML/src"
+xmlns:cpp="http://www.sdml.info/srcML/cpp"
+encoding="UTF-8"
+language="C++"
+directory="sub"
+filename="a.cpp"
+"""
+
+execute([srcmltranslator, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "")
+checkallforms(srcmlutility, option.INFO_FLAG_SHORT, option.INFO_FLAG, "", open('sub/a.cpp.xml', 'r').read(), info)
 
 # footer
 print
