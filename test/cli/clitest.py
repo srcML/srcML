@@ -798,6 +798,17 @@ checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.FILENAME_FLAG_SHORT, opt
 checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.SRCVERSION_FLAG_SHORT, option.SRCVERSION_FLAG, "", "", "1.2\n")
 checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.ENCODING_FLAG_SHORT, option.ENCODING_FLAG, "", "", default_srcml2src_encoding + "\n")
 
+execute([srcmltranslator, 'sub/a.cpp', 'sub/a.cpp.xml'], "")
+check([srcmlutility, option.NESTED_FLAG, 'sub/a.cpp.xml'], "", "0\n")
+
+execute([srcmltranslator, '--nested','sub/a.cpp', '-o', 'sub/a.cpp.xml'], "")
+check([srcmlutility, option.NESTED_FLAG, 'sub/a.cpp.xml'], "", "1\n")
+
+execute([srcmltranslator, 'sub/a.cpp', 'sub/b.cpp', '-o', 'sub/a.cpp.xml'], "")
+check([srcmlutility, option.NESTED_FLAG, 'sub/a.cpp.xml'], "", "2\n")
+
+#check([srcmlutility, option.NESTED_FLAG], "", "2\n")
+
 # footer
 print
 print "Error count: ", error_count
