@@ -908,6 +908,22 @@ else:
 	validate(getreturn([srcmlutility, option.TEXTENCODING_FLAG + "=" + bad_encoding], ""), status.STATUS_LIBXML2_FEATURE)
 	validate(getreturn([srcmlutility, option.TEXTENCODING_FLAG, "foobar"], None), status.STATUS_LIBXML2_FEATURE)
 
+##
+# test compression tool
+
+sxmlfile1 = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+"""
+
+check([srcmlutility, option.COMPRESSED_FLAG_SHORT, 'sub/a.cpp.xml', '-o', 'sub/a.cpp.gz'], "", "")
+check(['gunzip', '-c', 'sub/a.cpp.gz'], "", open('sub/a.cpp', 'r').read())
+check([srcmlutility, option.COMPRESSED_FLAG, 'sub/a.cpp.xml', '-o', 'sub/a.cpp.gz'], "", "")
+check(['gunzip', '-c', 'sub/a.cpp.gz'], "", open('sub/a.cpp', 'r').read())
+check([srcmlutility, option.COMPRESSED_FLAG_SHORT, '-o', 'sub/a.cpp.gz'], sxmlfile1, "")
+check(['gunzip', '-c', 'sub/a.cpp.gz'], "", open('sub/a.cpp', 'r').read())
+
 # footer
 print
 print "Error count: ", error_count
