@@ -792,6 +792,7 @@ check([srcmlutility, '-', '-o', '/dev/stdout'], sxmlfile, sfile)
 # Test srcml2src options with files
 execute([srcmltranslator, 'sub/a.cpp', '-s', '1.2', '-o', 'sub/a.cpp.xml'], "")
 
+# check metadata options
 checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.LANGUAGE_FLAG_SHORT, option.LANGUAGE_FLAG, "", "", "C++\n")
 checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.DIRECTORY_FLAG_SHORT, option.DIRECTORY_FLAG, "", "", "sub\n")
 checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.FILENAME_FLAG_SHORT, option.FILENAME_FLAG, "", "", "a.cpp\n")
@@ -830,7 +831,9 @@ sxmlfile2 = xml_declaration + """
 </unit>
 """
 
-execute([srcmltranslator, '--nested','sub/a.cpp', 'sub/b.cpp', '-o', 'sub/a.cpp.xml'], "")
+# check unit option
+
+execute([srcmltranslator, 'sub/a.cpp', 'sub/b.cpp', '-o', 'sub/a.cpp.xml'], "")
 checkallformsfile(srcmlutility, 'sub/a.cpp.xml', "-U", option.UNIT_FLAG, "1", "", sfile1)
 check([srcmlutility, option.UNIT_FLAG, "1", '-o', "sub/a.cpp"], open('sub/a.cpp.xml', 'r').read(), "")
 validate(open('sub/a.cpp', 'r').read(), sfile1)
@@ -843,6 +846,8 @@ validate(open('sub/b.cpp', 'r').read(), sfile2)
 check([srcmlutility, option.UNIT_FLAG, "2", 'sub/a.cpp.xml', '-o', "sub/b.cpp"], "", "")
 validate(open('sub/b.cpp', 'r').read(), sfile2)
 
+# check xml and unit option
+
 check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "1", 'sub/a.cpp.xml'], "", sxmlfile1)
 check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "1", '-o', 'sub/b.cpp.xml'], open("sub/a.cpp.xml").read(), "")
 validate(open('sub/b.cpp.xml', 'r').read(), sxmlfile1)
@@ -854,6 +859,18 @@ check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "2", '-o', 'sub/b.cpp.xm
 validate(open('sub/b.cpp.xml', 'r').read(), sxmlfile2)
 check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "2", 'sub/a.cpp.xml', '-o', "sub/b.cpp.xml"], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), sxmlfile2)
+
+# check metadata options with xml and unit
+
+execute([srcmltranslator, 'sub/a.cpp', 'emptysrc/empty.java', '-o', 'sub/a.cpp.xml'], "")
+check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "1", option.LANGUAGE_FLAG, 'sub/a.cpp.xml'], "", "C++\n")
+check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "1", option.DIRECTORY_FLAG, 'sub/a.cpp.xml'], "", "sub\n")
+check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "1", option.FILENAME_FLAG, 'sub/a.cpp.xml'], "", "a.cpp\n")
+
+check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "2", option.LANGUAGE_FLAG, 'sub/a.cpp.xml'], "", "Java\n")
+check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "2", option.DIRECTORY_FLAG, 'sub/a.cpp.xml'], "", "emptysrc\n")
+check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "2", option.FILENAME_FLAG, 'sub/a.cpp.xml'], "", "empty.java\n")
+
 
 # footer
 print
