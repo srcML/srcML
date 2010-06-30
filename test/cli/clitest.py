@@ -751,8 +751,9 @@ check([srcmltranslator, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fxmlfile)
 
 check([srcmltranslator, '-', '-o', 'sub/a.cpp.xml'], sfile, "")
-check([srcmltranslator, '/dev/stdin', '-o', 'sub/a.cpp.xml'], sfile, "")
+validate(open('sub/a.cpp.xml', 'r').read(), sxmlfile)
 check([srcmltranslator, '-o', 'sub/a.cpp.xml'], sfile, "")
+validate(open('sub/a.cpp.xml', 'r').read(), sxmlfile)
 
 check([srcmltranslator, '-', '--output', '/dev/stdout'], sfile, sxmlfile)
 check([srcmltranslator, '-', '--output=/dev/stdout'], sfile, sxmlfile)
@@ -768,8 +769,9 @@ check([srcmlutility, 'sub/a.cpp.xml', '-o', 'sub/a.cpp'], "", "")
 validate(open('sub/a.cpp', 'r').read(), sfile)
 
 check([srcmlutility, '-', '-o', 'sub/a.cpp'], sxmlfile, "")
-check([srcmlutility, '/dev/stdin', '-o', 'sub/a.cpp'], sxmlfile, "")
+validate(open('sub/a.cpp', 'r').read(), sfile)
 check([srcmlutility, '-o', 'sub/a.cpp'], sxmlfile, "")
+validate(open('sub/a.cpp', 'r').read(), sfile)
 
 check([srcmlutility, '-', '--output', '/dev/stdout'], sxmlfile, sfile)
 check([srcmlutility, '-', '--output=/dev/stdout'], sxmlfile, sfile)
