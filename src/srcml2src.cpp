@@ -165,7 +165,7 @@ void output_help(const char* name) {
 	    "  %1$s main.cpp.xml             (read from file main.cpp.xml, write to standard output)\n"
 	    "  %1$s main.cpp.xml -o main.cpp (read from file main.cpp.xml, write to file main.cpp)\n"
 	    "\n"
-	    "  %1$s http://www.sdml.info/projects/srcml/ex/main.cpp.xml (read from URI)\n"
+	    "  %1$s http://www.sdml.info/projects/srcml/ex/main.cpp.xml (read from URI, write to standard output)\n"
 	    "\n"
 	    "  %1$s --language               (read from standard input, output language attribute)\n"
 	    "  %1$s --directory              (read from standard input, output directory attribute)\n"
