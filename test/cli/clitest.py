@@ -810,6 +810,34 @@ check([srcmlutility, option.NESTED_FLAG, 'sub/a.cpp.xml'], "", "2\n")
 execute([srcmltranslator, '--xmlns:src=http://www.sdml.info/srcML/src', 'sub/a.cpp', 'sub/b.cpp', '-o', 'sub/a.cpp.xml'], "")
 check([srcmlutility, option.NESTED_FLAG, 'sub/a.cpp.xml'], "", "2\n")
 
+sfile1 = """
+a;
+"""
+
+sfile2 = """
+b;
+"""
+
+execute([srcmltranslator, '--nested','sub/a.cpp', 'sub/b.cpp', '-o', 'sub/a.cpp.xml'], "")
+checkallformsfile(srcmlutility, 'sub/a.cpp.xml', "-U", option.UNIT_FLAG, "1", "", sfile1)
+check([srcmlutility, option.UNIT_FLAG, "1", '-o', "sub/a.cpp"], open('sub/a.cpp.xml').read(), "")
+validate(open('sub/a.cpp').read(), sfile1)
+check([srcmlutility, option.UNIT_FLAG, "1", 'sub/a.cpp.xml', '-o', "sub/a.cpp"], "", "")
+validate(open('sub/a.cpp').read(), sfile1)
+
+checkallformsfile(srcmlutility, 'sub/a.cpp.xml', "-U", option.UNIT_FLAG, "2", "", sfile2)
+check([srcmlutility, option.UNIT_FLAG, "2", '-o', "sub/b.cpp"], open('sub/a.cpp.xml').read(), "")
+validate(open('sub/b.cpp').read(), sfile2)
+check([srcmlutility, option.UNIT_FLAG, "2", 'sub/a.cpp.xml', '-o', "sub/b.cpp"], "", "")
+validate(open('sub/b.cpp').read(), sfile2)
+
+#check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "1", 'sub/a.cpp.xml', '-o', "-"], nestedfile, sxmlfile1)
+#check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "1", 'sub/a.cpp.xml'], nestedfile, sxmlfile1)
+
+#check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "2", 'sub/a.cpp.xml', '-o', "-"], nestedfile, sxmlfile2)
+#check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "2", 'sub/a.cpp.xml'], nestedfile, sxmlfile2)
+
+
 # footer
 print
 print "Error count: ", error_count
