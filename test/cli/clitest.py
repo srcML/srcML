@@ -938,6 +938,7 @@ filename="a.cpp"
 
 execute([srcmltranslator, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "")
 checkallforms(srcmlutility, option.INFO_FLAG_SHORT, option.INFO_FLAG, "", open('sub/a.cpp.xml', 'r').read(), info)
+checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.INFO_FLAG_SHORT, option.INFO_FLAG, "", "", info)
 
 # footer
 print
