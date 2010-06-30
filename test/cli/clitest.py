@@ -871,6 +871,42 @@ check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "2", option.LANGUAGE_FLA
 check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "2", option.DIRECTORY_FLAG, 'sub/a.cpp.xml'], "", "emptysrc\n")
 check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "2", option.FILENAME_FLAG, 'sub/a.cpp.xml'], "", "empty.java\n")
 
+# prefix extraction
+
+execute([srcmltranslator, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "")
+checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.NAMESPACE_FLAG_SHORT, option.NAMESPACE_FLAG, "http://www.sdml.info/srcML/src", "", """
+""")
+
+checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.NAMESPACE_FLAG_SHORT, option.NAMESPACE_FLAG, "http://www.sdml.info/srcML/cpp", "", """cpp
+""")
+
+checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.NAMESPACE_FLAG_SHORT, option.NAMESPACE_FLAG, "http://www.sdml.info/srcML/literal", "", "")
+
+checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.NAMESPACE_FLAG_SHORT, option.NAMESPACE_FLAG, "http://www.ashland.edu/~mcollard/foo", "", "")
+
+##
+# xml encoding flag
+
+sfile1 = """
+a;
+"""
+
+
+execute([srcmltranslator, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "")
+checkallforms(srcmlutility, option.TEXTENCODING_FLAG_SHORT, option.TEXTENCODING_FLAG, "ISO-8859-1", open('sub/a.cpp.xml', 'r').read(), open('sub/a.cpp', 'r').read())
+check([srcmlutility, option.TEXTENCODING_FLAG, "ISO-8859-1", 'sub/a.cpp.xml'], "", open('sub/a.cpp', 'r').read())
+check([srcmlutility, option.TEXTENCODING_FLAG, "ISO-8859-1", '-o', 'sub/a.cpp'], open('sub/a.cpp.xml', 'r').read(), "")
+validate(open('sub/a.cpp', 'r').read(), sfile1)
+check([srcmlutility, option.TEXTENCODING_FLAG, "ISO-8859-1", 'sub/a.cpp.xml', '-o', 'sub/a.cpp'], "", "")
+validate(open('sub/a.cpp', 'r').read(), sfile1)
+
+# unknown encoding
+if srcml2src_src_encoding:
+	validate(getreturn([srcmlutility, option.TEXTENCODING_FLAG + "=" + bad_encoding], ""), status.STATUS_UNKNOWN_ENCODING)
+	validate(getreturn([srcmlutility, option.TEXTENCODING_FLAG], ""), status.STATUS_SRCENCODING_MISSING)
+else:
+	validate(getreturn([srcmlutility, option.TEXTENCODING_FLAG + "=" + bad_encoding], ""), status.STATUS_LIBXML2_FEATURE)
+	validate(getreturn([srcmlutility, option.TEXTENCODING_FLAG, "foobar"], None), status.STATUS_LIBXML2_FEATURE)
 
 # footer
 print
