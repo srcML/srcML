@@ -807,7 +807,8 @@ check([srcmlutility, option.NESTED_FLAG, 'sub/a.cpp.xml'], "", "1\n")
 execute([srcmltranslator, 'sub/a.cpp', 'sub/b.cpp', '-o', 'sub/a.cpp.xml'], "")
 check([srcmlutility, option.NESTED_FLAG, 'sub/a.cpp.xml'], "", "2\n")
 
-#check([srcmlutility, option.NESTED_FLAG], "", "2\n")
+execute([srcmltranslator, '--xmlns:src=http://www.sdml.info/srcML/src', 'sub/a.cpp', 'sub/b.cpp', '-o', 'sub/a.cpp.xml'], "")
+check([srcmlutility, option.NESTED_FLAG, 'sub/a.cpp.xml'], "", "2\n")
 
 # footer
 print
