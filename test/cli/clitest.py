@@ -737,9 +737,13 @@ sxmlfile = xml_declaration + """
 </unit>
 """
 
-check([srcmltranslator, 'sub/a.cpp', '--output', 'sub/a.cpp,xml'], "", "")
-check([srcmltranslator, 'sub/a.cpp', '--output=sub/a.cpp,xml'], "", "")
-check([srcmltranslator, 'sub/a.cpp', '-o', 'sub/a.cpp,xml'], "", "")
+check([srcmltranslator, 'sub/a.cpp', '--output', 'sub/a.cpp.xml'], "", "")
+check([srcmltranslator, 'sub/a.cpp', '--output=sub/a.cpp.xml'], "", "")
+check([srcmltranslator, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
+
+check([srcmltranslator, '-', '-o', 'sub/a.cpp.xml'], sfile, "")
+check([srcmltranslator, '/dev/stdin', '-o', 'sub/a.cpp.xml'], sfile, "")
+check([srcmltranslator, '-o', 'sub/a.cpp.xml'], sfile, "")
 
 check([srcmltranslator, '-', '--output', '/dev/stdout'], sfile, sxmlfile)
 check([srcmltranslator, '-', '--output=/dev/stdout'], sfile, sxmlfile)
@@ -747,9 +751,13 @@ check([srcmltranslator, '-', '-o', '/dev/stdout'], sfile, sxmlfile)
 
 # srcml2src
 
-check([srcmlutility, 'sub/a.cpp', '--output', 'sub/a.cpp,xml'], "", "")
-check([srcmlutility, 'sub/a.cpp', '--output=sub/a.cpp,xml'], "", "")
-check([srcmlutility, 'sub/a.cpp', '-o', 'sub/a.cpp,xml'], "", "")
+check([srcmlutility, 'sub/a.cpp', '--output', 'sub/a.cpp'], "", "")
+check([srcmlutility, 'sub/a.cpp', '--output=sub/a.cpp'], "", "")
+check([srcmlutility, 'sub/a.cpp', '-o', 'sub/a.cpp'], "", "")
+
+check([srcmltranslator, '-', '-o', 'sub/a.cpp'], sxmlfile, "")
+check([srcmltranslator, '/dev/stdin', '-o', 'sub/a.cpp'], sxmlfile, "")
+check([srcmltranslator, '-o', 'sub/a.cpp'], sxmlfile, "")
 
 check([srcmlutility, '-', '--output', '/dev/stdout'], sxmlfile, sfile)
 check([srcmlutility, '-', '--output=/dev/stdout'], sxmlfile, sfile)
