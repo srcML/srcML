@@ -917,6 +917,23 @@ check([srcmltranslator, option.ENCODING_FLAG_SHORT, 'ISO-8859-1', 'sub/a.cpp','-
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
 ##
+# text encoding flag
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
+"""
+
+fsrcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp"/>
+"""
+checkallforms(srcmltranslator, option.TEXTENCODING_FLAG_SHORT, option.TEXTENCODING_FLAG, "ISO-8859-1", sfile1, srcml)
+checkallformsfile(srcmltranslator, 'sub/a.cpp', option.TEXTENCODING_FLAG_SHORT, option.TEXTENCODING_FLAG, "ISO-8859-1", "", fsrcml)
+check([srcmltranslator, option.TEXTENCODING_FLAG, "ISO-8859-1", 'sub/a.cpp'], "", fsrcml)
+check([srcmltranslator, option.TEXTENCODING_FLAG, "ISO-8859-1", '-o', 'sub/a.cpp.xml'], sfile1, "")
+validate(open('sub/a.cpp.xml', 'r').read(), srcml)
+check([srcmltranslator, option.TEXTENCODING_FLAG, "ISO-8859-1", 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
+validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
+
+##
 # Test srcml2src options with files
 
 sxmlfile1 = xml_declaration + """
@@ -1107,7 +1124,7 @@ checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.NAMESPACE_FLAG_SHORT, op
 checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.NAMESPACE_FLAG_SHORT, option.NAMESPACE_FLAG, "http://www.ashland.edu/~mcollard/foo", "", "")
 
 ##
-# xml encoding flag
+# text encoding flag
 
 sfile1 = """
 a;
@@ -1123,19 +1140,12 @@ f = open('sub/a.cpp', 'w')
 f.write(sfile1)
 f.close()
 checkallforms(srcmlutility, option.TEXTENCODING_FLAG_SHORT, option.TEXTENCODING_FLAG, "ISO-8859-1", sxmlfile1, sfile1)
+checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.TEXTENCODING_FLAG_SHORT, option.TEXTENCODING_FLAG, "ISO-8859-1", "", sfile1)
 check([srcmlutility, option.TEXTENCODING_FLAG, "ISO-8859-1", 'sub/a.cpp.xml'], "", sfile1)
 check([srcmlutility, option.TEXTENCODING_FLAG, "ISO-8859-1", '-o', 'sub/a.cpp'], sxmlfile1, "")
 validate(open('sub/a.cpp', 'r').read(), sfile1)
 check([srcmlutility, option.TEXTENCODING_FLAG, "ISO-8859-1", 'sub/a.cpp.xml', '-o', 'sub/a.cpp'], "", "")
 validate(open('sub/a.cpp', 'r').read(), sfile1)
-
-# unknown encoding
-if srcml2src_src_encoding:
-	validate(getreturn([srcmlutility, option.TEXTENCODING_FLAG + "=" + bad_encoding], ""), status.STATUS_UNKNOWN_ENCODING)
-	validate(getreturn([srcmlutility, option.TEXTENCODING_FLAG], ""), status.STATUS_SRCENCODING_MISSING)
-else:
-	validate(getreturn([srcmlutility, option.TEXTENCODING_FLAG + "=" + bad_encoding], ""), status.STATUS_LIBXML2_FEATURE)
-	validate(getreturn([srcmlutility, option.TEXTENCODING_FLAG, "foobar"], None), status.STATUS_LIBXML2_FEATURE)
 
 ##
 # test compression tool
