@@ -1143,6 +1143,142 @@ check([srcmltranslator, option.NO_NAMESPACE_DECLARATION_FLAG, 'sub/a.cpp', '-o',
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
 ##
+# cpp markup else
+
+cpp_src = """
+#if A
+break;
+#else
+return;
+#endif
+"""
+
+cpp_marked_srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
+<break>break;</break>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+<return>return;</return>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+"""
+
+fcpp_marked_srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
+<break>break;</break>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+<return>return;</return>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+"""
+
+f = open('sub/a.cpp', 'w')
+f.write(cpp_src)
+f.close()
+
+check([srcmltranslator, 'sub/a.cpp'], "", fcpp_marked_srcml)
+check([srcmltranslator, '-o', 'sub/a.cpp.xml'], cpp_src, "")
+validate(open('sub/a.cpp.xml', 'r').read(), cpp_marked_srcml)
+check([srcmltranslator, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
+validate(open('sub/a.cpp.xml', 'r').read(), fcpp_marked_srcml)
+
+check([srcmltranslator, option.CPP_MARKUP_ELSE_FLAG, 'sub/a.cpp'], "", fcpp_marked_srcml)
+check([srcmltranslator, option.CPP_MARKUP_ELSE_FLAG, '-o', 'sub/a.cpp.xml'], cpp_src, "")
+validate(open('sub/a.cpp.xml', 'r').read(), cpp_marked_srcml)
+check([srcmltranslator, option.CPP_MARKUP_ELSE_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
+validate(open('sub/a.cpp.xml', 'r').read(), fcpp_marked_srcml)
+
+cpp_textonly_srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
+<break>break;</break>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+return;
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+"""
+
+fcpp_textonly_srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
+<break>break;</break>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+return;
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+"""
+
+check([srcmltranslator, option.CPP_TEXTONLY_ELSE_FLAG, 'sub/a.cpp'], "", fcpp_textonly_srcml)
+check([srcmltranslator, option.CPP_TEXTONLY_ELSE_FLAG, '-o', 'sub/a.cpp.xml'], cpp_src, "")
+validate(open('sub/a.cpp.xml', 'r').read(), cpp_textonly_srcml)
+check([srcmltranslator, option.CPP_TEXTONLY_ELSE_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
+validate(open('sub/a.cpp.xml', 'r').read(), fcpp_textonly_srcml)
+
+##
+# cpp markup if0
+
+cpp_if0 = """
+#if 0
+break;
+#endif
+"""
+
+cpp_textonly_srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>0</expr></cpp:if>
+break;
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+"""
+
+fcpp_textonly_srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>0</expr></cpp:if>
+break;
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+"""
+
+f = open('sub/a.cpp', 'w')
+f.write(cpp_if0)
+f.close()
+
+check([srcmltranslator, 'sub/a.cpp'], "", fcpp_textonly_srcml)
+check([srcmltranslator, '-o', 'sub/a.cpp.xml'], cpp_if0, "")
+validate(open('sub/a.cpp.xml', 'r').read(), cpp_textonly_srcml)
+check([srcmltranslator, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
+validate(open('sub/a.cpp.xml', 'r').read(), fcpp_textonly_srcml)
+
+check([srcmltranslator, option.CPP_TEXTONLY_IF0_FLAG, 'sub/a.cpp'], "", fcpp_textonly_srcml)
+check([srcmltranslator, option.CPP_TEXTONLY_IF0_FLAG, '-o', 'sub/a.cpp.xml'], cpp_if0, "")
+validate(open('sub/a.cpp.xml', 'r').read(), cpp_textonly_srcml)
+check([srcmltranslator, option.CPP_TEXTONLY_IF0_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
+validate(open('sub/a.cpp.xml', 'r').read(), fcpp_textonly_srcml)
+
+cpp_marked_srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>0</expr></cpp:if>
+<break>break;</break>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+"""
+
+fcpp_marked_srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr>0</expr></cpp:if>
+<break>break;</break>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+"""
+
+check([srcmltranslator, option.CPP_MARKUP_IF0_FLAG, 'sub/a.cpp'], "", fcpp_marked_srcml)
+check([srcmltranslator, option.CPP_MARKUP_IF0_FLAG, '-o', 'sub/a.cpp.xml'], cpp_if0, "")
+validate(open('sub/a.cpp.xml', 'r').read(), cpp_marked_srcml)
+check([srcmltranslator, option.CPP_MARKUP_IF0_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
+validate(open('sub/a.cpp.xml', 'r').read(), fcpp_marked_srcml)
+
+##
 # Test srcml2src options with files
 
 sxmlfile1 = xml_declaration + """
