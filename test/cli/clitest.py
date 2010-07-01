@@ -737,6 +737,58 @@ check([srcmltranslator, 'emptysrc/empty.aj'], "", xmltag + opentag + namespaceon
 # Test output options
 
 # src2srcml
+sfile = """
+a;
+"""
+
+sxmlfile = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+"""
+
+fxmlfile = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+"""
+
+check([srcmltranslator, 'sub/a.cpp', '--output', 'sub/a.cpp.xml'], "", "")
+validate(open('sub/a.cpp.xml', 'r').read(), fxmlfile)
+check([srcmltranslator, 'sub/a.cpp', '--output=sub/a.cpp.xml'], "", "")
+validate(open('sub/a.cpp.xml', 'r').read(), fxmlfile)
+check([srcmltranslator, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
+validate(open('sub/a.cpp.xml', 'r').read(), fxmlfile)
+
+check([srcmltranslator, '-', '-o', 'sub/a.cpp.xml'], sfile, "")
+validate(open('sub/a.cpp.xml', 'r').read(), sxmlfile)
+check([srcmltranslator, '-o', 'sub/a.cpp.xml'], sfile, "")
+validate(open('sub/a.cpp.xml', 'r').read(), sxmlfile)
+
+check([srcmltranslator, '-', '--output', '/dev/stdout'], sfile, sxmlfile)
+check([srcmltranslator, '-', '--output=/dev/stdout'], sfile, sxmlfile)
+check([srcmltranslator, '-', '-o', '/dev/stdout'], sfile, sxmlfile)
+
+# srcml2src
+
+check([srcmlutility, 'sub/a.cpp.xml', '--output', 'sub/a.cpp'], "", "")
+validate(open('sub/a.cpp', 'r').read(), sfile)
+check([srcmlutility, 'sub/a.cpp.xml', '--output=sub/a.cpp'], "", "")
+validate(open('sub/a.cpp', 'r').read(), sfile)
+check([srcmlutility, 'sub/a.cpp.xml', '-o', 'sub/a.cpp'], "", "")
+validate(open('sub/a.cpp', 'r').read(), sfile)
+
+check([srcmlutility, '-', '-o', 'sub/a.cpp'], sxmlfile, "")
+validate(open('sub/a.cpp', 'r').read(), sfile)
+check([srcmlutility, '-o', 'sub/a.cpp'], sxmlfile, "")
+validate(open('sub/a.cpp', 'r').read(), sfile)
+
+check([srcmlutility, '-', '--output', '/dev/stdout'], sxmlfile, sfile)
+check([srcmlutility, '-', '--output=/dev/stdout'], sxmlfile, sfile)
+check([srcmlutility, '-', '-o', '/dev/stdout'], sxmlfile, sfile)
+
+##
+# Test srcml2src options with files
 
 sfile = """
 a;
@@ -790,6 +842,21 @@ check([srcmlutility, '-', '-o', '/dev/stdout'], sxmlfile, sfile)
 
 ##
 # Test srcml2src options with files
+
+sfile1 = """
+a;
+"""
+
+sfile2 = """
+b;
+"""
+
+f = open('sub/a.cpp', 'w')
+f.write(sfile1)
+f.close()
+f = open('sub/b.cpp', 'w')
+f.write(sfile2)
+f.close()
 execute([srcmltranslator, 'sub/a.cpp', '-s', '1.2', '-o', 'sub/a.cpp.xml'], "")
 
 # check metadata options
@@ -811,6 +878,8 @@ check([srcmlutility, option.NESTED_FLAG, 'sub/a.cpp.xml'], "", "2\n")
 execute([srcmltranslator, '--xmlns:src=http://www.sdml.info/srcML/src', 'sub/a.cpp', 'sub/b.cpp', '-o', 'sub/a.cpp.xml'], "")
 check([srcmlutility, option.NESTED_FLAG, 'sub/a.cpp.xml'], "", "2\n")
 
+# check unit option
+
 sfile1 = """
 a;
 """
@@ -831,17 +900,36 @@ sxmlfile2 = xml_declaration + """
 </unit>
 """
 
-# check unit option
+nestedfile = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+
+<unit language="C++" dir="sub" filename="a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++" dir="sub" filename="b.cpp">
+<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+"""
+
+f = open('sub/a.cpp', 'w')
+f.write(sfile1)
+f.close()
+f = open('sub/b.cpp', 'w')
+f.write(sfile2)
+f.close()
 
 execute([srcmltranslator, 'sub/a.cpp', 'sub/b.cpp', '-o', 'sub/a.cpp.xml'], "")
 checkallformsfile(srcmlutility, 'sub/a.cpp.xml', "-U", option.UNIT_FLAG, "1", "", sfile1)
-check([srcmlutility, option.UNIT_FLAG, "1", '-o', "sub/a.cpp"], open('sub/a.cpp.xml', 'r').read(), "")
+check([srcmlutility, option.UNIT_FLAG, "1", '-o', "sub/a.cpp"], nestedfile, "")
 validate(open('sub/a.cpp', 'r').read(), sfile1)
 check([srcmlutility, option.UNIT_FLAG, "1", 'sub/a.cpp.xml', '-o', "sub/a.cpp"], "", "")
 validate(open('sub/a.cpp', 'r').read(), sfile1)
 
 checkallformsfile(srcmlutility, 'sub/a.cpp.xml', "-U", option.UNIT_FLAG, "2", "", sfile2)
-check([srcmlutility, option.UNIT_FLAG, "2", '-o', "sub/b.cpp"], open('sub/a.cpp.xml', 'r').read(), "")
+check([srcmlutility, option.UNIT_FLAG, "2", '-o', "sub/b.cpp"], nestedfile, "")
 validate(open('sub/b.cpp', 'r').read(), sfile2)
 check([srcmlutility, option.UNIT_FLAG, "2", 'sub/a.cpp.xml', '-o', "sub/b.cpp"], "", "")
 validate(open('sub/b.cpp', 'r').read(), sfile2)
@@ -849,13 +937,13 @@ validate(open('sub/b.cpp', 'r').read(), sfile2)
 # check xml and unit option
 
 check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "1", 'sub/a.cpp.xml'], "", sxmlfile1)
-check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "1", '-o', 'sub/b.cpp.xml'], open("sub/a.cpp.xml").read(), "")
+check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "1", '-o', 'sub/b.cpp.xml'], nestedfile, "")
 validate(open('sub/b.cpp.xml', 'r').read(), sxmlfile1)
 check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "1", 'sub/a.cpp.xml', '-o', "sub/b.cpp.xml"], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), sxmlfile1)
 
 check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "2", 'sub/a.cpp.xml'], "", sxmlfile2)
-check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "2", '-o', 'sub/b.cpp.xml'], open("sub/a.cpp.xml").read(), "")
+check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "2", '-o', 'sub/b.cpp.xml'], nestedfile, "")
 validate(open('sub/b.cpp.xml', 'r').read(), sxmlfile2)
 check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "2", 'sub/a.cpp.xml', '-o', "sub/b.cpp.xml"], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), sxmlfile2)
@@ -873,6 +961,13 @@ check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "2", option.FILENAME_FLA
 
 # prefix extraction
 
+sfile1 = """
+a;
+"""
+
+f = open('sub/a.cpp', 'w')
+f.write(sfile1)
+f.close()
 execute([srcmltranslator, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "")
 checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.NAMESPACE_FLAG_SHORT, option.NAMESPACE_FLAG, "http://www.sdml.info/srcML/src", "", """
 """)
@@ -891,11 +986,19 @@ sfile1 = """
 a;
 """
 
+sxmlfile1 = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+"""
 
+f = open('sub/a.cpp', 'w')
+f.write(sfile1)
+f.close()
 execute([srcmltranslator, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "")
-checkallforms(srcmlutility, option.TEXTENCODING_FLAG_SHORT, option.TEXTENCODING_FLAG, "ISO-8859-1", open('sub/a.cpp.xml', 'r').read(), open('sub/a.cpp', 'r').read())
-check([srcmlutility, option.TEXTENCODING_FLAG, "ISO-8859-1", 'sub/a.cpp.xml'], "", open('sub/a.cpp', 'r').read())
-check([srcmlutility, option.TEXTENCODING_FLAG, "ISO-8859-1", '-o', 'sub/a.cpp'], open('sub/a.cpp.xml', 'r').read(), "")
+checkallforms(srcmlutility, option.TEXTENCODING_FLAG_SHORT, option.TEXTENCODING_FLAG, "ISO-8859-1", sxmlfile1, sfile1)
+check([srcmlutility, option.TEXTENCODING_FLAG, "ISO-8859-1", 'sub/a.cpp.xml'], "", sfile1)
+check([srcmlutility, option.TEXTENCODING_FLAG, "ISO-8859-1", '-o', 'sub/a.cpp'], sxmlfile1, "")
 validate(open('sub/a.cpp', 'r').read(), sfile1)
 check([srcmlutility, option.TEXTENCODING_FLAG, "ISO-8859-1", 'sub/a.cpp.xml', '-o', 'sub/a.cpp'], "", "")
 validate(open('sub/a.cpp', 'r').read(), sfile1)
@@ -915,38 +1018,44 @@ sfile1 = """
 a;
 """
 
-sxmlfile1 = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
+sxmlfile = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 """
 
-sxmlfilestdin = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+fxmlfile = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 """
 
 # src2srcml
 
+f = open('sub/a.cpp.xml', 'w')
+f.write(sxmlfile1)
+f.close()
 execute([srcmlutility, 'sub/a.cpp.xml', '-o', 'sub/a.cpp'], "")
 check([srcmltranslator, option.COMPRESSED_FLAG_SHORT, 'sub/a.cpp', '-o', 'sub/a.cpp.xml.gz'], "", "")
-check(['gunzip', '-c', 'sub/a.cpp.xml.gz'], "", open('sub/a.cpp.xml', 'r').read())
+check(['gunzip', '-c', 'sub/a.cpp.xml.gz'], "", fxmlfile)
 check([srcmltranslator, option.COMPRESSED_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml.gz'], "", "")
-check(['gunzip', '-c', 'sub/a.cpp.xml.gz'], "", open('sub/a.cpp.xml', 'r').read())
+check(['gunzip', '-c', 'sub/a.cpp.xml.gz'], "", fxmlfile)
 check([srcmltranslator, option.COMPRESSED_FLAG_SHORT, '-o', 'sub/a.cpp.xml.gz'], sfile1, "")
-check(['gunzip', '-c', 'sub/a.cpp.xml.gz'], "", sxmlfilestdin)
+check(['gunzip', '-c', 'sub/a.cpp.xml.gz'], "", sxmlfile)
 
 
 # srcml2src
 
+f = open('sub/a.cpp', 'w')
+f.write(sfile1)
+f.close()
 execute([srcmltranslator, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "")
 check([srcmlutility, option.COMPRESSED_FLAG_SHORT, 'sub/a.cpp.xml', '-o', 'sub/a.cpp.gz'], "", "")
-check(['gunzip', '-c', 'sub/a.cpp.gz'], "", open('sub/a.cpp', 'r').read())
+check(['gunzip', '-c', 'sub/a.cpp.gz'], "", sfile)
 check([srcmlutility, option.COMPRESSED_FLAG, 'sub/a.cpp.xml', '-o', 'sub/a.cpp.gz'], "", "")
-check(['gunzip', '-c', 'sub/a.cpp.gz'], "", open('sub/a.cpp', 'r').read())
-check([srcmlutility, option.COMPRESSED_FLAG_SHORT, '-o', 'sub/a.cpp.gz'], sxmlfile1, "")
-check(['gunzip', '-c', 'sub/a.cpp.gz'], "", open('sub/a.cpp', 'r').read())
+check(['gunzip', '-c', 'sub/a.cpp.gz'], "", sfile)
+check([srcmlutility, option.COMPRESSED_FLAG_SHORT, '-o', 'sub/a.cpp.gz'], sxmlfile, "")
+check(['gunzip', '-c', 'sub/a.cpp.gz'], "", sfile)
 
 ##
 # test info and longinfo
@@ -966,13 +1075,39 @@ language="C++"
 nested="2"
 """
 
+sfile1 = """
+a;
+"""
 
+sxmlfile = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+"""
+
+nestedfile = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+
+<unit language="C++" dir="sub" filename="a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++" dir="sub" filename="b.cpp">
+<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+"""
+
+f = open('sub/a.cpp', 'w')
+f.write(sfile1)
+f.close()
 execute([srcmltranslator, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "")
-checkallforms(srcmlutility, option.INFO_FLAG_SHORT, option.INFO_FLAG, "", open('sub/a.cpp.xml', 'r').read(), info)
+checkallforms(srcmlutility, option.INFO_FLAG_SHORT, option.INFO_FLAG, "", sxmlfile, info)
 checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.INFO_FLAG_SHORT, option.INFO_FLAG, "", "", info)
 
 execute([srcmltranslator, 'sub/a.cpp', 'sub/b.cpp', '-o', 'sub/a.cpp.xml'], "")
-checkallforms(srcmlutility, option.LONG_INFO_FLAG_SHORT, option.LONG_INFO_FLAG, "", open('sub/a.cpp.xml', 'r').read(), longinfo)
+checkallforms(srcmlutility, option.LONG_INFO_FLAG_SHORT, option.LONG_INFO_FLAG, "", nestedfile, longinfo)
 checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.LONG_INFO_FLAG_SHORT, option.LONG_INFO_FLAG, "", "", longinfo)
 
 # footer
