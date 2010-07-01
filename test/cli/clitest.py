@@ -788,59 +788,6 @@ check([srcmlutility, '-', '--output=/dev/stdout'], sxmlfile, sfile)
 check([srcmlutility, '-', '-o', '/dev/stdout'], sxmlfile, sfile)
 
 ##
-# Test srcml2src options with files
-
-sfile = """
-a;
-"""
-
-sxmlfile = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
-<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-</unit>
-"""
-
-fxmlfile = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
-<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-</unit>
-"""
-
-check([srcmltranslator, 'sub/a.cpp', '--output', 'sub/a.cpp.xml'], "", "")
-validate(open('sub/a.cpp.xml', 'r').read(), fxmlfile)
-check([srcmltranslator, 'sub/a.cpp', '--output=sub/a.cpp.xml'], "", "")
-validate(open('sub/a.cpp.xml', 'r').read(), fxmlfile)
-check([srcmltranslator, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
-validate(open('sub/a.cpp.xml', 'r').read(), fxmlfile)
-
-check([srcmltranslator, '-', '-o', 'sub/a.cpp.xml'], sfile, "")
-validate(open('sub/a.cpp.xml', 'r').read(), sxmlfile)
-check([srcmltranslator, '-o', 'sub/a.cpp.xml'], sfile, "")
-validate(open('sub/a.cpp.xml', 'r').read(), sxmlfile)
-
-check([srcmltranslator, '-', '--output', '/dev/stdout'], sfile, sxmlfile)
-check([srcmltranslator, '-', '--output=/dev/stdout'], sfile, sxmlfile)
-check([srcmltranslator, '-', '-o', '/dev/stdout'], sfile, sxmlfile)
-
-# srcml2src
-
-check([srcmlutility, 'sub/a.cpp.xml', '--output', 'sub/a.cpp'], "", "")
-validate(open('sub/a.cpp', 'r').read(), sfile)
-check([srcmlutility, 'sub/a.cpp.xml', '--output=sub/a.cpp'], "", "")
-validate(open('sub/a.cpp', 'r').read(), sfile)
-check([srcmlutility, 'sub/a.cpp.xml', '-o', 'sub/a.cpp'], "", "")
-validate(open('sub/a.cpp', 'r').read(), sfile)
-
-check([srcmlutility, '-', '-o', 'sub/a.cpp'], sxmlfile, "")
-validate(open('sub/a.cpp', 'r').read(), sfile)
-check([srcmlutility, '-o', 'sub/a.cpp'], sxmlfile, "")
-validate(open('sub/a.cpp', 'r').read(), sfile)
-
-check([srcmlutility, '-', '--output', '/dev/stdout'], sxmlfile, sfile)
-check([srcmlutility, '-', '--output=/dev/stdout'], sxmlfile, sfile)
-check([srcmlutility, '-', '-o', '/dev/stdout'], sxmlfile, sfile)
-
-##
 # Test src2srcml options with files
 
 sfile1 = """
