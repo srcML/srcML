@@ -1039,7 +1039,6 @@ sxmlfile1 = xml_declaration + """
 f = open('sub/a.cpp', 'w')
 f.write(sfile1)
 f.close()
-execute([srcmltranslator, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "")
 checkallforms(srcmlutility, option.TEXTENCODING_FLAG_SHORT, option.TEXTENCODING_FLAG, "ISO-8859-1", sxmlfile1, sfile1)
 check([srcmlutility, option.TEXTENCODING_FLAG, "ISO-8859-1", 'sub/a.cpp.xml'], "", sfile1)
 check([srcmlutility, option.TEXTENCODING_FLAG, "ISO-8859-1", '-o', 'sub/a.cpp'], sxmlfile1, "")
@@ -1058,7 +1057,7 @@ else:
 ##
 # test compression tool
 
-sfile1 = """
+sfile = """
 a;
 """
 
@@ -1076,29 +1075,27 @@ fxmlfile = xml_declaration + """
 
 # src2srcml
 
-f = open('sub/a.cpp.xml', 'w')
-f.write(sxmlfile1)
+f = open('sub/a.cpp', 'w')
+f.write(sfile)
 f.close()
-execute([srcmlutility, 'sub/a.cpp.xml', '-o', 'sub/a.cpp'], "")
 check([srcmltranslator, option.COMPRESSED_FLAG_SHORT, 'sub/a.cpp', '-o', 'sub/a.cpp.xml.gz'], "", "")
 check(['gunzip', '-c', 'sub/a.cpp.xml.gz'], "", fxmlfile)
 check([srcmltranslator, option.COMPRESSED_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml.gz'], "", "")
 check(['gunzip', '-c', 'sub/a.cpp.xml.gz'], "", fxmlfile)
-check([srcmltranslator, option.COMPRESSED_FLAG_SHORT, '-o', 'sub/a.cpp.xml.gz'], sfile1, "")
+check([srcmltranslator, option.COMPRESSED_FLAG_SHORT, '-o', 'sub/a.cpp.xml.gz'], sfile, "")
 check(['gunzip', '-c', 'sub/a.cpp.xml.gz'], "", sxmlfile)
 
 
 # srcml2src
 
-f = open('sub/a.cpp', 'w')
-f.write(sfile1)
+f = open('sub/a.cpp.xml', 'w')
+f.write(fxmlfile)
 f.close()
-execute([srcmltranslator, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "")
 check([srcmlutility, option.COMPRESSED_FLAG_SHORT, 'sub/a.cpp.xml', '-o', 'sub/a.cpp.gz'], "", "")
 check(['gunzip', '-c', 'sub/a.cpp.gz'], "", sfile)
 check([srcmlutility, option.COMPRESSED_FLAG, 'sub/a.cpp.xml', '-o', 'sub/a.cpp.gz'], "", "")
 check(['gunzip', '-c', 'sub/a.cpp.gz'], "", sfile)
-check([srcmlutility, option.COMPRESSED_FLAG_SHORT, '-o', 'sub/a.cpp.gz'], sxmlfile, "")
+check([srcmlutility, option.COMPRESSED_FLAG_SHORT, '-o', 'sub/a.cpp.gz'], fxmlfile, "")
 check(['gunzip', '-c', 'sub/a.cpp.gz'], "", sfile)
 
 ##
