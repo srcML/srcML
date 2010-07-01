@@ -1116,10 +1116,6 @@ language="C++"
 nested="2"
 """
 
-sfile1 = """
-a;
-"""
-
 sxmlfile = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
@@ -1140,14 +1136,15 @@ nestedfile = xml_declaration + """
 </unit>
 """
 
-f = open('sub/a.cpp', 'w')
-f.write(sfile1)
+f = open('sub/a.cpp.xml', 'w')
+f.write(sxmlfile1)
 f.close()
-execute([srcmltranslator, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "")
 checkallforms(srcmlutility, option.INFO_FLAG_SHORT, option.INFO_FLAG, "", sxmlfile, info)
 checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.INFO_FLAG_SHORT, option.INFO_FLAG, "", "", info)
 
-execute([srcmltranslator, 'sub/a.cpp', 'sub/b.cpp', '-o', 'sub/a.cpp.xml'], "")
+f = open('sub/a.cpp.xml', 'w')
+f.write(nestedfile)
+f.close()
 checkallforms(srcmlutility, option.LONG_INFO_FLAG_SHORT, option.LONG_INFO_FLAG, "", nestedfile, longinfo)
 checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.LONG_INFO_FLAG_SHORT, option.LONG_INFO_FLAG, "", "", longinfo)
 
