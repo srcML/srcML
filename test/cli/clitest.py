@@ -1202,7 +1202,7 @@ directory="sub"
 filename="a.cpp"
 """
 
-longinfo = info = """xmlns="http://www.sdml.info/srcML/src"
+longinfo = """xmlns="http://www.sdml.info/srcML/src"
 xmlns:cpp="http://www.sdml.info/srcML/cpp"
 encoding="UTF-8"
 language="C++"
@@ -1210,7 +1210,7 @@ nested="2"
 """
 
 sxmlfile = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 """
