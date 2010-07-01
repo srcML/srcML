@@ -790,9 +790,7 @@ check([srcmlutility, '-', '-o', '/dev/stdout'], sxmlfile, sfile)
 ##
 # Test src2srcml options with files
 
-sfile1 = """
-a;
-"""
+sfile1 = ""
 
 sfile2 = """
 b;
@@ -805,33 +803,54 @@ f.close()
 ##
 # empty with debug
 srcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:err="http://www.sdml.info/srcML/srcerr" language="C++"/>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:err="http://www.sdml.info/srcML/srcerr" language="C++" dir="sub" filename="a.cpp"/>
 """
-#checkallformsfile(srcmltranslator, 'sub/a.cpp', option.DEBUG_FLAG_SHORT, option.DEBUG_FLAG, "", "", srcml)
+checkallformsfile(srcmltranslator, 'sub/a.cpp', option.DEBUG_FLAG_SHORT, option.DEBUG_FLAG, "", "", srcml)
 
 ##
 # language flag
 srcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp"/>
 """
-checkallforms(srcmltranslator, option.LANGUAGE_FLAG_SHORT, option.LANGUAGE_FLAG, "C++", "", srcml)
+checkallformsfile(srcmltranslator, 'sub/a.cpp', option.LANGUAGE_FLAG_SHORT, option.LANGUAGE_FLAG, "C++", "", srcml)
 
 srcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C"/>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" dir="sub" filename="a.cpp"/>
 """
-checkallforms(srcmltranslator, option.LANGUAGE_FLAG_SHORT, option.LANGUAGE_FLAG, "C", "", srcml)
+checkallformsfile(srcmltranslator, 'sub/a.cpp', option.LANGUAGE_FLAG_SHORT, option.LANGUAGE_FLAG, "C", "", srcml)
 
 srcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" language="Java"/>
+<unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="sub" filename="a.cpp"/>
 """
-checkallforms(srcmltranslator, option.LANGUAGE_FLAG_SHORT, option.LANGUAGE_FLAG, "Java", "", srcml)
+checkallformsfile(srcmltranslator, 'sub/a.cpp', option.LANGUAGE_FLAG_SHORT, option.LANGUAGE_FLAG, "Java", "", srcml)
 
 ##
 # filename flag
 srcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="foo"/>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="foo"/>
 """
-checkallforms(srcmltranslator, option.FILENAME_FLAG_SHORT, option.FILENAME_FLAG, "foo", "", srcml)
+checkallformsfile(srcmltranslator, 'sub/a.cpp', option.FILENAME_FLAG_SHORT, option.FILENAME_FLAG, "foo", "", srcml)
+
+##
+# directory flag
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="bar" filename="a.cpp"/>
+"""
+checkallformsfile(srcmltranslator, 'sub/a.cpp', option.DIRECTORY_FLAG_SHORT, option.DIRECTORY_FLAG, "bar", "", srcml)
+
+##
+# version flag
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp" version="1.0"/>
+"""
+checkallformsfile(srcmltranslator, 'sub/a.cpp', option.SRCVERSION_FLAG_SHORT, option.SRCVERSION_FLAG, "1.0", "", srcml)
+
+##
+# xml encoding flag
+srcml = """<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp"/>
+"""
+checkallformsfile(srcmltranslator, 'sub/a.cpp', option.ENCODING_FLAG_SHORT, option.ENCODING_FLAG, "ISO-8859-1", "", srcml)
 
 ##
 # Test srcml2src options with files
