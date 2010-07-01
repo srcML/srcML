@@ -1100,13 +1100,17 @@ check([srcmltranslator, "--debug", "--xmlns:cpp=http://www.sdml.info/srcML/cpp",
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
 srcml = xml_declaration + """
-<src:unit xmlns:src="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
-"""
-
-srcml = xml_declaration + """
 <src:unit xmlns:src="http://www.sdml.info/srcML/src" xmlns="http://www.sdml.info/srcML/cpp" language="C++"/>
 """
-check([srcmltranslator, "--xmlns:src=http://www.sdml.info/srcML/src", "--xmlns=http://www.sdml.info/srcML/cpp"], "", srcml)
+
+fsrcml = xml_declaration + """
+<src:unit xmlns:src="http://www.sdml.info/srcML/src" xmlns="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp"/>
+"""
+check([srcmltranslator, "--xmlns:src=http://www.sdml.info/srcML/src", "--xmlns=http://www.sdml.info/srcML/cpp", 'sub/a.cpp'], "", fsrcml)
+check([srcmltranslator, "--xmlns:src=http://www.sdml.info/srcML/src", "--xmlns=http://www.sdml.info/srcML/cpp", '-o', 'sub/a.cpp.xml'], sfile1, "")
+validate(open('sub/a.cpp.xml', 'r').read(), srcml)
+check([srcmltranslator, "--xmlns:src=http://www.sdml.info/srcML/src", "--xmlns=http://www.sdml.info/srcML/cpp", 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
+validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
 ##
 # Test srcml2src options with files
