@@ -1537,7 +1537,59 @@ check([srcmlutility, option.COMPRESSED_FLAG_SHORT, '-o', 'sub/a.cpp.gz'], fxmlfi
 check(['gunzip', '-c', 'sub/a.cpp.gz'], "", sfile)
 
 ##
-# test info and longinfo
+# src2srcml Markup Extensions
+sfile = """
+a + 1
+"""
+
+f = open('sub/a.cpp', 'w')
+f.write(sfile)
+f.close()
+
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" language="C++">
+<expr_stmt><expr><name>a</name> + <lit:literal type="number">1</lit:literal></expr></expr_stmt>
+</unit>
+"""
+
+fsrcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" language="C++" dir="sub" filename="a.cpp">
+<expr_stmt><expr><name>a</name> + <lit:literal type="number">1</lit:literal></expr></expr_stmt>
+</unit>
+"""
+
+check([srcmltranslator, option.LITERAL_FLAG], sfile, srcml)
+
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:op="http://www.sdml.info/srcML/operator" language="C++">
+<expr_stmt><expr><name>a</name> <op:operator>+</op:operator> 1</expr></expr_stmt>
+</unit>
+"""
+
+fsrcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:op="http://www.sdml.info/srcML/operator" language="C++" dir="sub" filename="a.cpp">
+<expr_stmt><expr><name>a</name> <op:operator>+</op:operator> 1</expr></expr_stmt>
+</unit>
+"""
+
+check([srcmltranslator, option.OPERATOR_FLAG], sfile, srcml)
+
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:type="http://www.sdml.info/srcML/modifier" language="C++">
+<expr_stmt><expr><name>a</name> + 1</expr></expr_stmt>
+</unit>
+"""
+
+fsrcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:type="http://www.sdml.info/srcML/modifier" language="C++" dir="sub" filename="a.cpp">
+<expr_stmt><expr><name>a</name> + 1</expr></expr_stmt>
+</unit>
+"""
+
+check([srcmltranslator, option.MODIFIER_FLAG], sfile, srcml)
+
+##
+# srcml2src info and longinfo
 
 info = """xmlns="http://www.sdml.info/srcML/src"
 xmlns:cpp="http://www.sdml.info/srcML/cpp"
