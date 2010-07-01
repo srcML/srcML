@@ -798,37 +798,91 @@ sfile2 = """
 b;
 """
 
-sxmlfile1 = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
-<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-</unit>
-"""
+f = open('sub/a.cpp', 'w')
+f.write(sfile1)
+f.close()
 
-sxmlfile2 = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="b.cpp">
-<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
-</unit>
+##
+# empty with debug
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:err="http://www.sdml.info/srcML/srcerr" language="C++"/>
 """
+#checkallformsfile(srcmltranslator, 'sub/a.cpp', option.DEBUG_FLAG_SHORT, option.DEBUG_FLAG, "", "", srcml)
+
+##
+# language flag
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
+"""
+checkallforms(srcmltranslator, option.LANGUAGE_FLAG_SHORT, option.LANGUAGE_FLAG, "C++", "", srcml)
+
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C"/>
+"""
+checkallforms(srcmltranslator, option.LANGUAGE_FLAG_SHORT, option.LANGUAGE_FLAG, "C", "", srcml)
+
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" language="Java"/>
+"""
+checkallforms(srcmltranslator, option.LANGUAGE_FLAG_SHORT, option.LANGUAGE_FLAG, "Java", "", srcml)
+
+##
+# filename flag
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="foo"/>
+"""
+checkallforms(srcmltranslator, option.FILENAME_FLAG_SHORT, option.FILENAME_FLAG, "foo", "", srcml)
 
 ##
 # Test srcml2src options with files
 
-sfile1 = """
-a;
+sxmlfile1 = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp" version="1.2">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
 """
 
-sfile2 = """
-b;
+nestedfile1 = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+
+<unit language="C++" dir="sub" filename="a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
 """
 
-f = open('sub/a.cpp', 'w')
-f.write(sfile1)
-f.close()
-f = open('sub/b.cpp', 'w')
-f.write(sfile2)
-f.close()
-execute([srcmltranslator, 'sub/a.cpp', '-s', '1.2', '-o', 'sub/a.cpp.xml'], "")
+nestedfile = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
 
+<unit language="C++" dir="sub" filename="a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++" dir="sub" filename="b.cpp">
+<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+"""
+
+nestedfilesrc = xml_declaration + """
+<src:unit xmlns:src="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+
+<src:unit language="C++" dir="sub" filename="a.cpp">
+<src:expr_stmt><src:expr><src:name>a</src:name></src:expr>;</src:expr_stmt>
+</src:unit>
+
+<src:unit language="C++" dir="sub" filename="b.cpp">
+<src:expr_stmt><src:expr><src:name>b</src:name></src:expr>;</src:expr_stmt>
+</src:unit>
+
+</src:unit>
+"""
+
+f = open('sub/a.cpp.xml', 'w')
+f.write(sxmlfile1)
+f.close()
 # check metadata options
 checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.LANGUAGE_FLAG_SHORT, option.LANGUAGE_FLAG, "", "", "C++\n")
 checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.DIRECTORY_FLAG_SHORT, option.DIRECTORY_FLAG, "", "", "sub\n")
@@ -836,16 +890,21 @@ checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.FILENAME_FLAG_SHORT, opt
 checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.SRCVERSION_FLAG_SHORT, option.SRCVERSION_FLAG, "", "", "1.2\n")
 checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.ENCODING_FLAG_SHORT, option.ENCODING_FLAG, "", "", default_srcml2src_encoding + "\n")
 
-execute([srcmltranslator, 'sub/a.cpp', 'sub/a.cpp.xml'], "")
 check([srcmlutility, option.NESTED_FLAG, 'sub/a.cpp.xml'], "", "0\n")
 
-execute([srcmltranslator, '--nested','sub/a.cpp', '-o', 'sub/a.cpp.xml'], "")
+f = open('sub/a.cpp.xml', 'w')
+f.write(nestedfile1)
+f.close()
 check([srcmlutility, option.NESTED_FLAG, 'sub/a.cpp.xml'], "", "1\n")
 
-execute([srcmltranslator, 'sub/a.cpp', 'sub/b.cpp', '-o', 'sub/a.cpp.xml'], "")
+f = open('sub/a.cpp.xml', 'w')
+f.write(nestedfile)
+f.close()
 check([srcmlutility, option.NESTED_FLAG, 'sub/a.cpp.xml'], "", "2\n")
 
-execute([srcmltranslator, '--xmlns:src=http://www.sdml.info/srcML/src', 'sub/a.cpp', 'sub/b.cpp', '-o', 'sub/a.cpp.xml'], "")
+f = open('sub/a.cpp.xml', 'w')
+f.write(nestedfilesrc)
+f.close()
 check([srcmlutility, option.NESTED_FLAG, 'sub/a.cpp.xml'], "", "2\n")
 
 # check unit option
