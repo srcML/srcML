@@ -997,6 +997,35 @@ validate(open('sub/a.cpp.xml').read(), nestedfile)
 check([srcmltranslator, '--xmlns:src=http://www.sdml.info/srcML/src', 'sub/a.cpp', 'sub/b.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml').read(), nestedfilesrc)
 
+# files from
+nestedfile = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+
+<unit language="C++" dir="sub" filename="a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++" dir="sub" filename="b.cpp">
+<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+"""
+
+filelist = """
+sub/a.cpp
+# fff
+sub/b.cpp
+"""
+
+f = open('filelistab', 'w')
+f.write("\nsub/a.cpp\nsub/b.cpp\n\n")
+f.close()
+
+check([srcmltranslator, option.FILELIST_FLAG, "filelistab", '-o', 'sub/a.cpp.xml'], "", "")
+validate(open('sub/a.cpp.xml', 'r').read(), nestedfile)
+
+
 ##
 # Test srcml2src options with files
 
