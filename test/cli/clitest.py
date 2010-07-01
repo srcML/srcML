@@ -152,7 +152,7 @@ check([srcmltranslator], "", srcml)
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:err="http://www.sdml.info/srcML/srcerr" language="C++"/>
 """
-check([srcmltranslator, "--debug"], "", srcml)
+checkallforms(srcmltranslator, option.DEBUG_FLAG_SHORT, option.DEBUG_FLAG, "", "", srcml)
 
 ##
 # language flag
@@ -839,6 +839,29 @@ validate(open('sub/a.cpp', 'r').read(), sfile)
 check([srcmlutility, '-', '--output', '/dev/stdout'], sxmlfile, sfile)
 check([srcmlutility, '-', '--output=/dev/stdout'], sxmlfile, sfile)
 check([srcmlutility, '-', '-o', '/dev/stdout'], sxmlfile, sfile)
+
+##
+# Test src2srcml options with files
+
+sfile1 = """
+a;
+"""
+
+sfile2 = """
+b;
+"""
+
+sxmlfile1 = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+"""
+
+sxmlfile2 = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="b.cpp">
+<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</unit>
+"""
 
 ##
 # Test srcml2src options with files
