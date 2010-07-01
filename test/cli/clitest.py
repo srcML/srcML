@@ -988,6 +988,7 @@ nestedfileextra = xml_declaration + """
 
 </unit>
 """
+
 f = open('sub/a.cpp.xml', 'w')
 f.write(nestedfileextra)
 f.close()
@@ -1002,12 +1003,14 @@ check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "2", option.FILENAME_FLA
 
 # prefix extraction
 
-sfile1 = """
-a;
+sxmlfile1 = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
 """
 
-f = open('sub/a.cpp', 'w')
-f.write(sfile1)
+f = open('sub/a.cpp.xml', 'w')
+f.write(sxmlfile1)
 f.close()
 execute([srcmltranslator, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "")
 checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.NAMESPACE_FLAG_SHORT, option.NAMESPACE_FLAG, "http://www.sdml.info/srcML/src", "", """
