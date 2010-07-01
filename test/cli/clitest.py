@@ -943,14 +943,10 @@ nestedfile = xml_declaration + """
 </unit>
 """
 
-f = open('sub/a.cpp', 'w')
-f.write(sfile1)
-f.close()
-f = open('sub/b.cpp', 'w')
-f.write(sfile2)
+f = open('sub/a.cpp.xml', 'w')
+f.write(nestedfile)
 f.close()
 
-execute([srcmltranslator, 'sub/a.cpp', 'sub/b.cpp', '-o', 'sub/a.cpp.xml'], "")
 checkallformsfile(srcmlutility, 'sub/a.cpp.xml', "-U", option.UNIT_FLAG, "1", "", sfile1)
 check([srcmlutility, option.UNIT_FLAG, "1", '-o', "sub/a.cpp"], nestedfile, "")
 validate(open('sub/a.cpp', 'r').read(), sfile1)
@@ -979,7 +975,23 @@ validate(open('sub/b.cpp.xml', 'r').read(), sxmlfile2)
 
 # check metadata options with xml and unit
 
-execute([srcmltranslator, 'sub/a.cpp', 'emptysrc/empty.java', '-o', 'sub/a.cpp.xml'], "")
+nestedfileextra = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+
+<unit language="C++" dir="sub" filename="a.cpp" mytag="foo">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="Java" dir="emptysrc" mytag="foo" filename="empty.java">
+<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+"""
+f = open('sub/a.cpp.xml', 'w')
+f.write(nestedfileextra)
+f.close()
+
 check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "1", option.LANGUAGE_FLAG, 'sub/a.cpp.xml'], "", "C++\n")
 check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "1", option.DIRECTORY_FLAG, 'sub/a.cpp.xml'], "", "sub\n")
 check([srcmlutility, option.XML_FLAG, option.UNIT_FLAG, "1", option.FILENAME_FLAG, 'sub/a.cpp.xml'], "", "a.cpp\n")
