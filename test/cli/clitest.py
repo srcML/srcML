@@ -911,11 +911,34 @@ else:
 ##
 # test compression tool
 
+sfile1 = """
+a;
+"""
+
 sxmlfile1 = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 """
+
+sxmlfilestdin = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+"""
+
+# src2srcml
+
+execute([srcmlutility, 'sub/a.cpp.xml', '-o', 'sub/a.cpp'], "")
+check([srcmltranslator, option.COMPRESSED_FLAG_SHORT, 'sub/a.cpp', '-o', 'sub/a.cpp.xml.gz'], "", "")
+check(['gunzip', '-c', 'sub/a.cpp.xml.gz'], "", open('sub/a.cpp.xml', 'r').read())
+check([srcmltranslator, option.COMPRESSED_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml.gz'], "", "")
+check(['gunzip', '-c', 'sub/a.cpp.xml.gz'], "", open('sub/a.cpp.xml', 'r').read())
+check([srcmltranslator, option.COMPRESSED_FLAG_SHORT, '-o', 'sub/a.cpp.xml.gz'], sfile1, "")
+check(['gunzip', '-c', 'sub/a.cpp.xml.gz'], "", sxmlfilestdin)
+
+
+# srcml2src
 
 execute([srcmltranslator, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "")
 check([srcmlutility, option.COMPRESSED_FLAG_SHORT, 'sub/a.cpp.xml', '-o', 'sub/a.cpp.gz'], "", "")
