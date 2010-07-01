@@ -1113,6 +1113,36 @@ check([srcmltranslator, "--xmlns:src=http://www.sdml.info/srcML/src", "--xmlns=h
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
 ##
+# no xml declaration
+srcml = """<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
+"""
+
+fsrcml = """<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp"/>
+"""
+
+check([srcmltranslator, option.NO_XML_DECLARATION_FLAG, 'sub/a.cpp'], "", fsrcml)
+check([srcmltranslator, option.NO_XML_DECLARATION_FLAG, '-o', 'sub/a.cpp.xml'], sfile1, "")
+validate(open('sub/a.cpp.xml', 'r').read(), srcml)
+check([srcmltranslator, option.NO_XML_DECLARATION_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
+validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
+
+##
+# no namespace declaration
+srcml = xml_declaration + """
+<unit language="C++"/>
+"""
+
+fsrcml = xml_declaration + """
+<unit language="C++" dir="sub" filename="a.cpp"/>
+"""
+
+check([srcmltranslator, option.NO_NAMESPACE_DECLARATION_FLAG, 'sub/a.cpp'], "", fsrcml)
+check([srcmltranslator, option.NO_NAMESPACE_DECLARATION_FLAG, '-o', 'sub/a.cpp.xml'], sfile1, "")
+validate(open('sub/a.cpp.xml', 'r').read(), srcml)
+check([srcmltranslator, option.NO_NAMESPACE_DECLARATION_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
+validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
+
+##
 # Test srcml2src options with files
 
 sxmlfile1 = xml_declaration + """
