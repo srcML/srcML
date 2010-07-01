@@ -933,6 +933,70 @@ validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([srcmltranslator, option.TEXTENCODING_FLAG, "ISO-8859-1", 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
+# nested 
+
+sfile1 = """
+a;
+"""
+
+sfile2 = """
+b;
+"""
+
+
+nestedfile1 = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+
+<unit language="C++" dir="sub" filename="a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+"""
+
+nestedfile = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+
+<unit language="C++" dir="sub" filename="a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++" dir="sub" filename="b.cpp">
+<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+"""
+
+nestedfilesrc = xml_declaration + """
+<src:unit xmlns:src="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+
+<src:unit language="C++" dir="sub" filename="a.cpp">
+<src:expr_stmt><src:expr><src:name>a</src:name></src:expr>;</src:expr_stmt>
+</src:unit>
+
+<src:unit language="C++" dir="sub" filename="b.cpp">
+<src:expr_stmt><src:expr><src:name>b</src:name></src:expr>;</src:expr_stmt>
+</src:unit>
+
+</src:unit>
+"""
+
+f = open('sub/a.cpp', 'w')
+f.write(sfile1)
+f.close()
+
+f = open('sub/b.cpp', 'w')
+f.write(sfile2)
+f.close()
+
+check([srcmltranslator, option.NESTED_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
+validate(open('sub/a.cpp.xml').read(), nestedfile1)
+check([srcmltranslator, 'sub/a.cpp', 'sub/b.cpp', '-o', 'sub/a.cpp.xml'], "", "")
+validate(open('sub/a.cpp.xml').read(), nestedfile)
+check([srcmltranslator, '--xmlns:src=http://www.sdml.info/srcML/src', 'sub/a.cpp', 'sub/b.cpp', '-o', 'sub/a.cpp.xml'], "", "")
+validate(open('sub/a.cpp.xml').read(), nestedfilesrc)
+
 ##
 # Test srcml2src options with files
 
