@@ -1559,6 +1559,11 @@ fsrcml = xml_declaration + """
 """
 
 check([srcmltranslator, option.LITERAL_FLAG], sfile, srcml)
+check([srcmltranslator, option.LITERAL_FLAG, 'sub/a.cpp'], "", fsrcml)
+check([srcmltranslator, option.LITERAL_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+validate(open('sub/a.cpp.xml', 'r').read(), srcml)
+check([srcmltranslator, option.LITERAL_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
+validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:op="http://www.sdml.info/srcML/operator" language="C++">
@@ -1573,6 +1578,11 @@ fsrcml = xml_declaration + """
 """
 
 check([srcmltranslator, option.OPERATOR_FLAG], sfile, srcml)
+check([srcmltranslator, option.OPERATOR_FLAG, 'sub/a.cpp'], "", fsrcml)
+check([srcmltranslator, option.OPERATOR_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+validate(open('sub/a.cpp.xml', 'r').read(), srcml)
+check([srcmltranslator, option.OPERATOR_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
+validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:type="http://www.sdml.info/srcML/modifier" language="C++">
@@ -1587,6 +1597,11 @@ fsrcml = xml_declaration + """
 """
 
 check([srcmltranslator, option.MODIFIER_FLAG], sfile, srcml)
+check([srcmltranslator, option.MODIFIER_FLAG, 'sub/a.cpp'], "", fsrcml)
+check([srcmltranslator, option.MODIFIER_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+validate(open('sub/a.cpp.xml', 'r').read(), srcml)
+check([srcmltranslator, option.MODIFIER_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
+validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
 ##
 # srcml2src info and longinfo
