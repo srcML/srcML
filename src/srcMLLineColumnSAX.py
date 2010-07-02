@@ -24,7 +24,7 @@ class srcMLLineColumnSAXHandler (ContentHandler) :
 
     # Empty End Document
     def endDocument(self) :
-        pass
+        self.outfile.write('\n')
 
     # Parse to obtain versions, and container names
     def startElement(self, name, attrs) :
@@ -32,7 +32,7 @@ class srcMLLineColumnSAXHandler (ContentHandler) :
             for attribute in attrs.getNames() :
                 self.outfile.write(' ' + attribute + '="' + attrs.getValue(attribute) + '"')
             if name != 'unit' :
-                self.outfile.write(' ' + 'linecolumn="' + str(self.line) + ':' + str(self.column) + '"')
+                self.outfile.write(' ' + 'line="' + str(self.line) + '" column="' + str(self.column) + '"')
             self.outfile.write('>')
 
     def endElement(self, name) :
@@ -43,9 +43,18 @@ class srcMLLineColumnSAXHandler (ContentHandler) :
             if character == '\n' :
                 self.column = 1
                 self.line += 1
+                self.outfile.write(character)
             else :
                 self.column += 1
-        self.outfile.write(content)
+                if character == '<' :
+                    self.outfile.write('&lt;')
+                elif character == '>' :
+                    self.outfile.write('&gt;')
+                elif character == '&' :
+                    self.outfile.write('&amp;')
+                else :
+                    self.outfile.write(character)
+        #self.outfile.write(content)
 
 # create first handler
 handler = srcMLLineColumnSAXHandler(sys.argv[2])
