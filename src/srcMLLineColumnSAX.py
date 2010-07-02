@@ -4,7 +4,12 @@ import sys
 from xml.sax import parse
 from xml.sax.handler import ContentHandler
 
+##
 # SAX Hander to add a line and column attribute
+#
+# Michael Decker
+# June 2, 2010
+#
 class srcMLLineColumnSAXHandler (ContentHandler) :
 
     # Init method to create variables
