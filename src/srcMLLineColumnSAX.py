@@ -25,6 +25,7 @@ class srcMLLineColumnSAXHandler (ContentHandler) :
     # Empty End Document
     def endDocument(self) :
         self.outfile.write('\n')
+        self.outfile.close()
 
     # Parse to obtain versions, and container names
     def startElement(self, name, attrs) :
