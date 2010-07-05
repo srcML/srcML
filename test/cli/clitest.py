@@ -1537,7 +1537,14 @@ check([srcmlutility, option.COMPRESSED_FLAG_SHORT, '-o', 'sub/a.cpp.gz'], fxmlfi
 check(['gunzip', '-c', 'sub/a.cpp.gz'], "", sfile)
 
 # test input file is gzipped
+f = open('sub/a.cpp.xml.gz', 'r')
+gzipped = f.read()
+f.close()
+
+check([srcmlutility], gzipped, sfile)
 check([srcmlutility, 'sub/a.cpp.xml.gz'], "", sfile)
+check([srcmlutility, '-o', 'sub/a.cpp'], gzipped, "")
+validate(open('sub/a.cpp', 'r').read(), sfile)
 check([srcmlutility, 'sub/a.cpp.xml.gz', '-o', 'sub/a.cpp'], "", "")
 validate(open('sub/a.cpp', 'r').read(), sfile)
 
