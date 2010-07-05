@@ -1665,6 +1665,41 @@ f.close()
 checkallforms(srcmlutility, option.LONG_INFO_FLAG_SHORT, option.LONG_INFO_FLAG, "", nestedfile, longinfo)
 checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.LONG_INFO_FLAG_SHORT, option.LONG_INFO_FLAG, "", "", longinfo)
 
+##
+# test extract all command
+
+sfile1 = """
+a;
+"""
+
+sfile2 = """
+b;
+"""
+
+nestedfile = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+
+<unit language="C++" dir="sub" filename="a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++" dir="sub" filename="b.cpp">
+<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+"""
+
+f = open('sub/a.cpp.xml', 'w')
+f.write(nestedfile)
+f.close()
+checkallforms(srcmlutility, option.EXPAND_FLAG_SHORT, option.EXPAND_FLAG, "", nestedfile, "")
+validate(open('sub/a.cpp', 'r').read(), sfile1)
+validate(open('sub/b.cpp', 'r').read(), sfile2)
+checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.EXPAND_FLAG_SHORT, option.EXPAND_FLAG, "", "", "")
+validate(open('sub/a.cpp', 'r').read(), sfile1)
+validate(open('sub/b.cpp', 'r').read(), sfile2)
+
 # footer
 print
 print "Error count: ", error_count
