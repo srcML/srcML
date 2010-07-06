@@ -25,6 +25,7 @@ header {
    #include "UTF8CharBuffer.h"
    #include "antlr/TokenStreamSelector.hpp"
    #include "PureCommentLexer.hpp"
+   #include "srcMLToken.h"
 }
 
 header "post_include_cpp" {
@@ -144,6 +145,8 @@ virtual int testLiteralsTable(int ttype) const;
 KeywordCPPLexer(const char* ifilename, const char* encoding, int language = LANGUAGE_CXX)
 	: antlr::CharScanner(new UTF8CharBuffer(ifilename, encoding),true), Language(language), onpreprocline(false), startline(true)
 {
+    setTokenObjectFactory(srcMLToken::factory);
+
     setupliterals();
 
     pair common[] = {

@@ -28,32 +28,86 @@
 #include "project.h"
 
 #include <antlr/Token.hpp>
+#include <antlr/TokenRefCount.hpp>
 
 enum { STARTTOKEN = 0, ENDTOKEN = 50, EMPTYTOKEN = 75 };
 
-template <int T>
 class srcMLToken : public antlr::Token {
 
  public:
 
-  srcMLToken(int t)
-    : Token(t) {}
+ srcMLToken()
+   : Token(), category(-1) {
+  }
 
-  int getLine() const { return T; }
+ srcMLToken(int t)
+   : Token(t), category(-1) {
+  }
+
+ srcMLToken(int t, int cat)
+   : Token(t), category(cat) {
+  }
+
+ srcMLToken(int t, std::string& s)
+   : Token(t, s), category(-1) {
+  }
+
+  static antlr::RefToken factory()
+  {
+    return antlr::RefToken(new srcMLToken());
+  }
+
+  // current text of the token
+  virtual std::string getText() const { return text; }
+
+  // set the current text of the token
+  virtual void setText(const std::string& s) { text = s; }
+
+  // current category
+  virtual int getCategory() const { return category; }
+
+  // set the current category
+  virtual void setCategory(int cat) { category = cat; }
+
+  // destructor
+  virtual ~srcMLToken() {}
+
+ private:
+  int category;
+  std::string text;
 };
 
-typedef srcMLToken<ENDTOKEN> EndToken;
-typedef srcMLToken<EMPTYTOKEN> EmptyToken;
-typedef srcMLToken<STARTTOKEN> StartToken;
+inline srcMLToken* EndTokenFactory(int token) {
+
+  return new srcMLToken(token, ENDTOKEN);
+}
+
+inline srcMLToken* EmptyTokenFactory(int token) {
+
+  return new srcMLToken(token, EMPTYTOKEN);
+}
+
+inline srcMLToken* StartTokenFactory(int token) {
+
+  return new srcMLToken(token, STARTTOKEN);
+}
+
+inline srcMLToken const * const Token2srcMLToken(const antlr::RefToken& token) {
+
+  //  return *token;
+  return static_cast<const srcMLToken*>(&(*token));
+}
 
 inline bool isstart(const antlr::RefToken& token) {
+
+  return Token2srcMLToken(token)->getCategory() != ENDTOKEN;
 
   return token->getLine() != ENDTOKEN;
 }
 
 inline bool isempty(const antlr::RefToken& token) {
 
-  return token->getLine() == EMPTYTOKEN;
+  return Token2srcMLToken(token)->getCategory() == EMPTYTOKEN;
 }
 
 #endif

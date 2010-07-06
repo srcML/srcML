@@ -82,7 +82,7 @@ class StreamMLParser : public StreamParser<Base> {
   void emptyElement(int id) {
 
     // push a empty element token
-    pushToken(antlr::RefToken(new EmptyToken(id)));
+    pushToken(antlr::RefToken(EmptyTokenFactory(id)));
   }
 
  private:
@@ -162,14 +162,14 @@ class StreamMLParser : public StreamParser<Base> {
   void pushSToken(int token, bool flush = true) {
 
     // push a new start token
-    pushToken(antlr::RefToken(new StartToken(token)), flush);
+    pushToken(antlr::RefToken(StartTokenFactory(token)), flush);
   } 
 
   // push the end token with this number onto the output token stream
   void pushEToken(int token) {
 
     // push a new end token
-    pushToken(antlr::RefToken(new EndToken(token)), false);
+    pushToken(antlr::RefToken(EndTokenFactory(token)), false);
   }
 
 };
