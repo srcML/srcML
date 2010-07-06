@@ -23,8 +23,8 @@
 <arg><option>&SRCVERSION_FLAG_SHORT;   <replaceable class="parameter">version</replaceable></option></arg>
 <arg><option>&ENCODING_FLAG_SHORT;     <replaceable class="parameter">encoding</replaceable></option></arg>
 <arg><option>&TEXTENCODING_FLAG_SHORT; <replaceable class="parameter">encoding</replaceable></option></arg>
-<arg rep="repeat"><replaceable class="parameter">input-source-code-file</replaceable></arg>
-<arg><replaceable class="parameter">output-srcML-file</replaceable></arg>
+<arg rep="repeat">                     <replaceable class="parameter">input-source-code-file</replaceable></arg>
+<arg><option>&OUTPUT_FLAG_SHORT;       <replaceable class="parameter">output-srcML-file</replaceable></option></arg>
   </cmdsynopsis>
 </refsynopsisdiv>
 <refsect1>
@@ -102,7 +102,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term><option>&FILELIST_FLAG_SHORT;, &FILELIST_FLAG;</option></term>
+      <term><option>&FILELIST_FLAG;</option></term>
       <listitem>
 	<para>
 	  Treats the input file as a list of source files.  Each file
@@ -422,31 +422,31 @@
     main.cpp.xml:
   </para>
   <para>
-    <command>src2srcml</command> main.cpp main.cpp.xml
+    <command>src2srcml</command> main.cpp &OUTPUT_FLAG_SHORT; main.cpp.xml
   </para>
   <para>
     To translate a C source-code file main.c into the srcML file main.c.xml:
   </para>
   <para>
-    <command>src2srcml</command> &LANGUAGE_FLAG;=C main.c main.c.xml
+    <command>src2srcml</command> &LANGUAGE_FLAG;=C main.c &OUTPUT_FLAG_SHORT; main.c.xml
   </para>
   <para>
     To translate a Java source-code file main.java into the srcML file main.java.xml:
   </para>
   <para>
-    <command>src2srcml</command> &LANGUAGE_FLAG;=Java main.java main.java.xml
+    <command>src2srcml</command> &LANGUAGE_FLAG;=Java main.java &OUTPUT_FLAG_SHORT; main.java.xml
   </para>
   <para>
     To specify the directory, filename, and version for an input file from standard input:
   </para>
   <para>
-    <command>src2srcml</command> &DIRECTORY_FLAG;=src &FILENAME_FLAG;=main.cpp &VERSION_FLAG;=1 - main.cpp.xml
+    <command>src2srcml</command> &DIRECTORY_FLAG;=src &FILENAME_FLAG;=main.cpp &VERSION_FLAG;=1 - &OUTPUT_FLAG_SHORT; main.cpp.xml
   </para>
   <para>
     To translate a source-code file in ISO-8859-1 encoding into a srcML file with UTF-8 encoding:
   </para>
   <para>
-    <command>src2srcml</command> &TEXTENCODING_FLAG;=ISO-8859-1 &ENCODING_FLAG;=UTF-8 main.cpp main.cpp.xml
+    <command>src2srcml</command> &TEXTENCODING_FLAG;=ISO-8859-1 &ENCODING_FLAG;=UTF-8 main.cpp &OUTPUT_FLAG_SHORT; main.cpp.xml
   </para>
 </refsect1>
 <refsect1>

@@ -22,8 +22,8 @@
 <arg><option>&DIRECTORY_FLAG; </option></arg>
 <arg><option>&ENCODING_FLAG; </option></arg>
 <arg><option>&TEXTENCODING_FLAG; <replaceable class="parameter">encoding</replaceable></option></arg>
-<arg><replaceable class="parameter">input-srcML-file</replaceable></arg>
-<arg><replaceable class="parameter">output-source-code-file</replaceable></arg>
+<arg>                            <replaceable class="parameter">input-srcML-file</replaceable></arg>
+<arg><option>&OUTPUT_FLAG_SHORT;                            <replaceable class="parameter">output-source-code-file</replaceable></option></arg>
   </cmdsynopsis>
 </refsynopsisdiv>
 <refsect1>
@@ -169,8 +169,7 @@
       <term><option>&VERBOSE_FLAG_SHORT;, &VERBOSE_FLAG;</option></term>
       <listitem>
 	<para>
-	  Verbose output to standard error.  Especially useful with
-	  the <option>&FILELIST_FLAG;</option> option.
+	  Verbose output to standard error.
 	</para>
       </listitem>
     </varlistentry>
@@ -389,37 +388,37 @@
     To translate the srcML file main.cpp.xml into the C++ source-code file main.cpp:
   </para>
   <para>
-    <command>srcml2src</command> main.cpp.xml main.cpp
+    <command>srcml2src</command> main.cpp.xml &OUTPUT_FLAG_SHORT; main.cpp
   </para>
   <para>
     To extract the language of the srcML file main.cpp.xml:
   </para>
   <para>
-    <command>srcml2src</command> &LANGUAGE_FLAG; main.c.xml
+    <command>srcml2src</command> &LANGUAGE_FLAG; main.cpp.xml
   </para>
   <para>
     To extract the directory of the srcML file main.cpp.xml:
   </para>
   <para>
-    <command>srcml2src</command> &DIRECTORY_FLAG; main.c.xml
+    <command>srcml2src</command> &DIRECTORY_FLAG; main.cpp.xml
   </para>
   <para>
     To extract the filename of the srcML file main.cpp.xml:
   </para>
   <para>
-    <command>srcml2src</command> &FILENAME_FLAG; main.c.xml
+    <command>srcml2src</command> &FILENAME_FLAG; main.cpp.xml
   </para>
   <para>
     To extract the version of the srcML file main.cpp.xml:
   </para>
   <para>
-    <command>srcml2src</command> &VERSION_FLAG; main.c.xml
+    <command>srcml2src</command> &VERSION_FLAG; main.cpp.xml
   </para>
   <para>
     To extract the xml encoding of the srcML file main.cpp.xml:
   </para>
   <para>
-    <command>srcml2src</command> &ENCODING_FLAG; main.c.xml
+    <command>srcml2src</command> &ENCODING_FLAG; main.cpp.xml
   </para>
 </refsect1>
 <refsect1>
