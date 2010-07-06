@@ -49,6 +49,8 @@ const char* const OPERATOR_FLAG = "--operator";
 
 const char* const MODIFIER_FLAG = "--modifier";
 
+const char* const POSITION_FLAG = "--position";
+
 const char* const INTERACTIVE_FLAG = "--interactive";
 const char* const INTERACTIVE_FLAG_SHORT = "-c";
 
@@ -93,6 +95,7 @@ enum {
   SRCML_EXT_LITERAL_NS_URI_POS,
   SRCML_EXT_OPERATOR_NS_URI_POS,
   SRCML_EXT_MODIFIER_NS_URI_POS,
+  SRCML_EXT_POSITION_NS_URI_POS,
 };
 
 char const * const num2uri[] = {
@@ -102,6 +105,7 @@ char const * const num2uri[] = {
   SRCML_EXT_LITERAL_NS_URI,
   SRCML_EXT_OPERATOR_NS_URI,
   SRCML_EXT_MODIFIER_NS_URI,
+  SRCML_EXT_POSITION_NS_URI,
 };
 
 // output help
@@ -248,6 +252,7 @@ const char* num2prefix[] = {
   SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT,
   SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT,
   SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT,
+  SRCML_EXT_POSITION_NS_PREFIX_DEFAULT,
 };
 
 /*
@@ -604,6 +609,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { CPP_TEXTONLY_ELSE_FLAG + 2, no_argument, NULL, 'E' },
     { CPP_MARKUP_IF0_FLAG + 2, no_argument, NULL, '0' },
     { CPP_TEXTONLY_IF0_FLAG + 2, no_argument, NULL, 'p' },
+    { POSITION_FLAG + 2, no_argument, NULL, 'P' },
     { NO_XML_DECLARATION_FLAG + 2, no_argument, &curoption, OPTION_XMLDECL },
     { NO_NAMESPACE_DECLARATION_FLAG + 2, no_argument, &curoption, OPTION_NAMESPACEDECL },
     { 0, 0, 0, 0 }
@@ -793,6 +799,14 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 	num2prefix[SRCML_EXT_MODIFIER_NS_URI_POS] = ns_prefix;
 	poptions.prefixchange[SRCML_EXT_MODIFIER_NS_URI_POS] = true;
 
+      } else if (strcmp(ns_uri, SRCML_EXT_POSITION_NS_URI) == 0) {
+
+	// specifying the operator prefix automatically turns on type modifier markup
+	options |= OPTION_POSITION;
+
+	num2prefix[SRCML_EXT_POSITION_NS_URI_POS] = ns_prefix;
+	poptions.prefixchange[SRCML_EXT_POSITION_NS_URI_POS] = true;
+
       } else {
 	fprintf(stderr, "%s: invalid namespace \"%s\"\n\n"
 		"Namespace URI must be on of the following:  \n"
@@ -801,10 +815,12 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 		"  %-35s namespace for srcML debugging elements\n"
 		"  %-35s namespace for optional literal elements\n"
 		"  %-35s namespace for optional operator element\n"
-		"  %-35s namespace for optional modifier element\n",
+		"  %-35s namespace for optional modifier element\n"
+		"  %-35s namespace for optional position element\n",
 		argv[0], ns_uri,
 		SRCML_SRC_NS_URI, SRCML_CPP_NS_URI, SRCML_ERR_NS_URI,
-		SRCML_EXT_LITERAL_NS_URI, SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_MODIFIER_NS_URI
+		SRCML_EXT_LITERAL_NS_URI, SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_MODIFIER_NS_URI,
+		SRCML_EXT_POSITION_NS_URI
 		);
 	exit(STATUS_INVALID_LANGUAGE);
       }
@@ -920,6 +936,10 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 		argv[0], CPP_MARKUP_IF0_FLAG, CPP_TEXTONLY_IF0_FLAG);
 	exit(STATUS_INVALID_OPTION_COMBINATION);
       }
+      break;
+
+    case 'P': 
+      options |= OPTION_POSITION;
       break;
 
     default:

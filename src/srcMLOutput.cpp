@@ -216,6 +216,7 @@ enum { SRCML_SRC_NS_URI_POS,
        SRCML_EXT_LITERAL_NS_URI_POS,
        SRCML_EXT_OPERATOR_NS_URI_POS,
        SRCML_EXT_MODIFIER_NS_URI_POS,
+       SRCML_EXT_POSITION_NS_URI_POS,
 };
 
 #undef ELEMENT_MAP_CALL_NAME
@@ -256,6 +257,9 @@ namespace {
   ELEMENT_MAP(SMODIFIER, SRCML_EXT_MODIFIER_NS_URI_POS)
 };
 
+static char buf[20];
+static char buf2[200];
+
 // check if encoding is supported
 bool srcMLOutput::checkEncoding(const char* encoding) {
 
@@ -270,7 +274,8 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 			 const char* curi[]
 			 )
   : input(ints), xout(0), srcml_filename(filename), unit_language(language), unit_dir(0), unit_filename(0),
-    unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(curi), openelementcount(0)
+    unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(curi), openelementcount(0), curline(0),
+    curcolumn(0)
 {
   // open the output text writer stream
   // "-" filename is standard output
@@ -365,6 +370,19 @@ void srcMLOutput::processText(const char* s, int size) {
 
 void srcMLOutput::processText(const antlr::RefToken& token) {
 
+  if (isoption(OPTION_POSITION)) {
+
+    sprintf(buf2, "%s:%s", BAD_CAST num2prefix[6], BAD_CAST "line");
+    int curline = token->getLine();
+    sprintf(buf, "%d", curline);
+    xmlTextWriterWriteAttribute(xout, BAD_CAST buf2, BAD_CAST buf);
+
+    sprintf(buf2, "%s:%s", BAD_CAST num2prefix[6], BAD_CAST "column");
+    int curcolumn = token->getColumn();
+    sprintf(buf, "%d", curcolumn);
+    xmlTextWriterWriteAttribute(xout, BAD_CAST buf2, BAD_CAST buf);
+  }
+
   xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) token->getText().data(), token->getText().size());
 }
 
@@ -375,7 +393,6 @@ void srcMLOutput::processEscape(const antlr::RefToken& token) {
   xmlTextWriterStartElement(xout, BAD_CAST s);
   ++openelementcount;
 
-  char buf[20];
   sprintf(buf, "0x%0x", token->getText()[0]);
   
   xmlTextWriterWriteAttribute(xout, BAD_CAST "char", BAD_CAST buf);
@@ -412,6 +429,9 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
 
 			    // optional modifier xml namespace
 			    isoption(OPTION_MODIFIER) ? SRCML_EXT_MODIFIER_NS_URI : 0,
+
+			    // optional position xml namespace
+			    isoption(OPTION_POSITION) ? SRCML_EXT_POSITION_NS_URI : 0,
 			  };
 
       // output the namespaces

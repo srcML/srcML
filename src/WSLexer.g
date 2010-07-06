@@ -45,7 +45,7 @@ WS :
             ' '  |
 
             // horizontal tab
-            '\t'
+            '\t' { tab(); }
         )+
 ;
 
@@ -61,6 +61,9 @@ EOL :
             // mark that we are starting a new line, so preproc
             // can be detected
             startline = true;
+
+            // record to new lines for optional positions
+            newline();
         }
 ;
 /*

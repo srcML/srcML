@@ -77,10 +77,9 @@ enum Options {
   // @srcml2src
   OPTION_VERBOSE     = 0x00000200,
 
-  // help
+  // position
   // @src2srcml
-  // @srcml2src
-  //  OPTION_HELP        = 0x00000400,
+  OPTION_POSITION     = 0x00000400,
 
   // program version
   // @src2srcml

@@ -57,6 +57,12 @@ class srcMLToken : public antlr::Token {
     return antlr::RefToken(new srcMLToken());
   }
 
+  virtual void setLine(int l) { line = l; }
+  virtual int getLine() const { return line; }
+
+  virtual void setColumn(int c) { column = c; }
+  virtual int getColumn() const { return column; }
+
   // current text of the token
   virtual std::string getText() const { return text; }
 
@@ -74,6 +80,8 @@ class srcMLToken : public antlr::Token {
 
  private:
   int category;
+  int line;
+  int column;
   std::string text;
 };
 

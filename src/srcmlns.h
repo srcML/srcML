@@ -41,10 +41,12 @@ const char* const SRCML_ERR_NS_PREFIX_DEFAULT = "err";
 const char* const SRCML_EXT_LITERAL_NS_URI = "http://www.sdml.info/srcML/literal";
 const char* const SRCML_EXT_OPERATOR_NS_URI = "http://www.sdml.info/srcML/operator";
 const char* const SRCML_EXT_MODIFIER_NS_URI = "http://www.sdml.info/srcML/modifier";
+const char* const SRCML_EXT_POSITION_NS_URI = "http://www.sdml.info/srcML/position";
 
 const char* const SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT = "lit";
 const char* const SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT = "op";
 const char* const SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT = "type";
+const char* const SRCML_EXT_POSITION_NS_PREFIX_DEFAULT = "pos";
 
 // srcML standard attributes
 const char* const UNIT_ATTRIBUTE_LANGUAGE = "language";
