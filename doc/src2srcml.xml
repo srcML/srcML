@@ -23,7 +23,7 @@
 <arg><option>&SRCVERSION_FLAG_SHORT;   <replaceable class="parameter">version</replaceable></option></arg>
 <arg><option>&ENCODING_FLAG_SHORT;     <replaceable class="parameter">encoding</replaceable></option></arg>
 <arg><option>&TEXTENCODING_FLAG_SHORT; <replaceable class="parameter">encoding</replaceable></option></arg>
-<arg rep="repeat">                     <replaceable class="parameter">input-source-code-file</replaceable></arg>
+<arg rep="repeat"><replaceable class="parameter">input-source-code-file</replaceable></arg>
 <arg><option>&OUTPUT_FLAG_SHORT;       <replaceable class="parameter">output-srcML-file</replaceable></option></arg>
   </cmdsynopsis>
 </refsynopsisdiv>

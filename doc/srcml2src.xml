@@ -22,7 +22,7 @@
 <arg><option>&DIRECTORY_FLAG; </option></arg>
 <arg><option>&ENCODING_FLAG; </option></arg>
 <arg><option>&TEXTENCODING_FLAG; <replaceable class="parameter">encoding</replaceable></option></arg>
-<arg>                            <replaceable class="parameter">input-srcML-file</replaceable></arg>
+<arg><replaceable class="parameter">input-srcML-file</replaceable></arg>
 <arg><option>&OUTPUT_FLAG_SHORT;                            <replaceable class="parameter">output-source-code-file</replaceable></option></arg>
   </cmdsynopsis>
 </refsynopsisdiv>
