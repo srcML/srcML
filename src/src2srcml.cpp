@@ -226,7 +226,7 @@ void output_version(const char* name) {
   printf("%s Version %s\n%s\n", name, VERSION,COPYRIGHT);
 }
 
-int options = OPTION_CPP_MARKUP_ELSE | OPTION_CPP | OPTION_XMLDECL | OPTION_NAMESPACEDECL;
+int options = OPTION_CPP_MARKUP_ELSE | OPTION_XMLDECL | OPTION_NAMESPACEDECL;
 
 const char* num2prefix[] = {
 
@@ -268,7 +268,6 @@ typedef struct process_options
   const char* given_directory;
   const char* given_filename;
   const char* given_version;
-  bool specified_cpp_option;
   bool prefixchange[num_prefixes];
 } process_options;
 
@@ -296,7 +295,6 @@ int main(int argc, char* argv[]) {
       0,
       0,
       0,
-      false,
       {
 	false,
 	false,
@@ -378,9 +376,9 @@ int main(int argc, char* argv[]) {
 
     }
 
-    // turnoff default cpp reference for Java-based languages
-    if (!poptions.specified_cpp_option && (poptions.language == srcMLTranslator::LANGUAGE_JAVA || poptions.language == srcMLTranslator::LANGUAGE_ASPECTJ))
-	options &= ~OPTION_CPP;
+    // turnon cpp namespace for non Java-based languages
+    if (!(poptions.language == srcMLTranslator::LANGUAGE_JAVA || poptions.language == srcMLTranslator::LANGUAGE_ASPECTJ))
+	options |= OPTION_CPP;
 
     // translator from input to output using determined language
     //    if (language == 0)
@@ -421,9 +419,9 @@ int main(int argc, char* argv[]) {
 	if (isoption(options, OPTION_VERBOSE))
 	  fprintf(stderr, "%d\t%s", count, line);
 
-	// turnoff default cpp reference for Java-based languages
-	if (!poptions.specified_cpp_option && (poptions.language == srcMLTranslator::LANGUAGE_JAVA || poptions.language == srcMLTranslator::LANGUAGE_ASPECTJ))
-	  options &= ~OPTION_CPP;
+	// turnon cpp namespace for non Java-based languages
+	if (!(poptions.language == srcMLTranslator::LANGUAGE_JAVA || poptions.language == srcMLTranslator::LANGUAGE_ASPECTJ))
+	  options |= OPTION_CPP;
 
 	// translate the file listed in the input file using the directory and filename extracted from the path
 	char* dir = 0;
@@ -740,9 +738,6 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
 	  options |= num2option[i];
 
-	  if (i == SRCML_CPP_NS_URI_POS)
-	    poptions.specified_cpp_option = true;
-
 	  num2prefix[i] = ns_prefix;
 	  poptions.prefixchange[i] = true;
 	  process = true;
@@ -766,10 +761,6 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 		);
 	exit(STATUS_INVALID_LANGUAGE);
       }
-    /*
-	poptions.specified_cpp_option = true;
-
-    */
       break;
 
     case 'z': 
