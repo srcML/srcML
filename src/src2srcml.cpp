@@ -133,23 +133,23 @@ void output_help(const char* name) {
 	  "\n"
 	  "Options:\n", name, OUTPUT_FLAG, OUTPUT_FLAG_SHORT);
 
-  printf("  -%c, -%-16s display this help and exit\n",      HELP_FLAG_SHORT, HELP_FLAG);
-  printf("  -%c, --%-16s display version number and exit\n\n", VERSION_FLAG_SHORT, VERSION_FLAG);
+  printf("  -%c, --%-14s display this help and exit\n",      HELP_FLAG_SHORT, HELP_FLAG);
+  printf("  -%c, --%-14s display version number and exit\n\n", VERSION_FLAG_SHORT, VERSION_FLAG);
 
-  printf("  -%c, --%-16s write result to <file|URI> instead of standard output\n", OUTPUT_FLAG_SHORT, OUTPUT_FLAG);
-  printf("  --%-20s read list of source file names from <file|URI> to form a compound srcML document\n\n",
+  printf("  -%c, --%-14s write result to <file|URI> instead of standard output\n", OUTPUT_FLAG_SHORT, OUTPUT_FLAG);
+  printf("  --%-18s read list of source file names from <file|URI> to form a compound srcML document\n\n",
 	  FILELIST_FLAG);
 
-  printf("  -%c, --%-16s store all input source files in one compound srcML document\n",
+  printf("  -%c, --%-14s store all input source files in one compound srcML document\n",
 	  NESTED_FLAG_SHORT, NESTED_FLAG);
 
-  printf("  -%c, --%-16s translates a single, individual expression outside of any statement\n",
+  printf("  -%c, --%-14s translates a single, individual expression outside of any statement\n",
 	  EXPRESSION_MODE_FLAG_SHORT, EXPRESSION_MODE_FLAG);
 
-  printf("  -%c, --%-16s set the output XML encoding to ENC (default:  %s)\n",
+  printf("  -%c, --%-14s set the output XML encoding to ENC (default:  %s)\n",
 	  ENCODING_FLAG_SHORT, ENCODING_FLAG, DEFAULT_XML_ENCODING);
 
-  printf("  -%c, --%-16s set the input source encoding to ENC (default:  %s)\n\n",
+  printf("  -%c, --%-14s set the input source encoding to ENC (default:  %s)\n\n",
 	  TEXTENCODING_FLAG_SHORT, TEXTENCODING_FLAG, DEFAULT_TEXT_ENCODING);
 
       /*
@@ -157,37 +157,37 @@ void output_help(const char* name) {
 	      << "store the text without any text encoding changes" << "\n"
       */
 
-  printf("  --%-20s set the default namespace URI\n", XMLNS_DEFAULT_FLAG_FULL);
+  printf("  --%-18s set the default namespace URI\n", XMLNS_DEFAULT_FLAG_FULL);
   printf("                       (default:  xmlns=\"%s\")\n", SRCML_SRC_NS_URI);
 
-  printf("  --%-20s set the namespace PREFIX for the namespace URI\n", XMLNS_FLAG_FULL);
+  printf("  --%-18s set the namespace PREFIX for the namespace URI\n", XMLNS_FLAG_FULL);
   printf("                       (defaults:  xmlns:cpp=\"%s\")\n", SRCML_CPP_NS_URI);
   printf("                       (defaults:  xmlns:srcerr=\"%s\")\n", SRCML_ERR_NS_URI);
 
-  printf("  --%-20s do not output the default XML declaration\n", NO_XML_DECLARATION_FLAG);
-  printf("  --%-20s do not output any namespace declarations\n\n", NO_NAMESPACE_DECLARATION_FLAG);
+  printf("  --%-18s do not output the default XML declaration\n", NO_XML_DECLARATION_FLAG);
+  printf("  --%-18s do not output any namespace declarations\n\n", NO_NAMESPACE_DECLARATION_FLAG);
 
-  printf("  -%c, --%-16s output in gzip format\n", COMPRESSED_FLAG_SHORT, COMPRESSED_FLAG);
+  printf("  -%c, --%-14s output in gzip format\n", COMPRESSED_FLAG_SHORT, COMPRESSED_FLAG);
 
-  printf("  -%c, --%-16s low-latency output\n", INTERACTIVE_FLAG_SHORT, INTERACTIVE_FLAG);
+  printf("  -%c, --%-14s low-latency output\n", INTERACTIVE_FLAG_SHORT, INTERACTIVE_FLAG);
 
-  printf("  -%c, --%-16s markup translation errors in namespace \"%s\"\n",
+  printf("  -%c, --%-14s markup translation errors in namespace \"%s\"\n",
 	  DEBUG_FLAG_SHORT, DEBUG_FLAG, SRCML_ERR_NS_URI);
 
-  printf("  -%c, --%-16s verbose output to standard error\n\n", VERBOSE_FLAG_SHORT, VERBOSE_FLAG);
+  printf("  -%c, --%-14s verbose output to standard error\n\n", VERBOSE_FLAG_SHORT, VERBOSE_FLAG);
 
   printf("Metadata Options:\n\n"
-	 "  -%c, --%-16s set the language to %s, %s (default), %s, or %s\n",
+	 "  -%c, --%-14s set the language to %s, %s (default), %s, or %s\n",
 	 LANGUAGE_FLAG_SHORT, LANGUAGE_FLAG_FULL,
 	 LANGUAGE_C, LANGUAGE_CXX, LANGUAGE_JAVA, LANGUAGE_ASPECTJ);
 
-  printf("  -%c, --%-16s set the directory attribute to DIR\n",
+  printf("  -%c, --%-14s set the directory attribute to DIR\n",
 	 DIRECTORY_FLAG_SHORT, DIRECTORY_FLAG_FULL);
 
-  printf("  -%c, --%-16s set the filename attribute to FILE\n",
+  printf("  -%c, --%-14s set the filename attribute to FILE\n",
 	 FILENAME_FLAG_SHORT, FILENAME_FLAG_FULL);
 
-  printf("  -%c, --%-16s set the version attribute to VER\n\n",
+  printf("  -%c, --%-14s set the version attribute to VER\n\n",
 	 SRCVERSION_FLAG_SHORT, SRCVERSION_FLAG_FULL);
 
       /*
@@ -197,30 +197,30 @@ void output_help(const char* name) {
 
   printf("Markup Extensions:\n\n");
 
-  printf("  --%-20s markup literal values in namespace \"%s\"\n",
+  printf("  --%-18s markup literal values in namespace \"%s\"\n",
 	 LITERAL_FLAG, SRCML_EXT_LITERAL_NS_URI);
 
-  printf("  --%-20s markup operators in namespace \"%s\"\n",
+  printf("  --%-18s markup operators in namespace \"%s\"\n",
 	 OPERATOR_FLAG, SRCML_EXT_OPERATOR_NS_URI);
 
-  printf("  --%-20s markup type modifiers in namespace \"%s\"\n",
+  printf("  --%-18s markup type modifiers in namespace \"%s\"\n",
 	 MODIFIER_FLAG, SRCML_EXT_MODIFIER_NS_URI);
 
   printf("\nLine/Column Position:\n\n");
 
-  printf("  --%-20s markup literal values in namespace \"%s\"\n",
+  printf("  --%-18s markup literal values in namespace \"%s\"\n",
 	 POSITION_FLAG, SRCML_EXT_POSITION_NS_URI);
 
-  printf("  --%-20s have tabs NUMBER characters apart.  Default is %d\n",
+  printf("  --%-18s have tabs NUMBER characters apart.  Default is %d\n",
 	 TABS_FLAG_FULL, 8);
 
   printf("\nCPP Markup Options:\n\n");
 
-  printf("  --%-20s markup cpp #else regions (default)\n", CPP_MARKUP_ELSE_FLAG);
-  printf("  %-20s leave cpp #else regions as text\n\n", CPP_TEXTONLY_ELSE_FLAG);
+  printf("  --%-18s markup cpp #else regions (default)\n", CPP_MARKUP_ELSE_FLAG);
+  printf("  --%-18s leave cpp #else regions as text\n\n", CPP_TEXTONLY_ELSE_FLAG);
 
-  printf("  --%-20s markup cpp #if 0 regions\n", CPP_MARKUP_IF0_FLAG);
-  printf("  --%-20s leave cpp #if 0 regions as text (default)\n\n", CPP_TEXTONLY_IF0_FLAG);
+  printf("  --%-18s markup cpp #if 0 regions\n", CPP_MARKUP_IF0_FLAG);
+  printf("  --%-18s leave cpp #if 0 regions as text (default)\n\n", CPP_TEXTONLY_IF0_FLAG);
 
   printf("Examples:  \n"
 	 "  %1$s                (read from standard input, write to standard output)\n"
