@@ -161,7 +161,7 @@ void output_help(const char* name) {
   printf("  --%-20s apply XSLT_FILE (FILE or URI) transformation to each nested unit\n", XSLT_FLAG_FULL);
   printf("  --%-20s passes a parameter NAME and VALUE to XSLT\n", PARAM_FLAG_FULL);
   printf("  --%-20s passes a string parameter NAME and VALUE to XSLT\n", STRING_PARAM_FLAG_FULL);
-  printf("  --%-20s output nested units that match RELAXNG_FILE file (FILE or URI) grammar\n\n", RELAXNG_FLAG_FULL);
+  printf("  --%-20s output nested units that match RELAXNG_FILE file (FILE or URI)\n\n", RELAXNG_FLAG_FULL);
 
   printf("Examples:  \n"
 	    "  %1$s                          (read from standard input, write to standard output)\n"
