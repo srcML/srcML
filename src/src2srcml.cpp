@@ -142,10 +142,10 @@ void output_help(const char* name) {
 	 "                       to form a compound srcML document\n\n",
 	  FILELIST_FLAG_FULL);
 
-  printf("  -%c, --%-14s store all input source files in one compound srcML document\n",
+  printf("  -%c, --%-14s store output in a compound srcML document, default for multiple input files\n",
 	  NESTED_FLAG_SHORT, NESTED_FLAG);
 
-  printf("  -%c, --%-14s expression mode for translating expressions not in a statement\n",
+  printf("  -%c, --%-14s expression mode for translating a single expression not in a statement\n",
 	  EXPRESSION_MODE_FLAG_SHORT, EXPRESSION_MODE_FLAG);
 
   printf("  -%c, --%-14s set the output XML encoding to ENC (default:  %s)\n",
