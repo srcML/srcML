@@ -243,7 +243,6 @@ int options = OPTION_CPP_MARKUP_ELSE | OPTION_CPP | OPTION_XMLDECL | OPTION_NAME
 // output filename
 //const char* srcml_filename = 0;
 
-const int num_prefixes = 6;
 const char* num2prefix[] = {
 
   SRCML_SRC_NS_PREFIX_DEFAULT,
@@ -254,6 +253,7 @@ const char* num2prefix[] = {
   SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT,
   SRCML_EXT_POSITION_NS_PREFIX_DEFAULT,
 };
+const int num_prefixes = sizeof(num2prefix) / sizeof(num2prefix[0]);
 
 /*
 bool prefixchange[] = {
