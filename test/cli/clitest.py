@@ -1726,6 +1726,31 @@ checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.EXPAND_FLAG_SHORT, optio
 validate(open('sub/a.cpp', 'r').read(), sfile1)
 validate(open('sub/b.cpp', 'r').read(), sfile2)
 
+##
+# no xml declaration srcml2src
+
+srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+</unit>"""
+
+srcmlout = """<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
+"""
+
+check([srcmlutility, option.NO_XML_DECLARATION_FLAG], srcml, srcmlout)
+
+##
+# no namespace declaration
+
+srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+</unit>"""
+
+srcmlout = xml_declaration + """
+<unit language="C++"/>
+"""
+
+check([srcmlutility, option.NO_NAMESPACE_DECLARATION_FLAG], srcml, srcmlout)
+
 # footer
 print
 print "Error count: ", error_count
