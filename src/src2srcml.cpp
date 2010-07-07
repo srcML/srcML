@@ -266,6 +266,7 @@ struct process_options
   const char* given_directory;
   const char* given_filename;
   const char* given_version;
+  int tabsize;
   bool prefixchange[num_prefixes];
 };
 
@@ -293,6 +294,7 @@ int main(int argc, char* argv[]) {
       0,
       0,
       0,
+      8,
       {
 	false,
 	false,
