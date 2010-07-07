@@ -84,24 +84,21 @@ const char FILELIST_COMMENT = '#';
 
 bool process;
 
-enum {
-  SRCML_SRC_NS_URI_POS = 0, 
-  SRCML_CPP_NS_URI_POS,
-  SRCML_ERR_NS_URI_POS,
-  SRCML_EXT_LITERAL_NS_URI_POS,
-  SRCML_EXT_OPERATOR_NS_URI_POS,
-  SRCML_EXT_MODIFIER_NS_URI_POS,
-  SRCML_EXT_POSITION_NS_URI_POS,
+struct uridata {
+  char const * const uri;
+  char const * prefix;
+  int option;
 };
 
-char const * const num2uri[] = {
-  SRCML_SRC_NS_URI,
-  SRCML_CPP_NS_URI,
-  SRCML_ERR_NS_URI,
-  SRCML_EXT_LITERAL_NS_URI,
-  SRCML_EXT_OPERATOR_NS_URI,
-  SRCML_EXT_MODIFIER_NS_URI,
-  SRCML_EXT_POSITION_NS_URI,
+uridata uris[] = {
+
+  { SRCML_SRC_NS_URI,          SRCML_SRC_NS_PREFIX_DEFAULT,         0 },
+  { SRCML_CPP_NS_URI,          SRCML_CPP_NS_PREFIX_DEFAULT,         OPTION_CPP },
+  { SRCML_ERR_NS_URI,          SRCML_ERR_NS_PREFIX_DEFAULT,         OPTION_DEBUG },
+  { SRCML_EXT_LITERAL_NS_URI,  SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT, OPTION_LITERAL },
+  { SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT, OPTION_OPERATOR },
+  { SRCML_EXT_MODIFIER_NS_URI, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT, OPTION_MODIFIER },
+  { SRCML_EXT_POSITION_NS_URI, SRCML_EXT_POSITION_NS_PREFIX_DEFAULT, OPTION_POSITION },
 };
 
 const char* num2prefix[] = {
@@ -114,17 +111,7 @@ const char* num2prefix[] = {
   SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT,
   SRCML_EXT_POSITION_NS_PREFIX_DEFAULT,
 };
-const int num_prefixes = sizeof(num2prefix) / sizeof(num2prefix[0]);
-
-int num2option[] = {
-  0,
-  OPTION_CPP,
-  OPTION_DEBUG,
-  OPTION_LITERAL,
-  OPTION_OPERATOR,
-  OPTION_MODIFIER,
-  OPTION_POSITION,
-};
+const int num_prefixes = sizeof(uris) / sizeof(uris[0]);
 
 // output help
 void output_help(const char* name) {
@@ -342,15 +329,15 @@ int main(int argc, char* argv[]) {
   // make sure user did not specify duplicate prefixes as an option
   for (int i = 0; i < num_prefixes - 1; ++i) {
     for (int j = i + 1; j < num_prefixes; ++j)
-      if(strcmp(num2prefix[i], num2prefix[j]) == 0) {
+      if(strcmp(uris[i].prefix, uris[j].prefix) == 0) {
 
 	fprintf(stderr, "%s: Namespace conflict for ", NAME);
-	if (num2prefix[i] == '\0') {
+	if (uris[i].prefix == '\0') {
 	  fprintf(stderr, "default prefix\n");
 	} else {
-	  fprintf(stderr, "prefix \'%s\'\n", num2prefix[i]);
+	  fprintf(stderr, "prefix \'%s\'\n", uris[i].prefix);
 	}
-	fprintf(stderr, "Prefix URI conflicts:\n  %s\n  %s\n", num2uri[i], num2uri[j]);
+	fprintf(stderr, "Prefix URI conflicts:\n  %s\n  %s\n", uris[i].uri, uris[j].uri);
 
 	exit(STATUS_INVALID_OPTION_COMBINATION);
       }
@@ -734,9 +721,9 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       // check uri to turn on specific option
       process = false;
       for (int i = 0; i < num_prefixes; ++i)
-	if (strcmp(ns_uri, num2uri[i]) == 0) {
+	if (strcmp(ns_uri, uris[i].uri) == 0) {
 
-	  options |= num2option[i];
+	  options |= uris[i].option;
 
 	  num2prefix[i] = ns_prefix;
 	  poptions.prefixchange[i] = true;
