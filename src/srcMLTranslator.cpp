@@ -69,7 +69,7 @@ void srcMLTranslator::translate(const char* unit_directory,
       // srcML lexical analyzer from standard input
       KeywordCPPLexer lexer(ifilename, encoding, language);
       lexer.setSelector(&selector);
-      lexer.setTabsize(8);
+      lexer.setTabsize(tabsize);
 
       // pure block comment lexer
       PureCommentLexer textlexer(lexer.getInputState());
