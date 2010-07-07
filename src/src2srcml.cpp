@@ -154,29 +154,18 @@ void output_help(const char* name) {
   printf("  -%c, --%-14s set the input source encoding to ENC (default:  %s)\n\n",
 	  TEXTENCODING_FLAG_SHORT, TEXTENCODING_FLAG, DEFAULT_TEXT_ENCODING);
 
-      /*
-	      << "  " << SKIP_ENCODING_FLAG_SHORT        << ", " << setw(COL) <<  SKIP_ENCODING_FLAG
-	      << "store the text without any text encoding changes" << "\n"
-      */
-
-  printf("  --%-18s set the default namespace URI\n", XMLNS_DEFAULT_FLAG_FULL);
-  printf("                       (default:  xmlns=\"%s\")\n", SRCML_SRC_NS_URI);
-
-  printf("  --%-18s set the namespace PREFIX for the namespace URI\n", XMLNS_FLAG_FULL);
-  printf("                       (defaults:  xmlns:cpp=\"%s\")\n", SRCML_CPP_NS_URI);
-  printf("                       (defaults:  xmlns:srcerr=\"%s\")\n", SRCML_ERR_NS_URI);
-
-  printf("  --%-18s do not output the default XML declaration\n", NO_XML_DECLARATION_FLAG);
-  printf("  --%-18s do not output any namespace declarations\n\n", NO_NAMESPACE_DECLARATION_FLAG);
-
   printf("  -%c, --%-14s output in gzip format\n", COMPRESSED_FLAG_SHORT, COMPRESSED_FLAG);
 
   printf("  -%c, --%-14s immediate output while parsing, default for keyboard input\n", INTERACTIVE_FLAG_SHORT, INTERACTIVE_FLAG);
 
-  printf("  -%c, --%-14s markup translation errors in namespace \"%s\"\n",
+  printf("  -%c, --%-14s markup translation errors in namespace %s\n",
 	  DEBUG_FLAG_SHORT, DEBUG_FLAG, SRCML_ERR_NS_URI);
 
-  printf("  -%c, --%-14s verbose output to standard error\n\n", VERBOSE_FLAG_SHORT, VERBOSE_FLAG);
+  printf("  -%c, --%-14s conversion and status information to stderr\n\n",
+	  VERBOSE_FLAG_SHORT, VERBOSE_FLAG);
+
+  printf("  --%-18s do not output the default XML declaration\n", NO_XML_DECLARATION_FLAG);
+  printf("  --%-18s do not output any namespace declarations\n\n", NO_NAMESPACE_DECLARATION_FLAG);
 
   printf("Metadata Options:\n\n"
 	 "  -%c, --%-14s set the language to %s, %s (default), %s, or %s\n",
@@ -215,6 +204,17 @@ void output_help(const char* name) {
 
   printf("  --%-18s have tabs NUMBER characters apart.  Default is %d\n",
 	 TABS_FLAG_FULL, 8);
+
+  printf("\nPrefix Options:\n\n");
+
+  printf("  --%-18s set the default namespace URI\n", XMLNS_DEFAULT_FLAG_FULL);
+
+  printf("  --%-18s set the namespace PREFIX for the namespace URI\n\n", XMLNS_FLAG_FULL);
+
+  printf("                       Standard URIs and Prefixes:\n");
+  printf("                         xmlns=\"%s\"\n", SRCML_SRC_NS_URI);
+  printf("                         xmlns:%s=\"%s\"\n", SRCML_CPP_NS_PREFIX_DEFAULT, SRCML_CPP_NS_URI);
+  printf("                         xmlns:srcerr=\"%s\"\n", SRCML_ERR_NS_URI);
 
   printf("\nCPP Markup Options:\n\n");
 

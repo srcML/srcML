@@ -145,27 +145,27 @@ void output_help(const char* name) {
   printf("  -%c, --%-17s display prefix of namespace given by URI and exit\n",
 	  NAMESPACE_FLAG_SHORT, NAMESPACE_FLAG_FULL);
 
-  printf("  -%c, --%-17s display number of nested units and exit\n\n", NESTED_FLAG_SHORT, NESTED_FLAG);
+  printf("  -%c, --%-17s display number of individual units and exit\n\n", NESTED_FLAG_SHORT, NESTED_FLAG);
 
-  printf("  -%c, --%-17s display most metadata (except nested unit count) and exit\n",
+  printf("  -%c, --%-17s display most metadata except file count (individual units) and exit\n",
 	  INFO_FLAG_SHORT, INFO_FLAG);
 
-  printf("  -%c, --%-17s display all metadata (including nested unit count) and exit\n\n",
+  printf("  -%c, --%-17s display all metadata including file count (individual units)  and exit\n\n",
 	  LONG_INFO_FLAG_SHORT, LONG_INFO_FLAG);
 
   printf("Compound Document Options:  \n\n"
-	 "  -%c, --%-17s extract nested unit NUM from a compound srcML document\n",
+	 "  -%c, --%-17s extract individual unit NUM from a compound srcML document\n",
 	  UNIT_FLAG_SHORT, UNIT_FLAG_FULL);
 
   printf("  -%c, --%-17s extract all files from a compound srcML document\n\n",
 	  EXPAND_FLAG_SHORT, EXPAND_FLAG);
 
   printf("Query ad Transformation Options:  \n\n"
-	 "  --%-21s apply XPATH expression to each nested unit\n", XPATH_FLAG_FULL);
-  printf("  --%-21s apply XSLT_FILE (FILE or URI) transformation to each nested unit\n", XSLT_FLAG_FULL);
+	 "  --%-21s apply XPATH expression to each individual unit\n", XPATH_FLAG_FULL);
+  printf("  --%-21s apply XSLT_FILE (FILE or URI) transformation to each individual unit\n", XSLT_FLAG_FULL);
   printf("  --%-21s passes a parameter NAME and VAL to the XSLT program\n", PARAM_FLAG_FULL);
   printf("  --%-21s passes a string parameter NAME and VAL to an XSLT program\n", STRING_PARAM_FLAG_FULL);
-  printf("  --%-21s output nested units that match RELAXNG_FILE file (FILE or URI)\n", RELAXNG_FLAG_FULL);
+  printf("  --%-21s output individual units that match RELAXNG_FILE file (FILE or URI)\n", RELAXNG_FLAG_FULL);
   printf("  --%-21s apply an xslt program or xpath query to the root element\n\n", XSLT_ALL_FLAG);
 
   printf("Examples:  \n"
