@@ -18,7 +18,30 @@
 <!-- output an entity for a declaration -->
 <xsl:template match="src:decl[contains(src:name, '_FLAG')]">
 
-  <xsl:value-of select="concat(src:name, '=', src:init/src:expr)"/><xsl:text>
+  <xsl:variable name="data" select="substring(src:init/src:expr, 2, string-length(src:init/src:expr) - 2)"/>
+
+  <xsl:variable name="fixeddata">
+  <xsl:choose>
+    <xsl:when test="starts-with($data, '--')">
+      <xsl:value-of select="$data"/>
+    </xsl:when>
+
+    <xsl:when test="starts-with($data, '-') and string-length($data)=2">
+      <xsl:value-of select="$data"/>
+    </xsl:when>
+
+    <xsl:when test="string-length($data)=1">
+      <xsl:value-of select="concat('-', $data)"/>
+    </xsl:when>
+
+    <xsl:otherwise>
+      <xsl:value-of select="concat('--', $data)"/>
+    </xsl:otherwise>
+
+  </xsl:choose>
+  </xsl:variable>
+
+  <xsl:value-of select="concat(src:name, '=', '&quot;', $fixeddata, '&quot;')"/><xsl:text>
 </xsl:text>
 
 </xsl:template>
