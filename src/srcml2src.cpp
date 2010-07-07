@@ -70,8 +70,8 @@ char const * const PARAM_FLAG = "param";
 char const * const PARAM_FLAG_FULL = "param NAME VALUE";
 //char const PARAM_FLAG_SHORT = '';
 
-char const * const STRING_PARAM_FLAG = "string-param";
-char const * const STRING_PARAM_FLAG_FULL = "string-param NAME VALUE";
+char const * const STRING_PARAM_FLAG = "stringparam";
+char const * const STRING_PARAM_FLAG_FULL = "stringparam NAME VALUE";
 //char const PARAM_FLAG_SHORT = '';
 
 char const * const XSLT_ALL_FLAG = "xslt-all";
@@ -161,11 +161,11 @@ void output_help(const char* name) {
 	  LONG_INFO_FLAG_SHORT, LONG_INFO_FLAG);
 
   printf("Query and Tranformation Options:  \n\n"
-	 "  --%-23s apply XPATH expression to each nested unit\n", XPATH_FLAG_FULL);
-  printf("  --%-23s apply XSLT_FILE transformation to each nested unit\n", XSLT_FLAG_FULL);
-  printf("  --%-23s passes parameters NAME and VALUE to the XSLT program\n", PARAM_FLAG_FULL);
-  printf("  --%-23s passes string parameters NAME and VALUE to the XSLT program\n", STRING_PARAM_FLAG_FULL);
-  printf("  --%-23s output nested units that match RELAXNG_FILE grammar\n\n", RELAXNG_FLAG_FULL);
+	 "  --%-22s apply XPATH expression to each nested unit\n", XPATH_FLAG_FULL);
+  printf("  --%-22s apply XSLT_FILE transformation to each nested unit\n", XSLT_FLAG_FULL);
+  printf("  --%-22s passes parameters NAME and VALUE to the XSLT program\n", PARAM_FLAG_FULL);
+  printf("  --%-22s passes string parameters NAME and VALUE to the XSLT program\n", STRING_PARAM_FLAG_FULL);
+  printf("  --%-22s output nested units that match RELAXNG_FILE grammar\n\n", RELAXNG_FLAG_FULL);
 
   printf("Examples:  \n"
 	    "  %1$s                          (read from standard input, write to standard output)\n"
