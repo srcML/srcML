@@ -89,11 +89,13 @@ char const * const CONTEXT_FLAG_FULL = "context=CONTEXT";
 void output_help(const char* name) {
 
   printf("Usage: %s [options] <srcML_infile>... [-o <src_outfile>]\n\n"
-         "Translates from the the XML source-code representation srcML to source-code text files.\n"
-         "The srcML files can be in xml or gzip compressed xml (detected automatically).\n"
-         "Also provides for access to metadata about the srcML document, extracting specific\n"
-         "parts of compound srcML documents, querying using XPath and RelaxNG, and\n"
-	 "transformation with XSLT.\n\n"
+         "Translates from the the XML source-code representation srcML to source-code text files.\n\n"
+         "Provides access to metadata about the srcML document. For compound srcML documents\n"
+	 "provides extraction of specific files, and efficient querying/transformation\n"
+	 "using XPath, XSLT, and RelaxNG.\n\n"
+
+	 "Compound srcML documents contain multiple individual source code files,\n"
+	 "e.g., an entire project or directory tree.\n\n"
 
 	 "By default, output is to stdout.  You can specify a file for output using the --%s or -%c option.\n"
 	 "When no filenames are given input is from stdin and output is to stdout.\n"
@@ -101,6 +103,8 @@ void output_help(const char* name) {
 
 	 "Any input file, including XSLT and RelaxNG files, can be a local\n"
 	 "filename (FILE) or a URI with the protocols http:, ftp:, or file:\n\n"
+
+         "The srcML files can be in xml or gzip compressed xml (detected automatically).\n\n"
 
 	 "Options:\n", name, OUTPUT_FLAG, OUTPUT_FLAG_SHORT);
 
