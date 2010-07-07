@@ -100,31 +100,23 @@ void output_help(const char* name) {
 	 "An input filename of '-' also reads from stdin.\n\n"
 
 	 "Any input file, including XSLT or RelaxNG file, can be a local\n"
-	 "filename or use the protocols http:, ftp:, or file:\n\n"
+	 "filename (FILE) or a URI with the protocols http:, ftp:, or file:\n\n"
 
 	 "Options:\n", name, OUTPUT_FLAG, OUTPUT_FLAG_SHORT);
 
   printf("  -%c, --%-17s display this help and exit\n", HELP_FLAG_SHORT, HELP_FLAG);
-  printf("  -%c, --%-17s display version number and exit\n", VERSION_FLAG_SHORT, VERSION_FLAG);
+  printf("  -%c, --%-17s display version number and exit\n\n", VERSION_FLAG_SHORT, VERSION_FLAG);
 
-  printf("  -%c, --%-17s write result to <file|URI> instead of standard output\n\n", OUTPUT_FLAG_SHORT, OUTPUT_FLAG_FULL);
+  printf("  -%c, --%-17s write result to OUTPUT which is a FILE or URI\n", OUTPUT_FLAG_SHORT, OUTPUT_FLAG_FULL);
 
-  printf("  -%c, --%-17s set the output source encoding to ENC (default:  %s) \n\n",
+  printf("  -%c, --%-17s set the output source encoding to ENC (default:  %s) \n",
 	  TEXTENCODING_FLAG_SHORT, TEXTENCODING_FLAG_FULL, DEFAULT_TEXT_ENCODING);
 
-       /*
- 	       << "  " << SKIP_ENCODING_FLAG_SHORT        << ", " << setw(COL) <<  SKIP_ENCODING_FLAG
-	       << "skip any text encoding transformation" << "\n"
-       */
-
-  printf("  -%c, --%-17s extract nested unit NUM from a compound srcML document\n",
-	  UNIT_FLAG_SHORT, UNIT_FLAG_FULL);
-
-  printf("  -%c, --%-17s extract all files from a compound srcML document\n\n",
-	  EXPAND_FLAG_SHORT, EXPAND_FLAG);
-
-  printf("  -%c, --%-17s output text or XML in gzip format\n\n",
+  printf("  -%c, --%-17s output text or XML in gzip format\n",
 	  COMPRESSED_FLAG_SHORT, COMPRESSED_FLAG);
+
+  printf("  -%c, --%-17s conversion and status information to stderr\n\n",
+	  VERBOSE_FLAG_SHORT, VERBOSE_FLAG);
 
   printf("  -%c, --%-17s output in XML instead of text\n",
 	  XML_FLAG_SHORT, XML_FLAG);
@@ -134,9 +126,6 @@ void output_help(const char* name) {
 
   printf("  --%-21s do not output any namespace declarations in XML output\n\n",
 	  NO_NAMESPACE_DECLARATION_FLAG);
-
-  printf("  -%c, --%-17s verbose output\n\n",
-	  VERBOSE_FLAG_SHORT, VERBOSE_FLAG);
 
   printf("Metadata Options:  \n\n"
 	 "  -%c, --%-17s display source language and exit\n", LANGUAGE_FLAG_SHORT, LANGUAGE_FLAG);
@@ -160,12 +149,19 @@ void output_help(const char* name) {
   printf("  -%c, --%-17s display all metadata (including nested unit count) and exit\n\n",
 	  LONG_INFO_FLAG_SHORT, LONG_INFO_FLAG);
 
+  printf("Compound Document Options:  \n\n"
+	 "  -%c, --%-17s extract nested unit NUM from a compound srcML document\n",
+	  UNIT_FLAG_SHORT, UNIT_FLAG_FULL);
+
+  printf("  -%c, --%-17s extract all files from a compound srcML document\n\n",
+	  EXPAND_FLAG_SHORT, EXPAND_FLAG);
+
   printf("Query and Transformation Options:  \n\n"
 	 "  --%-22s apply XPATH expression to each nested unit\n", XPATH_FLAG_FULL);
-  printf("  --%-22s apply XSLT_FILE transformation to each nested unit\n", XSLT_FLAG_FULL);
+  printf("  --%-22s apply XSLT_FILE (FILE or URI) transformation to each nested unit\n", XSLT_FLAG_FULL);
   printf("  --%-22s passes parameters NAME and VALUE to the XSLT program\n", PARAM_FLAG_FULL);
   printf("  --%-22s passes string parameters NAME and VALUE to the XSLT program\n", STRING_PARAM_FLAG_FULL);
-  printf("  --%-22s output nested units that match RELAXNG_FILE grammar\n\n", RELAXNG_FLAG_FULL);
+  printf("  --%-22s output nested units that match RELAXNG_FILE file (FILE or URI) grammar\n\n", RELAXNG_FLAG_FULL);
 
   printf("Examples:  \n"
 	    "  %1$s                          (read from standard input, write to standard output)\n"
