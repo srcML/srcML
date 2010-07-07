@@ -103,7 +103,7 @@ void output_help(const char* name) {
   printf("  -%c, --%-17s display this help and exit\n", HELP_FLAG_SHORT, HELP_FLAG);
   printf("  -%c, --%-17s display version number and exit\n", VERSION_FLAG_SHORT, VERSION_FLAG);
 
-  printf("  -%c, --%-17s write result to <file|URI> instead of standard output\n\n", OUTPUT_FLAG_SHORT, OUTPUT_FLAG);
+  printf("  -%c, --%-17s write result to <file|URI> instead of standard output\n\n", OUTPUT_FLAG_SHORT, OUTPUT_FLAG_FULL);
 
   printf("  -%c, --%-17s set the output source encoding to ENC (default:  %s) \n\n",
 	  TEXTENCODING_FLAG_SHORT, TEXTENCODING_FLAG_FULL, DEFAULT_TEXT_ENCODING);

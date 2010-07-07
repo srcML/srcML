@@ -137,7 +137,7 @@ void output_help(const char* name) {
   printf("  -%c, --%-14s display this help and exit\n",      HELP_FLAG_SHORT, HELP_FLAG);
   printf("  -%c, --%-14s display version number and exit\n\n", VERSION_FLAG_SHORT, VERSION_FLAG);
 
-  printf("  -%c, --%-14s write result to <file|URI> instead of standard output\n", OUTPUT_FLAG_SHORT, OUTPUT_FLAG);
+  printf("  -%c, --%-14s write result to <file|URI> instead of standard output\n", OUTPUT_FLAG_SHORT, OUTPUT_FLAG_FULL);
   printf("  --%-18s read list of source file names from <file|URI> to form a compound srcML document\n\n",
 	  FILELIST_FLAG_FULL);
 
