@@ -67,11 +67,11 @@ char const * const XSLT_FLAG = "xslt";
 char const * const XSLT_FLAG_FULL = "xslt=XSLT_FILE";
 
 char const * const PARAM_FLAG = "param";
-char const * const PARAM_FLAG_FULL = "param NAME VALUE";
+char const * const PARAM_FLAG_FULL = "param NAME VAL";
 //char const PARAM_FLAG_SHORT = '';
 
 char const * const STRING_PARAM_FLAG = "stringparam";
-char const * const STRING_PARAM_FLAG_FULL = "stringparam NAME VALUE";
+char const * const STRING_PARAM_FLAG_FULL = "stringparam NAME VAL";
 //char const PARAM_FLAG_SHORT = '';
 
 char const * const XSLT_ALL_FLAG = "xslt-all";
@@ -156,12 +156,12 @@ void output_help(const char* name) {
   printf("  -%c, --%-17s extract all files from a compound srcML document\n\n",
 	  EXPAND_FLAG_SHORT, EXPAND_FLAG);
 
-  printf("Query and Transformation Options:  \n\n"
-	 "  --%-20s apply XPATH expression to each nested unit\n", XPATH_FLAG_FULL);
-  printf("  --%-20s apply XSLT_FILE (FILE or URI) transformation to each nested unit\n", XSLT_FLAG_FULL);
-  printf("  --%-20s passes a parameter NAME and VALUE to XSLT\n", PARAM_FLAG_FULL);
-  printf("  --%-20s passes a string parameter NAME and VALUE to XSLT\n", STRING_PARAM_FLAG_FULL);
-  printf("  --%-20s output nested units that match RELAXNG_FILE file (FILE or URI)\n\n", RELAXNG_FLAG_FULL);
+  printf("Query ad Transformation Options:  \n\n"
+	 "  --%-21s apply XPATH expression to each nested unit\n", XPATH_FLAG_FULL);
+  printf("  --%-21s apply XSLT_FILE (FILE or URI) transformation to each nested unit\n", XSLT_FLAG_FULL);
+  printf("  --%-21s passes a parameter NAME and VAL to the XSLT program\n", PARAM_FLAG_FULL);
+  printf("  --%-21s passes a string parameter NAME and VAL to an XSLT program\n", STRING_PARAM_FLAG_FULL);
+  printf("  --%-21s output nested units that match RELAXNG_FILE file (FILE or URI)\n\n", RELAXNG_FLAG_FULL);
 
   printf("Examples:  \n"
 	    "  %1$s                          (read from standard input, write to standard output)\n"
