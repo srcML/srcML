@@ -104,6 +104,28 @@ char const * const num2uri[] = {
   SRCML_EXT_POSITION_NS_URI,
 };
 
+const char* num2prefix[] = {
+
+  SRCML_SRC_NS_PREFIX_DEFAULT,
+  SRCML_CPP_NS_PREFIX_DEFAULT,
+  SRCML_ERR_NS_PREFIX_DEFAULT,
+  SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT,
+  SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT,
+  SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT,
+  SRCML_EXT_POSITION_NS_PREFIX_DEFAULT,
+};
+const int num_prefixes = sizeof(num2prefix) / sizeof(num2prefix[0]);
+
+int num2option[] = {
+  0,
+  OPTION_CPP,
+  OPTION_DEBUG,
+  OPTION_LITERAL,
+  OPTION_OPERATOR,
+  OPTION_MODIFIER,
+  OPTION_POSITION,
+};
+
 // output help
 void output_help(const char* name) {
   printf( "Usage: %s [options] <src_infile>... [-o <srcML_outfile>]\n\n"
@@ -227,28 +249,6 @@ void output_version(const char* name) {
 }
 
 int options = OPTION_CPP_MARKUP_ELSE;
-
-const char* num2prefix[] = {
-
-  SRCML_SRC_NS_PREFIX_DEFAULT,
-  SRCML_CPP_NS_PREFIX_DEFAULT,
-  SRCML_ERR_NS_PREFIX_DEFAULT,
-  SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT,
-  SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT,
-  SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT,
-  SRCML_EXT_POSITION_NS_PREFIX_DEFAULT,
-};
-const int num_prefixes = sizeof(num2prefix) / sizeof(num2prefix[0]);
-
-int num2option[] = {
-  0,
-  OPTION_CPP,
-  OPTION_DEBUG,
-  OPTION_LITERAL,
-  OPTION_OPERATOR,
-  OPTION_MODIFIER,
-  OPTION_POSITION,
-};
 
 #ifdef __GNUG__
 extern "C" void verbose_handler(int);
