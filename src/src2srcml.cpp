@@ -127,7 +127,7 @@ void output_help(const char* name) {
 	  "When no filenames are given input is from stdin and output is to stdout.\n"
 	  "An input filename of '-' also reads from stdin.\n\n"
 
-	  "Any input file can be a local filename or use the protocols http:, ftp:, or file:\n\n"
+    	  "Any input file can be a local filename (FILE) or a URI with the protocols http:, ftp:, or file:\n\n"
 
 	  "Language is based on the file extension, with a default of C++.  It can also be directly\n"
 	  "set using the --language option.\n"
