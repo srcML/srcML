@@ -35,12 +35,14 @@ namespace pstd {
   // macros that are in different namespaces between compilers
 #ifdef __GNUC__
   using std::strtol;
+  using std::strtoul;
   using std::atoi;
   using std::size_t;
   using std::signal;
   using std::isspace;
 #else
   using ::strtol;
+  using ::strtoul;
   using ::atoi;
   using ::size_t;
   using ::signal;
