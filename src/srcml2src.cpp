@@ -203,17 +203,10 @@ int optionorder[5];
 int optioncount = 0;
 
 const int MAXPARAMS = 32;
-//int paramcount = 0;
-//const char* params[MAXPARAMS * 2 + 1] = { 0 };
 
 const int MAXXSLT = 32;
-//int xsltcount = 0;
-//const char* xsltfiles[MAXXSLT + 1] = { 0 };
 
 const int MAXXPATH = 32;
-//int xpathcount = 0;
-//const char* xpathexpr[MAXXPATH + 1] = { 0 };
-//std::list<const char*> xpathexprlist;
 
 //const char* ofilename = "-";
 
