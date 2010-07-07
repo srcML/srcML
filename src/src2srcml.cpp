@@ -581,7 +581,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { DIRECTORY_FLAG + 2, required_argument, NULL, DIRECTORY_FLAG_SHORT[1] },
     { FILENAME_FLAG + 2, required_argument, NULL, FILENAME_FLAG_SHORT[1] },
     { SRCVERSION_FLAG + 2, required_argument, NULL, SRCVERSION_FLAG_SHORT[1] },
-    { LITERAL_FLAG + 2, no_argument, NULL, 'T' },
+    { LITERAL_FLAG + 2, no_argument, &curoption, OPTION_LITERAL },
     { OPERATOR_FLAG + 2, no_argument, NULL, 'O' },
     { MODIFIER_FLAG + 2, no_argument, NULL, 'M' },
     { CPP_MARKUP_ELSE_FLAG + 2, no_argument, NULL, 'm' },
@@ -805,10 +805,6 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       options |= OPTION_VERSION;
 
       poptions.given_version = optarg;
-      break;
-
-    case 'T': 
-      options |= OPTION_LITERAL;
       break;
 
     case 'O': 
