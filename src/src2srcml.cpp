@@ -55,27 +55,21 @@ const char* const INTERACTIVE_FLAG = "--interactive";
 const char* const INTERACTIVE_FLAG_SHORT = "-c";
 
 const char* const CPP_MARKUP_ELSE_FLAG = "--cpp_markup_else";
-const char* const CPP_MARKUP_ELSE_FLAG_SHORT = "";
 
 const char* const CPP_TEXTONLY_ELSE_FLAG = "--cpp_text_else";
-const char* const CPP_TEXTONLY_ELSE_FLAG_SHORT = "";
 
 const char* const CPP_MARKUP_IF0_FLAG = "--cpp_markup_if0";
-const char* const CPP_MARKUP_IF0_FLAG_SHORT = "";
 
 const char* const CPP_TEXTONLY_IF0_FLAG = "--cpp_text_if0";
-const char* const CPP_TEXTONLY_IF0_FLAG_SHORT = "";
 
 const char* const EXPRESSION_MODE_FLAG = "--expression";
 const char* const EXPRESSION_MODE_FLAG_SHORT = "-e";
 
 const char* const SELF_VERSION_FLAG = "--self-version";
-const char* const SELF_VERSION_FLAG_SHORT = "";
 
 const char* const DEFAULT_XML_ENCODING = "UTF-8";
 
 const char* const FILELIST_FLAG = "--files-from";
-const char* const FILELIST_FLAG_SHORT = "";
 
 const char* const XMLNS_FLAG = "--xmlns";
 const char* const XMLNS_DEFAULT_FLAG_FULL = "--xmlns=URI";
