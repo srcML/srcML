@@ -123,11 +123,11 @@ void output_help(const char* name) {
   printf("  -%c, --%-17s extract all files from a compound srcML document\n\n",
 	  EXPAND_FLAG_SHORT, EXPAND_FLAG);
 
-  printf("  -%c, --%-17s output in XML instead of text\n\n",
-	  XML_FLAG_SHORT, XML_FLAG);
-
   printf("  -%c, --%-17s output text or XML in gzip format\n\n",
 	  COMPRESSED_FLAG_SHORT, COMPRESSED_FLAG);
+
+  printf("  -%c, --%-17s output in XML instead of text\n",
+	  XML_FLAG_SHORT, XML_FLAG);
 
   printf("  --%-21s do not output the default XML declaration in XML output\n",
 	  NO_XML_DECLARATION_FLAG);
