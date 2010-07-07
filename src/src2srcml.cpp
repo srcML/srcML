@@ -72,7 +72,7 @@ const char* const SELF_VERSION_FLAG = "self-version";
 const char* const DEFAULT_XML_ENCODING = "UTF-8";
 
 const char* const FILELIST_FLAG = "files-from";
-const char* const FILELIST_FLAG_FULL = "files-from=FILE";
+const char* const FILELIST_FLAG_FULL = "files-from=INPUT";
 
 const char* const XMLNS_FLAG = "xmlns";
 const char* const XMLNS_DEFAULT_FLAG_FULL = "xmlns=URI";
@@ -137,8 +137,9 @@ void output_help(const char* name) {
   printf("  -%c, --%-14s display this help and exit\n",      HELP_FLAG_SHORT, HELP_FLAG);
   printf("  -%c, --%-14s display version number and exit\n\n", VERSION_FLAG_SHORT, VERSION_FLAG);
 
-  printf("  -%c, --%-14s write result to <file|URI> instead of standard output\n", OUTPUT_FLAG_SHORT, OUTPUT_FLAG_FULL);
-  printf("  --%-18s read list of source file names from <file|URI> to form a compound srcML document\n\n",
+  printf("  -%c, --%-14s write result to OUTPUT which is a FILE or URI\n", OUTPUT_FLAG_SHORT, OUTPUT_FLAG_FULL);
+  printf("  --%-18s read list of source file names from INPUT which is a FILE or URI,\n"
+	 "                      to form a compound srcML document\n\n",
 	  FILELIST_FLAG_FULL);
 
   printf("  -%c, --%-14s store all input source files in one compound srcML document\n",
