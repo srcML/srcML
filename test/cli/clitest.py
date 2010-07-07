@@ -38,7 +38,7 @@ def validate(org, gen):
 	return
 
 def execute(command, input):
-	p = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+	p = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 	last_line = p.communicate(input)[0]
 
 	if p.returncode != 0:
