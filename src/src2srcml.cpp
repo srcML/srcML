@@ -82,6 +82,8 @@ const char* const EXAMPLE_XML_FILENAME="foo.cpp.xml";
 
 const char FILELIST_COMMENT = '#';
 
+bool process;
+
 enum {
   SRCML_SRC_NS_URI_POS = 0, 
   SRCML_CPP_NS_URI_POS,
@@ -713,15 +715,13 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       }
 
       // look for uri in rest of this argument
-      if (!ns_uri) {
-
+      if (!ns_uri)
 	for (; *embedded; ++embedded)
 	  if (*embedded == '=') {
 	    ns_uri = embedded + 1;
 	    *embedded = '\0';
 	    break;
 	  }
-      }
 
       // look for uri in next argument
       if (!ns_uri) {
@@ -733,63 +733,23 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 	ns_uri = argv[optind++];
       }
 
-      // update the uri's
-      // check for standard namespaces, store them, and update any flags
-      if (strcmp(ns_uri, SRCML_SRC_NS_URI) == 0) {
+      // check uri to turn on specific option
+      process = false;
+      for (int i = 0; i < num_prefixes; ++i)
+	if (strcmp(ns_uri, num2uri[i]) == 0) {
 
-	num2prefix[SRCML_SRC_NS_URI_POS] = ns_prefix;
-	poptions.prefixchange[SRCML_SRC_NS_URI_POS] = true;
+	  options |= num2option[i];
 
-      } else if (strcmp(ns_uri, SRCML_CPP_NS_URI) == 0) {
+	  if (i == SRCML_CPP_NS_URI_POS)
+	    poptions.specified_cpp_option = true;
 
-	// specifying the cpp prefix automatically turns on preprocessor
-	options |= OPTION_CPP;
-	poptions.specified_cpp_option = true;
+	  num2prefix[i] = ns_prefix;
+	  poptions.prefixchange[i] = true;
+	  process = true;
+	  break;
+	}
 
-	num2prefix[SRCML_CPP_NS_URI_POS] = ns_prefix;
-	poptions.prefixchange[SRCML_CPP_NS_URI_POS] = true;
-
-      } else if (strcmp(ns_uri, SRCML_ERR_NS_URI) == 0) {
-
-	// specifying the error prefix automatically turns on debugging
-	options |= OPTION_DEBUG;
-
-	num2prefix[SRCML_ERR_NS_URI_POS] = ns_prefix;
-	poptions.prefixchange[SRCML_ERR_NS_URI_POS] = true;
-
-      } else if (strcmp(ns_uri, SRCML_EXT_LITERAL_NS_URI) == 0) {
-
-	// specifying the literal prefix automatically turns on literal markup
-	options |= OPTION_LITERAL;
-
-	num2prefix[SRCML_EXT_LITERAL_NS_URI_POS] = ns_prefix;
-	poptions.prefixchange[SRCML_EXT_LITERAL_NS_URI_POS] = true;
-
-      } else if (strcmp(ns_uri, SRCML_EXT_OPERATOR_NS_URI) == 0) {
-
-	// specifying the operator prefix automatically turns on operator markup
-	options |= OPTION_OPERATOR;
-
-	num2prefix[SRCML_EXT_OPERATOR_NS_URI_POS] = ns_prefix;
-	poptions.prefixchange[SRCML_EXT_OPERATOR_NS_URI_POS] = true;
-
-      } else if (strcmp(ns_uri, SRCML_EXT_MODIFIER_NS_URI) == 0) {
-
-	// specifying the operator prefix automatically turns on type modifier markup
-	options |= OPTION_MODIFIER;
-
-	num2prefix[SRCML_EXT_MODIFIER_NS_URI_POS] = ns_prefix;
-	poptions.prefixchange[SRCML_EXT_MODIFIER_NS_URI_POS] = true;
-
-      } else if (strcmp(ns_uri, SRCML_EXT_POSITION_NS_URI) == 0) {
-
-	// specifying the operator prefix automatically turns on type modifier markup
-	options |= OPTION_POSITION;
-
-	num2prefix[SRCML_EXT_POSITION_NS_URI_POS] = ns_prefix;
-	poptions.prefixchange[SRCML_EXT_POSITION_NS_URI_POS] = true;
-
-      } else {
+      if (!process) {
 	fprintf(stderr, "%s: invalid namespace \"%s\"\n\n"
 		"Namespace URI must be on of the following:  \n"
 		"  %-35s primary srcML namespace\n"
@@ -806,7 +766,10 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 		);
 	exit(STATUS_INVALID_LANGUAGE);
       }
-      //      fprintf(stderr, "XMLNS: %s\n", optarg);
+    /*
+	poptions.specified_cpp_option = true;
+
+    */
       break;
 
     case 'z': 
