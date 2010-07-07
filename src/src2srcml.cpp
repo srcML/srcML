@@ -588,7 +588,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { CPP_TEXTONLY_ELSE_FLAG, no_argument, NULL, 'E' },
     { CPP_MARKUP_IF0_FLAG, no_argument, NULL, '0' },
     { CPP_TEXTONLY_IF0_FLAG, no_argument, NULL, 'p' },
-    { POSITION_FLAG, no_argument, NULL, 'P' },
+    { POSITION_FLAG, no_argument, &curoption, OPTION_POSITION },
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL },
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL },
     { 0, 0, 0, 0 }
@@ -857,10 +857,6 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 		argv[0], CPP_MARKUP_IF0_FLAG, CPP_TEXTONLY_IF0_FLAG);
 	exit(STATUS_INVALID_OPTION_COMBINATION);
       }
-      break;
-
-    case 'P': 
-      options |= OPTION_POSITION;
       break;
 
     default:
