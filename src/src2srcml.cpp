@@ -139,7 +139,7 @@ void output_help(const char* name) {
 
   printf("  -%c, --%-14s write result to OUTPUT which is a FILE or URI\n", OUTPUT_FLAG_SHORT, OUTPUT_FLAG_FULL);
   printf("  --%-18s read list of source file names from INPUT which is a FILE or URI,\n"
-	 "                      to form a compound srcML document\n\n",
+	 "                       to form a compound srcML document\n\n",
 	  FILELIST_FLAG_FULL);
 
   printf("  -%c, --%-14s store all input source files in one compound srcML document\n",
