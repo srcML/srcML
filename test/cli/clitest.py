@@ -1736,7 +1736,16 @@ srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 srcmlout = """<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 """
 
+f = open('sub/a.cpp.xml', 'w')
+f.write(srcml)
+f.close()
+
 check([srcmlutility, option.NO_XML_DECLARATION_FLAG], srcml, srcmlout)
+check([srcmlutility, option.NO_XML_DECLARATION_FLAG, 'sub/a.cpp.xml'], "", srcmlout)
+check([srcmlutility, option.NO_XML_DECLARATION_FLAG, '-o', 'sub/a.cpp.xml'], srcml, "")
+validate(open('sub/a.cpp.xml').read(), srcmlout)
+check([srcmlutility, option.NO_XML_DECLARATION_FLAG, 'sub/a.cpp.xml', '-o', 'sub/a.cpp.xml'], srcml, "")
+validate(open('sub/a.cpp.xml').read(), srcmlout)
 
 ##
 # no namespace declaration
@@ -1749,7 +1758,16 @@ srcmlout = xml_declaration + """
 <unit language="C++"/>
 """
 
+f = open('sub/a.cpp.xml', 'w')
+f.write(srcml)
+f.close()
+
 check([srcmlutility, option.NO_NAMESPACE_DECLARATION_FLAG], srcml, srcmlout)
+check([srcmlutility, option.NO_XML_DECLARATION_FLAG, 'sub/a.cpp.xml'], "", srcmlout)
+check([srcmlutility, option.NO_XML_DECLARATION_FLAG, '-o', 'sub/a.cpp.xml'], srcml, "")
+validate(open('sub/a.cpp.xml').read(), srcmlout)
+check([srcmlutility, option.NO_XML_DECLARATION_FLAG, 'sub/a.cpp.xml', '-o', 'sub/a.cpp.xml'], srcml, "")
+validate(open('sub/a.cpp.xml').read(), srcmlout)
 
 # footer
 print
