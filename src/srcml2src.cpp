@@ -62,13 +62,17 @@ char const * const XPATH_FLAG = "xpath";
 //char const XPATH_FLAG_SHORT = '';
 char const * const XPATH_FLAG_FULL = "xpath=XPATH";
 
-char const * const CONTEXT_FLAG = "context";
-//char const CONTEXT_FLAG_SHORT = '';
-char const * const CONTEXT_FLAG_FULL = "context=CONTEXT";
-
 char const * const XSLT_FLAG = "xslt";
 //char const XSLT_FLAG_SHORT = '';
 char const * const XSLT_FLAG_FULL = "xslt=XSLT_FILE";
+
+char const * const PARAM_FLAG = "param";
+char const * const PARAM_FLAG_FULL = "param NAME VALUE";
+//char const PARAM_FLAG_SHORT = '';
+
+char const * const STRING_PARAM_FLAG = "string-param";
+char const * const STRING_PARAM_FLAG_FULL = "string-param NAME VALUE";
+//char const PARAM_FLAG_SHORT = '';
 
 char const * const XSLT_ALL_FLAG = "xslt-all";
 //char const XSLT_ALL_FLAG_SHORT = '';
@@ -77,9 +81,9 @@ char const * const RELAXNG_FLAG = "relaxng";
 //char const RELAXNG_FLAG_SHORT = '';
 char const * const RELAXNG_FLAG_FULL = "relaxng=RELAXNG_FILE";
 
-char const * const PARAM_FLAG = "param";
-char const * const PARAM_FLAG_FULL = "param NAME VALUE";
-//char const PARAM_FLAG_SHORT = '';
+char const * const CONTEXT_FLAG = "context";
+//char const CONTEXT_FLAG_SHORT = '';
+char const * const CONTEXT_FLAG_FULL = "context=CONTEXT";
 
 // output help message
 void output_help(const char* name) {
@@ -530,6 +534,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
     { XPATH_FLAG, required_argument, NULL, 'P' },
     { XSLT_FLAG, required_argument, NULL, 'S' },
     { PARAM_FLAG, required_argument, NULL, 'A' },
+    { STRING_PARAM_FLAG, required_argument, NULL, 'B' },
     { RELAXNG_FLAG, required_argument, NULL, 'R' },
     //    { CONTEXT_FLAG, required_argument, NULL, 'C' },
     { 0, 0, 0, 0 }
@@ -643,19 +648,37 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
       break;
 
+    case 'P':
+      options |= OPTION_XPATH;
+      poptions.xpathexprlist.push_back(poptions.xpathexpr[poptions.xpathcount++] = optarg);
+      break;
+
     case 'S':
 
       options |= OPTION_XSLT;
       poptions.xsltfiles[poptions.xsltcount++] = optarg;
       break;
 
-    case 'R':
-      options |= OPTION_RELAXNG;
-      poptions.xpathexprlist.push_back(poptions.xpathexpr[poptions.xpathcount++] = optarg);
+    case 'A':
+
+      // param name
+      poptions.params[poptions.paramcount++] = optarg;
+      
+      // param value
+      poptions.params[poptions.paramcount++] = argv[optind++];
       break;
 
-    case 'P':
-      options |= OPTION_XPATH;
+    case 'B':
+
+      // param name
+      poptions.params[poptions.paramcount++] = optarg;
+      
+      // param value
+      poptions.params[poptions.paramcount++] = argv[optind++];
+      break;
+
+    case 'R':
+      options |= OPTION_RELAXNG;
       poptions.xpathexprlist.push_back(poptions.xpathexpr[poptions.xpathcount++] = optarg);
       break;
 
@@ -682,15 +705,6 @@ int process_args(int argc, char* argv[], process_options & poptions)
       options |= OPTION_NAMESPACE;
 
       poptions.ns.push_back(optarg);
-      break;
-
-    case 'A':
-
-      // param name
-      poptions.params[poptions.paramcount++] = optarg;
-      
-      // param value
-      poptions.params[poptions.paramcount++] = argv[optind++];
       break;
 
     default:
