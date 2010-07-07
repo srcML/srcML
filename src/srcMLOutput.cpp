@@ -282,7 +282,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   xout = xmlNewTextWriterFilename(srcml_filename, isoption(OPTION_COMPRESSED));
 
   // issue the xml declaration, but only if we want to
-  if (isoption(OPTION_XMLDECL))
+  if (!isoption(OPTION_XMLDECL))
     xmlTextWriterStartDocument(xout, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
 }
 
@@ -407,7 +407,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     xmlTextWriterStartElement(xout, BAD_CAST type2name(SUNIT));
 
     // outer units have namespaces
-    if (outer && isoption(OPTION_NAMESPACEDECL)) {
+    if (outer && !isoption(OPTION_NAMESPACEDECL)) {
 
       // figure out which namespaces are needed
       char const * const ns[] = { 

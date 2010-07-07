@@ -226,7 +226,7 @@ void output_version(const char* name) {
   printf("%s Version %s\n%s\n", name, VERSION,COPYRIGHT);
 }
 
-int options = OPTION_CPP_MARKUP_ELSE | OPTION_XMLDECL | OPTION_NAMESPACEDECL;
+int options = OPTION_CPP_MARKUP_ELSE;
 
 const char* num2prefix[] = {
 
@@ -613,7 +613,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       break;
 
     if (curoption) {
-      options &= ~curoption;
+      options |= curoption;
       continue;
     }
 
