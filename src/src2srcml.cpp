@@ -238,6 +238,16 @@ const char* num2prefix[] = {
 };
 const int num_prefixes = sizeof(num2prefix) / sizeof(num2prefix[0]);
 
+int num2option[] = {
+  0,
+  OPTION_CPP,
+  OPTION_DEBUG,
+  OPTION_LITERAL,
+  OPTION_OPERATOR,
+  OPTION_MODIFIER,
+  OPTION_POSITION,
+};
+
 #ifdef __GNUG__
 extern "C" void verbose_handler(int);
 
@@ -330,8 +340,8 @@ int main(int argc, char* argv[]) {
 #endif
 
   // make sure user did not specify duplicate prefixes as an option
-  for (int i = 0; i < 6 - 1; ++i) {
-    for (int j = i + 1; j < 6; ++j)
+  for (int i = 0; i < num_prefixes - 1; ++i) {
+    for (int j = i + 1; j < num_prefixes; ++j)
       if(strcmp(num2prefix[i], num2prefix[j]) == 0) {
 
 	fprintf(stderr, "%s: Namespace conflict for ", NAME);
