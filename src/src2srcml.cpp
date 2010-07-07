@@ -50,6 +50,8 @@ const char* const OPERATOR_FLAG = "--operator";
 const char* const MODIFIER_FLAG = "--modifier";
 
 const char* const POSITION_FLAG = "--position";
+const char* const TABS_FLAG = "--tabs";
+const char* const TABS_FLAG_FULL = "--tabs=NUMBER";
 
 const char* const INTERACTIVE_FLAG = "--interactive";
 const char* const INTERACTIVE_FLAG_SHORT = "-c";
@@ -203,6 +205,14 @@ void output_help(const char* name) {
 
   printf("  %-20s markup type modifiers in namespace \"%s\"\n",
 	 MODIFIER_FLAG, SRCML_EXT_MODIFIER_NS_URI);
+
+  printf("\nLine/Column Position:\n\n");
+
+  printf("  %-20s markup literal values in namespace \"%s\"\n",
+	 POSITION_FLAG, SRCML_EXT_POSITION_NS_URI);
+
+  printf("  %-20s have tabs NUMBER characters apart.  Default is %d\n",
+	 TABS_FLAG_FULL, 8);
 
   printf("\nCPP Markup Options:\n\n");
 
