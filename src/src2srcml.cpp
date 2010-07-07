@@ -585,19 +585,19 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { DIRECTORY_FLAG, required_argument, NULL, DIRECTORY_FLAG_SHORT },
     { FILENAME_FLAG, required_argument, NULL, FILENAME_FLAG_SHORT },
     { SRCVERSION_FLAG, required_argument, NULL, SRCVERSION_FLAG_SHORT },
-    { CPP_MARKUP_ELSE_FLAG, no_argument, NULL, 'm' },
-    { CPP_TEXTONLY_ELSE_FLAG, no_argument, NULL, 'E' },
-    { CPP_MARKUP_IF0_FLAG, no_argument, NULL, '0' },
-    { CPP_TEXTONLY_IF0_FLAG, no_argument, NULL, 'p' },
-    { TABS_FLAG, no_argument, NULL, 'T' },
     { FILELIST_FLAG, required_argument, NULL, 'F' },
     { XMLNS_FLAG, required_argument, NULL, 'X' },
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL },
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL },
+    { TABS_FLAG, required_argument, NULL, 'T' },
     { POSITION_FLAG, no_argument, &curoption, OPTION_POSITION },
     { LITERAL_FLAG, no_argument, &curoption, OPTION_LITERAL },
     { OPERATOR_FLAG, no_argument, &curoption, OPTION_OPERATOR },
     { MODIFIER_FLAG, no_argument, &curoption, OPTION_MODIFIER },
+    { CPP_MARKUP_ELSE_FLAG, no_argument, NULL, 'm' },
+    { CPP_TEXTONLY_ELSE_FLAG, no_argument, NULL, 'E' },
+    { CPP_MARKUP_IF0_FLAG, no_argument, NULL, '0' },
+    { CPP_TEXTONLY_IF0_FLAG, no_argument, NULL, 'p' },
     { 0, 0, 0, 0 }
   };
 
@@ -813,6 +813,12 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
       poptions.given_version = optarg;
       break;
+
+    case 'T' :
+      options |= OPTION_POSITION;
+      poptions.tabsize = atoi(optarg);
+      break;
+
 
     case 'm': 
       if (!cpp_else) {
