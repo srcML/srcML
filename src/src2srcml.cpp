@@ -143,7 +143,7 @@ void output_help(const char* name) {
 	  FILELIST_FLAG_FULL);
 
   printf("  -%c, --%-14s store output in a compound srcML document, default for multiple input files\n",
-	  NESTED_FLAG_SHORT, NESTED_FLAG);
+	  COMPOUND_FLAG_SHORT, COMPOUND_FLAG);
 
   printf("  -%c, --%-14s expression mode for translating a single expression not in a statement\n",
 	  EXPRESSION_MODE_FLAG_SHORT, EXPRESSION_MODE_FLAG);
@@ -574,7 +574,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { HELP_FLAG, no_argument, NULL, HELP_FLAG_SHORT },
     { VERSION_FLAG, no_argument, NULL, VERSION_FLAG_SHORT },
     { OUTPUT_FLAG, required_argument, NULL, OUTPUT_FLAG_SHORT },
-    { NESTED_FLAG, no_argument, NULL, NESTED_FLAG_SHORT },
+    { COMPOUND_FLAG, no_argument, NULL, COMPOUND_FLAG_SHORT },
     { EXPRESSION_MODE_FLAG, no_argument, NULL, EXPRESSION_MODE_FLAG_SHORT },
     { ENCODING_FLAG, required_argument, NULL, ENCODING_FLAG_SHORT },
     { TEXTENCODING_FLAG, required_argument, NULL, TEXTENCODING_FLAG_SHORT },
