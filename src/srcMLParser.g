@@ -1725,7 +1725,8 @@ terminate_post {} :
         {
             // end all statements this statement is nested in
             // special case when ending then of if statement
-            if ((!inMode(MODE_EXPRESSION_BLOCK) || inMode(MODE_EXPECT)) &&
+            if (!(parseoptions & OPTION_EXPRESSION) &&
+                 (!inMode(MODE_EXPRESSION_BLOCK) || inMode(MODE_EXPECT)) &&
                 !inMode(MODE_INTERNAL_END_CURLY) && !inMode(MODE_INTERNAL_END_PAREN)) {
 
                 // end down to either a block or top section, or to an if or else

@@ -160,7 +160,7 @@ void output_help(const char* name) {
   printf("  -%c, --%-17s display all metadata (including nested unit count) and exit\n\n",
 	  LONG_INFO_FLAG_SHORT, LONG_INFO_FLAG);
 
-  printf("Query and Tranformation Options:  \n\n"
+  printf("Query and Transformation Options:  \n\n"
 	 "  --%-22s apply XPATH expression to each nested unit\n", XPATH_FLAG_FULL);
   printf("  --%-22s apply XSLT_FILE transformation to each nested unit\n", XSLT_FLAG_FULL);
   printf("  --%-22s passes parameters NAME and VALUE to the XSLT program\n", PARAM_FLAG_FULL);
