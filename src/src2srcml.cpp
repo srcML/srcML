@@ -256,7 +256,7 @@ extern "C" void verbose_handler(int);
 extern "C" void terminate_handler(int);
 #endif
 
-typedef struct process_options
+struct process_options
 {
   // options
   // output filename
@@ -269,7 +269,7 @@ typedef struct process_options
   const char* given_filename;
   const char* given_version;
   bool prefixchange[num_prefixes];
-} process_options;
+};
 
 // setup options and collect info from arguments
 int process_args(int argc, char* argv[], process_options & poptions);
