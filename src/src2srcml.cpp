@@ -144,7 +144,7 @@ void output_help(const char* name) {
   printf("  -%c, --%-14s store all input source files in one compound srcML document\n",
 	  NESTED_FLAG_SHORT, NESTED_FLAG);
 
-  printf("  -%c, --%-14s translates a single, individual expression outside of any statement\n",
+  printf("  -%c, --%-14s expression mode for translating expressions not in a statement\n",
 	  EXPRESSION_MODE_FLAG_SHORT, EXPRESSION_MODE_FLAG);
 
   printf("  -%c, --%-14s set the output XML encoding to ENC (default:  %s)\n",
