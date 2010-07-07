@@ -86,22 +86,21 @@ bool process;
 
 struct uridata {
   char const * const uri;
-  char const * prefix;
   int option;
 };
 
 uridata uris[] = {
 
-  { SRCML_SRC_NS_URI,          SRCML_SRC_NS_PREFIX_DEFAULT,         0 },
-  { SRCML_CPP_NS_URI,          SRCML_CPP_NS_PREFIX_DEFAULT,         OPTION_CPP },
-  { SRCML_ERR_NS_URI,          SRCML_ERR_NS_PREFIX_DEFAULT,         OPTION_DEBUG },
-  { SRCML_EXT_LITERAL_NS_URI,  SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT, OPTION_LITERAL },
-  { SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT, OPTION_OPERATOR },
-  { SRCML_EXT_MODIFIER_NS_URI, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT, OPTION_MODIFIER },
-  { SRCML_EXT_POSITION_NS_URI, SRCML_EXT_POSITION_NS_PREFIX_DEFAULT, OPTION_POSITION },
+  { SRCML_SRC_NS_URI,          0 },
+  { SRCML_CPP_NS_URI,          OPTION_CPP },
+  { SRCML_ERR_NS_URI,          OPTION_DEBUG },
+  { SRCML_EXT_LITERAL_NS_URI,  OPTION_LITERAL },
+  { SRCML_EXT_OPERATOR_NS_URI, OPTION_OPERATOR },
+  { SRCML_EXT_MODIFIER_NS_URI, OPTION_MODIFIER },
+  { SRCML_EXT_POSITION_NS_URI, OPTION_POSITION },
 };
 
-const char* num2prefix[] = {
+const char* urisprefix[] = {
 
   SRCML_SRC_NS_PREFIX_DEFAULT,
   SRCML_CPP_NS_PREFIX_DEFAULT,
@@ -111,6 +110,7 @@ const char* num2prefix[] = {
   SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT,
   SRCML_EXT_POSITION_NS_PREFIX_DEFAULT,
 };
+
 const int num_prefixes = sizeof(uris) / sizeof(uris[0]);
 
 // output help
@@ -329,13 +329,13 @@ int main(int argc, char* argv[]) {
   // make sure user did not specify duplicate prefixes as an option
   for (int i = 0; i < num_prefixes - 1; ++i) {
     for (int j = i + 1; j < num_prefixes; ++j)
-      if(strcmp(uris[i].prefix, uris[j].prefix) == 0) {
+      if(strcmp(urisprefix[i], urisprefix[j]) == 0) {
 
 	fprintf(stderr, "%s: Namespace conflict for ", NAME);
-	if (uris[i].prefix == '\0') {
+	if (urisprefix[i] == '\0') {
 	  fprintf(stderr, "default prefix\n");
 	} else {
-	  fprintf(stderr, "prefix \'%s\'\n", uris[i].prefix);
+	  fprintf(stderr, "prefix \'%s\'\n", urisprefix[i]);
 	}
 	fprintf(stderr, "Prefix URI conflicts:\n  %s\n  %s\n", uris[i].uri, uris[j].uri);
 
@@ -370,7 +370,7 @@ int main(int argc, char* argv[]) {
     // translator from input to output using determined language
     //    if (language == 0)
     //	language = DEFAULT_LANGUAGE;
-    srcMLTranslator translator(poptions.language == 0 ? DEFAULT_LANGUAGE : poptions.language, poptions.src_encoding, poptions.xml_encoding, poptions.srcml_filename, options, poptions.given_directory, poptions.given_filename, poptions.given_version, num2prefix);
+    srcMLTranslator translator(poptions.language == 0 ? DEFAULT_LANGUAGE : poptions.language, poptions.src_encoding, poptions.xml_encoding, poptions.srcml_filename, options, poptions.given_directory, poptions.given_filename, poptions.given_version, urisprefix);
 
   // output source encoding
   if (isoption(options, OPTION_VERBOSE)) {
@@ -725,7 +725,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
 	  options |= uris[i].option;
 
-	  num2prefix[i] = ns_prefix;
+	  urisprefix[i] = ns_prefix;
 	  poptions.prefixchange[i] = true;
 	  process = true;
 	  break;
