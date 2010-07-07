@@ -74,7 +74,7 @@ char const * const STRING_PARAM_FLAG = "stringparam";
 char const * const STRING_PARAM_FLAG_FULL = "stringparam NAME VAL";
 //char const PARAM_FLAG_SHORT = '';
 
-char const * const XSLT_ALL_FLAG = "xslt-all";
+char const * const XSLT_ALL_FLAG = "apply-root";
 //char const XSLT_ALL_FLAG_SHORT = '';
 
 char const * const RELAXNG_FLAG = "relaxng";
