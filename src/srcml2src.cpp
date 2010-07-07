@@ -38,47 +38,47 @@ int option_error_status(int optopt);
 
 char const * const NAME = "srcml2src";
 
-char const * const EXPAND_FLAG = "--extract-all";
-char const * const EXPAND_FLAG_SHORT = "-a";
+char const * const EXPAND_FLAG = "extract-all";
+char const EXPAND_FLAG_SHORT = 'a';
 
-char const * const UNIT_FLAG = "--unit";
-char const * const UNIT_FLAG_SHORT = "-U";
-char const * const UNIT_FLAG_FULL = "--unit=NUM";
+char const * const UNIT_FLAG = "unit";
+char const UNIT_FLAG_SHORT = 'U';
+char const * const UNIT_FLAG_FULL = "unit=NUM";
 
-char const * const XML_FLAG = "--xml";
-char const * const XML_FLAG_SHORT = "-X";
+char const * const XML_FLAG = "xml";
+char const XML_FLAG_SHORT = 'X';
 
-char const * const INFO_FLAG = "--info";
-char const * const INFO_FLAG_SHORT = "-i";
+char const * const INFO_FLAG = "info";
+char const INFO_FLAG_SHORT = 'i';
 
-char const * const LONG_INFO_FLAG = "--longinfo";
-char const * const LONG_INFO_FLAG_SHORT = "-L";
+char const * const LONG_INFO_FLAG = "longinfo";
+char const LONG_INFO_FLAG_SHORT = 'L';
 
-char const * const NAMESPACE_FLAG = "--prefix";
-char const * const NAMESPACE_FLAG_SHORT = "-p";
-char const * const NAMESPACE_FLAG_FULL = "--prefix=URI";
+char const * const NAMESPACE_FLAG = "prefix";
+char const NAMESPACE_FLAG_SHORT = 'p';
+char const * const NAMESPACE_FLAG_FULL = "prefix=URI";
 
-char const * const XPATH_FLAG = "--xpath";
-char const * const XPATH_FLAG_SHORT = "";
-char const * const XPATH_FLAG_FULL = "--xpath=XPATH";
+char const * const XPATH_FLAG = "xpath";
+//char const XPATH_FLAG_SHORT = '';
+char const * const XPATH_FLAG_FULL = "xpath=XPATH";
 
-char const * const CONTEXT_FLAG = "--context";
-char const * const CONTEXT_FLAG_SHORT = "";
-char const * const CONTEXT_FLAG_FULL = "--context=CONTEXT";
+char const * const CONTEXT_FLAG = "context";
+//char const CONTEXT_FLAG_SHORT = '';
+char const * const CONTEXT_FLAG_FULL = "context=CONTEXT";
 
-char const * const XSLT_FLAG = "--xslt";
-char const * const XSLT_FLAG_SHORT = "";
-char const * const XSLT_FLAG_FULL = "--xslt=XSLT_FILE";
+char const * const XSLT_FLAG = "xslt";
+//char const XSLT_FLAG_SHORT = '';
+char const * const XSLT_FLAG_FULL = "xslt=XSLT_FILE";
 
-char const * const XSLT_ALL_FLAG = "--xslt-all";
-char const * const XSLT_ALL_FLAG_SHORT = "";
+char const * const XSLT_ALL_FLAG = "xslt-all";
+//char const XSLT_ALL_FLAG_SHORT = '';
 
-char const * const RELAXNG_FLAG = "--relaxng";
-char const * const RELAXNG_FLAG_SHORT = "";
-char const * const RELAXNG_FLAG_FULL = "--relaxng=RELAXNG_FILE";
+char const * const RELAXNG_FLAG = "relaxng";
+//char const RELAXNG_FLAG_SHORT = '';
+char const * const RELAXNG_FLAG_FULL = "relaxng=RELAXNG_FILE";
 
-char const * const PARAM_FLAG = "--param";
-char const * const PARAM_FLAG_SHORT = "";
+char const * const PARAM_FLAG = "param";
+//char const PARAM_FLAG_SHORT = '';
 
 // output help message
 void output_help(const char* name) {
@@ -90,7 +90,7 @@ void output_help(const char* name) {
          "parts of compound srcML documents, querying using XPath and RelaxNG, and\n"
 	 "and transformation with XSLT.\n\n"
 
-	 "By default, output is to stdout.  You can specify a file for output using the %s or %s option.\n"
+	 "By default, output is to stdout.  You can specify a file for output using the --%s or -%c option.\n"
 	 "When no filenames are given input is from stdin and output is to stdout.\n"
 	 "An input filename of '-' also reads from stdin.\n\n"
 
@@ -99,12 +99,12 @@ void output_help(const char* name) {
 
 	 "Options:\n", name, OUTPUT_FLAG, OUTPUT_FLAG_SHORT);
 
-  printf("  %s, %-19s display this help and exit\n", HELP_FLAG_SHORT, HELP_FLAG);
-  printf("  %s, %-19s display version number and exit\n", VERSION_FLAG_SHORT, VERSION_FLAG);
+  printf("  -%c, --%-17s display this help and exit\n", HELP_FLAG_SHORT, HELP_FLAG);
+  printf("  -%c, --%-17s display version number and exit\n", VERSION_FLAG_SHORT, VERSION_FLAG);
 
-  printf("  %s, %-19s write result to <file|URI> instead of standard output\n\n", OUTPUT_FLAG_SHORT, OUTPUT_FLAG);
+  printf("  -%c, --%-17s write result to <file|URI> instead of standard output\n\n", OUTPUT_FLAG_SHORT, OUTPUT_FLAG);
 
-  printf("  %s, %-19s set the output source encoding to ENC (default:  %s) \n\n",
+  printf("  -%c, --%-17s set the output source encoding to ENC (default:  %s) \n\n",
 	  TEXTENCODING_FLAG_SHORT, TEXTENCODING_FLAG_FULL, DEFAULT_TEXT_ENCODING);
 
        /*
@@ -112,53 +112,53 @@ void output_help(const char* name) {
 	       << "skip any text encoding transformation" << "\n"
        */
 
-  printf("  %s, %-19s extract nested unit NUM from a compound srcML document\n",
+  printf("  -%c, --%-17s extract nested unit NUM from a compound srcML document\n",
 	  UNIT_FLAG_SHORT, UNIT_FLAG_FULL);
 
-  printf("  %s, %-19s extract all files from a compound srcML document\n\n",
+  printf("  -%c, --%-17s extract all files from a compound srcML document\n\n",
 	  EXPAND_FLAG_SHORT, EXPAND_FLAG);
 
-  printf("  %s, %-19s output in XML instead of text\n\n",
+  printf("  -%c, --%-17s output in XML instead of text\n\n",
 	  XML_FLAG_SHORT, XML_FLAG);
 
-  printf("  %s, %-19s output text or XML in gzip format\n\n",
+  printf("  -%c, --%-17s output text or XML in gzip format\n\n",
 	  COMPRESSED_FLAG_SHORT, COMPRESSED_FLAG);
 
-  printf("  %-23s do not output the default XML declaration in XML output\n",
+  printf("  --%-21s do not output the default XML declaration in XML output\n",
 	  NO_XML_DECLARATION_FLAG);
 
-  printf("  %-23s do not output any namespace declarations in XML output\n\n",
+  printf("  --%-21s do not output any namespace declarations in XML output\n\n",
 	  NO_NAMESPACE_DECLARATION_FLAG);
 
-  printf("  %s, %-19s verbose output\n\n",
+  printf("  -%c, --%-17s verbose output\n\n",
 	  VERBOSE_FLAG_SHORT, VERBOSE_FLAG);
 
   printf("Metadata Options:  \n\n"
-	 "  %s, %-19s display source language and exit\n", LANGUAGE_FLAG_SHORT, LANGUAGE_FLAG);
+	 "  -%c, --%-17s display source language and exit\n", LANGUAGE_FLAG_SHORT, LANGUAGE_FLAG);
 
-  printf("  %s, %-19s display source directory name and exit\n", DIRECTORY_FLAG_SHORT, DIRECTORY_FLAG);
+  printf("  -%c, --%-17s display source directory name and exit\n", DIRECTORY_FLAG_SHORT, DIRECTORY_FLAG);
 
-  printf("  %s, %-19s display source filename and exit\n", FILENAME_FLAG_SHORT, FILENAME_FLAG   );
+  printf("  -%c, --%-17s display source filename and exit\n", FILENAME_FLAG_SHORT, FILENAME_FLAG   );
 
-  printf("  %s, %-19s display source version and exit\n", SRCVERSION_FLAG_SHORT, SRCVERSION_FLAG);
+  printf("  -%c, --%-17s display source version and exit\n", SRCVERSION_FLAG_SHORT, SRCVERSION_FLAG);
 
-  printf("  %s, %-19s display xml encoding and exit\n", ENCODING_FLAG_SHORT, ENCODING_FLAG);
+  printf("  -%c, --%-17s display xml encoding and exit\n", ENCODING_FLAG_SHORT, ENCODING_FLAG);
 
-  printf("  %s, %-19s display prefix of namespace given by URI and exit\n",
+  printf("  -%c, --%-17s display prefix of namespace given by URI and exit\n",
 	  NAMESPACE_FLAG_SHORT, NAMESPACE_FLAG_FULL);
 
-  printf("  %s, %-19s display number of nested units and exit\n\n", NESTED_FLAG_SHORT, NESTED_FLAG);
+  printf("  -%c, --%-17s display number of nested units and exit\n\n", NESTED_FLAG_SHORT, NESTED_FLAG);
 
-  printf("  %s, %-19s display most metadata (except nested unit count) and exit\n",
+  printf("  -%c, --%-17s display most metadata (except nested unit count) and exit\n",
 	  INFO_FLAG_SHORT, INFO_FLAG);
 
-  printf("  %s, %-19s display all metadata (including nested unit count) and exit\n\n",
+  printf("  -%c, --%-17s display all metadata (including nested unit count) and exit\n\n",
 	  LONG_INFO_FLAG_SHORT, LONG_INFO_FLAG);
 
   printf("Query and Tranformation Options:  \n\n"
-	 "  %-23s apply XPATH expression to each nested unit\n", XPATH_FLAG_FULL);
-  printf("  %-23s apply XSLT_FILE transformation to each nested unit\n", XSLT_FLAG_FULL);
-  printf("  %-23s output nested units that match RELAXNG_FILE grammar\n\n", RELAXNG_FLAG_FULL);
+	 "  --%-21s apply XPATH expression to each nested unit\n", XPATH_FLAG_FULL);
+  printf("  --%-21s apply XSLT_FILE transformation to each nested unit\n", XSLT_FLAG_FULL);
+  printf("  --%-21s output nested units that match RELAXNG_FILE grammar\n\n", RELAXNG_FLAG_FULL);
 
   printf("Examples:  \n"
 	    "  %1$s                          (read from standard input, write to standard output)\n"
@@ -505,31 +505,31 @@ int process_args(int argc, char* argv[], process_options & poptions)
 {
   int curoption = 0;
   struct option cliargs[] = {
-    { HELP_FLAG + 2, no_argument, NULL, HELP_FLAG_SHORT[1] },
-    { VERSION_FLAG + 2, no_argument, NULL, VERSION_FLAG_SHORT[1] },
-    { OUTPUT_FLAG + 2, required_argument, NULL, OUTPUT_FLAG_SHORT[1] },
-    { FILENAME_FLAG + 2, no_argument, NULL, FILENAME_FLAG_SHORT[1] },
-    { DIRECTORY_FLAG + 2, no_argument, NULL, DIRECTORY_FLAG_SHORT[1] },
-    { LANGUAGE_FLAG + 2, no_argument, NULL, LANGUAGE_FLAG_SHORT[1] },
-    { SRCVERSION_FLAG + 2, no_argument, NULL, SRCVERSION_FLAG_SHORT[1] },
-    { ENCODING_FLAG + 2, no_argument, NULL, ENCODING_FLAG_SHORT[1] },
-    { NESTED_FLAG + 2, no_argument, NULL, NESTED_FLAG_SHORT[1] },
-    { INFO_FLAG + 2, no_argument, NULL, INFO_FLAG_SHORT[1] },
-    { LONG_INFO_FLAG + 2, no_argument, NULL, LONG_INFO_FLAG_SHORT[1] },
-    { EXPAND_FLAG + 2, no_argument, NULL, EXPAND_FLAG_SHORT[1] },
-    { VERBOSE_FLAG + 2, no_argument, NULL, VERBOSE_FLAG_SHORT[1] },
-    { XML_FLAG + 2, no_argument, NULL, XML_FLAG_SHORT[1] },
-    { COMPRESSED_FLAG + 2, no_argument, NULL, COMPRESSED_FLAG_SHORT[1] },
-    { UNIT_FLAG + 2, required_argument, NULL, UNIT_FLAG_SHORT[1] },
-    { TEXTENCODING_FLAG + 2, required_argument, NULL, TEXTENCODING_FLAG_SHORT[1] },
-    { NAMESPACE_FLAG + 2, required_argument, NULL, NAMESPACE_FLAG_SHORT[1] },
-    { NO_XML_DECLARATION_FLAG + 2, no_argument, &curoption, OPTION_XMLDECL },
-    { NO_NAMESPACE_DECLARATION_FLAG + 2, no_argument, &curoption, OPTION_NAMESPACEDECL },
-    { XSLT_FLAG + 2, required_argument, NULL, 'S' },
-    { XPATH_FLAG + 2, required_argument, NULL, 'P' },
-    { RELAXNG_FLAG + 2, required_argument, NULL, 'R' },
-    { CONTEXT_FLAG + 2, required_argument, NULL, 'C' },
-    { PARAM_FLAG + 2, required_argument, NULL, 'A' },
+    { HELP_FLAG, no_argument, NULL, HELP_FLAG_SHORT },
+    { VERSION_FLAG, no_argument, NULL, VERSION_FLAG_SHORT },
+    { OUTPUT_FLAG, required_argument, NULL, OUTPUT_FLAG_SHORT },
+    { FILENAME_FLAG, no_argument, NULL, FILENAME_FLAG_SHORT },
+    { DIRECTORY_FLAG, no_argument, NULL, DIRECTORY_FLAG_SHORT },
+    { LANGUAGE_FLAG, no_argument, NULL, LANGUAGE_FLAG_SHORT },
+    { SRCVERSION_FLAG, no_argument, NULL, SRCVERSION_FLAG_SHORT },
+    { ENCODING_FLAG, no_argument, NULL, ENCODING_FLAG_SHORT },
+    { NESTED_FLAG, no_argument, NULL, NESTED_FLAG_SHORT },
+    { INFO_FLAG, no_argument, NULL, INFO_FLAG_SHORT },
+    { LONG_INFO_FLAG, no_argument, NULL, LONG_INFO_FLAG_SHORT },
+    { EXPAND_FLAG, no_argument, NULL, EXPAND_FLAG_SHORT },
+    { VERBOSE_FLAG, no_argument, NULL, VERBOSE_FLAG_SHORT },
+    { XML_FLAG, no_argument, NULL, XML_FLAG_SHORT },
+    { COMPRESSED_FLAG, no_argument, NULL, COMPRESSED_FLAG_SHORT },
+    { UNIT_FLAG, required_argument, NULL, UNIT_FLAG_SHORT },
+    { TEXTENCODING_FLAG, required_argument, NULL, TEXTENCODING_FLAG_SHORT },
+    { NAMESPACE_FLAG, required_argument, NULL, NAMESPACE_FLAG_SHORT },
+    { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL },
+    { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL },
+    { XSLT_FLAG, required_argument, NULL, 'S' },
+    { XPATH_FLAG, required_argument, NULL, 'P' },
+    { RELAXNG_FLAG, required_argument, NULL, 'R' },
+    { CONTEXT_FLAG, required_argument, NULL, 'C' },
+    { PARAM_FLAG, required_argument, NULL, 'A' },
     { 0, 0, 0, 0 }
   };
 
