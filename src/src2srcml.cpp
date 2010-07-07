@@ -818,11 +818,17 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       options |= OPTION_POSITION;
       
       char * end;
-      poptions.tabsize = pstd::strtoul(optarg, &end, 10);
+      poptions.tabsize = pstd::strtol(optarg, &end, 10);
       
-      // validate type of unit number                                                                                                                 
+      // validate type of tabsize number
       if (errno == EINVAL || strlen(end) == strlen(optarg)) {
-        fprintf(stderr, "%s: unit option value \"%s\" must be unsigned numeric.\n", argv[0], optarg);
+        fprintf(stderr, "%s: unit option value \"%s\" must be numeric.\n", argv[0], optarg);
+        exit(STATUS_UNIT_INVALID);
+      }
+
+      // validate range of unit number
+      if (poptions.tabsize <= 0) {
+        fprintf(stderr, "%s: unit option value \"%d\" must be > 0.\n", argv[0], poptions.tabsize);
         exit(STATUS_UNIT_INVALID);
       }
 
