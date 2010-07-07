@@ -78,7 +78,7 @@ char const * const RELAXNG_FLAG = "relaxng";
 char const * const RELAXNG_FLAG_FULL = "relaxng=RELAXNG_FILE";
 
 char const * const PARAM_FLAG = "param";
-char const * const PARAM_FLAG_FULL = "param Name Value";
+char const * const PARAM_FLAG_FULL = "param NAME VALUE";
 //char const PARAM_FLAG_SHORT = '';
 
 // output help message
