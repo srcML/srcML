@@ -527,11 +527,11 @@ int process_args(int argc, char* argv[], process_options & poptions)
     { NAMESPACE_FLAG, required_argument, NULL, NAMESPACE_FLAG_SHORT },
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL },
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL },
-    { XSLT_FLAG, required_argument, NULL, 'S' },
     { XPATH_FLAG, required_argument, NULL, 'P' },
-    { RELAXNG_FLAG, required_argument, NULL, 'R' },
-    { CONTEXT_FLAG, required_argument, NULL, 'C' },
+    { XSLT_FLAG, required_argument, NULL, 'S' },
     { PARAM_FLAG, required_argument, NULL, 'A' },
+    { RELAXNG_FLAG, required_argument, NULL, 'R' },
+    //    { CONTEXT_FLAG, required_argument, NULL, 'C' },
     { 0, 0, 0, 0 }
   };
 
@@ -659,10 +659,12 @@ int process_args(int argc, char* argv[], process_options & poptions)
       poptions.xpathexprlist.push_back(poptions.xpathexpr[poptions.xpathcount++] = optarg);
       break;
 
+      /*
     case 'C':
       options |= OPTION_XPATH;
       poptions.context = optarg;
       break;
+      */
 
     case 't':
       options |= OPTION_TEXT_ENCODING;
