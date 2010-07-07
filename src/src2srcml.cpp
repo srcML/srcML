@@ -170,7 +170,7 @@ void output_help(const char* name) {
 
   printf("  -%c, --%-14s output in gzip format\n", COMPRESSED_FLAG_SHORT, COMPRESSED_FLAG);
 
-  printf("  -%c, --%-14s low-latency output\n", INTERACTIVE_FLAG_SHORT, INTERACTIVE_FLAG);
+  printf("  -%c, --%-14s immediate output while parsing, default for keyboard input\n", INTERACTIVE_FLAG_SHORT, INTERACTIVE_FLAG);
 
   printf("  -%c, --%-14s markup translation errors in namespace \"%s\"\n",
 	  DEBUG_FLAG_SHORT, DEBUG_FLAG, SRCML_ERR_NS_URI);
