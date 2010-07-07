@@ -439,7 +439,8 @@ int main(int argc, char* argv[]) {
 	  translator.translate(dir,
 			       filename,
 			       poptions.given_version,
-			       poptions.language);
+			       poptions.language,
+			       poptions.tabsize);
 	} catch (FileError) {
 
 	  if (dir)
@@ -470,7 +471,8 @@ int main(int argc, char* argv[]) {
     // translate from standard input using any directory, filename and version given on the command line
     translator.setupInput(STDIN);
     translator.translate(poptions.given_directory, poptions.given_filename, poptions.given_version, 
-			 poptions.language ? poptions.language : DEFAULT_LANGUAGE);
+			 poptions.language ? poptions.language : DEFAULT_LANGUAGE,
+			 poptions.tabsize);
 
   // translate single input filename from command line
   }  else if (input_arg_count == 1) {
@@ -494,7 +496,8 @@ int main(int argc, char* argv[]) {
       translator.translate(isoption(options, OPTION_DIRECTORY) ? poptions.given_directory : path_s,
 			   isoption(options, OPTION_FILENAME)  ? poptions.given_filename  : filename_s,
 			   poptions.given_version,
-			   poptions.language ? poptions.language : DEFAULT_LANGUAGE);
+			   poptions.language ? poptions.language : DEFAULT_LANGUAGE,
+			   poptions.tabsize);
 
     } catch (FileError) {
 
@@ -534,7 +537,7 @@ int main(int argc, char* argv[]) {
       try {
 	translator.setupInput(path);
 	filename_split(path, path_s, filename_s);
-	translator.translate(path_s, filename_s, 0, poptions.language ? poptions.language : DEFAULT_LANGUAGE);
+	translator.translate(path_s, filename_s, 0, poptions.language ? poptions.language : DEFAULT_LANGUAGE, poptions.tabsize);
       } catch (FileError) {
 	if (path_s)
 	  fprintf(stderr, "%s error: file \'%s/%s\' does not exist.\n", argv[0], path_s, filename_s);

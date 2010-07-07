@@ -54,7 +54,8 @@ class srcMLTranslator : public Language {
   void translate(const char* unit_directory = 0,
 		 const char* unit_filename = 0,
 		 const char* unit_version = 0,
-		 int language = 0);
+		 int language = 0,
+		 int tabsize = 8);
 
   // destructor
   ~srcMLTranslator();

@@ -58,7 +58,8 @@ void srcMLTranslator::setupInput(const char* src_filename) {
 // translate from input stream to output stream
 void srcMLTranslator::translate(const char* unit_directory,
 				const char* unit_filename, const char* unit_version,
-				int language) {
+				int language,
+				int tabsize) {
 
   try {
 
@@ -68,6 +69,7 @@ void srcMLTranslator::translate(const char* unit_directory,
       // srcML lexical analyzer from standard input
       KeywordCPPLexer lexer(ifilename, encoding, language);
       lexer.setSelector(&selector);
+      lexer.setTabsize(8);
 
       // pure block comment lexer
       PureCommentLexer textlexer(lexer.getInputState());
