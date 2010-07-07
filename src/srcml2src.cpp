@@ -161,10 +161,11 @@ void output_help(const char* name) {
 	  LONG_INFO_FLAG_SHORT, LONG_INFO_FLAG);
 
   printf("Query and Tranformation Options:  \n\n"
-	 "  --%-21s apply XPATH expression to each nested unit\n", XPATH_FLAG_FULL);
-  printf("  --%-21s apply XSLT_FILE transformation to each nested unit\n", XSLT_FLAG_FULL);
-  printf("  --%-21s passes parameters NAME and VALUE to the XSLT program\n", PARAM_FLAG_FULL);
-  printf("  --%-21s output nested units that match RELAXNG_FILE grammar\n\n", RELAXNG_FLAG_FULL);
+	 "  --%-23s apply XPATH expression to each nested unit\n", XPATH_FLAG_FULL);
+  printf("  --%-23s apply XSLT_FILE transformation to each nested unit\n", XSLT_FLAG_FULL);
+  printf("  --%-23s passes parameters NAME and VALUE to the XSLT program\n", PARAM_FLAG_FULL);
+  printf("  --%-23s passes string parameters NAME and VALUE to the XSLT program\n", STRING_PARAM_FLAG_FULL);
+  printf("  --%-23s output nested units that match RELAXNG_FILE grammar\n\n", RELAXNG_FLAG_FULL);
 
   printf("Examples:  \n"
 	    "  %1$s                          (read from standard input, write to standard output)\n"
