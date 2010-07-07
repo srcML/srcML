@@ -573,12 +573,10 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { HELP_FLAG, no_argument, NULL, HELP_FLAG_SHORT },
     { VERSION_FLAG, no_argument, NULL, VERSION_FLAG_SHORT },
     { OUTPUT_FLAG, required_argument, NULL, OUTPUT_FLAG_SHORT },
-    { FILELIST_FLAG, required_argument, NULL, 'F' },
     { NESTED_FLAG, no_argument, NULL, NESTED_FLAG_SHORT },
     { EXPRESSION_MODE_FLAG, no_argument, NULL, EXPRESSION_MODE_FLAG_SHORT },
     { ENCODING_FLAG, required_argument, NULL, ENCODING_FLAG_SHORT },
     { TEXTENCODING_FLAG, required_argument, NULL, TEXTENCODING_FLAG_SHORT },
-    { XMLNS_FLAG, required_argument, NULL, 'X' },
     { COMPRESSED_FLAG, no_argument, NULL, COMPRESSED_FLAG_SHORT },
     { INTERACTIVE_FLAG, no_argument, NULL, INTERACTIVE_FLAG_SHORT },
     { DEBUG_FLAG, no_argument, NULL, DEBUG_FLAG_SHORT },
@@ -587,16 +585,19 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { DIRECTORY_FLAG, required_argument, NULL, DIRECTORY_FLAG_SHORT },
     { FILENAME_FLAG, required_argument, NULL, FILENAME_FLAG_SHORT },
     { SRCVERSION_FLAG, required_argument, NULL, SRCVERSION_FLAG_SHORT },
-    { LITERAL_FLAG, no_argument, &curoption, OPTION_LITERAL },
-    { OPERATOR_FLAG, no_argument, &curoption, OPTION_OPERATOR },
-    { MODIFIER_FLAG, no_argument, &curoption, OPTION_MODIFIER },
     { CPP_MARKUP_ELSE_FLAG, no_argument, NULL, 'm' },
     { CPP_TEXTONLY_ELSE_FLAG, no_argument, NULL, 'E' },
     { CPP_MARKUP_IF0_FLAG, no_argument, NULL, '0' },
     { CPP_TEXTONLY_IF0_FLAG, no_argument, NULL, 'p' },
-    { POSITION_FLAG, no_argument, &curoption, OPTION_POSITION },
+    { TABS_FLAG, no_argument, NULL, 'T' },
+    { FILELIST_FLAG, required_argument, NULL, 'F' },
+    { XMLNS_FLAG, required_argument, NULL, 'X' },
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL },
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL },
+    { POSITION_FLAG, no_argument, &curoption, OPTION_POSITION },
+    { LITERAL_FLAG, no_argument, &curoption, OPTION_LITERAL },
+    { OPERATOR_FLAG, no_argument, &curoption, OPTION_OPERATOR },
+    { MODIFIER_FLAG, no_argument, &curoption, OPTION_MODIFIER },
     { 0, 0, 0, 0 }
   };
 
@@ -610,7 +611,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     int option_index = 0;
     bool special = optind < argc && !strncmp(argv[optind], "--xmlns:", 8);
     opterr = !special ? 1 : 0;
-    int c = getopt_long(argc, argv, "hVo:F:nex:t:X:zcgvl:d:f:s:TOMmE0p", cliargs, &option_index);
+    int c = getopt_long(argc, argv, "hVo:nex:t:zcgvl:d:f:s:", cliargs, &option_index);
 
     if (c == -1)
       break;
