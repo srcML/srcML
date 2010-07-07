@@ -162,7 +162,7 @@ void output_help(const char* name) {
   printf("  --%-21s passes a parameter NAME and VAL to the XSLT program\n", PARAM_FLAG_FULL);
   printf("  --%-21s passes a string parameter NAME and VAL to an XSLT program\n", STRING_PARAM_FLAG_FULL);
   printf("  --%-21s output nested units that match RELAXNG_FILE file (FILE or URI)\n", RELAXNG_FLAG_FULL);
-  printf("  --%-21s apply an xslt program or xpath query to the root element\n", XSLT_ALL_FLAG);
+  printf("  --%-21s apply an xslt program or xpath query to the root element\n\n", XSLT_ALL_FLAG);
 
   printf("Examples:  \n"
 	    "  %1$s                          (read from standard input, write to standard output)\n"
