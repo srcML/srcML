@@ -816,7 +816,16 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
     case 'T' :
       options |= OPTION_POSITION;
-      poptions.tabsize = atoi(optarg);
+      
+      char * end;
+      poptions.tabsize = pstd::strtoul(optarg, &end, 10);
+      
+      // validate type of unit number                                                                                                                 
+      if (errno == EINVAL || strlen(end) == strlen(optarg)) {
+        fprintf(stderr, "%s: unit option value \"%s\" must be unsigned numeric.\n", argv[0], optarg);
+        exit(STATUS_UNIT_INVALID);
+      }
+
       break;
 
 
