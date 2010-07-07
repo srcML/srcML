@@ -190,7 +190,7 @@ void output_version(const char* name) {
 	 "%s\n", name, VERSION, COPYRIGHT);
 }
 
-int options = OPTION_XMLDECL | OPTION_NAMESPACEDECL;
+int options = 0;
 
 
 #ifdef __GNUG__
@@ -523,8 +523,8 @@ int process_args(int argc, char* argv[], process_options & poptions)
     { UNIT_FLAG, required_argument, NULL, UNIT_FLAG_SHORT },
     { TEXTENCODING_FLAG, required_argument, NULL, TEXTENCODING_FLAG_SHORT },
     { NAMESPACE_FLAG, required_argument, NULL, NAMESPACE_FLAG_SHORT },
-    { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL },
-    { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL },
+    { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
+    { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
     { XPATH_FLAG, required_argument, NULL, 'P' },
     { XSLT_FLAG, required_argument, NULL, 'S' },
     { PARAM_FLAG, required_argument, NULL, 'A' },
@@ -542,7 +542,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
       break;
 
     if (curoption) {
-      options &= ~curoption;
+      options |= curoption;
       continue;
     }
 
