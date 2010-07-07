@@ -66,7 +66,8 @@ void SAX2TextWriter::startDocument(void *ctx) {
 					      isoption(pstate->options, OPTION_COMPRESSED) ? 1 : 0);
 
     // start this document the same as the current document
-    xmlTextWriterStartDocument(pstate->writer,
+    if (!isoption(pstate->options, OPTION_XMLDECL))
+      xmlTextWriterStartDocument(pstate->writer,
 			       (const char*) pstate->ctxt->version,
 			       (const char*) (pstate->ctxt->encoding ? pstate->ctxt->encoding : pstate->ctxt->input->encoding),
 			       pstate->ctxt->standalone ? "yes" : "no");
@@ -142,12 +143,13 @@ void SAX2TextWriter::startElementNs(void* ctx, const xmlChar* localname, const x
     xmlTextWriterStartElement(pstate->writer, BAD_CAST name);
 
     // copy namespaces
-    for (int i = 0, index = 0; i < nb_namespaces; ++i, index += 2) {
+    if (!isoption(pstate->options, OPTION_NAMESPACE))
+      for (int i = 0, index = 0; i < nb_namespaces; ++i, index += 2) {
 
-      const char* name = xmlnsprefix((const char*) namespaces[index]);
+	const char* name = xmlnsprefix((const char*) namespaces[index]);
 
-      xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST name, namespaces[index + 1]);
-    }
+	xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST name, namespaces[index + 1]);
+      }
 
     // copy attributes
     for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
