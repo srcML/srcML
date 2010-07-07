@@ -40,42 +40,42 @@ using namespace LanguageName;
 
 const char* const NAME = "src2srcml";
 
-const char* const DEBUG_FLAG = "--debug";
-const char* const DEBUG_FLAG_SHORT = "-g";
+const char* const DEBUG_FLAG = "debug";
+const char DEBUG_FLAG_SHORT = 'g';
 
-const char* const LITERAL_FLAG = "--literal";
+const char* const LITERAL_FLAG = "literal";
 
-const char* const OPERATOR_FLAG = "--operator";
+const char* const OPERATOR_FLAG = "operator";
 
-const char* const MODIFIER_FLAG = "--modifier";
+const char* const MODIFIER_FLAG = "modifier";
 
-const char* const POSITION_FLAG = "--position";
-const char* const TABS_FLAG = "--tabs";
-const char* const TABS_FLAG_FULL = "--tabs=NUMBER";
+const char* const POSITION_FLAG = "position";
+const char* const TABS_FLAG = "tabs";
+const char* const TABS_FLAG_FULL = "tabs=NUMBER";
 
-const char* const INTERACTIVE_FLAG = "--interactive";
-const char* const INTERACTIVE_FLAG_SHORT = "-c";
+const char* const INTERACTIVE_FLAG = "interactive";
+const char INTERACTIVE_FLAG_SHORT = 'c';
 
-const char* const CPP_MARKUP_ELSE_FLAG = "--cpp_markup_else";
+const char* const CPP_MARKUP_ELSE_FLAG = "cpp_markup_else";
 
-const char* const CPP_TEXTONLY_ELSE_FLAG = "--cpp_text_else";
+const char* const CPP_TEXTONLY_ELSE_FLAG = "cpp_text_else";
 
-const char* const CPP_MARKUP_IF0_FLAG = "--cpp_markup_if0";
+const char* const CPP_MARKUP_IF0_FLAG = "cpp_markup_if0";
 
-const char* const CPP_TEXTONLY_IF0_FLAG = "--cpp_text_if0";
+const char* const CPP_TEXTONLY_IF0_FLAG = "cpp_text_if0";
 
-const char* const EXPRESSION_MODE_FLAG = "--expression";
-const char* const EXPRESSION_MODE_FLAG_SHORT = "-e";
+const char* const EXPRESSION_MODE_FLAG = "expression";
+const char EXPRESSION_MODE_FLAG_SHORT = 'e';
 
-const char* const SELF_VERSION_FLAG = "--self-version";
+const char* const SELF_VERSION_FLAG = "self-version";
 
 const char* const DEFAULT_XML_ENCODING = "UTF-8";
 
-const char* const FILELIST_FLAG = "--files-from";
+const char* const FILELIST_FLAG = "files-from";
 
-const char* const XMLNS_FLAG = "--xmlns";
-const char* const XMLNS_DEFAULT_FLAG_FULL = "--xmlns=URI";
-const char* const XMLNS_FLAG_FULL = "--xmlns:PREFIX=URI";
+const char* const XMLNS_FLAG = "xmlns";
+const char* const XMLNS_DEFAULT_FLAG_FULL = "xmlns=URI";
+const char* const XMLNS_FLAG_FULL = "xmlns:PREFIX=URI";
 
 const int DEFAULT_LANGUAGE = srcMLTranslator::LANGUAGE_CXX;
 
@@ -122,7 +122,7 @@ void output_help(const char* name) {
 	  "Translates source-code files in C, C++, and Java into the XML source-code representation srcML.\n"
 	  "Both single and multiple files can be stored in a single srcML document.\n\n"
 
-	  "By default, output is to stdout.  You can specify a file for output using the %s or %s option.\n"
+	  "By default, output is to stdout.  You can specify a file for output using the --%s or -%c option.\n"
 	  "When no filenames are given input is from stdin and output is to stdout.\n"
 	  "An input filename of '-' also reads from stdin.\n\n"
 
@@ -133,23 +133,23 @@ void output_help(const char* name) {
 	  "\n"
 	  "Options:\n", name, OUTPUT_FLAG, OUTPUT_FLAG_SHORT);
 
-  printf("  %s, %-16s display this help and exit\n",      HELP_FLAG_SHORT, HELP_FLAG);
-  printf("  %s, %-16s display version number and exit\n\n", VERSION_FLAG_SHORT, VERSION_FLAG);
+  printf("  -%c, -%-16s display this help and exit\n",      HELP_FLAG_SHORT, HELP_FLAG);
+  printf("  -%c, --%-16s display version number and exit\n\n", VERSION_FLAG_SHORT, VERSION_FLAG);
 
-  printf("  %s, %-16s write result to <file|URI> instead of standard output\n", OUTPUT_FLAG_SHORT, OUTPUT_FLAG);
-  printf("  %-20s read list of source file names from <file|URI> to form a compound srcML document\n\n",
+  printf("  -%c, --%-16s write result to <file|URI> instead of standard output\n", OUTPUT_FLAG_SHORT, OUTPUT_FLAG);
+  printf("  --%-20s read list of source file names from <file|URI> to form a compound srcML document\n\n",
 	  FILELIST_FLAG);
 
-  printf("  %s, %-16s store all input source files in one compound srcML document\n",
+  printf("  -%c, --%-16s store all input source files in one compound srcML document\n",
 	  NESTED_FLAG_SHORT, NESTED_FLAG);
 
-  printf("  %s, %-16s translates a single, individual expression outside of any statement\n",
+  printf("  -%c, --%-16s translates a single, individual expression outside of any statement\n",
 	  EXPRESSION_MODE_FLAG_SHORT, EXPRESSION_MODE_FLAG);
 
-  printf("  %s, %-16s set the output XML encoding to ENC (default:  %s)\n",
+  printf("  -%c, --%-16s set the output XML encoding to ENC (default:  %s)\n",
 	  ENCODING_FLAG_SHORT, ENCODING_FLAG, DEFAULT_XML_ENCODING);
 
-  printf("  %s, %-16s set the input source encoding to ENC (default:  %s)\n\n",
+  printf("  -%c, --%-16s set the input source encoding to ENC (default:  %s)\n\n",
 	  TEXTENCODING_FLAG_SHORT, TEXTENCODING_FLAG, DEFAULT_TEXT_ENCODING);
 
       /*
@@ -157,37 +157,37 @@ void output_help(const char* name) {
 	      << "store the text without any text encoding changes" << "\n"
       */
 
-  printf("  %-20s set the default namespace URI\n", XMLNS_DEFAULT_FLAG_FULL);
+  printf("  --%-20s set the default namespace URI\n", XMLNS_DEFAULT_FLAG_FULL);
   printf("                       (default:  xmlns=\"%s\")\n", SRCML_SRC_NS_URI);
 
-  printf("  %-20s set the namespace PREFIX for the namespace URI\n", XMLNS_FLAG_FULL);
+  printf("  --%-20s set the namespace PREFIX for the namespace URI\n", XMLNS_FLAG_FULL);
   printf("                       (defaults:  xmlns:cpp=\"%s\")\n", SRCML_CPP_NS_URI);
   printf("                       (defaults:  xmlns:srcerr=\"%s\")\n", SRCML_ERR_NS_URI);
 
-  printf("  %-20s do not output the default XML declaration\n", NO_XML_DECLARATION_FLAG);
-  printf("  %-20s do not output any namespace declarations\n\n", NO_NAMESPACE_DECLARATION_FLAG);
+  printf("  --%-20s do not output the default XML declaration\n", NO_XML_DECLARATION_FLAG);
+  printf("  --%-20s do not output any namespace declarations\n\n", NO_NAMESPACE_DECLARATION_FLAG);
 
-  printf("  %s, %-16s output in gzip format\n", COMPRESSED_FLAG_SHORT, COMPRESSED_FLAG);
+  printf("  -%c, --%-16s output in gzip format\n", COMPRESSED_FLAG_SHORT, COMPRESSED_FLAG);
 
-  printf("  %s, %-16s low-latency output\n", INTERACTIVE_FLAG_SHORT, INTERACTIVE_FLAG);
+  printf("  -%c, --%-16s low-latency output\n", INTERACTIVE_FLAG_SHORT, INTERACTIVE_FLAG);
 
-  printf("  %s, %-16s markup translation errors in namespace \"%s\"\n",
+  printf("  -%c, --%-16s markup translation errors in namespace \"%s\"\n",
 	  DEBUG_FLAG_SHORT, DEBUG_FLAG, SRCML_ERR_NS_URI);
 
-  printf("  %s, %-16s verbose output to standard error\n\n", VERBOSE_FLAG_SHORT, VERBOSE_FLAG);
+  printf("  -%c, --%-16s verbose output to standard error\n\n", VERBOSE_FLAG_SHORT, VERBOSE_FLAG);
 
   printf("Metadata Options:\n\n"
-	 "  %s, %-16s set the language to %s, %s (default), %s, or %s\n",
+	 "  -%c, --%-16s set the language to %s, %s (default), %s, or %s\n",
 	 LANGUAGE_FLAG_SHORT, LANGUAGE_FLAG_FULL,
 	 LANGUAGE_C, LANGUAGE_CXX, LANGUAGE_JAVA, LANGUAGE_ASPECTJ);
 
-  printf("  %s, %-16s set the directory attribute to DIR\n",
+  printf("  -%c, --%-16s set the directory attribute to DIR\n",
 	 DIRECTORY_FLAG_SHORT, DIRECTORY_FLAG_FULL);
 
-  printf("  %s, %-16s set the filename attribute to FILE\n",
+  printf("  -%c, --%-16s set the filename attribute to FILE\n",
 	 FILENAME_FLAG_SHORT, FILENAME_FLAG_FULL);
 
-  printf("  %s, %-16s set the version attribute to VER\n\n",
+  printf("  -%c, --%-16s set the version attribute to VER\n\n",
 	 SRCVERSION_FLAG_SHORT, SRCVERSION_FLAG_FULL);
 
       /*
@@ -197,30 +197,30 @@ void output_help(const char* name) {
 
   printf("Markup Extensions:\n\n");
 
-  printf("  %-20s markup literal values in namespace \"%s\"\n",
+  printf("  --%-20s markup literal values in namespace \"%s\"\n",
 	 LITERAL_FLAG, SRCML_EXT_LITERAL_NS_URI);
 
-  printf("  %-20s markup operators in namespace \"%s\"\n",
+  printf("  --%-20s markup operators in namespace \"%s\"\n",
 	 OPERATOR_FLAG, SRCML_EXT_OPERATOR_NS_URI);
 
-  printf("  %-20s markup type modifiers in namespace \"%s\"\n",
+  printf("  --%-20s markup type modifiers in namespace \"%s\"\n",
 	 MODIFIER_FLAG, SRCML_EXT_MODIFIER_NS_URI);
 
   printf("\nLine/Column Position:\n\n");
 
-  printf("  %-20s markup literal values in namespace \"%s\"\n",
+  printf("  --%-20s markup literal values in namespace \"%s\"\n",
 	 POSITION_FLAG, SRCML_EXT_POSITION_NS_URI);
 
-  printf("  %-20s have tabs NUMBER characters apart.  Default is %d\n",
+  printf("  --%-20s have tabs NUMBER characters apart.  Default is %d\n",
 	 TABS_FLAG_FULL, 8);
 
   printf("\nCPP Markup Options:\n\n");
 
-  printf("  %-20s markup cpp #else regions (default)\n", CPP_MARKUP_ELSE_FLAG);
+  printf("  --%-20s markup cpp #else regions (default)\n", CPP_MARKUP_ELSE_FLAG);
   printf("  %-20s leave cpp #else regions as text\n\n", CPP_TEXTONLY_ELSE_FLAG);
 
-  printf("  %-20s markup cpp #if 0 regions\n", CPP_MARKUP_IF0_FLAG);
-  printf("  %-20s leave cpp #if 0 regions as text (default)\n\n", CPP_TEXTONLY_IF0_FLAG);
+  printf("  --%-20s markup cpp #if 0 regions\n", CPP_MARKUP_IF0_FLAG);
+  printf("  --%-20s leave cpp #if 0 regions as text (default)\n\n", CPP_TEXTONLY_IF0_FLAG);
 
   printf("Examples:  \n"
 	 "  %1$s                (read from standard input, write to standard output)\n"
@@ -564,33 +564,33 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
   int curoption = 0;
   struct option cliargs[] = {
-    { HELP_FLAG + 2, no_argument, NULL, HELP_FLAG_SHORT[1] },
-    { VERSION_FLAG + 2, no_argument, NULL, VERSION_FLAG_SHORT[1] },
-    { OUTPUT_FLAG + 2, required_argument, NULL, OUTPUT_FLAG_SHORT[1] },
-    { FILELIST_FLAG + 2, required_argument, NULL, 'F' },
-    { NESTED_FLAG + 2, no_argument, NULL, NESTED_FLAG_SHORT[1] },
-    { EXPRESSION_MODE_FLAG + 2, no_argument, NULL, EXPRESSION_MODE_FLAG_SHORT[1] },
-    { ENCODING_FLAG + 2, required_argument, NULL, ENCODING_FLAG_SHORT[1] },
-    { TEXTENCODING_FLAG + 2, required_argument, NULL, TEXTENCODING_FLAG_SHORT[1] },
-    { XMLNS_FLAG + 2, required_argument, NULL, 'X' },
-    { COMPRESSED_FLAG + 2, no_argument, NULL, COMPRESSED_FLAG_SHORT[1] },
-    { INTERACTIVE_FLAG + 2, no_argument, NULL, INTERACTIVE_FLAG_SHORT[1] },
-    { DEBUG_FLAG + 2, no_argument, NULL, DEBUG_FLAG_SHORT[1] },
-    { VERBOSE_FLAG + 2, no_argument, NULL, VERBOSE_FLAG_SHORT[1] },
-    { LANGUAGE_FLAG + 2, required_argument, NULL, LANGUAGE_FLAG_SHORT[1] },
-    { DIRECTORY_FLAG + 2, required_argument, NULL, DIRECTORY_FLAG_SHORT[1] },
-    { FILENAME_FLAG + 2, required_argument, NULL, FILENAME_FLAG_SHORT[1] },
-    { SRCVERSION_FLAG + 2, required_argument, NULL, SRCVERSION_FLAG_SHORT[1] },
-    { LITERAL_FLAG + 2, no_argument, &curoption, OPTION_LITERAL },
-    { OPERATOR_FLAG + 2, no_argument, &curoption, OPTION_OPERATOR },
-    { MODIFIER_FLAG + 2, no_argument, &curoption, OPTION_MODIFIER },
-    { CPP_MARKUP_ELSE_FLAG + 2, no_argument, NULL, 'm' },
-    { CPP_TEXTONLY_ELSE_FLAG + 2, no_argument, NULL, 'E' },
-    { CPP_MARKUP_IF0_FLAG + 2, no_argument, NULL, '0' },
-    { CPP_TEXTONLY_IF0_FLAG + 2, no_argument, NULL, 'p' },
-    { POSITION_FLAG + 2, no_argument, NULL, 'P' },
-    { NO_XML_DECLARATION_FLAG + 2, no_argument, &curoption, OPTION_XMLDECL },
-    { NO_NAMESPACE_DECLARATION_FLAG + 2, no_argument, &curoption, OPTION_NAMESPACEDECL },
+    { HELP_FLAG, no_argument, NULL, HELP_FLAG_SHORT },
+    { VERSION_FLAG, no_argument, NULL, VERSION_FLAG_SHORT },
+    { OUTPUT_FLAG, required_argument, NULL, OUTPUT_FLAG_SHORT },
+    { FILELIST_FLAG, required_argument, NULL, 'F' },
+    { NESTED_FLAG, no_argument, NULL, NESTED_FLAG_SHORT },
+    { EXPRESSION_MODE_FLAG, no_argument, NULL, EXPRESSION_MODE_FLAG_SHORT },
+    { ENCODING_FLAG, required_argument, NULL, ENCODING_FLAG_SHORT },
+    { TEXTENCODING_FLAG, required_argument, NULL, TEXTENCODING_FLAG_SHORT },
+    { XMLNS_FLAG, required_argument, NULL, 'X' },
+    { COMPRESSED_FLAG, no_argument, NULL, COMPRESSED_FLAG_SHORT },
+    { INTERACTIVE_FLAG, no_argument, NULL, INTERACTIVE_FLAG_SHORT },
+    { DEBUG_FLAG, no_argument, NULL, DEBUG_FLAG_SHORT },
+    { VERBOSE_FLAG, no_argument, NULL, VERBOSE_FLAG_SHORT },
+    { LANGUAGE_FLAG, required_argument, NULL, LANGUAGE_FLAG_SHORT },
+    { DIRECTORY_FLAG, required_argument, NULL, DIRECTORY_FLAG_SHORT },
+    { FILENAME_FLAG, required_argument, NULL, FILENAME_FLAG_SHORT },
+    { SRCVERSION_FLAG, required_argument, NULL, SRCVERSION_FLAG_SHORT },
+    { LITERAL_FLAG, no_argument, &curoption, OPTION_LITERAL },
+    { OPERATOR_FLAG, no_argument, &curoption, OPTION_OPERATOR },
+    { MODIFIER_FLAG, no_argument, &curoption, OPTION_MODIFIER },
+    { CPP_MARKUP_ELSE_FLAG, no_argument, NULL, 'm' },
+    { CPP_TEXTONLY_ELSE_FLAG, no_argument, NULL, 'E' },
+    { CPP_MARKUP_IF0_FLAG, no_argument, NULL, '0' },
+    { CPP_TEXTONLY_IF0_FLAG, no_argument, NULL, 'p' },
+    { POSITION_FLAG, no_argument, NULL, 'P' },
+    { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL },
+    { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL },
     { 0, 0, 0, 0 }
   };
 

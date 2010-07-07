@@ -39,44 +39,44 @@ const char* const STDIN = "-";
 
 const char* const OPTION_SEPARATOR = "--";
 
-const char* const HELP_FLAG = "--help";
-const char* const HELP_FLAG_SHORT = "-h";
+const char* const HELP_FLAG = "help";
+const char HELP_FLAG_SHORT = 'h';
 
-const char* const VERSION_FLAG = "--version";
-const char* const VERSION_FLAG_SHORT = "-V";
+const char* const VERSION_FLAG = "version";
+const char VERSION_FLAG_SHORT = 'V';
 
-const char* const LANGUAGE_FLAG = "--language";
-const char* const LANGUAGE_FLAG_SHORT = "-l";
-const char* const LANGUAGE_FLAG_FULL = "--language=LANG";
+const char* const LANGUAGE_FLAG = "language";
+const char LANGUAGE_FLAG_SHORT = 'l';
+const char* const LANGUAGE_FLAG_FULL = "language=LANG";
 
-const char* const FILENAME_FLAG = "--filename";
-const char* const FILENAME_FLAG_SHORT = "-f";
-const char* const FILENAME_FLAG_FULL = "--filename=FILE";
+const char* const FILENAME_FLAG = "filename";
+const char FILENAME_FLAG_SHORT = 'f';
+const char* const FILENAME_FLAG_FULL = "filename=FILE";
 
-const char* const DIRECTORY_FLAG = "--directory";
-const char* const DIRECTORY_FLAG_SHORT = "-d";
-const char* const DIRECTORY_FLAG_FULL = "--directory=DIR";
+const char* const DIRECTORY_FLAG = "directory";
+const char DIRECTORY_FLAG_SHORT = 'd';
+const char* const DIRECTORY_FLAG_FULL = "directory=DIR";
 
-const char* const ENCODING_FLAG = "--encoding";
-const char* const ENCODING_FLAG_SHORT = "-x";
-const char* const ENCODING_FLAG_FULL = "--encoding=ENC";
+const char* const ENCODING_FLAG = "encoding";
+const char ENCODING_FLAG_SHORT = 'x';
+const char* const ENCODING_FLAG_FULL = "encoding=ENC";
 
-const char* const TEXTENCODING_FLAG = "--src-encoding";
-const char* const TEXTENCODING_FLAG_SHORT = "-t";
-const char* const TEXTENCODING_FLAG_FULL = "--src-encoding=ENC";
+const char* const TEXTENCODING_FLAG = "src-encoding";
+const char TEXTENCODING_FLAG_SHORT = 't';
+const char* const TEXTENCODING_FLAG_FULL = "src-encoding=ENC";
 
-const char* const NESTED_FLAG = "--nested";
-const char* const NESTED_FLAG_SHORT = "-n";
+const char* const NESTED_FLAG = "nested";
+const char NESTED_FLAG_SHORT = 'n';
 
-const char* const SRCVERSION_FLAG = "--src-version";
-const char* const SRCVERSION_FLAG_SHORT = "-s";
-const char* const SRCVERSION_FLAG_FULL = "--src-version=VER";
+const char* const SRCVERSION_FLAG = "src-version";
+const char SRCVERSION_FLAG_SHORT = 's';
+const char* const SRCVERSION_FLAG_FULL = "src-version=VER";
 
-const char* const VERBOSE_FLAG = "--verbose";
-const char* const VERBOSE_FLAG_SHORT = "-v";
+const char* const VERBOSE_FLAG = "verbose";
+const char VERBOSE_FLAG_SHORT = 'v';
 
-const char* const OUTPUT_FLAG = "--output";
-const char* const OUTPUT_FLAG_SHORT = "-o";
+const char* const OUTPUT_FLAG = "output";
+const char OUTPUT_FLAG_SHORT = 'o';
 
 namespace LanguageName {
 
@@ -88,15 +88,15 @@ const char* const LANGUAGE_ASPECTJ = "AspectJ";
 
 };
 
-const char* const SKIP_ENCODING_FLAG = "--skip-encoding";
-const char* const SKIP_ENCODING_FLAG_SHORT = "-k";
+const char* const SKIP_ENCODING_FLAG = "skip-encoding";
+const char SKIP_ENCODING_FLAG_SHORT = 'k';
 
-const char* const COMPRESSED_FLAG = "--compress";
-const char* const COMPRESSED_FLAG_SHORT = "-z";
+const char* const COMPRESSED_FLAG = "compress";
+const char COMPRESSED_FLAG_SHORT = 'z';
 
-const char* const NO_XML_DECLARATION_FLAG = "--no-xml-declaration";
+const char* const NO_XML_DECLARATION_FLAG = "no-xml-declaration";
 
-const char* const NO_NAMESPACE_DECLARATION_FLAG = "--no-namespace-decl";
+const char* const NO_NAMESPACE_DECLARATION_FLAG = "no-namespace-decl";
 
 /* Return Status */
 
