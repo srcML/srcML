@@ -93,13 +93,13 @@ void output_help(const char* name) {
          "The srcML files can be in xml or gzip compressed xml (detected automatically).\n"
          "Also provides for access to metadata about the srcML document, extracting specific\n"
          "parts of compound srcML documents, querying using XPath and RelaxNG, and\n"
-	 "and transformation with XSLT.\n\n"
+	 "transformation with XSLT.\n\n"
 
 	 "By default, output is to stdout.  You can specify a file for output using the --%s or -%c option.\n"
 	 "When no filenames are given input is from stdin and output is to stdout.\n"
 	 "An input filename of '-' also reads from stdin.\n\n"
 
-	 "Any input file, including XSLT or RelaxNG file, can be a local\n"
+	 "Any input file, including XSLT and RelaxNG files, can be a local\n"
 	 "filename (FILE) or a URI with the protocols http:, ftp:, or file:\n\n"
 
 	 "Options:\n", name, OUTPUT_FLAG, OUTPUT_FLAG_SHORT);
