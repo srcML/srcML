@@ -296,7 +296,7 @@ f.close()
 
 check([srcmltranslator, "sub/a.cpp", "sub/b.cpp", "-o", "-"], "", nestedfile)
 
-check([srcmltranslator, option.NESTED_FLAG, "sub/a.cpp", "-o", "-"], "", nestedfile1)
+check([srcmltranslator, option.COMPOUND_FLAG, "sub/a.cpp", "-o", "-"], "", nestedfile1)
 
 filelist = """
 sub/a.cpp
@@ -990,7 +990,7 @@ f = open('sub/b.cpp', 'w')
 f.write(sfile2)
 f.close()
 
-check([srcmltranslator, option.NESTED_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
+check([srcmltranslator, option.COMPOUND_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml').read(), nestedfile1)
 check([srcmltranslator, 'sub/a.cpp', 'sub/b.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml').read(), nestedfile)
