@@ -45,7 +45,7 @@ WS :
             ' '  |
 
             // horizontal tab
-            '\t' { tab(); }
+            '\t'
         )+
 ;
 
