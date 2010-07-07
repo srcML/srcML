@@ -231,17 +231,6 @@ void output_version(const char* name) {
 }
 
 int options = OPTION_CPP_MARKUP_ELSE | OPTION_CPP | OPTION_XMLDECL | OPTION_NAMESPACEDECL;
-//const char* src_encoding = DEFAULT_TEXT_ENCODING;
-//int language = 0;
-//const char* xml_encoding = DEFAULT_XML_ENCODING;
-//const char* given_directory = 0;
-//const char* given_filename = 0;
-//const char* fname = "-";
-//const char* given_version = 0;
-//bool specified_cpp_option = false;
-
-// output filename
-//const char* srcml_filename = 0;
 
 const char* num2prefix[] = {
 
@@ -254,17 +243,6 @@ const char* num2prefix[] = {
   SRCML_EXT_POSITION_NS_PREFIX_DEFAULT,
 };
 const int num_prefixes = sizeof(num2prefix) / sizeof(num2prefix[0]);
-
-/*
-bool prefixchange[] = {
-  false,
-  false,
-  false,
-  false,
-  false,
-  false,
-};
-*/
 
 #ifdef __GNUG__
 extern "C" void verbose_handler(int);
