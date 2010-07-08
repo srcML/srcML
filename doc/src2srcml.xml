@@ -44,8 +44,7 @@
   </para>
   <para>
     The translation is fast and uses a stream-parsing approach with
-    top-down parsing and elements are issued as soon as they
-    are detected.
+    top-down parsing and elements issued as soon as they are detected.
   </para>
   <para>
     The program <command>src2srcml</command> is typically used with
@@ -54,7 +53,8 @@
     <command>src2srcml</command> and then through
     <command>srcml2src</command> produces the original source-code
     file.  The program <command>srcml2src</command> also provides a
-    set of utilities for working with srcML files.
+    set of utilities for working with srcML files, including
+    efficient querying and transformation of source code.
   </para>
   <para>
     Using the character - in the place of an input source-code file
@@ -118,10 +118,10 @@
 	<para>
 	  Sets the input encoding of the source-code file to
 	  <replaceable>encoding</replaceable>.  The default is
-	  &DEFAULT_TEXT_ENCODING;.  Not stored, but used for any
-	  necessary source-code text translation.  Possible encodings
-	  can be obtained by using the command <command>iconv
-	  -l</command>.
+	  &DEFAULT_TEXT_ENCODING;.  Used for any necessary source-code
+	  text translation to the encoding used in the srcML file.
+	  Possible encodings can be obtained by using the command
+	  <command>iconv -l</command>.
 	</para>
       </listitem>
     </varlistentry>
@@ -214,9 +214,10 @@
       <term><option>&VERBOSE_FLAG_SHORT;, &VERBOSE_FLAG;</option></term>
       <listitem>
 	<para>
-	  Verbose output to standard error.  Especially useful with
-	  the <option>&FILELIST_FLAG;</option> option.  The signal
-	  SIGUSR1 can be used to toggle this option.
+	  Conversion and status information to stderr, including
+	  encodings used.  Especially useful with for monitoring
+	  progress of the the <option>&FILELIST_FLAG;</option> option.
+	  The signal SIGUSR1 can be used to toggle this option.
 	</para>
       </listitem>
     </varlistentry>
@@ -235,13 +236,18 @@
 	  values are C, C++, Java, or AspectJ.  The language affects
 	  parsing, the allowed markup, and what is considered a
 	  keyword.  The value is also stored as an attribute of the
-	  root element unit.  The default is C++.
+	  root element unit.
+	</para>
+	<para>
+	  If not specified, the programming language is based on the
+	  file extension.  If the file extension is not available or
+	  not in the standard list, the default is C++.
 	</para>
       </listitem>
     </varlistentry>
 
     <para>
-	  The rest of the metadata options are for optional,
+	  The rest of the metadata options are for optional attributes
 	  purely-descriptive attributes.  The value is a string with
 	  no interpretation by the srcML tools.  For compound srcML
 	  documents this option sets the attribute on the root
@@ -255,8 +261,7 @@
 	  The value of the directory attribute is typically obtained
 	  from the path of the input filename.  This option allows you
 	  to specify a different directory for standard input or where
-	  the directory is not contained in the path of the input
-	  filename.
+	  the directory is not contained in the input path.
 	</para>
       </listitem>
     </varlistentry>
@@ -266,8 +271,8 @@
 	<para>
 	  The value of the filename attribute is typically obtained
 	  from the input filename.  This option allows you to specify
-	  a different filename for standard input or where a different
-	  filename is wanted.
+	  a different filename for standard input or where the filename
+	  is not contained in the input path.
 	</para>
       </listitem>
     </varlistentry>
@@ -276,7 +281,9 @@
       <listitem>
 	<para>
 	  Sets the value of the attribute version to
-	  <replaceable>version</replaceable>.
+	  <replaceable>version</replaceable>.  This is a
+	  purely-descriptive attribute, where the value has no
+	  interpretation by src2srcml.
 	</para>
       </listitem>
     </varlistentry>
@@ -293,9 +300,13 @@
 	  Additional markup of literal values using the element
 	  literal with the prefix
 	  "&SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT;" in the namespace
-	  "&SRCML_EXT_LITERAL_NS_URI;".  Can also be
-	  specified by declaring a prefix for this namespace using the
-	  <option>&XMLNS_FLAG;</option> option, e.g.,
+	  "&SRCML_EXT_LITERAL_NS_URI;".
+	</para>
+
+	<para>
+	  Can also be specified by declaring a prefix for literal
+	  namespace using the <option>&XMLNS_FLAG;</option> option,
+	  e.g.,
 	  <option>&XMLNS_FLAG;:&SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT;="&SRCML_EXT_LITERAL_NS_URI;"</option>
 	</para>
       </listitem>
@@ -307,9 +318,12 @@
 	  Additional markup of operators values using the element
 	  operator with the prefix
 	  "&SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT;" in the namespace
-	  "&SRCML_EXT_OPERATOR_NS_URI;".  Can also be
-	  specified by declaring a prefix for this namespace using the
-	  <option>&XMLNS_FLAG;</option> option, e.g.,
+	  "&SRCML_EXT_OPERATOR_NS_URI;".
+	</para>
+	<para>
+	  Can also be specified by declaring a prefix for operator
+	  namespace using the <option>&XMLNS_FLAG;</option> option,
+	  e.g.,
 	  <option>&XMLNS_FLAG;:&SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT;="&SRCML_EXT_OPERATOR_NS_URI;"</option>
 	</para>
       </listitem>
@@ -321,9 +335,12 @@
 	  Additional markup of type modifiers using the element
 	  modifier with the prefix
 	  "&SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT;" in the namespace
-	  "&SRCML_EXT_MODIFIER_NS_URI;".  Can also be specified by
-	  declaring a prefix for this namespace using the
-	  <option>&XMLNS_FLAG;</option> option, e.g.,
+	  "&SRCML_EXT_MODIFIER_NS_URI;".
+	</para>
+	<para>
+	  Can also be specified by declaring a prefix for the modifier
+	  namespace using the <option>&XMLNS_FLAG;</option> option,
+	  e.g.,
 	  <option>&XMLNS_FLAG;:&SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT;="&SRCML_EXT_MODIFIER_NS_URI;"</option>
 	</para>
       </listitem>
