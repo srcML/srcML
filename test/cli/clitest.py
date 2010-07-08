@@ -1656,7 +1656,7 @@ longinfo = """xmlns="http://www.sdml.info/srcML/src"
 xmlns:cpp="http://www.sdml.info/srcML/cpp"
 encoding="UTF-8"
 language="C++"
-nested="2"
+\rfiles="2"
 """
 
 sxmlfile = xml_declaration + """
