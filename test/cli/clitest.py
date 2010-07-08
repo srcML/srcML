@@ -1865,7 +1865,18 @@ print os.path.basename(srcmlutility) + ' ' + option.VERSION_FLAG
 line = execute([srcmlutility, option.VERSION_FLAG], "")
 execute(['grep', 'Copyright'], line)
 
+##
+# Test order of metadata option order
 
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp" version="1.0"/>
+"""
+
+metadata = {option.LANGUAGE_FLAG_SHORT:'language="C++"\n', option.DIRECTORY_FLAG_SHORT:'directory="sub"\n', option.FILENAME_FLAG_SHORT:'filename="a.cpp"\n',
+	    option.SRCVERSION_FLAG_SHORT:'src-version="1.0"\n', option.ENCODING_FLAG_SHORT:'encoding="UTF-8"\n'}
+for metaoption in metadata.keys() :
+	for othermeta in metadata.keys() :
+		check([srcmlutility, metaoption + othermeta[1]], srcml, metadata[metaoption] + metadata[othermeta])
 
 # footer
 print
