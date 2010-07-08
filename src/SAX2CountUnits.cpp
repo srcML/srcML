@@ -69,9 +69,10 @@ void SAX2CountUnits::endElementNs(void *ctx, const xmlChar *localname, const xml
   ++(pstate->count);
 
   // output file status message if in verbose mode
-  if (pstate->verbose && !isoption(pstate->options, OPTION_LONG_INFO))
-    fprintf(stderr, "\r%5ld", pstate->count);
-  else if (isoption(pstate->options, OPTION_LONG_INFO) && isatty(STDOUT_FILENO)) {
+  if (pstate->verbose && !isoption(pstate->options, OPTION_LONG_INFO)) {
+    fprintf(stderr, "\r%ld", pstate->count);
+    fflush(stdout);
+  } else if (isoption(pstate->options, OPTION_LONG_INFO) && isatty(STDOUT_FILENO)) {
 
     // back up over the previous display
     // yes, this is a hack, but it works
