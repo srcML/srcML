@@ -1769,6 +1769,28 @@ validate(open('sub/a.cpp.xml').read(), srcmlout)
 check([srcmlutility, option.NO_NAMESPACE_DECLARATION_FLAG, 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml').read(), srcmlout)
 
+##
+# Help and version
+
+
+# src2srcml
+print os.path.basename(srcmltranslator) + ' ' + option.HELP_FLAG
+line = execute([srcmltranslator, option.HELP_FLAG], "")
+execute(['grep', 'Report bugs'], line)
+print os.path.basename(srcmltranslator) + ' ' + option.VERSION_FLAG
+line = execute([srcmltranslator, option.VERSION_FLAG], "")
+execute(['grep', 'Copyright'], line)
+
+# srcML2src
+print os.path.basename(srcmlutility) + ' ' + option.HELP_FLAG
+line = execute([srcmlutility, option.HELP_FLAG], "")
+execute(['grep', 'Report bugs'], line)
+print os.path.basename(srcmlutility) + ' ' + option.VERSION_FLAG
+line = execute([srcmlutility, option.VERSION_FLAG], "")
+execute(['grep', 'Copyright'], line)
+
+
+
 # footer
 print
 print "Error count: ", error_count
