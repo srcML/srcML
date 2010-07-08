@@ -203,6 +203,8 @@ extern "C" void terminate_handler(int);
 int optionorder[5];
 int optioncount = 0;
 
+void output_info(srcMLUtility& su, int options, int optioncount, int optionorder[]);
+
 const int MAXPARAMS = 32;
 
 const int MAXXSLT = 32;
@@ -330,8 +332,8 @@ int main(int argc, char* argv[]) {
     if (optioncount > 0) {
 
       // move to the appropriate unit
-      su.move_to_unit(poptions.unit);
-
+      su.move_to_unit(poptions.unit, su, options, optioncount, optionorder);
+      /*
       // output all the namespaces
       if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {
 
@@ -380,16 +382,19 @@ int main(int argc, char* argv[]) {
 	    printf("%s=\"%s\"\n", attribute_title, l);
 	}
       }
+      */
 
       if (isoption(options, OPTION_LONG_INFO)) {
-	if (!isoption(options, OPTION_UNIT))
-	  printf("nested=\"%d\"\n", su.curunits());
+	if (!isoption(options, OPTION_UNIT)) {
+	  printf("\rnested=\"%d\"\n", su.curunits());
+	}
       }
 
     // namespace
     } else if (isoption(options, OPTION_NAMESPACE)) {
 
-      su.move_to_unit(poptions.unit);
+      su.move_to_unit(poptions.unit, su, options, optioncount, optionorder);
+      //      su.move_to_unit(poptions.unit);
 
       for (std::list<const char*>::const_iterator iter = poptions.ns.begin(); iter != poptions.ns.end(); ++iter) {
 
@@ -751,4 +756,61 @@ int option_error_status(int optopt) {
   };
 
   return 0;
+}
+
+void output_info(srcMLUtility& su, int options, int optioncount, int optionorder[]) {
+
+      // output all the namespaces
+      if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {
+
+	const PROPERTIES_TYPE& ns = su.getNS();
+	for (PROPERTIES_TYPE::const_iterator iter = ns.begin(); iter != ns.end(); ++iter)
+	  printf("%s=\"%s\"\n", iter->second.c_str(), iter->first.c_str());
+      }
+
+      // output get attributes in order specified
+      for (int i = 0; i < optioncount; ++i) {
+
+	// find attribute name from option
+	const char* attribute_name = "";
+	const char* attribute_title = "";
+	int option = optionorder[i];
+
+	switch (option) {
+	case OPTION_XML_ENCODING:
+	  attribute_name = ".encoding";
+	  attribute_title = "encoding";
+	  break;
+	case OPTION_LANGUAGE:
+	  attribute_name = UNIT_ATTRIBUTE_LANGUAGE;
+	  attribute_title = attribute_name;
+	  break;
+	case OPTION_DIRECTORY:
+	  attribute_name = UNIT_ATTRIBUTE_DIRECTORY;
+	  attribute_title = "directory";
+	  break;
+	case OPTION_FILENAME:
+	  attribute_name = UNIT_ATTRIBUTE_FILENAME;
+	  attribute_title = attribute_name;
+	  break;
+	case OPTION_VERSION:
+	  attribute_name = UNIT_ATTRIBUTE_VERSION;
+	  attribute_title = "src-version";
+	  break;
+	};
+
+	// output the option
+	const char* l = su.attribute(attribute_name);
+	if (l) {
+	  if (optioncount == 1)
+	    printf("%s\n", l);
+	  else
+	    printf("%s=\"%s\"\n", attribute_title, l);
+	}
+      }
+
+	if (isoption(options, OPTION_LONG_INFO) && !isoption(options, OPTION_UNIT)) {
+	    printf("nested=\"%d", 1);
+	    //	    fflush(stdout);
+	}
 }

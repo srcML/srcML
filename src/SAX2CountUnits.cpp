@@ -29,6 +29,7 @@
 #include <iostream>
 #include <iomanip>
 #include <cstring>
+#include <cmath>
 #include "Options.h"
 
 static const int fieldwidth = 5;
@@ -68,6 +69,15 @@ void SAX2CountUnits::endElementNs(void *ctx, const xmlChar *localname, const xml
   ++(pstate->count);
 
   // output file status message if in verbose mode
-  if (pstate->verbose)
+  if (pstate->verbose && !isoption(pstate->options, OPTION_LONG_INFO))
     fprintf(stderr, "\r%5ld", pstate->count);
+  else if (isoption(pstate->options, OPTION_LONG_INFO) && isatty(STDOUT_FILENO)) {
+
+    int n = (int) log10(pstate->count - 1) + 1;
+    if (n < 0)
+      n = 1;
+    for (; n; --n)
+        putchar('\b');
+    printf("%ld", pstate->count);
+  }
 }

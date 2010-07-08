@@ -56,7 +56,8 @@ class srcMLUtility {
   const char* namespace_ext(const char* uri);
 
   // move to a particular nested unit
-  void move_to_unit(int unitnumber);
+  //  void move_to_unit(int unitnumber);
+  void move_to_unit(int unitnumber, srcMLUtility&su, int options, int optioncount, int optionorder[]);
 
   // namespaces and prefixes
   const PROPERTIES_TYPE& getNS() const;

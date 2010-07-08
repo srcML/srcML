@@ -32,17 +32,22 @@
 #include "SAX2CountUnits.h"
 #include <libxml/parser.h>
 #include <libxml/xmlwriter.h>
+#include "srcMLUtility.h"
 
 class SAX2Properties : public SAX2CountUnits {
  public:
 
   // constructor
-  SAX2Properties(int unit, int& options, PROPERTIES_TYPE& nsv, PROPERTIES_TYPE& attrv);
+  SAX2Properties(int unit, int& options, PROPERTIES_TYPE& nsv, PROPERTIES_TYPE& attrv, srcMLUtility&, int ocount,
+		 int oorder[]);
 
   static xmlSAXHandler factory();
 
   PROPERTIES_TYPE& nsv;
   PROPERTIES_TYPE& attrv;
+  srcMLUtility& su;
+  int optioncount;
+  int* optionorder;
 
   // startElement for root
   static void startElementNsRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,

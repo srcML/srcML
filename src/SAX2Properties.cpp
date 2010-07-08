@@ -32,9 +32,12 @@
 #include <cstring>
 #include <libxml/parser.h>
 
+void output_info(srcMLUtility& su, int options, int optioncount, int optionorder[]);
+
 // constructor
-SAX2Properties::SAX2Properties(int unit, int& options, PROPERTIES_TYPE& nsv, PROPERTIES_TYPE& attrv) 
-  : SAX2CountUnits(unit, options), nsv(nsv), attrv(attrv)
+SAX2Properties::SAX2Properties(int unit, int& options, PROPERTIES_TYPE& nsv, PROPERTIES_TYPE& attrv,
+			       srcMLUtility& msu, int ocount, int oorder[]) 
+  : SAX2CountUnits(unit, options), nsv(nsv), attrv(attrv), su(msu), optioncount(ocount), optionorder(oorder)
 {}
 
   xmlSAXHandler SAX2Properties::factory() {
@@ -63,12 +66,20 @@ void SAX2Properties::startElementNsRoot(void* ctx, const xmlChar* localname, con
     // collect attributes
     collect_attributes(nb_attributes, attributes, pstate->attrv);
 
+    // encoding is entered as a property
+    const char* encoding = (const char*) (pstate->ctxt->encoding ? pstate->ctxt->encoding : pstate->ctxt->input->encoding);
+    if (encoding)
+      pstate->attrv.insert(pstate->attrv.end(), PROPERTIES_TYPE::value_type(".encoding", encoding));
+
     // if a unit is specified, then move to that unit
     if (pstate->unit) {
       pstate->ctxt->sax->startElementNs = pstate->unit == 1 ? &startElementNsUnit : 0;
       pstate->ctxt->sax->endElementNs   = pstate->unit == 1 ? 0 : &endElementNs;
       return;
     }
+
+    // output the current data except for the completion of the nested unit count
+    output_info(pstate->su, pstate->options, pstate->optioncount, pstate->optionorder);
 
     // done collecting unit information
     if (isoption(pstate->options, OPTION_LONG_INFO)) {
@@ -98,6 +109,11 @@ void SAX2Properties::startElementNsUnit(void* ctx, const xmlChar* localname, con
 
     // merge attribute info with root attribute info
     collect_attributes(nb_attributes, attributes, pstate->attrv);
+
+    // encoding is entered as a property
+    //    const char* encoding = (const char*) (pstate->ctxt->encoding ? pstate->ctxt->encoding : pstate->ctxt->input->encoding);
+    //    pstate->attrv.insert(pstate->attrv.end(), PROPERTIES_TYPE::value_type(".encoding", encoding));
+    output_info(pstate->su, pstate->options, pstate->optioncount, pstate->optionorder);
 
     // reached the unit we wanted, so we are finished
     xmlStopParser(pstate->ctxt);
