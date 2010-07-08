@@ -1550,24 +1550,18 @@ validate(open('sub/a.cpp', 'r').read(), sfile)
 
 ##
 # src2srcml Markup Extensions
-sfile = """
-a + 1
-"""
+sfile = ""
 
 f = open('sub/a.cpp', 'w')
 f.write(sfile)
 f.close()
 
 srcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" language="C++">
-<expr_stmt><expr><name>a</name> + <lit:literal type="number">1</lit:literal></expr></expr_stmt>
-</unit>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" language="C++"/>
 """
 
 fsrcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" language="C++" dir="sub" filename="a.cpp">
-<expr_stmt><expr><name>a</name> + <lit:literal type="number">1</lit:literal></expr></expr_stmt>
-</unit>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" language="C++" dir="sub" filename="a.cpp"/>
 """
 
 check([srcmltranslator, option.LITERAL_FLAG], sfile, srcml)
@@ -1578,15 +1572,11 @@ check([srcmltranslator, option.LITERAL_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml']
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
 srcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:op="http://www.sdml.info/srcML/operator" language="C++">
-<expr_stmt><expr><name>a</name> <op:operator>+</op:operator> 1</expr></expr_stmt>
-</unit>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:op="http://www.sdml.info/srcML/operator" language="C++"/>
 """
 
 fsrcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:op="http://www.sdml.info/srcML/operator" language="C++" dir="sub" filename="a.cpp">
-<expr_stmt><expr><name>a</name> <op:operator>+</op:operator> 1</expr></expr_stmt>
-</unit>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:op="http://www.sdml.info/srcML/operator" language="C++" dir="sub" filename="a.cpp"/>
 """
 
 check([srcmltranslator, option.OPERATOR_FLAG], sfile, srcml)
@@ -1597,15 +1587,11 @@ check([srcmltranslator, option.OPERATOR_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
 srcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:type="http://www.sdml.info/srcML/modifier" language="C++">
-<expr_stmt><expr><name>a</name> + 1</expr></expr_stmt>
-</unit>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:type="http://www.sdml.info/srcML/modifier" language="C++"/>
 """
 
 fsrcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:type="http://www.sdml.info/srcML/modifier" language="C++" dir="sub" filename="a.cpp">
-<expr_stmt><expr><name>a</name> + 1</expr></expr_stmt>
-</unit>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:type="http://www.sdml.info/srcML/modifier" language="C++" dir="sub" filename="a.cpp"/>
 """
 
 check([srcmltranslator, option.MODIFIER_FLAG], sfile, srcml)
@@ -1616,15 +1602,11 @@ check([srcmltranslator, option.MODIFIER_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
 srcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" language="C++">
-<expr_stmt><expr><name>a</name> <op:operator>+</op:operator> <lit:literal type="number">1</lit:literal></expr></expr_stmt>
-</unit>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" language="C++"/>
 """
 
 fsrcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" language="C++" dir="sub" filename="a.cpp">
-<expr_stmt><expr><name>a</name> <op:operator>+</op:operator> <lit:literal type="number">1</lit:literal></expr></expr_stmt>
-</unit>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" language="C++" dir="sub" filename="a.cpp"/>
 """
 
 check([srcmltranslator, option.LITERAL_FLAG, option.OPERATOR_FLAG], sfile, srcml)
