@@ -61,9 +61,6 @@
     filename uses standard input, and in place of an output srcML file
     uses standard output.
   </para>
-  <para>
-    Some options are only available in the libxml2 version.
-  </para>
 </refsect1>
 <refsect1>
   <title>OPTIONS</title>
@@ -80,7 +77,7 @@
       <term><option>&VERSION_FLAG_SHORT;, &VERSION_FLAG;</option></term>
       <listitem>
 	<para>
-	  Output the version of src2srcml, including whether libxml2 enabled, then exit.
+	  Output the version of src2srcml then exit.
 	</para>
       </listitem>
     </varlistentry>
@@ -122,10 +119,9 @@
 	  Sets the input encoding of the source-code file to
 	  <replaceable>encoding</replaceable>.  The default is
 	  &DEFAULT_TEXT_ENCODING;.  Not stored, but used for any
-	  necessary source-code text translation in the
-	  libxml2-enabled version.  Possible encodings with the
-	  libxml2-enabled version can be obtained by using the command
-	  <command>iconv -l</command>.
+	  necessary source-code text translation.  Possible encodings
+	  can be obtained by using the command <command>iconv
+	  -l</command>.
 	</para>
       </listitem>
     </varlistentry>
@@ -135,12 +131,8 @@
 	<para>
 	  Sets the xml encoding of the output srcML file to
 	  <replaceable class="parameter">encoding</replaceable>.  The
-	  default is UTF-8.  Conversion to the xml encoding from the
-	  source encoding is only performed in the libxml2-enabled
-	  version.
-	  Possible encodings with the libxml2-enabled
-	  version can be obtained by using the command <command>iconv
-	  -l</command>.
+	  default is UTF-8.  Possible encodings can be obtained by
+	  using the command <command>iconv -l</command>.
 	</para>
       </listitem>
     </varlistentry>
@@ -187,9 +179,8 @@
       <term><option>&COMPRESSED_FLAG_SHORT;, &COMPRESSED_FLAG;</option></term>
       <listitem>
 	<para>
-	  Output is in compressed gzip format.  This format can be directly
-	  read by <command>srcml2src</command>. Only available in the
-	  libxml2-enabled version.
+	  Output is in compressed gzip format.  This format can be directly,
+	  and automatically, read by <command>srcml2src</command>.
 	</para>
       </listitem>
     </varlistentry>
@@ -457,7 +448,6 @@
   <para>&STATUS_INPUTFILE_PROBLEM;: Problem with input file</para>
   <para>&STATUS_UNKNOWN_OPTION;: Unknown option</para>
   <para>&STATUS_UNKNOWN_ENCODING;: Unknown encoding</para>
-  <para>&STATUS_LIBXML2_FEATURE;: Libxml2-only feature (not libxml2 enabled)</para>
   <para>&STATUS_INVALID_LANGUAGE;: Invalid language</para>
   <para>&STATUS_LANGUAGE_MISSING;: Language option specified, but value missing</para>
   <para>&STATUS_FILENAME_MISSING;: Filename option specified, but value missing</para>
