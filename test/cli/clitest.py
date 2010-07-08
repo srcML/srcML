@@ -1874,10 +1874,17 @@ srcml = xml_declaration + """
 
 metadata = {option.LANGUAGE_FLAG_SHORT:'language="C++"\n', option.DIRECTORY_FLAG_SHORT:'directory="sub"\n', option.FILENAME_FLAG_SHORT:'filename="a.cpp"\n',
 	    option.SRCVERSION_FLAG_SHORT:'src-version="1.0"\n', option.ENCODING_FLAG_SHORT:'encoding="UTF-8"\n'}
+
 for metaoption in metadata.keys() :
 	for othermeta in metadata.keys() :
 		check([srcmlutility, metaoption + othermeta[1]], srcml, metadata[metaoption] + metadata[othermeta])
-
+		for meta2 in metadata.keys() :
+			check([srcmlutility, metaoption + othermeta[1] + meta2[1]], srcml, metadata[metaoption] + metadata[othermeta] + metadata[meta2])
+			for meta3 in metadata.keys() :
+				check([srcmlutility, metaoption + othermeta[1] + meta2[1] + meta3[1]], srcml, metadata[metaoption] + metadata[othermeta] + metadata[meta2] + metadata[meta3])
+				for meta4 in metadata.keys() :
+					check([srcmlutility, metaoption + othermeta[1] + meta2[1] + meta3[1] + meta4[1]], srcml, metadata[metaoption] + metadata[othermeta] + metadata[meta2] + metadata[meta3] + metadata[meta4])
+			
 # footer
 print
 print "Error count: ", error_count
