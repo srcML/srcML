@@ -23,7 +23,23 @@
 		     contains(src:name, 'SRCML')
 ]">
 
-  <xsl:value-of select="concat('&lt;!ENTITY ', src:name, ' ' , src:init/src:expr, '&gt;')"/><xsl:text>
+  <xsl:variable name="data" select="substring(src:init/src:expr, 2, string-length(src:init/src:expr) - 2)"/>
+
+  <xsl:variable name="fixeddata">
+  <xsl:choose>
+
+    <xsl:when test="string-length($data)=1">
+      <xsl:value-of select='concat("&apos;", "-", $data, "&apos;")'/>
+    </xsl:when>
+
+    <xsl:otherwise>
+      <xsl:value-of select="concat('&quot;', '--', $data, '&quot;')"/>
+    </xsl:otherwise>
+
+  </xsl:choose>
+  </xsl:variable>
+
+  <xsl:value-of select="concat('&lt;!ENTITY ', src:name, ' ' , $fixeddata, '&gt;')"/><xsl:text>
 </xsl:text>
 
 </xsl:template>
