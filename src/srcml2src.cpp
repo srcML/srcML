@@ -386,7 +386,7 @@ int main(int argc, char* argv[]) {
 
       if (isoption(options, OPTION_LONG_INFO)) {
 	if (!isoption(options, OPTION_UNIT)) {
-	  printf("\rnested=\"%d\"\n", su.curunits());
+	  printf("\rfiles=\"%d\"\n", su.curunits());
 	}
       }
 
@@ -809,8 +809,7 @@ void output_info(srcMLUtility& su, int options, int optioncount, int optionorder
 	}
       }
 
-	if (isoption(options, OPTION_LONG_INFO) && !isoption(options, OPTION_UNIT)) {
-	    printf("nested=\"%d", 1);
-	    //	    fflush(stdout);
+      if (isoption(options, OPTION_LONG_INFO) && !isoption(options, OPTION_UNIT) && isatty(STDOUT_FILENO)) {
+	    printf("files=\"%d", 1);
 	}
 }
