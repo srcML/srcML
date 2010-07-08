@@ -157,10 +157,10 @@ void output_help(const char* name) {
 	 "  -%c, --%-17s extract individual unit NUM from a compound srcML document\n",
 	  UNIT_FLAG_SHORT, UNIT_FLAG_FULL);
 
-  printf("  -%c, --%-17s extract all files from a compound srcML document\n\n",
+  printf("  -%c, --%-17s extract all files from a compound srcML document and create them in the filesystem\n\n",
 	  EXPAND_FLAG_SHORT, EXPAND_FLAG);
 
-  printf("Query ad Transformation Options:  \n\n"
+  printf("Query and Transformation Options:  \n\n"
 	 "  --%-21s apply XPATH expression to each individual unit\n", XPATH_FLAG_FULL);
   printf("  --%-21s apply XSLT_FILE (FILE or URI) transformation to each individual unit\n", XSLT_FLAG_FULL);
   printf("  --%-21s passes a parameter NAME and VAL to the XSLT program\n", PARAM_FLAG_FULL);
