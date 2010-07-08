@@ -331,59 +331,10 @@ int main(int argc, char* argv[]) {
     // process get attribute options
     if (optioncount > 0) {
 
-      // move to the appropriate unit
+      // move to the appropriate unit and output the appropriate metadata
       su.move_to_unit(poptions.unit, su, options, optioncount, optionorder);
-      /*
-      // output all the namespaces
-      if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {
 
-	const PROPERTIES_TYPE& ns = su.getNS();
-	for (PROPERTIES_TYPE::const_iterator iter = ns.begin(); iter != ns.end(); ++iter)
-	  printf("%s=\"%s\"\n", iter->second.c_str(), iter->first.c_str());
-      }
-
-      // output get attributes in order specified
-      for (int i = 0; i < optioncount; ++i) {
-
-	// find attribute name from option
-	const char* attribute_name = "";
-	const char* attribute_title = "";
-	int option = optionorder[i];
-
-	switch (option) {
-	case OPTION_XML_ENCODING:
-	  attribute_name = ".encoding";
-	  attribute_title = "encoding";
-	  break;
-	case OPTION_LANGUAGE:
-	  attribute_name = UNIT_ATTRIBUTE_LANGUAGE;
-	  attribute_title = attribute_name;
-	  break;
-	case OPTION_DIRECTORY:
-	  attribute_name = UNIT_ATTRIBUTE_DIRECTORY;
-	  attribute_title = "directory";
-	  break;
-	case OPTION_FILENAME:
-	  attribute_name = UNIT_ATTRIBUTE_FILENAME;
-	  attribute_title = attribute_name;
-	  break;
-	case OPTION_VERSION:
-	  attribute_name = UNIT_ATTRIBUTE_VERSION;
-	  attribute_title = "src-version";
-	  break;
-	};
-
-	// output the option
-	const char* l = su.attribute(attribute_name);
-	if (l) {
-	  if (optioncount == 1)
-	    printf("%s\n", l);
-	  else
-	    printf("%s=\"%s\"\n", attribute_title, l);
-	}
-      }
-      */
-
+      // now finish longinfo
       if (isoption(options, OPTION_LONG_INFO)) {
 	if (!isoption(options, OPTION_UNIT)) {
 	  printf("\rfiles=\"%d\"\n", su.curunits());
