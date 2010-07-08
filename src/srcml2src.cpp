@@ -337,7 +337,9 @@ int main(int argc, char* argv[]) {
       // now finish longinfo
       if (isoption(options, OPTION_LONG_INFO)) {
 	if (!isoption(options, OPTION_UNIT)) {
-	  printf("\rfiles=\"%d\"\n", su.curunits());
+	  if (isatty(STDOUT_FILENO))
+	    putchar('\r');
+	  printf("files=\"%d\"\n", su.curunits());
 	}
       }
 
