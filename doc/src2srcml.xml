@@ -247,11 +247,9 @@
     </varlistentry>
 
     <para>
-	  The rest of the metadata options are for optional attributes
-	  purely-descriptive attributes.  The value is a string with
-	  no interpretation by the srcML tools.  For compound srcML
-	  documents this option sets the attribute on the root
-	  element.
+	  The rest of the metadata options are for optional
+	  attributes.  For compound srcML documents this option sets
+	  the attribute on the root element.
     </para>
 
     <varlistentry>
@@ -291,7 +289,9 @@
 <refsect1>
   <title>Markup Extensions</title>
   <para>
-    Extensions to the srcML markup are available.
+    Each extensions to the srcML markup has its own namespace.  These
+    are indicated in the srcML document by the declaration of the
+    specific extension namespace.  These flags make it easier to declare.
   </para>
     <varlistentry>
       <term><option>&LITERAL_FLAG;</option></term>
@@ -346,6 +346,39 @@
       </listitem>
     </varlistentry>
 
+</refsect1>
+<refsect1>
+  <title>LINE/COLUMN POSITION</title>
+  <para>
+    Optional line and column attributes are used to indicate
+    the position of an element in the original source code document.
+    Both the line and column start at 1.  The column position is based
+    on the tab settings with a default tab size of 8.  Other tab sizes
+    can be set using the &TABS_FLAG;.
+
+  </para>
+  <variablelist>
+    <varlistentry>
+      <term><option>&POSITION_FLAG;</option></term>
+      <listitem>
+	<para>
+	  Insert line and column attributes into each start element.
+	  These attributes have a default prefix of
+	  "&SRCML_EXT_POSITION_NS_PREFIX_DEFAULT;" in the namespace
+	  "&SRCML_EXT_POSITION_NS_URI;".
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><option>&TABS_FLAG;</option></term>
+      <listitem>
+	<para>
+	  Set the tab size.  Default is 8.  Use of this option
+	  automatically turns on the position attributes.
+	</para>
+      </listitem>
+    </varlistentry>
+  </variablelist>
 </refsect1>
 <refsect1>
   <title>CPP MARKUP OPTIONS</title>
