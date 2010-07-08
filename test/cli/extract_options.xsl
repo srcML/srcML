@@ -22,13 +22,6 @@
 
   <xsl:variable name="fixeddata">
   <xsl:choose>
-    <xsl:when test="starts-with($data, '--')">
-      <xsl:value-of select="$data"/>
-    </xsl:when>
-
-    <xsl:when test="starts-with($data, '-') and string-length($data)=2">
-      <xsl:value-of select="$data"/>
-    </xsl:when>
 
     <xsl:when test="string-length($data)=1">
       <xsl:value-of select="concat('-', $data)"/>
