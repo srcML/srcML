@@ -73,11 +73,21 @@ void SAX2CountUnits::endElementNs(void *ctx, const xmlChar *localname, const xml
     fprintf(stderr, "\r%5ld", pstate->count);
   else if (isoption(pstate->options, OPTION_LONG_INFO) && isatty(STDOUT_FILENO)) {
 
-    int n = (int) log10(pstate->count - 1) + 1;
-    if (n < 0)
-      n = 1;
-    for (; n; --n)
-        putchar('\b');
+    // back up over the previous display
+    // yes, this is a hack, but it works
+    int c = pstate->count - 1;
+    putchar('\b');
+    if (c >= 10)
+      putchar('\b');
+    if (c >= 100)
+      putchar('\b');
+    if (c >= 1000)
+      putchar('\b');
+    if (c >= 10000)
+      putchar('\b');
+    if (c >= 100000)
+      putchar('\b');
     printf("%ld", pstate->count);
+    fflush(stdout);
   }
 }
