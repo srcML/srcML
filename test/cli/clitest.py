@@ -1744,7 +1744,7 @@ check([srcmlutility, option.NO_XML_DECLARATION_FLAG], srcml, srcmlout)
 check([srcmlutility, option.NO_XML_DECLARATION_FLAG, 'sub/a.cpp.xml'], "", srcmlout)
 check([srcmlutility, option.NO_XML_DECLARATION_FLAG, '-o', 'sub/a.cpp.xml'], srcml, "")
 validate(open('sub/a.cpp.xml').read(), srcmlout)
-check([srcmlutility, option.NO_XML_DECLARATION_FLAG, 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], srcml, "")
+check([srcmlutility, option.NO_XML_DECLARATION_FLAG, 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml').read(), srcmlout)
 
 ##
@@ -1766,7 +1766,7 @@ check([srcmlutility, option.NO_NAMESPACE_DECLARATION_FLAG], srcml, srcmlout)
 check([srcmlutility, option.NO_NAMESPACE_DECLARATION_FLAG, 'sub/a.cpp.xml'], "", srcmlout)
 check([srcmlutility, option.NO_NAMESPACE_DECLARATION_FLAG, '-o', 'sub/a.cpp.xml'], srcml, "")
 validate(open('sub/a.cpp.xml').read(), srcmlout)
-check([srcmlutility, option.NO_NAMESPACE_DECLARATION_FLAG, 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], srcml, "")
+check([srcmlutility, option.NO_NAMESPACE_DECLARATION_FLAG, 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml').read(), srcmlout)
 
 # footer
