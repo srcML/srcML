@@ -1,4 +1,4 @@
-<!ENTITY DATE "Thu Jul  8 08:45:10 EDT 2010-e " >
+<!ENTITY DATE "Thu Jul  8 08:47:19 EDT 2010-e " >
 <!ENTITY DEBUG_FLAG "--debug">
 <!ENTITY DEBUG_FLAG_SHORT '-g'>
 <!ENTITY LITERAL_FLAG "--literal">
@@ -68,20 +68,20 @@
 <!ENTITY NO_XML_DECLARATION_FLAG "--no-xml-declaration">
 <!ENTITY NO_NAMESPACE_DECLARATION_FLAG "--no-namespace-decl">
 <!ENTITY DEFAULT_TEXT_ENCODING "--ISO-8859-1">
-<!ENTITY SRCML_SRC_NS_URI "--http://www.sdml.info/srcML/src">
-<!ENTITY SRCML_CPP_NS_URI "--http://www.sdml.info/srcML/cpp">
-<!ENTITY SRCML_ERR_NS_URI "--http://www.sdml.info/srcML/srcerr">
-<!ENTITY SRCML_SRC_NS_PREFIX_DEFAULT "--">
-<!ENTITY SRCML_CPP_NS_PREFIX_DEFAULT "--cpp">
-<!ENTITY SRCML_ERR_NS_PREFIX_DEFAULT "--err">
-<!ENTITY SRCML_EXT_LITERAL_NS_URI "--http://www.sdml.info/srcML/literal">
-<!ENTITY SRCML_EXT_OPERATOR_NS_URI "--http://www.sdml.info/srcML/operator">
-<!ENTITY SRCML_EXT_MODIFIER_NS_URI "--http://www.sdml.info/srcML/modifier">
-<!ENTITY SRCML_EXT_POSITION_NS_URI "--http://www.sdml.info/srcML/position">
-<!ENTITY SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT "--lit">
-<!ENTITY SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT "--op">
-<!ENTITY SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT "--type">
-<!ENTITY SRCML_EXT_POSITION_NS_PREFIX_DEFAULT "--pos">
+<!ENTITY SRCML_SRC_NS_URI 'http://www.sdml.info/srcML/src'>
+<!ENTITY SRCML_CPP_NS_URI 'http://www.sdml.info/srcML/cpp'>
+<!ENTITY SRCML_ERR_NS_URI 'http://www.sdml.info/srcML/srcerr'>
+<!ENTITY SRCML_SRC_NS_PREFIX_DEFAULT ''>
+<!ENTITY SRCML_CPP_NS_PREFIX_DEFAULT 'cpp'>
+<!ENTITY SRCML_ERR_NS_PREFIX_DEFAULT 'err'>
+<!ENTITY SRCML_EXT_LITERAL_NS_URI 'http://www.sdml.info/srcML/literal'>
+<!ENTITY SRCML_EXT_OPERATOR_NS_URI 'http://www.sdml.info/srcML/operator'>
+<!ENTITY SRCML_EXT_MODIFIER_NS_URI 'http://www.sdml.info/srcML/modifier'>
+<!ENTITY SRCML_EXT_POSITION_NS_URI 'http://www.sdml.info/srcML/position'>
+<!ENTITY SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT 'lit'>
+<!ENTITY SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT 'op'>
+<!ENTITY SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT 'type'>
+<!ENTITY SRCML_EXT_POSITION_NS_PREFIX_DEFAULT 'pos'>
 <!ENTITY STATUS_SUCCESS "0">
 <!ENTITY STATUS_ERROR "1">
 <!ENTITY STATUS_INPUTFILE_PROBLEM "2">

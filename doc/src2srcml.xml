@@ -239,18 +239,24 @@
 	</para>
       </listitem>
     </varlistentry>
+
+    <para>
+	  The rest of the metadata options are for optional,
+	  purely-descriptive attributes.  The value is a string with
+	  no interpretation by the srcML tools.  For compound srcML
+	  documents this option sets the attribute on the root
+	  element.
+    </para>
+
     <varlistentry>
       <term><option>&DIRECTORY_FLAG_SHORT;, &DIRECTORY_FLAG;=<replaceable class="parameter">directory</replaceable></option></term>
       <listitem>
 	<para>
-	  The unit element includes an optional, descriptive
-	  attribute, directory.  The value is typically obtained from
-	  the path of the input filename.  This option allows you to
-	  specify a different directory for standard input or where
+	  The value of the directory attribute is typically obtained
+	  from the path of the input filename.  This option allows you
+	  to specify a different directory for standard input or where
 	  the directory is not contained in the path of the input
 	  filename.
-	  For compound srcML documents this option sets
-	  the attribute on the root element.
 	</para>
       </listitem>
     </varlistentry>
@@ -258,13 +264,10 @@
       <term><option>&FILENAME_FLAG_SHORT;, &FILENAME_FLAG;=<replaceable class="parameter">filename</replaceable></option></term>
       <listitem>
 	<para>
-	  The unit element includes an optional, descriptive
-	  attribute, filename.  The value is typically obtained from
-	  the input filename.  This option allows you to specify a
-	  different filename for standard input or where a different
+	  The value of the filename attribute is typically obtained
+	  from the input filename.  This option allows you to specify
+	  a different filename for standard input or where a different
 	  filename is wanted.
-	  For compound srcML documents this option sets
-	  the attribute on the root element.
 	</para>
       </listitem>
     </varlistentry>
@@ -272,13 +275,8 @@
       <term><option>&SRCVERSION_FLAG_SHORT;, &SRCVERSION_FLAG;=<replaceable class="parameter">version</replaceable></option></term>
       <listitem>
 	<para>
-	  The unit element includes the version, an optional,
-	  purely-descriptive attribute.  Sets the value of the
-	  attribute version to <replaceable>version</replaceable>.
-	  The value is a string with no interpretation by the srcML
-	  tools.
-	  For compound srcML documents this option sets
-	  the attribute on the root element.
+	  Sets the value of the attribute version to
+	  <replaceable>version</replaceable>.
 	</para>
       </listitem>
     </varlistentry>
