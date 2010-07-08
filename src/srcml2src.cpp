@@ -768,7 +768,7 @@ void output_info(srcMLUtility& su, int options, int optioncount, int optionorder
 	  printf("%s=\"%s\"\n", iter->second.c_str(), iter->first.c_str());
       }
 
-      // output get attributes in order specified
+      // output attributes in order specified by the options on the command line
       for (int i = 0; i < optioncount; ++i) {
 
 	// find attribute name from option
