@@ -133,8 +133,9 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
 
   xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
 
-  char* unit_filename = (char*) xmlGetNsProp(a_node, BAD_CAST "filename", URI);
-  char* unit_directory = (char*) xmlGetNsProp(a_node, BAD_CAST "dir", URI);
+  // for some reason, xmlGetNsProp has an issue with the namespace
+  char* unit_filename = (char*) xmlGetProp(a_node, BAD_CAST "filename");
+  char* unit_directory = (char*) xmlGetProp(a_node, BAD_CAST "dir");
 
   char s[100];
 
