@@ -55,6 +55,12 @@ namespace SAX2ExtractRootSrc {
       xmlStopParser(pstate->ctxt);
     }
 
+    // output source encoding
+    if (isoption(*(pstate->poptions), OPTION_VERBOSE)) {
+      fprintf(stderr, "XML encoding:  %s\n", pstate->ctxt->encoding);
+      fprintf(stderr, "Output encoding:  %s\n", pstate->handler->name);
+    }
+
     // next state is to copy the unit contents, finishing when needed
     pstate->ctxt->sax->startElementNs = &startElementNsEscape;
     pstate->ctxt->sax->characters = &characters;
