@@ -67,11 +67,11 @@ char const * const XSLT_FLAG = "xslt";
 char const * const XSLT_FLAG_FULL = "xslt=XSLT_FILE";
 
 char const * const PARAM_FLAG = "param";
-char const * const PARAM_FLAG_FULL = "param NAME VAL";
+char const * const PARAM_FLAG_FULL = "param NAME=VAL";
 //char const PARAM_FLAG_SHORT = '';
 
 char const * const STRING_PARAM_FLAG = "stringparam";
-char const * const STRING_PARAM_FLAG_FULL = "stringparam NAME VAL";
+char const * const STRING_PARAM_FLAG_FULL = "stringparam NAME=VAL";
 //char const PARAM_FLAG_SHORT = '';
 
 char const * const XSLT_ALL_FLAG = "apply-root";
