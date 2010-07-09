@@ -288,7 +288,7 @@ dre = re.compile("directory=\"([^\"]*)\"", re.M)
 lre = re.compile("language=\"([^\"]*)\"", re.M)
 vre = re.compile("src-version=\"([^\"]*)\"", re.M)
 ere = re.compile("encoding=\"([^\"]*)\"", re.M)
-nre = re.compile("nested=\"([^\"]*)\"", re.M)
+nre = re.compile("files=\"([^\"]*)\"", re.M)
 
 try:
 			
