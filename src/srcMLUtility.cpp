@@ -248,7 +248,7 @@ void srcMLUtility::expand(const char* root_filename) {
   state.root_filename = root_filename;
   state.poptions = &options;
   state.handler = xmlFindCharEncodingHandler(output_encoding);
-  state.whole_path = (char*) malloc(0);
+  state.whole_path = (char*) malloc(5000);
   state.unit = -1;
 
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
