@@ -2018,6 +2018,8 @@ file = open('sub/a.cpp.xml', 'w')
 file.write(srcml)
 file.close()
 
+# xslt
+
 check([srcmlutility, option.XSLT_FLAG + '=copy.xsl'], srcml, xpath)
 check([srcmlutility, option.XSLT_FLAG + '=copy.xsl', 'sub/a.cpp.xml'], "", xpath)
 check([srcmlutility, option.XSLT_FLAG + '=copy.xsl', '-o', 'sub/b.cpp.xml'], srcml, "")
@@ -2028,6 +2030,8 @@ validate(open('sub/b.cpp.xml', 'r').read(), xpath)
 validate(getreturn([srcmlutility, option.XSLT_FLAG], srcml), status.STATUS_ERROR)
 validate(getreturn([srcmlutility, option.XSLT_FLAG + '='], srcml), status.STATUS_ERROR)
 
+# param
+
 check([srcmlutility, option.XSLT_FLAG + '=copy.xsl', option.PARAM_FLAG, 'NAME=VALUE'], srcml, xpath)
 check([srcmlutility, option.XSLT_FLAG + '=copy.xsl', option.PARAM_FLAG, 'NAME=VALUE', 'sub/a.cpp.xml'], "", xpath)
 check([srcmlutility, option.XSLT_FLAG + '=copy.xsl', option.PARAM_FLAG, 'NAME=VALUE', '-o', 'sub/b.cpp.xml'], srcml, "")
@@ -2037,6 +2041,18 @@ validate(open('sub/b.cpp.xml', 'r').read(), xpath)
 
 validate(getreturn([srcmlutility, option.XSLT_FLAG + '=copy.xsl', option.PARAM_FLAG], srcml), status.STATUS_ERROR)
 validate(getreturn([srcmlutility, option.XSLT_FLAG + '=copy.xsl', option.PARAM_FLAG, "NAME"], srcml), status.STATUS_ERROR)
+
+# stringparam
+
+check([srcmlutility, option.XSLT_FLAG + '=copy.xsl', option.STRING_PARAM_FLAG, 'NAME=VALUE'], srcml, xpath)
+check([srcmlutility, option.XSLT_FLAG + '=copy.xsl', option.STRING_PARAM_FLAG, 'NAME=VALUE', 'sub/a.cpp.xml'], "", xpath)
+check([srcmlutility, option.XSLT_FLAG + '=copy.xsl', option.STRING_PARAM_FLAG, 'NAME=VALUE', '-o', 'sub/b.cpp.xml'], srcml, "")
+validate(open('sub/b.cpp.xml', 'r').read(), xpath)
+check([srcmlutility, option.XSLT_FLAG + '=copy.xsl', option.STRING_PARAM_FLAG, 'NAME=VALUE', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
+validate(open('sub/b.cpp.xml', 'r').read(), xpath)
+
+validate(getreturn([srcmlutility, option.XSLT_FLAG + '=copy.xsl', option.STRING_PARAM_FLAG], srcml), status.STATUS_ERROR)
+validate(getreturn([srcmlutility, option.XSLT_FLAG + '=copy.xsl', option.STRING_PARAM_FLAG, "NAME"], srcml), status.STATUS_ERROR)
 
 # footer
 print
