@@ -1732,6 +1732,15 @@ filename="a.cpp"
 longinfo = """xmlns="http://www.sdml.info/srcML/src"
 xmlns:cpp="http://www.sdml.info/srcML/cpp"
 encoding="UTF-8"
+language="C++"
+directory="sub"
+filename="a.cpp"
+files="0"
+"""
+
+longinfonested = """xmlns="http://www.sdml.info/srcML/src"
+xmlns:cpp="http://www.sdml.info/srcML/cpp"
+encoding="UTF-8"
 files="2"
 """
 
@@ -1760,12 +1769,14 @@ f.write(sxmlfile1)
 f.close()
 checkallforms(srcmlutility, option.INFO_FLAG_SHORT, option.INFO_FLAG, "", sxmlfile, info)
 checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.INFO_FLAG_SHORT, option.INFO_FLAG, "", "", info)
+checkallforms(srcmlutility, option.LONG_INFO_FLAG_SHORT, option.LONG_INFO_FLAG, "", sxmlfile, longinfo)
+checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.LONG_INFO_FLAG_SHORT, option.LONG_INFO_FLAG, "", "", longinfo)
 
 f = open('sub/a.cpp.xml', 'w')
 f.write(nestedfile)
 f.close()
-checkallforms(srcmlutility, option.LONG_INFO_FLAG_SHORT, option.LONG_INFO_FLAG, "", nestedfile, longinfo)
-checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.LONG_INFO_FLAG_SHORT, option.LONG_INFO_FLAG, "", "", longinfo)
+checkallforms(srcmlutility, option.LONG_INFO_FLAG_SHORT, option.LONG_INFO_FLAG, "", nestedfile, longinfonested)
+checkallformsfile(srcmlutility, 'sub/a.cpp.xml', option.LONG_INFO_FLAG_SHORT, option.LONG_INFO_FLAG, "", "", longinfonested)
 
 ##
 # test extract all command
@@ -1921,6 +1932,10 @@ execute(['grep', srcencoding + xmlencoding], line)
 print os.path.basename(srcmlutility) + ' ' + option.VERBOSE_FLAG
 line = execute([srcmlutility, option.VERBOSE_FLAG], "")
 execute(['grep', xmlencoding + srcencoding], line)
+
+##
+# src2srcml expression option
+
 
 ##
 # Test Query and Transformation Options
