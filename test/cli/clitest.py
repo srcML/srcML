@@ -1979,8 +1979,18 @@ validate(open('sub/a.cpp.xml', 'r').read(), fsxmlfile)
 
 ##
 # Test Query and Transformation Options
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
+"""
 
+xpath = """<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
+"""
 
+file = open('sub/a.cpp.xml', 'w')
+file.write(srcml)
+file.close()
+
+check([srcmlutility, option.XPATH_FLAG + '=src:unit'], srcml, xpath)
 
 # footer
 print
