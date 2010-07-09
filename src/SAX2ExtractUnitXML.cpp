@@ -98,7 +98,7 @@ void SAX2ExtractUnitXML::startElementNsUnit(void* ctx, const xmlChar* localname,
     collect_namespaces(nb_namespaces, namespaces, pstate->nsv);
 
     // output the merged namespaces
-    if (!isoption(pstate->options, OPTION_XMLDECL))
+    if (!isoption(pstate->options, OPTION_NAMESPACEDECL))
       for (PROPERTIES_TYPE::const_iterator iter = pstate->nsv.begin(); iter != pstate->nsv.end(); ++iter)
 	xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST iter->second.c_str(), BAD_CAST iter->first.c_str());
 
