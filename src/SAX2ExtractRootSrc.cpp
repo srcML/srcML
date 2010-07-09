@@ -57,7 +57,7 @@ namespace SAX2ExtractRootSrc {
 
     // output source encoding
     if (isoption(*(pstate->poptions), OPTION_VERBOSE)) {
-      fprintf(stderr, "XML encoding:  %s\n", pstate->ctxt->encoding);
+      fprintf(stderr, "XML encoding:  %s\n", pstate->ctxt->encoding ? pstate->ctxt->encoding : pstate->ctxt->input->encoding);
       fprintf(stderr, "Output encoding:  %s\n", pstate->handler->name);
     }
 
