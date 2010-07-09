@@ -45,7 +45,7 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
 
   // root unit for compound srcML documents
   if ((options & OPTION_NESTED) > 0)
-    out.startUnit(getLanguageString(), directory, filename, version, true);
+    out.startUnit(0, directory, filename, version, true);
 }
 
 // setup the input source based on the filename
