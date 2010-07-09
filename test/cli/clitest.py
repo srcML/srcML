@@ -1979,6 +1979,9 @@ validate(open('sub/a.cpp.xml', 'r').read(), fsxmlfile)
 
 ##
 # Test Query and Transformation Options
+
+# xpath
+
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 """
@@ -1996,6 +1999,8 @@ check([srcmlutility, option.XPATH_FLAG + '=src:unit', '-o', 'sub/b.cpp.xml'], sr
 validate(open('sub/b.cpp.xml', 'r').read(), xpath)
 check([srcmlutility, option.XPATH_FLAG + '=src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), xpath)
+
+validate(getreturn([srcmlutility, option.XPATH_FLAG + '='], srcml), status.STATUS_ERROR)
 
 # footer
 print
