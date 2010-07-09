@@ -44,7 +44,14 @@
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
 
 SAX2UnitDOMXPath::SAX2UnitDOMXPath(const char* a_context_element, const char* a_fxpath[], const char* a_ofilename, int options)
-  : SAX2UnitDOM(a_context_element, a_ofilename, options), fxpath(a_fxpath), total(0) {
+  : SAX2UnitDOM(a_context_element, a_ofilename, options), fxpath(a_fxpath), total(0),
+    prev_unit_filename(0), itemcount(0) {
+}
+
+SAX2UnitDOMXPath::~SAX2UnitDOMXPath() {
+
+  if (!prev_unit_filename)
+    free(prev_unit_filename);
 }
 
 xmlSAXHandler SAX2UnitDOMXPath::factory() {
@@ -100,6 +107,7 @@ void SAX2UnitDOMXPath::startDocument(void *ctx) {
       fprintf(stderr, "Unable to register prefix %s for namespace %s\n", prefixes[i + 1], prefixes[i]);
 }
 
+
 // end unit element and current file/buffer (started by startElementNs
 void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
@@ -138,6 +146,9 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
   char* unit_directory = (char*) xmlGetProp(a_node, BAD_CAST "dir");
   char* unit_version = (char*) xmlGetProp(a_node, BAD_CAST "version");
 
+  if (!pstate->prev_unit_filename || strcmp(pstate->prev_unit_filename, unit_filename) != 0)
+    pstate->itemcount = 0;
+
   char s[100];
 
   // process the resulting nodes
@@ -174,6 +185,8 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
 
       onode = xmlXPathNodeSetItem(result_nodes->nodesetval, i);
 
+      ++(pstate->itemcount);
+
       // output a unit element around the fragment, unless
       // is is already a unit
       outputunit = strcmp("unit", (const char*) onode->name) != 0;
@@ -206,7 +219,7 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
 	}
 
 	// line number and clost unit start tag
-	snprintf(s, sizeof(s) / sizeof(s[0]), " line=\"%ld\">", xmlGetLineNo(onode));
+	snprintf(s, sizeof(s) / sizeof(s[0]), " item=\"%d\">", pstate->itemcount);
 	xmlOutputBufferWriteString(pstate->buf, s);
       }
 
@@ -251,8 +264,15 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
   // finished with the result nodes
   xmlXPathFreeObject(result_nodes);
 
+  // save the previous filename to see if there is a transition for
+  // item numbering
+  if (pstate->prev_unit_filename)
+    free(pstate->prev_unit_filename);
+  pstate->prev_unit_filename = strdup(unit_filename);
+
   xmlFree(unit_filename);
   xmlFree(unit_directory);
+  xmlFree(unit_version);
 
   SAX2UnitDOM::endElementNs(ctx, localname, prefix, URI);
 }

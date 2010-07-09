@@ -38,6 +38,8 @@ class SAX2UnitDOMXPath : public SAX2UnitDOM {
 
   SAX2UnitDOMXPath(const char* context_element, const char** fxpath, const char* ofilename, int options);
 
+  ~SAX2UnitDOMXPath();
+
   static xmlSAXHandler factory();
 
   const char** fxpath;
@@ -46,6 +48,8 @@ class SAX2UnitDOMXPath : public SAX2UnitDOM {
   double total;
   bool result_bool;
   int nodetype;
+  char* prev_unit_filename;
+  int itemcount;
 
   // start document
   static void startDocument(void *ctx);
