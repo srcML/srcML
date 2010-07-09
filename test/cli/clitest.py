@@ -1962,10 +1962,9 @@ fsxmlfile = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </unit>
 """
 
-f.close()
-f = open('sub/a.cpp', 'w')
-f.write(sfile)
-f.close()
+file = open('sub/a.cpp', 'w')
+file.write(sfile)
+file.close()
 
 checkallforms(srcmltranslator, option.EXPRESSION_MODE_FLAG_SHORT, option.EXPRESSION_MODE_FLAG, "", sfile, sxmlfile)
 checkallformsfile(srcmltranslator, 'sub/a.cpp', option.EXPRESSION_MODE_FLAG_SHORT, option.EXPRESSION_MODE_FLAG, "", "", fsxmlfile)
