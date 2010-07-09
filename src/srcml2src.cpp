@@ -125,7 +125,7 @@ void output_help(const char* name) {
   printf("  -%c, --%-17s output in XML instead of text\n",
 	  XML_FLAG_SHORT, XML_FLAG);
 
-  printf("  --%-21s do not output the default XML declaration in XML output\n",
+  printf("  --%-21s do not output the XML declaration in XML output\n",
 	  NO_XML_DECLARATION_FLAG);
 
   printf("  --%-21s do not output any namespace declarations in XML output\n\n",
@@ -168,17 +168,16 @@ void output_help(const char* name) {
   printf("  --%-21s output individual units that match RELAXNG_FILE file (FILE or URI)\n", RELAXNG_FLAG_FULL);
   printf("  --%-21s apply an xslt program or xpath query to the root element\n\n", XSLT_ALL_FLAG);
 
-  printf("Examples:  \n"
-	    "  %1$s                          (read from standard input, write to standard output)\n"
-	    "  %1$s main.cpp.xml             (read from file main.cpp.xml, write to standard output)\n"
-	    "  %1$s main.cpp.xml -o main.cpp (read from file main.cpp.xml, write to file main.cpp)\n"
-	    "\n"
-	    "  %1$s http://www.sdml.info/projects/srcml/ex/main.cpp.xml (read from URI, write to standard output)\n"
-	    "\n"
-	    "  %1$s --language               (read from standard input, output language attribute)\n"
-	    "  %1$s --directory              (read from standard input, output directory attribute)\n"
-	    "  %1$s --filename               (read from standard input, output filename attribute)\n"
-	    "  %1$s --src-version            (read from standard input, output version attribute)\n\n", name);
+  printf("Examples:  \n\n"
+	    "  Read from file main.cpp.xml, write to file main.cpp:\n\n"
+	    "  %1$s main.cpp.xml -o main.cpp\n\n"
+
+	    "  Read from URI, write to file main.cpp:\n\n"
+	    "  %1$s http://www.sdml.info/projects/srcml/ex/main.cpp.xml main.cpp\n\n"
+
+	    "  Read from file main.cpp.xml, output language attribute to stdout:\n\n"
+	    "  %1$s main.cpp.xml --language\n\n"
+	 , name);
 
   printf("www.sdml.info\n"
          "Report bugs to %s\n", EMAIL_ADDRESS);
