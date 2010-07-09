@@ -1881,6 +1881,18 @@ values = ['language="C++"\n', 'directory="sub"\n', 'filename="a.cpp"\n', 'src-ve
 index = 0
 check([srcmlutility, options[index] + options[index + 1][1] + options[index + 2][1] + options[index + 3][1] + options[index + 4][1]], srcml, values[index] + values[index + 1] + values[index + 2] + values[index + 3] + values[index + 4])
 
+index += 1
+check([srcmlutility, options[index] + options[index + 1][1] + options[index + 2][1] + options[index + 3][1] + options[index + 4][1]], srcml, values[index] + values[index + 1] + values[index + 2] + values[index + 3] + values[index + 4])
+
+index += 1
+check([srcmlutility, options[index] + options[index + 1][1] + options[index + 2][1] + options[index + 3][1] + options[index + 4][1]], srcml, values[index] + values[index + 1] + values[index + 2] + values[index + 3] + values[index + 4])
+
+index += 1
+check([srcmlutility, options[index] + options[index + 1][1] + options[index + 2][1] + options[index + 3][1] + options[index + 4][1]], srcml, values[index] + values[index + 1] + values[index + 2] + values[index + 3] + values[index + 4])
+
+index += 1
+check([srcmlutility, options[index] + options[index + 1][1] + options[index + 2][1] + options[index + 3][1] + options[index + 4][1]], srcml, values[index] + values[index + 1] + values[index + 2] + values[index + 3] + values[index + 4])
+
 # footer
 print
 print "Error count: ", error_count
