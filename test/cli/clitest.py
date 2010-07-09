@@ -1906,14 +1906,21 @@ sxmlfile = xml_declaration + """
 </unit>
 """
 
-verbose = """
-Source Encoding: """ + default_src2srcml_encoding + """
-XML Encoding: """ + default_srcml2src_encoding + "\n"
+srcencoding = """
+Source Encoding: """ + default_src2srcml_encoding
+
+xmlencoding = """
+XML Encoding: """ + default_srcml2src_encoding
 
 # src2srcml
 print os.path.basename(srcmltranslator) + ' ' + option.VERBOSE_FLAG
 line = execute([srcmltranslator, option.VERBOSE_FLAG], "")
-execute(['grep', verbose], line)
+execute(['grep', srcencoding + xmlencoding], line)
+
+# srcml2src
+print os.path.basename(srcmlutility) + ' ' + option.VERBOSE_FLAG
+line = execute([srcmlutility, option.VERBOSE_FLAG], "")
+execute(['grep', xmlencoding + srcencoding], line)
 
 ##
 # Test Query and Transformation Options
