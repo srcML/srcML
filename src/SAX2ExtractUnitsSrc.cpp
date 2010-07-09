@@ -251,11 +251,6 @@ namespace SAX2ExtractUnitsSrc {
       // convert from the escaped to the unescaped value
       char value = strtod((const char*) attributes[3], NULL);
       xmlOutputBufferWrite(pstate->output, 1, &value);
-
-    } else if (strcmp((const char*) localname, "formfeed") == 0 &&
-	       strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0) {
-   
-      xmlOutputBufferWrite(pstate->output, 1, "\f");
     }
   }
 
