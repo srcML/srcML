@@ -1991,6 +1991,11 @@ file.write(srcml)
 file.close()
 
 check([srcmlutility, option.XPATH_FLAG + '=src:unit'], srcml, xpath)
+check([srcmlutility, option.XPATH_FLAG + '=src:unit', 'sub/a.cpp.xml'], "", xpath)
+check([srcmlutility, option.XPATH_FLAG + '=src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
+validate(open('sub/b.cpp.xml', 'r').read(), xpath)
+check([srcmlutility, option.XPATH_FLAG + '=src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
+validate(open('sub/b.cpp.xml', 'r').read(), xpath)
 
 # footer
 print
