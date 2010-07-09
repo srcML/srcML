@@ -1820,7 +1820,8 @@ srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
 </unit>"""
 
-srcmlout = """<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
+srcmlout = """<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+</unit>
 """
 
 f = open('sub/a.cpp.xml', 'w')
@@ -1842,7 +1843,8 @@ srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </unit>"""
 
 srcmlout = xml_declaration + """
-<unit language="C++"/>
+<unit language="C++">
+</unit>
 """
 
 f = open('sub/a.cpp.xml', 'w')
@@ -1851,8 +1853,8 @@ f.close()
 
 check([srcmlutility, option.NO_NAMESPACE_DECLARATION_FLAG], srcml, srcmlout)
 check([srcmlutility, option.NO_NAMESPACE_DECLARATION_FLAG, 'sub/a.cpp.xml'], "", srcmlout)
-check([srcmlutility, option.NO_NAMESPACE_DECLARATION_FLAG, '-o', 'sub/a.cpp.xml'], srcml, "")
-validate(open('sub/a.cpp.xml').read(), srcmlout)
+check([srcmlutility, option.NO_NAMESPACE_DECLARATION_FLAG, '-o', 'sub/b.cpp.xml'], srcml, "")
+validate(open('sub/b.cpp.xml').read(), srcmlout)
 check([srcmlutility, option.NO_NAMESPACE_DECLARATION_FLAG, 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml').read(), srcmlout)
 
@@ -2002,6 +2004,29 @@ validate(open('sub/b.cpp.xml', 'r').read(), xpath)
 
 validate(getreturn([srcmlutility, option.XPATH_FLAG], srcml), status.STATUS_ERROR)
 validate(getreturn([srcmlutility, option.XPATH_FLAG + '='], srcml), status.STATUS_ERROR)
+
+# xslt
+
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
+"""
+
+xslt = """<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
+"""
+
+file = open('sub/a.cpp.xml', 'w')
+file.write(srcml)
+file.close()
+
+check([srcmlutility, option.XSLT_FLAG + '=src:unit'], srcml, xpath)
+check([srcmlutility, option.XSLT_FLAG + '=src:unit', 'sub/a.cpp.xml'], "", xpath)
+check([srcmlutility, option.XSLT_FLAG + '=src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
+validate(open('sub/b.cpp.xml', 'r').read(), xpath)
+check([srcmlutility, option.XSLT_FLAG + '=src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
+validate(open('sub/b.cpp.xml', 'r').read(), xpath)
+
+validate(getreturn([srcmlutility, option.XSLT_FLAG], srcml), status.STATUS_ERROR)
+validate(getreturn([srcmlutility, option.XSLT_FLAG + '='], srcml), status.STATUS_ERROR)
 
 # footer
 print
