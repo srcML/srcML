@@ -2000,6 +2000,7 @@ validate(open('sub/b.cpp.xml', 'r').read(), xpath)
 check([srcmlutility, option.XPATH_FLAG + '=src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), xpath)
 
+validate(getreturn([srcmlutility, option.XPATH_FLAG], srcml), status.STATUS_ERROR)
 validate(getreturn([srcmlutility, option.XPATH_FLAG + '='], srcml), status.STATUS_ERROR)
 
 # footer
