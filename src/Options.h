@@ -81,10 +81,10 @@ enum Options {
   // @src2srcml
   OPTION_POSITION     = 0x00000400,
 
-  // program version
+  // path
   // @src2srcml
   // @srcml2src
-  //  OPTION_PVERSION    = 0x00000800,
+  OPTION_PATH        = 0x00000800,
 
   // language
   // @src2srcml
@@ -102,7 +102,6 @@ enum Options {
   OPTION_TEXT_ENCODING= 0x00004000,
 
   // text extraction
-  // @src2srcml
   // @srcml2src
   OPTION_TEXT         = 0x00008000,
 
@@ -115,7 +114,6 @@ enum Options {
   OPTION_EXPAND       = 0x00020000,
 
   // output is xml
-  // @src2srcml
   // @srcml2src
   OPTION_XML          = 0x00040000,
 
@@ -130,7 +128,7 @@ enum Options {
   // skip encoding
   // @src2srcml
   // @srcml2src
-  OPTION_SKIP_ENCODING = 0x00200000,
+  //  OPTION_SKIP_ENCODING = 0x00200000,
 
   // cpp markup #else sections
   // @src2srcml

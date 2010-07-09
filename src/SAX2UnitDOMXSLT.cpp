@@ -71,7 +71,7 @@ static void apply(xmlParserCtxtPtr ctxt) {
       resroot->nsDef = savens;
 
     // put some space between this unit and the next one
-    if (!isoption(pstate->options, OPTION_XSLT_ALL))
+    if (!isoption(pstate->options, OPTION_XSLT_ALL) && pstate->isnested)
       xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\n"));
 
     // finished with the result of the transformation
