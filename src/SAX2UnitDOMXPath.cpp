@@ -136,6 +136,7 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
   // for some reason, xmlGetNsProp has an issue with the namespace
   char* unit_filename = (char*) xmlGetProp(a_node, BAD_CAST "filename");
   char* unit_directory = (char*) xmlGetProp(a_node, BAD_CAST "dir");
+  char* unit_version = (char*) xmlGetProp(a_node, BAD_CAST "version");
 
   char s[100];
 
@@ -194,6 +195,13 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
 	if (unit_filename) {
 	  xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(" filename=\""));
 	  xmlOutputBufferWriteString(pstate->buf, (const char*) unit_filename);
+	  xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\""));
+	}
+
+	// version attribute
+	if (unit_version) {
+	  xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(" version=\""));
+	  xmlOutputBufferWriteString(pstate->buf, (const char*) unit_version);
 	  xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\""));
 	}
 
