@@ -160,6 +160,8 @@ void srcMLUtility::extract_xml(const char* filename, int unit) {
   xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
   if (ctxt == NULL) return;
   ctxt->sax = &sax;
+  if (unit == 0)
+    ctxt->sax->startElementNs = &SAX2ExtractUnitXML::startElementNsUnit;
   ctxt->userData = &state;
   state.ctxt = ctxt;
 
