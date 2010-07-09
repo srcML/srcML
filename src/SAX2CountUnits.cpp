@@ -88,6 +88,14 @@ void SAX2CountUnits::endElementNs(void *ctx, const xmlChar *localname, const xml
       putchar('\b');
     if (c >= 100000)
       putchar('\b');
+    if (c >= 1000000)
+      putchar('\b');
+    if (c >= 10000000)
+      putchar('\b');
+    if (c >= 100000000)
+      putchar('\b');
+    if (c >= 1000000000)
+      putchar('\b');
     printf("%ld", pstate->count);
     fflush(stdout);
   }

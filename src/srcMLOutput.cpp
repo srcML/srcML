@@ -271,11 +271,12 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 			 const char* language, 
 			 const char* xml_enc,
 			 int op,
-			 const char* curi[]
+			 const char* curi[],
+			 int ts
 			 )
   : input(ints), xout(0), srcml_filename(filename), unit_language(language), unit_dir(0), unit_filename(0),
     unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(curi), openelementcount(0), curline(0),
-    curcolumn(0)
+    curcolumn(0), tabsize(ts)
 {
   // open the output text writer stream
   // "-" filename is standard output
@@ -449,6 +450,13 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
       }
     }
 
+    char stabsbase[50];
+    char* stabs = 0;
+    if (isoption(OPTION_POSITION)) {
+      stabs = stabsbase;
+      sprintf(stabsbase, "%d", tabsize);
+    }
+
     // list of attributes
     const char* const attrs[][2] = {
 
@@ -463,6 +471,9 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
 
       // version attribute
       { UNIT_ATTRIBUTE_VERSION, version },
+
+      // position tab setting
+      { "pos:tabs", stabs },
     };
 
     // output attributes

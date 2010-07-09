@@ -384,7 +384,7 @@ int main(int argc, char* argv[]) {
     // translator from input to output using determined language
     //    if (language == 0)
     //	language = DEFAULT_LANGUAGE;
-    srcMLTranslator translator(poptions.language == 0 ? DEFAULT_LANGUAGE : poptions.language, poptions.src_encoding, poptions.xml_encoding, poptions.srcml_filename, options, poptions.given_directory, poptions.given_filename, poptions.given_version, urisprefix);
+    srcMLTranslator translator(poptions.language == 0 ? DEFAULT_LANGUAGE : poptions.language, poptions.src_encoding, poptions.xml_encoding, poptions.srcml_filename, options, poptions.given_directory, poptions.given_filename, poptions.given_version, urisprefix, poptions.tabsize);
 
   // output source encoding
   if (isoption(options, OPTION_VERBOSE)) {

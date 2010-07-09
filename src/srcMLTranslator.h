@@ -44,7 +44,8 @@ class srcMLTranslator : public Language {
 		  const char* directory,
 		  const char* filename,
 		  const char* version,
-		  const char* uri[]
+		  const char* uri[],
+		  int tabsize
 		  );
 
   // setup the input source based on the filename
