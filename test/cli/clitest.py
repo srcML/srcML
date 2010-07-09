@@ -1927,6 +1927,10 @@ f = open('sub/a.cpp', 'w')
 f.write(sfile)
 f.close
 
+f = open('sub/a.cpp.xml', 'w')
+f.write(sxmlfile)
+f.close()
+ 
 # src2srcml
 print os.path.basename(srcmltranslator) + ' ' + option.VERBOSE_FLAG
 line = execute([srcmltranslator, option.VERBOSE_FLAG], sfile)
