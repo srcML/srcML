@@ -9,7 +9,7 @@ URIStream::URIStream(const char* uriname)
     throw URIStreamFileError();
 
   // get some data into the buffer
-  int size = xmlParserInputBufferGrow(input, 4096);
+  int size = xmlParserInputBufferGrow(input, 4);
 
   // found problem or eof
   if (size == -1 || size == 0)
@@ -25,6 +25,8 @@ char* URIStream::getline() {
 
   // find a line in the buffer
   while (input->buffer->content[endpos] != '\n') {
+
+    ++endpos;
 
     // need to refill the buffer
     if (endpos >= input->buffer->use) {
@@ -49,8 +51,6 @@ char* URIStream::getline() {
       if (size == -1 || size == 0)
 	eof = true;
     }
-
-    ++endpos;
   }
 
   // special case
