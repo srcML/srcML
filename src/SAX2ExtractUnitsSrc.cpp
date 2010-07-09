@@ -66,6 +66,9 @@ namespace SAX2ExtractUnitsSrc {
 
     State* pstate = (State*) user_data;
 
+#ifdef __GNUC__
+    xmlOutputBufferWrite(pstate->output, len, (const char*) ch);
+#else
     const char* c = (const char*) ch;
     int pos = 0;
     const char* chend = (const char*) ch + len;
@@ -86,6 +89,7 @@ namespace SAX2ExtractUnitsSrc {
     }
 
     xmlOutputBufferWrite(pstate->output, pos, (const char*)(BAD_CAST c - pos));
+#endif
   }
 
   // handle root unit of compound document
