@@ -703,6 +703,10 @@ int option_error_status(int optopt) {
     return STATUS_UNIT_MISSING;
     break;
 
+  case 'P':
+    return STATUS_ERROR;
+    break;
+
   case '\0':
     return STATUS_UNKNOWN_OPTION;
     break;
