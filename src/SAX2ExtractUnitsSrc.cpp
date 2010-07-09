@@ -128,6 +128,7 @@ namespace SAX2ExtractUnitsSrc {
 
     // next state is to copy the unit contents, finishing when needed
     pstate->ctxt->sax->startElementNs = &startElementNsEscape;
+    //    pstate->ctxt->sax->startElement = &startElementEscape;
     pstate->ctxt->sax->characters = &characters;
     pstate->ctxt->sax->ignorableWhitespace = &characters;
     pstate->ctxt->sax->endElementNs = &endElementNs;
@@ -242,15 +243,33 @@ namespace SAX2ExtractUnitsSrc {
 			    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
 			    const xmlChar** attributes) {
 
-    State* pstate = (State*) ctx;
-
-    // in the proper unit
-    if (strcmp((const char*) localname, "escape") == 0 &&
+    // only reason for this handler is that the escape element
+    // needs to be expanded to the equivalent character.
+    // So make it as quick as possible, since this is rare
+    if (localname[0] == 'e' && localname[1] == 's' &&
+	strcmp((const char*) localname, "escape") == 0 &&
  	strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0) {
       
       // convert from the escaped to the unescaped value
       char value = strtod((const char*) attributes[3], NULL);
-      xmlOutputBufferWrite(pstate->output, 1, &value);
+
+      xmlOutputBufferWrite(((State*) ctx)->output, 1, &value);
+    }
+  }
+
+  // escape control character elements
+  void startElementEscape(void* ctx, const xmlChar* localname, const xmlChar** attributes) {
+
+    // only reason for this handler is that the escape element
+    // needs to be expanded to the equivalent character.
+    // So make it as quick as possible, since this is rare
+    if (localname[0] == 'e' && localname[1] == 's' &&
+	strcmp((const char*) localname, "escape") == 0) {
+      
+      // convert from the escaped to the unescaped value
+      char value = strtod((const char*) attributes[3], NULL);
+
+      xmlOutputBufferWrite(((State*) ctx)->output, 1, &value);
     }
   }
 
