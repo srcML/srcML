@@ -127,7 +127,7 @@ void SAX2UnitDOMXSLT::endDocument(void *ctx) {
   xmlSAX2EndDocument(ctx);
 
   // root unit end tag
-  if (!isoption(pstate->options, OPTION_XSLT_ALL))
+  if (!isoption(pstate->options, OPTION_XSLT_ALL) && pstate->isnested)
     xmlOutputBufferWriteString(pstate->buf, pstate->found ? "</unit>\n" : "/>\n");
 
   // standard end document
