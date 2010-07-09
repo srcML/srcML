@@ -613,11 +613,13 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
     case 'A':
 
+      // find the = sign and replace it, marking the space
+
       // param name
       poptions.params[poptions.paramcount++] = optarg;
       
       // param value
-      poptions.params[poptions.paramcount++] = argv[optind++];
+      poptions.params[poptions.paramcount++] = asg_split(optarg);
       break;
 
     case 'B':
@@ -626,7 +628,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
       poptions.params[poptions.paramcount++] = optarg;
       
       // param value
-      poptions.params[poptions.paramcount++] = argv[optind++];
+      poptions.params[poptions.paramcount++] = asg_split(optarg);
       break;
 
     case 'R':

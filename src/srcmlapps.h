@@ -159,4 +159,17 @@ inline char* filename_split(char* path, char*& dir, char*& filename) {
   return path;
 }
 
+inline char* asg_split(char* path) {
+
+  char* ret = path;
+
+  char* point = rindex(path, '='); 
+  if (point) {
+    *point = '\0';
+    ret = point + 1;
+  }
+
+  return ret;
+}
+
 #endif
