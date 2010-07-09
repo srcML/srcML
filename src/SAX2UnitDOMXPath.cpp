@@ -50,7 +50,7 @@ SAX2UnitDOMXPath::SAX2UnitDOMXPath(const char* a_context_element, const char* a_
 
 SAX2UnitDOMXPath::~SAX2UnitDOMXPath() {
 
-  if (!prev_unit_filename)
+  if (prev_unit_filename)
     free(prev_unit_filename);
 }
 
@@ -146,7 +146,7 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
   char* unit_directory = (char*) xmlGetProp(a_node, BAD_CAST "dir");
   char* unit_version = (char*) xmlGetProp(a_node, BAD_CAST "version");
 
-  if (!pstate->prev_unit_filename || strcmp(pstate->prev_unit_filename, unit_filename) != 0)
+  if (!pstate->prev_unit_filename || (unit_filename && strcmp(pstate->prev_unit_filename, unit_filename) != 0))
     pstate->itemcount = 0;
 
   char s[100];
@@ -266,9 +266,10 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
 
   // save the previous filename to see if there is a transition for
   // item numbering
+
   if (pstate->prev_unit_filename)
     free(pstate->prev_unit_filename);
-  pstate->prev_unit_filename = strdup(unit_filename);
+  pstate->prev_unit_filename = unit_filename ? strdup(unit_filename) : 0;
 
   xmlFree(unit_filename);
   xmlFree(unit_directory);
