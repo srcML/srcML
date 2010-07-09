@@ -247,7 +247,7 @@ check([srcmltranslator, "-", "-o", "sub/a.cpp.xml"], sfile1, "")
 check([srcmltranslator, "-", "-o", "sub/b.cpp.xml"], sfile2, "")
 
 nestedfile1 = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
 
 <unit language="C++" dir="sub" filename="a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
@@ -257,7 +257,7 @@ nestedfile1 = xml_declaration + """
 """
 
 nestedfile = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
 
 <unit language="C++" dir="sub" filename="a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
@@ -271,7 +271,7 @@ nestedfile = xml_declaration + """
 """
 
 nestedfilesrc = xml_declaration + """
-<src:unit xmlns:src="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<src:unit xmlns:src="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
 
 <src:unit language="C++" dir="sub" filename="a.cpp">
 <src:expr_stmt><src:expr><src:name>a</src:name></src:expr>;</src:expr_stmt>
@@ -286,6 +286,7 @@ nestedfilesrc = xml_declaration + """
 
 if not os.path.exists("sub"):
 	os.mkdir("sub")
+
 f = open("sub/a.cpp", "w")
 f.write("\na;\n")
 f.close()
@@ -385,7 +386,7 @@ validate(open("sub/b.cpp", "r").read(), sfile2)
 
 # srcml2src extract nested unit
 nestedfileextra = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
 
 <unit language="C" dir="sub" filename="a.cpp" mytag="foo">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
@@ -945,7 +946,7 @@ b;
 
 
 nestedfile1 = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
 
 <unit language="C++" dir="sub" filename="a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
@@ -955,7 +956,7 @@ nestedfile1 = xml_declaration + """
 """
 
 nestedfile = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
 
 <unit language="C++" dir="sub" filename="a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
@@ -969,7 +970,7 @@ nestedfile = xml_declaration + """
 """
 
 nestedfilesrc = xml_declaration + """
-<src:unit xmlns:src="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<src:unit xmlns:src="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
 
 <src:unit language="C++" dir="sub" filename="a.cpp">
 <src:expr_stmt><src:expr><src:name>a</src:name></src:expr>;</src:expr_stmt>
@@ -999,7 +1000,7 @@ validate(open('sub/a.cpp.xml').read(), nestedfilesrc)
 
 # files from
 nestedfile = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
 
 <unit language="C++" dir="sub" filename="a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
@@ -1288,7 +1289,7 @@ sxmlfile1 = xml_declaration + """
 """
 
 nestedfile1 = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
 
 <unit language="C++" dir="sub" filename="a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
@@ -1298,7 +1299,7 @@ nestedfile1 = xml_declaration + """
 """
 
 nestedfile = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
 
 <unit language="C++" dir="sub" filename="a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
@@ -1312,7 +1313,7 @@ nestedfile = xml_declaration + """
 """
 
 nestedfilesrc = xml_declaration + """
-<src:unit xmlns:src="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<src:unit xmlns:src="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
 
 <src:unit language="C++" dir="sub" filename="a.cpp">
 <src:expr_stmt><src:expr><src:name>a</src:name></src:expr>;</src:expr_stmt>
@@ -1375,7 +1376,7 @@ sxmlfile2 = xml_declaration + """
 """
 
 nestedfile = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
 
 <unit language="C++" dir="sub" filename="a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
@@ -1421,7 +1422,7 @@ validate(open('sub/b.cpp.xml', 'r').read(), sxmlfile2)
 # check metadata options with xml and unit
 
 nestedfileextra = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
 
 <unit language="C++" dir="sub" filename="a.cpp" mytag="foo">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
@@ -1731,7 +1732,6 @@ filename="a.cpp"
 longinfo = """xmlns="http://www.sdml.info/srcML/src"
 xmlns:cpp="http://www.sdml.info/srcML/cpp"
 encoding="UTF-8"
-language="C++"
 files="2"
 """
 
@@ -1742,7 +1742,7 @@ sxmlfile = xml_declaration + """
 """
 
 nestedfile = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
 
 <unit language="C++" dir="sub" filename="a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
@@ -1779,7 +1779,7 @@ b;
 """
 
 nestedfile = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
 
 <unit language="C++" dir="sub" filename="a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
@@ -1914,6 +1914,9 @@ XML Encoding: """ + default_srcml2src_encoding + "\n"
 print os.path.basename(srcmltranslator) + ' ' + option.VERBOSE_FLAG
 line = execute([srcmltranslator, option.VERBOSE_FLAG], "")
 execute(['grep', verbose], line)
+
+##
+# Test Query and Transformation Options
 
 
 
