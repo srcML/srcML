@@ -1923,19 +1923,56 @@ Source Encoding: """ + default_src2srcml_encoding
 xmlencoding = """
 XML Encoding: """ + default_srcml2src_encoding
 
+f = open('sub/a.cpp', 'w')
+f.write(sfile)
+f.close
+
 # src2srcml
 print os.path.basename(srcmltranslator) + ' ' + option.VERBOSE_FLAG
-line = execute([srcmltranslator, option.VERBOSE_FLAG], "")
+line = execute([srcmltranslator, option.VERBOSE_FLAG], sfile)
+execute(['grep', srcencoding + xmlencoding], line)
+print os.path.basename(srcmltranslator) + ' ' + option.VERBOSE_FLAG + ' sub/a.cpp'
+line = execute([srcmltranslator, option.VERBOSE_FLAG, 'sub/a.cpp'], "")
 execute(['grep', srcencoding + xmlencoding], line)
 
 # srcml2src
 print os.path.basename(srcmlutility) + ' ' + option.VERBOSE_FLAG
-line = execute([srcmlutility, option.VERBOSE_FLAG], "")
+line = execute([srcmlutility, option.VERBOSE_FLAG], sxmlfile)
+execute(['grep', xmlencoding + srcencoding], line)
+print os.path.basename(srcmlutility) + ' ' + option.VERBOSE_FLAG + ' sub/a.cpp.xml'
+line = execute([srcmlutility, option.VERBOSE_FLAG, 'sub/a.cpp.xml'], "")
 execute(['grep', xmlencoding + srcencoding], line)
 
 ##
 # src2srcml expression option
 
+sfile ="""
+a
+"""
+
+sxmlfile = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<expr><name>a</name></expr>
+</unit>
+"""
+
+fsxmlfile = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
+<expr><name>a</name></expr>
+</unit>
+"""
+
+f.close()
+f = open('sub/a.cpp', 'w')
+f.write(sfile)
+f.close()
+
+checkallforms(srcmltranslator, option.EXPRESSION_MODE_FLAG_SHORT, option.EXPRESSION_MODE_FLAG, "", sfile, sxmlfile)
+checkallformsfile(srcmltranslator, 'sub/a.cpp', option.EXPRESSION_MODE_FLAG_SHORT, option.EXPRESSION_MODE_FLAG, "", "", fsxmlfile)
+check([srcmltranslator, option.EXPRESSION_MODE_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+validate(open('sub/a.cpp.xml', 'r').read(), sxmlfile)
+check([srcmltranslator, option.EXPRESSION_MODE_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
+validate(open('sub/a.cpp.xml', 'r').read(), fsxmlfile)
 
 ##
 # Test Query and Transformation Options
