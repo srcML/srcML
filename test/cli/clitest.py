@@ -1893,6 +1893,30 @@ check([srcmlutility, options[index] + options[index + 1][1] + options[index + 2]
 index += 1
 check([srcmlutility, options[index] + options[index + 1][1] + options[index + 2][1] + options[index + 3][1] + options[index + 4][1]], srcml, values[index] + values[index + 1] + values[index + 2] + values[index + 3] + values[index + 4])
 
+##
+# Testing for verbose
+
+sfile = """
+a;
+"""
+
+sxmlfile = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+"""
+
+verbose = """
+Source Encoding: """ + default_src2srcml_encoding + """
+XML Encoding: """ + default_srcml2src_encoding + "\n"
+
+# src2srcml
+print os.path.basename(srcmltranslator) + ' ' + option.VERBOSE_FLAG
+line = execute([srcmltranslator, option.VERBOSE_FLAG], "")
+execute(['grep', verbose], line)
+
+
+
 # footer
 print
 print "Error count: ", error_count
