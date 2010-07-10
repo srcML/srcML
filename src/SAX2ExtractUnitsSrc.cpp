@@ -140,7 +140,7 @@ namespace SAX2ExtractUnitsSrc {
     // find the directory
     int dir_index = -1;
     for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5)
-      if (strcmp((const char*) attributes[index], "dir") == 0) {
+      if (strcmp((const char*) attributes[index], UNIT_ATTRIBUTE_DIRECTORY) == 0) {
 
 	dir_index = index;
 	break;
@@ -150,7 +150,7 @@ namespace SAX2ExtractUnitsSrc {
     // find the filename
     int filename_index = -1;
     for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5)
-      if (strcmp((const char*) attributes[index], "filename") == 0) {
+      if (strcmp((const char*) attributes[index], UNIT_ATTRIBUTE_FILENAME) == 0) {
 
 	filename_index = index;
 	break;
