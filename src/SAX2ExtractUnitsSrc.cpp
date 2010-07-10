@@ -252,21 +252,4 @@ namespace SAX2ExtractUnitsSrc {
       xmlOutputBufferWrite(((State*) ctx)->output, 1, &value);
     }
   }
-
-  // escape control character elements
-  void startElementEscape(void* ctx, const xmlChar* localname, const xmlChar** attributes) {
-
-    // only reason for this handler is that the escape element
-    // needs to be expanded to the equivalent character.
-    // So make it as quick as possible, since this is rare
-    if (localname[0] == 'e' && localname[1] == 's' &&
-	strcmp((const char*) localname, "escape") == 0) {
-      
-      // convert from the escaped to the unescaped value
-      char value = strtod((const char*) attributes[3], NULL);
-
-      xmlOutputBufferWrite(((State*) ctx)->output, 1, &value);
-    }
-  }
-
 };
