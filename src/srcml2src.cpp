@@ -518,74 +518,92 @@ int process_args(int argc, char* argv[], process_options & poptions)
     char* end = 0;
     switch(c) {
 
-    case 'h': 
+    case HELP_FLAG_SHORT: 
       output_help(argv[0]);
       exit(STATUS_SUCCESS);
       break;
 
-    case 'V': 
+    case VERSION_FLAG_SHORT: 
       output_version(argv[0]);
       exit(STATUS_SUCCESS);
       break;
 
-    case 'o': 
+    case OUTPUT_FLAG_SHORT: 
       poptions.ofilename = optarg;
       break;
 
-    case 'f':
+    case FILENAME_FLAG_SHORT:
       options |= OPTION_FILENAME;
       optionorder[optioncount++] = OPTION_FILENAME;
       break;
 
-    case 'd':
+    case DIRECTORY_FLAG_SHORT:
       options |= OPTION_DIRECTORY;
       optionorder[optioncount++] = OPTION_DIRECTORY;
       break;
 
-    case 's':
+    case SRCVERSION_FLAG_SHORT:
       options |= OPTION_VERSION;
       optionorder[optioncount++] = OPTION_VERSION;
       break;
 
-    case 'l':
+    case LANGUAGE_FLAG_SHORT:
       options |= OPTION_LANGUAGE;
       optionorder[optioncount++] = OPTION_LANGUAGE;
       break;
 
-    case 'x':
+    case ENCODING_FLAG_SHORT:
       options |= OPTION_XML_ENCODING;
       optionorder[optioncount++] = OPTION_XML_ENCODING;
       break;
 
-    case 'n':
+    case TEXTENCODING_FLAG_SHORT:
+      options |= OPTION_TEXT_ENCODING;
+
+      poptions.src_encoding = optarg;
+
+      // validate source encoding
+      if (!srcMLUtility::checkEncoding(poptions.src_encoding)) {
+	fprintf(stderr, "%s: text encoding \"%s\" is not supported.\n", argv[0], poptions.src_encoding);
+	exit(STATUS_UNKNOWN_ENCODING);
+      }
+      break;
+
+    case NAMESPACE_FLAG_SHORT:
+      options |= OPTION_NAMESPACE;
+
+      poptions.ns.push_back(optarg);
+      break;
+
+    case NESTED_FLAG_SHORT:
       options |= OPTION_NESTED;
       break;
 
-    case 'i':
+    case INFO_FLAG_SHORT:
       options |= OPTION_INFO;
       break;
 
-    case 'L':
+    case LONG_INFO_FLAG_SHORT:
       options |= OPTION_LONG_INFO;
       break;
 
-    case 'a':
+    case EXPAND_FLAG_SHORT:
       options |= OPTION_EXPAND;
       break;
 
-    case 'v':
+    case VERBOSE_FLAG_SHORT:
       options |= OPTION_VERBOSE;
       break;
 
-    case 'X':
+    case XML_FLAG_SHORT:
       options |= OPTION_XML;
       break;
 
-    case 'z':
+    case COMPRESSED_FLAG_SHORT:
       options |= OPTION_COMPRESSED;
       break;
 
-    case 'U':
+    case UNIT_FLAG_SHORT:
       options |= OPTION_UNIT;
 
       // try to convert to number
@@ -651,24 +669,6 @@ int process_args(int argc, char* argv[], process_options & poptions)
       break;
       */
 
-    case 't':
-      options |= OPTION_TEXT_ENCODING;
-
-      poptions.src_encoding = optarg;
-
-      // validate source encoding
-      if (!srcMLUtility::checkEncoding(poptions.src_encoding)) {
-	fprintf(stderr, "%s: text encoding \"%s\" is not supported.\n", argv[0], poptions.src_encoding);
-	exit(STATUS_UNKNOWN_ENCODING);
-      }
-      break;
-
-    case 'p':
-      options |= OPTION_NAMESPACE;
-
-      poptions.ns.push_back(optarg);
-      break;
-
     default:
       fprintf(stderr, "WHAT: %d\n", c);
       break;
@@ -700,15 +700,15 @@ int option_error_status(int optopt) {
 
   switch (optopt) {
 
-  case 'x':
+  case ENCODING_FLAG_SHORT:
     return STATUS_XMLENCODING_MISSING;
     break;
 
-  case 't':
+  case TEXTENCODING_FLAG_SHORT:
     return STATUS_SRCENCODING_MISSING;
     break;
 
-  case 'U':
+  case UNIT_FLAG_SHORT:
     return STATUS_UNIT_MISSING;
     break;
 
