@@ -66,12 +66,12 @@ char const * const XSLT_FLAG = "xslt";
 //char const XSLT_FLAG_SHORT = '';
 char const * const XSLT_FLAG_FULL = "xslt=XSLT_FILE";
 
-char const * const PARAM_FLAG = "param";
-char const * const PARAM_FLAG_FULL = "param NAME=VAL";
+char const * const PARAM_FLAG = "xpathparam";
+char const * const PARAM_FLAG_FULL = "xpathparam NAME=VAL";
 //char const PARAM_FLAG_SHORT = '';
 
-char const * const STRING_PARAM_FLAG = "stringparam";
-char const * const STRING_PARAM_FLAG_FULL = "stringparam NAME=VAL";
+char const * const STRING_PARAM_FLAG = "param";
+char const * const STRING_PARAM_FLAG_FULL = "param NAME=VAL";
 //char const PARAM_FLAG_SHORT = '';
 
 char const * const XSLT_ALL_FLAG = "apply-root";
@@ -165,8 +165,8 @@ void output_help(const char* name) {
   printf("Query and Transformation Options:  \n\n"
 	 "  --%-21s apply XPATH expression to each individual unit\n", XPATH_FLAG_FULL);
   printf("  --%-21s apply XSLT_FILE (FILE or URI) transformation to each individual unit\n", XSLT_FLAG_FULL);
-  printf("  --%-21s passes a parameter NAME and VAL to the XSLT program\n", PARAM_FLAG_FULL);
-  printf("  --%-21s passes a string parameter NAME and VAL to an XSLT program\n", STRING_PARAM_FLAG_FULL);
+  printf("  --%-21s passes a parameter NAME and VAL to an XSLT program\n", STRING_PARAM_FLAG_FULL);
+  printf("  --%-21s passes a parameter NAME and XPATH to the XSLT program\n", PARAM_FLAG_FULL);
   printf("  --%-21s output individual units that match RELAXNG_FILE file (FILE or URI)\n", RELAXNG_FLAG_FULL);
   printf("  --%-21s apply an xslt program or xpath query to the root element\n\n", XSLT_ALL_FLAG);
 
@@ -618,13 +618,16 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
     case 'A':
 
-      // find the = sign and replace it, marking the space
-
       // param name
       poptions.params[poptions.paramcount++] = optarg;
       
       // param value
-      poptions.params[poptions.paramcount++] = asg_split(optarg);
+      end = asg_split(optarg);
+      poptions.params[poptions.paramcount] = (char*) malloc(strlen(end) + 1 + 2);
+      strcpy((char *) poptions.params[poptions.paramcount], "\'");
+      strcpy((char *) poptions.params[poptions.paramcount], end);
+      strcpy((char *) poptions.params[poptions.paramcount], "\'");
+      poptions.paramcount++;
       break;
 
     case 'B':
