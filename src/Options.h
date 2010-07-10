@@ -133,6 +133,7 @@ enum Options {
   // cpp markup #else sections
   // @src2srcml
   OPTION_CPP_MARKUP_ELSE = 0x00400000,
+  OPTION_XPATH_TOTAL = OPTION_CPP_MARKUP_ELSE,
 
   // cpp markup #if 0 sections
   // @src2srcml

@@ -243,11 +243,19 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
 
     // numeric result
   case XPATH_NUMBER:
+    if (!isoption(pstate->options, OPTION_XPATH_TOTAL)) {
+      if ((int)result_nodes->floatval == result_nodes->floatval)
+	printf("%d\n", (int)result_nodes->floatval);
+      else
+	printf("%f\n", result_nodes->floatval);
+    }
     pstate->total += result_nodes->floatval;
     break;
 
     // boolean result
   case XPATH_BOOLEAN:
+    if (!isoption(pstate->options, OPTION_XPATH_TOTAL))
+      puts(result_nodes->boolval ? "true\n" : "false\n");
     pstate->result_bool |= result_nodes->boolval;
     break;
 
@@ -299,12 +307,18 @@ void SAX2UnitDOMXPath::endDocument(void *ctx) {
     break;
 
   case XPATH_NUMBER:
-    printf((int)pstate->total == pstate->total ? "%.0lg\n" : "%lg\n", pstate->total);
+    if (isoption(pstate->options, OPTION_XPATH_TOTAL)) {
+      if ((int)pstate->total == pstate->total)
+	printf("%d\n", (int)pstate->total);
+      else
+	printf("%f\n", pstate->total);
+    }
     break;
 
   // boolean result
   case XPATH_BOOLEAN:
-    puts(pstate->result_bool ? "true\n" : "false\n");
+    if (isoption(pstate->options, OPTION_XPATH_TOTAL))
+      puts(pstate->result_bool ? "true\n" : "false\n");
     break;
 
   default:
