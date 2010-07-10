@@ -49,29 +49,36 @@ static void apply(xmlParserCtxtPtr ctxt) {
 
   // apply the style sheet to the document, which is the individual unit
   xmlDocPtr res = xsltApplyStylesheetUser(pstate->xslt, ctxt->myDoc, pstate->params, 0, 0, 0);
+  if (!res) {
+    fprintf(stderr, "srcml2src:  Error in applying stylesheet\n");
+    exit(1);
+  }
 
-  // has to be a result, and a non-empty result
+  // only interestd in non-empty results
   if (res && res->children) {
 
-    // if in per-unit mode and this is the first result found
+    // finish the end of the root unit start tag
+    // this is only if in per-unit mode and this is the first result found
+    // have to do so here because it may be empty
     if (pstate->isnested && !pstate->found && !isoption(pstate->options, OPTION_XSLT_ALL)) {
       xmlOutputBufferWrite(pstate->buf, pstate->rootbuf->use, (const char*) pstate->rootbuf->content);
-      xmlBufferFree(pstate->rootbuf);
       xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(">\n\n"));
       pstate->found = true;
+      xmlBufferFree(pstate->rootbuf);
     }
 
-    // save the result, but temporarily hide the namespaces
+    // save the result, but temporarily hide the namespaces since we only want them on the root element
     xmlNodePtr resroot = xmlDocGetRootElement(res);
     xmlNsPtr savens = resroot ? resroot->nsDef : 0;
-    if (savens && pstate->isnested && !isoption(pstate->options, OPTION_XSLT_ALL))
+    bool turnoff_namespaces = savens && pstate->isnested && !isoption(pstate->options, OPTION_XSLT_ALL);
+    if (turnoff_namespaces)
       resroot->nsDef = 0;
     xsltSaveResultTo(pstate->buf, res, pstate->xslt);
-    if (savens && pstate->isnested && !isoption(pstate->options, OPTION_XSLT_ALL))
+    if (turnoff_namespaces)
       resroot->nsDef = savens;
 
-    // put some space between this unit and the next one
-    if (!isoption(pstate->options, OPTION_XSLT_ALL) && pstate->isnested)
+    // put some space between this unit and the next one if compound
+    if (pstate->isnested && !isoption(pstate->options, OPTION_XSLT_ALL))
       xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\n"));
 
     // finished with the result of the transformation
