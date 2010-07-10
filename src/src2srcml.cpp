@@ -656,7 +656,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       exit(STATUS_SUCCESS);
       break;
 
-    case 'o': 
+    case OUTPUT_FLAG_SHORT: 
       poptions.srcml_filename = optarg;
       break;
 
@@ -669,15 +669,15 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       poptions.fname = optarg;
       break;
 
-    case 'n': 
+    case NESTED_FLAG_SHORT: 
       options |= OPTION_NESTED;
       break;
 
-    case 'e': 
+    case EXPRESSION_MODE_FLAG_SHORT: 
       options |= OPTION_EXPRESSION;
       break;
 
-    case 'x': 
+    case ENCODING_FLAG_SHORT: 
       options |= OPTION_XML_ENCODING;
 
       poptions.xml_encoding = optarg;
@@ -690,7 +690,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       }
       break;
 
-    case 't': 
+    case TEXTENCODING_FLAG_SHORT: 
       options |= OPTION_TEXT_ENCODING;
 
       poptions.src_encoding = optarg;
@@ -778,23 +778,23 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       }
       break;
 
-    case 'z': 
+    case COMPRESSED_FLAG_SHORT: 
       options |= OPTION_COMPRESSED;
       break;
 
-    case 'c': 
+    case INTERACTIVE_FLAG_SHORT: 
       options |= OPTION_INTERACTIVE;
       break;
 
-    case 'g': 
+    case DEBUG_FLAG_SHORT: 
       options |= OPTION_DEBUG;
       break;
 
-    case 'v': 
+    case VERBOSE_FLAG_SHORT: 
       options |= OPTION_VERBOSE;
       break;
 
-    case 'l': 
+    case LANGUAGE_FLAG_SHORT: 
       options |= OPTION_LANGUAGE;
 
       // validate language selected
@@ -807,19 +807,19 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       }
       break;
 
-    case 'd': 
+    case DIRECTORY_FLAG_SHORT: 
       options |= OPTION_DIRECTORY;
 
       poptions.given_directory = optarg;
       break;
 
-    case 'f': 
+    case FILENAME_FLAG_SHORT: 
       options |= OPTION_FILENAME;
 
       poptions.given_filename = optarg;
       break;
 
-    case 's': 
+    case SRCVERSION_FLAG_SHORT: 
       options |= OPTION_VERSION;
 
       poptions.given_version = optarg;
@@ -930,27 +930,27 @@ int option_error_status(int optopt) {
 
   switch (optopt) {
 
-  case 'f':
+  case FILENAME_FLAG_SHORT:
     return STATUS_FILENAME_MISSING;
     break;
 
-  case 'l':
+  case LANGUAGE_FLAG_SHORT:
     return STATUS_LANGUAGE_MISSING;
     break;
 
-  case 'd':
+  case DIRECTORY_FLAG_SHORT:
     return STATUS_DIRECTORY_MISSING;
     break;
 
-  case 's':
+  case SRCVERSION_FLAG_SHORT:
     return STATUS_VERSION_MISSING;
     break;
 
-  case 'x':
+  case ENCODING_FLAG_SHORT:
     return STATUS_XMLENCODING_MISSING;
     break;
 
-  case 't':
+  case TEXTENCODING_FLAG_SHORT:
     return STATUS_SRCENCODING_MISSING;
     break;
 
