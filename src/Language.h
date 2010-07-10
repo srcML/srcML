@@ -24,6 +24,8 @@
 #define LANGUAGE_H
 
 #include "srcmlapps.h"
+#include <fnmatch.h>
+#include <cstdio>
 
 struct pair {
   const char* s;
@@ -84,11 +86,18 @@ class Language {
   }
 
   // gets the current language based on the extenstion
-  static int getLanguageFromExtension(const char* const ext) {
+  static int getLanguageFromFilename(const char* const path) {
 
-    for (const pair * pos = ext2int; pos->s != 0; ++pos)
-      if (strcmp(pos->s, ext) == 0)
+    char pattern[50];
+    for (const pair * pos = ext2int; pos->s != 0; ++pos) {
+      strcpy(pattern, "*");
+      strcat(pattern, pos->s);
+      if (fnmatch(pattern, path, 0) == 0)
 	return pos->n;
+      strcat(pattern, ".gz");
+      if (fnmatch(pattern, path, 0) == 0)
+	return pos->n;
+    }
 
     return 0;
   }

@@ -386,9 +386,7 @@ int main(int argc, char* argv[]) {
     if (poptions.language == 0 && input_arg_count == 1) {
 
       char* path = argv[input_arg_start];
-      char* ext = filename_ext(path);
-      poptions.language = Language::getLanguageFromExtension(ext);
-
+      poptions.language = Language::getLanguageFromFilename(path);
     }
 
     // turnon cpp namespace for non Java-based languages
@@ -445,10 +443,8 @@ int main(int argc, char* argv[]) {
 	  translator.setupInput(line);
 
 	  // language based on extension
-	  if (poptions.language == 0) {
-	    char* ext = filename_ext(line);
-	    poptions.language = Language::getLanguageFromExtension(ext);
-	  }
+	  if (poptions.language == 0)
+	    poptions.language = Language::getLanguageFromFilename(line);
 
 	  filename_split(line, dir, filename);
 	  translator.translate(dir,
