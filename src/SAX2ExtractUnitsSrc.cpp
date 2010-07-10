@@ -197,10 +197,6 @@ namespace SAX2ExtractUnitsSrc {
     // add on the filename
     strncat(pstate->whole_path, (const char*) attributes[filename_index + 3], filename_size);
     size += filename_size;
-    //    pstate->whole_path[size] = '\0';
-    /*
-	  fprintf(stderr, "Error in creating directory:  %s\n", directory_path.string().c_str());
-    */
 
     // output file status message if in verbose mode
     if (isoption(*(pstate->poptions), OPTION_VERBOSE))
