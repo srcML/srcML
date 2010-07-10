@@ -649,13 +649,13 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
     switch(c) {
 
-    case 'h': 
+    case HELP_FLAG_SHORT: 
       output_help(argv[0]);
       exit(STATUS_SUCCESS);
 
       break;
 
-    case 'V': 
+    case VERSION_FLAG_SHORT: 
       output_version(argv[0]);
       exit(STATUS_SUCCESS);
       break;
