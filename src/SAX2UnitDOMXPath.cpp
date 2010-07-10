@@ -143,9 +143,9 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
   xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
 
   // for some reason, xmlGetNsProp has an issue with the namespace
-  char* unit_filename = (char*) xmlGetProp(a_node, BAD_CAST "filename");
-  char* unit_directory = (char*) xmlGetProp(a_node, BAD_CAST "dir");
-  char* unit_version = (char*) xmlGetProp(a_node, BAD_CAST "version");
+  char* unit_filename = (char*) xmlGetProp(a_node, BAD_CAST UNIT_ATTRIBUTE_FILENAME);
+  char* unit_directory = (char*) xmlGetProp(a_node, BAD_CAST UNIT_ATTRIBUTE_DIRECTORY);
+  char* unit_version = (char*) xmlGetProp(a_node, BAD_CAST UNIT_ATTRIBUTE_VERSION);
 
   if (!pstate->prev_unit_filename || (unit_filename && strcmp(pstate->prev_unit_filename, unit_filename) != 0))
     pstate->itemcount = 0;
