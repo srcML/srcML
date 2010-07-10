@@ -217,7 +217,7 @@ void output_help(const char* name) {
   printf("                       Predefined URIs and Prefixes:\n");
   printf("                         xmlns=\"%s\"\n", SRCML_SRC_NS_URI);
   printf("                         xmlns:%s=\"%s\"\n", SRCML_CPP_NS_PREFIX_DEFAULT, SRCML_CPP_NS_URI);
-  printf("                         xmlns:srcerr=\"%s\"\n", SRCML_ERR_NS_URI);
+  printf("                         xmlns:%s=\"%s\"\n", SRCML_ERR_NS_PREFIX_DEFAULT, SRCML_ERR_NS_URI);
 
   printf("\nCPP Markup Options:\n\n");
 
