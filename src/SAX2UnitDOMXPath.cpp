@@ -119,7 +119,7 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
   xmlSAX2EndElementNs(ctx, localname, prefix, URI);
 
   // only handle unit elements
-  if (strcmp((const char*) localname, "unit") != 0)
+  if (strcmp((const char*) localname, "unit") != 0 || (pstate->isnested && ctxt->nodeNr == 0))
     return;
 
   static int count = 0;
