@@ -88,16 +88,9 @@ class Language {
   // gets the current language based on the extenstion
   static int getLanguageFromFilename(const char* const path) {
 
-    char pattern[50];
-    for (const pair * pos = ext2int; pos->s != 0; ++pos) {
-      strcpy(pattern, "*");
-      strcat(pattern, pos->s);
-      if (fnmatch(pattern, path, 0) == 0)
+    for (const pair * pos = ext2int; pos->s != 0; ++pos)
+      if (fnmatch(pos->s, path, 0) == 0)
 	return pos->n;
-      strcat(pattern, ".gz");
-      if (fnmatch(pattern, path, 0) == 0)
-	return pos->n;
-    }
 
     return 0;
   }

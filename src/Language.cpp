@@ -32,23 +32,40 @@ pair Language::lang2int[] = {
 };
 
 pair Language::ext2int[] = {
-    { ".c", LANGUAGE_C },
-    { ".h", LANGUAGE_C },
+    { "*.c", LANGUAGE_C },
+    { "*.h", LANGUAGE_C },
 
-    { ".C", LANGUAGE_CXX },
-    { ".cpp", LANGUAGE_CXX },
-    { ".cc", LANGUAGE_CXX },
-    { ".cxx", LANGUAGE_CXX },
-    { ".c++", LANGUAGE_CXX },
-    { ".H", LANGUAGE_CXX },
-    { ".hpp", LANGUAGE_CXX },
-    { ".hh", LANGUAGE_CXX },
-    { ".hxx", LANGUAGE_CXX },
-    { ".h++", LANGUAGE_CXX },
+    { "*.C", LANGUAGE_CXX },
+    { "*.cpp", LANGUAGE_CXX },
+    { "*.cc", LANGUAGE_CXX },
+    { "*.cxx", LANGUAGE_CXX },
+    { "*.c++", LANGUAGE_CXX },
+    { "*.H", LANGUAGE_CXX },
+    { "*.hpp", LANGUAGE_CXX },
+    { "*.hh", LANGUAGE_CXX },
+    { "*.hxx", LANGUAGE_CXX },
+    { "*.h++", LANGUAGE_CXX },
 
-    { ".java", LANGUAGE_JAVA },
+    { "*.java", LANGUAGE_JAVA },
 
-    { ".aj", LANGUAGE_ASPECTJ },
+    { "*.aj.gz", LANGUAGE_ASPECTJ },
+    { "*.c.gz", LANGUAGE_C },
+    { "*.h.gz", LANGUAGE_C },
+
+    { "*.C.gz", LANGUAGE_CXX },
+    { "*.cpp.gz", LANGUAGE_CXX },
+    { "*.cc.gz", LANGUAGE_CXX },
+    { "*.cxx.gz", LANGUAGE_CXX },
+    { "*.c++.gz", LANGUAGE_CXX },
+    { "*.H.gz", LANGUAGE_CXX },
+    { "*.hpp.gz", LANGUAGE_CXX },
+    { "*.hh.gz", LANGUAGE_CXX },
+    { "*.hxx.gz", LANGUAGE_CXX },
+    { "*.h++.gz", LANGUAGE_CXX },
+
+    { "*.java.gz", LANGUAGE_JAVA },
+
+    { "*.aj.gz", LANGUAGE_ASPECTJ },
     /*
     { LanguageName::LANGUAGE_CXX_0X, LANGUAGE_CXX_0X },
     */
