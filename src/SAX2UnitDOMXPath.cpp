@@ -130,7 +130,7 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
   // evaluate the xpath on the context from the current document
   xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(pstate->compiled_xpath, pstate->context);
   if (result_nodes == 0) {
-    fprintf(stderr, "ERROR\n");
+    fprintf(stderr, "Error in executing xpath\n");
     return;
   }
 
