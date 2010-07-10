@@ -33,6 +33,7 @@
 #include "srcMLTranslator.h"
 #include "URIStream.h"
 #include <getopt.h>
+//#include "libxml_curl_io.h"
 
 int option_error_status(int optopt);
 
@@ -280,8 +281,16 @@ int main(int argc, char* argv[]) {
 
   int exit_status = EXIT_SUCCESS;
 
+  LIBXML_TEST_VERSION
+
   xmlGenericErrorFunc handler = (xmlGenericErrorFunc) libxml_error;
   initGenericErrorDefaultFunc(&handler);
+  /*
+  if (xmlRegisterInputCallbacks(curlMatch, curlOpen, curlRead, curlClose) < 0) {
+    fprintf(stderr, "failed to register curl handler\n");
+    exit(1);
+  }
+  */
 
   /* signal handling */
 
