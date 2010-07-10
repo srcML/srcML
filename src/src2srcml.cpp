@@ -116,6 +116,8 @@ const char* urisprefix[] = {
 
 const int num_prefixes = sizeof(uris) / sizeof(uris[0]);
 
+void libxml_error(void *ctx, const char *msg, ...) {}
+
 // output help
 void output_help(const char* name) {
   printf( "Usage: %s [options] <src_infile>... [-o <srcML_outfile>]\n\n"
@@ -277,6 +279,9 @@ int process_args(int argc, char* argv[], process_options & poptions);
 int main(int argc, char* argv[]) {
 
   int exit_status = EXIT_SUCCESS;
+
+  xmlGenericErrorFunc handler = (xmlGenericErrorFunc) libxml_error;
+  initGenericErrorDefaultFunc(&handler);
 
   /* signal handling */
 

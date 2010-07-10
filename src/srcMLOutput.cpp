@@ -278,9 +278,14 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
     unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(curi), openelementcount(0), curline(0),
     curcolumn(0), tabsize(ts)
 {
+
   // open the output text writer stream
   // "-" filename is standard output
   xout = xmlNewTextWriterFilename(srcml_filename, isoption(OPTION_COMPRESSED));
+  if (!xout) {
+    fprintf(stderr, "Unable to open output file %s\n", srcml_filename);
+    exit(1);
+  }
 
   // issue the xml declaration, but only if we want to
   if (!isoption(OPTION_XMLDECL))

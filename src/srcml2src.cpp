@@ -85,6 +85,8 @@ char const * const CONTEXT_FLAG = "context";
 //char const CONTEXT_FLAG_SHORT = '';
 char const * const CONTEXT_FLAG_FULL = "context=CONTEXT";
 
+void libxml_error(void *ctx, const char *msg, ...) {}
+
 // output help message
 void output_help(const char* name) {
 
@@ -239,6 +241,9 @@ int process_args(int argc, char* argv[], process_options & poptions);
 //std::list<const char*> ns;
 
 int main(int argc, char* argv[]) {
+
+  xmlGenericErrorFunc handler = (xmlGenericErrorFunc) libxml_error;
+  initGenericErrorDefaultFunc(&handler);
 
   /* signal handling */
 
