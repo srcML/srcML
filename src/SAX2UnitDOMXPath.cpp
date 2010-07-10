@@ -124,7 +124,7 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
 
   static int count = 0;
   ++count;
-  //  fprintf(stderr, "HERE %d\n", count);
+
   setPosition(count);
 
   // evaluate the xpath on the context from the current document
@@ -245,9 +245,11 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
   case XPATH_NUMBER:
     if (!isoption(pstate->options, OPTION_XPATH_TOTAL)) {
       if ((int)result_nodes->floatval == result_nodes->floatval)
-	printf("%d\n", (int)result_nodes->floatval);
+	sprintf(s, "%d\n", (int)result_nodes->floatval);
       else
-	printf("%f\n", result_nodes->floatval);
+	sprintf(s, "%f\n", result_nodes->floatval);
+
+      xmlOutputBufferWriteString(pstate->buf, s);
     }
     pstate->total += result_nodes->floatval;
     break;
@@ -255,14 +257,15 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
     // boolean result
   case XPATH_BOOLEAN:
     if (!isoption(pstate->options, OPTION_XPATH_TOTAL))
-      puts(result_nodes->boolval ? "true\n" : "false\n");
+      xmlOutputBufferWriteString(pstate->buf, result_nodes->boolval ? "true\n" : "false\n");
+
     pstate->result_bool |= result_nodes->boolval;
     break;
 
     // string
   case XPATH_STRING:
-    fprintf(stderr, "%s\n", result_nodes->stringval);
-    //    pstate->result_bool |= result_nodes->boolval;
+    xmlOutputBufferWriteString(pstate->buf, (const char*) result_nodes->stringval);
+    xmlOutputBufferWriteString(pstate->buf, "\n");
     break;
 
   default:
@@ -296,6 +299,8 @@ void SAX2UnitDOMXPath::endDocument(void *ctx) {
 
   xmlSAX2EndDocument(ctx);
 
+  char s[100];
+
   // finalize results
   switch (pstate->nodetype) {
   case XPATH_NODESET:
@@ -309,16 +314,17 @@ void SAX2UnitDOMXPath::endDocument(void *ctx) {
   case XPATH_NUMBER:
     if (isoption(pstate->options, OPTION_XPATH_TOTAL)) {
       if ((int)pstate->total == pstate->total)
-	printf("%d\n", (int)pstate->total);
+	sprintf(s, "%d\n", (int)pstate->total);
       else
-	printf("%f\n", pstate->total);
+	sprintf(s, "%f\n", pstate->total);
+      xmlOutputBufferWriteString(pstate->buf, s);
     }
     break;
 
   // boolean result
   case XPATH_BOOLEAN:
     if (isoption(pstate->options, OPTION_XPATH_TOTAL))
-      puts(pstate->result_bool ? "true\n" : "false\n");
+      xmlOutputBufferWriteString(pstate->buf, pstate->result_bool ? "true\n" : "false\n");
     break;
 
   default:
