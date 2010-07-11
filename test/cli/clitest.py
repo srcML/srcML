@@ -2162,6 +2162,40 @@ validate(open('sub/a.cpp.xml').read(), fsxmlfile)
 validate(getreturn([src2srcml, option.TABS_FLAG], ""), status.STATUS_ERROR)
 validate(getreturn([src2srcml, option.TABS_FLAG, 'a'], ""), status.STATUS_UNIT_INVALID)
 
+# position and tabs
+
+sxmlfile = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:pos="http://www.sdml.info/srcML/position" language="C++" pos:tabs="2"/>
+"""
+
+fsxmlfile = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:pos="http://www.sdml.info/srcML/position" language="C++" dir="sub" filename="a.cpp" pos:tabs="2"/>
+"""
+
+f = open('sub/a.cpp', 'w')
+f.write("")
+f.close()
+
+check([src2srcml, option.POSITION_FLAG, option.TABS_FLAG, '2'], "", sxmlfile)
+check([src2srcml, option.POSITION_FLAG, option.TABS_FLAG, '2', 'sub/a.cpp'], "", fsxmlfile)
+check([src2srcml, option.POSITION_FLAG, option.TABS_FLAG, '2', '-o', 'sub/a.cpp.xml'], "", "")
+validate(open('sub/a.cpp.xml').read(), sxmlfile)
+check([src2srcml, option.POSITION_FLAG, option.TABS_FLAG, '2', 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
+validate(open('sub/a.cpp.xml').read(), fsxmlfile)
+
+validate(getreturn([src2srcml, option.POSITION_FLAG, option.TABS_FLAG], ""), status.STATUS_ERROR)
+validate(getreturn([src2srcml, option.POSITION_FLAG, option.TABS_FLAG, 'a'], ""), status.STATUS_UNIT_INVALID)
+
+check([src2srcml, option.TABS_FLAG, '2', option.POSITION_FLAG], "", sxmlfile)
+check([src2srcml, option.TABS_FLAG, '2', option.POSITION_FLAG, 'sub/a.cpp'], "", fsxmlfile)
+check([src2srcml, option.TABS_FLAG, '2', option.POSITION_FLAG, '-o', 'sub/a.cpp.xml'], "", "")
+validate(open('sub/a.cpp.xml').read(), sxmlfile)
+check([src2srcml, option.TABS_FLAG, '2', option.POSITION_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
+validate(open('sub/a.cpp.xml').read(), fsxmlfile)
+
+validate(getreturn([src2srcml, option.TABS_FLAG, option.POSITION_FLAG], ""), status.STATUS_ERROR)
+validate(getreturn([src2srcml, option.TABS_FLAG, 'a', option.POSITION_FLAG], ""), status.STATUS_UNIT_INVALID)
+
 # footer
 print
 print "Error count: ", error_count
