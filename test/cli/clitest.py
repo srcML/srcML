@@ -1826,6 +1826,25 @@ validate(open('sub/a.cpp', 'r').read(), sfile1)
 validate(open('sub/b.cpp', 'r').read(), sfile2)
 
 ##
+# xml flag
+
+srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+</unit>
+"""
+
+f = open('sub/a.cpp.xml', 'w')
+f.write(srcml)
+f.close()
+
+check([srcml2src, option.XML_FLAG], srcml, srcml)
+check([srcml2src, option.XML_FLAG, 'sub/a.cpp.xml'], "", srcml)
+check([srcml2src, option.XML_FLAG, '-o', 'sub/a.cpp.xml'], srcml, "")
+validate(open('sub/a.cpp.xml').read(), srcml)
+check([srcml2src, option.XML_FLAG, 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
+validate(open('sub/b.cpp.xml').read(), srcml)
+
+##
 # no xml declaration srcml2src
 
 srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
