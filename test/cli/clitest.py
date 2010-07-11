@@ -1539,6 +1539,23 @@ check([srcml2src, option.COMPRESSED_FLAG_SHORT, '-o', 'sub/a.cpp.gz'], fxmlfile,
 check(['gunzip', '-c', 'sub/a.cpp.gz'], "", sfile)
 
 # test input file is gzipped
+
+sfile = """
+a;
+"""
+
+sxmlfile = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+"""
+
+fxmlfile = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp.gz">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+"""
+
 f = open('sub/a.cpp.gz', 'r')
 gzipped = f.read()
 f.close()
