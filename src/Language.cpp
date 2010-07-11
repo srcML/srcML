@@ -49,23 +49,6 @@ pair Language::ext2int[] = {
     { "*.java", LANGUAGE_JAVA },
 
     { "*.aj", LANGUAGE_ASPECTJ },
-    { "*.c.gz", LANGUAGE_C },
-    { "*.h.gz", LANGUAGE_C },
-
-    { "*.C.gz", LANGUAGE_CXX },
-    { "*.cpp.gz", LANGUAGE_CXX },
-    { "*.cc.gz", LANGUAGE_CXX },
-    { "*.cxx.gz", LANGUAGE_CXX },
-    { "*.c++.gz", LANGUAGE_CXX },
-    { "*.H.gz", LANGUAGE_CXX },
-    { "*.hpp.gz", LANGUAGE_CXX },
-    { "*.hh.gz", LANGUAGE_CXX },
-    { "*.hxx.gz", LANGUAGE_CXX },
-    { "*.h++.gz", LANGUAGE_CXX },
-
-    { "*.java.gz", LANGUAGE_JAVA },
-
-    { "*.aj.gz", LANGUAGE_ASPECTJ },
     /*
     { LanguageName::LANGUAGE_CXX_0X, LANGUAGE_CXX_0X },
     */
