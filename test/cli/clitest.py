@@ -2117,7 +2117,7 @@ validate(getreturn([srcml2src, option.XSLT_FLAG + '=copy.xsl', option.STRING_PAR
 
 # relaxng
 
-# position and tabs
+# position
 
 sxmlfile = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:pos="http://www.sdml.info/srcML/position" language="C++" pos:tabs="8"/>
@@ -2136,6 +2136,27 @@ check([src2srcml, option.POSITION_FLAG, 'sub/a.cpp'], "", fsxmlfile)
 check([src2srcml, option.POSITION_FLAG, '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml').read(), sxmlfile)
 check([src2srcml, option.POSITION_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
+validate(open('sub/a.cpp.xml').read(), fsxmlfile)
+
+# tabs
+
+sxmlfile = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:pos="http://www.sdml.info/srcML/position" language="C++" pos:tabs="4"/>
+"""
+
+fsxmlfile = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:pos="http://www.sdml.info/srcML/position" language="C++" dir="sub" filename="a.cpp" pos:tabs="4"/>
+"""
+
+f = open('sub/a.cpp', 'w')
+f.write("")
+f.close()
+
+check([src2srcml, option.TABS_FLAG, '4'], "", sxmlfile)
+check([src2srcml, option.TABS_FLAG, '4', 'sub/a.cpp'], "", fsxmlfile)
+check([src2srcml, option.TABS_FLAG, '4', '-o', 'sub/a.cpp.xml'], "", "")
+validate(open('sub/a.cpp.xml').read(), sxmlfile)
+check([src2srcml, option.TABS_FLAG, '4', 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml').read(), fsxmlfile)
 
 # footer
