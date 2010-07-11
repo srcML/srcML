@@ -2193,7 +2193,7 @@ validate(open('sub/a.cpp.xml').read(), sxmlfile)
 check([src2srcml, option.TABS_FLAG, '2', option.POSITION_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml').read(), fsxmlfile)
 
-validate(getreturn([src2srcml, option.TABS_FLAG, option.POSITION_FLAG], ""), status.STATUS_ERROR)
+validate(getreturn([src2srcml, option.TABS_FLAG, option.POSITION_FLAG], ""), status.STATUS_UNIT_INVALID)
 validate(getreturn([src2srcml, option.TABS_FLAG, 'a', option.POSITION_FLAG], ""), status.STATUS_UNIT_INVALID)
 
 # footer
