@@ -218,7 +218,8 @@ checkallforms(src2srcml, option.ENCODING_FLAG_SHORT, option.ENCODING_FLAG, "ISO-
 
 ##
 # create testing files
-#os.system("mkdir sub");
+if not os.path.exists("sub"):
+	os.system("mkdir sub")
 
 sfile1 = """
 a;
