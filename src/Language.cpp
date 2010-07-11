@@ -48,7 +48,7 @@ pair Language::ext2int[] = {
 
     { "*.java", LANGUAGE_JAVA },
 
-    { "*.aj.gz", LANGUAGE_ASPECTJ },
+    { "*.aj", LANGUAGE_ASPECTJ },
     { "*.c.gz", LANGUAGE_C },
     { "*.h.gz", LANGUAGE_C },
 
