@@ -954,6 +954,10 @@ int option_error_status(int optopt) {
     return STATUS_SRCENCODING_MISSING;
     break;
 
+  case 'T':
+    return STATUS_ERROR;
+    break;
+
   case '\0':
     return STATUS_UNKNOWN_OPTION;
     break;
