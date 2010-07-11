@@ -2159,6 +2159,9 @@ validate(open('sub/a.cpp.xml').read(), sxmlfile)
 check([src2srcml, option.TABS_FLAG, '4', 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml').read(), fsxmlfile)
 
+validate(getreturn([src2srcml, option.TABS_FLAG], ""), status.STATUS_ERROR)
+validate(getreturn([src2srcml, option.TABS_FLAG, 'a'], ""), status.STATUS_UNIT_INVALID)
+
 # footer
 print
 print "Error count: ", error_count
