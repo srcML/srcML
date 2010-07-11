@@ -2115,6 +2115,29 @@ validate(open('sub/b.cpp.xml', 'r').read(), xpath)
 validate(getreturn([srcml2src, option.XSLT_FLAG + '=copy.xsl', option.STRING_PARAM_FLAG], srcml), status.STATUS_ERROR)
 validate(getreturn([srcml2src, option.XSLT_FLAG + '=copy.xsl', option.STRING_PARAM_FLAG, "NAME"], srcml), status.STATUS_ERROR)
 
+# relaxng
+
+# position and tabs
+
+sxmlfile = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:pos="http://www.sdml.info/srcML/position" language="C++" pos:tabs="8"/>
+"""
+
+fsxmlfile = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:pos="http://www.sdml.info/srcML/position" language="C++" dir="sub" filename="a.cpp" pos:tabs="8"/>
+"""
+
+f = open('sub/a.cpp', 'w')
+f.write("")
+f.close()
+
+check([src2srcml, option.POSITION_FLAG], "", sxmlfile)
+check([src2srcml, option.POSITION_FLAG, 'sub/a.cpp'], "", fsxmlfile)
+check([src2srcml, option.POSITION_FLAG, '-o', 'sub/a.cpp.xml'], "", "")
+validate(open('sub/a.cpp.xml').read(), sxmlfile)
+check([src2srcml, option.POSITION_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
+validate(open('sub/a.cpp.xml').read(), fsxmlfile)
+
 # footer
 print
 print "Error count: ", error_count
