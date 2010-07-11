@@ -439,6 +439,7 @@ int main(int argc, char* argv[]) {
     */
   } catch (TerminateLibXMLError error) {
 
+    fprintf(stderr, "%s:  Program terminated by user\n", argv[0]);
     exit_status = STATUS_TERMINATED;
 
     return exit_status;
