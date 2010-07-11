@@ -1849,7 +1849,8 @@ validate(open('sub/b.cpp.xml').read(), srcml)
 
 srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
-</unit>"""
+</unit>
+"""
 
 srcmlout = """<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
 </unit>
@@ -1885,7 +1886,8 @@ validate(open('sub/b.cpp.xml').read(), srcmlout)
 
 srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
-</unit>"""
+</unit>
+"""
 
 srcmlout = xml_declaration + """
 <unit language="C++">
