@@ -30,7 +30,6 @@
 #include "project.h"
 #include "srcMLUtility.h"
 #include "Options.h"
-#include <list>
 #include "srcmlns.h"
 #include <getopt.h>
 
@@ -212,6 +211,8 @@ const int MAXXSLT = 32;
 
 const int MAXXPATH = 32;
 
+const int MAXNS = 32;
+
 //const char* ofilename = "-";
 
 typedef struct process_options
@@ -221,7 +222,9 @@ typedef struct process_options
   const char* src_encoding;
   int unit;
   const char* context;
-  std::list<const char*> ns;
+  //  std::list<const char*> ns;
+  int nscount;
+  const char* ns[MAXNS + 1];
   int paramcount;
   const char* params[MAXPARAMS * 2 + 1];
   int xsltcount;
@@ -259,7 +262,8 @@ int main(int argc, char* argv[]) {
      DEFAULT_TEXT_ENCODING,
      0,
      "src:unit",
-     std::list<const char*>(),
+     0,
+     { 0 },
      0,
      { 0 },
      0,
@@ -351,17 +355,17 @@ int main(int argc, char* argv[]) {
       su.move_to_unit(poptions.unit, su, options, optioncount, optionorder);
       //      su.move_to_unit(poptions.unit);
 
-      for (std::list<const char*>::const_iterator iter = poptions.ns.begin(); iter != poptions.ns.end(); ++iter) {
-
-	const char* prefix = su.namespace_ext(*iter);
+      for (int i = 0; i < poptions.nscount; ++i) {
+	
+	const char* prefix = su.namespace_ext(poptions.ns[i]);
 	if (prefix) {
-	  if (poptions.ns.size() == 1)
+	  if (poptions.nscount == 1)
 	    printf("%s\n", prefix);
 	  else {
 	    printf("xmlns");
 	    if (prefix[0] != '\0')
 	      printf(":%s", prefix);
-	    printf("=\"%s\"\n", *iter);
+	    printf("=\"%s\"\n", poptions.ns[i]);
 	  }
 	}
       }
@@ -571,7 +575,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
     case NAMESPACE_FLAG_SHORT:
       options |= OPTION_NAMESPACE;
 
-      poptions.ns.push_back(optarg);
+      poptions.ns[poptions.nscount++] = optarg;
       break;
 
     case NESTED_FLAG_SHORT:
