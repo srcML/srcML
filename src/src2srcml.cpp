@@ -609,7 +609,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { XMLNS_FLAG, required_argument, NULL, 'X' },
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
-    { OLD_FILENAME_FLAG, required_argument, NULL, 'O' },
+    { OLD_FILENAME_FLAG, no_argument, NULL, 'O' },
     { TABS_FLAG, required_argument, NULL, 'T' },
     { POSITION_FLAG, no_argument, &curoption, OPTION_POSITION },
     { LITERAL_FLAG, no_argument, &curoption, OPTION_LITERAL },
