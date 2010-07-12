@@ -2247,6 +2247,18 @@ validate(open('sub/a.cpp.xml').read(), fsxmlfile)
 validate(getreturn([src2srcml, option.REGISTER_EXT_FLAG], ""), status.STATUS_ERROR)
 validate(getreturn([src2srcml, option.REGISTER_EXT_FLAG, "cpp=Jawa"], ""), status.STATUS_UNIT_INVALID)
 
+fsxmlfile = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="sub" filename="a.xml"/>
+"""
+
+os.system("touch sub/a.xml")
+check([src2srcml, option.REGISTER_EXT_FLAG, 'xml=Java', 'sub/a.xml'], "", fsxmlfile)
+check([src2srcml, option.REGISTER_EXT_FLAG + '=xml=Java', 'sub/a.xml'], "", fsxmlfile)
+check([src2srcml, option.REGISTER_EXT_FLAG, 'xml=Java', 'sub/a.xml', '-o', 'sub/a.cpp.xml'], "", "")
+validate(open('sub/a.cpp.xml').read(), fsxmlfile)
+
+validate(getreturn([src2srcml, option.REGISTER_EXT_FLAG, "xml=Jawa"], ""), status.STATUS_UNIT_INVALID)
+
 # footer
 print
 print "Error count: ", error_count
