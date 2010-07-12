@@ -37,7 +37,7 @@ int option_error_status(int optopt);
 
 char const * const NAME = "srcml2src";
 
-char const * const EXPAND_FLAG = "extract-all";
+char const * const EXPAND_FLAG = "extract-all-files";
 char const EXPAND_FLAG_SHORT = 'a';
 
 char const * const UNIT_FLAG = "unit";
