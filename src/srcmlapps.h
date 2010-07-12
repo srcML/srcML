@@ -67,7 +67,7 @@ const char* const TEXTENCODING_FLAG = "src-encoding";
 const char TEXTENCODING_FLAG_SHORT = 't';
 const char* const TEXTENCODING_FLAG_FULL = "src-encoding=ENC";
 
-const char* const COMPOUND_FLAG = "compound";
+const char* const COMPOUND_FLAG = "archive";
 const char COMPOUND_FLAG_SHORT = 'n';
 
 const char* const NESTED_FLAG = "files";
