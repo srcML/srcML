@@ -683,7 +683,12 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
       end = asg_split(optarg);
 
-      Language::registerUserExt(optarg, end);
+      if(!Language::registerUserExt(optarg, end))
+      {
+	fprintf(stderr, "%s: xml language \"%s\" is not supported.\n", argv[0], end);
+	fprintf(stderr, "Try '%s %s' for more information.\n", argv[0], HELP_FLAG);
+	exit(STATUS_ERROR);
+      }
       break;
 
     case NESTED_FLAG_SHORT: 
@@ -980,6 +985,10 @@ int option_error_status(int optopt) {
     break;
 
   case 'T':
+    return STATUS_ERROR;
+    break;
+
+  case 'R':
     return STATUS_ERROR;
     break;
 
