@@ -80,6 +80,7 @@ const char* const XMLNS_DEFAULT_FLAG_FULL = "xmlns=URI";
 const char* const XMLNS_FLAG_FULL = "xmlns:PREFIX=URI";
 
 const char* const REGISTER_EXT_FLAG = "register-ext";
+const char* const OLD_FILENAME_FLAG = "old-filename";
 
 const int DEFAULT_LANGUAGE = srcMLTranslator::LANGUAGE_CXX;
 
@@ -608,6 +609,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { XMLNS_FLAG, required_argument, NULL, 'X' },
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
+    { OLD_FILENAME_FLAG, required_argument, NULL, 'O' },
     { TABS_FLAG, required_argument, NULL, 'T' },
     { POSITION_FLAG, no_argument, &curoption, OPTION_POSITION },
     { LITERAL_FLAG, no_argument, &curoption, OPTION_LITERAL },
@@ -853,6 +855,10 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       options |= OPTION_VERSION;
 
       poptions.given_version = optarg;
+      break;
+
+    case 'O' :
+      options |= OPTION_OLD_FILENAME;
       break;
 
     case 'T' :
