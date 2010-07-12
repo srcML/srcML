@@ -84,6 +84,8 @@ const char* const OUTPUT_FLAG = "output";
 const char OUTPUT_FLAG_SHORT = 'o';
 const char* const OUTPUT_FLAG_FULL = "output=OUTPUT";
 
+const char* const OUTPUT_FORMAT_FLAG = "output-format";
+
 namespace LanguageName {
 
 const char* const LANGUAGE_C = "C";
