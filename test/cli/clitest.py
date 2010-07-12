@@ -249,7 +249,7 @@ check([src2srcml, "-", "-o", "sub/b.cpp.xml"], sfile2, "")
 
 nestedfile1 = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
- 
+
 <unit language="C++" filename="sub/a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
@@ -299,6 +299,14 @@ f.close()
 check([src2srcml, "sub/a.cpp", "sub/b.cpp", "-o", "-"], "", nestedfile)
 
 check([src2srcml, option.COMPOUND_FLAG, "sub/a.cpp", "-o", "-"], "", nestedfile1)
+
+f = open('test.xml','w')
+f.write(nestedfile1)
+f.close()
+
+f = open('test2.xml','w')
+f.write(execute([src2srcml, option.COMPOUND_FLAG, 'sub/a.cpp', '-o', '-'], ""))
+f.close()
 
 filelist = """
 sub/a.cpp
