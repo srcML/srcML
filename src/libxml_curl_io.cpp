@@ -29,6 +29,7 @@ static void *myrealloc(void *ptr, size_t size)
 static size_t
 WriteMemoryCallback(void *ptr, size_t size, size_t nmemb, void *data)
 {
+  fprintf(stderr, "WRITING %d\n", nmemb);
   size_t realsize = size * nmemb;
   struct MemoryStruct *mem = (struct MemoryStruct *)data;
  
@@ -43,63 +44,58 @@ WriteMemoryCallback(void *ptr, size_t size, size_t nmemb, void *data)
 
 struct MemoryStruct chunk;
  
-/**
- * sqlMatch:
- * @URI: an URI to test
- *
- * Check for an sql: query
- *
- * Returns 1 if yes and 0 if another Input module should be used
- */
-int
-curlMatch(const char * URI) {
+// check if curl matches the protocol on the URI
+int curlMatch(const char * URI) {
 
-  return (URI != NULL) && (!strncmp(URI, "http:", 5) || !strncmp(URI, "sftp:", 5) || !strncmp(URI, "https:", 6));
+  return (URI != NULL) && (!strncmp(URI, "https:", 6) || !strncmp(URI, "sftp:", 5));
 }
 
-/**
- * curlOpen:
- * @URI: an URI to test
- *
- * Return a pointer to the curl: query handler, in this example simply
- * the current pointer...
- *
- * Returns an Input context or NULL in case or error
- */
-void *
-curlOpen(const char * URI) {
-    if ((URI == NULL) || (strncmp(URI, "http:", 5)))
-        return(NULL);
+// setup curl for this URI
+void* curlOpen(const char * URI) {
 
-chunk.memory=NULL; /* we expect realloc(NULL, size) to work */ 
-chunk.size = 0;    /* no data at this point */ 
+  if (!curlMatch(URI))
+    return NULL;
+
+  chunk.memory=NULL; /* we expect realloc(NULL, size) to work */ 
+  chunk.size = 0;    /* no data at this point */ 
+
+  curl = curl_easy_init();
+
+  curl_easy_setopt(curl, CURLOPT_URL, URI);
+
+  /* send all data to this function  */ 
+  curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
  
+  /* we pass our 'chunk' struct to the callback function */ 
+  curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
 
-    curl = curl_easy_init();
-
-    curl_easy_setopt(curl, CURLOPT_URL, URI);
-
-    /* send all data to this function  */ 
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
+  /*
+   * If you want to connect to a site who isn't using a certificate that is
+   * signed by one of the certs in the CA bundle you have, you can skip the
+   * verification of the server's certificate. This makes the connection
+   * A LOT LESS SECURE.
+   *
+   * If you have a CA cert for the server stored someplace else than in the
+   * default bundle, then the CURLOPT_CAPATH option might come handy for
+   * you.
+   */ 
+  curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
  
-    /* we pass our 'chunk' struct to the callback function */ 
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
+  /*
+   * If the site you're connecting to uses a different host name that what
+   * they have mentioned in their server certificate's commonName (or
+   * subjectAltName) fields, libcurl will refuse to connect. You can skip
+   * this check, but this will make the connection less secure.
+   */ 
+  curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 
-    curl_easy_perform(curl);
+  curl_easy_perform(curl);
 
-    return (void *) "foo";
+  return (void *) "foo";
 }
 
-/**
- * curlClose:
- * @context: the read context
- *
- * Close the curl: query handler
- *
- * Returns 0 or -1 in case of error
- */
-int
-curlClose(void * context) {
+// close the open file
+int curlClose(void * context) {
 
     if (context == NULL)
       return -1;
@@ -109,24 +105,17 @@ curlClose(void * context) {
     return 0;
 }
 
-/**
- * curlRead:
- * @context: the read context
- * @buffer: where to store data
- * @len: number of bytes to read
- *
- * Implement an curl: query read.
- *
- * Returns the number of bytes read or -1 in case of error
- */
-int
-curlRead(void * context, char * buffer, int len) {
+// read from the URI
+int curlRead(void * context, char * buffer, int len) {
+
+  fprintf(stderr, "ASKINGFOR %d\n", len);
+
    const char *ptr = (const char *) context;
 
    if ((context == NULL) || (buffer == NULL) || (len < 0))
        return -1;
 
-   if (len < chunk.size)
+   if (len > chunk.size)
      len = chunk.size;
    memcpy(buffer, chunk.memory, len);
    chunk.size = 0;
