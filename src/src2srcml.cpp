@@ -454,12 +454,10 @@ int main(int argc, char* argv[]) {
 	  if (poptions.language == 0)
 	    poptions.language = Language::getLanguageFromFilename(line);
 
-	  if (isoption(options, OPTION_OLD_FILENAME)) {
+	  if (isoption(options, OPTION_OLD_FILENAME))
 	    filename_split(line, dir, filename);
-	  } else {
-	    dir = 0;
+	  else
 	    filename = line;
-	  }
 	  translator.translate(dir,
 			       filename,
 			       poptions.given_version,
@@ -507,12 +505,10 @@ int main(int argc, char* argv[]) {
     translator.setupInput(path);
     char* path_s = 0;
     char* filename_s = 0;
-    if (isoption(options, OPTION_OLD_FILENAME)) {
+    if (isoption(options, OPTION_OLD_FILENAME))
       filename_split(path, path_s, filename_s);
-    } else {
-      path_s = 0;
+    else
       filename_s = path;
-    }
 
     // hack to fix where directory, but no filename
     if (path_s && !filename_s[0]) {
@@ -565,12 +561,10 @@ int main(int argc, char* argv[]) {
       char* filename_s = 0;
       try {
 	translator.setupInput(path);
-	if (isoption(options, OPTION_OLD_FILENAME)) {
+	if (isoption(options, OPTION_OLD_FILENAME))
 	  filename_split(path, path_s, filename_s);
-	} else {
-	  path_s = 0;
+	else
 	  filename_s = path;
-	}
 	translator.translate(path_s, filename_s, 0, poptions.language ? poptions.language : DEFAULT_LANGUAGE, poptions.tabsize);
       } catch (FileError) {
 	if (path_s)
