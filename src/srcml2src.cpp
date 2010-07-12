@@ -219,6 +219,7 @@ typedef struct process_options
 {
   // option values
   const char* ofilename;
+  const char * output_format;
   const char* src_encoding;
   int unit;
   const char* context;
@@ -252,6 +253,7 @@ int main(int argc, char* argv[]) {
   process_options poptions = 
     {
      "-",
+     0, 
      DEFAULT_TEXT_ENCODING,
      0,
      "src:unit",
@@ -484,6 +486,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
     { NAMESPACE_FLAG, required_argument, NULL, NAMESPACE_FLAG_SHORT },
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
+    { OUTPUT_FORMAT_FLAG, required_argument, NULL, 'u' },
     { XPATH_FLAG, required_argument, NULL, 'P' },
     { XSLT_FLAG, required_argument, NULL, 'S' },
     { PARAM_FLAG, required_argument, NULL, 'A' },
@@ -630,6 +633,15 @@ int process_args(int argc, char* argv[], process_options & poptions)
 	exit(STATUS_UNIT_INVALID);
       }
 
+      break;
+
+    case 'u':
+
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+
+      options |= OPTION_OUTPUT_FORMAT;
+      poptions.output_format = optarg;
       break;
 
     case 'P':

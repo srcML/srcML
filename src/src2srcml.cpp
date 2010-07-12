@@ -267,7 +267,7 @@ struct process_options
   // output filename
   const char* srcml_filename;
   const char* fname;
-  const char* output_format;
+  const char * output_format;
   int language;
   const char* src_encoding;
   const char* xml_encoding;
