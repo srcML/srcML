@@ -92,10 +92,12 @@ const char* srcMLUtility::namespace_ext(const char* uri) {
   if (!pos)
     return 0;
 
-  if (strncmp(pos, "xmlns:", 6))
-    return pos;
-  else
+  if (strncmp(pos, "xmlns:", 6) == 0)
     return pos + 6;
+  else if (strncmp(pos, "xmlns", 5) == 0)
+    return pos + 5;
+  else
+    return pos;
 }
 
 // move to a particular nested unit
