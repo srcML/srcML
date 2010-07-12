@@ -494,6 +494,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
   };
 
   while (1) {
+    int lastoptind = optind;
     curoption = 0;
     int option_index = 0;
     int c = getopt_long(argc, argv, "hVo:fdlsxniLavXzU:t:p:", cliargs, &option_index);
@@ -554,6 +555,10 @@ int process_args(int argc, char* argv[], process_options & poptions)
       break;
 
     case TEXTENCODING_FLAG_SHORT:
+
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+
       options |= OPTION_TEXT_ENCODING;
 
       poptions.src_encoding = optarg;
@@ -566,6 +571,10 @@ int process_args(int argc, char* argv[], process_options & poptions)
       break;
 
     case NAMESPACE_FLAG_SHORT:
+
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+
       options |= OPTION_NAMESPACE;
 
       poptions.ns[poptions.nscount++] = optarg;
@@ -600,6 +609,10 @@ int process_args(int argc, char* argv[], process_options & poptions)
       break;
 
     case UNIT_FLAG_SHORT:
+
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+
       options |= OPTION_UNIT;
 
       // try to convert to number
@@ -620,17 +633,27 @@ int process_args(int argc, char* argv[], process_options & poptions)
       break;
 
     case 'P':
+
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+
       options |= OPTION_XPATH;
       poptions.xpathexpr[poptions.xpathcount++] = optarg;
       break;
 
     case 'S':
 
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+
       options |= OPTION_XSLT;
       poptions.xsltfiles[poptions.xsltcount++] = optarg;
       break;
 
     case 'A':
+
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
 
       // param name
       poptions.params[poptions.paramcount++] = optarg;
@@ -646,6 +669,9 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
     case 'B':
 
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+
       // param name
       poptions.params[poptions.paramcount++] = optarg;
       
@@ -654,12 +680,20 @@ int process_args(int argc, char* argv[], process_options & poptions)
       break;
 
     case 'R':
+
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+
       options |= OPTION_RELAXNG;
       poptions.xpathexpr[poptions.xpathcount++] = optarg;
       break;
 
       /*
     case 'C':
+
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+
       options |= OPTION_XPATH;
       poptions.context = optarg;
       break;
