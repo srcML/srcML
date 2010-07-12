@@ -615,7 +615,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { DIRECTORY_FLAG, required_argument, NULL, DIRECTORY_FLAG_SHORT },
     { FILENAME_FLAG, required_argument, NULL, FILENAME_FLAG_SHORT },
     { SRCVERSION_FLAG, required_argument, NULL, SRCVERSION_FLAG_SHORT },
-    { OUTPUT_FORMAT_FLAG, required_argument, NULL, 'U' },
+    { OUTPUT_FORMAT_FLAG, required_argument, NULL, 'u' },
     { FILELIST_FLAG, required_argument, NULL, 'F' },
     { REGISTER_EXT_FLAG, required_argument, NULL, 'R' },
     { XMLNS_FLAG, required_argument, NULL, 'X' },
@@ -900,7 +900,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       poptions.given_version = optarg;
       break;
 
-    case 'U': 
+    case 'u': 
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
@@ -1048,7 +1048,7 @@ int option_error_status(int optopt) {
     return STATUS_SRCENCODING_MISSING;
     break;
 
-  case 'U':
+  case 'u':
     return STATUS_ERROR;
     break;
 
