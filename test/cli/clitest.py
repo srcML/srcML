@@ -300,14 +300,6 @@ check([src2srcml, "sub/a.cpp", "sub/b.cpp", "-o", "-"], "", nestedfile)
 
 check([src2srcml, option.COMPOUND_FLAG, "sub/a.cpp", "-o", "-"], "", nestedfile1)
 
-f = open('test.xml','w')
-f.write(nestedfile1)
-f.close()
-
-f = open('test2.xml','w')
-f.write(execute([src2srcml, option.COMPOUND_FLAG, 'sub/a.cpp', '-o', '-'], ""))
-f.close()
-
 filelist = """
 sub/a.cpp
 # fff
