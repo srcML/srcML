@@ -57,13 +57,13 @@ const char* const TABS_FLAG_FULL = "tabs=NUMBER";
 const char* const INTERACTIVE_FLAG = "interactive";
 const char INTERACTIVE_FLAG_SHORT = 'c';
 
-const char* const CPP_MARKUP_ELSE_FLAG = "cpp_markup_else";
+const char* const CPP_MARKUP_ELSE_FLAG = "cpp-markup-else";
 
-const char* const CPP_TEXTONLY_ELSE_FLAG = "cpp_text_else";
+const char* const CPP_TEXTONLY_ELSE_FLAG = "cpp-text-else";
 
-const char* const CPP_MARKUP_IF0_FLAG = "cpp_markup_if0";
+const char* const CPP_MARKUP_IF0_FLAG = "cpp-markup-if0";
 
-const char* const CPP_TEXTONLY_IF0_FLAG = "cpp_text_if0";
+const char* const CPP_TEXTONLY_IF0_FLAG = "cpp-text-if0";
 
 const char* const EXPRESSION_MODE_FLAG = "expression";
 const char EXPRESSION_MODE_FLAG_SHORT = 'e';
