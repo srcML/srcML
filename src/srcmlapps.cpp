@@ -26,6 +26,7 @@
 #include <cstring>
 #include <clocale>
 #include <cstdio>
+#include <cctype>
 
 #ifdef __GNUC__
 #include <langinfo.h>
@@ -52,5 +53,53 @@ void checkargisoption(const char* name, const char* opt, const char* optarg, int
 		name, optarg, opt, opt, optarg);
 	exit(1);
       }
+}
+
+char** makeargv(char* s) {
+
+  fprintf(stderr, "LINE:%s\n", s);
+  // figure out how many elements to allocate in the resulting array
+  int count = 0;
+  bool instring = false;
+  char prevchar = 'a';
+  for (char* p = s; p; ++p) {
+
+    // toggle back and forth between strings
+    if (*p == '"')
+      instring = !instring;
+
+    if (!instring && isspace(*p) && !isspace(prevchar))
+      ++count;
+
+    prevchar = *p;
+  }
+
+  // allocate the array of strings based on the count
+  char** argv = new char*[count + 1];
+  argv[0] = 0;
+
+  return argv;
+  // now point into our original string
+  count = 0;
+  instring = false;
+  prevchar = 'a';
+  char* start = s;
+  for (char* p = s; p; ++p) {
+
+    // toggle back and forth between strings
+    if (*p == '"')
+      instring = !instring;
+
+    if (!instring && isspace(*p) && !isspace(prevchar)) {
+      argv[count++] = start;
+      *p = '\0';
+      start = (p + 1);
+    }
+
+    prevchar = *p;
+  }
+  argv[count] = 0;
+
+  return argv;
 }
 

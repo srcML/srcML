@@ -182,4 +182,6 @@ inline bool argisoption(const char* s) {
 
 void checkargisoption(const char* name, const char* opt, const char* optarg, int optind, int lastoptind);
 
+char** makeargv(char* s);
+
 #endif
