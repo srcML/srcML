@@ -2245,7 +2245,7 @@ check([src2srcml, option.REGISTER_EXT_FLAG, 'cpp=Java', 'sub/a.cpp', '-o', 'sub/
 validate(open('sub/a.cpp.xml').read(), fsxmlfile)
 
 validate(getreturn([src2srcml, option.REGISTER_EXT_FLAG], ""), status.STATUS_ERROR)
-validate(getreturn([src2srcml, option.REGISTER_EXT_FLAG, "cpp=Jawa"], ""), status.STATUS_UNIT_INVALID)
+validate(getreturn([src2srcml, option.REGISTER_EXT_FLAG, "cpp=Jawa"], ""), status.STATUS_ERROR)
 
 fsxmlfile = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="sub" filename="a.xml"/>
@@ -2257,7 +2257,7 @@ check([src2srcml, option.REGISTER_EXT_FLAG + '=xml=Java', 'sub/a.xml'], "", fsxm
 check([src2srcml, option.REGISTER_EXT_FLAG, 'xml=Java', 'sub/a.xml', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml').read(), fsxmlfile)
 
-validate(getreturn([src2srcml, option.REGISTER_EXT_FLAG, "xml=Jawa"], ""), status.STATUS_UNIT_INVALID)
+validate(getreturn([src2srcml, option.REGISTER_EXT_FLAG, "xml=Jawa"], ""), status.STATUS_ERROR)
 
 # footer
 print
