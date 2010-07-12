@@ -79,7 +79,7 @@ const char* const XMLNS_FLAG = "xmlns";
 const char* const XMLNS_DEFAULT_FLAG_FULL = "xmlns=URI";
 const char* const XMLNS_FLAG_FULL = "xmlns:PREFIX=URI";
 
-const char* const REGISTER_EXT_FLAG = "register";
+const char* const REGISTER_EXT_FLAG = "register-ext";
 
 const int DEFAULT_LANGUAGE = srcMLTranslator::LANGUAGE_CXX;
 
