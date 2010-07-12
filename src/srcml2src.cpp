@@ -84,6 +84,8 @@ char const * const CONTEXT_FLAG = "context";
 //char const CONTEXT_FLAG_SHORT = '';
 char const * const CONTEXT_FLAG_FULL = "context=CONTEXT";
 
+const char* const LIST_FLAG = "list";
+
 void libxml_error(void *ctx, const char *msg, ...) {}
 
 // output help message
@@ -487,6 +489,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
     { OUTPUT_FORMAT_FLAG, required_argument, NULL, 'u' },
+    { LIST_FLAG, required_argument, NULL, 'I' },
     { XPATH_FLAG, required_argument, NULL, 'P' },
     { XSLT_FLAG, required_argument, NULL, 'S' },
     { PARAM_FLAG, required_argument, NULL, 'A' },
@@ -643,6 +646,10 @@ int process_args(int argc, char* argv[], process_options & poptions)
       options |= OPTION_OUTPUT_FORMAT;
       poptions.output_format = optarg;
       break;
+      
+    case 'I' :
+      options |= OPTION_LIST;
+      break;
 
     case 'P':
 
@@ -752,6 +759,10 @@ int option_error_status(int optopt) {
 
   case UNIT_FLAG_SHORT:
     return STATUS_UNIT_MISSING;
+    break;
+
+  case 'u':
+    return STATUS_ERROR;
     break;
 
   case 'P':

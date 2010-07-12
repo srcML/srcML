@@ -208,6 +208,12 @@ const OPTION_TYPE OPTION_RELAXNG      = OPTION_EXPRESSION;
 const OPTION_TYPE OPTION_OLD_FILENAME  = 0x100000000ull;
 
 // specify ouput format
+// @src2srcml
+// @srcml2src
 const OPTION_TYPE OPTION_OUTPUT_FORMAT  = 0x200000000ull;
+
+// specify ouput format
+// @srcml2src
+const OPTION_TYPE OPTION_LIST  = 0x400000000ull;
 
 #endif
