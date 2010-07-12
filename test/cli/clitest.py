@@ -2229,6 +2229,24 @@ validate(open('sub/a.cpp.xml').read(), fsxmlfile)
 validate(getreturn([src2srcml, option.TABS_FLAG, option.POSITION_FLAG], ""), status.STATUS_UNIT_INVALID)
 validate(getreturn([src2srcml, option.TABS_FLAG, 'a', option.POSITION_FLAG], ""), status.STATUS_UNIT_INVALID)
 
+# register language
+
+fsxmlfile = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="sub" filename="a.cpp"/>
+"""
+
+f = open('sub/a.cpp', 'w')
+f.write("")
+f.close()
+
+check([src2srcml, option.REGISTER_EXT_FLAG, 'cpp=Java', 'sub/a.cpp'], "", fsxmlfile)
+check([src2srcml, option.REGISTER_EXT_FLAG + '=cpp=Java', 'sub/a.cpp'], "", fsxmlfile)
+check([src2srcml, option.REGISTER_EXT_FLAG, 'cpp=Java', 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
+validate(open('sub/a.cpp.xml').read(), fsxmlfile)
+
+validate(getreturn([src2srcml, option.REGISTER_EXT_FLAG], ""), status.STATUS_ERROR)
+validate(getreturn([src2srcml, option.REGISTER_EXT_FLAG, "cpp=Jawa"], ""), status.STATUS_UNIT_INVALID)
+
 # footer
 print
 print "Error count: ", error_count
