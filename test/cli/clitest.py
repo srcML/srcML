@@ -713,6 +713,9 @@ language = 'language="C" '
 check([src2srcml, 'emptysrc/empty.c'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.c' + fileclose + endtag)
 check([src2srcml, 'emptysrc/empty.h'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.h' + fileclose + endtag)
 
+check([src2srcml, 'emptysrc/empty.c.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.c.gz' + fileclose + endtag)
+check([src2srcml, 'emptysrc/empty.h.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.h.gz' + fileclose + endtag)
+
 # check c++ file extensions
 language = 'language="C++" '
 
@@ -725,15 +728,28 @@ check([src2srcml, 'emptysrc/empty.hh'], "", xmltag + opentag + namespaceone + na
 check([src2srcml, 'emptysrc/empty.hxx'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.hxx' + fileclose + endtag)
 check([src2srcml, 'emptysrc/empty.h++'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.h++' + fileclose + endtag)
 
+check([src2srcml, 'emptysrc/empty.cpp.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.cpp.gz' + fileclose + endtag)
+check([src2srcml, 'emptysrc/empty.cc.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.cc.gz' + fileclose + endtag)
+check([src2srcml, 'emptysrc/empty.cxx.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.cxx.gz' + fileclose + endtag)
+check([src2srcml, 'emptysrc/empty.c++.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.c++.gz' + fileclose + endtag)
+check([src2srcml, 'emptysrc/empty.hpp.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.hpp.gz' + fileclose + endtag)
+check([src2srcml, 'emptysrc/empty.hh.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.hh.gz' + fileclose + endtag)
+check([src2srcml, 'emptysrc/empty.hxx.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.hxx.gz' + fileclose + endtag)
+check([src2srcml, 'emptysrc/empty.h++.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.h++.gz' + fileclose + endtag)
+
 # check java file extension
 language = 'language="Java" '
 
 check([src2srcml, 'emptysrc/empty.java'], "", xmltag + opentag + namespaceone + language + dir + fileopen + 'empty.java' + fileclose + endtag)
 
+check([src2srcml, 'emptysrc/empty.java.gz'], "", xmltag + opentag + namespaceone + language + dir + fileopen + 'empty.java.gz' + fileclose + endtag)
+
 # check aspectj file extension
 language = 'language="AspectJ" '
 
 check([src2srcml, 'emptysrc/empty.aj'], "", xmltag + opentag + namespaceone + language + dir + fileopen + 'empty.aj' + fileclose + endtag)
+
+check([src2srcml, 'emptysrc/empty.aj.gz'], "", xmltag + opentag + namespaceone + language + dir + fileopen + 'empty.aj.gz' + fileclose + endtag)
 
 ##
 # Test output options
