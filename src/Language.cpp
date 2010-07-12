@@ -66,7 +66,7 @@ int Language::getLanguageFromFilename(const char* const path) {
     if (fnmatch(pattern, path, 0) == 0)
       return pos->n;
 
-    strcat(pattern, ".gz");
+    strcat(pattern, ".*");
     if (fnmatch(pattern, path, 0) == 0)
       return pos->n;
   }
