@@ -19,7 +19,7 @@ def check(command, input, output):
 	
 	line = execute(command, input)
 
-	return validate(output, line)
+	return validate(line, output)
 	#return validate(output.strip(), line.strip())
 
 def checkError(command, input, error) :
@@ -27,13 +27,13 @@ def checkError(command, input, error) :
 
 	line = executeWithError(command, input)
 
-	return validate(error, line)
+	return validate(line, error)
 	
-def validate(org, gen):
-	if org != gen:
+def validate(gen, expected):
+	if gen != expected:
 		globals()["error_count"] = globals()["error_count"] + 1
 		print "ERROR"
-		print "org|" + str(org) + "|"
+		print "expected|" + str(expected) + "|"
 		print "gen|" + str(gen) + "|"
 	return
 
