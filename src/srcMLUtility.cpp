@@ -85,9 +85,17 @@ const char* srcMLUtility::attribute(const char* attribute_name) {
 // return blank for default namespace
 const char* srcMLUtility::namespace_ext(const char* uri) {
 
+  static std::string s;
+
   const char* pos = find(nsv, uri);
 
-  return pos ? pos : 0;
+  if (!pos)
+    return 0;
+
+  if (strncmp(pos, "xmlns:", 6))
+    return pos;
+  else
+    return pos + 6;
 }
 
 // move to a particular nested unit
