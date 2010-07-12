@@ -202,4 +202,9 @@ const OPTION_TYPE OPTION_XSLT_ALL      = OPTION_XMLNS;
 // @srcml2src
 const OPTION_TYPE OPTION_RELAXNG      = OPTION_EXPRESSION;
 
+// use old filename behavior, where it was just the base filename
+// @src2srcml
+// @srcml2src
+const OPTION_TYPE OPTION_OLD_FILENAME  = 0x100000000ull;
+
 #endif
