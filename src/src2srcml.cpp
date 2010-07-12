@@ -820,6 +820,10 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       break;
 
     case DIRECTORY_FLAG_SHORT: 
+
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+
       options |= OPTION_DIRECTORY;
 
       poptions.given_directory = optarg;

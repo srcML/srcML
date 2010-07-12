@@ -22,6 +22,7 @@
   Common utilities for srcML applications.
 */
 
+#include "srcmlapps.h"
 #include <cstring>
 #include <clocale>
 #include <cstdio>
@@ -41,3 +42,15 @@ const char* getencoding() {
   return "ISO-8859-1";
 #endif
 }
+
+void checkargisoption(const char* name, const char* opt, const char* optarg, int optind, int lastoptind) {
+
+      // check for missing argument confused by an argument that looks like an option
+      if (optind == (lastoptind + 2) && argisoption(optarg)) {
+	fprintf(stderr, "%s: Argument '%s' to option '%s' appears to be another option.\n"
+		"If this is correct, use the direct form '%s=%s\n",
+		name, optarg, opt, opt, optarg);
+	exit(1);
+      }
+}
+
