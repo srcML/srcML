@@ -249,8 +249,8 @@ check([src2srcml, "-", "-o", "sub/b.cpp.xml"], sfile2, "")
 
 nestedfile1 = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
-
-<unit language="C++" dir="sub" filename="a.cpp">
+ 
+<unit language="C++" filename="sub/a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
@@ -260,11 +260,11 @@ nestedfile1 = xml_declaration + """
 nestedfile = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
 
-<unit language="C++" dir="sub" filename="a.cpp">
+<unit language="C++" filename="sub/a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
-<unit language="C++" dir="sub" filename="b.cpp">
+<unit language="C++" filename="sub/b.cpp">
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 </unit>
 
@@ -274,11 +274,11 @@ nestedfile = xml_declaration + """
 nestedfilesrc = xml_declaration + """
 <src:unit xmlns:src="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
 
-<src:unit language="C++" dir="sub" filename="a.cpp">
+<src:unit language="C++" filename="sub/a.cpp">
 <src:expr_stmt><src:expr><src:name>a</src:name></src:expr>;</src:expr_stmt>
 </src:unit>
 
-<src:unit language="C++" dir="sub" filename="b.cpp">
+<src:unit language="C++" filename="sub/b.cpp">
 <src:expr_stmt><src:expr><src:name>b</src:name></src:expr>;</src:expr_stmt>
 </src:unit>
 
@@ -358,6 +358,20 @@ check([srcml2src, option.UNIT_FLAG, "2"], nestedfile, sfile2)
 sxmlfile1 = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+"""
+
+nestedfile = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
+
+<unit language="C++" dir="sub" filename="a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++" dir="sub" filename="b.cpp">
+<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</unit>
+
 </unit>
 """
 check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "1", "-"], nestedfile, sxmlfile1)
@@ -702,54 +716,53 @@ xmltag = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n'
 opentag = '<unit '
 namespaceone = 'xmlns="http://www.sdml.info/srcML/src" '
 namespacetwo = 'xmlns:cpp="http://www.sdml.info/srcML/cpp" '
-dir = 'dir="emptysrc" '
-fileopen = 'filename="'
+fileopen = 'filename="emptysrc/'
 fileclose = '"'
 endtag = '/>\n'
 
 # check c file extensions
 language = 'language="C" '
 
-check([src2srcml, 'emptysrc/empty.c'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.c' + fileclose + endtag)
-check([src2srcml, 'emptysrc/empty.h'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.h' + fileclose + endtag)
+check([src2srcml, 'emptysrc/empty.c'], "", xmltag + opentag + namespaceone + namespacetwo + language  + fileopen + 'empty.c' + fileclose + endtag)
+check([src2srcml, 'emptysrc/empty.h'], "", xmltag + opentag + namespaceone + namespacetwo + language  + fileopen + 'empty.h' + fileclose + endtag)
 
-check([src2srcml, 'emptysrc/empty.c.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.c.gz' + fileclose + endtag)
-check([src2srcml, 'emptysrc/empty.h.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.h.gz' + fileclose + endtag)
+check([src2srcml, 'emptysrc/empty.c.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language  + fileopen + 'empty.c.gz' + fileclose + endtag)
+check([src2srcml, 'emptysrc/empty.h.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language  + fileopen + 'empty.h.gz' + fileclose + endtag)
 
 # check c++ file extensions
 language = 'language="C++" '
 
-check([src2srcml, 'emptysrc/empty.cpp'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.cpp' + fileclose + endtag)
-check([src2srcml, 'emptysrc/empty.cc'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.cc' + fileclose + endtag)
-check([src2srcml, 'emptysrc/empty.cxx'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.cxx' + fileclose + endtag)
-check([src2srcml, 'emptysrc/empty.c++'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.c++' + fileclose + endtag)
-check([src2srcml, 'emptysrc/empty.hpp'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.hpp' + fileclose + endtag)
-check([src2srcml, 'emptysrc/empty.hh'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.hh' + fileclose + endtag)
-check([src2srcml, 'emptysrc/empty.hxx'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.hxx' + fileclose + endtag)
-check([src2srcml, 'emptysrc/empty.h++'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.h++' + fileclose + endtag)
+check([src2srcml, 'emptysrc/empty.cpp'], "", xmltag + opentag + namespaceone + namespacetwo + language  + fileopen + 'empty.cpp' + fileclose + endtag)
+check([src2srcml, 'emptysrc/empty.cc'], "", xmltag + opentag + namespaceone + namespacetwo + language  + fileopen + 'empty.cc' + fileclose + endtag)
+check([src2srcml, 'emptysrc/empty.cxx'], "", xmltag + opentag + namespaceone + namespacetwo + language  + fileopen + 'empty.cxx' + fileclose + endtag)
+check([src2srcml, 'emptysrc/empty.c++'], "", xmltag + opentag + namespaceone + namespacetwo + language  + fileopen + 'empty.c++' + fileclose + endtag)
+check([src2srcml, 'emptysrc/empty.hpp'], "", xmltag + opentag + namespaceone + namespacetwo + language  + fileopen + 'empty.hpp' + fileclose + endtag)
+check([src2srcml, 'emptysrc/empty.hh'], "", xmltag + opentag + namespaceone + namespacetwo + language  + fileopen + 'empty.hh' + fileclose + endtag)
+check([src2srcml, 'emptysrc/empty.hxx'], "", xmltag + opentag + namespaceone + namespacetwo + language  + fileopen + 'empty.hxx' + fileclose + endtag)
+check([src2srcml, 'emptysrc/empty.h++'], "", xmltag + opentag + namespaceone + namespacetwo + language  + fileopen + 'empty.h++' + fileclose + endtag)
 
-check([src2srcml, 'emptysrc/empty.cpp.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.cpp.gz' + fileclose + endtag)
-check([src2srcml, 'emptysrc/empty.cc.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.cc.gz' + fileclose + endtag)
-check([src2srcml, 'emptysrc/empty.cxx.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.cxx.gz' + fileclose + endtag)
-check([src2srcml, 'emptysrc/empty.c++.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.c++.gz' + fileclose + endtag)
-check([src2srcml, 'emptysrc/empty.hpp.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.hpp.gz' + fileclose + endtag)
-check([src2srcml, 'emptysrc/empty.hh.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.hh.gz' + fileclose + endtag)
-check([src2srcml, 'emptysrc/empty.hxx.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.hxx.gz' + fileclose + endtag)
-check([src2srcml, 'emptysrc/empty.h++.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language + dir + fileopen + 'empty.h++.gz' + fileclose + endtag)
+check([src2srcml, 'emptysrc/empty.cpp.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language  + fileopen + 'empty.cpp.gz' + fileclose + endtag)
+check([src2srcml, 'emptysrc/empty.cc.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language  + fileopen + 'empty.cc.gz' + fileclose + endtag)
+check([src2srcml, 'emptysrc/empty.cxx.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language  + fileopen + 'empty.cxx.gz' + fileclose + endtag)
+check([src2srcml, 'emptysrc/empty.c++.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language  + fileopen + 'empty.c++.gz' + fileclose + endtag)
+check([src2srcml, 'emptysrc/empty.hpp.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language  + fileopen + 'empty.hpp.gz' + fileclose + endtag)
+check([src2srcml, 'emptysrc/empty.hh.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language  + fileopen + 'empty.hh.gz' + fileclose + endtag)
+check([src2srcml, 'emptysrc/empty.hxx.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language  + fileopen + 'empty.hxx.gz' + fileclose + endtag)
+check([src2srcml, 'emptysrc/empty.h++.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language  + fileopen + 'empty.h++.gz' + fileclose + endtag)
 
 # check java file extension
 language = 'language="Java" '
 
-check([src2srcml, 'emptysrc/empty.java'], "", xmltag + opentag + namespaceone + language + dir + fileopen + 'empty.java' + fileclose + endtag)
+check([src2srcml, 'emptysrc/empty.java'], "", xmltag + opentag + namespaceone + language  + fileopen + 'empty.java' + fileclose + endtag)
 
-check([src2srcml, 'emptysrc/empty.java.gz'], "", xmltag + opentag + namespaceone + language + dir + fileopen + 'empty.java.gz' + fileclose + endtag)
+check([src2srcml, 'emptysrc/empty.java.gz'], "", xmltag + opentag + namespaceone + language  + fileopen + 'empty.java.gz' + fileclose + endtag)
 
 # check aspectj file extension
 language = 'language="AspectJ" '
 
-check([src2srcml, 'emptysrc/empty.aj'], "", xmltag + opentag + namespaceone + language + dir + fileopen + 'empty.aj' + fileclose + endtag)
+check([src2srcml, 'emptysrc/empty.aj'], "", xmltag + opentag + namespaceone + language  + fileopen + 'empty.aj' + fileclose + endtag)
 
-check([src2srcml, 'emptysrc/empty.aj.gz'], "", xmltag + opentag + namespaceone + language + dir + fileopen + 'empty.aj.gz' + fileclose + endtag)
+check([src2srcml, 'emptysrc/empty.aj.gz'], "", xmltag + opentag + namespaceone + language  + fileopen + 'empty.aj.gz' + fileclose + endtag)
 
 ##
 # Test output options
@@ -766,7 +779,7 @@ sxmlfile = xml_declaration + """
 """
 
 fxmlfile = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 """
@@ -825,7 +838,7 @@ srcml = xml_declaration + """
 """
 
 fsrcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:err="http://www.sdml.info/srcML/srcerr" language="C++" dir="sub" filename="a.cpp"/>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:err="http://www.sdml.info/srcML/srcerr" language="C++" filename="sub/a.cpp"/>
 """
 checkallformsfile(src2srcml, 'sub/a.cpp', option.DEBUG_FLAG_SHORT, option.DEBUG_FLAG, "", "", fsrcml)
 check([src2srcml, option.DEBUG_FLAG_SHORT, '-o', 'sub/a.cpp.xml'], sfile1, "")
@@ -840,7 +853,7 @@ srcml = xml_declaration + """
 """
 
 fsrcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp"/>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp"/>
 """
 checkallformsfile(src2srcml, 'sub/a.cpp', option.LANGUAGE_FLAG_SHORT, option.LANGUAGE_FLAG, "C++", "", fsrcml)
 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', '-o', 'sub/a.cpp.xml'], sfile1, "")
@@ -853,7 +866,7 @@ srcml = xml_declaration + """
 """
 
 fsrcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" dir="sub" filename="a.cpp"/>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="sub/a.cpp"/>
 """
 checkallformsfile(src2srcml, 'sub/a.cpp', option.LANGUAGE_FLAG_SHORT, option.LANGUAGE_FLAG, "C", "", fsrcml)
 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C', '-o', 'sub/a.cpp.xml'], sfile1, "")
@@ -866,7 +879,7 @@ srcml = xml_declaration + """
 """
 
 fsrcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="sub" filename="a.cpp"/>
+<unit xmlns="http://www.sdml.info/srcML/src" language="Java" filename="sub/a.cpp"/>
 """
 checkallformsfile(src2srcml, 'sub/a.cpp', option.LANGUAGE_FLAG_SHORT, option.LANGUAGE_FLAG, "Java", "", fsrcml)
 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'Java', '-o', 'sub/a.cpp.xml'], sfile1, "")
@@ -881,7 +894,7 @@ srcml = xml_declaration + """
 """
 
 fsrcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="foo"/>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="foo"/>
 """
 checkallformsfile(src2srcml, 'sub/a.cpp', option.FILENAME_FLAG_SHORT, option.FILENAME_FLAG, "foo", "", fsrcml)
 check([src2srcml, option.FILENAME_FLAG_SHORT, 'foo', '-o', 'sub/a.cpp.xml'], sfile1, "")
@@ -896,7 +909,7 @@ srcml = xml_declaration + """
 """
 
 fsrcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="bar" filename="a.cpp"/>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="bar" filename="sub/a.cpp"/>
 """
 checkallformsfile(src2srcml, 'sub/a.cpp', option.DIRECTORY_FLAG_SHORT, option.DIRECTORY_FLAG, "bar", "", fsrcml)
 check([src2srcml, option.DIRECTORY_FLAG_SHORT, 'bar', '-o', 'sub/a.cpp.xml'], sfile1, "")
@@ -911,7 +924,7 @@ srcml = xml_declaration + """
 """
 
 fsrcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp" version="1.0"/>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp" version="1.0"/>
 """
 checkallformsfile(src2srcml, 'sub/a.cpp', option.SRCVERSION_FLAG_SHORT, option.SRCVERSION_FLAG, "1.0", "", fsrcml)
 check([src2srcml, option.SRCVERSION_FLAG_SHORT, '1.0', '-o', 'sub/a.cpp.xml'], sfile1, "")
@@ -926,7 +939,7 @@ srcml = """<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
 """
 
 fsrcml = """<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp"/>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp"/>
 """
 checkallformsfile(src2srcml, 'sub/a.cpp', option.ENCODING_FLAG_SHORT, option.ENCODING_FLAG, "ISO-8859-1", "", fsrcml)
 check([src2srcml, option.ENCODING_FLAG_SHORT, 'ISO-8859-1', '-o', 'sub/a.cpp.xml'], sfile1, "")
@@ -941,7 +954,7 @@ srcml = xml_declaration + """
 """
 
 fsrcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp"/>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp"/>
 """
 checkallforms(src2srcml, option.TEXTENCODING_FLAG_SHORT, option.TEXTENCODING_FLAG, "ISO-8859-1", sfile1, srcml)
 checkallformsfile(src2srcml, 'sub/a.cpp', option.TEXTENCODING_FLAG_SHORT, option.TEXTENCODING_FLAG, "ISO-8859-1", "", fsrcml)
@@ -965,7 +978,7 @@ b;
 nestedfile1 = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
 
-<unit language="C++" dir="sub" filename="a.cpp">
+<unit language="C++" filename="sub/a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
@@ -975,11 +988,11 @@ nestedfile1 = xml_declaration + """
 nestedfile = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
 
-<unit language="C++" dir="sub" filename="a.cpp">
+<unit language="C++" filename="sub/a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
-<unit language="C++" dir="sub" filename="b.cpp">
+<unit language="C++" filename="sub/b.cpp">
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 </unit>
 
@@ -989,11 +1002,11 @@ nestedfile = xml_declaration + """
 nestedfilesrc = xml_declaration + """
 <src:unit xmlns:src="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
 
-<src:unit language="C++" dir="sub" filename="a.cpp">
+<src:unit language="C++" filename="sub/a.cpp">
 <src:expr_stmt><src:expr><src:name>a</src:name></src:expr>;</src:expr_stmt>
 </src:unit>
 
-<src:unit language="C++" dir="sub" filename="b.cpp">
+<src:unit language="C++" filename="sub/b.cpp">
 <src:expr_stmt><src:expr><src:name>b</src:name></src:expr>;</src:expr_stmt>
 </src:unit>
 
@@ -1019,11 +1032,11 @@ validate(open('sub/a.cpp.xml').read(), nestedfilesrc)
 nestedfile = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
 
-<unit language="C++" dir="sub" filename="a.cpp">
+<unit language="C++" filename="sub/a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
-<unit language="C++" dir="sub" filename="b.cpp">
+<unit language="C++" filename="sub/b.cpp">
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 </unit>
 
@@ -1057,7 +1070,7 @@ srcml = xml_declaration + """
 """
 
 fsrcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp"/>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp"/>
 """
 
 f = open('sub/a.cpp', 'w')
@@ -1088,7 +1101,7 @@ srcml = xml_declaration + """
 """
 
 fsrcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:err="http://www.sdml.info/srcML/srcerr" language="C++" dir="sub" filename="a.cpp"/>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:err="http://www.sdml.info/srcML/srcerr" language="C++" filename="sub/a.cpp"/>
 """
 
 # separate
@@ -1122,7 +1135,7 @@ srcml = xml_declaration + """
 """
 
 fsrcml = xml_declaration + """
-<src:unit xmlns:src="http://www.sdml.info/srcML/src" xmlns="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp"/>
+<src:unit xmlns:src="http://www.sdml.info/srcML/src" xmlns="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp"/>
 """
 check([src2srcml, "--xmlns:src=http://www.sdml.info/srcML/src", "--xmlns=http://www.sdml.info/srcML/cpp", 'sub/a.cpp'], "", fsrcml)
 check([src2srcml, "--xmlns:src=http://www.sdml.info/srcML/src", "--xmlns=http://www.sdml.info/srcML/cpp", '-o', 'sub/a.cpp.xml'], sfile1, "")
@@ -1135,7 +1148,7 @@ validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 srcml = """<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 """
 
-fsrcml = """<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp"/>
+fsrcml = """<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp"/>
 """
 
 check([src2srcml, option.NO_XML_DECLARATION_FLAG, 'sub/a.cpp'], "", fsrcml)
@@ -1151,7 +1164,7 @@ srcml = xml_declaration + """
 """
 
 fsrcml = xml_declaration + """
-<unit language="C++" dir="sub" filename="a.cpp"/>
+<unit language="C++" filename="sub/a.cpp"/>
 """
 
 check([src2srcml, option.NO_NAMESPACE_DECLARATION_FLAG, 'sub/a.cpp'], "", fsrcml)
@@ -1182,7 +1195,7 @@ cpp_marked_srcml = xml_declaration + """
 """
 
 fcpp_marked_srcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
 <cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
 <break>break;</break>
 <cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
@@ -1218,7 +1231,7 @@ return;
 """
 
 fcpp_textonly_srcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
 <cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
 <break>break;</break>
 <cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
@@ -1251,7 +1264,7 @@ break;
 """
 
 fcpp_textonly_srcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
 <cpp:if>#<cpp:directive>if</cpp:directive> <expr>0</expr></cpp:if>
 break;
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
@@ -1283,7 +1296,7 @@ cpp_marked_srcml = xml_declaration + """
 """
 
 fcpp_marked_srcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
 <cpp:if>#<cpp:directive>if</cpp:directive> <expr>0</expr></cpp:if>
 <break>break;</break>
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
@@ -1322,7 +1335,7 @@ nestedfile = xml_declaration + """
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
-<unit language="C++" dir="sub" filename="b.cpp">
+<unit language="C++" filename="sub/b.cpp">
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 </unit>
 
@@ -1336,7 +1349,7 @@ nestedfilesrc = xml_declaration + """
 <src:expr_stmt><src:expr><src:name>a</src:name></src:expr>;</src:expr_stmt>
 </src:unit>
 
-<src:unit language="C++" dir="sub" filename="b.cpp">
+<src:unit language="C++" filename="sub/b.cpp">
 <src:expr_stmt><src:expr><src:name>b</src:name></src:expr>;</src:expr_stmt>
 </src:unit>
 
@@ -1524,7 +1537,7 @@ sxmlfile = xml_declaration + """
 """
 
 fxmlfile = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 """
@@ -1567,7 +1580,7 @@ sxmlfile = xml_declaration + """
 """
 
 fxmlfile = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp.gz">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp.gz">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 """
@@ -1607,7 +1620,7 @@ srcml = xml_declaration + """
 """
 
 fsrcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" language="C++" dir="sub" filename="a.cpp"/>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" language="C++" filename="sub/a.cpp"/>
 """
 
 check([src2srcml, option.LITERAL_FLAG], sfile, srcml)
@@ -1622,7 +1635,7 @@ srcml = xml_declaration + """
 """
 
 fsrcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:op="http://www.sdml.info/srcML/operator" language="C++" dir="sub" filename="a.cpp"/>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:op="http://www.sdml.info/srcML/operator" language="C++" filename="sub/a.cpp"/>
 """
 
 check([src2srcml, option.OPERATOR_FLAG], sfile, srcml)
@@ -1637,7 +1650,7 @@ srcml = xml_declaration + """
 """
 
 fsrcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:type="http://www.sdml.info/srcML/modifier" language="C++" dir="sub" filename="a.cpp"/>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:type="http://www.sdml.info/srcML/modifier" language="C++" filename="sub/a.cpp"/>
 """
 
 check([src2srcml, option.MODIFIER_FLAG], sfile, srcml)
@@ -1652,7 +1665,7 @@ srcml = xml_declaration + """
 """
 
 fsrcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" language="C++" dir="sub" filename="a.cpp"/>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" language="C++" filename="sub/a.cpp"/>
 """
 
 check([src2srcml, option.LITERAL_FLAG, option.OPERATOR_FLAG], sfile, srcml)
@@ -1674,7 +1687,7 @@ srcml = xml_declaration + """
 """
 
 fsrcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:type="http://www.sdml.info/srcML/modifier" language="C++" dir="sub" filename="a.cpp"/>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:type="http://www.sdml.info/srcML/modifier" language="C++" filename="sub/a.cpp"/>
 """
 
 check([src2srcml, option.LITERAL_FLAG, option.MODIFIER_FLAG], sfile, srcml)
@@ -1696,7 +1709,7 @@ srcml = xml_declaration + """
 """
 
 fsrcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" language="C++" dir="sub" filename="a.cpp"/>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" language="C++" filename="sub/a.cpp"/>
 """
 
 check([src2srcml, option.OPERATOR_FLAG, option.MODIFIER_FLAG], sfile, srcml)
@@ -1718,7 +1731,7 @@ srcml = xml_declaration + """
 """
 
 fsrcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" language="C++" dir="sub" filename="a.cpp"/>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" language="C++" filename="sub/a.cpp"/>
 """
 
 check([src2srcml, option.LITERAL_FLAG, option.OPERATOR_FLAG, option.MODIFIER_FLAG], sfile, srcml)
@@ -2057,7 +2070,7 @@ sxmlfile = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 """
 
 fsxmlfile = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
 <expr><name>a</name></expr>
 </unit>
 """
@@ -2157,7 +2170,7 @@ sxmlfile = xml_declaration + """
 """
 
 fsxmlfile = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:pos="http://www.sdml.info/srcML/position" language="C++" dir="sub" filename="a.cpp" pos:tabs="8"/>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:pos="http://www.sdml.info/srcML/position" language="C++" filename="sub/a.cpp" pos:tabs="8"/>
 """
 
 f = open('sub/a.cpp', 'w')
@@ -2178,7 +2191,7 @@ sxmlfile = xml_declaration + """
 """
 
 fsxmlfile = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:pos="http://www.sdml.info/srcML/position" language="C++" dir="sub" filename="a.cpp" pos:tabs="4"/>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:pos="http://www.sdml.info/srcML/position" language="C++" filename="sub/a.cpp" pos:tabs="4"/>
 """
 
 f = open('sub/a.cpp', 'w')
@@ -2202,7 +2215,7 @@ sxmlfile = xml_declaration + """
 """
 
 fsxmlfile = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:pos="http://www.sdml.info/srcML/position" language="C++" dir="sub" filename="a.cpp" pos:tabs="2"/>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:pos="http://www.sdml.info/srcML/position" language="C++" filename="sub/a.cpp" pos:tabs="2"/>
 """
 
 f = open('sub/a.cpp', 'w')
@@ -2232,7 +2245,7 @@ validate(getreturn([src2srcml, option.TABS_FLAG, 'a', option.POSITION_FLAG], "")
 # register language
 
 fsxmlfile = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="sub" filename="a.cpp"/>
+<unit xmlns="http://www.sdml.info/srcML/src" language="Java" filename="sub/a.cpp"/>
 """
 
 f = open('sub/a.cpp', 'w')
@@ -2248,7 +2261,7 @@ validate(getreturn([src2srcml, option.REGISTER_EXT_FLAG], ""), status.STATUS_ERR
 validate(getreturn([src2srcml, option.REGISTER_EXT_FLAG, "cpp=Jawa"], ""), status.STATUS_ERROR)
 
 fsxmlfile = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="sub" filename="a.xml"/>
+<unit xmlns="http://www.sdml.info/srcML/src" language="Java" filename="sub/a.xml"/>
 """
 
 os.system("touch sub/a.xml")
