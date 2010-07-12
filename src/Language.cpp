@@ -32,23 +32,23 @@ pair Language::lang2int[] = {
 };
 
 pair Language::ext2int[] = {
-    { "*.c", LANGUAGE_C },
-    { "*.h", LANGUAGE_C },
+    { "c", LANGUAGE_C },
+    { "h", LANGUAGE_C },
 
-    { "*.C", LANGUAGE_CXX },
-    { "*.cpp", LANGUAGE_CXX },
-    { "*.cc", LANGUAGE_CXX },
-    { "*.cxx", LANGUAGE_CXX },
-    { "*.c++", LANGUAGE_CXX },
-    { "*.H", LANGUAGE_CXX },
-    { "*.hpp", LANGUAGE_CXX },
-    { "*.hh", LANGUAGE_CXX },
-    { "*.hxx", LANGUAGE_CXX },
-    { "*.h++", LANGUAGE_CXX },
+    { "C", LANGUAGE_CXX },
+    { "cpp", LANGUAGE_CXX },
+    { "cc", LANGUAGE_CXX },
+    { "cxx", LANGUAGE_CXX },
+    { "c++", LANGUAGE_CXX },
+    { "H", LANGUAGE_CXX },
+    { "hpp", LANGUAGE_CXX },
+    { "hh", LANGUAGE_CXX },
+    { "hxx", LANGUAGE_CXX },
+    { "h++", LANGUAGE_CXX },
 
-    { "*.java", LANGUAGE_JAVA },
+    { "java", LANGUAGE_JAVA },
 
-    { "*.aj", LANGUAGE_ASPECTJ },
+    { "aj", LANGUAGE_ASPECTJ },
     /*
     { LanguageName::LANGUAGE_CXX_0X, LANGUAGE_CXX_0X },
     */
@@ -59,17 +59,22 @@ static int usercount = 0;
 
 pair Language::userext2int[32] = { { 0, 0 } };
 
+bool Language::registerUserExt(const char* ext, int language) {
+
+  userext2int[usercount].s = ext;
+  userext2int[usercount].n = language;
+  ++usercount;
+
+  return true;
+}
+
 bool Language::registerUserExt(const char* ext, const char* language) {
 
   int nlanguage = Language::getLanguage(language);
   if (!nlanguage)
     return false;
 
-  userext2int[usercount].s = ext;
-  userext2int[usercount].n = nlanguage;
-  ++usercount;
-
-  return true;
+  return registerUserExt(ext, nlanguage);
 }
 
 // gets the current language based on the extenstion                                                                                                
@@ -77,7 +82,7 @@ int Language::getLanguageFromFilename(const char* const path) {
 
   // custom extensions                                                                                                                              
   char pattern[50];
-  for (const pair * pos = userext2int; pos->s != 0; ++pos) {
+  for (const pair * pos = userext2int + usercount - 1; pos->s != 0; --pos) {
 
     strcpy(pattern, "*.");
     strcat(pattern, pos->s);
@@ -89,7 +94,7 @@ int Language::getLanguageFromFilename(const char* const path) {
     if (fnmatch(pattern, path, 0) == 0)
       return pos->n;
   }
-
+  /*
   // predefined extensions                                                                                                                          
   if (fnmatch("*.gz", path, 0) != 0) {
 
@@ -107,6 +112,7 @@ int Language::getLanguageFromFilename(const char* const path) {
 	return pos->n;
     }
   }
+  */
 
   return 0;
 }

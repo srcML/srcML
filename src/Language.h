@@ -85,6 +85,7 @@ class Language {
     return "";
   }
 
+  static bool registerUserExt(const char* ext, int language);
   static bool registerUserExt(const char* ext, const char* language);
 
   // gets the current language based on the extenstion

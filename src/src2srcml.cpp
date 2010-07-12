@@ -279,6 +279,9 @@ struct process_options
 // setup options and collect info from arguments
 int process_args(int argc, char* argv[], process_options & poptions);
 
+// register standard file extensions
+void register_standard_file_extensions();
+
 int main(int argc, char* argv[]) {
 
   int exit_status = EXIT_SUCCESS;
@@ -300,6 +303,8 @@ int main(int argc, char* argv[]) {
   // signal to toggle verbose flag
   pstd::signal(SIGUSR1, verbose_handler);
 #endif
+
+  register_standard_file_extensions();
 
   process_options poptions =
     {
@@ -984,4 +989,27 @@ int option_error_status(int optopt) {
   };
 
   return 0;
+}
+
+void register_standard_file_extensions()
+{
+  Language::registerUserExt( "c", LANGUAGE_C );
+  Language::registerUserExt( "h", LANGUAGE_C );
+  Language::registerUserExt( "C", LANGUAGE_CXX );
+  Language::registerUserExt( "cpp", LANGUAGE_CXX );
+  Language::registerUserExt( "cc", LANGUAGE_CXX );
+  Language::registerUserExt( "cxx", LANGUAGE_CXX );
+  Language::registerUserExt( "c++", LANGUAGE_CXX );
+  Language::registerUserExt( "H", LANGUAGE_CXX );
+  Language::registerUserExt( "hpp", LANGUAGE_CXX );
+  Language::registerUserExt( "hh", LANGUAGE_CXX );
+  Language::registerUserExt( "hxx", LANGUAGE_CXX );
+  Language::registerUserExt( "h++", LANGUAGE_CXX );
+  Language::registerUserExt( "java", LANGUAGE_JAVA );
+  Language::registerUserExt( "aj", LANGUAGE_ASPECTJ );
+
+/*
+Language::registerUserExt( LanguageName::LANGUAGE_CXX_0X, LANGUAGE_CXX_0X },
+*/
+
 }
