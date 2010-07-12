@@ -685,7 +685,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
       if(!Language::registerUserExt(optarg, end))
       {
-	fprintf(stderr, "%s: xml language \"%s\" is not supported.\n", argv[0], end);
+	fprintf(stderr, "%s: language \"%s\" is not supported.\n", argv[0], end);
 	fprintf(stderr, "Try '%s %s' for more information.\n", argv[0], HELP_FLAG);
 	exit(STATUS_ERROR);
       }
