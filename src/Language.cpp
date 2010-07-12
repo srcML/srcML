@@ -31,33 +31,9 @@ pair Language::lang2int[] = {
     { 0, 0 }
 };
 
-pair Language::ext2int[] = {
-    { "c", LANGUAGE_C },
-    { "h", LANGUAGE_C },
-
-    { "C", LANGUAGE_CXX },
-    { "cpp", LANGUAGE_CXX },
-    { "cc", LANGUAGE_CXX },
-    { "cxx", LANGUAGE_CXX },
-    { "c++", LANGUAGE_CXX },
-    { "H", LANGUAGE_CXX },
-    { "hpp", LANGUAGE_CXX },
-    { "hh", LANGUAGE_CXX },
-    { "hxx", LANGUAGE_CXX },
-    { "h++", LANGUAGE_CXX },
-
-    { "java", LANGUAGE_JAVA },
-
-    { "aj", LANGUAGE_ASPECTJ },
-    /*
-    { LanguageName::LANGUAGE_CXX_0X, LANGUAGE_CXX_0X },
-    */
-    { 0, 0 }
-};
-
 static int usercount = 0;
 
-pair Language::userext2int[32] = { { 0, 0 } };
+pair Language::userext2int[47] = { { 0, 0 } };
 
 bool Language::registerUserExt(const char* ext, int language) {
 
@@ -94,25 +70,6 @@ int Language::getLanguageFromFilename(const char* const path) {
     if (fnmatch(pattern, path, 0) == 0)
       return pos->n;
   }
-  /*
-  // predefined extensions                                                                                                                          
-  if (fnmatch("*.gz", path, 0) != 0) {
-
-    for (const pair * pos = ext2int; pos->s != 0; ++pos)
-      if (fnmatch(pos->s, path, 0) == 0)
-	return pos->n;
-
-  } else {
-
-    for (const pair * pos = ext2int; pos->s != 0; ++pos) {
-      strcpy(pattern, pos->s);
-      strcat(pattern, ".gz");
-
-      if (fnmatch(pattern, path, 0) == 0)
-	return pos->n;
-    }
-  }
-  */
 
   return 0;
 }
