@@ -63,6 +63,12 @@ void* curlOpen(const char * URI) {
 
   curl_easy_setopt(curl, CURLOPT_URL, URI);
 
+  /* adjust user and password */
+  curl_easy_setopt(curl, CURLOPT_USERPWD, "fred:a63"); 
+
+  /* enable verbose for easier tracing */
+  curl_easy_setopt(curl, CURLOPT_VERBOSE, 1); 
+
   /* send all data to this function  */ 
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
  
@@ -79,7 +85,7 @@ void* curlOpen(const char * URI) {
    * default bundle, then the CURLOPT_CAPATH option might come handy for
    * you.
    */ 
-  curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+  //  curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
  
   /*
    * If the site you're connecting to uses a different host name that what
@@ -87,11 +93,18 @@ void* curlOpen(const char * URI) {
    * subjectAltName) fields, libcurl will refuse to connect. You can skip
    * this check, but this will make the connection less secure.
    */ 
-  curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+  //  curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 
   curl_easy_perform(curl);
 
-  return (void *) "foo";
+  long code;
+  curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &code);
+  fprintf(stderr, "CODE: %d\n", code);
+
+  //  if (code != 200)
+  //    return 0;
+
+  return curl;
 }
 
 // close the open file

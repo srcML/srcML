@@ -222,7 +222,6 @@ typedef struct process_options
   const char* src_encoding;
   int unit;
   const char* context;
-  //  std::list<const char*> ns;
   int nscount;
   const char* ns[MAXNS + 1];
   int paramcount;
@@ -235,12 +234,6 @@ typedef struct process_options
 
 // setup options and collect info from arguments
 int process_args(int argc, char* argv[], process_options & poptions);
-
-// option values
-//const char* src_encoding = DEFAULT_TEXT_ENCODING;
-//int unit = 0;
-//const char* context = "src:unit";
-//std::list<const char*> ns;
 
 int main(int argc, char* argv[]) {
 
