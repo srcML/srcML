@@ -175,22 +175,6 @@ namespace SAX2ExtractUnitsSrc {
       //      pstate->whole_path[dir_size] = '\0';
       size = dir_size;
 
-      // construct the directory subpath by subpath
-      for (char* c = pstate->whole_path; *c; ++c)
-
-	// replace the path delimiter with a null, mkdir, then put back
-	if (*c == '/') {
-	  *c = '\0';
-	  mkdir(pstate->whole_path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-	  *c = '/';
-	}
-
-      mkdir(pstate->whole_path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-
-      // delimiter for following filename
-      //      pstate->whole_path[dir_size] = '/';
-      //      ++size;
-      //      pstate->whole_path[dir_size] = '\0';
       strcat(pstate->whole_path, "/");
     }
 
@@ -198,16 +182,27 @@ namespace SAX2ExtractUnitsSrc {
     strncat(pstate->whole_path, (const char*) attributes[filename_index + 3], filename_size);
     size += filename_size;
 
+    // construct the directory subpath by subpath
+    for (char* c = pstate->whole_path; *c; ++c) {
+
+      // replace the path delimiter with a null, mkdir, then put back
+      if (*c == '/') {
+	*c = '\0';
+	mkdir(pstate->whole_path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+	*c = '/';
+      }
+    }
+
     // output file status message if in verbose mode
     if (isoption(*(pstate->poptions), OPTION_VERBOSE))
       fprintf(stderr, "%ld\t%s\n", pstate->count, pstate->whole_path);
 
+    // now create the file itself
     pstate->output = xmlOutputBufferCreateFilename(pstate->whole_path, pstate->handler, 0);
     if (pstate->output == NULL) {
       fprintf(stderr, "Output buffer error\n");
       xmlStopParser(pstate->ctxt);
     }
-
 }
 
   // end unit element and current file/buffer (started by startElementNs
