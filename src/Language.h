@@ -85,9 +85,27 @@ class Language {
     return "";
   }
 
+  static bool registerUserExt(const char* ext, const char* language);
+
   // gets the current language based on the extenstion
   static int getLanguageFromFilename(const char* const path) {
 
+    // custom extensions
+    char pattern[50];
+    for (const pair * pos = userext2int; pos->s != 0; ++pos) {
+
+	strcpy(pattern, "*.");
+	strcat(pattern, pos->s);
+
+	if (fnmatch(pattern, path, 0) == 0)
+	  return pos->n;
+
+	strcat(pattern, ".gz");
+	if (fnmatch(pattern, path, 0) == 0)
+	  return pos->n;
+    }
+
+    // predefined extensions
     if (fnmatch("*.gz", path, 0) != 0) {
 
       for (const pair * pos = ext2int; pos->s != 0; ++pos)
@@ -96,7 +114,6 @@ class Language {
 
     } else {
 
-      char pattern[50];
       for (const pair * pos = ext2int; pos->s != 0; ++pos) {
 	strcpy(pattern, pos->s);
 	strcat(pattern, ".gz");
@@ -118,6 +135,8 @@ class Language {
   static pair lang2int[];
 
   static pair ext2int[];
+
+  static pair userext2int[];
 };
 
 #endif

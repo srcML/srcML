@@ -79,6 +79,8 @@ const char* const XMLNS_FLAG = "xmlns";
 const char* const XMLNS_DEFAULT_FLAG_FULL = "xmlns=URI";
 const char* const XMLNS_FLAG_FULL = "xmlns:PREFIX=URI";
 
+const char* const REGISTER_EXT_FLAG = "register";
+
 const int DEFAULT_LANGUAGE = srcMLTranslator::LANGUAGE_CXX;
 
 const char* const EXAMPLE_TEXT_FILENAME="foo.cpp";
@@ -597,6 +599,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { FILENAME_FLAG, required_argument, NULL, FILENAME_FLAG_SHORT },
     { SRCVERSION_FLAG, required_argument, NULL, SRCVERSION_FLAG_SHORT },
     { FILELIST_FLAG, required_argument, NULL, 'F' },
+    { REGISTER_EXT_FLAG, required_argument, NULL, 'R' },
     { XMLNS_FLAG, required_argument, NULL, 'X' },
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
@@ -643,6 +646,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       exit(option_error_status(optopt));
     }
 
+    char* end = 0;
     switch(c) {
 
     case HELP_FLAG_SHORT: 
@@ -667,6 +671,13 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       options |= OPTION_NESTED;
 
       poptions.fname = optarg;
+      break;
+
+    case 'R': 
+
+      end = asg_split(optarg);
+
+      Language::registerUserExt(optarg, end);
       break;
 
     case NESTED_FLAG_SHORT: 

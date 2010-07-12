@@ -54,3 +54,21 @@ pair Language::ext2int[] = {
     */
     { 0, 0 }
 };
+
+static int usercount = 0;
+
+pair Language::userext2int[32] = { { 0, 0 } };
+
+bool Language::registerUserExt(const char* ext, const char* language) {
+
+  int nlanguage = Language::getLanguage(language);
+  if (!nlanguage)
+    return false;
+
+  userext2int[usercount].s = ext;
+  userext2int[usercount].n = nlanguage;
+  ++usercount;
+
+  return true;
+}
+
