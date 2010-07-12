@@ -99,15 +99,23 @@ void SAX2ExtractUnitXML::startElementNsUnit(void* ctx, const xmlChar* localname,
 
     // output the merged namespaces
     if (!isoption(pstate->options, OPTION_NAMESPACEDECL))
-      for (PROPERTIES_TYPE::const_iterator iter = pstate->nsv.begin(); iter != pstate->nsv.end(); ++iter)
-	xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST iter->second.c_str(), BAD_CAST iter->first.c_str());
+      for (int i = 0; i < 32; ++i) {
+	if (pstate->nsv[i].first == "")
+	  break;
+
+	xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST pstate->nsv[i].second.c_str(), BAD_CAST pstate->nsv[i].first.c_str());
+      }
 
     // merge this units attributes
     collect_attributes(nb_attributes, attributes, pstate->attrv);
 
     // output the merged attributes
-    for (PROPERTIES_TYPE::const_iterator iter = pstate->attrv.begin(); iter != pstate->attrv.end(); iter++)
-      xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST iter->first.c_str(), BAD_CAST iter->second.c_str());
+    for (int i = 0; i < 32; ++i) {
+      if (pstate->attrv[i].first == "")
+	break;
+
+      xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST pstate->attrv[i].first.c_str(), BAD_CAST pstate->attrv[i].second.c_str());
+    }
 
     // now really start
     pstate->ctxt->sax->endDocument    = &SAX2TextWriter::endDocument;

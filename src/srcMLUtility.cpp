@@ -76,19 +76,18 @@ int srcMLUtility::curunits() const {
 // attribute
 const char* srcMLUtility::attribute(const char* attribute_name) {
 
-  // extract attribute from unit tag
-  PROPERTIES_TYPE::const_iterator pos = find(attrv, attribute_name);
+  const char* pos = find(attrv, attribute_name);
 
-  return pos != attrv.end() ? pos->second.c_str() : 0;
+  return pos ? pos : 0;
 }
 
 // prefix of given namespace
 // return blank for default namespace
 const char* srcMLUtility::namespace_ext(const char* uri) {
 
-  PROPERTIES_TYPE::const_iterator pos = find(nsv, uri);
+  const char* pos = find(nsv, uri);
 
-  return pos != nsv.end() ? pos->second.substr(pos->second.size() > 5 ? 6 : 5).c_str() : 0;
+  return pos ? pos : 0;
 }
 
 // move to a particular nested unit
@@ -269,12 +268,12 @@ void srcMLUtility::expand(const char* root_filename) {
 
   xmlFreeParserCtxt(ctxt);
 }
-
+/*
 // namespaces and prefixes
-const PROPERTIES_TYPE& srcMLUtility::getNS() const {
+const PROPERTIES_TYPE* srcMLUtility::getNS() const {
   return nsv;
 }
-
+*/
 // xpath evaluation of the nested units
 void srcMLUtility::xpath(const char* ofilename, const char* context_element, const char* xpaths[]) {
 

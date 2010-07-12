@@ -68,8 +68,17 @@ void SAX2Properties::startElementNsRoot(void* ctx, const xmlChar* localname, con
 
     // encoding is entered as a property
     const char* encoding = (const char*) (pstate->ctxt->encoding ? pstate->ctxt->encoding : pstate->ctxt->input->encoding);
-    if (encoding)
-      pstate->attrv.insert(pstate->attrv.end(), PROPERTIES_TYPE::value_type(".encoding", encoding));
+
+    if (encoding) {
+      for (int i = 0; i < 32; ++i) {
+
+	if (pstate->attrv[i].first != "")
+	  continue;
+
+	pstate->attrv[i].first = ".encoding";
+	pstate->attrv[i].second = encoding;
+      }
+    }
 
     // if a unit is specified, then move to that unit
     if (pstate->unit) {

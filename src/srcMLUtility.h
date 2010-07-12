@@ -60,7 +60,7 @@ class srcMLUtility {
   void move_to_unit(int unitnumber, srcMLUtility&su, int options, int optioncount, int optionorder[]);
 
   // namespaces and prefixes
-  const PROPERTIES_TYPE& getNS() const;
+  const PROPERTIES_TYPE* getNS() const;
 
   // count of nested units
   int unit_count();
@@ -100,8 +100,10 @@ class srcMLUtility {
   const char* infile;
   const char* output_encoding;
   int& options;
-  PROPERTIES_TYPE nsv;
+ public:
+  PROPERTIES_TYPE nsv;;
   PROPERTIES_TYPE attrv;
+ private:
   int units;
 }; 
 

@@ -737,9 +737,16 @@ void output_info(srcMLUtility& su, int options, int optioncount, int optionorder
       // output all the namespaces
       if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {
 
-	const PROPERTIES_TYPE& ns = su.getNS();
-	for (PROPERTIES_TYPE::const_iterator iter = ns.begin(); iter != ns.end(); ++iter)
-	  printf("%s=\"%s\"\n", iter->second.c_str(), iter->first.c_str());
+	for (int i = 0; i < 32; ++i) {
+	  if (su.nsv[i].first == "")
+	    break;
+
+	  printf("%s=\"%s\"\n", su.nsv[i].second.c_str(), su.nsv[i].first.c_str());
+	  
+	}
+	//	for (PROPERTIES_TYPE* iter = su.nsv; iter->first; ++iter)
+	//	  ;
+	//	  printf("%s=\"%s\"\n", iter->second.c_str(), iter->first.c_str());
       }
 
       // output attributes in order specified by the options on the command line

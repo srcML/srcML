@@ -28,6 +28,7 @@ const char* qname(const char* prefix, const char* localname) {
 	return localname;
 }
 
+/*
 PROPERTIES_TYPE::const_iterator find(const PROPERTIES_TYPE& pv, const char* name) {
 
   for (PROPERTIES_TYPE::const_iterator pos = pv.begin(); pos != pv.end(); ++pos)
@@ -36,27 +37,40 @@ PROPERTIES_TYPE::const_iterator find(const PROPERTIES_TYPE& pv, const char* name
 
   return pv.end();
 }
+*/
 
-PROPERTIES_TYPE::iterator find(PROPERTIES_TYPE& pv, const char* name) {
+const char* find(PROPERTIES_TYPE& pv, const char* name) {
 
-  for (PROPERTIES_TYPE::iterator pos = pv.begin(); pos != pv.end(); ++pos)
-    if (pos->first == name)
-      return pos;
+  for (int i = 0; i < 32; ++i) {
+    if (pv[i].first == "")
+      return 0;
 
-  return pv.end();
+    if (pv[i].first == name)
+      return pv[i].second.c_str();
+  }
+
+  return 0;
 }
 
 // collect attributes
 void collect_attributes(int nb_attributes, const xmlChar** attributes, PROPERTIES_TYPE& attrv) {
 
-    for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
+  for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
 
       const char* name = qname((const char*) attributes[index + 1], (const char*) attributes[index]);
-      PROPERTIES_TYPE::iterator pos = find(attrv, name);
-      if (pos == attrv.end())
-	pos = attrv.insert(pos, PROPERTIES_TYPE::value_type(name, ""));
 
-      pos->second.assign((const char*) attributes[index + 3], (const char*)  attributes[index + 4]);
+      // look for it
+      int i;
+      for (i = 0; i < 32; ++i)
+	if (attrv[i].first == "" || attrv[i].first == name)
+	  break;
+
+      // if new, then stick in the name
+      if (attrv[i].first == "")
+	attrv[i].first = name;
+
+      // stick in the value
+      attrv[i].second.assign((const char*) attributes[index + 3], (const char*)  attributes[index + 4]);
     }
 }
 
@@ -66,10 +80,17 @@ void collect_namespaces(int nb_namespaces, const xmlChar** namespaces, PROPERTIE
   for (int i = 0, index = 0; i < nb_namespaces; ++i, index += 2) {
 
     const char* uri = (const char*) namespaces[index + 1];
-    PROPERTIES_TYPE::iterator pos = find(nsv, uri);
-    if (pos == nsv.end())
-      pos = nsv.insert(pos, PROPERTIES_TYPE::value_type(uri, ""));
 
-    pos->second.assign(xmlnsprefix((const char*) namespaces[index]));
+    // look for it
+    int i;
+    for (i = 0; i < 32; ++i)
+      if (nsv[i].first == "" || nsv[i].first == uri)
+	  break;
+
+    // if new, then stick in the name
+    if (nsv[i].first == "")
+      nsv[i].first = uri;
+
+    nsv[i].second = xmlnsprefix((const char*) namespaces[index]);
   }
 }
