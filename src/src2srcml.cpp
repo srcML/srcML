@@ -252,7 +252,7 @@ void output_version(const char* name) {
   printf("%s Version %s\n%s\n", name, VERSION,COPYRIGHT);
 }
 
-int options = OPTION_CPP_MARKUP_ELSE;
+OPTION_TYPE options = OPTION_CPP_MARKUP_ELSE;
 
 #ifdef __GNUG__
 extern "C" void verbose_handler(int);
