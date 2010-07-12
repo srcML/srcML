@@ -27,6 +27,7 @@
 #include <clocale>
 #include <cstdio>
 #include <cctype>
+#include <sys/stat.h>
 
 #ifdef __GNUC__
 #include <langinfo.h>
@@ -103,3 +104,17 @@ char** makeargv(char* s) {
   return argv;
 }
 
+// create the directories from the full path
+void makedirectories(char * path)
+{
+  // construct the directory subpath by subpath
+  for (char* c = path; *c; ++c) {
+
+    // replace the path delimiter with a null, mkdir, then put back
+    if (*c == '/') {
+      *c = '\0';
+      mkdir(path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+      *c = '/';
+    }
+  }
+}

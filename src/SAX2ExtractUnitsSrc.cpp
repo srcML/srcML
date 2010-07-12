@@ -24,6 +24,7 @@
 
 #include "SAX2ExtractUnitsSrc.h"
 #include "srcmlns.h"
+#include "srcmlapps.h"
 
 #include <iostream>
 
@@ -182,6 +183,9 @@ namespace SAX2ExtractUnitsSrc {
     strncat(pstate->whole_path, (const char*) attributes[filename_index + 3], filename_size);
     size += filename_size;
 
+    makedirectories(pstate->whole_path);
+
+    /*
     // construct the directory subpath by subpath
     for (char* c = pstate->whole_path; *c; ++c) {
 
@@ -192,6 +196,7 @@ namespace SAX2ExtractUnitsSrc {
 	*c = '/';
       }
     }
+    */
 
     // output file status message if in verbose mode
     if (isoption(*(pstate->poptions), OPTION_VERBOSE))

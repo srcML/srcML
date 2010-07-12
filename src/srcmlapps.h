@@ -184,4 +184,7 @@ void checkargisoption(const char* name, const char* opt, const char* optarg, int
 
 char** makeargv(char* s);
 
+// make the directories from the full path
+void makedirectories(char* path);
+
 #endif
