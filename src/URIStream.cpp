@@ -2,8 +2,8 @@
 #include "URIStream.h"
 #include <cstring>
 
-URIStream::URIStream(const char* uriname)
-  : startpos(0), endpos(-1), first(true), eof(false), done(false)
+URIStream::URIStream(const char* uriname, char eolchar)
+  : eol(eolchar), startpos(0), endpos(-1), first(true), eof(false), done(false)
 {
   if (!(input = xmlParserInputBufferCreateFilename(uriname, XML_CHAR_ENCODING_NONE)))
     throw URIStreamFileError();
@@ -24,7 +24,7 @@ char* URIStream::getline() {
   endpos = startpos;
 
   // find a line in the buffer
-  while (input->buffer->content[endpos] != '\n') {
+  while (input->buffer->content[endpos] != eol) {
 
     ++endpos;
 
