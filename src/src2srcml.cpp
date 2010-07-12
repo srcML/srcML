@@ -678,10 +678,18 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       break;
 
     case OUTPUT_FLAG_SHORT: 
+
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+
       poptions.srcml_filename = optarg;
       break;
 
     case 'F': 
+
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+
       options |= OPTION_FILELIST;
 
       // filelist mode is default nested mode
@@ -691,6 +699,9 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       break;
 
     case 'R': 
+
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
 
       end = asg_split(optarg);
 
@@ -711,6 +722,10 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       break;
 
     case ENCODING_FLAG_SHORT: 
+
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+
       options |= OPTION_XML_ENCODING;
 
       poptions.xml_encoding = optarg;
@@ -724,6 +739,10 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       break;
 
     case TEXTENCODING_FLAG_SHORT: 
+
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+
       options |= OPTION_TEXT_ENCODING;
 
       poptions.src_encoding = optarg;
@@ -737,6 +756,10 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       break;
 
     case 'X': 
+
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+
       ns_prefix = 0;
       ns_uri = 0;
 
@@ -828,6 +851,10 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       break;
 
     case LANGUAGE_FLAG_SHORT: 
+
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+
       options |= OPTION_LANGUAGE;
 
       // validate language selected
@@ -861,6 +888,10 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       break;
 
     case SRCVERSION_FLAG_SHORT: 
+
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+
       options |= OPTION_VERSION;
 
       poptions.given_version = optarg;
@@ -871,8 +902,13 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       break;
 
     case 'T' :
+      /*
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+      */
+
       options |= OPTION_POSITION;
-      
+
       char * end;
       poptions.tabsize = pstd::strtol(optarg, &end, 10);
       
