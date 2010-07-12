@@ -25,15 +25,15 @@
 #ifndef OUTPUT_OPTION_H
 #define OUTPUT_OPTION_H
 
-inline bool isoption(int options, int flag) {
-  return (flag & options) > 0;
-}
-
 #ifdef __GNUC__
   typedef unsigned long long OPTION_TYPE;
 #else
   typedef unsigned __int64 OPTION_TYPE;
 #endif
+
+inline bool isoption(OPTION_TYPE options, OPTION_TYPE flag) {
+  return (flag & options) > 0;
+}
 
 // issue debugging elements and declare debugging element namespace
 // @src2srcml
