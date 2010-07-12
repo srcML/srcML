@@ -621,6 +621,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
   const char* ns_uri;
 
   while (1) {
+    int lastoptind = optind;
     curoption = 0;
     int option_index = 0;
     bool special = optind < argc && !strncmp(argv[optind], "--xmlns:", 8);
@@ -825,6 +826,10 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       break;
 
     case FILENAME_FLAG_SHORT: 
+
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+
       options |= OPTION_FILENAME;
 
       poptions.given_filename = optarg;
