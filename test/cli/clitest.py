@@ -120,8 +120,8 @@ srcml2src = os.environ.get("SRCML2SRC")
 if srcml2src == "" or srcml2src == None:
 	srcml2src = "../../bin/srcml2src"
 
-src2srcml_src_encoding = src2srcmlversion().find("Libxml2") != -1;
-srcml2src_src_encoding = srcml2srcversion().find("Libxml2") != -1;
+src2srcml_src_encoding = True #src2srcmlversion().find("Libxml2") != -1;
+srcml2src_src_encoding = True #srcml2srcversion().find("Libxml2") != -1;
 
 if src2srcml_src_encoding:
 	default_src2srcml_encoding = "UTF-8"
