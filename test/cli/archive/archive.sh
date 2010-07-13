@@ -6,6 +6,8 @@ shift
 
 FILES=$@
 
+zip -v $NAME.zip $FILES
+
 gzip -cv $FILES > $NAME.gz
 
 bzip2 -cv $FILES > $NAME.bz2
@@ -14,9 +16,13 @@ tar -cvf $NAME.tar $FILES
 
 echo $FILES | tr " " "\n" | cpio -ov > $NAME.cpio
 
+gzip -cv $FILES.zip > $NAME.zip.gz
+
 gzip -cv $FILES.bz2 > $NAME.bz2.gz
 
 gzip -cv $FILES.cpio > $NAME.cpio.gz
+
+bzip2 -cv $FILES.zip > $NAME.zip.bz2
 
 bzip2 -cv $FILES.gz > $NAME.gz.bz2
 
@@ -27,6 +33,8 @@ bzip2 -cv $FILES.cpio > $NAME.cpio.bz2
 tar -cvzf $NAME.tar.gz $FILES
 
 tar -cvzf $NAME.tgz $FILES
+
+echo $FILES | sed "s/ /.zip\n/" | cpio -ov > $NAME.zip.cpio
 
 echo $FILES | sed "s/ /.gz\n/" | cpio -ov > $NAME.gz.cpio
 
