@@ -476,10 +476,6 @@ int main(int argc, char* argv[]) {
 	  filename = line;
 	src2srcml_file(translator, line, options, dir, filename, poptions.given_version, poptions.language, 
 		       poptions.tabsize, count);
-
-	// compound documents are interrupted gracefully
-	if (isoption(options, OPTION_TERMINATE))
-	  return STATUS_TERMINATED;
       }
 
     } catch (URIStreamFileError) {
@@ -553,10 +549,6 @@ int main(int argc, char* argv[]) {
 		     poptions.language ? poptions.language : DEFAULT_LANGUAGE,
 		     poptions.tabsize,
 		     count);
-
-      // compound documents are interrupted gracefully
-      if (isoption(options, OPTION_TERMINATE))
-	return STATUS_TERMINATED;
     }
   }
   } catch (srcEncodingException) {
@@ -1113,6 +1105,12 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE o
     // in verbose mode output the currently processed filename
     if (isoption(options, OPTION_VERBOSE))
       fprintf(stderr, "\n");
+
+
+   // compound documents are interrupted gracefully
+   if (isoption(options, OPTION_TERMINATE))
+     return;
+     //     return STATUS_TERMINATED;
 
 #ifdef LIBARCHIVE
     if (!special)
