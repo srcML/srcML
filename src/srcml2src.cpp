@@ -333,7 +333,6 @@ int main(int argc, char* argv[]) {
 
     // list
     if (isoption(options, OPTION_LIST)) {
-      fprintf(stderr, "HERE\n");
 
       su.list();
 
