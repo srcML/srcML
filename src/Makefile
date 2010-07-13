@@ -315,11 +315,6 @@ cleanantlr :
 version.cpp : VERSION
 	$(ECHO) 'const char* version() { const char* Version = "$(shell cat VERSION)"; return Version; }'   > $@
 
-# changes use of 64 bit integer using transformation
-visual :
-	perl -pi -e "s|ULL;|i64;|g" Mode.cpp
-
-
 # update trunk version
 PHONY : trunkversion
 trunkversion :
