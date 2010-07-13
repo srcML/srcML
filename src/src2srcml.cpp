@@ -502,9 +502,13 @@ int main(int argc, char* argv[]) {
 
     // translate from standard input using any directory, filename and version given on the command line
     translator.setupInput(STDIN);
-    translator.translate(poptions.given_directory, poptions.given_filename, poptions.given_version, 
-			 poptions.language ? poptions.language : DEFAULT_LANGUAGE,
-			 poptions.tabsize);
+
+    src2srcml_file(translator, "", options,
+		   poptions.given_directory,
+		   poptions.given_filename,
+		   poptions.given_version,
+		   poptions.language ? poptions.language : DEFAULT_LANGUAGE,
+		   poptions.tabsize);
 
   // translate single input filename from command line
   }  else if (input_arg_count == 1) {
