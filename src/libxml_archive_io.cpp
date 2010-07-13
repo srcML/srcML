@@ -5,14 +5,14 @@
 #include <fnmatch.h>
 #include <archive.h>
 
-static struct archive* a;
+static struct archive* a = 0;
 
 // check if archive matches the protocol on the URI
 int archiveMatch(const char * URI) {
 
-  return (URI != NULL) &&
-    (fnmatch("*.tar", URI, 0) == 0) &&
-    (fnmatch("*.bz2", URI, 0) == 0);
+  return (URI != NULL) && (
+    (fnmatch("*.tar", URI, 0) == 0) ||
+    (fnmatch("*.bz2", URI, 0) == 0));
 }
 
 // setup archive for this URI
@@ -51,17 +51,12 @@ int archiveClose(void * context) {
 // read from the URI
 int archiveRead(void * context, char * buffer, int len) {
 
-  char s[5000];
-  size_t size = archive_read_data(a, s, len);
+  size_t size = archive_read_data(a, buffer, len);
   if (size < 0)
     return 0;
 
   if (size == 0)
     return 0;
-
-  return 0;
-
-  memcpy(buffer, s, size);
 
   return size;
 }
