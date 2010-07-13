@@ -468,10 +468,6 @@ int main(int argc, char* argv[]) {
 	if (isoption(options, OPTION_VERBOSE))
 	  fprintf(stderr, "%d\t%s", count, line);
 
-	// turnon cpp namespace for non Java-based languages
-	if (!(poptions.language == srcMLTranslator::LANGUAGE_JAVA || poptions.language == srcMLTranslator::LANGUAGE_ASPECTJ))
-	  options |= OPTION_CPP;
-
 	// translate the file listed in the input file using the directory and filename extracted from the path
 	translator.setupInput(line);
 
@@ -1155,6 +1151,10 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE o
 	if (special && isoption(options, OPTION_VERBOSE))
 	  fprintf(stderr, "%d\n", count);
 #endif
+
+	// turnon cpp namespace for non Java-based languages
+	if (!(language == srcMLTranslator::LANGUAGE_JAVA || language == srcMLTranslator::LANGUAGE_ASPECTJ))
+	  options |= OPTION_CPP;
 
     try {
       translator.translate(dir, filename, version, language, tabsize);
