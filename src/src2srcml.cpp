@@ -33,7 +33,14 @@
 #include "srcMLTranslator.h"
 #include "URIStream.h"
 #include <getopt.h>
-//#include "libxml_curl_io.h"
+
+#ifdef CURL
+#include "libxml_curl_io.h"
+#endif
+
+#ifdef LIBARCHIVE
+#include "libxml_archive_io.h"
+#endif
 
 int option_error_status(int optopt);
 
@@ -292,12 +299,20 @@ int main(int argc, char* argv[]) {
 
   xmlGenericErrorFunc handler = (xmlGenericErrorFunc) libxml_error;
   initGenericErrorDefaultFunc(&handler);
-  /*
+
+#ifdef CURL
   if (xmlRegisterInputCallbacks(curlMatch, curlOpen, curlRead, curlClose) < 0) {
     fprintf(stderr, "failed to register curl handler\n");
     exit(1);
   }
-  */
+#endif
+
+#ifdef LIBARCHIVE
+  if (xmlRegisterInputCallbacks(archiveMatch, archiveOpen, archiveRead, archiveClose) < 0) {
+    fprintf(stderr, "%s: failed to register archive handler\n", argv[0]);
+    exit(1);
+  }
+#endif
 
   /* signal handling */
 
