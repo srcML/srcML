@@ -44,7 +44,7 @@
 
 int option_error_status(int optopt);
 
-void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE options, const char* dir, const char* filename, const char* version, int language, int tabsize);
+void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count);
 
 using namespace LanguageName;
 
@@ -430,8 +430,6 @@ int main(int argc, char* argv[]) {
 #endif
 
     // translator from input to output using determined language
-    //    if (language == 0)
-    //	language = DEFAULT_LANGUAGE;
     srcMLTranslator translator(poptions.language == 0 ? DEFAULT_LANGUAGE : poptions.language, poptions.src_encoding, poptions.xml_encoding, poptions.srcml_filename, options, poptions.given_directory, poptions.given_filename, poptions.given_version, urisprefix, poptions.tabsize);
 
   // output source encoding
@@ -439,6 +437,9 @@ int main(int argc, char* argv[]) {
     fprintf(stderr, "Source encoding:  %s\n", poptions.src_encoding);
     fprintf(stderr, "XML encoding:  %s\n", poptions.xml_encoding);
   }
+
+  // filecount for verbose mode
+  int count = 0;
 
   // translate input filenames from list in file
   if (isoption(options, OPTION_FILELIST)) {
@@ -453,20 +454,12 @@ int main(int argc, char* argv[]) {
       // translate all the filenames listed in the named file
       // Use libxml2 routines so that we can handle http:, file:, and gzipped files automagically
       URIStream uriinput(poptions.fname);
-      int count = 0;
       char* line;
       while ((line = uriinput.getline())) {
 
 	// skip blank lines or comment lines
 	if (line[0] == '\0' || line[0] == FILELIST_COMMENT)
 	  continue;
-
-	// another file
-	++count;
-
-	// in verbose mode output the currently processed filename
-	if (isoption(options, OPTION_VERBOSE))
-	  fprintf(stderr, "%d\t%s", count, line);
 
 	// translate the file listed in the input file using the directory and filename extracted from the path
 	translator.setupInput(line);
@@ -482,10 +475,7 @@ int main(int argc, char* argv[]) {
 	else
 	  filename = line;
 	src2srcml_file(translator, line, options, dir, filename, poptions.given_version, poptions.language, 
-		       poptions.tabsize);
-
-	if (isoption(options, OPTION_VERBOSE))
-	  fprintf(stderr, "\n");
+		       poptions.tabsize, count);
 
 	// compound documents are interrupted gracefully
 	if (isoption(options, OPTION_TERMINATE))
@@ -508,7 +498,7 @@ int main(int argc, char* argv[]) {
 		   poptions.given_filename,
 		   poptions.given_version,
 		   poptions.language ? poptions.language : DEFAULT_LANGUAGE,
-		   poptions.tabsize);
+		   poptions.tabsize, count);
 
   // translate single input filename from command line
   }  else if (input_arg_count == 1) {
@@ -529,7 +519,7 @@ int main(int argc, char* argv[]) {
 		   isoption(options, OPTION_FILENAME)  ? poptions.given_filename  : filename_s,
 		   poptions.given_version,
 		   poptions.language ? poptions.language : DEFAULT_LANGUAGE,
-		   poptions.tabsize);
+		   poptions.tabsize, count);
 
   // translate multiple input filenames on command line
   } else {
@@ -547,14 +537,6 @@ int main(int argc, char* argv[]) {
 
       char* path = argv[i];
 
-      // another file
-      ++count;
-
-      // in verbose mode output the currently processed filename
-      if (isoption(options, OPTION_VERBOSE)) {
-	fprintf(stderr, "%d\t%s", count, path);
-      }
-
       translator.setupInput(path);
 
       char* path_s = 0;
@@ -569,11 +551,8 @@ int main(int argc, char* argv[]) {
 		     filename_s,
 		     0,
 		     poptions.language ? poptions.language : DEFAULT_LANGUAGE,
-		     poptions.tabsize);
-
-      if (isoption(options, OPTION_VERBOSE)) {
-	fprintf(stderr, "\n");
-      }
+		     poptions.tabsize,
+		     count);
 
       // compound documents are interrupted gracefully
       if (isoption(options, OPTION_TERMINATE))
@@ -1087,7 +1066,7 @@ Language::registerUserExt( LanguageName::LANGUAGE_CXX_0X, LANGUAGE_CXX_0X },
 
 }
 
-void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE options, const char* dir, const char* filename, const char* version, int language, int tabsize) {
+void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count) {
 
   const char* NAME = "src2srcml";
 
@@ -1105,15 +1084,18 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE o
     while (!special || archiveGood()) {
 
 	translator.setupInput(path);
-	++count;
-
-	if (special && isoption(options, OPTION_VERBOSE))
-	  fprintf(stderr, "%d\n", count);
 #endif
 
 	// turnon cpp namespace for non Java-based languages
 	if (!(language == srcMLTranslator::LANGUAGE_JAVA || language == srcMLTranslator::LANGUAGE_ASPECTJ))
 	  options |= OPTION_CPP;
+
+	// another file
+	++count;
+
+	// in verbose mode output the currently processed filename
+	if (isoption(options, OPTION_VERBOSE))
+	  fprintf(stderr, "%d\t%s", count, path);
 
     try {
       translator.translate(dir, filename, version, language, tabsize);
@@ -1127,6 +1109,10 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE o
 
       exit(STATUS_INPUTFILE_PROBLEM);
     }
+
+    // in verbose mode output the currently processed filename
+    if (isoption(options, OPTION_VERBOSE))
+      fprintf(stderr, "\n");
 
 #ifdef LIBARCHIVE
     if (!special)
