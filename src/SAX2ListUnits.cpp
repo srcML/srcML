@@ -85,11 +85,8 @@ namespace SAX2ListUnits {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2ListUnits::State* pstate = (SAX2ListUnits::State*) ctxt->_private;
 
-    // check that this is a nested file
-    if (localname[0] != 'u' || !(strcmp((const char*) localname, "unit") == 0 &&
-	  strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0)) {
+    if (ctxt->nameNr > 1)
       return;
-    }
 
     // check that this is a nested file
     if (pstate->count == 0 && !(strcmp((const char*) localname, "unit") == 0 &&
