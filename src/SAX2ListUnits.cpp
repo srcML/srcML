@@ -67,13 +67,14 @@ namespace SAX2ListUnits {
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
 		    const xmlChar** attributes) {
 
-    State* pstate = (State*) ctx;
+    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+    SAX2ListUnits::State* pstate = (SAX2ListUnits::State*) ctxt->_private;
 
     // start counting units after the root
     pstate->count = 0;
 
     // handle nested units
-    pstate->ctxt->sax->startElementNs = &startElementNs;
+    ctxt->sax->startElementNs = &startElementNs;
   }
 
   // start a new output buffer and corresponding file for a unit element
@@ -81,7 +82,14 @@ namespace SAX2ListUnits {
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
 		    const xmlChar** attributes) {
 
-    State* pstate = (State*) ctx;
+    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+    SAX2ListUnits::State* pstate = (SAX2ListUnits::State*) ctxt->_private;
+
+    // check that this is a nested file
+    if (localname[0] != 'u' || !(strcmp((const char*) localname, "unit") == 0 &&
+	  strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0)) {
+      return;
+    }
 
     // check that this is a nested file
     if (pstate->count == 0 && !(strcmp((const char*) localname, "unit") == 0 &&
@@ -113,32 +121,12 @@ namespace SAX2ListUnits {
       }
     int filename_size = filename_index != -1 ? (const char*) attributes[filename_index + 4] - (const char*) attributes[filename_index + 3] : 0;
 
-    // filename is required
-    if (filename_size <= 0) {
-      fprintf(stderr, "Missing filename attribute\n");
-      return;
-    }
-
-    // create a complete path from the two separate directories and filename attributes
-    //    realloc(pstate->whole_path, dir_size + filename_size + 1);
-    pstate->whole_path[0] = '\0';
-    int size = 0;
-    // if there is a directory, then we need to construct each part of the path
+    // whole purpose
     if (dir_size > 0) {
-
-      // put the directory into the whole path
-      strncat(pstate->whole_path, (char*) attributes[dir_index + 3], dir_size);
-      //      pstate->whole_path[dir_size] = '\0';
-      size = dir_size;
-
-      strcat(pstate->whole_path, "/");
+      fprintf(stdout, "%ld\t%.*s/%.*s\n", pstate->count, dir_size, (char*) attributes[dir_index + 3],
+	      filename_size, (char*) attributes[filename_index + 3]);
+    }  else {
+      fprintf(stdout, "%ld\t%.*s\n", pstate->count, filename_size, (char*) attributes[filename_index + 3]);
     }
-
-    // add on the filename
-    strncat(pstate->whole_path, (const char*) attributes[filename_index + 3], filename_size);
-    size += filename_size;
-
-    // output file status message if in verbose mode
-    fprintf(stderr, "%ld\t%s\n", pstate->count, pstate->whole_path);
 }
 };

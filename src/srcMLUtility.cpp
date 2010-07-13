@@ -292,8 +292,7 @@ void srcMLUtility::list() {
   xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
   if (ctxt == NULL) return;
   ctxt->sax = &sax;
-  ctxt->userData = &state;
-  state.ctxt = ctxt;
+  ctxt->_private = &state;
 
   xmlParseDocument(ctxt);
 
