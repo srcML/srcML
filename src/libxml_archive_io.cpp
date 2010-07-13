@@ -14,6 +14,7 @@ int archiveMatch(const char * URI) {
   return (URI != NULL) && (
     (fnmatch("*.tar", URI, 0) == 0) ||
     (fnmatch("*.zip", URI, 0) == 0) ||
+    (fnmatch("*.foo", URI, 0) == 0) ||
     (fnmatch("*.bz2", URI, 0) == 0));
 }
 
@@ -23,11 +24,14 @@ void* archiveOpen(const char * URI) {
   if (!archiveMatch(URI))
     return NULL;
 
+  if (!a) {
+    fprintf(stderr, "REALOPEN\n");
     a = archive_read_new();
     archive_read_support_compression_all(a);
-    archive_read_support_format_raw(a);
+    archive_read_support_format_all(a);
 
     int r = archive_read_open_filename(a, URI, 4000);
+    fprintf(stderr, "OPEN: %d\n", r);
     if (r != ARCHIVE_OK)
       return 0;
 
@@ -35,6 +39,7 @@ void* archiveOpen(const char * URI) {
     r = archive_read_next_header(a, &ae);
     if (r != ARCHIVE_OK)
       return 0;
+  }
 
   return a;
 }
@@ -45,7 +50,13 @@ int archiveClose(void * context) {
     if (context == NULL)
       return -1;
 
+    struct archive_entry* ae;
+    int r = archive_read_next_header(a, &ae);
+    if (r == ARCHIVE_OK)
+      return 0;
+
     archive_read_finish(a);  
+    fprintf(stderr, "REALCLOSE\n");
 
     return 0;
 }
@@ -59,6 +70,8 @@ int archiveRead(void * context, char * buffer, int len) {
 
   if (size == 0)
     return 0;
+
+  fprintf(stderr, "SIZE: %d\n", size);
 
   return size;
 }
