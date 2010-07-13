@@ -405,15 +405,6 @@ int main(int argc, char* argv[]) {
   }
 #endif
 
-#ifdef LIBARCHIVE
-  // single file archive (tar, zip, cpio, etc.) is listed as a single file
-  // but is much, much more
-  if (input_arg_count == 1 && !isoption(options, OPTION_NESTED)) {
-    if (archiveMatch(argv[input_arg_count]))
-      options |= OPTION_NESTED;
-  }
-#endif
-
   try {
 
     // for single file specified on command line, grab the language from the extension
@@ -426,6 +417,15 @@ int main(int argc, char* argv[]) {
     // turnon cpp namespace for non Java-based languages
     if (!(poptions.language == srcMLTranslator::LANGUAGE_JAVA || poptions.language == srcMLTranslator::LANGUAGE_ASPECTJ))
 	options |= OPTION_CPP;
+
+#ifdef LIBARCHIVE
+  // single file archive (tar, zip, cpio, etc.) is listed as a single file
+  // but is much, much more
+    //  if (input_arg_count == 1 && !isoption(options, OPTION_NESTED)) {
+    if (input_arg_count && archiveMatch(argv[input_arg_start]))
+      options |= OPTION_NESTED;
+    //  }
+#endif
 
     // translator from input to output using determined language
     //    if (language == 0)
@@ -549,8 +549,10 @@ int main(int argc, char* argv[]) {
 
     bool special = archiveMatch(path);
     int count = 0;
-    if (special)
+    if (special) {
       archiveOpenRoot(path);
+      options |= OPTION_NESTED;
+    }
 
     while (!special || archiveGood()) {
 
