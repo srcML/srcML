@@ -196,11 +196,6 @@ void output_help(const char* name) {
   printf("  -%c, --%-14s set the version attribute to VER\n\n",
 	 SRCVERSION_FLAG_SHORT, SRCVERSION_FLAG_FULL);
 
-      /*
-	      << "  " << SELF_VERSION_FLAG <<  "  " << "        "
-	      << "set the version attribute to the src2srcml version\n"
-      */
-
   printf("Markup Extensions:\n\n");
 
   printf("  --%-18s markup literal values in namespace \"%s\"\n",
