@@ -527,51 +527,12 @@ int main(int argc, char* argv[]) {
       filename_s = p;
     }
 
-#ifdef LIBARCHIVE
-  // single file archive (tar, zip, cpio, etc.) is listed as a single file
-  // but is much, much more
-
-    bool special = archiveMatch(path);
-    int count = 0;
-    if (special) {
-      archiveOpenRoot(path);
-      options |= OPTION_NESTED;
-    }
-
-    while (!special || archiveGood()) {
-
-	translator.setupInput(path);
-	++count;
-
-	if (special && isoption(options, OPTION_VERBOSE))
-	  fprintf(stderr, "%d\n", count);
-#endif
-
-    try {
-      translator.translate(isoption(options, OPTION_DIRECTORY) ? poptions.given_directory : path_s,
-			   isoption(options, OPTION_FILENAME)  ? poptions.given_filename  : filename_s,
-			   poptions.given_version,
-			   poptions.language ? poptions.language : DEFAULT_LANGUAGE,
-			   poptions.tabsize);
-
-    } catch (FileError) {
-
-      if (path_s)
-	fprintf(stderr, "%s error: file \'%s/%s\' does not exist.\n", argv[0], path_s, filename_s);
-      else
-	fprintf(stderr, "%s error: file \'%s\' does not exist.\n", argv[0], filename_s);
-
-      exit(STATUS_INPUTFILE_PROBLEM);
-    }
-
-#ifdef LIBARCHIVE
-    if (!special)
-      break;
-      }
-
-    if (special)
-      archiveCloseRoot(path);
-#endif
+    src2srcml_file(translator, path, options,
+		   isoption(options, OPTION_DIRECTORY) ? poptions.given_directory : path_s,
+		   isoption(options, OPTION_FILENAME)  ? poptions.given_filename  : filename_s,
+		   poptions.given_version,
+		   poptions.language ? poptions.language : DEFAULT_LANGUAGE,
+		   poptions.tabsize);
 
   // translate multiple input filenames on command line
   } else {
