@@ -524,13 +524,6 @@ int main(int argc, char* argv[]) {
     else
       filename_s = path;
 
-    // hack to fix where directory, but no filename
-    if (path_s && !filename_s[0]) {
-      char* p = path_s;
-      path_s = filename_s;
-      filename_s = p;
-    }
-
     src2srcml_file(translator, path, options,
 		   isoption(options, OPTION_DIRECTORY) ? poptions.given_directory : path_s,
 		   isoption(options, OPTION_FILENAME)  ? poptions.given_filename  : filename_s,
