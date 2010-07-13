@@ -59,7 +59,10 @@ void* archiveOpenRoot(const char * URI) {
 
   a = archive_read_new();
   archive_read_support_compression_all(a);
+
+#if ARCHIVE_VERSION_STAMP > 2008000
   archive_read_support_format_raw(a);
+#endif
   archive_read_support_format_all(a);
 
   int r = archive_read_open_filename(a, URI, 4000);
