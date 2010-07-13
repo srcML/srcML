@@ -22,6 +22,7 @@ void* archiveOpen(const char * URI) {
   if (!archiveMatch(URI))
     return NULL;
 
+  fprintf(stderr, "OPEN\n");
   if (!a) {
     a = archive_read_new();
     archive_read_support_compression_all(a);
@@ -48,12 +49,16 @@ int archiveClose(void * context) {
     if (context == NULL)
       return -1;
 
+  fprintf(stderr, "CLOSE\n");
     // prime for next read
     struct archive_entry* ae;
     int r = archive_read_next_header(a, &ae);
     if (r != ARCHIVE_OK) {
+      fprintf(stderr, "HERE5 name: %s\n", archive_entry_pathname(ae));
       archive_read_finish(a);  
       return 0;
+    } else {
+      fprintf(stderr, "HERE5 OKAY name: %s\n", archive_entry_pathname(ae));
     }
 
     return 0;
@@ -62,6 +67,7 @@ int archiveClose(void * context) {
 // read from the URI
 int archiveRead(void * context, char * buffer, int len) {
 
+  fprintf(stderr, "READ\n");
   size_t size = archive_read_data(a, buffer, len);
   fprintf(stderr, "HERE4 data: %d\n", size);
   if (size < 0)
@@ -70,5 +76,7 @@ int archiveRead(void * context, char * buffer, int len) {
   if (size == 0)
     return 0;
 
+  buffer[size] = '\0';
+  fprintf(stderr, "%s", buffer);
   return size;
 }
