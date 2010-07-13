@@ -59,6 +59,7 @@ void* archiveOpenRoot(const char * URI) {
 
   a = archive_read_new();
   archive_read_support_compression_all(a);
+  archive_read_support_format_raw(a);
   archive_read_support_format_all(a);
 
   int r = archive_read_open_filename(a, URI, 4000);
