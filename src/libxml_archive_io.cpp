@@ -8,9 +8,12 @@
 
 static struct archive* a = 0;
 
+static const char * ARCHIVE_EXTENSIONS[] = {"tar", "zip", "tgz", "cpio", "gz", "bz2", 0};
+
 // check if archive matches the protocol on the URI
 int archiveMatch(const char * URI) {
 
+  /*
   return (URI != NULL) && (
     (fnmatch("*.tar", URI, 0) == 0) ||
     (fnmatch("*.zip", URI, 0) == 0) ||
@@ -18,6 +21,21 @@ int archiveMatch(const char * URI) {
     (fnmatch("*.cpio", URI, 0) == 0) ||
     (fnmatch("*.gz", URI, 0) == 0) ||
     (fnmatch("*.bz2", URI, 0) == 0));
+  */
+
+  if(URI == NULL)
+      return 0;
+
+  for(const char ** pos = ARCHIVE_EXTENSIONS; *pos != 0; ++pos )
+    {
+      char pattern[10] = { 0 } ;
+      strcpy(pattern, "*.");
+      strcat(pattern, *pos);
+      if(int match = fnmatch(pattern, URI, 0) == 0)
+	return match;
+     }
+
+  return 0;
 }
 
 // setup archive for this URI
