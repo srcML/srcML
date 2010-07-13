@@ -559,9 +559,8 @@ int main(int argc, char* argv[]) {
 	translator.setupInput(path);
 	++count;
 
-	if (special) {
+	if (special && isoption(options, OPTION_VERBOSE))
 	  fprintf(stderr, "%d\n", count);
-	}
 #endif
 
     try {
