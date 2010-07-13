@@ -74,8 +74,7 @@ def srcml2src(srctext, encoding):
 
 	# run the srcml processor
 	command = [srcmlutility]
-	if srcml2src_src_encoding:
-		command.append("--src-encoding=" + encoding)
+	command.append("--src-encoding=" + encoding)
 
 	return safe_communicate(command, srctext)
 
@@ -102,9 +101,8 @@ def src2srcML(text_file, encoding, language, directory, filename, prefixlist):
 
 	#print command
 
-	# run the srcml processorn
-	if src2srcml_src_encoding:
-		command.append("--src-encoding=" + encoding)
+	# run the srcml processor
+	command.append("--src-encoding=" + encoding)
 
 	return safe_communicate(command, text_file)
 
@@ -223,9 +221,6 @@ class Tee(object):
     def write(self, data):
         self.file.write(data)
         self.stdout.write(data)
-
-src2srcml_src_encoding = src2srcmlversion().find("Libxml2") != -1;
-srcml2src_src_encoding = srcml2srcversion().find("Libxml2") != -1;
 
 Tee(error_filename)
 
