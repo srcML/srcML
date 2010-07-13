@@ -16,26 +16,21 @@ tar -cvf $NAME.tar $FILES
 
 echo $FILES | tr " " "\n" | cpio -ov > $NAME.cpio
 
-gzip -cv $FILES.zip > $NAME.zip.gz
+gzip -cv $NAME.zip > $NAME.zip.gz
 
-gzip -cv $FILES.bz2 > $NAME.bz2.gz
+gzip -cv $NAME.bz2 > $NAME.bz2.gz
 
-gzip -cv $FILES.cpio > $NAME.cpio.gz
+gzip -cv $NAME.cpio > $NAME.cpio.gz
 
-bzip2 -cv $FILES.zip > $NAME.zip.bz2
+bzip2 -cv $NAME.zip > $NAME.zip.bz2
 
-bzip2 -cv $FILES.gz > $NAME.gz.bz2
+bzip2 -cv $NAME.gz > $NAME.gz.bz2
 
-bzip2 -cv $FILES.tar > $NAME.tar.bz2
+bzip2 -cv $NAME.tar > $NAME.tar.bz2
 
-bzip2 -cv $FILES.cpio > $NAME.cpio.bz2
+bzip2 -cv $NAME.cpio > $NAME.cpio.bz2
 
 tar -cvzf $NAME.tar.gz $FILES
 
 tar -cvzf $NAME.tgz $FILES
 
-echo $FILES | sed "s/ /.zip\n/" | cpio -ov > $NAME.zip.cpio
-
-echo $FILES | sed "s/ /.gz\n/" | cpio -ov > $NAME.gz.cpio
-
-echo $FILES | sed "s/ /.bz2\n/" | cpio -ov > $NAME.bz2.cpio
