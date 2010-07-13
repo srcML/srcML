@@ -7,6 +7,9 @@
 #include <archive_entry.h>
 
 static struct archive* a = 0;
+static bool root = false;
+static int status = 0;
+static struct archive_entry* ae;
 
 static const char * ARCHIVE_EXTENSIONS[] = {"tar", "zip", "tgz", "cpio", "gz", "bz2", 0};
 
@@ -38,52 +41,103 @@ int archiveMatch(const char * URI) {
   return 0;
 }
 
+// setup archive root for this URI
+bool archiveGood() {
+
+  return status == ARCHIVE_OK;
+}
+
 // setup archive for this URI
-void* archiveOpen(const char * URI) {
+void* archiveOpenRoot(const char * URI) {
+
+  //  fprintf(stderr, "ARCHIVE_OPEN_ROOT\n");
+
+  root = true;
 
   if (!archiveMatch(URI))
     return NULL;
 
+  a = archive_read_new();
+  archive_read_support_compression_all(a);
+  archive_read_support_format_all(a);
+
+  int r = archive_read_open_filename(a, URI, 4000);
+  if (r != ARCHIVE_OK)
+    return 0;
+
+  status = archive_read_next_header(a, &ae);
+  if (status != ARCHIVE_OK)
+    return 0;
+
+  return a;
+}
+
+// setup archive for this URI
+void* archiveOpen(const char * URI) {
+
+  //  fprintf(stderr, "ARCHIVE_OPEN\n");
+
+  if (!archiveMatch(URI))
+    return NULL;
+  /*
+  // just in case archiveOpenRoot() was not called
   if (!a) {
-    fprintf(stderr, "REALOPEN\n");
     a = archive_read_new();
     archive_read_support_compression_all(a);
     archive_read_support_format_raw(a);
     archive_read_support_format_all(a);
 
     int r = archive_read_open_filename(a, URI, 4000);
-    fprintf(stderr, "OPEN: %d\n", r);
     if (r != ARCHIVE_OK)
       return 0;
 
-    struct archive_entry* ae;
-    r = archive_read_next_header(a, &ae);
-    if (r != ARCHIVE_OK)
+    status = archive_read_next_header(a, &ae);
+    if (status != ARCHIVE_OK)
       return 0;
   }
-
+  */
   return a;
 }
 
 // close the open file
 int archiveClose(void * context) {
 
-    if (context == NULL)
+  //  fprintf(stderr, "ARCHIVE_CLOSE\n");
+
+  if (context == NULL)
+    return -1;
+
+  if (root) {
+    status = archive_read_next_header(a, &ae);
+    if (status != ARCHIVE_OK)
       return -1;
-
-    struct archive_entry* ae;
-    int r = archive_read_next_header(a, &ae);
-    if (r == ARCHIVE_OK)
-      return 0;
-
+  } else {
     archive_read_finish(a);  
-    fprintf(stderr, "REALCLOSE\n");
+  }
 
-    return 0;
+  return 0;
+}
+
+// close the open file
+int archiveCloseRoot(void * context) {
+
+  //  fprintf(stderr, "ARCHIVE_CLOSE_ROOT\n");
+
+  root = false;
+
+  if (context == NULL)
+    return -1;
+
+  archive_read_finish(a);  
+  a = 0;
+
+  return 0;
 }
 
 // read from the URI
 int archiveRead(void * context, char * buffer, int len) {
+
+  //  fprintf(stderr, "ARCHIVE_READ\n");
 
   size_t size = archive_read_data(a, buffer, len);
   if (size < 0)
@@ -92,7 +146,7 @@ int archiveRead(void * context, char * buffer, int len) {
   if (size == 0)
     return 0;
 
-  fprintf(stderr, "SIZE: %d\n", size);
+  //  fprintf(stderr, "SIZE: %d\n", size);
 
   return size;
 }

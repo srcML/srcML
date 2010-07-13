@@ -405,6 +405,15 @@ int main(int argc, char* argv[]) {
   }
 #endif
 
+#ifdef LIBARCHIVE
+  // single file archive (tar, zip, cpio, etc.) is listed as a single file
+  // but is much, much more
+  if (input_arg_count == 1 && !isoption(options, OPTION_NESTED)) {
+    if (archiveMatch(argv[input_arg_count]))
+      options |= OPTION_NESTED;
+  }
+#endif
+
   try {
 
     // for single file specified on command line, grab the language from the extension
@@ -534,6 +543,25 @@ int main(int argc, char* argv[]) {
       filename_s = p;
     }
 
+#ifdef LIBARCHIVE
+  // single file archive (tar, zip, cpio, etc.) is listed as a single file
+  // but is much, much more
+
+    bool special = archiveMatch(path);
+    int count = 0;
+    if (special)
+      archiveOpenRoot(path);
+
+    while (!special || archiveGood()) {
+
+	translator.setupInput(path);
+	++count;
+
+	if (special) {
+	  fprintf(stderr, "%d\n", count);
+	}
+#endif
+
     try {
       translator.translate(isoption(options, OPTION_DIRECTORY) ? poptions.given_directory : path_s,
 			   isoption(options, OPTION_FILENAME)  ? poptions.given_filename  : filename_s,
@@ -550,6 +578,15 @@ int main(int argc, char* argv[]) {
 
       exit(STATUS_INPUTFILE_PROBLEM);
     }
+
+#ifdef LIBARCHIVE
+    if (!special)
+      break;
+      }
+
+    if (special)
+      archiveCloseRoot(path);
+#endif
 
   // translate multiple input filenames on command line
   } else {
