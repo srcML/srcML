@@ -44,6 +44,8 @@
 
 int option_error_status(int optopt);
 
+void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE options, const char* dir, const char* filename, const char* version, int language, int tabsize);
+
 using namespace LanguageName;
 
 const char* const NAME = "src2srcml";
@@ -471,37 +473,23 @@ int main(int argc, char* argv[]) {
 	  options |= OPTION_CPP;
 
 	// translate the file listed in the input file using the directory and filename extracted from the path
+	translator.setupInput(line);
+
+	// language based on extension
+	if (poptions.language == 0)
+	  poptions.language = Language::getLanguageFromFilename(line);
+
 	char* dir = 0;
 	char* filename = 0;
-	try {
-	  translator.setupInput(line);
+	if (isoption(options, OPTION_OLD_FILENAME))
+	  filename_split(line, dir, filename);
+	else
+	  filename = line;
+	src2srcml_file(translator, line, options, dir, filename, poptions.given_version, poptions.language, 
+		       poptions.tabsize);
 
-	  // language based on extension
-	  if (poptions.language == 0)
-	    poptions.language = Language::getLanguageFromFilename(line);
-
-	  if (isoption(options, OPTION_OLD_FILENAME))
-	    filename_split(line, dir, filename);
-	  else
-	    filename = line;
-	  translator.translate(dir,
-			       filename,
-			       poptions.given_version,
-			       poptions.language,
-			       poptions.tabsize);
-	} catch (FileError) {
-
-	  if (dir)
-	    fprintf(stderr, isoption(options, OPTION_VERBOSE) ? "\t\terror: file \'%s/%s\' does not exist.\n" :
-				   " error: file \'%s/%s\' does not exist.\n", dir, filename);
-	  else
-	    fprintf(stderr, isoption(options, OPTION_VERBOSE) ? "\t\terror: file \'%s\' does not exist.\n" :
-				   " error: file \'%s\' does not exist.\n", filename);
-	}
-
-	if (isoption(options, OPTION_VERBOSE)) {
+	if (isoption(options, OPTION_VERBOSE))
 	  fprintf(stderr, "\n");
-	}
 
 	// compound documents are interrupted gracefully
 	if (isoption(options, OPTION_TERMINATE))
@@ -1141,5 +1129,53 @@ void register_standard_file_extensions()
 /*
 Language::registerUserExt( LanguageName::LANGUAGE_CXX_0X, LANGUAGE_CXX_0X },
 */
+
+}
+
+void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE options, const char* dir, const char* filename, const char* version, int language, int tabsize) {
+
+  const char* NAME = "src2srcml";
+
+#ifdef LIBARCHIVE
+  // single file archive (tar, zip, cpio, etc.) is listed as a single file
+  // but is much, much more
+
+    bool special = archiveMatch(path);
+    int count = 0;
+    if (special) {
+      archiveOpenRoot(path);
+      options |= OPTION_NESTED;
+    }
+
+    while (!special || archiveGood()) {
+
+	translator.setupInput(path);
+	++count;
+
+	if (special && isoption(options, OPTION_VERBOSE))
+	  fprintf(stderr, "%d\n", count);
+#endif
+
+    try {
+      translator.translate(dir, filename, version, language, tabsize);
+
+    } catch (FileError) {
+
+      if (dir)
+	fprintf(stderr, "%s error: file \'%s/%s\' does not exist.\n", NAME, dir, filename);
+      else
+	fprintf(stderr, "%s error: file \'%s\' does not exist.\n", NAME, filename);
+
+      exit(STATUS_INPUTFILE_PROBLEM);
+    }
+
+#ifdef LIBARCHIVE
+    if (!special)
+      break;
+      }
+
+    if (special)
+      archiveCloseRoot(path);
+#endif
 
 }
