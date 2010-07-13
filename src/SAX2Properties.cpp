@@ -35,7 +35,7 @@
 void output_info(srcMLUtility& su, int options, int optioncount, int optionorder[]);
 
 // constructor
-SAX2Properties::SAX2Properties(int unit, int& options, PROPERTIES_TYPE& nsv, PROPERTIES_TYPE& attrv,
+SAX2Properties::SAX2Properties(int unit, OPTION_TYPE& options, PROPERTIES_TYPE& nsv, PROPERTIES_TYPE& attrv,
 			       srcMLUtility& msu, int ocount, int oorder[]) 
   : SAX2CountUnits(unit, options), nsv(nsv), attrv(attrv), su(msu), optioncount(ocount), optionorder(oorder)
 {}

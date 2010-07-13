@@ -35,7 +35,7 @@
 #include "Options.h"
 #include "srcmlns.h"
 
-SAX2ExtractUnitXML::SAX2ExtractUnitXML(const char* ofilename, int unit, int& options, PROPERTIES_TYPE& nsv, PROPERTIES_TYPE& attrv):
+SAX2ExtractUnitXML::SAX2ExtractUnitXML(const char* ofilename, int unit, OPTION_TYPE& options, PROPERTIES_TYPE& nsv, PROPERTIES_TYPE& attrv):
   SAX2TextWriter(ofilename, options, unit), nsv(nsv), attrv(attrv), placescount(0), placesunit(0) {
 
 }

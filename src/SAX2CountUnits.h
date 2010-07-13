@@ -30,18 +30,19 @@
 
 #include <libxml/parser.h>
 #include <libxml/xmlwriter.h>
+#include "Options.h"
 
 class SAX2CountUnits {
  public:
 
   // constructor
-  SAX2CountUnits(int unit, int& options);
+  SAX2CountUnits(int unit, OPTION_TYPE& options);
 
   static xmlSAXHandler factory();
 
   xmlParserCtxtPtr ctxt;
   int unit;
-  int options;
+  OPTION_TYPE options;
   long count;
   bool verbose;
 

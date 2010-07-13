@@ -37,6 +37,7 @@
 
 #include "Options.h"
 
+#include "SAX2ListUnits.h"
 #include "SAX2ExtractUnitsSrc.h"
 #include "SAX2ExtractUnitSrc.h"
 #include "SAX2ExtractRootSrc.h"
@@ -56,7 +57,7 @@
 #include <libexslt/exslt.h>
 
 // constructor
-srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, int& op)
+srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, OPTION_TYPE& op)
   : infile(infilename), output_encoding(encoding), options(op), units(0) {
 
   // empty filename indicates standard input
@@ -101,7 +102,7 @@ const char* srcMLUtility::namespace_ext(const char* uri) {
 }
 
 // move to a particular nested unit
-void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, int options, int optioncount, int optionorder[]) {
+void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE options, int optioncount, int optionorder[]) {
 
   // output entire unit element
   xmlSAXHandler sax = SAX2Properties::factory();
@@ -263,6 +264,30 @@ void srcMLUtility::expand(const char* root_filename) {
   state.unit = -1;
 
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
+
+  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
+  if (ctxt == NULL) return;
+  ctxt->sax = &sax;
+  ctxt->userData = &state;
+  state.ctxt = ctxt;
+
+  xmlParseDocument(ctxt);
+
+  ctxt->sax = NULL;
+
+  free(state.whole_path);
+
+  xmlFreeParserCtxt(ctxt);
+}
+
+// list the elements
+void srcMLUtility::list() {
+
+  SAX2ListUnits::State state;
+  state.poptions = &options;
+  state.whole_path = (char*) malloc(5000);
+
+  xmlSAXHandler sax = SAX2ListUnits::factory();
 
   xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
   if (ctxt == NULL) return;

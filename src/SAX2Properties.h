@@ -38,7 +38,7 @@ class SAX2Properties : public SAX2CountUnits {
  public:
 
   // constructor
-  SAX2Properties(int unit, int& options, PROPERTIES_TYPE& nsv, PROPERTIES_TYPE& attrv, srcMLUtility&, int ocount,
+  SAX2Properties(int unit, OPTION_TYPE& options, PROPERTIES_TYPE& nsv, PROPERTIES_TYPE& attrv, srcMLUtility&, int ocount,
 		 int oorder[]);
 
   static xmlSAXHandler factory();

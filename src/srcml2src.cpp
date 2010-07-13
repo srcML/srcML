@@ -193,7 +193,7 @@ void output_version(const char* name) {
 	 "%s\n", name, VERSION, COPYRIGHT);
 }
 
-int options = 0;
+OPTION_TYPE options = 0;
 
 
 #ifdef __GNUG__
@@ -331,8 +331,14 @@ int main(int argc, char* argv[]) {
     // setup for processing
     srcMLUtility su(filename, poptions.src_encoding, options);
 
-    // process get attribute options
-    if (optioncount > 0) {
+    // list
+    if (isoption(options, OPTION_LIST)) {
+      fprintf(stderr, "HERE\n");
+
+      su.list();
+
+      // process get attribute options
+    } else if (optioncount > 0) {
 
       // move to the appropriate unit and output the appropriate metadata
       su.move_to_unit(poptions.unit, su, options, optioncount, optionorder);
@@ -489,7 +495,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
     { OUTPUT_FORMAT_FLAG, required_argument, NULL, 'u' },
-    { LIST_FLAG, required_argument, NULL, 'I' },
+    { LIST_FLAG, no_argument, NULL, 'I' },
     { XPATH_FLAG, required_argument, NULL, 'P' },
     { XSLT_FLAG, required_argument, NULL, 'S' },
     { PARAM_FLAG, required_argument, NULL, 'A' },

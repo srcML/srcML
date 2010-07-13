@@ -31,13 +31,14 @@
 #include "SAX2Utilities.h"
 #include <libxml/parser.h>
 #include <libxml/xmlwriter.h>
+#include "Options.h"
 
 class SAX2TextWriter {
 
  public:
 
   // constructor
-  SAX2TextWriter(const char* ofilename, int& options, int unit);
+  SAX2TextWriter(const char* ofilename, OPTION_TYPE& options, int unit);
 
   // sax factory
   static xmlSAXHandler factory();
@@ -67,7 +68,7 @@ class SAX2TextWriter {
 
  protected:
 
-  int options;
+  OPTION_TYPE options;
   const char* filename;      // output filename
   xmlTextWriterPtr writer;   // output text writer
 

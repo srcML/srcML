@@ -35,7 +35,7 @@
 #include "SAX2Utilities.h"
 #include "Options.h"
 
-SAX2TextWriter::SAX2TextWriter(const char* ofilename, int& options, int unit):
+SAX2TextWriter::SAX2TextWriter(const char* ofilename, OPTION_TYPE& options, int unit):
   unit(unit), options(options), filename(ofilename) {
 
 }

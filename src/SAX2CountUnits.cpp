@@ -35,7 +35,7 @@
 static const int fieldwidth = 5;
 
 // constructor
-SAX2CountUnits::SAX2CountUnits(int unit, int& options)
+SAX2CountUnits::SAX2CountUnits(int unit, OPTION_TYPE& options)
   : unit(unit), options(options), count(0)
 {
   verbose = isoption(options, OPTION_VERBOSE);

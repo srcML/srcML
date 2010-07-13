@@ -39,7 +39,7 @@ namespace SAX2ExtractUnitsSrc {
     const char * root_filename;
     const char * ofilename;
     xmlCharEncodingHandlerPtr handler;
-    int* poptions;
+    OPTION_TYPE* poptions;
     xmlOutputBufferPtr output;
     char* whole_path;
   };

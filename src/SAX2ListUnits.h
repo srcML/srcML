@@ -1,5 +1,5 @@
 /*
-  SAX2ExtractUnitSrc.h
+  SAX2ListUnits.h
 
   Copyright (C) 2008  SDML (www.sdml.info)
 
@@ -22,33 +22,32 @@
   Class for straightforward translation
 */
 
-#ifndef INCLUDED_SAX2EXTRACTUNITSRC
-#define INCLUDED_SAX2EXTRACTUNITSRC
+#ifndef INCLUDED_SAX2LISTUNITS
+#define INCLUDED_SAX2LISTUNITS
 
 #include <libxml/parser.h>
-#include "Options.h"
+#include "srcMLUtility.h"
 
-namespace SAX2ExtractUnitSrc {
+namespace SAX2ListUnits {
 
   xmlSAXHandler factory();
 
   struct State {
     xmlParserCtxtPtr ctxt;
-    int unit;
     long count;
-    const char * root_filename;
-    const char * ofilename;
-    xmlCharEncodingHandlerPtr handler;
     OPTION_TYPE* poptions;
-    xmlOutputBufferPtr output;
+    char* whole_path;
   };
 
   // handle root unit of compound document
   void startElementNsRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-			  const xmlChar** attributes);
+		    const xmlChar** attributes);
 
-  void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
+  // unit element
+  void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+		    const xmlChar** attributes);
 };
 
 #endif

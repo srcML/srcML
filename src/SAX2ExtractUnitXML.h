@@ -32,11 +32,12 @@
 #include "SAX2TextWriter.h"
 #include <libxml/parser.h>
 #include <libxml/xmlwriter.h>
+#include "Options.h"
 
 class SAX2ExtractUnitXML : public SAX2TextWriter {
  public:
 
-  SAX2ExtractUnitXML(const char* ofilename, int unit, int& options, PROPERTIES_TYPE& nsv, PROPERTIES_TYPE& attrv);
+  SAX2ExtractUnitXML(const char* ofilename, int unit, OPTION_TYPE& options, PROPERTIES_TYPE& nsv, PROPERTIES_TYPE& attrv);
 
   static xmlSAXHandler factory();
 

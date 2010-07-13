@@ -41,7 +41,7 @@ namespace SAX2ExtractRootSrc {
     const char * root_filename;
     const char * ofilename;
     xmlCharEncodingHandlerPtr handler;
-    int* poptions;
+    OPTION_TYPE* poptions;
     xmlOutputBufferPtr output;
   };
 

@@ -47,7 +47,7 @@ class srcMLUtility {
  public:
 
   // constructor
-  srcMLUtility(const char* infilename, const char* encoding, int& op);
+  srcMLUtility(const char* infilename, const char* encoding, OPTION_TYPE& op);
 
   // attribute
   const char* attribute(const char* attribute_name);
@@ -57,13 +57,16 @@ class srcMLUtility {
 
   // move to a particular nested unit
   //  void move_to_unit(int unitnumber);
-  void move_to_unit(int unitnumber, srcMLUtility&su, int options, int optioncount, int optionorder[]);
+  void move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE options, int optioncount, int optionorder[]);
 
   // namespaces and prefixes
   const PROPERTIES_TYPE* getNS() const;
 
   // count of nested units
   int unit_count();
+
+  // list the elements
+  void list();
 
   // extract (intact) current unit as XML
   void extract_xml(const char* ofilename, int unit = 0);
@@ -99,7 +102,7 @@ class srcMLUtility {
  private:
   const char* infile;
   const char* output_encoding;
-  int& options;
+  OPTION_TYPE& options;
  public:
   PROPERTIES_TYPE nsv;;
   PROPERTIES_TYPE attrv;
