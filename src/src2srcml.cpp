@@ -557,21 +557,22 @@ int main(int argc, char* argv[]) {
       if (isoption(options, OPTION_VERBOSE)) {
 	fprintf(stderr, "%d\t%s", count, path);
       }
+
+      translator.setupInput(path);
+
       char* path_s = 0;
       char* filename_s = 0;
-      try {
-	translator.setupInput(path);
-	if (isoption(options, OPTION_OLD_FILENAME))
-	  filename_split(path, path_s, filename_s);
-	else
-	  filename_s = path;
-	translator.translate(path_s, filename_s, 0, poptions.language ? poptions.language : DEFAULT_LANGUAGE, poptions.tabsize);
-      } catch (FileError) {
-	if (path_s)
-	  fprintf(stderr, "%s error: file \'%s/%s\' does not exist.\n", argv[0], path_s, filename_s);
-	else
-	  fprintf(stderr, "%s error: file \'%s\' does not exist.\n", argv[0], filename_s);
-      }
+      if (isoption(options, OPTION_OLD_FILENAME))
+	filename_split(path, path_s, filename_s);
+      else
+	filename_s = path;
+
+      src2srcml_file(translator, path, options,
+		     path_s,
+		     filename_s,
+		     0,
+		     poptions.language ? poptions.language : DEFAULT_LANGUAGE,
+		     poptions.tabsize);
 
       if (isoption(options, OPTION_VERBOSE)) {
 	fprintf(stderr, "\n");
