@@ -120,18 +120,8 @@ srcml2src = os.environ.get("SRCML2SRC")
 if srcml2src == "" or srcml2src == None:
 	srcml2src = "../../bin/srcml2src"
 
-src2srcml_src_encoding = True #src2srcmlversion().find("Libxml2") != -1;
-srcml2src_src_encoding = True #srcml2srcversion().find("Libxml2") != -1;
-
-if src2srcml_src_encoding:
-	default_src2srcml_encoding = "UTF-8"
-else:
-	default_src2srcml_encoding = "ISO-8859-1"
-
-if srcml2src_src_encoding:
-	default_srcml2src_encoding = "UTF-8"
-else:
-	default_srcml2src_encoding = "ISO-8859-1"
+default_src2srcml_encoding = "UTF-8"
+default_srcml2src_encoding = "UTF-8"
 
 xml_declaration= '<?xml version="1.0" encoding="' + default_src2srcml_encoding + '" standalone="yes"?>'
 
@@ -493,12 +483,8 @@ validate(getreturn([src2srcml, "--strip", "foobar"], None), status.STATUS_UNKNOW
 
 # unknown encoding
 
-if src2srcml_src_encoding:
-	validate(getreturn([src2srcml, option.TEXTENCODING_FLAG + "=" + bad_encoding, "foobar"], None), status.STATUS_UNKNOWN_ENCODING)
-	validate(getreturn([src2srcml, option.ENCODING_FLAG + "=" + bad_encoding, "foobar"], None), status.STATUS_UNKNOWN_ENCODING)
-else:
-	validate(getreturn([src2srcml, option.TEXTENCODING_FLAG + "=" + bad_encoding], nestedfile), status.STATUS_LIBXML2_FEATURE)
-	validate(getreturn([src2srcml, option.ENCODING_FLAG + "=" + bad_encoding], nestedfile), status.STATUS_SUCCESS)
+validate(getreturn([src2srcml, option.TEXTENCODING_FLAG + "=" + bad_encoding, "foobar"], None), status.STATUS_UNKNOWN_ENCODING)
+validate(getreturn([src2srcml, option.ENCODING_FLAG + "=" + bad_encoding, "foobar"], None), status.STATUS_UNKNOWN_ENCODING)
 	
 # missing value
 validate(getreturn([src2srcml, option.LANGUAGE_FLAG, bad_language, "foobar"], None), status.STATUS_INVALID_LANGUAGE)
@@ -508,10 +494,7 @@ validate(getreturn([src2srcml, option.DIRECTORY_FLAG], ""), status.STATUS_DIRECT
 validate(getreturn([src2srcml, option.SRCVERSION_FLAG], ""), status.STATUS_VERSION_MISSING)
 
 # source encoding not given
-if src2srcml_src_encoding:
-	validate(getreturn([src2srcml, option.TEXTENCODING_FLAG], ""), status.STATUS_SRCENCODING_MISSING)
-else:
-	validate(getreturn([src2srcml, option.TEXTENCODING_FLAG], ""), status.STATUS_LIBXML2_FEATURE)
+validate(getreturn([src2srcml, option.TEXTENCODING_FLAG], ""), status.STATUS_SRCENCODING_MISSING)
 
 validate(getreturn([src2srcml, option.ENCODING_FLAG], ""), status.STATUS_XMLENCODING_MISSING)
 
@@ -525,12 +508,8 @@ validate(getreturn([srcml2src, "foobar"], None), status.STATUS_INPUTFILE_PROBLEM
 validate(getreturn([srcml2src, "--strip", "foobar"], None), status.STATUS_UNKNOWN_OPTION)
 
 # unknown encoding
-if srcml2src_src_encoding:
-	validate(getreturn([srcml2src, option.TEXTENCODING_FLAG + "=" + bad_encoding], ""), status.STATUS_UNKNOWN_ENCODING)
-	validate(getreturn([srcml2src, option.TEXTENCODING_FLAG], ""), status.STATUS_SRCENCODING_MISSING)
-else:
-	validate(getreturn([srcml2src, option.TEXTENCODING_FLAG + "=" + bad_encoding], ""), status.STATUS_LIBXML2_FEATURE)
-	validate(getreturn([srcml2src, option.TEXTENCODING_FLAG, "foobar"], None), status.STATUS_LIBXML2_FEATURE)
+validate(getreturn([srcml2src, option.TEXTENCODING_FLAG + "=" + bad_encoding], ""), status.STATUS_UNKNOWN_ENCODING)
+validate(getreturn([srcml2src, option.TEXTENCODING_FLAG], ""), status.STATUS_SRCENCODING_MISSING)
 	
 # source encoding not given
 
