@@ -48,8 +48,6 @@ XML_IO_LIB_SRCML2SRC=
 IO_LIB_SRC2SRCML=
 endif
 
-LIBXML_VERSION= Libxml2 enabled
-
 SRC2SRCML_BIN=../bin/src2srcml
 SRCML2SRC_BIN=../bin/srcml2src
 
@@ -315,7 +313,7 @@ cleanantlr :
 
 # on every build, record the version number
 version.cpp : VERSION
-	$(ECHO) 'const char* version() { const char* Version = "$(shell cat VERSION) ${LIBXML_VERSION}"; return Version; }'   > $@
+	$(ECHO) 'const char* version() { const char* Version = "$(shell cat VERSION)"; return Version; }'   > $@
 
 # changes use of 64 bit integer using transformation
 visual :
