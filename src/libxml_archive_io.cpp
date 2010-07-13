@@ -14,7 +14,9 @@ int archiveMatch(const char * URI) {
   return (URI != NULL) && (
     (fnmatch("*.tar", URI, 0) == 0) ||
     (fnmatch("*.zip", URI, 0) == 0) ||
-    (fnmatch("*.foo", URI, 0) == 0) ||
+    (fnmatch("*.tgz", URI, 0) == 0) ||
+    (fnmatch("*.cpio", URI, 0) == 0) ||
+    (fnmatch("*.gz", URI, 0) == 0) ||
     (fnmatch("*.bz2", URI, 0) == 0));
 }
 
