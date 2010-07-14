@@ -1024,13 +1024,13 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE options
 
   const char* NAME = "src2srcml";
   int reallanguage = 0;
-  bool isarchive = false;
   char* afilename = 0;
 
 #ifdef LIBARCHIVE
 
   // single file archive (tar, zip, cpio, etc.) is listed as a single file
   // but is much, much more
+  bool isarchive = false;
   if ((isarchive = isArchive(path))) {
 
     // open the entire archive
@@ -1103,11 +1103,10 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE options
       return;
     //     return STATUS_TERMINATED;
 
+#ifdef LIBARCHIVE
     // done if not an archive
     if (!isarchive)
       break;
-
-#ifdef LIBARCHIVE
   }
 
   // if it is an archive, then really close the file
