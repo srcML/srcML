@@ -271,6 +271,7 @@ struct process_options
   // output filename
   const char* srcml_filename;
   const char* fname;
+  const char * input_format;
   const char * output_format;
   int language;
   const char* src_encoding;
@@ -324,6 +325,7 @@ int main(int argc, char* argv[]) {
     {
       0,
       "-",
+      0,
       0,
       0,
       DEFAULT_TEXT_ENCODING,

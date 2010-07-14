@@ -221,6 +221,7 @@ typedef struct process_options
 {
   // option values
   const char* ofilename;
+  const char * input_format;
   const char * output_format;
   const char* src_encoding;
   int unit;
@@ -255,6 +256,7 @@ int main(int argc, char* argv[]) {
   process_options poptions = 
     {
      "-",
+     0,
      0, 
      DEFAULT_TEXT_ENCODING,
      0,
