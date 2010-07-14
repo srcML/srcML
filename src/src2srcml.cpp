@@ -469,8 +469,21 @@ int main(int argc, char* argv[]) {
 	  filename_split(line, dir, filename);
 	else
 	  filename = line;
-	src2srcml_file(translator, line, options, dir, filename, poptions.given_version, poptions.language, 
-		       poptions.tabsize, count);
+	src2srcml_file(translator,
+		       /* full path is the complete line from the input file */
+		       line,
+		       options,
+		       /* directory must be blank (or from the path), and cannot be specified as an option */
+		       dir,
+		       /* filename must be complete path, and cannot be specified as an option */
+		       filename,
+		       /* must be a command line option */
+		       poptions.given_version,
+		       /* from path, or specified as an option */
+		       poptions.language,
+		       /* default or option */
+		       poptions.tabsize,
+		       count);
       }
 
     } catch (URIStreamFileError) {
