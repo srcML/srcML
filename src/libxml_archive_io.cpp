@@ -76,9 +76,9 @@ void* archiveOpenRoot(const char * URI) {
   a = archive_read_new();
   archive_read_support_compression_all(a);
 
-#if ARCHIVE_VERSION_STAMP > 2008000
+  //#if ARCHIVE_VERSION_STAMP > 2008000
   archive_read_support_format_raw(a);
-#endif
+  //#endif
   archive_read_support_format_all(a);
 
   int r = archive_read_open_filename(a, URI, 4000);
@@ -101,7 +101,7 @@ void* archiveOpen(const char * URI) {
 
   if (!archiveMatch(URI))
     return NULL;
-  /*
+
   // just in case archiveOpenRoot() was not called
   if (!a) {
     a = archive_read_new();
@@ -117,7 +117,7 @@ void* archiveOpen(const char * URI) {
     if (status != ARCHIVE_OK)
       return 0;
   }
-  */
+
   return a;
 }
 

@@ -1028,6 +1028,7 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE options
   char* afilename = 0;
 
 #ifdef LIBARCHIVE
+
   // single file archive (tar, zip, cpio, etc.) is listed as a single file
   // but is much, much more
   if ((isarchive = isArchive(path))) {
@@ -1042,15 +1043,13 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE options
   // process the individual file (once), or an archive as many times as it takes
   while (!isarchive || archiveGood()) {
 
+    // in an archive, the name is from the entry, not the path
     if (isarchive)
       afilename = strdup(archiveFilename());
 #endif
 
-    // for a single file, the name is taken from the path, for an archive, from the item
-    if (!isarchive)
-      translator.setupInput(path);
-    else
-      translator.setupInput(afilename);
+    // name of the physical file
+    translator.setupInput(path);
 
     // find the separate dir and filename
     char* ndir = (char*) dir;
@@ -1107,6 +1106,7 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE options
     // done if not an archive
     if (!isarchive)
       break;
+
 #ifdef LIBARCHIVE
   }
 
