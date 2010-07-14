@@ -1105,7 +1105,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE o
       }
 
     if (special)
-      archiveCloseRoot(path);
+      archiveCloseRoot((void*)path);
 #endif
 
 }
