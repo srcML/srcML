@@ -436,14 +436,14 @@ int main(int argc, char* argv[]) {
   // filecount for verbose mode
   int count = 0;
 
-  // translate input filenames from list in file
-  if (isoption(options, OPTION_FILELIST)) {
-
 #ifdef __GNUG__
     // setup so we can gracefully stop after a file at a time
     pstd::signal(SIGINT, terminate_handler);
 #endif
       
+  // translate input filenames from list in file
+  if (isoption(options, OPTION_FILELIST)) {
+
     try {
 
       // translate all the filenames listed in the named file
@@ -515,13 +515,6 @@ int main(int argc, char* argv[]) {
   // translate multiple input filenames on command line
   } else {
 
-    int count = 0;    // keep count for verbose mode
-
-#ifdef __GNUG__
-    // setup so we can gracefully stop after a file at a time
-    pstd::signal(SIGINT, terminate_handler);
-#endif
-      
     // translate in batch the input files on the command line extracting the directory and filename attributes
     // from the full path
     for (int i = input_arg_start; i <= input_arg_end; ++i) {
@@ -1062,7 +1055,6 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE o
   // but is much, much more
 
     bool special = archiveMatch(path);
-    int count = 0;
     if (special) {
       archiveOpenRoot(path);
       options |= OPTION_NESTED;
