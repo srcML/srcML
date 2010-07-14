@@ -44,7 +44,7 @@
 
 int option_error_status(int optopt);
 
-void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count);
+void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count);
 
 using namespace LanguageName;
 
@@ -457,26 +457,14 @@ int main(int argc, char* argv[]) {
 	  continue;
 
 	// translate the file listed in the input file using the directory and filename extracted from the path
-	translator.setupInput(line);
-
-	// language based on extension
-	if (poptions.language == 0)
-	  poptions.language = Language::getLanguageFromFilename(line);
-
-	char* dir = 0;
-	char* filename = 0;
-	if (isoption(options, OPTION_OLD_FILENAME))
-	  filename_split(line, dir, filename);
-	else
-	  filename = line;
 	src2srcml_file(translator,
 		       /* full path is the complete line from the input file */
 		       line,
 		       options,
 		       /* directory must be blank (or from the path), and cannot be specified as an option */
-		       dir,
+		       0,
 		       /* filename must be complete path, and cannot be specified as an option */
-		       filename,
+		       0,
 		       /* must be a command line option */
 		       poptions.given_version,
 		       /* from path, or specified as an option */
@@ -495,9 +483,7 @@ int main(int argc, char* argv[]) {
   } else if (input_arg_count == 0 || strcmp(argv[input_arg_start], STDIN) == 0) {
 
     // translate from standard input using any directory, filename and version given on the command line
-    translator.setupInput(STDIN);
-
-    src2srcml_file(translator, "", options,
+    src2srcml_file(translator, "-", options,
 		   poptions.given_directory,
 		   poptions.given_filename,
 		   poptions.given_version,
@@ -509,18 +495,9 @@ int main(int argc, char* argv[]) {
 
     // translate from path given on command line using directory given on the command line or extracted
     // from full path
-    char* path = argv[input_arg_start];
-    translator.setupInput(path);
-    char* path_s = 0;
-    char* filename_s = 0;
-    if (isoption(options, OPTION_OLD_FILENAME))
-      filename_split(path, path_s, filename_s);
-    else
-      filename_s = path;
-
-    src2srcml_file(translator, path, options,
-		   isoption(options, OPTION_DIRECTORY) ? poptions.given_directory : path_s,
-		   isoption(options, OPTION_FILENAME)  ? poptions.given_filename  : filename_s,
+    src2srcml_file(translator, argv[input_arg_start], options,
+		   poptions.given_directory,
+		   poptions.given_filename,
 		   poptions.given_version,
 		   poptions.language ? poptions.language : DEFAULT_LANGUAGE,
 		   poptions.tabsize, count);
@@ -532,20 +509,9 @@ int main(int argc, char* argv[]) {
     // from the full path
     for (int i = input_arg_start; i <= input_arg_end; ++i) {
 
-      char* path = argv[i];
-
-      translator.setupInput(path);
-
-      char* path_s = 0;
-      char* filename_s = 0;
-      if (isoption(options, OPTION_OLD_FILENAME))
-	filename_split(path, path_s, filename_s);
-      else
-	filename_s = path;
-
-      src2srcml_file(translator, path, options,
-		     path_s,
-		     filename_s,
+      src2srcml_file(translator, argv[i], options,
+		     0,
+		     0,
 		     0,
 		     poptions.language ? poptions.language : DEFAULT_LANGUAGE,
 		     poptions.tabsize,
@@ -1059,9 +1025,10 @@ Language::registerUserExt( LanguageName::LANGUAGE_CXX_0X, LANGUAGE_CXX_0X },
 
 }
 
-void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count) {
+void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count) {
 
   const char* NAME = "src2srcml";
+  int reallanguage = 0;
 
 #ifdef LIBARCHIVE
   // single file archive (tar, zip, cpio, etc.) is listed as a single file
@@ -1075,11 +1042,27 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE o
 
     while (!special || archiveGood()) {
 
-	translator.setupInput(path);
 #endif
+	translator.setupInput(path);
+
+	char* ndir = 0;
+	char* nfilename = 0;
+	if (strcmp(path, "-")) {
+	  if (!filename) {
+	  if (isoption(options, OPTION_OLD_FILENAME))
+	    filename_split(path, ndir, nfilename);
+	  else
+	    nfilename = path;
+	}
+	}
+
+	// language based on extension
+	reallanguage = language;
+	if (reallanguage == 0)
+	  reallanguage = Language::getLanguageFromFilename(nfilename);
 
 	// turnon cpp namespace for non Java-based languages
-	if (!(language == srcMLTranslator::LANGUAGE_JAVA || language == srcMLTranslator::LANGUAGE_ASPECTJ))
+	if (!(reallanguage == srcMLTranslator::LANGUAGE_JAVA || reallanguage == srcMLTranslator::LANGUAGE_ASPECTJ))
 	  options |= OPTION_CPP;
 
 	// another file
@@ -1090,7 +1073,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE o
 	  fprintf(stderr, "%d\t%s", count, path);
 
     try {
-      translator.translate(dir, filename, version, language, tabsize);
+      translator.translate(ndir, nfilename, version, reallanguage, tabsize);
 
     } catch (FileError) {
 
