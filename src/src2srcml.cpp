@@ -1024,63 +1024,63 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE options
 
   const char* NAME = "src2srcml";
   int reallanguage = 0;
+  bool isarchive = false;
+  char* afilename = 0;
 
 #ifdef LIBARCHIVE
   // single file archive (tar, zip, cpio, etc.) is listed as a single file
   // but is much, much more
+  if ((isarchive = isArchive(path))) {
 
-    bool special = archiveMatch(path);
-    if (special) {
-      archiveOpenRoot(path);
-      options |= OPTION_NESTED;
-    }
+    // open the entire archive
+    archiveOpenRoot(path);
 
-    while (!special || archiveGood()) {
+    // archives input files are automatically treated as containing more then one nested file
+    options |= OPTION_NESTED;
+  }
 
-      //      if (special)
-	//	translator.setupInput(archiveFilename());
-      //#else
-      
-      char* afilename = 0;
-      if (special)
-	afilename = strdup(archiveFilename());
-#else
-      char* afilename = 0;
+  // process the individual file (once), or an archive as many times as it takes
+  while (!isarchive || archiveGood()) {
+
+    if (isarchive)
+      afilename = strdup(archiveFilename());
 #endif
-        if (afilename && afilename[0])
-	  translator.setupInput(afilename);
-	//      else
-	fprintf(stderr, "HERE: %s\n", afilename);
-	translator.setupInput(path);
 
-	char* ndir = (char*) dir;
-	char* nfilename = (char*) filename;
-	if (strcmp(path, "-")) {
-	  if (!nfilename) {
-	  if (isoption(options, OPTION_OLD_FILENAME))
-	    filename_split(path, ndir, nfilename);
-	  else
-	    nfilename = path;
-	}
-	}
-	if (afilename)
-	  nfilename = afilename;
+    // for a single file, the name is taken from the path, for an archive, from the item
+    if (!isarchive)
+      translator.setupInput(path);
+    else
+      translator.setupInput(afilename);
 
-	// language based on extension
-	reallanguage = language;
-	if (reallanguage == 0)
-	  reallanguage = Language::getLanguageFromFilename(nfilename);
+    // find the separate dir and filename
+    char* ndir = (char*) dir;
+    char* nfilename = (char*) filename;
+    if (strcmp(path, "-")) {
+      if (!nfilename) {
+	if (isoption(options, OPTION_OLD_FILENAME))
+	  filename_split(path, ndir, nfilename);
+	else
+	  nfilename = path;
+      }
+    }
+    if (afilename)
+      nfilename = afilename;
 
-	// turnon cpp namespace for non Java-based languages
-	if (!(reallanguage == srcMLTranslator::LANGUAGE_JAVA || reallanguage == srcMLTranslator::LANGUAGE_ASPECTJ))
-	  options |= OPTION_CPP;
+    // language (for this item in archive mode) based on extension, if not specified
+    reallanguage = language;
+    if (reallanguage == 0)
+      reallanguage = Language::getLanguageFromFilename(nfilename);
 
-	// another file
-	++count;
+    // now that we have the language, turnon cpp namespace for non Java-based languages
+    if (!(reallanguage == srcMLTranslator::LANGUAGE_JAVA || reallanguage == srcMLTranslator::LANGUAGE_ASPECTJ))
+      options |= OPTION_CPP;
 
-	// in verbose mode output the currently processed filename
-	if (isoption(options, OPTION_VERBOSE))
-	  fprintf(stderr, "%d\t%s", count, path);
+    // another file
+    ++count;
+
+    // in verbose mode output the currently processed filename
+    if (isoption(options, OPTION_VERBOSE))
+      fprintf(stderr, "%d\t%s", count, path);
 
     try {
       translator.translate(ndir, nfilename, version, reallanguage, tabsize);
@@ -1095,23 +1095,23 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE options
       exit(STATUS_INPUTFILE_PROBLEM);
     }
 
-    // in verbose mode output the currently processed filename
+    // in verbose mode output end info about this file
     if (isoption(options, OPTION_VERBOSE))
       fprintf(stderr, "\n");
 
+    // compound documents are interrupted gracefully
+    if (isoption(options, OPTION_TERMINATE))
+      return;
+    //     return STATUS_TERMINATED;
 
-   // compound documents are interrupted gracefully
-   if (isoption(options, OPTION_TERMINATE))
-     return;
-     //     return STATUS_TERMINATED;
-
-#ifdef LIBARCHIVE
-    if (!special)
+    // done if not an archive
+    if (!isarchive)
       break;
-      }
+#ifdef LIBARCHIVE
+  }
 
-    if (special)
-      archiveCloseRoot((void*)path);
+  // if it is an archive, then really close the file
+  if (isarchive)
+    archiveCloseRoot((void*)path);
 #endif
-
 }
