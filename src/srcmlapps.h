@@ -84,7 +84,11 @@ const char* const OUTPUT_FLAG = "output";
 const char OUTPUT_FLAG_SHORT = 'o';
 const char* const OUTPUT_FLAG_FULL = "output=OUTPUT";
 
+const char* const INPUT_FORMAT_FLAG = "input-format";
+const char* const INPUT_FORMAT_FLAG_FULL = "input-format=EXTENSION";
+
 const char* const OUTPUT_FORMAT_FLAG = "output-format";
+const char* const OUTPUT_FORMAT_FLAG_FULL = "output-format=EXTENSION";
 
 namespace LanguageName {
 
