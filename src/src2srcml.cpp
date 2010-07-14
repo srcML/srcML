@@ -1045,10 +1045,10 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE options
 #endif
 	translator.setupInput(path);
 
-	char* ndir = 0;
-	char* nfilename = 0;
+	char* ndir = (char*) dir;
+	char* nfilename = (char*) filename;
 	if (strcmp(path, "-")) {
-	  if (!filename) {
+	  if (!nfilename) {
 	  if (isoption(options, OPTION_OLD_FILENAME))
 	    filename_split(path, ndir, nfilename);
 	  else
