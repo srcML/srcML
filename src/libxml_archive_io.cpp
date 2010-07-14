@@ -11,27 +11,36 @@ static bool root = false;
 static int status = 0;
 static struct archive_entry* ae;
 
-static const char * ARCHIVE_EXTENSIONS[] = {"tar", "zip", "tgz", "cpio", "gz", "bz2", 0};
+static const int NUMARCHIVES = 4;
+static const char * ARCHIVE_FILTER_EXTENSIONS[] = {"tar", "zip", "tgz", "cpio", "gz", "bz2", 0};
 
 char s[500];
+
+// check if file has an archive extension
+bool isArchive(const char * path)
+{
+  for(int i = 0; i < NUMARCHIVES; ++i)
+  {
+    char pattern[10] = { 0 };
+    strcpy(pattern, "*.");
+    strcat(pattern, ARCHIVE_FILTER_EXTENSIONS[i]);
+    if(fnmatch(pattern, path, 0) == 0)
+      return true;
+    strcat(pattern, ".*");
+    if(fnmatch(pattern, path, 0) == 0)
+      return true;
+  }
+
+  return false;
+}
 
 // check if archive matches the protocol on the URI
 int archiveMatch(const char * URI) {
 
-  /*
-  return (URI != NULL) && (
-    (fnmatch("*.tar", URI, 0) == 0) ||
-    (fnmatch("*.zip", URI, 0) == 0) ||
-    (fnmatch("*.tgz", URI, 0) == 0) ||
-    (fnmatch("*.cpio", URI, 0) == 0) ||
-    (fnmatch("*.gz", URI, 0) == 0) ||
-    (fnmatch("*.bz2", URI, 0) == 0));
-  */
-
   if(URI == NULL)
       return 0;
 
-  for(const char ** pos = ARCHIVE_EXTENSIONS; *pos != 0; ++pos )
+  for(const char ** pos = ARCHIVE_FILTER_EXTENSIONS; *pos != 0; ++pos )
     {
       char pattern[10] = { 0 } ;
       strcpy(pattern, "*.");
