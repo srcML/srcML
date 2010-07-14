@@ -1037,7 +1037,20 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE options
 
     while (!special || archiveGood()) {
 
+      //      if (special)
+	//	translator.setupInput(archiveFilename());
+      //#else
+      
+      char* afilename = 0;
+      if (special)
+	afilename = strdup(archiveFilename());
+#else
+      char* afilename = 0;
 #endif
+        if (afilename && afilename[0])
+	  translator.setupInput(afilename);
+	//      else
+	fprintf(stderr, "HERE: %s\n", afilename);
 	translator.setupInput(path);
 
 	char* ndir = (char*) dir;
@@ -1050,6 +1063,8 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE options
 	    nfilename = path;
 	}
 	}
+	if (afilename)
+	  nfilename = afilename;
 
 	// language based on extension
 	reallanguage = language;

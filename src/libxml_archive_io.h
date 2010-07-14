@@ -11,6 +11,8 @@
 // check if archive matches the protocol on the URI
 int archiveMatch(const char * URI);
 
+const char* archiveFilename();
+
 // setup archive root for this URI
 void* archiveOpenRoot(const char * URI);
 

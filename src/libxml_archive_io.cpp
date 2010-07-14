@@ -13,6 +13,8 @@ static struct archive_entry* ae;
 
 static const char * ARCHIVE_EXTENSIONS[] = {"tar", "zip", "tgz", "cpio", "gz", "bz2", 0};
 
+char s[500];
+
 // check if archive matches the protocol on the URI
 int archiveMatch(const char * URI) {
 
@@ -47,6 +49,11 @@ bool archiveGood() {
   return status == ARCHIVE_OK;
 }
 
+const char* archiveFilename() {
+
+  return s;
+}
+
 // setup archive for this URI
 void* archiveOpenRoot(const char * URI) {
 
@@ -72,6 +79,8 @@ void* archiveOpenRoot(const char * URI) {
   status = archive_read_next_header(a, &ae);
   if (status != ARCHIVE_OK)
     return 0;
+
+  strcpy(s, archive_entry_pathname(ae));
 
   return a;
 }
@@ -115,6 +124,7 @@ int archiveClose(void * context) {
     status = archive_read_next_header(a, &ae);
     if (status != ARCHIVE_OK)
       return -1;
+    strcpy(s, archive_entry_pathname(ae));
   } else {
     archive_read_finish(a);  
   }
