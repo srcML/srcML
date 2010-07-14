@@ -413,11 +413,11 @@ int main(int argc, char* argv[]) {
 
     // turnon cpp namespace for non Java-based languages
     if (!(poptions.language == srcMLTranslator::LANGUAGE_JAVA || poptions.language == srcMLTranslator::LANGUAGE_ASPECTJ))
-	options |= OPTION_CPP;
+      options |= OPTION_CPP;
 
 #ifdef LIBARCHIVE
-  // single file archive (tar, zip, cpio, etc.) is listed as a single file
-  // but is much, much more
+    // single file archive (tar, zip, cpio, etc.) is listed as a single file
+    // but is much, much more
     //  if (input_arg_count == 1 && !isoption(options, OPTION_NESTED)) {
     if (input_arg_count && archiveMatch(argv[input_arg_start]))
       options |= OPTION_NESTED;
@@ -427,103 +427,98 @@ int main(int argc, char* argv[]) {
     // translator from input to output using determined language
     srcMLTranslator translator(poptions.language == 0 ? DEFAULT_LANGUAGE : poptions.language, poptions.src_encoding, poptions.xml_encoding, poptions.srcml_filename, options, poptions.given_directory, poptions.given_filename, poptions.given_version, urisprefix, poptions.tabsize);
 
-  // output source encoding
-  if (isoption(options, OPTION_VERBOSE)) {
-    fprintf(stderr, "Source encoding:  %s\n", poptions.src_encoding);
-    fprintf(stderr, "XML encoding:  %s\n", poptions.xml_encoding);
-  }
+    // output source encoding
+    if (isoption(options, OPTION_VERBOSE)) {
+      fprintf(stderr, "Source encoding:  %s\n", poptions.src_encoding);
+      fprintf(stderr, "XML encoding:  %s\n", poptions.xml_encoding);
+    }
 
-  // filecount for verbose mode
-  int count = 0;
+    // filecount for verbose mode
+    int count = 0;
 
 #ifdef __GNUG__
     // setup so we can gracefully stop after a file at a time
     pstd::signal(SIGINT, terminate_handler);
 #endif
-      
-  // translate input filenames from list in file
-  if (isoption(options, OPTION_FILELIST)) {
 
-    try {
+    // translate from standard input
+    if (input_arg_count == 0 || strcmp(argv[input_arg_start], STDIN) == 0) {
 
-      // translate all the filenames listed in the named file
-      // Use libxml2 routines so that we can handle http:, file:, and gzipped files automagically
-      URIStream uriinput(poptions.fname);
-      char* line;
-      while ((line = uriinput.getline())) {
+      // translate from standard input using any directory, filename and version given on the command line
+      src2srcml_file(translator, "-", options,
+		     poptions.given_directory,
+		     poptions.given_filename,
+		     poptions.given_version,
+		     poptions.language ? poptions.language : DEFAULT_LANGUAGE,
+		     poptions.tabsize, count);
 
-	// skip blank lines or comment lines
-	if (line[0] == '\0' || line[0] == FILELIST_COMMENT)
-	  continue;
+      // translate single input filename from command line
+    } else if (input_arg_count == 1) {
 
-	// translate the file listed in the input file using the directory and filename extracted from the path
-	src2srcml_file(translator,
-		       /* full path is the complete line from the input file */
-		       line,
-		       options,
-		       /* directory must be blank (or from the path), and cannot be specified as an option */
+      // translate from path given on command line using directory given on the command line or extracted
+      // from full path
+      src2srcml_file(translator, argv[input_arg_start], options,
+		     poptions.given_directory,
+		     poptions.given_filename,
+		     poptions.given_version,
+		     poptions.language ? poptions.language : DEFAULT_LANGUAGE,
+		     poptions.tabsize, count);
+
+      // translate input filenames from list in file
+    } else if (isoption(options, OPTION_FILELIST)) {
+
+      try {
+
+	// translate all the filenames listed in the named file
+	// Use libxml2 routines so that we can handle http:, file:, and gzipped files automagically
+	URIStream uriinput(poptions.fname);
+	char* line;
+	while ((line = uriinput.getline())) {
+
+	  // skip blank lines or comment lines
+	  if (line[0] == '\0' || line[0] == FILELIST_COMMENT)
+	    continue;
+
+	  // translate the file listed in the input file using the directory and filename extracted from the path
+	  src2srcml_file(translator,
+			 line,
+			 options,
+			 0,
+			 0,
+			 poptions.given_version,
+			 poptions.language,
+			 poptions.tabsize,
+			 count);
+	}
+
+      } catch (URIStreamFileError) {
+	fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", argv[0], poptions.fname);
+	exit(STATUS_INPUTFILE_PROBLEM);
+      }
+
+    // translate multiple input filenames on command line
+    } else {
+
+      // translate in batch the input files on the command line extracting the directory and filename attributes
+      // from the full path
+      for (int i = input_arg_start; i <= input_arg_end; ++i) {
+
+	src2srcml_file(translator, argv[i], options,
 		       0,
-		       /* filename must be complete path, and cannot be specified as an option */
 		       0,
-		       /* must be a command line option */
-		       poptions.given_version,
-		       /* from path, or specified as an option */
-		       poptions.language,
-		       /* default or option */
+		       0,
+		       poptions.language ? poptions.language : DEFAULT_LANGUAGE,
 		       poptions.tabsize,
 		       count);
       }
-
-    } catch (URIStreamFileError) {
-      fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", argv[0], poptions.fname);
-      exit(STATUS_INPUTFILE_PROBLEM);
     }
 
-    // translate from standard input
-  } else if (input_arg_count == 0 || strcmp(argv[input_arg_start], STDIN) == 0) {
-
-    // translate from standard input using any directory, filename and version given on the command line
-    src2srcml_file(translator, "-", options,
-		   poptions.given_directory,
-		   poptions.given_filename,
-		   poptions.given_version,
-		   poptions.language ? poptions.language : DEFAULT_LANGUAGE,
-		   poptions.tabsize, count);
-
-  // translate single input filename from command line
-  }  else if (input_arg_count == 1) {
-
-    // translate from path given on command line using directory given on the command line or extracted
-    // from full path
-    src2srcml_file(translator, argv[input_arg_start], options,
-		   poptions.given_directory,
-		   poptions.given_filename,
-		   poptions.given_version,
-		   poptions.language ? poptions.language : DEFAULT_LANGUAGE,
-		   poptions.tabsize, count);
-
-  // translate multiple input filenames on command line
-  } else {
-
-    // translate in batch the input files on the command line extracting the directory and filename attributes
-    // from the full path
-    for (int i = input_arg_start; i <= input_arg_end; ++i) {
-
-      src2srcml_file(translator, argv[i], options,
-		     0,
-		     0,
-		     0,
-		     poptions.language ? poptions.language : DEFAULT_LANGUAGE,
-		     poptions.tabsize,
-		     count);
+    } catch (srcEncodingException) {
+      fprintf(stderr, "Translation encoding problem\n");
+      exit(STATUS_UNKNOWN_ENCODING);
     }
-  }
-  } catch (srcEncodingException) {
-    fprintf(stderr, "Translation encoding problem\n");
-    exit(STATUS_UNKNOWN_ENCODING);
-  }
 
-  return exit_status;
+    return exit_status;
 }
 
 // setup options and collect info from arguments
