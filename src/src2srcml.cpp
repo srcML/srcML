@@ -441,31 +441,8 @@ int main(int argc, char* argv[]) {
     pstd::signal(SIGINT, terminate_handler);
 #endif
 
-    // translate from standard input
-    if (input_arg_count == 0 || strcmp(argv[input_arg_start], STDIN) == 0) {
-
-      // translate from standard input using any directory, filename and version given on the command line
-      src2srcml_file(translator, "-", options,
-		     poptions.given_directory,
-		     poptions.given_filename,
-		     poptions.given_version,
-		     poptions.language ? poptions.language : DEFAULT_LANGUAGE,
-		     poptions.tabsize, count);
-
-      // translate single input filename from command line
-    } else if (input_arg_count == 1) {
-
-      // translate from path given on command line using directory given on the command line or extracted
-      // from full path
-      src2srcml_file(translator, argv[input_arg_start], options,
-		     poptions.given_directory,
-		     poptions.given_filename,
-		     poptions.given_version,
-		     poptions.language ? poptions.language : DEFAULT_LANGUAGE,
-		     poptions.tabsize, count);
-
-      // translate input filenames from list in file
-    } else if (isoption(options, OPTION_FILELIST)) {
+    // translate input filenames from list in file
+    if (isoption(options, OPTION_FILELIST)) {
 
       try {
 
@@ -496,7 +473,30 @@ int main(int argc, char* argv[]) {
 	exit(STATUS_INPUTFILE_PROBLEM);
       }
 
-    // translate multiple input filenames on command line
+      // translate from standard input
+    } else if (input_arg_count == 0 || strcmp(argv[input_arg_start], STDIN) == 0) {
+
+      // translate from standard input using any directory, filename and version given on the command line
+      src2srcml_file(translator, "-", options,
+		     poptions.given_directory,
+		     poptions.given_filename,
+		     poptions.given_version,
+		     poptions.language ? poptions.language : DEFAULT_LANGUAGE,
+		     poptions.tabsize, count);
+
+      // translate single input filename from command line
+    } else if (input_arg_count == 1) {
+
+      // translate from path given on command line using directory given on the command line or extracted
+      // from full path
+      src2srcml_file(translator, argv[input_arg_start], options,
+		     poptions.given_directory,
+		     poptions.given_filename,
+		     poptions.given_version,
+		     poptions.language ? poptions.language : DEFAULT_LANGUAGE,
+		     poptions.tabsize, count);
+
+      // translate multiple input filenames on command line
     } else {
 
       // translate in batch the input files on the command line extracting the directory and filename attributes
@@ -513,12 +513,12 @@ int main(int argc, char* argv[]) {
       }
     }
 
-    } catch (srcEncodingException) {
-      fprintf(stderr, "Translation encoding problem\n");
-      exit(STATUS_UNKNOWN_ENCODING);
-    }
+  } catch (srcEncodingException) {
+    fprintf(stderr, "Translation encoding problem\n");
+    exit(STATUS_UNKNOWN_ENCODING);
+  }
 
-    return exit_status;
+  return exit_status;
 }
 
 // setup options and collect info from arguments
