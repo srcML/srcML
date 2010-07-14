@@ -418,10 +418,9 @@ int main(int argc, char* argv[]) {
 #ifdef LIBARCHIVE
     // single file archive (tar, zip, cpio, etc.) is listed as a single file
     // but is much, much more
-    //  if (input_arg_count == 1 && !isoption(options, OPTION_NESTED)) {
-    if (input_arg_count && archiveMatch(argv[input_arg_start]))
+    if (input_arg_count == 1 && !isoption(options, OPTION_NESTED) &&
+        archiveMatch(argv[input_arg_start]) && isArchive(argv[input_arg_start]))
       options |= OPTION_NESTED;
-    //  }
 #endif
 
     // translator from input to output using determined language
