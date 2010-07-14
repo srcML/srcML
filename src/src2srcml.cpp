@@ -152,10 +152,12 @@ void output_help(const char* name) {
   printf("  -%c, --%-14s display this help and exit\n",      HELP_FLAG_SHORT, HELP_FLAG);
   printf("  -%c, --%-14s display version number and exit\n\n", VERSION_FLAG_SHORT, VERSION_FLAG);
 
-  printf("  -%c, --%-14s write result to OUTPUT which is a FILE or URI\n", OUTPUT_FLAG_SHORT, OUTPUT_FLAG_FULL);
   printf("  --%-18s read list of source file names from INPUT which is a FILE or URI,\n"
-	 "                       to form a compound srcML document\n\n",
+	 "                       to form a compound srcML document\n",
 	  FILELIST_FLAG_FULL);
+  printf("  --%-18s ???\n\n", INPUT_FORMAT_FLAG);
+  printf("  -%c, --%-14s write result to OUTPUT which is a FILE or URI\n", OUTPUT_FLAG_SHORT, OUTPUT_FLAG_FULL);
+  printf("  --%-18s ???\n\n", OUTPUT_FORMAT_FLAG);
 
   printf("  -%c, --%-14s store output in a compound srcML document, default for multiple input files\n",
 	  COMPOUND_FLAG_SHORT, COMPOUND_FLAG);

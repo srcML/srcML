@@ -114,7 +114,9 @@ void output_help(const char* name) {
   printf("  -%c, --%-17s display this help and exit\n", HELP_FLAG_SHORT, HELP_FLAG);
   printf("  -%c, --%-17s display version number and exit\n\n", VERSION_FLAG_SHORT, VERSION_FLAG);
 
+  printf("  --%-21s ???\n\n", INPUT_FORMAT_FLAG);
   printf("  -%c, --%-17s write result to OUTPUT which is a FILE or URI\n", OUTPUT_FLAG_SHORT, OUTPUT_FLAG_FULL);
+  printf("  --%-21s ???\n\n", OUTPUT_FORMAT_FLAG);
 
   printf("  -%c, --%-17s set the output source encoding to ENC (default:  %s) \n",
 	  TEXTENCODING_FLAG_SHORT, TEXTENCODING_FLAG_FULL, DEFAULT_TEXT_ENCODING);
@@ -495,8 +497,9 @@ int process_args(int argc, char* argv[], process_options & poptions)
     { NAMESPACE_FLAG, required_argument, NULL, NAMESPACE_FLAG_SHORT },
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
+    { INPUT_FORMAT_FLAG, required_argument, NULL, 'I' },
     { OUTPUT_FORMAT_FLAG, required_argument, NULL, 'u' },
-    { LIST_FLAG, no_argument, NULL, 'I' },
+    { LIST_FLAG, no_argument, NULL, 'T' },
     { XPATH_FLAG, required_argument, NULL, 'P' },
     { XSLT_FLAG, required_argument, NULL, 'S' },
     { PARAM_FLAG, required_argument, NULL, 'A' },
@@ -653,8 +656,17 @@ int process_args(int argc, char* argv[], process_options & poptions)
       options |= OPTION_OUTPUT_FORMAT;
       poptions.output_format = optarg;
       break;
+
+    case 'I':
+
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+
+      options |= OPTION_INPUT_FORMAT;
+      poptions.input_format = optarg;
+      break;
       
-    case 'I' :
+    case 'T' :
       options |= OPTION_LIST;
       break;
 
@@ -766,6 +778,10 @@ int option_error_status(int optopt) {
 
   case UNIT_FLAG_SHORT:
     return STATUS_UNIT_MISSING;
+    break;
+
+  case 'I':
+    return STATUS_ERROR;
     break;
 
   case 'u':
