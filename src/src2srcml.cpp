@@ -1034,7 +1034,7 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& option
 
   // in verbose mode output the currently processed filename
   if (isoption(options, OPTION_VERBOSE))
-    fprintf(stderr, "Input:\t%s\n", path);
+    fprintf(stderr, "Input:\t%s\n", strcmp(path, "-") == 0 ? "" : path);
 
   const char* NAME = "src2srcml";
   int reallanguage = 0;
@@ -1051,8 +1051,6 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& option
   bool first = true;
   while (first || !archiveStatus()) {
 
-    first = false;
-
     // start with the original options
     //    options = save_options;
 
@@ -1066,6 +1064,18 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& option
       isarchive = true;
       options |= OPTION_NESTED;
     }
+
+    // in verbose mode output the currently processed filename
+    if (first && archiveMatch(path) && isoption(options, OPTION_VERBOSE)
+	&& (strcmp(archiveCompression(), "none")))
+      fprintf(stderr, "Compression:\t%s\n", archiveCompression());
+
+    // in verbose mode output the currently processed filename
+    if (first && isArchive() && isoption(options, OPTION_VERBOSE))
+      fprintf(stderr, "Format:\t%s\n", archiveFormat());
+
+    first = false;
+
 #endif
 
     // name of the physical file

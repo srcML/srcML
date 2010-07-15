@@ -11,10 +11,18 @@
 // check if path has an archive extension
 bool isArchive(const char * path);
 
+// current file is an archive
 bool isArchive();
+
+// format (e.g., tar, cpio) of the current file
+const char* archiveFormat();
+
+// compression (e.g., gz, bzip2) of the current file
+const char* archiveCompression();
 
 // check if archive matches the protocol on the URI
 int archiveMatch(const char * URI);
+
 
 const char* archiveFilename(const char* URI);
 

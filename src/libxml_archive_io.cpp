@@ -37,6 +37,16 @@ bool isArchive() {
   return a && status == ARCHIVE_OK && (archive_format(a) != ARCHIVE_FORMAT_RAW);
 }
 
+// format (e.g., tar, cpio) of the current file
+const char* archiveFormat() {
+  return !a ? 0 : archive_format_name(a);
+}
+
+// compression (e.g., gz, bzip2) of the current file
+const char* archiveCompression() {
+  return !a ? 0 : archive_compression_name(a);
+}
+
 // check if archive matches the protocol on the URI
 int archiveMatch(const char * URI) {
 
