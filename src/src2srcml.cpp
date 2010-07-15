@@ -1046,6 +1046,8 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE options
 
 #ifdef LIBARCHIVE
 
+  OPTION_TYPE save_options = options;
+
   // single file archive (tar, zip, cpio, etc.) is listed as a single file
   // but is much, much more
   bool isarchive = false;
@@ -1061,6 +1063,9 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE options
     // in an archive, the name is from the entry, not the path
     if (isarchive)
       afilename = strdup(archiveFilename(path));
+
+    // start with the original options
+    options = save_options;
 #endif
 
     // name of the physical file

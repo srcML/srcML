@@ -33,6 +33,10 @@
 #include "srcmlns.h"
 #include <getopt.h>
 
+#ifdef LIBARCHIVE
+#include "libxml_archive_io.h"
+#endif
+
 int option_error_status(int optopt);
 
 char const * const NAME = "srcml2src";
@@ -245,7 +249,14 @@ int main(int argc, char* argv[]) {
 
   xmlGenericErrorFunc handler = (xmlGenericErrorFunc) libxml_error;
   initGenericErrorDefaultFunc(&handler);
-
+  /*
+#ifdef LIBARCHIVE
+  if (xmlRegisterInputCallbacks(archiveMatch, archiveOpen, archiveRead, archiveClose) < 0) {
+    fprintf(stderr, "%s: failed to register archive handler\n", argv[0]);
+    exit(1);
+  }
+#endif
+  */
   /* signal handling */
 
 #ifdef __GNUG__

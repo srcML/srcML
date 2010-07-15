@@ -91,6 +91,8 @@ void* archiveOpen(const char * URI) {
     status = archive_read_next_header(a, &ae);
     if (status != ARCHIVE_OK)
       return 0;
+
+    fprintf(stderr, "FORMAT: %s\n", archive_format_name(a));
   }
 
   return a;
