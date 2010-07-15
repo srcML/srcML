@@ -50,6 +50,8 @@ const char* archiveCompression() {
 // check if archive matches the protocol on the URI
 int archiveMatch(const char * URI) {
 
+  //  fprintf(stderr, "MATCH: %s\n", URI);
+  
   if(URI == NULL)
       return 0;
 
