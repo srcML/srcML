@@ -53,9 +53,9 @@ int archiveMatch(const char * URI) {
 }
 
 // setup archive root for this URI
-bool archiveGood() {
+int archiveStatus() {
 
-  return status == ARCHIVE_OK;
+  return status;
 }
 
 const char* archiveFilename(const char* URI) {
@@ -76,6 +76,7 @@ void* archiveOpen(const char * URI) {
 
   // just in case archiveOpenRoot() was not called
   if (!a) {
+    //    fprintf(stderr, "REALLY OPEN\n");
     a = archive_read_new();
     archive_read_support_compression_all(a);
 #if ARCHIVE_VERSION_STAMP >= 2008000
@@ -109,7 +110,9 @@ int archiveClose(void * context) {
   // read the next header.  If there isn't one, then really finish
   status = archive_read_next_header(a, &ae);
   if (status != ARCHIVE_OK) {
-    archive_read_finish(a);  
+    //    fprintf(stderr, "REALLY CLOSE\n");
+    archive_read_finish(a);
+    a = 0;
     return 0;
   }
 

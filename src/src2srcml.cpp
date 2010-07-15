@@ -1040,6 +1040,10 @@ Language::registerUserExt( LanguageName::LANGUAGE_CXX_0X, LANGUAGE_CXX_0X },
 
 void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count) {
 
+  // in verbose mode output the currently processed filename
+  if (isoption(options, OPTION_VERBOSE))
+    fprintf(stderr, "Input:\t%s\n", path);
+
   const char* NAME = "src2srcml";
   int reallanguage = 0;
   char* afilename = 0;
@@ -1058,7 +1062,10 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE options
   }
 
   // process the individual file (once), or an archive as many times as it takes
-  while (!isarchive || archiveGood()) {
+  bool first = true;
+  while (first || !archiveStatus()) {
+
+    first = false;
 
     // in an archive, the name is from the entry, not the path
     if (isarchive)

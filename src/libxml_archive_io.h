@@ -17,7 +17,7 @@ int archiveMatch(const char * URI);
 const char* archiveFilename(const char* URI);
 
 // setup archive root for this URI
-bool archiveGood();
+int archiveStatus();
 
 // setup archive for this URI
 void* archiveOpen(const char * URI);
