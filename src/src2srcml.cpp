@@ -624,7 +624,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     case 'F': 
 
       // check for missing argument confused by an argument that looks like an option
-      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+      //      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
 
       options |= OPTION_FILELIST;
 
@@ -1051,9 +1051,6 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE options
   bool isarchive = false;
   if ((isarchive = isArchive(path))) {
 
-    // open the entire archive
-    archiveOpenRoot(path);
-
     // archives input files are automatically treated as containing more then one nested file
     options |= OPTION_NESTED;
   }
@@ -1063,7 +1060,7 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE options
 
     // in an archive, the name is from the entry, not the path
     if (isarchive)
-      afilename = strdup(archiveFilename());
+      afilename = strdup(archiveFilename(path));
 #endif
 
     // name of the physical file
@@ -1126,9 +1123,5 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE options
     if (!isarchive)
       break;
   }
-
-  // if it is an archive, then really close the file
-  if (isarchive)
-    archiveCloseRoot((void*)path);
 #endif
 }

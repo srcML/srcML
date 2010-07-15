@@ -14,10 +14,7 @@ bool isArchive(const char * path);
 // check if archive matches the protocol on the URI
 int archiveMatch(const char * URI);
 
-const char* archiveFilename();
-
-// setup archive root for this URI
-void* archiveOpenRoot(const char * URI);
+const char* archiveFilename(const char* URI);
 
 // setup archive root for this URI
 bool archiveGood();
@@ -30,8 +27,5 @@ int archiveRead(void * context, char * buffer, int len);
 
 // close the open file
 int archiveClose(void * context);
-
-// close the open root file
-int archiveCloseRoot(void * context);
 
 #endif

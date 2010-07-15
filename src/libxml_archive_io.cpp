@@ -7,14 +7,11 @@
 #include <archive_entry.h>
 
 static struct archive* a = 0;
-static bool root = false;
 static int status = 0;
 static struct archive_entry* ae;
 
 static const int NUMARCHIVES = 4;
 static const char * ARCHIVE_FILTER_EXTENSIONS[] = {"tar", "zip", "tgz", "cpio", "gz", "bz2", 0};
-
-char s[500];
 
 // check if file has an archive extension
 bool isArchive(const char * path)
@@ -40,6 +37,9 @@ int archiveMatch(const char * URI) {
   if(URI == NULL)
       return 0;
 
+  if ((URI[0] == '-' && URI[1] == '\0') || (strcmp(URI, "/dev/stdin") == 0))
+    return 1;
+
   for(const char ** pos = ARCHIVE_FILTER_EXTENSIONS; *pos != 0; ++pos )
     {
       char pattern[10] = { 0 } ;
@@ -58,39 +58,12 @@ bool archiveGood() {
   return status == ARCHIVE_OK;
 }
 
-const char* archiveFilename() {
+const char* archiveFilename(const char* URI) {
 
-  return s;
-}
+  if (!a)
+    archiveOpen(URI);
 
-// setup archive for this URI
-void* archiveOpenRoot(const char * URI) {
-
-  //  fprintf(stderr, "ARCHIVE_OPEN_ROOT\n");
-
-  root = true;
-
-  if (!archiveMatch(URI))
-    return NULL;
-
-  a = archive_read_new();
-  archive_read_support_compression_all(a);
-#if ARCHIVE_VERSION_STAMP >= 2008000
-  archive_read_support_format_raw(a);
-#endif
-  archive_read_support_format_all(a);
-
-  int r = archive_read_open_filename(a, URI, 4000);
-  if (r != ARCHIVE_OK)
-    return 0;
-
-  status = archive_read_next_header(a, &ae);
-  if (status != ARCHIVE_OK)
-    return 0;
-
-  strcpy(s, archive_entry_pathname(ae));
-
-  return a;
+  return archive_entry_pathname(ae);
 }
 
 // setup archive for this URI
@@ -110,7 +83,8 @@ void* archiveOpen(const char * URI) {
 #endif
     archive_read_support_format_all(a);
 
-    int r = archive_read_open_filename(a, URI, 4000);
+    //    int r = archive_read_open_filename(a, URI, 4000);
+    int r = archive_read_open_filename(a, strcmp(URI, "-") == 0 ? 0 : URI, 4000);
     if (r != ARCHIVE_OK)
       return 0;
 
@@ -130,30 +104,12 @@ int archiveClose(void * context) {
   if (context == NULL)
     return -1;
 
-  if (root) {
-    status = archive_read_next_header(a, &ae);
-    if (status != ARCHIVE_OK)
-      return -1;
-    strcpy(s, archive_entry_pathname(ae));
-  } else {
+  // read the next header.  If there isn't one, then really finish
+  status = archive_read_next_header(a, &ae);
+  if (status != ARCHIVE_OK) {
     archive_read_finish(a);  
+    return 0;
   }
-
-  return 0;
-}
-
-// close the open file
-int archiveCloseRoot(void * context) {
-
-  //  fprintf(stderr, "ARCHIVE_CLOSE_ROOT\n");
-
-  root = false;
-
-  if (context == NULL)
-    return -1;
-
-  archive_read_finish(a);  
-  a = 0;
 
   return 0;
 }
