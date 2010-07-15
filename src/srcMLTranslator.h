@@ -62,6 +62,10 @@ class srcMLTranslator : public Language {
   ~srcMLTranslator();
 
  private:
+  bool first;
+  const char* root_directory;
+  const char* root_filename;
+  const char* root_version;
   const char* encoding;
   int language;
   OPTION_TYPE& options;

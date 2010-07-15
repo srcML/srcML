@@ -41,12 +41,11 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
 				 const char* uri[],
 				 int tabsize
 				 )
-  : Language(language), encoding(src_encoding), options(op),
+  : Language(language), first(true), 
+    root_directory(directory), root_filename(filename), root_version(version),
+    encoding(src_encoding), options(op),
     out(0, srcml_filename, getLanguageString(), xml_encoding, options, uri, tabsize), ifilename(0) {
 
-  // root unit for compound srcML documents
-  if ((options & OPTION_NESTED) > 0)
-    out.startUnit(0, directory, filename, version, true);
 }
 
 // setup the input source based on the filename
@@ -61,6 +60,11 @@ void srcMLTranslator::translate(const char* unit_directory,
 				const char* unit_filename, const char* unit_version,
 				int language,
 				int tabsize) {
+
+  // root unit for compound srcML documents
+  if (first && ((options & OPTION_NESTED) > 0))
+    out.startUnit(0, root_directory, root_filename, root_version, true);
+  first = false;
 
   try {
 
