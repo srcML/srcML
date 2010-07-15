@@ -64,6 +64,7 @@ void srcMLTranslator::translate(const char* unit_directory,
   // root unit for compound srcML documents
   if (first && ((options & OPTION_NESTED) > 0))
     out.startUnit(0, root_directory, root_filename, root_version, true);
+
   first = false;
 
   try {

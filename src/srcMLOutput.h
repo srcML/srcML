@@ -44,7 +44,7 @@ class srcMLOutput : public srcMLParserTokenTypes {
 	      const char* srcml_filename,
 	      const char* language, 
 	      const char* encoding,
-	      int option,
+	      OPTION_TYPE& option,
 	      const char* uri[],
 	      int tabsize
 	      );
@@ -74,7 +74,7 @@ class srcMLOutput : public srcMLParserTokenTypes {
   const char* unit_dir;
   const char* unit_filename;
   const char* unit_version;
-  int options;
+  OPTION_TYPE& options;
   const char* xml_encoding;
   const char** num2prefix;
   int openelementcount;

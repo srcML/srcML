@@ -44,7 +44,7 @@
 
 int option_error_status(int optopt);
 
-void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count);
+void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count);
 
 using namespace LanguageName;
 
@@ -418,14 +418,6 @@ int main(int argc, char* argv[]) {
     // turnon cpp namespace for non Java-based languages
     if (!(poptions.language == srcMLTranslator::LANGUAGE_JAVA || poptions.language == srcMLTranslator::LANGUAGE_ASPECTJ))
       options |= OPTION_CPP;
-
-#ifdef LIBARCHIVE
-    // single file archive (tar, zip, cpio, etc.) is listed as a single file
-    // but is much, much more
-    if (input_arg_count == 1 && !isoption(options, OPTION_NESTED) &&
-        archiveMatch(argv[input_arg_start]) && isArchive(argv[input_arg_start]))
-      options |= OPTION_NESTED;
-#endif
 
     // translator from input to output using determined language
     srcMLTranslator translator(poptions.language == 0 ? DEFAULT_LANGUAGE : poptions.language, poptions.src_encoding, poptions.xml_encoding, poptions.srcml_filename, options, poptions.given_directory, poptions.given_filename, poptions.given_version, urisprefix, poptions.tabsize);
@@ -1038,7 +1030,7 @@ Language::registerUserExt( LanguageName::LANGUAGE_CXX_0X, LANGUAGE_CXX_0X },
 
 }
 
-void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count) {
+void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count) {
 
   // in verbose mode output the currently processed filename
   if (isoption(options, OPTION_VERBOSE))
@@ -1050,16 +1042,10 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE options
 
 #ifdef LIBARCHIVE
 
-  OPTION_TYPE save_options = options;
-
   // single file archive (tar, zip, cpio, etc.) is listed as a single file
   // but is much, much more
   bool isarchive = false;
-  if ((isarchive = isArchive(path))) {
-
-    // archives input files are automatically treated as containing more then one nested file
-    options |= OPTION_NESTED;
-  }
+  OPTION_TYPE save_options = options;
 
   // process the individual file (once), or an archive as many times as it takes
   bool first = true;
@@ -1067,12 +1053,19 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE options
 
     first = false;
 
-    // in an archive, the name is from the entry, not the path
-    if (isarchive)
-      afilename = strdup(archiveFilename(path));
-
     // start with the original options
-    options = save_options;
+    //    options = save_options;
+
+    // if using libarchive, then get the filename (which starts the open)
+    if (archiveMatch(path)) {
+      const char* result = archiveFilename(path);
+      afilename = result ? strdup(result) : 0;
+    }
+
+    if (isArchive()) {
+      isarchive = true;
+      options |= OPTION_NESTED;
+    }
 #endif
 
     // name of the physical file

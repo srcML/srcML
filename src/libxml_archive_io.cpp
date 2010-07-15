@@ -31,6 +31,12 @@ bool isArchive(const char * path)
   return false;
 }
 
+// check if file has an archive extension
+bool isArchive() {
+
+  return a && status == ARCHIVE_OK && (archive_format(a) != ARCHIVE_FORMAT_RAW);
+}
+
 // check if archive matches the protocol on the URI
 int archiveMatch(const char * URI) {
 
@@ -63,7 +69,7 @@ const char* archiveFilename(const char* URI) {
   if (!a)
     archiveOpen(URI);
 
-  return archive_entry_pathname(ae);
+  return isArchive() ? archive_entry_pathname(ae) : 0;
 }
 
 // setup archive for this URI
@@ -93,7 +99,7 @@ void* archiveOpen(const char * URI) {
     if (status != ARCHIVE_OK)
       return 0;
 
-    //    fprintf(stderr, "FORMAT: %s\n", archive_format_name(a));
+    //fprintf(stderr, "FORMAT: %s\n", archive_format_name(a));
   }
 
   return a;
@@ -106,6 +112,9 @@ int archiveClose(void * context) {
 
   if (context == NULL)
     return -1;
+
+  if (status != ARCHIVE_OK)
+    return 0;
 
   // read the next header.  If there isn't one, then really finish
   status = archive_read_next_header(a, &ae);
@@ -123,6 +132,9 @@ int archiveClose(void * context) {
 int archiveRead(void * context, char * buffer, int len) {
 
   //  fprintf(stderr, "ARCHIVE_READ\n");
+
+  if (status != ARCHIVE_OK)
+    return 0;
 
   size_t size = archive_read_data(a, buffer, len);
   if (size < 0)

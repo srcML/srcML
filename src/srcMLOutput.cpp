@@ -270,7 +270,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 			 const char* filename,
 			 const char* language, 
 			 const char* xml_enc,
-			 int op,
+			 OPTION_TYPE& op,
 			 const char* curi[],
 			 int ts
 			 )

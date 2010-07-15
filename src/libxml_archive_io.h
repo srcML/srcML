@@ -11,6 +11,8 @@
 // check if path has an archive extension
 bool isArchive(const char * path);
 
+bool isArchive();
+
 // check if archive matches the protocol on the URI
 int archiveMatch(const char * URI);
 
