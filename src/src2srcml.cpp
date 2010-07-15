@@ -1099,7 +1099,7 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE options
 
     // in verbose mode output the currently processed filename
     if (isoption(options, OPTION_VERBOSE))
-      fprintf(stderr, "%d\t%s", count, path);
+      fprintf(stderr, "%d\t%s", count, !isarchive ? path : afilename);
 
     try {
       translator.translate(ndir, nfilename, version, reallanguage, tabsize);
