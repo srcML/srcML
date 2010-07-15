@@ -40,7 +40,7 @@ class srcMLTranslator : public Language {
 		  const char* src_encoding,
 		  const char* xml_encoding,
 		  const char* srcml_filename,
-		  int options,
+		  OPTION_TYPE& options,
 		  const char* directory,
 		  const char* filename,
 		  const char* version,
@@ -64,7 +64,7 @@ class srcMLTranslator : public Language {
  private:
   const char* encoding;
   int language;
-  int options;
+  OPTION_TYPE& options;
   srcMLOutput out;
   char* ifilename;
 }; 
