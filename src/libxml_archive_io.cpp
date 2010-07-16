@@ -230,7 +230,7 @@ void* archiveWriteOpen(const char * URI) {
       else if (!fnmatch("*.cpio", root_filename, 0) || !fnmatch("*.cpio.*", root_filename, 0))
       archive_write_set_format_cpio(wa);
     else
-      archive_write_set_format_pax_restricted(wa); // Correct for (gnu) tar?
+      archive_write_set_format_ustar(wa);
 
     //    fprintf(stderr, "ROOT: %s %s %s\n", root_filename, archive_compression_name(wa),
     //	    archive_format_name(wa));
