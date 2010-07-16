@@ -171,18 +171,21 @@ static int size = 0;
 static int pos = 0;
 static struct archive *wa;
 static struct archive_entry *wentry;
-static char root_filename[512];
-static char filename[512];
+static char root_filename[512] = { 0 };
+static char filename[512] = { 0 };
 
 // check if archive matches the protocol on the URI
 int archiveWriteMatch(const char * URI) {
 
-  // fprintf(stderr, "MATCH: %s\n", URI);
-  
-  if(URI == NULL)
+  //  fprintf(stderr, "MATCH: %s %s\n", URI, root_filename);
+
+  if (URI == NULL)
       return 0;
 
-  if (root_filename[0] != '\0')
+  if (strcmp(URI, "-") == 0)
+    return  0;
+
+  if (root_filename[0])
      return 1;
 
   for(const char ** pos = ARCHIVE_FILTER_EXTENSIONS; *pos != 0; ++pos )

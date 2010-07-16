@@ -51,6 +51,7 @@ namespace SAX2ExtractRootSrc {
 						   pstate->handler, 
 						   isoption(*(pstate->poptions), OPTION_COMPRESSED) ? 1 : 0);
     if (pstate->output == NULL) {
+      fprintf(stderr, "HERE %s %p\n", pstate->ofilename, pstate->handler);
       fprintf(stderr, "Output buffer error\n");
       xmlStopParser(pstate->ctxt);
     }
