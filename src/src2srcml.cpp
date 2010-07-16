@@ -308,7 +308,7 @@ int main(int argc, char* argv[]) {
 #endif
 
 #ifdef LIBARCHIVE
-  if (xmlRegisterInputCallbacks(archiveMatch, archiveOpen, archiveRead, archiveClose) < 0) {
+  if (xmlRegisterInputCallbacks(archiveReadMatch, archiveReadOpen, archiveRead, archiveReadClose) < 0) {
     fprintf(stderr, "%s: failed to register archive handler\n", argv[0]);
     exit(1);
   }
@@ -1049,30 +1049,30 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& option
 
   // process the individual file (once), or an archive as many times as it takes
   bool first = true;
-  while (first || !archiveStatus()) {
+  while (first || !archiveReadStatus()) {
 
     // start with the original options
     //    options = save_options;
 
     // if using libarchive, then get the filename (which starts the open)
-    if (archiveMatch(path)) {
-      const char* result = archiveFilename(path);
+    if (archiveReadMatch(path)) {
+      const char* result = archiveReadFilename(path);
       afilename = result ? strdup(result) : 0;
     }
 
-    if (isArchive()) {
+    if (isArchiveRead()) {
       isarchive = true;
       options |= OPTION_NESTED;
     }
 
     // in verbose mode output the currently processed filename
-    if (first && archiveMatch(path) && isoption(options, OPTION_VERBOSE)
-	&& (strcmp(archiveCompression(), "none")))
-      fprintf(stderr, "Compression:\t%s\n", archiveCompression());
+    if (first && archiveReadMatch(path) && isoption(options, OPTION_VERBOSE)
+	&& (strcmp(archiveReadCompression(), "none")))
+      fprintf(stderr, "Compression:\t%s\n", archiveReadCompression());
 
     // in verbose mode output the currently processed filename
-    if (first && isArchive() && isoption(options, OPTION_VERBOSE))
-      fprintf(stderr, "Format:\t%s\n", archiveFormat());
+    if (first && isArchiveRead() && isoption(options, OPTION_VERBOSE))
+      fprintf(stderr, "Format:\t%s\n", archiveReadFormat());
 
     first = false;
 

@@ -14,7 +14,7 @@ static const int NUMARCHIVES = 4;
 static const char * ARCHIVE_FILTER_EXTENSIONS[] = {"tar", "zip", "tgz", "cpio", "gz", "bz2", 0};
 
 // check if file has an archive extension
-bool isArchive(const char * path)
+bool isArchiveRead(const char * path)
 {
   for(int i = 0; i < NUMARCHIVES; ++i)
   {
@@ -32,23 +32,23 @@ bool isArchive(const char * path)
 }
 
 // check if file has an archive extension
-bool isArchive() {
+bool isArchiveRead() {
 
   return a && status == ARCHIVE_OK && (archive_format(a) != ARCHIVE_FORMAT_RAW);
 }
 
 // format (e.g., tar, cpio) of the current file
-const char* archiveFormat() {
+const char* archiveReadFormat() {
   return !a ? 0 : archive_format_name(a);
 }
 
 // compression (e.g., gz, bzip2) of the current file
-const char* archiveCompression() {
+const char* archiveReadCompression() {
   return !a ? 0 : archive_compression_name(a);
 }
 
 // check if archive matches the protocol on the URI
-int archiveMatch(const char * URI) {
+int archiveReadMatch(const char * URI) {
 
   //  fprintf(stderr, "MATCH: %s\n", URI);
   
@@ -70,37 +70,63 @@ int archiveMatch(const char * URI) {
   return 0;
 }
 
+// check if archive matches the protocol on the URI
+int archiveWriteMatch(const char * URI) {
+
+  //  fprintf(stderr, "MATCH: %s\n", URI);
+  
+  if(URI == NULL)
+      return 0;
+
+  for(const char ** pos = ARCHIVE_FILTER_EXTENSIONS; *pos != 0; ++pos )
+    {
+      char pattern[10] = { 0 } ;
+      strcpy(pattern, "*.");
+      strcat(pattern, *pos);
+      if(int match = fnmatch(pattern, URI, 0) == 0)
+	return match;
+     }
+
+  return 0;
+}
+
 // setup archive root for this URI
-int archiveStatus() {
+int archiveReadStatus() {
 
   return status;
 }
 
-const char* archiveFilename(const char* URI) {
+const char* archiveReadFilename(const char* URI) {
 
   if (!a)
-    archiveOpen(URI);
+    archiveReadOpen(URI);
 
-  return isArchive() ? archive_entry_pathname(ae) : 0;
+  return isArchiveRead() ? archive_entry_pathname(ae) : 0;
 }
 
 // setup archive for this URI
-void* archiveOpen(const char * URI) {
+void* archiveReadOpen(const char * URI) {
 
   //  fprintf(stderr, "ARCHIVE_OPEN\n");
 
-  if (!archiveMatch(URI))
+  if (!archiveReadMatch(URI))
     return NULL;
 
   // just in case archiveOpenRoot() was not called
   if (!a) {
     //    fprintf(stderr, "REALLY OPEN\n");
     a = archive_read_new();
-    archive_read_support_compression_all(a);
+    //    archive_read_support_compression_all(a);
+    archive_read_support_compression_bzip2(a);
+    archive_read_support_compression_gzip(a);
+
 #if ARCHIVE_VERSION_STAMP >= 2008000
   archive_read_support_format_raw(a);
 #endif
-    archive_read_support_format_all(a);
+  //    archive_read_support_format_all(a);
+    archive_read_support_format_tar(a);
+    archive_read_support_format_zip(a);
+    archive_read_support_format_cpio(a);
 
     //    int r = archive_read_open_filename(a, URI, 4000);
     int r = archive_read_open_filename(a, strcmp(URI, "-") == 0 ? 0 : URI, 4000);
@@ -118,7 +144,7 @@ void* archiveOpen(const char * URI) {
 }
 
 // close the open file
-int archiveClose(void * context) {
+int archiveReadClose(void * context) {
 
   //  fprintf(stderr, "ARCHIVE_CLOSE\n");
 

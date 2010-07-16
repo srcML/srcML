@@ -9,33 +9,48 @@
 #include <libxml/xmlIO.h>
 
 // check if path has an archive extension
-bool isArchive(const char * path);
+bool isArchiveRead(const char * path);
 
 // current file is an archive
-bool isArchive();
+bool isArchiveRead();
 
 // format (e.g., tar, cpio) of the current file
-const char* archiveFormat();
+const char* archiveReadFormat();
 
 // compression (e.g., gz, bzip2) of the current file
-const char* archiveCompression();
+const char* archiveReadCompression();
 
 // check if archive matches the protocol on the URI
-int archiveMatch(const char * URI);
+int archiveReadMatch(const char * URI);
 
+// check if archive matches the protocol on the URI
+int archiveWriteMatch(const char * URI);
 
-const char* archiveFilename(const char* URI);
+const char* archiveReadFilename(const char* URI);
 
 // setup archive root for this URI
-int archiveStatus();
+int archiveReadStatus();
 
 // setup archive for this URI
-void* archiveOpen(const char * URI);
+void* archiveReadOpen(const char * URI);
 
 // read from the URI
 int archiveRead(void * context, char * buffer, int len);
 
 // close the open file
-int archiveClose(void * context);
+int archiveReadClose(void * context);
+
+// setup archive root for this URI
+int archiveReadStatus();
+
+// setup archive for this URI
+void* archiveWriteOpen(const char * URI);
+
+// read from the URI
+int archiveWrite(void * context, char * buffer, int len);
+
+// close the open file
+int archiveWriteClose(void * context);
+
 
 #endif
