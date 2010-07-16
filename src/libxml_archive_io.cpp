@@ -166,7 +166,8 @@ int archiveRead(void * context, char * buffer, int len) {
   return size;
 }
 
-static char data[256000];
+static char* pdata = 0;
+static int size = 0;
 static int pos = 0;
 static struct archive *wa;
 static struct archive_entry *wentry;
@@ -176,13 +177,13 @@ static char filename[512];
 // check if archive matches the protocol on the URI
 int archiveWriteMatch(const char * URI) {
 
-  //  fprintf(stderr, "MATCH: %s\n", URI);
+  // fprintf(stderr, "MATCH: %s\n", URI);
   
   if(URI == NULL)
       return 0;
 
   if (root_filename[0] != '\0')
-    return 1;
+     return 1;
 
   for(const char ** pos = ARCHIVE_FILTER_EXTENSIONS; *pos != 0; ++pos )
     {
@@ -209,8 +210,28 @@ void* archiveWriteOpen(const char * URI) {
 
   if (!wa) {
     wa = archive_write_new();
-    //    archive_write_set_compression_gzip(wa);
-    archive_write_set_format_zip(wa); // Note 1
+
+    // setup the desired compression
+    // TODO:  Extract into method, and make more general
+    if (!fnmatch("*.gz", root_filename, 0))
+      archive_write_set_compression_gzip(wa);
+    else if (!fnmatch("*.bz2", root_filename, 0))
+      archive_write_set_compression_bzip2(wa);
+    else
+      archive_write_set_compression_none(wa);
+
+    // setup the desired format
+    // TODO:  Extract into method, and make more general
+    if (!fnmatch("*.zip", root_filename, 0) || !fnmatch("*.zip.*", root_filename, 0))
+      archive_write_set_format_zip(wa);
+      else if (!fnmatch("*.cpio", root_filename, 0) || !fnmatch("*.cpio.*", root_filename, 0))
+      archive_write_set_format_cpio(wa);
+    else
+      archive_write_set_format_pax_restricted(wa); // Correct for (gnu) tar?
+
+    //    fprintf(stderr, "ROOT: %s %s %s\n", root_filename, archive_compression_name(wa),
+    //	    archive_format_name(wa));
+
     archive_write_open_filename(wa, root_filename);
   }
   pos = 0;
@@ -226,7 +247,13 @@ int archiveWrite(void * context, const char * buffer, int len) {
 
   //  fprintf(stderr, "ARCHIVE_WRITE_WRITE: %d\n", len);
 
-  memcpy(data + pos, buffer, len);
+  // make sure we have room
+  if (pos + len >= size) {
+    size = (pos + len) * 2;
+    pdata = (char*) realloc(pdata, size);
+  }
+
+  memcpy(pdata + pos, buffer, len);
   pos += len;
 
   return len;
@@ -243,7 +270,7 @@ int archiveWriteClose(void * context) {
   archive_entry_set_filetype(wentry, AE_IFREG);
   archive_entry_set_perm(wentry, 0644);
   archive_write_header(wa, wentry);
-  archive_write_data(wa, data, pos);
+  archive_write_data(wa, pdata, pos);
   archive_entry_free(wentry);
   wentry = 0;
 
@@ -258,6 +285,9 @@ int archiveWriteRootClose(void * context) {
     archive_write_close(wa);
     archive_write_finish(wa);
   }
+  if (pdata)
+    free(pdata);
+
   wa = 0;
   strcpy(root_filename, "");
   strcpy(filename, "");

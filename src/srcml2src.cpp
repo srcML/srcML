@@ -262,6 +262,7 @@ int main(int argc, char* argv[]) {
     fprintf(stderr, "%s: failed to register archive handler\n", argv[0]);
     exit(1);
   }
+
 #endif
 
   /* signal handling */
