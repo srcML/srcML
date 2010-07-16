@@ -481,7 +481,7 @@ int main(int argc, char* argv[]) {
 		     poptions.given_directory,
 		     poptions.given_filename,
 		     poptions.given_version,
-		     poptions.language ? poptions.language : DEFAULT_LANGUAGE,
+		     poptions.language,
 		     poptions.tabsize, count);
 
       // translate single input filename from command line
@@ -493,7 +493,7 @@ int main(int argc, char* argv[]) {
 		     poptions.given_directory,
 		     poptions.given_filename,
 		     poptions.given_version,
-		     poptions.language ? poptions.language : DEFAULT_LANGUAGE,
+		     poptions.language,
 		     poptions.tabsize, count);
 
       // translate multiple input filenames on command line
@@ -507,7 +507,7 @@ int main(int argc, char* argv[]) {
 		       0,
 		       0,
 		       0,
-		       poptions.language ? poptions.language : DEFAULT_LANGUAGE,
+		       poptions.language,
 		       poptions.tabsize,
 		       count);
       }
@@ -1047,6 +1047,8 @@ Language::registerUserExt( LanguageName::LANGUAGE_CXX_0X, LANGUAGE_CXX_0X },
 
 void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count) {
 
+  options |= OPTION_SKIP_DEFAULT;
+
   // in verbose mode output the currently processed filename
   if (isoption(options, OPTION_VERBOSE))
     fprintf(stderr, "Input:\t%s\n", strcmp(path, "-") == 0 ? "" : path);
@@ -1116,10 +1118,12 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& option
       reallanguage = Language::getLanguageFromFilename(nfilename);
     if (reallanguage == 0 && !isoption(options, OPTION_SKIP_DEFAULT))
       reallanguage = DEFAULT_LANGUAGE;
-    else {
+
+    if (!reallanguage) {
+
       fprintf(stderr, "%s:  Skipping '%s'.  No language can be determined.\n", "FIXME", nfilename);
-      continue;
-    }
+
+    } else {
 
     // now that we have the language, turnon cpp namespace for non Java-based languages
     if (!(reallanguage == srcMLTranslator::LANGUAGE_JAVA || reallanguage == srcMLTranslator::LANGUAGE_ASPECTJ))
@@ -1144,7 +1148,7 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& option
 
       exit(STATUS_INPUTFILE_PROBLEM);
     }
-
+    }
     // in verbose mode output end info about this file
     if (isoption(options, OPTION_VERBOSE))
       fprintf(stderr, "\n");

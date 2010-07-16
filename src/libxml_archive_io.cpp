@@ -5,6 +5,7 @@
 #include <fnmatch.h>
 #include <archive.h>
 #include <archive_entry.h>
+#include <string>
 
 static struct archive* a = 0;
 static int status = 0;
@@ -216,6 +217,7 @@ void* archiveWriteOpen(const char * URI) {
 
     // setup the desired compression
     // TODO:  Extract into method, and make more general
+    //    std::string s;
     if (!fnmatch("*.gz", root_filename, 0))
       archive_write_set_compression_gzip(wa);
     else if (!fnmatch("*.bz2", root_filename, 0))
@@ -227,10 +229,20 @@ void* archiveWriteOpen(const char * URI) {
     // TODO:  Extract into method, and make more general
     if (!fnmatch("*.zip", root_filename, 0) || !fnmatch("*.zip.*", root_filename, 0))
       archive_write_set_format_zip(wa);
-      else if (!fnmatch("*.cpio", root_filename, 0) || !fnmatch("*.cpio.*", root_filename, 0))
+    else if (!fnmatch("*.cpio", root_filename, 0) || !fnmatch("*.cpio.*", root_filename, 0))
       archive_write_set_format_cpio(wa);
-    else
+    else if (!fnmatch("*.tar", root_filename, 0) ||
+	     !fnmatch("*.tar.*", root_filename, 0) ||
+	     !fnmatch("*.tgz", root_filename, 0) ||
+	     !fnmatch("*.tbz", root_filename, 0) ||
+	     !fnmatch("*.tb2", root_filename, 0) ||
+	     !fnmatch("*.tgz", root_filename, 0)
+	     )
       archive_write_set_format_ustar(wa);
+    else {
+      fprintf(stderr, "%s: Unknown format extension '%s'\n", "TODO", root_filename);
+      exit(1);
+    }
 
     //    fprintf(stderr, "ROOT: %s %s %s\n", root_filename, archive_compression_name(wa),
     //	    archive_format_name(wa));
