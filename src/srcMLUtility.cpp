@@ -59,6 +59,7 @@
 #ifdef LIBARCHIVE
 #include "libxml_archive_read.h"
 #include "libxml_archive_write.h"
+#include "libxml_archive_write_disk.h"
 #endif
 
 // constructor
@@ -271,6 +272,12 @@ void srcMLUtility::expand(const char* root_filename) {
       exit(1);
     }
     archiveWriteRootOpen(root_filename);
+  } else {
+    if (xmlRegisterOutputCallbacks(archiveWriteDiskMatch, archiveWriteDiskOpen, archiveWriteDisk, archiveWriteDiskClose) < 0) {
+      fprintf(stderr, "%s: failed to register archive handler\n", "FOO");
+      exit(1);
+    }
+    archiveWriteDiskRootOpen(root_filename);
   }
 #endif
 

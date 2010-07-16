@@ -183,7 +183,7 @@ namespace SAX2ExtractUnitsSrc {
     strncat(pstate->whole_path, (const char*) attributes[filename_index + 3], filename_size);
     size += filename_size;
 
-    makedirectories(pstate->whole_path);
+    //    makedirectories(pstate->whole_path);
 
     /*
     // construct the directory subpath by subpath

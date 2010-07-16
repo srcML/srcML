@@ -25,6 +25,8 @@ int archiveWriteDiskMatch(const char * URI) {
   if (URI == NULL)
       return 0;
 
+  return 1;
+
   if (strcmp(URI, "-") == 0)
     return  0;
 
@@ -55,35 +57,19 @@ void* archiveWriteDiskOpen(const char * URI) {
   //  fprintf(stderr, "ARCHIVE_WRITE_OPEN\n");
 
   if (!wa) {
-    wa = archive_write_new();
-
-    // setup the desired compression
-    // TODO:  Extract into method, and make more general
-    if (!fnmatch("*.gz", root_filename, 0))
-      archive_write_set_compression_gzip(wa);
-    else if (!fnmatch("*.bz2", root_filename, 0))
-      archive_write_set_compression_bzip2(wa);
-    else
-      archive_write_set_compression_none(wa);
-
-    // setup the desired format
-    // TODO:  Extract into method, and make more general
-    if (!fnmatch("*.zip", root_filename, 0) || !fnmatch("*.zip.*", root_filename, 0))
-      archive_write_set_format_zip(wa);
-      else if (!fnmatch("*.cpio", root_filename, 0) || !fnmatch("*.cpio.*", root_filename, 0))
-      archive_write_set_format_cpio(wa);
-    else
-      archive_write_set_format_ustar(wa);
-
-    //    fprintf(stderr, "ROOT: %s %s %s\n", root_filename, archive_compression_name(wa),
-    //	    archive_format_name(wa));
-
-    archive_write_open_filename(wa, root_filename);
+    wa = archive_write_disk_new();
   }
+
+  wentry = archive_entry_new();
+  archive_entry_set_pathname(wentry, URI);
+  archive_entry_set_filetype(wentry, AE_IFREG);
+  archive_entry_set_perm(wentry, 0644);
+  archive_write_header(wa, wentry);
+
   pos = 0;
   strcpy(filename, URI);
 
-  //  fprintf(stderr, "FILE: %s\n", URI);
+  //fprintf(stderr, "FILE: %s\n", URI);
 
   return wa;
 }
@@ -93,14 +79,7 @@ int archiveWriteDisk(void * context, const char * buffer, int len) {
 
   //  fprintf(stderr, "ARCHIVE_WRITE_WRITE: %d\n", len);
 
-  // make sure we have room
-  if (pos + len >= size) {
-    size = (pos + len) * 2;
-    pdata = (char*) realloc(pdata, size);
-  }
-
-  memcpy(pdata + pos, buffer, len);
-  pos += len;
+  archive_write_data(wa, buffer, len);
 
   return len;
 }
@@ -109,14 +88,6 @@ int archiveWriteDisk(void * context, const char * buffer, int len) {
 int archiveWriteDiskClose(void * context) {
 
   //  fprintf(stderr, "ARCHIVE_WRITE_CLOSE: %d\n", pos);
-
-  wentry = archive_entry_new();
-  archive_entry_set_pathname(wentry, filename);
-  archive_entry_set_size(wentry, pos);
-  archive_entry_set_filetype(wentry, AE_IFREG);
-  archive_entry_set_perm(wentry, 0644);
-  archive_write_header(wa, wentry);
-  archive_write_data(wa, pdata, pos);
   archive_entry_free(wentry);
   wentry = 0;
 
@@ -131,8 +102,6 @@ int archiveWriteDiskRootClose(void * context) {
     archive_write_close(wa);
     archive_write_finish(wa);
   }
-  if (pdata)
-    free(pdata);
 
   wa = 0;
   strcpy(root_filename, "");
