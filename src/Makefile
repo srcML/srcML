@@ -41,8 +41,8 @@ XML_IO_LIB_SRC2SRCML_DEFINE=-DLIBARCHIVE
 XML_IO_LIB_SRCML2SRC_DEFINE=-DLIBARCHIVE
 XML_IO_LIB_SRC2SRCML=-larchive
 XML_IO_LIB_SRCML2SRC=-larchive
-IO_LIB_SRC2SRCML=${OBJ_DIR}libxml_archive_io.o
-IO_LIB_SRCML2SRC=${OBJ_DIR}libxml_archive_io.o
+IO_LIB_SRC2SRCML=${OBJ_DIR}libxml_archive_read.o ${OBJ_DIR}libxml_archive_write.o 
+IO_LIB_SRCML2SRC=${OBJ_DIR}libxml_archive_read.o ${OBJ_DIR}libxml_archive_write.o 
 else
 XML_IO_LIB_SRC2SRCML_DEFINE=
 XML_IO_LIB_SRCML2SRC_DEFINE=
@@ -212,7 +212,10 @@ ${OBJ_DIR}URIStream.o : URIStream.cpp URIStream.h
 ${OBJ_DIR}libxml_curl_io.o : libxml_curl_io.cpp libxml_curl_io.h
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}libxml_archive_io.o : libxml_archive_read.cpp libxml_archive_read.h libxml_archive_write.cpp libxml_archive_write.h
+${OBJ_DIR}libxml_archive_read.o : libxml_archive_read.cpp libxml_archive_read.h 
+	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
+
+${OBJ_DIR}libxml_archive_write.o : libxml_archive_write.cpp libxml_archive_write.h
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}SAX2TextWriter.o : SAX2TextWriter.cpp SAX2TextWriter.h

@@ -1,5 +1,5 @@
-#ifndef INCLUDED_LIBXML_ARCHIVE_IO_H
-#define INCLUDED_LIBXML_ARCHIVE_IO_H
+#ifndef INCLUDED_LIBXML_ARCHIVE_READ_H
+#define INCLUDED_LIBXML_ARCHIVE_READ_H
 
 #include <stdio.h>
 #include <string.h>
@@ -23,9 +23,6 @@ const char* archiveReadCompression();
 // check if archive matches the protocol on the URI
 int archiveReadMatch(const char * URI);
 
-// check if archive matches the protocol on the URI
-int archiveWriteMatch(const char * URI);
-
 const char* archiveReadFilename(const char* URI);
 
 // setup archive root for this URI
@@ -42,18 +39,5 @@ int archiveReadClose(void * context);
 
 // setup archive root for this URI
 int archiveReadStatus();
-
-void* archiveWriteRootOpen(const char* URI);
-
-// setup archive for this URI
-void* archiveWriteOpen(const char * URI);
-
-// read from the URI
-int archiveWrite(void * context, const char * buffer, int len);
-
-// close the open file
-int archiveWriteClose(void * context);
-
-int archiveWriteRootClose(void * context);
 
 #endif
