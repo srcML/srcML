@@ -221,4 +221,12 @@ const OPTION_TYPE OPTION_OUTPUT_FORMAT  = 0x400000000ull;
 // @srcml2src
 const OPTION_TYPE OPTION_LIST  = 0x800000000ull;
 
+// skip default language option
+// @src2srcml
+const OPTION_TYPE OPTION_SKIP_DEFAULT  = 0x1800000000ull;
+
+// skip default language option
+// @src2srcml
+const OPTION_TYPE OPTION_RECURSIVE  = 0x2800000000ull;
+
 #endif

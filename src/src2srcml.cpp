@@ -89,7 +89,12 @@ const char* const XMLNS_DEFAULT_FLAG_FULL = "xmlns=URI";
 const char* const XMLNS_FLAG_FULL = "xmlns:PREFIX=URI";
 
 const char* const REGISTER_EXT_FLAG = "register-ext";
+
 const char* const OLD_FILENAME_FLAG = "old-filename";
+
+const char* const SKIP_DEFAULT_FLAG = "skip-default";
+
+const char* const RECURSIVE_FLAG = "recursive";
 
 const int DEFAULT_LANGUAGE = srcMLTranslator::LANGUAGE_CXX;
 
@@ -544,6 +549,8 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { FILELIST_FLAG, required_argument, NULL, 'F' },
     { REGISTER_EXT_FLAG, required_argument, NULL, 'R' },
     { XMLNS_FLAG, required_argument, NULL, 'X' },
+    { SKIP_DEFAULT_FLAG, no_argument, NULL, 'S' },
+    { RECURSIVE_FLAG, no_argument, NULL, 'r' },
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
     { OLD_FILENAME_FLAG, no_argument, NULL, 'O' },
@@ -760,6 +767,14 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 		);
 	exit(STATUS_INVALID_LANGUAGE);
       }
+      break;
+
+    case 'S': 
+      options |= OPTION_SKIP_DEFAULT;
+      break;
+
+    case 'r': 
+      options |= OPTION_RECURSIVE;
       break;
 
     case COMPRESSED_FLAG_SHORT: 
