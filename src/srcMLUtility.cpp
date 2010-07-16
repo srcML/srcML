@@ -57,7 +57,7 @@
 #include <libexslt/exslt.h>
 
 #ifdef LIBARCHIVE
-#include "libxml_archive_io.h"
+#include "libxml_archive_read.h"
 #endif
 
 // constructor

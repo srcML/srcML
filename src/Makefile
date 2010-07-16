@@ -212,7 +212,7 @@ ${OBJ_DIR}URIStream.o : URIStream.cpp URIStream.h
 ${OBJ_DIR}libxml_curl_io.o : libxml_curl_io.cpp libxml_curl_io.h
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}libxml_archive_io.o : libxml_archive_io.cpp libxml_archive_io.h
+${OBJ_DIR}libxml_archive_io.o : libxml_archive_read.cpp libxml_archive_read.h libxml_archive_write.cpp libxml_archive_write.h
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}SAX2TextWriter.o : SAX2TextWriter.cpp SAX2TextWriter.h
