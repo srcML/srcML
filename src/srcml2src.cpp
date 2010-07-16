@@ -251,7 +251,14 @@ int main(int argc, char* argv[]) {
   initGenericErrorDefaultFunc(&handler);
 
 #ifdef LIBARCHIVE
+  /* 
   if (xmlRegisterInputCallbacks(archiveReadMatch, archiveReadOpen, archiveRead, archiveReadClose) < 0) {
+    fprintf(stderr, "%s: failed to register archive handler\n", argv[0]);
+    exit(1);
+  }
+  */
+
+  if (xmlRegisterOutputCallbacks(archiveWriteMatch, archiveWriteOpen, archiveWrite, archiveWriteClose) < 0) {
     fprintf(stderr, "%s: failed to register archive handler\n", argv[0]);
     exit(1);
   }
@@ -413,7 +420,7 @@ int main(int argc, char* argv[]) {
       pstd::signal(SIGINT, terminate_handler);
 #endif
 
-      su.expand();
+      su.expand(poptions.ofilename);
 
       // if we terminated early, output the correct status
       if (isoption(options, OPTION_TERMINATE))

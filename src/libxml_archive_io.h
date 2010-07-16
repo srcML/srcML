@@ -43,14 +43,17 @@ int archiveReadClose(void * context);
 // setup archive root for this URI
 int archiveReadStatus();
 
+void* archiveWriteRootOpen(const char* URI);
+
 // setup archive for this URI
 void* archiveWriteOpen(const char * URI);
 
 // read from the URI
-int archiveWrite(void * context, char * buffer, int len);
+int archiveWrite(void * context, const char * buffer, int len);
 
 // close the open file
 int archiveWriteClose(void * context);
 
+int archiveWriteRootClose(void * context);
 
 #endif

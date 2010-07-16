@@ -56,6 +56,10 @@
 
 #include <libexslt/exslt.h>
 
+#ifdef LIBARCHIVE
+#include "libxml_archive_io.h"
+#endif
+
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, OPTION_TYPE& op)
   : infile(infilename), output_encoding(encoding), options(op), units(0) {
@@ -64,7 +68,6 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, OPTION_
   if (infile == 0)
     infile = "-";
 }
-
 // destructor
 srcMLUtility::~srcMLUtility() {
 
@@ -248,6 +251,10 @@ void srcMLUtility::extract_text(const char* ofilename, int unit) {
 
   xmlFreeParserCtxt(ctxt);
 
+#ifdef LIBARCHIVE
+  archiveWriteRootClose(0);
+#endif
+
   // make sure we did not end early
   if (state.unit && state.count != state.unit)
     throw OutOfRangeUnitError(state.count);
@@ -255,6 +262,11 @@ void srcMLUtility::extract_text(const char* ofilename, int unit) {
 
 // expand the compound srcML to individual files
 void srcMLUtility::expand(const char* root_filename) {
+
+#ifdef LIBARCHIVE
+  if (archiveWriteMatch(root_filename))
+    archiveWriteRootOpen(root_filename);
+#endif
 
   SAX2ExtractUnitsSrc::State state;
   state.root_filename = root_filename;
@@ -276,6 +288,11 @@ void srcMLUtility::expand(const char* root_filename) {
   ctxt->sax = NULL;
 
   free(state.whole_path);
+
+#ifdef LIBARCHIVE
+  if (archiveWriteMatch(root_filename))
+    archiveWriteRootClose(0);
+#endif
 
   xmlFreeParserCtxt(ctxt);
 }
