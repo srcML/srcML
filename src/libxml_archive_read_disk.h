@@ -1,5 +1,5 @@
-#ifndef INCLUDED_LIBXML_ARCHIVE_READ_H
-#define INCLUDED_LIBXML_ARCHIVE_READ_H
+#ifndef INCLUDED_LIBXML_ARCHIVE_READ_DISK_H
+#define INCLUDED_LIBXML_ARCHIVE_READ_DISK_H
 
 #include <stdio.h>
 #include <string.h>
@@ -9,35 +9,35 @@
 #include <libxml/xmlIO.h>
 
 // check if path has an archive extension
-bool isArchiveRead(const char * path);
+bool isArchiveReadDisk(const char * path);
 
 // current file is an archive
-bool isArchiveRead();
+bool isArchiveReadDisk();
 
 // format (e.g., tar, cpio) of the current file
-const char* archiveReadFormat();
+const char* archiveReadDiskFormat();
 
 // compression (e.g., gz, bzip2) of the current file
-const char* archiveReadCompression();
+const char* archiveReadDiskCompression();
 
 // check if archive matches the protocol on the URI
-int archiveReadMatch(const char * URI);
+int archiveReadDiskMatch(const char * URI);
 
-const char* archiveReadFilename(const char* URI);
+const char* archiveReadDiskFilename(const char* URI);
 
 // setup archive root for this URI
-int archiveReadStatus();
+int archiveReadDiskStatus();
 
 // setup archive for this URI
-void* archiveReadOpen(const char * URI);
+void* archiveReadDiskOpen(const char * URI);
 
 // read from the URI
-int archiveRead(void * context, char * buffer, int len);
+int archiveReadDisk(void * context, char * buffer, int len);
 
 // close the open file
-int archiveReadClose(void * context);
+int archiveReadDiskClose(void * context);
 
 // setup archive root for this URI
-int archiveReadStatus();
+int archiveReadDiskStatus();
 
 #endif

@@ -1,5 +1,5 @@
-#ifndef INCLUDED_LIBXML_ARCHIVE_WRITE_H
-#define INCLUDED_LIBXML_ARCHIVE_WRITE_H
+#ifndef INCLUDED_LIBXML_ARCHIVE_WRITE_DISK_H
+#define INCLUDED_LIBXML_ARCHIVE_WRITE_DISK_H
 
 #include <stdio.h>
 #include <string.h>
@@ -9,19 +9,19 @@
 #include <libxml/xmlIO.h>
 
 // check if archive matches the protocol on the URI
-int archiveWriteMatch(const char * URI);
+int archiveWriteDiskMatch(const char * URI);
 
-void* archiveWriteRootOpen(const char* URI);
+void* archiveWriteDiskRootOpen(const char* URI);
 
 // setup archive for this URI
-void* archiveWriteOpen(const char * URI);
+void* archiveWriteDiskOpen(const char * URI);
 
 // read from the URI
-int archiveWrite(void * context, const char * buffer, int len);
+int archiveWriteDisk(void * context, const char * buffer, int len);
 
 // close the open file
-int archiveWriteClose(void * context);
+int archiveWriteDiskClose(void * context);
 
-int archiveWriteRootClose(void * context);
+int archiveWriteDiskRootClose(void * context);
 
 #endif

@@ -1,4 +1,4 @@
-#include "libxml_archive_write.h"
+#include "libxml_archive_write_disk.h"
 #include <stdio.h>
 #include <string.h>
 #include <libxml/xmlIO.h>
@@ -18,7 +18,7 @@ static char root_filename[512] = { 0 };
 static char filename[512] = { 0 };
 
 // check if archive matches the protocol on the URI
-int archiveWriteMatch(const char * URI) {
+int archiveWriteDiskMatch(const char * URI) {
 
   //  fprintf(stderr, "MATCH: %s %s\n", URI, root_filename);
 
@@ -44,13 +44,13 @@ int archiveWriteMatch(const char * URI) {
 }
 
 // setup archive for this URI
-void* archiveWriteRootOpen(const char * URI) {
+void* archiveWriteDiskRootOpen(const char * URI) {
   //  fprintf(stderr, "ARCHIVE_WRITE_ROOT_OPEN: %s\n", URI);
   strcpy(root_filename, URI);
 }
 
 // setup archive for this URI
-void* archiveWriteOpen(const char * URI) {
+void* archiveWriteDiskOpen(const char * URI) {
 
   //  fprintf(stderr, "ARCHIVE_WRITE_OPEN\n");
 
@@ -89,7 +89,7 @@ void* archiveWriteOpen(const char * URI) {
 }
 
 // read from the URI
-int archiveWrite(void * context, const char * buffer, int len) {
+int archiveWriteDisk(void * context, const char * buffer, int len) {
 
   //  fprintf(stderr, "ARCHIVE_WRITE_WRITE: %d\n", len);
 
@@ -106,7 +106,7 @@ int archiveWrite(void * context, const char * buffer, int len) {
 }
 
 // close the open file
-int archiveWriteClose(void * context) {
+int archiveWriteDiskClose(void * context) {
 
   //  fprintf(stderr, "ARCHIVE_WRITE_CLOSE: %d\n", pos);
 
@@ -123,7 +123,7 @@ int archiveWriteClose(void * context) {
   return 1;
 }
 
-int archiveWriteRootClose(void * context) {
+int archiveWriteDiskRootClose(void * context) {
 
   //  fprintf(stderr, "ARCHIVE_WRITE_ROOT_CLOSE\n");
 

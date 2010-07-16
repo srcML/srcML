@@ -1,4 +1,4 @@
-#include "libxml_archive_read.h"
+#include "libxml_archive_read_disk.h"
 #include <stdio.h>
 #include <string.h>
 #include <libxml/xmlIO.h>
@@ -15,7 +15,7 @@ static const int NUMARCHIVES = 4;
 static const char * ARCHIVE_FILTER_EXTENSIONS[] = {"tar", "zip", "tgz", "cpio", "gz", "bz2", 0};
 
 // check if file has an archive extension
-bool isArchiveRead(const char * path)
+bool isArchiveReadDisk(const char * path)
 {
   for(int i = 0; i < NUMARCHIVES; ++i)
   {
@@ -33,23 +33,23 @@ bool isArchiveRead(const char * path)
 }
 
 // check if file has an archive extension
-bool isArchiveRead() {
+bool isArchiveReadDisk() {
 
   return a && status == ARCHIVE_OK && (archive_format(a) != ARCHIVE_FORMAT_RAW);
 }
 
 // format (e.g., tar, cpio) of the current file
-const char* archiveReadFormat() {
+const char* archiveReadDiskFormat() {
   return !a ? 0 : archive_format_name(a);
 }
 
 // compression (e.g., gz, bzip2) of the current file
-const char* archiveReadCompression() {
+const char* archiveReadDiskCompression() {
   return !a ? 0 : archive_compression_name(a);
 }
 
 // check if archive matches the protocol on the URI
-int archiveReadMatch(const char * URI) {
+int archiveReadDiskMatch(const char * URI) {
 
   //  fprintf(stderr, "MATCH: %s\n", URI);
   
@@ -72,25 +72,25 @@ int archiveReadMatch(const char * URI) {
 }
 
 // setup archive root for this URI
-int archiveReadStatus() {
+int archiveReadDiskStatus() {
 
   return status;
 }
 
-const char* archiveReadFilename(const char* URI) {
+const char* archiveReadDiskFilename(const char* URI) {
 
   if (!a)
-    archiveReadOpen(URI);
+    archiveReadDiskOpen(URI);
 
-  return isArchiveRead() ? archive_entry_pathname(ae) : 0;
+  return isArchiveReadDisk() ? archive_entry_pathname(ae) : 0;
 }
 
 // setup archive for this URI
-void* archiveReadOpen(const char * URI) {
+void* archiveReadDiskOpen(const char * URI) {
 
   //  fprintf(stderr, "ARCHIVE_OPEN\n");
 
-  if (!archiveReadMatch(URI))
+  if (!archiveReadDiskMatch(URI))
     return NULL;
 
   // just in case archiveOpenRoot() was not called
@@ -125,7 +125,7 @@ void* archiveReadOpen(const char * URI) {
 }
 
 // close the open file
-int archiveReadClose(void * context) {
+int archiveReadDiskClose(void * context) {
 
   //  fprintf(stderr, "ARCHIVE_CLOSE\n");
 
@@ -148,7 +148,7 @@ int archiveReadClose(void * context) {
 }
 
 // read from the URI
-int archiveRead(void * context, char * buffer, int len) {
+int archiveReadDisk(void * context, char * buffer, int len) {
 
   //  fprintf(stderr, "ARCHIVE_READ\n");
 
