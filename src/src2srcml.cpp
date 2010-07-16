@@ -1040,11 +1040,11 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& option
   int reallanguage = 0;
   char* afilename = 0;
 
+  bool isarchive = false;
 #ifdef LIBARCHIVE
 
   // single file archive (tar, zip, cpio, etc.) is listed as a single file
   // but is much, much more
-  bool isarchive = false;
   OPTION_TYPE save_options = options;
 
   // process the individual file (once), or an archive as many times as it takes
