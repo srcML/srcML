@@ -448,6 +448,10 @@ int main(int argc, char* argv[]) {
 
 	// translate all the filenames listed in the named file
 	// Use libxml2 routines so that we can handle http:, file:, and gzipped files automagically
+	if (!poptions.fname && input_arg_count > 0)
+	  poptions.fname = argv[input_arg_start];
+	if (!poptions.fname)
+	  poptions.fname = "-";
 	URIStream uriinput(poptions.fname);
 	char* line;
 	while ((line = uriinput.getline())) {
@@ -547,6 +551,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { INPUT_FORMAT_FLAG, required_argument, NULL, 'I' },
     { OUTPUT_FORMAT_FLAG, required_argument, NULL, 'u' },
     { FILELIST_FLAG, required_argument, NULL, 'F' },
+    //    { FILELIST_FLAG, optional_argument, NULL, 'F' },
     { REGISTER_EXT_FLAG, required_argument, NULL, 'R' },
     { XMLNS_FLAG, required_argument, NULL, 'X' },
     { SKIP_DEFAULT_FLAG, no_argument, NULL, 'S' },
@@ -1047,7 +1052,7 @@ Language::registerUserExt( LanguageName::LANGUAGE_CXX_0X, LANGUAGE_CXX_0X },
 
 void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count) {
 
-  options |= OPTION_SKIP_DEFAULT;
+  //  options |= OPTION_SKIP_DEFAULT;
 
   // in verbose mode output the currently processed filename
   if (isoption(options, OPTION_VERBOSE))
@@ -1114,11 +1119,10 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& option
 
     // language (for this item in archive mode) based on extension, if not specified
     reallanguage = language;
-    if (reallanguage == 0)
+    if (reallanguage == 0 && nfilename)
       reallanguage = Language::getLanguageFromFilename(nfilename);
-    if (reallanguage == 0 && !isoption(options, OPTION_SKIP_DEFAULT))
+    if (reallanguage == 0 /* && !isoption(options, OPTION_SKIP_DEFAULT) */)
       reallanguage = DEFAULT_LANGUAGE;
-
     if (!reallanguage) {
 
       fprintf(stderr, "%s:  Skipping '%s'.  No language can be determined.\n", "FIXME", nfilename);
