@@ -1114,6 +1114,12 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& option
     reallanguage = language;
     if (reallanguage == 0)
       reallanguage = Language::getLanguageFromFilename(nfilename);
+    if (reallanguage == 0 && !isoption(options, OPTION_SKIP_DEFAULT))
+      reallanguage = DEFAULT_LANGUAGE;
+    else {
+      fprintf(stderr, "%s:  Skipping '%s'.  No language can be determined.\n", "FIXME", nfilename);
+      continue;
+    }
 
     // now that we have the language, turnon cpp namespace for non Java-based languages
     if (!(reallanguage == srcMLTranslator::LANGUAGE_JAVA || reallanguage == srcMLTranslator::LANGUAGE_ASPECTJ))
