@@ -33,6 +33,9 @@
 #include "srcMLTranslator.h"
 #include "URIStream.h"
 #include <getopt.h>
+#include <dirent.h>
+
+const char* PROGRAM_NAME = "";
 
 #ifdef CURL
 #include "libxml_curl_io.h"
@@ -47,8 +50,6 @@ int option_error_status(int optopt);
 void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count);
 
 using namespace LanguageName;
-
-const char* const NAME = "src2srcml";
 
 const char* const DEBUG_FLAG = "debug";
 const char DEBUG_FLAG_SHORT = 'g';
@@ -104,6 +105,8 @@ const char* const EXAMPLE_XML_FILENAME="foo.cpp.xml";
 const char FILELIST_COMMENT = '#';
 
 bool process;
+
+bool flag = false;
 
 struct uridata {
   char const * const uri;
@@ -290,6 +293,8 @@ struct process_options
   bool prefixchange[num_prefixes];
 };
 
+void process_dir(srcMLTranslator& translator, char* dname, process_options& poptions, int& count);
+
 // setup options and collect info from arguments
 int process_args(int argc, char* argv[], process_options & poptions);
 
@@ -297,6 +302,8 @@ int process_args(int argc, char* argv[], process_options & poptions);
 void register_standard_file_extensions();
 
 int main(int argc, char* argv[]) {
+
+  PROGRAM_NAME = argv[0];
 
   int exit_status = EXIT_SUCCESS;
 
@@ -390,7 +397,7 @@ int main(int argc, char* argv[]) {
     for (int j = i + 1; j < num_prefixes; ++j)
       if(strcmp(urisprefix[i], urisprefix[j]) == 0) {
 
-	fprintf(stderr, "%s: Namespace conflict for ", NAME);
+	fprintf(stderr, "%s: Namespace conflict for ", PROGRAM_NAME);
 	if (urisprefix[i] == '\0') {
 	  fprintf(stderr, "default prefix\n");
 	} else {
@@ -442,7 +449,27 @@ int main(int argc, char* argv[]) {
 #endif
 
     // translate input filenames from list in file
-    if (isoption(options, OPTION_FILELIST)) {
+    if (false) {
+
+      try {
+
+	// translate all the filenames listed in the named file
+	// Use libxml2 routines so that we can handle http:, file:, and gzipped files automagically
+	if (!poptions.fname && input_arg_count > 0)
+	  poptions.fname = argv[input_arg_start];
+	if (!poptions.fname)
+	  poptions.fname = "-";
+	options |= OPTION_NESTED;
+
+	process_dir(translator, argv[input_arg_start], poptions, count);
+
+      } catch (URIStreamFileError) {
+	fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", argv[0], poptions.fname);
+	exit(STATUS_INPUTFILE_PROBLEM);
+      }
+
+    // translate input filenames from list in file
+    } else if (isoption(options, OPTION_FILELIST)) {
 
       try {
 
@@ -735,7 +762,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       // look for uri in next argument
       if (!ns_uri) {
 	if (!(optind < argc && argv[optind][0] != '-')) {
-	  fprintf(stderr, "%s: xmlns option selected but not specified.\n", NAME);
+	  fprintf(stderr, "%s: xmlns option selected but not specified.\n", PROGRAM_NAME);
 	  exit(STATUS_LANGUAGE_MISSING);
 	}
 
@@ -1058,7 +1085,6 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& option
   if (isoption(options, OPTION_VERBOSE))
     fprintf(stderr, "Input:\t%s\n", strcmp(path, "-") == 0 ? "" : path);
 
-  const char* NAME = "src2srcml";
   int reallanguage = 0;
   char* afilename = 0;
 
@@ -1121,11 +1147,11 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& option
     reallanguage = language;
     if (reallanguage == 0 && nfilename)
       reallanguage = Language::getLanguageFromFilename(nfilename);
-    if (reallanguage == 0 /* && !isoption(options, OPTION_SKIP_DEFAULT) */)
+    if (reallanguage == 0 && !isoption(options, OPTION_SKIP_DEFAULT))
       reallanguage = DEFAULT_LANGUAGE;
     if (!reallanguage) {
 
-      fprintf(stderr, "%s:  Skipping '%s'.  No language can be determined.\n", "FIXME", nfilename);
+      fprintf(stderr, "%s:  Skipping '%s'.  No language can be determined.\n", PROGRAM_NAME, nfilename);
 
     } else {
 
@@ -1146,9 +1172,9 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& option
     } catch (FileError) {
 
       if (dir)
-	fprintf(stderr, "%s error: file \'%s/%s\' does not exist.\n", NAME, dir, filename);
+	fprintf(stderr, "%s error: file \'%s/%s\' does not exist.\n", PROGRAM_NAME, dir, filename);
       else
-	fprintf(stderr, "%s error: file \'%s\' does not exist.\n", NAME, filename);
+	fprintf(stderr, "%s error: file \'%s\' does not exist.\n", PROGRAM_NAME, filename);
 
       exit(STATUS_INPUTFILE_PROBLEM);
     }
@@ -1168,4 +1194,55 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& option
       break;
   }
 #endif
+}
+
+
+void process_dir(srcMLTranslator& translator, char* dname, process_options& poptions, int& count) {
+
+  if (xmlCheckFilename(dname)) {
+	  src2srcml_file(translator,
+			 dname,
+			 options,
+			 0,
+			 0,
+			 poptions.given_version,
+			 poptions.language,
+			 poptions.tabsize,
+			 count);
+	  return;
+  }
+
+	DIR* dir = opendir(dname);
+	if (!dir)
+	  return;
+
+	char line[256];
+	while (struct dirent* entry = readdir(dir)) {
+
+	  if (strcmp(entry->d_name, ".") == 0 ||
+	      strcmp(entry->d_name, "..") == 0 ||
+	      strncmp(entry->d_name, ".", 1) == 0
+	      )
+	    continue;
+
+	  strcpy(line, dname);
+	  strcat(line, "/");
+	  strcat(line, entry->d_name);
+
+	  if (entry->d_type == DT_DIR) {
+	    process_dir(translator, line, poptions, count);
+	    continue;
+	  }
+
+	  // translate the file listed in the input file using the directory and filename extracted from the path
+	  src2srcml_file(translator,
+			 line,
+			 options,
+			 0,
+			 0,
+			 poptions.given_version,
+			 poptions.language,
+			 poptions.tabsize,
+			 count);
+	}
 }
