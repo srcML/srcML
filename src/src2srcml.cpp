@@ -303,6 +303,8 @@ void register_standard_file_extensions();
 
 int main(int argc, char* argv[]) {
 
+  options |= OPTION_SKIP_DEFAULT;
+
   PROGRAM_NAME = argv[0];
 
   int exit_status = EXIT_SUCCESS;
@@ -506,6 +508,8 @@ int main(int argc, char* argv[]) {
 
       // translate from standard input
     } else if (input_arg_count == 0 || strcmp(argv[input_arg_start], STDIN) == 0) {
+
+      options &= ~OPTION_SKIP_DEFAULT;
 
       // translate from standard input using any directory, filename and version given on the command line
       src2srcml_file(translator, "-", options,
