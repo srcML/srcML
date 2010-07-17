@@ -106,8 +106,6 @@ const char FILELIST_COMMENT = '#';
 
 bool process;
 
-bool flag = false;
-
 struct uridata {
   char const * const uri;
   int option;
@@ -455,27 +453,7 @@ int main(int argc, char* argv[]) {
 #endif
 
     // translate input filenames from list in file
-    if (false) {
-
-      try {
-
-	// translate all the filenames listed in the named file
-	// Use libxml2 routines so that we can handle http:, file:, and gzipped files automagically
-	if (!poptions.fname && input_arg_count > 0)
-	  poptions.fname = argv[input_arg_start];
-	if (!poptions.fname)
-	  poptions.fname = "-";
-	options |= OPTION_NESTED;
-
-	process_dir(translator, argv[input_arg_start], poptions, count);
-
-      } catch (URIStreamFileError) {
-	fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", argv[0], poptions.fname);
-	exit(STATUS_INPUTFILE_PROBLEM);
-      }
-
-    // translate input filenames from list in file
-    } else if (isoption(options, OPTION_FILELIST)) {
+    if (isoption(options, OPTION_FILELIST)) {
 
       try {
 
