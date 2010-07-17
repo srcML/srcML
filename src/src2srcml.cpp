@@ -293,6 +293,8 @@ struct process_options
   bool prefixchange[num_prefixes];
 };
 
+process_options* gpoptions = 0;
+
 void process_dir(srcMLTranslator& translator, char* dname, process_options& poptions, int& count);
 
 // setup options and collect info from arguments
@@ -359,6 +361,8 @@ int main(int argc, char* argv[]) {
 	false,
       }
     };
+
+  gpoptions = &poptions;
 
   // process command-line arguments
   int curarg = process_args(argc, argv, poptions);
@@ -1083,6 +1087,15 @@ Language::registerUserExt( LanguageName::LANGUAGE_CXX_0X, LANGUAGE_CXX_0X },
 
 void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count) {
 
+  // handle directories specially
+  struct stat instat;
+  stat(path, &instat);
+  if (S_ISDIR(instat.st_mode)) {
+    fprintf(stderr, "HEREABC: %s\n", path);
+    process_dir(translator, path, *gpoptions, count);
+    return;
+  }
+
   //  options |= OPTION_SKIP_DEFAULT;
 
   // in verbose mode output the currently processed filename
@@ -1202,7 +1215,7 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& option
 
 
 void process_dir(srcMLTranslator& translator, char* dname, process_options& poptions, int& count) {
-
+  /*
   if (xmlCheckFilename(dname)) {
 	  src2srcml_file(translator,
 			 dname,
@@ -1215,6 +1228,9 @@ void process_dir(srcMLTranslator& translator, char* dname, process_options& popt
 			 count);
 	  return;
   }
+  */
+      options |= OPTION_FILELIST;
+
 
 	DIR* dir = opendir(dname);
 	if (!dir)
