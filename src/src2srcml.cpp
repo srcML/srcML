@@ -1085,7 +1085,7 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& option
     return;
   }
 
-  //  options |= OPTION_SKIP_DEFAULT;
+  options |= OPTION_SKIP_DEFAULT;
 
   int reallanguage = 0;
   char* afilename = 0;
@@ -1151,12 +1151,18 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& option
       reallanguage = Language::getLanguageFromFilename(nfilename);
     if (reallanguage == 0 && !isoption(options, OPTION_SKIP_DEFAULT))
       reallanguage = DEFAULT_LANGUAGE;
-    if (!isarchive && !reallanguage) {
+    if (!reallanguage) {
+      //    if (!archiveReadMatch(nfilename) && !reallanguage) {
 
       if (!isoption(options, OPTION_VERBOSE))
 	fprintf(stderr, "%s:  Skipping '%s'.  No language can be determined.\n", PROGRAM_NAME, nfilename);
       else
 	fprintf(stderr, "Skipping '%s'.  No language can be determined.", nfilename);
+
+      if (isarchive) {
+	archiveReadOpen(path);
+	archiveReadClose(path);
+      }
 
     } else {
 
@@ -1202,6 +1208,7 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& option
 }
 
 void process_dir(srcMLTranslator& translator, char* dname, process_options& poptions, int& count) {
+
   /*
     if (xmlCheckFilename(dname)) {
     src2srcml_file(translator,
