@@ -1151,7 +1151,7 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& option
       reallanguage = Language::getLanguageFromFilename(nfilename);
     if (reallanguage == 0 && !isoption(options, OPTION_SKIP_DEFAULT))
       reallanguage = DEFAULT_LANGUAGE;
-    if (!reallanguage) {
+    if (!isarchive && !reallanguage) {
 
       if (!isoption(options, OPTION_VERBOSE))
 	fprintf(stderr, "%s:  Skipping '%s'.  No language can be determined.\n", PROGRAM_NAME, nfilename);

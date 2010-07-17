@@ -35,7 +35,13 @@ bool isArchiveReadHttp(const char * path)
 // check if file has an archive extension
 bool isArchiveReadHttp() {
 
-  return a && status == ARCHIVE_OK && (archive_format(a) != ARCHIVE_FORMAT_RAW);
+  return a && status == ARCHIVE_OK
+#if ARCHIVE_VERSION_STAMP >= 2008000
+    && (archive_format(a) != ARCHIVE_FORMAT_RAW
+#else
+    && (archive_format(a) != ARCHIVE_FORMAT_EMPTY
+#endif
+  );
 }
 
 // format (e.g., tar, cpio) of the current file

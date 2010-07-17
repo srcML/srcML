@@ -68,9 +68,14 @@ void* archiveWriteOpen(const char * URI) {
 
     // setup the desired format
     // TODO:  Extract into method, and make more general
+#if ARCHIVE_VERSION_STAMP >= 2008000
     if (!fnmatch("*.zip", root_filename, 0) || !fnmatch("*.zip.*", root_filename, 0))
       archive_write_set_format_zip(wa);
-      else if (!fnmatch("*.cpio", root_filename, 0) || !fnmatch("*.cpio.*", root_filename, 0))
+#else
+    if (false)
+      ;
+#endif
+    else if (!fnmatch("*.cpio", root_filename, 0) || !fnmatch("*.cpio.*", root_filename, 0))
       archive_write_set_format_cpio(wa);
     else
       archive_write_set_format_ustar(wa);
