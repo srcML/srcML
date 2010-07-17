@@ -1194,53 +1194,53 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& option
 
 void process_dir(srcMLTranslator& translator, char* dname, process_options& poptions, int& count) {
   /*
-  if (xmlCheckFilename(dname)) {
-	  src2srcml_file(translator,
-			 dname,
-			 options,
-			 0,
-			 0,
-			 poptions.given_version,
-			 poptions.language,
-			 poptions.tabsize,
-			 count);
-	  return;
-  }
+    if (xmlCheckFilename(dname)) {
+    src2srcml_file(translator,
+    dname,
+    options,
+    0,
+    0,
+    poptions.given_version,
+    poptions.language,
+    poptions.tabsize,
+    count);
+    return;
+    }
   */
-      options |= OPTION_FILELIST;
+  options |= OPTION_FILELIST;
 
 
-	DIR* dir = opendir(dname);
-	if (!dir)
-	  return;
+  DIR* dir = opendir(dname);
+  if (!dir)
+    return;
 
-	char line[256];
-	while (struct dirent* entry = readdir(dir)) {
+  char line[256];
+  while (struct dirent* entry = readdir(dir)) {
 
-	  if (strcmp(entry->d_name, ".") == 0 ||
-	      strcmp(entry->d_name, "..") == 0 ||
-	      strncmp(entry->d_name, ".", 1) == 0
-	      )
-	    continue;
+    if (strcmp(entry->d_name, ".") == 0 ||
+	strcmp(entry->d_name, "..") == 0 ||
+	strncmp(entry->d_name, ".", 1) == 0
+	)
+      continue;
 
-	  strcpy(line, dname);
-	  strcat(line, "/");
-	  strcat(line, entry->d_name);
+    strcpy(line, dname);
+    strcat(line, "/");
+    strcat(line, entry->d_name);
 
-	  if (entry->d_type == DT_DIR) {
-	    process_dir(translator, line, poptions, count);
-	    continue;
-	  }
+    if (entry->d_type == DT_DIR) {
+      process_dir(translator, line, poptions, count);
+      continue;
+    }
 
-	  // translate the file listed in the input file using the directory and filename extracted from the path
-	  src2srcml_file(translator,
-			 line,
-			 options,
-			 0,
-			 0,
-			 poptions.given_version,
-			 poptions.language,
-			 poptions.tabsize,
-			 count);
-	}
+    // translate the file listed in the input file using the directory and filename extracted from the path
+    src2srcml_file(translator,
+		   line,
+		   options,
+		   0,
+		   0,
+		   poptions.given_version,
+		   poptions.language,
+		   poptions.tabsize,
+		   count);
+  }
 }
