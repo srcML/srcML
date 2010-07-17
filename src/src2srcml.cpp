@@ -471,6 +471,10 @@ int main(int argc, char* argv[]) {
 	  if (line[0] == '\0' || line[0] == FILELIST_COMMENT)
 	    continue;
 
+	  // in verbose mode output the currently processed filename
+	  if (isoption(options, OPTION_VERBOSE))
+	    fprintf(stderr, "Input:\t%s\n", strcmp(line, "-") == 0 ? "" : line);
+
 	  // translate the file listed in the input file using the directory and filename extracted from the path
 	  src2srcml_file(translator,
 			 line,
@@ -504,6 +508,10 @@ int main(int argc, char* argv[]) {
       // translate single input filename from command line
     } else if (input_arg_count == 1) {
 
+      // in verbose mode output the currently processed filename
+      if (isoption(options, OPTION_VERBOSE))
+	fprintf(stderr, "Input:\t%s\n", strcmp(argv[input_arg_start], "-") == 0 ? "" : argv[input_arg_start]);
+
       // translate from path given on command line using directory given on the command line or extracted
       // from full path
       src2srcml_file(translator, argv[input_arg_start], options,
@@ -519,6 +527,10 @@ int main(int argc, char* argv[]) {
       // translate in batch the input files on the command line extracting the directory and filename attributes
       // from the full path
       for (int i = input_arg_start; i <= input_arg_end; ++i) {
+
+	// in verbose mode output the currently processed filename
+	if (isoption(options, OPTION_VERBOSE))
+	  fprintf(stderr, "Input:\t%s\n", strcmp(argv[i], "-") == 0 ? "" : argv[i]);
 
 	src2srcml_file(translator, argv[i], options,
 		       0,
@@ -1069,16 +1081,11 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& option
   struct stat instat;
   stat(path, &instat);
   if (S_ISDIR(instat.st_mode)) {
-    fprintf(stderr, "HEREABC: %s\n", path);
     process_dir(translator, path, *gpoptions, count);
     return;
   }
 
   //  options |= OPTION_SKIP_DEFAULT;
-
-  // in verbose mode output the currently processed filename
-  if (isoption(options, OPTION_VERBOSE))
-    fprintf(stderr, "Input:\t%s\n", strcmp(path, "-") == 0 ? "" : path);
 
   int reallanguage = 0;
   char* afilename = 0;
@@ -1146,7 +1153,10 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& option
       reallanguage = DEFAULT_LANGUAGE;
     if (!reallanguage) {
 
-      fprintf(stderr, "%s:  Skipping '%s'.  No language can be determined.\n", PROGRAM_NAME, nfilename);
+      if (!isoption(options, OPTION_VERBOSE))
+	fprintf(stderr, "%s:  Skipping '%s'.  No language can be determined.\n", PROGRAM_NAME, nfilename);
+      else
+	fprintf(stderr, "Skipping '%s'.  No language can be determined.", nfilename);
 
     } else {
 
