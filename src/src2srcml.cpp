@@ -1201,7 +1201,6 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& option
 #endif
 }
 
-
 void process_dir(srcMLTranslator& translator, char* dname, process_options& poptions, int& count) {
   /*
     if (xmlCheckFilename(dname)) {
@@ -1217,16 +1216,18 @@ void process_dir(srcMLTranslator& translator, char* dname, process_options& popt
     return;
     }
   */
-  options |= OPTION_FILELIST;
-
+  options |= OPTION_NESTED;
 
   DIR* dir = opendir(dname);
   if (!dir)
     return;
 
   char line[256];
+
+  // process all non-directory files
   while (struct dirent* entry = readdir(dir)) {
 
+    // skip standard UNIX filenames, and . files
     if (strcmp(entry->d_name, ".") == 0 ||
 	strcmp(entry->d_name, "..") == 0 ||
 	strncmp(entry->d_name, ".", 1) == 0
@@ -1237,10 +1238,8 @@ void process_dir(srcMLTranslator& translator, char* dname, process_options& popt
     strcat(line, "/");
     strcat(line, entry->d_name);
 
-    if (entry->d_type == DT_DIR) {
-      process_dir(translator, line, poptions, count);
+    if (entry->d_type == DT_DIR)
       continue;
-    }
 
     // translate the file listed in the input file using the directory and filename extracted from the path
     src2srcml_file(translator,
@@ -1252,5 +1251,27 @@ void process_dir(srcMLTranslator& translator, char* dname, process_options& popt
 		   poptions.language,
 		   poptions.tabsize,
 		   count);
+  }
+
+  if (!isoption(options, OPTION_RECURSIVE))
+    return;
+
+  // now process directories
+  rewinddir(dir);
+  while (struct dirent* entry = readdir(dir)) {
+
+    // skip standard UNIX filenames, and . files
+    if (strcmp(entry->d_name, ".") == 0 ||
+	strcmp(entry->d_name, "..") == 0 ||
+	strncmp(entry->d_name, ".", 1) == 0
+	)
+      continue;
+
+    strcpy(line, dname);
+    strcat(line, "/");
+    strcat(line, entry->d_name);
+
+    if (entry->d_type == DT_DIR)
+      process_dir(translator, line, poptions, count);
   }
 }
