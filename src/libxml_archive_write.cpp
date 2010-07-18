@@ -45,14 +45,14 @@ int archiveWriteMatch(const char * URI) {
 
 // setup archive for this URI
 void* archiveWriteRootOpen(const char * URI) {
-  //  fprintf(stderr, "ARCHIVE_WRITE_ROOT_OPEN: %s\n", URI);
+  // fprintf(stderr, "ARCHIVE_WRITE_ROOT_OPEN: %s\n", URI);
   strcpy(root_filename, URI);
 }
 
 // setup archive for this URI
 void* archiveWriteOpen(const char * URI) {
 
-  //  fprintf(stderr, "ARCHIVE_WRITE_OPEN\n");
+  // fprintf(stderr, "ARCHIVE_WRITE_OPEN: %s\n", URI);
 
   if (!wa) {
     wa = archive_write_new();
@@ -63,8 +63,6 @@ void* archiveWriteOpen(const char * URI) {
       archive_write_set_compression_gzip(wa);
     else if (!fnmatch("*.bz2", root_filename, 0))
       archive_write_set_compression_bzip2(wa);
-    else
-      archive_write_set_compression_none(wa);
 
     // setup the desired format
     // TODO:  Extract into method, and make more general
@@ -80,15 +78,15 @@ void* archiveWriteOpen(const char * URI) {
     else
       archive_write_set_format_ustar(wa);
 
-    //    fprintf(stderr, "ROOT: %s %s %s\n", root_filename, archive_compression_name(wa),
-    //	    archive_format_name(wa));
+    fprintf(stderr, "ROOT: %s %s %s\n", root_filename, archive_compression_name(wa),
+    archive_format_name(wa));
 
     archive_write_open_filename(wa, root_filename);
   }
   pos = 0;
   strcpy(filename, URI);
 
-  //  fprintf(stderr, "FILE: %s\n", URI);
+  // fprintf(stderr, "FILE: %s\n", URI);
 
   return wa;
 }
@@ -96,7 +94,7 @@ void* archiveWriteOpen(const char * URI) {
 // read from the URI
 int archiveWrite(void * context, const char * buffer, int len) {
 
-  //  fprintf(stderr, "ARCHIVE_WRITE_WRITE: %d\n", len);
+  // fprintf(stderr, "ARCHIVE_WRITE_WRITE: %d\n", len);
 
   // make sure we have room
   if (pos + len >= size) {
@@ -113,7 +111,7 @@ int archiveWrite(void * context, const char * buffer, int len) {
 // close the open file
 int archiveWriteClose(void * context) {
 
-  //  fprintf(stderr, "ARCHIVE_WRITE_CLOSE: %d\n", pos);
+  // fprintf(stderr, "ARCHIVE_WRITE_CLOSE: %d\n", pos);
 
   wentry = archive_entry_new();
   archive_entry_set_pathname(wentry, filename);
@@ -130,9 +128,10 @@ int archiveWriteClose(void * context) {
 
 int archiveWriteRootClose(void * context) {
 
-  //  fprintf(stderr, "ARCHIVE_WRITE_ROOT_CLOSE\n");
+  // fprintf(stderr, "ARCHIVE_WRITE_ROOT_CLOSE\n");
 
   if (wa) {
+    // fprintf(stderr, "FINISHING\n");
     archive_write_close(wa);
     archive_write_finish(wa);
   }

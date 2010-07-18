@@ -266,13 +266,14 @@ void srcMLUtility::extract_text(const char* ofilename, int unit) {
 void srcMLUtility::expand(const char* root_filename) {
 
 #ifdef LIBARCHIVE
+
   if (archiveWriteMatch(root_filename)) {
     if (xmlRegisterOutputCallbacks(archiveWriteMatch, archiveWriteOpen, archiveWrite, archiveWriteClose) < 0) {
       fprintf(stderr, "%s: failed to register archive handler\n", "FOO");
       exit(1);
     }
     archiveWriteRootOpen(root_filename);
-  } else {
+    } else {
     if (xmlRegisterOutputCallbacks(archiveWriteDiskMatch, archiveWriteDiskOpen, archiveWriteDisk, archiveWriteDiskClose) < 0) {
       fprintf(stderr, "%s: failed to register archive handler\n", "FOO");
       exit(1);

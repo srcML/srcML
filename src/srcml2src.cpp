@@ -35,6 +35,8 @@
 
 #ifdef LIBARCHIVE
 #include "libxml_archive_read.h"
+#include "libxml_archive_write.h"
+#include "libxml_archive_write_disk.h"
 #endif
 
 int option_error_status(int optopt);
@@ -251,13 +253,12 @@ int main(int argc, char* argv[]) {
   initGenericErrorDefaultFunc(&handler);
 
 #ifdef LIBARCHIVE
-  /* 
+  /*
   if (xmlRegisterInputCallbacks(archiveReadMatch, archiveReadOpen, archiveRead, archiveReadClose) < 0) {
     fprintf(stderr, "%s: failed to register archive handler\n", argv[0]);
     exit(1);
   }
-
-  if (xmlRegisterOutputCallbacks(archiveWriteMatch, archiveWriteOpen, archiveWrite, archiveWriteClose) < 0) {
+  if (xmlRegisterOutputCallbacks(archiveWriteDiskMatch, archiveWriteDiskOpen, archiveWriteDisk, archiveWriteDiskClose) < 0) {
     fprintf(stderr, "%s: failed to register archive handler\n", argv[0]);
     exit(1);
   }

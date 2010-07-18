@@ -1173,12 +1173,12 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& option
 	if (!isoption(options, OPTION_VERBOSE))
 	  fprintf(stderr, "%s:  Skipping '%s'.  No language can be determined.\n", PROGRAM_NAME, nfilename);
 	else
-	  fprintf(stderr, "Skipping '%s'.  No language can be determined.", nfilename);
+	  fprintf(stderr, "Skipping '%s'.  No language can be determined.\n", nfilename);
       }
 
       if (isarchive) {
-	archiveReadOpen(path);
-	archiveReadClose(path);
+	//	archiveReadOpen(path);
+	//	archiveReadClose(path);
       }
 
     } else {
