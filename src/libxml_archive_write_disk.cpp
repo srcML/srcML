@@ -20,7 +20,7 @@ static char filename[512] = { 0 };
 // check if archive matches the protocol on the URI
 int archiveWriteDiskMatch(const char * URI) {
 
-  fprintf(stderr, "MATCH: %s %s\n", URI, root_filename);
+  //  fprintf(stderr, "MATCH: %s %s\n", URI, root_filename);
 
   if (URI == NULL)
       return 0;
@@ -47,14 +47,14 @@ int archiveWriteDiskMatch(const char * URI) {
 
 // setup archive for this URI
 void* archiveWriteDiskRootOpen(const char * URI) {
-  fprintf(stderr, "ARCHIVE_WRITE_ROOT_OPEN: %s\n", URI);
+  //  fprintf(stderr, "ARCHIVE_WRITE_ROOT_OPEN: %s\n", URI);
   strcpy(root_filename, URI);
 }
 
 // setup archive for this URI
 void* archiveWriteDiskOpen(const char * URI) {
 
-  fprintf(stderr, "ARCHIVE_WRITE_DISK_OPEN: %s\n", URI);
+  //  fprintf(stderr, "ARCHIVE_WRITE_DISK_OPEN: %s\n", URI);
 
   if (!wa) {
     wa = archive_write_disk_new();
@@ -77,7 +77,7 @@ void* archiveWriteDiskOpen(const char * URI) {
 // read from the URI
 int archiveWriteDisk(void * context, const char * buffer, int len) {
 
-  fprintf(stderr, "ARCHIVE_WRITE_WRITE: %d\n", len);
+  //  fprintf(stderr, "ARCHIVE_WRITE_WRITE: %d\n", len);
 
   archive_write_data(wa, buffer, len);
 
