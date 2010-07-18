@@ -7,6 +7,7 @@
 #include <archive_entry.h>
 #include <string>
 #include <libxml/nanohttp.h>
+#include <libxml/nanoftp.h>
 
 static struct archive* a = 0;
 static int status = 0;
@@ -99,12 +100,14 @@ const char* archiveReadFilename(const char* URI) {
 
 
 static void* mcontext;
+ static bool ishttp = true;
 
 static int archive_read_open_http_callback(struct archive *a,
 					   void* _client_data) {
 
-  //  fprintf(stderr, "CALLBACK: OPEN\n");
-  mcontext = xmlNanoHTTPOpen(root_filename, 0);
+  //  fprintf(stderr, "CALLBACK: OPEN: %s\n", root_filename);
+  mcontext = ishttp ? xmlNanoHTTPOpen(root_filename, 0) : xmlNanoFTPOpen(root_filename);
+  //  fprintf(stderr, "MCONTEXT: %p\n", mcontext);
   return 0;
 }
 
@@ -115,11 +118,8 @@ static __LA_SSIZE_T archive_read_http_callback(struct archive *a,
   static char data[512];
   *_buffer = data;
   int len = 510;
-  int size = xmlNanoHTTPRead(mcontext, data, len);
-  //  int size = xmlNanoHTTPRead(mcontext, (void*) *_buffer, len);
-  //  fprintf(stderr, "DATA: %d\n", size);
-  //  for (int i = 0; i < size; ++i)
-  //    fprintf(stderr, "HERE: %c\n", data[i]);
+  int size = ishttp ? xmlNanoHTTPRead(mcontext, data, len) : xmlNanoFTPRead(mcontext, data, len);
+
   return size;
 }
 
@@ -127,7 +127,10 @@ static int archive_read_close_http_callback(struct archive *a,
 					   void* _client_data) {
 
   //  fprintf(stderr, "CALLBACK: CLOSE\n");
-  xmlNanoHTTPClose(mcontext);
+  if (ishttp)
+    xmlNanoHTTPClose(mcontext);
+  else
+    xmlNanoFTPClose(mcontext);
   return 1;
 }
 
@@ -156,9 +159,11 @@ void* archiveReadOpen(const char * URI) {
     archive_read_support_format_cpio(a);
 
     //    int r = archive_read_open_filename(a, URI, 4000);
+    ishttp = strncmp(URI, "http:", 5) == 0;
     int r;
-    if (strncmp(URI, "http:", 5) == 0) {
+    if (ishttp || strncmp(URI, "ftp:", 4) == 0) {
       strcpy(root_filename, URI);
+      ishttp = true;
       r = archive_read_open(a, 0, archive_read_open_http_callback, archive_read_http_callback,
 			      archive_read_close_http_callback);
     } else
