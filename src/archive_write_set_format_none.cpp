@@ -1,11 +1,13 @@
-#include "archive_write_format_set_non.h"
+#include "archive_write_set_format_none.h"
 #include <stdio.h>
-#include <string.h>
-#include "archive_platform.h"
-#include <archive.h>
-#include <archive_entry.h>
+//#include <string.h>
+//#include <archive.h>
+//#include <archive_entry.h>
+#include "archive_private.h"
+#include "archive_write_private.h"
 
-int ARCHIVE_FORMAT_NONE = 0x10000000
+
+static int ARCHIVE_FORMAT_NONE = 0x10000000;
 
 /*
  * Set output format to 'none' format.
@@ -48,8 +50,7 @@ static int archive_write_none_header(struct archive_write *a, struct archive_ent
  *
  * This is exported so that other 'tar' formats can use it.
  */
-int archive_write_format_header_none(struct archive_write *a, char h[512],
-				    struct archive_entry *entry, int tartype, int strict)
+int archive_write_format_header_none(struct archive_write *a, char h[512], struct archive_entry *entry, int tartype, int strict)
 {
   return ARCHIVE_OK;
 }
@@ -78,5 +79,5 @@ static ssize_t archive_write_none_data(struct archive_write *a, const void *buff
   ret = __archive_write_output(a, buff, s);
   if (ret != ARCHIVE_OK)
     return (ret);
-  return (s);
+  return s;
 }
