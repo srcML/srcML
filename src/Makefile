@@ -42,12 +42,16 @@ XML_IO_LIB_SRCML2SRC_DEFINE=-DLIBARCHIVE
 XML_IO_LIB_SRC2SRCML=-larchive
 XML_IO_LIB_SRCML2SRC=-larchive
 IO_LIB_SRC2SRCML=${OBJ_DIR}libxml_archive_read.o ${OBJ_DIR}libxml_archive_write.o ${OBJ_DIR}libxml_archive_read_disk.o ${OBJ_DIR}libxml_archive_write_disk.o
+IO_LIB_SRC2SRCML_DEPENDS=libxml_archive_read.h libxml_archive_write.h libxml_archive_read_disk.h libxml_archive_write_disk.h
+IO_LIB_SRCML2SRC_DEPENDS=libxml_archive_read.h libxml_archive_write.h libxml_archive_read_disk.h libxml_archive_write_disk.h
 IO_LIB_SRCML2SRC=${OBJ_DIR}libxml_archive_read.o ${OBJ_DIR}libxml_archive_write.o ${OBJ_DIR}libxml_archive_read_disk.o ${OBJ_DIR}libxml_archive_write_disk.o
 else
 XML_IO_LIB_SRC2SRCML_DEFINE=
 XML_IO_LIB_SRCML2SRC_DEFINE=
 XML_IO_LIB_SRC2SRCML=
 XML_IO_LIB_SRCML2SRC=
+IO_LIB_SRC2SRCML_DEPENDS=
+IO_LIB_SRCML2SRC_DEPENDS=
 IO_LIB_SRC2SRCML=
 IO_LIB_SRCML2SRC=
 endif
@@ -147,10 +151,10 @@ ${EXE_DIR}srcmllexer : ${OBJ_DIR}srcmllexer.o ${OBJ_DIR}KeywordCPPLexer.o ${OBJ_
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) -o $@
 
 # Object files
-${OBJ_DIR}src2srcml.o : src2srcml.cpp srcMLTranslator.h version.h srcmlapps.h Options.h srcmlns.h
+${OBJ_DIR}src2srcml.o : src2srcml.cpp srcMLTranslator.h version.h srcmlapps.h Options.h srcmlns.h ${IO_LIB_SRC2SRCML_DEPENDS}
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(XML_IO_LIB_SRC2SRCML_DEFINE) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}srcml2src.o : srcml2src.cpp version.h srcmlapps.h Options.h
+${OBJ_DIR}srcml2src.o : srcml2src.cpp version.h srcmlapps.h Options.h ${IO_LIB_SRC2SRCML_DEPENDS}
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(XML_IO_LIB_SRCML2SRC_DEFINE) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}srcmllexer.o : srcmllexer.cpp version.h srcmlapps.h
@@ -308,7 +312,7 @@ cleanbuild :
 # clean non-generated object files
 PHONY : cleanobject
 cleanobject :
-	rm -f ${OBJ_DIR}src2srcml.o ${OBJ_DIR}srcMLOutput.o ${OBJ_DIR}Mode.o ${OBJ_DIR}srcMLTranslator.o ${OBJ_DIR}srcMLParserClean.o ${OBJ_DIR}KeywordLexer.o ${OBJ_DIR}KeywordCPPLexerClean.o ${OBJ_DIR}srcml2src.o ${OBJ_DIR}srcMLUtility.o ${OBJ_DIR}version.o ${OBJ_DIR}filetrim.o ${OBJ_DIR}srcmlapps.o ${OBJ_DIR}srcmllexer.o ${OBJ_DIR}xmlwriter.o ${OBJ_DIR}xmlreader.o ${OBJ_DIR}UTF8CharBuffer.o ${OBJ_DIR}PureCommentLexerClean.o ${OBJ_DIR}Language.o ${OBJ_DIR}SAX2TextWriter.o ${OBJ_DIR}SAX2ExtractUnitsSrc.o ${OBJ_DIR}SAX2ExtractUnitSrc.o ${OBJ_DIR}SAX2ExtractRootSrc.o ${OBJ_DIR}SAX2ExtractUnitXML.o ${OBJ_DIR}SAX2Utilities.o ${OBJ_DIR}SAX2Properties.o ${OBJ_DIR}SAX2CountUnits.o version.cpp srcMLParserTokenTypesMacro.hpp {OBJ_DIR}PureCommentLexer.o ${OBJ_DIR}srceval.o ${OBJ_DIR}srcpatheval.o ${OBJ_DIR}srcxslteval.o ${OBJ_DIR}SAX2CopyElement.o ${OBJ_DIR}srcexfun.o ${OBJ_DIR}srcrelaxngeval.o ${OBJ_DIR}xmlsavebuf.o ${OBJ_DIR}SAX2UnitDOM.o ${OBJ_DIR}SAX2UnitDOMXSLT.o ${OBJ_DIR}SAX2UnitDOMXPath.o ${OBJ_DIR}SAX2UnitDOMRelaxNG.o ${OBJ_DIR}libxml_archive_ui.o ${OBJ_DIR}SAX2ListUnits.o ${OBJ_DIR}libxml_archive_io.o ${OBJ_DIR}URIStream.o
+	rm -f ${OBJ_DIR}src2srcml.o ${OBJ_DIR}srcMLOutput.o ${OBJ_DIR}Mode.o ${OBJ_DIR}srcMLTranslator.o ${OBJ_DIR}srcMLParserClean.o ${OBJ_DIR}KeywordLexer.o ${OBJ_DIR}KeywordCPPLexerClean.o ${OBJ_DIR}srcml2src.o ${OBJ_DIR}srcMLUtility.o ${OBJ_DIR}version.o ${OBJ_DIR}filetrim.o ${OBJ_DIR}srcmlapps.o ${OBJ_DIR}srcmllexer.o ${OBJ_DIR}xmlwriter.o ${OBJ_DIR}xmlreader.o ${OBJ_DIR}UTF8CharBuffer.o ${OBJ_DIR}PureCommentLexerClean.o ${OBJ_DIR}Language.o ${OBJ_DIR}SAX2TextWriter.o ${OBJ_DIR}SAX2ExtractUnitsSrc.o ${OBJ_DIR}SAX2ExtractUnitSrc.o ${OBJ_DIR}SAX2ExtractRootSrc.o ${OBJ_DIR}SAX2ExtractUnitXML.o ${OBJ_DIR}SAX2Utilities.o ${OBJ_DIR}SAX2Properties.o ${OBJ_DIR}SAX2CountUnits.o version.cpp srcMLParserTokenTypesMacro.hpp {OBJ_DIR}PureCommentLexer.o ${OBJ_DIR}srceval.o ${OBJ_DIR}srcpatheval.o ${OBJ_DIR}srcxslteval.o ${OBJ_DIR}SAX2CopyElement.o ${OBJ_DIR}srcexfun.o ${OBJ_DIR}srcrelaxngeval.o ${OBJ_DIR}xmlsavebuf.o ${OBJ_DIR}SAX2UnitDOM.o ${OBJ_DIR}SAX2UnitDOMXSLT.o ${OBJ_DIR}SAX2UnitDOMXPath.o ${OBJ_DIR}SAX2UnitDOMRelaxNG.o ${OBJ_DIR}libxml_archive_ui.o ${OBJ_DIR}SAX2ListUnits.o ${OBJ_DIR}libxml_archive_io.o ${OBJ_DIR}URIStream.o ${OBJ_DIR}libxml_archive_read.o ${OBJ_DIR}libxml_archive_read_disk.o ${OBJ_DIR}libxml_archive_write.o ${OBJ_DIR}libxml_archive_write_disk.o
 
 # clean ANTLR generated files
 PHONY : cleanantlr
