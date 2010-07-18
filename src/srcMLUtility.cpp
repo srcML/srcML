@@ -59,7 +59,6 @@
 #ifdef LIBARCHIVE
 #include "libxml_archive_read.h"
 #include "libxml_archive_write.h"
-#include "libxml_archive_write_disk.h"
 #endif
 
 // constructor
