@@ -502,7 +502,7 @@ int main(int argc, char* argv[]) {
 	exit(STATUS_INPUTFILE_PROBLEM);
       }
 
-      // translate from standard input
+    // translate from standard input
     } else if (input_arg_count == 0 || strcmp(argv[input_arg_start], STDIN) == 0) {
 
       options &= ~OPTION_SKIP_DEFAULT;
