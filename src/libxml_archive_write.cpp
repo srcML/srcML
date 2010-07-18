@@ -17,10 +17,14 @@ static std::string filename;
 
 static std::string data;
 
+static bool isstdout = false;
+
 // check if archive matches the protocol on the URI
 int archiveWriteMatch(const char * URI) {
 
-  //  fprintf(stderr, "MATCH: %s %s\n", URI, root_filename);
+  // fprintf(stderr, "MATCH: %s %s\n", URI, root_filename.c_str());
+
+  return 1;
 
   if (URI == NULL)
       return 0;
@@ -42,6 +46,8 @@ void* archiveWriteRootOpen(const char * URI) {
 
   // save the root URI
   root_filename = URI;
+
+  isstdout = root_filename == "-";
 }
 
 // setup archive for this URI
@@ -50,33 +56,38 @@ void* archiveWriteOpen(const char * URI) {
   // fprintf(stderr, "ARCHIVE_WRITE_OPEN: %s\n", URI);
 
   if (!wa) {
-    wa = archive_write_new();
 
-    // setup the desired compression
-    // TODO:  Extract into method, and make more general
-    if (!fnmatch("*.gz", root_filename.c_str(), 0))
-      archive_write_set_compression_gzip(wa);
-    else if (!fnmatch("*.bz2", root_filename.c_str(), 0))
-      archive_write_set_compression_bzip2(wa);
+    if (!isstdout) {
+      wa = archive_write_new();
 
-    // setup the desired format
-    // TODO:  Extract into method, and make more general
+      // setup the desired compression
+      // TODO:  Extract into method, and make more general
+      if (!fnmatch("*.gz", root_filename.c_str(), 0))
+	archive_write_set_compression_gzip(wa);
+      else if (!fnmatch("*.bz2", root_filename.c_str(), 0))
+	archive_write_set_compression_bzip2(wa);
+
+      // setup the desired format
+      // TODO:  Extract into method, and make more general
 #if ARCHIVE_VERSION_STAMP >= 2008000
-    if (!fnmatch("*.zip", root_filename.c_str(), 0) || !fnmatch("*.zip.*", root_filename.c_str(), 0))
-      archive_write_set_format_zip(wa);
+      if (!fnmatch("*.zip", root_filename.c_str(), 0) || !fnmatch("*.zip.*", root_filename.c_str(), 0))
+	archive_write_set_format_zip(wa);
 #else
-    if (false)
-      ;
+      if (false)
+	;
 #endif
-    else if (!fnmatch("*.cpio", root_filename.c_str(), 0) || !fnmatch("*.cpio.*", root_filename.c_str(), 0))
-      archive_write_set_format_cpio(wa);
-    else
-      archive_write_set_format_ustar(wa);
+      else if (!fnmatch("*.cpio", root_filename.c_str(), 0) || !fnmatch("*.cpio.*", root_filename.c_str(), 0))
+	archive_write_set_format_cpio(wa);
+      else
+	archive_write_set_format_ustar(wa);
 
-    //    fprintf(stderr, "ROOT: %s %s %s\n", root_filename.c_str(), archive_compression_name(wa),
-    //    archive_format_name(wa));
+      //    fprintf(stderr, "ROOT: %s %s %s\n", root_filename.c_str(), archive_compression_name(wa),
+      //    archive_format_name(wa));
 
-    archive_write_open_filename(wa, root_filename.c_str());
+      archive_write_open_filename(wa, root_filename.c_str());
+    } else {
+       wa = archive_write_disk_new();
+    }
   }
 
   filename = URI;
@@ -101,7 +112,7 @@ int archiveWrite(void * context, const char * buffer, int len) {
 // close the open file
 int archiveWriteClose(void * context) {
 
-  // fprintf(stderr, "ARCHIVE_WRITE_CLOSE: %d\n", pos);
+  // fprintf(stderr, "ARCHIVE_WRITE_CLOSE: %d\n", filename.size());
 
   wentry = archive_entry_new();
   archive_entry_set_pathname(wentry, filename.c_str());
@@ -131,9 +142,8 @@ int archiveWriteRootClose(void * context) {
   }
 
   wa = 0;
-
-  root_filename = "";
-  filename = "";
+  root_filename.clear();
+  filename.clear();
 
   return 1;
 }

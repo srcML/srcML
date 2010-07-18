@@ -9,9 +9,6 @@
 static const int NUMARCHIVES = 4;
 static const char * ARCHIVE_FILTER_EXTENSIONS[] = {"tar", "zip", "tgz", "cpio", "gz", "bz2", 0};
 
-static char* pdata = 0;
-static int size = 0;
-static int pos = 0;
 static struct archive *wa;
 static struct archive_entry *wentry;
 static char root_filename[512] = { 0 };
@@ -47,7 +44,7 @@ int archiveWriteDiskMatch(const char * URI) {
 
 // setup archive for this URI
 void* archiveWriteDiskRootOpen(const char * URI) {
-  //  fprintf(stderr, "ARCHIVE_WRITE_ROOT_OPEN: %s\n", URI);
+  // fprintf(stderr, "ARCHIVE_WRITE_ROOT_OPEN: %s\n", URI);
   strcpy(root_filename, URI);
 }
 
@@ -66,7 +63,6 @@ void* archiveWriteDiskOpen(const char * URI) {
   archive_entry_set_perm(wentry, 0644);
   archive_write_header(wa, wentry);
 
-  pos = 0;
   strcpy(filename, URI);
 
   //fprintf(stderr, "FILE: %s\n", URI);
