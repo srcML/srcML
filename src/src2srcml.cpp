@@ -515,23 +515,7 @@ int main(int argc, char* argv[]) {
 		     poptions.language,
 		     poptions.tabsize, count);
 
-      // translate single input filename from command line
-    } else if (input_arg_count == 1) {
-
-      // in verbose mode output the currently processed filename
-      if (isoption(options, OPTION_VERBOSE))
-	fprintf(stderr, "Input:\t%s\n", strcmp(argv[input_arg_start], "-") == 0 ? "" : argv[input_arg_start]);
-
-      // translate from path given on command line using directory given on the command line or extracted
-      // from full path
-      src2srcml_file(translator, argv[input_arg_start], options,
-		     poptions.given_directory,
-		     poptions.given_filename,
-		     poptions.given_version,
-		     poptions.language,
-		     poptions.tabsize, count);
-
-      // translate multiple input filenames on command line
+    // translate filenames from the command line
     } else {
 
       // translate in batch the input files on the command line extracting the directory and filename attributes
@@ -543,9 +527,9 @@ int main(int argc, char* argv[]) {
 	  fprintf(stderr, "Input:\t%s\n", strcmp(argv[i], "-") == 0 ? "" : argv[i]);
 
 	src2srcml_file(translator, argv[i], options,
-		       0,
-		       0,
-		       0,
+		       input_arg_count > 1 ? poptions.given_directory : 0,
+		       input_arg_count > 1 ? poptions.given_filename : 0,
+		       input_arg_count > 1 ? poptions.given_version : 0,
 		       poptions.language,
 		       poptions.tabsize,
 		       count);
