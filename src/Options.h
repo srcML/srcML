@@ -229,4 +229,7 @@ const OPTION_TYPE OPTION_SKIP_DEFAULT  = 0x1000000000ull;
 // @src2srcml
 const OPTION_TYPE OPTION_RECURSIVE  = 0x2000000000ull;
 
+// skip output of notification messages
+const OPTION_TYPE OPTION_QUIET  = 0x4000000000ull;
+
 #endif

@@ -43,7 +43,6 @@ const char* PROGRAM_NAME = "";
 
 #ifdef LIBARCHIVE
 #include "libxml_archive_read.h"
-#include "libxml_archive_read_http.h"
 #include "libxml_archive_write.h"
 #endif
 
@@ -98,6 +97,10 @@ const char* const OLD_FILENAME_FLAG = "old-filename";
 const char* const SKIP_DEFAULT_FLAG = "skip-default";
 
 const char* const RECURSIVE_FLAG = "recursive";
+const char RECURSIVE_FLAG_SHORT = 'r';
+
+const char* const QUIET_FLAG = "quiet";
+const char QUIET_FLAG_SHORT = 'q';
 
 const int DEFAULT_LANGUAGE = srcMLTranslator::LANGUAGE_CXX;
 
@@ -328,12 +331,7 @@ int main(int argc, char* argv[]) {
     fprintf(stderr, "%s: failed to register archive handler\n", argv[0]);
     exit(1);
   }
-  /*
-  if (xmlRegisterInputCallbacks(archiveReadHttpMatch, archiveReadHttpOpen, archiveReadHttp, archiveReadHttpClose) < 0) {
-    fprintf(stderr, "%s: failed to register archive handler\n", argv[0]);
-    exit(1);
-  }
-  */
+
   if (xmlRegisterOutputCallbacks(archiveWriteMatch, archiveWriteOpen, archiveWrite, archiveWriteClose) < 0) {
     fprintf(stderr, "%s: failed to register archive handler\n", argv[0]);
     exit(1);
@@ -593,6 +591,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { XMLNS_FLAG, required_argument, NULL, 'X' },
     { SKIP_DEFAULT_FLAG, no_argument, NULL, 'S' },
     { RECURSIVE_FLAG, no_argument, NULL, 'r' },
+    { QUIET_FLAG, no_argument, NULL, QUIET_FLAG_SHORT },
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
     { OLD_FILENAME_FLAG, no_argument, NULL, 'O' },
@@ -619,7 +618,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     int option_index = 0;
     bool special = optind < argc && !strncmp(argv[optind], "--xmlns:", 8);
     opterr = !special ? 1 : 0;
-    int c = getopt_long(argc, argv, "hVo:nex:t:zcgvl:d:f:s:", cliargs, &option_index);
+    int c = getopt_long(argc, argv, "hVo:nex:t:zcgvl:d:f:s:q", cliargs, &option_index);
 
     if (c == -1)
       break;
@@ -817,6 +816,10 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
     case 'r': 
       options |= OPTION_RECURSIVE;
+      break;
+
+    case QUIET_FLAG_SHORT: 
+      options |= OPTION_QUIET;
       break;
 
     case COMPRESSED_FLAG_SHORT: 
@@ -1166,11 +1169,12 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& option
     if (!reallanguage) {
       //    if (!archiveReadMatch(nfilename) && !reallanguage) {
 
-      if (!isoption(options, OPTION_VERBOSE))
-	;
-	//	fprintf(stderr, "%s:  Skipping '%s'.  No language can be determined.\n", PROGRAM_NAME, nfilename);
-      else
-	fprintf(stderr, "Skipping '%s'.  No language can be determined.", nfilename);
+      if (!isoption(options, OPTION_QUIET)) {
+	if (!isoption(options, OPTION_VERBOSE))
+	  fprintf(stderr, "%s:  Skipping '%s'.  No language can be determined.\n", PROGRAM_NAME, nfilename);
+	else
+	  fprintf(stderr, "Skipping '%s'.  No language can be determined.", nfilename);
+      }
 
       if (isarchive) {
 	archiveReadOpen(path);
@@ -1202,10 +1206,11 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& option
 
       exit(STATUS_INPUTFILE_PROBLEM);
     }
-    }
+
     // in verbose mode output end info about this file
     if (isoption(options, OPTION_VERBOSE))
       fprintf(stderr, "\n");
+    }
 
     // compound documents are interrupted gracefully
     if (isoption(options, OPTION_TERMINATE))
