@@ -25,23 +25,17 @@ int archiveWriteMatch(const char * URI) {
   if (URI == NULL)
       return 0;
 
+  // don't handle standard output (write_disk handles that)
   if (strcmp(URI, "-") == 0)
     return  0;
 
-  if (root_filename.empty())
+  // since we are only registered when needed, then anything should match
+  if (!root_filename.empty())
      return 1;
-
-  for(const char ** pos = ARCHIVE_FILTER_EXTENSIONS; *pos != 0; ++pos )
-    {
-      char pattern[10] = { 0 } ;
-      strcpy(pattern, "*.");
-      strcat(pattern, *pos);
-      if(int match = fnmatch(pattern, URI, 0) == 0)
-	return match;
-     }
 
   return 0;
 }
+
 // setup archive for this URI
 void* archiveWriteRootOpen(const char * URI) {
   // fprintf(stderr, "ARCHIVE_WRITE_ROOT_OPEN: %s\n", URI);
