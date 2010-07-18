@@ -66,9 +66,6 @@ int archiveReadMatch(const char * URI) {
   if(URI == NULL)
       return 0;
 
-  //  if (strncmp(URI, "http:", 5) == 0)
-  //    return 1;
-
   if ((URI[0] == '-' && URI[1] == '\0') || (strcmp(URI, "/dev/stdin") == 0))
     return 1;
 
@@ -159,9 +156,9 @@ void* archiveReadOpen(const char * URI) {
     archive_read_support_format_cpio(a);
 
     //    int r = archive_read_open_filename(a, URI, 4000);
-    ishttp = strncmp(URI, "http:", 5) == 0;
+    ishttp = xmlIOHTTPMatch(URI);
     int r;
-    if (ishttp || strncmp(URI, "ftp:", 4) == 0) {
+    if (ishttp || xmlIOFTPMatch(URI)) {
       strcpy(root_filename, URI);
       ishttp = true;
       r = archive_read_open(a, 0, archive_read_open_http_callback, archive_read_http_callback,
