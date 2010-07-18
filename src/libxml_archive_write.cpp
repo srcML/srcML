@@ -109,7 +109,8 @@ int archiveWrite(void * context, const char * buffer, int len) {
   memcpy(pdata + pos, buffer, len);
   pos += len;
   */
-  data.append(buffer, buffer + len);
+  data.append(buffer, len);
+  //  data.append(buffer, buffer + len);
 
   return len;
 }
