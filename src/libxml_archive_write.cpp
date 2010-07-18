@@ -13,7 +13,7 @@ static const char * ARCHIVE_FILTER_EXTENSIONS[] = {"tar", "zip", "tgz", "cpio", 
 static struct archive *wa;
 static struct archive_entry *wentry;
 static std::string root_filename;
-static char filename[512] = { 0 };
+static std::string filename;
 
 static std::string data;
 
@@ -28,7 +28,7 @@ int archiveWriteMatch(const char * URI) {
   if (strcmp(URI, "-") == 0)
     return  0;
 
-  if (root_filename[0])
+  if (root_filename.empty())
      return 1;
 
   for(const char ** pos = ARCHIVE_FILTER_EXTENSIONS; *pos != 0; ++pos )
@@ -85,7 +85,7 @@ void* archiveWriteOpen(const char * URI) {
     archive_write_open_filename(wa, root_filename.c_str());
   }
 
-  strcpy(filename, URI);
+  filename = URI;
 
   data.clear();
 
@@ -110,7 +110,7 @@ int archiveWriteClose(void * context) {
   // fprintf(stderr, "ARCHIVE_WRITE_CLOSE: %d\n", pos);
 
   wentry = archive_entry_new();
-  archive_entry_set_pathname(wentry, filename);
+  archive_entry_set_pathname(wentry, filename.c_str());
   archive_entry_set_size(wentry, data.size());
   archive_entry_set_filetype(wentry, AE_IFREG);
   archive_entry_set_perm(wentry, 0644);
@@ -139,7 +139,7 @@ int archiveWriteRootClose(void * context) {
   wa = 0;
 
   root_filename = "";
-  strcpy(filename, "");
+  filename = "";
 
   return 1;
 }
