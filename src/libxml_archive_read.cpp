@@ -108,8 +108,15 @@ static int archive_read_open_http_callback(struct archive *a,
   return 0;
 }
 
-static __LA_SSIZE_T archive_read_http_callback(struct archive *a,
+static 
+#if ARCHIVE_VERSION_STAMP >= 2008000
+__LA_SSIZE_T
+#else
+ssize_t
+#endif
+archive_read_http_callback(struct archive *a,
 					   void* _client_data, const void** _buffer) {
+
 
   //  fprintf(stderr, "CALLBACK: READ\n");
   static char data[512];
