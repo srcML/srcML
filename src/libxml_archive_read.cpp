@@ -16,7 +16,7 @@ static struct archive_entry* ae;
 static const int NUMARCHIVES = 4;
 static const char * ARCHIVE_FILTER_EXTENSIONS[] = {"tar", "zip", "tgz", "cpio", "gz", "bz2", 0};
 
- static char root_filename[512];
+static std::string root_filename;
 
 // check if file has an archive extension
 bool isArchiveRead(const char * path)
@@ -103,7 +103,7 @@ static int archive_read_open_http_callback(struct archive *a,
 					   void* _client_data) {
 
   //  fprintf(stderr, "CALLBACK: OPEN: %s\n", root_filename);
-  mcontext = ishttp ? xmlNanoHTTPOpen(root_filename, 0) : xmlNanoFTPOpen(root_filename);
+  mcontext = ishttp ? xmlNanoHTTPOpen(root_filename.c_str(), 0) : xmlNanoFTPOpen(root_filename.c_str());
   //  fprintf(stderr, "MCONTEXT: %p\n", mcontext);
   return 0;
 }
@@ -159,7 +159,7 @@ void* archiveReadOpen(const char * URI) {
     ishttp = xmlIOHTTPMatch(URI);
     int r;
     if (ishttp || xmlIOFTPMatch(URI)) {
-      strcpy(root_filename, URI);
+      root_filename = URI;
       ishttp = true;
       r = archive_read_open(a, 0, archive_read_open_http_callback, archive_read_http_callback,
 			      archive_read_close_http_callback);
