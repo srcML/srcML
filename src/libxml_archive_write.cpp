@@ -45,7 +45,6 @@ int archiveWriteMatch(const char * URI) {
 
   return 0;
 }
-
 // setup archive for this URI
 void* archiveWriteRootOpen(const char * URI) {
   // fprintf(stderr, "ARCHIVE_WRITE_ROOT_OPEN: %s\n", URI);
@@ -125,6 +124,10 @@ int archiveWriteClose(void * context) {
   archive_entry_set_size(wentry, data.size());
   archive_entry_set_filetype(wentry, AE_IFREG);
   archive_entry_set_perm(wentry, 0644);
+  archive_entry_set_atime(wentry, 2, 20);
+  //  archive_entry_set_birthtime(wentry, 3, 30);
+  archive_entry_set_ctime(wentry, 4, 40);
+  archive_entry_set_mtime(wentry, 5, 50);
   archive_write_header(wa, wentry);
   archive_write_data(wa, data.c_str(), data.size());
   //  archive_write_data(wa, pdata, pos);
