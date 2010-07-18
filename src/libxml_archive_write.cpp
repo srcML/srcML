@@ -12,7 +12,7 @@ static const char * ARCHIVE_FILTER_EXTENSIONS[] = {"tar", "zip", "tgz", "cpio", 
 
 static struct archive *wa;
 static struct archive_entry *wentry;
-static char root_filename[512] = { 0 };
+static std::string root_filename;
 static char filename[512] = { 0 };
 
 static std::string data;
@@ -45,7 +45,9 @@ int archiveWriteMatch(const char * URI) {
 // setup archive for this URI
 void* archiveWriteRootOpen(const char * URI) {
   // fprintf(stderr, "ARCHIVE_WRITE_ROOT_OPEN: %s\n", URI);
-  strcpy(root_filename, URI);
+
+  // save the root URI
+  root_filename = URI;
 }
 
 // setup archive for this URI
@@ -58,29 +60,29 @@ void* archiveWriteOpen(const char * URI) {
 
     // setup the desired compression
     // TODO:  Extract into method, and make more general
-    if (!fnmatch("*.gz", root_filename, 0))
+    if (!fnmatch("*.gz", root_filename.c_str(), 0))
       archive_write_set_compression_gzip(wa);
-    else if (!fnmatch("*.bz2", root_filename, 0))
+    else if (!fnmatch("*.bz2", root_filename.c_str(), 0))
       archive_write_set_compression_bzip2(wa);
 
     // setup the desired format
     // TODO:  Extract into method, and make more general
 #if ARCHIVE_VERSION_STAMP >= 2008000
-    if (!fnmatch("*.zip", root_filename, 0) || !fnmatch("*.zip.*", root_filename, 0))
+    if (!fnmatch("*.zip", root_filename.c_str(), 0) || !fnmatch("*.zip.*", root_filename.c_str(), 0))
       archive_write_set_format_zip(wa);
 #else
     if (false)
       ;
 #endif
-    else if (!fnmatch("*.cpio", root_filename, 0) || !fnmatch("*.cpio.*", root_filename, 0))
+    else if (!fnmatch("*.cpio", root_filename.c_str(), 0) || !fnmatch("*.cpio.*", root_filename.c_str(), 0))
       archive_write_set_format_cpio(wa);
     else
       archive_write_set_format_ustar(wa);
 
-    fprintf(stderr, "ROOT: %s %s %s\n", root_filename, archive_compression_name(wa),
+    fprintf(stderr, "ROOT: %s %s %s\n", root_filename.c_str(), archive_compression_name(wa),
     archive_format_name(wa));
 
-    archive_write_open_filename(wa, root_filename);
+    archive_write_open_filename(wa, root_filename.c_str());
   }
 
   strcpy(filename, URI);
@@ -135,7 +137,8 @@ int archiveWriteRootClose(void * context) {
   }
 
   wa = 0;
-  strcpy(root_filename, "");
+
+  root_filename = "";
   strcpy(filename, "");
 
   return 1;
