@@ -114,7 +114,7 @@ static __LA_SSIZE_T archive_read_http_callback(struct archive *a,
   //  fprintf(stderr, "CALLBACK: READ\n");
   static char data[512];
   *_buffer = data;
-  int len = 100;
+  int len = 510;
   int size = xmlNanoHTTPRead(mcontext, data, len);
   //  int size = xmlNanoHTTPRead(mcontext, (void*) *_buffer, len);
   //  fprintf(stderr, "DATA: %d\n", size);
