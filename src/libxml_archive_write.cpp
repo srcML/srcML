@@ -73,8 +73,8 @@ void* archiveWriteOpen(const char * URI) {
     else
       archive_write_set_format_ustar(wa);
 
-    fprintf(stderr, "ROOT: %s %s %s\n", root_filename.c_str(), archive_compression_name(wa),
-    archive_format_name(wa));
+    //    fprintf(stderr, "ROOT: %s %s %s\n", root_filename.c_str(), archive_compression_name(wa),
+    //    archive_format_name(wa));
 
     archive_write_open_filename(wa, root_filename.c_str());
   }
