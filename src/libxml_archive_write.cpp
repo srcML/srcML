@@ -10,9 +10,6 @@
 static const int NUMARCHIVES = 4;
 static const char * ARCHIVE_FILTER_EXTENSIONS[] = {"tar", "zip", "tgz", "cpio", "gz", "bz2", 0};
 
-//static char* pdata = 0;
-static int size = 0;
-static int pos = 0;
 static struct archive *wa;
 static struct archive_entry *wentry;
 static char root_filename[512] = { 0 };
@@ -85,10 +82,11 @@ void* archiveWriteOpen(const char * URI) {
 
     archive_write_open_filename(wa, root_filename);
   }
-  //  pos = 0;
+
   strcpy(filename, URI);
 
   data.clear();
+
   // fprintf(stderr, "FILE: %s\n", URI);
 
   return wa;
@@ -98,18 +96,8 @@ void* archiveWriteOpen(const char * URI) {
 int archiveWrite(void * context, const char * buffer, int len) {
 
   // fprintf(stderr, "ARCHIVE_WRITE_WRITE: %d\n", len);
-  /*
-  // make sure we have room
-  if (pos + len >= size) {
-    size = (pos + len) * 2;
-    pdata = (char*) realloc(pdata, size);
-  }
 
-  memcpy(pdata + pos, buffer, len);
-  pos += len;
-  */
   data.append(buffer, len);
-  //  data.append(buffer, buffer + len);
 
   return len;
 }
@@ -130,7 +118,6 @@ int archiveWriteClose(void * context) {
   archive_entry_set_mtime(wentry, 5, 50);
   archive_write_header(wa, wentry);
   archive_write_data(wa, data.c_str(), data.size());
-  //  archive_write_data(wa, pdata, pos);
   archive_entry_free(wentry);
   wentry = 0;
 
@@ -146,8 +133,6 @@ int archiveWriteRootClose(void * context) {
     archive_write_close(wa);
     archive_write_finish(wa);
   }
-  //  if (pdata)
-  //    free(pdata);
 
   wa = 0;
   strcpy(root_filename, "");
