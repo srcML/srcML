@@ -43,6 +43,8 @@ const char* PROGRAM_NAME = "";
 
 #ifdef LIBARCHIVE
 #include "libxml_archive_read.h"
+#include "libxml_archive_read_http.h"
+#include "libxml_archive_write.h"
 #endif
 
 int option_error_status(int optopt);
@@ -323,6 +325,16 @@ int main(int argc, char* argv[]) {
 
 #ifdef LIBARCHIVE
   if (xmlRegisterInputCallbacks(archiveReadMatch, archiveReadOpen, archiveRead, archiveReadClose) < 0) {
+    fprintf(stderr, "%s: failed to register archive handler\n", argv[0]);
+    exit(1);
+  }
+  /*
+  if (xmlRegisterInputCallbacks(archiveReadHttpMatch, archiveReadHttpOpen, archiveReadHttp, archiveReadHttpClose) < 0) {
+    fprintf(stderr, "%s: failed to register archive handler\n", argv[0]);
+    exit(1);
+  }
+  */
+  if (xmlRegisterOutputCallbacks(archiveWriteMatch, archiveWriteOpen, archiveWrite, archiveWriteClose) < 0) {
     fprintf(stderr, "%s: failed to register archive handler\n", argv[0]);
     exit(1);
   }
@@ -1114,7 +1126,7 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& option
       isarchive = true;
       options |= OPTION_NESTED;
     }
-
+  
     // in verbose mode output the currently processed filename
     if (first && archiveReadMatch(path) && isoption(options, OPTION_VERBOSE)
 	&& (strcmp(archiveReadCompression(), "none")))
@@ -1155,7 +1167,8 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& option
       //    if (!archiveReadMatch(nfilename) && !reallanguage) {
 
       if (!isoption(options, OPTION_VERBOSE))
-	fprintf(stderr, "%s:  Skipping '%s'.  No language can be determined.\n", PROGRAM_NAME, nfilename);
+	;
+	//	fprintf(stderr, "%s:  Skipping '%s'.  No language can be determined.\n", PROGRAM_NAME, nfilename);
       else
 	fprintf(stderr, "Skipping '%s'.  No language can be determined.", nfilename);
 

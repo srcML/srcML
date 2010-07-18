@@ -6,6 +6,7 @@
 #include <archive.h>
 #include <archive_entry.h>
 #include <string>
+#include <libxml/nanohttp.h>
 
 static struct archive* a = 0;
 static int status = 0;
@@ -13,6 +14,8 @@ static struct archive_entry* ae;
 
 static const int NUMARCHIVES = 4;
 static const char * ARCHIVE_FILTER_EXTENSIONS[] = {"tar", "zip", "tgz", "cpio", "gz", "bz2", 0};
+
+ static char root_filename[512];
 
 // check if file has an archive extension
 bool isArchiveRead(const char * path)
@@ -62,6 +65,9 @@ int archiveReadMatch(const char * URI) {
   if(URI == NULL)
       return 0;
 
+  //  if (strncmp(URI, "http:", 5) == 0)
+  //    return 1;
+
   if ((URI[0] == '-' && URI[1] == '\0') || (strcmp(URI, "/dev/stdin") == 0))
     return 1;
 
@@ -91,6 +97,40 @@ const char* archiveReadFilename(const char* URI) {
   return isArchiveRead() ? archive_entry_pathname(ae) : 0;
 }
 
+
+static void* mcontext;
+
+static int archive_read_open_http_callback(struct archive *a,
+					   void* _client_data) {
+
+  //  fprintf(stderr, "CALLBACK: OPEN\n");
+  mcontext = xmlNanoHTTPOpen(root_filename, 0);
+  return 0;
+}
+
+static __LA_SSIZE_T archive_read_http_callback(struct archive *a,
+					   void* _client_data, const void** _buffer) {
+
+  //  fprintf(stderr, "CALLBACK: READ\n");
+  static char data[512];
+  *_buffer = data;
+  int len = 100;
+  int size = xmlNanoHTTPRead(mcontext, data, len);
+  //  int size = xmlNanoHTTPRead(mcontext, (void*) *_buffer, len);
+  //  fprintf(stderr, "DATA: %d\n", size);
+  //  for (int i = 0; i < size; ++i)
+  //    fprintf(stderr, "HERE: %c\n", data[i]);
+  return size;
+}
+
+static int archive_read_close_http_callback(struct archive *a,
+					   void* _client_data) {
+
+  //  fprintf(stderr, "CALLBACK: CLOSE\n");
+  xmlNanoHTTPClose(mcontext);
+  return 1;
+}
+
 // setup archive for this URI
 void* archiveReadOpen(const char * URI) {
 
@@ -116,7 +156,13 @@ void* archiveReadOpen(const char * URI) {
     archive_read_support_format_cpio(a);
 
     //    int r = archive_read_open_filename(a, URI, 4000);
-    int r = archive_read_open_filename(a, strcmp(URI, "-") == 0 ? 0 : URI, 4000);
+    int r;
+    if (strncmp(URI, "http:", 5) == 0) {
+      strcpy(root_filename, URI);
+      r = archive_read_open(a, 0, archive_read_open_http_callback, archive_read_http_callback,
+			      archive_read_close_http_callback);
+    } else
+      r = archive_read_open_filename(a, strcmp(URI, "-") == 0 ? 0 : URI, 4000);
     if (r != ARCHIVE_OK)
       return 0;
 
