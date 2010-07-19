@@ -21,8 +21,8 @@ static bool isstdout = false;
 
 // check if archive matches the protocol on the URI
 int archiveWriteMatch_src2srcml(const char * URI) {
-
-  // fprintf(stderr, "MATCH: %s %s\n", URI, root_filename.c_str());
+  
+  fprintf(stderr, "SRC2SRCML MATCH: %s %s\n", URI, root_filename.c_str());
   if (URI == NULL)
       return 0;
 
