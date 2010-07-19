@@ -150,17 +150,17 @@ void* archiveReadOpen(const char * URI) {
   if (!a) {
     //    fprintf(stderr, "REALLY OPEN\n");
     a = archive_read_new();
-    //    archive_read_support_compression_all(a);
-    archive_read_support_compression_bzip2(a);
-    archive_read_support_compression_gzip(a);
+    archive_read_support_compression_all(a);
+    //    archive_read_support_compression_bzip2(a);
+    //    archive_read_support_compression_gzip(a);
 
 #if ARCHIVE_VERSION_STAMP >= 2008000
   archive_read_support_format_raw(a);
 #endif
-  //    archive_read_support_format_all(a);
-    archive_read_support_format_tar(a);
-    archive_read_support_format_zip(a);
-    archive_read_support_format_cpio(a);
+    archive_read_support_format_all(a);
+    //    archive_read_support_format_tar(a);
+    //    archive_read_support_format_zip(a);
+    //    archive_read_support_format_cpio(a);
 
     //    int r = archive_read_open_filename(a, URI, 4000);
     ishttp = xmlIOHTTPMatch(URI);
