@@ -388,6 +388,15 @@ int main(int argc, char* argv[]) {
   if (!poptions.srcml_filename)
     poptions.srcml_filename = "-";
 
+  // special check for standard input (only) and no specified language
+  if (((input_arg_count == 0) ||
+       (input_arg_count == 1 && strcmp(argv[input_arg_start], "-") == 0)) &&
+      (poptions.language == 0)) {
+
+    fprintf(stderr, "%s:  Language must be specified for standard input.\n", PROGRAM_NAME);
+    exit(1);
+  }
+
   // if more than one input filename assume nested
   if (input_arg_count > 1)
     options |= OPTION_NESTED;
@@ -1156,10 +1165,10 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& option
       //    if (!archiveReadMatch(nfilename) && !reallanguage) {
 
       if (!isoption(options, OPTION_QUIET)) {
-	if (!isoption(options, OPTION_VERBOSE))
-	  fprintf(stderr, "%s:  Skipping '%s'.  No language can be determined.\n", PROGRAM_NAME, nfilename);
-	else
+	if (isoption(options, OPTION_VERBOSE))
 	  fprintf(stderr, "Skipping '%s'.  No language can be determined.\n", nfilename);
+	else
+	  fprintf(stderr, "%s:  Skipping '%s'.  No language can be determined.\n", PROGRAM_NAME, nfilename);
       }
 
       if (isarchive) {
