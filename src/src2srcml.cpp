@@ -416,18 +416,24 @@ int main(int argc, char* argv[]) {
       exit(STATUS_INPUTFILE_PROBLEM);
     }
   }
-#endif
 
-#if 0
-  struct stat instat;
-      fstat(STDIN_FILENO, &instat);
-      fprintf(stderr, "STAT: %d %d\n", S_ISFIFO(instat.st_mode), instat.st_ino);
-      for (int i = input_arg_start; i <= input_arg_end; ++i) {
+  // verify that only one input pipe is STDIN
+  struct stat stdiostat;
+  fstat(STDIN_FILENO, &stdiostat);
+  int stdiocount = 0;
+  for (int i = input_arg_start; i <= input_arg_end; ++i) {
 
 	struct stat instat;
 	stat(argv[i], &instat);
-	fprintf(stderr, "STAT: %d %d\n", S_ISFIFO(instat.st_mode), instat.st_ino);
-	continue;
+	if (instat.st_ino == stdiostat.st_ino)
+	  ++stdiocount;
+
+	if (stdiocount > 1) {
+	  fprintf(stderr, "%s: Multiple input files are from standard input.\n",
+		  PROGRAM_NAME);
+	  exit(STATUS_INPUTFILE_PROBLEM);
+	}
+  }
 #endif
 	
   // make sure user did not specify duplicate prefixes as an option
