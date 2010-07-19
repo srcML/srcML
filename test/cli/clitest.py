@@ -557,8 +557,8 @@ cpp_marked_srcml = xml_declaration + """
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 </unit>
 """
-check([src2srcml], cpp_src, cpp_marked_srcml)
-check([src2srcml, option.CPP_MARKUP_ELSE_FLAG], cpp_src, cpp_marked_srcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++'], cpp_src, cpp_marked_srcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.CPP_MARKUP_ELSE_FLAG], cpp_src, cpp_marked_srcml)
 
 
 cpp_textonly_srcml = xml_declaration + """
@@ -570,10 +570,10 @@ return;
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 </unit>
 """
-check([src2srcml, option.CPP_TEXTONLY_ELSE_FLAG], cpp_src, cpp_textonly_srcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.CPP_TEXTONLY_ELSE_FLAG], cpp_src, cpp_textonly_srcml)
 
-validate(getreturn([src2srcml, option.CPP_MARKUP_ELSE_FLAG, option.CPP_TEXTONLY_ELSE_FLAG, "foobar"], None), status.STATUS_INVALID_OPTION_COMBINATION)
-validate(getreturn([src2srcml, option.CPP_TEXTONLY_ELSE_FLAG, option.CPP_MARKUP_ELSE_FLAG, "foobar"], None), status.STATUS_INVALID_OPTION_COMBINATION)
+validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.CPP_MARKUP_ELSE_FLAG, option.CPP_TEXTONLY_ELSE_FLAG, "foobar"], None), status.STATUS_INVALID_OPTION_COMBINATION)
+validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.CPP_TEXTONLY_ELSE_FLAG, option.CPP_MARKUP_ELSE_FLAG, "foobar"], None), status.STATUS_INVALID_OPTION_COMBINATION)
 
 ##
 # cpp markup if0
@@ -591,8 +591,8 @@ break;
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 </unit>
 """
-check([src2srcml], cpp_if0, cpp_textonly_srcml)
-check([src2srcml, option.CPP_TEXTONLY_IF0_FLAG], cpp_if0, cpp_textonly_srcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++'], cpp_if0, cpp_textonly_srcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.CPP_TEXTONLY_IF0_FLAG], cpp_if0, cpp_textonly_srcml)
 
 cpp_marked_srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
@@ -601,10 +601,10 @@ cpp_marked_srcml = xml_declaration + """
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 </unit>
 """
-check([src2srcml, option.CPP_MARKUP_IF0_FLAG], cpp_if0, cpp_marked_srcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.CPP_MARKUP_IF0_FLAG], cpp_if0, cpp_marked_srcml)
 
-validate(getreturn([src2srcml, option.CPP_MARKUP_IF0_FLAG, option.CPP_TEXTONLY_IF0_FLAG, "foobar"], None), status.STATUS_INVALID_OPTION_COMBINATION)
-validate(getreturn([src2srcml, option.CPP_TEXTONLY_IF0_FLAG, option.CPP_MARKUP_IF0_FLAG, "foobar"], None), status.STATUS_INVALID_OPTION_COMBINATION)
+validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.CPP_MARKUP_IF0_FLAG, option.CPP_TEXTONLY_IF0_FLAG, "foobar"], None), status.STATUS_INVALID_OPTION_COMBINATION)
+validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.CPP_TEXTONLY_IF0_FLAG, option.CPP_MARKUP_IF0_FLAG, "foobar"], None), status.STATUS_INVALID_OPTION_COMBINATION)
 
 ##
 # xmlns options
@@ -614,25 +614,25 @@ srcml = xml_declaration + """
 """
 
 # separate
-check([src2srcml, "--xmlns=http://www.sdml.info/srcML/src"], "", srcml)
-check([src2srcml, "--xmlns:cpp=http://www.sdml.info/srcML/cpp"], "", srcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', "--xmlns=http://www.sdml.info/srcML/src"], "", srcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', "--xmlns:cpp=http://www.sdml.info/srcML/cpp"], "", srcml)
 
 # multiple
-check([src2srcml, "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:cpp=http://www.sdml.info/srcML/cpp"], "", srcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:cpp=http://www.sdml.info/srcML/cpp"], "", srcml)
 
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:err="http://www.sdml.info/srcML/srcerr" language="C++"/>
 """
 
 # separate
-check([src2srcml, "--debug", "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:cpp=http://www.sdml.info/srcML/cpp", "--xmlns:err=http://www.sdml.info/srcML/srcerr"], "", srcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', "--debug", "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:cpp=http://www.sdml.info/srcML/cpp", "--xmlns:err=http://www.sdml.info/srcML/srcerr"], "", srcml)
 
 # multiple
-check([src2srcml, "--debug", "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:cpp=http://www.sdml.info/srcML/cpp"], "", srcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', "--debug", "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:cpp=http://www.sdml.info/srcML/cpp"], "", srcml)
 
-check([src2srcml, "--debug", "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:err=http://www.sdml.info/srcML/srcerr"], "", srcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', "--debug", "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:err=http://www.sdml.info/srcML/srcerr"], "", srcml)
 
-check([src2srcml, "--debug", "--xmlns:cpp=http://www.sdml.info/srcML/cpp", "--xmlns:err=http://www.sdml.info/srcML/srcerr"], "", srcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', "--debug", "--xmlns:cpp=http://www.sdml.info/srcML/cpp", "--xmlns:err=http://www.sdml.info/srcML/srcerr"], "", srcml)
 
 srcml = xml_declaration + """
 <src:unit xmlns:src="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
@@ -641,7 +641,7 @@ srcml = xml_declaration + """
 srcml = xml_declaration + """
 <src:unit xmlns:src="http://www.sdml.info/srcML/src" xmlns="http://www.sdml.info/srcML/cpp" language="C++"/>
 """
-check([src2srcml, "--xmlns:src=http://www.sdml.info/srcML/src", "--xmlns=http://www.sdml.info/srcML/cpp"], "", srcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', "--xmlns:src=http://www.sdml.info/srcML/src", "--xmlns=http://www.sdml.info/srcML/cpp"], "", srcml)
 
 ##
 # prefix extraction
@@ -674,7 +674,7 @@ checkallforms(srcml2src, option.NAMESPACE_FLAG_SHORT, option.NAMESPACE_FLAG, "ht
 srcml = """<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 """
 
-check([src2srcml, option.NO_XML_DECLARATION_FLAG], "", srcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.NO_XML_DECLARATION_FLAG], "", srcml)
 
 ##
 # no namespace declaration
@@ -682,7 +682,7 @@ srcml = xml_declaration + """
 <unit language="C++"/>
 """
 
-check([src2srcml, option.NO_NAMESPACE_DECLARATION_FLAG], "", srcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.NO_NAMESPACE_DECLARATION_FLAG], "", srcml)
 
 ##
 # check missingfile
@@ -780,14 +780,14 @@ validate(open('sub/a.cpp.xml', 'r').read(), fxmlfile)
 check([src2srcml, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fxmlfile)
 
-check([src2srcml, '-', '-o', 'sub/a.cpp.xml'], sfile, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', '-', '-o', 'sub/a.cpp.xml'], sfile, "")
 validate(open('sub/a.cpp.xml', 'r').read(), sxmlfile)
-check([src2srcml, '-o', 'sub/a.cpp.xml'], sfile, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', '-o', 'sub/a.cpp.xml'], sfile, "")
 validate(open('sub/a.cpp.xml', 'r').read(), sxmlfile)
 
-check([src2srcml, '-', '--output', '/dev/stdout'], sfile, sxmlfile)
-check([src2srcml, '-', '--output=/dev/stdout'], sfile, sxmlfile)
-check([src2srcml, '-', '-o', '/dev/stdout'], sfile, sxmlfile)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', '-', '--output', '/dev/stdout'], sfile, sxmlfile)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', '-', '--output=/dev/stdout'], sfile, sxmlfile)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', '-', '-o', '/dev/stdout'], sfile, sxmlfile)
 
 # srcml2src
 
@@ -830,7 +830,7 @@ fsrcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:err="http://www.sdml.info/srcML/srcerr" language="C++" filename="sub/a.cpp"/>
 """
 checkallformsfile(src2srcml, 'sub/a.cpp', option.DEBUG_FLAG_SHORT, option.DEBUG_FLAG, "", "", fsrcml)
-check([src2srcml, option.DEBUG_FLAG_SHORT, '-o', 'sub/a.cpp.xml'], sfile1, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.DEBUG_FLAG_SHORT, '-o', 'sub/a.cpp.xml'], sfile1, "")
 validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.DEBUG_FLAG_SHORT, 'sub/a.cpp','-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
@@ -886,7 +886,7 @@ fsrcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="foo"/>
 """
 checkallformsfile(src2srcml, 'sub/a.cpp', option.FILENAME_FLAG_SHORT, option.FILENAME_FLAG, "foo", "", fsrcml)
-check([src2srcml, option.FILENAME_FLAG_SHORT, 'foo', '-o', 'sub/a.cpp.xml'], sfile1, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.FILENAME_FLAG_SHORT, 'foo', '-o', 'sub/a.cpp.xml'], sfile1, "")
 validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.FILENAME_FLAG_SHORT, 'foo', 'sub/a.cpp','-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
@@ -901,7 +901,7 @@ fsrcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="bar" filename="sub/a.cpp"/>
 """
 checkallformsfile(src2srcml, 'sub/a.cpp', option.DIRECTORY_FLAG_SHORT, option.DIRECTORY_FLAG, "bar", "", fsrcml)
-check([src2srcml, option.DIRECTORY_FLAG_SHORT, 'bar', '-o', 'sub/a.cpp.xml'], sfile1, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.DIRECTORY_FLAG_SHORT, 'bar', '-o', 'sub/a.cpp.xml'], sfile1, "")
 validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.DIRECTORY_FLAG_SHORT, 'bar', 'sub/a.cpp','-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
@@ -916,7 +916,7 @@ fsrcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp" version="1.0"/>
 """
 checkallformsfile(src2srcml, 'sub/a.cpp', option.SRCVERSION_FLAG_SHORT, option.SRCVERSION_FLAG, "1.0", "", fsrcml)
-check([src2srcml, option.SRCVERSION_FLAG_SHORT, '1.0', '-o', 'sub/a.cpp.xml'], sfile1, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.SRCVERSION_FLAG_SHORT, '1.0', '-o', 'sub/a.cpp.xml'], sfile1, "")
 validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.SRCVERSION_FLAG_SHORT, '1.0', 'sub/a.cpp','-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
@@ -931,7 +931,7 @@ fsrcml = """<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp"/>
 """
 checkallformsfile(src2srcml, 'sub/a.cpp', option.ENCODING_FLAG_SHORT, option.ENCODING_FLAG, "ISO-8859-1", "", fsrcml)
-check([src2srcml, option.ENCODING_FLAG_SHORT, 'ISO-8859-1', '-o', 'sub/a.cpp.xml'], sfile1, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.ENCODING_FLAG_SHORT, 'ISO-8859-1', '-o', 'sub/a.cpp.xml'], sfile1, "")
 validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.ENCODING_FLAG_SHORT, 'ISO-8859-1', 'sub/a.cpp','-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
@@ -948,7 +948,7 @@ fsrcml = xml_declaration + """
 checkallforms(src2srcml, option.TEXTENCODING_FLAG_SHORT, option.TEXTENCODING_FLAG, "ISO-8859-1", sfile1, srcml)
 checkallformsfile(src2srcml, 'sub/a.cpp', option.TEXTENCODING_FLAG_SHORT, option.TEXTENCODING_FLAG, "ISO-8859-1", "", fsrcml)
 check([src2srcml, option.TEXTENCODING_FLAG, "ISO-8859-1", 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, option.TEXTENCODING_FLAG, "ISO-8859-1", '-o', 'sub/a.cpp.xml'], sfile1, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.TEXTENCODING_FLAG, "ISO-8859-1", '-o', 'sub/a.cpp.xml'], sfile1, "")
 validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.TEXTENCODING_FLAG, "ISO-8859-1", 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
