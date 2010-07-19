@@ -299,6 +299,7 @@ struct process_options
 process_options* gpoptions = 0;
 
 void process_dir(srcMLTranslator& translator, char* dname, process_options& poptions, int& count);
+void process_filelist(srcMLTranslator& translator, process_options& poptions, int& count);
 
 // setup options and collect info from arguments
 int process_args(int argc, char* argv[], process_options & poptions);
@@ -389,7 +390,7 @@ int main(int argc, char* argv[]) {
     poptions.srcml_filename = "-";
 
   // special check for standard input (only) and no specified language
-  if (((input_arg_count == 0) ||
+  if (!isoption(options, OPTION_FILELIST) && ((input_arg_count == 0) ||
        (input_arg_count == 1 && strcmp(argv[input_arg_start], "-") == 0)) &&
       (poptions.language == 0)) {
 
@@ -476,42 +477,12 @@ int main(int argc, char* argv[]) {
     // translate input filenames from list in file
     if (isoption(options, OPTION_FILELIST)) {
 
-      try {
+      if (!poptions.fname && input_arg_count > 0)
+        poptions.fname = argv[input_arg_start];
+      if (!poptions.fname)
+        poptions.fname = "-";
 
-	// translate all the filenames listed in the named file
-	// Use libxml2 routines so that we can handle http:, file:, and gzipped files automagically
-	if (!poptions.fname && input_arg_count > 0)
-	  poptions.fname = argv[input_arg_start];
-	if (!poptions.fname)
-	  poptions.fname = "-";
-	URIStream uriinput(poptions.fname);
-	char* line;
-	while ((line = uriinput.getline())) {
-
-	  // skip blank lines or comment lines
-	  if (line[0] == '\0' || line[0] == FILELIST_COMMENT)
-	    continue;
-
-	  // in verbose mode output the currently processed filename
-	  if (isoption(options, OPTION_VERBOSE))
-	    fprintf(stderr, "Input:\t%s\n", strcmp(line, "-") == 0 ? "" : line);
-
-	  // translate the file listed in the input file using the directory and filename extracted from the path
-	  src2srcml_file(translator,
-			 line,
-			 options,
-			 0,
-			 0,
-			 poptions.given_version,
-			 poptions.language,
-			 poptions.tabsize,
-			 count);
-	}
-
-      } catch (URIStreamFileError) {
-	fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", argv[0], poptions.fname);
-	exit(STATUS_INPUTFILE_PROBLEM);
-      }
+      process_filelist(translator, poptions, count);
 
     // translate from standard input
     } else if (input_arg_count == 0 || strcmp(argv[input_arg_start], STDIN) == 0) {
@@ -1293,5 +1264,40 @@ void process_dir(srcMLTranslator& translator, char* dname, process_options& popt
 
     if (entry->d_type == DT_DIR)
       process_dir(translator, line, poptions, count);
+  }
+}
+
+void process_filelist(srcMLTranslator& translator, process_options& poptions, int& count) {
+  try {
+
+    // translate all the filenames listed in the named file
+    // Use libxml2 routines so that we can handle http:, file:, and gzipped files automagically
+    URIStream uriinput(poptions.fname);
+    char* line;
+    while ((line = uriinput.getline())) {
+
+      // skip blank lines or comment lines
+      if (line[0] == '\0' || line[0] == FILELIST_COMMENT)
+        continue;
+
+      // in verbose mode output the currently processed filename
+      if (isoption(options, OPTION_VERBOSE))
+        fprintf(stderr, "Input:\t%s\n", strcmp(line, "-") == 0 ? "" : line);
+
+      // translate the file listed in the input file using the directory and filename extracted from the path
+      src2srcml_file(translator,
+                     line,
+                     options,
+                     0,
+                     0,
+                     poptions.given_version,
+                     poptions.language,
+                     poptions.tabsize,
+                     count);
+    }
+
+  } catch (URIStreamFileError) {
+    fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", PROGRAM_NAME, poptions.fname);
+    exit(STATUS_INPUTFILE_PROBLEM);
   }
 }
