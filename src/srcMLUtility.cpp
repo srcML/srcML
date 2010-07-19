@@ -266,7 +266,7 @@ void srcMLUtility::expand(const char* root_filename) {
 
 #ifdef LIBARCHIVE
 
-  if (xmlRegisterOutputCallbacks(archiveWriteMatch, archiveWriteOpen, archiveWrite, archiveWriteClose) < 0) {
+  if (xmlRegisterOutputCallbacks(archiveWriteMatch_srcml2src, archiveWriteOpen, archiveWrite, archiveWriteClose) < 0) {
       fprintf(stderr, "%s: failed to register archive handler\n", "FOO");
       exit(1);
     }
@@ -295,7 +295,7 @@ void srcMLUtility::expand(const char* root_filename) {
   free(state.whole_path);
 
 #ifdef LIBARCHIVE
-  if (archiveWriteMatch(root_filename))
+  if (archiveWriteMatch_srcml2src(root_filename))
     archiveWriteRootClose(0);
 #endif
 

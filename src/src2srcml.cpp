@@ -327,12 +327,13 @@ int main(int argc, char* argv[]) {
 #endif
 
 #ifdef LIBARCHIVE
+
   if (xmlRegisterInputCallbacks(archiveReadMatch, archiveReadOpen, archiveRead, archiveReadClose) < 0) {
     fprintf(stderr, "%s: failed to register archive handler\n", argv[0]);
     exit(1);
   }
 
-  if (xmlRegisterOutputCallbacks(archiveWriteMatch, archiveWriteOpen, archiveWrite, archiveWriteClose) < 0) {
+  if (xmlRegisterOutputCallbacks(archiveWriteMatch_src2srcml, archiveWriteOpen, archiveWrite, archiveWriteClose) < 0) {
     fprintf(stderr, "%s: failed to register archive handler\n", argv[0]);
     exit(1);
   }

@@ -20,7 +20,26 @@ static std::string data;
 static bool isstdout = false;
 
 // check if archive matches the protocol on the URI
-int archiveWriteMatch(const char * URI) {
+int archiveWriteMatch_src2srcml(const char * URI) {
+
+  // fprintf(stderr, "MATCH: %s %s\n", URI, root_filename.c_str());
+  if (URI == NULL)
+      return 0;
+
+  return
+    (fnmatch("*.tar", URI, 0) == 0) ||
+    (fnmatch("*.tar.gz", URI, 0) == 0) ||
+    (fnmatch("*.tar.bz2", URI, 0) == 0) ||
+
+    (fnmatch("*.cpio", URI, 0) == 0) ||
+    (fnmatch("*.cpio.gz", URI, 0) == 0) ||
+    (fnmatch("*.cpio.bz2", URI, 0) == 0) ||
+
+    (fnmatch("*.zip", URI, 0) == 0);
+}
+
+// check if archive matches the protocol on the URI
+int archiveWriteMatch_srcml2src(const char * URI) {
 
   // fprintf(stderr, "MATCH: %s %s\n", URI, root_filename.c_str());
 

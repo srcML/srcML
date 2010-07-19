@@ -9,7 +9,10 @@
 #include <libxml/xmlIO.h>
 
 // check if archive matches the protocol on the URI
-int archiveWriteMatch(const char * URI);
+int archiveWriteMatch_src2srcml(const char * URI);
+
+// check if archive matches the protocol on the URI
+int archiveWriteMatch_srcml2src(const char * URI);
 
 void* archiveWriteRootOpen(const char* URI);
 
