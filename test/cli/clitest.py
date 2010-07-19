@@ -145,7 +145,7 @@ bad_language = "Python++"
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 """
-check([src2srcml], "", srcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++'], "", srcml)
 
 ##
 # empty with debug
@@ -188,12 +188,12 @@ checkallforms(src2srcml, option.FILENAME_FLAG_SHORT, option.FILENAME_FLAG, "bar/
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="bar" filename="foo"/>
 """
-check([src2srcml, option.FILENAME_FLAG_SHORT, "foo", option.DIRECTORY_FLAG_SHORT, "bar"], "", srcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.FILENAME_FLAG_SHORT, "foo", option.DIRECTORY_FLAG_SHORT, "bar"], "", srcml)
 
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="bar" filename="foo"/>
 """
-check([src2srcml, option.DIRECTORY_FLAG_SHORT, "bar", option.FILENAME_FLAG_SHORT, "foo"], "", srcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.DIRECTORY_FLAG_SHORT, "bar", option.FILENAME_FLAG_SHORT, "foo"], "", srcml)
 
 ##
 # directory flag
@@ -230,7 +230,7 @@ sxmlfile1 = xml_declaration + """
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 """
-check([src2srcml], sfile1, sxmlfile1)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++'], sfile1, sxmlfile1)
 
 sfile2 = """
 b;
@@ -241,11 +241,11 @@ sxmlfile2 = xml_declaration + """
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 </unit>
 """
-check([src2srcml], sfile2, sxmlfile2)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++'], sfile2, sxmlfile2)
 
-check([src2srcml, "-", "-o", "sub/a.cpp.xml"], sfile1, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', "-", "-o", "sub/a.cpp.xml"], sfile1, "")
 
-check([src2srcml, "-", "-o", "sub/b.cpp.xml"], sfile2, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', "-", "-o", "sub/b.cpp.xml"], sfile2, "")
 
 nestedfile1 = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
@@ -483,30 +483,30 @@ check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "2", option.LANGUAGE_FLAG],
 # src2srcml error return
 
 # invalid input filename
-validate(getreturn([src2srcml, "foobar"], None), status.STATUS_INPUTFILE_PROBLEM)
+validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', "foobar"], None), status.STATUS_INPUTFILE_PROBLEM)
 
 # invalid input filename (repeat in output)
 validate(getreturn([src2srcml, "sub/a.cpp", "-o", "sub/a.cpp"], None), status.STATUS_INPUTFILE_PROBLEM)
 
 # unknown option
-validate(getreturn([src2srcml, "--strip", "foobar"], None), status.STATUS_UNKNOWN_OPTION)
+validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', "--strip", "foobar"], None), status.STATUS_UNKNOWN_OPTION)
 
 # unknown encoding
 
-validate(getreturn([src2srcml, option.TEXTENCODING_FLAG + "=" + bad_encoding, "foobar"], None), status.STATUS_UNKNOWN_ENCODING)
-validate(getreturn([src2srcml, option.ENCODING_FLAG + "=" + bad_encoding, "foobar"], None), status.STATUS_UNKNOWN_ENCODING)
+validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.TEXTENCODING_FLAG + "=" + bad_encoding, "foobar"], None), status.STATUS_UNKNOWN_ENCODING)
+validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.ENCODING_FLAG + "=" + bad_encoding, "foobar"], None), status.STATUS_UNKNOWN_ENCODING)
 	
 # missing value
 validate(getreturn([src2srcml, option.LANGUAGE_FLAG, bad_language, "foobar"], None), status.STATUS_INVALID_LANGUAGE)
 validate(getreturn([src2srcml, option.LANGUAGE_FLAG], None), status.STATUS_LANGUAGE_MISSING)
-validate(getreturn([src2srcml, option.FILENAME_FLAG], ""), status.STATUS_FILENAME_MISSING)
-validate(getreturn([src2srcml, option.DIRECTORY_FLAG], ""), status.STATUS_DIRECTORY_MISSING)
-validate(getreturn([src2srcml, option.SRCVERSION_FLAG], ""), status.STATUS_VERSION_MISSING)
+validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.FILENAME_FLAG], ""), status.STATUS_FILENAME_MISSING)
+validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.DIRECTORY_FLAG], ""), status.STATUS_DIRECTORY_MISSING)
+validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.SRCVERSION_FLAG], ""), status.STATUS_VERSION_MISSING)
 
 # source encoding not given
-validate(getreturn([src2srcml, option.TEXTENCODING_FLAG], ""), status.STATUS_SRCENCODING_MISSING)
+validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.TEXTENCODING_FLAG], ""), status.STATUS_SRCENCODING_MISSING)
 
-validate(getreturn([src2srcml, option.ENCODING_FLAG], ""), status.STATUS_XMLENCODING_MISSING)
+validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.ENCODING_FLAG], ""), status.STATUS_XMLENCODING_MISSING)
 
 ##
 # srcml2src error return
