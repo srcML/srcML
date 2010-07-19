@@ -418,6 +418,18 @@ int main(int argc, char* argv[]) {
   }
 #endif
 
+#if 0
+  struct stat instat;
+      fstat(STDIN_FILENO, &instat);
+      fprintf(stderr, "STAT: %d %d\n", S_ISFIFO(instat.st_mode), instat.st_ino);
+      for (int i = input_arg_start; i <= input_arg_end; ++i) {
+
+	struct stat instat;
+	stat(argv[i], &instat);
+	fprintf(stderr, "STAT: %d %d\n", S_ISFIFO(instat.st_mode), instat.st_ino);
+	continue;
+#endif
+	
   // make sure user did not specify duplicate prefixes as an option
   for (int i = 0; i < num_prefixes - 1; ++i) {
     for (int j = i + 1; j < num_prefixes; ++j)
@@ -503,15 +515,15 @@ int main(int argc, char* argv[]) {
       // translate in batch the input files on the command line extracting the directory and filename attributes
       // from the full path
       for (int i = input_arg_start; i <= input_arg_end; ++i) {
-
+	
 	// in verbose mode output the currently processed filename
 	if (isoption(options, OPTION_VERBOSE))
 	  fprintf(stderr, "Input:\t%s\n", strcmp(argv[i], "-") == 0 ? "" : argv[i]);
 
 	src2srcml_file(translator, argv[i], options,
-		       input_arg_count > 1 ? poptions.given_directory : 0,
-		       input_arg_count > 1 ? poptions.given_filename : 0,
-		       input_arg_count > 1 ? poptions.given_version : 0,
+		       input_arg_count == 1 ? poptions.given_directory : 0,
+		       input_arg_count == 1 ? poptions.given_filename : 0,
+		       input_arg_count == 1 ? poptions.given_version : 0,
 		       poptions.language,
 		       poptions.tabsize,
 		       count);
