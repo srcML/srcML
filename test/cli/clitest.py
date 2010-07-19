@@ -64,13 +64,23 @@ def getreturn(command, input):
 	return p.returncode
 
 def checkallforms(base, shortflag, longflag, optionvalue, progin, progout):
-	if optionvalue != "":
-		check([base, shortflag, optionvalue], progin, progout)
-		check([base, longflag, optionvalue], progin, progout)
-		check([base, longflag + "=" + optionvalue], progin, progout)
-	else:
-		check([base, shortflag], progin, progout)
-		check([base, longflag], progin, progout)
+	if base == src2srcml and (shortflag != option.LANGUAGE_FLAG_SHORT or longflag != option.LANGUAGE_FLAG_SHORT) :
+		if optionvalue != "":
+			check([base, option.LANGUAGE_FLAG_SHORT, 'C++', shortflag, optionvalue], progin, progout)
+			check([base, option.LANGUAGE_FLAG_SHORT, 'C++', longflag, optionvalue], progin, progout)
+			check([base, option.LANGUAGE_FLAG_SHORT, 'C++', longflag + "=" + optionvalue], progin, progout)
+		else:
+			check([base, option.LANGUAGE_FLAG_SHORT, 'C++', shortflag], progin, progout)
+			check([base, option.LANGUAGE_FLAG_SHORT, 'C++', longflag], progin, progout)
+
+	else :
+		if optionvalue != "":
+		       	check([base, shortflag, optionvalue], progin, progout)
+		       	check([base, longflag, optionvalue], progin, progout)
+		       	check([base, longflag + "=" + optionvalue], progin, progout)
+		else:
+			check([base, shortflag], progin, progout)
+			check([base, longflag], progin, progout)
 
 	return
 
