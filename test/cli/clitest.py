@@ -38,7 +38,7 @@ def validate(gen, expected):
 	return
 
 def execute(command, input):
-	p = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+	p = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 	last_line = p.communicate(input)[0]
 
 	if p.returncode != 0:
@@ -2031,7 +2031,7 @@ f.close()
  
 # src2srcml
 print os.path.basename(src2srcml) + ' ' + option.VERBOSE_FLAG
-line = execute([src2srcml, option.VERBOSE_FLAG], sfile)
+line = execute([src2srcml, option.VERBOSE_FLAG, option.LANGUAGE_FLAG_SHORT, 'C++'], sfile)
 execute(['grep', srcencoding + xmlencoding], line)
 print os.path.basename(src2srcml) + ' ' + option.VERBOSE_FLAG + ' sub/a.cpp'
 line = execute([src2srcml, option.VERBOSE_FLAG, 'sub/a.cpp'], "")
