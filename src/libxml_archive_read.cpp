@@ -179,6 +179,9 @@ void* archiveReadOpen(const char * URI) {
     if (status != ARCHIVE_OK)
       return 0;
 
+    if (archive_entry_filetype(ae) == AE_IFDIR)
+      archiveReadClose(mcontext);
+  //    fprintf(stderr, "ISDIR: %d\n", archive_entry_filetype(ae) == AE_IFDIR);
     //fprintf(stderr, "FORMAT: %s\n", archive_format_name(a));
   }
 
@@ -204,6 +207,10 @@ int archiveReadClose(void * context) {
     a = 0;
     return 0;
   }
+
+  if (archive_entry_filetype(ae) == AE_IFDIR)
+    archiveReadClose(context);
+    //  fprintf(stderr, "TYPE: %d\n", archive_entry_filetype(ae));
 
   return 0;
 }
