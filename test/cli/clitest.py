@@ -1068,19 +1068,19 @@ f.close()
 
 # separate
 check([src2srcml, "--xmlns=http://www.sdml.info/srcML/src", 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, "--xmlns=http://www.sdml.info/srcML/src", '-o', 'sub/a.cpp.xml'], sfile1, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', "--xmlns=http://www.sdml.info/srcML/src", '-o', 'sub/a.cpp.xml'], sfile1, "")
 validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, "--xmlns=http://www.sdml.info/srcML/src", 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 check([src2srcml, "--xmlns:cpp=http://www.sdml.info/srcML/cpp", 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, "--xmlns:cpp=http://www.sdml.info/srcML/cpp", '-o', 'sub/a.cpp.xml'], sfile1, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', "--xmlns:cpp=http://www.sdml.info/srcML/cpp", '-o', 'sub/a.cpp.xml'], sfile1, "")
 validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, "--xmlns:cpp=http://www.sdml.info/srcML/cpp", 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
 # multiple
 check([src2srcml, "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:cpp=http://www.sdml.info/srcML/cpp", 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:cpp=http://www.sdml.info/srcML/cpp", '-o', 'sub/a.cpp.xml'], sfile1, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:cpp=http://www.sdml.info/srcML/cpp", '-o', 'sub/a.cpp.xml'], sfile1, "")
 validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:cpp=http://www.sdml.info/srcML/cpp", 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
@@ -1095,26 +1095,26 @@ fsrcml = xml_declaration + """
 
 # separate
 check([src2srcml, "--debug", "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:cpp=http://www.sdml.info/srcML/cpp", "--xmlns:err=http://www.sdml.info/srcML/srcerr", 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, "--debug", "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:cpp=http://www.sdml.info/srcML/cpp", "--xmlns:err=http://www.sdml.info/srcML/srcerr", '-o', 'sub/a.cpp.xml'], sfile1, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', "--debug", "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:cpp=http://www.sdml.info/srcML/cpp", "--xmlns:err=http://www.sdml.info/srcML/srcerr", '-o', 'sub/a.cpp.xml'], sfile1, "")
 validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, "--debug", "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:cpp=http://www.sdml.info/srcML/cpp", "--xmlns:err=http://www.sdml.info/srcML/srcerr", 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
 # multiple
 check([src2srcml, "--debug", "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:cpp=http://www.sdml.info/srcML/cpp", 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, "--debug", "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:cpp=http://www.sdml.info/srcML/cpp", '-o', 'sub/a.cpp.xml'], sfile1, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', "--debug", "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:cpp=http://www.sdml.info/srcML/cpp", '-o', 'sub/a.cpp.xml'], sfile1, "")
 validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, "--debug", "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:cpp=http://www.sdml.info/srcML/cpp", 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
 check([src2srcml, "--debug", "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:err=http://www.sdml.info/srcML/srcerr", 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, "--debug", "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:err=http://www.sdml.info/srcML/srcerr", '-o', 'sub/a.cpp.xml'], sfile1, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', "--debug", "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:err=http://www.sdml.info/srcML/srcerr", '-o', 'sub/a.cpp.xml'], sfile1, "")
 validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, "--debug", "--xmlns=http://www.sdml.info/srcML/src", "--xmlns:err=http://www.sdml.info/srcML/srcerr", 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
 check([src2srcml, "--debug", "--xmlns:cpp=http://www.sdml.info/srcML/cpp", "--xmlns:err=http://www.sdml.info/srcML/srcerr", 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, "--debug", "--xmlns:cpp=http://www.sdml.info/srcML/cpp", "--xmlns:err=http://www.sdml.info/srcML/srcerr", '-o', 'sub/a.cpp.xml'], sfile1, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', "--debug", "--xmlns:cpp=http://www.sdml.info/srcML/cpp", "--xmlns:err=http://www.sdml.info/srcML/srcerr", '-o', 'sub/a.cpp.xml'], sfile1, "")
 validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, "--debug", "--xmlns:cpp=http://www.sdml.info/srcML/cpp", "--xmlns:err=http://www.sdml.info/srcML/srcerr", 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
@@ -1127,7 +1127,7 @@ fsrcml = xml_declaration + """
 <src:unit xmlns:src="http://www.sdml.info/srcML/src" xmlns="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp"/>
 """
 check([src2srcml, "--xmlns:src=http://www.sdml.info/srcML/src", "--xmlns=http://www.sdml.info/srcML/cpp", 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, "--xmlns:src=http://www.sdml.info/srcML/src", "--xmlns=http://www.sdml.info/srcML/cpp", '-o', 'sub/a.cpp.xml'], sfile1, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', "--xmlns:src=http://www.sdml.info/srcML/src", "--xmlns=http://www.sdml.info/srcML/cpp", '-o', 'sub/a.cpp.xml'], sfile1, "")
 validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, "--xmlns:src=http://www.sdml.info/srcML/src", "--xmlns=http://www.sdml.info/srcML/cpp", 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
@@ -1141,7 +1141,7 @@ fsrcml = """<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.s
 """
 
 check([src2srcml, option.NO_XML_DECLARATION_FLAG, 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, option.NO_XML_DECLARATION_FLAG, '-o', 'sub/a.cpp.xml'], sfile1, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.NO_XML_DECLARATION_FLAG, '-o', 'sub/a.cpp.xml'], sfile1, "")
 validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.NO_XML_DECLARATION_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
@@ -1157,7 +1157,7 @@ fsrcml = xml_declaration + """
 """
 
 check([src2srcml, option.NO_NAMESPACE_DECLARATION_FLAG, 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, option.NO_NAMESPACE_DECLARATION_FLAG, '-o', 'sub/a.cpp.xml'], sfile1, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.NO_NAMESPACE_DECLARATION_FLAG, '-o', 'sub/a.cpp.xml'], sfile1, "")
 validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.NO_NAMESPACE_DECLARATION_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
@@ -1198,13 +1198,13 @@ f.write(cpp_src)
 f.close()
 
 check([src2srcml, 'sub/a.cpp'], "", fcpp_marked_srcml)
-check([src2srcml, '-o', 'sub/a.cpp.xml'], cpp_src, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', '-o', 'sub/a.cpp.xml'], cpp_src, "")
 validate(open('sub/a.cpp.xml', 'r').read(), cpp_marked_srcml)
 check([src2srcml, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fcpp_marked_srcml)
 
 check([src2srcml, option.CPP_MARKUP_ELSE_FLAG, 'sub/a.cpp'], "", fcpp_marked_srcml)
-check([src2srcml, option.CPP_MARKUP_ELSE_FLAG, '-o', 'sub/a.cpp.xml'], cpp_src, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.CPP_MARKUP_ELSE_FLAG, '-o', 'sub/a.cpp.xml'], cpp_src, "")
 validate(open('sub/a.cpp.xml', 'r').read(), cpp_marked_srcml)
 check([src2srcml, option.CPP_MARKUP_ELSE_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fcpp_marked_srcml)
@@ -1230,7 +1230,7 @@ return;
 """
 
 check([src2srcml, option.CPP_TEXTONLY_ELSE_FLAG, 'sub/a.cpp'], "", fcpp_textonly_srcml)
-check([src2srcml, option.CPP_TEXTONLY_ELSE_FLAG, '-o', 'sub/a.cpp.xml'], cpp_src, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.CPP_TEXTONLY_ELSE_FLAG, '-o', 'sub/a.cpp.xml'], cpp_src, "")
 validate(open('sub/a.cpp.xml', 'r').read(), cpp_textonly_srcml)
 check([src2srcml, option.CPP_TEXTONLY_ELSE_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fcpp_textonly_srcml)
@@ -1265,13 +1265,13 @@ f.write(cpp_if0)
 f.close()
 
 check([src2srcml, 'sub/a.cpp'], "", fcpp_textonly_srcml)
-check([src2srcml, '-o', 'sub/a.cpp.xml'], cpp_if0, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', '-o', 'sub/a.cpp.xml'], cpp_if0, "")
 validate(open('sub/a.cpp.xml', 'r').read(), cpp_textonly_srcml)
 check([src2srcml, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fcpp_textonly_srcml)
 
 check([src2srcml, option.CPP_TEXTONLY_IF0_FLAG, 'sub/a.cpp'], "", fcpp_textonly_srcml)
-check([src2srcml, option.CPP_TEXTONLY_IF0_FLAG, '-o', 'sub/a.cpp.xml'], cpp_if0, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.CPP_TEXTONLY_IF0_FLAG, '-o', 'sub/a.cpp.xml'], cpp_if0, "")
 validate(open('sub/a.cpp.xml', 'r').read(), cpp_textonly_srcml)
 check([src2srcml, option.CPP_TEXTONLY_IF0_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fcpp_textonly_srcml)
@@ -1293,7 +1293,7 @@ fcpp_marked_srcml = xml_declaration + """
 """
 
 check([src2srcml, option.CPP_MARKUP_IF0_FLAG, 'sub/a.cpp'], "", fcpp_marked_srcml)
-check([src2srcml, option.CPP_MARKUP_IF0_FLAG, '-o', 'sub/a.cpp.xml'], cpp_if0, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.CPP_MARKUP_IF0_FLAG, '-o', 'sub/a.cpp.xml'], cpp_if0, "")
 validate(open('sub/a.cpp.xml', 'r').read(), cpp_marked_srcml)
 check([src2srcml, option.CPP_MARKUP_IF0_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fcpp_marked_srcml)
@@ -1540,7 +1540,7 @@ check([src2srcml, option.COMPRESSED_FLAG_SHORT, 'sub/a.cpp', '-o', 'sub/a.cpp.xm
 check(['gunzip', '-c', 'sub/a.cpp.xml.gz'], "", fxmlfile)
 check([src2srcml, option.COMPRESSED_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml.gz'], "", "")
 check(['gunzip', '-c', 'sub/a.cpp.xml.gz'], "", fxmlfile)
-check([src2srcml, option.COMPRESSED_FLAG_SHORT, '-o', 'sub/a.cpp.xml.gz'], sfile, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.COMPRESSED_FLAG_SHORT, '-o', 'sub/a.cpp.xml.gz'], sfile, "")
 check(['gunzip', '-c', 'sub/a.cpp.xml.gz'], "", sxmlfile)
 
 
@@ -1578,9 +1578,9 @@ f = open('sub/a.cpp.gz', 'r')
 gzipped = f.read()
 f.close()
 
-check([src2srcml], gzipped, sxmlfile)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++'], gzipped, sxmlfile)
 check([src2srcml, 'sub/a.cpp.gz'], "", fxmlfile)
-check([src2srcml, '-o', 'sub/a.cpp.xml'], gzipped, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', '-o', 'sub/a.cpp.xml'], gzipped, "")
 validate(open('sub/a.cpp.xml', 'r').read(), sxmlfile)
 check([src2srcml, 'sub/a.cpp.gz', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fxmlfile)
@@ -1612,9 +1612,9 @@ fsrcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" language="C++" filename="sub/a.cpp"/>
 """
 
-check([src2srcml, option.LITERAL_FLAG], sfile, srcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.LITERAL_FLAG], sfile, srcml)
 check([src2srcml, option.LITERAL_FLAG, 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, option.LITERAL_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.LITERAL_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
 validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.LITERAL_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
@@ -1627,9 +1627,9 @@ fsrcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:op="http://www.sdml.info/srcML/operator" language="C++" filename="sub/a.cpp"/>
 """
 
-check([src2srcml, option.OPERATOR_FLAG], sfile, srcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.OPERATOR_FLAG], sfile, srcml)
 check([src2srcml, option.OPERATOR_FLAG, 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, option.OPERATOR_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.OPERATOR_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
 validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.OPERATOR_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
@@ -1642,9 +1642,9 @@ fsrcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:type="http://www.sdml.info/srcML/modifier" language="C++" filename="sub/a.cpp"/>
 """
 
-check([src2srcml, option.MODIFIER_FLAG], sfile, srcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.MODIFIER_FLAG], sfile, srcml)
 check([src2srcml, option.MODIFIER_FLAG, 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, option.MODIFIER_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.MODIFIER_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
 validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.MODIFIER_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
@@ -1657,16 +1657,16 @@ fsrcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" language="C++" filename="sub/a.cpp"/>
 """
 
-check([src2srcml, option.LITERAL_FLAG, option.OPERATOR_FLAG], sfile, srcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.LITERAL_FLAG, option.OPERATOR_FLAG], sfile, srcml)
 check([src2srcml, option.LITERAL_FLAG, option.OPERATOR_FLAG, 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, option.LITERAL_FLAG, option.OPERATOR_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.LITERAL_FLAG, option.OPERATOR_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
 validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.LITERAL_FLAG, option.OPERATOR_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
-check([src2srcml, option.OPERATOR_FLAG, option.LITERAL_FLAG], sfile, srcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.OPERATOR_FLAG, option.LITERAL_FLAG], sfile, srcml)
 check([src2srcml, option.OPERATOR_FLAG, option.LITERAL_FLAG, 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, option.OPERATOR_FLAG, option.LITERAL_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.OPERATOR_FLAG, option.LITERAL_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
 validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.OPERATOR_FLAG, option.LITERAL_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
@@ -1679,16 +1679,16 @@ fsrcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:type="http://www.sdml.info/srcML/modifier" language="C++" filename="sub/a.cpp"/>
 """
 
-check([src2srcml, option.LITERAL_FLAG, option.MODIFIER_FLAG], sfile, srcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.LITERAL_FLAG, option.MODIFIER_FLAG], sfile, srcml)
 check([src2srcml, option.LITERAL_FLAG, option.MODIFIER_FLAG, 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, option.LITERAL_FLAG, option.MODIFIER_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.LITERAL_FLAG, option.MODIFIER_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
 validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.LITERAL_FLAG, option.MODIFIER_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
-check([src2srcml, option.MODIFIER_FLAG, option.LITERAL_FLAG], sfile, srcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.MODIFIER_FLAG, option.LITERAL_FLAG], sfile, srcml)
 check([src2srcml, option.MODIFIER_FLAG, option.LITERAL_FLAG, 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, option.MODIFIER_FLAG, option.LITERAL_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.MODIFIER_FLAG, option.LITERAL_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
 validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.MODIFIER_FLAG, option.LITERAL_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
@@ -1701,16 +1701,16 @@ fsrcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" language="C++" filename="sub/a.cpp"/>
 """
 
-check([src2srcml, option.OPERATOR_FLAG, option.MODIFIER_FLAG], sfile, srcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.OPERATOR_FLAG, option.MODIFIER_FLAG], sfile, srcml)
 check([src2srcml, option.OPERATOR_FLAG, option.MODIFIER_FLAG, 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, option.OPERATOR_FLAG, option.MODIFIER_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.OPERATOR_FLAG, option.MODIFIER_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
 validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.OPERATOR_FLAG, option.MODIFIER_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
-check([src2srcml, option.MODIFIER_FLAG, option.OPERATOR_FLAG], sfile, srcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.MODIFIER_FLAG, option.OPERATOR_FLAG], sfile, srcml)
 check([src2srcml, option.MODIFIER_FLAG, option.OPERATOR_FLAG, 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, option.MODIFIER_FLAG, option.OPERATOR_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.MODIFIER_FLAG, option.OPERATOR_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
 validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.MODIFIER_FLAG, option.OPERATOR_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
@@ -1723,44 +1723,44 @@ fsrcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" xmlns:op="http://www.sdml.info/srcML/operator" xmlns:type="http://www.sdml.info/srcML/modifier" language="C++" filename="sub/a.cpp"/>
 """
 
-check([src2srcml, option.LITERAL_FLAG, option.OPERATOR_FLAG, option.MODIFIER_FLAG], sfile, srcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.LITERAL_FLAG, option.OPERATOR_FLAG, option.MODIFIER_FLAG], sfile, srcml)
 check([src2srcml, option.LITERAL_FLAG, option.OPERATOR_FLAG, option.MODIFIER_FLAG, 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, option.LITERAL_FLAG, option.OPERATOR_FLAG, option.MODIFIER_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.LITERAL_FLAG, option.OPERATOR_FLAG, option.MODIFIER_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
 validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.LITERAL_FLAG, option.OPERATOR_FLAG, option.MODIFIER_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
-check([src2srcml, option.LITERAL_FLAG, option.MODIFIER_FLAG, option.OPERATOR_FLAG], sfile, srcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.LITERAL_FLAG, option.MODIFIER_FLAG, option.OPERATOR_FLAG], sfile, srcml)
 check([src2srcml, option.LITERAL_FLAG, option.MODIFIER_FLAG, option.OPERATOR_FLAG, 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, option.LITERAL_FLAG, option.MODIFIER_FLAG, option.OPERATOR_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.LITERAL_FLAG, option.MODIFIER_FLAG, option.OPERATOR_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
 validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.LITERAL_FLAG, option.MODIFIER_FLAG, option.OPERATOR_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
-check([src2srcml, option.OPERATOR_FLAG, option.LITERAL_FLAG, option.MODIFIER_FLAG], sfile, srcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.OPERATOR_FLAG, option.LITERAL_FLAG, option.MODIFIER_FLAG], sfile, srcml)
 check([src2srcml, option.OPERATOR_FLAG, option.LITERAL_FLAG, option.MODIFIER_FLAG, 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, option.OPERATOR_FLAG, option.LITERAL_FLAG, option.MODIFIER_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.OPERATOR_FLAG, option.LITERAL_FLAG, option.MODIFIER_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
 validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.OPERATOR_FLAG, option.LITERAL_FLAG, option.MODIFIER_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
-check([src2srcml, option.OPERATOR_FLAG, option.MODIFIER_FLAG, option.LITERAL_FLAG], sfile, srcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.OPERATOR_FLAG, option.MODIFIER_FLAG, option.LITERAL_FLAG], sfile, srcml)
 check([src2srcml, option.OPERATOR_FLAG, option.MODIFIER_FLAG, option.LITERAL_FLAG, 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, option.OPERATOR_FLAG, option.MODIFIER_FLAG, option.LITERAL_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.OPERATOR_FLAG, option.MODIFIER_FLAG, option.LITERAL_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
 validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.OPERATOR_FLAG, option.MODIFIER_FLAG, option.LITERAL_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
-check([src2srcml, option.MODIFIER_FLAG, option.LITERAL_FLAG, option.OPERATOR_FLAG], sfile, srcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.MODIFIER_FLAG, option.LITERAL_FLAG, option.OPERATOR_FLAG], sfile, srcml)
 check([src2srcml, option.MODIFIER_FLAG, option.LITERAL_FLAG, option.OPERATOR_FLAG, 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, option.MODIFIER_FLAG, option.LITERAL_FLAG, option.OPERATOR_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.MODIFIER_FLAG, option.LITERAL_FLAG, option.OPERATOR_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
 validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.MODIFIER_FLAG, option.LITERAL_FLAG, option.OPERATOR_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
-check([src2srcml, option.MODIFIER_FLAG, option.OPERATOR_FLAG, option.LITERAL_FLAG], sfile, srcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.MODIFIER_FLAG, option.OPERATOR_FLAG, option.LITERAL_FLAG], sfile, srcml)
 check([src2srcml, option.MODIFIER_FLAG, option.OPERATOR_FLAG, option.LITERAL_FLAG, 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, option.MODIFIER_FLAG, option.OPERATOR_FLAG, option.LITERAL_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.MODIFIER_FLAG, option.OPERATOR_FLAG, option.LITERAL_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
 validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.MODIFIER_FLAG, option.OPERATOR_FLAG, option.LITERAL_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
@@ -2070,7 +2070,7 @@ file.close()
 
 checkallforms(src2srcml, option.EXPRESSION_MODE_FLAG_SHORT, option.EXPRESSION_MODE_FLAG, "", sfile, sxmlfile)
 checkallformsfile(src2srcml, 'sub/a.cpp', option.EXPRESSION_MODE_FLAG_SHORT, option.EXPRESSION_MODE_FLAG, "", "", fsxmlfile)
-check([src2srcml, option.EXPRESSION_MODE_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.EXPRESSION_MODE_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
 validate(open('sub/a.cpp.xml', 'r').read(), sxmlfile)
 check([src2srcml, option.EXPRESSION_MODE_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsxmlfile)
@@ -2166,9 +2166,9 @@ f = open('sub/a.cpp', 'w')
 f.write("")
 f.close()
 
-check([src2srcml, option.POSITION_FLAG], "", sxmlfile)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.POSITION_FLAG], "", sxmlfile)
 check([src2srcml, option.POSITION_FLAG, 'sub/a.cpp'], "", fsxmlfile)
-check([src2srcml, option.POSITION_FLAG, '-o', 'sub/a.cpp.xml'], "", "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.POSITION_FLAG, '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml').read(), sxmlfile)
 check([src2srcml, option.POSITION_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml').read(), fsxmlfile)
@@ -2187,15 +2187,15 @@ f = open('sub/a.cpp', 'w')
 f.write("")
 f.close()
 
-check([src2srcml, option.TABS_FLAG, '4'], "", sxmlfile)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.TABS_FLAG, '4'], "", sxmlfile)
 check([src2srcml, option.TABS_FLAG, '4', 'sub/a.cpp'], "", fsxmlfile)
-check([src2srcml, option.TABS_FLAG, '4', '-o', 'sub/a.cpp.xml'], "", "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.TABS_FLAG, '4', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml').read(), sxmlfile)
 check([src2srcml, option.TABS_FLAG, '4', 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml').read(), fsxmlfile)
 
-validate(getreturn([src2srcml, option.TABS_FLAG], ""), status.STATUS_ERROR)
-validate(getreturn([src2srcml, option.TABS_FLAG, 'a'], ""), status.STATUS_UNIT_INVALID)
+validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.TABS_FLAG], ""), status.STATUS_ERROR)
+validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.TABS_FLAG, 'a'], ""), status.STATUS_UNIT_INVALID)
 
 # position and tabs
 
@@ -2211,25 +2211,25 @@ f = open('sub/a.cpp', 'w')
 f.write("")
 f.close()
 
-check([src2srcml, option.POSITION_FLAG, option.TABS_FLAG, '2'], "", sxmlfile)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.POSITION_FLAG, option.TABS_FLAG, '2'], "", sxmlfile)
 check([src2srcml, option.POSITION_FLAG, option.TABS_FLAG, '2', 'sub/a.cpp'], "", fsxmlfile)
-check([src2srcml, option.POSITION_FLAG, option.TABS_FLAG, '2', '-o', 'sub/a.cpp.xml'], "", "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.POSITION_FLAG, option.TABS_FLAG, '2', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml').read(), sxmlfile)
 check([src2srcml, option.POSITION_FLAG, option.TABS_FLAG, '2', 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml').read(), fsxmlfile)
 
-validate(getreturn([src2srcml, option.POSITION_FLAG, option.TABS_FLAG], ""), status.STATUS_ERROR)
-validate(getreturn([src2srcml, option.POSITION_FLAG, option.TABS_FLAG, 'a'], ""), status.STATUS_UNIT_INVALID)
+validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.POSITION_FLAG, option.TABS_FLAG], ""), status.STATUS_ERROR)
+validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.POSITION_FLAG, option.TABS_FLAG, 'a'], ""), status.STATUS_UNIT_INVALID)
 
-check([src2srcml, option.TABS_FLAG, '2', option.POSITION_FLAG], "", sxmlfile)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.TABS_FLAG, '2', option.POSITION_FLAG], "", sxmlfile)
 check([src2srcml, option.TABS_FLAG, '2', option.POSITION_FLAG, 'sub/a.cpp'], "", fsxmlfile)
-check([src2srcml, option.TABS_FLAG, '2', option.POSITION_FLAG, '-o', 'sub/a.cpp.xml'], "", "")
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.TABS_FLAG, '2', option.POSITION_FLAG, '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml').read(), sxmlfile)
 check([src2srcml, option.TABS_FLAG, '2', option.POSITION_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml').read(), fsxmlfile)
 
-validate(getreturn([src2srcml, option.TABS_FLAG, option.POSITION_FLAG], ""), status.STATUS_UNIT_INVALID)
-validate(getreturn([src2srcml, option.TABS_FLAG, 'a', option.POSITION_FLAG], ""), status.STATUS_UNIT_INVALID)
+validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.TABS_FLAG, option.POSITION_FLAG], ""), status.STATUS_UNIT_INVALID)
+validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.TABS_FLAG, 'a', option.POSITION_FLAG], ""), status.STATUS_UNIT_INVALID)
 
 # register language
 
@@ -2246,8 +2246,8 @@ check([src2srcml, option.REGISTER_EXT_FLAG + '=cpp=Java', 'sub/a.cpp'], "", fsxm
 check([src2srcml, option.REGISTER_EXT_FLAG, 'cpp=Java', 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml').read(), fsxmlfile)
 
-validate(getreturn([src2srcml, option.REGISTER_EXT_FLAG], ""), status.STATUS_ERROR)
-validate(getreturn([src2srcml, option.REGISTER_EXT_FLAG, "cpp=Jawa"], ""), status.STATUS_ERROR)
+validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.REGISTER_EXT_FLAG], ""), status.STATUS_ERROR)
+validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.REGISTER_EXT_FLAG, "cpp=Jawa"], ""), status.STATUS_ERROR)
 
 fsxmlfile = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" language="Java" filename="sub/a.xml"/>
@@ -2259,7 +2259,7 @@ check([src2srcml, option.REGISTER_EXT_FLAG + '=xml=Java', 'sub/a.xml'], "", fsxm
 check([src2srcml, option.REGISTER_EXT_FLAG, 'xml=Java', 'sub/a.xml', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml').read(), fsxmlfile)
 
-validate(getreturn([src2srcml, option.REGISTER_EXT_FLAG, "xml=Jawa"], ""), status.STATUS_ERROR)
+validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.REGISTER_EXT_FLAG, "xml=Jawa"], ""), status.STATUS_ERROR)
 
 # footer
 print
