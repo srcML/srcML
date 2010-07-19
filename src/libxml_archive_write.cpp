@@ -67,6 +67,8 @@ void* archiveWriteRootOpen(const char * URI) {
   root_filename = URI;
 
   isstdout = root_filename == "-";
+
+  return 0;
 }
 
 // setup archive for this URI
