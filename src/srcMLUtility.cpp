@@ -262,7 +262,7 @@ void srcMLUtility::extract_text(const char* ofilename, int unit) {
 }
 
 // expand the compound srcML to individual files
-void srcMLUtility::expand(const char* root_filename) {
+void srcMLUtility::expand(const char* root_filename, const char* format) {
 
 #ifdef LIBARCHIVE
 
@@ -270,7 +270,10 @@ void srcMLUtility::expand(const char* root_filename) {
       fprintf(stderr, "%s: failed to register archive handler\n", "FOO");
       exit(1);
     }
-    archiveWriteRootOpen(root_filename);
+
+  archiveWriteOutputFormat(format);
+
+  archiveWriteRootOpen(root_filename);
 #endif
 
   SAX2ExtractUnitsSrc::State state;

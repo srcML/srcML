@@ -8,6 +8,8 @@
 #include <libxml/xinclude.h>
 #include <libxml/xmlIO.h>
 
+void archiveWriteOutputFormat(const char* format);
+
 // check if archive matches the protocol on the URI
 int archiveWriteMatch_src2srcml(const char * URI);
 

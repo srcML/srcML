@@ -420,7 +420,7 @@ int main(int argc, char* argv[]) {
       pstd::signal(SIGINT, terminate_handler);
 #endif
 
-      su.expand(poptions.ofilename);
+      su.expand(poptions.ofilename, poptions.output_format);
 
       // if we terminated early, output the correct status
       if (isoption(options, OPTION_TERMINATE))

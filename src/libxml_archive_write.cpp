@@ -7,6 +7,13 @@
 #include <archive_entry.h>
 #include <string>
 
+static const char* output_format = 0;
+
+void archiveWriteOutputFormat(const char* format) {
+
+  output_format = format;
+}
+
 static const int NUMARCHIVES = 4;
 static const char * ARCHIVE_FILTER_EXTENSIONS[] = {"tar", "zip", "tgz", "cpio", "gz", "bz2", 0};
 
@@ -83,21 +90,22 @@ void* archiveWriteOpen(const char * URI) {
 
       // setup the desired compression
       // TODO:  Extract into method, and make more general
-      if (!fnmatch("*.gz", root_filename.c_str(), 0))
+      const char* extname = output_format ? output_format : root_filename.c_str();
+      if (!fnmatch("*.gz", extname, 0))
 	archive_write_set_compression_gzip(wa);
-      else if (!fnmatch("*.bz2", root_filename.c_str(), 0))
+      else if (!fnmatch("*.bz2", extname, 0))
 	archive_write_set_compression_bzip2(wa);
 
       // setup the desired format
       // TODO:  Extract into method, and make more general
 #if ARCHIVE_VERSION_STAMP >= 2008000
-      if (!fnmatch("*.zip", root_filename.c_str(), 0) || !fnmatch("*.zip.*", root_filename.c_str(), 0))
+      if (!fnmatch("*.zip", extname, 0) || !fnmatch("*.zip.*", extname, 0))
 	archive_write_set_format_zip(wa);
 #else
       if (false)
 	;
 #endif
-      else if (!fnmatch("*.cpio", root_filename.c_str(), 0) || !fnmatch("*.cpio.*", root_filename.c_str(), 0))
+      else if (!fnmatch("*.cpio", extname, 0) || !fnmatch("*.cpio.*", extname, 0))
 	archive_write_set_format_cpio(wa);
       else
 	archive_write_set_format_ustar(wa);
