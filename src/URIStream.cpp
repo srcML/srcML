@@ -62,7 +62,7 @@ char* URIStream::getline() {
 
   // current line starts at the startpos
   char* line = (char*) input->buffer->content + startpos;
-
+  fprintf(stderr, "S: %d %d\n", startpos, endpos);
   // skip past for the next line
   startpos = endpos + 1;
 
