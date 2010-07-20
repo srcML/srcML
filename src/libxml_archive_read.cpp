@@ -9,32 +9,14 @@
 #include <libxml/nanohttp.h>
 #include <libxml/nanoftp.h>
 
+static const int NUMARCHIVES = 4;
+static const char* ARCHIVE_FILTER_EXTENSIONS[] = {"tar", "zip", "tgz", "cpio", "gz", "bz2", 0};
+
 static struct archive* a = 0;
 static int status = 0;
-static struct archive_entry* ae;
-
-static const int NUMARCHIVES = 4;
-static const char * ARCHIVE_FILTER_EXTENSIONS[] = {"tar", "zip", "tgz", "cpio", "gz", "bz2", 0};
+static struct archive_entry* ae = 0;
 
 static std::string root_filename;
-
-// check if file has an archive extension
-bool isArchiveRead(const char * path)
-{
-  for(int i = 0; i < NUMARCHIVES; ++i)
-  {
-    char pattern[10] = { 0 };
-    strcpy(pattern, "*.");
-    strcat(pattern, ARCHIVE_FILTER_EXTENSIONS[i]);
-    if(fnmatch(pattern, path, 0) == 0)
-      return true;
-    strcat(pattern, ".*");
-    if(fnmatch(pattern, path, 0) == 0)
-      return true;
-  }
-
-  return false;
-}
 
 // check if file has an archive extension
 bool isArchiveRead() {
@@ -59,17 +41,17 @@ const char* archiveReadCompression() {
 }
 
 // check if archive matches the protocol on the URI
-int archiveReadMatch(const char * URI) {
+int archiveReadMatch(const char* URI) {
 
   //  fprintf(stderr, "MATCH: %s\n", URI);
   
-  if(URI == NULL)
+  if (URI == NULL)
       return 0;
 
   if ((URI[0] == '-' && URI[1] == '\0') || (strcmp(URI, "/dev/stdin") == 0))
     return 1;
 
-  for(const char ** pos = ARCHIVE_FILTER_EXTENSIONS; *pos != 0; ++pos )
+  for(const char** pos = ARCHIVE_FILTER_EXTENSIONS;*pos != 0; ++pos )
     {
       char pattern[10] = { 0 } ;
       strcpy(pattern, "*.");
@@ -99,7 +81,7 @@ const char* archiveReadFilename(const char* URI) {
 static void* mcontext;
  static bool ishttp = true;
 
-static int archive_read_open_http_callback(struct archive *a,
+static int archive_read_open_http_callback(struct archive* a,
 					   void* _client_data) {
 
   //  fprintf(stderr, "CALLBACK: OPEN: %s\n", root_filename);
@@ -114,7 +96,7 @@ __LA_SSIZE_T
 #else
 ssize_t
 #endif
-archive_read_http_callback(struct archive *a,
+archive_read_http_callback(struct archive* a,
 					   void* _client_data, const void** _buffer) {
 
 
@@ -127,7 +109,7 @@ archive_read_http_callback(struct archive *a,
   return size;
 }
 
-static int archive_read_close_http_callback(struct archive *a,
+static int archive_read_close_http_callback(struct archive* a,
 					   void* _client_data) {
 
   //  fprintf(stderr, "CALLBACK: CLOSE\n");
@@ -139,7 +121,7 @@ static int archive_read_close_http_callback(struct archive *a,
 }
 
 // setup archive for this URI
-void* archiveReadOpen(const char * URI) {
+void* archiveReadOpen(const char* URI) {
 
   //  fprintf(stderr, "ARCHIVE_OPEN\n");
 
@@ -189,7 +171,7 @@ void* archiveReadOpen(const char * URI) {
 }
 
 // close the open file
-int archiveReadClose(void * context) {
+int archiveReadClose(void* context) {
 
   //  fprintf(stderr, "ARCHIVE_CLOSE\n");
 
@@ -216,7 +198,7 @@ int archiveReadClose(void * context) {
 }
 
 // read from the URI
-int archiveRead(void * context, char * buffer, int len) {
+int archiveRead(void* context, char* buffer, int len) {
 
   //  fprintf(stderr, "ARCHIVE_READ\n");
 
