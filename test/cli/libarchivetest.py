@@ -213,6 +213,40 @@ check([src2srcml, 'archive/a.cpp.cpio', '-o', 'archive/a.cpp.xml'], '', '')
 validate(open('archive/a.cpp.xml', 'r').read(), srcml)
 
 ##
+# test cpio.gz
+
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
+
+<unit language="C++" filename="archive/a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+"""
+
+check([src2srcml, 'archive/a.cpp.cpio.gz'], '', srcml)
+check([src2srcml, 'archive/a.cpp.cpio.gz', '-o', 'archive/a.cpp.xml'], '', '')
+validate(open('archive/a.cpp.xml', 'r').read(), srcml)
+
+##
+# test cpio.bz2
+
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
+
+<unit language="C++" filename="archive/a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+"""
+
+check([src2srcml, 'archive/a.cpp.cpio.bz2'], '', srcml)
+check([src2srcml, 'archive/a.cpp.cpio.bz2', '-o', 'archive/a.cpp.xml'], '', '')
+validate(open('archive/a.cpp.xml', 'r').read(), srcml)
+
+##
 # test zip
 
 srcml = xml_declaration + """
