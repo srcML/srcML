@@ -28,7 +28,7 @@
 #include <cstring>
 #include <cstdio>
 #include <cstdlib>
-
+#include <string>
 #include "version.h"
 
 const char* const VERSION = version();
@@ -165,6 +165,20 @@ inline char* filename_split(char* path, char*& dir, char*& filename) {
   }
 
   return path;
+}
+
+inline std::string& filename_split(const char* path, std::string& dir, std::string& filename) {
+
+  const char* point = rindex(path, '/'); 
+  if (point) {
+    filename.assign(point + 1, path + strlen(path));
+    dir.assign(path, point);
+  } else {
+    filename = path;
+    dir = "";
+  }
+
+  return filename;
 }
 
 inline char* asg_split(char* path) {

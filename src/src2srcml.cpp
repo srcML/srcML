@@ -1133,14 +1133,8 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     // find the separate dir and filename
     const char* ndir = dir;
     const char* nfilename = filename;
-    if (strcmp(path, "-")) {
-      if (!nfilename) {
-	if (isoption(options, OPTION_OLD_FILENAME))
-	  nfilename = path; //filename_split(path, ndir, nfilename);
-	else
+    if (strcmp(path, "-") && !nfilename)
 	  nfilename = path;
-      }
-    }
     if (afilename)
       nfilename = afilename;
 
@@ -1157,11 +1151,6 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 	  fprintf(stderr, "Skipping '%s'.  No language can be determined.\n", nfilename);
 	else
 	  fprintf(stderr, "%s:  Skipping '%s'.  No language can be determined.\n", PROGRAM_NAME, nfilename);
-      }
-
-      if (isarchive) {
-	//	archiveReadOpen(path);
-	//	archiveReadClose(path);
       }
 
     } else {
