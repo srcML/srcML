@@ -1131,8 +1131,8 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     translator.setupInput(path);
 
     // find the separate dir and filename
-    const char* ndir = (char*) dir;
-    const char* nfilename = (char*) filename;
+    const char* ndir = dir;
+    const char* nfilename = filename;
     if (strcmp(path, "-")) {
       if (!nfilename) {
 	if (isoption(options, OPTION_OLD_FILENAME))
