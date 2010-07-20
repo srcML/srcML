@@ -143,7 +143,8 @@ int archiveWriteClose(void * context) {
 
   // fprintf(stderr, "ARCHIVE_WRITE_CLOSE: %d\n", filename.size());
 
-  wentry = archive_entry_new();
+  if (!wentry)
+    wentry = archive_entry_new();
   archive_entry_set_pathname(wentry, filename.c_str());
   archive_entry_set_size(wentry, data.size());
   archive_entry_set_filetype(wentry, AE_IFREG);
@@ -154,8 +155,9 @@ int archiveWriteClose(void * context) {
   archive_entry_set_mtime(wentry, 5, 50);
   archive_write_header(wa, wentry);
   archive_write_data(wa, data.c_str(), data.size());
-  archive_entry_free(wentry);
-  wentry = 0;
+  //  archive_entry_free(wentry);
+  //  wentry = 0;
+  archive_entry_clear(wentry);
 
   return 1;
 }
@@ -166,6 +168,7 @@ int archiveWriteRootClose(void * context) {
 
   if (wa) {
     // fprintf(stderr, "FINISHING\n");
+    archive_entry_free(wentry);
     archive_write_close(wa);
     archive_write_finish(wa);
   }
