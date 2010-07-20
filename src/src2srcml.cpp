@@ -327,20 +327,6 @@ int main(int argc, char* argv[]) {
   }
 #endif
 
-#ifdef LIBARCHIVE
-
-  if (xmlRegisterInputCallbacks(archiveReadMatch, archiveReadOpen, archiveRead, archiveReadClose) < 0) {
-    fprintf(stderr, "%s: failed to register archive handler\n", argv[0]);
-    exit(1);
-  }
-  /*
-  if (xmlRegisterOutputCallbacks(archiveWriteMatch_src2srcml, archiveWriteOpen, archiveWrite, archiveWriteClose) < 0) {
-    fprintf(stderr, "%s: failed to register archive handler\n", argv[0]);
-    exit(1);
-  }
-  */
-#endif
-
   /* signal handling */
 
 #ifdef __GNUG__
@@ -460,6 +446,22 @@ int main(int argc, char* argv[]) {
     if (isatty(STDIN_FILENO))
       options |= OPTION_INTERACTIVE;
   }
+#endif
+
+#ifdef LIBARCHIVE
+
+  if (!isoption(options, OPTION_FILELIST)) {
+  if (xmlRegisterInputCallbacks(archiveReadMatch, archiveReadOpen, archiveRead, archiveReadClose) < 0) {
+    fprintf(stderr, "%s: failed to register archive handler\n", argv[0]);
+    exit(1);
+  }
+  }
+  /*
+  if (xmlRegisterOutputCallbacks(archiveWriteMatch_src2srcml, archiveWriteOpen, archiveWrite, archiveWriteClose) < 0) {
+    fprintf(stderr, "%s: failed to register archive handler\n", argv[0]);
+    exit(1);
+  }
+  */
 #endif
 
   try {
@@ -1263,7 +1265,7 @@ void process_filelist(srcMLTranslator& translator, process_options& poptions, in
     while ((line = uriinput.getline())) {
 
       // skip blank lines or comment lines
-      if (line[0] == '\0' || line[0] == FILELIST_COMMENT)
+      if (line[0] == '\0' || line[0] == '\n' || line[0] == FILELIST_COMMENT)
         continue;
 
       // in verbose mode output the currently processed filename
