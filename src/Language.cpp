@@ -89,6 +89,8 @@ int getLanguageExtension(char * const path, char * const extension)
 
   reverseString(path, 0, length);
   regfree(&preg);
+
+  return errorcode;
 }
 
 // gets the current language based on the extenstion           
