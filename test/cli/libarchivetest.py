@@ -162,6 +162,40 @@ check([src2srcml, 'archive/a.cpp.tar', '-o', 'archive/a.cpp.xml'], '', '')
 validate(open('archive/a.cpp.xml', 'r').read(), srcml)
 
 ##
+# test tar.gz
+
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
+
+<unit language="C++" filename="archive/a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+"""
+
+check([src2srcml, 'archive/a.cpp.tar.gz'], '', srcml)
+check([src2srcml, 'archive/a.cpp.tar.gz', '-o', 'archive/a.cpp.xml'], '', '')
+validate(open('archive/a.cpp.xml', 'r').read(), srcml)
+
+##
+# test tar.bz2
+
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
+
+<unit language="C++" filename="archive/a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+"""
+
+check([src2srcml, 'archive/a.cpp.tar.bz2'], '', srcml)
+check([src2srcml, 'archive/a.cpp.tar.bz2', '-o', 'archive/a.cpp.xml'], '', '')
+validate(open('archive/a.cpp.xml', 'r').read(), srcml)
+
+##
 # test cpio
 
 srcml = xml_declaration + """
