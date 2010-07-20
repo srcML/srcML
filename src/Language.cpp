@@ -21,6 +21,7 @@
 */
 
 #include "Language.h"
+#include <regex.h>
 
 pair Language::lang2int[] = {
     { LanguageName::LANGUAGE_C, LANGUAGE_C },
