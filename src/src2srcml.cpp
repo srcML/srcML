@@ -48,7 +48,7 @@ const char* PROGRAM_NAME = "";
 
 int option_error_status(int optopt);
 
-void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count);
+void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count);
 
 using namespace LanguageName;
 
@@ -298,7 +298,7 @@ struct process_options
 
 process_options* gpoptions = 0;
 
-void process_dir(srcMLTranslator& translator, char* dname, process_options& poptions, int& count);
+void process_dir(srcMLTranslator& translator, const char* dname, process_options& poptions, int& count);
 void process_filelist(srcMLTranslator& translator, process_options& poptions, int& count);
 
 // setup options and collect info from arguments
@@ -1074,7 +1074,7 @@ Language::registerUserExt( LanguageName::LANGUAGE_CXX_0X, LANGUAGE_CXX_0X },
 
 }
 
-void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count) {
+void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count) {
 
   // handle directories specially
   struct stat instat;
@@ -1131,12 +1131,12 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& option
     translator.setupInput(path);
 
     // find the separate dir and filename
-    char* ndir = (char*) dir;
-    char* nfilename = (char*) filename;
+    const char* ndir = (char*) dir;
+    const char* nfilename = (char*) filename;
     if (strcmp(path, "-")) {
       if (!nfilename) {
 	if (isoption(options, OPTION_OLD_FILENAME))
-	  filename_split(path, ndir, nfilename);
+	  nfilename = path; //filename_split(path, ndir, nfilename);
 	else
 	  nfilename = path;
       }
@@ -1208,7 +1208,7 @@ void src2srcml_file(srcMLTranslator& translator, char* path, OPTION_TYPE& option
 #endif
 }
 
-void process_dir(srcMLTranslator& translator, char* dname, process_options& poptions, int& count) {
+void process_dir(srcMLTranslator& translator, const char* dname, process_options& poptions, int& count) {
 
   /*
     if (xmlCheckFilename(dname)) {
