@@ -108,6 +108,35 @@ xml_declaration= '<?xml version="1.0" encoding="' + default_src2srcml_encoding +
 
 print xml_declaration
 
+src ="""
+a;
+"""
+
+f = open('archive/a.cpp', 'w')
+f.write(src);
+f.close()
+
+execute(['archive/archive.sh', 'archive/a.cpp', 'archive/a.cpp'], '')
+
+##
+# test bz2
+
+src ="""
+a;
+"""
+
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="archive/a.cpp.bz2">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+"""
+
+f = open('archive/a.cpp', 'w')
+f.write(src);
+f.close()
+
+check([src2srcml, 'archive/a.cpp.bz2'], '', srcml)
+
 # footer
 print
 print "Error count: ", error_count
