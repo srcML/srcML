@@ -64,7 +64,7 @@ void reverseString( char * string, int start, int end)
     }
 }
 
-int getExtension(char * path, char * extension)
+int getLanguageExtension(char * path, char * extension)
 {
   int length = strlen(path);
   reverseString(path, 0, length);
