@@ -119,21 +119,26 @@ f.close()
 execute(['archive/archive.sh', 'archive/a.cpp', 'archive/a.cpp'], '')
 
 ##
-# test bz2
+# test gz
 
-src ="""
-a;
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="archive/a.cpp.gz">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
 """
+
+check([src2srcml, 'archive/a.cpp.gz'], '', srcml)
+check([src2srcml, 'archive/a.cpp.gz', '-o', 'archive/a.cpp.xml'], '', '')
+validate(open('archive/a.cpp.xml', 'r').read(), srcml)
+
+##
+# test bz2
 
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="archive/a.cpp.bz2">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 """
-
-f = open('archive/a.cpp', 'w')
-f.write(src);
-f.close()
 
 check([src2srcml, 'archive/a.cpp.bz2'], '', srcml)
 check([src2srcml, 'archive/a.cpp.bz2', '-o', 'archive/a.cpp.xml'], '', '')
