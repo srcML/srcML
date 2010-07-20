@@ -91,13 +91,13 @@ int getLanguageExtension(char * path, char * extension)
   regfree(&preg);
 }
 
-// gets the current language based on the extenstion                                                                                                
+// gets the current language based on the extenstion           
 int Language::getLanguageFromFilename(const char* const path) {
 
   if (fnmatch("*.xml", path, 0) == 0)
     return 0;
 
-  // custom extensions                                                                                                                              
+  // custom extensions
   char pattern[50];
   for (const pair * pos = userext2int + usercount - 1; pos->s != 0; --pos) {
 
