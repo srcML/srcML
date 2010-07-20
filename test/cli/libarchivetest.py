@@ -161,6 +161,40 @@ check([src2srcml, 'archive/a.cpp.tar'], '', srcml)
 check([src2srcml, 'archive/a.cpp.tar', '-o', 'archive/a.cpp.xml'], '', '')
 validate(open('archive/a.cpp.xml', 'r').read(), srcml)
 
+##
+# test cpio
+
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
+
+<unit language="C++" filename="archive/a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+"""
+
+check([src2srcml, 'archive/a.cpp.cpio'], '', srcml)
+check([src2srcml, 'archive/a.cpp.cpio', '-o', 'archive/a.cpp.xml'], '', '')
+validate(open('archive/a.cpp.xml', 'r').read(), srcml)
+
+##
+# test zip
+
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
+
+<unit language="C++" filename="archive/a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+"""
+
+check([src2srcml, 'archive/a.cpp.zip'], '', srcml)
+check([src2srcml, 'archive/a.cpp.zip', '-o', 'archive/a.cpp.xml'], '', '')
+validate(open('archive/a.cpp.xml', 'r').read(), srcml)
+
 # footer
 print
 print "Error count: ", error_count
