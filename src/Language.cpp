@@ -54,7 +54,7 @@ bool Language::registerUserExt(const char* ext, const char* language) {
   return registerUserExt(ext, nlanguage);
 }
 
-void reverseString( char * string, int start, int end)
+void reverseString(char * const string, int start, int end)
 {
   for(int i = start; i < (start + end) / 2; ++i)
     {
@@ -64,7 +64,7 @@ void reverseString( char * string, int start, int end)
     }
 }
 
-int getLanguageExtension(char * path, char * extension)
+int getLanguageExtension(char * const path, char * const extension)
 {
   int length = strlen(path);
   reverseString(path, 0, length);
