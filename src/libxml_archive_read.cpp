@@ -156,7 +156,6 @@ void* archiveReadOpen(const char* URI) {
     int r;
     if (ishttp || xmlIOFTPMatch(URI)) {
       root_filename = URI;
-      ishttp = true;
       r = archive_read_open(a, 0, archive_read_open_http_callback, archive_read_http_callback,
 			      archive_read_close_http_callback);
     } else
