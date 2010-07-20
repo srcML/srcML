@@ -1210,48 +1210,31 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
 void process_dir(srcMLTranslator& translator, const char* dname, process_options& poptions, int& count) {
 
-  /*
-    if (xmlCheckFilename(dname)) {
-    src2srcml_file(translator,
-    dname,
-    options,
-    0,
-    0,
-    poptions.given_version,
-    poptions.language,
-    poptions.tabsize,
-    count);
-    return;
-    }
-  */
+  // by default, all dirs are treated as an archive
   options |= OPTION_NESTED;
 
+  // try to open the found directory
   DIR* dir = opendir(dname);
   if (!dir)
     return;
 
-  char line[256];
-
   // process all non-directory files
   while (struct dirent* entry = readdir(dir)) {
-
-    // skip standard UNIX filenames, and . files
-    if (strcmp(entry->d_name, ".") == 0 ||
-	strcmp(entry->d_name, "..") == 0 ||
-	strncmp(entry->d_name, ".", 1) == 0
-	)
-      continue;
-
-    strcpy(line, dname);
-    strcat(line, "/");
-    strcat(line, entry->d_name);
 
     if (entry->d_type == DT_DIR)
       continue;
 
+    // skip standard UNIX filenames, and . files
+    if (entry->d_name[0] == '.')
+      continue;
+
+    std::string sline = dname;
+    sline += "/";
+    sline += entry->d_name;
+
     // translate the file listed in the input file using the directory and filename extracted from the path
     src2srcml_file(translator,
-		   line,
+		   sline.c_str(),
 		   options,
 		   0,
 		   0,
@@ -1268,19 +1251,18 @@ void process_dir(srcMLTranslator& translator, const char* dname, process_options
   rewinddir(dir);
   while (struct dirent* entry = readdir(dir)) {
 
-    // skip standard UNIX filenames, and . files
-    if (strcmp(entry->d_name, ".") == 0 ||
-	strcmp(entry->d_name, "..") == 0 ||
-	strncmp(entry->d_name, ".", 1) == 0
-	)
+    if (entry->d_type != DT_DIR)
       continue;
 
-    strcpy(line, dname);
-    strcat(line, "/");
-    strcat(line, entry->d_name);
+    // skip standard UNIX filenames, and . files
+    if (entry->d_name[0] == '.')
+      continue;
 
-    if (entry->d_type == DT_DIR)
-      process_dir(translator, line, poptions, count);
+    std::string sline = dname;
+    sline += "/";
+    sline += entry->d_name;
+
+    process_dir(translator, sline.c_str(), poptions, count);
   }
 }
 
