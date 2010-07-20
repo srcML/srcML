@@ -73,7 +73,7 @@ void* archiveWriteRootOpen(const char * URI) {
   // save the root URI
   root_filename = URI;
 
-  isstdout = root_filename == "-";
+  isstdout = root_filename == "-" && isatty(STDOUT_FILENO);
 
   return 0;
 }
