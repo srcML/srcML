@@ -9,7 +9,7 @@ URIStream::URIStream(const char* uriname, char eolchar)
     throw URIStreamFileError();
 
   // get some data into the buffer
-  int size = xmlParserInputBufferGrow(input, 4);
+  int size = xmlParserInputBufferGrow(input, 4096);
 
   // found problem or eof
   if (size == -1 || size == 0)
@@ -45,7 +45,7 @@ char* URIStream::getline() {
       // refill the buffer
       // put an appropriate value for the length, but note that libxml
       // basically uses 4 or a min value (which is currently around 4096)
-      int size = xmlParserInputBufferGrow(input, 4);
+      int size = xmlParserInputBufferGrow(input, 4096);
 
       // found problem or eof
       if (size == -1 || size == 0)
