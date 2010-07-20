@@ -44,19 +44,12 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
   : Language(language), first(true), 
     root_directory(directory), root_filename(filename), root_version(version),
     encoding(src_encoding), options(op),
-    out(0, srcml_filename, getLanguageString(), xml_encoding, options, uri, tabsize), ifilename(0) {
+    out(0, srcml_filename, getLanguageString(), xml_encoding, options, uri, tabsize) {
 
-}
-
-// setup the input source based on the filename
-void srcMLTranslator::setupInput(const char* src_filename) {
-
-  // cache filename for later
-  ifilename = strdup(src_filename);
 }
 
 // translate from input stream to output stream
-void srcMLTranslator::translate(const char* unit_directory,
+void srcMLTranslator::translate(const char* path, const char* unit_directory,
 				const char* unit_filename, const char* unit_version,
 				int language,
 				int tabsize) {
@@ -73,7 +66,7 @@ void srcMLTranslator::translate(const char* unit_directory,
       antlr::TokenStreamSelector selector;
 
       // srcML lexical analyzer from standard input
-      KeywordCPPLexer lexer(ifilename, encoding, language);
+      KeywordCPPLexer lexer(path, encoding, language);
       lexer.setSelector(&selector);
       lexer.setTabsize(tabsize);
 
@@ -96,15 +89,10 @@ void srcMLTranslator::translate(const char* unit_directory,
       Language l(language);
       out.consume(l.getLanguageString(), unit_directory, unit_filename, unit_version);
 
-      // done with filename
-      free(ifilename);
-
   } catch (const std::exception& e) {
-    free(ifilename);
     fprintf(stderr, "SRCML Exception: %s\n", e.what());
   }
   catch (UTF8FileError) {
-    free(ifilename);
     throw FileError();
   }
   catch (...) {

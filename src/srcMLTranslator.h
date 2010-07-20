@@ -48,11 +48,9 @@ class srcMLTranslator : public Language {
 		  int tabsize
 		  );
 
-  // setup the input source based on the filename
-  void setupInput(const char* src_filename);
-
   // translate from input stream to output stream
-  void translate(const char* unit_directory = 0,
+  void translate(const char* path,
+		 const char* unit_directory = 0,
 		 const char* unit_filename = 0,
 		 const char* unit_version = 0,
 		 int language = 0,
@@ -70,7 +68,6 @@ class srcMLTranslator : public Language {
   int language;
   OPTION_TYPE& options;
   srcMLOutput out;
-  char* ifilename;
 }; 
 
 #endif

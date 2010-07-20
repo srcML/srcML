@@ -1127,9 +1127,6 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
 #endif
 
-    // name of the physical file
-    translator.setupInput(path);
-
     // find the separate dir and filename
     const char* ndir = dir;
     const char* nfilename = filename;
@@ -1167,7 +1164,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       fprintf(stderr, "%d\t%s", count, !isarchive ? path : afilename);
 
     try {
-      translator.translate(ndir, nfilename, version, reallanguage, tabsize);
+      translator.translate(path, ndir, nfilename, version, reallanguage, tabsize);
 
     } catch (FileError) {
 
