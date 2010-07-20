@@ -48,6 +48,11 @@ int archiveReadMatch(const char* URI) {
   if (URI == NULL)
       return 0;
 
+#if ARCHIVE_VERSION_STAMP >= 2008000
+  return 1;
+
+#else
+
   if ((URI[0] == '-' && URI[1] == '\0') || (strcmp(URI, "/dev/stdin") == 0))
     return 1;
 
@@ -61,6 +66,8 @@ int archiveReadMatch(const char* URI) {
      }
 
   return 0;
+
+#endif
 }
 
 // setup archive root for this URI
