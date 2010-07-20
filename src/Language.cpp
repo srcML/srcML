@@ -36,6 +36,8 @@ static int usercount = 0;
 
 pair Language::userext2int[47] = { { 0, 0 } };
 
+const char * const regex = "(zg\\.|2zb\\.)*([^\\.]*)";
+
 bool Language::registerUserExt(const char* ext, int language) {
 
   userext2int[usercount].s = ext;
@@ -68,8 +70,6 @@ int getLanguageExtension(char * const path, char * const extension)
 {
   int length = strlen(path);
   reverseString(path, 0, length);
-
-  const char * const regex = "(zg\\.|2zb\\.)*([^\\.]*)";
 
   regex_t preg;
   int errorcode = regcomp(&preg, regex, REG_EXTENDED);
