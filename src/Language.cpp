@@ -53,6 +53,43 @@ bool Language::registerUserExt(const char* ext, const char* language) {
   return registerUserExt(ext, nlanguage);
 }
 
+void reverseString( char * string, int start, int end)
+{
+  for(int i = start; i < (start + end) / 2; ++i)
+    {
+      char temp = string[i];
+      string[i] = string[end - ((i + 1) - start)];
+      string[end - ((i + 1) - start)] = temp;
+    }
+}
+
+int getExtension(char * path, char * extension)
+{
+  int length = strlen(path);
+  reverseString(path, 0, length);
+
+  const char * regex = "(zg\\.|2zb\\.)*([^\\.]*)";
+
+  regex_t preg;
+  int errorcode = regcomp(&preg, regex, REG_EXTENDED);
+
+  regmatch_t pmatch[3];
+  errorcode = errorcode || regexec(&preg, path, 3, pmatch, 0);
+
+  int matchlength = pmatch[2].rm_eo - pmatch[2].rm_so;
+  char match[matchlength + 1];
+  for(int i = 0; i < matchlength; ++i)
+  {
+    match[i] = path[pmatch[2].rm_eo - (i + 1)];
+  }
+
+  match[matchlength] = '\0';
+  strcpy(extension, match);
+
+  reverseString(path, 0, length);
+  regfree(&preg);
+}
+
 // gets the current language based on the extenstion                                                                                                
 int Language::getLanguageFromFilename(const char* const path) {
 
