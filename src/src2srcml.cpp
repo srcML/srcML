@@ -1219,6 +1219,9 @@ void process_dir(srcMLTranslator& translator, const char* dname, process_options
     return;
 
   // process all non-directory files
+  std::string sline = dname;
+  sline += "/";
+  int basesize = sline.length();
   while (struct dirent* entry = readdir(dir)) {
 
     if (entry->d_type == DT_DIR)
@@ -1228,8 +1231,7 @@ void process_dir(srcMLTranslator& translator, const char* dname, process_options
     if (entry->d_name[0] == '.')
       continue;
 
-    std::string sline = dname;
-    sline += "/";
+    sline.resize(basesize);
     sline += entry->d_name;
 
     // translate the file listed in the input file using the directory and filename extracted from the path
@@ -1258,8 +1260,7 @@ void process_dir(srcMLTranslator& translator, const char* dname, process_options
     if (entry->d_name[0] == '.')
       continue;
 
-    std::string sline = dname;
-    sline += "/";
+    sline.resize(basesize);
     sline += entry->d_name;
 
     process_dir(translator, sline.c_str(), poptions, count);
