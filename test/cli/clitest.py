@@ -1864,10 +1864,16 @@ nestedfile = xml_declaration + """
 f = open('sub/a.cpp.xml', 'w')
 f.write(nestedfile)
 f.close()
-checkallforms(srcml2src, option.EXPAND_FLAG_SHORT, option.EXPAND_FLAG, "", nestedfile, "")
+
+os.system("rm -f sub/a.cpp sub/b.cpp")
+
+executeNoOutput([srcml2src, option.EXPAND_FLAG, 'sub/a.cpp.xml'], "")
 validate(open('sub/a.cpp', 'r').read(), sfile1)
 validate(open('sub/b.cpp', 'r').read(), sfile2)
-checkallformsfile(srcml2src, 'sub/a.cpp.xml', option.EXPAND_FLAG_SHORT, option.EXPAND_FLAG, "", "", "")
+
+os.system("rm -f sub/a.cpp sub/b.cpp")
+
+executeNoOutput([srcml2src, option.EXPAND_FLAG_SHORT, 'sub/a.cpp.xml'], "")
 validate(open('sub/a.cpp', 'r').read(), sfile1)
 validate(open('sub/b.cpp', 'r').read(), sfile2)
 
