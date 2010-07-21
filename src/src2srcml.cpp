@@ -569,6 +569,8 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { DIRECTORY_FLAG, required_argument, NULL, DIRECTORY_FLAG_SHORT },
     { FILENAME_FLAG, required_argument, NULL, FILENAME_FLAG_SHORT },
     { SRCVERSION_FLAG, required_argument, NULL, SRCVERSION_FLAG_SHORT },
+    { SETTINGS_FLAG, no_argument, NULL, 'N' },
+    { FEATURES_FLAG, no_argument, NULL, 'A' },
     { INPUT_FORMAT_FLAG, required_argument, NULL, 'I' },
     { OUTPUT_FORMAT_FLAG, required_argument, NULL, 'u' },
     { FILELIST_FLAG, required_argument, NULL, 'F' },
@@ -870,6 +872,14 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       options |= OPTION_VERSION;
 
       poptions.given_version = optarg;
+      break;
+
+    case 'N' :
+      exit(STATUS_SUCCESS);
+      break;
+
+    case 'A' :
+      exit(STATUS_SUCCESS);
       break;
 
     case 'I': 

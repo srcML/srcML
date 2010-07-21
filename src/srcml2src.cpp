@@ -515,12 +515,14 @@ int process_args(int argc, char* argv[], process_options & poptions)
     { NAMESPACE_FLAG, required_argument, NULL, NAMESPACE_FLAG_SHORT },
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
+    { SETTINGS_FLAG, no_argument, NULL, 'N' },
+    { FEATURES_FLAG, no_argument, NULL, 'A' },
     { INPUT_FORMAT_FLAG, required_argument, NULL, 'I' },
     { OUTPUT_FORMAT_FLAG, required_argument, NULL, 'u' },
     { LIST_FLAG, no_argument, NULL, 'T' },
-    { XPATH_FLAG, required_argument, NULL, 'P' },
+    { XPATH_FLAG, required_argument, NULL, 'H' },
     { XSLT_FLAG, required_argument, NULL, 'S' },
-    { PARAM_FLAG, required_argument, NULL, 'A' },
+    { PARAM_FLAG, required_argument, NULL, 'P' },
     { STRING_PARAM_FLAG, required_argument, NULL, 'B' },
     { RELAXNG_FLAG, required_argument, NULL, 'R' },
     //    { CONTEXT_FLAG, required_argument, NULL, 'C' },
@@ -666,13 +668,12 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
       break;
 
-    case 'u':
+    case 'N' :
+      exit(STATUS_SUCCESS);
+      break;
 
-      // check for missing argument confused by an argument that looks like an option
-      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
-
-      options |= OPTION_OUTPUT_FORMAT;
-      poptions.output_format = optarg;
+    case 'A' :
+      exit(STATUS_SUCCESS);
       break;
 
     case 'I':
@@ -684,11 +685,20 @@ int process_args(int argc, char* argv[], process_options & poptions)
       poptions.input_format = optarg;
       break;
       
+    case 'u':
+
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+
+      options |= OPTION_OUTPUT_FORMAT;
+      poptions.output_format = optarg;
+      break;
+
     case 'T' :
       options |= OPTION_LIST;
       break;
 
-    case 'P':
+    case 'H':
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
@@ -706,7 +716,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
       poptions.xsltfiles[poptions.xsltcount++] = optarg;
       break;
 
-    case 'A':
+    case 'P':
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
@@ -806,7 +816,7 @@ int option_error_status(int optopt) {
     return STATUS_ERROR;
     break;
 
-  case 'P':
+  case 'H':
     return STATUS_ERROR;
     break;
 
@@ -814,7 +824,7 @@ int option_error_status(int optopt) {
     return STATUS_ERROR;
     break;
 
-  case 'A':
+  case 'P':
     return STATUS_ERROR;
     break;
 
