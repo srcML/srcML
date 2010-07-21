@@ -270,6 +270,12 @@ void output_version(const char* name) {
   printf("%s Version %s\n%s\n", name, VERSION,COPYRIGHT);
 }
 
+void output_settings(const char * name)
+{}
+
+void output_features(const char * name)
+{}
+
 OPTION_TYPE options = OPTION_CPP_MARKUP_ELSE;
 
 #ifdef __GNUG__
@@ -875,10 +881,12 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       break;
 
     case 'N' :
+      output_settings(argv[0]);
       exit(STATUS_SUCCESS);
       break;
 
     case 'A' :
+      output_features(argv[0]);
       exit(STATUS_SUCCESS);
       break;
 
