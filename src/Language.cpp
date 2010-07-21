@@ -69,8 +69,8 @@ const char* getLanguageExtension(const char * const inpath)
     path += inpath[(length - 1) - i];
 
   // setup the regular expression
-  regex_t preg;
-  int errorcode = regcomp(&preg, regex, REG_EXTENDED);
+  static regex_t preg;
+  static int errorcode = regcomp(&preg, regex, REG_EXTENDED);
 
   // evalue the regex
   regmatch_t pmatch[3];
@@ -80,9 +80,6 @@ const char* getLanguageExtension(const char * const inpath)
   extension = "";
   for(int i = 0; i < pmatch[2].rm_eo - pmatch[2].rm_so; ++i)
     extension += path[pmatch[2].rm_eo - (i + 1)];
-
-  // done with the regexpr
-  regfree(&preg);
 
   // if we have a non-blank extension, return that
   if (extension.empty())
