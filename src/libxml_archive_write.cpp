@@ -27,6 +27,30 @@ static std::string data;
 
 static bool isstdout = false;
 
+/* A table that maps extensions to functions. */
+static struct { const char *extension; int (*setter)(struct archive *); } extensions[] =
+  {
+    { "gz",archive_write_set_compression_gzip },
+    { "bz2",archive_write_set_compression_bzip2 },
+    { "cpio",archive_write_set_format_cpio },
+    { "tar",archive_write_set_format_pax_restricted },
+    { "zip",archive_write_set_format_zip },
+    { 0,0 }
+  };
+
+int archive_write_set_format_by_name(struct archive *a, const char *extension)
+{
+  int i;
+
+  for (i = 0; extensions[i].extension != NULL; i++) {
+    if (strcmp(extension, extensions[i].extension) == 0)
+      return ((extensions[i].setter)(a));
+  }
+
+  return (ARCHIVE_FATAL);
+}
+
+
 // check if archive matches the protocol on the URI
 int archiveWriteMatch_src2srcml(const char * URI) {
   
