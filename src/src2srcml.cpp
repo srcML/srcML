@@ -63,18 +63,23 @@ const char* const MODIFIER_FLAG = "modifier";
 
 const char* const POSITION_FLAG = "position";
 const char* const TABS_FLAG = "tabs";
+const char TABS_FLAG_CODE = 'T';
 const char* const TABS_FLAG_FULL = "tabs=NUMBER";
 
 const char* const INTERACTIVE_FLAG = "interactive";
 const char INTERACTIVE_FLAG_SHORT = 'c';
 
 const char* const CPP_MARKUP_ELSE_FLAG = "cpp-markup-else";
+const char CPP_MARKUP_ELSE_FLAG_CODE = 'm';
 
 const char* const CPP_TEXTONLY_ELSE_FLAG = "cpp-text-else";
+const char CPP_TEXTONLY_ELSE_FLAG_CODE = 'E';
 
 const char* const CPP_MARKUP_IF0_FLAG = "cpp-markup-if0";
+const char CPP_MARKUP_IF0_FLAG_CODE = '0';
 
 const char* const CPP_TEXTONLY_IF0_FLAG = "cpp-text-if0";
+const char CPP_TEXTONLY_IF0_FLAG_CODE = 'p';
 
 const char* const EXPRESSION_MODE_FLAG = "expression";
 const char EXPRESSION_MODE_FLAG_SHORT = 'e';
@@ -84,20 +89,25 @@ const char* const SELF_VERSION_FLAG = "self-version";
 const char* const DEFAULT_XML_ENCODING = "UTF-8";
 
 const char* const FILELIST_FLAG = "files-from";
+const char FILELIST_FLAG_CODE = 'F';
 const char* const FILELIST_FLAG_FULL = "files-from=INPUT";
 
 const char* const XMLNS_FLAG = "xmlns";
+const char XMLNS_FLAG_CODE = 'X';
 const char* const XMLNS_DEFAULT_FLAG_FULL = "xmlns=URI";
 const char* const XMLNS_FLAG_FULL = "xmlns:PREFIX=URI";
 
 const char* const REGISTER_EXT_FLAG = "register-ext";
+const char REGISTER_EXT_FLAG_CODE = 'R';
 
 const char* const OLD_FILENAME_FLAG = "old-filename";
+const char OLD_FILENAME_FLAG_CODE = 'O';
 
 const char* const SKIP_DEFAULT_FLAG = "skip-default";
+const char SKIP_DEFAULT_FLAG_CODE = 'S';
 
 const char* const RECURSIVE_FLAG = "recursive";
-const char RECURSIVE_FLAG_SHORT = 'r';
+const char RECURSIVE_FLAG_CODE = 'r';
 
 const char* const QUIET_FLAG = "quiet";
 const char QUIET_FLAG_SHORT = 'q';
@@ -579,25 +589,25 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { FEATURES_FLAG, no_argument, NULL, FEATURES_FLAG_CODE },
     { INPUT_FORMAT_FLAG, required_argument, NULL, INPUT_FORMAT_FLAG_CODE },
     { OUTPUT_FORMAT_FLAG, required_argument, NULL, OUTPUT_FORMAT_FLAG_CODE },
-    { FILELIST_FLAG, required_argument, NULL, 'F' },
-    //    { FILELIST_FLAG, optional_argument, NULL, 'F' },
-    { REGISTER_EXT_FLAG, required_argument, NULL, 'R' },
-    { XMLNS_FLAG, required_argument, NULL, 'X' },
-    { SKIP_DEFAULT_FLAG, no_argument, NULL, 'S' },
-    { RECURSIVE_FLAG, no_argument, NULL, 'r' },
+    { FILELIST_FLAG, required_argument, NULL, FILELIST_FLAG_CODE },
+    //    { FILELIST_FLAG, optional_argument, NULL, FILELIST_FLAG_CODE },
+    { REGISTER_EXT_FLAG, required_argument, NULL, REGISTER_EXT_FLAG_CODE },
+    { XMLNS_FLAG, required_argument, NULL, XMLNS_FLAG_CODE },
+    { SKIP_DEFAULT_FLAG, no_argument, NULL, SKIP_DEFAULT_FLAG_CODE },
+    { RECURSIVE_FLAG, no_argument, NULL, RECURSIVE_FLAG_CODE },
     { QUIET_FLAG, no_argument, NULL, QUIET_FLAG_SHORT },
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
-    { OLD_FILENAME_FLAG, no_argument, NULL, 'O' },
-    { TABS_FLAG, required_argument, NULL, 'T' },
+    { OLD_FILENAME_FLAG, no_argument, NULL, OLD_FILENAME_FLAG_CODE },
+    { TABS_FLAG, required_argument, NULL, TABS_FLAG_CODE },
     { POSITION_FLAG, no_argument, &curoption, OPTION_POSITION },
     { LITERAL_FLAG, no_argument, &curoption, OPTION_LITERAL },
     { OPERATOR_FLAG, no_argument, &curoption, OPTION_OPERATOR },
     { MODIFIER_FLAG, no_argument, &curoption, OPTION_MODIFIER },
-    { CPP_MARKUP_ELSE_FLAG, no_argument, NULL, 'm' },
-    { CPP_TEXTONLY_ELSE_FLAG, no_argument, NULL, 'E' },
-    { CPP_MARKUP_IF0_FLAG, no_argument, NULL, '0' },
-    { CPP_TEXTONLY_IF0_FLAG, no_argument, NULL, 'p' },
+    { CPP_MARKUP_ELSE_FLAG, no_argument, NULL, CPP_MARKUP_ELSE_FLAG_CODE },
+    { CPP_TEXTONLY_ELSE_FLAG, no_argument, NULL, CPP_TEXTONLY_ELSE_FLAG_CODE },
+    { CPP_MARKUP_IF0_FLAG, no_argument, NULL, CPP_MARKUP_IF0_FLAG_CODE },
+    { CPP_TEXTONLY_IF0_FLAG, no_argument, NULL, CPP_TEXTONLY_IF0_FLAG_CODE },
     { 0, 0, 0, 0 }
   };
 
@@ -624,7 +634,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
     // treat --xmlns:prefix=url as --xmlns=url for processing
     if (special && c == '?') {
-      c = 'X';
+      c = XMLNS_FLAG_CODE;
     }
 
     // missing or extra option argument
@@ -655,7 +665,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       poptions.srcml_filename = optarg;
       break;
 
-    case 'F': 
+    case FILELIST_FLAG_CODE: 
 
       // check for missing argument confused by an argument that looks like an option
       //      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
@@ -668,7 +678,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       poptions.fname = optarg;
       break;
 
-    case 'R': 
+    case REGISTER_EXT_FLAG_CODE: 
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
@@ -730,7 +740,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       }
       break;
 
-    case 'X': 
+    case XMLNS_FLAG_CODE: 
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
@@ -809,11 +819,11 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       }
       break;
 
-    case 'S': 
+    case SKIP_DEFAULT_FLAG_CODE: 
       options |= OPTION_SKIP_DEFAULT;
       break;
 
-    case 'r': 
+    case RECURSIVE_FLAG_CODE: 
       options |= OPTION_RECURSIVE;
       break;
 
@@ -914,11 +924,11 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       poptions.output_format = optarg;
       break;
 
-    case 'O' :
+    case OLD_FILENAME_FLAG_CODE :
       options |= OPTION_OLD_FILENAME;
       break;
 
-    case 'T' :
+    case TABS_FLAG_CODE :
       /*
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
@@ -944,7 +954,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       break;
 
 
-    case 'm': 
+    case CPP_MARKUP_ELSE_FLAG_CODE: 
       if (!cpp_else) {
 	options |= OPTION_CPP_MARKUP_ELSE;
 
@@ -957,7 +967,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       }
       break;
 
-    case 'E': 
+    case CPP_TEXTONLY_ELSE_FLAG_CODE: 
       if (!cpp_else) {
 	options &= ~OPTION_CPP_MARKUP_ELSE;
 
@@ -969,7 +979,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       }
       break;
 
-    case '0': 
+    case CPP_MARKUP_IF0_FLAG_CODE: 
       if (!cpp_if0) {
 	options |= OPTION_CPP_MARKUP_IF0;
 
@@ -982,7 +992,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       }
       break;
 
-    case 'p': 
+    case CPP_TEXTONLY_IF0_FLAG_CODE: 
       if (!cpp_if0) {
 	// clear if previously marked
 	options &= ~OPTION_CPP_MARKUP_IF0;
@@ -1060,11 +1070,11 @@ int option_error_status(int optopt) {
     return STATUS_ERROR;
     break;
 
-  case 'T':
+  case TABS_FLAG_CODE:
     return STATUS_ERROR;
     break;
 
-  case 'R':
+  case REGISTER_EXT_FLAG_CODE:
     return STATUS_ERROR;
     break;
 
