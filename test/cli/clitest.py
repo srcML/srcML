@@ -22,6 +22,13 @@ def check(command, input, output):
 	return validate(line, output)
 	#return validate(output.strip(), line.strip())
 
+def checkNoOutput(command, input):
+
+	print os.path.basename(command[0]), ' '.join(command[1:])
+	
+	line = execute(command, input)
+
+
 def checkError(command, input, error) :
 	print os.path.basename(command[0]), ' '.join(command[1:])
 
@@ -398,14 +405,14 @@ check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "2"], nestedfile, sxmlfile2
 
 os.system("rm -f sub/a.cpp sub/b.cpp;")
 
-executeNoOutput([srcml2src, option.EXPAND_FLAG + '=.'], nestedfile)
+checkNoOutput([srcml2src, option.EXPAND_FLAG + '=.'], nestedfile)
 
 validate(open("sub/a.cpp", "r").read(), sfile1)
 validate(open("sub/b.cpp", "r").read(), sfile2)
 
 os.system("rm -f sub/a.cpp sub/b.cpp")
 
-executeNoOutput([srcml2src, option.EXPAND_FLAG_SHORT + '=.'], nestedfile)
+checkNoOutput([srcml2src, option.EXPAND_FLAG_SHORT + '=.'], nestedfile)
 
 validate(open("sub/a.cpp", "r").read(), sfile1)
 validate(open("sub/b.cpp", "r").read(), sfile2)
@@ -1867,13 +1874,13 @@ f.close()
 
 os.system("rm -f sub/a.cpp sub/b.cpp")
 
-executeNoOutput([srcml2src, option.EXPAND_FLAG + '=.', 'sub/a.cpp.xml'], "")
+checkNoOutput([srcml2src, option.EXPAND_FLAG + '=.', 'sub/a.cpp.xml'], "")
 validate(open('sub/a.cpp', 'r').read(), sfile1)
 validate(open('sub/b.cpp', 'r').read(), sfile2)
 
 os.system("rm -f sub/a.cpp sub/b.cpp")
 
-executeNoOutput([srcml2src, option.EXPAND_FLAG_SHORT + '=.', 'sub/a.cpp.xml'], "")
+checkNoOutput([srcml2src, option.EXPAND_FLAG_SHORT + '=.', 'sub/a.cpp.xml'], "")
 validate(open('sub/a.cpp', 'r').read(), sfile1)
 validate(open('sub/b.cpp', 'r').read(), sfile2)
 
