@@ -6,6 +6,7 @@
 #include <archive.h>
 #include <archive_entry.h>
 #include <string>
+#include <time.h>
 
 static const char* output_format = 0;
 
@@ -147,10 +148,11 @@ int archiveWriteClose(void * context) {
     wentry = archive_entry_new();
     archive_entry_set_filetype(wentry, AE_IFREG);
     archive_entry_set_perm(wentry, 0644);
-    archive_entry_set_atime(wentry, 2, 20);
-    //  archive_entry_set_birthtime(wentry, 3, 30);
-    archive_entry_set_ctime(wentry, 4, 40);
-    archive_entry_set_mtime(wentry, 5, 50);
+    time_t now = time(NULL);
+    //    archive_entry_set_birthtime(wentry, now, 0);
+    archive_entry_set_atime(wentry, now, 0);
+    archive_entry_set_ctime(wentry, now, 0);
+    archive_entry_set_mtime(wentry, now, 0);
   }
 
   archive_entry_set_pathname(wentry, filename.c_str());
