@@ -113,7 +113,7 @@ namespace SAX2ExtractUnitsSrc {
 		    const xmlChar** attributes) {
 
     State* pstate = (State*) ctx;
-
+    /*
     // check that this is a nested file
     if (pstate->count == 0 && !(strcmp((const char*) localname, "unit") == 0 &&
 	  strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0)) {
@@ -121,7 +121,7 @@ namespace SAX2ExtractUnitsSrc {
       xmlStopParser(pstate->ctxt);
       return;
     }
-
+    */
     ++(pstate->count);
 
     // start up the output unit

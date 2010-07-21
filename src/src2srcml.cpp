@@ -673,15 +673,19 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
 
-      comma_split(optarg);
-      end = asg_split(optarg);
+      // check all the registered extensions.  There may be many (CSV)
+      for (char* cursub = strtok(optarg, ","); cursub; cursub = strtok(NULL, ",")) {
+	const char* extension = cursub;
+	const char* language = asg_split(cursub);
 
-      if(!Language::registerUserExt(optarg, end))
-      {
-	fprintf(stderr, "%s: language \"%s\" is not supported.\n", argv[0], end);
-	fprintf(stderr, "Try '%s %s' for more information.\n", argv[0], HELP_FLAG);
-	exit(STATUS_ERROR);
+	if(!Language::registerUserExt(extension, language))
+	  {
+	    fprintf(stderr, "%s: language \"%s\" is not supported.\n", argv[0], language);
+	    fprintf(stderr, "Try '%s %s' for more information.\n", argv[0], HELP_FLAG);
+	    exit(STATUS_ERROR);
+	  }
       }
+
       break;
 
     case NESTED_FLAG_SHORT: 
