@@ -238,6 +238,7 @@ typedef struct process_options
   const char * input_format;
   const char * output_format;
   const char* src_encoding;
+  const char * to_directory;
   int unit;
   const char* context;
   int nscount;
@@ -286,6 +287,7 @@ int main(int argc, char* argv[]) {
      0,
      0, 
      DEFAULT_TEXT_ENCODING,
+     0,
      0,
      "src:unit",
      0,
@@ -513,7 +515,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
     { NESTED_FLAG, no_argument, NULL, NESTED_FLAG_SHORT },
     { INFO_FLAG, no_argument, NULL, INFO_FLAG_SHORT },
     { LONG_INFO_FLAG, no_argument, NULL, LONG_INFO_FLAG_SHORT },
-    { EXPAND_FLAG, no_argument, NULL, EXPAND_FLAG_SHORT },
+    { EXPAND_FLAG, required_argument, NULL, EXPAND_FLAG_SHORT },
     { VERBOSE_FLAG, no_argument, NULL, VERBOSE_FLAG_SHORT },
     { XML_FLAG, no_argument, NULL, XML_FLAG_SHORT },
     { COMPRESSED_FLAG, no_argument, NULL, COMPRESSED_FLAG_SHORT },
@@ -636,7 +638,13 @@ int process_args(int argc, char* argv[], process_options & poptions)
       break;
 
     case EXPAND_FLAG_SHORT:
+
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+
       options |= OPTION_EXPAND;
+
+      poptions.to_directory = optarg;
       break;
 
     case VERBOSE_FLAG_SHORT:
