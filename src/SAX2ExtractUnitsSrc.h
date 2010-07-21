@@ -42,6 +42,7 @@ namespace SAX2ExtractUnitsSrc {
     OPTION_TYPE* poptions;
     xmlOutputBufferPtr output;
     char* whole_path;
+    const char* to_directory;
   };
 
   // start a new output buffer and corresponding file for a

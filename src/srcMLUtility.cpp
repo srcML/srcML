@@ -262,7 +262,7 @@ void srcMLUtility::extract_text(const char* ofilename, int unit) {
 }
 
 // expand the compound srcML to individual files
-void srcMLUtility::expand(const char* root_filename, const char* format) {
+void srcMLUtility::expand(const char* root_filename, const char* format, const char* to_directory) {
 
 #ifdef LIBARCHIVE
 
@@ -281,6 +281,7 @@ void srcMLUtility::expand(const char* root_filename, const char* format) {
   state.poptions = &options;
   state.handler = xmlFindCharEncodingHandler(output_encoding);
   state.whole_path = (char*) malloc(5000);
+  state.to_directory = to_directory;
   state.unit = -1;
 
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();

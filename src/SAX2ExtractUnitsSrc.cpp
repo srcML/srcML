@@ -166,7 +166,9 @@ namespace SAX2ExtractUnitsSrc {
 
     // create a complete path from the two separate directories and filename attributes
     //    realloc(pstate->whole_path, dir_size + filename_size + 1);
-    pstate->whole_path[0] = '\0';
+    strcpy(pstate->whole_path, pstate->to_directory);
+    if (pstate->to_directory[0])
+      strcat(pstate->whole_path, "/");
     int size = 0;
     // if there is a directory, then we need to construct each part of the path
     if (dir_size > 0) {

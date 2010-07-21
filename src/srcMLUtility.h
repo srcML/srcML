@@ -78,7 +78,8 @@ class srcMLUtility {
   void extract_element(const char* filename, const char* element);
 
   // expand the compound srcML to individual files
-  void expand(const char* root_filename = "", const char* output_format = 0);
+  void expand(const char* root_filename = "", const char* output_format = 0,
+	      const char* to_directory = "");
 
   // perform xpath evaluation
   void xpath(const char* context_element, const char* ofilename, const char* xpaths[]);

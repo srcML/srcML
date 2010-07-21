@@ -487,10 +487,12 @@ int main(int argc, char* argv[]) {
 
       char* path = argv[input_arg_start];
       poptions.language = Language::getLanguageFromFilename(path);
+      /*
       if (!poptions.language) {
 	  fprintf(stderr, "Skipping '%s'.  No language can be determined.\n", path);
 	  exit(1);
       }
+      */
     }
 
     // turnon cpp namespace for non Java-based languages
