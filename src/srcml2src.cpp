@@ -42,8 +42,8 @@ int option_error_status(int optopt);
 
 char const * const NAME = "srcml2src";
 
-char const * const TO_DIRECTORY_FLAG = "extract-all-files";
-char const TO_DIRECTORY_FLAG_SHORT = 'a';
+char const * const EXPAND_FLAG = "extract-all-files";
+char const EXPAND_FLAG_SHORT = 'a';
 
 char const * const UNIT_FLAG = "unit";
 char const UNIT_FLAG_SHORT = 'U';
@@ -169,7 +169,7 @@ void output_help(const char* name) {
 	  UNIT_FLAG_SHORT, UNIT_FLAG_FULL);
 
   printf("  -%c, --%-17s extract all files from a compound srcML document and create them in the filesystem\n\n",
-	  TO_DIRECTORY_FLAG_SHORT, TO_DIRECTORY_FLAG);
+	  EXPAND_FLAG_SHORT, EXPAND_FLAG);
 
   printf("Query and Transformation Options:  \n\n"
 	 "  --%-21s apply XPATH expression to each individual unit\n", XPATH_FLAG_FULL);
@@ -515,7 +515,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
     { NESTED_FLAG, no_argument, NULL, NESTED_FLAG_SHORT },
     { INFO_FLAG, no_argument, NULL, INFO_FLAG_SHORT },
     { LONG_INFO_FLAG, no_argument, NULL, LONG_INFO_FLAG_SHORT },
-    { TO_DIRECTORY_FLAG, required_argument, NULL, TO_DIRECTORY_FLAG_SHORT },
+    { EXPAND_FLAG, required_argument, NULL, EXPAND_FLAG_SHORT },
     { VERBOSE_FLAG, no_argument, NULL, VERBOSE_FLAG_SHORT },
     { XML_FLAG, no_argument, NULL, XML_FLAG_SHORT },
     { COMPRESSED_FLAG, no_argument, NULL, COMPRESSED_FLAG_SHORT },
@@ -637,7 +637,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
       options |= OPTION_LONG_INFO;
       break;
 
-    case TO_DIRECTORY_FLAG_SHORT:
+    case EXPAND_FLAG_SHORT:
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
