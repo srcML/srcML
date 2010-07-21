@@ -47,6 +47,17 @@ def execute(command, input):
 
 	return last_line
 
+def executeNoOutput(command, input) :
+	p = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=None, stderr=subprocess.PIPE)
+	last_line = p.communicate(input)[0]
+
+	if p.returncode != 0:
+		globals()["error_count"] = globals()["error_count"] + 1
+		print "Status error:  ", p.returncode, command
+
+	return last_line
+	
+
 def executeWithError(command, input):
 	p = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 	last_line = p.communicate(input)[0]
@@ -385,16 +396,16 @@ sxmlfile2 = xml_declaration + """
 check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "2", "-"], nestedfile, sxmlfile2)
 check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "2"], nestedfile, sxmlfile2)
 
-os.system("rm -f sub/a.cpp sub/b.cpp")
+os.system("rm -f sub/a.cpp sub/b.cpp;")
 
-check([srcml2src, option.EXPAND_FLAG], nestedfile, "")
+executeNoOutput([srcml2src, option.EXPAND_FLAG], nestedfile)
 
 validate(open("sub/a.cpp", "r").read(), sfile1)
 validate(open("sub/b.cpp", "r").read(), sfile2)
 
 os.system("rm -f sub/a.cpp sub/b.cpp")
 
-check([srcml2src, option.EXPAND_FLAG_SHORT], nestedfile, "")
+executeNoOutput([srcml2src, option.EXPAND_FLAG_SHORT], nestedfile)
 
 validate(open("sub/a.cpp", "r").read(), sfile1)
 validate(open("sub/b.cpp", "r").read(), sfile2)
