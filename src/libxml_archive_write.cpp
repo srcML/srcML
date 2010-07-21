@@ -38,13 +38,13 @@ static struct { const char *extension; int (*setter)(struct archive *); } extens
     { 0,0 }
   };
 
-int archive_write_set_format_by_name(struct archive *a, const char *extension)
+int archive_write_set_by_name(struct archive *wa, const char *extension)
 {
   int i;
 
   for (i = 0; extensions[i].extension != NULL; i++) {
     if (strcmp(extension, extensions[i].extension) == 0)
-      return ((extensions[i].setter)(a));
+      return ((extensions[i].setter)(wa));
   }
 
   return (ARCHIVE_FATAL);
@@ -117,8 +117,27 @@ void* archiveWriteOpen(const char * URI) {
       // TODO:  Extract into method, and make more general
       std::string s = ".";
       s += output_format ? output_format : root_filename.c_str();
+
+      int length = s.length();
       const char* extname = s.c_str();
-      if (!fnmatch("*.gz", extname, 0))
+
+      // set formats
+      archive_write_set_format_ustar(wa);
+      for(int i = length - 1 ; i >= 0; --i)
+      {
+	int start;
+	for(start = i; start >= 0 && extname[start] != '.'; --start);
+
+	std::string extension = "";
+	for(int pos = start + 1; pos < i + 1; ++pos)
+	  extension += extname[pos];
+	fprintf(stderr, "%s\n", extension.c_str());
+	archive_write_set_by_name(wa, extension.c_str());
+
+	i = start;
+      }
+
+      /*      if (!fnmatch("*.gz", extname, 0))
 	archive_write_set_compression_gzip(wa);
       else if (!fnmatch("*.bz2", extname, 0))
 	archive_write_set_compression_bzip2(wa);
@@ -136,7 +155,7 @@ void* archiveWriteOpen(const char * URI) {
 	archive_write_set_format_cpio(wa);
       else
 	archive_write_set_format_ustar(wa);
-
+      */
       //      fprintf(stderr, "FORMAT: %s %s\n", extname, archive_format_name(wa));
 
       //    fprintf(stderr, "ROOT: %s %s %s\n", root_filename.c_str(), archive_compression_name(wa),
