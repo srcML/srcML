@@ -131,7 +131,7 @@ void* archiveWriteOpen(const char * URI) {
 	std::string extension = "";
 	for(int pos = start + 1; pos < i + 1; ++pos)
 	  extension += extname[pos];
-	fprintf(stderr, "%s\n", extension.c_str());
+	//	fprintf(stderr, "%s\n", extension.c_str());
 	archive_write_set_by_name(wa, extension.c_str());
 
 	i = start;
