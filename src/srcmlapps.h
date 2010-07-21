@@ -110,6 +110,10 @@ const char* const NO_XML_DECLARATION_FLAG = "no-xml-declaration";
 
 const char* const NO_NAMESPACE_DECLARATION_FLAG = "no-namespace-decl";
 
+const char * const SETTINGS_FLAG = "settings";
+
+const char * const FEATURES_FLAG = "features";
+
 /* Return Status */
 
 enum RETURN_STATUS {
