@@ -49,9 +49,17 @@ int archiveReadMatch(const char* URI) {
       return 0;
 
 #if ARCHIVE_VERSION_STAMP >= 2008000
+  // put all input through libarchive for automatic detection of the format
   return 1;
 
 #else
+  // allow libxml to handle non-archive files encrypted with gz
+  int extpos = strlen(URI) - 3;
+  if (fnmatch(URI, "*.gz", 0) == 0 &&
+      fnmatch(URI, "*.tar.*", 0) != 0 &&
+      fnmatch(URI, "*.cpio.*", 0) != 0 &&
+      fnmatch(URI, "*.zip.*", 0) != 0)
+    return 0;
 
   if ((URI[0] == '-' && URI[1] == '\0') || (strcmp(URI, "/dev/stdin") == 0))
     return 1;
