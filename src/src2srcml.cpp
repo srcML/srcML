@@ -1147,6 +1147,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     // if using libarchive, then get the filename (which starts the open)
     if (archiveReadMatch(path)) {
       const char* result = archiveReadFilename(path);
+
       afilename = result ? strdup(result) : 0;
     }
 
@@ -1182,7 +1183,8 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       reallanguage = Language::getLanguageFromFilename(nfilename);
     if (reallanguage == 0 && !isoption(options, OPTION_SKIP_DEFAULT))
       reallanguage = DEFAULT_LANGUAGE;
-    if (!archiveReadMatch(nfilename) && !reallanguage) {
+    if (!reallanguage) {
+    //    if (!archiveReadMatch(nfilename) && !reallanguage) {
 
       if (!isoption(options, OPTION_QUIET)) {
 	if (isoption(options, OPTION_VERBOSE))

@@ -89,6 +89,9 @@ const char* archiveReadFilename(const char* URI) {
   if (!a)
     archiveReadOpen(URI);
 
+  if (archiveReadStatus() != ARCHIVE_OK)
+    return 0;
+
   return isArchiveRead() ? archive_entry_pathname(ae) : 0;
 }
 
@@ -145,7 +148,6 @@ void* archiveReadOpen(const char* URI) {
 
   // just in case archiveOpenRoot() was not called
   if (!a) {
-    //    fprintf(stderr, "REALLY OPEN\n");
     a = archive_read_new();
     archive_read_support_compression_all(a);
     //    archive_read_support_compression_bzip2(a);
@@ -161,14 +163,14 @@ void* archiveReadOpen(const char* URI) {
 
     //    int r = archive_read_open_filename(a, URI, 4000);
     ishttp = xmlIOHTTPMatch(URI);
-    int r;
     if (ishttp || xmlIOFTPMatch(URI)) {
       root_filename = URI;
-      r = archive_read_open(a, 0, archive_read_open_http_callback, archive_read_http_callback,
+      status = archive_read_open(a, 0, archive_read_open_http_callback, archive_read_http_callback,
 			      archive_read_close_http_callback);
-    } else
-      r = archive_read_open_filename(a, strcmp(URI, "-") == 0 ? 0 : URI, 4000);
-    if (r != ARCHIVE_OK)
+    } else {
+      status = archive_read_open_filename(a, strcmp(URI, "-") == 0 ? 0 : URI, 4000);
+    }
+    if (status != ARCHIVE_OK)
       return 0;
 
     status = archive_read_next_header(a, &ae);
