@@ -91,7 +91,9 @@ void* archiveWriteOpen(const char * URI) {
 
       // setup the desired compression
       // TODO:  Extract into method, and make more general
-      const char* extname = output_format ? output_format : root_filename.c_str();
+      std::string s = ".";
+      s += output_format ? output_format : root_filename.c_str();
+      const char* extname = s.c_str();
       if (!fnmatch("*.gz", extname, 0))
 	archive_write_set_compression_gzip(wa);
       else if (!fnmatch("*.bz2", extname, 0))
@@ -104,12 +106,14 @@ void* archiveWriteOpen(const char * URI) {
 	archive_write_set_format_zip(wa);
 #else
       if (false)
-	;
+      	;
 #endif
-      else if (!fnmatch("*.cpio", extname, 0) || !fnmatch("*.cpio.*", extname, 0))
+      else if (fnmatch("*.cpio", extname, 0) == 0 || fnmatch("*.cpio.*", extname, 0) == 0)
 	archive_write_set_format_cpio(wa);
       else
 	archive_write_set_format_ustar(wa);
+
+      //      fprintf(stderr, "FORMAT: %s %s\n", extname, archive_format_name(wa));
 
       //    fprintf(stderr, "ROOT: %s %s %s\n", root_filename.c_str(), archive_compression_name(wa),
       //    archive_format_name(wa));
