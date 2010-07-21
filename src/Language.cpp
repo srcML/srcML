@@ -66,8 +66,13 @@ void reverseString(char * const string, int start, int end)
     }
 }
 
-int getLanguageExtension(char * const path, char * const extension)
+const char* getLanguageExtension(const char * const inpath)
 {
+  static char extension[256];
+
+  char path[256];
+  strcpy(path, inpath);
+
   int length = strlen(path);
   reverseString(path, 0, length);
 
@@ -77,40 +82,29 @@ int getLanguageExtension(char * const path, char * const extension)
   regmatch_t pmatch[3];
   errorcode = errorcode || regexec(&preg, path, 3, pmatch, 0);
 
+  extension[0] = '\0';
   int matchlength = pmatch[2].rm_eo - pmatch[2].rm_so;
-  char match[matchlength + 1];
   for(int i = 0; i < matchlength; ++i)
   {
-    match[i] = path[pmatch[2].rm_eo - (i + 1)];
+    extension[i] = path[pmatch[2].rm_eo - (i + 1)];
   }
+  extension[matchlength] = '\0';
 
-  match[matchlength] = '\0';
-  strcpy(extension, match);
-
-  reverseString(path, 0, length);
   regfree(&preg);
 
-  return errorcode;
+  return extension;
 }
 
 // gets the current language based on the extenstion           
 int Language::getLanguageFromFilename(const char* const path) {
 
-  if (fnmatch("*.xml", path, 0) == 0)
-    return 0;
+  // extract the (pure) extension
+  const char* extension = getLanguageExtension(path);
 
   // custom extensions
-  char pattern[50];
   for (const pair * pos = userext2int + usercount - 1; pos->s != 0; --pos) {
 
-    strcpy(pattern, "*.");
-    strcat(pattern, pos->s);
-
-    if (fnmatch(pattern, path, 0) == 0)
-      return pos->n;
-
-    strcat(pattern, ".*");
-    if (fnmatch(pattern, path, 0) == 0)
+    if (strcmp(pos->s, extension) == 0)
       return pos->n;
   }
 
