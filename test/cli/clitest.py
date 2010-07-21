@@ -398,14 +398,14 @@ check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "2"], nestedfile, sxmlfile2
 
 os.system("rm -f sub/a.cpp sub/b.cpp;")
 
-executeNoOutput([srcml2src, option.EXPAND_FLAG], nestedfile)
+executeNoOutput([srcml2src, option.EXPAND_FLAG, '.'], nestedfile)
 
 validate(open("sub/a.cpp", "r").read(), sfile1)
 validate(open("sub/b.cpp", "r").read(), sfile2)
 
 os.system("rm -f sub/a.cpp sub/b.cpp")
 
-executeNoOutput([srcml2src, option.EXPAND_FLAG_SHORT], nestedfile)
+executeNoOutput([srcml2src, option.EXPAND_FLAG_SHORT, '.'], nestedfile)
 
 validate(open("sub/a.cpp", "r").read(), sfile1)
 validate(open("sub/b.cpp", "r").read(), sfile2)
@@ -1867,13 +1867,13 @@ f.close()
 
 os.system("rm -f sub/a.cpp sub/b.cpp")
 
-executeNoOutput([srcml2src, option.EXPAND_FLAG, 'sub/a.cpp.xml'], "")
+executeNoOutput([srcml2src, option.EXPAND_FLAG, '.', 'sub/a.cpp.xml'], "")
 validate(open('sub/a.cpp', 'r').read(), sfile1)
 validate(open('sub/b.cpp', 'r').read(), sfile2)
 
 os.system("rm -f sub/a.cpp sub/b.cpp")
 
-executeNoOutput([srcml2src, option.EXPAND_FLAG_SHORT, 'sub/a.cpp.xml'], "")
+executeNoOutput([srcml2src, option.EXPAND_FLAG_SHORT, '.', 'sub/a.cpp.xml'], "")
 validate(open('sub/a.cpp', 'r').read(), sfile1)
 validate(open('sub/b.cpp', 'r').read(), sfile2)
 
