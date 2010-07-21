@@ -148,6 +148,7 @@ void* archiveReadOpen(const char* URI) {
 
   // just in case archiveOpenRoot() was not called
   if (!a) {
+    status = 0;
     a = archive_read_new();
     archive_read_support_compression_all(a);
     //    archive_read_support_compression_bzip2(a);
@@ -170,8 +171,12 @@ void* archiveReadOpen(const char* URI) {
     } else {
       status = archive_read_open_filename(a, strcmp(URI, "-") == 0 ? 0 : URI, 4000);
     }
-    if (status != ARCHIVE_OK)
+    if (status != ARCHIVE_OK) {
+      archive_read_finish(a);
+      a = 0;
+      ae = 0;
       return 0;
+    }
 
     status = archive_read_next_header(a, &ae);
     if (status != ARCHIVE_OK)

@@ -1153,7 +1153,9 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
     if (archiveReadStatus() != 0) {
       fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
-      
+      if (first)
+	return;
+
     } else {
 
     if (isArchiveRead()) {
