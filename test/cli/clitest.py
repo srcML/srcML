@@ -26,7 +26,7 @@ def checkNoOutput(command, input):
 
 	print os.path.basename(command[0]), ' '.join(command[1:])
 	
-	line = execute(command, input)
+	execute(command, input)
 
 
 def checkError(command, input, error) :
@@ -56,15 +56,12 @@ def execute(command, input):
 
 def executeNoOutput(command, input) :
 	p = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=None, stderr=subprocess.PIPE)
-	last_line = p.communicate(input)[0]
+	p.communicate(input)[0]
 
 	if p.returncode != 0:
 		globals()["error_count"] = globals()["error_count"] + 1
 		print "Status error:  ", p.returncode, command
-
-	return last_line
 	
-
 def executeWithError(command, input):
 	p = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 	last_line = p.communicate(input)[0]
