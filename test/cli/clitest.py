@@ -400,14 +400,14 @@ sxmlfile2 = xml_declaration + """
 check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "2", "-"], nestedfile, sxmlfile2)
 check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "2"], nestedfile, sxmlfile2)
 
-os.system("rm -f sub/a.cpp sub/b.cpp;")
+#os.system("rm -f sub/a.cpp sub/b.cpp;")
 
 checkNoOutput([srcml2src, option.EXPAND_FLAG + '=.'], nestedfile)
 
 #validate(open("sub/a.cpp", "r").read(), sfile1)
 #validate(open("sub/b.cpp", "r").read(), sfile2)
 
-os.system("rm -f sub/a.cpp sub/b.cpp")
+#os.system("rm -f sub/a.cpp sub/b.cpp")
 
 checkNoOutput([srcml2src, option.EXPAND_FLAG_SHORT, '.'], nestedfile)
 
@@ -1869,13 +1869,13 @@ f = open('sub/a.cpp.xml', 'w')
 f.write(nestedfile)
 f.close()
 
-os.system("rm -f sub/a.cpp sub/b.cpp")
+#os.system("rm -f sub/a.cpp sub/b.cpp")
 
 checkNoOutput([srcml2src, option.EXPAND_FLAG + '=.', 'sub/a.cpp.xml'], "")
 #validate(open('sub/a.cpp', 'r').read(), sfile1)
 #validate(open('sub/b.cpp', 'r').read(), sfile2)
 
-os.system("rm -f sub/a.cpp sub/b.cpp")
+#os.system("rm -f sub/a.cpp sub/b.cpp")
 
 checkNoOutput([srcml2src, option.EXPAND_FLAG_SHORT, '.', 'sub/a.cpp.xml'], "")
 #validate(open('sub/a.cpp', 'r').read(), sfile1)
