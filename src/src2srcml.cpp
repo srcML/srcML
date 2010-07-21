@@ -575,10 +575,10 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { DIRECTORY_FLAG, required_argument, NULL, DIRECTORY_FLAG_SHORT },
     { FILENAME_FLAG, required_argument, NULL, FILENAME_FLAG_SHORT },
     { SRCVERSION_FLAG, required_argument, NULL, SRCVERSION_FLAG_SHORT },
-    { SETTINGS_FLAG, no_argument, NULL, 'N' },
-    { FEATURES_FLAG, no_argument, NULL, 'A' },
-    { INPUT_FORMAT_FLAG, required_argument, NULL, 'I' },
-    { OUTPUT_FORMAT_FLAG, required_argument, NULL, 'u' },
+    { SETTINGS_FLAG, no_argument, NULL, SETTINGS_FLAG_CODE },
+    { FEATURES_FLAG, no_argument, NULL, FEATURES_FLAG_CODE },
+    { INPUT_FORMAT_FLAG, required_argument, NULL, INPUT_FORMAT_FLAG_CODE },
+    { OUTPUT_FORMAT_FLAG, required_argument, NULL, OUTPUT_FORMAT_FLAG_CODE },
     { FILELIST_FLAG, required_argument, NULL, 'F' },
     //    { FILELIST_FLAG, optional_argument, NULL, 'F' },
     { REGISTER_EXT_FLAG, required_argument, NULL, 'R' },
@@ -880,17 +880,17 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       poptions.given_version = optarg;
       break;
 
-    case 'N' :
+    case SETTINGS_FLAG_CODE :
       output_settings(argv[0]);
       exit(STATUS_SUCCESS);
       break;
 
-    case 'A' :
+    case FEATURES_FLAG_CODE :
       output_features(argv[0]);
       exit(STATUS_SUCCESS);
       break;
 
-    case 'I': 
+    case INPUT_FORMAT_FLAG_CODE: 
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
@@ -900,7 +900,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       poptions.input_format = optarg;
       break;
 
-    case 'u': 
+    case OUTPUT_FORMAT_FLAG_CODE: 
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
@@ -1048,11 +1048,11 @@ int option_error_status(int optopt) {
     return STATUS_SRCENCODING_MISSING;
     break;
 
-  case 'I':
+  case INPUT_FORMAT_FLAG_CODE:
     return STATUS_ERROR;
     break;
 
-  case 'u':
+  case OUTPUT_FORMAT_FLAG_CODE:
     return STATUS_ERROR;
     break;
 

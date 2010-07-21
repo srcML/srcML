@@ -521,10 +521,10 @@ int process_args(int argc, char* argv[], process_options & poptions)
     { NAMESPACE_FLAG, required_argument, NULL, NAMESPACE_FLAG_SHORT },
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
-    { SETTINGS_FLAG, no_argument, NULL, 'N' },
-    { FEATURES_FLAG, no_argument, NULL, 'A' },
-    { INPUT_FORMAT_FLAG, required_argument, NULL, 'I' },
-    { OUTPUT_FORMAT_FLAG, required_argument, NULL, 'u' },
+    { SETTINGS_FLAG, no_argument, NULL, SETTINGS_FLAG_CODE },
+    { FEATURES_FLAG, no_argument, NULL, FEATURES_FLAG_CODE },
+    { INPUT_FORMAT_FLAG, required_argument, NULL, INPUT_FORMAT_FLAG_CODE },
+    { OUTPUT_FORMAT_FLAG, required_argument, NULL, OUTPUT_FORMAT_FLAG_CODE },
     { LIST_FLAG, no_argument, NULL, 'T' },
     { XPATH_FLAG, required_argument, NULL, 'H' },
     { XSLT_FLAG, required_argument, NULL, 'S' },
@@ -674,17 +674,17 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
       break;
 
-    case 'N' :
+    case SETTINGS_FLAG_CODE :
       output_settings(argv[0]);
       exit(STATUS_SUCCESS);
       break;
 
-    case 'A' :
+    case FEATURES_FLAG_CODE :
       output_features(argv[0]);
       exit(STATUS_SUCCESS);
       break;
 
-    case 'I':
+    case INPUT_FORMAT_FLAG_CODE:
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
@@ -693,7 +693,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
       poptions.input_format = optarg;
       break;
       
-    case 'u':
+    case OUTPUT_FORMAT_FLAG_CODE:
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
@@ -816,11 +816,11 @@ int option_error_status(int optopt) {
     return STATUS_UNIT_MISSING;
     break;
 
-  case 'I':
+  case INPUT_FORMAT_FLAG_CODE:
     return STATUS_ERROR;
     break;
 
-  case 'u':
+  case OUTPUT_FORMAT_FLAG_CODE:
     return STATUS_ERROR;
     break;
 

@@ -85,9 +85,11 @@ const char OUTPUT_FLAG_SHORT = 'o';
 const char* const OUTPUT_FLAG_FULL = "output=OUTPUT";
 
 const char* const INPUT_FORMAT_FLAG = "input-format";
+const char INPUT_FORMAT_FLAG_CODE = 'I';
 const char* const INPUT_FORMAT_FLAG_FULL = "input-format=EXTENSION";
 
 const char* const OUTPUT_FORMAT_FLAG = "output-format";
+const char OUTPUT_FORMAT_FLAG_CODE = 'u';
 const char* const OUTPUT_FORMAT_FLAG_FULL = "output-format=EXTENSION";
 
 namespace LanguageName {
@@ -111,8 +113,10 @@ const char* const NO_XML_DECLARATION_FLAG = "no-xml-declaration";
 const char* const NO_NAMESPACE_DECLARATION_FLAG = "no-namespace-decl";
 
 const char * const SETTINGS_FLAG = "settings";
+const char SETTINGS_FLAG_CODE = 'N';
 
 const char * const FEATURES_FLAG = "features";
+const char FEATURES_FLAG_CODE = 'A';
 
 /* Return Status */
 
