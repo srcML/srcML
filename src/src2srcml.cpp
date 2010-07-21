@@ -665,6 +665,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
 
+      comma_split(optarg);
       end = asg_split(optarg);
 
       if(!Language::registerUserExt(optarg, end))

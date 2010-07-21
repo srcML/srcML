@@ -194,6 +194,19 @@ inline char* asg_split(char* path) {
   return ret;
 }
 
+inline char* comma_split(char* path) {
+
+  char* ret = path;
+
+  char* point = rindex(path, ','); 
+  if (point) {
+    *point = '\0';
+    ret = point + 1;
+  }
+
+  return ret;
+}
+
 inline bool argisoption(const char* s) {
 
   return s[0] == '-';
