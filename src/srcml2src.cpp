@@ -63,26 +63,26 @@ char const NAMESPACE_FLAG_SHORT = 'p';
 char const * const NAMESPACE_FLAG_FULL = "prefix=URI";
 
 char const * const XPATH_FLAG = "xpath";
-//char const XPATH_FLAG_SHORT = '';
+char const XPATH_FLAG_CODE = 'H';
 char const * const XPATH_FLAG_FULL = "xpath=XPATH";
 
 char const * const XSLT_FLAG = "xslt";
-//char const XSLT_FLAG_SHORT = '';
+char const XSLT_FLAG_CODE = 'S';
 char const * const XSLT_FLAG_FULL = "xslt=XSLT_FILE";
 
 char const * const PARAM_FLAG = "xpathparam";
+char const PARAM_FLAG_CODE = 'P';
 char const * const PARAM_FLAG_FULL = "xpathparam NAME=VAL";
-//char const PARAM_FLAG_SHORT = '';
 
 char const * const STRING_PARAM_FLAG = "param";
+char const STRING_PARAM_FLAG_CODE = 'B';
 char const * const STRING_PARAM_FLAG_FULL = "param NAME=VAL";
-//char const PARAM_FLAG_SHORT = '';
 
 char const * const XSLT_ALL_FLAG = "apply-root";
 //char const XSLT_ALL_FLAG_SHORT = '';
 
 char const * const RELAXNG_FLAG = "relaxng";
-//char const RELAXNG_FLAG_SHORT = '';
+char const RELAXNG_FLAG_CODE = 'R';
 char const * const RELAXNG_FLAG_FULL = "relaxng=RELAXNG_FILE";
 
 char const * const CONTEXT_FLAG = "context";
@@ -90,6 +90,7 @@ char const * const CONTEXT_FLAG = "context";
 char const * const CONTEXT_FLAG_FULL = "context=CONTEXT";
 
 const char* const LIST_FLAG = "list";
+const char LIST_FLAG_CODE = 'T';
 
 void libxml_error(void *ctx, const char *msg, ...) {}
 
@@ -525,12 +526,12 @@ int process_args(int argc, char* argv[], process_options & poptions)
     { FEATURES_FLAG, no_argument, NULL, FEATURES_FLAG_CODE },
     { INPUT_FORMAT_FLAG, required_argument, NULL, INPUT_FORMAT_FLAG_CODE },
     { OUTPUT_FORMAT_FLAG, required_argument, NULL, OUTPUT_FORMAT_FLAG_CODE },
-    { LIST_FLAG, no_argument, NULL, 'T' },
-    { XPATH_FLAG, required_argument, NULL, 'H' },
-    { XSLT_FLAG, required_argument, NULL, 'S' },
-    { PARAM_FLAG, required_argument, NULL, 'P' },
-    { STRING_PARAM_FLAG, required_argument, NULL, 'B' },
-    { RELAXNG_FLAG, required_argument, NULL, 'R' },
+    { LIST_FLAG, no_argument, NULL, LIST_FLAG_CODE },
+    { XPATH_FLAG, required_argument, NULL, XPATH_FLAG_CODE },
+    { XSLT_FLAG, required_argument, NULL, XSLT_FLAG_CODE },
+    { PARAM_FLAG, required_argument, NULL, PARAM_FLAG_CODE },
+    { STRING_PARAM_FLAG, required_argument, NULL, STRING_PARAM_FLAG_CODE },
+    { RELAXNG_FLAG, required_argument, NULL, RELAXNG_FLAG_CODE },
     //    { CONTEXT_FLAG, required_argument, NULL, 'C' },
     { 0, 0, 0, 0 }
   };
@@ -702,11 +703,11 @@ int process_args(int argc, char* argv[], process_options & poptions)
       poptions.output_format = optarg;
       break;
 
-    case 'T' :
+    case LIST_FLAG_CODE :
       options |= OPTION_LIST;
       break;
 
-    case 'H':
+    case XPATH_FLAG_CODE:
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
@@ -715,7 +716,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
       poptions.xpathexpr[poptions.xpathcount++] = optarg;
       break;
 
-    case 'S':
+    case XSLT_FLAG_CODE:
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
@@ -724,7 +725,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
       poptions.xsltfiles[poptions.xsltcount++] = optarg;
       break;
 
-    case 'P':
+    case PARAM_FLAG_CODE:
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
@@ -741,7 +742,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
       poptions.paramcount++;
       break;
 
-    case 'B':
+    case STRING_PARAM_FLAG_CODE:
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
@@ -753,7 +754,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
       poptions.params[poptions.paramcount++] = asg_split(optarg);
       break;
 
-    case 'R':
+    case RELAXNG_FLAG_CODE:
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
@@ -824,19 +825,19 @@ int option_error_status(int optopt) {
     return STATUS_ERROR;
     break;
 
-  case 'H':
+  case XPATH_FLAG_CODE:
     return STATUS_ERROR;
     break;
 
-  case 'S':
+  case XSLT_FLAG_CODE:
     return STATUS_ERROR;
     break;
 
-  case 'P':
+  case PARAM_FLAG_CODE:
     return STATUS_ERROR;
     break;
 
-  case 'B':
+  case STRING_PARAM_FLAG_CODE:
     return STATUS_ERROR;
     break;
 
