@@ -1151,6 +1151,11 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       afilename = result ? strdup(result) : 0;
     }
 
+    if (archiveReadStatus() != 0) {
+      fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
+      
+    } else {
+
     if (isArchiveRead()) {
       isarchive = true;
       options |= OPTION_NESTED;
@@ -1217,6 +1222,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 	fprintf(stderr, "%s error: file \'%s\' does not exist.\n", PROGRAM_NAME, nfilename);
 
       exit(STATUS_INPUTFILE_PROBLEM);
+    }
     }
 
     // in verbose mode output end info about this file
