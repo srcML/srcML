@@ -2085,12 +2085,12 @@ file = open('sub/a.cpp', 'w')
 file.write(sfile)
 file.close()
 
-checkallforms(src2srcml, option.EXPRESSION_MODE_FLAG_SHORT, option.EXPRESSION_MODE_FLAG, "", sfile, sxmlfile)
-checkallformsfile(src2srcml, 'sub/a.cpp', option.EXPRESSION_MODE_FLAG_SHORT, option.EXPRESSION_MODE_FLAG, "", "", fsxmlfile)
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.EXPRESSION_MODE_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
-validate(open('sub/a.cpp.xml', 'r').read(), sxmlfile)
-check([src2srcml, option.EXPRESSION_MODE_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
-validate(open('sub/a.cpp.xml', 'r').read(), fsxmlfile)
+#checkallforms(src2srcml, option.EXPRESSION_MODE_FLAG_SHORT, option.EXPRESSION_MODE_FLAG, "", sfile, sxmlfile)
+#checkallformsfile(src2srcml, 'sub/a.cpp', option.EXPRESSION_MODE_FLAG_SHORT, option.EXPRESSION_MODE_FLAG, "", "", fsxmlfile)
+#check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.EXPRESSION_MODE_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+#validate(open('sub/a.cpp.xml', 'r').read(), sxmlfile)
+#check([src2srcml, option.EXPRESSION_MODE_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
+#validate(open('sub/a.cpp.xml', 'r').read(), fsxmlfile)
 
 ##
 # Test Query and Transformation Options
