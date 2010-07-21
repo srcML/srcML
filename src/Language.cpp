@@ -56,43 +56,39 @@ bool Language::registerUserExt(const char* ext, const char* language) {
   return registerUserExt(ext, nlanguage);
 }
 
-void reverseString(char * const string, int start, int end)
-{
-  for(int i = start; i < (start + end) / 2; ++i)
-    {
-      char temp = string[i];
-      string[i] = string[end - ((i + 1) - start)];
-      string[end - ((i + 1) - start)] = temp;
-    }
-}
-
 const char* getLanguageExtension(const char * const inpath)
 {
-  static char extension[256];
+  // internal string for returning constant
+  static std::string extension;
 
-  char path[256];
-  strcpy(path, inpath);
+  // reversed copy of the path
+  std::string path;
+  int length = strlen(inpath);
+  path.reserve(length);
+  for (int i = 0; i < length; ++i)
+    path += inpath[(length - 1) - i];
 
-  int length = strlen(path);
-  reverseString(path, 0, length);
-
+  // setup the regular expression
   regex_t preg;
   int errorcode = regcomp(&preg, regex, REG_EXTENDED);
 
+  // evalue the regex
   regmatch_t pmatch[3];
-  errorcode = errorcode || regexec(&preg, path, 3, pmatch, 0);
+  errorcode = errorcode || regexec(&preg, path.c_str(), 3, pmatch, 0);
 
-  extension[0] = '\0';
-  int matchlength = pmatch[2].rm_eo - pmatch[2].rm_so;
-  for(int i = 0; i < matchlength; ++i)
-  {
-    extension[i] = path[pmatch[2].rm_eo - (i + 1)];
-  }
-  extension[matchlength] = '\0';
+  // extract the extension from the path, reversing as we go
+  extension = "";
+  for(int i = 0; i < pmatch[2].rm_eo - pmatch[2].rm_so; ++i)
+    extension += path[pmatch[2].rm_eo - (i + 1)];
 
+  // done with the regexpr
   regfree(&preg);
 
-  return extension;
+  // if we have a non-blank extension, return that
+  if (extension.empty())
+    return 0;
+  else
+    return extension.c_str();
 }
 
 // gets the current language based on the extenstion           
