@@ -31,6 +31,7 @@ static bool isstdout = false;
 static struct { const char *compression; int (*setter)(struct archive *); } compressions[] =
   {
     { "gz",archive_write_set_compression_gzip },
+    { "tgz",archive_write_set_compression_gzip },
     { "bz2",archive_write_set_compression_bzip2 },
     { 0,0 }
   };
@@ -52,6 +53,7 @@ static struct { const char *format; int (*setter)(struct archive *); } formats[]
   {
     { "cpio",archive_write_set_format_cpio },
     { "tar",archive_write_set_format_pax_restricted },
+    { "tgz",archive_write_set_format_pax_restricted },
 #if ARCHIVE_VERSION_STAMP >= 2008000
     { "zip",archive_write_set_format_zip },
 #endif
