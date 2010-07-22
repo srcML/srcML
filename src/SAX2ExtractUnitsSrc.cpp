@@ -204,8 +204,6 @@ namespace SAX2ExtractUnitsSrc {
     if (isoption(*(pstate->poptions), OPTION_VERBOSE))
       fprintf(stderr, "%ld\t%s\n", pstate->count, pstate->whole_path);
 
-    fprintf(stderr, "HERE: %s\n", pstate->whole_path);
-
     // now create the file itself
     pstate->output = xmlOutputBufferCreateFilename(pstate->whole_path, pstate->handler, 0);
     if (pstate->output == NULL) {
