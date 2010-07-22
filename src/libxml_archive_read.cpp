@@ -87,7 +87,7 @@ const char* archiveReadFilename(const char* URI) {
   if (!a)
     archiveReadOpen(URI);
 
-  if (archiveReadStatus() != ARCHIVE_OK || archiveReadStatus() != ARCHIVE_EOF)
+  if (archiveReadStatus() != ARCHIVE_OK && archiveReadStatus() != ARCHIVE_EOF)
     return 0;
 
   return isArchiveRead() ? archive_entry_pathname(ae) : 0;
