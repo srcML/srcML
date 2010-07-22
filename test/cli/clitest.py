@@ -2282,6 +2282,60 @@ validate(open('sub/a.cpp.xml').read(), fsxmlfile)
 
 validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.REGISTER_EXT_FLAG, "xml=Jawa"], ""), status.STATUS_ERROR)
 
+##
+# directory input
+
+src = """
+a;
+"""
+
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
+
+<unit language="AspectJ" filename="dir/file.aj">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C" filename="dir/file.c">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++" filename="dir/file.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="Java" filename="dir/file.java">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+"""
+
+if os.path.exists("dir"):
+	os.system("rm -r dir; mkdir dir")
+else :
+	os.system("mkdir dir")
+
+f = open("dir/file.cpp", 'w')
+f.write(src)
+f.close()
+
+f = open("dir/file.c", 'w')
+f.write(src)
+f.close()
+
+f = open("dir/file.java", 'w')
+f.write(src)
+f.close()
+
+f = open("dir/file.aj", 'w')
+f.write(src)
+f.close()
+
+check([src2srcml, 'dir'], "", srcml)
+check([src2srcml, 'dir', '-o', 'dir/dir.xml'], "", "")
+validate(open('dir/dir.xml', 'r').read(), srcml)
+
 # footer
 print
 print "Error count: ", error_count
