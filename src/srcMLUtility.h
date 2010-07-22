@@ -49,6 +49,9 @@ class srcMLUtility {
   // constructor
   srcMLUtility(const char* infilename, const char* encoding, OPTION_TYPE& op);
 
+  // set the input filename after the constructor
+  void set_input_filename(const char* infilename);
+
   // attribute
   const char* attribute(const char* attribute_name);
 

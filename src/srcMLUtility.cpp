@@ -334,6 +334,13 @@ const PROPERTIES_TYPE* srcMLUtility::getNS() const {
   return nsv;
 }
 */
+
+// set the input filename after the constructor
+void srcMLUtility::set_input_filename(const char* infilename) {
+  infile = infilename;
+}
+
+
 // xpath evaluation of the nested units
 void srcMLUtility::xpath(const char* ofilename, const char* context_element, const char* xpaths[]) {
 
