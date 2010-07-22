@@ -434,6 +434,15 @@ int main(int argc, char* argv[]) {
       // if we terminated early, output the correct status
       if (isoption(options, OPTION_TERMINATE))
 	exit_status = STATUS_TERMINATED;
+      /*
+      while (curarg < argc) {
+	fprintf(stderr, "ANOTHER: %s\n", argv[curarg]);
+	su.set_input_filename(argv[curarg]);
+	++curarg;
+
+	//	su.expand(poptions.ofilename, poptions.output_format, poptions.to_directory);
+      }
+	*/
 
     } else if (isoption(options, OPTION_XML)) {
 
