@@ -42,8 +42,6 @@ const char* archiveReadCompression() {
 
 // check if archive matches the protocol on the URI
 int archiveReadMatch(const char* URI) {
-
-  //  fprintf(stderr, "MATCH: %s\n", URI);
   
   if (URI == NULL)
       return 0;
@@ -102,9 +100,8 @@ static void* mcontext;
 static int archive_read_open_http_callback(struct archive* a,
 					   void* _client_data) {
 
-  //  fprintf(stderr, "CALLBACK: OPEN: %s\n", root_filename);
   mcontext = ishttp ? xmlNanoHTTPOpen(root_filename.c_str(), 0) : xmlNanoFTPOpen(root_filename.c_str());
-  //  fprintf(stderr, "MCONTEXT: %p\n", mcontext);
+
   return 0;
 }
 
@@ -117,8 +114,6 @@ ssize_t
 archive_read_http_callback(struct archive* a,
 					   void* _client_data, const void** _buffer) {
 
-
-  //  fprintf(stderr, "CALLBACK: READ\n");
   static char data[512];
   *_buffer = data;
   int len = 510;
@@ -130,7 +125,6 @@ archive_read_http_callback(struct archive* a,
 static int archive_read_close_http_callback(struct archive* a,
 					   void* _client_data) {
 
-  //  fprintf(stderr, "CALLBACK: CLOSE\n");
   if (ishttp)
     xmlNanoHTTPClose(mcontext);
   else
@@ -140,8 +134,6 @@ static int archive_read_close_http_callback(struct archive* a,
 
 // setup archive for this URI
 void* archiveReadOpen(const char* URI) {
-
-  fprintf(stderr, "ARCHIVE_OPEN\n");
 
   if (!archiveReadMatch(URI))
     return NULL;
@@ -184,8 +176,6 @@ void* archiveReadOpen(const char* URI) {
 
     if (archive_entry_filetype(ae) == AE_IFDIR)
       archiveReadClose(mcontext);
-  //    fprintf(stderr, "ISDIR: %d\n", archive_entry_filetype(ae) == AE_IFDIR);
-    //fprintf(stderr, "FORMAT: %s\n", archive_format_name(a));
   }
 
   return a;
@@ -193,8 +183,6 @@ void* archiveReadOpen(const char* URI) {
 
 // close the open file
 int archiveReadClose(void* context) {
-
-  //  fprintf(stderr, "ARCHIVE_CLOSE\n");
 
   if (context == NULL)
     return -1;
@@ -205,7 +193,7 @@ int archiveReadClose(void* context) {
   // read the next header.  If there isn't one, then really finish
   status = archive_read_next_header(a, &ae);
   if (status != ARCHIVE_OK) {
-    //    fprintf(stderr, "REALLY CLOSE\n");
+
     archive_read_finish(a);
     a = 0;
     return 0;
@@ -213,7 +201,6 @@ int archiveReadClose(void* context) {
 
   if (archive_entry_filetype(ae) == AE_IFDIR)
     archiveReadClose(context);
-    //  fprintf(stderr, "TYPE: %d\n", archive_entry_filetype(ae));
 
   return 0;
 }
@@ -221,14 +208,10 @@ int archiveReadClose(void* context) {
 // read from the URI
 int archiveRead(void* context, char* buffer, int len) {
 
-  fprintf(stderr, "ARCHIVE_READ\n");
-
   if (status != ARCHIVE_OK)
     return 0;
 
   size_t size = archive_read_data(a, buffer, len);
-  fprintf(stderr, "SIZE: %d\n", size);
-
   if (size < 0)
     return 0;
 
