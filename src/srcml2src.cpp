@@ -729,6 +729,9 @@ int process_args(int argc, char* argv[], process_options & poptions)
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
 
+      // check for blank argument
+      checkargisnonempty(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+
       options |= OPTION_XPATH;
       poptions.xpathexpr[poptions.xpathcount++] = optarg;
       break;
@@ -737,6 +740,9 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+
+      // check for blank argument
+      checkargisnonempty(argv[0], argv[lastoptind], optarg, optind, lastoptind);
 
       options |= OPTION_XSLT;
       poptions.xsltfiles[poptions.xsltcount++] = optarg;

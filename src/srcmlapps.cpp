@@ -56,6 +56,16 @@ void checkargisoption(const char* name, const char* opt, const char* optarg, int
       }
 }
 
+void checkargisnonempty(const char* name, const char* opt, const char* optarg, int optind, int lastoptind) {
+
+      // check for missing argument confused by an argument that looks like an option
+  if (optind == (lastoptind + 1) && strcmp(optarg, "") == 0) {
+    fprintf(stderr, "%s: Empty argument to option '%s'.\n",
+	    name, opt);
+    exit(1);
+  }
+}
+
 char** makeargv(char* s) {
 
   fprintf(stderr, "LINE:%s\n", s);
