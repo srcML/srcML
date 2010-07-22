@@ -303,11 +303,6 @@ void srcMLOutput::setTokenStream(TokenStream& ints) {
 
 void srcMLOutput::consume(const char* language, const char* directory, const char* filename, const char* version) {
 
- // issue the xml declaration, but only if we want to
-  if (firstconsume && !isoption(OPTION_XMLDECL))
-    xmlTextWriterStartDocument(xout, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
-  firstconsume = false;
-
   // store attributes so that first occurrence of unit element will be correct
   unit_dir = directory;
   unit_filename = filename;
@@ -410,6 +405,11 @@ void srcMLOutput::processEscape(const antlr::RefToken& token) {
 }
 
 void srcMLOutput::startUnit(const char* language, const char* dir, const char* filename, const char* version, bool outer) {
+
+  // issue the xml declaration, but only if we want to
+  if (firstconsume && !isoption(OPTION_XMLDECL))
+    xmlTextWriterStartDocument(xout, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
+  firstconsume = false;
 
     // start of main tag
     xmlTextWriterStartElement(xout, BAD_CAST type2name(SUNIT));
