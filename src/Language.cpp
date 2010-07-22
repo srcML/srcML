@@ -94,6 +94,9 @@ int Language::getLanguageFromFilename(const char* const path) {
   // extract the (pure) extension
   const char* extension = getLanguageExtension(path);
 
+  if (!extension)
+    return 0;
+
   // custom extensions
   for (const pair * pos = userext2int + usercount - 1; pos->s != 0; --pos) {
 
