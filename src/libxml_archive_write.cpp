@@ -56,7 +56,6 @@ int archive_write_set_by_name(struct archive *wa, const char *extension)
 // check if archive matches the protocol on the URI
 int archiveWriteMatch_src2srcml(const char * URI) {
   
-  //  fprintf(stderr, "SRC2SRCML MATCH: %s %s\n", URI, root_filename.c_str());
   if (URI == NULL)
       return 0;
 
@@ -74,8 +73,6 @@ int archiveWriteMatch_src2srcml(const char * URI) {
 
 // check if archive matches the protocol on the URI
 int archiveWriteMatch_srcml2src(const char * URI) {
-
-  // fprintf(stderr, "MATCH: %s %s\n", URI, root_filename.c_str());
 
   return 1;
 
@@ -95,7 +92,6 @@ int archiveWriteMatch_srcml2src(const char * URI) {
 
 // setup archive for this URI
 void* archiveWriteRootOpen(const char * URI) {
-  // fprintf(stderr, "ARCHIVE_WRITE_ROOT_OPEN: %s\n", URI);
 
   // save the root URI
   root_filename = URI;
@@ -116,8 +112,6 @@ void setupArchive(const char* path, struct archive *wa) {
 
 // setup archive for this URI
 void* archiveWriteOpen(const char * URI) {
-
-  // fprintf(stderr, "ARCHIVE_WRITE_OPEN: %s\n", URI);
 
   if (!wa) {
 
@@ -142,7 +136,6 @@ void* archiveWriteOpen(const char * URI) {
 	std::string extension = "";
 	for(int pos = start + 1; pos < i + 1; ++pos)
 	  extension += extname[pos];
-	//	fprintf(stderr, "%s\n", extension.c_str());
 	archive_write_set_by_name(wa, extension.c_str());
 
 	i = start;
@@ -167,15 +160,10 @@ void* archiveWriteOpen(const char * URI) {
       else
 	archive_write_set_format_ustar(wa);
       */
-      //      fprintf(stderr, "FORMAT: %s %s\n", extname, archive_format_name(wa));
-
-      //    fprintf(stderr, "ROOT: %s %s %s\n", root_filename.c_str(), archive_compression_name(wa),
-      //    archive_format_name(wa));
 
       archive_write_open_filename(wa, root_filename.c_str());
     } else {
        wa = archive_write_disk_new();
-       fprintf(stderr, "WRITING TO DISK\n");
     }
   }
 
@@ -183,15 +171,11 @@ void* archiveWriteOpen(const char * URI) {
 
   data.clear();
 
-  // fprintf(stderr, "FILE: %s\n", URI);
-
   return wa;
 }
 
 // read from the URI
 int archiveWrite(void * context, const char * buffer, int len) {
-
-  // fprintf(stderr, "ARCHIVE_WRITE_WRITE: %d\n", len);
 
   data.append(buffer, len);
 
@@ -200,8 +184,6 @@ int archiveWrite(void * context, const char * buffer, int len) {
 
 // close the open file
 int archiveWriteClose(void * context) {
-
-  // fprintf(stderr, "ARCHIVE_WRITE_CLOSE: %d\n", filename.size());
 
   if (!wentry) {
     wentry = archive_entry_new();
@@ -227,10 +209,7 @@ int archiveWriteClose(void * context) {
 
 int archiveWriteRootClose(void * context) {
 
-  // fprintf(stderr, "ARCHIVE_WRITE_ROOT_CLOSE\n");
-
   if (wa) {
-    // fprintf(stderr, "FINISHING\n");
     archive_entry_free(wentry);
     archive_write_close(wa);
     archive_write_finish(wa);
