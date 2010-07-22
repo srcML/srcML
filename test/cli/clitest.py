@@ -26,7 +26,7 @@ def checkNoOutput(command, input):
 
 	print os.path.basename(command[0]), ' '.join(command[1:])
 	
-	execute(command, input)
+	executeNoOutput(command, input)
 
 
 def checkError(command, input, error) :
@@ -400,12 +400,12 @@ sxmlfile2 = xml_declaration + """
 check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "2", "-"], nestedfile, sxmlfile2)
 check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "2"], nestedfile, sxmlfile2)
 
-#os.system("rm -f sub/a.cpp sub/b.cpp;")
+os.system("rm -f sub/a.cpp sub/b.cpp;")
 
 checkNoOutput([srcml2src, option.EXPAND_FLAG + '=.'], nestedfile)
 
-#validate(open("sub/a.cpp", "r").read(), sfile1)
-#validate(open("sub/b.cpp", "r").read(), sfile2)
+validate(open("sub/a.cpp", "r").read(), sfile1)
+validate(open("sub/b.cpp", "r").read(), sfile2)
 
 #os.system("rm -f sub/a.cpp sub/b.cpp")
 
@@ -1869,11 +1869,11 @@ f = open('sub/a.cpp.xml', 'w')
 f.write(nestedfile)
 f.close()
 
-#os.system("rm -f sub/a.cpp sub/b.cpp")
+os.system("rm -f sub/a.cpp sub/b.cpp")
 
 checkNoOutput([srcml2src, option.EXPAND_FLAG + '=.', 'sub/a.cpp.xml'], "")
-#validate(open('sub/a.cpp', 'r').read(), sfile1)
-#validate(open('sub/b.cpp', 'r').read(), sfile2)
+validate(open('sub/a.cpp', 'r').read(), sfile1)
+validate(open('sub/b.cpp', 'r').read(), sfile2)
 
 #os.system("rm -f sub/a.cpp sub/b.cpp")
 
