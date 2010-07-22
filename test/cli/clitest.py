@@ -2290,17 +2290,17 @@ a;
 """
 
 srcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
+<unit xmlns="http://www.sdml.info/srcML/src">
 
 <unit language="AspectJ" filename="dir/file.aj">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
-<unit language="C" filename="dir/file.c">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="dir/file.c">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
-<unit language="C++" filename="dir/file.cpp">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="dir/file.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
