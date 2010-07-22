@@ -138,74 +138,48 @@ namespace SAX2ExtractUnitsSrc {
   // start a new output buffer and corresponding file for a unit element
   void startUnit(State* pstate, int nb_attributes, const xmlChar** attributes) {
 
-    // find the directory
-    int dir_index = -1;
+    std::string& path = pstate->whole_path;
+
+    // start the path with the (optional) target directory
+    path = pstate->to_directory;
+
+    // append the directory attribute
     for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5)
       if (strcmp((const char*) attributes[index], UNIT_ATTRIBUTE_DIRECTORY) == 0) {
+	
+	if (!path.empty() && path[path.size() - 1] != '/')
+	  path += '/';
 
-	dir_index = index;
+	path.append((const char*) attributes[index + 3], (const char*) attributes[index + 4]);
 	break;
       }
-    int dir_size = dir_index != -1 ? (const char*) attributes[dir_index + 4] - (const char*) attributes[dir_index + 3] : 0;
 
-    // find the filename
-    int filename_index = -1;
+    // append the filename attribute, recording if we have one
+    bool foundfilename = false;
     for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5)
       if (strcmp((const char*) attributes[index], UNIT_ATTRIBUTE_FILENAME) == 0) {
 
-	filename_index = index;
+	if (!path.empty() && path[path.size() - 1] != '/')
+	  path += '/';
+
+	path.append((const char*) attributes[index + 3], (const char*) attributes[index + 4]);
+
+	foundfilename = true;
 	break;
       }
-    int filename_size = filename_index != -1 ? (const char*) attributes[filename_index + 4] - (const char*) attributes[filename_index + 3] : 0;
 
     // filename is required
-    if (filename_size <= 0) {
+    if (!foundfilename) {
       fprintf(stderr, "Missing filename attribute\n");
       return;
     }
 
-    // create a complete path from the two separate directories and filename attributes
-    //    realloc(pstate->whole_path, dir_size + filename_size + 1);
-    strcpy(pstate->whole_path, pstate->to_directory);
-    if (pstate->to_directory[0])
-      strcat(pstate->whole_path, "/");
-    int size = 0;
-    // if there is a directory, then we need to construct each part of the path
-    if (dir_size > 0) {
-
-      // put the directory into the whole path
-      strncat(pstate->whole_path, (char*) attributes[dir_index + 3], dir_size);
-      //      pstate->whole_path[dir_size] = '\0';
-      size = dir_size;
-
-      strcat(pstate->whole_path, "/");
-    }
-
-    // add on the filename
-    strncat(pstate->whole_path, (const char*) attributes[filename_index + 3], filename_size);
-    size += filename_size;
-
-    //    makedirectories(pstate->whole_path);
-
-    /*
-    // construct the directory subpath by subpath
-    for (char* c = pstate->whole_path; *c; ++c) {
-
-      // replace the path delimiter with a null, mkdir, then put back
-      if (*c == '/') {
-	*c = '\0';
-	mkdir(pstate->whole_path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-	*c = '/';
-      }
-    }
-    */
-
     // output file status message if in verbose mode
     if (isoption(*(pstate->poptions), OPTION_VERBOSE))
-      fprintf(stderr, "%ld\t%s\n", pstate->count, pstate->whole_path);
+      fprintf(stderr, "%ld\t%s\n", pstate->count, path.c_str());
 
     // now create the file itself
-    pstate->output = xmlOutputBufferCreateFilename(pstate->whole_path, pstate->handler, 0);
+    pstate->output = xmlOutputBufferCreateFilename(path.c_str(), pstate->handler, 0);
     if (pstate->output == NULL) {
       fprintf(stderr, "Output buffer error\n");
       xmlStopParser(pstate->ctxt);

@@ -280,7 +280,6 @@ void srcMLUtility::expand(const char* root_filename, const char* format, const c
   state.root_filename = root_filename;
   state.poptions = &options;
   state.handler = xmlFindCharEncodingHandler(output_encoding);
-  state.whole_path = (char*) malloc(5000);
   state.to_directory = to_directory;
   state.unit = -1;
 
@@ -296,8 +295,6 @@ void srcMLUtility::expand(const char* root_filename, const char* format, const c
 
   ctxt->sax = NULL;
 
-  free(state.whole_path);
-
 #ifdef LIBARCHIVE
   if (archiveWriteMatch_srcml2src(root_filename))
     archiveWriteRootClose(0);
@@ -311,7 +308,6 @@ void srcMLUtility::list() {
 
   SAX2ListUnits::State state;
   state.poptions = &options;
-  state.whole_path = (char*) malloc(5000);
 
   xmlSAXHandler sax = SAX2ListUnits::factory();
 
@@ -323,8 +319,6 @@ void srcMLUtility::list() {
   xmlParseDocument(ctxt);
 
   ctxt->sax = NULL;
-
-  free(state.whole_path);
 
   xmlFreeParserCtxt(ctxt);
 }

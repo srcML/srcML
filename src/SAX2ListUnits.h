@@ -36,7 +36,6 @@ namespace SAX2ListUnits {
     xmlParserCtxtPtr ctxt;
     long count;
     OPTION_TYPE* poptions;
-    char* whole_path;
   };
 
   // handle root unit of compound document

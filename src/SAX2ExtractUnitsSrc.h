@@ -41,7 +41,7 @@ namespace SAX2ExtractUnitsSrc {
     xmlCharEncodingHandlerPtr handler;
     OPTION_TYPE* poptions;
     xmlOutputBufferPtr output;
-    char* whole_path;
+    std::string whole_path;
     const char* to_directory;
   };
 
