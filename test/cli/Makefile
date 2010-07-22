@@ -18,3 +18,4 @@ clean :
 	rm -f filelistab
 	rm -f sub/*
 	rmdir sub
+	rm -r dir
