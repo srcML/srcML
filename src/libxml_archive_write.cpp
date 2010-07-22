@@ -27,11 +27,29 @@ static std::string data;
 
 static bool isstdout = false;
 
-/* A table that maps extensions to functions. */
-static struct { const char *extension; int (*setter)(struct archive *); } extensions[] =
+/* A table that maps compressions to functions. */
+static struct { const char *compression; int (*setter)(struct archive *); } compressions[] =
   {
     { "gz",archive_write_set_compression_gzip },
     { "bz2",archive_write_set_compression_bzip2 },
+    { 0,0 }
+  };
+
+int archive_write_set_compression_by_name(struct archive *wa, const char *compression)
+{
+  int i;
+
+  for (i = 0; compressions[i].compression != NULL; i++) {
+    if (strcmp(compression, compressions[i].compression) == 0)
+      return ((compressions[i].setter)(wa));
+  }
+
+  return (ARCHIVE_FATAL);
+}
+
+/* A table that maps formats to functions. */
+static struct { const char *format; int (*setter)(struct archive *); } formats[] =
+  {
     { "cpio",archive_write_set_format_cpio },
     { "tar",archive_write_set_format_pax_restricted },
 #if ARCHIVE_VERSION_STAMP >= 2008000
@@ -40,13 +58,13 @@ static struct { const char *extension; int (*setter)(struct archive *); } extens
     { 0,0 }
   };
 
-int archive_write_set_by_name(struct archive *wa, const char *extension)
+int archive_write_set_format_by_name(struct archive *wa, const char *format)
 {
   int i;
 
-  for (i = 0; extensions[i].extension != NULL; i++) {
-    if (strcmp(extension, extensions[i].extension) == 0)
-      return ((extensions[i].setter)(wa));
+  for (i = 0; formats[i].format != NULL; i++) {
+    if (strcmp(format, formats[i].format) == 0)
+      return ((formats[i].setter)(wa));
   }
 
   return (ARCHIVE_FATAL);
@@ -136,7 +154,11 @@ void* archiveWriteOpen(const char * URI) {
 	std::string extension = "";
 	for(int pos = start + 1; pos < i + 1; ++pos)
 	  extension += extname[pos];
-	archive_write_set_by_name(wa, extension.c_str());
+	archive_write_set_compression_by_name(wa, extension.c_str());
+	int setarchive = archive_write_set_format_by_name(wa, extension.c_str());
+
+	if(setarchive != ARCHIVE_FATAL)
+	  break;
 
 	i = start;
       }
