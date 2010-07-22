@@ -1274,6 +1274,9 @@ void process_dir(srcMLTranslator& translator, const char* dname, process_options
     sline.resize(basesize);
     sline += entry->d_name;
 
+    if(strcmp(sline.c_str(), poptions.srcml_filename) == 0)
+      continue;
+
     // translate the file listed in the input file using the directory and filename extracted from the path
     src2srcml_file(translator,
 		   sline.c_str(),
