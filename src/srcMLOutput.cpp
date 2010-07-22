@@ -338,7 +338,7 @@ const char* srcMLOutput::token2name(const antlr::RefToken& token) const {
 
 const char* srcMLOutput::type2name(int token_type) const {
 
-  static char s[512];
+  static std::string name;
 
   const char* tagname = ElementNames[token_type];
 
@@ -349,11 +349,10 @@ const char* srcMLOutput::type2name(int token_type) const {
   // non-default namespace name
   const char* prefix = num2prefix[(int)ElementPrefix[token_type]];
   if (prefix[0] != '\0') {
-    
-    strcpy(s, prefix);
-    strcat(s, ":");
-    strcat(s, tagname);
-    return s;
+     name = prefix;
+     name += ':';
+     name.append(tagname);
+     return name.c_str();
   }
 
   // default namespace name
