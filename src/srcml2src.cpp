@@ -756,6 +756,12 @@ int process_args(int argc, char* argv[], process_options & poptions)
       // param name
       poptions.params[poptions.paramcount++] = optarg;
       
+      // must be both name and value, but value could be empty
+      if (!strchr(optarg, '=')) {
+	fprintf(stderr, "%s: Param name and value must be given.\n", argv[0]);
+	exit(1);
+      }
+
       // param value
       end = asg_split(optarg);
       poptions.params[poptions.paramcount] = (char*) malloc(strlen(end) + 1 + 2);
@@ -769,6 +775,12 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+
+      // must be both name and value, but value could be empty
+      if (!strchr(optarg, '=')) {
+	fprintf(stderr, "%s: Param name and value must be given.\n", argv[0]);
+	exit(1);
+      }
 
       // param name
       poptions.params[poptions.paramcount++] = optarg;
