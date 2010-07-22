@@ -9,8 +9,8 @@
 #include <libxml/nanohttp.h>
 #include <libxml/nanoftp.h>
 
-static const int NUMARCHIVES = 4;
-static const char* ARCHIVE_FILTER_EXTENSIONS[] = {"tar", "zip", "tgz", "cpio", "gz", "bz2", 0};
+static const int NUMARCHIVES = 5;
+static const char* ARCHIVE_FILTER_EXTENSIONS[] = {"tar", "zip", "tgz", "cpio", "shar", "gz", "bz2", 0};
 
 static struct archive* a = 0;
 static int status = 0;
@@ -141,7 +141,7 @@ static int archive_read_close_http_callback(struct archive* a,
 // setup archive for this URI
 void* archiveReadOpen(const char* URI) {
 
-  //  fprintf(stderr, "ARCHIVE_OPEN\n");
+  fprintf(stderr, "ARCHIVE_OPEN\n");
 
   if (!archiveReadMatch(URI))
     return NULL;
@@ -221,19 +221,19 @@ int archiveReadClose(void* context) {
 // read from the URI
 int archiveRead(void* context, char* buffer, int len) {
 
-  //  fprintf(stderr, "ARCHIVE_READ\n");
+  fprintf(stderr, "ARCHIVE_READ\n");
 
   if (status != ARCHIVE_OK)
     return 0;
 
   size_t size = archive_read_data(a, buffer, len);
+  fprintf(stderr, "SIZE: %d\n", size);
+
   if (size < 0)
     return 0;
 
   if (size == 0)
     return 0;
-
-  //  fprintf(stderr, "SIZE: %d\n", size);
 
   return size;
 }

@@ -34,7 +34,9 @@ static struct { const char *extension; int (*setter)(struct archive *); } extens
     { "bz2",archive_write_set_compression_bzip2 },
     { "cpio",archive_write_set_format_cpio },
     { "tar",archive_write_set_format_pax_restricted },
+#if ARCHIVE_VERSION_STAMP >= 2008000
     { "zip",archive_write_set_format_zip },
+#endif
     { 0,0 }
   };
 
@@ -173,6 +175,7 @@ void* archiveWriteOpen(const char * URI) {
       archive_write_open_filename(wa, root_filename.c_str());
     } else {
        wa = archive_write_disk_new();
+       fprintf(stderr, "WRITING TO DISK\n");
     }
   }
 
