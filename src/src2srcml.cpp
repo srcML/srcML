@@ -560,6 +560,9 @@ int main(int argc, char* argv[]) {
       }
     }
 
+    if(count == 0)
+      exit(STATUS_INPUTFILE_PROBLEM);
+
   } catch (srcEncodingException) {
     fprintf(stderr, "Translation encoding problem\n");
     exit(STATUS_UNKNOWN_ENCODING);
