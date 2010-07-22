@@ -78,6 +78,8 @@ int archiveReadMatch(const char* URI) {
 
 // setup archive root for this URI
 int archiveReadStatus() {
+  if (status != ARCHIVE_OK)
+    return 0;
 
   return status;
 }
