@@ -276,7 +276,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 			 )
   : input(ints), xout(0), srcml_filename(filename), unit_language(language), unit_dir(0), unit_filename(0),
     unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(curi), openelementcount(0), curline(0),
-    curcolumn(0), tabsize(ts)
+    curcolumn(0), tabsize(ts), firstconsume(true)
 {
 
   // open the output text writer stream
@@ -286,15 +286,12 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
     fprintf(stderr, "Unable to open output file %s\n", srcml_filename);
     exit(1);
   }
-
-  // issue the xml declaration, but only if we want to
-  if (!isoption(OPTION_XMLDECL))
-    xmlTextWriterStartDocument(xout, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
 }
 
 srcMLOutput::~srcMLOutput() {
 
-  xmlTextWriterEndDocument(xout);
+  if (!firstconsume)
+    xmlTextWriterEndDocument(xout);
 
   xmlFreeTextWriter(xout);
 }
@@ -305,6 +302,11 @@ void srcMLOutput::setTokenStream(TokenStream& ints) {
 }
 
 void srcMLOutput::consume(const char* language, const char* directory, const char* filename, const char* version) {
+
+ // issue the xml declaration, but only if we want to
+  if (firstconsume && !isoption(OPTION_XMLDECL))
+    xmlTextWriterStartDocument(xout, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
+  firstconsume = false;
 
   // store attributes so that first occurrence of unit element will be correct
   unit_dir = directory;

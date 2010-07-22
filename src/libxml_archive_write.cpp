@@ -103,6 +103,15 @@ void* archiveWriteRootOpen(const char * URI) {
   return 0;
 }
 
+/*
+  Setup the format and compression for archive wa
+  based on the path.
+*/
+void setupArchive(const char* path, struct archive *wa) {
+
+}
+
+
 // setup archive for this URI
 void* archiveWriteOpen(const char * URI) {
 

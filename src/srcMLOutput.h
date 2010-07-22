@@ -83,6 +83,8 @@ class srcMLOutput : public srcMLParserTokenTypes {
   int curcolumn;
   int tabsize;
 
+  bool firstconsume;
+
   int consume_next();
 
   inline const char* type2name(int token_type) const;
