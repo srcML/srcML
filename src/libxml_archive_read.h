@@ -18,6 +18,8 @@ const char* archiveReadFilename(const char* URI);
 // setup archive root for this URI
 int archiveReadStatus();
 
+bool archiveIsDir();
+
 // setup archive for this URI
 void* archiveReadOpen(const char* URI);
 

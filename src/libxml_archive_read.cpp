@@ -19,6 +19,11 @@ static struct archive_entry* ae = 0;
 
 static std::string root_filename;
 
+bool archiveIsDir() {
+
+  return ae && archive_entry_filetype(ae) == AE_IFDIR;
+}
+
 // check if file has an archive extension
 bool isArchiveRead() {
 
