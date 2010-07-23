@@ -664,7 +664,6 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       exit(option_error_status(optopt));
     }
 
-    char* end = 0;
     switch(c) {
 
     case HELP_FLAG_SHORT: 
