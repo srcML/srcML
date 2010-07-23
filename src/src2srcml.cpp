@@ -484,18 +484,6 @@ int main(int argc, char* argv[]) {
 #endif
 
   try {
-    /*
-    // for single file specified on command line, grab the language from the extension
-    if (poptions.language == 0 && input_arg_count == 1) {
-
-      char* path = argv[input_arg_start];
-      poptions.language = Language::getLanguageFromFilename(path);
-    }
-
-    // turnon cpp namespace for non Java-based languages
-    if (!(poptions.language == srcMLTranslator::LANGUAGE_JAVA || poptions.language == srcMLTranslator::LANGUAGE_ASPECTJ))
-      options |= OPTION_CPP;
-    */
 
     // translator from input to output using determined language
     srcMLTranslator translator(poptions.language == 0 ? DEFAULT_LANGUAGE : poptions.language, poptions.src_encoding, poptions.xml_encoding, poptions.srcml_filename, options, poptions.given_directory, poptions.given_filename, poptions.given_version, urisprefix, poptions.tabsize);
