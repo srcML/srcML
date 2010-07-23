@@ -894,16 +894,16 @@ validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 ##
 # filename flag
 srcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="foo"/>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="foo.cpp"/>
 """
 
 fsrcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="foo"/>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="foo.cpp"/>
 """
-checkallformsfile(src2srcml, 'sub/a.cpp', option.FILENAME_FLAG_SHORT, option.FILENAME_FLAG, "foo", "", fsrcml)
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.FILENAME_FLAG_SHORT, 'foo', '-o', 'sub/a.cpp.xml'], sfile1, "")
+checkallformsfile(src2srcml, 'sub/a.cpp', option.FILENAME_FLAG_SHORT, option.FILENAME_FLAG, "foo.cpp", "", fsrcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.FILENAME_FLAG_SHORT, 'foo.cpp', '-o', 'sub/a.cpp.xml'], sfile1, "")
 validate(open('sub/a.cpp.xml', 'r').read(), srcml)
-check([src2srcml, option.FILENAME_FLAG_SHORT, 'foo', 'sub/a.cpp','-o', 'sub/a.cpp.xml'], "", "")
+check([src2srcml, option.FILENAME_FLAG_SHORT, 'foo.cpp', 'sub/a.cpp','-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
 ##
