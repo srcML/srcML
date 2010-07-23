@@ -22,6 +22,7 @@
 
 #include "Language.h"
 #include <regex.h>
+#include <algorithm>
 
 pair Language::lang2int[] = {
     { LanguageName::LANGUAGE_C, LANGUAGE_C },
@@ -62,14 +63,11 @@ const char* getLanguageExtension(const char * const inpath)
   static std::string extension;
 
   // reversed copy of the path
-  std::string path;
-  int length = strlen(inpath);
-  path.reserve(length);
-  for (int i = 0; i < length; ++i)
-    path += inpath[(length - 1) - i];
+  std::string path(inpath);
+  std::reverse(path.begin(), path.end());
 
   // setup the regular expression
-  static regex_t preg;
+  static regex_t preg = { 0 };
   static int errorcode = regcomp(&preg, regex, REG_EXTENDED);
 
   // evalue the regex
@@ -77,9 +75,8 @@ const char* getLanguageExtension(const char * const inpath)
   errorcode = errorcode || regexec(&preg, path.c_str(), 3, pmatch, 0);
 
   // extract the extension from the path, reversing as we go
-  extension = "";
-  for(int i = 0; i < pmatch[2].rm_eo - pmatch[2].rm_so; ++i)
-    extension += path[pmatch[2].rm_eo - (i + 1)];
+  extension.assign(&path[pmatch[2].rm_so], &path[pmatch[2].rm_eo]);
+  std::reverse(extension.begin(), extension.end());
 
   // if we have a non-blank extension, return that
   if (extension.empty())
