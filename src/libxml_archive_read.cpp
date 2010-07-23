@@ -8,6 +8,7 @@
 #include <string>
 #include <libxml/nanohttp.h>
 #include <libxml/nanoftp.h>
+#include <vector>
 
 static const int NUMARCHIVES = 5;
 static const char* ARCHIVE_FILTER_EXTENSIONS[] = {"tar", "zip", "tgz", "cpio", "shar", "gz", "bz2", 0};
@@ -114,10 +115,10 @@ ssize_t
 archive_read_http_callback(struct archive* a,
 					   void* _client_data, const void** _buffer) {
 
-  static char data[512];
-  *_buffer = data;
-  int len = 510;
-  int size = ishttp ? xmlNanoHTTPRead(mcontext, data, len) : xmlNanoFTPRead(mcontext, data, len);
+  static const int len = 4096;
+  static std::vector<char> data(len);
+  *_buffer = &data[0];
+  int size = ishttp ? xmlNanoHTTPRead(mcontext, &data[0], len) : xmlNanoFTPRead(mcontext, &data[0], len);
 
   return size;
 }
