@@ -1154,7 +1154,23 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       afilename = result ? strdup(result) : 0;
     }
 
-    if (archiveReadStatus() < 0 ) {
+    // skip any directories
+    if (archiveIsDir()) {
+      
+      if (!isoption(options, OPTION_QUIET)) {
+	if (isoption(options, OPTION_VERBOSE))
+	  fprintf(stderr, "Skipping directory '%s'.\n", afilename);
+	else
+	  fprintf(stderr, "%s:  Skipping directory '%s'.\n", PROGRAM_NAME, afilename);
+      }
+      /*
+    //    const char* posend = rindex(afilename, '/');
+    const char* posend = 0;
+    if (posend && *posend && (*(posend + 1) == '.')) {
+      fprintf(stderr, "%s: Skip this one %s\n", PROGRAM_NAME, afilename);
+      archiveReadClose();
+      */
+    } else if (archiveReadStatus() < 0 ) {
       fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
       if (first)
 	return;
@@ -1202,7 +1218,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 	else
 	  fprintf(stderr, "%s:  Skipping '%s'.  No language can be determined.\n", PROGRAM_NAME, nfilename);
       }
-
+      archiveReadClose();
     } else {
 
     // now that we have the language, turnon cpp namespace for non Java-based languages
