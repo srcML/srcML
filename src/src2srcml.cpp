@@ -1131,7 +1131,7 @@ Language::registerUserExt( LanguageName::LANGUAGE_CXX_0X, LANGUAGE_CXX_0X },
 
 void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count) {
 
-  // handle directories specially
+  // handle local directories specially
   struct stat instat;
   stat(path, &instat);
   if (S_ISDIR(instat.st_mode)) {
@@ -1158,13 +1158,15 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     // start with the original options
     //    options = save_options;
 
-    // if using libarchive, then get the filename (which starts the open)
+    // if using libarchive, then get the filename
+    // this will open the whole archive if it isn't already
     if (archiveReadMatch(path)) {
       const char* result = archiveReadFilename(path);
 
       afilename = result ? strdup(result) : 0;
     }
 
+    // okay, so we may have a file error and be unable to open it
     if (archiveReadStatus() < 0 ) {
       fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
       if (first)
@@ -1172,78 +1174,79 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
     } else {
 
-    if (isArchiveRead()) {
-      isarchive = true;
-      options |= OPTION_NESTED;
-    }
+      //
+      if (isArchiveRead()) {
+	isarchive = true;
+	options |= OPTION_NESTED;
+      }
   
-    // in verbose mode output the currently processed filename
-    if (first && archiveReadMatch(path) && isoption(options, OPTION_VERBOSE)
-	&& (strcmp(archiveReadCompression(), "none")))
-      fprintf(stderr, "Compression:\t%s\n", archiveReadCompression());
+      // in verbose mode output the currently processed filename
+      if (first && archiveReadMatch(path) && isoption(options, OPTION_VERBOSE)
+	  && (strcmp(archiveReadCompression(), "none")))
+	fprintf(stderr, "Compression:\t%s\n", archiveReadCompression());
 
-    // in verbose mode output the currently processed filename
-    if (first && isArchiveRead() && isoption(options, OPTION_VERBOSE))
-      fprintf(stderr, "Format:\t%s\n", archiveReadFormat());
+      // in verbose mode output the currently processed filename
+      if (first && isArchiveRead() && isoption(options, OPTION_VERBOSE))
+	fprintf(stderr, "Format:\t%s\n", archiveReadFormat());
 
-    first = false;
+      first = false;
 
 #endif
 
-    // find the separate dir and filename
-    const char* ndir = dir;
-    const char* nfilename = filename;
-    if (strcmp(path, "-") && !nfilename)
-	  nfilename = path;
-    if (afilename)
-      nfilename = afilename;
+      // find the separate dir and filename
+      const char* ndir = dir;
+      const char* nfilename = filename;
+      if (strcmp(path, "-") && !nfilename)
+	nfilename = path;
+      if (afilename)
+	nfilename = afilename;
 
-    // language (for this item in archive mode) based on extension, if not specified
-    reallanguage = language;
-    if (reallanguage == 0 && nfilename)
-      reallanguage = Language::getLanguageFromFilename(nfilename);
-    if (reallanguage == 0 && !isoption(options, OPTION_SKIP_DEFAULT))
-      reallanguage = DEFAULT_LANGUAGE;
-    if (!reallanguage) {
-    //    if (!archiveReadMatch(nfilename) && !reallanguage) {
+      // language (for this item in archive mode) based on extension, if not specified
+      reallanguage = language;
+      if (reallanguage == 0 && nfilename)
+	reallanguage = Language::getLanguageFromFilename(nfilename);
+      if (reallanguage == 0 && !isoption(options, OPTION_SKIP_DEFAULT))
+	reallanguage = DEFAULT_LANGUAGE;
+      if (!reallanguage) {
+	//    if (!archiveReadMatch(nfilename) && !reallanguage) {
 
-      if (!isoption(options, OPTION_QUIET)) {
+	if (!isoption(options, OPTION_QUIET)) {
+	  if (isoption(options, OPTION_VERBOSE))
+	    fprintf(stderr, "Skipping '%s'.  No language can be determined.\n", nfilename);
+	  else
+	    fprintf(stderr, "%s:  Skipping '%s'.  No language can be determined.\n", PROGRAM_NAME, nfilename);
+	}
+
+      } else {
+
+	// now that we have the language, turnon cpp namespace for non Java-based languages
+	if (!(reallanguage == srcMLTranslator::LANGUAGE_JAVA || reallanguage == srcMLTranslator::LANGUAGE_ASPECTJ))
+	  options |= OPTION_CPP;
+
+	// another file
+	++count;
+
+	// in verbose mode output the currently processed filename
 	if (isoption(options, OPTION_VERBOSE))
-	  fprintf(stderr, "Skipping '%s'.  No language can be determined.\n", nfilename);
-	else
-	  fprintf(stderr, "%s:  Skipping '%s'.  No language can be determined.\n", PROGRAM_NAME, nfilename);
+	  fprintf(stderr, "%d\t%s", count, !isarchive ? path : afilename);
+
+	try {
+	  translator.translate(path, ndir, nfilename, version, reallanguage, tabsize);
+
+	} catch (FileError) {
+
+	  if (dir)
+	    fprintf(stderr, "%s error: file \'%s/%s\' does not exist.\n", PROGRAM_NAME, dir, nfilename);
+	  else
+	    fprintf(stderr, "%s error: file \'%s\' does not exist.\n", PROGRAM_NAME, nfilename);
+
+	  exit(STATUS_INPUTFILE_PROBLEM);
+	}
       }
 
-    } else {
-
-    // now that we have the language, turnon cpp namespace for non Java-based languages
-    if (!(reallanguage == srcMLTranslator::LANGUAGE_JAVA || reallanguage == srcMLTranslator::LANGUAGE_ASPECTJ))
-      options |= OPTION_CPP;
-
-    // another file
-    ++count;
-
-    // in verbose mode output the currently processed filename
-    if (isoption(options, OPTION_VERBOSE))
-      fprintf(stderr, "%d\t%s", count, !isarchive ? path : afilename);
-
-    try {
-      translator.translate(path, ndir, nfilename, version, reallanguage, tabsize);
-
-    } catch (FileError) {
-
-      if (dir)
-	fprintf(stderr, "%s error: file \'%s/%s\' does not exist.\n", PROGRAM_NAME, dir, nfilename);
-      else
-	fprintf(stderr, "%s error: file \'%s\' does not exist.\n", PROGRAM_NAME, nfilename);
-
-      exit(STATUS_INPUTFILE_PROBLEM);
-    }
-    }
-
-    // in verbose mode output end info about this file
-    if (isoption(options, OPTION_VERBOSE))
-      fprintf(stderr, "\n");
+      // in verbose mode output end info about this file
+      if (isoption(options, OPTION_VERBOSE))
+	fprintf(stderr, "\n");
     }
 
     // compound documents are interrupted gracefully

@@ -85,6 +85,7 @@ int archiveReadStatus() {
 
 const char* archiveReadFilename(const char* URI) {
 
+  // if we haven't opened the archive, then do so now
   if (!a)
     archiveReadOpen(URI);
 
