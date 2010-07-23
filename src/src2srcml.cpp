@@ -1217,6 +1217,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 	    fprintf(stderr, "%s:  Skipping '%s'.  No language can be determined.\n", PROGRAM_NAME, nfilename);
 	}
 
+	archiveReadClose();
       } else {
 
 	// now that we have the language, turnon cpp namespace for non Java-based languages

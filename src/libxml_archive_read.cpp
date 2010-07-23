@@ -176,18 +176,26 @@ void* archiveReadOpen(const char* URI) {
     if (status != ARCHIVE_OK)
       return 0;
 
-    if (archive_entry_filetype(ae) == AE_IFDIR)
-      archiveReadClose(mcontext);
+    //    while (archive_entry_filetype(ae) == AE_IFDIR)
+    //      archiveReadClose(mcontext);
   }
 
   return a;
 }
 
 // close the open file
+int archiveReadClose() {
+
+  archiveReadClose(mcontext);
+}
+
+
+
+// close the open file
 int archiveReadClose(void* context) {
 
-  if (context == NULL)
-    return -1;
+  //  if (context == NULL)
+  //    return -1;
 
   if (status != ARCHIVE_OK)
     return 0;
