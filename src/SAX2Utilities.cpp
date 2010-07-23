@@ -18,14 +18,15 @@ const char* xmlnsprefix(const char* prefix) {
 
 const char* qname(const char* prefix, const char* localname) {
 
-      if (prefix) {
-	static char tag[256];
-	strcpy(tag, prefix);
-	strcat(tag, ":");
-	strcat(tag, localname);
-	return tag;
-      } else
-	return localname;
+  static std::string tag;
+
+  if (prefix) {
+    tag = prefix;
+    tag += ':';
+    tag += localname;
+    return tag.c_str();
+  } else
+    return localname;
 }
 
 /*
