@@ -5,15 +5,15 @@
 // expanded prefix for xmlns declaration
 const char* xmlnsprefix(const char* prefix) {
 
-      if (prefix) {
-	static char xmlns[256] = "xmlns:";
-	strcpy(xmlns + 6, (const char*) prefix);
+  static std::string xmlns;
 
-	return xmlns;
+  if (prefix) {
+    xmlns = "xmlns:";
+    xmlns += prefix;
+    return xmlns.c_str();
 
-      } else
-
-	return "xmlns";
+  } else
+    return "xmlns";
 }
 
 const char* qname(const char* prefix, const char* localname) {
