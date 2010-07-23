@@ -17,7 +17,6 @@ static int status = 0;
 static struct archive_entry* ae = 0;
 
 static std::string root_filename;
-static bool isdir = false;
 
 // check if file has an archive extension
 bool isArchiveRead() {
@@ -41,10 +40,6 @@ const char* archiveReadCompression() {
   return !a ? 0 : archive_compression_name(a);
 }
 
- bool archiveIsDir() {
-
-   return isdir;
- }
 // check if archive matches the protocol on the URI
 int archiveReadMatch(const char* URI) {
   
@@ -179,16 +174,11 @@ void* archiveReadOpen(const char* URI) {
     if (status != ARCHIVE_OK)
       return 0;
 
-    mcontext = a;
-    isdir = archive_entry_filetype(ae) == AE_IFDIR;
+    if (archive_entry_filetype(ae) == AE_IFDIR)
+      archiveReadClose(mcontext);
   }
 
   return a;
-}
-
-// close the open file
-int archiveReadClose() {
-  archiveReadClose(mcontext);
 }
 
 // close the open file
@@ -209,8 +199,8 @@ int archiveReadClose(void* context) {
     return 0;
   }
 
-  //  if (archive_entry_filetype(ae) == AE_IFDIR)
-  //    archiveReadClose(context);
+  if (archive_entry_filetype(ae) == AE_IFDIR)
+    archiveReadClose(context);
 
   return 0;
 }

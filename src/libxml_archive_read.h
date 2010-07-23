@@ -26,9 +26,6 @@ int archiveRead(void* context, char* buffer, int len);
 
 // close the open file
 int archiveReadClose(void* context);
-int archiveReadClose();
-
-bool archiveIsDir();
 
 // setup archive root for this URI
 int archiveReadStatus();
