@@ -34,8 +34,19 @@
 #include "URIStream.h"
 #include <getopt.h>
 #include <dirent.h>
+#include <algorithm>
 
 const char* PROGRAM_NAME = "";
+
+struct stringequal {
+  const char *const lhs;
+
+  stringequal(const char *l) : lhs(l) {}
+};
+
+bool operator==(const char* lhs, const stringequal& r) {
+   return std::strcmp(lhs, r.lhs) == 0;
+}
 
 #ifdef CURL
 #include "libxml_curl_io.h"
@@ -440,8 +451,8 @@ int main(int argc, char* argv[]) {
 	
   // make sure user did not specify duplicate prefixes as an option
   for (int i = 0; i < num_prefixes - 1; ++i) {
-    for (int j = i + 1; j < num_prefixes; ++j)
-      if(strcmp(urisprefix[i], urisprefix[j]) == 0) {
+    const char** presult = std::find(&urisprefix[i + 1], &urisprefix[num_prefixes], stringequal(urisprefix[i]));
+    if (presult != (urisprefix + num_prefixes)) {
 
 	fprintf(stderr, "%s: Namespace conflict for ", PROGRAM_NAME);
 	if (urisprefix[i] == '\0') {
@@ -449,10 +460,11 @@ int main(int argc, char* argv[]) {
 	} else {
 	  fprintf(stderr, "prefix \'%s\'\n", urisprefix[i]);
 	}
-	fprintf(stderr, "Prefix URI conflicts:\n  %s\n  %s\n", uris[i].uri, uris[j].uri);
+	fprintf(stderr, "Prefix URI conflicts:\n  %s\n  %s\n", uris[i].uri,
+		uris[presult - &urisprefix[0]]);
 
 	exit(STATUS_INVALID_OPTION_COMBINATION);
-      }
+    }
   }
 
   // automatic interactive use from stdin (not on redirect or pipe)
