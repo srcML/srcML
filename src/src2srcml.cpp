@@ -1130,7 +1130,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
   while (first || !archiveReadStatus()) {
 
     // start with the original options
-    //    options = save_options;
+    options = save_options;
 
     // if using libarchive, then get the filename
     // this will open the whole archive if it isn't already
@@ -1236,6 +1236,8 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       // in verbose mode output end info about this file
       if (isoption(options, OPTION_VERBOSE))
 	fprintf(stderr, "\n");
+
+      options = save_options;
     }
 
     // compound documents are interrupted gracefully

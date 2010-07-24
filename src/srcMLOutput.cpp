@@ -266,6 +266,8 @@ bool srcMLOutput::checkEncoding(const char* encoding) {
   return xmlFindCharEncodingHandler(encoding) != 0;
 }
 
+static int depth = 0;
+
 srcMLOutput::srcMLOutput(TokenStream* ints, 
 			 const char* filename,
 			 const char* language, 
@@ -286,6 +288,8 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
     fprintf(stderr, "Unable to open output file %s\n", srcml_filename);
     exit(1);
   }
+
+  depth = 0;
 }
 
 srcMLOutput::~srcMLOutput() {
@@ -414,16 +418,16 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     xmlTextWriterStartElement(xout, BAD_CAST type2name(SUNIT));
 
     // outer units have namespaces
-    if (outer && !isoption(OPTION_NAMESPACEDECL)) {
+    if (/* outer && */ !isoption(OPTION_NAMESPACEDECL)) {
 
       // figure out which namespaces are needed
       char const * const ns[] = { 
 
 	                    // main srcML namespace declaration always used
-	                    SRCML_SRC_NS_URI, 
+	(depth == 0) ? SRCML_SRC_NS_URI : 0,
 
 			    // main cpp namespace declaration
-			    isoption(OPTION_CPP)      ? SRCML_CPP_NS_URI : 0,
+	isoption(OPTION_CPP) && (isoption(OPTION_NESTED) == !outer)? SRCML_CPP_NS_URI : 0,
 
 			    // optional debugging xml namespace
 			    isoption(OPTION_DEBUG)    ? SRCML_ERR_NS_URI : 0,
@@ -493,6 +497,8 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     // leave space for nested unit
     if (outer && isoption(OPTION_NESTED))
       processText("\n\n", 2);
+
+    ++depth;
 }
 
 void srcMLOutput::processUnit(const antlr::RefToken& token) {
