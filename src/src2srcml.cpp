@@ -396,7 +396,7 @@ int main(int argc, char* argv[]) {
     poptions.srcml_filename = "-";
 
   // if more than one input filename assume nested
-  // (although a single input filename could be an archive)
+  // a single input filename which is an archive is detected during archive processing
   if (input_arg_count > 1)
     options |= OPTION_NESTED;
 
@@ -501,6 +501,7 @@ int main(int argc, char* argv[]) {
       if (!poptions.fname)
         poptions.fname = STDIN;
 
+      // so process the filelist
       process_filelist(translator, poptions, count);
 
     // translate from standard input
@@ -523,10 +524,11 @@ int main(int argc, char* argv[]) {
       // from the full path
       for (int i = input_arg_start; i <= input_arg_end; ++i) {
 	
-	// in verbose mode output the currently processed filename
-	if (isoption(options, OPTION_VERBOSE))
+	// output the currently processed filename
+	if (!isoption(options, OPTION_QUIET))
 	  fprintf(stderr, "Input:\t%s\n", strcmp(argv[i], STDIN) == 0 ? "" : argv[i]);
 
+	// process this command line argument
 	src2srcml_file(translator, argv[i], options,
 		       input_arg_count == 1 ? poptions.given_directory : 0,
 		       input_arg_count == 1 ? poptions.given_filename : 0,
@@ -537,11 +539,11 @@ int main(int argc, char* argv[]) {
       }
     }
 
-    if(count == 0)
+    if (count == 0)
       exit(STATUS_INPUTFILE_PROBLEM);
 
   } catch (srcEncodingException) {
-    fprintf(stderr, "Translation encoding problem\n");
+    fprintf(stderr, "%s: Translation encoding problem\n", PROGRAM_NAME);
     exit(STATUS_UNKNOWN_ENCODING);
   }
 
@@ -598,10 +600,6 @@ int process_args(int argc, char* argv[], process_options & poptions) {
   };
 
   // process all command line options
-  char* embedded;
-  const char* ns_prefix;
-  const char* ns_uri;
-
   while (1) {
     int lastoptind = optind;
     curoption = 0;
@@ -730,77 +728,58 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
 
-      ns_prefix = 0;
-      ns_uri = 0;
+      {
+	// find the start of the embedded uri (if it is in there)
+	const char* ns_uri = 0;
+	if (char* embedded = (char*) strchr(argv[optind - 1], '=')) {
+	  ns_uri = embedded + 1;
+	  *embedded = '\0';
+	}
 
-      // find the ':' or '=' or end of string
-      for (embedded = argv[optind - 1]; *embedded; ++embedded)
-	if (*embedded == ':' || *embedded == '=')
-	  break;
+	// now find the prefix in what is left
+	char* embedded = strchr(argv[optind - 1], ':');
+	const char* ns_prefix = embedded ? embedded + 1 : "";
 
-      // found prefix for sure
-      if (*embedded == '=') {
+	// if no uri, look in the next argument
+	if (!ns_uri) {
+	  if (!(optind < argc && argv[optind][0] != '-')) {
+	    fprintf(stderr, "%s: xmlns option selected but not specified.\n", PROGRAM_NAME);
+	    exit(STATUS_LANGUAGE_MISSING);
+	  }
 
-	ns_prefix = "";
-	ns_uri = embedded + 1;
+	  ns_uri = argv[optind++];
+	}
 
-      } else if (*embedded == ':') {
+	// check uri to turn on specific option
+	process = false;
+	for (int i = 0; i < num_prefixes; ++i)
+	  if (strcmp(ns_uri, uris[i].uri) == 0) {
 
-	ns_prefix = embedded + 1;
+	    options |= uris[i].option;
 
-      } else {
-
-	ns_prefix = "";
-      }
-
-      // look for uri in rest of this argument
-      if (!ns_uri)
-	for (; *embedded; ++embedded)
-	  if (*embedded == '=') {
-	    ns_uri = embedded + 1;
-	    *embedded = '\0';
+	    urisprefix[i] = ns_prefix;
+	    poptions.prefixchange[i] = true;
+	    process = true;
 	    break;
 	  }
 
-      // look for uri in next argument
-      if (!ns_uri) {
-	if (!(optind < argc && argv[optind][0] != '-')) {
-	  fprintf(stderr, "%s: xmlns option selected but not specified.\n", PROGRAM_NAME);
-	  exit(STATUS_LANGUAGE_MISSING);
+	if (!process) {
+	  fprintf(stderr, "%s: invalid namespace \"%s\"\n\n"
+		  "Namespace URI must be on of the following:  \n"
+		  "  %-35s primary srcML namespace\n"
+		  "  %-35s namespace for cpreprocessing elements\n"
+		  "  %-35s namespace for srcML debugging elements\n"
+		  "  %-35s namespace for optional literal elements\n"
+		  "  %-35s namespace for optional operator element\n"
+		  "  %-35s namespace for optional modifier element\n"
+		  "  %-35s namespace for optional position element\n",
+		  argv[0], ns_uri,
+		  SRCML_SRC_NS_URI, SRCML_CPP_NS_URI, SRCML_ERR_NS_URI,
+		  SRCML_EXT_LITERAL_NS_URI, SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_MODIFIER_NS_URI,
+		  SRCML_EXT_POSITION_NS_URI
+		  );
+	  exit(STATUS_INVALID_LANGUAGE);
 	}
-
-	ns_uri = argv[optind++];
-      }
-
-      // check uri to turn on specific option
-      process = false;
-      for (int i = 0; i < num_prefixes; ++i)
-	if (strcmp(ns_uri, uris[i].uri) == 0) {
-
-	  options |= uris[i].option;
-
-	  urisprefix[i] = ns_prefix;
-	  poptions.prefixchange[i] = true;
-	  process = true;
-	  break;
-	}
-
-      if (!process) {
-	fprintf(stderr, "%s: invalid namespace \"%s\"\n\n"
-		"Namespace URI must be on of the following:  \n"
-		"  %-35s primary srcML namespace\n"
-		"  %-35s namespace for cpreprocessing elements\n"
-		"  %-35s namespace for srcML debugging elements\n"
-		"  %-35s namespace for optional literal elements\n"
-		"  %-35s namespace for optional operator element\n"
-		"  %-35s namespace for optional modifier element\n"
-		"  %-35s namespace for optional position element\n",
-		argv[0], ns_uri,
-		SRCML_SRC_NS_URI, SRCML_CPP_NS_URI, SRCML_ERR_NS_URI,
-		SRCML_EXT_LITERAL_NS_URI, SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_MODIFIER_NS_URI,
-		SRCML_EXT_POSITION_NS_URI
-		);
-	exit(STATUS_INVALID_LANGUAGE);
       }
       break;
 
