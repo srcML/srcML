@@ -772,7 +772,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 		  "  %-35s namespace for optional literal elements\n"
 		  "  %-35s namespace for optional operator element\n"
 		  "  %-35s namespace for optional modifier element\n"
-		  "  %-35s namespace for optional position element\n",
+		  "  %-35s namespace for optional position element and attributes\n",
 		  argv[0], ns_uri,
 		  SRCML_SRC_NS_URI, SRCML_CPP_NS_URI, SRCML_ERR_NS_URI,
 		  SRCML_EXT_LITERAL_NS_URI, SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_MODIFIER_NS_URI,
