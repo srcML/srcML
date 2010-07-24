@@ -36,7 +36,7 @@
 #include <dirent.h>
 #include <algorithm>
 
-const char* PROGRAM_NAME = "";
+const char* PROGRAM_NAME = 0;
 
 struct stringequal {
   const char *const lhs;
@@ -48,20 +48,14 @@ bool operator==(const char* lhs, const stringequal& r) {
    return std::strcmp(lhs, r.lhs) == 0;
 }
 
-#ifdef CURL
-#include "libxml_curl_io.h"
-#endif
-
 #ifdef LIBARCHIVE
 #include "libxml_archive_read.h"
 #include "libxml_archive_write.h"
 #endif
 
-int option_error_status(int optopt);
-
-void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count);
-
-using namespace LanguageName;
+#ifdef CURL
+#include "libxml_curl_io.h"
+#endif
 
 const char* const DEBUG_FLAG = "debug";
 const char DEBUG_FLAG_SHORT = 'g';
@@ -163,12 +157,20 @@ const int num_prefixes = sizeof(uris) / sizeof(uris[0]);
 
 void libxml_error(void *ctx, const char *msg, ...) {}
 
+int option_error_status(int optopt);
+
+// translate a file, maybe an archive
+void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count);
+
+using namespace LanguageName;
+
 // output help
 void output_help(const char* name) {
   printf( "Usage: %s [options] <src_infile>... [-o <srcML_outfile>]\n\n"
 
 	  "Translates source-code files in C, C++, and Java into the XML source-code representation srcML.\n"
-	  "Both single and multiple files can be stored in a single srcML document.\n\n"
+	  "Input can be from standard input, a disk file, or an archive file, e.g., tar, cpio, and zip.\n"
+	  "Both single and multiple files can be stored in a srcML archive.\n\n"
 
 	  "By default, output is to stdout.  You can specify a file for output using the --%s or -%c option.\n"
 	  "When no filenames are given input is from stdin and output is to stdout.\n"
@@ -176,7 +178,7 @@ void output_help(const char* name) {
 
     	  "Any input file can be a local filename (FILE) or a URI with the protocols http:, ftp:, or file:\n\n"
 
-	  "Language is based on the file extension, with a default of C++.  It can also be directly\n"
+	  "Language is based on the file extension.  It can also be directly\n"
 	  "set using the --language option.\n"
 	  "\n"
 	  "Options:\n", name, OUTPUT_FLAG, OUTPUT_FLAG_SHORT);
@@ -185,13 +187,13 @@ void output_help(const char* name) {
   printf("  -%c, --%-14s display version number and exit\n\n", VERSION_FLAG_SHORT, VERSION_FLAG);
 
   printf("  --%-18s read list of source file names from INPUT which is a FILE or URI,\n"
-	 "                       to form a compound srcML document\n",
+	 "                       to form a srcML archive\n",
 	  FILELIST_FLAG_FULL);
   printf("  --%-18s ???\n\n", INPUT_FORMAT_FLAG);
   printf("  -%c, --%-14s write result to OUTPUT which is a FILE or URI\n", OUTPUT_FLAG_SHORT, OUTPUT_FLAG_FULL);
   printf("  --%-18s ???\n\n", OUTPUT_FORMAT_FLAG);
 
-  printf("  -%c, --%-14s store output in a compound srcML document, default for multiple input files\n",
+  printf("  -%c, --%-14s store output in a srcML archive, default for multiple input files\n",
 	  COMPOUND_FLAG_SHORT, COMPOUND_FLAG);
 
   printf("  -%c, --%-14s expression mode for translating a single expression not in a statement\n",
@@ -336,9 +338,10 @@ void register_standard_file_extensions();
 
 int main(int argc, char* argv[]) {
 
-  options |= OPTION_SKIP_DEFAULT;
-
+  // exportable to other code
   PROGRAM_NAME = argv[0];
+
+  options |= OPTION_SKIP_DEFAULT;
 
   int exit_status = EXIT_SUCCESS;
 
@@ -366,7 +369,7 @@ int main(int argc, char* argv[]) {
   process_options poptions =
     {
       0,
-      "-",
+      STDIN,
       0,
       0,
       0,
@@ -474,7 +477,7 @@ int main(int argc, char* argv[]) {
   try {
 
     // translator from input to output using determined language
-    srcMLTranslator translator(poptions.language == 0 ? DEFAULT_LANGUAGE : poptions.language,
+    srcMLTranslator translator(poptions.language,
 			       poptions.src_encoding,
 			       poptions.xml_encoding,
 			       poptions.srcml_filename,
