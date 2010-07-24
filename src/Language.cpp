@@ -79,10 +79,7 @@ const char* getLanguageExtension(const char * const inpath)
   std::reverse(extension.begin(), extension.end());
 
   // if we have a non-blank extension, return that
-  if (extension.empty())
-    return 0;
-  else
-    return extension.c_str();
+  return extension.empty() ? 0 : extension.c_str();
 }
 
 // gets the current language based on the extenstion           

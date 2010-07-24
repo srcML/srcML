@@ -750,7 +750,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 	}
 
 	// check uri to turn on specific option
-	bool process = false;
+	bool found = false;
 	for (int i = 0; i < num_prefixes; ++i)
 	  if (strcmp(ns_uri, uris[i].uri) == 0) {
 
@@ -758,11 +758,11 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
 	    urisprefix[i] = ns_prefix;
 	    poptions.prefixchange[i] = true;
-	    process = true;
+	    found = true;
 	    break;
 	  }
 
-	if (!process) {
+	if (!found) {
 	  fprintf(stderr, "%s: invalid namespace \"%s\"\n\n"
 		  "Namespace URI must be on of the following:  \n", argv[0], ns_uri);
 	  for (int i = 0; i < num_prefixes; ++i)
