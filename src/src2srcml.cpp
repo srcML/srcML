@@ -105,7 +105,7 @@ const char FILELIST_FLAG_CODE = 'F';
 const char* const FILELIST_FLAG_FULL = "files-from=INPUT";
 
 const char* const XMLNS_FLAG = "xmlns";
-const char XMLNS_FLAG_CODE = 'X';
+const char XMLNS_FLAG_CODE = 128;
 const char* const XMLNS_DEFAULT_FLAG_FULL = "xmlns=URI";
 const char* const XMLNS_FLAG_FULL = "xmlns:PREFIX=URI";
 
@@ -446,7 +446,7 @@ int main(int argc, char* argv[]) {
 	  fprintf(stderr, "prefix \'%s\'\n", urisprefix[i]);
 	}
 	fprintf(stderr, "Prefix URI conflicts:\n  %s\n  %s\n", uris[i].uri,
-		uris[presult - &urisprefix[0]]);
+		uris[presult - &urisprefix[0]].uri);
 
 	exit(STATUS_INVALID_OPTION_COMBINATION);
     }
