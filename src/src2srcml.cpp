@@ -1187,13 +1187,20 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 	nfilename = afilename;
 
       // language (for this item in archive mode) based on extension, if not specified
+
+      // 1) language may have been specified explicitly
       reallanguage = language;
+
+      // 2) try from the filename (basically the extension)
       if (reallanguage == 0 && nfilename)
 	reallanguage = Language::getLanguageFromFilename(nfilename);
+
+      // 3) default language
       if (reallanguage == 0 && !isoption(options, OPTION_SKIP_DEFAULT))
 	reallanguage = DEFAULT_LANGUAGE;
+
+      // error if can't find a language
       if (!reallanguage) {
-	//    if (!archiveReadMatch(nfilename) && !reallanguage) {
 
 	if (!isoption(options, OPTION_QUIET)) {
 	  if (!nfilename)
@@ -1205,10 +1212,12 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 	    fprintf(stderr, "%s:  Skipping '%s'.  No language can be determined.\n", PROGRAM_NAME, nfilename);
 	}
 
+	// close the file that we don't have a language for
 	archiveReadClose();
+
       } else {
 
-	// now that we have the language, turnon cpp namespace for non Java-based languages
+	// turnon cpp namespace for non Java-based languages
 	if (!(reallanguage == srcMLTranslator::LANGUAGE_JAVA || reallanguage == srcMLTranslator::LANGUAGE_ASPECTJ))
 	  options |= OPTION_CPP;
 
