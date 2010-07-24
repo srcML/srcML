@@ -311,8 +311,8 @@ struct process_options
   // output filename
   const char* srcml_filename;
   const char* fname;
-  const char * input_format;
-  const char * output_format;
+  const char* input_format;
+  const char* output_format;
   int language;
   const char* src_encoding;
   const char* xml_encoding;
@@ -376,14 +376,7 @@ int main(int argc, char* argv[]) {
       0,
       0,
       8,
-      {
-	false,
-	false,
-	false,
-	false,
-	false,
-	false,
-      }
+      {	false, false, false, false, false, false }
     };
 
   gpoptions = &poptions;
@@ -403,11 +396,12 @@ int main(int argc, char* argv[]) {
     poptions.srcml_filename = "-";
 
   // if more than one input filename assume nested
+  // (although a single input filename could be an archive)
   if (input_arg_count > 1)
     options |= OPTION_NESTED;
 
-  // verify that the output filename is not the same as any of the input filenames
 #ifdef __GNUG__
+  // verify that the output filename is not the same as any of the input filenames
   struct stat outstat;
   stat(poptions.srcml_filename, &outstat);
   for (int i = input_arg_start; i <= input_arg_end; ++i) {
@@ -458,8 +452,8 @@ int main(int argc, char* argv[]) {
     }
   }
 
-  // automatic interactive use from stdin (not on redirect or pipe)
 #ifdef __GNUG__
+  // automatic interactive use from stdin (not on redirect or pipe)
   if (input_arg_count == 0 || strcmp(argv[input_arg_start], STDIN) == 0) {
 
     if (isatty(STDIN_FILENO))
@@ -468,19 +462,13 @@ int main(int argc, char* argv[]) {
 #endif
 
 #ifdef LIBARCHIVE
-
+  // all input is through libarchive
   if (!isoption(options, OPTION_FILELIST)) {
     if (xmlRegisterInputCallbacks(archiveReadMatch, archiveReadOpen, archiveRead, archiveReadClose) < 0) {
       fprintf(stderr, "%s: failed to register archive handler\n", argv[0]);
       exit(1);
     }
   }
-  /*
-  if (xmlRegisterOutputCallbacks(archiveWriteMatch_src2srcml, archiveWriteOpen, archiveWrite, archiveWriteClose) < 0) {
-    fprintf(stderr, "%s: failed to register archive handler\n", argv[0]);
-    exit(1);
-  }
-  */
 #endif
 
   try {
@@ -494,7 +482,7 @@ int main(int argc, char* argv[]) {
       fprintf(stderr, "XML encoding:  %s\n", poptions.xml_encoding);
     }
 
-    // filecount for verbose mode
+    // filecount
     int count = 0;
 
 #ifdef __GNUG__
@@ -505,10 +493,13 @@ int main(int argc, char* argv[]) {
     // translate input filenames from list in file
     if (isoption(options, OPTION_FILELIST)) {
 
+      // if we don't have a filelist yet, get it from the first argument
       if (!poptions.fname && input_arg_count > 0)
         poptions.fname = argv[input_arg_start];
+
+      // still no filelist? use stdin
       if (!poptions.fname)
-        poptions.fname = "-";
+        poptions.fname = STDIN;
 
       process_filelist(translator, poptions, count);
 
@@ -518,7 +509,7 @@ int main(int argc, char* argv[]) {
       options &= ~OPTION_SKIP_DEFAULT;
 
       // translate from standard input using any directory, filename and version given on the command line
-      src2srcml_file(translator, "-", options,
+      src2srcml_file(translator, STDIN, options,
 		     poptions.given_directory,
 		     poptions.given_filename,
 		     poptions.given_version,
@@ -534,7 +525,7 @@ int main(int argc, char* argv[]) {
 	
 	// in verbose mode output the currently processed filename
 	if (isoption(options, OPTION_VERBOSE))
-	  fprintf(stderr, "Input:\t%s\n", strcmp(argv[i], "-") == 0 ? "" : argv[i]);
+	  fprintf(stderr, "Input:\t%s\n", strcmp(argv[i], STDIN) == 0 ? "" : argv[i]);
 
 	src2srcml_file(translator, argv[i], options,
 		       input_arg_count == 1 ? poptions.given_directory : 0,
@@ -1181,7 +1172,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       // find the separate dir and filename
       const char* ndir = dir;
       const char* nfilename = filename;
-      if (strcmp(path, "-") && !nfilename)
+      if (strcmp(path, STDIN) && !nfilename)
 	nfilename = path;
       if (afilename)
 	nfilename = afilename;
@@ -1341,7 +1332,7 @@ void process_filelist(srcMLTranslator& translator, process_options& poptions, in
 
       // in verbose mode output the currently processed filename
       if (isoption(options, OPTION_VERBOSE))
-        fprintf(stderr, "Input:\t%s\n", strcmp(line, "-") == 0 ? "" : line);
+        fprintf(stderr, "Input:\t%s\n", strcmp(line, STDIN) == 0 ? "" : line);
 
       // translate the file listed in the input file using the directory and filename extracted from the path
       src2srcml_file(translator,
