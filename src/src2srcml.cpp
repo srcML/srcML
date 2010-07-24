@@ -130,8 +130,6 @@ const char* const EXAMPLE_XML_FILENAME="foo.cpp.xml";
 
 const char FILELIST_COMMENT = '#';
 
-bool process;
-
 struct uridata {
   char const * const uri;
   int option;
@@ -752,7 +750,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 	}
 
 	// check uri to turn on specific option
-	process = false;
+	bool process = false;
 	for (int i = 0; i < num_prefixes; ++i)
 	  if (strcmp(ns_uri, uris[i].uri) == 0) {
 
