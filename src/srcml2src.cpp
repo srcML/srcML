@@ -320,21 +320,6 @@ int main(int argc, char* argv[]) {
   }
 
   /*
-  // skip encoding and specifying encoding
-  if (isoption(options, OPTION_SKIP_ENCODING) && isoption(options, OPTION_TEXT_ENCODING)) {
-
-    std::cerr << NAME << ": Options for skipping encoding and specifying source encoding are incompatible.\n";
-    exit(STATUS_INVALID_OPTION_COMBINATION);
-  }
-
-  // verify that the input file exists
-  struct stat instat;
-  int result = stat(filename, &instat);
-  if ((strcmp(filename, "-") != 0) && result == -1) {
-    fprintf(stderr, "%s: Problem with Input file '%s'\n", NAME, filename);
-    exit(STATUS_INPUTFILE_PROBLEM);
-  }
-
   // verify that the output file is not the same as the input file
 #ifdef __GNUG__
   struct stat outstat;
