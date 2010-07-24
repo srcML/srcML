@@ -783,18 +783,8 @@ int process_args(int argc, char* argv[], process_options & poptions)
       poptions.xpathexpr[poptions.xpathcount++] = optarg;
       break;
 
-      /*
-    case 'C':
-
-      // check for missing argument confused by an argument that looks like an option
-      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
-
-      options |= OPTION_XPATH;
-      poptions.context = optarg;
-      break;
-      */
-
     default:
+      // TODO:  Fix error message
       fprintf(stderr, "WHAT: %d\n", c);
       break;
     };
@@ -881,9 +871,6 @@ void output_info(srcMLUtility& su, int options, int optioncount, int optionorder
 	  printf("%s=\"%s\"\n", su.nsv[i].second.c_str(), su.nsv[i].first.c_str());
 	  
 	}
-	//	for (PROPERTIES_TYPE* iter = su.nsv; iter->first; ++iter)
-	//	  ;
-	//	  printf("%s=\"%s\"\n", iter->second.c_str(), iter->first.c_str());
       }
 
       // output attributes in order specified by the options on the command line
@@ -927,7 +914,6 @@ void output_info(srcMLUtility& su, int options, int optioncount, int optionorder
 	}
       }
 
-      if (isoption(options, OPTION_LONG_INFO) && !isoption(options, OPTION_UNIT) && isatty(STDOUT_FILENO)) {
+      if (isoption(options, OPTION_LONG_INFO) && !isoption(options, OPTION_UNIT) && isatty(STDOUT_FILENO))
 	    printf("files=\"%d", 1);
-	}
 }
