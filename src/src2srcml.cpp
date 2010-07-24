@@ -907,57 +907,52 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
       break;
 
-
     case CPP_MARKUP_ELSE_FLAG_CODE: 
-      if (!cpp_else) {
-	options |= OPTION_CPP_MARKUP_ELSE;
-
-	cpp_else = true;
-
-      } else {
+      if (cpp_else) {
 	fprintf(stderr, "%s: Conflicting options %s and %s selected.\n",
 		argv[0], CPP_MARKUP_ELSE_FLAG, CPP_TEXTONLY_ELSE_FLAG);
 	exit(STATUS_INVALID_OPTION_COMBINATION);
       }
+
+      options |= OPTION_CPP_MARKUP_ELSE;
+      cpp_else = true;
+
       break;
 
     case CPP_TEXTONLY_ELSE_FLAG_CODE: 
-      if (!cpp_else) {
-	options &= ~OPTION_CPP_MARKUP_ELSE;
-
-	cpp_else = true;
-      } else {
+      if (cpp_else) {
 	fprintf(stderr, "%s: Conflicting options %s and %s selected.\n",
 		argv[0], CPP_MARKUP_ELSE_FLAG, CPP_TEXTONLY_ELSE_FLAG);
 	exit(STATUS_INVALID_OPTION_COMBINATION);
       }
+
+      options &= ~OPTION_CPP_MARKUP_ELSE;
+      cpp_else = true;
+
       break;
 
     case CPP_MARKUP_IF0_FLAG_CODE: 
-      if (!cpp_if0) {
-	options |= OPTION_CPP_MARKUP_IF0;
-
-	cpp_if0 = true;
-
-      } else {
+      if (cpp_if0) {
 	fprintf(stderr, "%s: Conflicting options %s and %s selected.\n",
 		argv[0], CPP_MARKUP_IF0_FLAG, CPP_TEXTONLY_IF0_FLAG);
 	exit(STATUS_INVALID_OPTION_COMBINATION);
       }
+
+      options |= OPTION_CPP_MARKUP_IF0;
+      cpp_if0 = true;
+
       break;
 
     case CPP_TEXTONLY_IF0_FLAG_CODE: 
-      if (!cpp_if0) {
-	// clear if previously marked
-	options &= ~OPTION_CPP_MARKUP_IF0;
-
-	cpp_if0 = true;
-
-      } else {
+      if (cpp_if0) {
 	fprintf(stderr, "%s: Conflicting options %s and %s selected.\n",
 		argv[0], CPP_MARKUP_IF0_FLAG, CPP_TEXTONLY_IF0_FLAG);
 	exit(STATUS_INVALID_OPTION_COMBINATION);
       }
+
+      options &= ~OPTION_CPP_MARKUP_IF0;
+      cpp_if0 = true;
+
       break;
 
     default:
