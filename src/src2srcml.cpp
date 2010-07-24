@@ -135,17 +135,18 @@ bool process;
 struct uridata {
   char const * const uri;
   int option;
+  const char* description;
 };
 
 uridata uris[] = {
 
-  { SRCML_SRC_NS_URI,          0 },
-  { SRCML_CPP_NS_URI,          OPTION_CPP },
-  { SRCML_ERR_NS_URI,          OPTION_DEBUG },
-  { SRCML_EXT_LITERAL_NS_URI,  OPTION_LITERAL },
-  { SRCML_EXT_OPERATOR_NS_URI, OPTION_OPERATOR },
-  { SRCML_EXT_MODIFIER_NS_URI, OPTION_MODIFIER },
-  { SRCML_EXT_POSITION_NS_URI, OPTION_POSITION },
+  { SRCML_SRC_NS_URI,          0,               "primary srcML namespace" },
+  { SRCML_CPP_NS_URI,          OPTION_CPP,      "namespace for cpreprocessing elements" },
+  { SRCML_ERR_NS_URI,          OPTION_DEBUG,    "namespace for srcML debugging elements" },
+  { SRCML_EXT_LITERAL_NS_URI,  OPTION_LITERAL,  "namespace for optional literal elements" },
+  { SRCML_EXT_OPERATOR_NS_URI, OPTION_OPERATOR, "namespace for optional operator element"},
+  { SRCML_EXT_MODIFIER_NS_URI, OPTION_MODIFIER, "namespace for optional modifier element"},
+  { SRCML_EXT_POSITION_NS_URI, OPTION_POSITION, "namespace for optional position element and attributes" },
 };
 
 const char* urisprefix[] = {
@@ -765,19 +766,10 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
 	if (!process) {
 	  fprintf(stderr, "%s: invalid namespace \"%s\"\n\n"
-		  "Namespace URI must be on of the following:  \n"
-		  "  %-35s primary srcML namespace\n"
-		  "  %-35s namespace for cpreprocessing elements\n"
-		  "  %-35s namespace for srcML debugging elements\n"
-		  "  %-35s namespace for optional literal elements\n"
-		  "  %-35s namespace for optional operator element\n"
-		  "  %-35s namespace for optional modifier element\n"
-		  "  %-35s namespace for optional position element and attributes\n",
-		  argv[0], ns_uri,
-		  SRCML_SRC_NS_URI, SRCML_CPP_NS_URI, SRCML_ERR_NS_URI,
-		  SRCML_EXT_LITERAL_NS_URI, SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_MODIFIER_NS_URI,
-		  SRCML_EXT_POSITION_NS_URI
-		  );
+		  "Namespace URI must be on of the following:  \n", argv[0], ns_uri);
+	  for (int i = 0; i < num_prefixes; ++i)
+	    fprintf(stderr, "  %-35s %s\n", uris[i].uri, uris[i].description);
+
 	  exit(STATUS_INVALID_LANGUAGE);
 	}
       }
