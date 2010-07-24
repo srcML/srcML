@@ -76,6 +76,7 @@ const char* const POSITION_FLAG = "position";
 const char* const TABS_FLAG = "tabs";
 const char TABS_FLAG_CODE = 'T';
 const char* const TABS_FLAG_FULL = "tabs=NUMBER";
+const int DEFAULT_TABSIZE = 8;
 
 const char* const INTERACTIVE_FLAG = "interactive";
 const char INTERACTIVE_FLAG_SHORT = 'c';
@@ -374,7 +375,7 @@ int main(int argc, char* argv[]) {
       0,
       0,
       0,
-      8,
+      DEFAULT_TABSIZE,
       {	false, false, false, false, false, false }
     };
 
