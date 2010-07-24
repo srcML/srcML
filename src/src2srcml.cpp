@@ -1159,7 +1159,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       if (reallanguage == 0 && nfilename)
 	reallanguage = Language::getLanguageFromFilename(nfilename);
 
-      // 3) default language
+      // 3) default language (if allowed)
       if (reallanguage == 0 && !isoption(options, OPTION_SKIP_DEFAULT))
 	reallanguage = DEFAULT_LANGUAGE;
 
@@ -1187,7 +1187,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
 	// in verbose mode output the currently processed filename
 	if (!isoption(options, OPTION_QUIET))
-	  fprintf(stderr, "%d\t%s", count, !isarchive ? path : afilename);
+	  fprintf(stderr, "%d\t%s", count, nfilename);
 
 	try {
 
