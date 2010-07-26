@@ -1134,13 +1134,16 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
     // figure out the resulting filename
     std::string unit_filename;
+    bool foundfilename = true;
     const char* entry_filename = archiveReadFilename();
     if (entry_filename)
       unit_filename = entry_filename;
     else if (root_filename)
       unit_filename = root_filename;
-    else 
+    else if (strcmp(path, STDIN))
       unit_filename = path;
+    else
+      foundfilename = false;
 
     // special case:  skip directories (in archives)
     if (archiveIsDir()) {
@@ -1206,7 +1209,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     try {
 
       // translate the file
-      translator.translate(path, ndir, unit_filename.c_str(), version, reallanguage, tabsize);
+      translator.translate(path, ndir, foundfilename ? unit_filename.c_str() : 0, version, reallanguage, tabsize);
 
     } catch (FileError) {
 
