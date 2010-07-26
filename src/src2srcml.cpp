@@ -1171,12 +1171,8 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       // error if can't find a language
       if (!reallanguage) {
 
-	if (!isoption(options, OPTION_QUIET)) {
-	  if (!nfilename)
-	    nfilename = "standard input";
-
-	  fprintf(stderr, "Skipping '%s'.  No language can be determined.", nfilename);
-	}
+	if (!isoption(options, OPTION_QUIET))
+	  fprintf(stderr, "Skipping '%s'.  No language can be determined.", nfilename ? nfilename : "standard input");
 
 	// close the file that we don't have a language for
 	archiveReadClose();
