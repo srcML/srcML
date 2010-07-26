@@ -2344,7 +2344,7 @@ f.close()
 
 line = execute(['ls', '-f1', 'dir'], "")
 
-srcml += srcmlstart
+srcml = srcmlstart
 
 for file in line.split('\n') :
 	if file == 'file.aj' :
