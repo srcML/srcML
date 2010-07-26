@@ -2316,7 +2316,7 @@ if os.path.exists("dir"):
 else :
 	os.system("mkdir dir")
 
-f = open("dir/file.cpp", 'w')
+f = open("dir/file.aj", 'w')
 f.write(src)
 f.close()
 
@@ -2324,11 +2324,11 @@ f = open("dir/file.c", 'w')
 f.write(src)
 f.close()
 
-f = open("dir/file.java", 'w')
+f = open("dir/file.cpp", 'w')
 f.write(src)
 f.close()
 
-f = open("dir/file.aj", 'w')
+f = open("dir/file.java", 'w')
 f.write(src)
 f.close()
 
