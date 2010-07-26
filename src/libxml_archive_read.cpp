@@ -18,10 +18,16 @@ static int status = 0;
 static struct archive_entry* ae = 0;
 
 static std::string root_filename;
+static bool first = true;
 
 bool archiveIsDir() {
 
   return ae && archive_entry_filetype(ae) == AE_IFDIR;
+}
+
+bool isArchiveFirst() {
+
+  return first;
 }
 
 // check if file has an archive extension
@@ -141,8 +147,12 @@ void* archiveReadOpen(const char* URI) {
   if (!archiveReadMatch(URI))
     return NULL;
 
+  first = false;
+
   // just in case archiveOpenRoot() was not called
   if (!a) {
+
+    first = true;
     status = 0;
     a = archive_read_new();
     archive_read_support_compression_all(a);

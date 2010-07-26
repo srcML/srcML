@@ -4,6 +4,8 @@
 // current file is an archive
 bool isArchiveRead();
 
+bool isArchiveFirst();
+
 // format (e.g., tar, cpio) of the current file
 const char* archiveReadFormat();
 

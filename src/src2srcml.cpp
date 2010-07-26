@@ -1102,7 +1102,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
   // process the individual file (once), or an archive as many times as it takes
   bool first = true;
-  while (first || !archiveReadStatus()) {
+  do {
 
     // start with the original options
     options = save_options;
@@ -1125,15 +1125,13 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     }
 
     // output compression
-    if (first && isarchive && !isoption(options, OPTION_QUIET)
+    if (isArchiveFirst() && isarchive && !isoption(options, OPTION_QUIET)
 	&& (strcmp(archiveReadCompression(), "none")))
       fprintf(stderr, "Compression:\t%s\n", archiveReadCompression());
 
     // output format
-    if (first && isArchiveRead() && !isoption(options, OPTION_QUIET))
+    if (isArchiveFirst() && isArchiveRead() && !isoption(options, OPTION_QUIET))
       fprintf(stderr, "Format:\t%s\n", archiveReadFormat());
-
-    first = false;
 
     // get the filename
     const char* result = archiveReadFilename();
@@ -1235,7 +1233,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     // done if not an archive
     if (!isarchive)
       break;
-  }
+  } while (!archiveReadStatus());
 #endif
 }
 
