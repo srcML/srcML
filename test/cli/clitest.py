@@ -265,7 +265,7 @@ check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', "-", "-o", "sub/b.cpp.xml"]
 nestedfile1 = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src">
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlnslanguage="C++" filename="sub/a.cpp">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
