@@ -1122,6 +1122,8 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 	    fprintf(stderr, "%s:  Skipping '%s'.  Is a directory.\n", PROGRAM_NAME, afilename);
 	}
 
+	isarchive = true;
+	options |= OPTION_NESTED;
 	archiveReadClose();
 
     } else {
