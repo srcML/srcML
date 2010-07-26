@@ -4,6 +4,7 @@ STATUS_SRC= ../../src/srcmlapps.h
 all : test
 
 test : option.py status.py
+	./libarchivetest.py
 	./clitest.py
 
 option.py : ${OPTION_SRC}
