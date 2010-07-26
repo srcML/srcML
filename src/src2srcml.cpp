@@ -160,7 +160,7 @@ void libxml_error(void *ctx, const char *msg, ...) {}
 int option_error_status(int optopt);
 
 // translate a file, maybe an archive
-void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count);
+void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count, int & skipped);
 
 using namespace LanguageName;
 
@@ -327,8 +327,8 @@ struct process_options
 
 process_options* gpoptions = 0;
 
-void process_dir(srcMLTranslator& translator, const char* dname, process_options& poptions, int& count);
-void process_filelist(srcMLTranslator& translator, process_options& poptions, int& count);
+void process_dir(srcMLTranslator& translator, const char* dname, process_options& poptions, int& count, int & skipped);
+void process_filelist(srcMLTranslator& translator, process_options& poptions, int& count, int & skipped);
 
 // setup options and collect info from arguments
 int process_args(int argc, char* argv[], process_options & poptions);
@@ -497,6 +497,9 @@ int main(int argc, char* argv[]) {
     // filecount
     int count = 0;
 
+    // files skipped
+    int skipped = 0;
+
 #ifdef __GNUG__
     // setup so we can gracefully stop after a file at a time
     pstd::signal(SIGINT, terminate_handler);
@@ -514,7 +517,7 @@ int main(int argc, char* argv[]) {
         poptions.fname = STDIN;
 
       // so process the filelist
-      process_filelist(translator, poptions, count);
+      process_filelist(translator, poptions, count, skipped);
 
     // translate from standard input
     } else if (input_arg_count == 0 || strcmp(argv[input_arg_start], STDIN) == 0) {
@@ -527,7 +530,7 @@ int main(int argc, char* argv[]) {
 		     poptions.given_filename,
 		     poptions.given_version,
 		     poptions.language,
-		     poptions.tabsize, count);
+		     poptions.tabsize, count, skipped);
 
     // translate filenames from the command line
     } else {
@@ -547,7 +550,7 @@ int main(int argc, char* argv[]) {
 		       input_arg_count == 1 ? poptions.given_version : 0,
 		       poptions.language,
 		       poptions.tabsize,
-		       count);
+		       count, skipped);
       }
     }
 
@@ -1070,13 +1073,13 @@ void register_standard_file_extensions()
 
 }
 
-void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count) {
+void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count, int & skipped) {
 
   // handle local directories specially
   struct stat instat;
   stat(path, &instat);
   if (S_ISDIR(instat.st_mode)) {
-    process_dir(translator, path, *gpoptions, count);
+    process_dir(translator, path, *gpoptions, count, skipped);
     return;
   }
 
@@ -1226,7 +1229,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 #endif
 }
 
-void process_dir(srcMLTranslator& translator, const char* dname, process_options& poptions, int& count) {
+void process_dir(srcMLTranslator& translator, const char* dname, process_options& poptions, int& count, int & skipped) {
 
   // by default, all dirs are treated as an archive
   options |= OPTION_NESTED;
@@ -1268,7 +1271,7 @@ void process_dir(srcMLTranslator& translator, const char* dname, process_options
 		   poptions.given_version,
 		   poptions.language,
 		   poptions.tabsize,
-		   count);
+		   count, skipped);
   }
 
   if (!isoption(options, OPTION_RECURSIVE))
@@ -1288,11 +1291,11 @@ void process_dir(srcMLTranslator& translator, const char* dname, process_options
     sline.resize(basesize);
     sline += entry->d_name;
 
-    process_dir(translator, sline.c_str(), poptions, count);
+    process_dir(translator, sline.c_str(), poptions, count, skipped);
   }
 }
 
-void process_filelist(srcMLTranslator& translator, process_options& poptions, int& count) {
+void process_filelist(srcMLTranslator& translator, process_options& poptions, int& count, int & skipped) {
   try {
 
     // translate all the filenames listed in the named file
@@ -1318,7 +1321,7 @@ void process_filelist(srcMLTranslator& translator, process_options& poptions, in
                      poptions.given_version,
                      poptions.language,
                      poptions.tabsize,
-                     count);
+                     count, skipped);
     }
 
   } catch (URIStreamFileError) {
