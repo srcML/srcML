@@ -1132,9 +1132,15 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 	fprintf(stderr, "Format:\t%s\n", archiveReadFormat());
     }
 
-    // get the filename
-    const char* result = archiveReadFilename();
-    const char* entry_filename = result ? strdup(result) : 0;
+    // figure out the resulting filename
+    std::string unit_filename;
+    const char* entry_filename = archiveReadFilename();
+    if (entry_filename)
+      unit_filename = entry_filename;
+    else if (root_filename)
+      unit_filename = root_filename;
+    else 
+      unit_filename = path;
 
     // special case:  skip directories (in archives)
     if (archiveIsDir()) {
@@ -1156,14 +1162,6 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
 #endif
 
-    // find the separate dir and filename
-    const char* ndir = dir;
-    const char* unit_filename = root_filename;
-    if (strcmp(path, STDIN) && !unit_filename)
-      unit_filename = path;
-    if (entry_filename)
-      unit_filename = entry_filename;
-
     // language (for this item in archive mode) based on extension, if not specified
 
     // 1) language may have been specified explicitly
@@ -1172,18 +1170,18 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       reallanguage = language;
 
     // 2) try from the filename (basically the extension)
-    else if (unit_filename)
-      reallanguage = Language::getLanguageFromFilename(unit_filename);
+    else
+      reallanguage = Language::getLanguageFromFilename(unit_filename.c_str());
 
     // 3) default language (if allowed)
-    else if (!isoption(options, OPTION_SKIP_DEFAULT))
+    if (!reallanguage && !isoption(options, OPTION_SKIP_DEFAULT))
       reallanguage = DEFAULT_LANGUAGE;
 
     // error if can't find a language
-    else {
+    if (!reallanguage) {
 
       if (!isoption(options, OPTION_QUIET))
-	fprintf(stderr, "Skipping '%s'.  No language can be determined.\n", unit_filename ? unit_filename : "standard input");
+	fprintf(stderr, "Skipping '%s'.  No language can be determined.\n", unit_filename.c_str() ? unit_filename.c_str() : "standard input");
 
       ++skipped;
 
@@ -1202,19 +1200,20 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
     // output the currently processed filename
     if (!isoption(options, OPTION_QUIET))
-      fprintf(stderr, "%d\t%s\n", count, unit_filename);
+      fprintf(stderr, "%d\t%s\n", count, unit_filename.c_str());
 
+    const char* ndir = dir;
     try {
 
       // translate the file
-      translator.translate(path, ndir, unit_filename, version, reallanguage, tabsize);
+      translator.translate(path, ndir, unit_filename.c_str(), version, reallanguage, tabsize);
 
     } catch (FileError) {
 
       if (dir)
-	fprintf(stderr, "%s error: file \'%s/%s\' does not exist.\n", PROGRAM_NAME, dir, unit_filename);
+	fprintf(stderr, "%s error: file \'%s/%s\' does not exist.\n", PROGRAM_NAME, dir, unit_filename.c_str());
       else
-	fprintf(stderr, "%s error: file \'%s\' does not exist.\n", PROGRAM_NAME, unit_filename);
+	fprintf(stderr, "%s error: file \'%s\' does not exist.\n", PROGRAM_NAME, unit_filename.c_str());
 
       exit(STATUS_INPUTFILE_PROBLEM);
     }
