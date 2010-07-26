@@ -556,6 +556,13 @@ int main(int argc, char* argv[]) {
 
     if (count == 0)
       exit(STATUS_INPUTFILE_PROBLEM);
+    else
+      if(!isoption(options, OPTION_QUIET))
+      {
+	fprintf(stderr, "Files Skipped: %d\n", skipped);
+	fprintf(stderr, "Files Translated: %d\n", count);
+	fprintf(stderr, "Total: %d\n", count + skipped);
+      }
 
   } catch (srcEncodingException) {
     fprintf(stderr, "%s: Translation encoding problem\n", PROGRAM_NAME);
