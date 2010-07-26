@@ -556,13 +556,12 @@ int main(int argc, char* argv[]) {
 
     if (count == 0)
       exit(STATUS_INPUTFILE_PROBLEM);
-    else
-      if(isoption(options, OPTION_NESTED) && !isoption(options, OPTION_QUIET))
-      {
-	fprintf(stderr, "\n");
-	fprintf(stderr, "Files Translated: %d\n", count);
-	fprintf(stderr, "Files Skipped: %d\n", skipped);
-	fprintf(stderr, "Files Total: %d\n", count + skipped);
+
+    else if (isoption(options, OPTION_NESTED) && !isoption(options, OPTION_QUIET)) {
+	fprintf(stderr, "\n"
+		"Files Translated: %d\n"
+		"Files Skipped: %d\n"
+		"Files Total: %d\n", count, skipped, count + skipped);
       }
 
   } catch (srcEncodingException) {
