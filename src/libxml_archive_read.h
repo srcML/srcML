@@ -13,7 +13,7 @@ const char* archiveReadCompression();
 // check if archive matches the protocol on the URI
 int archiveReadMatch(const char* URI);
 
-const char* archiveReadFilename(const char* URI);
+const char* archiveReadFilename();
 
 // setup archive root for this URI
 int archiveReadStatus();

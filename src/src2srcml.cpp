@@ -1113,22 +1113,34 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     // open up the file
     translator.setInput(path);
 
-    // should be okay
+    // check if archive is bad
     if (archiveReadStatus() < 0 ) {
       fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
       if (first)
 	return;
+      // continue??
     }
 
-    // if using libarchive, then get the filename
-    const char* result = archiveReadFilename(path);
-    afilename = result ? strdup(result) : 0;
-
-    // so, do we have an archive?
+    // do we have an archive?
     if (isArchiveRead()) {
       isarchive = true;
       options |= OPTION_NESTED;
     }
+
+    // output compression
+    if (first && isarchive && !isoption(options, OPTION_QUIET)
+	&& (strcmp(archiveReadCompression(), "none")))
+      fprintf(stderr, "Compression:\t%s\n", archiveReadCompression());
+
+    // output format
+    if (first && isArchiveRead() && !isoption(options, OPTION_QUIET))
+      fprintf(stderr, "Format:\t%s\n", archiveReadFormat());
+
+    first = false;
+
+    // get the filename
+    const char* result = archiveReadFilename();
+    afilename = result ? strdup(result) : 0;
 
     // special case:  skip directories (in archives)
     if (archiveIsDir()) {
@@ -1144,19 +1156,9 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
 	// explicitly close, since we are skipping it
 	archiveReadClose();
+
 	continue;
     }
-
-    // in verbose mode output the currently processed filename
-    if (first && archiveReadMatch(path) && isoption(options, OPTION_VERBOSE)
-	&& (strcmp(archiveReadCompression(), "none")))
-      fprintf(stderr, "Compression:\t%s\n", archiveReadCompression());
-
-    // in verbose mode output the currently processed filename
-    if (first && isArchiveRead() && isoption(options, OPTION_VERBOSE))
-      fprintf(stderr, "Format:\t%s\n", archiveReadFormat());
-
-    first = false;
 
 #endif
 
@@ -1192,40 +1194,40 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       // close the file that we don't have a language for
       archiveReadClose();
 
-    } else {
-
-      // turnon cpp namespace for non Java-based languages
-      if (!(reallanguage == srcMLTranslator::LANGUAGE_JAVA || reallanguage == srcMLTranslator::LANGUAGE_ASPECTJ))
-	options |= OPTION_CPP;
-
-      // another file
-      ++count;
-
-      // in verbose mode output the currently processed filename
-      if (!isoption(options, OPTION_QUIET))
-	fprintf(stderr, "%d\t%s", count, nfilename);
-
-      try {
-
-	// translate the file
-	translator.translate(path, ndir, nfilename, version, reallanguage, tabsize);
-
-      } catch (FileError) {
-
-	if (dir)
-	  fprintf(stderr, "%s error: file \'%s/%s\' does not exist.\n", PROGRAM_NAME, dir, nfilename);
-	else
-	  fprintf(stderr, "%s error: file \'%s\' does not exist.\n", PROGRAM_NAME, nfilename);
-
-	exit(STATUS_INPUTFILE_PROBLEM);
-      }
-
-      // in verbose mode output end info about this file
-      if (!isoption(options, OPTION_QUIET))
-	fprintf(stderr, "\n");
-
-      options = save_options;
+      continue;
     }
+
+    // turnon cpp namespace for non Java-based languages
+    if (!(reallanguage == srcMLTranslator::LANGUAGE_JAVA || reallanguage == srcMLTranslator::LANGUAGE_ASPECTJ))
+      options |= OPTION_CPP;
+
+    // another file
+    ++count;
+
+    // in verbose mode output the currently processed filename
+    if (!isoption(options, OPTION_QUIET))
+      fprintf(stderr, "%d\t%s", count, nfilename);
+
+    try {
+
+      // translate the file
+      translator.translate(path, ndir, nfilename, version, reallanguage, tabsize);
+
+    } catch (FileError) {
+
+      if (dir)
+	fprintf(stderr, "%s error: file \'%s/%s\' does not exist.\n", PROGRAM_NAME, dir, nfilename);
+      else
+	fprintf(stderr, "%s error: file \'%s\' does not exist.\n", PROGRAM_NAME, nfilename);
+
+      exit(STATUS_INPUTFILE_PROBLEM);
+    }
+
+    // in verbose mode output end info about this file
+    if (!isoption(options, OPTION_QUIET))
+      fprintf(stderr, "\n");
+
+    options = save_options;
 
     // compound documents are interrupted gracefully
     if (isoption(options, OPTION_TERMINATE))

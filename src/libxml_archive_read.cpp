@@ -88,7 +88,7 @@ int archiveReadStatus() {
   return status;
 }
 
-const char* archiveReadFilename(const char* URI) {
+const char* archiveReadFilename() {
 
   if (!ae || (archiveReadStatus() != ARCHIVE_OK && archiveReadStatus() != ARCHIVE_EOF))
     return 0;
