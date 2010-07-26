@@ -53,7 +53,18 @@ static UTF8CharBuffer* pinput = 0;
 // translate from input stream to output stream
 void srcMLTranslator::setInput(const char* path) {
 
-  pinput = new UTF8CharBuffer(path, encoding);
+  try {
+    pinput = new UTF8CharBuffer(path, encoding);
+
+  } catch (const std::exception& e) {
+    fprintf(stderr, "SRCML Exception: %s\n", e.what());
+  }
+  catch (UTF8FileError) {
+    throw FileError();
+  }
+  catch (...) {
+    fprintf(stderr, "ERROR\n");
+  }
 }
 
 // translate from input stream to output stream
