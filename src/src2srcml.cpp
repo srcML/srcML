@@ -1238,7 +1238,8 @@ void process_dir(srcMLTranslator& translator, const char* dname, process_options
 
   // process all non-directory files
   std::string sline = dname;
-  sline += "/";
+  if (!sline.empty() && sline[sline.size() - 1] != '/')
+    sline += "/";
   int basesize = sline.length();
   while (struct dirent* entry = readdir(dir)) {
 
