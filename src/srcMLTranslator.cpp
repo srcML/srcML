@@ -48,6 +48,14 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
 
 }
 
+static UTF8CharBuffer* pinput = 0;
+
+// translate from input stream to output stream
+void srcMLTranslator::setInput(const char* path) {
+
+  pinput = new UTF8CharBuffer(path, encoding);
+}
+
 // translate from input stream to output stream
 void srcMLTranslator::translate(const char* path, const char* unit_directory,
 				const char* unit_filename, const char* unit_version,
@@ -66,7 +74,6 @@ void srcMLTranslator::translate(const char* path, const char* unit_directory,
       antlr::TokenStreamSelector selector;
 
       // srcML lexical analyzer from standard input
-      UTF8CharBuffer* pinput = new UTF8CharBuffer(path, encoding);
       KeywordCPPLexer lexer(pinput, encoding, language);
       lexer.setSelector(&selector);
       lexer.setTabsize(tabsize);
