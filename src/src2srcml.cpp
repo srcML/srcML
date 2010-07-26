@@ -559,8 +559,9 @@ int main(int argc, char* argv[]) {
     else
       if(!isoption(options, OPTION_QUIET))
       {
-	fprintf(stderr, "Files Skipped: %d\n", skipped);
+	fprintf(stderr, "\n");
 	fprintf(stderr, "Files Translated: %d\n", count);
+	fprintf(stderr, "Files Skipped: %d\n", skipped);
 	fprintf(stderr, "Total: %d\n", count + skipped);
       }
 
