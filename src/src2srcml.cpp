@@ -1093,7 +1093,6 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
   options |= OPTION_SKIP_DEFAULT;
 
-  int reallanguage = 0;
   char* afilename = 0;
 
   bool isarchive = false;
@@ -1173,7 +1172,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     // language (for this item in archive mode) based on extension, if not specified
 
     // 1) language may have been specified explicitly
-    reallanguage = language;
+    int reallanguage = language;
 
     // 2) try from the filename (basically the extension)
     if (reallanguage == 0 && nfilename)
