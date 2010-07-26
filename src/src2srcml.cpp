@@ -1113,17 +1113,16 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     // open up the file
     translator.setInput(path);
 
-    // if using libarchive, then get the filename
-    // this will open the whole archive if it isn't already
-    const char* result = archiveReadFilename(path);
-    afilename = result ? strdup(result) : 0;
-
-    // okay, so we may have a file error and be unable to open it
+    // should be okay
     if (archiveReadStatus() < 0 ) {
       fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
       if (first)
 	return;
     }
+
+    // if using libarchive, then get the filename
+    const char* result = archiveReadFilename(path);
+    afilename = result ? strdup(result) : 0;
 
     // so, do we have an archive?
     if (isArchiveRead()) {
