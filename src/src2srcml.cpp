@@ -1167,18 +1167,20 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     // language (for this item in archive mode) based on extension, if not specified
 
     // 1) language may have been specified explicitly
-    int reallanguage = language;
+    int reallanguage = 0;
+    if (language)
+      reallanguage = language;
 
     // 2) try from the filename (basically the extension)
-    if (reallanguage == 0 && unit_filename)
+    else if (unit_filename)
       reallanguage = Language::getLanguageFromFilename(unit_filename);
 
     // 3) default language (if allowed)
-    if (reallanguage == 0 && !isoption(options, OPTION_SKIP_DEFAULT))
+    else if (!isoption(options, OPTION_SKIP_DEFAULT))
       reallanguage = DEFAULT_LANGUAGE;
 
     // error if can't find a language
-    if (!reallanguage) {
+    else {
 
       if (!isoption(options, OPTION_QUIET))
 	fprintf(stderr, "Skipping '%s'.  No language can be determined.", unit_filename ? unit_filename : "standard input");
