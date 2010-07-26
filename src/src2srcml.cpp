@@ -557,7 +557,7 @@ int main(int argc, char* argv[]) {
     if (count == 0)
       exit(STATUS_INPUTFILE_PROBLEM);
     else
-      if(!isoption(options, OPTION_QUIET))
+      if(isoption(options, OPTION_NESTED) && !isoption(options, OPTION_QUIET))
       {
 	fprintf(stderr, "\n");
 	fprintf(stderr, "Files Translated: %d\n", count);
