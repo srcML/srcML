@@ -562,7 +562,7 @@ int main(int argc, char* argv[]) {
 	fprintf(stderr, "\n");
 	fprintf(stderr, "Files Translated: %d\n", count);
 	fprintf(stderr, "Files Skipped: %d\n", skipped);
-	fprintf(stderr, "Total: %d\n", count + skipped);
+	fprintf(stderr, "Files Total: %d\n", count + skipped);
       }
 
   } catch (srcEncodingException) {
