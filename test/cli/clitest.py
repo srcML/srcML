@@ -377,13 +377,13 @@ sxmlfile1 = xml_declaration + """
 """
 
 nestedfile = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
+<unit xmlns="http://www.sdml.info/srcML/src">
 
-<unit language="C++" dir="sub" filename="a.cpp">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
-<unit language="C++" dir="sub" filename="b.cpp">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="b.cpp">
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 </unit>
 
@@ -416,13 +416,13 @@ checkNoOutput([srcml2src, option.EXPAND_FLAG_SHORT, '.'], nestedfile)
 
 # srcml2src extract nested unit
 nestedfileextra = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
+<unit xmlns="http://www.sdml.info/srcML/src">
 
-<unit language="C" dir="sub" filename="a.cpp" mytag="foo">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" dir="sub" filename="a.cpp" mytag="foo">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
-<unit language="Java" dir="sub" mytag="foo" filename="b.cpp">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Java" dir="sub" mytag="foo" filename="b.cpp">
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 </unit>
 
@@ -446,17 +446,17 @@ check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "2", option.LANGUAGE_FLAG],
 
 # srcml2src extract nested unit
 nestedfileextra = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lc="http://www.sdml.info/srcML/linecol" language="C++">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:lc="http://www.sdml.info/srcML/linecol" language="C++">
 
-<unit language="C" dir="sub" filename="a.cpp" mytag="foo">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" dir="sub" filename="a.cpp" mytag="foo">
 <expr_stmt lc:line="1"><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
-<unit language="Java" dir="sub" mytag="foo" filename="b.cpp">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Java" dir="sub" mytag="foo" filename="b.cpp">
 <expr_stmt lc:line="1"><expr><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit dir="sub" mytag="foo" filename="c.cpp">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" dir="sub" mytag="foo" filename="c.cpp">
 <expr_stmt lc:line="1"><expr><name>c</name></expr>;</expr_stmt>
 </unit>
 
@@ -464,19 +464,19 @@ nestedfileextra = xml_declaration + """
 """
 
 sxmlfile1extra = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lc="http://www.sdml.info/srcML/linecol" language="C" dir="sub" filename="a.cpp" mytag="foo">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:lc="http://www.sdml.info/srcML/linecol" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" dir="sub" filename="a.cpp" mytag="foo">
 <expr_stmt lc:line="1"><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 """
 
 sxmlfile2extra = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lc="http://www.sdml.info/srcML/linecol" language="Java" dir="sub" mytag="foo" filename="b.cpp">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:lc="http://www.sdml.info/srcML/linecol" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Java" dir="sub" mytag="foo" filename="b.cpp">
 <expr_stmt lc:line="1"><expr><name>b</name></expr>;</expr_stmt>
 </unit>
 """
 
 sxmlfile3extra = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lc="http://www.sdml.info/srcML/linecol" language="C++" dir="sub" mytag="foo" filename="c.cpp">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:lc="http://www.sdml.info/srcML/linecol" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" mytag="foo" filename="c.cpp">
 <expr_stmt lc:line="1"><expr><name>c</name></expr>;</expr_stmt>
 </unit>
 """
