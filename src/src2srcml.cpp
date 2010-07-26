@@ -1093,8 +1093,6 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
   options |= OPTION_SKIP_DEFAULT;
 
-  char* afilename = 0;
-
   bool isarchive = false;
 #ifdef LIBARCHIVE
 
@@ -1139,7 +1137,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
     // get the filename
     const char* result = archiveReadFilename();
-    afilename = result ? strdup(result) : 0;
+    const char* afilename = result ? strdup(result) : 0;
 
     // special case:  skip directories (in archives)
     if (archiveIsDir()) {
