@@ -1120,6 +1120,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     if (isArchiveRead()) {
       isarchive = true;
       options |= OPTION_NESTED;
+      save_options |= OPTION_NESTED;
     }
 
     // output compression and format (if any)
@@ -1205,11 +1206,12 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     if (!isoption(options, OPTION_QUIET))
       fprintf(stderr, "%d\t%s\n", count, unit_filename.c_str());
 
-    const char* ndir = dir;
     try {
 
       // translate the file
-      translator.translate(path, ndir, foundfilename ? unit_filename.c_str() : 0, version, reallanguage, tabsize);
+      translator.translate(path, dir,
+			   foundfilename ? unit_filename.c_str() : 0,
+			   version, reallanguage, tabsize);
 
     } catch (FileError) {
 
