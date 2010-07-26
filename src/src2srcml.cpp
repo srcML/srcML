@@ -1129,7 +1129,8 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       isarchive = true;
       options |= OPTION_NESTED;
     }
-  
+
+    // special case:  skip directories (in archives)
     if (archiveIsDir()) {
 
 	if (!isoption(options, OPTION_QUIET)) {
@@ -1143,81 +1144,80 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
 	// explicitly close, since we are skipping it
 	archiveReadClose();
+	continue;
+    }
 
-    } else {
+    // in verbose mode output the currently processed filename
+    if (first && archiveReadMatch(path) && isoption(options, OPTION_VERBOSE)
+	&& (strcmp(archiveReadCompression(), "none")))
+      fprintf(stderr, "Compression:\t%s\n", archiveReadCompression());
 
-      // in verbose mode output the currently processed filename
-      if (first && archiveReadMatch(path) && isoption(options, OPTION_VERBOSE)
-	  && (strcmp(archiveReadCompression(), "none")))
-	fprintf(stderr, "Compression:\t%s\n", archiveReadCompression());
+    // in verbose mode output the currently processed filename
+    if (first && isArchiveRead() && isoption(options, OPTION_VERBOSE))
+      fprintf(stderr, "Format:\t%s\n", archiveReadFormat());
 
-      // in verbose mode output the currently processed filename
-      if (first && isArchiveRead() && isoption(options, OPTION_VERBOSE))
-	fprintf(stderr, "Format:\t%s\n", archiveReadFormat());
-
-      first = false;
+    first = false;
 
 #endif
 
-      // find the separate dir and filename
-      const char* ndir = dir;
-      const char* nfilename = filename;
-      if (strcmp(path, STDIN) && !nfilename)
-	nfilename = path;
-      if (afilename)
-	nfilename = afilename;
+    // find the separate dir and filename
+    const char* ndir = dir;
+    const char* nfilename = filename;
+    if (strcmp(path, STDIN) && !nfilename)
+      nfilename = path;
+    if (afilename)
+      nfilename = afilename;
 
-      // language (for this item in archive mode) based on extension, if not specified
+    // language (for this item in archive mode) based on extension, if not specified
 
-      // 1) language may have been specified explicitly
-      reallanguage = language;
+    // 1) language may have been specified explicitly
+    reallanguage = language;
 
-      // 2) try from the filename (basically the extension)
-      if (reallanguage == 0 && nfilename)
-	reallanguage = Language::getLanguageFromFilename(nfilename);
+    // 2) try from the filename (basically the extension)
+    if (reallanguage == 0 && nfilename)
+      reallanguage = Language::getLanguageFromFilename(nfilename);
 
-      // 3) default language (if allowed)
-      if (reallanguage == 0 && !isoption(options, OPTION_SKIP_DEFAULT))
-	reallanguage = DEFAULT_LANGUAGE;
+    // 3) default language (if allowed)
+    if (reallanguage == 0 && !isoption(options, OPTION_SKIP_DEFAULT))
+      reallanguage = DEFAULT_LANGUAGE;
 
-      // error if can't find a language
-      if (!reallanguage) {
+    // error if can't find a language
+    if (!reallanguage) {
 
-	if (!isoption(options, OPTION_QUIET))
-	  fprintf(stderr, "Skipping '%s'.  No language can be determined.", nfilename ? nfilename : "standard input");
+      if (!isoption(options, OPTION_QUIET))
+	fprintf(stderr, "Skipping '%s'.  No language can be determined.", nfilename ? nfilename : "standard input");
 
-	++skipped;
+      ++skipped;
 
-	// close the file that we don't have a language for
-	archiveReadClose();
+      // close the file that we don't have a language for
+      archiveReadClose();
 
-      } else {
+    } else {
 
-	// turnon cpp namespace for non Java-based languages
-	if (!(reallanguage == srcMLTranslator::LANGUAGE_JAVA || reallanguage == srcMLTranslator::LANGUAGE_ASPECTJ))
-	  options |= OPTION_CPP;
+      // turnon cpp namespace for non Java-based languages
+      if (!(reallanguage == srcMLTranslator::LANGUAGE_JAVA || reallanguage == srcMLTranslator::LANGUAGE_ASPECTJ))
+	options |= OPTION_CPP;
 
-	// another file
-	++count;
+      // another file
+      ++count;
 
-	// in verbose mode output the currently processed filename
-	if (!isoption(options, OPTION_QUIET))
-	  fprintf(stderr, "%d\t%s", count, nfilename);
+      // in verbose mode output the currently processed filename
+      if (!isoption(options, OPTION_QUIET))
+	fprintf(stderr, "%d\t%s", count, nfilename);
 
-	try {
+      try {
 
-	  // translate the file
-	  translator.translate(path, ndir, nfilename, version, reallanguage, tabsize);
+	// translate the file
+	translator.translate(path, ndir, nfilename, version, reallanguage, tabsize);
 
-	} catch (FileError) {
+      } catch (FileError) {
 
-	  if (dir)
-	    fprintf(stderr, "%s error: file \'%s/%s\' does not exist.\n", PROGRAM_NAME, dir, nfilename);
-	  else
-	    fprintf(stderr, "%s error: file \'%s\' does not exist.\n", PROGRAM_NAME, nfilename);
+	if (dir)
+	  fprintf(stderr, "%s error: file \'%s/%s\' does not exist.\n", PROGRAM_NAME, dir, nfilename);
+	else
+	  fprintf(stderr, "%s error: file \'%s\' does not exist.\n", PROGRAM_NAME, nfilename);
 
-	  exit(STATUS_INPUTFILE_PROBLEM);
-	}
+	exit(STATUS_INPUTFILE_PROBLEM);
       }
 
       // in verbose mode output end info about this file
