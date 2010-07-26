@@ -276,9 +276,9 @@ validate(open('archive/a.cpp.xml', 'r').read(), srcml)
 # test cpio.bz2
 
 srcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
+<unit xmlns="http://www.sdml.info/srcML/src">
 
-<unit language="C++" filename="archive/a.cpp">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="archive/a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
@@ -293,9 +293,9 @@ validate(open('archive/a.cpp.xml', 'r').read(), srcml)
 # test zip
 
 srcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
+<unit xmlns="http://www.sdml.info/srcML/src">
 
-<unit language="C++" filename="archive/a.cpp">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="archive/a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
@@ -310,9 +310,9 @@ validate(open('archive/a.cpp.xml', 'r').read(), srcml)
 # test zip.gz
 
 srcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
+<unit xmlns="http://www.sdml.info/srcML/src">
 
-<unit language="C++" filename="archive/a.cpp">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="archive/a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
@@ -327,9 +327,9 @@ validate(open('archive/a.cpp.xml', 'r').read(), srcml)
 # test zip.bz2
 
 srcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
+<unit xmlns="http://www.sdml.info/srcML/src">
 
-<unit language="C++" filename="archive/a.cpp">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="archive/a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
