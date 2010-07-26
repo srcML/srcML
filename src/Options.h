@@ -232,4 +232,9 @@ const OPTION_TYPE OPTION_RECURSIVE  = 0x2000000000ull;
 // skip output of notification messages
 const OPTION_TYPE OPTION_QUIET  = 0x4000000000ull;
 
+// settings
+// @src2srcml
+// @srcml2src
+const OPTION_TYPE OPTION_SETTINGS  = 0x8000000000ull;
+
 #endif
