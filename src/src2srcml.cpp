@@ -1134,16 +1134,16 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
     // get the filename
     const char* result = archiveReadFilename();
-    const char* afilename = result ? strdup(result) : 0;
+    const char* entry_filename = result ? strdup(result) : 0;
 
     // special case:  skip directories (in archives)
     if (archiveIsDir()) {
 
 	if (!isoption(options, OPTION_QUIET)) {
 	  if (isoption(options, OPTION_VERBOSE))
-	    fprintf(stderr, "Skipping '%s'.  Is a directory.\n", afilename);
+	    fprintf(stderr, "Skipping '%s'.  Is a directory.\n", entry_filename);
 	  else
-	    fprintf(stderr, "%s:  Skipping '%s'.  Is a directory.\n", PROGRAM_NAME, afilename);
+	    fprintf(stderr, "%s:  Skipping '%s'.  Is a directory.\n", PROGRAM_NAME, entry_filename);
 	}
 
 	++skipped;
@@ -1161,8 +1161,8 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     const char* unit_filename = root_filename;
     if (strcmp(path, STDIN) && !unit_filename)
       unit_filename = path;
-    if (afilename)
-      unit_filename = afilename;
+    if (entry_filename)
+      unit_filename = entry_filename;
 
     // language (for this item in archive mode) based on extension, if not specified
 
