@@ -1110,6 +1110,9 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     // start with the original options
     options = save_options;
 
+    // open up the file
+    translator.setInput(path);
+
     // if using libarchive, then get the filename
     // this will open the whole archive if it isn't already
     if (archiveReadMatch(path)) {
@@ -1208,7 +1211,6 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 	try {
 
 	  // translate the file
-	  translator.setInput(path);
 	  translator.translate(path, ndir, nfilename, version, reallanguage, tabsize);
 
 	} catch (FileError) {
