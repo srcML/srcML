@@ -4,14 +4,19 @@
 
 - Need OPTION_??? for --settings. Have to wait for all the options to be processed to output the settings
 
+- How to handle leading "../"
+
 - Compare list of file that tar gets (and order) with what srcML gets:
   - Use --exclude-vcs for tar
   - Do the same for cpio
+
+- Is our --files-from format valid as an mtree format? I.e, do you need anything but the filename?
 
 - Combine "urisprefix" with uris:
 
   - Add field and data
   - Change srcMLTranslator to take uris'
   - Change src2srcml to use uris where urisprefix is being used
+
 
 
