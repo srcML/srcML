@@ -2289,25 +2289,35 @@ src = """
 a;
 """
 
-srcml = xml_declaration + """
+srcmlstart = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src">
+"""
 
+aj = """
 <unit language="AspectJ" filename="dir/file.aj">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
+"""
 
+c = """
 <unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="dir/file.c">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
+"""
 
+cpp = """
 <unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="dir/file.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
+"""
 
+java = """
 <unit language="Java" filename="dir/file.java">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
+"""
 
+srcmlend = """
 </unit>
 """
 
@@ -2331,6 +2341,22 @@ f.close()
 f = open("dir/file.java", 'w')
 f.write(src)
 f.close()
+
+line = execute(['ls', '-f1', 'dir'], "")
+
+srcml += srcmlstart
+
+for file in line.split('\n') :
+	if file == 'file.aj' :
+		srcml += aj
+	if file == 'file.c' :
+		srcml += c
+	if file == 'file.cpp' :
+		srcml += cpp
+	if file == 'file.java' :
+		srcml += java
+
+srcml += srcmlend
 
 check([src2srcml, 'dir'], "", srcml)
 check([src2srcml, 'dir', '-o', 'dir/dir.xml'], "", "")
