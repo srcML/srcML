@@ -1183,7 +1183,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     else {
 
       if (!isoption(options, OPTION_QUIET))
-	fprintf(stderr, "Skipping '%s'.  No language can be determined.", unit_filename ? unit_filename : "standard input");
+	fprintf(stderr, "Skipping '%s'.  No language can be determined.\n", unit_filename ? unit_filename : "standard input");
 
       ++skipped;
 
@@ -1200,9 +1200,9 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     // another file
     ++count;
 
-    // in verbose mode output the currently processed filename
+    // output the currently processed filename
     if (!isoption(options, OPTION_QUIET))
-      fprintf(stderr, "%d\t%s", count, unit_filename);
+      fprintf(stderr, "%d\t%s\n", count, unit_filename);
 
     try {
 
@@ -1218,10 +1218,6 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
       exit(STATUS_INPUTFILE_PROBLEM);
     }
-
-    // in verbose mode output end info about this file
-    if (!isoption(options, OPTION_QUIET))
-      fprintf(stderr, "\n");
 
     options = save_options;
 
