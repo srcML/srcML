@@ -1456,13 +1456,13 @@ validate(open('sub/b.cpp.xml', 'r').read(), sxmlfile2)
 # check metadata options with xml and unit
 
 nestedfileextra = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
+<unit xmlns="http://www.sdml.info/srcML/src">
 
-<unit language="C++" dir="sub" filename="a.cpp" mytag="foo">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp" mytag="foo">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
-<unit language="Java" dir="emptysrc" mytag="foo" filename="empty.java">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Java" dir="emptysrc" mytag="foo" filename="empty.java">
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 </unit>
 
@@ -1813,13 +1813,13 @@ sxmlfile = xml_declaration + """
 """
 
 nestedfile = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
+<unit xmlns="http://www.sdml.info/srcML/src">
 
-<unit language="C++" dir="sub" filename="a.cpp">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
-<unit language="C++" dir="sub" filename="b.cpp">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="b.cpp">
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 </unit>
 
@@ -1852,13 +1852,13 @@ b;
 """
 
 nestedfile = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp">
+<unit xmlns="http://www.sdml.info/srcML/src">
 
-<unit language="C++" dir="sub" filename="a.cpp">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
-<unit language="C++" dir="sub" filename="b.cpp">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="b.cpp">
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 </unit>
 
