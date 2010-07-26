@@ -131,7 +131,11 @@ void makedirectories(char * path)
 
 const char* clean_filename(const char* in) {
 
-  return in;
+  const char* pos = in;
+  while (pos[0] == '.' && pos[1] == '/')
+    pos += 2;
+
+  return pos;
 }
 
 
