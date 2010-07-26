@@ -1112,8 +1112,15 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
       if (first)
 	return;
+    }
 
-    } else if (archiveIsDir()) {
+    // so, do we have an archive?
+    if (isArchiveRead()) {
+      isarchive = true;
+      options |= OPTION_NESTED;
+    }
+  
+    if (archiveIsDir()) {
 
 	if (!isoption(options, OPTION_QUIET)) {
 	  if (isoption(options, OPTION_VERBOSE))
@@ -1122,18 +1129,11 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 	    fprintf(stderr, "%s:  Skipping '%s'.  Is a directory.\n", PROGRAM_NAME, afilename);
 	}
 
-	isarchive = true;
-	options |= OPTION_NESTED;
+	// explicitly close, since we are skipping it
 	archiveReadClose();
 
     } else {
 
-      //
-      if (isArchiveRead()) {
-	isarchive = true;
-	options |= OPTION_NESTED;
-      }
-  
       // in verbose mode output the currently processed filename
       if (first && archiveReadMatch(path) && isoption(options, OPTION_VERBOSE)
 	  && (strcmp(archiveReadCompression(), "none")))
