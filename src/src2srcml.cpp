@@ -1115,11 +1115,8 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
     // if using libarchive, then get the filename
     // this will open the whole archive if it isn't already
-    if (archiveReadMatch(path)) {
-      const char* result = archiveReadFilename(path);
-
-      afilename = result ? strdup(result) : 0;
-    }
+    const char* result = archiveReadFilename(path);
+    afilename = result ? strdup(result) : 0;
 
     // okay, so we may have a file error and be unable to open it
     if (archiveReadStatus() < 0 ) {
