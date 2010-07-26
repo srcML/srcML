@@ -66,7 +66,8 @@ void srcMLTranslator::translate(const char* path, const char* unit_directory,
       antlr::TokenStreamSelector selector;
 
       // srcML lexical analyzer from standard input
-      KeywordCPPLexer lexer(path, encoding, language);
+      UTF8CharBuffer* pinput = new UTF8CharBuffer(path, encoding);
+      KeywordCPPLexer lexer(pinput, encoding, language);
       lexer.setSelector(&selector);
       lexer.setTabsize(tabsize);
 

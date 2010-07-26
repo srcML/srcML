@@ -142,8 +142,9 @@ void changetotextlexer(int typeend);
 
 virtual int testLiteralsTable(int ttype) const;
 
-KeywordCPPLexer(const char* ifilename, const char* encoding, int language = LANGUAGE_CXX)
-	: antlr::CharScanner(new UTF8CharBuffer(ifilename, encoding),true), Language(language), onpreprocline(false), startline(true)
+KeywordCPPLexer(UTF8CharBuffer* pinput, const char* encoding, int language = LANGUAGE_CXX)
+//	: antlr::CharScanner(new UTF8CharBuffer("sub/a.cpp", encoding),true), Language(language), onpreprocline(false), startline(true)	
+    : antlr::CharScanner(pinput,true), Language(language), onpreprocline(false), startline(true)
 {
     setTokenObjectFactory(srcMLToken::factory);
 
