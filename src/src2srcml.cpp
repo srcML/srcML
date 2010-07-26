@@ -1132,6 +1132,8 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 	    fprintf(stderr, "%s:  Skipping '%s'.  Is a directory.\n", PROGRAM_NAME, afilename);
 	}
 
+	++skipped;
+
 	// explicitly close, since we are skipping it
 	archiveReadClose();
 
@@ -1176,6 +1178,8 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
 	if (!isoption(options, OPTION_QUIET))
 	  fprintf(stderr, "Skipping '%s'.  No language can be determined.", nfilename ? nfilename : "standard input");
+
+	++skipped;
 
 	// close the file that we don't have a language for
 	archiveReadClose();
@@ -1259,6 +1263,7 @@ void process_dir(srcMLTranslator& translator, const char* dname, process_options
     if(strcmp(sline.c_str(), poptions.srcml_filename) == 0)
     {
       fprintf(stderr, "Skipping output file: %s", poptions.srcml_filename);
+      ++skipped;
       continue;
     }
 
