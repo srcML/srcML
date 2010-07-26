@@ -230,4 +230,6 @@ char** makeargv(char* s);
 // make the directories from the full path
 void makedirectories(char* path);
 
+const char* clean_filename(const char*);
+
 #endif

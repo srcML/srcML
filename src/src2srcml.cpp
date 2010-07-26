@@ -1207,9 +1207,12 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
     try {
 
+      int offset = clean_filename(unit_filename.c_str())
+	- &(unit_filename.c_str()[0]);
+
       // translate the file
       translator.translate(path, dir,
-			   foundfilename ? unit_filename.c_str() : 0,
+			   foundfilename ? unit_filename.c_str() + offset: 0,
 			   version, reallanguage, tabsize);
 
     } catch (FileError) {
