@@ -214,9 +214,6 @@ int archiveReadClose(void* context) {
     return 0;
   }
 
-  if (archive_entry_filetype(ae) == AE_IFDIR)
-    archiveReadClose(context);
-
   return 0;
 }
 
