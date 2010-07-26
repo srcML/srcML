@@ -1801,7 +1801,6 @@ files="0"
 """
 
 longinfonested = """xmlns="http://www.sdml.info/srcML/src"
-xmlns:cpp="http://www.sdml.info/srcML/cpp"
 encoding="UTF-8"
 files="2"
 """
