@@ -1,3 +1,12 @@
+/*
+
+  CharBuffer for antlr that uses a libxml input routines.
+  This provides for any necessary encoding conversion to UTF8,
+  so using libxml for XML output is direct.
+
+  libxml stores data internally in UTF*
+*/
+
 #ifndef INCLUDE_UTF8CHARBUFFER_HPP
 #define INCLUDE_UTF8CHARBUFFER_HPP
 
