@@ -1158,11 +1158,11 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
     // find the separate dir and filename
     const char* ndir = dir;
-    const char* nfilename = root_filename;
-    if (strcmp(path, STDIN) && !nfilename)
-      nfilename = path;
+    const char* unit_filename = root_filename;
+    if (strcmp(path, STDIN) && !unit_filename)
+      unit_filename = path;
     if (afilename)
-      nfilename = afilename;
+      unit_filename = afilename;
 
     // language (for this item in archive mode) based on extension, if not specified
 
@@ -1170,8 +1170,8 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     int reallanguage = language;
 
     // 2) try from the filename (basically the extension)
-    if (reallanguage == 0 && nfilename)
-      reallanguage = Language::getLanguageFromFilename(nfilename);
+    if (reallanguage == 0 && unit_filename)
+      reallanguage = Language::getLanguageFromFilename(unit_filename);
 
     // 3) default language (if allowed)
     if (reallanguage == 0 && !isoption(options, OPTION_SKIP_DEFAULT))
@@ -1181,7 +1181,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     if (!reallanguage) {
 
       if (!isoption(options, OPTION_QUIET))
-	fprintf(stderr, "Skipping '%s'.  No language can be determined.", nfilename ? nfilename : "standard input");
+	fprintf(stderr, "Skipping '%s'.  No language can be determined.", unit_filename ? unit_filename : "standard input");
 
       ++skipped;
 
@@ -1200,19 +1200,19 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
     // in verbose mode output the currently processed filename
     if (!isoption(options, OPTION_QUIET))
-      fprintf(stderr, "%d\t%s", count, nfilename);
+      fprintf(stderr, "%d\t%s", count, unit_filename);
 
     try {
 
       // translate the file
-      translator.translate(path, ndir, nfilename, version, reallanguage, tabsize);
+      translator.translate(path, ndir, unit_filename, version, reallanguage, tabsize);
 
     } catch (FileError) {
 
       if (dir)
-	fprintf(stderr, "%s error: file \'%s/%s\' does not exist.\n", PROGRAM_NAME, dir, nfilename);
+	fprintf(stderr, "%s error: file \'%s/%s\' does not exist.\n", PROGRAM_NAME, dir, unit_filename);
       else
-	fprintf(stderr, "%s error: file \'%s\' does not exist.\n", PROGRAM_NAME, nfilename);
+	fprintf(stderr, "%s error: file \'%s\' does not exist.\n", PROGRAM_NAME, unit_filename);
 
       exit(STATUS_INPUTFILE_PROBLEM);
     }
