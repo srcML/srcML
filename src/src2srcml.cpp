@@ -1101,7 +1101,6 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
   OPTION_TYPE save_options = options;
 
   // process the individual file (once), or an archive as many times as it takes
-  bool first = true;
   do {
 
     // start with the original options
@@ -1110,11 +1109,10 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     // open up the file
     translator.setInput(path);
 
-    // check if archive is bad
+    // check if file is bad
     if (archiveReadStatus() < 0 ) {
       fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
-      if (first)
-	return;
+      return;
       // continue??
     }
 
@@ -1124,14 +1122,15 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       options |= OPTION_NESTED;
     }
 
-    // output compression
-    if (isArchiveFirst() && isarchive && !isoption(options, OPTION_QUIET)
-	&& (strcmp(archiveReadCompression(), "none")))
-      fprintf(stderr, "Compression:\t%s\n", archiveReadCompression());
+    // output compression and format (if any)
+    if (isArchiveFirst() && isarchive && !isoption(options, OPTION_QUIET)) {
 
-    // output format
-    if (isArchiveFirst() && isArchiveRead() && !isoption(options, OPTION_QUIET))
-      fprintf(stderr, "Format:\t%s\n", archiveReadFormat());
+      if (strcmp(archiveReadCompression(), "none"))
+	fprintf(stderr, "Compression:\t%s\n", archiveReadCompression());
+
+      if (isArchiveRead())
+	fprintf(stderr, "Format:\t%s\n", archiveReadFormat());
+    }
 
     // get the filename
     const char* result = archiveReadFilename();
