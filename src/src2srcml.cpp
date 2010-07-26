@@ -1081,7 +1081,7 @@ void register_standard_file_extensions()
 
 }
 
-void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count, int & skipped) {
+void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped) {
 
   // handle local directories specially
   struct stat instat;
@@ -1158,7 +1158,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
     // find the separate dir and filename
     const char* ndir = dir;
-    const char* nfilename = filename;
+    const char* nfilename = root_filename;
     if (strcmp(path, STDIN) && !nfilename)
       nfilename = path;
     if (afilename)
