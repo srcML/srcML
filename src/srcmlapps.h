@@ -25,10 +25,6 @@
 #ifndef INCLUDED_SRCMLAPPS_H
 #define INCLUDED_SRCMLAPPS_H
 
-#include <cstring>
-#include <cstdio>
-#include <cstdlib>
-#include <string>
 #include "version.h"
 
 const char* const VERSION = version();
