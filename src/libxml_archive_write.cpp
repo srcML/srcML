@@ -127,33 +127,30 @@ void* archiveWriteRootOpen(const char * URI) {
 */
 int setupArchive(struct archive* wa, const char* path) {
 
-      // find the first (last?) extension
-      const char* firstext = rindex(path, '.') + 1;
+      // required outermost extension
+      const char* outer = rindex(path, '.') + 1;
+      if (!outer || outer[0] == '\0')
+	return 0;
+
+      // try to set the format based on the outermost extension
+      int setarchive = archive_write_set_format_by_name(wa, outer);
+
+      // find the innermost extension which is not required
+      std::string ext2(path, outer - 1);
+      const char* inner = rindex(ext2.c_str(), '.') + 1;
+
+      // if we still don't have a format, try the innermost extension if it exists
+      if (setarchive == ARCHIVE_FATAL && inner)
+	setarchive = archive_write_set_format_by_name(wa, inner);
+
+      // if we couldn't set the format based on the last two extensions, then get out
+      if (setarchive == ARCHIVE_FATAL)
+        return 0;
 
       // try to set the compression based on the last extension (may fail)
-      int setcompression = archive_write_set_compression_by_name(wa, firstext);
+      archive_write_set_compression_by_name(wa, outer);
 
-      // try to set the format based on the extension (may fail this time)
-      int setarchive = archive_write_set_format_by_name(wa, firstext);
-
-      // if the first extension did not set either format or compression, get out
-      if (setarchive == ARCHIVE_FATAL && setcompression == ARCHIVE_FATAL)
-        return 0;
-
-      // if the first extension set format (and maybe compression), done
-      if (setarchive != ARCHIVE_FATAL)
-        return 1;
-
-      // find the second (second to last?) extension
-      std::string ext2(path, firstext - 1);
-      char* secondext = rindex(ext2.c_str(), '.') + 1;
-      if (!secondext || secondext[0] == '\0')
-        return 0;
-
-      // try to set the format based on the extension (may fail this time)
-      setarchive = archive_write_set_format_by_name(wa, secondext);
-
-      return setarchive != ARCHIVE_FATAL ? 1 : 0;
+      return 1;
 }
 
 
@@ -205,7 +202,6 @@ int archiveWriteClose(void * context) {
   }
 
   archive_entry_set_pathname(wentry, filename.c_str());
-  archive_entry_set_size(wentry, data.size());
   archive_write_header(wa, wentry);
   archive_write_data(wa, data.c_str(), data.size());
   //  archive_entry_free(wentry);
