@@ -1114,7 +1114,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       // continue??
     }
 
-    // do we have an archive?
+    // once any source archive is input, then we have to assume nested
     if (isArchiveRead()) {
       options |= OPTION_NESTED;
       save_options |= OPTION_NESTED;
@@ -1123,7 +1123,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     // output compression and format (if any)
     if (isArchiveFirst() && !isoption(options, OPTION_QUIET)) {
 
-      if (strcmp(archiveReadCompression(), "none"))
+      if (archiveReadCompression() && strcmp(archiveReadCompression(), "none"))
 	fprintf(stderr, "Compression:\t%s\n", archiveReadCompression());
 
       if (isArchiveRead())
@@ -1225,7 +1225,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     //     return STATUS_TERMINATED;
 
 #ifdef LIBARCHIVE
-  } while (!archiveReadStatus());
+  } while (isArchiveRead() && !archiveReadStatus());
 #endif
 }
 
@@ -1297,6 +1297,7 @@ void process_dir(srcMLTranslator& translator, const char* dname, process_options
 }
 
 void process_filelist(srcMLTranslator& translator, process_options& poptions, int& count, int & skipped) {
+
   try {
 
     // translate all the filenames listed in the named file
