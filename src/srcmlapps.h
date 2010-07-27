@@ -98,9 +98,6 @@ const char* const LANGUAGE_ASPECTJ = "AspectJ";
 
 };
 
-const char* const SKIP_ENCODING_FLAG = "skip-encoding";
-const char SKIP_ENCODING_FLAG_SHORT = 'k';
-
 const char* const COMPRESSED_FLAG = "compress";
 const char COMPRESSED_FLAG_SHORT = 'z';
 
