@@ -1133,9 +1133,8 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     // figure out the resulting filename
     std::string unit_filename;
     bool foundfilename = true;
-    const char* entry_filename = archiveReadFilename();
-    if (entry_filename)
-      unit_filename = entry_filename;
+    if (archiveReadFilename())
+      unit_filename = archiveReadFilename();
     else if (root_filename)
       unit_filename = root_filename;
     else if (strcmp(path, STDIN))
@@ -1148,9 +1147,9 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
 	if (!isoption(options, OPTION_QUIET)) {
 	  if (isoption(options, OPTION_VERBOSE))
-	    fprintf(stderr, "Skipping '%s'.  Is a directory.\n", entry_filename);
+	    fprintf(stderr, "Skipping '%s'.  Is a directory.\n", unit_filename);
 	  else
-	    fprintf(stderr, "%s:  Skipping '%s'.  Is a directory.\n", PROGRAM_NAME, entry_filename);
+	    fprintf(stderr, "%s:  Skipping '%s'.  Is a directory.\n", PROGRAM_NAME, unit_filename);
 	}
 
 	++skipped;
