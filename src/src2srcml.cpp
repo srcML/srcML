@@ -1092,7 +1092,6 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
   options |= OPTION_SKIP_DEFAULT;
 
-  bool isarchive = false;
 #ifdef LIBARCHIVE
 
   // single file archive (tar, zip, cpio, etc.) is listed as a single file
@@ -1117,13 +1116,12 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
     // do we have an archive?
     if (isArchiveRead()) {
-      isarchive = true;
       options |= OPTION_NESTED;
       save_options |= OPTION_NESTED;
     }
 
     // output compression and format (if any)
-    if (isArchiveFirst() && isarchive && !isoption(options, OPTION_QUIET)) {
+    if (isArchiveFirst() && isArchiveRead() && !isoption(options, OPTION_QUIET)) {
 
       if (strcmp(archiveReadCompression(), "none"))
 	fprintf(stderr, "Compression:\t%s\n", archiveReadCompression());
