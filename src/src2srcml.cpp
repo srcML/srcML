@@ -1325,6 +1325,7 @@ void process_filelist(srcMLTranslator& translator, process_options& poptions, in
         ++line;
 
       // skip blank lines or comment lines
+      // TODO:  handle escaped newlines, escaped comments?
       if (line[0] == '\0' || line[0] == '\n' || line[0] == FILELIST_COMMENT)
         continue;
 
