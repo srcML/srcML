@@ -1228,23 +1228,30 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 #endif
 }
 
-void process_dir(srcMLTranslator& translator, const char* dname, process_options& poptions, int& count, int & skipped) {
+void process_dir(srcMLTranslator& translator, const char* directory, process_options& poptions, int& count, int & skipped) {
 
   // by default, all dirs are treated as an archive
   options |= OPTION_NESTED;
 
   // try to open the found directory
-  DIR* dir = opendir(dname);
-  if (!dir)
+  DIR* dirp = opendir(directory);
+  if (!dirp)
     return;
 
-  // process all non-directory files
-  std::string sline = dname;
-  if (!sline.empty() && sline[sline.size() - 1] != '/')
-    sline += "/";
-  int basesize = sline.length();
-  while (struct dirent* entry = readdir(dir)) {
+  // start of path from directory name
+  std::string filename = directory;
+  if (!filename.empty() && filename[filename.size() - 1] != '/')
+    filename += "/";
+  int basesize = filename.length();
 
+  // record the stat info on the output file
+  struct stat outstat;
+  stat(poptions.srcml_filename, &outstat);
+
+  // process all non-directory files
+  while (struct dirent* entry = readdir(dirp)) {
+
+    // handle directories later after all the filenames
     if (entry->d_type == DT_DIR)
       continue;
 
@@ -1252,11 +1259,15 @@ void process_dir(srcMLTranslator& translator, const char* dname, process_options
     if (entry->d_name[0] == '.')
       continue;
 
-    sline.resize(basesize);
-    sline += entry->d_name;
+    // path with current filename
+    filename.resize(basesize);
+    filename += entry->d_name;
 
-    if(strcmp(sline.c_str(), poptions.srcml_filename) == 0)
-    {
+    // make sure that we are not processing the output file
+    struct stat instat;
+    stat(filename.c_str(), &instat);
+    if (instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
+
       fprintf(stderr, "Skipping output file: %s", poptions.srcml_filename);
       ++skipped;
       continue;
@@ -1264,7 +1275,7 @@ void process_dir(srcMLTranslator& translator, const char* dname, process_options
 
     // translate the file listed in the input file using the directory and filename extracted from the path
     src2srcml_file(translator,
-		   sline.c_str(),
+		   filename.c_str(),
 		   options,
 		   0,
 		   0,
@@ -1274,24 +1285,28 @@ void process_dir(srcMLTranslator& translator, const char* dname, process_options
 		   count, skipped);
   }
 
+  // no need to handle subdirectories, unless recursive
   if (!isoption(options, OPTION_RECURSIVE))
     return;
 
   // now process directories
-  rewinddir(dir);
-  while (struct dirent* entry = readdir(dir)) {
+  rewinddir(dirp);
+  while (struct dirent* entry = readdir(dirp)) {
 
+    // already handled other types of files
     if (entry->d_type != DT_DIR)
       continue;
 
     // skip standard UNIX filenames, and . files
+    // TODO:  Skip . and .. by default, but should we announce others?  E.g., .svn?
     if (entry->d_name[0] == '.')
       continue;
 
-    sline.resize(basesize);
-    sline += entry->d_name;
+    // path with current filename
+    filename.resize(basesize);
+    filename += entry->d_name;
 
-    process_dir(translator, sline.c_str(), poptions, count, skipped);
+    process_dir(translator, filename.c_str(), poptions, count, skipped);
   }
 }
 
