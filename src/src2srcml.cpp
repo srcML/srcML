@@ -1232,9 +1232,6 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     //     return STATUS_TERMINATED;
 
 #ifdef LIBARCHIVE
-    // done if not an archive
-    if (!isarchive)
-      break;
   } while (!archiveReadStatus());
 #endif
 }
