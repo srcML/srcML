@@ -1145,19 +1145,15 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     // special case:  skip directories (in archives)
     if (archiveIsDir()) {
 
-	if (!isoption(options, OPTION_QUIET)) {
-	  if (isoption(options, OPTION_VERBOSE))
-	    fprintf(stderr, "Skipping '%s'.  Is a directory.\n", unit_filename);
-	  else
-	    fprintf(stderr, "%s:  Skipping '%s'.  Is a directory.\n", PROGRAM_NAME, unit_filename);
-	}
+      if (!isoption(options, OPTION_QUIET))
+	fprintf(stderr, "Skipping '%s'.  Is a directory.\n", unit_filename.c_str());
 
-	++skipped;
+      ++skipped;
 
-	// explicitly close, since we are skipping it
-	archiveReadClose();
+      // explicitly close, since we are skipping it
+      archiveReadClose();
 
-	continue;
+      continue;
     }
 
 #endif
