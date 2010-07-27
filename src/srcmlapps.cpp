@@ -27,6 +27,7 @@
 #include <clocale>
 #include <cstdio>
 #include <cctype>
+#include <cstdlib>
 #include <sys/stat.h>
 
 #ifdef __GNUC__
@@ -63,69 +64,6 @@ void checkargisnonempty(const char* name, const char* opt, const char* optarg, i
     fprintf(stderr, "%s: Empty argument to option '%s'.\n",
 	    name, opt);
     exit(1);
-  }
-}
-
-char** makeargv(char* s) {
-
-  fprintf(stderr, "LINE:%s\n", s);
-  // figure out how many elements to allocate in the resulting array
-  int count = 0;
-  bool instring = false;
-  char prevchar = 'a';
-  for (char* p = s; p; ++p) {
-
-    // toggle back and forth between strings
-    if (*p == '"')
-      instring = !instring;
-
-    if (!instring && isspace(*p) && !isspace(prevchar))
-      ++count;
-
-    prevchar = *p;
-  }
-
-  // allocate the array of strings based on the count
-  char** argv = new char*[count + 1];
-  argv[0] = 0;
-
-  return argv;
-  // now point into our original string
-  count = 0;
-  instring = false;
-  prevchar = 'a';
-  char* start = s;
-  for (char* p = s; p; ++p) {
-
-    // toggle back and forth between strings
-    if (*p == '"')
-      instring = !instring;
-
-    if (!instring && isspace(*p) && !isspace(prevchar)) {
-      argv[count++] = start;
-      *p = '\0';
-      start = (p + 1);
-    }
-
-    prevchar = *p;
-  }
-  argv[count] = 0;
-
-  return argv;
-}
-
-// create the directories from the full path
-void makedirectories(char * path)
-{
-  // construct the directory subpath by subpath
-  for (char* c = path; *c; ++c) {
-
-    // replace the path delimiter with a null, mkdir, then put back
-    if (*c == '/') {
-      *c = '\0';
-      mkdir(path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-      *c = '/';
-    }
   }
 }
 
