@@ -1319,11 +1319,9 @@ void process_filelist(srcMLTranslator& translator, process_options& poptions, in
 
       // skip over whitespace
       // TODO:  Other types of whitespace?  backspace?
-      while (line[0] == ' ' || line[0] == '\t' || line[0] == '\f')
-        ++line;
+      line += strspn(line, " \t\f");
 
       // skip blank lines or comment lines
-      // TODO:  handle escaped newlines, escaped comments?
       if (line[0] == '\0' || line[0] == '\n' || line[0] == FILELIST_COMMENT)
         continue;
 
