@@ -1161,12 +1161,10 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     // language (for this item in archive mode) based on extension, if not specified
 
     // 1) language may have been specified explicitly
-    int reallanguage = 0;
-    if (language)
-      reallanguage = language;
+    int reallanguage = language;
 
     // 2) try from the filename (basically the extension)
-    else
+    if (!reallanguage)
       reallanguage = Language::getLanguageFromFilename(unit_filename.c_str());
 
     // 3) default language (if allowed)
@@ -1217,6 +1215,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       exit(STATUS_INPUTFILE_PROBLEM);
     }
 
+    // restore options for next time around
     options = save_options;
 
     // compound documents are interrupted gracefully
