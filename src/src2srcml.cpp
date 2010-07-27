@@ -691,11 +691,11 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
       // check all the registered extensions.  There may be many (CSV)
       for (char* cursub = strtok(optarg, ","); cursub; cursub = strtok(NULL, ",")) {
-	const char* extension = cursub;
-	const char* language = asg_split(cursub);
+	char* language = cursub;
+	const char* extension = strsep(&language, "=");
 
-	if(!Language::registerUserExt(extension, language))
-	  {
+	if (!Language::registerUserExt(extension, language)) {
+
 	    fprintf(stderr, "%s: language \"%s\" is not supported.\n", argv[0], language);
 	    fprintf(stderr, "Try '%s %s' for more information.\n", argv[0], HELP_FLAG);
 	    exit(STATUS_ERROR);
