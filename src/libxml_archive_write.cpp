@@ -125,8 +125,35 @@ void* archiveWriteRootOpen(const char * URI) {
   Setup the format and compression for archive wa
   based on the path.
 */
-void setupArchive(const char* path, struct archive *wa) {
+int setupArchive(struct archive* wa, const char* path) {
 
+      // find the first (last?) extension
+      const char* firstext = rindex(path, '.') + 1;
+
+      // try to set the compression based on the last extension (may fail)
+      int setcompression = archive_write_set_compression_by_name(wa, firstext);
+
+      // try to set the format based on the extension (may fail this time)
+      int setarchive = archive_write_set_format_by_name(wa, firstext);
+
+      // if the first extension did not set either format or compression, get out
+      if (setarchive == ARCHIVE_FATAL && setcompression == ARCHIVE_FATAL)
+        return 0;
+
+      // if the first extension set format (and maybe compression), done
+      if (setarchive != ARCHIVE_FATAL)
+        return 1;
+
+      // find the second (second to last?) extension
+      std::string ext2(path, firstext - 1);
+      char* secondext = rindex(ext2.c_str(), '.') + 1;
+      if (!secondext || secondext[0] == '\0')
+        return 0;
+
+      // try to set the format based on the extension (may fail this time)
+      setarchive = archive_write_set_format_by_name(wa, secondext);
+
+      return setarchive != ARCHIVE_FATAL ? 1 : 0;
 }
 
 
@@ -138,31 +165,8 @@ void* archiveWriteOpen(const char * URI) {
     if (!isstdout) {
       wa = archive_write_new();
 
-      // setup the desired compression
-      // TODO:  Extract into method, and make more general
-      std::string s = ".";
-      s += output_format ? output_format : root_filename.c_str();
-
-      int length = s.length();
-      const char* extname = s.c_str();
-
-      // set formats
-      archive_write_set_format_ustar(wa);
-      for(int i = length - 1 ; i >= 0; --i)
-      {
-	int start;
-	for(start = i; start >= 0 && extname[start] != '.'; --start);
-
-	std::string extension = "";
-	for(int pos = start + 1; pos < i + 1; ++pos)
-	  extension += extname[pos];
-	archive_write_set_compression_by_name(wa, extension.c_str());
-	int setarchive = archive_write_set_format_by_name(wa, extension.c_str());
-
-	if(setarchive != ARCHIVE_FATAL)
-	  break;
-
-	i = start;
+      if (!setupArchive(wa, output_format ? output_format : root_filename.c_str())) {
+        return 0;
       }
 
       archive_write_open_filename(wa, root_filename.c_str());
