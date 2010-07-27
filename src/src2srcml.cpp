@@ -752,18 +752,15 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
       {
 	// find the start of the embedded uri (if it is in there)
-	const char* ns_uri = 0;
-	if (char* embedded = (char*) strchr(argv[optind - 1], '=')) {
-	  ns_uri = embedded + 1;
-	  *embedded = '\0';
-	}
+	char* ns_uri = argv[optind - 1];
+        strsep(&ns_uri, "=");
 
 	// now find the prefix in what is left
-	char* embedded = strchr(argv[optind - 1], ':');
-	const char* ns_prefix = embedded ? embedded + 1 : "";
+        char* ns_prefix = argv[optind - 1];
+        strsep(&ns_prefix, ":");
 
 	// if no uri, look in the next argument
-	if (!ns_uri) {
+	if (!ns_uri[0]) {
 	  if (!(optind < argc && argv[optind][0] != '-')) {
 	    fprintf(stderr, "%s: xmlns option selected but not specified.\n", PROGRAM_NAME);
 	    exit(STATUS_LANGUAGE_MISSING);
@@ -779,7 +776,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
 	    options |= uris[i].option;
 
-	    urisprefix[i] = ns_prefix;
+	    urisprefix[i] = ns_prefix ? ns_prefix : "";
 	    poptions.prefixchange[i] = true;
 	    found = true;
 	    break;
