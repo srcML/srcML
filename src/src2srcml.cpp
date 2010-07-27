@@ -1289,7 +1289,7 @@ void process_dir(srcMLTranslator& translator, const char* directory, process_opt
   if (!isoption(options, OPTION_RECURSIVE))
     return;
 
-  // now process directories
+  // go back and process directories
   rewinddir(dirp);
   while (struct dirent* entry = readdir(dirp)) {
 
@@ -1319,6 +1319,10 @@ void process_filelist(srcMLTranslator& translator, process_options& poptions, in
     URIStream uriinput(poptions.fname);
     char* line;
     while ((line = uriinput.getline())) {
+
+      // skip over whitespace
+      while (line[0] == ' ' || line[0] == '\t' || line[0] == '\f')
+        ++line;
 
       // skip blank lines or comment lines
       if (line[0] == '\0' || line[0] == '\n' || line[0] == FILELIST_COMMENT)
