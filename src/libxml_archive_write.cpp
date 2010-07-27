@@ -15,8 +15,6 @@ void archiveWriteOutputFormat(const char* format) {
   output_format = format;
 }
 
-static bool writesize = true;
-
 static const int NUMARCHIVES = 4;
 static const char * ARCHIVE_FILTER_EXTENSIONS[] = {"tar", "zip", "tgz", "cpio", "gz", "bz2", 0};
 
@@ -153,27 +151,10 @@ void* archiveWriteOpen(const char * URI) {
       }
 
       archive_write_open_filename(wa, root_filename.c_str());
-      writesize = true;
+
     } else {
-       wa = archive_write_disk_new();
-       writesize = true;
+      wa = archive_write_disk_new();
     }
-  }
-
-  if (!writesize) {
-    if (!wentry) {
-      wentry = archive_entry_new();
-      archive_entry_set_filetype(wentry, AE_IFREG);
-      archive_entry_set_perm(wentry, 0644);
-      time_t now = time(NULL);
-      //archive_entry_set_birthtime(wentry, now, 0);
-      archive_entry_set_atime(wentry, now, 0);
-      archive_entry_set_ctime(wentry, now, 0);
-      archive_entry_set_mtime(wentry, now, 0);
-    }
-
-    archive_entry_set_pathname(wentry, URI);
-    int r = archive_write_header(wa, wentry);
   }
 
   filename = URI;
@@ -186,10 +167,7 @@ void* archiveWriteOpen(const char * URI) {
 // read from the URI
 int archiveWrite(void * context, const char * buffer, int len) {
 
-  if (writesize)
-    data.append(buffer, len);
-  else
-    archive_write_data(wa, buffer, len);
+  data.append(buffer, len);
 
   return len;
 }
@@ -197,32 +175,21 @@ int archiveWrite(void * context, const char * buffer, int len) {
 // close the open file
 int archiveWriteClose(void * context) {
 
-  if (writesize) {
-    if (!wentry) {
-      wentry = archive_entry_new();
-      archive_entry_set_filetype(wentry, AE_IFREG);
-      archive_entry_set_perm(wentry, 0644);
-      time_t now = time(NULL);
-      //    archive_entry_set_birthtime(wentry, now, 0);
-      archive_entry_set_atime(wentry, now, 0);
-      archive_entry_set_ctime(wentry, now, 0);
-      archive_entry_set_mtime(wentry, now, 0);
-    }
-
-    archive_entry_set_pathname(wentry, filename.c_str());
-    archive_entry_set_size(wentry, data.size());
-    archive_write_header(wa, wentry);
-    archive_write_data(wa, data.c_str(), data.size());
+  if (!wentry) {
+    wentry = archive_entry_new();
+    archive_entry_set_filetype(wentry, AE_IFREG);
+    archive_entry_set_perm(wentry, 0644);
+    time_t now = time(NULL);
+    //    archive_entry_set_birthtime(wentry, now, 0);
+    archive_entry_set_atime(wentry, now, 0);
+    archive_entry_set_ctime(wentry, now, 0);
+    archive_entry_set_mtime(wentry, now, 0);
   }
 
-  /*
   archive_entry_set_pathname(wentry, filename.c_str());
+  archive_entry_set_size(wentry, data.size());
   archive_write_header(wa, wentry);
   archive_write_data(wa, data.c_str(), data.size());
-  */
-  //  archive_entry_free(wentry);
-  //  wentry = 0;
-  //  archive_entry_clear(wentry);
 
   return 1;
 }
