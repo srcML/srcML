@@ -26,6 +26,8 @@
 #include "srcmlapps.h"
 #include <fnmatch.h>
 #include <cstdio>
+#include <cstring>
+#include <string>
 
 struct pair {
   const char* s;
