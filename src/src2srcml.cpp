@@ -1318,6 +1318,7 @@ void process_filelist(srcMLTranslator& translator, process_options& poptions, in
     while ((line = uriinput.getline())) {
 
       // skip over whitespace
+      // TODO:  Other types of whitespace?  backspace?
       while (line[0] == ' ' || line[0] == '\t' || line[0] == '\f')
         ++line;
 
