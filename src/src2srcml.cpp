@@ -1121,7 +1121,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     }
 
     // output compression and format (if any)
-    if (isArchiveFirst() && isArchiveRead() && !isoption(options, OPTION_QUIET)) {
+    if (isArchiveFirst() && !isoption(options, OPTION_QUIET)) {
 
       if (strcmp(archiveReadCompression(), "none"))
 	fprintf(stderr, "Compression:\t%s\n", archiveReadCompression());
