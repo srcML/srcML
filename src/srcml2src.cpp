@@ -750,7 +750,8 @@ int process_args(int argc, char* argv[], process_options & poptions)
       }
 
       // param value
-      end = asg_split(optarg);
+      end = optarg;
+      strsep(&end, "=");
       poptions.params[poptions.paramcount] = (char*) malloc(strlen(end) + 1 + 2);
       strcpy((char *) poptions.params[poptions.paramcount], "\'");
       strcpy((char *) poptions.params[poptions.paramcount], end);
@@ -773,7 +774,11 @@ int process_args(int argc, char* argv[], process_options & poptions)
       poptions.params[poptions.paramcount++] = optarg;
       
       // param value
-      poptions.params[poptions.paramcount++] = asg_split(optarg);
+      {
+        char* place = optarg;
+        strsep(&place, "=");
+        poptions.params[poptions.paramcount++] = place;
+      }
       break;
 
     case RELAXNG_FLAG_CODE:

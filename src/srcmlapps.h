@@ -189,19 +189,6 @@ inline std::string& filename_split(const char* path, std::string& dir, std::stri
   return filename;
 }
 
-inline char* asg_split(char* path) {
-
-  char* ret = path;
-
-  char* point = rindex(path, '='); 
-  if (point) {
-    *point = '\0';
-    ret = point + 1;
-  }
-
-  return ret;
-}
-
 inline char* comma_split(char* path) {
 
   char* ret = path;
