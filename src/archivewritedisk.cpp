@@ -15,8 +15,8 @@ int main(int argc, const char **argv)
   int fd;
 
   a = archive_write_disk_new();
-  archive_write_set_format_pax_restricted(a);
-  archive_write_set_compression_gzip(a);
+  //  archive_write_set_format_pax_restricted(a);
+  //  archive_write_set_compression_gzip(a);
   entry = archive_entry_new();
   archive_entry_set_pathname(entry, argv[1]);
   archive_entry_set_filetype(entry, AE_IFREG);
