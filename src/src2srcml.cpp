@@ -521,7 +521,7 @@ int main(int argc, char* argv[]) {
       process_filelist(translator, poptions, count, skipped);
 
     // translate from standard input
-    } else if (input_arg_count == 0 || strcmp(argv[input_arg_start], STDIN) == 0) {
+    } else if (input_arg_count == 0) {
 
       options &= ~OPTION_SKIP_DEFAULT;
 
