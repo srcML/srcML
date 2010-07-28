@@ -365,8 +365,11 @@ file = open('archive/a.cpp.xml', 'w')
 file.write(srcml)
 file.close()
 
-check([srcml2src, '-o', 'archive/a.cpp.xml.tar'], srcml, "")
-validate(execute(['tar', '-Oxf', 'archive/a.cpp.xml.tar'], ""), src)
+check([srcml2src, '-o', 'archive/a.cpp.tar'], srcml, "")
+validate(execute(['tar', '-Oxf', 'archive/a.cpp.tar'], ""), src)
+
+check([srcml2src, 'archive/a.cpp.xml', '-o', 'archive/a.cpp.tar'], srcml, "")
+validate(execute(['tar', '-Oxf', 'archive/a.cpp.tar'], ""), src)
 
 # footer
 print
