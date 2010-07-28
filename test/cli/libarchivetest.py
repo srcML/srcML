@@ -381,10 +381,6 @@ src ="""
 a;
 """
 
-src ="""
-b;
-"""
-
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" language="C++" filename="archive/a.cpp">
 
