@@ -28,26 +28,6 @@
 
 #include <iostream>
 
-#ifdef __GNUC__
-#include <sys/stat.h>
-#include <sys/errno.h>
-#else
-#include <direct.h>
-#endif
-
-#ifdef __GNUC__
-#define EOL "\n"
-#define EOL_SIZE 1
-#else
-#define EOL "\r\n"
-#define EOL_SIZE 2
-#endif
-
-// directory permission for expand
-#ifdef __GNUC__
-const int EXPAND_DIR_PERM = S_IRWXU | S_IRWXG;
-#endif
-
 using namespace SAX2ListUnits;
 
 namespace SAX2ListUnits {
@@ -119,11 +99,10 @@ namespace SAX2ListUnits {
     int filename_size = filename_index != -1 ? (const char*) attributes[filename_index + 4] - (const char*) attributes[filename_index + 3] : 0;
 
     // whole purpose
-    if (dir_size > 0) {
-      fprintf(stdout, "%ld\t%.*s/%.*s\n", pstate->count, dir_size, (char*) attributes[dir_index + 3],
-	      filename_size, (char*) attributes[filename_index + 3]);
-    }  else {
-      fprintf(stdout, "%ld\t%.*s\n", pstate->count, filename_size, (char*) attributes[filename_index + 3]);
-    }
-}
+    fprintf(stdout, "%ld\t%.*s%.*s%.*s\n", pstate->count,
+            dir_size, (char*) attributes[dir_index + 3],
+            dir_size ? 1 : 0, "/",
+            filename_size, (char*) attributes[filename_index + 3]);
+
+  }
 };
