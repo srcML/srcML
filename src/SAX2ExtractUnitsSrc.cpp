@@ -46,6 +46,8 @@ public :
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                  const xmlChar** attributes) = 0;
 
+  virtual void charactersUnit(void* ctx, const xmlChar* ch, int len) = 0;
+
   virtual void endUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) = 0;
 
   virtual void endRootUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) = 0;
@@ -107,33 +109,9 @@ public :
     }
   }
 
-  virtual void endUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+  virtual void charactersUnit(void* ctx, const xmlChar* ch, int len) {
 
-  }
-
-  virtual void endRootUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
-
-  }
-};
-
-static ExtractUnitsSrc extractor;
-
-namespace SAX2ExtractUnitsSrc {
-
-  xmlSAXHandler factory() {
-
-    xmlSAXHandler sax = { 0 };
-
-    sax.initialized    = XML_SAX2_MAGIC;
-    sax.startElementNs = &startElementNsRoot;
-
-    return sax;
-  }
-
-  // output all characters to output buffer
-  void characters(void* user_data, const xmlChar* ch, int len) {
-
-    State* pstate = (State*) user_data;
+    State* pstate = (State*) ctx;
 
 #ifdef __GNUC__
     xmlOutputBufferWrite(pstate->output, len, (const char*) ch);
@@ -159,6 +137,47 @@ namespace SAX2ExtractUnitsSrc {
 
     xmlOutputBufferWrite(pstate->output, pos, (const char*)(BAD_CAST c - pos));
 #endif
+  }
+
+  virtual void endUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+
+    State* pstate = (State*) ctx;
+
+    // finish up this file
+    xmlOutputBufferClose(pstate->output);
+
+    // stop after this file (and end gracefully) with ctrl-c
+    if (isoption(*(pstate->poptions), OPTION_TERMINATE)) {
+      xmlStopParser(pstate->ctxt);
+      throw TerminateLibXMLError();
+    }
+
+
+  }
+
+  virtual void endRootUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+
+  }
+};
+
+static ExtractUnitsSrc extractor;
+
+namespace SAX2ExtractUnitsSrc {
+
+  xmlSAXHandler factory() {
+
+    xmlSAXHandler sax = { 0 };
+
+    sax.initialized    = XML_SAX2_MAGIC;
+    sax.startElementNs = &startElementNsRoot;
+
+    return sax;
+  }
+
+  // output all characters to output buffer
+  void characters(void* ctx, const xmlChar* ch, int len) {
+
+    extractor.charactersUnit(ctx, ch, len);
   }
 
   // handle root unit of compound document
@@ -213,14 +232,8 @@ namespace SAX2ExtractUnitsSrc {
     if (pstate->ctxt->nameNr != 2)
       return;
 
-    // finish up this file
-    xmlOutputBufferClose(pstate->output);
-
-    // stop after this file (and end gracefully) with ctrl-c
-    if (isoption(*(pstate->poptions), OPTION_TERMINATE)) {
-      xmlStopParser(pstate->ctxt);
-      throw TerminateLibXMLError();
-    }
+    // process the end of the unit
+    extractor.endUnit(ctx, localname, prefix, URI);
 
     // now waiting for start of next unit
     pstate->ctxt->sax->startElementNs = &startElementNs;
@@ -243,7 +256,7 @@ namespace SAX2ExtractUnitsSrc {
       // convert from the escaped to the unescaped value
       char value = strtod((const char*) attributes[3], NULL);
 
-      xmlOutputBufferWrite(((State*) ctx)->output, 1, &value);
+      characters(ctx, BAD_CAST &value, 1);
     }
   }
 };
