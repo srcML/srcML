@@ -416,6 +416,28 @@ check([srcml2src, 'archive/a.cpp.xml.zip', '-o', 'archive/a.cpp'], '', '')
 validate(open('archive/a.cpp', 'r').read(), src)
 
 ##
+# zip and gz
+
+src ="""
+a;
+"""
+
+check([srcml2src, 'archive/a.cpp.xml.zip.gz'], '', src)
+check([srcml2src, 'archive/a.cpp.xml.zip.gz', '-o', 'archive/a.cpp'], '', '')
+validate(open('archive/a.cpp', 'r').read(), src)
+
+##
+# zip and bz2
+
+src ="""
+a;
+"""
+
+check([srcml2src, 'archive/a.cpp.xml.zip.bz2'], '', src)
+check([srcml2src, 'archive/a.cpp.xml.zip.bz2', '-o', 'archive/a.cpp'], '', '')
+validate(open('archive/a.cpp', 'r').read(), src)
+
+##
 # output
 
 ##
