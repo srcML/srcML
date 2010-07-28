@@ -118,7 +118,7 @@ f = open('archive/a.cpp', 'w')
 f.write(src);
 f.close()
 
-execute(['archive/archive.sh', 'archive/a.cpp', 'archive/a.cpp'], '')
+os.system('./archive/archive.sh archive/a.cpp archive/a.cpp')
 
 ##
 # test gz
@@ -348,6 +348,18 @@ validate(open('archive/a.cpp.xml', 'r').read(), srcml)
 ##
 # input
 
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="archive/a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+"""
+
+file = open('archive/a.cpp.xml', 'w')
+file.write(srcml)
+file.close()
+
+os.system('./archive/archive.sh archive/a.cpp.xml archive/a.cpp.xml')
+
 ##
 # gz
 
@@ -355,14 +367,19 @@ src ="""
 a;
 """
 
-srcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="archive/a.cpp">
-<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-</unit>
-"""
-
 check([srcml2src, 'archive/a.cpp.xml.gz'], '', src)
 check([srcml2src, 'archive/a.cpp.xml.gz', '-o', 'archive/a.cpp'], '', '')
+validate(open('archive/a.cpp', 'r').read(), src)
+
+##
+# gz and bz2
+
+src ="""
+a;
+"""
+
+check([srcml2src, 'archive/a.cpp.xml.gz.bz2'], '', src)
+check([srcml2src, 'archive/a.cpp.xml.gz.bz2', '-o', 'archive/a.cpp'], '', '')
 validate(open('archive/a.cpp', 'r').read(), src)
 
 ##
