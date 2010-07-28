@@ -204,51 +204,6 @@ namespace SAX2ExtractUnitsSrc {
     pstate->ctxt->sax->endElementNs = &endElementNs;
   }
 
-  // start a new output buffer and corresponding file for a unit element
-  void startUnit(State* pstate, int nb_attributes, const xmlChar** attributes) {
-
-    std::string& path = pstate->whole_path;
-
-    // start the path with the (optional) target directory
-    path = pstate->to_directory;
-
-    // append the directory attribute
-    int dir_index = find_attribute_index(nb_attributes, attributes, UNIT_ATTRIBUTE_DIRECTORY);
-    if (dir_index != -1) {
-	
-	if (!path.empty() && path[path.size() - 1] != '/')
-	  path += '/';
-
-	path.append((const char*) attributes[dir_index + 3], (const char*) attributes[dir_index + 4]);
-    }
-
-    // find the filename attribute
-    int filename_index = find_attribute_index(nb_attributes, attributes, UNIT_ATTRIBUTE_FILENAME);
-    bool foundfilename = filename_index != -1;
-
-    // filename is required
-    if (!foundfilename) {
-      fprintf(stderr, "Missing filename attribute\n");
-      return;
-    }
-
-    // append the filename
-    if (!path.empty() && path[path.size() - 1] != '/')
-      path += '/';
-    path.append((const char*) attributes[filename_index + 3], (const char*) attributes[filename_index + 4]);
-
-    // output file status message if in verbose mode
-    if (isoption(*(pstate->poptions), OPTION_VERBOSE))
-      fprintf(stderr, "%ld\t%s\n", pstate->count, path.c_str());
-
-    // now create the file itself
-    pstate->output = xmlOutputBufferCreateFilename(path.c_str(), pstate->handler, 0);
-    if (pstate->output == NULL) {
-      fprintf(stderr, "Output buffer error\n");
-      xmlStopParser(pstate->ctxt);
-    }
-}
-
   // end unit element and current file/buffer (started by startElementNs
   void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
