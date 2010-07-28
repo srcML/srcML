@@ -811,6 +811,10 @@ fxmlfile = xml_declaration + """
 </unit>
 """
 
+f = open('sub/a.cpp', 'w')
+f.write(sfile)
+f.close()
+
 check([src2srcml, 'sub/a.cpp', '--output', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fxmlfile)
 check([src2srcml, 'sub/a.cpp', '--output=sub/a.cpp.xml'], "", "")
