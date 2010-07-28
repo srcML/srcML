@@ -405,6 +405,17 @@ check([srcml2src, 'archive/a.cpp.xml.bz2.gz', '-o', 'archive/a.cpp'], '', '')
 validate(open('archive/a.cpp', 'r').read(), src)
 
 ##
+# zip
+
+src ="""
+a;
+"""
+
+check([srcml2src, 'archive/a.cpp.xml.zip'], '', src)
+check([srcml2src, 'archive/a.cpp.xml.zip', '-o', 'archive/a.cpp'], '', '')
+validate(open('archive/a.cpp', 'r').read(), src)
+
+##
 # output
 
 ##
