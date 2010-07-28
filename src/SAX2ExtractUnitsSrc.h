@@ -29,6 +29,17 @@
 #include "srcMLUtility.h"
 #include "ProcessUnit.h"
 
+struct Element {
+  const xmlChar* localname;
+  const xmlChar* prefix;
+  const xmlChar* URI;
+  int nb_namespaces;
+  const xmlChar** namespaces;
+  int nb_attributes;
+  int nb_defaulted;
+  const xmlChar** attributes;
+};
+
 class SAX2ExtractUnitsSrc {
 
  public:
@@ -37,6 +48,10 @@ class SAX2ExtractUnitsSrc {
   OPTION_TYPE* poptions;
   int unit;
   long count;
+  Element root;
+  const xmlChar* firstcharacters;
+  int firstlen;
+  bool isarchive;
 
  public:
 

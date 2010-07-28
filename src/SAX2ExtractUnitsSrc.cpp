@@ -28,26 +28,6 @@
 #include "ProcessUnit.h"
 #include "ExtractUnitsSrc.h"
 
-namespace {
-
-  struct Element {
-    const xmlChar* localname;
-    const xmlChar* prefix;
-    const xmlChar* URI;
-    int nb_namespaces;
-    const xmlChar** namespaces;
-    int nb_attributes;
-    int nb_defaulted;
-    const xmlChar** attributes;
-  };
-
-}
-
-static Element root;
-static const xmlChar* firstcharacters;
-static int firstlen;
-static bool isarchive = false;
-
 xmlSAXHandler SAX2ExtractUnitsSrc::factory() {
 
   xmlSAXHandler sax = { 0 };
@@ -64,10 +44,10 @@ void SAX2ExtractUnitsSrc::characters(void* ctx, const xmlChar* ch, int len) {
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
-  if (!firstcharacters) {
-    firstcharacters = (const xmlChar*) malloc(len);
-    strncpy((char*) firstcharacters, (const char*) ch, len);
-    firstlen = len;
+  if (!pstate->firstcharacters) {
+    pstate->firstcharacters = (const xmlChar*) malloc(len);
+    strncpy((char*) pstate->firstcharacters, (const char*) ch, len);
+    pstate->firstlen = len;
   } else
     pstate->pprocess->charactersUnit(ctx, ch, len);
 }
@@ -84,33 +64,33 @@ void SAX2ExtractUnitsSrc::startElementNsRoot(void* ctx, const xmlChar* localname
   pstate->count = 0;
 
   // save all the info in case this is not a srcML archive
-  root.localname = localname ? (xmlChar*) strdup((const char*) localname) : 0;
-  root.prefix = prefix ? (xmlChar*) strdup((const char*) prefix) : 0;
-  root.URI = URI ? (xmlChar*) strdup((const char*) URI) : 0;
+  pstate->root.localname = localname ? (xmlChar*) strdup((const char*) localname) : 0;
+  pstate->root.prefix = prefix ? (xmlChar*) strdup((const char*) prefix) : 0;
+  pstate->root.URI = URI ? (xmlChar*) strdup((const char*) URI) : 0;
 
-  root.nb_namespaces = nb_namespaces;
+  pstate->root.nb_namespaces = nb_namespaces;
   int ns_length = nb_namespaces * 2;
-  root.namespaces = (const xmlChar**) malloc(ns_length * sizeof(namespaces[0]));
+  pstate->root.namespaces = (const xmlChar**) malloc(ns_length * sizeof(namespaces[0]));
   for (int i = 0; i < ns_length; ++i)
-    root.namespaces[i] = namespaces[i] ? (xmlChar*) strdup((const char*) namespaces[i]) : 0;
+    pstate->root.namespaces[i] = namespaces[i] ? (xmlChar*) strdup((const char*) namespaces[i]) : 0;
 
-  root.nb_attributes = nb_attributes;
-  root.nb_defaulted = nb_defaulted;
+  pstate->root.nb_attributes = nb_attributes;
+  pstate->root.nb_defaulted = nb_defaulted;
 
   int nb_length = nb_attributes * 5;
-  root.attributes = (const xmlChar**) malloc(nb_length * sizeof(attributes[0]));
+  pstate->root.attributes = (const xmlChar**) malloc(nb_length * sizeof(attributes[0]));
   for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
-    root.attributes[index] = attributes[index] ? (xmlChar*) strdup((const char*) attributes[index]) : 0;
-    root.attributes[index + 1] = attributes[index + 1] ? (xmlChar*) strdup((const char*) attributes[index + 1]) : 0;
-    root.attributes[index + 2] = attributes[index + 2] ? (xmlChar*) strdup((const char*) attributes[index + 2]) : 0;
+    pstate->root.attributes[index] = attributes[index] ? (xmlChar*) strdup((const char*) attributes[index]) : 0;
+    pstate->root.attributes[index + 1] = attributes[index + 1] ? (xmlChar*) strdup((const char*) attributes[index + 1]) : 0;
+    pstate->root.attributes[index + 2] = attributes[index + 2] ? (xmlChar*) strdup((const char*) attributes[index + 2]) : 0;
     int vallength = attributes[index + 4] - attributes[index + 3];
-    root.attributes[index + 3] = (const xmlChar*) malloc(vallength);
-    strncpy((char *) root.attributes[index + 3], (const char*) attributes[index + 3], vallength);
-    root.attributes[index + 4] = root.attributes[index + 3] + vallength;
+    pstate->root.attributes[index + 3] = (const xmlChar*) malloc(vallength);
+    strncpy((char *) pstate->root.attributes[index + 3], (const char*) attributes[index + 3], vallength);
+    pstate->root.attributes[index + 4] = pstate->root.attributes[index + 3] + vallength;
   }
 
-  firstcharacters = 0;
-  firstlen = 0;
+  pstate->firstcharacters = 0;
+  pstate->firstlen = 0;
 
   // handle nested units
   ctxt->sax->startElementNs = &startElementNs;
@@ -139,19 +119,19 @@ void SAX2ExtractUnitsSrc::startElementNs(void* ctx, const xmlChar* localname, co
     ++(pstate->count);
 
     // should have made this call earlier, makeup for it now
-    pstate->pprocess->startUnit(ctx, root.localname, root.prefix, root.URI, root.nb_namespaces,
-                                root.namespaces, root.nb_attributes, root.nb_defaulted, root.attributes);
+    pstate->pprocess->startUnit(ctx, pstate->root.localname, pstate->root.prefix, pstate->root.URI, pstate->root.nb_namespaces,
+                                pstate->root.namespaces, pstate->root.nb_attributes, pstate->root.nb_defaulted, pstate->root.attributes);
 
-    if (firstcharacters)
-      characters(ctx, firstcharacters, firstlen);
+    if (pstate->firstcharacters)
+      characters(ctx, pstate->firstcharacters, pstate->firstlen);
 
-    isarchive = false;
+    pstate->isarchive = false;
 
   } else {
 
     ++(pstate->count);
 
-    isarchive = true;
+    pstate->isarchive = true;
 
     // process the start of this unit
     pstate->pprocess->startUnit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted,
@@ -166,10 +146,9 @@ void SAX2ExtractUnitsSrc::endElementNs(void *ctx, const xmlChar *localname, cons
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
   // only process nested unit start elements
-  if (ctxt->nameNr != (isarchive ? 2 : 1))
+  if (ctxt->nameNr != (pstate->isarchive ? 2 : 1))
     return;
 
-  // process the end of the unit
   pstate->pprocess->endUnit(ctx, localname, prefix, URI);
 
   // now waiting for start of next unit
