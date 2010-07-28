@@ -331,6 +331,17 @@ check([src2srcml, option.FILELIST_FLAG, "filelistab"], "", nestedfile)
 ####
 # srcml2src
 
+src = """
+a;
+"""
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+"""
+
+check([srcml2src], srcml, src)
+
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="bar" filename="foo" version="1.2"/>
 """
