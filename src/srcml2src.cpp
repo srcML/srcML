@@ -63,26 +63,26 @@ char const NAMESPACE_FLAG_SHORT = 'p';
 char const * const NAMESPACE_FLAG_FULL = "prefix=URI";
 
 char const * const XPATH_FLAG = "xpath";
-char const XPATH_FLAG_CODE = 'H';
+const int XPATH_FLAG_CODE = 256 + 0;
 char const * const XPATH_FLAG_FULL = "xpath=XPATH";
 
 char const * const XSLT_FLAG = "xslt";
-char const XSLT_FLAG_CODE = 'S';
+const int XSLT_FLAG_CODE = 256 + 1;
 char const * const XSLT_FLAG_FULL = "xslt=XSLT_FILE";
 
 char const * const PARAM_FLAG = "xpathparam";
-char const PARAM_FLAG_CODE = 'P';
+const int PARAM_FLAG_CODE = 256 + 2;
 char const * const PARAM_FLAG_FULL = "xpathparam NAME=VAL";
 
 char const * const STRING_PARAM_FLAG = "param";
-char const STRING_PARAM_FLAG_CODE = 'B';
+const int STRING_PARAM_FLAG_CODE = 256 + 3;
 char const * const STRING_PARAM_FLAG_FULL = "param NAME=VAL";
 
 char const * const XSLT_ALL_FLAG = "apply-root";
 //char const XSLT_ALL_FLAG_SHORT = '';
 
 char const * const RELAXNG_FLAG = "relaxng";
-char const RELAXNG_FLAG_CODE = 'R';
+const int RELAXNG_FLAG_CODE = 256 + 4;
 char const * const RELAXNG_FLAG_FULL = "relaxng=RELAXNG_FILE";
 
 char const * const CONTEXT_FLAG = "context";
@@ -90,7 +90,7 @@ char const * const CONTEXT_FLAG = "context";
 char const * const CONTEXT_FLAG_FULL = "context=CONTEXT";
 
 const char* const LIST_FLAG = "list";
-const char LIST_FLAG_CODE = 'T';
+const int LIST_FLAG_CODE = 256 + 5;
 
 void libxml_error(void *ctx, const char *msg, ...) {}
 
