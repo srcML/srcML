@@ -108,6 +108,8 @@ xml_declaration= '<?xml version="1.0" encoding="' + default_src2srcml_encoding +
 
 print xml_declaration
 
+os.system("rm a.cpp*")
+
 src ="""
 a;
 """
@@ -339,6 +341,32 @@ srcml = xml_declaration + """
 check([src2srcml, 'archive/a.cpp.zip.bz2'], '', srcml)
 check([src2srcml, 'archive/a.cpp.zip.bz2', '-o', 'archive/a.cpp.xml'], '', '')
 validate(open('archive/a.cpp.xml', 'r').read(), srcml)
+
+##
+# srcml2src
+
+##
+# output
+
+##
+# tar
+
+src ="""
+a;
+"""
+
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="archive/a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+"""
+
+file = open('archive/a.cpp.xml', 'w')
+file.write(srcml)
+file.close()
+
+check([srcml2src, '-o', 'archive/a.cpp.xml.tar'], srcml, "")
+validate(execute(['tar', '-Ox', 'archive/a.cpp.xml.tar'], ""), src)
 
 # footer
 print
