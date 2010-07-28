@@ -99,7 +99,7 @@ class ExtractUnitsSrc : public ProcessUnit {
     output_buffer = xmlOutputBufferCreateFilename(path.c_str(), handler, 0);
     if (output_buffer == NULL) {
       fprintf(stderr, "Output buffer error\n");
-      xmlStopParser(pstate->ctxt);
+      xmlStopParser(ctxt);
     }
   }
 
@@ -141,7 +141,7 @@ class ExtractUnitsSrc : public ProcessUnit {
 
     // stop after this file (and end gracefully) with ctrl-c
     if (isoption(*(pstate->poptions), OPTION_TERMINATE)) {
-      xmlStopParser(pstate->ctxt);
+      xmlStopParser(ctxt);
       throw TerminateLibXMLError();
     }
 

@@ -63,7 +63,7 @@ namespace SAX2ExtractUnitsSrc {
     pstate->count = 0;
 
     // handle nested units
-    pstate->ctxt->sax->startElementNs = &startElementNs;
+    ctxt->sax->startElementNs = &startElementNs;
   }
 
   // start a new output buffer and corresponding file for a unit element
@@ -79,7 +79,7 @@ namespace SAX2ExtractUnitsSrc {
     if (pstate->count == 0 && !(strcmp((const char*) localname, "unit") == 0 &&
 	  strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0)) {
       fprintf(stderr, "Options only valid for nested srcML documents\n");
-      xmlStopParser(pstate->ctxt);
+      xmlStopParser(ctxt);
       return;
     }
     */
@@ -90,11 +90,11 @@ namespace SAX2ExtractUnitsSrc {
                         attributes);
 
     // next state is to copy the unit contents, finishing when needed
-    pstate->ctxt->sax->startElementNs = &startElementNsEscape;
-    //    pstate->ctxt->sax->startElement = &startElementEscape;
-    pstate->ctxt->sax->characters = &characters;
-    pstate->ctxt->sax->ignorableWhitespace = &characters;
-    pstate->ctxt->sax->endElementNs = &endElementNs;
+    ctxt->sax->startElementNs = &startElementNsEscape;
+    //    ctxt->sax->startElement = &startElementEscape;
+    ctxt->sax->characters = &characters;
+    ctxt->sax->ignorableWhitespace = &characters;
+    ctxt->sax->endElementNs = &endElementNs;
   }
 
   // end unit element and current file/buffer (started by startElementNs
@@ -104,16 +104,16 @@ namespace SAX2ExtractUnitsSrc {
     State* pstate = (State*) ctxt->_private;
 
     // only process nested unit start elements
-    if (pstate->ctxt->nameNr != 2)
+    if (ctxt->nameNr != 2)
       return;
 
     // process the end of the unit
     pstate->pprocess->endUnit(ctx, localname, prefix, URI);
 
     // now waiting for start of next unit
-    pstate->ctxt->sax->startElementNs = &startElementNs;
-    pstate->ctxt->sax->characters = 0;
-    pstate->ctxt->sax->endElementNs = 0;
+    ctxt->sax->startElementNs = &startElementNs;
+    ctxt->sax->characters = 0;
+    ctxt->sax->endElementNs = 0;
   }
 
   // escape control character elements

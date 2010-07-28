@@ -292,7 +292,6 @@ void srcMLUtility::expand(const char* root_filename, const char* format, const c
   if (ctxt == NULL) return;
   ctxt->sax = &sax;
   ctxt->_private = &state;
-  state.ctxt = ctxt;
 
   xmlParseDocument(ctxt);
 

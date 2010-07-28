@@ -34,7 +34,6 @@ namespace SAX2ExtractUnitsSrc {
   xmlSAXHandler factory();
 
   struct State {
-    xmlParserCtxtPtr ctxt;
     int unit;
     long count;
     OPTION_TYPE* poptions;
