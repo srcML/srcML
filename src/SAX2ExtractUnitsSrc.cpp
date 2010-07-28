@@ -43,11 +43,6 @@
 #define EOL_SIZE 2
 #endif
 
-// directory permission for expand
-#ifdef __GNUC__
-const int EXPAND_DIR_PERM = S_IRWXU | S_IRWXG;
-#endif
-
 using namespace SAX2ExtractUnitsSrc;
 
 namespace SAX2ExtractUnitsSrc {
