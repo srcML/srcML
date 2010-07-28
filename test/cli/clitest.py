@@ -417,11 +417,11 @@ sxmlfile2 = xml_declaration + """
 check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "2", "-"], nestedfile, sxmlfile2)
 check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "2"], nestedfile, sxmlfile2)
 
-#os.system("rm -f sub/a.cpp")
+os.system("rm -f sub/a.cpp")
 
-#checkNoOutput([srcml2src, option.EXPAND_FLAG + '=.'], sxmlfile1)
+checkNoOutput([srcml2src, option.EXPAND_FLAG + '=.'], sxmlfile1)
 
-#validate(open("sub/a.cpp", "r").read(), sfile1)
+validate(open("sub/a.cpp", "r").read(), sfile1)
 
 os.system("rm -f sub/a.cpp sub/b.cpp;")
 
@@ -1901,11 +1901,11 @@ f = open('sub/a.cpp.xml', 'w')
 f.write(srcml)
 f.close()
 
-#os.system("rm -f sub/a.cpp")
+os.system("rm -f sub/a.cpp")
 
-#checkNoOutput([srcml2src, option.EXPAND_FLAG + '=.', 'sub/a.cpp.xml'], srcml)
+checkNoOutput([srcml2src, option.EXPAND_FLAG + '=.', 'sub/a.cpp.xml'], srcml)
 
-#validate(open("sub/a.cpp", "r").read(), sfile1)
+validate(open("sub/a.cpp", "r").read(), sfile1)
 
 f = open('sub/a.cpp.xml', 'w')
 f.write(nestedfile)
