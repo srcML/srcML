@@ -60,7 +60,8 @@ class ExtractUnitsSrc : public ProcessUnit {
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                          const xmlChar** attributes) {
 
-    State* pstate = (State*) ctx;
+    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+    State* pstate = (State*) ctxt->_private;
 
     // start the path with the (optional) target directory
     path = to_directory;
@@ -132,7 +133,8 @@ class ExtractUnitsSrc : public ProcessUnit {
 
   virtual void endUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
-    State* pstate = (State*) ctx;
+    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+    State* pstate = (State*) ctxt->_private;
 
     // finish up this file
     xmlOutputBufferClose(output_buffer);

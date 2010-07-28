@@ -291,7 +291,7 @@ void srcMLUtility::expand(const char* root_filename, const char* format, const c
   xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
   if (ctxt == NULL) return;
   ctxt->sax = &sax;
-  ctxt->userData = &state;
+  ctxt->_private = &state;
   state.ctxt = ctxt;
 
   xmlParseDocument(ctxt);

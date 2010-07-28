@@ -45,7 +45,8 @@ namespace SAX2ExtractUnitsSrc {
   // output all characters to output buffer
   void characters(void* ctx, const xmlChar* ch, int len) {
 
-    State* pstate = (State*) ctx;
+    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+    State* pstate = (State*) ctxt->_private;
 
     pstate->pprocess->charactersUnit(ctx, ch, len);
   }
@@ -55,7 +56,8 @@ namespace SAX2ExtractUnitsSrc {
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
 		    const xmlChar** attributes) {
 
-    State* pstate = (State*) ctx;
+    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+    State* pstate = (State*) ctxt->_private;
 
     // start counting units after the root
     pstate->count = 0;
@@ -69,7 +71,9 @@ namespace SAX2ExtractUnitsSrc {
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
 		    const xmlChar** attributes) {
 
-    State* pstate = (State*) ctx;
+    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+    State* pstate = (State*) ctxt->_private;
+
     /*
     // check that this is a nested file
     if (pstate->count == 0 && !(strcmp((const char*) localname, "unit") == 0 &&
@@ -96,7 +100,8 @@ namespace SAX2ExtractUnitsSrc {
   // end unit element and current file/buffer (started by startElementNs
   void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
-    State* pstate = (State*) ctx;
+    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+    State* pstate = (State*) ctxt->_private;
 
     // only process nested unit start elements
     if (pstate->ctxt->nameNr != 2)
