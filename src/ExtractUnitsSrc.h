@@ -39,11 +39,15 @@ using namespace SAX2ExtractUnitsSrc;
 
 class ExtractUnitsSrc : public ProcessUnit {
  public :
-  ExtractUnitsSrc(const char* to_dir)
-    : to_directory(to_dir) {}
+ ExtractUnitsSrc(const char* to_dir, const char* output_encoding)
+   : to_directory(to_dir) {
+
+    handler = xmlFindCharEncodingHandler(output_encoding);
+  }
 
  private :
     const char* to_directory;
+    xmlCharEncodingHandlerPtr handler;
 
  public :
   virtual void startRootUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
@@ -91,7 +95,7 @@ class ExtractUnitsSrc : public ProcessUnit {
       fprintf(stderr, "%ld\t%s\n", pstate->count, path.c_str());
 
     // now create the file itself
-    output_buffer = xmlOutputBufferCreateFilename(path.c_str(), pstate->handler, 0);
+    output_buffer = xmlOutputBufferCreateFilename(path.c_str(), handler, 0);
     if (output_buffer == NULL) {
       fprintf(stderr, "Output buffer error\n");
       xmlStopParser(pstate->ctxt);
@@ -99,8 +103,6 @@ class ExtractUnitsSrc : public ProcessUnit {
   }
 
   virtual void charactersUnit(void* ctx, const xmlChar* ch, int len) {
-
-    State* pstate = (State*) ctx;
 
 #ifdef __GNUC__
     xmlOutputBufferWrite(output_buffer, len, (const char*) ch);

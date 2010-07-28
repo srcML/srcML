@@ -279,12 +279,10 @@ void srcMLUtility::expand(const char* root_filename, const char* format, const c
   archiveWriteRootOpen(root_filename);
 #endif
 
-  ExtractUnitsSrc process(to_directory);
+  ExtractUnitsSrc process(to_directory, output_encoding);
 
   SAX2ExtractUnitsSrc::State state;
-  state.root_filename = root_filename;
   state.poptions = &options;
-  state.handler = xmlFindCharEncodingHandler(output_encoding);
   state.unit = -1;
   state.pprocess = &process;
 

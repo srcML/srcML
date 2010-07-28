@@ -37,9 +37,6 @@ namespace SAX2ExtractUnitsSrc {
     xmlParserCtxtPtr ctxt;
     int unit;
     long count;
-    const char * root_filename;
-    const char * ofilename;
-    xmlCharEncodingHandlerPtr handler;
     OPTION_TYPE* poptions;
     ProcessUnit* pprocess;
   };
