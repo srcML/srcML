@@ -30,8 +30,6 @@
 
 using namespace SAX2ExtractUnitsSrc;
 
-static ExtractUnitsSrc extractor;
-
 namespace SAX2ExtractUnitsSrc {
 
   xmlSAXHandler factory() {
@@ -47,7 +45,9 @@ namespace SAX2ExtractUnitsSrc {
   // output all characters to output buffer
   void characters(void* ctx, const xmlChar* ch, int len) {
 
-    extractor.charactersUnit(ctx, ch, len);
+    State* pstate = (State*) ctx;
+
+    pstate->pprocess->charactersUnit(ctx, ch, len);
   }
 
   // handle root unit of compound document
@@ -82,7 +82,7 @@ namespace SAX2ExtractUnitsSrc {
     ++(pstate->count);
 
     // process the start of this unit
-    extractor.startUnit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted,
+    pstate->pprocess->startUnit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted,
                         attributes);
 
     // next state is to copy the unit contents, finishing when needed
@@ -103,7 +103,7 @@ namespace SAX2ExtractUnitsSrc {
       return;
 
     // process the end of the unit
-    extractor.endUnit(ctx, localname, prefix, URI);
+    pstate->pprocess->endUnit(ctx, localname, prefix, URI);
 
     // now waiting for start of next unit
     pstate->ctxt->sax->startElementNs = &startElementNs;
