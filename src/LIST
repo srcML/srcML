@@ -1,6 +1,4 @@
-- Replace type codes ( *_CODE) for options with ascii numbers starting at 128 (both src2srcml and srcml2src)
-
-- Need OPTION_??? for --settings. Have to wait for all the options to be processed to output the settings
+- Hande OPTION_SETTINGS.
 
 - How to handle leading "../"
 
