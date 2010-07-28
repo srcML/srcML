@@ -279,29 +279,35 @@ void srcMLUtility::expand(const char* root_filename, const char* format, const c
   archiveWriteRootOpen(root_filename);
 #endif
 
-  ExtractUnitsSrc process(to_directory, output_encoding);
+  // setup parser
+  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
+  if (ctxt == NULL) return;
 
+  // setup sax handler
+  xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
+  ctxt->sax = &sax;
+
+  // setup sax handling state
   SAX2ExtractUnitsSrc::State state;
   state.poptions = &options;
   state.unit = -1;
-  state.pprocess = &process;
-
-  xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
-
-  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
-  if (ctxt == NULL) return;
-  ctxt->sax = &sax;
   ctxt->_private = &state;
 
+  // setup process handling
+  ExtractUnitsSrc process(to_directory, output_encoding);
+  state.pprocess = &process;
+
+  // process the document
   xmlParseDocument(ctxt);
 
+#ifdef LIBARCHIVE
+  archiveWriteRootClose(0);
+#endif
+  
+  // local variable, do not want xmlFreeParserCtxt to free
   ctxt->sax = NULL;
 
-#ifdef LIBARCHIVE
-  if (archiveWriteMatch_srcml2src(root_filename))
-    archiveWriteRootClose(0);
-#endif
-
+  // all done with parsing
   xmlFreeParserCtxt(ctxt);
 }
 
