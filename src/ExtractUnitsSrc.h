@@ -38,7 +38,14 @@
 using namespace SAX2ExtractUnitsSrc;
 
 class ExtractUnitsSrc : public ProcessUnit {
-public :
+ public :
+  ExtractUnitsSrc(const char* to_dir)
+    : to_directory(to_dir) {}
+
+ private :
+    const char* to_directory;
+
+ public :
   virtual void startRootUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                              const xmlChar** attributes) {
@@ -52,7 +59,7 @@ public :
     State* pstate = (State*) ctx;
 
     // start the path with the (optional) target directory
-    path = pstate->to_directory;
+    path = to_directory;
 
     // append the directory attribute
     int dir_index = find_attribute_index(nb_attributes, attributes, UNIT_ATTRIBUTE_DIRECTORY);
