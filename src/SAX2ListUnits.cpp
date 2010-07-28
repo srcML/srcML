@@ -79,23 +79,11 @@ namespace SAX2ListUnits {
     ++(pstate->count);
 
     // find the directory
-    int dir_index = -1;
-    for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5)
-      if (strcmp((const char*) attributes[index], UNIT_ATTRIBUTE_DIRECTORY) == 0) {
-
-	dir_index = index;
-	break;
-      }
+    int dir_index = find_attribute_index(nb_attributes, attributes, UNIT_ATTRIBUTE_DIRECTORY);
     int dir_size = dir_index != -1 ? (const char*) attributes[dir_index + 4] - (const char*) attributes[dir_index + 3] : 0;
 
     // find the filename
-    int filename_index = -1;
-    for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5)
-      if (strcmp((const char*) attributes[index], UNIT_ATTRIBUTE_FILENAME) == 0) {
-
-	filename_index = index;
-	break;
-      }
+    int filename_index = find_attribute_index(nb_attributes, attributes, UNIT_ATTRIBUTE_FILENAME);
     int filename_size = filename_index != -1 ? (const char*) attributes[filename_index + 4] - (const char*) attributes[filename_index + 3] : 0;
 
     // whole purpose

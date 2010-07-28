@@ -53,6 +53,16 @@ const char* find(PROPERTIES_TYPE& pv, const char* name) {
   return 0;
 }
 
+// index of attribute in attributes
+int find_attribute_index(int nb_attributes, const xmlChar** attributes, const char* attribute) {
+
+    for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5)
+      if (strcmp((const char*) attributes[index], attribute) == 0)
+	return index;
+
+    return -1;
+}
+
 // collect attributes
 void collect_attributes(int nb_attributes, const xmlChar** attributes, PROPERTIES_TYPE& attrv) {
 
