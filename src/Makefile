@@ -240,7 +240,7 @@ ${OBJ_DIR}SAX2Utilities.o : SAX2Utilities.cpp SAX2Utilities.h
 ${OBJ_DIR}SAX2Properties.o : SAX2Properties.cpp SAX2Properties.h
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}SAX2ExtractUnitSrc.o : SAX2ExtractUnitSrc.cpp SAX2ExtractUnitSrc.h
+${OBJ_DIR}SAX2ExtractUnitSrc.o : SAX2ExtractUnitSrc.cpp SAX2ExtractUnitSrc.h ProcessUnit.h ExtractUnitsSrc.h
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}SAX2ExtractUnitXML.o : SAX2ExtractUnitXML.cpp SAX2ExtractUnitXML.h

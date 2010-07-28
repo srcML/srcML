@@ -49,6 +49,9 @@
 #include "SAX2UnitDOMXSLT.h"
 #include "SAX2UnitDOMRelaxNG.h"
 
+#include "ProcessUnit.h"
+#include "ExtractUnitsSrc.h"
+
 #include "srcexfun.h"
 #include <libxslt/xslt.h>
 #include <libxslt/transform.h>
@@ -276,12 +279,15 @@ void srcMLUtility::expand(const char* root_filename, const char* format, const c
   archiveWriteRootOpen(root_filename);
 #endif
 
+  ExtractUnitsSrc process;
+
   SAX2ExtractUnitsSrc::State state;
   state.root_filename = root_filename;
   state.poptions = &options;
   state.handler = xmlFindCharEncodingHandler(output_encoding);
   state.to_directory = to_directory;
   state.unit = -1;
+  state.pprocess = &process;
 
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
 

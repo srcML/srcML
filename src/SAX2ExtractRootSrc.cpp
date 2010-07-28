@@ -24,6 +24,7 @@
 
 #include "SAX2ExtractRootSrc.h"
 #include "Options.h"
+#include "srcmlns.h"
 
 namespace SAX2ExtractRootSrc {
 
@@ -89,4 +90,55 @@ namespace SAX2ExtractRootSrc {
 
     xmlStopParser(pstate->ctxt);
   }
+
+  // escape control character elements
+  void startElementNsEscape(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+			    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+			    const xmlChar** attributes) {
+
+    // only reason for this handler is that the escape element
+    // needs to be expanded to the equivalent character.
+    // So make it as quick as possible, since this is rare
+    if (localname[0] == 'e' && localname[1] == 's' &&
+	strcmp((const char*) localname, "escape") == 0 &&
+ 	strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0) {
+      
+      // convert from the escaped to the unescaped value
+      char value = strtod((const char*) attributes[3], NULL);
+
+      characters(ctx, BAD_CAST &value, 1);
+    }
+  }
+
+  // output all characters to output buffer
+  void characters(void* ctx, const xmlChar* ch, int len) {
+
+    State* pstate = (State*) ctx;
+
+#ifdef __GNUC__
+    xmlOutputBufferWrite(pstate->output, len, (const char*) ch);
+#else
+    const char* c = (const char*) ch;
+    int pos = 0;
+    const char* chend = (const char*) ch + len;
+    while (c < chend) {
+
+      switch (*c) {
+      case '\n' :
+	xmlOutputBufferWrite(pstate->output, pos, (const char*)(BAD_CAST c - pos));
+	pos = 0;
+	xmlOutputBufferWrite(pstate->output, EOL_SIZE, EOL);
+	break;
+
+      default :
+	++pos;
+	break;
+      };
+      ++c;
+    }
+
+    xmlOutputBufferWrite(pstate->output, pos, (const char*)(BAD_CAST c - pos));
+#endif
+  }
+
 };

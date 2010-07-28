@@ -27,6 +27,7 @@
 
 #include <libxml/parser.h>
 #include "srcMLUtility.h"
+#include "ProcessUnit.h"
 
 namespace SAX2ExtractUnitsSrc {
 
@@ -40,9 +41,9 @@ namespace SAX2ExtractUnitsSrc {
     const char * ofilename;
     xmlCharEncodingHandlerPtr handler;
     OPTION_TYPE* poptions;
-    xmlOutputBufferPtr output;
-    std::string whole_path;
+    xmlOutputBufferPtr output; // leave for now (unused, but positionally important)
     const char* to_directory;
+    ProcessUnit* pprocess;
   };
 
   // start a new output buffer and corresponding file for a

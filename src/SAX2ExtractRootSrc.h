@@ -45,8 +45,13 @@ namespace SAX2ExtractRootSrc {
     xmlOutputBufferPtr output;
   };
 
-  using SAX2ExtractUnitsSrc::characters;
-  using SAX2ExtractUnitsSrc::startElementNsEscape;
+  // start a new output buffer and corresponding file for a
+  // output all characters to output buffer
+  void characters(void* user_data, const xmlChar* ch, int len);
+
+  void startElementNsEscape(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+		    const xmlChar** attributes);
 
   void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
