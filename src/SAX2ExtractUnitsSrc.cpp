@@ -26,15 +26,6 @@
 #include "srcmlns.h"
 #include "srcmlapps.h"
 
-#include <iostream>
-
-#ifdef __GNUC__
-#include <sys/stat.h>
-#include <sys/errno.h>
-#else
-#include <direct.h>
-#endif
-
 #ifdef __GNUC__
 #define EOL "\n"
 #define EOL_SIZE 1
