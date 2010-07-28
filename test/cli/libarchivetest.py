@@ -383,6 +383,28 @@ check([srcml2src, 'archive/a.cpp.xml.gz.bz2', '-o', 'archive/a.cpp'], '', '')
 validate(open('archive/a.cpp', 'r').read(), src)
 
 ##
+# bz2
+
+src ="""
+a;
+"""
+
+check([srcml2src, 'archive/a.cpp.xml.bz2'], '', src)
+check([srcml2src, 'archive/a.cpp.xml.bz2', '-o', 'archive/a.cpp'], '', '')
+validate(open('archive/a.cpp', 'r').read(), src)
+
+##
+# bz2 and gz
+
+src ="""
+a;
+"""
+
+check([srcml2src, 'archive/a.cpp.xml.bz2.gz'], '', src)
+check([srcml2src, 'archive/a.cpp.xml.bz2.gz', '-o', 'archive/a.cpp'], '', '')
+validate(open('archive/a.cpp', 'r').read(), src)
+
+##
 # output
 
 ##
