@@ -35,8 +35,6 @@
 #define EOL_SIZE 2
 #endif
 
-using namespace SAX2ExtractUnitsSrc;
-
 class ExtractUnitsSrc : public ProcessUnit {
  public :
  ExtractUnitsSrc(const char* to_dir, const char* output_encoding)
@@ -61,7 +59,7 @@ class ExtractUnitsSrc : public ProcessUnit {
                          const xmlChar** attributes) {
 
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    State* pstate = (State*) ctxt->_private;
+    SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
     // start the path with the (optional) target directory
     path = to_directory;
@@ -134,7 +132,7 @@ class ExtractUnitsSrc : public ProcessUnit {
   virtual void endUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    State* pstate = (State*) ctxt->_private;
+    SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
     // finish up this file
     xmlOutputBufferClose(output_buffer);

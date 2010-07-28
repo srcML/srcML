@@ -288,7 +288,7 @@ void srcMLUtility::expand(const char* root_filename, const char* format, const c
   ctxt->sax = &sax;
 
   // setup sax handling state
-  SAX2ExtractUnitsSrc::State state;
+  SAX2ExtractUnitsSrc state;
   state.poptions = &options;
   state.unit = -1;
   ctxt->_private = &state;

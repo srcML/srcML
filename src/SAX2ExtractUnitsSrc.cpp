@@ -28,110 +28,105 @@
 #include "ProcessUnit.h"
 #include "ExtractUnitsSrc.h"
 
-using namespace SAX2ExtractUnitsSrc;
+xmlSAXHandler SAX2ExtractUnitsSrc::factory() {
 
-namespace SAX2ExtractUnitsSrc {
+  xmlSAXHandler sax = { 0 };
 
-  xmlSAXHandler factory() {
+  sax.initialized    = XML_SAX2_MAGIC;
+  sax.startElementNs = &startElementNsRoot;
 
-    xmlSAXHandler sax = { 0 };
+  return sax;
+}
 
-    sax.initialized    = XML_SAX2_MAGIC;
-    sax.startElementNs = &startElementNsRoot;
+// output all characters to output buffer
+void SAX2ExtractUnitsSrc::characters(void* ctx, const xmlChar* ch, int len) {
 
-    return sax;
+  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+  SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+
+  pstate->pprocess->charactersUnit(ctx, ch, len);
+}
+
+// handle root unit of compound document
+void SAX2ExtractUnitsSrc::startElementNsRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                                             int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                                             const xmlChar** attributes) {
+
+  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+  SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+
+  // start counting units after the root
+  pstate->count = 0;
+
+  // handle nested units
+  ctxt->sax->startElementNs = &startElementNs;
+}
+
+// start a new output buffer and corresponding file for a unit element
+void SAX2ExtractUnitsSrc::startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                                         int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                                         const xmlChar** attributes) {
+
+  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+  SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+
+  /*
+  // check that this is a nested file
+  if (pstate->count == 0 && !(strcmp((const char*) localname, "unit") == 0 &&
+  strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0)) {
+  fprintf(stderr, "Options only valid for nested srcML documents\n");
+  xmlStopParser(ctxt);
+  return;
   }
+  */
+  ++(pstate->count);
 
-  // output all characters to output buffer
-  void characters(void* ctx, const xmlChar* ch, int len) {
+  // process the start of this unit
+  pstate->pprocess->startUnit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted,
+                              attributes);
 
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    State* pstate = (State*) ctxt->_private;
+  // next state is to copy the unit contents, finishing when needed
+  ctxt->sax->startElementNs = &startElementNsEscape;
+  //    ctxt->sax->startElement = &startElementEscape;
+  ctxt->sax->characters = &characters;
+  ctxt->sax->ignorableWhitespace = &characters;
+  ctxt->sax->endElementNs = &endElementNs;
+}
 
-    pstate->pprocess->charactersUnit(ctx, ch, len);
-  }
+// end unit element and current file/buffer (started by startElementNs
+void SAX2ExtractUnitsSrc::endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
-  // handle root unit of compound document
-  void startElementNsRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-		    const xmlChar** attributes) {
+  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+  SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    State* pstate = (State*) ctxt->_private;
+  // only process nested unit start elements
+  if (ctxt->nameNr != 2)
+    return;
 
-    // start counting units after the root
-    pstate->count = 0;
+  // process the end of the unit
+  pstate->pprocess->endUnit(ctx, localname, prefix, URI);
 
-    // handle nested units
-    ctxt->sax->startElementNs = &startElementNs;
-  }
+  // now waiting for start of next unit
+  ctxt->sax->startElementNs = &startElementNs;
+  ctxt->sax->characters = 0;
+  ctxt->sax->endElementNs = 0;
+}
 
-  // start a new output buffer and corresponding file for a unit element
-  void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-		    const xmlChar** attributes) {
+// escape control character elements
+void SAX2ExtractUnitsSrc::startElementNsEscape(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                                               int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                                               const xmlChar** attributes) {
 
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    State* pstate = (State*) ctxt->_private;
-
-    /*
-    // check that this is a nested file
-    if (pstate->count == 0 && !(strcmp((const char*) localname, "unit") == 0 &&
-	  strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0)) {
-      fprintf(stderr, "Options only valid for nested srcML documents\n");
-      xmlStopParser(ctxt);
-      return;
-    }
-    */
-    ++(pstate->count);
-
-    // process the start of this unit
-    pstate->pprocess->startUnit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted,
-                        attributes);
-
-    // next state is to copy the unit contents, finishing when needed
-    ctxt->sax->startElementNs = &startElementNsEscape;
-    //    ctxt->sax->startElement = &startElementEscape;
-    ctxt->sax->characters = &characters;
-    ctxt->sax->ignorableWhitespace = &characters;
-    ctxt->sax->endElementNs = &endElementNs;
-  }
-
-  // end unit element and current file/buffer (started by startElementNs
-  void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
-
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    State* pstate = (State*) ctxt->_private;
-
-    // only process nested unit start elements
-    if (ctxt->nameNr != 2)
-      return;
-
-    // process the end of the unit
-    pstate->pprocess->endUnit(ctx, localname, prefix, URI);
-
-    // now waiting for start of next unit
-    ctxt->sax->startElementNs = &startElementNs;
-    ctxt->sax->characters = 0;
-    ctxt->sax->endElementNs = 0;
-  }
-
-  // escape control character elements
-  void startElementNsEscape(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-			    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-			    const xmlChar** attributes) {
-
-    // only reason for this handler is that the escape element
-    // needs to be expanded to the equivalent character.
-    // So make it as quick as possible, since this is rare
-    if (localname[0] == 'e' && localname[1] == 's' &&
-	strcmp((const char*) localname, "escape") == 0 &&
- 	strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0) {
+  // only reason for this handler is that the escape element
+  // needs to be expanded to the equivalent character.
+  // So make it as quick as possible, since this is rare
+  if (localname[0] == 'e' && localname[1] == 's' &&
+      strcmp((const char*) localname, "escape") == 0 &&
+      strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0) {
       
-      // convert from the escaped to the unescaped value
-      char value = strtod((const char*) attributes[3], NULL);
+    // convert from the escaped to the unescaped value
+    char value = strtod((const char*) attributes[3], NULL);
 
-      characters(ctx, BAD_CAST &value, 1);
-    }
+    characters(ctx, BAD_CAST &value, 1);
   }
-};
+}

@@ -29,39 +29,36 @@
 #include "srcMLUtility.h"
 #include "ProcessUnit.h"
 
-namespace SAX2ExtractUnitsSrc {
+class SAX2ExtractUnitsSrc {
+ public:
+  static xmlSAXHandler factory();
 
-  xmlSAXHandler factory();
-
-  struct State {
-    int unit;
-    long count;
-    OPTION_TYPE* poptions;
-    ProcessUnit* pprocess;
-  };
+  ProcessUnit* pprocess;
+  OPTION_TYPE* poptions;
+  int unit;
+  long count;
 
   // start a new output buffer and corresponding file for a
   // output all characters to output buffer
-  void characters(void* user_data, const xmlChar* ch, int len);
+  static void characters(void* user_data, const xmlChar* ch, int len);
 
   // handle root unit of compound document
-  void startElementNsRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-		    const xmlChar** attributes);
+  static void startElementNsRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                                 int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                                 const xmlChar** attributes);
 
   // unit element
-  void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-		    const xmlChar** attributes);
+  static void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                             int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                             const xmlChar** attributes);
 
-  void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
+  static void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
 
-  void startElementNsEscape(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-		    const xmlChar** attributes);
+  static void startElementNsEscape(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                                   int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                                   const xmlChar** attributes);
 
-  void startElementEscape(void* ctx, const xmlChar* localname, const xmlChar** attributes);
-
+  static void startElementEscape(void* ctx, const xmlChar* localname, const xmlChar** attributes);
 };
 
 #endif
