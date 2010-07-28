@@ -334,6 +334,7 @@ check([src2srcml, option.FILELIST_FLAG, "filelistab"], "", nestedfile)
 src = """
 a;
 """
+
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
@@ -1873,7 +1874,7 @@ b;
 """
 
 srcml = xml_declaration + """ 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 """

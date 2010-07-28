@@ -351,6 +351,9 @@ validate(open('archive/a.cpp.xml', 'r').read(), srcml)
 ##
 # tar
 
+##
+# single
+
 src ="""
 a;
 """
@@ -358,6 +361,37 @@ a;
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="archive/a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+"""
+
+file = open('archive/a.cpp.xml', 'w')
+file.write(srcml)
+file.close()
+
+check([srcml2src, '-o', 'archive/a.cpp.tar'], srcml, "")
+validate(execute(['tar', '-Oxf', 'archive/a.cpp.tar'], ""), src)
+
+check([srcml2src, 'archive/a.cpp.xml', '-o', 'archive/a.cpp.tar'], srcml, "")
+validate(execute(['tar', '-Oxf', 'archive/a.cpp.tar'], ""), src)
+
+##
+# archive
+
+src ="""
+a;
+"""
+
+src ="""
+b;
+"""
+
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" language="C++" filename="archive/a.cpp">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="archive/a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
 </unit>
 """
 
