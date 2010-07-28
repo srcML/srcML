@@ -68,7 +68,7 @@ const char* const MODIFIER_FLAG = "modifier";
 
 const char* const POSITION_FLAG = "position";
 const char* const TABS_FLAG = "tabs";
-const char TABS_FLAG_CODE = 'T';
+const int TABS_FLAG_CODE = 256 + 0;
 const char* const TABS_FLAG_FULL = "tabs=NUMBER";
 const int DEFAULT_TABSIZE = 8;
 
@@ -76,16 +76,16 @@ const char* const INTERACTIVE_FLAG = "interactive";
 const char INTERACTIVE_FLAG_SHORT = 'c';
 
 const char* const CPP_MARKUP_ELSE_FLAG = "cpp-markup-else";
-const char CPP_MARKUP_ELSE_FLAG_CODE = 'm';
+const int CPP_MARKUP_ELSE_FLAG_CODE = 256 + 1;
 
 const char* const CPP_TEXTONLY_ELSE_FLAG = "cpp-text-else";
-const char CPP_TEXTONLY_ELSE_FLAG_CODE = 'E';
+const int CPP_TEXTONLY_ELSE_FLAG_CODE = 256 + 2;
 
 const char* const CPP_MARKUP_IF0_FLAG = "cpp-markup-if0";
-const char CPP_MARKUP_IF0_FLAG_CODE = '0';
+const int CPP_MARKUP_IF0_FLAG_CODE = 256 + 3;
 
 const char* const CPP_TEXTONLY_IF0_FLAG = "cpp-text-if0";
-const char CPP_TEXTONLY_IF0_FLAG_CODE = 'p';
+const int CPP_TEXTONLY_IF0_FLAG_CODE = 256 + 4;
 
 const char* const EXPRESSION_MODE_FLAG = "expression";
 const char EXPRESSION_MODE_FLAG_SHORT = 'e';
@@ -95,25 +95,25 @@ const char* const SELF_VERSION_FLAG = "self-version";
 const char* const DEFAULT_XML_ENCODING = "UTF-8";
 
 const char* const FILELIST_FLAG = "files-from";
-const char FILELIST_FLAG_CODE = 'F';
+const int FILELIST_FLAG_CODE = 256 + 5;
 const char* const FILELIST_FLAG_FULL = "files-from=INPUT";
 
 const char* const XMLNS_FLAG = "xmlns";
-const char XMLNS_FLAG_CODE = 128;
+const int XMLNS_FLAG_CODE = 256 + 6;
 const char* const XMLNS_DEFAULT_FLAG_FULL = "xmlns=URI";
 const char* const XMLNS_FLAG_FULL = "xmlns:PREFIX=URI";
 
 const char* const REGISTER_EXT_FLAG = "register-ext";
-const char REGISTER_EXT_FLAG_CODE = 'R';
+const int REGISTER_EXT_FLAG_CODE = 256 + 7;
 
 const char* const OLD_FILENAME_FLAG = "old-filename";
-const char OLD_FILENAME_FLAG_CODE = 'O';
+const int OLD_FILENAME_FLAG_CODE = 256 + 8;
 
 const char* const SKIP_DEFAULT_FLAG = "skip-default";
-const char SKIP_DEFAULT_FLAG_CODE = 'S';
+const int SKIP_DEFAULT_FLAG_CODE = 256 + 9;
 
 const char* const RECURSIVE_FLAG = "recursive";
-const char RECURSIVE_FLAG_CODE = 'r';
+const int RECURSIVE_FLAG_CODE = 256 + 10;
 
 const char* const QUIET_FLAG = "quiet";
 const char QUIET_FLAG_SHORT = 'q';
