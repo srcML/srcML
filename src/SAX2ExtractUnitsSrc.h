@@ -30,13 +30,21 @@
 #include "ProcessUnit.h"
 
 class SAX2ExtractUnitsSrc {
+
  public:
-  static xmlSAXHandler factory();
 
   ProcessUnit* pprocess;
   OPTION_TYPE* poptions;
   int unit;
   long count;
+
+ public:
+
+  SAX2ExtractUnitsSrc(ProcessUnit* pprocess, OPTION_TYPE* poptions, int unit)
+    : pprocess(pprocess), poptions(poptions), unit(unit)
+    {}
+
+  static xmlSAXHandler factory();
 
   // start a new output buffer and corresponding file for a
   // output all characters to output buffer

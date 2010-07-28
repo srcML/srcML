@@ -287,15 +287,12 @@ void srcMLUtility::expand(const char* root_filename, const char* format, const c
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
   ctxt->sax = &sax;
 
-  // setup sax handling state
-  SAX2ExtractUnitsSrc state;
-  state.poptions = &options;
-  state.unit = -1;
-  ctxt->_private = &state;
-
   // setup process handling
   ExtractUnitsSrc process(to_directory, output_encoding);
-  state.pprocess = &process;
+
+  // setup sax handling state
+  SAX2ExtractUnitsSrc state(&process, &options, -1);
+  ctxt->_private = &state;
 
   // process the document
   xmlParseDocument(ctxt);
