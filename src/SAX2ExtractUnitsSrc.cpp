@@ -139,29 +139,25 @@ namespace SAX2ExtractUnitsSrc {
     path = pstate->to_directory;
 
     // append the directory attribute
-    for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5)
-      if (strcmp((const char*) attributes[index], UNIT_ATTRIBUTE_DIRECTORY) == 0) {
+    int dir_index = find_attribute_index(nb_attributes, attributes, UNIT_ATTRIBUTE_DIRECTORY);
+    if (dir_index != -1) {
 	
 	if (!path.empty() && path[path.size() - 1] != '/')
 	  path += '/';
 
-	path.append((const char*) attributes[index + 3], (const char*) attributes[index + 4]);
-	break;
-      }
+	path.append((const char*) attributes[dir_index + 3], (const char*) attributes[dir_index + 4]);
+    }
 
     // append the filename attribute, recording if we have one
-    bool foundfilename = false;
-    for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5)
-      if (strcmp((const char*) attributes[index], UNIT_ATTRIBUTE_FILENAME) == 0) {
+    int filename_index = find_attribute_index(nb_attributes, attributes, UNIT_ATTRIBUTE_FILENAME);
+    bool foundfilename = filename_index != -1;
+    if (foundfilename) {
 
 	if (!path.empty() && path[path.size() - 1] != '/')
 	  path += '/';
 
-	path.append((const char*) attributes[index + 3], (const char*) attributes[index + 4]);
-
-	foundfilename = true;
-	break;
-      }
+	path.append((const char*) attributes[filename_index + 3], (const char*) attributes[filename_index + 4]);
+    }
 
     // filename is required
     if (!foundfilename) {
