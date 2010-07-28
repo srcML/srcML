@@ -366,7 +366,7 @@ file.write(srcml)
 file.close()
 
 check([srcml2src, '-o', 'archive/a.cpp.xml.tar'], srcml, "")
-validate(execute(['tar', '-Ox', 'archive/a.cpp.xml.tar'], ""), src)
+validate(execute(['tar', '-Oxf', 'archive/a.cpp.xml.tar'], ""), src)
 
 # footer
 print
