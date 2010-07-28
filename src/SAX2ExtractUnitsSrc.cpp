@@ -148,22 +148,20 @@ namespace SAX2ExtractUnitsSrc {
 	path.append((const char*) attributes[dir_index + 3], (const char*) attributes[dir_index + 4]);
     }
 
-    // append the filename attribute, recording if we have one
+    // find the filename attribute
     int filename_index = find_attribute_index(nb_attributes, attributes, UNIT_ATTRIBUTE_FILENAME);
     bool foundfilename = filename_index != -1;
-    if (foundfilename) {
-
-	if (!path.empty() && path[path.size() - 1] != '/')
-	  path += '/';
-
-	path.append((const char*) attributes[filename_index + 3], (const char*) attributes[filename_index + 4]);
-    }
 
     // filename is required
     if (!foundfilename) {
       fprintf(stderr, "Missing filename attribute\n");
       return;
     }
+
+    // append the filename
+    if (!path.empty() && path[path.size() - 1] != '/')
+      path += '/';
+    path.append((const char*) attributes[filename_index + 3], (const char*) attributes[filename_index + 4]);
 
     // output file status message if in verbose mode
     if (isoption(*(pstate->poptions), OPTION_VERBOSE))
