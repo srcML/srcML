@@ -340,7 +340,12 @@ srcml = xml_declaration + """
 </unit>
 """
 
+f = open('a.cpp.xml', 'w')
+f.write(srcml)
+f.close()
+
 check([srcml2src], srcml, src)
+check([srcml2src, 'a.cpp.xml'], "", src)
 
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="bar" filename="foo" version="1.2"/>
