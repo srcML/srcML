@@ -105,18 +105,10 @@ void SAX2ExtractUnitsSrc::startElementNs(void* ctx, const xmlChar* localname, co
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
-  // next state is to copy the unit contents, finishing when needed
-  ctxt->sax->startElementNs = &startElementNsEscape;
-  ctxt->sax->characters = &characters;
-  ctxt->sax->ignorableWhitespace = &characters;
-  ctxt->sax->endElementNs = &endElementNs;
-
   // see if this is really a nested unit.  If not, then we have an individual
   // unit (not a srcML archive) and need to process the cached root
   if (pstate->count == 0 && !(strcmp((const char*) localname, "unit") == 0 &&
                               strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0)) {
-
-    ++(pstate->count);
 
     // should have made this call earlier, makeup for it now
     pstate->pprocess->startUnit(ctx, pstate->root.localname, pstate->root.prefix, pstate->root.URI, pstate->root.nb_namespaces,
@@ -127,15 +119,35 @@ void SAX2ExtractUnitsSrc::startElementNs(void* ctx, const xmlChar* localname, co
 
     pstate->isarchive = false;
 
+    ++(pstate->count);
+
+    // next state is to copy the unit contents, finishing when needed
+    ctxt->sax->startElementNs = &startElementNsEscape;
+    ctxt->sax->characters = &characters;
+    ctxt->sax->ignorableWhitespace = &characters;
+    ctxt->sax->endElementNs = &endElementNs;
+
   } else {
 
     ++(pstate->count);
 
     pstate->isarchive = true;
 
-    // process the start of this unit
-    pstate->pprocess->startUnit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted,
+    if (pstate->unit == -1 || pstate->count == pstate->unit) {
+      // process the start of this unit
+      pstate->pprocess->startUnit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted,
                               attributes);
+      // next state is to copy the unit contents, finishing when needed
+      ctxt->sax->startElementNs = &startElementNsEscape;
+      ctxt->sax->characters = &characters;
+      ctxt->sax->ignorableWhitespace = &characters;
+      ctxt->sax->endElementNs = &endElementNs;
+    } else {
+      // now waiting for start of next unit
+      ctxt->sax->startElementNs = &startElementNs;
+      ctxt->sax->characters = 0;
+      ctxt->sax->endElementNs = 0;
+    }
   }
 
   /*
