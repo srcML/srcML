@@ -2028,18 +2028,23 @@ validate(open('sub/b.cpp.xml').read(), srcmlout)
 
 
 # src2srcml
-print os.path.basename(src2srcml) + ' ' + option.HELP_FLAG
+
+globals()["test_count"] += 1
+print test_count, os.path.basename(src2srcml) + ' ' + option.HELP_FLAG
 line = execute([src2srcml, option.HELP_FLAG], "")
 execute(['grep', 'Report bugs'], line)
-print os.path.basename(src2srcml) + ' ' + option.VERSION_FLAG
+globals()["test_count"] += 1
+print test_count, os.path.basename(src2srcml) + ' ' + option.VERSION_FLAG
 line = execute([src2srcml, option.VERSION_FLAG], "")
 execute(['grep', 'Copyright'], line)
 
 # srcML2src
-print os.path.basename(srcml2src) + ' ' + option.HELP_FLAG
+globals()["test_count"] += 1
+print test_count, os.path.basename(srcml2src) + ' ' + option.HELP_FLAG
 line = execute([srcml2src, option.HELP_FLAG], "")
 execute(['grep', 'Report bugs'], line)
-print os.path.basename(srcml2src) + ' ' + option.VERSION_FLAG
+globals()["test_count"] += 1
+print test_count, os.path.basename(srcml2src) + ' ' + option.VERSION_FLAG
 line = execute([srcml2src, option.VERSION_FLAG], "")
 execute(['grep', 'Copyright'], line)
 
@@ -2099,18 +2104,23 @@ f.write(sxmlfile)
 f.close()
  
 # src2srcml
-print os.path.basename(src2srcml) + ' ' + option.VERBOSE_FLAG
+
+globals()["test_count"] += 1
+print test_count, os.path.basename(src2srcml) + ' ' + option.VERBOSE_FLAG
 line = execute([src2srcml, option.VERBOSE_FLAG, option.LANGUAGE_FLAG_SHORT, 'C++'], sfile)
 execute(['grep', srcencoding + xmlencoding], line)
-print os.path.basename(src2srcml) + ' ' + option.VERBOSE_FLAG + ' sub/a.cpp'
+globals()["test_count"] += 1
+print test_count, os.path.basename(src2srcml) + ' ' + option.VERBOSE_FLAG + ' sub/a.cpp'
 line = execute([src2srcml, option.VERBOSE_FLAG, 'sub/a.cpp'], "")
 execute(['grep', srcencoding + xmlencoding], line)
 
 # srcml2src
-print os.path.basename(srcml2src) + ' ' + option.VERBOSE_FLAG
+globals()["test_count"] += 1
+print test_count, os.path.basename(srcml2src) + ' ' + option.VERBOSE_FLAG
 line = execute([srcml2src, option.VERBOSE_FLAG], sxmlfile)
 execute(['grep', xmlencoding + srcencoding], line)
-print os.path.basename(srcml2src) + ' ' + option.VERBOSE_FLAG + ' sub/a.cpp.xml'
+globals()["test_count"] += 1
+print test_count, os.path.basename(srcml2src) + ' ' + option.VERBOSE_FLAG + ' sub/a.cpp.xml'
 line = execute([srcml2src, option.VERBOSE_FLAG, 'sub/a.cpp.xml'], "")
 execute(['grep', xmlencoding + srcencoding], line)
 
