@@ -11,7 +11,8 @@ import subprocess
 import option
 import status
 
-error_count = 0;
+test_count = 0
+error_count = 0
 
 def check(command, input, output):
 
@@ -23,10 +24,10 @@ def check(command, input, output):
 	
 def validate(gen, expected):
 	if gen != expected:
-		globals()["error_count"] = globals()["error_count"] + 1
-		print "ERROR"
-		print "expected|" + str(expected) + "|"
-		print "gen|" + str(gen) + "|"
+		globals()['error_count'] = globals()['error_count'] + 1
+		print 'ERROR'
+		print 'expected|' + str(expected) + '|'
+		print 'gen|' + str(gen) + '|'
 	return
 
 def execute(command, input):
@@ -34,32 +35,32 @@ def execute(command, input):
 	last_line = p.communicate(input)[0]
 
 	if p.returncode != 0:
-		globals()["error_count"] = globals()["error_count"] + 1
-		print "Status error:  ", p.returncode, command
+		globals()['error_count'] = globals()['error_count'] + 1
+		print 'Status error:  ', p.returncode, command
 
 	return last_line
 
 def getreturn(command, input):
 	p = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 	p.communicate(input)
-	print "Status: ", p.returncode, "\t", os.path.basename(command[0]), ' '.join(command[1:])
+	print 'Status: ', p.returncode, '\t', os.path.basename(command[0]), ' '.join(command[1:])
 	return p.returncode
 
 def checkallforms(base, shortflag, longflag, optionvalue, progin, progout):
 	if base == src2srcml and (shortflag != option.LANGUAGE_FLAG_SHORT or longflag != option.LANGUAGE_FLAG_SHORT) :
-		if optionvalue != "":
+		if optionvalue != '':
 			check([base, option.LANGUAGE_FLAG_SHORT, 'C++', shortflag, optionvalue], progin, progout)
 			check([base, option.LANGUAGE_FLAG_SHORT, 'C++', longflag, optionvalue], progin, progout)
-			check([base, option.LANGUAGE_FLAG_SHORT, 'C++', longflag + "=" + optionvalue], progin, progout)
+			check([base, option.LANGUAGE_FLAG_SHORT, 'C++', longflag + '=' + optionvalue], progin, progout)
 		else:
 			check([base, option.LANGUAGE_FLAG_SHORT, 'C++', shortflag], progin, progout)
 			check([base, option.LANGUAGE_FLAG_SHORT, 'C++', longflag], progin, progout)
 
 	else :
-		if optionvalue != "":
+		if optionvalue != '':
 		       	check([base, shortflag, optionvalue], progin, progout)
 		       	check([base, longflag, optionvalue], progin, progout)
-		       	check([base, longflag + "=" + optionvalue], progin, progout)
+		       	check([base, longflag + '=' + optionvalue], progin, progout)
 		else:
 			check([base, shortflag], progin, progout)
 			check([base, longflag], progin, progout)
@@ -67,10 +68,10 @@ def checkallforms(base, shortflag, longflag, optionvalue, progin, progout):
 	return
 
 def checkallformsfile(base, inputfile, shortflag, longflag, optionvalue, progin, progout):
-	if optionvalue != "":
+	if optionvalue != '':
 		check([base, inputfile, shortflag, optionvalue], progin, progout)
 		check([base, inputfile, longflag, optionvalue], progin, progout)
-		check([base, inputfile, longflag + "=" + optionvalue], progin, progout)
+		check([base, inputfile, longflag + '=' + optionvalue], progin, progout)
 	else:
 		check([base, inputfile, shortflag], progin, progout)
 		check([base, inputfile, longflag], progin, progout)
@@ -80,7 +81,7 @@ def checkallformsfile(base, inputfile, shortflag, longflag, optionvalue, progin,
 # version of src2srcml
 def src2srcmlversion():
 
-	last_line = subprocess.Popen([src2srcml, "-V"],
+	last_line = subprocess.Popen([src2srcml, '-V'],
 				     stdout=subprocess.PIPE).communicate()[0]
 
 	return last_line.strip()
@@ -88,27 +89,27 @@ def src2srcmlversion():
 # version of srcml2src
 def srcml2srcversion():
 
-	last_line = subprocess.Popen([srcml2src, "-V"],
+	last_line = subprocess.Popen([srcml2src, '-V'],
 				     stdout=subprocess.PIPE).communicate()[0]
 
 	return last_line.strip()
 
-src2srcml = os.environ.get("SRC2SRCML")
-if src2srcml == "" or src2srcml == None:
-	src2srcml = "../../bin/src2srcml"
+src2srcml = os.environ.get('SRC2SRCML')
+if src2srcml == '' or src2srcml == None:
+	src2srcml = '../../bin/src2srcml'
 	
-srcml2src = os.environ.get("SRCML2SRC")
-if srcml2src == "" or srcml2src == None:
-	srcml2src = "../../bin/srcml2src"
+srcml2src = os.environ.get('SRCML2SRC')
+if srcml2src == '' or srcml2src == None:
+	srcml2src = '../../bin/srcml2src'
 
-default_src2srcml_encoding = "UTF-8"
-default_srcml2src_encoding = "UTF-8"
+default_src2srcml_encoding = 'UTF-8'
+default_srcml2src_encoding = 'UTF-8'
 
 xml_declaration= '<?xml version="1.0" encoding="' + default_src2srcml_encoding + '" standalone="yes"?>'
 
 print xml_declaration
 
-os.system("rm a.cpp*")
+os.system('rm a.cpp*')
 
 src ="""
 a;
@@ -495,7 +496,7 @@ validate(execute(['tar', '-Oxf', 'archive/a.cpp.tar'], ""), src)
 
 # footer
 print
-print "Error count: ", error_count
+print 'Error count: ', error_count
 print
 print src2srcmlversion()
 print srcml2srcversion()
