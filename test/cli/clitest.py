@@ -80,7 +80,8 @@ def executeWithError(command, input):
 def getreturn(command, input):
 	p = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 	p.communicate(input)
-	print "Status: ", p.returncode, "\t", os.path.basename(command[0]), ' '.join(command[1:])
+	globals()["test_count"] += 1
+	print test_count, "Status: ", p.returncode, "\t", os.path.basename(command[0]), ' '.join(command[1:])
 	return p.returncode
 
 def checkallforms(base, shortflag, longflag, optionvalue, progin, progout):
