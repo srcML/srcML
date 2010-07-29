@@ -61,6 +61,8 @@ class ExtractUnitsSrc : public ProcessUnit {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
+    if (to_directory) {
+
     // start the path with the (optional) target directory
     path = to_directory;
 
@@ -92,6 +94,11 @@ class ExtractUnitsSrc : public ProcessUnit {
     // output file status message if in verbose mode
     if (isoption(*(pstate->poptions), OPTION_VERBOSE))
       fprintf(stderr, "%ld\t%s\n", pstate->count, path.c_str());
+
+    } else {
+
+      path = "-";
+    }
 
     // now create the file itself
     output_buffer = xmlOutputBufferCreateFilename(path.c_str(), handler, 0);

@@ -228,8 +228,55 @@ void srcMLUtility::extract_element(const char* element, const char* filename) {
 }
 
 // extract a given unit
-void srcMLUtility::extract_text(const char* ofilename, int unit) {
+void srcMLUtility::extract_text(const char* to_dir, const char* ofilename, int unit) {
 
+#ifdef LIBARCHIVE
+#if 0
+  if (xmlRegisterOutputCallbacks(archiveWriteMatch_src2srcml, archiveWriteOpen, archiveWrite, archiveWriteClose) < 0) {
+      fprintf(stderr, "%s: failed to register archive handler\n", "FOO");
+      exit(1);
+    }
+
+  if (archiveWriteMatch_src2srcml(ofilename)) {
+    archiveWriteOutputFormat(ofilename);
+
+    archiveWriteRootOpen(ofilename);
+  }
+#endif
+#endif
+
+  // setup parser
+  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
+  if (ctxt == NULL) return;
+
+  // setup sax handler
+  xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
+  ctxt->sax = &sax;
+
+  // setup process handling
+  ExtractUnitsSrc process(0 /* to_directory is stdout */, output_encoding);
+
+  // setup sax handling state
+  SAX2ExtractUnitsSrc state(&process, &options, unit);
+  ctxt->_private = &state;
+
+  // process the document
+  xmlParseDocument(ctxt);
+
+#ifdef LIBARCHIVE
+#if 0
+  if (archiveWriteMatch_src2srcml(ofilename))
+    archiveWriteRootClose(0);
+#endif
+#endif
+  
+  // local variable, do not want xmlFreeParserCtxt to free
+  ctxt->sax = NULL;
+
+  // all done with parsing
+  xmlFreeParserCtxt(ctxt);
+
+  /*
   xmlSAXHandler sax = unit == 0 ? SAX2ExtractRootSrc::factory() : SAX2ExtractUnitSrc::factory();
 
   SAX2ExtractRootSrc::State state;
@@ -262,6 +309,7 @@ void srcMLUtility::extract_text(const char* ofilename, int unit) {
   // make sure we did not end early
   if (state.unit && state.count != state.unit)
     throw OutOfRangeUnitError(state.count);
+  */
 }
 
 // expand the compound srcML to individual files

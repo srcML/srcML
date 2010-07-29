@@ -452,8 +452,24 @@ int main(int argc, char* argv[]) {
 
     } else {
 
-      su.extract_text(poptions.ofilename, poptions.unit);
+      if (!archiveWriteMatch_src2srcml(poptions.ofilename))
 
+        su.extract_text(0 /* null to_directory */, poptions.ofilename, poptions.unit);
+
+      else {
+
+#ifdef __GNUG__
+        // gracefully finish current file in compound document mode
+        pstd::signal(SIGINT, terminate_handler);
+#endif
+
+        su.expand(poptions.ofilename, poptions.output_format, "" /* blank to_directory */);
+
+        // if we terminated early, output the correct status
+        if (isoption(options, OPTION_TERMINATE))
+          exit_status = STATUS_TERMINATED;
+
+      }
     }
 
   } catch (const OutOfRangeUnitError& e) {
