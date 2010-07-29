@@ -39,8 +39,6 @@
 
 #include "SAX2ListUnits.h"
 #include "SAX2ExtractUnitsSrc.h"
-#include "SAX2ExtractUnitSrc.h"
-#include "SAX2ExtractRootSrc.h"
 #include "SAX2ExtractUnitXML.h"
 #include "SAX2CountUnits.h"
 #include "SAX2Properties.h"
@@ -277,35 +275,6 @@ void srcMLUtility::extract_text(const char* to_dir, const char* ofilename, int u
   xmlFreeParserCtxt(ctxt);
 
   /*
-  xmlSAXHandler sax = unit == 0 ? SAX2ExtractRootSrc::factory() : SAX2ExtractUnitSrc::factory();
-
-  SAX2ExtractRootSrc::State state;
-  state.ofilename = ofilename;
-  state.poptions = &options;
-  state.handler = xmlFindCharEncodingHandler(output_encoding);
-  state.unit = unit;
-
-  // check for file if local filename
-  if (strcmp(infile, "-") && !xmlIOHTTPMatch(infile) && strncmp(infile, "file:", 5) && !xmlCheckFilename(infile)) {
-    throw LibXMLError(0);
-  }
-
-  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
-  if (ctxt == NULL) return;
-  ctxt->sax = &sax;
-  ctxt->userData = &state;
-  state.ctxt = ctxt;
-
-  xmlParseDocument(ctxt);
-
-  ctxt->sax = NULL;
-
-  xmlFreeParserCtxt(ctxt);
-
-#ifdef LIBARCHIVE
-  archiveWriteRootClose(0);
-#endif
-
   // make sure we did not end early
   if (state.unit && state.count != state.unit)
     throw OutOfRangeUnitError(state.count);
