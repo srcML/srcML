@@ -11,11 +11,13 @@ import subprocess
 import option
 import status
 
-error_count = 0;
+test_count = 0
+error_count = 0
 
 def check(command, input, output):
 
-	print os.path.basename(command[0]), ' '.join(command[1:])
+	globals()["test_count"] += 1
+	print test_count, os.path.basename(command[0]), ' '.join(command[1:])
 	
 	line = execute(command, input)
 
@@ -24,13 +26,16 @@ def check(command, input, output):
 
 def checkNoOutput(command, input):
 
-	print os.path.basename(command[0]), ' '.join(command[1:])
+	globals()["test_count"] += 1
+	print test_count, os.path.basename(command[0]), ' '.join(command[1:])
 	
 	executeNoOutput(command, input)
 
 
 def checkError(command, input, error) :
-	print os.path.basename(command[0]), ' '.join(command[1:])
+
+	globals()["test_count"] += 1
+	print test_count, os.path.basename(command[0]), ' '.join(command[1:])
 
 	line = executeWithError(command, input)
 
