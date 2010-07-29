@@ -137,6 +137,29 @@ void SAX2ExtractUnitsSrc::startElementNs(void* ctx, const xmlChar* localname, co
     pstate->pprocess->startUnit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted,
                               attributes);
   }
+
+  /*
+  // free up the saved element
+  free((void*) pstate->root.localname);
+  free((void*) pstate->root.prefix);
+  free((void*) pstate->root.URI);
+
+  int ns_length = pstate->root.nb_namespaces * 2;
+  for (int i = 0; i < ns_length; ++i)
+    free((void*) pstate->root.namespaces[i]);
+  free((void*) pstate->root.namespaces);
+
+  int nb_length = nb_attributes * 5;
+  for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
+    free((void*) pstate->root.attributes[index]);
+    free((void*) pstate->root.attributes[index + 1]);
+    free((void*) pstate->root.attributes[index + 2]);
+    free((void*) pstate->root.attributes[index + 3]);
+  }
+  free((void*) pstate->root.attributes);
+
+  free((void*) pstate->firstcharacters);
+  */
 }
 
 // end unit element and current file/buffer (started by startElementNs
