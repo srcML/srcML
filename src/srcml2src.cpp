@@ -752,7 +752,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
       poptions.xsltfiles[poptions.xsltcount++] = optarg;
       break;
 
-    case PARAM_FLAG_CODE:
+    case STRING_PARAM_FLAG_CODE:
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
@@ -771,12 +771,12 @@ int process_args(int argc, char* argv[], process_options & poptions)
       strsep(&end, "=");
       poptions.params[poptions.paramcount] = (char*) malloc(strlen(end) + 1 + 2);
       strcpy((char *) poptions.params[poptions.paramcount], "\'");
-      strcpy((char *) poptions.params[poptions.paramcount], end);
-      strcpy((char *) poptions.params[poptions.paramcount], "\'");
+      strcat((char *) poptions.params[poptions.paramcount], end);
+      strcat((char *) poptions.params[poptions.paramcount], "\'");
       poptions.paramcount++;
       break;
 
-    case STRING_PARAM_FLAG_CODE:
+    case PARAM_FLAG_CODE:
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
