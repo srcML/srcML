@@ -31,149 +31,155 @@
   typedef unsigned __int64 OPTION_TYPE;
 #endif
 
+#ifdef __GNUC__
+#define ull(a) a##ULL
+#else
+#define ull(a) a##i64
+#endif
+
 inline bool isoption(OPTION_TYPE options, OPTION_TYPE flag) {
   return (flag & options) > 0;
 }
 
 // issue debugging elements and declare debugging element namespace
 // @src2srcml
-const OPTION_TYPE OPTION_DEBUG       = 1ull << 0;
+const OPTION_TYPE OPTION_DEBUG       = ull(1) << 0;
 
 // unit is nested a root unit
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_NESTED      = 1ull << 1;
+const OPTION_TYPE OPTION_NESTED      = ull(1) << 1;
 
 // markup literal values
 // @src2srcml
-const OPTION_TYPE OPTION_LITERAL     = 1ull << 2;
+const OPTION_TYPE OPTION_LITERAL     = ull(1) << 2;
 
 // output is compressed (gzip)
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_COMPRESSED  = 1ull << 3;
+const OPTION_TYPE OPTION_COMPRESSED  = ull(1) << 3;
 
 // output is OPTION_TYPEeractive (good for editing applications) @src2srcml
 // @src2srcml
-const OPTION_TYPE OPTION_INTERACTIVE = 1ull << 4;
+const OPTION_TYPE OPTION_INTERACTIVE = ull(1) << 4;
 
 // input filenames is a file list
 // @src2srcml
-const OPTION_TYPE OPTION_FILELIST    = 1ull << 5;
+const OPTION_TYPE OPTION_FILELIST    = ull(1) << 5;
 
 // declared filename
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_FILENAME    = 1ull << 6;
+const OPTION_TYPE OPTION_FILENAME    = ull(1) << 6;
 
 // declared directory
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_DIRECTORY   = 1ull << 7;
+const OPTION_TYPE OPTION_DIRECTORY   = ull(1) << 7;
 
 // declared version
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_VERSION     = 1ull << 8;
+const OPTION_TYPE OPTION_VERSION     = ull(1) << 8;
 
 // verbose translation
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_VERBOSE     = 1ull << 9;
+const OPTION_TYPE OPTION_VERBOSE     = ull(1) << 9;
 
 // position
 // @src2srcml
-const OPTION_TYPE OPTION_POSITION    = 1ull << 10;
+const OPTION_TYPE OPTION_POSITION    = ull(1) << 10;
 
 // path
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_PATH        = 1ull << 11;
+const OPTION_TYPE OPTION_PATH        = ull(1) << 11;
 
 // language
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_LANGUAGE    = 1ull << 12;
+const OPTION_TYPE OPTION_LANGUAGE    = ull(1) << 12;
 
 // xml encoding
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_XML_ENCODING= 1ull << 13;
+const OPTION_TYPE OPTION_XML_ENCODING= ull(1) << 13;
 
 // language
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_TEXT_ENCODING= 1ull << 14;
+const OPTION_TYPE OPTION_TEXT_ENCODING= ull(1) << 14;
 
 // text extraction
 // @srcml2src
-const OPTION_TYPE OPTION_TEXT         = 1ull << 15;
+const OPTION_TYPE OPTION_TEXT         = ull(1) << 15;
 
 // language
 // @srcml2src
-const OPTION_TYPE OPTION_UNIT         = 1ull << 16;
+const OPTION_TYPE OPTION_UNIT         = ull(1) << 16;
 
 // expand nested units OPTION_TYPEo separate files
 // @srcml2src
-const OPTION_TYPE OPTION_EXPAND       = 1ull << 17;
+const OPTION_TYPE OPTION_EXPAND       = ull(1) << 17;
 
 // output is xml
 // @srcml2src
-const OPTION_TYPE OPTION_XML          = 1ull << 18;
+const OPTION_TYPE OPTION_XML          = ull(1) << 18;
 
 // info
 // @srcml2src
-const OPTION_TYPE OPTION_INFO         = 1ull << 19;
+const OPTION_TYPE OPTION_INFO         = ull(1) << 19;
 
 // long info
 // @srcml2src
-const OPTION_TYPE OPTION_LONG_INFO    = 1ull << 20;
+const OPTION_TYPE OPTION_LONG_INFO    = ull(1) << 20;
 
 // skip encoding
 // @src2srcml
 // @srcml2src
-//  const OPTION_TYPE OPTION_SKIP_ENCODING = 1ull << 21;
+//  const OPTION_TYPE OPTION_SKIP_ENCODING = ull(1) << 21;
 
 // cpp markup #else sections
 // @src2srcml
-const OPTION_TYPE OPTION_CPP_MARKUP_ELSE = 1ull << 22;
+const OPTION_TYPE OPTION_CPP_MARKUP_ELSE = ull(1) << 22;
 const OPTION_TYPE OPTION_XPATH_TOTAL = OPTION_CPP_MARKUP_ELSE;
 
 // cpp markup #if 0 sections
 // @src2srcml
-const OPTION_TYPE OPTION_CPP_MARKUP_IF0 = 1ull << 23;
+const OPTION_TYPE OPTION_CPP_MARKUP_IF0 = ull(1) << 23;
 
 // terminate after this file
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_TERMINATE = 1ull << 24;
+const OPTION_TYPE OPTION_TERMINATE = ull(1) << 24;
 
 // expression mode
 // @src2srcml
-const OPTION_TYPE OPTION_EXPRESSION = 1ull << 25;
+const OPTION_TYPE OPTION_EXPRESSION = ull(1) << 25;
 
 // namespace mode
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_NAMESPACE = 1ull << 26;
+const OPTION_TYPE OPTION_NAMESPACE = ull(1) << 26;
 
 // xmlns mode
 // @src2srcml
-const OPTION_TYPE OPTION_XMLNS = 1ull << 27;
+const OPTION_TYPE OPTION_XMLNS = ull(1) << 27;
 
 // cpp mode
 // @src2srcml
-const OPTION_TYPE OPTION_CPP = 1ull << 28;
+const OPTION_TYPE OPTION_CPP = ull(1) << 28;
 
 // xml declaration
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_XMLDECL = 1ull << 29;
+const OPTION_TYPE OPTION_XMLDECL = ull(1) << 29;
 
 // namespace declaration
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_NAMESPACEDECL = 1ull << 30;
+const OPTION_TYPE OPTION_NAMESPACEDECL = ull(1) << 30;
 
 // self version
 //  const OPTION_TYPE OPTION_SELF_VERSION = 0x02000000;
@@ -205,36 +211,36 @@ const OPTION_TYPE OPTION_RELAXNG      = OPTION_EXPRESSION;
 // use old filename behavior, where it was just the base filename
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_OLD_FILENAME  = 1ull << 31;
+const OPTION_TYPE OPTION_OLD_FILENAME  = ull(1) << 31;
 
 // specify input format
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_INPUT_FORMAT  = 1ull << 32;
+const OPTION_TYPE OPTION_INPUT_FORMAT  = ull(1) << 32;
 
 // specify ouput format
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_OUTPUT_FORMAT  = 1ull << 33;
+const OPTION_TYPE OPTION_OUTPUT_FORMAT  = ull(1) << 33;
 
 // list option
 // @srcml2src
-const OPTION_TYPE OPTION_LIST  = 1ull << 34;
+const OPTION_TYPE OPTION_LIST  = ull(1) << 34;
 
 // skip default language option
 // @src2srcml
-const OPTION_TYPE OPTION_SKIP_DEFAULT  = 1ull << 35;
+const OPTION_TYPE OPTION_SKIP_DEFAULT  = ull(1) << 35;
 
 // skip default language option
 // @src2srcml
-const OPTION_TYPE OPTION_RECURSIVE  = 1ull << 36;
+const OPTION_TYPE OPTION_RECURSIVE  = ull(1) << 36;
 
 // skip output of notification messages
-const OPTION_TYPE OPTION_QUIET  = 1ull << 37;
+const OPTION_TYPE OPTION_QUIET  = ull(1) << 37;
 
 // settings
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_SETTINGS  = 1ull << 38;
+const OPTION_TYPE OPTION_SETTINGS  = ull(1) << 38;
 
 #endif
