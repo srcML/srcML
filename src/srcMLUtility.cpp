@@ -259,7 +259,7 @@ void srcMLUtility::extract_text(const char* to_dir, const char* ofilename, int u
   ctxt->sax = &sax;
 
   // setup process handling
-  ExtractUnitsSrc process(0 /* to_directory is stdout */, output_encoding);
+  ExtractUnitsSrc process(0 /* to_directory is stdout */, ofilename, output_encoding);
 
   // setup sax handling state
   SAX2ExtractUnitsSrc state(&process, &options, unit);
@@ -310,7 +310,7 @@ void srcMLUtility::expand(const char* root_filename, const char* format, const c
   ctxt->sax = &sax;
 
   // setup process handling
-  ExtractUnitsSrc process(to_directory, output_encoding);
+  ExtractUnitsSrc process(to_directory, root_filename, output_encoding);
 
   // setup sax handling state
   SAX2ExtractUnitsSrc state(&process, &options, -1);
