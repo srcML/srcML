@@ -42,48 +42,48 @@ const OPTION_TYPE OPTION_DEBUG       = 1ull << 0;
 // unit is nested a root unit
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_NESTED      = 0x00000002ull;
+const OPTION_TYPE OPTION_NESTED      = 1ull << 1;
 
 // markup literal values
 // @src2srcml
-const OPTION_TYPE OPTION_LITERAL     = 0x00000004ull;
+const OPTION_TYPE OPTION_LITERAL     = 1ull << 2;
 
 // output is compressed (gzip)
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_COMPRESSED  = 0x00000008ull;
+const OPTION_TYPE OPTION_COMPRESSED  = 1ull << 3;
 
 // output is OPTION_TYPEeractive (good for editing applications) @src2srcml
 // @src2srcml
-const OPTION_TYPE OPTION_INTERACTIVE = 0x00000010ull;
+const OPTION_TYPE OPTION_INTERACTIVE = 1ull << 4;
 
 // input filenames is a file list
 // @src2srcml
-const OPTION_TYPE OPTION_FILELIST    = 0x00000020ull;
+const OPTION_TYPE OPTION_FILELIST    = 1ull << 5;
 
 // declared filename
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_FILENAME    = 0x00000040ull;
+const OPTION_TYPE OPTION_FILENAME    = 1ull << 6;
 
 // declared directory
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_DIRECTORY   = 0x00000080ull;
+const OPTION_TYPE OPTION_DIRECTORY   = 1ull << 7;
 
 // declared version
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_VERSION     = 0x00000100ull;
+const OPTION_TYPE OPTION_VERSION     = 1ull << 8;
 
 // verbose translation
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_VERBOSE     = 0x00000200ull;
+const OPTION_TYPE OPTION_VERBOSE     = 1ull << 9;
 
 // position
 // @src2srcml
-const OPTION_TYPE OPTION_POSITION    = 0x00000400ull;
+const OPTION_TYPE OPTION_POSITION    = 1ull << 10;
 
 // path
 // @src2srcml
