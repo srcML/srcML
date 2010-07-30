@@ -88,46 +88,46 @@ const OPTION_TYPE OPTION_POSITION    = 1ull << 10;
 // path
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_PATH        = 0x00000800ull;
+const OPTION_TYPE OPTION_PATH        = 1ull << 11;
 
 // language
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_LANGUAGE    = 0x00001000ull;
+const OPTION_TYPE OPTION_LANGUAGE    = 1ull << 12;
 
 // xml encoding
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_XML_ENCODING= 0x00002000ull;
+const OPTION_TYPE OPTION_XML_ENCODING= 1ull << 13;
 
 // language
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_TEXT_ENCODING= 0x00004000ull;
+const OPTION_TYPE OPTION_TEXT_ENCODING= 1ull << 14;
 
 // text extraction
 // @srcml2src
-const OPTION_TYPE OPTION_TEXT         = 0x00008000ull;
+const OPTION_TYPE OPTION_TEXT         = 1ull << 15;
 
 // language
 // @srcml2src
-const OPTION_TYPE OPTION_UNIT         = 0x00010000ull;
+const OPTION_TYPE OPTION_UNIT         = 1ull << 16;
 
 // expand nested units OPTION_TYPEo separate files
 // @srcml2src
-const OPTION_TYPE OPTION_EXPAND       = 0x00020000ull;
+const OPTION_TYPE OPTION_EXPAND       = 1ull << 17;
 
 // output is xml
 // @srcml2src
-const OPTION_TYPE OPTION_XML          = 0x00040000ull;
+const OPTION_TYPE OPTION_XML          = 1ull << 18;
 
 // info
 // @srcml2src
-const OPTION_TYPE OPTION_INFO         = 0x00080000ull;
+const OPTION_TYPE OPTION_INFO         = 1ull << 19;
 
 // long info
 // @srcml2src
-const OPTION_TYPE OPTION_LONG_INFO    = 0x00100000ull;
+const OPTION_TYPE OPTION_LONG_INFO    = 1ull << 20;
 
 // skip encoding
 // @src2srcml
