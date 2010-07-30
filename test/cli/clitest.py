@@ -1403,7 +1403,7 @@ checkallformsfile(srcml2src, 'sub/a.cpp.xml', option.FILENAME_FLAG_SHORT, option
 checkallformsfile(srcml2src, 'sub/a.cpp.xml', option.SRCVERSION_FLAG_SHORT, option.SRCVERSION_FLAG, "", "", "1.2\n")
 checkallformsfile(srcml2src, 'sub/a.cpp.xml', option.ENCODING_FLAG_SHORT, option.ENCODING_FLAG, "", "", default_srcml2src_encoding + "\n")
 
-check([srcml2src, option.NESTED_FLAG, 'sub/a.cpp.xml'], "", "0\n")
+check([srcml2src, option.NESTED_FLAG, 'sub/a.cpp.xml'], "", "1\n")
 
 f = open('sub/a.cpp.xml', 'w')
 f.write(nestedfile1)
