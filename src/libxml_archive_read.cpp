@@ -13,43 +13,46 @@
 static const int NUMARCHIVES = 5;
 static const char* ARCHIVE_FILTER_EXTENSIONS[] = {"tar", "zip", "tgz", "cpio", "shar", "gz", "bz2", 0};
 
-static struct archive* a = 0;
-static int status = 0;
-static struct archive_entry* ae = 0;
+struct archiveData {
+  struct archive* a;
+  struct archive_entry* ae;
+  int status;
+  std::string root_filename;
+  bool first;
+};
 
-static std::string root_filename;
-static bool first = true;
+static struct archiveData scontext = { 0, 0, 0, "", true };
 
 bool archiveIsDir() {
 
-  return ae && archive_entry_filetype(ae) == AE_IFDIR;
+  return scontext.ae && archive_entry_filetype(scontext.ae) == AE_IFDIR;
 }
 
 bool isArchiveFirst() {
 
-  return first;
+  return scontext.first;
 }
 
 // check if file has an archive extension
 bool isArchiveRead() {
 
-  return a && status == ARCHIVE_OK
+  return scontext.a && scontext.status == ARCHIVE_OK
 #if ARCHIVE_VERSION_STAMP >= 2008000
-    && (archive_format(a) != ARCHIVE_FORMAT_RAW
+    && (archive_format(scontext.a) != ARCHIVE_FORMAT_RAW
 #else
-    && (archive_format(a) != ARCHIVE_FORMAT_EMPTY
+    && (archive_format(scontext.a) != ARCHIVE_FORMAT_EMPTY
 #endif
   );
 }
 
 // format (e.g., tar, cpio) of the current file
 const char* archiveReadFormat() {
-  return !a ? 0 : archive_format_name(a);
+  return !scontext.a ? 0 : archive_format_name(scontext.a);
 }
 
 // compression (e.g., gz, bzip2) of the current file
 const char* archiveReadCompression() {
-  return !a ? 0 : archive_compression_name(a);
+  return !scontext.a ? 0 : archive_compression_name(scontext.a);
 }
 
 // check if archive matches the protocol on the URI
@@ -91,15 +94,15 @@ int archiveReadMatch(const char* URI) {
 // setup archive root for this URI
 int archiveReadStatus() {
 
-  return status;
+  return scontext.status;
 }
 
 const char* archiveReadFilename() {
 
-  if (!ae || (archiveReadStatus() != ARCHIVE_OK && archiveReadStatus() != ARCHIVE_EOF))
+  if (!scontext.ae || (archiveReadStatus() != ARCHIVE_OK && archiveReadStatus() != ARCHIVE_EOF))
     return 0;
 
-  return isArchiveRead() ? archive_entry_pathname(ae) : 0;
+  return isArchiveRead() ? archive_entry_pathname(scontext.ae) : 0;
 }
 
 
@@ -109,7 +112,7 @@ static void* mcontext;
 static int archive_read_open_http_callback(struct archive* a,
 					   void* _client_data) {
 
-  mcontext = ishttp ? xmlNanoHTTPOpen(root_filename.c_str(), 0) : xmlNanoFTPOpen(root_filename.c_str());
+  mcontext = ishttp ? xmlNanoHTTPOpen(scontext.root_filename.c_str(), 0) : xmlNanoFTPOpen(scontext.root_filename.c_str());
 
   return 0;
 }
@@ -144,54 +147,55 @@ static int archive_read_close_http_callback(struct archive* a,
 // setup archive for this URI
 void* archiveReadOpen(const char* URI) {
 
+  fprintf(stderr, "HERE %s %s\n", __FUNCTION__, URI);
   if (!archiveReadMatch(URI))
     return NULL;
 
-  first = false;
+  scontext.first = false;
 
   // just in case archiveOpenRoot() was not called
-  if (!a) {
+  if (!scontext.a) {
 
-    first = true;
-    status = 0;
-    a = archive_read_new();
-    archive_read_support_compression_all(a);
-    //    archive_read_support_compression_bzip2(a);
-    //    archive_read_support_compression_gzip(a);
+    scontext.first = true;
+    scontext.status = 0;
+    scontext.a = archive_read_new();
+    archive_read_support_compression_all(scontext.a);
+    //    archive_read_support_compression_bzip2(scontext.a);
+    //    archive_read_support_compression_gzip(scontext.a);
 
 #if ARCHIVE_VERSION_STAMP >= 2008000
-  archive_read_support_format_raw(a);
+  archive_read_support_format_raw(scontext.a);
 #endif
-    archive_read_support_format_all(a);
-    //    archive_read_support_format_tar(a);
-    //    archive_read_support_format_zip(a);
-    //    archive_read_support_format_cpio(a);
+    archive_read_support_format_all(scontext.a);
+    //    archive_read_support_format_tar(scontext.a);
+    //    archive_read_support_format_zip(scontext.a);
+    //    archive_read_support_format_cpio(scontext.a);
 
     //    int r = archive_read_open_filename(a, URI, 4000);
     ishttp = xmlIOHTTPMatch(URI);
     if (ishttp || xmlIOFTPMatch(URI)) {
-      root_filename = URI;
-      status = archive_read_open(a, 0, archive_read_open_http_callback, archive_read_http_callback,
+      scontext.root_filename = URI;
+      scontext.status = archive_read_open(scontext.a, 0, archive_read_open_http_callback, archive_read_http_callback,
 			      archive_read_close_http_callback);
     } else {
-      status = archive_read_open_filename(a, strcmp(URI, "-") == 0 ? 0 : URI, 4000);
+      scontext.status = archive_read_open_filename(scontext.a, strcmp(URI, "-") == 0 ? 0 : URI, 4000);
     }
-    if (status != ARCHIVE_OK) {
-      archive_read_finish(a);
-      a = 0;
-      ae = 0;
+    if (scontext.status != ARCHIVE_OK) {
+      archive_read_finish(scontext.a);
+      scontext.a = 0;
+      scontext.ae = 0;
       return 0;
     }
 
-    status = archive_read_next_header(a, &ae);
-    if (status != ARCHIVE_OK)
+    scontext.status = archive_read_next_header(scontext.a, &scontext.ae);
+    if (scontext.status != ARCHIVE_OK)
       return 0;
 
-    //    while (archive_entry_filetype(ae) == AE_IFDIR)
+    //    while (archive_entry_filetype(scontext.ae) == AE_IFDIR)
     //      archiveReadClose(mcontext);
   }
 
-  return a;
+  return scontext.a;
 }
 
 // close the open file
@@ -208,15 +212,15 @@ int archiveReadClose(void* context) {
   //  if (context == NULL)
   //    return -1;
 
-  if (status != ARCHIVE_OK)
+  if (scontext.status != ARCHIVE_OK)
     return 0;
 
   // read the next header.  If there isn't one, then really finish
-  status = archive_read_next_header(a, &ae);
-  if (status != ARCHIVE_OK) {
+  scontext.status = archive_read_next_header(scontext.a, &scontext.ae);
+  if (scontext.status != ARCHIVE_OK) {
 
-    archive_read_finish(a);
-    a = 0;
+    archive_read_finish(scontext.a);
+    scontext.a = 0;
     return 0;
   }
 
@@ -226,10 +230,10 @@ int archiveReadClose(void* context) {
 // read from the URI
 int archiveRead(void* context, char* buffer, int len) {
 
-  if (status != ARCHIVE_OK)
+  if (scontext.status != ARCHIVE_OK)
     return 0;
 
-  size_t size = archive_read_data(a, buffer, len);
+  size_t size = archive_read_data(scontext.a, buffer, len);
   if (size < 0)
     return 0;
 
