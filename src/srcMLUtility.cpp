@@ -134,8 +134,8 @@ void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE opt
   xmlFreeParserCtxt(ctxt);
 
   // make sure we did not end early
-  if (state.unit && state.count != state.unit)
-     throw OutOfRangeUnitError(state.count);
+    if (state.unit && state.count != state.unit)
+       throw OutOfRangeUnitError(state.count);
 
   units = state.count;
 }
@@ -195,7 +195,7 @@ void srcMLUtility::extract_xml(const char* filename, int unit) {
 
   // make sure we did not end early
   if (state.unit && state.count != state.unit)
-    throw OutOfRangeUnitError(state.count);
+     throw OutOfRangeUnitError(state.count);
 }
 
 // extract a given unit
@@ -282,7 +282,7 @@ void srcMLUtility::extract_text(const char* to_dir, const char* ofilename, int u
   xmlFreeParserCtxt(ctxt);
 
   // make sure we did not end early
-  if (state.unit && state.count != state.unit)
+  if (state.unit && state.count < state.unit)
     throw OutOfRangeUnitError(state.count);
 }
 
