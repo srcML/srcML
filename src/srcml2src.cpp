@@ -158,7 +158,7 @@ void output_help(const char* name) {
   printf("  -%c, --%-17s display prefix of namespace given by URI and exit\n",
 	  NAMESPACE_FLAG_SHORT, NAMESPACE_FLAG_FULL);
 
-  printf("  -%c, --%-17s display number of individual units and exit\n\n", NESTED_FLAG_SHORT, NESTED_FLAG);
+  printf("  -%c, --%-17s display number of srcML files and exit\n\n", NESTED_FLAG_SHORT, NESTED_FLAG);
 
   printf("  -%c, --%-17s display most metadata except file count (individual units) and exit\n",
 	  INFO_FLAG_SHORT, INFO_FLAG);
@@ -166,11 +166,11 @@ void output_help(const char* name) {
   printf("  -%c, --%-17s display all metadata including file count (individual units)  and exit\n\n",
 	  LONG_INFO_FLAG_SHORT, LONG_INFO_FLAG);
 
-  printf("Compound Document Options:  \n\n"
-	 "  -%c, --%-17s extract individual unit NUM from a compound srcML document\n",
+  printf("srcML Archive Options:  \n\n"
+	 "  -%c, --%-17s extract individual unit NUM from srcML\n",
 	  UNIT_FLAG_SHORT, UNIT_FLAG_FULL);
 
-  printf("  -%c, --%-17s extract all files from a compound srcML document and create them in the filesystem\n\n",
+  printf("  -%c, --%-17s extract all files from srcML and create them in the filesystem\n\n",
 	  EXPAND_FLAG_SHORT, EXPAND_FLAG);
 
   printf("Query and Transformation Options:  \n\n"
@@ -391,7 +391,7 @@ int main(int argc, char* argv[]) {
     } else if (isoption(options, OPTION_NESTED)) {
 
 #ifdef __GNUG__
-      // gracefully finish current file in compound document mode
+      // gracefully finish current file in srcML archive mode
       pstd::signal(SIGINT, terminate_handler);
 #endif
 
@@ -409,7 +409,7 @@ int main(int argc, char* argv[]) {
     } else if (isoption(options, OPTION_EXPAND)) {
 
 #ifdef __GNUG__
-      // gracefully finish current file in compound document mode
+      // gracefully finish current file in srcML archive mode
       pstd::signal(SIGINT, terminate_handler);
 #endif
 
@@ -456,7 +456,7 @@ int main(int argc, char* argv[]) {
       else {
 
 #ifdef __GNUG__
-        // gracefully finish current file in compound document mode
+        // gracefully finish current file in srcML archive mode
         pstd::signal(SIGINT, terminate_handler);
 #endif
 
@@ -471,8 +471,8 @@ int main(int argc, char* argv[]) {
 
   } catch (const OutOfRangeUnitError& e) {
 
-    fprintf(stderr, "%s: unit %d  was selected from compound srcML document that contains "
-	    "%d nested units\n", argv[0], poptions.unit, e.size);
+    fprintf(stderr, "%s: unit %d  was selected from srcML that only contains "
+	    "%d units\n", argv[0], poptions.unit, e.size);
     exit_status = STATUS_UNIT_INVALID;
 
     return exit_status;
