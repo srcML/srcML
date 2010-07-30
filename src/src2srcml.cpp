@@ -489,6 +489,7 @@ int main(int argc, char* argv[]) {
 			       urisprefix,
 			       poptions.tabsize);
 
+
     // output source encoding
     if (isoption(options, OPTION_VERBOSE)) {
       fprintf(stderr, "Source encoding:  %s\n", poptions.src_encoding);
@@ -1101,8 +1102,12 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
     // start with the original options
     options = save_options;
+    std::string unit_filename;
+
+    try {
 
     // open up the file
+      unit_filename = path;
     translator.setInput(path);
 
     // check if file is bad
@@ -1129,7 +1134,6 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     }
 
     // figure out the resulting filename
-    std::string unit_filename;
     bool foundfilename = true;
     if (archiveReadFilename())
       unit_filename = archiveReadFilename();
@@ -1195,8 +1199,6 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     // output the currently processed filename
     if (!isoption(options, OPTION_QUIET))
       fprintf(stderr, "%d\t%s\n", count, c_filename);
-
-    try {
 
       // translate the file
       translator.translate(path, dir,
