@@ -132,48 +132,48 @@ const OPTION_TYPE OPTION_LONG_INFO    = 1ull << 20;
 // skip encoding
 // @src2srcml
 // @srcml2src
-//  const OPTION_TYPE OPTION_SKIP_ENCODING = 0x00200000;
+//  const OPTION_TYPE OPTION_SKIP_ENCODING = 1ull << 21;
 
 // cpp markup #else sections
 // @src2srcml
-const OPTION_TYPE OPTION_CPP_MARKUP_ELSE = 0x00400000ull;
+const OPTION_TYPE OPTION_CPP_MARKUP_ELSE = 1ull << 22;
 const OPTION_TYPE OPTION_XPATH_TOTAL = OPTION_CPP_MARKUP_ELSE;
 
 // cpp markup #if 0 sections
 // @src2srcml
-const OPTION_TYPE OPTION_CPP_MARKUP_IF0 = 0x00800000ull;
+const OPTION_TYPE OPTION_CPP_MARKUP_IF0 = 1ull << 23;
 
 // terminate after this file
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_TERMINATE = 0x01000000ull;
+const OPTION_TYPE OPTION_TERMINATE = 1ull << 24;
 
 // expression mode
 // @src2srcml
-const OPTION_TYPE OPTION_EXPRESSION = 0x02000000ull;
+const OPTION_TYPE OPTION_EXPRESSION = 1ull << 25;
 
 // namespace mode
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_NAMESPACE = 0x04000000ull;
+const OPTION_TYPE OPTION_NAMESPACE = 1ull << 26;
 
 // xmlns mode
 // @src2srcml
-const OPTION_TYPE OPTION_XMLNS = 0x08000000ull;
+const OPTION_TYPE OPTION_XMLNS = 1ull << 27;
 
 // cpp mode
 // @src2srcml
-const OPTION_TYPE OPTION_CPP = 0x10000000ull;
+const OPTION_TYPE OPTION_CPP = 1ull << 28;
 
 // xml declaration
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_XMLDECL = 0x20000000ull;
+const OPTION_TYPE OPTION_XMLDECL = 1ull << 29;
 
 // namespace declaration
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_NAMESPACEDECL = 0x40000000ull;
+const OPTION_TYPE OPTION_NAMESPACEDECL = 0x1ull << 30;
 
 // self version
 //  const OPTION_TYPE OPTION_SELF_VERSION = 0x02000000;
