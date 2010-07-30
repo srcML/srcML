@@ -68,10 +68,10 @@ int archiveReadMatch(const char* URI) {
 #else
   // allow libxml to handle non-archive files encrypted with gz
   int extpos = strlen(URI) - 3;
-  if (fnmatch(URI, "*.gz", 0) == 0 &&
-      fnmatch(URI, "*.tar.*", 0) != 0 &&
-      fnmatch(URI, "*.cpio.*", 0) != 0 &&
-      fnmatch(URI, "*.zip.*", 0) != 0)
+  if (fnmatch("*.gz", URI, 0) == 0 &&
+      fnmatch("*.tar.*", URI, 0) != 0 &&
+      fnmatch("*.cpio.*", URI, 0) != 0 &&
+      fnmatch("*.zip.*", URI, 0) != 0)
     return 0;
 
   if ((URI[0] == '-' && URI[1] == '\0') || (strcmp(URI, "/dev/stdin") == 0))
@@ -147,7 +147,6 @@ static int archive_read_close_http_callback(struct archive* a,
 // setup archive for this URI
 void* archiveReadOpen(const char* URI) {
 
-  fprintf(stderr, "HERE %s %s\n", __FUNCTION__, URI);
   if (!archiveReadMatch(URI))
     return NULL;
 
