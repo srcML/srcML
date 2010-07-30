@@ -106,7 +106,7 @@ class ExtractUnitsSrc : public ProcessUnit {
     }
 
     // now create the file itself
-    output_buffer = xmlOutputBufferCreateFilename(path.c_str(), handler, 0);
+    output_buffer = xmlOutputBufferCreateFilename(path.c_str(), handler, isoption(*(pstate->poptions), OPTION_COMPRESSED));
     if (output_buffer == NULL) {
       fprintf(stderr, "Output buffer error\n");
       xmlStopParser(ctxt);
