@@ -274,11 +274,9 @@ void srcMLUtility::extract_text(const char* to_dir, const char* ofilename, int u
   // all done with parsing
   xmlFreeParserCtxt(ctxt);
 
-  /*
   // make sure we did not end early
   if (state.unit && state.count != state.unit)
     throw OutOfRangeUnitError(state.count);
-  */
 }
 
 // expand the compound srcML to individual files
