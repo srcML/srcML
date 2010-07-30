@@ -231,16 +231,14 @@ const int MAXXPATH = 32;
 
 const int MAXNS = 32;
 
-//const char* ofilename = "-";
-
 typedef struct process_options
 {
   // option values
   const char* ofilename;
-  const char * input_format;
-  const char * output_format;
+  const char* input_format;
+  const char* output_format;
   const char* src_encoding;
-  const char * to_directory;
+  const char* to_directory;
   int unit;
   const char* context;
   int nscount;
@@ -373,7 +371,6 @@ int main(int argc, char* argv[]) {
     } else if (isoption(options, OPTION_NAMESPACE)) {
 
       su.move_to_unit(poptions.unit, su, options, optioncount, optionorder);
-      //      su.move_to_unit(poptions.unit);
 
       for (int i = 0; i < poptions.nscount; ++i) {
 	
