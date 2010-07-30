@@ -40,7 +40,6 @@
 #include "SAX2ListUnits.h"
 #include "SAX2ExtractUnitsSrc.h"
 #include "SAX2ExtractUnitXML.h"
-#include "SAX2CountUnits.h"
 #include "SAX2Properties.h"
 
 #include "SAX2UnitDOMXPath.h"
@@ -49,6 +48,7 @@
 
 #include "ProcessUnit.h"
 #include "ExtractUnitsSrc.h"
+#include "CountUnits.h"
 
 #include "srcexfun.h"
 #include <libxslt/xslt.h>
@@ -144,21 +144,28 @@ void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE opt
 // count of nested units
 int srcMLUtility::unit_count() {
 
-  // output entire unit element
-  xmlSAXHandler sax = SAX2CountUnits::factory();
-
-  SAX2CountUnits state(0, options);
-
+  // setup parser
   xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
   if (ctxt == NULL) return -1;
-  ctxt->sax = &sax;
-  ctxt->userData = &state;
-  state.ctxt = ctxt;
 
+  // setup sax handler
+  xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
+  ctxt->sax = &sax;
+
+  // setup process handling
+  CountUnits process;
+
+  // setup sax handling state
+  SAX2ExtractUnitsSrc state(&process, &options, -1);
+  ctxt->_private = &state;
+
+  // process the document
   xmlParseDocument(ctxt);
 
+  // local variable, do not want xmlFreeParserCtxt to free
   ctxt->sax = NULL;
 
+  // all done with parsing
   xmlFreeParserCtxt(ctxt);
 
   return state.count;
