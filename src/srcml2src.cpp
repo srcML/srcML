@@ -398,10 +398,10 @@ int main(int argc, char* argv[]) {
       // as it counts.  Need to overwrite this
       long count = su.unit_count();
 
-      //      if (isoption(options, OPTION_VERBOSE))
-      //	puts("\r");
+      if (isatty(STDOUT_FILENO))
+        putchar('\r');
 
-      printf("\r%d\n", count);
+      printf("%d\n", count);
 
       // if we terminated early, output the correct status
       if (isoption(options, OPTION_TERMINATE))
