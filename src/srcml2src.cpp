@@ -394,13 +394,14 @@ int main(int argc, char* argv[]) {
       // gracefully finish current file in srcML archive mode
       pstd::signal(SIGINT, terminate_handler);
 #endif
-
       // in verbose mode, the current counter is displayed
       // as it counts.  Need to overwrite this
-      if (isoption(options, OPTION_VERBOSE))
-	puts("\r");
+      long count = su.unit_count();
 
-      printf("%d\n", su.unit_count());
+      //      if (isoption(options, OPTION_VERBOSE))
+      //	puts("\r");
+
+      printf("\r%d\n", count);
 
       // if we terminated early, output the correct status
       if (isoption(options, OPTION_TERMINATE))
