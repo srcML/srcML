@@ -205,36 +205,36 @@ const OPTION_TYPE OPTION_RELAXNG      = OPTION_EXPRESSION;
 // use old filename behavior, where it was just the base filename
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_OLD_FILENAME  = 0x100000000ull;
+const OPTION_TYPE OPTION_OLD_FILENAME  = 0x1ull << 31;
 
 // specify input format
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_INPUT_FORMAT  = 0x200000000ull;
+const OPTION_TYPE OPTION_INPUT_FORMAT  = 0x1ull << 32;
 
 // specify ouput format
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_OUTPUT_FORMAT  = 0x400000000ull;
+const OPTION_TYPE OPTION_OUTPUT_FORMAT  = 0x1ull << 33;
 
 // list option
 // @srcml2src
-const OPTION_TYPE OPTION_LIST  = 0x800000000ull;
+const OPTION_TYPE OPTION_LIST  = 0x1ull << 34;
 
 // skip default language option
 // @src2srcml
-const OPTION_TYPE OPTION_SKIP_DEFAULT  = 0x1000000000ull;
+const OPTION_TYPE OPTION_SKIP_DEFAULT  = 0x1ull << 35;
 
 // skip default language option
 // @src2srcml
-const OPTION_TYPE OPTION_RECURSIVE  = 0x2000000000ull;
+const OPTION_TYPE OPTION_RECURSIVE  = 0x1ull << 36;
 
 // skip output of notification messages
-const OPTION_TYPE OPTION_QUIET  = 0x4000000000ull;
+const OPTION_TYPE OPTION_QUIET  = 0x1ull << 37;
 
 // settings
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_SETTINGS  = 0x8000000000ull;
+const OPTION_TYPE OPTION_SETTINGS  = 0x1ull << 38;
 
 #endif
