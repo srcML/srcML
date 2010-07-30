@@ -173,7 +173,7 @@ const OPTION_TYPE OPTION_XMLDECL = 1ull << 29;
 // namespace declaration
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_NAMESPACEDECL = 0x1ull << 30;
+const OPTION_TYPE OPTION_NAMESPACEDECL = 1ull << 30;
 
 // self version
 //  const OPTION_TYPE OPTION_SELF_VERSION = 0x02000000;
@@ -205,36 +205,36 @@ const OPTION_TYPE OPTION_RELAXNG      = OPTION_EXPRESSION;
 // use old filename behavior, where it was just the base filename
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_OLD_FILENAME  = 0x1ull << 31;
+const OPTION_TYPE OPTION_OLD_FILENAME  = 1ull << 31;
 
 // specify input format
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_INPUT_FORMAT  = 0x1ull << 32;
+const OPTION_TYPE OPTION_INPUT_FORMAT  = 1ull << 32;
 
 // specify ouput format
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_OUTPUT_FORMAT  = 0x1ull << 33;
+const OPTION_TYPE OPTION_OUTPUT_FORMAT  = 1ull << 33;
 
 // list option
 // @srcml2src
-const OPTION_TYPE OPTION_LIST  = 0x1ull << 34;
+const OPTION_TYPE OPTION_LIST  = 1ull << 34;
 
 // skip default language option
 // @src2srcml
-const OPTION_TYPE OPTION_SKIP_DEFAULT  = 0x1ull << 35;
+const OPTION_TYPE OPTION_SKIP_DEFAULT  = 1ull << 35;
 
 // skip default language option
 // @src2srcml
-const OPTION_TYPE OPTION_RECURSIVE  = 0x1ull << 36;
+const OPTION_TYPE OPTION_RECURSIVE  = 1ull << 36;
 
 // skip output of notification messages
-const OPTION_TYPE OPTION_QUIET  = 0x1ull << 37;
+const OPTION_TYPE OPTION_QUIET  = 1ull << 37;
 
 // settings
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_SETTINGS  = 0x1ull << 38;
+const OPTION_TYPE OPTION_SETTINGS  = 1ull << 38;
 
 #endif
