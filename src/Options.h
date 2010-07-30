@@ -37,7 +37,7 @@ inline bool isoption(OPTION_TYPE options, OPTION_TYPE flag) {
 
 // issue debugging elements and declare debugging element namespace
 // @src2srcml
-const OPTION_TYPE OPTION_DEBUG       = 0x00000001ull;
+const OPTION_TYPE OPTION_DEBUG       = 1ull << 0;
 
 // unit is nested a root unit
 // @src2srcml
