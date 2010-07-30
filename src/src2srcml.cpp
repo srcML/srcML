@@ -1208,9 +1208,9 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     } catch (FileError) {
 
       if (dir)
-	fprintf(stderr, "%s error: file \'%s/%s\' does not exist.\n", PROGRAM_NAME, dir, unit_filename.c_str());
+	fprintf(stderr, "%s: Unable to open file %s/%s\n", PROGRAM_NAME, dir, unit_filename.c_str());
       else
-	fprintf(stderr, "%s error: file \'%s\' does not exist.\n", PROGRAM_NAME, unit_filename.c_str());
+	fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, unit_filename.c_str());
 
       exit(STATUS_INPUTFILE_PROBLEM);
     }
