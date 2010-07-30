@@ -387,10 +387,10 @@ check([srcml2src, option.NESTED_FLAG], nestedfile, "2\n")
 
 check([srcml2src, option.NESTED_FLAG], nestedfilesrc, "2\n")
 
-checkallforms(srcml2src, "-U", option.UNIT_FLAG, "1", nestedfile, sfile1)
+checkallforms(srcml2src, option.UNIT_FLAG_SHORT, option.UNIT_FLAG, "1", nestedfile, sfile1)
 check([srcml2src, option.UNIT_FLAG, "1", "-"], nestedfile, sfile1)
 
-checkallforms(srcml2src, "-U", option.UNIT_FLAG, "2", nestedfile, sfile2)
+checkallforms(srcml2src, option.UNIT_FLAG_SHORT, option.UNIT_FLAG, "2", nestedfile, sfile2)
 check([srcml2src, option.UNIT_FLAG, "2"], nestedfile, sfile2)
 
 sxmlfile1 = xml_declaration + """
