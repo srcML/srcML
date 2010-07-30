@@ -260,12 +260,13 @@ int main(int argc, char* argv[]) {
   initGenericErrorDefaultFunc(&handler);
 
 #ifdef LIBARCHIVE
-  /*
+
+  xmlRegisterDefaultInputCallbacks();
+
   if (xmlRegisterInputCallbacks(archiveReadMatch, archiveReadOpen, archiveRead, archiveReadClose) < 0) {
     fprintf(stderr, "%s: failed to register archive handler\n", argv[0]);
     exit(1);
   }
-  */
   /*
   if (xmlRegisterOutputCallbacks(archiveWriteDiskMatch, archiveWriteDiskOpen, archiveWriteDisk, archiveWriteDiskClose) < 0) {
     fprintf(stderr, "%s: failed to register archive handler\n", argv[0]);
