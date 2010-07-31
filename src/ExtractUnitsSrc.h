@@ -49,11 +49,6 @@ class ExtractUnitsSrc : public ProcessUnit {
     xmlCharEncodingHandlerPtr handler;
 
  public :
-  virtual void startRootUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                             const xmlChar** attributes) {
-
-  }
 
   virtual void startUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                          int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
@@ -155,10 +150,6 @@ class ExtractUnitsSrc : public ProcessUnit {
       throw TerminateLibXMLError();
     }
 
-
-  }
-
-  virtual void endRootUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
   }
 

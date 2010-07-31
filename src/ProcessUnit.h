@@ -31,17 +31,17 @@ class ProcessUnit {
 public :
   virtual void startRootUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                 const xmlChar** attributes) = 0;
+                 const xmlChar** attributes) {}
 
   virtual void startUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                 const xmlChar** attributes) = 0;
+                 const xmlChar** attributes) {}
 
-  virtual void charactersUnit(void* ctx, const xmlChar* ch, int len) = 0;
+  virtual void charactersUnit(void* ctx, const xmlChar* ch, int len) {}
 
-  virtual void endUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) = 0;
+  virtual void endUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {}
 
-  virtual void endRootUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) = 0;
+  virtual void endRootUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {}
 };
 
 #endif

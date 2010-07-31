@@ -32,15 +32,6 @@ class CountUnits : public ProcessUnit {
   CountUnits() {}
 
  public :
-  virtual void startRootUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-                             int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                             const xmlChar** attributes) {}
-
-  virtual void startUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-                         int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                         const xmlChar** attributes) {}
-
-  virtual void charactersUnit(void* ctx, const xmlChar* ch, int len) {}
 
   virtual void endUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
@@ -78,9 +69,6 @@ class CountUnits : public ProcessUnit {
       printf("%ld", pstate->count);
       fflush(stdout);
     }
-  }
-
-  virtual void endRootUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
   }
 };
 
