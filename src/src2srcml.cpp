@@ -1212,7 +1212,9 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       else
 	fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, unit_filename.c_str());
 
-      exit(STATUS_INPUTFILE_PROBLEM);
+      ++skipped;
+      return;
+      //      exit(STATUS_INPUTFILE_PROBLEM);
     }
 
     // restore options for next time around
