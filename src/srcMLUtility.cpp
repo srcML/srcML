@@ -408,6 +408,7 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
 
   // parse the stylesheet
   state.xslt = xsltParseStylesheetFile(BAD_CAST xslts[0]);
+  // TODO: error return
 
   xmlParseDocument(ctxt);
 
