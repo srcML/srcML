@@ -75,8 +75,13 @@ class Properties : public CountUnits {
     if (pstate->unit == 0) {
       output_info(su, *(pstate->poptions), optioncount, optionorder);
 
-      if (!isoption(*(pstate->poptions), OPTION_LONG_INFO))
+      if (!isoption(*(pstate->poptions), OPTION_LONG_INFO)) {
+        ctxt->sax->startElementNs = 0;
+        ctxt->sax->characters = 0;
+        ctxt->sax->ignorableWhitespace = 0;
+        ctxt->sax->endElementNs = 0;
         xmlStopParser(ctxt);
+      }
     }
   }
 
@@ -109,6 +114,10 @@ class Properties : public CountUnits {
     // output the current data except for the completion of the nested unit count
     output_info(su, *(pstate->poptions), optioncount, optionorder);
 
+    ctxt->sax->startElementNs = 0;
+    ctxt->sax->characters = 0;
+    ctxt->sax->ignorableWhitespace = 0;
+    ctxt->sax->endElementNs = 0;
     xmlStopParser(ctxt);
   }
 };

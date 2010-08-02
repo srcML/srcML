@@ -120,7 +120,6 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
                                          int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                                          const xmlChar** attributes) {
 
-  fprintf(stderr, "%s\n", __FUNCTION__);
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
@@ -232,7 +231,9 @@ void SAX2ExtractUnitsSrc::endElementNs(void *ctx, const xmlChar *localname, cons
     // should have made this call earlier, makeup for it now
     pstate->pprocess->startUnit(ctx, pstate->root.localname, pstate->root.prefix, pstate->root.URI, pstate->root.nb_namespaces,
                                 pstate->root.namespaces, pstate->root.nb_attributes, pstate->root.nb_defaulted, pstate->root.attributes);
+    return;
   }
+
 
   if (pstate->unit == -1 || (!pstate->isarchive && pstate->unit == 0) || pstate->count == pstate->unit)
     pstate->pprocess->endUnit(ctx, localname, prefix, URI);

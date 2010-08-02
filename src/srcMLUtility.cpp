@@ -133,7 +133,6 @@ void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE opt
 
   // all done with parsing
   xmlFreeParserCtxt(ctxt);
-
   /*
   // output entire unit element
   xmlSAXHandler sax = SAX2Properties::factory();
