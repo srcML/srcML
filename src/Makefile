@@ -41,10 +41,10 @@ XML_IO_LIB_SRC2SRCML_DEFINE=-DLIBARCHIVE
 XML_IO_LIB_SRCML2SRC_DEFINE=-DLIBARCHIVE
 XML_IO_LIB_SRC2SRCML=-larchive
 XML_IO_LIB_SRCML2SRC=-larchive
-IO_LIB_SRC2SRCML=${OBJ_DIR}libxml_archive_read.o ${OBJ_DIR}libxml_archive_write.o ${OBJ_DIR}libxml_archive_read_disk.o
-IO_LIB_SRC2SRCML_DEPENDS=libxml_archive_read.h libxml_archive_write.h libxml_archive_read_disk.h
-IO_LIB_SRCML2SRC_DEPENDS=libxml_archive_read.h libxml_archive_write.h libxml_archive_read_disk.h
-IO_LIB_SRCML2SRC=${OBJ_DIR}libxml_archive_read.o ${OBJ_DIR}libxml_archive_write.o ${OBJ_DIR}libxml_archive_read_disk.o
+IO_LIB_SRC2SRCML=${OBJ_DIR}libxml_archive_read.o ${OBJ_DIR}libxml_archive_write.o
+IO_LIB_SRC2SRCML_DEPENDS=libxml_archive_read.h libxml_archive_write.h
+IO_LIB_SRCML2SRC_DEPENDS=libxml_archive_read.h libxml_archive_write.h
+IO_LIB_SRCML2SRC=${OBJ_DIR}libxml_archive_read.o ${OBJ_DIR}libxml_archive_write.o
 else
 XML_IO_LIB_SRC2SRCML_DEFINE=
 XML_IO_LIB_SRCML2SRC_DEFINE=
