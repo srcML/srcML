@@ -203,7 +203,7 @@ void* archiveReadOpen(const char* URI) {
 // close the open file
 int archiveReadClose() {
 
-  archiveReadClose(mcontext);
+  return archiveReadClose(mcontext);
 }
 
 
