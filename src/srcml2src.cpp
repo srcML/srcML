@@ -223,14 +223,6 @@ int optioncount = 0;
 
 void output_info(srcMLUtility& su, int options, int optioncount, int optionorder[]);
 
-const int MAXPARAMS = 32;
-
-const int MAXXSLT = 32;
-
-const int MAXXPATH = 32;
-
-const int MAXNS = 32;
-
 typedef struct process_options
 {
   // option values

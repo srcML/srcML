@@ -147,6 +147,14 @@ inline bool argisoption(const char* s) {
   return s[0] == '-';
 }
 
+const int MAXPARAMS = 64;
+
+const int MAXXSLT = 32;
+
+const int MAXXPATH = 32;
+
+const int MAXNS = 32;
+
 
 void checkargisoption(const char* name, const char* opt, const char* optarg, int optind, int lastoptind);
 
