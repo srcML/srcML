@@ -70,6 +70,11 @@ class SAX2ExtractUnitsSrc {
                                  const xmlChar** attributes);
 
   // unit element
+  static void startElementNsFirst(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                             int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                             const xmlChar** attributes);
+
+  // unit element
   static void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                              int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                              const xmlChar** attributes);

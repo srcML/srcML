@@ -40,6 +40,7 @@
 #include "ProcessUnit.h"
 #include "ExtractUnitsSrc.h"
 #include "CountUnits.h"
+#include "Properties.h"
 
 #include "SAX2ListUnits.h"
 #include "SAX2ExtractUnitsSrc.h"
@@ -109,6 +110,31 @@ const char* srcMLUtility::namespace_ext(const char* uri) {
 // move to a particular nested unit
 void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE options, int optioncount, int optionorder[]) {
 
+  // setup parser
+  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
+  if (ctxt == NULL) return;
+
+  // setup sax handler
+  xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
+  ctxt->sax = &sax;
+
+  // setup process handling
+  Properties process(su, nsv, attrv, optioncount, optionorder);
+
+  // setup sax handling state
+  SAX2ExtractUnitsSrc state(&process, &options, unitnumber);
+  ctxt->_private = &state;
+
+  // process the document
+  xmlParseDocument(ctxt);
+
+  // local variable, do not want xmlFreeParserCtxt to free
+  ctxt->sax = NULL;
+
+  // all done with parsing
+  xmlFreeParserCtxt(ctxt);
+
+  /*
   // output entire unit element
   xmlSAXHandler sax = SAX2Properties::factory();
 
@@ -138,6 +164,7 @@ void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE opt
        throw OutOfRangeUnitError(state.count);
 
   units = state.count;
+  */
 }
 
 
