@@ -392,7 +392,7 @@ int main(int argc, char* argv[]) {
       if (isatty(STDOUT_FILENO))
         putchar('\r');
 
-      printf("%d\n", count);
+      printf("%ld\n", count);
 
       // if we terminated early, output the correct status
       if (isoption(options, OPTION_TERMINATE))
