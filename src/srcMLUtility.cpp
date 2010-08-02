@@ -134,6 +134,13 @@ void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE opt
   // all done with parsing
   xmlFreeParserCtxt(ctxt);
   /*
+  // make sure we did not end early
+  if (state.unit && state.count != state.unit)
+     throw OutOfRangeUnitError(state.count);
+  */
+  units = state.count;
+
+  /*
   // output entire unit element
   xmlSAXHandler sax = SAX2Properties::factory();
 
@@ -158,11 +165,6 @@ void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE opt
   // now free the context
   xmlFreeParserCtxt(ctxt);
 
-  // make sure we did not end early
-    if (state.unit && state.count != state.unit)
-       throw OutOfRangeUnitError(state.count);
-
-  units = state.count;
   */
 }
 

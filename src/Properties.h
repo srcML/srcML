@@ -76,7 +76,7 @@ class Properties : public CountUnits {
       output_info(su, *(pstate->poptions), optioncount, optionorder);
     }
 
-    if (!isoption(*(pstate->poptions), OPTION_LONG_INFO)) {
+    if (pstate->unit < 1 && !isoption(*(pstate->poptions), OPTION_LONG_INFO)) {
       ctxt->sax->startElementNs = 0;
       ctxt->sax->characters = 0;
       ctxt->sax->ignorableWhitespace = 0;
@@ -89,10 +89,9 @@ class Properties : public CountUnits {
   void startUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                  int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                  const xmlChar** attributes) {
+
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
-
-    fprintf(stderr, "%s %d\n", __FUNCTION__, pstate->count);
 
     // collect namespaces
     collect_namespaces(nb_namespaces, namespaces, nsv);
