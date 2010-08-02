@@ -237,10 +237,8 @@ typedef struct process_options
   const char* ns[MAXNS + 1];
   int paramcount;
   const char* params[MAXPARAMS * 2 + 1];
-  int xsltcount;
-  const char* xsltfiles[MAXTRANSFORMS + 1];
-  int xpathcount;
-  const char* xpathexpr[MAXTRANSFORMS + 1];
+  int transformcount;
+  const char* transforms[MAXTRANSFORMS + 1];
 } process_options;
 
 // setup options and collect info from arguments
@@ -285,8 +283,6 @@ int main(int argc, char* argv[]) {
      0,
      0,
      "src:unit",
-     0,
-     { 0 },
      0,
      { 0 },
      0,
@@ -430,18 +426,18 @@ int main(int argc, char* argv[]) {
 
     } else if (isoption(options, OPTION_XPATH)) {
 
-      if (poptions.xpathcount == 0)
+      if (poptions.transformcount == 0)
 	su.extract_element(poptions.context, poptions.ofilename);
       else
-	su.xpath(poptions.ofilename, poptions.context, poptions.xpathexpr);
+	su.xpath(poptions.ofilename, poptions.context, poptions.transforms);
 
     } else if (isoption(options, OPTION_XSLT)) {
 
-      su.xslt(poptions.context, poptions.ofilename, poptions.xsltfiles, poptions.params, poptions.paramcount);
+      su.xslt(poptions.context, poptions.ofilename, poptions.transforms, poptions.params, poptions.paramcount);
 
     } else if (isoption(options, OPTION_RELAXNG)) {
 
-      su.relaxng(poptions.ofilename, poptions.xpathexpr);
+      su.relaxng(poptions.ofilename, poptions.transforms);
 
     } else {
 
@@ -729,7 +725,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
       checkargisnonempty(argv[0], argv[lastoptind], optarg, optind, lastoptind);
 
       options |= OPTION_XPATH;
-      poptions.xpathexpr[poptions.xpathcount++] = optarg;
+      poptions.transforms[poptions.transformcount++] = optarg;
       break;
 
     case XSLT_FLAG_CODE:
@@ -741,7 +737,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
       checkargisnonempty(argv[0], argv[lastoptind], optarg, optind, lastoptind);
 
       options |= OPTION_XSLT;
-      poptions.xsltfiles[poptions.xsltcount++] = optarg;
+      poptions.transforms[poptions.transformcount++] = optarg;
       break;
 
     case STRING_PARAM_FLAG_CODE:
@@ -796,7 +792,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
       checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
 
       options |= OPTION_RELAXNG;
-      poptions.xpathexpr[poptions.xpathcount++] = optarg;
+      poptions.transforms[poptions.transformcount++] = optarg;
       break;
 
     default:
