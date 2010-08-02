@@ -176,7 +176,6 @@ void SAX2UnitDOM::startElementNsUnit(void* ctx, const xmlChar* localname, const 
 void SAX2UnitDOM::endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-  SAX2UnitDOM* pstate = (SAX2UnitDOM*) ctxt->_private;
 
   xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
 
