@@ -72,16 +72,16 @@ class Properties : public CountUnits {
     }
 
     // output the current data except for the completion of the nested unit count
-    if (pstate->unit == 0) {
+    if (pstate->unit < 1) {
       output_info(su, *(pstate->poptions), optioncount, optionorder);
+    }
 
-      if (!isoption(*(pstate->poptions), OPTION_LONG_INFO)) {
-        ctxt->sax->startElementNs = 0;
-        ctxt->sax->characters = 0;
-        ctxt->sax->ignorableWhitespace = 0;
-        ctxt->sax->endElementNs = 0;
-        xmlStopParser(ctxt);
-      }
+    if (!isoption(*(pstate->poptions), OPTION_LONG_INFO)) {
+      ctxt->sax->startElementNs = 0;
+      ctxt->sax->characters = 0;
+      ctxt->sax->ignorableWhitespace = 0;
+      ctxt->sax->endElementNs = 0;
+      xmlStopParser(ctxt);
     }
   }
 
@@ -91,6 +91,8 @@ class Properties : public CountUnits {
                  const xmlChar** attributes) {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+
+    fprintf(stderr, "%s %d\n", __FUNCTION__, pstate->count);
 
     // collect namespaces
     collect_namespaces(nb_namespaces, namespaces, nsv);

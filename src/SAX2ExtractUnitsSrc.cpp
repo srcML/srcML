@@ -76,6 +76,8 @@ void SAX2ExtractUnitsSrc::startElementNsRoot(void* ctx, const xmlChar* localname
   // start counting units after the root
   pstate->count = 0;
 
+  pstate->rootonly = true;
+
   // save all the info in case this is not a srcML archive
   pstate->root.localname = localname ? (xmlChar*) strdup((const char*) localname) : 0;
   pstate->root.prefix = prefix ? (xmlChar*) strdup((const char*) prefix) : 0;
@@ -122,6 +124,8 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+
+  pstate->rootonly = false;
 
   // see if this is really a nested unit.  If not, then we have an individual
   // unit (not a srcML archive) and need to process the cached root
@@ -171,6 +175,8 @@ void SAX2ExtractUnitsSrc::startElementNs(void* ctx, const xmlChar* localname, co
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+
+  pstate->rootonly = false;
 
   ++(pstate->count);
 
@@ -227,13 +233,12 @@ void SAX2ExtractUnitsSrc::endElementNs(void *ctx, const xmlChar *localname, cons
     return;
 
   // got here without ever seeing a nested element of any kind
-  if (pstate->count == 0) {
+  if (pstate->rootonly) {
     // should have made this call earlier, makeup for it now
     pstate->pprocess->startUnit(ctx, pstate->root.localname, pstate->root.prefix, pstate->root.URI, pstate->root.nb_namespaces,
                                 pstate->root.namespaces, pstate->root.nb_attributes, pstate->root.nb_defaulted, pstate->root.attributes);
     return;
   }
-
 
   if (pstate->unit == -1 || (!pstate->isarchive && pstate->unit == 0) || pstate->count == pstate->unit)
     pstate->pprocess->endUnit(ctx, localname, prefix, URI);
@@ -241,6 +246,16 @@ void SAX2ExtractUnitsSrc::endElementNs(void *ctx, const xmlChar *localname, cons
   // now waiting for start of next unit
   ctxt->sax->startElementNs = &startElementNs;
   ctxt->sax->characters = 0;
+
+  // done if we are only stopping on this one
+  if (pstate->count == pstate->unit) {
+
+    ctxt->sax->startElementNs = 0;
+    ctxt->sax->characters = 0;
+    ctxt->sax->ignorableWhitespace = 0;
+    ctxt->sax->endElementNs = 0;
+    xmlStopParser(ctxt);
+  }
 }
 
 // escape control character elements

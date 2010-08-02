@@ -343,7 +343,7 @@ int main(int argc, char* argv[]) {
 
       su.list();
 
-      // process get attribute options
+    // process get attribute options
     } else if (optioncount > 0) {
 
       // move to the appropriate unit and output the appropriate metadata

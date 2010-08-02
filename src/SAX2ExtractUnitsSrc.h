@@ -52,6 +52,7 @@ class SAX2ExtractUnitsSrc {
   const xmlChar* firstcharacters;
   int firstlen;
   bool isarchive;
+  bool rootonly;
 
  public:
 
