@@ -1830,7 +1830,7 @@ encoding="UTF-8"
 language="C++"
 directory="sub"
 filename="a.cpp"
-files="0"
+files="1"
 """
 
 longinfonested = """xmlns="http://www.sdml.info/srcML/src"
