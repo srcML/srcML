@@ -226,7 +226,7 @@ void SAX2ExtractUnitsSrc::endElementNs(void *ctx, const xmlChar *localname, cons
   if (ctxt->nameNr != (pstate->isarchive ? 2 : 1))
     return;
 
-  if (pstate->unit == -1 || pstate->count == pstate->unit)
+  if (pstate->unit == -1 || (!pstate->isarchive && pstate->unit == 0) || pstate->count == pstate->unit)
     pstate->pprocess->endUnit(ctx, localname, prefix, URI);
 
   // now waiting for start of next unit
