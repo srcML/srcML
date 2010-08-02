@@ -238,9 +238,9 @@ typedef struct process_options
   int paramcount;
   const char* params[MAXPARAMS * 2 + 1];
   int xsltcount;
-  const char* xsltfiles[MAXXSLT + 1];
+  const char* xsltfiles[MAXTRANSFORMS + 1];
   int xpathcount;
-  const char* xpathexpr[MAXXPATH + 1];
+  const char* xpathexpr[MAXTRANSFORMS + 1];
 } process_options;
 
 // setup options and collect info from arguments
