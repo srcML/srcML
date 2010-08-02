@@ -25,6 +25,7 @@
 #ifndef INCLUDED_COUNTUNITS_H
 #define INCLUDED_COUNTUNITS_H
 
+#include "SAX2ExtractUnitsSrc.h"
 #include "ProcessUnit.h"
 
 class CountUnits : public ProcessUnit {
@@ -36,13 +37,16 @@ class CountUnits : public ProcessUnit {
   virtual void endUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    SAX2CountUnits* pstate = (SAX2CountUnits*) ctxt->_private;
+    SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+
+    if (!isatty(STDOUT_FILENO))
+      return;
 
     // output file status message if in verbose mode
-    if (pstate->verbose && !isoption(pstate->options, OPTION_LONG_INFO)) {
-      fprintf(stderr, "\r%ld", pstate->count);
+    if (!isoption(*(pstate->poptions), OPTION_LONG_INFO)) {
+      fprintf(stdout, "\r%ld", pstate->count);
       fflush(stdout);
-    } else if (isoption(pstate->options, OPTION_LONG_INFO) && isatty(STDOUT_FILENO)) {
+    } else if (isoption(*(pstate->poptions), OPTION_LONG_INFO)) {
 
       // back up over the previous display
       // yes, this is a hack, but it works

@@ -37,6 +37,10 @@
 
 #include "Options.h"
 
+#include "ProcessUnit.h"
+#include "ExtractUnitsSrc.h"
+#include "CountUnits.h"
+
 #include "SAX2ListUnits.h"
 #include "SAX2ExtractUnitsSrc.h"
 #include "SAX2ExtractUnitXML.h"
@@ -45,10 +49,6 @@
 #include "SAX2UnitDOMXPath.h"
 #include "SAX2UnitDOMXSLT.h"
 #include "SAX2UnitDOMRelaxNG.h"
-
-#include "ProcessUnit.h"
-#include "ExtractUnitsSrc.h"
-#include "CountUnits.h"
 
 #include "srcexfun.h"
 #include <libxslt/xslt.h>

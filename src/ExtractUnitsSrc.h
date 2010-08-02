@@ -25,6 +25,7 @@
 #ifndef INCLUDED_EXTRACTUNITSSRC_H
 #define INCLUDED_EXTRACTUNITSSRC_H
 
+#include "SAX2ExtractUnitsSrc.h"
 #include "ProcessUnit.h"
 
 #ifdef __GNUC__
