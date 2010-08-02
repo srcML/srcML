@@ -143,7 +143,7 @@ ${EXE_DIR}src2srcml : ${OBJ_DIR}srcMLParserClean.o ${OBJ_DIR}KeywordCPPLexerClea
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) ${XML_LIB_SRC2SRCML} ${XML_IO_LIB_SRC2SRCML} -o $@
 
 # srcML to source code translator program
-${EXE_DIR}srcml2src : ${OBJ_DIR}srcml2src.o ${OBJ_DIR}srcMLUtility.o ${OBJ_DIR}SAX2TextWriter.o ${OBJ_DIR}SAX2ExtractUnitsSrc.o ${OBJ_DIR}SAX2ExtractUnitXML.o ${OBJ_DIR}version.o ${OBJ_DIR}srcmlapps.o ${OBJ_DIR}SAX2Utilities.o ${OBJ_DIR}SAX2CountUnits.o ${XML_OBJ} ${OBJ_DIR}SAX2UnitDOM.o ${OBJ_DIR}SAX2UnitDOMXSLT.o ${OBJ_DIR}SAX2UnitDOMXPath.o ${OBJ_DIR}SAX2UnitDOMRelaxNG.o ${OBJ_DIR}srcexfun.o ${OBJ_DIR}SAX2ListUnits.o  ${IO_LIB_SRCML2SRC}
+${EXE_DIR}srcml2src : ${OBJ_DIR}srcml2src.o ${OBJ_DIR}srcMLUtility.o ${OBJ_DIR}SAX2TextWriter.o ${OBJ_DIR}SAX2ExtractUnitsSrc.o ${OBJ_DIR}SAX2ExtractUnitXML.o ${OBJ_DIR}version.o ${OBJ_DIR}srcmlapps.o ${OBJ_DIR}SAX2Utilities.o ${XML_OBJ} ${OBJ_DIR}SAX2UnitDOM.o ${OBJ_DIR}SAX2UnitDOMXSLT.o ${OBJ_DIR}SAX2UnitDOMXPath.o ${OBJ_DIR}SAX2UnitDOMRelaxNG.o ${OBJ_DIR}srcexfun.o ${IO_LIB_SRCML2SRC}
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) ${XML_LIB_SRCML2SRC} ${XML_IO_LIB_SRCML2SRC} -o $@
 
 # source code lexical analysis

@@ -41,11 +41,10 @@
 #include "ExtractUnitsSrc.h"
 #include "CountUnits.h"
 #include "Properties.h"
+#include "ListUnits.h"
 
-#include "SAX2ListUnits.h"
 #include "SAX2ExtractUnitsSrc.h"
 #include "SAX2ExtractUnitXML.h"
-//#include "SAX2Properties.h"
 
 #include "SAX2UnitDOMXPath.h"
 #include "SAX2UnitDOMXSLT.h"
@@ -361,20 +360,28 @@ void srcMLUtility::expand(const char* root_filename, const char* format, const c
 // list the elements
 void srcMLUtility::list() {
 
-  SAX2ListUnits::State state;
-  state.poptions = &options;
-
-  xmlSAXHandler sax = SAX2ListUnits::factory();
-
+  // setup parser
   xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
   if (ctxt == NULL) return;
+
+  // setup sax handler
+  xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
   ctxt->sax = &sax;
+
+  // setup process handling
+  ListUnits process;
+
+  // setup sax handling state
+  SAX2ExtractUnitsSrc state(&process, &options, -1);
   ctxt->_private = &state;
 
+  // process the document
   xmlParseDocument(ctxt);
 
+  // local variable, do not want xmlFreeParserCtxt to free
   ctxt->sax = NULL;
 
+  // all done with parsing
   xmlFreeParserCtxt(ctxt);
 }
 /*
