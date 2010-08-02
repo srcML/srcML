@@ -561,9 +561,9 @@ int main(int argc, char* argv[]) {
 
     else if (isoption(options, OPTION_NESTED) && !isoption(options, OPTION_QUIET)) {
 	fprintf(stderr, "\n"
-		"Translated Files: %d\n"
-		"Skipped Files: %d\n"
-		"Total Files: %d\n", count, skipped, count + skipped);
+		"Translated: %d\n"
+		"Skipped: %d\n"
+		"Total: %d\n", count, skipped, count + skipped);
       }
 
   } catch (srcEncodingException) {
