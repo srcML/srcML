@@ -876,7 +876,7 @@ void output_info(srcMLUtility& su, int options, int optioncount, int optionorder
       // output all the namespaces
       if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {
 
-	for (int i = 0; i < 32; ++i) {
+	for (int i = 0; i < MAXNS; ++i) {
 	  if (su.nsv[i].first == "")
 	    break;
 
