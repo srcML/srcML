@@ -736,6 +736,12 @@ int process_args(int argc, char* argv[], process_options & poptions)
       // check for blank argument
       checkargisnonempty(argv[0], argv[lastoptind], optarg, optind, lastoptind);
 
+      if(poptions.transformcount != 0)
+      {
+	fprintf(stderr, "%s: Only one xslt file with no xpath expressions may be used.\n", argv[0]);
+	exit(STATUS_ERROR);
+      }
+
       options |= OPTION_XSLT;
       poptions.transforms[poptions.transformcount++] = optarg;
       break;
