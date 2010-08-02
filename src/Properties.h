@@ -83,6 +83,12 @@ class Properties : public CountUnits {
       ctxt->sax->endElementNs = 0;
       xmlStopParser(ctxt);
     }
+
+    if (pstate->unit < 1 && isoption(*(pstate->poptions), OPTION_LONG_INFO)) {
+      pstate->unit = -1;
+      CountUnits* pcount = new CountUnits();
+      pstate->pprocess = pcount;
+    }
   }
 
   // extract namespace and attributes from root unit element
