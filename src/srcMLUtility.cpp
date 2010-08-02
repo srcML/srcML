@@ -45,7 +45,7 @@
 #include "SAX2ListUnits.h"
 #include "SAX2ExtractUnitsSrc.h"
 #include "SAX2ExtractUnitXML.h"
-#include "SAX2Properties.h"
+//#include "SAX2Properties.h"
 
 #include "SAX2UnitDOMXPath.h"
 #include "SAX2UnitDOMXSLT.h"
