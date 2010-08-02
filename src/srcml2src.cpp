@@ -724,6 +724,12 @@ int process_args(int argc, char* argv[], process_options & poptions)
       // check for blank argument
       checkargisnonempty(argv[0], argv[lastoptind], optarg, optind, lastoptind);
 
+      if(poptions.transformcount != 0)
+      {
+	fprintf(stderr, "%s: Only one xpath expression, xslt file, or relaxng file may be used.\n", argv[0]);
+	exit(STATUS_ERROR);
+      }
+
       options |= OPTION_XPATH;
       poptions.transforms[poptions.transformcount++] = optarg;
       break;
@@ -738,7 +744,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
       if(poptions.transformcount != 0)
       {
-	fprintf(stderr, "%s: Only one xslt file with no xpath expressions may be used.\n", argv[0]);
+	fprintf(stderr, "%s: Only one xpath expression, xslt file, or relaxng file may be used.\n", argv[0]);
 	exit(STATUS_ERROR);
       }
 
@@ -796,6 +802,12 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+
+      if(poptions.transformcount != 0)
+      {
+	fprintf(stderr, "%s: Only one xpath expression, xslt file, or relaxng file may be used.\n", argv[0]);
+	exit(STATUS_ERROR);
+      }
 
       options |= OPTION_RELAXNG;
       poptions.transforms[poptions.transformcount++] = optarg;
