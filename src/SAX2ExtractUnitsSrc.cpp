@@ -42,6 +42,7 @@ xmlSAXHandler SAX2ExtractUnitsSrc::factory() {
 // output all characters to output buffer
 void SAX2ExtractUnitsSrc::charactersPre(void* ctx, const xmlChar* ch, int len) {
 
+  fprintf(stderr, "HERE: %s\n", __FUNCTION__);
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
@@ -157,6 +158,7 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
     ctxt->sax->startElementNs = &startElementNsRegular;
     ctxt->sax->characters = &characters;
     ctxt->sax->ignorableWhitespace = &characters;
+    ctxt->sax->endElementNs = &endElementNsMid;
 
   } else {
 
@@ -242,7 +244,7 @@ void SAX2ExtractUnitsSrc::startElementNs(void* ctx, const xmlChar* localname, co
 
 void SAX2ExtractUnitsSrc::endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
-  fprintf(stderr, "HERE: %s\n", __FUNCTION__);
+  fprintf(stderr, "HERE: %s %s\n", __FUNCTION__, localname);
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
@@ -285,11 +287,12 @@ void SAX2ExtractUnitsSrc::endElementNsPost(void *ctx, const xmlChar *localname, 
 // end unit element and current file/buffer (started by startElementNs
 void SAX2ExtractUnitsSrc::endElementNsMid(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
+  fprintf(stderr, "HERE: %s %s\n", __FUNCTION__, localname);
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
   // only process nested unit start elements
-  if (ctxt->nameNr != (pstate->isarchive ? 2 : 1)) {
+  if (ctxt->nameNr != (pstate->isarchive ? 1 : 0)) {
     endElementNs(ctx, localname, prefix, URI);
     return;
   }
@@ -302,6 +305,7 @@ void SAX2ExtractUnitsSrc::startElementNsRegular(void* ctx, const xmlChar* localn
                                                 int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                                                 const xmlChar** attributes) {
 
+  fprintf(stderr, "HERE: %s %s\n", __FUNCTION__, localname);
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
   
