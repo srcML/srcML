@@ -2523,7 +2523,7 @@ srcmlend = """
 os.system('rm sub/a.cpp; touch sub/a.cpp')
 f = open('sub/a.java', 'w')
 f.write(src)
-f.close
+f.close()
 
 check([src2srcml, 'sub/a.cpp', 'sub/a.java'], '', srcmlstart + cppempty + java + srcmlend)
 check([src2srcml, 'sub/a.cpp', 'sub/a.java', '-o', 'sub/all.xml'], '', '')
@@ -2536,7 +2536,7 @@ validate(open('sub/all.xml', 'r').read(), srcmlstart + java + cppempty + srcmlen
 os.system('rm sub/a.java; touch sub/a.java')
 f = open('sub/a.cpp', 'w')
 f.write(src)
-f.close
+f.close()
 
 check([src2srcml, 'sub/a.cpp', 'sub/a.java'], '', srcmlstart + cpp + javaempty + srcmlend)
 check([src2srcml, 'sub/a.cpp', 'sub/a.java', '-o', 'sub/all.xml'], '', '')
