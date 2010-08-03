@@ -1983,6 +1983,40 @@ validate(open('sub/a.cpp.xml').read(), srcmlout)
 check([srcml2src, option.NO_XML_DECLARATION_FLAG, 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml').read(), srcmlout)
 
+srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+</unit>
+"""
+
+srcmlout = """<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+</unit>
+"""
+
+f = open('sub/a.cpp.xml', 'w')
+f.write(srcml)
+f.close()
+
+check([srcml2src, option.XML_FLAG, option.NO_XML_DECLARATION_FLAG], srcml, srcmlout)
+check([srcml2src, option.XML_FLAG, option.NO_XML_DECLARATION_FLAG, 'sub/a.cpp.xml'], "", srcmlout)
+check([srcml2src, option.XML_FLAG, option.NO_XML_DECLARATION_FLAG, '-o', 'sub/a.cpp.xml'], srcml, "")
+validate(open('sub/a.cpp.xml').read(), srcmlout)
+check([srcml2src, option.XML_FLAG, option.NO_XML_DECLARATION_FLAG, 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
+validate(open('sub/b.cpp.xml').read(), srcmlout)
+
+check([srcml2src, option.NO_XML_DECLARATION_FLAG, option.XML_FLAG], srcml, srcmlout)
+check([srcml2src, option.NO_XML_DECLARATION_FLAG, option.XML_FLAG, 'sub/a.cpp.xml'], "", srcmlout)
+check([srcml2src, option.NO_XML_DECLARATION_FLAG, option.XML_FLAG, '-o', 'sub/a.cpp.xml'], srcml, "")
+validate(open('sub/a.cpp.xml').read(), srcmlout)
+check([srcml2src, option.NO_XML_DECLARATION_FLAG, option.XML_FLAG, 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
+validate(open('sub/b.cpp.xml').read(), srcmlout)
+
+check([srcml2src, option.NO_XML_DECLARATION_FLAG], srcml, srcmlout)
+check([srcml2src, option.NO_XML_DECLARATION_FLAG, 'sub/a.cpp.xml'], "", srcmlout)
+check([srcml2src, option.NO_XML_DECLARATION_FLAG, '-o', 'sub/a.cpp.xml'], srcml, "")
+validate(open('sub/a.cpp.xml').read(), srcmlout)
+check([srcml2src, option.NO_XML_DECLARATION_FLAG, 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
+validate(open('sub/b.cpp.xml').read(), srcmlout)
+
 ##
 # no namespace declaration
 
