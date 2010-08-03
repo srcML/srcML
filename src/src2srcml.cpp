@@ -1117,6 +1117,9 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     // check if file is bad
     if (archiveReadStatus() < 0 ) {
       fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
+
+      ++error;
+
       return;
       // continue??
     }
@@ -1216,7 +1219,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       else
 	fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, unit_filename.c_str());
 
-      ++skipped;
+      ++error;
       return;
       //      exit(STATUS_INPUTFILE_PROBLEM);
     }
