@@ -2507,13 +2507,13 @@ cppempty = """
 """
 
 java = """
-<unit language="C++" filename="sub/a.java">
+<unit language="Java" filename="sub/a.java">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 """
 
 javaempty = """
-<unit language="C++" filename="sub/a.java"/>
+<unit language="Java" filename="sub/a.java"/>
 """
 
 srcmlend = """
@@ -2566,7 +2566,7 @@ check([src2srcml, 'sub/b.cpp', 'sub/a.cpp', '-o', 'sub/all.xml'], '', '')
 validate(open('sub/all.xml', 'r').read(), srcmlstart + cpp + cppempty + srcmlend)
 
 java = """
-<unit language="C++" filename="sub/b.java">
+<unit language="Java" filename="sub/b.java">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 """
