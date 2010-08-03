@@ -116,7 +116,7 @@ void SAX2ExtractUnitsSrc::startElementNsRoot(void* ctx, const xmlChar* localname
 
   // handle nested units
   ctxt->sax->startElementNs = &startElementNsFirst;
-  ctxt->sax->endElementNs = &endElementNs;
+  ctxt->sax->endElementNs = &endElementNsPost;
 }
 
 /*
@@ -228,15 +228,25 @@ void SAX2ExtractUnitsSrc::startElementNs(void* ctx, const xmlChar* localname, co
   free((void*) pstate->firstcharacters);
   */
 
-// end unit element and current file/buffer (started by startElementNs
 void SAX2ExtractUnitsSrc::endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
+  pstate->pprocess->endElementNs(ctx, localname, prefix, URI);
+}
+
+// end unit element and current file/buffer (started by startElementNs
+void SAX2ExtractUnitsSrc::endElementNsPost(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+
+  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+  SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+
   // only process nested unit start elements
-  if (ctxt->nameNr != (pstate->isarchive ? 2 : 1))
+  if (ctxt->nameNr != (pstate->isarchive ? 2 : 1)) {
+    endElementNs(ctx, localname, prefix, URI);
     return;
+  }
 
   // got here without ever seeing a nested element of any kind
   if (pstate->rootonly) {
