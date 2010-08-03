@@ -34,9 +34,20 @@ xmlSAXHandler SAX2ExtractUnitsSrc::factory() {
 
   sax.initialized    = XML_SAX2_MAGIC;
   sax.startElementNs = &startElementNsRoot;
-  sax.characters = &characters;  // catch first text of single unit
+  sax.characters = &charactersPre;  // catch first text of single unit
 
   return sax;
+}
+
+// output all characters to output buffer
+void SAX2ExtractUnitsSrc::charactersPre(void* ctx, const xmlChar* ch, int len) {
+
+  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+  SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+
+  pstate->firstcharacters = (const xmlChar*) malloc(len);
+  strncpy((char*) pstate->firstcharacters, (const char*) ch, len);
+  pstate->firstlen = len;
 }
 
 // output all characters to output buffer
@@ -45,12 +56,7 @@ void SAX2ExtractUnitsSrc::characters(void* ctx, const xmlChar* ch, int len) {
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
-  if (pstate->firstlen == -1) {
-    pstate->firstcharacters = (const xmlChar*) malloc(len);
-    strncpy((char*) pstate->firstcharacters, (const char*) ch, len);
-    pstate->firstlen = len;
-  } else
-    pstate->pprocess->characters(ctx, ch, len);
+  pstate->pprocess->characters(ctx, ch, len);
 }
 
 /*

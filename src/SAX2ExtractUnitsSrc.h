@@ -63,6 +63,9 @@ class SAX2ExtractUnitsSrc {
   static xmlSAXHandler factory();
 
   // output all characters to output buffer
+  static void charactersPre(void* user_data, const xmlChar* ch, int len);
+
+  // output all characters to output buffer
   static void characters(void* user_data, const xmlChar* ch, int len);
 
   // handle root unit of compound document
