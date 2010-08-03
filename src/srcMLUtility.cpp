@@ -42,6 +42,7 @@
 #include "CountUnits.h"
 #include "Properties.h"
 #include "ListUnits.h"
+#include "ExtractUnitsXML.h"
 
 #include "SAX2ExtractUnitsSrc.h"
 #include "SAX2ExtractUnitXML.h"
@@ -196,8 +197,37 @@ int srcMLUtility::unit_count() {
 }
 
 // extract a given unit
-void srcMLUtility::extract_xml(const char* filename, int unit) {
+void srcMLUtility::extract_xml(const char* ofilename, int unit) {
 
+  // setup parser
+  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
+  if (ctxt == NULL) return;
+
+  // setup sax handler
+  xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
+  ctxt->sax = &sax;
+
+  // setup process handling
+  ExtractUnitsXML process(0 /* to_directory is stdout */, ofilename, output_encoding);
+
+  // setup sax handling state
+  SAX2ExtractUnitsSrc state(&process, &options, unit);
+  ctxt->_private = &state;
+
+  // process the document
+  xmlParseDocument(ctxt);
+
+  // local variable, do not want xmlFreeParserCtxt to free
+  ctxt->sax = NULL;
+
+  // all done with parsing
+  xmlFreeParserCtxt(ctxt);
+
+  // make sure we did not end early
+  if (state.unit && state.count < state.unit)
+    throw OutOfRangeUnitError(state.count);
+
+  /*
   // output entire unit element
   xmlSAXHandler sax = SAX2ExtractUnitXML::factory();
 
@@ -220,6 +250,7 @@ void srcMLUtility::extract_xml(const char* filename, int unit) {
   // make sure we did not end early
   if (state.unit && state.count != state.unit)
      throw OutOfRangeUnitError(state.count);
+  */
 }
 
 // extract a given unit

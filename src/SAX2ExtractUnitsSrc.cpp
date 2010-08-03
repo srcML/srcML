@@ -233,7 +233,9 @@ void SAX2ExtractUnitsSrc::endElementNs(void *ctx, const xmlChar *localname, cons
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
+  fprintf(stderr, "HERE %s\n", localname);
   pstate->pprocess->endElementNs(ctx, localname, prefix, URI);
+  fprintf(stderr, "HERE2 %s\n", localname);
 }
 
 // end unit element and current file/buffer (started by startElementNs
