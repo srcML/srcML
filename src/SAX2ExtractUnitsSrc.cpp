@@ -201,8 +201,8 @@ void SAX2ExtractUnitsSrc::startElementNs(void* ctx, const xmlChar* localname, co
 
     // next state is to copy the unit contents, finishing when needed
     ctxt->sax->startElementNs = &startElementNsUnit;
-    ctxt->sax->characters = &characters;
-    ctxt->sax->ignorableWhitespace = &characters;
+    ctxt->sax->characters = &charactersUnit;
+    ctxt->sax->ignorableWhitespace = &charactersUnit;
     ctxt->sax->endElementNs = &endElementNs;
 
   } else {
