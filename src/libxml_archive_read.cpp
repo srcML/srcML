@@ -190,8 +190,12 @@ void* archiveReadOpen(const char* URI) {
     }
 
     scontext.status = archive_read_next_header(scontext.a, &scontext.ae);
-    if (scontext.status != ARCHIVE_OK)
+    if (scontext.status != ARCHIVE_OK) {
+
+      archive_read_finish(scontext.a);
+      scontext.a = 0;
       return 0;
+    }
   }
 
   return scontext.a;
