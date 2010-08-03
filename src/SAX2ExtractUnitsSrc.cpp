@@ -149,7 +149,7 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
 
     // output cached characters if detected
     if (pstate->firstlen != -1)
-      characters(ctx, pstate->firstcharacters, pstate->firstlen);
+      charactersUnit(ctx, pstate->firstcharacters, pstate->firstlen);
     pstate->firstlen = 0;
 
     pstate->isarchive = false;
