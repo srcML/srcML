@@ -2538,13 +2538,13 @@ f = open('sub/a.cpp', 'w')
 f.write(src)
 f.close
 
-check([src2srcml, 'sub/a.cpp', 'sub/a.java'], '', srcmlstart + cppempty + java + srcmlend)
+check([src2srcml, 'sub/a.cpp', 'sub/a.java'], '', srcmlstart + cpp + javaempty + srcmlend)
 check([src2srcml, 'sub/a.cpp', 'sub/a.java', '-o', 'sub/all.xml'], '', '')
-validate(open('sub/all.xml', 'r').read(), srcmlstart + cppempty + java + srcmlend)
+validate(open('sub/all.xml', 'r').read(), srcmlstart + cpp + javaempty + srcmlend)
 
-check([src2srcml, 'sub/a.java', 'sub/a.cpp'], '', srcmlstart + java + cppempty + srcmlend)
+check([src2srcml, 'sub/a.java', 'sub/a.cpp'], '', srcmlstart + javaempty + cpp + srcmlend)
 check([src2srcml, 'sub/a.java', 'sub/a.cpp', '-o', 'sub/all.xml'], '', '')
-validate(open('sub/all.xml', 'r').read(), srcmlstart + java + cppempty + srcmlend)
+validate(open('sub/all.xml', 'r').read(), srcmlstart + javaempty + cpp + srcmlend)
 
 # footer
 print
