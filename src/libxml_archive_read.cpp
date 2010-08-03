@@ -192,9 +192,6 @@ void* archiveReadOpen(const char* URI) {
     scontext.status = archive_read_next_header(scontext.a, &scontext.ae);
     if (scontext.status != ARCHIVE_OK)
       return 0;
-
-    //    while (archive_entry_filetype(scontext.ae) == AE_IFDIR)
-    //      archiveReadClose(mcontext);
   }
 
   return scontext.a;
