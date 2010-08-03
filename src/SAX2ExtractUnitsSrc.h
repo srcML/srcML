@@ -65,9 +65,6 @@ class SAX2ExtractUnitsSrc {
   // output all characters to output buffer
   static void charactersPre(void* user_data, const xmlChar* ch, int len);
 
-  // output all characters to output buffer
-  static void characters(void* user_data, const xmlChar* ch, int len);
-
   // handle root unit of compound document
   static void startElementNsRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                                  int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
@@ -85,13 +82,19 @@ class SAX2ExtractUnitsSrc {
 
   static void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
 
-  static void endElementNsPost(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
+  static void endElementNsSkip(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
 
-  static void endElementNsMid(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
-
-  static void startElementNsRegular(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+  /*
+    Call process methods
+   */
+  static void startElementNsUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                                    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                                    const xmlChar** attributes);
+  // output all characters to output buffer
+  static void charactersUnit(void* user_data, const xmlChar* ch, int len);
+
+  static void endElementNsUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
+
 };
 
 #endif

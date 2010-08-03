@@ -52,7 +52,7 @@ void SAX2ExtractUnitsSrc::charactersPre(void* ctx, const xmlChar* ch, int len) {
 }
 
 // output all characters to output buffer
-void SAX2ExtractUnitsSrc::characters(void* ctx, const xmlChar* ch, int len) {
+void SAX2ExtractUnitsSrc::charactersUnit(void* ctx, const xmlChar* ch, int len) {
 
   fprintf(stderr, "HERE: %s\n", __FUNCTION__);
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
@@ -119,7 +119,7 @@ void SAX2ExtractUnitsSrc::startElementNsRoot(void* ctx, const xmlChar* localname
 
   // handle nested units
   ctxt->sax->startElementNs = &startElementNsFirst;
-  ctxt->sax->endElementNs = &endElementNsPost;
+  ctxt->sax->endElementNs = &endElementNsSkip;
 }
 
 /*
@@ -155,10 +155,10 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
     pstate->isarchive = false;
 
     // next state is to copy the unit contents, finishing when needed
-    ctxt->sax->startElementNs = &startElementNsRegular;
-    ctxt->sax->characters = &characters;
-    ctxt->sax->ignorableWhitespace = &characters;
-    ctxt->sax->endElementNs = &endElementNsMid;
+    ctxt->sax->startElementNs = &startElementNsUnit;
+    ctxt->sax->characters = &charactersUnit;
+    ctxt->sax->ignorableWhitespace = &charactersUnit;
+    ctxt->sax->endElementNs = &endElementNs;
 
   } else {
 
@@ -188,11 +188,6 @@ void SAX2ExtractUnitsSrc::startElementNs(void* ctx, const xmlChar* localname, co
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
-  // only process nested unit start elements
-  if (ctxt->nameNr != (pstate->isarchive ? 1 : 0)) {
-    //    endElementNs(ctx, localname, prefix, URI);
-    return;
-  }
   pstate->rootonly = false;
 
   ++(pstate->count);
@@ -205,17 +200,17 @@ void SAX2ExtractUnitsSrc::startElementNs(void* ctx, const xmlChar* localname, co
     pstate->pprocess->startUnit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
 
     // next state is to copy the unit contents, finishing when needed
-    ctxt->sax->startElementNs = &startElementNsRegular;
+    ctxt->sax->startElementNs = &startElementNsUnit;
     ctxt->sax->characters = &characters;
     ctxt->sax->ignorableWhitespace = &characters;
-    ctxt->sax->endElementNs = &endElementNsMid;
+    ctxt->sax->endElementNs = &endElementNs;
 
   } else {
 
     ctxt->sax->startElementNs = 0;
     ctxt->sax->characters = 0;
     ctxt->sax->ignorableWhitespace = 0;
-    ctxt->sax->endElementNs = &endElementNsPost;
+    ctxt->sax->endElementNs = &endElementNsSkip;
   }
 }
 
@@ -242,7 +237,7 @@ void SAX2ExtractUnitsSrc::startElementNs(void* ctx, const xmlChar* localname, co
   free((void*) pstate->firstcharacters);
   */
 
-void SAX2ExtractUnitsSrc::endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+void SAX2ExtractUnitsSrc::endElementNsUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
   fprintf(stderr, "HERE: %s %s\n", __FUNCTION__, localname);
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
@@ -252,7 +247,7 @@ void SAX2ExtractUnitsSrc::endElementNs(void *ctx, const xmlChar *localname, cons
 }
 
 // end unit element and current file/buffer (started by startElementNs
-void SAX2ExtractUnitsSrc::endElementNsPost(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+void SAX2ExtractUnitsSrc::endElementNsSkip(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
   fprintf(stderr, "HERE: %s %s\n", __FUNCTION__, localname);
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
@@ -285,23 +280,23 @@ void SAX2ExtractUnitsSrc::endElementNsPost(void *ctx, const xmlChar *localname, 
 }
 
 // end unit element and current file/buffer (started by startElementNs
-void SAX2ExtractUnitsSrc::endElementNsMid(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+void SAX2ExtractUnitsSrc::endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
   fprintf(stderr, "HERE: %s %s\n", __FUNCTION__, localname);
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
   // only process nested unit start elements
-  if (ctxt->nameNr != (pstate->isarchive ? 1 : 0)) {
-    endElementNs(ctx, localname, prefix, URI);
+  if (ctxt->nameNr != (pstate->isarchive ? 2 : 1)) {
+    endElementNsUnit(ctx, localname, prefix, URI);
     return;
   }
 
-  endElementNsPost(ctx, localname, prefix, URI);
+  endElementNsSkip(ctx, localname, prefix, URI);
 }
 
 // escape control character elements
-void SAX2ExtractUnitsSrc::startElementNsRegular(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+void SAX2ExtractUnitsSrc::startElementNsUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                                                 int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                                                 const xmlChar** attributes) {
 
