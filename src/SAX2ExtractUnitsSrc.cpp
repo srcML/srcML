@@ -253,6 +253,10 @@ void SAX2ExtractUnitsSrc::endElementNsSkip(void *ctx, const xmlChar *localname, 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
+  if (ctxt->nameNr != (pstate->isarchive ? 2 : 1)) {
+    return;
+  }
+
   // got here without ever seeing a nested element of any kind
   if (pstate->rootonly) {
     // should have made this call earlier, makeup for it now
@@ -282,9 +286,10 @@ void SAX2ExtractUnitsSrc::endElementNsSkip(void *ctx, const xmlChar *localname, 
 // end unit element and current file/buffer (started by startElementNs
 void SAX2ExtractUnitsSrc::endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
-  fprintf(stderr, "HERE: %s %s\n", __FUNCTION__, localname);
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+
+  fprintf(stderr, "HERE: %s %s %d %d\n", __FUNCTION__, localname, ctxt->nameNr, pstate->isarchive);
 
   // only process nested unit start elements
   if (ctxt->nameNr != (pstate->isarchive ? 2 : 1)) {
