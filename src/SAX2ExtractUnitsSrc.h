@@ -87,6 +87,8 @@ class SAX2ExtractUnitsSrc {
 
   static void endElementNsPost(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
 
+  static void endElementNsMid(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
+
   static void startElementNsRegular(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                                    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                                    const xmlChar** attributes);

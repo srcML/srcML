@@ -48,10 +48,11 @@ class ExtractUnitsXML : public ProcessUnit {
  public :
 
     // handle root unit of compound document
-    void startUnitRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix,
+    void startRootUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix,
                        const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces, int nb_attributes,
                        int nb_defaulted, const xmlChar** attributes) {
 
+      fprintf(stderr, "%s\n", __FUNCTION__);
       // collect namespaces
       collect_namespaces(nb_namespaces, namespaces, nsv);
 
@@ -63,6 +64,7 @@ class ExtractUnitsXML : public ProcessUnit {
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                          const xmlChar** attributes) {
 
+      fprintf(stderr, "%s\n", __FUNCTION__);
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
@@ -110,13 +112,13 @@ class ExtractUnitsXML : public ProcessUnit {
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                               const xmlChar** attributes) {
 
+    fprintf(stderr, "%s %s\n", __FUNCTION__, localname);
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
     // start element with proper prefix
     const char* name = qname((const char*) prefix, (const char*) localname);
     xmlTextWriterStartElement(writer, BAD_CAST name);
-    fprintf(stderr, "%s: %s\n", __FUNCTION__, name);
 
     // copy namespaces
     if (!isoption(*(pstate->poptions), OPTION_NAMESPACE))
@@ -143,13 +145,13 @@ class ExtractUnitsXML : public ProcessUnit {
 
 
   virtual void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
-    fprintf(stderr, "%s: %s\n", __FUNCTION__, localname);
+    fprintf(stderr, "%s %s\n", __FUNCTION__, localname);
     xmlTextWriterEndElement(writer);
-    fprintf(stderr, "%s: %s\n", __FUNCTION__, localname);
   }
 
   virtual void characters(void* ctx, const xmlChar* ch, int len) {
 
+      fprintf(stderr, "%s\n", __FUNCTION__);
     const char* c = (const char*) ch;
     int pos = 0;
     const char* chend = (const char*) ch + len;
@@ -185,6 +187,7 @@ class ExtractUnitsXML : public ProcessUnit {
   }
 
   virtual void endUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+    fprintf(stderr, "%s %s\n", __FUNCTION__, localname);
     endElementNs(ctx, localname, prefix, URI);
 
     xmlTextWriterEndDocument(writer);
