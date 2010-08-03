@@ -2497,23 +2497,23 @@ srcmlstart = xml_declaration + """
 """
 
 cpp = """
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="dir/file.cpp">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 """
 
 cppempty = """
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="dir/file.cpp"/>
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp"/>
 """
 
 java = """
-<unit language="C++" filename="dir/file.cpp">
+<unit language="C++" filename="sub/a.java">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 """
 
 javaempty = """
-<unit language="C++" filename="dir/file.cpp"/>
+<unit language="C++" filename="sub/a.java"/>
 """
 
 srcmlend = """
@@ -2528,6 +2528,23 @@ f.close
 check([src2srcml, 'sub/a.cpp', 'sub/a.java'], '', srcmlstart + cppempty + java + srcmlend)
 check([src2srcml, 'sub/a.cpp', 'sub/a.java', '-o', 'sub/all.xml'], '', '')
 validate(open('sub/all.xml', 'r').read(), srcmlstart + cppempty + java + srcmlend)
+
+check([src2srcml, 'sub/a.java', 'sub/a.cpp'], '', srcmlstart + java + cppempty + srcmlend)
+check([src2srcml, 'sub/a.java', 'sub/a.cpp', '-o', 'sub/all.xml'], '', '')
+validate(open('sub/all.xml', 'r').read(), srcmlstart + java + cppempty + srcmlend)
+
+os.system('rm sub/a.java; touch sub/a.java')
+f = open('sub/a.cpp', 'w')
+f.write(src)
+f.close
+
+check([src2srcml, 'sub/a.cpp', 'sub/a.java'], '', srcmlstart + cppempty + java + srcmlend)
+check([src2srcml, 'sub/a.cpp', 'sub/a.java', '-o', 'sub/all.xml'], '', '')
+validate(open('sub/all.xml', 'r').read(), srcmlstart + cppempty + java + srcmlend)
+
+check([src2srcml, 'sub/a.java', 'sub/a.cpp'], '', srcmlstart + java + cppempty + srcmlend)
+check([src2srcml, 'sub/a.java', 'sub/a.cpp', '-o', 'sub/all.xml'], '', '')
+validate(open('sub/all.xml', 'r').read(), srcmlstart + java + cppempty + srcmlend)
 
 # footer
 print
