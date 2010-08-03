@@ -1083,8 +1083,8 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
   // handle local directories specially
   struct stat instat;
-  stat(path, &instat);
-  if (S_ISDIR(instat.st_mode)) {
+  int stat_status = stat(path, &instat);
+  if (!stat_status && S_ISDIR(instat.st_mode)) {
     process_dir(translator, path, *gpoptions, count, skipped);
     return;
   }
@@ -1237,8 +1237,10 @@ void process_dir(srcMLTranslator& translator, const char* directory, process_opt
 
   // try to open the found directory
   DIR* dirp = opendir(directory);
-  if (!dirp)
+  if (!dirp) {
+    fprintf(stderr, "HERE %s\n", directory);
     return;
+  }
 
   // start of path from directory name
   std::string filename = directory;
