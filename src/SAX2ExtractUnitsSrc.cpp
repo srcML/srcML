@@ -256,15 +256,21 @@ void SAX2ExtractUnitsSrc::endElementNsSkip(void *ctx, const xmlChar *localname, 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
-  if (ctxt->nameNr != (pstate->isarchive ? 2 : 1)) {
+  if (!pstate->rootonly && ctxt->nameNr != (pstate->isarchive ? 2 : 1)) {
     return;
   }
 
   // got here without ever seeing a nested element of any kind
   if (pstate->rootonly) {
+
     // should have made this call earlier, makeup for it now
     pstate->pprocess->startUnit(ctx, pstate->root.localname, pstate->root.prefix, pstate->root.URI, pstate->root.nb_namespaces,
                                 pstate->root.namespaces, pstate->root.nb_attributes, pstate->root.nb_defaulted, pstate->root.attributes);
+
+    if (pstate->firstlen != -1)
+      charactersUnit(ctx, pstate->firstcharacters, pstate->firstlen);
+
+    pstate->pprocess->endUnit(ctx, localname, prefix, URI);
     return;
   }
 
