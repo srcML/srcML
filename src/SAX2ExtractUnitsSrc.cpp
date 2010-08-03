@@ -50,7 +50,7 @@ void SAX2ExtractUnitsSrc::characters(void* ctx, const xmlChar* ch, int len) {
     strncpy((char*) pstate->firstcharacters, (const char*) ch, len);
     pstate->firstlen = len;
   } else
-    pstate->pprocess->charactersUnit(ctx, ch, len);
+    pstate->pprocess->characters(ctx, ch, len);
 }
 
 /*
@@ -145,7 +145,7 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
     pstate->isarchive = false;
 
     // next state is to copy the unit contents, finishing when needed
-    ctxt->sax->startElementNs = &startElementNsEscape;
+    ctxt->sax->startElementNs = &startElementNsRegular;
     ctxt->sax->characters = &characters;
     ctxt->sax->ignorableWhitespace = &characters;
 
@@ -187,7 +187,7 @@ void SAX2ExtractUnitsSrc::startElementNs(void* ctx, const xmlChar* localname, co
     pstate->pprocess->startUnit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
 
     // next state is to copy the unit contents, finishing when needed
-    ctxt->sax->startElementNs = &startElementNsEscape;
+    ctxt->sax->startElementNs = &startElementNsRegular;
     ctxt->sax->characters = &characters;
     ctxt->sax->ignorableWhitespace = &characters;
 
@@ -259,20 +259,12 @@ void SAX2ExtractUnitsSrc::endElementNs(void *ctx, const xmlChar *localname, cons
 }
 
 // escape control character elements
-void SAX2ExtractUnitsSrc::startElementNsEscape(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-                                               int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                                               const xmlChar** attributes) {
+void SAX2ExtractUnitsSrc::startElementNsRegular(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                                                int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                                                const xmlChar** attributes) {
 
-  // only reason for this handler is that the escape element
-  // needs to be expanded to the equivalent character.
-  // So make it as quick as possible, since this is rare
-  if (localname[0] == 'e' && localname[1] == 's' &&
-      strcmp((const char*) localname, "escape") == 0 &&
-      strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0) {
-      
-    // convert from the escaped to the unescaped value
-    char value = strtod((const char*) attributes[3], NULL);
-
-    characters(ctx, BAD_CAST &value, 1);
-  }
+  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+  SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+  
+  pstate->pprocess->startElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
 }

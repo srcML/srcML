@@ -37,11 +37,15 @@ public :
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                  const xmlChar** attributes) {}
 
-  virtual void charactersUnit(void* ctx, const xmlChar* ch, int len) {}
+  virtual void characters(void* ctx, const xmlChar* ch, int len) {}
 
   virtual void endUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {}
 
   virtual void endRootUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {}
+
+  virtual void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                 const xmlChar** attributes) {}
 };
 
 #endif

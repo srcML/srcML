@@ -109,7 +109,7 @@ class ExtractUnitsSrc : public ProcessUnit {
     }
   }
 
-  virtual void charactersUnit(void* ctx, const xmlChar* ch, int len) {
+  virtual void characters(void* ctx, const xmlChar* ch, int len) {
 
 #ifdef __GNUC__
     xmlOutputBufferWrite(output_buffer, len, (const char*) ch);
@@ -154,6 +154,24 @@ class ExtractUnitsSrc : public ProcessUnit {
 
   }
 
+  // escape control character elements
+  void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                                                 int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                                                 const xmlChar** attributes) {
+
+    // only reason for this handler is that the escape element
+    // needs to be expanded to the equivalent character.
+    // So make it as quick as possible, since this is rare
+    if (localname[0] == 'e' && localname[1] == 's' &&
+        strcmp((const char*) localname, "escape") == 0 &&
+        strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0) {
+
+      // convert from the escaped to the unescaped value
+      char value = strtod((const char*) attributes[3], NULL);
+
+      characters(ctx, BAD_CAST &value, 1);
+    }
+  }
  private :
   std::string path;
   xmlOutputBufferPtr output_buffer;
