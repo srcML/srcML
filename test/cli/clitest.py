@@ -2546,6 +2546,44 @@ check([src2srcml, 'sub/a.java', 'sub/a.cpp'], '', srcmlstart + javaempty + cpp +
 check([src2srcml, 'sub/a.java', 'sub/a.cpp', '-o', 'sub/all.xml'], '', '')
 validate(open('sub/all.xml', 'r').read(), srcmlstart + javaempty + cpp + srcmlend)
 
+cpp = """
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/b.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+"""
+
+os.system('rm sub/a.cpp; touch sub/a.cpp')
+f = open('sub/b.cpp', 'w')
+f.write(src)
+f.close()
+
+check([src2srcml, 'sub/a.cpp', 'sub/b.cpp'], '', srcmlstart + cppempty + cpp + srcmlend)
+check([src2srcml, 'sub/a.cpp', 'sub/b.cpp', '-o', 'sub/all.xml'], '', '')
+validate(open('sub/all.xml', 'r').read(), srcmlstart + cppempty + cpp + srcmlend)
+
+check([src2srcml, 'sub/b.cpp', 'sub/a.cpp'], '', srcmlstart + cpp + cppempty + srcmlend)
+check([src2srcml, 'sub/b.cpp', 'sub/a.cpp', '-o', 'sub/all.xml'], '', '')
+validate(open('sub/all.xml', 'r').read(), srcmlstart + cpp + cppempty + srcmlend)
+
+java = """
+<unit language="C++" filename="sub/b.java">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+"""
+
+os.system('rm sub/a.java; touch sub/a.java')
+f = open('sub/b.java', 'w')
+f.write(src)
+f.close()
+
+check([src2srcml, 'sub/a.java', 'sub/b.java'], '', srcmlstart + javaempty + java + srcmlend)
+check([src2srcml, 'sub/a.java', 'sub/b.java', '-o', 'sub/all.xml'], '', '')
+validate(open('sub/all.xml', 'r').read(), srcmlstart + javaempty + java + srcmlend)
+
+check([src2srcml, 'sub/b.java', 'sub/a.java'], '', srcmlstart + java + javaempty + srcmlend)
+check([src2srcml, 'sub/b.java', 'sub/a.java', '-o', 'sub/all.xml'], '', '')
+validate(open('sub/all.xml', 'r').read(), srcmlstart + java + javaempty + srcmlend)
+
 # footer
 print
 print "Error count: ", error_count
