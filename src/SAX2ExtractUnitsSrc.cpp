@@ -154,6 +154,9 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
 
     pstate->isarchive = false;
 
+    // process using the normal startElementNs
+    startElementNsUnit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);    
+
     // next state is to copy the unit contents, finishing when needed
     ctxt->sax->startElementNs = &startElementNsUnit;
     ctxt->sax->characters = &charactersUnit;
