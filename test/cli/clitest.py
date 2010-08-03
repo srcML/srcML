@@ -2485,6 +2485,50 @@ check([src2srcml, 'dir'], "", srcml)
 check([src2srcml, 'dir', '-o', 'dir/dir.xml'], "", "")
 validate(open('dir/dir.xml', 'r').read(), srcml)
 
+#
+# nested files
+
+src = """
+a;
+"""
+
+srcmlstart = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src">
+"""
+
+cpp = """
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="dir/file.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+"""
+
+cppempty = """
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="dir/file.cpp"/>
+"""
+
+java = """
+<unit language="C++" filename="dir/file.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+"""
+
+javaempty = """
+<unit language="C++" filename="dir/file.cpp"/>
+"""
+
+srcmlend = """
+</unit>
+"""
+
+os.system('rm sub/a.cpp; touch sub/a.cpp')
+f = open('sub/a.java', 'w')
+f.write(src)
+f.close
+
+check([src2srcml, 'sub/a.cpp', 'sub/a.java'], '', srcmlstart + cppempty + java + srcmlend)
+check([src2srcml, 'sub/a.cpp', 'sub/a.java', '-o', 'sub/all.xml'], '', '')
+validate(open('sub/all.xml', 'r').read(), srcmlstart + cppempty + java + srcmlend)
+
 # footer
 print
 print "Error count: ", error_count
