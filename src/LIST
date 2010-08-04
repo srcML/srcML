@@ -1,3 +1,19 @@
+- Change any testcases with "www.ashland.edu" in them
+
+- Instead of "--files", how about "--units".  If seems reasonable, put
+  in for now.
+
+- PROPERTIES_TYPE is using a literal 32 for the size.  Replace with a constant
+
+- Split http and ftp callbacks in libxml_archive_read.cpp.  Eliminate
+  the need for the "if () else ;"
+
+- Combine "urisprefix" with uris:
+
+  - Add field and data
+  - Change srcMLTranslator to take uris'
+  - Change src2srcml to use uris where urisprefix is being used
+
 - Hande OPTION_SETTINGS.
 
 - How to handle leading "../"
@@ -7,14 +23,5 @@
   - Do the same for cpio
 
 - Is our --files-from format valid as an mtree format? I.e, do you need anything but the filename?
-
-- Combine "urisprefix" with uris:
-
-  - Add field and data
-  - Change srcMLTranslator to take uris'
-  - Change src2srcml to use uris where urisprefix is being used
-
-
-- Change any examples with "www.ashland.edu" in them
 
 
