@@ -39,7 +39,17 @@ xmlSAXHandler SAX2ExtractUnitsSrc::factory() {
   return sax;
 }
 
-// output all characters to output buffer
+/*
+  Called right after the root unit.
+
+  Characters right after the first <unit element have to be preserved
+  until we know if it is an archive or not.  If an archive, this text
+  will be thrown away.  If not an archive, then we need these
+  characters since they form the white space before the first element
+  of the code.
+
+  This callback will only be called once.
+*/
 void SAX2ExtractUnitsSrc::charactersPre(void* ctx, const xmlChar* ch, int len) {
 
   // fprintf(stderr, "HERE: %s\n", __FUNCTION__);
@@ -73,7 +83,6 @@ void SAX2ExtractUnitsSrc::charactersUnit(void* ctx, const xmlChar* ch, int len) 
 
   This handler does NOT call startUnit() or startRootUnit().
 */
-
 void SAX2ExtractUnitsSrc::startElementNsRoot(void* ctx, const xmlChar* localname,
       const xmlChar* prefix, const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
       int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
@@ -85,6 +94,7 @@ void SAX2ExtractUnitsSrc::startElementNsRoot(void* ctx, const xmlChar* localname
   // start counting units after the root
   pstate->count = 0;
 
+  // need to record that we actually found something besides the root element
   pstate->rootonly = true;
 
   // save all the info in case this is not a srcML archive
@@ -123,9 +133,12 @@ void SAX2ExtractUnitsSrc::startElementNsRoot(void* ctx, const xmlChar* localname
 }
 
 /*
-  Handle startElement (except for root element).
-
-  This is called first for the first nested element (right after the root):
+  Called first for the first nested element (right after the root).
+  If this is an archive, then call startRootUnit() with the cached
+  data and throw away the cached characters, then proceed normally.
+  If this is not an archive, then call startUnit() with the cached
+  data, process the cached characters, then proceed with the normal
+  start element processing.
 */
 void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                                          int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
@@ -141,7 +154,10 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
   // unit (not a srcML archive) and need to process the cached root
   if (!(strcmp((const char*) localname, "unit") == 0 && strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0)) {
 
-    pstate->count = 1;
+    // this is not an archive
+    pstate->isarchive = false;
+
+    //    pstate->count = 1;
 
     // should have made this call earlier, makeup for it now
     pstate->pprocess->startUnit(ctx, pstate->root.localname, pstate->root.prefix, pstate->root.URI, pstate->root.nb_namespaces,
@@ -152,10 +168,8 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
       charactersUnit(ctx, pstate->firstcharacters, pstate->firstlen);
     pstate->firstlen = 0;
 
-    pstate->isarchive = false;
-
     // process using the normal startElementNs
-    startElementNsUnit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);    
+    startElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);    
 
     // next state is to copy the unit contents, finishing when needed
     ctxt->sax->startElementNs = &startElementNsUnit;
@@ -165,16 +179,17 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
 
   } else {
 
-      // should have made this call earlier, makeup for it now
-      pstate->pprocess->startRootUnit(ctx, pstate->root.localname, pstate->root.prefix, pstate->root.URI, pstate->root.nb_namespaces, pstate->root.namespaces, pstate->root.nb_attributes, pstate->root.nb_defaulted, pstate->root.attributes);
+    // this is an archive
+    pstate->isarchive = true;
 
-      // throw away the characters (they are ignorable between root and nested unit)
-      // NOP
+    // should have made this call earlier, makeup for it now
+    pstate->pprocess->startRootUnit(ctx, pstate->root.localname, pstate->root.prefix, pstate->root.URI, pstate->root.nb_namespaces, pstate->root.namespaces, pstate->root.nb_attributes, pstate->root.nb_defaulted, pstate->root.attributes);
 
-      pstate->isarchive = true;
+    // throw away the characters (they are ignorable between root and nested unit)
+    // NOP
 
-      // process using the normal startElementNs
-      startElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);    
+    // process using the normal startElementNs
+    startElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);    
   }
 }
 
@@ -195,10 +210,9 @@ void SAX2ExtractUnitsSrc::startElementNs(void* ctx, const xmlChar* localname, co
 
   ++(pstate->count);
 
-  // fprintf(stderr, "HERE %s %d %d\n", __FUNCTION__, pstate->count, pstate->unit);
-
   // call startUnit if I want to see all the units, or I want to see this unit
   if (pstate->unit == -1 || pstate->count == pstate->unit) {
+
     // process the start of this unit
     pstate->pprocess->startUnit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
 
