@@ -56,9 +56,7 @@ void SAX2ExtractUnitsSrc::charactersPre(void* ctx, const xmlChar* ch, int len) {
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
-  pstate->firstcharacters = (const xmlChar*) malloc(len);
-  strncpy((char*) pstate->firstcharacters, (const char*) ch, len);
-  pstate->firstlen = len;
+  pstate->firstcharacters.append((const char*) ch, len);
 }
 
 // output all characters to output buffer
@@ -123,10 +121,6 @@ void SAX2ExtractUnitsSrc::startElementNsRoot(void* ctx, const xmlChar* localname
     pstate->root.attributes[index + 4] = pstate->root.attributes[index + 3] + vallength;
   }
 
-  // setup to buffer characters before first element
-  pstate->firstcharacters = 0;
-  pstate->firstlen = -1;
-
   // handle nested units
   ctxt->sax->startElementNs = &startElementNsFirst;
   ctxt->sax->endElementNs = &endElementNsSkip;
@@ -163,10 +157,9 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
     pstate->pprocess->startUnit(ctx, pstate->root.localname, pstate->root.prefix, pstate->root.URI, pstate->root.nb_namespaces,
                                 pstate->root.namespaces, pstate->root.nb_attributes, pstate->root.nb_defaulted, pstate->root.attributes);
 
-    // output cached characters if detected
-    if (pstate->firstlen != -1)
-      charactersUnit(ctx, pstate->firstcharacters, pstate->firstlen);
-    pstate->firstlen = 0;
+    // output cached characters if we found any
+    if (!pstate->firstcharacters.empty())
+      charactersUnit(ctx, BAD_CAST pstate->firstcharacters.c_str(), pstate->firstcharacters.length());
 
     // process using the normal startElementNs
     startElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);    
@@ -250,8 +243,6 @@ void SAX2ExtractUnitsSrc::startElementNs(void* ctx, const xmlChar* localname, co
     free((void*) pstate->root.attributes[index + 3]);
   }
   free((void*) pstate->root.attributes);
-
-  free((void*) pstate->firstcharacters);
   */
 
 void SAX2ExtractUnitsSrc::endElementNsUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
@@ -281,8 +272,8 @@ void SAX2ExtractUnitsSrc::endElementNsSkip(void *ctx, const xmlChar *localname, 
     pstate->pprocess->startUnit(ctx, pstate->root.localname, pstate->root.prefix, pstate->root.URI, pstate->root.nb_namespaces,
                                 pstate->root.namespaces, pstate->root.nb_attributes, pstate->root.nb_defaulted, pstate->root.attributes);
 
-    if (pstate->firstlen != -1)
-      charactersUnit(ctx, pstate->firstcharacters, pstate->firstlen);
+    if (!pstate->firstcharacters.empty())
+      charactersUnit(ctx, BAD_CAST pstate->firstcharacters.c_str(), pstate->firstcharacters.length());
 
     pstate->pprocess->endUnit(ctx, localname, prefix, URI);
     return;

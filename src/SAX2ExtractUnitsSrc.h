@@ -49,8 +49,7 @@ class SAX2ExtractUnitsSrc {
   int unit;
   long count;
   Element root;
-  const xmlChar* firstcharacters;
-  int firstlen;
+  std::string firstcharacters;
   bool isarchive;
   bool rootonly;
 
