@@ -145,11 +145,9 @@ void* archiveWriteOpen(const char * URI) {
     wentry =  0;
     if (!isstdout) {
       wa = archive_write_new();
-
-      if (!setupArchive(wa, output_format ? output_format : root_filename.c_str())) {
+      if (!setupArchive(wa, output_format ? std::string(".").append(output_format).c_str() : root_filename.c_str())) {
         return 0;
       }
-
       archive_write_open_filename(wa, root_filename.c_str());
 
     } else {
