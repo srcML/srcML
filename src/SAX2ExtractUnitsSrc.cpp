@@ -134,14 +134,17 @@ void SAX2ExtractUnitsSrc::startElementNsRoot(void* ctx, const xmlChar* localname
   data, process the cached characters, then proceed with the normal
   start element processing.
 */
-void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-                                         int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                                         const xmlChar** attributes) {
+void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localname,
+    const xmlChar* prefix, const xmlChar* URI,
+    int nb_namespaces, const xmlChar** namespaces,
+    int nb_attributes, int nb_defaulted,
+    const xmlChar** attributes) {
 
   // fprintf(stderr, "HERE: %s\n", __FUNCTION__);
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
+  // so we have an element inside of the unit
   pstate->rootonly = false;
 
   // see if this is really a nested unit.  If not, then we have an individual
@@ -151,8 +154,6 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
     // this is not an archive
     pstate->isarchive = false;
 
-    //    pstate->count = 1;
-
     // should have made this call earlier, makeup for it now
     pstate->pprocess->startUnit(ctx, pstate->root.localname, pstate->root.prefix, pstate->root.URI, pstate->root.nb_namespaces,
                                 pstate->root.namespaces, pstate->root.nb_attributes, pstate->root.nb_defaulted, pstate->root.attributes);
@@ -160,6 +161,7 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
     // output cached characters if we found any
     if (!pstate->firstcharacters.empty())
       charactersUnit(ctx, BAD_CAST pstate->firstcharacters.c_str(), pstate->firstcharacters.length());
+    pstate->firstcharacters.clear();
 
     // process using the normal startElementNs
     startElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);    
@@ -179,7 +181,7 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
     pstate->pprocess->startRootUnit(ctx, pstate->root.localname, pstate->root.prefix, pstate->root.URI, pstate->root.nb_namespaces, pstate->root.namespaces, pstate->root.nb_attributes, pstate->root.nb_defaulted, pstate->root.attributes);
 
     // throw away the characters (they are ignorable between root and nested unit)
-    // NOP
+    pstate->firstcharacters.clear();
 
     // process using the normal startElementNs
     startElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);    
@@ -191,19 +193,22 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
 
   This is called first for the first nested element (right after the root):
 */
-void SAX2ExtractUnitsSrc::startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-                                         int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                                         const xmlChar** attributes) {
+void SAX2ExtractUnitsSrc::startElementNs(void* ctx, const xmlChar* localname,
+           const xmlChar* prefix, const xmlChar* URI,
+           int nb_namespaces, const xmlChar** namespaces,
+           int nb_attributes, int nb_defaulted,
+           const xmlChar** attributes) {
 
   // fprintf(stderr, "HERE: %s\n", __FUNCTION__);
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
+  // so we did find another element in the root
   pstate->rootonly = false;
 
   ++(pstate->count);
 
-  // call startUnit if I want to see all the units, or I want to see this unit
+  // call startUnit if I want to see all the units, or want to see this unit
   if (pstate->unit == -1 || pstate->count == pstate->unit) {
 
     // process the start of this unit
@@ -217,6 +222,7 @@ void SAX2ExtractUnitsSrc::startElementNs(void* ctx, const xmlChar* localname, co
 
   } else {
 
+    // we are going to skip processing this element
     ctxt->sax->startElementNs = 0;
     ctxt->sax->characters = 0;
     ctxt->sax->ignorableWhitespace = 0;
@@ -261,30 +267,32 @@ void SAX2ExtractUnitsSrc::endElementNsSkip(void *ctx, const xmlChar *localname, 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
-  if (!pstate->rootonly && ctxt->nameNr != (pstate->isarchive ? 2 : 1)) {
+  if (!pstate->rootonly && ctxt->nameNr != (pstate->isarchive ? 2 : 1))
     return;
-  }
 
-  // got here without ever seeing a nested element of any kind
+  // got here without ever seeing a nested element of any kind,
+  // so have to do the whole process
   if (pstate->rootonly) {
 
     // should have made this call earlier, makeup for it now
-    pstate->pprocess->startUnit(ctx, pstate->root.localname, pstate->root.prefix, pstate->root.URI, pstate->root.nb_namespaces,
-                                pstate->root.namespaces, pstate->root.nb_attributes, pstate->root.nb_defaulted, pstate->root.attributes);
+    pstate->pprocess->startUnit(ctx, pstate->root.localname, pstate->root.prefix,
+                                pstate->root.URI, pstate->root.nb_namespaces,
+                                pstate->root.namespaces, pstate->root.nb_attributes,
+                                pstate->root.nb_defaulted, pstate->root.attributes);
 
+    // first characters
     if (!pstate->firstcharacters.empty())
       charactersUnit(ctx, BAD_CAST pstate->firstcharacters.c_str(), pstate->firstcharacters.length());
+    pstate->firstcharacters.clear();
 
+    // end the unit
     pstate->pprocess->endUnit(ctx, localname, prefix, URI);
     return;
   }
 
+  // process the end of this unit
   if (pstate->unit == -1 || (!pstate->isarchive && pstate->unit == 0) || pstate->count == pstate->unit)
     pstate->pprocess->endUnit(ctx, localname, prefix, URI);
-
-  // now waiting for start of next unit
-  ctxt->sax->startElementNs = &startElementNs;
-  ctxt->sax->characters = 0;
 
   // done if we are only stopping on this one
   if (pstate->count == pstate->unit) {
@@ -295,6 +303,10 @@ void SAX2ExtractUnitsSrc::endElementNsSkip(void *ctx, const xmlChar *localname, 
     ctxt->sax->endElementNs = 0;
     xmlStopParser(ctxt);
   }
+
+  // now waiting for start of next unit
+  ctxt->sax->startElementNs = &startElementNs;
+  ctxt->sax->characters = 0;
 }
 
 // end unit element and current file/buffer (started by startElementNs
