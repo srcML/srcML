@@ -150,14 +150,14 @@ class ExtractUnitsSrc : public ProcessUnit {
       xmlStopParser(ctxt);
       throw TerminateLibXMLError();
     }
-
-
   }
 
   // escape control character elements
-  void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-                                                 int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                                                 const xmlChar** attributes) {
+  void startElementNs(void* ctx, const xmlChar* localname,
+       const xmlChar* prefix, const xmlChar* URI,
+       int nb_namespaces, const xmlChar** namespaces,
+       int nb_attributes, int nb_defaulted,
+       const xmlChar** attributes) {
 
     // only reason for this handler is that the escape element
     // needs to be expanded to the equivalent character.
@@ -172,6 +172,7 @@ class ExtractUnitsSrc : public ProcessUnit {
       characters(ctx, BAD_CAST &value, 1);
     }
   }
+
  private :
   std::string path;
   xmlOutputBufferPtr output_buffer;
