@@ -11,6 +11,12 @@ UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding)
     throw UTF8FileError();
 }
 
+// libxml context
+void* UTF8CharBuffer::getContext() const {
+
+  return input->context;
+}
+
 /*
  Get the next character from the stream
 

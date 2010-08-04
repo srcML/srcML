@@ -24,8 +24,11 @@ public:
 	// Create a character buffer
         UTF8CharBuffer(const char* ifilename, const char* encoding);
 
-	/// Get the next character from the stream
+	// Get the next character from the stream
 	int getChar();
+
+        // libxml context
+        void* getContext() const;
 
 	~UTF8CharBuffer();
 
