@@ -48,7 +48,7 @@ class srcMLTranslator : public Language {
 		  int tabsize
 		  );
 
-  void setInput(const char* path);
+  void* setInput(const char* path);
 
   // translate from input stream to output stream
   void translate(const char* path,

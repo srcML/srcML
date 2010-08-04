@@ -51,10 +51,14 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
 static UTF8CharBuffer* pinput = 0;
 
 // translate from input stream to output stream
-void srcMLTranslator::setInput(const char* path) {
+void* srcMLTranslator::setInput(const char* path) {
 
   try {
     pinput = new UTF8CharBuffer(path, encoding);
+
+    // return the libxml context of the file
+    if (pinput)
+      return pinput->getContext();
 
   } catch (const std::exception& e) {
     fprintf(stderr, "SRCML Exception: %s\n", e.what());
@@ -65,6 +69,8 @@ void srcMLTranslator::setInput(const char* path) {
   catch (...) {
     fprintf(stderr, "ERROR\n");
   }
+
+  return 0;
 }
 
 // translate from input stream to output stream
