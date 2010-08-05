@@ -226,11 +226,30 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
 
       // save the result, but temporarily hide the namespaces
       xmlNsPtr savens = onode && !isoption(pstate->options, OPTION_XSLT_ALL) ? onode->nsDef : 0;
-      if (savens)
+      if (savens) {
 	onode->nsDef = 0;
+
+        // create a new list of namespaces
+        xmlNsPtr ret = NULL;
+        xmlNsPtr p = NULL;
+        xmlNsPtr cur = savens;
+        while (cur != NULL) {
+          xmlNsPtr q = xmlCopyNamespace(cur);
+          if (p == NULL) {
+            ret = p = q;
+          } else {
+            p->next = q;
+            p = q;
+          }
+          cur = cur->next;
+        }
+        onode->nsDef = ret;
+      }
       xmlNodeDumpOutput(pstate->buf, ctxt->myDoc, onode, 0, 0, 0);
-      if (savens)
+      if (savens) {
+        xmlFreeNsList(onode->nsDef);
 	onode->nsDef = savens;
+      }
 
       // if we need a unit, output the end tag
       if (outputunit)
