@@ -109,11 +109,13 @@ void SAX2UnitDOM::startElementNsRoot(void* ctx, const xmlChar* localname, const 
 
   // output the namespaces
   for (xmlNsPtr pAttr =  onode->nsDef; pAttr != 0; pAttr = pAttr->next)
-    xmlNodeDump(pstate->rootbuf, ctxt->myDoc, (xmlNodePtr) pAttr, 0, 0);
+    if(pAttr->prefix == 0 || strcmp((const char *) pAttr->prefix, "cpp") != 0)
+      xmlNodeDump(pstate->rootbuf, ctxt->myDoc, (xmlNodePtr) pAttr, 0, 0);
 
   // output the attributes
   for (xmlAttrPtr pAttr = onode->properties; pAttr; pAttr = pAttr->next)
-    xmlNodeDump(pstate->rootbuf, onode->doc, (xmlNodePtr) pAttr, 0, 0);
+    if(strcmp((const char *) pAttr->name, "language") != 0)
+      xmlNodeDump(pstate->rootbuf, onode->doc, (xmlNodePtr) pAttr, 0, 0);
 
   // look for nested unit
   ctxt->sax->startElementNs = &SAX2UnitDOM::startElementNsFirstUnit;
