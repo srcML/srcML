@@ -2228,8 +2228,7 @@ srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 """
 
-xpath = """
-<unit xmlns="http://www.sdml.info/srcML/src">
+xpath = """<unit xmlns="http://www.sdml.info/srcML/src">
 
 <unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 
