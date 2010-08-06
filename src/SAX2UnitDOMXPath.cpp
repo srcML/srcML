@@ -235,7 +235,7 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
         xmlNsPtr cur = savens;
         while (cur != NULL) {
           xmlNsPtr q = xmlCopyNamespace(cur);
-	  fprintf(stderr, "%s\n", (const char *) q->href);
+	  // fprintf(stderr, "%s\n", (const char *) q->href);
           if (strcmp((const char*) q->href, "http://www.sdml.info/srcML/src") != 0 || q->prefix != 0) {
             if (p == NULL) {
               ret = p = q;
