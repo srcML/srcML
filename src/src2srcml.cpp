@@ -545,7 +545,7 @@ int main(int argc, char* argv[]) {
       for (int i = input_arg_start; i <= input_arg_end; ++i) {
 	
 	// output the currently processed filename
-	if (!isoption(options, OPTION_QUIET))
+	if (!isoption(options, OPTION_QUIET) && input_arg_count > 1)
 	  fprintf(stderr, "Input:\t%s\n", strcmp(argv[i], STDIN) == 0 ? "" : argv[i]);
 
 	// process this command line argument
