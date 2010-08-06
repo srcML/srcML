@@ -8,6 +8,8 @@
 #include <string>
 #include <time.h>
 
+class UnsupportedFormat {};
+
 static const char* output_format = 0;
 
 void archiveWriteOutputFormat(const char* format) {
@@ -123,8 +125,9 @@ int setupArchive(struct archive* wa, const char* path) {
       std::string ext2(path, outer - 1);
       const char* inner = rindex(ext2.c_str(), '.');
       if (!inner || inner[0] == '\0')
-	return 0;
-      ++inner;
+	inner = 0;
+      else
+        ++inner;
 
       // if we still don't have a format, try the innermost extension if it exists
       if (setarchive == ARCHIVE_FATAL && inner)
@@ -151,6 +154,7 @@ void* archiveWriteOpen(const char * URI) {
       wa = archive_write_new();
       if (!setupArchive(wa, output_format ? std::string(".").append(output_format).c_str() : root_filename.c_str())) {
         fprintf(stderr, "Invalid or unsupported format/compression\n");
+        throw UnsupportedFormat();
         return 0;
       }
       // open by direct filename, or stdout ("" instead of "-")
@@ -160,8 +164,8 @@ void* archiveWriteOpen(const char * URI) {
       wa = archive_write_disk_new();
     }
 
-    //    fprintf(stderr, "Format: %s\n", archive_format_name(wa));
-    //    fprintf(stderr, "Compression: %s\n", archive_compression_name(wa));
+    fprintf(stderr, "Format: %s\n", archive_format_name(wa));
+    fprintf(stderr, "Compression: %s\n", archive_compression_name(wa));
   }
 
   filename = URI;
