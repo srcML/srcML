@@ -111,16 +111,20 @@ void* archiveWriteRootOpen(const char * URI) {
 int setupArchive(struct archive* wa, const char* path) {
 
       // required outermost extension
-      const char* outer = rindex(path, '.') + 1;
+      const char* outer = rindex(path, '.');
       if (!outer || outer[0] == '\0')
 	return 0;
+      ++outer;
 
       // try to set the format based on the outermost extension
       int setarchive = archive_write_set_format_by_name(wa, outer);
 
       // find the innermost extension which is not required
       std::string ext2(path, outer - 1);
-      const char* inner = rindex(ext2.c_str(), '.') + 1;
+      const char* inner = rindex(ext2.c_str(), '.');
+      if (!inner || inner[0] == '\0')
+	return 0;
+      ++inner;
 
       // if we still don't have a format, try the innermost extension if it exists
       if (setarchive == ARCHIVE_FATAL && inner)
@@ -146,6 +150,7 @@ void* archiveWriteOpen(const char * URI) {
     if (!isstdout) {
       wa = archive_write_new();
       if (!setupArchive(wa, output_format ? std::string(".").append(output_format).c_str() : root_filename.c_str())) {
+        fprintf(stderr, "Invalid or unsupported format/compression\n");
         return 0;
       }
       // open by direct filename, or stdout ("" instead of "-")
