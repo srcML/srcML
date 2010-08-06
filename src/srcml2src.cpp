@@ -529,6 +529,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
     { UNIT_FLAG, required_argument, NULL, UNIT_FLAG_SHORT },
     { TEXTENCODING_FLAG, required_argument, NULL, TEXTENCODING_FLAG_SHORT },
     { NAMESPACE_FLAG, required_argument, NULL, NAMESPACE_FLAG_SHORT },
+    { QUIET_FLAG, no_argument, NULL, QUIET_FLAG_SHORT },
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
     { SETTINGS_FLAG, no_argument, NULL, SETTINGS_FLAG_CODE },
@@ -630,6 +631,10 @@ int process_args(int argc, char* argv[], process_options & poptions)
       options |= OPTION_NAMESPACE;
 
       poptions.ns[poptions.nscount++] = optarg;
+      break;
+
+    case QUIET_FLAG_SHORT: 
+      options |= OPTION_QUIET;
       break;
 
     case NESTED_FLAG_SHORT:
