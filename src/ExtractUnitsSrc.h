@@ -89,7 +89,7 @@ class ExtractUnitsSrc : public ProcessUnit {
       path.append((const char*) attributes[filename_index + 3], (const char*) attributes[filename_index + 4]);
 
       // output file status message if in verbose mode
-      if (isoption(*(pstate->poptions), OPTION_VERBOSE))
+      if (!isoption(*(pstate->poptions), OPTION_QUIET))
         fprintf(stderr, "%ld\t%s\n", pstate->count, path.c_str());
 
     } else if (output_filename) {
