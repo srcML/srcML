@@ -140,7 +140,6 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
     int nb_attributes, int nb_defaulted,
     const xmlChar** attributes) {
 
-  // fprintf(stderr, "HERE: %s\n", __FUNCTION__);
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
@@ -164,7 +163,7 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
     pstate->firstcharacters.clear();
 
     // process using the normal startElementNs
-    startElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);    
+    startElementNsUnit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);    
 
     // next state is to copy the unit contents, finishing when needed
     ctxt->sax->startElementNs = &startElementNsUnit;
@@ -199,7 +198,7 @@ void SAX2ExtractUnitsSrc::startElementNs(void* ctx, const xmlChar* localname,
            int nb_attributes, int nb_defaulted,
            const xmlChar** attributes) {
 
-  // fprintf(stderr, "HERE: %s\n", __FUNCTION__);
+  fprintf(stderr, "HERE: %s\n", __FUNCTION__);
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
@@ -331,7 +330,6 @@ void SAX2ExtractUnitsSrc::startElementNsUnit(void* ctx, const xmlChar* localname
                                                 int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                                                 const xmlChar** attributes) {
 
-  // fprintf(stderr, "HERE: %s %s\n", __FUNCTION__, localname);
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
   
