@@ -115,9 +115,6 @@ const int SKIP_DEFAULT_FLAG_CODE = 256 + 9;
 const char* const RECURSIVE_FLAG = "recursive";
 const int RECURSIVE_FLAG_CODE = 256 + 10;
 
-const char* const QUIET_FLAG = "quiet";
-const char QUIET_FLAG_SHORT = 'q';
-
 const int DEFAULT_LANGUAGE = srcMLTranslator::LANGUAGE_CXX;
 
 const char* const EXAMPLE_TEXT_FILENAME="foo.cpp";

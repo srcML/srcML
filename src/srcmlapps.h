@@ -76,6 +76,9 @@ const char* const SRCVERSION_FLAG_FULL = "src-version=VER";
 const char* const VERBOSE_FLAG = "verbose";
 const char VERBOSE_FLAG_SHORT = 'v';
 
+const char* const QUIET_FLAG = "quiet";
+const char QUIET_FLAG_SHORT = 'q';
+
 const char* const OUTPUT_FLAG = "output";
 const char OUTPUT_FLAG_SHORT = 'o';
 const char* const OUTPUT_FLAG_FULL = "output=OUTPUT";
