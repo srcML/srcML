@@ -441,7 +441,13 @@ int main(int argc, char* argv[]) {
 
     } else {
 
-      if (!archiveWriteMatch_src2srcml(poptions.ofilename))
+      std::string cfilename = poptions.ofilename;
+      if (poptions.output_format) {
+        cfilename = ".";
+        cfilename.append(poptions.output_format);
+      }
+
+      if (!archiveWriteMatch_src2srcml(cfilename.c_str()))
 
         su.extract_text(0 /* null to_directory */, poptions.ofilename, poptions.unit);
 
