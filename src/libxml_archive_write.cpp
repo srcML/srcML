@@ -164,8 +164,8 @@ void* archiveWriteOpen(const char * URI) {
       wa = archive_write_disk_new();
     }
 
-    fprintf(stderr, "Format: %s\n", archive_format_name(wa));
-    fprintf(stderr, "Compression: %s\n", archive_compression_name(wa));
+    //fprintf(stderr, "Format: %s\n", archive_format_name(wa));
+    //fprintf(stderr, "Compression: %s\n", archive_compression_name(wa));
   }
 
   filename = URI;

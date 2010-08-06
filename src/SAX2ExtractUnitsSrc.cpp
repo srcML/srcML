@@ -200,7 +200,7 @@ void SAX2ExtractUnitsSrc::startElementNs(void* ctx, const xmlChar* localname,
            int nb_attributes, int nb_defaulted,
            const xmlChar** attributes) {
 
-  fprintf(stderr, "HERE: %s\n", __FUNCTION__);
+  // fprintf(stderr, "HERE: %s\n", __FUNCTION__);
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
