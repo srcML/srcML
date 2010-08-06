@@ -162,6 +162,8 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
       charactersUnit(ctx, BAD_CAST pstate->firstcharacters.c_str(), pstate->firstcharacters.length());
     pstate->firstcharacters.clear();
 
+    pstate->count = 1;
+
     // process using the normal startElementNs
     startElementNsUnit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);    
 
