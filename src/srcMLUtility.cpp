@@ -406,17 +406,22 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
   
   SAX2UnitDOMXPath state(context_element, xpaths, ofilename, options);
 
+  // relative xpath changed to at any level
+  std::string s = state.fxpath[0];
+  if (s[0] != '/')
+    s = "//" + s;
+
+  // compile the xpath that will be applied to each unit
+  state.compiled_xpath = xmlXPathCompile(BAD_CAST s.c_str());
+  if (state.compiled_xpath == 0) {
+    return;
+  }
+
   xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
   if (ctxt == NULL) return;
   ctxt->sax = &sax;
   ctxt->_private = &state;
   //state.ctxt = ctxt;
-
-  // compile the xpath that will be applied to each unit
-  state.compiled_xpath = xmlXPathCompile(BAD_CAST state.fxpath[0]);
-  if (state.compiled_xpath == 0) {
-    return;
-  }
 
   xmlParseDocument(ctxt);
 
