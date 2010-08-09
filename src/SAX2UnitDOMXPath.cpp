@@ -146,6 +146,7 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
   char* unit_filename = (char*) xmlGetProp(a_node, BAD_CAST UNIT_ATTRIBUTE_FILENAME);
   char* unit_directory = (char*) xmlGetProp(a_node, BAD_CAST UNIT_ATTRIBUTE_DIRECTORY);
   char* unit_version = (char*) xmlGetProp(a_node, BAD_CAST UNIT_ATTRIBUTE_VERSION);
+  char* unit_language = (char*) xmlGetProp(a_node, BAD_CAST UNIT_ATTRIBUTE_LANGUAGE);
 
   if (!pstate->prev_unit_filename || (unit_filename && strcmp(pstate->prev_unit_filename, unit_filename) != 0))
     pstate->itemcount = 0;
@@ -212,6 +213,9 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
               break;
             }
 
+          if (!pstate->isnested && strcmp((const char*) pAttr->href, "http://www.sdml.info/srcML/src") != 0)
+            place = -1;
+
           if (place == -1) {
             xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(" xmlns"));
             if (pAttr->prefix) {
@@ -222,8 +226,14 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
             xmlOutputBufferWriteString(pstate->buf, (const char*) pAttr->href);
             xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\""));
           }
-          //          xmlNodeDump((xmlBufferPtr) pstate->buf, ctxt->myDoc, (xmlNodePtr) pAttr, 0, 0);
         }
+
+	// language attribute
+	if (unit_language) {
+	  xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(" language=\""));
+	  xmlOutputBufferWriteString(pstate->buf, (const char*) unit_language);
+	  xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\""));
+	}
 
 	// directory attribute
 	if (unit_directory) {
