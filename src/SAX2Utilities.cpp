@@ -42,7 +42,7 @@ PROPERTIES_TYPE::const_iterator find(const PROPERTIES_TYPE& pv, const char* name
 
 const char* find(PROPERTIES_TYPE& pv, const char* name) {
 
-  for (int i = 0; i < 32; ++i) {
+  for (int i = 0; i < MAXPROPERTIES; ++i) {
     if (pv[i].first == "")
       return 0;
 
@@ -72,7 +72,7 @@ void collect_attributes(int nb_attributes, const xmlChar** attributes, PROPERTIE
 
       // look for it
       int i;
-      for (i = 0; i < 32; ++i)
+      for (i = 0; i < MAXPROPERTIES; ++i)
 	if (attrv[i].first == "" || attrv[i].first == name)
 	  break;
 
@@ -94,7 +94,7 @@ void collect_namespaces(int nb_namespaces, const xmlChar** namespaces, PROPERTIE
 
     // look for it
     int i;
-    for (i = 0; i < 32; ++i)
+    for (i = 0; i < MAXPROPERTIES; ++i)
       if (nsv[i].first == "" || nsv[i].first == uri)
 	  break;
 

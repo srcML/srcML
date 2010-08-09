@@ -99,7 +99,7 @@ void SAX2ExtractUnitXML::startElementNsUnit(void* ctx, const xmlChar* localname,
 
     // output the merged namespaces
     if (!isoption(pstate->options, OPTION_NAMESPACEDECL))
-      for (int i = 0; i < 32; ++i) {
+      for (int i = 0; i < MAXPROPERTIES; ++i) {
 	if (pstate->nsv[i].first == "")
 	  break;
 
@@ -110,7 +110,7 @@ void SAX2ExtractUnitXML::startElementNsUnit(void* ctx, const xmlChar* localname,
     collect_attributes(nb_attributes, attributes, pstate->attrv);
 
     // output the merged attributes
-    for (int i = 0; i < 32; ++i) {
+    for (int i = 0; i < MAXPROPERTIES; ++i) {
       if (pstate->attrv[i].first == "")
 	break;
 
