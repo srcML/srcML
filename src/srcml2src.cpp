@@ -79,10 +79,10 @@ const int STRING_PARAM_FLAG_CODE = 256 + 3;
 char const * const STRING_PARAM_FLAG_FULL = "param NAME=VAL";
 
 char const * const XSLT_ALL_FLAG = "apply-root";
-//char const XSLT_ALL_FLAG_SHORT = '';
+const int XSLT_ALL_FLAG_SHORT = 256 + 4;
 
 char const * const RELAXNG_FLAG = "relaxng";
-const int RELAXNG_FLAG_CODE = 256 + 4;
+const int RELAXNG_FLAG_CODE = 256 + 5;
 char const * const RELAXNG_FLAG_FULL = "relaxng=RELAXNG_FILE";
 
 char const * const CONTEXT_FLAG = "context";
@@ -90,7 +90,7 @@ char const * const CONTEXT_FLAG = "context";
 char const * const CONTEXT_FLAG_FULL = "context=CONTEXT";
 
 const char* const LIST_FLAG = "list";
-const int LIST_FLAG_CODE = 256 + 5;
+const int LIST_FLAG_CODE = 256 + 6;
 
 void libxml_error(void *ctx, const char *msg, ...) {}
 
