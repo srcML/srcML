@@ -245,7 +245,7 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
             }
 
           // if its not on the root
-          if (place == -1) {
+          if (place == -1 || (!pstate->isnested && strcmp((const char*) cur->href, "http://www.sdml.info/srcML/cpp") == 0)) {
             xmlNsPtr q = xmlCopyNamespace(cur);
             if (p == NULL) {
               ret = p = q;
