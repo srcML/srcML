@@ -2270,23 +2270,27 @@ validate(getreturn([srcml2src, option.XPATH_FLAG], srcml), status.STATUS_ERROR)
 validate(getreturn([srcml2src, option.XPATH_FLAG + '='], srcml), status.STATUS_ERROR)
 
 srcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:foo="http://www.cs.uakron.edu/~collard/foo">
 
 <unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<foo:a/>
 </unit>
 
-<unit language="Java">
+<unit language="Java" xmlns:bar="http://www.cs.uakron.edu/~collard/bar">
+<bar:b/>
 </unit>
 
 </unit>
 """
 
-xpath = """<unit xmlns="http://www.sdml.info/srcML/src">
+xpath = """<unit xmlns="http://www.sdml.info/srcML/src" xmlns:foo="http://www.cs.uakron.edu/~collard/foo">
 
 <unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<foo:a/>
 </unit>
 
-<unit language="Java">
+<unit language="Java" xmlns:bar="http://www.cs.uakron.edu/~collard/bar">
+<bar:b/>
 </unit>
 
 </unit>
