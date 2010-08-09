@@ -2335,9 +2335,9 @@ srcml = xml_declaration + """
 xpath = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:foo="http://www.cs.uakron.edu/~collard/foo">
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" item="1"><name>a</name></unit>
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" item="1"><name>a</name></unit>
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/src" xmlns:bar="http://www.cs.uakron.edu/~collard/bar" item="1"><cpp:name>b</cpp:name></unit>
+<unit xmlns:cpp="http://www.sdml.info/srcML/src" xmlns:bar="http://www.cs.uakron.edu/~collard/bar" language="Java" item="1"><cpp:name>b</cpp:name></unit>
 
 </unit>
 """
