@@ -79,7 +79,7 @@ const int STRING_PARAM_FLAG_CODE = 256 + 3;
 char const * const STRING_PARAM_FLAG_FULL = "param NAME=VAL";
 
 char const * const XSLT_ALL_FLAG = "apply-root";
-const int XSLT_ALL_FLAG_SHORT = 256 + 4;
+const int XSLT_ALL_FLAG_CODE = 256 + 4;
 
 char const * const RELAXNG_FLAG = "relaxng";
 const int RELAXNG_FLAG_CODE = 256 + 5;
@@ -542,6 +542,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
     { PARAM_FLAG, required_argument, NULL, PARAM_FLAG_CODE },
     { STRING_PARAM_FLAG, required_argument, NULL, STRING_PARAM_FLAG_CODE },
     { RELAXNG_FLAG, required_argument, NULL, RELAXNG_FLAG_CODE },
+    { XSLT_ALL_FLAG, no_argument, NULL, XSLT_ALL_FLAG_CODE },
     //    { CONTEXT_FLAG, required_argument, NULL, 'C' },
     { 0, 0, 0, 0 }
   };
@@ -822,6 +823,11 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
       options |= OPTION_RELAXNG;
       poptions.transforms[poptions.transformcount++] = optarg;
+      break;
+
+    case XSLT_ALL_FLAG_CODE:
+
+      options |= OPTION_XSLT_ALL;
       break;
 
     default:
