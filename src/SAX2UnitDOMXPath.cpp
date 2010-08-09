@@ -239,7 +239,10 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
           // see if on the root
           int place = -1;
           for (int i = 0; i < pstate->nb_ns * 2; i += 2)
-            if (strcmp((const char*) cur->href, pstate->ns[i + 1]) == 0) {
+            if (strcmp((const char*) cur->href, pstate->ns[i + 1]) == 0
+                && ( cur->prefix && pstate->ns[i]
+                     ? strcmp((const char*) cur->prefix, pstate->ns[i]) == 0
+                     : !cur->prefix && !pstate->ns[i])) {
               place = i;
               break;
             }
