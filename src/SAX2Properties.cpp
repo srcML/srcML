@@ -71,7 +71,7 @@ void SAX2Properties::startElementNsRoot(void* ctx, const xmlChar* localname, con
 
     if (encoding) {
       int i;
-      for (i = 0; i < 32; ++i)
+      for (i = 0; i < MAXPROPERTIES; ++i)
 	if (pstate->attrv[i].first == "")
 	  break;
 
