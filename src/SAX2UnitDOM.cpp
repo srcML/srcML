@@ -68,6 +68,8 @@ void SAX2UnitDOM::startDocument(void *ctx) {
     // setup output
     pstate->buf = xmlOutputBufferCreateFilename(pstate->ofilename, NULL, 0);
 
+    // TODO:  STATIC, should be based on context
+    xmlOutputBufferWriteString(pstate->buf, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n");
     pstate->rootbuf = xmlBufferCreate();
 
     pstate->needroot = false;
