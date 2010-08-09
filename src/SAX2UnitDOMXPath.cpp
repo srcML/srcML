@@ -198,6 +198,33 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
 	// unit start tag
 	xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("<unit"));
 
+        // output the namespaces
+        for (xmlNsPtr pAttr =  a_node->nsDef; pAttr != 0; pAttr = pAttr->next) {
+
+          // see if on the root
+          int place = -1;
+          for (int i = 0; i < pstate->nb_ns * 2; i += 2)
+            if (strcmp((const char*) pAttr->href, pstate->ns[i + 1]) == 0
+                && ( pAttr->prefix && pstate->ns[i]
+                     ? strcmp((const char*) pAttr->prefix, pstate->ns[i]) == 0
+                     : !pAttr->prefix && !pstate->ns[i])) {
+              place = i;
+              break;
+            }
+
+          if (place == -1) {
+            xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(" xmlns"));
+            if (pAttr->prefix) {
+              xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(":"));
+              xmlOutputBufferWriteString(pstate->buf, (const char*) pAttr->prefix);
+            }
+            xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("=\""));
+            xmlOutputBufferWriteString(pstate->buf, (const char*) pAttr->href);
+            xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\""));
+          }
+          //          xmlNodeDump((xmlBufferPtr) pstate->buf, ctxt->myDoc, (xmlNodePtr) pAttr, 0, 0);
+        }
+
 	// directory attribute
 	if (unit_directory) {
 	  xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(" dir=\""));
