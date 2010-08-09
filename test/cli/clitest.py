@@ -2326,7 +2326,7 @@ srcml = xml_declaration + """
 </unit>
 
 <unit xmlns:cpp="http://www.sdml.info/srcML/src" xmlns:bar="http://www.cs.uakron.edu/~collard/bar" language="Java">
-<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+<cpp:expr_stmt><cpp:expr><cpp:name>b</cpp:name></cpp:expr>;</cpp:expr_stmt>
 </unit>
 
 </unit>
@@ -2337,7 +2337,7 @@ xpath = xml_declaration + """
 
 <unit item="1"><name>a</name></unit>
 
-<unit item="1"><name>b</name></unit>
+<unit item="1"><cpp:name>b</cpp:name></unit>
 
 </unit>
 """
