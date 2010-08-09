@@ -44,6 +44,7 @@ class SAX2UnitDOMXSLT : public SAX2UnitDOM {
   int paramcount;
   const char** fxslt;
   xsltStylesheetPtr xslt;
+  int result_type;
 
   // end document
   static void endDocument(void *ctx);
