@@ -167,7 +167,7 @@ void SAX2UnitDOM::startElementNsUnit(void* ctx, const xmlChar* localname, const 
 
   // tack on the namespaces from this unit
   for (int i = 0; i < 2 * nb_namespaces; ++i)
-    pstate->ns[pstate->nb_ns * 2 + i] = namespaces[i] ? strdup((char*) namespaces[i]) : 0;
+    pstate->ns[pstate->nb_ns * 2 + i] = (char*) namespaces[i];
   
   xmlSAX2StartElementNs(ctx, localname, prefix, URI, pstate->nb_ns + nb_namespaces, (const xmlChar**) pstate->ns, nb_attributes,
   			nb_defaulted, attributes);
