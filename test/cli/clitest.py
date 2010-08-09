@@ -2506,6 +2506,20 @@ validate(open('sub/b.cpp.xml', 'r').read(), srcml)
 validate(getreturn([srcml2src, option.XSLT_FLAG + '=copy.xsl', option.PARAM_FLAG], srcml), status.STATUS_ERROR)
 validate(getreturn([srcml2src, option.XSLT_FLAG + '=copy.xsl', option.PARAM_FLAG, "NAME"], srcml), status.STATUS_ERROR)
 
+xslt = xml_declaration + """
+a
+"""
+
+check([srcml2src, option.XSLT_FLAG + '=param.xsl', option.PARAM_FLAG, 'name="a"'], srcml, xslt)
+check([srcml2src, option.XSLT_FLAG + '=param.xsl', option.PARAM_FLAG, 'name="a"', 'sub/a.cpp.xml'], "", xslt)
+check([srcml2src, option.XSLT_FLAG + '=param.xsl', option.PARAM_FLAG, 'name="a"', '-o', 'sub/b.cpp.xml'], srcml, "")
+validate(open('sub/b.cpp.xml', 'r').read(), xslt)
+check([srcml2src, option.XSLT_FLAG + '=param.xsl', option.PARAM_FLAG, 'name="a"', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
+validate(open('sub/b.cpp.xml', 'r').read(), xslt)
+
+validate(getreturn([srcml2src, option.XSLT_FLAG + '=copy.xsl', option.PARAM_FLAG], srcml), status.STATUS_ERROR)
+validate(getreturn([srcml2src, option.XSLT_FLAG + '=copy.xsl', option.PARAM_FLAG, "name"], srcml), status.STATUS_ERROR)
+
 # stringparam
 
 check([srcml2src, option.XSLT_FLAG + '=copy.xsl', option.STRING_PARAM_FLAG, 'NAME=VALUE'], srcml, srcml)
