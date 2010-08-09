@@ -86,7 +86,7 @@ void SAX2UnitDOM::startElementNsRoot(void* ctx, const xmlChar* localname, const 
 
   // store the namespaces as we will need them later (with the nested unit elements)
   pstate->nb_ns = nb_namespaces;
-  pstate->ns = (char**) malloc((2 * nb_namespaces + 2) * sizeof(char*));
+  pstate->ns = (char**) malloc((2 * (nb_namespaces + 10) + 2) * sizeof(char*));
 
   for (int i = 0; i < 2 * nb_namespaces; ++i)
     pstate->ns[i] = namespaces[i] ? strdup((char*) namespaces[i]) : 0;
@@ -165,8 +165,11 @@ void SAX2UnitDOM::startElementNsUnit(void* ctx, const xmlChar* localname, const 
   // reset the line to agree with the line of the original text file
   ctxt->input->line = 1;
 
-  // build the individual unit start element, but use the namespaces from the outer unit
-  xmlSAX2StartElementNs(ctx, localname, prefix, URI, pstate->nb_ns, (const xmlChar**) pstate->ns, nb_attributes,
+  // tack on the namespaces from this unit
+  for (int i = 0; i < 2 * nb_namespaces; ++i)
+    pstate->ns[pstate->nb_ns * 2 + i] = namespaces[i] ? strdup((char*) namespaces[i]) : 0;
+  
+  xmlSAX2StartElementNs(ctx, localname, prefix, URI, pstate->nb_ns + nb_namespaces, (const xmlChar**) pstate->ns, nb_attributes,
   			nb_defaulted, attributes);
 
   // turn tree building start element back on (instead of this one)
