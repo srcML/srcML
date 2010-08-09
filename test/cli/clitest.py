@@ -2276,7 +2276,7 @@ srcml = xml_declaration + """
 <foo:a/>
 </unit>
 
-<unit language="Java" xmlns:bar="http://www.cs.uakron.edu/~collard/bar">
+<unit xmlns:bar="http://www.cs.uakron.edu/~collard/bar" language="Java">
 <bar:b/>
 </unit>
 
@@ -2289,7 +2289,7 @@ xpath = """<unit xmlns="http://www.sdml.info/srcML/src" xmlns:foo="http://www.cs
 <foo:a/>
 </unit>
 
-<unit language="Java" xmlns:bar="http://www.cs.uakron.edu/~collard/bar">
+<unit xmlns:bar="http://www.cs.uakron.edu/~collard/bar" language="Java">
 <bar:b/>
 </unit>
 
