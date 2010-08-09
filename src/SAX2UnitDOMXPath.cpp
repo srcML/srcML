@@ -245,7 +245,7 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
             }
 
           // if its not on the root
-          if (place == -1 || cur->prefix != 0) {
+          if (place == -1) {
             xmlNsPtr q = xmlCopyNamespace(cur);
             if (p == NULL) {
               ret = p = q;
