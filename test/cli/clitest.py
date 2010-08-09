@@ -2279,7 +2279,7 @@ srcml = xml_declaration + """
 xpath = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src">
 
-<unit item="1"><name>a</name></unit>
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" item="1"><name>a</name></unit>
 
 </unit>
 """
