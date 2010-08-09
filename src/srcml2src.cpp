@@ -354,7 +354,7 @@ int main(int argc, char* argv[]) {
 	if (!isoption(options, OPTION_UNIT)) {
 	  if (isatty(STDOUT_FILENO))
 	    putchar('\r');
-	  printf("files=\"%d\"\n", su.curunits());
+	  printf("unit=\"%d\"\n", su.curunits());
 	}
       }
 
@@ -956,5 +956,5 @@ void output_info(srcMLUtility& su, int options, int optioncount, int optionorder
       }
 
       if (isoption(options, OPTION_LONG_INFO) && !isoption(options, OPTION_UNIT) && isatty(STDOUT_FILENO))
-	    printf("files=\"%d", 1);
+	    printf("units=\"%d", 1);
 }
