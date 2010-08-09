@@ -234,9 +234,19 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
         xmlNsPtr p = NULL;
         xmlNsPtr cur = savens;
         while (cur != NULL) {
-          xmlNsPtr q = xmlCopyNamespace(cur);
 	  // fprintf(stderr, "%s\n", (const char *) q->href);
-          if (strcmp((const char*) q->href, "http://www.sdml.info/srcML/src") != 0 || q->prefix != 0) {
+
+          // see if on the root
+          int place = -1;
+          for (int i = 0; i < pstate->nb_ns * 2; i += 2)
+            if (strcmp((const char*) cur->href, pstate->ns[i + 1]) == 0) {
+              place = i;
+              break;
+            }
+
+          // if its not on the root
+          if (place == -1 || cur->prefix != 0) {
+            xmlNsPtr q = xmlCopyNamespace(cur);
             if (p == NULL) {
               ret = p = q;
             } else {

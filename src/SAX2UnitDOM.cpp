@@ -166,6 +166,7 @@ void SAX2UnitDOM::startElementNsUnit(void* ctx, const xmlChar* localname, const 
   ctxt->input->line = 1;
 
   // tack on the namespaces from this unit
+  // TODO:  Have a limit here, don't we?
   for (int i = 0; i < 2 * nb_namespaces; ++i)
     pstate->ns[pstate->nb_ns * 2 + i] = (char*) namespaces[i];
   
