@@ -701,7 +701,7 @@ checkallforms(srcml2src, option.NAMESPACE_FLAG_SHORT, option.NAMESPACE_FLAG, "ht
 
 checkallforms(srcml2src, option.NAMESPACE_FLAG_SHORT, option.NAMESPACE_FLAG, "http://www.sdml.info/srcML/literal", srcml, "")
 
-checkallforms(srcml2src, option.NAMESPACE_FLAG_SHORT, option.NAMESPACE_FLAG, "http://www.ashland.edu/~mcollard/foo", srcml, "")
+checkallforms(srcml2src, option.NAMESPACE_FLAG_SHORT, option.NAMESPACE_FLAG, "http://www.cs.uakron.edu/~collard/foo", srcml, "")
 
 srcml = xml_declaration + """
 <unit xmlns:cpp="http://www.sdml.info/srcML/src" xmlns="http://www.sdml.info/srcML/cpp"/>
@@ -1534,7 +1534,7 @@ checkallformsfile(srcml2src, 'sub/a.cpp.xml', option.NAMESPACE_FLAG_SHORT, optio
 
 checkallformsfile(srcml2src, 'sub/a.cpp.xml', option.NAMESPACE_FLAG_SHORT, option.NAMESPACE_FLAG, "http://www.sdml.info/srcML/literal", "", "")
 
-checkallformsfile(srcml2src, 'sub/a.cpp.xml', option.NAMESPACE_FLAG_SHORT, option.NAMESPACE_FLAG, "http://www.ashland.edu/~mcollard/foo", "", "")
+checkallformsfile(srcml2src, 'sub/a.cpp.xml', option.NAMESPACE_FLAG_SHORT, option.NAMESPACE_FLAG, "http://www.cs.uakron.edu/~collard/foo", "", "")
 
 ##
 # text encoding flag
