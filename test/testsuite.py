@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/opt/local/bin/python
 #
 # update.py
 #
@@ -103,6 +103,8 @@ def src2srcML(text_file, encoding, language, directory, filename, prefixlist):
 
 	# run the srcml processor
 	command.append("--src-encoding=" + encoding)
+
+	command.append("--quiet")
 
 	return safe_communicate(command, text_file)
 
