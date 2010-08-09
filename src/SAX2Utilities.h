@@ -5,6 +5,7 @@
 #include <libxml/parser.h>
 
 typedef std::pair<std::string, std::string> PROPERTIES_TYPE[32];
+const int MAXPROPERTIES = 32;
 
 // expanded prefix for xmlns declaration
 const char* xmlnsprefix(const char* prefix);

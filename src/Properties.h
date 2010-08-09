@@ -28,6 +28,7 @@
 void output_info(srcMLUtility& su, int options, int optioncount, int optionorder[]);
 
 #include "ProcessUnit.h"
+#include "srcmlapps.h"
 
 class Properties : public CountUnits {
  public :
@@ -63,7 +64,7 @@ class Properties : public CountUnits {
     if (encoding) {
       int i;
       // TODO: Use constant here
-      for (i = 0; i < 32; ++i)
+      for (i = 0; i < MAXPROPERTIES; ++i)
         if (attrv[i].first == "")
           break;
 
@@ -110,7 +111,7 @@ class Properties : public CountUnits {
 
     if (encoding) {
       int i;
-      for (i = 0; i < 32; ++i)
+      for (i = 0; i < MAXPROPERTIES; ++i)
         if (attrv[i].first == "")
           break;
 
