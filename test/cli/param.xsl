@@ -17,6 +17,7 @@
 
 <xsl:param name="name" select="'Error'"/>
 
-<xsl:template match="/"><xsl:copy-of select="$name"/></xsl:template>
+<xsl:template match="/"><xsl:copy-of select="$name"/><xsl:text>
+</xsl:text></xsl:template>
 
 </xsl:stylesheet>
