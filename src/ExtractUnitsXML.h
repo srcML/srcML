@@ -89,7 +89,7 @@ class ExtractUnitsXML : public ProcessUnit {
 
     // output the merged namespaces
     if (!isoption(*(pstate->poptions), OPTION_NAMESPACEDECL))
-      for (int i = 0; i < 32; ++i) {
+      for (int i = 0; i < MAXPROPERTIES; ++i) {
 	if (nsv[i].first == "")
 	  break;
 
@@ -100,7 +100,7 @@ class ExtractUnitsXML : public ProcessUnit {
     collect_attributes(nb_attributes, attributes, attrv);
 
     // output the merged attributes
-    for (int i = 0; i < 32; ++i) {
+    for (int i = 0; i < MAXPROPERTIES; ++i) {
       if (attrv[i].first == "")
 	break;
 
