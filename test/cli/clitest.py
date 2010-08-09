@@ -2325,7 +2325,7 @@ srcml = xml_declaration + """
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:bar="http://www.cs.uakron.edu/~collard/bar" language="Java">
+<unit xmlns:cpp="http://www.sdml.info/srcML/src" xmlns:bar="http://www.cs.uakron.edu/~collard/bar" language="Java">
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 </unit>
 
