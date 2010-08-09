@@ -1,13 +1,6 @@
 - Add xpath queries with relative, i.e., "src:comment" same as
 - "//src:comment" same as "/src:unit//src:comment"
 
-- Change any testcases with "www.ashland.edu" in them
-
-- Instead of "--files", how about "--units".  If seems reasonable, put
-  in for now.
-
-- PROPERTIES_TYPE is using a literal 32 for the size.  Replace with a constant
-
 - Split http and ftp callbacks in libxml_archive_read.cpp.  Put in
   separate files.  Eliminate the need for the "if () else ;"
 
