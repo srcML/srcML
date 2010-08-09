@@ -354,7 +354,7 @@ int main(int argc, char* argv[]) {
 	if (!isoption(options, OPTION_UNIT)) {
 	  if (isatty(STDOUT_FILENO))
 	    putchar('\r');
-	  printf("unit=\"%d\"\n", su.curunits());
+	  printf("units=\"%d\"\n", su.curunits());
 	}
       }
 
