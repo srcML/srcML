@@ -2290,7 +2290,6 @@ xpath = """<unit xmlns="http://www.sdml.info/srcML/src">
 </unit>
 
 </unit>
-
 """
 
 file = open('sub/a.cpp.xml', 'w')
