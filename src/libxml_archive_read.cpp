@@ -19,9 +19,8 @@ struct archiveData {
   int status;
   std::string root_filename;
   bool first;
+  void* libxmlcontext;
 };
-
-static archiveData scontext = { 0, 0, 0, "", true };
 
 static archiveData* gpcontext = 0;
 
@@ -139,7 +138,7 @@ static int archive_read_open_http_callback(struct archive* a,
 
   archiveData* pcontext = (archiveData*) _client_data;
 
-  pcontext = (archiveData*) (ishttp ? xmlNanoHTTPOpen(pcontext->root_filename.c_str(), 0) : xmlNanoFTPOpen(pcontext->root_filename.c_str()));
+  pcontext->libxmlcontext = (archiveData*) (ishttp ? xmlNanoHTTPOpen(pcontext->root_filename.c_str(), 0) : xmlNanoFTPOpen(pcontext->root_filename.c_str()));
 
   return 0;
 }
@@ -158,7 +157,7 @@ archive_read_http_callback(struct archive* a,
   static const int len = 4096;
   static std::vector<char> data(len);
   *_buffer = &data[0];
-  int size = ishttp ? xmlNanoHTTPRead(pcontext, &data[0], len) : xmlNanoFTPRead(pcontext, &data[0], len);
+  int size = ishttp ? xmlNanoHTTPRead(pcontext->libxmlcontext, &data[0], len) : xmlNanoFTPRead(pcontext->libxmlcontext, &data[0], len);
 
   return size;
 }
@@ -169,9 +168,9 @@ static int archive_read_close_http_callback(struct archive* a,
   archiveData* pcontext = (archiveData*) _client_data;
 
   if (ishttp)
-    xmlNanoHTTPClose(pcontext);
+    xmlNanoHTTPClose(pcontext->libxmlcontext);
   else
-    xmlNanoFTPClose(pcontext);
+    xmlNanoFTPClose(pcontext->libxmlcontext);
   return 1;
 }
 
@@ -204,7 +203,7 @@ void* archiveReadOpen(const char* URI) {
     ishttp = xmlIOHTTPMatch(URI);
     if (ishttp || xmlIOFTPMatch(URI)) {
       gpcontext->root_filename = URI;
-      gpcontext->status = archive_read_open(gpcontext->a, 0, archive_read_open_http_callback, archive_read_http_callback,
+      gpcontext->status = archive_read_open(gpcontext->a, gpcontext, archive_read_open_http_callback, archive_read_http_callback,
 			      archive_read_close_http_callback);
     } else {
       gpcontext->status = archive_read_open_filename(gpcontext->a, strcmp(URI, "-") == 0 ? 0 : URI, 4000);
