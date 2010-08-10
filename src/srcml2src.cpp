@@ -248,7 +248,7 @@ typedef struct process_options
   int registerextcount;
   const char* registerext[MAXPARAMS * 2 + 1];
   int registerfilescount;
-  const char* registerfiles[MAXPARAMS * 2 + 1];
+  const char* registerfiles[MAXPARAMS + 1];
 } process_options;
 
 // setup options and collect info from arguments
@@ -773,19 +773,6 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
       // register files name
       poptions.registerfiles[poptions.registerfilescount++] = optarg;
-      
-      // must be both name and value, but value could be empty
-      if (!strchr(optarg, '=')) {
-	fprintf(stderr, "%s: Register files name and value must be given.\n", argv[0]);
-	exit(1);
-      }
-
-      // registerfiles value
-      end = optarg;
-      strsep(&end, "=");
-      poptions.registerfiles[poptions.registerfilescount] = (char*) malloc(strlen(end) + 1);
-      strcpy((char *) poptions.registerfiles[poptions.registerfilescount], end);
-      poptions.registerfilescount++;
       break;
 
     case XPATH_FLAG_CODE:
