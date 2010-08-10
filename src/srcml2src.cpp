@@ -92,6 +92,12 @@ char const * const CONTEXT_FLAG_FULL = "context=CONTEXT";
 const char* const LIST_FLAG = "list";
 const int LIST_FLAG_CODE = 256 + 6;
 
+const char* const REGISTER_EXTENSION_FLAG = "register-ext";
+const int REGISTER_EXTENSION_FLAG_CODE = 256 + 7;
+
+const char* const REGISTER_EXTENSION_FILE_FLAG = "register-ext-file";
+const int REGISTER_EXTENSION_FLAG_FILE_CODE = 256 + 8;
+
 void libxml_error(void *ctx, const char *msg, ...) {}
 
 // output help message
