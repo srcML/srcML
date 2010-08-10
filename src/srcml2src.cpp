@@ -245,6 +245,10 @@ typedef struct process_options
   const char* params[MAXPARAMS * 2 + 1];
   int transformcount;
   const char* transforms[MAXTRANSFORMS + 1];
+  int registerextcount;
+  const char* registerext[MAXPARAMS * 2 + 1];
+  int registerfilescount;
+  const char* registerfiles[MAXPARAMS * 2 + 1];
 } process_options;
 
 // setup options and collect info from arguments
@@ -295,6 +299,10 @@ int main(int argc, char* argv[]) {
      { 0 },
      0,
      { 0 },
+     0,
+     { 0 },
+     0,
+     { 0 }
   };
 
   // process command-line arguments
@@ -737,9 +745,47 @@ int process_args(int argc, char* argv[], process_options & poptions)
       break;
 
     case REGISTER_EXTENSION_FLAG_CODE :
+
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+
+      // register extension name
+      poptions.registerext[poptions.registerextcount++] = optarg;
+      
+      // must be both name and value, but value could be empty
+      if (!strchr(optarg, '=')) {
+	fprintf(stderr, "%s: Register extension name and value must be given.\n", argv[0]);
+	exit(1);
+      }
+
+      // registerext value
+      end = optarg;
+      strsep(&end, "=");
+      poptions.registerext[poptions.registerextcount] = (char*) malloc(strlen(end) + 1 + 2);
+      strcmp((char *) poptions.registerext[poptions.registerextcount], end);
+      poptions.registerextcount++;
       break;
 
     case REGISTER_EXTENSION_FILE_FLAG_CODE :
+
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+
+      // register files name
+      poptions.registerfiles[poptions.registerfilescount++] = optarg;
+      
+      // must be both name and value, but value could be empty
+      if (!strchr(optarg, '=')) {
+	fprintf(stderr, "%s: Register files name and value must be given.\n", argv[0]);
+	exit(1);
+      }
+
+      // registerfiles value
+      end = optarg;
+      strsep(&end, "=");
+      poptions.registerfiles[poptions.registerfilescount] = (char*) malloc(strlen(end) + 1 + 2);
+      strcmp((char *) poptions.registerfiles[poptions.registerfilescount], end);
+      poptions.registerfilescount++;
       break;
 
     case XPATH_FLAG_CODE:
