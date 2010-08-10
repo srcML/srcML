@@ -236,6 +236,8 @@ const OPTION_TYPE OPTION_SKIP_DEFAULT  = ull(1) << 35;
 const OPTION_TYPE OPTION_RECURSIVE  = ull(1) << 36;
 
 // skip output of notification messages
+// @src2srcml
+// @srcml2src
 const OPTION_TYPE OPTION_QUIET  = ull(1) << 37;
 
 // settings
