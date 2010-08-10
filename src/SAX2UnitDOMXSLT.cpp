@@ -47,6 +47,8 @@ static void apply(xmlParserCtxtPtr ctxt) {
 
   SAX2UnitDOMXSLT* pstate = (SAX2UnitDOMXSLT*) ctxt->_private;
 
+  setPosition(pstate->count);
+
   // apply the style sheet to the document, which is the individual unit
   xmlDocPtr res = xsltApplyStylesheetUser(pstate->xslt, ctxt->myDoc, pstate->params, 0, 0, 0);
   if (!res) {
@@ -85,7 +87,7 @@ static void apply(xmlParserCtxtPtr ctxt) {
       resroot->nsDef = savens;
 
     // put some space between this unit and the next one if compound
-    if (pstate->isnested && !isoption(pstate->options, OPTION_XSLT_ALL))
+    if (pstate->result_type == XML_ELEMENT_NODE && pstate->isnested && !isoption(pstate->options, OPTION_XSLT_ALL))
       xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\n"));
 
     // finished with the result of the transformation

@@ -27,7 +27,7 @@
 #include "srcmlns.h"
 
 #include "Options.h"
-#include "srcmlns.h"
+#include "srcexfun.h"
 
 #include <libxml/parserInternals.h>
 #include <libxml/SAX2.h>
@@ -36,7 +36,7 @@
 #include <cassert>
 
 SAX2UnitDOM::SAX2UnitDOM(const char* a_context_element, const char* a_ofilename, int options) 
-  : context_element(a_context_element), ofilename(a_ofilename), options(options), found(false), nb_ns(0), ns(0), isnested(false) {
+  : context_element(a_context_element), ofilename(a_ofilename), options(options), found(false), nb_ns(0), ns(0), isnested(false), count(0) {
 
 }
 
@@ -119,6 +119,10 @@ void SAX2UnitDOM::startElementNsRoot(void* ctx, const xmlChar* localname, const 
     if(strcmp((const char *) pAttr->name, "language") != 0)
       xmlNodeDump(pstate->rootbuf, onode->doc, (xmlNodePtr) pAttr, 0, 0);
 
+  collect_attributes(nb_attributes, attributes, pstate->root_attributes);
+
+  setRootAttributes(pstate->root_attributes);
+
   // look for nested unit
   ctxt->sax->startElementNs = &SAX2UnitDOM::startElementNsFirstUnit;
 }
@@ -136,6 +140,8 @@ void SAX2UnitDOM::startElementNsFirstUnit(void* ctx, const xmlChar* localname, c
   // so we need to process normally
   if (isoption(pstate->options, OPTION_XSLT_ALL) || strcmp((const char*) localname, "unit") != 0) {
 
+    pstate->count = 1;
+    setPosition(pstate->count);
     xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes,
   			nb_defaulted, attributes);
     ctxt->sax->startElementNs = xmlSAX2StartElementNs;
@@ -163,6 +169,9 @@ void SAX2UnitDOM::startElementNsUnit(void* ctx, const xmlChar* localname, const 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
 
   SAX2UnitDOM* pstate = (SAX2UnitDOM*) ctxt->_private;
+
+  ++pstate->count;
+  setPosition(pstate->count);
 
   // reset the line to agree with the line of the original text file
   ctxt->input->line = 1;

@@ -29,6 +29,7 @@
 #define INCLUDED_SAX2UNITDOM_H
 
 #include <libxml/parser.h>
+#include "SAX2Utilities.h"
 
 class SAX2UnitDOM {
  public:
@@ -47,6 +48,8 @@ class SAX2UnitDOM {
   xmlBufferPtr rootbuf;
   bool needroot;
   bool isnested;
+  int count;
+  PROPERTIES_TYPE root_attributes;
 
   // start document
   static void startDocument(void *ctx);

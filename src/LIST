@@ -1,5 +1,4 @@
-- Add xpath queries with relative, i.e., "src:comment" same as
-- "//src:comment" same as "/src:unit//src:comment"
+- Tests for src:archive('filename') and other attributes in XSLT (see archive.xsl)
 
 - Split http and ftp callbacks in libxml_archive_read.cpp.  Put in
   separate files.  Eliminate the need for the "if () else ;"

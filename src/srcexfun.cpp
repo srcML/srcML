@@ -17,25 +17,24 @@ static xmlChar* unit_filename = 0;
 #include <libxslt/xsltInternals.h>
 #include <libxslt/extensions.h>
 
-int Position;
+static int Position;
+static PROPERTIES_TYPE* pattributes;
 
 void setPosition(int n) {
   Position = n;
 }
 
+void setRootAttributes(PROPERTIES_TYPE& attributes) {
+  pattributes = &attributes;
+}
+
 // 
 static void srcContextFunction (xmlXPathParserContextPtr ctxt, int nargs) {
-  /*
-    if (nargs != 1) {
+
+    if (nargs != 0) {
 	xmlXPathSetArityError(ctxt);
 	return;
     }
-
-    xmlChar* arg = xmlXPathPopString(ctxt);
-  */
-    //    xmlXPathObjectPtr ret = xmlXPathEval(arg, ctxt->context);
-
-    //    valuePush(ctxt, ret);
 
   valuePush(ctxt, xmlXPathNewFloat(Position));
 }
@@ -47,23 +46,34 @@ static void srcRootFunction (xmlXPathParserContextPtr ctxt, int nargs) {
 	return;
     }
 
-    xmlChar* arg1 = xmlXPathPopString(ctxt);
+    xmlChar* name = xmlXPathPopString(ctxt);
 
-    xmlXPathObjectPtr ret = xmlXPathEval(arg1, ctxt->context);
+    const char* value = find(*pattributes, (const char*) name);
 
-    valuePush(ctxt, ret);
+    if (value)
+      valuePush(ctxt, xmlXPathNewString(BAD_CAST value));
+    else
+      valuePush(ctxt, NULL);
 }
 
 void xpathsrcMLRegister(xmlXPathContextPtr context) {
 
-  xmlXPathRegisterFuncNS(context, (const xmlChar *)"rootunit",
+  xmlXPathRegisterFuncNS(context, (const xmlChar *)"unit",
 			 BAD_CAST "http://www.sdml.info/srcML/src",
 			 srcContextFunction);
+
+  xmlXPathRegisterFuncNS(context, (const xmlChar *)"archive",
+			 BAD_CAST "http://www.sdml.info/srcML/src",
+			 srcRootFunction);
 }
 
 void xsltsrcMLRegister () {
 
-    xsltRegisterExtModuleFunction(BAD_CAST "context",
-				  BAD_CAST "http://www.sdml.info/srcML/src",
-				  srcContextFunction);
+  xsltRegisterExtModuleFunction(BAD_CAST "unit",
+			  BAD_CAST "http://www.sdml.info/srcML/src",
+			  srcContextFunction);
+
+  xsltRegisterExtModuleFunction(BAD_CAST "archive",
+			  BAD_CAST "http://www.sdml.info/srcML/src",
+			  srcRootFunction);
 }

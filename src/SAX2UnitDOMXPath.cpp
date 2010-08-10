@@ -122,11 +122,6 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
   if (strcmp((const char*) localname, "unit") != 0 || (pstate->isnested && ctxt->nodeNr == 0))
     return;
 
-  static int count = 0;
-  ++count;
-
-  setPosition(count);
-
   // evaluate the xpath on the context from the current document
   xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(pstate->compiled_xpath, pstate->context);
   if (result_nodes == 0) {
