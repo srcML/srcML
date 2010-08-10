@@ -21,38 +21,57 @@ struct archiveData {
   bool first;
 };
 
-static struct archiveData scontext = { 0, 0, 0, "", true };
+static archiveData scontext = { 0, 0, 0, "", true };
 
-bool archiveIsDir() {
+static archiveData* gpcontext = 0;
 
-  return scontext.ae && archive_entry_filetype(scontext.ae) == AE_IFDIR;
+bool archiveIsDir(void* context) {
+
+  archiveData* pcontext = (archiveData*) context;
+
+  return pcontext->ae && archive_entry_filetype(pcontext->ae) == AE_IFDIR;
 }
 
-bool isArchiveFirst() {
+bool isArchiveFirst(void* context) {
 
-  return scontext.first;
+  archiveData* pcontext = (archiveData*) context;
+
+  return pcontext->first;
+}
+
+bool isAnythingOpen(void* context) {
+
+  return gpcontext == context;
 }
 
 // check if file has an archive extension
-bool isArchiveRead() {
+bool isArchiveRead(void* context) {
 
-  return scontext.a && scontext.status == ARCHIVE_OK
+  archiveData* pcontext = (archiveData*) context;
+
+  bool status = pcontext->a && pcontext->status == ARCHIVE_OK
 #if ARCHIVE_VERSION_STAMP >= 2008000
-    && (archive_format(scontext.a) != ARCHIVE_FORMAT_RAW
+    && (archive_format(pcontext->a) != ARCHIVE_FORMAT_RAW
 #else
-    && (archive_format(scontext.a) != ARCHIVE_FORMAT_EMPTY
+    && (archive_format(pcontext->a) != ARCHIVE_FORMAT_EMPTY
 #endif
   );
+
+        return status;
 }
 
 // format (e.g., tar, cpio) of the current file
-const char* archiveReadFormat() {
-  return !scontext.a ? 0 : archive_format_name(scontext.a);
+const char* archiveReadFormat(void* context) {
+  archiveData* pcontext = (archiveData*) context;
+
+  return !pcontext->a ? 0 : archive_format_name(pcontext->a);
 }
 
 // compression (e.g., gz, bzip2) of the current file
-const char* archiveReadCompression() {
-  return !scontext.a ? 0 : archive_compression_name(scontext.a);
+const char* archiveReadCompression(void* context) {
+  archiveData* pcontext = (archiveData*) context;
+
+  return !pcontext->a ? 0 : archive_compression_name(pcontext->a);
 }
 
 // check if archive matches the protocol on the URI
@@ -95,27 +114,32 @@ int archiveReadMatch(const char* URI) {
 }
 
 // setup archive root for this URI
-int archiveReadStatus() {
+int archiveReadStatus(void* context) {
 
-  return scontext.status;
+  archiveData* pcontext = (archiveData*) context;
+
+  return pcontext->status;
 }
 
-const char* archiveReadFilename() {
+const char* archiveReadFilename(void* context) {
 
-  if (!scontext.ae || (archiveReadStatus() != ARCHIVE_OK && archiveReadStatus() != ARCHIVE_EOF))
+  archiveData* pcontext = (archiveData*) context;
+
+  if (!pcontext->ae || (archiveReadStatus(context) != ARCHIVE_OK && archiveReadStatus(context) != ARCHIVE_EOF))
     return 0;
 
-  return isArchiveRead() ? archive_entry_pathname(scontext.ae) : 0;
+  return isArchiveRead(context) ? archive_entry_pathname(pcontext->ae) : 0;
 }
 
 
-static void* mcontext;
  static bool ishttp = true;
 
 static int archive_read_open_http_callback(struct archive* a,
 					   void* _client_data) {
 
-  mcontext = ishttp ? xmlNanoHTTPOpen(scontext.root_filename.c_str(), 0) : xmlNanoFTPOpen(scontext.root_filename.c_str());
+  archiveData* pcontext = (archiveData*) _client_data;
+
+  pcontext = (archiveData*) (ishttp ? xmlNanoHTTPOpen(pcontext->root_filename.c_str(), 0) : xmlNanoFTPOpen(pcontext->root_filename.c_str()));
 
   return 0;
 }
@@ -129,10 +153,12 @@ ssize_t
 archive_read_http_callback(struct archive* a,
 					   void* _client_data, const void** _buffer) {
 
+  archiveData* pcontext = (archiveData*) _client_data;
+
   static const int len = 4096;
   static std::vector<char> data(len);
   *_buffer = &data[0];
-  int size = ishttp ? xmlNanoHTTPRead(mcontext, &data[0], len) : xmlNanoFTPRead(mcontext, &data[0], len);
+  int size = ishttp ? xmlNanoHTTPRead(pcontext, &data[0], len) : xmlNanoFTPRead(pcontext, &data[0], len);
 
   return size;
 }
@@ -140,10 +166,12 @@ archive_read_http_callback(struct archive* a,
 static int archive_read_close_http_callback(struct archive* a,
 					   void* _client_data) {
 
+  archiveData* pcontext = (archiveData*) _client_data;
+
   if (ishttp)
-    xmlNanoHTTPClose(mcontext);
+    xmlNanoHTTPClose(pcontext);
   else
-    xmlNanoFTPClose(mcontext);
+    xmlNanoFTPClose(pcontext);
   return 1;
 }
 
@@ -153,77 +181,79 @@ void* archiveReadOpen(const char* URI) {
   if (!archiveReadMatch(URI))
     return NULL;
 
-  scontext.first = false;
-
   // just in case archiveOpenRoot() was not called
-  if (!scontext.a) {
+  if (!gpcontext) {
 
-    scontext.first = true;
-    scontext.status = 0;
-    scontext.a = archive_read_new();
-    archive_read_support_compression_all(scontext.a);
-    //    archive_read_support_compression_bzip2(scontext.a);
-    //    archive_read_support_compression_gzip(scontext.a);
+    gpcontext = new archiveData;
+    gpcontext->first = true;
+    gpcontext->status = 0;
+    gpcontext->a = archive_read_new();
+    archive_read_support_compression_all(gpcontext->a);
+    //    archive_read_support_compression_bzip2(gpcontext->a);
+    //    archive_read_support_compression_gzip(gpcontext->a);
 
 #if ARCHIVE_VERSION_STAMP >= 2008000
-  archive_read_support_format_raw(scontext.a);
+  archive_read_support_format_raw(gpcontext->a);
 #endif
-    archive_read_support_format_all(scontext.a);
-    //    archive_read_support_format_tar(scontext.a);
-    //    archive_read_support_format_zip(scontext.a);
-    //    archive_read_support_format_cpio(scontext.a);
+    archive_read_support_format_all(gpcontext->a);
+    //    archive_read_support_format_tar(gpcontext->a);
+    //    archive_read_support_format_zip(gpcontext->a);
+    //    archive_read_support_format_cpio(gpcontext->a);
 
     //    int r = archive_read_open_filename(a, URI, 4000);
     ishttp = xmlIOHTTPMatch(URI);
     if (ishttp || xmlIOFTPMatch(URI)) {
-      scontext.root_filename = URI;
-      scontext.status = archive_read_open(scontext.a, 0, archive_read_open_http_callback, archive_read_http_callback,
+      gpcontext->root_filename = URI;
+      gpcontext->status = archive_read_open(gpcontext->a, 0, archive_read_open_http_callback, archive_read_http_callback,
 			      archive_read_close_http_callback);
     } else {
-      scontext.status = archive_read_open_filename(scontext.a, strcmp(URI, "-") == 0 ? 0 : URI, 4000);
+      gpcontext->status = archive_read_open_filename(gpcontext->a, strcmp(URI, "-") == 0 ? 0 : URI, 4000);
     }
-    if (scontext.status != ARCHIVE_OK) {
-      archive_read_finish(scontext.a);
-      scontext.a = 0;
-      scontext.ae = 0;
+    if (gpcontext->status != ARCHIVE_OK) {
+      archive_read_finish(gpcontext->a);
+      delete gpcontext;
+      gpcontext = 0;
       return 0;
     }
 
-    scontext.status = archive_read_next_header(scontext.a, &scontext.ae);
-    if (scontext.status != ARCHIVE_OK) {
+    gpcontext->status = archive_read_next_header(gpcontext->a, &gpcontext->ae);
+    if (gpcontext->status == ARCHIVE_EOF) {
 
-      archive_read_finish(scontext.a);
-      scontext.a = 0;
+      return gpcontext;
+    } else if (gpcontext->status != ARCHIVE_OK) {
+
+      archive_read_finish(gpcontext->a);
+      gpcontext->a = 0;
       return 0;
     }
   }
 
-  return scontext.a;
+  return gpcontext;
 }
-
-// close the open file
-int archiveReadClose() {
-
-  return archiveReadClose(mcontext);
-}
-
-
 
 // close the open file
 int archiveReadClose(void* context) {
 
+  archiveData* pcontext = (archiveData*) context;
+
   //  if (context == NULL)
   //    return -1;
 
-  if (scontext.status != ARCHIVE_OK)
+  if (pcontext->status != ARCHIVE_OK) {
+
+    delete pcontext;
+    gpcontext = 0;
     return 0;
+  }
 
   // read the next header.  If there isn't one, then really finish
-  scontext.status = archive_read_next_header(scontext.a, &scontext.ae);
-  if (scontext.status != ARCHIVE_OK) {
+  pcontext->status = archive_read_next_header(pcontext->a, &pcontext->ae);
 
-    archive_read_finish(scontext.a);
-    scontext.a = 0;
+  if (pcontext->status != ARCHIVE_OK) {
+
+    archive_read_finish(pcontext->a);
+    delete pcontext;
+    gpcontext = 0;
     return 0;
   }
 
@@ -233,10 +263,12 @@ int archiveReadClose(void* context) {
 // read from the URI
 int archiveRead(void* context, char* buffer, int len) {
 
-  if (scontext.status != ARCHIVE_OK)
+  archiveData* pcontext = (archiveData*) context;
+
+  if (pcontext->status != ARCHIVE_OK)
     return 0;
 
-  size_t size = archive_read_data(scontext.a, buffer, len);
+  size_t size = archive_read_data(pcontext->a, buffer, len);
   if (size < 0)
     return 0;
 

@@ -1099,6 +1099,8 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
   OPTION_TYPE save_options = options;
 
   // process the individual file (once), or an archive as many times as it takes
+  void* context = 0;
+  bool isarchive = false;
   do {
 
     // start with the original options
@@ -1107,102 +1109,104 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
     try {
 
-    // open up the file
+      // open up the file
       unit_filename = path;
-    translator.setInput(path);
+      context = translator.setInput(path);
 
-    // check if file is bad
-    if (archiveReadStatus() < 0 ) {
-      fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
+      // check if file is bad
+      if (archiveReadStatus(context) < 0 ) {
+        fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
 
-      ++error;
+        ++error;
 
-      return;
-      // continue??
-    }
+        return;
+        // continue??
+      }
 
-    // once any source archive is input, then we have to assume nested
-    if (isArchiveRead()) {
-      options |= OPTION_NESTED;
-      save_options |= OPTION_NESTED;
-    }
+      isarchive = isArchiveRead(context);
 
-    // output compression and format (if any)
-    if (isArchiveFirst() && !isoption(options, OPTION_QUIET)) {
+      // once any source archive is input, then we have to assume nested
+      if (isarchive) {
+        options |= OPTION_NESTED;
+        save_options |= OPTION_NESTED;
+      }
 
-      if (archiveReadCompression() && strcmp(archiveReadCompression(), "none"))
-	fprintf(stderr, "Compression:\t%s\n", archiveReadCompression());
+      // output compression and format (if any)
+      if (isArchiveFirst(context) && !isoption(options, OPTION_QUIET)) {
 
-      if (isArchiveRead())
-	fprintf(stderr, "Format:\t%s\n", archiveReadFormat());
-    }
+        if (archiveReadCompression(context) && strcmp(archiveReadCompression(context), "none"))
+          fprintf(stderr, "Compression:\t%s\n", archiveReadCompression(context));
 
-    // figure out the resulting filename
-    bool foundfilename = true;
-    if (archiveReadFilename())
-      unit_filename = archiveReadFilename();
-    else if (root_filename)
-      unit_filename = root_filename;
-    else if (strcmp(path, STDIN))
-      unit_filename = path;
-    else
-      foundfilename = false;
+        if (isarchive)
+          fprintf(stderr, "Format:\t%s\n", archiveReadFormat(context));
+      }
 
-    // special case:  skip directories (in archives)
-    if (archiveIsDir()) {
+      // figure out the resulting filename
+      bool foundfilename = true;
+      if (archiveReadFilename(context))
+        unit_filename = archiveReadFilename(context);
+      else if (root_filename)
+        unit_filename = root_filename;
+      else if (strcmp(path, STDIN))
+        unit_filename = path;
+      else
+        foundfilename = false;
 
-      if (!isoption(options, OPTION_QUIET))
-	fprintf(stderr, "Skipping '%s'.  Is a directory.\n", unit_filename.c_str());
+      // special case:  skip directories (in archives)
+      if (archiveIsDir(context)) {
 
-      ++skipped;
+        if (!isoption(options, OPTION_QUIET))
+          fprintf(stderr, "Skipping '%s'.  Is a directory.\n", unit_filename.c_str());
 
-      // explicitly close, since we are skipping it
-      archiveReadClose();
+        ++skipped;
 
-      continue;
-    }
+        // explicitly close, since we are skipping it
+        archiveReadClose(context);
+
+        continue;
+      }
 
 #endif
 
-    // language (for this item in archive mode) based on extension, if not specified
+      // language (for this item in archive mode) based on extension, if not specified
 
-    // 1) language may have been specified explicitly
-    int reallanguage = language;
+      // 1) language may have been specified explicitly
+      int reallanguage = language;
 
-    // 2) try from the filename (basically the extension)
-    if (!reallanguage)
-      reallanguage = Language::getLanguageFromFilename(unit_filename.c_str());
+      // 2) try from the filename (basically the extension)
+      if (!reallanguage)
+        reallanguage = Language::getLanguageFromFilename(unit_filename.c_str());
 
-    // 3) default language (if allowed)
-    if (!reallanguage && !isoption(options, OPTION_SKIP_DEFAULT))
-      reallanguage = DEFAULT_LANGUAGE;
+      // 3) default language (if allowed)
+      if (!reallanguage && !isoption(options, OPTION_SKIP_DEFAULT))
+        reallanguage = DEFAULT_LANGUAGE;
 
-    // error if can't find a language
-    if (!reallanguage) {
+      // error if can't find a language
+      if (!reallanguage) {
 
+        if (!isoption(options, OPTION_QUIET))
+          fprintf(stderr, "Skipping '%s'.  No language can be determined.\n", unit_filename.c_str() ? unit_filename.c_str() : "standard input");
+
+        ++skipped;
+
+        // close the file that we don't have a language for
+        archiveReadClose(context);
+
+        continue;
+      }
+
+      // turnon cpp namespace for non Java-based languages
+      if (!(reallanguage == srcMLTranslator::LANGUAGE_JAVA || reallanguage == srcMLTranslator::LANGUAGE_ASPECTJ))
+        options |= OPTION_CPP;
+
+      // another file
+      ++count;
+
+      const char* c_filename = clean_filename(unit_filename.c_str());
+
+      // output the currently processed filename
       if (!isoption(options, OPTION_QUIET))
-	fprintf(stderr, "Skipping '%s'.  No language can be determined.\n", unit_filename.c_str() ? unit_filename.c_str() : "standard input");
-
-      ++skipped;
-
-      // close the file that we don't have a language for
-      archiveReadClose();
-
-      continue;
-    }
-
-    // turnon cpp namespace for non Java-based languages
-    if (!(reallanguage == srcMLTranslator::LANGUAGE_JAVA || reallanguage == srcMLTranslator::LANGUAGE_ASPECTJ))
-      options |= OPTION_CPP;
-
-    // another file
-    ++count;
-
-    const char* c_filename = clean_filename(unit_filename.c_str());
-
-    // output the currently processed filename
-    if (!isoption(options, OPTION_QUIET))
-      fprintf(stderr, "%d\t%s\n", count, c_filename);
+        fprintf(stderr, "%d\t%s\n", count, c_filename);
 
       // translate the file
       translator.translate(path, dir,
@@ -1231,7 +1235,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     //     return STATUS_TERMINATED;
 
 #ifdef LIBARCHIVE
-  } while (isArchiveRead() && !archiveReadStatus());
+  } while (isarchive && isAnythingOpen(context));
 #endif
 }
 
@@ -1243,7 +1247,6 @@ void process_dir(srcMLTranslator& translator, const char* directory, process_opt
   // try to open the found directory
   DIR* dirp = opendir(directory);
   if (!dirp) {
-    fprintf(stderr, "HERE %s\n", directory);
     return;
   }
 
@@ -1327,6 +1330,11 @@ void process_filelist(srcMLTranslator& translator, process_options& poptions, in
     // Use libxml2 routines so that we can handle http:, file:, and gzipped files automagically
     URIStream uriinput(poptions.fname);
     char* line;
+    if (xmlRegisterInputCallbacks(archiveReadMatch, archiveReadOpen, archiveRead, archiveReadClose) < 0) {
+      fprintf(stderr, "%s: failed to register archive handler\n", PROGRAM_NAME);
+      exit(1);
+    }
+
     while ((line = uriinput.getline())) {
 
       // skip over whitespace
