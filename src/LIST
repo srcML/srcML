@@ -1,3 +1,23 @@
+- Two features for both xslt and xpath on srcml2src:
+
+  --register-ext NAME=XPathExpression
+  
+  XPathExpression is a string
+   
+
+  --register-ext-file FILENAME
+
+  FILENAME of XPathExpressons.
+
+  Both of these may be used multiple times, e.g.,
+
+  srcml2src --register-ext return_expr=".//src:return/src:expr"
+
+  Will need:
+
+    -Arguments
+    -Some place to store them
+
 - Tests for src:archive('filename') and other attributes in XSLT (see archive.xsl)
 
 - Split http and ftp callbacks in libxml_archive_read.cpp.  Put in
