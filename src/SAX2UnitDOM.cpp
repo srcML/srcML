@@ -68,8 +68,6 @@ void SAX2UnitDOM::startDocument(void *ctx) {
     // setup output
     pstate->buf = xmlOutputBufferCreateFilename(pstate->ofilename, NULL, 0);
 
-    // TODO:  STATIC, should be based on context
-    xmlOutputBufferWriteString(pstate->buf, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n");
     pstate->rootbuf = xmlBufferCreate();
 
     pstate->needroot = false;
@@ -102,6 +100,8 @@ void SAX2UnitDOM::startElementNsRoot(void* ctx, const xmlChar* localname, const 
   xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
 
   // store the root start element
+  // TODO:  STATIC, should be based on context
+  xmlBufferCat(pstate->rootbuf, BAD_CAST "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n");
   xmlBufferCat(pstate->rootbuf, BAD_CAST "<");
   if (prefix != NULL) {
     xmlBufferCat(pstate->rootbuf, prefix);

@@ -67,7 +67,13 @@ static void apply(xmlParserCtxtPtr ctxt) {
     // finish the end of the root unit start tag
     // this is only if in per-unit mode and this is the first result found
     // have to do so here because it may be empty
+    if (pstate->result_type == XML_ELEMENT_NODE && !pstate->isnested && !pstate->found && !isoption(pstate->options, OPTION_XSLT_ALL)) {
+      xmlOutputBufferWriteString(pstate->buf, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n");
+    }
+
     if (pstate->result_type == XML_ELEMENT_NODE && pstate->isnested && !pstate->found && !isoption(pstate->options, OPTION_XSLT_ALL)) {
+      // TODO:  STATIC, should be based on context
+      xmlOutputBufferWriteString(pstate->buf, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n");
       xmlOutputBufferWrite(pstate->buf, pstate->rootbuf->use, (const char*) pstate->rootbuf->content);
       xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(">\n\n"));
 
