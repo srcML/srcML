@@ -2506,7 +2506,7 @@ validate(open('sub/b.cpp.xml', 'r').read(), srcml)
 validate(getreturn([srcml2src, option.XSLT_FLAG + '=copy.xsl', option.PARAM_FLAG], srcml), status.STATUS_ERROR)
 validate(getreturn([srcml2src, option.XSLT_FLAG + '=copy.xsl', option.PARAM_FLAG, "NAME"], srcml), status.STATUS_ERROR)
 
-xslt = xml_declaration + """
+xslt = """
 a
 """
 
@@ -2532,7 +2532,7 @@ validate(open('sub/b.cpp.xml', 'r').read(), srcml)
 validate(getreturn([srcml2src, option.XSLT_FLAG + '=copy.xsl', option.STRING_PARAM_FLAG], srcml), status.STATUS_ERROR)
 validate(getreturn([srcml2src, option.XSLT_FLAG + '=copy.xsl', option.STRING_PARAM_FLAG, "NAME"], srcml), status.STATUS_ERROR)
 
-xslt = xml_declaration + """
+xslt = """
 a
 """
 
