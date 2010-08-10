@@ -96,7 +96,7 @@ const char* const REGISTER_EXTENSION_FLAG = "register-ext";
 const int REGISTER_EXTENSION_FLAG_CODE = 256 + 7;
 
 const char* const REGISTER_EXTENSION_FILE_FLAG = "register-ext-file";
-const int REGISTER_EXTENSION_FLAG_FILE_CODE = 256 + 8;
+const int REGISTER_EXTENSION_FILE_FLAG_CODE = 256 + 8;
 
 void libxml_error(void *ctx, const char *msg, ...) {}
 
@@ -543,6 +543,8 @@ int process_args(int argc, char* argv[], process_options & poptions)
     { INPUT_FORMAT_FLAG, required_argument, NULL, INPUT_FORMAT_FLAG_CODE },
     { OUTPUT_FORMAT_FLAG, required_argument, NULL, OUTPUT_FORMAT_FLAG_CODE },
     { LIST_FLAG, no_argument, NULL, LIST_FLAG_CODE },
+    { REGISTER_EXTENSION_FLAG, required_argument, NULL, REGISTER_EXTENSION_FLAG_CODE },
+    { REGISTER_EXTENSION_FILE_FLAG, required_argument, NULL, REGISTER_EXTENSION_FILE_FLAG_CODE },
     { XPATH_FLAG, required_argument, NULL, XPATH_FLAG_CODE },
     { XSLT_FLAG, required_argument, NULL, XSLT_FLAG_CODE },
     { PARAM_FLAG, required_argument, NULL, PARAM_FLAG_CODE },
@@ -734,6 +736,12 @@ int process_args(int argc, char* argv[], process_options & poptions)
       options |= OPTION_LIST;
       break;
 
+    case REGISTER_EXTENSION_FLAG_CODE :
+      break;
+
+    case REGISTER_EXTENSION_FILE_FLAG_CODE :
+      break;
+
     case XPATH_FLAG_CODE:
 
       // check for missing argument confused by an argument that looks like an option
@@ -901,6 +909,14 @@ int option_error_status(int optopt) {
     break;
 
   case STRING_PARAM_FLAG_CODE:
+    return STATUS_ERROR;
+    break;
+
+  case REGISTER_EXTENSION_FILE_FLAG_CODE :
+    return STATUS_ERROR;
+    break;
+
+  case REGISTER_EXTENSION_FLAG_CODE :
     return STATUS_ERROR;
     break;
 
