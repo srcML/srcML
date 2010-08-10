@@ -1,6 +1,3 @@
-- Some of the tests for XSLT have text-only output, but have xml
-  declaration in the output, e.g., Test 626
-
 - Tests for src:archive('filename') and other attributes in XSLT (see archive.xsl)
 
 - Split http and ftp callbacks in libxml_archive_read.cpp.  Put in
