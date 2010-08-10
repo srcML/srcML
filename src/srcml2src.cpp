@@ -761,8 +761,8 @@ int process_args(int argc, char* argv[], process_options & poptions)
       // registerext value
       end = optarg;
       strsep(&end, "=");
-      poptions.registerext[poptions.registerextcount] = (char*) malloc(strlen(end) + 1 + 2);
-      strcmp((char *) poptions.registerext[poptions.registerextcount], end);
+      poptions.registerext[poptions.registerextcount] = (char*) malloc(strlen(end) + 1);
+      strcpy((char *) poptions.registerext[poptions.registerextcount], end);
       poptions.registerextcount++;
       break;
 
@@ -783,8 +783,8 @@ int process_args(int argc, char* argv[], process_options & poptions)
       // registerfiles value
       end = optarg;
       strsep(&end, "=");
-      poptions.registerfiles[poptions.registerfilescount] = (char*) malloc(strlen(end) + 1 + 2);
-      strcmp((char *) poptions.registerfiles[poptions.registerfilescount], end);
+      poptions.registerfiles[poptions.registerfilescount] = (char*) malloc(strlen(end) + 1);
+      strcpy((char *) poptions.registerfiles[poptions.registerfilescount], end);
       poptions.registerfilescount++;
       break;
 
