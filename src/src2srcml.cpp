@@ -1114,7 +1114,6 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
         ++error;
 
         return;
-        // continue??
       }
 
       // so, do we have an archive?
@@ -1128,18 +1127,20 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
         shownumber = true;
       }
 
-      // output the currently processed filename
-      if (showinput && !isoption(options, OPTION_QUIET) && isArchiveFirst(context))
-	  fprintf(stderr, "Input:\t%s\n", strcmp(path, STDIN) == 0 ? "standard input" : path);
+      // output tracing information about the input file
+      if (showinput && isArchiveFirst(context) && !isoption(options, OPTION_QUIET)) {
 
-      // output compression and format (if any)
-      if (isArchiveFirst(context) && !isoption(options, OPTION_QUIET)) {
+        // output the currently processed filename
+        fprintf(stderr, "Path: %s", strcmp(path, STDIN) == 0 ? "standard input" : path);
 
+        // output compression and format (if any)
         if (isarchive)
-          fprintf(stderr, "Format:\t%s\n", archiveReadFormat(context));
+          fprintf(stderr, "\tFormat: %s", archiveReadFormat(context));
 
         if (archiveReadCompression(context) && strcmp(archiveReadCompression(context), "none"))
-          fprintf(stderr, "Compression:\t%s\n", archiveReadCompression(context));
+          fprintf(stderr, "\tCompression: %s", archiveReadCompression(context));
+
+        fprintf(stderr, "\n");
       }
 
       // figure out the resulting filename
@@ -1207,7 +1208,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
       // output the currently processed filename
       if (!isoption(options, OPTION_QUIET) && shownumber)
-        fprintf(stderr, "%d\t%s\n", count, c_filename);
+        fprintf(stderr, "%5d %s\n", count, c_filename);
 
       // translate the file
       translator.translate(path, dir,
