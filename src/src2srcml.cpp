@@ -1114,7 +1114,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       context = translator.setInput(path);
 
       // check if file is bad
-      if (archiveReadStatus(context) < 0 ) {
+      if (!context || archiveReadStatus(context) < 0 ) {
         fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
 
         ++error;
