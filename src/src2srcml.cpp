@@ -1123,9 +1123,10 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
         // continue??
       }
 
+      // so, do we have an archive?
       isarchive = isArchiveRead(context);
 
-      // once any source archive is input, then we have to assume nested
+      // once any source archive is input, then we have to assume nested not just locally
       if (isarchive) {
         options |= OPTION_NESTED;
         save_options |= OPTION_NESTED;
@@ -1134,11 +1135,11 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       // output compression and format (if any)
       if (isArchiveFirst(context) && !isoption(options, OPTION_QUIET)) {
 
-        if (archiveReadCompression(context) && strcmp(archiveReadCompression(context), "none"))
-          fprintf(stderr, "Compression:\t%s\n", archiveReadCompression(context));
-
         if (isarchive)
           fprintf(stderr, "Format:\t%s\n", archiveReadFormat(context));
+
+        if (archiveReadCompression(context) && strcmp(archiveReadCompression(context), "none"))
+          fprintf(stderr, "Compression:\t%s\n", archiveReadCompression(context));
       }
 
       // figure out the resulting filename
