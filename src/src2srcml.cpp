@@ -524,8 +524,6 @@ int main(int argc, char* argv[]) {
     // translate from standard input
     } else if (input_arg_count == 0) {
 
-      options &= ~OPTION_SKIP_DEFAULT;
-
       // translate from standard input using any directory, filename and version given on the command line
       src2srcml_file(translator, STDIN, options,
 		     poptions.given_directory,
@@ -1087,8 +1085,6 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     process_dir(translator, path, *gpoptions, count, skipped, error);
     return;
   }
-
-  options |= OPTION_SKIP_DEFAULT;
 
 #ifdef LIBARCHIVE
 
