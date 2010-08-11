@@ -1186,8 +1186,13 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       // error if can't find a language
       if (!reallanguage) {
 
-        if (!isoption(options, OPTION_QUIET))
-          fprintf(stderr, "Skipping '%s'.  No language can be determined.\n", unit_filename.c_str() ? unit_filename.c_str() : "standard input");
+        if (!isoption(options, OPTION_QUIET)) {
+          if (!shownumber)
+            fprintf(stderr, "Skipped '%s':  Unknown extension.\n", unit_filename.c_str() ? unit_filename.c_str() : "standard input");
+          else
+            fprintf(stderr, "%5s %s\tSkipped: Unknown extension.\n", "-", unit_filename.c_str() ? unit_filename.c_str() : "standard input");
+
+        }
 
         ++skipped;
 
