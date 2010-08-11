@@ -1123,8 +1123,8 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       if (isarchive) {
         options |= OPTION_NESTED;
         save_options |= OPTION_NESTED;
-        showinput = true;
-        shownumber = true;
+        //        showinput = true;
+        //        shownumber = true;
       }
 
       // output tracing information about the input file
@@ -1306,7 +1306,7 @@ void process_dir(srcMLTranslator& translator, const char* directory, process_opt
 		   poptions.given_version,
 		   poptions.language,
 		   poptions.tabsize,
-		   count, skipped, error, true, true);
+		   count, skipped, error, false, true);
   }
 
   // no need to handle subdirectories, unless recursive
