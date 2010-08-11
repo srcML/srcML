@@ -247,7 +247,7 @@ int archiveReadClose(void* context) {
 
   // read the next header.  If there isn't one, then really finish
   pcontext->status = archive_read_next_header(pcontext->a, &pcontext->ae);
-
+  pcontext->first = false;
   if (pcontext->status != ARCHIVE_OK) {
 
     archive_read_finish(pcontext->a);
