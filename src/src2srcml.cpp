@@ -158,7 +158,7 @@ void libxml_error(void *ctx, const char *msg, ...) {}
 int option_error_status(int optopt);
 
 // translate a file, maybe an archive
-void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error);
+void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool showinput = false, bool shownumber = false);
 
 using namespace LanguageName;
 
@@ -532,7 +532,7 @@ int main(int argc, char* argv[]) {
 		     poptions.given_filename,
 		     poptions.given_version,
 		     poptions.language,
-		     poptions.tabsize, count, skipped, error);
+		     poptions.tabsize, count, skipped, error, false, false);
 
     // translate filenames from the command line
     } else {
@@ -541,10 +541,6 @@ int main(int argc, char* argv[]) {
       // from the full path
       for (int i = input_arg_start; i <= input_arg_end; ++i) {
 	
-	// output the currently processed filename
-	if (!isoption(options, OPTION_QUIET) && input_arg_count > 1)
-	  fprintf(stderr, "Input:\t%s\n", strcmp(argv[i], STDIN) == 0 ? "" : argv[i]);
-
 	// process this command line argument
 	src2srcml_file(translator, argv[i], options,
 		       input_arg_count == 1 ? poptions.given_directory : 0,
@@ -552,7 +548,9 @@ int main(int argc, char* argv[]) {
 		       input_arg_count == 1 ? poptions.given_version : 0,
 		       poptions.language,
 		       poptions.tabsize,
-		       count, skipped, error);
+		       count, skipped, error, !isoption(options, OPTION_QUIET) && input_arg_count > 1,
+                       !isoption(options, OPTION_QUIET) && input_arg_count > 1
+                       );
       }
     }
 
@@ -1080,7 +1078,7 @@ void register_standard_file_extensions()
 
 }
 
-void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error) {
+void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool showinput, bool shownumber) {
 
   // handle local directories specially
   struct stat instat;
@@ -1130,7 +1128,13 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       if (isarchive) {
         options |= OPTION_NESTED;
         save_options |= OPTION_NESTED;
+        showinput = true;
+        shownumber = true;
       }
+
+      // output the currently processed filename
+      if (showinput && !isoption(options, OPTION_QUIET) && isArchiveFirst(context))
+	  fprintf(stderr, "Input:\t%s\n", strcmp(path, STDIN) == 0 ? "standard input" : path);
 
       // output compression and format (if any)
       if (isArchiveFirst(context) && !isoption(options, OPTION_QUIET)) {
@@ -1206,7 +1210,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       const char* c_filename = clean_filename(unit_filename.c_str());
 
       // output the currently processed filename
-      if (!isoption(options, OPTION_QUIET))
+      if (!isoption(options, OPTION_QUIET) && shownumber)
         fprintf(stderr, "%d\t%s\n", count, c_filename);
 
       // translate the file
@@ -1295,7 +1299,7 @@ void process_dir(srcMLTranslator& translator, const char* directory, process_opt
 		   poptions.given_version,
 		   poptions.language,
 		   poptions.tabsize,
-		   count, skipped, error);
+		   count, skipped, error, true, true);
   }
 
   // no need to handle subdirectories, unless recursive
@@ -1346,10 +1350,6 @@ void process_filelist(srcMLTranslator& translator, process_options& poptions, in
       if (line[0] == '\0' || line[0] == '\n' || line[0] == FILELIST_COMMENT)
         continue;
 
-      // in verbose mode output the currently processed filename
-      if (isoption(options, OPTION_VERBOSE))
-        fprintf(stderr, "Input:\t%s\n", strcmp(line, STDIN) == 0 ? "" : line);
-
       // translate the file listed in the input file using the directory and filename extracted from the path
       src2srcml_file(translator,
                      line,
@@ -1359,7 +1359,7 @@ void process_filelist(srcMLTranslator& translator, process_options& poptions, in
                      poptions.given_version,
                      poptions.language,
                      poptions.tabsize,
-                     count, skipped, error);
+                     count, skipped, error, true, true);
     }
 
   } catch (URIStreamFileError) {
