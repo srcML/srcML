@@ -561,9 +561,9 @@ int main(int argc, char* argv[]) {
 
     else if (isoption(options, OPTION_NESTED) && !isoption(options, OPTION_QUIET)) {
 	fprintf(stderr, "\n"
-		"Translated: %d\n"
-		"Skipped: %d\n"
-		"Error: %d\n"
+		"Translated: %d\t"
+		"Skipped: %d\t"
+		"Error: %d\t"
 		"Total: %d\n", count, skipped, error, count + skipped + error);
       }
 
