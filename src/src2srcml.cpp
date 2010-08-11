@@ -1217,10 +1217,20 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
     } catch (FileError) {
 
+      // output tracing information about the input file
+      if (showinput && !isoption(options, OPTION_QUIET)) {
+
+        // output the currently processed filename
+        fprintf(stderr, "Path: %s", strcmp(path, STDIN) == 0 ? "standard input" : path);
+        fprintf(stderr, "\tError: Unable to open file.\n");
+
+      } else {
+
       if (dir)
 	fprintf(stderr, "%s: Unable to open file %s/%s\n", PROGRAM_NAME, dir, unit_filename.c_str());
       else
 	fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, unit_filename.c_str());
+      }
 
       ++error;
 
