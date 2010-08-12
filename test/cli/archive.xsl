@@ -16,7 +16,11 @@
 
 <xsl:output method="text"/>
 
-<xsl:template match="/"><xsl:copy-of select="src:archive('filename')"/><xsl:text>
-</xsl:text></xsl:template>
+<xsl:template match="/">
+<xsl:copy-of select="src:archive('filename')"/><xsl:text>
+</xsl:text>
+<xsl:copy-of select="src:archive('language')"/><xsl:text>
+</xsl:text>
+</xsl:template>
 
 </xsl:stylesheet>
