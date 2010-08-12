@@ -28,14 +28,14 @@ bool archiveIsDir(void* context) {
 
   archiveData* pcontext = (archiveData*) context;
 
-  return pcontext->ae && archive_entry_filetype(pcontext->ae) == AE_IFDIR;
+  return gpcontext && pcontext->ae && archive_entry_filetype(pcontext->ae) == AE_IFDIR;
 }
 
 bool isArchiveFirst(void* context) {
 
   archiveData* pcontext = (archiveData*) context;
 
-  return pcontext->first;
+  return gpcontext && pcontext && pcontext->first;
 }
 
 bool isAnythingOpen(void* context) {
@@ -48,7 +48,7 @@ bool isArchiveRead(void* context) {
 
   archiveData* pcontext = (archiveData*) context;
 
-  bool status = pcontext->a && pcontext->status == ARCHIVE_OK
+  bool status = gpcontext && pcontext && pcontext->a && pcontext->status == ARCHIVE_OK
 #if ARCHIVE_VERSION_STAMP >= 2008000
     && (archive_format(pcontext->a) != ARCHIVE_FORMAT_RAW
 #else
@@ -63,14 +63,14 @@ bool isArchiveRead(void* context) {
 const char* archiveReadFormat(void* context) {
   archiveData* pcontext = (archiveData*) context;
 
-  return !pcontext->a ? 0 : archive_format_name(pcontext->a);
+  return !gpcontext || !pcontext->a ? 0 : archive_format_name(pcontext->a);
 }
 
 // compression (e.g., gz, bzip2) of the current file
 const char* archiveReadCompression(void* context) {
   archiveData* pcontext = (archiveData*) context;
 
-  return !pcontext->a ? 0 : archive_compression_name(pcontext->a);
+  return !gpcontext || !pcontext->a ? 0 : archive_compression_name(pcontext->a);
 }
 
 // check if archive matches the protocol on the URI
@@ -96,7 +96,7 @@ int archiveReadMatch(const char* URI) {
     return 0;
 
   if ((URI[0] == '-' && URI[1] == '\0') || (strcmp(URI, "/dev/stdin") == 0))
-    return 1;
+    return 0;
 
   for(const char** pos = ARCHIVE_FILTER_EXTENSIONS;*pos != 0; ++pos )
     {
@@ -123,6 +123,9 @@ int archiveReadStatus(void* context) {
 const char* archiveReadFilename(void* context) {
 
   archiveData* pcontext = (archiveData*) context;
+
+  if (!gpcontext)
+    return 0;
 
   if (!pcontext->ae || (archiveReadStatus(context) != ARCHIVE_OK && archiveReadStatus(context) != ARCHIVE_EOF))
     return 0;
