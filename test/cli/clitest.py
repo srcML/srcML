@@ -2612,11 +2612,7 @@ srcml = xml_declaration + """
 </unit>
 """
 
-xslt = """a.cpp
-C++
-b.cpp
-Java
-"""
+xslt = ""
 
 file = open('sub/a.cpp.xml', 'w')
 file.write(srcml)
