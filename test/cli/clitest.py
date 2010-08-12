@@ -2596,7 +2596,7 @@ validate(open('sub/b.cpp.xml', 'r').read(), xslt)
 validate(getreturn([srcml2src, option.XSLT_FLAG], srcml), status.STATUS_ERROR)
 validate(getreturn([srcml2src, option.XSLT_FLAG + '='], srcml), status.STATUS_ERROR)
 
-# single file test
+# archive test
 
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src">
