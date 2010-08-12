@@ -2570,6 +2570,8 @@ validate(open('sub/b.cpp.xml', 'r').read(), xslt)
 validate(getreturn([srcml2src, option.XSLT_FLAG], srcml), status.STATUS_ERROR)
 validate(getreturn([srcml2src, option.XSLT_FLAG + '='], srcml), status.STATUS_ERROR)
 
+# single file test
+
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" filename="a.cpp" language="C++">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
@@ -2578,6 +2580,42 @@ srcml = xml_declaration + """
 
 xslt = """a.cpp
 C++
+"""
+
+file = open('sub/a.cpp.xml', 'w')
+file.write(srcml)
+file.close()
+
+check([srcml2src, option.XSLT_FLAG + '=archive.xsl'], srcml, xslt)
+check([srcml2src, option.XSLT_FLAG + '=archive.xsl', 'sub/a.cpp.xml'], "", xslt)
+check([srcml2src, option.XSLT_FLAG + '=archive.xsl', '-o', 'sub/b.cpp.xml'], srcml, "")
+validate(open('sub/b.cpp.xml', 'r').read(), xslt)
+check([srcml2src, option.XSLT_FLAG + '=archive.xsl', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
+validate(open('sub/b.cpp.xml', 'r').read(), xslt)
+
+validate(getreturn([srcml2src, option.XSLT_FLAG], srcml), status.STATUS_ERROR)
+validate(getreturn([srcml2src, option.XSLT_FLAG + '='], srcml), status.STATUS_ERROR)
+
+# single file test
+
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" filename="a.cpp" language="C++">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" filename="a.cpp" language="C++">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit filename="b.cpp" language="Java">
+<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+"""
+
+xslt = """a.cpp
+C++
+b.cpp
+Java
 """
 
 file = open('sub/a.cpp.xml', 'w')
