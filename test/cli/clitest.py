@@ -2599,7 +2599,7 @@ validate(getreturn([srcml2src, option.XSLT_FLAG + '='], srcml), status.STATUS_ER
 # single file test
 
 srcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" filename="a.cpp" language="C++">
+<unit xmlns="http://www.sdml.info/srcML/src">
 
 <unit xmlns:cpp="http://www.sdml.info/srcML/cpp" filename="a.cpp" language="C++">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
