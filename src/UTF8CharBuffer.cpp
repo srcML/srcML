@@ -31,19 +31,13 @@ int UTF8CharBuffer::getChar() {
   // need to refill the buffer
   if (size == 0 || pos >= size) {
 
-    // previous fill found eof
-    if (eof)
-      return -1;
-
     // refill the buffer
     input->buffer->use = 0;
     size = xmlParserInputBufferGrow(input, SRCBUFSIZE);
 	
     // found problem or eof
-    if (size == -1 || size == 0) {
-      eof = true;
+    if (size == -1 || size == 0)
       return -1;
-    }
 
     // shorthand for content buffer
     content = input->buffer->content;
