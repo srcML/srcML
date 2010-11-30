@@ -137,27 +137,6 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term><option>&XMLNS_FLAG;=<replaceable class="parameter">URI</replaceable></option></term>
-      <listitem>
-	<para>
-	  Sets the URI for the default namespace.  Default is
-	  <option>&XMLNS_FLAG;="&SRCML_SRC_NS_URI;"</option>.
-	</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term><option>&XMLNS_FLAG;:<replaceable class="parameter">PREFIX</replaceable>=<replaceable class="parameter">URI</replaceable></option></term>
-      <listitem>
-	<para>
-	  Sets the namespace prefix PREFIX for the namespace URI.
-	  Defaults are
-	  <option>&XMLNS_FLAG;:&SRCML_CPP_NS_PREFIX_DEFAULT;="&SRCML_CPP_NS_URI;"</option>,
-	  and
-	  <option>&XMLNS_FLAG;:&SRCML_ERR_NS_PREFIX_DEFAULT;="&SRCML_ERR_NS_URI;"</option>.
-	</para>
-      </listitem>
-    </varlistentry>
-    <varlistentry>
       <term><option>&NO_XML_DECLARATION_FLAG;</option></term>
       <listitem>
 	<para>
@@ -379,6 +358,61 @@
       </listitem>
     </varlistentry>
   </variablelist>
+</refsect1>
+<refsect1>
+  <title>URI AND PREFIX</title>
+  <para>
+    There is a set of standard URIs for the elements in srcML, each
+    with a predefined prefix.  The predefined URIs and prefixes for
+    them include (given in xmlns notation):
+  </para>
+
+  <informaltable frame='none' align="center" width="5in">
+    <tgroup cols='2'>
+      <colspec colwidth='0.5in'/>
+      <colspec colwidth='3in'/>
+      <tbody>
+	<row><entry>PREFIX</entry><entry>URI</entry></row>
+    <row><entry></entry><entry>&SRCML_SRC_NS_URI;</entry></row>
+    <row><entry>&SRCML_CPP_NS_PREFIX_DEFAULT;</entry><entry>&SRCML_CPP_NS_URI;</entry></row>
+    <row><entry>&SRCML_ERR_NS_PREFIX_DEFAULT;</entry><entry>&SRCML_ERR_NS_URI;</entry></row>
+    <row><entry>&SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT;</entry><entry>&SRCML_EXT_LITERAL_NS_URI;</entry></row>
+    <row><entry>&SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT;</entry><entry>&SRCML_EXT_OPERATOR_NS_URI;</entry></row>
+    <row><entry>&SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT;</entry><entry>&SRCML_EXT_MODIFIER_NS_URI;</entry></row>
+    <row><entry>&SRCML_EXT_POSITION_NS_PREFIX_DEFAULT;</entry><entry>&SRCML_EXT_POSITION_NS_URI;</entry></row>
+      </tbody>
+    </tgroup>
+  </informaltable>
+
+  <para>
+    The following options can be used to change the prefixes.
+  </para>
+
+  <variablelist>
+    <varlistentry>
+      <term><option>&XMLNS_FLAG;=<replaceable class="parameter">URI</replaceable></option></term>
+      <listitem>
+	<para>
+	  Sets the URI for the default namespace.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><option>&XMLNS_FLAG;:<replaceable class="parameter">PREFIX</replaceable>=<replaceable class="parameter">URI</replaceable></option></term>
+      <listitem>
+	<para>
+	  Sets the namespace prefix PREFIX for the namespace URI.
+	</para>
+      </listitem>
+    </varlistentry>
+  </variablelist>
+
+  <para>
+    These options are an alternative way to turn on options by
+    declaring the URI for an option.  See the MARKUP EXTENSIONS for
+    examples.
+  </para>
+
 </refsect1>
 <refsect1>
   <title>CPP MARKUP OPTIONS</title>

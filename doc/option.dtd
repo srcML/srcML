@@ -1,4 +1,4 @@
-<!ENTITY DATE "Thu Jul  8 11:22:26 EDT 2010-e " >
+<!ENTITY DATE "Mon Jul 12 09:23:49 EDT 2010-e " >
 <!ENTITY DEBUG_FLAG "--debug">
 <!ENTITY DEBUG_FLAG_SHORT '-g'>
 <!ENTITY LITERAL_FLAG "--literal">
@@ -18,6 +18,7 @@
 <!ENTITY DEFAULT_XML_ENCODING "--UTF-8">
 <!ENTITY FILELIST_FLAG "--files-from">
 <!ENTITY XMLNS_FLAG "--xmlns">
+<!ENTITY REGISTER_EXT_FLAG "--register">
 <!ENTITY EXPAND_FLAG "--extract-all">
 <!ENTITY EXPAND_FLAG_SHORT '-a'>
 <!ENTITY UNIT_FLAG "--unit">
@@ -32,8 +33,8 @@
 <!ENTITY NAMESPACE_FLAG_SHORT '-p'>
 <!ENTITY XPATH_FLAG "--xpath">
 <!ENTITY XSLT_FLAG "--xslt">
-<!ENTITY PARAM_FLAG "--param">
-<!ENTITY STRING_PARAM_FLAG "--stringparam">
+<!ENTITY PARAM_FLAG "--xpathparam">
+<!ENTITY STRING_PARAM_FLAG "--param">
 <!ENTITY XSLT_ALL_FLAG "--apply-root">
 <!ENTITY RELAXNG_FLAG "--relaxng">
 <!ENTITY CONTEXT_FLAG "--context">
