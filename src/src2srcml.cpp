@@ -644,7 +644,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
     // missing or extra option argument
     if (c == '?') {
-      fprintf(stderr, "Try '%s %s' for more information.\n", argv[0], HELP_FLAG);
+      fprintf(stderr, "Try '%s --%s' for more information.\n", argv[0], HELP_FLAG);
       exit(option_error_status(optopt));
     }
 
