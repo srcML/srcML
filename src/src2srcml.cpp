@@ -24,7 +24,6 @@
 
 #include <cstring>
 #include <sys/stat.h>
-#include "version.h"
 #include "srcmlapps.h"
 #include "srcmlns.h"
 #include "Options.h"

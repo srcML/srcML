@@ -25,7 +25,6 @@
 #include <cstdio>
 #include <cstring>
 #include <sys/stat.h>
-#include "version.h"
 #include "srcmlapps.h"
 #include "project.h"
 #include "srcMLUtility.h"
