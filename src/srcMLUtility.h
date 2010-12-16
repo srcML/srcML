@@ -25,10 +25,10 @@
 #ifndef SRCMLUTILITY_H
 #define SRCMLUTILITY_H
 
-#include "Language.h"
-#include "Options.h"
+#include "Language.hpp"
+#include "Options.hpp"
 
-#include "SAX2Utilities.h"
+#include "SAX2Utilities.hpp"
 
 class LibXMLError;
 class TerminateLibXMLError;

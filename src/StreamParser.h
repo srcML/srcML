@@ -38,7 +38,7 @@
 #define INCLUDED_STREAM_PARSER_H
 
 #include <antlr/TokenStream.hpp>
-#include "TokenStream.h"
+#include "TokenStream.hpp"
 
 #include <list>
 #include <cassert>

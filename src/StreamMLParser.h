@@ -26,9 +26,9 @@
 #ifndef INCLUDED_STREAM_MLPARSER_H
 #define INCLUDED_STREAM_MLPARSER_H
 
-#include "StreamParser.h"
+#include "StreamParser.hpp"
 
-#include "srcMLToken.h"
+#include "srcMLToken.hpp"
 
 template <typename Base>
 class StreamMLParser : public StreamParser<Base> {

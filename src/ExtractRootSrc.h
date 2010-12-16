@@ -25,7 +25,7 @@
 #ifndef INCLUDED_EXTRACTUNITSSRC_H
 #define INCLUDED_EXTRACTUNITSSRC_H
 
-#include "ExtractUnitsSrc.h"
+#include "ExtractUnitsSrc.hpp"
 
 #ifdef __GNUC__
 #define EOL "\n"

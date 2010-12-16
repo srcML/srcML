@@ -29,10 +29,10 @@
 #include "antlr/Token.hpp"
 #include "srcMLParserTokenTypes.hpp"
 #include <antlr/TokenStream.hpp>
-#include "StreamParser.h"
-#include "TokenStream.h"
-#include "Options.h"
-#include "srcMLException.h"
+#include "StreamParser.hpp"
+#include "TokenStream.hpp"
+#include "Options.hpp"
+#include "srcMLException.hpp"
 
 #include <libxml/xmlwriter.h>
 

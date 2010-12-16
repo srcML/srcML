@@ -23,11 +23,11 @@
 #ifndef SRCMLSTATESTACK_H
 #define SRCMLSTATESTACK_H
 
-#include "srcMLState.h"
-#include "StateStack.h"
-#include "State.h"
-#include "srcMLState.h"
-#include "TokenParser.h"
+#include "srcMLState.hpp"
+#include "StateStack.hpp"
+#include "State.hpp"
+#include "srcMLState.hpp"
+#include "TokenParser.hpp"
 
 typedef StateStack<srcMLState> srcMLStateStack;
 

@@ -28,11 +28,11 @@
 #ifndef INCLUDED_SAX2PROPERTIES_H
 #define INCLUDED_SAX2PROPERTIES_H
 
-#include "SAX2Utilities.h"
-#include "SAX2CountUnits.h"
+#include "SAX2Utilities.hpp"
+#include "SAX2CountUnits.hpp"
 #include <libxml/parser.h>
 #include <libxml/xmlwriter.h>
-#include "srcMLUtility.h"
+#include "srcMLUtility.hpp"
 
 class SAX2Properties : public SAX2CountUnits {
  public:

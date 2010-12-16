@@ -25,8 +25,8 @@
 #ifndef INCLUDED_EXTRACTUNITSSRC_H
 #define INCLUDED_EXTRACTUNITSSRC_H
 
-#include "SAX2ExtractUnitsSrc.h"
-#include "ProcessUnit.h"
+#include "SAX2ExtractUnitsSrc.hpp"
+#include "ProcessUnit.hpp"
 
 #ifdef __GNUC__
 #define EOL "\n"

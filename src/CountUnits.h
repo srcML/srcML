@@ -25,8 +25,8 @@
 #ifndef INCLUDED_COUNTUNITS_H
 #define INCLUDED_COUNTUNITS_H
 
-#include "SAX2ExtractUnitsSrc.h"
-#include "ProcessUnit.h"
+#include "SAX2ExtractUnitsSrc.hpp"
+#include "ProcessUnit.hpp"
 
 class CountUnits : public ProcessUnit {
  public :

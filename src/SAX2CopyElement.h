@@ -28,8 +28,8 @@
 #ifndef INCLUDED_SAX2COPYELEMENT_H
 #define INCLUDED_SAX2COPYELEMENT_H
 
-#include "SAX2Utilities.h"
-#include "SAX2TextWriter.h"
+#include "SAX2Utilities.hpp"
+#include "SAX2TextWriter.hpp"
 #include <libxml/parser.h>
 #include <libxml/xmlwriter.h>
 

@@ -2,7 +2,7 @@
 #define INCLUDED_SRCEXFUN_H
 
 #include <libxml/xpath.h>
-#include "SAX2Utilities.h"
+#include "SAX2Utilities.hpp"
 
 void setPosition(int n);
 

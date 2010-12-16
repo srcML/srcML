@@ -30,7 +30,7 @@
 
 #include <libxml/parser.h>
 #include <libxml/xmlwriter.h>
-#include "Options.h"
+#include "Options.hpp"
 
 class SAX2CountUnits {
  public:

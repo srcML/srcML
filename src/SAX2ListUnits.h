@@ -26,7 +26,7 @@
 #define INCLUDED_SAX2LISTUNITS
 
 #include <libxml/parser.h>
-#include "srcMLUtility.h"
+#include "srcMLUtility.hpp"
 
 namespace SAX2ListUnits {
 

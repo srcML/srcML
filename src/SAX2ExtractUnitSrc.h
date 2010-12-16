@@ -26,7 +26,7 @@
 #define INCLUDED_SAX2EXTRACTUNITSRC
 
 #include <libxml/parser.h>
-#include "Options.h"
+#include "Options.hpp"
 
 namespace SAX2ExtractUnitSrc {
 

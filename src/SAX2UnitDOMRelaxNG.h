@@ -30,7 +30,7 @@
 
 #include <libxml/relaxng.h>
 
-#include "SAX2UnitDOM.h"
+#include "SAX2UnitDOM.hpp"
 
 class SAX2UnitDOMRelaxNG : public SAX2UnitDOM {
  public:

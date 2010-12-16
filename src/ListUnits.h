@@ -25,7 +25,7 @@
 #ifndef INCLUDED_LISTUNITSSRC_H
 #define INCLUDED_LISTUNITSSRC_H
 
-#include "ProcessUnit.h"
+#include "ProcessUnit.hpp"
 
 class ListUnits : public ProcessUnit {
  public :

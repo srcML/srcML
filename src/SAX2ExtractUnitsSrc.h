@@ -26,8 +26,8 @@
 #define INCLUDED_SAX2EXTRACTUNITSSRC
 
 #include <libxml/parser.h>
-#include "srcMLUtility.h"
-#include "ProcessUnit.h"
+#include "srcMLUtility.hpp"
+#include "ProcessUnit.hpp"
 
 struct Element {
   const xmlChar* localname;

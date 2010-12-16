@@ -23,7 +23,7 @@
 #ifndef LANGUAGE_H
 #define LANGUAGE_H
 
-#include "srcmlapps.h"
+#include "srcmlapps.hpp"
 #include <fnmatch.h>
 #include <cstdio>
 #include <cstring>

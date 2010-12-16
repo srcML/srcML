@@ -28,7 +28,7 @@
 #ifndef INCLUDED_SAX2UNITDOMXPATH_H
 #define INCLUDED_SAX2UNITDOMXPATH_H
 
-#include "SAX2UnitDOM.h"
+#include "SAX2UnitDOM.hpp"
 
 #include <libxml/parser.h>
 #include <libxml/xpath.h>

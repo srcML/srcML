@@ -25,9 +25,9 @@
 #ifndef MODE_H
 #define MODE_H
 
-#include "TokenParser.h"
-#include "Language.h"
-#include "srcMLStateStack.h"
+#include "TokenParser.hpp"
+#include "Language.hpp"
+#include "srcMLStateStack.hpp"
 
 class Mode : public TokenParser, public Language {
 

@@ -25,7 +25,7 @@
 #ifndef INCLUDED_SRCMLTOKEN_H
 #define INCLUDED_SRCMLTOKEN_H
 
-#include "project.h"
+#include "project.hpp"
 
 #include <antlr/Token.hpp>
 #include <antlr/TokenRefCount.hpp>

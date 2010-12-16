@@ -25,11 +25,11 @@
 
 #include <list>
 #include <stack>
-#include "TokenParser.h"
-#include "srcMLException.h"
+#include "TokenParser.hpp"
+#include "srcMLException.hpp"
 
-#include "State.h"
-#include "Stack.h"
+#include "State.hpp"
+#include "Stack.hpp"
 
 const int MAXSIZE = 500;
 

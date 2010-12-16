@@ -23,9 +23,9 @@
 #ifndef SEGEXCEPTION_H
 #define SEGEXCEPTION_H
 
-#include "project.h"
+#include "project.hpp"
 
-#include "srcMLException.h"
+#include "srcMLException.hpp"
 
 extern "C" void handle_segmentation(int) throw (Segmentation_Fault);
 

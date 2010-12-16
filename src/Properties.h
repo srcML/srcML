@@ -27,8 +27,8 @@
 
 void output_info(srcMLUtility& su, int options, int optioncount, int optionorder[]);
 
-#include "ProcessUnit.h"
-#include "srcmlapps.h"
+#include "ProcessUnit.hpp"
+#include "srcmlapps.hpp"
 
 class Properties : public CountUnits {
  public :

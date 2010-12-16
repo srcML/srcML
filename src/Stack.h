@@ -22,7 +22,7 @@
   A simple stack, mainly done for performance reasons.
 */
 
-#include "srcMLException.h"
+#include "srcMLException.hpp"
 
 #ifndef STACK_H
 #define STACK_H

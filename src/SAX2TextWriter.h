@@ -28,10 +28,10 @@
 #ifndef INCLUDED_SAX2TEXTWRITER_H
 #define INCLUDED_SAX2TEXTWRITER_H
 
-#include "SAX2Utilities.h"
+#include "SAX2Utilities.hpp"
 #include <libxml/parser.h>
 #include <libxml/xmlwriter.h>
-#include "Options.h"
+#include "Options.hpp"
 
 class SAX2TextWriter {
 

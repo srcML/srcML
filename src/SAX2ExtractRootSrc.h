@@ -26,9 +26,9 @@
 #define INCLUDED_SAX2EXTRACTROOTSRC
 
 #include <libxml/parser.h>
-#include "srcMLUtility.h"
+#include "srcMLUtility.hpp"
 
-#include "SAX2ExtractUnitsSrc.h"
+#include "SAX2ExtractUnitsSrc.hpp"
 
 namespace SAX2ExtractRootSrc {
 

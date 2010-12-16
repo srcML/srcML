@@ -24,9 +24,9 @@
 #define STATE_H
 
 #include <list>
-#include "Stack.h"
+#include "Stack.hpp"
 
-#include "srcMLException.h"
+#include "srcMLException.hpp"
 
 class State {
  public:

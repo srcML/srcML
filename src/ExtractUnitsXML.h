@@ -25,7 +25,7 @@
 #ifndef INCLUDED_EXTRACTUNITSXML_H
 #define INCLUDED_EXTRACTUNITSXML_H
 
-#include "ProcessUnit.h"
+#include "ProcessUnit.hpp"
 #include <libxml/xmlwriter.h>
 #include <libxml/parser.h>
 #include <libxml/parserInternals.h>
