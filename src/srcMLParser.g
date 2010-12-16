@@ -2422,6 +2422,8 @@ java_specifier_mark { LocalMode lm; } :
 
             // start the function specifier
             startElement(SFUNCTION_SPECIFIER);
+
+            std::cerr << "HERE" << std::endl;
         }
         (PUBLIC | PRIVATE | PROTECTED | FINAL | STATIC | ABSTRACT)
 ;

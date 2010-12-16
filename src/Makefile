@@ -335,6 +335,11 @@ cleanantlr :
 version.cpp : VERSION
 	$(ECHO) 'const char* version() { const char* Version = "$(shell cat VERSION)"; return Version; }'   > $@
 
+srcmlapps.h : version.h
+
+version.h : VERSION
+	$(ECHO) '#define VERSION "$(shell cat VERSION)"'   > $@
+
 # update trunk version
 PHONY : trunkversion
 trunkversion :
