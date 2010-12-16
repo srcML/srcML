@@ -142,7 +142,7 @@ GENERATED_GRAMMARS = $(patsubst %.g, expanded%.g, $(CREATED_GRAMMARS))
 
 # source code to srcML translator program
 ${EXE_DIR}src2srcml : ${OBJ_DIR}src2srcml.o ${OBJ_DIR}srcmlapps.o
-	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) ${XML_LIB_SRC2SRCML} ${XML_IO_LIB_SRC2SRCML} -L../bin -lsrcml -o $@
+	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) ${XML_LIB_SRC2SRCML} ${XML_IO_LIB_SRC2SRCML} -L${EXE_DIR} -lsrcml -o $@
 
 ${EXE_DIR}libsrcml.so : ${OBJ_DIR}srcMLParserClean.o ${OBJ_DIR}KeywordCPPLexerClean.o ${OBJ_DIR}srcMLTranslator.o ${OBJ_DIR}srcMLOutput.o ${OBJ_DIR}Mode.o ${OBJ_DIR}UTF8CharBuffer.o ${OBJ_DIR}PureCommentLexerClean.o ${OBJ_DIR}Language.o ${OBJ_DIR}URIStream.o ${IO_LIB_SRC2SRCML}
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) -shared -fPIC $^ $(LDFLAGS) ${XML_LIB_SRC2SRCML} ${XML_IO_LIB_SRC2SRCML} -o $@
