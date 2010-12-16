@@ -4,7 +4,7 @@
 # Uncomment to generate a static build
 #STATIC
 
-VERSION="$(shell cat VERSION)"
+VERSION="\"$(shell cat VERSION)\""
 
 # detect OS
 OSUPPER = $(shell uname -s 2>/dev/null | tr [:lower:] [:upper:])
