@@ -27,8 +27,6 @@
 
 #include "version.h"
 
-const char* const VERSION = version();
-
 const char* const COPYRIGHT = "Copyright (C) 2010 SDML";
 
 const char* const EMAIL_ADDRESS = "srcml@sdml.info";
