@@ -1,5 +1,5 @@
 /*
-  SAX2CopyElement.h
+  SAX2CopyElement.hpp
 
   Copyright (C) 2008 SDML (www.sdml.info)
 

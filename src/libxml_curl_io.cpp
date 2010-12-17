@@ -1,4 +1,4 @@
-#include "libxml_curl_io.h"
+#include "libxml_curl_io.hpp"
 #include <stdio.h>
 #include <string.h>
 #include <libxml/parser.h>

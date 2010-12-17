@@ -6,10 +6,10 @@
   Usage:  xpathproc xpath-expression xml-file
 */
 
-#include "srcpatheval.h"
-#include "srceval.h"
-#include "srcexfun.h"
-#include "srcmlns.h"
+#include "srcpatheval.hpp"
+#include "srceval.hpp"
+#include "srcexfun.hpp"
+#include "srcmlns.hpp"
 
 #include <cstring>
 

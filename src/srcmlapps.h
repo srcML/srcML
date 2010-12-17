@@ -1,5 +1,5 @@
 /*
-  srcmlapps.h
+  srcmlapps.hpp
 
   Copyright (C) 2004, 2005  SDML (www.sdml.info)
 

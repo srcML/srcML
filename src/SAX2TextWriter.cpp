@@ -31,9 +31,9 @@
 #include <libxml/parserInternals.h>
 #include <iostream>
 
-#include "SAX2TextWriter.h"
-#include "SAX2Utilities.h"
-#include "Options.h"
+#include "SAX2TextWriter.hpp"
+#include "SAX2Utilities.hpp"
+#include "Options.hpp"
 
 SAX2TextWriter::SAX2TextWriter(const char* ofilename, OPTION_TYPE& options, int unit):
   unit(unit), options(options), filename(ofilename) {

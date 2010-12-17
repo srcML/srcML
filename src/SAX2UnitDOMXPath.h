@@ -1,5 +1,5 @@
 /*
-  SAX2UnitDOMXPath.h
+  SAX2UnitDOMXPath.hpp
 
   Copyright (C) 2010 SDML (www.sdml.info)
 

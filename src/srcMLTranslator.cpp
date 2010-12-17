@@ -22,12 +22,12 @@
   Class for straightforward translation from source code to srcML
 */
 
-#include "srcMLTranslator.h"
+#include "srcMLTranslator.hpp"
 #include "KeywordCPPLexer.hpp"
 #include "srcMLParser.hpp"
-#include "StreamMLParser.h"
-#include "srcMLOutput.h"
-#include "srcmlns.h"
+#include "StreamMLParser.hpp"
+#include "srcMLOutput.hpp"
+#include "srcmlns.hpp"
 
 // constructor
 srcMLTranslator::srcMLTranslator(int language,                // programming language of source code

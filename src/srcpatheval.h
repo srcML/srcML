@@ -1,5 +1,5 @@
 /*
-  srcpatheval.h
+  srcpatheval.hpp
 
   XPath expression evaluator on compound srcML documents
 */

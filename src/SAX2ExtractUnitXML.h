@@ -1,5 +1,5 @@
 /*
-  SAX2ExtractUnitXML.h
+  SAX2ExtractUnitXML.hpp
 
   Copyright (C) 2008 SDML (www.sdml.info)
 

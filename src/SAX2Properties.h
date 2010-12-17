@@ -1,5 +1,5 @@
 /*
-  SAX2Properties.h
+  SAX2Properties.hpp
 
   Copyright (C) 2008 SDML (www.sdml.info)
 

@@ -1,5 +1,5 @@
 /*
-  project.h
+  project.hpp
 
   Copyright (C) 2005  SDML (www.sdml.info)
 

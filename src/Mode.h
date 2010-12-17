@@ -1,5 +1,5 @@
 /*
-  Mode.h
+  Mode.hpp
 
   Copyright (C) 2002-2006  SDML (www.sdml.info)
 

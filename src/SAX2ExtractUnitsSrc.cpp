@@ -22,11 +22,11 @@
 
 */
 
-#include "SAX2ExtractUnitsSrc.h"
-#include "srcmlns.h"
-#include "srcmlapps.h"
-#include "ProcessUnit.h"
-#include "ExtractUnitsSrc.h"
+#include "SAX2ExtractUnitsSrc.hpp"
+#include "srcmlns.hpp"
+#include "srcmlapps.hpp"
+#include "ProcessUnit.hpp"
+#include "ExtractUnitsSrc.hpp"
 
 xmlSAXHandler SAX2ExtractUnitsSrc::factory() {
 

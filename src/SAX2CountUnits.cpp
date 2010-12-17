@@ -22,15 +22,15 @@
 
 */
 
-#include "SAX2CountUnits.h"
-#include "SAX2Utilities.h"
-#include "srcmlns.h"
+#include "SAX2CountUnits.hpp"
+#include "SAX2Utilities.hpp"
+#include "srcmlns.hpp"
 
 #include <iostream>
 #include <iomanip>
 #include <cstring>
 #include <cmath>
-#include "Options.h"
+#include "Options.hpp"
 
 static const int fieldwidth = 5;
 

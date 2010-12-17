@@ -1,5 +1,5 @@
 /*
-  srcMLToken.h
+  srcMLToken.hpp
 
   Copyright (C) 2004-2006  SDML (www.sdml.info)
 

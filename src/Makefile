@@ -44,8 +44,8 @@ XML_IO_LIB_SRCML2SRC_DEFINE=-DLIBARCHIVE
 XML_IO_LIB_SRC2SRCML=-larchive
 XML_IO_LIB_SRCML2SRC=-larchive
 IO_LIB_SRC2SRCML=${OBJ_DIR}libxml_archive_read.o ${OBJ_DIR}libxml_archive_write.o
-IO_LIB_SRC2SRCML_DEPENDS=libxml_archive_read.h libxml_archive_write.h
-IO_LIB_SRCML2SRC_DEPENDS=libxml_archive_read.h libxml_archive_write.h
+IO_LIB_SRC2SRCML_DEPENDS=libxml_archive_read.hpp libxml_archive_write.hpp
+IO_LIB_SRCML2SRC_DEPENDS=libxml_archive_read.hpp libxml_archive_write.hpp
 IO_LIB_SRCML2SRC=${OBJ_DIR}libxml_archive_read.o ${OBJ_DIR}libxml_archive_write.o
 else
 XML_IO_LIB_SRC2SRCML_DEFINE=
@@ -162,27 +162,27 @@ ${EXE_DIR}srcmllexer : ${OBJ_DIR}srcmllexer.o ${OBJ_DIR}KeywordCPPLexer.o ${OBJ_
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) -o $@
 
 # Object files
-${OBJ_DIR}src2srcml.o : src2srcml.cpp srcMLTranslator.h version.h srcmlapps.h Options.h srcmlns.h ${IO_LIB_SRC2SRCML_DEPENDS}
+${OBJ_DIR}src2srcml.o : src2srcml.cpp srcMLTranslator.hpp srcmlapps.hpp Options.hpp srcmlns.hpp ${IO_LIB_SRC2SRCML_DEPENDS}
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(XML_IO_LIB_SRC2SRCML_DEFINE) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}srcml2src.o : srcml2src.cpp version.h srcmlapps.h Options.h ${IO_LIB_SRC2SRCML_DEPENDS}
+${OBJ_DIR}srcml2src.o : srcml2src.cpp srcmlapps.hpp Options.hpp ${IO_LIB_SRC2SRCML_DEPENDS}
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(XML_IO_LIB_SRCML2SRC_DEFINE) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}srcmllexer.o : srcmllexer.cpp version.h srcmlapps.h
+${OBJ_DIR}srcmllexer.o : srcmllexer.cpp srcmlapps.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) -c $< -o $@
 
-${OBJ_DIR}srcMLTranslator.o : srcMLTranslator.cpp srcMLTranslator.h StreamMLParser.h StreamParser.h srcMLToken.h Language.h
+${OBJ_DIR}srcMLTranslator.o : srcMLTranslator.cpp srcMLTranslator.hpp StreamMLParser.hpp StreamParser.hpp srcMLToken.hpp Language.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-Mode.h : srcMLStateStack.h State.h StateStack.h srcMLState.h
+Mode.hpp : srcMLStateStack.hpp State.hpp StateStack.hpp srcMLState.hpp
 
-${OBJ_DIR}srcMLParser.o : $(firstword $(SRCMLPARSER_GENS)) Mode.h TokenParser.h State.h Options.h
+${OBJ_DIR}srcMLParser.o : $(firstword $(SRCMLPARSER_GENS)) Mode.hpp TokenParser.hpp State.hpp Options.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) -c $< -o $@
 
 srcMLParserClean.cpp : srcMLParser.cpp
 	$(SED) -f sedantlr < $< > $@
 
-${OBJ_DIR}srcMLParserClean.o : srcMLParserClean.cpp Mode.h TokenParser.h State.h Options.h
+${OBJ_DIR}srcMLParserClean.o : srcMLParserClean.cpp Mode.hpp TokenParser.hpp State.hpp Options.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) -c $< -o $@
 
 ${OBJ_DIR}srcMLParser.S : $(firstword $(SRCMLPARSER_GENS))
@@ -191,13 +191,13 @@ ${OBJ_DIR}srcMLParser.S : $(firstword $(SRCMLPARSER_GENS))
 KeywordCPPLexerClean.cpp : KeywordCPPLexer.cpp
 	$(SED) -f sedantlrlexer < $< > $@
 
-${OBJ_DIR}KeywordCPPLexerClean.o : KeywordCPPLexerClean.cpp Language.h
+${OBJ_DIR}KeywordCPPLexerClean.o : KeywordCPPLexerClean.cpp Language.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 PureCommentLexerClean.cpp : PureCommentLexer.cpp
 	$(SED) -f sedantlrlexer < $< > $@
 
-${OBJ_DIR}PureCommentLexerClean.o : PureCommentLexerClean.cpp Language.h
+${OBJ_DIR}PureCommentLexerClean.o : PureCommentLexerClean.cpp Language.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) -fno-jump-tables $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}PureCommentLexer.S : $(firstword $(PURECOMMENTLEXER_GENS))
@@ -206,93 +206,93 @@ ${OBJ_DIR}PureCommentLexer.S : $(firstword $(PURECOMMENTLEXER_GENS))
 ${OBJ_DIR}KeywordLexer.o : $(firstword $(KEYWORDLEXER_GENS))
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) -c $< -o $@
 
-srcMLTranslator.h : srcMLParserTokenTypes.hpp
+srcMLTranslator.hpp : srcMLParserTokenTypes.hpp
 
-${OBJ_DIR}srcMLOutput.o : srcMLOutput.cpp srcMLOutput.h srcMLOutputPR.h srcMLParserTokenTypesMacro.hpp srcmlns.h
+${OBJ_DIR}srcMLOutput.o : srcMLOutput.cpp srcMLOutput.hpp srcMLOutputPR.hpp srcMLParserTokenTypesMacro.hpp srcmlns.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}Mode.o : Mode.cpp Mode.h
+${OBJ_DIR}Mode.o : Mode.cpp Mode.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) -c $< -o $@
 
-${OBJ_DIR}Language.o : Language.cpp Language.h
+${OBJ_DIR}Language.o : Language.cpp Language.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) -c $< -o $@
 
-${OBJ_DIR}UTF8CharBuffer.o : UTF8CharBuffer.cpp UTF8CharBuffer.h
+${OBJ_DIR}UTF8CharBuffer.o : UTF8CharBuffer.cpp UTF8CharBuffer.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}srcMLUtility.o : srcMLUtility.cpp srcMLUtility.h SAX2CountUnits.h SAX2ExtractRootSrc.h SAX2ExtractUnitSrc.h SAX2ExtractUnitsSrc.h SAX2ExtractUnitXML.h SAX2Properties.h SAX2TextWriter.h SAX2Utilities.h Options.h ExtractUnitsSrc.h CountUnits.h Properties.h ExtractUnitsXML.h
+${OBJ_DIR}srcMLUtility.o : srcMLUtility.cpp srcMLUtility.hpp SAX2CountUnits.hpp SAX2ExtractRootSrc.hpp SAX2ExtractUnitSrc.hpp SAX2ExtractUnitsSrc.hpp SAX2ExtractUnitXML.hpp SAX2Properties.hpp SAX2TextWriter.hpp SAX2Utilities.hpp Options.hpp ExtractUnitsSrc.h CountUnits.h Properties.h ExtractUnitsXML.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(XML_IO_LIB_SRCML2SRC_DEFINE) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}URIStream.o : URIStream.cpp URIStream.h
+${OBJ_DIR}URIStream.o : URIStream.cpp URIStream.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}libxml_curl_io.o : libxml_curl_io.cpp libxml_curl_io.h
+${OBJ_DIR}libxml_curl_io.o : libxml_curl_io.cpp libxml_curl_io.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}libxml_archive_read.o : libxml_archive_read.cpp libxml_archive_read.h 
+${OBJ_DIR}libxml_archive_read.o : libxml_archive_read.cpp libxml_archive_read.hpp 
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}libxml_archive_write.o : libxml_archive_write.cpp libxml_archive_write.h
+${OBJ_DIR}libxml_archive_write.o : libxml_archive_write.cpp libxml_archive_write.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}libxml_archive_read_disk.o : libxml_archive_read_disk.cpp libxml_archive_read_disk.h 
+${OBJ_DIR}libxml_archive_read_disk.o : libxml_archive_read_disk.cpp libxml_archive_read_disk.hpp 
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}SAX2TextWriter.o : SAX2TextWriter.cpp SAX2TextWriter.h
+${OBJ_DIR}SAX2TextWriter.o : SAX2TextWriter.cpp SAX2TextWriter.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}SAX2CopyElement.o : SAX2CopyElement.cpp SAX2CopyElement.h
+${OBJ_DIR}SAX2CopyElement.o : SAX2CopyElement.cpp SAX2CopyElement.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}SAX2CountUnits.o : SAX2CountUnits.cpp SAX2CountUnits.h
+${OBJ_DIR}SAX2CountUnits.o : SAX2CountUnits.cpp SAX2CountUnits.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}SAX2Utilities.o : SAX2Utilities.cpp SAX2Utilities.h
+${OBJ_DIR}SAX2Utilities.o : SAX2Utilities.cpp SAX2Utilities.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}SAX2Properties.o : SAX2Properties.cpp SAX2Properties.h
+${OBJ_DIR}SAX2Properties.o : SAX2Properties.cpp SAX2Properties.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}SAX2ExtractUnitSrc.o : SAX2ExtractUnitSrc.cpp SAX2ExtractUnitSrc.h ProcessUnit.h ExtractUnitsSrc.h
+${OBJ_DIR}SAX2ExtractUnitSrc.o : SAX2ExtractUnitSrc.cpp SAX2ExtractUnitSrc.hpp ProcessUnit.hpp ExtractUnitsSrc.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}SAX2ExtractUnitXML.o : SAX2ExtractUnitXML.cpp SAX2ExtractUnitXML.h
+${OBJ_DIR}SAX2ExtractUnitXML.o : SAX2ExtractUnitXML.cpp SAX2ExtractUnitXML.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}SAX2ExtractUnitsSrc.o : SAX2ExtractUnitsSrc.cpp SAX2ExtractUnitsSrc.h
+${OBJ_DIR}SAX2ExtractUnitsSrc.o : SAX2ExtractUnitsSrc.cpp SAX2ExtractUnitsSrc.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}SAX2ListUnits.o : SAX2ListUnits.cpp SAX2ListUnits.h
+${OBJ_DIR}SAX2ListUnits.o : SAX2ListUnits.cpp SAX2ListUnits.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}SAX2ExtractRootSrc.o : SAX2ExtractRootSrc.cpp SAX2ExtractRootSrc.h
+${OBJ_DIR}SAX2ExtractRootSrc.o : SAX2ExtractRootSrc.cpp SAX2ExtractRootSrc.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}srceval.o : srceval.cpp srceval.h
+${OBJ_DIR}srceval.o : srceval.cpp srceval.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}srcexfun.o : srcexfun.cpp srcexfun.h
+${OBJ_DIR}srcexfun.o : srcexfun.cpp srcexfun.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}srcpatheval.o : srcpatheval.cpp srcpatheval.h srceval.h
+${OBJ_DIR}srcpatheval.o : srcpatheval.cpp srcpatheval.hpp srceval.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}srcxslteval.o : srcxslteval.cpp srcxslteval.h srceval.h
+${OBJ_DIR}srcxslteval.o : srcxslteval.cpp srcxslteval.hpp srceval.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}SAX2UnitDOM.o : SAX2UnitDOM.cpp SAX2UnitDOM.h
+${OBJ_DIR}SAX2UnitDOM.o : SAX2UnitDOM.cpp SAX2UnitDOM.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}SAX2UnitDOMXPath.o : SAX2UnitDOMXPath.cpp SAX2UnitDOMXPath.h
+${OBJ_DIR}SAX2UnitDOMXPath.o : SAX2UnitDOMXPath.cpp SAX2UnitDOMXPath.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}SAX2UnitDOMXSLT.o : SAX2UnitDOMXSLT.cpp SAX2UnitDOMXSLT.h
+${OBJ_DIR}SAX2UnitDOMXSLT.o : SAX2UnitDOMXSLT.cpp SAX2UnitDOMXSLT.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}SAX2UnitDOMRelaxNG.o : SAX2UnitDOMRelaxNG.cpp SAX2UnitDOMRelaxNG.h
+${OBJ_DIR}SAX2UnitDOMRelaxNG.o : SAX2UnitDOMRelaxNG.cpp SAX2UnitDOMRelaxNG.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}srcrelaxngeval.o : srcrelaxngeval.cpp srcrelaxngeval.h srceval.h
+${OBJ_DIR}srcrelaxngeval.o : srcrelaxngeval.cpp srcrelaxngeval.hpp srceval.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}srcmlapps.o : srcmlapps.cpp

@@ -1,4 +1,4 @@
-#include "libxml_archive_write.h"
+#include "libxml_archive_write.hpp"
 #include <stdio.h>
 #include <string.h>
 #include <libxml/xmlIO.h>

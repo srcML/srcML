@@ -1,5 +1,5 @@
 /*
-  Language.h
+  Language.hpp
 
   Copyright (C) 2002, 2003, 2004, 2005  SDML (www.sdml.info)
 

@@ -22,12 +22,12 @@
 
 */
 
-#include "SAX2UnitDOM.h"
-#include "SAX2Utilities.h"
-#include "srcmlns.h"
+#include "SAX2UnitDOM.hpp"
+#include "SAX2Utilities.hpp"
+#include "srcmlns.hpp"
 
-#include "Options.h"
-#include "srcexfun.h"
+#include "Options.hpp"
+#include "srcexfun.hpp"
 
 #include <libxml/parserInternals.h>
 #include <libxml/SAX2.h>

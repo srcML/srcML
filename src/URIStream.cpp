@@ -1,5 +1,5 @@
 
-#include "URIStream.h"
+#include "URIStream.hpp"
 #include <cstring>
 
 URIStream::URIStream(const char* uriname, char eolchar)

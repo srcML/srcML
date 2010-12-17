@@ -1,5 +1,5 @@
 /*
-  SAX2TextWriter.h
+  SAX2TextWriter.hpp
 
   Copyright (C) 2008 SDML (www.sdml.info)
 

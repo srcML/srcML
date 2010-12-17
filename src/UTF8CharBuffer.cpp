@@ -1,5 +1,5 @@
 #include <iostream>
-#include "UTF8CharBuffer.h"
+#include "UTF8CharBuffer.hpp"
 #include <libxml/encoding.h>
 
 // Create a character buffer

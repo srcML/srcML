@@ -1,5 +1,5 @@
 /*
-  SAX2CountUnits.h
+  SAX2CountUnits.hpp
 
   Copyright (C) 2008 SDML (www.sdml.info)
 

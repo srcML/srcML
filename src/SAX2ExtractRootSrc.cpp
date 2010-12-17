@@ -22,9 +22,9 @@
 
 */
 
-#include "SAX2ExtractRootSrc.h"
-#include "Options.h"
-#include "srcmlns.h"
+#include "SAX2ExtractRootSrc.hpp"
+#include "Options.hpp"
+#include "srcmlns.hpp"
 
 namespace SAX2ExtractRootSrc {
 

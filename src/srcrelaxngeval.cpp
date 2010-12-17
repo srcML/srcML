@@ -2,8 +2,8 @@
   srcrelaxngeval.cpp
 */
 
-#include "srcrelaxngeval.h"
-#include "srceval.h"
+#include "srcrelaxngeval.hpp"
+#include "srceval.hpp"
 
 #include <iostream>
 

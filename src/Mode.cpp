@@ -22,7 +22,7 @@
   Method definitions for inclusion in srcMLParser
 */
 
-#include "Mode.h"
+#include "Mode.hpp"
 
 #ifdef __GNUC__
 #define ull(a) a##ULL

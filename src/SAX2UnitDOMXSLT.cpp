@@ -22,16 +22,16 @@
 
 */
 
-#include "SAX2TextWriter.h"
-#include "SAX2UnitDOMXSLT.h"
-#include "SAX2Utilities.h"
-#include "srcmlns.h"
+#include "SAX2TextWriter.hpp"
+#include "SAX2UnitDOMXSLT.hpp"
+#include "SAX2Utilities.hpp"
+#include "srcmlns.hpp"
 
 #include <cstring>
-#include "Options.h"
-#include "srcmlns.h"
+#include "Options.hpp"
+#include "srcmlns.hpp"
 
-#include "srcexfun.h"
+#include "srcexfun.hpp"
 #include <cassert>
 #include <libxslt/xslt.h>
 #include <libxslt/transform.h>

@@ -22,9 +22,9 @@
 
 */
 
-#include "SAX2ExtractUnitSrc.h"
-#include "SAX2ExtractRootSrc.h"
-#include "srcmlns.h"
+#include "SAX2ExtractUnitSrc.hpp"
+#include "SAX2ExtractRootSrc.hpp"
+#include "srcmlns.hpp"
 
 namespace SAX2ExtractUnitSrc {
 

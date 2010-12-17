@@ -1,5 +1,5 @@
 /*
-  srcMLTokenStream.h
+  srcMLTokenStream.hpp
 
   Copyright (C) 2004, 2005  SDML (www.sdml.info)
 
@@ -31,7 +31,7 @@
   It also implements the TokenStream nextToken method and provides
   pushToken methods to fill the token buffer.
 
-  Parser grammars that use this class must also inherit from TokenParser.h
+  Parser grammars that use this class must also inherit from TokenParser.hpp
 */
 
 #ifndef INCLUDED_SRCMLTOKENSTREAM_H

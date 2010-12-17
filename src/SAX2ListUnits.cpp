@@ -22,9 +22,9 @@
 
 */
 
-#include "SAX2ListUnits.h"
-#include "srcmlns.h"
-#include "srcmlapps.h"
+#include "SAX2ListUnits.hpp"
+#include "srcmlns.hpp"
+#include "srcmlapps.hpp"
 
 #include <iostream>
 

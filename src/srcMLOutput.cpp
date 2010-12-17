@@ -22,13 +22,13 @@
   Output of the XML format based on srcMLParser
 */
 
-#include "srcMLOutput.h"
-#include "srcMLToken.h"
-#include "project.h"
-#include "srcmlns.h"
+#include "srcMLOutput.hpp"
+#include "srcMLToken.hpp"
+#include "project.hpp"
+#include "srcmlns.hpp"
 #include <boost/preprocessor/iteration/local.hpp>
 
-#include "srcMLOutputPR.h"
+#include "srcMLOutputPR.hpp"
 
 #include <cstring>
 

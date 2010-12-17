@@ -1,5 +1,5 @@
 /*
-  srcMLTranslator.h
+  srcMLTranslator.hpp
 
   Copyright (C) 2004, 2005  SDML (www.sdml.info)
 

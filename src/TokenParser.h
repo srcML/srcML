@@ -1,5 +1,5 @@
 /*
-  TokenParser.h
+  TokenParser.hpp
 
   Copyright (C) 2003-2005  SDML (www.sdml.info)
 

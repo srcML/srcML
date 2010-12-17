@@ -1,5 +1,5 @@
 /*
-  SAX2UnitDOMRelaxNG.h
+  SAX2UnitDOMRelaxNG.hpp
 
   Copyright (C) 2010 SDML (www.sdml.info)
 

@@ -1,4 +1,4 @@
-#include "libxml_archive_read_disk.h"
+#include "libxml_archive_read_disk.hpp"
 #include <stdio.h>
 #include <string.h>
 #include <libxml/xmlIO.h>

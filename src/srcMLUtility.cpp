@@ -22,9 +22,9 @@
   Class for straightforward translation
 */
 
-#include "srcMLUtility.h"
+#include "srcMLUtility.hpp"
 #include <cstring>
-#include "srcmlns.h"
+#include "srcmlns.hpp"
 
 #ifdef __GNUC__
 #include <sys/stat.h>
@@ -35,28 +35,28 @@
 
 #include <libxml/parserInternals.h>
 
-#include "Options.h"
+#include "Options.hpp"
 
-#include "ProcessUnit.h"
-#include "ExtractUnitsSrc.h"
-#include "CountUnits.h"
-#include "Properties.h"
-#include "ListUnits.h"
-#include "ExtractUnitsXML.h"
+#include "ProcessUnit.hpp"
+#include "ExtractUnitsSrc.hpp"
+#include "CountUnits.hpp"
+#include "Properties.hpp"
+#include "ListUnits.hpp"
+#include "ExtractUnitsXML.hpp"
 
-#include "SAX2ExtractUnitsSrc.h"
+#include "SAX2ExtractUnitsSrc.hpp"
 
-#include "SAX2UnitDOMXPath.h"
-#include "SAX2UnitDOMXSLT.h"
-#include "SAX2UnitDOMRelaxNG.h"
+#include "SAX2UnitDOMXPath.hpp"
+#include "SAX2UnitDOMXSLT.hpp"
+#include "SAX2UnitDOMRelaxNG.hpp"
 
-#include "srcexfun.h"
+#include "srcexfun.hpp"
 
 #include <libexslt/exslt.h>
 
 #ifdef LIBARCHIVE
-#include "libxml_archive_read.h"
-#include "libxml_archive_write.h"
+#include "libxml_archive_read.hpp"
+#include "libxml_archive_write.hpp"
 #endif
 
 // constructor

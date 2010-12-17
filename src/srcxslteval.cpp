@@ -6,9 +6,9 @@
   Usage:  xpathproc xpath-expression xml-file
 */
 
-#include "srcxslteval.h"
-#include "srceval.h"
-#include "Options.h"
+#include "srcxslteval.hpp"
+#include "srceval.hpp"
+#include "Options.hpp"
 
 #include <cstring>
 #include <iostream>

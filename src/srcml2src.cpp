@@ -25,16 +25,16 @@
 #include <cstdio>
 #include <cstring>
 #include <sys/stat.h>
-#include "srcmlapps.h"
-#include "project.h"
-#include "srcMLUtility.h"
-#include "Options.h"
-#include "srcmlns.h"
+#include "srcmlapps.hpp"
+#include "project.hpp"
+#include "srcMLUtility.hpp"
+#include "Options.hpp"
+#include "srcmlns.hpp"
 #include <getopt.h>
 
 #ifdef LIBARCHIVE
-#include "libxml_archive_read.h"
-#include "libxml_archive_write.h"
+#include "libxml_archive_read.hpp"
+#include "libxml_archive_write.hpp"
 #endif
 
 int option_error_status(int optopt);

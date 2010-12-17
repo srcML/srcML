@@ -1,5 +1,5 @@
 /*
-  URIStream.h
+  URIStream.hpp
 
   Copyright (C) 2010  SDML (www.sdml.info)
 

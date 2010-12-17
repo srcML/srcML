@@ -1,5 +1,5 @@
 /*
-  ProcessUnit.h
+  ProcessUnit.hpp
 
   Copyright (C) 2010  SDML (www.sdml.info)
 

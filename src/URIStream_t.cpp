@@ -1,4 +1,4 @@
-#include "URIStream.h"
+#include "URIStream.hpp"
 #include <iostream>
 #include <vector>
 #include <cstring>

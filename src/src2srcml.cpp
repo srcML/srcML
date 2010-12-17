@@ -24,13 +24,13 @@
 
 #include <cstring>
 #include <sys/stat.h>
-#include "srcmlapps.h"
-#include "srcmlns.h"
-#include "Options.h"
-#include "project.h"
-#include "Language.h"
-#include "srcMLTranslator.h"
-#include "URIStream.h"
+#include "srcmlapps.hpp"
+#include "srcmlns.hpp"
+#include "Options.hpp"
+#include "project.hpp"
+#include "Language.hpp"
+#include "srcMLTranslator.hpp"
+#include "URIStream.hpp"
 #include <getopt.h>
 #include <dirent.h>
 #include <algorithm>
@@ -48,12 +48,12 @@ bool operator==(const char* lhs, const stringequal& r) {
 }
 
 #ifdef LIBARCHIVE
-#include "libxml_archive_read.h"
-#include "libxml_archive_write.h"
+#include "libxml_archive_read.hpp"
+#include "libxml_archive_write.hpp"
 #endif
 
 #ifdef CURL
-#include "libxml_curl_io.h"
+#include "libxml_curl_io.hpp"
 #endif
 
 const char* const DEBUG_FLAG = "debug";

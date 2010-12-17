@@ -31,9 +31,9 @@
 #include <libxml/parserInternals.h>
 #include <iostream>
 
-#include "SAX2CopyElement.h"
-#include "SAX2Utilities.h"
-#include "Options.h"
+#include "SAX2CopyElement.hpp"
+#include "SAX2Utilities.hpp"
+#include "Options.hpp"
 
 SAX2CopyElement::SAX2CopyElement(const char* element, const char* ofilename, int& options, int unit):
   SAX2TextWriter(ofilename, options, unit), element(element), copymode(false) {

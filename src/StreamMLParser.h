@@ -1,5 +1,5 @@
 /*
-  StreamMLParser.h
+  StreamMLParser.hpp
 
   Copyright (C) 2002-2006  SDML (www.sdml.info)
 

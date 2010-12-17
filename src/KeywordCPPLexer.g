@@ -21,11 +21,11 @@
 */
 
 header {
-   #include "Language.h"
-   #include "UTF8CharBuffer.h"
+   #include "Language.hpp"
+   #include "UTF8CharBuffer.hpp"
    #include "antlr/TokenStreamSelector.hpp"
    #include "PureCommentLexer.hpp"
-   #include "srcMLToken.h"
+   #include "srcMLToken.hpp"
 }
 
 header "post_include_cpp" {

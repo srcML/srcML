@@ -126,8 +126,8 @@ header "post_include_hpp" {
 #include <iostream>
 #include <iomanip>
 #include <stack>
-#include "Mode.h"
-#include "Options.h"
+#include "Mode.hpp"
+#include "Options.hpp"
 
 #define assertMode(m)
 

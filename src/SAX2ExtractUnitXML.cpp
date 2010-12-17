@@ -22,18 +22,18 @@
 
 */
 
-#include "SAX2TextWriter.h"
-#include "SAX2ExtractUnitXML.h"
-#include "SAX2Utilities.h"
-#include "srcmlns.h"
+#include "SAX2TextWriter.hpp"
+#include "SAX2ExtractUnitXML.hpp"
+#include "SAX2Utilities.hpp"
+#include "srcmlns.hpp"
 
 #include <cstdio>
 #include <cstring>
 #include <libxml/xmlwriter.h>
 #include <libxml/parser.h>
 #include <libxml/parserInternals.h>
-#include "Options.h"
-#include "srcmlns.h"
+#include "Options.hpp"
+#include "srcmlns.hpp"
 
 SAX2ExtractUnitXML::SAX2ExtractUnitXML(const char* ofilename, int unit, OPTION_TYPE& options, PROPERTIES_TYPE& nsv, PROPERTIES_TYPE& attrv):
   SAX2TextWriter(ofilename, options, unit), nsv(nsv), attrv(attrv), placescount(0), placesunit(0) {

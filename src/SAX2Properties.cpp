@@ -22,13 +22,13 @@
 
 */
 
-#include "SAX2TextWriter.h"
-#include "SAX2Properties.h"
-#include "SAX2CountUnits.h"
-#include "SAX2Utilities.h"
+#include "SAX2TextWriter.hpp"
+#include "SAX2Properties.hpp"
+#include "SAX2CountUnits.hpp"
+#include "SAX2Utilities.hpp"
 
-#include "Options.h"
-#include "srcmlns.h"
+#include "Options.hpp"
+#include "srcmlns.hpp"
 #include <cstring>
 #include <libxml/parser.h>
 

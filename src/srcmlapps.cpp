@@ -22,7 +22,7 @@
   Common utilities for srcML applications.
 */
 
-#include "srcmlapps.h"
+#include "srcmlapps.hpp"
 #include <cstring>
 #include <clocale>
 #include <cstdio>

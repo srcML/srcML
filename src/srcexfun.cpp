@@ -1,5 +1,5 @@
-#include "srcexfun.h"
-#include "srcmlns.h"
+#include "srcexfun.hpp"
+#include "srcmlns.hpp"
 
 #include <cstring>
 
