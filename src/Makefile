@@ -220,7 +220,7 @@ ${OBJ_DIR}Language.o : Language.cpp Language.hpp
 ${OBJ_DIR}UTF8CharBuffer.o : UTF8CharBuffer.cpp UTF8CharBuffer.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}srcMLUtility.o : srcMLUtility.cpp srcMLUtility.hpp SAX2CountUnits.hpp SAX2ExtractRootSrc.hpp SAX2ExtractUnitSrc.hpp SAX2ExtractUnitsSrc.hpp SAX2ExtractUnitXML.hpp SAX2Properties.hpp SAX2TextWriter.hpp SAX2Utilities.hpp Options.hpp ExtractUnitsSrc.h CountUnits.h Properties.h ExtractUnitsXML.hpp
+${OBJ_DIR}srcMLUtility.o : srcMLUtility.cpp srcMLUtility.hpp SAX2CountUnits.hpp SAX2ExtractRootSrc.hpp SAX2ExtractUnitSrc.hpp SAX2ExtractUnitsSrc.hpp SAX2ExtractUnitXML.hpp SAX2Properties.hpp SAX2TextWriter.hpp SAX2Utilities.hpp Options.hpp ExtractUnitsSrc.hpp CountUnits.hpp Properties.hpp ExtractUnitsXML.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(XML_IO_LIB_SRCML2SRC_DEFINE) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}URIStream.o : URIStream.cpp URIStream.hpp
