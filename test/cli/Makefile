@@ -1,5 +1,5 @@
-OPTION_SRC= ../../src/src2srcml.cpp ../../src/srcml2src.cpp ../../src/srcmlapps.h
-STATUS_SRC= ../../src/srcmlapps.h
+OPTION_SRC= ../../src/src2srcml.cpp ../../src/srcml2src.cpp ../../src/srcmlapps.hpp
+STATUS_SRC= ../../src/srcmlapps.hpp
 
 all : test
 
