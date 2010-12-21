@@ -1190,7 +1190,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
             fprintf(stderr, "Skipped '%s':  Unknown extension.\n", unit_filename.c_str() ? unit_filename.c_str() : "standard input");
           else
             fprintf(stderr, "%5s %s\tSkipped: Unknown extension.\n", "-", unit_filename.c_str() ? unit_filename.c_str() : "standard input");
-
+	  
         }
 
         ++skipped;
@@ -1296,7 +1296,7 @@ void process_dir(srcMLTranslator& translator, const char* directory, process_opt
     stat(filename.c_str(), &instat);
     if (instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
 
-      fprintf(stderr, "Skipping output file: %s", poptions.srcml_filename);
+      fprintf(stderr, "%5s %s\tSkipped: Output file.\n", "-", poptions.srcml_filename);
       ++skipped;
       continue;
     }
