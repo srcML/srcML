@@ -165,7 +165,7 @@ const OPTION_TYPE OPTION_NAMESPACE = ull(1) << 26;
 
 // omit namespace mode
 // @srcml2src
-const OPTION_TYPE OPTION_OMIT = OPTION_NAMESPACE;
+const OPTION_TYPE OPTION_OMIT = ull(1) << 39;
 
 // xmlns mode
 // @src2srcml
