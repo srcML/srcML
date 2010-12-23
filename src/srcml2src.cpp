@@ -663,7 +663,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
 
-      //options |= OPTION_OMIT;
+      options |= OPTION_OMIT;
 
       poptions.omitns[poptions.omitnscount++] = optarg;
       break;
