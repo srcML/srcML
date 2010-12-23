@@ -1,5 +1,5 @@
 /*
-  Options.hpp
+N  Options.hpp
 
   Copyright (C) 2005, 2006  SDML (www.sdml.info)
 
@@ -162,6 +162,10 @@ const OPTION_TYPE OPTION_EXPRESSION = ull(1) << 25;
 // @src2srcml
 // @srcml2src
 const OPTION_TYPE OPTION_NAMESPACE = ull(1) << 26;
+
+// omit namespace mode
+// @srcml2src
+const OPTION_TYPE OPTION_OMIT = ull(1) << 40;
 
 // xmlns mode
 // @src2srcml
