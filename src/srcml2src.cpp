@@ -244,7 +244,8 @@ typedef struct process_options
   const char* context;
   int nscount;
   const char* ns[MAXNS + 1];
-  const char * omitns;
+  int omitnscount;
+  const char * omitns[MAXNS + 1];
   int paramcount;
   const char* params[MAXPARAMS * 2 + 1];
   int transformcount;
@@ -300,6 +301,7 @@ int main(int argc, char* argv[]) {
      0,
      { 0 },
      0,
+     { 0 },
      0,
      { 0 },
      0,
@@ -663,7 +665,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
       //options |= OPTION_OMIT;
 
-      poptions.omitns = optarg;
+      poptions.omitns[poptions.omitnscount++] = optarg;
       break;
 
     case QUIET_FLAG_SHORT: 
