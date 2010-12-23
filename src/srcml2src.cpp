@@ -48,6 +48,10 @@ char const * const UNIT_FLAG = "unit";
 char const UNIT_FLAG_SHORT = 'U';
 char const * const UNIT_FLAG_FULL = "unit=NUM";
 
+char const * const OMIT_FLAG = "omit";
+char const OMIT_FLAG_SHORT = 'O';
+char const * const OMIT_FLAG_FULL = "omit=NAMESPACE";
+
 char const * const XML_FLAG = "xml";
 char const XML_FLAG_SHORT = 'X';
 
