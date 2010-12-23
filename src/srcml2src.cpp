@@ -654,6 +654,16 @@ int process_args(int argc, char* argv[], process_options & poptions)
       poptions.ns[poptions.nscount++] = optarg;
       break;
 
+    case OMIT_FLAG_SHORT:
+
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+
+      //options |= OPTION_OMIT;
+
+      //poptions.ns[poptions.nscount++] = optarg;
+      break;
+
     case QUIET_FLAG_SHORT: 
       options |= OPTION_QUIET;
       break;
