@@ -48,10 +48,6 @@ char const * const UNIT_FLAG = "unit";
 char const UNIT_FLAG_SHORT = 'U';
 char const * const UNIT_FLAG_FULL = "unit=NUM";
 
-char const * const OMIT_FLAG = "omit";
-char const OMIT_FLAG_SHORT = 'O';
-char const * const OMIT_FLAG_FULL = "omit=NAMESPACE";
-
 char const * const XML_FLAG = "xml";
 char const XML_FLAG_SHORT = 'X';
 
@@ -64,6 +60,10 @@ char const LONG_INFO_FLAG_SHORT = 'L';
 char const * const NAMESPACE_FLAG = "prefix";
 char const NAMESPACE_FLAG_SHORT = 'p';
 char const * const NAMESPACE_FLAG_FULL = "prefix=URI";
+
+char const * const OMIT_FLAG = "omit";
+char const OMIT_FLAG_SHORT = 'O';
+char const * const OMIT_FLAG_FULL = "omit=NAMESPACE";
 
 char const * const XPATH_FLAG = "xpath";
 const int XPATH_FLAG_CODE = 256 + 0;
@@ -546,6 +546,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
     { UNIT_FLAG, required_argument, NULL, UNIT_FLAG_SHORT },
     { TEXTENCODING_FLAG, required_argument, NULL, TEXTENCODING_FLAG_SHORT },
     { NAMESPACE_FLAG, required_argument, NULL, NAMESPACE_FLAG_SHORT },
+    { OMIT_FLAG, required_argument, NULL, OMIT_FLAG_SHORT },
     { QUIET_FLAG, no_argument, NULL, QUIET_FLAG_SHORT },
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
