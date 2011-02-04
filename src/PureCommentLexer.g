@@ -123,6 +123,10 @@ COMMENT_TEXT {
         '\011' /* '\t' */ |
 
         '\012' /* '\n' */ { 
+
+              // make sure to count newlines even when inside of comments
+              newline();
+
               // end at EOL when for line comment, or the end of a string or char on a preprocessor line
               if (mode == LINECOMMENT_END || ((mode == STRING_END || mode == CHAR_END) && onpreprocline)) {
                   $setType(mode); selector->pop();
