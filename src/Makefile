@@ -30,7 +30,7 @@ CXX = /usr/bin/g++
 CXXFLAGS = -DVERSION=$(VERSION) -O3 -Wall -march=nocona -minline-all-stringops #-fno-rtti
 
 # compiler gcc linking flags
-CXX_LINK_FLAGS = -lcurl #-s
+CXX_LINK_FLAGS = #-s
 
 # object code for xml
 LIBXML_INCLUDE=-I/usr/include/libxml2
@@ -39,11 +39,11 @@ XML_LIB_SRC2SRCML=-lxml2
 XML_LIB_SRCML2SRC=-lxml2 -lxslt -lexslt
 
 ifndef NOLIBARCHIVE
-XML_IO_LIB_SRC2SRCML_DEFINE=-DLIBARCHIVE -DCURL
+XML_IO_LIB_SRC2SRCML_DEFINE=-DLIBARCHIVE
 XML_IO_LIB_SRCML2SRC_DEFINE=-DLIBARCHIVE
-XML_IO_LIB_SRC2SRCML=-larchive -lcurl
+XML_IO_LIB_SRC2SRCML=-larchive
 XML_IO_LIB_SRCML2SRC=-larchive
-IO_LIB_SRC2SRCML=${OBJ_DIR}libxml_archive_read.o ${OBJ_DIR}libxml_archive_write.o ${OBJ_DIR}libxml_curl_io.o
+IO_LIB_SRC2SRCML=${OBJ_DIR}libxml_archive_read.o ${OBJ_DIR}libxml_archive_write.o
 IO_LIB_SRC2SRCML_DEPENDS=libxml_archive_read.hpp libxml_archive_write.hpp
 IO_LIB_SRCML2SRC_DEPENDS=libxml_archive_read.hpp libxml_archive_write.hpp
 IO_LIB_SRCML2SRC=${OBJ_DIR}libxml_archive_read.o ${OBJ_DIR}libxml_archive_write.o
@@ -155,7 +155,7 @@ ${EXE_DIR}libsrcml.a : ${OBJ_DIR}srcMLParserClean.o ${OBJ_DIR}KeywordCPPLexerCle
 
 # srcML to source code translator program
 ${EXE_DIR}srcml2src : ${OBJ_DIR}srcml2src.o ${OBJ_DIR}srcMLUtility.o ${OBJ_DIR}SAX2ExtractUnitsSrc.o ${OBJ_DIR}srcmlapps.o ${OBJ_DIR}SAX2Utilities.o ${XML_OBJ} ${OBJ_DIR}SAX2UnitDOM.o ${OBJ_DIR}SAX2UnitDOMXSLT.o ${OBJ_DIR}SAX2UnitDOMXPath.o ${OBJ_DIR}SAX2UnitDOMRelaxNG.o ${OBJ_DIR}srcexfun.o ${IO_LIB_SRCML2SRC}
-	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ ${XML_LIB_SRCML2SRC} ${XML_IO_LIB_SRCML2SRC} -o $@
+	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) ${XML_LIB_SRCML2SRC} ${XML_IO_LIB_SRCML2SRC} -o $@
 
 # source code lexical analysis
 ${EXE_DIR}srcmllexer : ${OBJ_DIR}srcmllexer.o ${OBJ_DIR}KeywordCPPLexer.o ${OBJ_DIR}srcmlapps.o
