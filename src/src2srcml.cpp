@@ -23,7 +23,9 @@
 */
 
 #include <cstring>
+#ifdef __GNUG__
 #include <sys/stat.h>
+#endif
 #include "srcmlapps.hpp"
 #include "srcmlns.hpp"
 #include "Options.hpp"
