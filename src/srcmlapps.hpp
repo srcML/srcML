@@ -25,7 +25,7 @@
 #ifndef INCLUDED_SRCMLAPPS_H
 #define INCLUDED_SRCMLAPPS_H
 
-const char* const COPYRIGHT = "Copyright (C) 2010 SDML";
+const char* const COPYRIGHT = "Copyright (C) 2011 SDML";
 
 const char* const EMAIL_ADDRESS = "srcml@sdml.info";
 
