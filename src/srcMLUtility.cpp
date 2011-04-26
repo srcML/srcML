@@ -408,8 +408,8 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
 
   // relative xpath changed to at any level
   std::string s = state.fxpath[0];
-  if (s[0] != '/')
-    s = "//" + s;
+  //  if (s[0] != '/')
+  //    s = "//" + s;
 
   // compile the xpath that will be applied to each unit
   state.compiled_xpath = xmlXPathCompile(BAD_CAST s.c_str());
