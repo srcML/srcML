@@ -63,6 +63,10 @@
 srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, OPTION_TYPE& op)
   : infile(infilename), output_encoding(encoding), options(op), units(0) {
 
+
+  // assume totaling for numeric results
+  op |= OPTION_XPATH_TOTAL;
+
   // empty filename indicates standard input
   if (infile == 0)
     infile = "-";
