@@ -1,51 +1,41 @@
 #include <stdio.h>
 #include <regex.h>
 #include <sys/types.h>
-#include <cstring>
+#include <string.h>
 
-int main(int argc, char ** argv)
-{
-  int length = strlen(argv[1]);
-  char * string = argv[1];
-  for(int i = 0; i < length / 2; ++i)
-    {
-      char temp = string[i];
-      string[i] = string[length - (i + 1)];
-      string[length - (i + 1)] = temp;
-    }
-  fprintf(stderr, "%s\n", string);
+#define MAX_MATCHES 100
 
-  //  const char * regex = "(zg\\.|2zb\\.)*([:alnum:]*)\\.";
-  const char * regex = "(zg\\.|2zb\\.)*([^\\.]*)";
-  regex_t preg;
-  int errorcode = regcomp(&preg, regex, REG_EXTENDED);
-  if(errorcode == 0)
+int main(int argc, char ** argv) {
+
+  char* pattern = argv[1];
+  char* data = argv[2];
+
+  /* compile the regular expression pattern */
+  regex_t regexp;
+  int errorcode = regcomp(&regexp, pattern, REG_EXTENDED);
+  if (errorcode == 0)
     fprintf(stderr, "Compiled\n");
 
-  regmatch_t pmatch[3];
-  errorcode = regexec(&preg, string, 3, pmatch, 0);
-  if(errorcode == 0){
-    fprintf(stderr, "Ran\n");
-    fprintf(stderr, "Match: %d:%d\n", pmatch[0].rm_so, pmatch[0].rm_eo);
-    fprintf(stderr, "Match: %d:%d\n", pmatch[1].rm_so, pmatch[1].rm_eo);
-    fprintf(stderr, "Match: %d:%d\n", pmatch[2].rm_so, pmatch[2].rm_eo);
-  }
-  else{
+  /* space for resulting offsets of matches */
+  regmatch_t pmatch[MAX_MATCHES];
+
+  /* evaluate the compiled regular expression on the data */
+  errorcode = regexec(&regexp, data, MAX_MATCHES, pmatch, 0);
+  if (errorcode) {
     fprintf(stderr, "No Match\n");
-  }
-  
-  for(int i = pmatch[2].rm_so; i < (pmatch[2].rm_eo + pmatch[2].rm_so) / 2; ++i)
-  {
-      char temp = string[i];
-      fprintf(stderr, "%c\n", temp);
-      fprintf(stderr, "%c\n", string[pmatch[2].rm_eo - ((i + 1) - pmatch[2].rm_so)]);
-      string[i] = string[pmatch[2].rm_eo - ((i + 1) - pmatch[2].rm_so)];
-      string[pmatch[2].rm_eo - ((i + 1) - pmatch[2].rm_so)] = temp;
+    regfree(&regexp);
+    return 1;
   }
 
-    string [pmatch[2].rm_eo] = '\0';
+  /* output the matched results */
+  for (int i = 0; i < MAX_MATCHES && pmatch[i].rm_so != -1; ++i) {
 
-  fprintf(stderr, "%*s\n", pmatch[2].rm_eo - pmatch[2].rm_so, string + pmatch[2].rm_so);
-    regfree(&preg);
+      fprintf(stderr, "Match Location: %d:%d\n", (int) pmatch[i].rm_so, (int) pmatch[i].rm_eo);
+      fprintf(stderr, "Match: %*s\n", pmatch[i].rm_eo - pmatch[i].rm_so, data + pmatch[i].rm_so);
+  }
+
+  /* free up internal regular expression memory */
+  regfree(&regexp);
+
   return 0;
 }
