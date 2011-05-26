@@ -4,8 +4,8 @@
 EXE_DIR = ../bin/
 OBJ_DIR = ../obj/
 
-SRC2SRCML_BIN=../bin/src2srcml
-SRCML2SRC_BIN=../bin/srcml2src
+SRC2SRCML_BIN=wine ../bin/src2srcml.exe
+SRCML2SRC_BIN=wine ../bin/srcml2src.exe
 
 # detect OS                                                                     
 OSUPPER = $(shell uname -s 2>/dev/null | tr [:lower:] [:upper:])
@@ -17,7 +17,8 @@ DARWIN = $(strip $(findstring DARWIN, $(OSUPPER)))
 ifneq ($(DARWIN),)
 TIME=/opt/local/bin/gtime --output=/dev/stdout --format="%U"
 else
-TIME=time --output=/dev/stdout --format="%U"
+TIME=time 
+#TIME=time --output=/dev/stdout --format="%U"
 endif
 
 TIMING_MED=timing_med.h
@@ -40,12 +41,18 @@ time : ../bin/src2srcml
 	@../bin/src2srcml --version
 	@../bin/srcml2src --version
 	@${ECHO}
-	@${ECHO} ${FLAGS} "src2srcml:\t"
-	@cd .; ${TIME} ../bin/src2srcml ${TIMING_MED} -o ${TIMING_MED}.xml | ${SED} 's/[0-9\.]*/ 10872 \/ &/' | bc -l |  xargs printf "%7.0f lines/second\n"
-	@${ECHO} ${FLAGS} "srcml2src:\t"
-	@cd .; ${TIME} ../bin/srcml2src ${TIMING_MED}.xml -o ${TIMING_MED}v2 | ${SED} 's/[0-9\.]*/10872 \/ &/' | bc -l  |  xargs printf "%7.0f lines/second\n"
+	@${ECHO} ${FLAGS} "${SRC2SRCML_BIN} ${TIMING_MED} -o ${TIMING_MED}.xml:"
+	@cd .; ${TIME} ${SRC2SRCML_BIN} ${TIMING_MED} -o ${TIMING_MED}.xml | ${SED} 's/[0-9\.]*/ 10872 \/ &/' | bc -l |  xargs printf "%7.0f lines/second\n"
+	@${ECHO} ${FLAGS} "${SRCML2SRC_BIN} ${TIMING_MED}.xml -o ${TIMING_MED}vs:"
+	@cd .; ${TIME} ${SRCML2SRC_BIN} ${TIMING_MED}.xml -o ${TIMING_MED}v2 | ${SED} 's/[0-9\.]*/10872 \/ &/' | bc -l  |  xargs printf "%7.0f lines/second\n"
 
 PHONY : javatime
 javatime :
-	@${ECHO} ${FLAGS} "srcml2src Java:\t"
-	@cd .; ${TIME} ../bin/src2srcml --language Java ${TIMING_JAVA} -o ${TIMING_JAVA}.xml | ${SED} 's/[0-9\.]*/32628 \/ &/' | bc -l | xargs printf "%7.0f lines/second\n"
+	@${ECHO} ${FLAGS} "${SRC2SRCML_BIN} ${TIMING_JAVA} -o ${TIMING_JAVA}.xml: "
+	@cd .; ${TIME} ${SRC2SRCML_BIN} --language Java ${TIMING_JAVA} -o ${TIMING_JAVA}.xml | ${SED} 's/[0-9\.]*/32628 \/ &/' | bc -l | xargs printf "%7.0f lines/second\n"
+
+	@${ECHO} ${FLAGS} "${SRCML2SRC_BIN} ${TIMING_JAVA}.xml -o ${TIMING_JAVA}v2: "
+	@cd .; ${TIME} ${SRCML2SRC_BIN} --language Java ${TIMING_JAVA}.xml -o ${TIMING_JAVA}v2 | ${SED} 's/[0-9\.]*/32628 \/ &/' | bc -l | xargs printf "%7.0f lines/second\n"
+
+clean:
+	rm *.*v2 *.xml
