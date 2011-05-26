@@ -692,8 +692,8 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
       // check all the registered extensions.  There may be many (CSV)
       for (char* cursub = strtok(optarg, ","); cursub; cursub = strtok(NULL, ",")) {
-	char* language = cursub;
-	const char* extension = strsep(&language, "=");
+        char* language = cursub;
+        const char* extension = strsep(&language, "=");
 
 	if (!Language::registerUserExt(extension, language)) {
 
@@ -1287,7 +1287,9 @@ void process_dir(srcMLTranslator& translator, const char* directory, process_opt
   while (struct dirent* entry = readdir(dirp)) {
 
     // handle directories later after all the filenames
-    if (entry->d_type == DT_DIR)
+    struct stat fstat;
+    stat(entry->d_name, &fstat);
+    if (S_ISDIR(fstat.st_mode))
       continue;
 
     // skip standard UNIX filenames, and . files
@@ -1332,7 +1334,9 @@ void process_dir(srcMLTranslator& translator, const char* directory, process_opt
   while (struct dirent* entry = readdir(dirp)) {
 
     // already handled other types of files
-    if (entry->d_type != DT_DIR)
+    struct stat fstat;
+    stat(entry->d_name, &fstat);
+    if (!S_ISDIR(fstat.st_mode))
       continue;
 
     // skip standard UNIX filenames, and . files
