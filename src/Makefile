@@ -73,6 +73,9 @@ ECHO=/bin/echo
 # default
 all : ${EXE_DIR}src2srcml ${EXE_DIR}srcml2src
 
+demo :
+	echo ${ANTLR}
+
 # setup
 setup : version.cpp
 
