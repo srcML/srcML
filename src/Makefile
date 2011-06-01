@@ -1,20 +1,23 @@
 ##
 # Makefile for srcML translator, src2srcml and srcml2src
-
-# Uncomment to generate a static build
-#STATIC
+#
 
 VERSION="\"$(shell cat VERSION)\""
 
 # set compiler version to match that of antlr library
 CXX=/usr/bin/g++
 
+# library
 AR=/usr/bin/ar
 
 # associated text tools
 SED=${firstword ${wildcard /opt/local/bin/gsed /bin/sed}}
 GREP=${firstword ${wildcard /bin/grep /usr/bin/grep}}
 ECHO=/bin/echo
+
+# project dirs
+EXE_DIR = ../bin/
+OBJ_DIR = ../obj/
 
 # general ANTLR settings
 
@@ -41,21 +44,16 @@ CXXFLAGS = -DVERSION=$(VERSION) -O3 -Wall -march=nocona -minline-all-stringops #
 # compiler gcc linking flags
 CXX_LINK_FLAGS = #-s
 
-# object code for xml
+# libxml
 LIBXML_INCLUDE=-I/usr/include/libxml2
-XML_OBJ=
 XML_LIB_SRC2SRCML=-lxml2
 XML_LIB_SRCML2SRC=-lxml2 -lxslt -lexslt
 
+# libarchive
 XML_IO_LIB_DEFINE=-DLIBARCHIVE
 XML_IO_LIB=-larchive
-IO_LIB_SRC2SRCML=${OBJ_DIR}libxml_archive_read.o ${OBJ_DIR}libxml_archive_write.o
-IO_LIB_SRC2SRCML_DEPENDS=libxml_archive_read.hpp libxml_archive_write.hpp
-IO_LIB_SRCML2SRC_DEPENDS=libxml_archive_read.hpp libxml_archive_write.hpp
-IO_LIB_SRCML2SRC=${OBJ_DIR}libxml_archive_read.o ${OBJ_DIR}libxml_archive_write.o
-
-EXE_DIR = ../bin/
-OBJ_DIR = ../obj/
+IO_LIB_DEPENDS=libxml_archive_read.hpp libxml_archive_write.hpp
+IO_LIB=${OBJ_DIR}libxml_archive_read.o ${OBJ_DIR}libxml_archive_write.o
 
 SRC2SRCML_BIN=${EXE_DIR}src2srcml
 SRCML2SRC_BIN=${EXE_DIR}srcml2src
@@ -146,14 +144,14 @@ ${EXE_DIR}src2srcml : ${OBJ_DIR}src2srcml.o ${OBJ_DIR}srcmlapps.o ${EXE_DIR}libs
 ${EXE_DIR}src2srcmldyn : ${OBJ_DIR}src2srcml.o ${OBJ_DIR}srcmlapps.o ${EXE_DIR}libsrcml.so
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) ${XML_LIB_SRC2SRCML} ${XML_IO_LIB} -L${EXE_DIR} -lsrcml -o $@
 
-${EXE_DIR}libsrcml.so : ${OBJ_DIR}srcMLParserClean.o ${OBJ_DIR}KeywordCPPLexerClean.o ${OBJ_DIR}srcMLTranslator.o ${OBJ_DIR}srcMLOutput.o ${OBJ_DIR}Mode.o ${OBJ_DIR}UTF8CharBuffer.o ${OBJ_DIR}PureCommentLexerClean.o ${OBJ_DIR}Language.o ${OBJ_DIR}URIStream.o ${IO_LIB_SRC2SRCML}
+${EXE_DIR}libsrcml.so : ${OBJ_DIR}srcMLParserClean.o ${OBJ_DIR}KeywordCPPLexerClean.o ${OBJ_DIR}srcMLTranslator.o ${OBJ_DIR}srcMLOutput.o ${OBJ_DIR}Mode.o ${OBJ_DIR}UTF8CharBuffer.o ${OBJ_DIR}PureCommentLexerClean.o ${OBJ_DIR}Language.o ${OBJ_DIR}URIStream.o ${IO_LIB}
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) -shared -fPIC $^ $(LDFLAGS) ${XML_LIB_SRC2SRCML} ${XML_IO_LIB} -o $@
 
-${EXE_DIR}libsrcml.a : ${OBJ_DIR}srcMLParserClean.o ${OBJ_DIR}KeywordCPPLexerClean.o ${OBJ_DIR}srcMLTranslator.o ${OBJ_DIR}srcMLOutput.o ${OBJ_DIR}Mode.o ${OBJ_DIR}UTF8CharBuffer.o ${OBJ_DIR}PureCommentLexerClean.o ${OBJ_DIR}Language.o ${OBJ_DIR}URIStream.o ${IO_LIB_SRC2SRCML}
+${EXE_DIR}libsrcml.a : ${OBJ_DIR}srcMLParserClean.o ${OBJ_DIR}KeywordCPPLexerClean.o ${OBJ_DIR}srcMLTranslator.o ${OBJ_DIR}srcMLOutput.o ${OBJ_DIR}Mode.o ${OBJ_DIR}UTF8CharBuffer.o ${OBJ_DIR}PureCommentLexerClean.o ${OBJ_DIR}Language.o ${OBJ_DIR}URIStream.o ${IO_LIB}
 	${AR} rvs $@ $^ 
 
 # srcML to source code translator program
-${EXE_DIR}srcml2src : ${OBJ_DIR}srcml2src.o ${OBJ_DIR}srcMLUtility.o ${OBJ_DIR}SAX2ExtractUnitsSrc.o ${OBJ_DIR}srcmlapps.o ${OBJ_DIR}SAX2Utilities.o ${XML_OBJ} ${OBJ_DIR}SAX2UnitDOM.o ${OBJ_DIR}SAX2UnitDOMXSLT.o ${OBJ_DIR}SAX2UnitDOMXPath.o ${OBJ_DIR}SAX2UnitDOMRelaxNG.o ${OBJ_DIR}srcexfun.o ${IO_LIB_SRCML2SRC}
+${EXE_DIR}srcml2src : ${OBJ_DIR}srcml2src.o ${OBJ_DIR}srcMLUtility.o ${OBJ_DIR}SAX2ExtractUnitsSrc.o ${OBJ_DIR}srcmlapps.o ${OBJ_DIR}SAX2Utilities.o ${OBJ_DIR}SAX2UnitDOM.o ${OBJ_DIR}SAX2UnitDOMXSLT.o ${OBJ_DIR}SAX2UnitDOMXPath.o ${OBJ_DIR}SAX2UnitDOMRelaxNG.o ${OBJ_DIR}srcexfun.o ${IO_LIB}
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) ${XML_LIB_SRCML2SRC} ${XML_IO_LIB} -o $@
 
 # source code lexical analysis
@@ -161,10 +159,10 @@ ${EXE_DIR}srcmllexer : ${OBJ_DIR}srcmllexer.o ${OBJ_DIR}KeywordCPPLexer.o ${OBJ_
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) -o $@
 
 # Object files
-${OBJ_DIR}src2srcml.o : src2srcml.cpp srcMLTranslator.hpp srcmlapps.hpp Options.hpp srcmlns.hpp ${IO_LIB_SRC2SRCML_DEPENDS}
+${OBJ_DIR}src2srcml.o : src2srcml.cpp srcMLTranslator.hpp srcmlapps.hpp Options.hpp srcmlns.hpp ${IO_LIB_DEPENDS}
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(XML_IO_LIB_DEFINE) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}srcml2src.o : srcml2src.cpp srcmlapps.hpp Options.hpp ${IO_LIB_SRC2SRCML_DEPENDS}
+${OBJ_DIR}srcml2src.o : srcml2src.cpp srcmlapps.hpp Options.hpp ${IO_LIB_DEPENDS}
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(XML_IO_LIB_DEFINE) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}srcmllexer.o : srcmllexer.cpp srcmlapps.hpp
