@@ -22,11 +22,9 @@ OBJ_DIR = ../obj/
 ANTLR=${firstword ${wildcard /usr/bin/runantlr /usr/bin/cantlr /opt/local/bin/antlr}}
 
 # antlr c++ include files
-ifneq ($(DARWIN),)
-ANTLR_INC = -I/opt/local/include/
-else
-ANTLR_INC =
-endif
+ANTLR_INCLUDE_BASE=${firstword ${wildcard /usr/include/antlr /opt/local/include/antlr}}
+ANTLR_INCLUDE=${dir ${ANTLR_INCLUDE_BASE}}
+ANTLR_INC=-I${ANTLR_INCLUDE}
 
 # antlr c++ library
 ifneq ($(DARWIN),)
@@ -92,7 +90,7 @@ ECHO=/bin/echo
 all : ${EXE_DIR}src2srcml ${EXE_DIR}srcml2src
 
 demo :
-	echo ${ANTLR}
+	echo ${ANTLR_INCLUDE}
 
 # setup
 setup : version.cpp
