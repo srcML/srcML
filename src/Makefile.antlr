@@ -2,20 +2,8 @@
 # General Makefile for antlr project
 #
 
-# Standard antlr project settings
-JAVA_HOME =/usr/lib/j2sdk1.3
-
-CXX=/usr/bin/g++
-
-JAVA_CC =/usr/bin/java
-
-ANTLR_VERSION =antlr
-
-# antlr directory
-ANTLR_HOME =/usr/share/$(ANTLR_VERSION)
-
-# antlr jar file
-ANTLR_TOOL =/usr/share/java/antlrall.jar
+# antlr tool
+ANTLR=${firstword ${wildcard /usr/bin/runantlr /usr/bin/cantlr /opt/local/bin/antlr}}
 
 # antlr c++ include files
 ifneq ($(DARWIN),)
@@ -31,13 +19,4 @@ else
 ANTLR_LIB =-lantlr
 endif
 
-ANTLR=${firstword ${wildcard /usr/bin/runantlr /usr/bin/cantlr /opt/local/bin/antlr}}
-
-# compilation flags
-DEBUGFLAGS :=
-OPTFLAGS   :=
-STDFLAGS   := -W -Wall
-CXXFLAGS = $(DEBUGFLAGS) $(STDFLAGS) $(OPTFLAGS)
-
-# linking flags
 LDFLAGS  = $(ANTLR_LIB)
