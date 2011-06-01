@@ -27,13 +27,11 @@ ANTLR_INCLUDE=${dir ${ANTLR_INCLUDE_BASE}}
 ANTLR_INC=-I${ANTLR_INCLUDE}
 
 # antlr c++ library
-ifneq ($(DARWIN),)
-ANTLR_LIB =-L/opt/local/lib -lantlr
-else
-ANTLR_LIB =-lantlr
-endif
+ANTLR_LIBRARY_BASE=${firstword ${wildcard /usr/lib/libantlr* /opt/local/lib/libantlr*}}
+ANTLR_LIBRARY=${dir ${ANTLR_LIBRARY_BASE}}
+ANTLR_LIB=-L${ANTLR_LIBRARY} -lantlr
 
-LDFLAGS  = $(ANTLR_LIB)
+LDFLAGS=$(ANTLR_LIB)
 
 # ANTLR processing flags
 SRCMLPARSER_ANTLR_FLAGS =
@@ -90,7 +88,7 @@ ECHO=/bin/echo
 all : ${EXE_DIR}src2srcml ${EXE_DIR}srcml2src
 
 demo :
-	echo ${ANTLR_INCLUDE}
+	echo ${ANTLR_LIB}
 
 # setup
 setup : version.cpp
