@@ -1,5 +1,5 @@
 ##
-# Makefile for testing srcML translator, src2srcml and srcml2src
+# Makefile for srcML translator, src2srcml and srcml2src
 
 # Uncomment to generate a static build
 #STATIC
@@ -17,7 +17,25 @@ EXE_DIR = ../bin/
 OBJ_DIR = ../obj/
 
 # general ANTLR settings
-include Makefile.antlr
+
+# antlr tool
+ANTLR=${firstword ${wildcard /usr/bin/runantlr /usr/bin/cantlr /opt/local/bin/antlr}}
+
+# antlr c++ include files
+ifneq ($(DARWIN),)
+ANTLR_INC = -I/opt/local/include/
+else
+ANTLR_INC =
+endif
+
+# antlr c++ library
+ifneq ($(DARWIN),)
+ANTLR_LIB =-L/opt/local/lib -lantlr
+else
+ANTLR_LIB =-lantlr
+endif
+
+LDFLAGS  = $(ANTLR_LIB)
 
 # ANTLR processing flags
 SRCMLPARSER_ANTLR_FLAGS =
