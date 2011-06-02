@@ -15,9 +15,6 @@ SED=${firstword ${wildcard /opt/local/bin/gsed /bin/sed}}
 GREP=${firstword ${wildcard /bin/grep /usr/bin/grep}}
 ECHO=/bin/echo
 
-# see if ming is being used
-MINGW32=`echo . | ${CXX} -dM -E - | ${GREP} -i ming`
-
 # project dirs
 EXE_DIR = ../bin/
 OBJ_DIR = ../obj/
@@ -50,16 +47,13 @@ CXX_LINK_FLAGS = #-s
 # libxml
 LIBXML_INCLUDE=-I/usr/include/libxml2
 
-#ifdef MINGW32
-
-ifneq ($(MINGW32),)
+ifndef MINGW32
 XML_LIB_SRC2SRCML=-lxml2
 XML_LIB_SRCML2SRC=-lxml2 -lxslt -lexslt
 else
 XML_LIB_SRC2SRCML=-lxml2 -regex -liberty
 XML_LIB_SRCML2SRC=-lxml2 -lxslt -lexslt -regex -liberty
 endif
-
 
 # libarchive
 XML_IO_LIB_DEFINE=-DLIBARCHIVE
