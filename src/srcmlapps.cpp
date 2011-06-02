@@ -30,22 +30,6 @@
 #include <cstdlib>
 #include <sys/stat.h>
 
-#ifdef __GNUC__
-#include <langinfo.h>
-#endif
-
-// current environment encoding
-const char* getencoding() {
-
-#ifdef __GNUC__
-  setlocale(LC_ALL, "");
-
-  return nl_langinfo(CODESET);
-#else
-  return "ISO-8859-1";
-#endif
-}
-
 void checkargisoption(const char* name, const char* opt, const char* optarg, int optind, int lastoptind) {
 
       // check for missing argument confused by an argument that looks like an option

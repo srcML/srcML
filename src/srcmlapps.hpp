@@ -141,9 +141,6 @@ enum RETURN_STATUS {
 // width of long form of flag
 const int COL = 20;
 
-// current environment encoding
-const char* getencoding();
-
 const char* const DEFAULT_TEXT_ENCODING = "ISO-8859-1";
 
 inline bool argisoption(const char* s) {
