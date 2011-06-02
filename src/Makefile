@@ -15,6 +15,9 @@ SED=${firstword ${wildcard /opt/local/bin/gsed /bin/sed}}
 GREP=${firstword ${wildcard /bin/grep /usr/bin/grep}}
 ECHO=/bin/echo
 
+# see if ming is being used
+MINGW32=`echo . | ${CXX} -dM -E - | ${GREP} -i ming`
+
 # project dirs
 EXE_DIR = ../bin/
 OBJ_DIR = ../obj/
@@ -46,8 +49,17 @@ CXX_LINK_FLAGS = #-s
 
 # libxml
 LIBXML_INCLUDE=-I/usr/include/libxml2
+
+#ifdef MINGW32
+
+ifneq ($(MINGW32),)
 XML_LIB_SRC2SRCML=-lxml2
 XML_LIB_SRCML2SRC=-lxml2 -lxslt -lexslt
+else
+XML_LIB_SRC2SRCML=-lxml2 -regex -liberty
+XML_LIB_SRCML2SRC=-lxml2 -lxslt -lexslt -regex -liberty
+endif
+
 
 # libarchive
 XML_IO_LIB_DEFINE=-DLIBARCHIVE
@@ -66,10 +78,13 @@ settings :
 	@echo "SED="${SED}
 	@echo "GREP="${GREP}
 	@echo "ECHO="${ECHO}
+	@echo "MINGW32=|"${MINGW32}"|"
 	@echo "ANTLR_LIB_DIR="${ANTLR_LIB_DIR}
 	@echo "ANTLR_LIB="${ANTLR_LIB}
 	@echo "ANTLR_INC_DIR="${ANTLR_INC_DIR}
 	@echo "ANTLR_INC="${ANTLR_INC}
+	@echo "XML_LIB_SRC2SRCML="${XML_LIB_SRC2SRCML}
+	@echo "XML_LIB_SRCML2SRC="${XML_LIB_SRCML2SRC}
 	@echo "SRC2SRCML_BIN="${SRC2SRCML_BIN}
 	@echo "SRCML2SRC_BIN="${SRCML2SRC_BIN}
 
