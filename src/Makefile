@@ -25,12 +25,12 @@ OBJ_DIR = ../obj/
 ANTLR=${firstword ${wildcard /usr/bin/antlr /usr/bin/runantlr /usr/bin/cantlr /opt/local/bin/antlr}}
 
 # antlr c++ include files
-ANTLR_INCLUDE=${dir ${firstword ${wildcard /usr/include/antlr /opt/local/include/antlr}}}
-ANTLR_INC=-I${ANTLR_INCLUDE}
+ANTLR_INC_DIR=${dir ${firstword ${wildcard /usr/include/antlr /opt/local/include/antlr}}}
+ANTLR_INC=-I${ANTLR_INC_DIR}
 
 # antlr c++ library
-ANTLR_LIBRARY=${dir ${firstword ${wildcard /usr/lib64/libantlr* /usr/lib/libantlr* /opt/local/lib/libantlr*}}}
-ANTLR_LIB=-L${ANTLR_LIBRARY} -lantlr
+ANTLR_LIB_DIR=${dir ${firstword ${wildcard /usr/lib64/libantlr* /usr/lib/libantlr* /opt/local/lib/libantlr*}}}
+ANTLR_LIB=-L${ANTLR_LIB_DIR} -lantlr
 
 LDFLAGS=$(ANTLR_LIB)
 
@@ -66,7 +66,10 @@ settings :
 	@echo "SED="${SED}
 	@echo "GREP="${GREP}
 	@echo "ECHO="${ECHO}
+	@echo "ANTLR_LIB_DIR="${ANTLR_LIB_DIR}
 	@echo "ANTLR_LIB="${ANTLR_LIB}
+	@echo "ANTLR_INC_DIR="${ANTLR_INC_DIR}
+	@echo "ANTLR_INC="${ANTLR_INC}
 	@echo "SRC2SRCML_BIN="${SRC2SRCML_BIN}
 	@echo "SRCML2SRC_BIN="${SRCML2SRC_BIN}
 
