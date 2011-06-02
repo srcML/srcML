@@ -26,7 +26,11 @@ ANTLR=${firstword ${wildcard /usr/bin/antlr /usr/bin/runantlr /usr/bin/cantlr /o
 
 # antlr c++ include files
 ANTLR_INC_DIR=${dir ${firstword ${wildcard /usr/include/antlr /opt/local/include/antlr}}}
+ifndef MINGW32
 ANTLR_INC=-I${ANTLR_INC_DIR}
+else
+ANTLR_INC=
+endif
 
 # antlr c++ library
 ANTLR_LIB_DIR=${dir ${firstword ${wildcard /usr/lib64/libantlr* /usr/lib/libantlr* /opt/local/lib/libantlr*}}}
@@ -66,6 +70,9 @@ SRCML2SRC_BIN=${EXE_DIR}srcml2src
 
 # default
 all : ${EXE_DIR}src2srcml ${EXE_DIR}srcml2src
+
+mingw32 :
+	make MINGW32=1 CXX=i686-pc-mingw32-g++ AR=i686-pc-mingw32-ar 
 
 settings :
 	@echo "CXX="${CXX}
