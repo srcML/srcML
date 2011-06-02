@@ -25,6 +25,11 @@
 #ifndef INCLUDED_SRCMLAPPS_H
 #define INCLUDED_SRCMLAPPS_H
 
+#ifdef __MINGW32__
+#include <io.h>
+#include <string.h>
+#endif
+
 const char* const COPYRIGHT = "Copyright (C) 2011 SDML";
 
 const char* const EMAIL_ADDRESS = "srcml@sdml.info";
@@ -158,4 +163,15 @@ void checkargisnonempty(const char* name, const char* opt, const char* optarg, i
 
 const char* clean_filename(const char*);
 
+/* Implementation of strsep for MINGW */
+#ifdef __MINGW32__
+inline char* strsep(char** stringp, const char* delim) {
+  char* retvalue = *stringp;
+  char* split = strchr(*stringp, delim[0]);
+  *stringp = split + 1;
+  *split = '\0';
+
+  return retvalue;
+}
+#endif
 #endif
