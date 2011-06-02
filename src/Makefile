@@ -22,7 +22,7 @@ OBJ_DIR = ../obj/
 # general ANTLR settings
 
 # antlr tool
-ANTLR=${firstword ${wildcard /usr/bin/runantlr /usr/bin/cantlr /opt/local/bin/antlr}}
+ANTLR=${firstword ${wildcard /usr/bin/antlr /usr/bin/runantlr /usr/bin/cantlr /opt/local/bin/antlr}}
 
 # antlr c++ include files
 ANTLR_INCLUDE=${dir ${firstword ${wildcard /usr/include/antlr /opt/local/include/antlr}}}
