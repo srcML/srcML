@@ -282,8 +282,8 @@ int main(int argc, char* argv[]) {
 
   /* signal handling */
 
-#ifdef __GNUG__
-  // toggling verbose flag
+#if defined(__GNUG__) && !defined(__MINGW32__)
+  // signal to toggle verbose flag
   pstd::signal(SIGUSR1, verbose_handler);
 #endif
 
