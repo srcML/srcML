@@ -29,7 +29,7 @@ ANTLR_INCLUDE=${dir ${firstword ${wildcard /usr/include/antlr /opt/local/include
 ANTLR_INC=-I${ANTLR_INCLUDE}
 
 # antlr c++ library
-ANTLR_LIBRARY=${dir ${firstword ${wildcard /usr/lib/libantlr* /opt/local/lib/libantlr*}}}
+ANTLR_LIBRARY=${dir ${firstword ${wildcard /usr/lib64/libantlr* /usr/lib/libantlr* /opt/local/lib/libantlr*}}}
 ANTLR_LIB=-L${ANTLR_LIBRARY} -lantlr
 
 LDFLAGS=$(ANTLR_LIB)
