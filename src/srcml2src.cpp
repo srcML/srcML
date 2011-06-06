@@ -39,7 +39,7 @@
 
 int option_error_status(int optopt);
 
-char const * const NAME = "srcml2src";
+const char* PROGRAM_NAME = "srcml2src";
 
 char const * const EXPAND_FLAG = "to-dir";
 char const EXPAND_FLAG_SHORT = 'a';
@@ -269,12 +269,12 @@ int main(int argc, char* argv[]) {
   xmlRegisterDefaultInputCallbacks();
 
   if (xmlRegisterInputCallbacks(archiveReadMatch, archiveReadOpen, archiveRead, archiveReadClose) < 0) {
-    fprintf(stderr, "%s: failed to register archive handler\n", argv[0]);
+    fprintf(stderr, "%s: failed to register archive handler\n", PROGRAM_NAME);
     exit(1);
   }
   /*
   if (xmlRegisterOutputCallbacks(archiveWriteDiskMatch, archiveWriteDiskOpen, archiveWriteDisk, archiveWriteDiskClose) < 0) {
-    fprintf(stderr, "%s: failed to register archive handler\n", argv[0]);
+    fprintf(stderr, "%s: failed to register archive handler\n", PROGRAM_NAME);
     exit(1);
   }
   */
@@ -327,7 +327,7 @@ int main(int argc, char* argv[]) {
   // xml output and src-encoding (switch to encoding?)
   if (isoption(options, OPTION_XML) && isoption(options, OPTION_TEXT_ENCODING)) {
 
-    fprintf(stderr, "%s: Options for xml output and specifying source encoding are incompatible.\n", argv[0]);
+    fprintf(stderr, "%s: Options for xml output and specifying source encoding are incompatible.\n", PROGRAM_NAME);
     exit(STATUS_INVALID_OPTION_COMBINATION);
   }
 
@@ -337,7 +337,7 @@ int main(int argc, char* argv[]) {
   struct stat outstat;
   stat(ofilename, &outstat);
   if ((strcmp(ofilename, "-") != 0) && instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
-    fprintf(stderr, "%s: Input file '%s' is the same as the output file '%s'\n", NAME, filename, ofilename);
+    fprintf(stderr, "%s: Input file '%s' is the same as the output file '%s'\n", PROGRAM_NAME, filename, ofilename);
     exit(STATUS_INPUTFILE_PROBLEM);
   }
 #endif
@@ -491,7 +491,7 @@ int main(int argc, char* argv[]) {
   } catch (const OutOfRangeUnitError& e) {
 
     fprintf(stderr, "%s: unit %d  was selected from srcML that only contains "
-	    "%d units\n", argv[0], poptions.unit, e.size);
+	    "%d units\n", PROGRAM_NAME, poptions.unit, e.size);
     exit_status = STATUS_UNIT_INVALID;
 
     return exit_status;
@@ -502,7 +502,7 @@ int main(int argc, char* argv[]) {
     */
   } catch (TerminateLibXMLError error) {
 
-    fprintf(stderr, "%s:  Program terminated by user\n", argv[0]);
+    fprintf(stderr, "%s:  Program terminated by user\n", PROGRAM_NAME);
     exit_status = STATUS_TERMINATED;
 
     return exit_status;
@@ -511,12 +511,12 @@ int main(int argc, char* argv[]) {
 
     if (error.getErrorNum() == 0) {
       exit_status = STATUS_INPUTFILE_PROBLEM;
-      fprintf(stderr, "%s: Unable to open input file as XML\n", argv[0]);
+      fprintf(stderr, "%s: Unable to open input file as XML\n", PROGRAM_NAME);
     }
 
   } catch (const char* s) {
     
-    fprintf(stderr, "%s: %s\n", argv[0], s);
+    fprintf(stderr, "%s: %s\n", PROGRAM_NAME, s);
     if (!exit_status)
       exit_status = STATUS_ERROR;
   } catch (...) {
@@ -586,7 +586,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
     // missing or extra option argument
     if (c == '?') {
-      fprintf(stderr, "Try '%s --%s' for more information.\n", argv[0], HELP_FLAG);
+      fprintf(stderr, "Try '%s --%s' for more information.\n", PROGRAM_NAME, HELP_FLAG);
       exit(option_error_status(optopt));
     }
 
@@ -594,12 +594,12 @@ int process_args(int argc, char* argv[], process_options & poptions)
     switch(c) {
 
     case HELP_FLAG_SHORT: 
-      output_help(argv[0]);
+      output_help(PROGRAM_NAME);
       exit(STATUS_SUCCESS);
       break;
 
     case VERSION_FLAG_SHORT: 
-      output_version(argv[0]);
+      output_version(PROGRAM_NAME);
       exit(STATUS_SUCCESS);
       break;
 
@@ -635,7 +635,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
     case TEXTENCODING_FLAG_SHORT:
 
       // check for missing argument confused by an argument that looks like an option
-      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       options |= OPTION_TEXT_ENCODING;
 
@@ -643,7 +643,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
       // validate source encoding
       if (!srcMLUtility::checkEncoding(poptions.src_encoding)) {
-	fprintf(stderr, "%s: text encoding \"%s\" is not supported.\n", argv[0], poptions.src_encoding);
+	fprintf(stderr, "%s: text encoding \"%s\" is not supported.\n", PROGRAM_NAME, poptions.src_encoding);
 	exit(STATUS_UNKNOWN_ENCODING);
       }
       break;
@@ -651,7 +651,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
     case NAMESPACE_FLAG_SHORT:
 
       // check for missing argument confused by an argument that looks like an option
-      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       options |= OPTION_NAMESPACE;
 
@@ -661,7 +661,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
     case OMIT_FLAG_SHORT:
 
       // check for missing argument confused by an argument that looks like an option
-      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       options |= OPTION_OMIT;
 
@@ -687,7 +687,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
     case EXPAND_FLAG_SHORT:
 
       // check for missing argument confused by an argument that looks like an option
-      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       options |= OPTION_EXPAND;
 
@@ -709,7 +709,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
     case UNIT_FLAG_SHORT:
 
       // check for missing argument confused by an argument that looks like an option
-      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       options |= OPTION_UNIT;
 
@@ -718,32 +718,32 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
       // validate type of unit number
       if (errno == EINVAL || strlen(end) == strlen(optarg)) {
-	fprintf(stderr, "%s: unit option value \"%s\" must be numeric.\n", argv[0], optarg);
+	fprintf(stderr, "%s: unit option value \"%s\" must be numeric.\n", PROGRAM_NAME, optarg);
 	exit(STATUS_UNIT_INVALID);
       }
 
       // validate range of unit number
       if (poptions.unit <= 0) {
-	fprintf(stderr, "%s: unit option value \"%d\" must be > 0.\n", argv[0], poptions.unit);
+	fprintf(stderr, "%s: unit option value \"%d\" must be > 0.\n", PROGRAM_NAME, poptions.unit);
 	exit(STATUS_UNIT_INVALID);
       }
 
       break;
 
     case SETTINGS_FLAG_CODE :
-      output_settings(argv[0]);
+      output_settings(PROGRAM_NAME);
       exit(STATUS_SUCCESS);
       break;
 
     case FEATURES_FLAG_CODE :
-      output_features(argv[0]);
+      output_features(PROGRAM_NAME);
       exit(STATUS_SUCCESS);
       break;
 
     case INPUT_FORMAT_FLAG_CODE:
 
       // check for missing argument confused by an argument that looks like an option
-      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       options |= OPTION_INPUT_FORMAT;
       poptions.input_format = optarg;
@@ -752,7 +752,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
     case OUTPUT_FORMAT_FLAG_CODE:
 
       // check for missing argument confused by an argument that looks like an option
-      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       options |= OPTION_OUTPUT_FORMAT;
       poptions.output_format = optarg;
@@ -765,14 +765,14 @@ int process_args(int argc, char* argv[], process_options & poptions)
     case REGISTER_EXTENSION_FLAG_CODE :
 
       // check for missing argument confused by an argument that looks like an option
-      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       // register extension name
       poptions.registerext[poptions.registerextcount++] = optarg;
       
       // must be both name and value, but value could be empty
       if (!strchr(optarg, '=')) {
-	fprintf(stderr, "%s: Register extension name and value must be given.\n", argv[0]);
+	fprintf(stderr, "%s: Register extension name and value must be given.\n", PROGRAM_NAME);
 	exit(1);
       }
 
@@ -787,7 +787,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
     case REGISTER_EXTENSION_FILE_FLAG_CODE :
 
       // check for missing argument confused by an argument that looks like an option
-      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       // register files name
       poptions.registerfiles[poptions.registerfilescount++] = optarg;
@@ -796,14 +796,14 @@ int process_args(int argc, char* argv[], process_options & poptions)
     case XPATH_FLAG_CODE:
 
       // check for missing argument confused by an argument that looks like an option
-      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       // check for blank argument
-      checkargisnonempty(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+      checkargisnonempty(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       if(poptions.transformcount != 0)
       {
-	fprintf(stderr, "%s: Only one xpath expression, xslt file, or relaxng file may be used.\n", argv[0]);
+	fprintf(stderr, "%s: Only one xpath expression, xslt file, or relaxng file may be used.\n", PROGRAM_NAME);
 	exit(STATUS_ERROR);
       }
 
@@ -814,14 +814,14 @@ int process_args(int argc, char* argv[], process_options & poptions)
     case XSLT_FLAG_CODE:
 
       // check for missing argument confused by an argument that looks like an option
-      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       // check for blank argument
-      checkargisnonempty(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+      checkargisnonempty(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       if(poptions.transformcount != 0)
       {
-	fprintf(stderr, "%s: Only one xpath expression, xslt file, or relaxng file may be used.\n", argv[0]);
+	fprintf(stderr, "%s: Only one xpath expression, xslt file, or relaxng file may be used.\n", PROGRAM_NAME);
 	exit(STATUS_ERROR);
       }
 
@@ -832,14 +832,14 @@ int process_args(int argc, char* argv[], process_options & poptions)
     case STRING_PARAM_FLAG_CODE:
 
       // check for missing argument confused by an argument that looks like an option
-      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       // param name
       poptions.params[poptions.paramcount++] = optarg;
       
       // must be both name and value, but value could be empty
       if (!strchr(optarg, '=')) {
-	fprintf(stderr, "%s: Param name and value must be given.\n", argv[0]);
+	fprintf(stderr, "%s: Param name and value must be given.\n", PROGRAM_NAME);
 	exit(1);
       }
 
@@ -856,11 +856,11 @@ int process_args(int argc, char* argv[], process_options & poptions)
     case PARAM_FLAG_CODE:
 
       // check for missing argument confused by an argument that looks like an option
-      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       // must be both name and value, but value could be empty
       if (!strchr(optarg, '=')) {
-	fprintf(stderr, "%s: Param name and value must be given.\n", argv[0]);
+	fprintf(stderr, "%s: Param name and value must be given.\n", PROGRAM_NAME);
 	exit(1);
       }
 
@@ -878,11 +878,11 @@ int process_args(int argc, char* argv[], process_options & poptions)
     case RELAXNG_FLAG_CODE:
 
       // check for missing argument confused by an argument that looks like an option
-      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       if(poptions.transformcount != 0)
       {
-	fprintf(stderr, "%s: Only one xpath expression, xslt file, or relaxng file may be used.\n", argv[0]);
+	fprintf(stderr, "%s: Only one xpath expression, xslt file, or relaxng file may be used.\n", PROGRAM_NAME);
 	exit(STATUS_ERROR);
       }
 

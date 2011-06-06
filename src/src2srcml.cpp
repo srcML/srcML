@@ -37,7 +37,7 @@
 #include <dirent.h>
 #include <algorithm>
 
-const char* PROGRAM_NAME = 0;
+const char* PROGRAM_NAME = "src2srcml";
 
 struct stringequal {
   const char *const lhs;
@@ -337,9 +337,6 @@ void register_standard_file_extensions();
 
 int main(int argc, char* argv[]) {
 
-  // exportable to other code
-  PROGRAM_NAME = argv[0];
-
   options |= OPTION_SKIP_DEFAULT;
 
   int exit_status = EXIT_SUCCESS;
@@ -412,7 +409,7 @@ int main(int argc, char* argv[]) {
     stat(argv[i], &instat);
     if (instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
       fprintf(stderr, "%s: Input file '%s' is the same as the output file '%s'\n",
-	      argv[0], argv[i], poptions.srcml_filename);
+	      PROGRAM_NAME, argv[i], poptions.srcml_filename);
       exit(STATUS_INPUTFILE_PROBLEM);
     }
   }
@@ -467,7 +464,7 @@ int main(int argc, char* argv[]) {
   // all input is through libarchive
   if (!isoption(options, OPTION_FILELIST)) {
     if (xmlRegisterInputCallbacks(archiveReadMatch, archiveReadOpen, archiveRead, archiveReadClose) < 0) {
-      fprintf(stderr, "%s: failed to register archive handler\n", argv[0]);
+      fprintf(stderr, "%s: failed to register archive handler\n", PROGRAM_NAME);
       exit(1);
     }
   }
@@ -647,27 +644,27 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
     // missing or extra option argument
     if (c == '?') {
-      fprintf(stderr, "Try '%s --%s' for more information.\n", argv[0], HELP_FLAG);
+      fprintf(stderr, "Try '%s --%s' for more information.\n", PROGRAM_NAME, HELP_FLAG);
       exit(option_error_status(optopt));
     }
 
     switch(c) {
 
     case HELP_FLAG_SHORT: 
-      output_help(argv[0]);
+      output_help(PROGRAM_NAME);
       exit(STATUS_SUCCESS);
 
       break;
 
     case VERSION_FLAG_SHORT: 
-      output_version(argv[0]);
+      output_version(PROGRAM_NAME);
       exit(STATUS_SUCCESS);
       break;
 
     case OUTPUT_FLAG_SHORT: 
 
       // check for missing argument confused by an argument that looks like an option
-      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       poptions.srcml_filename = optarg;
       break;
@@ -675,7 +672,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     case FILELIST_FLAG_CODE: 
 
       // check for missing argument confused by an argument that looks like an option
-      //      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+      //      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       options |= OPTION_FILELIST;
 
@@ -688,7 +685,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     case REGISTER_EXT_FLAG_CODE: 
 
       // check for missing argument confused by an argument that looks like an option
-      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       // check all the registered extensions.  There may be many (CSV)
       for (char* cursub = strtok(optarg, ","); cursub; cursub = strtok(NULL, ",")) {
@@ -697,8 +694,8 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
 	if (!Language::registerUserExt(extension, language)) {
 
-	    fprintf(stderr, "%s: language \"%s\" is not supported.\n", argv[0], language);
-	    fprintf(stderr, "Try '%s %s' for more information.\n", argv[0], HELP_FLAG);
+	    fprintf(stderr, "%s: language \"%s\" is not supported.\n", PROGRAM_NAME, language);
+	    fprintf(stderr, "Try '%s %s' for more information.\n", PROGRAM_NAME, HELP_FLAG);
 	    exit(STATUS_ERROR);
 	  }
       }
@@ -716,7 +713,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     case ENCODING_FLAG_SHORT: 
 
       // check for missing argument confused by an argument that looks like an option
-      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       options |= OPTION_XML_ENCODING;
 
@@ -724,8 +721,8 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
       // validate xml encoding
       if (!srcMLOutput::checkEncoding(poptions.xml_encoding)) {
-	fprintf(stderr, "%s: xml encoding \"%s\" is not supported.\n", argv[0], poptions.xml_encoding);
-	fprintf(stderr, "Try '%s %s' for more information.\n", argv[0], HELP_FLAG);
+	fprintf(stderr, "%s: xml encoding \"%s\" is not supported.\n", PROGRAM_NAME, poptions.xml_encoding);
+	fprintf(stderr, "Try '%s %s' for more information.\n", PROGRAM_NAME, HELP_FLAG);
 	exit(STATUS_UNKNOWN_ENCODING);
       }
       break;
@@ -733,7 +730,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     case TEXTENCODING_FLAG_SHORT: 
 
       // check for missing argument confused by an argument that looks like an option
-      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       options |= OPTION_TEXT_ENCODING;
 
@@ -741,8 +738,8 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
       // validate source encoding
       if (!srcMLOutput::checkEncoding(poptions.src_encoding)) {
-	fprintf(stderr, "%s: text encoding \"%s\" is not supported.\n", argv[0], poptions.src_encoding);
-	fprintf(stderr, "Try '%s %s' for more information.\n", argv[0], HELP_FLAG);
+	fprintf(stderr, "%s: text encoding \"%s\" is not supported.\n", PROGRAM_NAME, poptions.src_encoding);
+	fprintf(stderr, "Try '%s %s' for more information.\n", PROGRAM_NAME, HELP_FLAG);
 	exit(STATUS_UNKNOWN_ENCODING);
       }
       break;
@@ -750,7 +747,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     case XMLNS_FLAG_CODE: 
 
       // check for missing argument confused by an argument that looks like an option
-      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       {
 	// find the start of the embedded uri (if it is in there)
@@ -786,7 +783,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
 	if (!found) {
 	  fprintf(stderr, "%s: invalid namespace \"%s\"\n\n"
-		  "Namespace URI must be on of the following:  \n", argv[0], ns_uri);
+		  "Namespace URI must be on of the following:  \n", PROGRAM_NAME, ns_uri);
 	  for (int i = 0; i < num_prefixes; ++i)
 	    fprintf(stderr, "  %-35s %s\n", uris[i].uri, uris[i].description);
 
@@ -826,7 +823,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     case LANGUAGE_FLAG_SHORT: 
 
       // check for missing argument confused by an argument that looks like an option
-      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       options |= OPTION_LANGUAGE;
 
@@ -834,7 +831,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       poptions.language = Language::getLanguage(optarg);
       if (poptions.language == 0) {
 	fprintf(stderr, "%s: invalid option -- Language flag must one of the following values:  "
-		"%s %s %s %s\n", argv[0], LANGUAGE_C, LANGUAGE_CXX, LANGUAGE_JAVA, LANGUAGE_ASPECTJ);
+		"%s %s %s %s\n", PROGRAM_NAME, LANGUAGE_C, LANGUAGE_CXX, LANGUAGE_JAVA, LANGUAGE_ASPECTJ);
 
 	exit(STATUS_INVALID_LANGUAGE);
       }
@@ -843,7 +840,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     case DIRECTORY_FLAG_SHORT: 
 
       // check for missing argument confused by an argument that looks like an option
-      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       options |= OPTION_DIRECTORY;
 
@@ -853,7 +850,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     case FILENAME_FLAG_SHORT: 
 
       // check for missing argument confused by an argument that looks like an option
-      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       options |= OPTION_FILENAME;
 
@@ -863,7 +860,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     case SRCVERSION_FLAG_SHORT: 
 
       // check for missing argument confused by an argument that looks like an option
-      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       options |= OPTION_VERSION;
 
@@ -871,19 +868,19 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       break;
 
     case SETTINGS_FLAG_CODE :
-      output_settings(argv[0]);
+      output_settings(PROGRAM_NAME);
       exit(STATUS_SUCCESS);
       break;
 
     case FEATURES_FLAG_CODE :
-      output_features(argv[0]);
+      output_features(PROGRAM_NAME);
       exit(STATUS_SUCCESS);
       break;
 
     case INPUT_FORMAT_FLAG_CODE: 
 
       // check for missing argument confused by an argument that looks like an option
-      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       options |= OPTION_INPUT_FORMAT;
 
@@ -893,7 +890,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     case OUTPUT_FORMAT_FLAG_CODE: 
 
       // check for missing argument confused by an argument that looks like an option
-      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       options |= OPTION_OUTPUT_FORMAT;
 
@@ -907,7 +904,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     case TABS_FLAG_CODE :
       /*
       // check for missing argument confused by an argument that looks like an option
-      checkargisoption(argv[0], argv[lastoptind], optarg, optind, lastoptind);
+      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
       */
 
       options |= OPTION_POSITION;
@@ -917,13 +914,13 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       
       // validate type of tabsize number
       if (errno == EINVAL || strlen(end) == strlen(optarg)) {
-        fprintf(stderr, "%s: unit option value \"%s\" must be numeric.\n", argv[0], optarg);
+        fprintf(stderr, "%s: unit option value \"%s\" must be numeric.\n", PROGRAM_NAME, optarg);
         exit(STATUS_UNIT_INVALID);
       }
 
       // validate range of unit number
       if (poptions.tabsize <= 0) {
-        fprintf(stderr, "%s: unit option value \"%d\" must be > 0.\n", argv[0], poptions.tabsize);
+        fprintf(stderr, "%s: unit option value \"%d\" must be > 0.\n", PROGRAM_NAME, poptions.tabsize);
         exit(STATUS_UNIT_INVALID);
       }
 
@@ -932,7 +929,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     case CPP_MARKUP_ELSE_FLAG_CODE: 
       if (cpp_else) {
 	fprintf(stderr, "%s: Conflicting options %s and %s selected.\n",
-		argv[0], CPP_MARKUP_ELSE_FLAG, CPP_TEXTONLY_ELSE_FLAG);
+		PROGRAM_NAME, CPP_MARKUP_ELSE_FLAG, CPP_TEXTONLY_ELSE_FLAG);
 	exit(STATUS_INVALID_OPTION_COMBINATION);
       }
 
@@ -944,7 +941,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     case CPP_TEXTONLY_ELSE_FLAG_CODE: 
       if (cpp_else) {
 	fprintf(stderr, "%s: Conflicting options %s and %s selected.\n",
-		argv[0], CPP_MARKUP_ELSE_FLAG, CPP_TEXTONLY_ELSE_FLAG);
+		PROGRAM_NAME, CPP_MARKUP_ELSE_FLAG, CPP_TEXTONLY_ELSE_FLAG);
 	exit(STATUS_INVALID_OPTION_COMBINATION);
       }
 
@@ -956,7 +953,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     case CPP_MARKUP_IF0_FLAG_CODE: 
       if (cpp_if0) {
 	fprintf(stderr, "%s: Conflicting options %s and %s selected.\n",
-		argv[0], CPP_MARKUP_IF0_FLAG, CPP_TEXTONLY_IF0_FLAG);
+		PROGRAM_NAME, CPP_MARKUP_IF0_FLAG, CPP_TEXTONLY_IF0_FLAG);
 	exit(STATUS_INVALID_OPTION_COMBINATION);
       }
 
@@ -968,7 +965,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     case CPP_TEXTONLY_IF0_FLAG_CODE: 
       if (cpp_if0) {
 	fprintf(stderr, "%s: Conflicting options %s and %s selected.\n",
-		argv[0], CPP_MARKUP_IF0_FLAG, CPP_TEXTONLY_IF0_FLAG);
+		PROGRAM_NAME, CPP_MARKUP_IF0_FLAG, CPP_TEXTONLY_IF0_FLAG);
 	exit(STATUS_INVALID_OPTION_COMBINATION);
       }
 
