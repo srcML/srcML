@@ -438,7 +438,7 @@ validate(open("sub/b.cpp", "r").read(), sfile2)
 
 #os.system("rm -f sub/a.cpp sub/b.cpp")
 
-checkNoOutput([srcml2src, option.EXPAND_FLAG_SHORT, '.'], nestedfile)
+#checkNoOutput([srcml2src, option.EXPAND_FLAG_SHORT, '.'], nestedfile)
 
 #validate(open("sub/a.cpp", "r").read(), sfile1)
 #validate(open("sub/b.cpp", "r").read(), sfile2)

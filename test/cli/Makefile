@@ -17,6 +17,5 @@ clean :
 	rm -f option.py
 	rm -f status.py
 	rm -f filelistab
-	rm -f sub/*
-	rmdir sub
-	rm -r dir
+	rm -fR sub
+	rm -fR dir
