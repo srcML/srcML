@@ -8,6 +8,10 @@
 #include <string>
 #include <time.h>
 
+#ifdef __MINGW32__
+#include <io.h>
+#endif
+
 class UnsupportedFormat {};
 
 static const char* output_format = 0;
@@ -113,7 +117,7 @@ void* archiveWriteRootOpen(const char * URI) {
 int setupArchive(struct archive* wa, const char* path) {
 
       // required outermost extension
-      const char* outer = rindex(path, '.');
+      const char* outer = strrchr(path, '.');
       if (!outer || outer[0] == '\0')
 	return 0;
       ++outer;
@@ -123,7 +127,7 @@ int setupArchive(struct archive* wa, const char* path) {
 
       // find the innermost extension which is not required
       std::string ext2(path, outer - 1);
-      const char* inner = rindex(ext2.c_str(), '.');
+      const char* inner = strrchr(ext2.c_str(), '.');
       if (!inner || inner[0] == '\0')
 	inner = 0;
       else
