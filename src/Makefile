@@ -25,20 +25,17 @@ OBJ_DIR = ../obj/
 ANTLR=${firstword ${wildcard /usr/bin/antlr /usr/bin/runantlr /usr/bin/cantlr /opt/local/bin/antlr}}
 
 # antlr c++ include files
-ANTLR_INC_DIR=${dir ${firstword ${wildcard /usr/include/antlr /opt/local/include/antlr}}}
 ifndef MINGW32
+ANTLR_INC_DIR=${dir ${firstword ${wildcard /usr/include/antlr /opt/local/include/antlr}}}
 ANTLR_INC=-I${ANTLR_INC_DIR}
-else
-ANTLR_INC=
 endif
 
 # antlr c++ library
 ifndef MINGW32
 ANTLR_LIB_DIR=${dir ${firstword ${wildcard /usr/lib64/libantlr* /usr/lib/libantlr* /opt/local/lib/libantlr*}}}
-ANTLR_LIB=-L${ANTLR_LIB_DIR} -lantlr
-else
-ANTLR_LIB= -lantlr
+ANTLR_LIB=-L${ANTLR_LIB_DIR}
 endif 
+ANTLR_LIB += -lantlr
 
 LDFLAGS=$(ANTLR_LIB)
 
