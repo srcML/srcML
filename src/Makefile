@@ -33,8 +33,12 @@ ANTLR_INC=
 endif
 
 # antlr c++ library
+ifndef MINGW32
 ANTLR_LIB_DIR=${dir ${firstword ${wildcard /usr/lib64/libantlr* /usr/lib/libantlr* /opt/local/lib/libantlr*}}}
 ANTLR_LIB=-L${ANTLR_LIB_DIR} -lantlr
+else
+ANTLR_LIB= -lantlr
+endif 
 
 LDFLAGS=$(ANTLR_LIB)
 
@@ -55,8 +59,8 @@ ifndef MINGW32
 XML_LIB_SRC2SRCML=-lxml2
 XML_LIB_SRCML2SRC=-lxml2 -lxslt -lexslt
 else
-XML_LIB_SRC2SRCML=-lxml2 -regex -liberty
-XML_LIB_SRCML2SRC=-lxml2 -lxslt -lexslt -regex -liberty
+XML_LIB_SRC2SRCML=-lxml2 -lregex -liberty
+XML_LIB_SRCML2SRC=-lxml2 -lxslt -lexslt -lregex -liberty
 endif
 
 # libarchive
