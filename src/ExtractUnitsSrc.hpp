@@ -28,7 +28,7 @@
 #include "SAX2ExtractUnitsSrc.hpp"
 #include "ProcessUnit.hpp"
 
-#ifdef __GNUC__
+#if defined(__GNUC__) && !defined(__MINGW32__)
 #define EOL "\n"
 #define EOL_SIZE 1
 #else

@@ -27,14 +27,6 @@
 
 #include "ExtractUnitsSrc.hpp"
 
-#if defined(__GNUC__) && !defined(__MINGW32__)
-#define EOL "\n"
-#define EOL_SIZE 1
-#else
-#define EOL "\r\n"
-#define EOL_SIZE 2
-#endif
-
 using namespace SAX2ExtractRootSrc;
 
 class ExtractRootSrc : public ExtractUnitsSrc {
