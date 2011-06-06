@@ -25,9 +25,9 @@
 #include "srcMLUtility.hpp"
 #include <cstring>
 #include "srcmlns.hpp"
-
-#ifdef __GNUC__
 #include <sys/stat.h>
+
+#if defined(__GNUC__) && !defined(__MINGW32__)
 #include <sys/errno.h>
 #else
 #include <direct.h>
