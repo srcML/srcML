@@ -111,7 +111,7 @@ class ExtractUnitsSrc : public ProcessUnit {
 
   virtual void characters(void* ctx, const xmlChar* ch, int len) {
 
-#ifdef __GNUC__
+#if defined(__GNUC__) && !defined(__MINGW32__)
     xmlOutputBufferWrite(output_buffer, len, (const char*) ch);
 #else
     const char* c = (const char*) ch;
