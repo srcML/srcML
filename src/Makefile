@@ -68,6 +68,10 @@ IO_LIB=${OBJ_DIR}libxml_archive_read.o ${OBJ_DIR}libxml_archive_write.o
 
 SRC2SRCML_BIN=${EXE_DIR}src2srcml
 SRCML2SRC_BIN=${EXE_DIR}srcml2src
+ifdef MINGW32
+SRC2SRCML_BIN +=.exe
+SRCML2SRC_BIN +=.exe
+endif
 
 # default
 all : ${EXE_DIR}src2srcml ${EXE_DIR}srcml2src
