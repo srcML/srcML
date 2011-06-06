@@ -4,8 +4,8 @@
 EXE_DIR = ../bin/
 OBJ_DIR = ../obj/
 
-SRC2SRCML_BIN=wine ../bin/src2srcml.exe
-SRCML2SRC_BIN=wine ../bin/srcml2src.exe
+SRC2SRCML_BIN=../bin/src2srcml
+SRCML2SRC_BIN=../bin/srcml2src
 
 # detect OS                                                                     
 OSUPPER = $(shell uname -s 2>/dev/null | tr [:lower:] [:upper:])
