@@ -39,7 +39,8 @@
 
 int option_error_status(int optopt);
 
-const char* PROGRAM_NAME = "srcml2src";
+#define BASE_PROGRAM_NAME "srcml2src"
+const char* PROGRAM_NAME = BASE_PROGRAM_NAME;
 
 char const * const EXPAND_FLAG = "to-dir";
 char const EXPAND_FLAG_SHORT = 'a';
@@ -192,14 +193,13 @@ void output_help(const char* name) {
 
   printf("Examples:  \n\n"
 	    "  Read from file main.cpp.xml, write to file main.cpp:\n\n"
-	    "  %1$s main.cpp.xml -o main.cpp\n\n"
+	    "  " BASE_PROGRAM_NAME " main.cpp.xml -o main.cpp\n\n"
 
 	    "  Read from URI, write to file main.cpp:\n\n"
-	    "  %1$s http://www.sdml.info/projects/srcml/ex/main.cpp.xml main.cpp\n\n"
+	    "  " BASE_PROGRAM_NAME " http://www.sdml.info/projects/srcml/ex/main.cpp.xml main.cpp\n\n"
 
 	    "  Read from file main.cpp.xml, output language attribute to stdout:\n\n"
-	    "  %1$s main.cpp.xml --language\n\n"
-	 , name);
+            "  " BASE_PROGRAM_NAME " main.cpp.xml --language\n\n");
 
   printf("www.sdml.info\n"
          "Report bugs to %s\n", EMAIL_ADDRESS);
@@ -331,17 +331,19 @@ int main(int argc, char* argv[]) {
     exit(STATUS_INVALID_OPTION_COMBINATION);
   }
 
-  /*
-  // verify that the output file is not the same as the input file
 #if defined(__GNUG__) && !defined(__MINGW32__)
+  // verify that the output file is not the same as the input file
+  struct stat instat;
+  stat(filename, &instat);
+
   struct stat outstat;
-  stat(ofilename, &outstat);
-  if ((strcmp(ofilename, "-") != 0) && instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
-    fprintf(stderr, "%s: Input file '%s' is the same as the output file '%s'\n", PROGRAM_NAME, filename, ofilename);
+  stat(poptions.ofilename, &outstat);
+  if ((strcmp(poptions.ofilename, "-") != 0) && instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
+    fprintf(stderr, "%s: Input file '%s' is the same as the output file '%s'\n", PROGRAM_NAME, filename, poptions.ofilename);
     exit(STATUS_INPUTFILE_PROBLEM);
   }
 #endif
-  */
+
   // info options are convenience functions for multiple options
   if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {
     optionorder[0] = OPTION_XML_ENCODING;
