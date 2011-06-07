@@ -333,7 +333,7 @@ int main(int argc, char* argv[]) {
 
   /*
   // verify that the output file is not the same as the input file
-#ifdef __GNUG__
+#if defined(__GNUG__) && !defined(__MINGW32__)
   struct stat outstat;
   stat(ofilename, &outstat);
   if ((strcmp(ofilename, "-") != 0) && instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {

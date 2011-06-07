@@ -399,7 +399,7 @@ int main(int argc, char* argv[]) {
   if (input_arg_count > 1)
     options |= OPTION_NESTED;
 
-#ifdef __GNUG__
+#if defined(__GNUC__) && !defined(__MINGW32__)
   // verify that the output filename is not the same as any of the input filenames
   struct stat outstat;
   stat(poptions.srcml_filename, &outstat);
@@ -451,7 +451,7 @@ int main(int argc, char* argv[]) {
     }
   }
 
-#ifdef __GNUG__
+#if defined(__GNUG__) && !defined(__MINGW32__)
   // automatic interactive use from stdin (not on redirect or pipe)
   if (input_arg_count == 0 || strcmp(argv[input_arg_start], STDIN) == 0) {
 
