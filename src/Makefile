@@ -66,15 +66,16 @@ XML_IO_LIB=-larchive
 IO_LIB_DEPENDS=libxml_archive_read.hpp libxml_archive_write.hpp
 IO_LIB=${OBJ_DIR}libxml_archive_read.o ${OBJ_DIR}libxml_archive_write.o
 
+ifndef MINGW32
 SRC2SRCML_BIN=${EXE_DIR}src2srcml
 SRCML2SRC_BIN=${EXE_DIR}srcml2src
-ifdef MINGW32
-SRC2SRCML_BIN +=.exe
-SRCML2SRC_BIN +=.exe
+else
+SRC2SRCML_BIN=${EXE_DIR}src2srcml.exe
+SRCML2SRC_BIN=${EXE_DIR}srcml2src.exe
 endif
 
 # default
-all : ${EXE_DIR}src2srcml ${EXE_DIR}srcml2src
+all : ${SRC2SRCML_BIN} ${SRCML2SRC_BIN}
 
 mingw32 :
 	make MINGW32=1 CXX=i686-pc-mingw32-g++ AR=i686-pc-mingw32-ar 
@@ -162,7 +163,7 @@ CREATED_GRAMMARS = WSLexer.g CommentLexer.g OperatorLexer.g TextLexer.g KeywordL
 GENERATED_GRAMMARS = $(patsubst %.g, expanded%.g, $(CREATED_GRAMMARS))
 
 # source code to srcML translator program
-${EXE_DIR}src2srcml : ${OBJ_DIR}src2srcml.o ${OBJ_DIR}srcmlapps.o ${EXE_DIR}libsrcml.a
+${SRC2SRCML_BIN} : ${OBJ_DIR}src2srcml.o ${OBJ_DIR}srcmlapps.o ${EXE_DIR}libsrcml.a
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) ${XML_LIB_SRC2SRCML} ${XML_IO_LIB} ${EXE_DIR}/libsrcml.a -o $@
 
 ${EXE_DIR}src2srcmldyn : ${OBJ_DIR}src2srcml.o ${OBJ_DIR}srcmlapps.o ${EXE_DIR}libsrcml.so
@@ -175,7 +176,7 @@ ${EXE_DIR}libsrcml.a : ${OBJ_DIR}srcMLParserClean.o ${OBJ_DIR}KeywordCPPLexerCle
 	${AR} rvs $@ $^ 
 
 # srcML to source code translator program
-${EXE_DIR}srcml2src : ${OBJ_DIR}srcml2src.o ${OBJ_DIR}srcMLUtility.o ${OBJ_DIR}SAX2ExtractUnitsSrc.o ${OBJ_DIR}srcmlapps.o ${OBJ_DIR}SAX2Utilities.o ${OBJ_DIR}SAX2UnitDOM.o ${OBJ_DIR}SAX2UnitDOMXSLT.o ${OBJ_DIR}SAX2UnitDOMXPath.o ${OBJ_DIR}SAX2UnitDOMRelaxNG.o ${OBJ_DIR}srcexfun.o ${IO_LIB}
+${SRCML2SRC_BIN} : ${OBJ_DIR}srcml2src.o ${OBJ_DIR}srcMLUtility.o ${OBJ_DIR}SAX2ExtractUnitsSrc.o ${OBJ_DIR}srcmlapps.o ${OBJ_DIR}SAX2Utilities.o ${OBJ_DIR}SAX2UnitDOM.o ${OBJ_DIR}SAX2UnitDOMXSLT.o ${OBJ_DIR}SAX2UnitDOMXPath.o ${OBJ_DIR}SAX2UnitDOMRelaxNG.o ${OBJ_DIR}srcexfun.o ${IO_LIB}
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) ${XML_LIB_SRCML2SRC} ${XML_IO_LIB} -o $@
 
 # source code lexical analysis
@@ -329,8 +330,11 @@ ${OBJ_DIR}xmlwriter.o : xmlwriter.cpp xmlwriter.h
 PHONY : clean
 clean :
 	make cleanbuild
-	rm -f ${EXE_DIR}src2srcml ${EXE_DIR}srcml2src version.cpp
+	rm -f ${EXE_DIR}src2srcml ${EXE_DIR}srcml2src
 
+cleanmingw32: 
+	make cleanbuild
+	rm -rf ${EXE_DIR}src2srcml.exe ${EXE_DIR}srcml2src.exe
 # clean generated files leaving program
 PHONY : cleanbuild
 cleanbuild :
