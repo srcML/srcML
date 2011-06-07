@@ -38,8 +38,8 @@ endif
 
 PHONY : time
 time : ../bin/src2srcml
-	@../bin/src2srcml --version
-	@../bin/srcml2src --version
+	@${SRC2SRCML_BIN} --version
+	@${SRC2SRCML_BIN} --version
 	@${ECHO}
 	@${ECHO} ${FLAGS} "${SRC2SRCML_BIN} ${TIMING_MED} -o ${TIMING_MED}.xml:"
 	@cd .; ${TIME} ${SRC2SRCML_BIN} ${TIMING_MED} -o ${TIMING_MED}.xml | ${SED} 's/[0-9\.]*/ 10872 \/ &/' | bc -l |  xargs printf "%7.0f lines/second\n"
