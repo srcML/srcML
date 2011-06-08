@@ -51,10 +51,8 @@ bool operator==(const char* lhs, const stringequal& r) {
    return std::strcmp(lhs, r.lhs) == 0;
 }
 
-#ifdef LIBARCHIVE
 #include "libxml_archive_read.hpp"
 #include "libxml_archive_write.hpp"
-#endif
 
 #ifdef CURL
 #include "libxml_curl_io.hpp"
@@ -462,7 +460,6 @@ int main(int argc, char* argv[]) {
   }
 #endif
 
-#ifdef LIBARCHIVE
   // all input is through libarchive
   if (!isoption(options, OPTION_FILELIST)) {
     if (xmlRegisterInputCallbacks(archiveReadMatch, archiveReadOpen, archiveRead, archiveReadClose) < 0) {
@@ -470,7 +467,6 @@ int main(int argc, char* argv[]) {
       exit(1);
     }
   }
-#endif
 
   try {
 
@@ -1088,8 +1084,6 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     return;
   }
 
-#ifdef LIBARCHIVE
-
   // single file archive (tar, zip, cpio, etc.) is listed as a single file
   // but is much, much more
   OPTION_TYPE save_options = options;
@@ -1173,8 +1167,6 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
         continue;
       }
 
-#endif
-
       // language (for this item in archive mode) based on extension, if not specified
 
       // 1) language may have been specified explicitly
@@ -1256,9 +1248,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       return;
     //     return STATUS_TERMINATED;
 
-#ifdef LIBARCHIVE
   } while (isarchive && isAnythingOpen(context));
-#endif
 }
 
 void process_dir(srcMLTranslator& translator, const char* directory, process_options& poptions, int& count, int & skipped, int & error, bool showinput, bool shownumber) {

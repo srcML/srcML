@@ -61,7 +61,6 @@ XML_LIB_SRCML2SRC=-lxml2 -lxslt -lexslt -lregex -liberty
 endif
 
 # libarchive
-XML_IO_LIB_DEFINE=-DLIBARCHIVE
 XML_IO_LIB=-larchive
 IO_LIB_DEPENDS=libxml_archive_read.hpp libxml_archive_write.hpp
 IO_LIB=${OBJ_DIR}libxml_archive_read.o ${OBJ_DIR}libxml_archive_write.o
@@ -185,10 +184,10 @@ ${EXE_DIR}srcmllexer : ${OBJ_DIR}srcmllexer.o ${OBJ_DIR}KeywordCPPLexer.o ${OBJ_
 
 # Object files
 ${OBJ_DIR}src2srcml.o : src2srcml.cpp srcMLTranslator.hpp srcmlapps.hpp Options.hpp srcmlns.hpp ${IO_LIB_DEPENDS}
-	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(XML_IO_LIB_DEFINE) $(LIBXML_INCLUDE) -c $< -o $@
+	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}srcml2src.o : srcml2src.cpp srcmlapps.hpp Options.hpp ${IO_LIB_DEPENDS}
-	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(XML_IO_LIB_DEFINE) $(LIBXML_INCLUDE) -c $< -o $@
+	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}srcmllexer.o : srcmllexer.cpp srcmlapps.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) -c $< -o $@
@@ -243,7 +242,7 @@ ${OBJ_DIR}UTF8CharBuffer.o : UTF8CharBuffer.cpp UTF8CharBuffer.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}srcMLUtility.o : srcMLUtility.cpp srcMLUtility.hpp SAX2CountUnits.hpp SAX2ExtractRootSrc.hpp SAX2ExtractUnitSrc.hpp SAX2ExtractUnitsSrc.hpp SAX2ExtractUnitXML.hpp SAX2Properties.hpp SAX2TextWriter.hpp SAX2Utilities.hpp Options.hpp ExtractUnitsSrc.hpp CountUnits.hpp Properties.hpp ExtractUnitsXML.hpp
-	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(XML_IO_LIB_DEFINE) $(LIBXML_INCLUDE) -c $< -o $@
+	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}URIStream.o : URIStream.cpp URIStream.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@

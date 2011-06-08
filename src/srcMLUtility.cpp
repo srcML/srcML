@@ -54,10 +54,8 @@
 
 #include <libexslt/exslt.h>
 
-#ifdef LIBARCHIVE
 #include "libxml_archive_read.hpp"
 #include "libxml_archive_write.hpp"
-#endif
 
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, OPTION_TYPE& op)
@@ -268,7 +266,6 @@ void srcMLUtility::extract_element(const char* element, const char* filename) {
 // extract a given unit
 void srcMLUtility::extract_text(const char* to_dir, const char* ofilename, int unit) {
 
-#ifdef LIBARCHIVE
 #if 0
   if (xmlRegisterOutputCallbacks(archiveWriteMatch_src2srcml, archiveWriteOpen, archiveWrite, archiveWriteClose) < 0) {
       fprintf(stderr, "%s: failed to register archive handler\n", "FOO");
@@ -280,7 +277,6 @@ void srcMLUtility::extract_text(const char* to_dir, const char* ofilename, int u
 
     archiveWriteRootOpen(ofilename);
   }
-#endif
 #endif
 
   // setup parser
@@ -301,11 +297,9 @@ void srcMLUtility::extract_text(const char* to_dir, const char* ofilename, int u
   // process the document
   xmlParseDocument(ctxt);
 
-#ifdef LIBARCHIVE
 #if 0
   if (archiveWriteMatch_src2srcml(ofilename))
     archiveWriteRootClose(0);
-#endif
 #endif
   
   // local variable, do not want xmlFreeParserCtxt to free
@@ -322,8 +316,6 @@ void srcMLUtility::extract_text(const char* to_dir, const char* ofilename, int u
 // expand the compound srcML to individual files
 void srcMLUtility::expand(const char* root_filename, const char* format, const char* to_directory) {
 
-#ifdef LIBARCHIVE
-
   if (xmlRegisterOutputCallbacks(archiveWriteMatch_srcml2src, archiveWriteOpen, archiveWrite, archiveWriteClose) < 0) {
       fprintf(stderr, "%s: failed to register archive handler\n", "FOO");
       exit(1);
@@ -332,7 +324,6 @@ void srcMLUtility::expand(const char* root_filename, const char* format, const c
   archiveWriteOutputFormat(format);
 
   archiveWriteRootOpen(root_filename);
-#endif
 
   // setup parser
   xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
@@ -352,9 +343,7 @@ void srcMLUtility::expand(const char* root_filename, const char* format, const c
   // process the document
   xmlParseDocument(ctxt);
 
-#ifdef LIBARCHIVE
   archiveWriteRootClose(0);
-#endif
   
   // local variable, do not want xmlFreeParserCtxt to free
   ctxt->sax = NULL;

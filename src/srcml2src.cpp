@@ -32,10 +32,8 @@
 #include "srcmlns.hpp"
 #include <getopt.h>
 
-#ifdef LIBARCHIVE
 #include "libxml_archive_read.hpp"
 #include "libxml_archive_write.hpp"
-#endif
 
 int option_error_status(int optopt);
 
@@ -264,8 +262,6 @@ int main(int argc, char* argv[]) {
   xmlGenericErrorFunc handler = (xmlGenericErrorFunc) libxml_error;
   initGenericErrorDefaultFunc(&handler);
 
-#ifdef LIBARCHIVE
-
   xmlRegisterDefaultInputCallbacks();
 
   if (xmlRegisterInputCallbacks(archiveReadMatch, archiveReadOpen, archiveRead, archiveReadClose) < 0) {
@@ -278,7 +274,6 @@ int main(int argc, char* argv[]) {
     exit(1);
   }
   */
-#endif
 
   /* signal handling */
 
