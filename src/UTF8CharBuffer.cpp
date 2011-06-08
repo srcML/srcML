@@ -55,8 +55,6 @@ int UTF8CharBuffer::getChar() {
     lastcr = false;
     if (pos < size)
       c = (int) content[pos++];
-    else
-      c = -1;
   }
 
   // convert carriage returns to a line feed
