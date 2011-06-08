@@ -2,8 +2,6 @@
 # Makefile for srcML translator, src2srcml and srcml2src
 #
 
-VERSION="\"$(shell cat VERSION)\""
-
 # set compiler version to match that of antlr library
 CXX=/usr/bin/g++
 
@@ -14,6 +12,9 @@ AR=/usr/bin/ar
 SED=${firstword ${wildcard /opt/local/bin/gsed /bin/sed}}
 GREP=${firstword ${wildcard /bin/grep /usr/bin/grep}}
 ECHO=/bin/echo
+CUT=/usr/bin/cut
+
+VERSION="\"Trunk `svnversion -n``svn info | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2-`\""
 
 # project dirs
 EXE_DIR = ../bin/
@@ -360,14 +361,6 @@ cleanantlr :
 	rm -f PureCommentLexerClean.cpp
 	rm -f KeywordCPPLexerClean.cpp
 	rm -f srcMLParserClean.cpp
-
-# update trunk version
-PHONY : trunkversion
-trunkversion :
-	$(ECHO) -n "Trunk " > VERSION
-	$(ECHO) -n `svnversion -n` >> VERSION
-	$(ECHO) -n " " >> VERSION
-	$(ECHO) -n `date` >> VERSION
 
 srcMLParserTokenTypesMacro.hpp : srcMLParserTokenTypes.hpp
 	$(GREP) '=' srcMLParserTokenTypes.hpp | $(SED) -e 's/,//g' -e 's/= //g' -e 's/^[ \t]*//' -e 's/^/#define TOKEN_/g' > $@
