@@ -136,6 +136,10 @@ void output_help(const char* name) {
   /*
   printf("  --%-21s ???\n\n", OUTPUT_FORMAT_FLAG);
   */
+
+  printf("  --%-21s List the file names in the srcML archive and exit\n\n", LIST_FLAG);
+
+
   printf("  -%c, --%-17s set the output source encoding to ENC (default:  %s) \n",
 	  TEXTENCODING_FLAG_SHORT, TEXTENCODING_FLAG_FULL, DEFAULT_TEXT_ENCODING);
 
