@@ -137,9 +137,6 @@ void output_help(const char* name) {
   printf("  --%-21s ???\n\n", OUTPUT_FORMAT_FLAG);
   */
 
-  printf("  --%-21s list all the files in the srcML archive and exit\n\n", LIST_FLAG);
-
-
   printf("  -%c, --%-17s set the output source encoding to ENC (default:  %s) \n",
 	  TEXTENCODING_FLAG_SHORT, TEXTENCODING_FLAG_FULL, DEFAULT_TEXT_ENCODING);
 
@@ -177,8 +174,10 @@ void output_help(const char* name) {
   printf("  -%c, --%-17s display most metadata except file count (individual units) and exit\n",
 	  INFO_FLAG_SHORT, INFO_FLAG);
 
-  printf("  -%c, --%-17s display all metadata including file count (individual units)  and exit\n\n",
+  printf("  -%c, --%-17s display all metadata including file count (individual units)  and exit\n",
 	  LONG_INFO_FLAG_SHORT, LONG_INFO_FLAG);
+
+  printf("  --%-21s list all the files in the srcML archive and exit\n\n", LIST_FLAG);
 
   printf("srcML Archive Options:  \n\n"
 	 "  -%c, --%-17s extract individual unit NUM from srcML\n",
