@@ -26,8 +26,6 @@ void* UTF8CharBuffer::getContext() const {
 */
 int UTF8CharBuffer::getChar() {
 
-  static const xmlChar* content = 0;
-
   // need to refill the buffer
   if (size == 0 || pos >= size) {
 
@@ -39,22 +37,19 @@ int UTF8CharBuffer::getChar() {
     if (size == -1 || size == 0)
       return -1;
 
-    // shorthand for content buffer
-    content = input->buffer->content;
-
     // start at the beginning
     pos = 0;
   }
 
   // individual 8-bit character to return
-  int c = (int) content[pos++];
+  int c = (int) input->buffer->content[pos++];
 
   // sequence "\r\n" where the '\r'
   // has already been converted to a '\n'
   if (c == '\n' && lastcr) {
     lastcr = false;
     if (pos < size)
-      c = (int) content[pos++];
+      c = (int) input->buffer->content[pos++];
   }
 
   // convert carriage returns to a line feed
