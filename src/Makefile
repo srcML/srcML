@@ -365,6 +365,8 @@ cleanantlr :
 PHONY : trunkversion
 trunkversion :
 	$(ECHO) -n "Trunk " > VERSION
+	$(ECHO) -n `svnversion -n` >> VERSION
+	$(ECHO) -n " " >> VERSION
 	$(ECHO) -n `date` >> VERSION
 
 srcMLParserTokenTypesMacro.hpp : srcMLParserTokenTypes.hpp
