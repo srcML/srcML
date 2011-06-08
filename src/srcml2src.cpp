@@ -129,11 +129,13 @@ void output_help(const char* name) {
 
   printf("  -%c, --%-17s display this help and exit\n", HELP_FLAG_SHORT, HELP_FLAG);
   printf("  -%c, --%-17s display version number and exit\n\n", VERSION_FLAG_SHORT, VERSION_FLAG);
-
+  /*
   printf("  --%-21s ???\n\n", INPUT_FORMAT_FLAG);
+  */
   printf("  -%c, --%-17s write result to OUTPUT which is a FILE or URI\n", OUTPUT_FLAG_SHORT, OUTPUT_FLAG_FULL);
+  /*
   printf("  --%-21s ???\n\n", OUTPUT_FORMAT_FLAG);
-
+  */
   printf("  -%c, --%-17s set the output source encoding to ENC (default:  %s) \n",
 	  TEXTENCODING_FLAG_SHORT, TEXTENCODING_FLAG_FULL, DEFAULT_TEXT_ENCODING);
 
@@ -553,8 +555,8 @@ int process_args(int argc, char* argv[], process_options & poptions)
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
     { SETTINGS_FLAG, no_argument, NULL, SETTINGS_FLAG_CODE },
     { FEATURES_FLAG, no_argument, NULL, FEATURES_FLAG_CODE },
-    { INPUT_FORMAT_FLAG, required_argument, NULL, INPUT_FORMAT_FLAG_CODE },
-    { OUTPUT_FORMAT_FLAG, required_argument, NULL, OUTPUT_FORMAT_FLAG_CODE },
+    //    { INPUT_FORMAT_FLAG, required_argument, NULL, INPUT_FORMAT_FLAG_CODE },
+    //    { OUTPUT_FORMAT_FLAG, required_argument, NULL, OUTPUT_FORMAT_FLAG_CODE },
     { LIST_FLAG, no_argument, NULL, LIST_FLAG_CODE },
     { REGISTER_EXTENSION_FLAG, required_argument, NULL, REGISTER_EXTENSION_FLAG_CODE },
     { REGISTER_EXTENSION_FILE_FLAG, required_argument, NULL, REGISTER_EXTENSION_FILE_FLAG_CODE },
@@ -736,7 +738,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
       output_features(PROGRAM_NAME);
       exit(STATUS_SUCCESS);
       break;
-
+      /*
     case INPUT_FORMAT_FLAG_CODE:
 
       // check for missing argument confused by an argument that looks like an option
@@ -745,7 +747,8 @@ int process_args(int argc, char* argv[], process_options & poptions)
       options |= OPTION_INPUT_FORMAT;
       poptions.input_format = optarg;
       break;
-      
+      */
+      /*
     case OUTPUT_FORMAT_FLAG_CODE:
 
       // check for missing argument confused by an argument that looks like an option
@@ -754,7 +757,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
       options |= OPTION_OUTPUT_FORMAT;
       poptions.output_format = optarg;
       break;
-
+      */
     case LIST_FLAG_CODE :
       options |= OPTION_LIST;
       break;

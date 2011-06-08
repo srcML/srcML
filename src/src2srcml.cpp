@@ -188,10 +188,13 @@ void output_help(const char* name) {
   printf("  --%-18s read list of source file names from INPUT which is a FILE or URI,\n"
 	 "                       to form a srcML archive\n",
 	  FILELIST_FLAG_FULL);
+  /*
   printf("  --%-18s ???\n\n", INPUT_FORMAT_FLAG);
   printf("  -%c, --%-14s write result to OUTPUT which is a FILE or URI\n", OUTPUT_FLAG_SHORT, OUTPUT_FLAG_FULL);
+  */
+  /*
   printf("  --%-18s ???\n\n", OUTPUT_FORMAT_FLAG);
-
+  */
   printf("  -%c, --%-14s store output in a srcML archive, default for multiple input files\n",
 	  COMPOUND_FLAG_SHORT, COMPOUND_FLAG);
 
@@ -594,8 +597,8 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { SRCVERSION_FLAG, required_argument, NULL, SRCVERSION_FLAG_SHORT },
     { SETTINGS_FLAG, no_argument, NULL, SETTINGS_FLAG_CODE },
     { FEATURES_FLAG, no_argument, NULL, FEATURES_FLAG_CODE },
-    { INPUT_FORMAT_FLAG, required_argument, NULL, INPUT_FORMAT_FLAG_CODE },
-    { OUTPUT_FORMAT_FLAG, required_argument, NULL, OUTPUT_FORMAT_FLAG_CODE },
+    //    { INPUT_FORMAT_FLAG, required_argument, NULL, INPUT_FORMAT_FLAG_CODE },
+    //    { OUTPUT_FORMAT_FLAG, required_argument, NULL, OUTPUT_FORMAT_FLAG_CODE },
     { FILELIST_FLAG, required_argument, NULL, FILELIST_FLAG_CODE },
     //    { FILELIST_FLAG, optional_argument, NULL, FILELIST_FLAG_CODE },
     { REGISTER_EXT_FLAG, required_argument, NULL, REGISTER_EXT_FLAG_CODE },
@@ -874,7 +877,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       output_features(PROGRAM_NAME);
       exit(STATUS_SUCCESS);
       break;
-
+      /*
     case INPUT_FORMAT_FLAG_CODE: 
 
       // check for missing argument confused by an argument that looks like an option
@@ -884,7 +887,8 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
       poptions.input_format = optarg;
       break;
-
+      */
+      /*
     case OUTPUT_FORMAT_FLAG_CODE: 
 
       // check for missing argument confused by an argument that looks like an option
@@ -894,7 +898,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
       poptions.output_format = optarg;
       break;
-
+      */
     case OLD_FILENAME_FLAG_CODE :
       options |= OPTION_OLD_FILENAME;
       break;
@@ -1027,11 +1031,11 @@ int option_error_status(int optopt) {
   case TEXTENCODING_FLAG_SHORT:
     return STATUS_SRCENCODING_MISSING;
     break;
-
+    /*
   case INPUT_FORMAT_FLAG_CODE:
     return STATUS_ERROR;
     break;
-
+    */
   case OUTPUT_FORMAT_FLAG_CODE:
     return STATUS_ERROR;
     break;
