@@ -52,7 +52,7 @@ javatime :
 	@cd .; ${TIME} ${SRC2SRCML_BIN} --language Java ${TIMING_JAVA} -o ${TIMING_JAVA}.xml | ${SED} 's/[0-9\.]*/32628 \/ &/' | bc -l | xargs printf "%7.0f lines/second\n"
 
 	@${ECHO} ${FLAGS} "${SRCML2SRC_BIN} ${TIMING_JAVA}.xml -o ${TIMING_JAVA}v2: "
-	@cd .; ${TIME} ${SRCML2SRC_BIN} --language Java ${TIMING_JAVA}.xml -o ${TIMING_JAVA}v2 | ${SED} 's/[0-9\.]*/32628 \/ &/' | bc -l | xargs printf "%7.0f lines/second\n"
+	@cd .; ${TIME} ${SRCML2SRC_BIN} --language Java ${TIMING_JAVA}.xml -o ${TIMING_JAVA}v2 | ${SED} 's/[0-9\.]*/32628 \/ \(&\ + 0.001)/' | bc -l | xargs printf "%7.0f lines/second\n"
 
 clean:
 	rm *.*v2 *.xml
