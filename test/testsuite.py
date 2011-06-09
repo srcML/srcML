@@ -78,6 +78,14 @@ def srcml2src(srctext, encoding):
 
 	return safe_communicate(command, srctext)
 
+# converts from unix to dos line endings
+def unix2dos(srctext):
+
+	# run the srcml processor
+	command = ['unix2dos']
+
+	return safe_communicate(command, srctext)
+
 # find differences of two files
 def xmldiff(xml_filename1, xml_filename2):
 
@@ -233,6 +241,12 @@ print src2srcmlversion()
 print srcml2srcversion()
 print
 
+# Handle optional dos line endings
+doseol = False
+if sys.argv[1] == "--dos":
+        sys.argv.pop(0)
+        doseol = True
+
 specname = ""
 if len(sys.argv) > 1:
 	specname = sys.argv[1]
@@ -373,6 +387,10 @@ try:
 
 						# convert the unit in xml to text
 						unittext = srcml2src(unitxml, encoding)
+
+						# convert the unit in xml to text (if needed)
+                                                if doseol:
+                                                        unittext = unix2dos(unittext)
 
 						# convert the text to srcML
 						unitsrcmlraw = src2srcML(unittext, encoding, language, directory, getfilename(unitxml), defaultxmlns(getfullxmlns(unitxml)))
