@@ -14,7 +14,7 @@ GREP=${firstword ${wildcard /bin/grep /usr/bin/grep}}
 ECHO=/bin/echo
 CUT=/usr/bin/cut
 
-VERSION="\"Trunk `svnversion -n``svn info | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2-`\""
+VERSION="\"Trunk $(shell svnversion -n) $(shell svn info | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2-)\""
 
 # project dirs
 EXE_DIR = ../bin/
