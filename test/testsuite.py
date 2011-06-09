@@ -243,7 +243,7 @@ print
 
 # Handle optional dos line endings
 doseol = False
-if sys.argv[1] == "--dos":
+if len(sys.argv) > 1 and sys.argv[1] == "--dos":
         sys.argv.pop(0)
         doseol = True
 
