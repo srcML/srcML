@@ -45,11 +45,27 @@ int UTF8CharBuffer::getChar() {
   int c = (int) input->buffer->content[pos++];
 
   // sequence "\r\n" where the '\r'
-  // has already been converted to a '\n'
-  if (c == '\n' && lastcr) {
+  // has already been converted to a '\n' so we need to skip over this '\n'
+  if (lastcr && c == '\n') {
     lastcr = false;
-    if (pos < size)
-      c = (int) input->buffer->content[pos++];
+
+    // might need to refill the buffer
+    if (pos >= size) {
+
+      // refill the buffer
+      input->buffer->use = 0;
+      size = xmlParserInputBufferGrow(input, SRCBUFSIZE);
+	
+      // found problem or eof
+      if (size == -1 || size == 0)
+        return -1;
+
+      // start at the beginning
+      pos = 0;
+    }
+
+    // certain to have a character
+    c = (int) input->buffer->content[pos++];
   }
 
   // convert carriage returns to a line feed
