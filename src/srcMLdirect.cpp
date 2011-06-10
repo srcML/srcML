@@ -55,6 +55,8 @@ int main(int argc, char * argv[]) {
 
   fprintf(stderr, "HERE\n");
 
+  translator.setInput("test.c");
+
   // translate from input stream to output stream
   translator.translate("test.c.xml", 
                        ".",
