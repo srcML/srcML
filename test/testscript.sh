@@ -3,20 +3,33 @@
 for file in "$@"
 do
     # number of individual units
-    units=$($SRCML2SRC --units $file)
+    units=$($SRCML2SRC --units $file | dos2unix)
 
     # language
-    language=$($SRCML2SRC --language $file)
+    language=$($SRCML2SRC --language $file | dos2unix)
 
     # dir
-    directory=$($SRCML2SRC --directory $file)
+    directory=$($SRCML2SRC --directory $file | dos2unix)
 
-    #echo src2srcml --language=$language --directory=$directory
+    #echo src2srcml --language=$language --directory=$directory --filename=\"$filename\"
 
-    for i in $(gseq $units)
+    for i in $(seq $units)
     do
-        $SRCML2SRC --unit=$i --xml $file | tee .save | $SRCML2SRC | $SRC2SRCML --language=$language --dir=$directory > .new
+	echo $file $i
+        $SRCML2SRC --unit=$i --xml $file -o .save
+	$SRCML2SRC .save -o .save.txt
 
+        # filename
+        filename=$($SRCML2SRC --filename .save | dos2unix)
+
+	if [[ "$filename" != "" ]]
+	then
+	    cat .save.txt | $SRC2SRCML --language=$language --dir=$directory --filename=$filename -o .new
+	else
+	    cat .save.txt | $SRC2SRCML --language=$language --dir=$directory -o .new
+	fi
+
+	diff .save .new
     done
 done
 
