@@ -143,6 +143,8 @@ const int COL = 20;
 
 const char* const DEFAULT_TEXT_ENCODING = "ISO-8859-1";
 
+const char* const DEFAULT_XML_ENCODING = "UTF-8";
+
 inline bool argisoption(const char* s) {
 
   return s[0] == '-';

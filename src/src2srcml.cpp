@@ -93,8 +93,6 @@ const char EXPRESSION_MODE_FLAG_SHORT = 'e';
 
 const char* const SELF_VERSION_FLAG = "self-version";
 
-const char* const DEFAULT_XML_ENCODING = "UTF-8";
-
 const char* const FILELIST_FLAG = "files-from";
 const int FILELIST_FLAG_CODE = 256 + 5;
 const char* const FILELIST_FLAG_FULL = "files-from=INPUT";

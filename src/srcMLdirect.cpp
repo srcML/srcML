@@ -43,7 +43,7 @@ int main(int argc, char * argv[]) {
 
   srcMLTranslator::srcMLTranslator translator(srcMLTranslator::LANGUAGE_C,
                                               DEFAULT_TEXT_ENCODING,
-                                              "UTF-8",
+                                              DEFAULT_TEXT_ENCODING,
                                               "test.c.xml",
                                               options,
                                               ".",
@@ -53,19 +53,16 @@ int main(int argc, char * argv[]) {
                                               8
                                               );
 
-  fprintf(stderr, "HERE\n");
-
   translator.setInput("test.c");
 
   // translate from input stream to output stream
-  translator.translate("test.c.xml", 
+  translator.translate("test.c.xml",
                        ".",
                        "test.c.xml", 
                        "1",
                        srcMLTranslator::LANGUAGE_C,
-                       8);
-
-  fprintf(stderr, "HERE\n");
+                       8
+                       );
 
   return 0;
 }
