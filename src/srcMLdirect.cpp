@@ -17,23 +17,47 @@ int main(int argc, char * argv[]) {
     SRCML_EXT_POSITION_NS_PREFIX_DEFAULT,
     };
 
-  srcMLTranslator::srcMLTranslator translator(srcMLTranslator::LANGUAGE_C,
-		  "UTF-8",
-		  "ISO-8859-1",
-		  "test.c.xml",
-		  options,
-		  "",
-		  "test.c",
-		  "1",
-		  urisprefix,
-		  8
+  /*
+    srcMLTranslator(int language,
+		  const char* src_encoding,
+		  const char* xml_encoding,
+		  const char* srcml_filename,
+		  OPTION_TYPE& options,
+		  const char* directory,
+		  const char* filename,
+		  const char* version,
+		  const char* uri[],
+		  int tabsize
 		  );
 
-  fprintf(stderr, "HERE:%s\n", "test.c");
+    void* setInput(const char* path);
+
+    // translate from input stream to output stream
+    void translate(const char* path,
+		 const char* unit_directory = 0,
+		 const char* unit_filename = 0,
+		 const char* unit_version = 0,
+		 int language = 0,
+		 int tabsize = 8);
+   */
+
+  srcMLTranslator::srcMLTranslator translator(srcMLTranslator::LANGUAGE_C,
+                                              DEFAULT_TEXT_ENCODING,
+                                              "UTF-8",
+                                              "test.c.xml",
+                                              options,
+                                              ".",
+                                              "test.c",
+                                              "1",
+                                              urisprefix,
+                                              8
+                                              );
+
+  fprintf(stderr, "HERE\n");
 
   // translate from input stream to output stream
   translator.translate("test.c.xml", 
-                       "",
+                       ".",
                        "test.c.xml", 
                        "1",
                        srcMLTranslator::LANGUAGE_C,
