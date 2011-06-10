@@ -44,21 +44,21 @@ int main(int argc, char * argv[]) {
   srcMLTranslator::srcMLTranslator translator(srcMLTranslator::LANGUAGE_C,
                                               DEFAULT_TEXT_ENCODING,
                                               DEFAULT_TEXT_ENCODING,
-                                              "test.c.xml",
+                                              argv[2],
                                               options,
-                                              ".",
-                                              "test.c",
+                                              "",
+                                              argv[1],
                                               "1",
                                               urisprefix,
                                               8
                                               );
 
-  translator.setInput("test.c");
+  translator.setInput(argv[1]);
 
   // translate from input stream to output stream
-  translator.translate("test.c.xml",
-                       ".",
-                       "test.c.xml", 
+  translator.translate(argv[1],
+                       "",
+                       argv[1], 
                        "1",
                        srcMLTranslator::LANGUAGE_C,
                        8
