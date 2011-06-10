@@ -1,17 +1,7 @@
-#include <cstring>
-#ifdef __GNUG__
-#include <sys/stat.h>
-#endif
 #include "srcmlapps.hpp"
 #include "srcmlns.hpp"
 #include "Options.hpp"
-#include "project.hpp"
-#include "Language.hpp"
 #include "srcMLTranslator.hpp"
-#include "URIStream.hpp"
-#include <getopt.h>
-#include <dirent.h>
-#include <algorithm>
 
 int main(int argc, char * argv[]) {
 
@@ -27,17 +17,29 @@ int main(int argc, char * argv[]) {
     SRCML_EXT_POSITION_NS_PREFIX_DEFAULT,
     };
 
-  srcMLTranslator::srcMLTranslator translator(1,
+  srcMLTranslator::srcMLTranslator translator(srcMLTranslator::LANGUAGE_C,
 		  "UTF-8",
 		  "ISO-8859-1",
-		  argv[1],
+		  "test.c.xml",
 		  options,
 		  "",
-		  argv[1],
+		  "test.c",
 		  "1",
 		  urisprefix,
 		  8
 		  );
+
+  fprintf(stderr, "HERE:%s\n", "test.c");
+
+  // translate from input stream to output stream
+  translator.translate("test.c.xml", 
+                       "",
+                       "test.c.xml", 
+                       "1",
+                       srcMLTranslator::LANGUAGE_C,
+                       8);
+
+  fprintf(stderr, "HERE\n");
 
   return 0;
 }
