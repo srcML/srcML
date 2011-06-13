@@ -5,6 +5,17 @@
 
 int main(int argc, char * argv[]) {
 
+  if(argc < 3) {
+
+    fprintf(stderr, "Usage: srcMLdirect inputfile outputfile\n");
+    return 1;
+  }
+  if(strcmp(argv[1], argv[2]) == 0) {
+
+    fprintf(stderr, "Input and output file must be different\n");
+    return 1;
+  }
+
   OPTION_TYPE options = OPTION_CPP_MARKUP_ELSE;
   const char* urisprefix[] = {
 
@@ -41,9 +52,10 @@ int main(int argc, char * argv[]) {
 		 int tabsize = 8);
    */
 
+  // create translator object
   srcMLTranslator::srcMLTranslator translator(srcMLTranslator::LANGUAGE_C,
                                               DEFAULT_TEXT_ENCODING,
-                                              DEFAULT_TEXT_ENCODING,
+                                              DEFAULT_XML_ENCODING,
                                               argv[2],
                                               options,
                                               "",
@@ -53,9 +65,10 @@ int main(int argc, char * argv[]) {
                                               8
                                               );
 
+  // set input file (must be done)
   translator.setInput(argv[1]);
 
-  // translate from input stream to output stream
+  // translate file
   translator.translate(argv[1],
                        "",
                        argv[1], 
