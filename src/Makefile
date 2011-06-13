@@ -75,7 +75,7 @@ SRCML2SRC_BIN=${EXE_DIR}srcml2src.exe
 endif
 
 # default
-all : ${SRC2SRCML_BIN} ${SRCML2SRC_BIN} ${EXE_DIR}srcMLdirect
+all : ${SRC2SRCML_BIN} ${SRCML2SRC_BIN} ${EXE_DIR}srcmldirect
 
 mingw32 :
 	make MINGW32=1 CXX=i686-pc-mingw32-g++ AR=i686-pc-mingw32-ar 
@@ -326,10 +326,10 @@ ${OBJ_DIR}xmlreader.o : xmlreader.cpp xmlreader.h
 ${OBJ_DIR}xmlwriter.o : xmlwriter.cpp xmlwriter.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-${OBJ_DIR}srcMLdirect.o : srcMLdirect.cpp srcMLTranslator.hpp srcmlapps.hpp Options.hpp srcmlns.hpp
+${OBJ_DIR}srcmldirect.o : srcmldirect.cpp srcMLTranslator.hpp srcmlapps.hpp Options.hpp srcmlns.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${EXE_DIR}srcMLdirect : ${OBJ_DIR}srcMLdirect.o ${OBJ_DIR}srcmlapps.o ${EXE_DIR}libsrcml.a
+${EXE_DIR}srcmldirect : ${OBJ_DIR}srcmldirect.o ${OBJ_DIR}srcmlapps.o ${EXE_DIR}libsrcml.a
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) ${XML_LIB_SRC2SRCML} ${XML_IO_LIB} ${EXE_DIR}/libsrcml.a -o $@
 
 # clean all generated files including program
