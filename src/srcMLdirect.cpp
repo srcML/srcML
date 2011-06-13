@@ -1,14 +1,15 @@
-#include "srcmlapps.hpp"
-#include "Options.hpp"
-#include "srcMLTranslator.hpp"
-#include "Language.cpp"
-
 /*
   Example of using libsrcml to translate a file.
 
   Michael J. Decker
   mjd52@zips.uakron.edu
 */
+
+#include "srcmlapps.hpp"
+#include "Options.hpp"
+#include "srcMLTranslator.hpp"
+#include "Language.cpp"
+
 int main(int argc, char * argv[]) {
 
   // test for correct input

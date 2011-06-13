@@ -326,7 +326,7 @@ ${OBJ_DIR}xmlreader.o : xmlreader.cpp xmlreader.h
 ${OBJ_DIR}xmlwriter.o : xmlwriter.cpp xmlwriter.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-${OBJ_DIR}srcMLdirect.o : srcMLdirect.cpp srcMLTranslator.hpp srcmlapps.hpp Options.hpp srcmlns.hpp ${IO_LIB_DEPENDS}
+${OBJ_DIR}srcMLdirect.o : srcMLdirect.cpp srcMLTranslator.hpp srcmlapps.hpp Options.hpp srcmlns.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${EXE_DIR}srcMLdirect : ${OBJ_DIR}srcMLdirect.o ${OBJ_DIR}srcmlapps.o ${EXE_DIR}libsrcml.a
