@@ -36,6 +36,8 @@ class srcMLTranslator : public Language {
  public:
 
   // constructor
+  srcMLTranslator(int language, const char* srcml_filename, OPTION_TYPE& op);
+
   srcMLTranslator(int language,
 		  const char* src_encoding,
 		  const char* xml_encoding,

@@ -30,6 +30,14 @@
 #include "srcmlns.hpp"
 
 // constructor
+srcMLTranslator::srcMLTranslator(int language, const char* srcml_filename, OPTION_TYPE& op)
+  : Language(language), first(true), 
+    root_directory(""), root_filename(""), root_version(""),
+    encoding(DEFAULT_TEXT_ENCODING), options(op),
+    out(0, srcml_filename, getLanguageString(), DEFAULT_XML_ENCODING, options, (const char**)DEFAULT_URI_PREFIX, 8) {
+}
+
+// constructor
 srcMLTranslator::srcMLTranslator(int language,                // programming language of source code
 				 const char* src_encoding,    // text encoding of source code
 				 const char* xml_encoding,    // xml encoding of result srcML file
