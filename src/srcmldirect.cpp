@@ -15,7 +15,7 @@ int main(int argc, char * argv[]) {
   // test for correct input
   if(argc < 3) {
 
-    fprintf(stderr, "Usage: srcMLdirect inputfile outputfile\n");
+    fprintf(stderr, "Usage: srcmldirect inputfile outputfile\n");
     return 1;
   }
   if(strcmp(argv[1], argv[2]) == 0) {
