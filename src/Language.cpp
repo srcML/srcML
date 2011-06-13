@@ -100,3 +100,25 @@ int Language::getLanguageFromFilename(const char* const path) {
 
   return 0;
 }
+
+void Language::register_standard_file_extensions()
+{
+  Language::registerUserExt("c",    LANGUAGE_C );
+  Language::registerUserExt("h",    LANGUAGE_C );
+
+  Language::registerUserExt("cpp",  LANGUAGE_CXX );
+  Language::registerUserExt("hpp",  LANGUAGE_CXX );
+  Language::registerUserExt("cxx",  LANGUAGE_CXX );
+  Language::registerUserExt("hxx",  LANGUAGE_CXX );
+  Language::registerUserExt("cc",   LANGUAGE_CXX );
+  Language::registerUserExt("hh",   LANGUAGE_CXX );
+  Language::registerUserExt("c++",  LANGUAGE_CXX );
+  Language::registerUserExt("h++",  LANGUAGE_CXX );
+  Language::registerUserExt("C",    LANGUAGE_CXX );
+  Language::registerUserExt("H",    LANGUAGE_CXX );
+
+  Language::registerUserExt("java", LANGUAGE_JAVA );
+
+  Language::registerUserExt("aj",   LANGUAGE_ASPECTJ );
+
+}

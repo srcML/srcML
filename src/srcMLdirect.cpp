@@ -1,8 +1,11 @@
 #include "srcmlapps.hpp"
-#include "srcmlns.hpp"
 #include "Options.hpp"
 #include "srcMLTranslator.hpp"
+#include "Language.cpp"
 
+/*
+  Example of using libsrcml to translate a file
+*/
 int main(int argc, char * argv[]) {
 
   if(argc < 3) {
@@ -16,10 +19,14 @@ int main(int argc, char * argv[]) {
     return 1;
   }
 
+  Language::register_standard_file_extensions();
+
   OPTION_TYPE options = OPTION_CPP_MARKUP_ELSE;
+  int language = Language::getLanguageFromFilename(argv[1]);
+  fprintf(stderr, "Language: %d\n", language);
 
   // create translator object
-  srcMLTranslator::srcMLTranslator translator(srcMLTranslator::LANGUAGE_C, argv[2], options);
+  srcMLTranslator::srcMLTranslator translator(language, argv[2], options);
 
   // set input file (must be done)
   translator.setInput(argv[1]);
@@ -29,7 +36,7 @@ int main(int argc, char * argv[]) {
                        NULL,
                        argv[1], 
                        NULL,
-                       srcMLTranslator::LANGUAGE_C,
+                       language,
                        8
                        );
 

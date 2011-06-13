@@ -333,9 +333,6 @@ void process_filelist(srcMLTranslator& translator, process_options& poptions, in
 // setup options and collect info from arguments
 int process_args(int argc, char* argv[], process_options & poptions);
 
-// register standard file extensions
-void register_standard_file_extensions();
-
 int main(int argc, char* argv[]) {
 
   options |= OPTION_SKIP_DEFAULT;
@@ -361,7 +358,7 @@ int main(int argc, char* argv[]) {
   pstd::signal(SIGUSR1, verbose_handler);
 #endif
 
-  register_standard_file_extensions();
+  Language::register_standard_file_extensions();
 
   process_options poptions =
     {
@@ -1052,28 +1049,6 @@ int option_error_status(int optopt) {
   };
 
   return 0;
-}
-
-void register_standard_file_extensions()
-{
-  Language::registerUserExt("c",    LANGUAGE_C );
-  Language::registerUserExt("h",    LANGUAGE_C );
-
-  Language::registerUserExt("cpp",  LANGUAGE_CXX );
-  Language::registerUserExt("hpp",  LANGUAGE_CXX );
-  Language::registerUserExt("cxx",  LANGUAGE_CXX );
-  Language::registerUserExt("hxx",  LANGUAGE_CXX );
-  Language::registerUserExt("cc",   LANGUAGE_CXX );
-  Language::registerUserExt("hh",   LANGUAGE_CXX );
-  Language::registerUserExt("c++",  LANGUAGE_CXX );
-  Language::registerUserExt("h++",  LANGUAGE_CXX );
-  Language::registerUserExt("C",    LANGUAGE_CXX );
-  Language::registerUserExt("H",    LANGUAGE_CXX );
-
-  Language::registerUserExt("java", LANGUAGE_JAVA );
-
-  Language::registerUserExt("aj",   LANGUAGE_ASPECTJ );
-
 }
 
 void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool showinput, bool shownumber) {

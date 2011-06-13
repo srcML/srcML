@@ -93,6 +93,9 @@ class Language {
   // gets the current language based on the extenstion
   static int getLanguageFromFilename(const char* const path);
 
+  // register the standard language file extensions
+  static void register_standard_file_extensions();
+
   ~Language() {}
 
  private:
