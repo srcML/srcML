@@ -100,6 +100,9 @@ const int REGISTER_EXTENSION_FLAG_CODE = 256 + 7;
 const char* const REGISTER_EXTENSION_FILE_FLAG = "register-ext-file";
 const int REGISTER_EXTENSION_FILE_FLAG_CODE = 256 + 8;
 
+const char* const EOL_FLAG = "eol";
+const int EOL_FLAG_CODE = 256 + 9;
+
 void libxml_error(void *ctx, const char *msg, ...) {}
 
 // output help message
@@ -563,6 +566,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
     { LIST_FLAG, no_argument, NULL, LIST_FLAG_CODE },
     { REGISTER_EXTENSION_FLAG, required_argument, NULL, REGISTER_EXTENSION_FLAG_CODE },
     { REGISTER_EXTENSION_FILE_FLAG, required_argument, NULL, REGISTER_EXTENSION_FILE_FLAG_CODE },
+    { EOL_FLAG, required_argument, NULL, EOL_FLAG_CODE },
     { XPATH_FLAG, required_argument, NULL, XPATH_FLAG_CODE },
     { XSLT_FLAG, required_argument, NULL, XSLT_FLAG_CODE },
     { PARAM_FLAG, required_argument, NULL, PARAM_FLAG_CODE },
@@ -794,6 +798,14 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
       // register files name
       poptions.registerfiles[poptions.registerfilescount++] = optarg;
+      break;
+
+    case EOL_FLAG_CODE :
+
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
+
+      // TODO: Handle end of line parameter
       break;
 
     case XPATH_FLAG_CODE:
