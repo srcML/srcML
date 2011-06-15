@@ -84,8 +84,7 @@ void* srcMLTranslator::setInput(const char* path) {
 // translate from input stream to output stream
 void srcMLTranslator::translate(const char* path, const char* unit_directory,
 				const char* unit_filename, const char* unit_version,
-				int language,
-				int tabsize) {
+				int language) {
 
   // root unit for compound srcML documents
   if (first && ((options & OPTION_NESTED) > 0))

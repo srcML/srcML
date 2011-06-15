@@ -1192,7 +1192,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       // translate the file
       translator.translate(path, dir,
 			   foundfilename ? c_filename : 0,
-			   version, reallanguage, tabsize);
+			   version, reallanguage);
 
     } catch (FileError) {
 

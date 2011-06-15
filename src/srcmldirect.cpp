@@ -40,7 +40,7 @@ int main(int argc, char * argv[]) {
   translator.setInput(argv[1]);
 
   // translate file
-  translator.translate(argv[1], NULL, argv[1], NULL, language, 8);
+  translator.translate(argv[1], NULL, argv[1], NULL, language);
 
   return 0;
 }
