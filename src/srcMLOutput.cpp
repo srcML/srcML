@@ -300,6 +300,11 @@ srcMLOutput::~srcMLOutput() {
   xmlFreeTextWriter(xout);
 }
 
+int srcMLOutput::getTabSize() {
+
+  return tabsize;
+}
+
 void srcMLOutput::setTokenStream(TokenStream& ints) {
 
   input = &ints;

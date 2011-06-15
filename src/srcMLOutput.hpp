@@ -100,6 +100,8 @@ class srcMLOutput : public srcMLParserTokenTypes {
   static const char ElementPrefix[];
 
  public:
+  int getTabSize();
+
   void processText(const antlr::RefToken& token);
 
   // standard processing of text
