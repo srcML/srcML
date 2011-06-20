@@ -23,7 +23,7 @@ ifeq ($(shell ${SVNVERSION} -n),exported)
 VERSION="\"$(shell cat VERSION)\""
 else
 VERSION="\"Trunk $(shell svnversion -n)$(shell svn info | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2-)\""
-$(shell echo ${VERSION} > VERSION)
+$(shell echo ${VERSION} | ${CUT} -d \" -f2 > VERSION)
 endif
 
 endif
