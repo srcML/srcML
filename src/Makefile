@@ -13,8 +13,9 @@ SED=${firstword ${wildcard /opt/local/bin/gsed /bin/sed}}
 GREP=${firstword ${wildcard /bin/grep /usr/bin/grep}}
 ECHO=/bin/echo
 CUT=/usr/bin/cut
+SVNVERSION=${wildcard /usr/bin/svnversion}
 
-ifeq ($(shell svnversion -n),exported)
+ifeq ($(shell ${SVNVERSION} -n),exported)
 VERSION="\"$(shell cat VERSION)\""
 else
 VERSION="\"Trunk $(shell svnversion -n)$(shell svn info | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2-)\""
