@@ -14,11 +14,10 @@ GREP=${firstword ${wildcard /bin/grep /usr/bin/grep}}
 ECHO=/bin/echo
 CUT=/usr/bin/cut
 
-ifeq ($(shell svnversion -nc),exported)
+ifeq ($(shell svnversion -n),exported)
 VERSION="\"$(shell cat VERSION)\""
 else
-VERSION="\"Trunk $(shell svnversion -nc)$(shell svn info | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2-)\""
-$(shell echo ${VERSION} > VERSION)
+VERSION="\"Trunk $(shell svnversion -n)$(shell svn info | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2-)\""
 endif
 
 # project dirs
@@ -83,6 +82,7 @@ endif
 
 # default
 all : ${SRC2SRCML_BIN} ${SRCML2SRC_BIN} # ${SRCMLDIRECT_BIN}
+	$(shell echo ${VERSION} > VERSION)
 
 mingw32 :
 	make MINGW32=1 CXX=i686-pc-mingw32-g++ AR=i686-pc-mingw32-ar 
