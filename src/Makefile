@@ -18,11 +18,13 @@ SVNVERSION=${wildcard /usr/bin/svnversion}
 ifeq ($(SVNVERSION),)
 VERSION="\"$(shell cat VERSION)\""
 else
-	ifeq ($(shell ${SVNVERSION} -n),exported)
-	VERSION="\"$(shell cat VERSION)\""
-	else
-	VERSION="\"Trunk $(shell svnversion -n)$(shell svn info | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2-)\""
-	endif
+
+ifeq ($(shell ${SVNVERSION} -n),exported)
+VERSION="\"$(shell cat VERSION)\""
+else
+VERSION="\"Trunk $(shell svnversion -n)$(shell svn info | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2-)\""
+endif
+
 endif
 
 # project dirs
