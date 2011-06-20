@@ -69,13 +69,15 @@ IO_LIB=${OBJ_DIR}libxml_archive_read.o ${OBJ_DIR}libxml_archive_write.o
 ifndef MINGW32
 SRC2SRCML_BIN=${EXE_DIR}src2srcml
 SRCML2SRC_BIN=${EXE_DIR}srcml2src
+SRCMLDIRECT_BIN=${EXE_DIR}srcmldirect
 else
 SRC2SRCML_BIN=${EXE_DIR}src2srcml.exe
 SRCML2SRC_BIN=${EXE_DIR}srcml2src.exe
+SRCMLDIRECT_BIN=${EXE_DIR}srcmldirect.exe
 endif
 
 # default
-all : ${SRC2SRCML_BIN} ${SRCML2SRC_BIN} ${EXE_DIR}srcmldirect
+all : ${SRC2SRCML_BIN} ${SRCML2SRC_BIN} ${SRCMLDIRECT_BIN}
 
 mingw32 :
 	make MINGW32=1 CXX=i686-pc-mingw32-g++ AR=i686-pc-mingw32-ar 
@@ -329,18 +331,18 @@ ${OBJ_DIR}xmlwriter.o : xmlwriter.cpp xmlwriter.h
 ${OBJ_DIR}srcmldirect.o : srcmldirect.cpp srcMLTranslator.hpp srcmlapps.hpp Options.hpp srcmlns.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${EXE_DIR}srcmldirect : ${OBJ_DIR}srcmldirect.o ${OBJ_DIR}srcmlapps.o ${EXE_DIR}libsrcml.a
+${SRCMLDIRECT_BIN} : ${OBJ_DIR}srcmldirect.o ${OBJ_DIR}srcmlapps.o ${EXE_DIR}libsrcml.a
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) ${XML_LIB_SRC2SRCML} ${XML_IO_LIB} ${EXE_DIR}/libsrcml.a -o $@
 
 # clean all generated files including program
 PHONY : clean
 clean :
 	make cleanbuild
-	rm -f ${EXE_DIR}src2srcml ${EXE_DIR}srcml2src
+	rm -f ${EXE_DIR}src2srcml ${EXE_DIR}srcml2src ${EXE_DIR}srcmldirect
 
 cleanmingw32: 
 	make cleanbuild
-	rm -rf ${EXE_DIR}src2srcml.exe ${EXE_DIR}srcml2src.exe
+	rm -rf ${EXE_DIR}src2srcml.exe ${EXE_DIR}srcml2src.exe ${EXE_DIR}srcmldirect.exe
 # clean generated files leaving program
 PHONY : cleanbuild
 cleanbuild :
@@ -350,7 +352,7 @@ cleanbuild :
 # clean non-generated object files
 PHONY : cleanobject
 cleanobject :
-	rm -f ${OBJ_DIR}src2srcml.o ${OBJ_DIR}srcMLOutput.o ${OBJ_DIR}Mode.o ${OBJ_DIR}srcMLTranslator.o ${OBJ_DIR}srcMLParserClean.o ${OBJ_DIR}KeywordLexer.o ${OBJ_DIR}KeywordCPPLexerClean.o ${OBJ_DIR}srcml2src.o ${OBJ_DIR}srcMLUtility.o ${OBJ_DIR}filetrim.o ${OBJ_DIR}srcmlapps.o ${OBJ_DIR}srcmllexer.o ${OBJ_DIR}xmlwriter.o ${OBJ_DIR}xmlreader.o ${OBJ_DIR}UTF8CharBuffer.o ${OBJ_DIR}PureCommentLexerClean.o ${OBJ_DIR}Language.o ${OBJ_DIR}SAX2TextWriter.o ${OBJ_DIR}SAX2ExtractUnitsSrc.o ${OBJ_DIR}SAX2ExtractUnitSrc.o ${OBJ_DIR}SAX2ExtractRootSrc.o ${OBJ_DIR}SAX2ExtractUnitXML.o ${OBJ_DIR}SAX2Utilities.o ${OBJ_DIR}SAX2Properties.o ${OBJ_DIR}SAX2CountUnits.o srcMLParserTokenTypesMacro.hpp {OBJ_DIR}PureCommentLexer.o ${OBJ_DIR}srceval.o ${OBJ_DIR}srcpatheval.o ${OBJ_DIR}srcxslteval.o ${OBJ_DIR}SAX2CopyElement.o ${OBJ_DIR}srcexfun.o ${OBJ_DIR}srcrelaxngeval.o ${OBJ_DIR}xmlsavebuf.o ${OBJ_DIR}SAX2UnitDOM.o ${OBJ_DIR}SAX2UnitDOMXSLT.o ${OBJ_DIR}SAX2UnitDOMXPath.o ${OBJ_DIR}SAX2UnitDOMRelaxNG.o ${OBJ_DIR}libxml_archive_ui.o ${OBJ_DIR}SAX2ListUnits.o ${OBJ_DIR}libxml_archive_io.o ${OBJ_DIR}URIStream.o ${OBJ_DIR}libxml_archive_read.o ${OBJ_DIR}libxml_archive_read_disk.o ${OBJ_DIR}libxml_archive_write.o
+	rm -f ${OBJ_DIR}src2srcml.o ${OBJ_DIR}srcMLOutput.o ${OBJ_DIR}Mode.o ${OBJ_DIR}srcMLTranslator.o ${OBJ_DIR}srcMLParserClean.o ${OBJ_DIR}KeywordLexer.o ${OBJ_DIR}KeywordCPPLexerClean.o ${OBJ_DIR}srcml2src.o ${OBJ_DIR}srcMLUtility.o ${OBJ_DIR}filetrim.o ${OBJ_DIR}srcmlapps.o ${OBJ_DIR}srcmllexer.o ${OBJ_DIR}xmlwriter.o ${OBJ_DIR}xmlreader.o ${OBJ_DIR}UTF8CharBuffer.o ${OBJ_DIR}PureCommentLexerClean.o ${OBJ_DIR}Language.o ${OBJ_DIR}SAX2TextWriter.o ${OBJ_DIR}SAX2ExtractUnitsSrc.o ${OBJ_DIR}SAX2ExtractUnitSrc.o ${OBJ_DIR}SAX2ExtractRootSrc.o ${OBJ_DIR}SAX2ExtractUnitXML.o ${OBJ_DIR}SAX2Utilities.o ${OBJ_DIR}SAX2Properties.o ${OBJ_DIR}SAX2CountUnits.o srcMLParserTokenTypesMacro.hpp {OBJ_DIR}PureCommentLexer.o ${OBJ_DIR}srceval.o ${OBJ_DIR}srcpatheval.o ${OBJ_DIR}srcxslteval.o ${OBJ_DIR}SAX2CopyElement.o ${OBJ_DIR}srcexfun.o ${OBJ_DIR}srcrelaxngeval.o ${OBJ_DIR}xmlsavebuf.o ${OBJ_DIR}SAX2UnitDOM.o ${OBJ_DIR}SAX2UnitDOMXSLT.o ${OBJ_DIR}SAX2UnitDOMXPath.o ${OBJ_DIR}SAX2UnitDOMRelaxNG.o ${OBJ_DIR}libxml_archive_ui.o ${OBJ_DIR}SAX2ListUnits.o ${OBJ_DIR}libxml_archive_io.o ${OBJ_DIR}URIStream.o ${OBJ_DIR}libxml_archive_read.o ${OBJ_DIR}libxml_archive_read_disk.o ${OBJ_DIR}libxml_archive_write.o ${OBJ_DIR}srcmldirect.o
 
 # clean ANTLR generated files
 PHONY : cleanantlr
