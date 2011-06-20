@@ -14,7 +14,11 @@ GREP=${firstword ${wildcard /bin/grep /usr/bin/grep}}
 ECHO=/bin/echo
 CUT=/usr/bin/cut
 
+ifeq ($(shell svnversion -n), "exported")
 VERSION="\"$(shell cat VERSION)\""
+else
+VERSION="\"Trunk $(shell svnversion -n)$(shell svn info | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2-)\""
+endif
 
 # project dirs
 EXE_DIR = ../bin/
