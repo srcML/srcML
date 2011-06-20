@@ -378,10 +378,6 @@ cleanantlr :
 srcMLParserTokenTypesMacro.hpp : srcMLParserTokenTypes.hpp
 	$(GREP) '=' srcMLParserTokenTypes.hpp | $(SED) -e 's/,//g' -e 's/= //g' -e 's/^[ \t]*//' -e 's/^/#define TOKEN_/g' > $@
 
-PHONY : trunkversion
-trunkversion : 
-	echo "Trunk $(shell svnversion -n)$(shell svn info | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2-)" > VERSION
-
 PHONY : install
 install :
 	cp ${EXE_DIR}src2srcml /usr/bin/.
