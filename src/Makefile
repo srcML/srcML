@@ -16,7 +16,7 @@ CUT=/usr/bin/cut
 SVNVERSION=${wildcard /usr/bin/svnversion}
 
 ifeq ($(SVNVERSION),)
-VERSION="\"no svnversion\""
+VERSION="\"$(shell cat VERSION)\""
 else
 	ifeq ($(shell ${SVNVERSION} -n),exported)
 	VERSION="\"$(shell cat VERSION)\""
