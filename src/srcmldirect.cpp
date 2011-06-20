@@ -34,7 +34,6 @@ int main(int argc, char * argv[]) {
   OPTION_TYPE options = OPTION_CPP_MARKUP_ELSE;
 
   // create translator object
-  // srcMLTranslator::srcMLTranslator translator(language, argv[2], options);
   srcMLTranslator translator(language, argv[2], options);
 
   // set input file (must be done)
