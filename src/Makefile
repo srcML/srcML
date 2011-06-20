@@ -69,15 +69,15 @@ IO_LIB=${OBJ_DIR}libxml_archive_read.o ${OBJ_DIR}libxml_archive_write.o
 ifndef MINGW32
 SRC2SRCML_BIN=${EXE_DIR}src2srcml
 SRCML2SRC_BIN=${EXE_DIR}srcml2src
-SRCMLDIRECT_BIN=${EXE_DIR}srcmldirect
+#SRCMLDIRECT_BIN=${EXE_DIR}srcmldirect
 else
 SRC2SRCML_BIN=${EXE_DIR}src2srcml.exe
 SRCML2SRC_BIN=${EXE_DIR}srcml2src.exe
-SRCMLDIRECT_BIN=${EXE_DIR}srcmldirect.exe
+#SRCMLDIRECT_BIN=${EXE_DIR}srcmldirect.exe
 endif
 
 # default
-all : ${SRC2SRCML_BIN} ${SRCML2SRC_BIN} ${SRCMLDIRECT_BIN}
+all : ${SRC2SRCML_BIN} ${SRCML2SRC_BIN} # ${SRCMLDIRECT_BIN}
 
 mingw32 :
 	make MINGW32=1 CXX=i686-pc-mingw32-g++ AR=i686-pc-mingw32-ar 
