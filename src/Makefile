@@ -14,7 +14,7 @@ GREP=${firstword ${wildcard /bin/grep /usr/bin/grep}}
 ECHO=/bin/echo
 CUT=/usr/bin/cut
 
-VERSION="\"Trunk $(shell svnversion -n)$(shell svn info | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2-)\""
+VERSION="\"$(shell cat VERSION)\""
 
 # project dirs
 EXE_DIR = ../bin/
@@ -375,8 +375,7 @@ srcMLParserTokenTypesMacro.hpp : srcMLParserTokenTypes.hpp
 
 PHONY : trunkversion
 trunkversion : 
-	VERSION="Trunk $(shell svnversion -n)$(shell svn info | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2-)"
-	echo ${VERSION} > VERSION
+	echo "Trunk $(shell svnversion -n)$(shell svn info | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2-)" > VERSION
 
 PHONY : install
 install :
