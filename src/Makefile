@@ -15,10 +15,14 @@ ECHO=/bin/echo
 CUT=/usr/bin/cut
 SVNVERSION=${wildcard /usr/bin/svnversion}
 
-ifeq ($(shell ${SVNVERSION} -n),exported)
-VERSION="\"$(shell cat VERSION)\""
+ifeq ($(SVNVERSION),)
+VERSION="\"no svnversion\""
 else
-VERSION="\"Trunk $(shell svnversion -n)$(shell svn info | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2-)\""
+	ifeq ($(shell ${SVNVERSION} -n),exported)
+	VERSION="\"$(shell cat VERSION)\""
+	else
+	VERSION="\"Trunk $(shell svnversion -n)$(shell svn info | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2-)\""
+	endif
 endif
 
 # project dirs
