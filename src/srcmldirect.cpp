@@ -3,10 +3,6 @@
 
   Michael J. Decker
   mjd52@zips.uakron.edu
-
-  $Date$
-  $Author$
-  $Copyright$
 */
 
 #include "srcmlapps.hpp"
