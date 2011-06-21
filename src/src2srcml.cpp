@@ -540,7 +540,7 @@ int main(int argc, char* argv[]) {
     if (count == 0)
       exit(STATUS_INPUTFILE_PROBLEM);
 
-    else if (isoption(options, OPTION_NESTED) && !isoption(options, OPTION_QUIET)) {
+    else if (showinput && isoption(options, OPTION_NESTED) && !isoption(options, OPTION_QUIET)) {
 	fprintf(stderr, "\n"
 		"Translated: %d\t"
 		"Skipped: %d\t"
@@ -1085,7 +1085,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       if (isarchive) {
         options |= OPTION_NESTED;
         save_options |= OPTION_NESTED;
-        //        showinput = true;
+        showinput = true;
         //        shownumber = true;
       }
 
