@@ -280,13 +280,7 @@ ${OBJ_DIR}SAX2Utilities.o : SAX2Utilities.cpp SAX2Utilities.hpp
 ${OBJ_DIR}SAX2ExtractUnitsSrc.o : SAX2ExtractUnitsSrc.cpp SAX2ExtractUnitsSrc.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}srceval.o : srceval.cpp srceval.hpp
-	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
-
 ${OBJ_DIR}srcexfun.o : srcexfun.cpp srcexfun.hpp
-	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
-
-${OBJ_DIR}srcxslteval.o : srcxslteval.cpp srcxslteval.hpp srceval.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}SAX2UnitDOM.o : SAX2UnitDOM.cpp SAX2UnitDOM.hpp
@@ -299,9 +293,6 @@ ${OBJ_DIR}SAX2UnitDOMXSLT.o : SAX2UnitDOMXSLT.cpp SAX2UnitDOMXSLT.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}SAX2UnitDOMRelaxNG.o : SAX2UnitDOMRelaxNG.cpp SAX2UnitDOMRelaxNG.hpp
-	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
-
-${OBJ_DIR}srcrelaxngeval.o : srcrelaxngeval.cpp srcrelaxngeval.hpp srceval.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}srcmlapps.o : srcmlapps.cpp
