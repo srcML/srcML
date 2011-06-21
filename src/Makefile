@@ -335,7 +335,7 @@ ${SRCMLDIRECT_BIN} : ${OBJ_DIR}srcmldirect.o ${OBJ_DIR}srcmlapps.o ${EXE_DIR}lib
 PHONY : clean
 clean :
 	make cleanbuild
-	rm -f ${EXE_DIR}src2srcml ${EXE_DIR}srcml2src ${EXE_DIR}srcmldirect
+	rm -f ${EXE_DIR}src2srcml ${EXE_DIR}srcml2src ${EXE_DIR}srcmldirect ${EXE_DIR}libsrcml.a
 
 cleanmingw32: 
 	make cleanbuild
