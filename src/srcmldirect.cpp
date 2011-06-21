@@ -6,7 +6,6 @@
 
   $Date$
   $Author$
-  $Copyright$
 
 */
 
