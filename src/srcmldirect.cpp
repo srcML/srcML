@@ -7,6 +7,7 @@
   $Date$
   $Author$
   $Id$
+  $Copyright$
 */
 
 #include "srcmlapps.hpp"
