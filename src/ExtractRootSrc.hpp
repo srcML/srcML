@@ -27,8 +27,6 @@
 
 #include "ExtractUnitsSrc.hpp"
 
-using namespace SAX2ExtractRootSrc;
-
 class ExtractRootSrc : public ExtractUnitsSrc {
 public :
   virtual void startRootUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
