@@ -54,10 +54,6 @@ bool operator==(const char* lhs, const stringequal& r) {
 #include "libxml_archive_read.hpp"
 #include "libxml_archive_write.hpp"
 
-#ifdef CURL
-#include "libxml_curl_io.hpp"
-#endif
-
 const char* const DEBUG_FLAG = "debug";
 const char DEBUG_FLAG_SHORT = 'g';
 
@@ -343,13 +339,6 @@ int main(int argc, char* argv[]) {
 
   xmlGenericErrorFunc handler = (xmlGenericErrorFunc) libxml_error;
   initGenericErrorDefaultFunc(&handler);
-
-#ifdef CURL
-  if (xmlRegisterInputCallbacks(curlMatch, curlOpen, curlRead, curlClose) < 0) {
-    fprintf(stderr, "failed to register curl handler\n");
-    exit(1);
-  }
-#endif
 
   /* signal handling */
 

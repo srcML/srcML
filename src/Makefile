@@ -262,9 +262,6 @@ ${OBJ_DIR}srcMLUtility.o : srcMLUtility.cpp srcMLUtility.hpp SAX2ExtractUnitsSrc
 ${OBJ_DIR}URIStream.o : URIStream.cpp URIStream.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}libxml_curl_io.o : libxml_curl_io.cpp libxml_curl_io.hpp
-	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
-
 ${OBJ_DIR}libxml_archive_read.o : libxml_archive_read.cpp libxml_archive_read.hpp 
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
