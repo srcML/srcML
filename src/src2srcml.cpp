@@ -153,7 +153,7 @@ void libxml_error(void *ctx, const char *msg, ...) {}
 int option_error_status(int optopt);
 
 // translate a file, maybe an archive
-void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool showinput = false, bool shownumber = false);
+void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber = false);
 
 using namespace LanguageName;
 
@@ -323,8 +323,8 @@ struct process_options
 
 process_options* gpoptions = 0;
 
-void process_dir(srcMLTranslator& translator, const char* dname, process_options& poptions, int& count, int & skipped, int & error, bool showinput, bool shownumber);
-void process_filelist(srcMLTranslator& translator, process_options& poptions, int& count, int & skipped, int & error);
+void process_dir(srcMLTranslator& translator, const char* dname, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
+void process_filelist(srcMLTranslator& translator, process_options& poptions, int& count, int & skipped, int & error, bool & showinput);
 
 // setup options and collect info from arguments
 int process_args(int argc, char* argv[], process_options & poptions);
@@ -506,7 +506,7 @@ int main(int argc, char* argv[]) {
         poptions.fname = STDIN;
 
       // so process the filelist
-      process_filelist(translator, poptions, count, skipped, error);
+      process_filelist(translator, poptions, count, skipped, error, showinput);
 
     // translate from standard input
     } else if (input_arg_count == 0) {
@@ -1040,7 +1040,7 @@ int option_error_status(int optopt) {
   return 0;
 }
 
-void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool showinput, bool shownumber) {
+void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   // handle local directories specially
   struct stat instat;
@@ -1218,7 +1218,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
   } while (isarchive && isAnythingOpen(context));
 }
 
-void process_dir(srcMLTranslator& translator, const char* directory, process_options& poptions, int& count, int & skipped, int & error, bool showinput, bool shownumber) {
+void process_dir(srcMLTranslator& translator, const char* directory, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   // by default, all dirs are treated as an archive
   options |= OPTION_NESTED;
@@ -1228,6 +1228,8 @@ void process_dir(srcMLTranslator& translator, const char* directory, process_opt
   if (!dirp) {
     return;
   }
+
+  showinput = true;
 
   // start of path from directory name
   std::string filename = directory;
@@ -1308,7 +1310,7 @@ void process_dir(srcMLTranslator& translator, const char* directory, process_opt
   }
 }
 
-void process_filelist(srcMLTranslator& translator, process_options& poptions, int& count, int & skipped, int & error) {
+void process_filelist(srcMLTranslator& translator, process_options& poptions, int& count, int & skipped, int & error, bool & showinput) {
 
   try {
 
@@ -1331,6 +1333,8 @@ void process_filelist(srcMLTranslator& translator, process_options& poptions, in
       if (line[0] == '\0' || line[0] == '\n' || line[0] == FILELIST_COMMENT)
         continue;
 
+      showinput = true;
+
       // translate the file listed in the input file using the directory and filename extracted from the path
       src2srcml_file(translator,
                      line,
@@ -1340,7 +1344,7 @@ void process_filelist(srcMLTranslator& translator, process_options& poptions, in
                      poptions.given_version,
                      poptions.language,
                      poptions.tabsize,
-                     count, skipped, error, true, true);
+                     count, skipped, error, showinput, true);
     }
 
   } catch (URIStreamFileError) {
