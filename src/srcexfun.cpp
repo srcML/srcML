@@ -2,7 +2,6 @@
 #include "srcmlns.hpp"
 
 #include <cstring>
-#include <vector>
 #include <string>
 
 #include <libxml/xpath.h>
@@ -23,12 +22,6 @@ static xmlChar* unit_filename = 0;
 
 static int Position;
 static PROPERTIES_TYPE* pattributes;
-
-struct xpath_ext_function {
-  std::string name;
-  std::string expr;
-
-};
 
 static std::vector<struct xpath_ext_function> MACROS;
 
@@ -130,4 +123,9 @@ void xpathRegisterExtensionFunction(const std::string & name, const std::string 
   struct xpath_ext_function xpath_function = {name, xpath};
 
   MACROS.push_back(xpath_function);
+}
+
+const std::vector<xpath_ext_function> getXPathExtensionFunctions() {
+
+  return MACROS;
 }
