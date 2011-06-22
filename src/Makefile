@@ -182,12 +182,11 @@ GENERATED_GRAMMARS = $(patsubst %.g, expanded%.g, $(CREATED_GRAMMARS))
 ${SRC2SRCML_BIN} : ${OBJ_DIR}src2srcml.o ${OBJ_DIR}srcmlapps.o $(if $(DYNAMIC), ${EXE_DIR}libsrcml.so, ${EXE_DIR}libsrcml.a)
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) ${XML_LIB_SRC2SRCML} ${XML_IO_LIB} $(if $(DYNAMIC), -L${EXE_DIR} -lsrcml, ${EXE_DIR}/libsrcml.a) -o $@
 
-${EXE_DIR}src2srcmldyn : ${OBJ_DIR}src2srcml.o ${OBJ_DIR}srcmlapps.o ${EXE_DIR}libsrcml.so
-	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) ${XML_LIB_SRC2SRCML} ${XML_IO_LIB} -L${EXE_DIR} -lsrcml -o $@
-
+# shared library for srcML translation
 ${EXE_DIR}libsrcml.so : $(LIBSRCML_INCLUDE)
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) -shared -fPIC $^ $(LDFLAGS) ${XML_LIB_SRC2SRCML} ${XML_IO_LIB} -o $@
 
+# static library for srcML translation
 ${EXE_DIR}libsrcml.a : $(LIBSRCML_INCLUDE)
 	${AR} rvs $@ $^ 
 
@@ -195,19 +194,12 @@ ${EXE_DIR}libsrcml.a : $(LIBSRCML_INCLUDE)
 ${SRCML2SRC_BIN} : ${OBJ_DIR}srcml2src.o ${OBJ_DIR}srcMLUtility.o ${OBJ_DIR}SAX2ExtractUnitsSrc.o ${OBJ_DIR}srcmlapps.o ${OBJ_DIR}SAX2Utilities.o ${OBJ_DIR}SAX2UnitDOM.o ${OBJ_DIR}SAX2UnitDOMXSLT.o ${OBJ_DIR}SAX2UnitDOMXPath.o ${OBJ_DIR}SAX2UnitDOMRelaxNG.o ${OBJ_DIR}srcexfun.o ${IO_LIB} ${OBJ_DIR}URIStream.o
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) ${XML_LIB_SRCML2SRC} ${XML_IO_LIB} -o $@
 
-# source code lexical analysis
-${EXE_DIR}srcmllexer : ${OBJ_DIR}srcmllexer.o ${OBJ_DIR}KeywordCPPLexer.o ${OBJ_DIR}srcmlapps.o
-	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) -o $@
-
 # Object files
 ${OBJ_DIR}src2srcml.o : src2srcml.cpp srcMLTranslator.hpp srcmlapps.hpp Options.hpp srcmlns.hpp ${IO_LIB_DEPENDS}
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}srcml2src.o : srcml2src.cpp srcmlapps.hpp Options.hpp URIStream.hpp ${IO_LIB_DEPENDS}
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
-
-${OBJ_DIR}srcmllexer.o : srcmllexer.cpp srcmlapps.hpp
-	$(CXX) $(ANTLR_INC) $(CXXFLAGS) -c $< -o $@
 
 ${OBJ_DIR}srcMLTranslator.o : srcMLTranslator.cpp srcMLTranslator.hpp StreamMLParser.hpp StreamParser.hpp srcMLToken.hpp Language.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
