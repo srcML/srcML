@@ -836,8 +836,6 @@ int process_args(int argc, char* argv[], process_options & poptions)
       strsep(&end, "=");
       xpath = (char*) malloc(strlen(end) + 1);
       strcpy((char *)xpath, end);
-      fprintf(stderr, "Name: %s\n", name);
-      fprintf(stderr, "XPath: %s\n", xpath);
       xpathRegisterExtensionFunction(name, xpath);
       break;
 
