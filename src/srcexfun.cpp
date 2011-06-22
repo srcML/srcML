@@ -3,6 +3,7 @@
 
 #include <cstring>
 #include <vector>
+#include <string>
 
 #include <libxml/xpath.h>
 #include <libxml/xpathInternals.h>
@@ -24,8 +25,8 @@ static int Position;
 static PROPERTIES_TYPE* pattributes;
 
 struct xpath_ext_function {
-  const char * name;
-  const char * expr;
+  std::string name;
+  std::string expr;
 
 };
 
@@ -72,12 +73,12 @@ static void srcMacrosFunction (xmlXPathParserContextPtr ctxt, int nargs) {
   // find out which expression is being used based on the name
   unsigned int i;
   for (i = 0; i < MACROS.size(); ++i)
-      if (strcmp(MACROS[i].name, (const char*) ctxt->context->function) == 0)
+    if (strcmp(MACROS[i].name.c_str(), (const char*) ctxt->context->function) == 0)
         break;
 
   //fprintf(stderr, "HERE: %s\n", MACROS[i].expr);
 
-    xmlXPathObjectPtr ret = xmlXPathEval(BAD_CAST MACROS[i].expr, ctxt->context);
+  xmlXPathObjectPtr ret = xmlXPathEval(BAD_CAST MACROS[i].expr.c_str(), ctxt->context);
 
     if (ret) {
       valuePush(ctxt, ret);
@@ -98,7 +99,7 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
 
   for (unsigned int i = 0; i < MACROS.size(); ++i) {
 
-    xmlXPathRegisterFuncNS(context, (const xmlChar *)MACROS[i].name,
+    xmlXPathRegisterFuncNS(context, (const xmlChar *)MACROS[i].name.c_str(),
  			 BAD_CAST "http://www.sdml.info/srcML/src",
 			 srcMacrosFunction);
   }
@@ -124,7 +125,7 @@ void xpathRegisterDefaultExtensionFunctions() {
   xpathRegisterExtensionFunction("returntype", "/src:unit//src:function/src:type");
 }
 
-void xpathRegisterExtensionFunction(const char * name, const char * xpath) {
+void xpathRegisterExtensionFunction(const std::string & name, const std::string & xpath) {
 
   struct xpath_ext_function xpath_function = {name, xpath};
 

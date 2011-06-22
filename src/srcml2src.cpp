@@ -613,8 +613,6 @@ int process_args(int argc, char* argv[], process_options & poptions)
     }
 
     char* end = 0;
-    const char * name;
-    const char * xpath;
     switch(c) {
 
     case HELP_FLAG_SHORT: 
@@ -823,21 +821,18 @@ int process_args(int argc, char* argv[], process_options & poptions)
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
-      // register extension function name
-      name = optarg;
-      
       // must be both name and value, but value could be empty
       if (!strchr(optarg, '=')) {
 	fprintf(stderr, "%s: Register extension function name and value must be given.\n", PROGRAM_NAME);
 	exit(1);
       }
-
+      
       // register xpath extension function
       end = optarg;
       strsep(&end, "=");
-      xpath = (char*) malloc(strlen(end) + 1);
-      strcpy((char *)xpath, end);
-      xpathRegisterExtensionFunction(name, xpath);
+
+      xpathRegisterExtensionFunction(optarg, end);
+
       break;
 
     case REGISTER_EXTENSION_FUNCTION_FILE_FLAG_CODE :
@@ -1119,10 +1114,6 @@ void register_xpath_functions_from_filename(const char * filename) {
 
     if(strcmp(extension_function, "")) {
 
-      // register extension function name
-      const char * name = (const char*) malloc(strlen(extension_function) + 1);
-      strcpy((char *)name, extension_function);
-      
       // must be both name and value, but value could be empty
       if (!strchr(extension_function, '=')) {
 	fprintf(stderr, "%s: Register extension function name and value must be given.\n", PROGRAM_NAME);
@@ -1130,11 +1121,9 @@ void register_xpath_functions_from_filename(const char * filename) {
       }
 
       // register xpath extension function
-      const char * end = name;
+      const char * end = extension_function;
       strsep((char **)&end, "=");
-      const char * xpath = (const char*) malloc(strlen(end) + 1);
-      strcpy((char *)xpath, end);
-      xpathRegisterExtensionFunction(name, xpath);
+      xpathRegisterExtensionFunction(extension_function, end);
     }
   }
 }

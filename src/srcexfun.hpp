@@ -14,6 +14,6 @@ void xpathsrcMLRegister(xmlXPathContextPtr context);
 
 void xpathRegisterDefaultExtensionFunctions();
 
-void xpathRegisterExtensionFunction(const char * name, const char * xpath);
+void xpathRegisterExtensionFunction(const std::string & name, const std::string & xpath);
 
 #endif
