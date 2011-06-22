@@ -100,8 +100,14 @@ const int REGISTER_EXTENSION_FLAG_CODE = 256 + 7;
 const char* const REGISTER_EXTENSION_FILE_FLAG = "register-ext-file";
 const int REGISTER_EXTENSION_FILE_FLAG_CODE = 256 + 8;
 
+const char* const REGISTER_EXTENSION_FUNCTION_FLAG = "register-xpath-func";
+const int REGISTER_EXTENSION_FUNCTION_FLAG_CODE = 256 + 9;
+
+const char* const REGISTER_EXTENSION_FUNCTION_FILE_FLAG = "register-xpath-func-file";
+const int REGISTER_EXTENSION_FUNCTION_FILE_FLAG_CODE = 256 + 10;
+
 const char* const EOL_FLAG = "eol";
-const int EOL_FLAG_CODE = 256 + 9;
+const int EOL_FLAG_CODE = 256 + 11;
 
 void libxml_error(void *ctx, const char *msg, ...) {}
 
@@ -566,6 +572,8 @@ int process_args(int argc, char* argv[], process_options & poptions)
     { LIST_FLAG, no_argument, NULL, LIST_FLAG_CODE },
     { REGISTER_EXTENSION_FLAG, required_argument, NULL, REGISTER_EXTENSION_FLAG_CODE },
     { REGISTER_EXTENSION_FILE_FLAG, required_argument, NULL, REGISTER_EXTENSION_FILE_FLAG_CODE },
+    { REGISTER_EXTENSION_FUNCTION_FLAG, required_argument, NULL, REGISTER_EXTENSION_FUNCTION_FLAG_CODE },
+    { REGISTER_EXTENSION_FUNCTION_FILE_FLAG, required_argument, NULL, REGISTER_EXTENSION_FUNCTION_FILE_FLAG_CODE },
     { EOL_FLAG, required_argument, NULL, EOL_FLAG_CODE },
     { XPATH_FLAG, required_argument, NULL, XPATH_FLAG_CODE },
     { XSLT_FLAG, required_argument, NULL, XSLT_FLAG_CODE },
@@ -800,6 +808,37 @@ int process_args(int argc, char* argv[], process_options & poptions)
       poptions.registerfiles[poptions.registerfilescount++] = optarg;
       break;
 
+    case REGISTER_EXTENSION_FUNCTION_FLAG_CODE :
+
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
+
+      // register extension function name
+      poptions.registerext[poptions.registerextcount++] = optarg;
+      
+      // must be both name and value, but value could be empty
+      if (!strchr(optarg, '=')) {
+	fprintf(stderr, "%s: Register extension function name and value must be given.\n", PROGRAM_NAME);
+	exit(1);
+      }
+
+      // registerext value
+      end = optarg;
+      strsep(&end, "=");
+      poptions.registerext[poptions.registerextcount] = (char*) malloc(strlen(end) + 1);
+      strcpy((char *) poptions.registerext[poptions.registerextcount], end);
+      poptions.registerextcount++;
+      break;
+
+    case REGISTER_EXTENSION_FUNCTION_FILE_FLAG_CODE :
+
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
+
+      // register files name
+      poptions.registerfiles[poptions.registerfilescount++] = optarg;
+      break;
+
     case EOL_FLAG_CODE :
 
       // check for missing argument confused by an argument that looks like an option
@@ -983,6 +1022,14 @@ int option_error_status(int optopt) {
     break;
 
   case REGISTER_EXTENSION_FLAG_CODE :
+    return STATUS_ERROR;
+    break;
+
+  case REGISTER_EXTENSION_FUNCTION_FILE_FLAG_CODE :
+    return STATUS_ERROR;
+    break;
+
+  case REGISTER_EXTENSION_FUNCTION_FLAG_CODE :
     return STATUS_ERROR;
     break;
 
