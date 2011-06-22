@@ -34,6 +34,7 @@
 
 #include "libxml_archive_read.hpp"
 #include "libxml_archive_write.hpp"
+#include "srcexfun.hpp"
 
 int option_error_status(int optopt);
 
@@ -321,6 +322,9 @@ int main(int argc, char* argv[]) {
      { 0 }
   };
 
+  // register default xpath extension functions
+  xpathRegisterDefaultExtensionFunctions();
+
   // process command-line arguments
   int curarg = process_args(argc, argv, poptions);
 
@@ -605,6 +609,8 @@ int process_args(int argc, char* argv[], process_options & poptions)
     }
 
     char* end = 0;
+    const char * name;
+    const char * xpath;
     switch(c) {
 
     case HELP_FLAG_SHORT: 
@@ -814,7 +820,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       // register extension function name
-      poptions.registerext[poptions.registerextcount++] = optarg;
+      name = optarg;
       
       // must be both name and value, but value could be empty
       if (!strchr(optarg, '=')) {
@@ -825,9 +831,9 @@ int process_args(int argc, char* argv[], process_options & poptions)
       // registerext value
       end = optarg;
       strsep(&end, "=");
-      poptions.registerext[poptions.registerextcount] = (char*) malloc(strlen(end) + 1);
-      strcpy((char *) poptions.registerext[poptions.registerextcount], end);
-      poptions.registerextcount++;
+      xpath = (char*) malloc(strlen(end) + 1);
+      strcpy((char *)xpath, end);
+      xpathRegisterExtensionFunction(name, xpath);
       break;
 
     case REGISTER_EXTENSION_FUNCTION_FILE_FLAG_CODE :

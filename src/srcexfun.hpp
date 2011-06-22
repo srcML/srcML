@@ -12,4 +12,8 @@ void xsltsrcMLRegister();
 
 void xpathsrcMLRegister(xmlXPathContextPtr context);
 
+void xpathRegisterDefaultExtensionFunctions();
+
+void xpathRegisterExtensionFunction(const char * name, const char * xpath);
+
 #endif

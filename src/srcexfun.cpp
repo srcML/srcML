@@ -2,6 +2,7 @@
 #include "srcmlns.hpp"
 
 #include <cstring>
+#include <vector>
 
 #include <libxml/xpath.h>
 #include <libxml/xpathInternals.h>
@@ -22,13 +23,13 @@ static xmlChar* unit_filename = 0;
 static int Position;
 static PROPERTIES_TYPE* pattributes;
 
-static struct { const char* name; const char* expr; } MACROS[] = {
-  { "statement", "/src:unit//src:if | /src:unit//src:while" },
-  { "if", "/src:unit//src:if" },
-  { "while", "/src:unit//src:while" },
-  { "nestedwhile", ".//src:while//src:while" },
-  { "returntype", "/src:unit//src:function/src:type" },
+struct xpath_ext_function {
+  const char * name;
+  const char * expr;
+
 };
+
+static std::vector<struct xpath_ext_function> MACROS;
 
 void setPosition(int n) {
   Position = n;
@@ -68,9 +69,9 @@ static void srcRootFunction (xmlXPathParserContextPtr ctxt, int nargs) {
 
 static void srcMacrosFunction (xmlXPathParserContextPtr ctxt, int nargs) {
 
-    // find out which expression is being used based on the name
+  // find out which expression is being used based on the name
   unsigned int i;
-    for (i = 0; i < sizeof(MACROS) / sizeof(MACROS[0]); ++i)
+  for (i = 0; i < MACROS.size(); ++i)
       if (strcmp(MACROS[i].name, (const char*) ctxt->context->function) == 0)
         break;
 
@@ -95,7 +96,7 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
  			 BAD_CAST "http://www.sdml.info/srcML/src",
 			 srcRootFunction);
 
-  for (unsigned int i = 0; i < sizeof(MACROS) / sizeof(MACROS[0]); ++i) {
+  for (unsigned int i = 0; i < MACROS.size(); ++i) {
 
     xmlXPathRegisterFuncNS(context, (const xmlChar *)MACROS[i].name,
  			 BAD_CAST "http://www.sdml.info/srcML/src",
@@ -112,4 +113,20 @@ void xsltsrcMLRegister () {
   xsltRegisterExtModuleFunction(BAD_CAST "archive",
 			  BAD_CAST "http://www.sdml.info/srcML/src",
 			  srcRootFunction);
+}
+
+void xpathRegisterDefaultExtensionFunctions() {
+
+  xpathRegisterExtensionFunction("statement", "/src:unit//src:if | /src:unit//src:while");
+  xpathRegisterExtensionFunction("if", "/src:unit//src:if");
+  xpathRegisterExtensionFunction("while", "/src:unit//src:while");
+  xpathRegisterExtensionFunction("nestedwhile", ".//src:while//src:while");
+  xpathRegisterExtensionFunction("returntype", "/src:unit//src:function/src:type");
+}
+
+void xpathRegisterExtensionFunction(const char * name, const char * xpath) {
+
+  struct xpath_ext_function xpath_function = {name, xpath};
+
+  MACROS.push_back(xpath_function);
 }
