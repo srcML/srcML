@@ -35,6 +35,7 @@
 #include "libxml_archive_read.hpp"
 #include "libxml_archive_write.hpp"
 #include "srcexfun.hpp"
+#include "URIStream.hpp"
 
 int option_error_status(int optopt);
 
@@ -1111,4 +1112,29 @@ void output_info(srcMLUtility& su, int options, int optioncount, int optionorder
 
 void register_xpath_functions_from_filename(const char * filename) {
 
+  URIStream xpath_extension_file(filename);
+
+  char * extension_function;
+  while((extension_function = xpath_extension_file.getline())) {
+
+    if(strcmp(extension_function, "")) {
+
+      // register extension function name
+      const char * name = (const char*) malloc(strlen(extension_function) + 1);
+      strcpy((char *)name, extension_function);
+      
+      // must be both name and value, but value could be empty
+      if (!strchr(extension_function, '=')) {
+	fprintf(stderr, "%s: Register extension function name and value must be given.\n", PROGRAM_NAME);
+	exit(1);
+      }
+
+      // register xpath extension function
+      const char * end = name;
+      strsep((char **)&end, "=");
+      const char * xpath = (const char*) malloc(strlen(end) + 1);
+      strcpy((char *)xpath, end);
+      xpathRegisterExtensionFunction(name, xpath);
+    }
+  }
 }

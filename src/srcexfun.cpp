@@ -75,7 +75,7 @@ static void srcMacrosFunction (xmlXPathParserContextPtr ctxt, int nargs) {
       if (strcmp(MACROS[i].name, (const char*) ctxt->context->function) == 0)
         break;
 
-    //    fprintf(stderr, "HERE: %s\n", MACROS[i].expr);
+  //fprintf(stderr, "HERE: %s\n", MACROS[i].expr);
 
     xmlXPathObjectPtr ret = xmlXPathEval(BAD_CAST MACROS[i].expr, ctxt->context);
 
