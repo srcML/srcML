@@ -272,6 +272,9 @@ typedef struct process_options
 // setup options and collect info from arguments
 int process_args(int argc, char* argv[], process_options & poptions);
 
+// read and register xpath functions from a file
+void register_xpath_functions_from_filename(const char * filename);
+
 int main(int argc, char* argv[]) {
 
   xmlGenericErrorFunc handler = (xmlGenericErrorFunc) libxml_error;
@@ -844,7 +847,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       // register files name
-      poptions.registerfiles[poptions.registerfilescount++] = optarg;
+      register_xpath_functions_from_filename(optarg);
       break;
 
     case EOL_FLAG_CODE :
@@ -1106,4 +1109,8 @@ void output_info(srcMLUtility& su, int options, int optioncount, int optionorder
 
       if (isoption(options, OPTION_LONG_INFO) && !isoption(options, OPTION_UNIT) && isatty(STDOUT_FILENO))
 	    printf("units=\"%d", 1);
+}
+
+void register_xpath_functions_from_filename(const char * filename) {
+
 }
