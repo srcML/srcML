@@ -828,11 +828,13 @@ int process_args(int argc, char* argv[], process_options & poptions)
 	exit(1);
       }
 
-      // registerext value
+      // register xpath extension function
       end = optarg;
       strsep(&end, "=");
       xpath = (char*) malloc(strlen(end) + 1);
       strcpy((char *)xpath, end);
+      fprintf(stderr, "Name: %s\n", name);
+      fprintf(stderr, "XPath: %s\n", xpath);
       xpathRegisterExtensionFunction(name, xpath);
       break;
 
