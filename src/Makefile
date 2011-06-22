@@ -179,8 +179,8 @@ CREATED_GRAMMARS = WSLexer.g CommentLexer.g OperatorLexer.g TextLexer.g KeywordL
 GENERATED_GRAMMARS = $(patsubst %.g, expanded%.g, $(CREATED_GRAMMARS))
 
 # source code to srcML translator program
-${SRC2SRCML_BIN} : ${OBJ_DIR}src2srcml.o ${OBJ_DIR}srcmlapps.o ${EXE_DIR}libsrcml.a
-	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) ${XML_LIB_SRC2SRCML} ${XML_IO_LIB} ${EXE_DIR}/libsrcml.a -o $@
+${SRC2SRCML_BIN} : ${OBJ_DIR}src2srcml.o ${OBJ_DIR}srcmlapps.o $(if DYNAMIC, ${EXE_DIR}libsrcml.so, ${EXE_DIR}libsrcml.a)
+	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) ${XML_LIB_SRC2SRCML} ${XML_IO_LIB} $(if DYNAMIC, -L${EXE_DIR} -lsrcml, ${EXE_DIR}/libsrcml.a) -o $@
 
 ${EXE_DIR}src2srcmldyn : ${OBJ_DIR}src2srcml.o ${OBJ_DIR}srcmlapps.o ${EXE_DIR}libsrcml.so
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) ${XML_LIB_SRC2SRCML} ${XML_IO_LIB} -L${EXE_DIR} -lsrcml -o $@
