@@ -20,8 +20,8 @@ srcml2src.1 : srcml2src.xml option.dtd option.dtd
 	${DOCBOOK2XMAN} --string-param quotes-on-literals=1 srcml2src.xml
 
 view : man
-	man -l src2srcml.1
-	man -l srcml2src.1
+	man ./src2srcml.1
+	man ./srcml2src.1
 
 src2srcml.1.gz : src2srcml.1
 	gzip -f src2srcml.1

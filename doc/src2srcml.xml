@@ -370,7 +370,7 @@
   <informaltable frame='none' align="center" width="5in">
     <tgroup cols='2'>
       <colspec colwidth='0.5in'/>
-      <colspec colwidth='3in'/>
+      <colspec colwidth='4.0in'/>
       <tbody>
 	<row><entry>PREFIX</entry><entry>URI</entry></row>
     <row><entry></entry><entry>&SRCML_SRC_NS_URI;</entry></row>
