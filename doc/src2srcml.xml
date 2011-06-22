@@ -37,9 +37,9 @@
     files into the XML source-code representation srcML.  The srcML
     format allows the use of XML for addressing, querying, and
     transformation of source code.  All text from the original
-    source-code file is preserved including white-space, comments and
+    source-code file is preserved including white-space, comments, and
     preprocessor statements.  No preprocessing of the source code is
-    done.  In addition it can be applied to individual source-code
+    done.  In addition, the tool can be applied to individual source-code
     files, or code fragments.
   </para>
   <para>
@@ -90,11 +90,11 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term><option>&NESTED_FLAG_SHORT;, &NESTED_FLAG;</option></term>
+      <term><option>&COMPOUND_FLAG_SHORT;, &COMPOUND_FLAG;</option></term>
       <listitem>
 	<para>
 	  Stores all input source files into one compound srcML
-	  document.  Default with <option>&FILELIST_FLAG;</option> option.
+	  document.  Default with more then one input file, a directory, or the <option>&FILELIST_FLAG;</option> option.
 	</para>
       </listitem>
     </varlistentry>
