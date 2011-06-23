@@ -1,7 +1,7 @@
 /*
   Language.cpp
 
-  Copyright (C) 2008  SDML (www.sdml.info)
+  Copyright (C) 2008-2011  SDML (www.sdml.info)
 
   This file is part of the srcML translator.
 
