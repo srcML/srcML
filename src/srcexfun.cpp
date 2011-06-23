@@ -74,20 +74,23 @@ static void srcRootFunction (xmlXPathParserContextPtr ctxt, int nargs) {
 
 static void srcMacrosFunction (xmlXPathParserContextPtr ctxt, int nargs) {
 
-  // find out which expression is being used based on the name
-  unsigned int i;
-  for (i = 0; i < MACROS.size(); ++i)
-    if (strcmp(MACROS[i].name.c_str(), (const char*) ctxt->context->function) == 0)
-        break;
+    // as of now, all of these have no arguments
+    if (nargs != 0) {
+	xmlXPathSetArityError(ctxt);
+	return;
+    }
 
-  //fprintf(stderr, "HERE: %s\n", MACROS[i].expr);
+    // find out which expression is being used based on the name
+    unsigned int i;
+    for (i = 0; i < MACROS.size(); ++i)
+      if (strcmp(MACROS[i].name.c_str(), (const char*) ctxt->context->function) == 0)
+          break;
 
-  xmlXPathObjectPtr ret = xmlXPathEval(BAD_CAST MACROS[i].expr.c_str(), ctxt->context);
+    // evaluate the expression on the given context
+    xmlXPathObjectPtr ret = xmlXPathEval(BAD_CAST MACROS[i].expr.c_str(), ctxt->context);
 
     if (ret) {
       valuePush(ctxt, ret);
-    } else {
-      fprintf(stderr, "WHOOPS\n");
     }
 }
 
@@ -101,9 +104,10 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
                          BAD_CAST SRCML_SRC_NS_URI,
 			 srcRootFunction);
 
+  // register all the xpath extension functions
   for (unsigned int i = 0; i < MACROS.size(); ++i) {
 
-    xmlXPathRegisterFuncNS(context, (const xmlChar *)MACROS[i].name.c_str(),
+    xmlXPathRegisterFuncNS(context, BAD_CAST MACROS[i].name.c_str(),
                          BAD_CAST SRCML_SRC_NS_URI,
 			 srcMacrosFunction);
   }
@@ -118,6 +122,14 @@ void xsltsrcMLRegister () {
   xsltRegisterExtModuleFunction(BAD_CAST "archive",
                          BAD_CAST SRCML_SRC_NS_URI,
    		         srcRootFunction);
+ 
+  // register all the xpath extension functions
+  for (unsigned int i = 0; i < MACROS.size(); ++i) {
+
+    xsltRegisterExtModuleFunction(BAD_CAST MACROS[i].name.c_str(),
+                         BAD_CAST SRCML_SRC_NS_URI,
+			 srcMacrosFunction);
+  }
 }
 
 void xpathRegisterDefaultExtensionFunctions() {
