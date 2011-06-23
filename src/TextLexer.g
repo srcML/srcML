@@ -1,7 +1,7 @@
 /*
   TextLexer.g
 
-  Copyright (C) 2002-2008  SDML (www.sdml.info)
+  Copyright (C) 2002-2010  SDML (www.sdml.info)
 
   This file is part of the srcML translator.
 
