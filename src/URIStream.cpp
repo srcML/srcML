@@ -27,6 +27,19 @@ URIStream::URIStream(const char* uriname, char eolchar)
     done = true;
 }
 
+
+std::string URIStream::readlines() {
+
+  std::string s;
+  char* line = 0;
+  while (line = readline()) {
+    s.append(line);
+    s.append(" ");
+  }
+
+  return s;
+}
+
 char* URIStream::readline() {
 
   if (done)
