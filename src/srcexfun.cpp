@@ -94,17 +94,17 @@ static void srcMacrosFunction (xmlXPathParserContextPtr ctxt, int nargs) {
 void xpathsrcMLRegister(xmlXPathContextPtr context) {
 
   xmlXPathRegisterFuncNS(context, (const xmlChar *)"unit",
-			 BAD_CAST "http://www.sdml.info/srcML/src",
+                         BAD_CAST SRCML_SRC_NS_URI,
 			 srcContextFunction);
 
   xmlXPathRegisterFuncNS(context, (const xmlChar *)"archive",
- 			 BAD_CAST "http://www.sdml.info/srcML/src",
+                         BAD_CAST SRCML_SRC_NS_URI,
 			 srcRootFunction);
 
   for (unsigned int i = 0; i < MACROS.size(); ++i) {
 
     xmlXPathRegisterFuncNS(context, (const xmlChar *)MACROS[i].name.c_str(),
- 			 BAD_CAST "http://www.sdml.info/srcML/src",
+                         BAD_CAST SRCML_SRC_NS_URI,
 			 srcMacrosFunction);
   }
 }
@@ -112,12 +112,12 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
 void xsltsrcMLRegister () {
 
   xsltRegisterExtModuleFunction(BAD_CAST "unit",
-			  BAD_CAST "http://www.sdml.info/srcML/src",
-			  srcContextFunction);
+                         BAD_CAST SRCML_SRC_NS_URI,
+                         srcContextFunction);
 
   xsltRegisterExtModuleFunction(BAD_CAST "archive",
-			  BAD_CAST "http://www.sdml.info/srcML/src",
-			  srcRootFunction);
+                         BAD_CAST SRCML_SRC_NS_URI,
+   		         srcRootFunction);
 }
 
 void xpathRegisterDefaultExtensionFunctions() {
