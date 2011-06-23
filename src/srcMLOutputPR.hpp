@@ -1,7 +1,7 @@
 /*
   srcMLOutputPR.hpp
 
-  Copyright (C) 2005, 2006  SDML (www.sdml.info)
+  Copyright (C) 2005-2010  SDML (www.sdml.info)
 
   This file is part of the srcML translator.
 
