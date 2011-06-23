@@ -1,5 +1,5 @@
 /*
-  KeywordLexer.g
+  KeywordCPPLexer.g
 
   Copyright (C) 2004-2010  SDML (www.sdml.info)
 
