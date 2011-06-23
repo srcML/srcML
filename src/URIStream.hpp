@@ -22,6 +22,7 @@
 */
 
 #include <libxml/parser.h>
+#include <string>
 
 #ifndef URISTREAM_H
 #define URISTREAM_H

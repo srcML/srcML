@@ -19,6 +19,6 @@ int main() {
   URIStream stream("/dev/stdin");
 
   char* line;
-  while (line = stream.getline())
+  while (line = stream.readline())
     std::cout << "|" << line << "|" << '\n';
 }

@@ -1323,7 +1323,7 @@ void process_filelist(srcMLTranslator& translator, process_options& poptions, in
       exit(1);
     }
 
-    while ((line = uriinput.getline())) {
+    while ((line = uriinput.readline())) {
 
       // skip over whitespace
       // TODO:  Other types of whitespace?  backspace?

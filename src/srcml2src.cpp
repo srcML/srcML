@@ -1110,7 +1110,7 @@ void register_xpath_functions_from_filename(const char * filename) {
   URIStream xpath_extension_file(filename);
 
   char * extension_function;
-  while((extension_function = xpath_extension_file.getline())) {
+  while((extension_function = xpath_extension_file.readline())) {
 
     if(strcmp(extension_function, "")) {
 

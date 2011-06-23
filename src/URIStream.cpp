@@ -27,7 +27,7 @@ URIStream::URIStream(const char* uriname, char eolchar)
     done = true;
 }
 
-char* URIStream::getline() {
+char* URIStream::readline() {
 
   if (done)
     return 0;
