@@ -5,7 +5,14 @@
 # collard@cs.kent.edu
 
 # specific project data
-include Makefile.data
+VERSION_NUM=11.09.2006
+VERSION=beta-Nov-09-2006
+VERSION_DIR=commercial
+
+DEST_DIR=/var/www/sdml/projects/srcml/commercial/tirawireless${VERSION_NUM}/.
+DEST_URL=collard@gehry.sdml.cs.kent.edu:${DEST_DIR}
+
+SVN_URL=http://www.sdml.info/svn/srcML/tags/${VERSION}
 
 # base of file name
 BASE=srcml-${VERSION_NUM}
@@ -35,14 +42,16 @@ DOC_DIR=${BASE}-doc
 WINBIN_DIR=${BASE}-windows
 
 # executables
-SRC2SRCML_EXE=src2srcml
-SRCML2SRC_EXE=srcml2src
+SRC2SRCML_BIN=src2srcml
+SRCML2SRC_BIN=srcml2src
+SRC2SRCML_EXE=src2srcml.exe
+SRCML2SRC_EXE=srcml2src.exe
 
-SRC2SRCML_PATH=${BIN_DIR}/${SRC2SRCML_EXE}
-SRCML2SRC_PATH=${BIN_DIR}/${SRCML2SRC_EXE}
+SRC2SRCML_PATH=${BIN_DIR}/${SRC2SRCML_BIN}
+SRCML2SRC_PATH=${BIN_DIR}/${SRCML2SRC_BIN}
 
-WIN_SRC2SRCML_PATH=
-WIN_SRCML2SRC_PATH=
+WIN_SRC2SRCML_PATH=${BIN_DIR}/${SRC2SRCML_EXE}
+WIN_SRCML2SRC_PATH=${BIN_DIR}/${SRCML2SRC_EXE}
 
 # files
 DTD_FILES= ${DTD_DIR}/srcml.dtd ${DTD_DIR}/srcmlj.dtd
@@ -53,7 +62,6 @@ SRC_FILES= ${SRC_DIR} ${SRC_DTD_DIR}/srcml.dtd ${SRC_DTD_DIR}/srcmlj.dtd ${SRC_D
 
 # some doc files are copied from src
 EXP_DOC_FILES= ${DOC_FILES} ${DOC_DIR}/README ${DOC_DIR}/NEWS ${DOC_DIR}/CHANGES
-#EXP_DOC_FILES= ${DOC_FILES} ${DOC_DIR}/LICENSE.pdf ${DOC_DIR}/README ${DOC_DIR}/NEWS ${DOC_DIR}/CHANGES
 
 # all generated files
 GEN_FILES=${SRC_TAR_GZ} ${DOC_TAR_GZ} ${EXE_TAR_GZ} ${EXE_STATIC_TAR_GZ} ${SRC_ZIP} ${DOC_ZIP}
