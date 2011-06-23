@@ -590,6 +590,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { SKIP_DEFAULT_FLAG, no_argument, NULL, SKIP_DEFAULT_FLAG_CODE },
     { RECURSIVE_FLAG, no_argument, NULL, RECURSIVE_FLAG_CODE },
     { QUIET_FLAG, no_argument, NULL, QUIET_FLAG_SHORT },
+    { NULL, required_argument, NULL, '@' },
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
     { OLD_FILENAME_FLAG, no_argument, NULL, OLD_FILENAME_FLAG_CODE },
@@ -612,7 +613,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     int option_index = 0;
     bool special = optind < argc && !strncmp(argv[optind], "--xmlns:", 8);
     opterr = !special ? 1 : 0;
-    int c = getopt_long(argc, argv, "hVo:nex:t:zcgvl:d:f:s:q", cliargs, &option_index);
+    int c = getopt_long(argc, argv, "hVo:nex:t:zcgvl:d:f:s:q@:", cliargs, &option_index);
 
     if (c == -1)
       break;
