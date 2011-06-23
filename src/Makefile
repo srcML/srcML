@@ -114,8 +114,7 @@ settings :
 # setup
 setup : version.cpp
 
-# ANTLR generated files
-SRCMLPARSER_GENS = \
+# ANTLR generated filesSRCMLPARSER_GENS = \
 	srcMLParser.cpp srcMLParser.hpp \
 	srcMLParserTokenTypes.txt srcMLParserTokenTypes.hpp
 
@@ -195,10 +194,10 @@ ${SRCML2SRC_BIN} : ${OBJ_DIR}srcml2src.o ${OBJ_DIR}srcMLUtility.o ${OBJ_DIR}SAX2
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) ${XML_LIB_SRCML2SRC} ${XML_IO_LIB} -o $@
 
 # Object files
-${OBJ_DIR}src2srcml.o : src2srcml.cpp srcMLTranslator.hpp srcmlapps.hpp Options.hpp srcmlns.hpp ${IO_LIB_DEPENDS}
+${OBJ_DIR}src2srcml.o : src2srcml.cpp srcMLTranslator.hpp srcmlapps.hpp Options.hpp srcmlns.hpp makeargv.hpp ${IO_LIB_DEPENDS}
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
-${OBJ_DIR}srcml2src.o : srcml2src.cpp srcmlapps.hpp Options.hpp URIStream.hpp ${IO_LIB_DEPENDS}
+${OBJ_DIR}srcml2src.o : srcml2src.cpp srcmlapps.hpp Options.hpp URIStream.hpp makeargv.hpp ${IO_LIB_DEPENDS}
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}srcMLTranslator.o : srcMLTranslator.cpp srcMLTranslator.hpp StreamMLParser.hpp StreamParser.hpp srcMLToken.hpp Language.hpp
