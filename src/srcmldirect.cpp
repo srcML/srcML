@@ -1,5 +1,5 @@
 /*
-  Example of using libsrcml to translate a file.
+  Example of using libsrcml to translate a source file to srcML.
 
   Michael J. Decker
   mjd52@zips.uakron.edu
