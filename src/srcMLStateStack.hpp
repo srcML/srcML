@@ -1,7 +1,7 @@
 /*
   srcMLStateStack.hpp
 
-  Copyright (C) 2002, 2003, 2004, 2005  SDML (www.sdml.info)
+  Copyright (C) 2004-2010  SDML (www.sdml.info)
 
   This file is part of the srcML translator.
 
