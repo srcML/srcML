@@ -1,7 +1,7 @@
 /*
   libxml_archive_write.cpp
 
-  Copyright (C) 2020-2011  SDML (www.sdml.info)                                                                                                                                                
+  Copyright (C) 2010-2011  SDML (www.sdml.info)                                                                                                                                                
 
   This file is part of the srcML translator.                                                                                                                                                   
 
