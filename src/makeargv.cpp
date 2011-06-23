@@ -1,5 +1,5 @@
 /*
-  makeargv.c
+  makeargv.cpp
 
   Definition of makeargv function
 
@@ -7,7 +7,7 @@
   collard@uakron.edu
 */
 
-#include "makeargv.h"
+#include "makeargv.hpp"
 
 #include <stdlib.h>
 #include <string.h>

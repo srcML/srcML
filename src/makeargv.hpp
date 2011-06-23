@@ -1,5 +1,5 @@
 /*
-  makeargv.h
+  makeargv.hpp
 
   Include file for makeargv function
 
@@ -7,8 +7,8 @@
   collard@uakron.edu
 */
 
-#ifndef INCLUDED_MAKEARGV_H
-#define INCLUDED_MAKEARGV_H
+#ifndef INCLUDED_MAKEARGV_HPP
+#define INCLUDED_MAKEARGV_HPP
 
 /* 
    Builds an array of strings just like argv based on s 
