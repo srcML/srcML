@@ -1,7 +1,7 @@
 /*
   srcMLException.hpp
 
-  Copyright (C) 2004, 2005 SDML (www.sdml.info)
+  Copyright (C) 2004-2010 SDML (www.sdml.info)
 
   This include file is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
