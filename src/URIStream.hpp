@@ -1,7 +1,7 @@
 /*
   URIStream.hpp
 
-  Copyright (C) 2010  SDML (www.sdml.info)
+  Copyright (C) 2010-2011  SDML (www.sdml.info)
 
   This file is part of the srcML translator.
 
@@ -32,7 +32,9 @@ class URIStream {
  public:
   URIStream(const char* uriname, char eolchar = '\n');
 
-  char* getline();
+  char* readline();
+
+  std::string readlines();
 
   ~URIStream();
 
