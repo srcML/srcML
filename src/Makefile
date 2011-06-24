@@ -114,7 +114,8 @@ settings :
 # setup
 setup : version.cpp
 
-# ANTLR generated filesSRCMLPARSER_GENS = \
+# ANTLR generated files
+SRCMLPARSER_GENS = \
 	srcMLParser.cpp srcMLParser.hpp \
 	srcMLParserTokenTypes.txt srcMLParserTokenTypes.hpp
 
