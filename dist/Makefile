@@ -2,6 +2,9 @@
 # Makefile for building srcML distributions
 #
 
+# tools
+ECHO=${wildcard /opt/local/bin/gecho /bin/echo}
+
 # svn repo
 SVN_URL=http://calder.sdml.cs.kent.edu/svn/srcML/trunk
 
@@ -56,7 +59,7 @@ exp :
 	make clean
 	mkdir ${BASE}
 	svn export -r${REVISION} ${SVN_URL}/src/ ${BASE}/src
-	gecho -n "Trunk${REVISION}" > ${BASE}/src/VERSION
+	${ECHO} -n "Trunk${REVISION}" > ${BASE}/src/VERSION
 	svn info -r${REVISION} ${SVN_URL}/src | grep 'Last Changed Date:' | cut -d: -f2- | tr -d '\n' >> ${BASE}/src/VERSION
 	svn export -r${REVISION} --depth='empty' ${SVN_URL}/obj/ ${BASE}/obj
 	svn export -r${REVISION} --depth='empty' ${SVN_URL}/bin/ ${BASE}/bin
