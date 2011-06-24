@@ -25,8 +25,7 @@ SRC_DIR_BASE=${BASE}-src
 SRC_DIR=${SRC_DIR_BASE}/src
 OBJ_DIR=${SRC_DIR_BASE}/obj
 BIN_DIR=${SRC_DIR_BASE}/bin
-SRC_DOC_DIR=${SRC_DIR_BASE}/doc
-DOC_DIR=${BASE}-doc
+DOC_DIR=${SRC_DIR_BASE}/doc
 WINBIN_DIR=${BASE}-windows
 
 # executables
@@ -42,9 +41,7 @@ WIN_SRC2SRCML_PATH=${BIN_DIR}/${SRC2SRCML_EXE}
 WIN_SRCML2SRC_PATH=${BIN_DIR}/${SRCML2SRC_EXE}
 
 # files
-DOC_FILES= ${DOC_DIR}/src2srcml.1 ${DOC_DIR}/srcml2src.1 ${DOC_DIR}/src2srcml.html ${DOC_DIR}/srcml2src.html
-SRC_FILES= ${SRC_DIR} ${SRC_DOC_DIR}/src2srcml.1 ${SRC_DOC_DIR}/srcml2src.1
-EXP_DOC_FILES= ${DOC_FILES} ${DOC_DIR}/README ${DOC_DIR}/NEWS ${DOC_DIR}/CHANGES
+SRC_FILES= ${SRC_DIR} ${DOC_DIR}/src2srcml.1 ${DOC_DIR}/srcml2src.1
 
 # all generated files
 GEN_FILES=${SRC_TAR_GZ} ${DOC_TAR_GZ} ${EXE_TAR_GZ} ${EXE_STATIC_TAR_GZ} ${SRC_ZIP} ${DOC_ZIP}
@@ -70,12 +67,12 @@ clean :
 srctar : ${SRC_TAR_GZ}
 
 ${SRC_TAR_GZ} : exp
-	tar czf $@ ${SRC_FILES}
+	tar czf $@ ${SRC_FILES} ${OBJ_DIR} ${BIN_DIR} ${DOC_DIR}
 	gunzip --test $@
 
 # src file for Windows
 srczip : ${SRC_ZIP}
 
 ${SRC_ZIP} : exp
-	zip -rql $@ ${SRC_FILES}
+	zip -rql $@ ${SRC_FILES} ${OBJ_DIR} ${BIN_DIR} ${DOC_DIR}
 	unzip -qt $@
