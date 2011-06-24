@@ -6,7 +6,7 @@
 SVN_URL=http://calder.sdml.cs.kent.edu/svn/srcML/trunk
 
 # file name base
-BASE=srcml
+BASE=srcML
 
 # generated compressed files
 SRC_TAR=${BASE}-src.tar
@@ -21,7 +21,7 @@ EXE_STATIC_TAR_GZ=${BASE}-linux-static.tar.gz
 WIN_ZIP=${BASE}-windows.zip
 
 # directories
-SRC_DIR_BASE=${BASE}-src
+SRC_DIR_BASE=${BASE}
 SRC_DIR=${SRC_DIR_BASE}/src
 OBJ_DIR=${SRC_DIR_BASE}/obj
 BIN_DIR=${SRC_DIR_BASE}/bin
@@ -52,11 +52,11 @@ GEN_FILES=${SRC_TAR_GZ} ${DOC_TAR_GZ} ${EXE_TAR_GZ} ${EXE_STATIC_TAR_GZ} ${SRC_Z
 # export the directories
 exp :
 	make clean
-	mkdir ${BASE}-src
-	svn export ${SVN_URL}/src/ ${BASE}-src/src
-	svn export --depth='empty' ${SVN_URL}/obj/ ${BASE}-src/obj
-	svn export --depth='empty' ${SVN_URL}/bin/ ${BASE}-src/bin
-	svn export ${SVN_URL}/doc/ ${BASE}-src/doc
+	mkdir ${BASE}
+	svn export ${SVN_URL}/src/ ${BASE}/src
+	svn export --depth='empty' ${SVN_URL}/obj/ ${BASE}/obj
+	svn export --depth='empty' ${SVN_URL}/bin/ ${BASE}/bin
+	svn export ${SVN_URL}/doc/ ${BASE}/doc
 
 clean :
 	rm -fR ${GEN_FILES} ${WIN_ZIP} ${SRC_DIR_BASE} ${BIN_DIR} ${DOC_DIR}
