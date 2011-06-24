@@ -43,7 +43,7 @@ WIN_SRCML2SRC_PATH=${BIN_DIR}/${SRCML2SRC_EXE}
 
 # files
 DOC_FILES= ${DOC_DIR}/src2srcml.1 ${DOC_DIR}/srcml2src.1 ${DOC_DIR}/src2srcml.html ${DOC_DIR}/srcml2src.html
-SRC_FILES= ${SRC_DIR} ${SRC_DTD_DIR}/srcml.dtd ${SRC_DTD_DIR}/srcmlj.dtd ${SRC_DOC_DIR}/src2srcml.1 ${SRC_DOC_DIR}/srcml2src.1 ${SRC_DOC_DIR}/src2srcml.html ${SRC_DOC_DIR}/srcml2src.html
+SRC_FILES= ${SRC_DIR} ${SRC_DOC_DIR}/src2srcml.1 ${SRC_DOC_DIR}/srcml2src.1
 EXP_DOC_FILES= ${DOC_FILES} ${DOC_DIR}/README ${DOC_DIR}/NEWS ${DOC_DIR}/CHANGES
 
 # all generated files
@@ -64,3 +64,18 @@ exp :
 clean :
 	rm -fR ${GEN_FILES} ${WIN_ZIP} ${SRC_DIR_BASE} ${BIN_DIR} ${DOC_DIR}
 
+##
+# src
+
+srctar : ${SRC_TAR_GZ}
+
+${SRC_TAR_GZ} : exp
+	tar czf $@ ${SRC_FILES}
+	gunzip --test $@
+
+# src file for Windows
+srczip : ${SRC_ZIP}
+
+${SRC_ZIP} : exp
+	zip -rql $@ ${SRC_FILES}
+	unzip -qt $@
