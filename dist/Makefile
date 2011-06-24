@@ -49,14 +49,18 @@ GEN_FILES=${SRC_TAR_GZ} ${DOC_TAR_GZ} ${EXE_TAR_GZ} ${EXE_STATIC_TAR_GZ} ${SRC_Z
 # generate files
 #all : ${GEN_FILES}
 
+REVISION=$(shell svn info ${SVN_URL}/src | grep 'Revision:' | cut -d: -f2- | tr -d '\n')
+
 # export the directories
 exp :
 	make clean
 	mkdir ${BASE}
-	svn export ${SVN_URL}/src/ ${BASE}/src
-	svn export --depth='empty' ${SVN_URL}/obj/ ${BASE}/obj
-	svn export --depth='empty' ${SVN_URL}/bin/ ${BASE}/bin
-	svn export ${SVN_URL}/doc/ ${BASE}/doc
+	svn export -r${REVISION} ${SVN_URL}/src/ ${BASE}/src
+	gecho -n "Trunk${REVISION}" > ${BASE}/src/VERSION
+	svn info -r${REVISION} ${SVN_URL}/src | grep 'Last Changed Date:' | cut -d: -f2- | tr -d '\n' >> ${BASE}/src/VERSION
+	svn export -r${REVISION} --depth='empty' ${SVN_URL}/obj/ ${BASE}/obj
+	svn export -r${REVISION} --depth='empty' ${SVN_URL}/bin/ ${BASE}/bin
+	svn export -r${REVISION} ${SVN_URL}/doc/ ${BASE}/doc
 
 clean :
 	rm -fR ${GEN_FILES} ${WIN_ZIP} ${SRC_DIR_BASE} ${BIN_DIR} ${DOC_DIR}
