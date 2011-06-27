@@ -57,7 +57,7 @@ exp :
 	make clean
 	mkdir ${SRC_DIR_BASE}
 	svn export -r${REVISION} ${SVN_URL}/src/ ${SRC_DIR_BASE}/src
-	${ECHO} -n "Trunk${REVISION}" > ${SRC_DIR_BASE}/src/VERSION
+	${ECHO} -n "Trunk ${REVISION}" > ${SRC_DIR_BASE}/src/VERSION
 	svn info -r${REVISION} ${SVN_URL}/src | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2- | ${TR} -d '\n' >> ${SRC_DIR_BASE}/src/VERSION
 	svn export -r${REVISION} --depth='empty' ${SVN_URL}/obj/ ${SRC_DIR_BASE}/obj
 	svn export -r${REVISION} --depth='empty' ${SVN_URL}/bin/ ${SRC_DIR_BASE}/bin
