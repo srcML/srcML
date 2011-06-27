@@ -1,4 +1,5 @@
 MAN_PAGES= src2srcml.1 srcml2src.1
+HTML_PAGES = src2srcml.html srcml2src.html
 MAN_GZIP= src2srcml.1.gz srcml2src.1.gz
 SRC2SRCML=../bin/src2srcml
 SRCML2SRC=../bin/srcml2src
@@ -51,4 +52,4 @@ install : ${MAN_GZIP}
 	cp src2srcml.1.gz srcml2src.1.gz /usr/share/man/man1/.
 
 clean :
-	rm -f ${MAN_PAGES} ${MAN_GZIP} option.dtd
+	rm -f ${MAN_PAGES} ${MAN_GZIP} option.dtd ${HTML_PAGES}
