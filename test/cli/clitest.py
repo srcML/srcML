@@ -2798,11 +2798,6 @@ srcmlend = """
 </unit>
 """
 
-if os.path.exists("dir"):
-	os.system("rm -r dir; mkdir dir")
-else :
-	os.system("mkdir dir")
-
 f = open("dir/file.aj", 'w')
 f.write(src)
 f.close()
@@ -2819,7 +2814,7 @@ f = open("dir/file.java", 'w')
 f.write(src)
 f.close()
 
-line = execute(['ls', '-f1', 'dir'], "")
+line = execute(['ls', '-A1', 'dir'], "")
 
 srcml = srcmlstart
 
