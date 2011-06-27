@@ -44,7 +44,7 @@ WIN_SRC2SRCML_PATH=${BIN_DIR}/${SRC2SRCML_EXE}
 WIN_SRCML2SRC_PATH=${BIN_DIR}/${SRCML2SRC_EXE}
 
 # files
-SRC_FILES= ${SRC_DIR} ${DOC_DIR}/src2srcml.1 ${DOC_DIR}/srcml2src.1
+SRC_FILES= ${SRC_DIR} 
 
 # all generated files
 GEN_FILES=srctar srczip
@@ -75,9 +75,16 @@ clean :
 src : ${SRC_TAR_GZ} ${SRC_ZIP}
 
 ${SRC_TAR_GZ} : exp
-	tar czf $@ ${SRC_FILES} ${OBJ_DIR} ${BIN_DIR} ${DOC_DIR}
+	tar czf $@ ${SRC_FILES} ${OBJ_DIR} ${BIN_DIR}
 	gunzip --test $@
 
 ${SRC_ZIP} : exp
-	zip -rql $@ ${SRC_FILES} ${OBJ_DIR} ${BIN_DIR} ${DOC_DIR}
+	zip -rql $@ ${SRC_FILES} ${OBJ_DIR} ${BIN_DIR}
 	unzip -qt $@
+
+##
+# bin
+bin : src
+	rm -fR ${SRC_DIR_BASE}
+	tar xzf ${SRC_TAR_GZ}
+	cd ${SRC_DIR} && make
