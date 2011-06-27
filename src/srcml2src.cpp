@@ -350,10 +350,10 @@ int main(int argc, char* argv[]) {
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
   // verify that the output file is not the same as the input file
-  struct stat instat;
+  struct stat instat = { 0 };
   stat(filename, &instat);
 
-  struct stat outstat;
+  struct stat outstat = { 0 };
   stat(poptions.ofilename, &outstat);
   if ((strcmp(poptions.ofilename, "-") != 0) && instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
     fprintf(stderr, "%s: Input file '%s' is the same as the output file '%s'\n", PROGRAM_NAME, filename, poptions.ofilename);
