@@ -54,7 +54,7 @@ SRC_FILES= ${SRC_DIR} ${DOC_DIR}/src2srcml.1 ${DOC_DIR}/srcml2src.1
 GEN_FILES=srctar srczip
 
 # generate files
-all : ${GEN_FILES}
+all : src
 
 REVISION=$(shell svn info ${SVN_URL}/src | grep 'Revision:' | cut -d: -f2- | tr -d '\n')
 
@@ -75,14 +75,11 @@ clean :
 ##
 # src
 
-srctar : ${SRC_TAR_GZ}
+src : ${SRC_TAR_GZ} ${SRC_ZIP}
 
 ${SRC_TAR_GZ} : exp
 	tar czf $@ ${SRC_FILES} ${OBJ_DIR} ${BIN_DIR} ${DOC_DIR}
 	gunzip --test $@
-
-# src file for Windows
-srczip : ${SRC_ZIP}
 
 ${SRC_ZIP} : exp
 	zip -rql $@ ${SRC_FILES} ${OBJ_DIR} ${BIN_DIR} ${DOC_DIR}
