@@ -7,6 +7,7 @@ ECHO=${wildcard /opt/local/bin/gecho /bin/echo}
 SED=${firstword ${wilcard /opt/local/bin/gsed /bin/sed}}
 GREP=${firstword ${wildcard /bin/grep /usr/bin/grep}}
 CUT=/usr/bin/cut
+TR=/usr/bin/tr
 
 # svn repo
 SVN_URL=http://calder.sdml.cs.kent.edu/svn/srcML/trunk
@@ -19,11 +20,7 @@ SRC_TAR=${BASE}-src.tar
 SRC_TAR_GZ=${SRC_TAR}.gz
 SRC_ZIP=${BASE}-src.zip
 
-DOC_TAR_GZ=${BASE}-doc.tar.gz
-DOC_ZIP=${BASE}-doc.zip
-
 EXE_TAR_GZ=${BASE}-linux.tar.gz
-EXE_STATIC_TAR_GZ=${BASE}-linux-static.tar.gz
 WIN_ZIP=${BASE}-windows.zip
 
 # directories
@@ -64,13 +61,13 @@ exp :
 	mkdir ${BASE}
 	svn export -r${REVISION} ${SVN_URL}/src/ ${BASE}/src
 	${ECHO} -n "Trunk${REVISION}" > ${BASE}/src/VERSION
-	svn info -r${REVISION} ${SVN_URL}/src | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2- | tr -d '\n' >> ${BASE}/src/VERSION
+	svn info -r${REVISION} ${SVN_URL}/src | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2- | ${TR} -d '\n' >> ${BASE}/src/VERSION
 	svn export -r${REVISION} --depth='empty' ${SVN_URL}/obj/ ${BASE}/obj
 	svn export -r${REVISION} --depth='empty' ${SVN_URL}/bin/ ${BASE}/bin
 	svn export -r${REVISION} ${SVN_URL}/doc/ ${BASE}/doc
 
 clean :
-	rm -fR ${GEN_FILES} ${WIN_ZIP} ${SRC_DIR_BASE} ${BIN_DIR} ${DOC_DIR}
+	rm -fR  ${SRC_DIR_BASE} ${SRC_TAR_GZ} ${SRC_ZIP}
 
 ##
 # src
