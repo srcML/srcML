@@ -14,14 +14,15 @@ SVN_URL=http://calder.sdml.cs.kent.edu/svn/srcML/trunk
 
 # file name base
 BASE=srcML
+WIN_BASE=${BASE}win
 
 # generated compressed files
 SRC_TAR=${BASE}-src.tar
 SRC_TAR_GZ=${SRC_TAR}.gz
 SRC_ZIP=${BASE}-src.zip
 
-EXE_TAR_GZ=${BASE}-linux.tar.gz
-WIN_ZIP=${BASE}-windows.zip
+UNIX_TAR_GZ=${BASE}.tar.gz
+WIN_ZIP=${BASE}win.zip
 
 # directories
 SRC_DIR_BASE=${BASE}-src
@@ -45,26 +46,31 @@ WIN_SRCML2SRC_PATH=${BIN_DIR}/${SRCML2SRC_EXE}
 
 DOC_FILES=${DOC_DIR}/src2srcml.1.gz ${DOC_DIR}/srcml2src.1.gz ${DOC_DIR}/src2srcml.html ${DOC_DIR}/srcml2src.html
 DIST_FILES=${DOC_FILES} ${SRC2SRCML_PATH} ${SRCML2SRC_PATH}
+WIN_DIST_FILES=${DOC_FILES} ${WIN_SRC2SRCML_PATH} ${WIN_SRCML2SRC_PATH}
 
 # generate files
-all : src bin
+all : src unix
 
 REVISION=$(strip $(shell svn info ${SVN_URL}/src | ${GREP} 'Revision:' | ${CUT} -d: -f2-))
 
 # export the directories
 exp :
 	echo ${REVISION}
-	make clean
+	make cleansrc
 	mkdir ${SRC_DIR_BASE}
 	svn export -r${REVISION} ${SVN_URL}/src/ ${SRC_DIR_BASE}/src
 	${ECHO} -n "Trunk ${REVISION}" > ${SRC_DIR_BASE}/src/VERSION
 	svn info -r${REVISION} ${SVN_URL}/src | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2- | ${TR} -d '\n' >> ${SRC_DIR_BASE}/src/VERSION
-	svn export -r${REVISION} --depth='empty' ${SVN_URL}/obj/ ${SRC_DIR_BASE}/obj
-	svn export -r${REVISION} --depth='empty' ${SVN_URL}/bin/ ${SRC_DIR_BASE}/bin
-	svn export -r${REVISION} ${SVN_URL}/doc/ ${SRC_DIR_BASE}/doc
+	svn export -r${REVISION} --depth='empty' ${SVN_URL}/obj/ ${SRC_DIR_BASE}/obj --native-eol LF
+	svn export -r${REVISION} --depth='empty' ${SVN_URL}/bin/ ${SRC_DIR_BASE}/bin --native-eol LF
+	svn export -r${REVISION} ${SVN_URL}/doc/ ${SRC_DIR_BASE}/doc --native-eol LF
 
 clean :
-	rm -fR  ${SRC_DIR_BASE} ${SRC_TAR_GZ} ${SRC_ZIP} ${BASE}
+	make cleansrc
+	rm -fR  ${SRC_TAR_GZ} ${UNIX_TAR_GZ} ${SRC_ZIP} ${WIN_ZIP}
+
+cleansrc :
+	rm -fR ${SRC_DIR_BASE} ${BASE} ${WIN_BASE}
 
 ##
 # src
@@ -81,10 +87,20 @@ ${SRC_ZIP} : exp
 
 ##
 # bin
-bin : src
-	rm -fR ${SRC_DIR_BASE}
+bin : ${SRC_TAR_GZ}
+	make cleansrc
 	tar xzf ${SRC_TAR_GZ}
 	cd ${SRC_DIR} && make
 	cd ${DOC_DIR} && make
 	mkdir ${BASE} && cp -t ${BASE} ${DIST_FILES}
-	tar czf ${BASE}.tar.gz ${BASE}
+	tar czf ${UNIX_TAR_GZ} ${BASE}
+
+windows : ${SRC_ZIP}
+	make cleansrc
+	unzip -aq ${SRC_ZIP}
+	cd ${SRC_DIR} && make mingw32
+	cd ${SRC_DIR} && make cleanbuild && make
+	cd ${DOC_DIR} && make
+	mkdir ${WIN_BASE} && cp -t ${WIN_BASE} ${WIN_DIST_FILES}
+	cp dlls/*.dll ${WIN_BASE}
+	zip -rql ${WIN_ZIP} ${WIN_BASE}
