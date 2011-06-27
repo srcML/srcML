@@ -388,6 +388,11 @@ int main(int argc, char* argv[]) {
 
 #if defined(__GNUC__) && !defined(__MINGW32__)
   // verify that the output filename is not the same as any of the input filenames
+  // verify that only one input pipe is STDIN
+  struct stat stdiostat;
+  fstat(STDIN_FILENO, &stdiostat);
+  int stdiocount = 0;
+
   struct stat outstat;
   stat(poptions.srcml_filename, &outstat);
   for (int i = input_arg_start; i <= input_arg_end; ++i) {
@@ -399,24 +404,14 @@ int main(int argc, char* argv[]) {
 	      PROGRAM_NAME, argv[i], poptions.srcml_filename);
       exit(STATUS_INPUTFILE_PROBLEM);
     }
-  }
 
-  // verify that only one input pipe is STDIN
-  struct stat stdiostat;
-  fstat(STDIN_FILENO, &stdiostat);
-  int stdiocount = 0;
-  for (int i = input_arg_start; i <= input_arg_end; ++i) {
+    if (instat.st_ino == stdiostat.st_ino)
+      ++stdiocount;
 
-	struct stat instat;
-	stat(argv[i], &instat);
-	if (instat.st_ino == stdiostat.st_ino)
-	  ++stdiocount;
-
-	if (stdiocount > 1) {
-	  fprintf(stderr, "%s: Multiple input files are from standard input.\n",
-		  PROGRAM_NAME);
-	  exit(STATUS_INPUTFILE_PROBLEM);
-	}
+    if (stdiocount > 1) {
+      fprintf(stderr, "%s: Multiple input files are from standard input.\n", PROGRAM_NAME);
+      exit(STATUS_INPUTFILE_PROBLEM);
+    }
   }
 #endif
 	
