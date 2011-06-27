@@ -7,7 +7,6 @@ ECHO=${wildcard /opt/local/bin/gecho /bin/echo}
 SED=${firstword ${wilcard /opt/local/bin/gsed /bin/sed}}
 GREP=${firstword ${wildcard /bin/grep /usr/bin/grep}}
 CUT=/usr/bin/cut
-SVNVERSION=${wildcard /usr/bin/svnversion}
 
 # svn repo
 SVN_URL=http://calder.sdml.cs.kent.edu/svn/srcML/trunk
@@ -65,7 +64,7 @@ exp :
 	mkdir ${BASE}
 	svn export -r${REVISION} ${SVN_URL}/src/ ${BASE}/src
 	${ECHO} -n "Trunk${REVISION}" > ${BASE}/src/VERSION
-	svn info -r${REVISION} ${SVN_URL}/src | grep 'Last Changed Date:' | cut -d: -f2- | tr -d '\n' >> ${BASE}/src/VERSION
+	svn info -r${REVISION} ${SVN_URL}/src | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2- | tr -d '\n' >> ${BASE}/src/VERSION
 	svn export -r${REVISION} --depth='empty' ${SVN_URL}/obj/ ${BASE}/obj
 	svn export -r${REVISION} --depth='empty' ${SVN_URL}/bin/ ${BASE}/bin
 	svn export -r${REVISION} ${SVN_URL}/doc/ ${BASE}/doc
