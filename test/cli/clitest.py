@@ -2236,6 +2236,10 @@ xpath = xml_declaration + """
 </unit>
 """
 
+xpath_empty = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src"/>
+"""
+
 file = open('sub/a.cpp.xml', 'w')
 file.write(srcml)
 file.close()
@@ -2260,12 +2264,12 @@ validate(open('sub/b.cpp.xml', 'r').read(), xpath)
 validate(getreturn([srcml2src, option.XPATH_FLAG], srcml), status.STATUS_ERROR)
 validate(getreturn([srcml2src, option.XPATH_FLAG + '='], srcml), status.STATUS_ERROR)
 
-check([srcml2src, option.XPATH_FLAG + '=src:unit'], srcml, xpath)
-check([srcml2src, option.XPATH_FLAG + '=src:unit', 'sub/a.cpp.xml'], "", xpath)
+check([srcml2src, option.XPATH_FLAG + '=src:unit'], srcml, xpath_empty)
+check([srcml2src, option.XPATH_FLAG + '=src:unit', 'sub/a.cpp.xml'], "", xpath_empty)
 check([srcml2src, option.XPATH_FLAG + '=src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), xpath)
+validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
 check([srcml2src, option.XPATH_FLAG + '=src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
-validate(open('sub/b.cpp.xml', 'r').read(), xpath)
+validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
 
 validate(getreturn([srcml2src, option.XPATH_FLAG], srcml), status.STATUS_ERROR)
 validate(getreturn([srcml2src, option.XPATH_FLAG + '='], srcml), status.STATUS_ERROR)
@@ -2282,6 +2286,10 @@ xpath = xml_declaration + """
 <unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" item="1"><name>a</name></unit>
 
 </unit>
+"""
+
+xpath_empty = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src"/>
 """
 
 file = open('sub/a.cpp.xml', 'w')
@@ -2308,12 +2316,12 @@ validate(open('sub/b.cpp.xml', 'r').read(), xpath)
 validate(getreturn([srcml2src, option.XPATH_FLAG], srcml), status.STATUS_ERROR)
 validate(getreturn([srcml2src, option.XPATH_FLAG + '='], srcml), status.STATUS_ERROR)
 
-check([srcml2src, option.XPATH_FLAG + '=src:name'], srcml, xpath)
-check([srcml2src, option.XPATH_FLAG + '=src:name', 'sub/a.cpp.xml'], "", xpath)
+check([srcml2src, option.XPATH_FLAG + '=src:name'], srcml, xpath_empty)
+check([srcml2src, option.XPATH_FLAG + '=src:name', 'sub/a.cpp.xml'], "", xpath_empty)
 check([srcml2src, option.XPATH_FLAG + '=src:name', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), xpath)
+validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
 check([srcml2src, option.XPATH_FLAG + '=src:name', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
-validate(open('sub/b.cpp.xml', 'r').read(), xpath)
+validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
 
 validate(getreturn([srcml2src, option.XPATH_FLAG], srcml), status.STATUS_ERROR)
 validate(getreturn([srcml2src, option.XPATH_FLAG + '='], srcml), status.STATUS_ERROR)
@@ -2342,6 +2350,10 @@ xpath = xml_declaration + """
 </unit>
 """
 
+xpath_empty = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:foo="http://www.cs.uakron.edu/~collard/foo"/>
+"""
+
 file = open('sub/a.cpp.xml', 'w')
 file.write(srcml)
 file.close()
@@ -2366,12 +2378,12 @@ validate(open('sub/b.cpp.xml', 'r').read(), xpath)
 validate(getreturn([srcml2src, option.XPATH_FLAG], srcml), status.STATUS_ERROR)
 validate(getreturn([srcml2src, option.XPATH_FLAG + '='], srcml), status.STATUS_ERROR)
 
-check([srcml2src, option.XPATH_FLAG + '=src:name'], srcml, xpath)
-check([srcml2src, option.XPATH_FLAG + '=src:name', 'sub/a.cpp.xml'], "", xpath)
+check([srcml2src, option.XPATH_FLAG + '=src:name'], srcml, xpath_empty)
+check([srcml2src, option.XPATH_FLAG + '=src:name', 'sub/a.cpp.xml'], "", xpath_empty)
 check([srcml2src, option.XPATH_FLAG + '=src:name', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), xpath)
+validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
 check([srcml2src, option.XPATH_FLAG + '=src:name', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
-validate(open('sub/b.cpp.xml', 'r').read(), xpath)
+validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
 
 validate(getreturn([srcml2src, option.XPATH_FLAG], srcml), status.STATUS_ERROR)
 validate(getreturn([srcml2src, option.XPATH_FLAG + '='], srcml), status.STATUS_ERROR)
@@ -2390,52 +2402,8 @@ srcml = xml_declaration + """
 </unit>
 """
 
-file = open('sub/a.cpp.xml', 'w')
-file.write(srcml)
-file.close()
-
-check([srcml2src, option.XPATH_FLAG + '=/src:unit'], srcml, srcml)
-check([srcml2src, option.XPATH_FLAG + '=/src:unit', 'sub/a.cpp.xml'], "", srcml)
-check([srcml2src, option.XPATH_FLAG + '=/src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), srcml)
-check([srcml2src, option.XPATH_FLAG + '=/src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
-validate(open('sub/b.cpp.xml', 'r').read(), srcml)
-
-validate(getreturn([srcml2src, option.XPATH_FLAG], srcml), status.STATUS_ERROR)
-validate(getreturn([srcml2src, option.XPATH_FLAG + '='], srcml), status.STATUS_ERROR)
-
-check([srcml2src, option.XPATH_FLAG + '=//src:unit'], srcml, srcml)
-check([srcml2src, option.XPATH_FLAG + '=//src:unit', 'sub/a.cpp.xml'], "", srcml)
-check([srcml2src, option.XPATH_FLAG + '=//src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), srcml)
-check([srcml2src, option.XPATH_FLAG + '=//src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
-validate(open('sub/b.cpp.xml', 'r').read(), srcml)
-
-validate(getreturn([srcml2src, option.XPATH_FLAG], srcml), status.STATUS_ERROR)
-validate(getreturn([srcml2src, option.XPATH_FLAG + '='], srcml), status.STATUS_ERROR)
-
-check([srcml2src, option.XPATH_FLAG + '=src:unit'], srcml, srcml)
-check([srcml2src, option.XPATH_FLAG + '=src:unit', 'sub/a.cpp.xml'], "", srcml)
-check([srcml2src, option.XPATH_FLAG + '=src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), srcml)
-check([srcml2src, option.XPATH_FLAG + '=src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
-validate(open('sub/b.cpp.xml', 'r').read(), srcml)
-
-validate(getreturn([srcml2src, option.XPATH_FLAG], srcml), status.STATUS_ERROR)
-validate(getreturn([srcml2src, option.XPATH_FLAG + '='], srcml), status.STATUS_ERROR)
-
-srcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:foo="http://www.cs.uakron.edu/~collard/foo">
-
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
-<foo:a/>
-</unit>
-
-<unit xmlns:bar="http://www.cs.uakron.edu/~collard/foo" language="Java">
-<foo:a/><bar:b/>
-</unit>
-
-</unit>
+xpath_empty = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:foo="http://www.cs.uakron.edu/~collard/foo"/>
 """
 
 file = open('sub/a.cpp.xml', 'w')
@@ -2462,12 +2430,64 @@ validate(open('sub/b.cpp.xml', 'r').read(), srcml)
 validate(getreturn([srcml2src, option.XPATH_FLAG], srcml), status.STATUS_ERROR)
 validate(getreturn([srcml2src, option.XPATH_FLAG + '='], srcml), status.STATUS_ERROR)
 
-check([srcml2src, option.XPATH_FLAG + '=src:unit'], srcml, srcml)
-check([srcml2src, option.XPATH_FLAG + '=src:unit', 'sub/a.cpp.xml'], "", srcml)
+check([srcml2src, option.XPATH_FLAG + '=src:unit'], srcml, xpath_empty)
+check([srcml2src, option.XPATH_FLAG + '=src:unit', 'sub/a.cpp.xml'], "", xpath_empty)
 check([srcml2src, option.XPATH_FLAG + '=src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), srcml)
+validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
 check([srcml2src, option.XPATH_FLAG + '=src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
+validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
+
+validate(getreturn([srcml2src, option.XPATH_FLAG], srcml), status.STATUS_ERROR)
+validate(getreturn([srcml2src, option.XPATH_FLAG + '='], srcml), status.STATUS_ERROR)
+
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:foo="http://www.cs.uakron.edu/~collard/foo">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<foo:a/>
+</unit>
+
+<unit xmlns:bar="http://www.cs.uakron.edu/~collard/foo" language="Java">
+<foo:a/><bar:b/>
+</unit>
+
+</unit>
+"""
+
+xpath_empty = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:foo="http://www.cs.uakron.edu/~collard/foo"/>
+"""
+
+file = open('sub/a.cpp.xml', 'w')
+file.write(srcml)
+file.close()
+
+check([srcml2src, option.XPATH_FLAG + '=/src:unit'], srcml, srcml)
+check([srcml2src, option.XPATH_FLAG + '=/src:unit', 'sub/a.cpp.xml'], "", srcml)
+check([srcml2src, option.XPATH_FLAG + '=/src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
 validate(open('sub/b.cpp.xml', 'r').read(), srcml)
+check([srcml2src, option.XPATH_FLAG + '=/src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
+validate(open('sub/b.cpp.xml', 'r').read(), srcml)
+
+validate(getreturn([srcml2src, option.XPATH_FLAG], srcml), status.STATUS_ERROR)
+validate(getreturn([srcml2src, option.XPATH_FLAG + '='], srcml), status.STATUS_ERROR)
+
+check([srcml2src, option.XPATH_FLAG + '=//src:unit'], srcml, srcml)
+check([srcml2src, option.XPATH_FLAG + '=//src:unit', 'sub/a.cpp.xml'], "", srcml)
+check([srcml2src, option.XPATH_FLAG + '=//src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
+validate(open('sub/b.cpp.xml', 'r').read(), srcml)
+check([srcml2src, option.XPATH_FLAG + '=//src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
+validate(open('sub/b.cpp.xml', 'r').read(), srcml)
+
+validate(getreturn([srcml2src, option.XPATH_FLAG], srcml), status.STATUS_ERROR)
+validate(getreturn([srcml2src, option.XPATH_FLAG + '='], srcml), status.STATUS_ERROR)
+
+check([srcml2src, option.XPATH_FLAG + '=src:unit'], srcml, xpath_empty)
+check([srcml2src, option.XPATH_FLAG + '=src:unit', 'sub/a.cpp.xml'], "", xpath_empty)
+check([srcml2src, option.XPATH_FLAG + '=src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
+validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
+check([srcml2src, option.XPATH_FLAG + '=src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
+validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
 
 validate(getreturn([srcml2src, option.XPATH_FLAG], srcml), status.STATUS_ERROR)
 validate(getreturn([srcml2src, option.XPATH_FLAG + '='], srcml), status.STATUS_ERROR)
