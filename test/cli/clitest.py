@@ -2794,7 +2794,7 @@ srcmlend = """
 </unit>
 """
 
-line = execute(['ls', '-A1', 'dir'], "")
+line = execute(['ls', '-f1', 'dir'], "")
 
 srcml = srcmlstart
 
