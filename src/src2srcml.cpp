@@ -389,15 +389,15 @@ int main(int argc, char* argv[]) {
 #if defined(__GNUC__) && !defined(__MINGW32__)
   // verify that the output filename is not the same as any of the input filenames
   // verify that only one input pipe is STDIN
-  struct stat stdiostat;
+  struct stat stdiostat = { 0 };
   fstat(STDIN_FILENO, &stdiostat);
   int stdiocount = 0;
 
-  struct stat outstat;
+  struct stat outstat = { 0 };
   stat(poptions.srcml_filename, &outstat);
   for (int i = input_arg_start; i <= input_arg_end; ++i) {
 
-    struct stat instat;
+    struct stat instat = { 0 };
     stat(argv[i], &instat);
     if (instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
       fprintf(stderr, "%s: Input file '%s' is the same as the output file '%s'\n",
@@ -1038,7 +1038,7 @@ int option_error_status(int optopt) {
 void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   // handle local directories specially
-  struct stat instat;
+  struct stat instat = { 0 };
   int stat_status = stat(path, &instat);
   if (!stat_status && S_ISDIR(instat.st_mode)) {
     process_dir(translator, path, *gpoptions, count, skipped, error, showinput, shownumber);
@@ -1233,28 +1233,30 @@ void process_dir(srcMLTranslator& translator, const char* directory, process_opt
   int basesize = filename.length();
 
   // record the stat info on the output file
-  struct stat outstat;
+  struct stat outstat = { 0 };
   stat(poptions.srcml_filename, &outstat);
 
   // process all non-directory files
   while (struct dirent* entry = readdir(dirp)) {
 
-    // handle directories later after all the filenames
-    struct stat fstat;
-    stat(entry->d_name, &fstat);
-    if (S_ISDIR(fstat.st_mode))
-      continue;
-
     // skip standard UNIX filenames, and . files
     if (entry->d_name[0] == '.')
       continue;
+
+    // handle directories later after all the filenames
+    struct stat fstat = { 0 };
+    stat(entry->d_name, &fstat);
+    if (S_ISDIR(fstat.st_mode)) {
+      fprintf(stderr, "FILE IS DIR: %s\n", entry->d_name);
+      continue;
+    }
 
     // path with current filename
     filename.resize(basesize);
     filename += entry->d_name;
 
     // make sure that we are not processing the output file
-    struct stat instat;
+    struct stat instat = { 0 };
     stat(filename.c_str(), &instat);
     if (instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
       if (!shownumber)
@@ -1286,15 +1288,15 @@ void process_dir(srcMLTranslator& translator, const char* directory, process_opt
   rewinddir(dirp);
   while (struct dirent* entry = readdir(dirp)) {
 
-    // already handled other types of files
-    struct stat fstat;
-    stat(entry->d_name, &fstat);
-    if (!S_ISDIR(fstat.st_mode))
-      continue;
-
     // skip standard UNIX filenames, and . files
     // TODO:  Skip . and .. by default, but should we announce others?  E.g., .svn?
     if (entry->d_name[0] == '.')
+      continue;
+
+    // already handled other types of files
+    struct stat fstat = { 0 };
+    stat(entry->d_name, &fstat);
+    if (!S_ISDIR(fstat.st_mode))
       continue;
 
     // path with current filename
