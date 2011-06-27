@@ -387,29 +387,54 @@ int main(int argc, char* argv[]) {
     options |= OPTION_NESTED;
 
 #if defined(__GNUC__) && !defined(__MINGW32__)
-  // verify that the output filename is not the same as any of the input filenames
-  // verify that only one input pipe is STDIN
+  // verify that all input filenames exist and are nice and clean
+  for (int i = input_arg_start; i <= input_arg_end; ++i) {
+
+    struct stat instat = { 0 };
+    if (stat(argv[i], &instat) == -1) {
+      perror(argv[i]);
+      exit(STATUS_INPUTFILE_PROBLEM);
+    }
+  }
+
+   // verify that only one input pipe is STDIN
   struct stat stdiostat = { 0 };
   fstat(STDIN_FILENO, &stdiostat);
   int stdiocount = 0;
 
-  struct stat outstat = { 0 };
-  stat(poptions.srcml_filename, &outstat);
-  for (int i = input_arg_start; i <= input_arg_end; ++i) {
+   for (int i = input_arg_start; i <= input_arg_end; ++i) {
 
+    // may not exist due to race condition, so check again
     struct stat instat = { 0 };
-    stat(argv[i], &instat);
-    if (instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
-      fprintf(stderr, "%s: Input file '%s' is the same as the output file '%s'\n",
-	      PROGRAM_NAME, argv[i], poptions.srcml_filename);
+    if (stat(argv[i], &instat) == -1) {
+      perror(argv[i]);
       exit(STATUS_INPUTFILE_PROBLEM);
     }
 
-    if (instat.st_ino == stdiostat.st_ino)
+     if (instat.st_ino == stdiostat.st_ino)
       ++stdiocount;
 
     if (stdiocount > 1) {
       fprintf(stderr, "%s: Multiple input files are from standard input.\n", PROGRAM_NAME);
+      exit(STATUS_INPUTFILE_PROBLEM);
+    }
+  }
+
+  // verify that the output filename is not the same as any of the input filenames
+  struct stat outstat = { 0 };
+  stat(poptions.srcml_filename, &outstat);
+  for (int i = input_arg_start; i <= input_arg_end; ++i) {
+
+    // may not exist due to race condition, so check again
+    struct stat instat = { 0 };
+    if (stat(argv[i], &instat) == -1) {
+      perror(argv[i]);
+      exit(STATUS_INPUTFILE_PROBLEM);
+    }
+
+    if (instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
+      fprintf(stderr, "%s: Input file '%s' is the same as the output file '%s'\n",
+	      PROGRAM_NAME, argv[i], poptions.srcml_filename);
       exit(STATUS_INPUTFILE_PROBLEM);
     }
   }
