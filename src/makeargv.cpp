@@ -16,10 +16,6 @@
 
 int makeargv(const char* s, const char* delimiter, char*** pnargv) {
 
-  char* t;
-  int numtokens;
-  int i;
-
   /* check for valid parameters */
   if ((s == 0) || (delimiter == 0) || (pnargv == 0)) {
     errno = EINVAL;
@@ -28,11 +24,13 @@ int makeargv(const char* s, const char* delimiter, char*** pnargv) {
 
   s = s + strspn(s, delimiter);
   /* copy the input string */
+  char* t;
   if ((t = (char *)malloc(strlen(s) + 1)) == NULL)
     return -1;
   strcpy(t, s);
 
   /* find the number of tokens in the string */
+  int numtokens = 0;
   if (strtok(t, delimiter) != NULL)
     for (numtokens = 1; strtok(NULL, delimiter) != NULL; ++numtokens)
       ;
@@ -52,7 +50,7 @@ int makeargv(const char* s, const char* delimiter, char*** pnargv) {
 
   /* fill up the argument array with pointers to strings in t */
   if (((*pnargv)[0] = strtok(t, delimiter)) != NULL)
-    for (i = 1; i < numtokens; ++i)
+    for (int i = 1; i < numtokens; ++i)
       (*pnargv)[i] = strtok(NULL, delimiter);
   (*pnargv)[numtokens] = NULL;
 
