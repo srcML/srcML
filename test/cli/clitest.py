@@ -2762,10 +2762,6 @@ validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.REGISTE
 ##
 # directory input
 
-src = """
-a;
-"""
-
 srcmlstart = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src">
 """
@@ -2797,22 +2793,6 @@ java = """
 srcmlend = """
 </unit>
 """
-
-f = open("dir/file.aj", 'w')
-f.write(src)
-f.close()
-
-f = open("dir/file.c", 'w')
-f.write(src)
-f.close()
-
-f = open("dir/file.cpp", 'w')
-f.write(src)
-f.close()
-
-f = open("dir/file.java", 'w')
-f.write(src)
-f.close()
 
 line = execute(['ls', '-A1', 'dir'], "")
 
