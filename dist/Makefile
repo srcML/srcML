@@ -4,6 +4,10 @@
 
 # tools
 ECHO=${wildcard /opt/local/bin/gecho /bin/echo}
+SED=${firstword ${wilcard /opt/local/bin/gsed /bin/sed}}
+GREP=${firstword ${wildcard /bin/grep /usr/bin/grep}}
+CUT=/usr/bin/cut
+SVNVERSION=${wildcard /usr/bin/svnversion}
 
 # svn repo
 SVN_URL=http://calder.sdml.cs.kent.edu/svn/srcML/trunk
@@ -47,10 +51,10 @@ WIN_SRCML2SRC_PATH=${BIN_DIR}/${SRCML2SRC_EXE}
 SRC_FILES= ${SRC_DIR} ${DOC_DIR}/src2srcml.1 ${DOC_DIR}/srcml2src.1
 
 # all generated files
-GEN_FILES=${SRC_TAR_GZ} ${DOC_TAR_GZ} ${EXE_TAR_GZ} ${EXE_STATIC_TAR_GZ} ${SRC_ZIP} ${DOC_ZIP}
+GEN_FILES=srctar srczip
 
 # generate files
-#all : ${GEN_FILES}
+all : ${GEN_FILES}
 
 REVISION=$(shell svn info ${SVN_URL}/src | grep 'Revision:' | cut -d: -f2- | tr -d '\n')
 
