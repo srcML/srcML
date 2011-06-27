@@ -49,7 +49,7 @@ DIST_FILES=${DOC_FILES} ${SRC2SRCML_PATH} ${SRCML2SRC_PATH}
 WIN_DIST_FILES=${DOC_FILES} ${WIN_SRC2SRCML_PATH} ${WIN_SRCML2SRC_PATH}
 
 # generate files
-all : src unix
+all : src bin
 
 REVISION=$(strip $(shell svn info ${SVN_URL}/src | ${GREP} 'Revision:' | ${CUT} -d: -f2-))
 
@@ -92,7 +92,7 @@ bin : ${SRC_TAR_GZ}
 	tar xzf ${SRC_TAR_GZ}
 	cd ${SRC_DIR} && make
 	cd ${DOC_DIR} && make
-	mkdir ${BASE} && cp -t ${BASE} ${DIST_FILES}
+	mkdir ${BASE} && cp -t ${BASE} ${DIST_FILES} && strip src2srcml srcml2src
 	tar czf ${UNIX_TAR_GZ} ${BASE}
 
 windows : ${SRC_ZIP}
@@ -101,6 +101,6 @@ windows : ${SRC_ZIP}
 	cd ${SRC_DIR} && make mingw32
 	cd ${SRC_DIR} && make cleanbuild && make
 	cd ${DOC_DIR} && make
-	mkdir ${WIN_BASE} && cp -t ${WIN_BASE} ${WIN_DIST_FILES}
+	mkdir ${WIN_BASE} && cp -t ${WIN_BASE} ${WIN_DIST_FILES} && i686-pc-mingw32-strip src2srcml.exe srcml2src.exe
 	cp dlls/*.dll ${WIN_BASE}
 	zip -rql ${WIN_ZIP} ${WIN_BASE}
