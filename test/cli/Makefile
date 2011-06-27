@@ -18,4 +18,3 @@ clean :
 	rm -f status.py
 	rm -f filelistab
 	rm -fR sub
-	rm -fR dir
