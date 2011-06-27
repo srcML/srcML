@@ -56,10 +56,11 @@ GEN_FILES=srctar srczip
 # generate files
 all : src
 
-REVISION=$(shell svn info ${SVN_URL}/src | grep 'Revision:' | cut -d: -f2- | tr -d '\n')
+REVISION=$(strip $(shell svn info ${SVN_URL}/src | grep 'Revision:' | cut -d: -f2-))
 
 # export the directories
 exp :
+	echo ${REVISION}
 	make clean
 	mkdir ${BASE}
 	svn export -r${REVISION} ${SVN_URL}/src/ ${BASE}/src
