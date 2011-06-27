@@ -24,7 +24,7 @@ EXE_TAR_GZ=${BASE}-linux.tar.gz
 WIN_ZIP=${BASE}-windows.zip
 
 # directories
-SRC_DIR_BASE=${BASE}
+SRC_DIR_BASE=${BASE}-src
 SRC_DIR=${SRC_DIR_BASE}/src
 OBJ_DIR=${SRC_DIR_BASE}/obj
 BIN_DIR=${SRC_DIR_BASE}/bin
@@ -43,14 +43,11 @@ SRCML2SRC_PATH=${BIN_DIR}/${SRCML2SRC_BIN}
 WIN_SRC2SRCML_PATH=${BIN_DIR}/${SRC2SRCML_EXE}
 WIN_SRCML2SRC_PATH=${BIN_DIR}/${SRCML2SRC_EXE}
 
-# files
-SRC_FILES= ${SRC_DIR} 
-
-# all generated files
-GEN_FILES=srctar srczip
+DOC_FILES=${DOC_DIR}/src2srcml.1.gz ${DOC_DIR}/srcml2src.1.gz ${DOC_DIR}/src2srcml.html ${DOC_DIR}/srcml2src.html
+DIST_FILES=${DOC_FILES} ${SRC2SRCML_PATH} ${SRCML2SRC_PATH}
 
 # generate files
-all : src
+all : src bin
 
 REVISION=$(strip $(shell svn info ${SVN_URL}/src | ${GREP} 'Revision:' | ${CUT} -d: -f2-))
 
@@ -58,16 +55,16 @@ REVISION=$(strip $(shell svn info ${SVN_URL}/src | ${GREP} 'Revision:' | ${CUT} 
 exp :
 	echo ${REVISION}
 	make clean
-	mkdir ${BASE}
-	svn export -r${REVISION} ${SVN_URL}/src/ ${BASE}/src
-	${ECHO} -n "Trunk${REVISION}" > ${BASE}/src/VERSION
-	svn info -r${REVISION} ${SVN_URL}/src | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2- | ${TR} -d '\n' >> ${BASE}/src/VERSION
-	svn export -r${REVISION} --depth='empty' ${SVN_URL}/obj/ ${BASE}/obj
-	svn export -r${REVISION} --depth='empty' ${SVN_URL}/bin/ ${BASE}/bin
-	svn export -r${REVISION} ${SVN_URL}/doc/ ${BASE}/doc
+	mkdir ${SRC_DIR_BASE}
+	svn export -r${REVISION} ${SVN_URL}/src/ ${SRC_DIR_BASE}/src
+	${ECHO} -n "Trunk${REVISION}" > ${SRC_DIR_BASE}/src/VERSION
+	svn info -r${REVISION} ${SVN_URL}/src | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2- | ${TR} -d '\n' >> ${SRC_DIR_BASE}/src/VERSION
+	svn export -r${REVISION} --depth='empty' ${SVN_URL}/obj/ ${SRC_DIR_BASE}/obj
+	svn export -r${REVISION} --depth='empty' ${SVN_URL}/bin/ ${SRC_DIR_BASE}/bin
+	svn export -r${REVISION} ${SVN_URL}/doc/ ${SRC_DIR_BASE}/doc
 
 clean :
-	rm -fR  ${SRC_DIR_BASE} ${SRC_TAR_GZ} ${SRC_ZIP}
+	rm -fR  ${SRC_DIR_BASE} ${SRC_TAR_GZ} ${SRC_ZIP} ${BASE}
 
 ##
 # src
@@ -75,11 +72,11 @@ clean :
 src : ${SRC_TAR_GZ} ${SRC_ZIP}
 
 ${SRC_TAR_GZ} : exp
-	tar czf $@ ${SRC_FILES} ${OBJ_DIR} ${BIN_DIR}
+	tar czf $@ ${SRC_DIR} ${OBJ_DIR} ${BIN_DIR} ${DOC_DIR}
 	gunzip --test $@
 
 ${SRC_ZIP} : exp
-	zip -rql $@ ${SRC_FILES} ${OBJ_DIR} ${BIN_DIR}
+	zip -rql $@ ${SRC_DIR} ${OBJ_DIR} ${BIN_DIR} ${DOC_DIR}
 	unzip -qt $@
 
 ##
@@ -88,3 +85,6 @@ bin : src
 	rm -fR ${SRC_DIR_BASE}
 	tar xzf ${SRC_TAR_GZ}
 	cd ${SRC_DIR} && make
+	cd ${DOC_DIR} && make
+	mkdir ${BASE} && cp -t ${BASE} ${DIST_FILES}
+	tar czf ${BASE}.tar.gz ${BASE}
