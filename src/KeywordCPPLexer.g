@@ -224,6 +224,7 @@ KeywordCPPLexer(UTF8CharBuffer* pinput, const char* encoding, int language = LAN
 
             { "goto", GOTO },
 
+            { "static", STATIC },
         };
 
         fillliterals(cfamily, sizeof(cfamily) / sizeof(cfamily[0]));
@@ -328,7 +329,6 @@ KeywordCPPLexer(UTF8CharBuffer* pinput, const char* encoding, int language = LAN
 
             // abstract
             { "abstract", ABSTRACT },
-//            { "static", STATIC },
 
         };
 

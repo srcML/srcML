@@ -1447,7 +1447,7 @@ struct_union_definition[int element_token] :
                 setMode(MODE_END_AT_BLOCK);
             }
         }
-        (STRUCT | UNION) (class_header lcurly | lcurly)
+        (java_specifier_mark)* (STRUCT | UNION) (class_header lcurly | lcurly)
 
         class_default_access_action[SPUBLIC_ACCESS_DEFAULT]
 ;
@@ -2777,7 +2777,7 @@ standard_specifiers { LocalMode lm; } :
 
             startElement(SNAME);
         }
-        (VIRTUAL | EXTERN | INLINE | EXPLICIT)
+        (VIRTUAL | EXTERN | INLINE | EXPLICIT | STATIC)
 ;
 
 auto_keyword { LocalMode lm; } :
