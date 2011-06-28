@@ -128,7 +128,7 @@ void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE opt
   ctxt->_private = &state;
 
   // process the document
-  xmlParseDocument(ctxt);
+  srcMLParseDocument(ctxt);
 
   // local variable, do not want xmlFreeParserCtxt to free
   ctxt->sax = NULL;
@@ -154,7 +154,7 @@ void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE opt
   ctxt->userData = &state;
   state.ctxt = ctxt;
 
-  xmlParseDocument(ctxt);
+  srcMLParseDocument(ctxt);
 
   // encoding is entered as a property
   //  const char* encoding = (const char*) (state.ctxt->encoding ? state.ctxt->encoding : state.ctxt->input->encoding);
@@ -190,7 +190,7 @@ int srcMLUtility::unit_count() {
   ctxt->_private = &state;
 
   // process the document
-  xmlParseDocument(ctxt);
+  srcMLParseDocument(ctxt);
 
   // local variable, do not want xmlFreeParserCtxt to free
   ctxt->sax = NULL;
@@ -220,7 +220,7 @@ void srcMLUtility::extract_xml(const char* ofilename, int unit) {
   ctxt->_private = &state;
 
   // process the document
-  xmlParseDocument(ctxt);
+  srcMLParseDocument(ctxt);
 
   // local variable, do not want xmlFreeParserCtxt to free
   ctxt->sax = NULL;
@@ -259,7 +259,7 @@ void srcMLUtility::extract_element(const char* element, const char* filename) {
   ctxt->userData = &state;
   state.ctxt = ctxt;
 
-  xmlParseDocument(ctxt);
+  srcMLParseDocument(ctxt);
 
   ctxt->sax = NULL;
 
@@ -344,7 +344,7 @@ void srcMLUtility::expand(const char* root_filename, const char* format, const c
   ctxt->_private = &state;
 
   // process the document
-  xmlParseDocument(ctxt);
+  srcMLParseDocument(ctxt);
 
   archiveWriteRootClose(0);
   
@@ -374,7 +374,7 @@ void srcMLUtility::list() {
   ctxt->_private = &state;
 
   // process the document
-  xmlParseDocument(ctxt);
+  srcMLParseDocument(ctxt);
 
   // local variable, do not want xmlFreeParserCtxt to free
   ctxt->sax = NULL;
@@ -419,7 +419,7 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
   ctxt->_private = &state;
   //state.ctxt = ctxt;
 
-  xmlParseDocument(ctxt);
+  srcMLParseDocument(ctxt);
 
   ctxt->sax = NULL;
 
@@ -448,7 +448,7 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
   state.xslt = xsltParseStylesheetFile(BAD_CAST xslts[0]);
   // TODO: error return
 
-  xmlParseDocument(ctxt);
+  srcMLParseDocument(ctxt);
 
   ctxt->sax = NULL;
 
@@ -473,7 +473,7 @@ void srcMLUtility::relaxng(const char* ofilename, const char** xslts) {
   state.rng = xmlRelaxNGParse(state.relaxng);
   state.rngptr = xmlRelaxNGNewValidCtxt(state.rng);
 
-  xmlParseDocument(ctxt);
+  srcMLParseDocument(ctxt);
 
   ctxt->sax = NULL;
 
