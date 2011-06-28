@@ -58,6 +58,7 @@
 #include "libxml_archive_write.hpp"
 
 // local function forward declarations
+static xmlParserCtxtPtr srcMLCreateURLParserCtxt(const char * infile);
 static void srcMLParseDocument(xmlParserCtxtPtr ctxt);
 
 // constructor
@@ -283,12 +284,7 @@ void srcMLUtility::extract_text(const char* to_dir, const char* ofilename, int u
 #endif
 
   // setup parser
-  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
-  if (ctxt == NULL) {
-    xmlErrorPtr ep = xmlGetLastError();
-    fprintf(stderr, "%s: %s", "srcml2src", ep->message);
-    return;
-  }
+  xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
 
   // setup sax handler
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
@@ -499,5 +495,21 @@ static void srcMLParseDocument(xmlParserCtxtPtr ctxt) {
     fprintf(stderr, "%s: %s in '%s'\n", "srcml2src", partmsg, ep->file);
     exit(1);
   }
+
+}
+
+// create srcml parser with error reporting
+static xmlParserCtxtPtr srcMLCreateURLParserCtxt(const char * infile) {
+
+  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
+  if (ctxt == NULL) {
+
+    // report error
+    xmlErrorPtr ep = xmlGetLastError();
+    fprintf(stderr, "%s: %s", "srcml2src", ep->message);
+    exit(1);
+  }
+
+  return ctxt;
 
 }
