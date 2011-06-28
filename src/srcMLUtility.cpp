@@ -295,7 +295,14 @@ void srcMLUtility::extract_text(const char* to_dir, const char* ofilename, int u
   ctxt->_private = &state;
 
   // process the document
-  xmlParseDocument(ctxt);
+  int status;
+  if ((status = xmlParseDocument(ctxt)) == -1) {
+    xmlErrorPtr ep = xmlCtxtGetLastError(ctxt);
+    char* partmsg = strdup(ep->message);
+    partmsg[strlen(partmsg) - 1] = '\0';
+    fprintf(stderr, "%s: %s in '%s'\n", "srcml2src", partmsg, ep->file);
+    exit(1);
+  }
 
 #if 0
   if (archiveWriteMatch_src2srcml(ofilename))
