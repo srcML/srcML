@@ -352,13 +352,13 @@ int main(int argc, char* argv[]) {
   // verify that the output file is not the same as the input file
   struct stat instat = { 0 };
   if (stat(filename, &instat) == -1) {
-    perror("src2srcml");
+    perror(PROGRAM_NAME);
     exit(STATUS_INPUTFILE_PROBLEM);
   }
 
   struct stat outstat = { 0 };
   if (stat(poptions.ofilename, &outstat) == -1) {
-    perror("src2srcml");
+    perror(PROGRAM_NAME);
     exit(1);
   }
 
