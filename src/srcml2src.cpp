@@ -361,7 +361,6 @@ int main(int argc, char* argv[]) {
 
     struct stat outstat = { 0 };
     if (stat(poptions.ofilename, &outstat) == -1) {
-      fprintf(stderr, "HERE2\n");
       perror(poptions.ofilename);
       exit(1);
     }
