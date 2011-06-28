@@ -392,14 +392,18 @@ int main(int argc, char* argv[]) {
 
     struct stat instat = { 0 };
     if (stat(argv[i], &instat) == -1) {
-      perror(argv[i]);
+      fprintf(stderr, "%s: %s '%s'\n", PROGRAM_NAME, strerror(errno), argv[i]);
       exit(STATUS_INPUTFILE_PROBLEM);
     }
   }
 
   // verify that only one input pipe is STDIN
   struct stat stdiostat = { 0 };
-  fstat(STDIN_FILENO, &stdiostat);
+  if (fstat(STDIN_FILENO, &stdiostat) == -1) {
+      fprintf(stderr, "%s: %s '%s'\n", PROGRAM_NAME, strerror(errno), "stdin");
+      exit(STATUS_INPUTFILE_PROBLEM);
+  }
+
   int stdiocount = 0;
 
    for (int i = input_arg_start; i <= input_arg_end; ++i) {
@@ -407,7 +411,7 @@ int main(int argc, char* argv[]) {
     // may not exist due to race condition, so check again
     struct stat instat = { 0 };
     if (stat(argv[i], &instat) == -1) {
-      perror(argv[i]);
+      fprintf(stderr, "%s: %s '%s'\n", PROGRAM_NAME, strerror(errno), argv[i]);
       exit(STATUS_INPUTFILE_PROBLEM);
     }
 
