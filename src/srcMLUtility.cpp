@@ -57,6 +57,9 @@
 #include "libxml_archive_read.hpp"
 #include "libxml_archive_write.hpp"
 
+// local function forward declarations
+static void srcMLParseDocument(xmlParserCtxtPtr ctxt);
+
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, OPTION_TYPE& op)
   : infile(infilename), output_encoding(encoding), options(op), units(0) {
@@ -299,14 +302,7 @@ void srcMLUtility::extract_text(const char* to_dir, const char* ofilename, int u
   ctxt->_private = &state;
 
   // process the document
-  int status;
-  if ((status = xmlParseDocument(ctxt)) == -1) {
-    xmlErrorPtr ep = xmlCtxtGetLastError(ctxt);
-    char* partmsg = strdup(ep->message);
-    partmsg[strlen(partmsg) - 1] = '\0';
-    fprintf(stderr, "%s: %s in '%s'\n", "srcml2src", partmsg, ep->file);
-    exit(1);
-  }
+  srcMLParseDocument(ctxt);
 
 #if 0
   if (archiveWriteMatch_src2srcml(ofilename))
@@ -488,3 +484,20 @@ void srcMLUtility::relaxng(const char* ofilename, const char** xslts) {
   xmlFreeParserCtxt(ctxt);
 }
 
+
+// process srcML document with error reporting
+static void srcMLParseDocument(xmlParserCtxtPtr ctxt) {
+
+  // process the document
+  int status;
+  if ((status = xmlParseDocument(ctxt)) == -1) {
+
+    // report error
+    xmlErrorPtr ep = xmlCtxtGetLastError(ctxt);
+    char* partmsg = strdup(ep->message);
+    partmsg[strlen(partmsg) - 1] = '\0';
+    fprintf(stderr, "%s: %s in '%s'\n", "srcml2src", partmsg, ep->file);
+    exit(1);
+  }
+
+}
