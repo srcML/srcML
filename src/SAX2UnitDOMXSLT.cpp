@@ -149,7 +149,7 @@ void SAX2UnitDOMXSLT::endDocument(void *ctx) {
   xmlSAX2EndDocument(ctx);
 
   // root unit end tag
-  if (pstate->result_type == XML_ELEMENT_NODE && !isoption(pstate->options, OPTION_XSLT_ALL) && pstate->isnested)
+  if (pstate->result_type == XML_ELEMENT_NODE && pstate->found && !isoption(pstate->options, OPTION_XSLT_ALL) && pstate->isnested)
     xmlOutputBufferWriteString(pstate->buf, pstate->found ? "</unit>\n" : "/>\n");
 
   // standard end document
