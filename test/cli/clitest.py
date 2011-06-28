@@ -730,15 +730,15 @@ check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.NO_NAMESPACE_DECLARA
 
 ##
 # check missingfile
-srcml = "src2srcml: Unable to open file foo.c\n"
+srcml = "src2srcml: No such file or directory 'foo.c'\n"
 
 checkError([src2srcml, 'foo.c'], "", srcml)
 
-srcml = "src2srcml: Unable to open file abc.c\n"
+srcml = "src2srcml: No such file or directory 'abc.c'\n"
 
 checkError([src2srcml, 'abc.c'], "", srcml)
 
-srcml = "src2srcml: Unable to open file ../src/foo.c\n"
+srcml = "src2srcml: No such file or directory '../src/foo.c'\n"
 
 checkError([src2srcml, '../src/foo.c'], "", srcml)
 
