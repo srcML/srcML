@@ -349,22 +349,27 @@ int main(int argc, char* argv[]) {
   }
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
-  // verify that the output file is not the same as the input file
-  struct stat instat = { 0 };
-  if (stat(filename, &instat) == -1) {
-    perror(PROGRAM_NAME);
-    exit(STATUS_INPUTFILE_PROBLEM);
-  }
+  // verify that a non-stdio direct output file is not the same as the input file
+  if (strcmp(filename, "-") != 0 && strcmp(poptions.ofilename, "-") != 0) {
 
-  struct stat outstat = { 0 };
-  if (stat(poptions.ofilename, &outstat) == -1) {
-    perror(PROGRAM_NAME);
-    exit(1);
-  }
+    // input file
+    struct stat instat = { 0 };
+    if (stat(filename, &instat) == -1) {
+      perror(filename);
+      exit(STATUS_INPUTFILE_PROBLEM);
+    }
 
-  if ((strcmp(poptions.ofilename, "-") != 0) && instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
-    fprintf(stderr, "%s: Input file '%s' is the same as the output file '%s'\n", PROGRAM_NAME, filename, poptions.ofilename);
-    exit(STATUS_INPUTFILE_PROBLEM);
+    struct stat outstat = { 0 };
+    if (stat(poptions.ofilename, &outstat) == -1) {
+      fprintf(stderr, "HERE2\n");
+      perror(poptions.ofilename);
+      exit(1);
+    }
+
+    if ((strcmp(poptions.ofilename, "-") != 0) && instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
+      fprintf(stderr, "%s: Input file '%s' is the same as the output file '%s'\n", PROGRAM_NAME, filename, poptions.ofilename);
+      exit(STATUS_INPUTFILE_PROBLEM);
+    }
   }
 #endif
 
