@@ -281,7 +281,11 @@ void srcMLUtility::extract_text(const char* to_dir, const char* ofilename, int u
 
   // setup parser
   xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
-  if (ctxt == NULL) return;
+  if (ctxt == NULL) {
+    xmlErrorPtr ep = xmlGetLastError();
+    fprintf(stderr, "%s: %s", "srcml2src", ep->message);
+    return;
+  }
 
   // setup sax handler
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
