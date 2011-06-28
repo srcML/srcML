@@ -397,7 +397,7 @@ int main(int argc, char* argv[]) {
     }
   }
 
-   // verify that only one input pipe is STDIN
+  // verify that only one input pipe is STDIN
   struct stat stdiostat = { 0 };
   fstat(STDIN_FILENO, &stdiostat);
   int stdiocount = 0;
