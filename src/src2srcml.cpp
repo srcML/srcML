@@ -390,6 +390,9 @@ int main(int argc, char* argv[]) {
   // verify that all input filenames exist and are nice and clean
   for (int i = input_arg_start; i <= input_arg_end; ++i) {
 
+    if (strcmp(argv[i], "-") == 0)
+      continue;
+
     struct stat instat = { 0 };
     if (stat(argv[i], &instat) == -1) {
       fprintf(stderr, "%s: %s '%s'\n", PROGRAM_NAME, strerror(errno), argv[i]);
@@ -406,7 +409,12 @@ int main(int argc, char* argv[]) {
 
   int stdiocount = 0;
 
-   for (int i = input_arg_start; i <= input_arg_end; ++i) {
+  for (int i = input_arg_start; i <= input_arg_end; ++i) {
+
+    if (strcmp(argv[i], "-") == 0) {
+      ++stdiocount;
+      continue;
+    }
 
     // may not exist due to race condition, so check again
     struct stat instat = { 0 };
@@ -428,6 +436,9 @@ int main(int argc, char* argv[]) {
   struct stat outstat = { 0 };
   stat(poptions.srcml_filename, &outstat);
   for (int i = input_arg_start; i <= input_arg_end; ++i) {
+
+    if (strcmp(argv[i], "-") == 0)
+      continue;
 
     // may not exist due to race condition, so check again
     struct stat instat = { 0 };
