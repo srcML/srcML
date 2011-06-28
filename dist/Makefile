@@ -56,7 +56,7 @@ REVISION=$(strip $(shell svn info ${SVN_URL}/src | ${GREP} 'Revision:' | ${CUT} 
 
 # export the directories
 exp :
-	echo ${REVISION}
+	@echo ${REVISION}
 	make cleansrc
 	mkdir ${SRC_DIR_BASE}
 	svn export -r${REVISION} ${SVN_URL}/src/ ${SRC_DIR_BASE}/src
