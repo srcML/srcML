@@ -30,6 +30,7 @@
 #include "Language.hpp"
 #include "srcMLOutput.hpp"
 
+class UTF8CharBuffer;
 class FileError {};
 
 class srcMLTranslator : public Language {
@@ -64,6 +65,7 @@ class srcMLTranslator : public Language {
   ~srcMLTranslator();
 
  private:
+  UTF8CharBuffer* pinput;
   bool first;
   const char* root_directory;
   const char* root_filename;

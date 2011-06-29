@@ -49,14 +49,12 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
 				 const char* uri[],
 				 int tabsize
 				 )
-  : Language(language), first(true), 
+  : Language(language), pinput(0), first(true),
     root_directory(directory), root_filename(filename), root_version(version),
     encoding(src_encoding), options(op),
     out(0, srcml_filename, getLanguageString(), xml_encoding, options, uri, tabsize) {
 
 }
-
-static UTF8CharBuffer* pinput = 0;
 
 // translate from input stream to output stream
 void* srcMLTranslator::setInput(const char* path) {
@@ -133,4 +131,5 @@ void srcMLTranslator::translate(const char* path, const char* unit_directory,
 }
 
 // destructor
-srcMLTranslator::~srcMLTranslator() {}
+srcMLTranslator::~srcMLTranslator() {
+}
