@@ -2277,7 +2277,7 @@ validate(getreturn([srcml2src, option.XPATH_FLAG + '='], srcml), status.STATUS_E
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<unit/>
+</unit>
 """
 
 xpath = xml_declaration + """
