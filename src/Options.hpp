@@ -109,7 +109,7 @@ const OPTION_TYPE OPTION_XML_ENCODING= ull(1) << 13;
 // language
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_TEXT_ENCODING= ull(1) << 14;
+const OPTION_TYPE OPTION_SRC_ENCODING= ull(1) << 14;
 
 // text extraction
 // @srcml2src

@@ -149,7 +149,7 @@ void output_help(const char* name) {
   */
 
   printf("  -%c, --%-17s set the output source encoding to ENC (default:  %s) \n",
-	  TEXTENCODING_FLAG_SHORT, TEXTENCODING_FLAG_FULL, DEFAULT_TEXT_ENCODING);
+	  SRC_ENCODING_FLAG_SHORT, SRC_ENCODING_FLAG_FULL, DEFAULT_TEXT_ENCODING);
 
   printf("  -%c, --%-17s output text or XML in gzip format\n",
 	  COMPRESSED_FLAG_SHORT, COMPRESSED_FLAG);
@@ -342,7 +342,7 @@ int main(int argc, char* argv[]) {
   /* Special checks for illegal combinations */
 
   // xml output and src-encoding (switch to encoding?)
-  if (isoption(options, OPTION_XML) && isoption(options, OPTION_TEXT_ENCODING)) {
+  if (isoption(options, OPTION_XML) && isoption(options, OPTION_SRC_ENCODING)) {
 
     fprintf(stderr, "%s: Options for xml output and specifying source encoding are incompatible.\n", PROGRAM_NAME);
     exit(STATUS_INVALID_OPTION_COMBINATION);
@@ -578,7 +578,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
     { XML_FLAG, no_argument, NULL, XML_FLAG_SHORT },
     { COMPRESSED_FLAG, no_argument, NULL, COMPRESSED_FLAG_SHORT },
     { UNIT_FLAG, required_argument, NULL, UNIT_FLAG_SHORT },
-    { TEXTENCODING_FLAG, required_argument, NULL, TEXTENCODING_FLAG_SHORT },
+    { SRC_ENCODING_FLAG, required_argument, NULL, SRC_ENCODING_FLAG_SHORT },
     { NAMESPACE_FLAG, required_argument, NULL, NAMESPACE_FLAG_SHORT },
     { OMIT_FLAG, required_argument, NULL, OMIT_FLAG_SHORT },
     { QUIET_FLAG, no_argument, NULL, QUIET_FLAG_SHORT },
@@ -665,12 +665,12 @@ int process_args(int argc, char* argv[], process_options & poptions)
       optionorder[optioncount++] = OPTION_XML_ENCODING;
       break;
 
-    case TEXTENCODING_FLAG_SHORT:
+    case SRC_ENCODING_FLAG_SHORT:
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
-      options |= OPTION_TEXT_ENCODING;
+      options |= OPTION_SRC_ENCODING;
 
       poptions.src_encoding = optarg;
 
@@ -1001,7 +1001,7 @@ int option_error_status(int optopt) {
     return STATUS_XMLENCODING_MISSING;
     break;
 
-  case TEXTENCODING_FLAG_SHORT:
+  case SRC_ENCODING_FLAG_SHORT:
     return STATUS_SRCENCODING_MISSING;
     break;
 

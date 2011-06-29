@@ -199,7 +199,7 @@ void output_help(const char* name) {
 	  ENCODING_FLAG_SHORT, ENCODING_FLAG, DEFAULT_XML_ENCODING);
 
   printf("  -%c, --%-14s set the input source encoding to ENC (default:  %s)\n\n",
-	  TEXTENCODING_FLAG_SHORT, TEXTENCODING_FLAG, DEFAULT_TEXT_ENCODING);
+	  SRC_ENCODING_FLAG_SHORT, SRC_ENCODING_FLAG, DEFAULT_TEXT_ENCODING);
 
   printf("  -%c, --%-14s output in gzip format\n", COMPRESSED_FLAG_SHORT, COMPRESSED_FLAG);
 
@@ -604,7 +604,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { COMPOUND_FLAG, no_argument, NULL, COMPOUND_FLAG_SHORT },
     { EXPRESSION_MODE_FLAG, no_argument, NULL, EXPRESSION_MODE_FLAG_SHORT },
     { ENCODING_FLAG, required_argument, NULL, ENCODING_FLAG_SHORT },
-    { TEXTENCODING_FLAG, required_argument, NULL, TEXTENCODING_FLAG_SHORT },
+    { SRC_ENCODING_FLAG, required_argument, NULL, SRC_ENCODING_FLAG_SHORT },
     { COMPRESSED_FLAG, no_argument, NULL, COMPRESSED_FLAG_SHORT },
     { INTERACTIVE_FLAG, no_argument, NULL, INTERACTIVE_FLAG_SHORT },
     { DEBUG_FLAG, no_argument, NULL, DEBUG_FLAG_SHORT },
@@ -746,12 +746,12 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       }
       break;
 
-    case TEXTENCODING_FLAG_SHORT: 
+    case SRC_ENCODING_FLAG_SHORT: 
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
-      options |= OPTION_TEXT_ENCODING;
+      options |= OPTION_SRC_ENCODING;
 
       poptions.src_encoding = optarg;
 
@@ -1046,7 +1046,7 @@ int option_error_status(int optopt) {
     return STATUS_XMLENCODING_MISSING;
     break;
 
-  case TEXTENCODING_FLAG_SHORT:
+  case SRC_ENCODING_FLAG_SHORT:
     return STATUS_SRCENCODING_MISSING;
     break;
     /*

@@ -60,9 +60,9 @@ const char* const ENCODING_FLAG = "encoding";
 const char ENCODING_FLAG_SHORT = 'x';
 const char* const ENCODING_FLAG_FULL = "encoding=ENC";
 
-const char* const TEXTENCODING_FLAG = "src-encoding";
-const char TEXTENCODING_FLAG_SHORT = 't';
-const char* const TEXTENCODING_FLAG_FULL = "src-encoding=ENC";
+const char* const SRC_ENCODING_FLAG = "src-encoding";
+const char SRC_ENCODING_FLAG_SHORT = 't';
+const char* const SRC_ENCODING_FLAG_FULL = "src-encoding=ENC";
 
 const char* const COMPOUND_FLAG = "archive";
 const char COMPOUND_FLAG_SHORT = 'n';
