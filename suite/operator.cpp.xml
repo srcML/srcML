@@ -214,10 +214,6 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name><name>a</name><op:operator>::</op:operator><name>b</name></name></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name><op:operator>::</op:operator><name>a</name></name></expr>;</expr_stmt>
 </unit>
 
