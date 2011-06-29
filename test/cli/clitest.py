@@ -537,7 +537,7 @@ validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', "--strip", "fo
 
 # unknown encoding
 
-validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.TEXTENCODING_FLAG + "=" + bad_encoding, "foobar"], None), status.STATUS_UNKNOWN_ENCODING)
+validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.SRC_ENCODING_FLAG + "=" + bad_encoding, "foobar"], None), status.STATUS_UNKNOWN_ENCODING)
 validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.ENCODING_FLAG + "=" + bad_encoding, "foobar"], None), status.STATUS_UNKNOWN_ENCODING)
 	
 # missing value
@@ -548,7 +548,7 @@ validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.DIRECTO
 validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.SRCVERSION_FLAG], ""), status.STATUS_VERSION_MISSING)
 
 # source encoding not given
-validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.TEXTENCODING_FLAG], ""), status.STATUS_SRCENCODING_MISSING)
+validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.SRC_ENCODING_FLAG], ""), status.STATUS_SRCENCODING_MISSING)
 
 validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.ENCODING_FLAG], ""), status.STATUS_XMLENCODING_MISSING)
 
@@ -562,8 +562,8 @@ validate(getreturn([srcml2src, "foobar"], None), status.STATUS_INPUTFILE_PROBLEM
 validate(getreturn([srcml2src, "--strip", "foobar"], None), status.STATUS_UNKNOWN_OPTION)
 
 # unknown encoding
-validate(getreturn([srcml2src, option.TEXTENCODING_FLAG + "=" + bad_encoding], ""), status.STATUS_UNKNOWN_ENCODING)
-validate(getreturn([srcml2src, option.TEXTENCODING_FLAG], ""), status.STATUS_SRCENCODING_MISSING)
+validate(getreturn([srcml2src, option.SRC_ENCODING_FLAG + "=" + bad_encoding], ""), status.STATUS_UNKNOWN_ENCODING)
+validate(getreturn([srcml2src, option.SRC_ENCODING_FLAG], ""), status.STATUS_SRCENCODING_MISSING)
 	
 # source encoding not given
 
@@ -579,7 +579,7 @@ validate(getreturn([srcml2src, option.UNIT_FLAG, missing_unit, option.DIRECTORY_
 validate(getreturn([srcml2src, option.UNIT_FLAG, missing_unit, option.SRCVERSION_FLAG], nestedfile), status.STATUS_UNIT_INVALID)
 
 # invalid combinations
-validate(getreturn([srcml2src, option.XML_FLAG, option.TEXTENCODING_FLAG, "UTF-8", "foobar"], None), status.STATUS_INVALID_OPTION_COMBINATION)
+validate(getreturn([srcml2src, option.XML_FLAG, option.SRC_ENCODING_FLAG, "UTF-8", "foobar"], None), status.STATUS_INVALID_OPTION_COMBINATION)
 
 ##
 # cpp markup else
@@ -993,12 +993,12 @@ srcml = xml_declaration + """
 fsrcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp"/>
 """
-checkallforms(src2srcml, option.TEXTENCODING_FLAG_SHORT, option.TEXTENCODING_FLAG, "ISO-8859-1", sfile1, srcml)
-checkallformsfile(src2srcml, 'sub/a.cpp', option.TEXTENCODING_FLAG_SHORT, option.TEXTENCODING_FLAG, "ISO-8859-1", "", fsrcml)
-check([src2srcml, option.TEXTENCODING_FLAG, "ISO-8859-1", 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.TEXTENCODING_FLAG, "ISO-8859-1", '-o', 'sub/a.cpp.xml'], sfile1, "")
+checkallforms(src2srcml, option.SRC_ENCODING_FLAG_SHORT, option.SRC_ENCODING_FLAG, "ISO-8859-1", sfile1, srcml)
+checkallformsfile(src2srcml, 'sub/a.cpp', option.SRC_ENCODING_FLAG_SHORT, option.SRC_ENCODING_FLAG, "ISO-8859-1", "", fsrcml)
+check([src2srcml, option.SRC_ENCODING_FLAG, "ISO-8859-1", 'sub/a.cpp'], "", fsrcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.SRC_ENCODING_FLAG, "ISO-8859-1", '-o', 'sub/a.cpp.xml'], sfile1, "")
 validate(open('sub/a.cpp.xml', 'r').read(), srcml)
-check([src2srcml, option.TEXTENCODING_FLAG, "ISO-8859-1", 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
+check([src2srcml, option.SRC_ENCODING_FLAG, "ISO-8859-1", 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
 # nested 
@@ -1552,12 +1552,12 @@ sxmlfile1 = xml_declaration + """
 f = open('sub/a.cpp', 'w')
 f.write(sfile1)
 f.close()
-checkallforms(srcml2src, option.TEXTENCODING_FLAG_SHORT, option.TEXTENCODING_FLAG, "ISO-8859-1", sxmlfile1, sfile1)
-checkallformsfile(srcml2src, 'sub/a.cpp.xml', option.TEXTENCODING_FLAG_SHORT, option.TEXTENCODING_FLAG, "ISO-8859-1", "", sfile1)
-check([srcml2src, option.TEXTENCODING_FLAG, "ISO-8859-1", 'sub/a.cpp.xml'], "", sfile1)
-check([srcml2src, option.TEXTENCODING_FLAG, "ISO-8859-1", '-o', 'sub/a.cpp'], sxmlfile1, "")
+checkallforms(srcml2src, option.SRC_ENCODING_FLAG_SHORT, option.SRC_ENCODING_FLAG, "ISO-8859-1", sxmlfile1, sfile1)
+checkallformsfile(srcml2src, 'sub/a.cpp.xml', option.SRC_ENCODING_FLAG_SHORT, option.SRC_ENCODING_FLAG, "ISO-8859-1", "", sfile1)
+check([srcml2src, option.SRC_ENCODING_FLAG, "ISO-8859-1", 'sub/a.cpp.xml'], "", sfile1)
+check([srcml2src, option.SRC_ENCODING_FLAG, "ISO-8859-1", '-o', 'sub/a.cpp'], sxmlfile1, "")
 validate(open('sub/a.cpp', 'r').read(), sfile1)
-check([srcml2src, option.TEXTENCODING_FLAG, "ISO-8859-1", 'sub/a.cpp.xml', '-o', 'sub/a.cpp'], "", "")
+check([srcml2src, option.SRC_ENCODING_FLAG, "ISO-8859-1", 'sub/a.cpp.xml', '-o', 'sub/a.cpp'], "", "")
 validate(open('sub/a.cpp', 'r').read(), sfile1)
 
 ##
