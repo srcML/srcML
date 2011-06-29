@@ -493,7 +493,7 @@ static void srcMLParseDocument(xmlParserCtxtPtr ctxt) {
     char* partmsg = strdup(ep->message);
     partmsg[strlen(partmsg) - 1] = '\0';
     fprintf(stderr, "%s: %s in '%s'\n", "srcml2src", partmsg, ep->file);
-    exit(1);
+    exit(STATUS_INPUTFILE_PROBLEM);
   }
 
 }
@@ -507,7 +507,7 @@ static xmlParserCtxtPtr srcMLCreateURLParserCtxt(const char * infile) {
     // report error
     xmlErrorPtr ep = xmlGetLastError();
     fprintf(stderr, "%s: %s", "srcml2src", ep->message);
-    exit(1);
+    exit(STATUS_INPUTFILE_PROBLEM);
   }
 
   return ctxt;
