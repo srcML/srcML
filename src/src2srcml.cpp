@@ -387,18 +387,22 @@ int main(int argc, char* argv[]) {
     options |= OPTION_NESTED;
 
 #if defined(__GNUC__) && !defined(__MINGW32__)
+  /*
   // verify that all input filenames exist and are nice and clean
   for (int i = input_arg_start; i <= input_arg_end; ++i) {
 
     if (strcmp(argv[i], "-") == 0)
       continue;
 
+    // may be remote
     struct stat instat = { 0 };
     if (stat(argv[i], &instat) == -1) {
+      continue;
       fprintf(stderr, "%s: %s '%s'\n", PROGRAM_NAME, strerror(errno), argv[i]);
       exit(STATUS_INPUTFILE_PROBLEM);
     }
   }
+  */
 
   // verify that only one input pipe is STDIN
   struct stat stdiostat = { 0 };
@@ -418,10 +422,8 @@ int main(int argc, char* argv[]) {
 
     // may not exist due to race condition, so check again
     struct stat instat = { 0 };
-    if (stat(argv[i], &instat) == -1) {
-      fprintf(stderr, "%s: %s '%s'\n", PROGRAM_NAME, strerror(errno), argv[i]);
-      exit(STATUS_INPUTFILE_PROBLEM);
-    }
+    if (stat(argv[i], &instat) == -1)
+      continue;
 
      if (instat.st_ino == stdiostat.st_ino)
       ++stdiocount;
@@ -442,10 +444,8 @@ int main(int argc, char* argv[]) {
 
     // may not exist due to race condition, so check again
     struct stat instat = { 0 };
-    if (stat(argv[i], &instat) == -1) {
-      perror(argv[i]);
-      exit(STATUS_INPUTFILE_PROBLEM);
-    }
+    if (stat(argv[i], &instat) == -1)
+      continue;
 
     if (instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
       fprintf(stderr, "%s: Input file '%s' is the same as the output file '%s'\n",
