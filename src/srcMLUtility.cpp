@@ -61,6 +61,8 @@
 static xmlParserCtxtPtr srcMLCreateURLParserCtxt(const char * infile);
 static void srcMLParseDocument(xmlParserCtxtPtr ctxt);
 
+static bool incount = false;
+
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, OPTION_TYPE& op)
   : infile(infilename), output_encoding(encoding), options(op), units(0) {
@@ -122,6 +124,8 @@ void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE opt
 
   // setup process handling
   Properties process(su, nsv, attrv, optioncount, optionorder);
+
+  incount = unitnumber == 0;
 
   // setup sax handling state
   SAX2ExtractUnitsSrc state(&process, &options, unitnumber);
@@ -488,6 +492,9 @@ static void srcMLParseDocument(xmlParserCtxtPtr ctxt) {
   int status;
   if ((status = xmlParseDocument(ctxt)) == -1) {
 
+    if (incount)
+      fprintf(stderr, "\n");
+
     // report error
     xmlErrorPtr ep = xmlCtxtGetLastError(ctxt);
     char* partmsg = strdup(ep->message);
@@ -495,7 +502,6 @@ static void srcMLParseDocument(xmlParserCtxtPtr ctxt) {
     fprintf(stderr, "%s: %s in '%s'\n", "srcml2src", partmsg, ep->file);
     exit(STATUS_INPUTFILE_PROBLEM);
   }
-
 }
 
 // create srcml parser with error reporting
