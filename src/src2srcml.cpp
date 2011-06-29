@@ -356,7 +356,7 @@ int main(int argc, char* argv[]) {
       0,
       0,
       0,
-      DEFAULT_TEXT_ENCODING,
+      0 /* DEFAULT_TEXT_ENCODING */,
       DEFAULT_XML_ENCODING,
       0,
       0,
