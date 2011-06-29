@@ -42,5 +42,7 @@ int main(int argc, char * argv[]) {
   // translate file
   translator.translate(argv[1], NULL, argv[1], NULL, language);
 
+  translator.close();
+
   return 0;
 }

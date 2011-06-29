@@ -54,6 +54,8 @@ class srcMLTranslator : public Language {
 
   void* setInput(const char* path);
 
+  void close();
+
   // translate from input stream to output stream
   void translate(const char* path,
 		 const char* unit_directory = 0,

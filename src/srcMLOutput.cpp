@@ -294,10 +294,18 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 
 srcMLOutput::~srcMLOutput() {
 
-  if (!firstconsume)
-    xmlTextWriterEndDocument(xout);
+  close();
+}
 
-  xmlFreeTextWriter(xout);
+void srcMLOutput::close() {
+
+  if (xout) {
+    if (!firstconsume)
+      xmlTextWriterEndDocument(xout);
+
+    xmlFreeTextWriter(xout);
+    xout = 0;
+  }
 }
 
 int srcMLOutput::getTabSize() {

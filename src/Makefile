@@ -81,7 +81,7 @@ IO_LIB=${OBJ_DIR}libxml_archive_read.o ${OBJ_DIR}libxml_archive_write.o
 ifndef MINGW32
 SRC2SRCML_BIN=${EXE_DIR}src2srcml
 SRCML2SRC_BIN=${EXE_DIR}srcml2src
-#SRCMLDIRECT_BIN=${EXE_DIR}srcmldirect
+SRCMLDIRECT_BIN=${EXE_DIR}srcmldirect
 else
 SRC2SRCML_BIN=${EXE_DIR}src2srcml.exe
 SRCML2SRC_BIN=${EXE_DIR}srcml2src.exe
