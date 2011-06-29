@@ -113,7 +113,7 @@ const char* srcMLUtility::namespace_ext(const char* uri) {
 void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE options, int optioncount, int optionorder[]) {
 
   // setup parser
-  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
+  xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
   if (ctxt == NULL) return;
 
   // setup sax handler
@@ -148,7 +148,7 @@ void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE opt
 
   SAX2Properties state(unitnumber, options, nsv, attrv, su, optioncount, optionorder);
 
-  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
+  xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
   if (ctxt == NULL) return;
   ctxt->sax = &sax;
   ctxt->userData = &state;
@@ -175,7 +175,7 @@ void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE opt
 int srcMLUtility::unit_count() {
 
   // setup parser
-  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
+  xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
   if (ctxt == NULL) return -1;
 
   // setup sax handler
@@ -205,7 +205,7 @@ int srcMLUtility::unit_count() {
 void srcMLUtility::extract_xml(const char* ofilename, int unit) {
 
   // setup parser
-  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
+  xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
   if (ctxt == NULL) return;
 
   // setup sax handler
@@ -253,7 +253,7 @@ void srcMLUtility::extract_element(const char* element, const char* filename) {
 
   SAX2CopyElement state(element, filename, unit, options);
 
-  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
+  xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
   if (ctxt == NULL) return;
   ctxt->sax = &sax;
   ctxt->userData = &state;
@@ -329,7 +329,7 @@ void srcMLUtility::expand(const char* root_filename, const char* format, const c
   archiveWriteRootOpen(root_filename);
 
   // setup parser
-  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
+  xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
   if (ctxt == NULL) return;
 
   // setup sax handler
@@ -359,7 +359,7 @@ void srcMLUtility::expand(const char* root_filename, const char* format, const c
 void srcMLUtility::list() {
 
   // setup parser
-  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
+  xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
   if (ctxt == NULL) return;
 
   // setup sax handler
@@ -413,7 +413,7 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
     return;
   }
 
-  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
+  xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
   if (ctxt == NULL) return;
   ctxt->sax = &sax;
   ctxt->_private = &state;
@@ -433,7 +433,7 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
   
   SAX2UnitDOMXSLT state(context_element, xslts, ofilename, params, paramcount, options);
 
-  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
+  xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
   if (ctxt == NULL) return;
   ctxt->sax = &sax;
   ctxt->_private = &state;
@@ -462,7 +462,7 @@ void srcMLUtility::relaxng(const char* ofilename, const char** xslts) {
   
   SAX2UnitDOMRelaxNG state(0, xslts, ofilename, 0);
 
-  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
+  xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
   if (ctxt == NULL) return;
   ctxt->sax = &sax;
   ctxt->_private = &state;

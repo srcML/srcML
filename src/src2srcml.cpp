@@ -412,7 +412,6 @@ int main(int argc, char* argv[]) {
   }
 
   int stdiocount = 0;
-
   for (int i = input_arg_start; i <= input_arg_end; ++i) {
 
     if (strcmp(argv[i], "-") == 0) {
