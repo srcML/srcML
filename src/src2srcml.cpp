@@ -161,12 +161,12 @@ using namespace LanguageName;
 void output_help(const char* name) {
   printf( "Usage: %s [options] <src_infile>... [-o <srcML_outfile>]\n\n"
 
-	  "Translates source-code files in C, C++, and Java into the XML source-code representation srcML.\n"
+	  "Translates C, C++, and Java source code into the XML source-code representation srcML.\n"
 	  "Input can be from standard input, a file, a directory, or an archive file, i.e., tar, cpio, and zip.\n"
-	  "Multiple files can be stored in a srcML archive.\n\n"
+	  "Multiple files are stored in a srcML archive.\n\n"
 
-          "The source-code language is automatically determined from the file extension, or can be set\n"
-          "explicitly.  Additional mappings from extensions to source-code language can be user registered.\n\n"
+	  "Language is based on the file extension.  Additional mappings from extensions to language can be registerd.\n"
+	  "It can also be directly set using the --language option.\n\n"
 
 	  "By default, output is to stdout.  You can specify a file for output using the --%s or -%c option.\n"
 	  "When no filenames are given input is from stdin and output is to stdout.\n"
@@ -174,9 +174,6 @@ void output_help(const char* name) {
 
     	  "Any input file can be a local filename (FILE) or a URI with the protocols http:, ftp:, or file:\n\n"
 
-	  "Language is based on the file extension.  It can also be directly\n"
-	  "set using the --language option.\n"
-	  "\n"
 	  "Options:\n", name, OUTPUT_FLAG, OUTPUT_FLAG_SHORT);
 
   printf("  -%c, --%-16s display this help and exit\n",      HELP_FLAG_SHORT, HELP_FLAG);
@@ -186,6 +183,7 @@ void output_help(const char* name) {
 	 LANGUAGE_FLAG_SHORT, LANGUAGE_FLAG_FULL,
 	 LANGUAGE_C, LANGUAGE_CXX, LANGUAGE_JAVA);
 
+  printf("  -%c, --%-16s write result to OUTPUT which is a FILE or URI\n", OUTPUT_FLAG_SHORT, OUTPUT_FLAG_FULL);
   printf("  --%-20s read list of source file names, either FILE or URI, from INPUT\n"
 	 "                         to form a srcML archive\n",
 	  FILELIST_FLAG_FULL);
