@@ -101,6 +101,9 @@ int archiveReadMatch(const char* URI) {
   if (URI == NULL)
       return 0;
 
+  if (fnmatch("*.xsl", URI, 0) == 0)
+    return 0;
+
 #if ARCHIVE_VERSION_STAMP >= 2008000
   // put all input through libarchive for automatic detection of the format
   return 1;
