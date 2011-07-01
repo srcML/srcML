@@ -355,14 +355,12 @@ int main(int argc, char* argv[]) {
     // input file
     struct stat instat = { 0 };
     if (stat(filename, &instat) == -1) {
-      perror(filename);
-      exit(STATUS_INPUTFILE_PROBLEM);
+      goto done;
     }
 
     struct stat outstat = { 0 };
     if (stat(poptions.ofilename, &outstat) == -1) {
-      perror(poptions.ofilename);
-      exit(1);
+      goto done;
     }
 
     if ((strcmp(poptions.ofilename, "-") != 0) && instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
@@ -370,6 +368,7 @@ int main(int argc, char* argv[]) {
       exit(STATUS_INPUTFILE_PROBLEM);
     }
   }
+ done:
 #endif
 
   // info options are convenience functions for multiple options
