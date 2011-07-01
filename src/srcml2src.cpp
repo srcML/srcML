@@ -118,7 +118,7 @@ void output_help(const char* name) {
 
   printf("Usage: %s [options] <srcML_infile>... [-o <src_outfile>]\n\n"
          "Translates from the the XML source-code representation srcML back to source-code.\n\n"
-         "Extracts back to standard output, the disk, or to general archive formats,\n"
+         "Extracts back to standard output, the disk, or to traditional archive formats,\n"
 	 "e.g., tar, cpio, zip, and with optional gzip, bzip2 compression.\n"
          "Provides access to metadata about the srcML document. For srcML archives\n"
 	 "provides extraction of specific files, and efficient querying/transformation\n"
