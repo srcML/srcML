@@ -225,7 +225,7 @@ void output_help(const char* name) {
   printf("  --%-21s do not output the default XML declaration\n", NO_XML_DECLARATION_FLAG);
   printf("  --%-21s do not output any namespace declarations\n\n", NO_NAMESPACE_DECLARATION_FLAG);
 
-  printf("Metadata Options:\n\n"
+  printf("Metadata Options:\n"
          "  -%c, --%-17s set the directory attribute to DIR\n",
 	 DIRECTORY_FLAG_SHORT, DIRECTORY_FLAG_FULL);
 
@@ -235,7 +235,7 @@ void output_help(const char* name) {
   printf("  -%c, --%-17s set the version attribute to VER\n\n",
 	 SRCVERSION_FLAG_SHORT, SRCVERSION_FLAG_FULL);
 
-  printf("Markup Extensions:\n\n");
+  printf("Markup Extensions:\n");
 
   printf("  --%-21s markup literal values in namespace \"%s\"\n",
 	 LITERAL_FLAG, SRCML_EXT_LITERAL_NS_URI);
@@ -246,7 +246,7 @@ void output_help(const char* name) {
   printf("  --%-21s markup type modifiers in namespace \"%s\"\n",
 	 MODIFIER_FLAG, SRCML_EXT_MODIFIER_NS_URI);
 
-  printf("\nLine/Column Position:\n\n");
+  printf("\nLine/Column Position:\n");
 
   printf("  --%-21s include attributes for line/column position \"%s\"\n",
 	 POSITION_FLAG, SRCML_EXT_POSITION_NS_URI);
@@ -254,7 +254,7 @@ void output_help(const char* name) {
   printf("  --%-21s set tabs NUMBER characters apart.  Default is %d\n",
 	 TABS_FLAG_FULL, 8);
 
-  printf("\nPrefix Options:\n\n");
+  printf("\nPrefix Options:\n");
 
   printf("  --%-21s set the default namespace URI\n", XMLNS_DEFAULT_FLAG_FULL);
 
@@ -265,7 +265,7 @@ void output_help(const char* name) {
   printf("                            xmlns:%s=\"%s\"\n", SRCML_CPP_NS_PREFIX_DEFAULT, SRCML_CPP_NS_URI);
   printf("                            xmlns:%s=\"%s\"\n", SRCML_ERR_NS_PREFIX_DEFAULT, SRCML_ERR_NS_URI);
 
-  printf("\nCPP Markup Options:\n\n");
+  printf("\nCPP Markup Options:\n");
 
   printf("  --%-21s markup cpp #else regions (default)\n", CPP_MARKUP_ELSE_FLAG);
   printf("  --%-21s leave cpp #else regions as text\n\n", CPP_TEXTONLY_ELSE_FLAG);

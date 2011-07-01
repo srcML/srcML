@@ -169,7 +169,7 @@ void output_help(const char* name) {
   printf("  --%-21s do not output any namespace declarations in XML output\n\n",
 	  NO_NAMESPACE_DECLARATION_FLAG);
 
-  printf("Metadata Options:  \n\n"
+  printf("Metadata Options:\n"
 	 "  -%c, --%-17s display source language and exit\n", LANGUAGE_FLAG_SHORT, LANGUAGE_FLAG);
 
   printf("  -%c, --%-17s display source directory name and exit\n", DIRECTORY_FLAG_SHORT, DIRECTORY_FLAG);
@@ -193,14 +193,14 @@ void output_help(const char* name) {
 
   printf("  --%-21s list all the files in the srcML archive and exit\n\n", LIST_FLAG);
 
-  printf("srcML Archive Options:  \n\n"
+  printf("srcML Archive Options:\n"
 	 "  -%c, --%-17s extract individual unit NUM from srcML\n",
 	  UNIT_FLAG_SHORT, UNIT_FLAG_FULL);
 
   printf("  -%c, --%-17s extract all files from srcML and create them in the filesystem\n\n",
 	  EXPAND_FLAG_SHORT, EXPAND_FLAG);
 
-  printf("Query and Transformation Options:  \n\n"
+  printf("Query and Transformation Options:\n"
 	 "  --%-21s apply XPATH expression to each individual unit\n", XPATH_FLAG_FULL);
   printf("  --%-21s apply XSLT_FILE (FILE or URI) transformation to each individual unit\n", XSLT_FLAG_FULL);
   printf("  --%-21s passes a parameter NAME and VAL to an XSLT program\n", STRING_PARAM_FLAG_FULL);
@@ -208,7 +208,7 @@ void output_help(const char* name) {
   printf("  --%-21s output individual units that match RELAXNG_FILE (FILE or URI)\n", RELAXNG_FLAG_FULL);
   printf("  --%-21s apply an xslt program or xpath query to the root element\n\n", XSLT_ALL_FLAG);
 
-  printf("Examples:  \n\n"
+  printf("Examples:\n"
 	    "  Read from file main.cpp.xml, write to file main.cpp:\n\n"
 	    "  " BASE_PROGRAM_NAME " main.cpp.xml -o main.cpp\n\n"
 
