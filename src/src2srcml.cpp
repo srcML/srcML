@@ -170,7 +170,7 @@ void output_help(const char* name) {
           "can be registered, and can be directly set using the --language option.\n\n"
 
 	  "By default, output is to stdout.  You can specify a file for output using the --%s or -%c option.\n"
-	  "When no filenames are given input is from stdin and output is to stdout.\n"
+	  "When no filenames are given input, is from stdin and output is to stdout.\n"
 	  "An input filename of '-' also reads from stdin.\n\n"
 
     	  "Any input file can be a local filename (FILE), or a URI with the protocols http:, ftp:, or file:\n\n"
