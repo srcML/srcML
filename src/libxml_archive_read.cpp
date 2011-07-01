@@ -101,6 +101,8 @@ int archiveReadMatch(const char* URI) {
   if (URI == NULL)
       return 0;
 
+  // when the xslt option is used, the input cannot come through libarchive/libxml
+  // so fix here so that it is not used
   if (fnmatch("*.xsl", URI, 0) == 0)
     return 0;
 
