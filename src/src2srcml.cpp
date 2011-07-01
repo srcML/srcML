@@ -213,7 +213,7 @@ void output_help(const char* name) {
 
   printf("  -%c, --%-17s immediate output while parsing, default for keyboard input\n", INTERACTIVE_FLAG_SHORT, INTERACTIVE_FLAG);
 
-  printf("  -%c, --%-17s markup translation errors in namespace %s\n",
+  printf("  -%c, --%-17s markup translation errors, namespace %s\n",
 	  DEBUG_FLAG_SHORT, DEBUG_FLAG, SRCML_ERR_NS_URI);
 
   printf("  -%c, --%-17s conversion and status information to stderr\n",
@@ -237,18 +237,18 @@ void output_help(const char* name) {
 
   printf("Markup Extensions:\n");
 
-  printf("  --%-21s markup literal values in namespace \"%s\"\n",
+  printf("  --%-21s markup literal values, namespace \"%s\"\n",
 	 LITERAL_FLAG, SRCML_EXT_LITERAL_NS_URI);
 
-  printf("  --%-21s markup operators in namespace \"%s\"\n",
+  printf("  --%-21s markup operators, namespace \"%s\"\n",
 	 OPERATOR_FLAG, SRCML_EXT_OPERATOR_NS_URI);
 
-  printf("  --%-21s markup type modifiers in namespace \"%s\"\n",
+  printf("  --%-21s markup type modifiers, namespace \"%s\"\n",
 	 MODIFIER_FLAG, SRCML_EXT_MODIFIER_NS_URI);
 
   printf("\nLine/Column Position:\n");
 
-  printf("  --%-21s include attributes for line/column position \"%s\"\n",
+  printf("  --%-21s include line/column attributres, namespace \"%s\"\n",
 	 POSITION_FLAG, SRCML_EXT_POSITION_NS_URI);
 
   printf("  --%-21s set tabs NUMBER characters apart.  Default is %d\n",

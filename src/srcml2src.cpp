@@ -188,7 +188,7 @@ void output_help(const char* name) {
   printf("  -%c, --%-17s display most metadata except file count (individual units) and exit\n",
 	  INFO_FLAG_SHORT, INFO_FLAG);
 
-  printf("  -%c, --%-17s display all metadata including file count (individual units)  and exit\n",
+  printf("  -%c, --%-17s display all metadata including file count (individual units) and exit\n",
 	  LONG_INFO_FLAG_SHORT, LONG_INFO_FLAG);
 
   printf("  --%-21s list all the files in the srcML archive and exit\n\n", LIST_FLAG);
