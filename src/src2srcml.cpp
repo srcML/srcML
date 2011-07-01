@@ -99,6 +99,7 @@ const char* const XMLNS_DEFAULT_FLAG_FULL = "xmlns=URI";
 const char* const XMLNS_FLAG_FULL = "xmlns:PREFIX=URI";
 
 const char* const REGISTER_EXT_FLAG = "register-ext";
+const char* const REGISTER_EXT_FLAG_FULL = "register-ext=EXT:LANG";
 const int REGISTER_EXT_FLAG_CODE = 256 + 7;
 
 const char* const OLD_FILENAME_FLAG = "old-filename";
@@ -165,23 +166,25 @@ void output_help(const char* name) {
 	  "Input can be from standard input, a file, a directory, or an archive file, i.e., tar, cpio, and zip.\n"
 	  "Multiple files are stored in a srcML archive.\n\n"
 
-	  "Language is based on the file extension.  Additional mappings from extensions to language can be registerd.\n"
-	  "It can also be directly set using the --language option.\n\n"
+	  "The source-code language is based on the file extension.  Additional extensions for a language\n"
+          "can be registered, and can be directly set using the --language option.\n\n"
 
 	  "By default, output is to stdout.  You can specify a file for output using the --%s or -%c option.\n"
 	  "When no filenames are given input is from stdin and output is to stdout.\n"
 	  "An input filename of '-' also reads from stdin.\n\n"
 
-    	  "Any input file can be a local filename (FILE) or a URI with the protocols http:, ftp:, or file:\n\n"
+    	  "Any input file can be a local filename (FILE), or a URI with the protocols http:, ftp:, or file:\n\n"
 
 	  "Options:\n", name, OUTPUT_FLAG, OUTPUT_FLAG_SHORT);
 
   printf("  -%c, --%-16s display this help and exit\n",      HELP_FLAG_SHORT, HELP_FLAG);
   printf("  -%c, --%-16s display version number and exit\n\n", VERSION_FLAG_SHORT, VERSION_FLAG);
 
-  printf("  -%c, --%-16s set the language to %s, %s, or %s\n\n",
+  printf("  -%c, --%-16s set the language to %s, %s, or %s\n",
 	 LANGUAGE_FLAG_SHORT, LANGUAGE_FLAG_FULL,
 	 LANGUAGE_C, LANGUAGE_CXX, LANGUAGE_JAVA);
+  printf("  --%-20s register file extension EXT for source-code language LANG\n\n",
+	  REGISTER_EXT_FLAG_FULL);
 
   printf("  -%c, --%-16s write result to OUTPUT which is a FILE or URI\n", OUTPUT_FLAG_SHORT, OUTPUT_FLAG_FULL);
   printf("  --%-20s read list of source file names, either FILE or URI, from INPUT\n"
@@ -245,10 +248,10 @@ void output_help(const char* name) {
 
   printf("\nLine/Column Position:\n\n");
 
-  printf("  --%-20s markup literal values in namespace \"%s\"\n",
+  printf("  --%-20s include attributes for line/column position \"%s\"\n",
 	 POSITION_FLAG, SRCML_EXT_POSITION_NS_URI);
 
-  printf("  --%-20s have tabs NUMBER characters apart.  Default is %d\n",
+  printf("  --%-20s set tabs NUMBER characters apart.  Default is %d\n",
 	 TABS_FLAG_FULL, 8);
 
   printf("\nPrefix Options:\n\n");
@@ -257,10 +260,10 @@ void output_help(const char* name) {
 
   printf("  --%-20s set the namespace PREFIX for the namespace URI\n\n", XMLNS_FLAG_FULL);
 
-  printf("                       Predefined URIs and Prefixes:\n");
-  printf("                         xmlns=\"%s\"\n", SRCML_SRC_NS_URI);
-  printf("                         xmlns:%s=\"%s\"\n", SRCML_CPP_NS_PREFIX_DEFAULT, SRCML_CPP_NS_URI);
-  printf("                         xmlns:%s=\"%s\"\n", SRCML_ERR_NS_PREFIX_DEFAULT, SRCML_ERR_NS_URI);
+  printf("                         Predefined URIs and Prefixes:\n");
+  printf("                           xmlns=\"%s\"\n", SRCML_SRC_NS_URI);
+  printf("                           xmlns:%s=\"%s\"\n", SRCML_CPP_NS_PREFIX_DEFAULT, SRCML_CPP_NS_URI);
+  printf("                           xmlns:%s=\"%s\"\n", SRCML_ERR_NS_PREFIX_DEFAULT, SRCML_ERR_NS_URI);
 
   printf("\nCPP Markup Options:\n\n");
 
