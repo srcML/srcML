@@ -22,7 +22,7 @@
 <arg><option>&FILENAME_FLAG_SHORT;     <replaceable class="parameter">filename</replaceable></option></arg>
 <arg><option>&SRCVERSION_FLAG_SHORT;   <replaceable class="parameter">version</replaceable></option></arg>
 <arg><option>&ENCODING_FLAG_SHORT;     <replaceable class="parameter">encoding</replaceable></option></arg>
-<arg><option>&TEXTENCODING_FLAG_SHORT; <replaceable class="parameter">encoding</replaceable></option></arg>
+<arg><option>&SRC_ENCODING_FLAG_SHORT; <replaceable class="parameter">encoding</replaceable></option></arg>
 <arg rep="repeat"><replaceable class="parameter">input-source-code-file</replaceable></arg>
 <arg><option>&OUTPUT_FLAG_SHORT;       <replaceable class="parameter">output-srcML-file</replaceable></option></arg>
   </cmdsynopsis>
@@ -113,7 +113,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term><option>&TEXTENCODING_FLAG_SHORT;, &TEXTENCODING_FLAG;=<replaceable class="parameter">encoding</replaceable></option></term>
+      <term><option>&SRC_ENCODING_FLAG_SHORT;, &SRC_ENCODING_FLAG;=<replaceable class="parameter">encoding</replaceable></option></term>
       <listitem>
 	<para>
 	  Sets the input encoding of the source-code file to
@@ -519,7 +519,7 @@
     To translate a source-code file in ISO-8859-1 encoding into a srcML file with UTF-8 encoding:
   </para>
   <para>
-    <command>src2srcml</command> &TEXTENCODING_FLAG;=ISO-8859-1 &ENCODING_FLAG;=UTF-8 main.cpp &OUTPUT_FLAG_SHORT; main.cpp.xml
+    <command>src2srcml</command> &SRC_ENCODING_FLAG;=ISO-8859-1 &ENCODING_FLAG;=UTF-8 main.cpp &OUTPUT_FLAG_SHORT; main.cpp.xml
   </para>
 </refsect1>
 <refsect1>
