@@ -32,7 +32,7 @@
 
 const char* const COPYRIGHT = "Copyright (C) 2011 SDML";
 
-const char* const EMAIL_ADDRESS = "srcml@sdml.info";
+const char* const EMAIL_ADDRESS = "collard@uakron.edu";
 
 const char* const STDIN = "-";
 
