@@ -203,8 +203,8 @@ void output_help(const char* name) {
   printf("Query and Transformation Options:\n"
 	 "  --%-21s apply XPATH expression to each individual unit\n", XPATH_FLAG_FULL);
   printf("  --%-21s apply XSLT_FILE (FILE or URI) transformation to each individual unit\n", XSLT_FLAG_FULL);
-  printf("  --%-21s passes a parameter NAME and VAL to an XSLT program\n", STRING_PARAM_FLAG_FULL);
-  printf("  --%-21s passes a parameter NAME and XPATH to the XSLT program\n", PARAM_FLAG_FULL);
+  //  printf("  --%-21s passes a parameter NAME and VAL to an XSLT program\n", STRING_PARAM_FLAG_FULL);
+  printf("  --%-21s passes a parameter NAME and VAL to the XSLT program\n", PARAM_FLAG_FULL);
   printf("  --%-21s output individual units that match RELAXNG_FILE (FILE or URI)\n", RELAXNG_FLAG_FULL);
   printf("  --%-21s apply an xslt program or xpath query to the root element\n\n", XSLT_ALL_FLAG);
 
