@@ -138,75 +138,75 @@ void output_help(const char* name) {
 
 	 "Options:\n", name, OUTPUT_FLAG, OUTPUT_FLAG_SHORT);
 
-  printf("  -%c, --%-16s display this help and exit\n", HELP_FLAG_SHORT, HELP_FLAG);
-  printf("  -%c, --%-16s display version number and exit\n\n", VERSION_FLAG_SHORT, VERSION_FLAG);
+  printf("  -%c, --%-17s display this help and exit\n", HELP_FLAG_SHORT, HELP_FLAG);
+  printf("  -%c, --%-17s display version number and exit\n\n", VERSION_FLAG_SHORT, VERSION_FLAG);
   /*
-  printf("  --%-20s ???\n\n", INPUT_FORMAT_FLAG);
+  printf("  --%-21s ???\n\n", INPUT_FORMAT_FLAG);
   */
-  printf("  -%c, --%-16s write result to OUTPUT which is a FILE or URI\n", OUTPUT_FLAG_SHORT, OUTPUT_FLAG_FULL);
+  printf("  -%c, --%-17s write result to OUTPUT which is a FILE or URI\n", OUTPUT_FLAG_SHORT, OUTPUT_FLAG_FULL);
   /*
-  printf("  --%-20s ???\n\n", OUTPUT_FORMAT_FLAG);
+  printf("  --%-21s ???\n\n", OUTPUT_FORMAT_FLAG);
   */
 
-  printf("  -%c, --%-16s set the output source encoding to ENC (default:  %s) \n",
+  printf("  -%c, --%-17s set the output source encoding to ENC (default:  %s) \n",
 	  SRC_ENCODING_FLAG_SHORT, SRC_ENCODING_FLAG_FULL, DEFAULT_TEXT_ENCODING);
 
-  printf("  -%c, --%-16s output text or XML in gzip format\n",
+  printf("  -%c, --%-17s output text or XML in gzip format\n",
 	  COMPRESSED_FLAG_SHORT, COMPRESSED_FLAG);
 
-  printf("  -%c, --%-16s conversion and status information to stderr\n",
+  printf("  -%c, --%-17s conversion and status information to stderr\n",
 	  VERBOSE_FLAG_SHORT, VERBOSE_FLAG);
 
-  printf("  -%c, --%-16s suppresses status messages\n\n",
+  printf("  -%c, --%-17s suppresses status messages\n\n",
 	  QUIET_FLAG_SHORT, QUIET_FLAG);
 
-  printf("  -%c, --%-16s output in XML instead of text\n",
+  printf("  -%c, --%-17s output in XML instead of text\n",
 	  XML_FLAG_SHORT, XML_FLAG);
 
-  printf("  --%-20s do not output the XML declaration in XML output\n",
+  printf("  --%-21s do not output the XML declaration in XML output\n",
 	  NO_XML_DECLARATION_FLAG);
 
-  printf("  --%-20s do not output any namespace declarations in XML output\n\n",
+  printf("  --%-21s do not output any namespace declarations in XML output\n\n",
 	  NO_NAMESPACE_DECLARATION_FLAG);
 
   printf("Metadata Options:  \n\n"
-	 "  -%c, --%-16s display source language and exit\n", LANGUAGE_FLAG_SHORT, LANGUAGE_FLAG);
+	 "  -%c, --%-17s display source language and exit\n", LANGUAGE_FLAG_SHORT, LANGUAGE_FLAG);
 
-  printf("  -%c, --%-16s display source directory name and exit\n", DIRECTORY_FLAG_SHORT, DIRECTORY_FLAG);
+  printf("  -%c, --%-17s display source directory name and exit\n", DIRECTORY_FLAG_SHORT, DIRECTORY_FLAG);
 
-  printf("  -%c, --%-16s display source filename and exit\n", FILENAME_FLAG_SHORT, FILENAME_FLAG   );
+  printf("  -%c, --%-17s display source filename and exit\n", FILENAME_FLAG_SHORT, FILENAME_FLAG   );
 
-  printf("  -%c, --%-16s display source version and exit\n", SRCVERSION_FLAG_SHORT, SRCVERSION_FLAG);
+  printf("  -%c, --%-17s display source version and exit\n", SRCVERSION_FLAG_SHORT, SRCVERSION_FLAG);
 
-  printf("  -%c, --%-16s display xml encoding and exit\n", ENCODING_FLAG_SHORT, ENCODING_FLAG);
+  printf("  -%c, --%-17s display xml encoding and exit\n", ENCODING_FLAG_SHORT, ENCODING_FLAG);
 
-  printf("  -%c, --%-16s display prefix of namespace given by URI and exit\n",
+  printf("  -%c, --%-17s display prefix of namespace given by URI and exit\n",
 	  NAMESPACE_FLAG_SHORT, NAMESPACE_FLAG_FULL);
 
-  printf("  -%c, --%-16s display number of srcML files and exit\n\n", NESTED_FLAG_SHORT, NESTED_FLAG);
+  printf("  -%c, --%-17s display number of srcML files and exit\n\n", NESTED_FLAG_SHORT, NESTED_FLAG);
 
-  printf("  -%c, --%-16s display most metadata except file count (individual units) and exit\n",
+  printf("  -%c, --%-17s display most metadata except file count (individual units) and exit\n",
 	  INFO_FLAG_SHORT, INFO_FLAG);
 
-  printf("  -%c, --%-16s display all metadata including file count (individual units)  and exit\n",
+  printf("  -%c, --%-17s display all metadata including file count (individual units)  and exit\n",
 	  LONG_INFO_FLAG_SHORT, LONG_INFO_FLAG);
 
-  printf("  --%-20s list all the files in the srcML archive and exit\n\n", LIST_FLAG);
+  printf("  --%-21s list all the files in the srcML archive and exit\n\n", LIST_FLAG);
 
   printf("srcML Archive Options:  \n\n"
-	 "  -%c, --%-16s extract individual unit NUM from srcML\n",
+	 "  -%c, --%-17s extract individual unit NUM from srcML\n",
 	  UNIT_FLAG_SHORT, UNIT_FLAG_FULL);
 
-  printf("  -%c, --%-16s extract all files from srcML and create them in the filesystem\n\n",
+  printf("  -%c, --%-17s extract all files from srcML and create them in the filesystem\n\n",
 	  EXPAND_FLAG_SHORT, EXPAND_FLAG);
 
   printf("Query and Transformation Options:  \n\n"
-	 "  --%-20s apply XPATH expression to each individual unit\n", XPATH_FLAG_FULL);
-  printf("  --%-20s apply XSLT_FILE (FILE or URI) transformation to each individual unit\n", XSLT_FLAG_FULL);
-  printf("  --%-20s passes a parameter NAME and VAL to an XSLT program\n", STRING_PARAM_FLAG_FULL);
-  printf("  --%-20s passes a parameter NAME and XPATH to the XSLT program\n", PARAM_FLAG_FULL);
-  printf("  --%-20s output individual units that match RELAXNG_FILE file (FILE or URI)\n", RELAXNG_FLAG_FULL);
-  printf("  --%-20s apply an xslt program or xpath query to the root element\n\n", XSLT_ALL_FLAG);
+	 "  --%-21s apply XPATH expression to each individual unit\n", XPATH_FLAG_FULL);
+  printf("  --%-21s apply XSLT_FILE (FILE or URI) transformation to each individual unit\n", XSLT_FLAG_FULL);
+  printf("  --%-21s passes a parameter NAME and VAL to an XSLT program\n", STRING_PARAM_FLAG_FULL);
+  printf("  --%-21s passes a parameter NAME and XPATH to the XSLT program\n", PARAM_FLAG_FULL);
+  printf("  --%-21s output individual units that match RELAXNG_FILE file (FILE or URI)\n", RELAXNG_FLAG_FULL);
+  printf("  --%-21s apply an xslt program or xpath query to the root element\n\n", XSLT_ALL_FLAG);
 
   printf("Examples:  \n\n"
 	    "  Read from file main.cpp.xml, write to file main.cpp:\n\n"
