@@ -118,8 +118,8 @@ void output_help(const char* name) {
 
   printf("Usage: %s [options] <srcML_infile>... [-o <src_outfile>]\n\n"
          "Translates from the the XML source-code representation srcML back to source-code.\n\n"
-         "Extracts back to standard output, the disk, or to various general archive formats,\n"
-	 "e.g., tar, cpio, zip, and with gzip, bzip2 compression.\n"
+         "Extracts back to standard output, the disk, or to general archive formats,\n"
+	 "e.g., tar, cpio, zip, and with optional gzip, bzip2 compression.\n"
          "Provides access to metadata about the srcML document. For srcML archives\n"
 	 "provides extraction of specific files, and efficient querying/transformation\n"
 	 "using XPath, XSLT, and RelaxNG.\n\n"
@@ -128,7 +128,7 @@ void output_help(const char* name) {
 	 "e.g., an entire project or directory tree.\n\n"
 
 	 "By default, output is to stdout.  You can specify a file for output using the --%s or -%c option.\n"
-	 "When no filenames are given input is from stdin and output is to stdout.\n"
+         "When no filenames are given, input is from stdin and output is to stdout.\n"
 	 "An input filename of '-' also reads from stdin.\n\n"
 
 	 "Any input file, including XSLT and RelaxNG files, can be a local\n"
