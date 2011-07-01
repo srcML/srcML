@@ -213,8 +213,11 @@ void output_help(const char* name) {
   printf("  -%c, --%-16s markup translation errors in namespace %s\n",
 	  DEBUG_FLAG_SHORT, DEBUG_FLAG, SRCML_ERR_NS_URI);
 
-  printf("  -%c, --%-16s conversion and status information to stderr\n\n",
+  printf("  -%c, --%-16s conversion and status information to stderr\n",
 	  VERBOSE_FLAG_SHORT, VERBOSE_FLAG);
+
+  printf("  -%c, --%-16s suppresses status messages\n\n",
+	  QUIET_FLAG_SHORT, QUIET_FLAG);
 
   printf("  --%-20s do not output the default XML declaration\n", NO_XML_DECLARATION_FLAG);
   printf("  --%-20s do not output any namespace declarations\n\n", NO_NAMESPACE_DECLARATION_FLAG);

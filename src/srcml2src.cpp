@@ -154,8 +154,11 @@ void output_help(const char* name) {
   printf("  -%c, --%-16s output text or XML in gzip format\n",
 	  COMPRESSED_FLAG_SHORT, COMPRESSED_FLAG);
 
-  printf("  -%c, --%-16s conversion and status information to stderr\n\n",
+  printf("  -%c, --%-16s conversion and status information to stderr\n",
 	  VERBOSE_FLAG_SHORT, VERBOSE_FLAG);
+
+  printf("  -%c, --%-16s suppresses status messages\n\n",
+	  QUIET_FLAG_SHORT, QUIET_FLAG);
 
   printf("  -%c, --%-16s output in XML instead of text\n",
 	  XML_FLAG_SHORT, XML_FLAG);
