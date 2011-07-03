@@ -7,25 +7,25 @@ do
     # number of individual units
     units=$($SRCML2SRC --units $file | dos2unix)
 
+    # save the info
+    $SRCML2SRC --info $file > .info
+
     # language
-    language=$($SRCML2SRC --language $file | dos2unix)
+    language=$(grep 'language' .info | grep -o "C\|C++\|C++0x\|Java" | dos2unix)
 
     # dir
-    directory=$($SRCML2SRC --directory $file | dos2unix)
-
-    # save the info
-    $SRCML2SRC --info $file | grep 'xmlns' > .info
+    directory=$(grep 'directory' .info | cut -c12- | tr -d '"' | dos2unix)
 
     # determine if operator option is needed
-    OPERATOR=$(grep 'http://www.sdml.info/srcML/operator' .info)
-    if [[ "$OPERATOR" != "" ]]
+    OPERATOR=''
+    if [[ "$(grep 'xmlns' .info | grep 'http://www.sdml.info/srcML/operator')" != "" ]]
     then
         OPERATOR='--operator'
     fi
 
     # determine if literal option is needed
-    LITERAL=$(grep 'http://www.sdml.info/srcML/literal' .info)
-    if [[ "$LITERAL" != "" ]]
+    LITERAL=''
+    if [[ "$(grep 'xmlns' .info | grep 'http://www.sdml.info/srcML/literal')" != "" ]]
     then
         LITERAL='--literal'
     fi
