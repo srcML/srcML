@@ -13,15 +13,18 @@ do
     # dir
     directory=$($SRCML2SRC --directory $file | dos2unix)
 
+    # save the info
+    $SRCML2SRC --info $file | grep 'xmlns' > .info
+
     # determine if operator option is needed
-    OPERATOR=$($SRCML2SRC --info $file | grep 'xmlns' | grep 'http://www.sdml.info/srcML/operator')
+    OPERATOR=$(grep 'http://www.sdml.info/srcML/operator' .info)
     if [[ "$OPERATOR" != "" ]]
     then
         OPERATOR='--operator'
     fi
 
     # determine if literal option is needed
-    LITERAL=$($SRCML2SRC --info $file | grep 'xmlns' | grep 'http://www.sdml.info/srcML/literal')
+    LITERAL=$(grep 'http://www.sdml.info/srcML/literal' .info)
     if [[ "$LITERAL" != "" ]]
     then
         LITERAL='--literal'
@@ -36,11 +39,10 @@ do
         # filename
         filename=$($SRCML2SRC --filename .save | dos2unix)
 
+        FILENAMEOPTION=''
 	if [[ "$filename" != "" ]]
 	then
             FILENAMEOPTION='--filename='$filename
-	else
-            FILENAMEOPTION=''
 	fi
         cat .save.txt | $SRC2SRCML $OPERATOR $LITERAL --language=$language --dir=$directory $FILENAMEOPTION -o .new
 
