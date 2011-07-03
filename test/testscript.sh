@@ -1,31 +1,39 @@
 #!/bin/bash
 
+trap report INT
+
+function report() {
+    echo
+    echo $errors " out of " $count " cases"
+    exit
+}
+
 count=0
 errors=0
 for file in "$@"
 do
-    # number of individual units
-    units=$($SRCML2SRC --units $file | dos2unix)
-
     # save the info
-    $SRCML2SRC --info $file > .info
+    info=$($SRCML2SRC --longinfo $file)
+
+    # number of individual units
+    units=$(echo "$info" | grep 'units' | cut -c7- | tr -d '"')
 
     # language
-    language=$(grep 'language' .info | grep -o "C\|C++\|C++0x\|Java" | dos2unix)
+    language=$(echo "$info" | grep 'language' | grep -o "C\|C++\|C++0x\|Java" | dos2unix)
 
     # dir
-    directory=$(grep 'directory' .info | cut -c12- | tr -d '"' | dos2unix)
+    directory=$(echo "$info" | grep 'directory' | cut -c12- | tr -d '"' | dos2unix)
 
     # determine if operator option is needed
     OPERATOR=''
-    if [[ "$(grep 'xmlns' .info | grep 'http://www.sdml.info/srcML/operator')" != "" ]]
+    if [[ "$(echo "$info" | grep 'xmlns' | grep 'http://www.sdml.info/srcML/operator')" != "" ]]
     then
         OPERATOR='--operator'
     fi
 
     # determine if literal option is needed
     LITERAL=''
-    if [[ "$(grep 'xmlns' .info | grep 'http://www.sdml.info/srcML/literal')" != "" ]]
+    if [[ "$(echo "$info" | grep 'xmlns' | grep 'http://www.sdml.info/srcML/literal')" != "" ]]
     then
         LITERAL='--literal'
     fi
@@ -55,5 +63,5 @@ do
         let "count += 1"
     done
 done
-echo
-echo $errors " out of " $count " cases"
+
+report
