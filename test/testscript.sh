@@ -1,5 +1,7 @@
 #!/bin/bash
 
+count=0
+errors=0
 for file in "$@"
 do
     # number of individual units
@@ -43,9 +45,13 @@ do
         cat .save.txt | $SRC2SRCML $OPERATOR $LITERAL --language=$language --dir=$directory $FILENAMEOPTION -o .new
 
 	diff .save .new
+        if [[ "$?" != "0" ]]
+        then
+            let "errors += 1"
+        fi
+
+        let "count += 1"
     done
 done
-
-
-
-#ls ../suite/*.c.xml | xargs -I^ -t bash -c "gseq \$(../bin/srcml2src --units ^) | xargs -I% -t bash -c '../bin/srcml2src --unit=% --xml ^ | tee .save | ../bin/srcml2src | ../bin/src2srcml -l C++ --dir=\"if\" | tee .new | diff - .save'" | tee linuxc.txt
+echo
+echo $errors " out of " $count " cases"
