@@ -1160,12 +1160,9 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       // special case:  skip directories (in archives)
       if (archiveIsDir(context)) {
 
-        if (!isoption(options, OPTION_QUIET)) {
-          if (!shownumber)
-            fprintf(stderr, "Skipped '%s':  Is a directory.\n", unit_filename.c_str());
-          else
-            fprintf(stderr, "%5s %s\tSkipped: Is a directory.\n", "-", unit_filename.c_str());
-        }
+        if (!isoption(options, OPTION_QUIET))
+          fprintf(stderr, !shownumber ? "Skipped '%s':  Is a directory.\n" :
+                  "    - %s\tSkipped: Is a directory.\n", unit_filename.c_str());
 
         ++skipped;
 
@@ -1193,9 +1190,9 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
         if (!isoption(options, OPTION_QUIET)) {
           if (!shownumber)
-            fprintf(stderr, "Skipped '%s':  Unknown extension.\n", unit_filename.c_str() ? unit_filename.c_str() : "standard input");
+            fprintf(stderr, "Skipped '%s':  Unregistered extension.\n", unit_filename.c_str() ? unit_filename.c_str() : "standard input");
           else
-            fprintf(stderr, "%5s %s\tSkipped: Unknown extension.\n", "-", unit_filename.c_str() ? unit_filename.c_str() : "standard input");
+            fprintf(stderr, "%5s %s\tSkipped: Unregistered extension.\n", "-", unit_filename.c_str() ? unit_filename.c_str() : "standard input");
 	  
         }
 

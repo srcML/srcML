@@ -63,7 +63,8 @@ CXXFLAGS = -DVERSION=$(VERSION) -O3 -Wall -march=nocona -minline-all-stringops #
 CXX_LINK_FLAGS = #-s
 
 # libxml
-LIBXML_INCLUDE=-I/usr/include/libxml2
+LIBXML_INC_DIR=${firstword ${wildcard /opt/local/include/libxml2 /usr/include/libxml2}}
+LIBXML_INCLUDE=-I$(LIBXML_INC_DIR)
 
 ifndef MINGW32
 XML_LIB_SRC2SRCML=-lxml2
