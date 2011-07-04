@@ -53,22 +53,24 @@ do
     for ((i = 1; i<=$units; i++ ))
     do
 	echo $file $i
-        $SRCML2SRC --unit=$i --xml $file -o .save
-	$SRCML2SRC .save -o .save.txt
+
+        save=$($SRCML2SRC --unit=$i --xml $file)
+	txt=$(echo "$save" | $SRCML2SRC)
 
         # filename
-        filename=$($SRCML2SRC --filename .save | dos2unix)
-
         FILENAMEOPTION=''
-	if [[ "$filename" != "" ]]
-	then
-            FILENAMEOPTION='--filename='$filename
-	fi
-        cat .save.txt | $SRC2SRCML $OPERATOR $LITERAL --language=$language --dir=$directory $FILENAMEOPTION -o .new
-
-	diff .save .new
-        if [[ "$?" != "0" ]]
+        if [[ $save =~ filename=\"([^\"]*)\" ]]
         then
+            FILENAMEOPTION='--filename='${BASH_REMATCH[1]}
+        fi
+
+        new=$(echo "$txt" | $SRC2SRCML $OPERATOR $LITERAL --language=$language --dir=$directory $FILENAMEOPTION)
+
+        if [[ "$save" != "$new" ]]
+        then
+            echo "BUG: "$i
+            echo "$save"
+            echo "$new"
             let "errors += 1"
         fi
 
