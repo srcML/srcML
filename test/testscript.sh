@@ -26,14 +26,14 @@ do
 
     # determine if operator option is needed
     OPERATOR=''
-    if [[ "$(echo "$info" | grep 'xmlns' | grep 'http://www.sdml.info/srcML/operator')" != "" ]]
+    if [[ $info =~ "http://www.sdml.info/srcML/operator" ]]
     then
         OPERATOR='--operator'
     fi
 
     # determine if literal option is needed
     LITERAL=''
-    if [[ "$(echo "$info" | grep 'xmlns' | grep 'http://www.sdml.info/srcML/literal')" != "" ]]
+    if [[ $info =~ "http://www.sdml.info/srcML/literal" ]]
     then
         LITERAL='--literal'
     fi
