@@ -50,7 +50,7 @@ do
         LITERAL='--literal'
     fi
 
-    for i in $(seq $units)
+    for ((i = 1; i<=$units; i++ ))
     do
 	echo $file $i
         $SRCML2SRC --unit=$i --xml $file -o .save
