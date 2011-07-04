@@ -16,7 +16,11 @@ do
     info=$($SRCML2SRC --longinfo $file)
 
     # number of individual units
-    units=$(echo "$info" | grep 'units' | cut -c7- | tr -d '"')
+    units=""
+    if [[ $info =~ units=\"([^\"]*)\" ]]
+    then
+        units=${BASH_REMATCH[1]}
+    fi
 
     # language
     language=""
