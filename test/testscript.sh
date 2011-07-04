@@ -54,23 +54,22 @@ do
     do
 	echo $file $i
 
-        save=$($SRCML2SRC --unit=$i --xml $file)
-	txt=$(echo "$save" | $SRCML2SRC)
+        $SRCML2SRC --unit=$i --xml $file > .save
 
         # filename
         FILENAMEOPTION=''
-        if [[ $save =~ filename=\"([^\"]*)\" ]]
+        if [[ $(cat .save) =~ filename=\"([^\"]*)\" ]]
         then
             FILENAMEOPTION='--filename='${BASH_REMATCH[1]}
         fi
 
-        new=$(echo "$txt" | $SRC2SRCML $OPERATOR $LITERAL --language=$language --dir=$directory $FILENAMEOPTION)
+	$SRCML2SRC < .save | dos2unix > .txt
 
-        if [[ "$save" != "$new" ]]
+        $SRC2SRCML $OPERATOR $LITERAL --language=$language --dir=$directory $FILENAMEOPTION < .txt > .new
+
+	diff .save .new
+        if [[ "$?" != "0" ]]
         then
-            echo "BUG: "$i
-            echo "$save"
-            echo "$new"
             let "errors += 1"
         fi
 
