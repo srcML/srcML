@@ -19,10 +19,18 @@ do
     units=$(echo "$info" | grep 'units' | cut -c7- | tr -d '"')
 
     # language
-    language=$(echo "$info" | grep 'language' | grep -o "C\|C++\|C++0x\|Java" | dos2unix)
+    language=""
+    if [[ $info =~ language=\"([^\"]*)\" ]]
+    then
+        language=${BASH_REMATCH[1]}
+    fi
 
     # dir
-    directory=$(echo "$info" | grep 'directory' | cut -c12- | tr -d '"' | dos2unix)
+    directory=""
+    if [[ $info =~ directory=\"([^\"]*)\" ]]
+    then
+        directory=${BASH_REMATCH[1]}
+    fi
 
     # determine if operator option is needed
     OPERATOR=''
