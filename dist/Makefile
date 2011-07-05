@@ -83,7 +83,6 @@ ${SRC_TAR_GZ} : exp
 	gunzip --test $@
 
 ${SRC_ZIP} : exp
-	unix2dos ${SRC_DIR}/* ${DOC_DIR}/*
 	zip -rql $@ ${SRC_DIR} ${OBJ_DIR} ${BIN_DIR} ${DOC_DIR}
 	unzip -qt $@
 
