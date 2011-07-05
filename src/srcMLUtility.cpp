@@ -238,40 +238,6 @@ void srcMLUtility::extract_xml(const char* ofilename, int unit) {
 }
 
 // extract a given unit
-void srcMLUtility::extract_element(const char* element, const char* filename) {
-  /*
-  xmlTextReaderPtr reader = xmlNewTextReaderFilename(infile);
-
-  const char* paths[] = { NULL };
-
-  // perform xpath evaluation
-  //  srceval(element, paths, "", "", reader, filename);
-
-  xmlFreeTextReader(reader);
-  */
-  /*
-  int unit;
-
-  // output entire unit element
-  xmlSAXHandler sax = SAX2CopyElement::factory();
-
-  SAX2CopyElement state(element, filename, unit, options);
-
-  xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
-  if (ctxt == NULL) return;
-  ctxt->sax = &sax;
-  ctxt->userData = &state;
-  state.ctxt = ctxt;
-
-  srcMLParseDocument(ctxt);
-
-  ctxt->sax = NULL;
-
-  xmlFreeParserCtxt(ctxt);
-  */
-}
-
-// extract a given unit
 void srcMLUtility::extract_text(const char* to_dir, const char* ofilename, int unit) {
 
 #if 0
