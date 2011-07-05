@@ -1199,11 +1199,9 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       if (!reallanguage) {
 
         if (!isoption(options, OPTION_QUIET)) {
-          if (!shownumber)
-            fprintf(stderr, "Skipped '%s':  Unregistered extension.\n", unit_filename.c_str() ? unit_filename.c_str() : "standard input");
-          else
-            fprintf(stderr, "%5s %s\tSkipped: Unregistered extension.\n", "-", unit_filename.c_str() ? unit_filename.c_str() : "standard input");
-	  
+          fprintf(stderr, !shownumber ? "Skipped '%s':  Unregistered extension.\n" :
+                    "    - %s\tSkipped: Unregistered extension.\n",
+                    unit_filename.c_str() ? unit_filename.c_str() : "standard input");
         }
 
         ++skipped;
