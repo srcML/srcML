@@ -36,6 +36,9 @@ const char* archiveReadFormat(void* context);
 // compression (e.g., gz, bzip2) of the current file
 const char* archiveReadCompression(void* context);
 
+// match the extension
+int archiveReadMatchExtension(const char* URI);
+
 // check if archive matches the protocol on the URI
 int archiveReadMatch(const char* URI);
 

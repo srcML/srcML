@@ -95,22 +95,10 @@ const char* archiveReadCompression(void* context) {
   return !gpcontext || !pcontext->a ? 0 : archive_compression_name(pcontext->a);
 }
 
-// check if archive matches the protocol on the URI
-int archiveReadMatch(const char* URI) {
-  
-  if (URI == NULL)
-      return 0;
 
-  // when the xslt option is used, the input cannot come through libarchive/libxml
-  // so fix here so that it is not used
-  if (fnmatch("*.xsl", URI, 0) == 0)
-    return 0;
+// match the extension
+int archiveReadMatchExtension(const char* URI) {
 
-#if ARCHIVE_VERSION_STAMP >= 2008000
-  // put all input through libarchive for automatic detection of the format
-  return 1;
-
-#else
   // allow libxml to handle non-archive files encrypted with gz
   int extpos = strlen(URI) - 3;
   if (fnmatch("*.gz", URI, 0) == 0 &&
@@ -130,6 +118,28 @@ int archiveReadMatch(const char* URI) {
       if(int match = fnmatch(pattern, URI, 0) == 0)
 	return match;
      }
+
+  return 0;
+}
+
+// check if archive matches the protocol on the URI
+int archiveReadMatch(const char* URI) {
+  
+  if (URI == NULL)
+      return 0;
+
+  // when the xslt option is used, the input cannot come through libarchive/libxml
+  // so fix here so that it is not used
+  if (fnmatch("*.xsl", URI, 0) == 0)
+    return 0;
+
+#if ARCHIVE_VERSION_STAMP >= 2008000
+  // put all input through libarchive for automatic detection of the format
+  return 1;
+
+#else
+  // match archive extensions
+  archiveReadMatchExtension(URI);
 
   return 0;
 
@@ -195,7 +205,7 @@ static int archive_read_close_http_callback(struct archive* a,
   archiveData* pcontext = (archiveData*) _client_data;
 
   if (ishttp)
-    xmlNanoHTTPClose(pcontext->libxmlcontext);
+   xmlNanoHTTPClose(pcontext->libxmlcontext);
   else
     xmlNanoFTPClose(pcontext->libxmlcontext);
   return 1;
