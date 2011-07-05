@@ -297,8 +297,9 @@ void output_version(const char* name) {
 
   printf("%s Version %s\n%s\n", name, VERSION,COPYRIGHT);
 
+  printf("Using: ");
   if(atoi(xmlParserVersion) == LIBXML_VERSION)
-    printf("Using: libxml %d, ", LIBXML_VERSION);
+    printf("libxml %d, ", LIBXML_VERSION);
   else
     printf("libxml %s (Compiled %d), ", xmlParserVersion, LIBXML_VERSION);
 
@@ -1118,22 +1119,24 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
     try {
 
-      // open up the file
-      unit_filename = path;
-      context = translator.setInput(path);
 
-      // check if file is bad
-      if (!context || archiveReadStatus(context) < 0 ) {
-        fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
-        ++error;
-        return;
-      }
+      unit_filename = path;
 
       // so, do we have an archive?
-      isarchive = isArchiveRead(context);
+      isarchive = archiveReadMatchExtension(unit_filename.c_str());
 
       // once any source archive is input, then we have to assume nested not just locally
       if (isarchive) {
+        // open up the file
+        context = translator.setInput(path);
+
+        // check if file is bad
+        if (!context || archiveReadStatus(context) < 0 ) {
+          fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
+          ++error;
+          return;
+        }
+
         options |= OPTION_NESTED;
         save_options |= OPTION_NESTED;
         showinput = true;
