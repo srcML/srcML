@@ -296,7 +296,7 @@ void output_help(const char* name) {
 void output_version(const char* name) {
 
   printf("%s Version %s\n%s\n", name, VERSION,COPYRIGHT);
-  printf("libxml (Compiled %d)\n", LIBXML_VERSION);
+  printf("libxml %s (Compiled %d)\n", xmlParserVersion, LIBXML_VERSION);
   printf("libarchive %d (Compiled %d)\n", archive_version_number(), ARCHIVE_VERSION_NUMBER);
 }
 
