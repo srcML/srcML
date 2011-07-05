@@ -36,6 +36,7 @@
 #include <getopt.h>
 #include <dirent.h>
 #include <algorithm>
+#include <archive.h>
 
 #define BASE_PROGRAM_NAME "src2srcml"
 
@@ -294,6 +295,7 @@ void output_help(const char* name) {
 // output version message
 void output_version(const char* name) {
   printf("%s Version %s\n%s\n", name, VERSION,COPYRIGHT);
+  printf("libarchive %d (Compiled %d)\n", archive_version_number(), ARCHIVE_VERSION_NUMBER);
 }
 
 void output_settings(const char * name)
@@ -1113,9 +1115,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       // check if file is bad
       if (!context || archiveReadStatus(context) < 0 ) {
         fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
-
         ++error;
-
         return;
       }
 

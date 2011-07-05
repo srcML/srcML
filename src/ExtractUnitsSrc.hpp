@@ -28,7 +28,7 @@
 #include "SAX2ExtractUnitsSrc.hpp"
 #include "ProcessUnit.hpp"
 
-#if defined(__GNUC__) // && !defined(__MINGW32__)
+#if defined(__GNUC__)
 #define EOL "\n"
 #define EOL_SIZE 1
 #else
@@ -111,7 +111,7 @@ class ExtractUnitsSrc : public ProcessUnit {
 
   virtual void characters(void* ctx, const xmlChar* ch, int len) {
 
-#if defined(__GNUC__) // && !defined(__MINGW32__)
+#if defined(__GNUC__)
     xmlOutputBufferWrite(output_buffer, len, (const char*) ch);
 #else
     const char* c = (const char*) ch;
