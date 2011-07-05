@@ -83,6 +83,7 @@ ${SRC_TAR_GZ} : exp
 	gunzip --test $@
 
 ${SRC_ZIP} : exp
+	unix2dos ${SRC_DIR}/* ${DOC_DIR}/*
 	zip -rql $@ ${SRC_DIR} ${OBJ_DIR} ${BIN_DIR} ${DOC_DIR}
 	unzip -qt $@
 
@@ -105,5 +106,6 @@ windows : ${SRC_ZIP}
 	cd ${DOC_DIR} && make
 	i686-pc-mingw32-strip ${WIN_SRC2SRCML_PATH} ${WIN_SRCML2SRC_PATH}
 	mkdir ${WIN_BASE} && ${CP} -t ${WIN_BASE} ${WIN_DIST_FILES}
+	unix2dos ${WIN_BASE}/*.html
 	cp dlls/*.dll ${WIN_BASE}
 	zip -rql ${WIN_ZIP} ${WIN_BASE}
