@@ -77,9 +77,6 @@ class srcMLUtility {
   // extract (intact) current unit as text
   void extract_text(const char* to_dir, const char* ofilename, int unit = 0);
 
-  // extract (intact) specific elements
-  void extract_element(const char* filename, const char* element);
-
   // expand the compound srcML to individual files
   void expand(const char* root_filename = "", const char* output_format = 0,
 	      const char* to_directory = "");
