@@ -231,10 +231,26 @@ void output_version(const char* name) {
 
   printf("%s Version %s\n"
 	 "%s\n", name, VERSION, COPYRIGHT);
-  printf("libxml %s (Compiled %d), ", xmlParserVersion, LIBXML_VERSION);
-  printf("libxslt %d (Compiled %d), ", xsltLibxsltVersion, LIBXSLT_VERSION);
-  printf("libexslt %d (Compiled %d), ", exsltLibexsltVersion, LIBEXSLT_VERSION);
-  printf("libarchive %d (Compiled %d)\n", archive_version_number(), ARCHIVE_VERSION_NUMBER);
+
+  if(atoi(xmlParserVersion) == LIBXML_VERSION)
+    printf("libxml %d,", LIBXML_VERSION);
+  else
+    printf("libxml %s (Compiled %d), ", xmlParserVersion, LIBXML_VERSION);
+
+  if(xsltLibxsltVersion == LIBXSLT_VERSION)
+    printf("libxslt %d, ", LIBXSLT_VERSION);
+  else
+    printf("libxslt %d (Compiled %d), ", xsltLibxsltVersion, LIBXSLT_VERSION);
+
+  if(exsltLibexsltVersion == LIBEXSLT_VERSION)
+    printf("libexslt %d, ", LIBEXSLT_VERSION);
+  else
+    printf("libexslt %d (Compiled %d), ", exsltLibexsltVersion, LIBEXSLT_VERSION);
+
+  if(archive_version_number(), ARCHIVE_VERSION_NUMBER)
+    printf("libarchive %d\n", ARCHIVE_VERSION_NUMBER);
+  else
+    printf("libarchive %d (Compiled %d)\n", archive_version_number(), ARCHIVE_VERSION_NUMBER);
 }
 
 void output_settings(const char * name)
