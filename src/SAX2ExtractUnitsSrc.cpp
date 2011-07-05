@@ -303,6 +303,7 @@ void SAX2ExtractUnitsSrc::endElementNsSkip(void *ctx, const xmlChar *localname, 
     ctxt->sax->ignorableWhitespace = 0;
     ctxt->sax->endElementNs = 0;
     xmlStopParser(ctxt);
+    return;
   }
 
   // now waiting for start of next unit
