@@ -138,10 +138,7 @@ int archiveReadMatch(const char* URI) {
 
 #else
   // match archive extensions
-  archiveReadMatchExtension(URI);
-
-  return 0;
-
+  return archiveReadMatchExtension(URI);
 #endif
 }
 
