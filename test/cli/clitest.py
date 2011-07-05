@@ -1,4 +1,4 @@
-#!/opt/local/bin/python
+#!/usr/bin/python
 #
 # clitest.py
 #
@@ -2824,7 +2824,7 @@ check([src2srcml, 'dir'], "", srcml)
 check([src2srcml, 'dir', '-o', 'dir/dir.xml'], "", "")
 validate(open('dir/dir.xml', 'r').read(), srcml)
 
-execute(['touch', 'dir/foo.tar'], "")
+os.system("tar cvzf dir/foo.tar dir/file.c")
 
 check([src2srcml, 'dir'], "", srcml)
 check([src2srcml, 'dir', '-o', 'dir/dir.xml'], "", "")
