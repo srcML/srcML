@@ -1119,24 +1119,22 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
     try {
 
-
+      // open up the file
       unit_filename = path;
+      context = translator.setInput(path);
+
+      // check if file is bad
+      if (!context || archiveReadStatus(context) < 0 ) {
+        fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
+        ++error;
+        return;
+      }
 
       // so, do we have an archive?
-      isarchive = archiveReadMatchExtension(unit_filename.c_str());
+      isarchive = isArchiveRead(context);
 
       // once any source archive is input, then we have to assume nested not just locally
       if (isarchive) {
-        // open up the file
-        context = translator.setInput(path);
-
-        // check if file is bad
-        if (!context || archiveReadStatus(context) < 0 ) {
-          fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
-          ++error;
-          return;
-        }
-
         options |= OPTION_NESTED;
         save_options |= OPTION_NESTED;
         showinput = true;
