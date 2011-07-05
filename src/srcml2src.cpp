@@ -233,7 +233,7 @@ void output_version(const char* name) {
 	 "%s\n", name, VERSION, COPYRIGHT);
 
   if(atoi(xmlParserVersion) == LIBXML_VERSION)
-    printf("libxml %d,", LIBXML_VERSION);
+    printf("Using: libxml %d, ", LIBXML_VERSION);
   else
     printf("libxml %s (Compiled %d), ", xmlParserVersion, LIBXML_VERSION);
 
