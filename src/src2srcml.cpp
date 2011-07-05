@@ -1120,7 +1120,6 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     try {
 
       // open up the file
-      unit_filename = path;
       context = translator.setInput(path);
 
       // check if file is bad
@@ -1157,8 +1156,8 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
         fprintf(stderr, "\n");
       }
 
-      // figure out the resulting filename
       bool foundfilename = true;
+      unit_filename = path;
       if (archiveReadFilename(context))
         unit_filename = archiveReadFilename(context);
       else if (root_filename)
