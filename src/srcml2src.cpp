@@ -503,8 +503,7 @@ int main(int argc, char* argv[]) {
 
     } else if (isoption(options, OPTION_XPATH)) {
 
-      if (poptions.transformcount != 0)
-	su.xpath(poptions.ofilename, poptions.context, poptions.transforms);
+      su.xpath(poptions.ofilename, poptions.context, poptions.transforms);
 
     } else if (isoption(options, OPTION_XSLT)) {
 
