@@ -100,7 +100,6 @@ const char* archiveReadCompression(void* context) {
 int archiveReadMatchExtension(const char* URI) {
 
   // allow libxml to handle non-archive files encrypted with gz
-  int extpos = strlen(URI) - 3;
   if (fnmatch("*.gz", URI, 0) == 0 &&
       fnmatch("*.tar.*", URI, 0) != 0 &&
       fnmatch("*.cpio.*", URI, 0) != 0 &&
