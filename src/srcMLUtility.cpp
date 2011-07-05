@@ -145,35 +145,7 @@ void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE opt
      throw OutOfRangeUnitError(state.count);
 
   units = state.count;
-
-  /*
-  // output entire unit element
-  xmlSAXHandler sax = SAX2Properties::factory();
-
-  SAX2Properties state(unitnumber, options, nsv, attrv, su, optioncount, optionorder);
-
-  xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
-  if (ctxt == NULL) return;
-  ctxt->sax = &sax;
-  ctxt->userData = &state;
-  state.ctxt = ctxt;
-
-  srcMLParseDocument(ctxt);
-
-  // encoding is entered as a property
-  //  const char* encoding = (const char*) (state.ctxt->encoding ? state.ctxt->encoding : state.ctxt->input->encoding);
-  //  if (encoding)
-  //    attrv.insert(attrv.end(), PROPERTIES_TYPE::value_type(".encoding", encoding));
-
-  // don't let the context free the static sax handler
-  ctxt->sax = NULL;
-
-  // now free the context
-  xmlFreeParserCtxt(ctxt);
-
-  */
 }
-
 
 // count of nested units
 int srcMLUtility::unit_count() {
