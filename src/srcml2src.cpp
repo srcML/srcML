@@ -32,10 +32,14 @@
 #include "srcmlns.hpp"
 #include <getopt.h>
 
+#include "archive.h"
 #include "libxml_archive_read.hpp"
 #include "libxml_archive_write.hpp"
 #include "srcexfun.hpp"
 #include "URIStream.hpp"
+#include <libxslt/xslt.h>
+#include <libxslt/xsltconfig.h>
+#include <libexslt/exslt.h>
 
 int option_error_status(int optopt);
 
@@ -227,6 +231,10 @@ void output_version(const char* name) {
 
   printf("%s Version %s\n"
 	 "%s\n", name, VERSION, COPYRIGHT);
+  printf("libxml %s (Compiled %d)\n", xmlParserVersion, LIBXML_VERSION);
+  printf("libxslt %d (Compiled %d)\n", xsltLibxsltVersion, LIBXSLT_VERSION);
+  printf("libexslt %d (Compiled %d)\n", exsltLibexsltVersion, LIBEXSLT_VERSION);
+  printf("libarchive %d (Compiled %d)\n", archive_version_number(), ARCHIVE_VERSION_NUMBER);
 }
 
 void output_settings(const char * name)
