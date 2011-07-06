@@ -157,6 +157,8 @@ int option_error_status(int optopt);
 // translate a file, maybe an archive
 void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber = false);
 
+void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber = false);
+
 using namespace LanguageName;
 
 // output help
@@ -1105,6 +1107,20 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     return;
   }
 
+  src2srcml_text(translator, path, options, dir, root_filename, version, language, tabsize, count, skipped,
+                 error, showinput, shownumber);
+}
+
+void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+
+  // handle local directories specially
+  struct stat instat = { 0 };
+  int stat_status = stat(path, &instat);
+  if (!stat_status && S_ISDIR(instat.st_mode)) {
+    process_dir_top(translator, path, *gpoptions, count, skipped, error, showinput, shownumber);
+    return;
+  }
+
   // single file archive (tar, zip, cpio, etc.) is listed as a single file
   // but is much, much more
   OPTION_TYPE save_options = options;
@@ -1339,7 +1355,7 @@ void process_dir(srcMLTranslator& translator, const char* directory, process_opt
     }
 
     // translate the file listed in the input file using the directory and filename extracted from the path
-    src2srcml_file(translator,
+    src2srcml_text(translator,
 		   filename.c_str(),
 		   options,
 		   0,
