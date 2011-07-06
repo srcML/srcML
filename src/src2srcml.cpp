@@ -1279,6 +1279,11 @@ void process_dir_top(srcMLTranslator& translator, const char* directory, process
   process_dir(translator, directory, poptions, count, skipped, error, showinput, shownumber, outstat);
 }
 
+int dir_filter(struct dirent* d) {
+
+  return d->d_name[0] != '.';
+}
+
 int dir_filter(const struct dirent* d) {
 
   return d->d_name[0] != '.';
