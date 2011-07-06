@@ -1300,17 +1300,15 @@ void process_dir(srcMLTranslator& translator, const char* directory, process_opt
     if (entry->d_name[0] == '.')
       continue;
 
-    // handle directories later after all the filenames
-    struct stat fstat = { 0 };
-    stat(entry->d_name, &fstat);
-    if (S_ISDIR(fstat.st_mode)) {
-      // TODO:  Why wasn't this a problem before?
-      //      fprintf(stderr, "FILE IS DIR: %s\n", entry->d_name);
-      continue;
-    }
-
     // path with current filename
     filename.replace(basesize, std::string::npos, entry->d_name);
+
+    // handle directories later after all the filenames
+    struct stat fstat = { 0 };
+    int stat_status = stat(filename.c_str(), &fstat);
+    if (!stat_status && S_ISDIR(fstat.st_mode)) {
+      continue;
+    }
 
     // make sure that we are not processing the output file
     struct stat instat = { 0 };
@@ -1336,8 +1334,8 @@ void process_dir(srcMLTranslator& translator, const char* directory, process_opt
   }
 
   // no need to handle subdirectories, unless recursive
-  if (!isoption(options, OPTION_RECURSIVE))
-    return;
+  //  if (!isoption(options, OPTION_RECURSIVE))
+  //    return;
 
   // go back and process directories
   rewinddir(dirp);
@@ -1348,14 +1346,14 @@ void process_dir(srcMLTranslator& translator, const char* directory, process_opt
     if (entry->d_name[0] == '.')
       continue;
 
-    // already handled other types of files
-    struct stat fstat = { 0 };
-    stat(entry->d_name, &fstat);
-    if (!S_ISDIR(fstat.st_mode))
-      continue;
-
     // path with current filename
     filename.replace(basesize, std::string::npos, entry->d_name);
+
+    // already handled other types of files
+    struct stat fstat = { 0 };
+    stat(filename.c_str(), &fstat);
+    if (!S_ISDIR(fstat.st_mode))
+      continue;
 
     process_dir(translator, filename.c_str(), poptions, count, skipped, error, showinput, shownumber, outstat);
   }
