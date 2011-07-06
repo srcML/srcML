@@ -783,6 +783,7 @@ check([src2srcml, 'emptysrc/empty.hpp'], "", xmltag + opentag + namespaceone + n
 check([src2srcml, 'emptysrc/empty.hh'], "", xmltag + opentag + namespaceone + namespacetwo + language  + fileopen + 'empty.hh' + fileclose + endtag)
 check([src2srcml, 'emptysrc/empty.hxx'], "", xmltag + opentag + namespaceone + namespacetwo + language  + fileopen + 'empty.hxx' + fileclose + endtag)
 check([src2srcml, 'emptysrc/empty.h++'], "", xmltag + opentag + namespaceone + namespacetwo + language  + fileopen + 'empty.h++' + fileclose + endtag)
+check([src2srcml, 'emptysrc/empty.tcc'], "", xmltag + opentag + namespaceone + namespacetwo + language  + fileopen + 'empty.tcc' + fileclose + endtag)
 
 check([src2srcml, 'emptysrc/empty.cpp.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language  + fileopen + 'empty.cpp.gz' + fileclose + endtag)
 check([src2srcml, 'emptysrc/empty.cc.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language  + fileopen + 'empty.cc.gz' + fileclose + endtag)
@@ -792,6 +793,7 @@ check([src2srcml, 'emptysrc/empty.hpp.gz'], "", xmltag + opentag + namespaceone 
 check([src2srcml, 'emptysrc/empty.hh.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language  + fileopen + 'empty.hh.gz' + fileclose + endtag)
 check([src2srcml, 'emptysrc/empty.hxx.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language  + fileopen + 'empty.hxx.gz' + fileclose + endtag)
 check([src2srcml, 'emptysrc/empty.h++.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language  + fileopen + 'empty.h++.gz' + fileclose + endtag)
+check([src2srcml, 'emptysrc/empty.tcc.gz'], "", xmltag + opentag + namespaceone + namespacetwo + language  + fileopen + 'empty.tcc.gz' + fileclose + endtag)
 
 # check java file extension
 language = 'language="Java" '
