@@ -343,7 +343,8 @@ struct process_options
 
 process_options* gpoptions = 0;
 
-void process_dir(srcMLTranslator& translator, const char* dname, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
+void process_dir_top(srcMLTranslator& translator, const char* dname, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
+void process_dir(srcMLTranslator& translator, const char* dname, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat);
 void process_filelist(srcMLTranslator& translator, process_options& poptions, int& count, int & skipped, int & error, bool & showinput);
 
 // setup options and collect info from arguments
@@ -1100,7 +1101,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
   struct stat instat = { 0 };
   int stat_status = stat(path, &instat);
   if (!stat_status && S_ISDIR(instat.st_mode)) {
-    process_dir(translator, path, *gpoptions, count, skipped, error, showinput, shownumber);
+    process_dir_top(translator, path, *gpoptions, count, skipped, error, showinput, shownumber);
     return;
   }
 
@@ -1264,29 +1265,33 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
   } while (isarchive && isAnythingOpen(context));
 }
 
-void process_dir(srcMLTranslator& translator, const char* directory, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void process_dir_top(srcMLTranslator& translator, const char* directory, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   // by default, all dirs are treated as an archive
   options |= OPTION_NESTED;
+
+  // record the stat info on the output file
+  struct stat outstat = { 0 };
+  stat(poptions.srcml_filename, &outstat);
+
+  showinput = true;
+
+  process_dir(translator, directory, poptions, count, skipped, error, showinput, shownumber, outstat);
+}
+
+void process_dir(srcMLTranslator& translator, const char* directory, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat) {
 
   // try to open the found directory
   DIR* dirp = opendir(directory);
   if (!dirp) {
     return;
   }
-
-  showinput = true;
-
   // start of path from directory name
   // TODO:  Assumes '/' as file path separator
   std::string filename = directory;
   if (!filename.empty() && filename[filename.size() - 1] != '/')
     filename += "/";
   int basesize = filename.length();
-
-  // record the stat info on the output file
-  struct stat outstat = { 0 };
-  stat(poptions.srcml_filename, &outstat);
 
   // process all non-directory files
   while (struct dirent* entry = readdir(dirp)) {
@@ -1354,7 +1359,7 @@ void process_dir(srcMLTranslator& translator, const char* directory, process_opt
     // path with current filename
     filename.replace(basesize, std::string::npos, entry->d_name);
 
-    process_dir(translator, filename.c_str(), poptions, count, skipped, error, showinput, shownumber);
+    process_dir(translator, filename.c_str(), poptions, count, skipped, error, showinput, shownumber, outstat);
   }
 }
 
