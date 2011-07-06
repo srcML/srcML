@@ -1409,6 +1409,7 @@ int dir_filter(const struct dirent* d) {
 }
 
 void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat) {
+#if defined(__GNUC__) && !defined(__MINGW32__)
 
   // collect the filenames in alphabetical order
   struct dirent **namelist;
@@ -1500,6 +1501,100 @@ void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_o
   for (int i = 0; i < n; i++)
     free(namelist[i]);
   free(namelist);
+
+#else
+
+  // try to open the found directory
+  DIR* dirp = opendir(directory);
+  if (!dirp) {
+    return;
+  }
+  // start of path from directory name
+  // TODO:  Assumes '/' as file path separator
+  std::string filename = directory;
+  if (!filename.empty() && filename[filename.size() - 1] != '/')
+    filename += "/";
+  int basesize = filename.length();
+
+  // process all non-directory files
+  while (struct dirent* entry = readdir(dirp)) {
+
+    // skip standard UNIX filenames, and . files
+    if (entry->d_name[0] == '.')
+      continue;
+
+    // special test with no stat needed
+#ifdef _DIRENT_HAVE_D_TYPE
+    if (entry->d_type == DT_DIR)
+      continue;
+#endif
+
+    // path with current filename
+    filename.replace(basesize, std::string::npos, entry->d_name);
+
+    // handle directories later after all the filenames
+    struct stat instat = { 0 };
+    int stat_status = stat(filename.c_str(), &instat);
+    if (!stat_status && S_ISDIR(instat.st_mode)) {
+      continue;
+    }
+
+    // make sure that we are not processing the output file
+    if (instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
+      fprintf(stderr, !shownumber ? "Skipped '%s':  Output file.\n" :
+	      "    - %s\tSkipped: Output file.\n", poptions.srcml_filename);
+
+      ++skipped;
+      continue;
+    }
+
+    // translate the file listed in the input file using the directory and filename extracted from the path
+    src2srcml_file(translator,
+		   filename.c_str(),
+		   options,
+		   0,
+		   0,
+		   poptions.given_version,
+		   poptions.language,
+		   poptions.tabsize,
+		   count, skipped, error, showinput, shownumber);
+  }
+
+  // no need to handle subdirectories, unless recursive
+  //  if (!isoption(options, OPTION_RECURSIVE))
+  //    return;
+
+  // go back and process directories
+  rewinddir(dirp);
+  while (struct dirent* entry = readdir(dirp)) {
+
+    // skip standard UNIX filenames, and . files
+    // TODO:  Skip . and .. by default, but should we announce others?  E.g., .svn?
+    if (entry->d_name[0] == '.')
+      continue;
+
+    // special test with no stat needed
+#ifdef _DIRENT_HAVE_D_TYPE
+    if (entry->d_type != DT_DIR)
+      continue;
+#endif
+
+    // path with current filename
+    filename.replace(basesize, std::string::npos, entry->d_name);
+
+    // already handled other types of files
+    struct stat instat = { 0 };
+    int stat_status = stat(filename.c_str(), &instat);
+    if (!stat_status && !S_ISDIR(instat.st_mode))
+      continue;
+
+    src2srcml_dir(translator, filename.c_str(), poptions, count, skipped, error, showinput, shownumber, outstat);
+  }
+
+  // all done with this directory
+  closedir(dirp);
+
+#endif
 }
 
 void src2srcml_filelist(srcMLTranslator& translator, process_options& poptions, int& count, int & skipped, int & error, bool & showinput) {
