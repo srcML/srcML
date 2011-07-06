@@ -1252,9 +1252,9 @@ void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       } else {
 
       if (dir)
-	fprintf(stderr, "%s: Unable to open file %s/%s\n", PROGRAM_NAME, dir, unit_filename.c_str());
+	fprintf(stderr, "%s: Unable to open file %s/%s\n", PROGRAM_NAME, dir, path);
       else
-	fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, unit_filename.c_str());
+	fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
       }
 
       ++error;
