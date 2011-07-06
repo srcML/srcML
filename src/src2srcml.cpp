@@ -345,9 +345,9 @@ struct process_options
 
 process_options* gpoptions = 0;
 
-void process_dir_top(srcMLTranslator& translator, const char* dname, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
-void process_dir(srcMLTranslator& translator, const char* dname, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat);
-void process_filelist(srcMLTranslator& translator, process_options& poptions, int& count, int & skipped, int & error, bool & showinput);
+void src2srcml_dir_top(srcMLTranslator& translator, const char* dname, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
+void src2srcml_dir(srcMLTranslator& translator, const char* dname, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat);
+void src2srcml_filelist(srcMLTranslator& translator, process_options& poptions, int& count, int & skipped, int & error, bool & showinput);
 
 // setup options and collect info from arguments
 int process_args(int argc, char* argv[], process_options & poptions);
@@ -563,7 +563,7 @@ int main(int argc, char* argv[]) {
         poptions.fname = STDIN;
 
       // so process the filelist
-      process_filelist(translator, poptions, count, skipped, error, showinput);
+      src2srcml_filelist(translator, poptions, count, skipped, error, showinput);
 
     // translate from standard input
     } else if (input_arg_count == 0) {
@@ -1103,7 +1103,7 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
   struct stat instat = { 0 };
   int stat_status = stat(path, &instat);
   if (!stat_status && S_ISDIR(instat.st_mode)) {
-    process_dir_top(translator, path, *gpoptions, count, skipped, error, showinput, shownumber);
+    src2srcml_dir_top(translator, path, *gpoptions, count, skipped, error, showinput, shownumber);
     return;
   }
 
@@ -1273,7 +1273,7 @@ void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
   } while (isarchive && isAnythingOpen(context));
 }
 
-void process_dir_top(srcMLTranslator& translator, const char* directory, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void src2srcml_dir_top(srcMLTranslator& translator, const char* directory, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   // by default, all dirs are treated as an archive
   options |= OPTION_NESTED;
@@ -1284,7 +1284,7 @@ void process_dir_top(srcMLTranslator& translator, const char* directory, process
 
   showinput = true;
 
-  process_dir(translator, directory, poptions, count, skipped, error, showinput, shownumber, outstat);
+  src2srcml_dir(translator, directory, poptions, count, skipped, error, showinput, shownumber, outstat);
 }
 
 int dir_filter(struct dirent* d) {
@@ -1297,7 +1297,7 @@ int dir_filter(const struct dirent* d) {
   return d->d_name[0] != '.';
 }
 
-void process_dir(srcMLTranslator& translator, const char* directory, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat) {
+void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat) {
 
   // collect the filenames in alphabetical order
   struct dirent **namelist;
@@ -1382,7 +1382,7 @@ void process_dir(srcMLTranslator& translator, const char* directory, process_opt
       continue;
 #endif
 
-    process_dir(translator, filename.c_str(), poptions, count, skipped, error, showinput, shownumber, outstat);
+    src2srcml_dir(translator, filename.c_str(), poptions, count, skipped, error, showinput, shownumber, outstat);
   }
 
   // all done with this directory
@@ -1391,7 +1391,7 @@ void process_dir(srcMLTranslator& translator, const char* directory, process_opt
   free(namelist);
 }
 
-void process_filelist(srcMLTranslator& translator, process_options& poptions, int& count, int & skipped, int & error, bool & showinput) {
+void src2srcml_filelist(srcMLTranslator& translator, process_options& poptions, int& count, int & skipped, int & error, bool & showinput) {
 
   try {
 
