@@ -345,6 +345,7 @@ struct process_options
 
 process_options* gpoptions = 0;
 
+void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
 void src2srcml_dir_top(srcMLTranslator& translator, const char* dname, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
 void src2srcml_dir(srcMLTranslator& translator, const char* dname, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat);
 void src2srcml_filelist(srcMLTranslator& translator, process_options& poptions, int& count, int & skipped, int & error, bool & showinput);
@@ -1273,6 +1274,168 @@ void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
   } while (isarchive && isAnythingOpen(context));
 }
 
+void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+
+  // single file archive (tar, zip, cpio, etc.) is listed as a single file
+  // but is much, much more
+  OPTION_TYPE save_options = options;
+
+  // process the individual file (once), or an archive as many times as it takes
+  void* context = 0;
+  bool isarchive = false;
+  do {
+
+    // start with the original options
+    options = save_options;
+    std::string unit_filename;
+
+    try {
+
+      // open up the file
+      context = translator.setInput(path);
+
+      // check if file is bad
+      if (!context || archiveReadStatus(context) < 0 ) {
+        fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
+        ++error;
+        return;
+      }
+
+      // so, do we have an archive?
+      isarchive = isArchiveRead(context);
+
+      // once any source archive is input, then we have to assume nested not just locally
+      if (isarchive) {
+        options |= OPTION_NESTED;
+        save_options |= OPTION_NESTED;
+        showinput = true;
+        //        shownumber = true;
+      }
+
+      // output tracing information about the input file
+      if (showinput && isArchiveFirst(context) && !isoption(options, OPTION_QUIET)) {
+
+        // output the currently processed filename
+        fprintf(stderr, "Path: %s", strcmp(path, STDIN) == 0 ? "standard input" : path);
+
+        // output compression and format (if any)
+        if (isarchive)
+          fprintf(stderr, "\tFormat: %s", archiveReadFormat(context));
+
+        if (archiveReadCompression(context) && strcmp(archiveReadCompression(context), "none"))
+          fprintf(stderr, "\tCompression: %s", archiveReadCompression(context));
+
+        fprintf(stderr, "\n");
+      }
+
+      bool foundfilename = true;
+      unit_filename = path;
+      if (archiveReadFilename(context))
+        unit_filename = archiveReadFilename(context);
+      else if (root_filename)
+        unit_filename = root_filename;
+      else if (strcmp(path, STDIN))
+        unit_filename = path;
+      else
+        foundfilename = false;
+
+      // special case:  skip directories (in archives)
+      if (archiveIsDir(context)) {
+
+        if (!isoption(options, OPTION_QUIET))
+          fprintf(stderr, !shownumber ? "Skipped '%s':  Is a directory.\n" :
+                  "    - %s\tSkipped: Is a directory.\n", unit_filename.c_str());
+
+        ++skipped;
+
+        // explicitly close, since we are skipping it
+        archiveReadClose(context);
+
+        continue;
+      }
+
+      // language (for this item in archive mode) based on extension, if not specified
+
+      // 1) language may have been specified explicitly
+      int reallanguage = language;
+
+      // 2) try from the filename (basically the extension)
+      if (!reallanguage)
+        reallanguage = Language::getLanguageFromFilename(unit_filename.c_str());
+
+      // 3) default language (if allowed)
+      if (!reallanguage && !isoption(options, OPTION_SKIP_DEFAULT))
+        reallanguage = DEFAULT_LANGUAGE;
+
+      // error if can't find a language
+      if (!reallanguage) {
+
+        if (!isoption(options, OPTION_QUIET)) {
+          fprintf(stderr, !shownumber ? "Skipped '%s':  Unregistered extension.\n" :
+                    "    - %s\tSkipped: Unregistered extension.\n",
+                    unit_filename.c_str() ? unit_filename.c_str() : "standard input");
+        }
+
+        ++skipped;
+
+        // close the file that we don't have a language for
+        archiveReadClose(context);
+
+        continue;
+      }
+
+      // turnon cpp namespace for non Java-based languages
+      if (!(reallanguage == srcMLTranslator::LANGUAGE_JAVA || reallanguage == srcMLTranslator::LANGUAGE_ASPECTJ))
+        options |= OPTION_CPP;
+
+      // another file
+      ++count;
+
+      const char* c_filename = clean_filename(unit_filename.c_str());
+
+      // output the currently processed filename
+      if (!isoption(options, OPTION_QUIET) && shownumber)
+        fprintf(stderr, "%5d %s\n", count, c_filename);
+
+      // translate the file
+      translator.translate(path, dir,
+			   foundfilename ? c_filename : 0,
+			   version, reallanguage);
+
+    } catch (FileError) {
+
+      // output tracing information about the input file
+      if (showinput && !isoption(options, OPTION_QUIET)) {
+
+        // output the currently processed filename
+        fprintf(stderr, "Path: %s", strcmp(path, STDIN) == 0 ? "standard input" : path);
+        fprintf(stderr, "\tError: Unable to open file.\n");
+
+      } else {
+
+      if (dir)
+	fprintf(stderr, "%s: Unable to open file %s/%s\n", PROGRAM_NAME, dir, unit_filename.c_str());
+      else
+	fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, unit_filename.c_str());
+      }
+
+      ++error;
+
+      return;
+      //      exit(STATUS_INPUTFILE_PROBLEM);
+    }
+
+    // restore options for next time around
+    options = save_options;
+
+    // compound documents are interrupted gracefully
+    if (isoption(options, OPTION_TERMINATE))
+      return;
+    //     return STATUS_TERMINATED;
+
+  } while (isarchive && isAnythingOpen(context));
+}
+
 void src2srcml_dir_top(srcMLTranslator& translator, const char* directory, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   // by default, all dirs are treated as an archive
@@ -1289,12 +1452,12 @@ void src2srcml_dir_top(srcMLTranslator& translator, const char* directory, proce
 
 int dir_filter(struct dirent* d) {
 
-  return d->d_name[0] != '.';
+  return d->d_name[0] != '.' && !archiveReadMatchExtension(d->d_name);
 }
 
 int dir_filter(const struct dirent* d) {
 
-  return d->d_name[0] != '.';
+  return d->d_name[0] != '.'  && !archiveReadMatchExtension(d->d_name);
 }
 
 void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat) {
