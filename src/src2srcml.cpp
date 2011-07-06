@@ -1304,15 +1304,13 @@ void process_dir(srcMLTranslator& translator, const char* directory, process_opt
     filename.replace(basesize, std::string::npos, entry->d_name);
 
     // handle directories later after all the filenames
-    struct stat fstat = { 0 };
-    int stat_status = stat(filename.c_str(), &fstat);
-    if (!stat_status && S_ISDIR(fstat.st_mode)) {
+    struct stat instat = { 0 };
+    int stat_status = stat(filename.c_str(), &instat);
+    if (!stat_status && S_ISDIR(instat.st_mode)) {
       continue;
     }
 
     // make sure that we are not processing the output file
-    struct stat instat = { 0 };
-    stat(filename.c_str(), &instat);
     if (instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
       fprintf(stderr, !shownumber ? "Skipped '%s':  Output file.\n" :
 	      "    - %s\tSkipped: Output file.\n", poptions.srcml_filename);
@@ -1350,13 +1348,16 @@ void process_dir(srcMLTranslator& translator, const char* directory, process_opt
     filename.replace(basesize, std::string::npos, entry->d_name);
 
     // already handled other types of files
-    struct stat fstat = { 0 };
-    stat(filename.c_str(), &fstat);
-    if (!S_ISDIR(fstat.st_mode))
+    struct stat instat = { 0 };
+    int stat_status = stat(filename.c_str(), &instat);
+    if (!stat_status &&!S_ISDIR(instat.st_mode))
       continue;
 
     process_dir(translator, filename.c_str(), poptions, count, skipped, error, showinput, shownumber, outstat);
   }
+
+  // all done with this directory
+  closedir(dirp);
 }
 
 void process_filelist(srcMLTranslator& translator, process_options& poptions, int& count, int & skipped, int & error, bool & showinput) {
