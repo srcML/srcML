@@ -1278,6 +1278,7 @@ void process_dir(srcMLTranslator& translator, const char* directory, process_opt
   showinput = true;
 
   // start of path from directory name
+  // TODO:  Assumes '/' as file path separator
   std::string filename = directory;
   if (!filename.empty() && filename[filename.size() - 1] != '/')
     filename += "/";
@@ -1298,13 +1299,15 @@ void process_dir(srcMLTranslator& translator, const char* directory, process_opt
     struct stat fstat = { 0 };
     stat(entry->d_name, &fstat);
     if (S_ISDIR(fstat.st_mode)) {
-      fprintf(stderr, "FILE IS DIR: %s\n", entry->d_name);
+      // TODO:  Why wasn't this a problem before?
+      //      fprintf(stderr, "FILE IS DIR: %s\n", entry->d_name);
       continue;
     }
 
     // path with current filename
-    filename.resize(basesize);
-    filename += entry->d_name;
+    filename.replace(basesize, std::string::npos, entry->d_name);
+    //    filename.resize(basesize);
+    //    filename += entry->d_name;
 
     // make sure that we are not processing the output file
     struct stat instat = { 0 };
@@ -1349,8 +1352,7 @@ void process_dir(srcMLTranslator& translator, const char* directory, process_opt
       continue;
 
     // path with current filename
-    filename.resize(basesize);
-    filename += entry->d_name;
+    filename.replace(basesize, std::string::npos, entry->d_name);
 
     process_dir(translator, filename.c_str(), poptions, count, skipped, error, showinput, shownumber);
   }
