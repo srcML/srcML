@@ -26,6 +26,8 @@
 #ifdef __GNUG__
 #include <sys/stat.h>
 #endif
+#include <sys/types.h>
+#include <dirent.h>
 #include "srcmlapps.hpp"
 #include "srcmlns.hpp"
 #include "Options.hpp"
