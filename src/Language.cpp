@@ -30,6 +30,7 @@ pair Language::lang2int[] = {
     { LanguageName::LANGUAGE_JAVA, LANGUAGE_JAVA },
     { LanguageName::LANGUAGE_CXX_0X, LANGUAGE_CXX_0X },
     { LanguageName::LANGUAGE_ASPECTJ, LANGUAGE_ASPECTJ },
+    { LanguageName::LANGUAGE_NONE, LANGUAGE_NONE },
     { 0, 0 }
 };
 
@@ -95,7 +96,7 @@ int Language::getLanguageFromFilename(const char* const path) {
   for (const pair * pos = userext2int + usercount - 1; pos->s != 0; --pos) {
 
     if (strcmp(pos->s, extension) == 0)
-      return pos->n;
+      return pos->n == LANGUAGE_NONE ? 0 : pos->n;
   }
 
   return 0;

@@ -94,6 +94,7 @@ const char* const OUTPUT_FORMAT_FLAG_FULL = "output-format=EXTENSION";
 
 namespace LanguageName {
 
+const char* const LANGUAGE_NONE = "";
 const char* const LANGUAGE_C = "C";
 const char* const LANGUAGE_CXX = "C++";
 const char* const LANGUAGE_CXX_0X = "C++0x";
