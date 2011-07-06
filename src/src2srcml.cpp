@@ -1300,6 +1300,12 @@ void process_dir(srcMLTranslator& translator, const char* directory, process_opt
     if (entry->d_name[0] == '.')
       continue;
 
+    // special test with no stat needed
+#ifdef _DIRENT_HAVE_D_TYPE
+    if (entry->d_type == DT_DIR)
+      continue;
+#endif
+
     // path with current filename
     filename.replace(basesize, std::string::npos, entry->d_name);
 
@@ -1344,13 +1350,19 @@ void process_dir(srcMLTranslator& translator, const char* directory, process_opt
     if (entry->d_name[0] == '.')
       continue;
 
+    // special test with no stat needed
+#ifdef _DIRENT_HAVE_D_TYPE
+    if (entry->d_type != DT_DIR)
+      continue;
+#endif
+
     // path with current filename
     filename.replace(basesize, std::string::npos, entry->d_name);
 
     // already handled other types of files
     struct stat instat = { 0 };
     int stat_status = stat(filename.c_str(), &instat);
-    if (!stat_status &&!S_ISDIR(instat.st_mode))
+    if (!stat_status && !S_ISDIR(instat.st_mode))
       continue;
 
     process_dir(translator, filename.c_str(), poptions, count, skipped, error, showinput, shownumber, outstat);
