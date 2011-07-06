@@ -430,11 +430,16 @@ static void srcMLParseDocument(xmlParserCtxtPtr ctxt) {
   int status;
   if ((status = xmlParseDocument(ctxt)) == -1) {
 
+    xmlErrorPtr ep = xmlCtxtGetLastError(ctxt);
+
+    // special case
+    if (ep->code == XML_ERR_EXTRA_CONTENT)
+      return;
+
     if (incount)
       fprintf(stderr, "\n");
 
     // report error
-    xmlErrorPtr ep = xmlCtxtGetLastError(ctxt);
     char* partmsg = strdup(ep->message);
     partmsg[strlen(partmsg) - 1] = '\0';
     fprintf(stderr, "%s: %s in '%s'\n", "srcml2src", partmsg, ep->file);
