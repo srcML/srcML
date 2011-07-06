@@ -1310,10 +1310,8 @@ void process_dir(srcMLTranslator& translator, const char* directory, process_opt
     struct stat instat = { 0 };
     stat(filename.c_str(), &instat);
     if (instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
-      if (!shownumber)
-	fprintf(stderr, "Skipped '%s':  Output file.\n", poptions.srcml_filename);
-      else
-	fprintf(stderr, "%5s %s\tSkipped: Output file.\n", "-", poptions.srcml_filename);
+      fprintf(stderr, !shownumber ? "Skipped '%s':  Output file.\n" :
+	      "    - %s\tSkipped: Output file.\n", poptions.srcml_filename);
 
       ++skipped;
       continue;
