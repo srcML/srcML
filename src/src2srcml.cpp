@@ -1279,13 +1279,20 @@ void process_dir_top(srcMLTranslator& translator, const char* directory, process
   process_dir(translator, directory, poptions, count, skipped, error, showinput, shownumber, outstat);
 }
 
+int dir_filter(const struct dirent* d) {
+
+  return d->d_name[0] != '.';
+}
+
 void process_dir(srcMLTranslator& translator, const char* directory, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat) {
 
-  // try to open the found directory
-  DIR* dirp = opendir(directory);
-  if (!dirp) {
+  // collect the filenames in alphabetical order
+  struct dirent **namelist;
+  int n = scandir(directory, &namelist, dir_filter, alphasort);
+  if (n < 0) {
     return;
   }
+
   // start of path from directory name
   // TODO:  Assumes '/' as file path separator
   std::string filename = directory;
@@ -1294,27 +1301,28 @@ void process_dir(srcMLTranslator& translator, const char* directory, process_opt
   int basesize = filename.length();
 
   // process all non-directory files
-  while (struct dirent* entry = readdir(dirp)) {
+  for (int i = 0; i < n; i++) {
 
-    // skip standard UNIX filenames, and . files
-    if (entry->d_name[0] == '.')
-      continue;
-
-    // special test with no stat needed
+    // special test for dir with no stat needed
 #ifdef _DIRENT_HAVE_D_TYPE
-    if (entry->d_type == DT_DIR)
+    if (namelist[i]->d_type == DT_DIR)
       continue;
 #endif
 
     // path with current filename
-    filename.replace(basesize, std::string::npos, entry->d_name);
+    filename.replace(basesize, std::string::npos, namelist[i]->d_name);
 
     // handle directories later after all the filenames
     struct stat instat = { 0 };
     int stat_status = stat(filename.c_str(), &instat);
-    if (!stat_status && S_ISDIR(instat.st_mode)) {
+    if (stat_status)
       continue;
-    }
+
+    // stat test for dir
+#ifndef _DIRENT_HAVE_D_TYPE
+    if (S_ISDIR(instat.st_mode))
+      continue;
+#endif
 
     // make sure that we are not processing the output file
     if (instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
@@ -1342,34 +1350,32 @@ void process_dir(srcMLTranslator& translator, const char* directory, process_opt
   //    return;
 
   // go back and process directories
-  rewinddir(dirp);
-  while (struct dirent* entry = readdir(dirp)) {
-
-    // skip standard UNIX filenames, and . files
-    // TODO:  Skip . and .. by default, but should we announce others?  E.g., .svn?
-    if (entry->d_name[0] == '.')
-      continue;
+  for (int i = 0; i < n; i++) {
 
     // special test with no stat needed
 #ifdef _DIRENT_HAVE_D_TYPE
-    if (entry->d_type != DT_DIR)
+    if (namelist[i]->d_type != DT_DIR)
       continue;
 #endif
 
     // path with current filename
-    filename.replace(basesize, std::string::npos, entry->d_name);
+    filename.replace(basesize, std::string::npos, namelist[i]->d_name);
 
     // already handled other types of files
+#ifndef _DIRENT_HAVE_D_TYPE
     struct stat instat = { 0 };
     int stat_status = stat(filename.c_str(), &instat);
     if (!stat_status && !S_ISDIR(instat.st_mode))
       continue;
+#endif
 
     process_dir(translator, filename.c_str(), poptions, count, skipped, error, showinput, shownumber, outstat);
+
+    free(namelist[i]);
   }
 
   // all done with this directory
-  closedir(dirp);
+  free(namelist);
 }
 
 void process_filelist(srcMLTranslator& translator, process_options& poptions, int& count, int & skipped, int & error, bool & showinput) {
