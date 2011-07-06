@@ -737,6 +737,13 @@ int process_args(int argc, char* argv[], process_options & poptions) {
         char* language = cursub;
         const char* extension = strsep(&language, "=");
 
+        if(language == NULL) {
+
+          fprintf(stderr, "Incomplete argument: %s\n", optarg);
+          fprintf(stderr, "Try '%s %s' for more information.\n", PROGRAM_NAME, HELP_FLAG);
+          exit(STATUS_ERROR);
+        }
+
 	if (!Language::registerUserExt(extension, language)) {
 
 	    fprintf(stderr, "%s: language \"%s\" is not supported.\n", PROGRAM_NAME, language);
