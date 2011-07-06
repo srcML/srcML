@@ -1311,8 +1311,6 @@ void process_dir(srcMLTranslator& translator, const char* directory, process_opt
 
     // path with current filename
     filename.replace(basesize, std::string::npos, entry->d_name);
-    //    filename.resize(basesize);
-    //    filename += entry->d_name;
 
     // make sure that we are not processing the output file
     struct stat instat = { 0 };
