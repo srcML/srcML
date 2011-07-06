@@ -1549,7 +1549,7 @@ void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_o
     }
 
     // translate the file listed in the input file using the directory and filename extracted from the path
-    src2srcml_file(translator,
+    src2srcml_text(translator,
 		   filename.c_str(),
 		   options,
 		   0,
