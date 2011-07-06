@@ -116,7 +116,7 @@ void Language::register_standard_file_extensions()
   Language::registerUserExt("h++",  LANGUAGE_CXX );
   Language::registerUserExt("C",    LANGUAGE_CXX );
   Language::registerUserExt("H",    LANGUAGE_CXX );
-  Language::registerUserExt("tcc",    LANGUAGE_CXX );
+  Language::registerUserExt("tcc",  LANGUAGE_CXX );
 
   Language::registerUserExt("java", LANGUAGE_JAVA );
 
