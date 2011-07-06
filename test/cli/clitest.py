@@ -2826,7 +2826,7 @@ check([src2srcml, 'dir'], "", srcml)
 check([src2srcml, 'dir', '-o', 'dir/dir.xml'], "", "")
 validate(open('dir/dir.xml', 'r').read(), srcml)
 
-os.system("tar cvzf dir/foo.tar dir/file.c")
+execute(['tar', 'czf', 'dir/foo.tar', 'dir/file.c'], "")
 
 check([src2srcml, 'dir'], "", srcml)
 check([src2srcml, 'dir', '-o', 'dir/dir.xml'], "", "")
