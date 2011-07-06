@@ -285,8 +285,8 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   // "-" filename is standard output
   xout = xmlNewTextWriterFilename(srcml_filename, isoption(OPTION_COMPRESSED));
   if (!xout) {
-    fprintf(stderr, "Unable to open output file %s\n", srcml_filename);
-    exit(1);
+    fprintf(stderr, "src2srcml: " "Unable to open output file %s\n", srcml_filename);
+    exit(2);
   }
 
   depth = 0;
