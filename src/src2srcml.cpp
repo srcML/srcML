@@ -1524,8 +1524,8 @@ void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_o
   // process all non-directory files
   while (struct dirent* entry = readdir(dirp)) {
 
-    // skip standard UNIX filenames, and . files
-    if (entry->d_name[0] == '.')
+    // filter out the usual suspects
+    if (!dir_filter(entry))
       continue;
 
     // special test with no stat needed
@@ -1575,7 +1575,8 @@ void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_o
 
     // skip standard UNIX filenames, and . files
     // TODO:  Skip . and .. by default, but should we announce others?  E.g., .svn?
-    if (entry->d_name[0] == '.')
+    // filter out the usual suspects
+    if (!dir_filter(entry))
       continue;
 
     // special test with no stat needed
