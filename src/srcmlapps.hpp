@@ -31,9 +31,9 @@
 #endif
 
 #ifdef __MINGW32__
-char PATH_SEPARATOR = '\\';
+#define PATH_SEPARATOR '\\'
 #else
-char PATH_SEPARATOR = '/';
+#define PATH_SEPARATOR '/'
 #endif
 
 const char* const COPYRIGHT = "Copyright (C) 2011 SDML";
