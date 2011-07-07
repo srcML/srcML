@@ -40,9 +40,7 @@
 #include <algorithm>
 #include <archive.h>
 
-#define BASE_PROGRAM_NAME "src2srcml"
-
-const char* PROGRAM_NAME = BASE_PROGRAM_NAME;
+#define PROGRAM_NAME "src2srcml"
 
 struct stringequal {
   const char *const lhs;
@@ -279,17 +277,17 @@ void output_help(const char* name) {
   printf("  --%-21s leave cpp #if 0 regions as text (default)\n\n", CPP_TEXTONLY_IF0_FLAG);
 
   printf("Examples:  \n"
-	 "  " BASE_PROGRAM_NAME " (read from standard input, write to standard output)\n"
-	 "  " BASE_PROGRAM_NAME " m.cpp          (read from file m.cpp, write to standard output)\n"
-	 "  " BASE_PROGRAM_NAME " m.cpp -o m.cpp.xml (read from file m.cpp, write to file m.cpp.xml)\n"
+	 "  " PROGRAM_NAME " (read from standard input, write to standard output)\n"
+	 "  " PROGRAM_NAME " m.cpp          (read from file m.cpp, write to standard output)\n"
+	 "  " PROGRAM_NAME " m.cpp -o m.cpp.xml (read from file m.cpp, write to file m.cpp.xml)\n"
 	 "\n"
-	 "  " BASE_PROGRAM_NAME " http://www.sdml.info/projects/srcml/ex/main.cpp (read from URI)\n"
+	 "  " PROGRAM_NAME " http://www.sdml.info/projects/srcml/ex/main.cpp (read from URI)\n"
 	 "\n"
-	 "  " BASE_PROGRAM_NAME " --directory=src --filename=m.cpp m.cpp -o m.cpp.xml "
+	 "  " PROGRAM_NAME " --directory=src --filename=m.cpp m.cpp -o m.cpp.xml "
 	 "(element unit attributes dir \"src\", filename \"m.cpp\")\n"
-	 "  " BASE_PROGRAM_NAME " --src-encoding=UTF-8 m.cpp m.cpp.xml         "
+	 "  " PROGRAM_NAME " --src-encoding=UTF-8 m.cpp m.cpp.xml         "
 	 "(encoding of input text file is UTF-8)\n"
-	 "  " BASE_PROGRAM_NAME " --xml-encoding=ISO-8859-1 m.cpp m.cpp.xml    "
+	 "  " PROGRAM_NAME " --xml-encoding=ISO-8859-1 m.cpp m.cpp.xml    "
 	 "(set encoding of srcML file to ISO-8859-1)\n\n");
 
   printf("www.sdml.info\n"
