@@ -24,8 +24,8 @@
 #include "URIStream.hpp"
 #include <cstring>
 
-URIStream::URIStream(const char* uriname, char eolchar)
-  : eol(eolchar), startpos(0), endpos(-1), first(true), eof(false), done(false)
+URIStream::URIStream(const char* uriname)
+  : startpos(0), endpos(-1), first(true), eof(false), done(false)
 {
   if (!(input = xmlParserInputBufferCreateFilename(uriname, XML_CHAR_ENCODING_NONE)))
     throw URIStreamFileError();
@@ -43,7 +43,7 @@ std::string URIStream::readlines() {
 
   std::string s;
   char* line = 0;
-  while (line = readline()) {
+  while ((line = readline())) {
     s.append(line);
     s.append(" ");
   }
@@ -59,7 +59,7 @@ char* URIStream::readline() {
   endpos = startpos;
 
   // find a line in the buffer
-  while (input->buffer->content[endpos] != eol) {
+  while (input->buffer->content[endpos] != '\n') {
 
     ++endpos;
 
@@ -92,7 +92,9 @@ char* URIStream::readline() {
   if (startpos >= input->buffer->use)
     return 0;
 
-  // replace the newline character with a null to turn it into single string
+  // replace the linefeed, and the optional carriage return before it, with a null to turn it into single string
+  if ((endpos - 1 > 0) && (input->buffer->content[endpos - 1] == '\r'))
+    input->buffer->content[endpos - 1] = '\0';
   input->buffer->content[endpos] = '\0';
 
   // current line starts at the startpos

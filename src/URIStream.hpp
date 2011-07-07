@@ -31,7 +31,7 @@ class URIStreamFileError {};
 
 class URIStream {
  public:
-  URIStream(const char* uriname, char eolchar = '\n');
+  URIStream(const char* uriname);
 
   char* readline();
 
@@ -40,7 +40,6 @@ class URIStream {
   ~URIStream();
 
  private:
-  char eol;
   xmlParserInputBufferPtr input;
   unsigned int startpos;
   unsigned int endpos;
