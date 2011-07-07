@@ -1424,10 +1424,9 @@ void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_o
   }
 
   // start of path from directory name
-  // TODO:  Assumes '/' as file path separator
   std::string filename = directory;
-  if (!filename.empty() && filename[filename.size() - 1] != '/')
-    filename += "/";
+  if (!filename.empty() && filename[filename.size() - 1] != PATH_SEPARATOR)
+    filename += PATH_SEPARATOR;
   int basesize = filename.length();
 
   // process all non-directory files
@@ -1514,11 +1513,11 @@ void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_o
   if (!dirp) {
     return;
   }
+
   // start of path from directory name
-  // TODO:  Assumes '/' as file path separator
   std::string filename = directory;
-  if (!filename.empty() && filename[filename.size() - 1] != '/')
-    filename += "/";
+  if (!filename.empty() && filename[filename.size() - 1] != PATH_SEPARATOR)
+    filename += PATH_SEPARATOR;
   int basesize = filename.length();
 
   // process all non-directory files

@@ -30,6 +30,12 @@
 #include <string.h>
 #endif
 
+#ifdef __MINGW32__
+char PATH_SEPARATOR = '\\';
+#else
+char PATH_SEPARATOR = '/';
+#endif
+
 const char* const COPYRIGHT = "Copyright (C) 2011 SDML";
 
 const char* const EMAIL_ADDRESS = "collard@uakron.edu";
