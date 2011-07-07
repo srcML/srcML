@@ -111,7 +111,7 @@ xml_declaration= '<?xml version="1.0" encoding="' + default_src2srcml_encoding +
 
 print xml_declaration
 
-os.system('rm a.cpp*')
+os.system('rm -f a.cpp*')
 
 src ="""
 a;
