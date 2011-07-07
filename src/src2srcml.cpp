@@ -1622,8 +1622,11 @@ void src2srcml_filelist(srcMLTranslator& translator, process_options& poptions, 
       line += strspn(line, " \t\f");
 
       // skip blank lines or comment lines
-      if (line[0] == '\0' || line[0] == '\n' || line[0] == FILELIST_COMMENT)
+      if (line[0] == '\0' || line[0] == '\r' || line[0] == '\n' || line[0] == FILELIST_COMMENT)
         continue;
+
+      if(line[strlen(line) - 1] == '\r')
+        line[strlen(line) -1] = '\0';
 
       showinput = true;
 
