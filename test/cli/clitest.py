@@ -2936,8 +2936,8 @@ validate(open('sub/all.xml', 'r').read(), srcmlstart + java + javaempty + srcmle
 
 # footer
 print
-print "Error count: ", error_count
-print "Exception count: ", exception_count
+print "Error count:\t\t", error_count
+print "Exception count:\t", exception_count
 print
 print src2srcmlversion()
 print srcml2srcversion()
