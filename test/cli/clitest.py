@@ -13,6 +13,7 @@ import status
 
 test_count = 0
 error_count = 0
+exception_count = 0
 
 def check(command, input, output):
 
@@ -85,8 +86,8 @@ def getreturn(command, input):
                 try:
                         p.communicate(input)
                 except OSError, (errornum, strerror):
-                        print "DOUBLE TRY DID NOT WORK"
-                        raise
+                        exception_count += 1
+                        
 
 	globals()["test_count"] += 1
 	print test_count, "Status: ", p.returncode, "\t", os.path.basename(command[0]), ' '.join(command[1:])
@@ -2936,6 +2937,7 @@ validate(open('sub/all.xml', 'r').read(), srcmlstart + java + javaempty + srcmle
 # footer
 print
 print "Error count: ", error_count
+print "Exception count: ", exception_count
 print
 print src2srcmlversion()
 print srcml2srcversion()
