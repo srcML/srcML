@@ -1124,13 +1124,11 @@ void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
   // but is much, much more
   OPTION_TYPE save_options = options;
 
-  // start with the original options
-  std::string unit_filename;
-
   try {
 
     bool foundfilename = true;
-    unit_filename = path;
+
+    std::string unit_filename = path;
     if (root_filename)
       unit_filename = root_filename;
     else if (strcmp(path, STDIN))
@@ -1138,9 +1136,9 @@ void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     else
       foundfilename = false;
 
-    // language (for this item in archive mode) based on extension, if not specified
+    // language based on extension, if not specified
 
-    // 1) language may have been specified explicitly
+    // 1) language may have been explicitly specified
     int reallanguage = language;
 
     // 2) try from the filename (basically the extension)
