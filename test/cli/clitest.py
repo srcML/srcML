@@ -79,6 +79,7 @@ def executeWithError(command, input):
 	return last_line
 
 def getreturn(command, input):
+	global exception_count
         p = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         try:
                 p.communicate(input)
