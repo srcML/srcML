@@ -76,6 +76,6 @@ class srcMLTranslator : public Language {
   int language;
   OPTION_TYPE& options;
   srcMLOutput out;
-}; 
+};
 
 #endif

@@ -35,7 +35,7 @@
 const State::MODE_TYPE Mode::MODE_STATEMENT           = ull(0x0000000000000001);
 const State::MODE_TYPE Mode::MODE_LIST                = ull(0x0000000000000002);
 const State::MODE_TYPE Mode::MODE_EXPECT              = ull(0x0000000000000004);
-const State::MODE_TYPE Mode::MODE_DETECT_COLON        = ull(0x0000000000000008);            
+const State::MODE_TYPE Mode::MODE_DETECT_COLON        = ull(0x0000000000000008);
 const State::MODE_TYPE Mode::MODE_TEMPLATE            = ull(0x0000000000000010);
 const State::MODE_TYPE Mode::MODE_ARGUMENT            = ull(0x0000000000000020);
 const State::MODE_TYPE Mode::MODE_NAMESPACE           = ull(0x0000000000000040);

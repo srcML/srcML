@@ -142,28 +142,28 @@ class StateStack {
 
   // stack size
   int size() const {
-  
+
     return st.size();
   }
 
   // stack empty
   bool empty() const {
-  
+
     return st.empty();
   }
 
   bool inMode(State::MODE_TYPE m) const {
-   
+
     return !st.empty() ? st.top().inMode(m) : false;
   }
 
   bool inPrevMode(State::MODE_TYPE m) const {
-   
+
     return st.size() > 1 ? st.prev().inMode(m) : false;
   }
 
   bool inTransparentMode(State::MODE_TYPE m) const {
-   
+
     return !st.empty() ? st.top().inTransparentMode(m) : false;
   }
 

@@ -35,7 +35,7 @@
 #include <cstring>
 #include <cassert>
 
-SAX2UnitDOM::SAX2UnitDOM(const char* a_context_element, const char* a_ofilename, int options) 
+SAX2UnitDOM::SAX2UnitDOM(const char* a_context_element, const char* a_ofilename, int options)
   : context_element(a_context_element), ofilename(a_ofilename), options(options), found(false), nb_ns(0), ns(0), isnested(false), count(0) {
 
 }
@@ -60,7 +60,7 @@ xmlSAXHandler SAX2UnitDOM::factory() {
 
 // start document
 void SAX2UnitDOM::startDocument(void *ctx) {
-  
+
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
 
     SAX2UnitDOM* pstate = (SAX2UnitDOM*) ctxt->_private;
@@ -180,7 +180,7 @@ void SAX2UnitDOM::startElementNsUnit(void* ctx, const xmlChar* localname, const 
   // TODO:  Have a limit here, don't we?
   for (int i = 0; i < 2 * nb_namespaces; ++i)
     pstate->ns[pstate->nb_ns * 2 + i] = (char*) namespaces[i];
-  
+
   xmlSAX2StartElementNs(ctx, localname, prefix, URI, pstate->nb_ns + nb_namespaces, (const xmlChar**) pstate->ns, nb_attributes,
   			nb_defaulted, attributes);
 

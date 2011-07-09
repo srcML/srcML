@@ -74,7 +74,7 @@ xmlSAXHandler SAX2UnitDOMXPath::factory() {
 
 // start document
 void SAX2UnitDOMXPath::startDocument(void *ctx) {
-  
+
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
 
   SAX2UnitDOMXPath* pstate = (SAX2UnitDOMXPath*) ctxt->_private;
@@ -305,7 +305,7 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
       // if we need a unit, output the end tag
       if (outputunit)
 	xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("</unit>\n\n"));
-      else 
+      else
 	xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\n\n"));
     }
 

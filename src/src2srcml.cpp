@@ -692,18 +692,18 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
     switch(c) {
 
-    case HELP_FLAG_SHORT: 
+    case HELP_FLAG_SHORT:
       output_help(PROGRAM_NAME);
       exit(STATUS_SUCCESS);
 
       break;
 
-    case VERSION_FLAG_SHORT: 
+    case VERSION_FLAG_SHORT:
       output_version(PROGRAM_NAME);
       exit(STATUS_SUCCESS);
       break;
 
-    case OUTPUT_FLAG_SHORT: 
+    case OUTPUT_FLAG_SHORT:
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
@@ -711,7 +711,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       poptions.srcml_filename = optarg;
       break;
 
-    case FILELIST_FLAG_CODE: 
+    case FILELIST_FLAG_CODE:
 
       // check for missing argument confused by an argument that looks like an option
       //      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
@@ -724,7 +724,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       poptions.fname = optarg;
       break;
 
-    case REGISTER_EXT_FLAG_CODE: 
+    case REGISTER_EXT_FLAG_CODE:
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
@@ -751,15 +751,15 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
       break;
 
-    case NESTED_FLAG_SHORT: 
+    case NESTED_FLAG_SHORT:
       options |= OPTION_NESTED;
       break;
 
-    case EXPRESSION_MODE_FLAG_SHORT: 
+    case EXPRESSION_MODE_FLAG_SHORT:
       options |= OPTION_EXPRESSION;
       break;
 
-    case ENCODING_FLAG_SHORT: 
+    case ENCODING_FLAG_SHORT:
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
@@ -776,7 +776,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       }
       break;
 
-    case SRC_ENCODING_FLAG_SHORT: 
+    case SRC_ENCODING_FLAG_SHORT:
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
@@ -793,7 +793,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       }
       break;
 
-    case XMLNS_FLAG_CODE: 
+    case XMLNS_FLAG_CODE:
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
@@ -841,35 +841,35 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       }
       break;
 
-    case SKIP_DEFAULT_FLAG_CODE: 
+    case SKIP_DEFAULT_FLAG_CODE:
       options |= OPTION_SKIP_DEFAULT;
       break;
 
-    case RECURSIVE_FLAG_CODE: 
+    case RECURSIVE_FLAG_CODE:
       options |= OPTION_RECURSIVE;
       break;
 
-    case QUIET_FLAG_SHORT: 
+    case QUIET_FLAG_SHORT:
       options |= OPTION_QUIET;
       break;
 
-    case COMPRESSED_FLAG_SHORT: 
+    case COMPRESSED_FLAG_SHORT:
       options |= OPTION_COMPRESSED;
       break;
 
-    case INTERACTIVE_FLAG_SHORT: 
+    case INTERACTIVE_FLAG_SHORT:
       options |= OPTION_INTERACTIVE;
       break;
 
-    case DEBUG_FLAG_SHORT: 
+    case DEBUG_FLAG_SHORT:
       options |= OPTION_DEBUG;
       break;
 
-    case VERBOSE_FLAG_SHORT: 
+    case VERBOSE_FLAG_SHORT:
       options |= OPTION_VERBOSE;
       break;
 
-    case LANGUAGE_FLAG_SHORT: 
+    case LANGUAGE_FLAG_SHORT:
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
@@ -886,7 +886,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       }
       break;
 
-    case DIRECTORY_FLAG_SHORT: 
+    case DIRECTORY_FLAG_SHORT:
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
@@ -896,7 +896,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       poptions.given_directory = optarg;
       break;
 
-    case FILENAME_FLAG_SHORT: 
+    case FILENAME_FLAG_SHORT:
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
@@ -906,7 +906,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       poptions.given_filename = optarg;
       break;
 
-    case SRCVERSION_FLAG_SHORT: 
+    case SRCVERSION_FLAG_SHORT:
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
@@ -926,7 +926,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       exit(STATUS_SUCCESS);
       break;
       /*
-    case INPUT_FORMAT_FLAG_CODE: 
+    case INPUT_FORMAT_FLAG_CODE:
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
@@ -937,7 +937,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       break;
       */
       /*
-    case OUTPUT_FORMAT_FLAG_CODE: 
+    case OUTPUT_FORMAT_FLAG_CODE:
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
@@ -961,7 +961,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
       char * end;
       poptions.tabsize = pstd::strtol(optarg, &end, 10);
-      
+
       // validate type of tabsize number
       if (errno == EINVAL || strlen(end) == strlen(optarg)) {
         fprintf(stderr, "%s: unit option value \"%s\" must be numeric.\n", PROGRAM_NAME, optarg);
@@ -976,7 +976,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
       break;
 
-    case CPP_MARKUP_ELSE_FLAG_CODE: 
+    case CPP_MARKUP_ELSE_FLAG_CODE:
       if (cpp_else) {
 	fprintf(stderr, "%s: Conflicting options %s and %s selected.\n",
 		PROGRAM_NAME, CPP_MARKUP_ELSE_FLAG, CPP_TEXTONLY_ELSE_FLAG);
@@ -988,7 +988,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
       break;
 
-    case CPP_TEXTONLY_ELSE_FLAG_CODE: 
+    case CPP_TEXTONLY_ELSE_FLAG_CODE:
       if (cpp_else) {
 	fprintf(stderr, "%s: Conflicting options %s and %s selected.\n",
 		PROGRAM_NAME, CPP_MARKUP_ELSE_FLAG, CPP_TEXTONLY_ELSE_FLAG);
@@ -1000,7 +1000,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
       break;
 
-    case CPP_MARKUP_IF0_FLAG_CODE: 
+    case CPP_MARKUP_IF0_FLAG_CODE:
       if (cpp_if0) {
 	fprintf(stderr, "%s: Conflicting options %s and %s selected.\n",
 		PROGRAM_NAME, CPP_MARKUP_IF0_FLAG, CPP_TEXTONLY_IF0_FLAG);
@@ -1012,7 +1012,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
       break;
 
-    case CPP_TEXTONLY_IF0_FLAG_CODE: 
+    case CPP_TEXTONLY_IF0_FLAG_CODE:
       if (cpp_if0) {
 	fprintf(stderr, "%s: Conflicting options %s and %s selected.\n",
 		PROGRAM_NAME, CPP_MARKUP_IF0_FLAG, CPP_TEXTONLY_IF0_FLAG);

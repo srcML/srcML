@@ -47,7 +47,7 @@ class Mode : public TokenParser, public Language {
   // statement may be nested inside of the current
   const static State::MODE_TYPE MODE_DETECT_COLON;
 
-  // 
+  //
   const static State::MODE_TYPE MODE_TEMPLATE;
 
   // an argument to a call
@@ -108,7 +108,7 @@ class Mode : public TokenParser, public Language {
   const static State::MODE_TYPE MODE_EXPRESSION_BLOCK;
   const static State::MODE_TYPE MODE_INTERNAL_END_PAREN; // remove
 
-  // access regions in classes used for matching of 
+  // access regions in classes used for matching of
   const static State::MODE_TYPE MODE_ACCESS_REGION;
   const static State::MODE_TYPE MODE_DO_STATEMENT;
   const static State::MODE_TYPE MODE_IGNORE_TERMINATE;

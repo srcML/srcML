@@ -331,11 +331,11 @@ int main(int argc, char* argv[]) {
 
   int exit_status = EXIT_SUCCESS;
 
-  process_options poptions = 
+  process_options poptions =
     {
      "-",
      0,
-     0, 
+     0,
      DEFAULT_TEXT_ENCODING,
      0,
      0,
@@ -569,7 +569,7 @@ int main(int argc, char* argv[]) {
     }
 
   } catch (const char* s) {
-    
+
     fprintf(stderr, "%s: %s\n", PROGRAM_NAME, s);
     if (!exit_status)
       exit_status = STATUS_ERROR;
@@ -650,17 +650,17 @@ int process_args(int argc, char* argv[], process_options & poptions)
     char* end = 0;
     switch(c) {
 
-    case HELP_FLAG_SHORT: 
+    case HELP_FLAG_SHORT:
       output_help(PROGRAM_NAME);
       exit(STATUS_SUCCESS);
       break;
 
-    case VERSION_FLAG_SHORT: 
+    case VERSION_FLAG_SHORT:
       output_version(PROGRAM_NAME);
       exit(STATUS_SUCCESS);
       break;
 
-    case OUTPUT_FLAG_SHORT: 
+    case OUTPUT_FLAG_SHORT:
       poptions.ofilename = optarg;
       break;
 
@@ -725,7 +725,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
       poptions.omitns[poptions.omitnscount++] = optarg;
       break;
 
-    case QUIET_FLAG_SHORT: 
+    case QUIET_FLAG_SHORT:
       options |= OPTION_QUIET;
       break;
 
@@ -827,7 +827,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
       // register extension name
       poptions.registerext[poptions.registerextcount++] = optarg;
-      
+
       // must be both name and value, but value could be empty
       if (!strchr(optarg, '=')) {
 	fprintf(stderr, "%s: Register extension name and value must be given.\n", PROGRAM_NAME);
@@ -861,7 +861,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
 	fprintf(stderr, "%s: Register extension function name and value must be given.\n", PROGRAM_NAME);
 	exit(1);
       }
-      
+
       // register xpath extension function
       end = optarg;
       strsep(&end, "=");
@@ -930,7 +930,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
       // param name
       poptions.params[poptions.paramcount++] = optarg;
-      
+
       // must be both name and value, but value could be empty
       if (!strchr(optarg, '=')) {
 	fprintf(stderr, "%s: Param name and value must be given.\n", PROGRAM_NAME);
@@ -960,7 +960,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
       // param name
       poptions.params[poptions.paramcount++] = optarg;
-      
+
       // param value
       {
         char* place = optarg;
@@ -1091,7 +1091,7 @@ void output_info(srcMLUtility& su, int options, int optioncount, int optionorder
 	    break;
 
 	  printf("%s=\"%s\"\n", su.nsv[i].second.c_str(), su.nsv[i].first.c_str());
-	  
+	
 	}
       }
 

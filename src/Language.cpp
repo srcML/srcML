@@ -83,7 +83,7 @@ const char* getLanguageExtension(const char * const inpath)
   return extension.empty() ? 0 : extension.c_str();
 }
 
-// gets the current language based on the extenstion           
+// gets the current language based on the extenstion
 int Language::getLanguageFromFilename(const char* const path) {
 
   // extract the (pure) extension

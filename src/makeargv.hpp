@@ -10,8 +10,8 @@
 #ifndef INCLUDED_MAKEARGV_HPP
 #define INCLUDED_MAKEARGV_HPP
 
-/* 
-   Builds an array of strings just like argv based on s 
+/*
+   Builds an array of strings just like argv based on s
    Client has to deallocate array of strings returned
    memory for strings is from parameter s
 */

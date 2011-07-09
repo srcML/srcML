@@ -109,7 +109,7 @@ class srcMLUtility {
   PROPERTIES_TYPE attrv;
  private:
   int units;
-}; 
+};
 
 class LibXMLError {
  public:

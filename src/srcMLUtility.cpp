@@ -246,7 +246,7 @@ void srcMLUtility::extract_text(const char* to_dir, const char* ofilename, int u
   if (archiveWriteMatch_src2srcml(ofilename))
     archiveWriteRootClose(0);
 #endif
-  
+
   // local variable, do not want xmlFreeParserCtxt to free
   ctxt->sax = NULL;
 
@@ -289,7 +289,7 @@ void srcMLUtility::expand(const char* root_filename, const char* format, const c
   srcMLParseDocument(ctxt);
 
   archiveWriteRootClose(0);
-  
+
   // local variable, do not want xmlFreeParserCtxt to free
   ctxt->sax = NULL;
 
@@ -341,7 +341,7 @@ void srcMLUtility::set_input_filename(const char* infilename) {
 void srcMLUtility::xpath(const char* ofilename, const char* context_element, const char* xpaths[]) {
 
   xmlSAXHandler sax = SAX2UnitDOMXPath::factory();
-  
+
   SAX2UnitDOMXPath state(context_element, xpaths, ofilename, options);
 
   // relative xpath changed to at any level
@@ -372,7 +372,7 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
 void srcMLUtility::xslt(const char* context_element, const char* ofilename, const char* xslts[], const char* params[], int paramcount) {
 
   xmlSAXHandler sax = SAX2UnitDOMXSLT::factory();
-  
+
   SAX2UnitDOMXSLT state(context_element, xslts, ofilename, params, paramcount, options);
 
   xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
@@ -401,7 +401,7 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
 void srcMLUtility::relaxng(const char* ofilename, const char** xslts) {
 
   xmlSAXHandler sax = SAX2UnitDOMRelaxNG::factory();
-  
+
   SAX2UnitDOMRelaxNG state(0, xslts, ofilename, 0);
 
   xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);

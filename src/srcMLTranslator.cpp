@@ -31,7 +31,7 @@
 
 // constructor
 srcMLTranslator::srcMLTranslator(int language, const char* srcml_filename, OPTION_TYPE& op)
-  : Language(language), first(true), 
+  : Language(language), first(true),
     root_directory(""), root_filename(""), root_version(""),
     encoding(DEFAULT_TEXT_ENCODING), options(op),
     out(0, srcml_filename, getLanguageString(), DEFAULT_XML_ENCODING, options, (const char**)DEFAULT_URI_PREFIX, 8) {
@@ -43,8 +43,8 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
 				 const char* xml_encoding,    // xml encoding of result srcML file
 				 const char* srcml_filename,  // filename of result srcML file
 				 OPTION_TYPE& op,
-				 const char* directory,       // 
-				 const char* filename,        // 
+				 const char* directory,       //
+				 const char* filename,        //
 				 const char* version,         //
 				 const char* uri[],
 				 int tabsize

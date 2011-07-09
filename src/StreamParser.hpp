@@ -96,7 +96,7 @@ class StreamParser : public Base, public TokenStream {
     while (consumeSkippedToken())
       ;
   }
-  
+
   // consume a current token
   bool consumeSkippedToken() {
 
@@ -244,7 +244,7 @@ class StreamParser : public Base, public TokenStream {
     // don't push any tokens during guessing stage
     if (Base::inputState->guessing)
       return;
-    
+
     // if it isn't an end token flush whitespace tokens
     if (flush) {
       skip2output();
@@ -252,7 +252,7 @@ class StreamParser : public Base, public TokenStream {
 
     // push the new token into the token buffer
     output().push_back(rtoken);
-  } 
+  }
 
   std::list<antlr::RefToken>& output() {
     return *pouttb;
@@ -268,10 +268,10 @@ class StreamParser : public Base, public TokenStream {
     // don't push any tokens during guessing stage
     if (Base::inputState->guessing)
       return;
-    
+
     // push the new token into the token buffer
     skip().push_back(rtoken);
-  } 
+  }
 
   inline void pushCorrectToken() {
 
@@ -295,13 +295,13 @@ class StreamParser : public Base, public TokenStream {
   void pushToken() {
 
     pushToken(Base::LT(1));
-  } 
+  }
 
   // push the skipped token onto the output token stream
   void pushSkipToken() {
 
     pushSkipToken(Base::LT(1));
-  } 
+  }
 
  public:
 

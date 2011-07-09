@@ -1,22 +1,22 @@
 /*
   UTF8CharBuffer.cpp
 
-  Copyright (C) 2008-2011  SDML (www.sdml.info)                                                                                                                                                
+  Copyright (C) 2008-2011  SDML (www.sdml.info)
 
-  This file is part of the srcML translator.                                                                                                                                                   
+  This file is part of the srcML translator.
 
-  The srcML translator is free software; you can redistribute it and/or modify 
-  it under the terms of the GNU General Public License as published by 
-  the Free Software Foundation; either version 2 of the License, or 
+  The srcML translator is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
   (at your option) any later version.
 
-  The srcML translator is distributed in the hope that it will be useful, 
-  but WITHOUT ANY WARRANTY; without even the implied warranty of 
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
-  GNU General Public License for more details. 
+  The srcML translator is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-  You should have received a copy of the GNU General Public License 
-  along with the srcML translator; if not, write to the Free Software 
+  You should have received a copy of the GNU General Public License
+  along with the srcML translator; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
@@ -30,7 +30,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding)
 {
   // use a libxml2 parser input buffer to support URIs
   // if an encoding is specified, then use it.  Otherwise, use current default
-  if (!(input = xmlParserInputBufferCreateFilename(ifilename, 
+  if (!(input = xmlParserInputBufferCreateFilename(ifilename,
      encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE)))
      throw UTF8FileError();
 }

@@ -37,7 +37,7 @@ class StreamMLParser : public StreamParser<Base> {
  public:
 
   StreamMLParser(antlr::TokenStream& lexer, int language, int parsing_options = 0)
-    : StreamParser<Base>(lexer, language, parsing_options), options(parsing_options) { 
+    : StreamParser<Base>(lexer, language, parsing_options), options(parsing_options) {
 
     Base::startUnit();
   }
@@ -94,7 +94,7 @@ class StreamMLParser : public StreamParser<Base> {
 
     // Always handled as white space and hidden from
     // parsing
-    case Base::WS: 
+    case Base::WS:
     case Base::CONTROL_CHAR:
     case Base::EOL_BACKSLASH:
     case Base::COMMENT_START:
@@ -145,14 +145,14 @@ class StreamMLParser : public StreamParser<Base> {
 
   // push the token onto the output token stream
   void pushToken(const antlr::RefToken& rtoken, bool flush = true) {
-        
+
     // don't push any tokens during guessing stage
     if (Base::inputState->guessing != 0)
       return;
 
     // normal pushToken
     StreamParser<Base>::pushToken(rtoken, flush);
-  } 
+  }
 
   /*
     Provide markup tag specific pushToken methods
@@ -163,7 +163,7 @@ class StreamMLParser : public StreamParser<Base> {
 
     // push a new start token
     pushToken(antlr::RefToken(StartTokenFactory(token)), flush);
-  } 
+  }
 
   // push the end token with this number onto the output token stream
   void pushEToken(int token) {

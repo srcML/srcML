@@ -202,7 +202,7 @@ namespace {
   // special characters
   ELEMENT_MAP(CONTROL_CHAR,   "escape")
 
-  // 
+  //
   ELEMENT_MAP(SEMPTY,         "empty_stmt")
 
   // C++0x elements
@@ -210,7 +210,7 @@ namespace {
   ELEMENT_MAP(SCONCEPTMAP,    "concept_map")
 };
 
-enum { SRCML_SRC_NS_URI_POS, 
+enum { SRCML_SRC_NS_URI_POS,
        SRCML_CPP_NS_URI_POS,
        SRCML_ERR_NS_URI_POS,
        SRCML_EXT_LITERAL_NS_URI_POS,
@@ -268,9 +268,9 @@ bool srcMLOutput::checkEncoding(const char* encoding) {
 
 static int depth = 0;
 
-srcMLOutput::srcMLOutput(TokenStream* ints, 
+srcMLOutput::srcMLOutput(TokenStream* ints,
 			 const char* filename,
-			 const char* language, 
+			 const char* language,
 			 const char* xml_enc,
 			 OPTION_TYPE& op,
 			 const char* curi[],
@@ -413,7 +413,7 @@ void srcMLOutput::processEscape(const antlr::RefToken& token) {
   ++openelementcount;
 
   sprintf(buf, "0x%0x", token->getText()[0]);
-  
+
   xmlTextWriterWriteAttribute(xout, BAD_CAST "char", BAD_CAST buf);
 
   xmlTextWriterEndElement(xout);
@@ -434,7 +434,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     if (/* outer && */ !isoption(OPTION_NAMESPACEDECL)) {
 
       // figure out which namespaces are needed
-      char const * const ns[] = { 
+      char const * const ns[] = {
 
 	                    // main srcML namespace declaration always used
 	(depth == 0) ? SRCML_SRC_NS_URI : 0,

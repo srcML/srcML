@@ -40,9 +40,9 @@ class srcMLOutput : public srcMLParserTokenTypes {
 
  public:
   // constructor
-  srcMLOutput(TokenStream* ints, 
+  srcMLOutput(TokenStream* ints,
 	      const char* srcml_filename,
-	      const char* language, 
+	      const char* language,
 	      const char* encoding,
 	      OPTION_TYPE& option,
 	      const char* uri[],

@@ -81,7 +81,7 @@ class State {
   }
 
   void clearMode(const MODE_TYPE& m) {
-  
+
     flags &= ~m;
     flags_prev &= ~m;
   }
