@@ -39,6 +39,8 @@
 #include <dirent.h>
 #include <algorithm>
 #include <archive.h>
+#include "libxml_archive_read.hpp"
+#include "libxml_archive_write.hpp"
 
 #define PROGRAM_NAME "src2srcml"
 
@@ -51,9 +53,6 @@ struct stringequal {
 bool operator==(const char* lhs, const stringequal& r) {
    return std::strcmp(lhs, r.lhs) == 0;
 }
-
-#include "libxml_archive_read.hpp"
-#include "libxml_archive_write.hpp"
 
 const char* const DEBUG_FLAG = "debug";
 const char DEBUG_FLAG_SHORT = 'g';
@@ -123,10 +122,10 @@ struct uridata {
   char const * const uri;
   char const * const prefix;
   int option;
-  const char* description;
+  char const * const description;
 };
 
-uridata uris[] = {
+const uridata uris[] = {
 
   { SRCML_SRC_NS_URI,          SRCML_SRC_NS_PREFIX_DEFAULT, 0,               "primary srcML namespace" },
   { SRCML_CPP_NS_URI,          SRCML_CPP_NS_PREFIX_DEFAULT, OPTION_CPP,      "namespace for cpreprocessing elements" },
@@ -380,7 +379,7 @@ int main(int argc, char* argv[]) {
       0,
       0,
       0,
-      DEFAULT_TEXT_ENCODING,
+      0, //DEFAULT_TEXT_ENCODING,
       DEFAULT_XML_ENCODING,
       0,
       0,
@@ -1403,14 +1402,16 @@ void src2srcml_dir_top(srcMLTranslator& translator, const char* directory, proce
   src2srcml_dir(translator, directory, poptions, count, skipped, error, showinput, shownumber, outstat);
 }
 
-int dir_filter(struct dirent* d) {
+// file/directory names to ignore when processing a directory
+// const/non-const versions for linux/bsd different declarations
+int dir_filter(const struct dirent* d) {
 
   return d->d_name[0] != '.' && !archiveReadMatchExtension(d->d_name);
 }
 
-int dir_filter(const struct dirent* d) {
+int dir_filter(struct dirent* d) {
 
-  return d->d_name[0] != '.'  && !archiveReadMatchExtension(d->d_name);
+  return dir_filter((const struct dirent*)d);
 }
 
 void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat) {
