@@ -1124,9 +1124,6 @@ void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
   // but is much, much more
   OPTION_TYPE save_options = options;
 
-  // process the individual file (once), or an archive as many times as it takes
-  void* context = 0;
-
   // start with the original options
   std::string unit_filename;
 
@@ -1134,9 +1131,7 @@ void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
     bool foundfilename = true;
     unit_filename = path;
-    if (archiveReadFilename(context))
-      unit_filename = archiveReadFilename(context);
-    else if (root_filename)
+    if (root_filename)
       unit_filename = root_filename;
     else if (strcmp(path, STDIN))
       unit_filename = path;
@@ -1175,12 +1170,11 @@ void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       options |= OPTION_CPP;
 
     // open up the file
-    context = translator.setInput(path);
+    void* context = translator.setInput(path);
 
     // check if file is bad
     if (!context || archiveReadStatus(context) < 0 ) {
       fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
-
 
       options = save_options;
       ++error;
