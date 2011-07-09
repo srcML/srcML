@@ -1127,103 +1127,103 @@ void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
   // process the individual file (once), or an archive as many times as it takes
   void* context = 0;
 
-    // start with the original options
-    std::string unit_filename;
+  // start with the original options
+  std::string unit_filename;
 
-    try {
+  try {
 
-      bool foundfilename = true;
+    bool foundfilename = true;
+    unit_filename = path;
+    if (archiveReadFilename(context))
+      unit_filename = archiveReadFilename(context);
+    else if (root_filename)
+      unit_filename = root_filename;
+    else if (strcmp(path, STDIN))
       unit_filename = path;
-      if (archiveReadFilename(context))
-        unit_filename = archiveReadFilename(context);
-      else if (root_filename)
-        unit_filename = root_filename;
-      else if (strcmp(path, STDIN))
-        unit_filename = path;
-      else
-        foundfilename = false;
+    else
+      foundfilename = false;
 
-      // language (for this item in archive mode) based on extension, if not specified
+    // language (for this item in archive mode) based on extension, if not specified
 
-      // 1) language may have been specified explicitly
-      int reallanguage = language;
+    // 1) language may have been specified explicitly
+    int reallanguage = language;
 
-      // 2) try from the filename (basically the extension)
-      if (!reallanguage)
-        reallanguage = Language::getLanguageFromFilename(unit_filename.c_str());
+    // 2) try from the filename (basically the extension)
+    if (!reallanguage)
+      reallanguage = Language::getLanguageFromFilename(unit_filename.c_str());
 
-      // 3) default language (if allowed)
-      if (!reallanguage && !isoption(options, OPTION_SKIP_DEFAULT))
-        reallanguage = DEFAULT_LANGUAGE;
+    // 3) default language (if allowed)
+    if (!reallanguage && !isoption(options, OPTION_SKIP_DEFAULT))
+      reallanguage = DEFAULT_LANGUAGE;
 
-      // error if can't find a language
-      if (!reallanguage) {
+    // error if can't find a language
+    if (!reallanguage) {
 
-        if (!isoption(options, OPTION_QUIET)) {
-          fprintf(stderr, !shownumber ? "Skipped '%s':  Unregistered extension.\n" :
-                    "    - %s\tSkipped: Unregistered extension.\n",
-                    unit_filename.c_str() ? unit_filename.c_str() : "standard input");
-        }
-
-        ++skipped;
-
-        return;
+      if (!isoption(options, OPTION_QUIET)) {
+	fprintf(stderr, !shownumber ? "Skipped '%s':  Unregistered extension.\n" :
+		"    - %s\tSkipped: Unregistered extension.\n",
+		unit_filename.c_str() ? unit_filename.c_str() : "standard input");
       }
 
-      // turnon cpp namespace for non Java-based languages
-      if (!(reallanguage == srcMLTranslator::LANGUAGE_JAVA || reallanguage == srcMLTranslator::LANGUAGE_ASPECTJ))
-        options |= OPTION_CPP;
+      ++skipped;
 
-      // open up the file
-      context = translator.setInput(path);
+      return;
+    }
 
-      // check if file is bad
-      if (!context || archiveReadStatus(context) < 0 ) {
-        fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
+    // turnon cpp namespace for non Java-based languages
+    if (!(reallanguage == srcMLTranslator::LANGUAGE_JAVA || reallanguage == srcMLTranslator::LANGUAGE_ASPECTJ))
+      options |= OPTION_CPP;
 
+    // open up the file
+    context = translator.setInput(path);
 
-        options = save_options;
-        ++error;
-
-        return;
-      }
-
-       // another file
-      ++count;
+    // check if file is bad
+    if (!context || archiveReadStatus(context) < 0 ) {
+      fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
 
 
-      const char* c_filename = clean_filename(unit_filename.c_str());
+      options = save_options;
+      ++error;
+
+      return;
+    }
+
+    // another file
+    ++count;
+
+
+    const char* c_filename = clean_filename(unit_filename.c_str());
+
+    // output the currently processed filename
+    if (!isoption(options, OPTION_QUIET) && shownumber)
+      fprintf(stderr, "%5d %s\n", count, c_filename);
+
+    // translate the file
+    translator.translate(path, dir,
+			 foundfilename ? c_filename : 0,
+			 version, reallanguage);
+
+  } catch (FileError) {
+
+    // output tracing information about the input file
+    if (showinput && !isoption(options, OPTION_QUIET)) {
 
       // output the currently processed filename
-      if (!isoption(options, OPTION_QUIET) && shownumber)
-        fprintf(stderr, "%5d %s\n", count, c_filename);
+      fprintf(stderr, "Path: %s", strcmp(path, STDIN) == 0 ? "standard input" : path);
+      fprintf(stderr, "\tError: Unable to open file.\n");
 
-      // translate the file
-      translator.translate(path, dir,
-			   foundfilename ? c_filename : 0,
-			   version, reallanguage);
-
-    } catch (FileError) {
-
-      // output tracing information about the input file
-      if (showinput && !isoption(options, OPTION_QUIET)) {
-
-        // output the currently processed filename
-        fprintf(stderr, "Path: %s", strcmp(path, STDIN) == 0 ? "standard input" : path);
-        fprintf(stderr, "\tError: Unable to open file.\n");
-
-      } else {
+    } else {
 
       if (dir)
 	fprintf(stderr, "%s: Unable to open file %s/%s\n", PROGRAM_NAME, dir, path);
       else
 	fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
-      }
-
-      ++error;
     }
 
-    options = save_options;
+    ++error;
+  }
+
+  options = save_options;
 }
 
 void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
