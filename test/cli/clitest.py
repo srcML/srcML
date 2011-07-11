@@ -45,15 +45,17 @@ def checkError(command, input, error) :
         return validate(line, error)
         
 def validate(gen, expected):
+        gen = str(gen)
+        expected = str(expected)
 
         if platform.system() == "Windows" and string.find(gen, "\r\n") != -1:
-                expected = string.replace(str(expected), "\n", "\r\n")
+                expected = string.replace(expected, "\n", "\r\n")
 
-        if str(gen) != str(expected):
+        if gen != expected:
                 globals()["error_count"] = globals()["error_count"] + 1
                 print "ERROR"
-                print "expected|" + str(expected) + "|"
-                print "gen|" + str(gen) + "|"
+                print "expected|" + expected + "|"
+                print "gen|" + gen + "|"
         return
 
 def execute(command, input):
