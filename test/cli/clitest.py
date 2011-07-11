@@ -19,73 +19,73 @@ exception_count = 0
 
 def check(command, input, output):
 
-	globals()["test_count"] += 1
-	print test_count, os.path.basename(command[0]), ' '.join(command[1:])
-	
-	line = execute(command, input)
+        globals()["test_count"] += 1
+        print test_count, os.path.basename(command[0]), ' '.join(command[1:])
+        
+        line = execute(command, input)
 
-	return validate(line, output)
-	#return validate(output.strip(), line.strip())
+        return validate(line, output)
+        #return validate(output.strip(), line.strip())
 
 def checkNoOutput(command, input):
 
-	globals()["test_count"] += 1
-	print test_count, os.path.basename(command[0]), ' '.join(command[1:])
-	
-	executeNoOutput(command, input)
+        globals()["test_count"] += 1
+        print test_count, os.path.basename(command[0]), ' '.join(command[1:])
+        
+        executeNoOutput(command, input)
 
 
 def checkError(command, input, error) :
 
-	globals()["test_count"] += 1
-	print test_count, os.path.basename(command[0]), ' '.join(command[1:])
+        globals()["test_count"] += 1
+        print test_count, os.path.basename(command[0]), ' '.join(command[1:])
 
-	line = executeWithError(command, input)
+        line = executeWithError(command, input)
 
-	return validate(line, error)
-	
+        return validate(line, error)
+        
 def validate(gen, expected):
 
         if platform.system() == "Windows" :
                 expected = string.replace(expected, "\n", "\r\n")
 
-	if gen != expected:
-		globals()["error_count"] = globals()["error_count"] + 1
-		print "ERROR"
-		print "expected|" + str(expected) + "|"
-		print "gen|" + str(gen) + "|"
-	return
+        if gen != expected:
+                globals()["error_count"] = globals()["error_count"] + 1
+                print "ERROR"
+                print "expected|" + str(expected) + "|"
+                print "gen|" + str(gen) + "|"
+        return
 
 def execute(command, input):
-	p = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-	last_line = p.communicate(input)[0]
+        p = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        last_line = p.communicate(input)[0]
 
-	if p.returncode != 0:
-		globals()["error_count"] = globals()["error_count"] + 1
-		print "Status error:  ", p.returncode, command
+        if p.returncode != 0:
+                globals()["error_count"] = globals()["error_count"] + 1
+                print "Status error:  ", p.returncode, command
 
-	return last_line
+        return last_line
 
 def executeNoOutput(command, input) :
-	p = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=None, stderr=subprocess.PIPE)
-	p.communicate(input)[0]
+        p = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=None, stderr=subprocess.PIPE)
+        p.communicate(input)[0]
 
-	if p.returncode != 0:
-		globals()["error_count"] = globals()["error_count"] + 1
-		print "Status error:  ", p.returncode, command
-	
+        if p.returncode != 0:
+                globals()["error_count"] = globals()["error_count"] + 1
+                print "Status error:  ", p.returncode, command
+        
 def executeWithError(command, input):
-	p = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-	last_line = p.communicate(input)[0]
+        p = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        last_line = p.communicate(input)[0]
 
-	if p.returncode == 0:
-		globals()["error_count"] = globals()["error_count"] + 1
-		print "Status error:  ", p.returncode, command
+        if p.returncode == 0:
+                globals()["error_count"] = globals()["error_count"] + 1
+                print "Status error:  ", p.returncode, command
 
-	return last_line
+        return last_line
 
 def getreturn(command, input):
-	global exception_count
+        global exception_count
         p = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         try:
                 p.communicate(input)
@@ -96,70 +96,70 @@ def getreturn(command, input):
                         exception_count += 1
                         
 
-	globals()["test_count"] += 1
-	print test_count, "Status: ", p.returncode, "\t", os.path.basename(command[0]), ' '.join(command[1:])
-	return p.returncode
+        globals()["test_count"] += 1
+        print test_count, "Status: ", p.returncode, "\t", os.path.basename(command[0]), ' '.join(command[1:])
+        return p.returncode
 
 
 
 def checkallforms(base, shortflag, longflag, optionvalue, progin, progout):
-	if base == src2srcml and (shortflag != option.LANGUAGE_FLAG_SHORT or longflag != option.LANGUAGE_FLAG_SHORT) :
-		if optionvalue != "":
-			check([base, option.LANGUAGE_FLAG_SHORT, 'C++', shortflag, optionvalue], progin, progout)
-			check([base, option.LANGUAGE_FLAG_SHORT, 'C++', longflag, optionvalue], progin, progout)
-			check([base, option.LANGUAGE_FLAG_SHORT, 'C++', longflag + "=" + optionvalue], progin, progout)
-		else:
-			check([base, option.LANGUAGE_FLAG_SHORT, 'C++', shortflag], progin, progout)
-			check([base, option.LANGUAGE_FLAG_SHORT, 'C++', longflag], progin, progout)
+        if base == src2srcml and (shortflag != option.LANGUAGE_FLAG_SHORT or longflag != option.LANGUAGE_FLAG_SHORT) :
+                if optionvalue != "":
+                        check([base, option.LANGUAGE_FLAG_SHORT, 'C++', shortflag, optionvalue], progin, progout)
+                        check([base, option.LANGUAGE_FLAG_SHORT, 'C++', longflag, optionvalue], progin, progout)
+                        check([base, option.LANGUAGE_FLAG_SHORT, 'C++', longflag + "=" + optionvalue], progin, progout)
+                else:
+                        check([base, option.LANGUAGE_FLAG_SHORT, 'C++', shortflag], progin, progout)
+                        check([base, option.LANGUAGE_FLAG_SHORT, 'C++', longflag], progin, progout)
 
-	else :
-		if optionvalue != "":
-		       	check([base, shortflag, optionvalue], progin, progout)
-		       	check([base, longflag, optionvalue], progin, progout)
-		       	check([base, longflag + "=" + optionvalue], progin, progout)
-		else:
-			check([base, shortflag], progin, progout)
-			check([base, longflag], progin, progout)
+        else :
+                if optionvalue != "":
+                        check([base, shortflag, optionvalue], progin, progout)
+                        check([base, longflag, optionvalue], progin, progout)
+                        check([base, longflag + "=" + optionvalue], progin, progout)
+                else:
+                        check([base, shortflag], progin, progout)
+                        check([base, longflag], progin, progout)
 
-	return
+        return
 
 def checkallformsfile(base, inputfile, shortflag, longflag, optionvalue, progin, progout):
-	if optionvalue != "":
-		check([base, inputfile, shortflag, optionvalue], progin, progout)
-		check([base, inputfile, longflag, optionvalue], progin, progout)
-		check([base, inputfile, longflag + "=" + optionvalue], progin, progout)
-	else:
-		check([base, inputfile, shortflag], progin, progout)
-		check([base, inputfile, longflag], progin, progout)
+        if optionvalue != "":
+                check([base, inputfile, shortflag, optionvalue], progin, progout)
+                check([base, inputfile, longflag, optionvalue], progin, progout)
+                check([base, inputfile, longflag + "=" + optionvalue], progin, progout)
+        else:
+                check([base, inputfile, shortflag], progin, progout)
+                check([base, inputfile, longflag], progin, progout)
 
-	return
-	
+        return
+        
 def checkallformsext(base, shortflag, longflag, optionvalue, other, progin, progout):
-	if optionvalue != "":
-		check([base, shortflag, optionvalue, other], progin, progout)
-		check([base, longflag, optionvalue, other], progin, progout)
-		check([base, longflag + "=" + optionvalue, other], progin, progout)
-	else:
-		check([base, shortflag, other], progin, progout)
-		check([base, longflag, other], progin, progout)
+        if optionvalue != "":
+                check([base, shortflag, optionvalue, other], progin, progout)
+                check([base, longflag, optionvalue, other], progin, progout)
+                check([base, longflag + "=" + optionvalue, other], progin, progout)
+        else:
+                check([base, shortflag, other], progin, progout)
+                check([base, longflag, other], progin, progout)
 
-	return
-	
+        return
+        
 # version of src2srcml
 def src2srcmlversion():
 
-	last_line = subprocess.Popen([src2srcml, "-V"],
-				     stdout=subprocess.PIPE).communicate()[0]
+        last_line = subprocess.Popen([src2srcml, "-V"],
+                                     stdout=subprocess.PIPE).communicate()[0]
 
-	return last_line.strip()
+        return last_line.strip()
 
 # version of srcml2src
 def srcml2srcversion():
 
-	last_line = subprocess.Popen([srcml2src, "-V"],
-				     stdout=subprocess.PIPE).communicate()[0]
+        last_line = subprocess.Popen([srcml2src, "-V"],
+                                     stdout=subprocess.PIPE).communicate()[0]
 
-	return last_line.strip()
+        return last_line.strip()
 
 src2srcml = os.environ.get("SRC2SRCML")
 if src2srcml == "" or src2srcml == None:
@@ -167,7 +167,7 @@ if src2srcml == "" or src2srcml == None:
                 src2srcml = "../../bin/src2srcml"
         else :
                 src2srcml = "src2srcml.exe"
-	
+        
 srcml2src = os.environ.get("SRCML2SRC")
 if srcml2src == "" or srcml2src == None:
         if platform.system() != "Windows":
@@ -264,7 +264,7 @@ checkallforms(src2srcml, option.ENCODING_FLAG_SHORT, option.ENCODING_FLAG, "ISO-
 ##
 # create testing files
 if not os.path.exists("sub"):
-	os.system("mkdir sub")
+        os.system("mkdir sub")
 
 sfile1 = """
 a;
@@ -331,7 +331,7 @@ nestedfilesrc = xml_declaration + """
 """
 
 if not os.path.exists("sub"):
-	os.mkdir("sub")
+        os.mkdir("sub")
 
 f = open("sub/a.cpp", "w")
 f.write("\na;\n")
@@ -563,7 +563,7 @@ check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "2", option.LANGUAGE_FLAG],
 
 validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.SRC_ENCODING_FLAG + "=" + bad_encoding, "foobar"], None), status.STATUS_UNKNOWN_ENCODING)
 validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.ENCODING_FLAG + "=" + bad_encoding, "foobar"], None), status.STATUS_UNKNOWN_ENCODING)
-	
+        
 # missing value
 validate(getreturn([src2srcml, option.LANGUAGE_FLAG, bad_language, "foobar"], None), status.STATUS_INVALID_LANGUAGE)
 validate(getreturn([src2srcml, option.LANGUAGE_FLAG], None), status.STATUS_LANGUAGE_MISSING)
@@ -588,7 +588,7 @@ validate(getreturn([srcml2src, "--strip", "foobar"], None), status.STATUS_UNKNOW
 # unknown encoding
 validate(getreturn([srcml2src, option.SRC_ENCODING_FLAG + "=" + bad_encoding], ""), status.STATUS_UNKNOWN_ENCODING)
 validate(getreturn([srcml2src, option.SRC_ENCODING_FLAG], ""), status.STATUS_SRCENCODING_MISSING)
-	
+        
 # source encoding not given
 
 # unit option selected but no value
@@ -2147,10 +2147,10 @@ srcml = xml_declaration + """
 """
 
 options = [option.LANGUAGE_FLAG_SHORT, option.DIRECTORY_FLAG_SHORT, option.FILENAME_FLAG_SHORT, option.SRCVERSION_FLAG_SHORT, option.ENCODING_FLAG_SHORT,
-	   option.LANGUAGE_FLAG_SHORT, option.DIRECTORY_FLAG_SHORT, option.FILENAME_FLAG_SHORT, option.SRCVERSION_FLAG_SHORT, option.ENCODING_FLAG_SHORT]
+           option.LANGUAGE_FLAG_SHORT, option.DIRECTORY_FLAG_SHORT, option.FILENAME_FLAG_SHORT, option.SRCVERSION_FLAG_SHORT, option.ENCODING_FLAG_SHORT]
 
 values = ['language="C++"\n', 'directory="sub"\n', 'filename="a.cpp"\n', 'src-version="1.0"\n', 'encoding="UTF-8"\n',
-	  'language="C++"\n', 'directory="sub"\n', 'filename="a.cpp"\n', 'src-version="1.0"\n', 'encoding="UTF-8"\n']
+          'language="C++"\n', 'directory="sub"\n', 'filename="a.cpp"\n', 'src-version="1.0"\n', 'encoding="UTF-8"\n']
 
 index = 0
 check([srcml2src, options[index] + options[index + 1][1] + options[index + 2][1] + options[index + 3][1] + options[index + 4][1]], srcml, values[index] + values[index + 1] + values[index + 2] + values[index + 3] + values[index + 4])
@@ -2825,14 +2825,14 @@ line = execute(['ls', '-1', 'dir'], "")
 srcml = srcmlstart
 
 for file in line.split('\n') :
-	if file == 'file.aj' :
-		srcml += aj
-	if file == 'file.c' :
-		srcml += c
-	if file == 'file.cpp' :
-		srcml += cpp
-	if file == 'file.java' :
-		srcml += java
+        if file == 'file.aj' :
+                srcml += aj
+        if file == 'file.c' :
+                srcml += c
+        if file == 'file.cpp' :
+                srcml += cpp
+        if file == 'file.java' :
+                srcml += java
 
 srcml += srcmlend
 
