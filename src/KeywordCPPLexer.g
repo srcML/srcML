@@ -118,6 +118,9 @@ bool startline;
 
 struct pair { char const * const s; int n; };
 
+// map from text of literal to token number, adjusted to language
+struct keyword { char const * const text; int token; int language; };
+
 void fillliterals(const pair litarr[], unsigned int size);
 
 void changetotextlexer(int typeend);
@@ -128,85 +131,82 @@ KeywordCPPLexer(UTF8CharBuffer* pinput, const char* encoding, int language = LAN
 {
     setTokenObjectFactory(srcMLToken::factory);
 
-    pair common[] = {
-        { ")", RPAREN },
-	    { ";", TERMINATE },
-	    { "(", LPAREN },
-	    { "~", DESTOP },
-	    { ":", COLON },
-	    { "}", RCURLY },
-	    { ",", COMMA },
-	    { "]", RBRACKET },
-	    { "{", LCURLY },
-	    { "[", LBRACKET },
-	    { "@", SPECIAL },
-
-	    { "&lt;", TEMPOPS },
-	    { "&gt;", TEMPOPE },
-	    { "&amp;", REFOPS },
-	    { "=", EQUAL },
-
-        { ".", PERIOD },
-//        { ".*", MEMBERPOINTER },
-        { "*", MULTOPS },
-//        { "*=", MULTIMM },
-
+    keyword keyword_map[] = {
         // common keywords
-        { "if", IF },
-        { "else", ELSE },
+        { "if"          , IF, LANGUAGE_ALL },
+        { "else"        , ELSE, LANGUAGE_ALL },
 
-        { "while", WHILE },
-        { "for", FOR },
-        { "do", DO },
+        { "while"       , WHILE, LANGUAGE_ALL },
+        { "for"         , FOR, LANGUAGE_ALL },
+        { "do"          , DO, LANGUAGE_ALL },
 
-        { "break", BREAK },
-        { "continue", CONTINUE },
+        { "break"       , BREAK, LANGUAGE_ALL },
+        { "continue"    , CONTINUE, LANGUAGE_ALL },
 
-        { "switch", SWITCH },
-        { "case", CASE },
-        { "default", DEFAULT },
+        { "switch"      , SWITCH, LANGUAGE_ALL },
+        { "case"        , CASE, LANGUAGE_ALL },
+        { "default"     , DEFAULT, LANGUAGE_ALL },
 
-        { "return", RETURN },
+        { "return"      , RETURN, LANGUAGE_ALL },
 
-        { "enum", ENUM },
+        { "enum"        , ENUM, LANGUAGE_ALL },
+
+        // operators and special characters
+        { ")"           , RPAREN, LANGUAGE_ALL },
+	    { ";"           , TERMINATE, LANGUAGE_ALL },
+	    { "("           , LPAREN, LANGUAGE_ALL },
+	    { "~"           , DESTOP, LANGUAGE_ALL },
+	    { ":"           , COLON, LANGUAGE_ALL },
+	    { "}"           , RCURLY, LANGUAGE_ALL },
+	    { ","           , COMMA, LANGUAGE_ALL },
+	    { "]"           , RBRACKET, LANGUAGE_ALL },
+	    { "{"           , LCURLY, LANGUAGE_ALL },
+	    { "["           , LBRACKET, LANGUAGE_ALL },
+	    { "@"           , SPECIAL, LANGUAGE_ALL },
+
+	    { "&lt;"        , TEMPOPS, LANGUAGE_ALL },
+	    { "&gt;"        , TEMPOPE, LANGUAGE_ALL },
+	    { "&amp;"       , REFOPS, LANGUAGE_ALL },
+	    { "="           , EQUAL, LANGUAGE_ALL },
+
+        { "."           , PERIOD, LANGUAGE_ALL },
+        //        { ".*"        , MEMBERPOINTER, LANGUAGE_ALL },
+        { "*"           , MULTOPS, LANGUAGE_ALL },
+        //        { "*="        , MULTIMM, LANGUAGE_ALL },
+
+        // C and C++ specific keywords
+        { "main"    , MAIN, LANGUAGE_C_FAMILY },
+
+        { "typedef" , TYPEDEF, LANGUAGE_C_FAMILY },
+
+        { "include" , INCLUDE, LANGUAGE_C_FAMILY },
+        { "define"  , DEFINE, LANGUAGE_C_FAMILY },
+        { "elif"    , ELIF, LANGUAGE_C_FAMILY },
+        { "endif"   , ENDIF, LANGUAGE_C_FAMILY },
+        { "error"   , ERRORPREC, LANGUAGE_C_FAMILY },
+        { "ifdef"   , IFDEF, LANGUAGE_C_FAMILY },
+        { "ifndef"  , IFNDEF, LANGUAGE_C_FAMILY },
+        { "line"    , LINE, LANGUAGE_C_FAMILY },
+        { "pragma"  , PRAGMA, LANGUAGE_C_FAMILY },
+        { "undef"   , UNDEF, LANGUAGE_C_FAMILY },
+
+        { "union"   , UNION, LANGUAGE_C_FAMILY },
+        { "struct"  , STRUCT, LANGUAGE_C_FAMILY },
+
+        { "inline"  , INLINE, LANGUAGE_C_FAMILY },
+        { "extern"  , EXTERN, LANGUAGE_C_FAMILY },
+
+        { "asm"     , ASM, LANGUAGE_C_FAMILY },
+
+        { "goto"    , GOTO, LANGUAGE_C_FAMILY },
+
+        { "static"  , STATIC, LANGUAGE_C_FAMILY },
     };
 
-    fillliterals(common, sizeof(common) / sizeof(common[0]));
-
-    // add all C and C++ specific keywords to the literals table
-    if (inLanguage(LANGUAGE_C_FAMILY)) {
-
-        pair cfamily[] = {
-            { "main", MAIN },
-
-            { "typedef", TYPEDEF },
-
-            { "include", INCLUDE },
-            { "define", DEFINE },
-            { "elif", ELIF },
-            { "endif", ENDIF },
-            { "error", ERRORPREC },
-            { "ifdef", IFDEF },
-            { "ifndef", IFNDEF },
-            { "line", LINE },
-            { "pragma", PRAGMA },
-            { "undef", UNDEF },
-
-            { "union", UNION },
-            { "struct", STRUCT },
-
-            { "inline", INLINE },
-            { "extern", EXTERN },
-
-            { "asm", ASM },
-
-            { "goto", GOTO },
-
-            { "static", STATIC },
-        };
-
-        fillliterals(cfamily, sizeof(cfamily) / sizeof(cfamily[0]));
-    }
+    // fill up the literals for the language that we are parsing
+    for (unsigned int i = 0; i < (sizeof(keyword_map) / sizeof(keyword_map[0])); ++i)
+        if (inLanguage(keyword_map[i].language))
+            literals[keyword_map[i].text] = keyword_map[i].token;
 
     // add all C++ and Java specific keywords to the literals table
     if (inLanguage(LANGUAGE_OO)) {
