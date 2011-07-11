@@ -42,12 +42,12 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
 				 const char* src_encoding,    // text encoding of source code
 				 const char* xml_encoding,    // xml encoding of result srcML file
 				 const char* srcml_filename,  // filename of result srcML file
-				 OPTION_TYPE& op,
-				 const char* directory,       //
-				 const char* filename,        //
-				 const char* version,         //
-				 const char* uri[],
-				 int tabsize
+				 OPTION_TYPE& op,             // many and varied options
+				 const char* directory,       // root unit directory
+				 const char* filename,        // root unit filename
+				 const char* version,         // root unit version
+				 const char* uri[],           // uri prefixes
+				 int tabsize                  // size of tabs
 				 )
   : Language(language), pinput(0), first(true),
     root_directory(directory), root_filename(filename), root_version(version),
