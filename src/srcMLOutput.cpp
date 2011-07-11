@@ -291,11 +291,11 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 
     // setup the line attribute name
     std::ostringstream out;
-    out << num2prefix[6] << ':' << "line";
+    out << num2prefix[SRCML_EXT_POSITION_NS_URI_POS] << ':' << "line";
     lineAttribute = out.str();
 
     std::ostringstream out2;
-    out2 << num2prefix[6] << ':' << "column";
+    out2 << num2prefix[SRCML_EXT_POSITION_NS_URI_POS] << ':' << "column";
     columnAttribute = out2.str();
   }
 
