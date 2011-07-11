@@ -89,8 +89,6 @@ class srcMLOutput : public srcMLParserTokenTypes {
   int curcolumn;
   int tabsize;
 
-  bool firstconsume;
-
   int depth;
 
   // output line attribute content

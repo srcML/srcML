@@ -274,7 +274,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 			 )
   : input(ints), xout(0), srcml_filename(filename), unit_language(language), unit_dir(0), unit_filename(0),
     unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(curi), openelementcount(0), curline(0),
-    curcolumn(0), tabsize(ts), firstconsume(true), depth(0)
+    curcolumn(0), tabsize(ts), depth(0)
 {
 
   // open the output text writer stream
@@ -310,9 +310,7 @@ srcMLOutput::~srcMLOutput() {
 void srcMLOutput::close() {
 
   if (xout) {
-    if (!firstconsume)
-      xmlTextWriterEndDocument(xout);
-
+    xmlTextWriterEndDocument(xout);
     xmlFreeTextWriter(xout);
     xout = 0;
   }
@@ -441,8 +439,6 @@ void srcMLOutput::processEscape(const antlr::RefToken& token) {
 }
 
 void srcMLOutput::startUnit(const char* language, const char* dir, const char* filename, const char* version, bool outer) {
-
-  firstconsume = false;
 
   // start of main tag
   xmlTextWriterStartElement(xout, BAD_CAST type2name(SUNIT));
