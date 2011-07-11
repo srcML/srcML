@@ -64,10 +64,6 @@ class srcMLOutput : public srcMLParserTokenTypes {
   // close the output
   void close();
 
-  // output line attribute content
-  std::string lineAttribute;
-  std::string columnAttribute;
-
   const char* lineAttributeValue(const antlr::RefToken& token);
   const char* columnAttributeValue(const antlr::RefToken& token);
 
@@ -95,6 +91,10 @@ class srcMLOutput : public srcMLParserTokenTypes {
 
   bool firstconsume;
 
+  // output line attribute content
+  std::string lineAttribute;
+  std::string columnAttribute;
+
   int consume_next();
 
   inline const char* type2name(int token_type) const;
@@ -112,11 +112,9 @@ class srcMLOutput : public srcMLParserTokenTypes {
  public:
   int getTabSize();
 
-  void processText(const antlr::RefToken& token);
-
   // standard processing of text
+  void processText(const antlr::RefToken& token);
   void processText(const std::string&);
-
   void processText(const char* s, int size);
 
   // handler for optional literal tokens
