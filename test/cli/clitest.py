@@ -7,6 +7,8 @@
 
 import os.path
 import subprocess
+import platform
+import string
 
 import option
 import status
@@ -43,6 +45,10 @@ def checkError(command, input, error) :
 	return validate(line, error)
 	
 def validate(gen, expected):
+
+        if platform.system() == "Windows" :
+                expected = string.replace(expected, "\n", "\r\n")
+
 	if gen != expected:
 		globals()["error_count"] = globals()["error_count"] + 1
 		print "ERROR"
