@@ -395,6 +395,10 @@ void srcMLOutput::processText(const antlr::RefToken& token) {
     int curline = token->getLine();
     sprintf(buf, "%d", curline);
     xmlTextWriterWriteAttribute(xout, BAD_CAST buf2, BAD_CAST buf);
+    /*
+    xmlTextWriterWriteFormatAttributeNS(xout, BAD_CAST num2prefix[6], BAD_CAST "line", BAD_CAST SRCML_EXT_POSITION_NS_URI,
+					"%d", token->getLine());
+    */
 
     sprintf(buf2, "%s:%s", BAD_CAST num2prefix[6], BAD_CAST "column");
     int curcolumn = token->getColumn();
