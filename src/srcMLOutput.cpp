@@ -498,11 +498,14 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
       }
     }
 
-    char stabsbase[50];
-    char* stabs = 0;
+    // setting up for tabs, even if not used
+    std::ostringstream stabs;
+    std::string tabattribute;
     if (isoption(OPTION_POSITION)) {
-      stabs = stabsbase;
-      sprintf(stabsbase, "%d", tabsize);
+      stabs << tabsize;
+      std::string tabattribute = SRCML_EXT_POSITION_NS_URI;
+      tabattribute.append(":");
+      tabattribute.append("tabs");
     }
 
     // list of attributes
@@ -521,7 +524,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
       { UNIT_ATTRIBUTE_VERSION, version },
 
       // position tab setting
-      { "pos:tabs", stabs },
+      { tabattribute.c_str(), isoption(OPTION_POSITION) ? stabs.str().c_str() : 0 },
     };
 
     // output attributes
