@@ -503,7 +503,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
     std::string tabattribute;
     if (isoption(OPTION_POSITION)) {
       stabs << tabsize;
-      std::string tabattribute = SRCML_EXT_POSITION_NS_URI;
+      tabattribute = num2prefix[SRCML_EXT_POSITION_NS_URI_POS];
       tabattribute.append(":");
       tabattribute.append("tabs");
     }
