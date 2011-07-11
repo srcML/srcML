@@ -105,6 +105,9 @@ class srcMLOutput : public srcMLParserTokenTypes {
 
   bool isoption(int) const;
 
+  void srcMLTextWriterStartElement(xmlTextWriter*, const xmlChar* s);
+  void srcMLTextWriterEndElement(xmlTextWriter*);
+
   // List of element names
   static const char* const ElementNames[];
   static const char ElementPrefix[];
