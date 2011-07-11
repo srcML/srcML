@@ -163,11 +163,17 @@ def srcml2srcversion():
 
 src2srcml = os.environ.get("SRC2SRCML")
 if src2srcml == "" or src2srcml == None:
-	src2srcml = "../../bin/src2srcml"
+        if platform.system() != "Windows":
+                src2srcml = "../../bin/src2srcml"
+        else :
+                src2srcml = "src2srcml.exe"
 	
 srcml2src = os.environ.get("SRCML2SRC")
 if srcml2src == "" or srcml2src == None:
-	srcml2src = "../../bin/srcml2src"
+        if platform.system() != "Windows":
+                srcml2src = "../../bin/srcml2src"
+        else :
+                srcml2src = "srcml2src.exe"
 
 default_src2srcml_encoding = "UTF-8"
 default_srcml2src_encoding = "UTF-8"
