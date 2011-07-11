@@ -30,12 +30,6 @@ header {
 
 header "post_include_cpp" {
 
-void KeywordCPPLexer::fillliterals(const pair litarr[], unsigned int size) {
-
-    for (unsigned int i = 0; i < size; ++i)
-        literals[litarr[i].s] = litarr[i].n;
-}
-
 void KeywordCPPLexer::changetotextlexer(int typeend) {
           selector->push("text"); 
            ((PureCommentLexer* ) (selector->getStream("text")))->init(typeend, onpreprocline);
@@ -120,8 +114,6 @@ struct pair { char const * const s; int n; };
 
 // map from text of literal to token number, adjusted to language
 struct keyword { char const * const text; int token; int language; };
-
-void fillliterals(const pair litarr[], unsigned int size);
 
 void changetotextlexer(int typeend);
 
