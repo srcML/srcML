@@ -67,8 +67,8 @@ class ExtractUnitsSrc : public ProcessUnit {
       int dir_index = find_attribute_index(nb_attributes, attributes, UNIT_ATTRIBUTE_DIRECTORY);
       if (dir_index != -1) {
 	
-	if (!path.empty() && path[path.size() - 1] != '/')
-	  path += '/';
+	if (!path.empty() && path[path.size() - 1] != PATH_SEPARATOR)
+	  path += PATH_SEPARATOR;
 
 	path.append((const char*) attributes[dir_index + 3], (const char*) attributes[dir_index + 4]);
       }
@@ -84,8 +84,8 @@ class ExtractUnitsSrc : public ProcessUnit {
       }
 
       // append the filename
-      if (!path.empty() && path[path.size() - 1] != '/')
-        path += '/';
+      if (!path.empty() && path[path.size() - 1] != PATH_SEPARATOR)
+        path += PATH_SEPARATOR;
       path.append((const char*) attributes[filename_index + 3], (const char*) attributes[filename_index + 4]);
 
       // output file status message if in verbose mode
