@@ -448,94 +448,94 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
 
   firstconsume = false;
 
-    // start of main tag
-    xmlTextWriterStartElement(xout, BAD_CAST type2name(SUNIT));
+  // start of main tag
+  xmlTextWriterStartElement(xout, BAD_CAST type2name(SUNIT));
 
-    // outer units have namespaces
-    if (/* outer && */ !isoption(OPTION_NAMESPACEDECL)) {
+  // outer units have namespaces
+  if (/* outer && */ !isoption(OPTION_NAMESPACEDECL)) {
 
-      // figure out which namespaces are needed
-      char const * const ns[] = {
+    // figure out which namespaces are needed
+    char const * const ns[] = {
 
-	                    // main srcML namespace declaration always used
-	(depth == 0) ? SRCML_SRC_NS_URI : 0,
+      // main srcML namespace declaration always used
+      (depth == 0) ? SRCML_SRC_NS_URI : 0,
 
-			    // main cpp namespace declaration
-	isoption(OPTION_CPP) && (isoption(OPTION_NESTED) == !outer)? SRCML_CPP_NS_URI : 0,
+      // main cpp namespace declaration
+      isoption(OPTION_CPP) && (isoption(OPTION_NESTED) == !outer) ? SRCML_CPP_NS_URI : 0,
 
-			    // optional debugging xml namespace
-			    isoption(OPTION_DEBUG)    ? SRCML_ERR_NS_URI : 0,
+      // optional debugging xml namespace
+      isoption(OPTION_DEBUG)    ? SRCML_ERR_NS_URI : 0,
 
-			    // optional literal xml namespace
-			    isoption(OPTION_LITERAL)  ? SRCML_EXT_LITERAL_NS_URI : 0,
+      // optional literal xml namespace
+      isoption(OPTION_LITERAL)  ? SRCML_EXT_LITERAL_NS_URI : 0,
 
-			    // optional operator xml namespace
-			    isoption(OPTION_OPERATOR) ? SRCML_EXT_OPERATOR_NS_URI : 0,
+      // optional operator xml namespace
+      isoption(OPTION_OPERATOR) ? SRCML_EXT_OPERATOR_NS_URI : 0,
 
-			    // optional modifier xml namespace
-			    isoption(OPTION_MODIFIER) ? SRCML_EXT_MODIFIER_NS_URI : 0,
+      // optional modifier xml namespace
+      isoption(OPTION_MODIFIER) ? SRCML_EXT_MODIFIER_NS_URI : 0,
 
-			    // optional position xml namespace
-			    isoption(OPTION_POSITION) ? SRCML_EXT_POSITION_NS_URI : 0,
-			  };
-
-      // output the namespaces
-      for (unsigned int i = 0; i < sizeof(ns) / sizeof(ns[0]); ++i) {
-	if (!ns[i])
-	  continue;
-
-	std::string prefix = "xmlns";
-	if (num2prefix[i][0] != '\0') {
-	  prefix += ':';
-	  prefix += num2prefix[i];
-	}
-
-	xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST ns[i]);
-      }
-    }
-
-    // setting up for tabs, even if not used
-    std::ostringstream stabs;
-    std::string tabattribute;
-    if (isoption(OPTION_POSITION)) {
-      stabs << tabsize;
-      tabattribute = num2prefix[SRCML_EXT_POSITION_NS_URI_POS];
-      tabattribute.append(":");
-      tabattribute.append("tabs");
-    }
-
-    // list of attributes
-    const char* const attrs[][2] = {
-
-      // language attribute
-      { UNIT_ATTRIBUTE_LANGUAGE, language },
-
-      // directory attribute
-      { UNIT_ATTRIBUTE_DIRECTORY, dir },
-
-      // filename attribute
-      { UNIT_ATTRIBUTE_FILENAME, filename },
-
-      // version attribute
-      { UNIT_ATTRIBUTE_VERSION, version },
-
-      // position tab setting
-      { tabattribute.c_str(), isoption(OPTION_POSITION) ? stabs.str().c_str() : 0 },
+      // optional position xml namespace
+      isoption(OPTION_POSITION) ? SRCML_EXT_POSITION_NS_URI : 0,
     };
 
-    // output attributes
-    for (unsigned int i = 0; i < sizeof(attrs) / sizeof(attrs[0]); ++i) {
-      if (!attrs[i][1])
+    // output the namespaces
+    for (unsigned int i = 0; i < sizeof(ns) / sizeof(ns[0]); ++i) {
+      if (!ns[i])
 	continue;
 
-      xmlTextWriterWriteAttribute(xout, BAD_CAST attrs[i][0], BAD_CAST attrs[i][1]);
+      std::string prefix = "xmlns";
+      if (num2prefix[i][0] != '\0') {
+	prefix += ':';
+	prefix += num2prefix[i];
+      }
+
+      xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST ns[i]);
     }
+  }
 
-    // leave space for nested unit
-    if (outer && isoption(OPTION_NESTED))
-      processText("\n\n", 2);
+  // setting up for tabs, even if not used
+  std::ostringstream stabs;
+  std::string tabattribute;
+  if (isoption(OPTION_POSITION)) {
+    stabs << tabsize;
+    tabattribute = num2prefix[SRCML_EXT_POSITION_NS_URI_POS];
+    tabattribute.append(":");
+    tabattribute.append("tabs");
+  }
 
-    ++depth;
+  // list of attributes
+  const char* const attrs[][2] = {
+
+    // language attribute
+    { UNIT_ATTRIBUTE_LANGUAGE, language },
+
+    // directory attribute
+    { UNIT_ATTRIBUTE_DIRECTORY, dir },
+
+    // filename attribute
+    { UNIT_ATTRIBUTE_FILENAME, filename },
+
+    // version attribute
+    { UNIT_ATTRIBUTE_VERSION, version },
+
+    // position tab setting
+    { tabattribute.c_str(), isoption(OPTION_POSITION) ? stabs.str().c_str() : 0 },
+  };
+
+  // output attributes
+  for (unsigned int i = 0; i < sizeof(attrs) / sizeof(attrs[0]); ++i) {
+    if (!attrs[i][1])
+      continue;
+
+    xmlTextWriterWriteAttribute(xout, BAD_CAST attrs[i][0], BAD_CAST attrs[i][1]);
+  }
+
+  // leave space for nested unit
+  if (outer && isoption(OPTION_NESTED))
+    processText("\n\n", 2);
+
+  ++depth;
 }
 
 void srcMLOutput::processUnit(const antlr::RefToken& token) {
