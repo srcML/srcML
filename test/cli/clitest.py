@@ -46,7 +46,7 @@ def checkError(command, input, error) :
         
 def validate(gen, expected):
 
-        if platform.system() == "Windows" :
+        if platform.system() == "Windows" and string.find(gen, "\r\n") != -1:
                 expected = string.replace(str(expected), "\n", "\r\n")
 
         if str(gen) != str(expected):
