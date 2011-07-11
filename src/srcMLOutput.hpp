@@ -91,6 +91,8 @@ class srcMLOutput : public srcMLParserTokenTypes {
 
   bool firstconsume;
 
+  int depth;
+
   // output line attribute content
   std::string lineAttribute;
   std::string columnAttribute;

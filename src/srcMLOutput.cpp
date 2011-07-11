@@ -264,8 +264,6 @@ bool srcMLOutput::checkEncoding(const char* encoding) {
   return xmlFindCharEncodingHandler(encoding) != 0;
 }
 
-static int depth = 0;
-
 srcMLOutput::srcMLOutput(TokenStream* ints,
 			 const char* filename,
 			 const char* language,
@@ -276,7 +274,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 			 )
   : input(ints), xout(0), srcml_filename(filename), unit_language(language), unit_dir(0), unit_filename(0),
     unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(curi), openelementcount(0), curline(0),
-    curcolumn(0), tabsize(ts), firstconsume(true)
+    curcolumn(0), tabsize(ts), firstconsume(true), depth(0)
 {
 
   // open the output text writer stream
@@ -298,8 +296,6 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
     out2 << num2prefix[SRCML_EXT_POSITION_NS_URI_POS] << ':' << "column";
     columnAttribute = out2.str();
   }
-
-  depth = 0;
 
   // issue the xml declaration, but only if we want to
   if (!isoption(OPTION_XMLDECL))
