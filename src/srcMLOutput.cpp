@@ -31,6 +31,7 @@
 #include "srcMLOutputPR.hpp"
 
 #include <cstring>
+#include <sstream>
 
 #define ELEMENT_MAP_CALL_NAME element_name
 #define ELEMENT_MAP_FIRST_TYPE int
@@ -258,7 +259,6 @@ namespace {
 };
 
 static char buf[20];
-static char buf2[200];
 
 // check if encoding is supported
 bool srcMLOutput::checkEncoding(const char* encoding) {
@@ -287,6 +287,18 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   if (!xout) {
     fprintf(stderr, "src2srcml: " "Unable to open output file %s\n", srcml_filename);
     exit(2);
+  }
+
+  if (isoption(OPTION_POSITION)) {
+
+    // setup the line attribute name
+    std::ostringstream out;
+    out << num2prefix[6] << ':' << "line";
+    lineAttribute = out.str();
+
+    std::ostringstream out2;
+    out2 << num2prefix[6] << ':' << "column";
+    columnAttribute = out.str();
   }
 
   depth = 0;
@@ -387,23 +399,26 @@ void srcMLOutput::processText(const char* s, int size) {
   xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) s, size);
 }
 
+const char* srcMLOutput::lineAttributeValue(const antlr::RefToken& token) {
+
+  static std::ostringstream out;
+  out.seekp(0);
+  out << token->getLine();
+
+  return out.str().c_str();
+}
+
 void srcMLOutput::processText(const antlr::RefToken& token) {
 
   if (isoption(OPTION_POSITION)) {
 
-    sprintf(buf2, "%s:%s", BAD_CAST num2prefix[6], BAD_CAST "line");
     int curline = token->getLine();
     sprintf(buf, "%d", curline);
-    xmlTextWriterWriteAttribute(xout, BAD_CAST buf2, BAD_CAST buf);
-    /*
-    xmlTextWriterWriteFormatAttributeNS(xout, BAD_CAST num2prefix[6], BAD_CAST "line", BAD_CAST SRCML_EXT_POSITION_NS_URI,
-					"%d", token->getLine());
-    */
+    xmlTextWriterWriteAttribute(xout, BAD_CAST lineAttribute.c_str(), BAD_CAST buf);
 
-    sprintf(buf2, "%s:%s", BAD_CAST num2prefix[6], BAD_CAST "column");
     int curcolumn = token->getColumn();
     sprintf(buf, "%d", curcolumn);
-    xmlTextWriterWriteAttribute(xout, BAD_CAST buf2, BAD_CAST buf);
+    xmlTextWriterWriteAttribute(xout, BAD_CAST columnAttribute.c_str(), BAD_CAST buf);
   }
 
   xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) token->getText().data(), token->getText().size());
