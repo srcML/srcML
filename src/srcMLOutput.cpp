@@ -300,6 +300,10 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   }
 
   depth = 0;
+
+  // issue the xml declaration, but only if we want to
+  if (!isoption(OPTION_XMLDECL))
+    xmlTextWriterStartDocument(xout, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
 }
 
 srcMLOutput::~srcMLOutput() {
@@ -442,9 +446,6 @@ void srcMLOutput::processEscape(const antlr::RefToken& token) {
 
 void srcMLOutput::startUnit(const char* language, const char* dir, const char* filename, const char* version, bool outer) {
 
-  // issue the xml declaration, but only if we want to
-  if (firstconsume && !isoption(OPTION_XMLDECL))
-    xmlTextWriterStartDocument(xout, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
   firstconsume = false;
 
     // start of main tag
