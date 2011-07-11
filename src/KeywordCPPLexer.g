@@ -201,117 +201,87 @@ KeywordCPPLexer(UTF8CharBuffer* pinput, const char* encoding, int language = LAN
         { "goto"    , GOTO, LANGUAGE_C_FAMILY },
 
         { "static"  , STATIC, LANGUAGE_C_FAMILY },
-    };
+ 
+
+        // add all C++ and Java specific keywords to the literals table
+
+        // exception handling
+        { "try", TRY , LANGUAGE_OO },
+        { "catch", CATCH , LANGUAGE_OO },
+        { "throw", THROW , LANGUAGE_OO },
+
+        // class
+        { "class", CLASS , LANGUAGE_OO },
+        { "public", PUBLIC , LANGUAGE_OO },
+        { "private", PRIVATE , LANGUAGE_OO },
+        { "protected", PROTECTED , LANGUAGE_OO },
+
+        { "new", NEW , LANGUAGE_OO },
+
+        // add all C++ specific keywords to the literals table
+        // class
+        { "virtual", VIRTUAL , LANGUAGE_CXX_FAMILY }, 
+        //     { "friend", FRIEND , LANGUAGE_CXX_FAMILY },
+        { "operator", OPERATOR , LANGUAGE_CXX_FAMILY },
+        { "explicit", EXPLICIT , LANGUAGE_CXX_FAMILY },
+        
+        // namespaces
+        { "namespace", NAMESPACE , LANGUAGE_CXX_FAMILY },
+        { "using", USING , LANGUAGE_CXX_FAMILY },
+        
+        // templates
+        { "template", TEMPLATE , LANGUAGE_CXX_FAMILY },
+        
+        { "delete", OPERATORS , LANGUAGE_CXX_FAMILY },
+        
+        // special C++ operators
+        { "::", DCOLON , LANGUAGE_CXX_FAMILY },
+
+        // special C++ constant values
+        { "false", FALSE , LANGUAGE_CXX_FAMILY },
+        { "true", TRUE , LANGUAGE_CXX_FAMILY },
+
+        // specifiers that are not needed for parsing
+        /*
+          { "mutable", MUTABLE , LANGUAGE_CXX_FAMILY },
+          { "volatile", VOLATILE , LANGUAGE_CXX_FAMILY },
+        */
+
+        // add all C++ specific keywords to the literals table
+        // concepts
+        { "concept", CONCEPT , LANGUAGE_CXX_0X },
+        { "concept_map", CONCEPTMAP , LANGUAGE_CXX_0X },
+        { "requires", REQUIRES , LANGUAGE_CXX_0X },
+        { "auto", AUTO , LANGUAGE_CXX_0X },
+
+        // add all Java specific keywords to the literals table
+        // exception handling
+        { "throws", THROWS , LANGUAGE_JAVA },
+        { "finally", FINALLY , LANGUAGE_JAVA },
+
+        // class
+        { "interface", INTERFACE , LANGUAGE_JAVA },
+        { "extends", EXTENDS , LANGUAGE_JAVA },
+        { "implements", IMPLEMENTS , LANGUAGE_JAVA },
+        
+        // import
+        { "import", IMPORT , LANGUAGE_JAVA },
+
+        // package
+        { "package", PACKAGE , LANGUAGE_JAVA },
+
+        // final
+        { "final", FINAL , LANGUAGE_JAVA },
+
+        // abstract
+        { "abstract", ABSTRACT , LANGUAGE_JAVA },
+   };
 
     // fill up the literals for the language that we are parsing
     for (unsigned int i = 0; i < (sizeof(keyword_map) / sizeof(keyword_map[0])); ++i)
         if (inLanguage(keyword_map[i].language))
             literals[keyword_map[i].text] = keyword_map[i].token;
 
-    // add all C++ and Java specific keywords to the literals table
-    if (inLanguage(LANGUAGE_OO)) {
-
-        pair language_oo[] = {
-
-            // exception handling
-            { "try", TRY },
-            { "catch", CATCH },
-            { "throw", THROW },
-
-            // class
-            { "class", CLASS },
-            { "public", PUBLIC },
-            { "private", PRIVATE },
-            { "protected", PROTECTED },
-
-            { "new", NEW },
-        };
-
-        fillliterals(language_oo, sizeof(language_oo) / sizeof(language_oo[0]));
-    }
-
-    // add all C++ specific keywords to the literals table
-    if (inLanguage(LANGUAGE_CXX_FAMILY)) {
-
-        pair language_cxx_family[] = {
-
-            // class
-            { "virtual", VIRTUAL }, 
-            //     { "friend", FRIEND },
-            { "operator", OPERATOR },
-            { "explicit", EXPLICIT },
-
-            // namespaces
-            { "namespace", NAMESPACE },
-            { "using", USING },
-
-            // templates
-            { "template", TEMPLATE },
-
-            { "delete", OPERATORS },
-
-            // special C++ operators
-            { "::", DCOLON },
-
-            // special C++ constant values
-            { "false", FALSE },
-            { "true", TRUE },
-
-            // specifiers that are not needed for parsing
-        /*
-            { "mutable", MUTABLE },
-            { "volatile", VOLATILE },
-        */
-        };
-
-        fillliterals(language_cxx_family, sizeof(language_cxx_family) / sizeof(language_cxx_family[0]));
-    }
-
-    // add all C++ specific keywords to the literals table
-    if (inLanguage(LANGUAGE_CXX_0X)) {
-
-        pair language_cxx_0x[] = {
-
-            // concepts
-            { "concept", CONCEPT },
-            { "concept_map", CONCEPTMAP },
-            { "requires", REQUIRES },
-            { "auto", AUTO },
-        };
-
-        fillliterals(language_cxx_0x, sizeof(language_cxx_0x) / sizeof(language_cxx_0x[0]));
-    }
-
-    // add all Java specific keywords to the literals table
-    if (inLanguage(LANGUAGE_JAVA)) {
-
-        pair language_java[] = {
-
-            // exception handling
-            { "throws", THROWS },
-            { "finally", FINALLY },
-
-            // class
-            { "interface", INTERFACE },
-            { "extends", EXTENDS },
-            { "implements", IMPLEMENTS },
-        
-            // import
-            { "import", IMPORT },
-
-            // package
-            { "package", PACKAGE },
-
-            // final
-            { "final", FINAL },
-
-            // abstract
-            { "abstract", ABSTRACT },
-
-        };
-
-        fillliterals(language_java, sizeof(language_java) / sizeof(language_java[0]));
-    }
 }
 
 private:
