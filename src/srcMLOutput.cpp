@@ -552,10 +552,8 @@ void srcMLOutput::processUnit(const antlr::RefToken& token) {
   } else {
 
     // end anything still open, including the unit
-    while (openelementcount) {
-
+    while (openelementcount)
       srcMLTextWriterEndElement(xout);
-    }
 
     // leave a blank line before next nested unit even the last one
     if (isoption(OPTION_NESTED))
