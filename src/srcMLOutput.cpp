@@ -258,8 +258,6 @@ namespace {
   ELEMENT_MAP(SMODIFIER, SRCML_EXT_MODIFIER_NS_URI_POS)
 };
 
-static char buf[20];
-
 // check if encoding is supported
 bool srcMLOutput::checkEncoding(const char* encoding) {
 
@@ -298,7 +296,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 
     std::ostringstream out2;
     out2 << num2prefix[6] << ':' << "column";
-    columnAttribute = out.str();
+    columnAttribute = out2.str();
   }
 
   depth = 0;
@@ -408,17 +406,22 @@ const char* srcMLOutput::lineAttributeValue(const antlr::RefToken& token) {
   return out.str().c_str();
 }
 
+const char* srcMLOutput::columnAttributeValue(const antlr::RefToken& token) {
+
+  static std::ostringstream out;
+  out.seekp(0);
+  out << token->getColumn();
+
+  return out.str().c_str();
+}
+
 void srcMLOutput::processText(const antlr::RefToken& token) {
 
   if (isoption(OPTION_POSITION)) {
 
-    int curline = token->getLine();
-    sprintf(buf, "%d", curline);
-    xmlTextWriterWriteAttribute(xout, BAD_CAST lineAttribute.c_str(), BAD_CAST buf);
+    xmlTextWriterWriteAttribute(xout, BAD_CAST lineAttribute.c_str(), BAD_CAST lineAttributeValue(token));
 
-    int curcolumn = token->getColumn();
-    sprintf(buf, "%d", curcolumn);
-    xmlTextWriterWriteAttribute(xout, BAD_CAST columnAttribute.c_str(), BAD_CAST buf);
+    xmlTextWriterWriteAttribute(xout, BAD_CAST columnAttribute.c_str(), BAD_CAST columnAttributeValue(token));
   }
 
   xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) token->getText().data(), token->getText().size());
@@ -431,9 +434,12 @@ void srcMLOutput::processEscape(const antlr::RefToken& token) {
   xmlTextWriterStartElement(xout, BAD_CAST s);
   ++openelementcount;
 
-  sprintf(buf, "0x%0x", token->getText()[0]);
+  static std::ostringstream out;
+  out.seekp(0);
+  int n = token->getText()[0];
+  out << "0x" << std::hex << n;
 
-  xmlTextWriterWriteAttribute(xout, BAD_CAST "char", BAD_CAST buf);
+  xmlTextWriterWriteAttribute(xout, BAD_CAST "char", BAD_CAST out.str().c_str());
 
   xmlTextWriterEndElement(xout);
   --openelementcount;

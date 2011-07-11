@@ -69,6 +69,7 @@ class srcMLOutput : public srcMLParserTokenTypes {
   std::string columnAttribute;
 
   const char* lineAttributeValue(const antlr::RefToken& token);
+  const char* columnAttributeValue(const antlr::RefToken& token);
 
   // destructor
   ~srcMLOutput();
