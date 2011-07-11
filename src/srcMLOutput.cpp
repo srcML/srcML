@@ -55,6 +55,7 @@ namespace {
   ELEMENT_MAP(COMMENT_END, ELEMENT_MAP_CALL(COMMENT_START))
   ELEMENT_MAP(LINECOMMENT_START, ELEMENT_MAP_CALL(COMMENT_START))
   ELEMENT_MAP(LINECOMMENT_END, ELEMENT_MAP_CALL(COMMENT_START))
+  ELEMENT_MAP(JAVADOC_COMMENT_START, ELEMENT_MAP_CALL(COMMENT_START))
 
   // No op
   ELEMENT_MAP(SNOP, "")
@@ -296,8 +297,6 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
     out2 << num2prefix[SRCML_EXT_POSITION_NS_URI_POS] << ':' << "column";
     columnAttribute = out2.str();
   }
-
-  injava = strcmp(unit_language, "Java") == 0;
 
   // issue the xml declaration, but only if we want to
   if (!isoption(OPTION_XMLDECL))
@@ -598,16 +597,26 @@ void srcMLOutput::processToken(const antlr::RefToken& token) {
   }
 }
 
-void srcMLOutput::processBlockCommentStart(const antlr::RefToken& token) {
-  static const char* BLOCK_COMMENT_ATTR = "block";
+void srcMLOutput::processJavadocCommentStart(const antlr::RefToken& token) {
   static const char* JAVADOC_COMMENT_ATTR = "javadoc";
 
   const char* s = token2name(token);
 
   srcMLTextWriterStartElement(xout, BAD_CAST s);
 
-  xmlTextWriterWriteAttribute(xout, BAD_CAST "type",
-     BAD_CAST (injava && token->getText().substr(0, 3) == "/**" ? JAVADOC_COMMENT_ATTR : BLOCK_COMMENT_ATTR));
+  xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST JAVADOC_COMMENT_ATTR);
+
+  processText(token);
+}
+
+void srcMLOutput::processBlockCommentStart(const antlr::RefToken& token) {
+  static const char* BLOCK_COMMENT_ATTR = "block";
+
+  const char* s = token2name(token);
+
+  srcMLTextWriterStartElement(xout, BAD_CAST s);
+
+  xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST BLOCK_COMMENT_ATTR);
 
   processText(token);
 }

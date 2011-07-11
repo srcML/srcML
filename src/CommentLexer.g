@@ -39,6 +39,7 @@ options {
 tokens {
 
     COMMENT_START;
+    JAVADOC_COMMENT_START;
 }
 
 {
@@ -58,7 +59,10 @@ LINECOMMENT_START
             } |
             '*'
             { 
-                $setType(COMMENT_START);
+                if (inLanguage(LANGUAGE_JAVA) && LA(1) == '*')
+                    $setType(JAVADOC_COMMENT_START);
+                else
+                    $setType(COMMENT_START);
 
                 changetotextlexer(COMMENT_END);
 

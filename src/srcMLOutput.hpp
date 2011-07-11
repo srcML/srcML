@@ -108,8 +108,6 @@ class srcMLOutput : public srcMLParserTokenTypes {
   void srcMLTextWriterStartElement(xmlTextWriter*, const xmlChar* s);
   void srcMLTextWriterEndElement(xmlTextWriter*);
 
-  bool injava;
-
   // List of element names
   static const char* const ElementNames[];
   static const char ElementPrefix[];
@@ -129,6 +127,7 @@ class srcMLOutput : public srcMLParserTokenTypes {
   void processAccess(const antlr::RefToken& token);
   void processToken(const antlr::RefToken& token);
   void processBlockCommentStart(const antlr::RefToken& token);
+  void processJavadocCommentStart(const antlr::RefToken& token);
   void processLineCommentStart(const antlr::RefToken& token);
   void processEndBlockToken(const antlr::RefToken& token);
   void processEndLineToken(const antlr::RefToken& token);
