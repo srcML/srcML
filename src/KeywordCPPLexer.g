@@ -30,32 +30,15 @@ header {
 
 header "post_include_cpp" {
 
-const char* lits[110];
-
-void KeywordCPPLexer::setupliterals() {
-
-    for (unsigned int i = 0; i < sizeof(lits) / sizeof(lits[0]); ++i)
-        lits[i] = "";
-}
-
 void KeywordCPPLexer::fillliterals(const pair litarr[], unsigned int size) {
 
     for (unsigned int i = 0; i < size; ++i)
-        lits[litarr[i].n] = litarr[i].s;
+        literals[litarr[i].s] = litarr[i].n;
 }
 
 void KeywordCPPLexer::changetotextlexer(int typeend) {
           selector->push("text"); 
            ((PureCommentLexer* ) (selector->getStream("text")))->init(typeend, onpreprocline);
-}
-int KeywordCPPLexer::testLiteralsTable(int ttype) const
-{
-    for (unsigned int i = 0; i < sizeof(lits) / sizeof(lits[0]); ++i) {
-        if (strcmp(lits[i], text.c_str()) == 0)
-            return i;
-    }
-
-    return ttype;
 }
 }
 
@@ -135,20 +118,15 @@ bool startline;
 
 struct pair { char const * const s; int n; };
 
-void setupliterals();
 void fillliterals(const pair litarr[], unsigned int size);
 
 void changetotextlexer(int typeend);
-
-virtual int testLiteralsTable(int ttype) const;
 
 KeywordCPPLexer(UTF8CharBuffer* pinput, const char* encoding, int language = LANGUAGE_CXX)
 //	: antlr::CharScanner(new UTF8CharBuffer("sub/a.cpp", encoding),true), Language(language), onpreprocline(false), startline(true)	
     : antlr::CharScanner(pinput,true), Language(language), onpreprocline(false), startline(true)
 {
     setTokenObjectFactory(srcMLToken::factory);
-
-    setupliterals();
 
     pair common[] = {
         { ")", RPAREN },
