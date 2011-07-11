@@ -118,7 +118,6 @@ struct keyword { char const * const text; int token; int language; };
 void changetotextlexer(int typeend);
 
 KeywordCPPLexer(UTF8CharBuffer* pinput, const char* encoding, int language = LANGUAGE_CXX)
-//	: antlr::CharScanner(new UTF8CharBuffer("sub/a.cpp", encoding),true), Language(language), onpreprocline(false), startline(true)	
     : antlr::CharScanner(pinput,true), Language(language), onpreprocline(false), startline(true)
 {
     setTokenObjectFactory(srcMLToken::factory);
