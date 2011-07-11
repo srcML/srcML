@@ -53,7 +53,7 @@ def validate(gen, expected):
                 expected = string.replace(expected, "\n", "\r\n")
 
         if string.find(gen, "\r\n") != -1:
-                eol_error_count += 1
+                globals()["eol_error_count"] += 1
 
         if gen != expected:
                 globals()["error_count"] = globals()["error_count"] + 1
