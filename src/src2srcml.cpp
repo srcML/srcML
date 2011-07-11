@@ -105,13 +105,8 @@ const int REGISTER_EXT_FLAG_CODE = 256 + 7;
 const char* const OLD_FILENAME_FLAG = "old-filename";
 const int OLD_FILENAME_FLAG_CODE = 256 + 8;
 
-const char* const SKIP_DEFAULT_FLAG = "skip-default";
-const int SKIP_DEFAULT_FLAG_CODE = 256 + 9;
-
 const char* const RECURSIVE_FLAG = "recursive";
-const int RECURSIVE_FLAG_CODE = 256 + 10;
-
-const int DEFAULT_LANGUAGE = srcMLTranslator::LANGUAGE_CXX;
+const int RECURSIVE_FLAG_CODE = 256 + 9;
 
 const char* const EXAMPLE_TEXT_FILENAME="foo.cpp";
 const char* const EXAMPLE_XML_FILENAME="foo.cpp.xml";
@@ -353,8 +348,6 @@ void src2srcml_filelist(srcMLTranslator& translator, process_options& poptions, 
 int process_args(int argc, char* argv[], process_options & poptions);
 
 int main(int argc, char* argv[]) {
-
-  options |= OPTION_SKIP_DEFAULT;
 
   int exit_status = EXIT_SUCCESS;
 
@@ -644,7 +637,6 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     //    { FILELIST_FLAG, optional_argument, NULL, FILELIST_FLAG_CODE },
     { REGISTER_EXT_FLAG, required_argument, NULL, REGISTER_EXT_FLAG_CODE },
     { XMLNS_FLAG, required_argument, NULL, XMLNS_FLAG_CODE },
-    { SKIP_DEFAULT_FLAG, no_argument, NULL, SKIP_DEFAULT_FLAG_CODE },
     { RECURSIVE_FLAG, no_argument, NULL, RECURSIVE_FLAG_CODE },
     { QUIET_FLAG, no_argument, NULL, QUIET_FLAG_SHORT },
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
@@ -839,10 +831,6 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 	  exit(STATUS_INVALID_LANGUAGE);
 	}
       }
-      break;
-
-    case SKIP_DEFAULT_FLAG_CODE:
-      options |= OPTION_SKIP_DEFAULT;
       break;
 
     case RECURSIVE_FLAG_CODE:
@@ -1145,10 +1133,6 @@ void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     if (!reallanguage)
       reallanguage = Language::getLanguageFromFilename(unit_filename.c_str());
 
-    // 3) default language (if allowed)
-    if (!reallanguage && !isoption(options, OPTION_SKIP_DEFAULT))
-      reallanguage = DEFAULT_LANGUAGE;
-
     // error if can't find a language
     if (!reallanguage) {
 
@@ -1306,10 +1290,6 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
       // 2) try from the filename (basically the extension)
       if (!reallanguage)
         reallanguage = Language::getLanguageFromFilename(unit_filename.c_str());
-
-      // 3) default language (if allowed)
-      if (!reallanguage && !isoption(options, OPTION_SKIP_DEFAULT))
-        reallanguage = DEFAULT_LANGUAGE;
 
       // error if can't find a language
       if (!reallanguage) {
