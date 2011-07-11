@@ -52,7 +52,7 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
   : Language(language), pinput(0), first(true),
     root_directory(directory), root_filename(filename), root_version(version),
     encoding(src_encoding), options(op),
-    out(0, srcml_filename, getLanguageString(), xml_encoding, options, uri, tabsize) {
+    out(0, srcml_filename, getLanguageString(), xml_encoding, options, uri, tabsize), tabsize(tabsize) {
 
 }
 
@@ -104,7 +104,7 @@ void srcMLTranslator::translate(const char* path, const char* unit_directory,
       // srcML lexical analyzer from standard input
       KeywordCPPLexer lexer(pinput, encoding, language);
       lexer.setSelector(&selector);
-      lexer.setTabsize(out.getTabSize());
+      lexer.setTabsize(tabsize);
 
       // pure block comment lexer
       PureCommentLexer textlexer(lexer.getInputState());

@@ -318,11 +318,6 @@ void srcMLOutput::close() {
   }
 }
 
-int srcMLOutput::getTabSize() {
-
-  return tabsize;
-}
-
 void srcMLOutput::setTokenStream(TokenStream& ints) {
 
   input = &ints;
