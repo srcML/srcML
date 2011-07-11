@@ -56,12 +56,12 @@ const char* clean_filename(const char* in) {
   const char* pos = in;
   int len = strlen(in);
 
-  while (len > 2 && pos[0] == '.' && pos[1] == '/') {
+  while (len > 2 && pos[0] == '.' && pos[1] == PATH_SEPARATOR) {
     pos += 2;
     len -= 2;
   }
 
-  while (len > 3 && pos[0] == '.' && pos[1] == '.' && pos[2] == '/') {
+  while (len > 3 && pos[0] == '.' && pos[1] == '.' && pos[2] == PATH_SEPARATOR) {
     pos += 3;
     len -= 3;
   }
