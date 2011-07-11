@@ -297,6 +297,8 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
     columnAttribute = out2.str();
   }
 
+  injava = strcmp(unit_language, "Java") == 0;
+
   // issue the xml declaration, but only if we want to
   if (!isoption(OPTION_XMLDECL))
     xmlTextWriterStartDocument(xout, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
@@ -574,6 +576,7 @@ void srcMLOutput::processAccess(const antlr::RefToken& token) {
 
   xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST type_default);
 
+  // end the element right away if empty
   if (isempty(token)) {
     srcMLTextWriterEndElement(xout);
   }
@@ -604,7 +607,7 @@ void srcMLOutput::processBlockCommentStart(const antlr::RefToken& token) {
   srcMLTextWriterStartElement(xout, BAD_CAST s);
 
   xmlTextWriterWriteAttribute(xout, BAD_CAST "type",
-     BAD_CAST (strcmp(unit_language, "Java") == 0 && token->getText().substr(0, 3) == "/**" ? JAVADOC_COMMENT_ATTR : BLOCK_COMMENT_ATTR));
+     BAD_CAST (injava && token->getText().substr(0, 3) == "/**" ? JAVADOC_COMMENT_ATTR : BLOCK_COMMENT_ATTR));
 
   processText(token);
 }

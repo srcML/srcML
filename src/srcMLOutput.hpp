@@ -108,6 +108,8 @@ class srcMLOutput : public srcMLParserTokenTypes {
   void srcMLTextWriterStartElement(xmlTextWriter*, const xmlChar* s);
   void srcMLTextWriterEndElement(xmlTextWriter*);
 
+  bool injava;
+
   // List of element names
   static const char* const ElementNames[];
   static const char ElementPrefix[];
