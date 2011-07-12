@@ -2858,14 +2858,11 @@ srcmlend = """
 </unit>
 """
 
-if platform.system() != "Windows" :
-        line = execute(['ls', '-1', 'dir'], "")
-else :
-        line = execute(['dir', '/B', 'dir'], "")
+dir = os.listdir('dir')
 
 srcml = srcmlstart
 
-for file in line.split('\n') :
+for file in dir :
         if file == 'file.aj' :
                 srcml += aj
         if file == 'file.c' :
