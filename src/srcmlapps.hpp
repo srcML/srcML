@@ -172,10 +172,18 @@ const char* clean_filename(const char*);
 /* Implementation of strsep for MINGW */
 #ifdef __MINGW32__
 inline char* strsep(char** stringp, const char* delim) {
+
+  if (!*stringp)
+    return NULL;
+
   char* retvalue = *stringp;
   char* split = strchr(*stringp, delim[0]);
-  *stringp = split + 1;
-  *split = '\0';
+  if (split) {
+    *stringp = split + 1;
+    *split = '\0';
+  } else {
+    *stringp = NULL;
+  }
 
   return retvalue;
 }
