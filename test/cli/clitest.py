@@ -2951,7 +2951,8 @@ srcmlend = """
 if platform.system() != "Windows" :
         os.system('rm sub/a.cpp; touch sub/a.cpp')
 else :
-        os.system("del sub\\a.cpp; copy emptysrc\\empty.cpp sub\\a.cpp")
+        os.system("del sub\\a.cpp")
+        os.system("copy emptysrc\\empty.cpp sub\\a.cpp")
 
 f = open('sub/a.java', 'w')
 f.write(src)
@@ -2968,7 +2969,8 @@ validate(open('sub/all.xml', 'r').read(), srcmlstart + java + cppempty + srcmlen
 if platform.system() != "Windows" :
         os.system('rm sub/a.java; touch sub/a.java')
 else :
-        os.system("del sub\\a.java; copy emptysrc\\empty.java sub\\a.java")
+        os.system("del sub\\a.java")
+        os.system("copy emptysrc\\empty.java sub\\a.java")
 
 f = open('sub/a.cpp', 'w')
 f.write(src)
@@ -2991,7 +2993,8 @@ cpp = """
 if platform.system() != "Windows" :
         os.system('rm sub/a.cpp; touch sub/a.cpp')
 else :
-        os.system("del sub\\a.cpp; copy emptysrc\\empty.cpp sub\\a.cpp")
+        os.system("del sub\\a.cpp")
+        os.system("copy emptysrc\\empty.cpp sub\\a.cpp")
 
 f = open('sub/b.cpp', 'w')
 f.write(src)
@@ -3014,7 +3017,8 @@ java = """
 if platform.system() != "Windows" :
         os.system('rm sub/a.java; touch sub/a.java')
 else :
-        os.system("del sub\\a.java; copy emptysrc\\empty.java sub\\a.java")
+        os.system("del sub\\a.java")
+        os.system("copy emptysrc\\empty.java sub\\a.java")
 
 f = open('sub/b.java', 'w')
 f.write(src)
