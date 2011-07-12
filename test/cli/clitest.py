@@ -63,8 +63,8 @@ def validate(gen, expected):
 
         if gen != expected:
                 globals()["error_count"] = globals()["error_count"] + 1
-                globals()["error_list"].append(test_count)
-                globals()["error_lines"].append(test_line)
+                globals()["error_list"].append(globals()["test_count"])
+                globals()["error_lines"].append(globals()["test_line"])
                 print "ERROR"
                 print "expected|" + expected + "|"
                 print "gen|" + gen + "|"
@@ -2976,8 +2976,9 @@ print "Error count:\t\t", error_count, "\t", error_list
 print "EOL Error count:\t", eol_error_count
 print "Exception count:\t", exception_count
 print
-for line in error_lines:
-        print line
+
+for i in range(len(error_list)) :
+        print error_list[i] + "\t" + test_line[i]
 print
 print src2srcmlversion()
 print srcml2srcversion()
