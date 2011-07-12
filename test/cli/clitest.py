@@ -18,6 +18,8 @@ error_count = 0
 eol_error_count = 0
 exception_count = 0
 error_list = []
+test_line = ""
+error_lines = []
 
 def check(command, input, output):
 
@@ -32,6 +34,7 @@ def check(command, input, output):
 def checkNoOutput(command, input):
 
         globals()["test_count"] += 1
+        globals()["test_line"] = os.path.basename(command[0]) + ' ' + ' '.join(command[1:])
         print test_count, os.path.basename(command[0]), ' '.join(command[1:])
         
         executeNoOutput(command, input)
@@ -59,6 +62,7 @@ def validate(gen, expected):
         if gen != expected:
                 globals()["error_count"] = globals()["error_count"] + 1
                 error_list.append(test_count)
+                error_lines.append(test_line)
                 print "ERROR"
                 print "expected|" + expected + "|"
                 print "gen|" + gen + "|"
@@ -2960,6 +2964,9 @@ print
 print "Error count:\t\t", error_count, "\t", error_list
 print "EOL Error count:\t", eol_error_count
 print "Exception count:\t", exception_count
+print
+for line in error_lines:
+        print line
 print
 print src2srcmlversion()
 print srcml2srcversion()
