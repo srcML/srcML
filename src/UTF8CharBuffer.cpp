@@ -28,10 +28,14 @@
 UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding)
   : antlr::CharBuffer(std::cin), pos(0), size(0), eof(false), lastcr(false)
 {
+  const char* enc = encoding;
+  if (!enc)
+    enc = "ISO-8859-1";
+
   // use a libxml2 parser input buffer to support URIs
   // if an encoding is specified, then use it.  Otherwise, use current default
   if (!(input = xmlParserInputBufferCreateFilename(ifilename,
-     encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE)))
+     enc ? xmlParseCharEncoding(enc) : XML_CHAR_ENCODING_NONE)))
      throw UTF8FileError();
 }
 
