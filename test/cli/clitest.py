@@ -2858,7 +2858,10 @@ srcmlend = """
 </unit>
 """
 
-line = execute(['ls', '-1', 'dir'], "")
+if platform.system() != "Windows" :
+        line = execute(['ls', '-1', 'dir'], "")
+else :
+        line = execute(['dir', '/B', 'dir'], "")
 
 srcml = srcmlstart
 
