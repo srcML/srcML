@@ -469,19 +469,23 @@ if platform.system() != "Windows" :
 else :
         os.system("del sub\\a.cpp")
 
-checkNoOutput([srcml2src, option.EXPAND_FLAG + '=.'], sxmlfile1)
+#remove
+if platform.system() != "Windows" :
+        checkNoOutput([srcml2src, option.EXPAND_FLAG + '=.'], sxmlfile1)
 
-validate(open("sub/a.cpp", "r").read(), sfile1)
+        validate(open("sub/a.cpp", "r").read(), sfile1)
 
+#remove
 if platform.system() != "Windows" :
         os.system("rm -f sub/a.cpp sub/b.cpp;")
 else :
         os.system("del sub\\a.cpp sub\\b.cpp")
 
-checkNoOutput([srcml2src, option.EXPAND_FLAG + '=.'], nestedfile)
+if platform.system() != "Windows" :
+        checkNoOutput([srcml2src, option.EXPAND_FLAG + '=.'], nestedfile)
 
-validate(open("sub/a.cpp", "r").read(), sfile1)
-validate(open("sub/b.cpp", "r").read(), sfile2)
+        validate(open("sub/a.cpp", "r").read(), sfile1)
+        validate(open("sub/b.cpp", "r").read(), sfile2)
 
 #os.system("rm -f sub/a.cpp sub/b.cpp")
 
@@ -1966,9 +1970,11 @@ if platform.system() != "Windows" :
 else :
         os.system("del sub\\a.cpp")
 
-checkNoOutput([srcml2src, option.EXPAND_FLAG + '=.', 'sub/a.cpp.xml'], srcml)
+#remove
+if platform.system() != "Windows":
+        checkNoOutput([srcml2src, option.EXPAND_FLAG + '=.', 'sub/a.cpp.xml'], srcml)
 
-validate(open("sub/a.cpp", "r").read(), sfile1)
+        validate(open("sub/a.cpp", "r").read(), sfile1)
 
 f = open('sub/a.cpp.xml', 'w')
 f.write(nestedfile)
@@ -1979,13 +1985,15 @@ if platform.system() != "Windows" :
 else :
         os.system("del sub\\a.cpp sub\\b.cpp")
 
-checkNoOutput([srcml2src, option.EXPAND_FLAG + '=.', 'sub/a.cpp.xml'], "")
-validate(open('sub/a.cpp', 'r').read(), sfile1)
-validate(open('sub/b.cpp', 'r').read(), sfile2)
+#remove
+if platform.system() != "Windows":
+        checkNoOutput([srcml2src, option.EXPAND_FLAG + '=.', 'sub/a.cpp.xml'], "")
+        validate(open('sub/a.cpp', 'r').read(), sfile1)
+        validate(open('sub/b.cpp', 'r').read(), sfile2)
 
 #os.system("rm -f sub/a.cpp sub/b.cpp")
 
-checkNoOutput([srcml2src, option.EXPAND_FLAG_SHORT, '.', 'sub/a.cpp.xml'], "")
+        checkNoOutput([srcml2src, option.EXPAND_FLAG_SHORT, '.', 'sub/a.cpp.xml'], "")
 #validate(open('sub/a.cpp', 'r').read(), sfile1)
 #validate(open('sub/b.cpp', 'r').read(), sfile2)
 
