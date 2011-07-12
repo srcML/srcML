@@ -8,10 +8,10 @@ test : option.py status.py
 	./clitest.py
 
 option.py : ${OPTION_SRC}
-	../../bin/src2srcml ${OPTION_SRC} | xsltproc extract_options.xsl - > option.py
+	src2srcml ${OPTION_SRC} | xsltproc extract_options.xsl - > option.py
 
 status.py : ${OPTION_SRC}
-	../../bin/src2srcml --literal ${STATUS_SRC} | xsltproc extract_return_status.xsl - > status.py
+	src2srcml --literal ${STATUS_SRC} | xsltproc extract_return_status.xsl - > status.py
 
 clean :
 	rm -f option.py

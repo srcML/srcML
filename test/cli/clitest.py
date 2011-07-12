@@ -17,6 +17,7 @@ test_count = 0
 error_count = 0
 eol_error_count = 0
 exception_count = 0
+error_list = []
 
 def check(command, input, output):
 
@@ -57,6 +58,7 @@ def validate(gen, expected):
 
         if gen != expected:
                 globals()["error_count"] = globals()["error_count"] + 1
+                error_list.append(test_count)
                 print "ERROR"
                 print "expected|" + expected + "|"
                 print "gen|" + gen + "|"
@@ -2955,7 +2957,7 @@ validate(open('sub/all.xml', 'r').read(), srcmlstart + java + javaempty + srcmle
 
 # footer
 print
-print "Error count:\t\t", error_count
+print "Error count:\t\t", error_count, "\t", error_list
 print "EOL Error count:\t", eol_error_count
 print "Exception count:\t", exception_count
 print
