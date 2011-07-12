@@ -2139,29 +2139,34 @@ validate(open('sub/b.cpp.xml').read(), srcmlout)
 
 
 # src2srcml
+if platform.system() != "Windows" :
 
-globals()["test_count"] += 1
-globals()["test_line"] = os.path.basename(src2srcml) + ' ' + option.HELP_FLAG
-print test_count, os.path.basename(src2srcml) + ' ' + option.HELP_FLAG
-line = execute([src2srcml, option.HELP_FLAG], "")
-execute(['grep', 'Report bugs'], line)
-globals()["test_count"] += 1
-globals()["test_line"] = os.path.basename(src2srcml) + ' ' + option.VERSION_FLAG
-print test_count, os.path.basename(src2srcml) + ' ' + option.VERSION_FLAG
-line = execute([src2srcml, option.VERSION_FLAG], "")
-execute(['grep', 'Copyright'], line)
+        globals()["test_count"] += 1
+        globals()["test_line"] = os.path.basename(src2srcml) + ' ' + option.HELP_FLAG
+        print test_count, os.path.basename(src2srcml) + ' ' + option.HELP_FLAG
+        line = execute([src2srcml, option.HELP_FLAG], "")
+        execute(['grep', 'Report bugs'], line)
+
+        globals()["test_count"] += 1
+        globals()["test_line"] = os.path.basename(src2srcml) + ' ' + option.VERSION_FLAG
+        print test_count, os.path.basename(src2srcml) + ' ' + option.VERSION_FLAG
+        line = execute([src2srcml, option.VERSION_FLAG], "")
+        execute(['grep', 'Copyright'], line)
 
 # srcML2src
-globals()["test_count"] += 1
-globals()["test_line"] = os.path.basename(srcml2src) + ' ' + option.HELP_FLAG
-print test_count, os.path.basename(srcml2src) + ' ' + option.HELP_FLAG
-line = execute([srcml2src, option.HELP_FLAG], "")
-execute(['grep', 'Report bugs'], line)
-globals()["test_count"] += 1
-globals()["test_line"] = os.path.basename(srcml2src) + ' ' + option.VERSION_FLAG
-print test_count, os.path.basename(srcml2src) + ' ' + option.VERSION_FLAG
-line = execute([srcml2src, option.VERSION_FLAG], "")
-execute(['grep', 'Copyright'], line)
+if platform.system() != "Windows" :
+
+        globals()["test_count"] += 1
+        globals()["test_line"] = os.path.basename(srcml2src) + ' ' + option.HELP_FLAG
+        print test_count, os.path.basename(srcml2src) + ' ' + option.HELP_FLAG
+        line = execute([srcml2src, option.HELP_FLAG], "")
+        execute(['grep', 'Report bugs'], line)
+
+        globals()["test_count"] += 1
+        globals()["test_line"] = os.path.basename(srcml2src) + ' ' + option.VERSION_FLAG
+        print test_count, os.path.basename(srcml2src) + ' ' + option.VERSION_FLAG
+        line = execute([srcml2src, option.VERSION_FLAG], "")
+        execute(['grep', 'Copyright'], line)
 
 ##
 # Test order of metadata option order
