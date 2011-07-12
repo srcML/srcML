@@ -2832,7 +2832,7 @@ fsxmlfile = xml_declaration + """
 if platform.system() != "Windows":
         os.system("touch sub/a.xml")
 else :
-        os.system("echo '' > sub/a.xml")
+        os.system("copy emptysrc/empty.cpp sub/a.xml")
 
 check([src2srcml, option.REGISTER_EXT_FLAG, 'xml=Java', 'sub/a.xml'], "", fsxmlfile)
 check([src2srcml, option.REGISTER_EXT_FLAG + '=xml=Java', 'sub/a.xml'], "", fsxmlfile)
@@ -2943,7 +2943,7 @@ srcmlend = """
 if platform.system() != "Windows" :
         os.system('rm sub/a.cpp; touch sub/a.cpp')
 else :
-        os.system("del sub/a.cpp; echo '' > sub/a.cpp")
+        os.system("del sub/a.cpp; copy emptysrc/empty.cpp sub/a.cpp")
 
 f = open('sub/a.java', 'w')
 f.write(src)
@@ -2960,7 +2960,7 @@ validate(open('sub/all.xml', 'r').read(), srcmlstart + java + cppempty + srcmlen
 if platform.system() != "Windows" :
         os.system('rm sub/a.java; touch sub/a.java')
 else :
-        os.system("del sub/a.java; echo '' > sub/a.java")
+        os.system("del sub/a.java; copy emptysrc/empty.java sub/a.java")
 
 f = open('sub/a.cpp', 'w')
 f.write(src)
@@ -2983,7 +2983,7 @@ cpp = """
 if platform.system() != "Windows" :
         os.system('rm sub/a.cpp; touch sub/a.cpp')
 else :
-        os.system("del sub/a.cpp; echo '' > sub/a.cpp")
+        os.system("del sub/a.cpp; copy emptysrc/empty.cpp sub/a.cpp")
 
 f = open('sub/b.cpp', 'w')
 f.write(src)
@@ -3006,7 +3006,7 @@ java = """
 if platform.system() != "Windows" :
         os.system('rm sub/a.java; touch sub/a.java')
 else :
-        os.system("del sub/a.java; echo '' > sub/a.java")
+        os.system("del sub/a.java; copy emptysrc/empty.java sub/a.java")
 
 f = open('sub/b.java', 'w')
 f.write(src)
