@@ -2224,29 +2224,34 @@ f.write(sxmlfile)
 f.close()
  
 # src2srcml
+if platform.system() != "Windows" :
 
-globals()["test_count"] += 1
-globals()["test_line"] = os.path.basename(src2srcml) + ' ' + option.VERBOSE_FLAG
-print test_count, os.path.basename(src2srcml) + ' ' + option.VERBOSE_FLAG
-line = execute([src2srcml, option.VERBOSE_FLAG, option.LANGUAGE_FLAG_SHORT, 'C++'], sfile)
-execute(['grep', srcencoding + xmlencoding], line)
-globals()["test_count"] += 1
-globals()["test_line"] = os.path.basename(src2srcml) + ' ' + option.VERBOSE_FLAG + ' sub/a.cpp'
-print test_count, os.path.basename(src2srcml) + ' ' + option.VERBOSE_FLAG + ' sub/a.cpp'
-line = execute([src2srcml, option.VERBOSE_FLAG, 'sub/a.cpp'], "")
-execute(['grep', srcencoding + xmlencoding], line)
+        globals()["test_count"] += 1
+        globals()["test_line"] = os.path.basename(src2srcml) + ' ' + option.VERBOSE_FLAG
+        print test_count, os.path.basename(src2srcml) + ' ' + option.VERBOSE_FLAG
+        line = execute([src2srcml, option.VERBOSE_FLAG, option.LANGUAGE_FLAG_SHORT, 'C++'], sfile)
+        execute(['grep', srcencoding + xmlencoding], line)
+
+        globals()["test_count"] += 1
+        globals()["test_line"] = os.path.basename(src2srcml) + ' ' + option.VERBOSE_FLAG + ' sub/a.cpp'
+        print test_count, os.path.basename(src2srcml) + ' ' + option.VERBOSE_FLAG + ' sub/a.cpp'
+        line = execute([src2srcml, option.VERBOSE_FLAG, 'sub/a.cpp'], "")
+        execute(['grep', srcencoding + xmlencoding], line)
 
 # srcml2src
-globals()["test_count"] += 1
-globals()["test_line"] = os.path.basename(srcml2src) + ' ' + option.VERBOSE_FLAG
-print test_count, os.path.basename(srcml2src) + ' ' + option.VERBOSE_FLAG
-line = execute([srcml2src, option.VERBOSE_FLAG], sxmlfile)
-execute(['grep', xmlencoding + srcencoding], line)
-globals()["test_count"] += 1
-globals()["test_line"] = os.path.basename(srcml2src) + ' ' + option.VERBOSE_FLAG + ' sub/a.cpp.xml'
-print test_count, os.path.basename(srcml2src) + ' ' + option.VERBOSE_FLAG + ' sub/a.cpp.xml'
-line = execute([srcml2src, option.VERBOSE_FLAG, 'sub/a.cpp.xml'], "")
-execute(['grep', xmlencoding + srcencoding], line)
+if platform.system() != "Windows" :
+
+        globals()["test_count"] += 1
+        globals()["test_line"] = os.path.basename(srcml2src) + ' ' + option.VERBOSE_FLAG
+        print test_count, os.path.basename(srcml2src) + ' ' + option.VERBOSE_FLAG
+        line = execute([srcml2src, option.VERBOSE_FLAG], sxmlfile)
+        execute(['grep', xmlencoding + srcencoding], line)
+
+        globals()["test_count"] += 1
+        globals()["test_line"] = os.path.basename(srcml2src) + ' ' + option.VERBOSE_FLAG + ' sub/a.cpp.xml'
+        print test_count, os.path.basename(srcml2src) + ' ' + option.VERBOSE_FLAG + ' sub/a.cpp.xml'
+        line = execute([srcml2src, option.VERBOSE_FLAG, 'sub/a.cpp.xml'], "")
+        execute(['grep', xmlencoding + srcencoding], line)
 
 ##
 # src2srcml expression option
