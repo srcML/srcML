@@ -2900,6 +2900,9 @@ for file in dir :
 
 srcml += srcmlend
 
+if platform.system() == "Windows" :
+        srcml = string.replace(srcml, "dir/", "dir\\")
+
 check([src2srcml, 'dir'], "", srcml)
 check([src2srcml, 'dir', '-o', 'dir/dir.xml'], "", "")
 validate(open('dir/dir.xml', 'r').read(), srcml)
