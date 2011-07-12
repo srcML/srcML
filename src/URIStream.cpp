@@ -93,7 +93,7 @@ char* URIStream::readline() {
     return 0;
 
   // replace the linefeed, and the optional carriage return before it, with a null to turn it into single string
-  if ((endpos - 1 > 0) && (input->buffer->content[endpos - 1] == '\r'))
+  if ((endpos >= 1) && (input->buffer->content[endpos - 1] == '\r'))
     input->buffer->content[endpos - 1] = '\0';
   input->buffer->content[endpos] = '\0';
 
