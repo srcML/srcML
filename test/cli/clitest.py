@@ -467,7 +467,7 @@ check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "2"], nestedfile, sxmlfile2
 if platform.system() != "Windows" :
         os.system("rm -f sub/a.cpp")
 else :
-        os.system("del sub/a.cpp")
+        os.system("del sub\\a.cpp")
 
 checkNoOutput([srcml2src, option.EXPAND_FLAG + '=.'], sxmlfile1)
 
@@ -476,7 +476,7 @@ validate(open("sub/a.cpp", "r").read(), sfile1)
 if platform.system() != "Windows" :
         os.system("rm -f sub/a.cpp sub/b.cpp;")
 else :
-        os.system("del sub/a.cpp sub/b.cpp")
+        os.system("del sub\\a.cpp sub\\b.cpp")
 
 checkNoOutput([srcml2src, option.EXPAND_FLAG + '=.'], nestedfile)
 
@@ -1964,7 +1964,7 @@ f.close()
 if platform.system() != "Windows" :
         os.system("rm -f sub/a.cpp")
 else :
-        os.system("del sub/a.cpp")
+        os.system("del sub\\a.cpp")
 
 checkNoOutput([srcml2src, option.EXPAND_FLAG + '=.', 'sub/a.cpp.xml'], srcml)
 
@@ -1977,7 +1977,7 @@ f.close()
 if platform.system() != "Windows" :
         os.system("rm -f sub/a.cpp sub/b.cpp")
 else :
-        os.system("del sub/a.cpp sub/b.cpp")
+        os.system("del sub\\a.cpp sub\\b.cpp")
 
 checkNoOutput([srcml2src, option.EXPAND_FLAG + '=.', 'sub/a.cpp.xml'], "")
 validate(open('sub/a.cpp', 'r').read(), sfile1)
@@ -2832,7 +2832,7 @@ fsxmlfile = xml_declaration + """
 if platform.system() != "Windows":
         os.system("touch sub/a.xml")
 else :
-        os.system("copy emptysrc/empty.cpp sub/a.xml")
+        os.system("copy emptysrc\\empty.cpp sub\\a.xml")
 
 check([src2srcml, option.REGISTER_EXT_FLAG, 'xml=Java', 'sub/a.xml'], "", fsxmlfile)
 check([src2srcml, option.REGISTER_EXT_FLAG + '=xml=Java', 'sub/a.xml'], "", fsxmlfile)
@@ -2943,7 +2943,7 @@ srcmlend = """
 if platform.system() != "Windows" :
         os.system('rm sub/a.cpp; touch sub/a.cpp')
 else :
-        os.system("del sub/a.cpp; copy emptysrc/empty.cpp sub/a.cpp")
+        os.system("del sub\\a.cpp; copy emptysrc\\empty.cpp sub\\a.cpp")
 
 f = open('sub/a.java', 'w')
 f.write(src)
@@ -2960,7 +2960,7 @@ validate(open('sub/all.xml', 'r').read(), srcmlstart + java + cppempty + srcmlen
 if platform.system() != "Windows" :
         os.system('rm sub/a.java; touch sub/a.java')
 else :
-        os.system("del sub/a.java; copy emptysrc/empty.java sub/a.java")
+        os.system("del sub\\a.java; copy emptysrc\\empty.java sub\\a.java")
 
 f = open('sub/a.cpp', 'w')
 f.write(src)
@@ -2983,7 +2983,7 @@ cpp = """
 if platform.system() != "Windows" :
         os.system('rm sub/a.cpp; touch sub/a.cpp')
 else :
-        os.system("del sub/a.cpp; copy emptysrc/empty.cpp sub/a.cpp")
+        os.system("del sub\\a.cpp; copy emptysrc\\empty.cpp sub\\a.cpp")
 
 f = open('sub/b.cpp', 'w')
 f.write(src)
@@ -3006,7 +3006,7 @@ java = """
 if platform.system() != "Windows" :
         os.system('rm sub/a.java; touch sub/a.java')
 else :
-        os.system("del sub/a.java; copy emptysrc/empty.java sub/a.java")
+        os.system("del sub\\a.java; copy emptysrc\\empty.java sub\\a.java")
 
 f = open('sub/b.java', 'w')
 f.write(src)
