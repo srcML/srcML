@@ -59,13 +59,6 @@ const char* const UNIT_ATTRIBUTE_VERSION = "version";
 const char* const UNIT_ATTRIBUTE_ITEM = "item";
 const char* const UNIT_ATTRIBUTE_PATH = "item";
 
-struct prefixns {
-  std::string prefix;
-  std::string ns;
-};
-
-static std::vector<struct prefixns> namespaces;
-
 const char* const DEFAULT_URI_PREFIX[] = {
 
   SRCML_SRC_NS_PREFIX_DEFAULT,
@@ -76,22 +69,5 @@ const char* const DEFAULT_URI_PREFIX[] = {
   SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT,
   SRCML_EXT_POSITION_NS_PREFIX_DEFAULT,
 };
-
-static void register_namespace(const std::string & prefix, const std::string & ns) {
-
-  struct prefixns new_namespace = {prefix, ns};
-  namespaces.push_back(new_namespace);
-}
-
-static void register_default_namespaces() {
-
-  register_namespace(SRCML_SRC_NS_PREFIX_DEFAULT, SRCML_SRC_NS_URI);
-  register_namespace(SRCML_CPP_NS_PREFIX_DEFAULT, SRCML_CPP_NS_URI);
-  register_namespace(SRCML_ERR_NS_PREFIX_DEFAULT, SRCML_ERR_NS_URI);
-  register_namespace(SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT, SRCML_EXT_LITERAL_NS_URI);
-  register_namespace(SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT, SRCML_EXT_OPERATOR_NS_URI);
-  register_namespace(SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT, SRCML_EXT_MODIFIER_NS_URI);
-  register_namespace(SRCML_EXT_POSITION_NS_PREFIX_DEFAULT, SRCML_EXT_POSITION_NS_URI);
-}
 
 #endif
