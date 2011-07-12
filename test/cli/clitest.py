@@ -1621,29 +1621,32 @@ fxmlfile = xml_declaration + """
 """
 
 # src2srcml
+if platform.system() != "Windows" :
 
-f = open('sub/a.cpp', 'w')
-f.write(sfile)
-f.close()
-check([src2srcml, option.COMPRESSED_FLAG_SHORT, 'sub/a.cpp', '-o', 'sub/a.cpp.xml.gz'], "", "")
-check(['gunzip', '-c', 'sub/a.cpp.xml.gz'], "", fxmlfile)
-check([src2srcml, option.COMPRESSED_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml.gz'], "", "")
-check(['gunzip', '-c', 'sub/a.cpp.xml.gz'], "", fxmlfile)
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.COMPRESSED_FLAG_SHORT, '-o', 'sub/a.cpp.xml.gz'], sfile, "")
-check(['gunzip', '-c', 'sub/a.cpp.xml.gz'], "", sxmlfile)
+        f = open('sub/a.cpp', 'w')
+        f.write(sfile)
+        f.close()
+        check([src2srcml, option.COMPRESSED_FLAG_SHORT, 'sub/a.cpp', '-o', 'sub/a.cpp.xml.gz'], "", "")
+        check(['gunzip', '-c', 'sub/a.cpp.xml.gz'], "", fxmlfile)
+        check([src2srcml, option.COMPRESSED_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml.gz'], "", "")
+        check(['gunzip', '-c', 'sub/a.cpp.xml.gz'], "", fxmlfile)
+        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.COMPRESSED_FLAG_SHORT, '-o', 'sub/a.cpp.xml.gz'], sfile, "")
+        check(['gunzip', '-c', 'sub/a.cpp.xml.gz'], "", sxmlfile)
 
 
 # srcml2src
 
-f = open('sub/a.cpp.xml', 'w')
-f.write(fxmlfile)
-f.close()
-check([srcml2src, option.COMPRESSED_FLAG_SHORT, 'sub/a.cpp.xml', '-o', 'sub/a.cpp.gz'], "", "")
-check(['gunzip', '-c', 'sub/a.cpp.gz'], "", sfile)
-check([srcml2src, option.COMPRESSED_FLAG, 'sub/a.cpp.xml', '-o', 'sub/a.cpp.gz'], "", "")
-check(['gunzip', '-c', 'sub/a.cpp.gz'], "", sfile)
-check([srcml2src, option.COMPRESSED_FLAG_SHORT, '-o', 'sub/a.cpp.gz'], fxmlfile, "")
-check(['gunzip', '-c', 'sub/a.cpp.gz'], "", sfile)
+if platform.system() != "Windows" :
+
+        f = open('sub/a.cpp.xml', 'w')
+        f.write(fxmlfile)
+        f.close()
+        check([srcml2src, option.COMPRESSED_FLAG_SHORT, 'sub/a.cpp.xml', '-o', 'sub/a.cpp.gz'], "", "")
+        check(['gunzip', '-c', 'sub/a.cpp.gz'], "", sfile)
+        check([srcml2src, option.COMPRESSED_FLAG, 'sub/a.cpp.xml', '-o', 'sub/a.cpp.gz'], "", "")
+        check(['gunzip', '-c', 'sub/a.cpp.gz'], "", sfile)
+        check([srcml2src, option.COMPRESSED_FLAG_SHORT, '-o', 'sub/a.cpp.gz'], fxmlfile, "")
+        check(['gunzip', '-c', 'sub/a.cpp.gz'], "", sfile)
 
 # test input file is gzipped
 
@@ -1663,27 +1666,29 @@ fxmlfile = xml_declaration + """
 </unit>
 """
 
-f = open('sub/a.cpp.gz', 'r')
-gzipped = f.read()
-f.close()
+if platform.system() != "Windows" :
 
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++'], gzipped, sxmlfile)
-check([src2srcml, 'sub/a.cpp.gz'], "", fxmlfile)
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', '-o', 'sub/a.cpp.xml'], gzipped, "")
-validate(open('sub/a.cpp.xml', 'r').read(), sxmlfile)
-check([src2srcml, 'sub/a.cpp.gz', '-o', 'sub/a.cpp.xml'], "", "")
-validate(open('sub/a.cpp.xml', 'r').read(), fxmlfile)
+        f = open('sub/a.cpp.gz', 'r')
+        gzipped = f.read()
+        f.close()
 
-f = open('sub/a.cpp.xml.gz', 'r')
-gzipped = f.read()
-f.close()
+        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++'], gzipped, sxmlfile)
+        check([src2srcml, 'sub/a.cpp.gz'], "", fxmlfile)
+        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', '-o', 'sub/a.cpp.xml'], gzipped, "")
+        validate(open('sub/a.cpp.xml', 'r').read(), sxmlfile)
+        check([src2srcml, 'sub/a.cpp.gz', '-o', 'sub/a.cpp.xml'], "", "")
+        validate(open('sub/a.cpp.xml', 'r').read(), fxmlfile)
+        
+        f = open('sub/a.cpp.xml.gz', 'r')
+        gzipped = f.read()
+        f.close()
 
-check([srcml2src], gzipped, sfile)
-check([srcml2src, 'sub/a.cpp.xml.gz'], "", sfile)
-check([srcml2src, '-o', 'sub/a.cpp'], gzipped, "")
-validate(open('sub/a.cpp', 'r').read(), sfile)
-check([srcml2src, 'sub/a.cpp.xml.gz', '-o', 'sub/a.cpp'], "", "")
-validate(open('sub/a.cpp', 'r').read(), sfile)
+        check([srcml2src], gzipped, sfile)
+        check([srcml2src, 'sub/a.cpp.xml.gz'], "", sfile)
+        check([srcml2src, '-o', 'sub/a.cpp'], gzipped, "")
+        validate(open('sub/a.cpp', 'r').read(), sfile)
+        check([srcml2src, 'sub/a.cpp.xml.gz', '-o', 'sub/a.cpp'], "", "")
+        validate(open('sub/a.cpp', 'r').read(), sfile)
 
 ##
 # src2srcml Markup Extensions
