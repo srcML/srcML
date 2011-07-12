@@ -2878,13 +2878,14 @@ check([src2srcml, 'dir'], "", srcml)
 check([src2srcml, 'dir', '-o', 'dir/dir.xml'], "", "")
 validate(open('dir/dir.xml', 'r').read(), srcml)
 
-execute(['tar', 'czf', 'dir/foo.tar', 'dir/file.c'], "")
+if platform.system() != "Windows" :
+        execute(['tar', 'czf', 'dir/foo.tar', 'dir/file.c'], "")
 
-check([src2srcml, 'dir'], "", srcml)
-check([src2srcml, 'dir', '-o', 'dir/dir.xml'], "", "")
-validate(open('dir/dir.xml', 'r').read(), srcml)
+        check([src2srcml, 'dir'], "", srcml)
+        check([src2srcml, 'dir', '-o', 'dir/dir.xml'], "", "")
+        validate(open('dir/dir.xml', 'r').read(), srcml)
 
-execute(['rm', 'dir/foo.tar'], "")
+        execute(['rm', 'dir/foo.tar'], "")
 
 #
 # nested files
