@@ -18,6 +18,7 @@ error_count = 0
 eol_error_count = 0
 exception_count = 0
 error_list = []
+eol_error_list = []
 test_line = ""
 error_lines = []
 
@@ -60,6 +61,7 @@ def validate(gen, expected):
 
         if string.find(gen, "\r\n") != -1:
                 globals()["eol_error_count"] += 1
+                globals()["eol_error_list"].append(globals()["test_count"])
 
         if gen != expected:
                 globals()["error_count"] = globals()["error_count"] + 1
@@ -2989,7 +2991,7 @@ validate(open('sub/all.xml', 'r').read(), srcmlstart + java + javaempty + srcmle
 # footer
 print
 print "Error count:\t\t", error_count, "\t", error_list
-print "EOL Error count:\t", eol_error_count
+print "EOL Error count:\t", eol_error_count, "\t", eol_error_list
 print "Exception count:\t", exception_count
 print
 
