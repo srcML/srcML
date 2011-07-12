@@ -2978,7 +2978,7 @@ print "Exception count:\t", exception_count
 print
 
 for i in range(len(error_list)) :
-        print error_list[i] + "\t" + test_line[i]
+        print str(error_list[i]) + "\t" + test_line[i]
 print
 print src2srcmlversion()
 print srcml2srcversion()
