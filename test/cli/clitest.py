@@ -24,6 +24,7 @@ error_lines = []
 def check(command, input, output):
 
         globals()["test_count"] += 1
+        globals()["test_line"] = os.path.basename(command[0]) + ' ' + ' '.join(command[1:])
         print test_count, os.path.basename(command[0]), ' '.join(command[1:])
         
         line = execute(command, input)
@@ -43,6 +44,7 @@ def checkNoOutput(command, input):
 def checkError(command, input, error) :
 
         globals()["test_count"] += 1
+        globals()["test_line"] = os.path.basename(command[0]) + ' ' + ' '.join(command[1:])
         print test_count, os.path.basename(command[0]), ' '.join(command[1:])
 
         line = executeWithError(command, input)
@@ -61,8 +63,8 @@ def validate(gen, expected):
 
         if gen != expected:
                 globals()["error_count"] = globals()["error_count"] + 1
-                error_list.append(test_count)
-                error_lines.append(test_line)
+                globals()["error_list"].append(test_count)
+                globals()["error_lines"].append(test_line)
                 print "ERROR"
                 print "expected|" + expected + "|"
                 print "gen|" + gen + "|"
@@ -109,6 +111,7 @@ def getreturn(command, input):
                         
 
         globals()["test_count"] += 1
+        globals()["test_line"] = os.path.basename(command[0]) + ' ' + ' '.join(command[1:])
         print test_count, "Status: ", p.returncode, "\t", os.path.basename(command[0]), ' '.join(command[1:])
         return p.returncode
 
@@ -2133,20 +2136,24 @@ validate(open('sub/b.cpp.xml').read(), srcmlout)
 # src2srcml
 
 globals()["test_count"] += 1
+globals()["test_line"] = os.path.basename(src2srcml) + ' ' + option.HELP_FLAG
 print test_count, os.path.basename(src2srcml) + ' ' + option.HELP_FLAG
 line = execute([src2srcml, option.HELP_FLAG], "")
 execute(['grep', 'Report bugs'], line)
 globals()["test_count"] += 1
+globals()["test_line"] = os.path.basename(src2srcml) + ' ' + option.VERSION_FLAG
 print test_count, os.path.basename(src2srcml) + ' ' + option.VERSION_FLAG
 line = execute([src2srcml, option.VERSION_FLAG], "")
 execute(['grep', 'Copyright'], line)
 
 # srcML2src
 globals()["test_count"] += 1
+globals()["test_line"] = os.path.basename(srcml2src) + ' ' + option.HELP_FLAG
 print test_count, os.path.basename(srcml2src) + ' ' + option.HELP_FLAG
 line = execute([srcml2src, option.HELP_FLAG], "")
 execute(['grep', 'Report bugs'], line)
 globals()["test_count"] += 1
+globals()["test_line"] = os.path.basename(srcml2src) + ' ' + option.VERSION_FLAG
 print test_count, os.path.basename(srcml2src) + ' ' + option.VERSION_FLAG
 line = execute([srcml2src, option.VERSION_FLAG], "")
 execute(['grep', 'Copyright'], line)
@@ -2209,20 +2216,24 @@ f.close()
 # src2srcml
 
 globals()["test_count"] += 1
+globals()["test_line"] = os.path.basename(src2srcml) + ' ' + option.VERBOSE_FLAG
 print test_count, os.path.basename(src2srcml) + ' ' + option.VERBOSE_FLAG
 line = execute([src2srcml, option.VERBOSE_FLAG, option.LANGUAGE_FLAG_SHORT, 'C++'], sfile)
 execute(['grep', srcencoding + xmlencoding], line)
 globals()["test_count"] += 1
+globals()["test_line"] = os.path.basename(src2srcml) + ' ' + option.VERBOSE_FLAG + ' sub/a.cpp'
 print test_count, os.path.basename(src2srcml) + ' ' + option.VERBOSE_FLAG + ' sub/a.cpp'
 line = execute([src2srcml, option.VERBOSE_FLAG, 'sub/a.cpp'], "")
 execute(['grep', srcencoding + xmlencoding], line)
 
 # srcml2src
 globals()["test_count"] += 1
+globals()["test_line"] = os.path.basename(srcml2src) + ' ' + option.VERBOSE_FLAG
 print test_count, os.path.basename(srcml2src) + ' ' + option.VERBOSE_FLAG
 line = execute([srcml2src, option.VERBOSE_FLAG], sxmlfile)
 execute(['grep', xmlencoding + srcencoding], line)
 globals()["test_count"] += 1
+globals()["test_line"] = os.path.basename(srcml2src) + ' ' + option.VERBOSE_FLAG + ' sub/a.cpp.xml'
 print test_count, os.path.basename(srcml2src) + ' ' + option.VERBOSE_FLAG + ' sub/a.cpp.xml'
 line = execute([srcml2src, option.VERBOSE_FLAG, 'sub/a.cpp.xml'], "")
 execute(['grep', xmlencoding + srcencoding], line)
