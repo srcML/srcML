@@ -464,13 +464,19 @@ sxmlfile2 = xml_declaration + """
 check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "2", "-"], nestedfile, sxmlfile2)
 check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "2"], nestedfile, sxmlfile2)
 
-os.system("rm -f sub/a.cpp")
+if platform.system() != "Windows" :
+        os.system("rm -f sub/a.cpp")
+else :
+        os.system("del sub/a.cpp")
 
 checkNoOutput([srcml2src, option.EXPAND_FLAG + '=.'], sxmlfile1)
 
 validate(open("sub/a.cpp", "r").read(), sfile1)
 
-os.system("rm -f sub/a.cpp sub/b.cpp;")
+if platform.system() != "Windows" :
+        os.system("rm -f sub/a.cpp sub/b.cpp;")
+else :
+        os.system("del sub/a.cpp sub/b.cpp")
 
 checkNoOutput([srcml2src, option.EXPAND_FLAG + '=.'], nestedfile)
 
@@ -1955,7 +1961,10 @@ f = open('sub/a.cpp.xml', 'w')
 f.write(srcml)
 f.close()
 
-os.system("rm -f sub/a.cpp")
+if platform.system() != "Windows" :
+        os.system("rm -f sub/a.cpp")
+else :
+        os.system("del sub/a.cpp")
 
 checkNoOutput([srcml2src, option.EXPAND_FLAG + '=.', 'sub/a.cpp.xml'], srcml)
 
@@ -1965,7 +1974,10 @@ f = open('sub/a.cpp.xml', 'w')
 f.write(nestedfile)
 f.close()
 
-os.system("rm -f sub/a.cpp sub/b.cpp")
+if platform.system() != "Windows" :
+        os.system("rm -f sub/a.cpp sub/b.cpp")
+else :
+        os.system("del sub/a.cpp sub/b.cpp")
 
 checkNoOutput([srcml2src, option.EXPAND_FLAG + '=.', 'sub/a.cpp.xml'], "")
 validate(open('sub/a.cpp', 'r').read(), sfile1)
@@ -2817,7 +2829,11 @@ fsxmlfile = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" language="Java" filename="sub/a.xml"/>
 """
 
-os.system("touch sub/a.xml")
+if platform.system() != "Windows":
+        os.system("touch sub/a.xml")
+else :
+        os.system("echo '' > sub/a.xml")
+
 check([src2srcml, option.REGISTER_EXT_FLAG, 'xml=Java', 'sub/a.xml'], "", fsxmlfile)
 check([src2srcml, option.REGISTER_EXT_FLAG + '=xml=Java', 'sub/a.xml'], "", fsxmlfile)
 check([src2srcml, option.REGISTER_EXT_FLAG, 'xml=Java', 'sub/a.xml', '-o', 'sub/a.cpp.xml'], "", "")
@@ -2924,7 +2940,11 @@ srcmlend = """
 </unit>
 """
 
-os.system('rm sub/a.cpp; touch sub/a.cpp')
+if platform.system() != "Windows" :
+        os.system('rm sub/a.cpp; touch sub/a.cpp')
+else :
+        os.system("del sub/a.cpp; echo '' > sub/a.cpp")
+
 f = open('sub/a.java', 'w')
 f.write(src)
 f.close()
@@ -2937,7 +2957,11 @@ check([src2srcml, 'sub/a.java', 'sub/a.cpp'], '', srcmlstart + java + cppempty +
 check([src2srcml, 'sub/a.java', 'sub/a.cpp', '-o', 'sub/all.xml'], '', '')
 validate(open('sub/all.xml', 'r').read(), srcmlstart + java + cppempty + srcmlend)
 
-os.system('rm sub/a.java; touch sub/a.java')
+if platform.system() != "Windows" :
+        os.system('rm sub/a.java; touch sub/a.java')
+else :
+        os.system("del sub/a.java; echo '' > sub/a.java")
+
 f = open('sub/a.cpp', 'w')
 f.write(src)
 f.close()
@@ -2956,7 +2980,11 @@ cpp = """
 </unit>
 """
 
-os.system('rm sub/a.cpp; touch sub/a.cpp')
+if platform.system() != "Windows" :
+        os.system('rm sub/a.cpp; touch sub/a.cpp')
+else :
+        os.system("del sub/a.cpp; echo '' > sub/a.cpp")
+
 f = open('sub/b.cpp', 'w')
 f.write(src)
 f.close()
@@ -2975,7 +3003,11 @@ java = """
 </unit>
 """
 
-os.system('rm sub/a.java; touch sub/a.java')
+if platform.system() != "Windows" :
+        os.system('rm sub/a.java; touch sub/a.java')
+else :
+        os.system("del sub/a.java; echo '' > sub/a.java")
+
 f = open('sub/b.java', 'w')
 f.write(src)
 f.close()
