@@ -310,11 +310,12 @@ int main(int argc, char* argv[]) {
   initGenericErrorDefaultFunc(&handler);
 
   xmlRegisterDefaultInputCallbacks();
-
+  /*
   if (xmlRegisterInputCallbacks(archiveReadMatch, archiveReadOpen, archiveRead, archiveReadClose) < 0) {
     fprintf(stderr, "%s: failed to register archive handler\n", PROGRAM_NAME);
     exit(1);
   }
+  */
   /*
   if (xmlRegisterOutputCallbacks(archiveWriteDiskMatch, archiveWriteDiskOpen, archiveWriteDisk, archiveWriteDiskClose) < 0) {
     fprintf(stderr, "%s: failed to register archive handler\n", PROGRAM_NAME);
