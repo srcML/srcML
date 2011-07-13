@@ -397,6 +397,7 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
   // TODO: error return
 
   std::cerr << "XSLT: " << __FUNCTION__ << " " << __LINE__ << '\n';
+  std::cerr << "XSLT: " << __FUNCTION__ << " " << __LINE__ << '\n';
 
   srcMLParseDocument(ctxt);
 
