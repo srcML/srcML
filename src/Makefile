@@ -88,13 +88,13 @@ else
 SRC2SRCML_BIN=${EXE_DIR}src2srcml.exe
 SRCML2SRC_BIN=${EXE_DIR}srcml2src.exe
 LIBSRCML_SO=${EXE_DIR}libsrcml.dll
-#SRCMLDIRECT_BIN=${EXE_DIR}srcmldirect.exe
+SRCMLDIRECT_BIN=${EXE_DIR}srcmldirect.exe
 endif
 
 LIBSRCML_INCLUDE=${OBJ_DIR}srcMLParserClean.o ${OBJ_DIR}KeywordCPPLexerClean.o ${OBJ_DIR}srcMLTranslator.o ${OBJ_DIR}srcMLOutput.o ${OBJ_DIR}Mode.o ${OBJ_DIR}UTF8CharBuffer.o ${OBJ_DIR}PureCommentLexerClean.o ${OBJ_DIR}Language.o ${OBJ_DIR}URIStream.o ${IO_LIB}
 
 # default
-all : ${SRC2SRCML_BIN} ${SRCML2SRC_BIN} # ${SRCMLDIRECT_BIN}
+all : ${SRC2SRCML_BIN} ${SRCML2SRC_BIN}  ${SRCMLDIRECT_BIN}
 
 mingw32 :
 	make MINGW32=1 CXX=i686-pc-mingw32-g++ AR=i686-pc-mingw32-ar
