@@ -131,6 +131,8 @@ xmlSAXHandler SAX2UnitDOMXSLT::factory() {
 
 // end unit element and current file/buffer (started by startElementNs
 void SAX2UnitDOMXSLT::endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+  std::cerr << "XSLT: " << __FUNCTION__ << " " << __LINE__ << "\n";
+
   // DOM building end element
   xmlSAX2EndElementNs(ctx, localname, prefix, URI);
 
