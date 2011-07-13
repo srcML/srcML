@@ -20,6 +20,7 @@
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+#include <iostream>
 #include "libxml_archive_read.hpp"
 #include <stdio.h>
 #include <string.h>
@@ -123,6 +124,8 @@ int archiveReadMatchExtension(const char* URI) {
 
 // check if archive matches the protocol on the URI
 int archiveReadMatch(const char* URI) {
+
+  std::cerr << __FUNCTION__ << " " << __LINE__ << '\n';
 
   if (URI == NULL)
       return 0;
