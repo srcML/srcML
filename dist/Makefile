@@ -44,6 +44,7 @@ SRCML2SRC_PATH=${BIN_DIR}/${SRCML2SRC_BIN}
 
 WIN_SRC2SRCML_PATH=${BIN_DIR}/${SRC2SRCML_EXE}
 WIN_SRCML2SRC_PATH=${BIN_DIR}/${SRCML2SRC_EXE}
+LIBSRCML_DLL=${BIN_DIR}/libsrcml.dll
 
 DOC_FILES=${DOC_DIR}/src2srcml.1.gz ${DOC_DIR}/srcml2src.1.gz ${DOC_DIR}/src2srcml.html ${DOC_DIR}/srcml2src.html
 DIST_FILES=${DOC_FILES} ${SRC2SRCML_PATH} ${SRCML2SRC_PATH}
@@ -115,7 +116,7 @@ windowsdyn : ${SRC_ZIP}
 	cd ${SRC_DIR} && make mingw32 DYNAMIC=1
 	cd ${SRC_DIR} && make cleanbuild && make
 	cd ${DOC_DIR} && make
-	i686-pc-mingw32-strip ${WIN_SRC2SRCML_PATH} ${WIN_SRCML2SRC_PATH}
+	i686-pc-mingw32-strip ${WIN_SRC2SRCML_PATH} ${WIN_SRCML2SRC_PATH} ${LIBSRCML_DLL}
 	mkdir ${WIN_BASE} && ${CP} -t ${WIN_BASE} ${WIN_DIST_FILES}
 	unix2dos ${WIN_BASE}/*.html
 	cp dlls/*.dll ${WIN_BASE}
