@@ -57,7 +57,7 @@ SRCMLPARSER_ANTLR_FLAGS =
 SRCMLLEXER_ANTLR_FLAGS =
 
 # compiler optimizations
-CXXFLAGS = -DVERSION=$(VERSION) -O3 -Wall -march=nocona -minline-all-stringops #-fno-rtti
+CXXFLAGS = -DVERSION=$(VERSION) -O3 -Wall -march=nocona -minline-all-stringops $(if $(DYNAMIC), -fPIC, ) #-fno-rtti
 
 # compiler gcc linking flags
 CXX_LINK_FLAGS = #-s
@@ -83,9 +83,11 @@ ifndef MINGW32
 SRC2SRCML_BIN=${EXE_DIR}src2srcml
 SRCML2SRC_BIN=${EXE_DIR}srcml2src
 SRCMLDIRECT_BIN=${EXE_DIR}srcmldirect
+LIBSRCML_SO=${EXE_DIR}libsrcml.so
 else
 SRC2SRCML_BIN=${EXE_DIR}src2srcml.exe
 SRCML2SRC_BIN=${EXE_DIR}srcml2src.exe
+LIBSRCML_SO=${EXE_DIR}libsrcml.dll
 #SRCMLDIRECT_BIN=${EXE_DIR}srcmldirect.exe
 endif
 
@@ -95,10 +97,11 @@ LIBSRCML_INCLUDE=${OBJ_DIR}srcMLParserClean.o ${OBJ_DIR}KeywordCPPLexerClean.o $
 all : ${SRC2SRCML_BIN} ${SRCML2SRC_BIN} # ${SRCMLDIRECT_BIN}
 
 mingw32 :
-	make MINGW32=1 CXX=i686-pc-mingw32-g++ AR=i686-pc-mingw32-ar 
+	make MINGW32=1 CXX=i686-pc-mingw32-g++ AR=i686-pc-mingw32-ar
 
 settings :
 	@echo "CXX="${CXX}
+	@echo "CXXFLAGS="${CXXFLAGS}
 	@echo "SED="${SED}
 	@echo "GREP="${GREP}
 	@echo "ECHO="${ECHO}
@@ -180,11 +183,11 @@ CREATED_GRAMMARS = WSLexer.g CommentLexer.g OperatorLexer.g TextLexer.g KeywordL
 GENERATED_GRAMMARS = $(patsubst %.g, expanded%.g, $(CREATED_GRAMMARS))
 
 # source code to srcML translator program
-${SRC2SRCML_BIN} : ${OBJ_DIR}src2srcml.o ${OBJ_DIR}srcmlapps.o ${OBJ_DIR}makeargv.o $(if $(DYNAMIC), ${EXE_DIR}libsrcml.so, ${EXE_DIR}libsrcml.a)
+${SRC2SRCML_BIN} : ${OBJ_DIR}src2srcml.o ${OBJ_DIR}srcmlapps.o ${OBJ_DIR}makeargv.o $(if $(DYNAMIC), ${LIBSRCML_SO}, ${EXE_DIR}libsrcml.a)
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) ${XML_LIB_SRC2SRCML} ${XML_IO_LIB} $(if $(DYNAMIC), -L${EXE_DIR} -lsrcml, ${EXE_DIR}/libsrcml.a) -o $@
 
 # shared library for srcML translation
-${EXE_DIR}libsrcml.so : $(LIBSRCML_INCLUDE)
+${LIBSRCML_SO}: $(LIBSRCML_INCLUDE)
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) -shared -fPIC $^ $(LDFLAGS) ${XML_LIB_SRC2SRCML} ${XML_IO_LIB} -o $@
 
 # static library for srcML translation
