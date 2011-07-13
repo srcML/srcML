@@ -96,8 +96,6 @@ const char* srcMLUtility::attribute(const char* attribute_name) {
 // return blank for default namespace
 const char* srcMLUtility::namespace_ext(const char* uri) {
 
-  static std::string s;
-
   const char* pos = find(nsv, uri);
 
   if (!pos)
