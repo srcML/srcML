@@ -371,8 +371,6 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
 // xslt evaluation of the nested units
 void srcMLUtility::xslt(const char* context_element, const char* ofilename, const char* xslts[], const char* params[], int paramcount) {
 
-  std::cerr << "XSLT: " << xslts[0] << '\n';
-
   xmlSAXHandler sax = SAX2UnitDOMXSLT::factory();
 
   SAX2UnitDOMXSLT state(context_element, xslts, ofilename, params, paramcount, options);
@@ -387,6 +385,8 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
   exsltRegisterAll();
 
   xsltsrcMLRegister();
+
+  std::cerr << "XSLT: " << xslts[0] << '\n';
 
   // parse the stylesheet
   state.xslt = xsltParseStylesheetFile(BAD_CAST xslts[0]);
