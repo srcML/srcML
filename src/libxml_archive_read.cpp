@@ -125,8 +125,6 @@ int archiveReadMatchExtension(const char* URI) {
 // check if archive matches the protocol on the URI
 int archiveReadMatch(const char* URI) {
 
-  std::cerr << __FUNCTION__ << " " << __LINE__ << '\n';
-
   if (URI == NULL)
       return 0;
 
