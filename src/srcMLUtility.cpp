@@ -26,7 +26,6 @@
 #include <cstring>
 #include "srcmlns.hpp"
 #include <sys/stat.h>
-#include <iostream>
 
 #if defined(__GNUC__) && !defined(__MINGW32__)
 #include <sys/errno.h>
@@ -67,6 +66,7 @@ static bool incount = false;
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, OPTION_TYPE& op)
   : infile(infilename), output_encoding(encoding), options(op), units(0) {
+
 
   // assume totaling for numeric results
   op |= OPTION_XPATH_TOTAL;
@@ -382,26 +382,13 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
   //state.ctxt = ctxt;
 
   // allow for all exslt functions
-  //  exsltRegisterAll();
+  exsltRegisterAll();
 
-  //  xsltsrcMLRegister();
-
-  std::cerr << "XSLT: " << __FUNCTION__ << " " << __LINE__ << '\n';
-  std::cerr << "PARSING: " << xslts[0] << '\n';
+  xsltsrcMLRegister();
 
   // parse the stylesheet
   state.xslt = xsltParseStylesheetFile(BAD_CAST xslts[0]);
-
-  std::cerr << "AFTER PARSING: " << xslts[0] << '\n';
-
-  if (!state.xslt) {
-    fprintf(stderr, "srcml2src:  Unable to parse stylesheet file %s\n", xslts[0]);
-    exit(45);
-  }
   // TODO: error return
-
-  std::cerr << "XSLT: " << __FUNCTION__ << " " << __LINE__ << '\n';
-  std::cerr << "XSLT: " << __FUNCTION__ << " " << __LINE__ << '\n';
 
   srcMLParseDocument(ctxt);
 

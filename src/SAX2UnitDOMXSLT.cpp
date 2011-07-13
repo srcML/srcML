@@ -27,8 +27,6 @@
 #include "SAX2Utilities.hpp"
 #include "srcmlns.hpp"
 
-#include <iostream>
-
 #include <cstring>
 #include "Options.hpp"
 #include "srcmlns.hpp"
@@ -47,8 +45,6 @@
 
 static void apply(xmlParserCtxtPtr ctxt) {
 
-  std::cerr << "XSLT Apply\n";
-
   SAX2UnitDOMXSLT* pstate = (SAX2UnitDOMXSLT*) ctxt->_private;
 
   setPosition(pstate->count);
@@ -59,8 +55,6 @@ static void apply(xmlParserCtxtPtr ctxt) {
     fprintf(stderr, "srcml2src:  Error in applying stylesheet\n");
     exit(1);
   }
-
-  std::cerr << "XSLT Applied\n";
 
   // only interestd in non-empty results
   if (res && res->children) {
@@ -131,8 +125,6 @@ xmlSAXHandler SAX2UnitDOMXSLT::factory() {
 
 // end unit element and current file/buffer (started by startElementNs
 void SAX2UnitDOMXSLT::endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
-  std::cerr << "XSLT: " << __FUNCTION__ << " " << __LINE__ << "\n";
-
   // DOM building end element
   xmlSAX2EndElementNs(ctx, localname, prefix, URI);
 
