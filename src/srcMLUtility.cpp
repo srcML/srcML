@@ -382,9 +382,9 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
   //state.ctxt = ctxt;
 
   // allow for all exslt functions
-  exsltRegisterAll();
+  //  exsltRegisterAll();
 
-  xsltsrcMLRegister();
+  //  xsltsrcMLRegister();
 
   std::cerr << "XSLT: " << xslts[0] << '\n';
 
