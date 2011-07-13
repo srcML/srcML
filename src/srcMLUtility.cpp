@@ -26,6 +26,7 @@
 #include <cstring>
 #include "srcmlns.hpp"
 #include <sys/stat.h>
+#include <iostream>
 
 #if defined(__GNUC__) && !defined(__MINGW32__)
 #include <sys/errno.h>
@@ -66,7 +67,6 @@ static bool incount = false;
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, OPTION_TYPE& op)
   : infile(infilename), output_encoding(encoding), options(op), units(0) {
-
 
   // assume totaling for numeric results
   op |= OPTION_XPATH_TOTAL;
@@ -370,6 +370,8 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
 
 // xslt evaluation of the nested units
 void srcMLUtility::xslt(const char* context_element, const char* ofilename, const char* xslts[], const char* params[], int paramcount) {
+
+  std::cerr << "XSLT: " << xslts[0] << '\n';
 
   xmlSAXHandler sax = SAX2UnitDOMXSLT::factory();
 
