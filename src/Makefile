@@ -308,8 +308,13 @@ ${OBJ_DIR}makeargv.o : makeargv.cpp makeargv.hpp
 ${OBJ_DIR}srcmldirect.o : srcmldirect.cpp srcMLTranslator.hpp srcmlapps.hpp Options.hpp srcmlns.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
+ifndef MINGW32
 ${SRCMLDIRECT_BIN} : ${OBJ_DIR}srcmldirect.o ${OBJ_DIR}srcmlapps.o ${EXE_DIR}libsrcml.a
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) ${XML_LIB_SRC2SRCML} ${XML_IO_LIB} ${EXE_DIR}/libsrcml.a -o $@
+else
+${SRCMLDIRECT_BIN} : ${OBJ_DIR}srcmldirect.o ${OBJ_DIR}srcmlapps.o ${LIBSRCML_SO}
+	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) ${XML_LIB_SRC2SRCML} ${XML_IO_LIB} ${LIBSRCML_SO} -o $@
+endif
 
 # clean all generated files including program
 PHONY : clean
