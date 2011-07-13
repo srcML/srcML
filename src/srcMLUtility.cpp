@@ -390,7 +390,9 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
   std::cerr << "PARSING: " << xslts[0] << '\n';
 
   // parse the stylesheet
-  state.xslt = xsltParseStylesheetFile(BAD_CAST xslts[0]);
+  xsltParseStylesheetFile(BAD_CAST xslts[0]);
+  //  state.xslt = xsltParseStylesheetFile(BAD_CAST xslts[0]);
+
   std::cerr << "AFTER PARSING: " << xslts[0] << '\n';
 
   if (!state.xslt) {
