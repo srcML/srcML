@@ -384,7 +384,7 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
   // allow for all exslt functions
   //  exsltRegisterAll();
 
-  //  xsltsrcMLRegister();
+  xsltsrcMLRegister();
 
   std::cerr << "XSLT: " << __FUNCTION__ << " " << __LINE__ << '\n';
 
