@@ -384,14 +384,13 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
   // allow for all exslt functions
   //  exsltRegisterAll();
 
-  xsltsrcMLRegister();
+  //  xsltsrcMLRegister();
 
   std::cerr << "XSLT: " << __FUNCTION__ << " " << __LINE__ << '\n';
   std::cerr << "PARSING: " << xslts[0] << '\n';
 
   // parse the stylesheet
-  xsltParseStylesheetFile(BAD_CAST xslts[0]);
-  //  state.xslt = xsltParseStylesheetFile(BAD_CAST xslts[0]);
+  state.xslt = xsltParseStylesheetFile(BAD_CAST xslts[0]);
 
   std::cerr << "AFTER PARSING: " << xslts[0] << '\n';
 
