@@ -160,7 +160,6 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
     // output cached characters if we found any
     if (!pstate->firstcharacters.empty())
       charactersUnit(ctx, BAD_CAST pstate->firstcharacters.c_str(), pstate->firstcharacters.length());
-    pstate->firstcharacters.clear();
 
     pstate->count = 1;
 
@@ -181,12 +180,11 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
     // should have made this call earlier, makeup for it now
     pstate->pprocess->startRootUnit(ctx, pstate->root.localname, pstate->root.prefix, pstate->root.URI, pstate->root.nb_namespaces, pstate->root.namespaces, pstate->root.nb_attributes, pstate->root.nb_defaulted, pstate->root.attributes);
 
-    // throw away the characters (they are ignorable between root and nested unit)
-    pstate->firstcharacters.clear();
-
     // process using the normal startElementNs
     startElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
   }
+
+  pstate->firstcharacters.clear();
 }
 
 /*
