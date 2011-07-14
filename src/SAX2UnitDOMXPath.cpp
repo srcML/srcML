@@ -254,9 +254,11 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
 	}
 
 	// line number and clost unit start tag
+	xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(" item=\""));
 	std::ostringstream out;
-	out << " item=\"" << pstate->itemcount << "\">";
+	out << pstate->itemcount;
 	xmlOutputBufferWriteString(pstate->buf, out.str().c_str());
+	xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\">"));
       }
 
       // save the result, but temporarily hide the namespaces
