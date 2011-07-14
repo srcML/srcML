@@ -123,7 +123,7 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
   xmlSAX2EndElementNs(ctx, localname, prefix, URI);
 
   // only handle unit elements
-  if (strcmp((const char*) localname, "unit") != 0 || (pstate->isnested && ctxt->nodeNr == 0))
+  if ((ctxt->nodeNr == 0 && pstate->isnested) || (strcmp((const char*) localname, "unit") != 0))
     return;
 
   // evaluate the xpath on the context from the current document
