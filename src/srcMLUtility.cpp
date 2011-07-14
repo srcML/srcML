@@ -458,5 +458,4 @@ static xmlParserCtxtPtr srcMLCreateURLParserCtxt(const char * infile) {
   }
 
   return ctxt;
-
 }

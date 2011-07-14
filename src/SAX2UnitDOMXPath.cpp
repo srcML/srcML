@@ -30,6 +30,7 @@
 #include <cstring>
 #include "Options.hpp"
 #include "srcmlns.hpp"
+#include <sstream>
 
 #include "srcexfun.hpp"
 #include <cassert>
@@ -149,8 +150,6 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
   if (!pstate->prev_unit_filename || (unit_filename && strcmp(pstate->prev_unit_filename, unit_filename) != 0))
     pstate->itemcount = 0;
 
-  char s[100];
-
   // process the resulting nodes
   pstate->nodetype = result_nodes->type;
 
@@ -255,8 +254,9 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
 	}
 
 	// line number and clost unit start tag
-	snprintf(s, sizeof(s) / sizeof(s[0]), " item=\"%d\">", pstate->itemcount);
-	xmlOutputBufferWriteString(pstate->buf, s);
+	std::ostringstream out;
+	out << " item=\"" << pstate->itemcount << "\">";
+	xmlOutputBufferWriteString(pstate->buf, out.str().c_str());
       }
 
       // save the result, but temporarily hide the namespaces
@@ -314,12 +314,13 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
     // numeric result
   case XPATH_NUMBER:
     if (!isoption(pstate->options, OPTION_XPATH_TOTAL)) {
+      std::ostringstream out;
       if ((int)result_nodes->floatval == result_nodes->floatval)
-	sprintf(s, "%d\n", (int)result_nodes->floatval);
+	out << (int)result_nodes->floatval;
       else
-	sprintf(s, "%f\n", result_nodes->floatval);
+	out << result_nodes->floatval;
 
-      xmlOutputBufferWriteString(pstate->buf, s);
+      xmlOutputBufferWriteString(pstate->buf, out.str().c_str());
     }
     pstate->total += result_nodes->floatval;
     break;
