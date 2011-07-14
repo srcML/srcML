@@ -370,8 +370,6 @@ void SAX2UnitDOMXPath::endDocument(void *ctx) {
 
   xmlSAX2EndDocument(ctx);
 
-  char s[100];
-
   // finalize results
   switch (pstate->nodetype) {
   case XPATH_NODESET:
@@ -384,11 +382,13 @@ void SAX2UnitDOMXPath::endDocument(void *ctx) {
 
   case XPATH_NUMBER:
     if (isoption(pstate->options, OPTION_XPATH_TOTAL)) {
+      std::ostringstream out;
       if ((int)pstate->total == pstate->total)
-	sprintf(s, "%d\n", (int)pstate->total);
+	out << (int)pstate->total;
       else
-	sprintf(s, "%f\n", pstate->total);
-      xmlOutputBufferWriteString(pstate->buf, s);
+	out << pstate->total;
+
+      xmlOutputBufferWriteString(pstate->buf, out.str().c_str());
     }
     break;
 
