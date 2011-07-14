@@ -255,9 +255,9 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
 
 	// line number and clost unit start tag
 	xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(" item=\""));
-	std::ostringstream out;
-	out << pstate->itemcount;
-	xmlOutputBufferWriteString(pstate->buf, out.str().c_str());
+	char s[50];
+	snprintf(s, 50, "%d", pstate->itemcount);
+	xmlOutputBufferWriteString(pstate->buf, s);
 	xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL("\">"));
       }
 
