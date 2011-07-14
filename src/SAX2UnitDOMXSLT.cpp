@@ -73,7 +73,6 @@ static void apply(xmlParserCtxtPtr ctxt) {
 
     if (pstate->result_type == XML_ELEMENT_NODE && pstate->isnested && !pstate->found && !isoption(pstate->options, OPTION_XSLT_ALL)) {
       // TODO:  STATIC, should be based on context
-      xmlOutputBufferWriteString(pstate->buf, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n");
       xmlOutputBufferWrite(pstate->buf, pstate->rootbuf->use, (const char*) pstate->rootbuf->content);
       xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(">\n\n"));
 
