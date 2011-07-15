@@ -78,6 +78,8 @@ def execute(command, input):
 
         if p.returncode != 0:
                 globals()["error_count"] = globals()["error_count"] + 1
+                globals()["error_list"].append(globals()["test_count"])
+                globals()["error_lines"].append(globals()["test_line"])
                 print "Status error:  ", p.returncode, command
 
         return last_line
@@ -88,6 +90,8 @@ def executeNoOutput(command, input) :
 
         if p.returncode != 0:
                 globals()["error_count"] = globals()["error_count"] + 1
+                globals()["error_list"].append(globals()["test_count"])
+                globals()["error_lines"].append(globals()["test_line"])
                 print "Status error:  ", p.returncode, command
         
 def executeWithError(command, input):
@@ -96,6 +100,8 @@ def executeWithError(command, input):
 
         if p.returncode == 0:
                 globals()["error_count"] = globals()["error_count"] + 1
+                globals()["error_list"].append(globals()["test_count"])
+                globals()["error_lines"].append(globals()["test_line"])
                 print "Status error:  ", p.returncode, command
 
         return last_line
@@ -2330,6 +2336,9 @@ file = open('sub/a.cpp.xml', 'w')
 file.write(srcml)
 file.close()
 
+
+check([srcml2src, option.XPATH_FLAG + '=/src:unit'], "", "")
+
 check([srcml2src, option.XPATH_FLAG + '=/src:unit'], srcml, xpath)
 check([srcml2src, option.XPATH_FLAG + '=/src:unit', 'sub/a.cpp.xml'], "", xpath)
 check([srcml2src, option.XPATH_FLAG + '=/src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
@@ -2589,6 +2598,8 @@ file.write(srcml)
 file.close()
 
 # xslt
+
+check([srcml2src, option.XSLT_FLAG + '=copy.xsl'], "", "")
 
 check([srcml2src, option.XSLT_FLAG + '=copy.xsl'], srcml, srcml)
 check([srcml2src, option.XSLT_FLAG + '=copy.xsl', 'sub/a.cpp.xml'], "", srcml)
