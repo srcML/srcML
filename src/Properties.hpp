@@ -32,8 +32,8 @@ void output_info(srcMLUtility& su, int options, int optioncount, int optionorder
 
 class Properties : public CountUnits {
  public :
- Properties(srcMLUtility& su, PROPERTIES_TYPE&nsv, PROPERTIES_TYPE& attrv, int optioncount, int optionorder[])
-   : su(su), nsv(nsv), attrv(attrv), optioncount(optioncount), optionorder(optionorder)
+  Properties(srcMLUtility& su, PROPERTIES_TYPE&nsv, PROPERTIES_TYPE& attrv, int optioncount, int optionorder[], FILE * output = stdout)
+    : su(su), nsv(nsv), attrv(attrv), optioncount(optioncount), optionorder(optionorder), output(output)
     {}
 
   srcMLUtility& su;
@@ -41,6 +41,7 @@ class Properties : public CountUnits {
   PROPERTIES_TYPE& attrv;
   int optioncount;
   int* optionorder;
+  FILE * output;
 
  public :
 
@@ -87,7 +88,7 @@ class Properties : public CountUnits {
 
     if (pstate->unit < 1 && isoption(*(pstate->poptions), OPTION_LONG_INFO)) {
       pstate->unit = -1;
-      CountUnits* pcount = new CountUnits();
+      CountUnits* pcount = new CountUnits(output);
       pstate->pprocess = pcount;
     }
   }

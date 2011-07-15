@@ -433,7 +433,7 @@ int main(int argc, char* argv[]) {
     } else if (optioncount > 0) {
 
       // move to the appropriate unit and output the appropriate metadata
-      su.move_to_unit(poptions.unit, su, options, optioncount, optionorder);
+      su.move_to_unit(poptions.unit, su, options, optioncount, optionorder, output);
 
       // now finish longinfo
       if (isoption(options, OPTION_LONG_INFO)) {
@@ -447,7 +447,7 @@ int main(int argc, char* argv[]) {
     // namespace
     } else if (isoption(options, OPTION_NAMESPACE)) {
 
-      su.move_to_unit(poptions.unit, su, options, optioncount, optionorder);
+      su.move_to_unit(poptions.unit, su, options, optioncount, optionorder, output);
 
       for (int i = 0; i < poptions.nscount; ++i) {
 	

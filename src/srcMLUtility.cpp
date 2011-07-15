@@ -110,7 +110,7 @@ const char* srcMLUtility::namespace_ext(const char* uri) {
 }
 
 // move to a particular nested unit
-void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE options, int optioncount, int optionorder[]) {
+void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE options, int optioncount, int optionorder[], FILE * output) {
 
   // setup parser
   xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
@@ -121,7 +121,7 @@ void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE opt
   ctxt->sax = &sax;
 
   // setup process handling
-  Properties process(su, nsv, attrv, optioncount, optionorder);
+  Properties process(su, nsv, attrv, optioncount, optionorder, output);
 
   incount = unitnumber == 0;
 
