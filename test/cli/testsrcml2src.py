@@ -177,12 +177,31 @@ if srcml2src == "" or srcml2src == None:
         else :
                 srcml2src = "srcml2src.exe"
 
-default_src2srcml_encoding = "UTF-8"
 default_srcml2src_encoding = "UTF-8"
 
-xml_declaration= '<?xml version="1.0" encoding="' + default_src2srcml_encoding + '" standalone="yes"?>'
+xml_declaration= '<?xml version="1.0" encoding="' + default_srcml2src_encoding + '" standalone="yes"?>'
 
 print xml_declaration
+
+# xpath
+
+# xpath numeric
+
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+    <unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="emptysrc/empty.c"/>
+
+    <unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="emptysrc/empty.c++"/>
+
+    <unit language="Java" filename="emptysrc/empty.java"/>
+
+</unit>
+"""
+
+xpath = option.XPATH_FLAG + '=count(/src:unit)'
+
+check([srcml2src, xpath], srcml, 3)
 
 # footer
 print
@@ -194,7 +213,6 @@ print
 for i in range(len(error_list)) :
         print str(error_list[i]) + "\t" + error_lines[i]
 print
-print src2srcmlversion()
 print srcml2srcversion()
 
 exit
