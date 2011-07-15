@@ -43,6 +43,7 @@
 #include "Properties.hpp"
 #include "ListUnits.hpp"
 #include "ExtractUnitsXML.hpp"
+#include "XPathQueryUnits.hpp"
 
 #include "SAX2ExtractUnitsSrc.hpp"
 
