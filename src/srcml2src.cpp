@@ -274,6 +274,8 @@ int optioncount = 0;
 
 void output_info(srcMLUtility& su, int options, int optioncount, int optionorder[]);
 
+FILE* output;
+
 typedef struct process_options
 {
   // option values
@@ -416,6 +418,12 @@ int main(int argc, char* argv[]) {
     // setup for processing
     srcMLUtility su(filename, poptions.src_encoding, options);
 
+    // for options, there may be an output file
+    output = stdout;
+    if (strcmp(poptions.ofilename, "") != 0 && (strcmp(poptions.ofilename, "-") != 0)) {
+      output = fopen(poptions.ofilename, "w");
+    }
+
     // list
     if (isoption(options, OPTION_LIST)) {
 
@@ -431,8 +439,8 @@ int main(int argc, char* argv[]) {
       if (isoption(options, OPTION_LONG_INFO)) {
 	if (!isoption(options, OPTION_UNIT)) {
 	  if (isatty(STDOUT_FILENO))
-	    putchar('\r');
-	  printf("units=\"%d\"\n", su.curunits());
+	    fputc('\r', output);
+	  fprintf(output, "units=\"%d\"\n", su.curunits());
 	}
       }
 
@@ -446,12 +454,12 @@ int main(int argc, char* argv[]) {
 	const char* prefix = su.namespace_ext(poptions.ns[i]);
 	if (prefix) {
 	  if (poptions.nscount == 1)
-	    printf("%s\n", prefix);
+	    fprintf(output, "%s\n", prefix);
 	  else {
-	    printf("xmlns");
+	    fprintf(output, "xmlns");
 	    if (prefix[0] != '\0')
-	      printf(":%s", prefix);
-	    printf("=\"%s\"\n", poptions.ns[i]);
+	      fprintf(output, ":%s", prefix);
+	    fprintf(output, "=\"%s\"\n", poptions.ns[i]);
 	  }
 	}
       }
@@ -468,9 +476,9 @@ int main(int argc, char* argv[]) {
       long count = su.unit_count();
 
       if (isatty(STDOUT_FILENO))
-        putchar('\r');
+        fputc('\r', stdout);
 
-      printf("%ld\n", count);
+      fprintf(output, "%ld\n", count);
 
       // if we terminated early, output the correct status
       if (isoption(options, OPTION_TERMINATE))
@@ -1090,7 +1098,7 @@ void output_info(srcMLUtility& su, int options, int optioncount, int optionorder
 	  if (su.nsv[i].first == "")
 	    break;
 
-	  printf("%s=\"%s\"\n", su.nsv[i].second.c_str(), su.nsv[i].first.c_str());
+	  fprintf(output, "%s=\"%s\"\n", su.nsv[i].second.c_str(), su.nsv[i].first.c_str());
 	
 	}
       }
@@ -1101,9 +1109,9 @@ void output_info(srcMLUtility& su, int options, int optioncount, int optionorder
 	// find attribute name from option
 	const char* attribute_name = "";
 	const char* attribute_title = "";
-	int option = optionorder[i];
+	int curoption = optionorder[i];
 
-	switch (option) {
+	switch (curoption) {
 	case OPTION_XML_ENCODING:
 	  attribute_name = ".encoding";
 	  attribute_title = "encoding";
@@ -1130,14 +1138,14 @@ void output_info(srcMLUtility& su, int options, int optioncount, int optionorder
 	const char* l = su.attribute(attribute_name);
 	if (l) {
 	  if (optioncount == 1)
-	    printf("%s\n", l);
+	    fprintf(output, "%s\n", l);
 	  else
-	    printf("%s=\"%s\"\n", attribute_title, l);
+	    fprintf(output, "%s=\"%s\"\n", attribute_title, l);
 	}
       }
 
       if (isoption(options, OPTION_LONG_INFO) && !isoption(options, OPTION_UNIT) && isatty(STDOUT_FILENO))
-	    printf("units=\"%d", 1);
+	    fprintf(output, "units=\"%d", 1);
 }
 
 void register_xpath_functions_from_filename(const char * filename) {
