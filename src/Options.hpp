@@ -22,8 +22,8 @@
   Options for translation output.
 */
 
-#ifndef OUTPUT_OPTION_H
-#define OUTPUT_OPTION_H
+#ifndef INCLUDED_OPTION_HPP
+#define INCLUDED_OPTION_HPP
 
 #ifdef __GNUC__
   typedef unsigned long long OPTION_TYPE;

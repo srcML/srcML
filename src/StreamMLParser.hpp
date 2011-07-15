@@ -23,8 +23,8 @@
   class.  The stream parsing is added by the base class, StreamParser.
 */
 
-#ifndef INCLUDED_STREAM_MLPARSER_H
-#define INCLUDED_STREAM_MLPARSER_H
+#ifndef INCLUDED_STREAM_MLPARSER_HPP
+#define INCLUDED_STREAM_MLPARSER_HPP
 
 #include "StreamParser.hpp"
 

@@ -22,8 +22,8 @@
   Common definitions for the entire project, mainly for different build environments
 */
 
-#ifndef INCLUDED_PROJECT_H
-#define INCLUDED_PROJECT_H
+#ifndef INCLUDED_PROJECT_HPP
+#define INCLUDED_PROJECT_HPP
 
 #include <cstdlib>
 #include <cctype>

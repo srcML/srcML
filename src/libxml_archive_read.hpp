@@ -20,8 +20,8 @@
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#ifndef INCLUDED_LIBXML_ARCHIVE_READ_H
-#define INCLUDED_LIBXML_ARCHIVE_READ_H
+#ifndef INCLUDED_LIBXML_ARCHIVE_READ_HPP
+#define INCLUDED_LIBXML_ARCHIVE_READ_HPP
 
 // current file is an archive
 bool isArchiveRead(void* context);

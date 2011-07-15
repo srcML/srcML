@@ -24,8 +24,8 @@
   Class for straightforward source code to srcML translation
 */
 
-#ifndef SRCMLTRANSLATOR_H
-#define SRCMLTRANSLATOR_H
+#ifndef SRCMLTRANSLATOR_HPP
+#define SRCMLTRANSLATOR_HPP
 
 #include "Language.hpp"
 #include "srcMLOutput.hpp"

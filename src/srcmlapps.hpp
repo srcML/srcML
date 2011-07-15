@@ -22,8 +22,8 @@
   Common utilities for srcML applications.
 */
 
-#ifndef INCLUDED_SRCMLAPPS_H
-#define INCLUDED_SRCMLAPPS_H
+#ifndef INCLUDED_SRCMLAPPS_HPP
+#define INCLUDED_SRCMLAPPS_HPP
 
 #ifdef __MINGW32__
 #include <io.h>

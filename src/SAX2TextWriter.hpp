@@ -25,8 +25,8 @@
   by overriding individual callbacks.
 */
 
-#ifndef INCLUDED_SAX2TEXTWRITER_H
-#define INCLUDED_SAX2TEXTWRITER_H
+#ifndef INCLUDED_SAX2TEXTWRITER_HPP
+#define INCLUDED_SAX2TEXTWRITER_HPP
 
 #include "SAX2Utilities.hpp"
 #include <libxml/parser.h>

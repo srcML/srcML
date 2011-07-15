@@ -24,8 +24,8 @@
 
 #include "srcMLException.hpp"
 
-#ifndef STACK_H
-#define STACK_H
+#ifndef STACK_HPP
+#define STACK_HPP
 
 template <class Type, int N>
 class SimpleStack {

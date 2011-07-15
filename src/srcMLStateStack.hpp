@@ -20,8 +20,8 @@
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#ifndef SRCMLSTATESTACK_H
-#define SRCMLSTATESTACK_H
+#ifndef SRCMLSTATESTACK_HPP
+#define SRCMLSTATESTACK_HPP
 
 #include "srcMLState.hpp"
 #include "StateStack.hpp"

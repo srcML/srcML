@@ -22,8 +22,8 @@
   Method definitions for inclusion in srcMLParser
 */
 
-#ifndef MODE_H
-#define MODE_H
+#ifndef MODE_HPP
+#define MODE_HPP
 
 #include "TokenParser.hpp"
 #include "Language.hpp"

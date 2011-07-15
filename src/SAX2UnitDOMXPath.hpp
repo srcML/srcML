@@ -25,8 +25,8 @@
   by overriding individual callbacks.
 */
 
-#ifndef INCLUDED_SAX2UNITDOMXPATH_H
-#define INCLUDED_SAX2UNITDOMXPATH_H
+#ifndef INCLUDED_SAX2UNITDOMXPATH_HPP
+#define INCLUDED_SAX2UNITDOMXPATH_HPP
 
 #include "SAX2UnitDOM.hpp"
 

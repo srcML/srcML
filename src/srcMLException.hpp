@@ -20,8 +20,8 @@
   Changes segmentation errors to an thrown exception.
 */
 
-#ifndef SRCMLEXCEPTION_H
-#define SRCMLEXCEPTION_H
+#ifndef SRCMLEXCEPTION_HPP
+#define SRCMLEXCEPTION_HPP
 
 class Segmentation_Fault : public std::exception {};
 

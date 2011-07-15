@@ -20,8 +20,8 @@
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#ifndef INCLUDED_SAX2UTILITIES_H
-#define INCLUDED_SAX2UTILITIES_H
+#ifndef INCLUDED_SAX2UTILITIES_HPP
+#define INCLUDED_SAX2UTILITIES_HPP
 
 #include <string>
 #include <libxml/parser.h>

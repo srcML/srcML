@@ -22,8 +22,8 @@
   XML output
 */
 
-#ifndef SRCMLOUTPUT_H
-#define SRCMLOUTPUT_H
+#ifndef SRCMLOUTPUT_HPP
+#define SRCMLOUTPUT_HPP
 
 #include <iostream>
 #include "antlr/Token.hpp"

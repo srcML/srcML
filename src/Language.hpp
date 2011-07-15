@@ -20,8 +20,8 @@
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#ifndef LANGUAGE_H
-#define LANGUAGE_H
+#ifndef LANGUAGE_HPP
+#define LANGUAGE_HPP
 
 #include "srcmlapps.hpp"
 #include <fnmatch.h>

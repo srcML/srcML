@@ -20,8 +20,8 @@
   Changes segmentation errors to an thrown exception.
 */
 
-#ifndef SEGEXCEPTION_H
-#define SEGEXCEPTION_H
+#ifndef SEGEXCEPTION_HPP
+#define SEGEXCEPTION_HPP
 
 #include "project.hpp"
 

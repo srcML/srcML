@@ -22,8 +22,8 @@
 
 */
 
-#ifndef INCLUDED_COUNTUNITS_H
-#define INCLUDED_COUNTUNITS_H
+#ifndef INCLUDED_COUNTUNITS_HPP
+#define INCLUDED_COUNTUNITS_HPP
 
 #include <cstdio>
 #include "SAX2ExtractUnitsSrc.hpp"

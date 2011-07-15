@@ -25,8 +25,8 @@
   by overriding individual callbacks.
 */
 
-#ifndef INCLUDED_SAX2UNITDOM_H
-#define INCLUDED_SAX2UNITDOM_H
+#ifndef INCLUDED_SAX2UNITDOM_HPP
+#define INCLUDED_SAX2UNITDOM_HPP
 
 #include <libxml/parser.h>
 #include "SAX2Utilities.hpp"

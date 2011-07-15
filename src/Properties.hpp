@@ -22,8 +22,8 @@
 
 */
 
-#ifndef INCLUDED_PROCESSUNITS_H
-#define INCLUDED_PROCESSUNITS_H
+#ifndef INCLUDED_PROPERTIES_HPP
+#define INCLUDED_PROPERTIES_HPP
 
 void output_info(srcMLUtility& su, int options, int optioncount, int optionorder[]);
 

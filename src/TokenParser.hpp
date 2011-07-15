@@ -42,8 +42,8 @@
   Will be overridden in stream parser version.
 */
 
-#ifndef TOKENPARSER_H
-#define TOKENPARSER_H
+#ifndef TOKENPARSER_HPP
+#define TOKENPARSER_HPP
 
 #include <iostream>
 #include <antlr/TokenStream.hpp>

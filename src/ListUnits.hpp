@@ -22,8 +22,8 @@
 
 */
 
-#ifndef INCLUDED_LISTUNITSSRC_H
-#define INCLUDED_LISTUNITSSRC_H
+#ifndef INCLUDED_LISTUNITSSRC_HPP
+#define INCLUDED_LISTUNITSSRC_HPP
 
 #include "ProcessUnit.hpp"
 

@@ -20,8 +20,8 @@
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#ifndef STATESTACK_H
-#define STATESTACK_H
+#ifndef STATESTACK_HPP
+#define STATESTACK_HPP
 
 #include <list>
 #include <stack>

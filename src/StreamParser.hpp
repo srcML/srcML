@@ -34,8 +34,8 @@
   Parser grammars that use this class must also inherit from TokenParser.hpp
 */
 
-#ifndef INCLUDED_STREAM_PARSER_H
-#define INCLUDED_STREAM_PARSER_H
+#ifndef INCLUDED_STREAM_PARSER_HPP
+#define INCLUDED_STREAM_PARSER_HPP
 
 #include <antlr/TokenStream.hpp>
 #include "TokenStream.hpp"

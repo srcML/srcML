@@ -22,8 +22,8 @@
   Class for extracting basic information from srcML documents, including equivalent source code.
 */
 
-#ifndef SRCMLUTILITY_H
-#define SRCMLUTILITY_H
+#ifndef SRCMLUTILITY_HPP
+#define SRCMLUTILITY_HPP
 
 #include "Language.hpp"
 #include "Options.hpp"

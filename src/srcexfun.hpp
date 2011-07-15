@@ -20,8 +20,8 @@
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#ifndef INCLUDED_SRCEXFUN_H
-#define INCLUDED_SRCEXFUN_H
+#ifndef INCLUDED_SRCEXFUN_HPP
+#define INCLUDED_SRCEXFUN_HPP
 
 #include <libxml/xpath.h>
 #include "SAX2Utilities.hpp"

@@ -24,8 +24,8 @@
 #include <libxml/parser.h>
 #include <string>
 
-#ifndef URISTREAM_H
-#define URISTREAM_H
+#ifndef URISTREAM_HPP
+#define URISTREAM_HPP
 
 class URIStreamFileError {};
 

@@ -22,8 +22,8 @@
   Definitions of srcML namespace URI's
 */
 
-#ifndef INCLUDED_SRCMLNS_H
-#define INCLUDED_SRCMLNS_H
+#ifndef INCLUDED_SRCMLNS_HPP
+#define INCLUDED_SRCMLNS_HPP
 
 #include <vector>
 #include <string>

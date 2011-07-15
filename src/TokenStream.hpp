@@ -34,8 +34,8 @@
   Parser grammars that use this class must also inherit from TokenParser.hpp
 */
 
-#ifndef INCLUDED_SRCMLTOKENSTREAM_H
-#define INCLUDED_SRCMLTOKENSTREAM_H
+#ifndef INCLUDED_SRCMLTOKENSTREAM_HPP
+#define INCLUDED_SRCMLTOKENSTREAM_HPP
 
 #include <antlr/TokenStream.hpp>
 

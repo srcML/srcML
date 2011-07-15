@@ -22,8 +22,8 @@
 
 */
 
-#ifndef INCLUDED_EXTRACTUNITSXML_H
-#define INCLUDED_EXTRACTUNITSXML_H
+#ifndef INCLUDED_EXTRACTUNITSXML_HPP
+#define INCLUDED_EXTRACTUNITSXML_HPP
 
 #include "ProcessUnit.hpp"
 #include <libxml/xmlwriter.h>

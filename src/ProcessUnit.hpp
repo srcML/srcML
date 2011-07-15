@@ -22,8 +22,8 @@
 
 */
 
-#ifndef INCLUDED_PROCESSUNIT_H
-#define INCLUDED_PROCESSUNIT_H
+#ifndef INCLUDED_PROCESSUNIT_HPP
+#define INCLUDED_PROCESSUNIT_HPP
 
 #include <libxml/parser.h>
 

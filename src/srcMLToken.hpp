@@ -22,8 +22,8 @@
   Specialized token for srcML markup elements.
 */
 
-#ifndef INCLUDED_SRCMLTOKEN_H
-#define INCLUDED_SRCMLTOKEN_H
+#ifndef INCLUDED_SRCMLTOKEN_HPP
+#define INCLUDED_SRCMLTOKEN_HPP
 
 #include "project.hpp"
 

@@ -25,8 +25,8 @@
   by overriding individual callbacks.
 */
 
-#ifndef INCLUDED_SAX2UNITDOMRELAXNG_H
-#define INCLUDED_SAX2UNITDOMRELAXNG_H
+#ifndef INCLUDED_SAX2UNITDOMRELAXNG_HPP
+#define INCLUDED_SAX2UNITDOMRELAXNG_HPP
 
 #include <libxml/relaxng.h>
 
