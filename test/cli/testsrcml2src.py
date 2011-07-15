@@ -201,7 +201,7 @@ srcml = xml_declaration + """
 
 xpath = option.XPATH_FLAG + '=count(/src:unit)'
 
-check([srcml2src, xpath], srcml, 3)
+check([srcml2src, xpath], srcml, "3\n")
 
 # footer
 print
