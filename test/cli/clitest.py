@@ -2895,7 +2895,10 @@ srcmlend = """
 </unit>
 """
 
-dir = os.listdir('dir')
+if platform.system() != "Windows" :
+	dir = execute(['ls', 'dir'], "").split("\n")
+else :
+	dir = os.listdir('dir')
 
 srcml = srcmlstart
 
