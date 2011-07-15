@@ -25,12 +25,15 @@
 #ifndef INCLUDED_COUNTUNITS_H
 #define INCLUDED_COUNTUNITS_H
 
+#include <cstdio>
 #include "SAX2ExtractUnitsSrc.hpp"
 #include "ProcessUnit.hpp"
 
 class CountUnits : public ProcessUnit {
  public :
-  CountUnits() {}
+  CountUnits(FILE* poutput = stdout)
+    : output(poutput)
+  {}
 
  public :
 
@@ -39,41 +42,43 @@ class CountUnits : public ProcessUnit {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
-    if (!isatty(STDOUT_FILENO))
+    if (!isatty(fileno(output)))
       return;
 
     // output file status message if in verbose mode
     if (!isoption(*(pstate->poptions), OPTION_LONG_INFO)) {
-      fprintf(stdout, "\r%ld", pstate->count);
-      fflush(stdout);
+      fprintf(output, "\r%ld", pstate->count);
+      fflush(output);
     } else if (isoption(*(pstate->poptions), OPTION_LONG_INFO)) {
 
       // back up over the previous display
       // yes, this is a hack, but it works
       int c = pstate->count - 1;
-      putchar('\b');
+      fputc('\b', output);
       if (c >= 10)
-        putchar('\b');
+        fputc('\b', output);
       if (c >= 100)
-        putchar('\b');
+        fputc('\b', output);
       if (c >= 1000)
-        putchar('\b');
+        fputc('\b', output);
       if (c >= 10000)
-        putchar('\b');
+        fputc('\b', output);
       if (c >= 100000)
-        putchar('\b');
+        fputc('\b', output);
       if (c >= 1000000)
-        putchar('\b');
+        fputc('\b', output);
       if (c >= 10000000)
-        putchar('\b');
+        fputc('\b', output);
       if (c >= 100000000)
-        putchar('\b');
+        fputc('\b', output);
       if (c >= 1000000000)
-        putchar('\b');
-      printf("%ld", pstate->count);
-      fflush(stdout);
+        fputc('\b', output);
+      fprintf(output, "%ld", pstate->count);
+      fflush(output);
     }
   }
+private:
+  FILE* output;
 };
 
 #endif

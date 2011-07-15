@@ -146,7 +146,7 @@ void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE opt
 }
 
 // count of nested units
-int srcMLUtility::unit_count() {
+int srcMLUtility::unit_count(FILE* output) {
 
   // setup parser
   xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
@@ -157,7 +157,7 @@ int srcMLUtility::unit_count() {
   ctxt->sax = &sax;
 
   // setup process handling
-  CountUnits process;
+  CountUnits process(output);
 
   // setup sax handling state
   SAX2ExtractUnitsSrc state(&process, &options, -1);

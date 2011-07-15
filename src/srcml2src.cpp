@@ -473,7 +473,7 @@ int main(int argc, char* argv[]) {
 #endif
       // in verbose mode, the current counter is displayed
       // as it counts.  Need to overwrite this
-      long count = su.unit_count();
+      long count = su.unit_count(output);
 
       if (isatty(STDOUT_FILENO))
         fputc('\r', stdout);

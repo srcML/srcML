@@ -66,7 +66,7 @@ class srcMLUtility {
   const PROPERTIES_TYPE* getNS() const;
 
   // count of nested units
-  int unit_count();
+  int unit_count(FILE* output);
 
   // list the elements
   void list();
