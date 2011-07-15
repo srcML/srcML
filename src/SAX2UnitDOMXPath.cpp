@@ -323,6 +323,7 @@ void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const x
 	out << result_nodes->floatval;
 
       xmlOutputBufferWriteString(pstate->buf, out.str().c_str());
+      xmlOutputBufferWriteString(pstate->buf, "\n");
     }
     pstate->total += result_nodes->floatval;
     break;
@@ -391,6 +392,7 @@ void SAX2UnitDOMXPath::endDocument(void *ctx) {
 	out << pstate->total;
 
       xmlOutputBufferWriteString(pstate->buf, out.str().c_str());
+      xmlOutputBufferWriteString(pstate->buf, "\n");
     }
     break;
 
