@@ -125,6 +125,7 @@ class Properties : public CountUnits {
     // output the current data
     output_info(su, *(pstate->poptions), optioncount, optionorder);
 
+    // stop, since normal unit processing would continue on to the contents
     ctxt->sax->startElementNs = 0;
     ctxt->sax->characters = 0;
     ctxt->sax->ignorableWhitespace = 0;
