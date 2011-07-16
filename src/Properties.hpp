@@ -75,6 +75,7 @@ class Properties : public CountUnits {
 
     // not processing a particular unit
     if (pstate->unit < 1) {
+
       // output the current data except for the completion of the nested unit count
       output_info(su, *(pstate->poptions), optioncount, optionorder);
 
@@ -89,7 +90,6 @@ class Properties : public CountUnits {
       }
 
       // ok, we want the longinfo so turn into CountUnits
-      pstate->unit = -1;
       CountUnits* pcount = new CountUnits(output);
       pstate->pprocess = pcount;
     }
