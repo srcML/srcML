@@ -25,8 +25,20 @@
 #ifndef INCLUDED_XPATHQUERYUNITS_HPP
 #define INCLUDED_XPATHQUERYUNITS_HPP
 
+#include <sstream>
+
 #include <libxml/parser.h>
 #include <libxml/xpath.h>
+
+#include <libxml/xpath.h>
+#include <libxml/xpathInternals.h>
+
+#include <libexslt/exslt.h>
+
+#include <libxml/SAX2.h>
+
+#define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
+#include "srcexfun.hpp"
 
 #include "ProcessUnit.hpp"
 
@@ -47,8 +59,41 @@ XPathQueryUnits(const char* a_context_element, const char* a_fxpath[], const cha
  public :
 
   virtual void startRootUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                 const xmlChar** attributes) {}
+			     int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+			     const xmlChar** attributes) {
+
+    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+
+    // allow for all exslt functions
+    //    exsltRegisterAll();
+
+    //    if (!pstate->fxpath[0][0])
+    //      return;
+
+    context = xmlXPathNewContext(ctxt->myDoc);
+
+    xpathsrcMLRegister(context);
+
+    // register standard prefixes for standard namespaces
+    const char* prefixes[] = {
+      SRCML_SRC_NS_URI, "src",
+      SRCML_CPP_NS_URI, SRCML_CPP_NS_PREFIX_DEFAULT,
+      SRCML_ERR_NS_URI, SRCML_ERR_NS_PREFIX_DEFAULT,
+      SRCML_EXT_LITERAL_NS_URI, SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT,
+      SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT,
+      SRCML_EXT_MODIFIER_NS_URI, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT,
+      SRCML_EXT_POSITION_NS_URI, SRCML_EXT_POSITION_NS_PREFIX_DEFAULT,
+      0, 0
+    };
+
+    for (unsigned int i = 0; prefixes[i] != 0; i += 2){
+      if (xmlXPathRegisterNs(context, BAD_CAST prefixes[i + 1], BAD_CAST prefixes[i]) == -1) {
+	fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "srcml2src", prefixes[i + 1], prefixes[i]);
+	exit(1);
+      }
+    }
+
+  }
 
   virtual void startUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
@@ -65,7 +110,254 @@ XPathQueryUnits(const char* a_context_element, const char* a_fxpath[], const cha
   // comments
   virtual void comments(void* ctx, const xmlChar* ch) {}
 
-  virtual void endUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {}
+  virtual void endUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+    /*
+    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+    SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+
+  // DOM building end element
+  xmlSAX2EndElementNs(ctx, localname, prefix, URI);
+
+  // only handle unit elements
+  if ((ctxt->nodeNr == 0 && pstate->isnested) || (strcmp((const char*) localname, "unit") != 0))
+    return;
+
+  // evaluate the xpath on the context from the current document
+  xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, pstate->context);
+  if (result_nodes == 0) {
+    fprintf(stderr, "%s: Error in executing xpath\n", "srcml2src");
+    return;
+  }
+
+  int result_size = 0;
+
+  bool outputunit = false;
+
+  xmlNodePtr onode = 0;
+
+  xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
+
+  // for some reason, xmlGetNsProp has an issue with the namespace
+  char* unit_filename = (char*) xmlGetProp(a_node, BAD_CAST UNIT_ATTRIBUTE_FILENAME);
+  char* unit_directory = (char*) xmlGetProp(a_node, BAD_CAST UNIT_ATTRIBUTE_DIRECTORY);
+  char* unit_version = (char*) xmlGetProp(a_node, BAD_CAST UNIT_ATTRIBUTE_VERSION);
+  char* unit_language = (char*) xmlGetProp(a_node, BAD_CAST UNIT_ATTRIBUTE_LANGUAGE);
+
+  if (!prev_unit_filename || (unit_filename && strcmp(prev_unit_filename, unit_filename) != 0))
+    pstate->itemcount = 0;
+
+  // process the resulting nodes
+  pstate->nodetype = result_nodes->type;
+
+  switch (pstate->nodetype) {
+
+    // node set result
+  case XPATH_NODESET:
+
+    if (!pstate->needroot) {
+      xmlOutputBufferWrite(buf, pstate->rootbuf->use, (const char*) pstate->rootbuf->content);
+      xmlBufferFree(pstate->rootbuf);
+      pstate->needroot = true;
+    }
+
+    // may not have any values
+    if (!result_nodes->nodesetval)
+      break;
+
+    // may not have any results
+    result_size = xmlXPathNodeSetGetLength(result_nodes->nodesetval);
+    if (result_size == 0)
+      break;
+
+    // first time found a node result, so close root unit start tag
+    if (!pstate->found) {
+      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">\n\n"));
+      pstate->found = true;
+    }
+
+    // output all the found nodes
+    for (int i = 0; i < xmlXPathNodeSetGetLength(result_nodes->nodesetval); ++i) {
+
+      onode = xmlXPathNodeSetItem(result_nodes->nodesetval, i);
+
+      ++(pstate->itemcount);
+
+      // output a unit element around the fragment, unless
+      // is is already a unit
+      outputunit = strcmp("unit", (const char*) onode->name) != 0;
+
+      // if we need a unit, output the start tag.  Line number starts at 1, not 0
+      if (outputunit) {
+
+	// unit start tag
+	xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<unit"));
+
+        // output the namespaces
+        for (xmlNsPtr pAttr =  a_node->nsDef; pAttr != 0; pAttr = pAttr->next) {
+
+          // see if on the root
+          int place = -1;
+          for (int i = 0; i < pstate->nb_ns * 2; i += 2)
+            if (strcmp((const char*) pAttr->href, pstate->ns[i + 1]) == 0
+                && ( pAttr->prefix && pstate->ns[i]
+                     ? strcmp((const char*) pAttr->prefix, pstate->ns[i]) == 0
+                     : !pAttr->prefix && !pstate->ns[i])) {
+              place = i;
+              break;
+            }
+
+          if (!pstate->isnested && strcmp((const char*) pAttr->href, "http://www.sdml.info/srcML/src") != 0)
+            place = -1;
+
+          if (place == -1) {
+            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" xmlns"));
+            if (pAttr->prefix) {
+              xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(":"));
+              xmlOutputBufferWriteString(buf, (const char*) pAttr->prefix);
+            }
+            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("=\""));
+            xmlOutputBufferWriteString(buf, (const char*) pAttr->href);
+            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
+          }
+        }
+
+	// language attribute
+	if (unit_language) {
+	  xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" language=\""));
+	  xmlOutputBufferWriteString(buf, (const char*) unit_language);
+	  xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
+	}
+
+	// directory attribute
+	if (unit_directory) {
+	  xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" dir=\""));
+	  xmlOutputBufferWriteString(buf, (const char*) unit_directory);
+	  xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
+	}
+
+	// filename attribute
+	if (unit_filename) {
+	  xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" filename=\""));
+	  xmlOutputBufferWriteString(buf, (const char*) unit_filename);
+	  xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
+	}
+
+	// version attribute
+	if (unit_version) {
+	  xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" version=\""));
+	  xmlOutputBufferWriteString(buf, (const char*) unit_version);
+	  xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
+	}
+
+	// line number and clost unit start tag
+	xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" item=\""));
+	char s[50];
+	snprintf(s, 50, "%d", pstate->itemcount);
+	xmlOutputBufferWriteString(buf, s);
+	xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\">"));
+      }
+
+      // save the result, but temporarily hide the namespaces
+      xmlNsPtr savens = onode && !isoption(pstate->options, OPTION_XSLT_ALL) ? onode->nsDef : 0;
+      if (savens) {
+	onode->nsDef = 0;
+
+        // create a new list of namespaces
+        xmlNsPtr ret = NULL;
+        xmlNsPtr p = NULL;
+        xmlNsPtr cur = savens;
+        while (cur != NULL) {
+	  // fprintf(stderr, "%s\n", (const char *) q->href);
+
+          // see if on the root
+          int place = -1;
+          for (int i = 0; i < pstate->nb_ns * 2; i += 2)
+            if (strcmp((const char*) cur->href, pstate->ns[i + 1]) == 0
+                && ( cur->prefix && pstate->ns[i]
+                     ? strcmp((const char*) cur->prefix, pstate->ns[i]) == 0
+                     : !cur->prefix && !pstate->ns[i])) {
+              place = i;
+              break;
+            }
+
+          // if its not on the root
+          if (place == -1 || (!pstate->isnested && strcmp((const char*) cur->href, "http://www.sdml.info/srcML/cpp") == 0)) {
+            xmlNsPtr q = xmlCopyNamespace(cur);
+            if (p == NULL) {
+              ret = p = q;
+            } else {
+              p->next = q;
+              p = q;
+            }
+          }
+          cur = cur->next;
+        }
+        onode->nsDef = ret;
+      }
+      xmlNodeDumpOutput(buf, ctxt->myDoc, onode, 0, 0, 0);
+      if (savens) {
+        xmlFreeNsList(onode->nsDef);
+	onode->nsDef = savens;
+      }
+
+      // if we need a unit, output the end tag
+      if (outputunit)
+	xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>\n\n"));
+      else
+	xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
+    }
+
+    break;
+
+    // numeric result
+  case XPATH_NUMBER:
+    if (!isoption(pstate->options, OPTION_XPATH_TOTAL)) {
+      std::ostringstream out;
+      if ((int)result_nodes->floatval == result_nodes->floatval)
+	out << (int)result_nodes->floatval;
+      else
+	out << result_nodes->floatval;
+
+      xmlOutputBufferWriteString(buf, out.str().c_str());
+      xmlOutputBufferWriteString(buf, "\n");
+    }
+    pstate->total += result_nodes->floatval;
+    break;
+
+    // boolean result
+  case XPATH_BOOLEAN:
+    if (!isoption(pstate->options, OPTION_XPATH_TOTAL))
+      xmlOutputBufferWriteString(buf, result_nodes->boolval ? "true\n" : "false\n");
+
+    pstate->result_bool |= result_nodes->boolval;
+    break;
+
+    // string
+  case XPATH_STRING:
+    xmlOutputBufferWriteString(buf, (const char*) result_nodes->stringval);
+    xmlOutputBufferWriteString(buf, "\n");
+    break;
+
+  default:
+    fprintf(stderr, "Unhandled type %d\n", pstate->nodetype);
+    break;
+  };
+
+  // finished with the result nodes
+  xmlXPathFreeObject(result_nodes);
+
+  // save the previous filename to see if there is a transition for
+  // item numbering
+
+  if (prev_unit_filename)
+    free(prev_unit_filename);
+  prev_unit_filename = unit_filename ? strdup(unit_filename) : 0;
+
+  xmlFree(unit_filename);
+  xmlFree(unit_directory);
+  xmlFree(unit_version);
+    */
+}
 
   virtual void endRootUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {}
 

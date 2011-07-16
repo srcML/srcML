@@ -53,12 +53,6 @@ class Properties : public CountUnits {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
-    // collect namespaces
-    collect_namespaces(nb_namespaces, namespaces, nsv);
-
-    // collect attributes
-    collect_attributes(nb_attributes, attributes, attrv);
-
     // encoding is entered as a property
     const char* encoding = (const char*) (ctxt->encoding ? ctxt->encoding : ctxt->input->encoding);
 
@@ -72,6 +66,12 @@ class Properties : public CountUnits {
       attrv[i].first = ".encoding";
       attrv[i].second = encoding;
     }
+
+    // collect namespaces
+    collect_namespaces(nb_namespaces, namespaces, nsv);
+
+    // collect attributes
+    collect_attributes(nb_attributes, attributes, attrv);
 
     // output the current data except for the completion of the nested unit count
     if (pstate->unit < 1) {
