@@ -110,8 +110,8 @@ void SAX2UnitDOMXPath::startDocument(void *ctx) {
       fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "srcml2src", prefixes[i + 1], prefixes[i]);
       exit(1);
     }
-  }
-}
+}}
+
 
 // end unit element and current file/buffer (started by startElementNs
 void SAX2UnitDOMXPath::endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {

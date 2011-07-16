@@ -50,7 +50,6 @@ class SAX2UnitDOMXPath : public SAX2UnitDOM {
   int nodetype;
   char* prev_unit_filename;
   int itemcount;
-  xmlOutputBufferPtr buf;
 
   // start document
   static void startDocument(void *ctx);
