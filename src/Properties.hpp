@@ -122,7 +122,7 @@ class Properties : public CountUnits {
       attrv[i].second = encoding;
     }
 
-    // output the current data except for the completion of the nested unit count
+    // output the current data
     output_info(su, *(pstate->poptions), optioncount, optionorder);
 
     ctxt->sax->startElementNs = 0;
