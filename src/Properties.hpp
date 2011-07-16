@@ -47,8 +47,8 @@ class Properties : public CountUnits {
 
   // extract namespace and attributes from root unit element
   void startRootUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-		    const xmlChar** attributes) {
+		     int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+		     const xmlChar** attributes) {
 
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
@@ -73,21 +73,22 @@ class Properties : public CountUnits {
     // collect attributes
     collect_attributes(nb_attributes, attributes, attrv);
 
-    // output the current data except for the completion of the nested unit count
+    // not processing a particular unit
     if (pstate->unit < 1) {
+      // output the current data except for the completion of the nested unit count
       output_info(su, *(pstate->poptions), optioncount, optionorder);
-    }
 
-    if (pstate->unit < 1 && !isoption(*(pstate->poptions), OPTION_LONG_INFO)) {
-      ctxt->sax->startElementNs = 0;
-      ctxt->sax->characters = 0;
-      ctxt->sax->ignorableWhitespace = 0;
-      ctxt->sax->endElementNs = 0;
-      xmlStopParser(ctxt);
-      return;
-    }
+      // may be enough, except for longinfo options
+      if (!isoption(*(pstate->poptions), OPTION_LONG_INFO)) {
+	ctxt->sax->startElementNs = 0;
+	ctxt->sax->characters = 0;
+	ctxt->sax->ignorableWhitespace = 0;
+	ctxt->sax->endElementNs = 0;
+	xmlStopParser(ctxt);
+	return;
+      }
 
-    if (pstate->unit < 1 && isoption(*(pstate->poptions), OPTION_LONG_INFO)) {
+      // ok, we want the longinfo so turn into CountUnits
       pstate->unit = -1;
       CountUnits* pcount = new CountUnits(output);
       pstate->pprocess = pcount;
