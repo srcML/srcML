@@ -221,7 +221,7 @@ KeywordCPPLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         // templates
         { "template"      , TEMPLATE      , LANGUAGE_CXX_FAMILY }, 
         
-        { "delete"        , OPERATORS     , LANGUAGE_CXX_FAMILY }, 
+        { "delete"        , DELETE        , LANGUAGE_CXX_FAMILY }, 
         
         // special C++ operators
         { "::"            , DCOLON        , LANGUAGE_CXX_FAMILY }, 

@@ -3227,10 +3227,11 @@ general_operators { LocalMode lm; bool first = true; } :
         }
         (
         ({ first || SkipBufferSize() == 0 }? (options { greedy = true; } : OPERATORS | TEMPOPS | TEMPOPE |
-         EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS /* | DELETEOP */ |
-         DOTDOT
+         EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT
         ) { first = false; })+ |
-        NEW
+
+        // others are not combined
+        NEW | DELETE
         )
 ;
 
