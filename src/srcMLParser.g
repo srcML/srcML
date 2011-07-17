@@ -3225,10 +3225,13 @@ general_operators { LocalMode lm; bool first = true; } :
                 startElement(SOPERATOR);
             }
         }
+        (
         ({ first || SkipBufferSize() == 0 }? (options { greedy = true; } : OPERATORS | TEMPOPS | TEMPOPE |
-         EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS /* | DELETEOP */ | NEW |
+         EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS /* | DELETEOP */ |
          DOTDOT
-        ) { first = false; })+
+        ) { first = false; })+ |
+        NEW
+        )
 ;
 
 rparen_operator { LocalMode lm; } :
