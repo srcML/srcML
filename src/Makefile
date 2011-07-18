@@ -70,8 +70,8 @@ ifndef MINGW32
 XML_LIB_SRC2SRCML=-lxml2
 XML_LIB_SRCML2SRC=-lxml2 -lxslt -lexslt
 else
-XML_LIB_SRC2SRCML=~/Dropbox/srcML/Windows/srcMLwin/libxml2.dll -lregex -liberty 
-XML_LIB_SRCML2SRC=~/Dropbox/srcML/Windows/srcMLwin/libxml2.dll ~/Dropbox/srcML/Windows/srcMLwin/libxslt.dll ~/Dropbox/srcML/Windows/srcMLwin/libexslt.dll -lregex -liberty
+XML_LIB_SRC2SRCML=../dist/dlls/libxml2.dll -lregex -liberty 
+XML_LIB_SRCML2SRC=../dist/dlls/libxml2.dll ../dist/dlls/libxslt.dll ../dist/dlls/libexslt.dll -lregex -liberty
 #XML_LIB_SRCML2SRC=-lxml2 -lxslt -lexslt -lregex -liberty
 endif
 
