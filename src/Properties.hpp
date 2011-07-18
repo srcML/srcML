@@ -94,6 +94,7 @@ class Properties : public CountUnits {
 
 	CountUnits* pcount = new CountUnits(output);
 	pstate->pprocess = pcount;
+        pstate->unit = -1;
       }
     }
   }
