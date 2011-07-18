@@ -31,6 +31,7 @@ endif
 # project dirs
 EXE_DIR = ../bin/
 OBJ_DIR = ../obj/
+DLL_DIR = ../dlls
 
 # general ANTLR settings
 
@@ -70,8 +71,8 @@ ifndef MINGW32
 XML_LIB_SRC2SRCML=-lxml2
 XML_LIB_SRCML2SRC=-lxml2 -lxslt -lexslt
 else
-XML_LIB_SRC2SRCML=/home/lou/programming/srcML/trunk/dist/dlls/libxml2.dll -lregex -liberty 
-XML_LIB_SRCML2SRC=/home/lou/programming/srcML/trunk/dist/dlls/libxml2.dll /home/lou/programming/srcML/trunk/dist/dlls/libxslt.dll /home/lou/programming/srcML/trunk/dist/dlls/libexslt.dll -lregex -liberty
+XML_LIB_SRC2SRCML=${DLL_DIR}/libxml2.dll -lregex -liberty 
+XML_LIB_SRCML2SRC=${DLL_DIR}/libxml2.dll ${DLL_DIR}/libxslt.dll ${DLL_DIR}/libexslt.dll -lregex -liberty
 #XML_LIB_SRCML2SRC=-lxml2 -lxslt -lexslt -lregex -liberty
 endif
 
