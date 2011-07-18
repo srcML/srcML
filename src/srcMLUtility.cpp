@@ -158,10 +158,10 @@ int srcMLUtility::unit_count(FILE* output) {
   ctxt->sax = &sax;
 
   // setup process handling
-  CountUnits process(output);
+  ProcessUnit* pprocess = isatty(fileno(output)) ? new CountUnits(output) : new ProcessUnit;
 
   // setup sax handling state
-  SAX2ExtractUnitsSrc state(&process, &options, -1);
+  SAX2ExtractUnitsSrc state(pprocess, &options, -1);
   ctxt->_private = &state;
 
   // process the document
@@ -169,6 +169,8 @@ int srcMLUtility::unit_count(FILE* output) {
 
   // local variable, do not want xmlFreeParserCtxt to free
   ctxt->sax = NULL;
+
+  delete pprocess;
 
   // all done with parsing
   xmlFreeParserCtxt(ctxt);
