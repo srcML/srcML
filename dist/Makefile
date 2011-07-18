@@ -32,6 +32,7 @@ OBJ_DIR=${SRC_DIR_BASE}/obj
 BIN_DIR=${SRC_DIR_BASE}/bin
 DOC_DIR=${SRC_DIR_BASE}/doc
 WINBIN_DIR=${BASE}-windows
+DLL_DIR=../../dlls
 
 # executables
 SRC2SRCML_BIN=src2srcml
@@ -113,12 +114,15 @@ windows : ${SRC_ZIP}
 windowsdyn : ${SRC_ZIP}
 	make cleansrc
 	unzip -aq ${SRC_ZIP}
-	cd ${SRC_DIR} && make mingw32 DYNAMIC=1
+	cd ${SRC_DIR} && make mingw32 DYNAMIC=1 DLL_DIR=${DLL_DIR}
 	cd ${SRC_DIR} && make cleanbuild && make
 	cd ${DOC_DIR} && make
 	i686-pc-mingw32-strip ${WIN_SRC2SRCML_PATH} ${WIN_SRCML2SRC_PATH} ${LIBSRCML_DLL}
 	mkdir ${WIN_BASE} && ${CP} -t ${WIN_BASE} ${WIN_DIST_FILES}
 	unix2dos ${WIN_BASE}/*.html
-	cp dlls/*.dll ${WIN_BASE}
+	cp ../dlls/*.dll ${WIN_BASE}
 	cp ${BIN_DIR}/libsrcml.dll ${WIN_BASE}
 	zip -rql ${WIN_ZIP} ${WIN_BASE}
+
+dll :
+	echo ${DLL_DIR}
