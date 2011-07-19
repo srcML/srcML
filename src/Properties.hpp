@@ -81,11 +81,7 @@ class Properties : public CountUnits {
 
       // may be enough, except for longinfo options
       if (!isoption(*(pstate->poptions), OPTION_LONG_INFO)) {
-	ctxt->sax->startElementNs = 0;
-	ctxt->sax->characters = 0;
-	ctxt->sax->ignorableWhitespace = 0;
-	ctxt->sax->endElementNs = 0;
-	xmlStopParser(ctxt);
+	pstate->stopUnit(ctx);
 	return;
       }
 
