@@ -83,8 +83,7 @@ class Properties : public ProcessUnit {
       if (pstate->unit == -1) {
 
 	// Keep going, either showing the count or just accumulating it
-	ProcessUnit* pcount = isatty(fileno(output)) ? new CountUnits(output) : new ProcessUnit;
-	pstate->pprocess = pcount;
+	pstate->pprocess = isatty(fileno(output)) ? new CountUnits(output) : new ProcessUnit;
       }
     }
   }
