@@ -432,6 +432,9 @@ int main(int argc, char* argv[]) {
     // process get attribute options
     } else if (optioncount > 0) {
 
+      if (isoption(options, OPTION_LONG_INFO))
+	poptions.unit = -1;
+
       // move to the appropriate unit and output the appropriate metadata
       su.move_to_unit(poptions.unit, su, options, optioncount, optionorder, output);
 
