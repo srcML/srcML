@@ -84,7 +84,7 @@ class Properties : public CountUnits {
 	pstate->stopUnit(ctx);
 	return;
       }
-
+      /*
       // ok, we want the longinfo so turn into CountUnits
       if (isatty(fileno(output))) {
 
@@ -92,6 +92,7 @@ class Properties : public CountUnits {
 	pstate->pprocess = pcount;
         pstate->unit = -1;
       }
+      */
     }
   }
 
@@ -126,11 +127,7 @@ class Properties : public CountUnits {
     output_info(su, *(pstate->poptions), optioncount, optionorder);
 
     // stop, since normal unit processing would continue on to the contents
-    ctxt->sax->startElementNs = 0;
-    ctxt->sax->characters = 0;
-    ctxt->sax->ignorableWhitespace = 0;
-    ctxt->sax->endElementNs = 0;
-    xmlStopParser(ctxt);
+    pstate->stopUnit(ctx);
   }
 };
 

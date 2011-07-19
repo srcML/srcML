@@ -42,6 +42,7 @@ class CountUnits : public ProcessUnit {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
+    fprintf(output, "HERE\n");
     // output file status message if in verbose mode
     if (!isoption(*(pstate->poptions), OPTION_LONG_INFO)) {
       fprintf(output, "\r%ld", pstate->count);

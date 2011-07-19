@@ -438,7 +438,7 @@ int main(int argc, char* argv[]) {
       // now finish longinfo
       if (isoption(options, OPTION_LONG_INFO)) {
 	if (!isoption(options, OPTION_UNIT)) {
-	  if (isatty(STDOUT_FILENO))
+	  if (fileno(output) == STDOUT_FILENO && isatty(STDOUT_FILENO))
 	    fputc('\r', output);
 	  fprintf(output, "units=\"%d\"\n", su.curunits());
 	}

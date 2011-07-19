@@ -324,9 +324,9 @@ void SAX2ExtractUnitsSrc::endElementNsSkip(void *ctx, const xmlChar *localname, 
     return;
   }
 
-    // all done
-    if (pstate->stop)
-      return;
+  // all done
+  if (pstate->stop)
+    return;
 
   // now waiting for start of next unit
   ctxt->sax->startElementNs = &startElementNs;
