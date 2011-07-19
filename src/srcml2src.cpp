@@ -477,10 +477,8 @@ int main(int argc, char* argv[]) {
       // as it counts.  Need to overwrite this
       long count = su.unit_count(output);
 
-      if (isatty(STDOUT_FILENO))
-        fputc('\r', stdout);
-
-      fprintf(output, "%ld\n", count);
+      if (!isatty(fileno(output)))
+	fprintf(output, "%ld\n", count);
 
       // if we terminated early, output the correct status
       if (isoption(options, OPTION_TERMINATE))
@@ -1146,7 +1144,7 @@ void output_info(srcMLUtility& su, int options, int optioncount, int optionorder
 	}
       }
 
-      if (isoption(options, OPTION_LONG_INFO) && !isoption(options, OPTION_UNIT) && isatty(STDOUT_FILENO))
+      if (isoption(options, OPTION_LONG_INFO) && !isoption(options, OPTION_UNIT) && isatty(fileno(output)))
 	    fprintf(output, "units=\"%d", 1);
 }
 
