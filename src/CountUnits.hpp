@@ -45,26 +45,12 @@ class CountUnits : public ProcessUnit {
     // back up over the previous display
     // yes, this is a hack, but it works
     int c = pstate->count - 1;
-    if (c >= 1)
+    for (int place = 1; true; place *= 10) {
+      if (c < place)
+	break;
+
       fputc('\b', output);
-    if (c >= 10)
-      fputc('\b', output);
-    if (c >= 100)
-      fputc('\b', output);
-    if (c >= 1000)
-      fputc('\b', output);
-    if (c >= 10000)
-      fputc('\b', output);
-    if (c >= 100000)
-      fputc('\b', output);
-    if (c >= 1000000)
-      fputc('\b', output);
-    if (c >= 10000000)
-      fputc('\b', output);
-    if (c >= 100000000)
-      fputc('\b', output);
-    if (c >= 1000000000)
-      fputc('\b', output);
+    }
     fprintf(output, "%ld", pstate->count);
     fflush(output);
   }
