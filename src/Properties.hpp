@@ -30,7 +30,7 @@ void output_info(srcMLUtility& su, int options, int optioncount, int optionorder
 #include "ProcessUnit.hpp"
 #include "srcmlapps.hpp"
 
-class Properties : public CountUnits {
+class Properties : public ProcessUnit {
  public :
   Properties(srcMLUtility& su, PROPERTIES_TYPE&nsv, PROPERTIES_TYPE& attrv, int optioncount, int optionorder[], FILE * output = stdout)
     : su(su), nsv(nsv), attrv(attrv), optioncount(optioncount), optionorder(optionorder), output(output)
@@ -84,7 +84,7 @@ class Properties : public CountUnits {
 	pstate->stopUnit(ctx);
 	return;
       }
-      /*
+
       // ok, we want the longinfo so turn into CountUnits
       if (isatty(fileno(output))) {
 
@@ -92,7 +92,6 @@ class Properties : public CountUnits {
 	pstate->pprocess = pcount;
         pstate->unit = -1;
       }
-      */
     }
   }
 
