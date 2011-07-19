@@ -42,38 +42,33 @@ class CountUnits : public ProcessUnit {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
-    // output file status message if in verbose mode
-    if (!isoption(*(pstate->poptions), OPTION_LONG_INFO)) {
-      fprintf(output, "\r%ld", pstate->count);
-      fflush(output);
-    } else if (isoption(*(pstate->poptions), OPTION_LONG_INFO)) {
-
-      // back up over the previous display
-      // yes, this is a hack, but it works
-      int c = pstate->count - 1;
+    // back up over the previous display
+    // yes, this is a hack, but it works
+    int c = pstate->count - 1;
+    if (c >= 1)
       fputc('\b', output);
-      if (c >= 10)
-        fputc('\b', output);
-      if (c >= 100)
-        fputc('\b', output);
-      if (c >= 1000)
-        fputc('\b', output);
-      if (c >= 10000)
-        fputc('\b', output);
-      if (c >= 100000)
-        fputc('\b', output);
-      if (c >= 1000000)
-        fputc('\b', output);
-      if (c >= 10000000)
-        fputc('\b', output);
-      if (c >= 100000000)
-        fputc('\b', output);
-      if (c >= 1000000000)
-        fputc('\b', output);
-      fprintf(output, "%ld", pstate->count);
-      fflush(output);
-    }
+    if (c >= 10)
+      fputc('\b', output);
+    if (c >= 100)
+      fputc('\b', output);
+    if (c >= 1000)
+      fputc('\b', output);
+    if (c >= 10000)
+      fputc('\b', output);
+    if (c >= 100000)
+      fputc('\b', output);
+    if (c >= 1000000)
+      fputc('\b', output);
+    if (c >= 10000000)
+      fputc('\b', output);
+    if (c >= 100000000)
+      fputc('\b', output);
+    if (c >= 1000000000)
+      fputc('\b', output);
+    fprintf(output, "%ld", pstate->count);
+    fflush(output);
   }
+
 private:
   FILE* output;
 };
