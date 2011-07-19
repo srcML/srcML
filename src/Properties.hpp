@@ -85,13 +85,9 @@ class Properties : public ProcessUnit {
 	return;
       }
 
-      // ok, we want the longinfo so turn into CountUnits
-      if (isatty(fileno(output))) {
-
-	CountUnits* pcount = new CountUnits(output);
-	pstate->pprocess = pcount;
-        pstate->unit = -1;
-      }
+      // Keep going, either showing the count or just accumulating it
+      ProcessUnit* pcount = isatty(fileno(output)) ? new CountUnits(output) : new ProcessUnit;
+      pstate->pprocess = pcount;
     }
   }
 
