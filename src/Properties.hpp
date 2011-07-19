@@ -73,21 +73,19 @@ class Properties : public ProcessUnit {
       attrv[i].second = encoding;
     }
 
-    // not processing a particular unit
+    // not processing a particular unit, so output
     if (pstate->unit < 1) {
 
       // output the current data except for the completion of the nested unit count
       output_info(su, *(pstate->poptions), optioncount, optionorder);
 
-      // may be enough, except for longinfo options
-      if (!isoption(*(pstate->poptions), OPTION_LONG_INFO)) {
-	pstate->stopUnit(ctx);
-	return;
-      }
+      // if visiting all, then do so counting, whether visible or not
+      if (pstate->unit == -1) {
 
-      // Keep going, either showing the count or just accumulating it
-      ProcessUnit* pcount = isatty(fileno(output)) ? new CountUnits(output) : new ProcessUnit;
-      pstate->pprocess = pcount;
+	// Keep going, either showing the count or just accumulating it
+	ProcessUnit* pcount = isatty(fileno(output)) ? new CountUnits(output) : new ProcessUnit;
+	pstate->pprocess = pcount;
+      }
     }
   }
 
