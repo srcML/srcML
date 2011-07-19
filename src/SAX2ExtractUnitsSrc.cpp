@@ -296,11 +296,7 @@ void SAX2ExtractUnitsSrc::endElementNsSkip(void *ctx, const xmlChar *localname, 
   // done if we are only stopping on this one
   if (pstate->count == pstate->unit) {
 
-    ctxt->sax->startElementNs = 0;
-    ctxt->sax->characters = 0;
-    ctxt->sax->ignorableWhitespace = 0;
-    ctxt->sax->endElementNs = 0;
-    xmlStopParser(ctxt);
+    stopUnit(ctx);
     return;
   }
 
@@ -336,3 +332,19 @@ void SAX2ExtractUnitsSrc::startElementNsUnit(void* ctx, const xmlChar* localname
 
   pstate->pprocess->startElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
 }
+
+// stop all processing
+void SAX2ExtractUnitsSrc::stopUnit(void* ctx) {
+
+  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+  SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+
+  ctxt->sax->startElementNs = 0;
+  ctxt->sax->characters = 0;
+  ctxt->sax->ignorableWhitespace = 0;
+  ctxt->sax->endElementNs = 0;
+  xmlStopParser(ctxt);
+
+  pstate->stop = true;
+}
+

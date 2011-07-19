@@ -52,11 +52,12 @@ class SAX2ExtractUnitsSrc {
   std::string firstcharacters;
   bool isarchive;
   bool rootonly;
+  bool stop;
 
  public:
 
   SAX2ExtractUnitsSrc(ProcessUnit* pprocess, OPTION_TYPE* poptions, int unit)
-    : pprocess(pprocess), poptions(poptions), unit(unit)
+    : pprocess(pprocess), poptions(poptions), unit(unit), stop(false)
     {}
 
   static xmlSAXHandler factory();
@@ -93,6 +94,9 @@ class SAX2ExtractUnitsSrc {
   static void charactersUnit(void* user_data, const xmlChar* ch, int len);
 
   static void endElementNsUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
+
+  // stop all processing
+  static void stopUnit(void* ctx);
 
 };
 
