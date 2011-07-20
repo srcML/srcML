@@ -40,9 +40,9 @@
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
 #include "srcexfun.hpp"
 
-#include "ProcessUnit.hpp"
+#include "UnitDOM.hpp"
 
-class XPathQueryUnits : public ProcessUnit {
+class XPathQueryUnits : public UnitDOM {
 public :
 
   XPathQueryUnits(const char* a_context_element, const char* a_fxpath[], const char* a_ofilename, int options)
