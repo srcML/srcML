@@ -441,8 +441,10 @@ int main(int argc, char* argv[]) {
       // now finish longinfo
       if (isoption(options, OPTION_LONG_INFO)) {
 	if (!isoption(options, OPTION_UNIT)) {
-	  if (!isatty(fileno(output)))
-	    fprintf(output, "units=\"%d\"\n", su.curunits());
+	  if (isatty(fileno(output)))
+            fprintf(output, "\r");
+
+          fprintf(output, "units=\"%d\"\n", su.curunits());
 	}
       }
 

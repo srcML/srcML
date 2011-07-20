@@ -44,10 +44,10 @@ class CountUnits : public ProcessUnit {
 
     // back up over the previous display
     // yes, this is a hack, but it works
-    int c = pstate->count - 1;
-    for (int place = 1; true; place *= 10) {
-      if (c < place)
-	break;
+    if(pstate->count == 1)
+      fputc('\b', output);
+
+    for (int place = pstate->count - 1; place > 0; place /= 10) {
 
       fputc('\b', output);
     }
