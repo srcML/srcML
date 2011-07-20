@@ -47,7 +47,7 @@ class XPathQueryUnits : public ProcessUnit {
 
 XPathQueryUnits(const char* a_context_element, const char* a_fxpath[], const char* a_ofilename, int options)
   : context_element(a_context_element), ofilename(a_ofilename), options(options), fxpath(a_fxpath), total(0),
-    prev_unit_filename(0), itemcount(0) {
+    prev_unit_filename(0), itemcount(0), found(false) {
 }
 
 ~XPathQueryUnits() {
@@ -62,6 +62,10 @@ XPathQueryUnits(const char* a_context_element, const char* a_fxpath[], const cha
 			     int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
 			     const xmlChar** attributes) {
 
+    // setup output
+    //    buf = xmlOutputBufferCreateFilename(pstate->ofilename, NULL, 0);
+
+    xmlSAX2StartDocument(ctx);
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
 
     // allow for all exslt functions
@@ -111,19 +115,15 @@ XPathQueryUnits(const char* a_context_element, const char* a_fxpath[], const cha
   virtual void comments(void* ctx, const xmlChar* ch) {}
 
   virtual void endUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
-    /*
+
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
   // DOM building end element
   xmlSAX2EndElementNs(ctx, localname, prefix, URI);
 
-  // only handle unit elements
-  if ((ctxt->nodeNr == 0 && pstate->isnested) || (strcmp((const char*) localname, "unit") != 0))
-    return;
-
   // evaluate the xpath on the context from the current document
-  xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, pstate->context);
+  xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, context);
   if (result_nodes == 0) {
     fprintf(stderr, "%s: Error in executing xpath\n", "srcml2src");
     return;
@@ -143,22 +143,25 @@ XPathQueryUnits(const char* a_context_element, const char* a_fxpath[], const cha
   char* unit_version = (char*) xmlGetProp(a_node, BAD_CAST UNIT_ATTRIBUTE_VERSION);
   char* unit_language = (char*) xmlGetProp(a_node, BAD_CAST UNIT_ATTRIBUTE_LANGUAGE);
 
+
   if (!prev_unit_filename || (unit_filename && strcmp(prev_unit_filename, unit_filename) != 0))
-    pstate->itemcount = 0;
+    itemcount = 0;
 
   // process the resulting nodes
-  pstate->nodetype = result_nodes->type;
+  int nodetype = result_nodes->type;
 
-  switch (pstate->nodetype) {
+  switch (nodetype) {
 
     // node set result
   case XPATH_NODESET:
 
+    /*
     if (!pstate->needroot) {
       xmlOutputBufferWrite(buf, pstate->rootbuf->use, (const char*) pstate->rootbuf->content);
       xmlBufferFree(pstate->rootbuf);
       pstate->needroot = true;
     }
+    */
 
     // may not have any values
     if (!result_nodes->nodesetval)
@@ -170,10 +173,11 @@ XPathQueryUnits(const char* a_context_element, const char* a_fxpath[], const cha
       break;
 
     // first time found a node result, so close root unit start tag
-    if (!pstate->found) {
+    if (!found) {
       xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">\n\n"));
-      pstate->found = true;
+      found = true;
     }
+    /*
 
     // output all the found nodes
     for (int i = 0; i < xmlXPathNodeSetGetLength(result_nodes->nodesetval); ++i) {
@@ -306,12 +310,13 @@ XPathQueryUnits(const char* a_context_element, const char* a_fxpath[], const cha
       else
 	xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
     }
+    */
 
     break;
 
     // numeric result
   case XPATH_NUMBER:
-    if (!isoption(pstate->options, OPTION_XPATH_TOTAL)) {
+    if (!isoption(options, OPTION_XPATH_TOTAL)) {
       std::ostringstream out;
       if ((int)result_nodes->floatval == result_nodes->floatval)
 	out << (int)result_nodes->floatval;
@@ -321,15 +326,15 @@ XPathQueryUnits(const char* a_context_element, const char* a_fxpath[], const cha
       xmlOutputBufferWriteString(buf, out.str().c_str());
       xmlOutputBufferWriteString(buf, "\n");
     }
-    pstate->total += result_nodes->floatval;
+    total += result_nodes->floatval;
     break;
 
     // boolean result
   case XPATH_BOOLEAN:
-    if (!isoption(pstate->options, OPTION_XPATH_TOTAL))
+    if (!isoption(options, OPTION_XPATH_TOTAL))
       xmlOutputBufferWriteString(buf, result_nodes->boolval ? "true\n" : "false\n");
 
-    pstate->result_bool |= result_nodes->boolval;
+    result_bool |= result_nodes->boolval;
     break;
 
     // string
@@ -339,10 +344,9 @@ XPathQueryUnits(const char* a_context_element, const char* a_fxpath[], const cha
     break;
 
   default:
-    fprintf(stderr, "Unhandled type %d\n", pstate->nodetype);
+    fprintf(stderr, "Unhandled type %d\n", nodetype);
     break;
   };
-
   // finished with the result nodes
   xmlXPathFreeObject(result_nodes);
 
@@ -356,7 +360,6 @@ XPathQueryUnits(const char* a_context_element, const char* a_fxpath[], const cha
   xmlFree(unit_filename);
   xmlFree(unit_directory);
   xmlFree(unit_version);
-    */
 }
 
   virtual void endRootUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {}
@@ -373,6 +376,8 @@ XPathQueryUnits(const char* a_context_element, const char* a_fxpath[], const cha
   int nodetype;
   char* prev_unit_filename;
   int itemcount;
+  bool found;
+  xmlOutputBufferPtr buf;
 };
 
 #endif
