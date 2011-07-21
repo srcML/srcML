@@ -45,7 +45,8 @@
 class XPathQueryUnits : public UnitDOM {
 public :
 
-  XPathQueryUnits(const char* a_context_element, const char* a_fxpath[], const char* a_ofilename, int options)
+  XPathQueryUnits(const char* a_context_element, const char* a_fxpath[], const char* a_ofilename, int options,
+                  xmlXPathCompExprPtr compiled_xpath)
     : context_element(a_context_element), ofilename(a_ofilename), options(options), fxpath(a_fxpath), total(0),
       prev_unit_filename(0), itemcount(0), found(false) {
   }

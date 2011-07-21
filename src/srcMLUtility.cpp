@@ -341,6 +341,42 @@ void srcMLUtility::set_input_filename(const char* infilename) {
 // xpath evaluation of the nested units
 void srcMLUtility::xpath(const char* ofilename, const char* context_element, const char* xpaths[]) {
 
+  // relative xpath changed to at any level
+  std::string s = xpaths[0];
+  //  if (s[0] != '/')
+  //    s = "//" + s;
+
+  // compile the xpath that will be applied to each unit
+  xmlXPathCompExprPtr compiled_xpath = xmlXPathCompile(BAD_CAST s.c_str());
+  if (compiled_xpath == 0) {
+    return;
+  }
+
+  // setup parser
+  xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
+  if (ctxt == NULL) return;
+
+  // setup sax handler
+  xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
+  ctxt->sax = &sax;
+
+  // setup process handling
+  XPathQueryUnits process(context_element, xpaths, ofilename, options, compiled_xpath);
+
+  // setup sax handling state
+  SAX2ExtractUnitsSrc state(&process, &options, -1);
+  ctxt->_private = &state;
+
+  // process the document
+  srcMLParseDocument(ctxt);
+
+  // local variable, do not want xmlFreeParserCtxt to free
+  ctxt->sax = NULL;
+
+  // all done with parsing
+  xmlFreeParserCtxt(ctxt);
+
+  /*
   xmlSAXHandler sax = SAX2UnitDOMXPath::factory();
 
   SAX2UnitDOMXPath state(context_element, xpaths, ofilename, options);
@@ -367,6 +403,7 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
   ctxt->sax = NULL;
 
   xmlFreeParserCtxt(ctxt);
+  */
 }
 
 // xslt evaluation of the nested units
