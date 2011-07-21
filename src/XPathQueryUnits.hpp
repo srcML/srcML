@@ -56,9 +56,7 @@ public :
       free(prev_unit_filename);
   }
 
-  virtual void startRootUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-                             int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                             const xmlChar** attributes) {
+  virtual void startOutput(void* ctx) {
 
     // setup output
     buf = xmlOutputBufferCreateFilename(ofilename, NULL, 0);
@@ -97,45 +95,10 @@ public :
 
   }
 
-  virtual void startUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-                         int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                         const xmlChar** attributes) {
-
-    xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
-
-  }
-
-  virtual void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-                              int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                              const xmlChar** attributes) {
-
-    xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
-
-  }
-
-  virtual void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
-
-
-  }
-
-  virtual void characters(void* ctx, const xmlChar* ch, int len) {
-
-    xmlSAX2Characters(ctx, ch, len);
-  }
-
-  // comments
-  virtual void comments(void* ctx, const xmlChar* ch) {
-
-    xmlSAX2Comment(ctx, ch);
-  }
-
-  virtual void endUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+  virtual void apply(void *ctx) {
 
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
-
-    // DOM building end element
-    xmlSAX2EndElementNs(ctx, localname, prefix, URI);
 
     // evaluate the xpath on the context from the current document
     xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, context);
@@ -385,9 +348,7 @@ public :
     ctxt->node = 0;
   }
 
-  virtual void endRootUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
-
-    xmlSAX2EndDocument(ctx);
+  virtual void endOutput(void *ctx) {
 
     // finalize results
     switch (nodetype) {
