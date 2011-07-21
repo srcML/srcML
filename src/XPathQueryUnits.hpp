@@ -35,8 +35,6 @@
 
 #include <libexslt/exslt.h>
 
-#include <libxml/SAX2.h>
-
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
 #include "srcexfun.hpp"
 
@@ -51,7 +49,7 @@ public :
       prev_unit_filename(0), itemcount(0), found(false) {
   }
 
-  ~XPathQueryUnits() {
+  virtual ~XPathQueryUnits() {
 
     if (prev_unit_filename)
       free(prev_unit_filename);
@@ -62,7 +60,6 @@ public :
     // setup output
     buf = xmlOutputBufferCreateFilename(ofilename, NULL, 0);
 
-    xmlSAX2StartDocument(ctx);
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
 
     // allow for all exslt functions

@@ -25,36 +25,30 @@
 #ifndef INCLUDED_UNITDOM_HPP
 #define INCLUDED_UNITDOM_HPP
 
-#include <sstream>
-
-#include <libxml/parser.h>
-#include <libxml/xpath.h>
-
-#include <libxml/xpath.h>
-#include <libxml/xpathInternals.h>
-
-#include <libexslt/exslt.h>
-
 #include <libxml/SAX2.h>
-
-#define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
-#include "srcexfun.hpp"
 
 #include "ProcessUnit.hpp"
 
 class UnitDOM : public ProcessUnit {
 public :
 
-  UnitDOM() {
-  }
+  UnitDOM() {}
 
-  ~UnitDOM() {
-  }
+  virtual ~UnitDOM() {}
+
+  virtual void apply(void* ctx) = 0;
+
+  virtual void startOutput(void* ctx) = 0;
+
+  virtual void endOutput(void* ctx) = 0;
 
   virtual void startRootUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                              int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                              const xmlChar** attributes) {
+    // setup output
+    startOutput(ctx);
 
+    // start the document
     xmlSAX2StartDocument(ctx);
   }
 
@@ -74,7 +68,6 @@ public :
 
   virtual void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
-    // DOM building end element
     xmlSAX2EndElementNs(ctx, localname, prefix, URI);
   }
 
@@ -91,38 +84,30 @@ public :
 
   virtual void endUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
-    // DOM building end element
+    // finish building the unit tree
     xmlSAX2EndElementNs(ctx, localname, prefix, URI);
 
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    xmlNodePtr thisnode = xmlDocGetRootElement(ctxt->myDoc);
-
-    xmlUnlinkNode(thisnode);
-    xmlFreeNode(thisnode);
+    // apply the necessary processing
+    apply(ctx);
 
     // unhook the unit tree from the document, leaving an empty document
+    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+    xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
+    xmlUnlinkNode(onode);
+    xmlFreeNode(onode);
     ctxt->node = 0;
   }
 
   virtual void endRootUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
+    // end the entire input document
     xmlSAX2EndDocument(ctx);
+
+    // end the output
+    endOutput(ctx);
   }
 
 private :
-  const char* context_element;
-  const char* ofilename;
-  int options;
-  const char** fxpath;
-  xmlXPathContextPtr context;
-  xmlXPathCompExprPtr compiled_xpath;
-  double total;
-  bool result_bool;
-  int nodetype;
-  char* prev_unit_filename;
-  int itemcount;
-  bool found;
-  xmlOutputBufferPtr buf;
 };
 
 #endif
