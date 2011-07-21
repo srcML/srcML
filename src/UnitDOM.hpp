@@ -1,7 +1,7 @@
 /*
   UnitDOM.cpp
 
-  Copyright (C) 2008-2011  SDML (www.sdml.info)
+  Copyright (C) 2011  SDML (www.sdml.info)
 
   This file is part of the srcML translator.
 
@@ -42,14 +42,23 @@ public :
 
   virtual void endOutput(void* ctx) = 0;
 
-  virtual void startRootUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-                             int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                             const xmlChar** attributes) {
-    // setup output
-    startOutput(ctx);
+  virtual void startDocument(void* ctx) {
+
+    fprintf(stderr, "%s\n", __FUNCTION__);
 
     // start the document
     xmlSAX2StartDocument(ctx);
+
+    // setup output
+    startOutput(ctx);
+  }
+
+  virtual void startRootUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                             int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                             const xmlChar** attributes) {
+    fprintf(stderr, "%s\n", __FUNCTION__);
+
+    xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
   }
 
   virtual void startUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
@@ -99,6 +108,10 @@ public :
   }
 
   virtual void endRootUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+
+  }
+
+  virtual void endDocument(void *ctx) {
 
     // end the entire input document
     xmlSAX2EndDocument(ctx);

@@ -46,7 +46,7 @@ public :
   XPathQueryUnits(const char* a_context_element, const char* a_fxpath[], const char* a_ofilename, int options,
                   xmlXPathCompExprPtr compiled_xpath)
     : context_element(a_context_element), ofilename(a_ofilename), options(options), fxpath(a_fxpath), total(0),
-      prev_unit_filename(0), itemcount(0), found(false) {
+      prev_unit_filename(0), itemcount(0), found(false), compiled_xpath(compiled_xpath), needroot(true) {
   }
 
   virtual ~XPathQueryUnits() {
@@ -56,6 +56,8 @@ public :
   }
 
   virtual void startOutput(void* ctx) {
+
+    fprintf(stderr, "%s\n", __FUNCTION__);
 
     // setup output
     buf = xmlOutputBufferCreateFilename(ofilename, NULL, 0);
@@ -69,7 +71,6 @@ public :
     //      return;
 
     context = xmlXPathNewContext(ctxt->myDoc);
-
     xpathsrcMLRegister(context);
 
     // register standard prefixes for standard namespaces
@@ -91,6 +92,9 @@ public :
       }
     }
 
+    // TODO:  Do we always do this?
+    xmlOutputBufferWriteString(buf, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n");
+    xmlOutputBufferWriteString(buf, "<unit");
   }
 
   virtual void apply(void *ctx) {
@@ -130,15 +134,13 @@ public :
 
       // node set result
     case XPATH_NODESET:
-
       /*
-        if (!pstate->needroot) {
-        xmlOutputBufferWrite(buf, pstate->rootbuf->use, (const char*) pstate->rootbuf->content);
+        if (needroot) {
+        xmlOutputBufferWrite(buf, pstate->rootbuf->use, "<unit );
         xmlBufferFree(pstate->rootbuf);
-        pstate->needroot = true;
+        needroot = false;
         }
       */
-
       // may not have any values
       if (!result_nodes->nodesetval)
         break;
@@ -348,6 +350,8 @@ public :
 
   virtual void endOutput(void *ctx) {
 
+    fprintf(stderr, "%s\n", __FUNCTION__);
+
     // finalize results
     switch (nodetype) {
     case XPATH_NODESET:
@@ -399,6 +403,7 @@ private :
   int itemcount;
   bool found;
   xmlOutputBufferPtr buf;
+  bool needroot;
 };
 
 #endif

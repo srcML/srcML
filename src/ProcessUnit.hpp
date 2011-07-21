@@ -29,6 +29,10 @@
 
 class ProcessUnit {
 public :
+  virtual void startDocument(void* ctx) {}
+
+  virtual void endDocument(void* ctx) {}
+
   virtual void startRootUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                  const xmlChar** attributes) {}

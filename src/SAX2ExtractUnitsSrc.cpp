@@ -35,8 +35,26 @@ xmlSAXHandler SAX2ExtractUnitsSrc::factory() {
   sax.initialized    = XML_SAX2_MAGIC;
   sax.startElementNs = &startElementNsRoot;
   sax.characters = &charactersPre;  // catch first text of single unit
+  sax.startDocument = &startDocument;
+  sax.endDocument = &endDocument;
 
   return sax;
+}
+
+void SAX2ExtractUnitsSrc::startDocument(void *ctx) {
+
+  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+  SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+
+  pstate->pprocess->startDocument(ctx);
+}
+
+void SAX2ExtractUnitsSrc::endDocument(void *ctx) {
+
+  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+  SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+
+  pstate->pprocess->endDocument(ctx);
 }
 
 /*

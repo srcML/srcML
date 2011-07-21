@@ -375,7 +375,7 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
 
   // all done with parsing
   xmlFreeParserCtxt(ctxt);
-  */
+*/
 
   xmlSAXHandler sax = SAX2UnitDOMXPath::factory();
 

@@ -62,6 +62,10 @@ class SAX2ExtractUnitsSrc {
 
   static xmlSAXHandler factory();
 
+  static void startDocument(void *ctx);
+
+  static void endDocument(void *ctx);
+
   // output all characters to output buffer
   static void charactersPre(void* user_data, const xmlChar* ch, int len);
 
