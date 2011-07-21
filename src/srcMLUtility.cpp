@@ -340,7 +340,7 @@ void srcMLUtility::set_input_filename(const char* infilename) {
 
 // xpath evaluation of the nested units
 void srcMLUtility::xpath(const char* ofilename, const char* context_element, const char* xpaths[]) {
-
+  /*
   // relative xpath changed to at any level
   std::string s = xpaths[0];
   //  if (s[0] != '/')
@@ -375,8 +375,8 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
 
   // all done with parsing
   xmlFreeParserCtxt(ctxt);
+  */
 
-  /*
   xmlSAXHandler sax = SAX2UnitDOMXPath::factory();
 
   SAX2UnitDOMXPath state(context_element, xpaths, ofilename, options);
@@ -403,7 +403,6 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
   ctxt->sax = NULL;
 
   xmlFreeParserCtxt(ctxt);
-  */
 }
 
 // xslt evaluation of the nested units
