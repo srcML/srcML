@@ -282,6 +282,7 @@ typedef struct process_options
   const char* ofilename;
   const char* input_format;
   const char* output_format;
+  const char* xml_encoding;
   const char* src_encoding;
   const char* to_directory;
   int unit;
@@ -338,6 +339,7 @@ int main(int argc, char* argv[]) {
      "-",
      0,
      0,
+     DEFAULT_XML_ENCODING,
      DEFAULT_TEXT_ENCODING,
      0,
      0,
@@ -603,7 +605,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
     { DIRECTORY_FLAG, no_argument, NULL, DIRECTORY_FLAG_SHORT },
     { LANGUAGE_FLAG, no_argument, NULL, LANGUAGE_FLAG_SHORT },
     { SRCVERSION_FLAG, no_argument, NULL, SRCVERSION_FLAG_SHORT },
-    { ENCODING_FLAG, no_argument, NULL, ENCODING_FLAG_SHORT },
+    { ENCODING_FLAG, optional_argument, NULL, ENCODING_FLAG_SHORT },
     { NESTED_FLAG, no_argument, NULL, NESTED_FLAG_SHORT },
     { INFO_FLAG, no_argument, NULL, INFO_FLAG_SHORT },
     { LONG_INFO_FLAG, no_argument, NULL, LONG_INFO_FLAG_SHORT },
@@ -697,6 +699,8 @@ int process_args(int argc, char* argv[], process_options & poptions)
     case ENCODING_FLAG_SHORT:
       options |= OPTION_XML_ENCODING;
       optionorder[optioncount++] = OPTION_XML_ENCODING;
+
+      poptions.xml_encoding = optarg;
       break;
 
     case SRC_ENCODING_FLAG_SHORT:
