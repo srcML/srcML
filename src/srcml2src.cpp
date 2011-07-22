@@ -700,7 +700,8 @@ int process_args(int argc, char* argv[], process_options & poptions)
       options |= OPTION_XML_ENCODING;
       optionorder[optioncount++] = OPTION_XML_ENCODING;
 
-      poptions.xml_encoding = optarg;
+      if(optarg)
+        poptions.xml_encoding = optarg;
       break;
 
     case SRC_ENCODING_FLAG_SHORT:
