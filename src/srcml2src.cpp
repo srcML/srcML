@@ -339,7 +339,7 @@ int main(int argc, char* argv[]) {
      "-",
      0,
      0,
-     DEFAULT_XML_ENCODING,
+     0,
      DEFAULT_TEXT_ENCODING,
      0,
      0,
@@ -700,8 +700,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
       options |= OPTION_XML_ENCODING;
       optionorder[optioncount++] = OPTION_XML_ENCODING;
 
-      if(optarg)
-        poptions.xml_encoding = optarg;
+      poptions.xml_encoding = optarg;
       break;
 
     case SRC_ENCODING_FLAG_SHORT:
