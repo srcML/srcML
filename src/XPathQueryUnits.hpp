@@ -57,7 +57,7 @@ public :
 
   virtual void startOutput(void* ctx) {
 
-    fprintf(stderr, "%s\n", __FUNCTION__);
+    //    fprintf(stderr, "%s\n", __FUNCTION__);
 
     // setup output
     buf = xmlOutputBufferCreateFilename(ofilename, NULL, 0);
@@ -102,27 +102,20 @@ public :
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
-    xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
-    /*
-    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("DEBUG\n\n"));
-    xmlNodeDumpOutput(buf, ctxt->myDoc, a_node, 0, 0, 0);
-    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("DEBUG\n\n"));
-    */
-    // evaluate the xpath on the context from the current document
+    // TODO:  Do we always do this?
     xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, context);
     if (result_nodes == 0) {
       fprintf(stderr, "%s: Error in executing xpath\n", "srcml2src");
       return;
     }
 
-    fprintf(stderr, "HERE %d\n", result_nodes->type);
-
     int result_size = 0;
 
     bool outputunit = false;
 
-    fprintf(stderr, "HERE\n");
     xmlNodePtr onode = 0;
+
+    xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
 
     // for some reason, xmlGetNsProp has an issue with the namespace
     char* unit_filename = (char*) xmlGetProp(a_node, BAD_CAST UNIT_ATTRIBUTE_FILENAME);
@@ -135,8 +128,6 @@ public :
 
     // process the resulting nodes
     int nodetype = result_nodes->type;
-
-    fprintf(stderr, "nodesetlength %d\n", xmlXPathNodeSetGetLength(result_nodes->nodesetval));
     switch (nodetype) {
 
       // node set result
@@ -173,11 +164,10 @@ public :
         // output a unit element around the fragment, unless
         // is is already a unit
         outputunit = strcmp("unit", (const char*) onode->name) != 0;
-	fprintf(stderr, "%s %d\n", (const char*) onode->name, outputunit);
+
         // if we need a unit, output the start tag.  Line number starts at 1, not 0
         if (outputunit) {
 
-	  fprintf(stderr, "OUTPUTUNIT\n");
           // unit start tag
           xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<unit"));
 
@@ -257,7 +247,6 @@ public :
           xmlNsPtr p = NULL;
           xmlNsPtr cur = savens;
           while (cur != NULL) {
-            // fprintf(stderr, "%s\n", (const char *) q->href);
 
             // see if on the root
             int place = -1;
@@ -350,7 +339,7 @@ public :
 
   virtual void endOutput(void *ctx) {
 
-    fprintf(stderr, "%s\n", __FUNCTION__);
+    //   fprintf(stderr, "%s\n", __FUNCTION__);
 
     // finalize results
     switch (nodetype) {
