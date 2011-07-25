@@ -32,7 +32,7 @@
 class UnitDOM : public ProcessUnit {
 public :
 
-  UnitDOM() {}
+  UnitDOM() : first(true) {}
 
   virtual ~UnitDOM() {}
 
@@ -53,6 +53,8 @@ public :
     startOutput(ctx);
   }
 
+  bool first;
+
   virtual void startRootUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                              int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                              const xmlChar** attributes) {
@@ -60,18 +62,22 @@ public :
 
     fprintf(stderr, "%s\n", __FUNCTION__);
 
-    // unhook the unit tree from the document, leaving an empty document
-    xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
-    xmlUnlinkNode(onode);
-    xmlFreeNode(onode);
-    ctxt->node = 0;
-
     xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
   }
 
   virtual void startUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                          int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                          const xmlChar** attributes) {
+
+    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+    if (first){
+    // unhook the unit tree from the document, leaving an empty document
+    xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
+    xmlUnlinkNode(onode);
+    xmlFreeNode(onode);
+    ctxt->node = 0;
+    }
+    first = false;
 
     xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
   }
