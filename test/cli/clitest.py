@@ -893,7 +893,7 @@ check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', '-o', 'sub/a.cpp.xml'], sfi
 validate(open('sub/a.cpp.xml', 'r').read(), sxmlfile)
 
 # non-windows
-if platform.system != "Windows" :
+if platform.system() != "Windows" :
         check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', '-', '--output', '/dev/stdout'], sfile, sxmlfile)
         check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', '-', '--output=/dev/stdout'], sfile, sxmlfile)
         check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', '-', '-o', '/dev/stdout'], sfile, sxmlfile)
@@ -914,7 +914,7 @@ validate(open('sub/a.cpp', 'r').read(), sfile)
 
 
 # non-windows
-if platform.system != "Windows" :
+if platform.system() != "Windows" :
         check([srcml2src, '-', '--output', '/dev/stdout'], sxmlfile, sfile)
         check([srcml2src, '-', '--output=/dev/stdout'], sxmlfile, sfile)
         check([srcml2src, '-', '-o', '/dev/stdout'], sxmlfile, sfile)
