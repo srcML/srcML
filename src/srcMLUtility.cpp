@@ -60,7 +60,7 @@
 
 // local function forward declarations
 static xmlParserCtxtPtr srcMLCreateURLParserCtxt(const char * infile);
-static void srcMLParseDocument(xmlParserCtxtPtr ctxt);
+static void srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly);
 
 static bool incount = false;
 
@@ -131,7 +131,7 @@ void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE opt
   ctxt->_private = &state;
 
   // process the document
-  srcMLParseDocument(ctxt);
+  srcMLParseDocument(ctxt, true);
 
   // local variable, do not want xmlFreeParserCtxt to free
   ctxt->sax = NULL;
@@ -165,7 +165,7 @@ int srcMLUtility::unit_count(FILE* output) {
   ctxt->_private = &state;
 
   // process the document
-  srcMLParseDocument(ctxt);
+  srcMLParseDocument(ctxt, false);
 
   // local variable, do not want xmlFreeParserCtxt to free
   ctxt->sax = NULL;
@@ -197,7 +197,7 @@ void srcMLUtility::extract_xml(const char* ofilename, int unit) {
   ctxt->_private = &state;
 
   // process the document
-  srcMLParseDocument(ctxt);
+  srcMLParseDocument(ctxt, true);
 
   // local variable, do not want xmlFreeParserCtxt to free
   ctxt->sax = NULL;
@@ -241,7 +241,7 @@ void srcMLUtility::extract_text(const char* to_dir, const char* ofilename, int u
   ctxt->_private = &state;
 
   // process the document
-  srcMLParseDocument(ctxt);
+  srcMLParseDocument(ctxt, true);
 
 #if 0
   if (archiveWriteMatch_src2srcml(ofilename))
@@ -287,7 +287,7 @@ void srcMLUtility::expand(const char* root_filename, const char* format, const c
   ctxt->_private = &state;
 
   // process the document
-  srcMLParseDocument(ctxt);
+  srcMLParseDocument(ctxt, false);
 
   archiveWriteRootClose(0);
 
@@ -317,7 +317,7 @@ void srcMLUtility::list() {
   ctxt->_private = &state;
 
   // process the document
-  srcMLParseDocument(ctxt);
+  srcMLParseDocument(ctxt, false);
 
   // local variable, do not want xmlFreeParserCtxt to free
   ctxt->sax = NULL;
@@ -398,7 +398,7 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
   ctxt->_private = &state;
   //state.ctxt = ctxt;
 
-  srcMLParseDocument(ctxt);
+  srcMLParseDocument(ctxt, false);
 
   ctxt->sax = NULL;
 
@@ -427,7 +427,7 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
   state.xslt = xsltParseStylesheetFile(BAD_CAST xslts[0]);
   // TODO: error return
 
-  srcMLParseDocument(ctxt);
+  srcMLParseDocument(ctxt, false);
 
   ctxt->sax = NULL;
 
@@ -452,7 +452,7 @@ void srcMLUtility::relaxng(const char* ofilename, const char** xslts) {
   state.rng = xmlRelaxNGParse(state.relaxng);
   state.rngptr = xmlRelaxNGNewValidCtxt(state.rng);
 
-  srcMLParseDocument(ctxt);
+  srcMLParseDocument(ctxt, false);
 
   ctxt->sax = NULL;
 
@@ -461,7 +461,7 @@ void srcMLUtility::relaxng(const char* ofilename, const char** xslts) {
 
 
 // process srcML document with error reporting
-static void srcMLParseDocument(xmlParserCtxtPtr ctxt) {
+static void srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly) {
 
   // process the document
   int status;
@@ -470,7 +470,7 @@ static void srcMLParseDocument(xmlParserCtxtPtr ctxt) {
     xmlErrorPtr ep = xmlCtxtGetLastError(ctxt);
 
     // special case
-    if (ep->code == XML_ERR_EXTRA_CONTENT || XML_ERR_DOCUMENT_END)
+    if (!allowendearly && (ep->code == XML_ERR_EXTRA_CONTENT || ep->code == XML_ERR_DOCUMENT_END))
       return;
 
     if (incount)
