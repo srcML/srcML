@@ -102,6 +102,12 @@ public :
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
+    /*
+    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
+    xmlNodeDumpOutput(buf, ctxt->myDoc, a_node, 0, 0, 0);
+    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
+    */
+
     // evaluate the xpath on the context from the current document
     xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, context);
     if (result_nodes == 0) {
@@ -109,10 +115,13 @@ public :
       return;
     }
 
+    fprintf(stderr, "HERE %d\n", result_nodes->type);
+
     int result_size = 0;
 
     bool outputunit = false;
 
+    fprintf(stderr, "HERE\n");
     xmlNodePtr onode = 0;
 
     xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
@@ -123,13 +132,13 @@ public :
     char* unit_version = (char*) xmlGetProp(a_node, BAD_CAST UNIT_ATTRIBUTE_VERSION);
     char* unit_language = (char*) xmlGetProp(a_node, BAD_CAST UNIT_ATTRIBUTE_LANGUAGE);
 
-
     if (!prev_unit_filename || (unit_filename && strcmp(prev_unit_filename, unit_filename) != 0))
       itemcount = 0;
 
     // process the resulting nodes
     int nodetype = result_nodes->type;
 
+    fprintf(stderr, "nodesetlength %d\n", xmlXPathNodeSetGetLength(result_nodes->nodesetval));
     switch (nodetype) {
 
       // node set result
@@ -166,10 +175,11 @@ public :
         // output a unit element around the fragment, unless
         // is is already a unit
         outputunit = strcmp("unit", (const char*) onode->name) != 0;
-
+	fprintf(stderr, "%s %d\n", (const char*) onode->name, outputunit);
         // if we need a unit, output the start tag.  Line number starts at 1, not 0
         if (outputunit) {
 
+	  fprintf(stderr, "OUTPUTUNIT\n");
           // unit start tag
           xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<unit"));
 
