@@ -470,7 +470,7 @@ static void srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly) {
     xmlErrorPtr ep = xmlCtxtGetLastError(ctxt);
 
     // special case
-    if (!allowendearly && (ep->code == XML_ERR_EXTRA_CONTENT || ep->code == XML_ERR_DOCUMENT_END))
+    if (allowendearly && (ep->code == XML_ERR_EXTRA_CONTENT || ep->code == XML_ERR_DOCUMENT_END))
       return;
 
     if (incount)
