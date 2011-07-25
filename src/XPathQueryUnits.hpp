@@ -102,12 +102,12 @@ public :
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
+    xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
     /*
-    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
+    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("DEBUG\n\n"));
     xmlNodeDumpOutput(buf, ctxt->myDoc, a_node, 0, 0, 0);
-    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
+    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("DEBUG\n\n"));
     */
-
     // evaluate the xpath on the context from the current document
     xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, context);
     if (result_nodes == 0) {
@@ -123,8 +123,6 @@ public :
 
     fprintf(stderr, "HERE\n");
     xmlNodePtr onode = 0;
-
-    xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
 
     // for some reason, xmlGetNsProp has an issue with the namespace
     char* unit_filename = (char*) xmlGetProp(a_node, BAD_CAST UNIT_ATTRIBUTE_FILENAME);
@@ -348,14 +346,6 @@ public :
     xmlFree(unit_filename);
     xmlFree(unit_directory);
     xmlFree(unit_version);
-
-    xmlNodePtr thisnode = xmlDocGetRootElement(ctxt->myDoc);
-
-    xmlUnlinkNode(thisnode);
-    xmlFreeNode(thisnode);
-
-    // unhook the unit tree from the document, leaving an empty document
-    ctxt->node = 0;
   }
 
   virtual void endOutput(void *ctx) {

@@ -108,7 +108,7 @@ public :
   virtual void endUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
     // finish building the unit tree
-    xmlSAX2EndElementNs(ctx, localname, prefix, URI);
+    //    xmlSAX2EndElementNs(ctx, localname, prefix, URI);
 
     // apply the necessary processing
     apply(ctx);
