@@ -3054,6 +3054,24 @@ check([src2srcml, 'sub/b.java', 'sub/a.java'], '', srcmlstart + java + javaempty
 check([src2srcml, 'sub/b.java', 'sub/a.java', '-o', 'sub/all.xml'], '', '')
 validate(open('sub/all.xml', 'r').read(), srcmlstart + java + javaempty + srcmlend)
 
+# xml error test
+info_single = """xmlns="http://www.sdml.info/srcML/src"
+xmlns:cpp="http://www.sdml.info/srcML/cpp"
+encoding="UTF-8"
+language="C++"
+"""
+
+info_archive = """xmlns="http://www.sdml.info/srcML/src"
+encoding="UTF-8"
+"""
+# ok
+check([srcml2src, option.INFO_FLAG, 'xml_error/illformed.xml'], '' ,info_single)
+check([srcml2src, option.INFO_FLAG, 'xml_error/illformedarchive.xml'], '', info_archive)
+
+# bad
+checkError([srcml2src, 'xml_error/illformed.xml'], '', '5')
+checkError([srcml2src, 'xml_error/illformedarchive.xml'], '', '5')
+
 # footer
 print
 print "Error count:\t\t", error_count, "\t", error_list
