@@ -892,9 +892,11 @@ validate(open('sub/a.cpp.xml', 'r').read(), sxmlfile)
 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', '-o', 'sub/a.cpp.xml'], sfile, "")
 validate(open('sub/a.cpp.xml', 'r').read(), sxmlfile)
 
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', '-', '--output', '/dev/stdout'], sfile, sxmlfile)
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', '-', '--output=/dev/stdout'], sfile, sxmlfile)
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', '-', '-o', '/dev/stdout'], sfile, sxmlfile)
+# non-windows
+if platform.system != "Windows" :
+        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', '-', '--output', '/dev/stdout'], sfile, sxmlfile)
+        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', '-', '--output=/dev/stdout'], sfile, sxmlfile)
+        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', '-', '-o', '/dev/stdout'], sfile, sxmlfile)
 
 # srcml2src
 
@@ -910,9 +912,12 @@ validate(open('sub/a.cpp', 'r').read(), sfile)
 check([srcml2src, '-o', 'sub/a.cpp'], sxmlfile, "")
 validate(open('sub/a.cpp', 'r').read(), sfile)
 
-check([srcml2src, '-', '--output', '/dev/stdout'], sxmlfile, sfile)
-check([srcml2src, '-', '--output=/dev/stdout'], sxmlfile, sfile)
-check([srcml2src, '-', '-o', '/dev/stdout'], sxmlfile, sfile)
+
+# non-windows
+if platform.system != "Windows" :
+        check([srcml2src, '-', '--output', '/dev/stdout'], sxmlfile, sfile)
+        check([srcml2src, '-', '--output=/dev/stdout'], sxmlfile, sfile)
+        check([srcml2src, '-', '-o', '/dev/stdout'], sxmlfile, sfile)
 
 ##
 # Test src2srcml options with files
