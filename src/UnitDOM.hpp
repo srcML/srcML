@@ -83,13 +83,17 @@ public :
     }
     first = false;
 
-    // tack on the namespaces from this unit
-    // TODO:  Have a limit here, don't we?
-    //    for (int i = 0; i < 2 * nb_namespaces; ++i)
-    //      pstate->root.namespaces[pstate->root.nb_namespaces * 2 + i] = namespaces[i];
+    // combine namespaces from both root and this unit
+    int ns_length = (pstate->root.nb_namespaces + nb_namespaces) * 2;
+    const xmlChar** rnamespaces = (const xmlChar**) malloc(ns_length * sizeof(namespaces[0]));
+    for (int i = 0; i < pstate->root.nb_namespaces; ++i)
+      rnamespaces[i] = (xmlChar*) strdup((const char*) pstate->root.namespaces[i]);
+    for (int i = pstate->root.nb_namespaces; i < ns_length; ++i)
+      rnamespaces[i] = (xmlChar*) strdup((const char*) namespaces[i]);
 
+    fprintf(stderr, "NAMESPACES %d\n", ns_length);
     xmlSAX2StartElementNs(ctx, localname, prefix, URI, pstate->root.nb_namespaces + nb_namespaces,
-			  pstate->root.namespaces, nb_attributes, nb_defaulted, attributes);
+			  rnamespaces, nb_attributes, nb_defaulted, attributes);
   }
 
   virtual void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
@@ -159,6 +163,8 @@ public :
   }
 
 private :
+  PROPERTIES_TYPE nsv;
+  PROPERTIES_TYPE attrv;
 };
 
 #endif
