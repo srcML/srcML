@@ -141,7 +141,7 @@ void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE opt
 
   // make sure we did not end early
   if (state.unit >= 1 && state.count != state.unit)
-     throw OutOfRangeUnitError(state.count);
+    throw OutOfRangeUnitError(state.count);
 
   units = state.count;
 }
@@ -215,9 +215,9 @@ void srcMLUtility::extract_text(const char* to_dir, const char* ofilename, int u
 
 #if 0
   if (xmlRegisterOutputCallbacks(archiveWriteMatch_src2srcml, archiveWriteOpen, archiveWrite, archiveWriteClose) < 0) {
-      fprintf(stderr, "%s: failed to register archive handler\n", "FOO");
-      exit(1);
-    }
+    fprintf(stderr, "%s: failed to register archive handler\n", "FOO");
+    exit(1);
+  }
 
   if (archiveWriteMatch_src2srcml(ofilename)) {
     archiveWriteOutputFormat(ofilename);
@@ -263,9 +263,9 @@ void srcMLUtility::extract_text(const char* to_dir, const char* ofilename, int u
 void srcMLUtility::expand(const char* root_filename, const char* format, const char* to_directory) {
 
   if (xmlRegisterOutputCallbacks(archiveWriteMatch_srcml2src, archiveWriteOpen, archiveWrite, archiveWriteClose) < 0) {
-      fprintf(stderr, "%s: failed to register archive handler\n", "FOO");
-      exit(1);
-    }
+    fprintf(stderr, "%s: failed to register archive handler\n", "FOO");
+    exit(1);
+  }
 
   archiveWriteOutputFormat(format);
 
@@ -328,7 +328,7 @@ void srcMLUtility::list() {
 /*
 // namespaces and prefixes
 const PROPERTIES_TYPE* srcMLUtility::getNS() const {
-  return nsv;
+return nsv;
 }
 */
 
@@ -340,7 +340,7 @@ void srcMLUtility::set_input_filename(const char* infilename) {
 
 // xpath evaluation of the nested units
 void srcMLUtility::xpath(const char* ofilename, const char* context_element, const char* xpaths[]) {
-
+  /*
   // relative xpath changed to at any level
   std::string s = xpaths[0];
   //  if (s[0] != '/')
@@ -349,7 +349,7 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
   // compile the xpath that will be applied to each unit
   xmlXPathCompExprPtr compiled_xpath = xmlXPathCompile(BAD_CAST s.c_str());
   if (compiled_xpath == 0) {
-    return;
+  return;
   }
 
   // setup parser
@@ -375,8 +375,8 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
 
   // all done with parsing
   xmlFreeParserCtxt(ctxt);
+  */
 
-  /*
   xmlSAXHandler sax = SAX2UnitDOMXPath::factory();
 
   SAX2UnitDOMXPath state(context_element, xpaths, ofilename, options);
@@ -403,7 +403,6 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
   ctxt->sax = NULL;
 
   xmlFreeParserCtxt(ctxt);
-*/
 }
 
 // xslt evaluation of the nested units
