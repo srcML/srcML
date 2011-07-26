@@ -64,12 +64,12 @@ CXXFLAGS = -DVERSION=$(VERSION) -O3 -Wall -march=nocona -minline-all-stringops $
 CXX_LINK_FLAGS = #-s
 
 # libxml
-LIBXML_INC_DIR=${firstword ${wildcard /opt/local/include/libxml2 /usr/include/libxml2}}
+LIBXML_INC_DIR=${firstword ${wildcard /opt/local/include/lixbml2 /usr/include/libxml2}}
 LIBXML_INCLUDE=-I$(LIBXML_INC_DIR)
 
 ifndef MINGW32
-XML_LIB_SRC2SRCML=-lxml2
-XML_LIB_SRCML2SRC=-lxml2 -lxslt -lexslt
+XML_LIB_SRC2SRCML=$(if $(DEBUG),-L /usr/lib/debug/usr/lib/,-lxml2)
+XML_LIB_SRCML2SRC=$(if $(DEBUG),-L /usr/lib/debug/usr/lib/-lxml2) -lxslt -lexslt
 else
 XML_LIB_SRC2SRCML=${DLL_DIR}/libxml2.dll -lregex -liberty 
 XML_LIB_SRCML2SRC=${DLL_DIR}/libxml2.dll ${DLL_DIR}/libxslt.dll ${DLL_DIR}/libexslt.dll -lregex -liberty
