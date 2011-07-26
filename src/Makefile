@@ -58,7 +58,7 @@ SRCMLPARSER_ANTLR_FLAGS =
 SRCMLLEXER_ANTLR_FLAGS =
 
 # compiler optimizations
-CXXFLAGS = -DVERSION=$(VERSION) -O3 -Wall -march=nocona -minline-all-stringops $(if $(DYNAMIC), -fPIC, ) #-fno-rtti
+CXXFLAGS = -DVERSION=$(VERSION) -O3 -Wall -march=nocona -minline-all-stringops $(if $(DYNAMIC), -fPIC,) $(if $(DEBUG), -g,)#-fno-rtti
 
 # compiler gcc linking flags
 CXX_LINK_FLAGS = #-s
