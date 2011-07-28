@@ -32,7 +32,7 @@
 class UnitDOM : public ProcessUnit {
 public :
 
-  UnitDOM() : first(true) {}
+  UnitDOM() {}
 
   virtual ~UnitDOM() {}
 
@@ -53,18 +53,6 @@ public :
     startOutput(ctx);
   }
 
-  bool first;
-
-  virtual void startRootUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-                             int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                             const xmlChar** attributes) {
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-
-    // fprintf(stderr, "%s\n", __FUNCTION__);
-
-    xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
-  }
-
   virtual void startUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                          int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                          const xmlChar** attributes) {
@@ -74,17 +62,24 @@ public :
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
-    if (first){
-      // unhook the unit tree from the document, leaving an empty document
-      xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
-      xmlUnlinkNode(onode);
-      xmlFreeNode(onode);
-      ctxt->node = 0;
-    }
-    first = false;
 
-    xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces,
-			  namespaces, nb_attributes, nb_defaulted, attributes);
+    // combine namespaces from root and local to this unit
+    int cnb_namespaces = pstate->root.nb_namespaces + nb_namespaces;
+    const xmlChar** cnamespaces = (const xmlChar**) malloc((cnb_namespaces * 2 + 2) * sizeof(namespaces[0]));
+
+    for (int i = 0; i < pstate->root.nb_namespaces * 2; ++i)
+     cnamespaces[i] = pstate->root.namespaces[i];
+    for (int i = pstate->root.nb_namespaces * 2; i < cnb_namespaces * 2; ++i)
+     cnamespaces[i] = namespaces[i];
+   cnamespaces[cnb_namespaces * 2] = 0;
+   cnamespaces[cnb_namespaces * 2 + 1] = 0;
+								 
+    fprintf(stderr, "NSCOUNTFORM %d\n", cnb_namespaces);
+    for (int i = 0; i < cnb_namespaces * 2; i = i + 2)
+      fprintf(stderr, "NSFORM %s=%s\n", cnamespaces[i], cnamespaces[i+1]);
+ 
+    xmlSAX2StartElementNs(ctx, localname, prefix, URI, cnb_namespaces,
+			  cnamespaces, nb_attributes, nb_defaulted, attributes);
   }
 
   virtual void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
@@ -136,12 +131,6 @@ public :
     ctxt->node = 0;
   }
 
-  virtual void endRootUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
-
-    // fprintf(stderr, "%s\n", __FUNCTION__);
-
-  }
-
   virtual void endDocument(void *ctx) {
 
     // fprintf(stderr, "%s\n", __FUNCTION__);
@@ -153,9 +142,6 @@ public :
     endOutput(ctx);
   }
 
-private :
-  PROPERTIES_TYPE nsv;
-  PROPERTIES_TYPE attrv;
 };
 
 #endif

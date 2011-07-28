@@ -102,6 +102,12 @@ public :
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
+    xmlNodePtr aa_node = xmlDocGetRootElement(ctxt->myDoc);
+    for (xmlNsPtr pAttr =  aa_node->nsDef; pAttr != 0; pAttr = pAttr->next) {
+
+      fprintf(stderr, "NS: %s=%s\n", pAttr->prefix, pAttr->href);
+    }
+
     // TODO:  Do we always do this?
     xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, context);
     if (result_nodes == 0) {
