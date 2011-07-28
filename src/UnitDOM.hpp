@@ -57,10 +57,11 @@ public :
                              int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                              const xmlChar** attributes) {
 
-    //    for (int i = 0; i < nb_namespaces; ++i) {
-    //        data.push_back(namespaces[i * 2]);
-    //        data.push_back(namespaces[i * 2 + 1]);
-    //      }
+    // record namespaces in an extensible list so we can add the per unit
+    for (int i = 0; i < nb_namespaces; ++i) {
+      data.push_back(namespaces[i * 2]);
+      data.push_back(namespaces[i * 2 + 1]);
+    }
   }
 
   virtual void startUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
@@ -76,88 +77,88 @@ public :
       // make sure not already in
       bool found = false;
       for (unsigned int j = 0; j < data.size() / 2; ++j)
-             if (xmlStrEqual(data[j * 2], namespaces[i * 2]) &&
-                 xmlStrEqual(data[j * 2 + 1], namespaces[i * 2 + 1])) {
-               found = true;
-               break;
-             }
-             if (found)
-               continue;
+        if (xmlStrEqual(data[j * 2], namespaces[i * 2]) &&
+            xmlStrEqual(data[j * 2 + 1], namespaces[i * 2 + 1])) {
+          found = true;
+          break;
+        }
+      if (found)
+        continue;
 
-           data.push_back(namespaces[i * 2]);
-           data.push_back(namespaces[i * 2 + 1]);
-           }
-
-      // start the unit (element) at the root using the combined namespaces
-      xmlSAX2StartElementNs(ctx, localname, prefix, URI, data.size() / 2,
-                            &data[0], nb_attributes, nb_defaulted, attributes);
-
-      // r
-      data.resize(rootsize);
+      data.push_back(namespaces[i * 2]);
+      data.push_back(namespaces[i * 2 + 1]);
     }
 
-    virtual void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-                                int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                                const xmlChar** attributes) {
+    // start the unit (element) at the root using the combined namespaces
+    xmlSAX2StartElementNs(ctx, localname, prefix, URI, data.size() / 2,
+                          &data[0], nb_attributes, nb_defaulted, attributes);
 
-      // fprintf(stderr, "%s\n", __FUNCTION__);
+    // remove per-unit namespaces
+    data.resize(rootsize);
+  }
 
-      xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
-    }
+  virtual void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                              int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                              const xmlChar** attributes) {
 
-    virtual void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+    // fprintf(stderr, "%s\n", __FUNCTION__);
 
-      // fprintf(stderr, "%s\n", __FUNCTION__);
+    xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
+  }
 
-      xmlSAX2EndElementNs(ctx, localname, prefix, URI);
-    }
+  virtual void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
-    virtual void characters(void* ctx, const xmlChar* ch, int len) {
+    // fprintf(stderr, "%s\n", __FUNCTION__);
 
-      // fprintf(stderr, "%s\n", __FUNCTION__);
+    xmlSAX2EndElementNs(ctx, localname, prefix, URI);
+  }
 
-      xmlSAX2Characters(ctx, ch, len);
-    }
+  virtual void characters(void* ctx, const xmlChar* ch, int len) {
 
-    // comments
-    virtual void comments(void* ctx, const xmlChar* ch) {
+    // fprintf(stderr, "%s\n", __FUNCTION__);
 
-      // fprintf(stderr, "%s\n", __FUNCTION__);
+    xmlSAX2Characters(ctx, ch, len);
+  }
 
-      xmlSAX2Comment(ctx, ch);
-    }
+  // comments
+  virtual void comments(void* ctx, const xmlChar* ch) {
 
-    virtual void endUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+    // fprintf(stderr, "%s\n", __FUNCTION__);
 
-      // fprintf(stderr, "%s\n", __FUNCTION__);
+    xmlSAX2Comment(ctx, ch);
+  }
 
-      // finish building the unit tree
-      xmlSAX2EndElementNs(ctx, localname, prefix, URI);
+  virtual void endUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
-      // apply the necessary processing
-      apply(ctx);
+    // fprintf(stderr, "%s\n", __FUNCTION__);
 
-      // unhook the unit tree from the document, leaving an empty document
-      xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-      xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
-      xmlUnlinkNode(onode);
-      xmlFreeNode(onode);
-      ctxt->node = 0;
-    }
+    // finish building the unit tree
+    xmlSAX2EndElementNs(ctx, localname, prefix, URI);
 
-    virtual void endDocument(void *ctx) {
+    // apply the necessary processing
+    apply(ctx);
 
-      // fprintf(stderr, "%s\n", __FUNCTION__);
+    // unhook the unit tree from the document, leaving an empty document
+    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+    xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
+    xmlUnlinkNode(onode);
+    xmlFreeNode(onode);
+    ctxt->node = 0;
+  }
 
-      // end the entire input document
-      xmlSAX2EndDocument(ctx);
+  virtual void endDocument(void *ctx) {
 
-      // end the output
-      endOutput(ctx);
-    }
+    // fprintf(stderr, "%s\n", __FUNCTION__);
 
-  private:
-    std::vector<const xmlChar*> data;
-  };
+    // end the entire input document
+    xmlSAX2EndDocument(ctx);
+
+    // end the output
+    endOutput(ctx);
+  }
+
+private:
+  std::vector<const xmlChar*> data;
+};
 
 #endif

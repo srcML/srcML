@@ -45,7 +45,7 @@ public :
 
   XPathQueryUnits(const char* a_context_element, const char* a_fxpath[], const char* a_ofilename, int options,
                   xmlXPathCompExprPtr compiled_xpath)
-    : context_element(a_context_element), ofilename(a_ofilename), options(options), fxpath(a_fxpath), 
+    : context_element(a_context_element), ofilename(a_ofilename), options(options), fxpath(a_fxpath),
       compiled_xpath(compiled_xpath), total(0), prev_unit_filename(0), itemcount(0), found(false), needroot(true) {
   }
 
@@ -91,10 +91,6 @@ public :
         exit(1);
       }
     }
-
-    // TODO:  Do we always do this?
-    xmlOutputBufferWriteString(buf, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n");
-    xmlOutputBufferWriteString(buf, "<unit");
   }
 
   virtual void apply(void *ctx) {
@@ -132,13 +128,52 @@ public :
 
       // node set result
     case XPATH_NODESET:
-      /*
-        if (needroot) {
-        xmlOutputBufferWrite(buf, pstate->rootbuf->use, "<unit );
-        xmlBufferFree(pstate->rootbuf);
-        needroot = false;
+
+      if (needroot) {
+
+        // store the root start element
+        // TODO:  STATIC, should be based on context
+        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"));
+        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<"));
+        if (pstate->root.prefix != NULL) {
+          xmlOutputBufferWriteString(buf, (const char*) pstate->root.prefix);
+          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(":"));
         }
-      */
+        xmlOutputBufferWriteString(buf, (const char*) pstate->root.localname);
+
+        // output the namespaces
+        for (int i = 0; i < pstate->root.nb_namespaces; ++i) {
+
+          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" xmlns"));
+          if (pstate->root.namespaces[i * 2]) {
+            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(":"));
+            xmlOutputBufferWriteString(buf, (const char*) pstate->root.namespaces[i * 2]);
+          }
+          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("=\""));
+          xmlOutputBufferWriteString(buf, (const char*) pstate->root.namespaces[i * 2 + 1]);
+          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
+        }
+
+        // output the attributes
+        for (int i = 0; i < pstate->root.nb_attributes; ++i) {
+
+          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" "));
+          if (pstate->root.attributes[i * 5 + 1]) {
+            xmlOutputBufferWriteString(buf, (const char*) pstate->root.attributes[i * 5 + 1]);
+            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(":"));
+          }
+          xmlOutputBufferWriteString(buf, (const char*) pstate->root.attributes[i * 5]);
+          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("=\""));
+
+          xmlOutputBufferWrite(buf, pstate->root.attributes[i * 5 + 4] - pstate->root.attributes[i * 5 + 3] + 1,
+                               (const char*) pstate->root.attributes[i * 5 + 3]);
+
+          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
+        }
+
+        needroot = false;
+      }
+
       // may not have any values
       if (!result_nodes->nodesetval)
         break;
