@@ -53,6 +53,16 @@ public :
     startOutput(ctx);
   }
 
+  virtual void startRootUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                             int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                             const xmlChar** attributes) {
+
+    for (int i = 0; i < nb_namespaces; ++i) {
+      data.push_back(namespaces[i * 2]);
+      data.push_back(namespaces[i * 2 + 1]);
+    }
+  }
+
   virtual void startUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                          int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                          const xmlChar** attributes) {
@@ -63,13 +73,7 @@ public :
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
     // combine namespaces from root and local to this unit
-    int cnb_namespaces = pstate->root.nb_namespaces + nb_namespaces;
-    const xmlChar** cnamespaces = (const xmlChar**) malloc(cnb_namespaces * 2 * sizeof(namespaces[0]));
-    for (int i = 0; i < pstate->root.nb_namespaces; ++i) {
-      cnamespaces[i * 2] = pstate->root.namespaces[i * 2];
-      cnamespaces[i * 2 + 1] = pstate->root.namespaces[i * 2 + 1];
-    }
-    int place = pstate->root.nb_namespaces;
+    int rootsize = data.size();
     for (int i = 0; i < nb_namespaces; ++i) {
 
       // make sure not already in
@@ -83,17 +87,15 @@ public :
       if (found)
         continue;
 
-      cnamespaces[place * 2] = namespaces[i * 2];
-      cnamespaces[place * 2 + 1] = namespaces[i * 2 + 1];
-      ++place;
+      data.push_back(namespaces[i * 2]);
+      data.push_back(namespaces[i * 2 + 1]);
     }
 
     // start the unit (element) at the root using the combined namespaces
-    xmlSAX2StartElementNs(ctx, localname, prefix, URI, place,
-                          cnamespaces, nb_attributes, nb_defaulted, attributes);
+    xmlSAX2StartElementNs(ctx, localname, prefix, URI, data.size() / 2,
+                          &data[0], nb_attributes, nb_defaulted, attributes);
 
-    // all done building, free the array
-    free(cnamespaces);
+    data.resize(rootsize);
   }
 
   virtual void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
@@ -156,6 +158,8 @@ public :
     endOutput(ctx);
   }
 
+private:
+  std::vector<const xmlChar*> data;
 };
 
 #endif
