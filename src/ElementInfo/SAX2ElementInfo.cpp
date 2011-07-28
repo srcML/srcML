@@ -21,6 +21,7 @@ xmlSAXHandler factory() {
   sax.endElementNs = &endElementNs;
 
   sax.characters = &characters;
+  sax.comment = &comment;
 
   return sax;
 }
@@ -86,6 +87,11 @@ void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, co
 }
 
 void characters(void* ctx, const xmlChar* ch, int len) {
+
+  // fprintf(stderr, "%s\n\n", __FUNCTION__);
+}
+
+void comments(void* ctx, const xmlChar* ch) {
 
   // fprintf(stderr, "%s\n\n", __FUNCTION__);
 }

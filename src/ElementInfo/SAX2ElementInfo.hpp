@@ -25,4 +25,6 @@ void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, co
 
 void characters(void* ctx, const xmlChar* ch, int len);
 
+void comments(void* ctx, const xmlChar* ch);
+
 #endif
