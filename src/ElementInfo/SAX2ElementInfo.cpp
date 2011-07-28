@@ -27,17 +27,17 @@ xmlSAXHandler factory() {
 
 void startDocument(void* ctx) {
 
-  fprintf(stderr, "%s\n\n", __FUNCTION__);
+  // fprintf(stderr, "%s\n\n", __FUNCTION__);
 }
 
 void endDocument(void* ctx) {
 
-  fprintf(stderr, "%s\n\n", __FUNCTION__);
+  // fprintf(stderr, "%s\n\n", __FUNCTION__);
 }
 
 void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-                    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                    const xmlChar** attributes) {
+		     int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+		     const xmlChar** attributes) {
 
   if(prefix)
     fprintf(stderr, "%s:\t%s:%s\t%s\n", __FUNCTION__, prefix, localname, URI);
@@ -58,11 +58,19 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
   if(nb_attributes) {
     fprintf(stderr, "\t\tAttributes:\n");
 
-    for(int i = 0; i < nb_attributes; ++i)
-      if(attributes[i * 5 + 1])
-        fprintf(stderr, "\t\t\t%d. %s:%s=%s:%s\n", i + 1, attributes[i * 5 + 1], attributes[i * 5], attributes[i * 5 + 3], attributes[i * 5 + 4]);
+    int index;
+    for(int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
+      if(attributes[index + 1])
+        fprintf(stderr, "\t\t\t%d. %s:%s=", i + 1, attributes[index + 1], attributes[index]);
       else
-        fprintf(stderr, "\t\t\t%d. %s=%s\n", i + 1, attributes[i * 5], attributes[i * 5 + 4]);
+        fprintf(stderr, "\t\t\t%d. %s=", i + 1, attributes[index]);
+
+      if(attributes[index + 3])
+        fprintf(stderr, "%s:%s\n", attributes[index + 3], attributes[index + 4]);
+      else
+        fprintf(stderr, "%s\n", attributes[index + 4]);
+    }
+
   }
 
   fprintf(stderr, "\n");
