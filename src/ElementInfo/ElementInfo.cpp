@@ -16,6 +16,11 @@ static void parseDocument(xmlParserCtxtPtr ctxt);
 
 int main(int argc, char * argv[]) {
 
+  if(argc < 2) {
+
+    fprintf(stderr, "Usage: %s xmlfile\n", "ElementInfo");
+    return 1;
+  }
 
   // create the ctxt
   xmlParserCtxtPtr ctxt = createURLParserCtxt(argv[1]);
