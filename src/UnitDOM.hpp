@@ -72,16 +72,14 @@ public :
     int place = pstate->root.nb_namespaces;
     for (int i = 0; i < nb_namespaces; ++i) {
 
-      fprintf(stderr, "TRY %s %s\n", namespaces[i * 2], namespaces[i * 2 + 1]);
-
       // make sure not already in
       bool found = false;
       for (int j = 0; j < pstate->root.nb_namespaces; ++j)
-        if (strcmp((const char*) pstate->root.namespaces[j * 2], (const char*) namespaces[i * 2]) == 0 &&
-            strcmp((const char*) pstate->root.namespaces[j * 2 + 1], (const char*) namespaces[i * 2 + 1]) == 0) {
+        if (xmlStrEqual(pstate->root.namespaces[j * 2], namespaces[i * 2]) &&
+            xmlStrEqual(pstate->root.namespaces[j * 2 + 1], namespaces[i * 2 + 1])) {
           found = true;
+          break;
         }
-
       if (found)
         continue;
 
@@ -90,9 +88,11 @@ public :
       ++place;
     }
 
+    // start the unit (element) at the root using the combined namespaces
     xmlSAX2StartElementNs(ctx, localname, prefix, URI, place,
                           cnamespaces, nb_attributes, nb_defaulted, attributes);
 
+    // all done building, free the array
     free(cnamespaces);
   }
 
