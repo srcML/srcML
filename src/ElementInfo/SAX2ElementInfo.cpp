@@ -36,10 +36,37 @@ void endDocument(void* ctx) {
 }
 
 void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-                            int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                            const xmlChar** attributes) {
+                    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                    const xmlChar** attributes) {
 
-  fprintf(stderr, "%s\n", __FUNCTION__);
+  if(prefix)
+    fprintf(stderr, "%s:\t%s:%s\n", __FUNCTION__, prefix, localname);
+  else
+    fprintf(stderr, "%s:\t%s\n", __FUNCTION__, localname);
+
+
+  if(nb_namespaces) {
+    fprintf(stderr, "\t\tNamespaces:\n");
+
+    for(int i = 0; i < nb_namespaces; i +=2)
+      if(namespaces[i])
+        fprintf(stderr, "\t\t\t%d. %s:%s\n", (i + 1) / 2 + 1, namespaces[i], namespaces[i + 1]);
+      else
+        fprintf(stderr, "\t\t\t%d. %s\n", (i + 1) / 2 + 1, namespaces[i + 1]);
+
+  }
+
+  if(nb_attributes) {
+    fprintf(stderr, "\t\tAttributes:\n");
+
+    for(int i = 0; i < nb_attributes; ++i)
+      if(attributes[i * 5 + 1])
+        fprintf(stderr, "\t\t\t%d. %s:%s=%s:%s\n", i + 1, attributes[i * 5 + 1], attributes[i * 5], attributes[i * 5 + 3], attributes[i * 5 + 4]);
+      else
+        fprintf(stderr, "\t\t\t%d. %s=%s\n", i + 1, attributes[i * 5], attributes[i * 5 + 4]);
+
+  }
+
 }
 
 void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
