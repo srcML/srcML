@@ -64,7 +64,7 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
     int index;
     for(int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
 
-      int end = strlen((const char *)attributes[index + 3]) - strlen((const char *)attributes[index + 4]);
+      int end = attributes[index + 4] - attributes[index + 3];
       char * value = strndup((const char *)attributes[index + 3], end);
 
       if(attributes[index + 1])
