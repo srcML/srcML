@@ -63,7 +63,6 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
         fprintf(stderr, "\t\t\t%d. %s:%s=%s:%s\n", i + 1, attributes[i * 5 + 1], attributes[i * 5], attributes[i * 5 + 3], attributes[i * 5 + 4]);
       else
         fprintf(stderr, "\t\t\t%d. %s=%s\n", i + 1, attributes[i * 5], attributes[i * 5 + 4]);
-
   }
 
   fprintf(stderr, "\n");
