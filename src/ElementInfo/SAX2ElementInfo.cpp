@@ -66,14 +66,19 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
 
   }
 
+  fprintf(stderr, "\n");
+
 }
 
 void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
-  fprintf(stderr, "%s\n\n", __FUNCTION__);
+  if(prefix)
+    fprintf(stderr, "%s:\t%s:%s\t%s\n", __FUNCTION__, prefix, localname, URI);
+  else
+    fprintf(stderr, "%s:\t%s\t%s\n", __FUNCTION__, localname, URI);
 }
 
 void characters(void* ctx, const xmlChar* ch, int len) {
 
-  fprintf(stderr, "%s\n\n", __FUNCTION__);
+  // fprintf(stderr, "%s\n\n", __FUNCTION__);
 }
