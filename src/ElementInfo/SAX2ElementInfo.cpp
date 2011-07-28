@@ -27,12 +27,12 @@ xmlSAXHandler factory() {
 
 void startDocument(void* ctx) {
 
-  fprintf(stderr, "%s\n", __FUNCTION__);
+  fprintf(stderr, "%s\n\n", __FUNCTION__);
 }
 
 void endDocument(void* ctx) {
 
-  fprintf(stderr, "%s\n", __FUNCTION__);
+  fprintf(stderr, "%s\n\n", __FUNCTION__);
 }
 
 void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
@@ -40,10 +40,9 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
                     const xmlChar** attributes) {
 
   if(prefix)
-    fprintf(stderr, "%s:\t%s:%s\n", __FUNCTION__, prefix, localname);
+    fprintf(stderr, "%s:\t%s:%s\t%s\n", __FUNCTION__, prefix, localname, URI);
   else
-    fprintf(stderr, "%s:\t%s\n", __FUNCTION__, localname);
-
+    fprintf(stderr, "%s:\t%s\t%s\n", __FUNCTION__, localname, URI);
 
   if(nb_namespaces) {
     fprintf(stderr, "\t\tNamespaces:\n");
@@ -71,15 +70,10 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
 
 void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
-  fprintf(stderr, "%s\n", __FUNCTION__);
+  fprintf(stderr, "%s\n\n", __FUNCTION__);
 }
 
 void characters(void* ctx, const xmlChar* ch, int len) {
 
-  fprintf(stderr, "%s\n", __FUNCTION__);
-}
-
-void comments(void* ctx, const xmlChar* ch) {
-
-  fprintf(stderr, "%s\n", __FUNCTION__);
+  fprintf(stderr, "%s\n\n", __FUNCTION__);
 }
