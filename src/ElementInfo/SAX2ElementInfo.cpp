@@ -6,6 +6,7 @@
 */
 
 #include <stdio.h>
+#include <string.h>
 #include "SAX2ElementInfo.hpp"
 
 xmlSAXHandler factory() {
@@ -61,15 +62,20 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
 
     int index;
     for(int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
-      if(attributes[index + 1])
-        fprintf(stderr, "\t\t\t%d. %s:%s=", i + 1, attributes[index + 1], attributes[index]);
-      else
-        fprintf(stderr, "\t\t\t%d. %s=", i + 1, attributes[index]);
 
-      if(attributes[index + 3])
-        fprintf(stderr, "%s:%s\n", attributes[index + 3], attributes[index + 4]);
+      int end = strlen((const char *)attributes[i + 3]) - strlen((const char *)attributes[i + 4]);
+      char * value = strndup((const char *)attributes[i + 3], end);
+
+      if(attributes[index + 1])
+        fprintf(stderr, "\t\t\t%d. %s:%s=%s", i + 1, attributes[index + 1], attributes[index], value);
       else
-        fprintf(stderr, "%s\n", attributes[index + 4]);
+        fprintf(stderr, "\t\t\t%d. %s=%s", i + 1, attributes[index], value);
+
+      if(attributes[index + 2])
+        fprintf(stderr, "\t%s\n", attributes[index + 2]);
+      else
+        fprintf(stderr, "\n");
+
     }
 
   }
