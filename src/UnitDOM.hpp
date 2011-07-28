@@ -32,7 +32,7 @@
 class UnitDOM : public ProcessUnit {
 public :
 
-  UnitDOM() {}
+  UnitDOM() : rootsize(0), isnested(false) {}
 
   virtual ~UnitDOM() {}
 
@@ -62,6 +62,8 @@ public :
       data.push_back(namespaces[i * 2]);
       data.push_back(namespaces[i * 2 + 1]);
     }
+    rootsize = data.size();
+    isnested = true;
   }
 
   virtual void startUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
@@ -70,8 +72,10 @@ public :
 
     // fprintf(stderr, "%s\n", __FUNCTION__);
 
+    // remove per-unit namespaces
+    data.resize(rootsize);
+
     // combine namespaces from root and local to this unit
-    int rootsize = data.size();
     for (int i = 0; i < nb_namespaces; ++i) {
 
       // make sure not already in
@@ -92,9 +96,6 @@ public :
     // start the unit (element) at the root using the combined namespaces
     xmlSAX2StartElementNs(ctx, localname, prefix, URI, data.size() / 2,
                           &data[0], nb_attributes, nb_defaulted, attributes);
-
-    // remove per-unit namespaces
-    data.resize(rootsize);
   }
 
   virtual void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
@@ -157,8 +158,10 @@ public :
     endOutput(ctx);
   }
 
-private:
+protected:
   std::vector<const xmlChar*> data;
+  int rootsize;
+  bool isnested;
 };
 
 #endif

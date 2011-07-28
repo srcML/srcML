@@ -207,33 +207,18 @@ public :
           xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<unit"));
 
           // output the namespaces
-          for (xmlNsPtr pAttr =  a_node->nsDef; pAttr != 0; pAttr = pAttr->next) {
-
-            // see if on the root
-            int place = -1;
-            for (int i = 0; i < pstate->root.nb_namespaces * 2; i += 2)
-              if (strcmp((const char*) pAttr->href, (const char*) pstate->root.namespaces[i + 1]) == 0
-                  && ( pAttr->prefix && pstate->root.namespaces[i]
-                       ? strcmp((const char*) pAttr->prefix, (const char*) pstate->root.namespaces[i]) == 0
-                       : !pAttr->prefix && !pstate->root.namespaces[i])) {
-                place = i;
-                break;
-              }
-
-            if (strcmp((const char*) pAttr->href, "http://www.sdml.info/srcML/src") != 0)
-              //            if (!pstate->isnested && strcmp((const char*) pAttr->href, "http://www.sdml.info/srcML/src") != 0)
-              place = -1;
-
-            if (place == -1) {
-              xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" xmlns"));
-              if (pAttr->prefix) {
-                xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(":"));
-                xmlOutputBufferWriteString(buf, (const char*) pAttr->prefix);
-              }
-              xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("=\""));
-              xmlOutputBufferWriteString(buf, (const char*) pAttr->href);
-              xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
+          xmlNsPtr pAttr =  a_node->nsDef;
+          for (int i = 0; i < UnitDOM::rootsize / 2; ++i)
+            pAttr = pAttr->next;
+          for (; pAttr != 0; pAttr = pAttr->next) {
+            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" xmlns"));
+            if (pAttr->prefix) {
+              xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(":"));
+              xmlOutputBufferWriteString(buf, (const char*) pAttr->prefix);
             }
+            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("=\""));
+            xmlOutputBufferWriteString(buf, (const char*) pAttr->href);
+            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
           }
 
           // language attribute
@@ -277,43 +262,20 @@ public :
         if (savens) {
           onode->nsDef = 0;
 
-          // create a new list of namespaces
-          xmlNsPtr ret = NULL;
-          xmlNsPtr p = NULL;
-          xmlNsPtr cur = savens;
-          while (cur != NULL) {
+          if (!outputunit) {
+            // create a new list of namespaces
+            xmlNsPtr cur = savens;
 
-            // see if on the root
-            int place = -1;
-            for (int i = 0; i < pstate->root.nb_namespaces * 2; i += 2)
-              if (strcmp((const char*) cur->href, (const char*) pstate->root.namespaces[i + 1]) == 0
-                  && ( cur->prefix && pstate->root.namespaces[i]
-                       ? strcmp((const char*) cur->prefix, (const char*) pstate->root.namespaces[i]) == 0
-                       : !cur->prefix && !pstate->root.namespaces[i])) {
-                place = i;
-                break;
-              }
+            // skip over the namespaces on the root
+            for (int i = 0; i < UnitDOM::rootsize / 2; ++i)
+              cur = cur->next;
 
-            // if its not on the root
-            if (place == -1 || (strcmp((const char*) cur->href, "http://www.sdml.info/srcML/cpp") == 0)) {
-              //            if (place == -1 || (!pstate->isnested && strcmp((const char*) cur->href, "http://www.sdml.info/srcML/cpp") == 0)) {
-              xmlNsPtr q = xmlCopyNamespace(cur);
-              if (p == NULL) {
-                ret = p = q;
-              } else {
-                p->next = q;
-                p = q;
-              }
-            }
-            cur = cur->next;
+            onode->nsDef = cur;
           }
-          onode->nsDef = ret;
         }
         xmlNodeDumpOutput(buf, ctxt->myDoc, onode, 0, 0, 0);
-        if (savens) {
-          xmlFreeNsList(onode->nsDef);
+        if (savens)
           onode->nsDef = savens;
-        }
 
         // if we need a unit, output the end tag
         if (outputunit)
