@@ -62,24 +62,38 @@ public :
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
-
     // combine namespaces from root and local to this unit
     int cnb_namespaces = pstate->root.nb_namespaces + nb_namespaces;
-    const xmlChar** cnamespaces = (const xmlChar**) malloc((cnb_namespaces * 2 + 2) * sizeof(namespaces[0]));
+    const xmlChar** cnamespaces = (const xmlChar**) malloc(cnb_namespaces * 2 * sizeof(namespaces[0]));
+    for (int i = 0; i < pstate->root.nb_namespaces; ++i) {
+      cnamespaces[i * 2] = pstate->root.namespaces[i * 2];
+      cnamespaces[i * 2 + 1] = pstate->root.namespaces[i * 2 + 1];
+    }
+    int place = pstate->root.nb_namespaces;
+    for (int i = 0; i < nb_namespaces; ++i) {
 
-    for (int i = 0; i < pstate->root.nb_namespaces * 2; ++i)
-     cnamespaces[i] = pstate->root.namespaces[i];
-    for (int i = pstate->root.nb_namespaces * 2; i < cnb_namespaces * 2; ++i)
-     cnamespaces[i] = namespaces[i];
-   cnamespaces[cnb_namespaces * 2] = 0;
-   cnamespaces[cnb_namespaces * 2 + 1] = 0;
-								 
-    fprintf(stderr, "NSCOUNTFORM %d\n", cnb_namespaces);
-    for (int i = 0; i < cnb_namespaces * 2; i = i + 2)
-      fprintf(stderr, "NSFORM %s=%s\n", cnamespaces[i], cnamespaces[i+1]);
- 
-    xmlSAX2StartElementNs(ctx, localname, prefix, URI, cnb_namespaces,
-			  cnamespaces, nb_attributes, nb_defaulted, attributes);
+      fprintf(stderr, "TRY %s %s\n", namespaces[i * 2], namespaces[i * 2 + 1]);
+
+      // make sure not already in
+      bool found = false;
+      for (int j = 0; j < pstate->root.nb_namespaces; ++j)
+        if (strcmp((const char*) pstate->root.namespaces[j * 2], (const char*) namespaces[i * 2]) == 0 &&
+            strcmp((const char*) pstate->root.namespaces[j * 2 + 1], (const char*) namespaces[i * 2 + 1]) == 0) {
+          found = true;
+        }
+
+      if (found)
+        continue;
+
+      cnamespaces[place * 2] = namespaces[i * 2];
+      cnamespaces[place * 2 + 1] = namespaces[i * 2 + 1];
+      ++place;
+    }
+
+    xmlSAX2StartElementNs(ctx, localname, prefix, URI, place,
+                          cnamespaces, nb_attributes, nb_defaulted, attributes);
+
+    free(cnamespaces);
   }
 
   virtual void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
