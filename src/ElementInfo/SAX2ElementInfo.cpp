@@ -49,11 +49,12 @@ void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
   if(nb_namespaces) {
     fprintf(stderr, "\t\tNamespaces:\n");
 
-    for(int i = 0; i < nb_namespaces; i +=2)
+    int index;
+    for(int i = 0, index = 0; i < nb_namespaces; ++i, index += 2)
       if(namespaces[i])
-        fprintf(stderr, "\t\t\t%d. %s:%s\n", (i + 1) / 2 + 1, namespaces[i], namespaces[i + 1]);
+        fprintf(stderr, "\t\t\t%d. %s:%s\n", (i + 1) / 2 + 1, namespaces[index], namespaces[index + 1]);
       else
-        fprintf(stderr, "\t\t\t%d. %s\n", (i + 1) / 2 + 1, namespaces[i + 1]);
+        fprintf(stderr, "\t\t\t%d. %s\n", (i + 1) / 2 + 1, namespaces[index + 1]);
 
   }
 
