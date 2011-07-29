@@ -353,7 +353,7 @@ public :
 
       // root unit end tag
       if (!isoption(options, OPTION_XSLT_ALL))
-        xmlOutputBufferWriteString(buf, found ? "</unit>\n" : "/>\n");
+        xmlOutputBufferWriteString(buf, found ? "</unit>\n" : "\n");
 
       break;
 
