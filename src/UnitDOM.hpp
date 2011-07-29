@@ -32,7 +32,7 @@
 class UnitDOM : public ProcessUnit {
 public :
 
-  UnitDOM() : rootsize(0), isnested(false) {}
+  UnitDOM() : rootsize(0) {}
 
   virtual ~UnitDOM() {}
 
@@ -63,7 +63,6 @@ public :
       data.push_back(namespaces[i * 2 + 1]);
     }
     rootsize = data.size();
-    isnested = true;
   }
 
   virtual void startUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
@@ -161,7 +160,6 @@ public :
 protected:
   std::vector<const xmlChar*> data;
   int rootsize;
-  bool isnested;
 };
 
 #endif

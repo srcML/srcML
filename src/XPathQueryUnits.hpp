@@ -124,12 +124,28 @@ public :
 
     // process the resulting nodes
     int nodetype = result_nodes->type;
+    bool dontgenarchive = false;
     switch (nodetype) {
 
       // node set result
     case XPATH_NODESET:
 
-      if (needroot) {
+      // may not have any values
+      if (!result_nodes->nodesetval)
+        break;
+
+      // may not have any results
+      result_size = xmlXPathNodeSetGetLength(result_nodes->nodesetval);
+      if (result_size == 0)
+        break;
+
+      // Do not need an archive is the input is not an archive, there is
+      // one result from the XPath, and the result is a nodeset
+
+      if (!pstate->isarchive && result_size == 1) // && xmlStrEqual(BAD_CAST "unit", xmlXPathNodeSetItem(result_nodes->nodesetval, 1)->name);
+	options |= OPTION_XSLT_ALL;
+
+      if (needroot && !isoption(options, OPTION_XSLT_ALL)) {
 
         // store the root start element
         // TODO:  STATIC, should be based on context
@@ -174,17 +190,8 @@ public :
         needroot = false;
       }
 
-      // may not have any values
-      if (!result_nodes->nodesetval)
-        break;
-
-      // may not have any results
-      result_size = xmlXPathNodeSetGetLength(result_nodes->nodesetval);
-      if (result_size == 0)
-        break;
-
       // first time found a node result, so close root unit start tag
-      if (!found) {
+      if (!found && !isoption(options, OPTION_XSLT_ALL)) {
         xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">\n\n"));
         found = true;
       }
@@ -280,8 +287,10 @@ public :
         // if we need a unit, output the end tag
         if (outputunit)
           xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>\n\n"));
-        else
+        else if (!isoption(options, OPTION_XSLT_ALL))
           xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
+        else
+          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n"));
       }
 
       break;
