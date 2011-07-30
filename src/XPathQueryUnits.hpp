@@ -143,15 +143,9 @@ public :
       if (needroot && !isoption(options, OPTION_XSLT_ALL)) {
 
         // store the root start element
-        if (!isoption(options, OPTION_XMLDECL)) {
-          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<?xml version=\""));
-          xmlOutputBufferWriteString(buf, (const char*) ctxt->version);
-          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\" encoding=\""));
-          xmlOutputBufferWriteString(buf, (const char*) (ctxt->encoding ? ctxt->encoding : ctxt->input->encoding));
-          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\" standalone=\""));
-          xmlOutputBufferWriteString(buf, ctxt->standalone ? "yes" : "no");
-          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\"?>\n"));
-        }
+        if (!isoption(options, OPTION_XMLDECL))
+          xmlOutputBufferWriteXMLDecl(ctxt, buf);
+
         xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<"));
         if (pstate->root.prefix != NULL) {
           xmlOutputBufferWriteString(buf, (const char*) pstate->root.prefix);
@@ -384,6 +378,17 @@ public :
 
     // all done with the buffer
     xmlOutputBufferClose(buf);
+  }
+
+  virtual void xmlOutputBufferWriteXMLDecl(xmlParserCtxtPtr ctxt, xmlOutputBufferPtr buf) {
+
+    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<?xml version=\""));
+    xmlOutputBufferWriteString(buf, (const char*) ctxt->version);
+    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\" encoding=\""));
+    xmlOutputBufferWriteString(buf, (const char*) (ctxt->encoding ? ctxt->encoding : ctxt->input->encoding));
+    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\" standalone=\""));
+    xmlOutputBufferWriteString(buf, ctxt->standalone ? "yes" : "no");
+    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\"?>\n"));
   }
 
 private :
