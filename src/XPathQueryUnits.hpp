@@ -45,7 +45,7 @@ public :
 
   XPathQueryUnits(const char* a_context_element, const char* a_ofilename, int options,
                   xmlXPathCompExprPtr compiled_xpath)
-    : context_element(a_context_element), ofilename(a_ofilename), options(options),
+    : ofilename(a_ofilename), options(options),
       compiled_xpath(compiled_xpath), total(0), prev_unit_filename(0), itemcount(0), found(false), needroot(true) {
   }
 
@@ -230,7 +230,7 @@ public :
           out << result_nodes->floatval;
 
         xmlOutputBufferWriteString(buf, out.str().c_str());
-        xmlOutputBufferWriteString(buf, "\n");
+        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n"));
       }
       total += result_nodes->floatval;
       break;
@@ -246,19 +246,19 @@ public :
       // string
     case XPATH_STRING:
       xmlOutputBufferWriteString(buf, (const char*) result_nodes->stringval);
-      xmlOutputBufferWriteString(buf, "\n");
+      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n"));
       break;
 
     default:
       fprintf(stderr, "Unhandled type %d\n", nodetype);
       break;
     };
+
     // finished with the result nodes
     xmlXPathFreeObject(result_nodes);
 
     // save the previous filename to see if there is a transition for
     // item numbering
-
     if (prev_unit_filename)
       free(prev_unit_filename);
     prev_unit_filename = unit_filename;
@@ -359,7 +359,6 @@ public :
   }
 
 private :
-  const char* context_element;
   const char* ofilename;
   int options;
   xmlXPathContextPtr context;
