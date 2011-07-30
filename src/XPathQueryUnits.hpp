@@ -102,13 +102,10 @@ public :
       return;
     }
 
-    // record the attributes from this particular unit
+    // record the filename from this particular unit
     // for some reason, xmlGetNsProp has an issue with the namespace
     xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
     char* unit_filename = (char*) xmlGetProp(a_node, BAD_CAST UNIT_ATTRIBUTE_FILENAME);
-    char* unit_directory = (char*) xmlGetProp(a_node, BAD_CAST UNIT_ATTRIBUTE_DIRECTORY);
-    char* unit_version = (char*) xmlGetProp(a_node, BAD_CAST UNIT_ATTRIBUTE_VERSION);
-    char* unit_language = (char*) xmlGetProp(a_node, BAD_CAST UNIT_ATTRIBUTE_LANGUAGE);
 
     // need a unique item number for each result from a unit.
     // use a filename (path) to see when to reset
@@ -177,7 +174,7 @@ public :
           // output a wrapping element, just like the one read in
           // note that this has to be ended somewhere
           xmlOutputBufferWriteElementNs(buf, pstate->root.localname, pstate->root.prefix, pstate->root.URI,
-                                        (data.size() - rootsize) / 2, &data[rootsize / 2],
+                                        (data.size() - rootsize) / 2, &data[rootsize],
                                         0, 0, 0);
 
           // output all the current attributes
@@ -264,11 +261,7 @@ public :
 
     if (prev_unit_filename)
       free(prev_unit_filename);
-    prev_unit_filename = unit_filename ? strdup(unit_filename) : 0;
-
-    xmlFree(unit_filename);
-    xmlFree(unit_directory);
-    xmlFree(unit_version);
+    prev_unit_filename = unit_filename;
   }
 
   virtual void endOutput(void *ctx) {
