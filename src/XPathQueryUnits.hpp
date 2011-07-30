@@ -142,47 +142,15 @@ public :
 
       if (needroot && !isoption(options, OPTION_XSLT_ALL)) {
 
-        // store the root start element
+        // xml declaration
         if (!isoption(options, OPTION_XMLDECL))
           xmlOutputBufferWriteXMLDecl(ctxt, buf);
 
-        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<"));
-        if (pstate->root.prefix != NULL) {
-          xmlOutputBufferWriteString(buf, (const char*) pstate->root.prefix);
-          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(":"));
-        }
-        xmlOutputBufferWriteString(buf, (const char*) pstate->root.localname);
-
-        // output the namespaces
-        for (int i = 0; i < pstate->root.nb_namespaces; ++i) {
-
-          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" xmlns"));
-          if (pstate->root.namespaces[i * 2]) {
-            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(":"));
-            xmlOutputBufferWriteString(buf, (const char*) pstate->root.namespaces[i * 2]);
-          }
-          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("=\""));
-          xmlOutputBufferWriteString(buf, (const char*) pstate->root.namespaces[i * 2 + 1]);
-          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
-        }
-
-        // output the attributes
-        for (int i = 0; i < pstate->root.nb_attributes; ++i) {
-
-          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" "));
-          if (pstate->root.attributes[i * 5 + 1]) {
-            xmlOutputBufferWriteString(buf, (const char*) pstate->root.attributes[i * 5 + 1]);
-            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(":"));
-          }
-          xmlOutputBufferWriteString(buf, (const char*) pstate->root.attributes[i * 5]);
-          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("=\""));
-
-          xmlOutputBufferWrite(buf, pstate->root.attributes[i * 5 + 4] - pstate->root.attributes[i * 5 + 3] + 1,
-                               (const char*) pstate->root.attributes[i * 5 + 3]);
-
-          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
-        }
-
+	// output a root element, just like the one read in
+	// note that this has to be ended somewhere
+	xmlOutputBufferWriteElementNs(buf, pstate->root.localname, pstate->root.prefix, pstate->root.URI,
+				      pstate->root.nb_namespaces, pstate->root.namespaces,
+				      pstate->root.nb_attributes, pstate->root.nb_defaulted, pstate->root.attributes);
         needroot = false;
       }
 
@@ -389,6 +357,48 @@ public :
     xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\" standalone=\""));
     xmlOutputBufferWriteString(buf, ctxt->standalone ? "yes" : "no");
     xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\"?>\n"));
+  }
+
+  virtual void xmlOutputBufferWriteElementNs(xmlOutputBufferPtr, const xmlChar* localname, const xmlChar* prefix,
+					     const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
+					     int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
+
+    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<"));
+    if (prefix != NULL) {
+      xmlOutputBufferWriteString(buf, (const char*) prefix);
+      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(":"));
+    }
+    xmlOutputBufferWriteString(buf, (const char*) localname);
+
+    // output the namespaces
+    for (int i = 0; i < nb_namespaces; ++i) {
+
+      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" xmlns"));
+      if (namespaces[i * 2]) {
+        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(":"));
+        xmlOutputBufferWriteString(buf, (const char*) namespaces[i * 2]);
+      }
+      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("=\""));
+      xmlOutputBufferWriteString(buf, (const char*) namespaces[i * 2 + 1]);
+      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
+    }
+
+    // output the attributes
+    for (int i = 0; i < nb_attributes; ++i) {
+
+      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" "));
+      if (attributes[i * 5 + 1]) {
+        xmlOutputBufferWriteString(buf, (const char*) attributes[i * 5 + 1]);
+        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(":"));
+      }
+      xmlOutputBufferWriteString(buf, (const char*) attributes[i * 5]);
+      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("=\""));
+
+      xmlOutputBufferWrite(buf, attributes[i * 5 + 4] - attributes[i * 5 + 3] + 1,
+                           (const char*) attributes[i * 5 + 3]);
+
+      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
+    }
   }
 
 private :
