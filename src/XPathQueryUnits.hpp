@@ -146,13 +146,13 @@ public :
         if (!isoption(options, OPTION_XMLDECL))
           xmlOutputBufferWriteXMLDecl(ctxt, buf);
 
-	// output a root element, just like the one read in
-	// note that this has to be ended somewhere
-	xmlOutputBufferWriteElementNs(buf, pstate->root.localname, pstate->root.prefix, pstate->root.URI,
-				      pstate->root.nb_namespaces, pstate->root.namespaces,
-				      pstate->root.nb_attributes, pstate->root.nb_defaulted, pstate->root.attributes);
-        needroot = false;
+        // output a root element, just like the one read in
+        // note that this has to be ended somewhere
+        xmlOutputBufferWriteElementNs(buf, pstate->root.localname, pstate->root.prefix, pstate->root.URI,
+                                      pstate->root.nb_namespaces, pstate->root.namespaces,
+                                      pstate->root.nb_attributes, pstate->root.nb_defaulted, pstate->root.attributes);
       }
+      needroot = false;
 
       // first time found a node result, so close root unit start tag
       if (!found && !isoption(options, OPTION_XSLT_ALL)) {
@@ -174,53 +174,17 @@ public :
         // if we need a unit, output the start tag.  Line number starts at 1, not 0
         if (outputunit) {
 
-          // unit start tag
-          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<unit"));
+          // output a wrapping element, just like the one read in
+          // note that this has to be ended somewhere
+          xmlOutputBufferWriteElementNs(buf, pstate->root.localname, pstate->root.prefix, pstate->root.URI,
+                                        (data.size() - rootsize) / 2, &data[rootsize / 2],
+                                        0, 0, 0);
 
-          // output the namespaces
-          xmlNsPtr pAttr =  a_node->nsDef;
-          for (int i = 0; i < UnitDOM::rootsize / 2; ++i)
-            pAttr = pAttr->next;
-          for (; pAttr != 0; pAttr = pAttr->next) {
-            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" xmlns"));
-            if (pAttr->prefix) {
-              xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(":"));
-              xmlOutputBufferWriteString(buf, (const char*) pAttr->prefix);
-            }
-            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("=\""));
-            xmlOutputBufferWriteString(buf, (const char*) pAttr->href);
-            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
-          }
+          // output all the current attributes
+          for (xmlAttrPtr pAttr = a_node->properties; pAttr; pAttr = pAttr->next)
+            xmlNodeDumpOutput(buf, ctxt->myDoc, (xmlNodePtr) pAttr, 0, 0, 0);
 
-          // language attribute
-          if (unit_language) {
-            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" language=\""));
-            xmlOutputBufferWriteString(buf, (const char*) unit_language);
-            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
-          }
-
-          // directory attribute
-          if (unit_directory) {
-            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" dir=\""));
-            xmlOutputBufferWriteString(buf, (const char*) unit_directory);
-            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
-          }
-
-          // filename attribute
-          if (unit_filename) {
-            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" filename=\""));
-            xmlOutputBufferWriteString(buf, (const char*) unit_filename);
-            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
-          }
-
-          // version attribute
-          if (unit_version) {
-            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" version=\""));
-            xmlOutputBufferWriteString(buf, (const char*) unit_version);
-            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
-          }
-
-          // line number and clost unit start tag
+          // append line number and close unit start tag
           xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" item=\""));
           char s[50];
           snprintf(s, 50, "%d", itemcount);
@@ -360,8 +324,8 @@ public :
   }
 
   virtual void xmlOutputBufferWriteElementNs(xmlOutputBufferPtr, const xmlChar* localname, const xmlChar* prefix,
-					     const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
-					     int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
+                                             const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
+                                             int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
 
     xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<"));
     if (prefix != NULL) {
