@@ -337,7 +337,6 @@ void srcMLUtility::set_input_filename(const char* infilename) {
   infile = infilename;
 }
 
-
 // xpath evaluation of the nested units
 void srcMLUtility::xpath(const char* ofilename, const char* context_element, const char* xpaths[]) {
 #ifdef SAXFRAMEWORK
@@ -361,7 +360,7 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
   ctxt->sax = &sax;
 
   // setup process handling
-  XPathQueryUnits process(context_element, xpaths, ofilename, options, compiled_xpath);
+  XPathQueryUnits process(context_element, ofilename, options, compiled_xpath);
 
   // setup sax handling state
   SAX2ExtractUnitsSrc state(&process, &options, -1);
