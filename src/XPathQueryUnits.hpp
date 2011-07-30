@@ -122,7 +122,7 @@ public :
     int nodetype = result_nodes->type;
     switch (nodetype) {
 
-    // node set result
+      // node set result
     case XPATH_NODESET:
 
       // may not have any values
@@ -143,8 +143,15 @@ public :
       if (needroot && !isoption(options, OPTION_XSLT_ALL)) {
 
         // store the root start element
-        // TODO:  STATIC, should be based on context
-        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"));
+        if (!isoption(options, OPTION_XMLDECL)) {
+          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<?xml version=\""));
+          xmlOutputBufferWriteString(buf, (const char*) ctxt->version);
+          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\" encoding=\""));
+          xmlOutputBufferWriteString(buf, (const char*) (ctxt->encoding ? ctxt->encoding : ctxt->input->encoding));
+          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\" standalone=\""));
+          xmlOutputBufferWriteString(buf, ctxt->standalone ? "yes" : "no");
+          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\"?>\n"));
+        }
         xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<"));
         if (pstate->root.prefix != NULL) {
           xmlOutputBufferWriteString(buf, (const char*) pstate->root.prefix);
