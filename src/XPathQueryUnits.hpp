@@ -43,9 +43,9 @@
 class XPathQueryUnits : public UnitDOM {
 public :
 
-  XPathQueryUnits(const char* a_context_element, const char* a_fxpath[], const char* a_ofilename, int options,
+  XPathQueryUnits(const char* a_context_element, const char* a_ofilename, int options,
                   xmlXPathCompExprPtr compiled_xpath)
-    : context_element(a_context_element), ofilename(a_ofilename), options(options), fxpath(a_fxpath),
+    : context_element(a_context_element), ofilename(a_ofilename), options(options),
       compiled_xpath(compiled_xpath), total(0), prev_unit_filename(0), itemcount(0), found(false), needroot(true) {
   }
 
@@ -66,9 +66,6 @@ public :
 
     // allow for all exslt functions
     //    exsltRegisterAll();
-
-    //    if (!pstate->fxpath[0][0])
-    //      return;
 
     context = xmlXPathNewContext(ctxt->myDoc);
     xpathsrcMLRegister(context);
@@ -98,36 +95,34 @@ public :
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
-    // TODO:  Do we always do this?
+    // evaluate the xpath
     xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, context);
     if (result_nodes == 0) {
       fprintf(stderr, "%s: Error in executing xpath\n", "srcml2src");
       return;
     }
 
-    int result_size = 0;
-
-    bool outputunit = false;
-
-    xmlNodePtr onode = 0;
-
-    xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
-
+    // record the attributes from this particular unit
     // for some reason, xmlGetNsProp has an issue with the namespace
+    xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
     char* unit_filename = (char*) xmlGetProp(a_node, BAD_CAST UNIT_ATTRIBUTE_FILENAME);
     char* unit_directory = (char*) xmlGetProp(a_node, BAD_CAST UNIT_ATTRIBUTE_DIRECTORY);
     char* unit_version = (char*) xmlGetProp(a_node, BAD_CAST UNIT_ATTRIBUTE_VERSION);
     char* unit_language = (char*) xmlGetProp(a_node, BAD_CAST UNIT_ATTRIBUTE_LANGUAGE);
 
+    // need a unique item number for each result from a unit.
+    // use a filename (path) to see when to reset
     if (!prev_unit_filename || (unit_filename && strcmp(prev_unit_filename, unit_filename) != 0))
       itemcount = 0;
 
     // process the resulting nodes
+    bool outputunit = false;
+    xmlNodePtr onode = 0;
+    int result_size = 0;
     int nodetype = result_nodes->type;
-    bool dontgenarchive = false;
     switch (nodetype) {
 
-      // node set result
+    // node set result
     case XPATH_NODESET:
 
       // may not have any values
@@ -143,7 +138,7 @@ public :
       // one result from the XPath, and the result is a nodeset
 
       if (!pstate->isarchive && result_size == 1) // && xmlStrEqual(BAD_CAST "unit", xmlXPathNodeSetItem(result_nodes->nodesetval, 1)->name);
-	options |= OPTION_XSLT_ALL;
+        options |= OPTION_XSLT_ALL;
 
       if (needroot && !isoption(options, OPTION_XSLT_ALL)) {
 
@@ -199,9 +194,9 @@ public :
       // output all the found nodes
       for (int i = 0; i < xmlXPathNodeSetGetLength(result_nodes->nodesetval); ++i) {
 
-        onode = xmlXPathNodeSetItem(result_nodes->nodesetval, i);
-
         ++itemcount;
+
+        onode = xmlXPathNodeSetItem(result_nodes->nodesetval, i);
 
         // output a unit element around the fragment, unless
         // is is already a unit
@@ -388,7 +383,6 @@ private :
   const char* context_element;
   const char* ofilename;
   int options;
-  const char** fxpath;
   xmlXPathContextPtr context;
   xmlXPathCompExprPtr compiled_xpath;
   double total;
