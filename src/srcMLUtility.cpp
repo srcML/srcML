@@ -337,6 +337,7 @@ void srcMLUtility::set_input_filename(const char* infilename) {
   infile = infilename;
 }
 
+#define SAXFRAMEWORK
 // xpath evaluation of the nested units
 void srcMLUtility::xpath(const char* ofilename, const char* context_element, const char* xpaths[]) {
 #ifdef SAXFRAMEWORK

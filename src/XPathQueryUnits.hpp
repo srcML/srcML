@@ -155,6 +155,7 @@ public :
         // if we need a unit, output the start tag.  Line number starts at 1, not 0
         if (outputunit) {
 
+	  // form text for wrapping unit, cached in wrap
           if (wrap == "") {
 
             // output a wrapping element, just like the one read in
@@ -199,12 +200,11 @@ public :
           if (!outputunit) {
             // create a new list of namespaces
             xmlNsPtr cur = savens;
+	    onode->nsDef = savens;
 
             // skip over the namespaces on the root
             for (int i = 0; i < UnitDOM::rootsize / 2; ++i)
-              cur = cur->next;
-
-            onode->nsDef = cur;
+              onode->nsDef = onode->nsDef->next;
           }
         }
         xmlNodeDumpOutput(buf, ctxt->myDoc, onode, 0, 0, 0);
