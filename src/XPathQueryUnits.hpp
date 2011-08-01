@@ -199,7 +199,6 @@ public :
 
           if (!outputunit) {
             // create a new list of namespaces
-            xmlNsPtr cur = savens;
 	    onode->nsDef = savens;
 
             // skip over the namespaces on the root
