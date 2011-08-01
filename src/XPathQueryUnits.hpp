@@ -163,8 +163,22 @@ public :
                                         0, 0, 0);
 
           // output all the current attributes
-          for (xmlAttrPtr pAttr = a_node->properties; pAttr; pAttr = pAttr->next)
-            xmlNodeDumpOutput(buf, ctxt->myDoc, (xmlNodePtr) pAttr, 0, 0, 0);
+          for (xmlAttrPtr pAttr = a_node->properties; pAttr; pAttr = pAttr->next) {
+            //        xmlNodeDumpOutput(buf, ctxt->myDoc, (xmlNodePtr) pAttr, 0, 0, 0);
+
+            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" "));
+            if (pAttr->ns && pAttr->ns->prefix) {
+              xmlOutputBufferWriteString(buf, (const char*) pAttr->ns->prefix);
+              xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(":"));
+            }
+            xmlOutputBufferWriteString(buf, (const char*) pAttr->name);
+            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("=\""));
+
+	    for (xmlNodePtr child = pAttr->children; child; child = child->next)
+	      xmlOutputBufferWriteString(buf, (const char*) child->content);
+
+            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
+          }
 
           // append line number and close unit start tag
           xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" item=\""));
