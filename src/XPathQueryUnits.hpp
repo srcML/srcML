@@ -46,14 +46,10 @@ public :
   XPathQueryUnits(const char* a_context_element, const char* a_ofilename, int options,
                   xmlXPathCompExprPtr compiled_xpath)
     : ofilename(a_ofilename), options(options),
-      compiled_xpath(compiled_xpath), total(0), prev_unit_filename(0), itemcount(0), found(false), needroot(true) {
+      compiled_xpath(compiled_xpath), total(0), found(false), needroot(true) {
   }
 
-  virtual ~XPathQueryUnits() {
-
-    if (prev_unit_filename)
-      free(prev_unit_filename);
-  }
+  virtual ~XPathQueryUnits() {}
 
   virtual void startOutput(void* ctx) {
 
@@ -102,21 +98,12 @@ public :
       return;
     }
 
-    // record the filename from this particular unit
-    // for some reason, xmlGetNsProp has an issue with the namespace
-    xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
-    char* unit_filename = (char*) xmlGetProp(a_node, BAD_CAST UNIT_ATTRIBUTE_FILENAME);
-
-    // need a unique item number for each result from a unit.
-    // use a filename (path) to see when to reset
-    if (!prev_unit_filename || (unit_filename && strcmp(prev_unit_filename, unit_filename) != 0))
-      itemcount = 0;
-
     // process the resulting nodes
+    xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
     bool outputunit = false;
     xmlNodePtr onode = 0;
     int result_size = 0;
-    int nodetype = result_nodes->type;
+    nodetype = result_nodes->type;
     switch (nodetype) {
 
       // node set result
@@ -160,8 +147,6 @@ public :
       // output all the found nodes
       for (int i = 0; i < xmlXPathNodeSetGetLength(result_nodes->nodesetval); ++i) {
 
-        ++itemcount;
-
         onode = xmlXPathNodeSetItem(result_nodes->nodesetval, i);
 
         // output a unit element around the fragment, unless
@@ -184,7 +169,7 @@ public :
           // append line number and close unit start tag
           xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" item=\""));
           char s[50];
-          snprintf(s, 50, "%d", itemcount);
+          snprintf(s, 50, "%d", i + 1);
           xmlOutputBufferWriteString(buf, s);
           xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\">"));
         }
@@ -256,17 +241,11 @@ public :
 
     // finished with the result nodes
     xmlXPathFreeObject(result_nodes);
-
-    // save the previous filename to see if there is a transition for
-    // item numbering
-    if (prev_unit_filename)
-      free(prev_unit_filename);
-    prev_unit_filename = unit_filename;
   }
 
   virtual void endOutput(void *ctx) {
 
-    //   fprintf(stderr, "%s\n", __FUNCTION__);
+    //    fprintf(stderr, "%s %d\n", __FUNCTION__, nodetype);
 
     // finalize results
     switch (nodetype) {
@@ -366,8 +345,6 @@ private :
   double total;
   bool result_bool;
   int nodetype;
-  char* prev_unit_filename;
-  int itemcount;
   bool found;
   xmlOutputBufferPtr buf;
   bool needroot;

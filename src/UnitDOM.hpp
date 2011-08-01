@@ -148,8 +148,6 @@ public :
 
   virtual void endDocument(void *ctx) {
 
-    // fprintf(stderr, "%s\n", __FUNCTION__);
-
     // end the entire input document
     xmlSAX2EndDocument(ctx);
 
