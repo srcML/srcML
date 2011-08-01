@@ -36,6 +36,8 @@
 #include <libexslt/exslt.h>
 
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
+#define LITERALPLUSSIZE(s) s, sizeof(s) - 1
+
 #include "srcexfun.hpp"
 
 #include "UnitDOM.hpp"
@@ -100,6 +102,7 @@ public :
 
     // process the resulting nodes
     xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
+    std::string wrap;
     bool outputunit = false;
     xmlNodePtr onode = 0;
     int result_size = 0;
@@ -121,7 +124,7 @@ public :
       // Do not need an archive is the input is not an archive, there is
       // one result from the XPath, and the result is a nodeset
 
-      if (!pstate->isarchive && result_size == 1) // && xmlStrEqual(BAD_CAST "unit", xmlXPathNodeSetItem(result_nodes->nodesetval, 1)->name);
+      if (!pstate->isarchive && result_size == 1)
         options |= OPTION_XSLT_ALL;
 
       if (needroot && !isoption(options, OPTION_XSLT_ALL)) {
@@ -135,14 +138,10 @@ public :
         xmlOutputBufferWriteElementNs(buf, pstate->root.localname, pstate->root.prefix, pstate->root.URI,
                                       pstate->root.nb_namespaces, pstate->root.namespaces,
                                       pstate->root.nb_attributes, pstate->root.nb_defaulted, pstate->root.attributes);
+        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">\n\n"));
       }
       needroot = false;
-
-      // first time found a node result, so close root unit start tag
-      if (!found && !isoption(options, OPTION_XSLT_ALL)) {
-        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">\n\n"));
-        found = true;
-      }
+      found = true;
 
       // output all the found nodes
       for (int i = 0; i < xmlXPathNodeSetGetLength(result_nodes->nodesetval); ++i) {
@@ -156,32 +155,36 @@ public :
         // if we need a unit, output the start tag.  Line number starts at 1, not 0
         if (outputunit) {
 
-          // output a wrapping element, just like the one read in
-          // note that this has to be ended somewhere
-          xmlOutputBufferWriteElementNs(buf, pstate->root.localname, pstate->root.prefix, pstate->root.URI,
-                                        (data.size() - rootsize) / 2, &data[rootsize],
-                                        0, 0, 0);
+          if (wrap == "") {
 
-          // output all the current attributes
-          for (xmlAttrPtr pAttr = a_node->properties; pAttr; pAttr = pAttr->next) {
-            //        xmlNodeDumpOutput(buf, ctxt->myDoc, (xmlNodePtr) pAttr, 0, 0, 0);
+            // output a wrapping element, just like the one read in
+            // note that this has to be ended somewhere
+            xmlOutputBufferWriteElementNs(wrap, pstate->root.localname, pstate->root.prefix, pstate->root.URI,
+                                          (data.size() - rootsize) / 2, &data[rootsize],
+                                          0, 0, 0);
 
-            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" "));
-            if (pAttr->ns && pAttr->ns->prefix) {
-              xmlOutputBufferWriteString(buf, (const char*) pAttr->ns->prefix);
-              xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(":"));
+            // output all the current attributes
+            for (xmlAttrPtr pAttr = a_node->properties; pAttr; pAttr = pAttr->next) {
+
+              wrap.append(LITERALPLUSSIZE(" "));
+              if (pAttr->ns && pAttr->ns->prefix) {
+                wrap.append((const char*) pAttr->ns->prefix);
+                wrap.append(LITERALPLUSSIZE(":"));
+              }
+              wrap.append((const char*) pAttr->name);
+              wrap.append(LITERALPLUSSIZE("=\""));
+
+              for (xmlNodePtr child = pAttr->children; child; child = child->next)
+                wrap.append((const char*) child->content);
+
+              wrap.append(LITERALPLUSSIZE("\""));
             }
-            xmlOutputBufferWriteString(buf, (const char*) pAttr->name);
-            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("=\""));
 
-	    for (xmlNodePtr child = pAttr->children; child; child = child->next)
-	      xmlOutputBufferWriteString(buf, (const char*) child->content);
-
-            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
+            wrap.append(LITERALPLUSSIZE(" item=\""));
           }
+          xmlOutputBufferWrite(buf, wrap.size(), wrap.c_str());
 
           // append line number and close unit start tag
-          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" item=\""));
           char s[50];
           snprintf(s, 50, "%d", i + 1);
           xmlOutputBufferWriteString(buf, s);
@@ -298,7 +301,7 @@ public :
     xmlOutputBufferClose(buf);
   }
 
-  virtual void xmlOutputBufferWriteXMLDecl(xmlParserCtxtPtr ctxt, xmlOutputBufferPtr buf) {
+  static void xmlOutputBufferWriteXMLDecl(xmlParserCtxtPtr ctxt, xmlOutputBufferPtr buf) {
 
     xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<?xml version=\""));
     xmlOutputBufferWriteString(buf, (const char*) ctxt->version);
@@ -309,7 +312,7 @@ public :
     xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\"?>\n"));
   }
 
-  virtual void xmlOutputBufferWriteElementNs(xmlOutputBufferPtr, const xmlChar* localname, const xmlChar* prefix,
+  static void xmlOutputBufferWriteElementNs(xmlOutputBufferPtr buf, const xmlChar* localname, const xmlChar* prefix,
                                              const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
                                              int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
 
@@ -348,6 +351,47 @@ public :
                            (const char*) attributes[i * 5 + 3]);
 
       xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
+    }
+  }
+
+  static void xmlOutputBufferWriteElementNs(std::string& s, const xmlChar* localname, const xmlChar* prefix,
+                                             const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
+                                             int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
+
+    s.append(LITERALPLUSSIZE("<"));
+    if (prefix != NULL) {
+      s.append((const char*) prefix);
+      s.append(LITERALPLUSSIZE(":"));
+    }
+    s.append((const char*) localname);
+
+    // output the namespaces
+    for (int i = 0; i < nb_namespaces; ++i) {
+
+      s.append(LITERALPLUSSIZE(" xmlns"));
+      if (namespaces[i * 2]) {
+        s.append(LITERALPLUSSIZE(":"));
+        s.append((const char*) namespaces[i * 2]);
+      }
+      s.append(LITERALPLUSSIZE("=\""));
+      s.append((const char*) namespaces[i * 2 + 1]);
+      s.append(LITERALPLUSSIZE("\""));
+    }
+
+    // output the attributes
+    for (int i = 0; i < nb_attributes; ++i) {
+
+      s.append(LITERALPLUSSIZE(" "));
+      if (attributes[i * 5 + 1]) {
+        s.append((const char*) attributes[i * 5 + 1]);
+        s.append(LITERALPLUSSIZE(":"));
+      }
+      s.append((const char*) attributes[i * 5]);
+      s.append(LITERALPLUSSIZE("=\""));
+
+      s.append((const char*) attributes[i * 5 + 3], attributes[i * 5 + 4] - attributes[i * 5 + 3] + 1);
+
+      s.append(LITERALPLUSSIZE("\""));
     }
   }
 
