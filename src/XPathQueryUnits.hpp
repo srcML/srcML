@@ -59,6 +59,7 @@ public :
 
     // setup output
     buf = xmlOutputBufferCreateFilename(ofilename, NULL, 0);
+    // TODO:  Detect error
 
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
 
@@ -66,7 +67,10 @@ public :
     //    exsltRegisterAll();
 
     context = xmlXPathNewContext(ctxt->myDoc);
+    // TODO:  Detect error
+
     xpathsrcMLRegister(context);
+    // TODO:  Detect error
 
     // register standard prefixes for standard namespaces
     const char* prefixes[] = {
@@ -144,13 +148,14 @@ public :
       found = true;
 
       // output all the found nodes
-      for (int i = 0; i < xmlXPathNodeSetGetLength(result_nodes->nodesetval); ++i) {
+      for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
 
-        onode = xmlXPathNodeSetItem(result_nodes->nodesetval, i);
+	// index into results
+        onode = result_nodes->nodesetval->nodeTab[i];
 
         // output a unit element around the fragment, unless
         // is is already a unit
-        outputunit = strcmp("unit", (const char*) onode->name) != 0;
+	outputunit = strcmp("unit", (const char*) onode->name) != 0;
 
         // if we need a unit, output the start tag.  Line number starts at 1, not 0
         if (outputunit) {
