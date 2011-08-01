@@ -97,6 +97,22 @@ public :
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
+    if (needroot && !isoption(options, OPTION_XSLT_ALL)) {
+
+      // xml declaration
+      if (!isoption(options, OPTION_XMLDECL))
+        xmlOutputBufferWriteXMLDecl(ctxt, buf);
+
+      // output a root element, just like the one read in
+      // note that this has to be ended somewhere
+      xmlOutputBufferWriteElementNs(buf, pstate->root.localname, pstate->root.prefix, pstate->root.URI,
+                                    pstate->root.nb_namespaces, pstate->root.namespaces,
+                                    pstate->isarchive ? pstate->root.nb_attributes : 0, pstate->root.nb_defaulted, pstate->root.attributes);
+
+      closetag = true;
+    }
+    needroot = false;
+
     // evaluate the xpath
     xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, context);
     if (result_nodes == 0) {
@@ -128,39 +144,30 @@ public :
       // Do not need an archive is the input is not an archive, there is
       // one result from the XPath, and the result is a nodeset
 
-      if (!pstate->isarchive && result_size == 1)
-        options |= OPTION_XSLT_ALL;
+      //      if (!pstate->isarchive && result_size == 1)
+      //        options |= OPTION_XSLT_ALL;
 
-      if (needroot && !isoption(options, OPTION_XSLT_ALL)) {
-
-        // xml declaration
-        if (!isoption(options, OPTION_XMLDECL))
-          xmlOutputBufferWriteXMLDecl(ctxt, buf);
-
-        // output a root element, just like the one read in
-        // note that this has to be ended somewhere
-        xmlOutputBufferWriteElementNs(buf, pstate->root.localname, pstate->root.prefix, pstate->root.URI,
-                                      pstate->root.nb_namespaces, pstate->root.namespaces,
-                                      pstate->root.nb_attributes, pstate->root.nb_defaulted, pstate->root.attributes);
-        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">\n\n"));
+      if (closetag) {
+	xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">\n\n"));
+	closetag = false;
       }
-      needroot = false;
+
       found = true;
 
       // output all the found nodes
       for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
 
-	// index into results
+        // index into results
         onode = result_nodes->nodesetval->nodeTab[i];
 
         // output a unit element around the fragment, unless
         // is is already a unit
-	outputunit = strcmp("unit", (const char*) onode->name) != 0;
+        outputunit = strcmp("unit", (const char*) onode->name) != 0;
 
         // if we need a unit, output the start tag.  Line number starts at 1, not 0
         if (outputunit) {
 
-	  // form text for wrapping unit, cached in wrap
+          // form text for wrapping unit, cached in wrap
           if (wrap == "") {
 
             // output a wrapping element, just like the one read in
@@ -202,9 +209,9 @@ public :
         if (savens) {
           onode->nsDef = 0;
 
-          if (!outputunit) {
+          if (pstate->isarchive && !outputunit) {
             // create a new list of namespaces
-	    onode->nsDef = savens;
+            onode->nsDef = savens;
 
             // skip over the namespaces on the root
             for (int i = 0; i < UnitDOM::rootsize / 2; ++i)
@@ -274,7 +281,7 @@ public :
 
       // root unit end tag
       if (!isoption(options, OPTION_XSLT_ALL))
-        xmlOutputBufferWriteString(buf, found ? "</unit>\n" : "\n");
+        xmlOutputBufferWriteString(buf, found ? "</unit>\n" : "/>\n");
 
       break;
 
@@ -317,8 +324,8 @@ public :
   }
 
   static void xmlOutputBufferWriteElementNs(xmlOutputBufferPtr buf, const xmlChar* localname, const xmlChar* prefix,
-                                             const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
-                                             int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
+                                            const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
+                                            int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
 
     xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<"));
     if (prefix != NULL) {
@@ -359,8 +366,8 @@ public :
   }
 
   static void xmlOutputBufferWriteElementNs(std::string& s, const xmlChar* localname, const xmlChar* prefix,
-                                             const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
-                                             int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
+                                            const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
+                                            int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
 
     s.append(LITERALPLUSSIZE("<"));
     if (prefix != NULL) {
@@ -410,6 +417,7 @@ private :
   bool found;
   xmlOutputBufferPtr buf;
   bool needroot;
+  bool closetag;
 };
 
 #endif
