@@ -110,7 +110,7 @@ public :
       // save the result, but temporarily hide the namespaces since we only want them on the root element
       xmlNodePtr resroot = xmlDocGetRootElement(res);
       xmlNsPtr savens = resroot ? resroot->nsDef : 0;
-      bool turnoff_namespaces = savens && pstate->isarchive && !isoption(options, OPTION_XSLT_ALL);
+      bool turnoff_namespaces = savens && !isoption(options, OPTION_XSLT_ALL);
       if (turnoff_namespaces)
         resroot->nsDef = 0;
       xsltSaveResultTo(buf, res, stylesheet);
