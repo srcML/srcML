@@ -57,7 +57,7 @@ class SAX2ExtractUnitsSrc {
  public:
 
   SAX2ExtractUnitsSrc(ProcessUnit* pprocess, OPTION_TYPE* poptions, int unit)
-    : pprocess(pprocess), poptions(poptions), unit(unit), isarchive(false), rootonly(false), stop(false)
+    : pprocess(pprocess), poptions(poptions), unit(unit), count(0), isarchive(false), rootonly(false), stop(false)
     {}
 
   static xmlSAXHandler factory();
