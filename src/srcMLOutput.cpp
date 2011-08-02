@@ -467,19 +467,19 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
       isoption(OPTION_CPP) && (isoption(OPTION_NESTED) == !outer) ? SRCML_CPP_NS_URI : 0,
 
       // optional debugging xml namespace
-      isoption(OPTION_DEBUG)    ? SRCML_ERR_NS_URI : 0,
+      (depth == 0) && isoption(OPTION_DEBUG)    ? SRCML_ERR_NS_URI : 0,
 
       // optional literal xml namespace
-      isoption(OPTION_LITERAL)  ? SRCML_EXT_LITERAL_NS_URI : 0,
+      (depth == 0) && isoption(OPTION_LITERAL)  ? SRCML_EXT_LITERAL_NS_URI : 0,
 
       // optional operator xml namespace
-      isoption(OPTION_OPERATOR) ? SRCML_EXT_OPERATOR_NS_URI : 0,
+      (depth == 0) && isoption(OPTION_OPERATOR) ? SRCML_EXT_OPERATOR_NS_URI : 0,
 
       // optional modifier xml namespace
-      isoption(OPTION_MODIFIER) ? SRCML_EXT_MODIFIER_NS_URI : 0,
+      (depth == 0) && isoption(OPTION_MODIFIER) ? SRCML_EXT_MODIFIER_NS_URI : 0,
 
       // optional position xml namespace
-      isoption(OPTION_POSITION) ? SRCML_EXT_POSITION_NS_URI : 0,
+      (depth == 0) && isoption(OPTION_POSITION) ? SRCML_EXT_POSITION_NS_URI : 0,
     };
 
     // output the namespaces
