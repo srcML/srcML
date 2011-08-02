@@ -36,10 +36,22 @@ public :
 
   virtual ~UnitDOM() {}
 
-  virtual void apply(void* ctx) = 0;
-
+  /*
+    Called exactly once at beginnning of document  Override for intended behavior.
+  */
   virtual void startOutput(void* ctx) = 0;
 
+  /*
+    Called exactly once for each unit.  For an archive, not called on the root unit
+
+    Formed unit combines namespaces from root and individual unit.  Full DOM of
+    individual unit is provided.  Cleanup of DOM unit is automatic.
+  */
+  virtual void apply(void* ctx) = 0;
+
+  /*
+    Called exactly once at end of document.  Override for intended behavior.
+  */
   virtual void endOutput(void* ctx) = 0;
 
   virtual void startDocument(void* ctx) {

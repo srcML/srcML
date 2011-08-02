@@ -132,24 +132,17 @@ public :
       // node set result
     case XPATH_NODESET:
 
-      // may not have any values
-      if (!result_nodes->nodesetval)
-        break;
-
-      // may not have any results
+      // may not have any values or results
       result_size = xmlXPathNodeSetGetLength(result_nodes->nodesetval);
       if (result_size == 0)
         break;
 
-      // Do not need an archive is the input is not an archive, there is
-      // one result from the XPath, and the result is a nodeset
-
-      //      if (!pstate->isarchive && result_size == 1)
-      //        options |= OPTION_XSLT_ALL;
-
+      // opened the root start element before, now need to close it.
+      // why not do this when it is started?  May not have any results, and
+      // need an empty element
       if (closetag) {
-	xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">\n\n"));
-	closetag = false;
+        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">\n\n"));
+        closetag = false;
       }
 
       found = true;
@@ -167,7 +160,8 @@ public :
         // if we need a unit, output the start tag.  Line number starts at 1, not 0
         if (outputunit) {
 
-          // form text for wrapping unit, cached in wrap
+          // form text for wrapping unit.  Cached in a string since we may need it for
+	  // each result
           if (wrap == "") {
 
             // output a wrapping element, just like the one read in
@@ -176,7 +170,7 @@ public :
                                           (data.size() - rootsize) / 2, &data[rootsize],
                                           0, 0, 0);
 
-            // output all the current attributes
+            // output all the current attributes from the individual unit
             for (xmlAttrPtr pAttr = a_node->properties; pAttr; pAttr = pAttr->next) {
 
               wrap.append(LITERALPLUSSIZE(" "));
@@ -195,12 +189,15 @@ public :
 
             wrap.append(LITERALPLUSSIZE(" item=\""));
           }
+
+	  // output the start of the wrapping unit
           xmlOutputBufferWrite(buf, wrap.size(), wrap.c_str());
 
           // append line number and close unit start tag
-          char s[50];
-          snprintf(s, 50, "%d", i + 1);
-          xmlOutputBufferWriteString(buf, s);
+	  const int MAXSSIZE = 50;
+          static char itoabuf[MAXSSIZE];
+          snprintf(itoabuf, MAXSSIZE, "%d", i + 1);
+          xmlOutputBufferWriteString(buf, itoabuf);
           xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\">"));
         }
 
@@ -210,10 +207,10 @@ public :
           onode->nsDef = 0;
 
           if (pstate->isarchive && !outputunit) {
-            // create a new list of namespaces
-            onode->nsDef = savens;
 
+            // create a new list of namespaces
             // skip over the namespaces on the root
+            onode->nsDef = savens;
             for (int i = 0; i < UnitDOM::rootsize / 2; ++i)
               onode->nsDef = onode->nsDef->next;
           }
