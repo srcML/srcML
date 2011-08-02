@@ -97,6 +97,8 @@ public :
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
+    isarchive = pstate->isarchive;
+
     if (needroot && !isoption(options, OPTION_XSLT_ALL)) {
 
       // xml declaration
@@ -116,7 +118,7 @@ public :
     // evaluate the xpath
     xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, context);
     if (result_nodes == 0) {
-      fprintf(stderr, "%s: Error in executing xpath\n", "srcml2src");
+      //      fprintf(stderr, "%s: Error in executing xpath\n", "srcml2src");
       return;
     }
 
@@ -161,7 +163,7 @@ public :
         if (outputunit) {
 
           // form text for wrapping unit.  Cached in a string since we may need it for
-	  // each result
+          // each result
           if (wrap == "") {
 
             // output a wrapping element, just like the one read in
@@ -190,11 +192,11 @@ public :
             wrap.append(LITERALPLUSSIZE(" item=\""));
           }
 
-	  // output the start of the wrapping unit
+          // output the start of the wrapping unit
           xmlOutputBufferWrite(buf, wrap.size(), wrap.c_str());
 
           // append line number and close unit start tag
-	  const int MAXSSIZE = 50;
+          const int MAXSSIZE = 50;
           static char itoabuf[MAXSSIZE];
           snprintf(itoabuf, MAXSSIZE, "%d", i + 1);
           xmlOutputBufferWriteString(buf, itoabuf);
@@ -202,8 +204,11 @@ public :
         }
 
         // save the result, but temporarily hide the namespaces
-        xmlNsPtr savens = onode && !isoption(options, OPTION_XSLT_ALL) ? onode->nsDef : 0;
+	xmlNsPtr savens = onode && !isoption(options, OPTION_XSLT_ALL) ? onode->nsDef : 0;
+        xmlNsPtr keepcpp = 0;
+        xmlNsPtr keepcppnext = 0;
         if (savens) {
+
           onode->nsDef = 0;
 
           if (pstate->isarchive && !outputunit) {
@@ -213,6 +218,23 @@ public :
             onode->nsDef = savens;
             for (int i = 0; i < UnitDOM::rootsize / 2; ++i)
               onode->nsDef = onode->nsDef->next;
+
+          } else if (!pstate->isarchive && !outputunit) {
+
+            // find the cpp namespace
+            for (xmlNsPtr place = savens; place; place = place->next) {
+
+              if (strcmp((const char*) place->href, SRCML_CPP_NS_URI) == 0) {
+                keepcpp = place;
+                break;
+              }
+            }
+
+            if (keepcpp) {
+              keepcppnext = keepcpp->next;
+              keepcpp->next = 0;
+            }
+	    onode->nsDef = keepcpp;
           }
         }
         xmlNodeDumpOutput(buf, ctxt->myDoc, onode, 0, 0, 0);
@@ -320,9 +342,9 @@ public :
     xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\"?>\n"));
   }
 
-  static void xmlOutputBufferWriteElementNs(xmlOutputBufferPtr buf, const xmlChar* localname, const xmlChar* prefix,
-                                            const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
-                                            int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
+  void xmlOutputBufferWriteElementNs(xmlOutputBufferPtr buf, const xmlChar* localname, const xmlChar* prefix,
+                                     const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
+                                     int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
 
     xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<"));
     if (prefix != NULL) {
@@ -333,6 +355,10 @@ public :
 
     // output the namespaces
     for (int i = 0; i < nb_namespaces; ++i) {
+
+      // don't put cpp namespace on the root for a non-archive
+      if (!isarchive && strcmp((const char*) namespaces[2 * i + 1], SRCML_CPP_NS_URI) == 0)
+        continue;
 
       xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" xmlns"));
       if (namespaces[i * 2]) {
@@ -362,9 +388,9 @@ public :
     }
   }
 
-  static void xmlOutputBufferWriteElementNs(std::string& s, const xmlChar* localname, const xmlChar* prefix,
-                                            const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
-                                            int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
+  void xmlOutputBufferWriteElementNs(std::string& s, const xmlChar* localname, const xmlChar* prefix,
+                                     const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
+                                     int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
 
     s.append(LITERALPLUSSIZE("<"));
     if (prefix != NULL) {
@@ -375,6 +401,10 @@ public :
 
     // output the namespaces
     for (int i = 0; i < nb_namespaces; ++i) {
+
+      // only put cpp namespace on the non-root unit for a non-archive
+      if (!isarchive && strcmp((const char*) namespaces[2 * i + 1], SRCML_CPP_NS_URI) != 0)
+        continue;
 
       s.append(LITERALPLUSSIZE(" xmlns"));
       if (namespaces[i * 2]) {
@@ -415,6 +445,7 @@ private :
   xmlOutputBufferPtr buf;
   bool needroot;
   bool closetag;
+  bool isarchive;
 };
 
 #endif

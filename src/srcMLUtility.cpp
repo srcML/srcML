@@ -350,6 +350,9 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
   // compile the xpath that will be applied to each unit
   xmlXPathCompExprPtr compiled_xpath = xmlXPathCompile(BAD_CAST s.c_str());
   if (compiled_xpath == 0) {
+    fprintf(stderr, "srcml2src:  Unable to compile XPath '%s'\n", s.c_str());
+    //    xmlErrorPtr ep = xmlGetLastError();
+    //    fprintf(stderr, "%s: %s", "srcml2src", ep->message);
     return;
   }
 
