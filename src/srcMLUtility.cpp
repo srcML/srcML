@@ -44,6 +44,7 @@
 #include "ListUnits.hpp"
 #include "ExtractUnitsXML.hpp"
 #include "XPathQueryUnits.hpp"
+#include "XSLTUnits.hpp"
 
 #include "SAX2ExtractUnitsSrc.hpp"
 
@@ -349,7 +350,7 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
   // compile the xpath that will be applied to each unit
   xmlXPathCompExprPtr compiled_xpath = xmlXPathCompile(BAD_CAST s.c_str());
   if (compiled_xpath == 0) {
-  return;
+    return;
   }
 
   // setup parser
@@ -410,6 +411,36 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
 // xslt evaluation of the nested units
 void srcMLUtility::xslt(const char* context_element, const char* ofilename, const char* xslts[], const char* params[], int paramcount) {
 
+#ifdef SAXFRAMEWORK
+
+  // parse the stylesheet
+  xsltStylesheetPtr stylesheet = xsltParseStylesheetFile(BAD_CAST xslts[0]);
+
+  // setup parser
+  xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
+  if (ctxt == NULL) return;
+
+  // setup sax handler
+  xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
+  ctxt->sax = &sax;
+
+  // setup process handling
+  XSLTUnits process(context_element, ofilename, options, stylesheet, params);
+
+  // setup sax handling state
+  SAX2ExtractUnitsSrc state(&process, &options, -1);
+  ctxt->_private = &state;
+
+  // process the document
+  srcMLParseDocument(ctxt, false);
+
+  // local variable, do not want xmlFreeParserCtxt to free
+  ctxt->sax = NULL;
+
+  // all done with parsing
+  xmlFreeParserCtxt(ctxt);
+
+#else
   xmlSAXHandler sax = SAX2UnitDOMXSLT::factory();
 
   SAX2UnitDOMXSLT state(context_element, xslts, ofilename, params, paramcount, options);
@@ -434,6 +465,7 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
   ctxt->sax = NULL;
 
   xmlFreeParserCtxt(ctxt);
+#endif
 }
 
 // relaxng evaluation of the nested units
