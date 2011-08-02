@@ -30,7 +30,7 @@ def check(command, input, output):
         
         line = execute(command, input)
 
-        return validate(line, output)
+        return validateWithInput(input, line, output)
         #return validate(output.strip(), line.strip())
 
 def checkNoOutput(command, input):
@@ -50,8 +50,29 @@ def checkError(command, input, error) :
 
         line = executeWithError(command, input)
 
-        return validate(line, error)
+        return validateWithInput(input, line, error)
         
+def validateWithInput(input, gen, expected):
+        gen = str(gen)
+        expected = str(expected)
+
+        if (platform.system() == "Windows" or platform.system() == "CYGWIN_NT-6.1") and string.find(gen, "\r\n") != -1:
+                expected = string.replace(expected, "\n", "\r\n")
+
+        if string.find(gen, "\r\n") != -1:
+                globals()["eol_error_count"] += 1
+                globals()["eol_error_list"].append(globals()["test_count"])
+
+        if gen != expected:
+                globals()["error_count"] = globals()["error_count"] + 1
+                globals()["error_list"].append(globals()["test_count"])
+                globals()["error_lines"].append(globals()["test_line"])
+                print "ERROR"
+                print "input|" + input + "|"
+                print "expected|" + expected + "|"
+                print "gen|" + gen + "|"
+        return
+
 def validate(gen, expected):
         gen = str(gen)
         expected = str(expected)
