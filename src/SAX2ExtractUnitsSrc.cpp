@@ -27,6 +27,7 @@
 #include "srcmlapps.hpp"
 #include "ProcessUnit.hpp"
 #include "ExtractUnitsSrc.hpp"
+#include "srcexfun.hpp"
 
 xmlSAXHandler SAX2ExtractUnitsSrc::factory() {
 
@@ -138,6 +139,8 @@ void SAX2ExtractUnitsSrc::startElementNsRoot(void* ctx, const xmlChar* localname
     strncpy((char *) pstate->root.attributes[index + 3], (const char*) attributes[index + 3], vallength);
     pstate->root.attributes[index + 4] = pstate->root.attributes[index + 3] + vallength;
   }
+
+  setRootAttributes(pstate->root.attributes, pstate->root.nb_attributes);
 
   // handle nested units
   ctxt->sax->startElementNs = &startElementNsFirst;

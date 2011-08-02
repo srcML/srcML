@@ -43,7 +43,9 @@ static xmlChar* unit_filename = 0;
 #include "URIStream.hpp"
 
 static int Position;
-static PROPERTIES_TYPE* pattributes;
+static PROPERTIES_TYPE* oldpattributes;
+static const xmlChar** pattributes;
+static int nb_attributes;
 
 static std::vector<struct xpath_ext_function> MACROS;
 
@@ -51,95 +53,103 @@ void setPosition(int n) {
   Position = n;
 }
 
+void setRootAttributes(const xmlChar** attributes, int pnb_attributes) {
+  pattributes = attributes;
+  nb_attributes = pnb_attributes;
+}
+
 void setRootAttributes(PROPERTIES_TYPE& attributes) {
-  pattributes = &attributes;
+  oldpattributes = &attributes;
 }
 
 //
 static void srcContextFunction (xmlXPathParserContextPtr ctxt, int nargs) {
 
-    if (nargs != 0) {
-	xmlXPathSetArityError(ctxt);
-	return;
-    }
+  if (nargs != 0) {
+    xmlXPathSetArityError(ctxt);
+    return;
+  }
 
   valuePush(ctxt, xmlXPathNewFloat(Position));
 }
 
 static void srcRootFunction (xmlXPathParserContextPtr ctxt, int nargs) {
 
-    if (nargs != 1) {
-	xmlXPathSetArityError(ctxt);
-	return;
-    }
+  if (nargs != 1) {
+    xmlXPathSetArityError(ctxt);
+    return;
+  }
 
-    xmlChar* name = xmlXPathPopString(ctxt);
+  xmlChar* name = xmlXPathPopString(ctxt);
 
-    const char* value = find(*pattributes, (const char*) name);
+  int n = find_attribute_index(nb_attributes, pattributes, (const char*) name);
+  if (n == -1) {
+    valuePush(ctxt, NULL);
+    return;
+  }
 
-    if (value)
-      valuePush(ctxt, xmlXPathNewString(BAD_CAST value));
-    else
-      valuePush(ctxt, NULL);
+  std::string s(pattributes[n + 3], pattributes[n + 4]);
+
+  valuePush(ctxt, xmlXPathNewString(BAD_CAST s.c_str()));
 }
 
 static void srcMacrosFunction (xmlXPathParserContextPtr ctxt, int nargs) {
 
-    // as of now, all of these have no arguments
-    if (nargs != 0) {
-	xmlXPathSetArityError(ctxt);
-	return;
-    }
+  // as of now, all of these have no arguments
+  if (nargs != 0) {
+    xmlXPathSetArityError(ctxt);
+    return;
+  }
 
-    // find out which expression is being used based on the name
-    unsigned int i;
-    for (i = 0; i < MACROS.size(); ++i)
-      if (strcmp(MACROS[i].name.c_str(), (const char*) ctxt->context->function) == 0)
-          break;
+  // find out which expression is being used based on the name
+  unsigned int i;
+  for (i = 0; i < MACROS.size(); ++i)
+    if (strcmp(MACROS[i].name.c_str(), (const char*) ctxt->context->function) == 0)
+      break;
 
-    // evaluate the expression on the given context
-    xmlXPathObjectPtr ret = xmlXPathEval(BAD_CAST MACROS[i].expr.c_str(), ctxt->context);
+  // evaluate the expression on the given context
+  xmlXPathObjectPtr ret = xmlXPathEval(BAD_CAST MACROS[i].expr.c_str(), ctxt->context);
 
-    if (ret) {
-      valuePush(ctxt, ret);
-    }
+  if (ret) {
+    valuePush(ctxt, ret);
+  }
 }
 
 void xpathsrcMLRegister(xmlXPathContextPtr context) {
 
   xmlXPathRegisterFuncNS(context, (const xmlChar *)"unit",
                          BAD_CAST SRCML_SRC_NS_URI,
-			 srcContextFunction);
+                         srcContextFunction);
 
   xmlXPathRegisterFuncNS(context, (const xmlChar *)"archive",
                          BAD_CAST SRCML_SRC_NS_URI,
-			 srcRootFunction);
+                         srcRootFunction);
 
   // register all the xpath extension functions
   for (unsigned int i = 0; i < MACROS.size(); ++i) {
 
     xmlXPathRegisterFuncNS(context, BAD_CAST MACROS[i].name.c_str(),
-                         BAD_CAST SRCML_SRC_NS_URI,
-			 srcMacrosFunction);
+                           BAD_CAST SRCML_SRC_NS_URI,
+                           srcMacrosFunction);
   }
 }
 
 void xsltsrcMLRegister () {
 
   xsltRegisterExtModuleFunction(BAD_CAST "unit",
-                         BAD_CAST SRCML_SRC_NS_URI,
-                         srcContextFunction);
+                                BAD_CAST SRCML_SRC_NS_URI,
+                                srcContextFunction);
 
   xsltRegisterExtModuleFunction(BAD_CAST "archive",
-                         BAD_CAST SRCML_SRC_NS_URI,
-   		         srcRootFunction);
+                                BAD_CAST SRCML_SRC_NS_URI,
+                                srcRootFunction);
 
   // register all the xpath extension functions
   for (unsigned int i = 0; i < MACROS.size(); ++i) {
 
     xsltRegisterExtModuleFunction(BAD_CAST MACROS[i].name.c_str(),
-                         BAD_CAST SRCML_SRC_NS_URI,
-			 srcMacrosFunction);
+                                  BAD_CAST SRCML_SRC_NS_URI,
+                                  srcMacrosFunction);
   }
 }
 

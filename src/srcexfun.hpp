@@ -29,6 +29,8 @@
 
 void setPosition(int n);
 
+void setRootAttributes(const xmlChar** attributes, int pnb_attributes);
+
 void setRootAttributes(PROPERTIES_TYPE&);
 
 void xsltsrcMLRegister();
