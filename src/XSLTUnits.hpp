@@ -137,6 +137,8 @@ public :
     // root unit end tag
     if (result_type == XML_ELEMENT_NODE && found && pstate->isarchive && !isoption(options, OPTION_XSLT_ALL)) {
       xmlOutputBufferWriteString(buf, found ? "</unit>\n" : "/>\n");
+    } else if (result_type == XML_ELEMENT_NODE && found && !pstate->isarchive && !isoption(options, OPTION_XSLT_ALL)) {
+      xmlOutputBufferWriteString(buf, "\n");
     }
 
     // all done with the buffer
