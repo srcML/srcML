@@ -115,17 +115,15 @@ public :
       bool turnoff_namespaces = savens && pstate->isarchive && !isoption(options, OPTION_XSLT_ALL);
       if (turnoff_namespaces)
         resroot->nsDef = 0;
-      xsltSaveResultTo(buf, res, stylesheet);
-      /*
+      //      xsltSaveResultTo(buf, res, stylesheet);
       for (xmlNodePtr child = res->children; child != NULL; child = child->next)
 	xmlNodeDumpOutput(buf, res, child, 0, 0, 0);
-      */
       if (turnoff_namespaces)
         resroot->nsDef = savens;
 
       // put some space between this unit and the next one if compound
       if (result_type == XML_ELEMENT_NODE && pstate->isarchive && !isoption(options, OPTION_XSLT_ALL))
-        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n"));
+        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
 
       // finished with the result of the transformation
       xmlFreeDoc(res);
