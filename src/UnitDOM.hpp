@@ -32,7 +32,7 @@
 class UnitDOM : public ProcessUnit {
 public :
 
-  UnitDOM() : rootsize(0) {}
+  UnitDOM() : rootsize(0), found(false) {}
 
   virtual ~UnitDOM() {}
 
@@ -63,6 +63,8 @@ public :
 
     // setup output
     startOutput(ctx);
+
+    found = true;
   }
 
   virtual void startRootUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
@@ -160,6 +162,10 @@ public :
 
   virtual void endDocument(void *ctx) {
 
+    // endDocument can be called, even if startDocument was not for empty input
+    if (!found)
+      return;
+
     // end the entire input document
     xmlSAX2EndDocument(ctx);
 
@@ -170,6 +176,7 @@ public :
 protected:
   std::vector<const xmlChar*> data;
   int rootsize;
+  bool found;
 };
 
 #endif
