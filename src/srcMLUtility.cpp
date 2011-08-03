@@ -399,6 +399,11 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
   SAX2ExtractUnitsSrc state(&process, &options, -1);
   ctxt->_private = &state;
 
+  // allow for all exslt functions
+  exsltRegisterAll();
+
+  xsltsrcMLRegister();
+
   // process the document
   srcMLParseDocument(ctxt, false);
 
