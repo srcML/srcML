@@ -113,15 +113,11 @@ public :
     xmlNodePtr onode = 0;
     int result_size = 0;
     nodetype = result_nodes->type;
+
     switch (nodetype) {
 
       // node set result
     case XPATH_NODESET:
-
-      // may not have any values or results
-      result_size = xmlXPathNodeSetGetLength(result_nodes->nodesetval);
-      if (result_size == 0)
-        break;
 
       if (needroot && !isoption(options, OPTION_XSLT_ALL)) {
 
@@ -138,6 +134,11 @@ public :
         closetag = true;
       }
       needroot = false;
+
+      // may not have any values or results
+      result_size = xmlXPathNodeSetGetLength(result_nodes->nodesetval);
+      if (result_size == 0)
+        break;
 
       // opened the root start element before, now need to close it.
       // why not do this when it is started?  May not have any results, and
