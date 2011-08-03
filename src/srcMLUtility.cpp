@@ -48,8 +48,6 @@
 
 #include "SAX2ExtractUnitsSrc.hpp"
 
-#include "SAX2UnitDOMXPath.hpp"
-#include "SAX2UnitDOMXSLT.hpp"
 #include "SAX2UnitDOMRelaxNG.hpp"
 
 #include "srcexfun.hpp"
@@ -338,10 +336,9 @@ void srcMLUtility::set_input_filename(const char* infilename) {
   infile = infilename;
 }
 
-#define SAXFRAMEWORK
 // xpath evaluation of the nested units
 void srcMLUtility::xpath(const char* ofilename, const char* context_element, const char* xpaths[]) {
-#ifdef SAXFRAMEWORK
+
   // relative xpath changed to at any level
   std::string s = xpaths[0];
   //  if (s[0] != '/')
@@ -379,42 +376,10 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
 
   // all done with parsing
   xmlFreeParserCtxt(ctxt);
-
-#else
-
-  xmlSAXHandler sax = SAX2UnitDOMXPath::factory();
-
-  SAX2UnitDOMXPath state(context_element, xpaths, ofilename, options);
-
-  // relative xpath changed to at any level
-  std::string s = state.fxpath[0];
-  //  if (s[0] != '/')
-  //    s = "//" + s;
-
-  // compile the xpath that will be applied to each unit
-  state.compiled_xpath = xmlXPathCompile(BAD_CAST s.c_str());
-  if (state.compiled_xpath == 0) {
-    return;
-  }
-
-  xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
-  if (ctxt == NULL) return;
-  ctxt->sax = &sax;
-  ctxt->_private = &state;
-  //state.ctxt = ctxt;
-
-  srcMLParseDocument(ctxt, false);
-
-  ctxt->sax = NULL;
-
-  xmlFreeParserCtxt(ctxt);
-#endif
 }
 
 // xslt evaluation of the nested units
 void srcMLUtility::xslt(const char* context_element, const char* ofilename, const char* xslts[], const char* params[], int paramcount) {
-
-#ifdef SAXFRAMEWORK
 
   // parse the stylesheet
   xsltStylesheetPtr stylesheet = xsltParseStylesheetFile(BAD_CAST xslts[0]);
@@ -442,33 +407,6 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
 
   // all done with parsing
   xmlFreeParserCtxt(ctxt);
-
-#else
-  xmlSAXHandler sax = SAX2UnitDOMXSLT::factory();
-
-  SAX2UnitDOMXSLT state(context_element, xslts, ofilename, params, paramcount, options);
-
-  xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
-  if (ctxt == NULL) return;
-  ctxt->sax = &sax;
-  ctxt->_private = &state;
-  //state.ctxt = ctxt;
-
-  // allow for all exslt functions
-  exsltRegisterAll();
-
-  xsltsrcMLRegister();
-
-  // parse the stylesheet
-  state.xslt = xsltParseStylesheetFile(BAD_CAST xslts[0]);
-  // TODO: error return
-
-  srcMLParseDocument(ctxt, false);
-
-  ctxt->sax = NULL;
-
-  xmlFreeParserCtxt(ctxt);
-#endif
 }
 
 // relaxng evaluation of the nested units
