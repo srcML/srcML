@@ -302,7 +302,6 @@ public :
       // string
     case XPATH_STRING:
       xmlOutputBufferWriteString(buf, (const char*) result_nodes->stringval);
-      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n"));
       break;
 
     default:
