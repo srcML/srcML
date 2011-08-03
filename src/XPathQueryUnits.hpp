@@ -266,17 +266,10 @@ public :
 
           // xpath results was not a unit, but was wrapped in a unit
 
-          // no namespaces needed, since they are on the unit element already
-          xmlNsPtr savens = onode->nsDef;
-          onode->nsDef = 0;
-
           // dump the namespace-modified tree
           xmlNodeDumpOutput(buf, ctxt->myDoc, onode, 0, 0, 0);
 
-          // restore original namespaces
-          onode->nsDef = savens;
-
-          // if we need a unit, output the end tag
+          // wrapped in a unit, so output the end tag
           xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>\n\n"));
         }
       }
