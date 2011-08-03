@@ -2346,6 +2346,9 @@ srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 """
 
+xpath_error = """srcml2src: Start tag expected, '<' not found in '-'
+"""
+
 xpath = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src">
 
@@ -2363,7 +2366,8 @@ file.write(srcml)
 file.close()
 
 
-check([srcml2src, option.XPATH_FLAG + '=/src:unit'], "", "")
+checkError([srcml2src, option.XPATH_FLAG + '=/src:unit'], "", xpath_error)
+validate(getreturn([srcml2src, option.XPATH_FLAG + '=/src:unit'], ""), 2)
 
 check([srcml2src, option.XPATH_FLAG + '=/src:unit'], srcml, xpath)
 check([srcml2src, option.XPATH_FLAG + '=/src:unit', 'sub/a.cpp.xml'], "", xpath)
@@ -2619,13 +2623,17 @@ srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 """
 
+xslt_error = """srcml2src: Start tag expected, '<' not found in '-'
+"""
+
 file = open('sub/a.cpp.xml', 'w')
 file.write(srcml)
 file.close()
 
 # xslt
 
-check([srcml2src, option.XSLT_FLAG + '=copy.xsl'], "", "")
+checkError([srcml2src, option.XSLT_FLAG + '=copy.xsl'], "", xslt_error)
+validate(getreturn([srcml2src, option.XSLT_FLAG + '=copy.xsl'], ""), 2)
 
 check([srcml2src, option.XSLT_FLAG + '=copy.xsl'], srcml, srcml)
 check([srcml2src, option.XSLT_FLAG + '=copy.xsl', 'sub/a.cpp.xml'], "", srcml)
@@ -3089,9 +3097,15 @@ encoding="UTF-8"
 check([srcml2src, option.INFO_FLAG, 'xml_error/illformed.xml'], '' ,info_single)
 check([srcml2src, option.INFO_FLAG, 'xml_error/illformedarchive.xml'], '', info_archive)
 
+xml_error = """srcml2src: expected '>' in 'xml_error/illformed.xml'
+"""
+
+xml_archive_error = """Extra content at end of document or something
+"""
+
 # bad
-checkError([srcml2src, 'xml_error/illformed.xml'], '', '5')
-checkError([srcml2src, 'xml_error/illformedarchive.xml'], '', '5')
+checkError([srcml2src, 'xml_error/illformed.xml'], '', xml_error)
+checkError([srcml2src, 'xml_error/illformedarchive.xml'], '', xml_archive_error)
 
 # footer
 print
