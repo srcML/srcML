@@ -99,22 +99,6 @@ public :
 
     isarchive = pstate->isarchive;
 
-    if (needroot && !isoption(options, OPTION_XSLT_ALL)) {
-
-      // xml declaration
-      if (!isoption(options, OPTION_XMLDECL))
-        xmlOutputBufferWriteXMLDecl(ctxt, buf);
-
-      // output a root element, just like the one read in
-      // note that this has to be ended somewhere
-      xmlOutputBufferWriteElementNs(buf, pstate->root.localname, pstate->root.prefix, pstate->root.URI,
-                                    pstate->root.nb_namespaces, pstate->root.namespaces,
-                                    pstate->isarchive ? pstate->root.nb_attributes : 0, pstate->root.nb_defaulted, pstate->root.attributes);
-
-      closetag = true;
-    }
-    needroot = false;
-
     // evaluate the xpath
     xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, context);
     if (result_nodes == 0) {
@@ -138,6 +122,22 @@ public :
       result_size = xmlXPathNodeSetGetLength(result_nodes->nodesetval);
       if (result_size == 0)
         break;
+
+      if (needroot && !isoption(options, OPTION_XSLT_ALL)) {
+
+        // xml declaration
+        if (!isoption(options, OPTION_XMLDECL))
+          xmlOutputBufferWriteXMLDecl(ctxt, buf);
+
+        // output a root element, just like the one read in
+        // note that this has to be ended somewhere
+        xmlOutputBufferWriteElementNs(buf, pstate->root.localname, pstate->root.prefix, pstate->root.URI,
+                                      pstate->root.nb_namespaces, pstate->root.namespaces,
+                                      pstate->isarchive ? pstate->root.nb_attributes : 0, pstate->root.nb_defaulted, pstate->root.attributes);
+
+        closetag = true;
+      }
+      needroot = false;
 
       // opened the root start element before, now need to close it.
       // why not do this when it is started?  May not have any results, and
