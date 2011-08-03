@@ -203,51 +203,82 @@ public :
           xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\">"));
         }
 
-        // save the result, but temporarily hide the namespaces
-	xmlNsPtr savens = onode && !isoption(options, OPTION_XSLT_ALL) ? onode->nsDef : 0;
-        xmlNsPtr keepcpp = 0;
-        xmlNsPtr keepcppnext = 0;
-        if (savens) {
+        /*
+          Three possibilities:
 
-          onode->nsDef = 0;
+          - Input was an archive, and XPath result is a unit
+          Resulting namespaces are those that were on the original unit
 
-          if (pstate->isarchive && !outputunit) {
+          - Input was not an archive, and XPath result is a unit
+          Need to split the name
 
-            // create a new list of namespaces
-            // skip over the namespaces on the root
-            onode->nsDef = savens;
-            for (int i = 0; i < UnitDOM::rootsize / 2; ++i)
-              onode->nsDef = onode->nsDef->next;
+          - XPath result was a node, but not a unit
+        */
 
-          } else if (!pstate->isarchive && !outputunit) {
+        // input was an archive, xpath result is a unit
+        if (pstate->isarchive && !outputunit) {
 
-            // find the cpp namespace
-            for (xmlNsPtr place = savens; place; place = place->next) {
+          // create a new list of namespaces
+          // skip over the namespaces on the root
+          xmlNsPtr savens = onode->nsDef;
+          onode->nsDef = savens;
+          for (int i = 0; i < UnitDOM::rootsize / 2; ++i)
+            onode->nsDef = onode->nsDef->next;
 
-              if (strcmp((const char*) place->href, SRCML_CPP_NS_URI) == 0) {
-                keepcpp = place;
-                break;
-              }
-            }
+          // dump the namespace-modified tree
+          xmlNodeDumpOutput(buf, ctxt->myDoc, onode, 0, 0, 0);
 
-            if (keepcpp) {
-              keepcppnext = keepcpp->next;
-              keepcpp->next = 0;
-            }
-	    onode->nsDef = keepcpp;
-          }
-        }
-        xmlNodeDumpOutput(buf, ctxt->myDoc, onode, 0, 0, 0);
-        if (savens)
+          // restore original namespaces
           onode->nsDef = savens;
 
-        // if we need a unit, output the end tag
-        if (outputunit)
-          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>\n\n"));
-        else if (!isoption(options, OPTION_XSLT_ALL))
+          // space between internal units
           xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
-        else
-          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n"));
+
+        } else if (!pstate->isarchive && !outputunit) {
+
+          // input was not an archive, xpath result is a unit
+
+          // namespace list only need the cpp namespace, if it exists
+          xmlNsPtr savens = onode->nsDef;
+          for (onode->nsDef = savens; onode->nsDef; onode->nsDef = onode->nsDef->next)
+            if (strcmp((const char*) onode->nsDef->href, SRCML_CPP_NS_URI) == 0)
+              break;
+
+          // if we found it, then
+          xmlNsPtr keepcppnext = 0;
+          if (onode->nsDef) {
+            keepcppnext = onode->nsDef->next;
+            onode->nsDef->next = 0;
+          }
+
+          // dump the namespace-modified tree
+          xmlNodeDumpOutput(buf, ctxt->myDoc, onode, 0, 0, 0);
+
+          // restore original namespaces
+          if (onode->nsDef)
+            onode->nsDef->next = keepcppnext;
+          onode->nsDef = savens;
+
+          // space between internal units
+          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
+
+        } else {
+
+          // xpath results was not a unit, but was wrapped in a unit
+
+          // no namespaces needed, since they are on the unit element already
+          xmlNsPtr savens = onode->nsDef;
+          onode->nsDef = 0;
+
+          // dump the namespace-modified tree
+          xmlNodeDumpOutput(buf, ctxt->myDoc, onode, 0, 0, 0);
+
+          // restore original namespaces
+          onode->nsDef = savens;
+
+          // if we need a unit, output the end tag
+          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>\n\n"));
+        }
       }
 
       break;
