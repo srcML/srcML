@@ -90,6 +90,24 @@ public :
         exit(1);
       }
     }
+
+    // register exslt functions for XPath usage
+    if (exsltDateXpathCtxtRegister(context, BAD_CAST "date") == -1) {
+      fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
+              "srcml2src", "date");
+    }
+    if (exsltMathXpathCtxtRegister(context, BAD_CAST "math") == -1) {
+      fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
+              "srcml2src", "math");
+    }
+    if (exsltSetsXpathCtxtRegister(context, BAD_CAST "set") == -1) {
+      fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
+              "srcml2src", "set");
+    }
+    if (exsltStrXpathCtxtRegister(context, BAD_CAST "str") == -1) {
+      fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
+              "srcml2src", "str");
+    }
   }
 
   virtual void apply(void *ctx) {
