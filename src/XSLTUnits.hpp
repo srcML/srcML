@@ -115,9 +115,11 @@ public :
       bool turnoff_namespaces = savens && pstate->isarchive && !isoption(options, OPTION_XSLT_ALL);
       if (turnoff_namespaces)
         resroot->nsDef = 0;
-      //      xsltSaveResultTo(buf, res, stylesheet);
+      xsltSaveResultTo(buf, res, stylesheet);
+      /*
       for (xmlNodePtr child = res->children; child != NULL; child = child->next)
 	xmlNodeDumpOutput(buf, res, child, 0, 0, 0);
+      */
       if (turnoff_namespaces)
         resroot->nsDef = savens;
 
