@@ -3109,7 +3109,12 @@ checkError([srcml2src, 'xml_error/illformedarchive.xml'], '', xml_archive_error)
 
 # escaped xml test
 
+extract_option_xpath_simple ="concat('&lt;', string(//src:decl[string(src:name)='EXPAND_FLAG']/src:name), '&gt;&#10;')"
+
 extract_option_xpath = "concat('&lt; &#33;ENTITY ', string(//src:decl[substring(src:name, string-length(src:name) - 4)='_FLAG']/src:name), ' --', substring(string(//src:decl[substring(src:name, string-length(src:name) - 4)='_FLAG']/src:init/src:expr), 2, string-length(string(//src:decl[substring(src:name, string-length(src:name) - 4)='_FLAG']/src:init/src:expr)) - 2), '&gt;&#10;')"
+
+extract_option_xpath_output_simple = """<EXPAND_FLAG>
+"""
 
 extract_option_xpath_output = """<!ENTITY EXPAND_FLAG "--to-dir">
 """
@@ -3143,6 +3148,7 @@ extract_options_output = """<!ENTITY EXPAND_FLAG "--to-dir">
 <!ENTITY EOL_FLAG "--eol">
 """
 
+check([srcml2src, option.XPATH_FLAG, extract_option_xpath_simple, 'extract_options/extract_options_test.cpp.xml'], '', extract_option_xpath_output_simple)
 check([srcml2src, option.XPATH_FLAG, extract_option_xpath, 'extract_options/extract_options_test.cpp.xml'], '', extract_option_xpath_output)
 check([srcml2src, option.XSLT_FLAG, 'extract_options/extract_options.xsl', 'extract_options/extract_options_test.cpp.xml'], '', extract_options_output)
 
