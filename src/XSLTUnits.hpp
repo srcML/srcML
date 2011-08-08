@@ -117,8 +117,8 @@ public :
         resroot->nsDef = 0;
       xsltSaveResultTo(buf, res, stylesheet);
       /*
-      for (xmlNodePtr child = res->children; child != NULL; child = child->next)
-	xmlNodeDumpOutput(buf, res, child, 0, 0, 0);
+        for (xmlNodePtr child = res->children; child != NULL; child = child->next)
+        xmlNodeDumpOutput(buf, res, child, 0, 0, 0);
       */
       if (turnoff_namespaces)
         resroot->nsDef = savens;
@@ -140,7 +140,7 @@ public :
     if (result_type == XML_ELEMENT_NODE && found && pstate->isarchive && !isoption(options, OPTION_XSLT_ALL)) {
       xmlOutputBufferWriteString(buf, found ? "</unit>\n" : "/>\n");
     } else if (result_type == XML_ELEMENT_NODE && found && !pstate->isarchive) {
-      xmlOutputBufferWriteString(buf, "\n");
+      //      xmlOutputBufferWriteString(buf, "\n");
     }
 
     // all done with the buffer
