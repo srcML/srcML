@@ -3107,6 +3107,39 @@ xml_archive_error = """Extra content at end of document or something
 checkError([srcml2src, 'xml_error/illformed.xml'], '', xml_error)
 checkError([srcml2src, 'xml_error/illformedarchive.xml'], '', xml_archive_error)
 
+# escaped xml test
+
+extract_options_output = """<!ENTITY EXPAND_FLAG "--to-dir">
+<!ENTITY EXPAND_FLAG_SHORT '-a'>
+<!ENTITY UNIT_FLAG "--unit">
+<!ENTITY UNIT_FLAG_SHORT '-U'>
+<!ENTITY XML_FLAG "--xml">
+<!ENTITY XML_FLAG_SHORT '-X'>
+<!ENTITY INFO_FLAG "--info">
+<!ENTITY INFO_FLAG_SHORT '-i'>
+<!ENTITY LONG_INFO_FLAG "--longinfo">
+<!ENTITY LONG_INFO_FLAG_SHORT '-L'>
+<!ENTITY NAMESPACE_FLAG "--prefix">
+<!ENTITY NAMESPACE_FLAG_SHORT '-p'>
+<!ENTITY OMIT_FLAG "--omit">
+<!ENTITY OMIT_FLAG_SHORT '-O'>
+<!ENTITY XPATH_FLAG "--xpath">
+<!ENTITY XSLT_FLAG "--xslt">
+<!ENTITY PARAM_FLAG "--xpathparam">
+<!ENTITY STRING_PARAM_FLAG "--param">
+<!ENTITY XSLT_ALL_FLAG "--apply-root">
+<!ENTITY RELAXNG_FLAG "--relaxng">
+<!ENTITY CONTEXT_FLAG "--context">
+<!ENTITY LIST_FLAG "--list">
+<!ENTITY REGISTER_EXTENSION_FLAG "--register-ext">
+<!ENTITY REGISTER_EXTENSION_FILE_FLAG "--register-ext-file">
+<!ENTITY REGISTER_EXTENSION_FUNCTION_FLAG "--register-xpath-func">
+<!ENTITY REGISTER_EXTENSION_FUNCTION_FILE_FLAG "--register-xpath-func-file">
+<!ENTITY EOL_FLAG "--eol">
+"""
+
+check([srcml2src, option.XSLT_FLAG, 'extract_options/extract_options.xsl', 'extract_options/extract_options_test.cpp.xml'], '', extract_options_output)
+
 # footer
 print
 print "Error count:\t\t", error_count, "\t", error_list

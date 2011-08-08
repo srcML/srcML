@@ -1,0 +1,1180 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="src/srcml2src.cpp"><comment type="block">/*
+  srcml2src.cpp
+
+  Copyright (C) 2004-2011  SDML (www.sdml.info)
+
+  This file is part of the srcML translator.
+
+  The srcML translator is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  The srcML translator is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with the srcML translator; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+  Main program to translate from srcML to source code
+*/</comment>
+
+<cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>&lt;cstdio&gt;</cpp:file></cpp:include>
+<cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>&lt;cstring&gt;</cpp:file></cpp:include>
+<cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>&lt;sys/stat.h&gt;</cpp:file></cpp:include>
+<cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>"srcmlapps.hpp"</cpp:file></cpp:include>
+<cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>"project.hpp"</cpp:file></cpp:include>
+<cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>"srcMLUtility.hpp"</cpp:file></cpp:include>
+<cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>"Options.hpp"</cpp:file></cpp:include>
+<cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>"srcmlns.hpp"</cpp:file></cpp:include>
+<cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>&lt;getopt.h&gt;</cpp:file></cpp:include>
+
+<cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>"archive.h"</cpp:file></cpp:include>
+<cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>"libxml_archive_read.hpp"</cpp:file></cpp:include>
+<cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>"libxml_archive_write.hpp"</cpp:file></cpp:include>
+<cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>"srcexfun.hpp"</cpp:file></cpp:include>
+<cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>"URIStream.hpp"</cpp:file></cpp:include>
+<cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>&lt;libxslt/xslt.h&gt;</cpp:file></cpp:include>
+<cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>&lt;libxslt/xsltconfig.h&gt;</cpp:file></cpp:include>
+<cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>&lt;libexslt/exslt.h&gt;</cpp:file></cpp:include>
+
+<function_decl><type><name>int</name></type> <name>option_error_status</name><parameter_list>(<param><decl><type><name>int</name></type> <name>optopt</name></decl></param>)</parameter_list>;</function_decl>
+
+<cpp:define>#<cpp:directive>define</cpp:directive> <name>BASE_PROGRAM_NAME</name> "srcml2src"</cpp:define>
+<decl_stmt><decl><type><name>const</name> <name>char</name>*</type> <name>PROGRAM_NAME</name> =<init> <expr><name>BASE_PROGRAM_NAME</name></expr></init></decl>;</decl_stmt>
+
+<decl_stmt><decl><type><name>char</name> <name>const</name> * <name>const</name></type> <name>EXPAND_FLAG</name> =<init> <expr>"to-dir"</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>char</name> <name>const</name></type> <name>EXPAND_FLAG_SHORT</name> =<init> <expr>'a'</expr></init></decl>;</decl_stmt>
+
+<decl_stmt><decl><type><name>char</name> <name>const</name> * <name>const</name></type> <name>UNIT_FLAG</name> =<init> <expr>"unit"</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>char</name> <name>const</name></type> <name>UNIT_FLAG_SHORT</name> =<init> <expr>'U'</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>char</name> <name>const</name> * <name>const</name></type> <name>UNIT_FLAG_FULL</name> =<init> <expr>"unit=NUM"</expr></init></decl>;</decl_stmt>
+
+<decl_stmt><decl><type><name>char</name> <name>const</name> * <name>const</name></type> <name>XML_FLAG</name> =<init> <expr>"xml"</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>char</name> <name>const</name></type> <name>XML_FLAG_SHORT</name> =<init> <expr>'X'</expr></init></decl>;</decl_stmt>
+
+<decl_stmt><decl><type><name>char</name> <name>const</name> * <name>const</name></type> <name>INFO_FLAG</name> =<init> <expr>"info"</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>char</name> <name>const</name></type> <name>INFO_FLAG_SHORT</name> =<init> <expr>'i'</expr></init></decl>;</decl_stmt>
+
+<decl_stmt><decl><type><name>char</name> <name>const</name> * <name>const</name></type> <name>LONG_INFO_FLAG</name> =<init> <expr>"longinfo"</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>char</name> <name>const</name></type> <name>LONG_INFO_FLAG_SHORT</name> =<init> <expr>'L'</expr></init></decl>;</decl_stmt>
+
+<decl_stmt><decl><type><name>char</name> <name>const</name> * <name>const</name></type> <name>NAMESPACE_FLAG</name> =<init> <expr>"prefix"</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>char</name> <name>const</name></type> <name>NAMESPACE_FLAG_SHORT</name> =<init> <expr>'p'</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>char</name> <name>const</name> * <name>const</name></type> <name>NAMESPACE_FLAG_FULL</name> =<init> <expr>"prefix=URI"</expr></init></decl>;</decl_stmt>
+
+<decl_stmt><decl><type><name>char</name> <name>const</name> * <name>const</name></type> <name>OMIT_FLAG</name> =<init> <expr>"omit"</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>char</name> <name>const</name></type> <name>OMIT_FLAG_SHORT</name> =<init> <expr>'O'</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>char</name> <name>const</name> * <name>const</name></type> <name>OMIT_FLAG_FULL</name> =<init> <expr>"omit=NAMESPACE"</expr></init></decl>;</decl_stmt>
+
+<decl_stmt><decl><type><name>char</name> <name>const</name> * <name>const</name></type> <name>XPATH_FLAG</name> =<init> <expr>"xpath"</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>const</name> <name>int</name></type> <name>XPATH_FLAG_CODE</name> =<init> <expr>256 + 0</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>char</name> <name>const</name> * <name>const</name></type> <name>XPATH_FLAG_FULL</name> =<init> <expr>"xpath=XPATH"</expr></init></decl>;</decl_stmt>
+
+<decl_stmt><decl><type><name>char</name> <name>const</name> * <name>const</name></type> <name>XSLT_FLAG</name> =<init> <expr>"xslt"</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>const</name> <name>int</name></type> <name>XSLT_FLAG_CODE</name> =<init> <expr>256 + 1</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>char</name> <name>const</name> * <name>const</name></type> <name>XSLT_FLAG_FULL</name> =<init> <expr>"xslt=XSLT_FILE"</expr></init></decl>;</decl_stmt>
+
+<decl_stmt><decl><type><name>char</name> <name>const</name> * <name>const</name></type> <name>PARAM_FLAG</name> =<init> <expr>"xpathparam"</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>const</name> <name>int</name></type> <name>PARAM_FLAG_CODE</name> =<init> <expr>256 + 2</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>char</name> <name>const</name> * <name>const</name></type> <name>PARAM_FLAG_FULL</name> =<init> <expr>"xpathparam NAME=VAL"</expr></init></decl>;</decl_stmt>
+
+<decl_stmt><decl><type><name>char</name> <name>const</name> * <name>const</name></type> <name>STRING_PARAM_FLAG</name> =<init> <expr>"param"</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>const</name> <name>int</name></type> <name>STRING_PARAM_FLAG_CODE</name> =<init> <expr>256 + 3</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>char</name> <name>const</name> * <name>const</name></type> <name>STRING_PARAM_FLAG_FULL</name> =<init> <expr>"param NAME=VAL"</expr></init></decl>;</decl_stmt>
+
+<decl_stmt><decl><type><name>char</name> <name>const</name> * <name>const</name></type> <name>XSLT_ALL_FLAG</name> =<init> <expr>"apply-root"</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>const</name> <name>int</name></type> <name>XSLT_ALL_FLAG_CODE</name> =<init> <expr>256 + 4</expr></init></decl>;</decl_stmt>
+
+<decl_stmt><decl><type><name>char</name> <name>const</name> * <name>const</name></type> <name>RELAXNG_FLAG</name> =<init> <expr>"relaxng"</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>const</name> <name>int</name></type> <name>RELAXNG_FLAG_CODE</name> =<init> <expr>256 + 5</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>char</name> <name>const</name> * <name>const</name></type> <name>RELAXNG_FLAG_FULL</name> =<init> <expr>"relaxng=RELAXNG_FILE"</expr></init></decl>;</decl_stmt>
+
+<decl_stmt><decl><type><name>char</name> <name>const</name> * <name>const</name></type> <name>CONTEXT_FLAG</name> =<init> <expr>"context"</expr></init></decl>;</decl_stmt>
+<comment type="line">//char const CONTEXT_FLAG_SHORT = '';</comment>
+<decl_stmt><decl><type><name>char</name> <name>const</name> * <name>const</name></type> <name>CONTEXT_FLAG_FULL</name> =<init> <expr>"context=CONTEXT"</expr></init></decl>;</decl_stmt>
+
+<decl_stmt><decl><type><name>const</name> <name>char</name>* <name>const</name></type> <name>LIST_FLAG</name> =<init> <expr>"list"</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>const</name> <name>int</name></type> <name>LIST_FLAG_CODE</name> =<init> <expr>256 + 6</expr></init></decl>;</decl_stmt>
+
+<decl_stmt><decl><type><name>const</name> <name>char</name>* <name>const</name></type> <name>REGISTER_EXTENSION_FLAG</name> =<init> <expr>"register-ext"</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>const</name> <name>int</name></type> <name>REGISTER_EXTENSION_FLAG_CODE</name> =<init> <expr>256 + 7</expr></init></decl>;</decl_stmt>
+
+<decl_stmt><decl><type><name>const</name> <name>char</name>* <name>const</name></type> <name>REGISTER_EXTENSION_FILE_FLAG</name> =<init> <expr>"register-ext-file"</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>const</name> <name>int</name></type> <name>REGISTER_EXTENSION_FILE_FLAG_CODE</name> =<init> <expr>256 + 8</expr></init></decl>;</decl_stmt>
+
+<decl_stmt><decl><type><name>const</name> <name>char</name>* <name>const</name></type> <name>REGISTER_EXTENSION_FUNCTION_FLAG</name> =<init> <expr>"register-xpath-func"</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>const</name> <name>int</name></type> <name>REGISTER_EXTENSION_FUNCTION_FLAG_CODE</name> =<init> <expr>256 + 9</expr></init></decl>;</decl_stmt>
+
+<decl_stmt><decl><type><name>const</name> <name>char</name>* <name>const</name></type> <name>REGISTER_EXTENSION_FUNCTION_FILE_FLAG</name> =<init> <expr>"register-xpath-func-file"</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>const</name> <name>int</name></type> <name>REGISTER_EXTENSION_FUNCTION_FILE_FLAG_CODE</name> =<init> <expr>256 + 10</expr></init></decl>;</decl_stmt>
+
+<decl_stmt><decl><type><name>const</name> <name>char</name>* <name>const</name></type> <name>EOL_FLAG</name> =<init> <expr>"eol"</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>const</name> <name>int</name></type> <name>EOL_FLAG_CODE</name> =<init> <expr>256 + 11</expr></init></decl>;</decl_stmt>
+
+<function><type><name>void</name></type> <name>libxml_error</name><parameter_list>(<param><decl><type><name>void</name> *</type><name>ctx</name></decl></param>, <param><decl><type><name>const</name> <name>char</name> *</type><name>msg</name></decl></param>, <param><decl><type>...</type></decl></param>)</parameter_list> <block>{}</block></function>
+
+<comment type="line">// output help message</comment>
+<function><type><name>void</name></type> <name>output_help</name><parameter_list>(<param><decl><type><name>const</name> <name>char</name>*</type> <name>name</name></decl></param>)</parameter_list> <block>{
+
+  <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"Usage: %s [options] &lt;srcML_infile&gt;... [-o &lt;src_outfile&gt;]\n\n"
+         "Translates from the the XML source-code representation srcML back to source-code.\n\n"
+         "Extracts back to standard output, the disk, or to traditional archive formats,\n"
+	 "e.g., tar, cpio, zip, and with optional gzip, bzip2 compression.\n"
+         "Provides access to metadata about the srcML document. For srcML archives\n"
+	 "provides extraction of specific files, and efficient querying/transformation\n"
+	 "using XPath, XSLT, and RelaxNG.\n\n"
+
+	 "srcML archives contain multiple individual source code files,\n"
+	 "e.g., an entire project or directory tree.\n\n"
+
+	 "By default, output is to stdout.  You can specify a file for output using the --%s or -%c option.\n"
+         "When no filenames are given, input is from stdin and output is to stdout.\n"
+	 "An input filename of '-' also reads from stdin.\n\n"
+
+	 "Any input file, including XSLT and RelaxNG files, can be a local\n"
+	 "filename (FILE) or a URI with the protocols http:, ftp:, or file:\n\n"
+
+         "The srcML files can be in xml, or compressed with gzip or bzip2 (detected automatically).\n\n"
+
+	 "Options:\n"</expr></argument>, <argument><expr><name>name</name></expr></argument>, <argument><expr><name>OUTPUT_FLAG</name></expr></argument>, <argument><expr><name>OUTPUT_FLAG_SHORT</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+  <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"  -%c, --%-17s display this help and exit\n"</expr></argument>, <argument><expr><name>HELP_FLAG_SHORT</name></expr></argument>, <argument><expr><name>HELP_FLAG</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"  -%c, --%-17s display version number and exit\n\n"</expr></argument>, <argument><expr><name>VERSION_FLAG_SHORT</name></expr></argument>, <argument><expr><name>VERSION_FLAG</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  <comment type="block">/*
+  printf("  --%-21s ???\n\n", INPUT_FORMAT_FLAG);
+  */</comment>
+  <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"  -%c, --%-17s write result to OUTPUT which is a FILE or URI\n"</expr></argument>, <argument><expr><name>OUTPUT_FLAG_SHORT</name></expr></argument>, <argument><expr><name>OUTPUT_FLAG_FULL</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  <comment type="block">/*
+  printf("  --%-21s ???\n\n", OUTPUT_FORMAT_FLAG);
+  */</comment>
+
+  <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"  -%c, --%-17s set the output source encoding to ENC (default:  %s) \n"</expr></argument>,
+	  <argument><expr><name>SRC_ENCODING_FLAG_SHORT</name></expr></argument>, <argument><expr><name>SRC_ENCODING_FLAG_FULL</name></expr></argument>, <argument><expr><name>DEFAULT_TEXT_ENCODING</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+  <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"  -%c, --%-17s output text or XML in gzip format\n"</expr></argument>,
+	  <argument><expr><name>COMPRESSED_FLAG_SHORT</name></expr></argument>, <argument><expr><name>COMPRESSED_FLAG</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+  <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"  -%c, --%-17s conversion and status information to stderr\n"</expr></argument>,
+	  <argument><expr><name>VERBOSE_FLAG_SHORT</name></expr></argument>, <argument><expr><name>VERBOSE_FLAG</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+  <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"  -%c, --%-17s suppresses status messages\n\n"</expr></argument>,
+	  <argument><expr><name>QUIET_FLAG_SHORT</name></expr></argument>, <argument><expr><name>QUIET_FLAG</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+  <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"  -%c, --%-17s output in XML instead of text\n"</expr></argument>,
+	  <argument><expr><name>XML_FLAG_SHORT</name></expr></argument>, <argument><expr><name>XML_FLAG</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+  <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"  --%-21s do not output the XML declaration in XML output\n"</expr></argument>,
+	  <argument><expr><name>NO_XML_DECLARATION_FLAG</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+  <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"  --%-21s do not output any namespace declarations in XML output\n\n"</expr></argument>,
+	  <argument><expr><name>NO_NAMESPACE_DECLARATION_FLAG</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+  <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"Metadata Options:\n"
+	 "  -%c, --%-17s display source language and exit\n"</expr></argument>, <argument><expr><name>LANGUAGE_FLAG_SHORT</name></expr></argument>, <argument><expr><name>LANGUAGE_FLAG</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+  <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"  -%c, --%-17s display source directory name and exit\n"</expr></argument>, <argument><expr><name>DIRECTORY_FLAG_SHORT</name></expr></argument>, <argument><expr><name>DIRECTORY_FLAG</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+  <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"  -%c, --%-17s display source filename and exit\n"</expr></argument>, <argument><expr><name>FILENAME_FLAG_SHORT</name></expr></argument>, <argument><expr><name>FILENAME_FLAG</name></expr></argument>   )</argument_list></call></expr>;</expr_stmt>
+
+  <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"  -%c, --%-17s display source version and exit\n"</expr></argument>, <argument><expr><name>SRCVERSION_FLAG_SHORT</name></expr></argument>, <argument><expr><name>SRCVERSION_FLAG</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+  <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"  -%c, --%-17s display xml encoding and exit\n"</expr></argument>, <argument><expr><name>ENCODING_FLAG_SHORT</name></expr></argument>, <argument><expr><name>ENCODING_FLAG</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+  <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"  -%c, --%-17s display prefix of namespace given by URI and exit\n"</expr></argument>,
+	  <argument><expr><name>NAMESPACE_FLAG_SHORT</name></expr></argument>, <argument><expr><name>NAMESPACE_FLAG_FULL</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+  <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"  -%c, --%-17s display number of srcML files and exit\n\n"</expr></argument>, <argument><expr><name>NESTED_FLAG_SHORT</name></expr></argument>, <argument><expr><name>NESTED_FLAG</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+  <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"  -%c, --%-17s display most metadata except file count (individual units) and exit\n"</expr></argument>,
+	  <argument><expr><name>INFO_FLAG_SHORT</name></expr></argument>, <argument><expr><name>INFO_FLAG</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+  <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"  -%c, --%-17s display all metadata including file count (individual units) and exit\n"</expr></argument>,
+	  <argument><expr><name>LONG_INFO_FLAG_SHORT</name></expr></argument>, <argument><expr><name>LONG_INFO_FLAG</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+  <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"  --%-21s list all the files in the srcML archive and exit\n\n"</expr></argument>, <argument><expr><name>LIST_FLAG</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+  <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"srcML Archive Options:\n"
+	 "  -%c, --%-17s extract individual unit NUM from srcML\n"</expr></argument>,
+	  <argument><expr><name>UNIT_FLAG_SHORT</name></expr></argument>, <argument><expr><name>UNIT_FLAG_FULL</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+  <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"  -%c, --%-17s extract all files from srcML and create them in the filesystem\n\n"</expr></argument>,
+	  <argument><expr><name>EXPAND_FLAG_SHORT</name></expr></argument>, <argument><expr><name>EXPAND_FLAG</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+  <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"Query and Transformation Options:\n"
+	 "  --%-21s apply XPATH expression to each individual unit\n"</expr></argument>, <argument><expr><name>XPATH_FLAG_FULL</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"  --%-21s apply XSLT_FILE (FILE or URI) transformation to each individual unit\n"</expr></argument>, <argument><expr><name>XSLT_FLAG_FULL</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  <comment type="line">//  printf("  --%-21s passes a parameter NAME and VAL to an XSLT program\n", STRING_PARAM_FLAG_FULL);</comment>
+  <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"  --%-21s passes a parameter NAME and VAL to the XSLT program\n"</expr></argument>, <argument><expr><name>PARAM_FLAG_FULL</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"  --%-21s output individual units that match RELAXNG_FILE (FILE or URI)\n"</expr></argument>, <argument><expr><name>RELAXNG_FLAG_FULL</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"  --%-21s apply an xslt program or xpath query to the root element\n\n"</expr></argument>, <argument><expr><name>XSLT_ALL_FLAG</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+  <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"Examples:\n"
+	    "  Read from file main.cpp.xml, write to file main.cpp:\n\n"
+	    "  " <name>BASE_PROGRAM_NAME</name> " main.cpp.xml -o main.cpp\n\n"
+
+	    "  Read from URI, write to file main.cpp:\n\n"
+	    "  " <name>BASE_PROGRAM_NAME</name> " http://www.sdml.info/projects/srcml/ex/main.cpp.xml main.cpp\n\n"
+
+	    "  Read from file main.cpp.xml, output language attribute to stdout:\n\n"
+            "  " <name>BASE_PROGRAM_NAME</name> " main.cpp.xml --language\n\n"</expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+  <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"www.sdml.info\n"
+         "Report bugs to %s\n"</expr></argument>, <argument><expr><name>EMAIL_ADDRESS</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+}</block></function>
+
+<comment type="line">// output version message</comment>
+<function><type><name>void</name></type> <name>output_version</name><parameter_list>(<param><decl><type><name>const</name> <name>char</name>*</type> <name>name</name></decl></param>)</parameter_list> <block>{
+
+  <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"%s Version %s\n"
+	 "%s\n"</expr></argument>, <argument><expr><name>name</name></expr></argument>, <argument><expr><name>VERSION</name></expr></argument>, <argument><expr><name>COPYRIGHT</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+  <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"Using: "</expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  <if>if<condition>(<expr><call><name>atoi</name><argument_list>(<argument><expr><name>xmlParserVersion</name></expr></argument>)</argument_list></call> == <name>LIBXML_VERSION</name></expr>)</condition><then>
+    <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"libxml %d, "</expr></argument>, <argument><expr><name>LIBXML_VERSION</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></then>
+  <else>else
+    <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"libxml %s (Compiled %d), "</expr></argument>, <argument><expr><name>xmlParserVersion</name></expr></argument>, <argument><expr><name>LIBXML_VERSION</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></else></if>
+
+  <if>if<condition>(<expr><name>xsltLibxsltVersion</name> == <name>LIBXSLT_VERSION</name></expr>)</condition><then>
+    <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"libxslt %d, "</expr></argument>, <argument><expr><name>LIBXSLT_VERSION</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></then>
+  <else>else
+    <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"libxslt %d (Compiled %d), "</expr></argument>, <argument><expr><name>xsltLibxsltVersion</name></expr></argument>, <argument><expr><name>LIBXSLT_VERSION</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></else></if>
+
+  <if>if<condition>(<expr><name>exsltLibexsltVersion</name> == <name>LIBEXSLT_VERSION</name></expr>)</condition><then>
+    <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"libexslt %d, "</expr></argument>, <argument><expr><name>LIBEXSLT_VERSION</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></then>
+  <else>else
+    <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"libexslt %d (Compiled %d), "</expr></argument>, <argument><expr><name>exsltLibexsltVersion</name></expr></argument>, <argument><expr><name>LIBEXSLT_VERSION</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></else></if>
+
+  <if>if<condition>(<expr><call><name>archive_version_number</name><argument_list>()</argument_list></call></expr>, <expr><name>ARCHIVE_VERSION_NUMBER</name></expr>)</condition><then>
+    <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"libarchive %d\n"</expr></argument>, <argument><expr><name>ARCHIVE_VERSION_NUMBER</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></then>
+  <else>else
+    <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"libarchive %d (Compiled %d)\n"</expr></argument>, <argument><expr><call><name>archive_version_number</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>ARCHIVE_VERSION_NUMBER</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></else></if>
+}</block></function>
+
+<function><type><name>void</name></type> <name>output_settings</name><parameter_list>(<param><decl><type><name>const</name> <name>char</name> *</type> <name>name</name></decl></param>)</parameter_list>
+<block>{}</block></function>
+
+<function><type><name>void</name></type> <name>output_features</name><parameter_list>(<param><decl><type><name>const</name> <name>char</name> *</type> <name>name</name></decl></param>)</parameter_list>
+<block>{}</block></function>
+
+<decl_stmt><decl><type><name>OPTION_TYPE</name></type> <name>options</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+
+
+<cpp:ifdef>#<cpp:directive>ifdef</cpp:directive> <name>__GNUG__</name></cpp:ifdef>
+<extern>extern "C" <function_decl><type><name>void</name></type> <name>verbose_handler</name><parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list>;</function_decl></extern>
+
+<extern>extern "C" <function_decl><type><name>void</name></type> <name>terminate_handler</name><parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list>;</function_decl></extern>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+
+<decl_stmt><decl><type><name>int</name></type> <name><name>optionorder</name><index>[<expr>5</expr>]</index></name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>int</name></type> <name>optioncount</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+
+<function_decl><type><name>void</name></type> <name>output_info</name><parameter_list>(<param><decl><type><name>srcMLUtility</name>&amp;</type> <name>su</name></decl></param>, <param><decl><type><name>int</name></type> <name>options</name></decl></param>, <param><decl><type><name>int</name></type> <name>optioncount</name></decl></param>, <param><decl><type><name>int</name></type> <name><name>optionorder</name><index>[]</index></name></decl></param>)</parameter_list>;</function_decl>
+
+<decl_stmt><decl><type><name>FILE</name>*</type> <name>output</name></decl>;</decl_stmt>
+
+<typedef>typedef <type><struct>struct <name>process_options</name>
+<block>{<public type="default">
+  <comment type="line">// option values</comment>
+  <decl_stmt><decl><type><name>const</name> <name>char</name>*</type> <name>ofilename</name></decl>;</decl_stmt>
+  <decl_stmt><decl><type><name>const</name> <name>char</name>*</type> <name>input_format</name></decl>;</decl_stmt>
+  <decl_stmt><decl><type><name>const</name> <name>char</name>*</type> <name>output_format</name></decl>;</decl_stmt>
+  <decl_stmt><decl><type><name>const</name> <name>char</name>*</type> <name>xml_encoding</name></decl>;</decl_stmt>
+  <decl_stmt><decl><type><name>const</name> <name>char</name>*</type> <name>src_encoding</name></decl>;</decl_stmt>
+  <decl_stmt><decl><type><name>const</name> <name>char</name>*</type> <name>to_directory</name></decl>;</decl_stmt>
+  <decl_stmt><decl><type><name>int</name></type> <name>unit</name></decl>;</decl_stmt>
+  <decl_stmt><decl><type><name>const</name> <name>char</name>*</type> <name>context</name></decl>;</decl_stmt>
+  <decl_stmt><decl><type><name>int</name></type> <name>nscount</name></decl>;</decl_stmt>
+  <decl_stmt><decl><type><name>const</name> <name>char</name>*</type> <name><name>ns</name><index>[<expr><name>MAXNS</name> + 1</expr>]</index></name></decl>;</decl_stmt>
+  <decl_stmt><decl><type><name>int</name></type> <name>omitnscount</name></decl>;</decl_stmt>
+  <decl_stmt><decl><type><name>const</name> <name>char</name> *</type> <name><name>omitns</name><index>[<expr><name>MAXNS</name> + 1</expr>]</index></name></decl>;</decl_stmt>
+  <decl_stmt><decl><type><name>int</name></type> <name>paramcount</name></decl>;</decl_stmt>
+  <decl_stmt><decl><type><name>const</name> <name>char</name>*</type> <name><name>params</name><index>[<expr><name>MAXPARAMS</name> * 2 + 1</expr>]</index></name></decl>;</decl_stmt>
+  <decl_stmt><decl><type><name>int</name></type> <name>transformcount</name></decl>;</decl_stmt>
+  <decl_stmt><decl><type><name>const</name> <name>char</name>*</type> <name><name>transforms</name><index>[<expr><name>MAXTRANSFORMS</name> + 1</expr>]</index></name></decl>;</decl_stmt>
+  <decl_stmt><decl><type><name>int</name></type> <name>registerextcount</name></decl>;</decl_stmt>
+  <decl_stmt><decl><type><name>const</name> <name>char</name>*</type> <name><name>registerext</name><index>[<expr><name>MAXPARAMS</name> * 2 + 1</expr>]</index></name></decl>;</decl_stmt>
+  <decl_stmt><decl><type><name>int</name></type> <name>registerfilescount</name></decl>;</decl_stmt>
+  <decl_stmt><decl><type><name>const</name> <name>char</name>*</type> <name><name>registerfiles</name><index>[<expr><name>MAXPARAMS</name> + 1</expr>]</index></name></decl>;</decl_stmt>
+</public>}</block></struct></type> <name>process_options</name>;</typedef>
+
+<comment type="line">// setup options and collect info from arguments</comment>
+<function_decl><type><name>int</name></type> <name>process_args</name><parameter_list>(<param><decl><type><name>int</name></type> <name>argc</name></decl></param>, <param><decl><type><name>char</name>*</type> <name><name>argv</name><index>[]</index></name></decl></param>, <param><decl><type><name>process_options</name> &amp;</type> <name>poptions</name></decl></param>)</parameter_list>;</function_decl>
+
+<comment type="line">// read and register xpath functions from a file</comment>
+<function_decl><type><name>void</name></type> <name>register_xpath_functions_from_filename</name><parameter_list>(<param><decl><type><name>const</name> <name>char</name> *</type> <name>filename</name></decl></param>)</parameter_list>;</function_decl>
+
+<function><type><name>int</name></type> <name>main</name><parameter_list>(<param><decl><type><name>int</name></type> <name>argc</name></decl></param>, <param><decl><type><name>char</name>*</type> <name><name>argv</name><index>[]</index></name></decl></param>)</parameter_list> <block>{
+
+  <decl_stmt><decl><type><name>xmlGenericErrorFunc</name></type> <name>handler</name> =<init> <expr>(<name>xmlGenericErrorFunc</name>) <name>libxml_error</name></expr></init></decl>;</decl_stmt>
+  <expr_stmt><expr><call><name>initGenericErrorDefaultFunc</name><argument_list>(<argument><expr>&amp;<name>handler</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+  <expr_stmt><expr><call><name>xmlRegisterDefaultInputCallbacks</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+  <if>if <condition>(<expr><call><name>xmlRegisterInputCallbacks</name><argument_list>(<argument><expr><name>archiveReadMatch</name></expr></argument>, <argument><expr><name>archiveReadOpen</name></expr></argument>, <argument><expr><name>archiveRead</name></expr></argument>, <argument><expr><name>archiveReadClose</name></expr></argument>)</argument_list></call> &lt; 0</expr>)</condition><then> <block>{
+    <expr_stmt><expr><call><name>fprintf</name><argument_list>(<argument><expr><name>stderr</name></expr></argument>, <argument><expr>"%s: failed to register archive handler\n"</expr></argument>, <argument><expr><name>PROGRAM_NAME</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>exit</name><argument_list>(<argument><expr>1</expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></then></if>
+  <comment type="block">/*
+  if (xmlRegisterOutputCallbacks(archiveWriteDiskMatch, archiveWriteDiskOpen, archiveWriteDisk, archiveWriteDiskClose) &lt; 0) {
+    fprintf(stderr, "%s: failed to register archive handler\n", PROGRAM_NAME);
+    exit(1);
+  }
+  */</comment>
+
+  <comment type="block">/* signal handling */</comment>
+
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><call><name>defined</name><argument_list>(<argument><expr><name>__GNUG__</name></expr></argument>)</argument_list></call> &amp;&amp; !<call><name>defined</name><argument_list>(<argument><expr><name>__MINGW32__</name></expr></argument>)</argument_list></call></expr></cpp:if>
+  <comment type="line">// signal to toggle verbose flag</comment>
+  <expr_stmt><expr><call><name><name>pstd</name>::<name>signal</name></name><argument_list>(<argument><expr><name>SIGUSR1</name></expr></argument>, <argument><expr><name>verbose_handler</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+
+  <decl_stmt><decl><type><name>int</name></type> <name>exit_status</name> =<init> <expr><name>EXIT_SUCCESS</name></expr></init></decl>;</decl_stmt>
+
+  <decl_stmt><decl><type><name>process_options</name></type> <name>poptions</name> =<init>
+    <expr><block>{
+     <expr>"-"</expr>,
+     <expr>0</expr>,
+     <expr>0</expr>,
+     <expr>0</expr>,
+     <expr><name>DEFAULT_TEXT_ENCODING</name></expr>,
+     <expr>0</expr>,
+     <expr>0</expr>,
+     <expr>"src:unit"</expr>,
+     <expr>0</expr>,
+     <expr><block>{ <expr>0</expr> }</block></expr>,
+     <expr>0</expr>,
+     <expr><block>{ <expr>0</expr> }</block></expr>,
+     <expr>0</expr>,
+     <expr><block>{ <expr>0</expr> }</block></expr>,
+     <expr>0</expr>,
+     <expr><block>{ <expr>0</expr> }</block></expr>,
+     <expr>0</expr>,
+     <expr><block>{ <expr>0</expr> }</block></expr>,
+     <expr>0</expr>,
+     <expr><block>{ <expr>0</expr> }</block></expr>
+  }</block></expr></init></decl>;</decl_stmt>
+
+  <comment type="line">// register default xpath extension functions</comment>
+  <expr_stmt><expr><call><name>xpathRegisterDefaultExtensionFunctions</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+  <comment type="line">// process command-line arguments</comment>
+  <decl_stmt><decl><type><name>int</name></type> <name>curarg</name> =<init> <expr><call><name>process_args</name><argument_list>(<argument><expr><name>argc</name></expr></argument>, <argument><expr><name>argv</name></expr></argument>, <argument><expr><name>poptions</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+  <comment type="line">// first command line parameter is input filename</comment>
+  <decl_stmt><decl><type><name>const</name> <name>char</name>*</type> <name>filename</name> =<init> <expr>"-"</expr></init></decl>;</decl_stmt>
+  <if>if <condition>(<expr><name>curarg</name> &lt; <name>argc</name></expr>)</condition><then> <block>{
+    <expr_stmt><expr><name>filename</name> = <name><name>argv</name><index>[<expr><name>curarg</name></expr>]</index></name></expr>;</expr_stmt>
+    <expr_stmt><expr>++<name>curarg</name></expr>;</expr_stmt>
+  }</block></then></if>
+
+  <comment type="block">/* Special checks for illegal combinations */</comment>
+
+  <comment type="line">// xml output and src-encoding (switch to encoding?)</comment>
+  <if>if <condition>(<expr><call><name>isoption</name><argument_list>(<argument><expr><name>options</name></expr></argument>, <argument><expr><name>OPTION_XML</name></expr></argument>)</argument_list></call> &amp;&amp; <call><name>isoption</name><argument_list>(<argument><expr><name>options</name></expr></argument>, <argument><expr><name>OPTION_SRC_ENCODING</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+
+    <expr_stmt><expr><call><name>fprintf</name><argument_list>(<argument><expr><name>stderr</name></expr></argument>, <argument><expr>"%s: Options for xml output and specifying source encoding are incompatible.\n"</expr></argument>, <argument><expr><name>PROGRAM_NAME</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>exit</name><argument_list>(<argument><expr><name>STATUS_INVALID_OPTION_COMBINATION</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></then></if>
+
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><call><name>defined</name><argument_list>(<argument><expr><name>__GNUG__</name></expr></argument>)</argument_list></call> &amp;&amp; !<call><name>defined</name><argument_list>(<argument><expr><name>__MINGW32__</name></expr></argument>)</argument_list></call></expr></cpp:if>
+  <comment type="line">// verify that a non-stdio direct output file is not the same as the input file</comment>
+  <if>if <condition>(<expr><call><name>strcmp</name><argument_list>(<argument><expr><name>filename</name></expr></argument>, <argument><expr>"-"</expr></argument>)</argument_list></call> != 0 &amp;&amp; <call><name>strcmp</name><argument_list>(<argument><expr><name>poptions</name>.<name>ofilename</name></expr></argument>, <argument><expr>"-"</expr></argument>)</argument_list></call> != 0</expr>)</condition><then> <block>{
+
+    <comment type="line">// input file</comment>
+    <decl_stmt><decl><type>struct <name>stat</name></type> <name>instat</name> =<init> <expr><block>{ <expr>0</expr> }</block></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><call><name>stat</name><argument_list>(<argument><expr><name>filename</name></expr></argument>, <argument><expr>&amp;<name>instat</name></expr></argument>)</argument_list></call> == -1</expr>)</condition><then> <block>{
+      <goto>goto <name>done</name>;</goto>
+    }</block></then></if>
+
+    <decl_stmt><decl><type>struct <name>stat</name></type> <name>outstat</name> =<init> <expr><block>{ <expr>0</expr> }</block></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><call><name>stat</name><argument_list>(<argument><expr><name>poptions</name>.<name>ofilename</name></expr></argument>, <argument><expr>&amp;<name>outstat</name></expr></argument>)</argument_list></call> == -1</expr>)</condition><then> <block>{
+      <goto>goto <name>done</name>;</goto>
+    }</block></then></if>
+
+    <if>if <condition>(<expr>(<call><name>strcmp</name><argument_list>(<argument><expr><name>poptions</name>.<name>ofilename</name></expr></argument>, <argument><expr>"-"</expr></argument>)</argument_list></call> != 0) &amp;&amp; <name>instat</name>.<name>st_ino</name> == <name>outstat</name>.<name>st_ino</name> &amp;&amp; <name>instat</name>.<name>st_dev</name> == <name>outstat</name>.<name>st_dev</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>fprintf</name><argument_list>(<argument><expr><name>stderr</name></expr></argument>, <argument><expr>"%s: Input file '%s' is the same as the output file '%s'\n"</expr></argument>, <argument><expr><name>PROGRAM_NAME</name></expr></argument>, <argument><expr><name>filename</name></expr></argument>, <argument><expr><name>poptions</name>.<name>ofilename</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>exit</name><argument_list>(<argument><expr><name>STATUS_INPUTFILE_PROBLEM</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></then></if>
+ <label><name>done</name>:</label>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+
+  <comment type="line">// info options are convenience functions for multiple options</comment>
+  <if>if <condition>(<expr><call><name>isoption</name><argument_list>(<argument><expr><name>options</name></expr></argument>, <argument><expr><name>OPTION_INFO</name></expr></argument>)</argument_list></call> || <call><name>isoption</name><argument_list>(<argument><expr><name>options</name></expr></argument>, <argument><expr><name>OPTION_LONG_INFO</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+    <expr_stmt><expr><name><name>optionorder</name><index>[<expr>0</expr>]</index></name> = <name>OPTION_XML_ENCODING</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>optionorder</name><index>[<expr>1</expr>]</index></name> = <name>OPTION_LANGUAGE</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>optionorder</name><index>[<expr>2</expr>]</index></name> = <name>OPTION_DIRECTORY</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>optionorder</name><index>[<expr>3</expr>]</index></name> = <name>OPTION_FILENAME</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name><name>optionorder</name><index>[<expr>4</expr>]</index></name> = <name>OPTION_VERSION</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>optioncount</name> = 5</expr>;</expr_stmt>
+
+    <expr_stmt><expr><name>options</name> |= <name>OPTION_NAMESPACE</name></expr>;</expr_stmt>
+  }</block></then></if>
+
+  <try>try <block>{
+
+    <comment type="line">// setup for processing</comment>
+    <decl_stmt><decl><type><name>srcMLUtility</name></type> <name>su</name><argument_list>(<argument><expr><name>filename</name></expr></argument>, <argument><expr><name>poptions</name>.<name>src_encoding</name></expr></argument>, <argument><expr><name>options</name></expr></argument>)</argument_list></decl>;</decl_stmt>
+
+    <comment type="line">// for options, there may be an output file</comment>
+    <expr_stmt><expr><name>output</name> = <name>stdout</name></expr>;</expr_stmt>
+    <if>if <condition>(<expr><call><name>strcmp</name><argument_list>(<argument><expr><name>poptions</name>.<name>ofilename</name></expr></argument>, <argument><expr>""</expr></argument>)</argument_list></call> != 0 &amp;&amp; (<call><name>strcmp</name><argument_list>(<argument><expr><name>poptions</name>.<name>ofilename</name></expr></argument>, <argument><expr>"-"</expr></argument>)</argument_list></call> != 0)</expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>output</name> = <call><name>fopen</name><argument_list>(<argument><expr><name>poptions</name>.<name>ofilename</name></expr></argument>, <argument><expr>"w"</expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <comment type="line">// list</comment>
+    <if>if <condition>(<expr><call><name>isoption</name><argument_list>(<argument><expr><name>options</name></expr></argument>, <argument><expr><name>OPTION_LIST</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+
+      <expr_stmt><expr><name>su</name>.<call><name>list</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+
+    <comment type="line">// process get attribute options</comment>
+    }</block></then> <else>else <if>if <condition>(<expr><name>optioncount</name> &gt; 0</expr>)</condition><then> <block>{
+
+      <if>if <condition>(<expr><call><name>isoption</name><argument_list>(<argument><expr><name>options</name></expr></argument>, <argument><expr><name>OPTION_LONG_INFO</name></expr></argument>)</argument_list></call></expr>)</condition><then>
+	<expr_stmt><expr><name>poptions</name>.<name>unit</name> = -1</expr>;</expr_stmt></then></if>
+
+      <comment type="line">// move to the appropriate unit and output the appropriate metadata</comment>
+      <expr_stmt><expr><name>su</name>.<call><name>move_to_unit</name><argument_list>(<argument><expr><name>poptions</name>.<name>unit</name></expr></argument>, <argument><expr><name>su</name></expr></argument>, <argument><expr><name>options</name></expr></argument>, <argument><expr><name>optioncount</name></expr></argument>, <argument><expr><name>optionorder</name></expr></argument>, <argument><expr><name>output</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <comment type="line">// now finish longinfo</comment>
+      <if>if <condition>(<expr><call><name>isoption</name><argument_list>(<argument><expr><name>options</name></expr></argument>, <argument><expr><name>OPTION_LONG_INFO</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+	<if>if <condition>(<expr>!<call><name>isoption</name><argument_list>(<argument><expr><name>options</name></expr></argument>, <argument><expr><name>OPTION_UNIT</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+	  <if>if <condition>(<expr><call><name>isatty</name><argument_list>(<argument><expr><call><name>fileno</name><argument_list>(<argument><expr><name>output</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then>
+            <expr_stmt><expr><call><name>fprintf</name><argument_list>(<argument><expr><name>output</name></expr></argument>, <argument><expr>"\r"</expr></argument>)</argument_list></call></expr>;</expr_stmt></then></if>
+
+          <expr_stmt><expr><call><name>fprintf</name><argument_list>(<argument><expr><name>output</name></expr></argument>, <argument><expr>"units=\"%d\"\n"</expr></argument>, <argument><expr><name>su</name>.<call><name>curunits</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	}</block></then></if>
+      }</block></then></if>
+
+    <comment type="line">// namespace</comment>
+    }</block></then> <else>else <if>if <condition>(<expr><call><name>isoption</name><argument_list>(<argument><expr><name>options</name></expr></argument>, <argument><expr><name>OPTION_NAMESPACE</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+
+      <expr_stmt><expr><name>su</name>.<call><name>move_to_unit</name><argument_list>(<argument><expr><name>poptions</name>.<name>unit</name></expr></argument>, <argument><expr><name>su</name></expr></argument>, <argument><expr><name>options</name></expr></argument>, <argument><expr><name>optioncount</name></expr></argument>, <argument><expr><name>optionorder</name></expr></argument>, <argument><expr><name>output</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <for>for (<init><decl><type><name>int</name></type> <name>i</name> =<init> <expr>0</expr></init></decl>;</init> <condition><expr><name>i</name> &lt; <name>poptions</name>.<name>nscount</name></expr>;</condition> <incr><expr>++<name>i</name></expr></incr>) <block>{
+	
+	<decl_stmt><decl><type><name>const</name> <name>char</name>*</type> <name>prefix</name> =<init> <expr><name>su</name>.<call><name>namespace_ext</name><argument_list>(<argument><expr><name>poptions</name>.<name><name>ns</name><index>[<expr><name>i</name></expr>]</index></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+	<if>if <condition>(<expr><name>prefix</name></expr>)</condition><then> <block>{
+	  <if>if <condition>(<expr><name>poptions</name>.<name>nscount</name> == 1</expr>)</condition><then>
+	    <expr_stmt><expr><call><name>fprintf</name><argument_list>(<argument><expr><name>output</name></expr></argument>, <argument><expr>"%s\n"</expr></argument>, <argument><expr><name>prefix</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></then>
+	  <else>else <block>{
+	    <expr_stmt><expr><call><name>fprintf</name><argument_list>(<argument><expr><name>output</name></expr></argument>, <argument><expr>"xmlns"</expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	    <if>if <condition>(<expr><name><name>prefix</name><index>[<expr>0</expr>]</index></name> != '\0'</expr>)</condition><then>
+	      <expr_stmt><expr><call><name>fprintf</name><argument_list>(<argument><expr><name>output</name></expr></argument>, <argument><expr>":%s"</expr></argument>, <argument><expr><name>prefix</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></then></if>
+	    <expr_stmt><expr><call><name>fprintf</name><argument_list>(<argument><expr><name>output</name></expr></argument>, <argument><expr>"=\"%s\"\n"</expr></argument>, <argument><expr><name>poptions</name>.<name><name>ns</name><index>[<expr><name>i</name></expr>]</index></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	  }</block></else></if>
+	}</block></then></if>
+      }</block></for>
+
+    <comment type="line">// process non-attribute options</comment>
+    }</block></then> <else>else <if>if <condition>(<expr><call><name>isoption</name><argument_list>(<argument><expr><name>options</name></expr></argument>, <argument><expr><name>OPTION_NESTED</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+
+<cpp:ifdef>#<cpp:directive>ifdef</cpp:directive> <name>__GNUG__</name></cpp:ifdef>
+      <comment type="line">// gracefully finish current file in srcML archive mode</comment>
+      <expr_stmt><expr><call><name><name>pstd</name>::<name>signal</name></name><argument_list>(<argument><expr><name>SIGINT</name></expr></argument>, <argument><expr><name>terminate_handler</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+      <comment type="line">// in verbose mode, the current counter is displayed</comment>
+      <comment type="line">// as it counts.  Need to overwrite this</comment>
+      <decl_stmt><decl><type><name>long</name></type> <name>count</name> =<init> <expr><name>su</name>.<call><name>unit_count</name><argument_list>(<argument><expr><name>output</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+
+      <if>if <condition>(<expr>!<call><name>isatty</name><argument_list>(<argument><expr><call><name>fileno</name><argument_list>(<argument><expr><name>output</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then>
+	<expr_stmt><expr><call><name>fprintf</name><argument_list>(<argument><expr><name>output</name></expr></argument>, <argument><expr>"%ld\n"</expr></argument>, <argument><expr><name>count</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></then></if>
+
+      <comment type="line">// if we terminated early, output the correct status</comment>
+      <if>if <condition>(<expr><call><name>isoption</name><argument_list>(<argument><expr><name>options</name></expr></argument>, <argument><expr><name>OPTION_TERMINATE</name></expr></argument>)</argument_list></call></expr>)</condition><then>
+	<expr_stmt><expr><name>exit_status</name> = <name>STATUS_TERMINATED</name></expr>;</expr_stmt></then></if>
+
+    }</block></then> <else>else <if>if <condition>(<expr><call><name>isoption</name><argument_list>(<argument><expr><name>options</name></expr></argument>, <argument><expr><name>OPTION_EXPAND</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+
+<cpp:ifdef>#<cpp:directive>ifdef</cpp:directive> <name>__GNUG__</name></cpp:ifdef>
+      <comment type="line">// gracefully finish current file in srcML archive mode</comment>
+      <expr_stmt><expr><call><name><name>pstd</name>::<name>signal</name></name><argument_list>(<argument><expr><name>SIGINT</name></expr></argument>, <argument><expr><name>terminate_handler</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+
+      <expr_stmt><expr><name>su</name>.<call><name>expand</name><argument_list>(<argument><expr><name>poptions</name>.<name>ofilename</name></expr></argument>, <argument><expr><name>poptions</name>.<name>output_format</name></expr></argument>, <argument><expr><name>poptions</name>.<name>to_directory</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <comment type="line">// if we terminated early, output the correct status</comment>
+      <if>if <condition>(<expr><call><name>isoption</name><argument_list>(<argument><expr><name>options</name></expr></argument>, <argument><expr><name>OPTION_TERMINATE</name></expr></argument>)</argument_list></call></expr>)</condition><then>
+	<expr_stmt><expr><name>exit_status</name> = <name>STATUS_TERMINATED</name></expr>;</expr_stmt></then></if>
+      <comment type="block">/*
+      while (curarg &lt; argc) {
+	fprintf(stderr, "ANOTHER: %s\n", argv[curarg]);
+	su.set_input_filename(argv[curarg]);
+	++curarg;
+
+	//	su.expand(poptions.ofilename, poptions.output_format, poptions.to_directory);
+      }
+	*/</comment>
+
+    }</block></then> <else>else <if>if <condition>(<expr><call><name>isoption</name><argument_list>(<argument><expr><name>options</name></expr></argument>, <argument><expr><name>OPTION_XML</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+
+      <expr_stmt><expr><name>su</name>.<call><name>extract_xml</name><argument_list>(<argument><expr><name>poptions</name>.<name>ofilename</name></expr></argument>, <argument><expr><name>poptions</name>.<name>unit</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    }</block></then> <else>else <if>if <condition>(<expr><call><name>isoption</name><argument_list>(<argument><expr><name>options</name></expr></argument>, <argument><expr><name>OPTION_XPATH</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+
+      <expr_stmt><expr><name>su</name>.<call><name>xpath</name><argument_list>(<argument><expr><name>poptions</name>.<name>ofilename</name></expr></argument>, <argument><expr><name>poptions</name>.<name>context</name></expr></argument>, <argument><expr><name>poptions</name>.<name>transforms</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    }</block></then> <else>else <if>if <condition>(<expr><call><name>isoption</name><argument_list>(<argument><expr><name>options</name></expr></argument>, <argument><expr><name>OPTION_XSLT</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+
+      <expr_stmt><expr><name>su</name>.<call><name>xslt</name><argument_list>(<argument><expr><name>poptions</name>.<name>context</name></expr></argument>, <argument><expr><name>poptions</name>.<name>ofilename</name></expr></argument>, <argument><expr><name>poptions</name>.<name>transforms</name></expr></argument>, <argument><expr><name>poptions</name>.<name>params</name></expr></argument>, <argument><expr><name>poptions</name>.<name>paramcount</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    }</block></then> <else>else <if>if <condition>(<expr><call><name>isoption</name><argument_list>(<argument><expr><name>options</name></expr></argument>, <argument><expr><name>OPTION_RELAXNG</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+
+      <expr_stmt><expr><name>su</name>.<call><name>relaxng</name><argument_list>(<argument><expr><name>poptions</name>.<name>ofilename</name></expr></argument>, <argument><expr><name>poptions</name>.<name>transforms</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+    }</block></then> <else>else <block>{
+
+      <decl_stmt><decl><type><name><name>std</name>::<name>string</name></name></type> <name>cfilename</name> =<init> <expr><name>poptions</name>.<name>ofilename</name></expr></init></decl>;</decl_stmt>
+      <if>if <condition>(<expr><name>poptions</name>.<name>output_format</name></expr>)</condition><then> <block>{
+        <expr_stmt><expr><name>cfilename</name> = "."</expr>;</expr_stmt>
+        <expr_stmt><expr><name>cfilename</name>.<call><name>append</name><argument_list>(<argument><expr><name>poptions</name>.<name>output_format</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <if>if <condition>(<expr>!<call><name>archiveWriteMatch_src2srcml</name><argument_list>(<argument><expr><name>cfilename</name>.<call><name>c_str</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then>
+
+        <expr_stmt><expr><name>su</name>.<call><name>extract_text</name><argument_list>(<argument><expr>0</expr></argument> <comment type="block">/* null to_directory */</comment>, <argument><expr><name>poptions</name>.<name>ofilename</name></expr></argument>, <argument><expr><name>poptions</name>.<name>unit</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></then>
+
+      <else>else <block>{
+
+<cpp:ifdef>#<cpp:directive>ifdef</cpp:directive> <name>__GNUG__</name></cpp:ifdef>
+        <comment type="line">// gracefully finish current file in srcML archive mode</comment>
+        <expr_stmt><expr><call><name><name>pstd</name>::<name>signal</name></name><argument_list>(<argument><expr><name>SIGINT</name></expr></argument>, <argument><expr><name>terminate_handler</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+
+        <expr_stmt><expr><name>su</name>.<call><name>expand</name><argument_list>(<argument><expr><name>poptions</name>.<name>ofilename</name></expr></argument>, <argument><expr><name>poptions</name>.<name>output_format</name></expr></argument>, <argument><expr>""</expr></argument> <comment type="block">/* blank to_directory */</comment>)</argument_list></call></expr>;</expr_stmt>
+
+        <comment type="line">// if we terminated early, output the correct status</comment>
+        <if>if <condition>(<expr><call><name>isoption</name><argument_list>(<argument><expr><name>options</name></expr></argument>, <argument><expr><name>OPTION_TERMINATE</name></expr></argument>)</argument_list></call></expr>)</condition><then>
+          <expr_stmt><expr><name>exit_status</name> = <name>STATUS_TERMINATED</name></expr>;</expr_stmt></then></if>
+
+      }</block></else></if>
+    }</block></else></if></else></if></else></if></else></if></else></if></else></if></else></if></else></if></else></if>
+
+  }</block></try> <catch>catch (<param><decl><type><name>const</name> <name>OutOfRangeUnitError</name>&amp;</type> <name>e</name></decl></param>) <block>{
+
+    <expr_stmt><expr><call><name>fprintf</name><argument_list>(<argument><expr><name>stderr</name></expr></argument>, <argument><expr>"%s: unit %d  was selected from srcML that only contains "
+	    "%d units\n"</expr></argument>, <argument><expr><name>PROGRAM_NAME</name></expr></argument>, <argument><expr><name>poptions</name>.<name>unit</name></expr></argument>, <argument><expr><name>e</name>.<name>size</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>exit_status</name> = <name>STATUS_UNIT_INVALID</name></expr>;</expr_stmt>
+
+    <return>return <expr><name>exit_status</name></expr>;</return>
+    <comment type="block">/*
+  } catch (LibXMLError) {
+    exit_status = STATUS_UNIT_INVALID;
+    throw "XML error";
+    */</comment>
+  }</block></catch> <catch>catch (<param><decl><type><name>TerminateLibXMLError</name></type> <name>error</name></decl></param>) <block>{
+
+    <expr_stmt><expr><call><name>fprintf</name><argument_list>(<argument><expr><name>stderr</name></expr></argument>, <argument><expr>"%s:  Program terminated by user\n"</expr></argument>, <argument><expr><name>PROGRAM_NAME</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><name>exit_status</name> = <name>STATUS_TERMINATED</name></expr>;</expr_stmt>
+
+    <return>return <expr><name>exit_status</name></expr>;</return>
+
+  }</block></catch> <catch>catch (<param><decl><type><name>LibXMLError</name></type> <name>error</name></decl></param>) <block>{
+
+    <if>if <condition>(<expr><name>error</name>.<call><name>getErrorNum</name><argument_list>()</argument_list></call> == 0</expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>exit_status</name> = <name>STATUS_INPUTFILE_PROBLEM</name></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>fprintf</name><argument_list>(<argument><expr><name>stderr</name></expr></argument>, <argument><expr>"%s: Unable to open input file as XML\n"</expr></argument>, <argument><expr><name>PROGRAM_NAME</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+  }</block></catch> <catch>catch (<param><decl><type><name>const</name> <name>char</name>*</type> <name>s</name></decl></param>) <block>{
+
+    <expr_stmt><expr><call><name>fprintf</name><argument_list>(<argument><expr><name>stderr</name></expr></argument>, <argument><expr>"%s: %s\n"</expr></argument>, <argument><expr><name>PROGRAM_NAME</name></expr></argument>, <argument><expr><name>s</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <if>if <condition>(<expr>!<name>exit_status</name></expr>)</condition><then>
+      <expr_stmt><expr><name>exit_status</name> = <name>STATUS_ERROR</name></expr>;</expr_stmt></then></if>
+  }</block></catch> <catch>catch (<param><decl><type>...</type></decl></param>) <block>{
+    <if>if <condition>(<expr>!<name>exit_status</name></expr>)</condition><then>
+      <expr_stmt><expr><name>exit_status</name> = <name>STATUS_ERROR</name></expr>;</expr_stmt></then></if>
+  }</block></catch>
+
+  <return>return <expr><name>exit_status</name></expr>;</return>
+}</block></function>
+
+<comment type="line">// setup options and collect info from arguments</comment>
+<function><type><name>int</name></type> <name>process_args</name><parameter_list>(<param><decl><type><name>int</name></type> <name>argc</name></decl></param>, <param><decl><type><name>char</name>*</type> <name><name>argv</name><index>[]</index></name></decl></param>, <param><decl><type><name>process_options</name> &amp;</type> <name>poptions</name></decl></param>)</parameter_list>
+<block>{
+  <decl_stmt><decl><type><name>int</name></type> <name>curoption</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+  <decl_stmt><decl><type>struct <name>option</name></type> <name><name>cliargs</name><index>[]</index></name> =<init> <expr><block>{
+    <expr><block>{ <expr><name>HELP_FLAG</name></expr>, <expr><name>no_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>HELP_FLAG_SHORT</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>VERSION_FLAG</name></expr>, <expr><name>no_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>VERSION_FLAG_SHORT</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>OUTPUT_FLAG</name></expr>, <expr><name>required_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>OUTPUT_FLAG_SHORT</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>FILENAME_FLAG</name></expr>, <expr><name>no_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>FILENAME_FLAG_SHORT</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>DIRECTORY_FLAG</name></expr>, <expr><name>no_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>DIRECTORY_FLAG_SHORT</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>LANGUAGE_FLAG</name></expr>, <expr><name>no_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>LANGUAGE_FLAG_SHORT</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>SRCVERSION_FLAG</name></expr>, <expr><name>no_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>SRCVERSION_FLAG_SHORT</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>ENCODING_FLAG</name></expr>, <expr><name>optional_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>ENCODING_FLAG_SHORT</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>NESTED_FLAG</name></expr>, <expr><name>no_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>NESTED_FLAG_SHORT</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>INFO_FLAG</name></expr>, <expr><name>no_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>INFO_FLAG_SHORT</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>LONG_INFO_FLAG</name></expr>, <expr><name>no_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>LONG_INFO_FLAG_SHORT</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>EXPAND_FLAG</name></expr>, <expr><name>required_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>EXPAND_FLAG_SHORT</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>VERBOSE_FLAG</name></expr>, <expr><name>no_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>VERBOSE_FLAG_SHORT</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>XML_FLAG</name></expr>, <expr><name>no_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>XML_FLAG_SHORT</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>COMPRESSED_FLAG</name></expr>, <expr><name>no_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>COMPRESSED_FLAG_SHORT</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>UNIT_FLAG</name></expr>, <expr><name>required_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>UNIT_FLAG_SHORT</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>SRC_ENCODING_FLAG</name></expr>, <expr><name>required_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>SRC_ENCODING_FLAG_SHORT</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>NAMESPACE_FLAG</name></expr>, <expr><name>required_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>NAMESPACE_FLAG_SHORT</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>OMIT_FLAG</name></expr>, <expr><name>required_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>OMIT_FLAG_SHORT</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>QUIET_FLAG</name></expr>, <expr><name>no_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>QUIET_FLAG_SHORT</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>NO_XML_DECLARATION_FLAG</name></expr>, <expr><name>no_argument</name></expr>, <expr>&amp;<name>curoption</name></expr>, <expr><name>OPTION_XMLDECL</name> | <name>OPTION_XML</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>NO_NAMESPACE_DECLARATION_FLAG</name></expr>, <expr><name>no_argument</name></expr>, <expr>&amp;<name>curoption</name></expr>, <expr><name>OPTION_NAMESPACEDECL</name> | <name>OPTION_XML</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>SETTINGS_FLAG</name></expr>, <expr><name>no_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>SETTINGS_FLAG_CODE</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>FEATURES_FLAG</name></expr>, <expr><name>no_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>FEATURES_FLAG_CODE</name></expr> }</block></expr>,
+    <comment type="line">//    { INPUT_FORMAT_FLAG, required_argument, NULL, INPUT_FORMAT_FLAG_CODE },</comment>
+    <comment type="line">//    { OUTPUT_FORMAT_FLAG, required_argument, NULL, OUTPUT_FORMAT_FLAG_CODE },</comment>
+    <expr><block>{ <expr><name>LIST_FLAG</name></expr>, <expr><name>no_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>LIST_FLAG_CODE</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>REGISTER_EXTENSION_FLAG</name></expr>, <expr><name>required_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>REGISTER_EXTENSION_FLAG_CODE</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>REGISTER_EXTENSION_FILE_FLAG</name></expr>, <expr><name>required_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>REGISTER_EXTENSION_FILE_FLAG_CODE</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>REGISTER_EXTENSION_FUNCTION_FLAG</name></expr>, <expr><name>required_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>REGISTER_EXTENSION_FUNCTION_FLAG_CODE</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>REGISTER_EXTENSION_FUNCTION_FILE_FLAG</name></expr>, <expr><name>required_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>REGISTER_EXTENSION_FUNCTION_FILE_FLAG_CODE</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>EOL_FLAG</name></expr>, <expr><name>required_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>EOL_FLAG_CODE</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>XPATH_FLAG</name></expr>, <expr><name>required_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>XPATH_FLAG_CODE</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>XSLT_FLAG</name></expr>, <expr><name>required_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>XSLT_FLAG_CODE</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>PARAM_FLAG</name></expr>, <expr><name>required_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>PARAM_FLAG_CODE</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>STRING_PARAM_FLAG</name></expr>, <expr><name>required_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>STRING_PARAM_FLAG_CODE</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>RELAXNG_FLAG</name></expr>, <expr><name>required_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>RELAXNG_FLAG_CODE</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>XSLT_ALL_FLAG</name></expr>, <expr><name>no_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>XSLT_ALL_FLAG_CODE</name></expr> }</block></expr>,
+    <comment type="line">//    { CONTEXT_FLAG, required_argument, NULL, 'C' },</comment>
+    <expr><block>{ <expr>0</expr>, <expr>0</expr>, <expr>0</expr>, <expr>0</expr> }</block></expr>
+  }</block></expr></init></decl>;</decl_stmt>
+
+  <while>while <condition>(<expr>1</expr>)</condition> <block>{
+    <decl_stmt><decl><type><name>int</name></type> <name>lastoptind</name> =<init> <expr><name>optind</name></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><name>curoption</name> = 0</expr>;</expr_stmt>
+    <decl_stmt><decl><type><name>int</name></type> <name>option_index</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>int</name></type> <name>c</name> =<init> <expr><call><name>getopt_long</name><argument_list>(<argument><expr><name>argc</name></expr></argument>, <argument><expr><name>argv</name></expr></argument>, <argument><expr>"hVo:fdlsxniLa:vXzU:t:p:"</expr></argument>, <argument><expr><name>cliargs</name></expr></argument>, <argument><expr>&amp;<name>option_index</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <if>if <condition>(<expr><name>c</name> == -1</expr>)</condition><then>
+      <break>break;</break></then></if>
+
+    <if>if <condition>(<expr><name>curoption</name></expr>)</condition><then> <block>{
+      <expr_stmt><expr><name>options</name> |= <name>curoption</name></expr>;</expr_stmt>
+      <continue>continue;</continue>
+    }</block></then></if>
+
+    <comment type="line">// missing or extra option argument</comment>
+    <if>if <condition>(<expr><name>c</name> == '?'</expr>)</condition><then> <block>{
+      <expr_stmt><expr><call><name>fprintf</name><argument_list>(<argument><expr><name>stderr</name></expr></argument>, <argument><expr>"Try '%s --%s' for more information.\n"</expr></argument>, <argument><expr><name>PROGRAM_NAME</name></expr></argument>, <argument><expr><name>HELP_FLAG</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>exit</name><argument_list>(<argument><expr><call><name>option_error_status</name><argument_list>(<argument><expr><name>optopt</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+
+    <decl_stmt><decl><type><name>char</name>*</type> <name>end</name> =<init> <expr>0</expr></init></decl>;</decl_stmt>
+    <switch>switch<condition>(<expr><name>c</name></expr>)</condition> <block>{
+
+    <case>case <expr><name>HELP_FLAG_SHORT</name></expr>:
+      <expr_stmt><expr><call><name>output_help</name><argument_list>(<argument><expr><name>PROGRAM_NAME</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>exit</name><argument_list>(<argument><expr><name>STATUS_SUCCESS</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <break>break;</break>
+
+    </case><case>case <expr><name>VERSION_FLAG_SHORT</name></expr>:
+      <expr_stmt><expr><call><name>output_version</name><argument_list>(<argument><expr><name>PROGRAM_NAME</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>exit</name><argument_list>(<argument><expr><name>STATUS_SUCCESS</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <break>break;</break>
+
+    </case><case>case <expr><name>OUTPUT_FLAG_SHORT</name></expr>:
+      <expr_stmt><expr><name>poptions</name>.<name>ofilename</name> = <name>optarg</name></expr>;</expr_stmt>
+      <break>break;</break>
+
+    </case><case>case <expr><name>FILENAME_FLAG_SHORT</name></expr>:
+      <expr_stmt><expr><name>options</name> |= <name>OPTION_FILENAME</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>optionorder</name><index>[<expr><name>optioncount</name>++</expr>]</index></name> = <name>OPTION_FILENAME</name></expr>;</expr_stmt>
+      <break>break;</break>
+
+    </case><case>case <expr><name>DIRECTORY_FLAG_SHORT</name></expr>:
+      <expr_stmt><expr><name>options</name> |= <name>OPTION_DIRECTORY</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>optionorder</name><index>[<expr><name>optioncount</name>++</expr>]</index></name> = <name>OPTION_DIRECTORY</name></expr>;</expr_stmt>
+      <break>break;</break>
+
+    </case><case>case <expr><name>SRCVERSION_FLAG_SHORT</name></expr>:
+      <expr_stmt><expr><name>options</name> |= <name>OPTION_VERSION</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>optionorder</name><index>[<expr><name>optioncount</name>++</expr>]</index></name> = <name>OPTION_VERSION</name></expr>;</expr_stmt>
+      <break>break;</break>
+
+    </case><case>case <expr><name>LANGUAGE_FLAG_SHORT</name></expr>:
+      <expr_stmt><expr><name>options</name> |= <name>OPTION_LANGUAGE</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>optionorder</name><index>[<expr><name>optioncount</name>++</expr>]</index></name> = <name>OPTION_LANGUAGE</name></expr>;</expr_stmt>
+      <break>break;</break>
+
+    </case><case>case <expr><name>ENCODING_FLAG_SHORT</name></expr>:
+      <expr_stmt><expr><name>options</name> |= <name>OPTION_XML_ENCODING</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name><name>optionorder</name><index>[<expr><name>optioncount</name>++</expr>]</index></name> = <name>OPTION_XML_ENCODING</name></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name>poptions</name>.<name>xml_encoding</name> = <name>optarg</name></expr>;</expr_stmt>
+      <break>break;</break>
+
+    </case><case>case <expr><name>SRC_ENCODING_FLAG_SHORT</name></expr>:
+
+      <comment type="line">// check for missing argument confused by an argument that looks like an option</comment>
+      <expr_stmt><expr><call><name>checkargisoption</name><argument_list>(<argument><expr><name>PROGRAM_NAME</name></expr></argument>, <argument><expr><name><name>argv</name><index>[<expr><name>lastoptind</name></expr>]</index></name></expr></argument>, <argument><expr><name>optarg</name></expr></argument>, <argument><expr><name>optind</name></expr></argument>, <argument><expr><name>lastoptind</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name>options</name> |= <name>OPTION_SRC_ENCODING</name></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name>poptions</name>.<name>src_encoding</name> = <name>optarg</name></expr>;</expr_stmt>
+
+      <comment type="line">// validate source encoding</comment>
+      <if>if <condition>(<expr>!<call><name><name>srcMLUtility</name>::<name>checkEncoding</name></name><argument_list>(<argument><expr><name>poptions</name>.<name>src_encoding</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+	<expr_stmt><expr><call><name>fprintf</name><argument_list>(<argument><expr><name>stderr</name></expr></argument>, <argument><expr>"%s: text encoding \"%s\" is not supported.\n"</expr></argument>, <argument><expr><name>PROGRAM_NAME</name></expr></argument>, <argument><expr><name>poptions</name>.<name>src_encoding</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	<expr_stmt><expr><call><name>exit</name><argument_list>(<argument><expr><name>STATUS_UNKNOWN_ENCODING</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+      <break>break;</break>
+
+    </case><case>case <expr><name>NAMESPACE_FLAG_SHORT</name></expr>:
+
+      <comment type="line">// check for missing argument confused by an argument that looks like an option</comment>
+      <expr_stmt><expr><call><name>checkargisoption</name><argument_list>(<argument><expr><name>PROGRAM_NAME</name></expr></argument>, <argument><expr><name><name>argv</name><index>[<expr><name>lastoptind</name></expr>]</index></name></expr></argument>, <argument><expr><name>optarg</name></expr></argument>, <argument><expr><name>optind</name></expr></argument>, <argument><expr><name>lastoptind</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name>options</name> |= <name>OPTION_NAMESPACE</name></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name>poptions</name>.<name><name>ns</name><index>[<expr><name>poptions</name>.<name>nscount</name>++</expr>]</index></name> = <name>optarg</name></expr>;</expr_stmt>
+      <break>break;</break>
+
+    </case><case>case <expr><name>OMIT_FLAG_SHORT</name></expr>:
+
+      <comment type="line">// check for missing argument confused by an argument that looks like an option</comment>
+      <expr_stmt><expr><call><name>checkargisoption</name><argument_list>(<argument><expr><name>PROGRAM_NAME</name></expr></argument>, <argument><expr><name><name>argv</name><index>[<expr><name>lastoptind</name></expr>]</index></name></expr></argument>, <argument><expr><name>optarg</name></expr></argument>, <argument><expr><name>optind</name></expr></argument>, <argument><expr><name>lastoptind</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name>options</name> |= <name>OPTION_OMIT</name></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name>poptions</name>.<name><name>omitns</name><index>[<expr><name>poptions</name>.<name>omitnscount</name>++</expr>]</index></name> = <name>optarg</name></expr>;</expr_stmt>
+      <break>break;</break>
+
+    </case><case>case <expr><name>QUIET_FLAG_SHORT</name></expr>:
+      <expr_stmt><expr><name>options</name> |= <name>OPTION_QUIET</name></expr>;</expr_stmt>
+      <break>break;</break>
+
+    </case><case>case <expr><name>NESTED_FLAG_SHORT</name></expr>:
+      <expr_stmt><expr><name>options</name> |= <name>OPTION_NESTED</name></expr>;</expr_stmt>
+      <break>break;</break>
+
+    </case><case>case <expr><name>INFO_FLAG_SHORT</name></expr>:
+      <expr_stmt><expr><name>options</name> |= <name>OPTION_INFO</name></expr>;</expr_stmt>
+      <break>break;</break>
+
+    </case><case>case <expr><name>LONG_INFO_FLAG_SHORT</name></expr>:
+      <expr_stmt><expr><name>options</name> |= <name>OPTION_LONG_INFO</name></expr>;</expr_stmt>
+      <break>break;</break>
+
+    </case><case>case <expr><name>EXPAND_FLAG_SHORT</name></expr>:
+
+      <comment type="line">// check for missing argument confused by an argument that looks like an option</comment>
+      <expr_stmt><expr><call><name>checkargisoption</name><argument_list>(<argument><expr><name>PROGRAM_NAME</name></expr></argument>, <argument><expr><name><name>argv</name><index>[<expr><name>lastoptind</name></expr>]</index></name></expr></argument>, <argument><expr><name>optarg</name></expr></argument>, <argument><expr><name>optind</name></expr></argument>, <argument><expr><name>lastoptind</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name>options</name> |= <name>OPTION_EXPAND</name></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name>poptions</name>.<name>to_directory</name> = <name>optarg</name></expr>;</expr_stmt>
+      <break>break;</break>
+
+    </case><case>case <expr><name>VERBOSE_FLAG_SHORT</name></expr>:
+      <expr_stmt><expr><name>options</name> |= <name>OPTION_VERBOSE</name></expr>;</expr_stmt>
+      <break>break;</break>
+
+    </case><case>case <expr><name>XML_FLAG_SHORT</name></expr>:
+      <expr_stmt><expr><name>options</name> |= <name>OPTION_XML</name></expr>;</expr_stmt>
+      <break>break;</break>
+
+    </case><case>case <expr><name>COMPRESSED_FLAG_SHORT</name></expr>:
+      <expr_stmt><expr><name>options</name> |= <name>OPTION_COMPRESSED</name></expr>;</expr_stmt>
+      <break>break;</break>
+
+    </case><case>case <expr><name>UNIT_FLAG_SHORT</name></expr>:
+
+      <comment type="line">// check for missing argument confused by an argument that looks like an option</comment>
+      <expr_stmt><expr><call><name>checkargisoption</name><argument_list>(<argument><expr><name>PROGRAM_NAME</name></expr></argument>, <argument><expr><name><name>argv</name><index>[<expr><name>lastoptind</name></expr>]</index></name></expr></argument>, <argument><expr><name>optarg</name></expr></argument>, <argument><expr><name>optind</name></expr></argument>, <argument><expr><name>lastoptind</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><name>options</name> |= <name>OPTION_UNIT</name></expr>;</expr_stmt>
+
+      <comment type="line">// try to convert to number</comment>
+      <expr_stmt><expr><name>poptions</name>.<name>unit</name> = <call><name><name>pstd</name>::<name>strtol</name></name><argument_list>(<argument><expr><name>optarg</name></expr></argument>, <argument><expr>&amp;<name>end</name></expr></argument>, <argument><expr>10</expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <comment type="line">// validate type of unit number</comment>
+      <if>if <condition>(<expr><name>errno</name> == <name>EINVAL</name> || <call><name>strlen</name><argument_list>(<argument><expr><name>end</name></expr></argument>)</argument_list></call> == <call><name>strlen</name><argument_list>(<argument><expr><name>optarg</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+	<expr_stmt><expr><call><name>fprintf</name><argument_list>(<argument><expr><name>stderr</name></expr></argument>, <argument><expr>"%s: unit option value \"%s\" must be numeric.\n"</expr></argument>, <argument><expr><name>PROGRAM_NAME</name></expr></argument>, <argument><expr><name>optarg</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	<expr_stmt><expr><call><name>exit</name><argument_list>(<argument><expr><name>STATUS_UNIT_INVALID</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <comment type="line">// validate range of unit number</comment>
+      <if>if <condition>(<expr><name>poptions</name>.<name>unit</name> &lt;= 0</expr>)</condition><then> <block>{
+	<expr_stmt><expr><call><name>fprintf</name><argument_list>(<argument><expr><name>stderr</name></expr></argument>, <argument><expr>"%s: unit option value \"%d\" must be &gt; 0.\n"</expr></argument>, <argument><expr><name>PROGRAM_NAME</name></expr></argument>, <argument><expr><name>poptions</name>.<name>unit</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	<expr_stmt><expr><call><name>exit</name><argument_list>(<argument><expr><name>STATUS_UNIT_INVALID</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <break>break;</break>
+
+    </case><case>case <expr><name>SETTINGS_FLAG_CODE</name></expr> :
+      <expr_stmt><expr><call><name>output_settings</name><argument_list>(<argument><expr><name>PROGRAM_NAME</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>exit</name><argument_list>(<argument><expr><name>STATUS_SUCCESS</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <break>break;</break>
+
+    </case><case>case <expr><name>FEATURES_FLAG_CODE</name></expr> :
+      <expr_stmt><expr><call><name>output_features</name><argument_list>(<argument><expr><name>PROGRAM_NAME</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>exit</name><argument_list>(<argument><expr><name>STATUS_SUCCESS</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <break>break;</break>
+      <comment type="block">/*
+    case INPUT_FORMAT_FLAG_CODE:
+
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
+
+      options |= OPTION_INPUT_FORMAT;
+      poptions.input_format = optarg;
+      break;
+      */</comment>
+      <comment type="block">/*
+    case OUTPUT_FORMAT_FLAG_CODE:
+
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
+
+      options |= OPTION_OUTPUT_FORMAT;
+      poptions.output_format = optarg;
+      break;
+      */</comment>
+    </case><case>case <expr><name>LIST_FLAG_CODE</name></expr> :
+      <expr_stmt><expr><name>options</name> |= <name>OPTION_LIST</name></expr>;</expr_stmt>
+      <break>break;</break>
+
+    </case><case>case <expr><name>REGISTER_EXTENSION_FLAG_CODE</name></expr> :
+
+      <comment type="line">// check for missing argument confused by an argument that looks like an option</comment>
+      <expr_stmt><expr><call><name>checkargisoption</name><argument_list>(<argument><expr><name>PROGRAM_NAME</name></expr></argument>, <argument><expr><name><name>argv</name><index>[<expr><name>lastoptind</name></expr>]</index></name></expr></argument>, <argument><expr><name>optarg</name></expr></argument>, <argument><expr><name>optind</name></expr></argument>, <argument><expr><name>lastoptind</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <comment type="line">// register extension name</comment>
+      <expr_stmt><expr><name>poptions</name>.<name><name>registerext</name><index>[<expr><name>poptions</name>.<name>registerextcount</name>++</expr>]</index></name> = <name>optarg</name></expr>;</expr_stmt>
+
+      <comment type="line">// must be both name and value, but value could be empty</comment>
+      <if>if <condition>(<expr>!<call><name>strchr</name><argument_list>(<argument><expr><name>optarg</name></expr></argument>, <argument><expr>'='</expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+	<expr_stmt><expr><call><name>fprintf</name><argument_list>(<argument><expr><name>stderr</name></expr></argument>, <argument><expr>"%s: Register extension name and value must be given.\n"</expr></argument>, <argument><expr><name>PROGRAM_NAME</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	<expr_stmt><expr><call><name>exit</name><argument_list>(<argument><expr>1</expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <comment type="line">// registerext value</comment>
+      <expr_stmt><expr><name>end</name> = <name>optarg</name></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>strsep</name><argument_list>(<argument><expr>&amp;<name>end</name></expr></argument>, <argument><expr>"="</expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name>poptions</name>.<name><name>registerext</name><index>[<expr><name>poptions</name>.<name>registerextcount</name></expr>]</index></name> = (<name>char</name>*) <call><name>malloc</name><argument_list>(<argument><expr><call><name>strlen</name><argument_list>(<argument><expr><name>end</name></expr></argument>)</argument_list></call> + 1</expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>strcpy</name><argument_list>(<argument><expr>(<name>char</name> *) <name>poptions</name>.<name><name>registerext</name><index>[<expr><name>poptions</name>.<name>registerextcount</name></expr>]</index></name></expr></argument>, <argument><expr><name>end</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name>poptions</name>.<name>registerextcount</name>++</expr>;</expr_stmt>
+      <break>break;</break>
+
+    </case><case>case <expr><name>REGISTER_EXTENSION_FILE_FLAG_CODE</name></expr> :
+
+      <comment type="line">// check for missing argument confused by an argument that looks like an option</comment>
+      <expr_stmt><expr><call><name>checkargisoption</name><argument_list>(<argument><expr><name>PROGRAM_NAME</name></expr></argument>, <argument><expr><name><name>argv</name><index>[<expr><name>lastoptind</name></expr>]</index></name></expr></argument>, <argument><expr><name>optarg</name></expr></argument>, <argument><expr><name>optind</name></expr></argument>, <argument><expr><name>lastoptind</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <comment type="line">// register files name</comment>
+      <expr_stmt><expr><name>poptions</name>.<name><name>registerfiles</name><index>[<expr><name>poptions</name>.<name>registerfilescount</name>++</expr>]</index></name> = <name>optarg</name></expr>;</expr_stmt>
+      <break>break;</break>
+
+    </case><case>case <expr><name>REGISTER_EXTENSION_FUNCTION_FLAG_CODE</name></expr> :
+
+      <comment type="line">// check for missing argument confused by an argument that looks like an option</comment>
+      <expr_stmt><expr><call><name>checkargisoption</name><argument_list>(<argument><expr><name>PROGRAM_NAME</name></expr></argument>, <argument><expr><name><name>argv</name><index>[<expr><name>lastoptind</name></expr>]</index></name></expr></argument>, <argument><expr><name>optarg</name></expr></argument>, <argument><expr><name>optind</name></expr></argument>, <argument><expr><name>lastoptind</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <comment type="line">// must be both name and value, but value could be empty</comment>
+      <if>if <condition>(<expr>!<call><name>strchr</name><argument_list>(<argument><expr><name>optarg</name></expr></argument>, <argument><expr>'='</expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+	<expr_stmt><expr><call><name>fprintf</name><argument_list>(<argument><expr><name>stderr</name></expr></argument>, <argument><expr>"%s: Register extension function name and value must be given.\n"</expr></argument>, <argument><expr><name>PROGRAM_NAME</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	<expr_stmt><expr><call><name>exit</name><argument_list>(<argument><expr>1</expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <comment type="line">// register xpath extension function</comment>
+      <expr_stmt><expr><name>end</name> = <name>optarg</name></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>strsep</name><argument_list>(<argument><expr>&amp;<name>end</name></expr></argument>, <argument><expr>"="</expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <expr_stmt><expr><call><name>xpathRegisterExtensionFunction</name><argument_list>(<argument><expr><name>optarg</name></expr></argument>, <argument><expr><name>end</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <break>break;</break>
+
+    </case><case>case <expr><name>REGISTER_EXTENSION_FUNCTION_FILE_FLAG_CODE</name></expr> :
+
+      <comment type="line">// check for missing argument confused by an argument that looks like an option</comment>
+      <expr_stmt><expr><call><name>checkargisoption</name><argument_list>(<argument><expr><name>PROGRAM_NAME</name></expr></argument>, <argument><expr><name><name>argv</name><index>[<expr><name>lastoptind</name></expr>]</index></name></expr></argument>, <argument><expr><name>optarg</name></expr></argument>, <argument><expr><name>optind</name></expr></argument>, <argument><expr><name>lastoptind</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <comment type="line">// register files name</comment>
+      <expr_stmt><expr><call><name>register_xpath_functions_from_filename</name><argument_list>(<argument><expr><name>optarg</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <break>break;</break>
+
+    </case><case>case <expr><name>EOL_FLAG_CODE</name></expr> :
+
+      <comment type="line">// check for missing argument confused by an argument that looks like an option</comment>
+      <expr_stmt><expr><call><name>checkargisoption</name><argument_list>(<argument><expr><name>PROGRAM_NAME</name></expr></argument>, <argument><expr><name><name>argv</name><index>[<expr><name>lastoptind</name></expr>]</index></name></expr></argument>, <argument><expr><name>optarg</name></expr></argument>, <argument><expr><name>optind</name></expr></argument>, <argument><expr><name>lastoptind</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <comment type="line">// TODO: Handle end of line parameter</comment>
+      <break>break;</break>
+
+    </case><case>case <expr><name>XPATH_FLAG_CODE</name></expr>:
+
+      <comment type="line">// check for missing argument confused by an argument that looks like an option</comment>
+      <expr_stmt><expr><call><name>checkargisoption</name><argument_list>(<argument><expr><name>PROGRAM_NAME</name></expr></argument>, <argument><expr><name><name>argv</name><index>[<expr><name>lastoptind</name></expr>]</index></name></expr></argument>, <argument><expr><name>optarg</name></expr></argument>, <argument><expr><name>optind</name></expr></argument>, <argument><expr><name>lastoptind</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <comment type="line">// check for blank argument</comment>
+      <expr_stmt><expr><call><name>checkargisnonempty</name><argument_list>(<argument><expr><name>PROGRAM_NAME</name></expr></argument>, <argument><expr><name><name>argv</name><index>[<expr><name>lastoptind</name></expr>]</index></name></expr></argument>, <argument><expr><name>optarg</name></expr></argument>, <argument><expr><name>optind</name></expr></argument>, <argument><expr><name>lastoptind</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if<condition>(<expr><name>poptions</name>.<name>transformcount</name> != 0</expr>)</condition><then>
+      <block>{
+	<expr_stmt><expr><call><name>fprintf</name><argument_list>(<argument><expr><name>stderr</name></expr></argument>, <argument><expr>"%s: Only one xpath expression, xslt file, or relaxng file may be used.\n"</expr></argument>, <argument><expr><name>PROGRAM_NAME</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	<expr_stmt><expr><call><name>exit</name><argument_list>(<argument><expr><name>STATUS_ERROR</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <expr_stmt><expr><name>options</name> |= <name>OPTION_XPATH</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name>poptions</name>.<name><name>transforms</name><index>[<expr><name>poptions</name>.<name>transformcount</name>++</expr>]</index></name> = <name>optarg</name></expr>;</expr_stmt>
+      <break>break;</break>
+
+    </case><case>case <expr><name>XSLT_FLAG_CODE</name></expr>:
+
+      <comment type="line">// check for missing argument confused by an argument that looks like an option</comment>
+      <expr_stmt><expr><call><name>checkargisoption</name><argument_list>(<argument><expr><name>PROGRAM_NAME</name></expr></argument>, <argument><expr><name><name>argv</name><index>[<expr><name>lastoptind</name></expr>]</index></name></expr></argument>, <argument><expr><name>optarg</name></expr></argument>, <argument><expr><name>optind</name></expr></argument>, <argument><expr><name>lastoptind</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <comment type="line">// check for blank argument</comment>
+      <expr_stmt><expr><call><name>checkargisnonempty</name><argument_list>(<argument><expr><name>PROGRAM_NAME</name></expr></argument>, <argument><expr><name><name>argv</name><index>[<expr><name>lastoptind</name></expr>]</index></name></expr></argument>, <argument><expr><name>optarg</name></expr></argument>, <argument><expr><name>optind</name></expr></argument>, <argument><expr><name>lastoptind</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if<condition>(<expr><name>poptions</name>.<name>transformcount</name> != 0</expr>)</condition><then>
+      <block>{
+	<expr_stmt><expr><call><name>fprintf</name><argument_list>(<argument><expr><name>stderr</name></expr></argument>, <argument><expr>"%s: Only one xpath expression, xslt file, or relaxng file may be used.\n"</expr></argument>, <argument><expr><name>PROGRAM_NAME</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	<expr_stmt><expr><call><name>exit</name><argument_list>(<argument><expr><name>STATUS_ERROR</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <expr_stmt><expr><name>options</name> |= <name>OPTION_XSLT</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name>poptions</name>.<name><name>transforms</name><index>[<expr><name>poptions</name>.<name>transformcount</name>++</expr>]</index></name> = <name>optarg</name></expr>;</expr_stmt>
+      <break>break;</break>
+
+    </case><case>case <expr><name>STRING_PARAM_FLAG_CODE</name></expr>:
+
+      <comment type="line">// check for missing argument confused by an argument that looks like an option</comment>
+      <expr_stmt><expr><call><name>checkargisoption</name><argument_list>(<argument><expr><name>PROGRAM_NAME</name></expr></argument>, <argument><expr><name><name>argv</name><index>[<expr><name>lastoptind</name></expr>]</index></name></expr></argument>, <argument><expr><name>optarg</name></expr></argument>, <argument><expr><name>optind</name></expr></argument>, <argument><expr><name>lastoptind</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <comment type="line">// param name</comment>
+      <expr_stmt><expr><name>poptions</name>.<name><name>params</name><index>[<expr><name>poptions</name>.<name>paramcount</name>++</expr>]</index></name> = <name>optarg</name></expr>;</expr_stmt>
+
+      <comment type="line">// must be both name and value, but value could be empty</comment>
+      <if>if <condition>(<expr>!<call><name>strchr</name><argument_list>(<argument><expr><name>optarg</name></expr></argument>, <argument><expr>'='</expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+	<expr_stmt><expr><call><name>fprintf</name><argument_list>(<argument><expr><name>stderr</name></expr></argument>, <argument><expr>"%s: Param name and value must be given.\n"</expr></argument>, <argument><expr><name>PROGRAM_NAME</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	<expr_stmt><expr><call><name>exit</name><argument_list>(<argument><expr>1</expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <comment type="line">// param value</comment>
+      <expr_stmt><expr><name>end</name> = <name>optarg</name></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>strsep</name><argument_list>(<argument><expr>&amp;<name>end</name></expr></argument>, <argument><expr>"="</expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name>poptions</name>.<name><name>params</name><index>[<expr><name>poptions</name>.<name>paramcount</name></expr>]</index></name> = (<name>char</name>*) <call><name>malloc</name><argument_list>(<argument><expr><call><name>strlen</name><argument_list>(<argument><expr><name>end</name></expr></argument>)</argument_list></call> + 1 + 2</expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>strcpy</name><argument_list>(<argument><expr>(<name>char</name> *) <name>poptions</name>.<name><name>params</name><index>[<expr><name>poptions</name>.<name>paramcount</name></expr>]</index></name></expr></argument>, <argument><expr>"\'"</expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>strcat</name><argument_list>(<argument><expr>(<name>char</name> *) <name>poptions</name>.<name><name>params</name><index>[<expr><name>poptions</name>.<name>paramcount</name></expr>]</index></name></expr></argument>, <argument><expr><name>end</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>strcat</name><argument_list>(<argument><expr>(<name>char</name> *) <name>poptions</name>.<name><name>params</name><index>[<expr><name>poptions</name>.<name>paramcount</name></expr>]</index></name></expr></argument>, <argument><expr>"\'"</expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><name>poptions</name>.<name>paramcount</name>++</expr>;</expr_stmt>
+      <break>break;</break>
+
+    </case><case>case <expr><name>PARAM_FLAG_CODE</name></expr>:
+
+      <comment type="line">// check for missing argument confused by an argument that looks like an option</comment>
+      <expr_stmt><expr><call><name>checkargisoption</name><argument_list>(<argument><expr><name>PROGRAM_NAME</name></expr></argument>, <argument><expr><name><name>argv</name><index>[<expr><name>lastoptind</name></expr>]</index></name></expr></argument>, <argument><expr><name>optarg</name></expr></argument>, <argument><expr><name>optind</name></expr></argument>, <argument><expr><name>lastoptind</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <comment type="line">// must be both name and value, but value could be empty</comment>
+      <if>if <condition>(<expr>!<call><name>strchr</name><argument_list>(<argument><expr><name>optarg</name></expr></argument>, <argument><expr>'='</expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+	<expr_stmt><expr><call><name>fprintf</name><argument_list>(<argument><expr><name>stderr</name></expr></argument>, <argument><expr>"%s: Param name and value must be given.\n"</expr></argument>, <argument><expr><name>PROGRAM_NAME</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	<expr_stmt><expr><call><name>exit</name><argument_list>(<argument><expr>1</expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <comment type="line">// param name</comment>
+      <expr_stmt><expr><name>poptions</name>.<name><name>params</name><index>[<expr><name>poptions</name>.<name>paramcount</name>++</expr>]</index></name> = <name>optarg</name></expr>;</expr_stmt>
+
+      <comment type="line">// param value</comment>
+      <block>{
+        <decl_stmt><decl><type><name>char</name>*</type> <name>place</name> =<init> <expr><name>optarg</name></expr></init></decl>;</decl_stmt>
+        <expr_stmt><expr><call><name>strsep</name><argument_list>(<argument><expr>&amp;<name>place</name></expr></argument>, <argument><expr>"="</expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><name>poptions</name>.<name><name>params</name><index>[<expr><name>poptions</name>.<name>paramcount</name>++</expr>]</index></name> = <name>place</name></expr>;</expr_stmt>
+      }</block>
+      <break>break;</break>
+
+    </case><case>case <expr><name>RELAXNG_FLAG_CODE</name></expr>:
+
+      <comment type="line">// check for missing argument confused by an argument that looks like an option</comment>
+      <expr_stmt><expr><call><name>checkargisoption</name><argument_list>(<argument><expr><name>PROGRAM_NAME</name></expr></argument>, <argument><expr><name><name>argv</name><index>[<expr><name>lastoptind</name></expr>]</index></name></expr></argument>, <argument><expr><name>optarg</name></expr></argument>, <argument><expr><name>optind</name></expr></argument>, <argument><expr><name>lastoptind</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+      <if>if<condition>(<expr><name>poptions</name>.<name>transformcount</name> != 0</expr>)</condition><then>
+      <block>{
+	<expr_stmt><expr><call><name>fprintf</name><argument_list>(<argument><expr><name>stderr</name></expr></argument>, <argument><expr>"%s: Only one xpath expression, xslt file, or relaxng file may be used.\n"</expr></argument>, <argument><expr><name>PROGRAM_NAME</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	<expr_stmt><expr><call><name>exit</name><argument_list>(<argument><expr><name>STATUS_ERROR</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <expr_stmt><expr><name>options</name> |= <name>OPTION_RELAXNG</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name>poptions</name>.<name><name>transforms</name><index>[<expr><name>poptions</name>.<name>transformcount</name>++</expr>]</index></name> = <name>optarg</name></expr>;</expr_stmt>
+      <break>break;</break>
+
+    </case><case>case <expr><name>XSLT_ALL_FLAG_CODE</name></expr>:
+
+      <expr_stmt><expr><name>options</name> |= <name>OPTION_XSLT_ALL</name></expr>;</expr_stmt>
+      <break>break;</break>
+
+    </case><default>default:
+      <comment type="line">// TODO:  Fix error message</comment>
+      <expr_stmt><expr><call><name>fprintf</name><argument_list>(<argument><expr><name>stderr</name></expr></argument>, <argument><expr>"WHAT: %d\n"</expr></argument>, <argument><expr><name>c</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <break>break;</break>
+    </default>}</block></switch><empty_stmt>;</empty_stmt>
+  }</block></while>
+
+  <return>return  <expr><name>optind</name></expr>;</return>
+}</block></function>
+<cpp:ifdef>#<cpp:directive>ifdef</cpp:directive> <name>__GNUG__</name></cpp:ifdef>
+<extern>extern "C" <function><type><name>void</name></type> <name>verbose_handler</name><parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list> <block>{
+
+  <if>if <condition>(<expr>(<name>options</name> &amp;= <name>OPTION_VERBOSE</name>) == 0</expr>)</condition><then>
+    <expr_stmt><expr><name>options</name> |= <name>OPTION_VERBOSE</name></expr>;</expr_stmt></then>
+  <else>else
+    <expr_stmt><expr><name>options</name> &amp;= ~<name>OPTION_VERBOSE</name></expr>;</expr_stmt></else></if>
+}</block></function></extern>
+
+<extern>extern "C" <function><type><name>void</name></type> <name>terminate_handler</name><parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list> <block>{
+
+  <comment type="line">// setup to terminate after current file</comment>
+  <expr_stmt><expr><name>options</name> |= <name>OPTION_TERMINATE</name></expr>;</expr_stmt>
+
+  <comment type="line">// turn off handler for this signal</comment>
+  <expr_stmt><expr><call><name><name>pstd</name>::<name>signal</name></name><argument_list>(<argument><expr><name>SIGINT</name></expr></argument>, <argument><expr><name>SIG_DFL</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+}</block></function></extern>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+
+<function><type><name>int</name></type> <name>option_error_status</name><parameter_list>(<param><decl><type><name>int</name></type> <name>optopt</name></decl></param>)</parameter_list> <block>{
+
+  <switch>switch <condition>(<expr><name>optopt</name></expr>)</condition> <block>{
+
+  <case>case <expr><name>ENCODING_FLAG_SHORT</name></expr>:
+    <return>return <expr><name>STATUS_XMLENCODING_MISSING</name></expr>;</return>
+    <break>break;</break>
+
+  </case><case>case <expr><name>SRC_ENCODING_FLAG_SHORT</name></expr>:
+    <return>return <expr><name>STATUS_SRCENCODING_MISSING</name></expr>;</return>
+    <break>break;</break>
+
+  </case><case>case <expr><name>UNIT_FLAG_SHORT</name></expr>:
+    <return>return <expr><name>STATUS_UNIT_MISSING</name></expr>;</return>
+    <break>break;</break>
+
+  </case><case>case <expr><name>INPUT_FORMAT_FLAG_CODE</name></expr>:
+    <return>return <expr><name>STATUS_ERROR</name></expr>;</return>
+    <break>break;</break>
+
+  </case><case>case <expr><name>OUTPUT_FORMAT_FLAG_CODE</name></expr>:
+    <return>return <expr><name>STATUS_ERROR</name></expr>;</return>
+    <break>break;</break>
+
+  </case><case>case <expr><name>XPATH_FLAG_CODE</name></expr>:
+    <return>return <expr><name>STATUS_ERROR</name></expr>;</return>
+    <break>break;</break>
+
+  </case><case>case <expr><name>XSLT_FLAG_CODE</name></expr>:
+    <return>return <expr><name>STATUS_ERROR</name></expr>;</return>
+    <break>break;</break>
+
+  </case><case>case <expr><name>PARAM_FLAG_CODE</name></expr>:
+    <return>return <expr><name>STATUS_ERROR</name></expr>;</return>
+    <break>break;</break>
+
+  </case><case>case <expr><name>STRING_PARAM_FLAG_CODE</name></expr>:
+    <return>return <expr><name>STATUS_ERROR</name></expr>;</return>
+    <break>break;</break>
+
+  </case><case>case <expr><name>REGISTER_EXTENSION_FILE_FLAG_CODE</name></expr> :
+    <return>return <expr><name>STATUS_ERROR</name></expr>;</return>
+    <break>break;</break>
+
+  </case><case>case <expr><name>REGISTER_EXTENSION_FLAG_CODE</name></expr> :
+    <return>return <expr><name>STATUS_ERROR</name></expr>;</return>
+    <break>break;</break>
+
+  </case><case>case <expr><name>REGISTER_EXTENSION_FUNCTION_FILE_FLAG_CODE</name></expr> :
+    <return>return <expr><name>STATUS_ERROR</name></expr>;</return>
+    <break>break;</break>
+
+  </case><case>case <expr><name>REGISTER_EXTENSION_FUNCTION_FLAG_CODE</name></expr> :
+    <return>return <expr><name>STATUS_ERROR</name></expr>;</return>
+    <break>break;</break>
+
+  </case><case>case <expr>'\0'</expr>:
+    <return>return <expr><name>STATUS_UNKNOWN_OPTION</name></expr>;</return>
+    <break>break;</break>
+  </case>}</block></switch><empty_stmt>;</empty_stmt>
+
+  <return>return <expr>0</expr>;</return>
+}</block></function>
+
+<function><type><name>void</name></type> <name>output_info</name><parameter_list>(<param><decl><type><name>srcMLUtility</name>&amp;</type> <name>su</name></decl></param>, <param><decl><type><name>int</name></type> <name>options</name></decl></param>, <param><decl><type><name>int</name></type> <name>optioncount</name></decl></param>, <param><decl><type><name>int</name></type> <name><name>optionorder</name><index>[]</index></name></decl></param>)</parameter_list> <block>{
+
+      <comment type="line">// output all the namespaces</comment>
+      <if>if <condition>(<expr><call><name>isoption</name><argument_list>(<argument><expr><name>options</name></expr></argument>, <argument><expr><name>OPTION_INFO</name></expr></argument>)</argument_list></call> || <call><name>isoption</name><argument_list>(<argument><expr><name>options</name></expr></argument>, <argument><expr><name>OPTION_LONG_INFO</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+
+	<for>for (<init><decl><type><name>int</name></type> <name>i</name> =<init> <expr>0</expr></init></decl>;</init> <condition><expr><name>i</name> &lt; <name>MAXNS</name></expr>;</condition> <incr><expr>++<name>i</name></expr></incr>) <block>{
+	  <if>if <condition>(<expr><name>su</name>.<name><name>nsv</name><index>[<expr><name>i</name></expr>]</index></name>.<name>first</name> == ""</expr>)</condition><then>
+	    <break>break;</break></then></if>
+
+	  <expr_stmt><expr><call><name>fprintf</name><argument_list>(<argument><expr><name>output</name></expr></argument>, <argument><expr>"%s=\"%s\"\n"</expr></argument>, <argument><expr><name>su</name>.<name><name>nsv</name><index>[<expr><name>i</name></expr>]</index></name>.<name>second</name>.<call><name>c_str</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>su</name>.<name><name>nsv</name><index>[<expr><name>i</name></expr>]</index></name>.<name>first</name>.<call><name>c_str</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	
+	}</block></for>
+      }</block></then></if>
+
+      <comment type="line">// output attributes in order specified by the options on the command line</comment>
+      <for>for (<init><decl><type><name>int</name></type> <name>i</name> =<init> <expr>0</expr></init></decl>;</init> <condition><expr><name>i</name> &lt; <name>optioncount</name></expr>;</condition> <incr><expr>++<name>i</name></expr></incr>) <block>{
+
+	<comment type="line">// find attribute name from option</comment>
+	<decl_stmt><decl><type><name>const</name> <name>char</name>*</type> <name>attribute_name</name> =<init> <expr>""</expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><type><name>const</name> <name>char</name>*</type> <name>attribute_title</name> =<init> <expr>""</expr></init></decl>;</decl_stmt>
+	<decl_stmt><decl><type><name>int</name></type> <name>curoption</name> =<init> <expr><name><name>optionorder</name><index>[<expr><name>i</name></expr>]</index></name></expr></init></decl>;</decl_stmt>
+
+	<switch>switch <condition>(<expr><name>curoption</name></expr>)</condition> <block>{
+	<case>case <expr><name>OPTION_XML_ENCODING</name></expr>:
+	  <expr_stmt><expr><name>attribute_name</name> = ".encoding"</expr>;</expr_stmt>
+	  <expr_stmt><expr><name>attribute_title</name> = "encoding"</expr>;</expr_stmt>
+	  <break>break;</break>
+	</case><case>case <expr><name>OPTION_LANGUAGE</name></expr>:
+	  <expr_stmt><expr><name>attribute_name</name> = <name>UNIT_ATTRIBUTE_LANGUAGE</name></expr>;</expr_stmt>
+	  <expr_stmt><expr><name>attribute_title</name> = <name>attribute_name</name></expr>;</expr_stmt>
+	  <break>break;</break>
+	</case><case>case <expr><name>OPTION_DIRECTORY</name></expr>:
+	  <expr_stmt><expr><name>attribute_name</name> = <name>UNIT_ATTRIBUTE_DIRECTORY</name></expr>;</expr_stmt>
+	  <expr_stmt><expr><name>attribute_title</name> = "directory"</expr>;</expr_stmt>
+	  <break>break;</break>
+	</case><case>case <expr><name>OPTION_FILENAME</name></expr>:
+	  <expr_stmt><expr><name>attribute_name</name> = <name>UNIT_ATTRIBUTE_FILENAME</name></expr>;</expr_stmt>
+	  <expr_stmt><expr><name>attribute_title</name> = <name>attribute_name</name></expr>;</expr_stmt>
+	  <break>break;</break>
+	</case><case>case <expr><name>OPTION_VERSION</name></expr>:
+	  <expr_stmt><expr><name>attribute_name</name> = <name>UNIT_ATTRIBUTE_VERSION</name></expr>;</expr_stmt>
+	  <expr_stmt><expr><name>attribute_title</name> = "src-version"</expr>;</expr_stmt>
+	  <break>break;</break>
+	</case>}</block></switch><empty_stmt>;</empty_stmt>
+
+	<comment type="line">// output the option</comment>
+	<decl_stmt><decl><type><name>const</name> <name>char</name>*</type> <name>l</name> =<init> <expr><name>su</name>.<call><name>attribute</name><argument_list>(<argument><expr><name>attribute_name</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+	<if>if <condition>(<expr><name>l</name></expr>)</condition><then> <block>{
+	  <if>if <condition>(<expr><name>optioncount</name> == 1</expr>)</condition><then>
+	    <expr_stmt><expr><call><name>fprintf</name><argument_list>(<argument><expr><name>output</name></expr></argument>, <argument><expr>"%s\n"</expr></argument>, <argument><expr><name>l</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></then>
+	  <else>else
+	    <expr_stmt><expr><call><name>fprintf</name><argument_list>(<argument><expr><name>output</name></expr></argument>, <argument><expr>"%s=\"%s\"\n"</expr></argument>, <argument><expr><name>attribute_title</name></expr></argument>, <argument><expr><name>l</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></else></if>
+	}</block></then></if>
+      }</block></for>
+
+      <if>if <condition>(<expr><call><name>isoption</name><argument_list>(<argument><expr><name>options</name></expr></argument>, <argument><expr><name>OPTION_LONG_INFO</name></expr></argument>)</argument_list></call> &amp;&amp; !<call><name>isoption</name><argument_list>(<argument><expr><name>options</name></expr></argument>, <argument><expr><name>OPTION_UNIT</name></expr></argument>)</argument_list></call> &amp;&amp; <call><name>isatty</name><argument_list>(<argument><expr><call><name>fileno</name><argument_list>(<argument><expr><name>output</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then>
+	    <expr_stmt><expr><call><name>fprintf</name><argument_list>(<argument><expr><name>output</name></expr></argument>, <argument><expr>"units=\"%d"</expr></argument>, <argument><expr>1</expr></argument>)</argument_list></call></expr>;</expr_stmt></then></if>
+}</block></function>
+
+<function><type><name>void</name></type> <name>register_xpath_functions_from_filename</name><parameter_list>(<param><decl><type><name>const</name> <name>char</name> *</type> <name>filename</name></decl></param>)</parameter_list> <block>{
+
+  <function_decl><type><name>URIStream</name></type> <name>xpath_extension_file</name><parameter_list>(<param><decl><type><name>filename</name></type></decl></param>)</parameter_list>;</function_decl>
+
+  <decl_stmt><decl><type><name>char</name> *</type> <name>extension_function</name></decl>;</decl_stmt>
+  <while>while<condition>(<expr>(<name>extension_function</name> = <name>xpath_extension_file</name>.<call><name>readline</name><argument_list>()</argument_list></call>)</expr>)</condition> <block>{
+
+    <if>if<condition>(<expr><call><name>strcmp</name><argument_list>(<argument><expr><name>extension_function</name></expr></argument>, <argument><expr>""</expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+
+      <comment type="line">// must be both name and value, but value could be empty</comment>
+      <if>if <condition>(<expr>!<call><name>strchr</name><argument_list>(<argument><expr><name>extension_function</name></expr></argument>, <argument><expr>'='</expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+	<expr_stmt><expr><call><name>fprintf</name><argument_list>(<argument><expr><name>stderr</name></expr></argument>, <argument><expr>"%s: Register extension function name and value must be given.\n"</expr></argument>, <argument><expr><name>PROGRAM_NAME</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+	<expr_stmt><expr><call><name>exit</name><argument_list>(<argument><expr>1</expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      }</block></then></if>
+
+      <comment type="line">// register xpath extension function</comment>
+      <decl_stmt><decl><type><name>const</name> <name>char</name> *</type> <name>end</name> =<init> <expr><name>extension_function</name></expr></init></decl>;</decl_stmt>
+      <expr_stmt><expr><call><name>strsep</name><argument_list>(<argument><expr>(<name>char</name> **)&amp;<name>end</name></expr></argument>, <argument><expr>"="</expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      <expr_stmt><expr><call><name>xpathRegisterExtensionFunction</name><argument_list>(<argument><expr><name>extension_function</name></expr></argument>, <argument><expr><name>end</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    }</block></then></if>
+  }</block></while>
+}</block></function>
+</unit>
