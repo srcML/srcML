@@ -111,7 +111,7 @@ windows : ${SRC_ZIP}
 	mkdir ${WIN_BASE} && ${CP} -t ${WIN_BASE} ${WIN_DIST_FILES}
 	unix2dos ${WIN_BASE}/*.html
 	cp dlls/*.dll ${WIN_BASE}
-	zip -rql ${WIN_ZIP} ${WIN_BASE}
+	zip -rql ${WIN_ZIP} ${WIN_BASE}/src2srcml.exe ${WIN_BASE}/srcml2src.exe ${WIN_BASE}/*.dll
 
 windowsdyn : ${SRC_ZIP}
 	make cleansrc
@@ -124,7 +124,7 @@ windowsdyn : ${SRC_ZIP}
 	unix2dos ${WIN_BASE}/*.html
 	cp ../dlls/*.dll ${WIN_BASE}
 	cp ${BIN_DIR}/libsrcml.dll ${WIN_BASE}
-	zip -rql ${WIN_ZIP} ${WIN_BASE}
+	zip -rql ${WIN_ZIP} ${WIN_BASE}/src2srcml.exe ${WIN_BASE}/srcml2src.exe ${WIN_BASE}/*.dll
 
 dll :
 	echo ${DLL_DIR}
