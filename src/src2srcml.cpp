@@ -1426,7 +1426,16 @@ void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_o
       continue;
 #endif
 
-#ifndef __MINGW32__
+#ifdef __MINGW32__
+    // make sure that we are not processing the output file
+    if (strcmp(filename.c_str(), poptions.srcml_filename) == 0) {
+      fprintf(stderr, !shownumber ? "Skipped '%s':  Output file.\n" :
+	      "    - %s\tSkipped: Output file.\n", poptions.srcml_filename);
+
+      ++skipped;
+      continue;
+    }
+#else
     // make sure that we are not processing the output file
     if (instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
       fprintf(stderr, !shownumber ? "Skipped '%s':  Output file.\n" :
