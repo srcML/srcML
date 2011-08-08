@@ -29,14 +29,71 @@ UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding)
   : antlr::CharBuffer(std::cin), pos(0), size(0), eof(false), lastcr(false)
 {
   const char* enc = encoding;
-  if (!enc)
-    enc = "ISO-8859-1";
 
-  // use a libxml2 parser input buffer to support URIs
-  // if an encoding is specified, then use it.  Otherwise, use current default
+  /* Use a libxml2 parser input buffer to support URIs.
+     If an encoding is specified, then use it.  Otherwise, assume none, and
+     try to figure it out later.
+  */
   if (!(input = xmlParserInputBufferCreateFilename(ifilename,
-     enc ? xmlParseCharEncoding(enc) : XML_CHAR_ENCODING_NONE)))
-     throw UTF8FileError();
+                                                   enc ? xmlParseCharEncoding(enc) : XML_CHAR_ENCODING_NONE)))
+    throw UTF8FileError();
+
+  /* If an encoding was not specified, then try to detect it.
+     This is especially important for the BOM for UTF-8.
+     If nothing is detected, then use ISO-8859-1 */
+  if (!encoding) {
+
+    // assume ISO-8859-1 unless we can detect it otherwise
+    xmlCharEncoding denc = XML_CHAR_ENCODING_8859_1;
+
+    // input enough characters to detect.
+    // 4 is good because you either get 4 or some standard size which is probably larger (really)
+    size = xmlParserInputBufferGrow(input, 4);
+
+    int shrink = 0;
+
+    // detect (and remove) BOMs for UTF8 and UTF16
+    if (size >= 3 &&
+        input->buffer->content[0] == 0xEF &&
+        input->buffer->content[1] == 0xBB &&
+        input->buffer->content[2] == 0xBF) {
+
+      denc = XML_CHAR_ENCODING_UTF8;
+      shrink = 3;
+
+    } else if (size >= 2 &&
+               input->buffer->content[0] == 0xFE &&
+               input->buffer->content[1] == 0xFF) {
+
+      denc = XML_CHAR_ENCODING_UTF16BE;
+      shrink = 2;
+
+    } else if (size >= 2 &&
+               input->buffer->content[0] == 0xFF &&
+               input->buffer->content[1] == 0xFE) {
+
+      denc = XML_CHAR_ENCODING_UTF16LE;
+      shrink = 2;
+    }
+
+    /* Transform the data already read in */
+
+    // since original encoding was NONE, no raw buffer was allocated, so use the regular buffer
+    //    if (shrink)
+    //      xmlBufferShrink(input->buffer, shrink);
+    pos = shrink;
+    input->raw = input->buffer;
+    input->rawconsumed = 0;
+
+    // need a new regular buffer
+    input->buffer = xmlBufferCreate();
+
+    // setup the encoder being used
+    input->encoder = xmlGetCharEncodingHandler(denc);
+
+    // convert the characters to the new encoding
+    int nbchars = xmlCharEncInFunc(input->encoder, input->buffer, input->raw);
+  }
 }
 
 // libxml context
@@ -46,11 +103,11 @@ void* UTF8CharBuffer::getContext() const {
 }
 
 /*
- Get the next character from the stream
+  Get the next character from the stream
 
- Grab characters one byte at a time from the input stream and place
- them in the original source encoding buffer.  Then convert from the
- original encoding to UTF-8 in the utf8 buffer.
+  Grab characters one byte at a time from the input stream and place
+  them in the original source encoding buffer.  Then convert from the
+  original encoding to UTF-8 in the utf8 buffer.
 */
 int UTF8CharBuffer::getChar() {
 
@@ -60,7 +117,7 @@ int UTF8CharBuffer::getChar() {
     // refill the buffer
     input->buffer->use = 0;
     size = xmlParserInputBufferGrow(input, SRCBUFSIZE);
-	
+
     // found problem or eof
     if (size == -1 || size == 0)
       return -1;
@@ -83,7 +140,7 @@ int UTF8CharBuffer::getChar() {
       // refill the buffer
       input->buffer->use = 0;
       size = xmlParserInputBufferGrow(input, SRCBUFSIZE);
-	
+
       // found problem or eof
       if (size == -1 || size == 0)
         return -1;

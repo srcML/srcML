@@ -320,7 +320,41 @@ public :
 
       // string
     case XPATH_STRING:
-      xmlOutputBufferWriteString(buf, (const char*) result_nodes->stringval);
+      {
+	const char* p = (const char*) result_nodes->stringval;
+	const char* pos = p;
+	while (*p) {
+
+	  if (p[0] == '&' && p[1] == 'l' && p[2] == 't' && p[3] == ';') {
+
+	    xmlOutputBufferWrite(buf, p - pos, pos);
+	    xmlOutputBufferWrite(buf, 1, "<");
+	    p += 4;
+	    pos = p;
+
+	  } else if (p[0] == '&' && p[1] == 'g' && p[2] == 't' && p[3] == ';') {
+
+	    xmlOutputBufferWrite(buf, p - pos, pos);
+	    xmlOutputBufferWrite(buf, 1, ">");
+	    p += 4;
+	    pos = p;
+
+	  } else if (p[0] == '&' && p[1] == '#' && isdigit(p[2]) && isdigit(p[3]) && p[4] == ';') {
+
+	    xmlOutputBufferWrite(buf, p - pos, pos);
+	    char s[3] = { p[2], p[3], '\0' };
+	    int c = atoi(s);
+	    xmlOutputBufferWrite(buf, 1, (const char*) &c);
+	    p += 5;
+	    pos = p;
+
+	  } else {
+
+	    ++p;
+	  }
+	}
+	xmlOutputBufferWrite(buf, p - pos, pos);
+      }
       break;
 
     default:

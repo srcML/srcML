@@ -45,6 +45,7 @@
 #include "ExtractUnitsXML.hpp"
 #include "XPathQueryUnits.hpp"
 #include "XSLTUnits.hpp"
+#include "RelaxNGUnits.hpp"
 
 #include "SAX2ExtractUnitsSrc.hpp"
 
