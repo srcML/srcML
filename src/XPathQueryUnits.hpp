@@ -342,10 +342,19 @@ public :
 	  } else if (p[0] == '&' && p[1] == '#' && isdigit(p[2]) && isdigit(p[3]) && p[4] == ';') {
 
 	    xmlOutputBufferWrite(buf, p - pos, pos);
-	    char s[3] = { p[2], p[3], '\0' };
+	    char s[] = { p[2], p[3], '\0' };
 	    int c = atoi(s);
 	    xmlOutputBufferWrite(buf, 1, (const char*) &c);
 	    p += 5;
+	    pos = p;
+
+	  } else if (p[0] == '&' && p[1] == '#' && isdigit(p[2]) && isdigit(p[3]) && isdigit(p[4]) && p[5] == ';') {
+
+	    xmlOutputBufferWrite(buf, p - pos, pos);
+	    char s[] = { p[2], p[3], p[4], '\0' };
+	    int c = atoi(s);
+	    xmlOutputBufferWrite(buf, 1, (const char*) &c);
+	    p += 6;
 	    pos = p;
 
 	  } else {
