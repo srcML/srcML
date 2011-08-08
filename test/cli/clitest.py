@@ -3111,7 +3111,7 @@ checkError([srcml2src, 'xml_error/illformedarchive.xml'], '', xml_archive_error)
 
 extract_option_xpath_simple ="concat('&lt;', string(//src:decl[string(src:name)='EXPAND_FLAG']/src:name), '&gt;&#10;')"
 
-extract_option_xpath = "concat('&lt; &#33;ENTITY ', string(//src:decl[substring(src:name, string-length(src:name) - 4)='_FLAG']/src:name), ' --', substring(string(//src:decl[substring(src:name, string-length(src:name) - 4)='_FLAG']/src:init/src:expr), 2, string-length(string(//src:decl[substring(src:name, string-length(src:name) - 4)='_FLAG']/src:init/src:expr)) - 2), '&gt;&#10;')"
+extract_option_xpath = "concat('&lt;!ENTITY ', string(//src:decl[substring(src:name, string-length(src:name) - 4)='_FLAG']/src:name), ' \"--', substring(string(//src:decl[substring(src:name, string-length(src:name) - 4)='_FLAG']/src:init/src:expr), 2, string-length(string(//src:decl[substring(src:name, string-length(src:name) - 4)='_FLAG']/src:init/src:expr)) - 2), '\"&gt;&#10;')"
 
 extract_option_xpath_output_simple = """<EXPAND_FLAG>
 """
