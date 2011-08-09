@@ -41,7 +41,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding)
   /* If an encoding was not specified, then try to detect it.
      This is especially important for the BOM for UTF-8.
      If nothing is detected, then use ISO-8859-1 */
-  if (!encoding) {
+  if (!input->encoder) {
 
     // assume ISO-8859-1 unless we can detect it otherwise
     xmlCharEncoding denc = XML_CHAR_ENCODING_8859_1;
