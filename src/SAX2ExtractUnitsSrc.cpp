@@ -38,7 +38,7 @@ xmlSAXHandler SAX2ExtractUnitsSrc::factory() {
   sax.characters = &charactersPre;  // catch first text of single unit
   sax.startDocument = &startDocument;
   sax.endDocument = &endDocument;
-  sax.comment = &comment;
+  //  sax.comment = &comment;
 
   return sax;
 }
