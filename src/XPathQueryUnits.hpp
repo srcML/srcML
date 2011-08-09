@@ -321,54 +321,55 @@ public :
       // string
     case XPATH_STRING:
       {
-	char* p = (char*) result_nodes->stringval;
-	char* pos = p;
-	while (*p) {
+        char* p = (char*) result_nodes->stringval;
+        char* pos = p;
+        while (*p) {
 
-	  if (p[0] == '&' && p[1] == 'l' && p[2] == 't' && p[3] == ';') {
+          if (p[0] == '&') {
+            if (p[1] == 'l' && p[2] == 't' && p[3] == ';') {
 
-	    xmlOutputBufferWrite(buf, p - pos, pos);
-	    xmlOutputBufferWrite(buf, 1, "<");
-	    p += 4;
-	    pos = p;
+              xmlOutputBufferWrite(buf, p - pos, pos);
+              xmlOutputBufferWrite(buf, 1, "<");
+              p += 4;
+              pos = p;
 
-	  } else if (p[0] == '&' && p[1] == 'g' && p[2] == 't' && p[3] == ';') {
+            } else if (p[1] == 'g' && p[2] == 't' && p[3] == ';') {
 
-	    xmlOutputBufferWrite(buf, p - pos, pos);
-	    xmlOutputBufferWrite(buf, 1, ">");
-	    p += 4;
-	    pos = p;
+              xmlOutputBufferWrite(buf, p - pos, pos);
+              xmlOutputBufferWrite(buf, 1, ">");
+              p += 4;
+              pos = p;
 
-	  } else if (p[0] == '&' && p[1] == '#' && isdigit(p[2]) && isdigit(p[3])) {
+            } else if (p[1] == '#' && isdigit(p[2]) && isdigit(p[3])) {
 
-	    xmlOutputBufferWrite(buf, p - pos, pos);
+              xmlOutputBufferWrite(buf, p - pos, pos);
 
-            int end = 4;
-            if(p[4] == ';')
-              end = 5;
-            else if (isdigit(p[4]) && p[5] == ';') 
-              end = 6;
+              int end = 4;
+              if(p[4] == ';')
+                end = 5;
+              else if (isdigit(p[4]) && p[5] == ';')
+                end = 6;
 
-            if(end > 4) {
-              char next = p[end];
-              p[end] = '\0';
+              if(end > 4) {
+                char next = p[end];
+                p[end] = '\0';
 
-              int c = atoi(p + 2);
-              xmlOutputBufferWrite(buf, 1, (const char*) &c);
-            
-              p[end] = next;
-            } else
-              xmlOutputBufferWrite(buf, 4, (const char*) p);
+                int c = atoi(p + 2);
+                xmlOutputBufferWrite(buf, 1, (const char*) &c);
 
-	    p += end;
-	    pos = p;
+                p[end] = next;
+              } else
+                xmlOutputBufferWrite(buf, 4, (const char*) p);
 
-	  } else {
+              p += end;
+              pos = p;
+            }
+          } else {
 
-	    ++p;
-	  }
-	}
-	xmlOutputBufferWrite(buf, p - pos, pos);
+            ++p;
+          }
+        }
+        xmlOutputBufferWrite(buf, p - pos, pos);
       }
       break;
 
