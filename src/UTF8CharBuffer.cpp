@@ -59,7 +59,6 @@ UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding)
 
       // assume ISO-8859-1 unless we can detect it otherwise
       xmlCharEncoding denc = XML_CHAR_ENCODING_8859_1;
-      int shrink = 0;
 
       /*
       if (size >= 2 &&
@@ -95,7 +94,6 @@ UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding)
 
       // convert the characters to the new encoding
       int nbchars = xmlCharEncInFunc(input->encoder, input->buffer, input->raw);
-      fprintf(stderr, "DEBUG:  %s %s %d DATA: %d\n", __FILE__,  __FUNCTION__, __LINE__, nbchars);
     }
   }
 }
