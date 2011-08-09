@@ -3152,6 +3152,21 @@ check([srcml2src, option.XPATH_FLAG, extract_option_xpath_simple, 'extract_optio
 check([srcml2src, option.XPATH_FLAG, extract_option_xpath, 'extract_options/extract_options_test.cpp.xml'], '', extract_option_xpath_output)
 check([srcml2src, option.XSLT_FLAG, 'extract_options/extract_options.xsl', 'extract_options/extract_options_test.cpp.xml'], '', extract_options_output)
 
+# UTF-8 BOM
+
+src_no_bom = """a;
+"""
+src_bom = """\xef\xbb\xbfa;
+"""
+
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+"""
+
+check([src2srcml, option.LANGUAGE_FLAG, 'C'], src_no_bom, srcml)
+check([src2srcml, option.LANGUAGE_FLAG, 'C'], src_bom, srcml)
+
 # footer
 print
 print "Error count:\t\t", error_count, "\t", error_list
