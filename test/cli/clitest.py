@@ -3214,7 +3214,8 @@ xpath_attribute_nested_output = xml_declaration + """
 """
 
 xpath_attribute_string_nested_output = """a.cpp
-b.cpp"""
+b.cpp
+"""
 
 check([srcml2src, option.XPATH_FLAG, xpath_attribute], srcml, xpath_attribute_output)
 check([srcml2src, option.XPATH_FLAG, xpath_attribute_string], srcml, xpath_attribute_string_output)
