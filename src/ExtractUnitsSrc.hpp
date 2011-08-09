@@ -79,7 +79,7 @@ class ExtractUnitsSrc : public ProcessUnit {
 
       // filename is required
       if (!foundfilename) {
-        fprintf(stderr, "Missing filename attribute\n");
+        fprintf(stderr, "Skipping unit %ld:  Missing filename attribute\n", pstate->count);
         return;
       }
 
