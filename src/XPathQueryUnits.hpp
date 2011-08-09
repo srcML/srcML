@@ -381,6 +381,9 @@ public :
         }
         xmlOutputBufferWrite(buf, p - pos, pos);
       }
+
+      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n"));
+
       break;
 
     default:
