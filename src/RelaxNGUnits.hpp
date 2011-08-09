@@ -54,7 +54,7 @@ public :
   RelaxNGUnits(const char* a_context_element, const char* a_ofilename, int options, xsltStylesheetPtr stylesheet,
             const char** params)
     : ofilename(a_ofilename), options(options),
-      stylesheet(stylesheet), total(0), found(false), needroot(true), params(params), result_type(0) {
+      stylesheet(stylesheet), total(0), found(false), needroot(true), result_type(0), params(params) {
   }
 
   virtual ~RelaxNGUnits() {}
