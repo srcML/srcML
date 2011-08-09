@@ -321,8 +321,8 @@ public :
       // string
     case XPATH_STRING:
       {
-	const char* p = (const char*) result_nodes->stringval;
-	const char* pos = p;
+	char* p = (char*) result_nodes->stringval;
+	char* pos = p;
 	while (*p) {
 
 	  if (p[0] == '&' && p[1] == 'l' && p[2] == 't' && p[3] == ';') {
@@ -339,22 +339,28 @@ public :
 	    p += 4;
 	    pos = p;
 
-	  } else if (p[0] == '&' && p[1] == '#' && isdigit(p[2]) && isdigit(p[3]) && p[4] == ';') {
+	  } else if (p[0] == '&' && p[1] == '#' && isdigit(p[2]) && isdigit(p[3])) {
 
 	    xmlOutputBufferWrite(buf, p - pos, pos);
-	    char s[] = { p[2], p[3], '\0' };
-	    int c = atoi(s);
-	    xmlOutputBufferWrite(buf, 1, (const char*) &c);
-	    p += 5;
-	    pos = p;
 
-	  } else if (p[0] == '&' && p[1] == '#' && isdigit(p[2]) && isdigit(p[3]) && isdigit(p[4]) && p[5] == ';') {
+            int end = 4;
+            if(p[4] == ';')
+              end = 5;
+            else if (isdigit(p[4]) && p[5] == ';') 
+              end = 6;
 
-	    xmlOutputBufferWrite(buf, p - pos, pos);
-	    char s[] = { p[2], p[3], p[4], '\0' };
-	    int c = atoi(s);
-	    xmlOutputBufferWrite(buf, 1, (const char*) &c);
-	    p += 6;
+            if(end > 4) {
+              char next = p[end];
+              p[end] = '\0';
+
+              int c = atoi(p + 2);
+              xmlOutputBufferWrite(buf, 1, (const char*) &c);
+            
+              p[end] = next;
+            } else
+              xmlOutputBufferWrite(buf, 4, (const char*) p);
+
+	    p += end;
 	    pos = p;
 
 	  } else {
