@@ -3109,9 +3109,9 @@ checkError([srcml2src, option.NESTED_FLAG, 'xml_error/illformedarchive.xml'], ''
 
 # escaped xml test
 
-extract_option_xpath_simple ="concat('&lt;', string(//src:decl[string(src:name)='EXPAND_FLAG']/src:name), '&gt;&#10;')"
+extract_option_xpath_simple ="concat('&lt;', string(//src:decl[string(src:name)='EXPAND_FLAG']/src:name), '&gt;')"
 
-extract_option_xpath = "concat('&lt;!ENTITY ', string(//src:decl[substring(src:name, string-length(src:name) - 4)='_FLAG']/src:name), ' \"--', substring(string(//src:decl[substring(src:name, string-length(src:name) - 4)='_FLAG']/src:init/src:expr), 2, string-length(string(//src:decl[substring(src:name, string-length(src:name) - 4)='_FLAG']/src:init/src:expr)) - 2), '\"&gt;&#10;')"
+extract_option_xpath = "concat('&lt;&#33;ENTITY ', string(//src:decl[substring(src:name, string-length(src:name) - 4)='_FLAG']/src:name), ' \"--', substring(string(//src:decl[substring(src:name, string-length(src:name) - 4)='_FLAG']/src:init/src:expr), 2, string-length(string(//src:decl[substring(src:name, string-length(src:name) - 4)='_FLAG']/src:init/src:expr)) - 2), '\"&gt;')"
 
 extract_option_xpath_output_simple = """<EXPAND_FLAG>
 """
@@ -3169,12 +3169,24 @@ check([src2srcml, option.LANGUAGE_FLAG, 'C'], src_bom, srcml)
 
 # xpath various return types
 
-# attribute
-
 srcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 """
+
+srcml_nested = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="b.cpp"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+"""
+
+# attribute
 
 xpath_attribute = "//src:unit/@filename"
 
@@ -3183,15 +3195,32 @@ xpath_attribute_string = "string(//src:unit/@filename)"
 xpath_attribute_output = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src">
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="a.cpp" item="1">a.cpp</unit>
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="a.cpp" item="1">a.cpp</unit>
 
 </unit>
 """
 
-xpath_attribute_string_output = """a.cpp"""
+xpath_attribute_string_output = """a.cpp
+"""
+
+xpath_attribute_nested_output = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="a.cpp" item="1">a.cpp</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="b.cpp" item="1">b.cpp</unit>
+
+</unit>
+"""
+
+xpath_attribute_string_nested_output = """a.cpp
+b.cpp"""
 
 check([srcml2src, option.XPATH_FLAG, xpath_attribute], srcml, xpath_attribute_output)
 check([srcml2src, option.XPATH_FLAG, xpath_attribute_string], srcml, xpath_attribute_string_output)
+
+check([srcml2src, option.XPATH_FLAG, xpath_attribute], srcml_nested, xpath_attribute_nested_output)
+check([srcml2src, option.XPATH_FLAG, xpath_attribute_string], srcml_nested, xpath_attribute_string_nested_output)
 
 # comment
 
