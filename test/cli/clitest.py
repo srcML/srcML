@@ -3169,6 +3169,8 @@ check([src2srcml, option.LANGUAGE_FLAG, 'C'], src_bom, srcml)
 
 # xpath various return types
 
+# attribute
+
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
@@ -3185,8 +3187,6 @@ srcml_nested = xml_declaration + """
 
 </unit>
 """
-
-# attribute
 
 xpath_attribute = "//src:unit/@filename"
 
@@ -3224,6 +3224,61 @@ check([srcml2src, option.XPATH_FLAG, xpath_attribute], srcml_nested, xpath_attri
 check([srcml2src, option.XPATH_FLAG, xpath_attribute_string], srcml_nested, xpath_attribute_string_nested_output)
 
 # comment
+
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+<!-- Comment -->
+</unit>
+"""
+
+srcml_nested = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+<!-- Comment One -->
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="b.cpp"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+<!-- Comment Two -->
+</unit>
+
+</unit>
+"""
+
+xpath_comment = "//comment()"
+
+xpath_comment_string = "string(//comment())"
+
+xpath_comment_output = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="a.cpp" item="1"><!-- Comment --></unit>
+
+</unit>
+"""
+
+xpath_comment_string_output = """ Comment 
+"""
+
+xpath_comment_nested_output = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="a.cpp" item="1"><!-- Comment One --></unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="b.cpp" item="1"><!-- Comment Two --></unit>
+
+</unit>
+"""
+
+xpath_comment_string_nested_output = """ Comment One 
+ Comment Two 
+"""
+
+check([srcml2src, option.XPATH_FLAG, xpath_comment], srcml, xpath_comment_output)
+check([srcml2src, option.XPATH_FLAG, xpath_comment_string], srcml, xpath_comment_string_output)
+
+check([srcml2src, option.XPATH_FLAG, xpath_comment], srcml_nested, xpath_comment_nested_output)
+check([srcml2src, option.XPATH_FLAG, xpath_comment_string], srcml_nested, xpath_comment_string_nested_output)
 
 # footer
 print
