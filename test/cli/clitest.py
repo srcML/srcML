@@ -3181,7 +3181,7 @@ xpath_attribute = "//src:unit/@filename"
 xpath_attribute_output = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src">
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="a.cpp" item="1"> filename="a.cpp"</unit>
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="a.cpp" item="1">a.cpp</unit>
 
 </unit>
 """
