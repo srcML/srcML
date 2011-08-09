@@ -95,7 +95,7 @@ void SAX2ExtractUnitsSrc::commentUnit(void* ctx, const xmlChar* ch) {
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
-  //  pstate->pprocess->characters(ctx, ch, len);
+  pstate->pprocess->comments(ctx, ch);
 }
 
 /*
