@@ -41,16 +41,11 @@ UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding)
   /* If an encoding was not specified, then try to detect it.
      This is especially important for the BOM for UTF-8.
      If nothing is detected, then use ISO-8859-1 */
-  if (!input->encoder) {
-
-    // assume ISO-8859-1 unless we can detect it otherwise
-    xmlCharEncoding denc = XML_CHAR_ENCODING_8859_1;
+  if (!encoding) {
 
     // input enough characters to detect.
     // 4 is good because you either get 4 or some standard size which is probably larger (really)
     size = xmlParserInputBufferGrow(input, 4);
-
-    int shrink = 0;
 
     // detect (and remove) BOMs for UTF8 and UTF16
     if (size >= 3 &&
@@ -58,41 +53,50 @@ UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding)
         input->buffer->content[1] == 0xBB &&
         input->buffer->content[2] == 0xBF) {
 
-      denc = XML_CHAR_ENCODING_UTF8;
-      shrink = 3;
+      pos = 3;
 
-    } else if (size >= 2 &&
-               input->buffer->content[0] == 0xFE &&
-               input->buffer->content[1] == 0xFF) {
+    } else {
 
-      denc = XML_CHAR_ENCODING_UTF16BE;
-      shrink = 2;
+      // assume ISO-8859-1 unless we can detect it otherwise
+      xmlCharEncoding denc = XML_CHAR_ENCODING_8859_1;
+      int shrink = 0;
 
-    } else if (size >= 2 &&
-               input->buffer->content[0] == 0xFF &&
-               input->buffer->content[1] == 0xFE) {
+      /*
+      if (size >= 2 &&
+          input->buffer->content[0] == 0xFE &&
+          input->buffer->content[1] == 0xFF) {
 
-      denc = XML_CHAR_ENCODING_UTF16LE;
-      shrink = 2;
+        denc = XML_CHAR_ENCODING_UTF16BE;
+        shrink = 2;
+
+      } else if (size >= 2 &&
+                 input->buffer->content[0] == 0xFF &&
+                 input->buffer->content[1] == 0xFE) {
+
+        denc = XML_CHAR_ENCODING_UTF16LE;
+        shrink = 2;
+      }
+      */
+
+      /* Transform the data already read in */
+
+      // since original encoding was NONE, no raw buffer was allocated, so use the regular buffer
+      //    if (shrink)
+      //      xmlBufferShrink(input->buffer, shrink);
+      pos = 0;
+      input->raw = input->buffer;
+      input->rawconsumed = size;
+
+      // need a new regular buffer
+      input->buffer = xmlBufferCreate();
+
+      // setup the encoder being used
+      input->encoder = xmlGetCharEncodingHandler(denc);
+
+      // convert the characters to the new encoding
+      int nbchars = xmlCharEncInFunc(input->encoder, input->buffer, input->raw);
+      fprintf(stderr, "DEBUG:  %s %s %d DATA: %d\n", __FILE__,  __FUNCTION__, __LINE__, nbchars);
     }
-
-    /* Transform the data already read in */
-
-    // since original encoding was NONE, no raw buffer was allocated, so use the regular buffer
-    //    if (shrink)
-    //      xmlBufferShrink(input->buffer, shrink);
-    pos = shrink;
-    input->raw = input->buffer;
-    input->rawconsumed = 0;
-
-    // need a new regular buffer
-    input->buffer = xmlBufferCreate();
-
-    // setup the encoder being used
-    input->encoder = xmlGetCharEncodingHandler(denc);
-
-    // convert the characters to the new encoding
-    int nbchars = xmlCharEncInFunc(input->encoder, input->buffer, input->raw);
   }
 }
 
