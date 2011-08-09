@@ -3100,12 +3100,12 @@ check([srcml2src, option.INFO_FLAG, 'xml_error/illformedarchive.xml'], '', info_
 xml_error = """srcml2src: expected '>' in 'xml_error/illformed.xml'
 """
 
-xml_archive_error = """Extra content at end of document or something
+xml_archive_error = """srcml2src: Extra content at the end of the document in 'xml_error/illformedarchive.xml'
 """
 
 # bad
 checkError([srcml2src, 'xml_error/illformed.xml'], '', xml_error)
-checkError([srcml2src, 'xml_error/illformedarchive.xml'], '', xml_archive_error)
+checkError([srcml2src, option.NESTED_FLAG, 'xml_error/illformedarchive.xml'], '', xml_archive_error)
 
 # escaped xml test
 
