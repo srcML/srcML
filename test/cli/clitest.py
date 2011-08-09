@@ -3167,6 +3167,27 @@ srcml = xml_declaration + """
 check([src2srcml, option.LANGUAGE_FLAG, 'C'], src_no_bom, srcml)
 check([src2srcml, option.LANGUAGE_FLAG, 'C'], src_bom, srcml)
 
+# xpath various return types
+
+# attribute
+
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+"""
+
+xpath_attribute = "//src:unit/@filename"
+
+xpath_attribute_output = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" filename="a.cpp" item="1"> filename="a.cpp"</unit>
+
+</unit>
+"""
+
+check([srcml2src, option.XPATH_FLAG, xpath_attribute], srcml, xpath_attribute_output)
+
 # footer
 print
 print "Error count:\t\t", error_count, "\t", error_list
