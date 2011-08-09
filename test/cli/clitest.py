@@ -3178,6 +3178,8 @@ srcml = xml_declaration + """
 
 xpath_attribute = "//src:unit/@filename"
 
+xpath_attribute_string = "string(//src:unit/@filename)"
+
 xpath_attribute_output = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src">
 
@@ -3186,7 +3188,12 @@ xpath_attribute_output = xml_declaration + """
 </unit>
 """
 
+xpath_attribute_string_output = """a.cpp"""
+
 check([srcml2src, option.XPATH_FLAG, xpath_attribute], srcml, xpath_attribute_output)
+check([srcml2src, option.XPATH_FLAG, xpath_attribute_string], srcml, xpath_attribute_string_output)
+
+# comment
 
 # footer
 print
