@@ -281,9 +281,19 @@ public :
           // space between internal units
           xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
 
+        } else if (onode->type == XML_ATTRIBUTE_NODE) {
+
+          // xpath of attribute is value of attribute
+
+          // dump the namespace-modified tree
+          xmlNodeDumpOutput(buf, ctxt->myDoc, onode->children, 0, 0, 0);
+
+          // wrapped in a unit, so output the end tag
+          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>\n\n"));
+
         } else {
 
-          // xpath results was not a unit, but was wrapped in a unit
+          // xpath of nodeset, that is not a unit
 
           // dump the namespace-modified tree
           xmlNodeDumpOutput(buf, ctxt->myDoc, onode, 0, 0, 0);
