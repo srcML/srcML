@@ -38,7 +38,6 @@ xmlSAXHandler SAX2ExtractUnitsSrc::factory() {
   sax.characters = &charactersPre;  // catch first text of single unit
   sax.startDocument = &startDocument;
   sax.endDocument = &endDocument;
-  //  sax.comment = &comment;
 
   return sax;
 }
@@ -87,6 +86,16 @@ void SAX2ExtractUnitsSrc::charactersUnit(void* ctx, const xmlChar* ch, int len) 
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
   pstate->pprocess->characters(ctx, ch, len);
+}
+
+// output all characters to output buffer
+void SAX2ExtractUnitsSrc::commentUnit(void* ctx, const xmlChar* ch) {
+
+  // fprintf(stderr, "HERE: %s\n", __FUNCTION__);
+  xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+  SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+
+  //  pstate->pprocess->characters(ctx, ch, len);
 }
 
 /*
@@ -199,6 +208,7 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
     ctxt->sax->characters = &charactersUnit;
     ctxt->sax->ignorableWhitespace = &charactersUnit;
     ctxt->sax->endElementNs = &endElementNs;
+    ctxt->sax->comment = &commentUnit;
 
   } else {
 
@@ -251,12 +261,14 @@ void SAX2ExtractUnitsSrc::startElementNs(void* ctx, const xmlChar* localname,
     ctxt->sax->characters = &charactersUnit;
     ctxt->sax->ignorableWhitespace = &charactersUnit;
     ctxt->sax->endElementNs = &endElementNs;
+    ctxt->sax->comment = &commentUnit;
 
   } else {
 
     // we are going to skip processing this element
     ctxt->sax->startElementNs = 0;
     ctxt->sax->characters = 0;
+    ctxt->sax->comment = 0;
     ctxt->sax->ignorableWhitespace = 0;
     ctxt->sax->endElementNs = &endElementNsSkip;
   }
@@ -386,6 +398,7 @@ void SAX2ExtractUnitsSrc::stopUnit(void* ctx) {
 
   ctxt->sax->startElementNs = 0;
   ctxt->sax->characters = 0;
+  ctxt->sax->comment = 0;
   ctxt->sax->ignorableWhitespace = 0;
   ctxt->sax->endElementNs = 0;
   xmlStopParser(ctxt);
