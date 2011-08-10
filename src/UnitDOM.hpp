@@ -134,6 +134,13 @@ public :
     xmlSAX2Characters(ctx, ch, len);
   }
 
+  virtual void cdatablock(void* ctx, const xmlChar* ch, int len) {
+
+    // fprintf(stderr, "%s\n", __FUNCTION__);
+
+    xmlSAX2CDataBlock(ctx, ch, len);
+  }
+
   // comments
   virtual void comments(void* ctx, const xmlChar* ch) {
 

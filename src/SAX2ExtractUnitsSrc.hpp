@@ -97,6 +97,7 @@ class SAX2ExtractUnitsSrc {
 
   // output all characters to output buffer
   static void charactersUnit(void* user_data, const xmlChar* ch, int len);
+  static void cdatablockUnit(void* user_data, const xmlChar* ch, int len);
   static void commentUnit(void* user_data, const xmlChar* ch);
 
   static void endElementNsUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);

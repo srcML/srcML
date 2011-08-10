@@ -49,8 +49,11 @@ public :
 
   virtual void characters(void* ctx, const xmlChar* ch, int len) {}
 
+
   // comments
   virtual void comments(void* ctx, const xmlChar* ch) {}
+
+  virtual void cdatablock(void* ctx, const xmlChar* ch, int len) {}
 
   virtual void endUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {}
 
