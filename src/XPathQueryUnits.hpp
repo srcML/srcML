@@ -361,13 +361,12 @@ public :
                 end = 6;
 
               if(end > 4) {
-                char next = p[end];
-                p[end] = '\0';
+                p[end - 1] = '\0';
 
                 int c = atoi(p + 2);
                 xmlOutputBufferWrite(buf, 1, (const char*) &c);
 
-                p[end] = next;
+                p[end - 1] = ';';
               } else
                 xmlOutputBufferWrite(buf, 4, (const char*) p);
 
