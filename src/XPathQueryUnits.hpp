@@ -176,7 +176,7 @@ public :
 
         // output a unit element around the fragment, unless
         // is is already a unit
-        outputunit = strcmp("unit", (const char*) onode->name) != 0;
+        outputunit = onode->name && strcmp("unit", (const char*) onode->name) != 0;
 
         // if we need a unit, output the start tag.  Line number starts at 1, not 0
         if (outputunit) {
@@ -235,7 +235,7 @@ public :
         */
 
         // input was an archive, xpath result is a unit
-        if (pstate->isarchive && !outputunit) {
+        if (onode->type == XML_ELEMENT_NODE && pstate->isarchive && !outputunit) {
 
           // create a new list of namespaces
           // skip over the namespaces on the root
@@ -253,7 +253,7 @@ public :
           // space between internal units
           xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
 
-        } else if (!pstate->isarchive && !outputunit) {
+        } else if (onode->type == XML_ELEMENT_NODE && !pstate->isarchive && !outputunit) {
 
           // input was not an archive, xpath result is a unit
 
@@ -280,6 +280,16 @@ public :
 
           // space between internal units
           xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
+
+        } else if (onode->type == XML_CDATA_SECTION_NODE) {
+
+          // xpath of attribute is value of attribute
+
+          // dump the namespace-modified tree
+          xmlNodeDumpOutput(buf, ctxt->myDoc, onode->children, 0, 0, 0);
+
+          // wrapped in a unit, so output the end tag
+          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>\n\n"));
 
         } else if (onode->type == XML_ATTRIBUTE_NODE) {
 
