@@ -36,6 +36,8 @@ public :
 
   virtual ~UnitDOM() {}
     
+  virtual int getOptions() const { return options; }
+
   /*
     Called exactly once at beginnning of document  Override for intended behavior.
   */
@@ -88,6 +90,7 @@ public :
   virtual void startUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                          int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                          const xmlChar** attributes) {
+
 
     // if applying to entire archive, then just build this start element node for now
     if (isoption(options, OPTION_XSLT_ALL)) {
@@ -161,35 +164,10 @@ public :
     // finish building the unit tree
     xmlSAX2EndElementNs(ctx, localname, prefix, URI);
 
-    // done if building entire tree (not just individual unit)
-    if (isoption(options, OPTION_XSLT_ALL))
-      return;
-
     // apply the necessary processing
     apply(ctx);
 
     // unhook the unit tree from the document, leaving an empty document
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
-    xmlUnlinkNode(onode);
-    xmlFreeNode(onode);
-    ctxt->node = 0;
-  }
-
-  // 
-  virtual void endRootUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
-
-    // only is used when building entire tree (not just individual unit)
-    if (!isoption(options, OPTION_XSLT_ALL))
-      return;
-
-    // finish building the unit tree
-    xmlSAX2EndElementNs(ctx, localname, prefix, URI);
-
-    // apply the necessary processing
-    apply(ctx);
-
-    // unhook the entire unit tree from the document, leaving an empty document
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
     xmlUnlinkNode(onode);
