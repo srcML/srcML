@@ -47,7 +47,7 @@ public :
 
   XPathQueryUnits(const char* a_context_element, const char* a_ofilename, int options,
                   xmlXPathCompExprPtr compiled_xpath)
-    : ofilename(a_ofilename), options(options),
+    : UnitDOM(options), ofilename(a_ofilename), options(options),
       compiled_xpath(compiled_xpath), total(0), found(false), needroot(true) {
   }
 
