@@ -339,14 +339,14 @@ public :
             if (p[1] == 'l' && p[2] == 't' && p[3] == ';') {
 
               xmlOutputBufferWrite(buf, p - pos, pos);
-              xmlOutputBufferWrite(buf, 1, "<");
+              xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<"));
               p += 4;
               pos = p;
 
             } else if (p[1] == 'g' && p[2] == 't' && p[3] == ';') {
 
               xmlOutputBufferWrite(buf, p - pos, pos);
-              xmlOutputBufferWrite(buf, 1, ">");
+              xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">"));
               p += 4;
               pos = p;
 
