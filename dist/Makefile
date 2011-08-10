@@ -50,8 +50,7 @@ LIBSRCML_DLL=${BIN_DIR}/libsrcml.dll
 DOC_FILES=${DOC_DIR}/src2srcml.1.gz ${DOC_DIR}/srcml2src.1.gz ${DOC_DIR}/src2srcml.html ${DOC_DIR}/srcml2src.html
 WIN_DOC_FILES=${DOC_DIR}/src2srcml.html ${DOC_DIR}/srcml2src.html
 DIST_FILES=${DOC_FILES} ${SRC2SRCML_PATH} ${SRCML2SRC_PATH}
-WIN_DIST_FILES=${WIN_SRC2SRCML_PATH} ${WIN_SRCML2SRC_PATH}
-#WIN_DIST_FILES=${WIN_DOC_FILES} ${WIN_SRC2SRCML_PATH} ${WIN_SRCML2SRC_PATH}
+WIN_DIST_FILES=${WIN_DOC_FILES} ${WIN_SRC2SRCML_PATH} ${WIN_SRCML2SRC_PATH}
 
 # generate files
 all : src bin
@@ -109,9 +108,8 @@ windows : ${SRC_ZIP}
 	cd ${DOC_DIR} && make
 	i686-pc-mingw32-strip ${WIN_SRC2SRCML_PATH} ${WIN_SRCML2SRC_PATH}
 	mkdir ${WIN_BASE} && ${CP} -t ${WIN_BASE} ${WIN_DIST_FILES}
-	cp -t ${WIN_BASE} ${WIN_DOC_FILES} 
 	unix2dos ${WIN_BASE}/*.html
-	zip -rql ${WIN_ZIP} ${WIN_BASE}/src2srcml.exe ${WIN_BASE}/srcml2src.exe ${WIN_BASE}/*.dll ${WIN_BASE}/src2srcml.html ${WIN_BASE}/srcml2src.html
+	zip -ql ${WIN_ZIP} ${WIN_BASE}/src2srcml.exe ${WIN_BASE}/srcml2src.exe ${WIN_BASE}/*.dll ${WIN_BASE}/src2srcml.html ${WIN_BASE}/srcml2src.html
 
 windowsdyn : ${SRC_ZIP}
 	make cleansrc
@@ -123,9 +121,8 @@ windowsdyn : ${SRC_ZIP}
 	mkdir ${WIN_BASE} && ${CP} -t ${WIN_BASE} ${WIN_DIST_FILES}
 	cp ../dlls/*.dll ${WIN_BASE}
 	cp ${BIN_DIR}/libsrcml.dll ${WIN_BASE}
-	cp -t ${WIN_BASE} ${WIN_DOC_FILES} 
 	unix2dos ${WIN_BASE}/*.html
-	zip -rql ${WIN_ZIP} ${WIN_BASE}/src2srcml.exe ${WIN_BASE}/srcml2src.exe ${WIN_BASE}/*.dll ${WIN_BASE}/src2srcml.html ${WIN_BASE}/srcml2src.html
+	zip -ql ${WIN_ZIP} ${WIN_BASE}/src2srcml.exe ${WIN_BASE}/srcml2src.exe ${WIN_BASE}/*.dll ${WIN_BASE}/src2srcml.html ${WIN_BASE}/srcml2src.html
 
 dll :
 	echo ${DLL_DIR}
