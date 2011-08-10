@@ -91,7 +91,6 @@ public :
 
     // if applying to entire archive, then just build this start element node for now
     if (isoption(options, OPTION_XSLT_ALL)) {
-      fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
 
       xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes,
 			    nb_defaulted, attributes);
@@ -179,8 +178,6 @@ public :
 
   // 
   virtual void endRootUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
-
-    fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
 
     // only is used when building entire tree (not just individual unit)
     if (!isoption(options, OPTION_XSLT_ALL))

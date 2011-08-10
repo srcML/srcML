@@ -295,6 +295,12 @@ void SAX2ExtractUnitsSrc::endElementNsSkip(void *ctx, const xmlChar *localname, 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
+  if (pstate->isarchive && ctxt->nameNr == 1) {
+
+    pstate->pprocess->endRootUnit(ctx, localname, prefix, URI);
+    return;
+  }
+
   if (!pstate->rootonly && ctxt->nameNr != (pstate->isarchive ? 2 : 1))
     return;
 
@@ -353,7 +359,7 @@ void SAX2ExtractUnitsSrc::endElementNs(void *ctx, const xmlChar *localname, cons
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
   // only process nested unit start elements
-  if (ctxt->nameNr != (pstate->isarchive ? 2 : 1)) {
+  if (ctxt->nameNr > (pstate->isarchive ? 2 : 1)) {
     endElementNsUnit(ctx, localname, prefix, URI);
     return;
   }
