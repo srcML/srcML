@@ -176,7 +176,7 @@ public :
 
         // output a unit element around the fragment, unless
         // is is already a unit
-        outputunit = onode->name && strcmp("unit", (const char*) onode->name) != 0;
+        outputunit = !onode->name || strcmp("unit", (const char*) onode->name) != 0;
 
         // if we need a unit, output the start tag.  Line number starts at 1, not 0
         if (outputunit) {
@@ -280,16 +280,6 @@ public :
 
           // space between internal units
           xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
-
-        } else if (onode->type == XML_CDATA_SECTION_NODE) {
-
-          // xpath of attribute is value of attribute
-
-          // dump the namespace-modified tree
-          xmlNodeDumpOutput(buf, ctxt->myDoc, onode->children, 0, 0, 0);
-
-          // wrapped in a unit, so output the end tag
-          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>\n\n"));
 
         } else if (onode->type == XML_ATTRIBUTE_NODE) {
 
