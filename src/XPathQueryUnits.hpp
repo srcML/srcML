@@ -91,6 +91,7 @@ public :
       }
     }
 
+#if LIBEXSLT_VERSION > 813
     // register exslt functions for XPath usage
     if (exsltDateXpathCtxtRegister(context, BAD_CAST "date") == -1) {
       fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
@@ -108,6 +109,7 @@ public :
       fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
               "srcml2src", "str");
     }
+#endif
   }
 
   virtual void apply(void *ctx) {
