@@ -132,6 +132,7 @@ class Mode : public TokenParser, public Language {
 
   const static State::MODE_TYPE MODE_FUNCTION_NAME;
 
+  const static State::MODE_TYPE MODE_THEN;
   const static State::MODE_TYPE MODE_ELSE;
 
   const static State::MODE_TYPE MODE_TYPEDEF;

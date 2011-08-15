@@ -87,6 +87,7 @@ const State::MODE_TYPE Mode::MODE_DERIVED             = ull(0x0008000000000000);
 const State::MODE_TYPE Mode::MODE_INNER_DECL          = ull(0x0010000000000000);
 const State::MODE_TYPE Mode::MODE_REQUIRES            = ull(0x0020000000000000);
 const State::MODE_TYPE Mode::MODE_CONCEPT             = ull(0x0040000000000000);
+const State::MODE_TYPE Mode::MODE_THEN                = ull(0x0080000000000000);
 
 
 srcMLState& Mode::currentState() {
