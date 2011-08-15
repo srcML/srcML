@@ -15,7 +15,7 @@ SVN_URL=http://calder.sdml.cs.kent.edu/svn/srcML/trunk
 
 # file name base
 BASE=srcML
-WIN_BASE=${BASE}win
+WIN_BASE=${BASE}-Win
 
 # generated compressed files
 SRC_TAR=${BASE}-src.tar
