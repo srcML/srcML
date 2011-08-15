@@ -23,7 +23,7 @@ SRC_TAR_GZ=${SRC_TAR}.gz
 SRC_ZIP=${BASE}-src.zip
 
 UNIX_TAR_GZ=${BASE}.tar.gz
-WIN_ZIP=${BASE}win.zip
+WIN_ZIP=${BASE}-Win.zip
 
 # directories
 SRC_DIR_BASE=${BASE}-src
