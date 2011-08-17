@@ -54,6 +54,8 @@ public:
   ~UTF8CharBuffer();
 
 private:
+
+  int growBuffer();
   int pos;
   int size;
   bool eof;

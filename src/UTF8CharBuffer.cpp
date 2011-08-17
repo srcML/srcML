@@ -98,6 +98,11 @@ UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding)
   }
 }
 
+int UTF8CharBuffer::growBuffer() {
+
+  return xmlParserInputBufferGrow(input, SRCBUFSIZE);
+}
+
 // libxml context
 void* UTF8CharBuffer::getContext() const {
 
@@ -141,7 +146,7 @@ int UTF8CharBuffer::getChar() {
 
       // refill the buffer
       input->buffer->use = 0;
-      size = xmlParserInputBufferGrow(input, SRCBUFSIZE);
+      size = growBuffer();
 
       // found problem or eof
       if (size == -1 || size == 0)
