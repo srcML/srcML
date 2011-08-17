@@ -61,20 +61,20 @@ UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding)
       xmlCharEncoding denc = XML_CHAR_ENCODING_8859_1;
 
       /*
-      if (size >= 2 &&
-          input->buffer->content[0] == 0xFE &&
-          input->buffer->content[1] == 0xFF) {
+        if (size >= 2 &&
+        input->buffer->content[0] == 0xFE &&
+        input->buffer->content[1] == 0xFF) {
 
         denc = XML_CHAR_ENCODING_UTF16BE;
         shrink = 2;
 
-      } else if (size >= 2 &&
-                 input->buffer->content[0] == 0xFF &&
-                 input->buffer->content[1] == 0xFE) {
+        } else if (size >= 2 &&
+        input->buffer->content[0] == 0xFF &&
+        input->buffer->content[1] == 0xFE) {
 
         denc = XML_CHAR_ENCODING_UTF16LE;
         shrink = 2;
-      }
+        }
       */
 
       /* Transform the data already read in */

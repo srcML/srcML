@@ -38,25 +38,26 @@ class UTF8FileError {};
 
 class UTF8CharBuffer : public antlr::CharBuffer {
 public:
-        // size of the original character buffer
-        static const unsigned int SRCBUFSIZE = 512;
 
-	// Create a character buffer
-        UTF8CharBuffer(const char* ifilename, const char* encoding);
+  // size of the original character buffer
+  static const unsigned int SRCBUFSIZE = 512;
 
-	// Get the next character from the stream
-	int getChar();
+  // Create a character buffer
+  UTF8CharBuffer(const char* ifilename, const char* encoding);
 
-        // libxml context
-        void* getContext() const;
+  // Get the next character from the stream
+  int getChar();
 
-	~UTF8CharBuffer();
+  // libxml context
+  void* getContext() const;
+
+  ~UTF8CharBuffer();
 
 private:
-	int pos;
-	int size;
-	bool eof;
-	bool lastcr;
-	xmlParserInputBufferPtr input;
+  int pos;
+  int size;
+  bool eof;
+  bool lastcr;
+  xmlParserInputBufferPtr input;
 };
 #endif
