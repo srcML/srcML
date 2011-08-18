@@ -1570,7 +1570,7 @@ lcurly {} :
             if (inMode(MODE_IF)) {
 
                 // then part of the if statement (after the condition)
-                startNewMode(MODE_STATEMENT | MODE_NEST | MODE_STATEMENT);
+                startNewMode(MODE_STATEMENT | MODE_NEST | MODE_THEN);
 
                 // start the then element
                 startNoSkipElement(STHEN);
@@ -1765,7 +1765,7 @@ else_handling {} :
                             endCurrentMode(MODE_ELSE);
 
                             // ending an else means ending an if
-                            endCurrentMode(MODE_IF);
+                            endCurrentModeSafely(MODE_IF);
 
                         }  
 
@@ -1998,7 +1998,7 @@ rparen[bool final = false] { bool isempty = getParen() == 0; } :
                     endDownOverMode(MODE_CONDITION);
 
                     // then part of the if statement (after the condition)
-                    startNewMode(MODE_STATEMENT | MODE_NEST);
+                    startNewMode(MODE_STATEMENT | MODE_NEST | MODE_THEN);
 
                     // start the then element
                     startNoSkipElement(STHEN);
@@ -3272,7 +3272,7 @@ rparen_general_operators[bool final = false] { bool isempty = getParen() == 0; }
                     endDownOverMode(MODE_CONDITION);
 
                     // then part of the if statement (after the condition)
-                    startNewMode(MODE_STATEMENT | MODE_NEST);
+                    startNewMode(MODE_STATEMENT | MODE_NEST | MODE_THEN);
 
                     // start the then element
                     startNoSkipElement(STHEN);
