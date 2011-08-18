@@ -189,7 +189,7 @@ header "post_include_cpp" {
 srcMLParser* LocalMode::pparser = 0;
 
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options)
-   : antlr::LLkParser(lexer,1), Mode(this, lang), zeromode(false), skipelse(false), cppifcount(0), parseoptions(parser_options)
+   : antlr::LLkParser(lexer,1), Mode(this, lang), zeromode(false), skipelse(false), cppifcount(0), parseoptions(parser_options), ifcount(0)
 
 {
     // LocalMode objects need access to the current parser
@@ -430,6 +430,7 @@ bool isdestructor;
 int parseoptions;
 std::string namestack[2];
 std::string namestack_save[2];
+int ifcount;
 
 ~srcMLParser() {}
 
@@ -973,6 +974,8 @@ if_statement { setFinalToken(); } :
             // statement with nested statement
             // detection of else
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_IF);
+
+            ++ifcount;
 
             // start the if statement
             startElement(SIF_STATEMENT);
@@ -1764,8 +1767,14 @@ else_handling {} :
                             // end the else
                             endCurrentMode(MODE_ELSE);
 
+                            // move to the next non-skipped token
+                            consumeSkippedTokens();
+
                             // ending an else means ending an if
-                            endCurrentModeSafely(MODE_IF);
+                            if (inMode(MODE_IF)) {
+                                endCurrentModeSafely(MODE_IF);
+                                --ifcount;
+                            }
                         }  
 
                         // following ELSE indicates end of outer then
