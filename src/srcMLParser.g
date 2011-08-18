@@ -1766,15 +1766,17 @@ else_handling {} :
 
                             // ending an else means ending an if
                             endCurrentModeSafely(MODE_IF);
-
                         }  
 
                         // following ELSE indicates end of outer then
-                        endCurrentMode();
+                        endCurrentModeSafely(MODE_THEN);
                     }
 
-                } else {
+                } else if (inTransparentMode(MODE_ELSE)) {
 
+                    // have an else, but are not in an if.  Could be a fragment,
+                    // or could be due to an #ifdef ... #else ... #endif
+                    endCurrentModeSafely(MODE_ELSE);
                 }
 
 
