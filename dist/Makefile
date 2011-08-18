@@ -86,7 +86,7 @@ ${SRC_TAR_GZ} : exp
 	gunzip --test $@
 
 ${SRC_ZIP} : exp
-	zip -rql $@ ${SRC_DIR} ${OBJ_DIR} ${BIN_DIR} ${DOC_DIR}
+	zip -orql $@ ${SRC_DIR} ${OBJ_DIR} ${BIN_DIR} ${DOC_DIR}
 	unzip -qt $@
 
 ##
@@ -107,7 +107,7 @@ windows : ${SRC_ZIP}
 	i686-pc-mingw32-strip ${WIN_SRC2SRCML_PATH} ${WIN_SRCML2SRC_PATH}
 	mkdir ${WIN_BASE} && ${CP} -t ${WIN_BASE} ${WIN_DIST_FILES}
 	unix2dos ${WIN_BASE}/*.html
-	zip -ql ${WIN_ZIP} ${WIN_BASE}/src2srcml.exe ${WIN_BASE}/srcml2src.exe ${WIN_BASE}/*.dll ${WIN_BASE}/src2srcml.html ${WIN_BASE}/srcml2src.html
+	zip -oql ${WIN_ZIP} ${WIN_BASE}/src2srcml.exe ${WIN_BASE}/srcml2src.exe ${WIN_BASE}/*.dll ${WIN_BASE}/src2srcml.html ${WIN_BASE}/srcml2src.html
 
 windowsdyn : ${SRC_ZIP}
 	unzip -aq ${SRC_ZIP}
@@ -119,7 +119,7 @@ windowsdyn : ${SRC_ZIP}
 	${CP} ../dlls/*.dll ${WIN_BASE}
 	${CP} ${BIN_DIR}/libsrcml.dll ${WIN_BASE}
 	unix2dos ${WIN_BASE}/*.html
-	zip -ql ${WIN_ZIP} ${WIN_BASE}/src2srcml.exe ${WIN_BASE}/srcml2src.exe ${WIN_BASE}/*.dll ${WIN_BASE}/src2srcml.html ${WIN_BASE}/srcml2src.html
+	zip -oql ${WIN_ZIP} ${WIN_BASE}/src2srcml.exe ${WIN_BASE}/srcml2src.exe ${WIN_BASE}/*.dll ${WIN_BASE}/src2srcml.html ${WIN_BASE}/srcml2src.html
 
 dll :
 	echo ${DLL_DIR}
