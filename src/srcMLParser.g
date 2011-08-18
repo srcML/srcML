@@ -993,7 +993,7 @@ if_statement { setFinalToken(); } :
 else_statement { setFinalToken(); } :
         {
             // treat as a statement with a nested statement
-            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_STATEMENT | MODE_ELSE);
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_ELSE);
 
             // start the else part of the if statement
             startElement(SELSE);
@@ -1772,6 +1772,9 @@ else_handling {} :
                         // following ELSE indicates end of outer then
                         endCurrentMode();
                     }
+
+                } else {
+
                 }
 
 
