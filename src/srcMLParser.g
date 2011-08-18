@@ -1743,11 +1743,11 @@ else_handling {} :
                 // see below
                 unsigned int cppmode_size = !cppmode.empty() ? cppmode.top().statesize.size() : 0;
 
+                // move to the next non-skipped token
+                consumeSkippedTokens();
+
                 // handle parts of if
                 if (inTransparentMode(MODE_IF)) {
-
-                    // move to the next non-skipped token
-                    consumeSkippedTokens();
 
                     // find out if the next token is an else
                     bool nestedelse = LA(1) == ELSE;
@@ -1778,7 +1778,6 @@ else_handling {} :
                     // or could be due to an #ifdef ... #else ... #endif
                     endCurrentModeSafely(MODE_ELSE);
                 }
-
 
             // update the state size in cppmode if changed from using consumeSkippedTokens
             if (!cppmode.empty() && cppmode_size != cppmode.top().statesize.size()) {
