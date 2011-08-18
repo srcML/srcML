@@ -1214,6 +1214,7 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
   // process the individual file (once), or an archive as many times as it takes
   void* context = 0;
   bool isarchive = false;
+  bool firstopen = true;
   do {
 
     // start with the original options
@@ -1223,7 +1224,10 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
     try {
 
       // open up the file
-      context = translator.setInput(path);
+      if (firstopen)
+        context = translator.setInput(path);
+      else
+        context = getContext();
 
       // check if file is bad
       if (!context || archiveReadStatus(context) < 0 ) {
@@ -1327,6 +1331,10 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
       if (!isoption(options, OPTION_QUIET) && shownumber)
         fprintf(stderr, "%5d %s\n", count, c_filename);
 
+      // open up the file
+      if (!firstopen)
+        context = translator.setInput(path);
+
       // translate the file
       translator.translate(path, dir,
                            foundfilename ? c_filename : 0,
@@ -1362,6 +1370,8 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
     if (isoption(options, OPTION_TERMINATE))
       return;
     //     return STATUS_TERMINATED;
+
+    firstopen = false;
 
   } while (isarchive && isAnythingOpen(context));
 }

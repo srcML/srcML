@@ -46,6 +46,11 @@ struct archiveData {
 
 static archiveData* gpcontext = 0;
 
+void* getContext() {
+
+  return gpcontext;
+}
+
 bool archiveIsDir(void* context) {
 
   archiveData* pcontext = (archiveData*) context;
