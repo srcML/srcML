@@ -1770,6 +1770,11 @@ else_handling {} :
                             // move to the next non-skipped token
                             consumeSkippedTokens();
 
+                            // we have an extra else that is rogue
+                            // it either is a single else statement, or part of an #ifdef ... #else ... #endif
+                            if (LA(1) == ELSE && ifcount == 1)
+                                break;
+
                             // ending an else means ending an if
                             if (inMode(MODE_IF)) {
                                 endCurrentModeSafely(MODE_IF);
