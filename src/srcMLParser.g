@@ -1739,6 +1739,17 @@ terminate_post {} :
         else_handling
 ;
 
+/*
+  Handle possible endings of else statements.
+
+  Called from all places that end a statement, and could possibly end the else that the target statement was in.
+  I.e., terminate ';', end of a statement block, etc.
+
+  If in an if-statement, relatively straightforward.  Note that we could be ending with multiple else's.
+
+  Special case:  else with no matching if.  This occurs with a) a single else, or more likely with b) an
+  else in a preprocessor #if .. #else ... #endif construct (actually, very common).
+*/
 else_handling {} :
         {
                 // record the current size of the top of the cppmode stack to detect
@@ -1770,6 +1781,11 @@ else_handling {} :
                             // move to the next non-skipped token
                             consumeSkippedTokens();
 
+                            /*
+                              TODO:  Can we only do this if we detect a cpp change?
+
+                              This would occur EVEN if we have an ifcount of 2.
+                             */
                             // we have an extra else that is rogue
                             // it either is a single else statement, or part of an #ifdef ... #else ... #endif
                             if (LA(1) == ELSE && ifcount == 1)
