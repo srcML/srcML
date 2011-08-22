@@ -14,8 +14,8 @@ TIMING_JAVA=timing_java.java
 
 PRINTF_FORMAT="\%1.0f lines/second\\n"
 
-SED=${firstword ${wildcard /opt/local/bin/gsed}}
-ECHO=${firstword ${wildcard /opt/local/bin/gecho}}
+SED=${firstword ${wildcard /opt/local/bin/gsed sed}}
+ECHO=${firstword ${wildcard /opt/local/bin/gecho echo}}
 FLAGS=-ne
 
 PHONY : time
