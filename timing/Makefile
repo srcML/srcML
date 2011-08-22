@@ -14,12 +14,8 @@ OSLOWER = $(shell uname -s 2>/dev/null | tr [:upper:] [:lower:])
 # 'linux' is output for Linux system, 'darwin' for OS X                         
 DARWIN = $(strip $(findstring DARWIN, $(OSUPPER)))
 
-ifneq ($(DARWIN),)
-TIME=/opt/local/bin/gtime --output=/dev/stdout --format="%U"
-else
-TIME=time 
-#TIME=time --output=/dev/stdout --format="%U"
-endif
+TIME_CMD=${firstword ${wildcard /opt/local/bin/gtime time}}
+TIME=$(TIME_CMD) --output=/dev/stdout --format="%U"
 
 TIMING_MED=timing_med.h
 TIMING_JAVA=timing_java.java
