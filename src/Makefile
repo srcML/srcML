@@ -194,6 +194,7 @@ ${LIBSRCML_SO}: $(LIBSRCML_INCLUDE)
 
 # static library for srcML translation
 ${EXE_DIR}libsrcml.a : $(LIBSRCML_INCLUDE)
+	rm -f $@
 	${AR} rvs $@ $^ 
 
 # srcML to source code translator program

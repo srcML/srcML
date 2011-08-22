@@ -437,8 +437,8 @@ int ifcount;
 srcMLParser(antlr::TokenStream& lexer, int lang = LANGUAGE_CXX, int options = 0);
 
 struct cppmodeitem {
-        cppmodeitem(int current_size)
-            : statesize(1, current_size), isclosed(false), skipelse(false)
+        cppmodeitem(int current_size, int curline)
+            : statesize(1, current_size), isclosed(false), skipelse(false), line(curline)
         {}
 
         cppmodeitem()
@@ -447,6 +447,7 @@ struct cppmodeitem {
         std::vector<int> statesize;
         bool isclosed;
         bool skipelse;
+        int line;
 };
 
 std::stack<cppmodeitem, std::list<cppmodeitem> > cppmode;
@@ -1757,8 +1758,14 @@ else_handling {} :
                 // see below
                 unsigned int cppmode_size = !cppmode.empty() ? cppmode.top().statesize.size() : 0;
 
+                int cppmode_line = !cppmode.empty() ? cppmode.top().line : 0;
+
+fprintf(stderr, "DEBUG:  %s %s %d DATA: %d\n", __FILE__,  __FUNCTION__, __LINE__, cppmode.top().statesize.size());
+fprintf(stderr, "DEBUG:  %s %s %d DATA: %d\n", __FILE__,  __FUNCTION__, __LINE__, cppmode.top().statesize.size());
+
                 // move to the next non-skipped token
                 consumeSkippedTokens();
+fprintf(stderr, "DEBUG:  %s %s %d DATA: %d\n", __FILE__,  __FUNCTION__, __LINE__, cppmode.top().statesize.size());
 
                 // handle parts of if
                 if (inTransparentMode(MODE_IF)) {
@@ -1781,6 +1788,19 @@ else_handling {} :
                             // move to the next non-skipped token
                             consumeSkippedTokens();
 
+                bool cppchange = cppmode_line == (!cppmode.empty() ? cppmode.top().line : 0);
+
+            // update the state size in cppmode if changed from using consumeSkippedTokens
+            if (!cppmode.empty() && cppmode_size != cppmode.top().statesize.size()) {
+
+                cppmode.top().statesize.back() = size();
+
+                // remove any finished ones
+                if (cppmode.top().isclosed)    {
+                        cppmode_cleanup();
+                }
+            }
+
                             /*
                               TODO:  Can we only do this if we detect a cpp change?
 
@@ -1788,7 +1808,9 @@ else_handling {} :
                              */
                             // we have an extra else that is rogue
                             // it either is a single else statement, or part of an #ifdef ... #else ... #endif
-                            if (LA(1) == ELSE && ifcount == 1)
+fprintf(stderr, "DEBUG:  %s %s %d DATA: %d\n", __FILE__,  __FUNCTION__, __LINE__, cppmode.top().statesize.size());
+
+                            if (LA(1) == ELSE && cppchange /* ifcount == 1 */)
                                 break;
 
                             // ending an else means ending an if
@@ -4198,7 +4220,7 @@ eol_post[int directive_token, bool markblockzero] {
                     // create new context for #if (and possible #else)
                     if (checkOption(OPTION_CPP_MARKUP_ELSE) && !inputState->guessing) {
 
-                        cppmode.push(cppmodeitem(size()));
+                        cppmode.push(cppmodeitem(size(), LT(1)->getLine()));
                     }
 
                     break;
@@ -4220,7 +4242,7 @@ eol_post[int directive_token, bool markblockzero] {
 
                         // create an empty cppmode for #if if one doesn't exist
                         if (cppmode.empty())
-                            cppmode.push(cppmodeitem(size()));
+                            cppmode.push(cppmodeitem(size(), LT(1)->getLine()));
 
                         // add new context for #else in current #if
                         cppmode.top().statesize.push_back(size()); 
@@ -4230,6 +4252,7 @@ eol_post[int directive_token, bool markblockzero] {
                                 cppmode.top().skipelse = true;
                         }
                     }
+                        cppmode.top().line = LT(1)->getLine();
 
                     break;
 
