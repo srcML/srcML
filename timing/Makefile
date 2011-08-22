@@ -16,7 +16,6 @@ DARWIN = $(strip $(findstring DARWIN, $(OSUPPER)))
 
 TIME_CMD=${firstword ${wildcard /opt/local/bin/gtime time}}
 
-
 TIME=$(TIME_CMD) --output=/dev/stdout --format="%U"
 
 TIMING_MED=timing_med.h
