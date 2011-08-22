@@ -7,7 +7,7 @@ OBJ_DIR = ../obj/
 SRC2SRCML_BIN=../bin/src2srcml
 SRCML2SRC_BIN=../bin/srcml2src
 
-TIME=${firstword ${wildcard /opt/local/bin/gtime time}} --format="%U"
+TIME=${firstword ${wildcard /opt/local/bin/gtime /usr/bin/time}} --format="%U"
 
 TIMING_MED=timing_med.h
 TIMING_JAVA=timing_java.java
@@ -23,8 +23,6 @@ time : ../bin/src2srcml
 	@${SRC2SRCML_BIN} --version
 	@${SRC2SRCML_BIN} --version
 	@${ECHO}
-
-	echo $(TIME)
 	@${ECHO} ${FLAGS} "${SRC2SRCML_BIN} ${TIMING_MED} -o ${TIMING_MED}.xml:"
 	@cd .; ${TIME} ${SRC2SRCML_BIN} ${TIMING_MED} -o ${TIMING_MED}.xml 2>&1 | ${SED} 's/[0-9\.]*/ 10872 \/ &/' | bc -l |  xargs printf "%7.0f lines/second\n"
 	@${ECHO} ${FLAGS} "${SRCML2SRC_BIN} ${TIMING_MED}.xml -o ${TIMING_MED}vs:"
