@@ -16,7 +16,7 @@ PRINTF_FORMAT="\%1.0f lines/second\\n"
 
 SED=${firstword ${wildcard /opt/local/bin/gsed sed}}
 ECHO=${firstword ${wildcard /opt/local/bin/gecho echo}}
-FLAGS=-ne
+FLAGS=-n
 
 PHONY : time
 time : ../bin/src2srcml
