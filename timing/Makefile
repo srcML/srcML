@@ -7,31 +7,16 @@ OBJ_DIR = ../obj/
 SRC2SRCML_BIN=../bin/src2srcml
 SRCML2SRC_BIN=../bin/srcml2src
 
-# detect OS                                                                     
-OSUPPER = $(shell uname -s 2>/dev/null | tr [:lower:] [:upper:])
-OSLOWER = $(shell uname -s 2>/dev/null | tr [:upper:] [:lower:])
-
-# 'linux' is output for Linux system, 'darwin' for OS X                         
-DARWIN = $(strip $(findstring DARWIN, $(OSUPPER)))
-
-TIME_CMD=${firstword ${wildcard /opt/local/bin/gtime time}}
-
-TIME=$(TIME_CMD) --output=/dev/stdout --format="%U"
+TIME=${firstword ${wildcard time}}
 
 TIMING_MED=timing_med.h
 TIMING_JAVA=timing_java.java
 
 PRINTF_FORMAT="\%1.0f lines/second\\n"
 
-ifneq ($(DARWIN),)
-SED=/opt/local/bin/gsed
-ECHO=/opt/local/bin/gecho
+SED=${firstword ${wildcard /opt/local/bin/gsed}}
+ECHO=${firstword ${wildcard /opt/local/bin/gecho}}
 FLAGS=-ne
-else
-SED=sed
-ECHO=echo
-FLAGS=-n
-endif
 
 PHONY : time
 time : ../bin/src2srcml
