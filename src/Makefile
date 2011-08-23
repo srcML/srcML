@@ -209,7 +209,7 @@ ${OBJ_DIR}srcml2src.o : srcml2src.cpp srcmlapps.hpp Options.hpp URIStream.hpp ma
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}srcMLTranslator.o : srcMLTranslator.cpp ${OBJ_DIR}srcMLTranslatorCore.o srcMLTranslator.hpp srcMLTranslatorCore.hpp
-	$(CXX) $(ANTLR_INC) $(CXXFLAGS) ${OBJ_DIR}srcMLTranslatorCore.o $(LIBXML_INCLUDE) -c $< -o $@
+	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}srcMLTranslatorCore.o : srcMLTranslatorCore.cpp srcMLTranslatorCore.hpp StreamMLParser.hpp StreamParser.hpp srcMLToken.hpp Language.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
