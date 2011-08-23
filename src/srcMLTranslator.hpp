@@ -27,13 +27,9 @@
 #ifndef SRCMLTRANSLATOR_HPP
 #define SRCMLTRANSLATOR_HPP
 
-#include "Language.hpp"
-#include "srcMLOutput.hpp"
+class srcMLTranslatorCore;
 
-class UTF8CharBuffer;
-class FileError {};
-
-class srcMLTranslator : public Language {
+class srcMLTranslator {
  public:
 
   // constructor
@@ -67,16 +63,7 @@ class srcMLTranslator : public Language {
   ~srcMLTranslator();
 
  private:
-  UTF8CharBuffer* pinput;
-  bool first;
-  const char* root_directory;
-  const char* root_filename;
-  const char* root_version;
-  const char* encoding;
-  int language;
-  OPTION_TYPE& options;
-  srcMLOutput out;
-  int tabsize;
+  srcMLTranslatorCore * translator;
 };
 
 #endif
