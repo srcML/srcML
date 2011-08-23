@@ -28,6 +28,7 @@
 #define SRCMLTRANSLATOR_HPP
 
 class srcMLTranslatorCore;
+class FileError {};
 
 class srcMLTranslator {
  public:
