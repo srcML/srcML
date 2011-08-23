@@ -34,6 +34,7 @@
 #include "project.hpp"
 #include "Language.hpp"
 #include "srcMLTranslator.hpp"
+#include "srcMLOutput.hpp"
 #include "URIStream.hpp"
 #include <getopt.h>
 #include <dirent.h>
@@ -1151,7 +1152,7 @@ void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     }
 
     // turnon cpp namespace for non Java-based languages
-    if (!(reallanguage == srcMLTranslator::LANGUAGE_JAVA || reallanguage == srcMLTranslator::LANGUAGE_ASPECTJ))
+    if (!(reallanguage == Language::LANGUAGE_JAVA || reallanguage == Language::LANGUAGE_ASPECTJ))
       options |= OPTION_CPP;
 
     // open up the file
@@ -1319,7 +1320,7 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
       }
 
       // turnon cpp namespace for non Java-based languages
-      if (!(reallanguage == srcMLTranslator::LANGUAGE_JAVA || reallanguage == srcMLTranslator::LANGUAGE_ASPECTJ))
+      if (!(reallanguage == Language::LANGUAGE_JAVA || reallanguage == Language::LANGUAGE_ASPECTJ))
         options |= OPTION_CPP;
 
       // another file

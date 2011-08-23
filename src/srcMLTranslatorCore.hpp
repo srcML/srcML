@@ -31,7 +31,6 @@
 #include "srcMLOutput.hpp"
 
 class UTF8CharBuffer;
-class FileError {};
 
 class srcMLTranslatorCore : public Language {
  public:
