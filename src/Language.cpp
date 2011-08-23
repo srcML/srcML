@@ -21,6 +21,7 @@
 */
 
 #include "Language.hpp"
+#include "srcmlapps.hpp"
 #include <regex.h>
 #include <algorithm>
 
