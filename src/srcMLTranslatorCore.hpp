@@ -24,8 +24,8 @@
   Class for straightforward source code to srcML translation
 */
 
-#ifndef SRCMLTRANSLATOR_HPP
-#define SRCMLTRANSLATOR_HPP
+#ifndef SRCMLTRANSLATORCORE_HPP
+#define SRCMLTRANSLATORCORE_HPP
 
 #include "Language.hpp"
 #include "srcMLOutput.hpp"
@@ -33,14 +33,14 @@
 class UTF8CharBuffer;
 class FileError {};
 
-class srcMLTranslator : public Language {
+class srcMLTranslatorCore : public Language {
  public:
 
   // constructor
-  srcMLTranslator(int language, const char* srcml_filename, OPTION_TYPE& op);
+  srcMLTranslatorCore(int language, const char* srcml_filename, OPTION_TYPE& op);
 
   // constructor
-  srcMLTranslator(int language,
+  srcMLTranslatorCore(int language,
 		  const char* src_encoding,
 		  const char* xml_encoding,
 		  const char* srcml_filename,
@@ -64,7 +64,7 @@ class srcMLTranslator : public Language {
 		 int language = 0);
 
   // destructor
-  ~srcMLTranslator();
+  ~srcMLTranslatorCore();
 
  private:
   UTF8CharBuffer* pinput;

@@ -22,7 +22,7 @@
   Class for straightforward translation from source code to srcML
 */
 
-#include "srcMLTranslator.hpp"
+#include "srcMLTranslatorCore.hpp"
 #include "KeywordCPPLexer.hpp"
 #include "srcMLParser.hpp"
 #include "StreamMLParser.hpp"
@@ -30,7 +30,7 @@
 #include "srcmlns.hpp"
 
 // constructor
-srcMLTranslator::srcMLTranslator(int language, const char* srcml_filename, OPTION_TYPE& op)
+srcMLTranslatorCore::srcMLTranslatorCore(int language, const char* srcml_filename, OPTION_TYPE& op)
   : Language(language), first(true),
     root_directory(""), root_filename(""), root_version(""),
     encoding(DEFAULT_TEXT_ENCODING), options(op),
@@ -38,7 +38,7 @@ srcMLTranslator::srcMLTranslator(int language, const char* srcml_filename, OPTIO
 }
 
 // constructor
-srcMLTranslator::srcMLTranslator(int language,                // programming language of source code
+srcMLTranslatorCore::srcMLTranslatorCore(int language,                // programming language of source code
 				 const char* src_encoding,    // text encoding of source code
 				 const char* xml_encoding,    // xml encoding of result srcML file
 				 const char* srcml_filename,  // filename of result srcML file
@@ -57,7 +57,7 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
 }
 
 // translate from input stream to output stream
-void* srcMLTranslator::setInput(const char* path) {
+void* srcMLTranslatorCore::setInput(const char* path) {
 
   try {
     pinput = new UTF8CharBuffer(path, encoding);
@@ -80,13 +80,13 @@ void* srcMLTranslator::setInput(const char* path) {
 }
 
 // close the output
-void srcMLTranslator::close() {
+void srcMLTranslatorCore::close() {
 
   out.close();
 }
 
 // translate from input stream to output stream
-void srcMLTranslator::translate(const char* path, const char* unit_directory,
+void srcMLTranslatorCore::translate(const char* path, const char* unit_directory,
 				const char* unit_filename, const char* unit_version,
 				int language) {
 
@@ -137,5 +137,5 @@ void srcMLTranslator::translate(const char* path, const char* unit_directory,
 }
 
 // destructor
-srcMLTranslator::~srcMLTranslator() {
+srcMLTranslatorCore::~srcMLTranslator() {
 }
