@@ -27,6 +27,8 @@
 #ifndef SRCMLTRANSLATOR_HPP
 #define SRCMLTRANSLATOR_HPP
 
+#include "Options.hpp"
+
 class srcMLTranslatorCore;
 class FileError {};
 

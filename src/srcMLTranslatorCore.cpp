@@ -137,5 +137,5 @@ void srcMLTranslatorCore::translate(const char* path, const char* unit_directory
 }
 
 // destructor
-srcMLTranslatorCore::~srcMLTranslator() {
+srcMLTranslatorCore::~srcMLTranslatorCore() {
 }

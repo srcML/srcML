@@ -27,6 +27,7 @@
 #ifndef SRCMLTRANSLATORCORE_HPP
 #define SRCMLTRANSLATORCORE_HPP
 
+#include "srcMLTranslator.hpp"
 #include "Language.hpp"
 #include "srcMLOutput.hpp"
 
