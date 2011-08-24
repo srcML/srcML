@@ -2613,7 +2613,7 @@ variable_identifier { LocalMode lm; bool iscomplex = false; TokenPosition tp; } 
             // record the token position so we can replace it if necessary
             tp = getTokenPosition();
         }
-        (DCOLON { iscomplex = true; })*
+        (dcolon { iscomplex = true; })*
 
         simple_name_optional_template[true]
 
