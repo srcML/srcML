@@ -35,10 +35,12 @@ const char* const XML_VERSION = "1.0";
 const char* const SRCML_SRC_NS_URI = "http://www.sdml.info/srcML/src";
 const char* const SRCML_CPP_NS_URI = "http://www.sdml.info/srcML/cpp";
 const char* const SRCML_ERR_NS_URI = "http://www.sdml.info/srcML/srcerr";
+const char* const SRCML_DIFF_NS_URI = "http://www.sdml.info/srcDiff";
 
 const char* const SRCML_SRC_NS_PREFIX_DEFAULT = "";
 const char* const SRCML_CPP_NS_PREFIX_DEFAULT = "cpp";
 const char* const SRCML_ERR_NS_PREFIX_DEFAULT = "err";
+const char* const SRCML_DIFF_NS_PREFIX_DEFAULT = "diff";
 
 // srcML extension namespace URI's
 const char* const SRCML_EXT_LITERAL_NS_URI = "http://www.sdml.info/srcML/literal";
