@@ -13,7 +13,7 @@
 	collard@uakron.edu
 -->
 
-<xsl:output method="xml" omit-xml-declaration="yes" version="1.0" encoding="UTF-8"/>
+<xsl:output method="xml" version="1.0" encoding="UTF-8" standalone="yes"/>
 
 <xsl:template match="@*|node()"><xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy></xsl:template>
 
