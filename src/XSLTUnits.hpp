@@ -91,8 +91,8 @@ public :
       }
 
       // xml declaration
-      if (result_type == XML_ELEMENT_NODE && !isoption(options, OPTION_XMLDECL) && !found)
-        xmlOutputBufferWriteXMLDecl(ctxt, buf);
+      //if (result_type == XML_ELEMENT_NODE && !isoption(options, OPTION_XMLDECL) && !found)
+      //xmlOutputBufferWriteXMLDecl(ctxt, buf);
 
       // finish the end of the root unit start tag
       // this is only if in per-unit mode and this is the first result found
