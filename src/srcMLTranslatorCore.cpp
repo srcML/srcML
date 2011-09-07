@@ -35,7 +35,7 @@ srcMLTranslatorCore::srcMLTranslatorCore(int language, const char* srcml_filenam
   : Language(language), first(true),
     root_directory(""), root_filename(""), root_version(""),
     encoding(DEFAULT_TEXT_ENCODING), options(op),
-    out(0, srcml_filename, getLanguageString(), DEFAULT_XML_ENCODING, options, (const char**)DEFAULT_URI_PREFIX, 8) {
+    out(0, srcml_filename, getLanguageString(), DEFAULT_XML_ENCODING, options, (const char**)DEFAULT_URI_PREFIX, 8), tabsize(8) {
 }
 
 // constructor
