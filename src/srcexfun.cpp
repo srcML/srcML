@@ -155,7 +155,7 @@ void xsltsrcMLRegister () {
 
 void xpathRegisterDefaultExtensionFunctions() {
 
-  xpathRegisterExtensionFunction("statement", "/src:unit//src:if | /src:unit//src:while");
+  xpathRegisterExtensionFunction("statement", "(src:if | src:while)");
   xpathRegisterExtensionFunction("if", "/src:unit//src:if");
   xpathRegisterExtensionFunction("while", "/src:unit//src:while");
   xpathRegisterExtensionFunction("nestedwhile", ".//src:while//src:while");

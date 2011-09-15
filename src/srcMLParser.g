@@ -3400,6 +3400,7 @@ guessing_end
 expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; } :
 
         // not sure why this works to detect macros, but it does
+        // need a better list
         IF | WHILE | SWITCH | FOR | BREAK | RETURN | GOTO | 
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) && LA(1) == NEW }?
