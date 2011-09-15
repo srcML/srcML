@@ -131,7 +131,7 @@ header "post_include_hpp" {
 
 #define assertMode(m)
 
-enum DECLTYPE { NONE, VARIABLE, FUNCTION, CONSTRUCTOR, DESTRUCTOR };
+enum DECLTYPE { NONE, VARIABLE, FUNCTION, CONSTRUCTOR, DESTRUCTOR, SINGLE_MACRO };
 enum CALLTYPE { NOCALL, CALL, MACRO };
 
 // position in output stream
@@ -595,6 +595,10 @@ statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; int fla 
         // check for declaration of some kind (variable, function, constructor, destructor
         { perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type == FUNCTION }?
         function[fla, type_count] |
+
+        // standalone macro
+        { decl_type == SINGLE_MACRO }?
+        macro_call |
 
         // variable declaration
         { decl_type == VARIABLE }?
@@ -2140,6 +2144,10 @@ perform_noncfg_check[DECLTYPE& type, int& token, int& fla, int& type_count, bool
             type_count = 1;
     }
 
+    // may just have a single macro (no parens possibly) before a statement
+    if (_tokenSet_0.member(LA(1)) && type_count == 0)
+        type = SINGLE_MACRO;
+
     inputState->guessing--;
     rewind(start);
 } :
@@ -3398,10 +3406,6 @@ guessing_end
    elements such as names and function calls are marked up.
 */
 expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; } :
-
-        // not sure why this works to detect macros, but it does
-        // need a better list
-        IF | WHILE | SWITCH | FOR | BREAK | RETURN | GOTO | 
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) && LA(1) == NEW }?
         (NEW function_identifier paren_pair LCURLY)=> general_operators anonymous_class_definition |
