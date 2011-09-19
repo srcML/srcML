@@ -80,11 +80,9 @@ UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding)
       /* Transform the data already read in */
 
       // since original encoding was NONE, no raw buffer was allocated, so use the regular buffer
-      //    if (shrink)
-      //      xmlBufferShrink(input->buffer, shrink);
       pos = 0;
       input->raw = input->buffer;
-      input->rawconsumed = size;
+      input->rawconsumed = 0;
 
       // need a new regular buffer
       input->buffer = xmlBufferCreate();
@@ -92,8 +90,8 @@ UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding)
       // setup the encoder being used
       input->encoder = xmlGetCharEncodingHandler(denc);
 
-      // convert the characters to the new encoding
-      int nbchars = xmlCharEncInFunc(input->encoder, input->buffer, input->raw);
+      // fill up the buffer with even more data
+      size = growBuffer();
     }
   }
 }
