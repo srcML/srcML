@@ -5,4 +5,8 @@
 <macro><name>a</name></macro> <if>if<condition>(<expr>1</expr>)</condition><then><empty_stmt>;</empty_stmt></then></if>
 </unit>
 
+<unit>
+<macro><name>a</name></macro> <while>while<condition>(<expr>1</expr>)</condition><empty_stmt>;</empty_stmt></while>
+</unit>
+
 </unit>
