@@ -405,20 +405,18 @@ void srcMLOutput::processText(const char* s, int size) {
 
 const char* srcMLOutput::lineAttributeValue(const antlr::RefToken& token) {
 
-  static std::ostringstream out;
-  out.seekp(0);
-  out << token->getLine();
+  static char out[21];
+  snprintf(out, 20, "%d", token->getLine());
 
-  return out.str().c_str();
+  return out;
 }
 
 const char* srcMLOutput::columnAttributeValue(const antlr::RefToken& token) {
 
-  static std::ostringstream out;
-  out.seekp(0);
-  out << token->getColumn();
+  static char out[21];
+  snprintf(out, 20, "%d", token->getColumn());
 
-  return out.str().c_str();
+  return out;
 }
 
 void srcMLOutput::processText(const antlr::RefToken& token) {
@@ -439,12 +437,12 @@ void srcMLOutput::processEscape(const antlr::RefToken& token) {
 
   srcMLTextWriterStartElement(xout, BAD_CAST s);
 
-  static std::ostringstream out;
-  out.seekp(0);
   int n = token->getText()[0];
-  out << "0x" << std::hex << n;
 
-  xmlTextWriterWriteAttribute(xout, BAD_CAST "char", BAD_CAST out.str().c_str());
+  static char out[20 + 2 + 1];
+  snprintf(out, 22, "0x%x", n);
+
+  xmlTextWriterWriteAttribute(xout, BAD_CAST "char", BAD_CAST out);
 
   srcMLTextWriterEndElement(xout);
 }
