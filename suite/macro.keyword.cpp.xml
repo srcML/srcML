@@ -9,4 +9,8 @@
 <macro><name>a</name></macro> <while>while<condition>(<expr>1</expr>)</condition><empty_stmt>;</empty_stmt></while>
 </unit>
 
+<unit>
+<macro><name>a</name></macro> <for>for(<init><expr>1</expr></init>)<empty_stmt>;</empty_stmt></for>
+</unit>
+
 </unit>
