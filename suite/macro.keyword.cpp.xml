@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="macro.keyword">
 
-<macro><name>A</name><argument_list>(<argument>1</argument>)</argument_list></macro> <function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
-
+<unit>
+<macro><name>a</name></macro> <if>if<condition>(<expr>1</expr>)</condition><then><empty_stmt>;</empty_stmt></then></if>
+</unit>
 
 </unit>
