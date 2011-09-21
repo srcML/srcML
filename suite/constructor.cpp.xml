@@ -76,8 +76,4 @@
 <constructor><specifier>inline</specifier> <name><name>A</name>::<name>A</name></name><parameter_list>()</parameter_list> <block>{}</block></constructor>
 </unit>
 
-<unit>
-<template>template <parameter_list>&lt;<param><type/><name>T</name></param>&gt;</parameter_list> <constructor><name><name><name>K</name><argument_list>&lt;<argument><name>T</name></argument>&gt;</argument_list></name>::<name>K</name></name><parameter_list>()</parameter_list> <block>{}</block></constructor></template>
-</unit>
-
 </unit>
