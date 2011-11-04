@@ -46,7 +46,8 @@ class srcMLOutput : public srcMLParserTokenTypes {
 	      const char* encoding,
 	      OPTION_TYPE& option,
 	      const char* uri[],
-	      int tabsize
+	      int tabsize,
+              xmlOutputBuffer* output_buffer = 0
 	      );
 
   static bool checkEncoding(const char* encoding);

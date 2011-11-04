@@ -39,7 +39,7 @@ class srcMLTranslatorCore : public Language {
   srcMLTranslatorCore(int language, const char* srcml_filename, OPTION_TYPE& op);
 
   // constructor
-  srcMLTranslatorCore(int language, xmlOutputBuffer* buffer, OPTION_TYPE& op);
+  srcMLTranslatorCore(int language, xmlOutputBuffer* output_buffer, OPTION_TYPE& op);
 
   // constructor
   srcMLTranslatorCore(int language,
