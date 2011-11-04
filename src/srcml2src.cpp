@@ -302,6 +302,7 @@ typedef struct process_options
   const char* registerext[MAXPARAMS * 2 + 1];
   int registerfilescount;
   const char* registerfiles[MAXPARAMS + 1];
+  const char* diff_version;
 } process_options;
 
 // setup options and collect info from arguments
@@ -633,6 +634,8 @@ int process_args(int argc, char* argv[], process_options & poptions)
     { REGISTER_EXTENSION_FUNCTION_FLAG, required_argument, NULL, REGISTER_EXTENSION_FUNCTION_FLAG_CODE },
     { REGISTER_EXTENSION_FUNCTION_FILE_FLAG, required_argument, NULL, REGISTER_EXTENSION_FUNCTION_FILE_FLAG_CODE },
     { EOL_FLAG, required_argument, NULL, EOL_FLAG_CODE },
+    { DIFF_FLAG_LONG, required_argument, NULL, DIFF_FLAG_CODE },
+
     { XPATH_FLAG, required_argument, NULL, XPATH_FLAG_CODE },
     { XSLT_FLAG, required_argument, NULL, XSLT_FLAG_CODE },
     { PARAM_FLAG, required_argument, NULL, PARAM_FLAG_CODE },
@@ -902,6 +905,15 @@ int process_args(int argc, char* argv[], process_options & poptions)
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       // TODO: Handle end of line parameter
+      break;
+
+    case DIFF_FLAG_CODE :
+
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
+
+      poptions.diff_version = optarg;
+
       break;
 
     case XPATH_FLAG_CODE:
