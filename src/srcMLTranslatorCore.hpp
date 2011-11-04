@@ -27,7 +27,6 @@
 #ifndef SRCMLTRANSLATORCORE_HPP
 #define SRCMLTRANSLATORCORE_HPP
 
-#include "srcMLTranslator.hpp"
 #include "Language.hpp"
 #include "srcMLOutput.hpp"
 
@@ -38,6 +37,9 @@ class srcMLTranslatorCore : public Language {
 
   // constructor
   srcMLTranslatorCore(int language, const char* srcml_filename, OPTION_TYPE& op);
+
+  // constructor
+  srcMLTranslatorCore(int language, xmlOutputBuffer* buffer, OPTION_TYPE& op);
 
   // constructor
   srcMLTranslatorCore(int language,

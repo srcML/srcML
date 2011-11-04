@@ -265,6 +265,8 @@ bool srcMLOutput::checkEncoding(const char* encoding) {
   return xmlFindCharEncodingHandler(encoding) != 0;
 }
 
+//xmlBufferPtr output_buffer = 0;
+
 srcMLOutput::srcMLOutput(TokenStream* ints,
 			 const char* filename,
 			 const char* language,
@@ -277,10 +279,11 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
     unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(curi), openelementcount(0), curline(0),
     curcolumn(0), tabsize(ts), depth(0)
 {
-
   // open the output text writer stream
   // "-" filename is standard output
   xout = xmlNewTextWriterFilename(srcml_filename, isoption(OPTION_COMPRESSED));
+  //  output_buffer = xmlBufferCreate();
+  //  xout = xmlNewTextWriterMemory(output_buffer, isoption(OPTION_COMPRESSED));
   if (!xout) {
     fprintf(stderr, "src2srcml: " "Unable to open output file %s\n", srcml_filename);
     exit(2);
