@@ -514,6 +514,10 @@ int main(int argc, char* argv[]) {
       }
 	*/
 
+    } else if (isoption(options, OPTION_DIFF)) {
+
+      su.extract_diff_xml(poptions.ofilename, poptions.unit, poptions.diff_version);
+
     } else if (isoption(options, OPTION_XML)) {
 
       su.extract_xml(poptions.ofilename, poptions.unit);
@@ -912,6 +916,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
+      options |= OPTION_DIFF;
       poptions.diff_version = optarg;
 
       break;

@@ -245,4 +245,7 @@ const OPTION_TYPE OPTION_QUIET  = ull(1) << 36;
 // @srcml2src
 const OPTION_TYPE OPTION_SETTINGS  = ull(1) << 37;
 
+// @srcml2src
+const OPTION_TYPE OPTION_DIFF  = ull(1) << 38;
+
 #endif
