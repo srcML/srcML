@@ -48,6 +48,58 @@ private :
 
 public :
 
+  // handle root unit of compound document
+  void startRootUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix,
+                     const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces, int nb_attributes,
+                     int nb_defaulted, const xmlChar** attributes) {
+
+    // clear out the diff namespace from the array before passing it on
+    bool found = false;
+    int deccount = 0;
+    for (int i = 0, index = 0; i < nb_namespaces; ++i, index += 2) {
+
+      const char* uri = (const char*) namespaces[index + 1];
+
+      if (strcmp(uri, "http://www.sdml.info/srcDiff") == 0) {
+        found = true;
+        deccount += 2;
+      } else if (found) {
+        namespaces[index - 2] = namespaces[index];
+        namespaces[index + 1 - 2] = namespaces[index + 1];
+      }
+    }
+    nb_namespaces -= deccount;
+    
+    ExtractUnitsXML::startRootUnit(ctx, localname, prefix, URI, nb_namespaces, namespaces,
+                                   nb_attributes, nb_defaulted, attributes);
+  }
+
+  // handle root unit of compound document
+  void startUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix,
+                     const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces, int nb_attributes,
+                     int nb_defaulted, const xmlChar** attributes) {
+
+    // clear out the diff namespace from the array before passing it on
+    bool found = false;
+    int deccount = 0;
+    for (int i = 0, index = 0; i < nb_namespaces; ++i, index += 2) {
+
+      const char* uri = (const char*) namespaces[index + 1];
+
+      if (strcmp(uri, "http://www.sdml.info/srcDiff") == 0) {
+        found = true;
+        deccount += 2;
+      } else if (found) {
+        namespaces[index - 2] = namespaces[index];
+        namespaces[index + 1 - 2] = namespaces[index + 1];
+      }
+    }
+    nb_namespaces -= deccount;
+    
+    ExtractUnitsXML::startUnit(ctx, localname, prefix, URI, nb_namespaces, namespaces,
+                                   nb_attributes, nb_defaulted, attributes);
+  }
+
   void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                       int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                       const xmlChar** attributes) {
