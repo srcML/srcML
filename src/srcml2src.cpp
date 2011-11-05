@@ -514,9 +514,13 @@ int main(int argc, char* argv[]) {
       }
 	*/
 
-    } else if (isoption(options, OPTION_DIFF)) {
+    } else if (isoption(options, OPTION_DIFF) && isoption(options, OPTION_XML)) {
 
       su.extract_diff_xml(poptions.ofilename, poptions.unit, poptions.diff_version);
+
+    } else if (isoption(options, OPTION_DIFF)) {
+
+      su.extract_diff_text(0, poptions.ofilename, poptions.unit, poptions.diff_version);
 
     } else if (isoption(options, OPTION_XML)) {
 

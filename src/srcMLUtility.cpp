@@ -39,6 +39,7 @@
 
 #include "ProcessUnit.hpp"
 #include "ExtractUnitsSrc.hpp"
+#include "ExtractUnitsDiffSrc.hpp"
 #include "CountUnits.hpp"
 #include "Properties.hpp"
 #include "ListUnits.hpp"
@@ -280,6 +281,37 @@ void srcMLUtility::extract_text(const char* to_dir, const char* ofilename, int u
   if (archiveWriteMatch_src2srcml(ofilename))
     archiveWriteRootClose(0);
 #endif
+
+  // local variable, do not want xmlFreeParserCtxt to free
+  ctxt->sax = NULL;
+
+  // all done with parsing
+  xmlFreeParserCtxt(ctxt);
+
+  // make sure we did not end early
+  if (state.unit && state.count < state.unit)
+    throw OutOfRangeUnitError(state.count);
+}
+
+// extract a given unit
+void srcMLUtility::extract_diff_text(const char* to_dir, const char* ofilename, int unit, const char* version) {
+
+  // setup parser
+  xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
+
+  // setup sax handler
+  xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
+  ctxt->sax = &sax;
+
+  // setup process handling
+  ExtractUnitsDiffSrc process(0 /* to_directory is stdout */, ofilename, output_encoding, version);
+
+  // setup sax handling state
+  SAX2ExtractUnitsSrc state(&process, &options, unit);
+  ctxt->_private = &state;
+
+  // process the document
+  srcMLParseDocument(ctxt, true);
 
   // local variable, do not want xmlFreeParserCtxt to free
   ctxt->sax = NULL;
