@@ -60,7 +60,9 @@ public :
 
       const char* uri = (const char*) namespaces[index + 1];
 
-      if (strcmp(uri, "http://www.sdml.info/srcDiff") == 0) {
+      if (!found && strcmp(uri, "http://www.sdml.info/srcDiff") == 0) {
+        fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
+
         found = true;
         deccount = 1;
       } else if (found) {
@@ -88,7 +90,7 @@ public :
 
       if (strcmp(uri, "http://www.sdml.info/srcDiff") == 0) {
         found = true;
-        deccount += 2;
+        deccount = 1;
       } else if (found) {
         namespaces[index - 2] = namespaces[index];
         namespaces[index + 1 - 2] = namespaces[index + 1];
