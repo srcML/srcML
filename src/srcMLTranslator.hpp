@@ -28,6 +28,7 @@
 #define SRCMLTRANSLATOR_HPP
 
 #include "Options.hpp"
+#include <libxml/xmlwriter.h>
 
 class srcMLTranslatorCore;
 class FileError {};
@@ -37,6 +38,9 @@ class srcMLTranslator {
 
   // constructor
   srcMLTranslator(int language, const char* srcml_filename, OPTION_TYPE& op);
+
+  // constructor
+  srcMLTranslator(int language, xmlBuffer* output_buffer, OPTION_TYPE& op);
 
   // constructor
   srcMLTranslator(int language,

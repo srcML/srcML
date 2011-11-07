@@ -274,7 +274,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 			 OPTION_TYPE& op,
 			 const char* curi[],
 			 int ts,
-                         xmlOutputBuffer* output_buffer
+                         xmlBuffer* output_buffer
 			 )
   : input(ints), xout(0), srcml_filename(filename), unit_language(language), unit_dir(0), unit_filename(0),
     unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(curi), openelementcount(0), curline(0),

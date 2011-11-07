@@ -32,6 +32,12 @@ srcMLTranslator::srcMLTranslator(int language, const char* srcml_filename, OPTIO
 }
 
 // constructor
+srcMLTranslator::srcMLTranslator(int language, xmlBuffer* output_buffer, OPTION_TYPE& op) {
+
+  translator = new srcMLTranslatorCore(language, output_buffer, op);
+}
+
+// constructor
 srcMLTranslator::srcMLTranslator(int language,                // programming language of source code
 				 const char* src_encoding,    // text encoding of source code
 				 const char* xml_encoding,    // xml encoding of result srcML file

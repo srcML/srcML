@@ -40,7 +40,7 @@ srcMLTranslatorCore::srcMLTranslatorCore(int language, const char* srcml_filenam
 }
 
 // constructor
-srcMLTranslatorCore::srcMLTranslatorCore(int language, xmlOutputBuffer* output_buffer, OPTION_TYPE& op)
+srcMLTranslatorCore::srcMLTranslatorCore(int language, xmlBuffer* output_buffer, OPTION_TYPE& op)
   : Language(language), first(true),
     root_directory(""), root_filename(""), root_version(""),
     encoding(DEFAULT_TEXT_ENCODING), options(op),
