@@ -62,7 +62,7 @@ public :
 
       if (strcmp(uri, "http://www.sdml.info/srcDiff") == 0) {
         found = true;
-        deccount += 2;
+        deccount = 1;
       } else if (found) {
         namespaces[index - 2] = namespaces[index];
         namespaces[index + 1 - 2] = namespaces[index + 1];
