@@ -282,9 +282,10 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 {
   // open the output text writer stream
   // "-" filename is standard output
-  xout = xmlNewTextWriterFilename(srcml_filename, isoption(OPTION_COMPRESSED));
-  //  output_buffer = xmlBufferCreate();
-  //  xout = xmlNewTextWriterMemory(output_buffer, isoption(OPTION_COMPRESSED));
+  if (output_buffer == 0)
+    xout = xmlNewTextWriterFilename(srcml_filename, isoption(OPTION_COMPRESSED));
+  else
+    xout = xmlNewTextWriterMemory(output_buffer, isoption(OPTION_COMPRESSED));
   if (!xout) {
     fprintf(stderr, "src2srcml: " "Unable to open output file %s\n", srcml_filename);
     exit(2);
