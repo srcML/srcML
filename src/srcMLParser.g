@@ -3618,7 +3618,7 @@ derive_access { LocalMode lm; } :
         (VIRTUAL)* (PUBLIC | PRIVATE | PROTECTED)
 ;
 
-parameter_list { LocalMode lm; bool isparam = false; } :
+parameter_list { LocalMode lm; bool lastwasparam = false; bool foundparam = false; } :
         {
             // list of parameters
             startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
@@ -3628,14 +3628,16 @@ parameter_list { LocalMode lm; bool isparam = false; } :
         }
         // parameter list must include all possible parts since it is part of
         // function detection
-        LPAREN (comma { isparam = false;} | full_parameter { isparam = true; })* checkparam[isparam] rparen
+        LPAREN ({ foundparam = true; if (!lastwasparam) checkparam(!lastwasparam && foundparam); lastwasparam = false; } comma | full_parameter { foundparam = true; lastwasparam = true; })* checkparam[!lastwasparam && foundparam] rparen
 ;
 
-checkparam[bool isparam] { LocalMode lm; } :
+checkparam[bool param] { LocalMode lm; } :
         {
-            startNewMode(MODE_LOCAL);
+            if (param) {
+                startNewMode(MODE_LOCAL);
 
-            startElement(SPARAMETER);
+                startElement(SPARAMETER);
+            }
         }
 ;
 
