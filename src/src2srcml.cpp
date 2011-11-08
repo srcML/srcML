@@ -246,7 +246,7 @@ void output_help(const char* name) {
 
   printf("\nLine/Column Position:\n");
 
-  printf("  --%-21s include line/column attributres, namespace \"%s\"\n",
+  printf("  --%-21s include line/column attributes, namespace \"%s\"\n",
          POSITION_FLAG, SRCML_EXT_POSITION_NS_URI);
 
   printf("  --%-21s set tabs NUMBER characters apart.  Default is %d\n",
