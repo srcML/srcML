@@ -3628,15 +3628,15 @@ parameter_list { LocalMode lm; bool lastwasparam = false; bool foundparam = fals
         }
         // parameter list must include all possible parts since it is part of
         // function detection
-        LPAREN ({ foundparam = true; if (!lastwasparam) checkparam(!lastwasparam && foundparam); lastwasparam = false; } comma | full_parameter { foundparam = true; lastwasparam = true; })* checkparam[!lastwasparam && foundparam] rparen
+        LPAREN ({ foundparam = true; if (!lastwasparam) empty_element(SPARAMETER, !lastwasparam); lastwasparam = false; } comma | full_parameter { foundparam = lastwasparam = true; })* empty_element[SPARAMETER, !lastwasparam && foundparam] rparen
 ;
 
-checkparam[bool param] { LocalMode lm; } :
+empty_element[int element, bool cond] { LocalMode lm; } :
         {
-            if (param) {
+            if (cond) {
                 startNewMode(MODE_LOCAL);
 
-                startElement(SPARAMETER);
+                startElement(element);
             }
         }
 ;
