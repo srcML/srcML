@@ -81,7 +81,7 @@ public :
     if ((strcmp((const char*) URI, "http://www.sdml.info/srcDiff") == 0 && (
         strcmp((const char*) localname, "insert") == 0
         || strcmp((const char*) localname, "delete") == 0
-        || strcmp((const char*) localname, "common") == 0)) {
+        || strcmp((const char*) localname, "common") == 0))) {
 
           st.pop();
           return;
