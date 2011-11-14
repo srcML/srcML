@@ -118,7 +118,7 @@ const int EOL_FLAG_CODE = 256 + 11;
 const char* const DIFF_FLAG_LONG = "diff";
 const int DIFF_FLAG_CODE = 256 + 12;
 
-const char* const PRESERVE_FLAG_LONG = "PRESERVE";
+const char* const PRESERVE_FLAG_LONG = "preserve";
 const int PRESERVE_FLAG_CODE = 256 + 13;
 
 void libxml_error(void *ctx, const char *msg, ...) {}
