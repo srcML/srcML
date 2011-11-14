@@ -525,7 +525,9 @@ int main(int argc, char* argv[]) {
 
     } else if (isoption(options, OPTION_DIFF)) {
 
-      su.extract_diff_text(0, poptions.ofilename, poptions.unit, poptions.diff_version);
+    } else if (isoption(options, OPTION_PRESERVE)) {
+
+      su.extract_xml_uri(0, poptions.ofilename, poptions.unit, poptions.preserve_uri);
 
     } else if (isoption(options, OPTION_XML)) {
 
