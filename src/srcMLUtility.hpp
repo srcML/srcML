@@ -80,6 +80,9 @@ class srcMLUtility {
   // extract a particular srcML version from srcDiff format
   void extract_diff_xml(const char* ofilename, int unit, const char* version);
 
+  // extract (intact) current unit as XML only preserving the URI
+  void extract_xml_uri(const char* ofilename, int unit, const char* uri);
+
   // extract a particular version from srcDiff format
   void extract_diff_text(const char* to_dir, const char* ofilename, int unit, const char* version);
 

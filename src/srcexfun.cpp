@@ -155,11 +155,13 @@ void xsltsrcMLRegister () {
 
 void xpathRegisterDefaultExtensionFunctions() {
 
-  xpathRegisterExtensionFunction("statement", "(src:if | src:while)");
+  xpathRegisterExtensionFunction("statement", "/src:unit//node()[self::src:while or self::src:if or self::src:return or self::src:for]");
+  xpathRegisterExtensionFunction("statement_node", "[self::src:while or self::src:if or self::src:return or self::src:for]");
   xpathRegisterExtensionFunction("if", "/src:unit//src:if");
   xpathRegisterExtensionFunction("while", "/src:unit//src:while");
   xpathRegisterExtensionFunction("nestedwhile", ".//src:while//src:while");
   xpathRegisterExtensionFunction("returntype", "/src:unit//src:function/src:type");
+  xpathRegisterExtensionFunction("inserted", "self::*[.//diff:new]");
 }
 
 void xpathRegisterExtensionFunction(const std::string & name, const std::string & xpath) {
