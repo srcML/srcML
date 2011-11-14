@@ -248,4 +248,7 @@ const OPTION_TYPE OPTION_SETTINGS  = ull(1) << 37;
 // @srcml2src
 const OPTION_TYPE OPTION_DIFF  = ull(1) << 38;
 
+// @srcml2src
+const OPTION_TYPE OPTION_PRESERVE  = ull(1) << 39;
+
 #endif
