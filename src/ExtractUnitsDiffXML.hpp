@@ -108,14 +108,19 @@ public :
 
     if (strcmp((const char*) URI, "http://www.sdml.info/srcDiff") == 0) {
 
-      if (strcmp((const char*) localname, "insert") == 0)
-        st.push(DIFF_OLD);
-      else if (strcmp((const char*) localname, "delete") == 0)
-        st.push(DIFF_NEW);
-      else if (strcmp((const char*) localname, "common") == 0)
-        st.push(DIFF_COMMON);
+      if (strcmp((const char*) localname, "insert") == 0) {
 
-      return;
+        st.push(DIFF_OLD);
+        return;
+      } else if (strcmp((const char*) localname, "delete") == 0) {
+
+        st.push(DIFF_NEW);
+        return;
+      } else if (strcmp((const char*) localname, "common") == 0) {
+
+        st.push(DIFF_COMMON);
+        return;
+      }
     }
 
     if (st.top() != DIFF_COMMON && st.top() != status)
