@@ -54,11 +54,11 @@ public :
 
     if (strcmp((const char*) URI, "http://www.sdml.info/srcDiff") == 0) {
 
-      if (strcmp((const char*) localname, "insert") == 0) {
+      if (strcmp((const char*) localname, "delete") == 0) {
 
         st.push(DIFF_OLD);
         return;
-      } else if (strcmp((const char*) localname, "delete") == 0) {
+      } else if (strcmp((const char*) localname, "insert") == 0) {
 
         st.push(DIFF_NEW);
         return;
