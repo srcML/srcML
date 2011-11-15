@@ -46,26 +46,24 @@ public :
   void startRootUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix,
                      const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces, int nb_attributes,
                      int nb_defaulted, const xmlChar** attributes) {
-    /*
-    // clear out the diff namespace from the array before passing it on
-    bool found = false;
-    int deccount = 0;
-    for (int i = 0, index = 0; i < nb_namespaces; ++i, index += 2) {
 
-      const char* uri = (const char*) namespaces[index + 1];
+    // only leave the diff namespace
+    int index = 0;
+    int i = 0;
+    for (i = 0; i < nb_namespaces; ++i, index += 2) {
 
-      if (!found && strcmp(uri, "http://www.sdml.info/srcDiff") == 0) {
-        fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
-
-        found = true;
-        deccount = 1;
-      } else if (found) {
-        namespaces[index - 2] = namespaces[index];
-        namespaces[index + 1 - 2] = namespaces[index + 1];
-      }
+      const char* nsuri = (const char*) namespaces[index + 1];
+      if (strcmp(nsuri, uri) == 0)
+        break;
     }
-    nb_namespaces -= deccount;
-    */
+
+    if (i < nb_namespaces) {
+      namespaces[0] = namespaces[index];
+      namespaces[1] = namespaces[index + 1];
+      nb_namespaces = 1;
+    } else 
+      nb_namespaces = 0;
+    
     ExtractUnitsXML::startRootUnit(ctx, localname, prefix, URI, nb_namespaces, namespaces,
                                    nb_attributes, nb_defaulted, attributes);
   }
@@ -74,24 +72,24 @@ public :
   void startUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix,
                      const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces, int nb_attributes,
                      int nb_defaulted, const xmlChar** attributes) {
-    /*
-    // clear out the diff namespace from the array before passing it on
-    bool found = false;
-    int deccount = 0;
-    for (int i = 0, index = 0; i < nb_namespaces; ++i, index += 2) {
 
-      const char* uri = (const char*) namespaces[index + 1];
+    // only leave the diff namespace
+    int index = 0;
+    int i = 0;
+    for (i = 0; i < nb_namespaces; ++i, index += 2) {
 
-      if (strcmp(uri, "http://www.sdml.info/srcDiff") == 0) {
-        found = true;
-        deccount = 1;
-      } else if (found) {
-        namespaces[index - 2] = namespaces[index];
-        namespaces[index + 1 - 2] = namespaces[index + 1];
-      }
+      const char* nsuri = (const char*) namespaces[index + 1];
+      if (strcmp(nsuri, uri) == 0)
+        break;
     }
-    nb_namespaces -= deccount;
-    */
+
+    if (i < nb_namespaces) {
+      namespaces[0] = namespaces[index];
+      namespaces[1] = namespaces[index + 1];
+      nb_namespaces = 1;
+    } else 
+      nb_namespaces = 0;
+    
     ExtractUnitsXML::startUnit(ctx, localname, prefix, URI, nb_namespaces, namespaces,
                                    nb_attributes, nb_defaulted, attributes);
   }
