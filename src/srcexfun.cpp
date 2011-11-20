@@ -22,7 +22,7 @@
 
 #include "srcexfun.hpp"
 #include "srcmlns.hpp"
-
+#include <cmath>
 #include <cstring>
 #include <string>
 
@@ -70,6 +70,8 @@ static void srcContextFunction (xmlXPathParserContextPtr ctxt, int nargs) {
     return;
   }
 
+  fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
+
   valuePush(ctxt, xmlXPathNewFloat(Position));
 }
 
@@ -115,6 +117,44 @@ static void srcMacrosFunction (xmlXPathParserContextPtr ctxt, int nargs) {
   }
 }
 
+static void srcPowersetFunction (xmlXPathParserContextPtr ctxt, int nargs) {
+
+  if (nargs != 1) {
+    xmlXPathSetArityError(ctxt);
+    return;
+  }
+
+  // node set to form powerset over
+  xmlNodeSetPtr master = xmlXPathPopNodeSet(ctxt);
+
+  // node set of sets
+  xmlNodeSetPtr ret = xmlXPathNodeSetCreate(NULL);
+
+  // number of sets
+  int setsize = pow(2, master->nodeNr);
+
+  // create all the sets
+  for (int setnum = 0; setnum < setsize; ++setnum) {
+
+    // set node
+    xmlNodePtr setnode = xmlNewNodeEatName(0, (xmlChar*)"set");
+    xmlXPathNodeSetAdd(ret, setnode);
+
+    // create this set, only leaving in what fits the bit position
+    for (int i = 0; i < master->nodeNr; ++i) {
+
+      if (setnum & (1 << i)) {      
+        xmlNodePtr node = xmlCopyNode(master->nodeTab[i], 1);
+        xmlAddChild(setnode, node);
+      }
+    }
+  }
+
+  if (ret) {
+    valuePush(ctxt, xmlXPathNewNodeSetList(ret));
+  }
+}
+
 void xpathsrcMLRegister(xmlXPathContextPtr context) {
 
   xmlXPathRegisterFuncNS(context, (const xmlChar *)"unit",
@@ -124,6 +164,10 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
   xmlXPathRegisterFuncNS(context, (const xmlChar *)"archive",
                          BAD_CAST SRCML_SRC_NS_URI,
                          srcRootFunction);
+
+  xmlXPathRegisterFuncNS(context, (const xmlChar *)"powerset",
+                         BAD_CAST SRCML_SRC_NS_URI,
+                         srcPowersetFunction);
 
   // register all the xpath extension functions
   for (unsigned int i = 0; i < MACROS.size(); ++i) {
@@ -143,6 +187,10 @@ void xsltsrcMLRegister () {
   xsltRegisterExtModuleFunction(BAD_CAST "archive",
                                 BAD_CAST SRCML_SRC_NS_URI,
                                 srcRootFunction);
+
+  xsltRegisterExtModuleFunction(BAD_CAST "powerset",
+                                BAD_CAST SRCML_SRC_NS_URI,
+                                srcPowersetFunction);
 
   // register all the xpath extension functions
   for (unsigned int i = 0; i < MACROS.size(); ++i) {
