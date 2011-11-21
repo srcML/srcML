@@ -49,7 +49,7 @@ public :
     Formed unit combines namespaces from root and individual unit.  Full DOM of
     individual unit is provided.  Cleanup of DOM unit is automatic.
   */
-  virtual void apply(void* ctx) = 0;
+  virtual bool apply(void* ctx) = 0;
 
   /*
     Called exactly once at end of document.  Override for intended behavior.
@@ -165,7 +165,7 @@ public :
     xmlSAX2EndElementNs(ctx, localname, prefix, URI);
 
     // apply the necessary processing
-    apply(ctx);
+    error = !apply(ctx);
 
     // unhook the unit tree from the document, leaving an empty document
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
@@ -178,7 +178,7 @@ public :
   virtual void endDocument(void *ctx) {
 
     // endDocument can be called, even if startDocument was not for empty input
-    if (!found)
+    if (!found || error)
       return;
 
     // end the entire input document
@@ -193,6 +193,7 @@ protected:
   int rootsize;
   bool found;
   int options;
+  bool error;
 };
 
 #endif
