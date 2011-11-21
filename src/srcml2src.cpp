@@ -367,9 +367,6 @@ int main(int argc, char* argv[]) {
      { 0 }
   };
 
-  // register default xpath extension functions
-  xpathRegisterDefaultExtensionFunctions();
-
   // process command-line arguments
   int curarg = process_args(argc, argv, poptions);
 
@@ -422,6 +419,27 @@ int main(int argc, char* argv[]) {
     optioncount = 5;
 
     options |= OPTION_NAMESPACE;
+  }
+
+  // register default xpath and xslt extension functions if needed
+  if (isoption(options, OPTION_XPATH) || isoption(options, OPTION_XSLT)) {
+    xpathRegisterExtensionFunction("statement", "/src:unit//node()[self::src:while or self::src:if or self::src:return or self::src:for]");
+    xpathRegisterExtensionFunction("statement_node", "[self::src:while or self::src:if or self::src:return or self::src:for]");
+    xpathRegisterExtensionFunction("if", "/src:unit//src:if");
+    xpathRegisterExtensionFunction("while", "/src:unit//src:while");
+    xpathRegisterExtensionFunction("nestedwhile", ".//src:while//src:while");
+    xpathRegisterExtensionFunction("returntype", "/src:unit//src:function/src:type");
+
+    // srcdiff functions
+    xpathRegisterExtensionFunction("haschange",   "self::*[.//diff:insert or .//diff:delete]");
+    xpathRegisterExtensionFunction("hascommon",   "self::*[.//diff:common]");
+    xpathRegisterExtensionFunction("hasinsert",   "self::*[.//diff:insert]");
+    xpathRegisterExtensionFunction("hasdelete",   "self::*[.//diff:delete]");
+    
+    xpathRegisterExtensionFunction("common",   "self::*[not(ancestor::diff:*) or ancestor::diff:*[1][self::diff:common]]");
+    xpathRegisterExtensionFunction("changed",  "ancestor::diff:*[1][self::diff:insert or self::diff:delete]");
+    xpathRegisterExtensionFunction("inserted", "ancestor::diff:*[1][self::diff:insert]");
+    xpathRegisterExtensionFunction("deleted",  "ancestor::diff:*[1][self::diff:delete]");
   }
 
   try {
