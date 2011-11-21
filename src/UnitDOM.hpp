@@ -164,8 +164,11 @@ public :
     // finish building the unit tree
     xmlSAX2EndElementNs(ctx, localname, prefix, URI);
 
+    SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+
     // apply the necessary processing
-    error = !apply(ctx);
+    if(error = !apply(ctx))
+      pstate->stopUnit();
 
     // unhook the unit tree from the document, leaving an empty document
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
@@ -173,6 +176,7 @@ public :
     xmlUnlinkNode(onode);
     xmlFreeNode(onode);
     ctxt->node = 0;
+
   }
 
   virtual void endDocument(void *ctx) {
