@@ -39,11 +39,12 @@ void xpathsrcMLRegister(xmlXPathContextPtr context);
 
 struct xpath_ext_function {
 
+  std::string prefix;
   std::string name;
   std::string expr;
 };
 
-void xpathRegisterExtensionFunction(const std::string & name, const std::string & xpath);
+void xpathRegisterExtensionFunction(const std::string& uri, const std::string & name, const std::string & xpath);
 
 const std::vector<xpath_ext_function> getXPathExtensionFunctions();
 

@@ -173,7 +173,7 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
   for (unsigned int i = 0; i < MACROS.size(); ++i) {
 
     xmlXPathRegisterFuncNS(context, BAD_CAST MACROS[i].name.c_str(),
-                           BAD_CAST SRCML_SRC_NS_URI,
+                           BAD_CAST MACROS[i].prefix.c_str(),
                            srcMacrosFunction);
   }
 }
@@ -196,14 +196,14 @@ void xsltsrcMLRegister () {
   for (unsigned int i = 0; i < MACROS.size(); ++i) {
 
     xsltRegisterExtModuleFunction(BAD_CAST MACROS[i].name.c_str(),
-                                  BAD_CAST SRCML_SRC_NS_URI,
+                                  BAD_CAST MACROS[i].prefix.c_str(),
                                   srcMacrosFunction);
   }
 }
 
-void xpathRegisterExtensionFunction(const std::string & name, const std::string & xpath) {
+void xpathRegisterExtensionFunction(const std::string& prefix, const std::string & name, const std::string & xpath) {
 
-  struct xpath_ext_function xpath_function = {name, xpath};
+  xpath_ext_function xpath_function = {prefix, name, xpath};
 
   MACROS.push_back(xpath_function);
 }

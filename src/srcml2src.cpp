@@ -423,23 +423,23 @@ int main(int argc, char* argv[]) {
 
   // register default xpath and xslt extension functions if needed
   if (isoption(options, OPTION_XPATH) || isoption(options, OPTION_XSLT)) {
-    xpathRegisterExtensionFunction("statement", "/src:unit//node()[self::src:while or self::src:if or self::src:return or self::src:for]");
-    xpathRegisterExtensionFunction("statement_node", "[self::src:while or self::src:if or self::src:return or self::src:for]");
-    xpathRegisterExtensionFunction("if", "/src:unit//src:if");
-    xpathRegisterExtensionFunction("while", "/src:unit//src:while");
-    xpathRegisterExtensionFunction("nestedwhile", ".//src:while//src:while");
-    xpathRegisterExtensionFunction("returntype", "/src:unit//src:function/src:type");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "statement", "/src:unit//node()[self::src:while or self::src:if or self::src:return or self::src:for]");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "statement_node", "[self::src:while or self::src:if or self::src:return or self::src:for]");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "if", "/src:unit//src:if");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "while", "/src:unit//src:while");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "nestedwhile", ".//src:while//src:while");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "returntype", "/src:unit//src:function/src:type");
 
     // srcdiff functions
-    xpathRegisterExtensionFunction("haschange",   "self::*[.//diff:insert or .//diff:delete]");
-    xpathRegisterExtensionFunction("hascommon",   "self::*[.//diff:common]");
-    xpathRegisterExtensionFunction("hasinsert",   "self::*[.//diff:insert]");
-    xpathRegisterExtensionFunction("hasdelete",   "self::*[.//diff:delete]");
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "haschange",   "self::*[.//diff:insert or .//diff:delete]");
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "hascommon",   "self::*[not(.//diff:*) or .//diff:common]");
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "hasinsert",   "self::*[.//diff:insert]");
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "hasdelete",   "self::*[.//diff:delete]");
     
-    xpathRegisterExtensionFunction("common",   "self::*[not(ancestor::diff:*) or ancestor::diff:*[1][self::diff:common]]");
-    xpathRegisterExtensionFunction("changed",  "ancestor::diff:*[1][self::diff:insert or self::diff:delete]");
-    xpathRegisterExtensionFunction("inserted", "ancestor::diff:*[1][self::diff:insert]");
-    xpathRegisterExtensionFunction("deleted",  "ancestor::diff:*[1][self::diff:delete]");
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "common",   "self::*[not(ancestor::diff:*) or ancestor::diff:*[1][self::diff:common]]");
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "changed",  "ancestor::diff:*[1][self::diff:insert or self::diff:delete]");
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "inserted", "ancestor::diff:*[1][self::diff:insert]");
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "deleted",  "ancestor::diff:*[1][self::diff:delete]");
   }
 
   try {
@@ -922,7 +922,8 @@ int process_args(int argc, char* argv[], process_options & poptions)
       end = optarg;
       strsep(&end, "=");
 
-      xpathRegisterExtensionFunction(optarg, end);
+      // TODO:  Extract the extension prefix
+      xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, optarg, end);
 
       break;
 
@@ -1234,7 +1235,7 @@ void register_xpath_functions_from_filename(const char * filename) {
       // register xpath extension function
       const char * end = extension_function;
       strsep((char **)&end, "=");
-      xpathRegisterExtensionFunction(extension_function, end);
+      xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, extension_function, end);
     }
   }
 }
