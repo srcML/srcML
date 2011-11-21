@@ -123,6 +123,7 @@ public :
     // evaluate the xpath
     xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, context);
     if (result_nodes == 0) {
+      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
       //      fprintf(stderr, "%s: Error in executing xpath\n", "srcml2src");
       return;
     }

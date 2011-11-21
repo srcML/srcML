@@ -68,7 +68,7 @@ public :
 
   }
 
-  virtual void apply(void* ctx) {
+  virtual bool apply(void* ctx) {
 
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
@@ -131,6 +131,8 @@ public :
       // finished with the result of the transformation
       xmlFreeDoc(res);
     }
+
+    return true;
   }
   virtual void endOutput(void *ctx) {
 
