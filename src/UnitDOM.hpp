@@ -32,7 +32,7 @@
 class UnitDOM : public ProcessUnit {
 public :
 
-  UnitDOM(int options) : rootsize(0), found(false), options(options) {}
+  UnitDOM(int options) : rootsize(0), found(false), options(options), error(false) {}
 
   virtual ~UnitDOM() {}
     
