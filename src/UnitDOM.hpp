@@ -169,7 +169,7 @@ public :
 
     // apply the necessary processing
     if(error = !apply(ctx))
-      pstate->stopUnit();
+      pstate->stopUnit(ctxt);
 
     // unhook the unit tree from the document, leaving an empty document
     xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
