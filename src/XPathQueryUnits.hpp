@@ -113,7 +113,7 @@ public :
 #endif
   }
 
-  virtual void apply(void *ctx) {
+  virtual bool apply(void *ctx) {
 
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
@@ -125,7 +125,7 @@ public :
     if (result_nodes == 0) {
       fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
       //      fprintf(stderr, "%s: Error in executing xpath\n", "srcml2src");
-      return;
+      return false;
     }
 
     // process the resulting nodes
@@ -396,6 +396,8 @@ public :
 
     // finished with the result nodes
     xmlXPathFreeObject(result_nodes);
+
+    return true;
   }
 
   virtual void endOutput(void *ctx) {
