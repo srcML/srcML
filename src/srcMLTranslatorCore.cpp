@@ -64,6 +64,8 @@ srcMLTranslatorCore::srcMLTranslatorCore(int language,                // program
     encoding(src_encoding), options(op),
     out(0, srcml_filename, getLanguageString(), xml_encoding, options, uri, tabsize), tabsize(tabsize) {
 
+}
+
 // constructor
 srcMLTranslatorCore::srcMLTranslatorCore(int language,                // programming language of source code
 				 const char* src_encoding,    // text encoding of source code
