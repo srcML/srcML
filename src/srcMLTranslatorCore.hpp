@@ -54,6 +54,19 @@ class srcMLTranslatorCore : public Language {
 		  int tabsize
 		  );
 
+  // constructor
+  srcMLTranslatorCore(int language,
+		  const char* src_encoding,
+		  const char* xml_encoding,
+                  xmlBuffer* output_buffer,
+		  OPTION_TYPE& options,
+		  const char* directory,
+		  const char* filename,
+		  const char* version,
+		  const char* uri[],
+		  int tabsize
+		  );
+
   void* setInput(const char* path);
 
   void close();
