@@ -64,6 +64,23 @@ srcMLTranslatorCore::srcMLTranslatorCore(int language,                // program
     encoding(src_encoding), options(op),
     out(0, srcml_filename, getLanguageString(), xml_encoding, options, uri, tabsize), tabsize(tabsize) {
 
+// constructor
+srcMLTranslatorCore::srcMLTranslatorCore(int language,                // programming language of source code
+				 const char* src_encoding,    // text encoding of source code
+				 const char* xml_encoding,    // xml encoding of result srcML file
+                                 xmlBuffer * output_buffer,
+				 OPTION_TYPE& op,             // many and varied options
+				 const char* directory,       // root unit directory
+				 const char* filename,        // root unit filename
+				 const char* version,         // root unit version
+				 const char* uri[],           // uri prefixes
+				 int tabsize                  // size of tabs
+				 )
+  : Language(language), pinput(0), first(true),
+    root_directory(directory), root_filename(filename), root_version(version),
+    encoding(src_encoding), options(op),
+  out(0, 0, getLanguageString(), xml_encoding, options, uri, tabsize, output_buffer), tabsize(tabsize) {
+
 }
 
 // translate from input stream to output stream
