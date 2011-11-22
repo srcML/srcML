@@ -67,8 +67,8 @@ srcMLTranslatorCore::srcMLTranslatorCore(int language,                // program
 // constructor
 srcMLTranslatorCore::srcMLTranslatorCore(int language,                // programming language of source code
 				 const char* src_encoding,    // text encoding of source code
-				 const char* xml_encoding,    // xml encoding of result srcML file
-                                 xmlBuffer * output_buffer,
+                                 const char* xml_encoding,    // xml encoding of result srcML file
+                                 xmlBuffer* output_buffer,
 				 OPTION_TYPE& op,             // many and varied options
 				 const char* directory,       // root unit directory
 				 const char* filename,        // root unit filename
