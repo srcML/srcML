@@ -53,6 +53,22 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
   translator = new srcMLTranslatorCore(language, src_encoding, xml_encoding, srcml_filename, op, directory, filename, version, uri, tabsize);
 }
 
+// constructor
+srcMLTranslator::srcMLTranslator(int language,                // programming language of source code
+				 const char* src_encoding,    // text encoding of source code
+				 const char* xml_encoding,    // xml encoding of result srcML file
+				 xmlBuffer* output_buffer,  
+				 OPTION_TYPE& op,             // many and varied options
+				 const char* directory,       // root unit directory
+				 const char* filename,        // root unit filename
+				 const char* version,         // root unit version
+				 const char* uri[],           // uri prefixes
+				 int tabsize                  // size of tabs
+				 ) {
+
+  translator = new srcMLTranslatorCore(language, src_encoding, xml_encoding, output_buffer, op, directory, filename, version, uri, tabsize);
+}
+
 // translate from input stream to output stream
 void* srcMLTranslator::setInput(const char* path) {
 
