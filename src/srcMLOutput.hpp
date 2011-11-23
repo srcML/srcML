@@ -104,7 +104,10 @@ class srcMLOutput : public srcMLParserTokenTypes {
 
   void outputToken(const antlr::RefToken& token);
 
+  static void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer, const char** num2prefix);
+
   bool isoption(int) const;
+  static bool isoption(int flag, const OPTION_TYPE& options);
 
   void srcMLTextWriterStartElement(xmlTextWriter*, const xmlChar* s);
   void srcMLTextWriterEndElement(xmlTextWriter*);

@@ -348,6 +348,10 @@ bool srcMLOutput::isoption(int flag) const {
   return (flag & options) > 0;
 }
 
+bool srcMLOutput::isoption(int flag, const OPTION_TYPE& options) {
+  return (flag & options) > 0;
+}
+
 int srcMLOutput::consume_next() {
 
   const antlr::RefToken& token = input->nextToken();
@@ -452,13 +456,7 @@ void srcMLOutput::processEscape(const antlr::RefToken& token) {
   srcMLTextWriterEndElement(xout);
 }
 
-void srcMLOutput::startUnit(const char* language, const char* dir, const char* filename, const char* version, bool outer) {
-
-  // start of main tag
-  srcMLTextWriterStartElement(xout, BAD_CAST type2name(SUNIT));
-
-  // outer units have namespaces
-  if (/* outer && */ !isoption(OPTION_NAMESPACEDECL)) {
+void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer, const char** num2prefix) {
 
     // figure out which namespaces are needed
     char const * const ns[] = {
@@ -467,25 +465,25 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
       (depth == 0) ? SRCML_SRC_NS_URI : 0,
 
       // main cpp namespace declaration
-      isoption(OPTION_CPP) && (isoption(OPTION_NESTED) == !outer) ? SRCML_CPP_NS_URI : 0,
+      isoption(OPTION_CPP, options) && (isoption(OPTION_NESTED, options) == !outer) ? SRCML_CPP_NS_URI : 0,
 
       // optional debugging xml namespace
-      (depth == 0) && isoption(OPTION_DEBUG)    ? SRCML_ERR_NS_URI : 0,
+      (depth == 0) && isoption(OPTION_DEBUG, options)    ? SRCML_ERR_NS_URI : 0,
 
       // optional literal xml namespace
-      (depth == 0) && isoption(OPTION_LITERAL)  ? SRCML_EXT_LITERAL_NS_URI : 0,
+      (depth == 0) && isoption(OPTION_LITERAL, options)  ? SRCML_EXT_LITERAL_NS_URI : 0,
 
       // optional operator xml namespace
-      (depth == 0) && isoption(OPTION_OPERATOR) ? SRCML_EXT_OPERATOR_NS_URI : 0,
+      (depth == 0) && isoption(OPTION_OPERATOR, options) ? SRCML_EXT_OPERATOR_NS_URI : 0,
 
       // optional modifier xml namespace
-      (depth == 0) && isoption(OPTION_MODIFIER) ? SRCML_EXT_MODIFIER_NS_URI : 0,
+      (depth == 0) && isoption(OPTION_MODIFIER, options) ? SRCML_EXT_MODIFIER_NS_URI : 0,
 
       // optional position xml namespace
-      (depth == 0) && isoption(OPTION_POSITION) ? SRCML_EXT_POSITION_NS_URI : 0,
+      (depth == 0) && isoption(OPTION_POSITION, options) ? SRCML_EXT_POSITION_NS_URI : 0,
 
       // optional diff xml namespace
-      (depth == 0) && isoption(OPTION_DIFF)     ? SRCML_DIFF_NS_URI : 0,
+      (depth == 0) && isoption(OPTION_DIFF, options)     ? SRCML_DIFF_NS_URI : 0,
     };
 
     // output the namespaces
@@ -501,6 +499,16 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
 
       xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST ns[i]);
     }
+}
+
+void srcMLOutput::startUnit(const char* language, const char* dir, const char* filename, const char* version, bool outer) {
+
+  // start of main tag
+  srcMLTextWriterStartElement(xout, BAD_CAST type2name(SUNIT));
+
+  // outer units have namespaces
+  if (/* outer && */ !isoption(OPTION_NAMESPACEDECL)) {
+    outputNamespaces(xout, options, depth, outer, num2prefix);
   }
 
   // setting up for tabs, even if not used
