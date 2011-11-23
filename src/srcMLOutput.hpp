@@ -70,7 +70,7 @@ class srcMLOutput : public srcMLParserTokenTypes {
   // destructor
   ~srcMLOutput();
 
-protected:
+public:
   TokenStream* input;
 
   xmlTextWriter* xout;
