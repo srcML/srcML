@@ -27,7 +27,7 @@
 #include "KeywordCPPLexer.hpp"
 #include "srcMLParser.hpp"
 #include "StreamMLParser.hpp"
-#include "srcMLOutput.hpp"
+#include "srcMLTranslatorOutput.hpp"
 #include "srcmlapps.hpp"
 #include "srcmlns.hpp"
 

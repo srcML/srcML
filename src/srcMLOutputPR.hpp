@@ -19,7 +19,7 @@
   along with the srcML translator; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-  Declaration of process pointer table for srcMLOutput.
+  Declaration of process pointer table for srcMLTranslatorOutput.
 */
 
 #include "srcMLParserTokenTypesMacro.hpp"
@@ -43,23 +43,23 @@ enum {
   PROCESSESCAPE,
 };
 
-srcMLOutput::PROCESS_PTR srcMLOutput::num2process[] = {
-  &srcMLOutput::processToken,
-  &srcMLOutput::processUnit,
-  &srcMLOutput::processText,
-  &srcMLOutput::processBlockCommentStart,
-  &srcMLOutput::processJavadocCommentStart,
-  &srcMLOutput::processEndBlockToken,
-  &srcMLOutput::processLineCommentStart,
-  &srcMLOutput::processEndLineToken,
-  //  &srcMLOutput::processMarker,
-  &srcMLOutput::processAccess,
-  &srcMLOutput::processString,
-  &srcMLOutput::processChar,
-  &srcMLOutput::processLiteral,
-  &srcMLOutput::processBoolean,
-  &srcMLOutput::processInterface,
-  &srcMLOutput::processEscape,
+srcMLTranslatorOutput::PROCESS_PTR srcMLTranslatorOutput::num2process[] = {
+  &srcMLTranslatorOutput::processToken,
+  &srcMLTranslatorOutput::processUnit,
+  &srcMLTranslatorOutput::processText,
+  &srcMLTranslatorOutput::processBlockCommentStart,
+  &srcMLTranslatorOutput::processJavadocCommentStart,
+  &srcMLTranslatorOutput::processEndBlockToken,
+  &srcMLTranslatorOutput::processLineCommentStart,
+  &srcMLTranslatorOutput::processEndLineToken,
+  //  &srcMLTranslatorOutput::processMarker,
+  &srcMLTranslatorOutput::processAccess,
+  &srcMLTranslatorOutput::processString,
+  &srcMLTranslatorOutput::processChar,
+  &srcMLTranslatorOutput::processLiteral,
+  &srcMLTranslatorOutput::processBoolean,
+  &srcMLTranslatorOutput::processInterface,
+  &srcMLTranslatorOutput::processEscape,
 };
 
 #define ELEMENT_MAP_CALL_NAME element_process
@@ -211,7 +211,7 @@ namespace {
 #undef ELEMENT_MAP_CALL
 #undef ELEMENT_MAP
 
-char srcMLOutput::process_table[] = {
+char srcMLTranslatorOutput::process_table[] = {
 
   // fill the array with the prefixes
   #define BOOST_PP_LOCAL_MACRO(n) element_process<n>(),

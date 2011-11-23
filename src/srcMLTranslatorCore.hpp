@@ -28,7 +28,7 @@
 #define SRCMLTRANSLATORCORE_HPP
 
 #include "Language.hpp"
-#include "srcMLOutput.hpp"
+#include "srcMLTranslatorOutput.hpp"
 
 class UTF8CharBuffer;
 
@@ -90,7 +90,7 @@ class srcMLTranslatorCore : public Language {
   const char* encoding;
   int language;
   OPTION_TYPE& options;
-  srcMLOutput out;
+  srcMLTranslatorOutput out;
   int tabsize;
 };
 
