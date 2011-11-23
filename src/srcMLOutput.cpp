@@ -483,6 +483,9 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
 
       // optional position xml namespace
       (depth == 0) && isoption(OPTION_POSITION) ? SRCML_EXT_POSITION_NS_URI : 0,
+
+      // optional diff xml namespace
+      (depth == 0) && isoption(OPTION_DIFF)     ? SRCML_DIFF_NS_URI : 0,
     };
 
     // output the namespaces
