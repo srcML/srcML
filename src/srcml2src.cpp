@@ -43,6 +43,8 @@
 
 int option_error_status(int optopt);
 
+extern const char* diff_version;
+
 #define BASE_PROGRAM_NAME "srcml2src"
 const char* PROGRAM_NAME = BASE_PROGRAM_NAME;
 
@@ -442,6 +444,9 @@ int main(int argc, char* argv[]) {
     xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "deleted",  "ancestor::diff:*[1][self::diff:delete]");
   }
 
+  if (isoption(options, OPTION_DIFF))
+    diff_version = poptions.diff_version;
+
   try {
 
     // setup for processing
@@ -536,14 +541,6 @@ int main(int argc, char* argv[]) {
 	//	su.expand(poptions.ofilename, poptions.output_format, poptions.to_directory);
       }
 	*/
-
-    } else if (isoption(options, OPTION_DIFF) && isoption(options, OPTION_XML)) {
-
-      su.extract_diff_xml(poptions.ofilename, poptions.unit, poptions.diff_version);
-
-    } else if (isoption(options, OPTION_DIFF)) {
-
-      su.extract_diff_text(0, poptions.ofilename, poptions.unit, poptions.diff_version);
 
     } else if (isoption(options, OPTION_PRESERVE)) {
 

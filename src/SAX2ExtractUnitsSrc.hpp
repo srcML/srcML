@@ -28,6 +28,7 @@
 #include <libxml/parser.h>
 #include "srcMLUtility.hpp"
 #include "ProcessUnit.hpp"
+#include <vector>
 
 struct Element {
   const xmlChar* localname;
@@ -39,6 +40,8 @@ struct Element {
   int nb_defaulted;
   const xmlChar** attributes;
 };
+
+extern const char* diff_version;
 
 class SAX2ExtractUnitsSrc {
 
@@ -53,12 +56,19 @@ class SAX2ExtractUnitsSrc {
   bool isarchive;
   bool rootonly;
   bool stop;
+  enum DIFF { DIFF_COMMON, DIFF_OLD, DIFF_NEW };
+  std::vector<DIFF> st;
+  int status;
 
  public:
 
   SAX2ExtractUnitsSrc(ProcessUnit* pprocess, OPTION_TYPE* poptions, int unit)
     : pprocess(pprocess), poptions(poptions), unit(unit), count(0), isarchive(false), rootonly(false), stop(false)
-    {}
+    {
+      if (isoption(*poptions, OPTION_DIFF))
+        status = strcmp(diff_version, "1") == 0 ? DIFF_OLD : DIFF_NEW;
+        st.push_back(DIFF_COMMON);
+    }
 
   static xmlSAXHandler factory();
 

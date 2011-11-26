@@ -29,6 +29,8 @@
 #include "ExtractUnitsSrc.hpp"
 #include "srcexfun.hpp"
 
+const char* diff_version = "";
+
 xmlSAXHandler SAX2ExtractUnitsSrc::factory() {
 
   xmlSAXHandler sax = { 0 };
@@ -83,6 +85,10 @@ void SAX2ExtractUnitsSrc::charactersUnit(void* ctx, const xmlChar* ch, int len) 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
+  // diff extraction
+  if (isoption(*(pstate->poptions), OPTION_DIFF) && pstate->st.back() != DIFF_COMMON && pstate->st.back() != pstate->status)
+    return;
+
   pstate->pprocess->characters(ctx, ch, len);
 }
 
@@ -92,6 +98,10 @@ void SAX2ExtractUnitsSrc::cdatablockUnit(void* ctx, const xmlChar* ch, int len) 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
+  // diff extraction
+  if (isoption(*(pstate->poptions), OPTION_DIFF) && pstate->st.back() != DIFF_COMMON && pstate->st.back() != pstate->status)
+    return;
+
   pstate->pprocess->cdatablock(ctx, ch, len);
 }
 
@@ -100,6 +110,10 @@ void SAX2ExtractUnitsSrc::commentUnit(void* ctx, const xmlChar* ch) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+
+  // diff extraction
+  if (isoption(*(pstate->poptions), OPTION_DIFF) && pstate->st.back() != DIFF_COMMON && pstate->st.back() != pstate->status)
+    return;
 
   pstate->pprocess->comments(ctx, ch);
 }
@@ -189,6 +203,12 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
 
     pstate->count = 1;
 
+    // setup for diff tracking
+    if (isoption(*(pstate->poptions), OPTION_DIFF)) {
+      pstate->st.clear();
+      pstate->st.push_back(DIFF_COMMON);
+    }
+
     // should have made this call earlier, makeup for it now
     pstate->pprocess->startUnit(ctx, pstate->root.localname, pstate->root.prefix, pstate->root.URI, pstate->root.nb_namespaces,
                                 pstate->root.namespaces, pstate->root.nb_attributes, pstate->root.nb_defaulted, pstate->root.attributes);
@@ -258,6 +278,12 @@ void SAX2ExtractUnitsSrc::startElementNs(void* ctx, const xmlChar* localname,
   // call startUnit if I want to see all the units, or want to see this unit
   if (pstate->unit == -1 || pstate->count == pstate->unit) {
 
+    // setup for diff tracking
+    if (isoption(*(pstate->poptions), OPTION_DIFF)) {
+      pstate->st.clear();
+      pstate->st.push_back(DIFF_COMMON);
+    }
+
     // process the start of this unit
     pstate->pprocess->startUnit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
 
@@ -286,6 +312,19 @@ void SAX2ExtractUnitsSrc::endElementNsUnit(void *ctx, const xmlChar *localname, 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
+  if (isoption(*(pstate->poptions), OPTION_DIFF) && (strcmp((const char*) URI, "http://www.sdml.info/srcDiff") == 0 && (
+        strcmp((const char*) localname, "insert") == 0
+        || strcmp((const char*) localname, "delete") == 0
+        || strcmp((const char*) localname, "common") == 0))) {
+
+          pstate->st.pop_back();
+          return;
+    }
+
+  // diff extraction
+  if (isoption(*(pstate->poptions), OPTION_DIFF) && pstate->st.back() != DIFF_COMMON && pstate->st.back() != pstate->status)
+    return;
+
   pstate->pprocess->endElementNs(ctx, localname, prefix, URI);
 }
 
@@ -307,6 +346,12 @@ void SAX2ExtractUnitsSrc::endElementNsSkip(void *ctx, const xmlChar *localname, 
   // got here without ever seeing a nested element of any kind,
   // so have to do the whole process
   if (pstate->rootonly) {
+
+    // setup for diff tracking
+    if (isoption(*(pstate->poptions), OPTION_DIFF)) {
+      pstate->st.clear();
+      pstate->st.push_back(DIFF_COMMON);
+    }
 
     // should have made this call earlier, makeup for it now
     pstate->pprocess->startUnit(ctx, pstate->root.localname, pstate->root.prefix,
@@ -374,6 +419,10 @@ void SAX2ExtractUnitsSrc::startElementNsUnit(void* ctx, const xmlChar* localname
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+
+  // diff extraction
+  if (isoption(*(pstate->poptions), OPTION_DIFF) && pstate->st.back() != DIFF_COMMON && pstate->st.back() != pstate->status)
+    return;
 
   pstate->pprocess->startElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
 }
