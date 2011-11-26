@@ -420,6 +420,23 @@ void SAX2ExtractUnitsSrc::startElementNsUnit(void* ctx, const xmlChar* localname
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
+  if (isoption(*(pstate->poptions), OPTION_DIFF) && strcmp((const char*) URI, "http://www.sdml.info/srcDiff") == 0) {
+
+      if (strcmp((const char*) localname, "delete") == 0) {
+
+        pstate->st.push_back(DIFF_OLD);
+        return;
+      } else if (strcmp((const char*) localname, "insert") == 0) {
+
+        pstate->st.push_back(DIFF_NEW);
+        return;
+      } else if (strcmp((const char*) localname, "common") == 0) {
+
+        pstate->st.push_back(DIFF_COMMON);
+        return;
+      }
+  }
+
   // diff extraction
   if (isoption(*(pstate->poptions), OPTION_DIFF) && pstate->st.back() != DIFF_COMMON && pstate->st.back() != pstate->status)
     return;
