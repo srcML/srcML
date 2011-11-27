@@ -437,20 +437,20 @@ int main(int argc, char* argv[]) {
                                    "self::*[not(descendant::diff:*) or descendant::diff:common]");
 
     xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "hasinsert",
-                                   "descendant::diff:insert");
+                                   "descendant::diff:insert[1]");
 
     xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "hasdelete",
-                                   "descendant::diff:delete");
+                                   "descendant::diff:delete[1]");
 
     xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "hasdifference",
                                    "descendant::diff:*[self::diff:insert or self::diff:delete]");
 
     xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "haschange",
-           "descendant::diff:insert[following-sibling::*[1][self::diff:delete] or preceeding-sibling::*[1][self::diff:delete]]");
+           "descendant::diff:insert[following-sibling::node()[1][self::diff:delete] or preceding-sibling::node()[1][self::diff:delete]][1]");
 
     // srcdiff includes functions
     xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "common", 
-                                   "self::*[not(ancestor::diff:*) or ancestor::diff:*[1][self::diff:common]]");
+                                   "not(ancestor::diff:*[1][self::diff:insert or self::diff:delete])");
 
     xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "inserted",
                                    "ancestor::diff:*[1][self::diff:insert]");
@@ -462,7 +462,8 @@ int main(int argc, char* argv[]) {
                                    "ancestor::diff:*[1][self::diff:insert or self::diff:delete]");
 
     xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "changed",
-                                   "ancestor::diff:*[1][self::diff:insert or self::diff:delete]");
+           "ancestor::diff:*[1][self::diff:insert[following-sibling::node()[1][self::diff:delete] or preceding-sibling::node()[1][self::diff:delete]] or self::diff:delete[following-sibling::node()[1][self::diff:insert] or preceding-sibling::node()[1][self::diff:insert]]]");
+
   }
 
   if (isoption(options, OPTION_DIFF))
