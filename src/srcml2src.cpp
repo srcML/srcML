@@ -432,16 +432,38 @@ int main(int argc, char* argv[]) {
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "nestedwhile", ".//src:while//src:while");
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "returntype", "/src:unit//src:function/src:type");
 
-    // srcdiff functions
-    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "haschange",   "self::*[.//diff:insert or .//diff:delete]");
-    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "hascommon",   "self::*[not(.//diff:*) or .//diff:common]");
-    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "hasinsert",   "self::*[.//diff:insert]");
-    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "hasdelete",   "self::*[.//diff:delete]");
-    
-    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "common",   "self::*[not(ancestor::diff:*) or ancestor::diff:*[1][self::diff:common]]");
-    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "changed",  "ancestor::diff:*[1][self::diff:insert or self::diff:delete]");
-    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "inserted", "ancestor::diff:*[1][self::diff:insert]");
-    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "deleted",  "ancestor::diff:*[1][self::diff:delete]");
+    // srcdiff containing functions
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "hascommon",
+                                   "self::*[not(descendant::diff:*) or descendant::diff:common]");
+
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "hasinsert",
+                                   "descendant::diff:insert");
+
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "hasdelete",
+                                   "descendant::diff:delete");
+
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "hasdifference",
+                                   "descendant::diff:*[self::diff:insert or self::diff:delete]");
+
+
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "haschange",
+                                   "self::*[descendant::diff:insert or descendant::diff:delete]");
+
+    // srcdiff includes functions
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "common", 
+                                   "self::*[not(ancestor::diff:*) or ancestor::diff:*[1][self::diff:common]]");
+
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "inserted",
+                                   "ancestor::diff:*[1][self::diff:insert]");
+
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "deleted",
+                                   "ancestor::diff:*[1][self::diff:delete]");
+
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "difference",
+                                   "ancestor::diff:*[1][self::diff:insert or self::diff:delete]");
+
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "changed",
+                                   "ancestor::diff:*[1][self::diff:insert or self::diff:delete]");
   }
 
   if (isoption(options, OPTION_DIFF))
