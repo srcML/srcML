@@ -445,9 +445,8 @@ int main(int argc, char* argv[]) {
     xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "hasdifference",
                                    "descendant::diff:*[self::diff:insert or self::diff:delete]");
 
-
     xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "haschange",
-                                   "self::*[descendant::diff:insert or descendant::diff:delete]");
+           "descendant::diff:insert[following-sibling::*[1][self::diff:delete] or preceeding-sibling::*[1][self::diff:delete]]");
 
     // srcdiff includes functions
     xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "common", 
