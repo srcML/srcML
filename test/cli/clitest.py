@@ -3343,8 +3343,12 @@ f.close()
 check([srcml2src, option.XML_FLAG, option.DIFF_FLAG_LONG, '1', 'diff/diff_archive.cpp.xml'], '', srcml_old)
 check([srcml2src, option.XML_FLAG, option.DIFF_FLAG_LONG, '2', 'diff/diff_archive.cpp.xml'], '', srcml_new)
 
+check([srcml2src, option.XML_FLAG, option.DIFF_FLAG_LONG, '1', '-o', 'diff/old_archive.cpp.xml'], srcdiff, '')
+validate(open('diff/old_archive.cpp.xml', 'r').read(), srcml_old)
 check([srcml2src, option.XML_FLAG, option.DIFF_FLAG_LONG, '1', 'diff/diff_archive.cpp.xml', '-o', 'diff/old_archive.cpp.xml'], '', '')
 validate(open('diff/old_archive.cpp.xml', 'r').read(), srcml_old)
+check([srcml2src, option.XML_FLAG, option.DIFF_FLAG_LONG, '2', '-o', 'diff/new_archive.cpp.xml'], srcdiff, '')
+validate(open('diff/new_archive.cpp.xml', 'r').read(), srcml_new)
 check([srcml2src, option.XML_FLAG, option.DIFF_FLAG_LONG, '2', 'diff/diff_archive.cpp.xml', '-o', 'diff/new_archive.cpp.xml'], '', '')
 validate(open('diff/new_archive.cpp.xml', 'r').read(), srcml_new)
 
