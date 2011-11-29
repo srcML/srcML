@@ -3302,14 +3302,14 @@ f = open('diff/b.cpp.xml', 'r')
 srcml_new = f.read()
 f.close()
 
-check([src2srcml, option.DIFF_FLAG_LONG, '1', 'diff/diff.cpp.xml'], '', src_old)
-check([src2srcml, option.DIFF_FLAG_LONG, '2', 'diff/diff.cpp.xml'], '', src_new)
+check([srcml2src, option.DIFF_FLAG_LONG, '1', 'diff/diff.cpp.xml'], '', src_old)
+check([srcml2src, option.DIFF_FLAG_LONG, '2', 'diff/diff.cpp.xml'], '', src_new)
 
 check([src2srcml, 'sub/a.cpp', 'sub/b.cpp', '-o', 'sub/all.xml'], '', '')
 validate(open('sub/all.xml', 'r').read(), srcmlstart + cppempty + cpp + srcmlend)
 
-check([src2srcml, option.XML_FLAG, option.DIFF_FLAG_LONG, '1', 'diff/diff.cpp.xml'], '', srcml_old)
-check([src2srcml, option.XML_FLAG, option.DIFF_FLAG_LONG, '2', 'diff/diff.cpp.xml'], '', srcml_new)
+check([srcml2src, option.XML_FLAG, option.DIFF_FLAG_LONG, '1', 'diff/diff.cpp.xml'], '', srcml_old)
+check([srcml2src, option.XML_FLAG, option.DIFF_FLAG_LONG, '2', 'diff/diff.cpp.xml'], '', srcml_new)
 
 # footer
 print
