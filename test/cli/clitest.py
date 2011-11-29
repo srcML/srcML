@@ -3313,6 +3313,11 @@ validate(open('diff/new.cpp', 'r').read(), src_new)
 check([srcml2src, option.XML_FLAG, option.DIFF_FLAG_LONG, '1', 'diff/diff.cpp.xml'], '', srcml_old)
 check([srcml2src, option.XML_FLAG, option.DIFF_FLAG_LONG, '2', 'diff/diff.cpp.xml'], '', srcml_new)
 
+check([srcml2src, option.XML_FLAG, option.DIFF_FLAG_LONG, '1', 'diff/diff.cpp.xml', '-o', 'diff/old.cpp.xml'], '', '')
+validate(open('diff/old.cpp.xml', 'r').read(), srcml_old)
+check([srcml2src, option.XML_FLAG, option.DIFF_FLAG_LONG, '2', 'diff/diff.cpp.xml', '-o', 'diff/new.cpp.xml'], '', '')
+validate(open('diff/new.cpp.xml', 'r').read(), srcml_new)
+
 # footer
 print
 print "Error count:\t\t", error_count, "\t", error_list
