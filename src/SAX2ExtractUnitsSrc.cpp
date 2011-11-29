@@ -220,6 +220,24 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
             break;
           }
       }
+
+      // clear out the diff namespace from the array before passing it on
+      bool found = false;
+      int deccount = 0;
+      for (int i = 0, index = 0; i < pstate->root.nb_namespaces; ++i, index += 2) {
+
+        const char* uri = (const char*) pstate->root.namespaces[index + 1];
+
+        if (!found && strcmp(uri, "http://www.sdml.info/srcDiff") == 0) {
+
+          found = true;
+          deccount = 1;
+        } else if (found) {
+          pstate->root.namespaces[index - 2] = pstate->root.namespaces[index];
+          pstate->root.namespaces[index + 1 - 2] = pstate->root.namespaces[index + 1];
+        }
+      }
+      pstate->root.nb_namespaces -= deccount;
     }
 
     // should have made this call earlier, makeup for it now
@@ -308,6 +326,24 @@ void SAX2ExtractUnitsSrc::startElementNs(void* ctx, const xmlChar* localname,
             break;
           }
       }
+
+      // clear out the diff namespace from the array before passing it on
+      bool found = false;
+      int deccount = 0;
+      for (int i = 0, index = 0; i < nb_namespaces; ++i, index += 2) {
+
+        const char* uri = (const char*) namespaces[index + 1];
+
+        if (!found && strcmp(uri, "http://www.sdml.info/srcDiff") == 0) {
+
+          found = true;
+          deccount = 1;
+        } else if (found) {
+          namespaces[index - 2] = namespaces[index];
+          namespaces[index + 1 - 2] = namespaces[index + 1];
+        }
+      }
+      nb_namespaces -= deccount;
     }
 
     // process the start of this unit
@@ -390,6 +426,24 @@ void SAX2ExtractUnitsSrc::endElementNsSkip(void *ctx, const xmlChar *localname, 
             break;
           }
       }
+
+      // clear out the diff namespace from the array before passing it on
+      bool found = false;
+      int deccount = 0;
+      for (int i = 0, index = 0; i < pstate->root.nb_namespaces; ++i, index += 2) {
+
+        const char* uri = (const char*) pstate->root.namespaces[index + 1];
+
+        if (!found && strcmp(uri, "http://www.sdml.info/srcDiff") == 0) {
+
+          found = true;
+          deccount = 1;
+        } else if (found) {
+          pstate->root.namespaces[index - 2] = pstate->root.namespaces[index];
+          pstate->root.namespaces[index + 1 - 2] = pstate->root.namespaces[index + 1];
+        }
+      }
+      pstate->root.nb_namespaces -= deccount;
     }
 
     // should have made this call earlier, makeup for it now
