@@ -209,10 +209,10 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
       pstate->st.push_back(DIFF_COMMON);
 
       // append the directory filename
-      int filename_index = find_attribute_index(nb_attributes, attributes, UNIT_ATTRIBUTE_FILENAME);
+      int filename_index = find_attribute_index(pstate->root.nb_attributes, pstate->root.attributes, UNIT_ATTRIBUTE_FILENAME);
       if (filename_index != -1) {
 	
-        for (char* pc = (char*) attributes[filename_index + 3]; pc < (char*) attributes[filename_index + 4]; ++pc)
+        for (char* pc = (char*) pstate->root.attributes[filename_index + 3]; pc < (char*) pstate->root.attributes[filename_index + 4]; ++pc)
           if (*pc == '|') {
             *pc = 0;
             if (pstate->status == DIFF_NEW)
