@@ -3305,8 +3305,10 @@ f.close()
 check([srcml2src, option.DIFF_FLAG_LONG, '1', 'diff/diff.cpp.xml'], '', src_old)
 check([srcml2src, option.DIFF_FLAG_LONG, '2', 'diff/diff.cpp.xml'], '', src_new)
 
-check([src2srcml, 'sub/a.cpp', 'sub/b.cpp', '-o', 'sub/all.xml'], '', '')
-validate(open('sub/all.xml', 'r').read(), srcmlstart + cppempty + cpp + srcmlend)
+check([srcml2src, option.DIFF_FLAG_LONG, '1', 'diff/diff.cpp.xml', '-o', 'diff/old.cpp'], '', '')
+validate(open('diff/old.cpp', 'r').read(), src_old)
+check([srcml2src, option.DIFF_FLAG_LONG, '2', 'diff/diff.cpp.xml', '-o', 'diff/new.cpp'], '', '')
+validate(open('diff/new.cpp', 'r').read(), src_new)
 
 check([srcml2src, option.XML_FLAG, option.DIFF_FLAG_LONG, '1', 'diff/diff.cpp.xml'], '', srcml_old)
 check([srcml2src, option.XML_FLAG, option.DIFF_FLAG_LONG, '2', 'diff/diff.cpp.xml'], '', srcml_new)
