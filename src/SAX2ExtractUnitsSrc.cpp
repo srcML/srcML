@@ -465,6 +465,7 @@ void SAX2ExtractUnitsSrc::stopUnit(void* ctx) {
   pstate->stop = true;
 }
 
+// setup the attributes and namespaces for a revision extraction
 void setupDiff(SAX2ExtractUnitsSrc* pstate,
                int& nb_namespaces, const xmlChar** namespaces,
                int& nb_attributes, const xmlChar** attributes) {
