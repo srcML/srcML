@@ -117,7 +117,7 @@ const int REGISTER_EXTENSION_FUNCTION_FILE_FLAG_CODE = 256 + 10;
 const char* const EOL_FLAG = "eol";
 const int EOL_FLAG_CODE = 256 + 11;
 
-const char* const DIFF_FLAG_LONG = "diff";
+const char* const DIFF_FLAG_LONG = "revision";
 const int DIFF_FLAG_CODE = 256 + 12;
 
 const char* const PRESERVE_FLAG_LONG = "preserve";
