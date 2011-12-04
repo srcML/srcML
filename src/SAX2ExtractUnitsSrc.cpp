@@ -31,6 +31,10 @@
 
 const char* diff_version = "";
 
+static void setupDiff(SAX2ExtractUnitsSrc* pstate,
+               int& nb_namespaces, const xmlChar** namespaces,
+                      int& nb_attributes, const xmlChar** attributes);
+
 xmlSAXHandler SAX2ExtractUnitsSrc::factory() {
 
   xmlSAXHandler sax = { 0 };
@@ -131,8 +135,8 @@ void SAX2ExtractUnitsSrc::commentUnit(void* ctx, const xmlChar* ch) {
   This handler does NOT call startUnit() or startRootUnit().
 */
 void SAX2ExtractUnitsSrc::startElementNsRoot(void* ctx, const xmlChar* localname,
-      const xmlChar* prefix, const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
-      int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
+                                             const xmlChar* prefix, const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
+                                             int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
@@ -185,10 +189,10 @@ void SAX2ExtractUnitsSrc::startElementNsRoot(void* ctx, const xmlChar* localname
   start element processing.
 */
 void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localname,
-    const xmlChar* prefix, const xmlChar* URI,
-    int nb_namespaces, const xmlChar** namespaces,
-    int nb_attributes, int nb_defaulted,
-    const xmlChar** attributes) {
+                                              const xmlChar* prefix, const xmlChar* URI,
+                                              int nb_namespaces, const xmlChar** namespaces,
+                                              int nb_attributes, int nb_defaulted,
+                                              const xmlChar** attributes) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
@@ -205,39 +209,8 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
 
     // setup for diff tracking
     if (isoption(*(pstate->poptions), OPTION_DIFF)) {
-      pstate->st.clear();
-      pstate->st.push_back(DIFF_COMMON);
 
-      // append the directory filename
-      int filename_index = find_attribute_index(pstate->root.nb_attributes, pstate->root.attributes, UNIT_ATTRIBUTE_FILENAME);
-      if (filename_index != -1) {
-	
-        for (char* pc = (char*) pstate->root.attributes[filename_index + 3]; pc < (char*) pstate->root.attributes[filename_index + 4]; ++pc)
-          if (*pc == '|') {
-            *pc = 0;
-            if (pstate->status == DIFF_NEW)
-              pstate->root.attributes[filename_index + 3] = (const xmlChar*) (pc + 1);
-            break;
-          }
-      }
-
-      // clear out the diff namespace from the array before passing it on
-      bool found = false;
-      int deccount = 0;
-      for (int i = 0, index = 0; i < pstate->root.nb_namespaces; ++i, index += 2) {
-
-        const char* uri = (const char*) pstate->root.namespaces[index + 1];
-
-        if (!found && strcmp(uri, "http://www.sdml.info/srcDiff") == 0) {
-
-          found = true;
-          deccount = 1;
-        } else if (found) {
-          pstate->root.namespaces[index - 2] = pstate->root.namespaces[index];
-          pstate->root.namespaces[index + 1 - 2] = pstate->root.namespaces[index + 1];
-        }
-      }
-      pstate->root.nb_namespaces -= deccount;
+      setupDiff(pstate, pstate->root.nb_namespaces, pstate->root.namespaces, pstate->root.nb_attributes, pstate->root.attributes);
     }
 
     // should have made this call earlier, makeup for it now
@@ -280,9 +253,9 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
     startElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
   }
 
-    // all done
-    if (pstate->stop)
-      return;
+  // all done
+  if (pstate->stop)
+    return;
 
   pstate->firstcharacters.clear();
 }
@@ -293,10 +266,10 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
   This is called first for the first nested element (right after the root):
 */
 void SAX2ExtractUnitsSrc::startElementNs(void* ctx, const xmlChar* localname,
-           const xmlChar* prefix, const xmlChar* URI,
-           int nb_namespaces, const xmlChar** namespaces,
-           int nb_attributes, int nb_defaulted,
-           const xmlChar** attributes) {
+                                         const xmlChar* prefix, const xmlChar* URI,
+                                         int nb_namespaces, const xmlChar** namespaces,
+                                         int nb_attributes, int nb_defaulted,
+                                         const xmlChar** attributes) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
@@ -311,39 +284,8 @@ void SAX2ExtractUnitsSrc::startElementNs(void* ctx, const xmlChar* localname,
 
     // setup for diff tracking
     if (isoption(*(pstate->poptions), OPTION_DIFF)) {
-      pstate->st.clear();
-      pstate->st.push_back(DIFF_COMMON);
 
-      // append the directory filename
-      int filename_index = find_attribute_index(nb_attributes, attributes, UNIT_ATTRIBUTE_FILENAME);
-      if (filename_index != -1) {
-	
-        for (char* pc = (char*) attributes[filename_index + 3]; pc < (char*) attributes[filename_index + 4]; ++pc)
-          if (*pc == '|') {
-            *pc = 0;
-            if (pstate->status == DIFF_NEW)
-              attributes[filename_index + 3] = (const xmlChar*) (pc + 1);
-            break;
-          }
-      }
-
-      // clear out the diff namespace from the array before passing it on
-      bool found = false;
-      int deccount = 0;
-      for (int i = 0, index = 0; i < nb_namespaces; ++i, index += 2) {
-
-        const char* uri = (const char*) namespaces[index + 1];
-
-        if (!found && strcmp(uri, "http://www.sdml.info/srcDiff") == 0) {
-
-          found = true;
-          deccount = 1;
-        } else if (found) {
-          namespaces[index - 2] = namespaces[index];
-          namespaces[index + 1 - 2] = namespaces[index + 1];
-        }
-      }
-      nb_namespaces -= deccount;
+      setupDiff(pstate, nb_namespaces, namespaces, nb_attributes, attributes);
     }
 
     // process the start of this unit
@@ -375,13 +317,13 @@ void SAX2ExtractUnitsSrc::endElementNsUnit(void *ctx, const xmlChar *localname, 
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
   if (isoption(*(pstate->poptions), OPTION_DIFF) && (strcmp((const char*) URI, "http://www.sdml.info/srcDiff") == 0 && (
-        strcmp((const char*) localname, "insert") == 0
-        || strcmp((const char*) localname, "delete") == 0
-        || strcmp((const char*) localname, "common") == 0))) {
+                                                                                                                        strcmp((const char*) localname, "insert") == 0
+                                                                                                                        || strcmp((const char*) localname, "delete") == 0
+                                                                                                                        || strcmp((const char*) localname, "common") == 0))) {
 
-          pstate->st.pop_back();
-          return;
-    }
+    pstate->st.pop_back();
+    return;
+  }
 
   // diff extraction
   if (isoption(*(pstate->poptions), OPTION_DIFF) && pstate->st.back() != DIFF_COMMON && pstate->st.back() != pstate->status)
@@ -411,39 +353,8 @@ void SAX2ExtractUnitsSrc::endElementNsSkip(void *ctx, const xmlChar *localname, 
 
     // setup for diff tracking
     if (isoption(*(pstate->poptions), OPTION_DIFF)) {
-      pstate->st.clear();
-      pstate->st.push_back(DIFF_COMMON);
 
-      // append the directory filename
-      int filename_index = find_attribute_index(pstate->root.nb_attributes, pstate->root.attributes, UNIT_ATTRIBUTE_FILENAME);
-      if (filename_index != -1) {
-	
-        for (char* pc = (char*) pstate->root.attributes[filename_index + 3]; pc < (char*) pstate->root.attributes[filename_index + 4]; ++pc)
-          if (*pc == '|') {
-            *pc = 0;
-            if (pstate->status == DIFF_NEW)
-              pstate->root.attributes[filename_index + 3] = (const xmlChar*) (pc + 1);
-            break;
-          }
-      }
-
-      // clear out the diff namespace from the array before passing it on
-      bool found = false;
-      int deccount = 0;
-      for (int i = 0, index = 0; i < pstate->root.nb_namespaces; ++i, index += 2) {
-
-        const char* uri = (const char*) pstate->root.namespaces[index + 1];
-
-        if (!found && strcmp(uri, "http://www.sdml.info/srcDiff") == 0) {
-
-          found = true;
-          deccount = 1;
-        } else if (found) {
-          pstate->root.namespaces[index - 2] = pstate->root.namespaces[index];
-          pstate->root.namespaces[index + 1 - 2] = pstate->root.namespaces[index + 1];
-        }
-      }
-      pstate->root.nb_namespaces -= deccount;
+      setupDiff(pstate, pstate->root.nb_namespaces, pstate->root.namespaces, pstate->root.nb_attributes, pstate->root.attributes);
     }
 
     // should have made this call earlier, makeup for it now
@@ -507,27 +418,27 @@ void SAX2ExtractUnitsSrc::endElementNs(void *ctx, const xmlChar *localname, cons
 
 // escape control character elements
 void SAX2ExtractUnitsSrc::startElementNsUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-                                                int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                                                const xmlChar** attributes) {
+                                             int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                                             const xmlChar** attributes) {
 
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
   if (isoption(*(pstate->poptions), OPTION_DIFF) && strcmp((const char*) URI, "http://www.sdml.info/srcDiff") == 0) {
 
-      if (strcmp((const char*) localname, "delete") == 0) {
+    if (strcmp((const char*) localname, "delete") == 0) {
 
-        pstate->st.push_back(DIFF_OLD);
-        return;
-      } else if (strcmp((const char*) localname, "insert") == 0) {
+      pstate->st.push_back(DIFF_OLD);
+      return;
+    } else if (strcmp((const char*) localname, "insert") == 0) {
 
-        pstate->st.push_back(DIFF_NEW);
-        return;
-      } else if (strcmp((const char*) localname, "common") == 0) {
+      pstate->st.push_back(DIFF_NEW);
+      return;
+    } else if (strcmp((const char*) localname, "common") == 0) {
 
-        pstate->st.push_back(DIFF_COMMON);
-        return;
-      }
+      pstate->st.push_back(DIFF_COMMON);
+      return;
+    }
   }
 
   // diff extraction
@@ -554,3 +465,54 @@ void SAX2ExtractUnitsSrc::stopUnit(void* ctx) {
   pstate->stop = true;
 }
 
+void setupDiff(SAX2ExtractUnitsSrc* pstate,
+               int& nb_namespaces, const xmlChar** namespaces,
+               int& nb_attributes, const xmlChar** attributes) {
+
+  pstate->st.clear();
+  pstate->st.push_back(pstate->DIFF_COMMON);
+
+  // get the proper filename for this revision
+  int filename_index = find_attribute_index(nb_attributes, attributes, UNIT_ATTRIBUTE_FILENAME);
+  if (filename_index != -1) {
+
+    for (char* pc = (char*) attributes[filename_index + 3]; pc < (char*) attributes[filename_index + 4]; ++pc)
+      if (*pc == '|') {
+        *pc = 0;
+        if (pstate->status == pstate->DIFF_NEW)
+          attributes[filename_index + 3] = (const xmlChar*) (pc + 1);
+        break;
+      }
+  }
+
+  // get the proper version of this revision
+  int version_index = find_attribute_index(nb_attributes, attributes, UNIT_ATTRIBUTE_VERSION);
+  if (version_index != -1) {
+
+    for (char* pc = (char*) attributes[version_index + 3]; pc < (char*) attributes[version_index + 4]; ++pc)
+      if (*pc == '|') {
+        *pc = 0;
+        if (pstate->status == pstate->DIFF_NEW)
+          attributes[version_index + 3] = (const xmlChar*) (pc + 1);
+        break;
+      }
+  }
+
+  // clear out the diff namespace from the array before passing it on
+  bool found = false;
+  int deccount = 0;
+  for (int i = 0, index = 0; i < nb_namespaces; ++i, index += 2) {
+
+    const char* uri = (const char*) namespaces[index + 1];
+
+    if (!found && strcmp(uri, "http://www.sdml.info/srcDiff") == 0) {
+
+      found = true;
+      deccount = 1;
+    } else if (found) {
+      namespaces[index - 2] = namespaces[index];
+      namespaces[index + 1 - 2] = namespaces[index + 1];
+    }
+  }
+  nb_namespaces -= deccount;
+}
