@@ -74,13 +74,17 @@ class ExtractUnitsSrc : public ProcessUnit {
       path = to_directory;
 
       // append the directory attribute from the root
-      int dir_index = find_attribute_index(pstate->root.nb_attributes, pstate->root.attributes, UNIT_ATTRIBUTE_DIRECTORY);
-      if (dir_index != -1) {
-	
-        if (!path.empty() && path[path.size() - 1] != PATH_SEPARATOR)
-          path += PATH_SEPARATOR;
+      int dir_index = -1;
+      if (pstate->isarchive) {
 
-        path.append((const char*) pstate->root.attributes[dir_index + 3], (const char*) pstate->root.attributes[dir_index + 4]);
+        dir_index = find_attribute_index(pstate->root.nb_attributes, pstate->root.attributes, UNIT_ATTRIBUTE_DIRECTORY);
+        if (dir_index != -1) {
+	
+          if (!path.empty() && path[path.size() - 1] != PATH_SEPARATOR)
+            path += PATH_SEPARATOR;
+
+          path.append((const char*) pstate->root.attributes[dir_index + 3], (const char*) pstate->root.attributes[dir_index + 4]);
+        }
       }
 
       // append the directory attribute from the individual unit
