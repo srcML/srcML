@@ -218,7 +218,7 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
   pstate->isarchive = !isoption(pstate->pprocess->getOptions(), OPTION_XSLT_ALL) && strcmp((const char*) localname, "unit") == 0 && strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0;
   if (!pstate->isarchive) {
 
-    pstate->count = 1;
+    pstate->count = 0;
 
     // setup for diff tracking
     diff_filename = true;
@@ -229,6 +229,8 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
 
     // should have made this call earlier, makeup for it now
     if (diff_filename) {
+
+      pstate->count = 1;
 
       pstate->pprocess->startUnit(ctx, pstate->root.localname, pstate->root.prefix, pstate->root.URI, pstate->root.nb_namespaces,
                                   pstate->root.namespaces, pstate->root.nb_attributes, pstate->root.nb_defaulted, pstate->root.attributes);
@@ -295,14 +297,15 @@ void SAX2ExtractUnitsSrc::startElementNs(void* ctx, const xmlChar* localname,
   // so we did find another element in the root
   pstate->rootonly = false;
 
-  ++(pstate->count);
-
   // setup for diff tracking
   diff_filename = true;
   if (isoption(*(pstate->poptions), OPTION_DIFF)) {
 
     diff_filename = setupDiff(pstate, nb_namespaces, namespaces, nb_attributes, attributes);
   }
+
+  if (diff_filename)
+    ++(pstate->count);
 
   // call startUnit if I want to see all the units, or want to see this unit
   if (diff_filename && (pstate->unit == -1 || pstate->count == pstate->unit)) {
