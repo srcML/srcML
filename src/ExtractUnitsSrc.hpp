@@ -61,6 +61,15 @@ class ExtractUnitsSrc : public ProcessUnit {
 
     if (to_directory) {
 
+      /*
+        The filename to extract to is based on:
+
+         - path given in the extract on the command line
+         - directory attribute of the root unit.  This can be superseded by the directory attribute
+         of the individual unit
+         - filename on the unit (which is really a path)
+       */
+
       // start the path with the (optional) target directory
       path = to_directory;
 
@@ -72,6 +81,17 @@ class ExtractUnitsSrc : public ProcessUnit {
 	  path += PATH_SEPARATOR;
 
 	path.append((const char*) attributes[dir_index + 3], (const char*) attributes[dir_index + 4]);
+
+      } else {
+
+        dir_index = find_attribute_index(pstate->root.nb_attributes, pstate->root.attributes, UNIT_ATTRIBUTE_DIRECTORY);
+        if (dir_index != -1) {
+	
+          if (!path.empty() && path[path.size() - 1] != PATH_SEPARATOR)
+            path += PATH_SEPARATOR;
+
+          path.append((const char*) pstate->root.attributes[dir_index + 3], (const char*) pstate->root.attributes[dir_index + 4]);
+        }
       }
 
       // find the filename attribute
