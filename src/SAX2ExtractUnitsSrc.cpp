@@ -503,16 +503,23 @@ bool setupDiff(SAX2ExtractUnitsSrc* pstate,
 
   // get the proper filename for this revision
   int filename_index = find_attribute_index(nb_attributes, attributes, UNIT_ATTRIBUTE_FILENAME);
-  if (filename_index != -1) {
 
-    for (char* pc = (char*) attributes[filename_index + 3]; pc < (char*) attributes[filename_index + 4]; ++pc)
-      if (*pc == '|') {
-        *pc = 0;
-        if (pstate->status == pstate->DIFF_NEW)
-          attributes[filename_index + 3] = (const xmlChar*) (pc + 1);
-        break;
-      }
-  }
+  // gotta have a filename with srcDiff
+  if (filename_index == -1)
+    return false;
+
+  // split up the filename
+  for (char* pc = (char*) attributes[filename_index + 3]; pc < (char*) attributes[filename_index + 4]; ++pc)
+    if (*pc == '|') {
+      *pc = 0;
+      if (pstate->status == pstate->DIFF_NEW)
+        attributes[filename_index + 3] = (const xmlChar*) (pc + 1);
+      break;
+    }
+
+  // make sure the filename is not blank (indicating there is no file for this revision)
+  if (attributes[filename_index + 3][0] == '\0' || attributes[filename_index + 3] == attributes[filename_index + 4])
+    return false;
 
   // get the proper version of this revision
   int version_index = find_attribute_index(nb_attributes, attributes, UNIT_ATTRIBUTE_VERSION);
