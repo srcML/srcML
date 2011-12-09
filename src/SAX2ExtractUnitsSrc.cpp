@@ -36,6 +36,9 @@ static bool setupDiff(SAX2ExtractUnitsSrc* pstate,
                       int& nb_namespaces, const xmlChar** namespaces,
                       int& nb_attributes, const xmlChar** attributes);
 
+// split the attribute according to the revision of the diff
+static int split_diff_attribute(SAX2ExtractUnitsSrc* pstate, const char* attribute_name, int& nb_attributes, const xmlChar** attributes);
+
 xmlSAXHandler SAX2ExtractUnitsSrc::factory() {
 
   xmlSAXHandler sax = { 0 };
@@ -261,6 +264,15 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
     ctxt->sax->comment = &commentUnit;
 
   } else {
+
+    if (isoption(*(pstate->poptions), OPTION_DIFF)) {
+
+      // get the proper version of this revision
+      split_diff_attribute(pstate, UNIT_ATTRIBUTE_VERSION, pstate->root.nb_attributes, pstate->root.attributes);
+
+      // get the proper dir of this revision
+      split_diff_attribute(pstate, UNIT_ATTRIBUTE_DIRECTORY, pstate->root.nb_attributes, pstate->root.attributes);
+    }
 
     // should have made this call earlier, makeup for it now
     pstate->pprocess->startRootUnit(ctx, pstate->root.localname, pstate->root.prefix, pstate->root.URI, pstate->root.nb_namespaces, pstate->root.namespaces, pstate->root.nb_attributes, pstate->root.nb_defaulted, pstate->root.attributes);
