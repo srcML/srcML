@@ -496,6 +496,24 @@ void SAX2ExtractUnitsSrc::stopUnit(void* ctx) {
   pstate->stop = true;
 }
 
+// split the attribute according to the revision of the diff
+int split_diff_attribute(SAX2ExtractUnitsSrc* pstate, const char* attribute_name, int& nb_attributes, const xmlChar** attributes) {
+
+  int attr_index = find_attribute_index(nb_attributes, attributes, attribute_name);
+  if (attr_index != -1) {
+
+    for (char* pc = (char*) attributes[attr_index + 3]; pc < (char*) attributes[attr_index + 4]; ++pc)
+      if (*pc == '|') {
+        *pc = 0;
+        if (pstate->status == pstate->DIFF_NEW)
+          attributes[attr_index + 3] = (const xmlChar*) (pc + 1);
+        break;
+      }
+  }
+
+  return attr_index;
+}
+
 // setup the attributes and namespaces for a revision extraction
 bool setupDiff(SAX2ExtractUnitsSrc* pstate,
                int& nb_namespaces, const xmlChar** namespaces,
@@ -505,37 +523,21 @@ bool setupDiff(SAX2ExtractUnitsSrc* pstate,
   pstate->st.push_back(pstate->DIFF_COMMON);
 
   // get the proper filename for this revision
-  int filename_index = find_attribute_index(nb_attributes, attributes, UNIT_ATTRIBUTE_FILENAME);
+  int filename_index = split_diff_attribute(pstate, UNIT_ATTRIBUTE_FILENAME, nb_attributes, attributes);
 
   // gotta have a filename with srcDiff
   if (filename_index == -1)
     return false;
-
-  // split up the filename
-  for (char* pc = (char*) attributes[filename_index + 3]; pc < (char*) attributes[filename_index + 4]; ++pc)
-    if (*pc == '|') {
-      *pc = 0;
-      if (pstate->status == pstate->DIFF_NEW)
-        attributes[filename_index + 3] = (const xmlChar*) (pc + 1);
-      break;
-    }
 
   // make sure the filename is not blank (indicating there is no file for this revision)
   if (attributes[filename_index + 3][0] == '\0' || attributes[filename_index + 3] == attributes[filename_index + 4])
     return false;
 
   // get the proper version of this revision
-  int version_index = find_attribute_index(nb_attributes, attributes, UNIT_ATTRIBUTE_VERSION);
-  if (version_index != -1) {
+  split_diff_attribute(pstate, UNIT_ATTRIBUTE_VERSION, nb_attributes, attributes);
 
-    for (char* pc = (char*) attributes[version_index + 3]; pc < (char*) attributes[version_index + 4]; ++pc)
-      if (*pc == '|') {
-        *pc = 0;
-        if (pstate->status == pstate->DIFF_NEW)
-          attributes[version_index + 3] = (const xmlChar*) (pc + 1);
-        break;
-      }
-  }
+  // get the proper dir of this revision
+  split_diff_attribute(pstate, UNIT_ATTRIBUTE_DIRECTORY, nb_attributes, attributes);
 
   // clear out the diff namespace from the array before passing it on
   bool found = false;
