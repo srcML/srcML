@@ -519,6 +519,8 @@ int split_diff_attribute(SAX2ExtractUnitsSrc* pstate, const char* attribute_name
         *pc = 0;
         if (pstate->status == pstate->DIFF_NEW)
           attributes[attr_index + 3] = (const xmlChar*) (pc + 1);
+        else
+          attributes[attr_index + 4] = (const xmlChar*) pc;
         break;
       }
   }
