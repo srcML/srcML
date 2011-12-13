@@ -1141,8 +1141,8 @@ void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
         if (unit_filename == "-")
           fprintf(stderr, "Skipped:  Must specify language for standard input.\n" );
         else
-          fprintf(stderr, !shownumber ? "Skipped '%s':  Unregistered extension.\n" :
-                  "    - %s\tSkipped: Unregistered extension.\n",
+          fprintf(stderr, !shownumber ? "Skipped '%s':  Unregistered extension\n" :
+                  "    - %s\tSkipped: Unregistered extension\n",
                   unit_filename.c_str() ? unit_filename.c_str() : "standard input");
       }
 
@@ -1279,8 +1279,8 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
       if (archiveIsDir(context)) {
 
         if (!isoption(options, OPTION_QUIET))
-          fprintf(stderr, !shownumber ? "Skipped '%s':  Is a directory.\n" :
-                  "    - %s\tSkipped: Is a directory.\n", unit_filename.c_str());
+          fprintf(stderr, !shownumber ? "Skipped '%s':  Directory\n" :
+                  "    - %s\tSkipped: Directory\n", unit_filename.c_str());
 
         ++skipped;
 
@@ -1306,8 +1306,8 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
           if (unit_filename == "-")
             fprintf(stderr, "Skipped:  Must specify language for standard input.\n" );
           else
-            fprintf(stderr, !shownumber ? "Skipped '%s':  Unregistered extension.\n" :
-                    "    - %s\tSkipped: Unregistered extension.\n",
+            fprintf(stderr, !shownumber ? "Skipped '%s':  Unregistered extension\n" :
+                    "    - %s\tSkipped: Unregistered extension\n",
                     unit_filename.c_str() ? unit_filename.c_str() : "standard input");
         }
 
