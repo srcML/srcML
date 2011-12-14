@@ -127,8 +127,8 @@ class ExtractUnitsSrc : public ProcessUnit {
     }
 
     // now create the file itself
-    output_buffer = xmlOutputBufferCreateFilename(path.c_str(), handler, isoption(*(pstate->poptions), OPTION_COMPRESSED));
-    if (output_buffer == NULL) {
+    output_buffer[0] = xmlOutputBufferCreateFilename(path.c_str(), handler, isoption(*(pstate->poptions), OPTION_COMPRESSED));
+    if (output_buffer[0] == NULL) {
       fprintf(stderr, "Output buffer error\n");
       xmlStopParser(ctxt);
     }
@@ -137,7 +137,7 @@ class ExtractUnitsSrc : public ProcessUnit {
   virtual void characters(void* ctx, const xmlChar* ch, int len) {
 
 #if defined(__GNUC__)
-    xmlOutputBufferWrite(output_buffer, len, (const char*) ch);
+    xmlOutputBufferWrite(output_buffer[0], len, (const char*) ch);
 #else
     const char* c = (const char*) ch;
     int pos = 0;
@@ -146,9 +146,9 @@ class ExtractUnitsSrc : public ProcessUnit {
 
       switch (*c) {
       case '\n' :
-	xmlOutputBufferWrite(output_buffer, pos, (const char*)(BAD_CAST c - pos));
+	xmlOutputBufferWrite(output_buffer[0], pos, (const char*)(BAD_CAST c - pos));
 	pos = 0;
-	xmlOutputBufferWrite(output_buffer, EOL_SIZE, EOL);
+	xmlOutputBufferWrite(output_buffer[0], EOL_SIZE, EOL);
 	break;
 
       default :
@@ -158,7 +158,7 @@ class ExtractUnitsSrc : public ProcessUnit {
       ++c;
     }
 
-    xmlOutputBufferWrite(output_buffer, pos, (const char*)(BAD_CAST c - pos));
+    xmlOutputBufferWrite(output_buffer[0], pos, (const char*)(BAD_CAST c - pos));
 #endif
   }
 
@@ -168,7 +168,7 @@ class ExtractUnitsSrc : public ProcessUnit {
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
     // finish up this file
-    xmlOutputBufferClose(output_buffer);
+    xmlOutputBufferClose(output_buffer[0]);
 
     // stop after this file (and end gracefully) with ctrl-c
     if (isoption(*(pstate->poptions), OPTION_TERMINATE)) {
@@ -200,7 +200,7 @@ class ExtractUnitsSrc : public ProcessUnit {
 
  private :
   std::string path;
-  xmlOutputBufferPtr output_buffer;
+  xmlOutputBufferPtr output_buffer[2];
 };
 
 #endif
