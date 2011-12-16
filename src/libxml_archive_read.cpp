@@ -70,7 +70,7 @@ bool isArchiveRead(void* context) {
 
   archiveData* pcontext = (archiveData*) context;
 
-  bool status = gpcontext && pcontext && pcontext->a && pcontext->status == ARCHIVE_OK
+  bool status = pcontext && pcontext->a && pcontext->status == ARCHIVE_OK
 #if ARCHIVE_VERSION_STAMP >= 2008000
     && (archive_format(pcontext->a) != ARCHIVE_FORMAT_RAW
 #else
@@ -85,14 +85,14 @@ bool isArchiveRead(void* context) {
 const char* archiveReadFormat(void* context) {
   archiveData* pcontext = (archiveData*) context;
 
-  return !gpcontext || !pcontext->a ? 0 : archive_format_name(pcontext->a);
+  return !pcontext->a ? 0 : archive_format_name(pcontext->a);
 }
 
 // compression (e.g., gz, bzip2) of the current file
 const char* archiveReadCompression(void* context) {
   archiveData* pcontext = (archiveData*) context;
 
-  return !gpcontext || !pcontext->a ? 0 : archive_compression_name(pcontext->a);
+  return !pcontext->a ? 0 : archive_compression_name(pcontext->a);
 }
 
 
