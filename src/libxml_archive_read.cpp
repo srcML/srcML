@@ -50,7 +50,7 @@ bool archiveIsDir(void* context) {
 
   archiveData* pcontext = (archiveData*) context;
 
-  return pcontext->ae && archive_entry_filetype(pcontext->ae) == AE_IFDIR;
+  return pcontext && pcontext->ae && archive_entry_filetype(pcontext->ae) == AE_IFDIR;
 }
 
 bool isArchiveFirst(void* context) {
@@ -154,7 +154,7 @@ const char* archiveReadFilename(void* context) {
 
   archiveData* pcontext = (archiveData*) context;
 
-  if (!gpcontext)
+  if (!pcontext)
     return 0;
 
   if (!pcontext->ae || (archiveReadStatus(context) != ARCHIVE_OK && archiveReadStatus(context) != ARCHIVE_EOF))
