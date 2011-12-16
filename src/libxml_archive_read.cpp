@@ -46,7 +46,7 @@ struct archiveData {
   std::string URI;
 };
 
-static archiveData context_pool[2];
+static archiveData context_pool[2] = { 0 };
 
 static archiveData* gpcontext = 0;
 
