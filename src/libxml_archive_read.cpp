@@ -42,7 +42,11 @@ struct archiveData {
   std::string root_filename;
   bool first;
   void* libxmlcontext;
+  bool open;
+  std::string URI;
 };
+
+static archiveData context_pool[2];
 
 static archiveData* gpcontext = 0;
 
@@ -215,14 +219,31 @@ static int archive_read_close_http_callback(struct archive* a,
 // setup archive for this URI
 void* archiveReadOpen(const char* URI) {
 
+  // only allow real archives (and no blank filenames)
   if (!archiveReadMatch(URI))
     return NULL;
+
+  // see if we already have a context for this.  I.e., check the pool
+  archiveData* curcontext = &context_pool[0];
+  if (curcontext->URI != std::string(URI))
+    curcontext = &context_pool[1];
+  if (curcontext->URI != std::string(URI))
+    curcontext = 0;
+
+  // may not have a current context for this URI, so pick one that is empty
+  if (curcontext == 0) {
+    
+
+
+  }
 
   if (!gpcontext) {
 
     gpcontext = new archiveData;
+    gpcontext->open = true;
     gpcontext->first = true;
     gpcontext->status = 0;
+    gpcontext->URI = URI;
     gpcontext->a = archive_read_new();
     archive_read_support_compression_all(gpcontext->a);
     //    archive_read_support_compression_bzip2(gpcontext->a);
@@ -288,7 +309,8 @@ int archiveReadClose(void* context) {
   if (pcontext->status != ARCHIVE_OK) {
 
     archive_read_finish(pcontext->a);
-    delete pcontext;
+    //    delete pcontext;
+    pcontext->open = false;
     gpcontext = 0;
     return 0;
   }
