@@ -1228,8 +1228,6 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
       // open up the file
       if (firstopen)
         context = translator.setInput(path);
-      else
-        context = getContext();
 
       // check if file is bad
       if (!context || archiveReadStatus(context) < 0 ) {
