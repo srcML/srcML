@@ -218,7 +218,6 @@ void* archiveReadOpen(const char* URI) {
   if (!archiveReadMatch(URI))
     return NULL;
 
-  // just in case archiveOpenRoot() was not called
   if (!gpcontext) {
 
     gpcontext = new archiveData;
