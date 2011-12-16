@@ -174,6 +174,28 @@ void SAX2ExtractUnitsSrc::startElementNsRoot(void* ctx, const xmlChar* localname
   for (int i = 0; i < ns_length; ++i)
     pstate->root.namespaces[i] = namespaces[i] ? (xmlChar*) strdup((const char*) namespaces[i]) : 0;
 
+  // see if we have an undetected srcDiff
+  bool founddiff = false;
+  for (int diffpos = 1; diffpos < ns_length; diffpos += 2) {
+    if (pstate->root.namespaces[diffpos] && strcmp((const char*) pstate->root.namespaces[diffpos], "http://www.sdml.info/srcDiff") == 0) {
+      founddiff = true;
+      break;
+    }
+  }
+
+  // potential issues with specification of option for diff, but no namespace, and vice-versa
+  if (isoption(*(pstate->poptions), OPTION_DIFF) && !founddiff) {
+
+    // found option_diff specified, but no namespace
+    fprintf(stderr, "srcml2src warning:  option --revision used on a document with no srcDiff namespace declared\n");
+
+  } else if (!isoption(*(pstate->poptions), OPTION_DIFF) && founddiff) {
+
+    // found no option_diff specified, but diff namespace
+    fprintf(stderr, "srcml2src warning:  option --revision not used on a document with srcDiff namespace declared\n");
+
+  }
+
   pstate->root.nb_attributes = nb_attributes;
   pstate->root.nb_defaulted = nb_defaulted;
 
