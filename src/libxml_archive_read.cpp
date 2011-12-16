@@ -50,14 +50,14 @@ bool archiveIsDir(void* context) {
 
   archiveData* pcontext = (archiveData*) context;
 
-  return gpcontext && pcontext->ae && archive_entry_filetype(pcontext->ae) == AE_IFDIR;
+  return pcontext->ae && archive_entry_filetype(pcontext->ae) == AE_IFDIR;
 }
 
 bool isArchiveFirst(void* context) {
 
   archiveData* pcontext = (archiveData*) context;
 
-  return gpcontext && pcontext && pcontext->first;
+  return pcontext && pcontext->first;
 }
 
 bool isAnythingOpen(void* context) {
