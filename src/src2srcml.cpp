@@ -444,10 +444,11 @@ int main(int argc, char* argv[]) {
     if (instat.st_ino == stdiostat.st_ino)
       ++stdiocount;
 
-    if (stdiocount > 1) {
-      fprintf(stderr, "%s: Multiple input files are from standard input.\n", PROGRAM_NAME);
-      exit(STATUS_INPUTFILE_PROBLEM);
-    }
+  }
+
+  if (stdiocount > 1) {
+    fprintf(stderr, "%s: Multiple input files are from standard input.\n", PROGRAM_NAME);
+    exit(STATUS_INPUTFILE_PROBLEM);
   }
 
   // verify that the output filename is not the same as any of the input filenames
