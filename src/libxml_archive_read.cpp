@@ -64,29 +64,29 @@ bool isArchiveRead(void* context) {
 
   archiveData* pcontext = (archiveData*) context;
 
-  bool status = pcontext && pcontext->a && pcontext->status == ARCHIVE_OK
+  return pcontext && pcontext->a && pcontext->status == ARCHIVE_OK
 #if ARCHIVE_VERSION_STAMP >= 2008000
     && (archive_format(pcontext->a) != ARCHIVE_FORMAT_RAW
 #else
     && (archive_format(pcontext->a) != ARCHIVE_FORMAT_EMPTY
 #endif
 );
-
-  return status;
 }
 
 // format (e.g., tar, cpio) of the current file
 const char* archiveReadFormat(void* context) {
+
   archiveData* pcontext = (archiveData*) context;
 
-  return !pcontext->a ? 0 : archive_format_name(pcontext->a);
+  return (!pcontext || !pcontext->a) ? 0 : archive_format_name(pcontext->a);
 }
 
 // compression (e.g., gz, bzip2) of the current file
 const char* archiveReadCompression(void* context) {
+
   archiveData* pcontext = (archiveData*) context;
 
-  return !pcontext->a ? 0 : archive_compression_name(pcontext->a);
+  return (!pcontext || !pcontext->a) ? 0 : archive_compression_name(pcontext->a);
 }
 
 
@@ -195,6 +195,7 @@ static int archive_read_close_http_callback(struct archive* a,
     xmlNanoHTTPClose(pcontext->libxmlcontext);
   else
     xmlNanoFTPClose(pcontext->libxmlcontext);
+
   return 1;
 }
 
@@ -243,10 +244,7 @@ void* archiveReadOpen(const char* URI) {
   }
 
   gpcontext->status = archive_read_next_header(gpcontext->a, &gpcontext->ae);
-  if (gpcontext->status == ARCHIVE_EOF) {
-
-    return gpcontext;
-  } else if (gpcontext->status != ARCHIVE_OK) {
+  if (gpcontext->status != ARCHIVE_EOF && gpcontext->status != ARCHIVE_OK) {
 
     archive_read_finish(gpcontext->a);
     gpcontext->a = 0;
