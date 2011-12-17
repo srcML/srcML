@@ -42,7 +42,6 @@ struct archiveData {
   std::string root_filename;
   void* libxmlcontext;
   bool isarchive;
-  bool open;
 };
 
 archiveData* current_context = 0;
@@ -58,7 +57,7 @@ bool isAnythingOpen(void* context) {
 
   archiveData* pcontext = (archiveData*) context;
 
-  return pcontext && pcontext->open;
+  return pcontext && pcontext->status != ARCHIVE_EOF;
 }
 
 // check if file has an archive extension
@@ -219,7 +218,6 @@ void* archiveReadOpen(const char* URI) {
 
   archiveData* gpcontext = 0;
   gpcontext = new archiveData;
-  gpcontext->open = true;
   gpcontext->status = 0;
   gpcontext->isarchive = false;
   gpcontext->a = archive_read_new();
@@ -274,7 +272,6 @@ int archiveReadClose(void* context) {
 
   if (pcontext->status != ARCHIVE_OK) {
 
-    pcontext->open = false;
     return 0;
   }
 
@@ -283,7 +280,6 @@ int archiveReadClose(void* context) {
   if (pcontext->status != ARCHIVE_OK) {
 
     archive_read_finish(pcontext->a);
-    pcontext->open = false;
     return 0;
   }
 
