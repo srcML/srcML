@@ -41,7 +41,6 @@ struct archiveData {
   int status;
   std::string root_filename;
   void* libxmlcontext;
-  bool isarchive;
 };
 
 archiveData* current_context = 0;
@@ -149,15 +148,12 @@ const char* archiveReadFilename(void* context) {
 
   archiveData* pcontext = (archiveData*) context;
 
-  if (!pcontext)
-    return 0;
-
-  if (!pcontext->ae || (archiveReadStatus(context) != ARCHIVE_OK && archiveReadStatus(context) != ARCHIVE_EOF))
+  if (!pcontext || !pcontext->ae ||
+      (archiveReadStatus(context) != ARCHIVE_OK && archiveReadStatus(context) != ARCHIVE_EOF))
     return 0;
 
   return isArchiveRead(context) ? archive_entry_pathname(pcontext->ae) : 0;
 }
-
 
 static bool ishttp = true;
 
@@ -212,14 +208,12 @@ void* archiveReadOpen(const char* URI) {
   if (current_context) {
     archiveData* context = current_context;
     current_context = 0;
-    context->isarchive = true;
     return context;
   }
 
   archiveData* gpcontext = 0;
   gpcontext = new archiveData;
   gpcontext->status = 0;
-  gpcontext->isarchive = false;
   gpcontext->a = archive_read_new();
   archive_read_support_compression_all(gpcontext->a);
   //    archive_read_support_compression_bzip2(gpcontext->a);
