@@ -1378,6 +1378,8 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
     firstopen = false;
 
   } while (isarchive && isAnythingOpen(context));
+
+  archiveDeleteContext(context);
 }
 
 void src2srcml_dir_top(srcMLTranslator& translator, const char* directory, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {

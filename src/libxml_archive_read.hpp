@@ -64,4 +64,6 @@ int archiveReadClose(void* context);
 // setup archive root for this URI
 int archiveReadStatus(void* context);
 
+void archiveDeleteContext(void* context);
+
 #endif
