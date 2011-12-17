@@ -1207,6 +1207,8 @@ void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
   options = save_options;
 }
 
+extern void* current_context;
+
 void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   // single file archive (tar, zip, cpio, etc.) is listed as a single file
@@ -1332,8 +1334,10 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
         fprintf(stderr, "%5d %s\n", count, c_filename);
 
       // open up the file
-      if (!firstopen)
+      if (!firstopen) {
+        current_context = context;
         context = translator.setInput(path);
+      }
 
       // translate the file
       translator.translate(path, dir,
