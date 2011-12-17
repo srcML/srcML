@@ -1242,7 +1242,7 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
       isarchive = isArchiveRead(context);
 
       // once any source archive is input, then we have to assume nested not just locally
-      if (isarchive) {
+      if (firstopen && isarchive) {
         options |= OPTION_NESTED;
         save_options |= OPTION_NESTED;
         showinput = true;
@@ -1250,7 +1250,7 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
       }
 
       // output tracing information about the input file
-      if (showinput && isArchiveFirst(context) && !isoption(options, OPTION_QUIET)) {
+      if (showinput && firstopen && !isoption(options, OPTION_QUIET)) {
 
         // output the currently processed filename
         fprintf(stderr, "Path: %s", strcmp(path, STDIN) == 0 ? "standard input" : path);

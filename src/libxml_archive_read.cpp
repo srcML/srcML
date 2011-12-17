@@ -40,7 +40,6 @@ struct archiveData {
   struct archive_entry* ae;
   int status;
   std::string root_filename;
-  bool first;
   void* libxmlcontext;
   bool isarchive;
   bool open;
@@ -53,13 +52,6 @@ bool archiveIsDir(void* context) {
   archiveData* pcontext = (archiveData*) context;
 
   return pcontext && pcontext->ae && archive_entry_filetype(pcontext->ae) == AE_IFDIR;
-}
-
-bool isArchiveFirst(void* context) {
-
-  archiveData* pcontext = (archiveData*) context;
-
-  return pcontext && pcontext->first;
 }
 
 bool isAnythingOpen(void* context) {
@@ -84,6 +76,7 @@ bool isArchiveRead(void* context) {
 
   return status;
 }
+
 // format (e.g., tar, cpio) of the current file
 const char* archiveReadFormat(void* context) {
   archiveData* pcontext = (archiveData*) context;
@@ -221,14 +214,12 @@ void* archiveReadOpen(const char* URI) {
     archiveData* context = current_context;
     current_context = 0;
     context->isarchive = true;
-    context->first = false;
     return context;
   }
 
   archiveData* gpcontext = 0;
   gpcontext = new archiveData;
   gpcontext->open = true;
-  gpcontext->first = true;
   gpcontext->status = 0;
   gpcontext->isarchive = false;
   gpcontext->a = archive_read_new();
@@ -289,7 +280,6 @@ int archiveReadClose(void* context) {
 
   // read the next header.  If there isn't one, then really finish
   pcontext->status = archive_read_next_header(pcontext->a, &pcontext->ae);
-  pcontext->first = false;
   if (pcontext->status != ARCHIVE_OK) {
 
     archive_read_finish(pcontext->a);

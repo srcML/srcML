@@ -28,8 +28,6 @@ bool isArchiveRead(void* context);
 
 bool isAnythingOpen(void* context);
 
-bool isArchiveFirst(void* context);
-
 // format (e.g., tar, cpio) of the current file
 const char* archiveReadFormat(void* context);
 
