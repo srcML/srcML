@@ -1280,17 +1280,6 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
 
       }
 
-      bool foundfilename = true;
-      unit_filename = path;
-      if (archiveReadFilename(context))
-        unit_filename = archiveReadFilename(context);
-      else if (root_filename)
-        unit_filename = root_filename;
-      else if (strcmp(path, STDIN))
-        unit_filename = path;
-      else
-        foundfilename = false;
-
       // special case:  skip directories (in archives)
       if (archiveIsDir(context)) {
 
@@ -1305,6 +1294,17 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
 
         continue;
       }
+
+      bool foundfilename = true;
+      unit_filename = path;
+      if (archiveReadFilename(context))
+        unit_filename = archiveReadFilename(context);
+      else if (root_filename)
+        unit_filename = root_filename;
+      else if (strcmp(path, STDIN))
+        unit_filename = path;
+      else
+        foundfilename = false;
 
       // language (for this item in archive mode) based on extension, if not specified
 
