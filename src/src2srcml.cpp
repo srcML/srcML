@@ -1315,7 +1315,7 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
 
         ++skipped;
 
-        // close the file that we don't have a language for
+        // close the file that we don't have a language for (normally handled by the translator)
         archiveReadClose(context);
 
         continue;
@@ -1331,11 +1331,16 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
       const char* c_filename = clean_filename(unit_filename.c_str());
 
       // output the currently processed filename
-      if (!isoption(options, OPTION_QUIET) && shownumber)
+      if (shownumber && !isoption(options, OPTION_QUIET))
         fprintf(stderr, "%5d %s\n", count, c_filename);
 
       // open up the file
       if (!firstopen) {
+        /*
+          The libxml api for input has open, read, and close.  It is not designed
+          to handle archives.  Here, we get the libxml input to reuse the same archive file.
+          This is NOT reentrant.
+        */
         current_context = context;
         context = translator.setInput(path);
       }
@@ -1343,20 +1348,16 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
       // translate the file
       translator.translate(path, dir,
                            foundfilename ? c_filename : 0,
-                           version, reallanguage);
+                           version,
+                           reallanguage);
 
     } catch (FileError) {
 
       // output tracing information about the input file
-      if (showinput && !isoption(options, OPTION_QUIET)) {
-
-        // output the currently processed filename
+      if (showinput && !isoption(options, OPTION_QUIET))
         fprintf(stderr, "Path: %s\tError: Unable to open file.\n", strcmp(path, STDIN) == 0 ? "standard input" : path);
-
-      } else {
-
+      else
         fprintf(stderr, "%s: Unable to open file %s%s%s\n", PROGRAM_NAME, dir ? dir : "", dir ? "/" : "", path);
-      }
 
       ++error;
 
@@ -1374,6 +1375,7 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
 
   } while (isarchive && isAnythingOpen(context));
 
+  // this has to be manually done
   archiveDeleteContext(context);
 }
 
