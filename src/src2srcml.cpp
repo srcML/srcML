@@ -1239,14 +1239,14 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
       }
 
       // so, do we have an archive?
-      isarchive = isArchiveRead(context);
+      if (firstopen)
+        isarchive = isArchiveRead(context);
 
       // once any source archive is input, then we have to assume nested not just locally
       if (firstopen && isarchive) {
         options |= OPTION_NESTED;
         save_options |= OPTION_NESTED;
         showinput = true;
-        //        shownumber = true;
       }
 
       // output tracing information about the input file
@@ -1262,7 +1262,7 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
         if (archiveReadCompression(context) && strcmp(archiveReadCompression(context), "none"))
           fprintf(stderr, "\tCompression: %s", archiveReadCompression(context));
 
-        fprintf(stderr, "\n");
+        fputc('\n', stderr);
       }
 
       bool foundfilename = true;
@@ -1305,7 +1305,7 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
 
         if (!isoption(options, OPTION_QUIET)) {
           if (unit_filename == "-")
-            fprintf(stderr, "Skipped:  Must specify language for standard input.\n" );
+            fputs("Skipped:  Must specify language for standard input.\n", stderr);
           else
             fprintf(stderr, !shownumber ? "Skipped '%s':  Unregistered extension\n" :
                     "    - %s\tSkipped: Unregistered extension\n",
@@ -1350,21 +1350,16 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
       if (showinput && !isoption(options, OPTION_QUIET)) {
 
         // output the currently processed filename
-        fprintf(stderr, "Path: %s", strcmp(path, STDIN) == 0 ? "standard input" : path);
-        fprintf(stderr, "\tError: Unable to open file.\n");
+        fprintf(stderr, "Path: %s\tError: Unable to open file.\n", strcmp(path, STDIN) == 0 ? "standard input" : path);
 
       } else {
 
-        if (dir)
-          fprintf(stderr, "%s: Unable to open file %s/%s\n", PROGRAM_NAME, dir, path);
-        else
-          fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
+        fprintf(stderr, "%s: Unable to open file %s%s%s\n", PROGRAM_NAME, dir ? dir : "", dir ? "/" : "", path);
       }
 
       ++error;
 
       return;
-      //      exit(STATUS_INPUTFILE_PROBLEM);
     }
 
     // restore options for next time around
@@ -1373,7 +1368,6 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
     // compound documents are interrupted gracefully
     if (isoption(options, OPTION_TERMINATE))
       return;
-    //     return STATUS_TERMINATED;
 
     firstopen = false;
 
