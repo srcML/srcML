@@ -1239,30 +1239,31 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
       }
 
       // so, do we have an archive?
-      if (firstopen)
+      if (firstopen) {
         isarchive = isArchiveRead(context);
 
-      // once any source archive is input, then we have to assume nested not just locally
-      if (firstopen && isarchive) {
-        options |= OPTION_NESTED;
-        save_options |= OPTION_NESTED;
-        showinput = true;
-      }
+        // once any source archive is input, then we have to assume nested not just locally
+        if (isarchive) {
+          options |= OPTION_NESTED;
+          save_options |= OPTION_NESTED;
+          showinput = true;
+        }
 
-      // output tracing information about the input file
-      if (showinput && firstopen && !isoption(options, OPTION_QUIET)) {
+        // output tracing information about the input file
+        if (showinput && !isoption(options, OPTION_QUIET)) {
 
-        // output the currently processed filename
-        fprintf(stderr, "Path: %s", strcmp(path, STDIN) == 0 ? "standard input" : path);
+          // output the currently processed filename
+          fprintf(stderr, "Path: %s", strcmp(path, STDIN) == 0 ? "standard input" : path);
 
-        // output compression and format (if any)
-        if (isarchive)
-          fprintf(stderr, "\tFormat: %s", archiveReadFormat(context));
+          // output compression and format (if any)
+          if (isarchive)
+            fprintf(stderr, "\tFormat: %s", archiveReadFormat(context));
 
-        if (archiveReadCompression(context) && strcmp(archiveReadCompression(context), "none"))
-          fprintf(stderr, "\tCompression: %s", archiveReadCompression(context));
+          if (archiveReadCompression(context) && strcmp(archiveReadCompression(context), "none"))
+            fprintf(stderr, "\tCompression: %s", archiveReadCompression(context));
 
-        fputc('\n', stderr);
+          fputc('\n', stderr);
+        }
       }
 
       bool foundfilename = true;
