@@ -1217,8 +1217,6 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
 
   // process the individual file (once), or an archive as many times as it takes
   void* context = 0;
-  bool isarchive = false;
-  bool firstopen = true;
   do {
 
     // start with the original options
@@ -1228,7 +1226,7 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
     try {
 
       // open up the file
-      if (firstopen) {
+      if (!context) {
 
         context = translator.setInput(path);
 
@@ -1240,7 +1238,7 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
         }
 
         // so, do we have an archive?
-        isarchive = isArchiveRead(context);
+        bool isarchive = isArchiveRead(context);
 
         // once any source archive is input, then we have to assume nested not just locally
         if (isarchive) {
@@ -1378,9 +1376,7 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
     if (isoption(options, OPTION_TERMINATE))
       return;
 
-    firstopen = false;
-
-  } while (isarchive && isAnythingOpen(context));
+  } while (isAnythingOpen(context));
 
   // this has to be manually done
   archiveDeleteContext(context);
