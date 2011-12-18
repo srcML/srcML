@@ -1228,29 +1228,18 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
     try {
 
       // open up the file
-      if (firstopen)
-        context = translator.setInput(path);
-
-      else {
-
-        /*
-          The libxml api for input has open, read, and close.  It is not designed
-          to handle archives.  Here, we get the libxml input to reuse the same archive file.
-          This is NOT reentrant.
-        */
-        current_context = context;
-        context = translator.setInput(path);
-      }
-
-      // check if file is bad
-      if (!context || archiveReadStatus(context) < 0 ) {
-        fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
-        ++error;
-        return;
-      }
-
-      // so, do we have an archive?
       if (firstopen) {
+
+        context = translator.setInput(path);
+
+        // check if file is bad
+        if (!context || archiveReadStatus(context) < 0 ) {
+          fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
+          ++error;
+          return;
+        }
+
+        // so, do we have an archive?
         isarchive = isArchiveRead(context);
 
         // once any source archive is input, then we have to assume nested not just locally
@@ -1275,6 +1264,24 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
 
           fputc('\n', stderr);
         }
+
+      } else {
+
+        /*
+          The libxml api for input has open, read, and close.  It is not designed
+          to handle archives.  Here, we get the libxml input to reuse the same archive file.
+          This is NOT reentrant.
+        */
+        current_context = context;
+        context = translator.setInput(path);
+
+        // check if file is bad
+        if (!context || archiveReadStatus(context) < 0 ) {
+          fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
+          ++error;
+          return;
+        }
+
       }
 
       bool foundfilename = true;
