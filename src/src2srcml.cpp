@@ -1219,8 +1219,6 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
   void* context = 0;
   do {
 
-    // start with the original options
-    options = save_options;
     std::string unit_filename;
 
     try {
@@ -1372,11 +1370,7 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
     // restore options for next time around
     options = save_options;
 
-    // compound documents are interrupted gracefully
-    if (isoption(options, OPTION_TERMINATE))
-      return;
-
-  } while (isAnythingOpen(context));
+  } while (isAnythingOpen(context) && !isoption(options, OPTION_TERMINATE));
 
   // this has to be manually done
   archiveDeleteContext(context);
