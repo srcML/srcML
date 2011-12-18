@@ -1231,6 +1231,17 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
       if (firstopen)
         context = translator.setInput(path);
 
+      else {
+
+        /*
+          The libxml api for input has open, read, and close.  It is not designed
+          to handle archives.  Here, we get the libxml input to reuse the same archive file.
+          This is NOT reentrant.
+        */
+        current_context = context;
+        context = translator.setInput(path);
+      }
+
       // check if file is bad
       if (!context || archiveReadStatus(context) < 0 ) {
         fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
@@ -1333,17 +1344,6 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
       // output the currently processed filename
       if (shownumber && !isoption(options, OPTION_QUIET))
         fprintf(stderr, "%5d %s\n", count, c_filename);
-
-      // open up the file
-      if (!firstopen) {
-        /*
-          The libxml api for input has open, read, and close.  It is not designed
-          to handle archives.  Here, we get the libxml input to reuse the same archive file.
-          This is NOT reentrant.
-        */
-        current_context = context;
-        context = translator.setInput(path);
-      }
 
       // translate the file
       translator.translate(path, dir,
