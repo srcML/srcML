@@ -478,7 +478,8 @@ void srcMLTranslatorOutput::processAccess(const antlr::RefToken& token) {
   }
 
   // start the element
-  srcMLTextWriterStartElement(xout, BAD_CAST token2name(token).c_str());
+  const char * tag = token2name(token).c_str();
+  srcMLTextWriterStartElement(xout, BAD_CAST tag);
 
   xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST type_default);
 
@@ -595,7 +596,7 @@ void srcMLTranslatorOutput::processBoolean(const antlr::RefToken& token) {
 #if DEBUG
 void srcMLTranslatorOutput::processMarker(const antlr::RefToken& token) {
 
-  const char* s = token2name(token);
+  const char* s = token2name(token).c_str();
 
   if (s[0] == 0)
     return;
