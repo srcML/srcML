@@ -418,7 +418,8 @@ void srcMLTranslatorOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION
 void srcMLTranslatorOutput::startUnit(const char* language, const char* dir, const char* filename, const char* version, bool outer) {
 
   // start of main tag
-  srcMLTextWriterStartElement(xout, BAD_CAST type2name(SUNIT).c_str());
+  std::string unit = type2name(SUNIT);
+  srcMLTextWriterStartElement(xout, BAD_CAST unit.c_str());
 
   // outer units have namespaces
   if (/* outer && */ !isoption(OPTION_NAMESPACEDECL)) {
