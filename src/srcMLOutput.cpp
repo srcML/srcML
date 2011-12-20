@@ -47,8 +47,6 @@ bool srcMLOutput::checkEncoding(const char* encoding) {
   return xmlFindCharEncodingHandler(encoding) != 0;
 }
 
-//xmlBufferPtr output_buffer = 0;
-
 srcMLOutput::srcMLOutput(TokenStream* ints,
 			 const char* filename,
 			 const char* language,
