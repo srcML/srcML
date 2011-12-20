@@ -126,7 +126,8 @@ void srcMLOutput::srcMLTextWriterEndElement(xmlTextWriter* xout) {
 
 const char* srcMLOutput::lineAttributeValue(const antlr::RefToken& token) {
 
-  char out[21];
+  // need to fix for threads
+  static char out[21];
   snprintf(out, 20, "%d", token->getLine());
 
   return out;
@@ -134,7 +135,8 @@ const char* srcMLOutput::lineAttributeValue(const antlr::RefToken& token) {
 
 const char* srcMLOutput::columnAttributeValue(const antlr::RefToken& token) {
 
-  char out[21];
+  // need to fix for threads
+  static char out[21];
   snprintf(out, 20, "%d", token->getColumn());
 
   return out;
