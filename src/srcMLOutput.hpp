@@ -94,6 +94,7 @@ public:
   // output line attribute content
   std::string lineAttribute;
   std::string columnAttribute;
+  char out[21];
 
   int consume_next();
 

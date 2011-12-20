@@ -321,13 +321,13 @@ std::string srcMLTranslatorOutput::token2name(const antlr::RefToken& token) cons
 
 std::string srcMLTranslatorOutput::type2name(int token_type) const {
 
-  std::string name;
+  std::string name = "";
 
   const char* tagname = ElementNames[token_type];
 
   // no element name
   if (tagname[0] == '\0')
-    return std::string("");
+    return name;
 
   // non-default namespace name
   const char* prefix = num2prefix[(int)ElementPrefix[token_type]];
