@@ -337,7 +337,7 @@ std::string srcMLTranslatorOutput::type2name(int token_type) const {
   }
 
   name += tagname;
-  fprintf(stderr, "HERE: %s %s %d %x %s\n", __FILE__, __FUNCTION__, __LINE__, this, name.c_str());
+
   // default namespace name
   return name;
 }
