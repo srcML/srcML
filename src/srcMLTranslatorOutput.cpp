@@ -478,8 +478,8 @@ void srcMLTranslatorOutput::processAccess(const antlr::RefToken& token) {
   }
 
   // start the element
-  const char * tag = token2name(token).c_str();
-  srcMLTextWriterStartElement(xout, BAD_CAST tag);
+  std::string tag = token2name(token);
+  srcMLTextWriterStartElement(xout, BAD_CAST tag.c_str());
 
   xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST type_default);
 
