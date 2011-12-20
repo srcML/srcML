@@ -64,8 +64,8 @@ class srcMLOutput : public srcMLParserTokenTypes {
   void processText(const std::string&);
   void processText(const char* s, int size);
 
-  const char* lineAttributeValue(const antlr::RefToken& token);
-  const char* columnAttributeValue(const antlr::RefToken& token);
+  std::string lineAttributeValue(const antlr::RefToken& token);
+  std::string columnAttributeValue(const antlr::RefToken& token);
 
   // destructor
   ~srcMLOutput();
