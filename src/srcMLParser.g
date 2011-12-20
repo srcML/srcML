@@ -168,8 +168,8 @@ header "post_include_cpp" {
     class LocalMode {
 
      public:
-     LocalMode()
-        : oldsize(pparser->size())
+     LocalMode(srcMLParser* t)
+        : pparser(t), oldsize(t->size())
      {}
 
      ~LocalMode() {
@@ -180,21 +180,15 @@ header "post_include_cpp" {
          }
      }
 
-        static void setParser(srcMLParser* opparser) { pparser = opparser; }
      private:
-       static srcMLParser* pparser;
+       srcMLParser* pparser;
        const int oldsize;
     };
-
-srcMLParser* LocalMode::pparser = 0;
 
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options)
    : antlr::LLkParser(lexer,1), Mode(this, lang), zeromode(false), skipelse(false), cppifcount(0), parseoptions(parser_options), ifcount(0)
 
 {
-    // LocalMode objects need access to the current parser
-    LocalMode::setParser(this);
-
     // root, single mode
     if (parseoptions & OPTION_EXPRESSION)
         // root, single mode to allows for an expression without a statement
@@ -1402,7 +1396,7 @@ anonymous_class_definition :
         call_argument_list
 ;
 
-anonymous_class_super { LocalMode lm; }:
+anonymous_class_super { LocalMode lm(this); }:
         {
             // statement
             startNewMode(MODE_LOCAL);
@@ -1707,7 +1701,7 @@ terminate[bool final = false] { if(final) setFinalToken(); } :
         terminate_post
 ;
 
-terminate_token { LocalMode lm; } :
+terminate_token { LocalMode lm(this); } :
         {
             if (inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_DECL) && !inMode(MODE_IF)) {
 
@@ -1976,7 +1970,7 @@ statement_part { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE decl
              extern_name
 ;
 
-lparen_marked { LocalMode lm; } :
+lparen_marked { LocalMode lm(this); } :
         {
             incParen();
 
@@ -2457,7 +2451,7 @@ pure_lead_type_identifier_no_specifiers {} :
         enum_definition_whole
 ;
 
-java_specifier_mark { LocalMode lm; } : 
+java_specifier_mark { LocalMode lm(this); } : 
         {
             // statement
             startNewMode(MODE_LOCAL);
@@ -2526,7 +2520,7 @@ function_identifier {} :
         function_pointer_name_grammar
 ;
 
-function_identifier_main { LocalMode lm; } :
+function_identifier_main { LocalMode lm(this); } :
         // special cases for main
         {
             // end all started elements in this rule
@@ -2542,7 +2536,7 @@ function_identifier_main { LocalMode lm; } :
 /*
   overloaded operator name
 */
-overloaded_operator { LocalMode lm; } :
+overloaded_operator { LocalMode lm(this); } :
         {
             // end all started elements in this rule
             startNewMode(MODE_LOCAL);
@@ -2560,7 +2554,7 @@ overloaded_operator { LocalMode lm; } :
         )
 ;
 
-variable_identifier_array_grammar_sub[bool& iscomplex] { LocalMode lm; } :
+variable_identifier_array_grammar_sub[bool& iscomplex] { LocalMode lm(this); } :
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
@@ -2581,7 +2575,7 @@ variable_identifier_array_grammar_sub[bool& iscomplex] { LocalMode lm; } :
   Full, complete expression matched all at once (no stream).
   Colon matches range(?) for bits.
 */
-full_expression { LocalMode lm; } :
+full_expression { LocalMode lm(this); } :
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
@@ -2607,7 +2601,7 @@ full_expression { LocalMode lm; } :
    A variable name in an expression.  Includes array names, but not
    function calls
 */
-variable_identifier { LocalMode lm; bool iscomplex = false; TokenPosition tp; } :
+variable_identifier { LocalMode lm(this); bool iscomplex = false; TokenPosition tp; } :
         {
             // local mode that is automatically ended by leaving this function
             startNewMode(MODE_LOCAL);
@@ -2639,7 +2633,7 @@ variable_identifier { LocalMode lm; bool iscomplex = false; TokenPosition tp; } 
 /*
   Name including template argument list
 */
-simple_name_optional_template[bool marked] { LocalMode lm; TokenPosition tp; } :
+simple_name_optional_template[bool marked] { LocalMode lm(this); TokenPosition tp; } :
         {
             if (marked) {
                 // local mode that is automatically ended by leaving this function
@@ -2671,7 +2665,7 @@ simple_name_optional_template[bool marked] { LocalMode lm; TokenPosition tp; } :
 
   preprocessor tokens that can also be used as identifiers
 */
-identifier[bool marked = false] { LocalMode lm; } :
+identifier[bool marked = false] { LocalMode lm(this); } :
         {
             if (marked) {
                 // local mode that is automatically ended by leaving this function
@@ -2686,7 +2680,7 @@ identifier[bool marked = false] { LocalMode lm; } :
 /*
   identifier name marked with name element
 */
-complex_name[bool marked] { LocalMode lm; TokenPosition tp; /* TokenPosition tp2 = { 0, 0 };*/ bool iscomplex_name = false; namestack[0] = ""; namestack[1] = ""; bool founddestop = false; } :
+complex_name[bool marked] { LocalMode lm(this); TokenPosition tp; /* TokenPosition tp2 = { 0, 0 };*/ bool iscomplex_name = false; namestack[0] = ""; namestack[1] = ""; bool founddestop = false; } :
         { inLanguage(LANGUAGE_JAVA_FAMILY) }? complex_name_java[marked] |
         (
         {
@@ -2742,7 +2736,7 @@ complex_name[bool marked] { LocalMode lm; TokenPosition tp; /* TokenPosition tp2
 /*
   identifier name marked with name element
 */
-complex_name_java[bool marked] { LocalMode lm; TokenPosition tp; bool iscomplex_name = false; } :
+complex_name_java[bool marked] { LocalMode lm(this); TokenPosition tp; bool iscomplex_name = false; } :
         {
             if (marked) {
                 // local mode that is automatically ended by leaving this function
@@ -2790,7 +2784,7 @@ catch[antlr::RecognitionException] {
 /*
   Specifier for a function
 */
-function_specifier { LocalMode lm; } :
+function_specifier { LocalMode lm(this); } :
         {
             // statement
             startNewMode(MODE_LOCAL);
@@ -2809,7 +2803,7 @@ function_specifier { LocalMode lm; } :
 /*
   Specifiers for functions, methods, and variables
 */
-standard_specifiers { LocalMode lm; } :
+standard_specifiers { LocalMode lm(this); } :
         { inLanguage(LANGUAGE_JAVA_FAMILY) }? 
             java_specifier_mark |
 
@@ -2822,7 +2816,7 @@ standard_specifiers { LocalMode lm; } :
         (VIRTUAL | EXTERN | INLINE | EXPLICIT | STATIC)
 ;
 
-auto_keyword { LocalMode lm; } :
+auto_keyword { LocalMode lm(this); } :
         {
             // local mode that is automatically ended by leaving this function
             startNewMode(MODE_LOCAL);
@@ -2885,7 +2879,7 @@ identifier_stack[std::string s[]] { s[1] = s[0]; s[0] = LT(1)->getText(); } :
         identifier[true]
 ;
 
-specifier_explicit { LocalMode lm; } :
+specifier_explicit { LocalMode lm(this); } :
         {
             // local mode that is automatically ended by leaving this function
             startNewMode(MODE_LOCAL);
@@ -3002,7 +2996,7 @@ eat_optional_macro_call {
 } :;
 
 
-macro_call { LocalMode lm; } :
+macro_call { LocalMode lm(this); } :
         {
             // start a mode for the macro that will end after the argument list
             startNewMode(MODE_STATEMENT | MODE_TOP);
@@ -3046,7 +3040,7 @@ catch[antlr::RecognitionException] {
 
 macro_call_contents {} :
         {
-            LocalMode lm;
+            LocalMode lm(this);
 
             int parencount = 0;
             bool start = true;
@@ -3256,7 +3250,7 @@ pure_expression_block {} :
 /*
   All possible operators
 */
-general_operators { LocalMode lm; bool first = true; } :
+general_operators { LocalMode lm(this); bool first = true; } :
         {
             if (isoption(parseoptions, OPTION_OPERATOR)) {
 
@@ -3277,7 +3271,7 @@ general_operators { LocalMode lm; bool first = true; } :
         )
 ;
 
-rparen_operator { LocalMode lm; } :
+rparen_operator { LocalMode lm(this); } :
         {
             if (isoption(parseoptions, OPTION_OPERATOR) && !inMode(MODE_END_ONLY_AT_RPAREN)) {
 
@@ -3335,7 +3329,7 @@ rparen_general_operators[bool final = false] { bool isempty = getParen() == 0; }
 /*
   Dot (period) operator
 */
-period { LocalMode lm; } :
+period { LocalMode lm(this); } :
         {
             if (isoption(parseoptions, OPTION_OPERATOR)) {
 
@@ -3352,7 +3346,7 @@ period { LocalMode lm; } :
 /*
   Namespace operator '::'
 */
-dcolon { LocalMode lm; } :
+dcolon { LocalMode lm(this); } :
         {
             if (isoption(parseoptions, OPTION_OPERATOR)) {
 
@@ -3480,7 +3474,7 @@ expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; } :
   Only start and end of strings are put directly through the parser.
   The contents of the string are handled as is whitespace.
 */
-string_literal { LocalMode lm; } :
+string_literal { LocalMode lm(this); } :
         {
             // only markup strings in literal option
             if (isoption(parseoptions, OPTION_LITERAL)) {
@@ -3499,7 +3493,7 @@ string_literal { LocalMode lm; } :
   Only start and end of character are put directly through the parser.
   The contents of the character are handled as is whitespace.
 */
-char_literal { LocalMode lm; } :
+char_literal { LocalMode lm(this); } :
         {
             // only markup characters in literal option
             if (isoption(parseoptions, OPTION_LITERAL)) {
@@ -3514,7 +3508,7 @@ char_literal { LocalMode lm; } :
         (CHAR_START CHAR_END)
 ;
 
-literal { LocalMode lm; } :
+literal { LocalMode lm(this); } :
         {
             // only markup literals in literal option
             if (isoption(parseoptions, OPTION_LITERAL)) {
@@ -3529,7 +3523,7 @@ literal { LocalMode lm; } :
         CONSTANTS
 ;
 
-boolean { LocalMode lm; } :
+boolean { LocalMode lm(this); } :
         {
             // only markup boolean values in literal option
             if (isoption(parseoptions, OPTION_LITERAL)) {
@@ -3544,7 +3538,7 @@ boolean { LocalMode lm; } :
         (TRUE | FALSE)
 ;
 
-derived { LocalMode lm; } :
+derived { LocalMode lm(this); } :
         {
             // end all elements at end of rule automatically
             startNewMode(MODE_LOCAL);
@@ -3574,7 +3568,7 @@ super_list_java {} :
         }
 ;
 
-extends_list { LocalMode lm; } :
+extends_list { LocalMode lm(this); } :
         {
             // end all elements at end of rule automatically
             startNewMode(MODE_LOCAL);
@@ -3586,7 +3580,7 @@ extends_list { LocalMode lm; } :
         super_list
 ;
 
-implements_list { LocalMode lm; } :
+implements_list { LocalMode lm(this); } :
         {
             // end all elements at end of rule automatically
             startNewMode(MODE_LOCAL);
@@ -3608,7 +3602,7 @@ super_list {} :
         )*
 ;
 
-derive_access { LocalMode lm; } :
+derive_access { LocalMode lm(this); } :
         {
             // end all elements at end of rule automatically
             startNewMode(MODE_LOCAL);
@@ -3618,7 +3612,7 @@ derive_access { LocalMode lm; } :
         (VIRTUAL)* (PUBLIC | PRIVATE | PROTECTED)
 ;
 
-parameter_list { LocalMode lm; bool lastwasparam = false; bool foundparam = false; } :
+parameter_list { LocalMode lm(this); bool lastwasparam = false; bool foundparam = false; } :
         {
             // list of parameters
             startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
@@ -3631,7 +3625,7 @@ parameter_list { LocalMode lm; bool lastwasparam = false; bool foundparam = fals
         LPAREN ({ foundparam = true; if (!lastwasparam) empty_element(SPARAMETER, !lastwasparam); lastwasparam = false; } comma | full_parameter { foundparam = lastwasparam = true; })* empty_element[SPARAMETER, !lastwasparam && foundparam] rparen
 ;
 
-empty_element[int element, bool cond] { LocalMode lm; } :
+empty_element[int element, bool cond] { LocalMode lm(this); } :
         {
             if (cond) {
                 startNewMode(MODE_LOCAL);
@@ -3706,7 +3700,7 @@ parameter { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTYPE decl_
 
 /*
 */
-parameter_type_count[int type_count] { LocalMode lm; } :
+parameter_type_count[int type_count] { LocalMode lm(this); } :
         {
             // local mode so start element will end correctly
             startNewMode(MODE_LOCAL);
@@ -3723,7 +3717,7 @@ parameter_type_count[int type_count] { LocalMode lm; } :
         ( options { greedy = true; } : multops | LBRACKET RBRACKET)*
 ;
 
-multops { LocalMode lm; } :
+multops { LocalMode lm(this); } :
         {
             // markup type modifiers if option is on
             if (isoption(parseoptions, OPTION_MODIFIER)) {
@@ -3740,7 +3734,7 @@ multops { LocalMode lm; } :
 
 /*
 */
-parameter_type { LocalMode lm; int type_count = 0; int fla = 0; int secondtoken = 0; DECLTYPE decl_type = NONE; } :
+parameter_type { LocalMode lm(this); int type_count = 0; int fla = 0; int secondtoken = 0; DECLTYPE decl_type = NONE; } :
         {
             // local mode so start element will end correctly
             startNewMode(MODE_LOCAL);
@@ -3785,7 +3779,7 @@ template_param_list {} :
         tempops
 ;
 
-requires_clause {/* LocalMode lm;*/ } :
+requires_clause {/* LocalMode lm(this);*/ } :
         {
             // template with nested statement (function or class)
             // expect a template parameter list
@@ -3835,7 +3829,7 @@ template_param {} :
 /*
   template argument list
 */
-template_argument_list { LocalMode lm; } : 
+template_argument_list { LocalMode lm(this); } : 
         {
             // local mode
             startNewMode(MODE_LOCAL);
@@ -3856,7 +3850,7 @@ restorenamestack { namestack[0] = namestack_save[0]; namestack[1] = namestack_sa
 /*
   template argument
 */
-template_argument { LocalMode lm; } :
+template_argument { LocalMode lm(this); } :
         {
             // local mode
             startNewMode(MODE_LOCAL);
@@ -3893,7 +3887,7 @@ tempope[bool final = false] { if (final) setFinalToken(); } :
 /*
   label statement
 */
-label_statement { LocalMode lm; } :
+label_statement { LocalMode lm(this); } :
         {
             // statement
             startNewMode(MODE_STATEMENT);
@@ -3973,7 +3967,7 @@ enum_definition {} :
   Complete definition of an enum.  Used for enum's embedded in typedef's where the entire
   enum must be parsed since it is part of the type.
 */
-enum_definition_whole { LocalMode lm; } :
+enum_definition_whole { LocalMode lm(this); } :
         enum_definition
 
         (variable_identifier)*
@@ -4344,14 +4338,14 @@ line_continuation { setFinalToken(); } :
         EOL_BACKSLASH
 ;
 
-cpp_condition[bool& markblockzero] { LocalMode lm; } :
+cpp_condition[bool& markblockzero] { LocalMode lm(this); } :
 
         set_bool[markblockzero, LA(1) == CONSTANTS && LT(1)->getText() == "0"]
 
         full_expression
 ;
 
-cpp_symbol { LocalMode lm; } :
+cpp_symbol { LocalMode lm(this); } :
         {
             // end all started elements in this rule
             startNewMode(MODE_LOCAL);
@@ -4366,7 +4360,7 @@ cpp_symbol_optional {} :
         (options { greedy = true; } : cpp_symbol)*
 ;
 
-cpp_filename { LocalMode lm; } :
+cpp_filename { LocalMode lm(this); } :
         (
         {
             startNewMode(MODE_PREPROC);
