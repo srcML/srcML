@@ -321,7 +321,7 @@ const char* srcMLTranslatorOutput::token2name(const antlr::RefToken& token) cons
 
 const char* srcMLTranslatorOutput::type2name(int token_type) const {
 
-  static std::string name;
+  std::string name;
 
   const char* tagname = ElementNames[token_type];
 
@@ -362,7 +362,7 @@ void srcMLTranslatorOutput::processEscape(const antlr::RefToken& token) {
 
   int n = token->getText()[0];
 
-  static char out[20 + 2 + 1];
+  char out[20 + 2 + 1];
   snprintf(out, 22, "0x%x", n);
 
   xmlTextWriterWriteAttribute(xout, BAD_CAST "char", BAD_CAST out);
@@ -470,7 +470,7 @@ void srcMLTranslatorOutput::startUnit(const char* language, const char* dir, con
 }
 
 void srcMLTranslatorOutput::processAccess(const antlr::RefToken& token) {
-  static const char* type_default = "default";
+  const char* type_default = "default";
 
   if (!isstart(token)) {
     processToken(token);
