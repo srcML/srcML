@@ -122,22 +122,20 @@ void srcMLOutput::srcMLTextWriterEndElement(xmlTextWriter* xout) {
   --openelementcount;
 }
 
-std::string srcMLOutput::lineAttributeValue(const antlr::RefToken& token) {
+const char * srcMLOutput::lineAttributeValue(const antlr::RefToken& token) {
 
   // need to fix for threads
-  //static char out[21];
-  //snprintf(out, 20, "%d", token->getLine());
-  std::string out = (char *)token->getLine();
+  static char out[21];
+  snprintf(out, 20, "%d", token->getLine());
 
   return out;
 }
 
-std::string srcMLOutput::columnAttributeValue(const antlr::RefToken& token) {
+const char * srcMLOutput::columnAttributeValue(const antlr::RefToken& token) {
 
   // need to fix for threads
-  //static char out[21];
-  //snprintf(out, 20, "%d", token->getColumn());
-  std::string out = (char *)token->getColumn();
+  static char out[21];
+  snprintf(out, 20, "%d", token->getColumn());
 
   return out;
 }
@@ -282,9 +280,9 @@ void srcMLOutput::processText(const antlr::RefToken& token) {
 
   if (isoption(OPTION_POSITION)) {
 
-    xmlTextWriterWriteAttribute(xout, BAD_CAST lineAttribute.c_str(), BAD_CAST lineAttributeValue(token).c_str());
+    xmlTextWriterWriteAttribute(xout, BAD_CAST lineAttribute.c_str(), BAD_CAST lineAttributeValue(token));
 
-    xmlTextWriterWriteAttribute(xout, BAD_CAST columnAttribute.c_str(), BAD_CAST columnAttributeValue(token).c_str());
+    xmlTextWriterWriteAttribute(xout, BAD_CAST columnAttribute.c_str(), BAD_CAST columnAttributeValue(token));
   }
 
   xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) token->getText().data(), token->getText().size());
