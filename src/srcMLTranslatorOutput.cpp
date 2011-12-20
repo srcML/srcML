@@ -334,12 +334,12 @@ std::string srcMLTranslatorOutput::type2name(int token_type) const {
   if (prefix[0] != '\0') {
      name = prefix;
      name += ':';
-     name.append(tagname);
-     return name;
   }
 
+  name += tagname;
+
   // default namespace name
-  return std::string(tagname);
+  return name;
 }
 
 void srcMLTranslatorOutput::srcMLTextWriterStartElement(xmlTextWriter* xout, const xmlChar* s) {
