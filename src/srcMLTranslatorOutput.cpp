@@ -327,7 +327,7 @@ std::string srcMLTranslatorOutput::type2name(int token_type) const {
 
   // no element name
   if (tagname[0] == '\0')
-    return "";
+    return std::string("");
 
   // non-default namespace name
   const char* prefix = num2prefix[(int)ElementPrefix[token_type]];
