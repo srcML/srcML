@@ -187,12 +187,12 @@ void SAX2ExtractUnitsSrc::startElementNsRoot(void* ctx, const xmlChar* localname
   if (isoption(*(pstate->poptions), OPTION_DIFF) && !founddiff) {
 
     // found option_diff specified, but no namespace
-    fprintf(stderr, "srcml2src warning:  option --revision used on a document with no srcDiff namespace declared\n");
+    //fprintf(stderr, "srcml2src warning:  option --revision used on a document with no srcDiff namespace declared\n");
 
   } else if (!isoption(*(pstate->poptions), OPTION_DIFF) && founddiff) {
 
     // found no option_diff specified, but diff namespace
-    fprintf(stderr, "srcml2src warning:  option --revision not used on a document with srcDiff namespace declared\n");
+    //fprintf(stderr, "srcml2src warning:  option --revision not used on a document with srcDiff namespace declared\n");
 
   }
 
