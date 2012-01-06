@@ -127,8 +127,12 @@ public :
         resroot->nsDef = savens;
 
       // put some space between this unit and the next one if compound
-      if (result_type == XML_ELEMENT_NODE && pstate->isarchive && !isoption(options, OPTION_XSLT_ALL))
-        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
+      if (result_type == XML_ELEMENT_NODE && pstate->isarchive && !isoption(options, OPTION_XSLT_ALL)) {
+
+        if(!isoption(options, OPTION_NO_UNIT))
+          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
+
+      }
 
       // finished with the result of the transformation
       xmlFreeDoc(res);
