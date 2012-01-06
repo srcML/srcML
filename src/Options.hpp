@@ -254,4 +254,7 @@ const OPTION_TYPE OPTION_PRESERVE  = ull(1) << 39;
 // @srcdiff
 const OPTION_TYPE OPTION_THREAD  = ull(1) << 40;
 
+// @srcml2src
+const OPTION_TYPE OPTION_NO_UNIT  = ull(1) << 41;
+
 #endif

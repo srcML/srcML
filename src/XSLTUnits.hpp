@@ -102,11 +102,13 @@ public :
 
         // output a root element, just like the one read in
         // note that this has to be ended somewhere
-        xmlOutputBufferWriteElementNs(buf, pstate->root.localname, pstate->root.prefix, pstate->root.URI,
-                                      pstate->root.nb_namespaces, pstate->root.namespaces,
-                                      pstate->isarchive ? pstate->root.nb_attributes : 0, pstate->root.nb_defaulted, pstate->root.attributes);
+        if(!isoption(options, OPTION_NO_UNIT))
+          xmlOutputBufferWriteElementNs(buf, pstate->root.localname, pstate->root.prefix, pstate->root.URI,
+                                        pstate->root.nb_namespaces, pstate->root.namespaces,
+                                        pstate->isarchive ? pstate->root.nb_attributes : 0, pstate->root.nb_defaulted, pstate->root.attributes);
 
-        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">\n\n"));
+        if(!isoption(options, OPTION_NO_UNIT))
+          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">\n\n"));
       }
       found = true;
 
@@ -141,7 +143,10 @@ public :
 
     // root unit end tag
     if (result_type == XML_ELEMENT_NODE && found && pstate->isarchive && !isoption(options, OPTION_XSLT_ALL)) {
-      xmlOutputBufferWriteString(buf, found ? "</unit>\n" : "/>\n");
+
+      if(!isoption(options, OPTION_NO_UNIT))
+        xmlOutputBufferWriteString(buf, found ? "</unit>\n" : "/>\n");
+
     } else if (result_type == XML_ELEMENT_NODE && found && !pstate->isarchive) {
       //      xmlOutputBufferWriteString(buf, "\n");
     }
