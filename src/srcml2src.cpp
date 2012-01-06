@@ -987,7 +987,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
       break;
 
-    case PRESERVE_FLAG_CODE :
+    case NO_UNIT_FLAG_CODE :
 
       options |= OPTION_NO_UNIT;
 
