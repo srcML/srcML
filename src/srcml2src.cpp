@@ -123,9 +123,6 @@ const int DIFF_FLAG_CODE = 256 + 12;
 const char* const PRESERVE_FLAG_LONG = "preserve";
 const int PRESERVE_FLAG_CODE = 256 + 13;
 
-const char* const NO_UNIT_FLAG_LONG = "no-unit";
-const int NO_UNIT_FLAG_CODE = 256 + 14;
-
 void libxml_error(void *ctx, const char *msg, ...) {}
 
 // output help message
@@ -693,7 +690,6 @@ int process_args(int argc, char* argv[], process_options & poptions)
     { EOL_FLAG, required_argument, NULL, EOL_FLAG_CODE },
     { DIFF_FLAG_LONG, required_argument, NULL, DIFF_FLAG_CODE },
     { PRESERVE_FLAG_LONG, required_argument, NULL, PRESERVE_FLAG_CODE },
-    { NO_UNIT_FLAG_LONG, no_argument, NULL, NO_UNIT_FLAG_CODE },
 
     { XPATH_FLAG, required_argument, NULL, XPATH_FLAG_CODE },
     { XSLT_FLAG, required_argument, NULL, XSLT_FLAG_CODE },
@@ -984,12 +980,6 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
       options |= OPTION_PRESERVE;
       poptions.preserve_uri = optarg;
-
-      break;
-
-    case NO_UNIT_FLAG_CODE :
-
-      options |= OPTION_NO_UNIT;
 
       break;
 

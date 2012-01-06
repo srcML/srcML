@@ -54,7 +54,7 @@ public :
   XSLTUnits(const char* a_context_element, const char* a_ofilename, OPTION_TYPE & options, xsltStylesheetPtr stylesheet,
             const char** params)
     : UnitDOM(options), ofilename(a_ofilename), options(options),
-      stylesheet(stylesheet), total(0), found(false), needroot(true), 
+      stylesheet(stylesheet), total(0), found(false), needroot(true),
       result_type(0), params(params) {
   }
 
@@ -102,13 +102,11 @@ public :
 
         // output a root element, just like the one read in
         // note that this has to be ended somewhere
-        if(!isoption(options, OPTION_NO_UNIT))
-          xmlOutputBufferWriteElementNs(buf, pstate->root.localname, pstate->root.prefix, pstate->root.URI,
-                                        pstate->root.nb_namespaces, pstate->root.namespaces,
-                                        pstate->isarchive ? pstate->root.nb_attributes : 0, pstate->root.nb_defaulted, pstate->root.attributes);
+        xmlOutputBufferWriteElementNs(buf, pstate->root.localname, pstate->root.prefix, pstate->root.URI,
+                                      pstate->root.nb_namespaces, pstate->root.namespaces,
+                                      pstate->isarchive ? pstate->root.nb_attributes : 0, pstate->root.nb_defaulted, pstate->root.attributes);
 
-        if(!isoption(options, OPTION_NO_UNIT))
-          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">\n\n"));
+        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">\n\n"));
       }
       found = true;
 
@@ -129,8 +127,7 @@ public :
       // put some space between this unit and the next one if compound
       if (result_type == XML_ELEMENT_NODE && pstate->isarchive && !isoption(options, OPTION_XSLT_ALL)) {
 
-        if(!isoption(options, OPTION_NO_UNIT))
-          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
+        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
 
       }
 
@@ -148,8 +145,7 @@ public :
     // root unit end tag
     if (result_type == XML_ELEMENT_NODE && found && pstate->isarchive && !isoption(options, OPTION_XSLT_ALL)) {
 
-      if(!isoption(options, OPTION_NO_UNIT))
-        xmlOutputBufferWriteString(buf, found ? "</unit>\n" : "/>\n");
+      xmlOutputBufferWriteString(buf, found ? "</unit>\n" : "/>\n");
 
     } else if (result_type == XML_ELEMENT_NODE && found && !pstate->isarchive) {
       //      xmlOutputBufferWriteString(buf, "\n");
