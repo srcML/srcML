@@ -51,7 +51,7 @@
 class XSLTUnits : public UnitDOM {
 public :
 
-  XSLTUnits(const char* a_context_element, const char* a_ofilename, int options, xsltStylesheetPtr stylesheet,
+  XSLTUnits(const char* a_context_element, const char* a_ofilename, OPTION_TYPE & options, xsltStylesheetPtr stylesheet,
             const char** params)
     : UnitDOM(options), ofilename(a_ofilename), options(options),
       stylesheet(stylesheet), total(0), found(false), needroot(true), 
@@ -251,7 +251,7 @@ public :
 
 private :
   const char* ofilename;
-  int options;
+  OPTION_TYPE & options;
   xmlXPathContextPtr context;
   xsltStylesheetPtr stylesheet;
   double total;
