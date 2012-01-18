@@ -2139,7 +2139,7 @@ perform_noncfg_check[DECLTYPE& type, int& token, int& fla, int& type_count, bool
     }
 
     // may just have a single macro (no parens possibly) before a statement
-    if (_tokenSet_0.member(LA(1)) && type_count == 0)
+    if (type == 0 && type_count == 0 && _tokenSet_0.member(LA(1)))
         type = SINGLE_MACRO;
 
     inputState->guessing--;
