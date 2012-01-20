@@ -6,6 +6,10 @@
 </unit>
 
 <unit>
+<struct_decl><specifier>friend</specifier> struct <name>A</name>;</struct_decl>
+</unit>
+
+<unit>
 <struct>struct <name>A</name> <block>{}</block>;</struct>
 </unit>
 
