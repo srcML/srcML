@@ -67,7 +67,7 @@ tokens {
 	PRIVATE;
 	PROTECTED;
     VIRTUAL;
-//	FRIEND;
+	FRIEND;
 	OPERATOR;
     EXPLICIT;
 
@@ -210,7 +210,7 @@ KeywordCPPLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         // add all C++ specific keywords to the literals table
         // class
         { "virtual"       , VIRTUAL       , LANGUAGE_CXX_FAMILY }, 
-        //     { "friend" , FRIEND        , LANGUAGE_CXX_FAMILY }, 
+        { "friend"        , FRIEND        , LANGUAGE_CXX_FAMILY }, 
         { "operator"      , OPERATOR      , LANGUAGE_CXX_FAMILY }, 
         { "explicit"      , EXPLICIT      , LANGUAGE_CXX_FAMILY }, 
         
