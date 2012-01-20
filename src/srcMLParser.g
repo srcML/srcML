@@ -1313,7 +1313,7 @@ class_declaration :
             // start the class definition
             startElement(SCLASS_DECLARATION);
         }
-        CLASS class_header
+        (java_specifier_mark)* CLASS class_header
 ;
 
 /*
@@ -1431,7 +1431,7 @@ struct_declaration :
             // start the class definition
             startElement(SSTRUCT_DECLARATION);
         }
-        STRUCT class_header
+        (java_specifier_mark)* STRUCT class_header
 ;
 
 struct_union_definition[int element_token] :
@@ -1463,7 +1463,7 @@ union_declaration :
             // start the class definition
             startElement(SUNION_DECLARATION);
         }
-        UNION class_header
+        (java_specifier_mark)* UNION class_header
 ;
 
 /*
@@ -2451,17 +2451,15 @@ pure_lead_type_identifier_no_specifiers {} :
         enum_definition_whole
 ;
 
-java_specifier_mark { LocalMode lm(this); } : 
+java_specifier_mark { LocalMode lm(this); } :
         {
             // statement
             startNewMode(MODE_LOCAL);
 
             // start the function specifier
             startElement(SFUNCTION_SPECIFIER);
-
-            //std::cerr << "HERE" << std::endl;
         }
-        (PUBLIC | PRIVATE | PROTECTED | FINAL | STATIC | ABSTRACT)
+        (PUBLIC | PRIVATE | PROTECTED | FINAL | STATIC | ABSTRACT | FRIEND)
 ;
 
 /*
@@ -2813,7 +2811,7 @@ standard_specifiers { LocalMode lm(this); } :
 
             startElement(SNAME);
         }
-        (VIRTUAL | EXTERN | INLINE | EXPLICIT | STATIC)
+        (VIRTUAL | EXTERN | INLINE | EXPLICIT | STATIC | FRIEND)
 ;
 
 auto_keyword { LocalMode lm(this); } :
