@@ -3609,7 +3609,7 @@ derive_access { LocalMode lm(this); } :
 
             startElement(SCLASS_SPECIFIER);
         }
-        (VIRTUAL)* (PUBLIC | PRIVATE | PROTECTED)
+        (VIRTUAL)* (PUBLIC | PRIVATE | PROTECTED) (VIRTUAL)*
 ;
 
 parameter_list { LocalMode lm(this); bool lastwasparam = false; bool foundparam = false; } :
