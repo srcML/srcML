@@ -1284,10 +1284,13 @@ class_struct_union[int token, int place] {} :
         { token == LCURLY && place == UNION }?
         struct_union_definition[SUNION] |
 
+        { place == CLASS }?
         class_declaration |
 
+        { place == STRUCT }?
         struct_declaration |
 
+        { place == UNION }?
         union_declaration
 ;
 
