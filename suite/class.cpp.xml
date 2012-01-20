@@ -64,11 +64,23 @@
 </unit>
 
 <unit>
+<class>class <name>A</name> <super>: <specifier>public virtual</specifier> <name>B</name></super> <block>{<private type="default"/>}</block>;</class>
+</unit>
+
+<unit>
 <class>class <name>A</name> <super>: <specifier>virtual private</specifier> <name>B</name></super> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
 <unit>
+<class>class <name>A</name> <super>: <specifier>private virtual</specifier> <name>B</name></super> <block>{<private type="default"/>}</block>;</class>
+</unit>
+
+<unit>
 <class>class <name>A</name> <super>: <specifier>virtual protected</specifier> <name>B</name></super> <block>{<private type="default"/>}</block>;</class>
+</unit>
+
+<unit>
+<class>class <name>A</name> <super>: <specifier>protected virtual</specifier> <name>B</name></super> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
 <unit>
