@@ -270,7 +270,7 @@
 </unit>
 
 <unit>
-<for>for(<init>;</init><condition><expr>1</expr>;</condition><incr/>)
+<for>for<group>(<init>;</init><condition><expr>1</expr>;</condition><incr/>)</group>
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt></for>
 </unit>
 
