@@ -130,7 +130,7 @@ void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE opt
   incount = unitnumber == 0;
 
   // setup sax handling state
-  SAX2ExtractUnitsSrc state(&process, &options, unitnumber);
+  SAX2ExtractUnitsSrc state(&process, &options, unitnumber, diff_version);
   ctxt->_private = &state;
 
   // process the document
@@ -164,7 +164,7 @@ int srcMLUtility::unit_count(FILE* output) {
   ProcessUnit* pprocess = isatty(fileno(output)) ? new CountUnits(output) : new ProcessUnit;
 
   // setup sax handling state
-  SAX2ExtractUnitsSrc state(pprocess, &options, -1);
+  SAX2ExtractUnitsSrc state(pprocess, &options, -1, diff_version);
   ctxt->_private = &state;
 
   // process the document
@@ -196,7 +196,7 @@ void srcMLUtility::extract_xml(const char* ofilename, int unit) {
   ExtractUnitsXML process(0 /* to_directory is stdout */, ofilename, output_encoding);
 
   // setup sax handling state
-  SAX2ExtractUnitsSrc state(&process, &options, unit);
+  SAX2ExtractUnitsSrc state(&process, &options, unit, diff_version);
   ctxt->_private = &state;
 
   // process the document
@@ -228,7 +228,7 @@ void srcMLUtility::extract_diff_xml(const char* ofilename, int unit, const char*
   ExtractUnitsDiffXML process(0 /* to_directory is stdout */, ofilename, output_encoding, version);
 
   // setup sax handling state
-  SAX2ExtractUnitsSrc state(&process, &options, unit);
+  SAX2ExtractUnitsSrc state(&process, &options, unit, diff_version);
   ctxt->_private = &state;
 
   // process the document
@@ -260,7 +260,7 @@ void srcMLUtility::extract_xml_uri(const char* ofilename, int unit, const char* 
   ExtractUnitsDiffXMLPreserve process(0 /* to_directory is stdout */, ofilename, output_encoding, uri);
 
   // setup sax handling state
-  SAX2ExtractUnitsSrc state(&process, &options, unit);
+  SAX2ExtractUnitsSrc state(&process, &options, unit, diff_version);
   ctxt->_private = &state;
 
   // process the document
@@ -304,7 +304,7 @@ void srcMLUtility::extract_text(const char* to_dir, const char* ofilename, int u
   ExtractUnitsSrc process(0 /* to_directory is stdout */, ofilename, output_encoding);
 
   // setup sax handling state
-  SAX2ExtractUnitsSrc state(&process, &options, unit);
+  SAX2ExtractUnitsSrc state(&process, &options, unit, diff_version);
   ctxt->_private = &state;
 
   // process the document
@@ -340,7 +340,7 @@ void srcMLUtility::extract_diff_text(const char* to_dir, const char* ofilename, 
   ExtractUnitsDiffSrc process(0 /* to_directory is stdout */, ofilename, output_encoding, version);
 
   // setup sax handling state
-  SAX2ExtractUnitsSrc state(&process, &options, unit);
+  SAX2ExtractUnitsSrc state(&process, &options, unit, diff_version);
   ctxt->_private = &state;
 
   // process the document
@@ -381,7 +381,7 @@ void srcMLUtility::expand(const char* root_filename, const char* format, const c
   ExtractUnitsSrc process(to_directory, root_filename, output_encoding);
 
   // setup sax handling state
-  SAX2ExtractUnitsSrc state(&process, &options, -1);
+  SAX2ExtractUnitsSrc state(&process, &options, -1, diff_version);
   ctxt->_private = &state;
 
   // process the document
@@ -411,7 +411,7 @@ void srcMLUtility::list() {
   ListUnits process;
 
   // setup sax handling state
-  SAX2ExtractUnitsSrc state(&process, &options, -1);
+  SAX2ExtractUnitsSrc state(&process, &options, -1, diff_version);
   ctxt->_private = &state;
 
   // process the document
@@ -462,7 +462,7 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
   XPathQueryUnits process(context_element, ofilename, options, compiled_xpath);
 
   // setup sax handling state
-  SAX2ExtractUnitsSrc state(&process, &options, -1);
+  SAX2ExtractUnitsSrc state(&process, &options, -1, diff_version);
   ctxt->_private = &state;
 
   // process the document
@@ -493,7 +493,7 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
   XSLTUnits process(context_element, ofilename, options, stylesheet, params);
 
   // setup sax handling state
-  SAX2ExtractUnitsSrc state(&process, &options, -1);
+  SAX2ExtractUnitsSrc state(&process, &options, -1, diff_version);
   ctxt->_private = &state;
 
   // allow for all exslt functions
