@@ -43,7 +43,7 @@
 
 int option_error_status(int optopt);
 
-extern const char* diff_version;
+const char* diff_version;
 
 #define BASE_PROGRAM_NAME "srcml2src"
 const char* PROGRAM_NAME = BASE_PROGRAM_NAME;

@@ -118,6 +118,7 @@ class srcMLUtility {
   PROPERTIES_TYPE attrv;
  private:
   int units;
+  const char* diff_version;
 };
 
 class LibXMLError {

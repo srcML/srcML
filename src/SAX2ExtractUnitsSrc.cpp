@@ -29,8 +29,6 @@
 #include "ExtractUnitsSrc.hpp"
 #include "srcexfun.hpp"
 
-const char* diff_version = "";
-
 static bool diff_filename = true;
 static bool setupDiff(SAX2ExtractUnitsSrc* pstate,
                       int& nb_namespaces, const xmlChar** namespaces,
@@ -248,8 +246,6 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
     // setup for diff tracking
     diff_filename = true;
     if (isoption(*(pstate->poptions), OPTION_DIFF)) {
-      fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
-
       diff_filename = setupDiff(pstate, pstate->root.nb_namespaces, pstate->root.namespaces, pstate->root.nb_attributes, pstate->root.attributes);
     }
 

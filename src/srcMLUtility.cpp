@@ -69,7 +69,7 @@ static bool incount = false;
 
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, OPTION_TYPE& op, const char* diff_version)
-  : infile(infilename), output_encoding(encoding), options(op), units(0) {
+  : infile(infilename), output_encoding(encoding), options(op), units(0), diff_version(diff_version) {
 
 
   // assume totaling for numeric results
