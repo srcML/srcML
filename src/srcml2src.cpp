@@ -472,7 +472,7 @@ int main(int argc, char* argv[]) {
   try {
 
     // setup for processing
-    srcMLUtility su(filename, poptions.src_encoding, options);
+    srcMLUtility su(filename, poptions.src_encoding, options, poptions.diff_version);
 
     // for options, there may be an output file
     output = stdout;

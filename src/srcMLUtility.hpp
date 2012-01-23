@@ -47,7 +47,7 @@ class srcMLUtility {
  public:
 
   // constructor
-  srcMLUtility(const char* infilename, const char* encoding, OPTION_TYPE& op);
+  srcMLUtility(const char* infilename, const char* encoding, OPTION_TYPE& op, const char* diff_version = "");
 
   // set the input filename after the constructor
   void set_input_filename(const char* infilename);

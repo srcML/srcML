@@ -62,7 +62,7 @@ class SAX2ExtractUnitsSrc {
 
  public:
 
-  SAX2ExtractUnitsSrc(ProcessUnit* pprocess, OPTION_TYPE* poptions, int unit)
+  SAX2ExtractUnitsSrc(ProcessUnit* pprocess, OPTION_TYPE* poptions, int unit, const char* diff_version = "")
     : pprocess(pprocess), poptions(poptions), unit(unit), count(0), isarchive(false), rootonly(false), stop(false)
     {
       if (isoption(*poptions, OPTION_DIFF))

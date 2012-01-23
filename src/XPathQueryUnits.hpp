@@ -150,7 +150,7 @@ public :
         // note that this has to be ended somewhere
         xmlOutputBufferWriteElementNs(buf, pstate->root.localname, pstate->root.prefix, pstate->root.URI,
                                       pstate->root.nb_namespaces, pstate->root.namespaces,
-                                      pstate->isarchive ? pstate->root.nb_attributes : 0, pstate->root.nb_defaulted, pstate->root.attributes);
+                                      pstate->isarchive ? pstate->root.nb_attributes : 0, pstate->root.nb_defaulted, pstate->isarchive ? pstate->root.attributes : 0);
 
         closetag = true;
       }
@@ -490,7 +490,7 @@ public :
       xmlOutputBufferWriteString(buf, (const char*) attributes[i * 5]);
       xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("=\""));
 
-      xmlOutputBufferWrite(buf, attributes[i * 5 + 4] - attributes[i * 5 + 3] + 1,
+      xmlOutputBufferWrite(buf, attributes[i * 5 + 4] - attributes[i * 5 + 3],
                            (const char*) attributes[i * 5 + 3]);
 
       xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
@@ -536,7 +536,7 @@ public :
       s.append((const char*) attributes[i * 5]);
       s.append(LITERALPLUSSIZE("=\""));
 
-      s.append((const char*) attributes[i * 5 + 3], attributes[i * 5 + 4] - attributes[i * 5 + 3] + 1);
+      s.append((const char*) attributes[i * 5 + 3], attributes[i * 5 + 4] - attributes[i * 5 + 3]);
 
       s.append(LITERALPLUSSIZE("\""));
     }

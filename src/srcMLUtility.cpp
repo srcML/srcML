@@ -68,7 +68,7 @@ static void srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly);
 static bool incount = false;
 
 // constructor
-srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, OPTION_TYPE& op)
+srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, OPTION_TYPE& op, const char* diff_version)
   : infile(infilename), output_encoding(encoding), options(op), units(0) {
 
 
