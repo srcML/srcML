@@ -19,6 +19,7 @@ FIELD_WIDTH_LANGUAGE = 5
 FIELD_WIDTH_DIRECTORY = 27
 MAX_COUNT = 29
 sperrorlist = []
+xml_filename = ""
 
 srcmltranslator = os.environ.get("SRC2SRCML")
 if srcmltranslator == "" or srcmltranslator == None:
