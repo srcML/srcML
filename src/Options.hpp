@@ -255,6 +255,6 @@ const OPTION_TYPE OPTION_PRESERVE  = ull(1) << 39;
 const OPTION_TYPE OPTION_THREAD  = ull(1) << 40;
 
 // @srcdiff
-const OPTION_TYPE OPTION_VIZUALIZE  = ull(1) << 41;
+const OPTION_TYPE OPTION_VISUALIZE  = ull(1) << 41;
 
 #endif
