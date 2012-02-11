@@ -2692,11 +2692,6 @@ complex_name[bool marked] { LocalMode lm(this); TokenPosition tp; /* TokenPositi
                 // Detecting before here means lookahead on all A::B::... names
                 // causing a slowdown of almost 20%.  Solution (hack) is to start all complex
                 // names as operator methods, then replace by NOP if not.
-//                startNewMode(MODE_LOCAL);
-//                startElement(STYPE);
-
-                // record the name token so we can replace it if necessary
-//                tp2 = getTokenPosition();
 
                 // local mode that is automatically ended by leaving this function
                 startNewMode(MODE_LOCAL);
@@ -2723,13 +2718,6 @@ complex_name[bool marked] { LocalMode lm(this); TokenPosition tp; /* TokenPositi
             if (marked && !iscomplex_name)
                 // set the token to NOP
                 tp.setType(SNOP);
-
-/*
-            // not an operator
-            if (marked)
-                // set the token to NOP
-                setTokenPosition(tp2, SNOP);
-*/
         }
             )
 ;
