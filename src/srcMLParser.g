@@ -2984,8 +2984,15 @@ eat_optional_macro_call {
         macro_call();
 } :;
 
+macro_call {} :
+        macro_call_inner
+        {
+            if (inMode(MODE_THEN) && LA(1) == ELSE)
+                endCurrentMode(MODE_THEN);
+        }
+    ;
 
-macro_call { LocalMode lm(this); } :
+macro_call_inner { LocalMode lm(this); } :
         {
             // start a mode for the macro that will end after the argument list
             startNewMode(MODE_STATEMENT | MODE_TOP);
