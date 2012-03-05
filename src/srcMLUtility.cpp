@@ -478,6 +478,9 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
 // xslt evaluation of the nested units
 void srcMLUtility::xslt(const char* context_element, const char* ofilename, const char* xslts[], const char* params[], int paramcount) {
 
+  // allow for all exslt functions
+  exsltRegisterAll();
+
   // parse the stylesheet
   xsltStylesheetPtr stylesheet = xsltParseStylesheetFile(BAD_CAST xslts[0]);
 
@@ -495,9 +498,6 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
   // setup sax handling state
   SAX2ExtractUnitsSrc state(&process, &options, -1, diff_version);
   ctxt->_private = &state;
-
-  // allow for all exslt functions
-  exsltRegisterAll();
 
   xsltsrcMLRegister();
 
