@@ -9,7 +9,7 @@ CXX=/usr/bin/g++
 AR=/usr/bin/ar
 
 # associated text tools
-SED=${firstword ${wildcard /opt/local/bin/gsed /bin/sed}}
+SED=${firstword ${wildcard /opt/local/bin/gsed /usr/local/bin/gsed /bin/sed}}
 GREP=${firstword ${wildcard /bin/grep /usr/bin/grep}}
 ECHO=/bin/echo
 CUT=/usr/bin/cut
@@ -58,7 +58,7 @@ SRCMLPARSER_ANTLR_FLAGS =
 SRCMLLEXER_ANTLR_FLAGS =
 
 # compiler optimizations
-CXXFLAGS = -DVERSION=$(VERSION) -O3 -Wall -march=nocona -minline-all-stringops $(if $(DYNAMIC), -fPIC,) $(if $(DEBUG), -g,) $(if $(DYNAMIC), -fPIC,) $(if $(SAXFRAMEWORK), -DSAXFRAMEWORK,) #-fno-rtti 
+CXXFLAGS = -DVERSION=$(VERSION) -O3 -Wall -march=nocona -minline-all-stringops $(if $(DYNAMIC), -fPIC,) $(if $(DEBUG), -g,) $(if $(DYNAMIC), -fPIC,) $(if $(SAXFRAMEWORK), -DSAXFRAMEWORK,) -I. #-fno-rtti 
 
 # compiler gcc linking flags
 CXX_LINK_FLAGS = #-s
@@ -203,7 +203,7 @@ ${SRCML2SRC_BIN} : ${OBJ_DIR}srcml2src.o ${OBJ_DIR}srcMLUtility.o ${OBJ_DIR}SAX2
 
 # Object files
 ${OBJ_DIR}src2srcml.o : src2srcml.cpp srcMLTranslator.hpp srcmlapps.hpp Options.hpp srcmlns.hpp makeargv.hpp ${IO_LIB_DEPENDS}
-	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE)  -c $< -o $@
+	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}srcml2src.o : srcml2src.cpp srcmlapps.hpp Options.hpp URIStream.hpp makeargv.hpp ${IO_LIB_DEPENDS}
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
