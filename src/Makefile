@@ -36,17 +36,17 @@ DLL_DIR = ../dlls
 # general ANTLR settings
 
 # antlr tool
-ANTLR=${firstword ${wildcard /usr/bin/antlr /usr/bin/runantlr /usr/bin/cantlr /opt/local/bin/antlr}}
+ANTLR=${firstword ${wildcard /usr/bin/antlr /usr/bin/runantlr /usr/bin/cantlr /opt/local/bin/antlr /usr/local/bin/antlr2}}
 
 # antlr c++ include files
 ifndef MINGW32
-ANTLR_INC_DIR=${dir ${firstword ${wildcard /usr/include/antlr /opt/local/include/antlr}}}
+ANTLR_INC_DIR=${dir ${firstword ${wildcard /usr/include/antlr /opt/local/include/antlr /usr/local/include/antlr}}}
 ANTLR_INC=-I${ANTLR_INC_DIR}
 endif
 
 # antlr c++ library
 ifndef MINGW32
-ANTLR_LIB_DIR=${dir ${firstword ${wildcard /usr/lib64/libantlr* /usr/lib/libantlr* /opt/local/lib/libantlr*}}}
+ANTLR_LIB_DIR=${dir ${firstword ${wildcard /usr/lib64/libantlr* /usr/lib/libantlr* /opt/local/lib/libantlr* /usr/local/lib/libantlr*}}}
 ANTLR_LIB=-L${ANTLR_LIB_DIR}
 endif 
 ANTLR_LIB += -lantlr
