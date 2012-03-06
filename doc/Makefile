@@ -4,9 +4,9 @@ MAN_GZIP= src2srcml.1.gz srcml2src.1.gz
 SRC2SRCML=../bin/src2srcml
 SRCML2SRC=../bin/srcml2src
 
-DOCBOOK2XMAN=${firstword ${wildcard /usr/bin/db2x_docbook2man /usr/bin/docbook2x-man /opt/local/bin/docbook2man}}
-MAN2HTML=${firstword ${wildcard /usr/bin/man2html /opt/local/bin/man2html}}
-MAN=${firstword ${wildcard /opt/local/bin/man /usr/bin/man2html}}
+DOCBOOK2XMAN=${firstword ${wildcard /usr/bin/db2x_docbook2man /usr/bin/docbook2x-man /opt/local/bin/docbook2man /usr/local/bin/docbook2man}}
+MAN2HTML=${firstword ${wildcard /usr/bin/man2html /opt/local/bin/man2html} /usr/local/bin/man2html}
+MAN=${firstword ${wildcard /opt/local/bin/man /usr/bin/man}}
 
 ECHO=/bin/echo
 
