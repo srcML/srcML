@@ -8,7 +8,7 @@ SED=${firstword ${wilcard /opt/local/bin/gsed /bin/sed}}
 GREP=${firstword ${wildcard /bin/grep /usr/bin/grep}}
 CUT=/usr/bin/cut
 TR=/usr/bin/tr
-CP=${firstword ${wildcard /opt/local/bin/gcp /bin/cp}}
+CP=${firstword ${wildcard /opt/local/bin/gcp /usr/local/bin/gcp /bin/cp}}
 
 # svn repo
 SVN_URL=http://calder.sdml.cs.kent.edu/svn/srcML/trunk
