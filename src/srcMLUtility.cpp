@@ -564,7 +564,7 @@ static void srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly) {
 // create srcml parser with error reporting
 static xmlParserCtxtPtr srcMLCreateURLParserCtxt(const char * infile) {
 
-  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT);
+  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT | XML_PARSE_HUGE);
   if (ctxt == NULL) {
 
     // report error
