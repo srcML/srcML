@@ -114,15 +114,36 @@ public :
       xmlNodePtr resroot = xmlDocGetRootElement(res);
       xmlNsPtr savens = resroot ? resroot->nsDef : 0;
       bool turnoff_namespaces = savens && pstate->isarchive && !isoption(options, OPTION_XSLT_ALL);
-      if (turnoff_namespaces)
-        resroot->nsDef = 0;
+
+      if (turnoff_namespaces) {
+	xmlNsPtr cur = savens;
+	xmlNsPtr ret = NULL;
+	xmlNsPtr p = NULL;
+
+	while (cur != NULL) {
+	  if (strcmp((const char*) cur->href, SRCML_CPP_NS_URI) == 0) {
+	    xmlNsPtr q = xmlCopyNamespace(cur);
+	    if (p == NULL) {
+	      ret = p = q;
+	    } else {
+	      p->next = q;
+	      p = q;
+	    }
+	  }
+	  cur = cur->next;
+	}
+	resroot->nsDef = ret;
+      }
       xsltSaveResultTo(buf, res, stylesheet);
       /*
         for (xmlNodePtr child = res->children; child != NULL; child = child->next)
         xmlNodeDumpOutput(buf, res, child, 0, 0, 0);
       */
-      if (turnoff_namespaces)
-        resroot->nsDef = savens;
+      if (turnoff_namespaces) {
+	xmlFreeNsList(resroot->nsDef);
+      
+	resroot->nsDef = savens;
+      }
 
       // put some space between this unit and the next one if compound
       if (result_type == XML_ELEMENT_NODE && pstate->isarchive && !isoption(options, OPTION_XSLT_ALL)) {
