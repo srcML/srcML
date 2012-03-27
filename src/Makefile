@@ -17,12 +17,12 @@ SVNVERSION=${firstword ${wildcard /usr/local/bin/svnversion /usr/bin/svnversion 
 
 ifeq ($(SVNVERSION),)
 VERSION="\"$(shell cat VERSION)\""
-REVISION="\"$(shell cat REVESION)\""
+REVISION="\"$(shell cat REVISION)\""
 else
 
 ifeq ($(shell ${SVNVERSION} -n),exported)
 VERSION="\"$(shell cat VERSION)\""
-REVISION="\"$(shell cat REVESION)\""
+REVISION="\"$(shell cat REVISION)\""
 else
 VERSION="\"Trunk $(shell ${SVNVERSION} -n)$(shell svn info | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2-)\""
 $(shell echo ${VERSION} | ${CUT} -d \" -f2 > VERSION)
