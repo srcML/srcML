@@ -26,7 +26,7 @@ REVISION="\"$(shell cat REVESION)\""
 else
 VERSION="\"Trunk $(shell ${SVNVERSION} -n)$(shell svn info | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2-)\""
 $(shell echo ${VERSION} | ${CUT} -d \" -f2 > VERSION)
-REVISION="$(shell ${SVNVERSION} -n)"
+REVISION="\"$(shell ${SVNVERSION} -n)\""
 endif
 
 endif
