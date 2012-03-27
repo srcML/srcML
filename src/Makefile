@@ -13,7 +13,7 @@ SED=${firstword ${wildcard /opt/local/bin/gsed /usr/local/bin/gsed /bin/sed}}
 GREP=${firstword ${wildcard /bin/grep /usr/bin/grep}}
 ECHO=/bin/echo
 CUT=/usr/bin/cut
-SVNVERSION=${firstword ${wildcard /usr/bin/svnversion /usr/local/bin/svnversion }}
+SVNVERSION=${firstword ${wildcard /usr/local/bin/svnversion /usr/bin/svnversion }}
 
 ifeq ($(SVNVERSION),)
 VERSION="\"$(shell cat VERSION)\""
