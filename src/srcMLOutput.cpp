@@ -211,6 +211,9 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
   // list of attributes
   const char* const attrs[][2] = {
 
+    // version attribute
+    { UNIT_ATTRIBUTE_REVISION, REVISION },
+
     // language attribute
     { UNIT_ATTRIBUTE_LANGUAGE, language },
 
@@ -222,9 +225,6 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
 
     // version attribute
     { UNIT_ATTRIBUTE_VERSION, version },
-
-    // version attribute
-    { UNIT_ATTRIBUTE_REVISION, REVISION },
 
     // position tab setting
     { tabattribute.c_str(), isoption(OPTION_POSITION) ? stabs.str().c_str() : 0 },
