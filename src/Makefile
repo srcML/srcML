@@ -20,7 +20,7 @@ VERSION="\"$(shell cat VERSION)\""
 REVISION="\"$(shell cat REVISION)\""
 else
 
-ifeq ($(shell ${SVNVERSION} -n),exported)
+ifeq ($(shell ${SVNVERSION} -n),Unversioned directory)
 VERSION="\"$(shell cat VERSION)\""
 REVISION="\"$(shell cat REVISION)\""
 else
