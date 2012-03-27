@@ -58,6 +58,7 @@ const char* const UNIT_ATTRIBUTE_LANGUAGE = "language";
 const char* const UNIT_ATTRIBUTE_DIRECTORY = "dir";
 const char* const UNIT_ATTRIBUTE_FILENAME = "filename";
 const char* const UNIT_ATTRIBUTE_VERSION = "version";
+const char* const UNIT_ATTRIBUTE_REVISION = "srcml_revision";
 const char* const UNIT_ATTRIBUTE_ITEM = "item";
 const char* const UNIT_ATTRIBUTE_PATH = "item";
 

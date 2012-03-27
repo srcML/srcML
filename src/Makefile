@@ -13,17 +13,20 @@ SED=${firstword ${wildcard /opt/local/bin/gsed /usr/local/bin/gsed /bin/sed}}
 GREP=${firstword ${wildcard /bin/grep /usr/bin/grep}}
 ECHO=/bin/echo
 CUT=/usr/bin/cut
-SVNVERSION=${wildcard /usr/bin/svnversion}
+SVNVERSION=${firstword ${wildcard /usr/bin/svnversion /usr/local/bin/svnversion }}
 
 ifeq ($(SVNVERSION),)
 VERSION="\"$(shell cat VERSION)\""
+REVISION="\"$(shell cat VERSION)\""
 else
 
 ifeq ($(shell ${SVNVERSION} -n),exported)
 VERSION="\"$(shell cat VERSION)\""
+REVISION="\"$(shell cat VERSION)\""
 else
 VERSION="\"Trunk $(shell ${SVNVERSION} -n)$(shell svn info | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2-)\""
 $(shell echo ${VERSION} | ${CUT} -d \" -f2 > VERSION)
+REVISION="$(shell ${SVNVERSION} -n)"
 endif
 
 endif
@@ -58,7 +61,7 @@ SRCMLPARSER_ANTLR_FLAGS =
 SRCMLLEXER_ANTLR_FLAGS =
 
 # compiler optimizations
-CXXFLAGS = -DVERSION=$(VERSION) -O3 -Wall -march=nocona -minline-all-stringops $(if $(DYNAMIC), -fPIC,) $(if $(DEBUG), -g,) $(if $(DYNAMIC), -fPIC,) $(if $(SAXFRAMEWORK), -DSAXFRAMEWORK,) #-fno-rtti 
+CXXFLAGS = -DVERSION=$(VERSION) -DREVISION=$(REVISION) -O3 -Wall -march=nocona -minline-all-stringops $(if $(DYNAMIC), -fPIC,) $(if $(DEBUG), -g,) $(if $(DYNAMIC), -fPIC,) $(if $(SAXFRAMEWORK), -DSAXFRAMEWORK,) #-fno-rtti 
 
 # compiler gcc linking flags
 CXX_LINK_FLAGS = #-s
