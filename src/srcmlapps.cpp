@@ -69,4 +69,8 @@ const char* clean_filename(const char* in) {
   return pos;
 }
 
+const char * srcml_version() {
 
+  return REVISION;
+
+}

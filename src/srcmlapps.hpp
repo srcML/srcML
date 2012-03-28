@@ -189,4 +189,7 @@ inline char* strsep(char** stringp, const char* delim) {
   return retvalue;
 }
 #endif
+
+const char * srcml_version();
+
 #endif

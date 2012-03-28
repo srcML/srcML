@@ -27,6 +27,7 @@
 #include "srcMLToken.hpp"
 #include "project.hpp"
 #include "srcmlns.hpp"
+#include "srcmlapps.hpp"
 #include <boost/preprocessor/iteration/local.hpp>
 
 #include <cstring>
@@ -212,7 +213,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
   const char* const attrs[][2] = {
 
     // version attribute
-    { UNIT_ATTRIBUTE_REVISION, REVISION },
+    { UNIT_ATTRIBUTE_REVISION, srcml_version() },
 
     // language attribute
     { UNIT_ATTRIBUTE_LANGUAGE, language },
