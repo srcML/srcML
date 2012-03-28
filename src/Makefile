@@ -96,7 +96,7 @@ LIBSRCML_SO=${EXE_DIR}libsrcml.dll
 SRCMLDIRECT_BIN=${EXE_DIR}srcmldirect.exe
 endif
 
-LIBSRCML_INCLUDE=${OBJ_DIR}srcMLParserClean.o ${OBJ_DIR}KeywordCPPLexerClean.o ${OBJ_DIR}srcMLTranslator.o ${OBJ_DIR}srcMLTranslatorCore.o ${OBJ_DIR}srcMLOutput.o ${OBJ_DIR}srcMLTranslatorOutput.o ${OBJ_DIR}Mode.o ${OBJ_DIR}UTF8CharBuffer.o ${OBJ_DIR}PureCommentLexerClean.o ${OBJ_DIR}Language.o ${OBJ_DIR}URIStream.o ${IO_LIB}
+LIBSRCML_INCLUDE=${OBJ_DIR}srcMLParserClean.o ${OBJ_DIR}KeywordCPPLexerClean.o ${OBJ_DIR}srcMLTranslator.o ${OBJ_DIR}srcMLTranslatorCore.o ${OBJ_DIR}srcMLOutput.o ${OBJ_DIR}srcMLTranslatorOutput.o ${OBJ_DIR}Mode.o ${OBJ_DIR}UTF8CharBuffer.o ${OBJ_DIR}PureCommentLexerClean.o ${OBJ_DIR}Language.o ${OBJ_DIR}URIStream.o ${OBJ_DIR}srcmlapps.o ${IO_LIB}
 
 # default
 all : ${SRC2SRCML_BIN} ${SRCML2SRC_BIN}  ${SRCMLDIRECT_BIN}
