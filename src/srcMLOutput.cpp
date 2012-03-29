@@ -213,7 +213,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
   const char* const attrs[][2] = {
 
     // version attribute
-    { UNIT_ATTRIBUTE_REVISION, srcml_version() },
+    { UNIT_ATTRIBUTE_REVISION, isoption(OPTION_REVISION) ? srcml_version() : 0 },
 
     // language attribute
     { UNIT_ATTRIBUTE_LANGUAGE, language },
