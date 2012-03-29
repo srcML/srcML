@@ -109,7 +109,7 @@ const int OLD_FILENAME_FLAG_CODE = 256 + 8;
 const char* const RECURSIVE_FLAG = "recursive";
 const int RECURSIVE_FLAG_CODE = 256 + 9;
 
-const char* const REVISION_FLAG = "no-revision";
+const char* const REVISION_FLAG = "revision";
 const int REVISION_FLAG_CODE = 256 + 10;
 
 const char* const EXAMPLE_TEXT_FILENAME="foo.cpp";
@@ -315,7 +315,7 @@ void output_settings(const char * name)
 void output_features(const char * name)
 {}
 
-OPTION_TYPE options = OPTION_CPP_MARKUP_ELSE | OPTION_REVISION;
+OPTION_TYPE options = OPTION_CPP_MARKUP_ELSE;
 
 #ifdef __GNUG__
 extern "C" void verbose_handler(int);
@@ -842,7 +842,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       break;
 
     case REVISION_FLAG_CODE:
-      options &= ~OPTION_REVISION;
+      options |= OPTION_REVISION;
       break;
 
     case QUIET_FLAG_SHORT:
