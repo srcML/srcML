@@ -251,4 +251,7 @@ const OPTION_TYPE OPTION_DIFF  = ull(1) << 38;
 // @srcml2src
 const OPTION_TYPE OPTION_PRESERVE  = ull(1) << 39;
 
+// @src2srcml
+const OPTION_TYPE OPTION_REVISION  = ull(1) << 40;
+
 #endif
