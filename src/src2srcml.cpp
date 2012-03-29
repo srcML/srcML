@@ -315,7 +315,7 @@ void output_settings(const char * name)
 void output_features(const char * name)
 {}
 
-OPTION_TYPE options = OPTION_CPP_MARKUP_ELSE;
+OPTION_TYPE options = OPTION_CPP_MARKUP_ELSE | OPTION_REVISION;
 
 #ifdef __GNUG__
 extern "C" void verbose_handler(int);
@@ -641,6 +641,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { REGISTER_EXT_FLAG, required_argument, NULL, REGISTER_EXT_FLAG_CODE },
     { XMLNS_FLAG, required_argument, NULL, XMLNS_FLAG_CODE },
     { RECURSIVE_FLAG, no_argument, NULL, RECURSIVE_FLAG_CODE },
+    { REVISION_FLAG, no_argument, NULL, REVISION_FLAG_CODE },
     { QUIET_FLAG, no_argument, NULL, QUIET_FLAG_SHORT },
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
@@ -838,6 +839,10 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
     case RECURSIVE_FLAG_CODE:
       options |= OPTION_RECURSIVE;
+      break;
+
+    case REVISION_FLAG_CODE:
+      options &= ~OPTION_REVISION;
       break;
 
     case QUIET_FLAG_SHORT:
