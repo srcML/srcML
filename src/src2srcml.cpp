@@ -109,7 +109,7 @@ const int OLD_FILENAME_FLAG_CODE = 256 + 8;
 const char* const RECURSIVE_FLAG = "recursive";
 const int RECURSIVE_FLAG_CODE = 256 + 9;
 
-const char* const REVISION_FLAG = "--no-revision";
+const char* const REVISION_FLAG = "no-revision";
 const int REVISION_FLAG_CODE = 256 + 10;
 
 const char* const EXAMPLE_TEXT_FILENAME="foo.cpp";
