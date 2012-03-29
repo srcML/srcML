@@ -98,7 +98,7 @@ def xmldiff(xml_filename1, xml_filename2):
 # find differences of two files
 def src2srcML(text_file, encoding, language, directory, filename, prefixlist):
 
-	command = [srcmltranslator, "-l", language, "--encoding=" + encoding]
+	command = [srcmltranslator, "--no-revision", "-l", language, "--encoding=" + encoding]
 
 	if directory != "":
 		command.extend(["--directory", directory])
