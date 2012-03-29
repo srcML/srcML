@@ -65,7 +65,7 @@ do
 
 	$SRCML2SRC < .save | dos2unix > .txt
 
-        $SRC2SRCML $OPERATOR $LITERAL --language=$language --dir=$directory $FILENAMEOPTION < .txt > .new
+        $SRC2SRCML "--no-revision" $OPERATOR $LITERAL --language=$language --dir=$directory $FILENAMEOPTION < .txt > .new
 
 	diff .save .new
         if [[ "$?" != "0" ]]
