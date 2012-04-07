@@ -355,6 +355,7 @@ tokens {
     // exception handling
 	STRY_BLOCK;
 	SCATCH_BLOCK;
+	SFINALLY_BLOCK;
 	STHROW_STATEMENT;
 	STHROW_SPECIFIER;
 	STHROW_SPECIFIER_JAVA;
@@ -546,7 +547,7 @@ cfg {} :
         template_declaration |
 
         // exception statements
-        try_statement | catch_statement | throw_statement |
+        try_statement | catch_statement | finally_statement | throw_statement |
 
         // namespace statements
         namespace_definition | namespace_directive |
@@ -3091,6 +3092,17 @@ catch_statement {} :
             startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
         }
         CATCH LPAREN
+;
+
+finally_statement {} :
+        {
+            // treat catch block as nested block statement
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_STATEMENT);
+
+            // start of the catch statement
+            startElement(SFINALLY_BLOCK);
+        }
+        FINALLY
 ;
 
 throw_statement {} :

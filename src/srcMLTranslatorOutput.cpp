@@ -160,6 +160,7 @@ namespace {
   // exception handling
   ELEMENT_MAP(STRY_BLOCK,       "try")
   ELEMENT_MAP(SCATCH_BLOCK,     "catch")
+  ELEMENT_MAP(SFINALLY_BLOCK,   "finally")
   ELEMENT_MAP(STHROW_STATEMENT, "throw")
   ELEMENT_MAP(STHROW_SPECIFIER, "throw")
   ELEMENT_MAP(STHROW_SPECIFIER_JAVA, "throws")
