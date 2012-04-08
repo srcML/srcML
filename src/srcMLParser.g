@@ -2649,7 +2649,7 @@ simple_name_optional_template[bool marked] { LocalMode lm(this); TokenPosition t
             }
         }
         mark_namestack identifier[marked] (
-            { inLanguage(LANGUAGE_CXX_FAMILY) }?
+            { inLanguage(LANGUAGE_CXX_FAMILY) || inLanguage(LANGUAGE_JAVA_FAMILY) }?
             (template_argument_list)=>
                 template_argument_list |
 
