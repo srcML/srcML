@@ -4038,6 +4038,18 @@ nested_terminate {
 enum_definition {} :
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (enum_class_definition nested_terminate)=> enum_class_definition |
+
+        { inLanguage(LANGUAGE_JAVA_FAMILY) }?
+        {
+            // statement
+            // end init correctly
+            startNewMode(MODE_STATEMENT | MODE_EXPRESSION_BLOCK | MODE_VARIABLE_NAME | MODE_EXPECT);
+
+            // start the enum definition element
+            startElement(SENUM);
+        }
+        (java_specifier_mark)*
+        ENUM |
         {
             // statement
             // end init correctly
