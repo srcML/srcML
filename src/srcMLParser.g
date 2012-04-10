@@ -1345,6 +1345,29 @@ class_definition :
         }
 ;
 
+enum_class_definition :
+        {
+            bool intypedef = inMode(MODE_TYPEDEF);
+
+            // statement
+            startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_CLASS | MODE_DECL);
+
+            // start the class definition
+            startElement(SENUM);
+
+            // java classes end at the end of the block
+            if (intypedef || inLanguage(LANGUAGE_JAVA_FAMILY)) {
+                setMode(MODE_END_AT_BLOCK);
+            }
+        }
+        (java_specifier_mark)* ENUM (class_header lcurly | lcurly) 
+        {
+
+            if (inLanguage(LANGUAGE_CXX_FAMILY))
+                class_default_access_action(SPRIVATE_ACCESS_DEFAULT);
+        }
+;
+
 concept_definition :
         {
             // statement
@@ -3977,11 +4000,44 @@ optional_paren_pair {
         consume();
     }
 } :;
+
+/*
+  See if there is a semicolon terminating a statement inside a block at the top level
+*/        
+nested_terminate {
+
+    int parencount = 0;
+    int bracecount = 0;
+    while (LA(1) != antlr::Token::EOF_TYPE) {
+
+        if (LA(1) == RPAREN)
+            --parencount;
+        else if (LA(1) == LPAREN)
+            ++parencount;
+
+        if (LA(1) == RCURLY)
+            --bracecount;
+        else if (LA(1) == LCURLY)
+            ++bracecount;
+
+        if (bracecount < 0)
+            break;
+
+        if (LA(1) == TERMINATE && parencount == 0 && bracecount == 0)
+            break;
+
+        consume();
+    }
+}:
+        TERMINATE
+;
         
 /*
   Definition of an enum.  Start of the enum only
 */
 enum_definition {} :
+        { inLanguage(LANGUAGE_JAVA_FAMILY) }?
+        (enum_class_definition nested_terminate)=> enum_class_definition |
         {
             // statement
             // end init correctly
