@@ -1998,6 +1998,11 @@ comma[bool final = false] { if (final) setFinalToken(); }:
                 // might want to check for !inMode(MODE_INTERNAL_END_CURLY)
                 endDownToFirstMode(MODE_LIST | MODE_STATEMENT);
             }
+
+            // comma in a variable initialization end init of current variable
+            if (inMode(MODE_IN_INIT)) {
+                endCurrentMode(MODE_IN_INIT);
+            }
         }
         COMMA
 ;
@@ -3231,8 +3236,8 @@ variable_declaration_initialization {} :
 
         EQUAL
         {
-            // end the init correctly
-            setMode(MODE_EXPRESSION | MODE_EXPECT);
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_LIST | MODE_IN_INIT | MODE_EXPRESSION | MODE_EXPECT);
 
             // start the initialization element
             startNoSkipElement(SDECLARATION_INITIALIZATION);
