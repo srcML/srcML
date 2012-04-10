@@ -3249,6 +3249,18 @@ variable_declaration_initialization {} :
         call_argument_list
 ;
 
+parameter_declaration_initialization {} :
+
+        EQUAL
+        {
+            // end the init correctly
+            setMode(MODE_EXPRESSION | MODE_EXPECT);
+
+            // start the initialization element
+            startNoSkipElement(SDECLARATION_INITIALIZATION);
+        }
+;
+
 pure_expression_block {} :
         lcurly_base 
         {
@@ -3649,8 +3661,9 @@ empty_element[int element, bool cond] { LocalMode lm(this); } :
 ;
 
 full_parameter {} :
+
         parameter
-        (options { greedy = true; } : variable_declaration_initialization expression)*
+        (options { greedy = true; } : parameter_declaration_initialization expression)*
 ;
 
 argument {} :
