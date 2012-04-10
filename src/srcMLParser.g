@@ -1913,6 +1913,10 @@ statement_part { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE decl
              parameter_list |
 
         // start of argument for return or throw statement
+        { inMode(MODE_INIT | MODE_EXPECT) && inTransparentMode(MODE_TEMPLATE) }?
+             parameter_declaration_initialization |
+
+        // start of argument for return or throw statement
         { inMode(MODE_INIT | MODE_EXPECT) }?
              variable_declaration_initialization |
 
