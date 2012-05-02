@@ -3323,9 +3323,9 @@ general_operators { LocalMode lm(this); bool first = true; } :
         )
 ;
 
-rparen_operator { LocalMode lm(this); } :
+rparen_operator[bool markup = true] { LocalMode lm(this); } :
         {
-            if (isoption(parseoptions, OPTION_OPERATOR) && !inMode(MODE_END_ONLY_AT_RPAREN)) {
+            if (markup && isoption(parseoptions, OPTION_OPERATOR) && !inMode(MODE_END_ONLY_AT_RPAREN)) {
 
                 // end all elements at end of rule automatically
                 startNewMode(MODE_LOCAL);
@@ -3337,18 +3337,21 @@ rparen_operator { LocalMode lm(this); } :
         RPAREN
     ;
 
-rparen_general_operators[bool final = false] { bool isempty = getParen() == 0; } :
+rparen_general_operators[bool final = false] { bool isempty = getParen() == 0; bool markup = true; } :
         {
             if (isempty) {
 
                 // additional right parentheses indicates end of non-list modes
                 endDownToFirstMode(MODE_LIST | MODE_PREPROC | MODE_END_ONLY_AT_RPAREN);
 
+                // don't markup since not a normal operator
+                markup = false;
+
             } else
 
                 decParen();
         }
-        rparen_operator
+        rparen_operator[markup]
         {
             if (isempty) {
 
