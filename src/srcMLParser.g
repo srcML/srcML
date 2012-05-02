@@ -3344,8 +3344,6 @@ rparen_general_operators[bool final = false] { bool isempty = getParen() == 0; }
                 // additional right parentheses indicates end of non-list modes
                 endDownToFirstMode(MODE_LIST | MODE_PREPROC | MODE_END_ONLY_AT_RPAREN);
 
-                if (inMode(MODE_LIST) && inMode(MODE_FOR_INCREMENT))
-                    endCurrentMode(MODE_FOR_INCREMENT);
             } else
 
                 decParen();
