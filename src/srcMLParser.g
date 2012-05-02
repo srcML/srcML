@@ -491,7 +491,7 @@ start {} :
         // requires clause for C++0x
         requires_clause |
 
-        { !inTransparentMode(MODE_INTERNAL_END_PAREN) || inPrevMode(MODE_CONDITION) }? rparen[true] |
+        { !inTransparentMode(MODE_INTERNAL_END_PAREN) || inPrevMode(MODE_CONDITION) }? rparen[true,false] |
 
         // characters with special actions that usually end currently open elements
         { !inTransparentMode(MODE_INTERNAL_END_CURLY) }? block_end |
@@ -2043,43 +2043,6 @@ colon[bool final = false] { if (final) setFinalToken(); } :
         COLON
 ;
 
-rparen[bool final = false] { bool isempty = getParen() == 0; } :
-        {
-            if (isempty) {
-
-                // additional right parentheses indicates end of non-list modes
-                endDownToFirstMode(MODE_LIST | MODE_PREPROC | MODE_END_ONLY_AT_RPAREN);
-
-                if (inMode(MODE_LIST) && inMode(MODE_FOR_INCREMENT))
-                    endCurrentMode(MODE_FOR_INCREMENT);
-            } else
-
-                decParen();
-        }
-        RPAREN
-        {
-            if (isempty) {
-
-                if (inMode(MODE_CONDITION) && inMode(MODE_IF_COND)) {
-
-                    // end the condition
-                    endDownOverMode(MODE_CONDITION);
-
-                    // then part of the if statement (after the condition)
-                    startNewMode(MODE_STATEMENT | MODE_NEST | MODE_THEN);
-
-                    // start the then element
-                    startNoSkipElement(STHEN);
-                }
-
-                // end the single mode that started the list
-                // don't end more than one since they may be nested
-                if (inMode(MODE_LIST))
-                    endCurrentMode(MODE_LIST);
-            }
-        }
-;
-
 /*
   Condition contained in if/while/switch.
 
@@ -2620,7 +2583,7 @@ full_expression { LocalMode lm(this); } :
         comma |
 
         // right parentheses, unless we are in a pair of parentheses in an expression 
-        { !inTransparentMode(MODE_INTERNAL_END_PAREN) }? rparen |
+        { !inTransparentMode(MODE_INTERNAL_END_PAREN) }? rparen[false, false] |
 
         // argument mode (as part of call)
         { inMode(MODE_ARGUMENT) }? argument |
@@ -3337,7 +3300,7 @@ rparen_operator[bool markup = true] { LocalMode lm(this); } :
         RPAREN
     ;
 
-rparen_general_operators[bool final = false] { bool isempty = getParen() == 0; bool markup = true; } :
+rparen[bool final = false, bool markup = true] { bool isempty = getParen() == 0; } :
         {
             if (isempty) {
 
@@ -3492,7 +3455,7 @@ expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; } :
         guessing_endCurrentModeSafely[MODE_INTERNAL_END_PAREN]
 
         // treat as operator for operator markup
-        rparen_general_operators[false] |
+        rparen[false] |
 
         // left curly brace
         {
@@ -3675,7 +3638,7 @@ parameter_list { LocalMode lm(this); bool lastwasparam = false; bool foundparam 
         }
         // parameter list must include all possible parts since it is part of
         // function detection
-        LPAREN ({ foundparam = true; if (!lastwasparam) empty_element(SPARAMETER, !lastwasparam); lastwasparam = false; } comma | full_parameter { foundparam = lastwasparam = true; })* empty_element[SPARAMETER, !lastwasparam && foundparam] rparen
+        LPAREN ({ foundparam = true; if (!lastwasparam) empty_element(SPARAMETER, !lastwasparam); lastwasparam = false; } comma | full_parameter { foundparam = lastwasparam = true; })* empty_element[SPARAMETER, !lastwasparam && foundparam] rparen[false, false]
 ;
 
 empty_element[int element, bool cond] { LocalMode lm(this); } :
@@ -3695,7 +3658,7 @@ full_parameter {} :
 ;
 
 argument {} :
-        { getParen() == 0 }? rparen |
+        { getParen() == 0 }? rparen[false,false] |
         {
             // argument with nested expression
             startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
