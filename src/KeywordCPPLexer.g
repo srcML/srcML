@@ -140,6 +140,8 @@ KeywordCPPLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
 
         { "enum"          , ENUM          , LANGUAGE_ALL }, 
 
+        { "static"        , STATIC        , LANGUAGE_ALL }, 
+ 
         // operators and special characters
         { ")"             , RPAREN        , LANGUAGE_ALL }, 
 	    { ";"             , TERMINATE     , LANGUAGE_ALL }, 
@@ -188,9 +190,6 @@ KeywordCPPLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         { "asm"           , ASM           , LANGUAGE_C_FAMILY }, 
 
         { "goto"          , GOTO          , LANGUAGE_C_FAMILY }, 
-
-        { "static"        , STATIC        , LANGUAGE_C_FAMILY }, 
- 
 
         // add all C++ and Java specific keywords to the literals table
 
