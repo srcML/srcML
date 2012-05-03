@@ -21,7 +21,7 @@
 
   Comments:
 
-  This is an ANTRL grammar file for the main part of the srcML translator.
+  This is an ANTLR grammar file for the main part of the srcML translator.
   It is a mixture of ANTLR code with C++ code mixed in for the actions.
 
   The grammar is for the C++ language.  It is unlike typical C++ parsers for many
