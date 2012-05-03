@@ -129,6 +129,8 @@ header "post_include_hpp" {
 #include "Mode.hpp"
 #include "Options.hpp"
 
+#define ENTRY_DEBUG
+
 #define assertMode(m)
 
 enum DECLTYPE { NONE, VARIABLE, FUNCTION, CONSTRUCTOR, DESTRUCTOR, SINGLE_MACRO };
@@ -476,7 +478,7 @@ void endAllModes();
 
   Order of evaluation is important.
 */
-start {} :
+start { ENTRY_DEBUG } :
 
         COMMENT_TEXT |
 
@@ -532,7 +534,7 @@ catch[...] {
 /*
   context-free grammar statements
 */
-cfg {} :
+cfg { ENTRY_DEBUG } :
 
         // conditional statements
         if_statement | else_statement | switch_statement | switch_case | switch_default |
@@ -576,7 +578,7 @@ cfg {} :
   can start with a name which leaves it ambiguous which to choose.
 */
 statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; int fla = 0;
-        int type_count = 0; DECLTYPE decl_type = NONE; CALLTYPE type = NOCALL; } :
+        int type_count = 0; DECLTYPE decl_type = NONE; CALLTYPE type = NOCALL; ENTRY_DEBUG } :
 
         // class forms for class declarations/definitions as opposed to part of a declaration types
         // must be before checking access_specifier_region
@@ -655,7 +657,7 @@ look_past[int skiptoken] returns [int token] {
 }:;
 
 // functions
-function[int token, int type_count] { /* TokenPosition tp; */} :
+function[int token, int type_count] { /* TokenPosition tp; */ENTRY_DEBUG } :
 		{
             // function definitions have a "nested" block statement
             startNewMode(MODE_STATEMENT);
@@ -726,10 +728,10 @@ perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
 
     inputState->guessing--;
     rewind(start);
-} :
+ENTRY_DEBUG } :
 ;
 
-call_check[int& postnametoken, int& argumenttoken, int& postcalltoken] {} :
+call_check[int& postnametoken, int& argumenttoken, int& postcalltoken] { ENTRY_DEBUG } :
 
         // detect name, which may be name of macro or even an expression
         function_identifier
@@ -752,7 +754,7 @@ call_check[int& postnametoken, int& argumenttoken, int& postcalltoken] {} :
        )
 ;
 
-call_check_paren_pair[int& argumenttoken] { bool name = false; } :
+call_check_paren_pair[int& argumenttoken] { bool name = false; ENTRY_DEBUG } :
         LPAREN
 
         // record token after the start of the argument list
@@ -787,7 +789,7 @@ markend[int& token] { token = LA(1); } :
 /*
   while statement, or while part of do statement
 */
-while_statement { setFinalToken(); } :
+while_statement { setFinalToken(); ENTRY_DEBUG } :
         {
             // statement with nested statement (after condition)
             startNewMode(MODE_STATEMENT | MODE_NEST);
@@ -804,7 +806,7 @@ while_statement { setFinalToken(); } :
 /*
  do while statement
 */
-do_statement { setFinalToken(); } : 
+do_statement { setFinalToken(); ENTRY_DEBUG } : 
         {
             // statement with nested statement (after condition)
             // set to top mode so that end of block will
@@ -824,7 +826,7 @@ do_statement { setFinalToken(); } :
 /*
   while part of do statement
 */
-do_while { setFinalToken(); } :
+do_while { setFinalToken(); ENTRY_DEBUG } :
         {
             // mode for do statement is in top mode so that
             // end of the block will not end the statement
@@ -839,7 +841,7 @@ do_while { setFinalToken(); } :
 /*
   start of for statement
 */
-for_statement { setFinalToken(); } :
+for_statement { setFinalToken(); ENTRY_DEBUG } :
         {
             // statement with nested statement after the for group
             startNewMode(MODE_STATEMENT | MODE_NEST);
@@ -857,7 +859,7 @@ for_statement { setFinalToken(); } :
 /*
   start of for group, i.e., initialization, test, increment
 */
-for_group { setFinalToken(); } :
+for_group { setFinalToken(); ENTRY_DEBUG } :
         {
             // start the for group mode that will end at the next matching
             // parentheses
@@ -873,7 +875,7 @@ for_group { setFinalToken(); } :
 /*
   for parameter list initialization
 */
-for_initialization_action {} :
+for_initialization_action { ENTRY_DEBUG } :
         {
             assertMode(MODE_FOR_INITIALIZATION | MODE_EXPECT);
 
@@ -887,7 +889,7 @@ for_initialization_action {} :
         }
     ;
 
-for_initialization { int type_count = 0; int fla = 0; int secondtoken = 0; DECLTYPE decl_type = NONE; } :
+for_initialization { int type_count = 0; int fla = 0; int secondtoken = 0; DECLTYPE decl_type = NONE; ENTRY_DEBUG } :
         for_initialization_action
         (
             // explicitly check for a variable declaration since it can easily
@@ -905,7 +907,7 @@ for_initialization { int type_count = 0; int fla = 0; int secondtoken = 0; DECLT
   Statement for the declaration of a variable or group of variables
   in a for initialization
 */
-for_initialization_variable_declaration[int type_count] {} :
+for_initialization_variable_declaration[int type_count] { ENTRY_DEBUG } :
         {
             // start a new mode for the expression which will end
             // inside of the terminate
@@ -920,7 +922,7 @@ for_initialization_variable_declaration[int type_count] {} :
 /*
   for parameter list condition
 */
-for_condition_action {} :
+for_condition_action { ENTRY_DEBUG } :
         {
             assertMode(MODE_FOR_CONDITION | MODE_EXPECT);
 
@@ -934,7 +936,7 @@ for_condition_action {} :
         }
     ;
 
-for_condition {} :
+for_condition { ENTRY_DEBUG } :
         for_condition_action
 
         // non-empty condition
@@ -944,7 +946,7 @@ for_condition {} :
 /*
   increment in for parameter list
 */
-for_increment {} :
+for_increment { ENTRY_DEBUG } :
         { 
             assertMode(MODE_FOR_INCREMENT | MODE_EXPECT);
 
@@ -968,7 +970,7 @@ for_increment {} :
  if statement is first processed here.  Then prepare for a condition.  The end of the
  condition will setup for the then part of the statement.  The end of the then looks
  ahead for an else.  If so, it ends the then part.  If not, it ends the entire statement.*/
-if_statement { setFinalToken(); } :
+if_statement { setFinalToken(); ENTRY_DEBUG } :
         {
             // statement with nested statement
             // detection of else
@@ -992,7 +994,7 @@ if_statement { setFinalToken(); } :
  else is detected on its own, and as part of termination (semicolon or
  end of a block
 */
-else_statement { setFinalToken(); } :
+else_statement { setFinalToken(); ENTRY_DEBUG } :
         {
             // treat as a statement with a nested statement
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_ELSE);
@@ -1006,7 +1008,7 @@ else_statement { setFinalToken(); } :
 /*
  start of switch statement
 */
-switch_statement { setFinalToken(); } :
+switch_statement { setFinalToken(); ENTRY_DEBUG } :
         {
             // statement with nested block
             startNewMode(MODE_STATEMENT | MODE_NEST);
@@ -1055,7 +1057,7 @@ section_entry_action :
 /*
  Yes, case isn't really a statement, but it is treated as one
 */
-switch_case { setFinalToken(); } :
+switch_case { setFinalToken(); ENTRY_DEBUG } :
         // start a new section
         section_entry_action
         {
@@ -1068,7 +1070,7 @@ switch_case { setFinalToken(); } :
         CASE 
 ;
 
-switch_default { setFinalToken(); } :
+switch_default { setFinalToken(); ENTRY_DEBUG } :
         // start a new section
         section_entry_action
         {
@@ -1084,7 +1086,7 @@ switch_default { setFinalToken(); } :
 /*
   start of return statement
 */
-import_statement { setFinalToken(); } :
+import_statement { setFinalToken(); ENTRY_DEBUG } :
         {
             // statement with a possible expression
             startNewMode(MODE_STATEMENT | MODE_VARIABLE_NAME | MODE_EXPECT);
@@ -1098,7 +1100,7 @@ import_statement { setFinalToken(); } :
 /*
   start of package statement
 */
-package_statement { setFinalToken(); } :
+package_statement { setFinalToken(); ENTRY_DEBUG } :
         {
             // statement with a possible expression
             startNewMode(MODE_STATEMENT | MODE_VARIABLE_NAME | MODE_EXPECT);
@@ -1112,7 +1114,7 @@ package_statement { setFinalToken(); } :
 /*
   start of return statement
 */
-return_statement { setFinalToken(); } :
+return_statement { setFinalToken(); ENTRY_DEBUG } :
         {
             // statement with a possible expression
             startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
@@ -1126,7 +1128,7 @@ return_statement { setFinalToken(); } :
 /*
   start of break statement
 */
-break_statement { setFinalToken(); } :
+break_statement { setFinalToken(); ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_STATEMENT);
@@ -1140,7 +1142,7 @@ break_statement { setFinalToken(); } :
 /*
   start of continue statement
 */
-continue_statement { setFinalToken(); } :
+continue_statement { setFinalToken(); ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_STATEMENT);
@@ -1154,7 +1156,7 @@ continue_statement { setFinalToken(); } :
 /*
   start of goto statement
 */
-goto_statement { setFinalToken(); } :
+goto_statement { setFinalToken(); ENTRY_DEBUG } :
         {
             // statement with an expected label name
             // label name is a subset of variable names
@@ -1169,7 +1171,7 @@ goto_statement { setFinalToken(); } :
 /*
   Complete assembly declaration statement
 */
-asm_declaration {} : 
+asm_declaration { ENTRY_DEBUG } : 
         {
             // statement
             startNewMode(MODE_STATEMENT);
@@ -1189,11 +1191,11 @@ asm_declaration {} :
 
  Past name handled as expression
 */
-extern_definition_header {} :
+extern_definition_header { ENTRY_DEBUG } :
         EXTERN string_literal
 ;
 
-extern_definition {} :
+extern_definition { ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_STATEMENT | MODE_EXTERN);
@@ -1207,7 +1209,7 @@ extern_definition {} :
 /*
   Name of extern section
 */
-extern_name {} :
+extern_name { ENTRY_DEBUG } :
         string_literal
         {
             // nest a block inside the namespace
@@ -1223,7 +1225,7 @@ extern_name {} :
 
  Past name handled as expression
 */
-namespace_definition { setFinalToken(); } :
+namespace_definition { setFinalToken(); ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_STATEMENT | MODE_NAMESPACE | MODE_VARIABLE_NAME);
@@ -1234,7 +1236,7 @@ namespace_definition { setFinalToken(); } :
         NAMESPACE
 ;
 
-namespace_alias { setFinalToken(); } :
+namespace_alias { setFinalToken(); ENTRY_DEBUG } :
 
         EQUAL 
         {
@@ -1244,7 +1246,7 @@ namespace_alias { setFinalToken(); } :
         }
 ;
 
-namespace_block {} :
+namespace_block { ENTRY_DEBUG } :
         {
             // nest a block inside the namespace
             setMode(MODE_NEST | MODE_STATEMENT);
@@ -1255,7 +1257,7 @@ namespace_block {} :
 /*
   start of namespace using directive
 */
-namespace_directive { setFinalToken(); } :
+namespace_directive { setFinalToken(); ENTRY_DEBUG } :
         {
             // statement with an expected namespace name after the keywords
             startNewMode(MODE_STATEMENT | MODE_FUNCTION_NAME);
@@ -1271,7 +1273,7 @@ namespace_directive { setFinalToken(); } :
 /*
   class structures and unions
 */
-class_struct_union[int token, int place] {} :
+class_struct_union[int token, int place] { ENTRY_DEBUG } :
 
         { token == LCURLY && place == INTERFACE }?
         interface_definition |
@@ -1298,12 +1300,12 @@ class_struct_union[int token, int place] {} :
 /*
   class structures and unions
 */
-class_struct_union_check[int& finaltoken, int& othertoken] { finaltoken = 0; othertoken = 0; } :
+class_struct_union_check[int& finaltoken, int& othertoken] { finaltoken = 0; othertoken = 0; ENTRY_DEBUG } :
 
         (java_specifier_mark)* markend[othertoken] (CLASS | STRUCT | UNION | INTERFACE) class_header check_end[finaltoken]
 ;
 
-check_end[int& token] { /* setFinalToken(); // problem with class */ token = LA(1); } :
+check_end[int& token] { /* setFinalToken(); // problem with class */ token = LA(1); ENTRY_DEBUG } :
         LCURLY | TERMINATE | COLON | COMMA | RPAREN
 ;
 
@@ -1524,7 +1526,7 @@ class_default_access_action[int access_token] :
 /*
  header (part before block) of class (or struct or union)
 */
-class_header {} :
+class_header { ENTRY_DEBUG } :
 
         (macro_call_check class_header_base LCURLY)=>
            macro_call class_header_base |
@@ -1535,7 +1537,7 @@ class_header {} :
 /*
  header (part before block) of class (or struct or union)
 */
-class_header_base { bool insuper = false; } :
+class_header_base { bool insuper = false; ENTRY_DEBUG } :
 
         complex_name[true] (
 
@@ -1555,7 +1557,7 @@ class_header_base { bool insuper = false; } :
 /*
   Each instance of an access specifier defines a region in the class
 */
-access_specifier_region {} : 
+access_specifier_region { ENTRY_DEBUG } : 
         section_entry_action
         {
             // mark access regions to detect statements that only occur in them
@@ -1587,7 +1589,7 @@ access_specifier_region {} :
 
   Marks the start of a block.  End of the block is handled in right curly brace
 */
-lcurly {} :
+lcurly { ENTRY_DEBUG } :
         {
             // special end for conditions
             if (inTransparentMode(MODE_CONDITION)) {
@@ -1625,7 +1627,7 @@ lcurly {} :
 
   Marks the start of a block.  End of the block is handled in right curly brace
 */
-lcurly_base { setFinalToken(); } :
+lcurly_base { setFinalToken(); ENTRY_DEBUG } :
         {  
             // need to pass on class mode to detect constructors for Java
             bool inclassmode = inLanguage(LANGUAGE_JAVA_FAMILY) && inMode(MODE_CLASS);
@@ -1644,7 +1646,7 @@ lcurly_base { setFinalToken(); } :
 /*
   Marks the end of a block.  Also indicates the end of some open elements.
 */
-block_end {} :
+block_end { ENTRY_DEBUG } :
         // handling of if with then block followed by else
         // handle the block, however scope of then completion stops at if
         rcurly
@@ -1689,7 +1691,7 @@ block_end {} :
 
   Not used directly, but called by block_end
 */
-rcurly { setFinalToken(); } :
+rcurly { setFinalToken(); ENTRY_DEBUG } :
         {
             // end any elements inside of the block
             endDownToMode(MODE_TOP);
@@ -1712,7 +1714,7 @@ rcurly { setFinalToken(); } :
 /*
   End any open expressions, match, then close any open elements
 */
-terminate[bool final = false] { if(final) setFinalToken(); } :
+terminate[bool final = false] { if(final) setFinalToken(); ENTRY_DEBUG } :
 
         {
             if (inMode(MODE_IGNORE_TERMINATE)) {
@@ -1728,7 +1730,7 @@ terminate[bool final = false] { if(final) setFinalToken(); } :
         terminate_post
 ;
 
-terminate_token { LocalMode lm(this); } :
+terminate_token { LocalMode lm(this); ENTRY_DEBUG } :
         {
             if (inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_DECL) && !inMode(MODE_IF)) {
 
@@ -1740,7 +1742,7 @@ terminate_token { LocalMode lm(this); } :
         TERMINATE
     ;
 
-terminate_pre {} :
+terminate_pre { ENTRY_DEBUG } :
         {
             // end any elements inside of the statement
             if (!inMode(MODE_TOP | MODE_NEST | MODE_STATEMENT))
@@ -1749,7 +1751,7 @@ terminate_pre {} :
         }
 ;
 
-terminate_post {} :
+terminate_post { ENTRY_DEBUG } :
         {
             // end all statements this statement is nested in
             // special case when ending then of if statement
@@ -1775,7 +1777,7 @@ terminate_post {} :
   Special case:  else with no matching if.  This occurs with a) a single else, or more likely with b) an
   else in a preprocessor #if .. #else ... #endif construct (actually, very common).
 */
-else_handling {} :
+else_handling { ENTRY_DEBUG } :
         {
                 // record the current size of the top of the cppmode stack to detect
                 // any #else or #endif in the consumeSkippedTokens
@@ -1850,7 +1852,7 @@ else_handling {} :
 /*
   Handling when mid-statement
 */
-statement_part { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE decl_type = NONE; CALLTYPE type = NOCALL; } :
+statement_part { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE decl_type = NONE; CALLTYPE type = NOCALL; ENTRY_DEBUG } :
 
         { inMode(MODE_EAT_TYPE) }?
             type_identifier
@@ -2001,7 +2003,7 @@ statement_part { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE decl
              extern_name
 ;
 
-lparen_marked { LocalMode lm(this); } :
+lparen_marked { LocalMode lm(this); ENTRY_DEBUG } :
         {
             incParen();
 
@@ -2034,7 +2036,7 @@ comma[bool final = false] { if (final) setFinalToken(); }:
         COMMA
 ;
 
-colon[bool final = false] { if (final) setFinalToken(); } :
+colon[bool final = false] { if (final) setFinalToken(); ENTRY_DEBUG } :
         {
             if (inTransparentMode(MODE_TOP_SECTION))
                 // colon ends the current item in a list
@@ -2050,7 +2052,7 @@ colon[bool final = false] { if (final) setFinalToken(); } :
   Starts condition mode and prepares to handle embedded expression.
   End of the element is handled in condition_rparen.
 */
-condition { setFinalToken(); } :
+condition { setFinalToken(); ENTRY_DEBUG } :
         {
             assertMode(MODE_CONDITION | MODE_EXPECT);
 
@@ -2066,11 +2068,11 @@ condition { setFinalToken(); } :
 
 /* Function */
 
-function_pointer_name_grammar {} :
+function_pointer_name_grammar { ENTRY_DEBUG } :
         LPAREN function_pointer_name_base RPAREN
 ;
 
-function_pointer_name_base {} :
+function_pointer_name_base { ENTRY_DEBUG } :
 
         // special case for function pointer names that don't have '*'
         (complex_name[true] RPAREN)=>
@@ -2087,7 +2089,7 @@ function_pointer_name_base {} :
   Everything except the ";" of a function declaration or the block of a
   function definition
 */
-function_header[int type_count] {} : 
+function_header[int type_count] { ENTRY_DEBUG } : 
 
         // no return value functions:  casting operator method and main
         { type_count == 0 }? function_identifier
@@ -2099,7 +2101,7 @@ function_header[int type_count] {} :
 /*
 Guessing mode only
 */
-function_tail {} :
+function_tail { ENTRY_DEBUG } :
         // at most only one throwlist expected.  0-many is more efficient
         (options { greedy = true; } :
 
@@ -2158,7 +2160,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
              DECLTYPE& type,
              bool inparam     /* are we in a parameter */
         ] { token = 0; fla = 0; type_count = 0; int specifier_count = 0; isdestructor = false;
-        type = NONE; bool foundpure = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; bool endbracket = false; } :
+        type = NONE; bool foundpure = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; bool endbracket = false; ENTRY_DEBUG } :
 
         // main pattern for variable declarations, and most function declaration/definitions.
         // trick is to look for function declarations/definitions, and along the way record
@@ -2271,29 +2273,29 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
         set_type[type, CONSTRUCTOR, !saveisdestructor && isconstructor]
 ;
 
-//monitor { std::cerr << namestack[0] << " " << namestack[1] << std::endl; } :;
+//monitor { std::cerr << namestack[0] << " " << namestack[1] << std::endl; ENTRY_DEBUG } :;
 
-//other[bool flag] { std::cerr << flag << std::endl; } :;
+//other[bool flag] { std::cerr << flag << std::endl; ENTRY_DEBUG } :;
 
-throw_exception[bool cond = true] { if (cond) throw antlr::RecognitionException(); } :;
+throw_exception[bool cond = true] { if (cond) throw antlr::RecognitionException(); ENTRY_DEBUG } :;
 
-set_type[DECLTYPE& name, DECLTYPE value, bool result = true] { if (result) name = value; } :;
+set_type[DECLTYPE& name, DECLTYPE value, bool result = true] { if (result) name = value; ENTRY_DEBUG } :;
 
-//trace[const char*s ] { std::cerr << s << std::endl; } :;
+//trace[const char*s ] { std::cerr << s << std::endl; ENTRY_DEBUG } :;
 
-//traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
+//traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; ENTRY_DEBUG } :;
 
-set_int[int& name, int value, bool result = true] { if (result) name = value; } :;
+set_int[int& name, int value, bool result = true] { if (result) name = value; ENTRY_DEBUG } :;
 
-set_bool[bool& variable, bool value = true] { variable = value; } :;
+set_bool[bool& variable, bool value = true] { variable = value; ENTRY_DEBUG } :;
 
 /*
-message[const char* s] { std::cerr << s << std::endl; } :;
+message[const char* s] { std::cerr << s << std::endl; ENTRY_DEBUG } :;
 
-message_int[const char* s, int n]  { std::cerr << s << n << std::endl; } :;
+message_int[const char* s, int n]  { std::cerr << s << n << std::endl; ENTRY_DEBUG } :;
 */
 
-function_rest[int& fla] {} :
+function_rest[int& fla] { ENTRY_DEBUG } :
 
         eat_optional_macro_call
 
@@ -2303,7 +2305,7 @@ function_rest[int& fla] {} :
 /*
   Type of a function.  Includes specifiers
 */
-function_type[int type_count] {} :
+function_type[int type_count] { ENTRY_DEBUG } :
         {
             // start a mode for the type that will end in this grammar rule
             startNewMode(MODE_EAT_TYPE);
@@ -2317,7 +2319,7 @@ function_type[int type_count] {} :
         update_typecount
 ;
 
-update_typecount {} :
+update_typecount { ENTRY_DEBUG } :
         {
             decTypeCount();
 
@@ -2328,7 +2330,7 @@ update_typecount {} :
         }
 ;
 
-update_var_typecount {} :
+update_var_typecount { ENTRY_DEBUG } :
         {
             decTypeCount();
 
@@ -2342,13 +2344,13 @@ update_var_typecount {} :
 /*
   Type of a function.  Includes specifiers
 */
-function_type_check[int& type_count] { type_count = 1; } :
+function_type_check[int& type_count] { type_count = 1; ENTRY_DEBUG } :
 
         lead_type_identifier
         ( { inLanguage(LANGUAGE_JAVA_FAMILY) || LA(1) != LBRACKET }? type_identifier_count[type_count])*
 ;
 
-type_identifier_count[int& type_count] { ++type_count; } :
+type_identifier_count[int& type_count] { ++type_count; ENTRY_DEBUG } :
 
          // overloaded parentheses operator
         { LA(1) == OPERATOR }?
@@ -2357,10 +2359,10 @@ type_identifier_count[int& type_count] { ++type_count; } :
         type_identifier | MAIN
 ;
 
-deduct[int& type_count] { --type_count; } :
+deduct[int& type_count] { --type_count; ENTRY_DEBUG } :
 ;
 
-eat_type[int count] { if (count <= 0) return; } :
+eat_type[int count] { if (count <= 0) return; ENTRY_DEBUG } :
 
         type_identifier
         eat_type[count - 1]
@@ -2369,7 +2371,7 @@ eat_type[int count] { if (count <= 0) return; } :
 /*
   throw list for a function
 */
-throw_list {} :
+throw_list { ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
             startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_EXPECT);
@@ -2392,7 +2394,7 @@ throw_list {} :
 /*
   throw list for a function
 */
-complete_throw_list {} :
+complete_throw_list { ENTRY_DEBUG } :
         THROW paren_pair | THROWS ( options { greedy = true; } : complex_name_java[true] | COMMA)*
 ;
 
@@ -2400,7 +2402,7 @@ complete_throw_list {} :
    type identifier
 
 */
-pure_lead_type_identifier {} :
+pure_lead_type_identifier { ENTRY_DEBUG } :
 
         auto_keyword |
 
@@ -2438,7 +2440,7 @@ pure_lead_type_identifier {} :
 //        struct_union_definition[SUNION] |
 ;
 
-pure_lead_type_identifier_no_specifiers {} :
+pure_lead_type_identifier_no_specifiers { ENTRY_DEBUG } :
 
         // class/struct/union before a name in a type, e.g., class A f();
         CLASS | STRUCT | UNION |
@@ -2450,7 +2452,7 @@ pure_lead_type_identifier_no_specifiers {} :
         enum_definition_whole
 ;
 
-java_specifier_mark { LocalMode lm(this); } :
+java_specifier_mark { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_LOCAL);
@@ -2465,7 +2467,7 @@ java_specifier_mark { LocalMode lm(this); } :
    type identifier
 
 */
-lead_type_identifier {} :
+lead_type_identifier { ENTRY_DEBUG } :
 
 //        java_specifier_mark |
 
@@ -2477,7 +2479,7 @@ lead_type_identifier {} :
         pure_lead_type_identifier
 ;
 
-type_identifier {} :
+type_identifier { ENTRY_DEBUG } :
 
         // any identifier that can appear first can appear later
         lead_type_identifier |
@@ -2485,7 +2487,7 @@ type_identifier {} :
         non_lead_type_identifier
 ;
 
-non_lead_type_identifier { bool iscomplex = false; } :
+non_lead_type_identifier { bool iscomplex = false; ENTRY_DEBUG } :
 
         { inLanguage(LANGUAGE_C_FAMILY) }? multops |
 
@@ -2506,7 +2508,7 @@ balanced_parentheses :
 /*
    Name of a function
 */
-function_identifier {} :
+function_identifier { ENTRY_DEBUG } :
 
         // typical name
         complex_name[true] |
@@ -2517,7 +2519,7 @@ function_identifier {} :
         function_pointer_name_grammar
 ;
 
-function_identifier_main { LocalMode lm(this); } :
+function_identifier_main { LocalMode lm(this); ENTRY_DEBUG } :
         // special cases for main
         {
             // end all started elements in this rule
@@ -2533,7 +2535,7 @@ function_identifier_main { LocalMode lm(this); } :
 /*
   overloaded operator name
 */
-overloaded_operator { LocalMode lm(this); } :
+overloaded_operator { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // end all started elements in this rule
             startNewMode(MODE_LOCAL);
@@ -2551,7 +2553,7 @@ overloaded_operator { LocalMode lm(this); } :
         )
 ;
 
-variable_identifier_array_grammar_sub[bool& iscomplex] { LocalMode lm(this); } :
+variable_identifier_array_grammar_sub[bool& iscomplex] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
@@ -2572,7 +2574,7 @@ variable_identifier_array_grammar_sub[bool& iscomplex] { LocalMode lm(this); } :
   Full, complete expression matched all at once (no stream).
   Colon matches range(?) for bits.
 */
-full_expression { LocalMode lm(this); } :
+full_expression { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
@@ -2598,7 +2600,7 @@ full_expression { LocalMode lm(this); } :
    A variable name in an expression.  Includes array names, but not
    function calls
 */
-variable_identifier { LocalMode lm(this); bool iscomplex = false; TokenPosition tp; } :
+variable_identifier { LocalMode lm(this); bool iscomplex = false; TokenPosition tp; ENTRY_DEBUG } :
         {
             // local mode that is automatically ended by leaving this function
             startNewMode(MODE_LOCAL);
@@ -2630,7 +2632,7 @@ variable_identifier { LocalMode lm(this); bool iscomplex = false; TokenPosition 
 /*
   Name including template argument list
 */
-simple_name_optional_template[bool marked] { LocalMode lm(this); TokenPosition tp; } :
+simple_name_optional_template[bool marked] { LocalMode lm(this); TokenPosition tp; ENTRY_DEBUG } :
         {
             if (marked) {
                 // local mode that is automatically ended by leaving this function
@@ -2662,7 +2664,7 @@ simple_name_optional_template[bool marked] { LocalMode lm(this); TokenPosition t
 
   preprocessor tokens that can also be used as identifiers
 */
-identifier[bool marked = false] { LocalMode lm(this); } :
+identifier[bool marked = false] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             if (marked) {
                 // local mode that is automatically ended by leaving this function
@@ -2677,7 +2679,7 @@ identifier[bool marked = false] { LocalMode lm(this); } :
 /*
   identifier name marked with name element
 */
-complex_name[bool marked] { LocalMode lm(this); TokenPosition tp; /* TokenPosition tp2 = { 0, 0 };*/ bool iscomplex_name = false; namestack[0] = ""; namestack[1] = ""; bool founddestop = false; } :
+complex_name[bool marked] { LocalMode lm(this); TokenPosition tp; /* TokenPosition tp2 = { 0, 0 };*/ bool iscomplex_name = false; namestack[0] = ""; namestack[1] = ""; bool founddestop = false; ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_JAVA_FAMILY) }? complex_name_java[marked] |
         (
         {
@@ -2721,7 +2723,7 @@ complex_name[bool marked] { LocalMode lm(this); TokenPosition tp; /* TokenPositi
 /*
   identifier name marked with name element
 */
-complex_name_java[bool marked] { LocalMode lm(this); TokenPosition tp; bool iscomplex_name = false; } :
+complex_name_java[bool marked] { LocalMode lm(this); TokenPosition tp; bool iscomplex_name = false; ENTRY_DEBUG } :
         {
             if (marked) {
                 // local mode that is automatically ended by leaving this function
@@ -2750,7 +2752,7 @@ complex_name_java[bool marked] { LocalMode lm(this); TokenPosition tp; bool isco
 /*
   sequences of "::" and names
 */
-name_tail[bool& iscomplex, bool marked] {} :
+name_tail[bool& iscomplex, bool marked] { ENTRY_DEBUG } :
 
         // "a::" will cause an exception to be thrown
         ( options { greedy = true; } : 
@@ -2769,7 +2771,7 @@ catch[antlr::RecognitionException] {
 /*
   Specifier for a function
 */
-function_specifier { LocalMode lm(this); } :
+function_specifier { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_LOCAL);
@@ -2788,7 +2790,7 @@ function_specifier { LocalMode lm(this); } :
 /*
   Specifiers for functions, methods, and variables
 */
-standard_specifiers { LocalMode lm(this); } :
+standard_specifiers { LocalMode lm(this); ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_JAVA_FAMILY) }? 
             java_specifier_mark |
 
@@ -2801,7 +2803,7 @@ standard_specifiers { LocalMode lm(this); } :
         (VIRTUAL | EXTERN | INLINE | EXPLICIT | STATIC | FRIEND)
 ;
 
-auto_keyword { LocalMode lm(this); } :
+auto_keyword { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // local mode that is automatically ended by leaving this function
             startNewMode(MODE_LOCAL);
@@ -2812,7 +2814,7 @@ auto_keyword { LocalMode lm(this); } :
 ;
 
 // constructor definition
-constructor_declaration {} :
+constructor_declaration { ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_STATEMENT);
@@ -2824,7 +2826,7 @@ constructor_declaration {} :
 ;              
 
 // constructor definition
-constructor_definition {} :
+constructor_definition { ENTRY_DEBUG } :
         {
             // statement with nested block
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_STATEMENT);
@@ -2838,7 +2840,7 @@ constructor_definition {} :
 ;
 
 // constructor definition
-constructor_header {} :
+constructor_header { ENTRY_DEBUG } :
 
         (specifier_explicit | { inLanguage(LANGUAGE_JAVA_FAMILY) }? java_specifier_mark)*
 
@@ -2848,7 +2850,7 @@ constructor_header {} :
 ;
 
 // member initialization list of constructor
-member_initialization_list {} :
+member_initialization_list { ENTRY_DEBUG } :
         {
             // handle member initialization list as a list of calls
             startNewMode(MODE_LIST | MODE_CALL);
@@ -2858,13 +2860,13 @@ member_initialization_list {} :
         COLON
 ;
 
-mark_namestack { namestack[1] = namestack[0]; namestack[0] = LT(1)->getText(); } :;
+mark_namestack { namestack[1] = namestack[0]; namestack[0] = LT(1)->getText(); ENTRY_DEBUG } :;
 
-identifier_stack[std::string s[]] { s[1] = s[0]; s[0] = LT(1)->getText(); } :
+identifier_stack[std::string s[]] { s[1] = s[0]; s[0] = LT(1)->getText(); ENTRY_DEBUG } :
         identifier[true]
 ;
 
-specifier_explicit { LocalMode lm(this); } :
+specifier_explicit { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // local mode that is automatically ended by leaving this function
             startNewMode(MODE_LOCAL);
@@ -2875,7 +2877,7 @@ specifier_explicit { LocalMode lm(this); } :
 ;
 
 // destructor definition
-destructor_definition {} :
+destructor_definition { ENTRY_DEBUG } :
         {
             // statement with nested block
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_STATEMENT);
@@ -2887,7 +2889,7 @@ destructor_definition {} :
 ;
 
 // destructor declaration
-destructor_declaration {} :
+destructor_declaration { ENTRY_DEBUG } :
         {
             // just a statement
             startNewMode(MODE_STATEMENT);
@@ -2900,7 +2902,7 @@ destructor_declaration {} :
 
 
 // destructor header
-destructor_header {} :
+destructor_header { ENTRY_DEBUG } :
 
         (specifier_explicit)*
 
@@ -2915,7 +2917,7 @@ destructor_header {} :
 /*
   call  function call, macro, etc.
 */
-call {} :
+call { ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
             startNewMode(MODE_ARGUMENT | MODE_LIST);
@@ -2931,7 +2933,7 @@ call {} :
 /*
  Argument list for a call, e.g., to a function
 */
-call_argument_list {} :
+call_argument_list { ENTRY_DEBUG } :
         {
             // list of parameters
             setMode(MODE_EXPECT | MODE_LIST | MODE_INTERNAL_END_PAREN | MODE_END_ONLY_AT_RPAREN);
@@ -2948,7 +2950,7 @@ call_argument_list {} :
   function call, macro, etc.
 */
 
-macro_call_check {} :
+macro_call_check { ENTRY_DEBUG } :
         NAME optional_paren_pair
 ;
 
@@ -2978,9 +2980,9 @@ eat_optional_macro_call {
     // when successfull, eat the macro
     if (success)
         macro_call();
-} :;
+ENTRY_DEBUG } :;
 
-macro_call {} :
+macro_call { ENTRY_DEBUG } :
         macro_call_inner
         {
             if (inMode(MODE_THEN) && LA(1) == ELSE)
@@ -2988,7 +2990,7 @@ macro_call {} :
         }
     ;
 
-macro_call_inner { LocalMode lm(this); } :
+macro_call_inner { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // start a mode for the macro that will end after the argument list
             startNewMode(MODE_STATEMENT | MODE_TOP);
@@ -3030,7 +3032,7 @@ catch[antlr::RecognitionException] {
             emptyElement(SERROR_PARSE);
 }
 
-macro_call_contents {} :
+macro_call_contents { ENTRY_DEBUG } :
         {
             LocalMode lm(this);
 
@@ -3064,7 +3066,7 @@ macro_call_contents {} :
         }
 ;
 
-try_statement {} :
+try_statement { ENTRY_DEBUG } :
         {
             // treat try block as nested block statement
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_STATEMENT);
@@ -3075,7 +3077,7 @@ try_statement {} :
         TRY
 ;
 
-catch_statement {} :
+catch_statement { ENTRY_DEBUG } :
         {
             // treat catch block as nested block statement
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_STATEMENT);
@@ -3089,7 +3091,7 @@ catch_statement {} :
         CATCH LPAREN
 ;
 
-finally_statement {} :
+finally_statement { ENTRY_DEBUG } :
         {
             // treat catch block as nested block statement
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_STATEMENT);
@@ -3100,7 +3102,7 @@ finally_statement {} :
         FINALLY
 ;
 
-throw_statement {} :
+throw_statement { ENTRY_DEBUG } :
         {
             // statement with expected expression
             startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
@@ -3111,7 +3113,7 @@ throw_statement {} :
         THROW
 ;
 
-expression_statement[CALLTYPE type = NOCALL] {} :
+expression_statement[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
         {
             // statement with an embedded expression
             startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
@@ -3125,7 +3127,7 @@ expression_statement[CALLTYPE type = NOCALL] {} :
 /*
   Statement for the declaration of a variable or group of variables
 */
-variable_declaration_statement[int type_count] {} :
+variable_declaration_statement[int type_count] { ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_STATEMENT);
@@ -3147,7 +3149,7 @@ variable_declaration_statement[int type_count] {} :
 /*
   Statement for the declaration of a variable or group of variables
 */
-short_variable_declaration {} :
+short_variable_declaration { ENTRY_DEBUG } :
         {
             // declaration
             startNewMode(MODE_LOCAL);
@@ -3169,7 +3171,7 @@ short_variable_declaration {} :
     int a, b;
     int a = b, c = d;
 */
-variable_declaration[int type_count] {} :
+variable_declaration[int type_count] { ENTRY_DEBUG } :
         {
             // variable declarations may be in a list
             startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
@@ -3181,7 +3183,7 @@ variable_declaration[int type_count] {} :
   A simple variable declaration of a single variable including the type,
   name, and initialization block.
 */
-variable_declaration_type[int type_count] {} :
+variable_declaration_type[int type_count] { ENTRY_DEBUG } :
         {
             // start a mode for the type that will end in this grammar rule
             startNewMode(MODE_EAT_VAR_TYPE);
@@ -3198,7 +3200,7 @@ variable_declaration_type[int type_count] {} :
 /*
   Variable declaration name and optional initialization
 */
-variable_declaration_nameinit {} :
+variable_declaration_nameinit { ENTRY_DEBUG } :
         variable_identifier
         {
             // expect a possible initialization
@@ -3209,7 +3211,7 @@ variable_declaration_nameinit {} :
 /*
   Initialization of a variable in a declaration.  Does not include the equal sign.
 */
-function_pointer_initialization {} :
+function_pointer_initialization { ENTRY_DEBUG } :
 
         EQUAL
         {
@@ -3222,7 +3224,7 @@ function_pointer_initialization {} :
         (options { greedy = true; } : expression)*
 ;
 
-variable_declaration_initialization {} :
+variable_declaration_initialization { ENTRY_DEBUG } :
 
         EQUAL
         {
@@ -3239,7 +3241,7 @@ variable_declaration_initialization {} :
         call_argument_list
 ;
 
-parameter_declaration_initialization {} :
+parameter_declaration_initialization { ENTRY_DEBUG } :
 
         EQUAL
         {
@@ -3251,7 +3253,7 @@ parameter_declaration_initialization {} :
         }
 ;
 
-pure_expression_block {} :
+pure_expression_block { ENTRY_DEBUG } :
         lcurly_base 
         {
             // nesting blocks, not statement
@@ -3265,7 +3267,7 @@ pure_expression_block {} :
 /*
   All possible operators
 */
-general_operators { LocalMode lm(this); bool first = true; } :
+general_operators { LocalMode lm(this); bool first = true; ENTRY_DEBUG } :
         {
             if (isoption(parseoptions, OPTION_OPERATOR)) {
 
@@ -3286,7 +3288,7 @@ general_operators { LocalMode lm(this); bool first = true; } :
         )
 ;
 
-rparen_operator[bool markup = true] { LocalMode lm(this); } :
+rparen_operator[bool markup = true] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             if (markup && isoption(parseoptions, OPTION_OPERATOR) && !inMode(MODE_END_ONLY_AT_RPAREN)) {
 
@@ -3300,7 +3302,7 @@ rparen_operator[bool markup = true] { LocalMode lm(this); } :
         RPAREN
     ;
 
-rparen[bool final = false, bool markup = true] { bool isempty = getParen() == 0; } :
+rparen[bool final = false, bool markup = true] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
         {
             if (isempty) {
 
@@ -3345,7 +3347,7 @@ rparen[bool final = false, bool markup = true] { bool isempty = getParen() == 0;
 /*
   Dot (period) operator
 */
-period { LocalMode lm(this); } :
+period { LocalMode lm(this); ENTRY_DEBUG } :
         {
             if (isoption(parseoptions, OPTION_OPERATOR)) {
 
@@ -3362,7 +3364,7 @@ period { LocalMode lm(this); } :
 /*
   Namespace operator '::'
 */
-dcolon { LocalMode lm(this); } :
+dcolon { LocalMode lm(this); ENTRY_DEBUG } :
         {
             if (isoption(parseoptions, OPTION_OPERATOR)) {
 
@@ -3379,7 +3381,7 @@ dcolon { LocalMode lm(this); } :
 /*
    An expression
 */
-expression[CALLTYPE type = NOCALL] {} : 
+expression[CALLTYPE type = NOCALL] { ENTRY_DEBUG } : 
         {
             // if expecting an expression start one. except if you are at a right curly brace
             if (inMode(MODE_EXPRESSION | MODE_EXPECT) && LA(1) != RCURLY &&
@@ -3396,26 +3398,26 @@ expression[CALLTYPE type = NOCALL] {} :
 ;
 
 guessing_startNewMode[State::MODE_TYPE mode]
-    { if (inputState->guessing) startNewMode(mode | MODE_GUESSING); } : ;
+    { if (inputState->guessing) startNewMode(mode | MODE_GUESSING); ENTRY_DEBUG } : ;
 
 guessing_endDownToMode[State::MODE_TYPE mode]
-    { if (inputState->guessing && inTransparentMode(MODE_GUESSING)) endDownToMode(mode | MODE_GUESSING); } : ;
+    { if (inputState->guessing && inTransparentMode(MODE_GUESSING)) endDownToMode(mode | MODE_GUESSING); ENTRY_DEBUG } : ;
 
 guessing_endCurrentModeSafely[State::MODE_TYPE mode]
-    { if (inputState->guessing && inTransparentMode(MODE_GUESSING)) endCurrentModeSafely(mode | MODE_GUESSING); } : ;
+    { if (inputState->guessing && inTransparentMode(MODE_GUESSING)) endCurrentModeSafely(mode | MODE_GUESSING); ENTRY_DEBUG } : ;
 
 guessing_endGuessing
-    { if (inTransparentMode(MODE_GUESSING)) endDownOverMode(MODE_GUESSING); } : ;
+    { if (inTransparentMode(MODE_GUESSING)) endDownOverMode(MODE_GUESSING); ENTRY_DEBUG } : ;
 
 guessing_end
-    { if (!inputState->guessing && inTransparentMode(MODE_GUESSING)) endDownOverMode(MODE_GUESSING); } : ;
+    { if (!inputState->guessing && inTransparentMode(MODE_GUESSING)) endDownOverMode(MODE_GUESSING); ENTRY_DEBUG } : ;
 
 
 /*
    Occurs only within another expression.  The mode is MODE_EXPRESSION.  Only
    elements such as names and function calls are marked up.
 */
-expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; } :
+expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG } :
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) && LA(1) == NEW }?
         (NEW function_identifier paren_pair LCURLY)=> general_operators anonymous_class_definition |
@@ -3490,7 +3492,7 @@ expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; } :
   Only start and end of strings are put directly through the parser.
   The contents of the string are handled as is whitespace.
 */
-string_literal { LocalMode lm(this); } :
+string_literal { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // only markup strings in literal option
             if (isoption(parseoptions, OPTION_LITERAL)) {
@@ -3509,7 +3511,7 @@ string_literal { LocalMode lm(this); } :
   Only start and end of character are put directly through the parser.
   The contents of the character are handled as is whitespace.
 */
-char_literal { LocalMode lm(this); } :
+char_literal { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // only markup characters in literal option
             if (isoption(parseoptions, OPTION_LITERAL)) {
@@ -3524,7 +3526,7 @@ char_literal { LocalMode lm(this); } :
         (CHAR_START CHAR_END)
 ;
 
-literal { LocalMode lm(this); } :
+literal { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // only markup literals in literal option
             if (isoption(parseoptions, OPTION_LITERAL)) {
@@ -3539,7 +3541,7 @@ literal { LocalMode lm(this); } :
         CONSTANTS
 ;
 
-boolean { LocalMode lm(this); } :
+boolean { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // only markup boolean values in literal option
             if (isoption(parseoptions, OPTION_LITERAL)) {
@@ -3554,7 +3556,7 @@ boolean { LocalMode lm(this); } :
         (TRUE | FALSE)
 ;
 
-derived { LocalMode lm(this); } :
+derived { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // end all elements at end of rule automatically
             startNewMode(MODE_LOCAL);
@@ -3574,7 +3576,7 @@ derived { LocalMode lm(this); } :
         )*
 ;
 
-super_list_java {} :
+super_list_java { ENTRY_DEBUG } :
         {
             // end all elements at end of rule automatically
             startNewMode(MODE_LOCAL);
@@ -3584,7 +3586,7 @@ super_list_java {} :
         }
 ;
 
-extends_list { LocalMode lm(this); } :
+extends_list { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // end all elements at end of rule automatically
             startNewMode(MODE_LOCAL);
@@ -3596,7 +3598,7 @@ extends_list { LocalMode lm(this); } :
         super_list
 ;
 
-implements_list { LocalMode lm(this); } :
+implements_list { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // end all elements at end of rule automatically
             startNewMode(MODE_LOCAL);
@@ -3608,7 +3610,7 @@ implements_list { LocalMode lm(this); } :
         super_list
 ;
 
-super_list {} :
+super_list { ENTRY_DEBUG } :
         (options { greedy = true; } :
             (derive_access)*
 
@@ -3618,7 +3620,7 @@ super_list {} :
         )*
 ;
 
-derive_access { LocalMode lm(this); } :
+derive_access { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // end all elements at end of rule automatically
             startNewMode(MODE_LOCAL);
@@ -3628,7 +3630,7 @@ derive_access { LocalMode lm(this); } :
         (VIRTUAL)* (PUBLIC | PRIVATE | PROTECTED) (VIRTUAL)*
 ;
 
-parameter_list { LocalMode lm(this); bool lastwasparam = false; bool foundparam = false; } :
+parameter_list { LocalMode lm(this); bool lastwasparam = false; bool foundparam = false; ENTRY_DEBUG } :
         {
             // list of parameters
             startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
@@ -3641,7 +3643,7 @@ parameter_list { LocalMode lm(this); bool lastwasparam = false; bool foundparam 
         LPAREN ({ foundparam = true; if (!lastwasparam) empty_element(SPARAMETER, !lastwasparam); lastwasparam = false; } comma | full_parameter { foundparam = lastwasparam = true; })* empty_element[SPARAMETER, !lastwasparam && foundparam] rparen[false, false]
 ;
 
-empty_element[int element, bool cond] { LocalMode lm(this); } :
+empty_element[int element, bool cond] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             if (cond) {
                 startNewMode(MODE_LOCAL);
@@ -3651,13 +3653,13 @@ empty_element[int element, bool cond] { LocalMode lm(this); } :
         }
 ;
 
-full_parameter {} :
+full_parameter { ENTRY_DEBUG } :
 
         parameter
         (options { greedy = true; } : parameter_declaration_initialization expression)*
 ;
 
-argument {} :
+argument { ENTRY_DEBUG } :
         { getParen() == 0 }? rparen[false,false] |
         {
             // argument with nested expression
@@ -3676,7 +3678,7 @@ argument {} :
 /*
   Parameter for a function declaration or definition
 */                
-parameter { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTYPE decl_type = NONE; } :
+parameter { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTYPE decl_type = NONE; ENTRY_DEBUG } :
         {
             // end parameter correctly
             startNewMode(MODE_PARAMETER);
@@ -3717,7 +3719,7 @@ parameter { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTYPE decl_
 
 /*
 */
-parameter_type_count[int type_count] { LocalMode lm(this); } :
+parameter_type_count[int type_count] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // local mode so start element will end correctly
             startNewMode(MODE_LOCAL);
@@ -3734,7 +3736,7 @@ parameter_type_count[int type_count] { LocalMode lm(this); } :
         ( options { greedy = true; } : multops | LBRACKET RBRACKET)*
 ;
 
-multops { LocalMode lm(this); } :
+multops { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // markup type modifiers if option is on
             if (isoption(parseoptions, OPTION_MODIFIER)) {
@@ -3751,7 +3753,7 @@ multops { LocalMode lm(this); } :
 
 /*
 */
-parameter_type { LocalMode lm(this); int type_count = 0; int fla = 0; int secondtoken = 0; DECLTYPE decl_type = NONE; } :
+parameter_type { LocalMode lm(this); int type_count = 0; int fla = 0; int secondtoken = 0; DECLTYPE decl_type = NONE; ENTRY_DEBUG } :
         {
             // local mode so start element will end correctly
             startNewMode(MODE_LOCAL);
@@ -3770,7 +3772,7 @@ parameter_type { LocalMode lm(this); int type_count = 0; int fla = 0; int second
 /*
   template declaration
 */
-template_declaration {} :
+template_declaration { ENTRY_DEBUG } :
         {
             // template with nested statement (function or class)
             // expect a template parameter list
@@ -3788,7 +3790,7 @@ template_declaration {} :
 /*
   template parameter list
 */
-template_param_list {} :
+template_param_list { ENTRY_DEBUG } :
         {
             // start the template parameter list
             startElement(STEMPLATE_PARAMETER_LIST);
@@ -3796,7 +3798,7 @@ template_param_list {} :
         tempops
 ;
 
-requires_clause {/* LocalMode lm(this);*/ } :
+requires_clause {/* LocalMode lm(this);*/ ENTRY_DEBUG } :
         {
             // template with nested statement (function or class)
             // expect a template parameter list
@@ -3822,7 +3824,7 @@ requires_clause {/* LocalMode lm(this);*/ } :
 
   A template parameter is a subset of a general function parameter
 */
-template_param {} :
+template_param { ENTRY_DEBUG } :
         {
             // end parameter correctly
             startNewMode(MODE_PARAMETER);
@@ -3846,7 +3848,7 @@ template_param {} :
 /*
   template argument list
 */
-template_argument_list { LocalMode lm(this); } : 
+template_argument_list { LocalMode lm(this); ENTRY_DEBUG } : 
         {
             // local mode
             startNewMode(MODE_LOCAL);
@@ -3858,16 +3860,16 @@ template_argument_list { LocalMode lm(this); } :
         restorenamestack
 ;
 
-savenamestack { namestack_save[0] = namestack[0]; namestack_save[1] = namestack[1]; } :
+savenamestack { namestack_save[0] = namestack[0]; namestack_save[1] = namestack[1]; ENTRY_DEBUG } :
     ;
 
-restorenamestack { namestack[0] = namestack_save[0]; namestack[1] = namestack_save[1]; } :
+restorenamestack { namestack[0] = namestack_save[0]; namestack[1] = namestack_save[1]; ENTRY_DEBUG } :
     ;
 
 /*
   template argument
 */
-template_argument { LocalMode lm(this); } :
+template_argument { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // local mode
             startNewMode(MODE_LOCAL);
@@ -3877,7 +3879,7 @@ template_argument { LocalMode lm(this); } :
         ( options { greedy = true; } : type_identifier | literal | char_literal | string_literal | boolean)+
 ;
 
-tempops {} :
+tempops { ENTRY_DEBUG } :
         {
             // make sure we are in a list mode so that we can end correctly
             // some uses of tempope will have their own mode
@@ -3887,7 +3889,7 @@ tempops {} :
         TEMPOPS
 ;
 
-tempope[bool final = false] { if (final) setFinalToken(); } :
+tempope[bool final = false] { if (final) setFinalToken(); ENTRY_DEBUG } :
         {
             // end down to the mode created by the start template operator
             endDownToMode(MODE_LIST);
@@ -3904,7 +3906,7 @@ tempope[bool final = false] { if (final) setFinalToken(); } :
 /*
   label statement
 */
-label_statement { LocalMode lm(this); } :
+label_statement { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_STATEMENT);
@@ -3918,7 +3920,7 @@ label_statement { LocalMode lm(this); } :
 /*
   typedef_statement
 */
-typedef_statement {} :
+typedef_statement { ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_STATEMENT | MODE_EXPECT | MODE_VARIABLE_NAME);
@@ -3963,7 +3965,7 @@ optional_paren_pair {
 
         consume();
     }
-} :;
+ENTRY_DEBUG } :;
 
 /*
   See if there is a semicolon terminating a statement inside a block at the top level
@@ -3999,7 +4001,7 @@ nested_terminate {
 /*
   Definition of an enum.  Start of the enum only
 */
-enum_definition {} :
+enum_definition { ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (enum_class_definition nested_terminate)=> enum_class_definition |
 
@@ -4029,7 +4031,7 @@ enum_definition {} :
   Complete definition of an enum.  Used for enum's embedded in typedef's where the entire
   enum must be parsed since it is part of the type.
 */
-enum_definition_whole { LocalMode lm(this); } :
+enum_definition_whole { LocalMode lm(this); ENTRY_DEBUG } :
         enum_definition
 
         (variable_identifier)*
@@ -4223,7 +4225,7 @@ eol_skip[int directive_token, bool markblockzero] {
            LA(1) != 1 /* EOF? */
         )
                 consume();
-    } :
+    ENTRY_DEBUG } :
     eol[directive_token, markblockzero]
 ;
 
@@ -4240,7 +4242,7 @@ eol[int directive_token, bool markblockzero] {
             endCurrentMode(MODE_PREPROC);
 
             endCurrentMode(MODE_PARSE_EOL);
-} :
+ENTRY_DEBUG } :
         (EOL | LINECOMMENT_START | eof)
         eol_post[directive_token, markblockzero]
 ;
@@ -4353,7 +4355,7 @@ eol_post[int directive_token, bool markblockzero] {
                 consume();
         }
 
-        } :
+        ENTRY_DEBUG } :
 ;
 
 // remove any finished or unneeded cppmodes
@@ -4368,7 +4370,7 @@ cppmode_cleanup {
             if (!cppmode.empty() && (equal || cppmode.top().statesize.size() == 2)) {
                 cppmode.pop();
             }
-        } :
+        ENTRY_DEBUG } :
 ;
 
 // ended modes that may lead to needed updates
@@ -4389,10 +4391,10 @@ cppmode_adjust {
            }
     }
 
-    } :
+    ENTRY_DEBUG } :
 ;
 
-line_continuation { setFinalToken(); } :
+line_continuation { setFinalToken(); ENTRY_DEBUG } :
         {
             // end all preprocessor modes
             endDownOverMode(MODE_PARSE_EOL);
@@ -4400,14 +4402,14 @@ line_continuation { setFinalToken(); } :
         EOL_BACKSLASH
 ;
 
-cpp_condition[bool& markblockzero] { LocalMode lm(this); } :
+cpp_condition[bool& markblockzero] { LocalMode lm(this); ENTRY_DEBUG } :
 
         set_bool[markblockzero, LA(1) == CONSTANTS && LT(1)->getText() == "0"]
 
         full_expression
 ;
 
-cpp_symbol { LocalMode lm(this); } :
+cpp_symbol { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // end all started elements in this rule
             startNewMode(MODE_LOCAL);
@@ -4418,11 +4420,11 @@ cpp_symbol { LocalMode lm(this); } :
         NAME
 ;
 
-cpp_symbol_optional {} :
+cpp_symbol_optional { ENTRY_DEBUG } :
         (options { greedy = true; } : cpp_symbol)*
 ;
 
-cpp_filename { LocalMode lm(this); } :
+cpp_filename { LocalMode lm(this); ENTRY_DEBUG } :
         (
         {
             startNewMode(MODE_PREPROC);
