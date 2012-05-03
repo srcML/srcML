@@ -869,7 +869,7 @@ for_group { setFinalToken(); ENTRY_DEBUG } :
             // start the for group mode that will end at the next matching
             // parentheses
             replaceMode(MODE_FOR_GROUP, MODE_TOP | MODE_FOR_INITIALIZATION | MODE_IGNORE_TERMINATE |
-                        MODE_INTERNAL_END_PAREN | MODE_LIST);
+                        MODE_INTERNAL_END_PAREN | MODE_LIST | MODE_FOR_GROUP);
 
             // start the for heading group element
             startElement(SFOR_GROUP);
