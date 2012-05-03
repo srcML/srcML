@@ -3334,6 +3334,10 @@ rparen[bool final = false, bool markup = true] { bool isempty = getParen() == 0;
                 // additional right parentheses indicates end of non-list modes
                 endDownToFirstMode(MODE_LIST | MODE_PREPROC | MODE_END_ONLY_AT_RPAREN);
 
+                // special case:  Get to here, in for-initalization.  Need an extra end mode
+                if (inMode(MODE_VARIABLE_NAME) && inTransparentMode(MODE_FOR_CONDITION))
+                    endDownToFirstMode(MODE_FOR_CONDITION);
+
                 // don't markup since not a normal operator
                 markup = false;
 
