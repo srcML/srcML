@@ -129,7 +129,9 @@ header "post_include_hpp" {
 #include "Mode.hpp"
 #include "Options.hpp"
 
+// Macros to introduce trace statements
 #define ENTRY_DEBUG
+#define CATCH_DEBUG
 
 #define assertMode(m)
 
@@ -523,6 +525,8 @@ start { ENTRY_DEBUG } :
 ;
 exception
 catch[...] {
+
+        CATCH_DEBUG
 
         // need to consume the token. If we got here because
         // of an error with EOF token, then call EOF directly
