@@ -523,6 +523,7 @@ start { ENTRY_DEBUG } :
 ;
 exception
 catch[...] {
+
         // need to consume the token. If we got here because
         // of an error with EOF token, then call EOF directly
         if (LA(1) == 1)
@@ -2000,7 +2001,13 @@ statement_part { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE decl
 
         // string literal of extern
         { inMode(MODE_EXTERN) }?
-             extern_name
+             extern_name |
+
+        // sometimes end up here, as when for group ends early, or with for-each
+        rparen |
+
+        // seem to end up here for colon in ternary operator
+        colon_marked
 ;
 
 lparen_marked { LocalMode lm(this); ENTRY_DEBUG } :
@@ -2034,6 +2041,20 @@ comma[bool final = false] { if (final) setFinalToken(); }:
             }
         }
         COMMA
+;
+
+colon_marked[bool final = false] { LocalMode lm(this); if (final) setFinalToken(); ENTRY_DEBUG } :
+        {
+            if (isoption(parseoptions, OPTION_OPERATOR)) {
+
+                // end all elements at end of rule automatically
+                startNewMode(MODE_LOCAL);
+
+                // start the modifier
+                startElement(SOPERATOR);
+            }
+        }
+        COLON
 ;
 
 colon[bool final = false] { if (final) setFinalToken(); ENTRY_DEBUG } :
