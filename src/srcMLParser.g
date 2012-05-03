@@ -308,6 +308,7 @@ tokens {
 	SDECLARATION_STATEMENT;
 	SDECLARATION;
 	SDECLARATION_INITIALIZATION;
+	SDECLARATION_RANGE;
 
 	SGOTO_STATEMENT;
 	SCONTINUE_STATEMENT;
@@ -501,7 +502,7 @@ start { ENTRY_DEBUG } :
         { !inTransparentMode(MODE_INTERNAL_END_CURLY) }? block_end |
 
         // switch cases @test switch
-        { !inMode(MODE_DERIVED) && (!inMode(MODE_EXPRESSION) || inTransparentMode(MODE_DETECT_COLON)) }? 
+        { !inMode(MODE_DERIVED) && !inMode(MODE_INIT) && (!inMode(MODE_EXPRESSION) || inTransparentMode(MODE_DETECT_COLON)) }? 
         colon[true] |
 
         terminate[true] |
@@ -1950,6 +1951,10 @@ statement_part { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE decl
         { inMode(MODE_INIT | MODE_EXPECT) }?
              variable_declaration_initialization |
 
+        // start of argument for return or throw statement
+        { inMode(MODE_INIT | MODE_EXPECT) }?
+             variable_declaration_range |
+
         // in an argument list expecting an argument
         { inMode(MODE_ARGUMENT | MODE_LIST) }?
              argument |
@@ -3264,6 +3269,18 @@ variable_declaration_initialization { ENTRY_DEBUG } :
             startNewMode(MODE_ARGUMENT | MODE_LIST);
         }
         call_argument_list
+;
+
+variable_declaration_range { ENTRY_DEBUG } :
+
+        COLON
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_LIST | MODE_IN_INIT | MODE_EXPRESSION | MODE_EXPECT);
+
+            // start the initialization element
+            startNoSkipElement(SDECLARATION_RANGE);
+        }
 ;
 
 parameter_declaration_initialization { ENTRY_DEBUG } :
