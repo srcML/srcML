@@ -131,7 +131,7 @@ header "post_include_hpp" {
 
 // Macros to introduce trace statements
 #define ENTRY_DEBUG
-#define CATCH_DEBUG 
+#define CATCH_DEBUG
 
 #define assertMode(m)
 
@@ -468,12 +468,6 @@ TokenPosition getTokenPosition() {
 public:
 
 void endAllModes();
-
-void trace_exception() {
-
-    emptyElement(SEXCEPTION_DEBUG);
-
-}
 
 }
 
