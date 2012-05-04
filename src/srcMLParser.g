@@ -131,7 +131,7 @@ header "post_include_hpp" {
 
 // Macros to introduce trace statements
 #define ENTRY_DEBUG
-#define CATCH_DEBUG
+#define CATCH_DEBUG/*  {   LocalMode lm(this);    startNewMode(MODE_LOCAL);    startElement(SEXCEPTION_DEBUG);    endCurrentMode(MODE_LOCAL); }*/
 
 #define assertMode(m)
 
@@ -225,16 +225,6 @@ void srcMLParser::endAllModes() {
     if (size() == 1)
         endLastMode();
 }
-
-void srcMLParser::trace_exception() {
-
-    LocalMode lm(this);
-    startNewMode(MODE_LOCAL);
-    startElement(SEXCEPTION_DEBUG);
-    endCurrentMode(MODE_LOCAL);
-
-}
-
 
 }
 
@@ -478,8 +468,6 @@ TokenPosition getTokenPosition() {
 public:
 
 void endAllModes();
-
-void trace_exception();
 
 }
 
