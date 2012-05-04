@@ -129,9 +129,13 @@ header "post_include_hpp" {
 #include "Mode.hpp"
 #include "Options.hpp"
 
+void trace_exception() {
+
+}
+
 // Macros to introduce trace statements
 #define ENTRY_DEBUG
-#define CATCH_DEBUG
+#define CATCH_DEBUG 
 
 #define assertMode(m)
 
