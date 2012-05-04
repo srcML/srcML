@@ -468,7 +468,16 @@ TokenPosition getTokenPosition() {
 public:
 
 void endAllModes();
+/*
+void trace_exception() {
 
+    LocalMode lm(this);
+    startNewMode(MODE_LOCAL);
+    startElement(SEXCEPTION_DEBUG);
+    endCurrentMode(MODE_LOCAL);
+
+}
+*/
 }
 
 
