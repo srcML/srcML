@@ -226,6 +226,16 @@ void srcMLParser::endAllModes() {
         endLastMode();
 }
 
+void srcMLParser::trace_exception() {
+
+    LocalMode lm(this);
+    startNewMode(MODE_LOCAL);
+    startElement(SEXCEPTION_DEBUG);
+    endCurrentMode(MODE_LOCAL);
+
+}
+
+
 }
 
 options {
@@ -468,16 +478,9 @@ TokenPosition getTokenPosition() {
 public:
 
 void endAllModes();
-/*
-void trace_exception() {
 
-    LocalMode lm(this);
-    startNewMode(MODE_LOCAL);
-    startElement(SEXCEPTION_DEBUG);
-    endCurrentMode(MODE_LOCAL);
+void trace_exception();
 
-}
-*/
 }
 
 
