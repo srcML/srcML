@@ -2,7 +2,7 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="for">
 
 <unit>
-<for>for (<init><decl><type><name>int</name></type> <name>i</name : <range> <expr><name>b</name></expr></range></decl></init>)
+<for>for (<init><decl><type><name>int</name></type> <name>i</name> : <range> <expr><name>b</name></expr></range></decl></init>)
 <empty_stmt>;</empty_stmt></for>
 </unit>
 
