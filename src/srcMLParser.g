@@ -131,7 +131,7 @@ header "post_include_hpp" {
 
 // Macros to introduce trace statements
 #define ENTRY_DEBUG // fprintf(stderr, "DEBUG:  %s %s %d DATA: %d\n", __FILE__,  __FUNCTION__, __LINE__, LA(1));
-#define CATCH_DEBUG
+#define CATCH_DEBUG /* { LocalMode lm(this); startNewMode(MODE_LOCAL); startElement(SMARKER); }*/
 
 #define assertMode(m)
 
