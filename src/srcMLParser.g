@@ -469,7 +469,7 @@ public:
 
 void endAllModes();
 
-void tracer_exception() {
+void trace_exception() {
 
     emptyElement(SEXCEPTION_DEBUG);
 
