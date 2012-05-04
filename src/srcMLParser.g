@@ -130,8 +130,8 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG
-#define CATCH_DEBUG/*  {   LocalMode lm(this);    startNewMode(MODE_LOCAL);    startElement(SEXCEPTION_DEBUG);    endCurrentMode(MODE_LOCAL); }*/
+#define ENTRY_DEBUG // fprintf(stderr, "DEBUG:  %s %s %d DATA: %d\n", __FILE__,  __FUNCTION__, __LINE__, LA(1));
+#define CATCH_DEBUG
 
 #define assertMode(m)
 
@@ -604,7 +604,7 @@ statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; int fla 
 
         // standalone macro
         { decl_type == NULLOPERATOR }?
-        expression |
+        expression_statement |
 
         // standalone macro
         { decl_type == SINGLE_MACRO }?
@@ -2437,8 +2437,8 @@ throw_list { ENTRY_DEBUG } :
 /*
   throw list for a function
 */
-complete_throw_list { ENTRY_DEBUG } :
-        THROW paren_pair | THROWS ( options { greedy = true; } : complex_name_java[true] | COMMA)*
+complete_throw_list { bool flag = false; ENTRY_DEBUG } :
+        THROW paren_pair | THROWS ( options { greedy = true; } : complex_name_java[true, flag] | COMMA)*
 ;
 
 /*
@@ -2722,9 +2722,7 @@ identifier[bool marked = false] { LocalMode lm(this); ENTRY_DEBUG } :
 /*
   identifier name marked with name element
 */
-complex_name[bool marked] { LocalMode lm(this); TokenPosition tp; /* TokenPosition tp2 = { 0, 0 };*/ bool iscomplex_name = false; namestack[0] = ""; namestack[1] = ""; bool founddestop = false; ENTRY_DEBUG } :
-        { inLanguage(LANGUAGE_JAVA_FAMILY) }? complex_name_java[marked] |
-        (
+complex_name[bool marked] { LocalMode lm(this); TokenPosition tp; bool iscomplex_name = false; ENTRY_DEBUG } :
         {
             if (marked) {
                 // There is a problem detecting complex names from
@@ -2747,49 +2745,55 @@ complex_name[bool marked] { LocalMode lm(this); TokenPosition tp; /* TokenPositi
                 tp = getTokenPosition();
             }
         }
+        (
+        { inLanguage(LANGUAGE_JAVA_FAMILY) }?
+        complex_name_java[marked, iscomplex_name] |
+
+        { inLanguage(LANGUAGE_C) }?
+        complex_name_c[marked, iscomplex_name] |
+
+        { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) }?
+        complex_name_cpp[marked, iscomplex_name]
+        )
+        {
+            // if we marked it as a complex name and it isn't, fix
+            if (marked && !iscomplex_name)
+                // set the token to NOP
+                tp.setType(SNOP);
+        }
+;
+
+/*
+  identifier name marked with name element
+*/
+complex_name_cpp[bool marked, bool& iscomplex_name] { namestack[0] = ""; namestack[1] = ""; bool founddestop = false; ENTRY_DEBUG } :
+
         (DCOLON { iscomplex_name = true; })*
         (DESTOP set_bool[isdestructor] {
             founddestop = true;
         })*
         (simple_name_optional_template[marked] | mark_namestack overloaded_operator)
         name_tail[iscomplex_name, marked]
-        { if (founddestop) iscomplex_name = true; founddestop = false; }
-        {
-            // if we marked it as a complex name and it isn't, fix
-            if (marked && !iscomplex_name)
-                // set the token to NOP
-                tp.setType(SNOP);
-        }
-            )
+        { if (founddestop) iscomplex_name = true; }
 ;
 
 /*
-  identifier name marked with name element
+  Identifier markup for C
 */
-complex_name_java[bool marked] { LocalMode lm(this); TokenPosition tp; bool iscomplex_name = false; ENTRY_DEBUG } :
-        {
-            if (marked) {
-                // local mode that is automatically ended by leaving this function
-                startNewMode(MODE_LOCAL);
+complex_name_c[bool marked, bool& iscomplex_name] { namestack[0] = ""; namestack[1] = ""; ENTRY_DEBUG } :
+        
+        (DCOLON { iscomplex_name = true; })*
+        (simple_name_optional_template[marked] | mark_namestack overloaded_operator)
+        name_tail[iscomplex_name, marked]
+;
 
-                // start outer name
-                startElement(SONAME);
+/*
+  Identifier markup for Java
+*/
+complex_name_java[bool marked, bool& iscomplex_name] { namestack[0] = ""; namestack[1] = ""; ENTRY_DEBUG } :
 
-                // start inner name
-                startElement(SCNAME);
-
-                // record the name token so we can replace it if necessary
-                tp = getTokenPosition();
-            }
-        }
         simple_name_optional_template[marked]
         (options { greedy = true; } : (period { iscomplex_name = true; } simple_name_optional_template[marked]))*
-        {
-            // if we marked it as a complex name and it isn't, fix
-            if (marked && !iscomplex_name)
-                // set the token to NOP
-                tp.setType(SNOP);
-        }
 ;
 
 /*
@@ -3669,11 +3673,11 @@ implements_list { LocalMode lm(this); ENTRY_DEBUG } :
         super_list
 ;
 
-super_list { ENTRY_DEBUG } :
+super_list { bool flag = false; ENTRY_DEBUG } :
         (options { greedy = true; } :
             (derive_access)*
 
-            complex_name_java[true]
+            complex_name_java[true, flag]
         |
             COMMA
         )*
