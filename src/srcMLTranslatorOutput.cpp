@@ -212,6 +212,8 @@ namespace {
   // C++0x elements
   ELEMENT_MAP(SCONCEPT,       "concept")
   ELEMENT_MAP(SCONCEPTMAP,    "concept_map")
+
+  ELEMENT_MAP(SEXCEPTION_DEBUG,    "execption_debug")
 };
 
 enum { SRCML_SRC_NS_URI_POS,
