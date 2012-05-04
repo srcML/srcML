@@ -413,6 +413,8 @@ tokens {
 
     // Last token used for boundary
     END_ELEMENT_TOKEN;
+
+    SEXCEPTION_DEBUG;
 }
 
 /*
