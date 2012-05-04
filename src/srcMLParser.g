@@ -130,7 +130,7 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG // fprintf(stderr, "DEBUG:  %s %s %d DATA: %d\n", __FILE__,  __FUNCTION__, __LINE__, LA(1));
+#define ENTRY_DEBUG //fprintf(stderr, "DEBUG:  %s %s %d DATA: %d\n", __FILE__,  __FUNCTION__, __LINE__, LA(1));
 #define CATCH_DEBUG /* { LocalMode lm(this); startNewMode(MODE_LOCAL); startElement(SMARKER); }*/
 
 #define assertMode(m)
@@ -599,6 +599,12 @@ statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; int fla 
         // check for declaration of some kind (variable, function, constructor, destructor
         { perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type == FUNCTION }?
         function[fla, type_count] |
+
+        // "~" which looked like destructor, but isn't
+        { decl_type == NONE && LA(1) == DESTOP }?
+        expression_statement_process
+        expression_process
+        general_operators |
 
         // standalone macro
         { decl_type == NULLOPERATOR }?
@@ -3158,7 +3164,7 @@ throw_statement { ENTRY_DEBUG } :
         THROW
 ;
 
-expression_statement[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
+expression_statement_process { ENTRY_DEBUG } :
         {
             // statement with an embedded expression
             startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
@@ -3166,6 +3172,12 @@ expression_statement[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
             // start the element which will end after the terminate
             startElement(SEXPRESSION_STATEMENT);
         }
+;
+
+expression_statement[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
+
+        expression_statement_process
+
         expression[type]
 ;
 
@@ -3442,7 +3454,7 @@ dcolon { LocalMode lm(this); ENTRY_DEBUG } :
 /*
    An expression
 */
-expression[CALLTYPE type = NOCALL] { ENTRY_DEBUG } : 
+expression_process { ENTRY_DEBUG } : 
         {
             // if expecting an expression start one. except if you are at a right curly brace
             if (inMode(MODE_EXPRESSION | MODE_EXPECT) && LA(1) != RCURLY &&
@@ -3455,6 +3467,12 @@ expression[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
                 startElement(SEXPRESSION);
             }
         }
+;
+
+expression[CALLTYPE type = NOCALL] { ENTRY_DEBUG } : 
+
+        expression_process
+
         expression_part[type]
 ;
 
