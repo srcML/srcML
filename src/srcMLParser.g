@@ -135,7 +135,7 @@ header "post_include_hpp" {
 
 #define assertMode(m)
 
-enum DECLTYPE { NONE, VARIABLE, FUNCTION, CONSTRUCTOR, DESTRUCTOR, SINGLE_MACRO };
+enum DECLTYPE { NONE, VARIABLE, FUNCTION, CONSTRUCTOR, DESTRUCTOR, SINGLE_MACRO, NULLOPERATOR };
 enum CALLTYPE { NOCALL, CALL, MACRO };
 
 // position in output stream
@@ -598,6 +598,10 @@ statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; int fla 
         // check for declaration of some kind (variable, function, constructor, destructor
         { perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type == FUNCTION }?
         function[fla, type_count] |
+
+        // standalone macro
+        { decl_type == NULLOPERATOR }?
+        expression |
 
         // standalone macro
         { decl_type == SINGLE_MACRO }?
@@ -2160,6 +2164,8 @@ perform_noncfg_check[DECLTYPE& type, int& token, int& fla, int& type_count, bool
     int start = mark();
     inputState->guessing++;
 
+    int firsttoken = LA(1);
+
     try {
         noncfg_check(token, fla, type_count, type, inparam);
 
@@ -2172,6 +2178,10 @@ perform_noncfg_check[DECLTYPE& type, int& token, int& fla, int& type_count, bool
     // may just have a single macro (no parens possibly) before a statement
     if (type == 0 && type_count == 0 && _tokenSet_0.member(LA(1)))
         type = SINGLE_MACRO;
+
+    // may just have an expression 
+    if (type == DESTRUCTOR && !inLanguage(LANGUAGE_CXX_FAMILY))
+        type = NULLOPERATOR;
 
     inputState->guessing--;
     rewind(start);
