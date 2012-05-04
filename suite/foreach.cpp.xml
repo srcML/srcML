@@ -6,4 +6,10 @@
 <empty_stmt>;</empty_stmt></for>
 </unit>
 
+<unit>
+<for>for (<init><decl><type><name>int</name></type> <name>i</name> :<range> <expr><name>b</name></expr></range></decl></init>)
+<block>{
+}</block></for>
+</unit>
+
 </unit>
