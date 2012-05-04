@@ -2325,7 +2325,7 @@ set_type[DECLTYPE& name, DECLTYPE value, bool result = true] { if (result) name 
 
 //trace[const char*s ] { std::cerr << s << std::endl; ENTRY_DEBUG } :;
 
-trace_exception[] {LocalMode lm(this); startNewMode(MODE_LOCAL); startElement(SEXCEPTION_DEBUG); } :;
+trace_exception[] {LocalMode lm(this); startNewMode(MODE_LOCAL); startElement(SEXCEPTION_DEBUG); endCurrentMode(MODE_LOCAL); } :;
 
 //traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; ENTRY_DEBUG } :;
 
