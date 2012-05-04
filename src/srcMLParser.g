@@ -469,6 +469,10 @@ public:
 
 void endAllModes();
 
+void tracer_exception() {
+
+}
+
 }
 
 
