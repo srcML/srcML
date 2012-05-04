@@ -471,6 +471,8 @@ void endAllModes();
 
 void tracer_exception() {
 
+    emptyElement(SEXCEPTION_DEBUG);
+
 }
 
 }
