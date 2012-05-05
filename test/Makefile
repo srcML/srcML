@@ -14,6 +14,9 @@ SRCENCODING=
 
 ALLINALLCUTOFF=35
 
+all : ${GEN_FILES} ${GEN_CPP}
+	./testsuite.py
+
 PHONY : testbase
 testbase : gen
 
@@ -328,9 +331,6 @@ GEN_FILES=${GEN_PART} ${GEN_ALL} ${GEN_BLOCK} ${GEN_COMMENT} ${GEN_PREPROC} ${GE
 GEN_CPP_BASE=${GEN_SEP} ${foreach nm, $(SEP_PLUS), $(nm).all} ${foreach nm, $(SEP_PLUS), $(nm).block} ${foreach nm, $(SEP_PLUS), $(nm).comment} ${foreach nm, $(SEP_PLUS), $(nm).preproc}
 
 GEN_CPP= ${foreach nm, $(GEN_CPP_BASE), ../suite/$(nm).cpp}
-
-all : ${GEN_FILES} ${GEN_CPP}
-	./testsuite.py
 
 gencpp : ${GEN_CPP}
 
