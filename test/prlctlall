@@ -1,0 +1,68 @@
+#!/bin/bash
+
+BUILD="Yes"
+TEST="Yes"
+FEDORA="Yes"
+UBUNTU="Yes"
+
+if [[ $1 = "--fedora" ]];
+then 
+    UBUNTU="No"
+    shift
+
+elif [[ $1 = "--ubuntu" ]];
+then 
+    FEDORA="No"
+    shift
+fi
+
+if [[ $1 = "--build" ]];
+then 
+    TEST="No"
+    shift
+
+elif [[ $1 = "--test" ]];
+then 
+    BUILD="No"
+    shift
+fi
+
+if [[ $FEDORA = "Yes" && $BUILD = "Yes" ]];
+then
+echo "prlctl $1 \"Fedora Linux 15 Build\" $2"; prlctl $1 "Fedora Linux 15 Build" $2
+fi
+
+if [[ $FEDORA = "Yes" && $TEST = "Yes" ]];
+then
+echo "prlctl $1 \"Fedora Linux 15 Test\" $2"; prlctl $1 "Fedora Linux 15 Test" $2
+fi
+
+if [[ $FEDORA = "Yes" && $BUILD = "Yes" ]];
+then
+echo "prlctl $1 \"Fedora Linux 16 Build\" $2"; prlctl $1 "Fedora Linux 16 Build" $2
+fi
+
+if [[ $FEDORA = "Yes" && $TEST = "Yes" ]];
+then
+echo "prlctl $1 \"Fedora Linux 16 Test\" $2"; prlctl $1 "Fedora Linux 16 Test" $2
+fi
+
+if [[ $UBUNTU = "Yes" && $BUILD = "Yes" ]];
+then
+echo "prlctl $1 \"Ubuntu Linux 10.04 Build\" $2"; prlctl $1 "Ubuntu Linux 10.04 Build" $2
+fi
+
+if [[ $UBUNTU = "Yes" && $TEST = "Yes" ]];
+then
+echo "prlctl $1 \"Ubuntu Linux 10.04 Test\" $2"; prlctl $1 "Ubuntu Linux 10.04 Test" $2
+fi
+
+if [[ $UBUNTU = "Yes" && $BUILD = "Yes" ]];
+then
+echo "prlctl $1 \"Ubuntu Linux 11.04 Build\" $2"; prlctl $1 "Ubuntu Linux 11.04 Build" $2
+fi
+
+if [[ $UBUNTU = "Yes" && $TEST = "Yes" ]];
+then
+echo "prlctl $1 \"Ubuntu Linux 11.04 Test\" $2"; prlctl $1 "Ubuntu Linux 11.04 Test" $2
+fi
