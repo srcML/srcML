@@ -274,8 +274,4 @@
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt></for>
 </unit>
 
-<unit>
-<expr_stmt><expr><op:opeator>~</op:operator><call><name>a</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
-</unit>
-
 </unit>
