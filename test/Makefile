@@ -14,7 +14,7 @@ SRCENCODING=
 
 ALLINALLCUTOFF=35
 
-all : ${GEN_FILES} ${GEN_CPP}
+all : gen
 	./testsuite.py
 
 PHONY : testbase
