@@ -7,5 +7,18 @@ scp ~/Dropbox/srcML/Unix/Fedora16/srcML.tar.gz fedora16test:/srcML
 scp ~/Dropbox/srcML/Unix/Ubuntu10.04/srcML.tar.gz ubuntu10test:/srcML
 scp ~/Dropbox/srcML/Unix/Ubuntu11.04/srcML.tar.gz ubuntu11test:/srcML
 
+cp ~/Dropbox/srcML/Unix/OSX/srcML.tar.gz ~/srcML
+
 ./prlctlall --test exec 'bash -c "cd srcML; tar xvf srcML.tar.gz"'
 ./prlctlall --test exec 'bash -c "export SRC2SRCML=\"/srcML/srcML/src2srcml\"; export SRCML2SRC=\"/srcML/srcML/srcml2src\"; cd srcML/trunk/test/; rm -f srcMLTestReport*; make clean; make;"'
+./prlctlall --test exec 'bash -c "grep -a \"Errors:\" srcML/trunk/test/srcMLTestReport*"'
+
+cd srcML
+svn update
+tar xvf srcML.tar.gz
+export SRC2SRCML="../../srcML/src2srcml"
+export SRCML2SRC="../../srcML/srcml2src"
+cd trunk/test/
+rm -f srcMLTestReport*
+make clean; make
+grep -a "Errors:" srcMLTestReport*
