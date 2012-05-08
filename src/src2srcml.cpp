@@ -112,6 +112,9 @@ const int RECURSIVE_FLAG_CODE = 256 + 9;
 const char* const REVISION_FLAG = "revision";
 const int REVISION_FLAG_CODE = 256 + 10;
 
+const char* const CPP_FLAG = "cpp";
+const int CPP_FLAG_CODE = 256 + 11;
+
 const char* const EXAMPLE_TEXT_FILENAME="foo.cpp";
 const char* const EXAMPLE_XML_FILENAME="foo.cpp.xml";
 
@@ -642,6 +645,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { XMLNS_FLAG, required_argument, NULL, XMLNS_FLAG_CODE },
     { RECURSIVE_FLAG, no_argument, NULL, RECURSIVE_FLAG_CODE },
     { REVISION_FLAG, no_argument, NULL, REVISION_FLAG_CODE },
+    { CPP_FLAG, no_argument, NULL, CPP_FLAG_CODE },
     { QUIET_FLAG, no_argument, NULL, QUIET_FLAG_SHORT },
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
