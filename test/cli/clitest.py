@@ -3328,6 +3328,30 @@ validate(open('diff/new.cpp.xml', 'r').read(), srcml_new)
 check([srcml2src, option.XML_FLAG, option.DIFF_FLAG_LONG, '2', 'diff/diff.cpp.xml', '-o', 'diff/new.cpp.xml'], '', '')
 validate(open('diff/new.cpp.xml', 'r').read(), srcml_new)
 
+# cpp option
+
+sfile1 = ""
+
+
+f = open('sub/a.java', 'w')
+f.write(sfile1)
+f.close()
+
+##
+# empty with debug
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:err="http://www.sdml.info/srcML/srcerr" language="Java"/>
+"""
+
+fsrcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:err="http://www.sdml.info/srcML/srcerr" language="java" filename="sub/a.cpp"/>
+"""
+checkallformsfile(src2srcml, 'sub/a.java', option.CPP_FLAG, option.CPP_FLAG, "", "", fsrcml)
+check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'Java', option.CPP_FLAG, '-o', 'sub/a.java.xml'], sfile1, "")
+validate(open('sub/a.java.xml', 'r').read(), srcml)
+check([src2srcml, option.CPP_FLAG, 'sub/a.java','-o', 'sub/a.java.xml'], "", "")
+validate(open('sub/a.java.xml', 'r').read(), fsrcml)
+
 # footer
 print
 print "Error count:\t\t", error_count, "\t", error_list
