@@ -849,6 +849,10 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       options |= OPTION_REVISION;
       break;
 
+    case CPP_FLAG_CODE:
+      options |= OPTION_CPP;
+      break;
+
     case QUIET_FLAG_SHORT:
       options |= OPTION_QUIET;
       break;
