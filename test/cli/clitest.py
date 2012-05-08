@@ -3344,7 +3344,7 @@ srcml = xml_declaration + """
 """
 
 fsrcml = xml_declaration + """
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="java" filename="sub/a.java"/>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Java" filename="sub/a.java"/>
 """
 checkallformsfile(src2srcml, 'sub/a.java', option.CPP_FLAG, option.CPP_FLAG, "", "", fsrcml)
 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'Java', option.CPP_FLAG, '-o', 'sub/a.java.xml'], sfile1, "")
