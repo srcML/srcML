@@ -2320,21 +2320,21 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
         set_type[type, CONSTRUCTOR, !saveisdestructor && isconstructor]
 ;
 
-//monitor { std::cerr << namestack[0] << " " << namestack[1] << std::endl; ENTRY_DEBUG } :;
+//monitor { std::cerr << namestack[0] << " " << namestack[1] << std::endl; } :;
 
-//other[bool flag] { std::cerr << flag << std::endl; ENTRY_DEBUG } :;
+//other[bool flag] { std::cerr << flag << std::endl; } :;
 
-throw_exception[bool cond = true] { if (cond) throw antlr::RecognitionException(); ENTRY_DEBUG } :;
+throw_exception[bool cond = true] { if (cond) throw antlr::RecognitionException(); } :;
 
-set_type[DECLTYPE& name, DECLTYPE value, bool result = true] { if (result) name = value; ENTRY_DEBUG } :;
+set_type[DECLTYPE& name, DECLTYPE value, bool result = true] { if (result) name = value; } :;
 
-//trace[const char*s ] { std::cerr << s << std::endl; ENTRY_DEBUG } :;
+//trace[const char*s ] { std::cerr << s << std::endl; } :;
 
-//traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; ENTRY_DEBUG } :;
+//traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
 
-set_int[int& name, int value, bool result = true] { if (result) name = value; ENTRY_DEBUG } :;
+set_int[int& name, int value, bool result = true] { if (result) name = value; } :;
 
-set_bool[bool& variable, bool value = true] { variable = value; ENTRY_DEBUG } :;
+set_bool[bool& variable, bool value = true] { variable = value; } :;
 
 /*
 message[const char* s] { std::cerr << s << std::endl; ENTRY_DEBUG } :;
@@ -2911,7 +2911,7 @@ member_initialization_list { ENTRY_DEBUG } :
         COLON
 ;
 
-mark_namestack { namestack[1] = namestack[0]; namestack[0] = LT(1)->getText(); ENTRY_DEBUG } :;
+mark_namestack { namestack[1] = namestack[0]; namestack[0] = LT(1)->getText(); } :;
 
 identifier_stack[std::string s[]] { s[1] = s[0]; s[0] = LT(1)->getText(); ENTRY_DEBUG } :
         identifier[true]
@@ -3031,7 +3031,9 @@ eat_optional_macro_call {
     // when successfull, eat the macro
     if (success)
         macro_call();
-ENTRY_DEBUG } :;
+
+    ENTRY_DEBUG
+    } :;
 
 macro_call { ENTRY_DEBUG } :
         macro_call_inner
@@ -4044,7 +4046,9 @@ optional_paren_pair {
 
         consume();
     }
-ENTRY_DEBUG } :;
+
+    ENTRY_DEBUG
+} :;
 
 /*
   See if there is a semicolon terminating a statement inside a block at the top level
