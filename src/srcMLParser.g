@@ -494,9 +494,6 @@ start { ENTRY_DEBUG } :
 
         comma[true] |
 
-        // requires clause for C++0x
-        requires_clause |
-
         { !inTransparentMode(MODE_INTERNAL_END_PAREN) || inPrevMode(MODE_CONDITION) }? rparen[true,false] |
 
         // characters with special actions that usually end currently open elements
@@ -3880,7 +3877,8 @@ template_param_list { ENTRY_DEBUG } :
         tempops
 ;
 
-requires_clause {/* LocalMode lm(this);*/ ENTRY_DEBUG } :
+/*
+requires_clause { ENTRY_DEBUG } :
         {
             // template with nested statement (function or class)
             // expect a template parameter list
@@ -3900,6 +3898,7 @@ requires_clause {/* LocalMode lm(this);*/ ENTRY_DEBUG } :
         }
         (TERMINATE { endCurrentMode(MODE_STATEMENT | MODE_NEST); } )*
 ;
+*/
 
 /*
   template parameter
