@@ -1894,9 +1894,7 @@ statement_part { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE decl
         // K&R function parameters
         { inLanguage(LANGUAGE_C_FAMILY) && inMode(MODE_FUNCTION_TAIL) && 
           perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type == VARIABLE }?
-
-            // parameter declaration for a K&R old style function parameter declaration
-            variable_declaration_statement[type_count] parameter (variable_declaration_initialization expression)* terminate |
+            kr_parameter |
 
         /*
           MODE_EXPRESSION
@@ -2328,7 +2326,7 @@ throw_exception[bool cond = true] { if (cond) throw antlr::RecognitionException(
 
 set_type[DECLTYPE& name, DECLTYPE value, bool result = true] { if (result) name = value; } :;
 
-//trace[const char*s ] { std::cerr << s << std::endl; } :;
+trace[const char*s ] { std::cerr << s << std::endl; } :;
 
 //traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
 
@@ -2366,7 +2364,7 @@ function_type[int type_count] { ENTRY_DEBUG } :
         update_typecount
 ;
 
-update_typecount { ENTRY_DEBUG } :
+update_typecount {} :
         {
             decTypeCount();
 
@@ -2377,7 +2375,7 @@ update_typecount { ENTRY_DEBUG } :
         }
 ;
 
-update_var_typecount { ENTRY_DEBUG } :
+update_var_typecount {} :
         {
             decTypeCount();
 
@@ -2406,8 +2404,7 @@ type_identifier_count[int& type_count] { ++type_count; ENTRY_DEBUG } :
         type_identifier | MAIN
 ;
 
-deduct[int& type_count] { --type_count; ENTRY_DEBUG } :
-;
+deduct[int& type_count] { --type_count; } :;
 
 eat_type[int count] { if (count <= 0) return; ENTRY_DEBUG } :
 
@@ -3732,6 +3729,10 @@ empty_element[int element, bool cond] { LocalMode lm(this); ENTRY_DEBUG } :
                 startElement(element);
             }
         }
+;
+
+kr_parameter { ENTRY_DEBUG } : 
+        full_parameter terminate_pre terminate_token
 ;
 
 full_parameter { ENTRY_DEBUG } :
