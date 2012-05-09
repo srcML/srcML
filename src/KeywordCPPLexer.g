@@ -224,6 +224,7 @@ KeywordCPPLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         
         // special C++ operators
         { "::"            , DCOLON        , LANGUAGE_CXX_FAMILY }, 
+        { "&&"            , RVALUEREF     , LANGUAGE_CXX_FAMILY }, 
 
         // special C++ constant values
         { "false"         , FALSE         , LANGUAGE_CXX_FAMILY }, 

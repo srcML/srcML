@@ -64,6 +64,7 @@ PERIOD; // = ".";
 MULTOPS; // = "*";
 REFOPS;  // = "&";
 MULTIMM; // = "*=";
+RVALUEREF; // = "&&";
 
 DOTDOT;
 DOTDOTDOT;

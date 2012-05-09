@@ -3345,7 +3345,7 @@ general_operators { LocalMode lm(this); bool first = true; ENTRY_DEBUG } :
         }
         (
         ({ first || SkipBufferSize() == 0 }? (options { greedy = true; } : OPERATORS | TEMPOPS | TEMPOPE |
-         EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT
+         EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF
         ) { first = false; })+ |
 
         // others are not combined
@@ -3827,7 +3827,7 @@ multops { LocalMode lm(this); ENTRY_DEBUG } :
                 startElement(SMODIFIER);
             }
         }
-        (MULTOPS | REFOPS | DOTDOTDOT | { LT(1)->getText() == "&amp;&amp;" }? OPERATORS)
+        (MULTOPS | REFOPS | DOTDOTDOT | RVALUEREF)
 ;
 
 /*
