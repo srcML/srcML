@@ -61,10 +61,6 @@
 <decl_stmt><decl><type><name>void</name></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
-<decl_stmt><decl><type><name>int</name>*</type> <name>a</name></decl>;</decl_stmt>
-</unit>
-
 <!--
 <unit>
 <decl_stmt><decl><type><name>int</name></type> <name>a</name>, <name>b</name></decl>;</decl_stmt>
@@ -73,18 +69,6 @@
 
 <unit>
 <decl_stmt><decl><type><name>const</name> <name>int</name></type> <name>a</name></decl>;</decl_stmt>
-</unit>
-
-<unit>
-<decl_stmt><decl><type><name>const</name> <name>int</name>*</type> <name>a</name></decl>;</decl_stmt>
-</unit>
-
-<unit>
-<decl_stmt><decl><type><name>const</name> <name>int</name> *</type> <name>a</name></decl>;</decl_stmt>
-</unit>
-
-<unit>
-<decl_stmt><decl><type><name>const</name> *<name>int</name> *</type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
@@ -194,14 +178,6 @@
 
 <unit>
 <decl_stmt><decl><type><name>extern</name> <name>int</name></type> <name>foo</name></decl>;</decl_stmt>
-</unit>
-
-<unit>
-<decl_stmt><decl><type><name>extern</name> <name>int</name>*</type> <name>foo</name></decl>;</decl_stmt>
-</unit>
-
-<unit>
-<decl_stmt><decl><type><name>a</name></type> <name>b</name><argument_list>(<argument><expr>*<name>c</name></expr></argument>)</argument_list>,<name>d</name><argument_list>(<argument><expr>*<name>e</name></expr></argument>)</argument_list></decl>;</decl_stmt>
 </unit>
 
 <unit>
