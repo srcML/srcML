@@ -2781,7 +2781,7 @@ complex_name_cpp[bool marked, bool& iscomplex_name] { namestack[0] = ""; namesta
 complex_name_c[bool marked, bool& iscomplex_name] { namestack[0] = ""; namestack[1] = ""; ENTRY_DEBUG } :
         
         (DCOLON { iscomplex_name = true; })*
-        (simple_name_optional_template[marked] | mark_namestack overloaded_operator)
+        (simple_name_optional_template[marked])
         name_tail[iscomplex_name, marked]
 ;
 
