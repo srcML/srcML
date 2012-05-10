@@ -2224,6 +2224,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
 
             (
                 // specifiers
+                (standard_specifiers)=>
                 standard_specifiers set_int[specifier_count, specifier_count + 1] |
 
                 // typical type name
@@ -2448,6 +2449,7 @@ pure_lead_type_identifier { ENTRY_DEBUG } :
         auto_keyword |
 
         // specifiers that occur in a type
+        (standard_specifiers)=>
         standard_specifiers |
 
         pure_lead_type_identifier_no_specifiers
@@ -4028,7 +4030,7 @@ typedef_statement { ENTRY_DEBUG } :
         (java_specifier_mark | CLASS)=>
         class_definition |
 
-        struct_union_definition[LA(1) == STRUCT ? SSTRUCT : SUNION])
+        struct_union_definition[LA(1) == STRUCT ? SSTRUCT : SUNION])*
 ;
 
 paren_pair :
