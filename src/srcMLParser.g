@@ -3344,7 +3344,7 @@ general_operators { LocalMode lm(this); bool first = true; ENTRY_DEBUG } :
             }
         }
         (
-            general_operators_list ({ SkipBufferSize() == 0 }? general_operators_list)* |
+            general_operators_list (options { greedy = true; } : { SkipBufferSize() == 0 }? general_operators_list)* |
 
             // others are not combined
             NEW | DELETE
