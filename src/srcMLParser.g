@@ -3344,13 +3344,15 @@ general_operators { LocalMode lm(this); bool first = true; ENTRY_DEBUG } :
             }
         }
         (
-        ({ first || SkipBufferSize() == 0 }? (options { greedy = true; } : OPERATORS | TEMPOPS | TEMPOPE |
-         EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF
-        ) { first = false; })+ |
+            general_operators_list ({ SkipBufferSize() == 0 }? general_operators_list)* |
 
-        // others are not combined
-        NEW | DELETE
+            // others are not combined
+            NEW | DELETE
         )
+;
+
+general_operators_list { ENTRY_DEBUG }:
+        OPERATORS | TEMPOPS | TEMPOPE | EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF
 ;
 
 rparen_operator[bool markup = true] { LocalMode lm(this); ENTRY_DEBUG } :
