@@ -3035,6 +3035,7 @@ macro_call { ENTRY_DEBUG } :
     ;
 
 macro_call_inner { LocalMode lm(this); ENTRY_DEBUG } :
+
         {
             // start a mode for the macro that will end after the argument list
             startNewMode(MODE_STATEMENT | MODE_TOP);
@@ -3043,9 +3044,7 @@ macro_call_inner { LocalMode lm(this); ENTRY_DEBUG } :
             startElement(SMACRO_CALL);
         }
         identifier[true]
-
-        (options { greedy = true; } :
-
+        (
         {
             // start a mode for the macro argument list
             startNewMode(MODE_LIST | MODE_TOP);
@@ -3065,8 +3064,7 @@ macro_call_inner { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // end the macro argument list
             endCurrentMode(MODE_LIST | MODE_TOP);
-        }
-        )*
+        })*
 ;
 exception
 catch[antlr::RecognitionException] {
