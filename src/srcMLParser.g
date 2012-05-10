@@ -2228,8 +2228,8 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
 
                 // typical type name
                 complex_name[true] set_bool[foundpure]
-                    set_bool[isoperatorfunction, isoperatorfunction ||
-                             (namestack[0] == "operator" && type_count == 0)] |
+                    set_bool[isoperatorfunction, inLanguage(LANGUAGE_CXX) && (isoperatorfunction ||
+                             (namestack[0] == "operator" && type_count == 0))] |
 
                 // special function name
                 MAIN set_bool[isoperatorfunction, type_count == 0] |
@@ -3941,11 +3941,9 @@ template_argument_list { LocalMode lm(this); ENTRY_DEBUG } :
         restorenamestack
 ;
 
-savenamestack { namestack_save[0] = namestack[0]; namestack_save[1] = namestack[1]; ENTRY_DEBUG } :
-    ;
+savenamestack { namestack_save[0] = namestack[0]; namestack_save[1] = namestack[1]; ENTRY_DEBUG } :;
 
-restorenamestack { namestack[0] = namestack_save[0]; namestack[1] = namestack_save[1]; ENTRY_DEBUG } :
-    ;
+restorenamestack { namestack[0] = namestack_save[0]; namestack[1] = namestack_save[1]; ENTRY_DEBUG } :;
 
 /*
   template argument
