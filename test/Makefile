@@ -157,7 +157,7 @@ GEN_PART=${foreach nm, $(GEN_SEP), ../suite/$(nm).cpp.xml}
 BASE_C=functionkr # typedef_cstruct
 
 # base for C family
-BASE_C_FAMILY=asm macro cstruct extern main function_pointer decl_struct typedef
+BASE_C_FAMILY=asm macro cstruct extern main function_pointer decl_struct typedef decl_pointer function_asterisk
 
 # base for object-oriented languages
 BASE_OO=catch_form foreach
@@ -340,6 +340,9 @@ gen : ${GEN_FILES}
 
 # function declaration from function
 ../suite/function_decl.cpp.xml : ../suite/function.cpp.xml ${XSLT_DEFN2DECL_XSL}
+	${XSLT_DEFN2DECL} $< > $@
+
+../suite/function_asterisk_decl.cpp.xml : ../suite/function_asterisk.cpp.xml ${XSLT_DEFN2DECL_XSL}
 	${XSLT_DEFN2DECL} $< > $@
 
 # const function from function
