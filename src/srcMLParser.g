@@ -429,7 +429,6 @@ int cppifcount;
 bool isdestructor;
 int parseoptions;
 std::string namestack[2];
-std::string namestack_save[2];
 int ifcount;
 
 ~srcMLParser() {}
@@ -2278,7 +2277,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                   (inMode(MODE_CLASS) && inLanguage(LANGUAGE_JAVA_FAMILY)) ||
 
                  // outside of a class definition, but with properly prefixed name
-                 (namestack[0] != "" && namestack[1] != "" && namestack[0] == namestack[1]))]
+                 (inLanguage(LANGUAGE_CXX_FAMILY) && namestack[0] != "" && namestack[1] != "" && namestack[0] == namestack[1]))]
 
         // need to see if we possibly have a constructor/destructor name, with no type
         set_bool[isoperatorfunction, isoperatorfunction || isconstructor]
@@ -2778,17 +2777,15 @@ complex_name_cpp[bool marked, bool& iscomplex_name] { namestack[0] = ""; namesta
 /*
   Identifier markup for C
 */
-complex_name_c[bool marked, bool& iscomplex_name] { namestack[0] = ""; namestack[1] = ""; ENTRY_DEBUG } :
+complex_name_c[bool marked, bool& iscomplex_name] { ENTRY_DEBUG } :
         
-        (DCOLON { iscomplex_name = true; })*
         simple_name_optional_template[marked]
-        name_tail[iscomplex_name, marked]
 ;
 
 /*
   Identifier markup for Java
 */
-complex_name_java[bool marked, bool& iscomplex_name] { namestack[0] = ""; namestack[1] = ""; ENTRY_DEBUG } :
+complex_name_java[bool marked, bool& iscomplex_name] { ENTRY_DEBUG } :
 
         simple_name_optional_template[marked]
         (options { greedy = true; } : (period { iscomplex_name = true; } simple_name_optional_template[marked]))*
@@ -3931,21 +3928,21 @@ template_param { ENTRY_DEBUG } :
 /*
   template argument list
 */
-template_argument_list { LocalMode lm(this); ENTRY_DEBUG } : 
+template_argument_list { LocalMode lm(this); std::string namestack_save[2]; ENTRY_DEBUG } : 
         {
             // local mode
             startNewMode(MODE_LOCAL);
 
             startElement(STEMPLATE_ARGUMENT_LIST);
         }
-        savenamestack
+        savenamestack[namestack_save]
         tempops (COMMA | template_argument)* tempope
-        restorenamestack
+        restorenamestack[namestack_save]
 ;
 
-savenamestack { namestack_save[0] = namestack[0]; namestack_save[1] = namestack[1]; ENTRY_DEBUG } :;
+savenamestack[std::string namestack_save[]] { namestack_save[0] = namestack[0]; namestack_save[1] = namestack[1]; ENTRY_DEBUG } :;
 
-restorenamestack { namestack[0] = namestack_save[0]; namestack[1] = namestack_save[1]; ENTRY_DEBUG } :;
+restorenamestack[std::string namestack_save[]] { namestack[0] = namestack_save[0]; namestack[1] = namestack_save[1]; ENTRY_DEBUG } :;
 
 /*
   template argument
