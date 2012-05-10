@@ -2166,8 +2166,6 @@ perform_noncfg_check[DECLTYPE& type, int& token, int& fla, int& type_count, bool
     int start = mark();
     inputState->guessing++;
 
-    int firsttoken = LA(1);
-
     try {
         noncfg_check(token, fla, type_count, type, inparam);
 
