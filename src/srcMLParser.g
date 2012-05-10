@@ -2226,7 +2226,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
 
                 // typical type name
                 complex_name[true] set_bool[foundpure]
-                    set_bool[isoperatorfunction, inLanguage(LANGUAGE_CXX) && (isoperatorfunction ||
+                    set_bool[isoperatorfunction, inLanguage(LANGUAGE_CXX_FAMILY) && (isoperatorfunction ||
                              (namestack[0] == "operator" && type_count == 0))] |
 
                 // special function name
