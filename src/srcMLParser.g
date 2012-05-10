@@ -131,7 +131,7 @@ header "post_include_hpp" {
 
 // Macros to introduce trace statements
 #define ENTRY_DEBUG // fprintf(stderr, "TRACE: %d %d  %5s %s (%d)\n", inputState->guessing, LA(1), (LA(1) != 11 ? LT(1)->getText().c_str() : "\\n"), __FUNCTION__, __LINE__);
-#define CATCH_DEBUG { LocalMode lm(this); startNewMode(MODE_LOCAL); startElement(SMARKER); }
+#define CATCH_DEBUG // { LocalMode lm(this); startNewMode(MODE_LOCAL); startElement(SMARKER); }
 
 #define assertMode(m)
 
@@ -4020,7 +4020,13 @@ typedef_statement { ENTRY_DEBUG } :
                 // statement
                 startNewMode(MODE_NEST | MODE_STATEMENT | MODE_INNER_DECL);
         }
-       ( class_definition | struct_union_definition[LA(1) == STRUCT ? SSTRUCT : SUNION])*
+        (
+        /* Never going to see a Java specifier before a class in C++, and never going
+           to see a TYPEDEF in a Java program, but needed for grammar ambiguity */
+        (java_specifier_mark | CLASS)=>
+        class_definition |
+
+        struct_union_definition[LA(1) == STRUCT ? SSTRUCT : SUNION])
 ;
 
 paren_pair :
