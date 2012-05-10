@@ -3076,8 +3076,10 @@ catch[antlr::RecognitionException] {
             emptyElement(SERROR_PARSE);
 }
 
-macro_call_contents { ENTRY_DEBUG } :
-        {
+macro_call_contents { 
+
+            ENTRY_DEBUG
+
             LocalMode lm(this);
 
             int parencount = 0;
@@ -3090,7 +3092,7 @@ macro_call_contents { ENTRY_DEBUG } :
                 if (LA(1) == RPAREN)
                     --parencount;
 
-                if (start) {
+                if (inputState->guessing == 0 && start) {
                        // argument with nested expression
                        startNewMode(MODE_ARGUMENT);
 
@@ -3100,15 +3102,14 @@ macro_call_contents { ENTRY_DEBUG } :
                        start = false;
                 }
 
-                if (LA(1) == COMMA && parencount == 0) {
+                if (inputState->guessing == 0 && LA(1) == COMMA && parencount == 0) {
                     endCurrentMode();
                     start = true;
                 }
                 consume();
             }
 
-        }
-;
+        } :;
 
 try_statement { ENTRY_DEBUG } :
         {
