@@ -103,11 +103,11 @@ void srcMLOutput::close() {
   }
 }
 
-bool srcMLOutput::isoption(int flag) const {
+bool srcMLOutput::isoption(const OPTION_TYPE& flag) const {
   return (flag & options) > 0;
 }
 
-bool srcMLOutput::isoption(int flag, const OPTION_TYPE& options) {
+bool srcMLOutput::isoption(const OPTION_TYPE& flag, const OPTION_TYPE& options) {
   return (flag & options) > 0;
 }
 

@@ -3334,7 +3334,7 @@ pure_expression_block { ENTRY_DEBUG } :
 /*
   All possible operators
 */
-general_operators { LocalMode lm(this); bool first = true; ENTRY_DEBUG } :
+general_operators { LocalMode lm(this); ENTRY_DEBUG } :
         {
             if (isoption(parseoptions, OPTION_OPERATOR)) {
 
