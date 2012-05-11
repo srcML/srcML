@@ -124,6 +124,8 @@ namespace {
   ELEMENT_MAP(SFUNCTION_CALL,        "call")
   ELEMENT_MAP(SPARAMETER_LIST,       "parameter_list")
   ELEMENT_MAP(SPARAMETER,            "param")
+  ELEMENT_MAP(SKRPARAMETER_LIST,     "krparameter_list")
+  ELEMENT_MAP(SKRPARAMETER,          "krparam")
   ELEMENT_MAP(SARGUMENT_LIST,        "argument_list")
   ELEMENT_MAP(SARGUMENT,             "argument")
 
