@@ -130,7 +130,7 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG // fprintf(stderr, "TRACE: %d %d  %5s %s (%d)\n", inputState->guessing, LA(1), (LA(1) != 11 ? LT(1)->getText().c_str() : "\\n"), __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG // fprintf(stderr, "TRACE: %d%s%d  %5s %s (%d)\n", inputState->guessing, inputState->guessing == 0 ? " " : inputState->guessing == 1 ? "   " : inputState->guessing == 2 ? "     " : "       ", LA(1), (LA(1) != 11 ? LT(1)->getText().c_str() : "\\n"), __FUNCTION__, __LINE__);
 #define CATCH_DEBUG // { LocalMode lm(this); startNewMode(MODE_LOCAL); startElement(SMARKER); }
 
 #define assertMode(m)
@@ -2289,7 +2289,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
         // we have a declaration, so do we have a function?
         (
             // check for function pointer, which must have a non-specifier part of the type
-            (function_pointer_name_grammar LPAREN)=>
+            (function_pointer_name_grammar eat_optional_macro_call LPAREN)=>
             function_pointer_name_grammar
         
             // what was assumed to be the name of the function is actually part of the type
@@ -3034,7 +3034,7 @@ macro_call { ENTRY_DEBUG } :
         }
     ;
 
-macro_call_inner { LocalMode lm(this); ENTRY_DEBUG } :
+macro_call_inner { LocalMode lm(this); bool first = true; ENTRY_DEBUG } :
 
         {
             // start a mode for the macro that will end after the argument list
@@ -3044,7 +3044,7 @@ macro_call_inner { LocalMode lm(this); ENTRY_DEBUG } :
             startElement(SMACRO_CALL);
         }
         identifier[true]
-        (
+        ({ first }?
         {
             // start a mode for the macro argument list
             startNewMode(MODE_LIST | MODE_TOP);
@@ -3064,7 +3064,7 @@ macro_call_inner { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // end the macro argument list
             endCurrentMode(MODE_LIST | MODE_TOP);
-        })*
+        } set_bool[first, false] )*
 ;
 exception
 catch[antlr::RecognitionException] {
