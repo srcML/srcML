@@ -2779,7 +2779,7 @@ complex_name_cpp[bool marked, bool& iscomplex_name] { namestack[0] = ""; namesta
 */
 complex_name_c[bool marked, bool& iscomplex_name] { ENTRY_DEBUG } :
         
-        simple_name_optional_template[marked]
+        identifier[marked]
 ;
 
 /*
