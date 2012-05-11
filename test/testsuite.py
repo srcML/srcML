@@ -482,6 +482,15 @@ else:
 	for e in xerrorlist:
 		print e[0], e[1], "\n", "".join(e[2][3:])
 
+# Output totals again
+if error_count != 0:
+	print "Errors:  " + str(error_count) + " out of " + str(total_count),
+	if str(total_count) == "1":
+		print " case", 
+	else:
+		print " cases", 
+        print
+
 # output tool errors counts
 print
 if len(sperrorlist) == 0:
