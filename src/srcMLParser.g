@@ -2201,7 +2201,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
              DECLTYPE& type,
              bool inparam     /* are we in a parameter */
         ] { token = 0; fla = 0; type_count = 0; int specifier_count = 0; isdestructor = false;
-        type = NONE; bool foundpure = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; bool endbracket = false; ENTRY_DEBUG } :
+        type = NONE; bool foundpure = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; bool endbracket = false; bool modifieroperator = false; ENTRY_DEBUG } :
 
         // main pattern for variable declarations, and most function declaration/definitions.
         // trick is to look for function declarations/definitions, and along the way record
@@ -2220,6 +2220,11 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
 
             // was their a bracket on the end?  Need to know for Java
             set_bool[endbracket, inLanguage(LANGUAGE_JAVA_FAMILY) && LA(1) == LBRACKET]
+
+            // record any type modifiers that are also operators
+            // this is for disambiguation of destructor declarations from expressions involving
+            // the ~ operator
+            set_bool[modifieroperator, modifieroperator || LA(1) == REFOPS || LA(1) == MULTOPS]
 
             (
                 // specifiers
@@ -2257,6 +2262,9 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
         set_int[type_count, type_count > 1 ? type_count - 1 : 0]
 
         set_bool[isoperatorfunction, isoperatorfunction || isdestructor]
+
+        // special case for what looks like a destructor declaration
+        throw_exception[isdestructor && modifieroperator]
 
         /*
           We have a declaration (at this point a variable) if we have:
