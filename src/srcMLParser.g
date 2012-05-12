@@ -3147,6 +3147,17 @@ try_statement { ENTRY_DEBUG } :
             startElement(STRY_BLOCK);
         }
         TRY
+        {            
+            // looking for a LPAREN.  may have some whitespace before it
+            consumeSkippedTokens();
+
+            if (LA(1) == LPAREN) {
+                match(LPAREN);
+
+                // expect a parameter list
+                startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
+            }
+        }
 ;
 
 catch_statement { ENTRY_DEBUG } :
@@ -3156,11 +3167,19 @@ catch_statement { ENTRY_DEBUG } :
 
             // start of the catch statement
             startElement(SCATCH_BLOCK);
-
-            // expect a parameter list
-            startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
         }
-        CATCH LPAREN
+        CATCH
+        {            
+            // looking for a LPAREN.  may have some whitespace before it
+            consumeSkippedTokens();
+
+            if (LA(1) == LPAREN) {
+                match(LPAREN);
+
+                // expect a parameter list
+                startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
+            }
+        }
 ;
 
 finally_statement { ENTRY_DEBUG } :
