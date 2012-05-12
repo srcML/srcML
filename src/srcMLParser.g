@@ -130,7 +130,7 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG // fprintf(stderr, "TRACE: %d%s%d  %5s %s (%d)\n", inputState->guessing, inputState->guessing == 0 ? " " : inputState->guessing == 1 ? "   " : inputState->guessing == 2 ? "     " : "       ", LA(1), (LA(1) != 11 ? LT(1)->getText().c_str() : "\\n"), __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d  %5s%*s %s (%d)\n", inputState->guessing, LA(1), (LA(1) != 11 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #define CATCH_DEBUG // { LocalMode lm(this); startNewMode(MODE_LOCAL); startElement(SMARKER); }
 
 #define assertMode(m)
@@ -189,8 +189,18 @@ header "post_include_cpp" {
        const int oldsize;
     };
 
+    class RuleDepth {
+
+     public:
+     RuleDepth(srcMLParser* t) : pparser(t) { ++pparser->ruledepth; }
+     ~RuleDepth() { --pparser->ruledepth; }
+
+     private:
+       srcMLParser* pparser;
+    };
+
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options)
-   : antlr::LLkParser(lexer,1), Mode(this, lang), zeromode(false), skipelse(false), cppifcount(0), parseoptions(parser_options), ifcount(0)
+   : antlr::LLkParser(lexer,1), Mode(this, lang), zeromode(false), skipelse(false), cppifcount(0), parseoptions(parser_options), ifcount(0), ruledepth(0)
 
 {
     // root, single mode
@@ -432,6 +442,7 @@ bool isdestructor;
 int parseoptions;
 std::string namestack[2];
 int ifcount;
+int ruledepth;
 
 ~srcMLParser() {}
 
@@ -483,7 +494,7 @@ void endAllModes();
 
   Order of evaluation is important.
 */
-start { ENTRY_DEBUG } :
+start { ruledepth = 0; ENTRY_DEBUG } :
 
         COMMENT_TEXT |
 
