@@ -3122,7 +3122,7 @@ macro_call_contents {
 try_statement { ENTRY_DEBUG } :
         {
             // treat try block as nested block statement
-            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_STATEMENT);
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_TRY);
 
             // start of the try statement
             startElement(STRY_BLOCK);

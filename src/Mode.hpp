@@ -155,6 +155,8 @@ class Mode : public TokenParser, public Language {
 
   const static State::MODE_TYPE MODE_IN_INIT;
 
+  const static State::MODE_TYPE MODE_TRY;
+
  public:
 
   Mode(TokenParser* ptp, int lang)
