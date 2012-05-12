@@ -130,8 +130,8 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d  %5s%*s %s (%d)\n", inputState->guessing, LA(1), (LA(1) != 11 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
-#define CATCH_DEBUG // { LocalMode lm(this); startNewMode(MODE_LOCAL); startElement(SMARKER); }
+#define ENTRY_DEBUG // RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d  %5s%*s %s (%d)\n", inputState->guessing, LA(1), (LA(1) != 11 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define CATCH_DEBUG // marker()
 
 #define assertMode(m)
 
@@ -1622,7 +1622,7 @@ lcurly { ENTRY_DEBUG } :
                 endDownToMode(MODE_CONDITION);
                 endCurrentMode(MODE_CONDITION);
             }
-
+           
             if (inMode(MODE_IF)) {
 
                 // then part of the if statement (after the condition)
@@ -1681,7 +1681,7 @@ block_end { ENTRY_DEBUG } :
             // special case when ending then of if statement
 
             // end down to either a block or top section, or to an if, whichever is reached first
-            endDownToFirstMode(MODE_BLOCK | MODE_TOP | MODE_IF | MODE_ELSE);
+            endDownToFirstMode(MODE_BLOCK | MODE_TOP | MODE_IF | MODE_ELSE | MODE_TRY);
         }
         else_handling
         {
@@ -1812,6 +1812,12 @@ else_handling { ENTRY_DEBUG } :
 
                 // move to the next non-skipped token
                 consumeSkippedTokens();
+
+                // catch and finally statements are nested inside of a try, if at that level
+                // so if no CATCH or FINALLY, then end now
+                if (inMode(MODE_TRY) && (LA(1) != CATCH) && (LA(1) != FINALLY)) {
+                    endCurrentMode(MODE_TRY);
+                }
 
                 // handle parts of if
                 if (inTransparentMode(MODE_IF)) {
@@ -2345,6 +2351,8 @@ set_type[DECLTYPE& name, DECLTYPE value, bool result = true] { if (result) name 
 trace[const char*s ] { std::cerr << s << std::endl; } :;
 
 //traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
+
+marker { LocalMode lm(this); startNewMode(MODE_LOCAL); startElement(SMARKER); } :;
 
 set_int[int& name, int value, bool result = true] { if (result) name = value; } :;
 
