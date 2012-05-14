@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Java" dir="constructor">
 
+<unit>
 <class><specifier>public</specifier> class <name>Class</name> <block>{ 
     <constructor><name>Class</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
 }</block></class>
+</unit>
 
-
+<unit>
 <class><specifier>public</specifier> class <name>Class</name> <block>{ 
     <constructor><name>Class</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{}</block></constructor>
 }</block></class>
+</unit>
+
+<unit>
+<class><specifier>public</specifier> class <name>Class</name> <block>{ 
+    <constructor><name>Class</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
+        <try>try <block>{}</block><catch>catch()<block>{}</block></catch></try>
+    }</block></constructor>
+}</block></class>
+</unit>
 
 </unit>
