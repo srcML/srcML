@@ -119,7 +119,7 @@ OPERATORS options { testLiterals = true; } { unsigned int realbegin = _begin; bo
         ',' | ';' | '('..')' | '[' | ']' | '{' | '}' | '@' |
 
         '$'  |    // not an operator (why is it here?)
-        '?' { $setType(QMARK); } | // part of ternary
+        '?' { if (inLanguage(LANGUAGE_JAVA_FAMILY)) $setType(QMARK); } | // part of ternary
         '~'  | // has to be separate if part of name
 
         '.' ('*' | '.' ( '.' { $setType(DOTDOTDOT); } | { $setType(DOTDOT); }) | { $setType(CONSTANTS); } CONSTANTS | ) |

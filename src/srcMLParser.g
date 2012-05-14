@@ -4010,12 +4010,8 @@ template_argument[] { LocalMode lm(this); ENTRY_DEBUG } :
             startElement(STEMPLATE_ARGUMENT);
         }
         ( options { greedy = true; } : 
-            type_identifier | 
-
-            literal | char_literal | string_literal | boolean |
-
-            { inLanguage(LANGUAGE_JAVA_FAMILY) }? QMARK
-    )+
+            type_identifier | literal | char_literal | string_literal | boolean | EXTENDS | QMARK
+        )+
 ;
 
 tempops { ENTRY_DEBUG } :
