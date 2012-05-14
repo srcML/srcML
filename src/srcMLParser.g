@@ -1954,7 +1954,7 @@ statement_part { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE decl
 
         // special case for type modifiers
         { inMode(MODE_VARIABLE_NAME | MODE_INIT) }?
-             multops |
+        (multops | tripledotop) |
 
         // start of argument for return or throw statement
         { inMode(MODE_VARIABLE_NAME | MODE_INIT) }?
@@ -2520,7 +2520,7 @@ pure_lead_type_identifier_no_specifiers { ENTRY_DEBUG } :
         CLASS | STRUCT | UNION |
 
         // enum use in a type
-        (ENUM variable_identifier (variable_identifier | multops | INLINE))=> ENUM |
+        (ENUM variable_identifier (variable_identifier | multops | tripledotop | INLINE))=> ENUM |
 
         // entire enum definition
         enum_definition_whole
@@ -2562,6 +2562,8 @@ type_identifier { ENTRY_DEBUG } :
 ;
 
 non_lead_type_identifier { bool iscomplex = false; ENTRY_DEBUG } :
+
+        tripledotop |
 
         { inLanguage(LANGUAGE_C_FAMILY) }? multops |
 
@@ -3881,7 +3883,22 @@ multops { LocalMode lm(this); ENTRY_DEBUG } :
                 startElement(SMODIFIER);
             }
         }
-        (MULTOPS | REFOPS | DOTDOTDOT | RVALUEREF)
+        (MULTOPS | REFOPS | RVALUEREF)
+;
+
+tripledotop { LocalMode lm(this); ENTRY_DEBUG } :
+        {
+            // markup type modifiers if option is on
+            if (isoption(parseoptions, OPTION_MODIFIER)) {
+
+                // end all elements at end of rule automatically
+                startNewMode(MODE_LOCAL);
+
+                // start the modifier
+                startElement(SMODIFIER);
+            }
+        }
+        DOTDOTDOT
 ;
 
 /*
