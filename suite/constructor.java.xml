@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Java" dir="constructor">
 
+<class><specifier>public</specifier> class <name>Class</name> <block>{ 
+
+    <constructor><name>Class</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{}</block></constructor>
+
+}</block></class>
 
 </unit>
