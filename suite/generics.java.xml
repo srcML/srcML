@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="generics">
 
+<unit>
+<class><specifier>public</specifier> class <name><name>Class</name><argument_list>&lt;<argument><name>T</name></argument>&gt;</argument_list></name> <block>{}</block></class>
+</unit>
+
 </unit>
