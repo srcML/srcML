@@ -67,4 +67,34 @@
 }</block></class>
 </unit>
 
+<unit>
+<class><specifier>public</specifier> class <name>Class</name> <block>{ 
+    <constructor><name>Class</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
+        <while>while<condition>(<expr>1</expr>)</condition>
+          <try>try <block>{
+              <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+          }</block> <catch>catch()<block>{
+              <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+          }</block></catch> <finally>finally <block>{
+              <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
+        }</block></finally></try></while>
+    }</block></constructor>
+}</block></class>
+</unit>
+
+<unit>
+<class><specifier>public</specifier> class <name>Class</name> <block>{ 
+    <constructor><name>Class</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
+        <if>if<condition>(<expr>1</expr>)</condition><then>
+          <try>try <block>{
+              <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+          }</block> <catch>catch()<block>{
+              <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+          }</block></catch> <finally>finally <block>{
+              <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
+        }</block></finally></try></then></if>
+    }</block></constructor>
+}</block></class>
+</unit>
+
 </unit>
