@@ -55,7 +55,7 @@
 <unit>
 <class><specifier>public</specifier> class <name>Class</name> <block>{ 
     <constructor><name>Class</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
-        <for>for(<init>;</init><condition><expr>1</expr></condition>;<incr/>)
+        <for>for(<init>;</init><condition><expr>1</expr>;</condition><incr/>)
           <try>try <block>{
               <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
           }</block> <catch>catch()<block>{
