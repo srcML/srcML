@@ -2825,6 +2825,7 @@ complex_name_c[bool marked, bool& iscomplex_name] { ENTRY_DEBUG } :
 */
 complex_name_java[bool marked, bool& iscomplex_name] { ENTRY_DEBUG } :
 
+        template_argument_list |
         simple_name_optional_template[marked]
         (options { greedy = true; } : (period { iscomplex_name = true; } simple_name_optional_template[marked]))*
 ;
