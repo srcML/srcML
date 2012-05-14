@@ -96,6 +96,7 @@ tokens {
     INTERFACE;
     FINAL;
     ABSTRACT;
+    SUPER;
 
     // C++0x tokens
     CONCEPT;
@@ -252,6 +253,7 @@ KeywordCPPLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         { "interface"     , INTERFACE     , LANGUAGE_JAVA }, 
         { "extends"       , EXTENDS       , LANGUAGE_JAVA }, 
         { "implements"    , IMPLEMENTS    , LANGUAGE_JAVA }, 
+        { "super"         , SUPER         , LANGUAGE_JAVA }, 
         
         // import
         { "import"        , IMPORT        , LANGUAGE_JAVA }, 

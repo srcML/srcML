@@ -2747,7 +2747,7 @@ identifier[bool marked = false] { LocalMode lm(this); ENTRY_DEBUG } :
                 startElement(SNAME);
             }
         }
-        (NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF)
+        (NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF | SUPER)
 ;
 
 /*
@@ -4010,9 +4010,34 @@ template_argument[] { LocalMode lm(this); ENTRY_DEBUG } :
             startElement(STEMPLATE_ARGUMENT);
         }
         ( options { greedy = true; } : 
-            type_identifier | literal | char_literal | string_literal | boolean | EXTENDS | QMARK
+            type_identifier | literal | char_literal | string_literal | boolean | 
+
+
+            template_extends_java | template_super_java | QMARK
         )+
 ;
+
+template_extends_java[] { LocalMode lm(this); bool iscomplex = false; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
+
+            startElement(SEXTENDS);
+        }
+        EXTENDS
+        complex_name_java[true, iscomplex]
+;
+
+
+template_super_java[] { LocalMode lm(this); bool iscomplex = false; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
+
+            startElement(SDERIVATION_LIST);
+        }
+        SUPER
+        complex_name_java[true, iscomplex]
+;
+
 
 tempops { ENTRY_DEBUG } :
         {
