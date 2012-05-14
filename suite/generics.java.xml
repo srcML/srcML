@@ -17,4 +17,6 @@
 <decl_stmt><decl><type><name><name>Class</name><argument_list>&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>c</name> =<init> <expr>new <call><name><name>Class</name><argument_list>&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
 </unit>
 
+<decl_stmt><decl><type><name><name>Class</name><argument_list>&lt;<argument><name>Integer</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></type> <name>c</name> =<init> <expr>new <call><name><name>Class</name><argument_list>&lt;<argument><name>Integer</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
 </unit>
