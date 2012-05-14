@@ -157,6 +157,8 @@ class Mode : public TokenParser, public Language {
 
   const static State::MODE_TYPE MODE_TRY;
 
+  const static State::MODE_TYPE MODE_END_LIST_AT_BLOCK;
+
  public:
 
   Mode(TokenParser* ptp, int lang)

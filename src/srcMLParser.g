@@ -130,8 +130,8 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG // RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d  %5s%*s %s (%d)\n", inputState->guessing, LA(1), (LA(1) != 11 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
-#define CATCH_DEBUG // marker()
+#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d  %5s%*s %s (%d)\n", inputState->guessing, LA(1), (LA(1) != 11 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define CATCH_DEBUG //marker();
 
 #define assertMode(m)
 
@@ -1915,6 +1915,11 @@ statement_part { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE decl
           MODE_EXPRESSION
         */
 
+        // block right after argument list, e.g., throws list in Java
+        { inTransparentMode(MODE_END_LIST_AT_BLOCK) }?
+        { endDownToMode(MODE_LIST); endCurrentMode(MODE_LIST); }
+            lcurly | 
+
         // expression block or expressions
         // must check before expression
         { inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT) }?
@@ -2449,13 +2454,13 @@ throw_list { ENTRY_DEBUG } :
         THROW LPAREN |
         {
             // start a new mode that will end after the argument list
-            startNewMode(MODE_LIST | MODE_EXPECT);
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_EXPECT | MODE_END_LIST_AT_BLOCK);
 
             startElement(STHROW_SPECIFIER_JAVA);
         }
         THROWS
         {
-            endCurrentMode(MODE_LIST | MODE_EXPECT);
+//            endCurrentMode(MODE_LIST | MODE_EXPECT);
         }
 ;  
 
@@ -2918,6 +2923,9 @@ constructor_header { ENTRY_DEBUG } :
         complex_name[true]
 
         parameter_list
+        {
+            setMode(MODE_FUNCTION_TAIL);
+        }
 ;
 
 // member initialization list of constructor
