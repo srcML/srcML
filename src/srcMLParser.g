@@ -1815,12 +1815,14 @@ else_handling { ENTRY_DEBUG } :
 
                 // catch and finally statements are nested inside of a try, if at that level
                 // so if no CATCH or FINALLY, then end now
-                if (inMode(MODE_TRY) && (LA(1) != CATCH) && (LA(1) != FINALLY)) {
+                bool intry = inMode(MODE_TRY);
+                bool restoftry = LA(1) == CATCH || LA(1) == FINALLY;
+                if (intry && !restoftry) {
                     endCurrentMode(MODE_TRY);
                 }
 
                 // handle parts of if
-                if (inTransparentMode(MODE_IF)) {
+                if (inTransparentMode(MODE_IF) && !(intry && restoftry)) {
 
                     // find out if the next token is an else
                     bool nestedelse = LA(1) == ELSE;
