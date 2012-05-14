@@ -55,6 +55,7 @@ RPAREN; // = ")";
 TERMINATE; // = ";";
 PREPROC;
 COLON; // = ":";
+QMARK;
 
 // define value in master grammar so that it depends on language
 DCOLON;
@@ -118,7 +119,7 @@ OPERATORS options { testLiterals = true; } { unsigned int realbegin = _begin; bo
         ',' | ';' | '('..')' | '[' | ']' | '{' | '}' | '@' |
 
         '$'  |    // not an operator (why is it here?)
-        '?'  | // part of ternary
+        '?' { $setType(QMARK); } | // part of ternary
         '~'  | // has to be separate if part of name
 
         '.' ('*' | '.' ( '.' { $setType(DOTDOTDOT); } | { $setType(DOTDOT); }) | { $setType(CONSTANTS); } CONSTANTS | ) |

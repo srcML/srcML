@@ -3404,7 +3404,7 @@ general_operators { LocalMode lm(this); ENTRY_DEBUG } :
 ;
 
 general_operators_list { ENTRY_DEBUG }:
-        OPERATORS | TEMPOPS | TEMPOPE | EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF
+        OPERATORS | TEMPOPS | TEMPOPE | EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF | QMARK
 ;
 
 rparen_operator[bool markup = true] { LocalMode lm(this); ENTRY_DEBUG } :
@@ -4002,14 +4002,20 @@ restorenamestack[std::string namestack_save[]] { namestack[0] = namestack_save[0
 /*
   template argument
 */
-template_argument { LocalMode lm(this); ENTRY_DEBUG } :
+template_argument[] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // local mode
             startNewMode(MODE_LOCAL);
 
             startElement(STEMPLATE_ARGUMENT);
         }
-        ( options { greedy = true; } : type_identifier | literal | char_literal | string_literal | boolean)+
+        ( options { greedy = true; } : 
+            type_identifier | 
+
+            literal | char_literal | string_literal | boolean |
+
+            { inLanguage(LANGUAGE_JAVA_FAMILY) }? QMARK
+    )+
 ;
 
 tempops { ENTRY_DEBUG } :
