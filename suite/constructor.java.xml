@@ -51,4 +51,20 @@
 }</block></class>
 </unit>
 
+
+<unit>
+<class><specifier>public</specifier> class <name>Class</name> <block>{ 
+    <constructor><name>Class</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
+        <for>for(<init>;</init><condition>1</condition>;<incr/>)
+          <try>try <block>{
+              <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+          }</block> <catch>catch()<block>{
+              <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+          }</block></catch> <finally>finally <block>{
+              <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
+        }</block></finally></try></for>
+    }</block></constructor>
+}</block></class>
+</unit>
+
 </unit>
