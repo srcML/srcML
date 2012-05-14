@@ -46,4 +46,10 @@
 <empty_stmt>;</empty_stmt></for>
 </unit>
 
+
+<unit>
+<for>for(<init>;</init><condition><expr>1</expr>;</condition><incr/>)
+  <try>try <block>{}</block> <catch>catch <block>{}</block></catch></try></for>
+</unit>
+
 </unit>
