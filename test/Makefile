@@ -326,7 +326,7 @@ cleanall :
 %.cpp0x.xml : %.cpp.xml
 	${XSLT_SETLANGUAGE_CXX_0X} $< > $@
 
-GEN_FILES=${GEN_PART} ${GEN_ALL} ${GEN_BLOCK} ${GEN_COMMENT} ${GEN_PREPROC} ${GEN_FORMFEED} ../suite/constructor.cpp.xml $(GEN_JAVA) $(GEN_C) $(GEN_CXX_0X)
+GEN_FILES=${GEN_PART} ${GEN_ALL} ${GEN_BLOCK} ${GEN_COMMENT} ${GEN_PREPROC} ${GEN_FORMFEED} $(GEN_JAVA) $(GEN_C) $(GEN_CXX_0X)
 
 GEN_CPP_BASE=${GEN_SEP} ${foreach nm, $(SEP_PLUS), $(nm).all} ${foreach nm, $(SEP_PLUS), $(nm).block} ${foreach nm, $(SEP_PLUS), $(nm).comment} ${foreach nm, $(SEP_PLUS), $(nm).preproc}
 
