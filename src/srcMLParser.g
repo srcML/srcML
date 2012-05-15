@@ -2172,6 +2172,9 @@ function_tail { ENTRY_DEBUG } :
             { inLanguage(LANGUAGE_CXX_FAMILY) }?
             function_specifier |
 
+            { inLanguage(LANGUAGE_CXX_FAMILY) }?
+            TRY | 
+
             { inLanguage(LANGUAGE_OO) }?
             complete_throw_list |
 
@@ -2917,6 +2920,8 @@ constructor_definition { ENTRY_DEBUG } :
             startElement(SCONSTRUCTOR_DEFINITION);
         }
         constructor_header
+
+        (try_statement)*
 
         (member_initialization_list)*
 ;
