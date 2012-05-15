@@ -49,4 +49,8 @@
 <class><specifier>public</specifier> class <name><name>Class</name><argument_list>&lt;<argument>? <implements>implements <name>Object</name></implements></argument>&gt;</argument_list></name> <block>{}</block></class>
 </unit>
 
+<class type="interface"><specifier>public</specifier> interface <name>Cage</name><argument_list>&lt;<argument><name>E</name></argument>&gt;</argument_list> <block>{}</block></class>
+
+<class type="interface"><specifier>public</specifier> interface <name>Cage</name><argument_list>&lt;<argument><name>E</name></argument>&gt;</argument_list> <super><extends>extends <name><name>Collection</name><argument_list>&lt;<argument><name>E</name></argument>&gt;</argument_list></name></extends></super> <block>{}</block></class>
+
 </unit>
