@@ -3180,10 +3180,6 @@ try_pseudo_statement { ENTRY_DEBUG } :
 
 catch_statement { ENTRY_DEBUG } :
         {
-            // need to wrap this in a try statement, even if one doesn't exist
-            if (!inMode(MODE_TRY))
-                try_pseudo_statement();
-
             // treat catch block as nested block statement
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_STATEMENT);
 
@@ -3206,10 +3202,6 @@ catch_statement { ENTRY_DEBUG } :
 
 finally_statement { ENTRY_DEBUG } :
         {
-            // need to wrap this in a try statement, even if one doesn't exist
-            if (!inMode(MODE_TRY))
-                try_pseudo_statement();
-
             // treat catch block as nested block statement
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_STATEMENT);
 
