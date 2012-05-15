@@ -1672,7 +1672,7 @@ lcurly_base { setFinalToken(); ENTRY_DEBUG } :
 /*
   Marks the end of a block.  Also indicates the end of some open elements.
 */
-block_end { ENTRY_DEBUG } :
+block_end[] { ENTRY_DEBUG } :
         // handling of if with then block followed by else
         // handle the block, however scope of then completion stops at if
         rcurly
@@ -1717,7 +1717,7 @@ block_end { ENTRY_DEBUG } :
 
   Not used directly, but called by block_end
 */
-rcurly { setFinalToken(); ENTRY_DEBUG } :
+rcurly[] { setFinalToken(); ENTRY_DEBUG } :
         {
             // end any elements inside of the block
             endDownToMode(MODE_TOP);
@@ -1819,6 +1819,7 @@ else_handling { ENTRY_DEBUG } :
                 bool restoftry = LA(1) == CATCH || LA(1) == FINALLY;
                 if (intry && !restoftry) {
                     endCurrentMode(MODE_TRY);
+                    endDownToMode(MODE_TOP);
                 }
 
                 // handle parts of if
