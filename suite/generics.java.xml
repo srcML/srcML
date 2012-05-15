@@ -42,6 +42,10 @@
 </unit>
 
 <unit>
+<class><specifier>public</specifier> class <name><name>Class</name><argument_list>&lt;<argument>?</argument>&gt;</argument_list></name> <block>{}</block></class>
+</unit>
+
+<unit>
 <class><specifier>public</specifier> class <name><name>Class</name><argument_list>&lt;<argument>T <implements>implements <name>Object</name></implements></argument>&gt;</argument_list></name> <block>{}</block></class>
 </unit>
 
