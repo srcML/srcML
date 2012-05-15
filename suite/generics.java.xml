@@ -17,6 +17,12 @@
 <decl_stmt><decl><type><name><name>Class</name><argument_list>&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>c</name> =<init> <expr>new <call><name><name>Class</name><argument_list>&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
 </unit>
 
+<unit>
 <decl_stmt><decl><type><name><name>Class</name><argument_list>&lt;<argument><name>Integer</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></type> <name>c</name> =<init> <expr>new <call><name><name>Class</name><argument_list>&lt;<argument><name>Integer</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<function><type><specifier>public</specifier> <argument_list>&lt;<argument><name>U</name></argument>&gt;</argument_list> <name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>U</name></type> <name>u</name></decl></param>)</parameter_list> <block>{}</block></function>
+</unit>
 
 </unit>
