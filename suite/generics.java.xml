@@ -37,4 +37,8 @@
 <class><specifier>public</specifier> class <name><name>Class</name><argument_list>&lt;<argument><name>T</name> <extends>extends <name>Object</name></extends></argument>&gt;</argument_list></name> <block>{}</block></class>
 </unit>
 
+<unit>
+<class><specifier>public</specifier> class <name><name>Class</name><argument_list>&lt;<argument>? <extends>extends <name>Object</name></extends></argument>&gt;</argument_list></name> <block>{}</block></class>
+</unit>
+
 </unit>
