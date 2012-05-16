@@ -2218,6 +2218,10 @@ perform_noncfg_check[DECLTYPE& type, int& token, int& fla, int& type_count, bool
     if (type == DESTRUCTOR && !inLanguage(LANGUAGE_CXX_FAMILY))
         type = NULLOPERATOR;
 
+    // false constructor for java
+    if (inLanguage(LANGUAGE_JAVA_FAMILY) && type == CONSTRUCTOR && fla != LCURLY)
+        type = NONE;
+
     inputState->guessing--;
     rewind(start);
 } :
