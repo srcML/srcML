@@ -31,7 +31,7 @@
 
 class Mode : public TokenParser, public Language {
 
- public:
+public:
 
   /* Set of mode flags */
 
@@ -159,13 +159,13 @@ class Mode : public TokenParser, public Language {
 
   const static State::MODE_TYPE MODE_END_LIST_AT_BLOCK;
 
- public:
+public:
 
   Mode(TokenParser* ptp, int lang)
     : Language(lang), statev(ptp)
-    {
-      pstate = &statev;
-    }
+  {
+    pstate = &statev;
+  }
 
   ~Mode() {}
 
@@ -179,55 +179,127 @@ protected:
   // overridden in StreamParser
   //  void flushSkip() {}
 
-  State::MODE_TYPE getMode() const;
-
-  State::MODE_TYPE getPrevMode() const;
-
-  State::MODE_TYPE getTransparentMode() const;
-
-  srcMLState& currentState();
-
   int size() const {
-   return pstate->size();
+    return pstate->size();
   }
 
-  int getParen() const;
+  srcMLState& currentState() {
 
-  void incParen();
+    return pstate->currentState();
+  }
 
-  void decParen();
+  int getParen() const {
 
-  int getTypeCount() const;
+    return pstate->getParen();
+  }
 
-  void setTypeCount(int n);
+  void incParen() {
 
-  void incTypeCount();
+    pstate->incParen();
+  }
 
-  void decTypeCount();
+  void decParen() {
 
-  void startNewMode(const State::MODE_TYPE& m);
+    pstate->decParen();
+  }
 
-  void endCurrentMode();
+  int getTypeCount() const {
 
-  void endCurrentMode(const State::MODE_TYPE& m);
+    return pstate->getTypeCount();
+  }
 
-  void endTopMode();
+  void setTypeCount(int n) {
 
-  void endLastMode();
+    pstate->setTypeCount(n);
+  }
 
-  void endCurrentModeSafely(const State::MODE_TYPE& m);
+  void incTypeCount() {
 
-  void setMode(const State::MODE_TYPE& m);
+    pstate->incTypeCount();
+  }
 
-  void clearMode(const State::MODE_TYPE& m);
+  void decTypeCount() {
 
-  void replaceMode(const State::MODE_TYPE& o, const State::MODE_TYPE& n);
+    pstate->decTypeCount();
+  }
 
-  bool inMode(const State::MODE_TYPE& m) const;
+  State::MODE_TYPE getMode() const {
 
-  bool inPrevMode(const State::MODE_TYPE& m) const;
+    return pstate->getMode();
+  }
 
-  bool inTransparentMode(const State::MODE_TYPE& m) const;
+  State::MODE_TYPE getPrevMode() const {
+
+    return pstate->getMode();
+  }
+
+  State::MODE_TYPE getTransparentMode() const {
+
+    return pstate->getTransparentMode();
+  }
+
+  void startNewMode(const State::MODE_TYPE& m) {
+
+    pstate->startNewMode(m);
+  }
+
+  void endCurrentMode() {
+
+    // remove the mode
+    pstate->endCurrentMode();
+  }
+
+  void endCurrentMode(const State::MODE_TYPE& m) {
+
+    // remove the mode
+    pstate->endCurrentMode(m);
+  }
+
+  void endLastMode() {
+
+    // remove the mode
+    pstate->endLastMode();
+  }
+
+  void endTopMode() {
+
+    // remove the mode
+    pstate->endCurrentMode();
+  }
+
+  void endCurrentModeSafely(const State::MODE_TYPE& m) {
+
+    // remove the mode
+    pstate->endCurrentModeSafely(m);
+  }
+
+  void setMode(const State::MODE_TYPE& m) {
+
+    pstate->setMode(m);
+  }
+
+  void clearMode(const State::MODE_TYPE& m) {
+
+    pstate->clearMode(m);
+  }
+
+  void replaceMode(const State::MODE_TYPE& o, const State::MODE_TYPE& n) {
+
+    pstate->replaceMode(o, n);
+  }
+
+  bool inPrevMode(const State::MODE_TYPE& m) const {
+
+    return pstate->inPrevMode(m);
+  }
+
+  bool inMode(const State::MODE_TYPE& m) const {
+    return pstate->inMode(m);
+  }
+
+  bool inTransparentMode(const State::MODE_TYPE& m) const {
+    return pstate->inTransparentMode(m);
+  }
 
   // End elements down to a specific mode
   void endDownToMode(const State::MODE_TYPE& ele);

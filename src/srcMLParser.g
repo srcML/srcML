@@ -494,7 +494,7 @@ void endAllModes();
 
   Order of evaluation is important.
 */
-start { ruledepth = 0; ENTRY_DEBUG } :
+start[] { ruledepth = 0; ENTRY_DEBUG } :
 
         COMMENT_TEXT |
 
