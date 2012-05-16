@@ -616,10 +616,6 @@ statements_non_cfg[] { int token = 0; int place = 0; int secondtoken = 0; int fl
         sole_destop |
 
         // standalone macro
-        { decl_type == NULLOPERATOR }?
-        expression_statement |
-
-        // standalone macro
         { decl_type == SINGLE_MACRO }?
         macro_call |
 
