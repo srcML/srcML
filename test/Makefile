@@ -39,5 +39,5 @@ shortjava : testbase
 	@export SRC2SRCML=${SRC2SRCML}; export SRCML2SRC=${SRCML2SRC}; time ./testsuite.py ".*\.all" Java
 
 clean :
-	cd ../suite && make
+	cd ../suite && make clean
 	cd ../test
