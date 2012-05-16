@@ -550,7 +550,7 @@ catch[...] {
 /*
   context-free grammar statements
 */
-cfg { ENTRY_DEBUG } :
+cfg[] { ENTRY_DEBUG } :
 
         // conditional statements
         if_statement | else_statement | switch_statement | switch_case | switch_default |
@@ -593,7 +593,7 @@ cfg { ENTRY_DEBUG } :
   Important to keep semantic checks, e.g., (constructor)=>, in place.  Most of these rules
   can start with a name which leaves it ambiguous which to choose.
 */
-statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; int fla = 0;
+statements_non_cfg[] { int token = 0; int place = 0; int secondtoken = 0; int fla = 0;
         int type_count = 0; DECLTYPE decl_type = NONE; CALLTYPE type = NOCALL; ENTRY_DEBUG } :
 
         // class forms for class declarations/definitions as opposed to part of a declaration types
@@ -815,7 +815,7 @@ markend[int& token] { token = LA(1); } :
 /*
   while statement, or while part of do statement
 */
-while_statement { setFinalToken(); ENTRY_DEBUG } :
+while_statement[] { setFinalToken(); ENTRY_DEBUG } :
         {
             // statement with nested statement (after condition)
             startNewMode(MODE_STATEMENT | MODE_NEST);
@@ -832,7 +832,7 @@ while_statement { setFinalToken(); ENTRY_DEBUG } :
 /*
  do while statement
 */
-do_statement { setFinalToken(); ENTRY_DEBUG } : 
+do_statement[] { setFinalToken(); ENTRY_DEBUG } : 
         {
             // statement with nested statement (after condition)
             // set to top mode so that end of block will
@@ -867,7 +867,7 @@ do_while { setFinalToken(); ENTRY_DEBUG } :
 /*
   start of for statement
 */
-for_statement { setFinalToken(); ENTRY_DEBUG } :
+for_statement[] { setFinalToken(); ENTRY_DEBUG } :
         {
             // statement with nested statement after the for group
             startNewMode(MODE_STATEMENT | MODE_NEST);
@@ -996,7 +996,7 @@ for_increment { ENTRY_DEBUG } :
  if statement is first processed here.  Then prepare for a condition.  The end of the
  condition will setup for the then part of the statement.  The end of the then looks
  ahead for an else.  If so, it ends the then part.  If not, it ends the entire statement.*/
-if_statement { setFinalToken(); ENTRY_DEBUG } :
+if_statement[] { setFinalToken(); ENTRY_DEBUG } :
         {
             // statement with nested statement
             // detection of else
@@ -1020,7 +1020,7 @@ if_statement { setFinalToken(); ENTRY_DEBUG } :
  else is detected on its own, and as part of termination (semicolon or
  end of a block
 */
-else_statement { setFinalToken(); ENTRY_DEBUG } :
+else_statement[] { setFinalToken(); ENTRY_DEBUG } :
         {
             // treat as a statement with a nested statement
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_ELSE);
@@ -1034,7 +1034,7 @@ else_statement { setFinalToken(); ENTRY_DEBUG } :
 /*
  start of switch statement
 */
-switch_statement { setFinalToken(); ENTRY_DEBUG } :
+switch_statement[] { setFinalToken(); ENTRY_DEBUG } :
         {
             // statement with nested block
             startNewMode(MODE_STATEMENT | MODE_NEST);
@@ -1112,7 +1112,7 @@ switch_default { setFinalToken(); ENTRY_DEBUG } :
 /*
   start of return statement
 */
-import_statement { setFinalToken(); ENTRY_DEBUG } :
+import_statement[] { setFinalToken(); ENTRY_DEBUG } :
         {
             // statement with a possible expression
             startNewMode(MODE_STATEMENT | MODE_VARIABLE_NAME | MODE_EXPECT);
@@ -1126,7 +1126,7 @@ import_statement { setFinalToken(); ENTRY_DEBUG } :
 /*
   start of package statement
 */
-package_statement { setFinalToken(); ENTRY_DEBUG } :
+package_statement[] { setFinalToken(); ENTRY_DEBUG } :
         {
             // statement with a possible expression
             startNewMode(MODE_STATEMENT | MODE_VARIABLE_NAME | MODE_EXPECT);
@@ -1140,7 +1140,7 @@ package_statement { setFinalToken(); ENTRY_DEBUG } :
 /*
   start of return statement
 */
-return_statement { setFinalToken(); ENTRY_DEBUG } :
+return_statement[] { setFinalToken(); ENTRY_DEBUG } :
         {
             // statement with a possible expression
             startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
@@ -1154,7 +1154,7 @@ return_statement { setFinalToken(); ENTRY_DEBUG } :
 /*
   start of break statement
 */
-break_statement { setFinalToken(); ENTRY_DEBUG } :
+break_statement[] { setFinalToken(); ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_STATEMENT);
@@ -1168,7 +1168,7 @@ break_statement { setFinalToken(); ENTRY_DEBUG } :
 /*
   start of continue statement
 */
-continue_statement { setFinalToken(); ENTRY_DEBUG } :
+continue_statement[] { setFinalToken(); ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_STATEMENT);
@@ -1182,7 +1182,7 @@ continue_statement { setFinalToken(); ENTRY_DEBUG } :
 /*
   start of goto statement
 */
-goto_statement { setFinalToken(); ENTRY_DEBUG } :
+goto_statement[] { setFinalToken(); ENTRY_DEBUG } :
         {
             // statement with an expected label name
             // label name is a subset of variable names
@@ -3159,7 +3159,7 @@ macro_call_contents {
 
         } :;
 
-try_statement { ENTRY_DEBUG } :
+try_statement[] { ENTRY_DEBUG } :
         try_pseudo_statement
         TRY
         {            
@@ -3175,7 +3175,7 @@ try_statement { ENTRY_DEBUG } :
         }
 ;
 
-try_pseudo_statement { ENTRY_DEBUG } :
+try_pseudo_statement[] { ENTRY_DEBUG } :
         {
             // treat try block as nested block statement
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_TRY);
@@ -3185,7 +3185,7 @@ try_pseudo_statement { ENTRY_DEBUG } :
         }
 ;
 
-catch_statement { ENTRY_DEBUG } :
+catch_statement[] { ENTRY_DEBUG } :
         {
             // treat catch block as nested block statement
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_STATEMENT);
@@ -3207,7 +3207,7 @@ catch_statement { ENTRY_DEBUG } :
         }
 ;
 
-finally_statement { ENTRY_DEBUG } :
+finally_statement[] { ENTRY_DEBUG } :
         {
             // treat catch block as nested block statement
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_STATEMENT);
@@ -3218,7 +3218,7 @@ finally_statement { ENTRY_DEBUG } :
         FINALLY
 ;
 
-throw_statement { ENTRY_DEBUG } :
+throw_statement[] { ENTRY_DEBUG } :
         {
             // statement with expected expression
             startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
@@ -4103,7 +4103,7 @@ template_super_java[] { LocalMode lm(this); bool iscomplex = false; ENTRY_DEBUG 
 ;
 
 
-tempops { ENTRY_DEBUG } :
+tempops[] { ENTRY_DEBUG } :
         {
             // make sure we are in a list mode so that we can end correctly
             // some uses of tempope will have their own mode
@@ -4130,7 +4130,7 @@ tempope[bool final = false] { if (final) setFinalToken(); ENTRY_DEBUG } :
 /*
   label statement
 */
-label_statement { LocalMode lm(this); ENTRY_DEBUG } :
+label_statement[] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_STATEMENT);
@@ -4144,7 +4144,7 @@ label_statement { LocalMode lm(this); ENTRY_DEBUG } :
 /*
   typedef_statement
 */
-typedef_statement { ENTRY_DEBUG } :
+typedef_statement[] { ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_STATEMENT | MODE_EXPECT | MODE_VARIABLE_NAME);
