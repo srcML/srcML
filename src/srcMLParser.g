@@ -3602,6 +3602,9 @@ guessing_end
 expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG } :
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
+        (NEW template_argument_list)=> sole_new template_argument_list |
+        
+        { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (NEW function_identifier paren_pair LCURLY)=> sole_new anonymous_class_definition |
 
         // call
