@@ -3,38 +3,38 @@
 
 <unit>
   <try>try <block>{<expr_stmt><expr><name>a</name></expr>;</expr_stmt>}</block>
-    <catch>catch <block>{<expr_stmt><expr><name>b</name></expr>;</expr_stmt>}</block>
-    <finally>finally <block>{<expr_stmt><expr><name>c</name></expr>;</expr_stmt>}</block></finally></catch></try>
+    <catch>catch <block>{<expr_stmt><expr><name>b</name></expr>;</expr_stmt>}</block></catch>
+    <finally>finally <block>{<expr_stmt><expr><name>c</name></expr>;</expr_stmt>}</block></finally></try>
 </unit>
 
 <unit>
   <try>try <block>{<expr_stmt><expr><name>a</name></expr>;</expr_stmt>}</block>
     <try>try <block>{<expr_stmt><expr><name>a</name></expr>;</expr_stmt>}</block>
-      <catch>catch <block>{<expr_stmt><expr><name>b</name></expr>;</expr_stmt>}</block>
-        <finally>finally <block>{<expr_stmt><expr><name>c</name></expr>;</expr_stmt>}</block></finally></catch></try>
-    <catch>catch <block>{<expr_stmt><expr><name>b</name></expr>;</expr_stmt>}</block>
-    <finally>finally <block>{<expr_stmt><expr><name>c</name></expr>;</expr_stmt>}</block></finally></catch></try>
+      <catch>catch <block>{<expr_stmt><expr><name>b</name></expr>;</expr_stmt>}</block></catch>
+        <finally>finally <block>{<expr_stmt><expr><name>c</name></expr>;</expr_stmt>}</block></finally></try>
+    <catch>catch <block>{<expr_stmt><expr><name>b</name></expr>;</expr_stmt>}</block></catch>
+    <finally>finally <block>{<expr_stmt><expr><name>c</name></expr>;</expr_stmt>}</block></finally></try>
 </unit>
 
 <unit>
 <for>for(<init>;</init><condition><expr>1</expr>;</condition><incr/>)
   <try>try <block>{<expr_stmt><expr><name>a</name></expr>;</expr_stmt>}</block>
-    <catch>catch <block>{<expr_stmt><expr><name>b</name></expr>;</expr_stmt>}</block>
-    <finally>finally <block>{<expr_stmt><expr><name>c</name></expr>;</expr_stmt>}</block></finally></catch></try></for>
+    <catch>catch <block>{<expr_stmt><expr><name>b</name></expr>;</expr_stmt>}</block></catch>
+    <finally>finally <block>{<expr_stmt><expr><name>c</name></expr>;</expr_stmt>}</block></finally></try></for>
 </unit>
 
 <unit>
 <while>while<condition>(<expr>1</expr>)</condition>
   <try>try <block>{<expr_stmt><expr><name>a</name></expr>;</expr_stmt>}</block>
     <catch>catch <block>{<expr_stmt><expr><name>b</name></expr>;</expr_stmt>}</block>
-    <finally>finally <block>{<expr_stmt><expr><name>c</name></expr>;</expr_stmt>}</block></finally></catch></try></while>
+    <finally>finally <block>{<expr_stmt><expr><name>c</name></expr>;</expr_stmt>}</block></finally></try></while>
 </unit>
 
 <unit>
   <if>if<condition>(<expr>1</expr>)</condition><then>
   <try>try <block>{<expr_stmt><expr><name>a</name></expr>;</expr_stmt>}</block>
     <catch>catch <block>{<expr_stmt><expr><name>b</name></expr>;</expr_stmt>}</block>
-    <finally>finally <block>{<expr_stmt><expr><name>c</name></expr>;</expr_stmt>}</block></finally></catch></try></then></if>
+    <finally>finally <block>{<expr_stmt><expr><name>c</name></expr>;</expr_stmt>}</block></finally></try></then></if>
 </unit>
 
 </unit>
