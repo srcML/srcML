@@ -26,14 +26,14 @@
 <unit>
 <while>while<condition>(<expr>1</expr>)</condition>
   <try>try <block>{<expr_stmt><expr><name>a</name></expr>;</expr_stmt>}</block>
-    <catch>catch <block>{<expr_stmt><expr><name>b</name></expr>;</expr_stmt>}</block>
+    <catch>catch <block>{<expr_stmt><expr><name>b</name></expr>;</expr_stmt>}</block></catch>
     <finally>finally <block>{<expr_stmt><expr><name>c</name></expr>;</expr_stmt>}</block></finally></try></while>
 </unit>
 
 <unit>
   <if>if<condition>(<expr>1</expr>)</condition><then>
   <try>try <block>{<expr_stmt><expr><name>a</name></expr>;</expr_stmt>}</block>
-    <catch>catch <block>{<expr_stmt><expr><name>b</name></expr>;</expr_stmt>}</block>
+    <catch>catch <block>{<expr_stmt><expr><name>b</name></expr>;</expr_stmt>}</block></catch>
     <finally>finally <block>{<expr_stmt><expr><name>c</name></expr>;</expr_stmt>}</block></finally></try></then></if>
 </unit>
 
