@@ -111,11 +111,11 @@ XSLT_ADDCONST=${XSLT} xsl/addconst.xsl
 
 XSLT_IDENTITY=${XSLT} xsl/identity.xsl
 
-XSLT_INSERTEXPR=${XSLT} --stringparam expr_filename "../suite/expression.cpp.xml" xsl/insertexpr.xsl
-XSLT_INSERTEXPR_XSL= ../suite/expression.cpp.xml xsl/insertexpr.xsl
+XSLT_INSERTEXPR=${XSLT} --stringparam expr_filename "expression.cpp.xml" xsl/insertexpr.xsl
+XSLT_INSERTEXPR_XSL= expression.cpp.xml xsl/insertexpr.xsl
 
-XSLT_INSERTDECL=${XSLT} --stringparam decl_filename "../suite/decl_simple.cpp.xml" xsl/insertparam.xsl
-XSLT_INSERTDECL_XSL= ../suite/decl_simple.cpp.xml xsl/insertdecl.xsl
+XSLT_INSERTDECL=${XSLT} --stringparam decl_filename "decl_simple.cpp.xml" xsl/insertparam.xsl
+XSLT_INSERTDECL_XSL= decl_simple.cpp.xml xsl/insertdecl.xsl
 
 XSLT_STRUCT2UNION_XSL=xsl/struct2union.xsl
 XSLT_STRUCT2UNION=${XSLT} ${XSLT_STRUCT2UNION_XSL}
@@ -168,7 +168,7 @@ SEP_BASE=$(BASE_COMMON) $(BASE_C) $(BASE_C_FAMILY) $(BASE_CXX) $(BASE_OO)
 GEN_SEP= $(GEN_BASE) $(GEN_BASE_CXX)
 
 # generated cases for C++ from base
-GEN_PART=${foreach nm, $(GEN_SEP), ../suite/$(nm).cpp.xml}
+GEN_PART=${foreach nm, $(GEN_SEP), $(nm).cpp.xml}
 
 SEP_FILES=$(SEP_BASE) preprocessor
 
@@ -177,97 +177,97 @@ BASE_JAVA_ALL_GEN = $(BASE_COMMON) $(GEN_BASE) $(BASE_OO)
 
 BASE_JAVA_ALL = $(BASE_COMMON) $(GEN_BASE) $(BASE_OO) $(BASE_JAVA)
 
-GEN_JAVA= ${foreach nm, $(BASE_JAVA_ALL_GEN), ../suite/$(nm).java.xml}
+GEN_JAVA= ${foreach nm, $(BASE_JAVA_ALL_GEN), $(nm).java.xml}
 
 BASE_CXX_0X_ALL_GEN = $(BASE_COMMON) $(BASE_CXX) $(BASE_OO)
 
 BASE_CXX_0X_ALL = $(BASE_COMMON) $(BASE_CXX) $(BASE_OO)
 
-GEN_CXX_0X= ${foreach nm, $(BASE_CXX_0X_ALL_GEN), ../suite/$(nm).cpp0x.xml}
+GEN_CXX_0X= ${foreach nm, $(BASE_CXX_0X_ALL_GEN), $(nm).cpp0x.xml}
 
 BASE_C_ALL = $(BASE_COMMON) $(BASE_C_FAMILY)
-GEN_C= ${foreach nm, $(BASE_C_ALL), ../suite/$(nm).c.xml}
+GEN_C= ${foreach nm, $(BASE_C_ALL), $(nm).c.xml}
 
 SEP_PLUS= ${SEP_FILES} ${GEN_SEP}
 SEP_PLUSNOPREPROC= ${SEP_BASE} ${GEN_SEP}
 
 ##
 # generate cases for all
-GEN_ALL= ${foreach nm, $(SEP_PLUS), ../suite/$(nm).all.cpp.xml} ../suite/extra.all.cpp.xml \
-	       ${foreach nm, $(BASE_JAVA_ALL), ../suite/$(nm).all.java.xml} \
-	       ${foreach nm, $(BASE_CXX_0X_ALL), ../suite/$(nm).all.cpp0x.xml} \
-	       ${foreach nm, $(BASE_C_ALL), ../suite/$(nm).all.c.xml} ../suite/extra.all.c.xml
+GEN_ALL= ${foreach nm, $(SEP_PLUS), $(nm).all.cpp.xml} extra.all.cpp.xml \
+	       ${foreach nm, $(BASE_JAVA_ALL), $(nm).all.java.xml} \
+	       ${foreach nm, $(BASE_CXX_0X_ALL), $(nm).all.cpp0x.xml} \
+	       ${foreach nm, $(BASE_C_ALL), $(nm).all.c.xml} extra.all.c.xml
 
 # generated cases for blocks
-GEN_BLOCK= ${foreach nm, $(SEP_PLUS),          ../suite/$(nm).block.cpp.xml} \
-               ${foreach nm, $(BASE_C_ALL),    ../suite/$(nm).block.c.xml} \
- 	       ${foreach nm, $(BASE_CXX_0X_ALL), ../suite/$(nm).block.cpp0x.xml} \
-               ${foreach nm, $(BASE_JAVA_ALL), ../suite/$(nm).block.java.xml} \
-		 ../suite/extra.block.c.xml ../suite/extra.block.cpp.xml
+GEN_BLOCK= ${foreach nm, $(SEP_PLUS),          $(nm).block.cpp.xml} \
+               ${foreach nm, $(BASE_C_ALL),    $(nm).block.c.xml} \
+ 	       ${foreach nm, $(BASE_CXX_0X_ALL), $(nm).block.cpp0x.xml} \
+               ${foreach nm, $(BASE_JAVA_ALL), $(nm).block.java.xml} \
+		 extra.block.c.xml extra.block.cpp.xml
 
 # generated cases for comments
-GEN_COMMENT= ${foreach nm, $(SEP_PLUS),          ../suite/$(nm).comment.cpp.xml} \
-	       ${foreach nm, $(BASE_C_ALL),    ../suite/$(nm).comment.c.xml} \
- 	       ${foreach nm, $(BASE_CXX_0X_ALL), ../suite/$(nm).comment.cpp0x.xml} \
-	       ${foreach nm, $(BASE_JAVA_ALL), ../suite/$(nm).comment.java.xml} \
-		   ../suite/extra.comment.c.xml ../suite/extra.comment.cpp.xml
+GEN_COMMENT= ${foreach nm, $(SEP_PLUS),          $(nm).comment.cpp.xml} \
+	       ${foreach nm, $(BASE_C_ALL),    $(nm).comment.c.xml} \
+ 	       ${foreach nm, $(BASE_CXX_0X_ALL), $(nm).comment.cpp0x.xml} \
+	       ${foreach nm, $(BASE_JAVA_ALL), $(nm).comment.java.xml} \
+		   extra.comment.c.xml extra.comment.cpp.xml
 
 # generated cases for formfeed
-GEN_FORMFEED = ${foreach nm, $(SEP_PLUS),          ../suite/$(nm).formfeed.cpp.xml} \
-		     ${foreach nm, $(BASE_C_ALL),    ../suite/$(nm).formfeed.c.xml} \
- 	       ${foreach nm, $(BASE_CXX_0X_ALL), ../suite/$(nm).formfeed.cpp0x.xml} \
-		     ${foreach nm, $(BASE_JAVA_ALL), ../suite/$(nm).formfeed.java.xml} \
-		     ../suite/extra.formfeed.c.xml ../suite/extra.formfeed.cpp.xml
+GEN_FORMFEED = ${foreach nm, $(SEP_PLUS),          $(nm).formfeed.cpp.xml} \
+		     ${foreach nm, $(BASE_C_ALL),    $(nm).formfeed.c.xml} \
+ 	       ${foreach nm, $(BASE_CXX_0X_ALL), $(nm).formfeed.cpp0x.xml} \
+		     ${foreach nm, $(BASE_JAVA_ALL), $(nm).formfeed.java.xml} \
+		     extra.formfeed.c.xml extra.formfeed.cpp.xml
 
 # generated test cases for preproc
-GEN_PREPROC= ${foreach nm, $(SEP_PLUSNOPREPROC), ../suite/$(nm).preproc.cpp.xml} \
- 	       ${foreach nm, $(BASE_CXX_0X_ALL), ../suite/$(nm).preproc.cpp0x.xml} \
-	           ${foreach nm, $(BASE_C_ALL), ../suite/$(nm).preproc.c.xml} \
-		   ../suite/extra.preproc.c.xml ../suite/extra.preproc.cpp.xml
+GEN_PREPROC= ${foreach nm, $(SEP_PLUSNOPREPROC), $(nm).preproc.cpp.xml} \
+ 	       ${foreach nm, $(BASE_CXX_0X_ALL), $(nm).preproc.cpp0x.xml} \
+	           ${foreach nm, $(BASE_C_ALL), $(nm).preproc.c.xml} \
+		   extra.preproc.c.xml extra.preproc.cpp.xml
 
-../suite/allinall.c.xml :
-	@echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" > ../suite/allinall.c.xml
-	@echo "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C\" dir=\"allinall.c\">" >> ../suite/allinall.c.xml
+allinall.c.xml :
+	@echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" > allinall.c.xml
+	@echo "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C\" dir=\"allinall.c\">" >> allinall.c.xml
 
-	find ../suite -name "*.all.c.xml" | xargs -i tail +3 {} | sed "s|</unit>||">> ../suite/allinall.c.xml
-	@echo "</unit>" >> ../suite/allinall.c.xml
+	find ../suite -name "*.all.c.xml" | xargs -i tail +3 {} | sed "s|</unit>||">> allinall.c.xml
+	@echo "</unit>" >> allinall.c.xml
 
-../suite/allinall.java.xml :
-	@echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" > ../suite/allinall.java.xml
-	@echo "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"Java\" dir=\"allinall.java\">" >> ../suite/allinall.java.xml
+allinall.java.xml :
+	@echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" > allinall.java.xml
+	@echo "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"Java\" dir=\"allinall.java\">" >> allinall.java.xml
 
-	find ../suite -name "*.all.java.xml" | xargs -i tail +3 {} | sed "s|</unit>||">> ../suite/allinall.java.xml
-	@echo "</unit>" >> ../suite/allinall.java.xml
+	find ../suite -name "*.all.java.xml" | xargs -i tail +3 {} | sed "s|</unit>||">> allinall.java.xml
+	@echo "</unit>" >> allinall.java.xml
 
-../suite/allinall.1.cpp.xml :
-	@echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" > ../suite/allinall.1.cpp.xml
-	@echo "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"allinall.1.cpp\">" >> ../suite/allinall.1.cpp.xml
+allinall.1.cpp.xml :
+	@echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" > allinall.1.cpp.xml
+	@echo "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"allinall.1.cpp\">" >> allinall.1.cpp.xml
 
-	@find ../suite -name "*.all.cpp.xml" | sed "s|../suite/cstruct.all.cpp.xml||" | sed "s|../suite/functionkr.all.cpp.xml||" | head -30 | xargs -i tail +3 {} | sed "s|</unit>||" >> ../suite/allinall.1.cpp.xml
-	@echo "</unit>" >> ../suite/allinall.1.cpp.xml
+	@find ../suite -name "*.all.cpp.xml" | sed "s|cstruct.all.cpp.xml||" | sed "s|functionkr.all.cpp.xml||" | head -30 | xargs -i tail +3 {} | sed "s|</unit>||" >> allinall.1.cpp.xml
+	@echo "</unit>" >> allinall.1.cpp.xml
 
-../suite/allinall.2.cpp.xml :
-	@echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" > ../suite/allinall.2.cpp.xml
-	@echo "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"allinall.2.cpp\">" >> ../suite/allinall.2.cpp.xml
+allinall.2.cpp.xml :
+	@echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" > allinall.2.cpp.xml
+	@echo "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"allinall.2.cpp\">" >> allinall.2.cpp.xml
 
-	@find ../suite -name "*.all.cpp.xml" | sed "s|../suite/cstruct.all.cpp.xml||" | sed "s|../suite/functionkr.all.cpp.xml||" | tail -18 | xargs -i tail +3 {} | sed "s|</unit>||" >> ../suite/allinall.2.cpp.xml
-	@echo "</unit>" >> ../suite/allinall.2.cpp.xml
+	@find ../suite -name "*.all.cpp.xml" | sed "s|cstruct.all.cpp.xml||" | sed "s|functionkr.all.cpp.xml||" | tail -18 | xargs -i tail +3 {} | sed "s|</unit>||" >> allinall.2.cpp.xml
+	@echo "</unit>" >> allinall.2.cpp.xml
 
 allinone : allinonecpp allinonec allinonejava
 	#@make cleanall
 
-allinonec : ../suite/allinall.c.xml
-	-${SRCML2SRC} ${SRCENCODING} ../suite/allinall.c.xml | ${SRC2SRCML} -l C ${SRCENCODING} --directory="allinall.c" | diff -w  - ../suite/allinall.c.xml
+allinonec : allinall.c.xml
+	-${SRCML2SRC} ${SRCENCODING} allinall.c.xml | ${SRC2SRCML} -l C ${SRCENCODING} --directory="allinall.c" | diff -w  - allinall.c.xml
 
-allinonecpp : ../suite/allinall.1.cpp.xml ../suite/allinall.2.cpp.xml
-	-${SRCML2SRC} ${SRCENCODING} ../suite/allinall.1.cpp.xml | ${SRC2SRCML} -l C++ ${SRCENCODING} --directory="allinall.1.cpp" | diff -w  - ../suite/allinall.1.cpp.xml
-	-${SRCML2SRC} ${SRCENCODING} ../suite/allinall.2.cpp.xml | ${SRC2SRCML} -l C++ ${SRCENCODING} --directory="allinall.2.cpp" | diff -w  - ../suite/allinall.2.cpp.xml
+allinonecpp : allinall.1.cpp.xml allinall.2.cpp.xml
+	-${SRCML2SRC} ${SRCENCODING} allinall.1.cpp.xml | ${SRC2SRCML} -l C++ ${SRCENCODING} --directory="allinall.1.cpp" | diff -w  - allinall.1.cpp.xml
+	-${SRCML2SRC} ${SRCENCODING} allinall.2.cpp.xml | ${SRC2SRCML} -l C++ ${SRCENCODING} --directory="allinall.2.cpp" | diff -w  - allinall.2.cpp.xml
 
-allinonejava : ../suite/allinall.java.xml
-	-${SRCML2SRC} ${SRCENCODING} ../suite/allinall.java.xml | ${SRC2SRCML} -l Java ${SRCENCODING} --directory="allinall.java" | diff -w  - ../suite/allinall.java.xml
+allinonejava : allinall.java.xml
+	-${SRCML2SRC} ${SRCENCODING} allinall.java.xml | ${SRC2SRCML} -l Java ${SRCENCODING} --directory="allinall.java" | diff -w  - allinall.java.xml
 
 cleanall :
-	rm -f ../suite/allinall.*
+	rm -f allinall.*
 
 %.cpp : %.cpp.xml
 	${XSLT_IDENTITY} $< > $@
@@ -330,7 +330,7 @@ GEN_FILES=${GEN_PART} ${GEN_ALL} ${GEN_BLOCK} ${GEN_COMMENT} ${GEN_PREPROC} ${GE
 
 GEN_CPP_BASE=${GEN_SEP} ${foreach nm, $(SEP_PLUS), $(nm).all} ${foreach nm, $(SEP_PLUS), $(nm).block} ${foreach nm, $(SEP_PLUS), $(nm).comment} ${foreach nm, $(SEP_PLUS), $(nm).preproc}
 
-GEN_CPP= ${foreach nm, $(GEN_CPP_BASE), ../suite/$(nm).cpp}
+GEN_CPP= ${foreach nm, $(GEN_CPP_BASE), $(nm).cpp}
 
 gencpp : ${GEN_CPP}
 
@@ -339,58 +339,58 @@ gen : ${GEN_FILES}
 #  Test cases generated from other test cases
 
 # function declaration from function
-../suite/function_decl.cpp.xml : ../suite/function.cpp.xml ${XSLT_DEFN2DECL_XSL}
+function_decl.cpp.xml : function.cpp.xml ${XSLT_DEFN2DECL_XSL}
 	${XSLT_DEFN2DECL} $< > $@
 
-../suite/function_asterisk_decl.cpp.xml : ../suite/function_asterisk.cpp.xml ${XSLT_DEFN2DECL_XSL}
+function_asterisk_decl.cpp.xml : function_asterisk.cpp.xml ${XSLT_DEFN2DECL_XSL}
 	${XSLT_DEFN2DECL} $< > $@
 
 # const function from function
-../suite/function_const.cpp.xml : ../suite/function.cpp.xml ${XSLT_DEFN2DECL_XSL}
+function_const.cpp.xml : function.cpp.xml ${XSLT_DEFN2DECL_XSL}
 	${XSLT_ADDCONST} $< > $@
 
 # while from if
-../suite/while.cpp.xml : ../suite/if.cpp.xml ${XSLT_IF2WHILE_XSL}
+while.cpp.xml : if.cpp.xml ${XSLT_IF2WHILE_XSL}
 	${XSLT_IF2WHILE} $< > $@
 
 # if with a nested conditional from if
-../suite/ifnestcond.cpp.xml : ../suite/if.cpp.xml ${XSLT_NESTCOND_XSL}
+ifnestcond.cpp.xml : if.cpp.xml ${XSLT_NESTCOND_XSL}
 	${XSLT_NESTCOND} $< > $@
 
 # return from return base
-../suite/return.cpp.xml : ../suite/return_base.cpp.xml ${XSLT_INSRT_XSL}
+return.cpp.xml : return_base.cpp.xml ${XSLT_INSRT_XSL}
 	${XSLT_INSERTEXPR} $< > $@
 
 # constructor from constructor base
-../suite/constructor.cpp.xml : ../suite/constructor_base.cpp.xml ${XSLT_DEFN2DECL_XSL}
+constructor.cpp.xml : constructor_base.cpp.xml ${XSLT_DEFN2DECL_XSL}
 	cp $< $@
 
 # explicit constructor from constructor
-../suite/constructor_explicit.cpp.xml : ../suite/constructor.cpp.xml ${XSLT_INSRT_XSL}
+constructor_explicit.cpp.xml : constructor.cpp.xml ${XSLT_INSRT_XSL}
 	${XSLT_ADDEXPLICIT} $< > $@
 
 # virtual destructor from destructor
-../suite/destructor_virtual.cpp.xml : ../suite/destructor.cpp.xml ${XSLT_INSRT_XSL}
+destructor_virtual.cpp.xml : destructor.cpp.xml ${XSLT_INSRT_XSL}
 	${XSLT_ADDVIRTUAL} $< > $@
 
 # throw from throw base
-../suite/throw.cpp.xml : ../suite/throw_base.cpp.xml ${XSLT_INSRT_XSL}
+throw.cpp.xml : throw_base.cpp.xml ${XSLT_INSRT_XSL}
 	${XSLT_INSERTEXPR} $< > $@
 
 # struct from class
-../suite/struct.cpp.xml : ../suite/class.cpp.xml ${XSLT_CLASS2STRUCT_XSL}
+struct.cpp.xml : class.cpp.xml ${XSLT_CLASS2STRUCT_XSL}
 	${XSLT_CLASS2STRUCT} $< > $@
 
 # union from struct
-../suite/union.cpp.xml : ../suite/struct.cpp.xml ${XSLT_STRUCT2UNION_XSL}
+union.cpp.xml : struct.cpp.xml ${XSLT_STRUCT2UNION_XSL}
 	${XSLT_STRUCT2UNION} $< > $@
 
 # interface from class
-../suite/interface_java.java.xml : ../suite/class_java.java.xml ${XSLT_CLASS2INTERFACE_XSL}
+interface_java.java.xml : class_java.java.xml ${XSLT_CLASS2INTERFACE_XSL}
 	${XSLT_CLASS2INTERFACE} $< > $@
 
 # if with blocks from if
-../suite/ifblock.cpp.xml : ../suite/if.cpp.xml ${XSLT_IF2IFBLOCK_XSL}
+ifblock.cpp.xml : if.cpp.xml ${XSLT_IF2IFBLOCK_XSL}
 	${XSLT_IF2IFBLOCK} $< > $@
 
 clean :
