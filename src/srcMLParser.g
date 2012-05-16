@@ -3881,7 +3881,7 @@ parameter_type_count[int type_count] { LocalMode lm(this); ENTRY_DEBUG } :
         }
 
         // sometimes there is no parameter name.  if so, we need to eat it
-        ( options { greedy = true; } : multops | LBRACKET RBRACKET)*
+        ( options { greedy = true; } : multops | tripledotop | LBRACKET RBRACKET)*
 ;
 
 multops { LocalMode lm(this); ENTRY_DEBUG } :
