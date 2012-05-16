@@ -14,6 +14,41 @@ SRCENCODING=
 
 ALLINALLCUTOFF=35
 
+
+##
+# General lists of test cases
+
+# original base of cases for all languages
+BASE_COMMON=comment string variable_names expression decl_simple \
+	          if for do switch call function enum return_base problem
+
+# base for all languages generated from original cases
+GEN_BASE=while ifnestcond return function_decl ifblock
+
+# base for C++ generated from original cases
+GEN_BASE_CXX=throw constructor_explicit destructor_virtual function_const struct union
+
+# basic generated C++ files
+GEN_SEP= $(GEN_BASE) $(GEN_BASE_CXX)
+
+# generated cases for C++ from base
+GEN_PART=${foreach nm, $(GEN_SEP), ../suite/$(nm).cpp.xml}
+
+# base for C only
+BASE_C=functionkr # typedef_cstruct
+
+# base for C family
+BASE_C_FAMILY=asm macro cstruct extern main function_pointer decl_struct typedef decl_pointer function_asterisk
+
+# base for object-oriented languages
+BASE_OO=catch_form foreach try
+
+# base for C++ only
+BASE_CXX=friend namespace template typedef_template constructor destructor throw_base function_throw class function_operator typedef_ns variable_names_ns function_ns decl_ns try typedef_struct
+
+# base for Java only
+BASE_JAVA=class_java keyword_java interface_java package
+
 all : gen
 	./testsuite.py
 
@@ -133,40 +168,6 @@ XSLT_SETLANGUAGE_CXX_0X=${XSLT} --stringparam language "C++0x" ${XSLT_SETLANGUAG
 XSLT_SETLANGUAGE_JAVA=${XSLT} --stringparam language "Java" ${XSLT_SETLANGUAGE_XSL}
 
 XSLT_REMOVECPP=${XSLT} ${XSLT_REMOVECPP_XSL}
-
-##
-# General lists of test cases
-
-# original base of cases for all languages
-BASE_COMMON=comment string variable_names expression decl_simple \
-	          if for do switch call function enum return_base problem
-
-# base for all languages generated from original cases
-GEN_BASE=while ifnestcond return function_decl ifblock
-
-# base for C++ generated from original cases
-GEN_BASE_CXX=throw constructor_explicit destructor_virtual function_const struct union
-
-# basic generated C++ files
-GEN_SEP= $(GEN_BASE) $(GEN_BASE_CXX)
-
-# generated cases for C++ from base
-GEN_PART=${foreach nm, $(GEN_SEP), ../suite/$(nm).cpp.xml}
-
-# base for C only
-BASE_C=functionkr # typedef_cstruct
-
-# base for C family
-BASE_C_FAMILY=asm macro cstruct extern main function_pointer decl_struct typedef decl_pointer function_asterisk
-
-# base for object-oriented languages
-BASE_OO=catch_form foreach try
-
-# base for C++ only
-BASE_CXX=friend namespace template typedef_template constructor destructor throw_base function_throw class function_operator typedef_ns variable_names_ns function_ns decl_ns try typedef_struct
-
-# base for Java only
-BASE_JAVA=class_java keyword_java interface_java package
 
 SEP_BASE=$(BASE_COMMON) $(BASE_C) $(BASE_C_FAMILY) $(BASE_CXX) $(BASE_OO)
 
