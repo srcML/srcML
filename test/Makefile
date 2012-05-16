@@ -14,7 +14,7 @@ SRCENCODING=
 
 ALLINALLCUTOFF=35
 
-all : 
+all : testbase
 	./testsuite.py
 
 PHONY : testbase
