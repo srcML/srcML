@@ -39,22 +39,6 @@ PHONY : shortjava
 shortjava : testbase
 	@export SRC2SRCML=${SRC2SRCML}; export SRCML2SRC=${SRCML2SRC}; time ./testsuite.py ".*\.all" Java
 
-PHONY : 
-full : testbase
-	@export SRC2SRCML=${SRC2SRCML}; export SRCML2SRC=${SRCML2SRC}; time ./testsuite.py
-
-PHONY : fullcpp
-fullcpp : testbase
-	@export SRC2SRCML=${SRC2SRCML}; export SRCML2SRC=${SRCML2SRC}; time ./testsuite.py ".*" C++
-
-PHONY : fullc
-fullc : testbase
-	@export SRC2SRCML=${SRC2SRCML}; export SRCML2SRC=${SRCML2SRC}; time ./testsuite.py ".*" C
-
-PHONY : fulljava
-fulljava : testbase
-	@export SRC2SRCML=${SRC2SRCML}; export SRCML2SRC=${SRCML2SRC}; time ./testsuite.py ".*" Java
-
 clean :
 	cd ../suite
 	make
