@@ -26,7 +26,7 @@
 </unit>
 
 <unit>
-<constructor><type><specifier>public</specifier> <argument_list>&lt;<argument><name>U</name></argument>&gt;</argument_list></type> <name>Class</name><parameter_list>(<param><decl><type><name>U</name></type> <name>u</name></decl></param>)</parameter_list> <block>{}</block></constructor>
+<constructor><specifier>public</specifier> <argument_list>&lt;<argument><name>U</name></argument>&gt;</argument_list> <name>Class</name><parameter_list>(<param><decl><type><name>U</name></type> <name>u</name></decl></param>)</parameter_list> <block>{}</block></constructor>
 </unit>
 
 <unit>
