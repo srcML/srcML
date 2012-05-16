@@ -29,7 +29,7 @@
       <try>try <block>{ 
           <expr_stmt><expr><name>a</name></expr>;</expr_stmt> 
           }</block><catch>catch <block>{}</block></catch></try>
-      }</block></catch></try>
+    }</block></catch></try>
 </unit>
 
 <unit>
@@ -37,7 +37,11 @@
   <try>try <block>{ 
       <expr_stmt><expr><name>a</name></expr>;</expr_stmt> 
       }</block><catch>catch <block>{}</block></catch></try>
+    }</block><catch>catch <block>{
+      <try>try <block>{ 
+      <expr_stmt><expr><name>a</name></expr>;</expr_stmt> 
     }</block><catch>catch <block>{}</block></catch></try>
+}</block></catch></try>
 </unit>
 
 <unit>
