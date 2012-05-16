@@ -2435,7 +2435,7 @@ function_type_check[int& type_count] { type_count = 1; ENTRY_DEBUG } :
 
 type_identifier_count[int& type_count] { ++type_count; ENTRY_DEBUG } :
 
-         // overloaded parentheses operator
+        // overloaded parentheses operator
         { LA(1) == OPERATOR }?
         overloaded_operator |
 
@@ -3095,7 +3095,7 @@ macro_call_inner { LocalMode lm(this); bool first = true; ENTRY_DEBUG } :
             startElement(SMACRO_CALL);
         }
         identifier[true]
-        ({ first }?
+        (options { greedy = true; } : { first }?
         {
             // start a mode for the macro argument list
             startNewMode(MODE_LIST | MODE_TOP);
