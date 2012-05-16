@@ -8,12 +8,34 @@
 </unit>
 
 <unit>
+  <try>try <block>{
+      <try>try <block>{<expr_stmt><expr><name>a</name></expr>;</expr_stmt>}</block>
+        <catch>catch <block>{<expr_stmt><expr><name>b</name></expr>;</expr_stmt>}</block></catch>
+        <finally>finally <block>{<expr_stmt><expr><name>c</name></expr>;</expr_stmt>}</block></finally></try>
+      }</block>
+    <catch>catch <block>{<expr_stmt><expr><name>b</name></expr>;</expr_stmt>}</block></catch>
+    <finally>finally <block>{<expr_stmt><expr><name>c</name></expr>;</expr_stmt>}</block></finally></try>
+</unit>
+
+<unit>
   <try>try <block>{<expr_stmt><expr><name>a</name></expr>;</expr_stmt>}</block>
+    <catch>catch <block>{
+        <try>try <block>{<expr_stmt><expr><name>a</name></expr>;</expr_stmt>}</block>
+          <catch>catch <block>{<expr_stmt><expr><name>b</name></expr>;</expr_stmt>}</block></catch>
+          <finally>finally <block>{<expr_stmt><expr><name>c</name></expr>;</expr_stmt>}</block></finally></try>
+        }</block></catch>
+    <finally>finally <block>{<expr_stmt><expr><name>c</name></expr>;</expr_stmt>}</block></finally></try>
+</unit>
+
+
+<unit>
+  <try>try <block>{<expr_stmt><expr><name>a</name></expr>;</expr_stmt>}</block>
+    <catch>catch <block>{<expr_stmt><expr><name>b</name></expr>;</expr_stmt>}</block></catch>
+    <finally>finally <block>{
     <try>try <block>{<expr_stmt><expr><name>a</name></expr>;</expr_stmt>}</block>
       <catch>catch <block>{<expr_stmt><expr><name>b</name></expr>;</expr_stmt>}</block></catch>
         <finally>finally <block>{<expr_stmt><expr><name>c</name></expr>;</expr_stmt>}</block></finally></try>
-    <catch>catch <block>{<expr_stmt><expr><name>b</name></expr>;</expr_stmt>}</block></catch>
-    <finally>finally <block>{<expr_stmt><expr><name>c</name></expr>;</expr_stmt>}</block></finally></try>
+}</block></finally></try>
 </unit>
 
 <unit>
