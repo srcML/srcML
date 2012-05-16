@@ -57,4 +57,9 @@
 <function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name> =<init> <expr><name>c</name></expr></init></decl></param>)</parameter_list>;</function_decl>
 </unit>
 
+<unit><function><type><name>void</name></type> <name>foo</name><parameter_list>(<param><function_decl><type><name>int</name></type> (*<name>a</name>)<parameter_list>(<param><decl><type><name>char</name></type> <name>i</name></decl></param>)</parameter_list></function_decl></param>, <param><decl><type><name>char</name></type> <name>b</name></decl></param>)</parameter_list>
+<block>{
+}</block></function> 
+</unit>
+
 </unit>
