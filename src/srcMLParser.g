@@ -610,10 +610,10 @@ statements_non_cfg { int token = 0; int place = 0; int secondtoken = 0; int fla 
         function[fla, type_count] |
 
         // "~" which looked like destructor, but isn't
-        { decl_type == NONE && LA(1) == DESTOP }?
+        { decl_type == NONE }?
         expression_statement_process
         expression_process
-        general_operators |
+        sole_destop |
 
         // standalone macro
         { decl_type == NULLOPERATOR }?
@@ -3416,6 +3416,20 @@ general_operators { LocalMode lm(this); ENTRY_DEBUG } :
             // others are not combined
             NEW | DELETE
         )
+;
+
+sole_destop { LocalMode lm(this); ENTRY_DEBUG } :
+        {
+            if (isoption(parseoptions, OPTION_OPERATOR)) {
+
+                // end all elements at end of rule automatically
+                startNewMode(MODE_LOCAL);
+
+                // start the modifier
+                startElement(SOPERATOR);
+            }
+        }
+        DESTOP
 ;
 
 general_operators_list { ENTRY_DEBUG }:
