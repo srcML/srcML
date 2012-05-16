@@ -1,7 +1,7 @@
 /*
   srcmlapps.hpp
 
-  Copyright (C) 2004-2011  SDML (www.sdml.info)
+  Copyright (C) 2004-2012  SDML (www.sdml.info)
 
   This file is part of the srcML translator.
 
@@ -36,7 +36,7 @@
 #define PATH_SEPARATOR '/'
 #endif
 
-const char* const COPYRIGHT = "Copyright (C) 2011 SDML";
+const char* const COPYRIGHT = "Copyright (C) 2012 SDML";
 
 const char* const EMAIL_ADDRESS = "collard@uakron.edu";
 
