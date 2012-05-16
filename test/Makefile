@@ -28,7 +28,7 @@ GEN_BASE=while ifnestcond return function_decl ifblock
 GEN_BASE_CXX=throw constructor_explicit destructor_virtual function_const struct union
 
 # base for C only
-BASE_C=functionkr # typedef_cstruct
+#BASE_C=functionkr # typedef_cstruct
 
 # base for C family
 BASE_C_FAMILY=asm macro cstruct extern main function_pointer decl_struct typedef decl_pointer function_asterisk
