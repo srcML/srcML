@@ -56,4 +56,7 @@ fulljava : testbase
 	@export SRC2SRCML=${SRC2SRCML}; export SRCML2SRC=${SRCML2SRC}; time ./testsuite.py ".*" Java
 
 clean :
-	#rm -f ${GEN_FILES}
+	cd ../suite
+	make
+	cd ../test
+
