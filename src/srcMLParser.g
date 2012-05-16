@@ -2073,11 +2073,12 @@ lparen_marked { LocalMode lm(this); ENTRY_DEBUG } :
         LPAREN  
 ;
 
-comma[bool final = false] { if (final) setFinalToken(); }:
+comma[bool final = false] { if (final) setFinalToken(); ENTRY_DEBUG }:
         {
             // comma ends the current item in a list
             // or ends the current expression
             if (!inTransparentMode(MODE_PARSE_EOL) && (inTransparentMode(MODE_LIST) || inTransparentMode(MODE_NEST | MODE_STATEMENT))) {
+
                 // might want to check for !inMode(MODE_INTERNAL_END_CURLY)
                 endDownToFirstMode(MODE_LIST | MODE_STATEMENT);
             }
@@ -3819,7 +3820,7 @@ derive_access { LocalMode lm(this); ENTRY_DEBUG } :
         (VIRTUAL)* (PUBLIC | PRIVATE | PROTECTED) (options { greedy = true; } : VIRTUAL)*
 ;
 
-parameter_list { LocalMode lm(this); bool lastwasparam = false; bool foundparam = false; ENTRY_DEBUG } :
+parameter_list[] { LocalMode lm(this); bool lastwasparam = false; bool foundparam = false; ENTRY_DEBUG } :
         {
             // list of parameters
             startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
@@ -3829,7 +3830,13 @@ parameter_list { LocalMode lm(this); bool lastwasparam = false; bool foundparam 
         }
         // parameter list must include all possible parts since it is part of
         // function detection
-        LPAREN ({ foundparam = true; if (!lastwasparam) empty_element(SPARAMETER, !lastwasparam); lastwasparam = false; } comma | full_parameter { foundparam = lastwasparam = true; })* empty_element[SPARAMETER, !lastwasparam && foundparam] rparen[false, false]
+        LPAREN ({ foundparam = true; if (!lastwasparam) empty_element(SPARAMETER, !lastwasparam); lastwasparam = false; } 
+        {
+            // We are in a parameter list.  Need to make sure we end it down to the start of the parameter list
+            if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
+                endCurrentMode(MODE_LOCAL);
+        } comma |
+        full_parameter { foundparam = lastwasparam = true; })* empty_element[SPARAMETER, !lastwasparam && foundparam] rparen[false, false]
 ;
 
 empty_element[int element, bool cond] { LocalMode lm(this); ENTRY_DEBUG } :
