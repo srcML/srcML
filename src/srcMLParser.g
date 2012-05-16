@@ -130,7 +130,7 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d  %5s%*s %s (%d)\n", inputState->guessing, LA(1), (LA(1) != 11 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d  %5s%*s %s (%d)\n", inputState->guessing, LA(1), (LA(1) != 11 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #define CATCH_DEBUG //marker();
 
 #define assertMode(m)
@@ -2265,6 +2265,10 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                 (standard_specifiers)=>
                 standard_specifiers set_int[specifier_count, specifier_count + 1] |
 
+                { inLanguage(LANGUAGE_JAVA_FAMILY) }?
+                (template_argument_list)=>
+                template_argument_list set_int[specifier_count, specifier_count + 1] |
+
                 // typical type name
                 complex_name[true] set_bool[foundpure]
                     set_bool[isoperatorfunction, inLanguage(LANGUAGE_CXX_FAMILY) && (isoperatorfunction ||
@@ -2287,7 +2291,6 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
             set_int[token, LA(1), type_count == 1]
 
         )*
-    
         // adjust type tokens to eliminate for last left bracket (only for Java)
         set_int[type_count, endbracket ? type_count - 1 : type_count]
 
@@ -2319,6 +2322,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                  // inside of a class definition
                  ((inMode(MODE_ACCESS_REGION) && inLanguage(LANGUAGE_CXX_FAMILY)) ||
                   (inMode(MODE_CLASS) && inLanguage(LANGUAGE_JAVA_FAMILY)) ||
+                  (inLanguage(LANGUAGE_JAVA_FAMILY) && LA(1) == LPAREN) ||
 
                  // outside of a class definition, but with properly prefixed name
                  (inLanguage(LANGUAGE_CXX_FAMILY) && namestack[0] != "" && namestack[1] != "" && namestack[0] == namestack[1]))]
@@ -2366,6 +2370,7 @@ throw_exception[bool cond = true] { if (cond) throw antlr::RecognitionException(
 set_type[DECLTYPE& name, DECLTYPE value, bool result = true] { if (result) name = value; } :;
 
 trace[const char*s ] { std::cerr << s << std::endl; } :;
+trace_int[int s] { std::cerr << "HERE " << s << std::endl; } :;
 
 //traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
 
@@ -2926,15 +2931,15 @@ constructor_definition { ENTRY_DEBUG } :
         }
         constructor_header
 
-        (try_statement)*
+        ({ inLanguage(LANGUAGE_CXX_FAMILY) }? try_statement)*
 
-        (member_initialization_list)*
+        ({ inLanguage(LANGUAGE_CXX_FAMILY) }? member_initialization_list)*
 ;
 
 // constructor definition
 constructor_header { ENTRY_DEBUG } :
 
-        (specifier_explicit | { inLanguage(LANGUAGE_JAVA_FAMILY) }? java_specifier_mark)*
+        (specifier_explicit | { inLanguage(LANGUAGE_JAVA_FAMILY) }? (java_specifier_mark | template_argument_list))*
 
         complex_name[true]
 
