@@ -4071,10 +4071,14 @@ template_argument[] { LocalMode lm(this); ENTRY_DEBUG } :
             startElement(STEMPLATE_ARGUMENT);
         }
         ( options { greedy = true; } : 
-            type_identifier | literal | char_literal | string_literal | boolean | 
+            { LA(1) != SUPER }?
+            type_identifier |
 
+            literal | char_literal | string_literal | boolean | 
 
-            template_extends_java | template_super_java | QMARK
+            template_extends_java |
+
+            template_super_java | QMARK
         )+
 ;
 
