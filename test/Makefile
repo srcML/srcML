@@ -14,7 +14,6 @@ SRCENCODING=
 
 ALLINALLCUTOFF=35
 
-
 ##
 # General lists of test cases
 
@@ -27,12 +26,6 @@ GEN_BASE=while ifnestcond return function_decl ifblock
 
 # base for C++ generated from original cases
 GEN_BASE_CXX=throw constructor_explicit destructor_virtual function_const struct union
-
-# basic generated C++ files
-GEN_SEP= $(GEN_BASE) $(GEN_BASE_CXX)
-
-# generated cases for C++ from base
-GEN_PART=${foreach nm, $(GEN_SEP), ../suite/$(nm).cpp.xml}
 
 # base for C only
 BASE_C=functionkr # typedef_cstruct
@@ -47,7 +40,7 @@ BASE_OO=catch_form foreach try
 BASE_CXX=friend namespace template typedef_template constructor destructor throw_base function_throw class function_operator typedef_ns variable_names_ns function_ns decl_ns try typedef_struct
 
 # base for Java only
-BASE_JAVA=class_java keyword_java interface_java package
+BASE_JAVA=class_java keyword_java interface_java package generics
 
 all : gen
 	./testsuite.py
@@ -170,6 +163,12 @@ XSLT_SETLANGUAGE_JAVA=${XSLT} --stringparam language "Java" ${XSLT_SETLANGUAGE_X
 XSLT_REMOVECPP=${XSLT} ${XSLT_REMOVECPP_XSL}
 
 SEP_BASE=$(BASE_COMMON) $(BASE_C) $(BASE_C_FAMILY) $(BASE_CXX) $(BASE_OO)
+
+# basic generated C++ files
+GEN_SEP= $(GEN_BASE) $(GEN_BASE_CXX)
+
+# generated cases for C++ from base
+GEN_PART=${foreach nm, $(GEN_SEP), ../suite/$(nm).cpp.xml}
 
 SEP_FILES=$(SEP_BASE) preprocessor
 
