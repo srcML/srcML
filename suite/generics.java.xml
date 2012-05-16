@@ -46,7 +46,7 @@
 </unit>
 
 <unit>
-<class><specifier>public</specifier> class <name><name>Class</name><argument_list>&lt;<argument>T <super>super <name>Object</name></super></argument>&gt;</argument_list></name> <block>{}</block></class>
+<class><specifier>public</specifier> class <name><name>Class</name><argument_list>&lt;<argument><name>T</name> <super>super <name>Object</name></super></argument>&gt;</argument_list></name> <block>{}</block></class>
 </unit>
 
 <unit>
