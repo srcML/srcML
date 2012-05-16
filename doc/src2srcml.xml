@@ -422,6 +422,14 @@
   </para>
   <variablelist>
     <varlistentry>
+      <term><option>&CPP_FLAG;</option></term>
+      <listitem>
+	<para>
+	  Turn on preprocessor handling for non-C++ languages.
+	</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
       <term><option>&CPP_MARKUP_ELSE_FLAG;</option></term>
       <listitem>
 	<para>
