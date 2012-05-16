@@ -130,7 +130,7 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d  %5s%*s %s (%d)\n", inputState->guessing, LA(1), (LA(1) != 11 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d  %5s%*s %s (%d)\n", inputState->guessing, LA(1), (LA(1) != 11 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #define CATCH_DEBUG //marker();
 
 #define assertMode(m)
@@ -1548,8 +1548,15 @@ class_default_access_action[int access_token] :
 /*
  header (part before block) of class (or struct or union)
 */
-class_header { ENTRY_DEBUG } :
+class_header[] { ENTRY_DEBUG } :
 
+        /*
+          TODO
+          
+          This shouldn't be needed, but uncommenting the predicate causes Java
+          to mess up with template parameters, but not C++ ???
+        */
+        { inLanguage(LANGUAGE_CXX_FAMILY) }?
         (macro_call_check class_header_base LCURLY)=>
            macro_call class_header_base |
 
@@ -1559,7 +1566,7 @@ class_header { ENTRY_DEBUG } :
 /*
  header (part before block) of class (or struct or union)
 */
-class_header_base { bool insuper = false; ENTRY_DEBUG } :
+class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 
         complex_name[true] (
 
