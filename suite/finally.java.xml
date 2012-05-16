@@ -2,6 +2,12 @@
 <unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="finally">
 
   <unit>
+    <try>try <block>{}</block>
+      <catch>catch <block>{}</block></catch>
+      <finally>finally <block>{}</block></finally></try>
+  </unit>
+
+  <unit>
     <try>try <block>{<expr_stmt><expr><name>a</name></expr>;</expr_stmt>}</block>
       <catch>catch <block>{<expr_stmt><expr><name>b</name></expr>;</expr_stmt>}</block></catch>
       <finally>finally <block>{<expr_stmt><expr><name>c</name></expr>;</expr_stmt>}</block></finally></try>
