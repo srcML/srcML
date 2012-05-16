@@ -1957,7 +1957,10 @@ statement_part { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE decl
 
         // special case for type modifiers
         { inMode(MODE_VARIABLE_NAME | MODE_INIT) }?
-        (multops | tripledotop) |
+             multops |
+
+        { inMode(MODE_VARIABLE_NAME | MODE_INIT) }?
+             tripledotop |
 
         // start of argument for return or throw statement
         { inMode(MODE_VARIABLE_NAME | MODE_INIT) }?
@@ -3418,6 +3421,20 @@ general_operators { LocalMode lm(this); ENTRY_DEBUG } :
         )
 ;
 
+sole_new { LocalMode lm(this); ENTRY_DEBUG } :
+        {
+            if (isoption(parseoptions, OPTION_OPERATOR)) {
+
+                // end all elements at end of rule automatically
+                startNewMode(MODE_LOCAL);
+
+                // start the modifier
+                startElement(SOPERATOR);
+            }
+        }
+        NEW
+;
+
 sole_destop { LocalMode lm(this); ENTRY_DEBUG } :
         {
             if (isoption(parseoptions, OPTION_OPERATOR)) {
@@ -3577,8 +3594,8 @@ guessing_end
 */
 expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG } :
 
-        { inLanguage(LANGUAGE_JAVA_FAMILY) && LA(1) == NEW }?
-        (NEW function_identifier paren_pair LCURLY)=> general_operators anonymous_class_definition |
+        { inLanguage(LANGUAGE_JAVA_FAMILY) }?
+        (NEW function_identifier paren_pair LCURLY)=> sole_new anonymous_class_definition |
 
         // call
         // distinguish between a call and a macro
