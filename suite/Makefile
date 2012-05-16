@@ -43,7 +43,6 @@ BASE_CXX=friend namespace template typedef_template constructor destructor throw
 BASE_JAVA=class_java keyword_java interface_java package generics
 
 all : gen
-	./testsuite.py
 
 PHONY : testbase
 testbase : gen
