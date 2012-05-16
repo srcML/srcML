@@ -14,13 +14,12 @@ SRCENCODING=
 
 ALLINALLCUTOFF=35
 
-all : testbase
+all : 
 	./testsuite.py
 
 PHONY : testbase
 testbase :
-	cd ../suite
-	make
+	cd ../suite && make
 	cd ../test
 
 PHONY : short
@@ -40,6 +39,5 @@ shortjava : testbase
 	@export SRC2SRCML=${SRC2SRCML}; export SRCML2SRC=${SRCML2SRC}; time ./testsuite.py ".*\.all" Java
 
 clean :
-	cd ../suite
-	make
+	cd ../suite && make
 	cd ../test
