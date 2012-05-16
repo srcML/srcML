@@ -31,8 +31,10 @@
 #include <libxml/parserInternals.h>
 #include <libxml/xmlreader.h>
 
+/*
 static xmlChar* unit_directory = 0;
 static xmlChar* unit_filename = 0;
+*/
 
 #include <libxml/tree.h>
 

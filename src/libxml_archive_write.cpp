@@ -44,7 +44,7 @@ void archiveWriteOutputFormat(const char* format) {
 }
 
 static const int NUMARCHIVES = 4;
-static const char * ARCHIVE_FILTER_EXTENSIONS[] = {"tar", "zip", "tgz", "cpio", "gz", "bz2", 0};
+//static const char * ARCHIVE_FILTER_EXTENSIONS[] = {"tar", "zip", "tgz", "cpio", "gz", "bz2", 0};
 
 static struct archive *wa;
 static struct archive_entry *wentry;
