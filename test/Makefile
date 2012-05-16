@@ -14,39 +14,14 @@ SRCENCODING=
 
 ALLINALLCUTOFF=35
 
-##
-# General lists of test cases
-
-# original base of cases for all languages
-BASE_COMMON=comment string variable_names expression decl_simple \
-	          if for do switch call function enum return_base problem
-
-# base for all languages generated from original cases
-GEN_BASE=while ifnestcond return function_decl ifblock
-
-# base for C++ generated from original cases
-GEN_BASE_CXX=throw constructor_explicit destructor_virtual function_const struct union
-
-# base for C only
-#BASE_C=functionkr # typedef_cstruct
-
-# base for C family
-BASE_C_FAMILY=asm macro cstruct extern main function_pointer decl_struct typedef decl_pointer function_asterisk
-
-# base for object-oriented languages
-BASE_OO=catch_form foreach try
-
-# base for C++ only
-BASE_CXX=friend namespace template typedef_template constructor destructor throw_base function_throw class function_operator typedef_ns variable_names_ns function_ns decl_ns try typedef_struct
-
-# base for Java only
-BASE_JAVA=class_java keyword_java interface_java package generics
-
-all : gen
+all :
 	./testsuite.py
 
 PHONY : testbase
-testbase : gen
+testbase :
+	cd ../suite
+	make
+	cd ../test
 
 PHONY : short
 short : testbase
