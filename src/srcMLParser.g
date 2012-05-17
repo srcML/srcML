@@ -4663,7 +4663,7 @@ cpp_condition[bool& markblockzero] { LocalMode lm(this); ENTRY_DEBUG } :
         full_expression
 ;
 
-cpp_symbol { LocalMode lm(this); ENTRY_DEBUG } :
+cpp_symbol[] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // end all started elements in this rule
             startNewMode(MODE_LOCAL);
@@ -4674,11 +4674,11 @@ cpp_symbol { LocalMode lm(this); ENTRY_DEBUG } :
         NAME
 ;
 
-cpp_symbol_optional { ENTRY_DEBUG } :
+cpp_symbol_optional[] { ENTRY_DEBUG } :
         (options { greedy = true; } : cpp_symbol)*
 ;
 
-cpp_filename { LocalMode lm(this); ENTRY_DEBUG } :
+cpp_filename[] { LocalMode lm(this); ENTRY_DEBUG } :
         (
         {
             startNewMode(MODE_PREPROC);
@@ -4688,6 +4688,6 @@ cpp_filename { LocalMode lm(this); ENTRY_DEBUG } :
         (string_literal | char_literal | TEMPOPS (~(TEMPOPE))* TEMPOPE))*
 ;
 
-cpp_linenumber :
+cpp_linenumber[] :
         (options { greedy = true; } : literal)*
 ;
