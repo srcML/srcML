@@ -271,7 +271,7 @@ void output_help(const char* name) {
 
   printf("\nCPP Markup Options:\n");
 
-  printf("  --%-21s turn on preprocessor handling for non-C++ languages\n", CPP_FLAG);
+  printf("  --%-21s preprocessor parsing and markup for Java and non-C/C++ languages\n", CPP_FLAG);
 
   printf("  --%-21s markup cpp #else regions (default)\n", CPP_MARKUP_ELSE_FLAG);
   printf("  --%-21s leave cpp #else regions as text\n\n", CPP_TEXTONLY_ELSE_FLAG);
