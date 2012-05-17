@@ -3794,7 +3794,7 @@ extends_list[] { LocalMode lm(this); ENTRY_DEBUG } :
         super_list
 ;
 
-implements_list { LocalMode lm(this); ENTRY_DEBUG } :
+implements_list[] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // end all elements at end of rule automatically
             startNewMode(MODE_LOCAL);
@@ -3806,7 +3806,7 @@ implements_list { LocalMode lm(this); ENTRY_DEBUG } :
         super_list
 ;
 
-super_list { bool flag = false; ENTRY_DEBUG } :
+super_list[] { bool flag = false; ENTRY_DEBUG } :
         (options { greedy = true; } :
             (derive_access)*
 
@@ -3816,7 +3816,7 @@ super_list { bool flag = false; ENTRY_DEBUG } :
         )*
 ;
 
-derive_access { LocalMode lm(this); ENTRY_DEBUG } :
+derive_access[] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // end all elements at end of rule automatically
             startNewMode(MODE_LOCAL);
@@ -3855,17 +3855,17 @@ empty_element[int element, bool cond] { LocalMode lm(this); ENTRY_DEBUG } :
         }
 ;
 
-kr_parameter { ENTRY_DEBUG } : 
+kr_parameter[] { ENTRY_DEBUG } : 
         full_parameter terminate_pre terminate_token
 ;
 
-full_parameter { ENTRY_DEBUG } :
+full_parameter[] { ENTRY_DEBUG } :
 
         parameter
         (options { greedy = true; } : parameter_declaration_initialization expression)*
 ;
 
-argument { ENTRY_DEBUG } :
+argument[] { ENTRY_DEBUG } :
         { getParen() == 0 }? rparen[false,false] |
         {
             // argument with nested expression
@@ -3884,7 +3884,7 @@ argument { ENTRY_DEBUG } :
 /*
   Parameter for a function declaration or definition
 */                
-parameter { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTYPE decl_type = NONE; ENTRY_DEBUG } :
+parameter[] { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTYPE decl_type = NONE; ENTRY_DEBUG } :
         {
             // end parameter correctly
             startNewMode(MODE_PARAMETER);
