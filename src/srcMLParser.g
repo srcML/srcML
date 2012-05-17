@@ -2121,7 +2121,7 @@ colon[bool final = false] { if (final) setFinalToken(); ENTRY_DEBUG } :
   Starts condition mode and prepares to handle embedded expression.
   End of the element is handled in condition_rparen.
 */
-condition { setFinalToken(); ENTRY_DEBUG } :
+condition[] { setFinalToken(); ENTRY_DEBUG } :
         {
             assertMode(MODE_CONDITION | MODE_EXPECT);
 
@@ -2137,11 +2137,11 @@ condition { setFinalToken(); ENTRY_DEBUG } :
 
 /* Function */
 
-function_pointer_name_grammar { ENTRY_DEBUG } :
+function_pointer_name_grammar[] { ENTRY_DEBUG } :
         LPAREN function_pointer_name_base RPAREN
 ;
 
-function_pointer_name_base { ENTRY_DEBUG } :
+function_pointer_name_base[] { ENTRY_DEBUG } :
 
         // special case for function pointer names that don't have '*'
         (complex_name[true] RPAREN)=>
