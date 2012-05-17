@@ -1759,7 +1759,7 @@ terminate[bool final = false] { if(final) setFinalToken(); ENTRY_DEBUG } :
         terminate_post
 ;
 
-terminate_token { LocalMode lm(this); ENTRY_DEBUG } :
+terminate_token[] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             if (inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_DECL) && !inMode(MODE_IF)) {
 
@@ -1771,7 +1771,7 @@ terminate_token { LocalMode lm(this); ENTRY_DEBUG } :
         TERMINATE
     ;
 
-terminate_pre { ENTRY_DEBUG } :
+terminate_pre[] { ENTRY_DEBUG } :
         {
             // end any elements inside of the statement
             if (!inMode(MODE_TOP | MODE_NEST | MODE_STATEMENT))
@@ -1780,7 +1780,7 @@ terminate_pre { ENTRY_DEBUG } :
         }
 ;
 
-terminate_post { ENTRY_DEBUG } :
+terminate_post[] { ENTRY_DEBUG } :
         {
             // end all statements this statement is nested in
             // special case when ending then of if statement
