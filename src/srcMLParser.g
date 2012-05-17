@@ -4202,11 +4202,11 @@ typedef_statement[] { ENTRY_DEBUG } :
         struct_union_definition[LA(1) == STRUCT ? SSTRUCT : SUNION])*
 ;
 
-paren_pair :
+paren_pair[] :
         LPAREN (paren_pair | ~(LPAREN | RPAREN))* RPAREN
 ;
 
-optional_paren_pair {
+optional_paren_pair[] {
 
     if (LA(1) != LPAREN)
         return;
@@ -4230,7 +4230,7 @@ optional_paren_pair {
 /*
   See if there is a semicolon terminating a statement inside a block at the top level
 */        
-nested_terminate {
+nested_terminate[] {
 
     int parencount = 0;
     int bracecount = 0;
@@ -4261,7 +4261,7 @@ nested_terminate {
 /*
   Definition of an enum.  Start of the enum only
 */
-enum_definition { ENTRY_DEBUG } :
+enum_definition[] { ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (enum_class_definition nested_terminate)=> enum_class_definition |
 
@@ -4291,7 +4291,7 @@ enum_definition { ENTRY_DEBUG } :
   Complete definition of an enum.  Used for enum's embedded in typedef's where the entire
   enum must be parsed since it is part of the type.
 */
-enum_definition_whole { LocalMode lm(this); ENTRY_DEBUG } :
+enum_definition_whole[] { LocalMode lm(this); ENTRY_DEBUG } :
         enum_definition
 
         (variable_identifier)*
@@ -4323,7 +4323,7 @@ enum_definition_whole { LocalMode lm(this); ENTRY_DEBUG } :
 
   EOF marks the end of all processing, so it must occur after any ending modes
 */
-eof :
+eof[] :
         {
             // end all modes
             endAllModes();
@@ -4336,7 +4336,7 @@ eof :
 
     Match on the directive itself not the entire directive
 */
-preprocessor {
+preprocessor[] {
         int directive_token = 0;
         bool markblockzero = false;
 
