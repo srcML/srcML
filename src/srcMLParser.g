@@ -3599,10 +3599,10 @@ guessing_endDownToMode[State::MODE_TYPE mode]
 guessing_endCurrentModeSafely[State::MODE_TYPE mode]
     { if (inputState->guessing && inTransparentMode(MODE_GUESSING)) endCurrentModeSafely(mode | MODE_GUESSING); ENTRY_DEBUG } : ;
 
-guessing_endGuessing
+guessing_endGuessing[]
     { if (inTransparentMode(MODE_GUESSING)) endDownOverMode(MODE_GUESSING); ENTRY_DEBUG } : ;
 
-guessing_end
+guessing_end[]
     { if (!inputState->guessing && inTransparentMode(MODE_GUESSING)) endDownOverMode(MODE_GUESSING); ENTRY_DEBUG } : ;
 
 
