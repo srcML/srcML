@@ -2697,7 +2697,7 @@ full_expression[] { LocalMode lm(this); ENTRY_DEBUG } :
    A variable name in an expression.  Includes array names, but not
    function calls
 */
-variable_identifier { LocalMode lm(this); bool iscomplex = false; TokenPosition tp; ENTRY_DEBUG } :
+variable_identifier[] { LocalMode lm(this); bool iscomplex = false; TokenPosition tp; ENTRY_DEBUG } :
         {
             // local mode that is automatically ended by leaving this function
             startNewMode(MODE_LOCAL);
@@ -2871,7 +2871,7 @@ catch[antlr::RecognitionException] {
 /*
   Specifier for a function
 */
-function_specifier { LocalMode lm(this); ENTRY_DEBUG } :
+function_specifier[] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_LOCAL);
@@ -2890,7 +2890,7 @@ function_specifier { LocalMode lm(this); ENTRY_DEBUG } :
 /*
   Specifiers for functions, methods, and variables
 */
-standard_specifiers { LocalMode lm(this); ENTRY_DEBUG } :
+standard_specifiers[] { LocalMode lm(this); ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_JAVA_FAMILY) }? 
             java_specifier_mark |
 
@@ -2903,7 +2903,7 @@ standard_specifiers { LocalMode lm(this); ENTRY_DEBUG } :
         (VIRTUAL | EXTERN | INLINE | EXPLICIT | STATIC | FRIEND)
 ;
 
-auto_keyword { LocalMode lm(this); ENTRY_DEBUG } :
+auto_keyword[] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // local mode that is automatically ended by leaving this function
             startNewMode(MODE_LOCAL);
@@ -2914,7 +2914,7 @@ auto_keyword { LocalMode lm(this); ENTRY_DEBUG } :
 ;
 
 // constructor definition
-constructor_declaration { ENTRY_DEBUG } :
+constructor_declaration[] { ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_STATEMENT);
@@ -2926,7 +2926,7 @@ constructor_declaration { ENTRY_DEBUG } :
 ;              
 
 // constructor definition
-constructor_definition { ENTRY_DEBUG } :
+constructor_definition[] { ENTRY_DEBUG } :
         {
             // statement with nested block
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_STATEMENT);
