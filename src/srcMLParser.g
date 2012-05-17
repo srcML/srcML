@@ -1333,7 +1333,7 @@ check_end[int& token] { /* setFinalToken(); // problem with class */ token = LA(
 
 /*
 */
-class_declaration :
+class_declaration[] :
         {
             // statement
             startNewMode(MODE_STATEMENT);
@@ -1346,7 +1346,7 @@ class_declaration :
 
 /*
 */
-class_definition :
+class_definition[] :
         {
             bool intypedef = inMode(MODE_TYPEDEF);
 
@@ -1369,7 +1369,7 @@ class_definition :
         }
 ;
 
-enum_class_definition :
+enum_class_definition[] :
         {
             bool intypedef = inMode(MODE_TYPEDEF);
 
@@ -1392,7 +1392,7 @@ enum_class_definition :
         }
 ;
 
-concept_definition :
+concept_definition[] :
         {
             // statement
             startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_CLASS | MODE_END_AT_BLOCK);
@@ -1412,7 +1412,7 @@ concept_definition :
         )
 ;
 
-conceptmap_definition :
+conceptmap_definition[] :
         {
             // statement
             startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_CLASS | MODE_END_AT_BLOCK);
@@ -1425,7 +1425,7 @@ conceptmap_definition :
         complex_name[true] 
 ;
 
-anonymous_class_definition :
+anonymous_class_definition[] :
         {
             // statement
             startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_CLASS | MODE_END_AT_BLOCK);
