@@ -2944,7 +2944,13 @@ constructor_definition { ENTRY_DEBUG } :
 // constructor definition
 constructor_header { ENTRY_DEBUG } :
 
-        (specifier_explicit | { inLanguage(LANGUAGE_JAVA_FAMILY) }? (java_specifier_mark | template_argument_list))*
+        (options { greedy = true; } : 
+            specifier_explicit |
+            
+            { inLanguage(LANGUAGE_JAVA_FAMILY) }? java_specifier_mark |
+
+            { inLanguage(LANGUAGE_JAVA_FAMILY) }? template_argument_list
+        )*
 
         complex_name[true]
 
