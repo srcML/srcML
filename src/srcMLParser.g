@@ -2563,7 +2563,7 @@ java_specifier_mark[] { LocalMode lm(this); ENTRY_DEBUG } :
    type identifier
 
 */
-lead_type_identifier { ENTRY_DEBUG } :
+lead_type_identifier[] { ENTRY_DEBUG } :
 
 //        java_specifier_mark |
 
@@ -2575,7 +2575,7 @@ lead_type_identifier { ENTRY_DEBUG } :
         pure_lead_type_identifier
 ;
 
-type_identifier { ENTRY_DEBUG } :
+type_identifier[] { ENTRY_DEBUG } :
 
         // any identifier that can appear first can appear later
         lead_type_identifier |
@@ -2583,7 +2583,7 @@ type_identifier { ENTRY_DEBUG } :
         non_lead_type_identifier
 ;
 
-non_lead_type_identifier { bool iscomplex = false; ENTRY_DEBUG } :
+non_lead_type_identifier[] { bool iscomplex = false; ENTRY_DEBUG } :
 
         tripledotop |
 
@@ -2596,7 +2596,7 @@ non_lead_type_identifier { bool iscomplex = false; ENTRY_DEBUG } :
 /*
   A set of balanced parentheses
 */
-balanced_parentheses :
+balanced_parentheses[] :
         LCURLY
         (balanced_parentheses | ~(LCURLY | RCURLY))*
         RCURLY
@@ -2605,7 +2605,7 @@ balanced_parentheses :
 /*
    Name of a function
 */
-function_identifier { ENTRY_DEBUG } :
+function_identifier[] { ENTRY_DEBUG } :
 
         // typical name
         complex_name[true] |
@@ -2616,7 +2616,7 @@ function_identifier { ENTRY_DEBUG } :
         function_pointer_name_grammar
 ;
 
-function_identifier_main { LocalMode lm(this); ENTRY_DEBUG } :
+function_identifier_main[] { LocalMode lm(this); ENTRY_DEBUG } :
         // special cases for main
         {
             // end all started elements in this rule
@@ -2632,7 +2632,7 @@ function_identifier_main { LocalMode lm(this); ENTRY_DEBUG } :
 /*
   overloaded operator name
 */
-overloaded_operator { LocalMode lm(this); ENTRY_DEBUG } :
+overloaded_operator[] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // end all started elements in this rule
             startNewMode(MODE_LOCAL);
@@ -2671,7 +2671,7 @@ variable_identifier_array_grammar_sub[bool& iscomplex] { LocalMode lm(this); ENT
   Full, complete expression matched all at once (no stream).
   Colon matches range(?) for bits.
 */
-full_expression { LocalMode lm(this); ENTRY_DEBUG } :
+full_expression[] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
