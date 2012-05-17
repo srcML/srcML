@@ -3688,7 +3688,7 @@ expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG
   Only start and end of strings are put directly through the parser.
   The contents of the string are handled as is whitespace.
 */
-string_literal { LocalMode lm(this); ENTRY_DEBUG } :
+string_literal[] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // only markup strings in literal option
             if (isoption(parseoptions, OPTION_LITERAL)) {
@@ -3707,7 +3707,7 @@ string_literal { LocalMode lm(this); ENTRY_DEBUG } :
   Only start and end of character are put directly through the parser.
   The contents of the character are handled as is whitespace.
 */
-char_literal { LocalMode lm(this); ENTRY_DEBUG } :
+char_literal[] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // only markup characters in literal option
             if (isoption(parseoptions, OPTION_LITERAL)) {
@@ -3722,7 +3722,7 @@ char_literal { LocalMode lm(this); ENTRY_DEBUG } :
         (CHAR_START CHAR_END)
 ;
 
-literal { LocalMode lm(this); ENTRY_DEBUG } :
+literal[] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // only markup literals in literal option
             if (isoption(parseoptions, OPTION_LITERAL)) {
@@ -3737,7 +3737,7 @@ literal { LocalMode lm(this); ENTRY_DEBUG } :
         CONSTANTS
 ;
 
-boolean { LocalMode lm(this); ENTRY_DEBUG } :
+boolean[] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // only markup boolean values in literal option
             if (isoption(parseoptions, OPTION_LITERAL)) {
@@ -3752,7 +3752,7 @@ boolean { LocalMode lm(this); ENTRY_DEBUG } :
         (TRUE | FALSE)
 ;
 
-derived { LocalMode lm(this); ENTRY_DEBUG } :
+derived[] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // end all elements at end of rule automatically
             startNewMode(MODE_LOCAL);
@@ -3772,7 +3772,7 @@ derived { LocalMode lm(this); ENTRY_DEBUG } :
         )*
 ;
 
-super_list_java { ENTRY_DEBUG } :
+super_list_java[] { ENTRY_DEBUG } :
         {
             // end all elements at end of rule automatically
             startNewMode(MODE_LOCAL);
@@ -3782,7 +3782,7 @@ super_list_java { ENTRY_DEBUG } :
         }
 ;
 
-extends_list { LocalMode lm(this); ENTRY_DEBUG } :
+extends_list[] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // end all elements at end of rule automatically
             startNewMode(MODE_LOCAL);
