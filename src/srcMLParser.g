@@ -848,7 +848,7 @@ do_statement[] { setFinalToken(); ENTRY_DEBUG } :
 /*
   while part of do statement
 */
-do_while { setFinalToken(); ENTRY_DEBUG } :
+do_while[] { setFinalToken(); ENTRY_DEBUG } :
         {
             // mode for do statement is in top mode so that
             // end of the block will not end the statement
