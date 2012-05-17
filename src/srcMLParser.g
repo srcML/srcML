@@ -3028,7 +3028,7 @@ destructor_header[] { ENTRY_DEBUG } :
 /*
   call  function call, macro, etc.
 */
-call { ENTRY_DEBUG } :
+call[] { ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
             startNewMode(MODE_ARGUMENT | MODE_LIST);
@@ -3044,7 +3044,7 @@ call { ENTRY_DEBUG } :
 /*
  Argument list for a call, e.g., to a function
 */
-call_argument_list { ENTRY_DEBUG } :
+call_argument_list[] { ENTRY_DEBUG } :
         {
             // list of parameters
             setMode(MODE_EXPECT | MODE_LIST | MODE_INTERNAL_END_PAREN | MODE_END_ONLY_AT_RPAREN);
@@ -3061,11 +3061,11 @@ call_argument_list { ENTRY_DEBUG } :
   function call, macro, etc.
 */
 
-macro_call_check { ENTRY_DEBUG } :
+macro_call_check[] { ENTRY_DEBUG } :
         NAME optional_paren_pair
 ;
 
-eat_optional_macro_call {
+eat_optional_macro_call[] {
 
     bool success = false;
 
@@ -3095,7 +3095,7 @@ eat_optional_macro_call {
     ENTRY_DEBUG
     } :;
 
-macro_call { ENTRY_DEBUG } :
+macro_call[] { ENTRY_DEBUG } :
         macro_call_inner
         {
             if (inMode(MODE_THEN) && LA(1) == ELSE)
@@ -3103,7 +3103,7 @@ macro_call { ENTRY_DEBUG } :
         }
     ;
 
-macro_call_inner { LocalMode lm(this); bool first = true; ENTRY_DEBUG } :
+macro_call_inner[] { LocalMode lm(this); bool first = true; ENTRY_DEBUG } :
 
         {
             // start a mode for the macro that will end after the argument list
@@ -3143,7 +3143,7 @@ catch[antlr::RecognitionException] {
             emptyElement(SERROR_PARSE);
 }
 
-macro_call_contents { 
+macro_call_contents[] { 
 
             ENTRY_DEBUG
 
