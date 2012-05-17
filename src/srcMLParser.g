@@ -1247,7 +1247,7 @@ extern_name[] { ENTRY_DEBUG } :
 
  Past name handled as expression
 */
-namespace_definition { setFinalToken(); ENTRY_DEBUG } :
+namespace_definition[] { setFinalToken(); ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_STATEMENT | MODE_NAMESPACE | MODE_VARIABLE_NAME);
@@ -1258,7 +1258,7 @@ namespace_definition { setFinalToken(); ENTRY_DEBUG } :
         NAMESPACE
 ;
 
-namespace_alias { setFinalToken(); ENTRY_DEBUG } :
+namespace_alias[] { setFinalToken(); ENTRY_DEBUG } :
 
         EQUAL 
         {
@@ -1268,7 +1268,7 @@ namespace_alias { setFinalToken(); ENTRY_DEBUG } :
         }
 ;
 
-namespace_block { ENTRY_DEBUG } :
+namespace_block[] { ENTRY_DEBUG } :
         {
             // nest a block inside the namespace
             setMode(MODE_NEST | MODE_STATEMENT);
@@ -1279,7 +1279,7 @@ namespace_block { ENTRY_DEBUG } :
 /*
   start of namespace using directive
 */
-namespace_directive { setFinalToken(); ENTRY_DEBUG } :
+namespace_directive[] { setFinalToken(); ENTRY_DEBUG } :
         {
             // statement with an expected namespace name after the keywords
             startNewMode(MODE_STATEMENT | MODE_FUNCTION_NAME);
