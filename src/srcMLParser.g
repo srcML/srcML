@@ -1049,7 +1049,7 @@ switch_statement[] { setFinalToken(); ENTRY_DEBUG } :
 
  There are no grammar rules to match.
 */
-section_entry_action_first :
+section_entry_action_first[] :
         {
             // start a new section inside the block with nested statements
             startNewMode(MODE_TOP_SECTION | MODE_TOP | MODE_NEST | MODE_STATEMENT);
@@ -1061,7 +1061,7 @@ section_entry_action_first :
 
  There are no grammar rules to match.
 */
-section_entry_action :
+section_entry_action[] :
         {
             // end any statements inside the section
             endDownToMode(MODE_TOP);
@@ -1079,7 +1079,7 @@ section_entry_action :
 /*
  Yes, case isn't really a statement, but it is treated as one
 */
-switch_case { setFinalToken(); ENTRY_DEBUG } :
+switch_case[] { setFinalToken(); ENTRY_DEBUG } :
         // start a new section
         section_entry_action
         {
@@ -1092,7 +1092,7 @@ switch_case { setFinalToken(); ENTRY_DEBUG } :
         CASE 
 ;
 
-switch_default { setFinalToken(); ENTRY_DEBUG } :
+switch_default[] { setFinalToken(); ENTRY_DEBUG } :
         // start a new section
         section_entry_action
         {
