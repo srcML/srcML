@@ -2170,7 +2170,7 @@ function_header[int type_count] { ENTRY_DEBUG } :
 /*
 Guessing mode only
 */
-function_tail { ENTRY_DEBUG } :
+function_tail[] { ENTRY_DEBUG } :
         // at most only one throwlist expected.  0-many is more efficient
         (options { greedy = true; } :
 
@@ -2379,7 +2379,7 @@ trace_int[int s] { std::cerr << "HERE " << s << std::endl; } :;
 
 //traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
 
-marker { LocalMode lm(this); startNewMode(MODE_LOCAL); startElement(SMARKER); } :;
+marker[] { LocalMode lm(this); startNewMode(MODE_LOCAL); startElement(SMARKER); } :;
 
 set_int[int& name, int value, bool result = true] { if (result) name = value; } :;
 
