@@ -4613,7 +4613,7 @@ eol_post[int directive_token, bool markblockzero] {
 ;
 
 // remove any finished or unneeded cppmodes
-cppmode_cleanup {
+cppmode_cleanup[] {
 
         bool equal = true;
         for (unsigned int i = 0; i < cppmode.top().statesize.size(); ++i) {
@@ -4628,7 +4628,7 @@ cppmode_cleanup {
 ;
 
 // ended modes that may lead to needed updates
-cppmode_adjust {
+cppmode_adjust[] {
 
     if (checkOption(OPTION_CPP_MARKUP_ELSE) && !cppmode.empty() && 
         cppmode.top().isclosed == true &&
@@ -4648,7 +4648,7 @@ cppmode_adjust {
     ENTRY_DEBUG } :
 ;
 
-line_continuation { setFinalToken(); ENTRY_DEBUG } :
+line_continuation[] { setFinalToken(); ENTRY_DEBUG } :
         {
             // end all preprocessor modes
             endDownOverMode(MODE_PARSE_EOL);
