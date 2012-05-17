@@ -3015,7 +3015,7 @@ destructor_declaration[] { ENTRY_DEBUG } :
 // destructor header
 destructor_header[] { ENTRY_DEBUG } :
 
-        (specifier_explicit | { LT(1)->getText() == "void" }? identifier[true])*
+        (options { greedy = true; } : specifier_explicit | { LT(1)->getText() == "void" }? identifier[true])*
 
         complex_name[true]
 
