@@ -3248,7 +3248,7 @@ throw_statement[] { ENTRY_DEBUG } :
         THROW
 ;
 
-expression_statement_process { ENTRY_DEBUG } :
+expression_statement_process[] { ENTRY_DEBUG } :
         {
             // statement with an embedded expression
             startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
@@ -3290,7 +3290,7 @@ variable_declaration_statement[int type_count] { ENTRY_DEBUG } :
 /*
   Statement for the declaration of a variable or group of variables
 */
-short_variable_declaration { ENTRY_DEBUG } :
+short_variable_declaration[] { ENTRY_DEBUG } :
         {
             // declaration
             startNewMode(MODE_LOCAL);
@@ -3341,7 +3341,7 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
 /*
   Variable declaration name and optional initialization
 */
-variable_declaration_nameinit { ENTRY_DEBUG } :
+variable_declaration_nameinit[] { ENTRY_DEBUG } :
         variable_identifier
         {
             // expect a possible initialization
@@ -3352,7 +3352,7 @@ variable_declaration_nameinit { ENTRY_DEBUG } :
 /*
   Initialization of a variable in a declaration.  Does not include the equal sign.
 */
-function_pointer_initialization { ENTRY_DEBUG } :
+function_pointer_initialization[] { ENTRY_DEBUG } :
 
         EQUAL
         {
@@ -3365,7 +3365,7 @@ function_pointer_initialization { ENTRY_DEBUG } :
         (options { greedy = true; } : expression)*
 ;
 
-variable_declaration_initialization { ENTRY_DEBUG } :
+variable_declaration_initialization[] { ENTRY_DEBUG } :
 
         EQUAL
         {
@@ -3382,7 +3382,7 @@ variable_declaration_initialization { ENTRY_DEBUG } :
         call_argument_list
 ;
 
-variable_declaration_range { ENTRY_DEBUG } :
+variable_declaration_range[] { ENTRY_DEBUG } :
 
         COLON
         {
@@ -3394,7 +3394,7 @@ variable_declaration_range { ENTRY_DEBUG } :
         }
 ;
 
-parameter_declaration_initialization { ENTRY_DEBUG } :
+parameter_declaration_initialization[] { ENTRY_DEBUG } :
 
         EQUAL
         {
@@ -3406,7 +3406,7 @@ parameter_declaration_initialization { ENTRY_DEBUG } :
         }
 ;
 
-pure_expression_block { ENTRY_DEBUG } :
+pure_expression_block[] { ENTRY_DEBUG } :
         lcurly_base 
         {
             // nesting blocks, not statement
@@ -3420,7 +3420,7 @@ pure_expression_block { ENTRY_DEBUG } :
 /*
   All possible operators
 */
-general_operators { LocalMode lm(this); ENTRY_DEBUG } :
+general_operators[] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             if (isoption(parseoptions, OPTION_OPERATOR)) {
 
@@ -3439,7 +3439,7 @@ general_operators { LocalMode lm(this); ENTRY_DEBUG } :
         )
 ;
 
-sole_new { LocalMode lm(this); ENTRY_DEBUG } :
+sole_new[] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             if (isoption(parseoptions, OPTION_OPERATOR)) {
 
@@ -3453,7 +3453,7 @@ sole_new { LocalMode lm(this); ENTRY_DEBUG } :
         NEW
 ;
 
-sole_destop { LocalMode lm(this); ENTRY_DEBUG } :
+sole_destop[] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             if (isoption(parseoptions, OPTION_OPERATOR)) {
 
@@ -3467,7 +3467,7 @@ sole_destop { LocalMode lm(this); ENTRY_DEBUG } :
         DESTOP
 ;
 
-general_operators_list { ENTRY_DEBUG }:
+general_operators_list[] { ENTRY_DEBUG }:
         OPERATORS | TEMPOPS | TEMPOPE | EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF | QMARK
 ;
 
