@@ -2415,7 +2415,7 @@ function_type[int type_count] { ENTRY_DEBUG } :
         update_typecount
 ;
 
-update_typecount {} :
+update_typecount[] {} :
         {
             decTypeCount();
 
@@ -2426,7 +2426,7 @@ update_typecount {} :
         }
 ;
 
-update_var_typecount {} :
+update_var_typecount[] {} :
         {
             decTypeCount();
 
@@ -2466,7 +2466,7 @@ eat_type[int count] { if (count <= 0) return; ENTRY_DEBUG } :
 /*
   throw list for a function
 */
-throw_list { ENTRY_DEBUG } :
+throw_list[] { ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
             startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_EXPECT);
@@ -2489,7 +2489,7 @@ throw_list { ENTRY_DEBUG } :
 /*
   throw list for a function
 */
-complete_throw_list { bool flag = false; ENTRY_DEBUG } :
+complete_throw_list[] { bool flag = false; ENTRY_DEBUG } :
         THROW paren_pair | THROWS ( options { greedy = true; } : complex_name_java[true, flag] | COMMA)*
 ;
 
@@ -2497,7 +2497,7 @@ complete_throw_list { bool flag = false; ENTRY_DEBUG } :
    type identifier
 
 */
-pure_lead_type_identifier { ENTRY_DEBUG } :
+pure_lead_type_identifier[] { ENTRY_DEBUG } :
 
         auto_keyword |
 
@@ -2536,7 +2536,7 @@ pure_lead_type_identifier { ENTRY_DEBUG } :
 //        struct_union_definition[SUNION] |
 ;
 
-pure_lead_type_identifier_no_specifiers { ENTRY_DEBUG } :
+pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
 
         // class/struct/union before a name in a type, e.g., class A f();
         CLASS | STRUCT | UNION |
@@ -2548,7 +2548,7 @@ pure_lead_type_identifier_no_specifiers { ENTRY_DEBUG } :
         enum_definition_whole
 ;
 
-java_specifier_mark { LocalMode lm(this); ENTRY_DEBUG } :
+java_specifier_mark[] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_LOCAL);
