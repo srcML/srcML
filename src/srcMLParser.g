@@ -3942,7 +3942,7 @@ parameter_type_count[int type_count] { LocalMode lm(this); ENTRY_DEBUG } :
         ( options { greedy = true; } : multops | tripledotop | LBRACKET RBRACKET)*
 ;
 
-multops { LocalMode lm(this); ENTRY_DEBUG } :
+multops[] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // markup type modifiers if option is on
             if (isoption(parseoptions, OPTION_MODIFIER)) {
@@ -3957,7 +3957,7 @@ multops { LocalMode lm(this); ENTRY_DEBUG } :
         (MULTOPS | REFOPS | RVALUEREF)
 ;
 
-tripledotop { LocalMode lm(this); ENTRY_DEBUG } :
+tripledotop[] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // markup type modifiers if option is on
             if (isoption(parseoptions, OPTION_MODIFIER)) {
@@ -3974,7 +3974,7 @@ tripledotop { LocalMode lm(this); ENTRY_DEBUG } :
 
 /*
 */
-parameter_type { LocalMode lm(this); int type_count = 0; int fla = 0; int secondtoken = 0; DECLTYPE decl_type = NONE; ENTRY_DEBUG } :
+parameter_type[] { LocalMode lm(this); int type_count = 0; int fla = 0; int secondtoken = 0; DECLTYPE decl_type = NONE; ENTRY_DEBUG } :
         {
             // local mode so start element will end correctly
             startNewMode(MODE_LOCAL);
@@ -3993,7 +3993,7 @@ parameter_type { LocalMode lm(this); int type_count = 0; int fla = 0; int second
 /*
   template declaration
 */
-template_declaration { ENTRY_DEBUG } :
+template_declaration[] { ENTRY_DEBUG } :
         {
             // template with nested statement (function or class)
             // expect a template parameter list
@@ -4011,7 +4011,7 @@ template_declaration { ENTRY_DEBUG } :
 /*
   template parameter list
 */
-template_param_list { ENTRY_DEBUG } :
+template_param_list[] { ENTRY_DEBUG } :
         {
             // start the template parameter list
             startElement(STEMPLATE_PARAMETER_LIST);
@@ -4020,7 +4020,7 @@ template_param_list { ENTRY_DEBUG } :
 ;
 
 /*
-requires_clause { ENTRY_DEBUG } :
+requires_clause[] { ENTRY_DEBUG } :
         {
             // template with nested statement (function or class)
             // expect a template parameter list
@@ -4047,7 +4047,7 @@ requires_clause { ENTRY_DEBUG } :
 
   A template parameter is a subset of a general function parameter
 */
-template_param { ENTRY_DEBUG } :
+template_param[] { ENTRY_DEBUG } :
         {
             // end parameter correctly
             startNewMode(MODE_PARAMETER);
@@ -4071,7 +4071,7 @@ template_param { ENTRY_DEBUG } :
 /*
   template argument list
 */
-template_argument_list { LocalMode lm(this); std::string namestack_save[2]; ENTRY_DEBUG } : 
+template_argument_list[] { LocalMode lm(this); std::string namestack_save[2]; ENTRY_DEBUG } : 
         {
             // local mode
             startNewMode(MODE_LOCAL);
