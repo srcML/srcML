@@ -11,7 +11,6 @@ cp ~/Dropbox/srcML/Unix/OSX/srcML.tar.gz ~/srcML
 
 ./prlctlall --test exec 'bash -c "cd srcML; tar xvf srcML.tar.gz"'
 ./prlctlall --test exec 'bash -c "export SRC2SRCML=\"/srcML/srcML/src2srcml\"; export SRCML2SRC=\"/srcML/srcML/srcml2src\"; cd srcML/trunk/test/; rm -f srcMLTestReport*; make clean; make;"'
-./prlctlall --test exec 'bash -c "grep -a \"Errors:\" srcML/trunk/test/srcMLTestReport*"'
 
 cd srcML
 svn update
@@ -21,4 +20,6 @@ export SRCML2SRC="../../srcML/srcml2src"
 cd trunk/test/
 rm -f srcMLTestReport*
 make clean; make
+
+./prlctlall --test exec 'bash -c "grep -a \"Errors:\" srcML/trunk/test/srcMLTestReport*"'
 grep -a "Errors:" srcMLTestReport*
