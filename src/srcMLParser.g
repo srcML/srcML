@@ -1447,7 +1447,7 @@ anonymous_class_definition[] :
         call_argument_list
 ;
 
-anonymous_class_super { LocalMode lm(this); }:
+anonymous_class_super[] { LocalMode lm(this); }:
         {
             // statement
             startNewMode(MODE_LOCAL);
@@ -1458,7 +1458,7 @@ anonymous_class_super { LocalMode lm(this); }:
         complex_name[true]
 ;
 
-interface_definition :
+interface_definition[] :
         {
             // statement
             startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_CLASS);
@@ -1474,7 +1474,7 @@ interface_definition :
 
 /*
 */
-struct_declaration :
+struct_declaration[] :
         {
             // statement
             startNewMode(MODE_STATEMENT);
@@ -1506,7 +1506,7 @@ struct_union_definition[int element_token] :
 
 /*
 */
-union_declaration :
+union_declaration[] :
         {
             // statement
             startNewMode(MODE_STATEMENT);
@@ -1586,7 +1586,7 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 /*
   Each instance of an access specifier defines a region in the class
 */
-access_specifier_region { ENTRY_DEBUG } : 
+access_specifier_region[] { ENTRY_DEBUG } : 
         section_entry_action
         {
             // mark access regions to detect statements that only occur in them
@@ -1618,7 +1618,7 @@ access_specifier_region { ENTRY_DEBUG } :
 
   Marks the start of a block.  End of the block is handled in right curly brace
 */
-lcurly { ENTRY_DEBUG } :
+lcurly[] { ENTRY_DEBUG } :
         {
             // special end for conditions
             if (inTransparentMode(MODE_CONDITION)) {
@@ -1656,7 +1656,7 @@ lcurly { ENTRY_DEBUG } :
 
   Marks the start of a block.  End of the block is handled in right curly brace
 */
-lcurly_base { setFinalToken(); ENTRY_DEBUG } :
+lcurly_base[] { setFinalToken(); ENTRY_DEBUG } :
         {  
             // need to pass on class mode to detect constructors for Java
             bool inclassmode = inLanguage(LANGUAGE_JAVA_FAMILY) && inMode(MODE_CLASS);
