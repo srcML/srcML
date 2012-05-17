@@ -881,7 +881,7 @@ for_statement[] { setFinalToken(); ENTRY_DEBUG } :
 /*
   start of for group, i.e., initialization, test, increment
 */
-for_group { setFinalToken(); ENTRY_DEBUG } :
+for_group[] { setFinalToken(); ENTRY_DEBUG } :
         {
             // start the for group mode that will end at the next matching
             // parentheses
@@ -897,7 +897,7 @@ for_group { setFinalToken(); ENTRY_DEBUG } :
 /*
   for parameter list initialization
 */
-for_initialization_action { ENTRY_DEBUG } :
+for_initialization_action[] { ENTRY_DEBUG } :
         {
             assertMode(MODE_FOR_INITIALIZATION | MODE_EXPECT);
 
@@ -911,7 +911,7 @@ for_initialization_action { ENTRY_DEBUG } :
         }
     ;
 
-for_initialization { int type_count = 0; int fla = 0; int secondtoken = 0; DECLTYPE decl_type = NONE; ENTRY_DEBUG } :
+for_initialization[] { int type_count = 0; int fla = 0; int secondtoken = 0; DECLTYPE decl_type = NONE; ENTRY_DEBUG } :
         for_initialization_action
         (
             // explicitly check for a variable declaration since it can easily
@@ -944,7 +944,7 @@ for_initialization_variable_declaration[int type_count] { ENTRY_DEBUG } :
 /*
   for parameter list condition
 */
-for_condition_action { ENTRY_DEBUG } :
+for_condition_action[] { ENTRY_DEBUG } :
         {
             assertMode(MODE_FOR_CONDITION | MODE_EXPECT);
 
@@ -958,7 +958,7 @@ for_condition_action { ENTRY_DEBUG } :
         }
     ;
 
-for_condition { ENTRY_DEBUG } :
+for_condition[] { ENTRY_DEBUG } :
         for_condition_action
 
         // non-empty condition
@@ -968,7 +968,7 @@ for_condition { ENTRY_DEBUG } :
 /*
   increment in for parameter list
 */
-for_increment { ENTRY_DEBUG } :
+for_increment[] { ENTRY_DEBUG } :
         { 
             assertMode(MODE_FOR_INCREMENT | MODE_EXPECT);
 
