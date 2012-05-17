@@ -2942,7 +2942,7 @@ constructor_definition[] { ENTRY_DEBUG } :
 ;
 
 // constructor definition
-constructor_header { ENTRY_DEBUG } :
+constructor_header[] { ENTRY_DEBUG } :
 
         (options { greedy = true; } : 
             specifier_explicit |
@@ -2961,7 +2961,7 @@ constructor_header { ENTRY_DEBUG } :
 ;
 
 // member initialization list of constructor
-member_initialization_list { ENTRY_DEBUG } :
+member_initialization_list[] { ENTRY_DEBUG } :
         {
             // handle member initialization list as a list of calls
             startNewMode(MODE_LIST | MODE_CALL);
@@ -2971,13 +2971,13 @@ member_initialization_list { ENTRY_DEBUG } :
         COLON
 ;
 
-mark_namestack { namestack[1] = namestack[0]; namestack[0] = LT(1)->getText(); } :;
+mark_namestack[] { namestack[1] = namestack[0]; namestack[0] = LT(1)->getText(); } :;
 
 identifier_stack[std::string s[]] { s[1] = s[0]; s[0] = LT(1)->getText(); ENTRY_DEBUG } :
         identifier[true]
 ;
 
-specifier_explicit { LocalMode lm(this); ENTRY_DEBUG } :
+specifier_explicit[] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // local mode that is automatically ended by leaving this function
             startNewMode(MODE_LOCAL);
@@ -2988,7 +2988,7 @@ specifier_explicit { LocalMode lm(this); ENTRY_DEBUG } :
 ;
 
 // destructor definition
-destructor_definition { ENTRY_DEBUG } :
+destructor_definition[] { ENTRY_DEBUG } :
         {
             // statement with nested block
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_STATEMENT);
@@ -3000,7 +3000,7 @@ destructor_definition { ENTRY_DEBUG } :
 ;
 
 // destructor declaration
-destructor_declaration { ENTRY_DEBUG } :
+destructor_declaration[] { ENTRY_DEBUG } :
         {
             // just a statement
             startNewMode(MODE_STATEMENT);
@@ -3013,7 +3013,7 @@ destructor_declaration { ENTRY_DEBUG } :
 
 
 // destructor header
-destructor_header { ENTRY_DEBUG } :
+destructor_header[] { ENTRY_DEBUG } :
 
         (specifier_explicit | { LT(1)->getText() == "void" }? identifier[true])*
 
