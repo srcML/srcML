@@ -1806,7 +1806,7 @@ terminate_post[] { ENTRY_DEBUG } :
   Special case:  else with no matching if.  This occurs with a) a single else, or more likely with b) an
   else in a preprocessor #if .. #else ... #endif construct (actually, very common).
 */
-else_handling { ENTRY_DEBUG } :
+else_handling[] { ENTRY_DEBUG } :
         {
                 // record the current size of the top of the cppmode stack to detect
                 // any #else or #endif in the consumeSkippedTokens
@@ -1890,7 +1890,7 @@ else_handling { ENTRY_DEBUG } :
 /*
   Handling when mid-statement
 */
-statement_part { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE decl_type = NONE; CALLTYPE type = NOCALL; ENTRY_DEBUG } :
+statement_part[] { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE decl_type = NONE; CALLTYPE type = NOCALL; ENTRY_DEBUG } :
 
         { inMode(MODE_EAT_TYPE) }?
             type_identifier
@@ -2057,7 +2057,7 @@ statement_part { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE decl
         colon_marked
 ;
 
-lparen_marked { LocalMode lm(this); ENTRY_DEBUG } :
+lparen_marked[] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             incParen();
 
