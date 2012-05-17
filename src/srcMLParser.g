@@ -3534,7 +3534,7 @@ rparen[bool final = false, bool markup = true] { bool isempty = getParen() == 0;
 /*
   Dot (period) operator
 */
-period { LocalMode lm(this); ENTRY_DEBUG } :
+period[] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             if (isoption(parseoptions, OPTION_OPERATOR)) {
 
@@ -3551,7 +3551,7 @@ period { LocalMode lm(this); ENTRY_DEBUG } :
 /*
   Namespace operator '::'
 */
-dcolon { LocalMode lm(this); ENTRY_DEBUG } :
+dcolon[] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             if (isoption(parseoptions, OPTION_OPERATOR)) {
 
@@ -3568,7 +3568,7 @@ dcolon { LocalMode lm(this); ENTRY_DEBUG } :
 /*
    An expression
 */
-expression_process { ENTRY_DEBUG } : 
+expression_process[] { ENTRY_DEBUG } : 
         {
             // if expecting an expression start one. except if you are at a right curly brace
             if (inMode(MODE_EXPRESSION | MODE_EXPECT) && LA(1) != RCURLY &&
