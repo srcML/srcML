@@ -1193,7 +1193,7 @@ goto_statement[] { setFinalToken(); ENTRY_DEBUG } :
 /*
   Complete assembly declaration statement
 */
-asm_declaration { ENTRY_DEBUG } : 
+asm_declaration[] { ENTRY_DEBUG } : 
         {
             // statement
             startNewMode(MODE_STATEMENT);
@@ -1213,11 +1213,11 @@ asm_declaration { ENTRY_DEBUG } :
 
  Past name handled as expression
 */
-extern_definition_header { ENTRY_DEBUG } :
+extern_definition_header[] { ENTRY_DEBUG } :
         EXTERN string_literal
 ;
 
-extern_definition { ENTRY_DEBUG } :
+extern_definition[] { ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_STATEMENT | MODE_EXTERN);
@@ -1231,7 +1231,7 @@ extern_definition { ENTRY_DEBUG } :
 /*
   Name of extern section
 */
-extern_name { ENTRY_DEBUG } :
+extern_name[] { ENTRY_DEBUG } :
         string_literal
         {
             // nest a block inside the namespace
