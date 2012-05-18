@@ -3,8 +3,8 @@
 ./prlctlall --build exec 'bash -c "cd srcML; svn update"'
 
 ./prlctlall --fedora --build exec 'bash -c "cd srcML/trunk/dist; make clean; make"'
-rm -rf ~/Dropbox/srcML/Unix/Fedora15/srcML*
-rm -rf ~/Dropbox/srcML/Unix/Fedora16/srcML*
+#rm -rf ~/Dropbox/srcML/Unix/Fedora15/srcML*
+#rm -rf ~/Dropbox/srcML/Unix/Fedora16/srcML*
 ./prlctlall --fedora --build exec 'bash -c "chown -R srcml:srcml srcML"'
 scp fedora15build:/srcML/trunk/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora15
 scp fedora16build:/srcML/trunk/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora16
@@ -29,5 +29,8 @@ cd srcML; svn update
 cd
 
 cd srcML/trunk/dist; make clean; make;
+man srcML/src2srcml.1.gz | man2html > srcML/src2srcml.html
+man srcML/srcml2src.1.gz | man2html > srcML/srcml2src.html
+tar czf srcML.tar.gz srcML
 cp *.tar.gz ~/Dropbox/srcML/Unix/OSX
 cd
