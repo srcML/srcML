@@ -425,7 +425,11 @@
       <term><option>&CPP_FLAG;</option></term>
       <listitem>
 	<para>
-	  Turn on preprocessor handling for non-C++ languages.
+	  Turns on parsing and markup of preprocessor statements in
+          non-C/C++ languages such as Java.
+          Can also be enabled by defining a prefix for this cpp
+          namespace URL, e.g., 
+	  <option>&XMLNS_FLAG;:&SRCML_CPP_NS_PREFIX_DEFAULT;="&SRCML_CPP_NS_URI;"</option>.
 	</para>
       </listitem>
     </varlistentry>
