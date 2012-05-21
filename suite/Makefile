@@ -216,7 +216,7 @@ GEN_FORMFEED = ${foreach nm, $(SEP_PLUS),          $(nm).formfeed.cpp.xml} \
 		     ${foreach nm, $(BASE_C_ALL),    $(nm).formfeed.c.xml} \
  	       ${foreach nm, $(BASE_CXX_0X_ALL), $(nm).formfeed.cpp0x.xml} \
 		     ${foreach nm, $(BASE_JAVA_ALL), $(nm).formfeed.java.xml} \
-		     extra_c.formfeed.c.xml extra_.cppformfeed.cpp.xml
+		     extra_c.formfeed.c.xml extra_cpp.formfeed.cpp.xml
 
 # generated test cases for preproc
 GEN_PREPROC= ${foreach nm, $(SEP_PLUSNOPREPROC), $(nm).preproc.cpp.xml} \
