@@ -209,7 +209,7 @@ GEN_COMMENT= ${foreach nm, $(SEP_PLUS),          $(nm).comment.cpp.xml} \
 	       ${foreach nm, $(BASE_C_ALL),    $(nm).comment.c.xml} \
  	       ${foreach nm, $(BASE_CXX_0X_ALL), $(nm).comment.cpp0x.xml} \
 	       ${foreach nm, $(BASE_JAVA_ALL), $(nm).comment.java.xml} \
-		   extrac_c.comment.c.xml extra_cpp.comment.cpp.xml
+		   extra_c.comment.c.xml extra_cpp.comment.cpp.xml
 
 # generated cases for formfeed
 GEN_FORMFEED = ${foreach nm, $(SEP_PLUS),          $(nm).formfeed.cpp.xml} \
