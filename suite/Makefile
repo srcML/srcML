@@ -192,37 +192,37 @@ SEP_PLUSNOPREPROC= ${SEP_BASE} ${GEN_SEP}
 
 ##
 # generate cases for all
-GEN_ALL= ${foreach nm, $(SEP_PLUS), $(nm).all.cpp.xml} extra.all.cpp.xml \
+GEN_ALL= ${foreach nm, $(SEP_PLUS), $(nm).all.cpp.xml} extra_cpp.all.cpp.xml \
 	       ${foreach nm, $(BASE_JAVA_ALL), $(nm).all.java.xml} \
 	       ${foreach nm, $(BASE_CXX_0X_ALL), $(nm).all.cpp0x.xml} \
-	       ${foreach nm, $(BASE_C_ALL), $(nm).all.c.xml} extra.all.c.xml
+	       ${foreach nm, $(BASE_C_ALL), $(nm).all.c.xml} extra_c.all.c.xml
 
 # generated cases for blocks
 GEN_BLOCK= ${foreach nm, $(SEP_PLUS),          $(nm).block.cpp.xml} \
                ${foreach nm, $(BASE_C_ALL),    $(nm).block.c.xml} \
  	       ${foreach nm, $(BASE_CXX_0X_ALL), $(nm).block.cpp0x.xml} \
                ${foreach nm, $(BASE_JAVA_ALL), $(nm).block.java.xml} \
-		 extra.block.c.xml extra.block.cpp.xml
+		 extra_c.block.c.xml extra_cpp.block.cpp.xml
 
 # generated cases for comments
 GEN_COMMENT= ${foreach nm, $(SEP_PLUS),          $(nm).comment.cpp.xml} \
 	       ${foreach nm, $(BASE_C_ALL),    $(nm).comment.c.xml} \
  	       ${foreach nm, $(BASE_CXX_0X_ALL), $(nm).comment.cpp0x.xml} \
 	       ${foreach nm, $(BASE_JAVA_ALL), $(nm).comment.java.xml} \
-		   extra.comment.c.xml extra.comment.cpp.xml
+		   extrac_c.comment.c.xml extra_cpp.comment.cpp.xml
 
 # generated cases for formfeed
 GEN_FORMFEED = ${foreach nm, $(SEP_PLUS),          $(nm).formfeed.cpp.xml} \
 		     ${foreach nm, $(BASE_C_ALL),    $(nm).formfeed.c.xml} \
  	       ${foreach nm, $(BASE_CXX_0X_ALL), $(nm).formfeed.cpp0x.xml} \
 		     ${foreach nm, $(BASE_JAVA_ALL), $(nm).formfeed.java.xml} \
-		     extra.formfeed.c.xml extra.formfeed.cpp.xml
+		     extra_c.formfeed.c.xml extra_.cppformfeed.cpp.xml
 
 # generated test cases for preproc
 GEN_PREPROC= ${foreach nm, $(SEP_PLUSNOPREPROC), $(nm).preproc.cpp.xml} \
  	       ${foreach nm, $(BASE_CXX_0X_ALL), $(nm).preproc.cpp0x.xml} \
 	           ${foreach nm, $(BASE_C_ALL), $(nm).preproc.c.xml} \
-		   extra.preproc.c.xml extra.preproc.cpp.xml
+		   extra_c.preproc.c.xml extra_cpp.preproc.cpp.xml
 
 allinall.c.xml :
 	@echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" > allinall.c.xml
