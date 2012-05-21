@@ -40,7 +40,7 @@ BASE_OO=catch_form foreach try
 BASE_CXX=friend namespace template typedef_template constructor destructor throw_base function_throw class function_operator typedef_ns variable_names_ns function_ns decl_ns try typedef_struct
 
 # base for Java only
-BASE_JAVA=class_java constructor keyword_java interface_java package finally generics
+BASE_JAVA=class_java constructor_java keyword_java interface_java package finally generics
 
 all : gen
 
