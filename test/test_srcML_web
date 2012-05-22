@@ -2,8 +2,7 @@
 
 ./prlctlall --test exec 'bash -c "cd srcML; svn update; cd ..; chown -R srcml:srcml srcML"'
 
-URL="http://www.sdml.info/trunk6"
-
+URL="http://www.sdml.info/projects/srcml/trunk6"
 
 curl $(URL)/srcML-Fedora15.tar.gz -o srcML.tar.gz
 scp srcML.tar.gz fedora15test:/srcML
