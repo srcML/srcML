@@ -11,12 +11,12 @@
 	version="1.0">
 
 <!--
-	insertcomments.xsl
+	insertpreproc.xsl
 
-	Inserts comments at every opportunity
+	Inserts preprocessor statements at every opportunity
 
 	Michael L. Collard
-	collard@cs.kent.edu
+	collard@uakron.edu
 -->
 
 <xsl:import href="str.replace.function.xsl"/>
@@ -39,7 +39,7 @@
   <xsl:copy-of select="."/>
 </xsl:template>
 
-<xsl:template match="text()[contains(., ' ')]">
+<xsl:template match="src:unit/src:unit//text()[contains(., ' ')]">
   <xsl:apply-templates select="." mode="replace"/>
 </xsl:template>
 

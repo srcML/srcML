@@ -5,21 +5,18 @@
 	xmlns:cpp="http://www.sdml.info/srcML/cpp"
 	xmlns:str="http://exslt.org/strings"
 	xmlns:func="http://exslt.org/functions"
-	xmlns:exsl="http://exslt.org/common"
-	extension-element-prefixes="str exsl func"
+	extension-element-prefixes="str func"
 	exclude-result-prefixes="src"
 	version="1.0">
 
 <!--
 	insertblock.xsl
 
-	Inserts a block around each unit
+	Inserts a block around the contents in each unit
 
 	Michael L. Collard
-	collard@cs.kent.edu
+	collard@uakron.edu
 -->
-
-<xsl:import href="str.replace.function.xsl"/>
 
 <xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8" standalone="yes"/>
 
@@ -30,7 +27,7 @@
 	</xsl:attribute>
 </xsl:template>
 
-<!-- filter out any if statements with an else -->
+<!-- wrap the entire contents of the unit inside a block -->
 <xsl:template match="src:unit/src:unit" xml:space="preserve">
 <unit>
 <block>{

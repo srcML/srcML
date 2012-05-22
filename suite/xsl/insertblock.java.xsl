@@ -10,12 +10,12 @@
 	version="1.0">
 
 <!--
-	insertblock.xsl
+	insertblock.java.xsl
 
-	Inserts a block around each unit
+	Inserts a block around each unit for Java
 
 	Michael L. Collard
-	collard@cs.kent.edu
+	collard@uakron.edu
 -->
 
 <xsl:import href="str.replace.function.xsl"/>

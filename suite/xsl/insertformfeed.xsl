@@ -19,7 +19,7 @@
 	collard@cs.kent.edu
 -->
 
-<xsl:import href="str.replace.function.xsl"/>
+<xsl:import href="insertcomments.xsl"/>
 
 <xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8" standalone="yes"/>
 
@@ -30,37 +30,6 @@
 	<xsl:attribute name="dir">
 		<xsl:value-of select="."/><xsl:text>.formfeed</xsl:text>
 	</xsl:attribute>
-</xsl:template>
-
-<!-- change the directory attribute on any unit from "if" to "while" -->
-<xsl:template match="src:comment">
-  <xsl:copy-of select="."/>
-</xsl:template>
-
-<xsl:template match="text()[contains(., ' ')]">
-  <xsl:apply-templates select="." mode="replace"/>
-</xsl:template>
-
-<xsl:template match="text()[contains(., ' ')]" mode="replace">
-  <xsl:value-of select="substring-before(., ' ')"/>
-  <xsl:value-of select="' '"/>
-  <xsl:copy-of select="$cmt"/>
-  <xsl:value-of select="' '"/>
-  <xsl:value-of select="substring-after(., ' ')"/>
-<!--  <xsl:apply-templates select="substring-after(., ' ')" mode="replace"/> -->
-</xsl:template>
-
-<xsl:template match="text()" mode="replace">
-  <xsl:value-of select="."/><xsl:value-of select="abc"/>
-</xsl:template>
-
-<!-- filter out comments -->
-<xsl:template match="comment()"/>
-
-<xsl:template match="@*|node()">
-	<xsl:copy>
-	  <xsl:apply-templates select="@*|node()"/>
-	</xsl:copy>
 </xsl:template>
 
 </xsl:stylesheet>

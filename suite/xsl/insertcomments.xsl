@@ -16,7 +16,7 @@
 	Inserts comments at every opportunity
 
 	Michael L. Collard
-	collard@cs.kent.edu
+	collard@uakron.edu
 -->
 
 <xsl:import href="str.replace.function.xsl"/>
@@ -32,12 +32,11 @@
 	</xsl:attribute>
 </xsl:template>
 
-<!-- change the directory attribute on any unit from "if" to "while" -->
 <xsl:template match="src:comment">
   <xsl:copy-of select="."/>
 </xsl:template>
 
-<xsl:template match="text()[contains(., ' ')]">
+<xsl:template match="src:unit/src:unit//text()[contains(., ' ')]">
   <xsl:apply-templates select="." mode="replace"/>
 </xsl:template>
 
