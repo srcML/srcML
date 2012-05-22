@@ -17,6 +17,8 @@ ALLINALLCUTOFF=35
 all : testbase
 	./testsuite.py
 
+gen : testbase
+
 PHONY : testbase
 testbase :
 	cd ../suite && make
