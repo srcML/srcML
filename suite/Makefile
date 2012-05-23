@@ -44,40 +44,7 @@ BASE_JAVA=class_java constructor_java keyword_java interface_java package_java f
 
 all : gen
 
-PHONY : testbase
 testbase : gen
-
-PHONY : short
-short : testbase
-	@export SRC2SRCML=${SRC2SRCML}; export SRCML2SRC=${SRCML2SRC}; time ./testsuite.py ".*\.all|macro"
-
-PHONY : shortc
-shortc : testbase
-	@export SRC2SRCML=${SRC2SRCML}; export SRCML2SRC=${SRCML2SRC}; time ./testsuite.py ".*\.all|macro" C
-
-PHONY : shortcpp
-shortcpp : testbase
-	@export SRC2SRCML=${SRC2SRCML}; export SRCML2SRC=${SRCML2SRC}; time ./testsuite.py ".*\.all|macro" C++
-
-PHONY : shortjava
-shortjava : testbase
-	@export SRC2SRCML=${SRC2SRCML}; export SRCML2SRC=${SRCML2SRC}; time ./testsuite.py ".*\.all" Java
-
-PHONY : 
-full : testbase
-	@export SRC2SRCML=${SRC2SRCML}; export SRCML2SRC=${SRCML2SRC}; time ./testsuite.py
-
-PHONY : fullcpp
-fullcpp : testbase
-	@export SRC2SRCML=${SRC2SRCML}; export SRCML2SRC=${SRCML2SRC}; time ./testsuite.py ".*" C++
-
-PHONY : fullc
-fullc : testbase
-	@export SRC2SRCML=${SRC2SRCML}; export SRCML2SRC=${SRCML2SRC}; time ./testsuite.py ".*" C
-
-PHONY : fulljava
-fulljava : testbase
-	@export SRC2SRCML=${SRC2SRCML}; export SRCML2SRC=${SRCML2SRC}; time ./testsuite.py ".*" Java
 
 XSLT=/usr/bin/xsltproc
 
