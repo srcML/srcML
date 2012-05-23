@@ -470,7 +470,7 @@ int main(int argc, char* argv[]) {
     diff_version = poptions.diff_version;
 
   if (isoption(options, OPTION_DIFF) && isoption(options, OPTION_XML) && poptions.unit == 0)
-    proptions.unit = -1;
+    poptions.unit = -1;
 
   try {
 
