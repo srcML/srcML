@@ -469,6 +469,9 @@ int main(int argc, char* argv[]) {
   if (isoption(options, OPTION_DIFF))
     diff_version = poptions.diff_version;
 
+  if (isoption(options, OPTION_DIFF) && isoption(options, OPTION_XML) && poptions.unit == 0)
+    proptions.unit = -1;
+
   try {
 
     // setup for processing
