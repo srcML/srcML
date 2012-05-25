@@ -80,7 +80,7 @@ static struct { const char *format; int (*setter)(struct archive *); } formats[]
     { "cpio", archive_write_set_format_cpio },
     { "tar",  archive_write_set_format_pax_restricted },
     { "tgz",  archive_write_set_format_pax_restricted },
-#if ARCHIVE_VERSION_STAMP >= 2008000
+#if ARCHIVE_VERSION_NUMBER >= 2008000
     { "zip",  archive_write_set_format_zip },
 #endif
     { 0,0 }

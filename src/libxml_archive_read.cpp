@@ -65,7 +65,7 @@ bool isArchiveRead(void* context) {
   archiveData* pcontext = (archiveData*) context;
 
   return pcontext && pcontext->a && pcontext->status == ARCHIVE_OK
-#if ARCHIVE_VERSION_STAMP >= 2008000
+#if ARCHIVE_VERSION_NUMBER >= 2008000
     && (archive_format(pcontext->a) != ARCHIVE_FORMAT_RAW
 #else
     && (archive_format(pcontext->a) != ARCHIVE_FORMAT_EMPTY
@@ -126,7 +126,7 @@ int archiveReadMatch(const char* URI) {
   if (fnmatch("*.xsl", URI, 0) == 0)
     return 0;
 
-#if ARCHIVE_VERSION_STAMP >= 2008000
+#if ARCHIVE_VERSION_NUMBER >= 2008000
   // put all input through libarchive for automatic detection of the format
   return 1;
 
@@ -168,7 +168,7 @@ static int archive_read_open_http_callback(struct archive* a,
 }
 
 static
-#if ARCHIVE_VERSION_STAMP >= 2008000
+#if ARCHIVE_VERSION_NUMBER >= 2008000
 __LA_SSIZE_T
 #else
 ssize_t
@@ -220,7 +220,7 @@ void* archiveReadOpen(const char* URI) {
   //    archive_read_support_compression_bzip2(gpcontext->a);
   //    archive_read_support_compression_gzip(gpcontext->a);
 
-#if ARCHIVE_VERSION_STAMP >= 2008000
+#if ARCHIVE_VERSION_NUMBER >= 2008000
   archive_read_support_format_raw(gpcontext->a);
 #endif
   archive_read_support_format_all(gpcontext->a);
