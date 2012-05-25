@@ -216,15 +216,19 @@ void* archiveReadOpen(const char* URI) {
   gpcontext = new archiveData;
   gpcontext->status = 0;
   gpcontext->a = archive_read_new();
-  archive_read_support_compression_all(gpcontext->a);
-  //    archive_read_support_compression_bzip2(gpcontext->a);
-  //    archive_read_support_compression_gzip(gpcontext->a);
+  //archive_read_support_compression_all(gpcontext->a);
+#if ARCHIVE_VERSION_NUMBER >= 3000003
+  archive_read_support_compression_bzip2(gpcontext->a);
+  archive_read_support_compression_gzip(gpcontext->a);
+#else
+    archive_read_support_compression_all(gpcontext->a);
+#endif
 
 #if ARCHIVE_VERSION_NUMBER >= 2008000
   archive_read_support_format_raw(gpcontext->a);
 #endif
 
-#if ARCHIVE_VERSION_NUMBER >= 3000004
+#if ARCHIVE_VERSION_NUMBER >= 3000003
   archive_read_support_format_tar(gpcontext->a);
   archive_read_support_format_zip(gpcontext->a);
   archive_read_support_format_cpio(gpcontext->a);
