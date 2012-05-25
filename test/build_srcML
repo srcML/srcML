@@ -1,29 +1,30 @@
 #!/bin/bash
 
-./prlctlall --build exec 'bash -c "cd srcML; svn update"'
+./prlctlall.py --build exec 'bash -c "cd srcML; svn update"'
 
-./prlctlall --fedora --build exec 'bash -c "cd srcML/trunk/dist; make clean; make"'
+./prlctlall.py --fedora --build exec 'bash -c "cd srcML/trunk/dist; make clean; make"'
 #rm -rf ~/Dropbox/srcML/Unix/Fedora15/srcML*
 #rm -rf ~/Dropbox/srcML/Unix/Fedora16/srcML*
-./prlctlall --fedora --build exec 'bash -c "chown -R srcml:srcml srcML"'
+./prlctlall.py --fedora --build exec 'bash -c "chown -R srcml:srcml srcML"'
 scp fedora15build:/srcML/trunk/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora15
 scp fedora16build:/srcML/trunk/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora16
 
 
-./prlctlall --fedora --build exec 'bash -c "cd srcML/trunk/dist; make clean; make windowsdyn"'
+./prlctlall.py --fedora --build exec 'bash -c "cd srcML/trunk/dist; make clean; make windowsdyn"'
 #rm -rf ~/Dropbox/srcML/Unix/Fedora16/srcML*
-./prlctlall --fedora --build exec 'bash -c "chown -R srcml:srcml srcML"'
+./prlctlall.py --fedora --build exec 'bash -c "chown -R srcml:srcml srcML"'
 scp fedora15build:/srcML/trunk/dist/srcML*.zip ~/Dropbox/srcML/Windows
 cd ~/Dropbox/srcML/Windows; unzip srcML-Win.zip
 cd
 
-./prlctlall --ubuntu --build exec 'bash -c "cd srcML/trunk/dist; make clean; make"'
+./prlctlall.py --ubuntu --build exec 'bash -c "cd srcML/trunk/dist; make clean; make"'
 
 #rm -rf ~/Dropbox/srcML/Unix/Ubuntu10.04/srcML*
 #rm -rf ~/Dropbox/srcML/Unix/Ubuntu11.04/srcML*
-./prlctlall --ubuntu --build exec 'bash -c "chown -R srcml:srcml srcML"'
+./prlctlall.py --ubuntu --build exec 'bash -c "chown -R srcml:srcml srcML"'
 scp ubuntu10build:/srcML/trunk/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu10.04
 scp ubuntu11build:/srcML/trunk/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu11.04
+scp ubuntu12build:/srcML/trunk/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu12.04-64
 
 cd srcML; svn update
 cd
