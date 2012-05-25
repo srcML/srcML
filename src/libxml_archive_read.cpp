@@ -223,10 +223,14 @@ void* archiveReadOpen(const char* URI) {
 #if ARCHIVE_VERSION_NUMBER >= 2008000
   archive_read_support_format_raw(gpcontext->a);
 #endif
+
+#if ARCHIVE_VERSION_NUMBER >= 3000004
+  archive_read_support_format_tar(gpcontext->a);
+  archive_read_support_format_zip(gpcontext->a);
+  archive_read_support_format_cpio(gpcontext->a);
+#else
   archive_read_support_format_all(gpcontext->a);
-  //    archive_read_support_format_tar(gpcontext->a);
-  //    archive_read_support_format_zip(gpcontext->a);
-  //    archive_read_support_format_cpio(gpcontext->a);
+#endif
 
   //    int r = archive_read_open_filename(a, URI, 4000);
   ishttp = xmlIOHTTPMatch(URI);
