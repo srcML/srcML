@@ -29,5 +29,5 @@ cd trunk/test/
 rm -f srcMLTestReport*
 make clean; make
 
-./prlctlall.py --test exec 'bash -c "grep -a \"Errors:\" srcML/trunk/test/srcMLTestReport*"'
+~/prlctlall.py --test exec 'bash -c "grep -a \"Errors:\" srcML/trunk/test/srcMLTestReport*"'
 grep -a "Errors:" srcMLTestReport*
