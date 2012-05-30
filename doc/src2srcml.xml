@@ -93,8 +93,8 @@
       <term><option>&COMPOUND_FLAG_SHORT;, &COMPOUND_FLAG;</option></term>
       <listitem>
 	<para>
-	  Stores all input source files into one compound srcML
-	  document.  Default with more then one input file, a directory, or the <option>&FILELIST_FLAG;</option> option.
+	  Stores all input source files into one srcML archive.
+	  Default with more then one input file, a directory, or the <option>&FILELIST_FLAG;</option> option.
 	</para>
       </listitem>
     </varlistentry>
@@ -104,7 +104,7 @@
 	<para>
 	  Treats the input file as a list of source files.  Each file
 	  is separately translated and collectively stored into a
-	  single compound srcML document.  The list has a single
+	  single srcML archive.  The list has a single
 	  filename on each line starting at the beginning of the line.
 	  Blank lines and lines that begin with the character '#' are ignored.
 	  As with input and output files, using the character - in
@@ -227,7 +227,7 @@
 
     <para>
 	  The rest of the metadata options are for optional
-	  attributes.  For compound srcML documents this option sets
+	  attributes.  For a srcML archive this option sets
 	  the attribute on the root element.
     </para>
 
@@ -493,7 +493,7 @@
 	  closed, and then the program stops.  More than one SIGINT causes default behavior.
 	</para>
 	<para>
-	  This special SIGINT handling only occurs with multiple input files in compound srcML documents.
+	  This special SIGINT handling only occurs with multiple input files in srcML archives.
 	</para>
       </listitem>
     </varlistentry>
