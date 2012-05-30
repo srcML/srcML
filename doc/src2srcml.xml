@@ -461,7 +461,7 @@
       <term><option>&CPP_TEXTONLY_IF0_FLAG;</option></term>
       <listitem>
 	<para>
-	  Only place text in #else and #elif regions leaving out markup.
+	  Only place text in #if 0 regions leaving out markup.
 	  Default.
 	</para>
       </listitem>
