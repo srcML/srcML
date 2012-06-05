@@ -12,39 +12,46 @@ WD=${shell pwd}
 SRCENCODING=
 #SRCENCODING=--src-encoding=ISO-8859-1
 
-ALLINALLCUTOFF=35
+define language
+${shell grep '$1 ' suite.txt | grep -v '^#' | cut -d' ' -f2- | tr -s '\n' ' '}
+endef
 
 ##
 # General lists of test cases
 
 # original base of cases for all languages
-BASE_COMMON=comment string variable_names expression decl_simple \
-	          if for do switch call function enum return_base problem
+BASE_COMMON=${call language,'LANGUAGE_ALL_BASE'}
 
 # base for all languages generated from original cases
-GEN_BASE=while ifnestcond return function_decl ifblock
+GEN_BASE=${call language,'LANGUAGE_ALL_GEN'}
 
 # base for C++ generated from original cases
-GEN_BASE_CXX=throw constructor_explicit destructor_virtual function_const struct union
+GEN_BASE_CXX=${call language,'LANGUAGE_CXX_FAMILY'}
 
 # base for C only
 #BASE_C=functionkr # typedef_cstruct
 
 # base for C family
-BASE_C_FAMILY=asm macro cstruct extern main function_pointer decl_struct typedef decl_pointer function_asterisk
+BASE_C_FAMILY=${call language,'LANGUAGE_C_FAMILY'}
 
 # base for object-oriented languages
-BASE_OO=catch_form foreach try
+BASE_OO=${call language,'LANGUAGE_OO'}
 
 # base for C++ only
-BASE_CXX=friend namespace template typedef_template constructor destructor throw_base function_throw class function_operator typedef_ns variable_names_ns function_ns decl_ns try typedef_struct
+BASE_CXX=${call language,'LANGUAGE_CXX'}
 
 # base for Java only
-BASE_JAVA=class_java constructor_java keyword_java interface_java package_java finally_java generics_java
+BASE_JAVA=${call language,'LANGUAGE_JAVA'}
 
 all : gen
 
 testbase : gen
+
+echobase :
+	@echo ${BASE_COMMON}
+
+echogen :
+	@echo ${GEN_BASE}
 
 XSLT=/usr/bin/xsltproc
 
