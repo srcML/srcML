@@ -93,7 +93,9 @@ void collect_attributes(int nb_attributes, const xmlChar** attributes, PROPERTIE
       const char* name = qname((const char*) attributes[index + 1], (const char*) attributes[index]);
 
       // look for it
-      int i;
+
+      // temporary fix need to rename one
+      //int i;
       for (i = 0; i < MAXPROPERTIES; ++i)
 	if (attrv[i].first == "" || attrv[i].first == name)
 	  break;
