@@ -88,14 +88,14 @@ int find_attribute_index(int nb_attributes, const xmlChar** attributes, const ch
 // collect attributes
 void collect_attributes(int nb_attributes, const xmlChar** attributes, PROPERTIES_TYPE& attrv) {
 
-  for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
+  for (int j = 0, index = 0; j < nb_attributes; ++j, index += 5) {
 
       const char* name = qname((const char*) attributes[index + 1], (const char*) attributes[index]);
 
       // look for it
 
-      // temporary fix need to rename one
-      //int i;
+      // temporary fix
+      int i;
       for (i = 0; i < MAXPROPERTIES; ++i)
 	if (attrv[i].first == "" || attrv[i].first == name)
 	  break;
