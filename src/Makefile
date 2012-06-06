@@ -8,6 +8,19 @@ CXX=/usr/bin/g++
 # library
 AR=/usr/bin/ar
 
+ifdef MINGW32
+
+ifneq (${wildcard /etc/fedora-release},)
+
+ifneq ($(shell cat /etc/fedora-release | grep "17"),)
+CXX=i686-w64-mingw32-g++
+AR=i686-w64-mingw32-ar
+endif
+
+endif
+
+endif
+
 # associated text tools
 SED=${firstword ${wildcard /opt/local/bin/gsed /usr/local/bin/gsed /bin/sed}}
 GREP=${firstword ${wildcard /bin/grep /usr/bin/grep}}
