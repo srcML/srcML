@@ -112,7 +112,7 @@ void collect_attributes(int nb_attributes, const xmlChar** attributes, PROPERTIE
 // collect namespaces
 void collect_namespaces(int nb_namespaces, const xmlChar** namespaces, PROPERTIES_TYPE& nsv) {
 
-  for (int i = 0, index = 0; i < nb_namespaces; ++i, index += 2) {
+  for (int j = 0, index = 0; j < nb_namespaces; ++j, index += 2) {
 
     const char* uri = (const char*) namespaces[index + 1];
 
