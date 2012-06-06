@@ -30,6 +30,8 @@ void output_info(srcMLUtility& su, int options, int optioncount, int optionorder
 #include "ProcessUnit.hpp"
 #include "srcmlapps.hpp"
 
+#include <unistd.h>
+
 class Properties : public ProcessUnit {
  public :
   Properties(srcMLUtility& su, PROPERTIES_TYPE&nsv, PROPERTIES_TYPE& attrv, int optioncount, int optionorder[], FILE * output = stdout)
