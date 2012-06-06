@@ -10,6 +10,9 @@ AR=/usr/bin/ar
 
 ifdef MINGW32
 
+CXX=i686-pc-mingw32-g++
+AR=i686-pc-mingw32-ar
+
 ifneq (${wildcard /etc/fedora-release},)
 
 ifneq ($(shell cat /etc/fedora-release | grep "17"),)
@@ -121,7 +124,7 @@ LIBSRCML_INCLUDE=${OBJ_DIR}srcMLParserClean.o ${OBJ_DIR}KeywordCPPLexerClean.o $
 all : ${SRC2SRCML_BIN} ${SRCML2SRC_BIN}  ${SRCMLDIRECT_BIN}
 
 mingw32 :
-	make MINGW32=1 CXX=i686-pc-mingw32-g++ AR=i686-pc-mingw32-ar
+	make MINGW32=1
 
 settings :
 	@echo "CXX="${CXX}
