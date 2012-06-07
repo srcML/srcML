@@ -99,7 +99,7 @@ bool isArchiveRead(void* context) {
     // allow libxml to handle non-archive files encrypted with gz
     if (strcmp(URI + strlen(URI) - strlen(".gz"), ".gz") == 0) {
 
-      for(int i = 0; i < sizeof(tails) / sizeof(tails[0]); ++i)
+      for(unsigned int i = 0; i < sizeof(tails) / sizeof(tails[0]); ++i)
 
         if (strcmp(URI + strlen(URI) - strlen(tails[i]), tails[i]) == 0)
           break;
