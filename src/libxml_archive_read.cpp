@@ -104,7 +104,8 @@ bool isArchiveRead(void* context) {
         if (strcmp(URI + strlen(URI) - strlen(tails[i]), tails[i]) == 0)
           break;
 
-          return 0;
+      return 0;
+
     }
 
     if ((URI[0] == '-' && URI[1] == '\0') || (strcmp(URI, "/dev/stdin") == 0))
