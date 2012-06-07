@@ -34,7 +34,7 @@
 #include <regex.h>
 
 static const int NUMARCHIVES = 5;
-static const char* ARCHIVE_FILTER_EXTENSIONS[] = {"tar", "zip", "tgz", "cpio", "shar", "gz", "bz2", 0};
+static const char* ARCHIVE_FILTER_EXTENSIONS[] = {".tar", ".zip", ".tgz", ".cpio", ".shar", ".gz", ".bz2", 0};
 
 struct archiveData {
   struct archive* a;
@@ -94,22 +94,25 @@ const char* archiveReadCompression(void* context) {
 // match the extension
 int archiveReadMatchExtension(const char* URI) {
 
+  const char* tails[] = { ".gz", ".tar.gz", ".zip.gz", ".cpio.gz" };
+
   // allow libxml to handle non-archive files encrypted with gz
-  if (fnmatch("*.gz", URI, 0) == 0 &&
-      fnmatch("*.tar.*", URI, 0) != 0 &&
-      fnmatch("*.cpio.*", URI, 0) != 0 &&
-      fnmatch("*.zip.*", URI, 0) != 0)
-    return 0;
+ if (strcmp(URI + strlen(URI) - strlen(tails[0]), tails[0]) == 00 &&
+        strcmp(URI + strlen(URI) - strlen(tails[1]), tails[1]) != 00 &&
+        strcmp(URI + strlen(URI) - strlen(tails[2]), tails[2]) != 00 &&
+     strcmp(URI + strlen(URI) - strlen(tails[3]), tails[3]) != 00)
+   return 0;
 
   if ((URI[0] == '-' && URI[1] == '\0') || (strcmp(URI, "/dev/stdin") == 0))
     return 0;
 
   for(const char** pos = ARCHIVE_FILTER_EXTENSIONS;*pos != 0; ++pos )
     {
-      char pattern[10] = { 0 } ;
+      /*      char pattern[10] = { 0 } ;
       strcpy(pattern, "*.");
       strcat(pattern, *pos);
-      if(int match = fnmatch(pattern, URI, 0) == 0)
+      */
+      if(int match = strcmp(URI + strlen(URI) - strlen(*pos), *pos) == 0)
         return match;
     }
 
