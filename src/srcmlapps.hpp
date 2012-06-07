@@ -103,7 +103,7 @@ namespace LanguageName {
 const char* const LANGUAGE_NONE = "";
 const char* const LANGUAGE_C = "C";
 const char* const LANGUAGE_CXX = "C++";
-const char* const LANGUAGE_CXX_0X = "C++0x";
+const char* const LANGUAGE_CXX_11 = "C++11";
 const char* const LANGUAGE_JAVA = "Java";
 const char* const LANGUAGE_ASPECTJ = "AspectJ";
 

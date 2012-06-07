@@ -29,7 +29,7 @@ pair Language::lang2int[] = {
     { LanguageName::LANGUAGE_C, LANGUAGE_C },
     { LanguageName::LANGUAGE_CXX, LANGUAGE_CXX },
     { LanguageName::LANGUAGE_JAVA, LANGUAGE_JAVA },
-    { LanguageName::LANGUAGE_CXX_0X, LANGUAGE_CXX_0X },
+    { LanguageName::LANGUAGE_CXX_11, LANGUAGE_CXX_11 },
     { LanguageName::LANGUAGE_ASPECTJ, LANGUAGE_ASPECTJ },
     { LanguageName::LANGUAGE_NONE, LANGUAGE_NONE },
     { 0, 0 }
