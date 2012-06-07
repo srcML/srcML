@@ -15,6 +15,10 @@ scp fedora17build64:/srcML/trunk/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora1
 
 scp ubuntu10build:/srcML/trunk/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu10.04
 scp ubuntu11build:/srcML/trunk/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu11.04
+scp ubuntu12build:/srcML/trunk/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu12.04
+
+scp ubuntu10build64:/srcML/trunk/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu10.04-64
+scp ubuntu11build64:/srcML/trunk/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu11.04-64
 scp ubuntu12build64:/srcML/trunk/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu12.04-64
 
 ./prlctlall.py --fedora --build --15 exec 'bash -c "cd srcML/trunk/dist; make clean; make windowsdyn"'
