@@ -31,6 +31,7 @@
 #include <libxml/nanohttp.h>
 #include <libxml/nanoftp.h>
 #include <vector>
+#include <regex.h>
 
 static const int NUMARCHIVES = 5;
 static const char* ARCHIVE_FILTER_EXTENSIONS[] = {"tar", "zip", "tgz", "cpio", "shar", "gz", "bz2", 0};
