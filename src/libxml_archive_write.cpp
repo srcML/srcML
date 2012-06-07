@@ -28,6 +28,7 @@
 #include <archive_entry.h>
 #include <string>
 #include <time.h>
+#include <algorithm>
 
 #ifdef __MINGW32__
 #include <io.h>
