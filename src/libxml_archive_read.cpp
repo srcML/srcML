@@ -132,7 +132,7 @@ bool isArchiveRead(void* context) {
 
     // when the xslt option is used, the input cannot come through libarchive/libxml
     // so fix here so that it is not used
-    if (fnmatch("*.xsl", URI, 0) == 0)
+    if (strcmp(URI + strlen(URI) - strlen(".xsl"), ".xsl") == 0)
       return 0;
 
 #if ARCHIVE_VERSION_NUMBER >= 2008000
