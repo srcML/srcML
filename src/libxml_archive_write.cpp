@@ -24,7 +24,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <libxml/xmlIO.h>
-#include <fnmatch.h>
 #include <archive.h>
 #include <archive_entry.h>
 #include <string>
@@ -103,16 +102,18 @@ int archiveWriteMatch_src2srcml(const char * URI) {
   if (URI == NULL)
       return 0;
 
-  return
-    (fnmatch("*.tar", URI, 0) == 0) ||
-    (fnmatch("*.tar.gz", URI, 0) == 0) ||
-    (fnmatch("*.tar.bz2", URI, 0) == 0) ||
+  // reversed copy of the path
+  std::string path(URI);
+  std::reverse(path.begin(), path.end());
 
-    (fnmatch("*.cpio", URI, 0) == 0) ||
-    (fnmatch("*.cpio.gz", URI, 0) == 0) ||
-    (fnmatch("*.cpio.bz2", URI, 0) == 0) ||
+  // see if the extension is for a source archive
+  const char* tails[] = { ".tar", ".tar.gz", ".tar.bz2", ".cpio", ".cpio.gz", ".cpio.bz2", ".zip"}; 
 
-    (fnmatch("*.zip", URI, 0) == 0);
+  for (int i = 0; i < sizeof(tails) / sizeof(tails[0]); ++i)
+    if (strcmp(URI + strlen(URI) - strlen(tails[i]), tails[i]) == 0)
+      return 1;
+
+  return 0;
 }
 
 // check if archive matches the protocol on the URI
