@@ -129,7 +129,7 @@ XSLT_SETLANGUAGE_C=${XSLT} --stringparam language "C" ${XSLT_SETLANGUAGE_XSL}
 
 XSLT_SETLANGUAGE_CXX=${XSLT} --stringparam language "CXX" ${XSLT_SETLANGUAGE_XSL}
 
-XSLT_SETLANGUAGE_CXX_0X=${XSLT} --stringparam language "C++0x" ${XSLT_SETLANGUAGE_XSL}
+XSLT_SETLANGUAGE_CXX_0X=${XSLT} --stringparam language "C++11" ${XSLT_SETLANGUAGE_XSL}
 
 XSLT_SETLANGUAGE_JAVA=${XSLT} --stringparam language "Java" ${XSLT_SETLANGUAGE_XSL}
 
