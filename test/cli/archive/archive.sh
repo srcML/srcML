@@ -30,6 +30,10 @@ bzip2 -cv $NAME.tar > $NAME.tar.bz2
 
 bzip2 -cv $NAME.cpio > $NAME.cpio.bz2
 
+tar -cvjf $NAME.tar.bz2 $FILES
+
+tar -cvjf $NAME.tbz2 $FILES
+
 tar -cvzf $NAME.tar.gz $FILES
 
 tar -cvzf $NAME.tgz $FILES
