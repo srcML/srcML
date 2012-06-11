@@ -26,8 +26,6 @@ bzip2 -cv $NAME.zip > $NAME.zip.bz2
 
 bzip2 -cv $NAME.gz > $NAME.gz.bz2
 
-bzip2 -cv $NAME.tar > $NAME.tar.bz2
-
 bzip2 -cv $NAME.cpio > $NAME.cpio.bz2
 
 tar -cvjf $NAME.tar.bz2 $FILES
