@@ -210,6 +210,23 @@ check([src2srcml, 'archive/a.cpp.tgz', '-o', 'archive/a.cpp.xml'], '', '')
 validate(open('archive/a.cpp.xml', 'r').read(), srcml)
 
 ##
+# test tbz2
+
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="archive/a.cpp">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+"""
+
+check([src2srcml, 'archive/a.cpp.tbz2'], '', srcml)
+check([src2srcml, 'archive/a.cpp.tbz2', '-o', 'archive/a.cpp.xml'], '', '')
+validate(open('archive/a.cpp.xml', 'r').read(), srcml)
+
+##
 # test tar.gz
 
 srcml = xml_declaration + """
