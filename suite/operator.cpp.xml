@@ -451,7 +451,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><name><op:operator>::</op:operator>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><name><op:operator>::</op:operator><name>b</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
