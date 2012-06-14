@@ -435,11 +435,11 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>(0, 1)</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>(</op:operator>0, 1<op:operator>)</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>,</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator></expr><op:operator>,</op:operator><expr><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
