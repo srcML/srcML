@@ -330,4 +330,40 @@
 <expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><op:operator>&lt;=</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><op:operator>!</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><op:operator>&&</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><op:operator>||</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><op:operator>~</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><op:operator>&</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><op:operator>|</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><op:operator>^</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><op:operator>&lt;&lt;</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><op:operator>&gt;&gt;</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
 </unit>
