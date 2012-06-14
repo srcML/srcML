@@ -434,4 +434,48 @@
 <expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>.*</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>(0, 1)</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>,</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>?</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>:</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>::</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>sizeof('a')</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>alignof('a')</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+ <unit>
+
+<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>typeid('a')</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>(int)</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>new</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>delete</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
+<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>delete[]</op:operator><name>b</name></expr>;</expr_stmt>
+</unit>
+
 </unit>
