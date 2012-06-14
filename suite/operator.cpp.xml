@@ -339,7 +339,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>&&</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>&amp;&amp;</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -351,7 +351,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>&</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>&amp;</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
