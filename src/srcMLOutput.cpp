@@ -66,14 +66,15 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
     xout = xmlNewTextWriterFilename(srcml_filename, isoption(OPTION_COMPRESSED));
   else
     xout = xmlNewTextWriterMemory(output_buffer, isoption(OPTION_COMPRESSED));
+  // TODO:  Customize error message for each case, including output buffer
   if (!xout) {
     fprintf(stderr, "src2srcml: " "Unable to open output file %s\n", srcml_filename);
     exit(2);
   }
 
+  // setup attributes names for line/column position if used
   if (isoption(OPTION_POSITION)) {
 
-    // setup the line attribute name
     std::ostringstream out;
     out << num2prefix[SRCML_EXT_POSITION_NS_URI_POS] << ':' << "line";
     lineAttribute = out.str();
@@ -106,6 +107,7 @@ bool srcMLOutput::isoption(const OPTION_TYPE& flag) const {
   return (flag & options) > 0;
 }
 
+// TODO:  make const
 bool srcMLOutput::isoption(const OPTION_TYPE& flag, const OPTION_TYPE& options) {
   return (flag & options) > 0;
 }
@@ -124,7 +126,6 @@ void srcMLOutput::srcMLTextWriterEndElement(xmlTextWriter* xout) {
 
 const char * srcMLOutput::lineAttributeValue(const antlr::RefToken& token) {
 
-  // need to fix for threads
   snprintf(out, 20, "%d", token->getLine());
 
   return out;
@@ -132,7 +133,6 @@ const char * srcMLOutput::lineAttributeValue(const antlr::RefToken& token) {
 
 const char * srcMLOutput::columnAttributeValue(const antlr::RefToken& token) {
 
-  // need to fix for threads
   snprintf(out, 20, "%d", token->getColumn());
 
   return out;
