@@ -455,15 +455,19 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>sizeof('a')</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><call><name>sizeof</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>alignof('a')</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><call><name>sizeof</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
- <unit>
 
-<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>typeid('a')</op:operator><name>b</name></expr>;</expr_stmt>
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><call><name>alignof</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><call><name>typeid</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>(</op:operator>int<op:operator>)</op:operator><name>b</name></expr>;</expr_stmt>
