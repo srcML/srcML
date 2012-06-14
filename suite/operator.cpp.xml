@@ -466,7 +466,7 @@
 <expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>typeid('a')</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>(int)</op:operator><name>b</name></expr>;</expr_stmt>
+<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>(</op:operator>int<op:operator>)</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>new</op:operator><name>b</name></expr>;</expr_stmt>
