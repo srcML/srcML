@@ -93,7 +93,7 @@ CONSTANTS :
         '0'..'9'
     ;
 
-OPERATORS options { testLiterals = true; } { unsigned int realbegin = _begin; bool gt = false; int dcoloncount = 0; bool stop = false; } : 
+OPERATORS options { testLiterals = true; } { bool star = false; } : 
         (
             '#' {
 
@@ -107,13 +107,37 @@ OPERATORS options { testLiterals = true; } { unsigned int realbegin = _begin; bo
                 onpreprocline = true; 
             }
         }   |
-
+/*
         ({ !stop && !(gt && (LA(1) == '>' || LA(1) == ':' || LA(1) == '&' || LA(1) == '*')) && (dcoloncount < 2) }?
 
          ( '*' { gt = true; } | '|' | ':' { ++dcoloncount; } | '`' | '=' { if (LA(1) != '=') stop = true; } | '!' | '%' | '+' | '^' | '-' |
            '&' { text.erase(realbegin); text += "&amp;"; realbegin += 4; gt = true; } | 
            '>' { if (realbegin == _begin) gt = true; text.erase(realbegin); text += "&gt;"; realbegin += 3; } | 
-           '<' { text.erase(realbegin); text += "&lt;"; realbegin += 3; gt = true; }) { ++realbegin; } )+ |
+           '<' { text.erase(realbegin); text += "&lt;"; realbegin += 3; gt = true; }) { ++realbegin; } )+ */ 
+
+       '+' ('+' | '=')? |
+       '-' ('-' | '=' | '>' { star = true; $setText("-&gt;"); })? ({ star }? '*' { $setText("-&gt;*"); })? |
+       '*' ('=')? |
+//       '/' ('=')? |
+       '%' ('=')? |
+       '^' ('=')? |
+       '|' ('|')? ('=')? |
+       '`' |
+       '!' ('=')? |
+       ':' (':')? |
+       '=' ('=')? |
+
+       '&' { $setText("&amp;"); }
+            ('&' { $setText("&amp;&amp;"); star = true; } | '=' { $setText("&amp;="); } )?
+             ({ star }? '=' { $setText("&amp;&amp;="); } )? | 
+     
+       '>' { $setText("&gt;"); } |
+
+       '<' { $setText("&lt;"); }
+            ('<' { $setText("&lt;&lt;"); } | '=' { $setText("&lt;="); })? ('=' { $setText("&lt;&lt;="); })? |
+
+//       '<' { text.erase(realbegin); text += "&lt;"; realbegin += 3; gt = true; realbegin += 3; } 
+//            ('<' { text.erase(realbegin); text += "&lt;"; realbegin += 4; gt = true; })? ('=')? |
 
         // match these as individual operators only
         ',' | ';' | '('..')' | '[' | ']' | '{' | '}' | '@' |

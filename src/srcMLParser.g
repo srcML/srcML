@@ -3432,7 +3432,11 @@ general_operators[] { LocalMode lm(this); ENTRY_DEBUG } :
             }
         }
         (
-            general_operators_list (options { greedy = true; } : { SkipBufferSize() == 0 }? general_operators_list)* |
+        OPERATORS | TEMPOPS |
+            TEMPOPE ({ SkipBufferSize() == 0 }? TEMPOPE)? ({ SkipBufferSize() == 0 }? TEMPOPE)? ({ SkipBufferSize() == 0 }? EQUAL)? |
+    EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF | QMARK
+
+/*            general_operators_list (options { greedy = true; } : { SkipBufferSize() == 0 }? general_operators_list)* */ |
 
             // others are not combined
             NEW | DELETE
