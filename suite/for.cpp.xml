@@ -46,4 +46,9 @@
 <empty_stmt>;</empty_stmt></for>
 </unit>
 
+<unit>
+<for>for (<init>;</init><condition><expr>1</expr>;</condition><incr/>)
+<empty_stmt>;</empty_stmt></for>
+</unit>
+
 </unit>
