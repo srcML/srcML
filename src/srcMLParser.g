@@ -4465,7 +4465,13 @@ preprocessor[] {
             endCurrentMode(MODE_LOCAL);
 
             tp.setType(SCPP_ERROR);
-        }
+        } |
+
+        /* blank preproc */
+
+        /* skip over anything, start with stuff defined before */
+        (~(NAME | ERRORPREC | INCLUDE | DEFINE | IF | ENDIF | IFNDEF | UNDEF | ELIF | ELSE | IFDEF | LINE | PRAGMA | EOL | LINECOMMENT_START | COMMENT_START | JAVADOC_COMMENT_START | EOF))?
+
         )
         eol_skip[directive_token, markblockzero]
 ;
