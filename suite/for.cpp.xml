@@ -47,8 +47,8 @@
 </unit>
 
 <unit>
-<for>for (<init>;</init><condition><expr>1</expr>;</condition><incr/>)
-<empty_stmt>;</empty_stmt></for>
+<for>for(<init>;</init> <condition><expr>(*<name>i</name>) != 0</expr>;<incr>++<name>i</name></icr>)</condition>
+<empty_stmt>;</empty_stmt>
 </unit>
 
 </unit>
