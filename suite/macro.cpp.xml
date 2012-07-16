@@ -87,14 +87,17 @@
 <macro><name>A</name><argument_list>(<argument>1</argument>)</argument_list></macro> <function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
+<unit>
 <expr_stmt><expr>.<name>macro</name> <name>a</name>
 <cpp:error># <cpp:directive>comment</cpp:directive></cpp:error>
 <cpp:error>#<cpp:directive/></cpp:error>
 .<name>endm</name></expr></expr_stmt>
 </unit>
 
+<unit>
 <function><type><name>static</name> <name>void</name></type>
 <name>lto_read_decls</name> <parameter_list>(<param><decl><macro><name>VEC</name><argument_list>(<argument>ld_plugin_symbol_resolution_t</argument>,<argument>heap</argument>)</argument_list></macro> *<name>resolutions</name></decl></param>)</parameter_list>
 <block>{}</block></function>
+</unit>
 
 </unit>
