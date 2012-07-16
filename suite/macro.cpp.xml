@@ -95,6 +95,6 @@
 
 <function><type><name>static</name> <name>void</name></type>
 <name>lto_read_decls</name> <parameter_list>(<param><decl><macro><name>VEC</name><argument_list>(<argument>ld_plugin_symbol_resolution_t</argument>,<argument>heap</argument>)</argument_list></macro> *<name>resolutions</name></decl></param>)</parameter_list>
-<block>{}</block>/function>
+<block>{}</block></function>
 
 </unit>
