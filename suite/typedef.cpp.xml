@@ -105,6 +105,10 @@
 <typedef>typedef <type><enum>enum <block>{ <expr><name>a</name></expr>, <expr><name>b</name> = <name>c</name></expr> }</block></enum></type> <name>a</name>;</typedef>
 </unit>
 
+<unit>
+<typedef>typedef <type><name>float</name> <name>SFtype</name></type> <name>__attribute__</name> ((<name>mode</name> (<name>SF</name>)));</typedef>
+</unit>
+
 
 </unit>
 
