@@ -51,7 +51,9 @@
 <empty_stmt>;</empty_stmt></for>
 </unit>
 
-<for>for (<init><expr><name>ei</name> = <call><name>ei_start</name> <argument_list>(<argument><expr><name>ENTRY_BLOCK_PTR</name>-&gt;<name>succs</name></expr></argument>)</argument_list>;</init> <condition>(tmp = ei_safe_edge (ei));</condition><incr/> )
+<unit>
+<for>for (<init><expr><name>ei</name> = <call><name>ei_start</name> <argument_list>(<argument><expr><name>ENTRY_BLOCK_PTR</name>-&gt;<name>succs</name></expr></argument>)</argument_list></call></expr>;</init> <condition>(<expr><name>tmp</name> = <call><name>ei_safe_edge</name> <argument_list>(<argument><expr><name>ei</name></expr></argument>)</argument_list></call>)</expr>;</condition><incr/> )
   <empty_stmt>;</empty_stmt></for>
+</unit>
 
 </unit>
