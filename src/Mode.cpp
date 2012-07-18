@@ -91,6 +91,7 @@ const State::MODE_TYPE Mode::MODE_THEN                = ull(0x0080000000000000);
 const State::MODE_TYPE Mode::MODE_IN_INIT             = ull(0x0100000000000000);
 const State::MODE_TYPE Mode::MODE_TRY                 = ull(0x0200000000000000);
 const State::MODE_TYPE Mode::MODE_END_LIST_AT_BLOCK   = ull(0x0400000000000000);
+const State::MODE_TYPE Mode::MODE_TEMPLATE_PARAMETER_LIST = ull(0x0800000000000000);
 
 /*
 int Mode::size() const {

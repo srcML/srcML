@@ -522,7 +522,7 @@ start[] { ruledepth = 0; ENTRY_DEBUG } :
             (!inMode(MODE_EXPRESSION) && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT)) }? lcurly | 
 
         // process template operator correctly @test template
-        { inTransparentMode(MODE_TEMPLATE) }? tempope[true] |
+        { inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) }? tempope[true] |
 
         // context-free grammar statements
         { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) }? cfg |
@@ -4012,7 +4012,7 @@ template_declaration[] { ENTRY_DEBUG } :
         }
         TEMPLATE 
         {
-            startNewMode(MODE_TEMPLATE | MODE_LIST | MODE_EXPECT);
+            startNewMode(MODE_TEMPLATE | MODE_LIST | MODE_EXPECT | MODE_TEMPLATE_PARAMETER_LIST);
         }
 ;
 

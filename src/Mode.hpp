@@ -49,6 +49,7 @@ public:
 
   //
   const static State::MODE_TYPE MODE_TEMPLATE;
+  const static State::MODE_TYPE MODE_TEMPLATE_PARAMETER_LIST;
 
   // an argument to a call
   const static State::MODE_TYPE MODE_ARGUMENT;
