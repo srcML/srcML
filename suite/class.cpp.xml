@@ -117,4 +117,10 @@
 </private>}</block>;</class>
 </unit>
 
+<unit>
+<class>class <name>a</name> <block>{<private>private:
+    <function_decl><type><name>int</name></type> <name>main</name><parameter_list>()</parameter_list>;</function_decl>
+</private>}</block>;</class>
+</unit>
+
 </unit>
