@@ -2187,6 +2187,10 @@ function_tail[] { ENTRY_DEBUG } :
 
             // K&R 
             { inLanguage(LANGUAGE_C) }? (
+
+            // FIXME:  Must be integrated into other C-based languages
+            // FIXME:  Wrong markup
+            ( macro_call )=> macro_call | 
             { look_past(NAME) == LCURLY }? NAME |
               parameter (MULTOPS | NAME | COMMA)* TERMINATE
             )
