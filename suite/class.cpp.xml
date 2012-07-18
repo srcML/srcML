@@ -119,7 +119,7 @@
 
 <unit>
 <class>class <name>a</name> <block>{<private>private:
-    <function_decl><type><name>int</name></type> <name>main</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>int</name></type> <name>main</name><parameter_list>(<param><decl><type>int</type> <name>argc</name></decl></param>, <param><type><name>int</name>*[]</type> <name>argv</name></param>)</parameter_list>;</function_decl>
 </private>}</block>;</class>
 </unit>
 
