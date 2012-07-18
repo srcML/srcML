@@ -160,6 +160,8 @@ public:
 
   const static State::MODE_TYPE MODE_END_LIST_AT_BLOCK;
 
+  const static State::MODE_TYPE MODE_ONLY_END_TERMINATE;
+
 public:
 
   Mode(TokenParser* ptp, int lang)
@@ -303,12 +305,12 @@ protected:
   }
 
   // End elements down to a specific mode
-  void endDownToMode(const State::MODE_TYPE& ele);
+  void endDownToMode(const State::MODE_TYPE& ele, const State::MODE_TYPE& stopmode = 0ULL);
 
-  void endDownToFirstMode(const State::MODE_TYPE& mode);
+  void endDownToFirstMode(const State::MODE_TYPE& ele, const State::MODE_TYPE& stopmode = 0ULL);
 
   // End elements until we skip over a specific mode
-  void endDownOverMode(const State::MODE_TYPE& ele);
+  void endDownOverMode(const State::MODE_TYPE& ele, const State::MODE_TYPE& stopmode = 0ULL);
 
 };
 

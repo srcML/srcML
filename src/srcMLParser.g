@@ -3498,7 +3498,7 @@ rparen[bool final = false, bool markup = true] { bool isempty = getParen() == 0;
             if (isempty) {
 
                 // additional right parentheses indicates end of non-list modes
-                endDownToFirstMode(MODE_LIST | MODE_PREPROC | MODE_END_ONLY_AT_RPAREN);
+                endDownToFirstMode(MODE_LIST | MODE_PREPROC | MODE_END_ONLY_AT_RPAREN, MODE_ONLY_END_TERMINATE);
 
                 // special case:  Get to here, in for-initalization.  Need an extra end mode
                 if (inMode(MODE_VARIABLE_NAME) && inTransparentMode(MODE_FOR_CONDITION))
@@ -4183,7 +4183,7 @@ label_statement[] { LocalMode lm(this); ENTRY_DEBUG } :
 typedef_statement[] { ENTRY_DEBUG } :
         {
             // statement
-            startNewMode(MODE_STATEMENT | MODE_EXPECT | MODE_VARIABLE_NAME);
+            startNewMode(MODE_STATEMENT | MODE_EXPECT | MODE_VARIABLE_NAME | MODE_ONLY_END_TERMINATE);
 
             // start the typedef element
             startElement(STYPEDEF);

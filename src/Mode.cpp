@@ -92,6 +92,7 @@ const State::MODE_TYPE Mode::MODE_IN_INIT             = ull(0x0100000000000000);
 const State::MODE_TYPE Mode::MODE_TRY                 = ull(0x0200000000000000);
 const State::MODE_TYPE Mode::MODE_END_LIST_AT_BLOCK   = ull(0x0400000000000000);
 const State::MODE_TYPE Mode::MODE_TEMPLATE_PARAMETER_LIST = ull(0x0800000000000000);
+const State::MODE_TYPE Mode::MODE_ONLY_END_TERMINATE = ull(0x1000000000000000);
 
 /*
 int Mode::size() const {
@@ -112,31 +113,31 @@ bool Mode::inTransparentMode(const State::MODE_TYPE& m) const {
 */
 
 // end elements down to a specific mode
-void Mode::endDownToMode(const State::MODE_TYPE& mode) {
+void Mode::endDownToMode(const State::MODE_TYPE& mode, const State::MODE_TYPE& stopmode) {
 
   if (!pstate->inTransparentMode(mode))
       return;
 
-  while (pstate->size() > 1 && !pstate->inMode(mode)) {
+  while (pstate->size() > 1 && !pstate->inMode(mode) && (stopmode ? !pstate->inMode(stopmode) : true)) {
       endCurrentMode();
   }
 }
 
 // end elements down to a specific mode
-void Mode::endDownToFirstMode(const State::MODE_TYPE& mode) {
+void Mode::endDownToFirstMode(const State::MODE_TYPE& mode, const State::MODE_TYPE& stopmode) {
 
   //  if (pstate->getTransparentMode() & (mode == 0))
   //      return;
 
-  while (pstate->size() > 1 && (pstate->getMode() & mode) == 0) {
+  while (pstate->size() > 1 && (pstate->getMode() & mode) == 0 && (stopmode ? !pstate->inMode(stopmode) : true)) {
       endCurrentMode();
   }
 }
 
 // end elements down to a specific mode
-void Mode::endDownOverMode(const State::MODE_TYPE& mode) {
+void Mode::endDownOverMode(const State::MODE_TYPE& mode, const State::MODE_TYPE& stopmode) {
 
-  while (pstate->size() > 1 && pstate->inMode(mode)) {
+  while (pstate->size() > 1 && pstate->inMode(mode) && (stopmode ? !pstate->inMode(stopmode) : true)) {
       endCurrentMode();
   }
 }
