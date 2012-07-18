@@ -175,7 +175,30 @@ COMMENT_TEXT {
         '?'..'[' |
 
         '\\'    // wipe out previous escape character
-                { if (prevLA == '\\') prevprevLA = 0; } |
+                { if (prevLA == '\\') prevprevLA = 0; } 
+
+                {
+                    if ((mode == STRING_END || mode == CHAR_END) && onpreprocline) {
+
+                        // skip over whitespace after line continuation character
+                        while (LA(1) == ' ') {
+                            consume();
+                            prevLA = 0;
+                            prevprevLA = 0;
+                        }
+
+                        // treat newline as part of string
+                        if (LA(1) == '\n') {
+
+                            consume();
+                            newline();
+                            prevLA = 0;
+                            prevprevLA = 0;
+                        }
+                    }
+                }
+
+            |
 
         ']'..'\377'
         )
