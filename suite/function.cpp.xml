@@ -62,4 +62,9 @@
 }</block></function> 
 </unit>
 
+<unit>
+<function><type><name>int</name></type> <name>main</name><parameter_list>(<param><decl><type><name>int</name></type> <name>argc</name></decl></param>, <param><decl><type><name>int</name>*[]</type> <name>argv</name></decl></param>)</parameter_list>
+<block>{}</block></function>
+</unit>
+
 </unit>
