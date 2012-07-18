@@ -67,7 +67,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><call><name>a<name>::<name>main</name></name><argument_list>(<argument<expr><name>argc</name></expr></argument>, <agument><expr><name>argv</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-<unit>
+<expr_stmt><expr><call><name><name>a</name>::<name>main</name></name><argument_list>(<argument<expr><name>argc</name></expr></argument>, <argument><expr><name>argv</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
 
 </unit>
