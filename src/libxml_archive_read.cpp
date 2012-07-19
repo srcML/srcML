@@ -238,6 +238,7 @@ bool isArchiveRead(void* context) {
 #endif
 
 #if ARCHIVE_VERSION_NUMBER >= 3000003
+    archive_read_support_format_empty(gpcontext->a);
     archive_read_support_format_tar(gpcontext->a);
     archive_read_support_format_zip(gpcontext->a);
     archive_read_support_format_cpio(gpcontext->a);
