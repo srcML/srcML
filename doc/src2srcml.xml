@@ -229,16 +229,15 @@
       <term><option>&REGISTER_EXTENSION_FLAG;=<replaceable class="parameter">extention=language</replaceable></option></term>
       <listitem>
 	<para>
+	  Sets the extensions to associate with a given language.
+          Note: the extensions to not contain the '.'.
+	</para>
+	<para>
 	  The programming language of the source-code file.  Allowable
 	  values are C, C++, Java, or AspectJ.  The language affects
 	  parsing, the allowed markup, and what is considered a
 	  keyword.  The value is also stored as an attribute of the
 	  root element unit.
-	</para>
-	<para>
-	  If not specified, the programming language is based on the
-	  file extension.  If the file extension is not available or
-	  not in the standard list, the default is C++.
 	</para>
       </listitem>
     </varlistentry>
