@@ -49,4 +49,18 @@
 <expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr>*<name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<function>static void
+pass_state_graph (state_t start_state, void (*applied_func) (state_t state))
+<block>{
+{
+  arc_t arc;
+
+
+  (*applied_func) (start_state);
+
+}
+</block></function>
+</unit>
+
 </unit>
