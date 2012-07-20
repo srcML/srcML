@@ -50,17 +50,14 @@
 </unit>
 
 <unit>
-<function>static void
-pass_state_graph (state_t start_state, void (*applied_func) (state_t state))
+<function><type><name>static</name> <name>void</name></type>
+<name>pass_state_graph</name> <paramter_list>(<param><decl><type>state_t</type> <name>start_state</name></decl></param>, <param><function_decl>void (*applied_func) (state_t state)</function_decl></param>)</paramter_list>
 <block>{
 {
-  arc_t arc;
-
 
   (*applied_func) (start_state);
 
-}
-</block></function>
+}</block></function>
 </unit>
 
 </unit>
