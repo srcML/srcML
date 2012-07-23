@@ -108,8 +108,8 @@ void Language::register_standard_file_extensions()
   Language::registerUserExt("c",    LANGUAGE_C );
   Language::registerUserExt("h",    LANGUAGE_C );
 
-  Language::registerUserExt("cs",    LANGUAGE_CS );
-  Language::registerUserExt("hs",    LANGUAGE_CS );
+  //Language::registerUserExt("cs",    LANGUAGE_CS );
+  //Language::registerUserExt("hs",    LANGUAGE_CS );
 
   Language::registerUserExt("cpp",  LANGUAGE_CXX );
   Language::registerUserExt("hpp",  LANGUAGE_CXX );
