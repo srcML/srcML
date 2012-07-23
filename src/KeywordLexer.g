@@ -31,7 +31,7 @@ options {
     namespaceStd="std";
 }
 
-class KeywordLexer extends TextLexer;
+class KeywordLexer extends OperatorLexer;
 
 options {
     k = 1;

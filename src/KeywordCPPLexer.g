@@ -103,6 +103,25 @@ tokens {
     CONCEPTMAP;
     REQUIRES;
     AUTO;
+
+    // C# tokens
+    FOREACH;
+    REF;
+    OUT;
+    IN;
+    LOCK;
+    IS;
+    INTERNAL;
+    SEALED;
+    OVERRIDE;
+    IMPLICIT;
+    EXPLICIT;
+    STACKALLOC;
+    AS;
+    DELEGATE;
+    FIXED;
+    CHECKED;
+    UNCHECKED;
 }
 
 {
@@ -263,6 +282,27 @@ KeywordCPPLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
 
         // abstract
         { "abstract"      , ABSTRACT      , LANGUAGE_JAVA }, 
+
+        // add all C# specific keywords to the literals table
+        { "foreach"       , FOREACH       , LANGUAGE_CSHARP }, 
+        { "ref"           , REF           , LANGUAGE_CSHARP }, 
+        { "out"           , OUT           , LANGUAGE_CSHARP }, 
+        { "in"            , IN            , LANGUAGE_CSHARP }, 
+        { "lock"          , LOCK          , LANGUAGE_CSHARP }, 
+        { "is"            , IS            , LANGUAGE_CSHARP }, 
+        { "internal"      , INTERNAL      , LANGUAGE_CSHARP }, 
+        { "sealed"        , SEALED        , LANGUAGE_CSHARP }, 
+        { "override"      , OVERRIDE      , LANGUAGE_CSHARP }, 
+        { "explicit"      , EXPLICIT      , LANGUAGE_CSHARP }, 
+        { "implicit"      , IMPLICIT      , LANGUAGE_CSHARP }, 
+        { "stackalloc"    , STACKALLOC    , LANGUAGE_CSHARP }, 
+        { "as"            , AS            , LANGUAGE_CSHARP }, 
+        { "interface"     , INTERFACE     , LANGUAGE_CSHARP }, 
+        { "delegate"      , DELEGATE      , LANGUAGE_CSHARP }, 
+        { "fixed"         , FIXED         , LANGUAGE_CSHARP }, 
+        { "checked"       , CHECKED       , LANGUAGE_CSHARP }, 
+        { "unchecked"     , UNCHECKED     , LANGUAGE_CSHARP }, 
+        { "finally"       , FINALLY       , LANGUAGE_CSHARP }, 
    };
 
     // fill up the literals for the language that we are parsing

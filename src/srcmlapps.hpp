@@ -107,6 +107,7 @@ const char* const LANGUAGE_CXX = "C++";
 const char* const LANGUAGE_CXX_11 = "C++11";
 const char* const LANGUAGE_JAVA = "Java";
 const char* const LANGUAGE_ASPECTJ = "AspectJ";
+const char* const LANGUAGE_CSHARP = "C#";
 
 };
 

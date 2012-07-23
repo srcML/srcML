@@ -185,13 +185,13 @@ $(SRCMLPARSER_GENS): srcMLParser.g KeywordCPPLexerTokenTypes.txt PureCommentLexe
 $(KEYWORDCPPLEXER_GENS): KeywordCPPLexer.g KeywordLexerTokenTypes.txt
 	$(ANTLR) -glib "WSLexer.g;CommentLexer.g;OperatorLexer.g;TextLexer.g;KeywordLexer.g" ${SRCMLLEXER_ANTLR_FLAGS} $<
 
-$(KEYWORDLEXER_GENS): KeywordLexer.g TextLexerTokenTypes.txt
-	$(ANTLR) -glib "WSLexer.g;CommentLexer.g;OperatorLexer.g;TextLexer.g" ${SRCMLLEXER_ANTLR_FLAGS} $<
+$(KEYWORDLEXER_GENS): KeywordLexer.g OperatorLexerTokenTypes.txt
+	$(ANTLR) -glib "WSLexer.g;CommentLexer.g;TextLexer.g;OperatorLexer.g" ${SRCMLLEXER_ANTLR_FLAGS} $<
 
-$(TEXTLEXER_GENS): TextLexer.g OperatorLexerTokenTypes.txt
-	$(ANTLR) -glib "WSLexer.g;CommentLexer.g;OperatorLexer.g" ${SRCMLLEXER_ANTLR_FLAGS} $<
+$(OPERATORLEXER_GENS): OperatorLexer.g TextLexerTokenTypes.txt
+	$(ANTLR) -glib "WSLexer.g;CommentLexer.g;TextLexer.g" ${SRCMLLEXER_ANTLR_FLAGS} $<
 
-$(OPERATORLEXER_GENS): OperatorLexer.g CommentLexerTokenTypes.txt
+$(TEXTLEXER_GENS): TextLexer.g CommentLexerTokenTypes.txt
 	$(ANTLR) -glib "WSLexer.g;CommentLexer.g" ${SRCMLLEXER_ANTLR_FLAGS} $<
 
 $(COMMENTLEXER_GENS): CommentLexer.g WSLexerTokenTypes.txt

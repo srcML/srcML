@@ -40,7 +40,7 @@ options {
     namespaceStd="std";
 }
 
-class TextLexer extends OperatorLexer;
+class TextLexer extends CommentLexer;
 
 options {
 	k = 1;

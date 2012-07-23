@@ -303,9 +303,12 @@ tokens {
 	SELSE;
 
     SWHILE_STATEMENT;
+    SLOCK_STATEMENT;
+    SFIXED_STATEMENT;
 	SDO_STATEMENT;
 
 	SFOR_STATEMENT;
+	SFOREACH_STATEMENT;
     SFOR_GROUP;
 	SFOR_INITIALIZATION;
 	SFOR_CONDITION;
@@ -419,6 +422,10 @@ tokens {
     SCONCEPT;
     SCONCEPTMAP;
     SAUTO;
+
+    // C#
+    SCHECKED_STATEMENT;
+    SUNCHECKED_STATEMENT;
 
     // misc
     SEMPTY;  // empty statement
@@ -556,7 +563,7 @@ cfg[] { ENTRY_DEBUG } :
         if_statement | else_statement | switch_statement | switch_case | switch_default |
 
         // iterative statements
-        while_statement | for_statement | do_statement |
+        while_statement | for_statement | do_statement | foreach_statement |
 
         // jump statements
         return_statement | break_statement | continue_statement | goto_statement |
@@ -577,6 +584,11 @@ cfg[] { ENTRY_DEBUG } :
 
         // java package - keyword only detected for Java
         package_statement |
+
+        // C#
+        checked_statement | 
+
+        unchecked_statement | lock_statement | fixed_statement |
 
         // assembly block
         asm_declaration
@@ -602,7 +614,7 @@ statements_non_cfg[] { int token = 0; int place = 0; int secondtoken = 0; int fl
 
         // class forms sections
         // must be after class_struct_union_check
-        { inLanguage(LANGUAGE_CXX_FAMILY) }?
+        { inLanguage(LANGUAGE_CXX_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
         access_specifier_region |
 
         // check for declaration of some kind (variable, function, constructor, destructor
@@ -872,6 +884,24 @@ for_statement[] { setFinalToken(); ENTRY_DEBUG } :
             startElement(SFOR_STATEMENT);
         }
         FOR
+        {
+            // statement with nested statement after the for group
+            startNewMode(MODE_FOR_GROUP | MODE_EXPECT);
+        }
+;
+
+/*
+  start of foreach statement (C#)
+*/
+foreach_statement[] { setFinalToken(); ENTRY_DEBUG } :
+        {
+            // statement with nested statement after the for group
+            startNewMode(MODE_STATEMENT | MODE_NEST);
+
+            // start the for statement
+            startElement(SFOREACH_STATEMENT);
+        }
+        FOREACH
         {
             // statement with nested statement after the for group
             startNewMode(MODE_FOR_GROUP | MODE_EXPECT);
@@ -1357,14 +1387,14 @@ class_definition[] :
             startElement(SCLASS);
 
             // java classes end at the end of the block
-            if (intypedef || inLanguage(LANGUAGE_JAVA_FAMILY)) {
+            if (intypedef || inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP)) {
                 setMode(MODE_END_AT_BLOCK);
             }
         }
         (java_specifier_mark)* CLASS (class_header lcurly | lcurly) 
         {
 
-            if (inLanguage(LANGUAGE_CXX_FAMILY))
+            if (inLanguage(LANGUAGE_CXX_FAMILY) && !inLanguage(LANGUAGE_CSHARP))
                 class_default_access_action(SPRIVATE_ACCESS_DEFAULT);
         }
 ;
@@ -1380,7 +1410,7 @@ enum_class_definition[] :
             startElement(SENUM);
 
             // java classes end at the end of the block
-            if (intypedef || inLanguage(LANGUAGE_JAVA_FAMILY)) {
+            if (intypedef || inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP)) {
                 setMode(MODE_END_AT_BLOCK);
             }
         }
@@ -2560,7 +2590,7 @@ java_specifier_mark[] { LocalMode lm(this); ENTRY_DEBUG } :
             // start the function specifier
             startElement(SFUNCTION_SPECIFIER);
         }
-        (PUBLIC | PRIVATE | PROTECTED | FINAL | STATIC | ABSTRACT | FRIEND)
+        (PUBLIC | PRIVATE | PROTECTED | FINAL | STATIC | ABSTRACT | FRIEND | INTERNAL | SEALED | OVERRIDE | REF | OUT | IMPLICIT | EXPLICIT)
 ;
 
 /*
@@ -2804,7 +2834,7 @@ complex_name[bool marked] { LocalMode lm(this); TokenPosition tp; bool iscomplex
             }
         }
         (
-        { inLanguage(LANGUAGE_JAVA_FAMILY) }?
+        { inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) }?
         complex_name_java[marked, iscomplex_name] |
 
         { inLanguage(LANGUAGE_C) }?
@@ -2895,7 +2925,7 @@ function_specifier[] { LocalMode lm(this); ENTRY_DEBUG } :
   Specifiers for functions, methods, and variables
 */
 standard_specifiers[] { LocalMode lm(this); ENTRY_DEBUG } :
-        { inLanguage(LANGUAGE_JAVA_FAMILY) }? 
+        { inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) }? 
             java_specifier_mark |
 
         {
@@ -2951,7 +2981,7 @@ constructor_header[] { ENTRY_DEBUG } :
         (options { greedy = true; } : 
             specifier_explicit |
             
-            { inLanguage(LANGUAGE_JAVA_FAMILY) }? java_specifier_mark |
+            { inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) }? java_specifier_mark |
 
             { inLanguage(LANGUAGE_JAVA_FAMILY) }? template_argument_list
         )*
@@ -3208,6 +3238,28 @@ try_pseudo_statement[] { ENTRY_DEBUG } :
         }
 ;
 
+checked_statement[] { ENTRY_DEBUG } :
+        {
+            // treat try block as nested block statement
+            startNewMode(MODE_STATEMENT | MODE_NEST);
+
+            // start of the try statement
+            startElement(SCHECKED_STATEMENT);
+        }
+        CHECKED
+;
+
+unchecked_statement[] { ENTRY_DEBUG } :
+        {
+            // treat try block as nested block statement
+            startNewMode(MODE_STATEMENT | MODE_NEST);
+
+            // start of the try statement
+            startElement(SUNCHECKED_STATEMENT);
+        }
+        UNCHECKED
+;
+
 catch_statement[] { ENTRY_DEBUG } :
         {
             // treat catch block as nested block statement
@@ -3239,6 +3291,50 @@ finally_statement[] { ENTRY_DEBUG } :
             startElement(SFINALLY_BLOCK);
         }
         FINALLY
+;
+
+lock_statement[] { ENTRY_DEBUG } :
+        {
+            // treat catch block as nested block statement
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_STATEMENT);
+
+            // start of the catch statement
+            startElement(SLOCK_STATEMENT);
+        }
+        LOCK
+        {            
+            // looking for a LPAREN.  may have some whitespace before it
+            consumeSkippedTokens();
+
+            if (LA(1) == LPAREN) {
+                match(LPAREN);
+
+                // expect a parameter list
+                startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
+            }
+        }
+;
+
+fixed_statement[] { ENTRY_DEBUG } :
+        {
+            // treat catch block as nested block statement
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_STATEMENT);
+
+            // start of the catch statement
+            startElement(SFIXED_STATEMENT);
+        }
+        FIXED
+        {            
+            // looking for a LPAREN.  may have some whitespace before it
+            consumeSkippedTokens();
+
+            if (LA(1) == LPAREN) {
+                match(LPAREN);
+
+                // expect a parameter list
+                startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
+            }
+        }
 ;
 
 throw_statement[] { ENTRY_DEBUG } :
@@ -3443,7 +3539,7 @@ general_operators[] { LocalMode lm(this); ENTRY_DEBUG } :
 /*            general_operators_list (options { greedy = true; } : { SkipBufferSize() == 0 }? general_operators_list)* */ |
 
             // others are not combined
-            NEW | DELETE
+            NEW | DELETE | IN | IS | STACKALLOC | AS
         )
 ;
 

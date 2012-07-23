@@ -31,7 +31,7 @@ options {
     namespaceStd="std";
 }
 
-class OperatorLexer extends CommentLexer;
+class OperatorLexer extends TextLexer;
 
 options {
     k = 1;
@@ -140,7 +140,16 @@ OPERATORS options { testLiterals = true; } { bool star = false; } :
 //            ('<' { text.erase(realbegin); text += "&lt;"; realbegin += 4; gt = true; })? ('=')? |
 
         // match these as individual operators only
-        ',' | ';' | '('..')' | '[' | ']' | '{' | '}' | '@' |
+        ',' | ';' | '('..')' | '[' | ']' | '{' | '}' | 
+
+            // names can start with a @ in C#
+            '@'
+            ( 
+            { inLanguage(LANGUAGE_CSHARP) }? NAME
+            { $setType(NAME); }
+            |
+            )
+        |
 
         '$'  |    // not an operator (why is it here?)
         '?' { if (inLanguage(LANGUAGE_JAVA_FAMILY)) $setType(QMARK); } | // part of ternary
