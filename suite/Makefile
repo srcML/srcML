@@ -130,6 +130,8 @@ XSLT_SETLANGUAGE=${XSLT} ${XSLT_SETLANGUAGE_XSL}
 
 XSLT_SETLANGUAGE_C=${XSLT} --stringparam language "C" ${XSLT_SETLANGUAGE_XSL}
 
+XSLT_SETLANGUAGE_CS=${XSLT} --stringparam language "C#" ${XSLT_SETLANGUAGE_XSL}
+
 XSLT_SETLANGUAGE_CXX=${XSLT} --stringparam language "CXX" ${XSLT_SETLANGUAGE_XSL}
 
 XSLT_SETLANGUAGE_CXX_0X=${XSLT} --stringparam language "C++11" ${XSLT_SETLANGUAGE_XSL}
@@ -254,6 +256,9 @@ cleanall :
 %.all.c.xml : %.c.xml
 	${XSLT_MERGEUNIT} $< > $@
 
+%.all.cs.xml : %.cs.xml
+	${XSLT_MERGEUNIT} $< > $@
+
 %.all.java.xml : %.java.xml
 	${XSLT_MERGEUNIT} $< > $@
 
@@ -261,6 +266,9 @@ cleanall :
 	${XSLT_BLOCKUNIT} $< > $@
 
 %.block.c.xml : %.c.xml
+	${XSLT_BLOCKUNIT} $< > $@
+
+%.block.cs.xml : %.cs.xml
 	${XSLT_BLOCKUNIT} $< > $@
 
 %.block.java.xml : %.java.xml
@@ -272,6 +280,9 @@ cleanall :
 %.comment.c.xml : %.c.xml
 	${XSLT_INSERTCOMMENT} $< > $@
 
+%.comment.cs.xml : %.cs.xml
+	${XSLT_INSERTCOMMENT} $< > $@
+
 %.comment.java.xml : %.java.xml
 	${XSLT_INSERTCOMMENT} $< > $@
 
@@ -279,6 +290,9 @@ cleanall :
 	${XSLT_INSERTPREPROC} $< > $@
 
 %.preproc.c.xml : %.c.xml
+	${XSLT_INSERTPREPROC} $< > $@
+
+%.preproc.cs.xml : %.cs.xml
 	${XSLT_INSERTPREPROC} $< > $@
 
 %.preproc.java.xml : %.java.xml
@@ -290,6 +304,9 @@ cleanall :
 %.formfeed.c.xml : %.c.xml
 	${XSLT_INSERTFORMFEED} $< > $@
 
+%.formfeed.cs.xml : %.cs.xml
+	${XSLT_INSERTFORMFEED} $< > $@
+
 %.formfeed.java.xml : %.java.xml
 	${XSLT_INSERTFORMFEED} $< > $@
 
@@ -298,6 +315,9 @@ cleanall :
 
 %.c.xml : %.cpp.xml
 	${XSLT_SETLANGUAGE_C} $< > $@
+
+%.cs.xml : %.cpps.xml
+	${XSLT_SETLANGUAGE_CS} $< > $@
 
 %.cpp0x.xml : %.cpp.xml
 	${XSLT_SETLANGUAGE_CXX_0X} $< > $@
