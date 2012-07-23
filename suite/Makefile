@@ -134,7 +134,7 @@ XSLT_SETLANGUAGE_CS=${XSLT} --stringparam language "C\#" ${XSLT_SETLANGUAGE_XSL}
 
 XSLT_SETLANGUAGE_CXX=${XSLT} --stringparam language "CXX" ${XSLT_SETLANGUAGE_XSL}
 
-XSLT_SETLANGUAGE_CXX_0X=${XSLT} --stringparam language "C++11" ${XSLT_SETLANGUAGE_XSL}
+XSLT_SETLANGUAGE_CXX_11=${XSLT} --stringparam language "C++11" ${XSLT_SETLANGUAGE_XSL}
 
 XSLT_SETLANGUAGE_JAVA=${XSLT} --stringparam language "Java" ${XSLT_SETLANGUAGE_XSL}
 
@@ -157,11 +157,11 @@ BASE_JAVA_ALL = $(BASE_COMMON) $(GEN_BASE) $(BASE_OO) $(BASE_JAVA)
 
 GEN_JAVA= ${foreach nm, $(BASE_JAVA_ALL_GEN), $(nm).java.xml}
 
-BASE_CXX_0X_ALL_GEN = $(BASE_COMMON) $(BASE_CXX) $(BASE_OO)
+BASE_CXX_11_ALL_GEN = $(BASE_COMMON) $(BASE_CXX) $(BASE_OO)
 
-BASE_CXX_0X_ALL = $(BASE_COMMON) $(BASE_CXX) $(BASE_OO)
+BASE_CXX_11_ALL = $(BASE_COMMON) $(BASE_CXX) $(BASE_OO)
 
-GEN_CXX_0X= ${foreach nm, $(BASE_CXX_0X_ALL_GEN), $(nm).cpp0x.xml}
+GEN_CXX_11= ${foreach nm, $(BASE_CXX_11_ALL_GEN), $(nm).cpp0x.xml}
 
 BASE_C_ALL = $(BASE_COMMON) $(BASE_C_FAMILY)
 GEN_C= ${foreach nm, $(BASE_C_ALL), $(nm).c.xml}
@@ -176,7 +176,7 @@ SEP_PLUSNOPREPROC= ${SEP_BASE} ${GEN_SEP}
 # generate cases for all
 GEN_ALL= ${foreach nm, $(SEP_PLUS), $(nm).all.cpp.xml} extra_cpp.all.cpp.xml \
 	       ${foreach nm, $(BASE_JAVA_ALL), $(nm).all.java.xml} \
-	       ${foreach nm, $(BASE_CXX_0X_ALL), $(nm).all.cpp0x.xml} \
+	       ${foreach nm, $(BASE_CXX_11_ALL), $(nm).all.cpp0x.xml} \
 	       ${foreach nm, $(BASE_C_ALL), $(nm).all.c.xml} \
 	       ${foreach nm, $(BASE_CS_ALL), $(nm).all.cs.xml} \
 		extra_c.all.c.xml extra_cpp.all.cpp.xml
@@ -185,7 +185,7 @@ GEN_ALL= ${foreach nm, $(SEP_PLUS), $(nm).all.cpp.xml} extra_cpp.all.cpp.xml \
 GEN_BLOCK= ${foreach nm, $(SEP_PLUS),          $(nm).block.cpp.xml} \
                ${foreach nm, $(BASE_C_ALL),    $(nm).block.c.xml} \
                ${foreach nm, $(BASE_CS_ALL),    $(nm).block.cs.xml} \
- 	       ${foreach nm, $(BASE_CXX_0X_ALL), $(nm).block.cpp0x.xml} \
+ 	       ${foreach nm, $(BASE_CXX_11_ALL), $(nm).block.cpp0x.xml} \
                ${foreach nm, $(BASE_JAVA_ALL), $(nm).block.java.xml} \
 		 extra_c.block.c.xml extra_cpp.block.cpp.xml
 
@@ -193,7 +193,7 @@ GEN_BLOCK= ${foreach nm, $(SEP_PLUS),          $(nm).block.cpp.xml} \
 GEN_COMMENT= ${foreach nm, $(SEP_PLUS),          $(nm).comment.cpp.xml} \
 	       ${foreach nm, $(BASE_C_ALL),    $(nm).comment.c.xml} \
 	       ${foreach nm, $(BASE_CS_ALL),    $(nm).comment.cs.xml} \
- 	       ${foreach nm, $(BASE_CXX_0X_ALL), $(nm).comment.cpp0x.xml} \
+ 	       ${foreach nm, $(BASE_CXX_11_ALL), $(nm).comment.cpp0x.xml} \
 	       ${foreach nm, $(BASE_JAVA_ALL), $(nm).comment.java.xml} \
 		   extra_c.comment.c.xml extra_cpp.comment.cpp.xml
 
@@ -201,13 +201,13 @@ GEN_COMMENT= ${foreach nm, $(SEP_PLUS),          $(nm).comment.cpp.xml} \
 GEN_FORMFEED = ${foreach nm, $(SEP_PLUS),          $(nm).formfeed.cpp.xml} \
 		     ${foreach nm, $(BASE_C_ALL),    $(nm).formfeed.c.xml} \
 		     ${foreach nm, $(BASE_CS_ALL),    $(nm).formfeed.cs.xml} \
- 	       ${foreach nm, $(BASE_CXX_0X_ALL), $(nm).formfeed.cpp0x.xml} \
+ 	       ${foreach nm, $(BASE_CXX_11_ALL), $(nm).formfeed.cpp0x.xml} \
 		     ${foreach nm, $(BASE_JAVA_ALL), $(nm).formfeed.java.xml} \
 		     extra_c.formfeed.c.xml extra_cpp.formfeed.cpp.xml
 
 # generated test cases for preproc
 GEN_PREPROC= ${foreach nm, $(SEP_PLUSNOPREPROC), $(nm).preproc.cpp.xml} \
- 	       ${foreach nm, $(BASE_CXX_0X_ALL), $(nm).preproc.cpp0x.xml} \
+ 	       ${foreach nm, $(BASE_CXX_11_ALL), $(nm).preproc.cpp0x.xml} \
 	           ${foreach nm, $(BASE_C_ALL), $(nm).preproc.c.xml} \
 	           ${foreach nm, $(BASE_CS_ALL), $(nm).preproc.cs.xml} \
 		   extra_c.preproc.c.xml extra_cpp.preproc.cpp.xml
@@ -329,9 +329,9 @@ cleanall :
 	${XSLT_SETLANGUAGE_CS} $< > $@
 
 %.cpp0x.xml : %.cpp.xml
-	${XSLT_SETLANGUAGE_CXX_0X} $< > $@
+	${XSLT_SETLANGUAGE_CXX_11} $< > $@
 
-GEN_FILES=${GEN_PART} ${GEN_ALL} ${GEN_BLOCK} ${GEN_COMMENT} ${GEN_PREPROC} ${GEN_FORMFEED} $(GEN_JAVA) $(GEN_C) $(GEN_CS) $(GEN_CXX_0X)
+GEN_FILES=${GEN_PART} ${GEN_ALL} ${GEN_BLOCK} ${GEN_COMMENT} ${GEN_PREPROC} ${GEN_FORMFEED} $(GEN_JAVA) $(GEN_C) $(GEN_CS) $(GEN_CXX_11)
 
 GEN_CPP_BASE=${GEN_SEP} ${foreach nm, $(SEP_PLUS), $(nm).all} ${foreach nm, $(SEP_PLUS), $(nm).block} ${foreach nm, $(SEP_PLUS), $(nm).comment} ${foreach nm, $(SEP_PLUS), $(nm).preproc}
 
