@@ -115,7 +115,6 @@ tokens {
     SEALED;
     OVERRIDE;
     IMPLICIT;
-    EXPLICIT;
     STACKALLOC;
     AS;
     DELEGATE;
