@@ -40,6 +40,9 @@ BASE_OO=${call language,'LANGUAGE_OO'}
 # base for C++ only
 BASE_CXX=${call language,'LANGUAGE_CXX'}
 
+# base for C# only
+BASE_CS=${call language,'LANGUAGE_CS'}
+
 # base for Java only
 BASE_JAVA=${call language,'LANGUAGE_JAVA'}
 
