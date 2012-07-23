@@ -130,7 +130,7 @@ XSLT_SETLANGUAGE=${XSLT} ${XSLT_SETLANGUAGE_XSL}
 
 XSLT_SETLANGUAGE_C=${XSLT} --stringparam language "C" ${XSLT_SETLANGUAGE_XSL}
 
-XSLT_SETLANGUAGE_CS=${XSLT} --stringparam language "C#" ${XSLT_SETLANGUAGE_XSL}
+XSLT_SETLANGUAGE_CS=${XSLT} --stringparam language "C\#" ${XSLT_SETLANGUAGE_XSL}
 
 XSLT_SETLANGUAGE_CXX=${XSLT} --stringparam language "CXX" ${XSLT_SETLANGUAGE_XSL}
 
@@ -178,11 +178,13 @@ GEN_ALL= ${foreach nm, $(SEP_PLUS), $(nm).all.cpp.xml} extra_cpp.all.cpp.xml \
 	       ${foreach nm, $(BASE_JAVA_ALL), $(nm).all.java.xml} \
 	       ${foreach nm, $(BASE_CXX_0X_ALL), $(nm).all.cpp0x.xml} \
 	       ${foreach nm, $(BASE_C_ALL), $(nm).all.c.xml} \
-		extra_c.all.c.xml extra_cpp.xml
+	       ${foreach nm, $(BASE_CS_ALL), $(nm).all.cs.xml} \
+		extra_c.all.c.xml #extra_cpp.xml
 
 # generated cases for blocks
 GEN_BLOCK= ${foreach nm, $(SEP_PLUS),          $(nm).block.cpp.xml} \
                ${foreach nm, $(BASE_C_ALL),    $(nm).block.c.xml} \
+               ${foreach nm, $(BASE_CS_ALL),    $(nm).block.cs.xml} \
  	       ${foreach nm, $(BASE_CXX_0X_ALL), $(nm).block.cpp0x.xml} \
                ${foreach nm, $(BASE_JAVA_ALL), $(nm).block.java.xml} \
 		 extra_c.block.c.xml extra_cpp.block.cpp.xml
@@ -190,6 +192,7 @@ GEN_BLOCK= ${foreach nm, $(SEP_PLUS),          $(nm).block.cpp.xml} \
 # generated cases for comments
 GEN_COMMENT= ${foreach nm, $(SEP_PLUS),          $(nm).comment.cpp.xml} \
 	       ${foreach nm, $(BASE_C_ALL),    $(nm).comment.c.xml} \
+	       ${foreach nm, $(BASE_CS_ALL),    $(nm).comment.cs.xml} \
  	       ${foreach nm, $(BASE_CXX_0X_ALL), $(nm).comment.cpp0x.xml} \
 	       ${foreach nm, $(BASE_JAVA_ALL), $(nm).comment.java.xml} \
 		   extra_c.comment.c.xml extra_cpp.comment.cpp.xml
@@ -197,6 +200,7 @@ GEN_COMMENT= ${foreach nm, $(SEP_PLUS),          $(nm).comment.cpp.xml} \
 # generated cases for formfeed
 GEN_FORMFEED = ${foreach nm, $(SEP_PLUS),          $(nm).formfeed.cpp.xml} \
 		     ${foreach nm, $(BASE_C_ALL),    $(nm).formfeed.c.xml} \
+		     ${foreach nm, $(BASE_CS_ALL),    $(nm).formfeed.cs.xml} \
  	       ${foreach nm, $(BASE_CXX_0X_ALL), $(nm).formfeed.cpp0x.xml} \
 		     ${foreach nm, $(BASE_JAVA_ALL), $(nm).formfeed.java.xml} \
 		     extra_c.formfeed.c.xml extra_cpp.formfeed.cpp.xml
@@ -205,6 +209,7 @@ GEN_FORMFEED = ${foreach nm, $(SEP_PLUS),          $(nm).formfeed.cpp.xml} \
 GEN_PREPROC= ${foreach nm, $(SEP_PLUSNOPREPROC), $(nm).preproc.cpp.xml} \
  	       ${foreach nm, $(BASE_CXX_0X_ALL), $(nm).preproc.cpp0x.xml} \
 	           ${foreach nm, $(BASE_C_ALL), $(nm).preproc.c.xml} \
+	           ${foreach nm, $(BASE_CS_ALL), $(nm).preproc.cs.xml} \
 		   extra_c.preproc.c.xml extra_cpp.preproc.cpp.xml
 
 allinall.c.xml :
@@ -320,7 +325,7 @@ cleanall :
 %.c.xml : %.cpp.xml
 	${XSLT_SETLANGUAGE_C} $< > $@
 
-%.cs.xml : %.cpps.xml
+%.cs.xml : %.cpp.xml
 	${XSLT_SETLANGUAGE_CS} $< > $@
 
 %.cpp0x.xml : %.cpp.xml
