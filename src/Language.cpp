@@ -27,6 +27,7 @@
 
 pair Language::lang2int[] = {
     { LanguageName::LANGUAGE_C, LANGUAGE_C },
+    { LanguageName::LANGUAGE_CS, LANGUAGE_CS },
     { LanguageName::LANGUAGE_CXX, LANGUAGE_CXX },
     { LanguageName::LANGUAGE_JAVA, LANGUAGE_JAVA },
     { LanguageName::LANGUAGE_CXX_11, LANGUAGE_CXX_11 },
@@ -106,6 +107,9 @@ void Language::register_standard_file_extensions()
 {
   Language::registerUserExt("c",    LANGUAGE_C );
   Language::registerUserExt("h",    LANGUAGE_C );
+
+  Language::registerUserExt("cs",    LANGUAGE_CS );
+  Language::registerUserExt("hs",    LANGUAGE_CS );
 
   Language::registerUserExt("cpp",  LANGUAGE_CXX );
   Language::registerUserExt("hpp",  LANGUAGE_CXX );
