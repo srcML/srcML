@@ -179,7 +179,7 @@ GEN_ALL= ${foreach nm, $(SEP_PLUS), $(nm).all.cpp.xml} extra_cpp.all.cpp.xml \
 	       ${foreach nm, $(BASE_CXX_0X_ALL), $(nm).all.cpp0x.xml} \
 	       ${foreach nm, $(BASE_C_ALL), $(nm).all.c.xml} \
 	       ${foreach nm, $(BASE_CS_ALL), $(nm).all.cs.xml} \
-		extra_c.all.c.xml #extra_cpp.xml
+		extra_c.all.c.xml extra_cpp.all.cpp.xml
 
 # generated cases for blocks
 GEN_BLOCK= ${foreach nm, $(SEP_PLUS),          $(nm).block.cpp.xml} \
