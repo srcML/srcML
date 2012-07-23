@@ -166,6 +166,9 @@ GEN_CXX_0X= ${foreach nm, $(BASE_CXX_0X_ALL_GEN), $(nm).cpp0x.xml}
 BASE_C_ALL = $(BASE_COMMON) $(BASE_C_FAMILY)
 GEN_C= ${foreach nm, $(BASE_C_ALL), $(nm).c.xml}
 
+BASE_CS_ALL = $(BASE_COMMON) $(BASE_C_FAMILY) $(BASE_CS)
+GEN_CS= ${foreach nm, $(BASE_C_ALL), $(nm).cs.xml}
+
 SEP_PLUS= ${SEP_FILES} ${GEN_SEP}
 SEP_PLUSNOPREPROC= ${SEP_BASE} ${GEN_SEP}
 
@@ -174,7 +177,8 @@ SEP_PLUSNOPREPROC= ${SEP_BASE} ${GEN_SEP}
 GEN_ALL= ${foreach nm, $(SEP_PLUS), $(nm).all.cpp.xml} extra_cpp.all.cpp.xml \
 	       ${foreach nm, $(BASE_JAVA_ALL), $(nm).all.java.xml} \
 	       ${foreach nm, $(BASE_CXX_0X_ALL), $(nm).all.cpp0x.xml} \
-	       ${foreach nm, $(BASE_C_ALL), $(nm).all.c.xml} extra_c.all.c.xml
+	       ${foreach nm, $(BASE_C_ALL), $(nm).all.c.xml} \
+		extra_c.all.c.xml extra_cpp.xml
 
 # generated cases for blocks
 GEN_BLOCK= ${foreach nm, $(SEP_PLUS),          $(nm).block.cpp.xml} \
@@ -322,7 +326,7 @@ cleanall :
 %.cpp0x.xml : %.cpp.xml
 	${XSLT_SETLANGUAGE_CXX_0X} $< > $@
 
-GEN_FILES=${GEN_PART} ${GEN_ALL} ${GEN_BLOCK} ${GEN_COMMENT} ${GEN_PREPROC} ${GEN_FORMFEED} $(GEN_JAVA) $(GEN_C) $(GEN_CXX_0X)
+GEN_FILES=${GEN_PART} ${GEN_ALL} ${GEN_BLOCK} ${GEN_COMMENT} ${GEN_PREPROC} ${GEN_FORMFEED} $(GEN_JAVA) $(GEN_C) $(GEN_CS) $(GEN_CXX_0X)
 
 GEN_CPP_BASE=${GEN_SEP} ${foreach nm, $(SEP_PLUS), $(nm).all} ${foreach nm, $(SEP_PLUS), $(nm).block} ${foreach nm, $(SEP_PLUS), $(nm).comment} ${foreach nm, $(SEP_PLUS), $(nm).preproc}
 
