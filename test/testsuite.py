@@ -259,13 +259,13 @@ specnum = 0
 speclang = ""
 if len(sys.argv) == 3:
 	result = sys.argv[2]
-	if result == "C++" or result == "C" or result == "Java" or result == "C++0x":
+	if result == "C++" or result == "C" or result == "C#" or result == "Java" or result == "C++11":
 		speclang = result
 	else:
 		specnum = int(sys.argv[2])
 elif len(sys.argv) == 2:
 	result = sys.argv[1]
-	if result == "C++" or result == "C" or result == "Java" or result == "C++0x":
+	if result == "C++" or result == "C" or result == "C#" or result == "Java" or result == "C++11":
 		speclang = result
 		specname = ""
 	else:
