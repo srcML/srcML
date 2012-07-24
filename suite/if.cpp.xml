@@ -121,4 +121,29 @@
 	<break>break;</break></else></if></else></if></else></if>
 </unit>
 
+<unit>
+  <if>if <condition>(<expr>1</expr>)</condition><then> 
+    <if>if <condition>(<expr>2</expr>)</condition><then>
+      <if>if <condition>(<expr>3</expr>)</condition><then>
+	<continue>continue;</continue></then>
+      <else>else
+	<continue>continue;</continue></else></if></then>
+    <else>else
+      <if>if <condition>(<expr>4</expr>)</condition><then>
+	<continue>continue;</continue></then>
+      <else>else
+	<continue>continue;</continue></else></if></else></if></then>
+  <else>else
+    <if>if <condition>(<expr>5</expr>)</condition><then> 
+      <if>if <condition>(<expr>6</expr>)</condition><then>
+	<continue>continue;</continue></then>
+      <else>else
+	<continue>continue;</continue></else></if></then>
+    <else>else
+      <if>if <condition>(<expr>7</expr>)</condition><then>
+	<continue>continue;</continue></then>
+      <else>else
+	<continue>continue;</continue></else></if></else></if></else></if>
+</unit>
+
 </unit>
