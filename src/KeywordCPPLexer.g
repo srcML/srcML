@@ -126,6 +126,8 @@ tokens {
     UNSAFE;
     READONLY;
     VOLATILE;
+    GET;
+    SET;
 }
 
 {
@@ -312,6 +314,8 @@ KeywordCPPLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         { "unsafe"        , UNSAFE        , LANGUAGE_CSHARP }, 
         { "readonly"      , READONLY      , LANGUAGE_CSHARP }, 
         { "volatile"      , VOLATILE      , LANGUAGE_CSHARP }, 
+        { "get"           , GET           , LANGUAGE_CSHARP }, 
+        { "set"           , SET           , LANGUAGE_CSHARP }, 
    };
 
     // fill up the literals for the language that we are parsing

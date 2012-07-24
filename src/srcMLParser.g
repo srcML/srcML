@@ -594,7 +594,7 @@ cfg[] { ENTRY_DEBUG } :
         // C#
         checked_statement | 
 
-        unchecked_statement | lock_statement | fixed_statement |
+        unchecked_statement | lock_statement | fixed_statement | property_method |
 
         // assembly block
         asm_declaration
@@ -716,6 +716,18 @@ function[int token, int type_count] { /* TokenPosition tp; */ENTRY_DEBUG } :
 //            if (token != LCURLY)
 //                tp.setType(SFUNCTION_DECLARATION);
         }
+;
+
+// functions
+property_method[] { /* TokenPosition tp; */ENTRY_DEBUG } :
+		{
+            // function definitions have a "nested" block statement
+            startNewMode(MODE_STATEMENT);
+
+            // start the function definition element
+            startElement(SFUNCTION_DEFINITION);
+        }
+        (GET | SET)
 ;
 
 perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
@@ -2811,7 +2823,7 @@ identifier[bool marked = false] { LocalMode lm(this); ENTRY_DEBUG } :
             }
         }
         (NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
-            SUPER | CHECKED | UNCHECKED | REGION | ENDREGION)
+            SUPER | CHECKED | UNCHECKED | REGION | ENDREGION | GET | SET)
 ;
 
 /*
