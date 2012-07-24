@@ -2596,7 +2596,7 @@ java_specifier_mark[] { LocalMode lm(this); ENTRY_DEBUG } :
             // start the function specifier
             startElement(SFUNCTION_SPECIFIER);
         }
-        (PUBLIC | PRIVATE | PROTECTED | FINAL | STATIC | ABSTRACT | FRIEND | INTERNAL | SEALED | OVERRIDE | REF | OUT | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE)
+        (PUBLIC | PRIVATE | PROTECTED | FINAL | STATIC | ABSTRACT | FRIEND | INTERNAL | SEALED | OVERRIDE | REF | OUT | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE | DELEGATE /* | { inLanguage(LANGUAGE_CSHARP) }? NEW */)
 ;
 
 /*
