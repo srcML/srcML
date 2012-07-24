@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="interface">
+
+<unit>
+<class type="interface">interface <name>I</name> 
+<block>{}</block></class>
+</unit>
+
+<unit>
+<class type="interface">interface <name>I</name> 
+<block>{
+  <function_decl><type><name>void</name></type> <name>M</name><parameter_list>()</parameter_list>;</function_decl>
+}</block></class>
+</unit>
+
+</unit>
