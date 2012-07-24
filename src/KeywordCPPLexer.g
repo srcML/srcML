@@ -128,6 +128,7 @@ tokens {
     VOLATILE;
     GET;
     SET;
+    PARTIAL;
 }
 
 {
@@ -314,6 +315,7 @@ KeywordCPPLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         { "unsafe"        , UNSAFE        , LANGUAGE_CSHARP }, 
         { "readonly"      , READONLY      , LANGUAGE_CSHARP }, 
         { "volatile"      , VOLATILE      , LANGUAGE_CSHARP }, 
+        { "partial"       , PARTIAL       , LANGUAGE_CSHARP }, 
         { "get"           , GET           , LANGUAGE_CSHARP }, 
         { "set"           , SET           , LANGUAGE_CSHARP }, 
    };
