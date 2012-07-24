@@ -54,22 +54,6 @@ LANGUAGE_CXX decl_ns
 LANGUAGE_CXX try
 LANGUAGE_CXX typedef_struct
 
-LANGUAGE_CS friend
-LANGUAGE_CS namespace
-LANGUAGE_CS template
-LANGUAGE_CS typedef_template
-LANGUAGE_CS constructor
-LANGUAGE_CS destructor
-LANGUAGE_CS throw_base
-LANGUAGE_CS function_throw
-LANGUAGE_CS class
-LANGUAGE_CS function_operator
-LANGUAGE_CS typedef_ns
-LANGUAGE_CS variable_names_ns
-LANGUAGE_CS function_ns
-LANGUAGE_CS decl_ns
-LANGUAGE_CS try
-LANGUAGE_CS typedef_struct
 LANGUAGE_CS interface_cs
 
 LANGUAGE_JAVA class_java
