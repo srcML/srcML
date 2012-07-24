@@ -11,7 +11,7 @@
       <function>get <block>{
           <return>return <expr><name>x</name></expr>;</return>
       }</block></function>
-}</block></decl></decl_stmt></unit>
+}</block></decl></decl_stmt>
 </unit>
 
 </unit>
