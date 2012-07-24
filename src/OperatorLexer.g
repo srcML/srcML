@@ -128,13 +128,14 @@ OPERATORS options { testLiterals = true; } { bool star = false; } :
        '=' ('=')? |
 
        '&' { $setText("&amp;"); }
-            ('&' { $setText("&amp;&amp;"); star = true; } | '=' { $setText("&amp;="); } )?
+            (options { greedy = true; } : '&' { $setText("&amp;&amp;"); star = true; } | '=' { $setText("&amp;="); } )?
              ({ star }? '=' { $setText("&amp;&amp;="); } )? | 
      
        '>' { $setText("&gt;"); } |
 
        '<' { $setText("&lt;"); }
-            ('<' { $setText("&lt;&lt;"); } | '=' { $setText("&lt;="); })? ('=' { $setText("&lt;&lt;="); })? |
+            (options { greedy = true; } : '<' { $setText("&lt;&lt;"); } | '=' { $setText("&lt;="); })?
+            ('=' { $setText("&lt;&lt;="); })? |
 
 //       '<' { text.erase(realbegin); text += "&lt;"; realbegin += 3; gt = true; realbegin += 3; } 
 //            ('<' { text.erase(realbegin); text += "&lt;"; realbegin += 4; gt = true; })? ('=')? |
