@@ -121,6 +121,8 @@ tokens {
     FIXED;
     CHECKED;
     UNCHECKED;
+    REGION;
+    ENDREGION;
 }
 
 {
@@ -302,6 +304,8 @@ KeywordCPPLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         { "checked"       , CHECKED       , LANGUAGE_CSHARP }, 
         { "unchecked"     , UNCHECKED     , LANGUAGE_CSHARP }, 
         { "finally"       , FINALLY       , LANGUAGE_CSHARP }, 
+        { "region"        , REGION        , LANGUAGE_CSHARP }, 
+        { "endregion"     , ENDREGION     , LANGUAGE_CSHARP }, 
    };
 
     // fill up the literals for the language that we are parsing

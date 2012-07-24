@@ -405,6 +405,12 @@ tokens {
 	SCPP_THEN;
 	SCPP_ELSE;
 	SCPP_ELIF;
+
+    // C# cpp directive
+    SCPP_REGION;
+    SCPP_ENDREGION;
+
+    // This HAS to mark the end of the CPP directives
 	SCPP_ENDIF;
 
     SMARKER;
@@ -2804,7 +2810,8 @@ identifier[bool marked = false] { LocalMode lm(this); ENTRY_DEBUG } :
                 startElement(SNAME);
             }
         }
-        (NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF | SUPER)
+        (NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
+            SUPER | CHECKED | UNCHECKED | REGION | ENDREGION)
 ;
 
 /*
@@ -4565,6 +4572,20 @@ preprocessor[] {
             endCurrentMode(MODE_LOCAL);
 
             tp.setType(SCPP_ERROR);
+        } |
+
+        REGION
+        {
+            endCurrentMode(MODE_LOCAL);
+
+            tp.setType(SCPP_REGION);
+        } |
+
+        ENDREGION
+        {
+            endCurrentMode(MODE_LOCAL);
+
+            tp.setType(SCPP_ENDREGION);
         } |
 
         /* blank preproc */

@@ -198,6 +198,8 @@ namespace {
   ELEMENT_MAP(SCPP_THEN,      "then")
   ELEMENT_MAP(SCPP_PRAGMA,    "pragma")
   ELEMENT_MAP(SCPP_ERROR,     "error")
+  ELEMENT_MAP(SCPP_REGION,    "region")
+  ELEMENT_MAP(SCPP_ENDREGION, "endregion")
 
   ELEMENT_MAP(SMARKER,        "marker")
   ELEMENT_MAP(SERROR_PARSE,   "parse")
