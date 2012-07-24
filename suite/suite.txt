@@ -59,6 +59,7 @@ LANGUAGE_CS abstract_cs
 LANGUAGE_CS overide_cs
 LANGUAGE_CS operator_cs
 LANGUAGE_CS finally_cs
+LANGUAGE_CS delegate_cs
 
 LANGUAGE_JAVA class_java
 LANGUAGE_JAVA constructor_java
