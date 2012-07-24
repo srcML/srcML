@@ -140,7 +140,7 @@ XSLT_SETLANGUAGE_JAVA=${XSLT} --stringparam language "Java" ${XSLT_SETLANGUAGE_X
 
 XSLT_REMOVECPP=${XSLT} ${XSLT_REMOVECPP_XSL}
 
-SEP_BASE=$(BASE_COMMON) $(BASE_C) $(BASE_C_FAMILY) $(BASE_CXX) $(BASE_CS) $(BASE_OO)
+SEP_BASE=$(BASE_COMMON) $(BASE_C) $(BASE_C_FAMILY) $(BASE_CXX) $(BASE_OO)
 
 # basic generated C++ files
 GEN_SEP= $(GEN_BASE) $(GEN_BASE_CXX)
@@ -167,7 +167,7 @@ BASE_C_ALL = $(BASE_COMMON) $(BASE_C_FAMILY)
 GEN_C= ${foreach nm, $(BASE_C_ALL), $(nm).c.xml}
 
 BASE_CS_ALL = $(BASE_COMMON) $(BASE_C_FAMILY) $(BASE_CS)
-GEN_CS= ${foreach nm, $(BASE_C_ALL), $(nm).cs.xml}
+GEN_CS= ${foreach nm, $(BASE_CS_ALL), $(nm).cs.xml}
 
 SEP_PLUS= ${SEP_FILES} ${GEN_SEP}
 SEP_PLUSNOPREPROC= ${SEP_BASE} ${GEN_SEP}

@@ -70,6 +70,7 @@ LANGUAGE_CS function_ns
 LANGUAGE_CS decl_ns
 LANGUAGE_CS try
 LANGUAGE_CS typedef_struct
+LANGUAGE_CS interface_cs
 
 LANGUAGE_JAVA class_java
 LANGUAGE_JAVA constructor_java
