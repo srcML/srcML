@@ -125,6 +125,7 @@ tokens {
     ENDREGION;
     UNSAFE;
     READONLY;
+    VOLATILE;
 }
 
 {
@@ -310,6 +311,7 @@ KeywordCPPLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         { "endregion"     , ENDREGION     , LANGUAGE_CSHARP }, 
         { "unsafe"        , UNSAFE        , LANGUAGE_CSHARP }, 
         { "readonly"      , READONLY      , LANGUAGE_CSHARP }, 
+        { "volatile"      , VOLATILE      , LANGUAGE_CSHARP }, 
    };
 
     // fill up the literals for the language that we are parsing
