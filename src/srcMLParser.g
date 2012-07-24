@@ -2365,9 +2365,9 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                  (type_count == specifier_count) &&
 
                  // inside of a class definition
-                 ((inMode(MODE_ACCESS_REGION) && inLanguage(LANGUAGE_CXX_FAMILY)) ||
-                  (inMode(MODE_CLASS) && inLanguage(LANGUAGE_JAVA_FAMILY)) ||
-                  (inLanguage(LANGUAGE_JAVA_FAMILY) && LA(1) == LPAREN) ||
+                 ((inMode(MODE_ACCESS_REGION) && inLanguage(LANGUAGE_CXX_FAMILY) && !inLanguage(LANGUAGE_CSHARP)) ||
+                  (inMode(MODE_CLASS) && (inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP))) ||
+                  ((inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP)) && LA(1) == LPAREN) ||
 
                  // outside of a class definition, but with properly prefixed name
                  (inLanguage(LANGUAGE_CXX_FAMILY) && namestack[0] != "" && namestack[1] != "" && namestack[0] == namestack[1]))]
