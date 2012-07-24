@@ -57,6 +57,7 @@ LANGUAGE_CXX typedef_struct
 LANGUAGE_CS interface_cs
 LANGUAGE_CS abstract_cs
 LANGUAGE_CS overide_cs
+LANGUAGE_CS operator_cs
 
 LANGUAGE_JAVA class_java
 LANGUAGE_JAVA constructor_java
