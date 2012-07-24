@@ -163,12 +163,12 @@ BASE_CXX_11_ALL = $(BASE_COMMON) $(BASE_CXX) $(BASE_OO)
 
 GEN_CXX_11= ${foreach nm, $(BASE_CXX_11_ALL_GEN), $(nm).cpp11.xml}
 
+BASE_C_ALL_GEN = $(BASE_COMMON) $(BASE_C_FAMILY)
 BASE_C_ALL = $(BASE_COMMON) $(BASE_C_FAMILY)
-GEN_C= ${foreach nm, $(BASE_C_ALL), $(nm).c.xml}
+GEN_C= ${foreach nm, $(BASE_C_ALL_GEN), $(nm).c.xml}
 
-BASE_CS_ALL_GEN = $(BASE_COMMON) $(BASE_C_FAMILY) $(BASE_CXX)
 BASE_CS_ALL = $(BASE_COMMON) $(BASE_C_FAMILY) $(BASE_CXX) $(BASE_CS)
-GEN_CS= ${foreach nm, $(BASE_CS_ALL_GEN), $(nm).cs.xml}
+GEN_CS= ${foreach nm, $(BASE_CS_ALL), $(nm).cs.xml}
 
 SEP_PLUS= ${SEP_FILES} ${GEN_SEP}
 SEP_PLUSNOPREPROC= ${SEP_BASE} ${GEN_SEP}
