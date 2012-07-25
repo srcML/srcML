@@ -2263,8 +2263,6 @@ perform_noncfg_check[DECLTYPE& type, int& token, int& fla, int& type_count, bool
             type_count = 1;
     }
 
-fprintf(stderr, "DEBUG:  %s %s %d DATA: %d\n", __FILE__,  __FUNCTION__, __LINE__, type);
-
     // may just have a single macro (no parens possibly) before a statement
     if (type == 0 && type_count == 0 && _tokenSet_0.member(LA(1)))
         type = SINGLE_MACRO;
