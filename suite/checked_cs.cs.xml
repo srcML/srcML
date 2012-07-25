@@ -2,7 +2,7 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:op="http://www.sdml.info/srcML/operator" language="C#" dir="checked">
 
 <unit>
-<expr_stmt><expr><call><name>checked</name><argument_list>(<argument><expr><name>a</name> + <name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<checked>checked <expr_stmt><expr>(<name>a</name> + <name>b</name>)</expr>;</expr_stmt></checked>
 </unit>
 
 <unit>
