@@ -10,4 +10,9 @@
 <empty_stmt>;</empty_stmt></foreach>
 </unit>
 
+<unit>
+<if>if<condition>(<expr><name>a</name> <op:operator>is</op:operator> <name>int</name></expr>)</condition><then>
+<empty_stmt>;</empty_stmt></then></if>
+</unit>
+
 </unit>
