@@ -56,7 +56,7 @@ LANGUAGE_CXX typedef_struct
 
 LANGUAGE_CS interface_cs
 LANGUAGE_CS abstract_cs
-LANGUAGE_CS overide_cs
+LANGUAGE_CS override_cs
 LANGUAGE_CS operator_cs
 LANGUAGE_CS finally_cs
 LANGUAGE_CS delegate_cs
