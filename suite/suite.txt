@@ -70,6 +70,7 @@ LANGUAGE_CS fixed_cs
 LANGUAGE_CS foreach_cs
 LANGUAGE_CS implicit_cs
 LANGUAGE_CS internal_cs
+LANGUAGE_CS lock_cs
 
 LANGUAGE_JAVA class_java
 LANGUAGE_JAVA constructor_java
