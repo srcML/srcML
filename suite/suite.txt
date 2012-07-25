@@ -59,6 +59,7 @@ LANGUAGE_CS abstract_cs
 LANGUAGE_CS override_cs
 LANGUAGE_CS operator_cs
 LANGUAGE_CS finally_cs
+LANGUAGE_CS checked_cs
 LANGUAGE_CS delegate_cs
 LANGUAGE_CS event_cs
 

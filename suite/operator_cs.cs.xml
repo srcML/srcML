@@ -9,11 +9,4 @@
 <expr_stmt><expr>(<name>a</name> + <name>b</name>)</expr>;</expr_stmt>
 </unit>
 
-<unit>
-<expr_stmt><expr><call><name>checked</name><argument_list>(<argument><expr><name>a</name> + <name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><checked><name>checked</name><block>{<expr_stmt><expr><name>a</name> + <name>b</name></expr></expr_stmt>}</block></checked></expr></expr_stmt>
-</unit>
 </unit>
