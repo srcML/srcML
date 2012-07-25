@@ -53,6 +53,7 @@ LANGUAGE_CXX function_ns
 LANGUAGE_CXX decl_ns
 LANGUAGE_CXX try
 LANGUAGE_CXX typedef_struct
+LANGUAGE_CXX operator
 
 LANGUAGE_CS interface_cs
 LANGUAGE_CS abstract_cs
