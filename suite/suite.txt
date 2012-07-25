@@ -36,6 +36,7 @@ LANGUAGE_C_FAMILY decl_struct
 LANGUAGE_C_FAMILY typedef
 LANGUAGE_C_FAMILY decl_pointer
 LANGUAGE_C_FAMILY function_asterisk
+LANGUAGE_C_FAMILY goto
 
 LANGUAGE_CXX friend
 LANGUAGE_CXX namespace
