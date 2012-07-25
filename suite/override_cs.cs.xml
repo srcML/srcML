@@ -2,7 +2,7 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="override">
 
 <unit>
-  <function><type><specifier>public</specifier> <specifier>overide</specifier> <name>void</name></type> <name>M</name><parameter_list>()</parameter_list>
+  <function><type><specifier>public</specifier> <specifier>override</specifier> <name>void</name></type> <name>M</name><parameter_list>()</parameter_list>
 <block>{}</block></function>
 </unit>
 
