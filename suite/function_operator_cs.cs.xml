@@ -2,6 +2,10 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="function_operator">
 
 <unit>
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name> <specifier>operator</specifier></type> <name>+</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
 <function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name> <specifier>operator</specifier></type> <name>+</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>, <param><decl><type><name>Integer</name></type> <name>j</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
