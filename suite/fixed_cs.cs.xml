@@ -2,6 +2,8 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp"  language="C#" dir="fixed">
 
 <unit>
+<fixed>fixed (<decl><type><name>int</name>*</type> <name>p</name> =<init> <expr><name>arr</name></expr></init></decl>)
+<empty_stmt>;</empty_stmt></fixed>
 </unit>
 
 </unit>
