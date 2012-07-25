@@ -6,6 +6,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><checked><name>checked</name><block>{<expr_stmt><expr><name>a</name> + <name>b</name></expr></expr_stmt>}</block></checked></expr></expr_stmt>
+<checked><name>checked</name><block>{<expr_stmt><expr><name>a</name> + <name>b</name></expr></expr_stmt>}</block></checked>
 </unit>
+
 </unit>
