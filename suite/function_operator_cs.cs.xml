@@ -18,6 +18,22 @@
 </unit>
 
 <unit>
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name> <specifier>operator</specifier></type> <name>++</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name> <specifier>operator</specifier></type> <name>--</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name> <specifier>operator</specifier></type> <name>true</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name> <specifier>operator</specifier></type> <name>false</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
 <function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name> <specifier>operator</specifier></type> <name>+</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>, <param><decl><type><name>Integer</name></type> <name>j</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
