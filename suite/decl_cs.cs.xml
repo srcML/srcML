@@ -2,7 +2,7 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="decl">
 
 <unit>
-<function><type><specifier>public</specifier> <name>void</name></type> <name>M</name><parameter_list>(<param><decl><type><specifier>out</specifier> <name>int</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
+<decl_stmt><decl><type><specifier>private</specifier> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
 </unit>
