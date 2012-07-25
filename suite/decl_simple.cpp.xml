@@ -202,4 +202,8 @@
 <decl_stmt><decl><type><name>object</name></type> <name>o</name></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><name>sbyte</name></type> <name>b</name></decl>;</decl_stmt>
+</unit>
+
 </unit>
