@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="foreach">
+
+<unit>
+<for>foreach (<init><decl><type><name>int</name>*</type> <name>p</name> in<range> <expr><name>arr</name></expr></range></decl></init>)
+<empty_stmt>;</empty_stmt></for>
+</unit>
+
+<unit>
+<for>foreach (<init><decl><type><name>int</name>*</type> <name>p</name> in<range> <expr><name>arr</name></expr></range></decl></init>)
+<block>{}</block></for>
+</unit>
+
+</unit>
