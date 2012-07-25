@@ -72,6 +72,7 @@ LANGUAGE_CS implicit_cs
 LANGUAGE_CS internal_cs
 LANGUAGE_CS lock_cs
 LANGUAGE_CS function_operator_cs
+LANGUAGE_CS function_specifier_cs
 
 LANGUAGE_JAVA class_java
 LANGUAGE_JAVA constructor_java
