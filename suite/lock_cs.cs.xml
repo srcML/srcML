@@ -2,7 +2,7 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="lock">
 
 <unit>
-<lock>foreach (<init><decl><type><name>int</name>*</type> <name>p</name></decl></init>)
+<lock>lock (<init><decl><type><name>int</name>*</type> <name>p</name></decl></init>)
 <block>;</block></lock>
 </unit>
 
