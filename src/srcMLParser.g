@@ -2263,6 +2263,8 @@ perform_noncfg_check[DECLTYPE& type, int& token, int& fla, int& type_count, bool
             type_count = 1;
     }
 
+fprintf(stderr, "DEBUG:  %s %s %d DATA: %d\n", __FILE__,  __FUNCTION__, __LINE__, type);
+
     // may just have a single macro (no parens possibly) before a statement
     if (type == 0 && type_count == 0 && _tokenSet_0.member(LA(1)))
         type = SINGLE_MACRO;
@@ -2346,7 +2348,6 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
 
             // record second (before we parse it) for label detection
             set_int[token, LA(1), type_count == 1]
-
         )*
         // adjust type tokens to eliminate for last left bracket (only for Java)
         set_int[type_count, endbracket ? type_count - 1 : type_count]
@@ -2376,13 +2377,19 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                  // entire type is specifiers
                  (type_count == specifier_count) &&
 
-                 // inside of a class definition
-                 ((inMode(MODE_ACCESS_REGION) && inLanguage(LANGUAGE_CXX_FAMILY) && !inLanguage(LANGUAGE_CSHARP)) ||
-                  (inMode(MODE_CLASS) && (inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP))) ||
-                  ((inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP)) && LA(1) == LPAREN) ||
+                 (
+                    // inside of a C++ class definition
+                    inMode(MODE_ACCESS_REGION) ||
 
-                 // outside of a class definition, but with properly prefixed name
-                 (inLanguage(LANGUAGE_CXX_FAMILY) && namestack[0] != "" && namestack[1] != "" && namestack[0] == namestack[1]))]
+                    // inside of a Java or C# class (as always)
+                    (inMode(MODE_CLASS) && inLanguage(LANGUAGE_JAVA_FAMILY)) ||
+
+                    (inLanguage(LANGUAGE_JAVA_FAMILY) && LA(1) == LPAREN) ||
+
+                    // outside of a class definition, but with properly prefixed name
+                    ((inLanguage(LANGUAGE_CXX_FAMILY) && !inLanguage(LANGUAGE_CSHARP)) && namestack[0] != "" && namestack[1] != "" && namestack[0] == namestack[1])
+                )
+        ]
 
         // need to see if we possibly have a constructor/destructor name, with no type
         set_bool[isoperatorfunction, isoperatorfunction || isconstructor]
