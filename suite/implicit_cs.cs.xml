@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="goto">
+
+<unit>
+<function><type><specifier>public</specifier> <specifier>static</specifier> <specifier>implicit</specifier></type> <name>operator M</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+</unit>

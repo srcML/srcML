@@ -68,6 +68,7 @@ LANGUAGE_CS event_cs
 LANGUAGE_CS explicit_cs
 LANGUAGE_CS fixed_cs
 LANGUAGE_CS foreach_cs
+LANGUAGE_CS implicit_cs
 
 LANGUAGE_JAVA class_java
 LANGUAGE_JAVA constructor_java
