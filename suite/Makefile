@@ -169,7 +169,7 @@ GEN_C= ${foreach nm, $(BASE_C_ALL_GEN), $(nm).c.xml}
 
 BASE_CS_ALL_GEN = $(BASE_COMMON) $(BASE_C_FAMILY) $(BASE_CXX)
 BASE_CS_ALL = $(BASE_COMMON) $(BASE_C_FAMILY) $(BASE_CXX) $(BASE_CS)
-GEN_CS= ${foreach nm, $(BASE_C_ALL_GEN), $(nm).c.xml}
+GEN_CS= ${foreach nm, $(BASE_CS_ALL_GEN), $(nm).c.xml}
 
 SEP_PLUS= ${SEP_FILES} ${GEN_SEP}
 SEP_PLUSNOPREPROC= ${SEP_BASE} ${GEN_SEP}
