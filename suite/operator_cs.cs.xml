@@ -5,4 +5,9 @@
 <expr_stmt><expr><name>a</name> <op:operator>as</op:operator> <name>int</name></expr></expr_stmt>
 </unit>
 
+<unit>
+<foreach>foreach (<init><decl><type><name>int</name>*</type> <name>p</name> <op:operator>in</op:operator><range> <expr><name>arr</name></expr></range></decl></init>)
+<empty_stmt>;</empty_stmt></foreach>
+</unit>
+
 </unit>
