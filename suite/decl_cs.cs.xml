@@ -5,4 +5,12 @@
 <decl_stmt><decl><type><specifier>private</specifier> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><specifier>protected</specifier> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>public</specifier> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
+</unit>
+
 </unit>
