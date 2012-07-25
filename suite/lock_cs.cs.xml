@@ -2,7 +2,7 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="lock">
 
 <unit>
-<lock>lock (<expr><name>p</name></expr>)
+<lock>lock (<param><decl><type><name>p</name></type></decl></param>)
 <block>{}</block></lock>
 </unit>
 
