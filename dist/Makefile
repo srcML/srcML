@@ -88,7 +88,7 @@ ${SRC_TAR_GZ} : exp
 
 ${SRC_ZIP} : exp
 	zip -orql $@ ${SRC_DIR} ${OBJ_DIR} ${BIN_DIR} ${DOC_DIR}
-	unzip -qt $@
+	unzip -uqt $@
 
 ##
 # bin
@@ -101,7 +101,7 @@ bin : ${SRC_TAR_GZ}
 	tar czf ${UNIX_TAR_GZ} ${BASE}
 
 windows : ${SRC_ZIP}
-	unzip -aq ${SRC_ZIP}
+	unzip -uaq ${SRC_ZIP}
 	cd ${SRC_DIR} && make mingw32
 	cd ${SRC_DIR} && make cleanbuild && make
 	cd ${DOC_DIR} && make
@@ -111,7 +111,7 @@ windows : ${SRC_ZIP}
 	zip -oql ${WIN_ZIP} ${WIN_BASE}/src2srcml.exe ${WIN_BASE}/srcml2src.exe ${WIN_BASE}/*.dll ${WIN_BASE}/src2srcml.html ${WIN_BASE}/srcml2src.html
 
 windowsdyn : ${SRC_ZIP}
-	unzip -aq ${SRC_ZIP}
+	unzip -uaq ${SRC_ZIP}
 	cd ${SRC_DIR} && make mingw32 DYNAMIC=1 DLL_DIR=${DLL_DIR}
 	cd ${SRC_DIR} && make cleanbuild && make
 	cd ${DOC_DIR} && make clean && make
