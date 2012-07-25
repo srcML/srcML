@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="implicit">
+
+<unit>
+<class><specifier>internal</specifier> class <name>C</name> <block>{}</block></class>
+</unit>
+
+</unit>
