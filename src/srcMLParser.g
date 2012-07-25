@@ -3558,7 +3558,7 @@ general_operators[] { LocalMode lm(this); ENTRY_DEBUG } :
 /*            general_operators_list (options { greedy = true; } : { SkipBufferSize() == 0 }? general_operators_list)* */ |
 
             // others are not combined
-            NEW | DELETE | IN | IS | STACKALLOC | AS
+            NEW | DELETE | IN | IS | STACKALLOC | AS | AWAIT
         )
 ;
 

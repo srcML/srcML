@@ -129,6 +129,7 @@ tokens {
     GET;
     SET;
     PARTIAL;
+    AWAIT;
 }
 
 {
@@ -318,6 +319,7 @@ KeywordCPPLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         { "partial"       , PARTIAL       , LANGUAGE_CSHARP }, 
         { "get"           , GET           , LANGUAGE_CSHARP }, 
         { "set"           , SET           , LANGUAGE_CSHARP }, 
+        { "await"         , AWAIT         , LANGUAGE_CSHARP }, 
    };
 
     // fill up the literals for the language that we are parsing
