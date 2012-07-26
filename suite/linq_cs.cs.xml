@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="linq">
 
+<unit>
+<decl_stmt><decl><type><name>Query</name></type> <name>query</name> =<init>
+    <expr><name>from</name> <name>vegetable</name> in <name>vegetables</name>
+    <name>orderby</name> <name>vegetable</name> <name>ascending</name>
+    <name>select</name> <name>vegetable</name></expr></init></decl>;</decl_stmt>
+</unit>
+
 </unit>
