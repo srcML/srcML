@@ -101,4 +101,8 @@
 <expr_stmt><expr><name>this</name>.<name>a</name></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><name>num</name> = <name>value</name></expr>;</expr_stmt>
+</unit>
+
 </unit>
