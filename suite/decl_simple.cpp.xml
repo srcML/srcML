@@ -222,4 +222,8 @@
 <decl_stmt><decl><type><name>ushort</name></type> <name>s</name></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><name>extern</name> <name>alias</name></type> <name>GridV1</name></decl>;</decl_stmt>
+</unit>
+
 </unit>
