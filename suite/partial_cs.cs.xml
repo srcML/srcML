@@ -14,4 +14,9 @@
     <function_decl><type><specifier>partial</specifier> <name>void</name></type> <name>M</name><parameter_list>()</parameter_list>;</function_decl>
 }</block></class>
 </unit>
+
+<unit>
+<function><type><specifier>partial</specifier> <name>void</name></type> <name>M</name><parameter_list>()</parameter_list><block>{}</block></function>
+</unit>
+
 </unit>
