@@ -5,7 +5,7 @@
 <class>class <name>A</name> <block>{}</block></class>
 </unit>
 
-<nit>
+<unit>
 <class>class <name>A</name> <super>: <name>B</name>, <name>C</name></super> <block>{}</block></class>
 </unit>
 
