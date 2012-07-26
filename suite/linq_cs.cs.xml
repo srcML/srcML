@@ -45,7 +45,7 @@
             <name>where</name> <name><name>w</name><index>[<expr>0</expr>]</index></name> == 'a' || <name><name>w</name><index>[<expr>0</expr>]</index></name> == 'e'
                 || <name><name>w</name><index>[<expr>0</expr>]</index></name> == 'i' || <name><name>w</name><index>[<expr>0</expr>]</index></name> == 'o'
                 || <name><name>w</name><index>[<expr>0</expr>]</index></name> == 'u'
-            <name>select</name> <name>word</name></expr></init></decl>;</decl_stmt
+            <name>select</name> <name>word</name></expr></init></decl>;</decl_stmt>
 </unit>
 
 </unit>
