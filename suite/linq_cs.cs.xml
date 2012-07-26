@@ -21,4 +21,12 @@
     <name>group</name> <name>student</name> <name>by</name> <name>student</name>.<name><name>Last</name><index>[<expr>0</expr>]</index></name></expr></init></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><name>var</name></type> <name>wordGroups1</name> =<init>
+            <expr><name>from</name> <name>w</name> in <name>words</name>
+            <name>group</name> <name>w</name> <name>by</name> <name><name>w</name><index>[<expr>0</expr>]</index></name> <name>into</name> <name>fruitGroup</name>
+            <name>where</name> <call><name><name>fruitGroup</name>.<name>Count</name></name><argument_list>()</argument_list></call> &gt;= 2
+            <name>select</name> new <block>{ <expr><name>FirstLetter</name> = <name>fruitGroup</name>.<name>Key</name></expr>, <expr><name>Words</name> = <name>fruitGroup</name>.<name>Count</name><argument_list>()</argument_list></expr> }</block></expr></init></decl>;</decl_stmt>
+</unit>
+
 </unit>
