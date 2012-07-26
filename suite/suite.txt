@@ -57,6 +57,13 @@ LANGUAGE_CXX typedef_struct
 LANGUAGE_CXX operator
 LANGUAGE_CXX literal
 
+LANGUAGE_CSHARP asm
+LANGUAGE_CSHARP extern
+LANGUAGE_CSHARP main
+LANGUAGE_CSHARP function_pointer
+LANGUAGE_CSHARP decl_pointer
+LANGUAGE_CSHARP function_asterisk
+LANGUAGE_CSHARP goto
 LANGUAGE_CSHARP throw
 LANGUAGE_CSHARP function_const
 LANGUAGE_CSHARP namespace
