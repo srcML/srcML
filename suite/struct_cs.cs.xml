@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="struct">
+
+<unit>
+<struct>struct <name>A</name> <block>{}</block></struct>
+</unit>
+
+<unit>
+<struct>struct <name>A</name> <super>: <name>B</name>, <name>C</name></super> <block>{}</block></struct>
+</unit>
+
+<unit>
+<struct><specifier>public</specifier> struct <name>A</name> <super>: <name>B</name>, <name>C</name></super> <block>{}</block></struct>
+</unit>
+
+</unit>

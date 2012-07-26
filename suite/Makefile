@@ -43,6 +43,9 @@ BASE_CXX=${call language,'LANGUAGE_CXX'}
 # base for C# only
 BASE_CS=${call language,'LANGUAGE_CSHARP'}
 
+# base for C# only
+BASE_CS_GEN=${call language,'LANGUAGE_CSHARP_GEN'}
+
 # base for Java only
 BASE_JAVA=${call language,'LANGUAGE_JAVA'}
 
@@ -167,7 +170,7 @@ BASE_C_ALL_GEN = $(BASE_COMMON) $(BASE_C_FAMILY)
 BASE_C_ALL = $(BASE_COMMON) $(BASE_C_FAMILY)
 GEN_C= ${foreach nm, $(BASE_C_ALL_GEN), $(nm).c.xml}
 
-BASE_CS_ALL_GEN = $(BASE_COMMON) $(GEN_BASE)
+BASE_CS_ALL_GEN = $(BASE_COMMON) $(GEN_BASE) $(BASE_CS_GEN)
 BASE_CS_ALL = $(BASE_COMMON) $(BASE_CS)
 GEN_CS= ${foreach nm, $(BASE_CS_ALL_GEN), $(nm).cs.xml}
 
