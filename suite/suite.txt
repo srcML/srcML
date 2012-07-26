@@ -78,6 +78,8 @@ LANGUAGE_CSHARP sealed_cs
 LANGUAGE_CSHARP unchecked_cs
 LANGUAGE_CSHARP unsafe_cs
 LANGUAGE_CSHARP generics_cs
+LANGUAGE_CSHARP linq_cs
+LANGUAGE_CSHARP accessor_cs
 
 LANGUAGE_JAVA class_java
 LANGUAGE_JAVA constructor_java
