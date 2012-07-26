@@ -206,4 +206,8 @@
 <decl_stmt><decl><type><name>sbyte</name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><name>string</name></type> <name>s</name></decl>;</decl_stmt>
+</unit>
+
 </unit>
