@@ -2829,13 +2829,16 @@ complex_name[bool marked] { LocalMode lm(this); TokenPosition tp; bool iscomplex
             }
         }
         (
-        { inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) }?
+        { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         complex_name_java[marked, iscomplex_name] |
+
+        { inLanguage(LANGUAGE_CSHARP) }?
+        complex_name_csharp[marked, iscomplex_name] |
 
         { inLanguage(LANGUAGE_C) }?
         complex_name_c[marked, iscomplex_name] |
 
-        { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) }?
+        { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_CSHARP) }?
         complex_name_cpp[marked, iscomplex_name]
         )
         {
@@ -2857,6 +2860,20 @@ complex_name_cpp[bool marked, bool& iscomplex_name] { namestack[0] = ""; namesta
         })*
         (simple_name_optional_template[marked] | mark_namestack overloaded_operator)
         name_tail[iscomplex_name, marked]
+        { if (founddestop) iscomplex_name = true; }
+;
+
+/*
+  identifier name marked with name element
+*/
+complex_name_csharp[bool marked, bool& iscomplex_name] { namestack[0] = ""; namestack[1] = ""; bool founddestop = false; ENTRY_DEBUG } :
+
+        (DCOLON { iscomplex_name = true; })*
+        (DESTOP set_bool[isdestructor] {
+            founddestop = true;
+        })*
+        (simple_name_optional_template[marked] | mark_namestack overloaded_operator)
+        name_tail_csharp[iscomplex_name, marked]
         { if (founddestop) iscomplex_name = true; }
 ;
 
@@ -2886,6 +2903,20 @@ name_tail[bool& iscomplex, bool marked] { ENTRY_DEBUG } :
         // "a::" will cause an exception to be thrown
         ( options { greedy = true; } : 
             (dcolon { iscomplex = true; })
+            ( options { greedy = true; } : dcolon)*
+            (DESTOP set_bool[isdestructor])*
+            (simple_name_optional_template[marked] | mark_namestack overloaded_operator | function_identifier_main)
+        )*
+;
+exception
+catch[antlr::RecognitionException] {
+}
+
+name_tail_csharp[bool& iscomplex, bool marked] { ENTRY_DEBUG } :
+
+        // "a::" will cause an exception to be thrown
+        ( options { greedy = true; } : 
+            (dcolon { iscomplex = true; } | period { iscomplex = true; })
             ( options { greedy = true; } : dcolon)*
             (DESTOP set_bool[isdestructor])*
             (simple_name_optional_template[marked] | mark_namestack overloaded_operator | function_identifier_main)
