@@ -15,4 +15,10 @@
     <name>select</name> <name>vegetable</name></expr></init></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><name>var</name></type> <name>studentQuery1</name> =<init>
+    <expr><name>from</name> <name>student</name> in <name>students</name>
+    <name>group</name> <name>student</name> <name>by</name> <name>student</name>.<name><name>Last</name><index>[<expr>0</expr>]</index></name></expr></init></decl>;</decl_stmt>
+</unit>
+
 </unit>
