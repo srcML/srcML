@@ -91,6 +91,7 @@ LANGUAGE_CSHARP linq_cs
 LANGUAGE_CSHARP accessor_cs
 LANGUAGE_CSHARP partial_cs
 LANGUAGE_CSHARP yield_cs
+LANGUAGE_CSHARP class_cs
 
 LANGUAGE_JAVA class_java
 LANGUAGE_JAVA constructor_java
