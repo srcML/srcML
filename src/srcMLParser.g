@@ -2570,7 +2570,7 @@ java_specifier_mark[] { LocalMode lm(this); ENTRY_DEBUG } :
             // start the function specifier
             startElement(SFUNCTION_SPECIFIER);
         }
-        (PUBLIC | PRIVATE | PROTECTED | FINAL | STATIC | ABSTRACT | FRIEND | INTERNAL | SEALED | OVERRIDE | REF | OUT | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE | DELEGATE | PARTIAL | EVENT /* | { inLanguage(LANGUAGE_CSHARP) }? NEW */) | { inLanguage(LANGUAGE_CSHARP) }? attribute
+        (PUBLIC | PRIVATE | PROTECTED | FINAL | STATIC | ABSTRACT | FRIEND | INTERNAL | SEALED | OVERRIDE | REF | OUT | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE | DELEGATE | PARTIAL | EVENT | ASYNC /* | { inLanguage(LANGUAGE_CSHARP) }? NEW */) | { inLanguage(LANGUAGE_CSHARP) }? attribute
 ;
 
 /*
@@ -2800,7 +2800,7 @@ identifier[bool marked = false] { LocalMode lm(this); ENTRY_DEBUG } :
             }
         }
         (NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
-            SUPER | CHECKED | UNCHECKED | REGION | ENDREGION | GET | SET | ADD | REMOVE)
+            SUPER | CHECKED | UNCHECKED | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC)
 ;
 
 /*
