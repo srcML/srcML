@@ -59,7 +59,6 @@ LANGUAGE_CXX literal
 
 LANGUAGE_CSHARP throw
 LANGUAGE_CSHARP function_const
-LANGUAGE_CSHARP cstruct
 LANGUAGE_CSHARP namespace
 LANGUAGE_CSHARP throw_base
 LANGUAGE_CSHARP try
@@ -92,6 +91,7 @@ LANGUAGE_CSHARP accessor_cs
 LANGUAGE_CSHARP partial_cs
 LANGUAGE_CSHARP yield_cs
 LANGUAGE_CSHARP class_cs
+LANGUAGE_CSHARP struct_cs
 
 LANGUAGE_JAVA class_java
 LANGUAGE_JAVA constructor_java
