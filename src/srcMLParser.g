@@ -2226,7 +2226,7 @@ perform_noncfg_check[DECLTYPE& type, int& token, int& fla, int& type_count, bool
         type = NULLOPERATOR;
 
     // false constructor for java
-    if (inLanguage(LANGUAGE_JAVA_FAMILY) && type == CONSTRUCTOR && fla != LCURLY)
+    if ((inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP)) && type == CONSTRUCTOR && fla != LCURLY)
         type = NONE;
 
     inputState->guessing--;
@@ -2337,7 +2337,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                     // inside of a Java or C# class (as always)
                     (inMode(MODE_CLASS) && inLanguage(LANGUAGE_JAVA_FAMILY)) ||
 
-                    (inLanguage(LANGUAGE_JAVA_FAMILY) && LA(1) == LPAREN) ||
+                    ((inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP)) && LA(1) == LPAREN) ||
 
                     // outside of a class definition, but with properly prefixed name
                     ((inLanguage(LANGUAGE_CXX_FAMILY) && !inLanguage(LANGUAGE_CSHARP)) && namestack[0] != "" && namestack[1] != "" && namestack[0] == namestack[1])
