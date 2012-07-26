@@ -211,6 +211,9 @@ namespace {
   ELEMENT_MAP(SINTERFACE,     "class")
 
   // special characters
+  ELEMENT_MAP(SATTRIBUTE,   "attribute")
+
+  // special characters
   ELEMENT_MAP(CONTROL_CHAR,   "escape")
 
   //

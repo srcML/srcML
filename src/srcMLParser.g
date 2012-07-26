@@ -428,6 +428,7 @@ tokens {
     // C#
     SCHECKED_STATEMENT;
     SUNCHECKED_STATEMENT;
+    SATTRIBUTE;
 
     // misc
     SEMPTY;  // empty statement
@@ -588,7 +589,7 @@ cfg[] { ENTRY_DEBUG } :
         package_statement |
 
         // C#
-        checked_statement | 
+        checked_statement | /* { inLanguage(LANGUAGE_CSHARP) }? attribute | */
 
         unchecked_statement | lock_statement | fixed_statement | property_method |
 
@@ -2569,7 +2570,7 @@ java_specifier_mark[] { LocalMode lm(this); ENTRY_DEBUG } :
             // start the function specifier
             startElement(SFUNCTION_SPECIFIER);
         }
-        (PUBLIC | PRIVATE | PROTECTED | FINAL | STATIC | ABSTRACT | FRIEND | INTERNAL | SEALED | OVERRIDE | REF | OUT | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE | DELEGATE | PARTIAL /* | { inLanguage(LANGUAGE_CSHARP) }? NEW */)
+        (PUBLIC | PRIVATE | PROTECTED | FINAL | STATIC | ABSTRACT | FRIEND | INTERNAL | SEALED | OVERRIDE | REF | OUT | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE | DELEGATE | PARTIAL /* | { inLanguage(LANGUAGE_CSHARP) }? NEW */) | { inLanguage(LANGUAGE_CSHARP) }? attribute
 ;
 
 /*
@@ -2678,6 +2679,21 @@ variable_identifier_array_grammar_sub[bool& iscomplex] { LocalMode lm(this); ENT
         {
             iscomplex = true;
         }
+;
+
+
+attribute[] { LocalMode lm(this); ENTRY_DEBUG } :
+        {
+            // start a mode to end at right bracket with expressions inside
+            startNewMode(MODE_LOCAL);
+
+            startElement(SATTRIBUTE);
+        }
+        LBRACKET
+
+        full_expression
+
+        RBRACKET
 ;
 
 /*
