@@ -23,4 +23,12 @@
 <expr_stmt><expr><call><name>typeof</name><argument_list>(<argument><expr><name>C</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<class type="interface">interface <name>I</name><argument_list>&lt;<argument><expr><op:operator>in</op:operator> <name>A</name></expr></argument>&gt;</argument_list> <block>{}</block></class>
+</unit>
+
+<unit>
+<class type="interface">interface <name>I</name><argument_list>&lt;<argument><expr><op:operator>out</op:operator> <name>A</name></expr></argument>&gt;</argument_list> <block>{}</block></class>
+</unit>
+
 </unit>
