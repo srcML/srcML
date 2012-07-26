@@ -57,6 +57,9 @@ LANGUAGE_CXX typedef_struct
 LANGUAGE_CXX operator
 LANGUAGE_CXX literal
 
+LANGUAGE_CSHARP throw
+LANGUAGE_CSHARP function_const
+LANGUAGE_CSHARP cstruct
 LANGUAGE_CSHARP namespace
 LANGUAGE_CSHARP throw_base
 LANGUAGE_CSHARP try
