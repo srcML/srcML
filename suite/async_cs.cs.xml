@@ -4,9 +4,9 @@
 <unit>
 <function><type><specifier>public</specifier> <name>async</name> <name>void</name></type> <name>M</name><parameter_list>()</parameter_list>
 <block>{
-    <decl_stmt><decl><type><name>int</name></type> <name>exampleInt</name> =<init> <expr>await <call><name>AwaitedProcessAsync</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl><type><name>int</name></type> <name>i</name> =<init> <expr>await <call><name>M</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
 
-    <return>return <expr><name>exampleInt</name></expr>;</return>
+    <return>return <expr><name>i</name></expr>;</return>
 }</block></function>
 </unit>
 
