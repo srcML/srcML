@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#">
+
+<unit>
+<function><type><specifier>public</specifier> <name>async</name> <name>void</name></type> <name>M</name><parameter_list>()</parameter_list>
+<block>{
+    <decl_stmt><decl><type><name>int</name></type> <name>exampleInt</name> =<init> <expr>await <call><name>AwaitedProcessAsync</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+
+    <return>return <expr><name>exampleInt</name></expr>;</return>
+}</block></function>
+</unit>
+
+</unit>
