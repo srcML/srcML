@@ -2,7 +2,7 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="unsafe">
 
 <unit>
-<unchecked>unchecked <block>{<expr_stmt><expr><name>a</name> + <name>b</name></expr></expr_stmt>}</block></unchecked>
+<unsafe>unsafe <block>{<expr_stmt><expr><name>a</name> + <name>b</name></expr></expr_stmt>}</block></unsafe>
 </unit>
 
 </unit>
