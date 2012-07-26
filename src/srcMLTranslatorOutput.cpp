@@ -638,6 +638,13 @@ const char* const srcMLTranslatorOutput::ElementNames[] = {
   #include BOOST_PP_LOCAL_ITERATE()
   #undef BOOST_PP_LOCAL_MACRO
   #undef BOOST_PP_LOCAL_LIMITS
+
+  // fill the array in order of token numbers
+  #define BOOST_PP_LOCAL_MACRO(n)   element_name<256 + 1 + n>(),
+  #define BOOST_PP_LOCAL_LIMITS     (0, TOKEN_END_ELEMENT_TOKEN - 1 - 256)
+  #include BOOST_PP_LOCAL_ITERATE()
+  #undef BOOST_PP_LOCAL_MACRO
+  #undef BOOST_PP_LOCAL_LIMITS
 };
 
 // element prefix number
@@ -646,6 +653,13 @@ const char srcMLTranslatorOutput::ElementPrefix[] = {
   // fill the array with the prefixes
   #define BOOST_PP_LOCAL_MACRO(n)   element_prefix<n>(),
   #define BOOST_PP_LOCAL_LIMITS     (0, TOKEN_END_ELEMENT_TOKEN - 1)
+  #include BOOST_PP_LOCAL_ITERATE()
+  #undef BOOST_PP_LOCAL_MACRO
+  #undef BOOST_PP_LOCAL_LIMITS
+
+  // fill the array in order of token numbers
+  #define BOOST_PP_LOCAL_MACRO(n)   element_prefix<256 + 1 + n>(),
+  #define BOOST_PP_LOCAL_LIMITS     (0, TOKEN_END_ELEMENT_TOKEN - 1 - 256)
   #include BOOST_PP_LOCAL_ITERATE()
   #undef BOOST_PP_LOCAL_MACRO
   #undef BOOST_PP_LOCAL_LIMITS

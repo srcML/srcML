@@ -69,7 +69,7 @@ srcMLTranslatorOutput::PROCESS_PTR srcMLTranslatorOutput::num2process[] = {
   ELEMENT_MAP_CALL_NAME() { s }
 
 #define ELEMENT_MAP_CALL(t) ELEMENT_MAP_CALL_NAME <srcMLParserTokenTypes::t>()
-#define ELEMENT_MAP(t, s) template <> inline ELEMENT_MAP_SECOND_TYPE ELEMENT_MAP_CALL(t) { return s; }
+#define ELEMENT_MAP(t, s) template <> inline ELEMENT_MAP_SECOND_TYPE ELEMENT_MAP_CALL(t) /* stuff */ { return s; }
 
 // map the token types to specific strings
 namespace {
@@ -78,7 +78,6 @@ namespace {
   ELEMENT_MAP_DEFAULT(return PROCESSTEXT;)
 
   ELEMENT_MAP(SUNIT, PROCESSUNIT)
-  ELEMENT_MAP(SSINGLE, PROCESSTEXT)
   ELEMENT_MAP(START_ELEMENT_TOKEN, PROCESSTEXT)
   ELEMENT_MAP(COMMENT_START, PROCESSBLOCKCOMMENTSTART)
   ELEMENT_MAP(COMMENT_END, PROCESSENDBLOCKTOKEN)
@@ -222,8 +221,15 @@ namespace {
 char srcMLTranslatorOutput::process_table[] = {
 
   // fill the array with the prefixes
-  #define BOOST_PP_LOCAL_MACRO(n) element_process<n>(),
+  #define BOOST_PP_LOCAL_MACRO(n)   element_process<n>(),
   #define BOOST_PP_LOCAL_LIMITS     (0, TOKEN_END_ELEMENT_TOKEN - 1)
+  #include BOOST_PP_LOCAL_ITERATE()
+  #undef BOOST_PP_LOCAL_MACRO
+  #undef BOOST_PP_LOCAL_LIMITS
+
+  // fill the array in order of token numbers
+  #define BOOST_PP_LOCAL_MACRO(n)   element_process<256 + 1 + n>(),
+  #define BOOST_PP_LOCAL_LIMITS     (0, TOKEN_END_ELEMENT_TOKEN - 1 - 256)
   #include BOOST_PP_LOCAL_ITERATE()
   #undef BOOST_PP_LOCAL_MACRO
   #undef BOOST_PP_LOCAL_LIMITS
