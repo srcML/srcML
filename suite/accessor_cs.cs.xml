@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="linq">
 
+<unit>
+<decl_stmt><decl><type><name>event</name> <name>E</name></type> <name>e</name> <block>{
+    <macro><name>add</name></macro> <block>{}</block>
+}</block></decl></decl_stmt>
+</unit>
+
 </unit>
