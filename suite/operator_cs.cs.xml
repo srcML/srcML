@@ -19,4 +19,8 @@
 <decl_stmt><decl><type><name>int</name> *</type> <name>i</name> =<init> <expr><op:operator>stackalloc</op:operator> <name>int</name></expr></init></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><call><name>typeof</name><argument_list>(<argument><expr><name>C</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
 </unit>
