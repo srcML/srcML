@@ -218,4 +218,8 @@
 <decl_stmt><decl><type><name>ulong</name></type> <name>l</name></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><name>ushort</name></type> <name>s</name></decl>;</decl_stmt>
+</unit>
+
 </unit>
