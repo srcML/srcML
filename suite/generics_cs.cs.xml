@@ -2,6 +2,7 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="generics">
 
 <unit>
+<class type="interface">interface <name>I</name><argument_list>&lt;<argument><expr>in <name>A</name></expr></argument>&gt;</argument_list> <block>{}</block></class>
 </unit>
 
 </unit>
