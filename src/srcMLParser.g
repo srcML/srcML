@@ -1398,7 +1398,6 @@ class_definition[] :
         }
         (java_specifier_mark)* CLASS (class_header lcurly | lcurly) 
         {
-
             if (inLanguage(LANGUAGE_CXX_FAMILY) && !inLanguage(LANGUAGE_CSHARP))
                 class_default_access_action(SPRIVATE_ACCESS_DEFAULT);
         }
@@ -1421,8 +1420,7 @@ enum_class_definition[] :
         }
         (java_specifier_mark)* ENUM (class_header lcurly | lcurly) 
         {
-
-            if (inLanguage(LANGUAGE_CXX_FAMILY))
+            if (inLanguage(LANGUAGE_CXX_FAMILY) && !inLanguage(LANGUAGE_CSHARP))
                 class_default_access_action(SPRIVATE_ACCESS_DEFAULT);
         }
 ;
@@ -1502,8 +1500,10 @@ struct_union_definition[int element_token] :
             }
         }
         (java_specifier_mark)* (STRUCT | UNION) (class_header lcurly | lcurly)
-
-        class_default_access_action[SPUBLIC_ACCESS_DEFAULT]
+        {
+           if (inLanguage(LANGUAGE_CXX_FAMILY) && !inLanguage(LANGUAGE_CSHARP))
+               class_default_access_action(SPUBLIC_ACCESS_DEFAULT);
+        }
 ;
 
 /*
