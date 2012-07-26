@@ -29,4 +29,11 @@
             <name>select</name> new <block>{ <expr><name>FirstLetter</name> = <name>fruitGroup</name>.<name>Key</name></expr>, <expr><name>Words</name> = <name>fruitGroup</name>.<name>Count</name><argument_list>()</argument_list></expr> }</block></expr></init></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><name>var</name></type> <name>innerJoinQuery</name> =<init>
+    <expr><name>from</name> <name>category</name> in <name>categories</name>
+    <name>join</name> <name>prod</name> in <name>products</name> <name>on</name> <name>category</name>.<name>ID</name> <name>equals</name> <name>prod</name>.<name>CategoryID</name>
+    <name>select</name> new <block>{ <expr><name>ProductName</name> = <name>prod</name>.<name>Name</name></expr>, <expr><name>Category</name> = <name>category</name>.<name>Name</name></expr> }</block></expr></init></decl>;</decl_stmt> <comment type="line">//produces flat sequence</comment>
+</unit>
+
 </unit>
