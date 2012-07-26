@@ -2,7 +2,7 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#">
 
 <unit>
-<function><type><specifier>public</specifier> <name>async</name> <name>void</name></type> <name>M</name><parameter_list>()</parameter_list>
+<function><type><specifier>public</specifier> <specifier>async</specifier> <name>void</name></type> <name>M</name><parameter_list>()</parameter_list>
 <block>{
     <decl_stmt><decl><type><name>int</name></type> <name>i</name> =<init> <expr>await <call><name>M</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
 
