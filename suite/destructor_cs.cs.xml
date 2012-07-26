@@ -2,44 +2,44 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="destructor">
 
 <unit>
-<class><specifier>public</specifier> class <name>~Class</name> <block>{ 
-    <destructor><name>~Class</name><parameter_list>()</parameter_list> <block>{}</block></destructor>
+<class><specifier>public</specifier> class <name>Class</name> <block>{ 
+    <destructor><name>~<name>Class</name></name><parameter_list>()</parameter_list> <block>{}</block></destructor>
 }</block></class>
 </unit>
 
 <unit>
-<class><specifier>public</specifier> class <name>~Class</name> <block>{ 
-    <destructor><name>~Class</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{}</block></destructor>
+<class><specifier>public</specifier> class <name>Class</name> <block>{ 
+    <destructor><name>~<name>Class</name></name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{}</block></destructor>
 }</block></class>
 </unit>
 
 <unit>
-<class><specifier>public</specifier> class <name>~Class</name> <block>{ 
-    <destructor><name>~Class</name><parameter_list>()</parameter_list> <block>{
+<class><specifier>public</specifier> class <name>Class</name> <block>{ 
+    <destructor><name>~<name>Class</name></name><parameter_list>()</parameter_list> <block>{
         <try>try <block>{}</block> <catch>catch()<block>{}</block></catch></try>
     }</block></destructor>
 }</block></class>
 </unit>
 
 <unit>
-<class><specifier>public</specifier> class <name>~Class</name> <block>{ 
-    <destructor><name>~Class</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
+<class><specifier>public</specifier> class <name>Class</name> <block>{ 
+    <destructor><name>~<name>Class</name></name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
         <try>try <block>{}</block><catch>catch()<block>{}</block></catch></try>
     }</block></destructor>
 }</block></class>
 </unit>
 
 <unit>
-<class><specifier>public</specifier> class <name>~Class</name> <block>{ 
-    <destructor><name>~Class</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
+<class><specifier>public</specifier> class <name>Class</name> <block>{ 
+    <destructor><name>~<name>Class</name></name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
         <try>try <block>{}</block> <catch>catch()<block>{}</block></catch> <finally>finally <block>{}</block></finally></try>
     }</block></destructor>
 }</block></class>
 </unit>
 
 <unit>
-<class><specifier>public</specifier> class <name>~Class</name> <block>{ 
-    <destructor><name>~Class</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
+<class><specifier>public</specifier> class <name>Class</name> <block>{ 
+    <destructor><name>~<name>Class</name></name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
         <try>try <block>{
             <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
         }</block> <catch>catch()<block>{
@@ -53,8 +53,8 @@
 
 
 <unit>
-<class><specifier>public</specifier> class <name>~Class</name> <block>{ 
-    <destructor><name>~Class</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
+<class><specifier>public</specifier> class <name>Class</name> <block>{ 
+    <destructor><name>~<name>Class</name></name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
         <for>for(<init>;</init><condition><expr>1</expr>;</condition><incr/>)
           <try>try <block>{
               <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
@@ -68,8 +68,8 @@
 </unit>
 
 <unit>
-<class><specifier>public</specifier> class <name>~Class</name> <block>{ 
-    <destructor><name>~Class</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
+<class><specifier>public</specifier> class <name>Class</name> <block>{ 
+    <destructor><name>~<name>Class</name></name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
         <while>while<condition>(<expr>1</expr>)</condition>
           <try>try <block>{
               <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
@@ -83,8 +83,8 @@
 </unit>
 
 <unit>
-<class><specifier>public</specifier> class <name>~Class</name> <block>{ 
-    <destructor><name>~Class</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
+<class><specifier>public</specifier> class <name>Class</name> <block>{ 
+    <destructor><name>~<name>Class</name></name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
         <if>if<condition>(<expr>1</expr>)</condition><then>
           <try>try <block>{
               <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
