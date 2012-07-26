@@ -2,6 +2,10 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="unchecked">
 
 <unit>
+<unchecked>unchecked <expr_stmt><expr>(<name>a</name> + <name>b</name>)</expr></expr_stmt></unchecked>
+</unit>
+
+<unit>
 <unchecked>unchecked <block>{<expr_stmt><expr><name>a</name> + <name>b</name></expr></expr_stmt>}</block></unchecked>
 </unit>
 
