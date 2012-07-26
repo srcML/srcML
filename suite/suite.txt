@@ -100,6 +100,7 @@ LANGUAGE_CSHARP yield_cs
 LANGUAGE_CSHARP class_cs
 LANGUAGE_CSHARP struct_cs
 LANGUAGE_CSHARP constructor_cs
+LANGUAGE_CSHARP destructor_cs
 
 LANGUAGE_JAVA class_java
 LANGUAGE_JAVA constructor_java
