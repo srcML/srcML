@@ -2,8 +2,26 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="linq">
 
 <unit>
-<decl_stmt><decl><type><name>event</name> <name>E</name></type> <name>e</name> <block>{
+<decl_stmt><decl><type><specifier>event</specifier> <name>E</name></type> <name>e</name> <block>{
     <function>add <block>{}</block></function>
+}</block></decl></decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>event</specifier> <name>E</name></type> <name>e</name> <block>{
+    <function>remove <block>{}</block></function>
+}</block></decl></decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>private</specifier> <name>E</name></type> <name>e</name> <block>{
+    <function>get <block>{}</block></function>
+}</block></decl></decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>private</specifier> <name>E</name></type> <name>e</name> <block>{
+    <function>set <block>{}</block></function>
 }</block></decl></decl_stmt>
 </unit>
 
