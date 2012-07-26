@@ -97,4 +97,8 @@
 <expr_stmt><expr><name>base</name>.<name>a</name></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><name>this</name>.<name>a</name></expr>;</expr_stmt>
+</unit>
+
 </unit>
