@@ -392,6 +392,14 @@ struct.cpp.xml : class.cpp.xml ${XSLT_CLASS2STRUCT_XSL}
 union.cpp.xml : struct.cpp.xml ${XSLT_STRUCT2UNION_XSL}
 	${XSLT_STRUCT2UNION} $< > $@
 
+# struct from class
+struct_cs.cs.xml : class_cs.cs.xml ${XSLT_CLASS2STRUCT_XSL}
+	${XSLT_CLASS2STRUCT} $< > $@
+
+# union from struct
+union_cs.cs.xml : struct_cs.cs.xml ${XSLT_STRUCT2UNION_XSL}
+	${XSLT_STRUCT2UNION} $< > $@
+
 # interface from class
 interface_java.java.xml : class_java.java.xml ${XSLT_CLASS2INTERFACE_XSL}
 	${XSLT_CLASS2INTERFACE} $< > $@
