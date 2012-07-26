@@ -8,4 +8,11 @@
     <name>select</name> <name>vegetable</name></expr></init></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><name>Query</name></type> <name>query</name> =<init>
+    <expr><name>from</name> <name>vegetable</name> in <name>vegetables</name>
+    <name>orderby</name> <name>vegetable</name> <name>descending</name>
+    <name>select</name> <name>vegetable</name></expr></init></decl>;</decl_stmt>
+</unit>
+
 </unit>
