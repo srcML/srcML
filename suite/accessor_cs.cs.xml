@@ -15,6 +15,18 @@
 
 <unit>
 <decl_stmt><decl><type><specifier>private</specifier> <name>E</name></type> <name>e</name> <block>{
+    <function>add <block>{}</block></function>
+}</block></decl></decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>private</specifier> <name>E</name></type> <name>e</name> <block>{
+    <function>remove <block>{}</block></function>
+}</block></decl></decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>private</specifier> <name>E</name></type> <name>e</name> <block>{
     <function>get <block>{}</block></function>
 }</block></decl></decl_stmt>
 </unit>
