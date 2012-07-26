@@ -2570,7 +2570,7 @@ java_specifier_mark[] { LocalMode lm(this); ENTRY_DEBUG } :
             // start the function specifier
             startElement(SFUNCTION_SPECIFIER);
         }
-        (PUBLIC | PRIVATE | PROTECTED | FINAL | STATIC | ABSTRACT | FRIEND | INTERNAL | SEALED | OVERRIDE | REF | OUT | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE | DELEGATE | PARTIAL /* | { inLanguage(LANGUAGE_CSHARP) }? NEW */) | { inLanguage(LANGUAGE_CSHARP) }? attribute
+        (PUBLIC | PRIVATE | PROTECTED | FINAL | STATIC | ABSTRACT | FRIEND | INTERNAL | SEALED | OVERRIDE | REF | OUT | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE | DELEGATE | PARTIAL | EVENT /* | { inLanguage(LANGUAGE_CSHARP) }? NEW */) | { inLanguage(LANGUAGE_CSHARP) }? attribute
 ;
 
 /*
