@@ -262,9 +262,6 @@ tokens {
     // entire source file
     SUNIT;
 
-    // single element
-    SSINGLE;
-
     // First token used for boundary
     START_ELEMENT_TOKEN;
 
@@ -2284,6 +2281,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                 template_argument_list set_int[specifier_count, specifier_count + 1] |
 
                 // typical type name
+                { LA(1) != ASYNC }?
                 complex_name[true] set_bool[foundpure]
                     set_bool[isoperatorfunction, inLanguage(LANGUAGE_CXX_FAMILY) && (isoperatorfunction ||
                              (namestack[0] == "operator" && type_count == 0))] |
@@ -2584,6 +2582,7 @@ lead_type_identifier[] { ENTRY_DEBUG } :
 //        (macro_call_paren identifier)=> macro_call |
 
         // typical type name
+        { LA(1) != ASYNC }?
         complex_name[true] |
 
         pure_lead_type_identifier
@@ -2909,7 +2908,7 @@ function_specifier[] { LocalMode lm(this); ENTRY_DEBUG } :
             // start the function specifier
             startElement(SFUNCTION_SPECIFIER);
         }
-        (standard_specifiers |
+        ({ LA(1) != ASYNC }? standard_specifiers |
 
         // pure virtual specifier
         EQUAL literal |
