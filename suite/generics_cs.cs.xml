@@ -5,4 +5,8 @@
 <class type="interface">interface <name>I</name><argument_list>&lt;<argument><expr>in <name>A</name></expr></argument>&gt;</argument_list> <block>{}</block></class>
 </unit>
 
+<unit>
+<class type="interface">interface <name>I</name><argument_list>&lt;<argument><expr>out <name>A</name></expr></argument>&gt;</argument_list> <block>{}</block></class>
+</unit>
+
 </unit>
