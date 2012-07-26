@@ -385,8 +385,6 @@ tokens {
     STEMPLATE_ARGUMENT_LIST;
     STEMPLATE_PARAMETER;
     STEMPLATE_PARAMETER_LIST;
-    SREQUIRES;
-    SCLAUSE;
 
     // cpp internal elements
 	SCPP_DIRECTIVE;
@@ -425,8 +423,6 @@ tokens {
     SINTERFACE;
 
     // C++0x elements
-    SCONCEPT;
-    SCONCEPTMAP;
     SAUTO;
 
     // C#
@@ -665,13 +661,6 @@ statements_non_cfg[] { int token = 0; int place = 0; int secondtoken = 0; int fl
         // extern block as opposed to enum as part of declaration
         { decl_type == NONE }?
         extern_definition |
-
-        // C++0x additional non-cfg statements
-        { look_past(AUTO) == CONCEPT }?
-        concept_definition |
-
-        { look_past(AUTO) == CONCEPTMAP }?
-        conceptmap_definition |
 
         // call
 
@@ -1438,39 +1427,6 @@ enum_class_definition[] :
             if (inLanguage(LANGUAGE_CXX_FAMILY))
                 class_default_access_action(SPRIVATE_ACCESS_DEFAULT);
         }
-;
-
-concept_definition[] :
-        {
-            // statement
-            startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_CLASS | MODE_END_AT_BLOCK);
-
-            // start the class definition
-            startElement(SCONCEPT);
-        }
-        (
-            (auto_keyword)* CONCEPT
-
-            identifier[true] 
-                {
-                    startNewMode(MODE_EXPECT | MODE_DERIVED);
-
-                    startNewMode(MODE_TEMPLATE | MODE_LIST | MODE_EXPECT | MODE_DERIVED);
-                }
-        )
-;
-
-conceptmap_definition[] :
-        {
-            // statement
-            startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_CLASS | MODE_END_AT_BLOCK);
-
-            // start the class definition
-            startElement(SCONCEPTMAP);
-        }
-        (auto_keyword)* CONCEPTMAP
-
-        complex_name[true] 
 ;
 
 anonymous_class_definition[] :
@@ -4148,29 +4104,6 @@ template_param_list[] { ENTRY_DEBUG } :
 ;
 
 /*
-requires_clause[] { ENTRY_DEBUG } :
-        {
-            // template with nested statement (function or class)
-            // expect a template parameter list
-            startNewMode(MODE_STATEMENT | MODE_NEST);
-
-            startElement(SREQUIRES);
-        }
-        REQUIRES 
-        {
-            startNewMode(MODE_LOCAL);
-
-            startElement(SCLAUSE);
-        }
-        (general_operators)* complex_name[true] (general_operators (general_operators)* complex_name[true])* 
-        {
-            endCurrentMode(MODE_LOCAL);
-        }
-        (TERMINATE { endCurrentMode(MODE_STATEMENT | MODE_NEST); } )*
-;
-*/
-
-/*
   template parameter
 
   A template parameter is a subset of a general function parameter
@@ -4278,8 +4211,6 @@ tempope[bool final = false] { if (final) setFinalToken(); ENTRY_DEBUG } :
         {
             // end the mode created by the start template operator
             endCurrentModeSafely(MODE_LIST);
-
-            setMode(MODE_REQUIRES);
         }
 ;
 

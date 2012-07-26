@@ -99,9 +99,6 @@ tokens {
     SUPER;
 
     // C++0x tokens
-    CONCEPT;
-    CONCEPTMAP;
-    REQUIRES;
     AUTO;
 
     // C# tokens
