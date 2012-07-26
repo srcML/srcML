@@ -717,7 +717,7 @@ property_method[] { /* TokenPosition tp; */ENTRY_DEBUG } :
             // start the function definition element
             startElement(SFUNCTION_DEFINITION);
         }
-        (GET | SET)
+        (GET | SET | ADD | REMOVE)
 ;
 
 perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
@@ -2800,7 +2800,7 @@ identifier[bool marked = false] { LocalMode lm(this); ENTRY_DEBUG } :
             }
         }
         (NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
-            SUPER | CHECKED | UNCHECKED | REGION | ENDREGION | GET | SET)
+            SUPER | CHECKED | UNCHECKED | REGION | ENDREGION | GET | SET | ADD | REMOVE)
 ;
 
 /*

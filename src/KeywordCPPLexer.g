@@ -125,6 +125,8 @@ tokens {
     VOLATILE;
     GET;
     SET;
+    ADD;
+    REMOVE;
     PARTIAL;
     AWAIT;
 }
@@ -316,6 +318,8 @@ KeywordCPPLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         { "partial"       , PARTIAL       , LANGUAGE_CSHARP }, 
         { "get"           , GET           , LANGUAGE_CSHARP }, 
         { "set"           , SET           , LANGUAGE_CSHARP }, 
+        { "add"           , ADD           , LANGUAGE_CSHARP }, 
+        { "remove"        , REMOVE        , LANGUAGE_CSHARP }, 
         { "await"         , AWAIT         , LANGUAGE_CSHARP }, 
         { "abstract"      , ABSTRACT      , LANGUAGE_CSHARP }, 
    };
