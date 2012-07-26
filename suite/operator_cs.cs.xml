@@ -15,4 +15,8 @@
 <empty_stmt>;</empty_stmt></then></if>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><name>int</name> *</type> <name>i</name> =<init> <expr><op:operator>stackalloc</op:operator> <name>int</name></expr></init></decl>;</decl_stmt>
+</unit>
+
 </unit>
