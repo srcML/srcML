@@ -3,7 +3,7 @@
 
 <unit>
 <decl_stmt><decl><type><name>event</name> <name>E</name></type> <name>e</name> <block>{
-    <function><name>add</name> <block>{}</block></function>
+    <function>add <block>{}</block></function>
 }</block></decl></decl_stmt>
 </unit>
 
