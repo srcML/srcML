@@ -230,4 +230,8 @@
 <decl_stmt><decl><type><name>dynamic</name></type> <name>d</name></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><name>var</name></type> <name>i</name></decl>;</decl_stmt>
+</unit>
+
 </unit>
