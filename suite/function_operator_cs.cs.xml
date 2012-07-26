@@ -2,99 +2,99 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="function_operator">
 
 <unit>
-<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name> <specifier>operator</specifier></type> <name>+</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator +</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name> <specifier>operator</specifier></type> <name>-</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator -</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name> <specifier>operator</specifier></type> <name>!</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator !</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name> <specifier>operator</specifier></type> <name>~</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator ~</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name> <specifier>operator</specifier></type> <name>++</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator ++</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name> <specifier>operator</specifier></type> <name>--</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator --</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name> <specifier>operator</specifier></type> <name>true</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator true</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name> <specifier>operator</specifier></type> <name>false</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator false</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name> <specifier>operator</specifier></type> <name>+</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>, <param><decl><type><name>Integer</name></type> <name>j</name></decl></param>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator +</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>, <param><decl><type><name>Integer</name></type> <name>j</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name> <specifier>operator</specifier></type> <name>-</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>, <param><decl><type><name>Integer</name></type> <name>j</name></decl></param>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator -</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>, <param><decl><type><name>Integer</name></type> <name>j</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name> <specifier>operator</specifier></type> <name>*</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>, <param><decl><type><name>Integer</name></type> <name>j</name></decl></param>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator *</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>, <param><decl><type><name>Integer</name></type> <name>j</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name> <specifier>operator</specifier></type> <name>/</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>, <param><decl><type><name>Integer</name></type> <name>j</name></decl></param>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator /</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>, <param><decl><type><name>Integer</name></type> <name>j</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name> <specifier>operator</specifier></type> <name>%</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>, <param><decl><type><name>Integer</name></type> <name>j</name></decl></param>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator %</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>, <param><decl><type><name>Integer</name></type> <name>j</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name> <specifier>operator</specifier></type> <name>&amp;</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>, <param><decl><type><name>Integer</name></type> <name>j</name></decl></param>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator &amp;</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>, <param><decl><type><name>Integer</name></type> <name>j</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name> <specifier>operator</specifier></type> <name>|</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>, <param><decl><type><name>Integer</name></type> <name>j</name></decl></param>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator |</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>, <param><decl><type><name>Integer</name></type> <name>j</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name> <specifier>operator</specifier></type> <name>^</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>, <param><decl><type><name>Integer</name></type> <name>j</name></decl></param>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator ^</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>, <param><decl><type><name>Integer</name></type> <name>j</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name> <specifier>operator</specifier></type> <name>&lt;&lt;</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>, <param><decl><type><name>Integer</name></type> <name>j</name></decl></param>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator &lt;&lt;</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>, <param><decl><type><name>Integer</name></type> <name>j</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name> <specifier>operator</specifier></type> <name>&gt;&gt;</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>, <param><decl><type><name>Integer</name></type> <name>j</name></decl></param>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator &gt;&gt;</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>, <param><decl><type><name>Integer</name></type> <name>j</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>public</specifier> <specifier>static</specifier> <name>bool</name> <specifier>operator</specifier></type> <name>==</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>, <param><decl><type><name>Integer</name></type> <name>j</name></decl></param>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>bool</name></type> <name>operator ==</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>, <param><decl><type><name>Integer</name></type> <name>j</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>public</specifier> <specifier>static</specifier> <name>bool</name> <specifier>operator</specifier></type> <name>!=</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>, <param><decl><type><name>Integer</name></type> <name>j</name></decl></param>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>bool</name></type> <name>operator !=</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>, <param><decl><type><name>Integer</name></type> <name>j</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>public</specifier> <specifier>static</specifier> <name>bool</name> <specifier>operator</specifier></type> <name>&gt;</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>, <param><decl><type><name>Integer</name></type> <name>j</name></decl></param>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>bool</name></type> <name>operator &gt;</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>, <param><decl><type><name>Integer</name></type> <name>j</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>public</specifier> <specifier>static</specifier> <name>bool</name> <specifier>operator</specifier></type> <name>&lt;</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>, <param><decl><type><name>Integer</name></type> <name>j</name></decl></param>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>bool</name></type> <name>operator &lt;</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>, <param><decl><type><name>Integer</name></type> <name>j</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>public</specifier> <specifier>static</specifier> <name>bool</name> <specifier>operator</specifier></type> <name>&gt;=</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>, <param><decl><type><name>Integer</name></type> <name>j</name></decl></param>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>bool</name></type> <name>operator &gt;=</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>, <param><decl><type><name>Integer</name></type> <name>j</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>public</specifier> <specifier>static</specifier> <name>bool</name> <specifier>operator</specifier></type> <name>&lt;=</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>, <param><decl><type><name>Integer</name></type> <name>j</name></decl></param>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>bool</name></type> <name>operator &lt;=</name><parameter_list>(<param><decl><type><name>Integer</name></type> <name>i</name></decl></param>, <param><decl><type><name>Integer</name></type> <name>j</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
 </unit>
