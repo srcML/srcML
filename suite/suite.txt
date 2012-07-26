@@ -57,6 +57,12 @@ LANGUAGE_CXX typedef_struct
 LANGUAGE_CXX operator
 LANGUAGE_CXX literal
 
+LANGUAGE_CSHARP namespace
+LANGUAGE_CSHARP throw_base
+LANGUAGE_CSHARP try
+LANGUAGE_CSHARP operator
+LANGUAGE_CSHARP literal
+LANGUAGE_CSHARP function_throw
 LANGUAGE_CSHARP interface_cs
 LANGUAGE_CSHARP abstract_cs
 LANGUAGE_CSHARP override_cs
