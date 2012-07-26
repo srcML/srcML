@@ -89,10 +89,6 @@ SPECIAL :
 */
 //ALLOPERATORS options { testLiterals = true; } : 
 
-CONSTANTS :
-        '0'..'9'
-    ;
-
 OPERATORS options { testLiterals = true; } { bool star = false; } : 
         (
             '#' {
