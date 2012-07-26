@@ -36,4 +36,16 @@
     <name>select</name> new <block>{ <expr><name>ProductName</name> = <name>prod</name>.<name>Name</name></expr>, <expr><name>Category</name> = <name>category</name>.<name>Name</name></expr> }</block></expr></init></decl>;</decl_stmt> <comment type="line">//produces flat sequence</comment>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><name>var</name></type> <name>earlyBirdQuery</name> =<init>
+            <expr><name>from</name> <name>sentence</name> in <name>strings</name>
+            <name>let</name> <name>words</name> = <name>sentence</name>.<name>Split</name><argument_list>(<argument>' '</argument>)</argument_list>
+            <name>from</name> <name>word</name> in <name>words</name>
+            <name>let</name> <name>w</name> = <name>word</name>.<name>ToLower</name><argument_list>()</argument_list>
+            <name>where</name> <name><name>w</name><index>[<expr>0</expr>]</index></name> == 'a' || <name><name>w</name><index>[<expr>0</expr>]</index></name> == 'e'
+                || <name><name>w</name><index>[<expr>0</expr>]</index></name> == 'i' || <name><name>w</name><index>[<expr>0</expr>]</index></name> == 'o'
+                || <name><name>w</name><index>[<expr>0</expr>]</index></name> == 'u'
+            <name>select</name> <name>word</name></expr></init></decl>;</decl_stmt
+</unit>
+
 </unit>
