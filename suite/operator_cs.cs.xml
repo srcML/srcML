@@ -6,7 +6,7 @@
 </unit>
 
 <unit>
-<foreach>foreach (<init><decl><type><name>int</name>*</type> <name>p</name> <op:operator>in</op:operator> <expr><name>arr</name></expr></decl></init>)
+<foreach>foreach (<init><decl><type><name>int</name>*</type> <name>p</name> <op:operator>in</op:operator> <name>arr</name></decl></init>)
 <empty_stmt>;</empty_stmt></foreach>
 </unit>
 
