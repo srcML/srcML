@@ -3897,7 +3897,8 @@ derived[] { LocalMode lm(this); ENTRY_DEBUG } :
         (options { greedy = true; } :
             (derive_access)*
 
-            variable_identifier
+            variable_identifier 
+            ({ inLanguage(LANGUAGE_CSHARP) }? period variable_identifier)*
 
             (template_argument_list)*
         |
