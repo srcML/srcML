@@ -2246,7 +2246,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
              DECLTYPE& type,
              bool inparam     /* are we in a parameter */
         ] { token = 0; fla = 0; type_count = 0; int specifier_count = 0; isdestructor = false;
-        type = NONE; bool foundpure = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; bool endbracket = false; bool modifieroperator = false; ENTRY_DEBUG } :
+        type = NONE; bool foundpure = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; bool endbracket = false; bool modifieroperator = false; bool sawoperator = false; ENTRY_DEBUG } :
 
         // main pattern for variable declarations, and most function declaration/definitions.
         // trick is to look for function declarations/definitions, and along the way record
@@ -2262,6 +2262,8 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
           parts, specifier parts, and second token
         */
         ({ inLanguage(LANGUAGE_JAVA_FAMILY) || LA(1) != LBRACKET }?
+
+            set_bool[sawoperator, sawoperator || LA(1) == OPERATOR]
 
             // was their a bracket on the end?  Need to know for Java
             set_bool[endbracket, inLanguage(LANGUAGE_JAVA_FAMILY) && LA(1) == LBRACKET]
@@ -2337,7 +2339,8 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                     // inside of a Java or C# class (as always)
                     (inMode(MODE_CLASS) && inLanguage(LANGUAGE_JAVA_FAMILY)) ||
 
-                    ((inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP)) && LA(1) == LPAREN) ||
+                    ((inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP)) && LA(1) == LPAREN
+                     && !sawoperator) ||
 
                     // outside of a class definition, but with properly prefixed name
                     ((inLanguage(LANGUAGE_CXX_FAMILY) && !inLanguage(LANGUAGE_CSHARP)) && namestack[0] != "" && namestack[1] != "" && namestack[0] == namestack[1])
