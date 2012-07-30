@@ -2284,7 +2284,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                 template_argument_list set_int[specifier_count, specifier_count + 1] |
 
                 // typical type name
-                { LA(1) != ASYNC }?
+//                { LA(1) != ASYNC }?
                 complex_name[true] set_bool[foundpure]
                     set_bool[isoperatorfunction, inLanguage(LANGUAGE_CXX_FAMILY) && (isoperatorfunction ||
                              (namestack[0] == "operator" && type_count == 0))] |
