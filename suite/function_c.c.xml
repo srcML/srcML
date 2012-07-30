@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" dir="function">
+
+<unit>
+<function><type><specifier>static</specifier> <specifier>inline</specifier> <name>int</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>void</name></type> <name>foo</name><parameter_list>(<param><function_decl><type><name>int</name></type> (*<name>a</name>)<parameter_list>(<param><decl><type><name>char</name></type> <name>i</name></decl></param>)</parameter_list></function_decl></param>, <param><decl><type><name>char</name></type> <name>b</name></decl></param>)</parameter_list>
+<block>{
+}</block></function> 
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>main</name><parameter_list>(<param><decl><type><name>int</name></type> <name>argc</name></decl></param>, <param><decl><type><name>int</name>*[]</type> <name>argv</name></decl></param>)</parameter_list>
+<block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name> *</type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>const</name> <name>int</name>*</type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name>*</type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>const</name> <name>int</name>*</type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name>*</type> <name>a</name></decl></param>)</parameter_list>;</function>
+</unit>
+
+</unit>
