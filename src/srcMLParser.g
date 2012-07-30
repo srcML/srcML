@@ -653,13 +653,13 @@ statements_non_cfg[] { int token = 0; int place = 0; int secondtoken = 0; int fl
         // labels to goto
         { secondtoken == COLON }? label_statement |
 
-        // enum definition as opposed to part of type or declaration
-        { decl_type == NONE }?
-        enum_definition |
-
         // extern block as opposed to enum as part of declaration
         { decl_type == NONE }?
         extern_definition |
+
+        // enum definition as opposed to part of type or declaration
+        { decl_type == NONE }?
+        enum_definition |
 
         // call
 
