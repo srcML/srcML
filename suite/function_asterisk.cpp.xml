@@ -18,10 +18,6 @@
 </unit>
 
 <unit>
-<function><type><specifier>virtual</specifier> <name>int</name>*</type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list> <block>{}</block></function>
-</unit>
-
-<unit>
 <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
