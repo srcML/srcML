@@ -1496,7 +1496,7 @@ struct_union_definition[int element_token] :
             // start the struct definition
             startElement(element_token);
 
-            if (intypedef) {
+            if (intypedef || inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP)) {
                 setMode(MODE_END_AT_BLOCK);
             }
         }
