@@ -85,7 +85,7 @@ LANGUAGE_CSHARP implicit_cs
 LANGUAGE_CSHARP internal_cs
 LANGUAGE_CSHARP lock_cs
 LANGUAGE_CSHARP function_operator_cs
-LANGUAGE_CSHARP function_specifier_cs
+LANGUAGE_CSHARP function_cs
 LANGUAGE_CSHARP decl_cs
 LANGUAGE_CSHARP sealed_cs
 LANGUAGE_CSHARP unchecked_cs
