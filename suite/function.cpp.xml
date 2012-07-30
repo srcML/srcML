@@ -30,10 +30,6 @@
 </unit>
 
 <unit>
-<function><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list><block>{}</block></function>
-</unit>
-
-<unit>
 <function><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list><block>{}</block></function>
 </unit>
 
