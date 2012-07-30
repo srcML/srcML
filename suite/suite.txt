@@ -38,7 +38,6 @@ LANGUAGE_C_FAMILY decl_pointer
 LANGUAGE_C_FAMILY function_asterisk
 LANGUAGE_C_FAMILY goto
 LANGUAGE_C_FAMILY literal
-LANGUAGE_C_FAMILY function_cpp
 
 LANGUAGE_CXX friend
 LANGUAGE_CXX namespace
