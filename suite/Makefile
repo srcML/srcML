@@ -34,6 +34,9 @@ GEN_BASE_CXX=${call language,'LANGUAGE_CXX_FAMILY'}
 # base for C family
 BASE_C_FAMILY=${call language,'LANGUAGE_C_FAMILY'}
 
+# base for C family
+BASE_C=${call language,'LANGUAGE_C_ONLY'}
+
 # base for object-oriented languages
 BASE_OO=${call language,'LANGUAGE_OO'}
 
@@ -167,7 +170,7 @@ BASE_CXX_11_ALL = $(BASE_COMMON) $(BASE_CXX) $(BASE_OO)
 GEN_CXX_11= ${foreach nm, $(BASE_CXX_11_ALL_GEN), $(nm).cpp11.xml}
 
 BASE_C_ALL_GEN = $(BASE_COMMON) $(BASE_C_FAMILY)
-BASE_C_ALL = $(BASE_COMMON) $(BASE_C_FAMILY)
+BASE_C_ALL = $(BASE_COMMON) $(BASE_C_FAMILY) $(BASE_C)
 GEN_C= ${foreach nm, $(BASE_C_ALL_GEN), $(nm).c.xml}
 
 BASE_CS_ALL_GEN = $(BASE_COMMON) $(GEN_BASE) $(BASE_CS_GEN)
