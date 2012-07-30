@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir"generics" filename="generics_cs">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="generics" filename="generics_cs">
 
 <unit>
 <class type="interface">interface <name>I</name><argument_list>&lt;<argument><expr>in <name>A</name></expr></argument>&gt;</argument_list> <block>{}</block></class>
