@@ -1249,10 +1249,6 @@ asm_declaration[] { ENTRY_DEBUG } :
 
  Past name handled as expression
 */
-extern_definition_header[] { ENTRY_DEBUG } :
-        EXTERN string_literal
-;
-
 extern_definition[] { ENTRY_DEBUG } :
         {
             // statement
