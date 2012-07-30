@@ -609,6 +609,12 @@ cfg[] { ENTRY_DEBUG } :
 statements_non_cfg[] { int token = 0; int place = 0; int secondtoken = 0; int fla = 0;
         int type_count = 0; DECLTYPE decl_type = NONE; CALLTYPE type = NOCALL; ENTRY_DEBUG } :
 
+        // don't ask
+        (yield_return_statement)=> yield_return_statement |
+
+        // don't ask
+        (yield_break_statement)=> yield_break_statement |
+
         // class forms for class declarations/definitions as opposed to part of a declaration types
         // must be before checking access_specifier_region
         (class_struct_union_check[token /* token after header */, place])=> class_struct_union[token, place] |
@@ -1183,6 +1189,28 @@ return_statement[] { setFinalToken(); ENTRY_DEBUG } :
         RETURN
 ;
 
+yield_specifier[] { LocalMode lm(this); ENTRY_DEBUG } :
+        {
+            // statement
+            startNewMode(MODE_LOCAL);
+
+            // start the function specifier
+            startElement(SFUNCTION_SPECIFIER);
+        }
+        YIELD
+;
+
+yield_return_statement[] { ENTRY_DEBUG } :
+        {
+            // statement with a possible expression
+            startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
+
+            // start the return statement
+            startElement(SRETURN_STATEMENT);
+        }
+        yield_specifier RETURN
+;
+
 /*
   start of break statement
 */
@@ -1195,6 +1223,17 @@ break_statement[] { setFinalToken(); ENTRY_DEBUG } :
             startElement(SBREAK_STATEMENT);
         }
         BREAK
+;
+
+yield_break_statement[] { ENTRY_DEBUG } :
+        {
+            // statement
+            startNewMode(MODE_STATEMENT);
+
+            // start the break statement
+            startElement(SBREAK_STATEMENT);
+        }
+        yield_specifier BREAK
 ;
 
 /*
@@ -2792,7 +2831,7 @@ identifier[bool marked = false] { LocalMode lm(this); ENTRY_DEBUG } :
             }
         }
         (NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
-            SUPER | CHECKED | UNCHECKED | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC)
+            SUPER | CHECKED | UNCHECKED | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD)
 ;
 
 /*

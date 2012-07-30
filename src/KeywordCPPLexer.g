@@ -127,6 +127,7 @@ tokens {
     SET;
     ADD;
     REMOVE;
+    YIELD;
     PARTIAL;
     AWAIT;
     EVENT;
@@ -326,6 +327,7 @@ KeywordCPPLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         { "abstract"      , ABSTRACT      , LANGUAGE_CSHARP }, 
         { "event"         , EVENT         , LANGUAGE_CSHARP }, 
         { "async"         , ASYNC         , LANGUAGE_CSHARP }, 
+        { "yield"         , YIELD         , LANGUAGE_CSHARP }, 
    };
 
     // fill up the literals for the language that we are parsing
