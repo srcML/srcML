@@ -12,7 +12,6 @@ LANGUAGE_ALL_BASE function
 LANGUAGE_ALL_BASE enum
 LANGUAGE_ALL_BASE return_base
 LANGUAGE_ALL_BASE problem
-LANGUAGE_ALL_BASE literal
 
 LANGUAGE_ALL_GEN while
 LANGUAGE_ALL_GEN ifnestcond 
@@ -38,6 +37,7 @@ LANGUAGE_C_FAMILY typedef
 LANGUAGE_C_FAMILY decl_pointer
 LANGUAGE_C_FAMILY function_asterisk
 LANGUAGE_C_FAMILY goto
+LANGUAGE_C_FAMILY literal
 
 LANGUAGE_CXX friend
 LANGUAGE_CXX namespace
@@ -100,6 +100,7 @@ LANGUAGE_CSHARP class_cs
 LANGUAGE_CSHARP struct_cs
 LANGUAGE_CSHARP constructor_cs
 LANGUAGE_CSHARP destructor_cs
+LANGUAGE_CSHARP literal
 
 LANGUAGE_JAVA class_java
 LANGUAGE_JAVA constructor_java
@@ -108,6 +109,7 @@ LANGUAGE_JAVA interface_java
 LANGUAGE_JAVA package_java
 LANGUAGE_JAVA finally_java
 LANGUAGE_JAVA generics_java
+LANGUAGE_JAVA literal_java
 
 LANGUAGE_OO catch_form
 LANGUAGE_OO foreach
