@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" dir="extra">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" dir="extra" filename="extra_c">
 
 <unit>
 <function_decl><type><name>int</name></type> (*<name>a</name>)<parameter_list>(<param><decl><type><name>int</name></type> <name>b</name></decl></param>, <param><decl><type><name>int</name>[]</type></decl></param>)</parameter_list>;</function_decl>
