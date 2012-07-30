@@ -56,6 +56,7 @@ LANGUAGE_CXX decl_ns
 LANGUAGE_CXX try
 LANGUAGE_CXX typedef_struct
 LANGUAGE_CXX operator
+LANGUAGE_CXX function_cpp
 
 LANGUAGE_CSHARP_GEN asm
 LANGUAGE_CSHARP_GEN extern
@@ -109,6 +110,7 @@ LANGUAGE_JAVA package_java
 LANGUAGE_JAVA finally_java
 LANGUAGE_JAVA generics_java
 LANGUAGE_JAVA literal_java
+LANGUAGE_JAVA function_java
 
 LANGUAGE_OO catch_form
 LANGUAGE_OO foreach
