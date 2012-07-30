@@ -18,12 +18,6 @@
 </unit>
 
 <unit>
-<function><type><name>void</name></type> <name>foo</name><parameter_list>(<param><function_decl><type><name>int</name></type> (*<name>a</name>)<parameter_list>(<param><decl><type><name>char</name></type> <name>i</name></decl></param>)</parameter_list></function_decl></param>, <param><decl><type><name>char</name></type> <name>b</name></decl></param>)</parameter_list>
-<block>{
-}</block></function> 
-</unit>
-
-<unit>
 <function><type><name>int</name></type> <name>main</name><parameter_list>(<param><decl><type><name>int</name></type> <name>argc</name></decl></param>, <param><decl><type><name>int</name>*[]</type> <name>argv</name></decl></param>)</parameter_list>
 <block>{}</block></function>
 </unit>
