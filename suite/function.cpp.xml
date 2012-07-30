@@ -6,23 +6,11 @@
 </unit>
 
 <unit>
-<function><type><name>static</name> <name>int</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
-</unit>
-
-<unit>
-<function><type><name>static</name> <name>inline</name> <name>int</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
-</unit>
-
-<unit>
 <function><type><name>const</name> <name>int</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
 <function><type><name>int</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list> <block>{}</block></function>
-</unit>
-
-<unit>
-<function><type><name>static</name> <name>int</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
