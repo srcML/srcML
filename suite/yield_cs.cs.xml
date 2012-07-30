@@ -2,11 +2,11 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="yield" filename="yield_cs">
 
 <unit>
-<yield>yield <return>return <expr><name>result</name></expr>;</return></yield>
+<return<specifier>yield</specifier> return <expr><name>result</name></expr>;</return>
 </unit>
 
 <unit>
-<yield>yield <break>break;</break></yield>
+<break<specifier>yield</specifier> break;</break>
 </unit>
 
 </unit>
