@@ -426,6 +426,7 @@ tokens {
     SCHECKED_STATEMENT;
     SUNCHECKED_STATEMENT;
     SATTRIBUTE;
+    SUNSAFE_STATEMENT;
 
     // misc
     SEMPTY;  // empty statement
@@ -588,7 +589,7 @@ cfg[] { ENTRY_DEBUG } :
         // C#
         checked_statement | /* { inLanguage(LANGUAGE_CSHARP) }? attribute | */
 
-        unchecked_statement | lock_statement | fixed_statement | property_method |
+        unchecked_statement | lock_statement | fixed_statement | property_method | unsafe_statement |
 
         // assembly block
         asm_declaration
@@ -3260,6 +3261,17 @@ checked_statement[] { ENTRY_DEBUG } :
             startElement(SCHECKED_STATEMENT);
         }
         CHECKED
+;
+
+unsafe_statement[] { ENTRY_DEBUG } :
+        {
+            // treat try block as nested block statement
+            startNewMode(MODE_STATEMENT | MODE_NEST);
+
+            // start of the try statement
+            startElement(SUNSAFE_STATEMENT);
+        }
+        UNSAFE
 ;
 
 unchecked_statement[] { ENTRY_DEBUG } :
