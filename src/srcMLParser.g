@@ -2563,17 +2563,6 @@ pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
         enum_definition_whole
 ;
 
-java_specifier_mark[] { LocalMode lm(this); ENTRY_DEBUG } :
-        {
-            // statement
-            startNewMode(MODE_LOCAL);
-
-            // start the function specifier
-            startElement(SFUNCTION_SPECIFIER);
-        }
-        (PUBLIC | PRIVATE | PROTECTED | FINAL | STATIC | ABSTRACT | FRIEND | INTERNAL | SEALED | OVERRIDE | REF | OUT | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE | DELEGATE | PARTIAL | EVENT | ASYNC /* | { inLanguage(LANGUAGE_CSHARP) }? NEW */) | { inLanguage(LANGUAGE_CSHARP) }? attribute
-;
-
 /*
    type identifier
 
@@ -2950,9 +2939,23 @@ function_specifier[] { LocalMode lm(this); ENTRY_DEBUG } :
         simple_name_optional_template[false])
 ;
 
+standard_specifiers[] { LocalMode lm(this); ENTRY_DEBUG } :
+        {
+            // statement
+            startNewMode(MODE_LOCAL);
+
+            // start the function specifier
+            startElement(SFUNCTION_SPECIFIER);
+        }
+        (PUBLIC | PRIVATE | PROTECTED | FINAL | STATIC | ABSTRACT | FRIEND | INTERNAL | SEALED | OVERRIDE | REF | OUT | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE | DELEGATE | PARTIAL | EVENT | ASYNC /* | { inLanguage(LANGUAGE_CSHARP) }? NEW */ | VIRTUAL | EXTERN | INLINE) | { inLanguage(LANGUAGE_CSHARP) }? attribute
+;
+
+java_specifier_mark[] : standard_specifiers ;
+
 /*
   Specifiers for functions, methods, and variables
 */
+/*
 standard_specifiers[] { LocalMode lm(this); ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) }? 
             java_specifier_mark |
@@ -2965,6 +2968,7 @@ standard_specifiers[] { LocalMode lm(this); ENTRY_DEBUG } :
         }
         (VIRTUAL | EXTERN | INLINE | EXPLICIT | STATIC | FRIEND)
 ;
+*/
 
 auto_keyword[] { LocalMode lm(this); ENTRY_DEBUG } :
         {
@@ -3041,6 +3045,8 @@ identifier_stack[std::string s[]] { s[1] = s[0]; s[0] = LT(1)->getText(); ENTRY_
 ;
 
 specifier_explicit[] { LocalMode lm(this); ENTRY_DEBUG } :
+        standard_specifiers
+/*
         {
             // local mode that is automatically ended by leaving this function
             startNewMode(MODE_LOCAL);
@@ -3048,6 +3054,7 @@ specifier_explicit[] { LocalMode lm(this); ENTRY_DEBUG } :
             startElement(SCLASS_SPECIFIER);
         }
         (EXPLICIT | INLINE | VIRTUAL)
+*/
 ;
 
 // destructor definition
