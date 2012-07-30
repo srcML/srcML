@@ -2305,6 +2305,10 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
             // record second (before we parse it) for label detection
             set_int[token, LA(1), type_count == 1]
         )*
+
+        // adjust type tokens to account for keyword async used as name (only for C#)
+        set_int[type_count, token == ASYNC ? type_count - 1 : type_count]
+
         // adjust type tokens to eliminate for last left bracket (only for Java)
         set_int[type_count, endbracket ? type_count - 1 : type_count]
 
