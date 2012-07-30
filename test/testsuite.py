@@ -297,6 +297,7 @@ error_count = 0
 total_count = 0
 
 dre = re.compile("directory=\"([^\"]*)\"", re.M)
+fre = re.compile("filename=\"([^\"]*)\"", re.M)
 lre = re.compile("language=\"([^\"]*)\"", re.M)
 vre = re.compile("src-version=\"([^\"]*)\"", re.M)
 ere = re.compile("encoding=\"([^\"]*)\"", re.M)
@@ -328,8 +329,15 @@ try:
 				dreinfo = dre.search(info)
 				directory = dreinfo.group(1)
 
+				# optional filename of the outer unit element
+				freinfo = fre.search(info)
+                                if freinfo != None:
+                                        filename = freinfo.group(1)
+                                else:
+                                        filename = None
+
 				# only process if directory name matches or is not given
-				if specname != "" and m.match(directory) == None:
+				if specname != "" and m.match(directory) == None and (filename == None or m.match(filename) == None):
 					continue
 			
 				# language of the entire document with a default of C++
