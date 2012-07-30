@@ -101,6 +101,7 @@ LANGUAGE_CSHARP struct_cs
 LANGUAGE_CSHARP constructor_cs
 LANGUAGE_CSHARP destructor_cs
 LANGUAGE_CSHARP literal
+LANGUAGE_CSHARP indexers_cs
 
 LANGUAGE_JAVA class_java
 LANGUAGE_JAVA constructor_java

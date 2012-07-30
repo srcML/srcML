@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="accessor">
+
+<unit>
+<decl_stmt><decl><type><specifier>event</specifier> <name>E</name></type> <name>e</name> <block>{
+    <function>add <block>{}</block></function>
+}</block></decl></decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>event</specifier> <name>E</name></type> <name>e</name> <block>{
+    <function>remove <block>{}</block></function>
+}</block></decl></decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>private</specifier> <name>E</name></type> <name>e</name> <block>{
+    <function>add <block>{}</block></function>
+}</block></decl></decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>private</specifier> <name>E</name></type> <name>e</name> <block>{
+    <function>remove <block>{}</block></function>
+}</block></decl></decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>private</specifier> <name>E</name></type> <name>e</name> <block>{
+    <function>get <block>{}</block></function>
+}</block></decl></decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>private</specifier> <name>E</name></type> <name>e</name> <block>{
+    <function>set <block>{}</block></function>
+}</block></decl></decl_stmt>
+</unit>
+
+</unit>
