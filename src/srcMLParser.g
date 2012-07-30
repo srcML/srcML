@@ -1359,7 +1359,7 @@ class_struct_union[int token, int place] { ENTRY_DEBUG } :
 */
 class_struct_union_check[int& finaltoken, int& othertoken] { finaltoken = 0; othertoken = 0; ENTRY_DEBUG } :
 
-        (java_specifier_mark)* markend[othertoken] (CLASS | STRUCT | UNION | INTERFACE) class_header check_end[finaltoken]
+        (specifier)* markend[othertoken] (CLASS | STRUCT | UNION | INTERFACE) class_header check_end[finaltoken]
 ;
 
 check_end[int& token] { /* setFinalToken(); // problem with class */ token = LA(1); ENTRY_DEBUG } :
@@ -1376,7 +1376,7 @@ class_declaration[] :
             // start the class definition
             startElement(SCLASS_DECLARATION);
         }
-        (java_specifier_mark)* CLASS class_header
+        (specifier)* CLASS class_header
 ;
 
 /*
@@ -1396,7 +1396,7 @@ class_definition[] :
                 setMode(MODE_END_AT_BLOCK);
             }
         }
-        (java_specifier_mark)* CLASS (class_header lcurly | lcurly) 
+        (specifier)* CLASS (class_header lcurly | lcurly) 
         {
             if (inLanguage(LANGUAGE_CXX_FAMILY) && !inLanguage(LANGUAGE_CSHARP))
                 class_default_access_action(SPRIVATE_ACCESS_DEFAULT);
@@ -1418,7 +1418,7 @@ enum_class_definition[] :
                 setMode(MODE_END_AT_BLOCK);
             }
         }
-        (java_specifier_mark)* ENUM (class_header lcurly | lcurly) 
+        (specifier)* ENUM (class_header lcurly | lcurly) 
         {
             if (inLanguage(LANGUAGE_CXX_FAMILY) && !inLanguage(LANGUAGE_CSHARP))
                 class_default_access_action(SPRIVATE_ACCESS_DEFAULT);
@@ -1469,7 +1469,7 @@ interface_definition[] :
             // java interfaces end at the end of the block
             setMode(MODE_END_AT_BLOCK); 
         }
-        (java_specifier_mark)* INTERFACE class_header lcurly
+        (specifier)* INTERFACE class_header lcurly
 ;
 
 /*
@@ -1482,7 +1482,7 @@ struct_declaration[] :
             // start the class definition
             startElement(SSTRUCT_DECLARATION);
         }
-        (java_specifier_mark)* STRUCT class_header
+        (specifier)* STRUCT class_header
 ;
 
 struct_union_definition[int element_token] :
@@ -1499,7 +1499,7 @@ struct_union_definition[int element_token] :
                 setMode(MODE_END_AT_BLOCK);
             }
         }
-        (java_specifier_mark)* (STRUCT | UNION) (class_header lcurly | lcurly)
+        (specifier)* (STRUCT | UNION) (class_header lcurly | lcurly)
         {
            if (inLanguage(LANGUAGE_CXX_FAMILY) && !inLanguage(LANGUAGE_CSHARP))
                class_default_access_action(SPUBLIC_ACCESS_DEFAULT);
@@ -1516,7 +1516,7 @@ union_declaration[] :
             // start the class definition
             startElement(SUNION_DECLARATION);
         }
-        (java_specifier_mark)* UNION class_header
+        (specifier)* UNION class_header
 ;
 
 /*
@@ -2275,8 +2275,8 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
 
             (
                 // specifiers
-                (standard_specifiers)=>
-                standard_specifiers set_int[specifier_count, specifier_count + 1] |
+                (specifier)=>
+                specifier set_int[specifier_count, specifier_count + 1] |
 
                 { inLanguage(LANGUAGE_JAVA_FAMILY) }?
                 (template_argument_list)=>
@@ -2517,8 +2517,8 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
         auto_keyword |
 
         // specifiers that occur in a type
-        (standard_specifiers)=>
-        standard_specifiers |
+        (specifier)=>
+        specifier |
 
         pure_lead_type_identifier_no_specifiers
 
@@ -2569,7 +2569,7 @@ pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
 */
 lead_type_identifier[] { ENTRY_DEBUG } :
 
-//        java_specifier_mark |
+//        specifier |
 
 //        (macro_call_paren identifier)=> macro_call |
 
@@ -2931,7 +2931,7 @@ function_specifier[] { LocalMode lm(this); ENTRY_DEBUG } :
             // start the function specifier
             startElement(SFUNCTION_SPECIFIER);
         }
-        ({ LA(1) != ASYNC }? standard_specifiers |
+        ({ LA(1) != ASYNC }? specifier |
 
         // pure virtual specifier
         EQUAL literal |
@@ -2939,7 +2939,7 @@ function_specifier[] { LocalMode lm(this); ENTRY_DEBUG } :
         simple_name_optional_template[false])
 ;
 
-standard_specifiers[] { LocalMode lm(this); ENTRY_DEBUG } :
+specifier[] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_LOCAL);
@@ -2947,28 +2947,19 @@ standard_specifiers[] { LocalMode lm(this); ENTRY_DEBUG } :
             // start the function specifier
             startElement(SFUNCTION_SPECIFIER);
         }
-        (PUBLIC | PRIVATE | PROTECTED | FINAL | STATIC | ABSTRACT | FRIEND | INTERNAL | SEALED | OVERRIDE | REF | OUT | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE | DELEGATE | PARTIAL | EVENT | ASYNC /* | { inLanguage(LANGUAGE_CSHARP) }? NEW */ | VIRTUAL | EXTERN | INLINE) | { inLanguage(LANGUAGE_CSHARP) }? attribute
+        (
+            // access
+            PUBLIC | PRIVATE | PROTECTED |
+
+            // C++
+            FINAL | STATIC | ABSTRACT | FRIEND |
+
+            // C# & Java
+            INTERNAL | SEALED | OVERRIDE | REF | OUT | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE | DELEGATE | PARTIAL | EVENT | ASYNC | VIRTUAL | EXTERN | INLINE
+        ) |
+
+        { inLanguage(LANGUAGE_CSHARP) }? attribute
 ;
-
-java_specifier_mark[] : standard_specifiers ;
-
-/*
-  Specifiers for functions, methods, and variables
-*/
-/*
-standard_specifiers[] { LocalMode lm(this); ENTRY_DEBUG } :
-        { inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) }? 
-            java_specifier_mark |
-
-        {
-            // local mode that is automatically ended by leaving this function
-            startNewMode(MODE_LOCAL);
-
-            startElement(SNAME);
-        }
-        (VIRTUAL | EXTERN | INLINE | EXPLICIT | STATIC | FRIEND)
-;
-*/
 
 auto_keyword[] { LocalMode lm(this); ENTRY_DEBUG } :
         {
@@ -3012,9 +3003,8 @@ constructor_definition[] { ENTRY_DEBUG } :
 constructor_header[] { ENTRY_DEBUG } :
 
         (options { greedy = true; } : 
-            specifier_explicit |
-            
-            { inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) }? java_specifier_mark |
+
+            specifier |
 
             { inLanguage(LANGUAGE_JAVA_FAMILY) }? template_argument_list
         )*
@@ -3044,24 +3034,11 @@ identifier_stack[std::string s[]] { s[1] = s[0]; s[0] = LT(1)->getText(); ENTRY_
         identifier[true]
 ;
 
-specifier_explicit[] { LocalMode lm(this); ENTRY_DEBUG } :
-        standard_specifiers
-/*
-        {
-            // local mode that is automatically ended by leaving this function
-            startNewMode(MODE_LOCAL);
-
-            startElement(SCLASS_SPECIFIER);
-        }
-        (EXPLICIT | INLINE | VIRTUAL)
-*/
-;
-
 // destructor definition
 destructor_definition[] { ENTRY_DEBUG } :
         {
             // statement with nested block
-            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_STATEMENT);
+            startNewMode(MODE_STATEMENT | MODE_NEST);
 
             // start the destructor definition
             startElement(SDESTRUCTOR_DEFINITION);
@@ -3085,7 +3062,7 @@ destructor_declaration[] { ENTRY_DEBUG } :
 // destructor header
 destructor_header[] { ENTRY_DEBUG } :
 
-        (options { greedy = true; } : specifier_explicit | { LT(1)->getText() == "void" }? identifier[true])*
+        (options { greedy = true; } : specifier | { LT(1)->getText() == "void" }? identifier[true])*
 
         complex_name[true]
 
@@ -4312,7 +4289,7 @@ typedef_statement[] { ENTRY_DEBUG } :
         (
         /* Never going to see a Java specifier before a class in C++, and never going
            to see a TYPEDEF in a Java program, but needed for grammar ambiguity */
-        (java_specifier_mark | CLASS)=>
+        (specifier | CLASS)=>
         class_definition |
 
         struct_union_definition[LA(1) == STRUCT ? SSTRUCT : SUNION])*
@@ -4390,7 +4367,7 @@ enum_definition[] { ENTRY_DEBUG } :
             // start the enum definition element
             startElement(SENUM);
         }
-        (java_specifier_mark)*
+        (specifier)*
         ENUM |
         {
             // statement
