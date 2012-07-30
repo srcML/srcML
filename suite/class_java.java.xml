@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="class">
+<unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="class" filename="class_java">
 
 <unit>
 <class>class <name>A</name> <block>{}</block></class>

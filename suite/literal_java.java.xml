@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:lit="http://www.sdml.info/srcML/literal" language="Java" dir="literal">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:lit="http://www.sdml.info/srcML/literal" language="Java" dir="literal" filename="literal_java">
 
 <unit>
 <expr_stmt><expr><lit:literal type="number">1</lit:literal></expr>;</expr_stmt>
