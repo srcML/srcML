@@ -16,4 +16,8 @@
 <block>{}</block></function>
 </unit>
 
+<unit>
+<function><type><specifier>virtual</specifier> <name>int</name>*</type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list> <block>{}</block></function>
+</unit>
+
 </unit>
