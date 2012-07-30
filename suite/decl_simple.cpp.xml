@@ -223,7 +223,7 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>extern</name> <name>alias</name></type> <name>GridV1</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>extern</specifier> <name>alias</name></type> <name>GridV1</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
