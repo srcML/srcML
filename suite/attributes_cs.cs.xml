@@ -2,6 +2,8 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="attributes" filename="attributes_cs">
 
 <unit>
+><function><type><attribute>[<expr><name>System</name></expr>]</attribute>
+<specifier>public</specifier> <specifier>static</specifier> <name>void</name></type> <name>M</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
 </unit>
