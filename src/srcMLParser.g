@@ -2297,7 +2297,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
           Process all the parts of a potential type.  Keep track of total
           parts, specifier parts, and second token
         */
-        ({ inLanguage(LANGUAGE_JAVA_FAMILY) || (type_count == 0) || LA(1) != LBRACKET }?
+        ({ inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) || (type_count == 0) || LA(1) != LBRACKET }?
 
             set_bool[sawoperator, sawoperator || LA(1) == OPERATOR]
 
