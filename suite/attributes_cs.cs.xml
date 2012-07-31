@@ -6,4 +6,10 @@
 <specifier>public</specifier> <specifier>static</specifier> <name>void</name></type> <name>M</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
+<unit>
+        <function><type><attribute>[<expr><name>System</name></expr>]</attribute>
+        <specifier>public</specifier> <specifier>static</specifier> <name>void</name></type> <name>OperationsBaseData</name><parameter_list>()</parameter_list> <block>{
+        }</block></function>
+</unit>
+
 </unit>
