@@ -354,8 +354,8 @@ cleanall :
 	${XSLT_INSERTFORMFEED} $< > $@
 
 %.java.xml : %.cpp.xml
-	[[ $@ != "literal.java.xml" ]] && ${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP} - > $@
-	[[ $@ = "literal.java.xml" ]] && ${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP_LITERAL} - > $@
+	( [[ $@ != "literal.java.xml" ]] && ${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP} - > $@ ) || echo -n ""
+	( [[ $@ = "literal.java.xml" ]] && ${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP_LITERAL} - > $@ ) || echo -n ""
 
 %.c.xml : %.cpp.xml
 	${XSLT_SETLANGUAGE_C} $< > $@
