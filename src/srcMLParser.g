@@ -1526,7 +1526,7 @@ struct_union_definition[int element_token] :
             bool intypedef = inMode(MODE_TYPEDEF);
 
             // statement
-            startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_DECL);
+            startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_DECL | MODE_CLASS);
 
             // start the struct definition
             startElement(element_token);
@@ -1723,24 +1723,28 @@ block_end[] { ENTRY_DEBUG } :
 
             // end down to either a block or top section, or to an if, whichever is reached first
             endDownToFirstMode(MODE_BLOCK | MODE_TOP | MODE_IF | MODE_ELSE | MODE_TRY);
-        }
-        else_handling
-        {
-            bool endatblock = inMode(MODE_END_AT_BLOCK);
+
+            bool endstatement = inMode(MODE_END_AT_BLOCK);
 
             // some statements end with the block
-            if (inMode(MODE_END_AT_BLOCK))
+            if (inMode(MODE_END_AT_BLOCK)) {
                 endCurrentMode(MODE_LOCAL);
 
-            if (endatblock && inTransparentMode(MODE_TEMPLATE))
-                endCurrentMode(MODE_LOCAL);
+                if (inTransparentMode(MODE_TEMPLATE))
+                    endCurrentMode(MODE_LOCAL);
+            }
 
             // looking for a terminate (';').  may have some whitespace before it
             consumeSkippedTokens();
 
             // some statements end with the block if there is no terminate
-            if (inMode(MODE_END_AT_BLOCK_NO_TERMINATE) && LA(1) != TERMINATE)
+            if (inMode(MODE_END_AT_BLOCK_NO_TERMINATE) && LA(1) != TERMINATE) {
+                endstatement = true;
                 endCurrentMode(MODE_LOCAL);
+            }
+
+            if (!inMode(MODE_CLASS) || inMode(MODE_CLASS) && endstatement)
+                else_handling();
 
             // if we are in a declaration (as part of a class/struct/union definition)
             // then we needed to markup the (abbreviated) variable declaration
@@ -1869,8 +1873,12 @@ else_handling[] { ENTRY_DEBUG } :
                     // find out if the next token is an else
                     bool nestedelse = LA(1) == ELSE;
 
+                    if (!nestedelse) {
+
+                        endDownToMode(MODE_TOP);
+
                     // when an ELSE is next and already in an else, must end properly (not needed for then)
-                    if (nestedelse && inMode(MODE_ELSE)) {
+                    } else if (nestedelse && inMode(MODE_ELSE)) {
 
                         while (inMode(MODE_ELSE)) {
 
