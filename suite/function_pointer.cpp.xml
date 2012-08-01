@@ -51,7 +51,7 @@
 
 <unit>
 <function><type><specifier>static</specifier> <name>void</name></type>
-<name>pass_state_graph</name> <paramter_list>(<param><decl><type>state_t</type> <name>start_state</name></decl></param>, <param><function_decl><type><name>void</name></type> (*<name>applied_func</name>) <paramter_list>(<param><decl><type><name>state_t</name></type> <name>state</name></decl></param>)</paramter_list></function_decl></param>)</paramter_list>
+<name>pass_state_graph</name> <paramter_list>(<param><decl><type><name>state_t</name></type> <name>start_state</name></decl></param>, <param><function_decl><type><name>void</name></type> (*<name>applied_func</name>) <paramter_list>(<param><decl><type><name>state_t</name></type> <name>state</name></decl></param>)</paramter_list></function_decl></param>)</paramter_list>
 <block>{
 
   <expr_stmt><expr><call><name>(*applied_func)</name> <argument_list>(<argument>start_state</argument>)</argument_list></call></expr>;</expr_stmt>
