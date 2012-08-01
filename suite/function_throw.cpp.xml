@@ -50,7 +50,7 @@
 </unit>
 
 <unit>
-<function_decl><type><name>virtual</name> <name>int</name>*</type> <name><name>f</name><argument_list>&lt;<argument><name>int</name></argument>&gt;</argument_list></name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list> <throw>throw (<argument><expr><name>a</name></expr></argument>)</throw> ;</function_decl>
+<function_decl><type><specifier>virtual</specifier> <name>int</name>*</type> <name><name>f</name><argument_list>&lt;<argument><name>int</name></argument>&gt;</argument_list></name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>)</parameter_list> <throw>throw (<argument><expr><name>a</name></expr></argument>)</throw> ;</function_decl>
 </unit>
 
 <unit>
