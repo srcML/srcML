@@ -228,7 +228,7 @@ GEN_IFTHENELSE= ${foreach nm, $(SEP_PLUS), $(nm).ifthenelse.cpp.xml} \
  	       ${foreach nm, $(BASE_CXX_11_ALL), $(nm).ifthenelse.cpp11.xml} \
 	           ${foreach nm, $(BASE_C_ALL), $(nm).ifthenelse.c.xml} \
 	           ${foreach nm, $(BASE_CS_ALL), $(nm).ifthenelse.cs.xml} \
-	           ${foreach nm, $(BASE_JAVA_ALL), $(nm).ifthenelse.cs.xml} \
+	           ${foreach nm, $(BASE_JAVA_ALL), $(nm).ifthenelse.java.xml} \
 		   extra_c.ifthenelse.c.xml extra_cpp.ifthenelse.cpp.xml
 
 allinall.c.xml :
