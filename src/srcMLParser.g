@@ -3402,7 +3402,7 @@ lock_statement[] { ENTRY_DEBUG } :
 fixed_statement[] { ENTRY_DEBUG } :
         {
             // treat catch block as nested block statement
-            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_STATEMENT);
+            startNewMode(MODE_STATEMENT | MODE_NEST);
 
             // start of the catch statement
             startElement(SFIXED_STATEMENT);
@@ -3413,10 +3413,8 @@ fixed_statement[] { ENTRY_DEBUG } :
             consumeSkippedTokens();
 
             if (LA(1) == LPAREN) {
-                match(LPAREN);
 
-                // expect a parameter list
-                startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
+                parameter_list();
             }
         }
 ;
