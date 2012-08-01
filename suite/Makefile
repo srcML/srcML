@@ -122,6 +122,9 @@ XSLT_INSERTCOMMENT=${XSLT} xsl/insertcomments.xsl
 # insert preprocessor
 XSLT_INSERTPREPROC=${XSLT} xsl/insertpreproc.xsl
 
+# nest if
+XSLT_INSERTIFTHENELSE=${XSLT} xsl/nestif.xsl
+
 # insert form feed
 XSLT_INSERTFORMFEED=${XSLT} xsl/insertformfeed.xsl
 
@@ -220,6 +223,13 @@ GEN_PREPROC= ${foreach nm, $(SEP_PLUSNOPREPROC), $(nm).preproc.cpp.xml} \
 	           ${foreach nm, $(BASE_CS_ALL), $(nm).preproc.cs.xml} \
 		   extra_c.preproc.c.xml extra_cpp.preproc.cpp.xml
 
+# generated test cases for preproc
+GEN_IFTHENELSE= ${foreach nm, $(SEP_PLUS), $(nm).ifthenelse.cpp.xml} \
+ 	       ${foreach nm, $(BASE_CXX_11_ALL), $(nm).ifthenelse.cpp11.xml} \
+	           ${foreach nm, $(BASE_C_ALL), $(nm).ifthenelse.c.xml} \
+	           ${foreach nm, $(BASE_CS_ALL), $(nm).ifthenelse.cs.xml} \
+		   extra_c.ifthenelse.c.xml extra_cpp.ifthenelse.cpp.xml
+
 allinall.c.xml :
 	@echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" > allinall.c.xml
 	@echo "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C\" dir=\"allinall.c\">" >> allinall.c.xml
@@ -315,6 +325,18 @@ cleanall :
 %.preproc.java.xml : %.java.xml
 	${XSLT_INSERTPREPROC} $< > $@
 
+%.ifthenelse.cpp.xml : %.cpp.xml
+	${XSLT_INSERTIFTHENELSE} $< > $@
+
+%.ifthenelse.c.xml : %.c.xml
+	${XSLT_INSERTIFTHENELSE} $< > $@
+
+%.ifthenelse.cs.xml : %.cs.xml
+	${XSLT_INSERTIFTHENELSE} $< > $@
+
+%.ifthenelse.java.xml : %.java.xml
+	${XSLT_INSERTIFTHENELSE} $< > $@
+
 %.formfeed.cpp.xml : %.cpp.xml
 	${XSLT_INSERTFORMFEED} $< > $@
 
@@ -339,7 +361,7 @@ cleanall :
 %.cpp11.xml : %.cpp.xml
 	${XSLT_SETLANGUAGE_CXX_11} $< > $@
 
-GEN_FILES=${GEN_PART} ${GEN_ALL} ${GEN_BLOCK} ${GEN_COMMENT} ${GEN_PREPROC} ${GEN_FORMFEED} $(GEN_JAVA) $(GEN_C) $(GEN_CS) $(GEN_CXX_11)
+GEN_FILES=${GEN_PART} ${GEN_ALL} ${GEN_BLOCK} ${GEN_COMMENT} ${GEN_PREPROC} ${GEN_IFTHENELSE} ${GEN_FORMFEED} $(GEN_JAVA) $(GEN_C) $(GEN_CS) $(GEN_CXX_11)
 
 GEN_CPP_BASE=${GEN_SEP} ${foreach nm, $(SEP_PLUS), $(nm).all} ${foreach nm, $(SEP_PLUS), $(nm).block} ${foreach nm, $(SEP_PLUS), $(nm).comment} ${foreach nm, $(SEP_PLUS), $(nm).preproc}
 
