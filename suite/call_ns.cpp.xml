@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="call">
+
+<unit>
+<expr_stmt><expr><call><name><name>a</name>::<name>main</name></name><argument_list>(<argument><expr><name>argc</name></expr></argument>, <argument><expr><name>argv</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+</unit>

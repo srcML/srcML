@@ -59,6 +59,7 @@ LANGUAGE_CXX typedef_struct
 LANGUAGE_CXX operator
 LANGUAGE_CXX function_cpp
 LANGUAGE_CXX literal_cpp
+LANGUAGE_CXX call_ns
 
 LANGUAGE_CSHARP_GEN asm
 LANGUAGE_CSHARP_GEN extern
