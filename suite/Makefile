@@ -124,6 +124,7 @@ XSLT_INSERTPREPROC=${XSLT} xsl/insertpreproc.xsl
 
 # nest if
 XSLT_INSERTIFTHENELSE=${XSLT} xsl/nestif.xsl
+XSLT_INSERTIFTHENELSE_JAVA=${XSLT} xsl/nestif.java.xsl
 
 # insert form feed
 XSLT_INSERTFORMFEED=${XSLT} xsl/insertformfeed.xsl
@@ -336,7 +337,7 @@ cleanall :
 	${XSLT_INSERTIFTHENELSE} $< > $@
 
 %.ifthenelse.java.xml : %.java.xml
-	${XSLT_INSERTIFTHENELSE} $< > $@
+	${XSLT_INSERTIFTHENELSE_JAVA} $< > $@
 
 %.formfeed.cpp.xml : %.cpp.xml
 	${XSLT_INSERTFORMFEED} $< > $@
