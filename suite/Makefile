@@ -135,6 +135,7 @@ XSLT_INSERTFORMFEED=${XSLT} xsl/insertformfeed.xsl
 XSLT_SETLANGUAGE_XSL=xsl/setlanguage.xsl
 
 XSLT_REMOVECPP_XSL=xsl/removecpp.xsl
+XSLT_REMOVECPP_LITERAL_XSL=xsl/removecppliteral.xsl
 
 XSLT_SETLANGUAGE=${XSLT} ${XSLT_SETLANGUAGE_XSL}
 
@@ -149,6 +150,7 @@ XSLT_SETLANGUAGE_CXX_11=${XSLT} --stringparam language "C++11" ${XSLT_SETLANGUAG
 XSLT_SETLANGUAGE_JAVA=${XSLT} --stringparam language "Java" ${XSLT_SETLANGUAGE_XSL}
 
 XSLT_REMOVECPP=${XSLT} ${XSLT_REMOVECPP_XSL}
+XSLT_REMOVECPP_LITERAL=${XSLT} ${XSLT_REMOVECPP_LITERAL_XSL}
 
 SEP_BASE=$(BASE_COMMON) $(BASE_C_FAMILY) $(BASE_CXX) $(BASE_OO)
 
@@ -352,7 +354,8 @@ cleanall :
 	${XSLT_INSERTFORMFEED} $< > $@
 
 %.java.xml : %.cpp.xml
-	${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP} - > $@
+	[[ $@ != "literal.java.xml" ]] && ${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP} - > $@
+	[[ $@ = "literal.java.xml" ]] && ${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP_LITERAL} - > $@
 
 %.c.xml : %.cpp.xml
 	${XSLT_SETLANGUAGE_C} $< > $@
