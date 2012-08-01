@@ -1869,12 +1869,8 @@ else_handling[] { ENTRY_DEBUG } :
                     // find out if the next token is an else
                     bool nestedelse = LA(1) == ELSE;
 
-                    // if there isn't an ELSE next, then just end like other statements
-                    if (!nestedelse) {
-                        endDownToMode(MODE_TOP);
-
                     // when an ELSE is next and already in an else, must end properly (not needed for then)
-                    } else if (inMode(MODE_ELSE)) {
+                    if (nestedelse && inMode(MODE_ELSE)) {
 
                         while (inMode(MODE_ELSE)) {
 
@@ -3357,6 +3353,30 @@ finally_statement[] { ENTRY_DEBUG } :
         FINALLY
 ;
 
+/*
+delegate_anonymous[] { ENTRY_DEBUG } :
+        {
+            // treat catch block as nested block statement
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_STATEMENT);
+
+            // start of the catch statement
+            startElement(SLOCK_STATEMENT);
+        }
+        DELEGATE
+        {            
+            // looking for a LPAREN.  may have some whitespace before it
+            consumeSkippedTokens();
+
+            if (LA(1) == LPAREN) {
+                match(LPAREN);
+
+                // expect a parameter list
+                startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
+            }
+        }
+;
+*/
+
 lock_statement[] { ENTRY_DEBUG } :
         {
             // treat catch block as nested block statement
@@ -4045,7 +4065,10 @@ argument[] { ENTRY_DEBUG } :
         } 
         (
         { !(LA(1) == RPAREN && inTransparentMode(MODE_INTERNAL_END_PAREN)) }? expression |
-
+/*
+        (DELEGATE LPAREN)=>
+        delegate_anonymous | 
+*/
         type_identifier
         )
 ;
