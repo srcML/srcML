@@ -45,4 +45,27 @@
 )</argument_list></call></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<class><specifier>public</specifier> class <name>SysTray</name> <block>{ 
+
+    <function><type><specifier>public</specifier> <name>boolean</name></type> <name>init</name><parameter_list>(<param><decl><type><specifier>final</specifier> <name>Shell</name></type> <name>aMainShell</name></decl></param>)</parameter_list> <block>{ 
+
+        <if>if<condition>(<expr><name>true</name></expr>)</condition><then><block>{ 
+              <return>return <expr><name>false</name></expr>;</return> 
+        }</block></then><else>else<block>{ 
+              
+        <expr_stmt><expr><call><name><name>trayItem</name>.<name>addSelectionListener</name></name><argument_list>(<argument><expr>new <class><super><name>SelectionAdapter</name></super> <argument_list>()</argument_list> <block>{ 
+                              
+                        <function><type><specifier>public</specifier> <name>void</name></type> <name>widgetDefaultSelected</name><parameter_list>(<param><decl><type><name>SelectionEvent</name></type> <name>anEvent</name></decl></param>)</parameter_list> <block>{}</block></function>
+ 
+        }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <return>return <expr><name>true</name></expr>;</return>                 
+        }</block></else></if>
+    }</function>
+        
+    <function><type><specifier>private</specifier> <name>void</name></type> <name>otherClassMethod</name><parameter_list>()</parameter_list> <block>{}</block></function> 
+        
+}</block></class> 
+</unit>
+
 </unit>
