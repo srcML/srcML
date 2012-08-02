@@ -4375,9 +4375,13 @@ template_argument_list[] { LocalMode lm(this); std::string namestack_save[2]; EN
         savenamestack[namestack_save]
         tempops (COMMA | template_argument)* tempope 
 
-        (WHERE complex_name COLON (complex_name | CLASS | STRUCT))*
+        (generic_constraint)*
 
         restorenamestack[namestack_save]
+;
+
+generic_constraint[] { ENTRY_DEBUG } : 
+        WHERE complex_name COLON (complex_name | CLASS | STRUCT | NEW LPAREN RPAREN | COMMA)*
 ;
 
 savenamestack[std::string namestack_save[]] { namestack_save[0] = namestack[0]; namestack_save[1] = namestack[1]; ENTRY_DEBUG } :;
