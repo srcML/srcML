@@ -137,6 +137,15 @@ tokens {
     WHERE;
     SELECT;
     LET;
+    ORDERBY;
+    ASCENDING;
+    DESCENDING;
+    GROUP;
+    BY;
+    JOIN;
+    ON;
+    EQUALS;
+    INTO;
 }
 
 {
@@ -334,10 +343,20 @@ KeywordCPPLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         { "async"         , ASYNC         , LANGUAGE_CSHARP }, 
         { "yield"         , YIELD         , LANGUAGE_CSHARP }, 
 
+        // C# linq
         { "from"          , FROM          , LANGUAGE_CSHARP }, 
         { "where"         , WHERE         , LANGUAGE_CSHARP }, 
         { "select"        , SELECT        , LANGUAGE_CSHARP }, 
         { "let"           , LET           , LANGUAGE_CSHARP }, 
+        { "orderby"       , ORDERBY       , LANGUAGE_CSHARP }, 
+        { "ascending"     , ASCENDING     , LANGUAGE_CSHARP }, 
+        { "descending"    , DESCENDING    , LANGUAGE_CSHARP }, 
+        { "group"         , GROUP         , LANGUAGE_CSHARP }, 
+        { "by"            , BY            , LANGUAGE_CSHARP }, 
+        { "join"          , JOIN          , LANGUAGE_CSHARP }, 
+        { "on"            , ON            , LANGUAGE_CSHARP }, 
+        { "equals"        , EQUALS        , LANGUAGE_CSHARP }, 
+        { "into"          , INTO          , LANGUAGE_CSHARP }, 
    };
 
     // fill up the literals for the language that we are parsing

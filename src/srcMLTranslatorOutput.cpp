@@ -219,6 +219,9 @@ namespace {
   ELEMENT_MAP(SSELECT,   "select")
   ELEMENT_MAP(SWHERE,   "where")
   ELEMENT_MAP(SLET,   "let")
+  ELEMENT_MAP(SORDERBY,   "orderby")
+  ELEMENT_MAP(SGROUP,   "group")
+  ELEMENT_MAP(SJOIN,   "join")
 
   // special characters
   ELEMENT_MAP(CONTROL_CHAR,   "escape")

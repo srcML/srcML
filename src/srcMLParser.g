@@ -436,6 +436,9 @@ tokens {
     SWHERE;
     SSELECT;
     SLET;
+    SORDERBY;
+    SJOIN;
+    SGROUP;
 
     // Last token used for boundary
     END_ELEMENT_TOKEN;
@@ -2712,7 +2715,7 @@ linq_expression[] { LocalMode lm(this); ENTRY_DEBUG }:
 
             startElement(SLINQ);
         }
-        (linq_from | linq_where | linq_select | linq_let)+
+        (linq_from | linq_where | linq_select | linq_let | linq_group | linq_join | linq_orderby)+
     ;
 
 linq_from[] { LocalMode lm(this); ENTRY_DEBUG }:
@@ -2753,6 +2756,36 @@ linq_let[] { LocalMode lm(this); ENTRY_DEBUG }:
             startElement(SLET);
         }
         LET linq_full_expression
+    ;
+
+linq_group[] { LocalMode lm(this); ENTRY_DEBUG }:
+        {
+            // start a mode to end at right bracket with expressions inside
+            startNewMode(MODE_LOCAL);
+
+            startElement(SGROUP);
+        }
+        GROUP linq_full_expression (BY linq_full_expression)*
+    ;
+
+linq_join[] { LocalMode lm(this); ENTRY_DEBUG }:
+        {
+            // start a mode to end at right bracket with expressions inside
+            startNewMode(MODE_LOCAL);
+
+            startElement(JOIN);
+        }
+        JOIN linq_full_expression ON linq_full_expression EQUALS linq_full_expression (INTO linq_full_expression)*
+    ;
+
+linq_orderby[] { LocalMode lm(this); ENTRY_DEBUG }:
+        {
+            // start a mode to end at right bracket with expressions inside
+            startNewMode(MODE_LOCAL);
+
+            startElement(SORDERBY);
+        }
+        ORDERBY linq_full_expression ((ASCENDING | DESCENDING) COMMA linq_full_expression)*
     ;
 
 variable_identifier_array_grammar_sub[bool& iscomplex] { LocalMode lm(this); ENTRY_DEBUG } :
@@ -2912,9 +2945,13 @@ identifier[bool marked = false] { LocalMode lm(this); ENTRY_DEBUG } :
                 startElement(SNAME);
             }
         }
-        (NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
-            SUPER | CHECKED | UNCHECKED | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD
-        | FROM | WHERE | SELECT | LET)
+        (
+            NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
+            SUPER | CHECKED | UNCHECKED | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD |
+
+            // C# linq
+            FROM | WHERE | SELECT | LET | ORDERBY | ASCENDING | DESCENDING | GROUP | BY | JOIN | ON | EQUALS | INTO
+        )
 ;
 
 /*
