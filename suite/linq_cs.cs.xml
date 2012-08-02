@@ -13,32 +13,32 @@
 
 <unit>
 <decl_stmt><decl><type><name>Query</name></type> <name>query</name> =<init>
-    <expr><linq><select>select <expr><name>vegetable</name></expr></select></linq></expr></init></decl>;</decl_stmt>
+    <expr><linq><select>select <expr><name>item</name></expr></select></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
 <decl_stmt><decl><type><name>Query</name></type> <name>query</name> =<init>
-    <expr><linq><orderby>orderby <expr><name>vegetable</name> <name>descending</name></expr></orderby></linq></expr></init></decl>;</decl_stmt>
+    <expr><linq><orderby>orderby <expr><name>item</name> <name>descending</name></expr></orderby></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>var</name></type> <name>studentQuery1</name> =<init>
+<decl_stmt><decl><type><name>Query</name></type> <name>query</name> =<init>
     <expr><linq><group>group <expr><name>item</name></expr> by <expr><name><name>item</name>.<name>value</name></name></expr></group></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>var</name></type> <name>innerJoinQuery</name> =<init>
+<decl_stmt><decl><type><name>Query</name></type> <name>query</name> =<init>
     <expr><linq><join>join <expr><name>item</name></expr> in <expr><name>list</name></expr> on <expr><name><name>other_item</name>.<name>value</name></name></expr> equals <expr><name><name>item</name>.<name>value</name></name></expr></join></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>var</name></type> <name>earlyBirdQuery</name> =<init>
-            <expr><linq><let>let <expr><name>words</name> = <call><name><name>sentence</name>.<name>Split</name></name><argument_list>(<argument><expr>' '</expr></argument>)</argument_list></call></expr></let></linq></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>Query</name></type> <name>query</name> =<init>
+            <expr><linq><let>let <expr><name>items</name> = <name><name>list</name>.<name>items</name></name></expr></let></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>var</name></type> <name>earlyBirdQuery</name> =<init>
-            <expr><linq><where>where <expr><name><name>w</name><index>[<expr>0</expr>]</index></name> == 'a' || <name><name>w</name><index>[<expr>0</expr>]</index></name> == 'e'</expr></where></linq></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>Query</name></type> <name>query</name> =<init>
+            <expr><linq><where>where <expr><name><name>item</name>.<name>value</name></name> == 0</expr></where></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
