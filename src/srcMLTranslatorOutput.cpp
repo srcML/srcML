@@ -214,6 +214,12 @@ namespace {
   // special characters
   ELEMENT_MAP(SATTRIBUTE,   "attribute")
 
+  ELEMENT_MAP(SLINQ,   "linq")
+  ELEMENT_MAP(SFROM, "from")
+  ELEMENT_MAP(SSELECT,   "select")
+  ELEMENT_MAP(SWHERE,   "where")
+  ELEMENT_MAP(SLET,   "let")
+
   // special characters
   ELEMENT_MAP(CONTROL_CHAR,   "escape")
 

@@ -132,6 +132,11 @@ tokens {
     AWAIT;
     EVENT;
     ASYNC;
+
+    FROM;
+    WHERE;
+    SELECT;
+    LET;
 }
 
 {
@@ -328,6 +333,11 @@ KeywordCPPLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         { "event"         , EVENT         , LANGUAGE_CSHARP }, 
         { "async"         , ASYNC         , LANGUAGE_CSHARP }, 
         { "yield"         , YIELD         , LANGUAGE_CSHARP }, 
+
+        { "from"          , FROM          , LANGUAGE_CSHARP }, 
+        { "where"         , WHERE         , LANGUAGE_CSHARP }, 
+        { "select"        , SELECT        , LANGUAGE_CSHARP }, 
+        { "let"           , LET           , LANGUAGE_CSHARP }, 
    };
 
     // fill up the literals for the language that we are parsing

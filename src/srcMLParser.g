@@ -431,6 +431,12 @@ tokens {
     // misc
     SEMPTY;  // empty statement
 
+    SLINQ;
+    SFROM;
+    SWHERE;
+    SSELECT;
+    SLET;
+
     // Last token used for boundary
     END_ELEMENT_TOKEN;
 }
@@ -2699,6 +2705,56 @@ overloaded_operator[] { LocalMode lm(this); ENTRY_DEBUG } :
         )
 ;
 
+linq_expression[] { LocalMode lm(this); ENTRY_DEBUG }:
+        {
+            // start a mode to end at right bracket with expressions inside
+            startNewMode(MODE_LOCAL);
+
+            startElement(SLINQ);
+        }
+        (linq_from | linq_where | linq_select | linq_let)+
+    ;
+
+linq_from[] { LocalMode lm(this); ENTRY_DEBUG }:
+        {
+            // start a mode to end at right bracket with expressions inside
+            startNewMode(MODE_LOCAL);
+
+            startElement(SFROM);
+        }
+        FROM linq_full_expression
+    ;
+
+linq_where[] { LocalMode lm(this); ENTRY_DEBUG }:
+        {
+            // start a mode to end at right bracket with expressions inside
+            startNewMode(MODE_LOCAL);
+
+            startElement(SWHERE);
+        }
+        WHERE linq_full_expression
+    ;
+
+linq_select[] { LocalMode lm(this); ENTRY_DEBUG }:
+        {
+            // start a mode to end at right bracket with expressions inside
+            startNewMode(MODE_LOCAL);
+
+            startElement(SSELECT);
+        }
+        SELECT linq_full_expression
+    ;
+
+linq_let[] { LocalMode lm(this); ENTRY_DEBUG }:
+        {
+            // start a mode to end at right bracket with expressions inside
+            startNewMode(MODE_LOCAL);
+
+            startElement(SLET);
+        }
+        LET linq_full_expression
+    ;
+
 variable_identifier_array_grammar_sub[bool& iscomplex] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
@@ -2753,6 +2809,28 @@ full_expression[] { LocalMode lm(this); ENTRY_DEBUG } :
 
         // expression with right parentheses if a previous match is in one
         { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }? expression |
+
+        COLON)*
+;
+
+linq_full_expression[] { LocalMode lm(this); ENTRY_DEBUG } :
+        {
+            // start a mode to end at right bracket with expressions inside
+            startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
+        }
+        (options { greedy = true; } :
+
+        // commas as in a list
+        comma |
+
+        // right parentheses, unless we are in a pair of parentheses in an expression 
+        { !inTransparentMode(MODE_INTERNAL_END_PAREN) }? rparen[false, false] |
+
+        // argument mode (as part of call)
+        { inMode(MODE_ARGUMENT) }? argument |
+
+        // expression with right parentheses if a previous match is in one
+        { LA(1) != FROM && LA(1) != SELECT && LA(1) != LET && LA(1) != WHERE && (LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN)) }? expression |
 
         COLON)*
 ;
@@ -2835,7 +2913,8 @@ identifier[bool marked = false] { LocalMode lm(this); ENTRY_DEBUG } :
             }
         }
         (NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
-            SUPER | CHECKED | UNCHECKED | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD)
+            SUPER | CHECKED | UNCHECKED | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD
+        | FROM | WHERE | SELECT | LET)
 ;
 
 /*
@@ -3805,6 +3884,8 @@ guessing_end[]
    elements such as names and function calls are marked up.
 */
 expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG } :
+
+        linq_expression | 
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (NEW template_argument_list)=> sole_new template_argument_list |
