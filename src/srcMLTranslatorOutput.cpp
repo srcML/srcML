@@ -257,9 +257,9 @@ namespace {
   ELEMENT_MAP_DEFAULT(return SRCML_SRC_NS_URI_POS;)
 
   // cpp namespace
-  #define BOOST_PP_LOCAL_MACRO(n) template<> inline int element_prefix<n>() { return SRCML_CPP_NS_URI_POS; }
+  #define BOOST_PP_LOCAL_MACRO(n) template<> inline int element_prefix<n + TOKEN_SCPP_DIRECTIVE>() { return SRCML_CPP_NS_URI_POS; }
   //  #define BOOST_PP_LOCAL_MACRO(n) ELEMENT_MAP(n, SRCML_CPP_NS_URI_POS),
-  #define BOOST_PP_LOCAL_LIMITS (TOKEN_SCPP_DIRECTIVE, TOKEN_SCPP_ENDIF)
+  #define BOOST_PP_LOCAL_LIMITS (0, TOKEN_SCPP_ENDIF - TOKEN_SCPP_DIRECTIVE)
   #include BOOST_PP_LOCAL_ITERATE()
   #undef BOOST_PP_LOCAL_MACRO
   #undef BOOST_PP_LOCAL_LIMITS
@@ -353,7 +353,6 @@ std::string srcMLTranslatorOutput::type2name(int token_type) const {
      name = prefix;
      name += ':';
   }
-
   name += tagname;
 
   // default namespace name
