@@ -27,6 +27,11 @@
 </unit>
 
 <unit>
+<decl_stmt><decl><type><name>var</name></type> <name>innerJoinQuery</name> =<init>
+    <join>join <expr><name>item</name></expr> in <expr><name>list</name></expr> on <expr><name><name>other_item</name>.<name>value</name></name></expr> equals <expr><name><name>item</name>.<name>value</name></name></expr></join></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
 <decl_stmt><decl><type><name>Query</name></type> <name>query</name> =<init>
     <expr><linq><from>from <expr><name>vegetable</name> in <name>vegetables</name></expr></from>
     <orderby>orderby <expr><name>vegetable</name> <name>ascending</name></expr></orderby>
@@ -57,7 +62,7 @@
 <unit>
 <decl_stmt><decl><type><name>var</name></type> <name>innerJoinQuery</name> =<init>
     <expr><linq><from>from <expr><name>category</name> in <name>categories</name></expr></from>
-    <join>join <expr><name>prod</name> in <name>products</name> on <name>category</name>.<name>ID</name> equals <name>prod</name>.<name>CategoryID</name></expr></join>
+    <join>join <expr><name>prod</name></expr> in <expr><name>products</name></expr> on <expr><name><name>category</name>.<name>ID</name></name></expr> equals <expr><name><name>prod</name>.<name>CategoryID</name></name></expr></join>
     <select>select <expr>new <block>{ <expr><name>ProductName</name> = <name>prod</name>.<name>Name</name></expr>, <expr><name>Category</name> = <name>category</name>.<name>Name</name></expr> }</block></expr></select></linq></expr></init></decl>;</decl_stmt> <comment type="line">//produces flat sequence</comment>
 </unit>
 
