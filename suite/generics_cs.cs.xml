@@ -14,4 +14,8 @@
 <class>class <name>C</name><argument_list>&lt;<argument><expr><name>A</name></expr></argument>&gt;</argument_list> where A : class <block>{}</block></class>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><name>var</name></type> <name>where</name></decl>;</decl_stmt>
+</unit>
+
 </unit>

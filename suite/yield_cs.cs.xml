@@ -9,4 +9,8 @@
 <break><specifier>yield</specifier> break;</break>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><name>var</name></type> <name>yield</name></decl>;</decl_stmt>
+</unit>
+
 </unit>
