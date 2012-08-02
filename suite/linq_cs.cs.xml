@@ -18,6 +18,11 @@
 
 <unit>
 <decl_stmt><decl><type><name>Query</name></type> <name>query</name> =<init>
+    <expr><linq><orderby>orderby <expr><name>vegetable</name> <name>descending</name></expr></orderby></linq></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>Query</name></type> <name>query</name> =<init>
     <expr><linq><from>from <expr><name>vegetable</name> in <name>vegetables</name></expr></from>
     <orderby>orderby <expr><name>vegetable</name> <name>ascending</name></expr></orderby>
     <select>select <expr><name>vegetable</name></expr></select></linq></expr></init></decl>;</decl_stmt>
