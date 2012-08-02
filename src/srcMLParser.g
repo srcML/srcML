@@ -2957,7 +2957,7 @@ identifier[bool marked = false] { LocalMode lm(this); ENTRY_DEBUG } :
 /*
   identifier name marked with name element
 */
-complex_name[bool marked] { LocalMode lm(this); TokenPosition tp; bool iscomplex_name = false; ENTRY_DEBUG } :
+complex_name[bool marked = true] { LocalMode lm(this); TokenPosition tp; bool iscomplex_name = false; ENTRY_DEBUG } :
         {
             if (marked) {
                 // There is a problem detecting complex names from
@@ -4372,7 +4372,10 @@ template_argument_list[] { LocalMode lm(this); std::string namestack_save[2]; EN
             startElement(STEMPLATE_ARGUMENT_LIST);
         }
         savenamestack[namestack_save]
-        tempops (COMMA | template_argument)* tempope
+        tempops (COMMA | template_argument)* tempope 
+
+        (WHERE complex_name COLON (complex_name | CLASS | STRUCT))*
+
         restorenamestack[namestack_save]
 ;
 
