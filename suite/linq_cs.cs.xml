@@ -23,7 +23,7 @@
 
 <unit>
 <decl_stmt><decl><type><name>var</name></type> <name>studentQuery1</name> =<init>
-    <expr><linq><group>group <expr><name>item</name> by <name><name>item</name>.<name>value</name></name></expr></group></linq></expr></init></decl>;</decl_stmt>
+    <expr><linq><group>group <expr><name>item</name></expr> by <expr><name><name>item</name>.<name>value</name></name></expr></group></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
@@ -49,7 +49,7 @@
 <unit>
 <decl_stmt><decl><type><name>var</name></type> <name>wordGroups1</name> =<init>
             <expr><linq><from>from <expr><name>w</name> in <name>words</name></expr></from>
-            <group>group <expr><name>w</name> by <name><name>w</name><index>[<expr>0</expr>]</index></name> into <name>fruitGroup</name></expr></group>
+            <group>group <expr><name>w</name></expr> by <expr><name><name>w</name><index>[<expr>0</expr>]</index></name> into <name>fruitGroup</name></expr></group>
             <where>where <expr><call><name><name>fruitGroup</name>.<name>Count</name></name><argument_list>()</argument_list></call> &gt;= 2</expr></where>
             <select>select <expr>new <block>{ <expr><name>FirstLetter</name> = <name>fruitGroup</name>.<name>Key</name></expr>, <expr><name>Words</name> = <name>fruitGroup</name>.<name>Count</name><argument_list>()</argument_list></expr> }</block></expr></select></linq></expr></init></decl>;</decl_stmt>
 </unit>
