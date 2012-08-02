@@ -3,9 +3,9 @@
 
 <unit>
 <decl_stmt><decl><type><name>Query</name></type> <name>query</name> =<init>
-    <expr><linq><name>from</name> <name>vegetable</name> in <name>vegetables</name>
-    <name>orderby</name> <name>vegetable</name> <name>ascending</name>
-    <name>select</name> <name>vegetable</name></linq></expr></init></decl>;</decl_stmt>
+    <expr><linq><from>from <name>vegetable</name> in <name>vegetables</name></from>
+    <orderby>orderby <name>vegetable</name> <name>ascending</name></orderby>
+    <select>select <name>vegetable</name></select></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
