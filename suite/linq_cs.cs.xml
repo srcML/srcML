@@ -39,9 +39,9 @@
 <unit>
 <decl_stmt><decl><type><name>var</name></type> <name>earlyBirdQuery</name> =<init>
             <expr><linq><from>from <expr><name>sentence</name> in <name>strings</name></expr></from>
-            <let>let <expr><name>words</name> = <name>sentence</name>.<name>Split</name><argument_list>(<argument>' '</argument>)</argument_list></expr></let>
+            <let>let <expr><name>words</name> = <call><name><name>sentence</name>.<name>Split</name></name><argument_list>(<argument><expr>' '</expr></argument>)</argument_list></call></expr></let>
             <from>from <expr><name>word</name> in <name>words</name></expr></from>
-            <let>let <expr><name>w</name> = <call><name><name>word</name>.<name>ToLower</name></name><argument_list>()</argument_list></name></expr></let>
+            <let>let <expr><name>w</name> = <call><name><name>word</name>.<name>ToLower</name></name><argument_list>()</argument_list></call></expr></let>
             <where>where <expr><name><name>w</name><index>[<expr>0</expr>]</index></name> == 'a' || <name><name>w</name><index>[<expr>0</expr>]</index></name> == 'e'
                 || <name><name>w</name><index>[<expr>0</expr>]</index></name> == 'i' || <name><name>w</name><index>[<expr>0</expr>]</index></name> == 'o'
                 || <name><name>w</name><index>[<expr>0</expr>]</index></name> == 'u'</expr></where>
