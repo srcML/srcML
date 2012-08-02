@@ -39,12 +39,12 @@
 <unit>
 <decl_stmt><decl><type><name>var</name></type> <name>earlyBirdQuery</name> =<init>
             <expr><linq><from>from <name>sentence</name> in <name>strings</name></from>
-            <let>let <name>words</name> = <name>sentence</name>.<name>Split</name><argument_list>(<argument>' '</argument>)</argument_list>
+            <let>let <name>words</name> = <name>sentence</name>.<name>Split</name><argument_list>(<argument>' '</argument>)</argument_list></let>
             <from>from <name>word</name> in <name>words</name></from>
-            <name>let</name> <name>w</name> = <name>word</name>.<name>ToLower</name><argument_list>()</argument_list>
+            <let>let <name>w</name> = <name>word</name>.<name>ToLower</name><argument_list>()</argument_list></let>
             <where>where <name><name>w</name><index>[<expr>0</expr>]</index></name> == 'a' || <name><name>w</name><index>[<expr>0</expr>]</index></name> == 'e'
                 || <name><name>w</name><index>[<expr>0</expr>]</index></name> == 'i' || <name><name>w</name><index>[<expr>0</expr>]</index></name> == 'o'
-                || <name><name>w</name><index>[<expr>0</expr>]</index></name> == 'u'</where></let>
+                || <name><name>w</name><index>[<expr>0</expr>]</index></name> == 'u'</where>
             <select>select <name>word</name></select></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
