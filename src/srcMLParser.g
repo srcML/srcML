@@ -2715,7 +2715,8 @@ linq_expression[] { LocalMode lm(this); ENTRY_DEBUG }:
 
             startElement(SLINQ);
         }
-        (linq_from | linq_where | linq_select | linq_let | linq_group | linq_join | linq_orderby)+
+        (linq_from | linq_where | linq_select | linq_let | linq_group | linq_join | linq_orderby)
+        (linq_from | linq_where | linq_select | linq_let | linq_group | linq_join | linq_orderby)*
     ;
 
 linq_from[] { LocalMode lm(this); ENTRY_DEBUG }:
@@ -2773,7 +2774,7 @@ linq_join[] { LocalMode lm(this); ENTRY_DEBUG }:
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
 
-            startElement(JOIN);
+            startElement(SJOIN);
         }
         JOIN linq_full_expression ON linq_full_expression EQUALS linq_full_expression (INTO linq_full_expression)*
     ;
@@ -2863,7 +2864,7 @@ linq_full_expression[] { LocalMode lm(this); ENTRY_DEBUG } :
         { inMode(MODE_ARGUMENT) }? argument |
 
         // expression with right parentheses if a previous match is in one
-        { LA(1) != FROM && LA(1) != SELECT && LA(1) != LET && LA(1) != WHERE && (LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN)) }? expression |
+        { LA(1) != FROM && LA(1) != SELECT && LA(1) != LET && LA(1) != WHERE && LA(1) != ORDERBY && LA(1) != GROUP && LA(1) != JOIN && (LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN)) }? expression |
 
         COLON)*
 ;
