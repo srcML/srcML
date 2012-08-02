@@ -93,4 +93,48 @@
             <select>select <expr><name>word</name></expr></select></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><name>var</name></type> <name>from</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>var</name></type> <name>in</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>var</name></type> <name>orderby</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>var</name></type> <name>group</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>var</name></type> <name>by</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>var</name></type> <name>into</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>var</name></type> <name>where</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>var</name></type> <name>join</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>var</name></type> <name>on</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>var</name></type> <name>equals</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>var</name></type> <name>let</name></decl>;</decl_stmt>
+</unit>
+
 </unit>
