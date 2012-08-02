@@ -22,6 +22,11 @@
 </unit>
 
 <unit>
+<decl_stmt><decl><type><name>var</name></type> <name>studentQuery1</name> =<init>
+    <expr><linq><group>group <expr><name>item</name> by <name><name>item</name>.<name>value</name></name></expr></group></linq></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
 <decl_stmt><decl><type><name>Query</name></type> <name>query</name> =<init>
     <expr><linq><from>from <expr><name>vegetable</name> in <name>vegetables</name></expr></from>
     <orderby>orderby <expr><name>vegetable</name> <name>ascending</name></expr></orderby>
