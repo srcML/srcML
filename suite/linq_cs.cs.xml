@@ -28,7 +28,7 @@
 
 <unit>
 <decl_stmt><decl><type><name>Query</name></type> <name>query</name> =<init>
-            <expr><linq><group>group <expr><name>item</name></expr> by <expr><name><name>item</name>.<name>value</name></name> into <name>fruitGroup</name></expr></group></linq></expr></init></decl>;</decl_stmt>
+            <expr><linq><group>group <expr><name>item</name></expr> by <expr><name><name>item</name>.<name>value</name></name> into <name>values</name></expr></group></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
