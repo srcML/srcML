@@ -3,49 +3,49 @@
 
 <unit>
 <decl_stmt><decl><type><name>Query</name></type> <name>query</name> =<init>
-    <expr><name>from</name> <name>vegetable</name> in <name>vegetables</name>
+    <expr><linq><name>from</name> <name>vegetable</name> in <name>vegetables</name>
     <name>orderby</name> <name>vegetable</name> <name>ascending</name>
-    <name>select</name> <name>vegetable</name></expr></init></decl>;</decl_stmt>
+    <name>select</name> <name>vegetable</name></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
 <decl_stmt><decl><type><name>Query</name></type> <name>query</name> =<init>
-    <expr><name>from</name> <name>vegetable</name> in <name>vegetables</name>
+    <expr><linq><name>from</name> <name>vegetable</name> in <name>vegetables</name>
     <name>orderby</name> <name>vegetable</name> <name>descending</name>
-    <name>select</name> <name>vegetable</name></expr></init></decl>;</decl_stmt>
+    <name>select</name> <name>vegetable</name></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
 <decl_stmt><decl><type><name>var</name></type> <name>studentQuery1</name> =<init>
-    <expr><name>from</name> <name>student</name> in <name>students</name>
-    <name>group</name> <name>student</name> <name>by</name> <name>student</name>.<name><name>Last</name><index>[<expr>0</expr>]</index></name></expr></init></decl>;</decl_stmt>
+    <expr><linq><name>from</name> <name>student</name> in <name>students</name>
+    <name>group</name> <name>student</name> <name>by</name> <name>student</name>.<name><name>Last</name><index>[<expr>0</expr>]</index></name></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
 <decl_stmt><decl><type><name>var</name></type> <name>wordGroups1</name> =<init>
-            <expr><name>from</name> <name>w</name> in <name>words</name>
+            <expr><linq><name>from</name> <name>w</name> in <name>words</name>
             <name>group</name> <name>w</name> <name>by</name> <name><name>w</name><index>[<expr>0</expr>]</index></name> <name>into</name> <name>fruitGroup</name>
             <name>where</name> <call><name><name>fruitGroup</name>.<name>Count</name></name><argument_list>()</argument_list></call> &gt;= 2
-            <name>select</name> new <block>{ <expr><name>FirstLetter</name> = <name>fruitGroup</name>.<name>Key</name></expr>, <expr><name>Words</name> = <name>fruitGroup</name>.<name>Count</name><argument_list>()</argument_list></expr> }</block></expr></init></decl>;</decl_stmt>
+            <name>select</name> new <block>{ <expr><name>FirstLetter</name> = <name>fruitGroup</name>.<name>Key</name></expr>, <expr><name>Words</name> = <name>fruitGroup</name>.<name>Count</name><argument_list>()</argument_list></expr> }</block></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
 <decl_stmt><decl><type><name>var</name></type> <name>innerJoinQuery</name> =<init>
-    <expr><name>from</name> <name>category</name> in <name>categories</name>
+    <expr><linq><name>from</name> <name>category</name> in <name>categories</name>
     <name>join</name> <name>prod</name> in <name>products</name> <name>on</name> <name>category</name>.<name>ID</name> <name>equals</name> <name>prod</name>.<name>CategoryID</name>
-    <name>select</name> new <block>{ <expr><name>ProductName</name> = <name>prod</name>.<name>Name</name></expr>, <expr><name>Category</name> = <name>category</name>.<name>Name</name></expr> }</block></expr></init></decl>;</decl_stmt> <comment type="line">//produces flat sequence</comment>
+    <name>select</name> new <block>{ <expr><name>ProductName</name> = <name>prod</name>.<name>Name</name></expr>, <expr><name>Category</name> = <name>category</name>.<name>Name</name></expr> }</block></linq></expr></init></decl>;</decl_stmt> <comment type="line">//produces flat sequence</comment>
 </unit>
 
 <unit>
 <decl_stmt><decl><type><name>var</name></type> <name>earlyBirdQuery</name> =<init>
-            <expr><name>from</name> <name>sentence</name> in <name>strings</name>
+            <expr><linq><name>from</name> <name>sentence</name> in <name>strings</name>
             <name>let</name> <name>words</name> = <name>sentence</name>.<name>Split</name><argument_list>(<argument>' '</argument>)</argument_list>
             <name>from</name> <name>word</name> in <name>words</name>
             <name>let</name> <name>w</name> = <name>word</name>.<name>ToLower</name><argument_list>()</argument_list>
             <name>where</name> <name><name>w</name><index>[<expr>0</expr>]</index></name> == 'a' || <name><name>w</name><index>[<expr>0</expr>]</index></name> == 'e'
                 || <name><name>w</name><index>[<expr>0</expr>]</index></name> == 'i' || <name><name>w</name><index>[<expr>0</expr>]</index></name> == 'o'
                 || <name><name>w</name><index>[<expr>0</expr>]</index></name> == 'u'
-            <name>select</name> <name>word</name></expr></init></decl>;</decl_stmt>
+            <name>select</name> <name>word</name></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
 </unit>
