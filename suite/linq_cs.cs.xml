@@ -32,7 +32,7 @@
 <unit>
 <decl_stmt><decl><type><name>var</name></type> <name>innerJoinQuery</name> =<init>
     <expr><linq><from>from <expr><name>category</name> in <name>categories</name></expr></from>
-    <join>join <expr><name>prod</name> in <name>products</name> on <name>category</name>.<name>ID</name> <name>equals</name> <name>prod</name>.<name>CategoryID</name></expr></join>
+    <join>join <expr><name>prod</name> in <name>products</name> on <name>category</name>.<name>ID</name> equals <name>prod</name>.<name>CategoryID</name></expr></join>
     <select>select <expr>new <block>{ <expr><name>ProductName</name> = <name>prod</name>.<name>Name</name></expr>, <expr><name>Category</name> = <name>category</name>.<name>Name</name></expr> }</block></expr></select></linq></expr></init></decl>;</decl_stmt> <comment type="line">//produces flat sequence</comment>
 </unit>
 
