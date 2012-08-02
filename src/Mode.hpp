@@ -162,6 +162,8 @@ public:
 
   const static State::MODE_TYPE MODE_ONLY_END_TERMINATE;
 
+  const static State::MODE_TYPE MODE_ENUM;
+
 public:
 
   Mode(TokenParser* ptp, int lang)

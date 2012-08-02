@@ -1743,7 +1743,7 @@ block_end[] { ENTRY_DEBUG } :
                 endCurrentMode(MODE_LOCAL);
             }
 
-            if (!inMode(MODE_CLASS) || inMode(MODE_CLASS) && endstatement)
+            if (!(inMode(MODE_CLASS) || inTransparentMode(MODE_ENUM)) || (inMode(MODE_CLASS) || inTransparentMode(MODE_ENUM)) && endstatement)
                 else_handling();
 
             // if we are in a declaration (as part of a class/struct/union definition)
@@ -4442,7 +4442,7 @@ enum_definition[] { ENTRY_DEBUG } :
         {
             // statement
             // end init correctly
-            startNewMode(MODE_STATEMENT | MODE_EXPRESSION_BLOCK | MODE_VARIABLE_NAME | MODE_EXPECT);
+            startNewMode(MODE_STATEMENT | MODE_EXPRESSION_BLOCK | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_ENUM);
 
             // start the enum definition element
             startElement(SENUM);
@@ -4452,7 +4452,7 @@ enum_definition[] { ENTRY_DEBUG } :
         {
             // statement
             // end init correctly
-            startNewMode(MODE_STATEMENT | MODE_EXPRESSION_BLOCK | MODE_VARIABLE_NAME | MODE_EXPECT);
+            startNewMode(MODE_STATEMENT | MODE_EXPRESSION_BLOCK | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_ENUM);
 
             // start the enum definition element
             startElement(SENUM);
