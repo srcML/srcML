@@ -1999,7 +1999,7 @@ statement_part[] { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE de
 
         // already in an expression
         { inMode(MODE_EXPRESSION) }?
-             expression_part |
+             expression_part_plus_linq |
 
         // call list in member initialization list
         { inMode(MODE_CALL | MODE_LIST) }?
@@ -2715,8 +2715,7 @@ linq_expression[] { LocalMode lm(this); ENTRY_DEBUG }:
 
             startElement(SLINQ);
         }
-        (linq_from | linq_where | linq_select | linq_let | linq_group | linq_join | linq_orderby)
-        (linq_from | linq_where | linq_select | linq_let | linq_group | linq_join | linq_orderby)*
+        (linq_from | linq_where | linq_select | linq_let | linq_group | linq_join | linq_orderby)+
     ;
 
 linq_from[] { LocalMode lm(this); ENTRY_DEBUG }:
@@ -2864,7 +2863,7 @@ linq_full_expression[] { LocalMode lm(this); ENTRY_DEBUG } :
         { inMode(MODE_ARGUMENT) }? argument |
 
         // expression with right parentheses if a previous match is in one
-        { LA(1) != FROM && LA(1) != SELECT && LA(1) != LET && LA(1) != WHERE && LA(1) != ORDERBY && LA(1) != GROUP && LA(1) != JOIN && (LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN)) }? expression |
+        { LA(1) != FROM && LA(1) != SELECT && LA(1) != LET && LA(1) != WHERE && LA(1) != ORDERBY && LA(1) != GROUP && LA(1) != JOIN && (LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN)) }? expression_setup_linq |
 
         COLON)*
 ;
@@ -3898,6 +3897,13 @@ expression[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
 
         expression_process
 
+        expression_part_plus_linq[type]
+;
+
+expression_setup_linq[CALLTYPE type = NOCALL] { ENTRY_DEBUG } : 
+
+        expression_process
+
         expression_part[type]
 ;
 
@@ -3921,9 +3927,13 @@ guessing_end[]
    Occurs only within another expression.  The mode is MODE_EXPRESSION.  Only
    elements such as names and function calls are marked up.
 */
-expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG } :
 
-        linq_expression | 
+expression_part_plus_linq[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG } :
+
+        linq_expression | expression_part[type]
+    ;
+
+expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG } :
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (NEW template_argument_list)=> sole_new template_argument_list |
