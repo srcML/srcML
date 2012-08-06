@@ -1067,7 +1067,7 @@ if_statement[] { setFinalToken(); ENTRY_DEBUG } :
  else is detected on its own, and as part of termination (semicolon or
  end of a block
 */
-else_statement[] { setFinalToken(); ENTRY_DEBUG } :
+else_statement[] { /* setFinalToken(); */ ENTRY_DEBUG } :
         {
             // treat as a statement with a nested statement
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_ELSE);
@@ -1076,6 +1076,14 @@ else_statement[] { setFinalToken(); ENTRY_DEBUG } :
             startElement(SELSE);
         }
         ELSE
+/*
+        (IF
+        {
+            // expect a condition
+            // start THEN after condition
+            startNewMode(MODE_CONDITION | MODE_EXPECT | MODE_IF_COND);
+        })*
+*/
 ;
 
 /*
@@ -2873,6 +2881,10 @@ linq_full_expression[] { LocalMode lm(this); ENTRY_DEBUG } :
    function calls
 */
 variable_identifier[] { LocalMode lm(this); bool iscomplex = false; TokenPosition tp; ENTRY_DEBUG } :
+
+        complex_name[true, true]
+/*
+
         {
             // local mode that is automatically ended by leaving this function
             startNewMode(MODE_LOCAL);
@@ -2899,6 +2911,7 @@ variable_identifier[] { LocalMode lm(this); bool iscomplex = false; TokenPositio
                 // set the token to NOP
                 tp.setType(SNOP);
         }
+*/
 ;
 
 /*
@@ -2957,7 +2970,7 @@ identifier[bool marked = false] { LocalMode lm(this); ENTRY_DEBUG } :
 /*
   identifier name marked with name element
 */
-complex_name[bool marked = true] { LocalMode lm(this); TokenPosition tp; bool iscomplex_name = false; ENTRY_DEBUG } :
+complex_name[bool marked = true, bool index = false] { LocalMode lm(this); TokenPosition tp; bool iscomplex_name = false; ENTRY_DEBUG } :
         {
             if (marked) {
                 // There is a problem detecting complex names from
@@ -2993,6 +3006,8 @@ complex_name[bool marked = true] { LocalMode lm(this); TokenPosition tp; bool is
         { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_CSHARP) }?
         complex_name_cpp[marked, iscomplex_name]
         )
+        ({ index }?
+        variable_identifier_array_grammar_sub[iscomplex_name])*
         {
             // if we marked it as a complex name and it isn't, fix
             if (marked && !iscomplex_name)
@@ -3006,7 +3021,7 @@ complex_name[bool marked = true] { LocalMode lm(this); TokenPosition tp; bool is
 */
 complex_name_cpp[bool marked, bool& iscomplex_name] { namestack[0] = ""; namestack[1] = ""; bool founddestop = false; ENTRY_DEBUG } :
 
-        (DCOLON { iscomplex_name = true; })*
+        (dcolon { iscomplex_name = true; })*
         (DESTOP set_bool[isdestructor] {
             founddestop = true;
         })*
@@ -3020,7 +3035,7 @@ complex_name_cpp[bool marked, bool& iscomplex_name] { namestack[0] = ""; namesta
 */
 complex_name_csharp[bool marked, bool& iscomplex_name] { namestack[0] = ""; namestack[1] = ""; bool founddestop = false; ENTRY_DEBUG } :
 
-        (DCOLON { iscomplex_name = true; })*
+        (dcolon { iscomplex_name = true; })*
         (DESTOP set_bool[isdestructor] {
             founddestop = true;
         })*
