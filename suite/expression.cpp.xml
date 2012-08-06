@@ -94,11 +94,11 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>base</name>.<name>a</name></expr>;</expr_stmt>
+<expr_stmt><expr><name><name>base</name>.<name>a</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>this</name>.<name>a</name></expr>;</expr_stmt>
+<expr_stmt><expr><name><name>this</name>.<name>a</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
