@@ -110,7 +110,7 @@ int archiveWriteMatch_src2srcml(const char * URI) {
   // see if the extension is for a source archive
   const char* tails[] = { ".tar", ".tar.gz", ".tar.bz2", ".cpio", ".cpio.gz", ".cpio.bz2", ".zip"}; 
 
-  for (int i = 0; i < sizeof(tails) / sizeof(tails[0]); ++i)
+  for (unsigned int i = 0; i < sizeof(tails) / sizeof(tails[0]); ++i)
     if (strcmp(URI + strlen(URI) - strlen(tails[i]), tails[i]) == 0)
       return 1;
 
