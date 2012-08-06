@@ -2147,6 +2147,20 @@ comma[bool final = false] { if (final) setFinalToken(); ENTRY_DEBUG }:
                 endCurrentMode(MODE_IN_INIT);
             }
         }
+        comma_marked
+;
+
+comma_marked[] { LocalMode lm(this); ENTRY_DEBUG }:
+        {
+            if (isoption(parseoptions, OPTION_OPERATOR)) {
+
+                // end all elements at end of rule automatically
+                startNewMode(MODE_LOCAL);
+
+                // start the modifier
+                startElement(SOPERATOR);
+            }
+        }
         COMMA
 ;
 
