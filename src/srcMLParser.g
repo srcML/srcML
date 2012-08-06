@@ -2349,6 +2349,9 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                 (specifier)=>
                 specifier set_int[specifier_count, specifier_count + 1] |
 
+                { type_count == 0 && inLanguage(LANGUAGE_CSHARP) }?
+                attribute |
+
                 { inLanguage(LANGUAGE_JAVA_FAMILY) }?
                 (template_argument_list)=>
                 template_argument_list set_int[specifier_count, specifier_count + 1] |
@@ -2597,6 +2600,8 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
         // specifiers that occur in a type
         (specifier)=>
         specifier |
+
+        { inLanguage(LANGUAGE_CSHARP) }? attribute |
 
         pure_lead_type_identifier_no_specifiers
 
@@ -3152,9 +3157,9 @@ specifier[] { LocalMode lm(this); ENTRY_DEBUG } :
 
             // C# & Java
             INTERNAL | SEALED | OVERRIDE | REF | OUT | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE | DELEGATE | PARTIAL | EVENT | ASYNC | VIRTUAL | EXTERN | INLINE
-        ) |
+        )/* |
 
-        { inLanguage(LANGUAGE_CSHARP) }? attribute
+        { inLanguage(LANGUAGE_CSHARP) }? attribute */
 ;
 
 auto_keyword[] { LocalMode lm(this); ENTRY_DEBUG } :
@@ -3199,6 +3204,8 @@ constructor_definition[] { ENTRY_DEBUG } :
 constructor_header[] { ENTRY_DEBUG } :
 
         (options { greedy = true; } : 
+
+            { inLanguage(LANGUAGE_CSHARP) }? attribute |
 
             specifier |
 
@@ -3257,6 +3264,8 @@ destructor_declaration[] { ENTRY_DEBUG } :
 
 // destructor header
 destructor_header[] { ENTRY_DEBUG } :
+
+        (options { greedy = true; } : { inLanguage(LANGUAGE_CSHARP) }? attribute)*
 
         (options { greedy = true; } : specifier | { LT(1)->getText() == "void" }? identifier[true])*
 
