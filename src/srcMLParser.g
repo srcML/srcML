@@ -3047,6 +3047,10 @@ complex_name_csharp[bool marked, bool& iscomplex_name] { namestack[0] = ""; name
 complex_name_c[bool marked, bool& iscomplex_name] { ENTRY_DEBUG } :
         
         identifier[marked]
+        ( options { greedy = true; } : 
+            period { iscomplex_name = true; }
+            identifier[marked]
+        )*
 ;
 
 /*
