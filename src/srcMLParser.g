@@ -3069,7 +3069,7 @@ name_tail[bool& iscomplex, bool marked] { ENTRY_DEBUG } :
 
         // "a::" will cause an exception to be thrown
         ( options { greedy = true; } : 
-            (dcolon { iscomplex = true; })
+            (dcolon { iscomplex = true; } | period { iscomplex = true; })
             ( options { greedy = true; } : dcolon)*
             (DESTOP set_bool[isdestructor])*
             (simple_name_optional_template[marked] | mark_namestack overloaded_operator | function_identifier_main)
