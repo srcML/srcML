@@ -146,11 +146,11 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name><op:operator>.</op:operator><call><name>b</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name><name>a</name><op:operator>.</op:operator><name>b</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name><op:operator>.</op:operator><call><name><name>b</name><op:operator>::</op:operator><name>c</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name><name>a</name><op:operator>.</op:operator><name>b</name><op:operator>::</op:operator><name>c</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
