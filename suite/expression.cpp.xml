@@ -42,14 +42,6 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>a</name> *</type> <name>b</name></decl>;</decl_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr>*(<name>a</name>)<name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> - <name>b</name></expr>;</expr_stmt>
 </unit>
 
