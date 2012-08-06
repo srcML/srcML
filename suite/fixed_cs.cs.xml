@@ -2,12 +2,12 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp"  language="C#" dir="fixed" filename="fixed_cs">
 
 <unit>
-<fixed>fixed (<decl><type><name>int</name>*</type> <name>p</name> =<init> <expr><name>arr</name></expr></init></decl>)
+<fixed>fixed <parameter_list>(<param><decl><type><name>int</name>*</type> <name>p</name> =<init> <expr><name>arr</name></expr></init></decl></param>)</parameter_list>
 <empty_stmt>;</empty_stmt></fixed>
 </unit>
 
 <unit>
-<fixed>fixed (<decl><type><name>int</name>*</type> <name>p</name> =<init> <expr><name>arr</name></expr></init></decl>)
+<fixed>fixed <parameter_list>(<param><decl><type><name>int</name>*</type> <name>p</name> =<init> <expr><name>arr</name></expr></init></decl></param>)</parameter_list>
 <block>{}</block></fixed>
 </unit>
 
