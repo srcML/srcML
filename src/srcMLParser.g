@@ -2404,6 +2404,9 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
         // need to see if we possibly have a constructor/destructor name, with no type
         set_bool[isconstructor,
 
+                 // operator methods may not have non-specifier types also
+                 !sawoperator &&
+
                  // entire type is specifiers
                  (type_count == specifier_count) &&
 
