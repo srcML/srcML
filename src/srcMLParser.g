@@ -2414,7 +2414,10 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                     // right inside the block of a Java or C# class
                     (inPrevMode(MODE_CLASS) && (inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP))) ||
 
-                    // outside of a class definition, but with properly prefixed name
+                    // by itself, but has specifiers so is not a call
+                    (specifier_count > 0 && (inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP))) ||
+
+                    // outside of a class definition in C++, but with properly prefixed name
                     ((inLanguage(LANGUAGE_CXX_FAMILY) && !inLanguage(LANGUAGE_CSHARP)) && namestack[0] != "" && namestack[1] != "" && namestack[0] == namestack[1])
                 )
         ]
