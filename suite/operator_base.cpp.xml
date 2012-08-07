@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:op="http://www.sdml.info/srcML/operator" language="C++" dir="operator">
 
-<Unit>
+<unit>
 <expr_stmt><expr>1 <op:operator>+</op:operator> 2</expr>;</expr_stmt>
 </unit>
 
