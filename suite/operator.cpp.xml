@@ -42,10 +42,6 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><op:operator>delete</op:operator><index>[]</index><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>=</op:operator><op:operator>-></op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
@@ -55,6 +51,10 @@
 
 <unit>
 <expr_stmt><expr><name>a</name> <op:operator>=</op:operator><name><op:operator>::</op:operator><name>b</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><op:operator>delete</op:operator><index>[]</index><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -78,6 +78,10 @@
 </unit>
 
 <unit>
+<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>new</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
 <expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>delete</op:operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
@@ -95,6 +99,10 @@
 
 <unit>
 <expr_stmt><expr><name>a</name> <op:operator>-=</op:operator><name><op:operator>::</op:operator><name>b</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>-=</op:operator><op:operator>new</op:operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
