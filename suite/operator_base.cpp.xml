@@ -963,10 +963,6 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>*=</op:operator><op:operator>new</op:operator> <name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><op:operator>-</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
@@ -1147,10 +1143,6 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><op:operator>new</op:operator> <name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>%=</op:operator><op:operator>-</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
@@ -1328,10 +1320,6 @@
 
 <unit>
 <expr_stmt><expr><name>a</name> <op:operator>%=</op:operator><op:operator>(</op:operator><name>int</name><op:operator>)</op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><name>a</name> <op:operator>%=</op:operator><op:operator>new</op:operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
