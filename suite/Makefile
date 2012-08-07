@@ -136,6 +136,7 @@ XSLT_SETLANGUAGE_XSL=xsl/setlanguage.xsl
 
 XSLT_REMOVECPP_XSL=xsl/removecpp.xsl
 XSLT_REMOVECPP_LITERAL_XSL=xsl/removecppliteral.xsl
+XSLT_REMOVECPP_OPERATOR_XSL=xsl/removecppoperator.xsl
 
 XSLT_SETLANGUAGE=${XSLT} ${XSLT_SETLANGUAGE_XSL}
 
@@ -151,6 +152,7 @@ XSLT_SETLANGUAGE_JAVA=${XSLT} --stringparam language "Java" ${XSLT_SETLANGUAGE_X
 
 XSLT_REMOVECPP=${XSLT} ${XSLT_REMOVECPP_XSL}
 XSLT_REMOVECPP_LITERAL=${XSLT} ${XSLT_REMOVECPP_LITERAL_XSL}
+XSLT_REMOVECPP_OPERATOR=${XSLT} ${XSLT_REMOVECPP_OPERATOR_XSL}
 
 SEP_BASE=$(BASE_COMMON) $(BASE_C_FAMILY) $(BASE_CXX) $(BASE_OO)
 
@@ -354,8 +356,9 @@ cleanall :
 	${XSLT_INSERTFORMFEED} $< > $@
 
 %.java.xml : %.cpp.xml
-	( [[ $@ != "literal.java.xml" ]] && ${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP} - > $@ ) || echo -n ""
 	( [[ $@ = "literal.java.xml" ]] && ${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP_LITERAL} - > $@ ) || echo -n ""
+	( [[ $@ = "operator_base.java.xml" ]] && ${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP_OPERATOR} - > $@ ) || echo -n ""
+	( [[ $@ != "literal.java.xml" ]] && ${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP} - > $@ ) || echo -n ""
 
 %.c.xml : %.cpp.xml
 	${XSLT_SETLANGUAGE_C} $< > $@
