@@ -2360,7 +2360,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
 //                { LA(1) != ASYNC }?
                 complex_name[true] set_bool[foundpure]
                     set_bool[isoperatorfunction, inLanguage(LANGUAGE_CXX_FAMILY) && (isoperatorfunction ||
-                             (namestack[0] == "operator" && type_count == 0))] |
+                             (namestack[0] == "operator" && type_count == specifier_count))] |
 
                 // special function name
                 MAIN set_bool[isoperatorfunction, type_count == 0] |
