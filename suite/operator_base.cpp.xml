@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:op="http://www.sdml.info/srcML/operator" language="C++" dir="operator">
 
-<unit>
+<Unit>
 <expr_stmt><expr>1 <op:operator>+</op:operator> 2</expr>;</expr_stmt>
 </unit>
 
@@ -187,10 +187,6 @@
 
 <unit>
 <expr_stmt><expr><name><name>a</name><index>[<expr>1</expr>]</index></name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><name>a</name><op:operator>->*</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -399,15 +395,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>=</op:operator><op:operator>-></op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>=</op:operator><op:operator>.</op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><name>a</name> <op:operator>=</op:operator><op:operator>->*</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -599,15 +587,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>-></op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>.</op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>->*</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -799,15 +779,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>-=</op:operator><op:operator>-></op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>-=</op:operator><op:operator>.</op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><name>a</name> <op:operator>-=</op:operator><op:operator>->*</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -999,15 +971,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>*=</op:operator><op:operator>-></op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>*=</op:operator><op:operator>.</op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><name>a</name> <op:operator>*=</op:operator><op:operator>->*</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1199,15 +1163,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><op:operator>-></op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><op:operator>.</op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><op:operator>->*</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1399,15 +1355,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>%=</op:operator><op:operator>-></op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>%=</op:operator><op:operator>.</op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><name>a</name> <op:operator>%=</op:operator><op:operator>->*</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1599,15 +1547,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&amp;=</op:operator><op:operator>-></op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>&amp;=</op:operator><op:operator>.</op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><name>a</name> <op:operator>&amp;=</op:operator><op:operator>->*</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1799,15 +1739,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>|=</op:operator><op:operator>-></op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>|=</op:operator><op:operator>.</op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><name>a</name> <op:operator>|=</op:operator><op:operator>->*</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1999,15 +1931,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>^=</op:operator><op:operator>-></op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>^=</op:operator><op:operator>.</op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><name>a</name> <op:operator>^=</op:operator><op:operator>->*</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -2199,15 +2123,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&lt;&lt;=</op:operator><op:operator>-></op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>&lt;&lt;=</op:operator><op:operator>.</op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><name>a</name> <op:operator>&lt;&lt;=</op:operator><op:operator>->*</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -2399,15 +2315,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><op:operator>-></op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><op:operator>.</op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><op:operator>->*</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
