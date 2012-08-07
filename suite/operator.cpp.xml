@@ -6,6 +6,10 @@
 </unit>
 
 <unit>
+<expr_stmt><expr><op:operator>new</op:operator> <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
 <expr_stmt><expr><op:operator>delete</op:operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
@@ -22,11 +26,19 @@
 </unit>
 
 <unit>
+<expr_stmt><expr><op:operator>new</op:operator> <name><name>type</name><index>[<expr><name>n</name></expr>]</index></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
 <expr_stmt><expr><name>a</name><op:operator>->*</op:operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
 <expr_stmt><expr><name><op:operator>::</op:operator><name>a</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <op:operator>=</op:operator><op:operator>new</op:operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
