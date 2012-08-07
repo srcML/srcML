@@ -669,11 +669,11 @@ statements_non_cfg[] { int token = 0; int place = 0; int secondtoken = 0; int fl
         { secondtoken == COLON }? label_statement |
 
         // extern block as opposed to enum as part of declaration
-        { decl_type == NONE }?
+        { decl_type == NONE && LA(1) != NEW }?
         extern_definition |
 
         // enum definition as opposed to part of type or declaration
-        { decl_type == NONE }?
+        { decl_type == NONE && LA(1) != NEW }?
         enum_definition |
 
         // call
