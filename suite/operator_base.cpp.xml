@@ -150,10 +150,6 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><call><name><name>a</name><op:operator>.</op:operator><name>b</name><op:operator>::</op:operator><name>c</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><op:operator>new</op:operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
@@ -167,18 +163,6 @@
 
 <unit>
 <expr_stmt><expr><op:operator>+</op:operator>1</expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><name><name>a</name><op:operator>::</op:operator><name>b</name></name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<decl_stmt><decl><type><name><name><name>A</name><argument_list>&lt;<argument><name>T</name></argument>&gt;</argument_list></name><op:operator>::</op:operator><name>b</name></name></type> <name>c</name></decl>;</decl_stmt>
-</unit>
-
-<unit>
-<decl_stmt><decl><type><name><name><name>A</name><argument_list>&lt;<argument><name>T</name></argument>&gt;</argument_list></name><op:operator>::</op:operator><op:operator>*</op:operator><name>b</name></name></type> <name>c</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
@@ -211,10 +195,6 @@
 
 <unit>
 <expr_stmt><expr><name>a</name></expr><op:operator>,</op:operator><expr><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><name><op:operator>::</op:operator><name>a</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -451,10 +431,6 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>=</op:operator><name><op:operator>::</op:operator><name>b</name></name></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>=</op:operator><call><name>sizeof</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
@@ -652,10 +628,6 @@
 
 <unit>
 <expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><op:operator>:</op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><name>a</name> <op:operator>+=</op:operator><name><op:operator>::</op:operator><name>b</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -859,10 +831,6 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>-=</op:operator><name><op:operator>::</op:operator><name>b</name></name></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>-=</op:operator><call><name>sizeof</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
@@ -1060,10 +1028,6 @@
 
 <unit>
 <expr_stmt><expr><name>a</name> <op:operator>*=</op:operator><op:operator>:</op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><name>a</name> <op:operator>*=</op:operator><name><op:operator>::</op:operator><name>b</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1267,10 +1231,6 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><name><op:operator>::</op:operator><name>b</name></name></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>/=</op:operator><call><name>sizeof</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
@@ -1468,10 +1428,6 @@
 
 <unit>
 <expr_stmt><expr><name>a</name> <op:operator>%=</op:operator><op:operator>:</op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><name>a</name> <op:operator>%=</op:operator><name><op:operator>::</op:operator><name>b</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -1675,10 +1631,6 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&amp;=</op:operator><name><op:operator>::</op:operator><name>b</name></name></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>&amp;=</op:operator><call><name>sizeof</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
@@ -1876,10 +1828,6 @@
 
 <unit>
 <expr_stmt><expr><name>a</name> <op:operator>|=</op:operator><op:operator>:</op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><name>a</name> <op:operator>|=</op:operator><name><op:operator>::</op:operator><name>b</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -2083,10 +2031,6 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>^=</op:operator><name><op:operator>::</op:operator><name>b</name></name></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>^=</op:operator><call><name>sizeof</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
@@ -2287,10 +2231,6 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>&lt;&lt;=</op:operator><name><op:operator>::</op:operator><name>b</name></name></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>a</name> <op:operator>&lt;&lt;=</op:operator><call><name>sizeof</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
@@ -2488,10 +2428,6 @@
 
 <unit>
 <expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><op:operator>:</op:operator><name>b</name></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><name><op:operator>::</op:operator><name>b</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
