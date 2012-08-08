@@ -109,6 +109,7 @@ LANGUAGE_CSHARP indexers_cs
 LANGUAGE_CSHARP attributes_cs
 LANGUAGE_CSHARP string_cs
 LANGUAGE_CSHARP lambda_cs
+LANGUAGE_CSHARP enum_cs
 
 LANGUAGE_JAVA class_java
 LANGUAGE_JAVA constructor_java
