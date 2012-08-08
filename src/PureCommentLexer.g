@@ -149,7 +149,23 @@ COMMENT_TEXT {
         '\040'..'\041' |
 
         '\042' /* '\"' */
-                { if ((prevLA != '\\' || noescape) && mode == STRING_END) { $setType(mode); selector->pop(); } } |
+                {
+                    if (noescape) {
+
+                            int count = 1;
+                            while (LA(1) == '\042') {
+                                match("\"");
+                                ++count;
+                            }
+
+                            if (count % 2 == 1) {
+                                $setType(mode); selector->pop();
+                            }
+
+                    } else if ((prevLA != '\\') && mode == STRING_END) {
+                        $setType(mode); selector->pop();
+                    } 
+                } |
 
         '\043'..'\045' | 
 
