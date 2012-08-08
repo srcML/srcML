@@ -5,16 +5,9 @@
 <decl_stmt><decl><type>enum <name>a</name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
-<decl_stmt><decl><type><specifier>extern</specifier> <name>int</name></type> <name>foo</name></decl>;</decl_stmt>
-</unit>
 
 <unit>
 <decl_stmt><decl><type><name>int</name> *</type> <name>a</name> =<init> <expr><name>null</name></expr></init></decl>;</decl_stmt>
-</unit>
-
-<unit>
-<decl_stmt><decl><type><specifier>extern</specifier> <name>alias</name></type> <name>GridV1</name></decl>;</decl_stmt>
 </unit>
 
 </unit>
