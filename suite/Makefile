@@ -197,6 +197,7 @@ SEP_PLUSNOPREPROC= ${SEP_BASE} ${GEN_SEP}
 # generate cases for all
 GEN_ALL= ${foreach nm, $(SEP_PLUS), $(nm).all.cpp.xml} extra_cpp.all.cpp.xml \
 	       ${foreach nm, $(BASE_JAVA_ALL), $(nm).all.java.xml} \
+	       ${foreach nm, $(BASE_ASPECTJ_ALL_GEN), $(nm).all.aj.xml} \
 	       ${foreach nm, $(BASE_CXX_11_ALL), $(nm).all.cpp11.xml} \
 	       ${foreach nm, $(BASE_C_ALL), $(nm).all.c.xml} \
 	       ${foreach nm, $(BASE_CS_ALL), $(nm).all.cs.xml} \
@@ -206,39 +207,43 @@ GEN_ALL= ${foreach nm, $(SEP_PLUS), $(nm).all.cpp.xml} extra_cpp.all.cpp.xml \
 GEN_BLOCK= ${foreach nm, $(SEP_PLUS),          $(nm).block.cpp.xml} \
                ${foreach nm, $(BASE_C_ALL),    $(nm).block.c.xml} \
                ${foreach nm, $(BASE_CS_ALL),    $(nm).block.cs.xml} \
- 	       ${foreach nm, $(BASE_CXX_11_ALL), $(nm).block.cpp11.xml} \
+	       ${foreach nm, $(BASE_CXX_11_ALL), $(nm).block.cpp11.xml} \
                ${foreach nm, $(BASE_JAVA_ALL), $(nm).block.java.xml} \
+	       ${foreach nm, $(BASE_ASPECTJ_ALL_GEN), $(nm).all.aj.xml} \
 		 extra_c.block.c.xml extra_cpp.block.cpp.xml
 
 # generated cases for comments
 GEN_COMMENT= ${foreach nm, $(SEP_PLUS),          $(nm).comment.cpp.xml} \
 	       ${foreach nm, $(BASE_C_ALL),    $(nm).comment.c.xml} \
 	       ${foreach nm, $(BASE_CS_ALL),    $(nm).comment.cs.xml} \
- 	       ${foreach nm, $(BASE_CXX_11_ALL), $(nm).comment.cpp11.xml} \
+	       ${foreach nm, $(BASE_CXX_11_ALL), $(nm).comment.cpp11.xml} \
 	       ${foreach nm, $(BASE_JAVA_ALL), $(nm).comment.java.xml} \
+	       ${foreach nm, $(BASE_ASPECTJ_ALL_GEN), $(nm).all.aj.xml} \
 		   extra_c.comment.c.xml extra_cpp.comment.cpp.xml
 
 # generated cases for formfeed
 GEN_FORMFEED = ${foreach nm, $(SEP_PLUS),          $(nm).formfeed.cpp.xml} \
 		     ${foreach nm, $(BASE_C_ALL),    $(nm).formfeed.c.xml} \
 		     ${foreach nm, $(BASE_CS_ALL),    $(nm).formfeed.cs.xml} \
- 	       ${foreach nm, $(BASE_CXX_11_ALL), $(nm).formfeed.cpp11.xml} \
+	             ${foreach nm, $(BASE_CXX_11_ALL), $(nm).formfeed.cpp11.xml} \
 		     ${foreach nm, $(BASE_JAVA_ALL), $(nm).formfeed.java.xml} \
+	             ${foreach nm, $(BASE_ASPECTJ_ALL_GEN), $(nm).all.aj.xml} \
 		     extra_c.formfeed.c.xml extra_cpp.formfeed.cpp.xml
 
 # generated test cases for preproc
 GEN_PREPROC= ${foreach nm, $(SEP_PLUSNOPREPROC), $(nm).preproc.cpp.xml} \
- 	       ${foreach nm, $(BASE_CXX_11_ALL), $(nm).preproc.cpp11.xml} \
+                   ${foreach nm, $(BASE_CXX_11_ALL), $(nm).preproc.cpp11.xml} \
 	           ${foreach nm, $(BASE_C_ALL), $(nm).preproc.c.xml} \
 	           ${foreach nm, $(BASE_CS_ALL), $(nm).preproc.cs.xml} \
 		   extra_c.preproc.c.xml extra_cpp.preproc.cpp.xml
 
 # generated test cases for preproc
 GEN_IFTHENELSE= ${foreach nm, $(SEP_PLUS), $(nm).ifthenelse.cpp.xml} \
- 	       ${foreach nm, $(BASE_CXX_11_ALL), $(nm).ifthenelse.cpp11.xml} \
+	           ${foreach nm, $(BASE_CXX_11_ALL), $(nm).ifthenelse.cpp11.xml} \
 	           ${foreach nm, $(BASE_C_ALL), $(nm).ifthenelse.c.xml} \
 	           ${foreach nm, $(BASE_CS_ALL), $(nm).ifthenelse.cs.xml} \
 	           ${foreach nm, $(BASE_JAVA_ALL), $(nm).ifthenelse.java.xml} \
+	           ${foreach nm, $(BASE_ASPECTJ_ALL_GEN), $(nm).all.aj.xml} \
 		   extra_c.ifthenelse.c.xml extra_cpp.ifthenelse.cpp.xml
 
 allinall.c.xml :
@@ -300,6 +305,9 @@ cleanall :
 %.all.java.xml : %.java.xml
 	${XSLT_MERGEUNIT} $< > $@
 
+%.all.aj.xml : %.aj.xml
+	${XSLT_MERGEUNIT} $< > $@
+
 %.block.cpp.xml : %.cpp.xml
 	${XSLT_BLOCKUNIT} $< > $@
 
@@ -310,6 +318,9 @@ cleanall :
 	${XSLT_BLOCKUNIT} $< > $@
 
 %.block.java.xml : %.java.xml
+	${XSLT_BLOCKUNIT_JAVA} $< > $@
+
+%.block.aj.xml : %.aj.xml
 	${XSLT_BLOCKUNIT_JAVA} $< > $@
 
 %.comment.cpp.xml : %.cpp.xml
@@ -324,6 +335,9 @@ cleanall :
 %.comment.java.xml : %.java.xml
 	${XSLT_INSERTCOMMENT} $< > $@
 
+%.comment.aj.xml : %.aj.xml
+	${XSLT_INSERTCOMMENT} $< > $@
+
 %.preproc.cpp.xml : %.cpp.xml
 	${XSLT_INSERTPREPROC} $< > $@
 
@@ -334,6 +348,9 @@ cleanall :
 	${XSLT_INSERTPREPROC} $< > $@
 
 %.preproc.java.xml : %.java.xml
+	${XSLT_INSERTPREPROC} $< > $@
+
+%.preproc.aj.xml : %.aj.xml
 	${XSLT_INSERTPREPROC} $< > $@
 
 %.ifthenelse.cpp.xml : %.cpp.xml
@@ -348,6 +365,9 @@ cleanall :
 %.ifthenelse.java.xml : %.java.xml
 	${XSLT_INSERTIFTHENELSE_JAVA} $< > $@
 
+%.ifthenelse.aj.xml : %.aj.xml
+	${XSLT_INSERTIFTHENELSE_JAVA} $< > $@
+
 %.formfeed.cpp.xml : %.cpp.xml
 	${XSLT_INSERTFORMFEED} $< > $@
 
@@ -357,7 +377,7 @@ cleanall :
 %.formfeed.cs.xml : %.cs.xml
 	${XSLT_INSERTFORMFEED} $< > $@
 
-%.formfeed.java.xml : %.java.xml
+%.formfeed.aj.xml : %.aj.xml
 	${XSLT_INSERTFORMFEED} $< > $@
 
 %.java.xml : %.cpp.xml
