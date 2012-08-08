@@ -21,4 +21,8 @@
 <decl_stmt><decl><type><name>var</name></type> <name>shortDigits</name> =<init> <expr><call><name><name>digits</name>.<name>Where</name></name><argument_list>(<argument><expr>(<name>digit</name>, <name>index</name>) =&gt; <name><name>digit</name>.<name>Length</name></name> &lt; <name>index</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><name>var</name></type> <name>shortDigits</name> =<init> <expr><call><name><name>digits</name>.<name>Where</name></name><argument_list>(<argument><expr>(<decl><type><name>string</name></type> <name>digit</name></decl>, <decl><type><name>int</name></type> <name>index</name></decl>) =&gt; <name><name>digit</name>.<name>Length</name></name> &lt; <name>index</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+</unit>
+
 </unit>
