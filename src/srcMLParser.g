@@ -4619,7 +4619,7 @@ enum_definition[] { ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (enum_class_definition nested_terminate)=> enum_class_definition |
 
-        { inLanguage(LANGUAGE_JAVA_FAMILY) }?
+        { inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) }?
         {
             // statement
             // end init correctly
