@@ -377,6 +377,9 @@ cleanall :
 %.formfeed.cs.xml : %.cs.xml
 	${XSLT_INSERTFORMFEED} $< > $@
 
+%.formfeed.java.xml : %.java.xml
+	${XSLT_INSERTFORMFEED} $< > $@
+
 %.formfeed.aj.xml : %.aj.xml
 	${XSLT_INSERTFORMFEED} $< > $@
 
