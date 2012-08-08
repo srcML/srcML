@@ -33,4 +33,8 @@
 <expr_stmt><expr><lit:literal type="string">@"""'Ahoy!' cried the captain."""</lit:literal></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><lit:literal type="string">@"""""""Ahoy!"" cried the captain."""""</lit:literal></expr>;</expr_stmt>
+</unit>
+
 </unit>
