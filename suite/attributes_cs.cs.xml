@@ -12,4 +12,8 @@
         }</block></function>
 </unit>
 
+<unit>
+<class><attribute>[<expr><name>System</name></expr>]</attribute> class <name>C</name> <block>{}</block></class>
+</unit>
+
 </unit>
