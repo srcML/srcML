@@ -37,4 +37,10 @@
 <expr_stmt><expr><lit:literal type="string">@"""""""Ahoy!""criedthecaptain."""""</lit:literal></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><lit:literal type="string">@"one
+two
+three"</lit:literal></expr>;</expr_stmt>
+</unit>
+
 </unit>
