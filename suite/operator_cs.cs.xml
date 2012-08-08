@@ -35,4 +35,8 @@
 <expr_stmt><expr><name>i</name> <op:operator>=</op:operator> <op:operator>await</op:operator> <call><name>M</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><name>w</name> <op:operator>=&gt;</op:operator> <name><name>w</name><op:operator>.</op:operator><name>Length</name></name></expr></expr_stmt>
+</unit>
+
 </unit>
