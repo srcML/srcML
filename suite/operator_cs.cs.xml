@@ -24,14 +24,6 @@
 </unit>
 
 <unit>
-<class type="interface">interface <name>I</name><argument_list>&lt;<argument><expr><op:operator>in</op:operator> <name>A</name></expr></argument>&gt;</argument_list> <block>{}</block></class>
-</unit>
-
-<unit>
-<class type="interface">interface <name>I</name><argument_list>&lt;<argument><expr><op:operator>out</op:operator> <name>A</name></expr></argument>&gt;</argument_list> <block>{}</block></class>
-</unit>
-
-<unit>
 <expr_stmt><expr><name>i</name> <op:operator>=</op:operator> <op:operator>await</op:operator> <call><name>M</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
 </unit>
 
