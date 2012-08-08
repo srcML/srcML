@@ -28,4 +28,16 @@
 <decl_stmt><decl><type><attribute>[<expr><name>System</name></expr>]</attribute> <specifier>public</specifier> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<function><type><attribute>[<expr><name>System</name></expr>]</attribute> <specifier>public</specifier> <name>void</name></type> <name>M</name><parameter_list>(<param><decl><type><attribute>[<expr><name>In</name></expr>]</attribute> <name>int</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><attribute>[<expr><name>System</name></expr>]</attribute> <specifier>public</specifier> <name>void</name></type> <name>M</name><parameter_list>(<param><decl><type><attribute>[<expr><name>In</name></expr>]</attribute><attribute>[<expr><name>Out</name></expr>]</attribute> <name>int</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><attribute>[<expr><name>System</name></expr>]</attribute> <specifier>public</specifier> <name>void</name></type> <name>M</name><parameter_list>(<param><decl><type><attribute>[<expr><name>In</name></expr>, <name>Out</name>]</attribute> <name>int</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
+</unit>
+
 </unit>
