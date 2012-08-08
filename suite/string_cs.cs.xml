@@ -5,4 +5,12 @@
 <expr_stmt><expr>@"good morning"</expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr>@"c:\Docs\Source\a.txt"</expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr>@"""Ahoy!"" cried the captain."</expr>;</expr_stmt>
+</unit>
+
 </unit>
