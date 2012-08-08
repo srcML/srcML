@@ -10,7 +10,7 @@
 </unit>
 
 <unit>
-<class>class <name><name>C</name><argument_list>&lt;<argument><expr><name>A</name></expr></argument>&gt; where A : class</argument_list></name> <block>{}</block></class>
+<class>class <name><name>C</name><argument_list>&lt;<argument><name>A</name></argument>&gt; where <name>A</name> : class</argument_list></name> <block>{}</block></class>
 </unit>
 
 <unit>
