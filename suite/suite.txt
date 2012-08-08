@@ -65,6 +65,7 @@ LANGUAGE_CXX literal_cpp
 LANGUAGE_CXX call_ns
 LANGUAGE_CXX expression_pointer
 LANGUAGE_CXX enum_cpp
+LANGUAGE_CXX operator_cpp
 
 LANGUAGE_CSHARP_GEN asm
 LANGUAGE_CSHARP_GEN extern
