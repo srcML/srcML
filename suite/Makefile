@@ -149,6 +149,7 @@ XSLT_SETLANGUAGE_CXX=${XSLT} --stringparam language "CXX" ${XSLT_SETLANGUAGE_XSL
 XSLT_SETLANGUAGE_CXX_11=${XSLT} --stringparam language "C++11" ${XSLT_SETLANGUAGE_XSL}
 
 XSLT_SETLANGUAGE_JAVA=${XSLT} --stringparam language "Java" ${XSLT_SETLANGUAGE_XSL}
+XSLT_SETLANGUAGE_ASPECTJ=${XSLT} --stringparam language "AspectJ" ${XSLT_SETLANGUAGE_XSL}
 
 XSLT_REMOVECPP=${XSLT} ${XSLT_REMOVECPP_XSL}
 XSLT_REMOVECPP_LITERAL=${XSLT} ${XSLT_REMOVECPP_LITERAL_XSL}
@@ -170,6 +171,10 @@ BASE_JAVA_ALL_GEN = $(BASE_COMMON) $(GEN_BASE) $(BASE_OO)
 BASE_JAVA_ALL = $(BASE_COMMON) $(GEN_BASE) $(BASE_OO) $(BASE_JAVA)
 
 GEN_JAVA= ${foreach nm, $(BASE_JAVA_ALL_GEN), $(nm).java.xml}
+
+BASE_ASPECTJ_ALL_GEN = $(BASE_COMMON) $(GEN_BASE) $(BASE_OO) $(BASE_JAVA)
+
+GEN_ASPECTJ= ${foreach nm, $(BASE_ASPECTJ_ALL_GEN), $(nm).aj.xml}
 
 BASE_CXX_11_ALL_GEN = $(BASE_COMMON) $(BASE_CXX) $(BASE_OO)
 
@@ -360,6 +365,12 @@ cleanall :
 	( [[ $@ = "literal.java.xml" ]] && ${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP_LITERAL} - > $@ ) || echo -n ""
 	( [[ $@ = "operator_base.java.xml" ]] && ${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP_OPERATOR} - > $@ ) || echo -n ""
 
+
+%.aj.xml : %.cpp.xml
+	( [[ $@ != "literal.aj.xml" ]] && [[ $@ != "operator.aj.xml" ]] && ${XSLT_SETLANGUAGE_ASPECTJ} $< | ${XSLT_REMOVECPP} - > $@ ) || echo -n ""
+	( [[ $@ = "literal.aj.xml" ]] && ${XSLT_SETLANGUAGE_ASPECTJ} $< | ${XSLT_REMOVECPP_LITERAL} - > $@ ) || echo -n ""
+	( [[ $@ = "operator_base.aj.xml" ]] && ${XSLT_SETLANGUAGE_ASPECTJ} $< | ${XSLT_REMOVECPP_OPERATOR} - > $@ ) || echo -n ""
+
 %.c.xml : %.cpp.xml
 	${XSLT_SETLANGUAGE_C} $< > $@
 
@@ -369,7 +380,7 @@ cleanall :
 %.cpp11.xml : %.cpp.xml
 	${XSLT_SETLANGUAGE_CXX_11} $< > $@
 
-GEN_FILES=${GEN_PART} ${GEN_ALL} ${GEN_BLOCK} ${GEN_COMMENT} ${GEN_PREPROC} ${GEN_IFTHENELSE} ${GEN_FORMFEED} $(GEN_JAVA) $(GEN_C) $(GEN_CS) $(GEN_CXX_11)
+GEN_FILES=${GEN_PART} ${GEN_ALL} ${GEN_BLOCK} ${GEN_COMMENT} ${GEN_PREPROC} ${GEN_IFTHENELSE} ${GEN_FORMFEED} $(GEN_JAVA) $(GEN_C) $(GEN_CS) $(GEN_CXX_11) $(GEN_ASPECTJ)
 
 GEN_CPP_BASE=${GEN_SEP} ${foreach nm, $(SEP_PLUS), $(nm).all} ${foreach nm, $(SEP_PLUS), $(nm).block} ${foreach nm, $(SEP_PLUS), $(nm).comment} ${foreach nm, $(SEP_PLUS), $(nm).preproc}
 
