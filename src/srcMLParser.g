@@ -1760,6 +1760,11 @@ block_end[] { ENTRY_DEBUG } :
                 endCurrentMode(MODE_LOCAL);
             }
 
+            if (inTransparentMode(MODE_ENUM) && inLanguage(LANGUAGE_CSHARP)) {
+
+                endCurrentMode(MODE_LOCAL);
+            }
+
             if (!(inMode(MODE_CLASS) || inTransparentMode(MODE_ENUM)) || (inMode(MODE_CLASS) || inTransparentMode(MODE_ENUM)) && endstatement)
                 else_handling();
 
@@ -2640,9 +2645,11 @@ pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
         CLASS | STRUCT | UNION |
 
         // enum use in a type
+        { inLanguage(LANGUAGE_CXX_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
         (ENUM variable_identifier (variable_identifier | multops | tripledotop | INLINE))=> ENUM |
 
         // entire enum definition
+        { inLanguage(LANGUAGE_CXX_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
         enum_definition_whole
 ;
 
@@ -4623,7 +4630,7 @@ enum_definition[] { ENTRY_DEBUG } :
         {
             // statement
             // end init correctly
-            startNewMode(MODE_STATEMENT | MODE_EXPRESSION_BLOCK | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_ENUM);
+            startNewMode(MODE_STATEMENT | MODE_EXPRESSION_BLOCK | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_ENUM | MODE_END_AT_BLOCK);
 
             // start the enum definition element
             startElement(SENUM);
