@@ -390,9 +390,7 @@ cleanall :
 
 
 %.aj.xml : %.java.xml
-	( [[ $@ != "literal.aj.xml" ]] && [[ $@ != "operator.aj.xml" ]] && ${XSLT_SETLANGUAGE_ASPECTJ} $< | ${XSLT_REMOVECPP} - > $@ ) || echo -n ""
-	( [[ $@ = "literal.aj.xml" ]] && ${XSLT_SETLANGUAGE_ASPECTJ} $< | ${XSLT_REMOVECPP_LITERAL} - > $@ ) || echo -n ""
-	( [[ $@ = "operator_base.aj.xml" ]] && ${XSLT_SETLANGUAGE_ASPECTJ} $< | ${XSLT_REMOVECPP_OPERATOR} - > $@ ) || echo -n ""
+	${XSLT_SETLANGUAGE_ASPECTJ} $< > $@
 
 %.c.xml : %.cpp.xml
 	${XSLT_SETLANGUAGE_C} $< > $@
