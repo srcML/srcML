@@ -2707,6 +2707,9 @@ function_identifier[] { ENTRY_DEBUG } :
 
         function_identifier_main |
 
+        { inLanguage(LANGUAGE_CSHARP) }?
+        DEFAULT |
+
         // function pointer identifier with name marked separately
         function_pointer_name_grammar
 ;
@@ -3295,7 +3298,7 @@ call[] { ENTRY_DEBUG } :
             // start the function call element
             startElement(SFUNCTION_CALL);
         }
-        function_identifier
+        function_identifier 
 
         call_argument_list
 ;
