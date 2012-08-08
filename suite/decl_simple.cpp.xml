@@ -176,10 +176,6 @@
 <decl_stmt><decl><type><name>int</name></type> <name>undef</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
-<decl_stmt><decl><type><specifier>extern</specifier> <name>int</name></type> <name>foo</name></decl>;</decl_stmt>
-</unit>
-
 <!--
 <unit>
 <decl_stmt><decl><type><name>int</name></type></name> <name><name>sign</name> =<init> <expr>( <name>m_oldParameters[ <expr><name>paramindex</name></expr> ]</name> &lt; 0 )? -1:1</expr></init></decl>;</decl_stmt>
@@ -188,10 +184,6 @@
 
 <unit>
 <decl_stmt><decl><type><name>decimal</name></type> <name>a</name></decl>;</decl_stmt>
-</unit>
-
-<unit>
-<decl_stmt><decl><type><name>int</name> *</type> <name>a</name> =<init> <expr><name>null</name></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
@@ -216,10 +208,6 @@
 
 <unit>
 <decl_stmt><decl><type><name>ushort</name></type> <name>s</name></decl>;</decl_stmt>
-</unit>
-
-<unit>
-<decl_stmt><decl><type><specifier>extern</specifier> <name>alias</name></type> <name>GridV1</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
