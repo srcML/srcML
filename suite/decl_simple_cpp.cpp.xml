@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="decl_simple">
+
+<unit>
+<decl_stmt><decl><type>enum <name>a</name></type> <name>b</name></decl>;</decl_stmt>
+</unit>
+
+</unit>

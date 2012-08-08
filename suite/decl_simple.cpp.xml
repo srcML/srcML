@@ -180,10 +180,6 @@
 <decl_stmt><decl><type><specifier>extern</specifier> <name>int</name></type> <name>foo</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
-<decl_stmt><decl><type>enum <name>a</name></type> <name>b</name></decl>;</decl_stmt>
-</unit>
-
 <!--
 <unit>
 <decl_stmt><decl><type><name>int</name></type></name> <name><name>sign</name> =<init> <expr>( <name>m_oldParameters[ <expr><name>paramindex</name></expr> ]</name> &lt; 0 )? -1:1</expr></init></decl>;</decl_stmt>
