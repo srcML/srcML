@@ -1412,7 +1412,7 @@ class_struct_union[int token, int place] { ENTRY_DEBUG } :
 */
 class_struct_union_check[int& finaltoken, int& othertoken] { finaltoken = 0; othertoken = 0; ENTRY_DEBUG } :
 
-        (specifier)* markend[othertoken] (CLASS | STRUCT | UNION | INTERFACE) class_header check_end[finaltoken]
+        (attribute)* (specifier)* markend[othertoken] (CLASS | STRUCT | UNION | INTERFACE) class_header check_end[finaltoken]
 ;
 
 check_end[int& token] { /* setFinalToken(); // problem with class */ token = LA(1); ENTRY_DEBUG } :
@@ -1429,7 +1429,7 @@ class_declaration[] :
             // start the class definition
             startElement(SCLASS_DECLARATION);
         }
-        (specifier)* CLASS class_header
+        (attribute)* (specifier)* CLASS class_header
 ;
 
 /*
@@ -1449,7 +1449,7 @@ class_definition[] :
                 setMode(MODE_END_AT_BLOCK);
             }
         }
-        (specifier)* CLASS (class_header lcurly | lcurly) 
+        (attribute)* (specifier)* CLASS (class_header lcurly | lcurly) 
         {
             if (inLanguage(LANGUAGE_CXX_FAMILY) && !inLanguage(LANGUAGE_CSHARP))
                 class_default_access_action(SPRIVATE_ACCESS_DEFAULT);
@@ -1471,7 +1471,7 @@ enum_class_definition[] :
                 setMode(MODE_END_AT_BLOCK);
             }
         }
-        (specifier)* ENUM (class_header lcurly | lcurly) 
+        (attribute)* (specifier)* ENUM (class_header lcurly | lcurly) 
         {
             if (inLanguage(LANGUAGE_CXX_FAMILY) && !inLanguage(LANGUAGE_CSHARP))
                 class_default_access_action(SPRIVATE_ACCESS_DEFAULT);
@@ -1522,7 +1522,7 @@ interface_definition[] :
             // java interfaces end at the end of the block
             setMode(MODE_END_AT_BLOCK); 
         }
-        (specifier)* INTERFACE class_header lcurly
+        (attribute)* (specifier)* INTERFACE class_header lcurly
 ;
 
 /*
@@ -1535,7 +1535,7 @@ struct_declaration[] :
             // start the class definition
             startElement(SSTRUCT_DECLARATION);
         }
-        (specifier)* STRUCT class_header
+        (attribute)* (specifier)* STRUCT class_header
 ;
 
 struct_union_definition[int element_token] :
@@ -1552,7 +1552,7 @@ struct_union_definition[int element_token] :
                 setMode(MODE_END_AT_BLOCK);
             }
         }
-        (specifier)* (STRUCT | UNION) (class_header lcurly | lcurly)
+        (attribute)* (specifier)* (STRUCT | UNION) (class_header lcurly | lcurly)
         {
            if (inLanguage(LANGUAGE_CXX_FAMILY) && !inLanguage(LANGUAGE_CSHARP))
                class_default_access_action(SPUBLIC_ACCESS_DEFAULT);
@@ -1569,7 +1569,7 @@ union_declaration[] :
             // start the class definition
             startElement(SUNION_DECLARATION);
         }
-        (specifier)* UNION class_header
+        (attribute)* (specifier)* UNION class_header
 ;
 
 /*
@@ -2317,7 +2317,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
              DECLTYPE& type,
              bool inparam     /* are we in a parameter */
         ] { token = 0; fla = 0; type_count = 0; int specifier_count = 0; isdestructor = false;
-        type = NONE; bool foundpure = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; bool endbracket = false; bool modifieroperator = false; bool sawoperator = false; ENTRY_DEBUG } :
+        type = NONE; bool foundpure = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; bool endbracket = false; bool modifieroperator = false; bool sawoperator = false; int attributecount = 0; ENTRY_DEBUG } :
 
         // main pattern for variable declarations, and most function declaration/definitions.
         // trick is to look for function declarations/definitions, and along the way record
@@ -2349,8 +2349,8 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                 (specifier)=>
                 specifier set_int[specifier_count, specifier_count + 1] |
 
-                { type_count == 0 && inLanguage(LANGUAGE_CSHARP) }?
-                attribute |
+                { type_count == attributecount && inLanguage(LANGUAGE_CSHARP) }?
+                attribute set_int[attributecount, attributecount + 1] |
 
                 { inLanguage(LANGUAGE_JAVA_FAMILY) }?
                 (template_argument_list)=>
@@ -4628,7 +4628,7 @@ enum_definition[] { ENTRY_DEBUG } :
             // start the enum definition element
             startElement(SENUM);
         }
-        (specifier)*
+        (attribute)* (specifier)*
         ENUM |
         {
             // statement
