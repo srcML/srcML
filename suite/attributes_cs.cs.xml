@@ -16,4 +16,8 @@
 <class><attribute>[<expr><name>System</name></expr>]</attribute> class <name>C</name> <block>{}</block></class>
 </unit>
 
+<unit>
+<struct><attribute>[<expr><name>System</name></expr>]</attribute> struct <name>C</name> <block>{}</block></struct>
+</unit>
+
 </unit>
