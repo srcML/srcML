@@ -5,9 +5,4 @@
 <decl_stmt><decl><type>enum <name>a</name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
-
-<unit>
-<decl_stmt><decl><type><name>int</name> *</type> <name>a</name> =<init> <expr><name>null</name></expr></init></decl>;</decl_stmt>
-</unit>
-
 </unit>

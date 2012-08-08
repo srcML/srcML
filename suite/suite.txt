@@ -39,7 +39,7 @@ LANGUAGE_C_FAMILY typedef
 LANGUAGE_C_FAMILY decl_pointer
 LANGUAGE_C_FAMILY goto
 LANGUAGE_C_FAMILY expression_pointer
-LANGUAGE_C_FAMILY decl_simple_cpp
+LANGUAGE_C_FAMILY enum_cpp
 
 LANGUAGE_C_ONLY function_c
 
@@ -64,7 +64,7 @@ LANGUAGE_CXX function_cpp
 LANGUAGE_CXX literal_cpp
 LANGUAGE_CXX call_ns
 LANGUAGE_CXX expression_pointer
-LANGUAGE_CXX decl_simple_cpp
+LANGUAGE_CXX enum_cpp
 
 LANGUAGE_CSHARP_GEN asm
 LANGUAGE_CSHARP_GEN extern
@@ -112,7 +112,6 @@ LANGUAGE_CSHARP attributes_cs
 LANGUAGE_CSHARP string_cs
 LANGUAGE_CSHARP lambda_cs
 LANGUAGE_CSHARP enum_cs
-LANGUAGE_CSHARP decl_simple_cs
 
 LANGUAGE_JAVA class_java
 LANGUAGE_JAVA constructor_java
