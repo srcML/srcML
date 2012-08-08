@@ -123,6 +123,7 @@ LANGUAGE_JAVA finally_java
 LANGUAGE_JAVA generics_java
 LANGUAGE_JAVA literal_java
 LANGUAGE_JAVA function_java
+LANGUAGE_JAVA operator_java
 
 LANGUAGE_OO catch_form
 LANGUAGE_OO foreach
