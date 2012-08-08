@@ -35,4 +35,6 @@
 <decl_stmt><decl><type><name>T</name></type> <name>temp</name> =<init> <expr><call>default<argument_list>(<argument><expr><name>T</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
 </unit>
 
+<decl_stmt><decl><type><name>int</name></type> <name>y</name> =<init> <expr><name>x</name> <op:operator>??</op:operator> <op:operator>-</op:operator>1</expr></init></decl>;</decl_stmt>
+
 </unit>
