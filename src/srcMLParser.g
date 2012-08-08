@@ -2839,7 +2839,7 @@ variable_identifier_array_grammar_sub[bool& iscomplex] { LocalMode lm(this); ENT
 attribute[] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
-            startNewMode(MODE_LOCAL);
+            startNewMode(MODE_LIST);
 
             startElement(SATTRIBUTE);
         }
