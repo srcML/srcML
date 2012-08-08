@@ -6,6 +6,10 @@
 </unit>
 
 <unit>
+<enum><specifier>public</specifier> <specifier>new</specifier> enum <block>{}</block>;</enum>
+</unit>
+
+<unit>
 <enum><specifier>new</specifier> <specifier>public</specifier> enum <block>{}</block>;</enum>
 </unit>
 
