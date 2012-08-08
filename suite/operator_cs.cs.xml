@@ -39,4 +39,8 @@
 <expr_stmt><expr><name>w</name> <op:operator>=&gt;</op:operator> <name><name>w</name><op:operator>.</op:operator><name>Length</name></name></expr></expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr>(<decl><type><name>string</name></type> <name>w</name></decl>) =&gt; <name><name>w</name>.<name>Length</name></name></expr></expr_stmt>
+</unit>
+
 </unit>
