@@ -73,6 +73,8 @@ DOTDOTDOT;
 FALSE;
 TRUE;
 
+LAMBDA;
+
 SPECIAL;
 
 ALLOPERATORS;
@@ -121,7 +123,7 @@ OPERATORS options { testLiterals = true; } { bool star = false; } :
        '`' |
        '!' ('=')? |
        ':' (':')? |
-       '=' ('=')? |
+       '=' ('=' | '>' { $setType(LAMBDA); } |) |
 
        '&' { $setText("&amp;"); }
             (options { greedy = true; } : '&' { $setText("&amp;&amp;"); star = true; } | '=' { $setText("&amp;="); } )?

@@ -822,12 +822,12 @@ call_check_paren_pair[int& argumenttoken] { bool name = false; ENTRY_DEBUG } :
 
             // special case for something that looks like a declaration
             { !name }?
-            NAME set_bool[name, true] |
+            identifier set_bool[name, true] |
 
             // found two names in a row, so this is not an expression
             // cause this to fail by next matching END_ELEMENT_TOKEN
             { name }?
-            NAME guessing_endGuessing END_ELEMENT_TOKEN |
+            identifier guessing_endGuessing END_ELEMENT_TOKEN |
 
             // forbid parentheses (handled recursively) and cfg tokens
             { !_tokenSet_0.member(LA(1)) }? ~(LPAREN | RPAREN | TERMINATE) set_bool[name, false]
@@ -3800,7 +3800,7 @@ general_operators[] { LocalMode lm(this); ENTRY_DEBUG } :
 /*            general_operators_list (options { greedy = true; } : { SkipBufferSize() == 0 }? general_operators_list)* */ |
 
             // others are not combined
-            NEW | DELETE | IN | IS | STACKALLOC | AS | AWAIT
+            NEW | DELETE | IN | IS | STACKALLOC | AS | AWAIT | LAMBDA
         )
 ;
 
