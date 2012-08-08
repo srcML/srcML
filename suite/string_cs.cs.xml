@@ -2,7 +2,7 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="string" filename="string_cs">
 
 <unit>
-<expr_stmt><expr>@"good morning"</expr>;</expr_stmt>
+<expr_stmt><expr>@"goodmorning"</expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -14,19 +14,19 @@
 </unit>
 
 <unit>
-<expr_stmt><expr>@"""Ahoy!"" cried the captain."</expr>;</expr_stmt>
+<expr_stmt><expr>@"""Ahoy!""criedthecaptain."</expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>@"'Ahoy!' ""cried the captain."""</expr>;</expr_stmt>
+<expr_stmt><expr>@"'Ahoy!'""criedthecaptain."""</expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>@"""'Ahoy!' cried the captain."""</expr>;</expr_stmt>
+<expr_stmt><expr>@"""'Ahoy!'criedthecaptain."""</expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>@"""""""Ahoy!"" cried the captain."""""</expr>;</expr_stmt>
+<expr_stmt><expr>@"""""""Ahoy!""criedthecaptain."""""</expr>;</expr_stmt>
 </unit>
 
 </unit>

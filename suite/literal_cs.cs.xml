@@ -10,7 +10,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="string">@"good morning"</lit:literal></expr>;</expr_stmt>
+<expr_stmt><expr><lit:literal type="string">@"goodmorning"</lit:literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
@@ -22,19 +22,19 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="string">@"""Ahoy!"" cried the captain."</lit:literal></expr>;</expr_stmt>
+<expr_stmt><expr><lit:literal type="string">@"""Ahoy!""criedthecaptain."</lit:literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="string">@"'Ahoy!' ""cried the captain."""</lit:literal></expr>;</expr_stmt>
+<expr_stmt><expr><lit:literal type="string">@"'Ahoy!'""criedthecaptain."""</lit:literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="string">@"""'Ahoy!' cried the captain."""</lit:literal></expr>;</expr_stmt>
+<expr_stmt><expr><lit:literal type="string">@"""'Ahoy!'criedthecaptain."""</lit:literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="string">@"""""""Ahoy!"" cried the captain."""""</lit:literal></expr>;</expr_stmt>
+<expr_stmt><expr><lit:literal type="string">@"""""""Ahoy!""criedthecaptain."""""</lit:literal></expr>;</expr_stmt>
 </unit>
 
 </unit>
