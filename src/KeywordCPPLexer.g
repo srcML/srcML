@@ -32,7 +32,7 @@ header "post_include_cpp" {
 
 void KeywordCPPLexer::changetotextlexer(int typeend) {
           selector->push("text"); 
-           ((PureCommentLexer* ) (selector->getStream("text")))->init(typeend, onpreprocline);
+           ((PureCommentLexer* ) (selector->getStream("text")))->init(typeend, onpreprocline, atstring);
 }
 }
 
@@ -153,6 +153,7 @@ public:
 
 bool onpreprocline;
 bool startline;
+bool atstring;
 
 // map from text of literal to token number, adjusted to language
 struct keyword { char const * const text; int token; int language; };
@@ -160,7 +161,7 @@ struct keyword { char const * const text; int token; int language; };
 void changetotextlexer(int typeend);
 
 KeywordCPPLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
-    : antlr::CharScanner(pinput,true), Language(language), onpreprocline(false), startline(true)
+    : antlr::CharScanner(pinput,true), Language(language), onpreprocline(false), startline(true), atstring(false)
 {
     setTokenObjectFactory(srcMLToken::factory);
 

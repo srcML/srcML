@@ -145,6 +145,9 @@ OPERATORS options { testLiterals = true; } { bool star = false; } :
             { inLanguage(LANGUAGE_CSHARP) }? NAME
             { $setType(NAME); }
             |
+            { inLanguage(LANGUAGE_CSHARP) }? { atstring = true; } STRING_START
+            { $setType(STRING_START); }
+            |
             )
         |
 

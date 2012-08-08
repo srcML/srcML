@@ -62,8 +62,11 @@ int mode;
 // preprocessor lines required unterminated strings to end early
 bool onpreprocline;
 
+// ignore character escapes
+bool noescape;
+
 PureCommentLexer(const antlr::LexerSharedInputState& state)
-	: antlr::CharScanner(state,true), mode(0), onpreprocline(false)
+	: antlr::CharScanner(state,true), mode(0), onpreprocline(false), noescape(false)
 {}
 
 private:
@@ -75,13 +78,16 @@ public:
     }
 
     // reinitialize comment lexer
-    void init(int m, bool onpreproclinestate) {
+    void init(int m, bool onpreproclinestate, bool nescape = false) {
 
         onpreprocline = onpreproclinestate;
 
         mode = m;
+
+        noescape = nescape;
     }
 }
+
 
 /*
   Any text inside a comment, string, or character
@@ -101,6 +107,7 @@ COMMENT_TEXT {
     int prevprevLA = 0;
 
     int realbegin = _begin;
+
 } :
 
 /*
@@ -142,7 +149,7 @@ COMMENT_TEXT {
         '\040'..'\041' |
 
         '\042' /* '\"' */
-                { if (prevLA != '\\' && mode == STRING_END) { $setType(mode); selector->pop(); } } |
+                { if ((prevLA != '\\' || noescape) && mode == STRING_END) { $setType(mode); selector->pop(); } } |
 
         '\043'..'\045' | 
 

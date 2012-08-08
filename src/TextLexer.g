@@ -73,6 +73,7 @@ STRING_START :
             // character literal or single quoted string
             '\'' { $setType(CHAR_START); changetotextlexer(CHAR_END); }
         )
+        { atstring = false; }
 ;
 
 CONSTANTS :
