@@ -123,7 +123,7 @@ OPERATORS options { testLiterals = true; } { bool star = false; } :
        '`' |
        '!' ('=')? |
        ':' (':')? |
-       '=' ('=' | '>' { $setType(LAMBDA); } |) |
+       '=' ('=' | '>' { $setText("=&gt;"); $setType(LAMBDA); } |) |
 
        '&' { $setText("&amp;"); }
             (options { greedy = true; } : '&' { $setText("&amp;&amp;"); star = true; } | '=' { $setText("&amp;="); } )?
