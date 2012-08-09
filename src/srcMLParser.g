@@ -2912,7 +2912,7 @@ linq_full_expression[] { LocalMode lm(this); ENTRY_DEBUG } :
    A variable name in an expression.  Includes array names, but not
    function calls
 */
-variable_identifier[] { LocalMode lm(this); bool iscomplex = false; TokenPosition tp; ENTRY_DEBUG } :
+variable_identifier[] { LocalMode lm(this); TokenPosition tp; ENTRY_DEBUG } :
 
         complex_name[true, true]
 /*
@@ -3982,7 +3982,7 @@ guessing_end[]
    elements such as names and function calls are marked up.
 */
 
-expression_part_plus_linq[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG } :
+expression_part_plus_linq[CALLTYPE type = NOCALL] { guessing_end(); ENTRY_DEBUG } :
 
         linq_expression | expression_part[type]
     ;
