@@ -3,7 +3,7 @@
 
 <unit>
 <expr_stmt><expr><name><name>button1</name>.<name>Click</name></name> += <function><name>delegate</name><parameter_list>(<param><decl><type><name><name>System</name>.<name>Object</name></name></type> <name>o</name></decl></param>, <param><decl><type><name><name>System</name>.<name>EventArgs</name></name></type> <name>e</name></decl></param>)</parameter_list>
-                   <block>{ <expr><call><name><name>System</name>.<name>Windows</name>.<name>Forms</name>.<name>MessageBox</name>.<name>Show</name></name><argument_list>(<argument><expr>"Click!"</expr></argument>)</argument_list></call></expr>; }</block></function></expr>;</expr_stmt>
+                   <block>{ <expr_stmt><expr><call><name><name>System</name>.<name>Windows</name>.<name>Forms</name>.<name>MessageBox</name>.<name>Show</name></name><argument_list>(<argument><expr>"Click!"</expr></argument>)</argument_list></call></expr>;</expr_stmt> }</block></function></expr>;</expr_stmt>
 </unit>
 
 <unit>
