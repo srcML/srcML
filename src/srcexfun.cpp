@@ -119,6 +119,35 @@ static void srcMacrosFunction (xmlXPathParserContextPtr ctxt, int nargs) {
   }
 }
 
+static void srcInFunction (xmlXPathParserContextPtr ctxt, int nargs) {
+
+  // need at least one argument
+  if (nargs == 0) {
+    xmlXPathSetArityError(ctxt);
+    return;
+  }
+
+  // find the first xpath that produces a result
+  for (int i = 0; i < nargs; ++i) {
+
+    std::string path = "ancestor::";
+
+    // find the name of the element
+    xmlChar* name = xmlXPathPopString(ctxt);
+
+    path.append((const char*) name);
+
+    // evaluate the expression on the given context
+    xmlXPathObjectPtr ret = xmlXPathEval(BAD_CAST path.c_str(), ctxt->context);
+    if (ret) {
+      valuePush(ctxt, xmlXPathNewBoolean(1));
+      return;
+    }
+  }
+
+  valuePush(ctxt, xmlXPathNewBoolean(0));
+}
+
 static void srcPowersetFunction (xmlXPathParserContextPtr ctxt, int nargs) {
 
   if (nargs != 1) {
@@ -178,6 +207,10 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
                            BAD_CAST MACROS[i].prefix.c_str(),
                            srcMacrosFunction);
   }
+
+  xmlXPathRegisterFuncNS(context, (const xmlChar *)"in",
+                         BAD_CAST SRCML_SRC_NS_URI,
+                         srcInFunction);
 }
 
 void xsltsrcMLRegister () {
