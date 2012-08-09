@@ -11,6 +11,10 @@
 </unit>
 
 <unit>
+<function_decl><type><specifier>public</specifier> <specifier>delegate</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit>
 <decl_stmt><decl><type><name>Del</name></type> <name>d</name> =<init> <expr><function><name>delegate</name><parameter_list>(<param><decl><type><name>int</name></type> <name>k</name></decl></param>)</parameter_list> <block>{ <comment type="block">/* ... */</comment> }</block></function></expr></init></decl>;</decl_stmt>
 </unit>
 
