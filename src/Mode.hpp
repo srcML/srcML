@@ -164,6 +164,8 @@ public:
 
   const static State::MODE_TYPE MODE_ENUM;
 
+  const static State::MODE_TYPE MODE_ANONYMOUS;
+
 public:
 
   Mode(TokenParser* ptp, int lang)

@@ -1742,6 +1742,12 @@ block_end[] { ENTRY_DEBUG } :
         // handle the block, however scope of then completion stops at if
         rcurly
         { 
+            if (inMode(MODE_ANONYMOUS)) {
+
+                endCurrentMode(MODE_ANONYMOUS);
+                return;
+            }
+
             // end all statements this statement is nested in
             // special case when ending then of if statement
 
@@ -3560,7 +3566,7 @@ lambda_anonymous[] { ENTRY_DEBUG } :
 delegate_anonymous[] { ENTRY_DEBUG } :
         {
             // treat catch block as nested block statement
-            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_STATEMENT);
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_ANONYMOUS);
 
             // start of the catch statement
             startElement(SFUNCTION_DEFINITION);
