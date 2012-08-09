@@ -20,7 +20,7 @@
     <decl_stmt><decl><type><name><name>System</name>.<name>Threading</name>.<name>Thread</name></name></type> <name>t1</name> =<init> <expr>new <macro><name>System</name></macro>.<macro><name>Threading</name></macro>.<macro><name>Thread</name>
       <argument_list>(<argument><function><name>delegate</name><parameter_list>()</parameter_list>
             <block>{
-                System.Console.Write("Hello, ");
+                <expr_stmt><expr><call><name><name>System</name>.<name>Console</name>.<name>Write</name></name><argument_list>(<argument><expr>"Hello, "</expr></argument>)</argument_list></call></expr>;</expr_stmt>
                 System.Console.WriteLine("World!");
             }</block></function></argument>)</argument_list></macro></expr></init></decl>;</decl_stmt>
     <expr_stmt><expr><call><name><name>t1</name>.<name>Start</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
