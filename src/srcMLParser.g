@@ -3532,29 +3532,28 @@ finally_statement[] { ENTRY_DEBUG } :
         FINALLY
 ;
 
-/*
 delegate_anonymous[] { ENTRY_DEBUG } :
         {
             // treat catch block as nested block statement
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_STATEMENT);
 
             // start of the catch statement
-            startElement(SLOCK_STATEMENT);
+            startElement(SFUNCTION_DEFINITION);
+        }
+        delegate_marked
+        parameter_list
+;
+
+delegate_marked[] { LocalMode lm(this); ENTRY_DEBUG } :
+        {
+            // treat catch block as nested block statement
+            startNewMode(MODE_LOCAL);
+
+            // start of the catch statement
+            startElement(SNAME);
         }
         DELEGATE
-        {            
-            // looking for a LPAREN.  may have some whitespace before it
-            consumeSkippedTokens();
-
-            if (LA(1) == LPAREN) {
-                match(LPAREN);
-
-                // expect a parameter list
-                startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
-            }
-        }
 ;
-*/
 
 lock_statement[] { ENTRY_DEBUG } :
         {
@@ -3990,6 +3989,8 @@ expression_part_plus_linq[CALLTYPE type = NOCALL] { guessing_end(); bool flag; E
 
 expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG } :
 
+        (DELEGATE LPAREN)=> delegate_anonymous |
+
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (NEW template_argument_list)=> sole_new template_argument_list |
         
@@ -4255,10 +4256,7 @@ argument[] { ENTRY_DEBUG } :
         } 
         (
         { !(LA(1) == RPAREN && inTransparentMode(MODE_INTERNAL_END_PAREN)) }? expression |
-/*
-        (DELEGATE LPAREN)=>
-        delegate_anonymous | 
-*/
+
         type_identifier
         )
 ;
