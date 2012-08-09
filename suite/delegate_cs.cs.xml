@@ -31,4 +31,8 @@
 }</block></function>
 </unit>
 
+<unit>
+<expr_stmt><expr><call><name>BeginInvoke</name><argument_list>(<argument><expr><function><name>delegate</name><parameter_list>()</parameter_list> <block>{ }</block></function></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
 </unit>
