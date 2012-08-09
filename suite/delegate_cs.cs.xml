@@ -14,4 +14,17 @@
 <decl_stmt><decl><type><name>Del</name></type> <name>d</name> =<init> <expr><function><name>delegate</name><parameter_list>(<param><decl><name>int</name> <name>k</name></decl></param>)</parameter_list> <block>{ <comment type="block">/* ... */</comment> }</block></function></expr></init></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<function><type><name>void</name></type> <name>StartThread</name><parameter_list>()</parameter_list>
+<block>{
+    <decl_stmt><decl><type><name><name>System</name>.<name>Threading</name>.<name>Thread</name></name></type> <name>t1</name> =<init> <expr>new <macro><name>System</name></macro>.<macro><name>Threading</name></macro>.<macro><name>Thread</name>
+      <argument_list>(<argument>delegate()
+            {
+                System.Console.Write("Hello, ");
+                System.Console.WriteLine("World!");
+            }</argument>)</argument_list></macro></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>t1</name>.<name>Start</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+}</block></function>
+</unit>
+
 </unit>
