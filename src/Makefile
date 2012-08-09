@@ -121,11 +121,14 @@ endif
 LIBSRCML_INCLUDE=${OBJ_DIR}srcMLParserClean.o ${OBJ_DIR}KeywordCPPLexerClean.o ${OBJ_DIR}srcMLTranslator.o ${OBJ_DIR}srcMLTranslatorCore.o ${OBJ_DIR}srcMLOutput.o ${OBJ_DIR}srcMLTranslatorOutput.o ${OBJ_DIR}Mode.o ${OBJ_DIR}UTF8CharBuffer.o ${OBJ_DIR}PureCommentLexerClean.o ${OBJ_DIR}Language.o ${OBJ_DIR}URIStream.o ${OBJ_DIR}srcmlapps.o ${IO_LIB}
 
 # default
+.PHONY: all
 all : ${SRC2SRCML_BIN} ${SRCML2SRC_BIN}  ${SRCMLDIRECT_BIN}
 
+.PHONY: mingw32
 mingw32 :
 	make MINGW32=1
 
+.PHONY: settings
 settings :
 	@echo "CXX="${CXX}
 	@echo "CXXFLAGS="${CXXFLAGS}
@@ -143,6 +146,7 @@ settings :
 	@echo "SRCML2SRC_BIN="${SRCML2SRC_BIN}
 
 # setup
+.PHONY: setup
 setup : version.cpp
 
 # ANTLR generated files
@@ -241,7 +245,7 @@ ${OBJ_DIR}srcMLTranslatorCore.o : srcMLTranslatorCore.cpp srcMLTranslatorCore.hp
 
 Mode.hpp : srcMLStateStack.hpp State.hpp StateStack.hpp srcMLState.hpp
 
-${OBJ_DIR}srcMLParser.o : $(firstword $(SRCMLPARSER_GENS)) Mode.hpp TokenParser.hpp State.hpp Options.hpp
+${OBJ_DIR}srcMLParser.o : $(SRCMLPARSER_GENS) Mode.hpp TokenParser.hpp State.hpp Options.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) -c $< -o $@
 
 srcMLParserClean.cpp : srcMLParser.cpp
