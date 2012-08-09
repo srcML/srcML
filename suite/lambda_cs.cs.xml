@@ -10,11 +10,11 @@
 </unit>
 
 <unit>
-<expr_stmt><expr>(<decl><type><name>string</name></type> <name>w</name></decl>) =&gt; <name><name>w</name>.<name>Length</name></name></expr></expr_stmt>
+<expr_stmt><expr>(<name>string</name> <name>w</name>) =&gt; <name><name>w</name>.<name>Length</name></name></expr></expr_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>int</name></type> <name>shortestWordLength</name> =<init> <expr><call><name><name>words</name>.<name>Min</name></name><argument_list>(<argument>(<decl><type><name>string</name></type> <name>w</name></decl>) =&gt; w.Length</argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>int</name></type> <name>shortestWordLength</name> =<init> <expr><call><name><name>words</name>.<name>Min</name></name><argument_list>(<argument>(<name>string</name> <name>w</name>) =&gt; w.Length</argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
@@ -22,11 +22,11 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>var</name></type> <name>shortDigits</name> =<init> <expr><call><name><name>digits</name>.<name>Where</name></name><argument_list>(<argument><expr>(<decl><type><name>string</name></type> <name>digit</name></decl>, <decl><type><name>int</name></type> <name>index</name></decl>) =&gt; <name><name>digit</name>.<name>Length</name></name> &lt; <name>index</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>var</name></type> <name>shortDigits</name> =<init> <expr><call><name><name>digits</name>.<name>Where</name></name><argument_list>(<argument><expr>(<name>string</name> <name>digit</name>, <name>int</name> <name>index</name>) =&gt; <name><name>digit</name>.<name>Length</name></name> &lt; <name>index</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr>(<param><decl><type><name>input</name></type> <name>parameters</name></decl></param>) =&gt; <block>{<expr_stmt><expr><name>statement</name></expr>;</expr_stmt>}</block></expr></expr_stmt>
+<expr_stmt><expr>(<name>input</name> <name>parameters</name>) =&gt; <block>{<expr_stmt><expr><name>statement</name></expr>;</expr_stmt>}</block></expr></expr_stmt>
 </unit>
 
 <unit>
