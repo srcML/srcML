@@ -135,7 +135,7 @@ header "post_include_hpp" {
 
 #define assertMode(m)
 
-enum DECLTYPE { NONE, VARIABLE, FUNCTION, CONSTRUCTOR, DESTRUCTOR, SINGLE_MACRO, NULLOPERATOR };
+enum DECLTYPE { NONE, VARIABLE, FUNCTION, CONSTRUCTOR, DESTRUCTOR, SINGLE_MACRO, NULLOPERATOR, DELEGATE_FUNCTION };
 enum CALLTYPE { NOCALL, CALL, MACRO };
 
 // position in output stream
@@ -647,6 +647,10 @@ statements_non_cfg[] { int token = 0; int place = 0; int secondtoken = 0; int fl
         { decl_type == SINGLE_MACRO }?
         macro_call |
 
+        // standalone macro
+        { decl_type == DELEGATE_FUNCTION }?
+        delegate_anonymous |
+
         // variable declaration
         { decl_type == VARIABLE }?
         variable_declaration_statement[type_count] |
@@ -823,6 +827,9 @@ call_check_paren_pair[int& argumenttoken] { bool name = false; ENTRY_DEBUG } :
             // special case for something that looks like a declaration
             { !name }?
             identifier set_bool[name, true] |
+
+            // special case for something that looks like a declaration
+            delegate_anonymous | 
 
             // found two names in a row, so this is not an expression
             // cause this to fail by next matching END_ELEMENT_TOKEN
@@ -2291,6 +2298,9 @@ perform_noncfg_check[DECLTYPE& type, int& token, int& fla, int& type_count, bool
 
         if (type == VARIABLE && type_count == 0)
             type_count = 1;
+
+//        if (type == NONE && first == DELEGATE)
+//            type = DELEGATE_FUNCTION;
     }
 
     // may just have a single macro (no parens possibly) before a statement
@@ -2299,6 +2309,8 @@ perform_noncfg_check[DECLTYPE& type, int& token, int& fla, int& type_count, bool
 
     // may just have an expression 
     if (type == DESTRUCTOR && !inLanguage(LANGUAGE_CXX_FAMILY))
+
+
         type = NULLOPERATOR;
 
     // false constructor for java
@@ -2337,8 +2349,10 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
           Process all the parts of a potential type.  Keep track of total
           parts, specifier parts, and second token
         */
+        (DELEGATE LPAREN)=>
+            DELEGATE LPAREN set_type[type, DELEGATE_FUNCTION] |
+        (
         ({ inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) || (type_count == 0) || LA(1) != LBRACKET }?
-
             set_bool[sawoperator, sawoperator || LA(1) == OPERATOR]
 
             // was their a bracket on the end?  Need to know for Java
@@ -2350,8 +2364,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
             set_bool[modifieroperator, modifieroperator || LA(1) == REFOPS || LA(1) == MULTOPS]
 
             (
-                // specifiers
-                (specifier)=>
+            (specifier)=>
                 specifier set_int[specifier_count, specifier_count + 1] |
 
                 { type_count == attributecount && inLanguage(LANGUAGE_CSHARP) }?
@@ -2465,6 +2478,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
 
         // could also have a constructor
         set_type[type, CONSTRUCTOR, !saveisdestructor && isconstructor]
+)
 ;
 
 //monitor { std::cerr << namestack[0] << " " << namestack[1] << std::endl; } :;
@@ -3542,6 +3556,28 @@ delegate_anonymous[] { ENTRY_DEBUG } :
         }
         delegate_marked
         parameter_list
+
+        /* completely parse a function until it is done */
+        parse_complete_block
+;
+
+parse_complete_block[] { ENTRY_DEBUG 
+
+    int blockcount = 0;
+    while (LA(1) != 1) {
+
+        if (LA(1) == LCURLY)
+            ++blockcount;
+        else if (LA(1) == RCURLY)
+            --blockcount;
+
+        if (blockcount == 0)
+            break;
+
+        start();
+    }
+}:
+
 ;
 
 delegate_marked[] { LocalMode lm(this); ENTRY_DEBUG } :
@@ -4299,7 +4335,6 @@ parameter[] { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTYPE dec
             setMode(MODE_VARIABLE_NAME | MODE_INIT);
         }
         ( options { greedy = true; } : variable_declaration_nameinit)*
-
         )
 ;
 
