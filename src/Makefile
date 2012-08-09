@@ -189,7 +189,7 @@ $(SRCMLPARSER_GENS): srcMLParser.g KeywordCPPLexerTokenTypes.txt PureCommentLexe
 
 $(KEYWORDCPPLEXER_GENS): KeywordCPPLexer.g KeywordLexerTokenTypes.txt
 	$(ANTLR) -glib "WSLexer.g;CommentLexer.g;OperatorLexer.g;TextLexer.g;KeywordLexer.g" ${SRCMLLEXER_ANTLR_FLAGS} $<
-	touch ${KEYOWRDCPPLEXER_GENS}
+	touch ${KEYWORDCPPLEXER_GENS}
 
 $(KEYWORDLEXER_GENS): KeywordLexer.g OperatorLexerTokenTypes.txt
 	$(ANTLR) -glib "WSLexer.g;CommentLexer.g;TextLexer.g;OperatorLexer.g" ${SRCMLLEXER_ANTLR_FLAGS} $<
