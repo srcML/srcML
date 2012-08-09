@@ -2,6 +2,11 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="delegate" filename="delegate_cs">
 
 <unit>
+<expr_stmt><expr><name><name>button1</name>.<name>Click</name></name> += delegate(<name><name>System</name>.<name>Object</name></name> <name>o</name>, <name><name>System</name>.<name>EventArgs</name></name> <name>e</name>)
+                   <block>{ <expr><call><name><name>System</name>.<name>Windows</name>.<name>Forms</name>.<name>MessageBox</name>.<name>Show</name></name><argument_list>(<argument><expr>"Click!"</expr></argument>)</argument_list></call></expr>; }</block></expr>;</expr_stmt>
+</unit>
+
+<unit>
 <function_decl><type><specifier>delegate</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
