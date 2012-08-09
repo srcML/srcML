@@ -3546,6 +3546,17 @@ finally_statement[] { ENTRY_DEBUG } :
         FINALLY
 ;
 
+lambda_anonymous[] { ENTRY_DEBUG } :
+        {
+            // treat catch block as nested block statement
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_STATEMENT);
+        }
+        lambda_marked
+
+        /* completely parse a function until it is done */
+        parse_complete_block
+;
+
 delegate_anonymous[] { ENTRY_DEBUG } :
         {
             // treat catch block as nested block statement
@@ -3589,6 +3600,17 @@ delegate_marked[] { LocalMode lm(this); ENTRY_DEBUG } :
             startElement(SNAME);
         }
         DELEGATE
+;
+
+lambda_marked[] { LocalMode lm(this); ENTRY_DEBUG } :
+        {
+            // treat catch block as nested block statement
+            startNewMode(MODE_LOCAL);
+
+            // start of the catch statement
+            startElement(SNAME);
+        }
+        LAMBDA
 ;
 
 lock_statement[] { ENTRY_DEBUG } :
@@ -4026,6 +4048,8 @@ expression_part_plus_linq[CALLTYPE type = NOCALL] { guessing_end(); ENTRY_DEBUG 
 expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG } :
 
         (DELEGATE LPAREN)=> delegate_anonymous |
+
+        (LAMBDA LCURLY)=> lambda_anonymous |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (NEW template_argument_list)=> sole_new template_argument_list |
