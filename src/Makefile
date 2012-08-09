@@ -185,27 +185,35 @@ WSLEXER_GENS = 	\
 # ANTLR generated cpp, hpp and txt files
 $(SRCMLPARSER_GENS): srcMLParser.g KeywordCPPLexerTokenTypes.txt PureCommentLexerTokenTypes.txt
 	$(ANTLR) ${SRCMLPARSER_ANTLR_FLAGS} -glib "WSLexer.g;CommentLexer.g;OperatorLexer.g;TextLexer.g;KeywordLexer.g;KeywordCPPLexer.g;PureCommentLexer.g" $<
+	touch ${SRCMLPARSER_GENS}
 
 $(KEYWORDCPPLEXER_GENS): KeywordCPPLexer.g KeywordLexerTokenTypes.txt
 	$(ANTLR) -glib "WSLexer.g;CommentLexer.g;OperatorLexer.g;TextLexer.g;KeywordLexer.g" ${SRCMLLEXER_ANTLR_FLAGS} $<
+	touch ${KEYOWRDCPPLEXER_GENS}
 
 $(KEYWORDLEXER_GENS): KeywordLexer.g OperatorLexerTokenTypes.txt
 	$(ANTLR) -glib "WSLexer.g;CommentLexer.g;TextLexer.g;OperatorLexer.g" ${SRCMLLEXER_ANTLR_FLAGS} $<
+	touch ${KEYWORDLEXER_GENS}
 
 $(OPERATORLEXER_GENS): OperatorLexer.g TextLexerTokenTypes.txt
 	$(ANTLR) -glib "WSLexer.g;CommentLexer.g;TextLexer.g" ${SRCMLLEXER_ANTLR_FLAGS} $<
+	touch ${OPERATORLEXER_GENS}
 
 $(TEXTLEXER_GENS): TextLexer.g CommentLexerTokenTypes.txt
 	$(ANTLR) -glib "WSLexer.g;CommentLexer.g" ${SRCMLLEXER_ANTLR_FLAGS} $<
+	touch ${TEXTLEXER_GENS}
 
 $(COMMENTLEXER_GENS): CommentLexer.g WSLexerTokenTypes.txt
 	$(ANTLR) -glib "WSLexer.g" ${SRCMLLEXER_ANTLR_FLAGS} $<
+	touch ${COMMENTLEXER_GENS}
 
 $(PURECOMMENTLEXER_GENS): PureCommentLexer.g
 	$(ANTLR) ${SRCMLLEXER_ANTLR_FLAGS} $<
+	touch ${PURECOMMENTLEXER_GENS}
 
 $(WSLEXER_GENS): WSLexer.g PureCommentLexerTokenTypes.txt
 	$(ANTLR) -glib "PureCommentLexer.g" ${SRCMLLEXER_ANTLR_FLAGS} $< 
+	touch ${WXLEXER_GENS}
 
 # User created grammars
 CREATED_GRAMMARS = WSLexer.g CommentLexer.g OperatorLexer.g TextLexer.g KeywordLexer.g KeywordCPPLexer.g PureCommentLexer.g
