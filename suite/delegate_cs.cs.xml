@@ -20,7 +20,7 @@
     <decl_stmt><decl><type><name><name>System</name>.<name>Threading</name>.<name>Thread</name></name></type> <name>t1</name> =<init> <expr>new <call><name><name>System</name>.<name>Threading</name>.<name>Thread</name></name>
       <argument_list>(<argument><expr><function><name>delegate</name><parameter_list>()</parameter_list>
             <block>{
-                <expr_stmt><expr><call><name><name>System</name>.<name>Console</name>.<name>Write</name></name><argument_list>(<argument><expr>"Hello, "</expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <expr_stmt><expr><call><name><name>System</name>.<name>Console</name>.<name>Write</name></name><argument_list>(<argument><expr>"Hello,"</expr></argument>)</argument_list></call></expr>;</expr_stmt>
                 <expr_stmt><expr><call><name><name>System</name>.<name>Console</name>.<name>WriteLine</name></name><argument_list>(<argument><expr>"World!"</expr></argument>)</argument_list></call></expr>;</expr_stmt>
             }</block></function></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
     <expr_stmt><expr><call><name><name>t1</name>.<name>Start</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
