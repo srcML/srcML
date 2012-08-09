@@ -3583,6 +3583,8 @@ parse_complete_block[] { ENTRY_DEBUG
     int blockcount = 0;
     while (LA(1) != 1) {
 
+        consumeSkippedTokens();
+
         if (LA(1) == LCURLY)
             ++blockcount;
         else if (LA(1) == RCURLY)
