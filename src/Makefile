@@ -213,7 +213,7 @@ $(PURECOMMENTLEXER_GENS): PureCommentLexer.g
 
 $(WSLEXER_GENS): WSLexer.g PureCommentLexerTokenTypes.txt
 	$(ANTLR) -glib "PureCommentLexer.g" ${SRCMLLEXER_ANTLR_FLAGS} $< 
-	touch ${WXLEXER_GENS}
+	touch ${WSLEXER_GENS}
 
 # User created grammars
 CREATED_GRAMMARS = WSLexer.g CommentLexer.g OperatorLexer.g TextLexer.g KeywordLexer.g KeywordCPPLexer.g PureCommentLexer.g
