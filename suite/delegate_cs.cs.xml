@@ -42,4 +42,18 @@
  }</block></function></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><call><name>BeginInvoke</name><argument_list>(<argument><expr><function><name>delegate</name><parameter_list>()</parameter_list> <block>{
+                <while>while<condition>(<expr>1</expr>)</condition>
+                    <expr_stmt><expr><name>a</name></expr>;</expr_stmt></while>
+ }</block></function></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>BeginInvoke</name><argument_list>(<argument><expr><function><name>delegate</name><parameter_list>()</parameter_list> <block>{
+                <for>for(<init>;</init><condition><expr>1</expr>;</condition><incr/>)
+                    <expr_stmt><expr><name>a</name></expr>;</expr_stmt></for>
+ }</block></function></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
 </unit>
