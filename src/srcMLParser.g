@@ -2370,10 +2370,11 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
             set_bool[modifieroperator, modifieroperator || LA(1) == REFOPS || LA(1) == MULTOPS]
 
             (
-            (specifier)=>
+                (specifier)=>
                 specifier set_int[specifier_count, specifier_count + 1] |
 
                 { type_count == attributecount && inLanguage(LANGUAGE_CSHARP) }?
+                (attribute)=>
                 attribute set_int[attributecount, attributecount + 1] |
 
                 { inLanguage(LANGUAGE_JAVA_FAMILY) }?
@@ -2382,7 +2383,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
 
                 // typical type name
 //                { LA(1) != ASYNC }?
-                complex_name[true] set_bool[foundpure]
+                complex_name[true, true] set_bool[foundpure]
                     set_bool[isoperatorfunction, inLanguage(LANGUAGE_CXX_FAMILY) && (isoperatorfunction ||
                              (namestack[0] == "operator" && type_count == specifier_count))] |
 
@@ -2685,7 +2686,7 @@ lead_type_identifier[] { ENTRY_DEBUG } :
 
         // typical type name
         { LA(1) != ASYNC }?
-        complex_name[true] |
+        complex_name[true, true] |
 
         pure_lead_type_identifier
 ;
