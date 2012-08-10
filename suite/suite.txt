@@ -14,6 +14,7 @@ LANGUAGE_ALL_BASE return_base
 LANGUAGE_ALL_BASE problem
 LANGUAGE_ALL_BASE literal
 LANGUAGE_ALL_BASE operator_base
+LANGUAGE_ALL_BASE whitespace
 
 LANGUAGE_ALL_GEN while
 LANGUAGE_ALL_GEN ifnestcond 
