@@ -384,9 +384,9 @@ cleanall :
 	${XSLT_INSERTFORMFEED} $< > $@
 
 %.java.xml : %.cpp.xml
-	( [[ $@ != "literal.java.xml" ]] && [[ $@ != "operator.java.xml" ]] && ${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP} - > $@ ) || echo -n ""
-	( [[ $@ = "literal.java.xml" ]] && ${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP_LITERAL} - > $@ ) || echo -n ""
-	( [[ $@ = "operator_base.java.xml" ]] && ${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP_OPERATOR} - > $@ ) || echo -n ""
+	( test $@ != "literal.java.xml" -a $@ != "operator.java.xml" && ${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP} - > $@ ) || echo -n ""
+	( test $@ = "literal.java.xml" && ${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP_LITERAL} - > $@ ) || echo -n ""
+	( test $@ = "operator_base.java.xml" && ${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP_OPERATOR} - > $@ ) || echo -n ""
 
 
 %.aj.xml : %.java.xml
