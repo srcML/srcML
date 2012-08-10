@@ -3580,20 +3580,21 @@ delegate_anonymous[] { ENTRY_DEBUG } :
 
 parse_complete_block[] { ENTRY_DEBUG 
 
-    int blockcount = 0;
-    while (LA(1) != 1) {
+    if (inputState->guessing) {
 
-        consumeSkippedTokens();
+        int blockcount = 0;
+        while (LA(1) != 1) {
 
-        if (LA(1) == LCURLY)
-            ++blockcount;
-        else if (LA(1) == RCURLY)
-            --blockcount;
+            if (LA(1) == LCURLY)
+                ++blockcount;
+            else if (LA(1) == RCURLY)
+                --blockcount;
 
-        if (blockcount == 0)
-            break;
+            if (blockcount == 0)
+                break;
 
-        start();
+            consume();
+        }
     }
 }:
 
