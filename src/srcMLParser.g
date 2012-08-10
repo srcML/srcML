@@ -4511,8 +4511,16 @@ template_argument_list[] { LocalMode lm(this); std::string namestack_save[2]; EN
         restorenamestack[namestack_save]
 ;
 
-generic_constraint[] { ENTRY_DEBUG } : 
-        WHERE complex_name COLON (complex_name | CLASS | STRUCT | NEW LPAREN RPAREN | COMMA)*
+generic_constraint[] { LocalMode lm(this); ENTRY_DEBUG } : 
+        {
+            // local mode
+            startNewMode(MODE_LOCAL);
+
+            startElement(SWHERE);
+        }
+        WHERE complex_name COLON 
+        (complex_name | CLASS | STRUCT)
+        (COMMA NEW LPAREN RPAREN)*
 ;
 
 savenamestack[std::string namestack_save[]] { namestack_save[0] = namestack[0]; namestack_save[1] = namestack[1]; ENTRY_DEBUG } :;
