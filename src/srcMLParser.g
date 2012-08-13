@@ -2364,8 +2364,8 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
           Process all the parts of a potential type.  Keep track of total
           parts, specifier parts, and second token
         */
-        (DELEGATE LPAREN)=>
-            DELEGATE LPAREN set_type[type, DELEGATE_FUNCTION] |
+        (DELEGATE (LPAREN | LCURLY))=>
+            DELEGATE set_type[type, DELEGATE_FUNCTION] |
         (
         ({ inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) || (type_count == 0) || LA(1) != LBRACKET }?
             set_bool[sawoperator, sawoperator || LA(1) == OPERATOR]
@@ -3584,7 +3584,7 @@ delegate_anonymous[] { ENTRY_DEBUG } :
             startElement(SFUNCTION_DEFINITION);
         }
         delegate_marked
-        parameter_list
+        (parameter_list)*
 
         /* completely parse a function until it is done */
         parse_complete_block
