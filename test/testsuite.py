@@ -326,7 +326,29 @@ try:
 
 				# full path of the file
 				xml_filename = os.path.join(root, name)
+
+                                f = open(xml_filename, "r")
+
+                                s = f.readline()
+                                s = f.readline()
+
+                                language = s.split("language=\"")[1].split('"')[0]
+
+                                part = s.split("dir=\"")
+                                if len(part) > 1:
+                                        directory = part[1].split('"')[0]
+                                else:
+                                        directory = None
+
+                                part = s.split("filename=\"")
+                                if len(part) > 1:
+                                        filename = part[1].split('"')[0]
+                                else:
+                                        filename = None
+
+                                f.close()
 			
+                                """
 				# get all the info
 				info = getsrcmlattributefile(xml_filename, "--info")
 				#info = getsrcmlattributefile(xml_filename, "--longinfo")
@@ -344,16 +366,18 @@ try:
                                         filename = freinfo.group(1)
                                 else:
                                         filename = None
+                                """
 
 				# only process if directory name matches or is not given
 				if specname != "" and m.match(directory) == None and (filename == None or m.match(filename) == None):
 					continue
-			
+
+                                """
 				# language of the entire document with a default of C++
 				language = lre.search(info).group(1)
 				if len(language) == 0:
 					language = "C++"
-
+                                """
 				# only process if language matches or is not given
 				if speclang != "" and language != speclang:
 					continue
@@ -361,6 +385,8 @@ try:
 				# output language and directory
 				print
 				print language.ljust(FIELD_WIDTH_LANGUAGE), " ", directory.ljust(FIELD_WIDTH_DIRECTORY), " ",
+
+				info = getsrcmlattributefile(xml_filename, "--info")
 
 				# encoding of the outer unit
 				encoding = ere.search(info).group(1)
@@ -379,7 +405,6 @@ try:
 				else:
 					count = specnum - 1
 
-				# read entire file into a string
 				filexml = name2filestr(xml_filename)
 
                                 all = string.split(extract_all(filexml), '\0')
