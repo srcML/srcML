@@ -679,6 +679,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
     { NAMESPACE_FLAG, required_argument, NULL, NAMESPACE_FLAG_SHORT },
     { OMIT_FLAG, required_argument, NULL, OMIT_FLAG_SHORT },
     { QUIET_FLAG, no_argument, NULL, QUIET_FLAG_SHORT },
+    { NULL_FLAG, no_argument, NULL, NULL_FLAG_SHORT },
     { NO_XML_DECLARATION_FLAG, no_argument, &curoption, OPTION_XMLDECL | OPTION_XML },
     { NO_NAMESPACE_DECLARATION_FLAG, no_argument, &curoption, OPTION_NAMESPACEDECL | OPTION_XML },
     { SETTINGS_FLAG, no_argument, NULL, SETTINGS_FLAG_CODE },
@@ -708,7 +709,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
     int lastoptind = optind;
     curoption = 0;
     int option_index = 0;
-    int c = getopt_long(argc, argv, "hVo:fdlsxniLa:vXzU:t:p:", cliargs, &option_index);
+    int c = getopt_long(argc, argv, "hVo:fdlsx0niLa:vXzU:t:p:", cliargs, &option_index);
     if (c == -1)
       break;
 
@@ -805,6 +806,10 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
     case QUIET_FLAG_SHORT:
       options |= OPTION_QUIET;
+      break;
+
+    case NULL_FLAG_SHORT:
+      options |= OPTION_NULL;
       break;
 
     case NESTED_FLAG_SHORT:
