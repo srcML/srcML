@@ -834,8 +834,8 @@ call_check_paren_pair[int& argumenttoken] { bool name = false; ENTRY_DEBUG } :
             // special case for something that looks like a declaration
             delegate_anonymous | 
 
-//            (LAMBDA LPAREN)=>
-//            lambda_anonymous | 
+            (LAMBDA (LCURLY | LPAREN)) =>
+            lambda_anonymous | 
 
             { inLanguage(LANGUAGE_CSHARP) }?
             DEFAULT |
