@@ -124,6 +124,9 @@ const int SETTINGS_FLAG_CODE = 128 + 2;
 const char * const FEATURES_FLAG = "features";
 const int FEATURES_FLAG_CODE = 128 + 3;
 
+const char * const NULL_FLAG = "null";
+const int NULL_FLAG_SHORT = '0';
+
 /* Return Status */
 
 enum RETURN_STATUS {
