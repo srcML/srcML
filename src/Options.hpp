@@ -254,4 +254,8 @@ const OPTION_TYPE OPTION_PRESERVE  = ull(1) << 39;
 // @src2srcml
 const OPTION_TYPE OPTION_REVISION  = ull(1) << 40;
 
+// @src2srcml
+// @srcml2src
+const OPTION_TYPE OPTION_NULL  = ull(1) << 41;
+
 #endif
