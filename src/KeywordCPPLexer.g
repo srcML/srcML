@@ -272,8 +272,8 @@ KeywordCPPLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         { "&&"            , RVALUEREF     , LANGUAGE_CXX_FAMILY }, 
 
         // special C++ constant values
-        { "false"         , FALSE         , LANGUAGE_CXX_FAMILY }, 
-        { "true"          , TRUE          , LANGUAGE_CXX_FAMILY }, 
+        { "false"         , FALSE         , LANGUAGE_OO }, 
+        { "true"          , TRUE          , LANGUAGE_OO }, 
 
         // specifiers that are not needed for parsing
         /*
