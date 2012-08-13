@@ -3156,6 +3156,8 @@ catch[antlr::RecognitionException] {
   Specifier for a function
 */
 function_specifier[] { LocalMode lm(this); ENTRY_DEBUG } :
+        generic_constraint |
+
         {
             // statement
             startNewMode(MODE_LOCAL);
