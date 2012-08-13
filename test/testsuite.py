@@ -338,7 +338,9 @@ try:
                                 f = open(xml_filename, "r")
 
                                 s = f.readline()
+                                filexml = s
                                 s = f.readline()
+                                filexml += s;
 
                                 language = s.split("language=\"")[1].split('"')[0]
 
@@ -354,8 +356,6 @@ try:
                                 else:
                                         filename = None
 
-                                f.close()
-			
                                 """
 				# get all the info
 				info = getsrcmlattributefile(xml_filename, "--info")
@@ -394,8 +394,14 @@ try:
 				print
 				print language.ljust(FIELD_WIDTH_LANGUAGE), " ", directory.ljust(FIELD_WIDTH_DIRECTORY), " ",
 
-				filexml = name2filestr(xml_filename)
-
+#				filexml = name2filestr(xml_filename)
+#                                filexml += f.read()
+                                s = f.readline()
+                                while s:
+                                        filexml += s;
+                                        s = f.readline()
+                                f.close()
+                                        
 				info = getsrcmlattributeraw(filexml, "--info")
 
 				# encoding of the outer unit
