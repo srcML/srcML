@@ -761,7 +761,8 @@ perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
         if (inLanguage(LANGUAGE_C_FAMILY) && (_tokenSet_0.member(postcalltoken) || postcalltoken == NAME 
             || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == LCURLY)
             || postcalltoken == EXTERN || postcalltoken == STRUCT || postcalltoken == UNION || postcalltoken == CLASS
-            || postcalltoken == RCURLY || postcalltoken == 1 /* EOF ? */
+            || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == RCURLY)
+            || postcalltoken == 1 /* EOF ? */
             || postcalltoken == TEMPLATE || postcalltoken == PUBLIC || postcalltoken == PRIVATE
             || postcalltoken == PROTECTED))
 
