@@ -59,7 +59,7 @@ class ExtractUnitsSrc : public ProcessUnit {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
-    if (to_directory) {
+    if (to_directory && !isoption(*(pstate->poptions), OPTION_NULL)) {
 
       /*
         The filename to extract to is based on:
@@ -103,7 +103,7 @@ class ExtractUnitsSrc : public ProcessUnit {
       bool foundfilename = filename_index != -1;
 
       // filename is required
-      if (!foundfilename) {
+      if (!foundfilename && !isoption(*(pstate->poptions), OPTION_NULL)) {
         fprintf(stderr, "Skipping unit %ld:  Missing filename attribute\n", pstate->count);
         return;
       }
@@ -127,7 +127,10 @@ class ExtractUnitsSrc : public ProcessUnit {
     }
 
     // now create the file itself
-    output_buffer[0] = xmlOutputBufferCreateFilename(path.c_str(), handler, isoption(*(pstate->poptions), OPTION_COMPRESSED));
+    if (isoption(*(pstate->poptions), OPTION_NULL)) {
+      output_buffer[0] = xmlOutputBufferCreateFd(1, handler); 
+    } else
+      output_buffer[0] = xmlOutputBufferCreateFilename(path.c_str(), handler, isoption(*(pstate->poptions), OPTION_COMPRESSED));
     if (output_buffer[0] == NULL) {
       fprintf(stderr, "Output buffer error\n");
       xmlStopParser(ctxt);
@@ -166,6 +169,11 @@ class ExtractUnitsSrc : public ProcessUnit {
 
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+
+    if (isoption(*(pstate->poptions), OPTION_NULL)) {
+      xmlOutputBufferWrite(output_buffer[0], 1, "\0");
+    }
+
 
     // finish up this file
     xmlOutputBufferClose(output_buffer[0]);

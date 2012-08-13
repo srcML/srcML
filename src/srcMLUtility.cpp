@@ -195,6 +195,9 @@ void srcMLUtility::extract_xml(const char* ofilename, int unit) {
   // setup process handling
   ExtractUnitsXML process(0 /* to_directory is stdout */, ofilename, output_encoding);
 
+  if (isoption(options, OPTION_NULL))
+    unit = -1;
+
   // setup sax handling state
   SAX2ExtractUnitsSrc state(&process, &options, unit, diff_version);
   ctxt->_private = &state;

@@ -64,7 +64,6 @@ class ExtractUnitsXML : public ProcessUnit {
 		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                          const xmlChar** attributes) {
 
-      // fprintf(stderr, "%s\n", __FUNCTION__);
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
@@ -188,11 +187,18 @@ class ExtractUnitsXML : public ProcessUnit {
 
   virtual void endUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
     // fprintf(stderr, "%s %s\n", __FUNCTION__, localname);
+    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+    SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+
     endElementNs(ctx, localname, prefix, URI);
 
     xmlTextWriterEndDocument(writer);
 
     xmlFreeTextWriter(writer);
+
+    if (isoption(*(pstate->poptions), OPTION_NULL)) {
+      putchar('\0');
+    }
   }
 
   // comments
