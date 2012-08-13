@@ -328,7 +328,8 @@ try:
 				xml_filename = os.path.join(root, name)
 			
 				# get all the info
-				info = getsrcmlattributefile(xml_filename, "--longinfo")
+				info = getsrcmlattributefile(xml_filename, "--info")
+				#info = getsrcmlattributefile(xml_filename, "--longinfo")
 				if info == None:
 					print "Problem with", xml_filename
 					continue
@@ -371,7 +372,7 @@ try:
 					version = vre_result.group(1)
 		
 				# number of nested units
-				number = int(nre.search(info).group(1))
+				#number = int(nre.search(info).group(1))
 		
 				if specnum == 0:
 					count = 0
@@ -383,6 +384,7 @@ try:
 
                                 all = string.split(extract_all(filexml), '\0')
 
+                                number = len(all) - 1
 				while count == 0 or count < number:
 
 					try: 
