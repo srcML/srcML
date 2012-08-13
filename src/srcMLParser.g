@@ -837,6 +837,9 @@ call_check_paren_pair[int& argumenttoken] { bool name = false; ENTRY_DEBUG } :
 //            (LAMBDA LPAREN)=>
 //            lambda_anonymous | 
 
+            { inLanguage(LANGUAGE_CSHARP) }?
+            DEFAULT |
+
             // found two names in a row, so this is not an expression
             // cause this to fail by next matching END_ELEMENT_TOKEN
             { name }?
