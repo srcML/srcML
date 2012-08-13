@@ -1633,7 +1633,7 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
         complex_name[true] (
 
             { inLanguage(LANGUAGE_C_FAMILY) }?
-            (options { greedy = true; } : derived)* | 
+            (options { greedy = true; } : derived)* (generic_constraint)* | 
 
             { inLanguage(LANGUAGE_JAVA_FAMILY) }?
             (options { greedy = true; } : super_list_java { insuper = true; } extends_list)* 
@@ -4211,12 +4211,14 @@ derived[] { LocalMode lm(this); ENTRY_DEBUG } :
         }
         COLON
         (options { greedy = true; } :
+            { LA(1) != WHERE }? (
             (derive_access)*
 
             variable_identifier 
             ({ inLanguage(LANGUAGE_CSHARP) }? period variable_identifier)*
 
             (template_argument_list)*
+            )
         |
             COMMA
         )*
@@ -4520,8 +4522,8 @@ generic_constraint[] { LocalMode lm(this); ENTRY_DEBUG } :
             startElement(SWHERE);
         }
         WHERE complex_name COLON 
-        (complex_name | CLASS | STRUCT)
-        (COMMA NEW LPAREN RPAREN)*
+        (complex_name | CLASS | STRUCT | NEW LPAREN RPAREN)
+        (COMMA (complex_name | CLASS | STRUCT | NEW LPAREN RPAREN))*
 ;
 
 savenamestack[std::string namestack_save[]] { namestack_save[0] = namestack[0]; namestack_save[1] = namestack[1]; ENTRY_DEBUG } :;
