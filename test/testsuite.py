@@ -448,10 +448,7 @@ try:
 							unitxml = all[count - 1]
 
 						# convert the unit in xml to text
-                                                if number == 0:
-                                                        unittext = srcml2src(unitxml, encoding)
-                                                else:
-                                                        unittext = srcml2src(unitxml, encoding)
+                                                unittext = srcml2src(unitxml, encoding)
 
 						# convert the unit in xml to text (if needed)
                                                 if doseol:
