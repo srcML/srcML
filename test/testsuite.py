@@ -9,6 +9,7 @@ import os.path
 import re
 import subprocess
 import difflib
+import string
 from datetime import datetime, time
 
 maxcount = 700
@@ -62,6 +63,13 @@ def safe_communicate_file(command, filename):
 def extract_unit(src, count):
 
 	command = [srcmlutility, "--unit=" + str(count), "--xml"]
+
+	return safe_communicate(command, src)
+
+# extracts a particular unit from a srcML file
+def extract_all(src):
+
+	command = [srcmlutility, "-0", "--xml"]
 
 	return safe_communicate(command, src)
 
@@ -373,6 +381,8 @@ try:
 				# read entire file into a string
 				filexml = name2filestr(xml_filename)
 
+                                all = string.split(extract_all(filexml), '\0')
+
 				while count == 0 or count < number:
 
 					try: 
@@ -385,6 +395,8 @@ try:
 						if count > maxcount:
 							break
 
+                                                #print all[count]
+
 						# total count of test cases
 						total_count = total_count + 1
 
@@ -392,10 +404,13 @@ try:
 						if number == 0:
 							unitxml = filexml
 						else:
-							unitxml = extract_unit(filexml, count)
+							unitxml = all[count - 1]
 
 						# convert the unit in xml to text
-						unittext = srcml2src(unitxml, encoding)
+                                                if number == 0:
+                                                        unittext = srcml2src(unitxml, encoding)
+                                                else:
+                                                        unittext = srcml2src(unitxml, encoding)
 
 						# convert the unit in xml to text (if needed)
                                                 if doseol:
