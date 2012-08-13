@@ -3577,7 +3577,7 @@ delegate_anonymous[] { ENTRY_DEBUG } :
             startElement(SFUNCTION_DEFINITION);
         }
         delegate_marked
-        parameter_list
+        (parameter_list)*
 
         /* completely parse a function until it is done */
         parse_complete_block
