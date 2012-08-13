@@ -834,6 +834,7 @@ call_check_paren_pair[int& argumenttoken] { bool name = false; ENTRY_DEBUG } :
             // special case for something that looks like a declaration
             delegate_anonymous | 
 
+//            (LAMBDA LPAREN)=>
 //            lambda_anonymous | 
 
             // found two names in a row, so this is not an expression
