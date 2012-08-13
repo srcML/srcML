@@ -816,6 +816,7 @@ call_check[int& postnametoken, int& argumenttoken, int& postcalltoken] { ENTRY_D
 ;
 
 call_check_paren_pair[int& argumenttoken] { bool name = false; ENTRY_DEBUG } :
+
         LPAREN
 
         // record token after the start of the argument list
@@ -832,6 +833,8 @@ call_check_paren_pair[int& argumenttoken] { bool name = false; ENTRY_DEBUG } :
 
             // special case for something that looks like a declaration
             delegate_anonymous | 
+
+            lambda_anonymous | 
 
             // found two names in a row, so this is not an expression
             // cause this to fail by next matching END_ELEMENT_TOKEN
