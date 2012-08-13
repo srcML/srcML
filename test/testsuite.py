@@ -150,6 +150,14 @@ def getsrcmlattributefile(xml_file, command):
 
 	return last_line.strip()
 
+def getsrcmlattributeraw(srctext, command):
+
+	# run the srcml processor
+	command = [srcmlutility]
+	command.append("--info")
+
+	return safe_communicate(command, srctext)
+
 # directory attribute
 def getdirectory(xml_file):
 
@@ -386,7 +394,9 @@ try:
 				print
 				print language.ljust(FIELD_WIDTH_LANGUAGE), " ", directory.ljust(FIELD_WIDTH_DIRECTORY), " ",
 
-				info = getsrcmlattributefile(xml_filename, "--info")
+				filexml = name2filestr(xml_filename)
+
+				info = getsrcmlattributeraw(filexml, "--info")
 
 				# encoding of the outer unit
 				encoding = ere.search(info).group(1)
@@ -404,8 +414,6 @@ try:
 					count = 0
 				else:
 					count = specnum - 1
-
-				filexml = name2filestr(xml_filename)
 
                                 all = string.split(extract_all(filexml), '\0')
 
