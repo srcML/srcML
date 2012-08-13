@@ -214,22 +214,6 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><call><name><name>const_cast</name><argument_list>&lt;<argument><name>type</name></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><call><name><name>static_cast</name><argument_list>&lt;<argument><name>type</name></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><call><name><name>dynamic_cast</name><argument_list>&lt;<argument><name>type</name></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><call><name><name>reinterpret_cast</name><argument_list>&lt;<argument><name>type</name></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>
-
-<unit>
 <for>for(<init>;</init><condition><expr>1</expr>;</condition><incr/>)
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt></for>
 </unit>
