@@ -709,7 +709,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
     int lastoptind = optind;
     curoption = 0;
     int option_index = 0;
-    int c = getopt_long(argc, argv, "hVo:fdlsx0niLa:vXzU:t:p:", cliargs, &option_index);
+    int c = getopt_long(argc, argv, "hVo:fdlsxniLa:vXzU:t:p:Oq0", cliargs, &option_index);
     if (c == -1)
       break;
 
