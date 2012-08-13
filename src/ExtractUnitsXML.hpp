@@ -204,7 +204,11 @@ class ExtractUnitsXML : public ProcessUnit {
   // comments
   void comments(void* ctx, const xmlChar* ch) {
 
-    xmlTextWriterWriteComment(writer, ch);
+    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+    SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+
+    if (!isoption(*(pstate->poptions), OPTION_NULL))
+      xmlTextWriterWriteComment(writer, ch);
   }
 
  private :
