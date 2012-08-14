@@ -135,7 +135,7 @@ header "post_include_hpp" {
 
 #define assertMode(m)
 
-enum DECLTYPE { NONE, VARIABLE, FUNCTION, CONSTRUCTOR, DESTRUCTOR, SINGLE_MACRO, NULLOPERATOR, DELEGATE_FUNCTION };
+enum DECLTYPE { NONE, VARIABLE, FUNCTION, CONSTRUCTOR, DESTRUCTOR, SINGLE_MACRO, NULLOPERATOR, DELEGATE_FUNCTION, ENUM_DECL };
 enum CALLTYPE { NOCALL, CALL, MACRO };
 
 // position in output stream
@@ -682,7 +682,7 @@ statements_non_cfg[] { int token = 0; int place = 0; int secondtoken = 0; int fl
         extern_definition |
 
         // enum definition as opposed to part of type or declaration
-        { decl_type == NONE && LA(1) != NEW }?
+        { decl_type == ENUM_DECL }?
         enum_definition |
 
         // call
@@ -2311,8 +2311,10 @@ perform_noncfg_check[DECLTYPE& type, int& token, int& fla, int& type_count, bool
     int start = mark();
     inputState->guessing++;
 
+    bool sawenum;
+
     try {
-        noncfg_check(token, fla, type_count, type, inparam);
+        noncfg_check(token, fla, type_count, type, inparam, sawenum);
 
     } catch (...) {
 
@@ -2322,6 +2324,9 @@ perform_noncfg_check[DECLTYPE& type, int& token, int& fla, int& type_count, bool
 //        if (type == NONE && first == DELEGATE)
 //            type = DELEGATE_FUNCTION;
     }
+
+    if (type == 0 && sawenum)
+        type = ENUM_DECL;
 
     // may just have a single macro (no parens possibly) before a statement
     if (type == 0 && type_count == 0 && _tokenSet_0.member(LA(1)))
@@ -2352,8 +2357,9 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
              int& fla,        /* for a function, TERMINATE or LCURLY, 0 for a variable */
              int& type_count, /* number of tokens in type (not including name) */
              DECLTYPE& type,
-             bool inparam     /* are we in a parameter */
-        ] { token = 0; fla = 0; type_count = 0; int specifier_count = 0; isdestructor = false;
+             bool inparam,     /* are we in a parameter */
+             bool& sawenum
+        ] { sawenum = false; token = 0; fla = 0; type_count = 0; int specifier_count = 0; isdestructor = false;
         type = NONE; bool foundpure = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; bool endbracket = false; bool modifieroperator = false; bool sawoperator = false; int attributecount = 0; ENTRY_DEBUG } :
 
         // main pattern for variable declarations, and most function declaration/definitions.
@@ -2383,6 +2389,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
             // the ~ operator
             set_bool[modifieroperator, modifieroperator || LA(1) == REFOPS || LA(1) == MULTOPS]
 
+            set_bool[sawenum, sawenum || LA(1) == ENUM]
             (
                 (specifier)=>
                 specifier set_int[specifier_count, specifier_count + 1] |
@@ -3684,7 +3691,7 @@ lambda_marked[] { LocalMode lm(this); ENTRY_DEBUG } :
             startNewMode(MODE_LOCAL);
 
             // start of the catch statement
-            startElement(SNAME);
+//            startElement(SNAME);
         }
         LAMBDA
 ;
