@@ -810,6 +810,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
     case NULL_FLAG_SHORT:
       options |= OPTION_NULL;
+      options |= OPTION_EXPAND;
       break;
 
     case NESTED_FLAG_SHORT:
