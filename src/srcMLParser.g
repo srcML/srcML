@@ -439,6 +439,11 @@ tokens {
     SORDERBY;
     SJOIN;
     SGROUP;
+    SIN;
+    SON;
+    SEQUALS;
+    SBY;
+    SINTO;
 
     // Last token used for boundary
     END_ELEMENT_TOKEN;
@@ -2795,7 +2800,17 @@ linq_from[] { LocalMode lm(this); ENTRY_DEBUG }:
 
             startElement(SFROM);
         }
-        FROM linq_full_expression (IN linq_full_expression)*
+        FROM linq_full_expression (linq_in)*
+    ;
+
+linq_in[] { LocalMode lm(this); ENTRY_DEBUG }:
+        {
+            // start a mode to end at right bracket with expressions inside
+            startNewMode(MODE_LOCAL);
+
+            startElement(SIN);
+        }
+        IN linq_full_expression
     ;
 
 linq_where[] { LocalMode lm(this); ENTRY_DEBUG }:
@@ -2835,7 +2850,27 @@ linq_group[] { LocalMode lm(this); ENTRY_DEBUG }:
 
             startElement(SGROUP);
         }
-        GROUP linq_full_expression (BY linq_full_expression)* (INTO linq_full_expression)*
+        GROUP linq_full_expression (linq_by)* (linq_into)*
+    ;
+
+linq_by[] { LocalMode lm(this); ENTRY_DEBUG }:
+        {
+            // start a mode to end at right bracket with expressions inside
+            startNewMode(MODE_LOCAL);
+
+            startElement(SBY);
+        }
+        BY linq_full_expression
+    ;
+
+linq_into[] { LocalMode lm(this); ENTRY_DEBUG }:
+        {
+            // start a mode to end at right bracket with expressions inside
+            startNewMode(MODE_LOCAL);
+
+            startElement(SINTO);
+        }
+        INTO linq_full_expression
     ;
 
 linq_join[] { LocalMode lm(this); ENTRY_DEBUG }:
@@ -2845,7 +2880,27 @@ linq_join[] { LocalMode lm(this); ENTRY_DEBUG }:
 
             startElement(SJOIN);
         }
-        JOIN linq_full_expression (IN linq_full_expression)* (ON linq_full_expression)* (EQUALS linq_full_expression)* (INTO linq_full_expression)*
+        JOIN linq_full_expression (linq_in)* (linq_on)* (linq_equals)* (linq_into)*
+    ;
+
+linq_on[] { LocalMode lm(this); ENTRY_DEBUG }:
+        {
+            // start a mode to end at right bracket with expressions inside
+            startNewMode(MODE_LOCAL);
+
+            startElement(SON);
+        }
+        ON linq_full_expression
+    ;
+
+linq_equals[] { LocalMode lm(this); ENTRY_DEBUG }:
+        {
+            // start a mode to end at right bracket with expressions inside
+            startNewMode(MODE_LOCAL);
+
+            startElement(SEQUALS);
+        }
+        EQUALS linq_full_expression
     ;
 
 linq_orderby[] { LocalMode lm(this); ENTRY_DEBUG }:

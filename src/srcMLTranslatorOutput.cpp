@@ -222,6 +222,11 @@ namespace {
   ELEMENT_MAP(SORDERBY,   "orderby")
   ELEMENT_MAP(SGROUP,   "group")
   ELEMENT_MAP(SJOIN,   "join")
+  ELEMENT_MAP(SIN,   "in")
+  ELEMENT_MAP(SON,   "on")
+  ELEMENT_MAP(SEQUALS,   "equals")
+  ELEMENT_MAP(SBY,   "by")
+  ELEMENT_MAP(SINTO,   "into")
 
   // special characters
   ELEMENT_MAP(CONTROL_CHAR,   "escape")
