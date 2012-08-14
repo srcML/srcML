@@ -423,6 +423,9 @@ int main(int argc, char* argv[]) {
     options |= OPTION_NAMESPACE;
   }
 
+  if (isoption(options, OPTION_NULL) && !isoption(options, OPTION_XML))
+    options |= OPTION_EXPAND;
+
   // register default xpath and xslt extension functions if needed
   if (isoption(options, OPTION_XPATH) || isoption(options, OPTION_XSLT)) {
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "statement", "/src:unit//node()[self::src:while or self::src:if or self::src:return or self::src:for]");
@@ -810,7 +813,6 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
     case NULL_FLAG_SHORT:
       options |= OPTION_NULL;
-      options |= OPTION_EXPAND;
       break;
 
     case NESTED_FLAG_SHORT:
