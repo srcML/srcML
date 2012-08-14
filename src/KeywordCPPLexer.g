@@ -132,6 +132,7 @@ tokens {
     AWAIT;
     EVENT;
     ASYNC;
+    THIS;
 
     FROM;
     WHERE;
@@ -342,6 +343,7 @@ KeywordCPPLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         { "abstract"      , ABSTRACT      , LANGUAGE_CSHARP }, 
         { "event"         , EVENT         , LANGUAGE_CSHARP }, 
         { "async"         , ASYNC         , LANGUAGE_CSHARP }, 
+        { "this"          , THIS          , LANGUAGE_CSHARP }, 
         { "yield"         , YIELD         , LANGUAGE_CSHARP }, 
 
         // C# linq
