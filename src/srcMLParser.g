@@ -2675,11 +2675,11 @@ pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
         CLASS | STRUCT | UNION |
 
         // enum use in a type
-        { inLanguage(LANGUAGE_CXX_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
+        { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
         (ENUM variable_identifier (variable_identifier | multops | tripledotop | INLINE))=> ENUM |
 
         // entire enum definition
-        { inLanguage(LANGUAGE_CXX_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
+        { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
         enum_definition_whole
 ;
 
