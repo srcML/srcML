@@ -8,12 +8,12 @@
 
 <unit>
 <decl_stmt><decl><type><name>Query</name></type> <name>query</name> =<init>
-    <expr><linq><orderby>orderby <expr><name>item</name> <name>ascending</name></expr></orderby></linq></expr></init></decl>;</decl_stmt>
+    <expr><linq><orderby>orderby <expr><name>item</name></expr> <name>ascending</name></orderby></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
 <decl_stmt><decl><type><name>Query</name></type> <name>query</name> =<init>
-    <expr><linq><orderby>orderby <expr><name>item</name> <name>ascending</name></expr></orderby></linq></expr></init></decl>;</decl_stmt>
+    <expr><linq><orderby>orderby <expr><name>item</name></expr> <name>ascending</name></orderby></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
@@ -23,7 +23,7 @@
 
 <unit>
 <decl_stmt><decl><type><name>Query</name></type> <name>query</name> =<init>
-    <expr><linq><orderby>orderby <expr><name>item</name> <name>descending</name></expr></orderby></linq></expr></init></decl>;</decl_stmt>
+    <expr><linq><orderby>orderby <expr><name>item</name></expr> <name>descending</name></orderby></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
@@ -33,7 +33,7 @@
 
 <unit>
 <decl_stmt><decl><type><name>Query</name></type> <name>query</name> =<init>
-    <expr><linq><orderby>orderby <expr><name>item</name> <name>ascending</name>, <name>item</name> <name>descending</name></expr></orderby></linq></expr></init></decl>;</decl_stmt>
+    <expr><linq><orderby>orderby <expr><name>item</name></expr> <name>ascending</name>, <expr><name>item</name></expr> <name>descending</name></orderby></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
