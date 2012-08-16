@@ -28,6 +28,11 @@
 
 <unit>
 <decl_stmt><decl><type><name>Query</name></type> <name>query</name> =<init>
+    <expr><linq><orderby>orderby <expr><name>item</name></expr></orderby></linq></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>Query</name></type> <name>query</name> =<init>
     <expr><linq><orderby>orderby <expr><name>item</name> <name>ascending</name>, <name>item</name> <name>descending</name></expr></orderby></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
