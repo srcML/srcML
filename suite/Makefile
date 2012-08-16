@@ -176,11 +176,11 @@ GEN_JAVA= ${foreach nm, $(BASE_JAVA_ALL_GEN), $(nm).java.xml}
 
 #GEN_ASPECTJ= ${foreach nm, $(BASE_ASPECTJ_ALL_GEN), $(nm).aj.xml}
 
-BASE_CXX_11_ALL_GEN = $(BASE_COMMON) $(BASE_CXX) $(BASE_OO)
+#BASE_CXX_11_ALL_GEN = $(BASE_COMMON) $(BASE_CXX) $(BASE_OO)
 
-BASE_CXX_11_ALL = $(BASE_COMMON) $(BASE_CXX) $(BASE_OO)
+#BASE_CXX_11_ALL = $(BASE_COMMON) $(BASE_CXX) $(BASE_OO)
 
-GEN_CXX_11= ${foreach nm, $(BASE_CXX_11_ALL_GEN), $(nm).cpp11.xml}
+#GEN_CXX_11= ${foreach nm, $(BASE_CXX_11_ALL_GEN), $(nm).cpp11.xml}
 
 BASE_C_ALL_GEN = $(BASE_COMMON) $(BASE_C_FAMILY)
 BASE_C_ALL = $(BASE_COMMON) $(BASE_C_FAMILY) $(BASE_C)
