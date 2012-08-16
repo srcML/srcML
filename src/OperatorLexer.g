@@ -91,7 +91,10 @@ SPECIAL :
 */
 //ALLOPERATORS options { testLiterals = true; } : 
 
-OPERATORS options { testLiterals = true; } { bool star = false; } : 
+OPERATORS options { testLiterals = true; } { bool star = false; static int lastpos = 0; 
+
+
+} : 
         (
             '#' {
 
@@ -123,7 +126,7 @@ OPERATORS options { testLiterals = true; } { bool star = false; } :
        '`' |
        '!' ('=')? |
        ':' (':')? |
-       '=' ('=' | { inLanguage(LANGUAGE_CSHARP) }? '>' { $setText("=&gt;"); $setType(LAMBDA); } |) |
+       '=' ('=' | { inLanguage(LANGUAGE_CSHARP) && (lastpos != (getColumn() - 1))}? '>' { $setText("=&gt;"); $setType(LAMBDA); } |) |
 
        '&' { $setText("&amp;"); }
             (options { greedy = true; } : '&' { $setText("&amp;&amp;"); star = true; } | '=' { $setText("&amp;="); } )?
@@ -161,5 +164,5 @@ OPERATORS options { testLiterals = true; } { bool star = false; } :
 
         '\\' ( EOL { $setType(EOL_BACKSLASH); } )*
         )
-        { startline = false; }
+        { startline = false; lastpos = getColumn(); }
 ;
