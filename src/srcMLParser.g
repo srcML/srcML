@@ -130,7 +130,7 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d  %5s%*s %s (%d)\n", inputState->guessing, LA(1), (LA(1) != 11 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d  %5s%*s %s (%d)\n", inputState->guessing, LA(1), (LA(1) != 11 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #define CATCH_DEBUG //marker();
 
 #define assertMode(m)
@@ -2420,6 +2420,10 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                 // special function name
                 MAIN set_bool[isoperatorfunction, type_count == 0] |
 
+                { inLanguage(LANGUAGE_CSHARP) }?
+                (LBRACKET RBRACKET)=>
+                LBRACKET RBRACKET |
+
                 // type parts that can occur before other type parts (excluding specifiers)
                 pure_lead_type_identifier_no_specifiers set_bool[foundpure] |
 
@@ -2656,6 +2660,10 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
         // specifiers that occur in a type
         (specifier)=>
         specifier |
+
+        { inLanguage(LANGUAGE_CSHARP) }?
+        (LBRACKET RBRACKET)=>
+        LBRACKET RBRACKET | 
 
         { inLanguage(LANGUAGE_CSHARP) }? attribute |
 
