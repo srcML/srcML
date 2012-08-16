@@ -3009,7 +3009,7 @@ attribute_target[] { LocalMode lm(this); ENTRY_DEBUG } :
 
             startElement(STARGET);
         }
-        (RETURN | identifier)
+        (RETURN | EVENT | identifier)
 ;
 
 /*
