@@ -53,7 +53,11 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><attribute>[<expr><name>event</name>: <name>SomeAttr</name></expr>]</attribute> <specifier>private</specifier> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><attribute>[<expr><name>field</name>: <name>SomeAttr</name></expr>]</attribute> <specifier>private</specifier> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><attribute>[<expr><name>event</name>: <name>SomeAttr</name></expr>]</attribute> <specifier>event</specifier> <name>void</name></type> <name>f</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
