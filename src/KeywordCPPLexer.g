@@ -133,6 +133,7 @@ tokens {
     EVENT;
     ASYNC;
     THIS;
+    PARAMS;
 
     FROM;
     WHERE;
@@ -345,6 +346,7 @@ KeywordCPPLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         { "async"         , ASYNC         , LANGUAGE_CSHARP }, 
         { "this"          , THIS          , LANGUAGE_CSHARP }, 
         { "yield"         , YIELD         , LANGUAGE_CSHARP }, 
+        { "params"        , PARAMS        , LANGUAGE_CSHARP }, 
 
         // C# linq
         { "from"          , FROM          , LANGUAGE_CSHARP }, 
