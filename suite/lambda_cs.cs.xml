@@ -10,7 +10,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr>(<name>string</name> <name>w</name>) =&gt; <name><name>w</name>.<name>Length</name></name></expr></expr_stmt>
+<expr_stmt><expr>(<name>string</name> <name>w</name>) =&gt; <name><name>w</name>.<name>Length</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
