@@ -820,7 +820,7 @@ call_check[int& postnametoken, int& argumenttoken, int& postcalltoken] { ENTRY_D
        )
 ;
 
-call_check_paren_pair[int& argumenttoken] { bool name = false; ENTRY_DEBUG } :
+call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; ENTRY_DEBUG } :
 
         LPAREN
 
@@ -830,10 +830,10 @@ call_check_paren_pair[int& argumenttoken] { bool name = false; ENTRY_DEBUG } :
         ( options { greedy = true; } : 
 
             // recursive nested parentheses
-            call_check_paren_pair[argumenttoken] set_bool[name, false] | 
+            call_check_paren_pair[argumenttoken, depth + 1] set_bool[name, false] | 
 
             // special case for something that looks like a declaration
-            { !name }?
+            { !name || (depth > 0) }?
             identifier set_bool[name, true] |
 
             // special case for something that looks like a declaration
@@ -847,7 +847,7 @@ call_check_paren_pair[int& argumenttoken] { bool name = false; ENTRY_DEBUG } :
 
             // found two names in a row, so this is not an expression
             // cause this to fail by next matching END_ELEMENT_TOKEN
-            { name }?
+            { name && (depth == 0) }?
             identifier guessing_endGuessing END_ELEMENT_TOKEN |
 
             // forbid parentheses (handled recursively) and cfg tokens
