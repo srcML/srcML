@@ -21,16 +21,12 @@ scp ~/Dropbox/srcML/Unix/Ubuntu12.04-64/srcML.tar.gz ubuntu12test64:/srcML
 cp ~/Dropbox/srcML/Unix/OSX/srcML.tar.gz ~/srcML
 
 ./prlctlall.py --test exec 'bash -c "cd srcML; tar xvf srcML.tar.gz"'
-./prlctlall.py --test exec 'bash -c "export SRC2SRCML=\"/srcML/srcML/src2srcml\"; export SRCML2SRC=\"/srcML/srcML/srcml2src\"; cd srcML/trunk/test/; rm -f srcMLTestReport*; make clean; make;"'
+./prlctlall.py --test exec 'bash -c "export SRC2SRCML=\"/srcML/srcML/src2srcml\"; export SRCML2SRC=\"/srcML/srcML/srcml2src\"; cd srcML/trunk/test/cli; make clean; make;"'
 
 cd srcML
 svn update
 tar xvf srcML.tar.gz
 export SRC2SRCML="../../srcML/src2srcml"
 export SRCML2SRC="../../srcML/srcml2src"
-cd trunk/test/
-rm -f srcMLTestReport*
+cd trunk/test/cli
 make clean; make
-
-~/prlctlall.py --test exec 'bash -c "grep -a \"Errors:\" srcML/trunk/test/srcMLTestReport*"'
-grep -a "Errors:" srcMLTestReport*
