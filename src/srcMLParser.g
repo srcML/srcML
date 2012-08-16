@@ -426,6 +426,7 @@ tokens {
     SCHECKED_STATEMENT;
     SUNCHECKED_STATEMENT;
     SATTRIBUTE;
+    STARGET;
     SUNSAFE_STATEMENT;
 
     // misc
@@ -2993,9 +2994,22 @@ attribute[] { LocalMode lm(this); ENTRY_DEBUG } :
         }
         LBRACKET
 
+        ((attribute_target COLON)=>
+        (attribute_target COLON) | )
+
         full_expression
 
         RBRACKET
+;
+
+attribute_target[] { LocalMode lm(this); ENTRY_DEBUG } :
+        {
+            // start a mode to end at right bracket with expressions inside
+            startNewMode(MODE_LOCAL);
+
+            startElement(STARGET);
+        }
+        (RETURN | identifier)
 ;
 
 /*

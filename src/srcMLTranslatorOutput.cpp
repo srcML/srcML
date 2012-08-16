@@ -213,6 +213,7 @@ namespace {
 
   // special characters
   ELEMENT_MAP(SATTRIBUTE,   "attribute")
+  ELEMENT_MAP(STARGET,      "target")
 
   ELEMENT_MAP(SLINQ,   "linq")
   ELEMENT_MAP(SFROM, "from")
