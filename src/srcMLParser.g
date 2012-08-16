@@ -2917,7 +2917,31 @@ linq_orderby[] { LocalMode lm(this); ENTRY_DEBUG }:
 
             startElement(SORDERBY);
         }
-        ORDERBY linq_full_expression ((ASCENDING | DESCENDING) COMMA linq_full_expression)*
+        ORDERBY linq_full_expression 
+
+        (linq_ascending | linq_descending)*
+        
+        (COMMA linq_full_expression (linq_ascending | linq_descending| ))*
+    ;
+
+linq_ascending[] { LocalMode lm(this); ENTRY_DEBUG }:
+        {
+            // start a mode to end at right bracket with expressions inside
+            startNewMode(MODE_LOCAL);
+
+            startElement(SNAME);
+        }
+        ASCENDING
+    ;
+
+linq_descending[] { LocalMode lm(this); ENTRY_DEBUG }:
+        {
+            // start a mode to end at right bracket with expressions inside
+            startNewMode(MODE_LOCAL);
+
+            startElement(SNAME);
+        }
+        DESCENDING
     ;
 
 variable_identifier_array_grammar_sub[bool& iscomplex] { LocalMode lm(this); ENTRY_DEBUG } :
@@ -2995,7 +3019,7 @@ linq_full_expression[] { LocalMode lm(this); ENTRY_DEBUG } :
         { inMode(MODE_ARGUMENT) }? argument |
 
         // expression with right parentheses if a previous match is in one
-        { LA(1) != ON && LA(1) != BY && LA(1) != FROM && LA(1) != SELECT && LA(1) != LET && LA(1) != WHERE && LA(1) != ORDERBY && LA(1) != GROUP && LA(1) != JOIN && LA(1) != IN && LA(1) != EQUALS && LA(1) != INTO && (LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN)) }? expression_setup_linq |
+        { LA(1) != ASCENDING && LA(1) != DESCENDING && LA(1) != ON && LA(1) != BY && LA(1) != FROM && LA(1) != SELECT && LA(1) != LET && LA(1) != WHERE && LA(1) != ORDERBY && LA(1) != GROUP && LA(1) != JOIN && LA(1) != IN && LA(1) != EQUALS && LA(1) != INTO && (LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN)) }? expression_setup_linq |
 
         COLON)*
 ;
