@@ -2366,7 +2366,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
              bool& sawenum,
              int& posin
         ] { sawenum = false; token = 0; fla = 0; type_count = 0; int specifier_count = 0; isdestructor = false;
-        type = NONE; bool foundpure = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; bool endbracket = false; bool modifieroperator = false; bool sawoperator = false; int attributecount = 0; posin = 0; ENTRY_DEBUG } :
+        type = NONE; bool foundpure = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; bool endbracket = false; bool modifieroperator = false; bool sawoperator = false; int attributecount = 0; posin = 0; bool qmark = false; ENTRY_DEBUG } :
 
         // main pattern for variable declarations, and most function declaration/definitions.
         // trick is to look for function declarations/definitions, and along the way record
@@ -2386,6 +2386,8 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
         (
         ({ inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) || (type_count == 0) || LA(1) != LBRACKET }?
 
+            set_bool[qmark, (qmark || (LA(1) == QMARK)) && inLanguage(LANGUAGE_CSHARP)]
+
             set_int[posin, LA(1) == IN ? posin = type_count : posin]
 
             set_bool[sawoperator, sawoperator || LA(1) == OPERATOR]
@@ -2396,7 +2398,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
             // record any type modifiers that are also operators
             // this is for disambiguation of destructor declarations from expressions involving
             // the ~ operator
-            set_bool[modifieroperator, modifieroperator || LA(1) == REFOPS || LA(1) == MULTOPS]
+            set_bool[modifieroperator, modifieroperator || LA(1) == REFOPS || LA(1) == MULTOPS || LA(1) == QMARK]
 
             set_bool[sawenum, sawenum || LA(1) == ENUM]
             (
@@ -2437,6 +2439,9 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
             // record second (before we parse it) for label detection
             set_int[token, LA(1), type_count == 1]
         )*
+
+        // special case for ternary operator on its own
+        throw_exception[LA(1) == COLON && qmark]
 
         // adjust specifier tokens to account for keyword async used as name (only for C#)
         set_int[specifier_count, token == ASYNC ? specifier_count - 1 : specifier_count]
@@ -4561,7 +4566,7 @@ multops[] { LocalMode lm(this); ENTRY_DEBUG } :
                 startElement(SMODIFIER);
             }
         }
-        (MULTOPS | REFOPS | RVALUEREF)
+        (MULTOPS | REFOPS | RVALUEREF | { inLanguage(LANGUAGE_CSHARP) }? QMARK)
 ;
 
 tripledotop[] { LocalMode lm(this); ENTRY_DEBUG } :
