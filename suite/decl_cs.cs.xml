@@ -25,4 +25,8 @@
 <decl_stmt><decl><type><specifier>public</specifier> <specifier>volatile</specifier> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><name>int</name>?</type> <name>i</name></decl>;</decl_stmt>
+</unit>
+
 </unit>
