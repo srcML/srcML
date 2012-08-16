@@ -14,7 +14,7 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name>int</name></type> <name>shortestWordLength</name> =<init> <expr><call><name><name>words</name>.<name>Min</name></name><argument_list>(<argument><expr>(<name>string</name> <name>w</name>) =&gt; w.Length</expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>int</name></type> <name>shortestWordLength</name> =<init> <expr><call><name><name>words</name>.<name>Min</name></name><argument_list>(<argument><expr>(<name>string</name> <name>w</name>) =&gt; <name><name>w</name>.<name>Length</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
