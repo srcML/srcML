@@ -45,41 +45,41 @@
 </unit>
 
 <unit>
-<function><type><attribute>[<expr><name>method</name>: <name>SomeAttr</name></expr>]</attribute> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><type><attribute>[<target>method</target>: <expr><name>SomeAttr</name></expr>]</attribute> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><attribute>[<expr><name>return</name>: <name>SomeAttr</name></expr>]</attribute> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><type><attribute>[<target>return></target>: <expr><name>SomeAttr</name></expr>]</attribute> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><attribute>[<expr><name>field</name>: <name>SomeAttr</name></expr>]</attribute> <specifier>private</specifier> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><attribute>[<target>field</target>: <expr><name>SomeAttr</name></expr>]</attribute> <specifier>private</specifier> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><attribute>[<expr><name>event</name>: <name>SomeAttr</name></expr>]</attribute> <specifier>event</specifier> <name>void</name></type> <name>f</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><attribute>[<target>event</target>: <expr><name>SomeAttr</name></expr>]</attribute> <specifier>event</specifier> <name>void</name></type> <name>f</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<function><type><specifier>public</specifier> <name>void</name></type> <name>f</name><parameter_list>( <param><decl><type><attribute>[<expr><name>param</name>: <name>SomeAttr</name></expr>]</attribute><name>int</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <name>void</name></type> <name>f</name><parameter_list>( <param><decl><type><attribute>[<target>param</target>: <expr><name>SomeAttr</name></expr>]</attribute><name>int</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
 <decl_stmt><decl><type><specifier>public</specifier> <name>byte</name></type> <name>this</name><parameter_list>[<param><decl><type><name>int</name></type> <name>i</name></decl></param>]</parameter_list> <block>{
-    <function><attribute>[<expr><name>property</name>: <name>SomeAttr</name></expr>]</attribute>get <block>{}</block></function>
+    <function><attribute>[<target>property</target>: <expr><name>SomeAttr</name></expr>]</attribute>get <block>{}</block></function>
 }</block></decl></decl_stmt>
 </unit>
 
 <unit>
-<class><attribute>[<expr><name>type</name>: <name>SomeAttr</name></expr>]</attribute> <specifier>public</specifier> class <name>C</name> <block>{}</block></class>
+<class><attribute>[<target>type</target>: <expr><name>SomeAttr</name></expr>]</attribute> <specifier>public</specifier> class <name>C</name> <block>{}</block></class>
 </unit>
 
 <unit>
-<attribute>[<expr><name>assembly</name>: <name>SomeAttr</name></expr>]</attribute>
+<attribute>[<target>assembly</target>: <expr><name>SomeAttr</name></expr>]</attribute>
 </unit>
 
 <unit>
-<attribute>[<expr><name>module</name>: <name>SomeAttr</name></expr>]</attribute>
+<attribute>[<target>module</target>: <expr><name>SomeAttr</name></expr>]</attribute>
 </unit>
 
 </unit>
