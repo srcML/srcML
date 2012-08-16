@@ -2,12 +2,12 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="foreach" filename="foreach_cs">
 
 <unit>
-<foreach>foreach (<init><decl><type><name>int</name></type> <name>p</name></decl></init> <init>in <decl><name>arr</name></decl></init>)
+<foreach>foreach (<init><decl><type><name>int</name></type> <name>p</name></decl></init> <init>in <expr><name>arr</name></expr></init>)
 <empty_stmt>;</empty_stmt></foreach>
 </unit>
 
 <unit>
-<foreach>foreach (<init><decl><type><name>int</name></type> <name>p</name></decl></init> <init>in <decl><name>arr</name></decl></init>)
+<foreach>foreach (<init><decl><type><name>int</name></type> <name>p</name></decl></init> <init>in <expr><name>arr</name></expr></init>)
 <block>{}</block></foreach>
 </unit>
 
