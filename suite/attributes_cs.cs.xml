@@ -74,4 +74,12 @@
 <class><attribute>[<expr><name>type</name>: <name>SomeAttr</name></expr>]</attribute> <specifier>public</specifier> class <name>C</name> <block>{}</block></class>
 </unit>
 
+<unit>
+<attribute>[<expr><name>assembly</name>: <name>SomeAttr</name></expr>]</attribute>
+</unit>
+
+<unit>
+<attribute>[<expr><name>module</name>: <name>SomeAttr</name></expr>]</attribute>
+</unit>
+
 </unit>
