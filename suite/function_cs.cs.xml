@@ -6,7 +6,7 @@
 </unit>
 
 <unit>
-<function><type><specifier>public</specifier> <specifier>static</specifier> <name>void</name></type> <name>M</name><parameter_list>(<param><decl><type><name>params</name></type> <name><name>int</name><index>[]</index></name> <name>list</name></decl></param>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>void</name></type> <name>M</name><parameter_list>(<param><decl><type><specifier>params</specifier> <name><name>int</name><index>[]</index></name></type> <name>list</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
