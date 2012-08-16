@@ -60,4 +60,8 @@
 <function><type><specifier>public</specifier> <name>void</name></type> <name>f</name><parameter_list>( <param><decl><type><attribute>[<expr><name>param</name>: <name>SomeAttr</name></expr>]</attribute><name>int</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
+<unit>
+<class><attribute>[<expr><name>type</name>: <name>SomeAttr</name></expr>]</attribute> <specifier>public</specifier> class <name>C</name> <block>{}</block></class>
+</unit>
+
 </unit>
