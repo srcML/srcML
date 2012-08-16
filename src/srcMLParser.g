@@ -2312,9 +2312,10 @@ perform_noncfg_check[DECLTYPE& type, int& token, int& fla, int& type_count, bool
     inputState->guessing++;
 
     bool sawenum;
+    int posin = 0;
 
     try {
-        noncfg_check(token, fla, type_count, type, inparam, sawenum);
+        noncfg_check(token, fla, type_count, type, inparam, sawenum, posin);
 
     } catch (...) {
 
@@ -2324,6 +2325,10 @@ perform_noncfg_check[DECLTYPE& type, int& token, int& fla, int& type_count, bool
 //        if (type == NONE && first == DELEGATE)
 //            type = DELEGATE_FUNCTION;
     }
+
+    // may just have an expression 
+    if (type == VARIABLE && posin)
+        type_count = posin - 1;
 
     if (type == 0 && sawenum)
         type = ENUM_DECL;
@@ -2358,9 +2363,10 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
              int& type_count, /* number of tokens in type (not including name) */
              DECLTYPE& type,
              bool inparam,     /* are we in a parameter */
-             bool& sawenum
+             bool& sawenum,
+             int& posin
         ] { sawenum = false; token = 0; fla = 0; type_count = 0; int specifier_count = 0; isdestructor = false;
-        type = NONE; bool foundpure = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; bool endbracket = false; bool modifieroperator = false; bool sawoperator = false; int attributecount = 0; ENTRY_DEBUG } :
+        type = NONE; bool foundpure = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; bool endbracket = false; bool modifieroperator = false; bool sawoperator = false; int attributecount = 0; posin = 0; ENTRY_DEBUG } :
 
         // main pattern for variable declarations, and most function declaration/definitions.
         // trick is to look for function declarations/definitions, and along the way record
@@ -2379,6 +2385,9 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
             DELEGATE set_type[type, DELEGATE_FUNCTION] |
         (
         ({ inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) || (type_count == 0) || LA(1) != LBRACKET }?
+
+            set_int[posin, LA(1) == IN ? posin = type_count : posin]
+
             set_bool[sawoperator, sawoperator || LA(1) == OPERATOR]
 
             // was their a bracket on the end?  Need to know for Java
@@ -3912,6 +3921,13 @@ variable_declaration_initialization[] { ENTRY_DEBUG } :
             // start the initialization element
             startNoSkipElement(SDECLARATION_INITIALIZATION);
         } |
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_LIST | MODE_IN_INIT | MODE_EXPRESSION | MODE_EXPECT);
+
+            // start the initialization element
+            startElement(SDECLARATION_INITIALIZATION);
+        } IN |
         {
             // start a new mode that will end after the argument list
             startNewMode(MODE_ARGUMENT | MODE_LIST);
