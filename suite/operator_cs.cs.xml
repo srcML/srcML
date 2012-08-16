@@ -35,7 +35,9 @@
 <decl_stmt><decl><type><name>T</name></type> <name>temp</name> =<init> <expr><call>default<argument_list>(<argument><expr><name>T</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
 </unit>
 
+<unit>
 <decl_stmt><decl><type><name>int</name></type> <name>y</name> =<init> <expr><name>x</name> <op:operator>??</op:operator> <op:operator>-</op:operator>1</expr></init></decl>;</decl_stmt>
+</unit>
 
 <unit>
 <expr_stmt><expr><call><name><name>const_cast</name><argument_list>&lt;<argument><name>type</name></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
