@@ -3842,11 +3842,23 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
 /*
   Variable declaration name and optional initialization
 */
-variable_declaration_nameinit[] { ENTRY_DEBUG } :
-        variable_identifier
+variable_declaration_nameinit[] { bool isthis = LA(1) == THIS; ENTRY_DEBUG } :
+        complex_name[true, false]
         {
             // expect a possible initialization
             setMode(MODE_INIT | MODE_EXPECT);
+
+            if (isthis && LA(1) == LBRACKET) {
+
+                indexer_parameter_list();
+
+                endDownToFirstMode(MODE_LIST);
+
+                match(RBRACKET);
+
+                endCurrentMode(MODE_LOCAL);
+                endCurrentMode(MODE_LOCAL);
+            }
         }
 ;
 
@@ -4368,6 +4380,29 @@ parameter_list[] { LocalMode lm(this); bool lastwasparam = false; bool foundpara
                 endCurrentMode(MODE_LOCAL);
         } comma |
         full_parameter { foundparam = lastwasparam = true; })* empty_element[SPARAMETER, !lastwasparam && foundparam] rparen[false, false]
+;
+
+indexer_parameter_list[] { bool lastwasparam = false; bool foundparam = false; ENTRY_DEBUG } :
+        {
+            // list of parameters
+            startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
+
+            // start the parameter list element
+            startElement(SPARAMETER_LIST);
+        }
+        // parameter list must include all possible parts since it is part of
+        // function detection
+        LBRACKET 
+        { startNewMode(MODE_LIST); }
+        ({ foundparam = true; if (!lastwasparam) empty_element(SPARAMETER, !lastwasparam); lastwasparam = false; } 
+        {
+            // We are in a parameter list.  Need to make sure we end it down to the start of the parameter list
+//            if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
+//                endCurrentMode(MODE_LOCAL);
+        } comma |
+
+        full_parameter { foundparam = lastwasparam = true; })* 
+        /* empty_element[SPARAMETER, !lastwasparam && foundparam] */
 ;
 
 empty_element[int element, bool cond] { LocalMode lm(this); ENTRY_DEBUG } :
