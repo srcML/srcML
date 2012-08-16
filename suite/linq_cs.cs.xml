@@ -58,7 +58,7 @@
 
 <unit>
 <decl_stmt><decl><type><name>Query</name></type> <name>query</name> =<init>
-    <expr><linq><join>join <expr><name>item</name></expr> <in>in <expr><name>list</name></expr></in> <on>on <expr><name><name>other_item</name>.<name>value</name></name></expr></on> <equals>equals <expr><name><name>item</name>.<name>value</name></name></expr></equals> <into>into <expr><name>values</name</expr></into></join></linq></expr></init></decl>;</decl_stmt>
+    <expr><linq><join>join <expr><name>item</name></expr> <in>in <expr><name>list</name></expr></in> <on>on <expr><name><name>other_item</name>.<name>value</name></name></expr></on> <equals>equals <expr><name><name>item</name>.<name>value</name></name></expr></equals> <into>into <expr><name>values</name></expr></into></join></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
