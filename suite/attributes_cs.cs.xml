@@ -65,6 +65,12 @@
 </unit>
 
 <unit>
+<decl_stmt><decl><type><specifier>public</specifier> <name>byte</name></type> <name>this</name><parameter_list>[<param><decl><type><name>int</name></type> <name>i</name></decl></param>]</parameter_list> <block>{
+    <function><attribute>[<expr><name>property</name>: <name>SomeAttr</name></expr>]</attribute>get <block>{}</block></function>
+}</block></decl></decl_stmt>
+</unit>
+
+<unit>
 <class><attribute>[<expr><name>type</name>: <name>SomeAttr</name></expr>]</attribute> <specifier>public</specifier> class <name>C</name> <block>{}</block></class>
 </unit>
 
