@@ -52,4 +52,12 @@
 <function><type><attribute>[<expr><name>return</name>: <name>SomeAttr</name></expr>]</attribute> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><attribute>[<expr><name>event</name>: <name>SomeAttr</name></expr>]</attribute> <specifier>private</specifier> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<function><type><specifier>public</specifier> <name>void</name></type> <name>f</name><parameter_list>( <param><decl><type><attribute>[<expr><name>param</name>: <name>SomeAttr</name></expr>]</attribute><name>int</name></type> <name>i</name></decl></param>)</parameter_list> <block>{}</block></function>
+</unit>
+
 </unit>
