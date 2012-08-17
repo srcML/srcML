@@ -135,7 +135,7 @@ header "post_include_hpp" {
 
 #define assertMode(m)
 
-enum DECLTYPE { NONE, VARIABLE, FUNCTION, CONSTRUCTOR, DESTRUCTOR, SINGLE_MACRO, NULLOPERATOR, DELEGATE_FUNCTION, ENUM_DECL, GLOBAL_ATTRIBUTE };
+enum DECLTYPE { NONE, VARIABLE, FUNCTION, CONSTRUCTOR, DESTRUCTOR, SINGLE_MACRO, NULLOPERATOR, DELEGATE_FUNCTION, ENUM_DECL, GLOBAL_ATTRIBUTE, PROPERTY_ACCESSOR };
 enum CALLTYPE { NOCALL, CALL, MACRO };
 
 // position in output stream
@@ -604,7 +604,7 @@ cfg[] { ENTRY_DEBUG } :
         // C#
         checked_statement | /* { inLanguage(LANGUAGE_CSHARP) }? attribute | */
 
-        unchecked_statement | lock_statement | fixed_statement | property_method | unsafe_statement |
+        unchecked_statement | lock_statement | fixed_statement | /* property_method | */ unsafe_statement |
 
         // assembly block
         asm_declaration
@@ -645,6 +645,9 @@ statements_non_cfg[] { int token = 0; int place = 0; int secondtoken = 0; int fl
 
         { decl_type == GLOBAL_ATTRIBUTE }?
         attribute |
+
+        { decl_type == PROPERTY_ACCESSOR }?
+        property_method |
 
         // "~" which looked like destructor, but isn't
         { decl_type == NONE }?
@@ -742,6 +745,16 @@ property_method[] { /* TokenPosition tp; */ENTRY_DEBUG } :
 
             // start the function definition element
             startElement(SFUNCTION_DEFINITION);
+        }
+        (attribute)* property_method_names
+;
+
+// functions
+property_method_names[] { LocalMode lm(this); ENTRY_DEBUG } :
+		{
+            startNewMode(MODE_LOCAL);
+
+            startElement(SNAME);
         }
         (GET | SET | ADD | REMOVE)
 ;
@@ -2414,6 +2427,11 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                 global = attribute set_int[attributecount, attributecount + 1] 
                 set_type[type, GLOBAL_ATTRIBUTE, global]
                 throw_exception[global] |
+
+                { type_count == attributecount && inLanguage(LANGUAGE_CSHARP) }?
+                property_method_names
+                set_type[type, PROPERTY_ACCESSOR, true]
+                throw_exception[true] |
 
                 { inLanguage(LANGUAGE_JAVA_FAMILY) }?
                 (template_argument_list)=>

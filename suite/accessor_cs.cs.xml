@@ -3,37 +3,37 @@
 
 <unit>
 <decl_stmt><decl><type><specifier>event</specifier> <name>E</name></type> <name>e</name> <block>{
-    <function>add <block>{}</block></function>
+    <function><name>add</name> <block>{}</block></function>
 }</block></decl></decl_stmt>
 </unit>
 
 <unit>
 <decl_stmt><decl><type><specifier>event</specifier> <name>E</name></type> <name>e</name> <block>{
-    <function>remove <block>{}</block></function>
+    <function><name>remove</name> <block>{}</block></function>
 }</block></decl></decl_stmt>
 </unit>
 
 <unit>
 <decl_stmt><decl><type><specifier>private</specifier> <name>E</name></type> <name>e</name> <block>{
-    <function>add <block>{}</block></function>
+    <function><name>add</name> <block>{}</block></function>
 }</block></decl></decl_stmt>
 </unit>
 
 <unit>
 <decl_stmt><decl><type><specifier>private</specifier> <name>E</name></type> <name>e</name> <block>{
-    <function>remove <block>{}</block></function>
+    <function><name>remove</name> <block>{}</block></function>
 }</block></decl></decl_stmt>
 </unit>
 
 <unit>
 <decl_stmt><decl><type><specifier>private</specifier> <name>E</name></type> <name>e</name> <block>{
-    <function>get <block>{}</block></function>
+    <function><name>get</name> <block>{}</block></function>
 }</block></decl></decl_stmt>
 </unit>
 
 <unit>
 <decl_stmt><decl><type><specifier>private</specifier> <name>E</name></type> <name>e</name> <block>{
-    <function>set <block>{}</block></function>
+    <function><name>set</name> <block>{}</block></function>
 }</block></decl></decl_stmt>
 </unit>
 
