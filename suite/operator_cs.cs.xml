@@ -2,7 +2,7 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:op="http://www.sdml.info/srcML/operator" language="C#" dir="operator" filename="operator_cs">
 
 <unit>
-<expr_stmt><expr><name>a</name> <op:operator>as</op:operator> <name>int</name></expr></expr_stmt>
+<expr_stmt><expr><name>a</name> <op:operator>as</op:operator> <name>int</name></expr>;</expr_stmt>
 </unit>
 
 <unit>
