@@ -135,7 +135,7 @@ header "post_include_hpp" {
 
 #define assertMode(m)
 
-enum DECLTYPE { NONE, VARIABLE, FUNCTION, CONSTRUCTOR, DESTRUCTOR, SINGLE_MACRO, NULLOPERATOR, DELEGATE_FUNCTION, ENUM_DECL };
+enum DECLTYPE { NONE, VARIABLE, FUNCTION, CONSTRUCTOR, DESTRUCTOR, SINGLE_MACRO, NULLOPERATOR, DELEGATE_FUNCTION, ENUM_DECL, GLOBAL_ATTRIBUTE };
 enum CALLTYPE { NOCALL, CALL, MACRO };
 
 // position in output stream
@@ -642,6 +642,9 @@ statements_non_cfg[] { int token = 0; int place = 0; int secondtoken = 0; int fl
         // check for declaration of some kind (variable, function, constructor, destructor
         { perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type == FUNCTION }?
         function[fla, type_count] |
+
+        { decl_type == GLOBAL_ATTRIBUTE }?
+        attribute |
 
         // "~" which looked like destructor, but isn't
         { decl_type == NONE }?
@@ -2367,7 +2370,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
              bool& sawenum,
              int& posin
         ] { sawenum = false; token = 0; fla = 0; type_count = 0; int specifier_count = 0; isdestructor = false;
-        type = NONE; bool foundpure = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; bool endbracket = false; bool modifieroperator = false; bool sawoperator = false; int attributecount = 0; posin = 0; bool qmark = false; ENTRY_DEBUG } :
+        type = NONE; bool foundpure = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; bool endbracket = false; bool modifieroperator = false; bool sawoperator = false; int attributecount = 0; posin = 0; bool qmark = false; bool global = false; ENTRY_DEBUG } :
 
         // main pattern for variable declarations, and most function declaration/definitions.
         // trick is to look for function declarations/definitions, and along the way record
@@ -2408,7 +2411,9 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
 
                 { type_count == attributecount && inLanguage(LANGUAGE_CSHARP) }?
                 (attribute)=>
-                attribute set_int[attributecount, attributecount + 1] |
+                global = attribute set_int[attributecount, attributecount + 1] 
+                set_type[type, GLOBAL_ATTRIBUTE, global]
+                throw_exception[global] |
 
                 { inLanguage(LANGUAGE_JAVA_FAMILY) }?
                 (template_argument_list)=>
@@ -2985,7 +2990,7 @@ variable_identifier_array_grammar_sub[bool& iscomplex] { LocalMode lm(this); ENT
 ;
 
 
-attribute[] { LocalMode lm(this); ENTRY_DEBUG } :
+attribute[] returns [bool global = false] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_TOP | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
@@ -2995,21 +3000,23 @@ attribute[] { LocalMode lm(this); ENTRY_DEBUG } :
         LBRACKET
 
         ((attribute_target COLON)=>
-        (attribute_target COLON) | )
+        (global = attribute_target COLON) | )
 
         full_expression
 
         RBRACKET
 ;
 
-attribute_target[] { LocalMode lm(this); ENTRY_DEBUG } :
+attribute_target[] returns [bool global = false] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
 
             startElement(STARGET);
         }
-        (RETURN | EVENT | identifier)
+        (RETURN | EVENT |
+            set_bool[global, LA(1) != RETURN && LA(1) != EVENT && (LT(1)->getText() == "module" || LT(1)->getText() == "assembly")] identifier
+            )
 ;
 
 /*
