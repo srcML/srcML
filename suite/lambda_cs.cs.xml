@@ -26,7 +26,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr>(<name>input</name> <name>parameters</name>) =&gt; <block>{<expr_stmt><expr><name>statement</name></expr>;</expr_stmt>}</block></expr></expr_stmt>
+<expr_stmt><expr>(<name>input</name> <name>parameters</name>) =&gt; <block>{<expr_stmt><expr><name>statement</name></expr>;</expr_stmt>}</block></expr>;</expr_stmt>
 </unit>
 
 <unit>
