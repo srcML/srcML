@@ -3,13 +3,13 @@
 
 <unit>
 <decl_stmt><decl><type><specifier>public</specifier> <name>byte</name></type> <name>this</name><parameter_list>[<param><decl><type><name>int</name></type> <name>i</name></decl></param>]</parameter_list> <block>{
-    <function>get <block>{}</block></function>
+    <function><name>get</name> <block>{}</block></function>
 }</block></decl></decl_stmt>
 </unit>
 
 <unit>
 <decl_stmt><decl><type><specifier>public</specifier> <name>byte</name></type> <name>this</name><parameter_list>[<param><decl><type><name>int</name></type> <name>i</name></decl></param>]</parameter_list> <block>{
-    <function>set <block>{}</block></function>
+    <function><name>set</name> <block>{}</block></function>
 }</block></decl></decl_stmt>
 </unit>
 
