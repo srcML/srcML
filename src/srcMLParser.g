@@ -2971,7 +2971,7 @@ linq_orderby[] { LocalMode lm(this); ENTRY_DEBUG }:
         }
         ORDERBY linq_full_expression 
 
-        (options { greedy = true; } : linq_ascending | linq_descending)*
+        (options { greedy = true; } : linq_ascending | linq_descending | )
         
         (options { greedy = true; } : COMMA linq_full_expression (linq_ascending | linq_descending| ))*
     ;
@@ -3221,8 +3221,7 @@ complex_name[bool marked = true, bool index = false] { LocalMode lm(this); Token
         { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_CSHARP) }?
         complex_name_cpp[marked, iscomplex_name]
         )
-        ({ index }?
-        (options { greedy = true; } : variable_identifier_array_grammar_sub[iscomplex_name]))*
+        (options { greedy = true; } : { index }? variable_identifier_array_grammar_sub[iscomplex_name])*
         {
             // if we marked it as a complex name and it isn't, fix
             if (marked && !iscomplex_name)
@@ -4401,7 +4400,7 @@ derived[] { LocalMode lm(this); ENTRY_DEBUG } :
             variable_identifier 
             ({ inLanguage(LANGUAGE_CSHARP) }? period variable_identifier)*
 
-            (template_argument_list)*
+            (options { greedy = true; } : template_argument_list)*
             )
         |
             COMMA
@@ -4716,7 +4715,7 @@ template_argument_list[] { LocalMode lm(this); std::string namestack_save[2]; EN
         savenamestack[namestack_save]
         tempops (COMMA | template_argument)* tempope 
 
-        (generic_constraint)*
+        (options { greedy = true; } : generic_constraint)*
 
         restorenamestack[namestack_save]
 ;
@@ -4730,7 +4729,7 @@ generic_constraint[] { LocalMode lm(this); ENTRY_DEBUG } :
         }
         WHERE complex_name COLON 
         (complex_name | CLASS | STRUCT | NEW LPAREN RPAREN)
-        (COMMA (complex_name | CLASS | STRUCT | NEW LPAREN RPAREN))*
+        (options { greedy = true; } : COMMA (complex_name | CLASS | STRUCT | NEW LPAREN RPAREN))*
 ;
 
 savenamestack[std::string namestack_save[]] { namestack_save[0] = namestack[0]; namestack_save[1] = namestack[1]; ENTRY_DEBUG } :;
