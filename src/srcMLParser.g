@@ -2843,7 +2843,7 @@ linq_expression[] { LocalMode lm(this); ENTRY_DEBUG }:
 
             startElement(SLINQ);
         }
-        (linq_from | linq_where | linq_select | linq_let | linq_group | linq_join | linq_orderby)+
+        (options { greedy = true; } : linq_from | linq_where | linq_select | linq_let | linq_group | linq_join | linq_orderby)+
     ;
 
 linq_from[] { LocalMode lm(this); ENTRY_DEBUG }:
@@ -2853,7 +2853,7 @@ linq_from[] { LocalMode lm(this); ENTRY_DEBUG }:
 
             startElement(SFROM);
         }
-        FROM linq_full_expression (linq_in)*
+        FROM linq_full_expression (options { greedy = true; } : linq_in)*
     ;
 
 linq_in[] { LocalMode lm(this); ENTRY_DEBUG }:
@@ -2903,7 +2903,9 @@ linq_group[] { LocalMode lm(this); ENTRY_DEBUG }:
 
             startElement(SGROUP);
         }
-        GROUP linq_full_expression (linq_by)* (linq_into)*
+        GROUP linq_full_expression
+        (options { greedy = true; } : linq_by)*
+        (options { greedy = true; } : linq_into)*
     ;
 
 linq_by[] { LocalMode lm(this); ENTRY_DEBUG }:
@@ -2933,7 +2935,11 @@ linq_join[] { LocalMode lm(this); ENTRY_DEBUG }:
 
             startElement(SJOIN);
         }
-        JOIN linq_full_expression (linq_in)* (linq_on)* (linq_equals)* (linq_into)*
+        JOIN linq_full_expression 
+        (options { greedy = true; } : linq_in)* 
+        (options { greedy = true; } : linq_on)* 
+        (options { greedy = true; } : linq_equals)* 
+        (options { greedy = true; } : linq_into)* 
     ;
 
 linq_on[] { LocalMode lm(this); ENTRY_DEBUG }:
@@ -2965,9 +2971,9 @@ linq_orderby[] { LocalMode lm(this); ENTRY_DEBUG }:
         }
         ORDERBY linq_full_expression 
 
-        (linq_ascending | linq_descending)*
+        (options { greedy = true; } : linq_ascending | linq_descending)*
         
-        (COMMA linq_full_expression (linq_ascending | linq_descending| ))*
+        (options { greedy = true; } : COMMA linq_full_expression (linq_ascending | linq_descending| ))*
     ;
 
 linq_ascending[] { LocalMode lm(this); ENTRY_DEBUG }:
@@ -3216,7 +3222,7 @@ complex_name[bool marked = true, bool index = false] { LocalMode lm(this); Token
         complex_name_cpp[marked, iscomplex_name]
         )
         ({ index }?
-        variable_identifier_array_grammar_sub[iscomplex_name])*
+        (options { greedy = true; } : variable_identifier_array_grammar_sub[iscomplex_name]))*
         {
             // if we marked it as a complex name and it isn't, fix
             if (marked && !iscomplex_name)
@@ -3731,7 +3737,7 @@ delegate_anonymous[] { ENTRY_DEBUG } :
             startElement(SFUNCTION_DEFINITION);
         }
         delegate_marked
-        (parameter_list)*
+        (options { greedy = true; } : parameter_list)*
 
         /* completely parse a function until it is done */
         parse_complete_block
