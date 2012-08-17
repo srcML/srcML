@@ -1783,7 +1783,7 @@ block_end[] { ENTRY_DEBUG } :
             // special case when ending then of if statement
 
             // end down to either a block or top section, or to an if, whichever is reached first
-            endDownToFirstMode(MODE_BLOCK | MODE_TOP | MODE_IF | MODE_ELSE | MODE_TRY);
+            endDownToFirstMode(MODE_BLOCK | MODE_TOP | MODE_IF | MODE_ELSE | MODE_TRY | MODE_ANONYMOUS);
 
             bool endstatement = inMode(MODE_END_AT_BLOCK);
 
@@ -3714,7 +3714,7 @@ finally_statement[] { ENTRY_DEBUG } :
 lambda_anonymous[] { ENTRY_DEBUG } :
         {
             // treat catch block as nested block statement
-            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_STATEMENT);
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_ANONYMOUS);
         }
         lambda_marked
 
