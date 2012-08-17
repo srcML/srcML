@@ -2447,8 +2447,8 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                 MAIN set_bool[isoperatorfunction, type_count == 0] |
 
                 { inLanguage(LANGUAGE_CSHARP) }?
-                (LBRACKET RBRACKET)=>
-                LBRACKET RBRACKET |
+                (LBRACKET (COMMA)* RBRACKET)=>
+                LBRACKET (COMMA)* RBRACKET |
 
                 // type parts that can occur before other type parts (excluding specifiers)
                 pure_lead_type_identifier_no_specifiers set_bool[foundpure] |
@@ -2691,8 +2691,8 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
         specifier |
 
         { inLanguage(LANGUAGE_CSHARP) }?
-        (LBRACKET RBRACKET)=>
-        LBRACKET RBRACKET | 
+        (LBRACKET (COMMA)* RBRACKET)=>
+        LBRACKET (COMMA)* RBRACKET | 
 
         { inLanguage(LANGUAGE_CSHARP) }? attribute |
 
@@ -3005,7 +3005,7 @@ variable_identifier_array_grammar_sub[bool& iscomplex] { LocalMode lm(this); ENT
         }
         LBRACKET
 
-        full_expression
+        full_expression[!inLanguage(LANGUAGE_CSHARP)] ({ inLanguage(LANGUAGE_CSHARP) }? COMMA full_expression[false])*
 
         RBRACKET
         {
@@ -3047,7 +3047,7 @@ attribute_target[] returns [bool global = false] { LocalMode lm(this); ENTRY_DEB
   Full, complete expression matched all at once (no stream).
   Colon matches range(?) for bits.
 */
-full_expression[] { LocalMode lm(this); ENTRY_DEBUG } :
+full_expression[bool checkcomma = true] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
@@ -3055,6 +3055,7 @@ full_expression[] { LocalMode lm(this); ENTRY_DEBUG } :
         (options { greedy = true; } :
 
         // commas as in a list
+//        { checkcomma }?
         comma |
 
         // right parentheses, unless we are in a pair of parentheses in an expression 
