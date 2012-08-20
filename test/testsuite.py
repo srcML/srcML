@@ -370,10 +370,10 @@ try:
 				encoding = ere.search(info).group(1)
 			
 				# version of the outer unit
-				version = ""
-				vre_result = vre.search(info)
-				if vre_result:
-					version = vre_result.group(1)
+#				version = ""
+#				vre_result = vre.search(info)
+#				if vre_result:
+#					version = vre_result.group(1)
 		
 				if specnum == 0:
 					count = 0
