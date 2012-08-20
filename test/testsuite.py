@@ -426,7 +426,7 @@ try:
 						if result != "":
 							error_count += 1
 							
-							errorlist.append((directory + " " + language, count, result))
+							errorlist.append((directory + " " + language, count, result, name))
 
 							# part of list of nested unit number in output
 							print "\033[0;31m" + str(count) + "\033[0m",
@@ -497,7 +497,7 @@ else:
 
 			xerrorlist.remove(x)
 
-		print e[0], e[1], othererror, "\n", "".join(e[2][3:])
+		print e[0], e[1], e[3], othererror, "\n", "".join(e[2][3:])
 
 	for e in xerrorlist:
 		print e[0], e[1], "\n", "".join(e[2][3:])
