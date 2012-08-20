@@ -345,47 +345,15 @@ try:
                                 language = s.split("language=\"")[1].split('"')[0]
 
                                 part = s.split("dir=\"")
-                                if len(part) > 1:
-                                        directory = part[1].split('"')[0]
-                                else:
-                                        directory = None
+                                directory = part[1].split('"')[0] if len(part) > 1 else None
 
                                 part = s.split("filename=\"")
-                                if len(part) > 1:
-                                        filename = part[1].split('"')[0]
-                                else:
-                                        filename = None
-
-                                """
-				# get all the info
-				info = getsrcmlattributefile(xml_filename, "--info")
-				#info = getsrcmlattributefile(xml_filename, "--longinfo")
-				if info == None:
-					print "Problem with", xml_filename
-					continue
-
-				# directory of the outer unit element
-				dreinfo = dre.search(info)
-				directory = dreinfo.group(1)
-
-				# optional filename of the outer unit element
-				freinfo = fre.search(info)
-                                if freinfo != None:
-                                        filename = freinfo.group(1)
-                                else:
-                                        filename = None
-                                """
+                                filename = part[1].split('"')[0] if len(part) > 1 else None
 
 				# only process if directory name matches or is not given
 				if specname != "" and m.match(directory) == None and (filename == None or m.match(filename) == None):
 					continue
 
-                                """
-				# language of the entire document with a default of C++
-				language = lre.search(info).group(1)
-				if len(language) == 0:
-					language = "C++"
-                                """
 				# only process if language matches or is not given
 				if speclang != "" and language != speclang:
 					continue
