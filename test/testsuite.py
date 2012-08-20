@@ -337,8 +337,7 @@ try:
 
                                 f = open(xml_filename, "r")
 
-                                s = f.readline()
-                                filexml = s
+                                filexml = f.readline()
                                 s = f.readline()
                                 filexml += s;
 
@@ -358,18 +357,13 @@ try:
 				if speclang != "" and language != speclang:
 					continue
 			
+                                filexml += f.read()
+                                f.close()
+                                        
 				# output language and directory
 				print
 				print language.ljust(FIELD_WIDTH_LANGUAGE), " ", directory.ljust(FIELD_WIDTH_DIRECTORY), " ",
 
-#				filexml = name2filestr(xml_filename)
-#                                filexml += f.read()
-                                s = f.readline()
-                                while s:
-                                        filexml += s;
-                                        s = f.readline()
-                                f.close()
-                                        
 				info = getsrcmlattributeraw(filexml, "--info")
 
 				# encoding of the outer unit
@@ -380,9 +374,6 @@ try:
 				vre_result = vre.search(info)
 				if vre_result:
 					version = vre_result.group(1)
-		
-				# number of nested units
-				#number = int(nre.search(info).group(1))
 		
 				if specnum == 0:
 					count = 0
