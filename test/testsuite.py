@@ -312,13 +312,6 @@ error_count = 0
 # total test cases
 total_count = 0
 
-dre = re.compile("directory=\"([^\"]*)\"", re.M)
-fre = re.compile("filename=\"([^\"]*)\"", re.M)
-lre = re.compile("language=\"([^\"]*)\"", re.M)
-vre = re.compile("src-version=\"([^\"]*)\"", re.M)
-ere = re.compile("encoding=\"([^\"]*)\"", re.M)
-nre = re.compile("units=\"([^\"]*)\"", re.M)
-
 try:
 			
 	# process all files		
@@ -337,9 +330,10 @@ try:
 
                                 f = open(xml_filename, "r")
 
-                                filexml = f.readline()
+                                line1 = f.readline()
+                                filexml = line1
                                 s = f.readline()
-                                filexml += s;
+                                filexml += s
 
                                 language = s.split("language=\"")[1].split('"')[0]
 
@@ -351,10 +345,12 @@ try:
 
 				# only process if directory name matches or is not given
 				if specname != "" and m.match(directory) == None and (filename == None or m.match(filename) == None):
+                                        f.close()
 					continue
 
 				# only process if language matches or is not given
 				if speclang != "" and language != speclang:
+                                        f.close()
 					continue
 			
                                 filexml += f.read()
@@ -364,16 +360,9 @@ try:
 				print
 				print language.ljust(FIELD_WIDTH_LANGUAGE), " ", directory.ljust(FIELD_WIDTH_DIRECTORY), " ",
 
-				info = getsrcmlattributeraw(filexml, "--info")
-
 				# encoding of the outer unit
-				encoding = ere.search(info).group(1)
-			
-				# version of the outer unit
-#				version = ""
-#				vre_result = vre.search(info)
-#				if vre_result:
-#					version = vre_result.group(1)
+                                part = line1.split("encoding=\"")
+                                encoding = part[1].split('"')[0]
 		
 				if specnum == 0:
 					count = 0
