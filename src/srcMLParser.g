@@ -3257,7 +3257,7 @@ complex_name_csharp[bool marked, bool& iscomplex_name] { namestack[0] = ""; name
             founddestop = true;
         })*
         (simple_name_optional_template[marked] | mark_namestack overloaded_operator)
-        (multops)*
+        ({ !inTransparentMode(MODE_EXPRESSION) }? multops)*
         name_tail_csharp[iscomplex_name, marked]
         { if (founddestop) iscomplex_name = true; }
 ;
@@ -3294,9 +3294,9 @@ name_tail[bool& iscomplex, bool marked] { ENTRY_DEBUG } :
             (dcolon { iscomplex = true; } | period { iscomplex = true; })
             ( options { greedy = true; } : dcolon)*
             (DESTOP set_bool[isdestructor])*
-            (multops)*
+            ({ !inTransparentMode(MODE_EXPRESSION) }? multops)*
             (simple_name_optional_template[marked] | mark_namestack overloaded_operator | function_identifier_main)
-            (multops)*
+            ({ !inTransparentMode(MODE_EXPRESSION) }? multops)*
         )*
 ;
 exception
