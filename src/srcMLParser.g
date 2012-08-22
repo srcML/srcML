@@ -200,7 +200,7 @@ header "post_include_cpp" {
     };
 
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options)
-   : antlr::LLkParser(lexer,1), Mode(this, lang), zeromode(false), skipelse(false), cppifcount(0), parseoptions(parser_options), ifcount(0), ruledepth(0)
+   : antlr::LLkParser(lexer,1), Mode(this, lang), zeromode(false), skipelse(false), cppifcount(0), parseoptions(parser_options), ifcount(0), ruledepth(0), notdestructor(false)
 
 {
     // root, single mode
@@ -467,6 +467,7 @@ std::string namestack[2];
 int ifcount;
 int ruledepth;
 bool qmark;
+bool notdestructor;
 
 ~srcMLParser() {}
 
@@ -2483,7 +2484,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
         set_bool[isoperatorfunction, isoperatorfunction || isdestructor]
 
         // special case for what looks like a destructor declaration
-        throw_exception[isdestructor && (modifieroperator || type_count > 1 || !typeisvoid)]
+        throw_exception[isdestructor && (modifieroperator || type_count > 1 || (type_count == 1 && !typeisvoid))]
 
         /*
           We have a declaration (at this point a variable) if we have:
@@ -3300,6 +3301,8 @@ name_tail[bool& iscomplex, bool marked] { ENTRY_DEBUG } :
             (simple_name_optional_template[marked] | mark_namestack overloaded_operator | function_identifier_main)
             ({ !inTransparentMode(MODE_EXPRESSION) }? multops)*
         )*
+
+        { notdestructor = LA(1) == DESTOP; }
 ;
 exception
 catch[antlr::RecognitionException] {
@@ -4259,6 +4262,8 @@ expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG
         
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (NEW function_identifier paren_pair LCURLY)=> sole_new anonymous_class_definition |
+
+        { notdestructor }? sole_destop { notdestructor = false; } | 
 
         // call
         // distinguish between a call and a macro
