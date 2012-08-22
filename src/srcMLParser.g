@@ -2384,7 +2384,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
              bool& sawenum,
              int& posin
         ] { sawenum = false; token = 0; fla = 0; type_count = 0; int specifier_count = 0; isdestructor = false;
-        type = NONE; bool foundpure = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; bool endbracket = false; bool modifieroperator = false; bool sawoperator = false; int attributecount = 0; posin = 0; qmark = false; bool global = false; ENTRY_DEBUG } :
+        type = NONE; bool foundpure = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; bool endbracket = false; bool modifieroperator = false; bool sawoperator = false; int attributecount = 0; posin = 0; qmark = false; bool global = false; bool typeisvoid = false; ENTRY_DEBUG } :
 
         // main pattern for variable declarations, and most function declaration/definitions.
         // trick is to look for function declarations/definitions, and along the way record
@@ -2405,6 +2405,8 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
         ({ inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) || (type_count == 0) || LA(1) != LBRACKET }?
 
             set_bool[qmark, (qmark || (LA(1) == QMARK)) && inLanguage(LANGUAGE_CSHARP)]
+        
+            set_bool[typeisvoid, typeisvoid || LA(1) == NAME && LT(1)->getText() == "void"]
 
             set_int[posin, LA(1) == IN ? posin = type_count : posin]
 
@@ -2481,7 +2483,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
         set_bool[isoperatorfunction, isoperatorfunction || isdestructor]
 
         // special case for what looks like a destructor declaration
-        throw_exception[isdestructor && modifieroperator]
+        throw_exception[isdestructor && (modifieroperator || type_count > 1 || !typeisvoid)]
 
         /*
           We have a declaration (at this point a variable) if we have:
