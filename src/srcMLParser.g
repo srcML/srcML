@@ -466,6 +466,7 @@ int parseoptions;
 std::string namestack[2];
 int ifcount;
 int ruledepth;
+bool qmark;
 
 ~srcMLParser() {}
 
@@ -2098,7 +2099,7 @@ statement_part[] { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE de
              variable_declaration_initialization |
 
         // start of argument for return or throw statement
-        { inMode(MODE_INIT | MODE_EXPECT) }?
+        { inMode(MODE_INIT | MODE_EXPECT) && inLanguage(LANGUAGE_CXX) }?
              variable_declaration_range |
 
         // in an argument list expecting an argument
@@ -2383,7 +2384,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
              bool& sawenum,
              int& posin
         ] { sawenum = false; token = 0; fla = 0; type_count = 0; int specifier_count = 0; isdestructor = false;
-        type = NONE; bool foundpure = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; bool endbracket = false; bool modifieroperator = false; bool sawoperator = false; int attributecount = 0; posin = 0; bool qmark = false; bool global = false; ENTRY_DEBUG } :
+        type = NONE; bool foundpure = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; bool endbracket = false; bool modifieroperator = false; bool sawoperator = false; int attributecount = 0; posin = 0; qmark = false; bool global = false; ENTRY_DEBUG } :
 
         // main pattern for variable declarations, and most function declaration/definitions.
         // trick is to look for function declarations/definitions, and along the way record
@@ -4618,7 +4619,7 @@ multops[] { LocalMode lm(this); ENTRY_DEBUG } :
                 startElement(SMODIFIER);
             }
         }
-        (MULTOPS | REFOPS | RVALUEREF | { inLanguage(LANGUAGE_CSHARP) }? QMARK)
+        (MULTOPS | REFOPS | RVALUEREF | { inLanguage(LANGUAGE_CSHARP) }? QMARK set_bool[qmark, true])
 ;
 
 tripledotop[] { LocalMode lm(this); ENTRY_DEBUG } :
