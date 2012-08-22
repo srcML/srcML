@@ -91,8 +91,7 @@ SPECIAL :
 */
 //ALLOPERATORS options { testLiterals = true; } : 
 
-OPERATORS options { testLiterals = true; } { bool star = false; static int lastpos = 0; 
-
+OPERATORS options { testLiterals = true; } { bool star = false; static int lastpos = 0;
 
 } : 
         (
@@ -126,7 +125,7 @@ OPERATORS options { testLiterals = true; } { bool star = false; static int lastp
        '`' |
        '!' ('=')? |
        ':' (':')? |
-       '=' ('=' | { inLanguage(LANGUAGE_CSHARP) /* && (lastpos != (getColumn() - 1)) */}? '>' { $setText("=&gt;"); $setType(LAMBDA); } |) |
+       '=' ('=' | { inLanguage(LANGUAGE_CSHARP) && (lastpos != (getColumn() - 1)) }? '>' { $setText("=&gt;"); $setType(LAMBDA); } |) |
 
        '&' { $setText("&amp;"); }
             (options { greedy = true; } : '&' { $setText("&amp;&amp;"); star = true; } | '=' { $setText("&amp;="); } )?
