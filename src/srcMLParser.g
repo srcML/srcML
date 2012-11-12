@@ -593,7 +593,7 @@ cfg[] { ENTRY_DEBUG } :
         try_statement | catch_statement | finally_statement | throw_statement |
 
         // namespace statements
-        namespace_definition | namespace_directive |
+        namespace_definition | (USING LPAREN)=> using_statement | namespace_directive |
 
         typedef_statement |
 
@@ -3683,6 +3683,20 @@ unsafe_statement[] { ENTRY_DEBUG } :
             startElement(SUNSAFE_STATEMENT);
         }
         UNSAFE
+;
+
+using_statement[] { ENTRY_DEBUG } :
+        {
+            // treat try block as nested block statement
+            startNewMode(MODE_STATEMENT | MODE_NEST);
+
+            // start of the try statement
+            startElement(SUSING_DIRECTIVE);
+
+            // expect a condition to follow the keyword
+            startNewMode(MODE_CONDITION | MODE_EXPECT);
+        }
+        USING
 ;
 
 unchecked_statement[] { ENTRY_DEBUG } :
