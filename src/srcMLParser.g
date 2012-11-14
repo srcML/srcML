@@ -2265,7 +2265,7 @@ function_pointer_name_grammar[] { ENTRY_DEBUG } :
         LPAREN function_pointer_name_base RPAREN
 ;
 
-function_pointer_name_base[] { ENTRY_DEBUG } :
+function_pointer_name_base[] { ENTRY_DEBUG bool flag = false; } :
 
         // special case for function pointer names that don't have '*'
         (complex_name[true] RPAREN)=>
@@ -2276,6 +2276,9 @@ function_pointer_name_base[] { ENTRY_DEBUG } :
 
         // typical function pointer name
         MULTOPS (complex_name[true])*
+
+        // optional array declaration
+        (variable_identifier_array_grammar_sub[flag])*
 ;
 
 /*
