@@ -129,3 +129,26 @@ void collect_namespaces(int nb_namespaces, const xmlChar** namespaces, PROPERTIE
     nsv[i].second = xmlnsprefix((const char*) namespaces[index]);
   }
 }
+
+void collect_namespaces_version(int nb_namespaces, const xmlChar** namespaces, PROPERTIES_TYPE& nsv) {
+
+  for (int j = 0, index = 0; j < nb_namespaces; ++j, index += 2) {
+
+    const char* uri = (const char*) namespaces[index + 1];
+
+    if(strcmp(uri, "http://www.sdml.info/srcDiff") == 0)
+      continue;
+
+    // look for it
+    int i;
+    for (i = 0; i < MAXPROPERTIES; ++i)
+      if (nsv[i].first == "" || nsv[i].first == uri)
+	  break;
+
+    // if new, then stick in the name
+    if (nsv[i].first == "")
+      nsv[i].first = uri;
+
+    nsv[i].second = xmlnsprefix((const char*) namespaces[index]);
+  }
+}

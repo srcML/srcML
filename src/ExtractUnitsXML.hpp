@@ -52,9 +52,15 @@ class ExtractUnitsXML : public ProcessUnit {
                        const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces, int nb_attributes,
                        int nb_defaulted, const xmlChar** attributes) {
 
+      xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+      SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+
       // fprintf(stderr, "%s\n", __FUNCTION__);
       // collect namespaces
-      collect_namespaces(nb_namespaces, namespaces, nsv);
+      if(isoption(*(pstate->poptions), OPTION_DIFF))
+        collect_namespaces_version(nb_namespaces, namespaces, nsv);
+      else
+        collect_namespaces(nb_namespaces, namespaces, nsv);
 
       // collect attributes
       collect_attributes(nb_attributes, attributes, attrv);

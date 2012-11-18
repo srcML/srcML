@@ -46,5 +46,9 @@ void collect_attributes(int nb_attributes, const xmlChar** attributes,
 // collect namespaces
 void collect_namespaces(int nb_namespaces, const xmlChar** namespaces,
 			PROPERTIES_TYPE& nsv);
+
+// collect namespaces
+void collect_namespaces_version(int nb_namespaces, const xmlChar** namespaces,
+			PROPERTIES_TYPE& nsv);
 #endif
 
