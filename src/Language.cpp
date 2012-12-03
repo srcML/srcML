@@ -127,6 +127,6 @@ void Language::register_standard_file_extensions()
 
   Language::registerUserExt("aj",   LANGUAGE_ASPECTJ );
 
-  Language::registerUserExt("cs",   LANGUAGE_CSHARP );
+  //  Language::registerUserExt("cs",   LANGUAGE_CSHARP );
 
 }
