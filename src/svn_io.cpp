@@ -12,17 +12,22 @@
 
 #include "svn_io.hpp"
 
+apr_pool_t * global_pool;
+svn_ra_session_t * global_session;
+
+struct svn_context {
+
+  svn_stream_t * stream;
+  apr_pool_t * pool;
+
+};
+
 int abortfunc(int retcode) {
 
   std::cout << retcode << '\n';
 
   return retcode;
 }
-
-char buffer[256];
-
-void svn_process_dir(svn_ra_session_t * session, const char * path, svn_revnum_t revision, apr_pool_t * pool);
-void svn_process_file(svn_ra_session_t * session, const char * path, svn_revnum_t revision, apr_pool_t * pool);
 
 void svn_process_dir(svn_ra_session_t * session, const char * path, svn_revnum_t revision, apr_pool_t * pool) {
 
@@ -48,43 +53,31 @@ void svn_process_dir(svn_ra_session_t * session, const char * path, svn_revnum_t
     new_path += "/";
     new_path += name;
 
+    apr_allocator_t * allocator;
+    apr_allocator_create(&allocator);
+
+    apr_pool_t * new_pool;
+    apr_pool_create_ex(&new_pool, NULL, abortfunc, allocator);
+
     if(dirent->kind == svn_node_file)
-      svn_process_file(session, new_path.c_str(), revision, pool);
+      svn_process_file(session, new_path.c_str(), revision, new_pool);
     else if(dirent->kind == svn_node_dir)
-      svn_process_dir(session, new_path.c_str(), revision, pool);
+      svn_process_dir(session, new_path.c_str(), revision, new_pool);
     else if(dirent->kind == svn_node_none)
       fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, "Path does not exist");
     else if(dirent->kind == svn_node_unknown)
       fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, "Unkown");
 
-      }
+    apr_pool_destroy(new_pool);
+
+  }
 
 }
 
 void svn_process_file(svn_ra_session_t * session, const char * path, svn_revnum_t revision, apr_pool_t * pool) {
 
-  svn_stream_t * stream;
-  svn_stringbuf_t * str = svn_stringbuf_create_ensure(0, pool);
-  stream = svn_stream_from_stringbuf(str, pool);
+  global_pool = pool;
 
-  svn_revnum_t fetched_rev;
-  apr_hash_t *props;
-  svn_ra_get_file(session, path, revision, stream, &fetched_rev, &props, pool);
-
-  apr_size_t len = 256;
-
-  svn_error_t * error;
-
-  do {
-
-    error = svn_stream_read(stream, buffer, &len);
-
-    if(error)
-      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, error->message);
-
-    std::cout << buffer;
-
-  } while(len != 0);
 
 }
 
@@ -136,6 +129,7 @@ void svn_process_session() {
 
   svn_ra_session_t * session;
   svn_error_t * error = svn_client_open_ra_session(&session, "http://calder.sdml.cs.kent.edu/svn/srcML", ctx, pool);
+  global_session = session;
 
   if(error)
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, error->message);
@@ -160,4 +154,49 @@ void svn_process_session() {
 
   apr_terminate();
 
+}
+
+// check svn match
+int svnReadMatch(const char * URI) {
+
+  return 1;
+}
+
+void * svneReadOpen(const char * URI) {
+
+  svn_context * context = new svn_context;
+  context->pool = global_pool;
+
+  svn_stringbuf_t * str = svn_stringbuf_create_ensure(0, context->pool);
+  context->stream = svn_stream_from_stringbuf(str, context->pool);
+
+  svn_revnum_t fetched_rev;
+  apr_hash_t * props;
+
+  svn_ra_get_file(global_session, URI, SVN_INVALID_REVNUM, context->stream, &fetched_rev, &props, context->pool);
+
+  return context;
+
+}
+
+// read from the URI
+int svnRead(void * context, char * buffer, int len) {
+
+  svn_context * ctx = (svn_context *)context;
+
+  apr_size_t length = len;
+
+  svn_error_t * error = svn_stream_read(ctx->stream, buffer, &length);
+
+  if(error) return 0;
+
+  if(length < 0) return 0;
+
+  return length;
+}
+
+// close the open file
+int svnReadClose(void * context) {
+
+  return 1;
 }

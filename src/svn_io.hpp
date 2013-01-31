@@ -28,4 +28,16 @@ void svn_process_file(svn_ra_session_t * session, const char * path, svn_revnum_
 
 void svn_process_session();
 
+// check svn match
+int svnReadMatch(const char * URI);
+
+// svn open
+void * svneReadOpen(const char * URI);
+
+// read from the URI
+int svnRead(void * context, char * buffer, int len);
+
+// close the open file
+int svnReadClose(void * context);
+
 #endif
