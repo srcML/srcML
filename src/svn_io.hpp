@@ -1,5 +1,5 @@
 /*
-  process_svn.hpp
+  svn_io.hpp
 
   Functions for reading a file form svn
 
@@ -20,8 +20,8 @@
 #include <svn_string.h>
 #include <svn_subst.h>
 
-#ifndef INCLUDDED_PROCESS_SVN_HPP
-#define INCLUDDED_PROCESS_SVN_HPP
+#ifndef INCLUDDED_SVN_IO_HPP
+#define INCLUDDED_SVN_IO_HPP
 
 void svn_process_dir(svn_ra_session_t * session, const char * path, svn_revnum_t revision, apr_pool_t * pool);
 void svn_process_file(svn_ra_session_t * session, const char * path, svn_revnum_t revision, apr_pool_t * pool);

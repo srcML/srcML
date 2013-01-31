@@ -10,7 +10,7 @@
 #include <iostream>
 #include <string>
 
-#include "process_svn.hpp"
+#include "svn_io.hpp"
 
 int abortfunc(int retcode) {
 
