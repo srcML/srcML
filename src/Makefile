@@ -92,6 +92,14 @@ CXX_LINK_FLAGS = #-s
 LIBXML_INC_DIR=${firstword ${wildcard /opt/local/include/libxml2 /usr/include/libxml2}}
 LIBXML_INCLUDE=-I$(LIBXML_INC_DIR)
 
+# libapr
+LIBAPR_INC_DIR=${firstword ${wildcard /usr/include/apr-1/ /usr/include/apr}}
+LIBAPR_INCLUDE=-I$(LIBAPR_INC_DIR)
+
+# libsvn
+LIBSVN_INC_DIR=${firstword ${wildcard /usr/local/include/subversion-1 /usr/include/subversion}}
+LIBSVN_INCLUDE=-I$(LIBSVN_INC_DIR)
+
 ifndef MINGW32
 XML_LIB_SRC2SRCML=$(if $(DEBUG),-L /usr/lib/debug/usr/lib/,-lxml2)
 XML_LIB_SRCML2SRC=$(if $(DEBUG),-L /usr/lib/debug/usr/lib/,-lxml2) -lxslt -lexslt
@@ -311,6 +319,9 @@ ${OBJ_DIR}libxml_archive_read.o : libxml_archive_read.cpp libxml_archive_read.hp
 
 ${OBJ_DIR}libxml_archive_write.o : libxml_archive_write.cpp libxml_archive_write.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
+
+${OBJ_DIR}process_svn.o : process_svn.cpp process_svn.hpp
+	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBSVN_INCLUDE) $(LIBAPR_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}SAX2TextWriter.o : SAX2TextWriter.cpp SAX2TextWriter.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
