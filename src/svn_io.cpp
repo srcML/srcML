@@ -28,8 +28,7 @@ int abortfunc(int retcode) {
 
   return retcode;
 }
-
-void svn_process_dir(svn_ra_session_t * session, const char * path, svn_revnum_t revision, apr_pool_t * pool) {
+void svn_process_dir(svn_ra_session_t * session, const char * path, svn_revnum_t revision, apr_pool_t * pool, srcMLTranslator & translator, OPTION_TYPE & options, const char * dir, const char * filename, const char * version, int language, int tabsize, int & count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   apr_hash_t * dirents;
   svn_revnum_t fetched_rev;
@@ -60,9 +59,9 @@ void svn_process_dir(svn_ra_session_t * session, const char * path, svn_revnum_t
     apr_pool_create_ex(&new_pool, NULL, abortfunc, allocator);
 
     if(dirent->kind == svn_node_file)
-      svn_process_file(session, new_path.c_str(), revision, new_pool);
+      svn_process_file(session, new_path.c_str(), revision, new_pool, translator, options, dir, filename, version, language, tabsize, count, skipped, error, showinput, shownumber);
     else if(dirent->kind == svn_node_dir)
-      svn_process_dir(session, new_path.c_str(), revision, new_pool);
+      svn_process_dir(session, new_path.c_str(), revision, new_pool, translator, options, dir, filename, version, language, tabsize, count, skipped, error, showinput, shownumber);
     else if(dirent->kind == svn_node_none)
       fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, "Path does not exist");
     else if(dirent->kind == svn_node_unknown)
@@ -74,14 +73,14 @@ void svn_process_dir(svn_ra_session_t * session, const char * path, svn_revnum_t
 
 }
 
-void svn_process_file(svn_ra_session_t * session, const char * path, svn_revnum_t revision, apr_pool_t * pool) {
+void svn_process_file(svn_ra_session_t * session, const char * path, svn_revnum_t revision, apr_pool_t * pool, srcMLTranslator & translator, OPTION_TYPE & options, const char * dir, const char * filename, const char * version, int language, int tabsize, int & count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   global_pool = pool;
 
 
 }
 
-void svn_process_session() {
+void svn_process_session(srcMLTranslator & translator, OPTION_TYPE & options, const char * dir, const char * filename, const char * version, int language, int tabsize, int & count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   apr_initialize();
 
@@ -128,11 +127,11 @@ void svn_process_session() {
   ctx->conflict_baton = NULL;
 
   svn_ra_session_t * session;
-  svn_error_t * error = svn_client_open_ra_session(&session, "http://calder.sdml.cs.kent.edu/svn/srcML", ctx, pool);
+  svn_error_t * svn_error = svn_client_open_ra_session(&session, "http://calder.sdml.cs.kent.edu/svn/srcML", ctx, pool);
   global_session = session;
 
-  if(error)
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, error->message);
+  if(svn_error)
+    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, svn_error->message);
 
 
   const char * path = "trunk/srcdiff/trunk/src";
@@ -144,9 +143,9 @@ void svn_process_session() {
   svn_ra_stat(session, path, revision, &dirent, path_pool);
 
   if(dirent->kind == svn_node_file)
-    svn_process_file(session, path, revision, path_pool);
+    svn_process_file(session, path, revision, path_pool, translator, options, dir, filename, version, language, tabsize, count, skipped, error, showinput, shownumber);
   else if(dirent->kind == svn_node_dir)
-    svn_process_dir(session, path, revision, path_pool);
+    svn_process_dir(session, path, revision, path_pool, translator, options, dir, filename, version, language, tabsize, count, skipped, error, showinput, shownumber);
   else if(dirent->kind == svn_node_none)
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, "Path does not exist");
   else if(dirent->kind == svn_node_unknown)

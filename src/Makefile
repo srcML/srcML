@@ -321,7 +321,7 @@ ${OBJ_DIR}libxml_archive_write.o : libxml_archive_write.cpp libxml_archive_write
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}svn_io.o : svn_io.cpp svn_io.hpp
-	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBSVN_INCLUDE) $(LIBAPR_INCLUDE) -c $< -o $@
+	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBSVN_INCLUDE) $(LIBAPR_INCLUDE) $(LIBXML_INCLUDE) -c $< -o $@
 
 ${OBJ_DIR}SAX2TextWriter.o : SAX2TextWriter.cpp SAX2TextWriter.hpp
 	$(CXX) $(ANTLR_INC) $(CXXFLAGS) $(LIBXML_INCLUDE) -c $< -o $@
