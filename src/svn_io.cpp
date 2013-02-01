@@ -51,7 +51,8 @@ void svn_process_dir(svn_ra_session_t * session, const char * path, svn_revnum_t
 
     std::string new_path = path;
     const char * name = (const char *)key;
-    new_path += "/";
+    if(path && path[0] != 0)
+      new_path += "/";
     new_path += name;
 
     apr_allocator_t * allocator;
@@ -216,7 +217,7 @@ void svn_process_session(srcMLTranslator & translator, const char * url, OPTION_
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, svn_error->message);
 
 
-  const char * path = ".";
+  const char * path = "";
   apr_pool_t * path_pool;
   apr_pool_create_ex(&path_pool, NULL, abortfunc, allocator);
 
