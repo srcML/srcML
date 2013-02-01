@@ -11,6 +11,8 @@
 #include <string>
 
 #include "svn_io.hpp"
+#include "Language.hpp"
+#include "srcmlapps.hpp"
 
 apr_pool_t * global_pool;
 svn_ra_session_t * global_session;
@@ -77,10 +79,90 @@ void svn_process_file(svn_ra_session_t * session, const char * path, svn_revnum_
 
   global_pool = pool;
 
+  OPTION_TYPE save_options = options;
+  try {
+
+    bool foundfilename = true;
+
+    std::string unit_filename = path;
+    if (filename)
+      unit_filename = filename;
+    else 
+      unit_filename = path;
+
+    // language based on extension, if not specified
+
+    // 1) language may have been explicitly specified
+    int reallanguage = language;
+
+    // 2) try from the filename (basically the extension)
+    if (!reallanguage)
+      reallanguage = Language::getLanguageFromFilename(unit_filename.c_str());
+
+    // error if can't find a language
+    if (!reallanguage) {
+
+      if (!isoption(options, OPTION_QUIET)) {
+        if (unit_filename == "-")
+          fprintf(stderr, "Skipped:  Must specify language for standard input.\n" );
+        else
+          fprintf(stderr, !shownumber ? "Skipped '%s':  Unregistered extension\n" :
+                  "    - %s\tSkipped: Unregistered extension\n",
+                  unit_filename.c_str() ? unit_filename.c_str() : "standard input");
+      }
+
+      ++skipped;
+
+      return;
+    }
+
+    // turnon cpp namespace for non Java-based languages
+    if (!(reallanguage == Language::LANGUAGE_JAVA || reallanguage == Language::LANGUAGE_ASPECTJ))
+      options |= OPTION_CPP;
+
+    // open up the file
+    void * context = translator.setInput(path);
+
+    // another file
+    ++count;
+
+
+    const char* c_filename = clean_filename(unit_filename.c_str());
+
+    // output the currently processed filename
+    if (!isoption(options, OPTION_QUIET) && shownumber)
+      fprintf(stderr, "%5d %s\n", count, c_filename);
+
+    // translate the file
+    translator.translate(path, dir,
+                         foundfilename ? c_filename : 0,
+                         version, reallanguage);
+
+  } catch (FileError) {
+
+    // output tracing information about the input file
+    if (showinput && !isoption(options, OPTION_QUIET)) {
+
+      // output the currently processed filename
+      fprintf(stderr, "Path: %s", strcmp(path, STDIN) == 0 ? "standard input" : path);
+      fprintf(stderr, "\tError: Unable to open file.\n");
+
+    } else {
+
+      if (dir)
+        fprintf(stderr, "%s: Unable to open file %s/%s\n", "src2srcml", dir, path);
+      else
+        fprintf(stderr, "%s: Unable to open file %s\n", "src2srcml", path);
+    }
+
+    ++error;
+  }
+
+  options = save_options;
 
 }
 
-void svn_process_session(srcMLTranslator & translator, OPTION_TYPE & options, const char * dir, const char * filename, const char * version, int language, int tabsize, int & count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void svn_process_session(srcMLTranslator & translator, const char * url, OPTION_TYPE & options, const char * dir, const char * filename, const char * version, int language, int tabsize, int & count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   apr_initialize();
 
@@ -127,14 +209,14 @@ void svn_process_session(srcMLTranslator & translator, OPTION_TYPE & options, co
   ctx->conflict_baton = NULL;
 
   svn_ra_session_t * session;
-  svn_error_t * svn_error = svn_client_open_ra_session(&session, "http://calder.sdml.cs.kent.edu/svn/srcML", ctx, pool);
+  svn_error_t * svn_error = svn_client_open_ra_session(&session, url, ctx, pool);
   global_session = session;
 
   if(svn_error)
     fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, svn_error->message);
 
 
-  const char * path = "trunk/srcdiff/trunk/src";
+  const char * path = ".";
   apr_pool_t * path_pool;
   apr_pool_create_ex(&path_pool, NULL, abortfunc, allocator);
 
@@ -161,7 +243,7 @@ int svnReadMatch(const char * URI) {
   return 1;
 }
 
-void * svneReadOpen(const char * URI) {
+void * svnReadOpen(const char * URI) {
 
   svn_context * context = new svn_context;
   context->pool = global_pool;

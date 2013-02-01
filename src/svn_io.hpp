@@ -30,13 +30,13 @@ void svn_process_dir(svn_ra_session_t * session, const char * path, svn_revnum_t
 
 void svn_process_file(svn_ra_session_t * session, const char * path, svn_revnum_t revision, apr_pool_t * pool, srcMLTranslator & translator, OPTION_TYPE & options, const char * dir, const char * filename, const char * version, int language, int tabsize, int & count, int & skipped, int & error, bool & showinput, bool shownumber);
 
-void svn_process_session(srcMLTranslator & translator, OPTION_TYPE & options, const char * dir, const char * filename, const char * version, int language, int tabsize, int & count, int & skipped, int & error, bool & showinput, bool shownumber);
+void svn_process_session(srcMLTranslator & translator, const char * srcml_filename, OPTION_TYPE & options, const char * dir, const char * filename, const char * version, int language, int tabsize, int & count, int & skipped, int & error, bool & showinput, bool shownumber);
 
 // check svn match
 int svnReadMatch(const char * URI);
 
 // svn open
-void * svneReadOpen(const char * URI);
+void * svnReadOpen(const char * URI);
 
 // read from the URI
 int svnRead(void * context, char * buffer, int len);
