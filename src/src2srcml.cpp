@@ -347,6 +347,7 @@ struct process_options
   const char* given_version;
   int tabsize;
   bool prefixchange[num_prefixes];
+  int revision;
 };
 
 process_options* gpoptions = 0;
@@ -390,7 +391,8 @@ int main(int argc, char* argv[]) {
       0,
       0,
       DEFAULT_TABSIZE,
-      { false, false, false, false, false, false }
+      { false, false, false, false, false, false },
+      SVN_INVALID_REVNUM
     };
 
   gpoptions = &poptions;
@@ -730,10 +732,23 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
-      poptions.fname = optarg;
+      {
+
+        char * pos = index(optarg, '@');
+
+        if(!pos)
+          poptions.fname = optarg;
+        else {
+
+          poptions.fname = strndup(optarg, pos - optarg);
+          poptions.revision = atoi(pos + 1);
+
+        }
+
+      }
 
       options |= OPTION_SVN;
-      
+
       break;
 
     case FILELIST_FLAG_CODE:
