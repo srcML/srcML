@@ -191,16 +191,8 @@ void svn_process_session(srcMLTranslator & translator, const char * url, OPTION_
   svn_boolean_t trust_server_cert = true;
 
   svn_auth_baton_t * ab;
-  svn_cmdline_create_auth_baton(&ab, non_interactive,
-                                auth_username,
-                                auth_password,
-                                config_dir,
-                                no_auth_cache,
-                                trust_server_cert,
-                                cfg_config,
-                                ctx->cancel_func,
-                                ctx->cancel_baton,
-                                pool);
+  svn_cmdline_create_auth_baton(&ab, non_interactive, auth_username, auth_password, config_dir, no_auth_cache, trust_server_cert,
+                                cfg_config, ctx->cancel_func, ctx->cancel_baton, pool);
 
   ctx->auth_baton = ab;
   ctx->conflict_func = NULL;
@@ -222,13 +214,15 @@ void svn_process_session(srcMLTranslator & translator, const char * url, OPTION_
   svn_ra_stat(session, path, revision, &dirent, path_pool);
 
   if(dirent->kind == svn_node_file)
-    svn_process_file(session, path, revision, path_pool, translator, options, dir, filename, version, language ? language : Language::getLanguageFromFilename(url), tabsize, count, skipped, error, showinput, shownumber);
+    svn_process_file(session, path, revision, path_pool, translator, options, dir, filename, version,
+                     language ? language : Language::getLanguageFromFilename(url), tabsize, count, skipped, error, showinput, shownumber);
   else if(dirent->kind == svn_node_dir)
-    svn_process_dir(session, path, revision, path_pool, translator, options, dir, filename, version, language, tabsize, count, skipped, error, showinput, shownumber);
+    svn_process_dir(session, path, revision, path_pool, translator, options, dir, filename, version, language, tabsize,
+                    count, skipped, error, showinput, shownumber);
   else if(dirent->kind == svn_node_none)
     fprintf(stderr, "%s\n", "Path does not exist");
   else if(dirent->kind == svn_node_unknown)
-    fprintf(stderr, "%s\n", "Unkown");
+    fprintf(stderr, "%s\n", "Unknown");
 
   apr_terminate();
 
