@@ -100,7 +100,7 @@ LIBAPR_INCLUDE=-I$(LIBAPR_INC_DIR)
 LIBSVN_INC_DIR=${firstword ${wildcard /usr/local/include/subversion-1 /usr/include/subversion-1}}
 LIBSVN_INCLUDE=-I$(LIBSVN_INC_DIR)
 
-LIBSVN_LIB=-L${firstword ${wildcard /usr/local/Cellar/subversion/1.7.8/lib, /usr/lib/i386-linuxgnu}} -lsvn_repos-1 -lapr-1  -lsvn_ra-1 -lsvn_ra_neon-1 -lsvn_ra_local-1 -lsvn_ra_svn-1 -lsvn_wc-1 -lsvn_fs-1 -lsvn_fs_fs-1 -lsvn_fs_util-1 -lsvn_fs-1 -lsvn_delta-1 -lsvn_client-1 -lsvn_diff-1 -lsvn_subr-1
+LIBSVN_LIB=-L${firstword ${wildcard /usr/local/Cellar/subversion/1.7.8/lib /usr/lib/i386-linuxgnu}} -lsvn_repos-1 -lapr-1 -laprutil-1 -lsvn_ra-1 -lsvn_ra_neon-1 -lsvn_ra_local-1 -lsvn_ra_svn-1 -lsvn_wc-1 -lsvn_fs-1 -lsvn_fs_fs-1 -lsvn_fs_util-1 -lsvn_fs-1 -lsvn_delta-1 -lsvn_client-1 -lsvn_diff-1 -lsvn_subr-1
 
 
 ifndef MINGW32
