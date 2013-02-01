@@ -174,7 +174,6 @@ void svn_process_session(srcMLTranslator & translator, const char * url, OPTION_
   apr_pool_t * pool;
   apr_pool_create_ex(&pool, NULL, abortfunc, allocator);
 
-
   svn_client_ctx_t * ctx;
   apr_hash_t * cfg_hash;
   svn_config_t * cfg_config;
@@ -217,7 +216,6 @@ void svn_process_session(srcMLTranslator & translator, const char * url, OPTION_
   if(svn_error)
     fprintf(stderr, "%s\n", svn_error->message);
 
-
   const char * path = "";
   apr_pool_t * path_pool;
   apr_pool_create_ex(&path_pool, NULL, abortfunc, allocator);
@@ -227,7 +225,7 @@ void svn_process_session(srcMLTranslator & translator, const char * url, OPTION_
   svn_ra_stat(session, path, revision, &dirent, path_pool);
 
   if(dirent->kind == svn_node_file)
-    svn_process_file(session, path, revision, path_pool, translator, options, dir, filename, version, language, tabsize, count, skipped, error, showinput, shownumber);
+    svn_process_file(session, path, revision, path_pool, translator, options, dir, filename, version, language ? language : Language::getLanguageFromFilename(url), tabsize, count, skipped, error, showinput, shownumber);
   else if(dirent->kind == svn_node_dir)
     svn_process_dir(session, path, revision, path_pool, translator, options, dir, filename, version, language, tabsize, count, skipped, error, showinput, shownumber);
   else if(dirent->kind == svn_node_none)
