@@ -42,6 +42,7 @@
 #include <archive.h>
 #include "libxml_archive_read.hpp"
 #include "libxml_archive_write.hpp"
+#include "svn_io.hpp"
 
 #define PROGRAM_NAME "src2srcml"
 
@@ -344,6 +345,8 @@ struct process_options
   const char* given_version;
   int tabsize;
   bool prefixchange[num_prefixes];
+
+  bool is_svn;
 };
 
 process_options* gpoptions = 0;
@@ -387,7 +390,8 @@ int main(int argc, char* argv[]) {
       0,
       0,
       DEFAULT_TABSIZE,
-      { false, false, false, false, false, false }
+      { false, false, false, false, false, false },
+      false
     };
 
   gpoptions = &poptions;
@@ -567,6 +571,14 @@ int main(int argc, char* argv[]) {
       src2srcml_filelist(translator, poptions, count, skipped, error, showinput);
 
       // translate from standard input
+    } else if (poptions.is_svn) {
+
+      if (xmlRegisterInputCallbacks(svnReadMatch, svnReadOpen, svnRead, svnReadClose) < 0) {
+        fprintf(stderr, "%s: failed to register svn handler\n", PROGRAM_NAME);
+        exit(1);
+      }
+      svn_process_session(translator, poptions.fname, options, poptions.given_directory, poptions.given_filename, poptions.given_version, poptions.language, poptions.tabsize, count, skipped, error, showinput, shownumber);
+
     } else if (input_arg_count == 0) {
 
       // translate from standard input using any directory, filename and version given on the command line
@@ -657,6 +669,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { LITERAL_FLAG, no_argument, &curoption, OPTION_LITERAL },
     { OPERATOR_FLAG, no_argument, &curoption, OPTION_OPERATOR },
     { MODIFIER_FLAG, no_argument, &curoption, OPTION_MODIFIER },
+    { "svn", required_argument, NULL, 270 },
     { CPP_MARKUP_ELSE_FLAG, no_argument, NULL, CPP_MARKUP_ELSE_FLAG_CODE },
     { CPP_TEXTONLY_ELSE_FLAG, no_argument, NULL, CPP_TEXTONLY_ELSE_FLAG_CODE },
     { CPP_MARKUP_IF0_FLAG, no_argument, NULL, CPP_MARKUP_IF0_FLAG_CODE },
@@ -711,6 +724,16 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       poptions.srcml_filename = optarg;
+      break;
+
+    case 270:
+
+      // check for missing argument confused by an argument that looks like an option
+      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
+
+      poptions.fname = optarg;
+      poptions.is_svn = true;
+
       break;
 
     case FILELIST_FLAG_CODE:
