@@ -93,7 +93,7 @@ LIBXML_INC_DIR=${firstword ${wildcard /opt/local/include/libxml2 /usr/include/li
 LIBXML_INCLUDE=-I$(LIBXML_INC_DIR)
 
 # libapr
-LIBAPR_INC_DIR=${firstword ${wildcard /usr/include/apr-1/ /usr/include/apr-1.0}}
+LIBAPR_INC_DIR=${firstword ${wildcard /usr/include/apr-1/ /usr/include/apr-1.0 }}
 LIBAPR_INCLUDE=-I$(LIBAPR_INC_DIR)
 
 # libsvn
