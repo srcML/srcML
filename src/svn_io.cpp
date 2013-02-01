@@ -215,7 +215,7 @@ void svn_process_session(srcMLTranslator & translator, const char * url, OPTION_
   global_session = session;
 
   if(svn_error)
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, svn_error->message);
+    fprintf(stderr, "%s\n", svn_error->message);
 
 
   const char * path = "";
@@ -231,9 +231,9 @@ void svn_process_session(srcMLTranslator & translator, const char * url, OPTION_
   else if(dirent->kind == svn_node_dir)
     svn_process_dir(session, path, revision, path_pool, translator, options, dir, filename, version, language, tabsize, count, skipped, error, showinput, shownumber);
   else if(dirent->kind == svn_node_none)
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, "Path does not exist");
+    fprintf(stderr, "%s\n", "Path does not exist");
   else if(dirent->kind == svn_node_unknown)
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, "Unkown");
+    fprintf(stderr, "%s\n", "Unkown");
 
   apr_terminate();
 
