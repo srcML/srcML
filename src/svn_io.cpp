@@ -14,7 +14,6 @@
 #include "Language.hpp"
 #include "srcmlapps.hpp"
 
-apr_pool_t * global_pool;
 svn_ra_session_t * global_session;
 
 struct svn_context {
@@ -68,7 +67,7 @@ void svn_process_dir(svn_ra_session_t * session, const char * path, svn_revnum_t
     else if(dirent->kind == svn_node_none)
       fprintf(stderr, "%s\n", "Path does not exist");
     else if(dirent->kind == svn_node_unknown)
-      fprintf(stderr, "%s\n", "Unkown");
+      fprintf(stderr, "%s\n", "Unknown");
 
     apr_pool_destroy(new_pool);
 
@@ -78,8 +77,6 @@ void svn_process_dir(svn_ra_session_t * session, const char * path, svn_revnum_t
 
 void svn_process_file(svn_ra_session_t * session, const char * path, svn_revnum_t revision, apr_pool_t * pool, srcMLTranslator & translator, OPTION_TYPE & options, const char * dir, const char * filename, const char * version, int language, int tabsize, int & count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
-  global_pool = pool;
-
   OPTION_TYPE save_options = options;
   try {
 
@@ -88,7 +85,7 @@ void svn_process_file(svn_ra_session_t * session, const char * path, svn_revnum_
     std::string unit_filename = path;
     if (filename)
       unit_filename = filename;
-    else 
+    else
       unit_filename = path;
 
     // language based on extension, if not specified
@@ -122,7 +119,7 @@ void svn_process_file(svn_ra_session_t * session, const char * path, svn_revnum_
       options |= OPTION_CPP;
 
     // open up the file
-    //void * context = 
+    //void * context =
     translator.setInput(path);
 
     // another file
@@ -246,7 +243,14 @@ int svnReadMatch(const char * URI) {
 void * svnReadOpen(const char * URI) {
 
   svn_context * context = new svn_context;
-  context->pool = global_pool;
+
+  apr_allocator_t * allocator;
+  apr_allocator_create(&allocator);
+
+  apr_pool_t * pool;
+  apr_pool_create_ex(&pool, NULL, abortfunc, allocator);
+
+  context->pool = pool;
 
   svn_stringbuf_t * str = svn_stringbuf_create_ensure(0, context->pool);
   context->stream = svn_stream_from_stringbuf(str, context->pool);
@@ -278,6 +282,10 @@ int svnRead(void * context, char * buffer, int len) {
 
 // close the open file
 int svnReadClose(void * context) {
+
+  svn_context * ctx = (svn_context *)context;
+
+  apr_pool_destroy(ctx->pool);
 
   return 1;
 }
