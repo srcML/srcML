@@ -66,9 +66,9 @@ void svn_process_dir(svn_ra_session_t * session, const char * path, svn_revnum_t
     else if(dirent->kind == svn_node_dir)
       svn_process_dir(session, new_path.c_str(), revision, new_pool, translator, options, dir, filename, version, language, tabsize, count, skipped, error, showinput, shownumber);
     else if(dirent->kind == svn_node_none)
-      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, "Path does not exist");
+      fprintf(stderr, "%s\n", "Path does not exist");
     else if(dirent->kind == svn_node_unknown)
-      fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, "Unkown");
+      fprintf(stderr, "%s\n", "Unkown");
 
     apr_pool_destroy(new_pool);
 
@@ -122,7 +122,8 @@ void svn_process_file(svn_ra_session_t * session, const char * path, svn_revnum_
       options |= OPTION_CPP;
 
     // open up the file
-    void * context = translator.setInput(path);
+    //void * context = 
+    translator.setInput(path);
 
     // another file
     ++count;
