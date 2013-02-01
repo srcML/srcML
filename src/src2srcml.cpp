@@ -578,7 +578,7 @@ int main(int argc, char* argv[]) {
         fprintf(stderr, "%s: failed to register svn handler\n", PROGRAM_NAME);
         exit(1);
       }
-      svn_process_session(translator, poptions.fname, options, poptions.given_directory, poptions.given_filename, poptions.given_version, poptions.language, poptions.tabsize, count, skipped, error, showinput, shownumber);
+      svn_process_session(poptions.revision, translator, poptions.fname, options, poptions.given_directory, poptions.given_filename, poptions.given_version, poptions.language, poptions.tabsize, count, skipped, error, showinput, shownumber);
 
     } else if (input_arg_count == 0) {
 

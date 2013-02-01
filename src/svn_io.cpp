@@ -161,7 +161,7 @@ void svn_process_file(svn_ra_session_t * session, const char * path, svn_revnum_
 
 }
 
-void svn_process_session(srcMLTranslator & translator, const char * url, OPTION_TYPE & options, const char * dir, const char * filename, const char * version, int language, int tabsize, int & count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void svn_process_session(svn_revnum_t revision, srcMLTranslator & translator, const char * url, OPTION_TYPE & options, const char * dir, const char * filename, const char * version, int language, int tabsize, int & count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   apr_initialize();
 
@@ -209,7 +209,6 @@ void svn_process_session(srcMLTranslator & translator, const char * url, OPTION_
   apr_pool_t * path_pool;
   apr_pool_create_ex(&path_pool, NULL, abortfunc, allocator);
 
-  svn_revnum_t revision = SVN_INVALID_REVNUM;
   svn_dirent_t * dirent;
   svn_ra_stat(session, path, revision, &dirent, path_pool);
 
