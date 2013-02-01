@@ -116,6 +116,8 @@ const int REVISION_FLAG_CODE = 256 + 10;
 const char* const CPP_FLAG = "cpp";
 const int CPP_FLAG_CODE = 256 + 11;
 
+const char* const SVN_FLAG = "svn";
+
 const char* const EXAMPLE_TEXT_FILENAME="foo.cpp";
 const char* const EXAMPLE_XML_FILENAME="foo.cpp.xml";
 
@@ -345,8 +347,6 @@ struct process_options
   const char* given_version;
   int tabsize;
   bool prefixchange[num_prefixes];
-
-  bool is_svn;
 };
 
 process_options* gpoptions = 0;
@@ -390,8 +390,7 @@ int main(int argc, char* argv[]) {
       0,
       0,
       DEFAULT_TABSIZE,
-      { false, false, false, false, false, false },
-      false
+      { false, false, false, false, false, false }
     };
 
   gpoptions = &poptions;
@@ -571,7 +570,7 @@ int main(int argc, char* argv[]) {
       src2srcml_filelist(translator, poptions, count, skipped, error, showinput);
 
       // translate from standard input
-    } else if (poptions.is_svn) {
+    } else if (isoption(options, OPTION_SVN)) {
 
       if (xmlRegisterInputCallbacks(svnReadMatch, svnReadOpen, svnRead, svnReadClose) < 0) {
         fprintf(stderr, "%s: failed to register svn handler\n", PROGRAM_NAME);
@@ -669,7 +668,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { LITERAL_FLAG, no_argument, &curoption, OPTION_LITERAL },
     { OPERATOR_FLAG, no_argument, &curoption, OPTION_OPERATOR },
     { MODIFIER_FLAG, no_argument, &curoption, OPTION_MODIFIER },
-    { "svn", required_argument, NULL, 270 },
+    { SVN_FLAG, required_argument, NULL, OPTION_SVN },
     { CPP_MARKUP_ELSE_FLAG, no_argument, NULL, CPP_MARKUP_ELSE_FLAG_CODE },
     { CPP_TEXTONLY_ELSE_FLAG, no_argument, NULL, CPP_TEXTONLY_ELSE_FLAG_CODE },
     { CPP_MARKUP_IF0_FLAG, no_argument, NULL, CPP_MARKUP_IF0_FLAG_CODE },
@@ -726,14 +725,15 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       poptions.srcml_filename = optarg;
       break;
 
-    case 270:
+    case OPTION_SVN:
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       poptions.fname = optarg;
-      poptions.is_svn = true;
 
+      options |= OPTION_SVN;
+      
       break;
 
     case FILELIST_FLAG_CODE:
