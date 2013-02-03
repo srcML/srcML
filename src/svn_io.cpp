@@ -15,6 +15,7 @@
 #include "srcmlapps.hpp"
 
 svn_ra_session_t * global_session;
+svn_revnum_t global_revision;
 
 struct svn_context {
 
@@ -76,6 +77,8 @@ void svn_process_dir(svn_ra_session_t * session, const char * path, svn_revnum_t
 }
 
 void svn_process_file(svn_ra_session_t * session, const char * path, svn_revnum_t revision, apr_pool_t * pool, srcMLTranslator & translator, OPTION_TYPE & options, const char * dir, const char * filename, const char * version, int language, int tabsize, int & count, int & skipped, int & error, bool & showinput, bool shownumber) {
+
+  global_revision = revision;
 
   OPTION_TYPE save_options = options;
   try {
@@ -251,7 +254,7 @@ void * svnReadOpen(const char * URI) {
   svn_revnum_t fetched_rev;
   apr_hash_t * props;
 
-  svn_ra_get_file(global_session, URI, SVN_INVALID_REVNUM, context->stream, &fetched_rev, &props, context->pool);
+  svn_ra_get_file(global_session, URI, global_revision, context->stream, &fetched_rev, &props, context->pool);
 
   return context;
 
@@ -279,6 +282,8 @@ int svnReadClose(void * context) {
   svn_context * ctx = (svn_context *)context;
 
   apr_pool_destroy(ctx->pool);
+
+  delete ctx;
 
   return 1;
 }
