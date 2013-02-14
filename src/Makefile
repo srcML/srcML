@@ -83,7 +83,7 @@ SRCMLPARSER_ANTLR_FLAGS =
 SRCMLLEXER_ANTLR_FLAGS =
 
 # compiler optimizations
-CXXFLAGS = -DVERSION=$(VERSION) -DREVISION=$(REVISION) -O3 -Wall -march=nocona -minline-all-stringops $(if $(DYNAMIC), -fPIC,) $(if $(DEBUG), -g,) $(if $(DYNAMIC), -fPIC,) $(if $(SAXFRAMEWORK), -DSAXFRAMEWORK,) #-fno-rtti 
+CXXFLAGS = -DVERSION=$(VERSION) -DREVISION=$(REVISION) -O3 -Wall -march=nocona -minline-all-stringops $(if $(DYNAMIC), -fPIC,) $(if $(DEBUG), -g,) $(if $(DYNAMIC), -fPIC,) $(if $(SAXFRAMEWORK), -DSAXFRAMEWORK,) $(if $(SVN), -DSVN,) #-fno-rtti  
 
 # compiler gcc linking flags
 CXX_LINK_FLAGS = #-s
@@ -91,6 +91,10 @@ CXX_LINK_FLAGS = #-s
 # libxml
 LIBXML_INC_DIR=${firstword ${wildcard /opt/local/include/libxml2 /usr/include/libxml2}}
 LIBXML_INCLUDE=-I$(LIBXML_INC_DIR)
+
+ifdef SVN
+
+SVN_DEP=$(OBJ_DIR)svn_io.o
 
 # libapr
 LIBAPR_INC_DIR=${firstword ${wildcard /usr/include/apr-1/ /usr/include/apr-1.0/}}
@@ -101,7 +105,7 @@ LIBSVN_INC_DIR=${firstword ${wildcard /usr/include/subversion-1/ /usr/include/su
 LIBSVN_INCLUDE=-I$(LIBSVN_INC_DIR)
 
 LIBSVN_LIB=-L${firstword ${wildcard /usr/lib/i386-linux-gnu /usr/lib}} -lsvn_repos-1 -lsvn_ra-1 -lsvn_ra_neon-1 -lsvn_ra_local-1 -lsvn_ra_svn-1 -lsvn_wc-1 -lsvn_fs-1 -lsvn_fs_fs-1 -lsvn_fs_util-1 -lsvn_fs-1 -lsvn_delta-1 -lsvn_client-1 -lsvn_diff-1 -lsvn_subr-1 -lapr-1 -laprutil-1
-
+endif
 
 ifndef MINGW32
 XML_LIB_SRC2SRCML=$(if $(DEBUG),-L /usr/lib/debug/usr/lib/,-lxml2)
@@ -233,7 +237,7 @@ CREATED_GRAMMARS = WSLexer.g CommentLexer.g OperatorLexer.g TextLexer.g KeywordL
 GENERATED_GRAMMARS = $(patsubst %.g, expanded%.g, $(CREATED_GRAMMARS))
 
 # source code to srcML translator program
-${SRC2SRCML_BIN} : ${OBJ_DIR}src2srcml.o ${OBJ_DIR}srcmlapps.o ${OBJ_DIR}makeargv.o ${OBJ_DIR}svn_io.o $(if $(DYNAMIC), ${LIBSRCML_SO}, ${EXE_DIR}libsrcml.a)
+${SRC2SRCML_BIN} : ${OBJ_DIR}src2srcml.o ${OBJ_DIR}srcmlapps.o ${OBJ_DIR}makeargv.o ${SVN_DEP} $(if $(DYNAMIC), ${LIBSRCML_SO}, ${EXE_DIR}libsrcml.a)
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) ${XML_LIB_SRC2SRCML} ${XML_IO_LIB} $(LIBSVN_LIB) $(if $(DYNAMIC), -L${EXE_DIR} -lsrcml, ) -o $@
 
 # shared library for srcML translation
@@ -390,7 +394,7 @@ cleanbuild :
 # clean non-generated object files
 PHONY : cleanobject
 cleanobject :
-	rm -f ${OBJ_DIR}src2srcml.o ${OBJ_DIR}srcMLOutput.o ${OBJ_DIR}srcMLTranslatorOutput.o ${OBJ_DIR}Mode.o ${OBJ_DIR}srcMLTranslator.o ${OBJ_DIR}srcMLParserClean.o ${OBJ_DIR}KeywordLexer.o ${OBJ_DIR}KeywordCPPLexerClean.o ${OBJ_DIR}srcml2src.o ${OBJ_DIR}srcMLUtility.o ${OBJ_DIR}srcmlapps.o ${OBJ_DIR}srcmllexer.o ${OBJ_DIR}xmlwriter.o ${OBJ_DIR}xmlreader.o ${OBJ_DIR}UTF8CharBuffer.o ${OBJ_DIR}PureCommentLexerClean.o ${OBJ_DIR}Language.o ${OBJ_DIR}SAX2TextWriter.o ${OBJ_DIR}SAX2ExtractUnitsSrc.o ${OBJ_DIR}SAX2ExtractUnitXML.o ${OBJ_DIR}SAX2Utilities.o srcMLParserTokenTypesMacro.hpp {OBJ_DIR}PureCommentLexer.o ${OBJ_DIR}srceval.o ${OBJ_DIR}srcxslteval.o ${OBJ_DIR}SAX2CopyElement.o ${OBJ_DIR}srcexfun.o ${OBJ_DIR}srcrelaxngeval.o ${OBJ_DIR}xmlsavebuf.o ${OBJ_DIR}SAX2UnitDOM.o ${OBJ_DIR}SAX2UnitDOMRelaxNG.o ${OBJ_DIR}libxml_archive_ui.o ${OBJ_DIR}libxml_archive_io.o ${OBJ_DIR}URIStream.o ${OBJ_DIR}libxml_archive_read.o ${OBJ_DIR}libxml_archive_write.o ${OBJ_DIR}srcmldirect.o ${OBJ_DIR}makeargv.o ${OBJ_DIR}srcMLTranslatorCore.o ${OBJ_DIR}svn_io.o
+	rm -f ${OBJ_DIR}src2srcml.o ${OBJ_DIR}srcMLOutput.o ${OBJ_DIR}srcMLTranslatorOutput.o ${OBJ_DIR}Mode.o ${OBJ_DIR}srcMLTranslator.o ${OBJ_DIR}srcMLParserClean.o ${OBJ_DIR}KeywordLexer.o ${OBJ_DIR}KeywordCPPLexerClean.o ${OBJ_DIR}srcml2src.o ${OBJ_DIR}srcMLUtility.o ${OBJ_DIR}srcmlapps.o ${OBJ_DIR}srcmllexer.o ${OBJ_DIR}xmlwriter.o ${OBJ_DIR}xmlreader.o ${OBJ_DIR}UTF8CharBuffer.o ${OBJ_DIR}PureCommentLexerClean.o ${OBJ_DIR}Language.o ${OBJ_DIR}SAX2TextWriter.o ${OBJ_DIR}SAX2ExtractUnitsSrc.o ${OBJ_DIR}SAX2ExtractUnitXML.o ${OBJ_DIR}SAX2Utilities.o srcMLParserTokenTypesMacro.hpp {OBJ_DIR}PureCommentLexer.o ${OBJ_DIR}srceval.o ${OBJ_DIR}srcxslteval.o ${OBJ_DIR}SAX2CopyElement.o ${OBJ_DIR}srcexfun.o ${OBJ_DIR}srcrelaxngeval.o ${OBJ_DIR}xmlsavebuf.o ${OBJ_DIR}SAX2UnitDOM.o ${OBJ_DIR}SAX2UnitDOMRelaxNG.o ${OBJ_DIR}libxml_archive_ui.o ${OBJ_DIR}libxml_archive_io.o ${OBJ_DIR}URIStream.o ${OBJ_DIR}libxml_archive_read.o ${OBJ_DIR}libxml_archive_write.o ${OBJ_DIR}srcmldirect.o ${OBJ_DIR}makeargv.o ${OBJ_DIR}srcMLTranslatorCore.o ${SVN_DEP}
 
 # clean ANTLR generated files
 PHONY : cleanantlr

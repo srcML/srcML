@@ -42,7 +42,11 @@
 #include <archive.h>
 #include "libxml_archive_read.hpp"
 #include "libxml_archive_write.hpp"
+
+#ifdef SVN
 #include "svn_io.hpp"
+
+#endif
 
 #define PROGRAM_NAME "src2srcml"
 
@@ -347,7 +351,12 @@ struct process_options
   const char* given_version;
   int tabsize;
   bool prefixchange[num_prefixes];
+
+#ifdef SVN
+
   int revision;
+
+#endif
 };
 
 process_options* gpoptions = 0;
@@ -391,8 +400,12 @@ int main(int argc, char* argv[]) {
       0,
       0,
       DEFAULT_TABSIZE,
-      { false, false, false, false, false, false },
-      SVN_INVALID_REVNUM
+      { false, false, false, false, false, false }
+
+#ifdef SVN
+      , SVN_INVALID_REVNUM
+#endif
+
     };
 
   gpoptions = &poptions;
@@ -571,7 +584,7 @@ int main(int argc, char* argv[]) {
       // so process the filelist
       src2srcml_filelist(translator, poptions, count, skipped, error, showinput);
 
-      // translate from standard input
+#ifdef SVN
     } else if (isoption(options, OPTION_SVN)) {
 
       if (xmlRegisterInputCallbacks(svnReadMatch, svnReadOpen, svnRead, svnReadClose) < 0) {
@@ -580,7 +593,10 @@ int main(int argc, char* argv[]) {
       }
       svn_process_session(poptions.revision, translator, poptions.fname, options, poptions.given_directory, poptions.given_filename, poptions.given_version, poptions.language, poptions.tabsize, count, skipped, error, showinput, shownumber);
 
-    } else if (input_arg_count == 0) {
+#endif
+    }
+    // translate from standard input
+    else if (input_arg_count == 0) {
 
       // translate from standard input using any directory, filename and version given on the command line
       src2srcml_file(translator, STDIN, options,
@@ -670,7 +686,9 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { LITERAL_FLAG, no_argument, &curoption, OPTION_LITERAL },
     { OPERATOR_FLAG, no_argument, &curoption, OPTION_OPERATOR },
     { MODIFIER_FLAG, no_argument, &curoption, OPTION_MODIFIER },
+#ifdef SVN
     { SVN_FLAG, required_argument, NULL, OPTION_SVN },
+#endif
     { CPP_MARKUP_ELSE_FLAG, no_argument, NULL, CPP_MARKUP_ELSE_FLAG_CODE },
     { CPP_TEXTONLY_ELSE_FLAG, no_argument, NULL, CPP_TEXTONLY_ELSE_FLAG_CODE },
     { CPP_MARKUP_IF0_FLAG, no_argument, NULL, CPP_MARKUP_IF0_FLAG_CODE },
@@ -726,7 +744,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
       poptions.srcml_filename = optarg;
       break;
-
+#ifdef SVN
     case OPTION_SVN:
 
       // check for missing argument confused by an argument that looks like an option
@@ -750,6 +768,8 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       options |= OPTION_SVN;
 
       break;
+
+#endif
 
     case FILELIST_FLAG_CODE:
 
