@@ -2506,7 +2506,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                  !sawoperator &&
 
                  // entire type is specifiers
-                 (type_count == specifier_count) &&
+                 (type_count == (specifier_count + attributecount)) &&
 
                  (
                     // inside of a C++ class definition
