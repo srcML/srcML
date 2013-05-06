@@ -2388,7 +2388,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
              bool& sawenum,
              int& posin
         ] { sawenum = false; token = 0; fla = 0; type_count = 0; int specifier_count = 0; isdestructor = false;
-        type = NONE; bool foundpure = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; bool endbracket = false; bool modifieroperator = false; bool sawoperator = false; int attributecount = 0; posin = 0; qmark = false; bool global = false; bool typeisvoid = false; ENTRY_DEBUG } :
+        type = NONE; bool foundpure = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; bool endbracket = false; bool modifieroperator = false; bool sawoperator = false; int attributecount = 0; posin = 0; qmark = false; bool global = false; bool typeisvoid = false; int real_type_count = 0; ENTRY_DEBUG } :
 
         // main pattern for variable declarations, and most function declaration/definitions.
         // trick is to look for function declarations/definitions, and along the way record
@@ -2471,6 +2471,8 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
             set_int[token, LA(1), type_count == 1]
         )*
 
+        set_int[real_type_count, type_count]
+
         // special case for ternary operator on its own
         throw_exception[LA(1) == COLON && qmark]
 
@@ -2533,6 +2535,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
         // we have a declaration, so do we have a function?
         (
             // check for function pointer, which must have a non-specifier part of the type
+            { real_type_count > 0 }?
             (function_pointer_name_grammar eat_optional_macro_call LPAREN)=>
             function_pointer_name_grammar
         
