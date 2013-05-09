@@ -257,7 +257,7 @@ void srcMLOutput::processUnit(const antlr::RefToken& token) {
   } else {
 
     // end anything still open, including the unit
-    while (openelementcount)
+    while (openelementcount > 0)
       srcMLTextWriterEndElement(xout);
 
     // leave a blank line before next nested unit even the last one
