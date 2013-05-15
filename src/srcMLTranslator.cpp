@@ -69,12 +69,6 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
   translator = new srcMLTranslatorCore(language, src_encoding, xml_encoding, output_buffer, op, directory, filename, version, uri, tabsize);
 }
 
-// factory method
-srcMLTranslator * srcMLTranslator::srcMLTranslator_factory(int language, const char* srcml_filename, OPTION_TYPE& op) {
-
-  return new srcMLTranslator(language, srcml_filename, op);
-}
-
 
 // translate from input stream to output stream
 void* srcMLTranslator::setInput(const char* path) {
@@ -100,3 +94,42 @@ srcMLTranslator::~srcMLTranslator() {
 
   delete translator;
 }
+
+/*
+
+  C# Methods
+
+*/
+
+// factory method
+srcMLTranslator * srcMLTranslator::srcMLTranslator_factory(int language, const char* srcml_filename, OPTION_TYPE& op) {
+
+  return new srcMLTranslator(language, srcml_filename, op);
+}
+
+
+// translate from input stream to output stream
+void* srcMLTranslator::setInput(srcMLTranslator * translator, const char* path) {
+
+  return translator->translator->setInput(path);
+}
+
+// close the output
+void srcMLTranslator::close(srcMLTranslator * translator) {
+
+  translator->translator->close();
+}
+
+// translate from input stream to output stream
+void srcMLTranslator::translate(srcMLTranslator * translator, const char* path, const char* unit_directory,
+				const char* unit_filename, const char* unit_version,
+				int language) {
+  translator->translate(path, unit_directory, unit_filename, unit_version, language);
+}
+
+// destructor
+void srcMLTranslator::srcMLTranslator_delete(srcMLTranslator * translator) {
+
+  delete translator;
+}
+

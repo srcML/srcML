@@ -68,7 +68,6 @@ class srcMLTranslator {
 		  int tabsize
 		  );
 
-  srcMLTranslator * srcMLTranslator_factory(int language, const char* srcml_filename, OPTION_TYPE& op);
 
   void* setInput(const char* path);
 
@@ -83,6 +82,20 @@ class srcMLTranslator {
 
   // destructor
   ~srcMLTranslator();
+
+  /*
+
+    C# methods
+
+   */
+
+  srcMLTranslator * srcMLTranslator_factory(int language, const char* srcml_filename, OPTION_TYPE& op);
+  void* setInput(srcMLTranslator * translator, const char* path);
+  void close(srcMLTranslator * translator);
+  void translate(srcMLTranslator * translator, const char* path, const char* unit_directory,
+				const char* unit_filename, const char* unit_version,
+				int language);
+void srcMLTranslator_delete(srcMLTranslator * translator);
 
  private:
   srcMLTranslatorCore * translator;
