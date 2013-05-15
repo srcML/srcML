@@ -69,6 +69,13 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
   translator = new srcMLTranslatorCore(language, src_encoding, xml_encoding, output_buffer, op, directory, filename, version, uri, tabsize);
 }
 
+// factory method
+srcMLTranslator * srcMLTranslator::srcMLTranslator_factory(int language, xmlBuffer* output_buffer, OPTION_TYPE& op) {
+
+  return new srcMLTranslator(language, output_buffer, op);
+}
+
+
 // translate from input stream to output stream
 void* srcMLTranslator::setInput(const char* path) {
 

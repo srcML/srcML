@@ -68,6 +68,8 @@ class srcMLTranslator {
 		  int tabsize
 		  );
 
+  srcMLTranslator * srcMLTranslator_factory(int language, xmlBuffer* output_buffer, OPTION_TYPE& op);
+
   void* setInput(const char* path);
 
   void close();
