@@ -70,9 +70,9 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
 }
 
 // factory method
-srcMLTranslator * srcMLTranslator::srcMLTranslator_factory(int language, xmlBuffer* output_buffer, OPTION_TYPE& op) {
+srcMLTranslator * srcMLTranslator::srcMLTranslator_factory(int language, const char* srcml_filename, OPTION_TYPE& op) {
 
-  return new srcMLTranslator(language, output_buffer, op);
+  return new srcMLTranslator(language, srcml_filename, op);
 }
 
 

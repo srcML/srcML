@@ -1,5 +1,5 @@
 /*
-  srcMLTranslator.hpp
+v  srcMLTranslator.hpp
 
   Copyright (C) 2003-2011  SDML (www.sdml.info)
 
@@ -68,7 +68,7 @@ class srcMLTranslator {
 		  int tabsize
 		  );
 
-  srcMLTranslator * srcMLTranslator_factory(int language, xmlBuffer* output_buffer, OPTION_TYPE& op);
+  srcMLTranslator * srcMLTranslator_factory(int language, const char* srcml_filename, OPTION_TYPE& op);
 
   void* setInput(const char* path);
 
