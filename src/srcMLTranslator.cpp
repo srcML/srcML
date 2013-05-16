@@ -39,32 +39,32 @@ srcMLTranslator::srcMLTranslator(int language, xmlBuffer* output_buffer, OPTION_
 
 // constructor
 srcMLTranslator::srcMLTranslator(int language,                // programming language of source code
-				 const char* src_encoding,    // text encoding of source code
-				 const char* xml_encoding,    // xml encoding of result srcML file
-				 const char* srcml_filename,  // filename of result srcML file
-				 OPTION_TYPE& op,             // many and varied options
-				 const char* directory,       // root unit directory
-				 const char* filename,        // root unit filename
-				 const char* version,         // root unit version
-				 const char* uri[],           // uri prefixes
-				 int tabsize                  // size of tabs
-				 ) {
+                                 const char* src_encoding,    // text encoding of source code
+                                 const char* xml_encoding,    // xml encoding of result srcML file
+                                 const char* srcml_filename,  // filename of result srcML file
+                                 OPTION_TYPE& op,             // many and varied options
+                                 const char* directory,       // root unit directory
+                                 const char* filename,        // root unit filename
+                                 const char* version,         // root unit version
+                                 const char* uri[],           // uri prefixes
+                                 int tabsize                  // size of tabs
+                                 ) {
 
   translator = new srcMLTranslatorCore(language, src_encoding, xml_encoding, srcml_filename, op, directory, filename, version, uri, tabsize);
 }
 
 // constructor
 srcMLTranslator::srcMLTranslator(int language,                // programming language of source code
-				 const char* src_encoding,    // text encoding of source code
-				 const char* xml_encoding,    // xml encoding of result srcML file
-				 xmlBuffer* output_buffer,  
-				 OPTION_TYPE& op,             // many and varied options
-				 const char* directory,       // root unit directory
-				 const char* filename,        // root unit filename
-				 const char* version,         // root unit version
-				 const char* uri[],           // uri prefixes
-				 int tabsize                  // size of tabs
-				 ) {
+                                 const char* src_encoding,    // text encoding of source code
+                                 const char* xml_encoding,    // xml encoding of result srcML file
+                                 xmlBuffer* output_buffer,
+                                 OPTION_TYPE& op,             // many and varied options
+                                 const char* directory,       // root unit directory
+                                 const char* filename,        // root unit filename
+                                 const char* version,         // root unit version
+                                 const char* uri[],           // uri prefixes
+                                 int tabsize                  // size of tabs
+                                 ) {
 
   translator = new srcMLTranslatorCore(language, src_encoding, xml_encoding, output_buffer, op, directory, filename, version, uri, tabsize);
 }
@@ -84,8 +84,8 @@ void srcMLTranslator::close() {
 
 // translate from input stream to output stream
 void srcMLTranslator::translate(const char* path, const char* unit_directory,
-				const char* unit_filename, const char* unit_version,
-				int language) {
+                                const char* unit_filename, const char* unit_version,
+                                int language) {
   translator->translate(path, unit_directory, unit_filename, unit_version, language);
 }
 
@@ -102,37 +102,40 @@ srcMLTranslator::~srcMLTranslator() {
 */
 
 #ifdef MINGW32
+extern "C" {
 
-// factory method
-__declspec(dllexport) srcMLTranslator * srcMLTranslator::srcMLTranslator_factory(int language, const char* srcml_filename, OPTION_TYPE& op) {
+  // factory method
+  __declspec(dllexport) srcMLTranslator * srcMLTranslator::srcMLTranslator_factory(int language, const char* srcml_filename, OPTION_TYPE& op) {
 
-  return new srcMLTranslator(language, srcml_filename, op);
-}
+    return new srcMLTranslator(language, srcml_filename, op);
+  }
 
 
-// translate from input stream to output stream
-__declspec(dllexport) void* srcMLTranslator::setInput(srcMLTranslator * translator, const char* path) {
+  // translate from input stream to output stream
+  __declspec(dllexport) void* srcMLTranslator::setInput(srcMLTranslator * translator, const char* path) {
 
-  return translator->translator->setInput(path);
-}
+    return translator->translator->setInput(path);
+  }
 
-// close the output
-__declspec(dllexport) void srcMLTranslator::close(srcMLTranslator * translator) {
+  // close the output
+  __declspec(dllexport) void srcMLTranslator::close(srcMLTranslator * translator) {
 
-  translator->translator->close();
-}
+    translator->translator->close();
+  }
 
-// translate from input stream to output stream
-__declspec(dllexport) void srcMLTranslator::translate(srcMLTranslator * translator, const char* path, const char* unit_directory,
-				const char* unit_filename, const char* unit_version,
-				int language) {
-  translator->translate(path, unit_directory, unit_filename, unit_version, language);
-}
+  // translate from input stream to output stream
+  __declspec(dllexport) void srcMLTranslator::translate(srcMLTranslator * translator, const char* path, const char* unit_directory,
+                                                        const char* unit_filename, const char* unit_version,
+                                                        int language) {
+    translator->translate(path, unit_directory, unit_filename, unit_version, language);
+  }
 
-// destructor
-void srcMLTranslator::srcMLTranslator_delete(srcMLTranslator * translator) {
+  // destructor
+  void srcMLTranslator::srcMLTranslator_delete(srcMLTranslator * translator) {
 
-  delete translator;
+    delete translator;
+  }
+
 }
 
 #endif
