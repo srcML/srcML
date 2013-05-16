@@ -101,27 +101,29 @@ srcMLTranslator::~srcMLTranslator() {
 
 */
 
+#ifdef MINGW32
+
 // factory method
-srcMLTranslator * srcMLTranslator::srcMLTranslator_factory(int language, const char* srcml_filename, OPTION_TYPE& op) {
+__declspec(dllexport) srcMLTranslator * srcMLTranslator::srcMLTranslator_factory(int language, const char* srcml_filename, OPTION_TYPE& op) {
 
   return new srcMLTranslator(language, srcml_filename, op);
 }
 
 
 // translate from input stream to output stream
-void* srcMLTranslator::setInput(srcMLTranslator * translator, const char* path) {
+__declspec(dllexport) void* srcMLTranslator::setInput(srcMLTranslator * translator, const char* path) {
 
   return translator->translator->setInput(path);
 }
 
 // close the output
-void srcMLTranslator::close(srcMLTranslator * translator) {
+__declspec(dllexport) void srcMLTranslator::close(srcMLTranslator * translator) {
 
   translator->translator->close();
 }
 
 // translate from input stream to output stream
-void srcMLTranslator::translate(srcMLTranslator * translator, const char* path, const char* unit_directory,
+__declspec(dllexport) void srcMLTranslator::translate(srcMLTranslator * translator, const char* path, const char* unit_directory,
 				const char* unit_filename, const char* unit_version,
 				int language) {
   translator->translate(path, unit_directory, unit_filename, unit_version, language);
@@ -133,3 +135,4 @@ void srcMLTranslator::srcMLTranslator_delete(srcMLTranslator * translator) {
   delete translator;
 }
 
+#endif
