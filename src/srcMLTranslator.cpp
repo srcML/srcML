@@ -101,8 +101,6 @@ srcMLTranslator::~srcMLTranslator() {
 
 */
 
-extern "C" {
-
   // factory method
   srcMLTranslator * srcMLTranslator::srcMLTranslator_factory(int language, const char* srcml_filename, OPTION_TYPE& op) {
 
@@ -134,5 +132,3 @@ extern "C" {
 
     delete translator;
   }
-
-}
