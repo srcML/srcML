@@ -88,7 +88,6 @@ class srcMLTranslator {
     C# methods
 
    */
-#ifdef MINGW32
 
   srcMLTranslator * srcMLTranslator_factory(int language, const char* srcml_filename, OPTION_TYPE& op);
   void* setInput(srcMLTranslator * translator, const char* path);
@@ -97,8 +96,6 @@ class srcMLTranslator {
 				const char* unit_filename, const char* unit_version,
 				int language);
   void srcMLTranslator_delete(srcMLTranslator * translator);
-
-#endif
 
  private:
   srcMLTranslatorCore * translator;
