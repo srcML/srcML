@@ -59,13 +59,19 @@ char* URIStream::readline() {
   endpos = startpos;
 
   // find a line in the buffer
+#ifdef LIBXML2_NEW_BUFFER
+  while (xmlBufContent(input->buffer)[endpos] != '\n') {
+#else
   while (input->buffer->content[endpos] != '\n') {
-
+#endif
     ++endpos;
 
     // need to refill the buffer
+#ifdef LIBXML2_NEW_BUFFER
+    if (endpos >= xmlBufUse(input->buffer)) {
+#else
     if (endpos >= input->buffer->use) {
-
+#endif
       // need to refill, but previous fill found eof
       if (eof)
 	break;
@@ -73,7 +79,12 @@ char* URIStream::readline() {
       // shrink the part of the buffer that we are not using yet
       // this is a large buffer, so this will not happen very often, and
       // only if libxml decides for this input source it should
+
+#ifdef LIBXML2_NEW_BUFFER
+      int removed = xmlBufShrink(input->buffer, startpos >= 1 ? startpos - 1 : 0);
+#else
       int removed = xmlBufferShrink(input->buffer, startpos >= 1 ? startpos - 1 : 0);
+#endif
       endpos -= removed;
       startpos -= removed;
 
@@ -89,16 +100,27 @@ char* URIStream::readline() {
   }
 
   // special case
+#ifdef LIBXML2_NEW_BUFFER
+  if (startpos >= xmlBufUse(input->buffer))
+#else
   if (startpos >= input->buffer->use)
+#endif
     return 0;
 
   // replace the linefeed, and the optional carriage return before it, with a null to turn it into single string
+#ifdef LIBXML2_NEW_BUFFER
+  if ((endpos >= 1) && (xmlBufContent(input->buffer)[endpos - 1] == '\r'))
+    xmlBufContent(input->buffer)[endpos - 1] = '\0';
+  xmlBufContent(input->buffer)[endpos] = '\0';
+  // current line starts at the startpos
+  char* line = (char*) xmlBufContent(input->buffer) + startpos;
+#else
   if ((endpos >= 1) && (input->buffer->content[endpos - 1] == '\r'))
     input->buffer->content[endpos - 1] = '\0';
   input->buffer->content[endpos] = '\0';
-
   // current line starts at the startpos
   char* line = (char*) input->buffer->content + startpos;
+#endif
 
   // skip past for the next line
   startpos = endpos + 1;

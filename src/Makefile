@@ -15,7 +15,7 @@ AR=i686-pc-mingw32-ar
 
 ifneq (${wildcard /etc/fedora-release},)
 
-ifneq ($(shell cat /etc/fedora-release | grep "17"),)
+ifneq ($(shell cat /etc/fedora-release | grep "1[78]"),)
 CXX=i686-w64-mingw32-g++
 AR=i686-w64-mingw32-ar
 endif
