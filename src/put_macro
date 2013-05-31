@@ -1,0 +1,2 @@
+#!/bin/bash
+/usr/bin/grep '=' srcMLParserTokenTypes.hpp | /usr/local/bin/gsed -e 's/,//g' -e 's/= //g' -e 's/^[ \t]*//' -e 's/^/#define TOKEN_/g' > srcMLParserTokenTypesMacro.hpp
