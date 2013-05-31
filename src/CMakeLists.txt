@@ -20,7 +20,7 @@ add_custom_command(OUTPUT KeywordCPPLexer.cpp COMMAND antlr2 -glib \"WSLexer.g\;
 add_custom_command(OUTPUT PureCommentLexer.cpp COMMAND antlr2 PureCommentLexer.g DEPENDS PureCommentLexer.g)
 add_custom_command(OUTPUT srcMLParser.cpp COMMAND antlr2 -glib \"WSLexer.g\;CommentLexer.g\;OperatorLexer.g\;TextLexer.g\;KeywordLexer.g\;KeywordCPPLexer.g\" srcMLParser.g DEPENDS srcMLParser.g KeywordCPPLexer.cpp)
 
-add_custom_command(OUTPUT srcMLParserTokenTypesMacro.hpp COMMAND ./put_macro DEPENDS srcMLParser.cpp)
+add_custom_command(OUTPUT srcMLParserTokenTypesMacro.hpp COMMAND /usr/bin/grep '=' srcMLParserTokenTypes.hpp | /usr/local/bin/gsed -e 's/,//g' -e 's/= //g' -e 's/^[ \t]*//' -e 's/^/\#define TOKEN_/g' > srcMLParserTokenTypesMacro.hpp DEPENDS srcMLParser.cpp)
 
 add_library(srcml srcMLParser.cpp KeywordCPPLexer.cpp srcMLTranslator.cpp srcMLTranslatorCore.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp UTF8CharBuffer.cpp PureCommentLexer.cpp Language.cpp URIStream.cpp srcmlapps.cpp libxml_archive_read.cpp libxml_archive_write.cpp srcMLParserTokenTypesMacro.hpp)
 
