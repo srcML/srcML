@@ -22,6 +22,11 @@ include_directories(${LIBXML2_INCLUDE_DIR})
 
 # define needed programs
 find_program(ANTLR NAMES antlr runantlr cantlr antlr2 PATHS /usr/bin /opt/local/bin /usr/local/bin)
+find_program(SED NAMES gsed sed PATHS /opt/local/bin /usr/local /bin)
+find_program(GREP grep PATHS /bin /usr/bin)
+find_program(ECHO echo PATH /bin)
+find_program(CUT cut PATH /usr/bin)
+find_program(SVNVERSION svnversion PATHS /usr/local/bin /usr/bin)
 
 # Run antlr
 add_custom_command(OUTPUT TextLexer.cpp COMMAND ${ANTLR} -glib \"WSLexer.g\;CommentLexer.g\" TextLexer.g  DEPENDS TextLexer.g WSLexer.cpp CommentLexer.cpp)
@@ -34,7 +39,7 @@ add_custom_command(OUTPUT PureCommentLexer.cpp COMMAND ${ANTLR} PureCommentLexer
 add_custom_command(OUTPUT srcMLParser.cpp COMMAND ${ANTLR} -glib \"WSLexer.g\;CommentLexer.g\;OperatorLexer.g\;TextLexer.g\;KeywordLexer.g\;KeywordCPPLexer.g\" srcMLParser.g DEPENDS srcMLParser.g KeywordCPPLexer.cpp)
 
 # Run special command for macro
-add_custom_command(OUTPUT srcMLParserTokenTypesMacro.hpp COMMAND /usr/bin/grep '=' srcMLParserTokenTypes.hpp | /usr/local/bin/gsed -e 's/,//g' -e 's/= //g' -e 's/^[ \t]*//' -e 's/^/\#define TOKEN_/g' > srcMLParserTokenTypesMacro.hpp DEPENDS srcMLParser.cpp)
+add_custom_command(OUTPUT srcMLParserTokenTypesMacro.hpp COMMAND ${GREP} '=' srcMLParserTokenTypes.hpp | ${SED} -e 's/,//g' -e 's/= //g' -e 's/^[ \t]*//' -e 's/^/\#define TOKEN_/g' > srcMLParserTokenTypesMacro.hpp DEPENDS srcMLParser.cpp)
 
 # libsrcml
 add_library(srcml srcMLParser.cpp KeywordCPPLexer.cpp srcMLTranslator.cpp srcMLTranslatorCore.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp UTF8CharBuffer.cpp PureCommentLexer.cpp Language.cpp URIStream.cpp srcmlapps.cpp libxml_archive_read.cpp libxml_archive_write.cpp srcMLParserTokenTypesMacro.hpp)
