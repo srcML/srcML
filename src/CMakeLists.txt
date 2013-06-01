@@ -20,15 +20,18 @@ find_package(LibArchive)
 find_package(LibXml2)
 include_directories(${LIBXML2_INCLUDE_DIR})
 
+# define needed programs
+find_program(ANTLR NAMES antlr runantlr cantlr antlr2 PATHS /usr/bin /opt/local/bin /usr/local/bin)
+
 # Run antlr
-add_custom_command(OUTPUT TextLexer.cpp COMMAND antlr2 -glib \"WSLexer.g\;CommentLexer.g\" TextLexer.g  DEPENDS TextLexer.g WSLexer.cpp CommentLexer.cpp)
-add_custom_command(OUTPUT WSLexer.cpp COMMAND antlr2 -glib \"PureCommentLexer.g\" WSLexer.g DEPENDS WSLexer.g PureCommentLexer.cpp)
-add_custom_command(OUTPUT CommentLexer.cpp COMMAND antlr2 -glib \"WSLexer.g\" CommentLexer.g DEPENDS CommentLexer.g WSLexer.cpp)
-add_custom_command(OUTPUT OperatorLexer.cpp COMMAND antlr2 -glib \"WSLexer.g\;CommentLexer.g\;TextLexer.g\" OperatorLexer.g DEPENDS OperatorLexer.g CommentLexer.cpp TextLexer.cpp)
-add_custom_command(OUTPUT KeywordLexer.cpp COMMAND antlr2 -glib \"WSLexer.g\;CommentLexer.g\;OperatorLexer.g\;TextLexer.g\" KeywordLexer.g DEPENDS KeywordLexer.g OperatorLexer.cpp)
-add_custom_command(OUTPUT KeywordCPPLexer.cpp COMMAND antlr2 -glib \"WSLexer.g\;CommentLexer.g\;OperatorLexer.g\;TextLexer.g\;KeywordLexer.g\" KeywordCPPLexer.g DEPENDS KeywordCPPLexer.g KeywordLexer.cpp)
-add_custom_command(OUTPUT PureCommentLexer.cpp COMMAND antlr2 PureCommentLexer.g DEPENDS PureCommentLexer.g)
-add_custom_command(OUTPUT srcMLParser.cpp COMMAND antlr2 -glib \"WSLexer.g\;CommentLexer.g\;OperatorLexer.g\;TextLexer.g\;KeywordLexer.g\;KeywordCPPLexer.g\" srcMLParser.g DEPENDS srcMLParser.g KeywordCPPLexer.cpp)
+add_custom_command(OUTPUT TextLexer.cpp COMMAND ${ANTLR} -glib \"WSLexer.g\;CommentLexer.g\" TextLexer.g  DEPENDS TextLexer.g WSLexer.cpp CommentLexer.cpp)
+add_custom_command(OUTPUT WSLexer.cpp COMMAND ${ANTLR} -glib \"PureCommentLexer.g\" WSLexer.g DEPENDS WSLexer.g PureCommentLexer.cpp)
+add_custom_command(OUTPUT CommentLexer.cpp COMMAND ${ANTLR} -glib \"WSLexer.g\" CommentLexer.g DEPENDS CommentLexer.g WSLexer.cpp)
+add_custom_command(OUTPUT OperatorLexer.cpp COMMAND ${ANTLR} -glib \"WSLexer.g\;CommentLexer.g\;TextLexer.g\" OperatorLexer.g DEPENDS OperatorLexer.g CommentLexer.cpp TextLexer.cpp)
+add_custom_command(OUTPUT KeywordLexer.cpp COMMAND ${ANTLR} -glib \"WSLexer.g\;CommentLexer.g\;OperatorLexer.g\;TextLexer.g\" KeywordLexer.g DEPENDS KeywordLexer.g OperatorLexer.cpp)
+add_custom_command(OUTPUT KeywordCPPLexer.cpp COMMAND ${ANTLR} -glib \"WSLexer.g\;CommentLexer.g\;OperatorLexer.g\;TextLexer.g\;KeywordLexer.g\" KeywordCPPLexer.g DEPENDS KeywordCPPLexer.g KeywordLexer.cpp)
+add_custom_command(OUTPUT PureCommentLexer.cpp COMMAND ${ANTLR} PureCommentLexer.g DEPENDS PureCommentLexer.g)
+add_custom_command(OUTPUT srcMLParser.cpp COMMAND ${ANTLR} -glib \"WSLexer.g\;CommentLexer.g\;OperatorLexer.g\;TextLexer.g\;KeywordLexer.g\;KeywordCPPLexer.g\" srcMLParser.g DEPENDS srcMLParser.g KeywordCPPLexer.cpp)
 
 # Run special command for macro
 add_custom_command(OUTPUT srcMLParserTokenTypesMacro.hpp COMMAND /usr/bin/grep '=' srcMLParserTokenTypes.hpp | /usr/local/bin/gsed -e 's/,//g' -e 's/= //g' -e 's/^[ \t]*//' -e 's/^/\#define TOKEN_/g' > srcMLParserTokenTypesMacro.hpp DEPENDS srcMLParser.cpp)
