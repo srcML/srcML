@@ -44,6 +44,7 @@ add_custom_command(OUTPUT srcMLParserTokenTypesMacro.hpp COMMAND ${GREP} '=' src
 # libsrcml
 add_library(srcml srcMLParser.cpp KeywordCPPLexer.cpp srcMLTranslator.cpp srcMLTranslatorCore.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp UTF8CharBuffer.cpp PureCommentLexer.cpp Language.cpp URIStream.cpp srcmlapps.cpp libxml_archive_read.cpp libxml_archive_write.cpp srcMLParserTokenTypesMacro.hpp)
 target_link_libraries(srcml archive xml2 antlr)
+set_target_properties(srcml PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ../bin)
 
 # src2srcml
 add_executable(src2srcml src2srcml.cpp srcmlapps.cpp makeargv.cpp)
@@ -53,4 +54,6 @@ add_custom_target(srcMLParserTokenTypesMacro.hpp DEPENDS srcMLParserTokenTypes.h
 # srcml2src
 add_executable(srcml2src srcml2src.cpp srcMLUtility.cpp SAX2ExtractUnitsSrc.cpp srcmlapps.cpp SAX2Utilities.cpp SAX2UnitDOM.cpp SAX2UnitDOMRelaxNG.cpp srcexfun.cpp libxml_archive_read.cpp libxml_archive_write.cpp URIStream.cpp makeargv.cpp)
 target_link_libraries(srcml2src archive xml2 xslt exslt)
+
 set_target_properties(src2srcml srcml2src PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../bin)
+
