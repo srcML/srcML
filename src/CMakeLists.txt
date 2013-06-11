@@ -21,7 +21,7 @@ find_package(LibXslt)
 include_directories(${LIBXML2_INCLUDE_DIR} ${LibArchive_INCLUDE_DIRS} ${LIBXSLT_INCLUDE_DIR})
 
 # define needed programs
-find_program(ANTLR NAMES antlr runantlr cantlr antlr2 PATHS /usr/bin /opt/local/bin /usr/local/bin C:/antlr/277/bin)
+find_program(ANTLR NAMES antlr runantlr cantlr antlr2 antlr.bat PATHS /usr/bin /opt/local/bin /usr/local/bin C:/antlr/277/bin)
 find_program(SED NAMES gsed sed PATHS /opt/local/bin /usr/local /bin)
 find_program(GREP grep PATHS /bin /usr/bin)
 find_program(ECHO echo PATH /bin)
