@@ -15,10 +15,18 @@ add_definitions(-DVERSION=\"${VERSION}\")
 add_definitions(-DREVISION=\"${REVISION}\")
 
 # get needed packages and include
-find_package(LibXml2)
 find_package(LibArchive)
+find_package(LibXml2)
 find_package(LibXslt)
-include_directories(${LIBXML2_INCLUDE_DIR} ${LibArchive_INCLUDE_DIRS} ${LIBXSLT_INCLUDE_DIR})
+if(LibArchive_FOUND)
+        include_directories(${LibArchive_INCLUDE_DIRS})
+endif()
+if(LIBXML2_FOUND)
+        include_directories(${LIBXML2_INCLUDE_DIR})
+endif()
+if(LIBXSLT_FOUND)
+        include_directories(${LIBXSLT_INCLUDE_DIR})
+endif()
 
 # define needed programs
 find_program(ANTLR NAMES antlr runantlr cantlr antlr2 antlr.bat PATHS /usr/bin /opt/local/bin /usr/local/bin C:/antlr/277/bin)
