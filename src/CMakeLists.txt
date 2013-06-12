@@ -33,6 +33,9 @@ if(LIBXSLT_FOUND)
         include_directories(${LIBXSLT_INCLUDE_DIR})
 endif()
 
+find_path(LIBANTLR_LIB_DIR NAMES libantlr.a PATHS /usr/lib /usr/local/lib)
+link_directories(${LIBANTLR_LIB_DIR})
+
 include_directories(C:/antlr/277/include/antlr)
 
 # define needed programs
