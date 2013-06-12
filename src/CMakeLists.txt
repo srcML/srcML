@@ -8,6 +8,10 @@
 cmake_minimum_required(VERSION 2.8)
 project(srcML)
 
+# specify g++ compiler
+include(CMakeForceCompiler)
+CMAKE_FORCE_CXX_COMPILER(/usr/bin/g++ "g++")
+
 # get version and revision
 execute_process(COMMAND cat VERSION COMMAND tr -d "\n" OUTPUT_VARIABLE VERSION)
 execute_process(COMMAND cat REVISION COMMAND tr -d "\n" OUTPUT_VARIABLE REVISION)
