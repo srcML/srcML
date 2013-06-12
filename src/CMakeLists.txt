@@ -33,10 +33,9 @@ if(LIBXSLT_FOUND)
         include_directories(${LIBXSLT_INCLUDE_DIR})
 endif()
 
-find_path(LIBANTLR_LIB_DIR NAMES libantlr.a PATHS /usr/lib /usr/local/lib)
-link_directories(${LIBANTLR_LIB_DIR})
-
 include_directories(C:/antlr/277/include/antlr)
+
+find_library(LIBANTLR_LIB NAMES libantlr.a PATHS /usr/lib /usr/local/lib)
 
 # define needed programs
 find_program(ANTLR NAMES antlr runantlr cantlr antlr2 antlr.bat PATHS /usr/bin /opt/local/bin /usr/local/bin C:/antlr/277/bin)
@@ -61,12 +60,12 @@ add_custom_command(OUTPUT srcMLParserTokenTypesMacro.hpp COMMAND ${GREP} '=' src
 
 # libsrcml
 add_library(srcml srcMLParser.cpp KeywordCPPLexer.cpp srcMLTranslator.cpp srcMLTranslatorCore.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp UTF8CharBuffer.cpp PureCommentLexer.cpp Language.cpp URIStream.cpp srcmlapps.cpp libxml_archive_read.cpp libxml_archive_write.cpp srcMLParserTokenTypesMacro.hpp)
-target_link_libraries(srcml archive xml2 antlr)
+target_link_libraries(srcml archive xml2 ${LIBANTLR_LIB})
 set_target_properties(srcml PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ../bin)
 
 # src2srcml
 add_executable(src2srcml src2srcml.cpp srcmlapps.cpp makeargv.cpp)
-target_link_libraries(src2srcml archive xml2 antlr srcml)
+target_link_libraries(src2srcml archive xml2 ${LIBANTLR_LIB} srcml)
 add_custom_target(srcMLParserTokenTypesMacro.hpp DEPENDS srcMLParserTokenTypes.hpp)
 
 # srcml2src
