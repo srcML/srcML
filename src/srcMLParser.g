@@ -2410,7 +2410,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
 
             set_bool[qmark, (qmark || (LA(1) == QMARK)) && inLanguage(LANGUAGE_CSHARP)]
         
-            set_bool[typeisvoid, typeisvoid || LA(1) == NAME && LT(1)->getText() == "void"]
+            set_bool[typeisvoid, typeisvoid || (LA(1) == NAME && LT(1)->getText() == "void")]
 
             set_int[posin, LA(1) == IN ? posin = type_count : posin]
 
