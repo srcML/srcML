@@ -1,8 +1,21 @@
 from ctypes import *
 libsrcml = cdll.LoadLibrary('../bin/libsrcml.so')
 
-#  srcMLTranslator * srcml_new(int language, const char* srcml_filename, OPTION_TYPE& op);
-#  void* srcml_set_input(srcMLTranslator * translator, const char* path);
+libsrcml.srcml_new.restype = c_void_p
+libsrcml.srcml_new.argtypes = [c_int, c_char_p, c_ulonglong]
+
+libsrcml.srcml_set_input.restype = c_void_p
+libsrcml.srcml_set_input.argtypes = [c_void_p, c_char_p]
+
+libsrcml.srcml_close.restype = None
+libsrcml.srcml_close.argtypes = [c_void_p]
+
+libsrcml.srcml_translate.restype = None
+libsrcml.srcml_translate.argtypes = [c_void_p, c_char_p, c_char_p, c_char_p, c_char_p, c_int]
+
+libsrcml.srcml_delete.restype = None
+libsrcml.srcml_delete.argtypes = [c_void_p]
+
 #  void srcml_close(srcMLTranslator * translator);
 #  void srcml_translate(srcMLTranslator * translator, const char* path, const char* unit_directory, const char* unit_filename, const char* unit_version, int language);
 #  void srcml_delete(srcMLTranslator * translator);
@@ -10,7 +23,7 @@ libsrcml = cdll.LoadLibrary('../bin/libsrcml.so')
 class srcMLTranslator(object):
 
     def __init__(self, language, srcml_filename, op):
-        self.translator = libsrcml.srcml_new(c_int(language), c_char_p(srcml_filename), c_ulonglong(op))
+        self.translator = libsrcml.srcml_new(language, srcml_filename, op)
 
     def setInput(self, path):
         libsrcml.srcml_set_input(self.translator, path)
