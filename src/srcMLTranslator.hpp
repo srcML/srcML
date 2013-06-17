@@ -94,7 +94,7 @@ class srcMLTranslator {
 
 extern "C" {
 
-  srcMLTranslator * srcml_new(int language, const char* srcml_filename, OPTION_TYPE& op);
+  srcMLTranslator * srcml_new(int language, const char* srcml_filename, OPTION_TYPE op);
   void* srcml_set_input(srcMLTranslator * translator, const char* path);
   void srcml_close(srcMLTranslator * translator);
   void srcml_translate(srcMLTranslator * translator, const char* path, const char* unit_directory, const char* unit_filename, const char* unit_version, int language);

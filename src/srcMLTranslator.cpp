@@ -98,7 +98,7 @@ srcMLTranslator::~srcMLTranslator() {
 extern "C" {
 
   // factory method
-  srcMLTranslator * srcml_new(int language, const char* srcml_filename, OPTION_TYPE& op) {
+  srcMLTranslator * srcml_new(int language, const char* srcml_filename, OPTION_TYPE op) {
 
     return new srcMLTranslator(language, srcml_filename, op);
   }
