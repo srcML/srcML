@@ -95,49 +95,39 @@ srcMLTranslator::~srcMLTranslator() {
   delete translator;
 }
 
-/*
-
-  C# Methods
-
-*/
-
-#ifdef MINGW32
-
 extern "C" {
 
   // factory method
-  __declspec(dllexport) srcMLTranslator * srcMLTranslator::srcMLTranslator_factory(int language, const char* srcml_filename, OPTION_TYPE& op) {
+  srcMLTranslator * srcml_factory(int language, const char* srcml_filename, OPTION_TYPE& op) {
 
     return new srcMLTranslator(language, srcml_filename, op);
   }
 
 
   // translate from input stream to output stream
-  __declspec(dllexport) void* srcMLTranslator::setInput(srcMLTranslator * translator, const char* path) {
+  void* srcml_setInput(srcMLTranslator * translator, const char* path) {
 
-    return translator->translator->setInput(path);
+    return translator->getTranslator()->setInput(path);
   }
 
   // close the output
-  __declspec(dllexport) void srcMLTranslator::close(srcMLTranslator * translator) {
+  void srcml_close(srcMLTranslator * translator) {
 
-    translator->translator->close();
+    translator->getTranslator()->close();
   }
 
   // translate from input stream to output stream
-  __declspec(dllexport) void srcMLTranslator::translate(srcMLTranslator * translator, const char* path, const char* unit_directory,
+  void srcml_translate(srcMLTranslator * translator, const char* path, const char* unit_directory,
                                                         const char* unit_filename, const char* unit_version,
                                                         int language) {
     translator->translate(path, unit_directory, unit_filename, unit_version, language);
   }
 
   // destructor
-  __declspec(dllexport) void srcMLTranslator::srcMLTranslator_delete(srcMLTranslator * translator) {
+  void srcml_delete(srcMLTranslator * translator) {
 
     delete translator;
   }
 
 
 }
-
-#endif

@@ -83,26 +83,23 @@ class srcMLTranslator {
   // destructor
   ~srcMLTranslator();
 
-  /*
-
-    C# methods
-
-   */
-#ifdef MINGW32
-
-  srcMLTranslator * srcMLTranslator_factory(int language, const char* srcml_filename, OPTION_TYPE& op);
-  void* setInput(srcMLTranslator * translator, const char* path);
-  void close(srcMLTranslator * translator);
-  void translate(srcMLTranslator * translator, const char* path, const char* unit_directory,
-				const char* unit_filename, const char* unit_version,
-				int language);
-  void srcMLTranslator_delete(srcMLTranslator * translator);
-
-#endif
+  srcMLTranslatorCore * getTranslator() {
+    return translator;
+  }
 
  private:
   srcMLTranslatorCore * translator;
 
 };
+
+extern "C" {
+
+  srcMLTranslator * srcml_factory(int language, const char* srcml_filename, OPTION_TYPE& op);
+  void* srcml_setInput(srcMLTranslator * translator, const char* path);
+  void srcml_close(srcMLTranslator * translator);
+  void srcml_translate(srcMLTranslator * translator, const char* path, const char* unit_directory, const char* unit_filename, const char* unit_version, int language);
+  void srcml_delete(srcMLTranslator * translator);
+
+}
 
 #endif
