@@ -38,6 +38,13 @@ srcMLTranslator::srcMLTranslator(int language, xmlBuffer* output_buffer, OPTION_
 }
 
 // constructor
+srcMLTranslator::srcMLTranslator(int language, OPTION_TYPE& op) {
+
+  output_buffer = xmlBufferCreate();
+  translator = new srcMLTranslatorCore(language, output_buffer, op);
+}
+
+// constructor
 srcMLTranslator::srcMLTranslator(int language,                // programming language of source code
                                  const char* src_encoding,    // text encoding of source code
                                  const char* xml_encoding,    // xml encoding of result srcML file
@@ -98,11 +105,10 @@ srcMLTranslator::~srcMLTranslator() {
 extern "C" {
 
   // factory method
-  srcMLTranslator * srcml_new(int language, const char* srcml_filename, OPTION_TYPE op) {
+  srcMLTranslator * srcml_new(int language, OPTION_TYPE op) {
     
-    return new srcMLTranslator(language, srcml_filename, op);
+    return new srcMLTranslator(language, op);
   }
-
 
   // translate from input stream to output stream
   void* srcml_set_input(srcMLTranslator * translator, const char* path) {
@@ -122,6 +128,11 @@ extern "C" {
                                                         int language) {
 
     translator->translate(path, unit_directory, unit_filename, unit_version, language);
+  }
+
+  const char * srcml_get_srcml(srcMLTranslator * translator) {
+
+    return (const char *)translator->getBuffer()->content;
   }
 
   // destructor

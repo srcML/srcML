@@ -42,6 +42,8 @@ class srcMLTranslator {
   // constructor
   srcMLTranslator(int language, xmlBuffer* output_buffer, OPTION_TYPE& op);
 
+  srcMLTranslator(int language, OPTION_TYPE& op);
+
   // constructor
   srcMLTranslator(int language,
 		  const char* src_encoding,
@@ -87,14 +89,20 @@ class srcMLTranslator {
     return translator;
   }
 
+  xmlBuffer * getBuffer() {
+    return output_buffer;
+  }
+
  private:
+  xmlBuffer * output_buffer;
   srcMLTranslatorCore * translator;
 
 };
 
 extern "C" {
 
-  srcMLTranslator * srcml_new(int language, const char* srcml_filename, OPTION_TYPE op);
+  srcMLTranslator * srcml_new(int language, OPTION_TYPE op);
+  const char * srcml_get_srcml(srcMLTranslator * translator);
   void* srcml_set_input(srcMLTranslator * translator, const char* path);
   void srcml_close(srcMLTranslator * translator);
   void srcml_translate(srcMLTranslator * translator, const char* path, const char* unit_directory, const char* unit_filename, const char* unit_version, int language);
