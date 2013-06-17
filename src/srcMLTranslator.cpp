@@ -98,14 +98,14 @@ srcMLTranslator::~srcMLTranslator() {
 extern "C" {
 
   // factory method
-  srcMLTranslator * srcml_factory(int language, const char* srcml_filename, OPTION_TYPE& op) {
+  srcMLTranslator * srcml_new(int language, const char* srcml_filename, OPTION_TYPE& op) {
 
     return new srcMLTranslator(language, srcml_filename, op);
   }
 
 
   // translate from input stream to output stream
-  void* srcml_setInput(srcMLTranslator * translator, const char* path) {
+  void* srcml_set_input(srcMLTranslator * translator, const char* path) {
 
     return translator->getTranslator()->setInput(path);
   }
