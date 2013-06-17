@@ -99,7 +99,7 @@ extern "C" {
 
   // factory method
   srcMLTranslator * srcml_new(int language, const char* srcml_filename, OPTION_TYPE op) {
-
+    
     return new srcMLTranslator(language, srcml_filename, op);
   }
 
@@ -120,6 +120,7 @@ extern "C" {
   void srcml_translate(srcMLTranslator * translator, const char* path, const char* unit_directory,
                                                         const char* unit_filename, const char* unit_version,
                                                         int language) {
+
     translator->translate(path, unit_directory, unit_filename, unit_version, language);
   }
 
