@@ -8,9 +8,10 @@
 cmake_minimum_required(VERSION 2.8)
 project(srcML)
 
-option(SHARED "Build libsrcml shared SHARED|STATIC" STATIC)
-if(NOT SHARED)
-set(SHARED STATIC) 
+option(IS_SHARED "Build libsrcml shared ")
+set(BUILD_TYPE STATIC) 
+if(SHARED)
+set(BUILD_TYPE SHARED) 
 endif()
 
 # specify g++ compiler
@@ -68,7 +69,7 @@ add_custom_command(OUTPUT srcMLParser.cpp srcMLParser.hpp srcMLParserTokenTypes.
 add_custom_command(OUTPUT srcMLParserTokenTypesMacro.hpp COMMAND ${GREP} '=' srcMLParserTokenTypes.hpp | ${SED} -e 's/,//g' -e 's/= //g' -e 's/^[ \t]*//' -e 's/^/\#define TOKEN_/g' > srcMLParserTokenTypesMacro.hpp DEPENDS srcMLParserTokenTypes.hpp)
 
 # libsrcml
-add_library(srcml ${SHARED} srcMLParser.cpp KeywordCPPLexer.cpp srcMLTranslator.cpp srcMLTranslatorCore.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp UTF8CharBuffer.cpp PureCommentLexer.cpp Language.cpp URIStream.cpp srcmlapps.cpp libxml_archive_read.cpp libxml_archive_write.cpp srcMLParserTokenTypesMacro.hpp)
+add_library(srcml ${BUILD_TYPE} srcMLParser.cpp KeywordCPPLexer.cpp srcMLTranslator.cpp srcMLTranslatorCore.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp UTF8CharBuffer.cpp PureCommentLexer.cpp Language.cpp URIStream.cpp srcmlapps.cpp libxml_archive_read.cpp libxml_archive_write.cpp srcMLParserTokenTypesMacro.hpp)
 target_link_libraries(srcml archive xml2 ${LIBANTLR_LIB})
 set_target_properties(srcml PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ../bin LIBRARY_OUTPUT_DIRECTORY ../bin)
 
