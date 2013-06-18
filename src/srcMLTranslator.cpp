@@ -38,10 +38,11 @@ srcMLTranslator::srcMLTranslator(int language, xmlBuffer* output_buffer, OPTION_
 }
 
 // constructor
-srcMLTranslator::srcMLTranslator(int language, OPTION_TYPE& op) {
+srcMLTranslator::srcMLTranslator(int language, OPTION_TYPE op) {
 
   output_buffer = xmlBufferCreate();
-  translator = new srcMLTranslatorCore(language, output_buffer, op);
+  options = op;
+  translator = new srcMLTranslatorCore(language, output_buffer, options);
 }
 
 // constructor
@@ -93,6 +94,7 @@ void srcMLTranslator::close() {
 void srcMLTranslator::translate(const char* path, const char* unit_directory,
                                 const char* unit_filename, const char* unit_version,
                                 int language) {
+
   translator->translate(path, unit_directory, unit_filename, unit_version, language);
 }
 

@@ -42,7 +42,7 @@ class srcMLTranslator {
   // constructor
   srcMLTranslator(int language, xmlBuffer* output_buffer, OPTION_TYPE& op);
 
-  srcMLTranslator(int language, OPTION_TYPE& op);
+  srcMLTranslator(int language, OPTION_TYPE op);
 
   // constructor
   srcMLTranslator(int language,
@@ -96,6 +96,7 @@ class srcMLTranslator {
  private:
   xmlBuffer * output_buffer;
   srcMLTranslatorCore * translator;
+  OPTION_TYPE options;
 
 };
 
