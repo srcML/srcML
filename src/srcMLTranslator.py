@@ -61,10 +61,10 @@ class srcMLTranslator(object):
         libsrcml.srcml_delete(self.translator)
 
 # test
-from srcMLapps import *
-translator = srcMLTranslator(2, "", "", 0, "directory", "file", "version", URI_PREFIX, 8)
-translator.setInputString("a;")
-translator.translate("a", "b", "c", "d", 2)
-translator.close()
-print translator.getsrcML()
-translator.delete()
+#from srcMLapps import *
+#translator = srcMLTranslator(2, "ISO-8859-1", "ISO-8859-1", 0, "directory", "file", "version", URI_PREFIX, 8)
+#translator.setInputString("a;")
+#translator.translate("a", "b", "c", "d", 2)
+#translator.close()
+#print translator.getsrcML()
+#translator.delete()
