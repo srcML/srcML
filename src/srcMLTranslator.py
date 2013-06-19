@@ -1,5 +1,14 @@
 from ctypes import *
-libsrcml = cdll.LoadLibrary('../bin/libsrcml.so')
+import os
+LIBSRCML_PATH=""
+if os.path.exists('../bin/libsrcml.dylib') :
+    LIBSRCML_PATH="../bin/libsrcml.dylib"
+elif os.path.exists('../bin/libsrcml.so') :
+    LIBSRCML_PATH="../bin/libsrcml.so"
+elif os.path.exists('../bin/libsrcml.dll') :
+    LIBSRCML_PATH="../bin/libsrcml.dll"
+
+libsrcml = cdll.LoadLibrary(LIBSRCML_PATH)
 
 libsrcml.srcml_new.restype = c_void_p
 libsrcml.srcml_new.argtypes = [c_int, c_ulonglong]
@@ -25,7 +34,6 @@ class srcMLTranslator(object):
         self.translator = libsrcml.srcml_new(language, op)
 
     def setInput(self, path):
-
         return libsrcml.srcml_set_input(self.translator, path)
 
     def close(self):
@@ -41,9 +49,9 @@ class srcMLTranslator(object):
         libsrcml.srcml_delete(self.translator)
 
 # test
-#translator = srcMLTranslator(2, 0)
-#translator.setInput("a.cpp")
-#translator.translate("", "", "", "", 2)
-#translator.close()
-#print translator.getsrcML()
-#translator.delete()
+translator = srcMLTranslator(2, 0)
+translator.setInput("a.cpp")
+translator.translate("a", "b", "c", "d", 2)
+translator.close()
+print translator.getsrcML()
+translator.delete()
