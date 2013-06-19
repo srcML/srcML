@@ -16,6 +16,9 @@ libsrcml.srcml_new.argtypes = [c_int, c_ulonglong]
 libsrcml.srcml_set_input.restype = c_void_p
 libsrcml.srcml_set_input.argtypes = [c_void_p, c_char_p]
 
+libsrcml.srcml_set_input_string.restype = c_void_p
+libsrcml.srcml_set_input_string.argtypes = [c_void_p, c_char_p]
+
 libsrcml.srcml_close.restype = None
 libsrcml.srcml_close.argtypes = [c_void_p]
 
@@ -36,6 +39,9 @@ class srcMLTranslator(object):
     def setInput(self, path):
         return libsrcml.srcml_set_input(self.translator, path)
 
+    def setInputString(self, source):
+        return libsrcml.srcml_set_input_string(self.translator, source)
+
     def close(self):
         libsrcml.srcml_close(self.translator)
 
@@ -50,7 +56,7 @@ class srcMLTranslator(object):
 
 # test
 translator = srcMLTranslator(2, 0)
-translator.setInput("a.cpp")
+translator.setInputString("a;")
 translator.translate("a", "b", "c", "d", 2)
 translator.close()
 print translator.getsrcML()
