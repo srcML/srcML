@@ -111,6 +111,9 @@ def src2srcML(text_file, encoding, language, directory, filename, prefixlist):
 
         options = OPTION_CPP
 
+        if filename == "" :
+                filename = None;
+
         if prefixlist.count("--xmlns:op=http://www.sdml.info/srcML/operator") :
                 options = options | OPTION_OPERATOR
         if prefixlist.count("--xmlns:lit=http://www.sdml.info/srcML/literal") :
@@ -136,7 +139,7 @@ def src2srcML(text_file, encoding, language, directory, filename, prefixlist):
 
         translator = srcMLTranslator(lang, options)
         translator.setInputString(text_file)
-        translator.translate(None, directory, None, None, lang)
+        translator.translate(None, directory, filename, None, lang)
         translator.close()
         srcml = translator.getsrcML()
         translator.delete()
