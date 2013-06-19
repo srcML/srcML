@@ -108,7 +108,7 @@ def xmldiff(xml_filename1, xml_filename2):
 
 # find differences of two files
 def src2srcML(text_file, encoding, language, directory, filename, prefixlist):
-
+        print text_file
         options = OPTION_CPP
 
         if filename == "" :
@@ -137,7 +137,7 @@ def src2srcML(text_file, encoding, language, directory, filename, prefixlist):
                 lang = LANGUAGE_ASPECTJ[1]
                 options = options & ~OPTION_CPP
 
-        translator = srcMLTranslator(lang, options)
+        translator = srcMLTranslator(lang, "ISO-8859-1", encoding, options, None, None, None, URI_PREFIX, 8)
         translator.setInputString(text_file)
         translator.translate(None, directory, filename, None, lang)
         translator.close()
