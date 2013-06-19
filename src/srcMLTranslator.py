@@ -13,6 +13,9 @@ libsrcml = cdll.LoadLibrary(LIBSRCML_PATH)
 libsrcml.srcml_new.restype = c_void_p
 libsrcml.srcml_new.argtypes = [c_int, c_ulonglong]
 
+libsrcml.srcml_new_long.restype = c_void_p
+libsrcml.srcml_new_long.argtypes = [c_int, c_char_p, c_char_p, c_ulonglong, c_char_p, c_char_p, c_char_p * 7, c_int]
+
 libsrcml.srcml_set_input.restype = c_void_p
 libsrcml.srcml_set_input.argtypes = [c_void_p, c_char_p]
 
@@ -35,6 +38,9 @@ class srcMLTranslator(object):
 
     def __init__(self, language, op):
         self.translator = libsrcml.srcml_new(language, op)
+
+    def __init__(self, language, src_encoding, xml_encoding, op, directory, filename, version, uri, tabsize):
+        self.translator = libsrcml.srcml_new_long(language, src_encoding, xml_encoding, op, directory, filename, version, uri, tabsize)
 
     def setInput(self, path):
         return libsrcml.srcml_set_input(self.translator, path)
