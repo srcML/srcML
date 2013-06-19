@@ -84,6 +84,12 @@ void* srcMLTranslator::setInput(const char* path) {
   return translator->setInput(path);
 }
 
+// translate from input stream to output stream
+void* srcMLTranslator::setInputString(const char* source) {
+
+  return translator->setInputString(source);
+}
+
 // close the output
 void srcMLTranslator::close() {
 
@@ -116,6 +122,12 @@ extern "C" {
   void* srcml_set_input(srcMLTranslator * translator, const char* path) {
 
     return translator->getTranslator()->setInput(path);
+  }
+
+  // translate from input stream to output stream
+  void* srcml_set_input_string(srcMLTranslator * translator, const char* source) {
+
+    return translator->getTranslator()->setInputString(source);
   }
 
   // close the output

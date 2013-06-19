@@ -44,6 +44,7 @@ public:
 
   // Create a character buffer
   UTF8CharBuffer(const char* ifilename, const char* encoding);
+  UTF8CharBuffer(const char* source);
 
   // Get the next character from the stream
   int getChar();

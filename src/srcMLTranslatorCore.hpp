@@ -68,6 +68,7 @@ class srcMLTranslatorCore : public Language {
 		  );
 
   void* setInput(const char* path);
+  void* setInputString(const char* source);
 
   void close();
 
