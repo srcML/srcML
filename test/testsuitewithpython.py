@@ -13,6 +13,7 @@ import difflib
 import string
 from datetime import datetime, time
 from srcMLTranslator import srcMLTranslator
+from srcMLapps import *
 
 maxcount = 700
 error_filename = "srcMLTestReport"
@@ -126,11 +127,26 @@ def src2srcML(text_file, encoding, language, directory, filename, prefixlist):
 	#command.append("--quiet")
 
 	#return safe_communicate(command, text_file)
-        OPTION_CPP = 1 << 28
-        translator = srcMLTranslator(2, OPTION_CPP)
+        options = OPTION_CPP
+        lang = LANGUAGE_NONE[1]
+        if language == LANGUAGE_C[0] :
+                lang = LANGUAGE_C[1]
+        elif language == LANGUAGE_CS[0] :
+                lang = LANGUAGE_CS[1]
+        elif language == LANGUAGE_CXX[0] :
+                lang = LANGUAGE_CXX[1]
+        elif language == LANGUAGE_CXX_11[0] :
+                lang = LANGUAGE_CXX_11[1]
+        elif language == LANGUAGE_JAVA[0] :
+                lang = LANGUAGE_JAVA[1]
+                options = options & ~OPTION_CPP
+        elif language == LANGUAGE_ASPECTJ[0] :
+                lang = LANGUAGE_ASPECTJ[1]
+                options = options & ~OPTION_CPP
+
+        translator = srcMLTranslator(lang, options)
         translator.setInputString(text_file)
-        #translate(self, path, unit_directory, unit_filename, unit_version, language)
-        translator.translate(None, directory, None, None, 2)
+        translator.translate(None, directory, None, None, lang)
         translator.close()
         srcml = translator.getsrcML()
         translator.delete()
