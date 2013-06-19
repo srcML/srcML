@@ -86,7 +86,7 @@ def srcml2src(srctext, encoding):
 
 	# run the srcml processor
 	command = [srcmlutility]
-	#command.append("--src-encoding=" + encoding)
+	command.append("--src-encoding=" + encoding)
 
 	return safe_communicate(command, srctext)
 
