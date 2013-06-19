@@ -86,7 +86,7 @@ def srcml2src(srctext, encoding):
 
 	# run the srcml processor
 	command = [srcmlutility]
-	command.append("--src-encoding=" + encoding)
+	#command.append("--src-encoding=" + encoding)
 
 	return safe_communicate(command, srctext)
 
@@ -137,12 +137,13 @@ def src2srcML(text_file, encoding, language, directory, filename, prefixlist):
                 lang = LANGUAGE_ASPECTJ[1]
                 options = options & ~OPTION_CPP
 
-        translator = srcMLTranslator(lang, "ISO-8859-1", encoding, options, None, None, None, URI_PREFIX, 8)
+        translator = srcMLTranslator(lang, encoding, encoding, options, None, None, None, URI_PREFIX, 8)
         translator.setInputString(text_file)
         translator.translate(None, directory, filename, None, lang)
         translator.close()
         srcml = translator.getsrcML()
         translator.delete()
+
         return srcml
 
 # additional processing stages
@@ -417,7 +418,7 @@ try:
 
 						# convert the unit in xml to text
                                                 unittext = srcml2src(unitxml, encoding)
-
+v
 						# convert the unit in xml to text (if needed)
                                                 if doseol:
                                                         unittext = unix2dos(unittext)
