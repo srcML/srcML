@@ -1,3 +1,4 @@
+from ctypes import *
 # language constants
 LANGUAGE_NONE = ("", 64)
 LANGUAGE_C = ("C", 1)
@@ -20,3 +21,7 @@ OPTION_EXPRESSION      = 1 << 25
 OPTION_CPP             = 1 << 28
 OPTION_OPERATOR        = 1 << 16
 OPTION_MODIFIER        = 1 << 17
+
+# default uri
+URI_TYPE = c_char_p * 8
+URI_PREFIX = URI_TYPE("", "cpp", "err", "lit", "op", "type", "pos", None )

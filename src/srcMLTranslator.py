@@ -14,7 +14,7 @@ libsrcml.srcml_new.restype = c_void_p
 libsrcml.srcml_new.argtypes = [c_int, c_ulonglong]
 
 libsrcml.srcml_new_long.restype = c_void_p
-libsrcml.srcml_new_long.argtypes = [c_int, c_char_p, c_char_p, c_ulonglong, c_char_p, c_char_p, c_char_p * 7, c_int]
+libsrcml.srcml_new_long.argtypes = [c_int, c_char_p, c_char_p, c_ulonglong, c_char_p, c_char_p, c_char_p, c_char_p * 8, c_int]
 
 libsrcml.srcml_set_input.restype = c_void_p
 libsrcml.srcml_set_input.argtypes = [c_void_p, c_char_p]
@@ -61,9 +61,10 @@ class srcMLTranslator(object):
         libsrcml.srcml_delete(self.translator)
 
 # test
-#translator = srcMLTranslator(2, 0)
-#translator.setInputString("a;")
-#translator.translate("a", "b", "c", "d", 2)
-#translator.close()
-#print translator.getsrcML()
-#translator.delete()
+from srcMLapps import *
+translator = srcMLTranslator(2, "", "", 0, "directory", "file", "version", URI_PREFIX, 8)
+translator.setInputString("a;")
+translator.translate("a", "b", "c", "d", 2)
+translator.close()
+print translator.getsrcML()
+translator.delete()
