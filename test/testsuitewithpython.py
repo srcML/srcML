@@ -109,25 +109,15 @@ def xmldiff(xml_filename1, xml_filename2):
 # find differences of two files
 def src2srcML(text_file, encoding, language, directory, filename, prefixlist):
 
-	#command = [srcmltranslator, "-l", language, "--encoding=" + encoding]
-
-	#if directory != "":
-		#command.extend(["--directory", directory])
-
-       	#if filename != "":
-		#command.extend(["--filename", filename])
-
-	#command.extend(prefixlist)
-
-	#print command
-
-	# run the srcml processor
-	#command.append("--src-encoding=" + encoding)
-
-	#command.append("--quiet")
-
-	#return safe_communicate(command, text_file)
         options = OPTION_CPP
+
+        if prefixlist.count("--xmlns:op=http://www.sdml.info/srcML/operator") :
+                options = options | OPTION_OPERATOR
+        if prefixlist.count("--xmlns:lit=http://www.sdml.info/srcML/literal") :
+                options = options | OPTION_LITERAL
+        if prefixlist.count("--xmlns:type=http://www.sdml.info/srcML/modifier") :
+                options = options | OPTION_MODIFER
+
         lang = LANGUAGE_NONE[1]
         if language == LANGUAGE_C[0] :
                 lang = LANGUAGE_C[1]
