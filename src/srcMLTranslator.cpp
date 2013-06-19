@@ -90,12 +90,6 @@ void srcMLTranslator::close() {
   translator->close();
 }
 
-// clear the output buffer
-void srcMLTranslator::clear() {
-
-  xmlBufferEmpty(output_buffer);
-}
-
 // translate from input stream to output stream
 void srcMLTranslator::translate(const char* path, const char* unit_directory,
                                 const char* unit_filename, const char* unit_version,
@@ -128,12 +122,6 @@ extern "C" {
   void srcml_close(srcMLTranslator * translator) {
 
     translator->getTranslator()->close();
-  }
-
-  // close the output
-  void srcml_clear(srcMLTranslator * translator) {
-
-    translator->clear();
   }
 
   // translate from input stream to output stream

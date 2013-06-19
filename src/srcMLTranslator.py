@@ -19,9 +19,6 @@ libsrcml.srcml_set_input.argtypes = [c_void_p, c_char_p]
 libsrcml.srcml_close.restype = None
 libsrcml.srcml_close.argtypes = [c_void_p]
 
-libsrcml.srcml_clear.restype = None
-libsrcml.srcml_clear.argtypes = [c_void_p]
-
 libsrcml.srcml_translate.restype = None
 libsrcml.srcml_translate.argtypes = [c_void_p, c_char_p, c_char_p, c_char_p, c_char_p, c_int]
 
@@ -41,9 +38,6 @@ class srcMLTranslator(object):
 
     def close(self):
         libsrcml.srcml_close(self.translator)
-
-    def clear(self):
-        libsrcml.srcml_clear(self.translator)
 
     def translate(self, path, unit_directory, unit_filename, unit_version, language):
         libsrcml.srcml_translate(self.translator, path, unit_directory, unit_filename, unit_version, language)
