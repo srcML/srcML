@@ -418,7 +418,7 @@ try:
 
 						# convert the unit in xml to text
                                                 unittext = srcml2src(unitxml, encoding)
-v
+
 						# convert the unit in xml to text (if needed)
                                                 if doseol:
                                                         unittext = unix2dos(unittext)
