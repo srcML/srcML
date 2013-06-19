@@ -93,7 +93,7 @@ void srcMLTranslator::close() {
 // clear the output buffer
 void srcMLTranslator::clear() {
 
-
+  xmlBufferEmpty(output_buffer);
 }
 
 // translate from input stream to output stream
