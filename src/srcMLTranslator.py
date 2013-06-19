@@ -55,9 +55,9 @@ class srcMLTranslator(object):
         libsrcml.srcml_delete(self.translator)
 
 # test
-translator = srcMLTranslator(2, 0)
-translator.setInputString("a;")
-translator.translate("a", "b", "c", "d", 2)
-translator.close()
-print translator.getsrcML()
-translator.delete()
+#translator = srcMLTranslator(2, 0)
+#translator.setInputString("a;")
+#translator.translate("a", "b", "c", "d", 2)
+#translator.close()
+#print translator.getsrcML()
+#translator.delete()
