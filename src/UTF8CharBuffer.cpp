@@ -101,16 +101,16 @@ UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding)
 }
 
 // Create a character buffer
-UTF8CharBuffer::UTF8CharBuffer(const char* source)
+UTF8CharBuffer::UTF8CharBuffer(const char* source, const char * encoding, bool is_source)
   : antlr::CharBuffer(std::cin), pos(0), size(0), eof(false), lastcr(false)
 {
-  const char * encoding = 0;
+  const char * enc = encoding;
   size = strlen(source);
   /* Use a libxml2 parser input buffer to support URIs.
      If an encoding is specified, then use it.  Otherwise, assume none, and
      try to figure it out later.
   */
-  if (!(input = xmlParserInputBufferCreateMem(source, size, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE)))
+  if (!(input = xmlParserInputBufferCreateMem(source, size, enc ? xmlParseCharEncoding(enc) : XML_CHAR_ENCODING_NONE)))
     throw UTF8FileError();
 
   /* If an encoding was not specified, then try to detect it.
@@ -173,6 +173,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char* source)
       size = growBuffer();
     }
   }
+
 }
 
 int UTF8CharBuffer::growBuffer() {

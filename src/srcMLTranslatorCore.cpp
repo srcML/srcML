@@ -112,7 +112,7 @@ void* srcMLTranslatorCore::setInput(const char* path) {
 void* srcMLTranslatorCore::setInputString(const char* source) {
 
   try {
-    pinput = new UTF8CharBuffer(source);
+    pinput = new UTF8CharBuffer(source, encoding, true);
 
     // return the libxml context of the file
     if (pinput)
