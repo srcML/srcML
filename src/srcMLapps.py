@@ -1,0 +1,22 @@
+# language constants
+LANGUAGE_NONE = ""
+LANGUAGE_C = "C"
+LANGUAGE_CS = "C#"
+LANGUAGE_CXX = "C++"
+LANGUAGE_CXX_11 = "C++11"
+LANGUAGE_JAVA = "Java"
+LANGUAGE_ASPECTJ = "AspectJ"
+LANGUAGE_CSHARP = "C#"
+
+# parsing options
+OPTION_DEBUG       = ull(1) << 0
+
+OPTION_NESTED      = ull(1) << 1
+OPTION_LITERAL     = ull(1) << 2
+OPTION_CPP_MARKUP_ELSE = ull(1) << 22
+OPTION_XPATH_TOTAL = OPTION_CPP_MARKUP_ELSE
+OPTION_CPP_MARKUP_IF0 = ull(1) << 23
+OPTION_EXPRESSION = ull(1) << 25
+OPTION_CPP = ull(1) << 28
+OPTION_OPERATOR         = ull(1) << 16
+OPTION_MODIFIER       = ull(1) << 17

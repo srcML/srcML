@@ -8,7 +8,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(srcML)
 
-option(IS_SHARED "Build libsrcml shared")
+option(IS_SHARED "Build libsrcml shared" On)
 set(BUILD_TYPE STATIC) 
 if(IS_SHARED)
 set(BUILD_TYPE SHARED) 
