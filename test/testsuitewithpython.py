@@ -108,7 +108,7 @@ def xmldiff(xml_filename1, xml_filename2):
 
 # find differences of two files
 def src2srcML(text_file, encoding, language, directory, filename, prefixlist):
-        print text_file
+
         options = OPTION_CPP
 
         if filename == "" :
