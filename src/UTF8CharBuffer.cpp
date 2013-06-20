@@ -41,6 +41,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding)
   /* If an encoding was not specified, then try to detect it.
      This is especially important for the BOM for UTF-8.
      If nothing is detected, then use ISO-8859-1 */
+
   if (!encoding) {
 
     // input enough characters to detect.
@@ -96,6 +97,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding)
 
       // fill up the buffer with even more data
       size = growBuffer();
+
     }
   }
 }
