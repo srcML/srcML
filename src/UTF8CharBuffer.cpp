@@ -115,7 +115,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char* source, const char * encoding, bool i
   if (!(input = xmlParserInputBufferCreateMem(source, size, enc ? xmlParseCharEncoding(enc) : XML_CHAR_ENCODING_NONE)))
     throw UTF8FileError();
 
-  if(encoding) {
+  if(encoding && strcmp(encoding, "UTF-8") != 0) {
     pos = 0;
     input->raw = input->buffer;
     input->rawconsumed = 0;
