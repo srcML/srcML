@@ -117,6 +117,8 @@ UTF8CharBuffer::UTF8CharBuffer(const char* source, const char * encoding, bool i
 
   if(encoding && input->encoder) {
     pos = 0;
+    if(input->raw)
+      xmlBufferFree(input->raw);
     input->raw = input->buffer;
     input->rawconsumed = 0;
     input->buffer = xmlBufferCreate();
