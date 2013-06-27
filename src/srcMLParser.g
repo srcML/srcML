@@ -2489,7 +2489,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
         set_bool[isoperatorfunction, isoperatorfunction || isdestructor]
 
         // special case for what looks like a destructor declaration
-        throw_exception[isdestructor && (modifieroperator || type_count > 1 || (type_count == 1 && !typeisvoid))]
+        throw_exception[isdestructor && (modifieroperator || type_count > 1 || ((type_count - specifier_count) == 1 && !typeisvoid))]
 
         /*
           We have a declaration (at this point a variable) if we have:
