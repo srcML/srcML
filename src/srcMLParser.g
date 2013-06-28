@@ -2203,7 +2203,7 @@ comma[bool final = false] { if (final) setFinalToken(); ENTRY_DEBUG }:
 
 comma_marked[] { LocalMode lm(this); ENTRY_DEBUG }:
         {
-            if (isoption(parseoptions, OPTION_OPERATOR)) {
+            if (isoption(parseoptions, OPTION_OPERATOR) && !inMode(MODE_PARAMETER)) {
 
                 // end all elements at end of rule automatically
                 startNewMode(MODE_LOCAL);
@@ -2489,7 +2489,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
         set_bool[isoperatorfunction, isoperatorfunction || isdestructor]
 
         // special case for what looks like a destructor declaration
-        throw_exception[isdestructor && (modifieroperator || type_count > 1 || ((type_count - specifier_count) == 1 && !typeisvoid))]
+        throw_exception[isdestructor && (modifieroperator || (type_count - specifier_count) > 1 || ((type_count - specifier_count) == 1 && !typeisvoid))]
 
         /*
           We have a declaration (at this point a variable) if we have:
