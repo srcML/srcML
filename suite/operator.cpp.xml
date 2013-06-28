@@ -305,5 +305,9 @@
 <expr_stmt><expr><name>a</name> <op:operator>&gt;&gt;=</op:operator><op:operator>delete</op:operator><index>[]</index> <name>b</name></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<function><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>int</name></type> <name>b</name></decl></param>)</parameter_list> <block>{}</block></function>
+</unit>
+
 </unit>
  
