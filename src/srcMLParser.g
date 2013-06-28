@@ -2499,7 +2499,8 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
               and it is part of a parameter list
         */
         set_type[type, VARIABLE, ((type_count - specifier_count > 0) ||
-                                 (inparam && (LA(1) == RPAREN || LA(1) == COMMA || LA(1) == LBRACKET)))]
+                                 (inparam && (LA(1) == RPAREN || LA(1) == COMMA || LA(1) == LBRACKET || 
+                                              ((inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_C)) && LA(1) == EQUAL))))]
 
         // need to see if we possibly have a constructor/destructor name, with no type
         set_bool[isconstructor,
