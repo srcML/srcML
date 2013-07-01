@@ -2203,7 +2203,7 @@ comma[bool final = false] { if (final) setFinalToken(); ENTRY_DEBUG }:
 
 comma_marked[] { LocalMode lm(this); ENTRY_DEBUG }:
         {
-            if (isoption(parseoptions, OPTION_OPERATOR) && !inMode(MODE_PARAMETER)) {
+            if (isoption(parseoptions, OPTION_OPERATOR) && !inMode(MODE_PARAMETER) && !inMode(MODE_ARGUMENT)) {
 
                 // end all elements at end of rule automatically
                 startNewMode(MODE_LOCAL);
