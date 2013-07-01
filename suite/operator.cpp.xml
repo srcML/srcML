@@ -309,5 +309,9 @@
 <function><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>int</name></type> <name>b</name></decl></param>)</parameter_list> <block>{}</block></function>
 </unit>
 
+<unit>
+<expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><name>b</name></expr></argument>, <argument><expr><name>c</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
 </unit>
  
