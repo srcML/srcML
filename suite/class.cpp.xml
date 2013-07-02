@@ -107,13 +107,13 @@
 
 <unit>
 <class>class <name>a</name> <block>{<private>private:
-    <constructor_decl><name>a</name><parameter_list>(<param><decl><type><name>int</name></type> <name>i</name> =<init> <expr><call>b<argument_list>()</argument_list></call></expr></init></decl></param>)</parameter_list>;</constructor_decl>
+    <constructor_decl><name>a</name><parameter_list>(<param><decl><type><name>int</name></type> <name>i</name> =<init> <expr><call><name>b</name><argument_list>()</argument_list></call></expr></init></decl></param>)</parameter_list>;</constructor_decl>
 </private>}</block>;</class>
 </unit>
 
 <unit>
 <class>class <name>a</name> <block>{<private>private:
-    <constructor_decl><name>a</name><parameter_list>(<param><decl><type><name>int</name></type> =<init> <expr><call>b<argument_list>()</argument_list></call></expr></init></decl></param>)</parameter_list>;</constructor_decl>
+    <constructor_decl><name>a</name><parameter_list>(<param><decl><type><name>int</name></type> =<init> <expr><call><name>b</name><argument_list>()</argument_list></call></expr></init></decl></param>)</parameter_list>;</constructor_decl>
 </private>}</block>;</class>
 </unit>
 
