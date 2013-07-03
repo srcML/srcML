@@ -130,7 +130,7 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d  %5s%*s %s (%d)\n", inputState->guessing, LA(1), (LA(1) != 11 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d  %5s%*s %s (%d)\n", inputState->guessing, LA(1), (LA(1) != 11 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #define CATCH_DEBUG //marker();
 
 #define assertMode(m)
@@ -3252,6 +3252,7 @@ complex_name_cpp[bool marked, bool& iscomplex_name] { namestack[0] = ""; namesta
             founddestop = true;
         })*
         (simple_name_optional_template[marked] | mark_namestack overloaded_operator)
+        // test case (currently) operator 55 fails thinking & is a modifier
         (multops)*
         name_tail[iscomplex_name, marked]
         { if (founddestop) iscomplex_name = true; }
