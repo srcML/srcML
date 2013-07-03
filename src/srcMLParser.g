@@ -4290,7 +4290,10 @@ expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG
         // distinguish between a call and a macro
         { type == CALL || (perform_call_check(type, -1) && type == CALL) }?
 
-            call
+            // Added argument to correct markup of default parameters using a call.
+            // normally call claims left paren and start calls argument.
+            // however I believe parameter_list matches a right paren of the call.
+            call argument
 
             guessing_startNewMode[MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN] |
 
