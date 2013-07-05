@@ -67,6 +67,8 @@ LANGUAGE_CXX call_ns
 LANGUAGE_CXX expression_pointer
 LANGUAGE_CXX enum_cpp
 LANGUAGE_CXX operator_cpp
+LANGUAGE_CXX call_cpp
+LANGUAGE_CXX class_cpp
 
 LANGUAGE_CSHARP_GEN asm
 LANGUAGE_CSHARP_GEN extern
@@ -114,6 +116,8 @@ LANGUAGE_CSHARP attributes_cs
 LANGUAGE_CSHARP string_cs
 LANGUAGE_CSHARP lambda_cs
 LANGUAGE_CSHARP enum_cs
+LANGUAGE_CSHARP call_cs
+LANGUAGE_CSHARP class_cs
 
 LANGUAGE_JAVA class_java
 LANGUAGE_JAVA constructor_java

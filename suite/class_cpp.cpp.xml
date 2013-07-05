@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="class_cs">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="class_cpp">
 
 <unit>
-<class>class <name>A</name> <block>{
+<class>class <name>A</name> <block>{<private type="default">
   <function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{
     <expr_stmt><expr><call><name>~<name>d</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
   }</block></function>
-}</block></class>
+</private>}</block>;</class>
 </unit>
 
 </unit>
