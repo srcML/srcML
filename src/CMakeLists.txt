@@ -8,12 +8,6 @@
 cmake_minimum_required(VERSION 2.8)
 project(srcML)
 
-option(IS_SHARED "Build libsrcml shared" On)
-set(BUILD_TYPE STATIC) 
-if(IS_SHARED)
-set(BUILD_TYPE SHARED) 
-endif()
-
 # specify g++ compiler
 include(CMakeForceCompiler)
 CMAKE_FORCE_CXX_COMPILER(/usr/bin/g++ "g++")
@@ -68,10 +62,15 @@ add_custom_command(OUTPUT srcMLParser.cpp srcMLParser.hpp srcMLParserTokenTypes.
 # Run special command for macro
 add_custom_command(OUTPUT srcMLParserTokenTypesMacro.hpp COMMAND ${GREP} '=' srcMLParserTokenTypes.hpp | ${SED} -e 's/,//g' -e 's/= //g' -e 's/^[ \t]*//' -e 's/^/\#define TOKEN_/g' > srcMLParserTokenTypesMacro.hpp DEPENDS srcMLParserTokenTypes.hpp)
 
-# libsrcml
-add_library(srcml ${BUILD_TYPE} srcMLParser.cpp KeywordCPPLexer.cpp srcMLTranslator.cpp srcMLTranslatorCore.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp UTF8CharBuffer.cpp PureCommentLexer.cpp Language.cpp URIStream.cpp srcmlapps.cpp libxml_archive_read.cpp libxml_archive_write.cpp srcMLParserTokenTypesMacro.hpp)
+# libsrcml static
+add_library(srcml STATIC srcMLParser.cpp KeywordCPPLexer.cpp srcMLTranslator.cpp srcMLTranslatorCore.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp UTF8CharBuffer.cpp PureCommentLexer.cpp Language.cpp URIStream.cpp srcmlapps.cpp libxml_archive_read.cpp libxml_archive_write.cpp srcMLParserTokenTypesMacro.hpp)
 target_link_libraries(srcml archive xml2 ${LIBANTLR_LIB})
 set_target_properties(srcml PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ../bin LIBRARY_OUTPUT_DIRECTORY ../bin)
+
+# libsrcml shared
+add_library(srcml.0 SHARED srcMLParser.cpp KeywordCPPLexer.cpp srcMLTranslator.cpp srcMLTranslatorCore.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp UTF8CharBuffer.cpp PureCommentLexer.cpp Language.cpp URIStream.cpp srcmlapps.cpp libxml_archive_read.cpp libxml_archive_write.cpp srcMLParserTokenTypesMacro.hpp)
+target_link_libraries(srcml.0 archive xml2 ${LIBANTLR_LIB})
+set_target_properties(srcml.0 PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ../bin LIBRARY_OUTPUT_DIRECTORY ../bin)
 
 # src2srcml
 add_executable(src2srcml src2srcml.cpp srcmlapps.cpp makeargv.cpp)
