@@ -680,7 +680,8 @@ statements_non_cfg[] { int token = 0; int place = 0; int secondtoken = 0; int fl
         { decl_type == DESTRUCTOR && fla != TERMINATE }?
         destructor_definition |
 
-        { decl_type == DESTRUCTOR && fla == TERMINATE }?
+        // destructor declaration restrained so that it can only occur within a class
+        {(!inLanguage(LANGUAGE_CXX) || inMode(MODE_ACCESS_REGION)) && decl_type == DESTRUCTOR && fla == TERMINATE }?
         destructor_declaration |
 
         // labels to goto
@@ -695,7 +696,6 @@ statements_non_cfg[] { int token = 0; int place = 0; int secondtoken = 0; int fl
         enum_definition |
 
         // call
-
         { inLanguage(LANGUAGE_C_FAMILY) && perform_call_check(type, secondtoken) && type == MACRO }?
         macro_call |
 
