@@ -70,8 +70,8 @@ set_target_properties(srcml PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ../bin LIBRARY_O
 # libsrcml shared
 add_library(srcml.0 SHARED srcMLParser.cpp KeywordCPPLexer.cpp srcMLTranslator.cpp srcMLTranslatorCore.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp UTF8CharBuffer.cpp PureCommentLexer.cpp Language.cpp URIStream.cpp srcmlapps.cpp libxml_archive_read.cpp libxml_archive_write.cpp srcMLParserTokenTypesMacro.hpp)
 target_link_libraries(srcml.0 archive xml2 ${LIBANTLR_LIB})
-set_target_properties(srcml.0 PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ../bin LIBRARY_OUTPUT_DIRECTORY ../bin)
-add_custom_command(OUTPUT ../bin/libsrcml${CMAKE_SHARED_LIBRARY_SUFFIX} COMMAND mv ../bin/libsrcml.0${CMAKE_SHARED_LIBRARY_SUFFIX} ../bin/libsrcml${CMAKE_SHARED_LIBRARY_SUFFIX} DEPENDS ../bin/libsrcml.0${CMAKE_SHARED_LIBRARY_SUFFIX})
+set_target_properties(srcml.0 PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ../bin LIBRARY_OUTPUT_DIRECTORY ../bin OUTPUT_NAME srcml)
+
 
 # src2srcml
 add_executable(src2srcml src2srcml.cpp srcmlapps.cpp makeargv.cpp)
