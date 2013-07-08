@@ -681,7 +681,7 @@ statements_non_cfg[] { int token = 0; int place = 0; int secondtoken = 0; int fl
         destructor_definition |
 
         // destructor declaration restrained so that it can only occur within a class
-        {(!inLanguage(LANGUAGE_CXX) || inMode(MODE_ACCESS_REGION)) && decl_type == DESTRUCTOR && fla == TERMINATE }?
+        {(inTransparentMode(MODE_CLASS) && !inTransparentMode(MODE_FUNCTION_TAIL)) && decl_type == DESTRUCTOR && fla == TERMINATE }?
         destructor_declaration |
 
         // labels to goto
