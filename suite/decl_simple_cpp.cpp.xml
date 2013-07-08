@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="decl_simple_cpp">
+
+<unit>
+<decl_stmt><decl><type><name>const</name> <name><name>std</name>::<name>s</name></name>&amp;</type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+</unit>
