@@ -717,6 +717,20 @@ look_past[int skiptoken] returns [int token] {
     rewind(place);
 }:;
 
+look_past_multiple[int skiptoken1, int skiptoken2, int skiptoken3, int skiptoken4] returns [int token] {
+    
+    int place = mark();
+    inputState->guessing++;
+
+    while (LA(1) != antlr::Token::EOF_TYPE && (LA(1) == skiptoken1 || LA(1) == skiptoken2 || LA(1) == skiptoken3 || (inLanguage(LANGUAGE_CSHARP && LA(1) == skiptoken4))))
+        consume();
+
+    token = LA(1);
+
+    inputState->guessing--;
+    rewind(place);
+}:;
+
 // functions
 function[int token, int type_count] { /* TokenPosition tp; */ENTRY_DEBUG } :
 		{
@@ -3307,7 +3321,7 @@ name_tail[bool& iscomplex, bool marked] { ENTRY_DEBUG } :
             (DESTOP set_bool[isdestructor])*
             ({ !inTransparentMode(MODE_EXPRESSION) }? multops)*
             (simple_name_optional_template[marked] | mark_namestack overloaded_operator | function_identifier_main)
-            ({ !inTransparentMode(MODE_EXPRESSION) }? multops)*
+            ({ !inTransparentMode(MODE_EXPRESSION) && look_past_multiple(MULTOPS, REFOPS, RVALUEREF, QMARK) == DCOLON }? multops)*
         )*
 
         { notdestructor = LA(1) == DESTOP; }
