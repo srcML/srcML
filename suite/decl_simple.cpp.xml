@@ -218,4 +218,20 @@
 <decl_stmt><decl><type><name>var</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><name>var</name></type> <name>get</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>var</name></type> <name>set</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>get</name></type> <name>i</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>set</name></type> <name>i</name></decl>;</decl_stmt>
+</unit>
+
 </unit>
