@@ -5,4 +5,8 @@
 <using>using <expr><name><name>System</name>.<name>Text</name></name></expr>;</using>
 </unit>
 
+<unit>
+<using>using <expr><name>Project</name> = <name><name>PC</name>.<name>MyCompony</name>.<name>Project</name></name></expr>;</using>
+</unit>
+
 </unit>
