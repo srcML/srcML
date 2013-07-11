@@ -6,4 +6,13 @@
 <block>{}</block></using>
 </unit>
 
+<unit>
+<using>using <init>(<decl><type><name>Font</name></type> <name>font1</name> =<init> <expr>new <call><name>Font</name><argument_list>(<argument>Arial</argument>, <argument>10.0f</argument>)</argument_list></call></expr></init></decl>)</init>
+<block>{
+
+  <decl_stmt><decl><type><name>byte</name></type> <name>charset</name> =<init> <expr><name><name>font1</name>.<name>GdiCharSet</name></name></expr></init></decl>;</decl_stmt>
+
+}</block></using>
+</unit>
+
 </unit>
