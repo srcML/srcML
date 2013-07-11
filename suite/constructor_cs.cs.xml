@@ -17,6 +17,14 @@
 
 <unit>
 <class>class <name>Foo</name> <block>{ 
+      <constructor_decl><attribute>[<expr><name>MethodAttribute</name></expr>]</attribute> 
+      <specifier>public</specifier> <name>Foo</name><parameter_list>()</parameter_list>;</constructor_decl> 
+}</block></class> 
+</unit>
+
+
+<unit>
+<class>class <name>Foo</name> <block>{ 
       <constructor><attribute>[<expr><name>MethodAttribute</name></expr>]</attribute> 
       <specifier>public</specifier> <name>Foo</name><parameter_list>()</parameter_list> <block>{}</block></constructor> 
 }</block></class> 
