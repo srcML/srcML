@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="yield" filename="using_statement_cs">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="using" filename="using_statement_cs">
 
 <unit>
 <using>using <init>(<decl><type><name>Font</name></type> <name>font1</name> =<init> <expr>new <call><name>Font</name><argument_list>(<argument>Arial</argument>, <argument>10.0f</argument>)</argument_list></call></expr></init></decl>)</init>
