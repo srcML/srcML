@@ -120,6 +120,7 @@ LANGUAGE_CSHARP enum_cs
 LANGUAGE_CSHARP call_cs
 LANGUAGE_CSHARP class_cs
 LANGUAGE_CSHARP using_directive_cs
+LANGUAGE_CSHARP using_statement_cs
 
 LANGUAGE_JAVA class_java
 LANGUAGE_JAVA constructor_java
