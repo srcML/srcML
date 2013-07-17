@@ -107,6 +107,28 @@ def xmldiff(xml_filename1, xml_filename2):
 		return ""
 
 # find differences of two files
+def src2srcML_executable(text_file, encoding, language, directory, filename, prefixlist):
+
+        command = [srcmltranslator, "-l", language, "--encoding=" + encoding]
+
+        if directory != "":
+                command.extend(["--directory", directory])
+
+        if filename != "":
+                command.extend(["--filename", filename])
+
+        command.extend(prefixlist)
+
+        #print command                                                                                                                                 
+
+        # run the srcml processor                                                                                                                      
+        command.append("--src-encoding=" + encoding)
+
+        command.append("--quiet")
+
+        return safe_communicate(command, text_file)
+
+# find differences of two files
 def src2srcML(text_file, encoding, language, directory, filename, prefixlist):
 
         options = OPTION_CPP
@@ -281,9 +303,13 @@ print
 
 # Handle optional dos line endings
 doseol = False
-if len(sys.argv) > 1 and sys.argv[1] == "--dos":
+use_exec = False
+while len(sys.argv) > 1 and ( sys.argv[1] == "--dos" or sys.argv[1] == "--exec" ) :
+        if sys.argv[1] == "--dos" :
+                doseol = True
+        else :
+                use_exec = True
         sys.argv.pop(0)
-        doseol = True
 
 specname = ""
 if len(sys.argv) > 1:
@@ -424,7 +450,10 @@ try:
                                                         unittext = unix2dos(unittext)
 
 						# convert the text to srcML
-						unitsrcmlraw = src2srcML(unittext, encoding, language, directory, getfilename(unitxml), defaultxmlns(getfullxmlns(unitxml)))
+                                                if use_exec :
+                                                        unitsrcmlraw = src2srcML_executable(unittext, encoding, language, directory, getfilename(unitxml), defaultxmlns(getfullxmlns(unitxml)))
+                                                else :
+                                                        unitsrcmlraw = src2srcML(unittext, encoding, language, directory, getfilename(unitxml), defaultxmlns(getfullxmlns(unitxml)))
 
 						# additional, later stage processing
 						unitsrcml = unitsrcmlraw # srcML2srcMLStages(unitsrcmlraw, nondefaultxmlns(getfullxmlns(unitxml)))
