@@ -5,12 +5,15 @@
 # Michael L. Collard
 
 import sys
+sys.path.append("../src")
 import os.path
 import re
 import subprocess
 import difflib
 import string
 from datetime import datetime, time
+from srcMLTranslator import srcMLTranslator
+from srcMLapps import *
 
 maxcount = 700
 error_filename = "srcMLTestReport"
@@ -104,26 +107,66 @@ def xmldiff(xml_filename1, xml_filename2):
 		return ""
 
 # find differences of two files
+def src2srcML_executable(text_file, encoding, language, directory, filename, prefixlist):
+
+        command = [srcmltranslator, "-l", language, "--encoding=" + encoding]
+
+        if directory != "":
+                command.extend(["--directory", directory])
+
+        if filename != "":
+                command.extend(["--filename", filename])
+
+        command.extend(prefixlist)
+
+        #print command                                                                                                                                 
+
+        # run the srcml processor                                                                                                                      
+        command.append("--src-encoding=" + encoding)
+
+        command.append("--quiet")
+
+        return safe_communicate(command, text_file)
+
+# find differences of two files
 def src2srcML(text_file, encoding, language, directory, filename, prefixlist):
 
-	command = [srcmltranslator, "-l", language, "--encoding=" + encoding]
+        options = OPTION_CPP
 
-	if directory != "":
-		command.extend(["--directory", directory])
+        if filename == "" :
+                filename = None;
 
-       	if filename != "":
-		command.extend(["--filename", filename])
+        if prefixlist.count("--xmlns:op=http://www.sdml.info/srcML/operator") :
+                options = options | OPTION_OPERATOR
+        if prefixlist.count("--xmlns:lit=http://www.sdml.info/srcML/literal") :
+                options = options | OPTION_LITERAL
+        if prefixlist.count("--xmlns:type=http://www.sdml.info/srcML/modifier") :
+                options = options | OPTION_MODIFER
 
-	command.extend(prefixlist)
+        lang = LANGUAGE_NONE[1]
+        if language == LANGUAGE_C[0] :
+                lang = LANGUAGE_C[1]
+        elif language == LANGUAGE_CS[0] :
+                lang = LANGUAGE_CS[1]
+        elif language == LANGUAGE_CXX[0] :
+                lang = LANGUAGE_CXX[1]
+        elif language == LANGUAGE_CXX_11[0] :
+                lang = LANGUAGE_CXX_11[1]
+        elif language == LANGUAGE_JAVA[0] :
+                lang = LANGUAGE_JAVA[1]
+                options = options & ~OPTION_CPP
+        elif language == LANGUAGE_ASPECTJ[0] :
+                lang = LANGUAGE_ASPECTJ[1]
+                options = options & ~OPTION_CPP
 
-	#print command
+        translator = srcMLTranslator(lang, encoding, encoding, options, None, None, None, URI_PREFIX, 8)
+        translator.setInputString(text_file)
+        translator.translate(None, directory, filename, None, lang)
+        translator.close()
+        srcml = translator.getsrcML()
+        translator.delete()
 
-	# run the srcml processor
-	command.append("--src-encoding=" + encoding)
-
-	command.append("--quiet")
-
-	return safe_communicate(command, text_file)
+        return srcml
 
 # additional processing stages
 def srcML2srcMLStages(srcmlfile, otherxmlns):
@@ -260,9 +303,13 @@ print
 
 # Handle optional dos line endings
 doseol = False
-if len(sys.argv) > 1 and sys.argv[1] == "--dos":
+use_exec = False
+while len(sys.argv) > 1 and ( sys.argv[1] == "--dos" or sys.argv[1] == "--exec" ) :
+        if sys.argv[1] == "--dos" :
+                doseol = True
+        else :
+                use_exec = True
         sys.argv.pop(0)
-        doseol = True
 
 specname = ""
 if len(sys.argv) > 1:
@@ -403,7 +450,10 @@ try:
                                                         unittext = unix2dos(unittext)
 
 						# convert the text to srcML
-						unitsrcmlraw = src2srcML(unittext, encoding, language, directory, getfilename(unitxml), defaultxmlns(getfullxmlns(unitxml)))
+                                                if use_exec :
+                                                        unitsrcmlraw = src2srcML_executable(unittext, encoding, language, directory, getfilename(unitxml), defaultxmlns(getfullxmlns(unitxml)))
+                                                else :
+                                                        unitsrcmlraw = src2srcML(unittext, encoding, language, directory, getfilename(unitxml), defaultxmlns(getfullxmlns(unitxml)))
 
 						# additional, later stage processing
 						unitsrcml = unitsrcmlraw # srcML2srcMLStages(unitsrcmlraw, nondefaultxmlns(getfullxmlns(unitxml)))
