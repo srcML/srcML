@@ -70,19 +70,19 @@
 </unit>
 
 <unit>
-<typedef>typedef <type><name>const</name> <name>int</name></type> <name>a</name>;</typedef>
+<typedef>typedef <type>const <name>int</name></type> <name>a</name>;</typedef>
 </unit>
 
 <unit>
-<typedef>typedef <type><name>const</name> <name>int</name>*</type> <name>a</name>;</typedef>
+<typedef>typedef <type>const <name>int</name>*</type> <name>a</name>;</typedef>
 </unit>
 
 <unit>
-<typedef>typedef <type><name>const</name> <name>int</name> *</type> <name>a</name>;</typedef>
+<typedef>typedef <type>const <name>int</name> *</type> <name>a</name>;</typedef>
 </unit>
 
 <unit>
-<typedef>typedef <type><name>const</name> * <name>int</name> *</type> <name>a</name>;</typedef>
+<typedef>typedef <type>const * <name>int</name> *</type> <name>a</name>;</typedef>
 </unit>
 
 <unit>

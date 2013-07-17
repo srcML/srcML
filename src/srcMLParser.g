@@ -3196,7 +3196,11 @@ identifier[bool marked = false] { LocalMode lm(this); ENTRY_DEBUG } :
                 // local mode that is automatically ended by leaving this function
                 startNewMode(MODE_LOCAL);
 
-                startElement(SNAME);
+                if(LT(1)->getText() != "const")
+                    startElement(SNAME);
+                else if(isoption(parseoptions, OPTION_MODIFIER))
+                    startElement(SMODIFIER);
+
             }
         }
         (
