@@ -1424,7 +1424,8 @@ namespace_block[] { ENTRY_DEBUG } :
 namespace_directive[] { setFinalToken(); ENTRY_DEBUG } :
         {
             // statement with an expected namespace name after the keywords
-            startNewMode(MODE_STATEMENT | MODE_FUNCTION_NAME);
+            startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT | MODE_STATEMENT);
+            //startNewMode(MODE_STATEMENT | MODE_FUNCTION_NAME);
 
             // start the using directive
             startElement(SUSING_DIRECTIVE);
