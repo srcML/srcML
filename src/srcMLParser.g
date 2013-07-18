@@ -3721,9 +3721,10 @@ using_statement[] { ENTRY_DEBUG } :
             startElement(SUSING_DIRECTIVE);
 
             // expect a condition to follow the keyword
-            startNewMode(MODE_CONDITION | MODE_EXPECT);
+            startNewMode(MODE_TOP | MODE_FOR_INITIALIZATION | MODE_IGNORE_TERMINATE |
+                            MODE_INTERNAL_END_PAREN | MODE_LIST | MODE_EXPECT);
         }
-        USING
+        USING LPAREN
 ;
 
 unchecked_statement[] { ENTRY_DEBUG } :
