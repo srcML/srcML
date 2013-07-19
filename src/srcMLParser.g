@@ -135,7 +135,7 @@ header "post_include_hpp" {
 
 #define assertMode(m)
 
-enum DECLTYPE { NONE, VARIABLE, FUNCTION, CONSTRUCTOR, DESTRUCTOR, SINGLE_MACRO, NULLOPERATOR, DELEGATE_FUNCTION, ENUM_DECL, GLOBAL_ATTRIBUTE, PROPERTY_ACCESSOR };
+enum DECLTYPE { NONE, VARIABLE, FUNCTION, CONSTRUCTOR, DESTRUCTOR, SINGLE_MACRO, NULLOPERATOR, DELEGATE_FUNCTION, ENUM_DECL, GLOBAL_ATTRIBUTE, PROPERTY_ACCESSOR, PROPERTY_ACCESSOR_DECL };
 enum CALLTYPE { NOCALL, CALL, MACRO };
 
 // position in output stream
@@ -654,6 +654,9 @@ statements_non_cfg[] { int token = 0; int place = 0; int secondtoken = 0; int fl
         { decl_type == PROPERTY_ACCESSOR }?
         property_method |
 
+        { decl_type == PROPERTY_ACCESSOR_DECL }?
+        property_method_decl |
+
         // "~" which looked like destructor, but isn't
         { decl_type == NONE }?
         expression_statement_process
@@ -764,6 +767,18 @@ property_method[] { /* TokenPosition tp; */ENTRY_DEBUG } :
 
             // start the function definition element
             startElement(SFUNCTION_DEFINITION);
+        }
+        (attribute)* property_method_names
+;
+
+// functions
+property_method_decl[] { /* TokenPosition tp; */ENTRY_DEBUG } :
+		{
+            // function definitions have a "nested" block statement
+            startNewMode(MODE_STATEMENT);
+
+            // start the function definition element
+            startElement(SFUNCTION_DECLARATION);
         }
         (attribute)* property_method_names
 ;
@@ -2491,7 +2506,9 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
 
         // special case for property attributes as names, e.g., get, set, etc.
         throw_exception[type == PROPERTY_ACCESSOR && (type_count == attributecount + 1) && LA(1) == LCURLY]
-        set_type[type, NONE, type == PROPERTY_ACCESSOR]
+        set_type[type, PROPERTY_ACCESSOR_DECL, type == PROPERTY_ACCESSOR]
+        throw_exception[type == PROPERTY_ACCESSOR_DECL && (type_count == attributecount + 1) && LA(1) == TERMINATE]
+        set_type[type, NONE, type == PROPERTY_ACCESSOR_DECL]
 
         set_int[real_type_count, type_count]
 
