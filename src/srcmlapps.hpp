@@ -36,7 +36,7 @@
 #define PATH_SEPARATOR '/'
 #endif
 
-const char* const COPYRIGHT = "Copyright (C) 2012 SDML";
+const char* const COPYRIGHT = "Copyright (C) 2013 SDML";
 
 const char* const EMAIL_ADDRESS = "collard@uakron.edu";
 
