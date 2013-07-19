@@ -549,6 +549,9 @@ start[] { ruledepth = 0; ENTRY_DEBUG } :
         // process template operator correctly @test template
         { inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) }? tempope[true] |
 
+        // special default() call for C#
+        { inLanguage(LANGUAGE_CSHARP) && inTransparentMode(MODE_EXPRESSION) }? (DEFAULT LPAREN)=> expression_part |
+
         // context-free grammar statements
         { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) }? cfg |
 
@@ -578,7 +581,7 @@ catch[...] {
 cfg[] { ENTRY_DEBUG } :
 
         // conditional statements
-        if_statement | else_statement | switch_statement | switch_case | switch_default |
+        if_statement | else_statement | switch_statement | switch_case | { true }? (DEFAULT COLON)=> switch_default |
 
         // iterative statements
         while_statement | for_statement | do_statement | foreach_statement |
