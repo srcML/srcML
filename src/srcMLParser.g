@@ -550,7 +550,7 @@ start[] { ruledepth = 0; ENTRY_DEBUG } :
         { inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) }? tempope[true] |
 
         // special default() call for C#
-        { inLanguage(LANGUAGE_CSHARP) && inTransparentMode(MODE_EXPRESSION) }? (DEFAULT LPAREN)=> expression_part |
+//        { LA(1) == DEFAULT && inLanguage(LANGUAGE_CSHARP) && inTransparentMode(MODE_EXPRESSION) }? (DEFAULT LPAREN)=> expression_part |
 
         // context-free grammar statements
         { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) }? cfg |
