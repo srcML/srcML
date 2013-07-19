@@ -66,8 +66,8 @@ exp :
 	${ECHO} -n "Trunk ${REVISION}" > ${SRC_DIR_BASE}/src/VERSION
 	${ECHO} -n "${REVISION}" > ${SRC_DIR_BASE}/src/REVISION
 	svn info -r${REVISION} ${SVN_URL}/src | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2- | ${TR} -d '\n' >> ${SRC_DIR_BASE}/src/VERSION
-	svn export -r${REVISION} --depth='empty' ${SVN_URL}/obj/ ${SRC_DIR_BASE}/obj --native-eol LF
-	svn export -r${REVISION} --depth='empty' ${SVN_URL}/bin/ ${SRC_DIR_BASE}/bin --native-eol LF
+	mkdir ${SRC_DIR_BASE}/obj
+	mkdir ${SRC_DIR_BASE}/bin
 	svn export -r${REVISION} ${SVN_URL}/doc/ ${SRC_DIR_BASE}/doc --native-eol LF
 
 clean :
@@ -94,7 +94,7 @@ ${SRC_ZIP} : exp
 # bin
 bin : ${SRC_TAR_GZ}
 	tar xzf ${SRC_TAR_GZ}
-	cd ${SRC_DIR} && make
+	cd ${SRC_DIR} && make 
 	cd ${DOC_DIR} && make
 	strip ${SRC2SRCML_PATH} ${SRCML2SRC_PATH}
 	mkdir ${BASE} && ${CP} -t ${BASE} ${DIST_FILES}
@@ -111,9 +111,9 @@ windows : ${SRC_ZIP}
 	zip -oql ${WIN_ZIP} ${WIN_BASE}/src2srcml.exe ${WIN_BASE}/srcml2src.exe ${WIN_BASE}/*.dll ${WIN_BASE}/src2srcml.html ${WIN_BASE}/srcml2src.html
 
 windowsdyn : ${SRC_ZIP}
-	unzip -uq ${SRC_ZIP}
-	cd ${SRC_DIR} && make mingw32 DYNAMIC=1 DLL_DIR=${DLL_DIR}
-	cd ${SRC_DIR} && make cleanbuild && make
+	unzip -uq  ${SRC_ZIP}
+	cd ${SRC_DIR} && make -f Makefile.old mingw32 DYNAMIC=1 DLL_DIR=${DLL_DIR}
+	cd ${SRC_DIR} && make -f Makefile.old cleanbuild && make -f Makefile.old
 	cd ${DOC_DIR} && make clean && make
 	i686-pc-mingw32-strip ${WIN_SRC2SRCML_PATH} ${WIN_SRCML2SRC_PATH} ${LIBSRCML_DLL}
 	mkdir ${WIN_BASE} && ${CP} -t ${WIN_BASE} ${WIN_DIST_FILES}
