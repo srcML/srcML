@@ -4404,6 +4404,8 @@ expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG
 
 expression_part_default[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG } :
 
+        expression_process
+
         (DEFAULT COLON)=> call argument
 ;
 
