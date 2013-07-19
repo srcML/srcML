@@ -377,19 +377,19 @@ endif
 # clean all generated files including program
 PHONY : clean
 clean :
-	make cleanbuild
+	make -f Makefile.old cleanbuild
 	rm -f ${EXE_DIR}src2srcml ${EXE_DIR}srcml2src ${EXE_DIR}srcmldirect ${EXE_DIR}libsrcml.a ${EXE_DIR}libsrcml.so
 
 PHONY : cleanmingw32
 cleanmingw32: 
-	make cleanbuild
+	make -f Makefile.old cleanbuild
 	rm -rf ${EXE_DIR}src2srcml.exe ${EXE_DIR}srcml2src.exe ${EXE_DIR}srcmldirect.exe
 
 # clean generated files leaving program
 PHONY : cleanbuild
 cleanbuild :
-	make cleanantlr
-	make cleanobject
+	make -f Makefile.old cleanantlr
+	make -f Makefile.old cleanobject
 
 # clean non-generated object files
 PHONY : cleanobject
