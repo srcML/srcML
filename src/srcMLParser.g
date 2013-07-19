@@ -3780,6 +3780,37 @@ using_statement[] { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTY
         )
 ;
 
+lock_statement[] { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTYPE decl_type = NONE; ENTRY_DEBUG } :
+        {
+            // treat try block as nested block statement
+            startNewMode(MODE_STATEMENT | MODE_NEST);
+
+            // start of the try statement
+            startElement(SLOCK_STATEMENT);
+
+            // expect a condition to follow the keyword
+            startNewMode(MODE_TOP | MODE_LIST | MODE_EXPECT);
+        }
+        LOCK LPAREN
+        (
+            // explicitly check for a variable declaration since it can easily
+            // be confused with an expression
+            { perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type == VARIABLE }?
+            for_initialization_variable_declaration[type_count] |
+            
+            {
+                // use a new mode without the expect so we don't nest expression parts
+                startNewMode(MODE_EXPRESSION);
+
+                // start the expression element
+                startElement(SEXPRESSION);
+            }
+            // explicitly check for non-terminate so that a large switch statement
+            // isn't needed
+            expression
+        )
+;
+
 unchecked_statement[] { ENTRY_DEBUG } :
         {
             // treat try block as nested block statement
@@ -3893,7 +3924,7 @@ lambda_marked[] { LocalMode lm(this); ENTRY_DEBUG } :
         }
         LAMBDA
 ;
-
+/*
 lock_statement[] { ENTRY_DEBUG } :
         {
             // treat catch block as nested block statement
@@ -3915,7 +3946,7 @@ lock_statement[] { ENTRY_DEBUG } :
             }
         }
 ;
-
+*/
 fixed_statement[] { ENTRY_DEBUG } :
         {
             // treat catch block as nested block statement
