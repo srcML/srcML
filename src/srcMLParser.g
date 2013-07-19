@@ -550,7 +550,7 @@ start[] { ruledepth = 0; ENTRY_DEBUG } :
         { inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) }? tempope[true] |
 
         // special default() call for C#
-//        { LA(1) == DEFAULT && inLanguage(LANGUAGE_CSHARP) && inTransparentMode(MODE_EXPRESSION) }? (DEFAULT LPAREN)=> expression_part |
+        { LA(1) == DEFAULT && inLanguage(LANGUAGE_CSHARP) && inTransparentMode(MODE_EXPRESSION) }? (DEFAULT LPAREN)=> expression_part_default |
 
         // context-free grammar statements
         { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) }? cfg |
@@ -814,7 +814,7 @@ perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
         type = CALL;
 
         // call syntax succeeded, however post call token is not legitimate
-        if (inLanguage(LANGUAGE_C_FAMILY) && (_tokenSet_0.member(postcalltoken) || postcalltoken == NAME 
+        if (inLanguage(LANGUAGE_C_FAMILY) && (_tokenSet_1.member(postcalltoken) || postcalltoken == NAME 
             || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == LCURLY)
             || postcalltoken == EXTERN || postcalltoken == STRUCT || postcalltoken == UNION || postcalltoken == CLASS
             || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == RCURLY)
@@ -837,7 +837,7 @@ perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
 
         // single macro call followed by statement_cfg
         else if (inLanguage(LANGUAGE_C_FAMILY) && secondtoken != -1
-                 && (_tokenSet_0.member(secondtoken) || secondtoken == LCURLY || secondtoken == 1 /* EOF */
+                 && (_tokenSet_1.member(secondtoken) || secondtoken == LCURLY || secondtoken == 1 /* EOF */
                      || secondtoken == PUBLIC || secondtoken == PRIVATE || secondtoken == PROTECTED))
 
             type = MACRO;
@@ -893,8 +893,8 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
             (LAMBDA (LCURLY | LPAREN)) =>
             lambda_anonymous | 
 
-            { inLanguage(LANGUAGE_CSHARP) }?
-            DEFAULT |
+//            { inLanguage(LANGUAGE_CSHARP) }?
+//            DEFAULT |
 
             // found two names in a row, so this is not an expression
             // cause this to fail by next matching END_ELEMENT_TOKEN
@@ -902,7 +902,7 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
             identifier guessing_endGuessing END_ELEMENT_TOKEN |
 
             // forbid parentheses (handled recursively) and cfg tokens
-            { !_tokenSet_0.member(LA(1)) }? ~(LPAREN | RPAREN | TERMINATE) set_bool[name, false]
+            { !_tokenSet_1.member(LA(1)) }? ~(LPAREN | RPAREN | TERMINATE) set_bool[name, false]
         )* 
 
         RPAREN
@@ -2389,7 +2389,7 @@ perform_noncfg_check[DECLTYPE& type, int& token, int& fla, int& type_count, bool
         type = ENUM_DECL;
 
     // may just have a single macro (no parens possibly) before a statement
-    if (type == 0 && type_count == 0 && _tokenSet_0.member(LA(1)))
+    if (type == 0 && type_count == 0 && _tokenSet_1.member(LA(1)))
         type = SINGLE_MACRO;
 
     // may just have an expression 
@@ -4319,6 +4319,8 @@ expression_part_plus_linq[CALLTYPE type = NOCALL] { guessing_end(); ENTRY_DEBUG 
 
 expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG } :
 
+        (DEFAULT COLON)=> call argument |
+
         (DELEGATE LPAREN)=> delegate_anonymous |
 
         (LAMBDA LCURLY)=> lambda_anonymous |
@@ -4398,6 +4400,11 @@ expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG
         variable_identifier | string_literal | char_literal | literal | boolean |
 
         variable_identifier_array_grammar_sub[flag]
+;
+
+expression_part_default[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG } :
+
+        (DEFAULT COLON)=> call argument
 ;
 
 /*
