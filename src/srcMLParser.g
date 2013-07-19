@@ -2846,10 +2846,23 @@ function_identifier[] { ENTRY_DEBUG } :
         function_identifier_main |
 
         { inLanguage(LANGUAGE_CSHARP) }?
-        DEFAULT |
+        function_identifier_default |
 
         // function pointer identifier with name marked separately
         function_pointer_name_grammar
+;
+
+function_identifier_default[] { LocalMode lm(this); ENTRY_DEBUG } :
+        // special cases for main
+        {
+            // end all started elements in this rule
+            startNewMode(MODE_LOCAL);
+
+            // start of the name element
+            startElement(SNAME);
+        }
+        // main program
+        DEFAULT
 ;
 
 function_identifier_main[] { LocalMode lm(this); ENTRY_DEBUG } :
