@@ -37,4 +37,12 @@
 }</block></decl></decl_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><specifier>public</specifier> <specifier>abstract</specifier> <name>double</name></type> <name>Area</name> 
+  <block>{
+     <function><name>get</name>;</function>
+     <function><name>set</name>;</function>
+  }</block></decl></decl_stmt>
+</unit>
+
 </unit>
