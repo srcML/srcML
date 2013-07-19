@@ -40,8 +40,8 @@
 <unit>
 <decl_stmt><decl><type><specifier>public</specifier> <specifier>abstract</specifier> <name>double</name></type> <name>Area</name> 
   <block>{
-     <function><name>get</name>;</function>
-     <function><name>set</name>;</function>
+     <function_decl><name>get</name>;</function_decl>
+     <function_decl><name>set</name>;</function_decl>
   }</block></decl></decl_stmt>
 </unit>
 
