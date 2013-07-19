@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="default" filename="default_cs">
+
+<unit>
+<expr_stmt><expr><name>b</name> = <default>default(<name>int</name>)</default></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<function><type><name>void</name></type> <name>foo</name><parameter_list>()</parameter_list> <block>{ <expr_stmt><expr><name>b</name> = <default>default(<name>int</name>)</default></expr>;</expr_stmt> }</block></function> 
+</unit>
+
+<unit>
+<class>class <name>A</name> <block>{ 
+        <function><type><name>void</name></type> <name>foo</name><parameter_list>()</parameter_list> <block>{ <expr_stmt><expr><name>b</name> = <default>default(<name>int</name>)</default></expr>;</expr_stmt> }</block></function> 
+        <function><type><name>void</name></type> <name>bar</name><parameter_list>()</parameter_list> <block>{ }</block></function> 
+}</block></class></unit>
+
+</unit>
