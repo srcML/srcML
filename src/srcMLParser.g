@@ -2490,7 +2490,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
         )*
 
         // special case for property attributes as names, e.g., get, set, etc.
-        throw_exception[type == PROPERTY_ACCESSOR && token == LCURLY]
+        throw_exception[type == PROPERTY_ACCESSOR && (type_count == attributecount + 1) && LA(1) == LCURLY]
         set_type[type, NONE, type == PROPERTY_ACCESSOR]
 
         set_int[real_type_count, type_count]
