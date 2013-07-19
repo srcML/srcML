@@ -2456,7 +2456,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                 { type_count == attributecount && inLanguage(LANGUAGE_CSHARP) }?
                 property_method_names
                 set_type[type, PROPERTY_ACCESSOR, true]
-                throw_exception[true] |
+                /* throw_exception[true] */ |
 
                 { inLanguage(LANGUAGE_JAVA_FAMILY) }?
                 (template_argument_list)=>
@@ -2488,6 +2488,10 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
             // record second (before we parse it) for label detection
             set_int[token, LA(1), type_count == 1]
         )*
+
+        // special case for property attributes as names, e.g., get, set, etc.
+        throw_exception[type == PROPERTY_ACCESSOR && token == LCURLY]
+        set_type[type, NONE, type == PROPERTY_ACCESSOR]
 
         set_int[real_type_count, type_count]
 
