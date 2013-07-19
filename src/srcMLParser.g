@@ -3731,7 +3731,7 @@ using_statement[] { ENTRY_DEBUG } :
             startNewMode(MODE_TOP | MODE_FOR_INITIALIZATION | MODE_IGNORE_TERMINATE |
                             MODE_INTERNAL_END_PAREN | MODE_LIST | MODE_EXPECT);
         }
-        USING LPAREN
+        USING // LPAREN
 ;
 
 unchecked_statement[] { ENTRY_DEBUG } :
