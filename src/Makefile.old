@@ -141,7 +141,7 @@ all : ${SRC2SRCML_BIN} ${SRCML2SRC_BIN}  ${SRCMLDIRECT_BIN}
 
 .PHONY: mingw32
 mingw32 :
-	make MINGW32=1
+	make -f Makefile.old MINGW32=1
 
 .PHONY: settings
 settings :
