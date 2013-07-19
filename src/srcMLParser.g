@@ -3758,7 +3758,7 @@ using_statement[] { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTY
             startElement(SUSING_DIRECTIVE);
 
             // expect a condition to follow the keyword
-            startNewMode(MODE_TOP | MODE_LIST | MODE_EXPECT);
+            startNewMode(MODE_TOP | MODE_LIST | MODE_EXPECT | MODE_INTERNAL_END_PAREN);
         }
         USING LPAREN
         (
@@ -3789,7 +3789,7 @@ lock_statement[] { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTYP
             startElement(SLOCK_STATEMENT);
 
             // expect a condition to follow the keyword
-            startNewMode(MODE_TOP | MODE_LIST | MODE_EXPECT);
+            startNewMode(MODE_TOP | MODE_LIST | MODE_EXPECT | MODE_INTERNAL_END_PAREN);
         }
         LOCK LPAREN
         (
