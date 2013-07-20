@@ -3552,9 +3552,15 @@ destructor_declaration[] { ENTRY_DEBUG } :
 // destructor header
 destructor_header[] { ENTRY_DEBUG } :
 
-        (options { greedy = true; } : { inLanguage(LANGUAGE_CSHARP) }? attribute)*
+        (options { greedy = true; } : 
 
-        (options { greedy = true; } : specifier | { LT(1)->getText() == "void" }? identifier[true])*
+            { inLanguage(LANGUAGE_CSHARP) }? attribute |
+
+            specifier |
+
+        { LT(1)->getText() == "void" }? identifier[true]
+
+    )*
 
         complex_name[true]
 
