@@ -550,6 +550,29 @@ if error_count != 0:
 		print " cases", 
         print
 
+# Output totals by language
+if error_count != 0:
+        list = []
+        for e in errorlist:
+                list.append(str.split(e[0])[1])
+
+        # TODO:  Replace with Counter from collections
+        n = list.count("C++")
+        if n != 0:
+                print "Errors:  C++  " + str(n)
+        
+        n = list.count("C#")
+        if n != 0:
+                print "Errors:  C#   " + str(n)
+        
+        n = list.count("C")
+        if n != 0:
+                print "Errors:  C    " + str(n)
+        
+        n = list.count("Java")
+        if n != 0:
+                print "Errors:  Java " + str(n)
+        
 # output tool errors counts
 print
 if len(sperrorlist) == 0:
