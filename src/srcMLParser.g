@@ -3324,8 +3324,7 @@ complex_name_cpp[bool marked, bool& iscomplex_name] { namestack[0] = ""; namesta
             founddestop = true;
         })*
         (simple_name_optional_template[marked] | mark_namestack overloaded_operator)
-        // test case (currently) operator 55 fails thinking & is a modifier
-        (multops)*
+        ({ !inTransparentMode(MODE_EXPRESSION) }? multops)*
         name_tail[iscomplex_name, marked]
         { if (founddestop) iscomplex_name = true; }
 ;
@@ -3377,9 +3376,9 @@ name_tail[bool& iscomplex, bool marked] { ENTRY_DEBUG } :
             (dcolon { iscomplex = true; } | period { iscomplex = true; })
             ( options { greedy = true; } : dcolon)*
             (DESTOP set_bool[isdestructor])*
-            ({ !inTransparentMode(MODE_EXPRESSION) }? multops)*
+            (multops)*
             (simple_name_optional_template[marked] | mark_namestack overloaded_operator | function_identifier_main)
-            ({ !inTransparentMode(MODE_EXPRESSION) && look_past_multiple(MULTOPS, REFOPS, RVALUEREF, QMARK) == DCOLON }? multops)*
+            ({ look_past_multiple(MULTOPS, REFOPS, RVALUEREF, QMARK) == DCOLON }? multops)*
         )*
 
         { notdestructor = LA(1) == DESTOP; }
