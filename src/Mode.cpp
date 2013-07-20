@@ -95,6 +95,7 @@ const State::MODE_TYPE Mode::MODE_TEMPLATE_PARAMETER_LIST = ull(0x08000000000000
 const State::MODE_TYPE Mode::MODE_ONLY_END_TERMINATE = ull(0x1000000000000000);
 const State::MODE_TYPE Mode::MODE_ENUM                = ull(0x2000000000000000);
 const State::MODE_TYPE Mode::MODE_ANONYMOUS           = ull(0x4000000000000000);
+const State::MODE_TYPE Mode::MODE_END_AT_COMMA        = ull(0x8000000000000000);
 
 /*
 int Mode::size() const {

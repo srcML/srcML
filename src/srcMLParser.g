@@ -3062,14 +3062,19 @@ linq_descending[] { LocalMode lm(this); ENTRY_DEBUG }:
 variable_identifier_array_grammar_sub[bool& iscomplex] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
-            startNewMode(MODE_LOCAL);
+            if (inLanguage(LANGUAGE_CSHARP))
+                startNewMode(MODE_LOCAL | MODE_TOP | MODE_LIST | MODE_END_AT_COMMA);
+            else
+                startNewMode(MODE_LOCAL | MODE_TOP | MODE_LIST);
 
             startElement(SINDEX);
         }
         LBRACKET
+        (
+            { !inLanguage(LANGUAGE_CSHARP) }? full_expression[true] |
 
-        full_expression[!inLanguage(LANGUAGE_CSHARP)] ({ inLanguage(LANGUAGE_CSHARP) }? COMMA full_expression[false])*
-
+            { inLanguage(LANGUAGE_CSHARP) }? ({ LA(1) != RBRACKET }? (COMMA | full_expression[false]) )*
+        )
         RBRACKET
         {
             iscomplex = true;
@@ -3119,6 +3124,7 @@ full_expression[bool checkcomma = true] { LocalMode lm(this); ENTRY_DEBUG } :
 
         // commas as in a list
 //        { checkcomma }?
+        { !inPrevMode(MODE_END_AT_COMMA) }?
         comma |
 
         // right parentheses, unless we are in a pair of parentheses in an expression 
