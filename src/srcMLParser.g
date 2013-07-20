@@ -130,7 +130,7 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d  %5s%*s %s (%d)\n", inputState->guessing, LA(1), (LA(1) != 11 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != 11 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #define CATCH_DEBUG //marker();
 
 #define assertMode(m)
@@ -3070,15 +3070,20 @@ variable_identifier_array_grammar_sub[bool& iscomplex] { LocalMode lm(this); ENT
             startElement(SINDEX);
         }
         LBRACKET
-        (
-            { !inLanguage(LANGUAGE_CSHARP) }? full_expression[true] |
 
-            { inLanguage(LANGUAGE_CSHARP) }? ({ LA(1) != RBRACKET }? (COMMA | full_expression[false]) )*
-        )
+        variable_identifier_array_grammar_sub_contents
+
         RBRACKET
         {
             iscomplex = true;
         }
+;
+
+
+variable_identifier_array_grammar_sub_contents{ LocalMode lm(this); ENTRY_DEBUG } :
+        { !inLanguage(LANGUAGE_CSHARP) }? full_expression[true] |
+
+        { inLanguage(LANGUAGE_CSHARP) }? ({ LA(1) != RBRACKET }? (COMMA | full_expression[false]) )*
 ;
 
 
