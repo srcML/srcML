@@ -3265,6 +3265,11 @@ identifier[bool marked = false] { LocalMode lm(this); ENTRY_DEBUG } :
   identifier name marked with name element
 */
 complex_name[bool marked = true, bool index = false] { LocalMode lm(this); TokenPosition tp; bool iscomplex_name = false; ENTRY_DEBUG } :
+        complex_name_inner[marked, index]
+        (options { greedy = true; } : { index }? variable_identifier_array_grammar_sub[iscomplex_name])*
+;
+
+complex_name_inner[bool marked = true, bool index = false] { LocalMode lm(this); TokenPosition tp; bool iscomplex_name = false; ENTRY_DEBUG } :
         {
             if (marked) {
                 // There is a problem detecting complex names from
@@ -3300,7 +3305,7 @@ complex_name[bool marked = true, bool index = false] { LocalMode lm(this); Token
         { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_CSHARP) }?
         complex_name_cpp[marked, iscomplex_name]
         )
-        (options { greedy = true; } : { index }? variable_identifier_array_grammar_sub[iscomplex_name])*
+        (options { greedy = true; } : { index && !inTransparentMode(MODE_EAT_TYPE) && !inTransparentMode(MODE_EAT_VAR_TYPE) }? variable_identifier_array_grammar_sub[iscomplex_name])*
         {
             // if we marked it as a complex name and it isn't, fix
             if (marked && !iscomplex_name)
