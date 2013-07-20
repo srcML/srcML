@@ -460,7 +460,7 @@ try:
 						
 						# find the difference
 						result = xmldiff(unitxml, unitsrcml)
-						if count == MAX_COUNT:
+						if count > 0 and (count % MAX_COUNT) == 0:
 							print "\n", "".rjust(FIELD_WIDTH_LANGUAGE), " ", "...".ljust(FIELD_WIDTH_DIRECTORY), " ",
 						if result != "":
 							error_count += 1
