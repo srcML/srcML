@@ -3129,7 +3129,7 @@ full_expression[bool checkcomma = true] { LocalMode lm(this); ENTRY_DEBUG } :
 
         // commas as in a list
 //        { checkcomma }?
-        { !inPrevMode(MODE_END_AT_COMMA) }?
+        {inTransparentMode(MODE_END_ONLY_AT_RPAREN) || !inTransparentMode(MODE_END_AT_COMMA)}?
         comma |
 
         // right parentheses, unless we are in a pair of parentheses in an expression 
