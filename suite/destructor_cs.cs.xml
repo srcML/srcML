@@ -23,13 +23,13 @@
 
 <unit>
 <class>class <name>A</name> <block>{
-    <destructor_decl><attribute>[<expr><name>MethodAttribute</name></expr>]</attribute><name>~<name>A</name></name><parameter_list>()</parameter_list>;</destructor_decl>
+    <destructor_decl><attribute>[<expr><name>MethodAttribute</name></expr>]</attribute> <name>~<name>A</name></name><parameter_list>()</parameter_list>;</destructor_decl>
 }</block></class>
 </unit>
 
 <unit>
 <class>class <name>A</name> <block>{
-    <destructor><attribute>[<expr><name>MethodAttribute</name></expr>]</attribute><name>~<name>A</name></name><parameter_list>()</parameter_list> <block>{}</block></destructor>
+    <destructor><attribute>[<expr><name>MethodAttribute</name></expr>]</attribute> <name>~<name>A</name></name><parameter_list>()</parameter_list> <block>{}</block></destructor>
 }</block></class>
 </unit>
 
