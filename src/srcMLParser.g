@@ -2852,6 +2852,18 @@ function_identifier[] { ENTRY_DEBUG } :
         function_pointer_name_grammar
 ;
 
+qmark_marked[] { LocalMode lm(this); ENTRY_DEBUG } :
+        // special cases for main
+        {
+            // end all started elements in this rule
+            startNewMode(MODE_LOCAL);
+
+            // start of the name element
+            startElement(SNAME);
+        }
+        QMARK
+;
+
 function_identifier_default[] { LocalMode lm(this); ENTRY_DEBUG } :
         // special cases for main
         {
@@ -4926,14 +4938,14 @@ template_argument[] { LocalMode lm(this); ENTRY_DEBUG } :
             startElement(STEMPLATE_ARGUMENT);
         }
         ( options { greedy = true; } : 
-            { LA(1) != SUPER }?
+            { LA(1) != SUPER && LA(1) != QMARK }?
             type_identifier |
 
             literal | char_literal | string_literal | boolean | 
 
             template_extends_java |
 
-            template_super_java | QMARK
+            template_super_java | qmark_marked
         )+
 ;
 
