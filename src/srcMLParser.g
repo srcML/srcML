@@ -2133,7 +2133,7 @@ statement_part[] { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE de
              variable_declaration_initialization |
 
         // start of argument for return or throw statement
-        { inMode(MODE_INIT | MODE_EXPECT) && inLanguage(LANGUAGE_CXX) }?
+        { inMode(MODE_INIT | MODE_EXPECT) && (inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_JAVA)) }?
              variable_declaration_range |
 
         // in an argument list expecting an argument
