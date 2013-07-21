@@ -1821,6 +1821,7 @@ block_end[] { ENTRY_DEBUG } :
             endDownToFirstMode(MODE_BLOCK | MODE_TOP | MODE_IF | MODE_ELSE | MODE_TRY | MODE_ANONYMOUS);
 
             bool endstatement = inMode(MODE_END_AT_BLOCK);
+            bool anonymous_class = inMode(MODE_CLASS) && inMode(MODE_END_AT_BLOCK);
 
             // some statements end with the block
             if (inMode(MODE_END_AT_BLOCK)) {
@@ -1844,7 +1845,8 @@ block_end[] { ENTRY_DEBUG } :
                 endCurrentMode(MODE_LOCAL);
             }
 
-            if (!(inMode(MODE_CLASS) || inTransparentMode(MODE_ENUM)) || (inMode(MODE_CLASS) || inTransparentMode(MODE_ENUM)) && endstatement)
+            if (!(anonymous_class))
+                if (!(inMode(MODE_CLASS) || inTransparentMode(MODE_ENUM)) || (inMode(MODE_CLASS) || inTransparentMode(MODE_ENUM)) && endstatement)
                 else_handling();
 
             // if we are in a declaration (as part of a class/struct/union definition)
