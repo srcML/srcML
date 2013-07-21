@@ -3261,8 +3261,8 @@ identifier[bool marked = false] { LocalMode lm(this); ENTRY_DEBUG } :
 
                 if(LT(1)->getText() != "const")
                     startElement(SNAME);
-                else if(isoption(parseoptions, OPTION_MODIFIER))
-                    startElement(SMODIFIER);
+                else
+                    startElement(SFUNCTION_SPECIFIER);
 
             }
         }
