@@ -38,11 +38,11 @@
 </unit>
 
 <unit>
-<class><specifier>public</specifier> class <name><name>Class</name><argument_list>&lt;<argument>? <extends>extends <name>Object</name></extends></argument>&gt;</argument_list></name> <block>{}</block></class>
+<class><specifier>public</specifier> class <name><name>Class</name><argument_list>&lt;<argument><name>?</name> <extends>extends <name>Object</name></extends></argument>&gt;</argument_list></name> <block>{}</block></class>
 </unit>
 
 <unit>
-<class><specifier>public</specifier> class <name><name>Class</name><argument_list>&lt;<argument>?</argument>&gt;</argument_list></name> <block>{}</block></class>
+<class><specifier>public</specifier> class <name><name>Class</name><argument_list>&lt;<argument><name>?</name></argument>&gt;</argument_list></name> <block>{}</block></class>
 </unit>
 
 <unit>
@@ -50,7 +50,7 @@
 </unit>
 
 <unit>
-<class><specifier>public</specifier> class <name><name>Class</name><argument_list>&lt;<argument>? <super>super <name>Object</name></super></argument>&gt;</argument_list></name> <block>{}</block></class>
+<class><specifier>public</specifier> class <name><name>Class</name><argument_list>&lt;<argument><name>?</name> <super>super <name>Object</name></super></argument>&gt;</argument_list></name> <block>{}</block></class>
 </unit>
 
 <unit>
