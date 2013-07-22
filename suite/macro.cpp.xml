@@ -100,4 +100,19 @@
 <block>{}</block></function>
 </unit>
 
+<unit>
+<macro><name>M</name><argument_list>(<argument>A</argument>)</argument_list></macro> <if>if
+</if>
+</unit>
+
+<unit>
+<macro><name>M</name><argument_list>(<argument>A</argument>)</argument_list></macro> <while>while
+</while>
+</unit>
+
+<unit>
+<macro><name>M</name><argument_list>(<argument>A</argument>)</argument_list></macro> <for>for
+</for>
+</unit>
+
 </unit>
