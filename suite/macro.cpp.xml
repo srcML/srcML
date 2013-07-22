@@ -101,16 +101,16 @@
 </unit>
 
 <unit>
-<macro><name>M</name><argument_list>(<argument>A</argument>)</argument_list></macro> <if>if
-</if></unit>
+<macro><name>M</name><argument_list>(<argument>A</argument>)</argument_list></macro> <if>if;</if>
+</unit>
 
 <unit>
-<macro><name>M</name><argument_list>(<argument>A</argument>)</argument_list></macro> <while>while
-</while></unit>
+<macro><name>M</name><argument_list>(<argument>A</argument>)</argument_list></macro> <while>while;</while>
+</unit>
 
 <unit>
-<macro><name>M</name><argument_list>(<argument>A</argument>)</argument_list></macro> <for>for
-</for></unit>
+<macro><name>M</name><argument_list>(<argument>A</argument>)</argument_list></macro> <for>for;</for>
+</unit>
 
 <unit>
 <macro><name>M</name><argument_list>(<argument>A</argument>)</argument_list></macro> <decl_stmt><decl><type><specifier>static</specifier> <name>int</name></type> <name>a</name></decl>;</decl_stmt>
