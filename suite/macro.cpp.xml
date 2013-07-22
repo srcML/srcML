@@ -112,4 +112,12 @@
 <macro><name>M</name><argument_list>(<argument>A</argument>)</argument_list></macro> <for>for
 </for></unit>
 
+<unit>
+<macro><name>M</name><argument_list>(<argument>A</argument>)</argument_list></macro> <decl_stmt><decl><type><specifier>static</specifier> <name>int</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<macro><name>M</name><argument_list>(<argument>A</argument>)</argument_list></macro> <decl_stmt><decl><type><specifier>const</specifier> <name>int</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
 </unit>
