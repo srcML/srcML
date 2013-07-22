@@ -17,6 +17,7 @@ execute_process(COMMAND cat VERSION COMMAND tr -d "\n" OUTPUT_VARIABLE VERSION)
 execute_process(COMMAND cat REVISION COMMAND tr -d "\n" OUTPUT_VARIABLE REVISION)
 add_definitions(-DVERSION=\"${VERSION}\")
 add_definitions(-DREVISION=\"${REVISION}\")
+add_definitions(-O3)
 
 # get needed packages and include
 find_package(LibArchive)
