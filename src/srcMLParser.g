@@ -820,7 +820,8 @@ perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
             || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == RCURLY)
             || postcalltoken == 1 /* EOF ? */
             || postcalltoken == TEMPLATE || postcalltoken == PUBLIC || postcalltoken == PRIVATE
-            || postcalltoken == PROTECTED))
+            || postcalltoken == PROTECTED
+            || postcalltoken == STATIC))
 
             type = MACRO;
 
