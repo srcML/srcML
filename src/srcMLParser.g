@@ -2851,7 +2851,7 @@ function_identifier[] { ENTRY_DEBUG } :
         function_identifier_default |
 
         // function pointer identifier with name marked separately
-        function_pointer_name_grammar
+        function_pointer_name_grammar eat_optional_macro_call
 ;
 
 qmark_marked[] { LocalMode lm(this); ENTRY_DEBUG } :
