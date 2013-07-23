@@ -5028,17 +5028,17 @@ typedef_statement[] { ENTRY_DEBUG } :
 
                 // start of the type
                 startElement(STYPE);
+
+                if (LA(1) == CLASS)
+                    class_definition();
+                else if (LA(1) == STRUCT)
+                    struct_union_definition(SSTRUCT);
+                else
+                    struct_union_definition(SUNION);
             } else
                 // statement
                 startNewMode(MODE_NEST | MODE_STATEMENT | MODE_INNER_DECL);
         }
-        (
-        /* Never going to see a Java specifier before a class in C++, and never going
-           to see a TYPEDEF in a Java program, but needed for grammar ambiguity */
-        (specifier | CLASS)=>
-        class_definition |
-
-        struct_union_definition[LA(1) == STRUCT ? SSTRUCT : SUNION])*
 ;
 
 paren_pair[] :
