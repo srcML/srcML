@@ -4505,7 +4505,7 @@ expression_part_default[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENT
 
         expression_process
 
-        (DEFAULT COLON)=> call argument
+        call argument
 ;
 
 /*
