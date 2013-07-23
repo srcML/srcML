@@ -23,6 +23,7 @@ add_definitions(-O3)
 find_package(LibArchive)
 find_package(LibXml2)
 find_package(LibXslt)
+find_package(Boost)
 
 if(LibArchive_FOUND)
         include_directories(${LibArchive_INCLUDE_DIRS})
@@ -36,6 +37,10 @@ endif()
 
 if(LIBXSLT_FOUND)
         include_directories(${LIBXSLT_INCLUDE_DIR})
+endif()
+
+if(BOOST_FOUND)
+        include_directories(${Boost_INCLUDE_DIR})
 endif()
 
 include_directories(C:/antlr/277/include/antlr)
@@ -78,6 +83,7 @@ add_custom_target(srcMLParserTokenTypesMacro.hpp DEPENDS srcMLParserTokenTypes.h
 
 # srcml
 #add_executable(srcml srcml.cpp)
+#target_link_libraries(srcml boost_program_options-mt)
 
 # src2srcml
 add_executable(src2srcml src2srcml.cpp srcmlapps.cpp makeargv.cpp)
@@ -87,5 +93,6 @@ target_link_libraries(src2srcml archive xml2 ${LIBANTLR_LIB} srcml_static)
 add_executable(srcml2src srcml2src.cpp srcMLUtility.cpp SAX2ExtractUnitsSrc.cpp srcmlapps.cpp SAX2Utilities.cpp SAX2UnitDOM.cpp SAX2UnitDOMRelaxNG.cpp srcexfun.cpp libxml_archive_read.cpp libxml_archive_write.cpp URIStream.cpp makeargv.cpp)
 target_link_libraries(srcml2src archive xml2 xslt exslt)
 
+#set_target_properties(srcml src2srcml srcml2src PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../bin)
 set_target_properties(src2srcml srcml2src PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../bin)
 
