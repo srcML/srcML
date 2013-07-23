@@ -596,7 +596,7 @@ cfg[] { ENTRY_DEBUG } :
         try_statement | catch_statement | finally_statement | throw_statement |
 
         // namespace statements
-        namespace_definition | (USING LPAREN)=> using_statement | namespace_directive |
+        namespace_definition | { inLanguage(LANGUAGE_CSHARP) }? (USING LPAREN)=> using_statement | namespace_directive |
 
         typedef_statement |
 
