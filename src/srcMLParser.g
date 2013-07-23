@@ -4415,8 +4415,6 @@ expression_part_plus_linq[CALLTYPE type = NOCALL] { guessing_end(); ENTRY_DEBUG 
 
 expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG } :
 
-        (DEFAULT COLON)=> call argument |
-
         (DELEGATE LPAREN)=> delegate_anonymous |
 
         (LAMBDA LCURLY)=> lambda_anonymous |
