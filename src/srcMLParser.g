@@ -581,7 +581,7 @@ catch[...] {
 cfg[] { ENTRY_DEBUG } :
 
         // conditional statements
-        if_statement | else_statement | switch_statement | switch_case | { true }? (DEFAULT COLON)=> switch_default |
+        if_statement | else_statement | switch_statement | switch_case | switch_default |
 
         // iterative statements
         while_statement | for_statement | do_statement | foreach_statement |
