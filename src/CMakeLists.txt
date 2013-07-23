@@ -23,7 +23,7 @@ add_definitions(-O3)
 find_package(LibArchive)
 find_package(LibXml2)
 find_package(LibXslt)
-find_package(Boost)
+find_package(Boost COMPONENTS program_options)
 
 if(LibArchive_FOUND)
         include_directories(${LibArchive_INCLUDE_DIRS})
@@ -83,7 +83,7 @@ add_custom_target(srcMLParserTokenTypesMacro.hpp DEPENDS srcMLParserTokenTypes.h
 
 # srcml
 add_executable(srcml EXCLUDE_FROM_ALL srcml.cpp)
-target_link_libraries(srcml boost_program_options-mt)
+target_link_libraries(srcml ${Boost_PROGRAM_OPTIONS_LIBRARY})
 
 # src2srcml
 add_executable(src2srcml src2srcml.cpp srcmlapps.cpp makeargv.cpp)
