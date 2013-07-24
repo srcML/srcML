@@ -578,3 +578,28 @@ static xmlParserCtxtPtr srcMLCreateURLParserCtxt(const char * infile) {
 
   return ctxt;
 }
+
+extern "C" {
+
+  // constructor
+  srcMLUtility * srcMLUtility_new(const char* infilename, const char* encoding, OPTION_TYPE& op, const char* diff_version) {
+
+    return new srcMLUtility(infilename, encoding, op, diff_version);
+
+  }
+
+  // extract (intact) current unit as text
+  void extract_text(srcMLUtility * su, const char* to_dir, const char* ofilename, int unit) {
+
+    su->extract_text(to_dir, ofilename, unit);
+
+  }
+
+  void srcml_utility_delete(srcMLUtility * su) {
+
+    delete su;
+
+  }
+
+
+}

@@ -144,4 +144,16 @@ class OutOfRangeUnitError : public LibXMLError {
   int size;
 };
 
+extern "C" {
+
+  // constructor
+  srcMLUtility * srcml_utility_new(const char* infilename, const char* encoding, OPTION_TYPE& op, const char* diff_version = "");
+
+  // extract (intact) current unit as text
+  void extract_text(srcMLUtility * su, const char* to_dir, const char* ofilename, int unit = 0);
+
+  void srcml_utility_delete(srcMLUtility * su);
+
+}
+
 #endif
