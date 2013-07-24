@@ -584,8 +584,7 @@ extern "C" {
   // constructor
   srcMLUtility * srcml_utility_new(const char* infilename, const char* encoding, OPTION_TYPE op, const char* diff_version) {
 
-    srcMLUtility * su = new srcMLUtility(infilename, encoding, op, diff_version);
-    return su;
+    return new srcMLUtility(infilename, encoding, op, diff_version);
 
   }
 
