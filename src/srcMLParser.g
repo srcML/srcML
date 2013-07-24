@@ -200,7 +200,7 @@ header "post_include_cpp" {
     };
 
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options)
-   : antlr::LLkParser(lexer,1), Mode(this, lang), zeromode(false), skipelse(false), cppifcount(0), parseoptions(parser_options), ifcount(0), ruledepth(0), notdestructor(false)
+   : antlr::LLkParser(lexer,1), Mode(this, lang), cpp_zeromode(false), skipelse(false), cppifcount(0), parseoptions(parser_options), ifcount(0), ruledepth(0), notdestructor(false)
 
 {
     // root, single mode
@@ -458,7 +458,7 @@ public:
 
 friend class CompleteElement;
 
-bool zeromode;
+bool cpp_zeromode;
 bool skipelse;
 int cppifcount;
 bool isdestructor;
@@ -5249,10 +5249,10 @@ eol_post[int directive_token, bool markblockzero] {
                 case IFNDEF :
 
                     // start a new blank mode for new zero'ed blocks
-                    if (!zeromode && markblockzero) {
+                    if (!cpp_zeromode && markblockzero) {
 
                         // start a new blank mode for if
-                        zeromode = true;
+                        cpp_zeromode = true;
 
                         // keep track of nested if's (inside the #if 0) so we know when
                         // we reach the proper #endif
@@ -5274,11 +5274,11 @@ eol_post[int directive_token, bool markblockzero] {
                 case ELIF :
 
                     // #else reached for #if 0 that started this mode
-                    if (zeromode && cppifcount == 1)
-                        zeromode = false;
+                    if (cpp_zeromode && cppifcount == 1)
+                        cpp_zeromode = false;
 
                     // not in skipped #if, so skip #else until #endif of #if is reached
-                    if (!zeromode) {
+                    if (!cpp_zeromode) {
                         skipelse = true;
                         cppifcount = 1;
                     }
@@ -5292,7 +5292,7 @@ eol_post[int directive_token, bool markblockzero] {
                         // add new context for #else in current #if
                         cppmode.top().statesize.push_back(size()); 
                     
-                        if (!zeromode) {
+                        if (!cpp_zeromode) {
                             if (cppmode.top().statesize.front() > size())
                                 cppmode.top().skipelse = true;
                         }
@@ -5306,8 +5306,8 @@ eol_post[int directive_token, bool markblockzero] {
                     --cppifcount;
 
                     // #endif reached for #if 0 that started this mode
-                    if (zeromode && cppifcount == 0)
-                        zeromode = false;
+                    if (cpp_zeromode && cppifcount == 0)
+                        cpp_zeromode = false;
 
                     // #endif reached for #else that started this mode
                     if (skipelse && cppifcount == 0)
@@ -5332,12 +5332,12 @@ eol_post[int directive_token, bool markblockzero] {
 
         /*
             Skip elements when:
-                - in zero block (zeromode) and not marking #if 0
+                - in zero block (cpp_zeromode) and not marking #if 0
                 - when processing only #if part, not #else
                 - when guessing and in else (unless in zero block)
                 - when ??? for cppmode
         */
-        if ((!checkOption(OPTION_CPP_MARKUP_IF0) && zeromode) ||
+        if ((!checkOption(OPTION_CPP_MARKUP_IF0) && cpp_zeromode) ||
             (!checkOption(OPTION_CPP_MARKUP_ELSE) && skipelse) ||
             (inputState->guessing && skipelse) ||
             (!cppmode.empty() && !cppmode.top().isclosed && cppmode.top().skipelse)
