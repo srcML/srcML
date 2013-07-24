@@ -3126,38 +3126,9 @@ linq_full_expression[] { CompleteElement element; ENTRY_DEBUG } :
    A variable name in an expression.  Includes array names, but not
    function calls
 */
-variable_identifier[] { CompleteElement element; TokenPosition tp; ENTRY_DEBUG } :
+variable_identifier[] { ENTRY_DEBUG } :
 
         complex_name[true, true]
-/*
-
-        {
-            // local mode that is automatically ended by leaving this function
-            startNewMode(MODE_LOCAL);
-
-            // outer name
-            startElement(SONAME);
-
-            // inner name that may be replaced by a NOP
-            startElement(SCNAME);
-
-            // record the token position so we can replace it if necessary
-            tp = getTokenPosition();
-        }
-        (dcolon { iscomplex = true; })*
-
-        simple_name_optional_template[true]
-
-        name_tail[iscomplex, true]
-
-        (options { greedy = true; } : variable_identifier_array_grammar_sub[iscomplex])*
-        {
-            // non-complex names need to be simplified
-            if (!iscomplex)
-                // set the token to NOP
-                tp.setType(SNOP);
-        }
-*/
 ;
 
 /*
