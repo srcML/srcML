@@ -69,8 +69,8 @@ add_custom_command(OUTPUT srcMLParser.cpp srcMLParser.hpp srcMLParserTokenTypes.
 add_custom_command(OUTPUT srcMLParserTokenTypesMacro.hpp COMMAND ${GREP} '=' srcMLParserTokenTypes.hpp | ${SED} -e 's/,//g' -e 's/= //g' -e 's/^[ \t]*//' -e 's/^/\#define TOKEN_/g' > srcMLParserTokenTypesMacro.hpp DEPENDS srcMLParserTokenTypes.hpp)
 
 # libsrcml static
-add_library(srcml_static STATIC srcMLParser.cpp KeywordCPPLexer.cpp srcMLTranslator.cpp srcMLTranslatorCore.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp UTF8CharBuffer.cpp PureCommentLexer.cpp Language.cpp URIStream.cpp srcmlapps.cpp libxml_archive_read.cpp libxml_archive_write.cpp srcMLParserTokenTypesMacro.hpp)
-target_link_libraries(srcml_static archive xml2 ${LIBANTLR_LIB})
+add_library(srcml_static STATIC srcMLParser.cpp KeywordCPPLexer.cpp srcMLTranslator.cpp srcMLTranslatorCore.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp UTF8CharBuffer.cpp PureCommentLexer.cpp Language.cpp URIStream.cpp srcmlapps.cpp libxml_archive_read.cpp libxml_archive_write.cpp srcMLParserTokenTypesMacro.hpp srcMLUtility.cpp)
+target_link_libraries(srcml_static archive xml2 ${LIBANTLR_LIB} xslt exslt)
 set_target_properties(srcml_static PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ../bin LIBRARY_OUTPUT_DIRECTORY ../bin OUTPUT_NAME srcml)
 
 # libsrcml shared

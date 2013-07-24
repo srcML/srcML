@@ -25,7 +25,7 @@
 #ifndef INCLUDED_PROPERTIES_HPP
 #define INCLUDED_PROPERTIES_HPP
 
-void output_info(srcMLUtility& su, int options, int optioncount, int optionorder[]);
+void output_info(srcMLUtility& su, int options, int optioncount, int optionorder[], FILE * output);
 
 #include "ProcessUnit.hpp"
 #include "srcmlapps.hpp"
@@ -79,7 +79,7 @@ class Properties : public ProcessUnit {
     if (pstate->unit < 1) {
 
       // output the current data except for the completion of the nested unit count
-      output_info(su, *(pstate->poptions), optioncount, optionorder);
+      output_info(su, *(pstate->poptions), optioncount, optionorder, output);
 
       // if visiting all, then do so counting, whether visible or not
       if (pstate->unit == -1) {
@@ -118,11 +118,70 @@ class Properties : public ProcessUnit {
     }
 
     // output the current data
-    output_info(su, *(pstate->poptions), optioncount, optionorder);
+    output_info(su, *(pstate->poptions), optioncount, optionorder, output);
 
     // stop, since normal unit processing would continue on to the contents
     pstate->stopUnit(ctx);
   }
 };
+
+void output_info(srcMLUtility& su, int options, int optioncount, int optionorder[], FILE * output) {
+
+      // output all the namespaces
+      if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {
+
+	for (int i = 0; i < MAXNS; ++i) {
+	  if (su.nsv[i].first == "")
+	    break;
+
+	  fprintf(output, "%s=\"%s\"\n", su.nsv[i].second.c_str(), su.nsv[i].first.c_str());
+	
+	}
+      }
+
+      // output attributes in order specified by the options on the command line
+      for (int i = 0; i < optioncount; ++i) {
+
+	// find attribute name from option
+	const char* attribute_name = "";
+	const char* attribute_title = "";
+	int curoption = optionorder[i];
+
+	switch (curoption) {
+	case OPTION_XML_ENCODING:
+	  attribute_name = ".encoding";
+	  attribute_title = "encoding";
+	  break;
+	case OPTION_LANGUAGE:
+	  attribute_name = UNIT_ATTRIBUTE_LANGUAGE;
+	  attribute_title = attribute_name;
+	  break;
+	case OPTION_DIRECTORY:
+	  attribute_name = UNIT_ATTRIBUTE_DIRECTORY;
+	  attribute_title = "directory";
+	  break;
+	case OPTION_FILENAME:
+	  attribute_name = UNIT_ATTRIBUTE_FILENAME;
+	  attribute_title = attribute_name;
+	  break;
+	case OPTION_VERSION:
+	  attribute_name = UNIT_ATTRIBUTE_VERSION;
+	  attribute_title = "src-version";
+	  break;
+	};
+
+	// output the option
+	const char* l = su.attribute(attribute_name);
+	if (l) {
+	  if (optioncount == 1)
+	    fprintf(output, "%s\n", l);
+	  else
+	    fprintf(output, "%s=\"%s\"\n", attribute_title, l);
+	}
+      }
+
+      if (isoption(options, OPTION_LONG_INFO) && !isoption(options, OPTION_UNIT) && isatty(fileno(output)))
+	    fprintf(output, "units=\"%d", 1);
+}
 
 #endif

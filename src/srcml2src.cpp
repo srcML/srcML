@@ -1188,65 +1188,6 @@ int option_error_status(int optopt) {
   return 0;
 }
 
-void output_info(srcMLUtility& su, int options, int optioncount, int optionorder[]) {
-
-      // output all the namespaces
-      if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {
-
-	for (int i = 0; i < MAXNS; ++i) {
-	  if (su.nsv[i].first == "")
-	    break;
-
-	  fprintf(output, "%s=\"%s\"\n", su.nsv[i].second.c_str(), su.nsv[i].first.c_str());
-	
-	}
-      }
-
-      // output attributes in order specified by the options on the command line
-      for (int i = 0; i < optioncount; ++i) {
-
-	// find attribute name from option
-	const char* attribute_name = "";
-	const char* attribute_title = "";
-	int curoption = optionorder[i];
-
-	switch (curoption) {
-	case OPTION_XML_ENCODING:
-	  attribute_name = ".encoding";
-	  attribute_title = "encoding";
-	  break;
-	case OPTION_LANGUAGE:
-	  attribute_name = UNIT_ATTRIBUTE_LANGUAGE;
-	  attribute_title = attribute_name;
-	  break;
-	case OPTION_DIRECTORY:
-	  attribute_name = UNIT_ATTRIBUTE_DIRECTORY;
-	  attribute_title = "directory";
-	  break;
-	case OPTION_FILENAME:
-	  attribute_name = UNIT_ATTRIBUTE_FILENAME;
-	  attribute_title = attribute_name;
-	  break;
-	case OPTION_VERSION:
-	  attribute_name = UNIT_ATTRIBUTE_VERSION;
-	  attribute_title = "src-version";
-	  break;
-	};
-
-	// output the option
-	const char* l = su.attribute(attribute_name);
-	if (l) {
-	  if (optioncount == 1)
-	    fprintf(output, "%s\n", l);
-	  else
-	    fprintf(output, "%s=\"%s\"\n", attribute_title, l);
-	}
-      }
-
-      if (isoption(options, OPTION_LONG_INFO) && !isoption(options, OPTION_UNIT) && isatty(fileno(output)))
-	    fprintf(output, "units=\"%d", 1);
-}
-
 void register_xpath_functions_from_filename(const char * filename) {
 
   URIStream xpath_extension_file(filename);
