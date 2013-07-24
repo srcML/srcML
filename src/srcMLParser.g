@@ -1487,7 +1487,7 @@ check_end[int& token] { /* setFinalToken(); // problem with class */ token = LA(
 
 /*
 */
-class_declaration[] :
+class_declaration[] { ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_STATEMENT);
@@ -1500,7 +1500,7 @@ class_declaration[] :
 
 /*
 */
-class_definition[] :
+class_preprocessing[int token] { ENTRY_DEBUG } :
         {
             bool intypedef = inMode(MODE_TYPEDEF);
 
@@ -1511,14 +1511,18 @@ class_definition[] :
             startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_CLASS | MODE_DECL);
 
             // start the class definition
-            startElement(SCLASS);
+            startElement(token);
 
             // java classes end at the end of the block
             if (intypedef || inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP)) {
                 setMode(MODE_END_AT_BLOCK);
             }
-
         }
+;
+
+class_definition[] { ENTRY_DEBUG } :
+        class_preprocessing[SCLASS]
+
         (attribute)* (specifier)* CLASS (class_header lcurly | lcurly) 
         {
             if (inLanguage(LANGUAGE_CXX_FAMILY) && !inLanguage(LANGUAGE_CSHARP))
@@ -1526,24 +1530,9 @@ class_definition[] :
         }
 ;
 
-enum_class_definition[] :
-        {
-            bool intypedef = inMode(MODE_TYPEDEF);
+enum_class_definition[] { ENTRY_DEBUG } :
+        class_preprocessing[SENUM]
 
-            if (intypedef)
-                startElement(STYPE);
-
-            // statement
-            startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_CLASS | MODE_DECL);
-
-            // start the class definition
-            startElement(SENUM);
-
-            // java classes end at the end of the block
-            if (intypedef || inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP)) {
-                setMode(MODE_END_AT_BLOCK);
-            }
-        }
         (attribute)* (specifier)* ENUM (class_header lcurly | lcurly) 
         {
             if (inLanguage(LANGUAGE_CXX_FAMILY) && !inLanguage(LANGUAGE_CSHARP))
@@ -1551,7 +1540,7 @@ enum_class_definition[] :
         }
 ;
 
-anonymous_class_definition[] :
+anonymous_class_definition[] { ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_CLASS | MODE_END_AT_BLOCK);
@@ -1573,7 +1562,7 @@ anonymous_class_definition[] :
         call_argument_list
 ;
 
-anonymous_class_super[] { LocalMode lm(this); }:
+anonymous_class_super[] { LocalMode lm(this); ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_LOCAL);
@@ -1584,7 +1573,7 @@ anonymous_class_super[] { LocalMode lm(this); }:
         complex_name[true]
 ;
 
-interface_definition[] :
+interface_definition[] { ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_CLASS);
@@ -1600,7 +1589,7 @@ interface_definition[] :
 
 /*
 */
-struct_declaration[] :
+struct_declaration[] { ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_STATEMENT);
@@ -1611,23 +1600,9 @@ struct_declaration[] :
         (attribute)* (specifier)* STRUCT class_header
 ;
 
-struct_union_definition[int element_token] :
-        {
-            bool intypedef = inMode(MODE_TYPEDEF);
+struct_union_definition[int element_token] { ENTRY_DEBUG } :
+        class_preprocessing[element_token]
 
-            if (intypedef)
-                startElement(STYPE);
-
-            // statement
-            startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_DECL | MODE_CLASS);
-
-            // start the struct definition
-            startElement(element_token);
-
-            if (intypedef || inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP)) {
-                setMode(MODE_END_AT_BLOCK);
-            }
-        }
         (attribute)* (specifier)* (STRUCT | UNION) (class_header lcurly | lcurly)
         {
            if (inLanguage(LANGUAGE_CXX_FAMILY) && !inLanguage(LANGUAGE_CSHARP))
@@ -1637,7 +1612,7 @@ struct_union_definition[int element_token] :
 
 /*
 */
-union_declaration[] :
+union_declaration[] { ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_STATEMENT);
@@ -1651,7 +1626,7 @@ union_declaration[] :
 /*
    Classes and structs in C++ have a default private/public section.  This handles it.
 */
-class_default_access_action[int access_token] :
+class_default_access_action[int access_token] { ENTRY_DEBUG } :
         {
             if (inLanguage(LANGUAGE_CXX_FAMILY) && (SkipBufferSize() > 0 ||
                 !(LA(1) == PUBLIC || LA(1) == PRIVATE || LA(1) == PROTECTED))) {
@@ -2752,34 +2727,6 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_CSHARP) }? attribute |
 
         pure_lead_type_identifier_no_specifiers
-
-
-        /*
-           Anonymous class/struct/union in guessing mode processes
-           the entire block
-        */
-
-        // anonymous struct definition in a type (guessing)
-//        { inputState->guessing }?
-//        structures balanced_parentheses |
-
-        /*
-           Anonymous class/struct/union in non-guessing mode only
-           starts the markup so that the contents of the block
-           can be marked.
-        */
-
-        // anonymous struct definition in a type
-//        { !inputState->guessing }?
-//        struct_union_definition[SSTRUCT] |
-
-        // anonymous class definition in a type
-//        { !inputState->guessing }?
-//        class_definition |
-
-        // anonymous union definition in a type
-//        { !inputState->guessing }?
-//        struct_union_definition[SUNION] |
 ;
 
 pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
@@ -3460,9 +3407,7 @@ specifier[] { LocalMode lm(this); ENTRY_DEBUG } :
 
             // C# & Java
             INTERNAL | SEALED | OVERRIDE | REF | OUT | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE | DELEGATE | PARTIAL | EVENT | ASYNC | VIRTUAL | EXTERN | INLINE | IN | PARAMS
-        )/* |
-
-        { inLanguage(LANGUAGE_CSHARP) }? attribute */
+        )
 ;
 
 auto_keyword[] { LocalMode lm(this); ENTRY_DEBUG } :
