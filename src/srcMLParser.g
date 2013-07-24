@@ -748,15 +748,8 @@ function[int token, int type_count] { /* TokenPosition tp; */ENTRY_DEBUG } :
             else
                 // start the function definition element
                 startElement(SFUNCTION_DEFINITION);
-
-            // record the token position so we can replace it if necessary
-//            tp = getTokenPosition();
         }
         function_header[type_count]
-        {
-//            if (token != LCURLY)
-//                tp.setType(SFUNCTION_DECLARATION);
-        }
 ;
 
 // functions
@@ -948,7 +941,6 @@ do_statement[] { setFinalToken(); ENTRY_DEBUG } :
             startNewMode(MODE_NEST | MODE_STATEMENT);
         }
         DO
-        { /* condition detected in while */}
 ;
 
 /*
@@ -980,7 +972,7 @@ for_statement[] { setFinalToken(); ENTRY_DEBUG } :
         FOR
         {
             // statement with nested statement after the for group
-            startNewMode(MODE_FOR_GROUP | MODE_EXPECT);
+            startNewMode(MODE_EXPECT | MODE_FOR_GROUP);
         }
 ;
 
@@ -998,7 +990,7 @@ foreach_statement[] { setFinalToken(); ENTRY_DEBUG } :
         FOREACH
         {
             // statement with nested statement after the for group
-            startNewMode(MODE_FOR_GROUP | MODE_EXPECT);
+            startNewMode(MODE_EXPECT | MODE_FOR_GROUP);
         }
 ;
 
@@ -1094,7 +1086,7 @@ for_condition[] { ENTRY_DEBUG } :
 */
 for_increment[] { ENTRY_DEBUG } :
         { 
-            assertMode(MODE_FOR_INCREMENT | MODE_EXPECT);
+            assertMode(MODE_EXPECT | MODE_FOR_INCREMENT);
 
             clearMode(MODE_EXPECT | MODE_FOR_INCREMENT);
 
@@ -1512,6 +1504,9 @@ class_definition[] :
         {
             bool intypedef = inMode(MODE_TYPEDEF);
 
+            if (intypedef)
+                startElement(STYPE);
+
             // statement
             startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_CLASS | MODE_DECL);
 
@@ -1522,6 +1517,7 @@ class_definition[] :
             if (intypedef || inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP)) {
                 setMode(MODE_END_AT_BLOCK);
             }
+
         }
         (attribute)* (specifier)* CLASS (class_header lcurly | lcurly) 
         {
@@ -1533,6 +1529,9 @@ class_definition[] :
 enum_class_definition[] :
         {
             bool intypedef = inMode(MODE_TYPEDEF);
+
+            if (intypedef)
+                startElement(STYPE);
 
             // statement
             startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_CLASS | MODE_DECL);
@@ -1615,6 +1614,9 @@ struct_declaration[] :
 struct_union_definition[int element_token] :
         {
             bool intypedef = inMode(MODE_TYPEDEF);
+
+            if (intypedef)
+                startElement(STYPE);
 
             // statement
             startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_DECL | MODE_CLASS);
@@ -4039,14 +4041,14 @@ variable_declaration_statement[int type_count] { ENTRY_DEBUG } :
             // statement
             startNewMode(MODE_STATEMENT);
 
-            if (!inTransparentMode(MODE_INNER_DECL))
+            if (!inTransparentMode(MODE_INNER_DECL) || inTransparentMode(MODE_CLASS))
                 // start the declaration statement
                 startElement(SDECLARATION_STATEMENT);
 
             // declaration
             startNewMode(MODE_LOCAL);
 
-            if (!inTransparentMode(MODE_INNER_DECL))
+            if (!inTransparentMode(MODE_INNER_DECL) || inTransparentMode(MODE_CLASS))
                 // start the declaration
                 startElement(SDECLARATION);
         }
@@ -5018,27 +5020,10 @@ typedef_statement[] { ENTRY_DEBUG } :
 
             // start the typedef element
             startElement(STYPEDEF);
+
+            startNewMode(MODE_NEST | MODE_STATEMENT | MODE_INNER_DECL | MODE_TYPEDEF | MODE_END_AT_BLOCK_NO_TERMINATE);
         }
         TYPEDEF
-        {
-            if (LA(1) == CLASS || LA(1) == UNION || LA(1) == STRUCT) {
-
-                // end all elements started in this rule
-                startNewMode(MODE_LOCAL | MODE_TYPEDEF | MODE_END_AT_BLOCK_NO_TERMINATE);
-
-                // start of the type
-                startElement(STYPE);
-
-                if (LA(1) == CLASS)
-                    class_definition();
-                else if (LA(1) == STRUCT)
-                    struct_union_definition(SSTRUCT);
-                else
-                    struct_union_definition(SUNION);
-            } else
-                // statement
-                startNewMode(MODE_NEST | MODE_STATEMENT | MODE_INNER_DECL);
-        }
 ;
 
 paren_pair[] :
