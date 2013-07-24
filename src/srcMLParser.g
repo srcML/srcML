@@ -534,25 +534,25 @@ start[] { ruledepth = 0; ENTRY_DEBUG } :
         // end of line
         line_continuation | EOL | LINECOMMENT_START |
 
-        comma[true] |
+        comma |
 
-        { !inTransparentMode(MODE_INTERNAL_END_PAREN) || inPrevMode(MODE_CONDITION) }? rparen[true,false] |
+        { !inTransparentMode(MODE_INTERNAL_END_PAREN) || inPrevMode(MODE_CONDITION) }? rparen[false] |
 
         // characters with special actions that usually end currently open elements
         { !inTransparentMode(MODE_INTERNAL_END_CURLY) }? block_end |
 
         // switch cases @test switch
         { !inMode(MODE_DERIVED) && !inMode(MODE_INIT) && (!inMode(MODE_EXPRESSION) || inTransparentMode(MODE_DETECT_COLON)) }? 
-        colon[true] |
+        colon |
 
-        terminate[true] |
+        terminate |
 
         // don't confuse with expression block
         { inTransparentMode(MODE_CONDITION) ||
             (!inMode(MODE_EXPRESSION) && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT)) }? lcurly | 
 
         // process template operator correctly @test template
-        { inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) }? tempope[true] |
+        { inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) }? tempope |
 
         // special default() call for C#
         { LA(1) == DEFAULT && inLanguage(LANGUAGE_CSHARP) && inTransparentMode(MODE_EXPRESSION) }? (DEFAULT LPAREN)=> expression_part_default |
@@ -915,7 +915,7 @@ markend[int& token] { token = LA(1); } :
 /*
   while statement, or while part of do statement
 */
-while_statement[] { setFinalToken(); ENTRY_DEBUG } :
+while_statement[] { ENTRY_DEBUG } :
         {
             // statement with nested statement (after condition)
             startNewMode(MODE_STATEMENT | MODE_NEST);
@@ -932,7 +932,7 @@ while_statement[] { setFinalToken(); ENTRY_DEBUG } :
 /*
  do while statement
 */
-do_statement[] { setFinalToken(); ENTRY_DEBUG } : 
+do_statement[] { ENTRY_DEBUG } : 
         {
             // statement with nested statement (after condition)
             // set to top mode so that end of block will
@@ -951,7 +951,7 @@ do_statement[] { setFinalToken(); ENTRY_DEBUG } :
 /*
   while part of do statement
 */
-do_while[] { setFinalToken(); ENTRY_DEBUG } :
+do_while[] { ENTRY_DEBUG } :
         {
             // mode for do statement is in top mode so that
             // end of the block will not end the statement
@@ -966,7 +966,7 @@ do_while[] { setFinalToken(); ENTRY_DEBUG } :
 /*
   start of for statement
 */
-for_statement[] { setFinalToken(); ENTRY_DEBUG } :
+for_statement[] { ENTRY_DEBUG } :
         {
             // statement with nested statement after the for group
             startNewMode(MODE_STATEMENT | MODE_NEST);
@@ -984,7 +984,7 @@ for_statement[] { setFinalToken(); ENTRY_DEBUG } :
 /*
   start of foreach statement (C#)
 */
-foreach_statement[] { setFinalToken(); ENTRY_DEBUG } :
+foreach_statement[] { ENTRY_DEBUG } :
         {
             // statement with nested statement after the for group
             startNewMode(MODE_STATEMENT | MODE_NEST);
@@ -1002,7 +1002,7 @@ foreach_statement[] { setFinalToken(); ENTRY_DEBUG } :
 /*
   start of for group, i.e., initialization, test, increment
 */
-for_group[] { setFinalToken(); ENTRY_DEBUG } :
+for_group[] { ENTRY_DEBUG } :
         {
             // start the for group mode that will end at the next matching
             // parentheses
@@ -1113,7 +1113,7 @@ for_increment[] { ENTRY_DEBUG } :
  if statement is first processed here.  Then prepare for a condition.  The end of the
  condition will setup for the then part of the statement.  The end of the then looks
  ahead for an else.  If so, it ends the then part.  If not, it ends the entire statement.*/
-if_statement[] { setFinalToken(); ENTRY_DEBUG } :
+if_statement[] { ENTRY_DEBUG } :
         {
             // statement with nested statement
             // detection of else
@@ -1137,7 +1137,7 @@ if_statement[] { setFinalToken(); ENTRY_DEBUG } :
  else is detected on its own, and as part of termination (semicolon or
  end of a block
 */
-else_statement[] { /* setFinalToken(); */ ENTRY_DEBUG } :
+else_statement[] { ENTRY_DEBUG } :
         {
             // treat as a statement with a nested statement
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_ELSE);
@@ -1151,7 +1151,7 @@ else_statement[] { /* setFinalToken(); */ ENTRY_DEBUG } :
 /*
  start of switch statement
 */
-switch_statement[] { setFinalToken(); ENTRY_DEBUG } :
+switch_statement[] { ENTRY_DEBUG } :
         {
             // statement with nested block
             startNewMode(MODE_STATEMENT | MODE_NEST);
@@ -1200,7 +1200,7 @@ section_entry_action[] :
 /*
  Yes, case isn't really a statement, but it is treated as one
 */
-switch_case[] { setFinalToken(); ENTRY_DEBUG } :
+switch_case[] { ENTRY_DEBUG } :
         // start a new section
         section_entry_action
         {
@@ -1213,7 +1213,7 @@ switch_case[] { setFinalToken(); ENTRY_DEBUG } :
         CASE 
 ;
 
-switch_default[] { setFinalToken(); ENTRY_DEBUG } :
+switch_default[] { ENTRY_DEBUG } :
         // start a new section
         section_entry_action
         {
@@ -1229,7 +1229,7 @@ switch_default[] { setFinalToken(); ENTRY_DEBUG } :
 /*
   start of return statement
 */
-import_statement[] { setFinalToken(); ENTRY_DEBUG } :
+import_statement[] { ENTRY_DEBUG } :
         {
             // statement with a possible expression
             startNewMode(MODE_STATEMENT | MODE_VARIABLE_NAME | MODE_EXPECT);
@@ -1243,7 +1243,7 @@ import_statement[] { setFinalToken(); ENTRY_DEBUG } :
 /*
   start of package statement
 */
-package_statement[] { setFinalToken(); ENTRY_DEBUG } :
+package_statement[] { ENTRY_DEBUG } :
         {
             // statement with a possible expression
             startNewMode(MODE_STATEMENT | MODE_VARIABLE_NAME | MODE_EXPECT);
@@ -1257,7 +1257,7 @@ package_statement[] { setFinalToken(); ENTRY_DEBUG } :
 /*
   start of return statement
 */
-return_statement[] { setFinalToken(); ENTRY_DEBUG } :
+return_statement[] { ENTRY_DEBUG } :
         {
             // statement with a possible expression
             startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
@@ -1293,7 +1293,7 @@ yield_return_statement[] { ENTRY_DEBUG } :
 /*
   start of break statement
 */
-break_statement[] { setFinalToken(); ENTRY_DEBUG } :
+break_statement[] { ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_STATEMENT);
@@ -1318,7 +1318,7 @@ yield_break_statement[] { ENTRY_DEBUG } :
 /*
   start of continue statement
 */
-continue_statement[] { setFinalToken(); ENTRY_DEBUG } :
+continue_statement[] { ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_STATEMENT);
@@ -1332,7 +1332,7 @@ continue_statement[] { setFinalToken(); ENTRY_DEBUG } :
 /*
   start of goto statement
 */
-goto_statement[] { setFinalToken(); ENTRY_DEBUG } :
+goto_statement[] { ENTRY_DEBUG } :
         {
             // statement with an expected label name
             // label name is a subset of variable names
@@ -1397,7 +1397,7 @@ extern_name[] { ENTRY_DEBUG } :
 
  Past name handled as expression
 */
-namespace_definition[] { setFinalToken(); ENTRY_DEBUG } :
+namespace_definition[] { ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_STATEMENT | MODE_NAMESPACE | MODE_VARIABLE_NAME);
@@ -1408,7 +1408,7 @@ namespace_definition[] { setFinalToken(); ENTRY_DEBUG } :
         NAMESPACE
 ;
 
-namespace_alias[] { setFinalToken(); ENTRY_DEBUG } :
+namespace_alias[] { ENTRY_DEBUG } :
 
         EQUAL 
         {
@@ -1429,7 +1429,7 @@ namespace_block[] { ENTRY_DEBUG } :
 /*
   start of namespace using directive
 */
-namespace_directive[] { setFinalToken(); ENTRY_DEBUG } :
+namespace_directive[] { ENTRY_DEBUG } :
         {
             // statement with an expected namespace name after the keywords
             startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT | MODE_STATEMENT);
@@ -1478,7 +1478,7 @@ class_struct_union_check[int& finaltoken, int& othertoken] { finaltoken = 0; oth
         (attribute)* (specifier)* markend[othertoken] (CLASS | STRUCT | UNION | INTERFACE) class_header check_end[finaltoken]
 ;
 
-check_end[int& token] { /* setFinalToken(); // problem with class */ token = LA(1); ENTRY_DEBUG } :
+check_end[int& token] { token = LA(1); ENTRY_DEBUG } :
         LCURLY | TERMINATE | COLON | COMMA | RPAREN
 ;
 
@@ -1712,7 +1712,7 @@ access_specifier_region[] { ENTRY_DEBUG } :
             }
             PROTECTED
         )
-        { setFinalToken(); }
+        { }
         COLON
 ;
 
@@ -1759,7 +1759,7 @@ lcurly[] { ENTRY_DEBUG } :
 
   Marks the start of a block.  End of the block is handled in right curly brace
 */
-lcurly_base[] { setFinalToken(); ENTRY_DEBUG } :
+lcurly_base[] { ENTRY_DEBUG } :
         {  
             // need to pass on class mode to detect constructors for Java
             bool inclassmode = inLanguage(LANGUAGE_JAVA_FAMILY) && inMode(MODE_CLASS);
@@ -1840,7 +1840,7 @@ block_end[] { ENTRY_DEBUG } :
 
   Not used directly, but called by block_end
 */
-rcurly[] { setFinalToken(); ENTRY_DEBUG } :
+rcurly[] { ENTRY_DEBUG } :
         {
             // end any elements inside of the block
             endDownToMode(MODE_TOP);
@@ -1863,7 +1863,7 @@ rcurly[] { setFinalToken(); ENTRY_DEBUG } :
 /*
   End any open expressions, match, then close any open elements
 */
-terminate[bool final = false] { if(final) setFinalToken(); ENTRY_DEBUG } :
+terminate[] { ENTRY_DEBUG } :
 
         {
             if (inMode(MODE_IGNORE_TERMINATE)) {
@@ -2188,7 +2188,7 @@ lparen_marked[] { CompleteElement element; ENTRY_DEBUG } :
         LPAREN  
 ;
 
-comma[bool final = false] { if (final) setFinalToken(); ENTRY_DEBUG }:
+comma[] { ENTRY_DEBUG }:
         {
             // comma ends the current item in a list
             // or ends the current expression
@@ -2220,7 +2220,7 @@ comma_marked[] { CompleteElement element; ENTRY_DEBUG }:
         COMMA
 ;
 
-colon_marked[bool final = false] { CompleteElement element; if (final) setFinalToken(); ENTRY_DEBUG } :
+colon_marked[] { CompleteElement element; ENTRY_DEBUG } :
         {
             if (isoption(parseoptions, OPTION_OPERATOR)) {
 
@@ -2234,7 +2234,7 @@ colon_marked[bool final = false] { CompleteElement element; if (final) setFinalT
         COLON
 ;
 
-colon[bool final = false] { if (final) setFinalToken(); ENTRY_DEBUG } :
+colon[] { ENTRY_DEBUG } :
         {
             if (inTransparentMode(MODE_TOP_SECTION))
                 // colon ends the current item in a list
@@ -2250,7 +2250,7 @@ colon[bool final = false] { if (final) setFinalToken(); ENTRY_DEBUG } :
   Starts condition mode and prepares to handle embedded expression.
   End of the element is handled in condition_rparen.
 */
-condition[] { setFinalToken(); ENTRY_DEBUG } :
+condition[] { ENTRY_DEBUG } :
         {
             assertMode(MODE_CONDITION | MODE_EXPECT);
 
@@ -3037,9 +3037,9 @@ variable_identifier_array_grammar_sub[bool& iscomplex] { CompleteElement element
 
 
 variable_identifier_array_grammar_sub_contents{ CompleteElement element; ENTRY_DEBUG } :
-        { !inLanguage(LANGUAGE_CSHARP) }? full_expression[true] |
+        { !inLanguage(LANGUAGE_CSHARP) }? full_expression |
 
-        { inLanguage(LANGUAGE_CSHARP) }? ({ LA(1) != RBRACKET }? (COMMA | full_expression[false]) )*
+        { inLanguage(LANGUAGE_CSHARP) }? ({ LA(1) != RBRACKET }? (COMMA | full_expression) )*
 ;
 
 
@@ -3076,7 +3076,7 @@ attribute_target[] returns [bool global = false] { CompleteElement element; ENTR
   Full, complete expression matched all at once (no stream).
   Colon matches range(?) for bits.
 */
-full_expression[bool checkcomma = true] { CompleteElement element; ENTRY_DEBUG } :
+full_expression[] { CompleteElement element; ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
@@ -3084,12 +3084,11 @@ full_expression[bool checkcomma = true] { CompleteElement element; ENTRY_DEBUG }
         (options { greedy = true; } :
 
         // commas as in a list
-//        { checkcomma }?
         {inTransparentMode(MODE_END_ONLY_AT_RPAREN) || !inTransparentMode(MODE_END_AT_COMMA)}?
         comma |
 
         // right parentheses, unless we are in a pair of parentheses in an expression 
-        { !inTransparentMode(MODE_INTERNAL_END_PAREN) }? rparen[false, false] |
+        { !inTransparentMode(MODE_INTERNAL_END_PAREN) }? rparen[false] |
 
         // argument mode (as part of call)
         { inMode(MODE_ARGUMENT) }? argument |
@@ -3111,7 +3110,7 @@ linq_full_expression[] { CompleteElement element; ENTRY_DEBUG } :
         comma |
 
         // right parentheses, unless we are in a pair of parentheses in an expression 
-        { !inTransparentMode(MODE_INTERNAL_END_PAREN) }? rparen[false, false] |
+        { !inTransparentMode(MODE_INTERNAL_END_PAREN) }? rparen[false] |
 
         // argument mode (as part of call)
         { inMode(MODE_ARGUMENT) }? argument |
@@ -4144,7 +4143,7 @@ rparen_operator[bool markup = true] { CompleteElement element; ENTRY_DEBUG } :
         RPAREN
     ;
 
-rparen[bool final = false, bool markup = true] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
+rparen[bool markup = true] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
         {
             if (isempty) {
 
@@ -4341,7 +4340,7 @@ expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG
         guessing_endCurrentModeSafely[MODE_INTERNAL_END_PAREN]
 
         // treat as operator for operator markup
-        rparen[false] |
+        rparen[true] |
 
         // left curly brace
         {
@@ -4540,7 +4539,7 @@ parameter_list[] { CompleteElement element; bool lastwasparam = false; bool foun
             if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
                 endCurrentMode(MODE_LOCAL);
         } comma |
-        full_parameter { foundparam = lastwasparam = true; })* empty_element[SPARAMETER, !lastwasparam && foundparam] rparen[false, false]
+        full_parameter { foundparam = lastwasparam = true; })* empty_element[SPARAMETER, !lastwasparam && foundparam] rparen[false]
 ;
 
 indexer_parameter_list[] { bool lastwasparam = false; bool foundparam = false; ENTRY_DEBUG } :
@@ -4587,7 +4586,7 @@ full_parameter[] { ENTRY_DEBUG } :
 ;
 
 argument[] { ENTRY_DEBUG } :
-        { getParen() == 0 }? rparen[false,false] |
+        { getParen() == 0 }? rparen[false] |
         {
             // argument with nested expression
             startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
@@ -4853,7 +4852,7 @@ tempops[] { ENTRY_DEBUG } :
         TEMPOPS
 ;
 
-tempope[bool final = false] { if (final) setFinalToken(); ENTRY_DEBUG } :
+tempope[] { ENTRY_DEBUG } :
         {
             // end down to the mode created by the start template operator
             endDownToMode(MODE_LIST);
@@ -5361,7 +5360,7 @@ cppmode_adjust[] {
     ENTRY_DEBUG } :
 ;
 
-line_continuation[] { setFinalToken(); ENTRY_DEBUG } :
+line_continuation[] { ENTRY_DEBUG } :
         {
             // end all preprocessor modes
             endDownOverMode(MODE_PARSE_EOL);
