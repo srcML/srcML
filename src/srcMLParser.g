@@ -3680,14 +3680,6 @@ try_statement[] { ENTRY_DEBUG } :
             startElement(STRY_BLOCK);
         }
         TRY
-        {            
-            if (LA(1) == LPAREN) {
-                match(LPAREN);
-
-                // expect a parameter list
-                startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
-            }
-        }
 ;
 
 checked_statement[] { ENTRY_DEBUG } :
