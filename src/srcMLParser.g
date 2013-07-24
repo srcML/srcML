@@ -1121,7 +1121,7 @@ if_statement[] { setFinalToken(); ENTRY_DEBUG } :
 
             // expect a condition
             // start THEN after condition
-            startNewMode(MODE_CONDITION | MODE_EXPECT | MODE_IF_COND);
+            startNewMode(MODE_EXPECT | MODE_CONDITION);
         }
         IF
 ;
@@ -1141,14 +1141,6 @@ else_statement[] { /* setFinalToken(); */ ENTRY_DEBUG } :
             startElement(SELSE);
         }
         ELSE
-/*
-        (IF
-        {
-            // expect a condition
-            // start THEN after condition
-            startNewMode(MODE_CONDITION | MODE_EXPECT | MODE_IF_COND);
-        })*
-*/
 ;
 
 /*
@@ -4238,8 +4230,10 @@ rparen[bool final = false, bool markup = true] { bool isempty = getParen() == 0;
         rparen_operator[markup]
         {
             if (isempty) {
-
-                if (inMode(MODE_CONDITION) && inMode(MODE_IF_COND)) {
+                
+                // special handling for then part of an if statement
+                // only when in a condition of an if statement
+                if (inMode(MODE_CONDITION) && inPrevMode(MODE_IF)) {
 
                     // end the condition
                     endDownOverMode(MODE_CONDITION);

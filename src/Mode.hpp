@@ -92,7 +92,6 @@ public:
   // and stopping the ending of statements at the IF when
   // an ELSE is matched
   const static State::MODE_TYPE MODE_IF;
-  const static State::MODE_TYPE MODE_IF_COND;
 
   // for special sections inside of mode such as in
   // classes and switch statement blocks
