@@ -2014,12 +2014,7 @@ else_handling[] { ENTRY_DEBUG } :
   Handling when mid-statement
 */
 statement_part[] { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE decl_type = NONE; CALLTYPE type = NOCALL; ENTRY_DEBUG } :
-
         { inMode(MODE_EAT_TYPE) }?
-            type_identifier
-            update_typecount |
-
-        { inMode(MODE_EAT_VAR_TYPE) }?
             type_identifier
             update_typecount |
 
@@ -3269,7 +3264,7 @@ complex_name_inner[bool marked = true, bool index = false] { LocalMode lm(this);
         { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_CSHARP) }?
         complex_name_cpp[marked, iscomplex_name]
         )
-        (options { greedy = true; } : { index && !inTransparentMode(MODE_EAT_TYPE) && !inTransparentMode(MODE_EAT_VAR_TYPE) }? variable_identifier_array_grammar_sub[iscomplex_name])*
+        (options { greedy = true; } : { index && !inTransparentMode(MODE_EAT_TYPE) }? variable_identifier_array_grammar_sub[iscomplex_name])*
         {
             // if we marked it as a complex name and it isn't, fix
             if (marked && !iscomplex_name)
@@ -4040,7 +4035,7 @@ variable_declaration[int type_count] { ENTRY_DEBUG } :
 variable_declaration_type[int type_count] { ENTRY_DEBUG } :
         {
             // start a mode for the type that will end in this grammar rule
-            startNewMode(MODE_EAT_VAR_TYPE);
+            startNewMode(MODE_EAT_TYPE);
 
             setTypeCount(type_count);
 

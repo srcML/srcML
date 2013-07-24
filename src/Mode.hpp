@@ -113,12 +113,9 @@ public:
   const static State::MODE_TYPE MODE_ACCESS_REGION;
   const static State::MODE_TYPE MODE_DO_STATEMENT;
   const static State::MODE_TYPE MODE_IGNORE_TERMINATE;
-  const static State::MODE_TYPE MODE_SKIP_PARSE;
 
   const static State::MODE_TYPE MODE_EXTERN;
-  const static State::MODE_TYPE MODE_CALLLIST;
   const static State::MODE_TYPE MODE_INTERNAL_END_CURLY;
-  const static State::MODE_TYPE MODE_MACRO_CONTENTS;
 
   const static State::MODE_TYPE MODE_GUESSING;
   const static State::MODE_TYPE MODE_CLASS;
@@ -128,8 +125,6 @@ public:
   const static State::MODE_TYPE MODE_END_ONLY_AT_RPAREN;
 
   const static State::MODE_TYPE MODE_END_AT_BLOCK_NO_TERMINATE;
-
-  const static State::MODE_TYPE MODE_NEG_BLOCK;
 
   const static State::MODE_TYPE MODE_FUNCTION_NAME;
 
@@ -144,15 +139,9 @@ public:
 
   const static State::MODE_TYPE MODE_FUNCTION_PARAMETER;
 
-  const static State::MODE_TYPE MODE_EAT_VAR_TYPE;
-
   const static State::MODE_TYPE MODE_DERIVED;
 
   const static State::MODE_TYPE MODE_INNER_DECL;
-
-  const static State::MODE_TYPE MODE_REQUIRES;
-
-  const static State::MODE_TYPE MODE_CONCEPT;
 
   const static State::MODE_TYPE MODE_IN_INIT;
 

@@ -31,7 +31,6 @@
 #endif
 
 /* Set of mode flags */
-
 const State::MODE_TYPE Mode::MODE_STATEMENT           = ull(0x0000000000000001);
 const State::MODE_TYPE Mode::MODE_LIST                = ull(0x0000000000000002);
 const State::MODE_TYPE Mode::MODE_EXPECT              = ull(0x0000000000000004);
@@ -63,18 +62,18 @@ const State::MODE_TYPE Mode::MODE_INTERNAL_END_PAREN  = ull(0x0000000008000000);
 const State::MODE_TYPE Mode::MODE_ACCESS_REGION       = ull(0x0000000010000000);
 const State::MODE_TYPE Mode::MODE_DO_STATEMENT        = ull(0x0000000020000000);
 const State::MODE_TYPE Mode::MODE_IGNORE_TERMINATE    = ull(0x0000000040000000);
-const State::MODE_TYPE Mode::MODE_SKIP_PARSE          = ull(0x0000000080000000);
+// const State::MODE_TYPE Mode::MODE_UNUSED           = ull(0x0000000080000000);
 const State::MODE_TYPE Mode::MODE_EXTERN              = ull(0x0000000100000000);
-const State::MODE_TYPE Mode::MODE_CALLLIST            = ull(0x0000000200000000);
+// const State::MODE_TYPE Mode::MODE_UNUSED           = ull(0x0000000200000000);
 const State::MODE_TYPE Mode::MODE_INTERNAL_END_CURLY  = ull(0x0000000400000000);
-const State::MODE_TYPE Mode::MODE_MACRO_CONTENTS      = ull(0x0000000800000000);
+// const State::MODE_TYPE Mode::MODE_UNUSED           = ull(0x0000000800000000);
 const State::MODE_TYPE Mode::MODE_GUESSING            = ull(0x0000001000000000);
 const State::MODE_TYPE Mode::MODE_CLASS               = ull(0x0000002000000000);
 const State::MODE_TYPE Mode::MODE_FUNCTION            = ull(0x0000004000000000);
 const State::MODE_TYPE Mode::MODE_END_AT_BLOCK        = ull(0x0000008000000000);
 const State::MODE_TYPE Mode::MODE_END_ONLY_AT_RPAREN  = ull(0x0000010000000000);
 const State::MODE_TYPE Mode::MODE_END_AT_BLOCK_NO_TERMINATE = ull(0x0000020000000000);
-const State::MODE_TYPE Mode::MODE_NEG_BLOCK           = ull(0x0000040000000000);
+// const State::MODE_TYPE Mode::MODE_UNUSED           = ull(0x0000040000000000);
 const State::MODE_TYPE Mode::MODE_IF_COND             = ull(0x0000080000000000);
 const State::MODE_TYPE Mode::MODE_FUNCTION_NAME       = ull(0x0000100000000000);
 const State::MODE_TYPE Mode::MODE_ELSE                = ull(0x0000200000000000);
@@ -82,11 +81,11 @@ const State::MODE_TYPE Mode::MODE_TYPEDEF             = ull(0x0000400000000000);
 const State::MODE_TYPE Mode::MODE_DECL                = ull(0x0000800000000000);
 const State::MODE_TYPE Mode::MODE_EAT_TYPE            = ull(0x0001000000000000);
 const State::MODE_TYPE Mode::MODE_FUNCTION_PARAMETER  = ull(0x0002000000000000);
-const State::MODE_TYPE Mode::MODE_EAT_VAR_TYPE        = ull(0x0004000000000000);
+// const State::MODE_TYPE Mode::MODE_UNUSED           = ull(0x0004000000000000);
 const State::MODE_TYPE Mode::MODE_DERIVED             = ull(0x0008000000000000);
 const State::MODE_TYPE Mode::MODE_INNER_DECL          = ull(0x0010000000000000);
-const State::MODE_TYPE Mode::MODE_REQUIRES            = ull(0x0020000000000000);
-const State::MODE_TYPE Mode::MODE_CONCEPT             = ull(0x0040000000000000);
+// const State::MODE_TYPE Mode::MODE_UNUSED           = ull(0x0020000000000000);
+// const State::MODE_TYPE Mode::MODE_UNUSED           = ull(0x0040000000000000);
 const State::MODE_TYPE Mode::MODE_THEN                = ull(0x0080000000000000);
 const State::MODE_TYPE Mode::MODE_IN_INIT             = ull(0x0100000000000000);
 const State::MODE_TYPE Mode::MODE_TRY                 = ull(0x0200000000000000);
