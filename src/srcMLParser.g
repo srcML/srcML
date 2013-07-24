@@ -169,14 +169,14 @@ struct TokenPosition {
 // Included in the generated srcMLParser.cpp file after antlr includes
 header "post_include_cpp" {
 
-    class LocalMode {
+    class CompleteElement {
 
      public:
-     LocalMode(srcMLParser* t)
+     CompleteElement(srcMLParser* t)
         : pparser(t), oldsize(t->size())
      {}
 
-     ~LocalMode() {
+     ~CompleteElement() {
          srcMLParser& fp = *pparser;
          int n = fp.size() - oldsize;
          for (int i = 0; i < n; ++i) {
@@ -456,7 +456,7 @@ tokens {
 {
 public:
 
-friend class LocalMode;
+friend class CompleteElement;
 
 bool zeromode;
 bool skipelse;
@@ -777,7 +777,7 @@ property_method_decl[] { /* TokenPosition tp; */ENTRY_DEBUG } :
 ;
 
 // functions
-property_method_names[] { LocalMode lm(this); ENTRY_DEBUG } :
+property_method_names[] { CompleteElement lm(this); ENTRY_DEBUG } :
 		{
             startNewMode(MODE_LOCAL);
 
@@ -1263,7 +1263,7 @@ return_statement[] { setFinalToken(); ENTRY_DEBUG } :
         RETURN
 ;
 
-yield_specifier[] { LocalMode lm(this); ENTRY_DEBUG } :
+yield_specifier[] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_LOCAL);
@@ -1554,7 +1554,7 @@ anonymous_class_definition[] { ENTRY_DEBUG } :
         call_argument_list
 ;
 
-anonymous_class_super[] { LocalMode lm(this); ENTRY_DEBUG } :
+anonymous_class_super[] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_LOCAL);
@@ -1874,7 +1874,7 @@ terminate[bool final = false] { if(final) setFinalToken(); ENTRY_DEBUG } :
         terminate_post
 ;
 
-terminate_token[] { LocalMode lm(this); ENTRY_DEBUG } :
+terminate_token[] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             if (inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_DECL) && !inMode(MODE_IF)) {
 
@@ -2167,7 +2167,7 @@ statement_part[] { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE de
         colon_marked
 ;
 
-lparen_marked[] { LocalMode lm(this); ENTRY_DEBUG } :
+lparen_marked[] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             incParen();
 
@@ -2201,7 +2201,7 @@ comma[bool final = false] { if (final) setFinalToken(); ENTRY_DEBUG }:
         comma_marked
 ;
 
-comma_marked[] { LocalMode lm(this); ENTRY_DEBUG }:
+comma_marked[] { CompleteElement lm(this); ENTRY_DEBUG }:
         {
             if (isoption(parseoptions, OPTION_OPERATOR) && !inMode(MODE_PARAMETER) && !inMode(MODE_ARGUMENT)) {
 
@@ -2215,7 +2215,7 @@ comma_marked[] { LocalMode lm(this); ENTRY_DEBUG }:
         COMMA
 ;
 
-colon_marked[bool final = false] { LocalMode lm(this); if (final) setFinalToken(); ENTRY_DEBUG } :
+colon_marked[bool final = false] { CompleteElement lm(this); if (final) setFinalToken(); ENTRY_DEBUG } :
         {
             if (isoption(parseoptions, OPTION_OPERATOR)) {
 
@@ -2581,7 +2581,7 @@ trace_int[int s] { std::cerr << "HERE " << s << std::endl; } :;
 
 //traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
 
-marker[] { LocalMode lm(this); startNewMode(MODE_LOCAL); startElement(SMARKER); } :;
+marker[] { CompleteElement lm(this); startNewMode(MODE_LOCAL); startElement(SMARKER); } :;
 
 set_int[int& name, int value, bool result = true] { if (result) name = value; } :;
 
@@ -2791,7 +2791,7 @@ function_identifier[] { ENTRY_DEBUG } :
         function_pointer_name_grammar eat_optional_macro_call
 ;
 
-qmark_marked[] { LocalMode lm(this); ENTRY_DEBUG } :
+qmark_marked[] { CompleteElement lm(this); ENTRY_DEBUG } :
         // special cases for main
         {
             // end all started elements in this rule
@@ -2803,7 +2803,7 @@ qmark_marked[] { LocalMode lm(this); ENTRY_DEBUG } :
         QMARK
 ;
 
-function_identifier_default[] { LocalMode lm(this); ENTRY_DEBUG } :
+function_identifier_default[] { CompleteElement lm(this); ENTRY_DEBUG } :
         // special cases for main
         {
             // end all started elements in this rule
@@ -2816,7 +2816,7 @@ function_identifier_default[] { LocalMode lm(this); ENTRY_DEBUG } :
         DEFAULT
 ;
 
-function_identifier_main[] { LocalMode lm(this); ENTRY_DEBUG } :
+function_identifier_main[] { CompleteElement lm(this); ENTRY_DEBUG } :
         // special cases for main
         {
             // end all started elements in this rule
@@ -2832,7 +2832,7 @@ function_identifier_main[] { LocalMode lm(this); ENTRY_DEBUG } :
 /*
   overloaded operator name
 */
-overloaded_operator[] { LocalMode lm(this); ENTRY_DEBUG } :
+overloaded_operator[] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             // end all started elements in this rule
             startNewMode(MODE_LOCAL);
@@ -2850,7 +2850,7 @@ overloaded_operator[] { LocalMode lm(this); ENTRY_DEBUG } :
         )
 ;
 
-linq_expression[] { LocalMode lm(this); ENTRY_DEBUG }:
+linq_expression[] { CompleteElement lm(this); ENTRY_DEBUG }:
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
@@ -2860,7 +2860,7 @@ linq_expression[] { LocalMode lm(this); ENTRY_DEBUG }:
         (options { greedy = true; } : linq_from | linq_where | linq_select | linq_let | linq_group | linq_join | linq_orderby)+
     ;
 
-linq_from[] { LocalMode lm(this); ENTRY_DEBUG }:
+linq_from[] { CompleteElement lm(this); ENTRY_DEBUG }:
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
@@ -2870,7 +2870,7 @@ linq_from[] { LocalMode lm(this); ENTRY_DEBUG }:
         FROM linq_full_expression (options { greedy = true; } : linq_in)*
     ;
 
-linq_in[] { LocalMode lm(this); ENTRY_DEBUG }:
+linq_in[] { CompleteElement lm(this); ENTRY_DEBUG }:
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
@@ -2880,7 +2880,7 @@ linq_in[] { LocalMode lm(this); ENTRY_DEBUG }:
         IN linq_full_expression
     ;
 
-linq_where[] { LocalMode lm(this); ENTRY_DEBUG }:
+linq_where[] { CompleteElement lm(this); ENTRY_DEBUG }:
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
@@ -2890,7 +2890,7 @@ linq_where[] { LocalMode lm(this); ENTRY_DEBUG }:
         WHERE linq_full_expression
     ;
 
-linq_select[] { LocalMode lm(this); ENTRY_DEBUG }:
+linq_select[] { CompleteElement lm(this); ENTRY_DEBUG }:
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
@@ -2900,7 +2900,7 @@ linq_select[] { LocalMode lm(this); ENTRY_DEBUG }:
         SELECT linq_full_expression
     ;
 
-linq_let[] { LocalMode lm(this); ENTRY_DEBUG }:
+linq_let[] { CompleteElement lm(this); ENTRY_DEBUG }:
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
@@ -2910,7 +2910,7 @@ linq_let[] { LocalMode lm(this); ENTRY_DEBUG }:
         LET linq_full_expression
     ;
 
-linq_group[] { LocalMode lm(this); ENTRY_DEBUG }:
+linq_group[] { CompleteElement lm(this); ENTRY_DEBUG }:
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
@@ -2922,7 +2922,7 @@ linq_group[] { LocalMode lm(this); ENTRY_DEBUG }:
         (options { greedy = true; } : linq_into)*
     ;
 
-linq_by[] { LocalMode lm(this); ENTRY_DEBUG }:
+linq_by[] { CompleteElement lm(this); ENTRY_DEBUG }:
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
@@ -2932,7 +2932,7 @@ linq_by[] { LocalMode lm(this); ENTRY_DEBUG }:
         BY linq_full_expression
     ;
 
-linq_into[] { LocalMode lm(this); ENTRY_DEBUG }:
+linq_into[] { CompleteElement lm(this); ENTRY_DEBUG }:
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
@@ -2942,7 +2942,7 @@ linq_into[] { LocalMode lm(this); ENTRY_DEBUG }:
         INTO linq_full_expression
     ;
 
-linq_join[] { LocalMode lm(this); ENTRY_DEBUG }:
+linq_join[] { CompleteElement lm(this); ENTRY_DEBUG }:
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
@@ -2956,7 +2956,7 @@ linq_join[] { LocalMode lm(this); ENTRY_DEBUG }:
         (options { greedy = true; } : linq_into)* 
     ;
 
-linq_on[] { LocalMode lm(this); ENTRY_DEBUG }:
+linq_on[] { CompleteElement lm(this); ENTRY_DEBUG }:
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
@@ -2966,7 +2966,7 @@ linq_on[] { LocalMode lm(this); ENTRY_DEBUG }:
         ON linq_full_expression
     ;
 
-linq_equals[] { LocalMode lm(this); ENTRY_DEBUG }:
+linq_equals[] { CompleteElement lm(this); ENTRY_DEBUG }:
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
@@ -2976,7 +2976,7 @@ linq_equals[] { LocalMode lm(this); ENTRY_DEBUG }:
         EQUALS linq_full_expression
     ;
 
-linq_orderby[] { LocalMode lm(this); ENTRY_DEBUG }:
+linq_orderby[] { CompleteElement lm(this); ENTRY_DEBUG }:
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
@@ -2990,7 +2990,7 @@ linq_orderby[] { LocalMode lm(this); ENTRY_DEBUG }:
         (options { greedy = true; } : COMMA linq_full_expression (linq_ascending | linq_descending| ))*
     ;
 
-linq_ascending[] { LocalMode lm(this); ENTRY_DEBUG }:
+linq_ascending[] { CompleteElement lm(this); ENTRY_DEBUG }:
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
@@ -3000,7 +3000,7 @@ linq_ascending[] { LocalMode lm(this); ENTRY_DEBUG }:
         ASCENDING
     ;
 
-linq_descending[] { LocalMode lm(this); ENTRY_DEBUG }:
+linq_descending[] { CompleteElement lm(this); ENTRY_DEBUG }:
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
@@ -3010,7 +3010,7 @@ linq_descending[] { LocalMode lm(this); ENTRY_DEBUG }:
         DESCENDING
     ;
 
-variable_identifier_array_grammar_sub[bool& iscomplex] { LocalMode lm(this); ENTRY_DEBUG } :
+variable_identifier_array_grammar_sub[bool& iscomplex] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
             if (inLanguage(LANGUAGE_CSHARP))
@@ -3031,14 +3031,14 @@ variable_identifier_array_grammar_sub[bool& iscomplex] { LocalMode lm(this); ENT
 ;
 
 
-variable_identifier_array_grammar_sub_contents{ LocalMode lm(this); ENTRY_DEBUG } :
+variable_identifier_array_grammar_sub_contents{ CompleteElement lm(this); ENTRY_DEBUG } :
         { !inLanguage(LANGUAGE_CSHARP) }? full_expression[true] |
 
         { inLanguage(LANGUAGE_CSHARP) }? ({ LA(1) != RBRACKET }? (COMMA | full_expression[false]) )*
 ;
 
 
-attribute[] returns [bool global = false] { LocalMode lm(this); ENTRY_DEBUG } :
+attribute[] returns [bool global = false] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_TOP | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
@@ -3055,7 +3055,7 @@ attribute[] returns [bool global = false] { LocalMode lm(this); ENTRY_DEBUG } :
         RBRACKET
 ;
 
-attribute_target[] returns [bool global = false] { LocalMode lm(this); ENTRY_DEBUG } :
+attribute_target[] returns [bool global = false] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
@@ -3071,7 +3071,7 @@ attribute_target[] returns [bool global = false] { LocalMode lm(this); ENTRY_DEB
   Full, complete expression matched all at once (no stream).
   Colon matches range(?) for bits.
 */
-full_expression[bool checkcomma = true] { LocalMode lm(this); ENTRY_DEBUG } :
+full_expression[bool checkcomma = true] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
@@ -3095,7 +3095,7 @@ full_expression[bool checkcomma = true] { LocalMode lm(this); ENTRY_DEBUG } :
         COLON)*
 ;
 
-linq_full_expression[] { LocalMode lm(this); ENTRY_DEBUG } :
+linq_full_expression[] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
@@ -3121,7 +3121,7 @@ linq_full_expression[] { LocalMode lm(this); ENTRY_DEBUG } :
    A variable name in an expression.  Includes array names, but not
    function calls
 */
-variable_identifier[] { LocalMode lm(this); TokenPosition tp; ENTRY_DEBUG } :
+variable_identifier[] { CompleteElement lm(this); TokenPosition tp; ENTRY_DEBUG } :
 
         complex_name[true, true]
 /*
@@ -3158,7 +3158,7 @@ variable_identifier[] { LocalMode lm(this); TokenPosition tp; ENTRY_DEBUG } :
 /*
   Name including template argument list
 */
-simple_name_optional_template[bool marked] { LocalMode lm(this); TokenPosition tp; ENTRY_DEBUG } :
+simple_name_optional_template[bool marked] { CompleteElement lm(this); TokenPosition tp; ENTRY_DEBUG } :
         {
             if (marked) {
                 // local mode that is automatically ended by leaving this function
@@ -3190,7 +3190,7 @@ simple_name_optional_template[bool marked] { LocalMode lm(this); TokenPosition t
 
   preprocessor tokens that can also be used as identifiers
 */
-identifier[bool marked = false] { LocalMode lm(this); ENTRY_DEBUG } :
+identifier[bool marked = false] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             if (marked) {
                 // local mode that is automatically ended by leaving this function
@@ -3215,12 +3215,12 @@ identifier[bool marked = false] { LocalMode lm(this); ENTRY_DEBUG } :
 /*
   identifier name marked with name element
 */
-complex_name[bool marked = true, bool index = false] { LocalMode lm(this); TokenPosition tp; bool iscomplex_name = false; ENTRY_DEBUG } :
+complex_name[bool marked = true, bool index = false] { CompleteElement lm(this); TokenPosition tp; bool iscomplex_name = false; ENTRY_DEBUG } :
         complex_name_inner[marked, index]
         (options { greedy = true; } : { index }? variable_identifier_array_grammar_sub[iscomplex_name])*
 ;
 
-complex_name_inner[bool marked = true, bool index = false] { LocalMode lm(this); TokenPosition tp; bool iscomplex_name = false; ENTRY_DEBUG } :
+complex_name_inner[bool marked = true, bool index = false] { CompleteElement lm(this); TokenPosition tp; bool iscomplex_name = false; ENTRY_DEBUG } :
         {
             if (marked) {
                 // There is a problem detecting complex names from
@@ -3359,7 +3359,7 @@ catch[antlr::RecognitionException] {
 /*
   Specifier for a function
 */
-function_specifier[] { LocalMode lm(this); ENTRY_DEBUG } :
+function_specifier[] { CompleteElement lm(this); ENTRY_DEBUG } :
         generic_constraint |
 
         {
@@ -3377,7 +3377,7 @@ function_specifier[] { LocalMode lm(this); ENTRY_DEBUG } :
         simple_name_optional_template[false])
 ;
 
-specifier[] { LocalMode lm(this); ENTRY_DEBUG } :
+specifier[] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_LOCAL);
@@ -3397,7 +3397,7 @@ specifier[] { LocalMode lm(this); ENTRY_DEBUG } :
         )
 ;
 
-auto_keyword[] { LocalMode lm(this); ENTRY_DEBUG } :
+auto_keyword[] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             // local mode that is automatically ended by leaving this function
             startNewMode(MODE_LOCAL);
@@ -3596,7 +3596,7 @@ macro_call[] { ENTRY_DEBUG } :
         }
     ;
 
-macro_call_inner[] { LocalMode lm(this); bool first = true; ENTRY_DEBUG } :
+macro_call_inner[] { CompleteElement lm(this); bool first = true; ENTRY_DEBUG } :
 
         {
             // start a mode for the macro that will end after the argument list
@@ -3640,7 +3640,7 @@ macro_call_contents[] {
 
             ENTRY_DEBUG
 
-            LocalMode lm(this);
+            CompleteElement lm(this);
 
             int parencount = 0;
             bool start = true;
@@ -3856,7 +3856,7 @@ parse_complete_block[] { ENTRY_DEBUG
 
 ;
 
-delegate_marked[] { LocalMode lm(this); ENTRY_DEBUG } :
+delegate_marked[] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             // treat catch block as nested block statement
             startNewMode(MODE_LOCAL);
@@ -3867,7 +3867,7 @@ delegate_marked[] { LocalMode lm(this); ENTRY_DEBUG } :
         DELEGATE
 ;
 
-lambda_marked[] { LocalMode lm(this); ENTRY_DEBUG } :
+lambda_marked[] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             // treat catch block as nested block statement
             startNewMode(MODE_LOCAL);
@@ -4098,7 +4098,7 @@ pure_expression_block[] { ENTRY_DEBUG } :
 /*
   All possible operators
 */
-general_operators[] { LocalMode lm(this); ENTRY_DEBUG } :
+general_operators[] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             if (isoption(parseoptions, OPTION_OPERATOR)) {
 
@@ -4122,7 +4122,7 @@ general_operators[] { LocalMode lm(this); ENTRY_DEBUG } :
         )
 ;
 
-sole_new[] { LocalMode lm(this); ENTRY_DEBUG } :
+sole_new[] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             if (isoption(parseoptions, OPTION_OPERATOR)) {
 
@@ -4136,7 +4136,7 @@ sole_new[] { LocalMode lm(this); ENTRY_DEBUG } :
         NEW
 ;
 
-sole_destop[] { LocalMode lm(this); ENTRY_DEBUG } :
+sole_destop[] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             if (isoption(parseoptions, OPTION_OPERATOR)) {
 
@@ -4154,7 +4154,7 @@ general_operators_list[] { ENTRY_DEBUG }:
         OPERATORS | TEMPOPS | TEMPOPE | EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF | QMARK
 ;
 
-rparen_operator[bool markup = true] { LocalMode lm(this); ENTRY_DEBUG } :
+rparen_operator[bool markup = true] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             if (markup && isoption(parseoptions, OPTION_OPERATOR) && !inMode(MODE_END_ONLY_AT_RPAREN)) {
 
@@ -4219,7 +4219,7 @@ rparen[bool final = false, bool markup = true] { bool isempty = getParen() == 0;
 /*
   Dot (period) operator
 */
-period[] { LocalMode lm(this); ENTRY_DEBUG } :
+period[] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             if (isoption(parseoptions, OPTION_OPERATOR)) {
 
@@ -4236,7 +4236,7 @@ period[] { LocalMode lm(this); ENTRY_DEBUG } :
 /*
   Namespace operator '::'
 */
-dcolon[] { LocalMode lm(this); ENTRY_DEBUG } :
+dcolon[] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             if (isoption(parseoptions, OPTION_OPERATOR)) {
 
@@ -4407,7 +4407,7 @@ expression_part_default[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENT
   Only start and end of strings are put directly through the parser.
   The contents of the string are handled as is whitespace.
 */
-string_literal[] { LocalMode lm(this); ENTRY_DEBUG } :
+string_literal[] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             // only markup strings in literal option
             if (isoption(parseoptions, OPTION_LITERAL)) {
@@ -4426,7 +4426,7 @@ string_literal[] { LocalMode lm(this); ENTRY_DEBUG } :
   Only start and end of character are put directly through the parser.
   The contents of the character are handled as is whitespace.
 */
-char_literal[] { LocalMode lm(this); ENTRY_DEBUG } :
+char_literal[] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             // only markup characters in literal option
             if (isoption(parseoptions, OPTION_LITERAL)) {
@@ -4441,7 +4441,7 @@ char_literal[] { LocalMode lm(this); ENTRY_DEBUG } :
         (CHAR_START CHAR_END)
 ;
 
-literal[] { LocalMode lm(this); ENTRY_DEBUG } :
+literal[] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             // only markup literals in literal option
             if (isoption(parseoptions, OPTION_LITERAL)) {
@@ -4456,7 +4456,7 @@ literal[] { LocalMode lm(this); ENTRY_DEBUG } :
         CONSTANTS
 ;
 
-boolean[] { LocalMode lm(this); ENTRY_DEBUG } :
+boolean[] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             // only markup boolean values in literal option
             if (isoption(parseoptions, OPTION_LITERAL)) {
@@ -4471,7 +4471,7 @@ boolean[] { LocalMode lm(this); ENTRY_DEBUG } :
         (TRUE | FALSE)
 ;
 
-derived[] { LocalMode lm(this); ENTRY_DEBUG } :
+derived[] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             // end all elements at end of rule automatically
             startNewMode(MODE_LOCAL);
@@ -4504,7 +4504,7 @@ super_list_java[] { ENTRY_DEBUG } :
         }
 ;
 
-extends_list[] { LocalMode lm(this); ENTRY_DEBUG } :
+extends_list[] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             // end all elements at end of rule automatically
             startNewMode(MODE_LOCAL);
@@ -4516,7 +4516,7 @@ extends_list[] { LocalMode lm(this); ENTRY_DEBUG } :
         super_list
 ;
 
-implements_list[] { LocalMode lm(this); ENTRY_DEBUG } :
+implements_list[] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             // end all elements at end of rule automatically
             startNewMode(MODE_LOCAL);
@@ -4538,7 +4538,7 @@ super_list[] { bool flag = false; ENTRY_DEBUG } :
         )*
 ;
 
-derive_access[] { LocalMode lm(this); ENTRY_DEBUG } :
+derive_access[] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             // end all elements at end of rule automatically
             startNewMode(MODE_LOCAL);
@@ -4548,7 +4548,7 @@ derive_access[] { LocalMode lm(this); ENTRY_DEBUG } :
         (VIRTUAL)* (PUBLIC | PRIVATE | PROTECTED) (options { greedy = true; } : VIRTUAL)*
 ;
 
-parameter_list[] { LocalMode lm(this); bool lastwasparam = false; bool foundparam = false; ENTRY_DEBUG } :
+parameter_list[] { CompleteElement lm(this); bool lastwasparam = false; bool foundparam = false; ENTRY_DEBUG } :
         {
             // list of parameters
             startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
@@ -4590,7 +4590,7 @@ indexer_parameter_list[] { bool lastwasparam = false; bool foundparam = false; E
         /* empty_element[SPARAMETER, !lastwasparam && foundparam] */
 ;
 
-empty_element[int element, bool cond] { LocalMode lm(this); ENTRY_DEBUG } :
+empty_element[int element, bool cond] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             if (cond) {
                 startNewMode(MODE_LOCAL);
@@ -4669,7 +4669,7 @@ parameter[] { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTYPE dec
 
 /*
 */
-parameter_type_count[int type_count] { LocalMode lm(this); ENTRY_DEBUG } :
+parameter_type_count[int type_count] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             // local mode so start element will end correctly
             startNewMode(MODE_LOCAL);
@@ -4686,7 +4686,7 @@ parameter_type_count[int type_count] { LocalMode lm(this); ENTRY_DEBUG } :
         ( options { greedy = true; } : multops | tripledotop | LBRACKET RBRACKET)*
 ;
 
-multops[] { LocalMode lm(this); ENTRY_DEBUG } :
+multops[] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             // markup type modifiers if option is on
             if (isoption(parseoptions, OPTION_MODIFIER)) {
@@ -4701,7 +4701,7 @@ multops[] { LocalMode lm(this); ENTRY_DEBUG } :
         (MULTOPS | REFOPS | RVALUEREF | { inLanguage(LANGUAGE_CSHARP) }? QMARK set_bool[qmark, true])
 ;
 
-tripledotop[] { LocalMode lm(this); ENTRY_DEBUG } :
+tripledotop[] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             // markup type modifiers if option is on
             if (isoption(parseoptions, OPTION_MODIFIER)) {
@@ -4718,7 +4718,7 @@ tripledotop[] { LocalMode lm(this); ENTRY_DEBUG } :
 
 /*
 */
-parameter_type[] { LocalMode lm(this); int type_count = 0; int fla = 0; int secondtoken = 0; DECLTYPE decl_type = NONE; ENTRY_DEBUG } :
+parameter_type[] { CompleteElement lm(this); int type_count = 0; int fla = 0; int secondtoken = 0; DECLTYPE decl_type = NONE; ENTRY_DEBUG } :
         {
             // local mode so start element will end correctly
             startNewMode(MODE_LOCAL);
@@ -4792,7 +4792,7 @@ template_param[] { ENTRY_DEBUG } :
 /*
   template argument list
 */
-template_argument_list[] { LocalMode lm(this); std::string namestack_save[2]; ENTRY_DEBUG } : 
+template_argument_list[] { CompleteElement lm(this); std::string namestack_save[2]; ENTRY_DEBUG } : 
         {
             // local mode
             startNewMode(MODE_LOCAL);
@@ -4807,7 +4807,7 @@ template_argument_list[] { LocalMode lm(this); std::string namestack_save[2]; EN
         restorenamestack[namestack_save]
 ;
 
-generic_constraint[] { LocalMode lm(this); ENTRY_DEBUG } : 
+generic_constraint[] { CompleteElement lm(this); ENTRY_DEBUG } : 
         {
             // local mode
             startNewMode(MODE_LOCAL);
@@ -4826,7 +4826,7 @@ restorenamestack[std::string namestack_save[]] { namestack[0] = namestack_save[0
 /*
   template argument
 */
-template_argument[] { LocalMode lm(this); ENTRY_DEBUG } :
+template_argument[] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             // local mode
             startNewMode(MODE_LOCAL);
@@ -4845,7 +4845,7 @@ template_argument[] { LocalMode lm(this); ENTRY_DEBUG } :
         )+
 ;
 
-template_extends_java[] { LocalMode lm(this); bool iscomplex = false; ENTRY_DEBUG } :
+template_extends_java[] { CompleteElement lm(this); bool iscomplex = false; ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
 
@@ -4856,7 +4856,7 @@ template_extends_java[] { LocalMode lm(this); bool iscomplex = false; ENTRY_DEBU
 ;
 
 
-template_super_java[] { LocalMode lm(this); bool iscomplex = false; ENTRY_DEBUG } :
+template_super_java[] { CompleteElement lm(this); bool iscomplex = false; ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
 
@@ -4892,7 +4892,7 @@ tempope[bool final = false] { if (final) setFinalToken(); ENTRY_DEBUG } :
 /*
   label statement
 */
-label_statement[] { LocalMode lm(this); ENTRY_DEBUG } :
+label_statement[] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_STATEMENT);
@@ -5008,7 +5008,7 @@ enum_definition[] { ENTRY_DEBUG } :
   Complete definition of an enum.  Used for enum's embedded in typedef's where the entire
   enum must be parsed since it is part of the type.
 */
-enum_definition_whole[] { LocalMode lm(this); ENTRY_DEBUG } :
+enum_definition_whole[] { CompleteElement lm(this); ENTRY_DEBUG } :
         enum_definition
 
         (variable_identifier)*
@@ -5393,14 +5393,14 @@ line_continuation[] { setFinalToken(); ENTRY_DEBUG } :
         EOL_BACKSLASH
 ;
 
-cpp_condition[bool& markblockzero] { LocalMode lm(this); ENTRY_DEBUG } :
+cpp_condition[bool& markblockzero] { CompleteElement lm(this); ENTRY_DEBUG } :
 
         set_bool[markblockzero, LA(1) == CONSTANTS && LT(1)->getText() == "0"]
 
         full_expression
 ;
 
-cpp_symbol[] { LocalMode lm(this); ENTRY_DEBUG } :
+cpp_symbol[] { CompleteElement lm(this); ENTRY_DEBUG } :
         {
             // end all started elements in this rule
             startNewMode(MODE_LOCAL);
@@ -5415,7 +5415,7 @@ cpp_symbol_optional[] { ENTRY_DEBUG } :
         (options { greedy = true; } : cpp_symbol)*
 ;
 
-cpp_filename[] { LocalMode lm(this); ENTRY_DEBUG } :
+cpp_filename[] { CompleteElement lm(this); ENTRY_DEBUG } :
         (
         {
             startNewMode(MODE_PREPROC);
