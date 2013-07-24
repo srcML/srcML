@@ -216,7 +216,7 @@ srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options
 void srcMLParser::endAllModes() {
 
      // expression mode has an extra mode
-     if (parseoptions & OPTION_EXPRESSION)
+     if (isoption(parseoptions, OPTION_EXPRESSION))
         endCurrentMode();
 
      // should only be one mode
@@ -1899,7 +1899,7 @@ terminate_post[] { ENTRY_DEBUG } :
         {
             // end all statements this statement is nested in
             // special case when ending then of if statement
-            if (!(parseoptions & OPTION_EXPRESSION) &&
+            if (!isoption(parseoptions, OPTION_EXPRESSION) &&
                  (!inMode(MODE_EXPRESSION_BLOCK) || inMode(MODE_EXPECT)) &&
                 !inMode(MODE_INTERNAL_END_CURLY) && !inMode(MODE_INTERNAL_END_PAREN)) {
 
