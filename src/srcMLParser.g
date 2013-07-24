@@ -3423,7 +3423,7 @@ constructor_declaration[] { ENTRY_DEBUG } :
 constructor_definition[] { ENTRY_DEBUG } :
         {
             // statement with nested block
-            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_STATEMENT);
+            startNewMode(MODE_STATEMENT | MODE_NEST);
 
             // start the construction definition
             startElement(SCONSTRUCTOR_DEFINITION);
@@ -3795,16 +3795,14 @@ unchecked_statement[] { ENTRY_DEBUG } :
 catch_statement[] { ENTRY_DEBUG } :
         {
             // treat catch block as nested block statement
-            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_STATEMENT);
+            startNewMode(MODE_STATEMENT | MODE_NEST);
 
             // start of the catch statement
             startElement(SCATCH_BLOCK);
         }
         CATCH
         {            
-            // looking for a LPAREN.  may have some whitespace before it
-            consumeSkippedTokens();
-
+            // parameter list is unmarked with a single parameter
             if (LA(1) == LPAREN) {
                 match(LPAREN);
 
@@ -3817,7 +3815,7 @@ catch_statement[] { ENTRY_DEBUG } :
 finally_statement[] { ENTRY_DEBUG } :
         {
             // treat catch block as nested block statement
-            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_STATEMENT);
+            startNewMode(MODE_STATEMENT | MODE_NEST);
 
             // start of the catch statement
             startElement(SFINALLY_BLOCK);
@@ -3894,29 +3892,7 @@ lambda_marked[] { LocalMode lm(this); ENTRY_DEBUG } :
         }
         LAMBDA
 ;
-/*
-lock_statement[] { ENTRY_DEBUG } :
-        {
-            // treat catch block as nested block statement
-            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_STATEMENT);
 
-            // start of the catch statement
-            startElement(SLOCK_STATEMENT);
-        }
-        LOCK
-        {            
-            // looking for a LPAREN.  may have some whitespace before it
-            consumeSkippedTokens();
-
-            if (LA(1) == LPAREN) {
-                match(LPAREN);
-
-                // expect a parameter list
-                startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
-            }
-        }
-;
-*/
 fixed_statement[] { ENTRY_DEBUG } :
         {
             // treat catch block as nested block statement
@@ -3928,8 +3904,6 @@ fixed_statement[] { ENTRY_DEBUG } :
         FIXED
         {            
             // looking for a LPAREN.  may have some whitespace before it
-            consumeSkippedTokens();
-
             if (LA(1) == LPAREN) {
 
                 parameter_list();
