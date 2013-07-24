@@ -204,7 +204,7 @@ srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options
 
 {
     // root, single mode
-    if (parseoptions & OPTION_EXPRESSION)
+    if (isoption(parseoptions, OPTION_EXPRESSION))
         // root, single mode to allows for an expression without a statement
         startNewMode(MODE_TOP | MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
     else
