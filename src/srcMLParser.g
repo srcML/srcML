@@ -3672,28 +3672,21 @@ macro_call_contents[] {
         } :;
 
 try_statement[] { ENTRY_DEBUG } :
-        try_pseudo_statement
-        TRY
-        {            
-            // looking for a LPAREN.  may have some whitespace before it
-            consumeSkippedTokens();
-
-            if (LA(1) == LPAREN) {
-                match(LPAREN);
-
-                // expect a parameter list
-                startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
-            }
-        }
-;
-
-try_pseudo_statement[] { ENTRY_DEBUG } :
         {
             // treat try block as nested block statement
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_TRY);
 
             // start of the try statement
             startElement(STRY_BLOCK);
+        }
+        TRY
+        {            
+            if (LA(1) == LPAREN) {
+                match(LPAREN);
+
+                // expect a parameter list
+                startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
+            }
         }
 ;
 
