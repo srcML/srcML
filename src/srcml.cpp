@@ -108,6 +108,16 @@ void file_test(std::string fp) {
 	std::cout << fp << "\n";
 }
 
+/* Function used to check that 'opt1' and 'opt2' are not specified
+   at the same time. (FROM BOOST LIBRARY EXAMPLES)*/
+void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, const char* opt2)
+{
+	if (vm.count(opt1) && !vm[opt1].defaulted() && vm.count(opt2) && !vm[opt2].defaulted()) {
+		throw std::logic_error(std::string("Conflicting options '")
+			+ opt1 + "' and '" + opt2 + "'.");
+	} 
+}
+
 int main(int argc, char * argv[]) {
 
 	prog_opts::options_description general("General Options");
@@ -220,6 +230,15 @@ int main(int argc, char * argv[]) {
 	prog_opts::variables_map cli_map;
 	prog_opts::store(prog_opts::parse_command_line(argc, argv, all), cli_map);
 	prog_opts::notify(cli_map);
+
+	//OPTION CONFLICTS
+	try {
+		conflicting_options(cli_map, "quiet", "verbose");	
+	}
+	catch(std::exception& e) {
+  	std::cerr << e.what() << "\n";
+  	return 1;
+  }
 
   //DISPLAY HELP
 	if (cli_map.count("help")) {  
