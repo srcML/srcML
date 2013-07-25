@@ -743,7 +743,7 @@ look_past_multiple[int skiptoken1, int skiptoken2, int skiptoken3, int skiptoken
 }:;
 
 // functions
-function[int token, int type_count] { /* TokenPosition tp; */ENTRY_DEBUG } :
+function[int token, int type_count] { ENTRY_DEBUG } :
 		{
             // function definitions have a "nested" block statement
             startNewMode(MODE_STATEMENT);
@@ -758,7 +758,7 @@ function[int token, int type_count] { /* TokenPosition tp; */ENTRY_DEBUG } :
 ;
 
 // functions
-property_method[] { /* TokenPosition tp; */ENTRY_DEBUG } :
+property_method[] { ENTRY_DEBUG } :
 		{
             // function definitions have a "nested" block statement
             startNewMode(MODE_STATEMENT);
@@ -770,7 +770,7 @@ property_method[] { /* TokenPosition tp; */ENTRY_DEBUG } :
 ;
 
 // functions
-property_method_decl[] { /* TokenPosition tp; */ENTRY_DEBUG } :
+property_method_decl[] { ENTRY_DEBUG } :
 		{
             // function definitions have a "nested" block statement
             startNewMode(MODE_STATEMENT);
