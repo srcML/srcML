@@ -3036,7 +3036,7 @@ variable_identifier_array_grammar_sub[bool& iscomplex] { CompleteElement element
 variable_identifier_array_grammar_sub_contents{ CompleteElement element; ENTRY_DEBUG } :
         { !inLanguage(LANGUAGE_CSHARP) }? full_expression |
 
-        { inLanguage(LANGUAGE_CSHARP) }? ({ LA(1) != RBRACKET }? (COMMA | full_expression) )*
+        { inLanguage(LANGUAGE_CSHARP) }? (options { greedy = true; } : { LA(1) != RBRACKET }? ({ /* stop warning */ LA(1) == COMMA }? COMMA | full_expression) )*
 ;
 
 
