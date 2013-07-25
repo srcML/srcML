@@ -2431,7 +2431,6 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
 
             set_bool[sawenum, sawenum || LA(1) == ENUM]
             (
-                (specifier)=>
                 specifier set_int[specifier_count, specifier_count + 1] |
 
                 { type_count == attributecount && inLanguage(LANGUAGE_CSHARP) }?
