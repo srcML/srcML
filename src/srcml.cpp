@@ -25,41 +25,113 @@
 #include <string>
 
 //Compiled with:
-// g++ -o srcml ../srcml.cpp -lboost_program_options
-
-/*
-	Arguement conflicts
-
-	-l --language
-	-x --encoding
-	-d --directory
-	-f --filename
-	-s --src-version
-
-
-*/
+// g++ -o srcml ./srcml.cpp -lboost_program_options
 
 namespace prog_opts = boost::program_options;
 
+const std::string SRCML_HEADER = "";
+const std::string SRCML_FOOTER = "";
+
+const std::string SRC2SRCML_HEADER = "Usage: srcml [options] <src_infile>... [-o <srcML_outfile>]\
+	\n\n\
+	Translates C, C++, and Java source code into the XML source-code representation srcML.\
+	Input can be from standard input, a file, a directory, or an archive file, i.e., tar, cpio, and zip.\
+	Multiple files are stored in a srcML archive.\
+	\n\n\
+	The source-code language is based on the file extension.  Additional extensions for a language\
+	can be registered, and can be directly set using the --language option.\
+	\n\n\
+	By default, output is to stdout.  You can specify a file for output using the --output or -o option.\
+	When no filenames are given, input is from stdin and output is to stdout.\
+	An input filename of '-' also reads from stdin.\
+	\n\n\
+	Any input file can be a local filename (FILE) or a URI with the protocols http:, ftp:, or file:\
+	\n\n";
+
+const std::string SRC2SRCML_FOOTER = "Examples:\
+  \n\n\
+  src2srcml (read from standard input, write to standard output)\n\
+  src2srcml m.cpp          (read from file m.cpp, write to standard output)\n\
+  src2srcml m.cpp -o m.cpp.xml (read from file m.cpp, write to file m.cpp.xml)\n\
+  \n\
+  src2srcml http://www.sdml.info/projects/srcml/ex/main.cpp (read from URI)\n\
+	\n\
+  src2srcml --directory=src --filename=m.cpp m.cpp -o m.cpp.xml (element unit attributes dir \"src\", filename \"m.cpp\")\n\
+  src2srcml --src-encoding=UTF-8 m.cpp m.cpp.xml         (encoding of input text file is UTF-8)\n\
+  src2srcml --xml-encoding=ISO-8859-1 m.cpp m.cpp.xml    (set encoding of srcML file to ISO-8859-1)\n\
+  \n\
+	www.sdml.info\n\
+	Report bugs to collard@uakron.edu\n";
+
+const std::string SRCML2SRC_HEADER = "Usage: srcml2src [options] <srcML_infile>... [-o <src_outfile>]\
+	\n\n\
+	Translates from the the XML source-code representation srcML back to source-code.\
+	\n\n\
+	Extracts back to standard output, the disk, or to traditional archive formats,\
+	e.g., tar, cpio, zip, and with optional gzip, bzip2 compression.\
+	Provides access to metadata about the srcML document. For srcML archives\
+	provides extraction of specific files, and efficient querying/transformation\
+	using XPath, XSLT, and RelaxNG.\
+	\n\n\
+	srcML archives contain multiple individual source code files,\
+	e.g., an entire project or directory tree.\
+	\n\n\
+	By default, output is to stdout.  You can specify a file for output using the --output or -o option.\
+	When no filenames are given, input is from stdin and output is to stdout.\
+	An input filename of '-' also reads from stdin.\
+	\n\n\
+	Any input file, including XSLT and RelaxNG files, can be a local\
+	filename (FILE) or a URI with the protocols http:, ftp:, or file:\
+	\n\n\
+	The srcML files can be in xml, or compressed with gzip or bzip2 (detected automatically).\
+	\n\n";
+
+const std::string SRCML2SRC_FOOTER = "Examples:\
+	\n\n\
+  Read from file main.cpp.xml, write to file main.cpp:\
+  \n\
+  srcml main.cpp.xml -o main.cpp\
+	\n\n\
+  Read from URI, write to file main.cpp:\
+  \n\
+  srcml http://www.sdml.info/projects/srcml/ex/main.cpp.xml main.cpp\
+  \n\n\
+  Read from file main.cpp.xml, output language attribute to stdout:\
+  \n\
+  srcml main.cpp.xml --language\
+  \n\n\
+	www.sdml.info\n\
+	Report bugs to collard@uakron.edu\n";
+
 int main(int argc, char * argv[]) {
 
-	prog_opts::options_description general("Options");
+	prog_opts::options_description general("General Options");
 	general.add_options()
-		("help,h", "display this help and exit")
-		("version,V", "display version number and exit")
-		("archive,n", "store output in a srcML archive, default for multiple input files")
 		("compress,z", "output in gzip format")
-		("debug,g", "markup translation errors, namespace http://www.sdml.info/srcML/srcerr")
-		("expression,e", "expression mode for translating a single expression not in a statement")
-		("interactive,c", "immediate output while parsing, default for keyboard input")
+		("help,h", prog_opts::value<std::string>()->implicit_value(""),"display this help and exit. USAGE: help or help [module name]. MODULES: src2srcml, srcml2src")
 		("no-namespace-decl", "do not output any namespace declarations")
 		("no-xml-dexlaration", "do not output the XML declaration")
-		("output,o", prog_opts::value<std::string>(), "write result ouput to arg which is a FILE or URI")
-		("files-from", prog_opts::value<std::string>(), "read list of source file names, either FILE or URI, from arg to form a srcML archive")
-		("register-ext", prog_opts::value<std::string>(), "register file extension EXT for source-code language LANG. arg format EXT=LANG")
-		("src-encoding", prog_opts::value<std::string>(), "set the input source encoding to arg (default:  ISO-8859-1)")
-		("verbose,v", "conversion and status information to stderr")
+		("output=,o", prog_opts::value<std::string>(), "write result ouput to arg which is a FILE or URI")
 		("quiet,q", "suppresses status messages")
+		("src-encoding=,t", prog_opts::value<std::string>(), "set the input source encoding to arg (default:  ISO-8859-1)")
+		("verbose,v", "conversion and status information to stderr")		
+		("version,V", "display version number and exit")
+		;
+
+	prog_opts::options_description src2srcml_options("src2srcml Options");
+	src2srcml_options.add_options()
+		("archive,n", "store output in a srcML archive, default for multiple input files")
+		("debug,g", "markup translation errors, namespace http://www.sdml.info/srcML/srcerr")
+		("encoding=,x", prog_opts::value<std::string>(),"set the output XML encoding to ENC (default:  UTF-8)")
+		("expression,e", "expression mode for translating a single expression not in a statement")
+		("files-from", prog_opts::value<std::string>(), "read list of source file names, either FILE or URI, from arg to form a srcML archive")
+		("interactive,c", "immediate output while parsing, default for keyboard input")
+		("language=,l", prog_opts::value<std::string>(), "set the language to C, C++, or Java")
+		("register-ext", prog_opts::value<std::string>(), "register file extension EXT for source-code language LANG. arg format EXT=LANG")
+		;
+
+	prog_opts::options_description srcml2src_options("srcml2src Options");
+	srcml2src_options.add_options()
 		("xml,X", "output in XML instead of text")
 		;
 
@@ -75,7 +147,7 @@ int main(int argc, char * argv[]) {
 	prog_opts::options_description line_col("Line/Column Position");
 	line_col.add_options()
 		("position", "include line/column attributes, namespace 'http://www.sdml.info/srcML/position'")
-		("tabs", prog_opts::value<int>(), "set tabs arg characters apart.  Default is 8")
+		("tabs=", prog_opts::value<int>(), "set tabs arg characters apart.  Default is 8")
 		;
 
 	prog_opts::options_description markup("Markup Extensions");
@@ -85,13 +157,25 @@ int main(int argc, char * argv[]) {
 		("operator", "markup operators, namespace 'http://www.sdml.info/srcML/operator'")
 		;
 
-	prog_opts::options_description metadata("Metadata Options");
-	metadata.add_options()
+	prog_opts::options_description src2srcml_metadata("Metadata Options");
+	src2srcml_metadata.add_options()
+		("directory=,d", prog_opts::value<std::string>(), "set the arg directory attribute")
+		("filename=,f", prog_opts::value<std::string>(), "set the arg filename attribute")
+		("src-version=,s", prog_opts::value<std::string>(), "set the arg version attribute")
+		;
+
+	prog_opts::options_description srcml2src_metadata("Metadata Options");
+	srcml2src_metadata.add_options()
 		("info,i", "display most metadata except file count (individual units) and exit")
 		("list", "list all the files in the srcML archive and exit")
 		("longinfo,L", "display all metadata including file count (individual units) and exit")
-		("prefix,p", prog_opts::value<std::string>(), "display prefix of namespace given by URI arg and exit")
+		("prefix=,p", prog_opts::value<std::string>(), "display prefix of namespace given by URI arg and exit")
 		("units,n", "display number of srcML files and exit")
+		("show-directory", "display source directory name and exit")
+		("show-encoding", "display xml encoding and exit")
+		("show-filename", "display source filename and exit")
+		("show-language", "display source language and exit")
+		("show-src-version", "display source version and exit")
 		;
 
 	prog_opts::options_description prefix("Prefix Options");
@@ -120,18 +204,39 @@ int main(int argc, char * argv[]) {
 	prog_opts::store(prog_opts::parse_command_line(argc, argv, general), cli_map);
 	prog_opts::notify(cli_map);    
 	
-	//MERGE ALL OPTIONS
-	prog_opts::options_description all("srcML");
-  all.add(general).add(cpp_markup).add(line_col).add(markup).add(metadata).add(prefix).add(query_transform).add(srcml_archive);
+	//Group Options
+	prog_opts::options_description src2srcml("src2srcml");
+	src2srcml.add(general).add(src2srcml_options).add(cpp_markup).add(line_col).add(markup).add(src2srcml_metadata).add(prefix);
+
+	prog_opts::options_description srcml2src("srcml2src");
+	srcml2src.add(general).add(srcml2src_options).add(src2srcml_metadata).add(query_transform).add(srcml_archive);
 
   //DISPLAY HELP
 	if (cli_map.count("help")) {  
-		
-		std::cout << "THIS IS WHERE THE HELP HEADER GOES\n\n";
-	 	std::cout << all << "\n";
-	 	std::cout << "THIS IS WHERE THE HELP FOOTER GOES\n";
+		const std::string& help_opt = cli_map["help"].as<std::string>();
 
-	 	return 0;
+		if (help_opt == ""){
+			//MIGHT NEED A NEW HEADER AND FOOTER FOR THE GENERAL OPTION
+			std::cout << SRCML_HEADER << "\n";
+			std::cout << general << "\n";
+			std::cout << SRCML_FOOTER << "\n";
+		}
+		else if (help_opt == "src2srcml") {
+			std::cout << SRC2SRCML_HEADER << "\n";
+			std::cout << src2srcml << "\n";
+			std::cout << SRC2SRCML_FOOTER << "\n";
+		}
+		else if (help_opt == "srcml2src") {
+			std::cout << SRCML2SRC_HEADER << "\n";
+			std::cout << srcml2src << "\n";
+			std::cout << SRCML2SRC_FOOTER << "\n";
+		}
+		else {
+			std::cout << "Unknown module '" 
+      		 << help_opt << "' in the --help-module option\n";
+      return 1;
+		}
+
 	}
 
   return 0;
