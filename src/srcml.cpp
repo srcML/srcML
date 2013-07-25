@@ -60,8 +60,8 @@ const std::string SRC2SRCML_FOOTER = "Examples:\
   src2srcml --src-encoding=UTF-8 m.cpp m.cpp.xml         (encoding of input text file is UTF-8)\n\
   src2srcml --xml-encoding=ISO-8859-1 m.cpp m.cpp.xml    (set encoding of srcML file to ISO-8859-1)\n\
   \n\
-	www.sdml.info\n\
-	Report bugs to collard@uakron.edu\n";
+  www.sdml.info\n\
+  Report bugs to collard@uakron.edu";
 
 const std::string SRCML2SRC_HEADER = "Usage: srcml2src [options] <srcML_infile>... [-o <src_outfile>]\
 \n\n\
@@ -98,10 +98,10 @@ const std::string SRCML2SRC_FOOTER = "Examples:\
   \n\n\
   Read from file main.cpp.xml, output language attribute to stdout:\
   \n\
-  srcml main.cpp.xml --language\
-  \n\n\
-	www.sdml.info\n\
-	Report bugs to collard@uakron.edu\n";
+  srcml main.cpp.xml --language\n\
+  \n\
+  www.sdml.info\n\
+  Report bugs to collard@uakron.edu";
 
 int main(int argc, char * argv[]) {
 
