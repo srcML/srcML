@@ -6,19 +6,6 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><specifier>const</specifier> <name>int</name>*</type> <name>a</name></decl>;</decl_stmt>
-</unit>
-
-<unit>
-<decl_stmt><decl><type><specifier>const</specifier> <name>int</name> *</type> <name>a</name></decl>;</decl_stmt>
-</unit>
-
-<unit>
-<decl_stmt><decl><type><specifier>const</specifier> *<name>int</name> *</type> <name>a</name></decl>;</decl_stmt>
-</unit>
-
-
-<unit>
 <decl_stmt><decl><type><specifier>extern</specifier> <name>int</name>*</type> <name>foo</name></decl>;</decl_stmt>
 </unit>
 
