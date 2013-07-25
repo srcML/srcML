@@ -2546,7 +2546,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
         // we have a declaration, so do we have a function?
         (
             // check for function pointer, which must have a non-specifier part of the type
-            { real_type_count > 0 }?
+            { inLanguage(LANGUAGE_C_FAMILY) && real_type_count > 0 }?
             (function_pointer_name_grammar eat_optional_macro_call LPAREN)=>
             function_pointer_name_grammar
         
