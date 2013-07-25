@@ -34,7 +34,7 @@
 #include <regex.h>
 
 static const int NUMARCHIVES = 5;
-static const char* ARCHIVE_FILTER_EXTENSIONS[] = {".tar", ".zip", ".tgz", ".cpio", ".shar", ".gz", ".bz2", 0};
+static const char* ARCHIVE_FILTER_EXTENSIONS[] = {".tar", ".zip", ".tgz", ".cpio", ".shar", ".gz", ".bz2", ".xz", 0};
 
 struct archiveData {
   struct archive* a;

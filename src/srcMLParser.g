@@ -766,7 +766,7 @@ property_method[] { /* TokenPosition tp; */ENTRY_DEBUG } :
             // start the function definition element
             startElement(SFUNCTION_DEFINITION);
         }
-        (attribute)* property_method_names
+        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* property_method_names
 ;
 
 // functions
@@ -778,7 +778,7 @@ property_method_decl[] { /* TokenPosition tp; */ENTRY_DEBUG } :
             // start the function definition element
             startElement(SFUNCTION_DECLARATION);
         }
-        (attribute)* property_method_names
+        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* property_method_names
 ;
 
 // functions
@@ -1475,7 +1475,7 @@ class_struct_union[int token, int place] { ENTRY_DEBUG } :
 */
 class_struct_union_check[int& finaltoken, int& othertoken] { finaltoken = 0; othertoken = 0; ENTRY_DEBUG } :
 
-        (attribute)* (specifier)* markend[othertoken] (CLASS | STRUCT | UNION | INTERFACE) class_header check_end[finaltoken]
+        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* (specifier)* markend[othertoken] (CLASS | STRUCT | UNION | INTERFACE) class_header check_end[finaltoken]
 ;
 
 check_end[int& token] { token = LA(1); ENTRY_DEBUG } :
@@ -1492,7 +1492,7 @@ class_declaration[] { ENTRY_DEBUG } :
             // start the class definition
             startElement(SCLASS_DECLARATION);
         }
-        (attribute)* (specifier)* CLASS class_header
+        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* (specifier)* CLASS class_header
 ;
 
 /*
@@ -1520,7 +1520,7 @@ class_preprocessing[int token] { ENTRY_DEBUG } :
 class_definition[] { ENTRY_DEBUG } :
         class_preprocessing[SCLASS]
 
-        (attribute)* (specifier)* CLASS (class_header lcurly | lcurly) 
+        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* (specifier)* CLASS (class_header lcurly | lcurly) 
         {
             if (inLanguage(LANGUAGE_CXX_ONLY))
                 class_default_access_action(SPRIVATE_ACCESS_DEFAULT);
@@ -1530,7 +1530,7 @@ class_definition[] { ENTRY_DEBUG } :
 enum_class_definition[] { ENTRY_DEBUG } :
         class_preprocessing[SENUM]
 
-        (attribute)* (specifier)* ENUM (class_header lcurly | lcurly) 
+        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* (specifier)* ENUM (class_header lcurly | lcurly) 
         {
             if (inLanguage(LANGUAGE_CXX_ONLY))
                 class_default_access_action(SPRIVATE_ACCESS_DEFAULT);
@@ -1581,7 +1581,7 @@ interface_definition[] { ENTRY_DEBUG } :
             // java interfaces end at the end of the block
             setMode(MODE_END_AT_BLOCK); 
         }
-        (attribute)* (specifier)* INTERFACE class_header lcurly
+        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* (specifier)* INTERFACE class_header lcurly
 ;
 
 /*
@@ -1594,13 +1594,13 @@ struct_declaration[] { ENTRY_DEBUG } :
             // start the class definition
             startElement(SSTRUCT_DECLARATION);
         }
-        (attribute)* (specifier)* STRUCT class_header
+        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* (specifier)* STRUCT class_header
 ;
 
 struct_union_definition[int element_token] { ENTRY_DEBUG } :
         class_preprocessing[element_token]
 
-        (attribute)* (specifier)* (STRUCT | UNION) (class_header lcurly | lcurly)
+        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* (specifier)* (STRUCT | UNION) (class_header lcurly | lcurly)
         {
            if (inLanguage(LANGUAGE_CXX_ONLY))
                class_default_access_action(SPUBLIC_ACCESS_DEFAULT);
@@ -1617,7 +1617,7 @@ union_declaration[] { ENTRY_DEBUG } :
             // start the class definition
             startElement(SUNION_DECLARATION);
         }
-        (attribute)* (specifier)* UNION class_header
+        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* (specifier)* UNION class_header
 ;
 
 /*
@@ -4963,7 +4963,7 @@ enum_definition[] { ENTRY_DEBUG } :
             // start the enum definition element
             startElement(SENUM);
         }
-        (attribute)* (specifier)*
+        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* (specifier)*
         ENUM |
         {
             // statement
