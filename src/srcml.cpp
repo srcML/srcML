@@ -103,6 +103,11 @@ const std::string SRCML2SRC_FOOTER = "Examples:\
   www.sdml.info\n\
   Report bugs to collard@uakron.edu";
 
+//TEST FUNCTION FOR PROOF OF CONCEPT
+void file_test(std::string fp) {
+	std::cout << fp << "\n";
+}
+
 int main(int argc, char * argv[]) {
 
 	prog_opts::options_description general("General Options");
@@ -124,7 +129,7 @@ int main(int argc, char * argv[]) {
 		("debug,g", "markup translation errors, namespace http://www.sdml.info/srcML/srcerr")
 		("encoding=,x", prog_opts::value<std::string>(),"set the output XML encoding to ENC (default:  UTF-8)")
 		("expression,e", "expression mode for translating a single expression not in a statement")
-		("files-from", prog_opts::value<std::string>(), "read list of source file names, either FILE or URI, from arg to form a srcML archive")
+		("files-from", prog_opts::value<std::string>()->notifier(&file_test), "read list of source file names, either FILE or URI, from arg to form a srcML archive")
 		("interactive,c", "immediate output while parsing, default for keyboard input")
 		("language=,l", prog_opts::value<std::string>(), "set the language to C, C++, or Java")
 		("register-ext", prog_opts::value<std::string>(), "register file extension EXT for source-code language LANG. arg format EXT=LANG")
@@ -197,12 +202,7 @@ int main(int argc, char * argv[]) {
 	srcml_archive.add_options()
 		("to-dir", "extract all files from srcML and create them in the filesystem")
 		("unit=,U", prog_opts::value<int>(), "extract individual unit number arg from srcML")
-		;
-
-	//ASSIGN THE CLI ARGS TO MAP
-	prog_opts::variables_map cli_map;
-	prog_opts::store(prog_opts::parse_command_line(argc, argv, general), cli_map);
-	prog_opts::notify(cli_map);    
+		;    
 	
 	//Group Options
 	prog_opts::options_description src2srcml("src2srcml");
@@ -210,6 +210,16 @@ int main(int argc, char * argv[]) {
 
 	prog_opts::options_description srcml2src("srcml2src");
 	srcml2src.add(general).add(srcml2src_options).add(src2srcml_metadata).add(query_transform).add(srcml_archive);
+
+	prog_opts::options_description all("All Options");
+	all.add(general).add(src2srcml_options).add(cpp_markup).add(line_col).
+		add(markup).add(src2srcml_metadata).add(prefix).add(srcml2src_options).
+		add(src2srcml_metadata).add(query_transform).add(srcml_archive);
+
+	//ASSIGN THE CLI ARGS TO MAP
+	prog_opts::variables_map cli_map;
+	prog_opts::store(prog_opts::parse_command_line(argc, argv, all), cli_map);
+	prog_opts::notify(cli_map);
 
   //DISPLAY HELP
 	if (cli_map.count("help")) {  
@@ -241,4 +251,3 @@ int main(int argc, char * argv[]) {
 
   return 0;
 }
-
