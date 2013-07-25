@@ -91,7 +91,7 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
 
   output_buffer = xmlBufferCreate();
   options = op;
-  translator = new srcMLTranslatorCore(language, src_encoding, xml_encoding, output_buffer, op, directory, filename, version, uri, tabsize);
+  translator = new srcMLTranslatorCore(language, src_encoding, xml_encoding, output_buffer, options, directory, filename, version, uri, tabsize);
 }
 
 
