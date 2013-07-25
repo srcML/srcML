@@ -256,7 +256,7 @@ KeywordCPPLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         // add all C++ specific keywords to the literals table
         // class
         { "virtual"       , VIRTUAL       , LANGUAGE_CXX_FAMILY }, 
-        { "friend"        , FRIEND        , LANGUAGE_CXX_FAMILY }, 
+        { "friend"        , FRIEND        , LANGUAGE_CXX_ONLY }, 
         { "operator"      , OPERATOR      , LANGUAGE_CXX_FAMILY }, 
         { "explicit"      , EXPLICIT      , LANGUAGE_CXX_FAMILY }, 
         
@@ -267,7 +267,7 @@ KeywordCPPLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         // templates
         { "template"      , TEMPLATE      , LANGUAGE_CXX_FAMILY }, 
         
-        { "delete"        , DELETE        , LANGUAGE_CXX_FAMILY }, 
+        { "delete"        , DELETE        , LANGUAGE_CXX_ONLY }, 
         
         // special C++ operators
         { "::"            , DCOLON        , LANGUAGE_CXX_FAMILY }, 
