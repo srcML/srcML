@@ -3081,7 +3081,7 @@ full_expression[] { CompleteElement element; ENTRY_DEBUG } :
         (options { greedy = true; } :
 
         // commas as in a list
-        {inTransparentMode(MODE_END_ONLY_AT_RPAREN) || !inTransparentMode(MODE_END_AT_COMMA)}?
+        { inTransparentMode(MODE_END_ONLY_AT_RPAREN) || !inTransparentMode(MODE_END_AT_COMMA)}?
         comma |
 
         // right parentheses, unless we are in a pair of parentheses in an expression 
@@ -3249,7 +3249,7 @@ complex_name_cpp[bool marked, bool& iscomplex_name] { namestack[0] = ""; namesta
             founddestop = true;
         })*
         (simple_name_optional_template[marked] | mark_namestack overloaded_operator)
-        ({ !inTransparentMode(MODE_EXPRESSION) }? multops)*
+        (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) }? multops)*
         name_tail[iscomplex_name, marked]
         { if (founddestop) iscomplex_name = true; }
 ;
@@ -3264,7 +3264,7 @@ complex_name_csharp[bool marked, bool& iscomplex_name] { namestack[0] = ""; name
             founddestop = true;
         })*
         (simple_name_optional_template[marked] | mark_namestack overloaded_operator)
-        ({ !inTransparentMode(MODE_EXPRESSION) }? multops)*
+        (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) }? multops)*
         name_tail_csharp[iscomplex_name, marked]
         { if (founddestop) iscomplex_name = true; }
 ;
@@ -3303,7 +3303,7 @@ name_tail[bool& iscomplex, bool marked] { ENTRY_DEBUG } :
             (DESTOP set_bool[isdestructor])*
             (multops)*
             (simple_name_optional_template[marked] | mark_namestack overloaded_operator | function_identifier_main)
-            ({ look_past_multiple(MULTOPS, REFOPS, RVALUEREF, QMARK) == DCOLON }? multops)*
+            (options { greedy = true; } : { look_past_multiple(MULTOPS, REFOPS, RVALUEREF, QMARK) == DCOLON }? multops)*
         )*
 
         { notdestructor = LA(1) == DESTOP; }
@@ -3321,7 +3321,7 @@ name_tail_csharp[bool& iscomplex, bool marked] { ENTRY_DEBUG } :
             (multops)*
             (DESTOP set_bool[isdestructor])*
             (simple_name_optional_template[marked] | mark_namestack overloaded_operator | function_identifier_main)
-            (multops)*
+            (options { greedy = true; } : multops)*
         )*
 ;
 exception
