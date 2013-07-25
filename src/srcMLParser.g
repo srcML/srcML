@@ -3180,7 +3180,9 @@ identifier[bool marked = false] { CompleteElement element; ENTRY_DEBUG } :
             SUPER | CHECKED | UNCHECKED | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD |
 
             // C# linq
-            FROM | WHERE | SELECT | LET | ORDERBY | ASCENDING | DESCENDING | GROUP | BY | JOIN | ON | EQUALS | INTO | THIS
+            FROM | WHERE | SELECT | LET | ORDERBY | ASCENDING | DESCENDING | GROUP | BY | JOIN | ON | EQUALS | INTO | THIS |
+
+            { inLanguage(LANGUAGE_CSHARP) }? UNION
         )
 ;
 
