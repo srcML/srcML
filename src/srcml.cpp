@@ -33,20 +33,20 @@ const std::string SRCML_HEADER = "";
 const std::string SRCML_FOOTER = "";
 
 const std::string SRC2SRCML_HEADER = "Usage: srcml [options] <src_infile>... [-o <srcML_outfile>]\
-	\n\n\
-	Translates C, C++, and Java source code into the XML source-code representation srcML.\
-	Input can be from standard input, a file, a directory, or an archive file, i.e., tar, cpio, and zip.\
-	Multiple files are stored in a srcML archive.\
-	\n\n\
-	The source-code language is based on the file extension.  Additional extensions for a language\
-	can be registered, and can be directly set using the --language option.\
-	\n\n\
-	By default, output is to stdout.  You can specify a file for output using the --output or -o option.\
-	When no filenames are given, input is from stdin and output is to stdout.\
-	An input filename of '-' also reads from stdin.\
-	\n\n\
-	Any input file can be a local filename (FILE) or a URI with the protocols http:, ftp:, or file:\
-	\n\n";
+\n\n\
+Translates C, C++, and Java source code into the XML source-code representation srcML.\n\
+Input can be from standard input, a file, a directory, or an archive file, i.e., tar, cpio, and zip.\n\
+Multiple files are stored in a srcML archive.\
+\n\n\
+The source-code language is based on the file extension.  Additional extensions for a language\n\
+can be registered, and can be directly set using the --language option.\
+\n\n\
+By default, output is to stdout.  You can specify a file for output using the --output or -o option.\n\
+When no filenames are given, input is from stdin and output is to stdout.\n\
+An input filename of '-' also reads from stdin.\
+\n\n\
+Any input file can be a local filename (FILE) or a URI with the protocols http:, ftp:, or file:\
+\n\n";
 
 const std::string SRC2SRCML_FOOTER = "Examples:\
   \n\n\
@@ -64,27 +64,27 @@ const std::string SRC2SRCML_FOOTER = "Examples:\
 	Report bugs to collard@uakron.edu\n";
 
 const std::string SRCML2SRC_HEADER = "Usage: srcml2src [options] <srcML_infile>... [-o <src_outfile>]\
-	\n\n\
-	Translates from the the XML source-code representation srcML back to source-code.\
-	\n\n\
-	Extracts back to standard output, the disk, or to traditional archive formats,\
-	e.g., tar, cpio, zip, and with optional gzip, bzip2 compression.\
-	Provides access to metadata about the srcML document. For srcML archives\
-	provides extraction of specific files, and efficient querying/transformation\
-	using XPath, XSLT, and RelaxNG.\
-	\n\n\
-	srcML archives contain multiple individual source code files,\
-	e.g., an entire project or directory tree.\
-	\n\n\
-	By default, output is to stdout.  You can specify a file for output using the --output or -o option.\
-	When no filenames are given, input is from stdin and output is to stdout.\
-	An input filename of '-' also reads from stdin.\
-	\n\n\
-	Any input file, including XSLT and RelaxNG files, can be a local\
-	filename (FILE) or a URI with the protocols http:, ftp:, or file:\
-	\n\n\
-	The srcML files can be in xml, or compressed with gzip or bzip2 (detected automatically).\
-	\n\n";
+\n\n\
+Translates from the the XML source-code representation srcML back to source-code.\
+\n\n\
+Extracts back to standard output, the disk, or to traditional archive formats,\n\
+e.g., tar, cpio, zip, and with optional gzip, bzip2 compression.\n\
+Provides access to metadata about the srcML document. For srcML archives\n\
+provides extraction of specific files, and efficient querying/transformation\n\
+using XPath, XSLT, and RelaxNG.\
+\n\n\
+srcML archives contain multiple individual source code files,\n\
+e.g., an entire project or directory tree.\
+\n\n\
+By default, output is to stdout.  You can specify a file for output using the --output or -o option.\n\
+When no filenames are given, input is from stdin and output is to stdout.\n\
+An input filename of '-' also reads from stdin.\
+\n\n\
+Any input file, including XSLT and RelaxNG files, can be a local\n\
+filename (FILE) or a URI with the protocols http:, ftp:, or file:\
+\n\n\
+The srcML files can be in xml, or compressed with gzip or bzip2 (detected automatically).\
+\n\n";
 
 const std::string SRCML2SRC_FOOTER = "Examples:\
 	\n\n\
