@@ -499,10 +499,10 @@ void startUnit() {
    emptyElement(SUNIT);
 }
 
-// returns the current token in the output token stream
-TokenPosition getTokenPosition() {
-        TokenPosition tp(CurrentToken(), &(currentState().callstack.top()));
-        return tp;
+// sets to the current token in the output token stream
+void setTokenPosition(TokenPosition& tp) {
+        tp.token = CurrentToken();
+        tp.sp = &(currentState().callstack.top());
 }
 
 public:
@@ -3140,7 +3140,7 @@ simple_name_optional_template[bool marked] { CompleteElement element; TokenPosit
                 startElement(SCNAME);
 
                 // record the name token so we can replace it if necessary
-                tp = getTokenPosition();
+                setTokenPosition(tp);
             }
         }
         mark_namestack identifier[marked] (
@@ -3214,7 +3214,7 @@ complex_name_inner[bool marked = true, bool index = false] { CompleteElement ele
                 startElement(SCNAME);
 
                 // record the name token so we can replace it if necessary
-                tp = getTokenPosition();
+                setTokenPosition(tp);
             }
         }
         (
@@ -5043,7 +5043,7 @@ preprocessor[] {
             // assume error.  will set to proper one later
             startElement(SCPP_ERROR);
 
-            tp = getTokenPosition();
+            setTokenPosition(tp);
         }
         PREPROC markend[directive_token]
         {
