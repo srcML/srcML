@@ -646,7 +646,7 @@ statements_non_cfg[] { int token = 0; int place = 0; int secondtoken = 0; int fl
 
         // class forms sections
         // must be after class_struct_union_check
-        { inLanguage(LANGUAGE_CXX_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
+        { inLanguage(LANGUAGE_CXX_ONLY) }?
         access_specifier_region |
 
         // check for declaration of some kind (variable, function, constructor, destructor
@@ -1522,7 +1522,7 @@ class_definition[] { ENTRY_DEBUG } :
 
         (attribute)* (specifier)* CLASS (class_header lcurly | lcurly) 
         {
-            if (inLanguage(LANGUAGE_CXX_FAMILY) && !inLanguage(LANGUAGE_CSHARP))
+            if (inLanguage(LANGUAGE_CXX_ONLY))
                 class_default_access_action(SPRIVATE_ACCESS_DEFAULT);
         }
 ;
@@ -1532,7 +1532,7 @@ enum_class_definition[] { ENTRY_DEBUG } :
 
         (attribute)* (specifier)* ENUM (class_header lcurly | lcurly) 
         {
-            if (inLanguage(LANGUAGE_CXX_FAMILY) && !inLanguage(LANGUAGE_CSHARP))
+            if (inLanguage(LANGUAGE_CXX_ONLY))
                 class_default_access_action(SPRIVATE_ACCESS_DEFAULT);
         }
 ;
@@ -1602,7 +1602,7 @@ struct_union_definition[int element_token] { ENTRY_DEBUG } :
 
         (attribute)* (specifier)* (STRUCT | UNION) (class_header lcurly | lcurly)
         {
-           if (inLanguage(LANGUAGE_CXX_FAMILY) && !inLanguage(LANGUAGE_CSHARP))
+           if (inLanguage(LANGUAGE_CXX_ONLY))
                class_default_access_action(SPUBLIC_ACCESS_DEFAULT);
         }
 ;
@@ -1625,7 +1625,7 @@ union_declaration[] { ENTRY_DEBUG } :
 */
 class_default_access_action[int access_token] { ENTRY_DEBUG } :
         {
-            if (inLanguage(LANGUAGE_CXX_FAMILY) && (SkipBufferSize() > 0 ||
+            if (inLanguage(LANGUAGE_CXX_ONLY) && (SkipBufferSize() > 0 ||
                 !(LA(1) == PUBLIC || LA(1) == PRIVATE || LA(1) == PROTECTED))) {
 
                 // setup block section
@@ -2366,8 +2366,6 @@ perform_noncfg_check[DECLTYPE& type, int& token, int& fla, int& type_count, bool
 
     // may just have an expression 
     if (type == DESTRUCTOR && !inLanguage(LANGUAGE_CXX_FAMILY))
-
-
         type = NULLOPERATOR;
 
     // false constructor for java
@@ -2532,7 +2530,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                     (specifier_count > 0 && (inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP))) ||
 
                     // outside of a class definition in C++, but with properly prefixed name
-                    ((inLanguage(LANGUAGE_CXX_FAMILY) && !inLanguage(LANGUAGE_CSHARP)) && namestack[0] != "" && namestack[1] != "" && namestack[0] == namestack[1])
+                    (inLanguage(LANGUAGE_CXX_FAMILY) && namestack[0] != "" && namestack[1] != "" && namestack[0] == namestack[1])
                 )
         ]
 
@@ -4092,7 +4090,7 @@ general_operators[] { CompleteElement element; ENTRY_DEBUG } :
 /*            general_operators_list (options { greedy = true; } : { SkipBufferSize() == 0 }? general_operators_list)* */ |
 
             // others are not combined
-            NEW | { inLanguage(LANGUAGE_CXX_FAMILY) }? DELETE | IN | IS | STACKALLOC | AS | AWAIT | LAMBDA
+            NEW | DELETE | IN | IS | STACKALLOC | AS | AWAIT | LAMBDA
         )
 ;
 
@@ -4313,7 +4311,7 @@ expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG
         // general math operators
         general_operators 
         {
-            if ((inLanguage(LANGUAGE_CXX_FAMILY) || inLanguage(LANGUAGE_CSHARP)) && LA(1) == DESTOP)
+            if (inLanguage(LANGUAGE_CXX_FAMILY) && LA(1) == DESTOP)
                 general_operators();
         }
         | /* newop | */ period |
