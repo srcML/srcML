@@ -3168,7 +3168,7 @@ identifier[bool marked = false] { CompleteElement element; ENTRY_DEBUG } :
                 // local mode that is automatically ended by leaving this function
                 startNewMode(MODE_LOCAL);
 
-                if(LT(1)->getText() != "const")
+                if((!inLanguage(LANGUAGE_CXX) && !inLanguage(LANGUAGE_C))  || LT(1)->getText() != "const")
                     startElement(SNAME);
                 else
                     startElement(SFUNCTION_SPECIFIER);
