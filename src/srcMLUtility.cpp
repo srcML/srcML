@@ -164,7 +164,12 @@ void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE opt
 int srcMLUtility::unit_count(FILE* output) {
 
   // setup parser
-  xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
+  // setup parser
+  xmlParserCtxtPtr ctxt = 0;
+  if(infile)
+    ctxt = srcMLCreateURLParserCtxt(infile);
+  else
+    ctxt = srcMLCreateMemoryParserCtxt(buffer, size);
   if (ctxt == NULL) return -1;
 
   // setup sax handler
@@ -191,6 +196,7 @@ int srcMLUtility::unit_count(FILE* output) {
 
   return state.count;
 }
+
 
 // extract a given unit
 void srcMLUtility::extract_xml(const char* ofilename, int unit) {
