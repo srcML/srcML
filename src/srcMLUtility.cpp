@@ -160,6 +160,54 @@ void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE opt
   units = state.count;
 }
 
+const char * srcMLUtility::long_info(srcMLUtility & su, OPTION_TYPE options) {
+
+  int unitnumber = 0;
+  int optioncount = 5;
+  int optionorder[] = {OPTION_XML_ENCODING, OPTION_LANGUAGE, OPTION_DIRECTORY, OPTION_FILENAME, OPTION_VERSION};
+
+  // setup parser
+  // setup parser
+  xmlParserCtxtPtr ctxt = 0;
+  if(infile)
+    ctxt = srcMLCreateURLParserCtxt(infile);
+  else
+    ctxt = srcMLCreateMemoryParserCtxt(buffer, size);
+  if (ctxt == NULL) return 0;
+
+  // setup sax handler
+  xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
+  ctxt->sax = &sax;
+
+  // setup process handling
+  std::ostringstream buffer;
+  Properties process(su, nsv, attrv, optioncount, optionorder, &buffer);
+
+  incount = unitnumber == 0;
+
+  // setup sax handling state
+  SAX2ExtractUnitsSrc state(&process, &options, unitnumber, diff_version);
+  ctxt->_private = &state;
+
+  // process the document
+  srcMLParseDocument(ctxt, true);
+
+  // local variable, do not want xmlFreeParserCtxt to free
+  ctxt->sax = NULL;
+
+  // all done with parsing
+  xmlFreeParserCtxt(ctxt);
+
+  // make sure we did not end early
+  if (state.unit >= 1 && state.count != state.unit)
+    throw OutOfRangeUnitError(state.count);
+
+  units = state.count;
+
+  return buffer.str().c_str();
+
+}
+
 // count of nested units
 int srcMLUtility::unit_count(FILE* output) {
 
