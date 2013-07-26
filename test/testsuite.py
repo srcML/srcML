@@ -253,13 +253,25 @@ def getfilename(xml_file):
 	return getsrcmlattribute(xml_file, "-f")
 
 # xmlns attribute
-def getfullxmlns(xml_file):
+def getfullxmlns_executable(xml_file):
 
 	l = []
 	for a in getsrcmlattribute(xml_file, "--info").split():
 		if a[0:5] == "xmlns":
 			l.append("--" + a.replace('"', ""))
 	
+	return l
+
+# xmlns attribute
+def getfullxmlns(xml_file):
+
+	l = []
+        utility = srcMLUtility(xml_file, len(xml_file) + 1, encoding, 0, "")
+	for a in utility.long_info().split():
+		if a[0:5] == "xmlns":
+			l.append("--" + a.replace('"', ""))
+        utility.delete()
+
 	return l
 
 # xmlns attribute
@@ -448,7 +460,10 @@ try:
                                         all = extract_all(filexml)
 
                                 number = len(all) - 1
-                                xmlns = defaultxmlns(getfullxmlns(filexml))
+                                if use_exec :
+                                        xmlns = defaultxmlns(getfullxmlns_executable(filexml))
+                                else :
+                                        xmlns = defaultxmlns(getfullxmlns(filexml))
 				while count == 0 or count < number:
 
 					try: 
