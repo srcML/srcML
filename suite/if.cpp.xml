@@ -72,7 +72,7 @@
     <empty_stmt>;</empty_stmt></while></then></if>
 </unit>
 
-<unit filename="A.cc">
+<unit>
   <if>if <condition>(<expr>1</expr>)</condition><then> 
     <if>if <condition>(<expr>2</expr>)</condition><then>
       <expr_stmt><expr><name>x</name> = 1</expr>;</expr_stmt></then>
