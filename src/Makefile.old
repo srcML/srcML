@@ -133,7 +133,7 @@ LIBSRCML_SO=${EXE_DIR}libsrcml.dll
 SRCMLDIRECT_BIN=${EXE_DIR}srcmldirect.exe
 endif
 
-LIBSRCML_INCLUDE=${OBJ_DIR}srcMLParserClean.o ${OBJ_DIR}KeywordCPPLexerClean.o ${OBJ_DIR}srcMLTranslator.o ${OBJ_DIR}srcMLTranslatorCore.o ${OBJ_DIR}srcMLOutput.o ${OBJ_DIR}srcMLTranslatorOutput.o ${OBJ_DIR}Mode.o ${OBJ_DIR}UTF8CharBuffer.o ${OBJ_DIR}PureCommentLexerClean.o ${OBJ_DIR}Language.o ${OBJ_DIR}URIStream.o ${OBJ_DIR}srcmlapps.o ${IO_LIB}
+LIBSRCML_INCLUDE=${OBJ_DIR}srcMLParserClean.o ${OBJ_DIR}KeywordCPPLexerClean.o ${OBJ_DIR}srcMLTranslator.o ${OBJ_DIR}srcMLTranslatorCore.o ${OBJ_DIR}srcMLOutput.o ${OBJ_DIR}srcMLTranslatorOutput.o ${OBJ_DIR}Mode.o ${OBJ_DIR}UTF8CharBuffer.o ${OBJ_DIR}PureCommentLexerClean.o ${OBJ_DIR}Language.o ${OBJ_DIR}URIStream.o ${OBJ_DIR}srcmlapps.o ${IO_LIB} ${OBJ_DIR}srcMLUtility.o ${OBJ_DIR}SAX2ExtractUnitsSrc.o ${OBJ_DIR}SAX2Utilities.o ${OBJ_DIR}SAX2UnitDOM.o ${OBJ_DIR}SAX2UnitDOMRelaxNG.o ${OBJ_DIR}srcexfun.o
 
 # default
 .PHONY: all
@@ -250,7 +250,7 @@ ${EXE_DIR}libsrcml.a : $(LIBSRCML_INCLUDE)
 	${AR} rvs $@ $^ 
 
 # srcML to source code translator program
-${SRCML2SRC_BIN} : ${OBJ_DIR}srcml2src.o ${OBJ_DIR}srcMLUtility.o ${OBJ_DIR}SAX2ExtractUnitsSrc.o ${OBJ_DIR}srcmlapps.o ${OBJ_DIR}SAX2Utilities.o ${OBJ_DIR}SAX2UnitDOM.o ${OBJ_DIR}SAX2UnitDOMRelaxNG.o ${OBJ_DIR}srcexfun.o ${IO_LIB} ${OBJ_DIR}URIStream.o ${OBJ_DIR}makeargv.o
+${SRCML2SRC_BIN} : ${OBJ_DIR}srcml2src.o ${OBJ_DIR}makeargv.o $(if $(DYNAMIC), ${LIBSRCML_SO}, ${EXE_DIR}libsrcml.a)
 	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) ${XML_LIB_SRCML2SRC} ${XML_IO_LIB} -o $@
 
 # Object files
