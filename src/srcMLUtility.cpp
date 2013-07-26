@@ -160,11 +160,12 @@ void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE opt
   units = state.count;
 }
 
-const char * srcMLUtility::long_info(srcMLUtility & su, OPTION_TYPE options) {
+const char * srcMLUtility::long_info(srcMLUtility & su) {
 
   int unitnumber = 0;
   int optioncount = 5;
   int optionorder[] = {OPTION_XML_ENCODING, OPTION_LANGUAGE, OPTION_DIRECTORY, OPTION_FILENAME, OPTION_VERSION};
+  OPTION_TYPE options = OPTION_LONG_INFO;
 
   // setup parser
   // setup parser
@@ -801,6 +802,12 @@ extern "C" {
   const char * srcml_extract_xml_buffer(srcMLUtility * su, int unit) {
 
     return su->extract_xml(unit);
+
+  }
+
+  const char * srcml_long_info(srcMLUtility * su) {
+
+    return su->long_info(*su);
 
   }
 

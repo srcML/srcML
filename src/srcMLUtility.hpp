@@ -62,7 +62,7 @@ class srcMLUtility {
   // move to a particular nested unit
   //  void move_to_unit(int unitnumber);
   void move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE options, int optioncount, int optionorder[], FILE * output);
-  const char * long_info(srcMLUtility & su, OPTION_TYPE options);
+  const char * long_info(srcMLUtility & su);
 
   // namespaces and prefixes
   const PROPERTIES_TYPE* getNS() const;
@@ -165,6 +165,8 @@ extern "C" {
   // extract (intact) current unit as XML
   //void srcml_extract_xml_file(const char* ofilename, int unit);
   const char * srcml_extract_xml_buffer(srcMLUtility * su, int unit);
+
+  const char * srcml_long_info(srcMLUtility * su);
 
   void srcml_utility_delete(srcMLUtility * su);
 
