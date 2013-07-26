@@ -42,6 +42,9 @@ class CountUnits : public ProcessUnit {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
+    // check if file to output to
+    if(!output) return;
+
     // back up over the previous display
     // yes, this is a hack, but it works
     if(pstate->count == 1)
