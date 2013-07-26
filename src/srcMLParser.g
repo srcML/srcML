@@ -3187,6 +3187,27 @@ identifier[bool marked = false] { CompleteElement element; ENTRY_DEBUG } :
 ;
 
 /*
+  Basic single token names
+
+  preprocessor tokens that can also be used as identifiers
+*/
+simple_identifier[bool marked = false] { CompleteElement element; ENTRY_DEBUG } :
+        {
+            if (marked) {
+                // local mode that is automatically ended by leaving this function
+                startNewMode(MODE_LOCAL);
+
+                if((!inLanguage(LANGUAGE_CXX) && !inLanguage(LANGUAGE_C))  || LT(1)->getText() != "const")
+                    startElement(SNAME);
+                else
+                    startElement(SFUNCTION_SPECIFIER);
+
+            }
+        }
+        NAME
+;
+
+/*
   identifier name marked with name element
 */
 complex_name[bool marked = true, bool index = false] { CompleteElement element; TokenPosition tp; bool iscomplex_name = false; ENTRY_DEBUG } :
@@ -3480,7 +3501,7 @@ destructor_header[] { ENTRY_DEBUG } :
 
             specifier |
 
-        { LT(1)->getText() == "void" }? identifier[true]
+        { LT(1)->getText() == "void" }? simple_identifier[true]
 
     )*
 
