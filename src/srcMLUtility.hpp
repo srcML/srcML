@@ -48,6 +48,7 @@ class srcMLUtility {
 
   // constructor
   srcMLUtility(const char* infilename, const char* encoding, OPTION_TYPE& op, const char* diff_version = "");
+  srcMLUtility(const char * buffer, int size, const char* encoding, OPTION_TYPE& op, const char* diff_version = "");
 
   // set the input filename after the constructor
   void set_input_filename(const char* infilename);
@@ -115,6 +116,8 @@ class srcMLUtility {
   OPTION_TYPE options;
   int units;
   const char* diff_version;
+  const char * buffer;
+  int size;
  public:
   PROPERTIES_TYPE nsv;
   PROPERTIES_TYPE attrv;
@@ -146,7 +149,8 @@ class OutOfRangeUnitError : public LibXMLError {
 extern "C" {
 
   // constructor
-  srcMLUtility * srcml_utility_new(const char* infilename, const char* encoding, OPTION_TYPE op, const char* diff_version = "");
+  srcMLUtility * srcml_utility_file_new(const char* infilename, const char* encoding, OPTION_TYPE op, const char* diff_version = "");
+  srcMLUtility * srcml_utility_memory_new(const char * buffer, int size, const char* encoding, OPTION_TYPE op, const char* diff_version = "");
 
   // extract (intact) current unit as text
   void srcml_extract_text(srcMLUtility * su, const char* to_dir, const char* ofilename, int unit);

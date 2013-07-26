@@ -63,13 +63,14 @@
 
 // local function forward declarations
 static xmlParserCtxtPtr srcMLCreateURLParserCtxt(const char * infile);
+static xmlParserCtxtPtr srcMLCreateMemoryParserCtxt(const char * buffer, int size);
 static void srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly);
 
 static bool incount = false;
 
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, OPTION_TYPE& op, const char* diff_version)
-  : infile(infilename), output_encoding(encoding), options(op), units(0), diff_version(diff_version) {
+  : infile(infilename), output_encoding(encoding), options(op), units(0), diff_version(diff_version), buffer(0), size(0) {
 
 
   // assume totaling for numeric results
@@ -79,6 +80,16 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, OPTION_
   if (infile == 0)
     infile = "-";
 }
+
+// constructor
+srcMLUtility::srcMLUtility(const char * buffer, int size, const char* encoding, OPTION_TYPE& op, const char* diff_version)
+  : infile(0), output_encoding(encoding), options(op), units(0), diff_version(diff_version), buffer(buffer), size(size) {
+
+  // assume totaling for numeric results
+  op |= OPTION_XPATH_TOTAL;
+
+}
+
 // destructor
 srcMLUtility::~srcMLUtility() {
 
@@ -297,7 +308,11 @@ void srcMLUtility::extract_text(const char* to_dir, const char* ofilename, int u
 #endif
 
   // setup parser
-  xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
+  xmlParserCtxtPtr ctxt = 0;
+  if(infile)
+    ctxt = srcMLCreateURLParserCtxt(infile);
+  else
+    ctxt = srcMLCreateMemoryParserCtxt(buffer, size);
 
   // setup sax handler
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
@@ -579,12 +594,34 @@ static xmlParserCtxtPtr srcMLCreateURLParserCtxt(const char * infile) {
   return ctxt;
 }
 
+// create srcml parser with error reporting
+static xmlParserCtxtPtr srcMLCreateMemoryParserCtxt(const char * buffer, int size) {
+
+  xmlParserCtxtPtr ctxt = xmlCreateMemoryParserCtxt(buffer, size);
+
+  if (ctxt == NULL) {
+
+    // report error
+    xmlErrorPtr ep = xmlGetLastError();
+    fprintf(stderr, "%s: %s", "srcml2src", ep->message);
+    exit(STATUS_INPUTFILE_PROBLEM);
+  }
+
+  return ctxt;
+}
+
 extern "C" {
 
   // constructor
-  srcMLUtility * srcml_utility_new(const char* infilename, const char* encoding, OPTION_TYPE op, const char* diff_version) {
+  srcMLUtility * srcml_utility_file_new(const char* infilename, const char* encoding, OPTION_TYPE op, const char* diff_version) {
 
     return new srcMLUtility(infilename, encoding, op, diff_version);
+
+  }
+
+  srcMLUtility * srcml_utility_memory_new(const char * buffer, int size, const char* encoding, OPTION_TYPE op, const char* diff_version) {
+
+    return new srcMLUtility(buffer, size, encoding, op, diff_version);
 
   }
 

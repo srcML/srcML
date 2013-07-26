@@ -10,8 +10,11 @@ elif os.path.exists('../bin/libsrcml.dll') :
 
 libsrcml = cdll.LoadLibrary(LIBSRCML_PATH)
 
-libsrcml.srcml_utility_new.restype = c_void_p
-libsrcml.srcml_utility_new.argtypes = [c_char_p, c_char_p, c_ulonglong, c_char_p]
+libsrcml.srcml_utility_file_new.restype = c_void_p
+libsrcml.srcml_utility_file_new.argtypes = [c_char_p, c_char_p, c_ulonglong, c_char_p]
+
+libsrcml.srcml_utility_memory_new.restype = c_void_p
+libsrcml.srcml_utility_memory_new.argtypes = [c_char_p, c_int, c_char_p, c_ulonglong, c_char_p]
 
 libsrcml.srcml_extract_text.restype = None
 libsrcml.srcml_extract_text.argtypes = [c_void_p, c_char_p, c_char_p, c_int]
@@ -22,7 +25,10 @@ libsrcml.srcml_delete.argtypes = [c_ulonglong]
 class srcMLUtility(object):
 
     def __init__(self, filename, src_encoding, options, diff_version) :
-        self.utility = c_void_p(libsrcml.srcml_utility_new(filename, src_encoding, options, diff_version))
+        self.utility = c_void_p(libsrcml.srcml_utility_file_new(filename, src_encoding, options, diff_version))
+
+    def __init__(self, buffer, size, src_encoding, options, diff_version) :
+        self.utility = c_void_p(libsrcml.srcml_utility_memory_new(buffer, size, src_encoding, options, diff_version))
 
     def extract_text(self, to_dir, ofilename, unit) :
         libsrcml.srcml_extract_text(self.utility, to_dir, ofilename, unit) 
@@ -31,6 +37,10 @@ class srcMLUtility(object):
         libsrcml.srcml_utility_delete(self.utility)
 
 # test
-utility = srcMLUtility("a.cpp.xml", "UTF-8", 0, "")
+srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>"""
+
+utility = srcMLUtility(srcml, len(srcml) + 1, "UTF-8", 0, "")
 utility.extract_text(None, "/dev/stdout", 1)
 utility.delete()
