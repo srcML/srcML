@@ -4300,7 +4300,7 @@ guessing_end[]
 
 expression_part_plus_linq[CALLTYPE type = NOCALL] { guessing_end(); ENTRY_DEBUG } :
 
-        linq_expression | expression_part[type]
+        { inLanguage(LANGUAGE_CSHARP) }? linq_expression | expression_part[type]
     ;
 
 expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG } :
