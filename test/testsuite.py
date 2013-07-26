@@ -37,7 +37,7 @@ srcexprtranslator = '/home/collard/srcML/trunk/srcexpr/src/srcexpr'
 
 # extracts a particular unit from a srcML file
 def safe_communicate(command, inp):
-
+        
 	try:
 		return subprocess.Popen(command, stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(inp)[0]
 	except OSError, (errornum, strerror):
@@ -485,7 +485,7 @@ try:
                                                 if use_exec :
                                                         unitsrcmlraw = src2srcML_executable(unittext, encoding, language, directory, getfilename(unitxml), defaultxmlns(getfullxmlns(unitxml)))
                                                 else :
-                                                        unitsrcmlraw = src2srcML(unittext, encoding, language, directory, getfilename(unitxml), defaultxmlns(getfullxmlns(unitxml)))
+                                                        unitsrcmlraw = src2srcML(unittext, encoding, language, directory, filename, defaultxmlns(getfullxmlns(unitxml)))
 
 						# additional, later stage processing
 						unitsrcml = unitsrcmlraw # srcML2srcMLStages(unitsrcmlraw, nondefaultxmlns(getfullxmlns(unitxml)))
