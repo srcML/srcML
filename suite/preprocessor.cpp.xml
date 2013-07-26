@@ -151,7 +151,7 @@
 </unit>
 
 
-<unit filename="via-rhine.c">
+<unit>
 <expr_stmt><expr><call><name>printk</name><argument_list>(<argument><expr><name>name</name></expr></argument>, <argument><expr><name>memaddr</name></expr></argument>
 <cpp:if>#<cpp:directive>if</cpp:directive> <expr>0</expr></cpp:if>
               ()

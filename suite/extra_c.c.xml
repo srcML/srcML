@@ -41,7 +41,7 @@
 }</block>
 </unit>
 
-<unit filename="ip_vs.h">
+<unit>
 <block>{
 	<switch>switch <condition>(<expr><call><name>IP_VS_FWD_METHOD</name><argument_list>(<argument><expr><name>cp</name></expr></argument>)</argument_list></call></expr>)</condition> <block>{
 	}</block></switch>

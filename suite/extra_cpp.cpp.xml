@@ -9,7 +9,7 @@
 <function_decl><type><name>int</name></type> (*<name>a</name>)<parameter_list>(<param><decl><type><name>int</name></type> <name>b</name></decl></param>, <param><decl><type><name><name>int</name><index>[]</index></name></type></decl></param>)</parameter_list>;</function_decl>
 </unit>
 
-<unit filename="cfe_api.c">
+<unit>
 <cpp:if>#<cpp:directive>if</cpp:directive> <expr><call><name>defined</name><argument_list>(<argument><expr><name>CFE_API_strlen</name></expr></argument>)</argument_list></call></expr></cpp:if>
 
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
@@ -23,7 +23,7 @@
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 </unit>
 
-<unit filename="aurora.c">
+<unit>
 <block>{
 	<if>if <condition>(<expr>(<call><name>aurora_paranoia_check</name><argument_list>(<argument><expr><name>port</name></expr></argument>, <argument><expr><name>tty</name>-&gt;<name>name</name></expr></argument>, <argument><expr>"aurora_open"</expr></argument>)</argument_list></call>)</expr></condition><then> <block>{
 <cpp:ifdef>#<cpp:directive>ifdef</cpp:directive> <name>AURORA_DEBUG</name></cpp:ifdef>
@@ -33,7 +33,7 @@
 }</block>
 </unit>
 
-<unit filename="urb.c">
+<unit>
 <block>{
 <return>return <macro><name>snprintf</name> <argument_list>(<argument>buf</argument>, <argument>size</argument>,
 		 <argument>({ char *s;
@@ -45,19 +45,19 @@
 }</block>
 </unit>
 
-<unit filename="ip_vs.h">
+<unit>
 <block>{
 	<switch>switch <condition>(<expr><call><name>IP_VS_FWD_METHOD</name><argument_list>(<argument><expr><name>cp</name></expr></argument>)</argument_list></call></expr>)</condition> <block>{
 	}</block></switch>
 }</block>
 </unit>
 
-<unit filename="if_vlan.h">
+<unit>
 <if>if <condition>(<expr><call><name>a</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call> &lt; <name>t</name></expr>)</condition><then>
      <empty_stmt>;</empty_stmt></then></if>
 </unit>
 
-<unit filename="cs461x_image.h">
+<unit>
 <decl_stmt><decl><type><name>a</name></type> <name>b</name> =<init> <expr><block>{ <expr><block>{<expr><call><name>sizeof</name><argument_list>(<argument><expr><name>c</name></expr></argument>)</argument_list></call></expr>, <expr><name>d</name></expr>}</block></expr> }</block></expr></init></decl>;</decl_stmt>
 </unit>
 
