@@ -164,7 +164,6 @@ void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE opt
 int srcMLUtility::unit_count(FILE* output) {
 
   // setup parser
-  // setup parser
   xmlParserCtxtPtr ctxt = 0;
   if(infile)
     ctxt = srcMLCreateURLParserCtxt(infile);
@@ -177,7 +176,11 @@ int srcMLUtility::unit_count(FILE* output) {
   ctxt->sax = &sax;
 
   // setup process handling
-  ProcessUnit* pprocess = isatty(fileno(output)) ? new CountUnits(output) : new ProcessUnit;
+  ProcessUnit* pprocess = 0;
+  if(output)
+    pprocess = isatty(fileno(output)) ? new CountUnits(output) : new ProcessUnit;
+  else
+    pprocess = new CountUnits(output);
 
   // setup sax handling state
   SAX2ExtractUnitsSrc state(pprocess, &options, -1, diff_version);
@@ -701,6 +704,13 @@ extern "C" {
   const char * srcml_extract_text_buffer(srcMLUtility * su, int unit) {
 
     su->extract_text(unit);
+
+  }
+
+  // count of nested units
+  int srcml_unit_count(srcMLUtility * su, FILE* output) {
+
+    return su->unit_count(output);
 
   }
 

@@ -157,6 +157,9 @@ extern "C" {
   void srcml_extract_text_file(srcMLUtility * su, const char* to_dir, const char* ofilename, int unit);
   const char * srcml_extract_text_buffer(srcMLUtility * su, int unit);
 
+  // count of nested units
+  int srcml_unit_count(srcMLUtility * su, FILE* output);
+
   void srcml_utility_delete(srcMLUtility * su);
 
 }
