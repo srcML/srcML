@@ -13,6 +13,7 @@ import difflib
 import string
 from datetime import datetime, time
 from srcMLTranslator import srcMLTranslator
+from srcMLUtility import srcMLUtility
 from srcMLapps import *
 
 maxcount = 700
@@ -82,13 +83,23 @@ def name2filestr(src_filename):
 	return file
 
 # converts a srcML file back to text
-def srcml2src(srctext, encoding):
+def srcml2src_executable(srctext, encoding):
 
 	# run the srcml processor
 	command = [srcmlutility]
 	command.append("--src-encoding=" + encoding)
 
 	return safe_communicate(command, srctext)
+
+# converts a srcML file back to text
+def srcml2src(srctext, encoding):
+
+	# run the srcml processor
+        utility = srcMLUtility(srctext, len(srctext) + 1, encoding, 0, "")
+        source = utility.extract_text(0)
+        utility.delete()
+
+	return source
 
 # converts from unix to dos line endings
 def unix2dos(srctext):
@@ -443,7 +454,10 @@ try:
 							unitxml = all[count - 1]
 
 						# convert the unit in xml to text
-                                                unittext = srcml2src(unitxml, encoding)
+                                                if use_exec :
+                                                        unittext = srcml2src_executable(unitxml, encoding)
+                                                else :
+                                                        unittext = srcml2src(unitxml, encoding)
 
 						# convert the unit in xml to text (if needed)
                                                 if doseol:
