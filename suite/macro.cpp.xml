@@ -101,15 +101,15 @@
 </unit>
 
 <unit>
-<macro><name>M</name><argument_list>(<argument>A</argument>)</argument_list></macro> <if>if;</if>
+<macro><name>M</name><argument_list>(<argument>A</argument>)</argument_list></macro> <if>if<empty_stmt>;</empty_stmt></if>
 </unit>
 
 <unit>
-<macro><name>M</name><argument_list>(<argument>A</argument>)</argument_list></macro> <while>while;</while>
+<macro><name>M</name><argument_list>(<argument>A</argument>)</argument_list></macro> <while>while<empty_stmt>;</empty_stmt></while>
 </unit>
 
 <unit>
-<macro><name>M</name><argument_list>(<argument>A</argument>)</argument_list></macro> <for>for;</for>
+<macro><name>M</name><argument_list>(<argument>A</argument>)</argument_list></macro> <for>for<empty_stmt>;</empty_stmt></for>
 </unit>
 
 <unit>
