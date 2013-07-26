@@ -345,6 +345,65 @@ void srcMLUtility::extract_text(const char* to_dir, const char* ofilename, int u
 }
 
 // extract a given unit
+const char * srcMLUtility::extract_text(int unit) {
+
+#if 0
+  if (xmlRegisterOutputCallbacks(archiveWriteMatch_src2srcml, archiveWriteOpen, archiveWrite, archiveWriteClose) < 0) {
+    fprintf(stderr, "%s: failed to register archive handler\n", "FOO");
+    exit(1);
+  }
+
+  if (archiveWriteMatch_src2srcml(ofilename)) {
+    archiveWriteOutputFormat(ofilename);
+
+    archiveWriteRootOpen(ofilename);
+  }
+#endif
+
+  // setup parser
+  xmlParserCtxtPtr ctxt = 0;
+  if(infile)
+    ctxt = srcMLCreateURLParserCtxt(infile);
+  else
+    ctxt = srcMLCreateMemoryParserCtxt(buffer, size);
+
+  // setup sax handler
+  xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
+  ctxt->sax = &sax;
+
+  // setup process handling
+  xmlBufferPtr buffer = xmlBufferCreate();
+  ExtractUnitsSrc process(buffer, output_encoding);
+
+  // setup sax handling state
+  SAX2ExtractUnitsSrc state(&process, &options, unit, diff_version);
+  ctxt->_private = &state;
+
+  // process the document
+  srcMLParseDocument(ctxt, true);
+
+#if 0
+  if (archiveWriteMatch_src2srcml(ofilename))
+    archiveWriteRootClose(0);
+#endif
+
+  // local variable, do not want xmlFreeParserCtxt to free
+  ctxt->sax = NULL;
+
+  // all done with parsing
+  xmlFreeParserCtxt(ctxt);
+
+  // make sure we did not end early
+  if (state.unit && state.count < state.unit)
+    throw OutOfRangeUnitError(state.count);
+
+  const char * content = strdup((const char *)buffer->content);
+  xmlBufferFree(buffer);
+  return content;
+
+}
+
+// extract a given unit
 void srcMLUtility::extract_diff_text(const char* to_dir, const char* ofilename, int unit, const char* version) {
 
   // setup parser
@@ -626,9 +685,16 @@ extern "C" {
   }
 
   // extract (intact) current unit as text
-  void srcml_extract_text(srcMLUtility * su, const char* to_dir, const char* ofilename, int unit) {
+  void srcml_extract_text_file(srcMLUtility * su, const char* to_dir, const char* ofilename, int unit) {
 
     su->extract_text(to_dir, ofilename, unit);
+
+  }
+
+
+  const char * srcml_extract_text_buffer(srcMLUtility * su, int unit) {
+
+    su->extract_text(unit);
 
   }
 

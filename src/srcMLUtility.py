@@ -16,8 +16,11 @@ libsrcml.srcml_utility_file_new.argtypes = [c_char_p, c_char_p, c_ulonglong, c_c
 libsrcml.srcml_utility_memory_new.restype = c_void_p
 libsrcml.srcml_utility_memory_new.argtypes = [c_char_p, c_int, c_char_p, c_ulonglong, c_char_p]
 
-libsrcml.srcml_extract_text.restype = None
-libsrcml.srcml_extract_text.argtypes = [c_void_p, c_char_p, c_char_p, c_int]
+libsrcml.srcml_extract_text_file.restype = None
+libsrcml.srcml_extract_text_file.argtypes = [c_void_p, c_char_p, c_char_p, c_int]
+
+libsrcml.srcml_extract_text_buffer.restype = c_char_p
+libsrcml.srcml_extract_text_buffer.argtypes = [c_void_p, c_int]
 
 libsrcml.srcml_delete.restype = None
 libsrcml.srcml_delete.argtypes = [c_ulonglong]
@@ -31,7 +34,10 @@ class srcMLUtility(object):
         self.utility = c_void_p(libsrcml.srcml_utility_memory_new(buffer, size, src_encoding, options, diff_version))
 
     def extract_text(self, to_dir, ofilename, unit) :
-        libsrcml.srcml_extract_text(self.utility, to_dir, ofilename, unit) 
+        libsrcml.srcml_extract_text_file(self.utility, to_dir, ofilename, unit) 
+
+    def extract_text(self, unit) :
+        return libsrcml.srcml_extract_text_buffer(self.utility, unit) 
 
     def delete(self) :
         libsrcml.srcml_utility_delete(self.utility)
@@ -42,5 +48,5 @@ srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </unit>"""
 
 utility = srcMLUtility(srcml, len(srcml) + 1, "UTF-8", 0, "")
-utility.extract_text(None, "/dev/stdout", 1)
+print utility.extract_text(1)
 utility.delete()

@@ -77,6 +77,7 @@ class srcMLUtility {
 
   // extract (intact) current unit as text
   void extract_text(const char* to_dir, const char* ofilename, int unit = 0);
+  const char * extract_text(int unit = 0);
 
   // extract a particular srcML version from srcDiff format
   void extract_diff_xml(const char* ofilename, int unit, const char* version);
@@ -153,7 +154,8 @@ extern "C" {
   srcMLUtility * srcml_utility_memory_new(const char * buffer, int size, const char* encoding, OPTION_TYPE op, const char* diff_version = "");
 
   // extract (intact) current unit as text
-  void srcml_extract_text(srcMLUtility * su, const char* to_dir, const char* ofilename, int unit);
+  void srcml_extract_text_file(srcMLUtility * su, const char* to_dir, const char* ofilename, int unit);
+  const char * srcml_extract_text_buffer(srcMLUtility * su, int unit);
 
   void srcml_utility_delete(srcMLUtility * su);
 

@@ -40,7 +40,13 @@
 class ExtractUnitsSrc : public ProcessUnit {
  public :
  ExtractUnitsSrc(const char* to_dir, const char* output_filename, const char* output_encoding)
-   : to_directory(to_dir), output_filename(output_filename) {
+   : to_directory(to_dir), output_filename(output_filename), buffer(0) {
+
+    handler = xmlFindCharEncodingHandler(output_encoding);
+  }
+
+ ExtractUnitsSrc(xmlBufferPtr buffer, const char* output_encoding)
+   : to_directory(0), output_filename(0), buffer(buffer) {
 
     handler = xmlFindCharEncodingHandler(output_encoding);
   }
@@ -48,6 +54,7 @@ class ExtractUnitsSrc : public ProcessUnit {
  private :
     const char* to_directory;
     const char* output_filename;
+    xmlBufferPtr buffer;
     xmlCharEncodingHandlerPtr handler;
 
  public :
@@ -129,6 +136,9 @@ class ExtractUnitsSrc : public ProcessUnit {
     // now create the file itself
     if (isoption(*(pstate->poptions), OPTION_NULL)) {
       output_buffer[0] = xmlOutputBufferCreateFd(1, handler); 
+    } else if(buffer) {
+      output_buffer[0] = xmlOutputBufferCreateBuffer(buffer, handler);
+
     } else
       output_buffer[0] = xmlOutputBufferCreateFilename(path.c_str(), handler, isoption(*(pstate->poptions), OPTION_COMPRESSED));
     if (output_buffer[0] == NULL) {
