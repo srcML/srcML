@@ -74,6 +74,7 @@ class srcMLUtility {
 
   // extract (intact) current unit as XML
   void extract_xml(const char* ofilename, int unit = 0);
+  const char * extract_xml(int unit);
 
   // extract (intact) current unit as text
   void extract_text(const char* to_dir, const char* ofilename, int unit = 0);

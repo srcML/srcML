@@ -33,7 +33,13 @@
 class ExtractUnitsXML : public ProcessUnit {
  public :
  ExtractUnitsXML(const char* to_dir, const char* filename, const char* output_encoding)
-   : to_directory(to_dir), ofilename(filename) {
+   : to_directory(to_dir), ofilename(filename), buffer(0) {
+
+    handler = xmlFindCharEncodingHandler(output_encoding);
+  }
+
+ ExtractUnitsXML(xmlBufferPtr buffer, const char* output_encoding)
+   : to_directory(0), ofilename(0), buffer(buffer) {
 
     handler = xmlFindCharEncodingHandler(output_encoding);
   }
@@ -41,9 +47,11 @@ class ExtractUnitsXML : public ProcessUnit {
  private :
     const char* to_directory;
     const char* ofilename;
+    xmlBufferPtr buffer;
     xmlCharEncodingHandlerPtr handler;
     PROPERTIES_TYPE nsv;
     PROPERTIES_TYPE attrv;
+ 
 
  public :
 
@@ -75,8 +83,11 @@ class ExtractUnitsXML : public ProcessUnit {
 
     // open the output text writer stream
     // "-" filename is standard output
-    writer = xmlNewTextWriterFilename(ofilename,
+    if(ofilename)
+      writer = xmlNewTextWriterFilename(ofilename,
 					      isoption(*(pstate->poptions), OPTION_COMPRESSED) ? 1 : 0);
+    else
+      writer = xmlNewTextWriterMemory(buffer, isoption(*(pstate->poptions), OPTION_COMPRESSED) ? 1 : 0);
 
     // start this document the same as the current document
     if (!isoption(*(pstate->poptions), OPTION_XMLDECL))

@@ -205,7 +205,11 @@ int srcMLUtility::unit_count(FILE* output) {
 void srcMLUtility::extract_xml(const char* ofilename, int unit) {
 
   // setup parser
-  xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
+  xmlParserCtxtPtr ctxt = 0;
+  if(infile)
+    ctxt = srcMLCreateURLParserCtxt(infile);
+  else
+    ctxt = srcMLCreateMemoryParserCtxt(buffer, size);
   if (ctxt == NULL) return;
 
   // setup sax handler
@@ -234,6 +238,51 @@ void srcMLUtility::extract_xml(const char* ofilename, int unit) {
   // make sure we did not end early
   if (state.unit && state.count < state.unit)
     throw OutOfRangeUnitError(state.count);
+}
+
+// extract a given unit
+const char * srcMLUtility::extract_xml(int unit) {
+
+  // setup parser
+  xmlParserCtxtPtr ctxt = 0;
+  if(infile)
+    ctxt = srcMLCreateURLParserCtxt(infile);
+  else
+    ctxt = srcMLCreateMemoryParserCtxt(buffer, size);
+  if (ctxt == NULL) return 0;
+
+  // setup sax handler
+  xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
+  ctxt->sax = &sax;
+
+  // setup process handling
+  xmlBufferPtr buffer = xmlBufferCreate();
+  ExtractUnitsXML process(buffer, output_encoding);
+
+  if (isoption(options, OPTION_NULL))
+    unit = -1;
+
+  // setup sax handling state
+  SAX2ExtractUnitsSrc state(&process, &options, unit, diff_version);
+  ctxt->_private = &state;
+
+  // process the document
+  srcMLParseDocument(ctxt, true);
+
+  // local variable, do not want xmlFreeParserCtxt to free
+  ctxt->sax = NULL;
+
+  // all done with parsing
+  xmlFreeParserCtxt(ctxt);
+
+  // make sure we did not end early
+  if (state.unit && state.count < state.unit)
+    throw OutOfRangeUnitError(state.count);
+
+  const char * content = strdup((const char *)buffer->content);
+  xmlBufferFree(buffer);
+  return content;
+
 }
 
 // extract a given unit
@@ -355,19 +404,6 @@ void srcMLUtility::extract_text(const char* to_dir, const char* ofilename, int u
 
 // extract a given unit
 const char * srcMLUtility::extract_text(int unit) {
-
-#if 0
-  if (xmlRegisterOutputCallbacks(archiveWriteMatch_src2srcml, archiveWriteOpen, archiveWrite, archiveWriteClose) < 0) {
-    fprintf(stderr, "%s: failed to register archive handler\n", "FOO");
-    exit(1);
-  }
-
-  if (archiveWriteMatch_src2srcml(ofilename)) {
-    archiveWriteOutputFormat(ofilename);
-
-    archiveWriteRootOpen(ofilename);
-  }
-#endif
 
   // setup parser
   xmlParserCtxtPtr ctxt = 0;
