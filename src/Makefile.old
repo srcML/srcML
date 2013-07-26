@@ -242,7 +242,7 @@ ${SRC2SRCML_BIN} : ${OBJ_DIR}src2srcml.o ${OBJ_DIR}srcmlapps.o ${OBJ_DIR}makearg
 
 # shared library for srcML translation
 ${LIBSRCML_SO}: $(LIBSRCML_INCLUDE)
-	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) -shared -fPIC $^ $(LDFLAGS) ${XML_LIB_SRC2SRCML} ${XML_IO_LIB} -o $@
+	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) -shared -fPIC $^ $(LDFLAGS) ${XML_LIB_SRC2SRCML} ${XML_IO_LIB} ${XML_LIB_SRCML2SRC} -o $@
 
 # static library for srcML translation
 ${EXE_DIR}libsrcml.a : $(LIBSRCML_INCLUDE)
@@ -251,7 +251,7 @@ ${EXE_DIR}libsrcml.a : $(LIBSRCML_INCLUDE)
 
 # srcML to source code translator program
 ${SRCML2SRC_BIN} : ${OBJ_DIR}srcml2src.o ${OBJ_DIR}makeargv.o $(if $(DYNAMIC), ${LIBSRCML_SO}, ${EXE_DIR}libsrcml.a)
-	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) ${XML_LIB_SRCML2SRC} ${XML_IO_LIB} -o $@
+	$(CXX) $(CXXFLAGS) $(CXX_LINK_FLAGS) $^ $(LDFLAGS) ${XML_LIB_SRCML2SRC} ${XML_IO_LIB} $(if $(DYNAMIC), -L${EXE_DIR} -lsrcml, ) -o $@
 
 # Object files
 ${OBJ_DIR}src2srcml.o : src2srcml.cpp srcMLTranslator.hpp srcmlapps.hpp Options.hpp srcmlns.hpp makeargv.hpp ${IO_LIB_DEPENDS}
