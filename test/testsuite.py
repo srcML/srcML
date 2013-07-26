@@ -37,7 +37,7 @@ srcexprtranslator = '/home/collard/srcML/trunk/srcexpr/src/srcexpr'
 
 # extracts a particular unit from a srcML file
 def safe_communicate(command, inp):
-        
+
 	try:
 		return subprocess.Popen(command, stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(inp)[0]
 	except OSError, (errornum, strerror):
@@ -448,6 +448,7 @@ try:
                                         all = extract_all(filexml)
 
                                 number = len(all) - 1
+                                xmlns = defaultxmlns(getfullxmlns(filexml))
 				while count == 0 or count < number:
 
 					try: 
@@ -483,7 +484,7 @@ try:
 
 						# convert the text to srcML
                                                 if use_exec :
-                                                        unitsrcmlraw = src2srcML_executable(unittext, encoding, language, directory, getfilename(unitxml), defaultxmlns(getfullxmlns(unitxml)))
+                                                        unitsrcmlraw = src2srcML_executable(unittext, encoding, language, directory, getfilename(unitxml), xmlns)
                                                 else :
                                                         unitsrcmlraw = src2srcML(unittext, encoding, language, directory, filename, defaultxmlns(getfullxmlns(unitxml)))
 
