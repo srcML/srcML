@@ -69,11 +69,28 @@ def extract_unit(src, count):
 	return safe_communicate(command, src)
 
 # extracts a particular unit from a srcML file
-def extract_all(src):
+def extract_all_executable(src):
 
 	command = [srcmlutility, "-0", "--xml"]
 
 	return safe_communicate(command, src)
+
+# extracts a particular unit from a srcML file
+def extract_all(src):
+
+        all = []
+        utility = srcMLUtility(src, len(src) + 1, encoding, 0, "")
+        count = utility.unit_count(None)
+
+        for i in range(1, count + 1) :
+
+                all.append(utility.extract_xml(i))
+
+        utility.delete()
+
+        all.append(0)
+
+	return all
 
 def name2filestr(src_filename):
 	file = open(src_filename).read()
@@ -425,7 +442,10 @@ try:
 				else:
 					count = specnum - 1
 
-                                all = string.split(extract_all(filexml), '\0')
+                                if use_exec :
+                                        all = string.split(extract_all_executable(filexml), '\0')
+                                else :
+                                        all = extract_all(filexml)
 
                                 number = len(all) - 1
 				while count == 0 or count < number:
