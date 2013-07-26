@@ -168,7 +168,6 @@ const char * srcMLUtility::long_info(srcMLUtility & su) {
   OPTION_TYPE options = OPTION_LONG_INFO;
 
   // setup parser
-  // setup parser
   xmlParserCtxtPtr ctxt = 0;
   if(infile)
     ctxt = srcMLCreateURLParserCtxt(infile);

@@ -55,6 +55,9 @@ libsrcml.srcml_unit_count.argtypes = [c_void_p, c_void_p]
 libsrcml.srcml_extract_xml_buffer.restype = c_char_p
 libsrcml.srcml_extract_xml_buffer.argtypes = [c_void_p, c_int]
 
+libsrcml.srcml_long_info.restype = c_char_p
+libsrcml.srcml_long_info.argtypes = [c_void_p]
+
 libsrcml.srcml_delete.restype = None
 libsrcml.srcml_delete.argtypes = [c_ulonglong]
 
@@ -105,6 +108,9 @@ class srcMLUtility(object):
     def extract_xml(self, unit) :
         return libsrcml.srcml_extract_xml_buffer(self.utility, unit) 
 
+    def long_info(self) :
+        return libsrcml.srcml_long_info(self.utility) 
+
     def delete(self) :
         libsrcml.srcml_utility_delete(self.utility)
 
@@ -122,6 +128,6 @@ class srcMLUtility(object):
 #</unit>"""
 
 #utility = srcMLUtility(srcml, len(srcml) + 1, "UTF-8", 0, "")
-#print utility.unit_count(None)
+#print utility.long_info()
 #print utility.extract_text(1)
 #utility.delete()
