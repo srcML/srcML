@@ -2987,9 +2987,9 @@ linq_orderby[] { CompleteElement element; ENTRY_DEBUG }:
         }
         ORDERBY linq_full_expression 
 
-        (options { greedy = true; } : linq_ascending | linq_descending | )
+        (options { greedy = true; } : linq_ascending | linq_descending)*
         
-        (options { greedy = true; } : COMMA linq_full_expression (linq_ascending | linq_descending| ))*
+        (options { greedy = true; } : COMMA linq_full_expression (options { greedy = true; } : linq_ascending | linq_descending)* )*
     ;
 
 linq_ascending[] { CompleteElement element; ENTRY_DEBUG }:
