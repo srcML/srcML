@@ -1,4 +1,5 @@
 from ctypes import *
+from srcMLapps import *
 import os
 LIBSRCML_PATH=""
 if os.path.exists('../bin/libsrcml.dylib') :

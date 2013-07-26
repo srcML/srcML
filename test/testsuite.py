@@ -12,9 +12,7 @@ import subprocess
 import difflib
 import string
 from datetime import datetime, time
-from srcMLTranslator import srcMLTranslator
-from srcMLUtility import srcMLUtility
-from srcMLapps import *
+from srcML import *
 
 maxcount = 700
 error_filename = "srcMLTestReport"
