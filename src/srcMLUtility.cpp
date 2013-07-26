@@ -750,6 +750,12 @@ extern "C" {
 
   }
 
+  const char * srcml_extract_xml_buffer(srcMLUtility * su, int unit) {
+
+    return su->extract_xml(unit);
+
+  }
+
   void srcml_utility_delete(srcMLUtility * su) {
 
     delete su;

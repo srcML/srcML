@@ -52,6 +52,9 @@ libsrcml.srcml_extract_text_buffer.argtypes = [c_void_p, c_int]
 libsrcml.srcml_unit_count.restype = c_int
 libsrcml.srcml_unit_count.argtypes = [c_void_p, c_void_p]
 
+libsrcml.srcml_extract_xml_buffer.restype = c_char_p
+libsrcml.srcml_extract_xml_buffer.argtypes = [c_void_p, c_int]
+
 libsrcml.srcml_delete.restype = None
 libsrcml.srcml_delete.argtypes = [c_ulonglong]
 
@@ -98,6 +101,9 @@ class srcMLUtility(object):
 
     def unit_count(self, file) :
         return libsrcml.srcml_unit_count(self.utility, file) 
+
+    def extract_xml(self, unit) :
+        return libsrcml.srcml_extract_xml_buffer(self.utility, unit) 
 
     def delete(self) :
         libsrcml.srcml_utility_delete(self.utility)

@@ -161,6 +161,10 @@ extern "C" {
   // count of nested units
   int srcml_unit_count(srcMLUtility * su, FILE* output);
 
+  // extract (intact) current unit as XML
+  //void srcml_extract_xml_file(const char* ofilename, int unit);
+  const char * srcml_extract_xml_buffer(srcMLUtility * su, int unit);
+
   void srcml_utility_delete(srcMLUtility * su);
 
 }
