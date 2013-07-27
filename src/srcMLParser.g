@@ -2702,8 +2702,6 @@ complete_throw_list[] { bool flag = false; ENTRY_DEBUG } :
 */
 pure_lead_type_identifier[] { ENTRY_DEBUG } :
 
-        auto_keyword |
-
         // specifiers that occur in a type
         (specifier)=>
         specifier |
@@ -3414,16 +3412,6 @@ specifier[] { CompleteElement element; ENTRY_DEBUG } :
             // C# & Java
             INTERNAL | SEALED | OVERRIDE | REF | OUT | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE | DELEGATE | PARTIAL | EVENT | ASYNC | VIRTUAL | EXTERN | INLINE | IN | PARAMS
         )
-;
-
-auto_keyword[] { CompleteElement element; ENTRY_DEBUG } :
-        {
-            // local mode that is automatically ended by leaving this function
-            startNewMode(MODE_LOCAL);
-
-            startElement(SNAME);
-        }
-        AUTO
 ;
 
 // constructor definition

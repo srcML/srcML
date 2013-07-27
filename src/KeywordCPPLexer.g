@@ -285,7 +285,7 @@ KeywordCPPLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
 
         // add all C++ specific keywords to the literals table
         // concepts
-        { "auto"          , AUTO          , LANGUAGE_CXX_11 }, 
+//        { "auto"          , AUTO          , LANGUAGE_CXX_11 }, 
 
         // add all Java specific keywords to the literals table
         // exception handling
