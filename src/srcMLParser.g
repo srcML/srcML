@@ -539,15 +539,15 @@ start[] { ruledepth = 0; ENTRY_DEBUG } :
         // characters with special actions that usually end currently open elements
         { !inTransparentMode(MODE_INTERNAL_END_CURLY) }? block_end |
 
-        // switch cases @test switch
-        { !inMode(MODE_INIT) && (!inMode(MODE_EXPRESSION) || inTransparentMode(MODE_DETECT_COLON)) }? 
-        colon |
-
         terminate |
 
         // don't confuse with expression block
         { inTransparentMode(MODE_CONDITION) ||
             (!inMode(MODE_EXPRESSION) && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT)) }? lcurly | 
+
+        // switch cases @test switch
+        { !inMode(MODE_INIT) && (!inMode(MODE_EXPRESSION) || inTransparentMode(MODE_DETECT_COLON)) }? 
+        colon |
 
         // process template operator correctly @test template
         { inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) }? tempope |
@@ -1431,7 +1431,6 @@ namespace_directive[] { ENTRY_DEBUG } :
         {
             // statement with an expected namespace name after the keywords
             startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT | MODE_STATEMENT);
-            //startNewMode(MODE_STATEMENT | MODE_FUNCTION_NAME);
 
             // start the using directive
             startElement(SUSING_DIRECTIVE);
