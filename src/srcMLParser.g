@@ -887,7 +887,7 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
             identifier set_bool[name, true] |
 
             // special case for something that looks like a declaration
-            delegate_anonymous | 
+            { LA(1) == DELEGATE }? delegate_anonymous | 
 
             (LAMBDA (LCURLY | LPAREN)) =>
             lambda_anonymous | 
