@@ -2432,8 +2432,8 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                 (specifier)=> specifier set_int[specifier_count, specifier_count + 1] |
 
                 { type_count == attributecount && inLanguage(LANGUAGE_CSHARP) }?
-                (attribute)=>
-                global = attribute set_int[attributecount, attributecount + 1] 
+                (attribute_global)=>
+                global = attribute_global set_int[attributecount, attributecount + 1] 
                 set_type[type, GLOBAL_ATTRIBUTE, global]
                 throw_exception[global] |
 
@@ -3046,7 +3046,24 @@ variable_identifier_array_grammar_sub_contents{ CompleteElement element; ENTRY_D
 ;
 
 
-attribute[] returns [bool global = false] { CompleteElement element; ENTRY_DEBUG } :
+attribute_global[] returns [bool global = false] { CompleteElement element; ENTRY_DEBUG } :
+        {
+            // start a mode to end at right bracket with expressions inside
+            startNewMode(MODE_TOP | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
+
+            startElement(SATTRIBUTE);
+        }
+        LBRACKET
+
+        ((attribute_target_global COLON)=>
+        (global = attribute_target_global COLON) | )
+
+        full_expression
+
+        RBRACKET
+;
+
+attribute[] { CompleteElement element; ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_TOP | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
@@ -3056,14 +3073,24 @@ attribute[] returns [bool global = false] { CompleteElement element; ENTRY_DEBUG
         LBRACKET
 
         ((attribute_target COLON)=>
-        (global = attribute_target COLON) | )
+        (attribute_target COLON) | )
 
         full_expression
 
         RBRACKET
 ;
 
-attribute_target[] returns [bool global = false] { CompleteElement element; ENTRY_DEBUG } :
+attribute_target[] { CompleteElement element; ENTRY_DEBUG } :
+        {
+            // start a mode to end at right bracket with expressions inside
+            startNewMode(MODE_LOCAL);
+
+            startElement(STARGET);
+        }
+        (RETURN | EVENT | identifier)
+;
+
+attribute_target_global[] returns [bool global = false] { CompleteElement element; ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
