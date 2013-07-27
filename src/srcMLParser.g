@@ -2862,6 +2862,10 @@ linq_expression[] { CompleteElement element; ENTRY_DEBUG }:
         (options { greedy = true; } : linq_from | linq_where | linq_select | linq_let | linq_group | linq_join | linq_orderby)+
     ;
 
+linq_expression_pure[] { CompleteElement element; ENTRY_DEBUG }:
+        linq_from | linq_where | linq_select | linq_let | linq_group | linq_join | linq_orderby
+    ;
+
 linq_from[] { CompleteElement element; ENTRY_DEBUG }:
         {
             // start a mode to end at right bracket with expressions inside
@@ -4300,7 +4304,7 @@ guessing_end[]
 
 expression_part_plus_linq[CALLTYPE type = NOCALL] { guessing_end(); ENTRY_DEBUG } :
 
-        { inLanguage(LANGUAGE_CSHARP) }? linq_expression | expression_part[type]
+        { inLanguage(LANGUAGE_CSHARP) }? (linq_expression_pure)=> linq_expression | expression_part[type]
     ;
 
 expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG } :
