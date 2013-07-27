@@ -1879,7 +1879,7 @@ terminate[] { ENTRY_DEBUG } :
 
 terminate_token[] { CompleteElement element; ENTRY_DEBUG } :
         {
-            if (inMode(MODE_STATEMENT | MODE_NEST) && !inMode(MODE_DECL) && !inMode(MODE_IF)) {
+            if (inMode(MODE_STATEMENT | MODE_NEST) && !inMode(MODE_DECL)) {
 
                 startNewMode(MODE_LOCAL);
 
