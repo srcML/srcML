@@ -4338,7 +4338,7 @@ expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG
         { type == MACRO }? macro_call |
 
         // general math operators
-        general_operators 
+        (general_operators)=> general_operators 
         {
             if (inLanguage(LANGUAGE_CXX_FAMILY) && LA(1) == DESTOP)
                 general_operators();
