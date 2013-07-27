@@ -4304,7 +4304,10 @@ guessing_end[]
 
 expression_part_plus_linq[CALLTYPE type = NOCALL] { guessing_end(); ENTRY_DEBUG } :
 
-        { inLanguage(LANGUAGE_CSHARP) }? (linq_expression_pure)=> linq_expression | expression_part[type]
+        { inLanguage(LANGUAGE_CSHARP) && (
+            LA(1) == FROM || LA(1) == WHERE || LA(1) == SELECT || LA(1) == LET || LA(1) == GROUP || LA(1) == JOIN || LA(1) == ORDERBY)}?
+            (linq_expression_pure)=> linq_expression |
+        expression_part[type]
     ;
 
 expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG } :
