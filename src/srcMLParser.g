@@ -3359,8 +3359,7 @@ catch[antlr::RecognitionException] {
   Specifier for a function
 */
 function_specifier[] { CompleteElement element; ENTRY_DEBUG } :
-        generic_constraint |
-
+        { LA(1) == WHERE }? generic_constraint |
         {
             // statement
             startNewMode(MODE_LOCAL);
