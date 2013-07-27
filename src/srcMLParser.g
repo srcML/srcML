@@ -3091,15 +3091,10 @@ attribute_target[] { CompleteElement element; ENTRY_DEBUG } :
 ;
 
 attribute_target_global[] returns [bool global = false] { CompleteElement element; ENTRY_DEBUG } :
-        {
-            // start a mode to end at right bracket with expressions inside
-            startNewMode(MODE_LOCAL);
 
-            startElement(STARGET);
-        }
-        (RETURN | EVENT |
-            set_bool[global, LA(1) != RETURN && LA(1) != EVENT && (LT(1)->getText() == "module" || LT(1)->getText() == "assembly")] identifier
-            )
+        set_bool[global, LA(1) != RETURN && LA(1) != EVENT && (LT(1)->getText() == "module" || LT(1)->getText() == "assembly")]
+
+        attribute_target
 ;
 
 /*
