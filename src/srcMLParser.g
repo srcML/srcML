@@ -1671,7 +1671,7 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 
         complex_name[true] (
 
-            { inLanguage(LANGUAGE_C_FAMILY) }?
+            { inLanguage(LANGUAGE_CXX_FAMILY) }?
             (options { greedy = true; } : derived)* (generic_constraint)* | 
 
             { inLanguage(LANGUAGE_JAVA_FAMILY) }?
@@ -1680,7 +1680,7 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
                 {
                     if (insuper)
                         endCurrentMode();
-                }
+                } |
        )
 ;
 
