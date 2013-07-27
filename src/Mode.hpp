@@ -138,8 +138,6 @@ public:
 
   const static State::MODE_TYPE MODE_FUNCTION_PARAMETER;
 
-  const static State::MODE_TYPE MODE_DERIVED;
-
   const static State::MODE_TYPE MODE_INNER_DECL;
 
   const static State::MODE_TYPE MODE_IN_INIT;

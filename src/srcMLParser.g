@@ -540,7 +540,7 @@ start[] { ruledepth = 0; ENTRY_DEBUG } :
         { !inTransparentMode(MODE_INTERNAL_END_CURLY) }? block_end |
 
         // switch cases @test switch
-        { !inMode(MODE_DERIVED) && !inMode(MODE_INIT) && (!inMode(MODE_EXPRESSION) || inTransparentMode(MODE_DETECT_COLON)) }? 
+        { !inMode(MODE_INIT) && (!inMode(MODE_EXPRESSION) || inTransparentMode(MODE_DETECT_COLON)) }? 
         colon |
 
         terminate |
@@ -2140,10 +2140,6 @@ statement_part[] { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE de
         // expecting a template parameter
         { inTransparentMode(MODE_TEMPLATE) && inMode(MODE_LIST) }?
              template_param |
-
-        // expecting a template parameter
-        { inLanguage(LANGUAGE_CXX_FAMILY) && inMode(MODE_DERIVED) && inMode(MODE_EXPECT) }?
-             derived |
 
         // start of condition for if/while/switch
         { inMode(MODE_CONDITION | MODE_EXPECT) }?
