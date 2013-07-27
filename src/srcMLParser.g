@@ -2455,11 +2455,13 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                 // special function name
                 MAIN set_bool[isoperatorfunction, type_count == 0] |
 
+
                 { inLanguage(LANGUAGE_CSHARP) }?
                 (LBRACKET (COMMA)* RBRACKET)=>
                 LBRACKET (COMMA)* RBRACKET |
 
                 // type parts that can occur before other type parts (excluding specifiers)
+                { LA(1) != LBRACKET }?
                 pure_lead_type_identifier_no_specifiers set_bool[foundpure] |
 
                 // type parts that must only occur after other type parts (excluding specifiers)
@@ -2752,7 +2754,7 @@ lead_type_identifier[] { ENTRY_DEBUG } :
 type_identifier[] { ENTRY_DEBUG } :
 
         // any identifier that can appear first can appear later
-        lead_type_identifier |
+        (lead_type_identifier)=> lead_type_identifier |
 
         non_lead_type_identifier
 ;
