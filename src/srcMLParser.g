@@ -2453,8 +2453,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                 // special function name
                 MAIN set_bool[isoperatorfunction, type_count == 0] |
 
-
-                { inLanguage(LANGUAGE_CSHARP) }?
+                { inLanguage(LANGUAGE_CSHARP) && type_count > 0 }?
                 (LBRACKET (COMMA)* RBRACKET)=>
                 LBRACKET (COMMA)* RBRACKET |
 
