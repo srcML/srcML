@@ -214,7 +214,7 @@ srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options
         startNewMode(MODE_TOP | MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
     else
        // root, single mode that allows statements to be nested
-       startNewMode(MODE_TOP | MODE_NEST | MODE_STATEMENT);
+       startNewMode(MODE_TOP | MODE_STATEMENT | MODE_NEST);
 }
 
 // ends all currently open modes
@@ -943,7 +943,7 @@ do_statement[] { ENTRY_DEBUG } :
             startElement(SDO_STATEMENT);
 
             // mode to nest while part of do while statement
-            startNewMode(MODE_NEST | MODE_STATEMENT);
+            startNewMode(MODE_STATEMENT | MODE_NEST);
         }
         DO
 ;
@@ -1173,7 +1173,7 @@ switch_statement[] { ENTRY_DEBUG } :
 section_entry_action_first[] :
         {
             // start a new section inside the block with nested statements
-            startNewMode(MODE_TOP_SECTION | MODE_TOP | MODE_NEST | MODE_STATEMENT);
+            startNewMode(MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_NEST);
         }
 ;
 
@@ -1385,7 +1385,7 @@ extern_name[] { ENTRY_DEBUG } :
         string_literal
         {
             // nest a block inside the namespace
-            setMode(MODE_NEST | MODE_STATEMENT);
+            setMode(MODE_STATEMENT | MODE_NEST);
         }
 ;
 
@@ -1421,7 +1421,7 @@ namespace_alias[] { ENTRY_DEBUG } :
 namespace_block[] { ENTRY_DEBUG } :
         {
             // nest a block inside the namespace
-            setMode(MODE_NEST | MODE_STATEMENT);
+            setMode(MODE_STATEMENT | MODE_NEST);
         }
         lcurly 
 ;
@@ -1505,7 +1505,7 @@ class_preprocessing[int token] { ENTRY_DEBUG } :
                 startElement(STYPE);
 
             // statement
-            startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_CLASS | MODE_DECL);
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_CLASS | MODE_DECL);
 
             // start the class definition
             startElement(token);
@@ -1540,7 +1540,7 @@ enum_class_definition[] { ENTRY_DEBUG } :
 anonymous_class_definition[] { ENTRY_DEBUG } :
         {
             // statement
-            startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_CLASS | MODE_END_AT_BLOCK);
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_CLASS | MODE_END_AT_BLOCK);
 
             // start the class definition
             startElement(SCLASS);
@@ -1573,7 +1573,7 @@ anonymous_class_super[] { CompleteElement element; ENTRY_DEBUG } :
 interface_definition[] { ENTRY_DEBUG } :
         {
             // statement
-            startNewMode(MODE_STATEMENT | MODE_BLOCK | MODE_NEST | MODE_CLASS);
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_CLASS);
 
             // start the interface definition
             startElement(SINTERFACE);
@@ -1750,7 +1750,7 @@ lcurly[] { ENTRY_DEBUG } :
         lcurly_base
         {
             // alter the modes set in lcurly_base
-            setMode(MODE_TOP | MODE_NEST | MODE_STATEMENT | MODE_LIST);
+            setMode(MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_LIST);
         }
 ;
 
@@ -1881,7 +1881,7 @@ terminate[] { ENTRY_DEBUG } :
 
 terminate_token[] { CompleteElement element; ENTRY_DEBUG } :
         {
-            if (inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_DECL) && !inMode(MODE_IF)) {
+            if (inMode(MODE_STATEMENT | MODE_NEST) && !inMode(MODE_DECL) && !inMode(MODE_IF)) {
 
                 startNewMode(MODE_LOCAL);
 
@@ -1894,7 +1894,7 @@ terminate_token[] { CompleteElement element; ENTRY_DEBUG } :
 terminate_pre[] { ENTRY_DEBUG } :
         {
             // end any elements inside of the statement
-            if (!inMode(MODE_TOP | MODE_NEST | MODE_STATEMENT))
+            if (!inMode(MODE_TOP | MODE_STATEMENT | MODE_NEST))
                 endDownToFirstMode(MODE_STATEMENT | MODE_EXPRESSION_BLOCK |
                                    MODE_INTERNAL_END_CURLY | MODE_INTERNAL_END_PAREN);
         }
@@ -2192,7 +2192,7 @@ comma[] { ENTRY_DEBUG }:
         {
             // comma ends the current item in a list
             // or ends the current expression
-            if (!inTransparentMode(MODE_PARSE_EOL) && (inTransparentMode(MODE_LIST) || inTransparentMode(MODE_NEST | MODE_STATEMENT))) {
+            if (!inTransparentMode(MODE_PARSE_EOL) && (inTransparentMode(MODE_LIST) || inTransparentMode(MODE_STATEMENT | MODE_NEST))) {
 
                 // might want to check for !inMode(MODE_INTERNAL_END_CURLY)
                 endDownToFirstMode(MODE_LIST | MODE_STATEMENT);
@@ -4110,7 +4110,7 @@ pure_expression_block[] { ENTRY_DEBUG } :
         lcurly_base 
         {
             // nesting blocks, not statement
-            replaceMode(MODE_NEST | MODE_STATEMENT, MODE_BLOCK | MODE_NEST | MODE_END_AT_BLOCK_NO_TERMINATE);
+            replaceMode(MODE_STATEMENT | MODE_NEST, MODE_BLOCK | MODE_NEST | MODE_END_AT_BLOCK_NO_TERMINATE);
 
             // end this expression block correctly
             startNewMode(MODE_TOP | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
@@ -4939,7 +4939,7 @@ typedef_statement[] { ENTRY_DEBUG } :
             // start the typedef element
             startElement(STYPEDEF);
 
-            startNewMode(MODE_NEST | MODE_STATEMENT | MODE_INNER_DECL | MODE_TYPEDEF | MODE_END_AT_BLOCK_NO_TERMINATE);
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_INNER_DECL | MODE_TYPEDEF | MODE_END_AT_BLOCK_NO_TERMINATE);
         }
         TYPEDEF
 ;
