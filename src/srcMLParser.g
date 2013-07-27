@@ -526,8 +526,6 @@ void endAllModes();
 */
 start[] { ruledepth = 0; ENTRY_DEBUG } :
 
-        COMMENT_TEXT |
-
         // end of file
         eof |
 
