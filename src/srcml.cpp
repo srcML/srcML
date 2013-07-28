@@ -103,27 +103,36 @@ const std::string SRCML2SRC_FOOTER = "Examples:\
   www.sdml.info\n\
   Report bugs to collard@uakron.edu";
 
-//TEST FUNCTION FOR PROOF OF CONCEPT
-void file_test(std::string fp) {
-	std::cout << fp << "\n";
-}
+// TEST FUNCTION FOR PROOF OF CONCEPT
+void file_test(std::string fp);
+
+void help_display(std::string help_opt);
 
 /* Function used to check that 'opt1' and 'opt2' are not specified
    at the same time. (FROM BOOST LIBRARY EXAMPLES)*/
-void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, const char* opt2)
-{
-	if (vm.count(opt1) && !vm[opt1].defaulted() && vm.count(opt2) && !vm[opt2].defaulted()) {
-		throw std::logic_error(std::string("Conflicting options '")
-			+ opt1 + "' and '" + opt2 + "'.");
-	} 
-}
+void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, const char* opt2);
+
+// Define Program Options
+prog_opts::options_description general("General Options");
+prog_opts::options_description src2srcml_options("src2srcml Options");
+prog_opts::options_description srcml2src_options("srcml2src Options");
+prog_opts::options_description cpp_markup("CPP Markup Options");
+prog_opts::options_description line_col("Line/Column Position");
+prog_opts::options_description markup("Markup Extensions");
+prog_opts::options_description src2srcml_metadata("Metadata Options");
+prog_opts::options_description srcml2src_metadata("Metadata Options");
+prog_opts::options_description prefix("Prefix Options");
+prog_opts::options_description query_transform("Query and Transform Options");
+prog_opts::options_description srcml_archive("srcML Archive Options");
+prog_opts::options_description src2srcml("src2srcml");
+prog_opts::options_description srcml2src("srcml2src");
+prog_opts::options_description all("All Options");
 
 int main(int argc, char * argv[]) {
 
-	prog_opts::options_description general("General Options");
 	general.add_options()
 		("compress,z", "output in gzip format")
-		("help,h", prog_opts::value<std::string>()->implicit_value(""),"display this help and exit. USAGE: help or help [module name]. MODULES: src2srcml, srcml2src")
+		("help,h", prog_opts::value<std::string>()->implicit_value("")->notifier(&help_display),"display this help and exit. USAGE: help or help [module name]. MODULES: src2srcml, srcml2src")
 		("no-namespace-decl", "do not output any namespace declarations")
 		("no-xml-dexlaration", "do not output the XML declaration")
 		("output=,o", prog_opts::value<std::string>(), "write result ouput to arg which is a FILE or URI")
@@ -133,7 +142,6 @@ int main(int argc, char * argv[]) {
 		("version,V", "display version number and exit")
 		;
 
-	prog_opts::options_description src2srcml_options("src2srcml Options");
 	src2srcml_options.add_options()
 		("archive,n", "store output in a srcML archive, default for multiple input files")
 		("debug,g", "markup translation errors, namespace http://www.sdml.info/srcML/srcerr")
@@ -145,12 +153,10 @@ int main(int argc, char * argv[]) {
 		("register-ext", prog_opts::value<std::string>(), "register file extension EXT for source-code language LANG. arg format EXT=LANG")
 		;
 
-	prog_opts::options_description srcml2src_options("srcml2src Options");
 	srcml2src_options.add_options()
 		("xml,X", "output in XML instead of text")
 		;
 
-	prog_opts::options_description cpp_markup("CPP Markup Options");
 	cpp_markup.add_options()
 		("cpp", "preprocessor parsing and markup for Java and non-C/C++ languages")
 		("cpp-markup-else", "markup cpp #else regions (default)")
@@ -159,27 +165,23 @@ int main(int argc, char * argv[]) {
 		("cpp-text-if0", "leave cpp #if 0 regions as text (default)")
 		;
 
-	prog_opts::options_description line_col("Line/Column Position");
 	line_col.add_options()
 		("position", "include line/column attributes, namespace 'http://www.sdml.info/srcML/position'")
 		("tabs=", prog_opts::value<int>(), "set tabs arg characters apart.  Default is 8")
 		;
 
-	prog_opts::options_description markup("Markup Extensions");
 	markup.add_options()
 		("literal", "markup literal values, namespace 'http://www.sdml.info/srcML/literal'")
 		("modifier", "markup type modifiers, namespace 'http://www.sdml.info/srcML/modifier'")
 		("operator", "markup operators, namespace 'http://www.sdml.info/srcML/operator'")
 		;
 
-	prog_opts::options_description src2srcml_metadata("Metadata Options");
 	src2srcml_metadata.add_options()
 		("directory=,d", prog_opts::value<std::string>(), "set the arg directory attribute")
 		("filename=,f", prog_opts::value<std::string>(), "set the arg filename attribute")
 		("src-version=,s", prog_opts::value<std::string>(), "set the arg version attribute")
 		;
 
-	prog_opts::options_description srcml2src_metadata("Metadata Options");
 	srcml2src_metadata.add_options()
 		("info,i", "display most metadata except file count (individual units) and exit")
 		("list", "list all the files in the srcML archive and exit")
@@ -193,13 +195,11 @@ int main(int argc, char * argv[]) {
 		("show-src-version", "display source version and exit")
 		;
 
-	prog_opts::options_description prefix("Prefix Options");
 	prefix.add_options()
 		("xmlns=", prog_opts::value<std::string>(), "set the default namespace to arg")
 		("xmlns:", prog_opts::value<std::string>(), "set the namespace arg format PREFIX=URI")
 		;
 
-	prog_opts::options_description query_transform("Query and Transform Options");
 	query_transform.add_options()
 		("apply-root", "apply an xslt program or xpath query to the root element")
 		("relaxng=", prog_opts::value<std::string>(), "output individual units that match RELAXNG_FILE (FILE or URI) arg")
@@ -208,20 +208,18 @@ int main(int argc, char * argv[]) {
 		("xslt=", prog_opts::value<std::string>(), "apply XSLT_FILE (FILE or URI) arg transformation to each individual unit")
 		;
 
-	prog_opts::options_description srcml_archive("srcML Archive Options");
 	srcml_archive.add_options()
 		("to-dir", "extract all files from srcML and create them in the filesystem")
 		("unit=,U", prog_opts::value<int>(), "extract individual unit number arg from srcML")
 		;    
 	
-	//Group Options
-	prog_opts::options_description src2srcml("src2srcml");
+	//Group src2srcml Options
 	src2srcml.add(general).add(src2srcml_options).add(cpp_markup).add(line_col).add(markup).add(src2srcml_metadata).add(prefix);
-
-	prog_opts::options_description srcml2src("srcml2src");
+	
+	//Group srcml2src Options
 	srcml2src.add(general).add(srcml2src_options).add(src2srcml_metadata).add(query_transform).add(srcml_archive);
-
-	prog_opts::options_description all("All Options");
+	
+	//Group all Options
 	all.add(general).add(src2srcml_options).add(cpp_markup).add(line_col).
 		add(markup).add(src2srcml_metadata).add(prefix).add(srcml2src_options).
 		add(src2srcml_metadata).add(query_transform).add(srcml_archive);
@@ -231,7 +229,7 @@ int main(int argc, char * argv[]) {
 	prog_opts::store(prog_opts::parse_command_line(argc, argv, all), cli_map);
 	prog_opts::notify(cli_map);
 
-	//OPTION CONFLICTS
+	//CHECK OPTION CONFLICTS
 	try {
 		conflicting_options(cli_map, "quiet", "verbose");	
 	}
@@ -240,9 +238,21 @@ int main(int argc, char * argv[]) {
   	return 1;
   }
 
-  //DISPLAY HELP
-	if (cli_map.count("help")) {  
-		const std::string& help_opt = cli_map["help"].as<std::string>();
+  return 0;
+}
+
+void file_test(std::string fp) {
+	std::cout << fp << "\n";
+}
+
+void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, const char* opt2) {
+	if (vm.count(opt1) && !vm[opt1].defaulted() && vm.count(opt2) && !vm[opt2].defaulted()) {
+		throw std::logic_error(std::string("Conflicting options '")
+			+ opt1 + "' and '" + opt2 + "'.");
+	} 
+}
+
+void help_display(std::string help_opt) {
 
 		if (help_opt == ""){
 			//MIGHT NEED A NEW HEADER AND FOOTER FOR THE GENERAL OPTION
@@ -262,11 +272,7 @@ int main(int argc, char * argv[]) {
 		}
 		else {
 			std::cout << "Unknown module '" 
-      		 << help_opt << "' in the --help-module option\n";
-      return 1;
+      	<< help_opt << "' in the --help-module option\n";
+      	exit(1);
 		}
-
-	}
-
-  return 0;
 }
