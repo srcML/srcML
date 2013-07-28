@@ -29,10 +29,10 @@
 
 namespace prog_opts = boost::program_options;
 
-const std::string SRCML_HEADER = "";
-const std::string SRCML_FOOTER = "";
+const char* SRCML_HEADER = "";
+const char* SRCML_FOOTER = "";
 
-const std::string SRC2SRCML_HEADER = "Usage: srcml [options] <src_infile>... [-o <srcML_outfile>]\
+const char* SRC2SRCML_HEADER = "Usage: srcml [options] <src_infile>... [-o <srcML_outfile>]\
 	\n\n\
 	Translates C, C++, and Java source code into the XML source-code representation srcML.\n\
 	Input can be from standard input, a file, a directory, or an archive file, i.e., tar, cpio, and zip.\n\
@@ -48,7 +48,7 @@ const std::string SRC2SRCML_HEADER = "Usage: srcml [options] <src_infile>... [-o
 	Any input file can be a local filename (FILE) or a URI with the protocols http:, ftp:, or file:\
 	\n\n";
 
-const std::string SRC2SRCML_FOOTER = "Examples:\
+const char* SRC2SRCML_FOOTER = "Examples:\
   \n\n\
   src2srcml (read from standard input, write to standard output)\n\
   src2srcml m.cpp          (read from file m.cpp, write to standard output)\n\
@@ -63,7 +63,7 @@ const std::string SRC2SRCML_FOOTER = "Examples:\
   www.sdml.info\n\
   Report bugs to collard@uakron.edu";
 
-const std::string SRCML2SRC_HEADER = "Usage: srcml2src [options] <srcML_infile>... [-o <src_outfile>]\
+const char* SRCML2SRC_HEADER = "Usage: srcml2src [options] <srcML_infile>... [-o <src_outfile>]\
 	\n\n\
 	Translates from the the XML source-code representation srcML back to source-code.\
 	\n\n\
@@ -86,7 +86,7 @@ const std::string SRCML2SRC_HEADER = "Usage: srcml2src [options] <srcML_infile>.
 	The srcML files can be in xml, or compressed with gzip or bzip2 (detected automatically).\
 	\n\n";
 
-const std::string SRCML2SRC_FOOTER = "Examples:\
+const char* SRCML2SRC_FOOTER = "Examples:\
 	\n\n\
   Read from file main.cpp.xml, write to file main.cpp:\
   \n\
@@ -104,9 +104,9 @@ const std::string SRCML2SRC_FOOTER = "Examples:\
   Report bugs to collard@uakron.edu";
 
 // TEST FUNCTION FOR PROOF OF CONCEPT
-void file_test(std::string fp);
+void file_test(const std::string& fp);
 
-void help_display(std::string help_opt);
+void option_help(const std::string& help_opt);
 
 /* Function used to check that 'opt1' and 'opt2' are not specified
    at the same time. (FROM BOOST LIBRARY EXAMPLES)*/
@@ -132,7 +132,7 @@ int main(int argc, char * argv[]) {
 
 	general.add_options()
 		("compress,z", "output in gzip format")
-		("help,h", prog_opts::value<std::string>()->implicit_value("")->notifier(&help_display),"display this help and exit. USAGE: help or help [module name]. MODULES: src2srcml, srcml2src")
+		("help,h", prog_opts::value<std::string>()->implicit_value("")->notifier(&option_help),"display this help and exit. USAGE: help or help [module name]. MODULES: src2srcml, srcml2src")
 		("no-namespace-decl", "do not output any namespace declarations")
 		("no-xml-dexlaration", "do not output the XML declaration")
 		("output=,o", prog_opts::value<std::string>(), "write result ouput to arg which is a FILE or URI")
@@ -241,7 +241,7 @@ int main(int argc, char * argv[]) {
   return 0;
 }
 
-void file_test(std::string fp) {
+void file_test(const std::string& fp) {
 	std::cout << fp << "\n";
 }
 
@@ -252,7 +252,7 @@ void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, c
 	} 
 }
 
-void help_display(std::string help_opt) {
+void option_help(const std::string& help_opt) {
 
 		if (help_opt == ""){
 			//MIGHT NEED A NEW HEADER AND FOOTER FOR THE GENERAL OPTION
