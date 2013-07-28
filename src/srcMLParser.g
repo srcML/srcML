@@ -2384,7 +2384,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
              bool& sawenum,
              int& posin
         ] { sawenum = false; token = 0; fla = 0; type_count = 0; int specifier_count = 0; isdestructor = false;
-        type = NONE; bool foundpure = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; bool endbracket = false; bool modifieroperator = false; bool sawoperator = false; int attributecount = 0; posin = 0; qmark = false; bool global = false; bool typeisvoid = false; int real_type_count = 0; ENTRY_DEBUG } :
+        type = NONE; bool foundpure = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; bool endbracket = false; bool modifieroperator = false; bool sawoperator = false; int attributecount = 0; posin = 0; qmark = false; bool global = false; bool typeisvoid = false; int real_type_count = 0; bool sawconst = false; ENTRY_DEBUG } :
 
         // main pattern for variable declarations, and most function declaration/definitions.
         // trick is to look for function declarations/definitions, and along the way record
@@ -2422,7 +2422,8 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
 
             set_bool[sawenum, sawenum || LA(1) == ENUM]
             (
-                (specifier)=> specifier set_int[specifier_count, specifier_count + 1] |
+                (specifier)=> set_bool[foundpure, foundpure || LA(1) == CONST] specifier 
+                set_int[specifier_count, specifier_count + 1] |
 
                 { type_count == attributecount && inLanguage(LANGUAGE_CSHARP) }?
                 (attribute_global)=>
@@ -2457,7 +2458,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                 pure_lead_type_identifier_no_specifiers set_bool[foundpure] |
 
                 // type parts that must only occur after other type parts (excluding specifiers)
-                non_lead_type_identifier throw_exception[!foundpure]
+                non_lead_type_identifier throw_exception[!foundpure] 
             )
 
             // another type part
@@ -3186,11 +3187,7 @@ identifier[bool marked = false] { CompleteElement element; ENTRY_DEBUG } :
                 // local mode that is automatically ended by leaving this function
                 startNewMode(MODE_LOCAL);
 
-                if(LT(1)->getText() != "const")
-                    startElement(SNAME);
-                else
-                    startElement(SFUNCTION_SPECIFIER);
-
+                startElement(SNAME);
             }
         }
         (
@@ -3215,11 +3212,7 @@ simple_identifier[bool marked = false] { CompleteElement element; ENTRY_DEBUG } 
                 // local mode that is automatically ended by leaving this function
                 startNewMode(MODE_LOCAL);
 
-                if((!inLanguage(LANGUAGE_CXX) && !inLanguage(LANGUAGE_C))  || LT(1)->getText() != "const")
-                    startElement(SNAME);
-                else
-                    startElement(SFUNCTION_SPECIFIER);
-
+                startElement(SNAME);
             }
         }
         NAME
@@ -3374,13 +3367,7 @@ catch[antlr::RecognitionException] {
 */
 function_specifier[] { CompleteElement element; ENTRY_DEBUG } :
         { LA(1) == WHERE }? generic_constraint |
-        {
-            // statement
-            startNewMode(MODE_LOCAL);
 
-            // start the function specifier
-            startElement(SFUNCTION_SPECIFIER);
-        }
         ({ LA(1) != ASYNC }? specifier |
 
         // pure virtual specifier
@@ -3405,7 +3392,9 @@ specifier[] { CompleteElement element; ENTRY_DEBUG } :
             FINAL | STATIC | ABSTRACT | FRIEND | { inLanguage(LANGUAGE_CSHARP) }? NEW | 
 
             // C# & Java
-            INTERNAL | SEALED | OVERRIDE | REF | OUT | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE | DELEGATE | PARTIAL | EVENT | ASYNC | VIRTUAL | EXTERN | INLINE | IN | PARAMS
+            INTERNAL | SEALED | OVERRIDE | REF | OUT | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE | DELEGATE | PARTIAL | EVENT | ASYNC | VIRTUAL | EXTERN | INLINE | IN | PARAMS |
+
+            CONST
         )
 ;
 

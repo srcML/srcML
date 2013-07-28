@@ -82,6 +82,7 @@ tokens {
     DELETE;
 
     // specifiers that are not needed for parsing
+    CONST;
     /*
     MUTABLE;
     VOLATILE;
@@ -237,6 +238,8 @@ KeywordCPPLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         { "asm"           , ASM           , LANGUAGE_C_FAMILY }, 
 
         { "goto"          , GOTO          , LANGUAGE_C_FAMILY }, 
+
+        { "const"         , CONST         , LANGUAGE_C_FAMILY }, 
 
         // add all C++ and Java specific keywords to the literals table
 
