@@ -103,10 +103,26 @@ const char* SRCML2SRC_FOOTER = "Examples:\
   www.sdml.info\n\
   Report bugs to collard@uakron.edu";
 
-// TEST FUNCTION FOR PROOF OF CONCEPT
-void file_test(const std::string& fp);
-
+//CLI Option Functions
 void option_help(const std::string& help_opt);
+void option_output(const std::string& output_opt);
+void option_src_encoding(const std::string& src_encoding_opt);
+void option_encoding(const std::string& encoding_opt);
+void option_files_from(const std::string& files_from_opt);
+void option_language(const std::string& language_opt);
+void option_register_ext(const std::string& register_ext_opt);
+void option_tabs(const int& tabs_opt);
+void option_directory(const std::string& directory_opt);
+void option_filename(const std::string& filename_opt);
+void option_src_versions(const std::string& src_versions_opt);
+void option_prefix(const std::string& prefix_opt);
+void option_xmlns_uri(const std::string& xmlns_uri_opt);
+void option_xmlns_prefix(const std::string& xmlns_prefix_opt);
+void option_relaxng(const std::string& relaxng_opt);
+void option_xpath(const std::string& xpath_opt);
+void option_xpathparam(const std::string& xpathparam_opt);
+void option_xslt(const std::string& xslt_opt);
+void option_unit(const int& unit_opt);
 
 /* Function used to check that 'opt1' and 'opt2' are not specified
    at the same time. (FROM BOOST LIBRARY EXAMPLES)*/
@@ -135,9 +151,9 @@ int main(int argc, char * argv[]) {
 		("help,h", prog_opts::value<std::string>()->implicit_value("")->notifier(&option_help),"display this help and exit. USAGE: help or help [module name]. MODULES: src2srcml, srcml2src")
 		("no-namespace-decl", "do not output any namespace declarations")
 		("no-xml-dexlaration", "do not output the XML declaration")
-		("output=,o", prog_opts::value<std::string>(), "write result ouput to arg which is a FILE or URI")
+		("output=,o", prog_opts::value<std::string>()->notifier(&option_output), "write result ouput to arg which is a FILE or URI")
 		("quiet,q", "suppresses status messages")
-		("src-encoding=,t", prog_opts::value<std::string>(), "set the input source encoding to arg (default:  ISO-8859-1)")
+		("src-encoding=,t", prog_opts::value<std::string>()->notifier(&option_src_encoding), "set the input source encoding to arg (default:  ISO-8859-1)")
 		("verbose,v", "conversion and status information to stderr")		
 		("version,V", "display version number and exit")
 		;
@@ -145,12 +161,12 @@ int main(int argc, char * argv[]) {
 	src2srcml_options.add_options()
 		("archive,n", "store output in a srcML archive, default for multiple input files")
 		("debug,g", "markup translation errors, namespace http://www.sdml.info/srcML/srcerr")
-		("encoding=,x", prog_opts::value<std::string>(),"set the output XML encoding to ENC (default:  UTF-8)")
+		("encoding=,x", prog_opts::value<std::string>()->notifier(&option_encoding),"set the output XML encoding to ENC (default:  UTF-8)")
 		("expression,e", "expression mode for translating a single expression not in a statement")
-		("files-from", prog_opts::value<std::string>()->notifier(&file_test), "read list of source file names, either FILE or URI, from arg to form a srcML archive")
+		("files-from", prog_opts::value<std::string>()->notifier(&option_files_from), "read list of source file names, either FILE or URI, from arg to form a srcML archive")
 		("interactive,c", "immediate output while parsing, default for keyboard input")
-		("language=,l", prog_opts::value<std::string>(), "set the language to C, C++, or Java")
-		("register-ext", prog_opts::value<std::string>(), "register file extension EXT for source-code language LANG. arg format EXT=LANG")
+		("language=,l", prog_opts::value<std::string>()->notifier(&option_language), "set the language to C, C++, or Java")
+		("register-ext", prog_opts::value<std::string>()->notifier(&option_register_ext), "register file extension EXT for source-code language LANG. arg format EXT=LANG")
 		;
 
 	srcml2src_options.add_options()
@@ -167,7 +183,7 @@ int main(int argc, char * argv[]) {
 
 	line_col.add_options()
 		("position", "include line/column attributes, namespace 'http://www.sdml.info/srcML/position'")
-		("tabs=", prog_opts::value<int>(), "set tabs arg characters apart.  Default is 8")
+		("tabs=", prog_opts::value<int>()->notifier(&option_tabs), "set tabs arg characters apart.  Default is 8")
 		;
 
 	markup.add_options()
@@ -177,16 +193,16 @@ int main(int argc, char * argv[]) {
 		;
 
 	src2srcml_metadata.add_options()
-		("directory=,d", prog_opts::value<std::string>(), "set the arg directory attribute")
-		("filename=,f", prog_opts::value<std::string>(), "set the arg filename attribute")
-		("src-version=,s", prog_opts::value<std::string>(), "set the arg version attribute")
+		("directory=,d", prog_opts::value<std::string>()->notifier(&option_directory), "set the arg directory attribute")
+		("filename=,f", prog_opts::value<std::string>()->notifier(&option_filename), "set the arg filename attribute")
+		("src-version=,s", prog_opts::value<std::string>()->notifier(&option_src_versions), "set the arg version attribute")
 		;
 
 	srcml2src_metadata.add_options()
 		("info,i", "display most metadata except file count (individual units) and exit")
 		("list", "list all the files in the srcML archive and exit")
 		("longinfo,L", "display all metadata including file count (individual units) and exit")
-		("prefix=,p", prog_opts::value<std::string>(), "display prefix of namespace given by URI arg and exit")
+		("prefix=,p", prog_opts::value<std::string>()->notifier(&option_prefix), "display prefix of namespace given by URI arg and exit")
 		("units,n", "display number of srcML files and exit")
 		("show-directory", "display source directory name and exit")
 		("show-encoding", "display xml encoding and exit")
@@ -196,21 +212,21 @@ int main(int argc, char * argv[]) {
 		;
 
 	prefix.add_options()
-		("xmlns=", prog_opts::value<std::string>(), "set the default namespace to arg")
-		("xmlns:", prog_opts::value<std::string>(), "set the namespace arg format PREFIX=URI")
+		("xmlns=", prog_opts::value<std::string>()->notifier(&option_xmlns_uri), "set the default namespace to arg")
+		("xmlns:", prog_opts::value<std::string>()->notifier(&option_xmlns_prefix), "set the namespace arg format PREFIX=URI")
 		;
 
 	query_transform.add_options()
 		("apply-root", "apply an xslt program or xpath query to the root element")
-		("relaxng=", prog_opts::value<std::string>(), "output individual units that match RELAXNG_FILE (FILE or URI) arg")
-		("xpath=", prog_opts::value<std::string>(), "apply XPATH expression arg to each individual unit")
-		("xpathparam", prog_opts::value<std::string>(), "passes a parameter NAME and VAL arg to the XSLT program. arg format NAME=VAL")
-		("xslt=", prog_opts::value<std::string>(), "apply XSLT_FILE (FILE or URI) arg transformation to each individual unit")
+		("relaxng=", prog_opts::value<std::string>()->notifier(&option_relaxng), "output individual units that match RELAXNG_FILE (FILE or URI) arg")
+		("xpath=", prog_opts::value<std::string>()->notifier(&option_xpath), "apply XPATH expression arg to each individual unit")
+		("xpathparam", prog_opts::value<std::string>()->notifier(&option_xpathparam), "passes a parameter NAME and VAL arg to the XSLT program. arg format NAME=VAL")
+		("xslt=", prog_opts::value<std::string>()->notifier(&option_xslt), "apply XSLT_FILE (FILE or URI) arg transformation to each individual unit")
 		;
 
 	srcml_archive.add_options()
 		("to-dir", "extract all files from srcML and create them in the filesystem")
-		("unit=,U", prog_opts::value<int>(), "extract individual unit number arg from srcML")
+		("unit=,U", prog_opts::value<int>()->notifier(&option_unit), "extract individual unit number arg from srcML")
 		;    
 	
 	//Group src2srcml Options
@@ -241,10 +257,6 @@ int main(int argc, char * argv[]) {
   return 0;
 }
 
-void file_test(const std::string& fp) {
-	std::cout << fp << "\n";
-}
-
 void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, const char* opt2) {
 	if (vm.count(opt1) && !vm[opt1].defaulted() && vm.count(opt2) && !vm[opt2].defaulted()) {
 		throw std::logic_error(std::string("Conflicting options '")
@@ -253,26 +265,97 @@ void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, c
 }
 
 void option_help(const std::string& help_opt) {
+	if (help_opt == ""){
+		//MIGHT NEED A NEW HEADER AND FOOTER FOR THE GENERAL OPTION
+		std::cout << SRCML_HEADER << "\n";
+		std::cout << general << "\n";
+		std::cout << SRCML_FOOTER << "\n";
+	}
+	else if (help_opt == "src2srcml") {
+		std::cout << SRC2SRCML_HEADER << "\n";
+		std::cout << src2srcml << "\n";
+		std::cout << SRC2SRCML_FOOTER << "\n";
+	}
+	else if (help_opt == "srcml2src") {
+		std::cout << SRCML2SRC_HEADER << "\n";
+		std::cout << srcml2src << "\n";
+		std::cout << SRCML2SRC_FOOTER << "\n";
+	}
+	else {
+		std::cout << "Unknown module '" 
+    	<< help_opt << "' in the --help-module option\n";
+    	exit(1);
+	}
+}
 
-		if (help_opt == ""){
-			//MIGHT NEED A NEW HEADER AND FOOTER FOR THE GENERAL OPTION
-			std::cout << SRCML_HEADER << "\n";
-			std::cout << general << "\n";
-			std::cout << SRCML_FOOTER << "\n";
-		}
-		else if (help_opt == "src2srcml") {
-			std::cout << SRC2SRCML_HEADER << "\n";
-			std::cout << src2srcml << "\n";
-			std::cout << SRC2SRCML_FOOTER << "\n";
-		}
-		else if (help_opt == "srcml2src") {
-			std::cout << SRCML2SRC_HEADER << "\n";
-			std::cout << srcml2src << "\n";
-			std::cout << SRCML2SRC_FOOTER << "\n";
-		}
-		else {
-			std::cout << "Unknown module '" 
-      	<< help_opt << "' in the --help-module option\n";
-      	exit(1);
-		}
+void option_output(const std::string& output_opt) {
+
+}
+
+void option_src_encoding(const std::string& src_encoding_opt) {
+
+}
+
+void option_encoding(const std::string& encoding_opt){
+
+}
+
+void option_files_from(const std::string& files_from_opt){
+	
+}
+
+void option_language(const std::string& language_opt){
+	
+}
+
+void option_register_ext(const std::string& register_ext_opt){
+	
+}
+
+void option_tabs(const int& tabs_opt){
+	
+}
+
+void option_directory(const std::string& directory_opt){
+	
+}
+
+void option_filename(const std::string& filename_opt){
+	
+}
+
+void option_src_versions(const std::string& src_versions_opt){
+	
+}
+
+void option_prefix(const std::string& prefix_opt){
+	
+}
+
+void option_xmlns_uri(const std::string& xmlns_uri_opt){
+	
+}
+
+void option_xmlns_prefix(const std::string& xmlns_prefix_opt){
+	
+}
+
+void option_relaxng(const std::string& relaxng_opt){
+	
+}
+
+void option_xpath(const std::string& xpath_opt){
+	
+}
+
+void option_xpathparam(const std::string& xpathparam_opt){
+	
+}
+
+void option_xslt(const std::string& xslt_opt){
+	
+}
+
+void option_unit(const int& unit_opt){
+	
 }
