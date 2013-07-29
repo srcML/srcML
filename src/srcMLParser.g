@@ -651,6 +651,10 @@ statements_non_cfg[] { int token = 0; int place = 0; int secondtoken = 0; int fl
         { perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type == FUNCTION }?
         function[fla, type_count] |
 
+        // variable declaration
+        { decl_type == VARIABLE }?
+        variable_declaration_statement[type_count] |
+
         { decl_type == GLOBAL_ATTRIBUTE }?
         attribute |
 
@@ -674,15 +678,11 @@ statements_non_cfg[] { int token = 0; int place = 0; int secondtoken = 0; int fl
         { decl_type == DELEGATE_FUNCTION }?
         delegate_anonymous |
 
-        // variable declaration
-        { decl_type == VARIABLE }?
-        variable_declaration_statement[type_count] |
-
         // constructor
         { decl_type == CONSTRUCTOR && fla != TERMINATE }?
         constructor_definition |
 
-        { decl_type == CONSTRUCTOR && fla == TERMINATE }?
+        { decl_type == CONSTRUCTOR }?
         constructor_declaration |
 
         // destructor
@@ -705,7 +705,7 @@ statements_non_cfg[] { int token = 0; int place = 0; int secondtoken = 0; int fl
         enum_definition |
 
         // call
-        { inLanguage(LANGUAGE_C_FAMILY) && perform_call_check(type, secondtoken) && type == MACRO }?
+        { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY)) && perform_call_check(type, secondtoken) && type == MACRO }?
         macro_call |
 
         expression_statement[type]
@@ -2341,9 +2341,6 @@ perform_noncfg_check[DECLTYPE& type, int& token, int& fla, int& type_count, bool
 
         if (type == VARIABLE && type_count == 0)
             type_count = 1;
-
-//        if (type == NONE && first == DELEGATE)
-//            type = DELEGATE_FUNCTION;
     }
 
     // may just have an expression 
