@@ -890,9 +890,6 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
             (LAMBDA (LCURLY | LPAREN)) =>
             lambda_anonymous | 
 
-//            { inLanguage(LANGUAGE_CSHARP) }?
-//            DEFAULT |
-
             // found two names in a row, so this is not an expression
             // cause this to fail by next matching END_ELEMENT_TOKEN
             { name && (depth == 0) }?
@@ -3859,9 +3856,6 @@ lambda_marked[] { CompleteElement element; ENTRY_DEBUG } :
         {
             // treat catch block as nested block statement
             startNewMode(MODE_LOCAL);
-
-            // start of the catch statement
-//            startElement(SNAME);
         }
         LAMBDA
 ;
