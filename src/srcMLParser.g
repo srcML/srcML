@@ -2438,7 +2438,8 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
 
             set_bool[sawenum, sawenum || LA(1) == ENUM]
             (
-                (specifier)=> set_bool[foundpure, foundpure || LA(1) == CONST] specifier 
+                { _tokenSet_21.member(LA(1)) }?
+                set_bool[foundpure, foundpure || LA(1) == CONST] specifier 
                 set_int[specifier_count, specifier_count + 1] |
 
                 { type_count == attributecount && inLanguage(LANGUAGE_CSHARP) }?
@@ -2715,7 +2716,7 @@ complete_throw_list[] { bool flag = false; ENTRY_DEBUG } :
 pure_lead_type_identifier[] { ENTRY_DEBUG } :
 
         // specifiers that occur in a type
-        (specifier)=>
+		{ _tokenSet_21.member(LA(1)) }?
         specifier |
 
         { inLanguage(LANGUAGE_CSHARP) }?
