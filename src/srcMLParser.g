@@ -2012,6 +2012,20 @@ statement_part[] { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE de
             type_identifier
             update_typecount |
 
+        // block right after argument list, e.g., throws list in Java
+        { inTransparentMode(MODE_END_LIST_AT_BLOCK) }?
+        { endDownToMode(MODE_LIST); endCurrentMode(MODE_LIST); }
+            lcurly | 
+
+        /*
+          MODE_EXPRESSION
+        */
+
+        // expression block or expressions
+        // must check before expression
+        { inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT) }?
+             pure_expression_block |
+
         /*
           MODE_FUNCTION_TAIL
         */
@@ -2025,23 +2039,9 @@ statement_part[] { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE de
              function_specifier |
 
         // K&R function parameters
-        { inLanguage(LANGUAGE_C_FAMILY) && inMode(MODE_FUNCTION_TAIL) && 
+        { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY)) && inMode(MODE_FUNCTION_TAIL) && 
           perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type == VARIABLE }?
             kr_parameter |
-
-        /*
-          MODE_EXPRESSION
-        */
-
-        // block right after argument list, e.g., throws list in Java
-        { inTransparentMode(MODE_END_LIST_AT_BLOCK) }?
-        { endDownToMode(MODE_LIST); endCurrentMode(MODE_LIST); }
-            lcurly | 
-
-        // expression block or expressions
-        // must check before expression
-        { inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT) }?
-             pure_expression_block |
 
         // start of argument for return or throw statement
         { inMode(MODE_EXPRESSION | MODE_EXPECT) &&
