@@ -810,7 +810,7 @@ perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
         type = CALL;
 
         // call syntax succeeded, however post call token is not legitimate
-        if (inLanguage(LANGUAGE_C_FAMILY) && (_tokenSet_1.member(postcalltoken) || postcalltoken == NAME 
+        if ((inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY)) && (_tokenSet_1.member(postcalltoken) || postcalltoken == NAME 
             || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == LCURLY)
             || postcalltoken == EXTERN || postcalltoken == STRUCT || postcalltoken == UNION || postcalltoken == CLASS
             || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == RCURLY)
@@ -825,7 +825,7 @@ perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
 
         type = NOCALL;
 
-        if (inLanguage(LANGUAGE_C_FAMILY) && argumenttoken != 0 && postcalltoken == 0) {
+        if ((inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY)) && argumenttoken != 0 && postcalltoken == 0) {
 
             guessing_endGuessing();
 
@@ -833,7 +833,7 @@ perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
         }
 
         // single macro call followed by statement_cfg
-        else if (inLanguage(LANGUAGE_C_FAMILY) && secondtoken != -1
+        else if ((inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY)) && secondtoken != -1
                  && (_tokenSet_1.member(secondtoken) || secondtoken == LCURLY || secondtoken == 1 /* EOF */
                      || secondtoken == PUBLIC || secondtoken == PRIVATE || secondtoken == PROTECTED))
 
