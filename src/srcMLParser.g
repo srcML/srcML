@@ -1676,7 +1676,7 @@ class_header[] { ENTRY_DEBUG } :
           This shouldn't be needed, but uncommenting the predicate causes Java
           to mess up with template parameters, but not C++ ???
         */
-        { inLanguage(LANGUAGE_C_FAMILY) }?
+        { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
         (macro_call_check class_header_base LCURLY)=>
            macro_call class_header_base |
 
