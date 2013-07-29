@@ -553,7 +553,7 @@ start[] { ruledepth = 0; ENTRY_DEBUG } :
         { inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) }? tempope |
 
         // special default() call for C#
-        { LA(1) == DEFAULT && inLanguage(LANGUAGE_CSHARP) && inTransparentMode(MODE_EXPRESSION) }? (DEFAULT LPAREN)=> expression_part_default |
+        { LA(1) == DEFAULT && inLanguage(LANGUAGE_CSHARP) && inTransparentMode(MODE_EXPRESSION) && next_token() == LPAREN}? expression_part_default |
 
         // context-free grammar statements
         { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) }? cfg |
@@ -708,6 +708,23 @@ statements_non_cfg[] { int token = 0; int place = 0; int secondtoken = 0; int fl
         expression_statement[type]
 ;
 
+
+next_token[] returns [int token] {
+    
+    int place = mark();
+    inputState->guessing++;
+
+    // consume current token
+    consume();
+
+    // consume intermediate skipped tokens
+    consumeSkippedTokens();
+
+    token = LA(1);
+
+    inputState->guessing--;
+    rewind(place);
+}:;
 
 look_past[int skiptoken] returns [int token] {
     
@@ -884,7 +901,7 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
             // special case for something that looks like a declaration
             { LA(1) == DELEGATE }? delegate_anonymous | 
 
-            (LAMBDA (LCURLY | LPAREN)) =>
+            { next_token() == LCURLY || next_token() == LPAREN }?
             lambda_anonymous | 
 
             // found two names in a row, so this is not an expression
@@ -1260,11 +1277,13 @@ return_statement[] { ENTRY_DEBUG } :
         RETURN
 ;
 
-yield_statements[] { ENTRY_DEBUG } :
+yield_statements[] { int t = next_token(); ENTRY_DEBUG } :
 
-        (yield_return_statement)=> yield_return_statement |
+        { t == RETURN }?
+        yield_return_statement |
 
-        (yield_break_statement)=> yield_break_statement
+        { t == BREAK }?
+        yield_break_statement
 ;
 
 yield_specifier[] { CompleteElement element; ENTRY_DEBUG } :
