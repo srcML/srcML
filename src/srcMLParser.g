@@ -2853,7 +2853,7 @@ linq_expression[] { CompleteElement element; ENTRY_DEBUG }:
         (options { greedy = true; } : linq_from | linq_where | linq_select | linq_let | linq_group | linq_join | linq_orderby)+
     ;
 
-linq_expression_pure[] { CompleteElement element; ENTRY_DEBUG }:
+linq_expression_pure[] { ENTRY_DEBUG }:
         linq_from | linq_where | linq_select | linq_let | linq_group | linq_join | linq_orderby
     ;
 
@@ -4299,9 +4299,9 @@ guessing_end[]
 
 expression_part_plus_linq[CALLTYPE type = NOCALL] { guessing_end(); ENTRY_DEBUG } :
 
-        { inLanguage(LANGUAGE_CSHARP) && (
-            LA(1) == FROM || LA(1) == WHERE || LA(1) == SELECT || LA(1) == LET || LA(1) == GROUP || LA(1) == JOIN || LA(1) == ORDERBY)}?
-            (linq_expression_pure)=> linq_expression |
+        { inLanguage(LANGUAGE_CSHARP) }?
+        (linq_expression_pure)=> linq_expression |
+
         expression_part[type]
     ;
 
