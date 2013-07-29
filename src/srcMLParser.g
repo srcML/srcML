@@ -726,6 +726,13 @@ next_token[] returns [int token] {
     rewind(place);
 }:;
 
+next_token_check[int token1, int token2] returns [bool result] {
+
+    int token = next_token();
+
+    result = token == token1 || token == token2;
+}:;
+
 look_past[int skiptoken] returns [int token] {
     
     int place = mark();
@@ -901,7 +908,7 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
             // special case for something that looks like a declaration
             { LA(1) == DELEGATE }? delegate_anonymous | 
 
-            { next_token() == LCURLY || next_token() == LPAREN }?
+            { next_token_check(LCURLY, LPAREN) }?
             lambda_anonymous | 
 
             // found two names in a row, so this is not an expression
@@ -2415,8 +2422,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
           Process all the parts of a potential type.  Keep track of total
           parts, specifier parts, and second token
         */
-        (DELEGATE (LPAREN | LCURLY))=>
-            DELEGATE set_type[type, DELEGATE_FUNCTION] |
+        { next_token_check(LPAREN, LCURLY) }? DELEGATE set_type[type, DELEGATE_FUNCTION] |
         (
         ({ inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) || (type_count == 0) || LA(1) != LBRACKET }?
 
@@ -4324,9 +4330,11 @@ expression_part_plus_linq[CALLTYPE type = NOCALL] { guessing_end(); ENTRY_DEBUG 
 
 expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG } :
 
-        (DELEGATE LPAREN)=> delegate_anonymous |
+        { next_token() == LPAREN }?
+        delegate_anonymous |
 
-        (LAMBDA LCURLY)=> lambda_anonymous |
+        { next_token() == LCURLY }?
+        lambda_anonymous |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (NEW template_argument_list)=> sole_new template_argument_list |
