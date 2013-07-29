@@ -599,7 +599,7 @@ cfg[] { ENTRY_DEBUG } :
         try_statement | catch_statement | finally_statement | throw_statement |
 
         // namespace statements
-        namespace_definition | { inLanguage(LANGUAGE_CSHARP) }? (USING LPAREN)=> using_statement | namespace_directive |
+        namespace_definition | using_statement_namespace |
 
         typedef_statement |
 
@@ -3691,6 +3691,14 @@ unsafe_statement[] { ENTRY_DEBUG } :
             startElement(SUNSAFE_STATEMENT);
         }
         UNSAFE
+;
+
+using_statement_namespace[] { ENTRY_DEBUG } :
+
+        { inLanguage(LANGUAGE_CSHARP) }?
+        (USING LPAREN)=> using_statement |
+
+        namespace_directive
 ;
 
 using_statement[] { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTYPE decl_type = NONE; ENTRY_DEBUG } :
