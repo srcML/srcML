@@ -104,25 +104,66 @@ const char* SRCML2SRC_FOOTER = "Examples:\
   Report bugs to collard@uakron.edu";
 
 //CLI Option Functions
-void option_help(const std::string& help_opt);
-void option_output(const std::string& output_opt);
-void option_src_encoding(const std::string& src_encoding_opt);
-void option_encoding(const std::string& encoding_opt);
-void option_files_from(const std::string& files_from_opt);
-void option_language(const std::string& language_opt);
-void option_register_ext(const std::string& register_ext_opt);
-void option_tabs(const int& tabs_opt);
-void option_directory(const std::string& directory_opt);
-void option_filename(const std::string& filename_opt);
-void option_src_versions(const std::string& src_versions_opt);
-void option_prefix(const std::string& prefix_opt);
-void option_xmlns_uri(const std::string& xmlns_uri_opt);
-void option_xmlns_prefix(const std::string& xmlns_prefix_opt);
-void option_relaxng(const std::string& relaxng_opt);
-void option_xpath(const std::string& xpath_opt);
-void option_xpathparam(const std::string& xpathparam_opt);
-void option_xslt(const std::string& xslt_opt);
-void option_unit(const int& unit_opt);
+void option_compress(const bool& opt);
+void option_help(const std::string& opt);
+void option_no_namespace_decl(const bool& opt);
+void option_no_xml_dexlaration(const bool& opt);
+void option_output(const std::string& opt);
+void option_quiet(const bool& opt);
+void option_src_encoding(const std::string& opt);
+void option_verbose(const bool& opt);
+void option_version(const bool& opt);
+
+void option_archive(const bool& opt);
+void option_debug(const bool& opt);
+void option_encoding(const std::string& opt);
+void option_expression(const bool& opt);
+void option_files_from(const std::string& opt);
+void option_interactive(const bool& opt);
+void option_language(const std::string& opt);
+void option_register_ext(const std::string& opt);
+
+void option_xml(const bool& opt);
+
+void option_cpp(const bool& opt);
+void option_cpp_markup_else(const bool& opt);
+void cpp_markup_if0(const bool& opt);
+void cpp_text_else(const bool& opt);
+void cpp_text_if0(const bool& opt);
+
+void option_position(const bool& opt);
+void option_tabs(const int& opt);
+
+void option_literal(const bool& opt);
+void option_modifier(const bool& opt);
+void option_operator(const bool& opt);
+
+void option_directory(const std::string& opt);
+void option_filename(const std::string& opt);
+void option_src_versions(const std::string& opt);
+
+void option_info(const bool& opt);
+void option_list(const bool& opt);
+void option_longinfo(const bool& opt);
+void option_prefix(const std::string& opt);
+void option_units(const bool& opt);
+void option_show_directory(const bool& opt);
+void option_show_encoding(const bool& opt);
+void option_show_filename(const bool& opt);
+void option_show_language(const bool& opt);
+void option_show_src_version(const bool& opt);
+
+void option_xmlns_uri(const std::string& opt);
+void option_xmlns_prefix(const std::string& opt);
+
+void option_apply_root(const bool& opt);
+void option_relaxng(const std::string& opt);
+void option_xpath(const std::string& opt);
+void option_xpathparam(const std::string& opt);
+void option_xslt(const std::string& opt);
+
+void option_to_dir(const bool& opt);
+void option_unit(const int& opt);
 
 /* Function used to check that 'opt1' and 'opt2' are not specified
    at the same time. (FROM BOOST LIBRARY EXAMPLES)*/
@@ -147,7 +188,7 @@ prog_opts::options_description all("All Options");
 int main(int argc, char * argv[]) {
 
 	general.add_options()
-		("compress,z", "output in gzip format")
+		("compress,z", prog_opts::bool_switch()->notifier(&option_compress), "output in gzip format")
 		("help,h", prog_opts::value<std::string>()->implicit_value("")->notifier(&option_help),"display this help and exit. USAGE: help or help [module name]. MODULES: src2srcml, srcml2src")
 		("no-namespace-decl", "do not output any namespace declarations")
 		("no-xml-dexlaration", "do not output the XML declaration")
@@ -264,6 +305,10 @@ void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, c
 	} 
 }
 
+void option_compress(const bool& opt) {
+
+}
+
 void option_help(const std::string& help_opt) {
 	if (help_opt == ""){
 		//MIGHT NEED A NEW HEADER AND FOOTER FOR THE GENERAL OPTION
@@ -288,74 +333,194 @@ void option_help(const std::string& help_opt) {
 	}
 }
 
-void option_output(const std::string& output_opt) {
+void option_no_namespace_decl(const bool& opt){
 
 }
 
-void option_src_encoding(const std::string& src_encoding_opt) {
+void option_no_xml_dexlaration(const bool& opt){
 
 }
 
-void option_encoding(const std::string& encoding_opt){
+void option_output(const std::string& opt){
 
 }
 
-void option_files_from(const std::string& files_from_opt){
-	
+void option_quiet(const bool& opt){
+
 }
 
-void option_language(const std::string& language_opt){
-	
+void option_src_encoding(const std::string& opt){
+
 }
 
-void option_register_ext(const std::string& register_ext_opt){
-	
+void option_verbose(const bool& opt){
+
 }
 
-void option_tabs(const int& tabs_opt){
-	
+void option_version(const bool& opt){
+
 }
 
-void option_directory(const std::string& directory_opt){
-	
+void option_archive(const bool& opt){
+
 }
 
-void option_filename(const std::string& filename_opt){
-	
+void option_debug(const bool& opt){
+
 }
 
-void option_src_versions(const std::string& src_versions_opt){
-	
+void option_encoding(const std::string& opt){
+
 }
 
-void option_prefix(const std::string& prefix_opt){
-	
+void option_expression(const bool& opt){
+
 }
 
-void option_xmlns_uri(const std::string& xmlns_uri_opt){
-	
+void option_files_from(const std::string& opt){
+
 }
 
-void option_xmlns_prefix(const std::string& xmlns_prefix_opt){
-	
+void option_interactive(const bool& opt){
+
 }
 
-void option_relaxng(const std::string& relaxng_opt){
-	
+void option_language(const std::string& opt){
+
 }
 
-void option_xpath(const std::string& xpath_opt){
-	
+void option_register_ext(const std::string& opt){
+
 }
 
-void option_xpathparam(const std::string& xpathparam_opt){
-	
+void option_xml(const bool& opt){
+
 }
 
-void option_xslt(const std::string& xslt_opt){
-	
+void option_cpp(const bool& opt){
+
 }
 
-void option_unit(const int& unit_opt){
-	
+void option_cpp_markup_else(const bool& opt){
+
+}
+
+void cpp_markup_if0(const bool& opt){
+
+}
+
+void cpp_text_else(const bool& opt){
+
+}
+
+void cpp_text_if0(const bool& opt){
+
+}
+
+void option_position(const bool& opt){
+
+}
+
+void option_tabs(const int& opt){
+
+}
+
+void option_literal(const bool& opt){
+
+}
+
+void option_modifier(const bool& opt){
+
+}
+
+void option_operator(const bool& opt){
+
+}
+
+void option_directory(const std::string& opt){
+
+}
+
+void option_filename(const std::string& opt){
+
+}
+
+void option_src_versions(const std::string& opt){
+
+}
+
+void option_info(const bool& opt){
+
+}
+
+void option_list(const bool& opt){
+
+}
+
+void option_longinfo(const bool& opt){
+
+}
+
+void option_prefix(const std::string& opt){
+
+}
+
+void option_units(const bool& opt){
+
+}
+
+void option_show_directory(const bool& opt){
+
+}
+
+void option_show_encoding(const bool& opt){
+
+}
+
+void option_show_filename(const bool& opt){
+
+}
+
+void option_show_language(const bool& opt){
+
+}
+
+void option_show_src_version(const bool& opt){
+
+}
+
+void option_xmlns_uri(const std::string& opt){
+
+}
+
+void option_xmlns_prefix(const std::string& opt){
+
+}
+
+void option_apply_root(const bool& opt){
+
+}
+
+void option_relaxng(const std::string& opt){
+
+}
+
+void option_xpath(const std::string& opt){
+
+}
+
+void option_xpathparam(const std::string& opt){
+
+}
+
+void option_xslt(const std::string& opt){
+
+}
+
+void option_to_dir(const bool& opt){
+
+}
+
+void option_unit(const int& opt){
+
 }
