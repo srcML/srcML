@@ -614,6 +614,9 @@ cfg[] { ENTRY_DEBUG } :
 
         unchecked_statement | lock_statement | fixed_statement | /* property_method | */ unsafe_statement |
 
+        // C#
+        yield_statements | 
+
         // assembly block
         asm_declaration
 ;
@@ -631,12 +634,6 @@ cfg[] { ENTRY_DEBUG } :
 */
 statements_non_cfg[] { int token = 0; int place = 0; int secondtoken = 0; int fla = 0;
         int type_count = 0; DECLTYPE decl_type = NONE; CALLTYPE type = NOCALL; ENTRY_DEBUG } :
-
-        // don't ask
-        (yield_return_statement)=> yield_return_statement |
-
-        // don't ask
-        (yield_break_statement)=> yield_break_statement |
 
         // class forms for class declarations/definitions as opposed to part of a declaration types
         // must be before checking access_specifier_region
@@ -1261,6 +1258,13 @@ return_statement[] { ENTRY_DEBUG } :
             startElement(SRETURN_STATEMENT);
         }
         RETURN
+;
+
+yield_statements[] { ENTRY_DEBUG } :
+
+        (yield_return_statement)=> yield_return_statement |
+
+        (yield_break_statement)=> yield_break_statement
 ;
 
 yield_specifier[] { CompleteElement element; ENTRY_DEBUG } :
