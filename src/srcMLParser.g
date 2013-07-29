@@ -2454,7 +2454,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                 /* throw_exception[true] */ |
 
                 { inLanguage(LANGUAGE_JAVA_FAMILY) }?
-                (template_argument_list)=>
+                // (template_argument_list)=>
                 template_argument_list set_int[specifier_count, specifier_count + 1] |
 
                 // typical type name
@@ -2466,8 +2466,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                 // special function name
                 MAIN set_bool[isoperatorfunction, type_count == 0] |
 
-                { inLanguage(LANGUAGE_CSHARP) && type_count > 0 }?
-                (LBRACKET (COMMA)* RBRACKET)=>
+                { inLanguage(LANGUAGE_CSHARP) && type_count > 0 && look_past(COMMA) == RBRACKET }?
                 LBRACKET (COMMA)* RBRACKET |
 
                 // type parts that can occur before other type parts (excluding specifiers)
@@ -2719,8 +2718,7 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
 		{ _tokenSet_21.member(LA(1)) }?
         specifier |
 
-        { inLanguage(LANGUAGE_CSHARP) }?
-        (LBRACKET (COMMA)* RBRACKET)=>
+        { inLanguage(LANGUAGE_CSHARP) && look_past(COMMA) == RBRACKET }?
         LBRACKET (COMMA)* RBRACKET | 
 
         { inLanguage(LANGUAGE_CSHARP) }? attribute |
