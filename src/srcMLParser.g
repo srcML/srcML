@@ -1729,7 +1729,6 @@ access_specifier_region[] { ENTRY_DEBUG } :
             }
             PROTECTED
         )
-        { }
         COLON
 ;
 
@@ -2335,7 +2334,7 @@ function_tail[] { ENTRY_DEBUG } :
 
             // FIXME:  Must be integrated into other C-based languages
             // FIXME:  Wrong markup
-            ( macro_call )=> macro_call | 
+            (macro_call_check)=> macro_call | 
             { look_past(NAME) == LCURLY }? NAME |
               parameter (MULTOPS | NAME | COMMA)* TERMINATE
             )
