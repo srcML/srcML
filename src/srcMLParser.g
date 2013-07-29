@@ -3712,8 +3712,8 @@ unsafe_statement[] { ENTRY_DEBUG } :
 
 using_statement_namespace[] { ENTRY_DEBUG } :
 
-        { inLanguage(LANGUAGE_CSHARP) }?
-        (USING LPAREN)=> using_statement |
+        { inLanguage(LANGUAGE_CSHARP) && next_token() == LPAREN }?
+        using_statement |
 
         namespace_directive
 ;
