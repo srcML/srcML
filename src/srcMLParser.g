@@ -644,8 +644,18 @@ statements_non_cfg[] { int token = 0; int place = 0; int secondtoken = 0;
         { inLanguage(LANGUAGE_CXX_ONLY) }?
         access_specifier_region |
 
+        decl_or_defn
+    ;
+
+decl_or_defn[] { int token = 0; int place = 0; int secondtoken = 0; 
+        int type_count = 0; DECLTYPE decl_type = NONE; CALLTYPE type = NOCALL; 
+
+        perform_noncfg_check(decl_type, secondtoken, type_count);
+
+        ENTRY_DEBUG } :
+
         // check for declaration of some kind (variable, function, constructor, destructor
-        { perform_noncfg_check(decl_type, secondtoken, type_count) && decl_type == FUNCTION_DECL }?
+        { decl_type == FUNCTION_DECL }?
         function_declaration[type_count] |
 
         // function definition
