@@ -632,8 +632,7 @@ cfg[] { ENTRY_DEBUG } :
   Important to keep semantic checks, e.g., (constructor)=>, in place.  Most of these rules
   can start with a name which leaves it ambiguous which to choose.
 */
-statements_non_cfg[] { int token = 0; int place = 0; int secondtoken = 0; 
-        int type_count = 0; DECLTYPE decl_type = NONE; CALLTYPE type = NOCALL; ENTRY_DEBUG } :
+statements_non_cfg[] { int token = 0; int place = 0; ENTRY_DEBUG } :
 
         // class forms for class declarations/definitions as opposed to part of a declaration types
         // must be before checking access_specifier_region
@@ -647,7 +646,7 @@ statements_non_cfg[] { int token = 0; int place = 0; int secondtoken = 0;
         decl_or_defn
     ;
 
-decl_or_defn[] { int place = 0; int secondtoken = 0; 
+decl_or_defn[] { int secondtoken = 0; 
         int type_count = 0; DECLTYPE decl_type = NONE; CALLTYPE type = NOCALL; 
 
         perform_noncfg_check(decl_type, secondtoken, type_count);
@@ -2438,7 +2437,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
              bool& sawenum,
              int& posin
         ] { sawenum = false; token = 0; fla = 0; type_count = 0; int specifier_count = 0; isdestructor = false;
-        type = NONE; bool foundpure = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; bool endbracket = false; bool modifieroperator = false; bool sawoperator = false; int attributecount = 0; posin = 0; qmark = false; bool global = false; bool typeisvoid = false; int real_type_count = 0; bool sawconst = false; ENTRY_DEBUG } :
+        type = NONE; bool foundpure = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; bool endbracket = false; bool modifieroperator = false; bool sawoperator = false; int attributecount = 0; posin = 0; qmark = false; bool global = false; bool typeisvoid = false; int real_type_count = 0; ENTRY_DEBUG } :
 
         // main pattern for variable declarations, and most function declaration/definitions.
         // trick is to look for function declarations/definitions, and along the way record
@@ -4447,7 +4446,7 @@ expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG
         variable_identifier_array_grammar_sub[flag]
 ;
 
-expression_part_default[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG } :
+expression_part_default[CALLTYPE type = NOCALL] { guessing_end(); ENTRY_DEBUG } :
 
         expression_process
 
