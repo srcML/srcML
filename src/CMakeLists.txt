@@ -45,7 +45,7 @@ endif()
 
 include_directories(C:/antlr/277/include/antlr)
 
-find_library(LIBANTLR_LIB NAMES libantlr.a PATHS /usr/lib /usr/local/lib)
+find_library(LIBANTLR_LIB NAMES libantlr.a libantlr2-0.dll PATHS /usr/lib /usr/local/lib ../dlls)
 
 # define needed programs
 find_program(ANTLR NAMES antlr runantlr cantlr antlr2 antlr.bat PATHS /usr/bin /opt/local/bin /usr/local/bin C:/antlr/277/bin)
