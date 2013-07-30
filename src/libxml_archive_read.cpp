@@ -234,7 +234,7 @@ bool isArchiveRead(void* context) {
 #endif
 
 #if ARCHIVE_VERSION_NUMBER >= 3001002
-    //archive_read_support_filter_xz(gpcontext->a);
+    archive_read_support_filter_xz(gpcontext->a);
 #endif
 
 #if ARCHIVE_VERSION_NUMBER >= 2008000
