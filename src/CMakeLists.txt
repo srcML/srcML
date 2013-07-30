@@ -1,4 +1,4 @@
-###
+x###
 #    CMakeLists.txt
 #
 #
@@ -9,8 +9,8 @@ cmake_minimum_required(VERSION 2.8)
 project(srcML)
 
 # specify g++ compiler
-include(CMakeForceCompiler)
-CMAKE_FORCE_CXX_COMPILER(/usr/bin/g++ "g++")
+#include(CMakeForceCompiler)
+#CMAKE_FORCE_CXX_COMPILER(/usr/bin/g++ "g++")
 
 # get version and revision
 execute_process(COMMAND cat VERSION COMMAND tr -d "\n" OUTPUT_VARIABLE VERSION)
@@ -56,7 +56,7 @@ find_program(CUT cut PATH /usr/bin)
 find_program(SVNVERSION svnversion PATHS /usr/local/bin /usr/bin)
 
 # Run antlr
-add_custom_command(OUTPUT TextLexer.cpp TextLexer.hpp TextLexerTokenTypes.txt TextLexerTokenTypes.hpp expandedTextLexer.g COMMAND rm -f TextLexer.cpp TextLexer.hpp TextLexerTokenTypes.txt TextLexerTokenTypes.hpp expandedTextLexer.g COMMAND ${ANTLR} -glib \"WSLexer.g\;CommentLexer.g\" TextLexer.g  DEPENDS TextLexer.g WSLexer.cpp CommentLexer.cpp)
+add_custom_command(OUTPUT TextLexer.cpp TextLexer.hpp TextLzexerTokenTypes.txt TextLexerTokenTypes.hpp expandedTextLexer.g COMMAND rm -f TextLexer.cpp TextLexer.hpp TextLexerTokenTypes.txt TextLexerTokenTypes.hpp expandedTextLexer.g COMMAND ${ANTLR} -glib \"WSLexer.g\;CommentLexer.g\" TextLexer.g  DEPENDS TextLexer.g WSLexer.cpp CommentLexer.cpp)
 add_custom_command(OUTPUT WSLexer.cpp WSLexer.hpp WSLexerTokenTypes.txt WSLexerTokenTypes.hpp COMMAND rm -f WSLexer.cpp WSLexer.hpp WSLexerTokenTypes.txt WSLexerTokenTypes.hpp COMMAND ${ANTLR} -glib \"PureCommentLexer.g\" WSLexer.g DEPENDS WSLexer.g PureCommentLexer.cpp)
 add_custom_command(OUTPUT CommentLexer.cpp CommentLexer.hpp CommentLexerTokenTypes.txt CommentLexerTokenTypes.hpp expandedCommentLexer.g COMMAND rm -f CommentLexer.cpp CommentLexer.hpp CommentLexerTokenTypes.txt CommentLexerTokenTypes.hpp expandedCommentLexer.g COMMAND ${ANTLR} -glib \"WSLexer.g\" CommentLexer.g DEPENDS CommentLexer.g WSLexer.cpp)
 add_custom_command(OUTPUT OperatorLexer.cpp OperatorLexer.hpp OperatorLexerTokenTypes.txt OperatorLexerTokenTypes.hpp expandedOperatorLexer.g COMMAND rm -f OperatorLexer.cpp OperatorLexer.hpp OperatorLexerTokenTypes.txt OperatorLexerTokenTypes.hpp expandedOperatorLexer.g COMMAND ${ANTLR} -glib \"WSLexer.g\;CommentLexer.g\;TextLexer.g\" OperatorLexer.g DEPENDS OperatorLexer.g CommentLexer.cpp TextLexer.cpp)
@@ -70,12 +70,12 @@ add_custom_command(OUTPUT srcMLParserTokenTypesMacro.hpp COMMAND ${GREP} '=' src
 
 # libsrcml static
 add_library(srcml_static STATIC srcMLParser.cpp KeywordCPPLexer.cpp srcMLTranslator.cpp srcMLTranslatorCore.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp UTF8CharBuffer.cpp PureCommentLexer.cpp Language.cpp URIStream.cpp srcmlapps.cpp libxml_archive_read.cpp libxml_archive_write.cpp srcMLParserTokenTypesMacro.hpp srcMLUtility.cpp SAX2ExtractUnitsSrc.cpp srcmlapps.cpp SAX2Utilities.cpp SAX2UnitDOM.cpp SAX2UnitDOMRelaxNG.cpp srcexfun.cpp)
-target_link_libraries(srcml_static ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY})
+target_link_libraries(srcml_static ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} exslt regex)
 set_target_properties(srcml_static PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ../bin LIBRARY_OUTPUT_DIRECTORY ../bin OUTPUT_NAME srcml)
 
 # libsrcml shared
 add_library(srcml_shared SHARED srcMLParser.cpp KeywordCPPLexer.cpp srcMLTranslator.cpp srcMLTranslatorCore.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp UTF8CharBuffer.cpp PureCommentLexer.cpp Language.cpp URIStream.cpp srcmlapps.cpp libxml_archive_read.cpp libxml_archive_write.cpp srcMLParserTokenTypesMacro.hpp srcMLUtility.cpp SAX2ExtractUnitsSrc.cpp SAX2Utilities.cpp SAX2UnitDOM.cpp SAX2UnitDOMRelaxNG.cpp srcexfun.cpp)
-target_link_libraries(srcml_shared ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY})
+target_link_libraries(srcml_shared ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} exslt regex)
 set_target_properties(srcml_shared PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ../bin LIBRARY_OUTPUT_DIRECTORY ../bin OUTPUT_NAME srcml)
 
 # srcMLParserTokenTypesMacro
