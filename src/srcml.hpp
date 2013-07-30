@@ -1,5 +1,5 @@
 /*
-  srcml.h
+  srcml.hpp
 
   Copyright (C) 2013  SDML (www.sdml.info)
 
@@ -18,8 +18,8 @@
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#ifndef SRCML_H_INCLUDED
-#define SRCML_H_INCLUDED
+#ifndef INCLUDED_SRCML_HPP
+#define INCLUDED_SRCML_HPP
 
 #ifdef __cplusplus
 // extern "C" {
