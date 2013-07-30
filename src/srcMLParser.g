@@ -2310,8 +2310,8 @@ function_pointer_name_grammar[] { ENTRY_DEBUG } :
 function_pointer_name_base[] { ENTRY_DEBUG bool flag = false; } :
 
         // special case for function pointer names that don't have '*'
-        (complex_name[true] RPAREN)=>
-            complex_name[true] |
+        { _tokenSet_12.member(LA(1)) }?
+        complex_name[true] |
 
         // special name prefix of namespace or class
         identifier (template_argument_list)* DCOLON function_pointer_name_base |
