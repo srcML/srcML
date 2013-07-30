@@ -135,7 +135,7 @@ header "post_include_hpp" {
 
 #define assertMode(m)
 
-enum DECLTYPE { NONE, VARIABLE, FUNCTION, CONSTRUCTOR, DESTRUCTOR, SINGLE_MACRO, NULLOPERATOR, DELEGATE_FUNCTION, ENUM_DECL, GLOBAL_ATTRIBUTE, PROPERTY_ACCESSOR, PROPERTY_ACCESSOR_DECL };
+enum DECLTYPE { NONE, VARIABLE, FUNCTION, FUNCTION_DECL, CONSTRUCTOR, CONSTRUCTOR_DECL, DESTRUCTOR, DESTRUCTOR_DECL, SINGLE_MACRO, NULLOPERATOR, DELEGATE_FUNCTION, ENUM_DECL, GLOBAL_ATTRIBUTE, PROPERTY_ACCESSOR, PROPERTY_ACCESSOR_DECL };
 enum CALLTYPE { NOCALL, CALL, MACRO };
 
 // position in output stream
@@ -632,7 +632,7 @@ cfg[] { ENTRY_DEBUG } :
   Important to keep semantic checks, e.g., (constructor)=>, in place.  Most of these rules
   can start with a name which leaves it ambiguous which to choose.
 */
-statements_non_cfg[] { int token = 0; int place = 0; int secondtoken = 0; int fla = 0;
+statements_non_cfg[] { int token = 0; int place = 0; int secondtoken = 0; 
         int type_count = 0; DECLTYPE decl_type = NONE; CALLTYPE type = NOCALL; ENTRY_DEBUG } :
 
         // class forms for class declarations/definitions as opposed to part of a declaration types
@@ -645,8 +645,12 @@ statements_non_cfg[] { int token = 0; int place = 0; int secondtoken = 0; int fl
         access_specifier_region |
 
         // check for declaration of some kind (variable, function, constructor, destructor
-        { perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type == FUNCTION }?
-        function[fla, type_count] |
+        { perform_noncfg_check(decl_type, secondtoken, type_count) && decl_type == FUNCTION_DECL }?
+        function_declaration[type_count] |
+
+        // function definition
+        { decl_type == FUNCTION }?
+        function_definition[type_count] |
 
         // variable declaration
         { decl_type == VARIABLE }?
@@ -676,18 +680,18 @@ statements_non_cfg[] { int token = 0; int place = 0; int secondtoken = 0; int fl
         delegate_anonymous |
 
         // constructor
-        { decl_type == CONSTRUCTOR && fla != TERMINATE }?
+        { decl_type == CONSTRUCTOR }?
         constructor_definition |
 
-        { decl_type == CONSTRUCTOR }?
+        { decl_type == CONSTRUCTOR_DECL }?
         constructor_declaration |
 
         // destructor
-        { decl_type == DESTRUCTOR && fla != TERMINATE }?
+        { decl_type == DESTRUCTOR }?
         destructor_definition |
 
         // destructor declaration restrained so that it can only occur within a class
-        {(inTransparentMode(MODE_CLASS) && !inTransparentMode(MODE_FUNCTION_TAIL)) && decl_type == DESTRUCTOR }?
+        {(inTransparentMode(MODE_CLASS) && !inTransparentMode(MODE_FUNCTION_TAIL)) && decl_type == DESTRUCTOR_DECL }?
         destructor_declaration |
 
         // labels to goto
@@ -762,21 +766,25 @@ look_past_multiple[int skiptoken1, int skiptoken2, int skiptoken3, int skiptoken
 }:;
 
 // functions
-function[int token, int type_count] { ENTRY_DEBUG } :
+function_declaration[int type_count] { ENTRY_DEBUG } :
 		{
-            // function definitions have a "nested" block statement
             startNewMode(MODE_STATEMENT);
 
-            if (token != LCURLY)
-                startElement(SFUNCTION_DECLARATION);
-            else
-                // start the function definition element
-                startElement(SFUNCTION_DEFINITION);
+            startElement(SFUNCTION_DECLARATION);
         }
         function_header[type_count]
 ;
 
 // functions
+function_definition[int type_count] { ENTRY_DEBUG } :
+		{
+            startNewMode(MODE_STATEMENT);
+
+            startElement(SFUNCTION_DEFINITION);
+        }
+        function_header[type_count]
+;
+
 property_method[] { ENTRY_DEBUG } :
 		{
             // function definitions have a "nested" block statement
@@ -1048,12 +1056,12 @@ for_initialization_action[] { ENTRY_DEBUG } :
         }
     ;
 
-for_initialization[] { int type_count = 0; int fla = 0; int secondtoken = 0; DECLTYPE decl_type = NONE; ENTRY_DEBUG } :
+for_initialization[] { int type_count = 0;  int secondtoken = 0; DECLTYPE decl_type = NONE; ENTRY_DEBUG } :
         for_initialization_action
         (
             // explicitly check for a variable declaration since it can easily
             // be confused with an expression
-            { perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type == VARIABLE }?
+            { perform_noncfg_check(decl_type, secondtoken, type_count) && decl_type == VARIABLE }?
             for_initialization_variable_declaration[type_count] |
             
             // explicitly check for non-terminate so that a large switch statement
@@ -2033,7 +2041,7 @@ else_handling[] { ENTRY_DEBUG } :
 /*
   Handling when mid-statement
 */
-statement_part[] { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE decl_type = NONE; CALLTYPE type = NOCALL; ENTRY_DEBUG } :
+statement_part[] { int type_count;  int secondtoken = 0; DECLTYPE decl_type = NONE; CALLTYPE type = NOCALL; ENTRY_DEBUG } :
         { inMode(MODE_EAT_TYPE) }?
             type_identifier
             update_typecount |
@@ -2066,7 +2074,7 @@ statement_part[] { int type_count; int fla = 0; int secondtoken = 0; DECLTYPE de
 
         // K&R function parameters
         { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY)) && inMode(MODE_FUNCTION_TAIL) && 
-          perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type == VARIABLE }?
+          perform_noncfg_check(decl_type, secondtoken, type_count) && decl_type == VARIABLE }?
             kr_parameter |
 
         // start of argument for return or throw statement
@@ -2348,7 +2356,7 @@ function_tail[] { ENTRY_DEBUG } :
         )*
 ;
 
-perform_noncfg_check[DECLTYPE& type, int& token, int& fla, int& type_count, bool inparam = false] returns [bool isdecl] {
+perform_noncfg_check[DECLTYPE& type, int& token, int& type_count, bool inparam = false] returns [bool isdecl] {
 
     isdecl = true;
 
@@ -2359,6 +2367,7 @@ perform_noncfg_check[DECLTYPE& type, int& token, int& fla, int& type_count, bool
 
     bool sawenum;
     int posin = 0;
+    int fla = 0;
 
     try {
         noncfg_check(token, fla, type_count, type, inparam, sawenum, posin);
@@ -2383,6 +2392,15 @@ perform_noncfg_check[DECLTYPE& type, int& token, int& fla, int& type_count, bool
     // may just have an expression 
     if (type == DESTRUCTOR && !inLanguage(LANGUAGE_CXX_FAMILY))
         type = NULLOPERATOR;
+
+    if (type == CONSTRUCTOR && fla == TERMINATE)
+        type = CONSTRUCTOR_DECL;
+
+    if (type == DESTRUCTOR && fla == TERMINATE)
+        type = DESTRUCTOR_DECL;
+
+    if (type == FUNCTION && fla == TERMINATE)
+        type = FUNCTION_DECL;
 
     // false constructor for java
 //    if (inLanguage(LANGUAGE_JAVA_FAMILY) && type == CONSTRUCTOR && fla != LCURLY)
@@ -3724,7 +3742,7 @@ using_statement_namespace[] { ENTRY_DEBUG } :
         namespace_directive
 ;
 
-using_statement[] { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTYPE decl_type = NONE; ENTRY_DEBUG } :
+using_statement[] { int type_count = 0; int secondtoken = 0;  DECLTYPE decl_type = NONE; ENTRY_DEBUG } :
         {
             // treat try block as nested block statement
             startNewMode(MODE_STATEMENT | MODE_NEST);
@@ -3739,7 +3757,7 @@ using_statement[] { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTY
         (
             // explicitly check for a variable declaration since it can easily
             // be confused with an expression
-            { perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type == VARIABLE }?
+            { perform_noncfg_check(decl_type, secondtoken, type_count) && decl_type == VARIABLE }?
             for_initialization_variable_declaration[type_count] |
             
             {
@@ -3755,7 +3773,7 @@ using_statement[] { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTY
         )
 ;
 
-lock_statement[] { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTYPE decl_type = NONE; ENTRY_DEBUG } :
+lock_statement[] { int type_count = 0; int secondtoken = 0;  DECLTYPE decl_type = NONE; ENTRY_DEBUG } :
         {
             // treat try block as nested block statement
             startNewMode(MODE_STATEMENT | MODE_NEST);
@@ -3770,7 +3788,7 @@ lock_statement[] { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTYP
         (
             // explicitly check for a variable declaration since it can easily
             // be confused with an expression
-            { perform_noncfg_check(decl_type, secondtoken, fla, type_count) && decl_type == VARIABLE }?
+            { perform_noncfg_check(decl_type, secondtoken, type_count) && decl_type == VARIABLE }?
             for_initialization_variable_declaration[type_count] |
             
             {
@@ -4651,7 +4669,7 @@ argument[] { ENTRY_DEBUG } :
 /*
   Parameter for a function declaration or definition
 */                
-parameter[] { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTYPE decl_type = NONE; ENTRY_DEBUG } :
+parameter[] { int type_count = 0; int secondtoken = 0;  DECLTYPE decl_type = NONE; ENTRY_DEBUG } :
         {
             // end parameter correctly
             startNewMode(MODE_PARAMETER);
@@ -4660,8 +4678,8 @@ parameter[] { int type_count = 0; int secondtoken = 0; int fla = 0; DECLTYPE dec
             startElement(SPARAMETER);
         }
         (
-        { perform_noncfg_check(decl_type, secondtoken, fla, type_count, true) && decl_type == FUNCTION }?
-        function[TERMINATE, type_count]
+        { perform_noncfg_check(decl_type, secondtoken, type_count, true) && decl_type == FUNCTION }?
+        function_declaration[type_count]
 
         function_identifier // pointer_name_grammar
 
@@ -4740,7 +4758,7 @@ tripledotop[] { CompleteElement element; ENTRY_DEBUG } :
 
 /*
 */
-parameter_type[] { CompleteElement element; int type_count = 0; int fla = 0; int secondtoken = 0; DECLTYPE decl_type = NONE; ENTRY_DEBUG } :
+parameter_type[] { CompleteElement element; int type_count = 0; int secondtoken = 0; DECLTYPE decl_type = NONE; ENTRY_DEBUG } :
         {
             // local mode so start element will end correctly
             startNewMode(MODE_LOCAL);
@@ -4748,7 +4766,7 @@ parameter_type[] { CompleteElement element; int type_count = 0; int fla = 0; int
             // start of type
             startElement(STYPE);
         }
-        { perform_noncfg_check(decl_type, secondtoken, fla, type_count) }?
+        { perform_noncfg_check(decl_type, secondtoken, type_count) }?
         eat_type[type_count]
 ;
 
