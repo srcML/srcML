@@ -2089,7 +2089,7 @@ statement_part[] { int type_count;  int secondtoken = 0; DECLTYPE decl_type = NO
 
         // start of argument for return or throw statement
         { inMode(MODE_EXPRESSION | MODE_EXPECT) &&
-            inLanguage(LANGUAGE_C_FAMILY) && perform_call_check(type, secondtoken) && type == MACRO }?
+            inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) && perform_call_check(type, secondtoken) && type == MACRO }?
         macro_call |
 
         { inMode(MODE_EXPRESSION | MODE_EXPECT) }?
