@@ -135,7 +135,7 @@ header "post_include_hpp" {
 
 #define assertMode(m)
 
-enum DECLTYPE { NONE, VARIABLE, FUNCTION, FUNCTION_DECL, CONSTRUCTOR, CONSTRUCTOR_DECL, DESTRUCTOR, DESTRUCTOR_DECL, SINGLE_MACRO, NULLOPERATOR, DELEGATE_FUNCTION, ENUM_DECL, GLOBAL_ATTRIBUTE, PROPERTY_ACCESSOR, PROPERTY_ACCESSOR_DECL };
+enum DECLTYPE { NONE, VARIABLE, FUNCTION, FUNCTION_DECL, CONSTRUCTOR, CONSTRUCTOR_DECL, DESTRUCTOR, DESTRUCTOR_DECL, SINGLE_MACRO, NULLOPERATOR, DELEGATE_FUNCTION, ENUM_DECL, GLOBAL_ATTRIBUTE, PROPERTY_ACCESSOR, PROPERTY_ACCESSOR_DECL, EXPRESSION };
 enum CALLTYPE { NOCALL, CALL, MACRO };
 
 // position in output stream
@@ -690,8 +690,8 @@ statements_non_cfg[] { int token = 0; int place = 0; int secondtoken = 0;
         { decl_type == DESTRUCTOR }?
         destructor_definition |
 
-        // destructor declaration restrained so that it can only occur within a class
-        {(inTransparentMode(MODE_CLASS) && !inTransparentMode(MODE_FUNCTION_TAIL)) && decl_type == DESTRUCTOR_DECL }?
+        // destructor declaration
+        { decl_type == DESTRUCTOR_DECL }?
         destructor_declaration |
 
         // labels to goto
@@ -2405,6 +2405,9 @@ perform_noncfg_check[DECLTYPE& type, int& token, int& type_count, bool inparam =
     // false constructor for java
 //    if (inLanguage(LANGUAGE_JAVA_FAMILY) && type == CONSTRUCTOR && fla != LCURLY)
 //        type = NONE;
+
+    if (type == DESTRUCTOR_DECL && !(inTransparentMode(MODE_CLASS) && !inTransparentMode(MODE_FUNCTION_TAIL)))
+        type = EXPRESSION;
 
     inputState->guessing--;
     rewind(start);
