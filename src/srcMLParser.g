@@ -647,7 +647,7 @@ statements_non_cfg[] { int token = 0; int place = 0; int secondtoken = 0;
         decl_or_defn
     ;
 
-decl_or_defn[] { int token = 0; int place = 0; int secondtoken = 0; 
+decl_or_defn[] { int place = 0; int secondtoken = 0; 
         int type_count = 0; DECLTYPE decl_type = NONE; CALLTYPE type = NOCALL; 
 
         perform_noncfg_check(decl_type, secondtoken, type_count);
@@ -3936,11 +3936,9 @@ fixed_statement[] { ENTRY_DEBUG } :
         }
         FIXED
         {            
-            // looking for a LPAREN.  may have some whitespace before it
-            if (LA(1) == LPAREN) {
-
+            // looking for a LPAREN
+            if (LA(1) == LPAREN)
                 parameter_list();
-            }
         }
 ;
 
