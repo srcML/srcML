@@ -86,11 +86,11 @@ add_executable(srcml EXCLUDE_FROM_ALL srcml.cpp)
 target_link_libraries(srcml ${Boost_PROGRAM_OPTIONS_LIBRARY})
 
 # src2srcml
-add_executable(src2srcml src2srcml.cpp makeargv.cpp)
+add_executable(src2srcml src2srcml.cpp)
 target_link_libraries(src2srcml archive xml2 ${LIBANTLR_LIB} srcml_static)
 
 # srcml2src
-add_executable(srcml2src srcml2src.cpp makeargv.cpp)
+add_executable(srcml2src srcml2src.cpp)
 target_link_libraries(srcml2src archive xml2 xslt exslt srcml_static)
 
 set_target_properties(srcml src2srcml srcml2src PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../bin)
