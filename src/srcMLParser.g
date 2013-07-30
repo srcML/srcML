@@ -894,7 +894,7 @@ call_check[int& postnametoken, int& argumenttoken, int& postcalltoken] { ENTRY_D
         markend[postnametoken]
 
        (
-        { inLanguage(LANGUAGE_C_FAMILY) }?
+        { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
         // check for proper form of argument list
         call_check_paren_pair[argumenttoken]
 
