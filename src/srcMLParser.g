@@ -135,7 +135,7 @@ header "post_include_hpp" {
 
 #define assertMode(m)
 
-enum DECLTYPE { NONE, VARIABLE, FUNCTION, FUNCTION_DECL, CONSTRUCTOR, CONSTRUCTOR_DECL, DESTRUCTOR, DESTRUCTOR_DECL, SINGLE_MACRO, NULLOPERATOR, DELEGATE_FUNCTION, ENUM_DECL, GLOBAL_ATTRIBUTE, PROPERTY_ACCESSOR, PROPERTY_ACCESSOR_DECL, EXPRESSION };
+enum DECLTYPE { NONE, VARIABLE, FUNCTION, FUNCTION_DECL, CONSTRUCTOR, CONSTRUCTOR_DECL, DESTRUCTOR, DESTRUCTOR_DECL, SINGLE_MACRO, NULLOPERATOR, DELEGATE_FUNCTION, ENUM_DECL, GLOBAL_ATTRIBUTE, PROPERTY_ACCESSOR, PROPERTY_ACCESSOR_DECL, EXPRESSION, CLASS_DEFN, CLASS_DECL, UNION_DEFN, UNION_DECL, STRUCT_DEFN, STRUCT_DECL, INTERFACE_DEFN, INTERFACE_DECL, ACCESS_REGION };
 enum CALLTYPE { NOCALL, CALL, MACRO };
 
 // position in output stream
@@ -632,26 +632,38 @@ cfg[] { ENTRY_DEBUG } :
   Important to keep semantic checks, e.g., (constructor)=>, in place.  Most of these rules
   can start with a name which leaves it ambiguous which to choose.
 */
-statements_non_cfg[] { int token = 0; int place = 0; ENTRY_DEBUG } :
-
-        // class forms for class declarations/definitions as opposed to part of a declaration types
-        // must be before checking access_specifier_region
-        (class_struct_union_check[token /* token after header */, place])=> class_struct_union[token, place] |
-
-        // class forms sections
-        // must be after class_struct_union_check
-        { inLanguage(LANGUAGE_CXX_ONLY) }?
-        access_specifier_region |
-
-        decl_or_defn
-    ;
-
-decl_or_defn[] { int secondtoken = 0; 
+statements_non_cfg[] { int secondtoken = 0; 
         int type_count = 0; DECLTYPE decl_type = NONE; CALLTYPE type = NOCALL; 
 
         perform_noncfg_check(decl_type, secondtoken, type_count);
 
         ENTRY_DEBUG } :
+
+        { decl_type == INTERFACE_DEFN }?
+        interface_definition |
+
+        { decl_type == CLASS_DEFN }?
+        class_definition |
+
+        { decl_type == STRUCT_DEFN }?
+        struct_union_definition[SSTRUCT] |
+
+        { decl_type == UNION_DEFN }?
+        struct_union_definition[SUNION] |
+
+        { decl_type == CLASS_DECL }?
+        class_declaration |
+
+        { decl_type == STRUCT_DECL }?
+        struct_declaration |
+
+        { decl_type == UNION_DECL }?
+        union_declaration |
+
+        { decl_type == ACCESS_REGION }?
+        access_specifier_region |
+
+        // TODO:  Why no interface declaration?
 
         // check for declaration of some kind (variable, function, constructor, destructor
         { decl_type == FUNCTION_DECL }?
@@ -1483,41 +1495,6 @@ namespace_directive[] { ENTRY_DEBUG } :
 ;
 
 /* Declarations Definitions CFG */
-
-/*
-  class structures and unions
-*/
-class_struct_union[int token, int place] { ENTRY_DEBUG } :
-
-        { token == LCURLY && place == INTERFACE }?
-        interface_definition |
-
-        { token == LCURLY && place == CLASS }?
-        class_definition |
-
-        { token == LCURLY && place == STRUCT }?
-        struct_union_definition[SSTRUCT] |
-
-        { token == LCURLY && place == UNION }?
-        struct_union_definition[SUNION] |
-
-        { place == CLASS }?
-        class_declaration |
-
-        { place == STRUCT }?
-        struct_declaration |
-
-        { place == UNION }?
-        union_declaration
-;
-
-/*
-  class structures and unions
-*/
-class_struct_union_check[int& finaltoken, int& othertoken] { finaltoken = 0; othertoken = 0; ENTRY_DEBUG } :
-
-        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* (specifier)* markend[othertoken] (CLASS | STRUCT | UNION | INTERFACE) class_header check_end[finaltoken]
-;
 
 check_end[int& token] { token = LA(1); ENTRY_DEBUG } :
         LCURLY | TERMINATE | COLON | COMMA | RPAREN
@@ -2475,8 +2452,12 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
             set_bool[sawenum, sawenum || LA(1) == ENUM]
             (
                 { _tokenSet_21.member(LA(1)) }?
+                set_int[token, LA(1)]
                 set_bool[foundpure, foundpure || LA(1) == CONST] specifier 
-                set_int[specifier_count, specifier_count + 1] |
+                set_int[specifier_count, specifier_count + 1] 
+                set_type[type, ACCESS_REGION,
+                         inLanguage(LANGUAGE_CXX) && LA(1) == COLON && (token == PUBLIC || token == PRIVATE || token == PROTECTED)] 
+                throw_exception[type == ACCESS_REGION] |
 
                 { type_count == attributecount && inLanguage(LANGUAGE_CSHARP) }?
                 (attribute_global)=>
@@ -2488,6 +2469,20 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                 property_method_names
                 set_type[type, PROPERTY_ACCESSOR, true]
                 /* throw_exception[true] */ |
+
+                { type_count == attributecount + specifier_count }?
+                (CLASS set_type[type, CLASS_DECL, true] | 
+                 STRUCT set_type[type, STRUCT_DECL, true] | 
+                 UNION set_type[type, UNION_DECL, true] | 
+                 INTERFACE  set_type[type, INTERFACE_DECL, true])
+                set_int[type_count, type_count + 1]
+                class_header
+                set_type[type, CLASS_DEFN, type == CLASS_DECL && LA(1) == LCURLY]
+                set_type[type, STRUCT_DEFN, type == STRUCT_DECL && LA(1) == LCURLY]
+                set_type[type, UNION_DEFN, type == UNION_DECL && LA(1) == LCURLY]
+                set_type[type, INTERFACE_DEFN, type == INTERFACE_DECL && LA(1) == LCURLY] 
+                set_type[type, NONE, !(LA(1) == TERMINATE || LA(1) == LCURLY)]
+                throw_exception[type != NONE] |
 
                 { inLanguage(LANGUAGE_JAVA_FAMILY) }?
                 // (template_argument_list)=>
