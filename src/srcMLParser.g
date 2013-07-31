@@ -639,31 +639,9 @@ statements_non_cfg[] { int secondtoken = 0;
 
         ENTRY_DEBUG } :
 
-        { decl_type == INTERFACE_DEFN }?
-        interface_definition |
-
-        { decl_type == CLASS_DEFN }?
-        class_definition |
-
-        { decl_type == STRUCT_DEFN }?
-        struct_union_definition[SSTRUCT] |
-
-        { decl_type == UNION_DEFN }?
-        struct_union_definition[SUNION] |
-
-        { decl_type == CLASS_DECL }?
-        class_declaration |
-
-        { decl_type == STRUCT_DECL }?
-        struct_declaration |
-
-        { decl_type == UNION_DECL }?
-        union_declaration |
-
-        { decl_type == ACCESS_REGION }?
-        access_specifier_region |
-
-        // TODO:  Why no interface declaration?
+        // variable declaration
+        { decl_type == VARIABLE }?
+        variable_declaration_statement[type_count] |
 
         // check for declaration of some kind (variable, function, constructor, destructor
         { decl_type == FUNCTION_DECL }?
@@ -673,9 +651,31 @@ statements_non_cfg[] { int secondtoken = 0;
         { decl_type == FUNCTION }?
         function_definition[type_count] |
 
-        // variable declaration
-        { decl_type == VARIABLE }?
-        variable_declaration_statement[type_count] |
+        { decl_type == CLASS_DEFN }?
+        class_definition |
+
+        { decl_type == INTERFACE_DEFN }?
+        interface_definition |
+
+        { decl_type == CLASS_DECL }?
+        class_declaration |
+
+        { decl_type == STRUCT_DEFN }?
+        struct_union_definition[SSTRUCT] |
+
+        { decl_type == STRUCT_DECL }?
+        struct_declaration |
+
+        { decl_type == UNION_DEFN }?
+        struct_union_definition[SUNION] |
+
+        { decl_type == UNION_DECL }?
+        union_declaration |
+
+        { decl_type == ACCESS_REGION }?
+        access_specifier_region |
+
+        // TODO:  Why no interface declaration?
 
         { decl_type == GLOBAL_ATTRIBUTE }?
         attribute |
