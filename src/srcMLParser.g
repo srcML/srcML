@@ -694,12 +694,6 @@ statements_non_cfg[] { int secondtoken = 0;
         { decl_type == PROPERTY_ACCESSOR_DECL }?
         property_method_decl |
 
-        // "~" which looked like destructor, but isn't
-        { decl_type == NONE }?
-        expression_statement_process
-        expression_process
-        sole_destop |
-
         // standalone macro
         { decl_type == SINGLE_MACRO }?
         macro_call |
@@ -722,6 +716,12 @@ statements_non_cfg[] { int secondtoken = 0;
         // destructor declaration
         { decl_type == DESTRUCTOR_DECL }?
         destructor_declaration |
+
+        // "~" which looked like destructor, but isn't
+        { decl_type == NONE }?
+        expression_statement_process
+        expression_process
+        sole_destop |
 
         // labels to goto
         { secondtoken == COLON }? label_statement |
@@ -1728,18 +1728,16 @@ access_specifier_region[] { ENTRY_DEBUG } :
             setMode(MODE_ACCESS_REGION);
         }
         (
+            // start access region
             {
-                // start of case element
                 startElement(SPUBLIC_ACCESS);
             }
             PUBLIC |
             {
-                // start of case element
                 startElement(SPRIVATE_ACCESS);
             }
             PRIVATE |
             {
-                // start of case element
                 startElement(SPROTECTED_ACCESS);
             }
             PROTECTED
