@@ -131,6 +131,11 @@ header "post_include_hpp" {
 
 // Macros to introduce trace statements
 #define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != 11 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#ifdef ENTRY_DEBUG
+#define ENTRY_DEBUG_INIT ruledepth(0), 
+#define ENTRY_DEBUG_START ruledepth = 0;
+#endif
+
 #define CATCH_DEBUG //marker();
 
 #define assertMode(m)
@@ -190,6 +195,7 @@ header "post_include_cpp" {
        const int oldsize;
     };
 
+#ifdef ENTRY_DEBUG
     class RuleDepth {
 
      public:
@@ -199,12 +205,12 @@ header "post_include_cpp" {
      private:
        srcMLParser* pparser;
     };
+#endif
 
     srcMLParser* CompleteElement::masterthis;
 
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options)
-   : antlr::LLkParser(lexer,1), Mode(this, lang), cpp_zeromode(false), skipelse(false), cppifcount(0), parseoptions(parser_options), ifcount(0), ruledepth(0), notdestructor(false)
-
+   : antlr::LLkParser(lexer,1), Mode(this, lang), cpp_zeromode(false), skipelse(false), cppifcount(0), parseoptions(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false)
 {
     CompleteElement::masterthis = this;
 
@@ -470,7 +476,9 @@ bool isdestructor;
 int parseoptions;
 std::string namestack[2];
 int ifcount;
+#ifdef ENTRY_DEBUG
 int ruledepth;
+#endif
 bool qmark;
 bool notdestructor;
 
@@ -524,7 +532,7 @@ void endAllModes();
 
   Order of evaluation is important.
 */
-start[] { ruledepth = 0; ENTRY_DEBUG } :
+start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
 
         // end of file
         eof |
