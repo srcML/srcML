@@ -277,9 +277,9 @@ int main(int argc, char * argv[]) {
 	srcml2src.add(general).add(srcml2src_options).add(src2srcml_metadata).add(query_transform).add(srcml_archive);
 	
 	//Group all Options
-	all.add(general).add(src2srcml_options).add(cpp_markup).add(line_col).
-		add(markup).add(src2srcml_metadata).add(prefix).add(srcml2src_options).
-		add(src2srcml_metadata).add(query_transform).add(srcml_archive);
+	all.add(general).add(src2srcml_options).add(srcml2src_options).
+		add(cpp_markup).add(line_col).add(markup).add(src2srcml_metadata).
+		add(srcml2src_metadata).add(prefix).add(query_transform).add(srcml_archive);
 
 	//ASSIGN THE CLI ARGS TO MAP
 	prog_opts::variables_map cli_map;
@@ -294,6 +294,9 @@ int main(int argc, char * argv[]) {
   	std::cerr << e.what() << "\n";
   	return 1;
   }
+
+  int i;
+	std::cout << "input file: " << argv[argc - 1] << "\n";
 
   return 0;
 }
