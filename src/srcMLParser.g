@@ -717,6 +717,10 @@ statements_non_cfg[] { int secondtoken = 0;
         { decl_type == DESTRUCTOR_DECL }?
         destructor_declaration |
 
+        // enum definition as opposed to part of type or declaration
+        { decl_type == ENUM_DECL }?
+        enum_definition |
+
         // "~" which looked like destructor, but isn't
         { decl_type == NONE }?
         expression_statement_process
@@ -729,10 +733,6 @@ statements_non_cfg[] { int secondtoken = 0;
         // extern block as opposed to enum as part of declaration
         { decl_type == NONE && LA(1) != NEW }?
         extern_definition |
-
-        // enum definition as opposed to part of type or declaration
-        { decl_type == ENUM_DECL }?
-        enum_definition |
 
         // call
         { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY)) && perform_call_check(type, secondtoken) && type == MACRO }?
