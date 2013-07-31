@@ -8,6 +8,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(srcML)
 
+
 # specify g++ compiler
 include(CMakeForceCompiler)
 CMAKE_FORCE_CXX_COMPILER(/usr/bin/g++ "g++")
@@ -43,6 +44,14 @@ if(BOOST_FOUND)
         include_directories(${Boost_INCLUDE_DIR})
 endif()
 
+if(NOT DEFINED LIBXSLT_EXSLT_LIBRARY)
+		set(LIBXSLT_EXSLT_LIBRARY exslt)
+endif()
+
+if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+		set(LIBREGEX_LIBRARY regex)
+endif()
+
 include_directories(C:/antlr/277/include/antlr)
 
 find_library(LIBANTLR_LIB NAMES libantlr.a libantlr2-0.dll PATHS /usr/lib /usr/local/lib ../dlls)
@@ -70,12 +79,12 @@ add_custom_command(OUTPUT srcMLParserTokenTypesMacro.hpp COMMAND ${GREP} '=' src
 
 # libsrcml static
 add_library(srcml_static STATIC srcMLParser.cpp KeywordCPPLexer.cpp srcMLTranslator.cpp srcMLTranslatorCore.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp UTF8CharBuffer.cpp PureCommentLexer.cpp Language.cpp URIStream.cpp srcmlapps.cpp libxml_archive_read.cpp libxml_archive_write.cpp srcMLParserTokenTypesMacro.hpp srcMLUtility.cpp SAX2ExtractUnitsSrc.cpp srcmlapps.cpp SAX2Utilities.cpp SAX2UnitDOM.cpp SAX2UnitDOMRelaxNG.cpp srcexfun.cpp)
-target_link_libraries(srcml_static ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY})
+target_link_libraries(srcml_static ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} ${LIBREGEX_LIBRARY})
 set_target_properties(srcml_static PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ../bin LIBRARY_OUTPUT_DIRECTORY ../bin OUTPUT_NAME srcml)
 
 # libsrcml shared
 add_library(srcml_shared SHARED srcMLParser.cpp KeywordCPPLexer.cpp srcMLTranslator.cpp srcMLTranslatorCore.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp UTF8CharBuffer.cpp PureCommentLexer.cpp Language.cpp URIStream.cpp srcmlapps.cpp libxml_archive_read.cpp libxml_archive_write.cpp srcMLParserTokenTypesMacro.hpp srcMLUtility.cpp SAX2ExtractUnitsSrc.cpp SAX2Utilities.cpp SAX2UnitDOM.cpp SAX2UnitDOMRelaxNG.cpp srcexfun.cpp)
-target_link_libraries(srcml_shared ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY})
+target_link_libraries(srcml_shared ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} ${LIBREGEX_LIBRARY})
 set_target_properties(srcml_shared PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ../bin LIBRARY_OUTPUT_DIRECTORY ../bin OUTPUT_NAME srcml)
 
 # srcMLParserTokenTypesMacro
