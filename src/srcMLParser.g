@@ -731,7 +731,7 @@ statements_non_cfg[] { int secondtoken = 0;
         { secondtoken == COLON }? label_statement |
 
         // extern block as opposed to enum as part of declaration
-        { decl_type == NONE && LA(1) != NEW }?
+        { decl_type == NONE }?
         extern_definition |
 
         // call
