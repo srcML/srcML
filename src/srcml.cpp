@@ -127,9 +127,9 @@ void option_xml(const bool& opt);
 
 void option_cpp(const bool& opt);
 void option_cpp_markup_else(const bool& opt);
-void cpp_markup_if0(const bool& opt);
-void cpp_text_else(const bool& opt);
-void cpp_text_if0(const bool& opt);
+void option_cpp_markup_if0(const bool& opt);
+void option_cpp_text_else(const bool& opt);
+void option_cpp_text_if0(const bool& opt);
 
 void option_position(const bool& opt);
 void option_tabs(const int& opt);
@@ -190,47 +190,47 @@ int main(int argc, char * argv[]) {
 	general.add_options()
 		("compress,z", prog_opts::bool_switch()->notifier(&option_compress), "output in gzip format")
 		("help,h", prog_opts::value<std::string>()->implicit_value("")->notifier(&option_help),"display this help and exit. USAGE: help or help [module name]. MODULES: src2srcml, srcml2src")
-		("no-namespace-decl", "do not output any namespace declarations")
-		("no-xml-dexlaration", "do not output the XML declaration")
+		("no-namespace-decl", prog_opts::bool_switch()->notifier(&option_no_namespace_decl), "do not output any namespace declarations")
+		("no-xml-dexlaration", prog_opts::bool_switch()->notifier(&option_no_xml_dexlaration), "do not output the XML declaration")
 		("output=,o", prog_opts::value<std::string>()->notifier(&option_output), "write result ouput to arg which is a FILE or URI")
-		("quiet,q", "suppresses status messages")
+		("quiet,q", prog_opts::bool_switch()->notifier(&option_quiet), "suppresses status messages")
 		("src-encoding=,t", prog_opts::value<std::string>()->notifier(&option_src_encoding), "set the input source encoding to arg (default:  ISO-8859-1)")
-		("verbose,v", "conversion and status information to stderr")		
-		("version,V", "display version number and exit")
+		("verbose,v", prog_opts::bool_switch()->notifier(&option_verbose), "conversion and status information to stderr")		
+		("version,V", prog_opts::bool_switch()->notifier(&option_version), "display version number and exit")
 		;
 
 	src2srcml_options.add_options()
-		("archive,n", "store output in a srcML archive, default for multiple input files")
-		("debug,g", "markup translation errors, namespace http://www.sdml.info/srcML/srcerr")
+		("archive,n", prog_opts::bool_switch()->notifier(&option_archive), "store output in a srcML archive, default for multiple input files")
+		("debug,g", prog_opts::bool_switch()->notifier(&option_debug), "markup translation errors, namespace http://www.sdml.info/srcML/srcerr")
 		("encoding=,x", prog_opts::value<std::string>()->notifier(&option_encoding),"set the output XML encoding to ENC (default:  UTF-8)")
-		("expression,e", "expression mode for translating a single expression not in a statement")
+		("expression,e", prog_opts::bool_switch()->notifier(&option_expression), "expression mode for translating a single expression not in a statement")
 		("files-from", prog_opts::value<std::string>()->notifier(&option_files_from), "read list of source file names, either FILE or URI, from arg to form a srcML archive")
-		("interactive,c", "immediate output while parsing, default for keyboard input")
+		("interactive,c", prog_opts::bool_switch()->notifier(&option_interactive), "immediate output while parsing, default for keyboard input")
 		("language=,l", prog_opts::value<std::string>()->notifier(&option_language), "set the language to C, C++, or Java")
 		("register-ext", prog_opts::value<std::string>()->notifier(&option_register_ext), "register file extension EXT for source-code language LANG. arg format EXT=LANG")
 		;
 
 	srcml2src_options.add_options()
-		("xml,X", "output in XML instead of text")
+		("xml,X", prog_opts::bool_switch()->notifier(&option_xml), "output in XML instead of text")
 		;
 
 	cpp_markup.add_options()
-		("cpp", "preprocessor parsing and markup for Java and non-C/C++ languages")
-		("cpp-markup-else", "markup cpp #else regions (default)")
-		("cpp-markup-if0", "markup cpp #if 0 regions")
-		("cpp-text-else", "leave cpp #else regions as text")
-		("cpp-text-if0", "leave cpp #if 0 regions as text (default)")
+		("cpp", prog_opts::bool_switch()->notifier(&option_cpp), "preprocessor parsing and markup for Java and non-C/C++ languages")
+		("cpp-markup-else", prog_opts::bool_switch()->notifier(&option_cpp_markup_else), "markup cpp #else regions (default)")
+		("cpp-markup-if0", prog_opts::bool_switch()->notifier(&option_cpp_markup_if0), "markup cpp #if 0 regions")
+		("cpp-text-else", prog_opts::bool_switch()->notifier(&option_cpp_text_else), "leave cpp #else regions as text")
+		("cpp-text-if0", prog_opts::bool_switch()->notifier(&option_cpp_text_if0), "leave cpp #if 0 regions as text (default)")
 		;
 
 	line_col.add_options()
-		("position", "include line/column attributes, namespace 'http://www.sdml.info/srcML/position'")
+		("position", prog_opts::bool_switch()->notifier(&option_position), "include line/column attributes, namespace 'http://www.sdml.info/srcML/position'")
 		("tabs=", prog_opts::value<int>()->notifier(&option_tabs), "set tabs arg characters apart.  Default is 8")
 		;
 
 	markup.add_options()
-		("literal", "markup literal values, namespace 'http://www.sdml.info/srcML/literal'")
-		("modifier", "markup type modifiers, namespace 'http://www.sdml.info/srcML/modifier'")
-		("operator", "markup operators, namespace 'http://www.sdml.info/srcML/operator'")
+		("literal", prog_opts::bool_switch()->notifier(&option_literal), "markup literal values, namespace 'http://www.sdml.info/srcML/literal'")
+		("modifier", prog_opts::bool_switch()->notifier(&option_modifier), "markup type modifiers, namespace 'http://www.sdml.info/srcML/modifier'")
+		("operator", prog_opts::bool_switch()->notifier(&option_operator), "markup operators, namespace 'http://www.sdml.info/srcML/operator'")
 		;
 
 	src2srcml_metadata.add_options()
@@ -240,16 +240,16 @@ int main(int argc, char * argv[]) {
 		;
 
 	srcml2src_metadata.add_options()
-		("info,i", "display most metadata except file count (individual units) and exit")
-		("list", "list all the files in the srcML archive and exit")
-		("longinfo,L", "display all metadata including file count (individual units) and exit")
+		("info,i", prog_opts::bool_switch()->notifier(&option_info), "display most metadata except file count (individual units) and exit")
+		("list", prog_opts::bool_switch()->notifier(&option_list), "list all the files in the srcML archive and exit")
+		("longinfo,L", prog_opts::bool_switch()->notifier(&option_longinfo), "display all metadata including file count (individual units) and exit")
 		("prefix=,p", prog_opts::value<std::string>()->notifier(&option_prefix), "display prefix of namespace given by URI arg and exit")
-		("units,n", "display number of srcML files and exit")
-		("show-directory", "display source directory name and exit")
-		("show-encoding", "display xml encoding and exit")
-		("show-filename", "display source filename and exit")
-		("show-language", "display source language and exit")
-		("show-src-version", "display source version and exit")
+		("units,n", prog_opts::bool_switch()->notifier(&option_units), "display number of srcML files and exit")
+		("show-directory", prog_opts::bool_switch()->notifier(&option_show_directory), "display source directory name and exit")
+		("show-encoding", prog_opts::bool_switch()->notifier(&option_show_encoding), "display xml encoding and exit")
+		("show-filename", prog_opts::bool_switch()->notifier(&option_show_filename), "display source filename and exit")
+		("show-language", prog_opts::bool_switch()->notifier(&option_show_language), "display source language and exit")
+		("show-src-version", prog_opts::bool_switch()->notifier(&option_show_src_version), "display source version and exit")
 		;
 
 	prefix.add_options()
@@ -258,7 +258,7 @@ int main(int argc, char * argv[]) {
 		;
 
 	query_transform.add_options()
-		("apply-root", "apply an xslt program or xpath query to the root element")
+		("apply-root", prog_opts::bool_switch()->notifier(&option_apply_root), "apply an xslt program or xpath query to the root element")
 		("relaxng=", prog_opts::value<std::string>()->notifier(&option_relaxng), "output individual units that match RELAXNG_FILE (FILE or URI) arg")
 		("xpath=", prog_opts::value<std::string>()->notifier(&option_xpath), "apply XPATH expression arg to each individual unit")
 		("xpathparam", prog_opts::value<std::string>()->notifier(&option_xpathparam), "passes a parameter NAME and VAL arg to the XSLT program. arg format NAME=VAL")
@@ -266,7 +266,7 @@ int main(int argc, char * argv[]) {
 		;
 
 	srcml_archive.add_options()
-		("to-dir", "extract all files from srcML and create them in the filesystem")
+		("to-dir", prog_opts::bool_switch()->notifier(&option_to_dir), "extract all files from srcML and create them in the filesystem")
 		("unit=,U", prog_opts::value<int>()->notifier(&option_unit), "extract individual unit number arg from srcML")
 		;    
 	
@@ -306,7 +306,7 @@ void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, c
 }
 
 void option_compress(const bool& opt) {
-
+	
 }
 
 void option_help(const std::string& help_opt) {
@@ -405,15 +405,15 @@ void option_cpp_markup_else(const bool& opt){
 
 }
 
-void cpp_markup_if0(const bool& opt){
+void option_cpp_markup_if0(const bool& opt){
 
 }
 
-void cpp_text_else(const bool& opt){
+void option_cpp_text_else(const bool& opt){
 
 }
 
-void cpp_text_if0(const bool& opt){
+void option_cpp_text_if0(const bool& opt){
 
 }
 
