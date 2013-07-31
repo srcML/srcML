@@ -1179,7 +1179,7 @@ if_statement[] { ENTRY_DEBUG } :
 
             // expect a condition
             // start THEN after condition
-            startNewMode(MODE_EXPECT | MODE_CONDITION);
+            startNewMode(MODE_CONDITION | MODE_EXPECT);
         }
         IF
 ;
@@ -2477,7 +2477,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                 set_type[type, GLOBAL_ATTRIBUTE, global]
                 throw_exception[global] |
 
-                { type_count == attributecount && inLanguage(LANGUAGE_CSHARP) }?
+                { type_count == attributecount }?
                 property_method_names
                 set_type[type, PROPERTY_ACCESSOR, true]
                 /* throw_exception[true] */ |
@@ -3091,7 +3091,9 @@ variable_identifier_array_grammar_sub[bool& iscomplex] { CompleteElement element
 variable_identifier_array_grammar_sub_contents{ CompleteElement element; ENTRY_DEBUG } :
         { !inLanguage(LANGUAGE_CSHARP) }? full_expression |
 
-        { inLanguage(LANGUAGE_CSHARP) }? (options { greedy = true; } : { LA(1) != RBRACKET }? ({ /* stop warning */ LA(1) == COMMA }? COMMA | full_expression) )*
+        { inLanguage(LANGUAGE_CSHARP) }? (options { greedy = true; } : { LA(1) != RBRACKET }?
+            ({ /* stop warning */ LA(1) == COMMA }? COMMA | full_expression)
+        )*
 ;
 
 
