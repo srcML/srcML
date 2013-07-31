@@ -103,7 +103,7 @@ bin : ${SRC_TAR_GZ}
 windows : ${SRC_ZIP}
 	unzip -uq ${SRC_ZIP}
 	cd ${SRC_DIR} && mingw32-cmake . && make
-	cd ${SRC_DIR} && make clean && rm -f CMakeCache.txt && cmake . && make
+	cd ${SRC_DIR} && rm -f CMakeCache.txt && cmake . && make
 	cd ${DOC_DIR} && make
 	i686-pc-mingw32-strip ${WIN_SRC2SRCML_PATH} ${WIN_SRCML2SRC_PATH}
 	mkdir ${WIN_BASE} && ${CP} -t ${WIN_BASE} ${WIN_DIST_FILES}
@@ -116,7 +116,7 @@ windowsdyn : ${SRC_ZIP}
 	cd ${SRC_DIR} && make -f Makefile.old cleanbuild && make -f Makefile.old
 	# note this does not select dynamic
 	#cd ${SRC_DIR} && mingw32-cmake . && make
-	#cd ${SRC_DIR} && make clean && rm -f CMakeCache.txt && cmake . && make
+	#cd ${SRC_DIR} && rm -f CMakeCache.txt && cmake . && make
 	cd ${DOC_DIR} && make clean && make
 	i686-pc-mingw32-strip ${WIN_SRC2SRCML_PATH} ${WIN_SRCML2SRC_PATH} ${LIBSRCML_DLL}
 	mkdir ${WIN_BASE} && ${CP} -t ${WIN_BASE} ${WIN_DIST_FILES}
