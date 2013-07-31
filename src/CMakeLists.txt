@@ -10,8 +10,10 @@ project(srcML)
 
 
 # specify g++ compiler
-include(CMakeForceCompiler)
-CMAKE_FORCE_CXX_COMPILER(/usr/bin/g++ "g++")
+if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
+       include(CMakeForceCompiler)
+	CMAKE_FORCE_CXX_COMPILER(/usr/bin/g++ "g++")
+endif()
 
 # get version and revision
 execute_process(COMMAND cat VERSION COMMAND tr -d "\n" OUTPUT_VARIABLE VERSION)
