@@ -1620,7 +1620,7 @@ struct_declaration[] { ENTRY_DEBUG } :
             // start the class definition
             startElement(SSTRUCT_DECLARATION);
         }
-        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* (specifier)* STRUCT class_header
+        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* (specifier)* STRUCT trace_int[LA(1)] class_header trace_int[LA(1)]
 ;
 
 struct_union_definition[int element_token] { ENTRY_DEBUG } :
@@ -1697,19 +1697,25 @@ class_header[] { ENTRY_DEBUG } :
 */
 class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 
-        complex_name[true] (
+        complex_name[true]
 
-            { inLanguage(LANGUAGE_CXX_FAMILY) }?
-            (options { greedy = true; } : derived)* (generic_constraint)* | 
+        ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
+        ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : generic_constraint))*
 
-            { inLanguage(LANGUAGE_JAVA_FAMILY) }?
-            (options { greedy = true; } : super_list_java { insuper = true; } extends_list)* 
-                ( { if (!insuper) { insuper = true; super_list_java(); } } implements_list)*
-                {
-                    if (insuper)
-                        endCurrentMode();
-                } |
-       )
+        ({ inLanguage(LANGUAGE_JAVA_FAMILY) }? (options { greedy = true; } : super_list_java { insuper = true; } extends_list))*
+        ({ inLanguage(LANGUAGE_JAVA_FAMILY) }?
+            {
+                if (!insuper) {
+                    insuper = true;
+                    super_list_java(); 
+                } 
+            } 
+            implements_list
+        )*
+        {
+            if (insuper)
+                endCurrentMode();
+        }
 ;
 
 /*
