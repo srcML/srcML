@@ -3424,7 +3424,7 @@ specifier[] { CompleteElement element; ENTRY_DEBUG } :
             PUBLIC | PRIVATE | PROTECTED |
 
             // C++
-            FINAL | STATIC | ABSTRACT | FRIEND | { inLanguage(LANGUAGE_CSHARP) }? NEW | 
+            FINAL | STATIC | ABSTRACT | FRIEND | { inLanguage(LANGUAGE_CSHARP) }? NEW | VOLATILE | MUTABLE |
 
             // C# & Java
             INTERNAL | SEALED | OVERRIDE | REF | OUT | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE | DELEGATE | PARTIAL | EVENT | ASYNC | VIRTUAL | EXTERN | INLINE | IN | PARAMS |
