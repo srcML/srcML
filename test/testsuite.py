@@ -528,7 +528,7 @@ try:
                                                 if use_exec :
                                                         unitsrcmlraw = src2srcML_executable(unittext, encoding, language, directory, getfilename(unitxml), xmlns)
                                                 else :
-                                                        unitsrcmlraw = src2srcML(unittext, encoding, language, directory, filename, defaultxmlns(getfullxmlns(unitxml)))
+                                                        unitsrcmlraw = src2srcML(unittext, encoding, language, directory, filename, xmlns)
 
 						# additional, later stage processing
 						unitsrcml = unitsrcmlraw # srcML2srcMLStages(unitsrcmlraw, nondefaultxmlns(getfullxmlns(unitxml)))
