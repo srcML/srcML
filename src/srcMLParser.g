@@ -2416,7 +2416,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
              bool& sawenum,
              int& posin
         ] { sawenum = false; token = 0; fla = 0; type_count = 0; int specifier_count = 0; isdestructor = false;
-        type = NONE; bool foundpure = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; bool endbracket = false; bool modifieroperator = false; bool sawoperator = false; int attributecount = 0; posin = 0; qmark = false; bool global = false; bool typeisvoid = false; int real_type_count = 0; bool lcurly = false; ENTRY_DEBUG } :
+        type = NONE; bool foundpure = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; bool endbracket = false; bool modifieroperator = false; bool sawoperator = false; int attributecount = 0; posin = 0; qmark = false; bool global = false; int real_type_count = 0; bool lcurly = false; ENTRY_DEBUG } :
 
         // main pattern for variable declarations, and most function declaration/definitions.
         // trick is to look for function declarations/definitions, and along the way record
@@ -2437,8 +2437,6 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
 
             set_bool[qmark, (qmark || (LA(1) == QMARK)) && inLanguage(LANGUAGE_CSHARP)]
         
-            set_bool[typeisvoid, typeisvoid || (LA(1) == NAME && LT(1)->getText() == "void")]
-
             set_int[posin, LA(1) == IN ? posin = type_count : posin]
 
             set_bool[sawoperator, sawoperator || LA(1) == OPERATOR]
@@ -2547,7 +2545,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
         set_bool[isoperatorfunction, isoperatorfunction || isdestructor]
 
         // special case for what looks like a destructor declaration
-        throw_exception[isdestructor && (modifieroperator || (type_count - specifier_count - attributecount) > 1 || ((type_count - specifier_count - attributecount) == 1 && !typeisvoid))]
+        throw_exception[isdestructor && (modifieroperator || (type_count - specifier_count - attributecount) > 1 || ((type_count - specifier_count - attributecount) == 1))]
 
         /*
           We have a declaration (at this point a variable) if we have:
