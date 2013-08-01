@@ -165,6 +165,8 @@ void option_xslt(const std::string& opt);
 void option_to_dir(const bool& opt);
 void option_unit(const int& opt);
 
+void positional_args(const std::string& opt);
+
 /* Function used to check that 'opt1' and 'opt2' are not specified
    at the same time. (FROM BOOST LIBRARY EXAMPLES)*/
 void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, const char* opt2);
@@ -183,7 +185,11 @@ prog_opts::options_description query_transform("Query and Transform Options");
 prog_opts::options_description srcml_archive("srcML Archive Options");
 prog_opts::options_description src2srcml("src2srcml");
 prog_opts::options_description srcml2src("srcml2src");
+prog_opts::options_description positional_options("positional");
 prog_opts::options_description all("All Options");
+
+// Positional Args
+prog_opts::positional_options_description input_file;
 
 int main(int argc, char * argv[]) {
 
@@ -270,6 +276,10 @@ int main(int argc, char * argv[]) {
 		("unit=,U", prog_opts::value<int>()->notifier(&option_unit), "extract individual unit number arg from srcML")
 		;    
 	
+	positional_options.add_options()
+		("input-file", prog_opts::value<std::string>()->notifier(&positional_args), "input file")
+		;
+
 	//Group src2srcml Options
 	src2srcml.add(general).add(src2srcml_options).add(cpp_markup).add(line_col).add(markup).add(src2srcml_metadata).add(prefix);
 	
@@ -279,11 +289,16 @@ int main(int argc, char * argv[]) {
 	//Group all Options
 	all.add(general).add(src2srcml_options).add(srcml2src_options).
 		add(cpp_markup).add(line_col).add(markup).add(src2srcml_metadata).
-		add(srcml2src_metadata).add(prefix).add(query_transform).add(srcml_archive);
+		add(srcml2src_metadata).add(prefix).add(query_transform).add(srcml_archive).
+		add(positional_options);
+
+	//Positional Args
+	input_file.add("input-file", 1);
 
 	//ASSIGN THE CLI ARGS TO MAP
 	prog_opts::variables_map cli_map;
-	prog_opts::store(prog_opts::parse_command_line(argc, argv, all), cli_map);
+	//prog_opts::store(prog_opts::parse_command_line(argc, argv, all), cli_map);
+	prog_opts::store(prog_opts::command_line_parser(argc, argv).options(all).positional(input_file).run(), cli_map);
 	prog_opts::notify(cli_map);
 
 	//CHECK OPTION CONFLICTS
@@ -294,9 +309,6 @@ int main(int argc, char * argv[]) {
   	std::cerr << e.what() << "\n";
   	return 1;
   }
-
-  int i;
-	std::cout << "input file: " << argv[argc - 1] << "\n";
 
   return 0;
 }
@@ -526,4 +538,8 @@ void option_to_dir(const bool& opt){
 
 void option_unit(const int& opt){
 
+}
+
+void positional_args(const std::string& opt){
+	
 }
