@@ -2584,7 +2584,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                     (specifier_count > 0 && (inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP))) ||
 
                     // outside of a class definition in C++, but with properly prefixed name
-                    (inLanguage(LANGUAGE_CXX_FAMILY) && namestack[0] != "" && namestack[1] != "" && namestack[0] == namestack[1])
+                    (inLanguage(LANGUAGE_CXX_FAMILY) && namestack[0] != "" && namestack[0] == namestack[1])
                 )
         ]
 
@@ -3088,7 +3088,7 @@ variable_identifier_array_grammar_sub[bool& iscomplex] { CompleteElement element
 ;
 
 
-variable_identifier_array_grammar_sub_contents{ CompleteElement element; ENTRY_DEBUG } :
+variable_identifier_array_grammar_sub_contents{ ENTRY_DEBUG } :
         { !inLanguage(LANGUAGE_CSHARP) }? full_expression |
 
         { inLanguage(LANGUAGE_CSHARP) }? (options { greedy = true; } : { LA(1) != RBRACKET }?
@@ -3141,7 +3141,7 @@ attribute_target[] { CompleteElement element; ENTRY_DEBUG } :
         (RETURN | EVENT | identifier)
 ;
 
-attribute_target_global[] returns [bool global = false] { CompleteElement element; ENTRY_DEBUG } :
+attribute_target_global[] returns [bool global = false] { ENTRY_DEBUG } :
 
         set_bool[global, LA(1) != RETURN && LA(1) != EVENT && (LT(1)->getText() == "module" || LT(1)->getText() == "assembly")]
 
@@ -3334,7 +3334,7 @@ complex_name_inner[bool marked = true, bool index = false] { CompleteElement ele
 /*
   identifier name marked with name element
 */
-complex_name_cpp[bool marked, bool& iscomplex_name] { namestack[0] = ""; namestack[1] = ""; bool founddestop = false; ENTRY_DEBUG } :
+complex_name_cpp[bool marked, bool& iscomplex_name] { namestack[0] = namestack[1] = ""; bool founddestop = false; ENTRY_DEBUG } :
 
         (dcolon { iscomplex_name = true; })*
         (DESTOP set_bool[isdestructor] {
@@ -3349,7 +3349,7 @@ complex_name_cpp[bool marked, bool& iscomplex_name] { namestack[0] = ""; namesta
 /*
   identifier name marked with name element
 */
-complex_name_csharp[bool marked, bool& iscomplex_name] { namestack[0] = ""; namestack[1] = ""; bool founddestop = false; ENTRY_DEBUG } :
+complex_name_csharp[bool marked, bool& iscomplex_name] { namestack[0] = namestack[1] = ""; bool founddestop = false; ENTRY_DEBUG } :
 
         (dcolon { iscomplex_name = true; })*
         (DESTOP set_bool[isdestructor] {
