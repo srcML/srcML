@@ -491,6 +491,11 @@ try:
                                         xmlns = defaultxmlns(getfullxmlns_executable(filexml))
                                 else :
                                         xmlns = defaultxmlns(getfullxmlns(filexml))
+				while len(xmlns) == 0 :
+					if use_exec :
+						xmlns = defaultxmlns(getfullxmlns_executable(filexml))
+					else :
+						xmlns = defaultxmlns(getfullxmlns(filexml))
 				while count == 0 or count < number:
 
 					try: 
