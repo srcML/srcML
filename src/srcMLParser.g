@@ -923,7 +923,6 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
 
         // record token after the start of the argument list
         markend[argumenttoken]
-
         ( options { greedy = true; } : 
 
             // recursive nested parentheses
@@ -934,7 +933,7 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
             identifier set_bool[name, true] |
 
             // special case for something that looks like a declaration
-            { LA(1) == DELEGATE }? delegate_anonymous | 
+            { LA(1) == DELEGATE /* eliminate ANTRL warning, will be noped */ }? delegate_anonymous | 
 
             { next_token_check(LCURLY, LPAREN) }?
             lambda_anonymous | 
@@ -1485,7 +1484,7 @@ namespace_block[] { ENTRY_DEBUG } :
 namespace_directive[] { ENTRY_DEBUG } :
         {
             // statement with an expected namespace name after the keywords
-            startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT | MODE_STATEMENT);
+            startNewMode(MODE_STATEMENT | MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
 
             // start the using directive
             startElement(SUSING_DIRECTIVE);
@@ -2698,7 +2697,7 @@ function_type_check[int& type_count] { type_count = 1; ENTRY_DEBUG } :
 type_identifier_count[int& type_count] { ++type_count; ENTRY_DEBUG } :
 
         // overloaded parentheses operator
-        { LA(1) == OPERATOR }?
+        { LA(1) == OPERATOR /* turns off ANTLR warning, and is nooped */ }?
         overloaded_operator |
 
         type_identifier | MAIN
