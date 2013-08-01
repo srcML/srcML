@@ -2461,9 +2461,17 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                          inLanguage(LANGUAGE_CXX) && LA(1) == COLON && (token == PUBLIC || token == PRIVATE || token == PROTECTED)] 
                 throw_exception[type == ACCESS_REGION] |
 
-                { type_count == attributecount && inLanguage(LANGUAGE_CSHARP) }?
-                (attribute_global)=>
-                global = attribute_global set_int[attributecount, attributecount + 1] 
+                { inLanguage(LANGUAGE_CSHARP) }?
+                set_bool[global, false]
+                LBRACKET
+                       (COMMA)*
+
+                        (RETURN | EVENT | set_bool[global, LT(1)->getText() == "module" || LT(1)->getText() == "assembly"] identifier)?
+
+                        (COLON)*
+
+                        full_expression set_int[attributecount, attributecount + 1]
+                RBRACKET
                 set_type[type, GLOBAL_ATTRIBUTE, global]
                 throw_exception[global] |
 
@@ -2499,9 +2507,6 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
 
                 // special function name
                 MAIN set_bool[isoperatorfunction, type_count == 0] |
-
-                { inLanguage(LANGUAGE_CSHARP) && type_count > 0 && look_past(COMMA) == RBRACKET }?
-                LBRACKET (COMMA)* RBRACKET |
 
                 // type parts that can occur before other type parts (excluding specifiers)
                 { LA(1) != LBRACKET }?
@@ -3086,22 +3091,6 @@ variable_identifier_array_grammar_sub_contents{ ENTRY_DEBUG } :
         )*
 ;
 
-
-attribute_global[] returns [bool global = false] { CompleteElement element; ENTRY_DEBUG } :
-        {
-            // start a mode to end at right bracket with expressions inside
-            startNewMode(MODE_TOP | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
-
-            startElement(SATTRIBUTE);
-        }
-        LBRACKET
-
-        ({ next_token() == COLON }? global = attribute_target_global COLON)*
-
-        full_expression
-
-        RBRACKET
-;
 
 attribute[] { CompleteElement element; ENTRY_DEBUG } :
         {
