@@ -21,6 +21,7 @@
 #ifndef INCLUDED_SRCML_H
 #define INCLUDED_SRCML_H
 
+#include <types.h> /* size_t */
 #include <stdio.h> /* FILE * */
 
 #ifdef __cplusplus
