@@ -24,6 +24,13 @@
   src2srcml_* - Conversion from source code text to srcML
   srcml2src_* - Conversion from srcML back to source code text
   srcml_*     - Info, query, and transformation of srcML
+
+
+  NOTE:  Went with camel case as it is c, and libarchive uses camelcase, and I like the way that API feels
+  NOTE:  We will probably not support all of this all at once.  Just want to work out the names so we don't
+  have to change any later
+  NOTE:  "converted"? "transformed"? Other term?
+  NOTE:  considered using "file" instead of "filename", but libarchive did that, and deprecated it later
 */
 
 #ifndef INCLUDED_SRCML_H
@@ -45,6 +52,8 @@
 #define SRCML_OPTION_MODIFIER 1<<1
 #define SRCML_OPTION_ARCHIVE  1<<2
 #define SRCML_OPTION_COMPRESS  1<<1
+#define SRCML_OPTION_NO_XML_DECLARATION
+#define SRCML_OPTION_NO_NAMESPACE_DECLARATION
 #define SRCML_OPTION_CPP
 #define SRCML_OPTION_CPP_TEXT_ELSE
 #define SRCML_OPTION_CPP_MARKUP_IF0
@@ -52,47 +61,44 @@
 
 /*
   src2srcml - translate from source code to the srcML format
-
-  NOTE:  Overloaded names until parameters are determined
-  NOTE:  "converted"? "transformed"? Other term?
 */
 
 struct srcml_archive;
 struct srcml_unit; // alternatively: srcml_archive_unit
 
-/* Converts from source code text to srcML if the input_filename is a source code file extension.
-   Converts from srcML back to source code text if the input_filename extension is xml. 
+/* Converts from source code to srcML if the input_filename is a source code file extension.
+   Language determined by file extension.
+
+   Converts from srcML back to source code if the input_filename extension is xml. 
 
    Equivalent to:  srcml main.cpp -o main.cpp.xml
 */
 int srcml(const char* input_filename, const char* out_filename);
 
-/* source code file converted to an individual srcML file 
-   For setting attributes, encoding, etc, use src2srcml_filename_filename */
+/* Converts from source code to srcML.
+   Language determined by file extension
+
+   For setting attributes, encoding, etc, use src2srcml_filename_filename()
+*/
 int src2srcml(const char* src_filename, const char* srcml_filename);
 
-/* source code file converted to an individual srcML file */
-/* NOTE:  considered using "file" instead of "filename", but libarchive did that, and deprecated it later */
-int src2srcml_filename_filename(char* src_filename, char* srcml_filename, int options, char* language, char* src_encoding, char* attributes[][2]);
+/* Converts source code to srcML with full control */
+int src2srcml_filename_filename(char* src_filename, char* srcml_filename, int options, char* language, char* attributes[][2]);
+int src2srcml_filename_memory  (char* src_filename, char** srcml_buffer,  int options, char* language, char* attributes[][2]);
+int src2srcml_memory_filename  (char* src_buffer, char* srcml_filename,   int options, char* language, char* attributes[][2]);
+int src2srcml_memory_memory    (char* src_buffer, char** srcml_buffer,    int options, char* language, char* attributes[][2]);
 
-/* list of source code files converted to a srcML archive file */
-int src2srcml_filelist_filename(char* src_filenames[], int size, char* srcmlfilename, char* language, char* src_encoding, int options);
-
-/* source code file converted to an individual srcML memory */
-int src2srcml_filename_memory(char* src_filename, char** srcml_memory, char* language, char* src_encoding, int options);
-
-/* source code memory converted to a srcML file */
-int src2srcml_memory_filename(char* src_memory, char* srcml_filename, char* language, char* src_encoding, int options);
-
-/* source code memory to the individual srcML format */
-int src2srcml_memory_memory(char* src_memory, char** srcml_memory, char* language, char* src_encoding, int options);
+/* list of source code files converted to a srcML archive */
+int src2srcml_filelist_filename(char* src_filelist[], int size, char* srcmlfilename, char* language, char* src_encoding, int options);
+int src2srcml_filelist_memory  (char* src_filelist[], int size, char** srcml_buffer,  int options, char* language, char* src_encoding, char* attributes[][2]);
 
 /*
-  Write a srcML archive file by file
+  Full API for creating srcML archives
 */
 
-/* create a new srcML archive data structure */
-srcml_archive* src2srcml_new_archive();
+/* create a new srcml archive
+   client will have to free it using src2srcml_free() */
+struct srcml_archive* src2srcml_new_archive();
 
 /* setup options for srcml archive */
 int src2srcml_set_archive_encoding  (struct srcml_archive*, const char* encoding);
@@ -102,32 +108,33 @@ int src2srcml_set_archive_directory (struct srcml_archive*, const char* director
 int src2srcml_set_archive_version   (struct srcml_archive*, const char* version);
 int src2srcml_set_archive_attributes(struct srcml_archive*, const char* attributes[][2]);
 int src2srcml_set_archive_options   (struct srcml_archive*, int option);
+int src2srcml_set_archive_tabstop   (struct srcml_archive*, int tabstop);
 int src2srcml_archive_register_file_extension(struct srcml_archive*, const char* extension, const char* language);
+int src2srcml_archive_register_namespace_prefix(struct srcml_archive*, const char* prefix, const char* namespace);
 
 /* open a srcML archive for output */
 int src2srcml_open_filename(struct srcml_archive*, const char* srcml_filename);
-int src2srcml_open_memory(struct srcml_archive*, const char* buffer, size_t buffer_size);
-int src2srcml_open_FILE(struct srcml_archive*, FILE* srcml_file);
-int src2srcml_open_fd(struct srcml_archive*, int srcml_fd);
+int src2srcml_open_memory  (struct srcml_archive*, const char** buffer, size_t buffer_size);
+int src2srcml_open_FILE    (struct srcml_archive*, FILE* srcml_file);
+int src2srcml_open_fd      (struct srcml_archive*, int srcml_fd);
 
-//srcml_unit* src2srcml_create_unit
-struct srcml_archive_unit* src2srcml_new_unit(struct srcml_archive*);
+/* create a new unit for this archive */
+struct srcml_unit* src2srcml_new_unit(struct srcml_archive*);
 
 /* setup options for srcml unit */
-int src2srcml_set_unit_language (struct srcml_archive*, const char* language);
-int src2srcml_set_unit_filename (struct srcml_archive*, const char* filename);
-int src2srcml_set_unit_directory(struct srcml_archive*, const char* directory);
-int src2srcml_set_unit_version  (struct srcml_archive*, const char* version);
+int src2srcml_set_unit_language (struct srcml_unit*, const char* language);
+int src2srcml_set_unit_filename (struct srcml_unit*, const char* filename);
+int src2srcml_set_unit_directory(struct srcml_unit*, const char* directory);
+int src2srcml_set_unit_version  (struct srcml_unit*, const char* version);
 
-/* write a src file to the srcML archive after translation */
-int src2srcml_write_unit_filename(struct srcml_archive* archive, const char* src_filename);
-int src2srcml_write_unit_memory(struct srcml_archive* archive, const char* buffer, size_t buffer_size);
-
-/* write a buffer to the srcML archive after translation */
-int src2srcml_write_unit_memory(struct srcml_archive* archive, const char* buffer, size_t buffer_size, const char* language, const char* attributes[][2]);
+/* Convert to srcml and append to the archive */
+int src2srcml_unit_filename(struct srcml_unit*, const char* src_filename);
+int src2srcml_unit_memory  (struct srcml_unit*, const char* src_buffer, size_t buffer_size);
+int src2srcml_unit_FILE    (struct srcml_unit*, FILE* srcml_file);
+int src2srcml_unit_fd      (struct srcml_unit*, int srcml_fd);
 
 /* close the srcML archive */
-void src2srcml_close(struct srcml_archive* arcdata);
+void src2srcml_close(struct srcml_archive*);
 
 /* free the srcML archive data */
 void src2srcml_free(struct srcml_archive*);
@@ -142,17 +149,18 @@ int srcml2src(const char* srcml_filename, const char* src_filename);
 
 int srcml2src_filename_filename(const char* srcml_filename, const char* src_filename, int options, const char* src_encoding, int unit);
 
+const char* src2srcml_get_encoding (const struct srcml_archive*);
+const char* src2srcml_get_language (const struct srcml_archive*);
+const char* src2srcml_get_filename (const struct srcml_archive*);
+const char* src2srcml_get_directory(const struct srcml_archive*);
+const char* src2srcml_get_version  (const struct srcml_archive*);
+int         src2srcml_get_options  (const struct srcml_archive*);
+int         src2srcml_get_tabstop  (const struct srcml_archive*);
+
 /* srcml utility functions NOTE:  need memory forms of these */
 
-const char* src2srcml_get_encoding (struct srcml_archive*);
-const char* src2srcml_get_language (struct srcml_archive*);
-const char* src2srcml_get_filename (struct srcml_archive*);
-const char* src2srcml_get_directory(struct srcml_archive*);
-const char* src2srcml_get_version  (struct srcml_archive*);
-int         src2srcml_get_options  (struct srcml_archive*);
-
 /* srcML attributes with namespaces */
-const char* [2][2] srcml_info(const char* srcml_filename);
+const char* [][2] srcml_info(const char* srcml_filename);
 
 /* srcML attributes with namespaces and number of units */
 const char* [][2] srcml_longinfo(const char* srcml_filename);

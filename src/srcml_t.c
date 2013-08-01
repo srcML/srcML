@@ -17,7 +17,7 @@
   along with the srcML translator; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-  Test program for srcml.h functions
+  Test program for the syntax of the srcml.h functions
 */
 
 #include "srcml.h"
