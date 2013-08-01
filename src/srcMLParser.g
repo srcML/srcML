@@ -611,19 +611,11 @@ cfg[] { ENTRY_DEBUG } :
 
         typedef_statement |
 
-        // java import - keyword only detected for Java
-        import_statement |
+        // Java - keyword only detected for Java
+        import_statement | package_statement |
 
-        // java package - keyword only detected for Java
-        package_statement |
-
-        // C#
-        checked_statement | /* { inLanguage(LANGUAGE_CSHARP) }? attribute | */
-
-        unchecked_statement | lock_statement | fixed_statement | /* property_method | */ unsafe_statement |
-
-        // C#
-        yield_statements | 
+        // C# - keyword only detected for C#
+        checked_statement | unchecked_statement | lock_statement | fixed_statement | unsafe_statement | yield_statements | 
 
         // assembly block
         asm_declaration
@@ -911,19 +903,18 @@ call_check[int& postnametoken, int& argumenttoken, int& postcalltoken] { ENTRY_D
         // record token after the function identifier for future use if this
         // fails
         markend[postnametoken]
+        (
+            { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
+            // check for proper form of argument list
+            call_check_paren_pair[argumenttoken]
 
-       (
-        { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
-        // check for proper form of argument list
-        call_check_paren_pair[argumenttoken]
+            guessing_endGuessing
 
-        guessing_endGuessing
+            // record token after argument list to differentiate between call and macro
+            markend[postcalltoken] |
 
-        // record token after argument list to differentiate between call and macro
-        markend[postcalltoken] |
-
-        LPAREN
-       )
+            LPAREN
+        )
 ;
 
 call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; ENTRY_DEBUG } :
