@@ -18,6 +18,14 @@
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/*
+  srcml functions form three namespaces:
+
+  src2srcml_* - Conversion from source code text to srcML
+  srcml2src_* - Conversion from srcML back to source code text
+  srcml_*     - Info, query, and transformation of srcML
+*/
+
 #ifndef INCLUDED_SRCML_H
 #define INCLUDED_SRCML_H
 
@@ -51,6 +59,13 @@
 
 struct srcml_archive;
 struct srcml_unit; // alternatively: srcml_archive_unit
+
+/* Converts from source code text to srcML if the input_filename is a source code file extension.
+   Converts from srcML back to source code text if the input_filename extension is xml. 
+
+   Equivalent to:  srcml main.cpp -o main.cpp.xml
+*/
+int srcml(const char* input_filename, const char* out_filename);
 
 /* source code file converted to an individual srcML file 
    For setting attributes, encoding, etc, use src2srcml_filename_filename */
