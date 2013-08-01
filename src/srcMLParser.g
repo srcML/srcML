@@ -2416,7 +2416,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
              bool& sawenum,
              int& posin
         ] { sawenum = false; token = 0; fla = 0; type_count = 0; int specifier_count = 0; isdestructor = false;
-        type = NONE; bool foundpure = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; bool endbracket = false; bool modifieroperator = false; bool sawoperator = false; int attributecount = 0; posin = 0; qmark = false; bool global = false; bool typeisvoid = false; int real_type_count = 0; ENTRY_DEBUG } :
+        type = NONE; bool foundpure = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; bool endbracket = false; bool modifieroperator = false; bool sawoperator = false; int attributecount = 0; posin = 0; qmark = false; bool global = false; bool typeisvoid = false; int real_type_count = 0; bool lcurly = false; ENTRY_DEBUG } :
 
         // main pattern for variable declarations, and most function declaration/definitions.
         // trick is to look for function declarations/definitions, and along the way record
@@ -2478,12 +2478,13 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                  UNION set_type[type, UNION_DECL, true] | 
                  INTERFACE  set_type[type, INTERFACE_DECL, true])
                 set_int[type_count, type_count + 1]
-                class_header
-                set_type[type, CLASS_DEFN, type == CLASS_DECL && LA(1) == LCURLY]
-                set_type[type, STRUCT_DEFN, type == STRUCT_DECL && LA(1) == LCURLY]
-                set_type[type, UNION_DEFN, type == UNION_DECL && LA(1) == LCURLY]
-                set_type[type, INTERFACE_DEFN, type == INTERFACE_DECL && LA(1) == LCURLY] 
-                set_type[type, NONE, !(LA(1) == TERMINATE || LA(1) == LCURLY)]
+                set_bool[lcurly, LA(1) == LCURLY]
+                (class_header | LCURLY)
+                set_type[type, CLASS_DEFN, type == CLASS_DECL && (LA(1) == LCURLY || lcurly)]
+                set_type[type, STRUCT_DEFN, type == STRUCT_DECL && (LA(1) == LCURLY || lcurly)]
+                set_type[type, UNION_DEFN, type == UNION_DECL && (LA(1) == LCURLY || lcurly)]
+                set_type[type, INTERFACE_DEFN, type == INTERFACE_DECL && (LA(1) == LCURLY || lcurly)] 
+                set_type[type, NONE, !(LA(1) == TERMINATE || (LA(1) == LCURLY || lcurly))]
                 throw_exception[type != NONE] |
 
                 { inLanguage(LANGUAGE_JAVA_FAMILY) }?
