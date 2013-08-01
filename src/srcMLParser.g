@@ -3035,7 +3035,6 @@ linq_equals[] { CompleteElement element; ENTRY_DEBUG }:
 
 linq_orderby[] { CompleteElement element; ENTRY_DEBUG }:
         {
-            // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
 
             startElement(SORDERBY);
@@ -3123,8 +3122,7 @@ attribute[] { CompleteElement element; ENTRY_DEBUG } :
         }
         LBRACKET
 
-        ((attribute_target COLON)=>
-        (attribute_target COLON) | )
+        ({ next_token() == COLON }? attribute_target COLON)*
 
         full_expression
 
