@@ -1620,7 +1620,7 @@ struct_declaration[] { ENTRY_DEBUG } :
             // start the class definition
             startElement(SSTRUCT_DECLARATION);
         }
-        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* (specifier)* STRUCT trace_int[LA(1)] class_header trace_int[LA(1)]
+        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* (specifier)* STRUCT class_header
 ;
 
 struct_union_definition[int element_token] { ENTRY_DEBUG } :
@@ -2632,8 +2632,8 @@ throw_exception[bool cond = true] { if (cond) throw antlr::RecognitionException(
 
 set_type[DECLTYPE& name, DECLTYPE value, bool result = true] { if (result) name = value; } :;
 
-trace[const char*s ] { std::cerr << s << std::endl; } :;
-trace_int[int s] { std::cerr << "HERE " << s << std::endl; } :;
+//trace[const char*s ] { std::cerr << s << std::endl; } :;
+//trace_int[int s] { std::cerr << "HERE " << s << std::endl; } :;
 
 //traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
 
