@@ -3105,8 +3105,7 @@ attribute_global[] returns [bool global = false] { CompleteElement element; ENTR
         }
         LBRACKET
 
-        ((attribute_target_global COLON)=>
-        (global = attribute_target_global COLON) | )
+        ({ next_token() == COLON }? global = attribute_target_global COLON)*
 
         full_expression
 
