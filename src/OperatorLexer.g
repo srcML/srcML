@@ -75,7 +75,7 @@ TRUE;
 
 LAMBDA;
 
-SPECIAL;
+ATSIGN;
 
 ALLOPERATORS;
 
@@ -144,7 +144,7 @@ OPERATORS options { testLiterals = true; } { bool star = false; static int lastp
         ',' | ';' | '('..')' | '[' | ']' | '{' | '}' | 
 
             // names can start with a @ in C#
-            '@'
+            '@' { $setType(ATSIGN); }
             ( 
             { inLanguage(LANGUAGE_CSHARP) }? NAME
             { $setType(NAME); }

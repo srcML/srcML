@@ -199,7 +199,7 @@ KeywordCPPLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
 	    { "]"             , RBRACKET      , LANGUAGE_ALL }, 
 	    { "{"             , LCURLY        , LANGUAGE_ALL }, 
 	    { "["             , LBRACKET      , LANGUAGE_ALL }, 
-	    { "@"             , SPECIAL       , LANGUAGE_ALL }, 
+	    { "@"             , ATSIGN        , LANGUAGE_JAVA }, 
 
 	    { "&lt;"          , TEMPOPS       , LANGUAGE_ALL }, 
 	    { "&gt;"          , TEMPOPE       , LANGUAGE_ALL }, 

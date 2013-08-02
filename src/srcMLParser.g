@@ -457,6 +457,8 @@ tokens {
     SBY;
     SINTO;
 
+    SANNOTATION;
+
     // Last token used for boundary
     END_ELEMENT_TOKEN;
 }
@@ -618,7 +620,11 @@ cfg[] { ENTRY_DEBUG } :
         checked_statement | unchecked_statement | lock_statement | fixed_statement | unsafe_statement | yield_statements | 
 
         // assembly block
-        asm_declaration
+        asm_declaration /* |
+
+        { inLanguage(LANGUAGE_JAVA) }?
+        annotation*/
+
 ;
 
 /*
@@ -814,7 +820,8 @@ property_method[] { ENTRY_DEBUG } :
             // start the function definition element
             startElement(SFUNCTION_DEFINITION);
         }
-        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* property_method_names
+        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* 
+        property_method_names
 ;
 
 // functions
@@ -826,7 +833,8 @@ property_method_decl[] { ENTRY_DEBUG } :
             // start the function definition element
             startElement(SFUNCTION_DECLARATION);
         }
-        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* property_method_names
+        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* 
+        property_method_names
 ;
 
 // functions
@@ -1508,7 +1516,8 @@ class_declaration[] { ENTRY_DEBUG } :
             // start the class definition
             startElement(SCLASS_DECLARATION);
         }
-        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* (specifier)* CLASS class_header
+        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* 
+        (specifier)* CLASS class_header
 ;
 
 /*
@@ -3543,6 +3552,24 @@ destructor_header[] { ENTRY_DEBUG } :
             setMode(MODE_FUNCTION_TAIL);
         }
 ;              
+
+/*
+  call  function call, macro, etc.
+*/
+annotation[] { CompleteElement el; ENTRY_DEBUG } :
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST);
+
+            // start the function call element
+            startElement(SANNOTATION);
+        }
+        ATSIGN
+
+        function_identifier 
+
+        (call_argument_list (full_expression | COMMMA)* RPAREN| (full_expression | COMMA)* RPAREN)
+;
 
 /*
   call  function call, macro, etc.
