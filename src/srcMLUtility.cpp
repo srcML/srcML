@@ -57,9 +57,12 @@
 #include "srcexfun.hpp"
 
 #include <libexslt/exslt.h>
-
 #include "libxml_archive_read.hpp"
 #include "libxml_archive_write.hpp"
+
+#if defined(__GNUG__) && !defined(__MINGW32__)
+#include <dlfcn.h>
+#endif
 
 // local function forward declarations
 static xmlParserCtxtPtr srcMLCreateURLParserCtxt(const char * infile);
@@ -645,11 +648,43 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
   xmlFreeParserCtxt(ctxt);
 }
 
+// allow for all exslt functions
+void dlexsltRegisterAll() {
+
+#if defined(__GNUG__) && !defined(__MINGW32__)
+    typedef void (*exsltRegisterAll_function)();
+
+    void* handle = dlopen("libexslt.so", RTLD_LAZY);
+    if (!handle) {
+        void* handle = dlopen("libexslt.dylib", RTLD_LAZY);
+        if (!handle) {
+            fprintf(stderr, "Unable to open libexslt library\n");
+            return;
+        }
+    }
+
+    dlerror();
+    exsltRegisterAll_function exsltRegisterAll = (exsltRegisterAll_function)dlsym(handle, "exsltRegisterAll");
+    char* error;
+    if ((error = dlerror()) != NULL) {
+        dlclose(handle);
+        return;
+    }
+#endif
+
+    // allow for all exslt functions
+    exsltRegisterAll();
+
+#if defined(__GNUG__) && !defined(__MINGW32__)
+    dlclose(handle);
+#endif
+}
+
 // xslt evaluation of the nested units
 void srcMLUtility::xslt(const char* context_element, const char* ofilename, const char* xslts[], const char* params[], int paramcount) {
 
-  // allow for all exslt functions
-  exsltRegisterAll();
+  // allow for all exstl functions
+  dlexsltRegisterAll();
 
   // parse the stylesheet
   xsltStylesheetPtr stylesheet = xsltParseStylesheetFile(BAD_CAST xslts[0]);

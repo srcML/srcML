@@ -39,8 +39,11 @@
 #define LITERALPLUSSIZE(s) s, sizeof(s) - 1
 
 #include "srcexfun.hpp"
-
 #include "UnitDOM.hpp"
+
+#if defined(__GNUG__) && !defined(__MINGW32__)
+#include <dlfcn.h>
+#endif
 
 class XPathQueryUnits : public UnitDOM {
 public :
@@ -93,23 +96,66 @@ public :
     }
 
 #if LIBEXSLT_VERSION > 813
-    // register exslt functions for XPath usage
-    if (exsltDateXpathCtxtRegister(context, BAD_CAST "date") == -1) {
-      fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
-              "srcml2src", "date");
+#if defined(__GNUG__) && !defined(__MINGW32__)
+    typedef int (*exsltXpathCtxtRegister)(xmlXPathContextPtr, const xmlChar*);
+
+    void* handle = dlopen("libexslt.so", RTLD_LAZY);
+    if (!handle) {
+        handle = dlopen("libexslt.dylib", RTLD_LAZY);
+        if (!handle) 
+            fprintf(stderr, "Unable to open libexslt library\n");
     }
-    if (exsltMathXpathCtxtRegister(context, BAD_CAST "math") == -1) {
-      fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
-              "srcml2src", "math");
-    }
-    if (exsltSetsXpathCtxtRegister(context, BAD_CAST "set") == -1) {
-      fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
-              "srcml2src", "set");
-    }
-    if (exsltStrXpathCtxtRegister(context, BAD_CAST "str") == -1) {
-      fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
-              "srcml2src", "str");
-    }
+
+    if (handle) {
+
+        char* error;
+
+        dlerror();
+        exsltXpathCtxtRegister exsltDateXpathCtxtRegister = (exsltXpathCtxtRegister)dlsym(handle, "exsltDateXpathCtxtRegister");
+        if (dlerror() == NULL)  {
+#endif
+            // register exslt functions for XPath usage
+            if (exsltDateXpathCtxtRegister(context, BAD_CAST "date") == -1) {
+                fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
+                        "srcml2src", "date");
+            }
+#if defined(__GNUG__) && !defined(__MINGW32__)
+        }
+
+        dlerror();
+        exsltXpathCtxtRegister exsltMathXpathCtxtRegister = (exsltXpathCtxtRegister)dlsym(handle, "exsltMathXpathCtxtRegister");
+        if (dlerror() == NULL)  {
+#endif
+            if (exsltMathXpathCtxtRegister(context, BAD_CAST "math") == -1) {
+                fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
+                        "srcml2src", "math");
+            }
+#if defined(__GNUG__) && !defined(__MINGW32__)
+        }
+
+        dlerror();
+        exsltXpathCtxtRegister exsltSetsXpathCtxtRegister = (exsltXpathCtxtRegister)dlsym(handle, "exsltSetsXpathCtxtRegister");
+        if (dlerror() == NULL)  {
+#endif
+            if (exsltSetsXpathCtxtRegister(context, BAD_CAST "set") == -1) {
+                fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
+                        "srcml2src", "set");
+            }
+#if defined(__GNUG__) && !defined(__MINGW32__)
+        }
+
+        dlerror();
+        exsltXpathCtxtRegister exsltStrXpathCtxtRegister = (exsltXpathCtxtRegister)dlsym(handle, "exsltStrXpathCtxtRegister");
+        if (dlerror() == NULL)  {
+#endif
+            if (exsltStrXpathCtxtRegister(context, BAD_CAST "str") == -1) {
+                fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
+                        "srcml2src", "str");
+            }
+#if defined(__GNUG__) && !defined(__MINGW32__)
+        }
+#endif
+  }
 #endif
   }
 

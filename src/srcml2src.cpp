@@ -251,11 +251,12 @@ void output_version(const char* name) {
   else
     printf("libxslt %d (Compiled %d), ", xsltLibxsltVersion, LIBXSLT_VERSION);
 
+/*
   if(exsltLibexsltVersion == LIBEXSLT_VERSION)
     printf("libexslt %d, ", LIBEXSLT_VERSION);
   else
     printf("libexslt %d (Compiled %d), ", exsltLibexsltVersion, LIBEXSLT_VERSION);
-
+*/
   if(archive_version_number(), ARCHIVE_VERSION_NUMBER)
     printf("libarchive %d\n", ARCHIVE_VERSION_NUMBER);
   else
