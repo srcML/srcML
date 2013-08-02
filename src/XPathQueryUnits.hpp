@@ -154,8 +154,8 @@ public :
             }
 #if defined(__GNUG__) && !defined(__MINGW32__)
         }
+    }
 #endif
-  }
 #endif
   }
 
