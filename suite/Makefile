@@ -456,8 +456,17 @@ throw.cpp.xml : throw_base.cpp.xml ${XSLT_INSRT_XSL}
 struct.cpp.xml : class.cpp.xml ${XSLT_CLASS2STRUCT_XSL}
 	${XSLT_CLASS2STRUCT} $< > $@
 
+
 # union from struct
 union.cpp.xml : struct.cpp.xml ${XSLT_STRUCT2UNION_XSL}
+	${XSLT_STRUCT2UNION} $< > $@
+
+# struct from class
+struct_cpp.cpp.xml : class_cpp.cpp.xml ${XSLT_CLASS2STRUCT_XSL}
+	${XSLT_CLASS2STRUCT} $< > $@
+
+# union from struct
+union_cpp.cpp.xml : struct_cpp.cpp.xml ${XSLT_STRUCT2UNION_XSL}
 	${XSLT_STRUCT2UNION} $< > $@
 
 # struct from class
