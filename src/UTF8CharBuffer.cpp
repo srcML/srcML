@@ -115,6 +115,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char* source, const char * encoding, bool i
   if (!(input = xmlParserInputBufferCreateMem(source, size, enc ? xmlParseCharEncoding(enc) : XML_CHAR_ENCODING_NONE)))
     throw UTF8FileError();
 
+/*
   if(encoding && input->encoder) {
     pos = 0;
     if(input->raw)
@@ -124,7 +125,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char* source, const char * encoding, bool i
     input->buffer = xmlBufferCreate();
     size = growBuffer();
   }
-
+*/
   /* If an encoding was not specified, then try to detect it.
      This is especially important for the BOM for UTF-8.
      If nothing is detected, then use ISO-8859-1 */
@@ -213,7 +214,7 @@ int UTF8CharBuffer::getChar() {
 
     // refill the buffer
 #ifdef LIBXML2_NEW_BUFFER
-    xmlBufShrink(input->buffer, 0);
+    xmlBufShrink(input->buffer, size);
 #else
     input->buffer->use = 0;
 #endif
@@ -244,7 +245,7 @@ int UTF8CharBuffer::getChar() {
 
       // refill the buffer
 #ifdef LIBXML2_NEW_BUFFER
-    xmlBufShrink(input->buffer, 0);
+    xmlBufShrink(input->buffer, size);
 #else
     input->buffer->use = 0;
 #endif
