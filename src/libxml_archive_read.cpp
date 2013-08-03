@@ -306,9 +306,6 @@ bool isArchiveRead(void* context) {
     if (size < 0)
       return 0;
 
-    if (size == 0)
-      return 0;
-
     return size;
   }
 
