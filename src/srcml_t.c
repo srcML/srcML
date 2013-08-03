@@ -24,18 +24,75 @@
 
 int main() {
 
-    /* Convert a single file to srcML */
+    /*
+      Easy translation
+    */
+
+    /* Translate a single file to srcML */
+    srcml("a.cpp", "a.cpp.xml");
+
+    /* Translate a single srcML file back to a source code file */
+    /* Note:  name of output file could come from srcML */
+    srcml("a.cpp.xml", "a.cpp");
+
+    /*
+      Using old forms
+    */
+
+    /* Translate a single file to srcML */
     src2srcml("a.cpp", "a.cpp.xml");
 
-    /* Convert a single srcML file back to a file */
+    /* Translate a single srcML file back to a source code file */
     /* Note:  name of output file could come from srcML */
-    srcml2src("a.cpp.xml", "a.cpp");
+    /* NOTE:  NOT SURE WHY THIS CAN"T BE FOUND with gcc */
+//    srcml2src("a.cpp.xml", "a.cpp");
 
-    /* Convert a single file to srcML */
+    /*
+      Full options, src2srcml
+    */
+
+    /* Translate a single file to srcML */
     src2srcml_filename_filename("a.cpp", "a.cpp.xml", 0, 0, 0, 0);
 
-    /* Convert a srcML file to a source code file */
+    /*
+      Full options, srcml2src
+    */
+
+    /* Translate a srcML file to a source code file */
     srcml2src_filename_filename("a.cpp.xml", "a.cpp", 0, 0, 0, 0);
+
+    /*
+      Create an archive, file by file
+    */
+
+    /* create a new srcml archive */
+    struct srcml_archive* archive = src2srcml_new_archive();
+
+    /* setup options for srcml archive */
+    src2srcml_set_directory(archive, "newstuff");
+
+    /* open a srcML archive for output */
+    src2srcml_open_filename(archive, "project.xml");
+
+    /* setup options for srcml unit */
+    src2srcml_unit_set_language(archive, "C");
+
+    /* Translate to srcml and append to the archive */
+    src2srcml_unit_filename(archive, "a.c");
+
+    /* setup options for srcml unit */
+    src2srcml_unit_set_language(archive, "C++");
+
+    /* Translate to srcml and append to the archive */
+    src2srcml_unit_filename(archive, "a.c");
+
+    /* close the srcML archive */
+    src2srcml_close(archive);
+
+    /* free the srcML archive data */
+    src2srcml_free(archive);
+
+
 
     return 0;
 }

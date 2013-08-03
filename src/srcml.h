@@ -39,7 +39,7 @@
 #ifndef INCLUDED_SRCML_H
 #define INCLUDED_SRCML_H
 
-#include <types.h> /* size_t */
+#include <sys/types.h> /* size_t */
 #include <stdio.h> /* FILE * */
 
 #ifdef __cplusplus
@@ -118,16 +118,13 @@ int src2srcml_set_attributes(struct srcml_archive*, const char* attr[][2]);
 int src2srcml_set_options   (struct srcml_archive*, int option);
 int src2srcml_set_tabstop   (struct srcml_archive*, int tabstop);
 int src2srcml_register_file_extension(struct srcml_archive*, const char* extension, const char* language);
-int src2srcml_register_namespace_prefix(struct srcml_archive*, const char* prefix, const char* namespace);
+int src2srcml_register_namespace_prefix(struct srcml_archive*, const char* prefix, const char* ns);
 
 /* open a srcML archive for output */
 int src2srcml_open_filename(struct srcml_archive*, const char* srcml_filename);
 int src2srcml_open_memory  (struct srcml_archive*, const char** buffer, size_t buffer_size);
 int src2srcml_open_FILE    (struct srcml_archive*, FILE* srcml_file);
 int src2srcml_open_fd      (struct srcml_archive*, int srcml_fd);
-
-/* create a new unit for this archive */
-struct srcml_unit* src2srcml_new_unit(struct srcml_archive*);
 
 /* setup options for srcml unit */
 int src2srcml_unit_set_language (struct srcml_unit*, const char* language);
