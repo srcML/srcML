@@ -35,18 +35,27 @@
 
 #include <libxslt/transform.h>
 
-#include <libxslt/xslt.h>
-#include <libxslt/xsltInternals.h>
-#include <libxslt/xsltutils.h>
-
-#include <libexslt/exslt.h>
-
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
 #define LITERALPLUSSIZE(s) s, sizeof(s) - 1
 
 #include "srcexfun.hpp"
 
 #include "UnitDOM.hpp"
+
+#if defined(__GNUG__) && !defined(__MINGW32__)
+typedef xmlDocPtr (*xsltApplyStylesheetUser_function) (xsltStylesheetPtr,xmlDocPtr,const char **,const char *, FILE *,
+                                               xsltTransformContextPtr);
+xsltApplyStylesheetUser_function xsltApplyStylesheetUserDynamic;
+
+typedef int (*xsltSaveResultTo_function) (xmlOutputBufferPtr, xmlDocPtr, xsltStylesheetPtr);
+xsltSaveResultTo_function xsltSaveResultToDynamic;
+#else
+#include <libxslt/xslt.h>
+#include <libxslt/xsltInternals.h>
+#include <libxslt/xsltutils.h>
+
+#include <libexslt/exslt.h>
+#endif
 
 class XSLTUnits : public UnitDOM {
 public :
@@ -56,6 +65,26 @@ public :
     : UnitDOM(options), ofilename(a_ofilename), options(options),
       stylesheet(stylesheet), total(0), found(false), needroot(true),
       result_type(0), params(params) {
+
+#if defined(__GNUG__) && !defined(__MINGW32__)
+    void* handle = dlopen("libxslt.so", RTLD_LAZY);
+    if (!handle) {
+        void* handle = dlopen("libxslt.dylib", RTLD_LAZY);
+        if (!handle) {
+            fprintf(stderr, "Unable to open libxslt library\n");
+            return;
+        }
+    }
+
+    dlerror();
+    xsltApplyStylesheetUserDynamic = (xsltApplyStylesheetUser_function)dlsym(handle, "xsltApplyStylesheetUser");
+    char* error;
+    if ((error = dlerror()) != NULL) {
+        dlclose(handle);
+        return;
+    }
+#endif
+
   }
 
   virtual ~XSLTUnits() {}
@@ -76,7 +105,11 @@ public :
     setPosition(pstate->count);
 
     // apply the style sheet to the document, which is the individual unit
+#if defined(__GNUG__) && !defined(__MINGW32__)
+    xmlDocPtr res = xsltApplyStylesheetUserDynamic(stylesheet, ctxt->myDoc, params, 0, 0, 0);
+#else
     xmlDocPtr res = xsltApplyStylesheetUser(stylesheet, ctxt->myDoc, params, 0, 0, 0);
+#endif
     if (!res) {
       fprintf(stderr, "srcml2src:  Error in applying stylesheet\n");
       exit(1);
@@ -134,7 +167,11 @@ public :
 	}
 	resroot->nsDef = ret;
       }
+#if defined(__GNUG__) && !defined(__MINGW32__)
+      xsltSaveResultToDynamic(buf, res, stylesheet);
+#else
       xsltSaveResultTo(buf, res, stylesheet);
+#endif
       /*
         for (xmlNodePtr child = res->children; child != NULL; child = child->next)
         xmlNodeDumpOutput(buf, res, child, 0, 0, 0);

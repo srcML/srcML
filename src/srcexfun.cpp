@@ -38,9 +38,13 @@ static xmlChar* unit_filename = 0;
 
 #include <libxml/tree.h>
 
+#if defined(__GNUG__) && !defined(__MINGW32__)
+#include <dlfcn.h>
+#else
 #include <libxslt/xsltutils.h>
 #include <libxslt/xsltInternals.h>
 #include <libxslt/extensions.h>
+#endif
 
 #include "URIStream.hpp"
 
@@ -214,6 +218,26 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
 }
 
 void xsltsrcMLRegister () {
+
+#if defined(__GNUG__) && !defined(__MINGW32__)
+    typedef int (*xsltRegisterExtModuleFunction_function) (const xmlChar *, const xmlChar *, xmlXPathFunction);
+    void* handle = dlopen("libexslt.so", RTLD_LAZY);
+    if (!handle) {
+        void* handle = dlopen("libexslt.dylib", RTLD_LAZY);
+        if (!handle) {
+            fprintf(stderr, "Unable to open libexslt library\n");
+            return;
+        }
+    }
+
+    dlerror();
+    xsltRegisterExtModuleFunction_function xsltRegisterExtModuleFunction = (xsltRegisterExtModuleFunction_function)dlsym(handle, "xsltRegisterExtModuleFunction");
+    char* error;
+    if ((error = dlerror()) != NULL) {
+        dlclose(handle);
+        return;
+    }
+#endif
 
   xsltRegisterExtModuleFunction(BAD_CAST "unit",
                                 BAD_CAST SRCML_SRC_NS_URI,

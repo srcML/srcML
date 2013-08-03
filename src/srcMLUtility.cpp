@@ -686,6 +686,27 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
   // allow for all exstl functions
   dlexsltRegisterAll();
 
+#if defined(__GNUG__) && !defined(__MINGW32__)
+  typedef xsltStylesheetPtr (*xsltParseStylesheetFile_function) (const xmlChar*);
+
+    void* handle = dlopen("libexslt.so", RTLD_LAZY);
+    if (!handle) {
+        void* handle = dlopen("libexslt.dylib", RTLD_LAZY);
+        if (!handle) {
+            fprintf(stderr, "Unable to open libexslt library\n");
+            return;
+        }
+    }
+
+    dlerror();
+    xsltParseStylesheetFile_function xsltParseStylesheetFile = (xsltParseStylesheetFile_function)dlsym(handle, "xsltParseStylesheetFile");
+    char* error;
+    if ((error = dlerror()) != NULL) {
+        dlclose(handle);
+        return;
+    }
+#endif
+
   // parse the stylesheet
   xsltStylesheetPtr stylesheet = xsltParseStylesheetFile(BAD_CAST xslts[0]);
 

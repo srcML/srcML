@@ -245,11 +245,12 @@ void output_version(const char* name) {
     printf("libxml %d, ", LIBXML_VERSION);
   else
     printf("libxml %s (Compiled %d), ", xmlParserVersion, LIBXML_VERSION);
-
+/*
   if(xsltLibxsltVersion == LIBXSLT_VERSION)
     printf("libxslt %d, ", LIBXSLT_VERSION);
   else
     printf("libxslt %d (Compiled %d), ", xsltLibxsltVersion, LIBXSLT_VERSION);
+*/
 
 /*
   if(exsltLibexsltVersion == LIBEXSLT_VERSION)
