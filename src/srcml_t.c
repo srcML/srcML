@@ -65,10 +65,8 @@ int main() {
       Create an archive, file by file
     */
 
-    /* create a new srcml archive */
+    /* create a new srcml archive and setup any archive options */
     struct srcml_archive* archive = src2srcml_new_archive();
-
-    /* setup options for srcml archive */
     src2srcml_set_directory(archive, "newstuff");
 
     /* open a srcML archive for output */
@@ -80,19 +78,11 @@ int main() {
     /* Translate to srcml and append to the archive */
     src2srcml_unit_filename(archive, "a.c");
 
-    /* setup options for srcml unit */
-    src2srcml_unit_set_language(archive, "C++");
-
-    /* Translate to srcml and append to the archive */
-    src2srcml_unit_filename(archive, "a.c");
-
     /* close the srcML archive */
     src2srcml_close(archive);
 
     /* free the srcML archive data */
     src2srcml_free(archive);
-
-
 
     return 0;
 }
