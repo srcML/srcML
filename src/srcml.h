@@ -22,7 +22,9 @@
   srcml functions form three namespaces:
 
   src2srcml_* - Conversion from source code text to srcML
+                src2srcml_* implies _write_, as would be in srcml_write_
   srcml2src_* - Conversion from srcML back to source code text
+                srcml2src_* implies _read_, as would be in srcml_read_
   srcml_*     - Info, query, and transformation of srcML
 
 
@@ -101,16 +103,16 @@ int src2srcml_filelist_memory  (char* src_filelist[], int size, char** srcml_buf
 struct srcml_archive* src2srcml_new_archive();
 
 /* setup options for srcml archive */
-int src2srcml_archive_set_encoding  (struct srcml_archive*, const char* encoding);
-int src2srcml_archive_set_language  (struct srcml_archive*, const char* language);
-int src2srcml_archive_set_filename  (struct srcml_archive*, const char* filename);
-int src2srcml_archive_set_directory (struct srcml_archive*, const char* directory);
-int src2srcml_archive_set_version   (struct srcml_archive*, const char* version);
-int src2srcml_archive_set_attributes(struct srcml_archive*, const char* attributes[][2]);
-int src2srcml_archive_set_options   (struct srcml_archive*, int option);
-int src2srcml_archive_set_tabstop   (struct srcml_archive*, int tabstop);
-int src2srcml_archive_register_file_extension(struct srcml_archive*, const char* extension, const char* language);
-int src2srcml_archive_register_namespace_prefix(struct srcml_archive*, const char* prefix, const char* namespace);
+int src2srcml_set_encoding  (struct srcml_archive*, const char* encoding);
+int src2srcml_set_language  (struct srcml_archive*, const char* language);
+int src2srcml_set_filename  (struct srcml_archive*, const char* filename);
+int src2srcml_set_directory (struct srcml_archive*, const char* directory);
+int src2srcml_set_version   (struct srcml_archive*, const char* version);
+int src2srcml_set_attributes(struct srcml_archive*, const char* attributes[][2]);
+int src2srcml_set_options   (struct srcml_archive*, int option);
+int src2srcml_set_tabstop   (struct srcml_archive*, int tabstop);
+int src2srcml_register_file_extension(struct srcml_archive*, const char* extension, const char* language);
+int src2srcml_register_namespace_prefix(struct srcml_archive*, const char* prefix, const char* namespace);
 
 /* open a srcML archive for output */
 int src2srcml_open_filename(struct srcml_archive*, const char* srcml_filename);
