@@ -19,19 +19,20 @@
 */
 
 /*
-  srcml functions form three namespaces:
+  srcml functions (currently) form three namespaces:
 
-  src2srcml_* - Conversion from source code text to srcML
-                src2srcml_* implies _write_, as would be in srcml_write_
-  srcml2src_* - Conversion from srcML back to source code text
-                srcml2src_* implies _read_, as would be in srcml_read_
+  src2srcml_* - Translate source code text to srcML
+                src2srcml_* implies _write_, as would be in srcml_write_*
+
+  srcml2src_* - Translate srcML to source code text
+                srcml2src_* implies _read_, as would be in srcml_read_*
+
   srcml_*     - Info, query, and transformation of srcML
 
-
+  NOTE:  Should we have just one namespace?
   NOTE:  Went with camel case as it is c, and libarchive uses camelcase, and I like the way that API feels
   NOTE:  We will probably not support all of this all at once.  Just want to work out the names so we don't
   have to change any later
-  NOTE:  "converted"? "transformed"? Other term?
   NOTE:  considered using "file" instead of "filename", but libarchive did that, and deprecated it later
 */
 
@@ -68,31 +69,36 @@
 struct srcml_archive;
 struct srcml_unit; // alternatively: srcml_archive_unit
 
-/* Converts from source code to srcML if the input_filename is a source code file extension.
+/* Translates from source code to srcML if the input_filename extension is for source code.
    Language determined by file extension.
 
-   Converts from srcML back to source code if the input_filename extension is xml. 
+   Translates from srcML back to source code if the input_filename extension is '.xml'. 
 
-   Equivalent to:  srcml main.cpp -o main.cpp.xml
+   CLI equivalence:  srcml main.cpp -o main.cpp.xml
+                     srcml main.cpp.xml -o main.cpp
 */
-int srcml(const char* input_filename, const char* out_filename);
+int srcml(const char* input_filename, const char* output_filename);
 
-/* Converts from source code to srcML.
-   Language determined by file extension
-
+/* Translates from source code to srcML. Language determined by file extension.
    For setting attributes, encoding, etc, use src2srcml_filename_filename()
+
+   (Old) CLI equivalence:  src2srcml main.cpp -o main.cpp.xml
 */
 int src2srcml(const char* src_filename, const char* srcml_filename);
 
-/* Converts source code to srcML with full control */
-int src2srcml_filename_filename(char* src_filename, char* srcml_filename, int options, char* language, char* attributes[][2]);
-int src2srcml_filename_memory  (char* src_filename, char** srcml_buffer,  int options, char* language, char* attributes[][2]);
-int src2srcml_memory_filename  (char* src_buffer, char* srcml_filename,   int options, char* language, char* attributes[][2]);
-int src2srcml_memory_memory    (char* src_buffer, char** srcml_buffer,    int options, char* language, char* attributes[][2]);
+/* Translates source code to srcML with full control of attr/options */
+int src2srcml_filename_filename(char* src_filename, char* srcml_filename, int options, char* language, char* attr[][2]);
+int src2srcml_filename_memory  (char* src_filename, char** srcml_buffer,  int options, char* language, char* attr[][2]);
+int src2srcml_memory_filename  (char* src_buffer, char* srcml_filename,   int options, char* language, char* attr[][2]);
+int src2srcml_memory_memory    (char* src_buffer, char** srcml_buffer,    int options, char* language, char* attr[][2]);
 
-/* list of source code files converted to a srcML archive */
-int src2srcml_filelist_filename(char* src_filelist[], int size, char* srcmlfilename, char* language, char* src_encoding, int options);
-int src2srcml_filelist_memory  (char* src_filelist[], int size, char** srcml_buffer,  int options, char* language, char* src_encoding, char* attributes[][2]);
+/* Translates a list of source code files to a srcML archive */
+/* NOTE:  have src_encoding be part of attr? */
+int src2srcml_filelist_filename(char* src_filelist[], int size, char* srcmlfilename, int options, char* language, char* src_encoding, char* attr[][2]);
+int src2srcml_filelist_memory  (char* src_filelist[], int size, char** srcml_buffer, int options, char* language, char* src_encoding, char* attr[][2]);
+int src2srcml_filelist_FILE    (char* src_filelist[], int size, FILE* srcml_file,    int options, char* language, char* src_encoding, char* attr[][2]);
+int src2srcml_filelist_fd      (char* src_filelist[], int size, int srcml_fd,        int options, char* language, char* src_encoding, char* attr[][2]);
+
 
 /*
   Full API for creating srcML archives
@@ -108,7 +114,7 @@ int src2srcml_set_language  (struct srcml_archive*, const char* language);
 int src2srcml_set_filename  (struct srcml_archive*, const char* filename);
 int src2srcml_set_directory (struct srcml_archive*, const char* directory);
 int src2srcml_set_version   (struct srcml_archive*, const char* version);
-int src2srcml_set_attributes(struct srcml_archive*, const char* attributes[][2]);
+int src2srcml_set_attributes(struct srcml_archive*, const char* attr[][2]);
 int src2srcml_set_options   (struct srcml_archive*, int option);
 int src2srcml_set_tabstop   (struct srcml_archive*, int tabstop);
 int src2srcml_register_file_extension(struct srcml_archive*, const char* extension, const char* language);
@@ -151,13 +157,13 @@ int srcml2src(const char* srcml_filename, const char* src_filename);
 
 int srcml2src_filename_filename(const char* srcml_filename, const char* src_filename, int options, const char* src_encoding, int unit);
 
-const char* src2srcml_get_encoding (const struct srcml_archive*);
-const char* src2srcml_get_language (const struct srcml_archive*);
-const char* src2srcml_get_filename (const struct srcml_archive*);
-const char* src2srcml_get_directory(const struct srcml_archive*);
-const char* src2srcml_get_version  (const struct srcml_archive*);
-int         src2srcml_get_options  (const struct srcml_archive*);
-int         src2srcml_get_tabstop  (const struct srcml_archive*);
+const char* srcml_get_encoding (const struct srcml_archive*);
+const char* srcml_get_language (const struct srcml_archive*);
+const char* srcml_get_filename (const struct srcml_archive*);
+const char* srcml_get_directory(const struct srcml_archive*);
+const char* srcml_get_version  (const struct srcml_archive*);
+int         srcml_get_options  (const struct srcml_archive*);
+int         srcml_get_tabstop  (const struct srcml_archive*);
 
 /* srcml utility functions NOTE:  need memory forms of these */
 
@@ -187,8 +193,9 @@ int srcml_xslt_filename_filename(const char* input_srcml_filename, const char* x
 /* RelaxNG file is applied to the input srcml with the transformed (???) result stored in the output srcml */
 int srcml_relaxng_filename_filename(const char* input_srcml_filename, const char* relaxng_filename, const char* output_srcml_filename, int options, const char* xsltparams[][2]);
 
-/* Pipeline of XPath, XSLT, and RelaxNG transformations on the input srcml filename with the transformed result stored in the
-   output srcml filename. XPath is a string, while XSLT and RelaxNG are filenames.  Transforms are applied in the order given */
+/* Pipeline of XPath, XSLT, and RelaxNG transformations on the input srcml filename with the transformed result
+   stored in the output srcml filename. XPath is a string, while XSLT and RelaxNG are filenames.  Transformations are
+   applied in the order given */
 int srcml_transform_filename_filename(const char* input_srcml_filename, const char* transformation[], size_t transformation_size, const char* output_srcml_filename, int options);
 
 #ifdef __cplusplus
