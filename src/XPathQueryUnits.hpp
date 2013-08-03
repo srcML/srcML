@@ -45,6 +45,8 @@
 #include <dlfcn.h>
 #endif
 
+#define dlsymvar(type, name) type name = (type)dlsym(handle, #name)
+
 class XPathQueryUnits : public UnitDOM {
 public :
 
@@ -111,7 +113,7 @@ public :
         char* error;
 
         dlerror();
-        exsltXpathCtxtRegister exsltDateXpathCtxtRegister = (exsltXpathCtxtRegister)dlsym(handle, "exsltDateXpathCtxtRegister");
+        dlsymvar(exsltXpathCtxtRegister,exsltDateXpathCtxtRegister);
         if (dlerror() == NULL)  {
 #endif
             // register exslt functions for XPath usage
@@ -123,7 +125,7 @@ public :
         }
 
         dlerror();
-        exsltXpathCtxtRegister exsltMathXpathCtxtRegister = (exsltXpathCtxtRegister)dlsym(handle, "exsltMathXpathCtxtRegister");
+        dlsymvar(exsltXpathCtxtRegister,exsltMathXpathCtxtRegister);
         if (dlerror() == NULL)  {
 #endif
             if (exsltMathXpathCtxtRegister(context, BAD_CAST "math") == -1) {
@@ -134,7 +136,7 @@ public :
         }
 
         dlerror();
-        exsltXpathCtxtRegister exsltSetsXpathCtxtRegister = (exsltXpathCtxtRegister)dlsym(handle, "exsltSetsXpathCtxtRegister");
+        dlsymvar(exsltXpathCtxtRegister,exsltSetsXpathCtxtRegister);
         if (dlerror() == NULL)  {
 #endif
             if (exsltSetsXpathCtxtRegister(context, BAD_CAST "set") == -1) {
@@ -145,7 +147,7 @@ public :
         }
 
         dlerror();
-        exsltXpathCtxtRegister exsltStrXpathCtxtRegister = (exsltXpathCtxtRegister)dlsym(handle, "exsltStrXpathCtxtRegister");
+        dlsymvar(exsltXpathCtxtRegister,exsltStrXpathCtxtRegister);
         if (dlerror() == NULL)  {
 #endif
             if (exsltStrXpathCtxtRegister(context, BAD_CAST "str") == -1) {
