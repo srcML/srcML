@@ -1163,15 +1163,13 @@ int option_error_status(int optopt) {
 
 void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language) {
 
-  // handle local directories specially
-  struct stat instat = { 0 };
-  int stat_status = stat(path, &instat);
-  if (!stat_status && S_ISDIR(instat.st_mode)) {
-    src2srcml_dir_top(translator, path, *gpoptions);
-    return;
-  }
+    // handle local directories specially
+    if (xmlCheckFilename(path) == 2) {
+        src2srcml_dir_top(translator, path, *gpoptions);
+        return;
+    }
 
-  src2srcml_archive(translator, path, options, dir, root_filename, version, language);
+    src2srcml_archive(translator, path, options, dir, root_filename, version, language);
 }
 
 void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version) {
@@ -1540,9 +1538,7 @@ void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_o
 
     // already handled other types of files
 #ifndef _DIRENT_HAVE_D_TYPE
-    struct stat instat = { 0 };
-    int stat_status = stat(filename.c_str(), &instat);
-    if (!stat_status && !S_ISDIR(instat.st_mode))
+    if (xmlCheckFilename(filename.c_str()) != 2)
       continue;
 #endif
 
@@ -1585,11 +1581,8 @@ void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_o
     filename.replace(basesize, std::string::npos, entry->d_name);
 
     // handle directories later after all the filenames
-    struct stat instat = { 0 };
-    int stat_status = stat(filename.c_str(), &instat);
-    if (!stat_status && S_ISDIR(instat.st_mode)) {
-      continue;
-    }
+    if (xmlCheckFilename(path) != 1)
+        continue;
 
     // make sure that we are not processing the output file
     if (strcmp(filename.c_str(), poptions.srcml_filename) == 0) {
@@ -1633,10 +1626,8 @@ void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_o
     filename.replace(basesize, std::string::npos, entry->d_name);
 
     // already handled other types of files
-    struct stat instat = { 0 };
-    int stat_status = stat(filename.c_str(), &instat);
-    if (!stat_status && !S_ISDIR(instat.st_mode))
-      continue;
+    if (xmlCheckFilename(path) != 2)
+        continue;
 
     src2srcml_dir(translator, filename.c_str(), poptions, error, outstat);
   }
