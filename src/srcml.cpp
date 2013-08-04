@@ -297,7 +297,6 @@ int main(int argc, char * argv[]) {
 
 		//ASSIGN THE CLI ARGS TO MAP
 		prog_opts::variables_map cli_map;
-		//prog_opts::store(prog_opts::parse_command_line(argc, argv, all), cli_map);
 		prog_opts::store(prog_opts::command_line_parser(argc, argv).options(all).positional(input_file).run(), cli_map);
 		prog_opts::notify(cli_map);
 
