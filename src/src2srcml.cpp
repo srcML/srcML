@@ -350,7 +350,6 @@ struct process_options
   const char* given_filename;
   const char* given_version;
   int tabsize;
-  bool prefixchange[num_prefixes];
 
 #ifdef SVN
 
@@ -400,7 +399,6 @@ int main(int argc, char* argv[]) {
       0,
       0,
       DEFAULT_TABSIZE,
-      { false, false, false, false, false, false }
 
 #ifdef SVN
       , SVN_INVALID_REVNUM
@@ -885,7 +883,6 @@ int process_args(int argc, char* argv[], process_options & poptions) {
             options |= uris[i].option;
 
             urisprefix[i] = ns_prefix ? ns_prefix : "";
-            poptions.prefixchange[i] = true;
             found = true;
             break;
           }
