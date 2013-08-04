@@ -163,9 +163,9 @@ void libxml_error(void *ctx, const char *msg, ...) {}
 int option_error_status(int optopt);
 
 // translate a file, maybe an archive
-void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize);
+void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language);
 
-void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize);
+void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language);
 
 using namespace LanguageName;
 
@@ -363,7 +363,7 @@ struct process_options
 
 process_options* gpoptions = 0;
 
-void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize);
+void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language);
 void src2srcml_dir_top(srcMLTranslator& translator, const char* dname, process_options& poptions);
 void src2srcml_dir(srcMLTranslator& translator, const char* dname, process_options& poptions, const struct stat& outstat);
 void src2srcml_filelist(srcMLTranslator& translator, process_options& poptions);
@@ -600,8 +600,7 @@ int main(int argc, char* argv[]) {
                      poptions.given_directory,
                      poptions.given_filename,
                      poptions.given_version,
-                     poptions.language,
-                     poptions.tabsize);
+                     poptions.language);
 
       // translate filenames from the command line
     } else {
@@ -615,8 +614,7 @@ int main(int argc, char* argv[]) {
                        input_arg_count == 1 ? poptions.given_directory : 0,
                        input_arg_count == 1 ? poptions.given_filename : 0,
                        input_arg_count == 1 ? poptions.given_version : 0,
-                       poptions.language,
-                       poptions.tabsize);
+                       poptions.language);
       }
     }
 
@@ -1163,7 +1161,7 @@ int option_error_status(int optopt) {
   return 0;
 }
 
-void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize) {
+void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language) {
 
   // handle local directories specially
   struct stat instat = { 0 };
@@ -1173,10 +1171,10 @@ void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     return;
   }
 
-  src2srcml_archive(translator, path, options, dir, root_filename, version, language, tabsize);
+  src2srcml_archive(translator, path, options, dir, root_filename, version, language);
 }
 
-void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize) {
+void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language) {
 
   // single file archive (tar, zip, cpio, etc.) is listed as a single file
   // but is much, much more
@@ -1276,7 +1274,7 @@ void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
 extern void* current_context;
 
-void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize) {
+void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language) {
 
   // single file archive (tar, zip, cpio, etc.) is listed as a single file
   // but is much, much more
@@ -1522,8 +1520,7 @@ void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_o
                    0,
                    0,
                    poptions.given_version,
-                   poptions.language,
-                   poptions.tabsize);
+                   poptions.language);
   }
 
   // no need to handle subdirectories, unless recursive
@@ -1611,8 +1608,7 @@ void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_o
                    0,
                    0,
                    poptions.given_version,
-                   poptions.language,
-                   poptions.tabsize);
+                   poptions.language)
   }
 
   // no need to handle subdirectories, unless recursive
@@ -1679,8 +1675,7 @@ void src2srcml_filelist(srcMLTranslator& translator, process_options& poptions) 
                      0,
                      0,
                      poptions.given_version,
-                     poptions.language,
-                     poptions.tabsize);
+                     poptions.language);
     }
 
   } catch (URIStreamFileError) {
