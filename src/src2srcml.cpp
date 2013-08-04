@@ -340,7 +340,7 @@ struct process_options
   // options
   // output filename
   const char* srcml_filename;
-  const char* fname;
+  const char* src_filename;
   const char* input_format;
   const char* output_format;
   int language;
@@ -574,12 +574,12 @@ int main(int argc, char* argv[]) {
     if (isoption(options, OPTION_FILELIST)) {
 
       // if we don't have a filelist yet, get it from the first argument
-      if (!poptions.fname && input_arg_count > 0)
-        poptions.fname = argv[input_arg_start];
+      if (!poptions.src_filename && input_arg_count > 0)
+        poptions.src_filename = argv[input_arg_start];
 
       // still no filelist? use stdin
-      if (!poptions.fname)
-        poptions.fname = STDIN;
+      if (!poptions.src_filename)
+        poptions.src_filename = STDIN;
 
       // so process the filelist
       src2srcml_filelist(translator, poptions, count, skipped, error, showinput);
@@ -591,7 +591,7 @@ int main(int argc, char* argv[]) {
         fprintf(stderr, "%s: failed to register svn handler\n", PROGRAM_NAME);
         exit(1);
       }
-      svn_process_session(poptions.revision, translator, poptions.fname, options, poptions.given_directory, poptions.given_filename, poptions.given_version, poptions.language, poptions.tabsize, count, skipped, error, showinput, shownumber);
+      svn_process_session(poptions.revision, translator, poptions.src_filename, options, poptions.given_directory, poptions.given_filename, poptions.given_version, poptions.language, poptions.tabsize, count, skipped, error, showinput, shownumber);
 
 #endif
     }
@@ -755,10 +755,10 @@ int process_args(int argc, char* argv[], process_options & poptions) {
         char * pos = index(optarg, '@');
 
         if(!pos)
-          poptions.fname = optarg;
+          poptions.src_filename = optarg;
         else {
 
-          poptions.fname = strndup(optarg, pos - optarg);
+          poptions.src_filename = strndup(optarg, pos - optarg);
           poptions.revision = atoi(pos + 1);
 
         }
@@ -781,7 +781,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       // filelist mode is default nested mode
       options |= OPTION_NESTED;
 
-      poptions.fname = optarg;
+      poptions.src_filename = optarg;
       break;
 
     case REGISTER_EXT_FLAG_CODE:
@@ -1671,7 +1671,7 @@ void src2srcml_filelist(srcMLTranslator& translator, process_options& poptions, 
 
     // translate all the filenames listed in the named file
     // Use libxml2 routines so that we can handle http:, file:, and gzipped files automagically
-    URIStream uriinput(poptions.fname);
+    URIStream uriinput(poptions.src_filename);
     char* line;
 
     while ((line = uriinput.readline())) {
@@ -1699,7 +1699,7 @@ void src2srcml_filelist(srcMLTranslator& translator, process_options& poptions, 
     }
 
   } catch (URIStreamFileError) {
-    fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", PROGRAM_NAME, poptions.fname);
+    fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", PROGRAM_NAME, poptions.src_filename);
     exit(STATUS_INPUTFILE_PROBLEM);
   }
 }
