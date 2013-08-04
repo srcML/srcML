@@ -464,8 +464,7 @@ int main(int argc, char* argv[]) {
     }
 
     // may not exist due to race condition, so check again
-    struct stat instat = { 0 };
-    if (stat(argv[i], &instat) == -1)
+    if (xmlCheckFilename(argv[i]) == 0)
       continue;
 
     if (instat.st_ino == stdiostat.st_ino && instat.st_dev == stdiostat.st_dev)
