@@ -163,9 +163,9 @@ void libxml_error(void *ctx, const char *msg, ...) {}
 int option_error_status(int optopt);
 
 // translate a file, maybe an archive
-void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber = false);
+void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput);
 
-void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber = false);
+void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput);
 
 using namespace LanguageName;
 
@@ -360,9 +360,9 @@ struct process_options
 
 process_options* gpoptions = 0;
 
-void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
-void src2srcml_dir_top(srcMLTranslator& translator, const char* dname, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber);
-void src2srcml_dir(srcMLTranslator& translator, const char* dname, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat);
+void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput);
+void src2srcml_dir_top(srcMLTranslator& translator, const char* dname, process_options& poptions, int& count, int & skipped, int & error, bool & showinput);
+void src2srcml_dir(srcMLTranslator& translator, const char* dname, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, const struct stat& outstat);
 void src2srcml_filelist(srcMLTranslator& translator, process_options& poptions, int& count, int & skipped, int & error, bool & showinput);
 
 // setup options and collect info from arguments
@@ -545,13 +545,11 @@ int main(int argc, char* argv[]) {
 
 
     bool showinput = false;
-    bool shownumber = false;
     // output source encoding
     if (isoption(options, OPTION_VERBOSE)) {
       fprintf(stderr, "Source encoding:  %s\n", poptions.src_encoding);
       fprintf(stderr, "XML encoding:  %s\n", poptions.xml_encoding);
       showinput = false;
-      shownumber = true;
     }
 
     // filecount
@@ -589,7 +587,7 @@ int main(int argc, char* argv[]) {
         fprintf(stderr, "%s: failed to register svn handler\n", PROGRAM_NAME);
         exit(1);
       }
-      svn_process_session(poptions.revision, translator, poptions.src_filename, options, poptions.given_directory, poptions.given_filename, poptions.given_version, poptions.language, poptions.tabsize, count, skipped, error, showinput, shownumber);
+      svn_process_session(poptions.revision, translator, poptions.src_filename, options, poptions.given_directory, poptions.given_filename, poptions.given_version, poptions.language, poptions.tabsize, count, skipped, error, showinput);
 
 #endif
     }
@@ -602,7 +600,7 @@ int main(int argc, char* argv[]) {
                      poptions.given_filename,
                      poptions.given_version,
                      poptions.language,
-                     poptions.tabsize, count, skipped, error, showinput, shownumber);
+                     poptions.tabsize, count, skipped, error, showinput);
 
       // translate filenames from the command line
     } else {
@@ -618,7 +616,7 @@ int main(int argc, char* argv[]) {
                        input_arg_count == 1 ? poptions.given_version : 0,
                        poptions.language,
                        poptions.tabsize,
-                       count, skipped, error, showinput, shownumber);
+                       count, skipped, error, showinput);
       }
     }
 
@@ -1165,21 +1163,21 @@ int option_error_status(int optopt) {
   return 0;
 }
 
-void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void src2srcml_file(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput) {
 
   // handle local directories specially
   struct stat instat = { 0 };
   int stat_status = stat(path, &instat);
   if (!stat_status && S_ISDIR(instat.st_mode)) {
-    src2srcml_dir_top(translator, path, *gpoptions, count, skipped, error, showinput, shownumber);
+    src2srcml_dir_top(translator, path, *gpoptions, count, skipped, error, showinput);
     return;
   }
 
   src2srcml_archive(translator, path, options, dir, root_filename, version, language, tabsize, count, skipped,
-                    error, showinput, shownumber);
+                    error, showinput);
 }
 
-void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput) {
 
   // single file archive (tar, zip, cpio, etc.) is listed as a single file
   // but is much, much more
@@ -1213,7 +1211,7 @@ void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
         if (unit_filename == "-")
           fprintf(stderr, "Skipped:  Must specify language for standard input.\n" );
         else
-          fprintf(stderr, !shownumber ? "Skipped '%s':  Unregistered extension\n" :
+          fprintf(stderr, !isoption(options, OPTION_VERBOSE) ? "Skipped '%s':  Unregistered extension\n" :
                   "    - %s\tSkipped: Unregistered extension\n",
                   unit_filename.c_str() ? unit_filename.c_str() : "standard input");
       }
@@ -1247,7 +1245,7 @@ void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
     const char* c_filename = clean_filename(unit_filename.c_str());
 
     // output the currently processed filename
-    if (!isoption(options, OPTION_QUIET) && shownumber)
+    if (!isoption(options, OPTION_QUIET) && isoption(options, OPTION_VERBOSE))
       fprintf(stderr, "%5d %s\n", count, c_filename);
 
     // translate the file
@@ -1280,7 +1278,7 @@ void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
 
 extern void* current_context;
 
-void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYPE& options, const char* dir, const char* root_filename, const char* version, int language, int tabsize, int& count, int & skipped, int & error, bool & showinput) {
 
   // single file archive (tar, zip, cpio, etc.) is listed as a single file
   // but is much, much more
@@ -1355,7 +1353,7 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
       if (archiveIsDir(context)) {
 
         if (!isoption(options, OPTION_QUIET))
-          fprintf(stderr, !shownumber ? "Skipped '%s':  Directory\n" :
+            fprintf(stderr, !isoption(options,OPTION_VERBOSE) ? "Skipped '%s':  Directory\n" :
                   "    - %s\tSkipped: Directory\n", unit_filename.c_str());
 
         ++skipped;
@@ -1393,7 +1391,7 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
           if (unit_filename == "-")
             fputs("Skipped:  Must specify language for standard input.\n", stderr);
           else
-            fprintf(stderr, !shownumber ? "Skipped '%s':  Unregistered extension\n" :
+              fprintf(stderr, !isoption(options, OPTION_VERBOSE) ? "Skipped '%s':  Unregistered extension\n" :
                     "    - %s\tSkipped: Unregistered extension\n",
                     unit_filename.c_str() ? unit_filename.c_str() : "standard input");
         }
@@ -1416,7 +1414,7 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
       const char* c_filename = clean_filename(unit_filename.c_str());
 
       // output the currently processed filename
-      if (shownumber && !isoption(options, OPTION_QUIET))
+      if (isoption(options, OPTION_VERBOSE) && !isoption(options, OPTION_QUIET))
         fprintf(stderr, "%5d %s\n", count, c_filename);
 
       // translate the file
@@ -1447,7 +1445,7 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
   archiveDeleteContext(context);
 }
 
-void src2srcml_dir_top(srcMLTranslator& translator, const char* directory, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber) {
+void src2srcml_dir_top(srcMLTranslator& translator, const char* directory, process_options& poptions, int& count, int & skipped, int & error, bool & showinput) {
 
   // by default, all dirs are treated as an archive
   options |= OPTION_NESTED;
@@ -1458,7 +1456,7 @@ void src2srcml_dir_top(srcMLTranslator& translator, const char* directory, proce
 
   showinput = true;
 
-  src2srcml_dir(translator, directory, poptions, count, skipped, error, showinput, shownumber, outstat);
+  src2srcml_dir(translator, directory, poptions, count, skipped, error, showinput, outstat);
 }
 
 // file/directory names to ignore when processing a directory
@@ -1473,7 +1471,7 @@ int dir_filter(struct dirent* d) {
   return dir_filter((const struct dirent*)d);
 }
 
-void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, bool shownumber, const struct stat& outstat) {
+void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_options& poptions, int& count, int & skipped, int & error, bool & showinput, const struct stat& outstat) {
 #if defined(__GNUC__) && !defined(__MINGW32__)
 
   // collect the filenames in alphabetical order
@@ -1515,7 +1513,7 @@ void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_o
 
     // make sure that we are not processing the output file
     if (instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev) {
-      fprintf(stderr, !shownumber ? "Skipped '%s':  Output file.\n" :
+        fprintf(stderr, !isoption(options, OPTION_VERBOSE) ? "Skipped '%s':  Output file.\n" :
               "    - %s\tSkipped: Output file.\n", poptions.srcml_filename);
 
       ++skipped;
@@ -1531,7 +1529,7 @@ void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_o
                    poptions.given_version,
                    poptions.language,
                    poptions.tabsize,
-                   count, skipped, error, showinput, shownumber);
+                   count, skipped, error, showinput);
   }
 
   // no need to handle subdirectories, unless recursive
@@ -1558,7 +1556,7 @@ void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_o
       continue;
 #endif
 
-    src2srcml_dir(translator, filename.c_str(), poptions, count, skipped, error, showinput, shownumber, outstat);
+    src2srcml_dir(translator, filename.c_str(), poptions, count, skipped, error, showinput, outstat);
   }
 
   // all done with this directory
@@ -1605,7 +1603,7 @@ void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_o
 
     // make sure that we are not processing the output file
     if (strcmp(filename.c_str(), poptions.srcml_filename) == 0) {
-      fprintf(stderr, !shownumber ? "Skipped '%s':  Output file.\n" :
+        fprintf(stderr, !isoption(options, OPTION_VERBOSE) ? "Skipped '%s':  Output file.\n" :
               "    - %s\tSkipped: Output file.\n", poptions.srcml_filename);
 
       ++skipped;
@@ -1621,7 +1619,7 @@ void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_o
                    poptions.given_version,
                    poptions.language,
                    poptions.tabsize,
-                   count, skipped, error, showinput, shownumber);
+                   count, skipped, error, showinput);
   }
 
   // no need to handle subdirectories, unless recursive
@@ -1653,7 +1651,7 @@ void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_o
     if (!stat_status && !S_ISDIR(instat.st_mode))
       continue;
 
-    src2srcml_dir(translator, filename.c_str(), poptions, count, skipped, error, showinput, shownumber, outstat);
+    src2srcml_dir(translator, filename.c_str(), poptions, count, skipped, error, showinput, outstat);
   }
 
   // all done with this directory
@@ -1692,7 +1690,7 @@ void src2srcml_filelist(srcMLTranslator& translator, process_options& poptions, 
                      poptions.given_version,
                      poptions.language,
                      poptions.tabsize,
-                     count, skipped, error, showinput, true);
+                     count, skipped, error, showinput);
     }
 
   } catch (URIStreamFileError) {
