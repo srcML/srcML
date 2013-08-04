@@ -230,7 +230,7 @@ int main(int argc, char * argv[]) {
 
 		line_col.add_options()
 			("position", prog_opts::bool_switch()->notifier(&option_position), "include line/column attributes, namespace 'http://www.sdml.info/srcML/position'")
-			("tabs=", prog_opts::value<int>()->notifier(&option_tabs), "set tabs arg characters apart.  Default is 8")
+			("tabs=", prog_opts::value<int>()->notifier(&option_tabs)->default_value(8), "set tabs arg characters apart.  Default is 8")
 			;
 
 		markup.add_options()
@@ -436,7 +436,7 @@ void option_position(const bool& opt){
 }
 
 void option_tabs(const int& opt){
-
+	
 }
 
 void option_literal(const bool& opt){
