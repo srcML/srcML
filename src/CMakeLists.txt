@@ -111,8 +111,13 @@ target_link_libraries(src2srcml ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIB
 
 # srcml2src
 add_executable(srcml2src srcml2src.cpp srcMLUtility.cpp SAX2ExtractUnitsSrc.cpp SAX2Utilities.cpp SAX2UnitDOM.cpp SAX2UnitDOMRelaxNG.cpp srcexfun.cpp)
-#add_executable(srcml2src srcml2src.cpp)
-target_link_libraries(srcml2src  ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBXSLT_LIBRARIES} srcml_static)
+
+if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
+       target_link_libraries(srcml2src  ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBXSLT_LIBRARIES} srcml_static)
+else()
+       target_link_libraries(srcml2src  ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBXSLT_LIBRARIES} srcml_static)
+
+endif()
 
 set_target_properties(srcml src2srcml srcml2src PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../bin)
 
