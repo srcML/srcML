@@ -62,6 +62,11 @@
 #define SRCML_OPTION_CPP_MARKUP_IF0
 #define SRCML_OPTION_APPLY_ROOT
 
+#define SRCML_LANGUAGE_C "C"
+#define SRCML_LANGUAGE_CXX "C++"
+#define SRCML_LANGUAGE_JAVA "Java"
+#define SRCML_LANGUAGE_CSHARP "C#"
+
 /*
   src2srcml - translate from source code to the srcML format
 */
@@ -75,8 +80,29 @@ struct srcml_archive;
 
    CLI equivalence:  srcml main.cpp -o main.cpp.xml
                      srcml main.cpp.xml -o main.cpp
+
+   NOTE:  Should language be a string?  Or an enumerated type?  Keep in mind, future languages
+   may be user added.  Probably string would be more flexible.  Perhaps provide constants
+   for core languages
 */
-int srcml(const char* input_filename, const char* output_filename);
+int srcml(const char* input_filename, const char* output_filename, const char* language);
+
+/*
+  srcML capabilities
+*/
+
+/* source-code language is supported */
+int srcml_check_language(const char* language);
+
+/* currently registered language for a file extension */
+const char* srcml_check_extension(const char* extension);
+
+/* particular encoding is supported, both for input and output */
+int srcml_check_encoding(const char* encoding);
+
+/* whether various features are available */
+int srcml_check_xslt();
+int srcml_check_exslt();
 
 /* Translates from source code to srcML. Language determined by file extension.
    For setting attributes, encoding, etc, use src2srcml_filename_filename()
@@ -147,6 +173,7 @@ void src2srcml_free(struct srcml_archive*);
   srcml2src - translate from the srcML format back to source code
   NOTE: mirror of src2srcml
 */
+
 
 /* srcML file converted back to a source code file, or directory of source-code files for an archive */
 int srcml2src(const char* srcml_filename, const char* src_filename);
