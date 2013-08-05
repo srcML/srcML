@@ -28,11 +28,12 @@
                 srcml2src_* implies _read_, as would be in srcml_read_*
 
   srcml_*     - Info, query, and transformation of srcML
-
+  
   NOTE:  Should we have just one namespace?
   NOTE:  Went with camel case as it is c, and libarchive uses camelcase, and I like the way that API feels
   NOTE:  We will probably not support all of this all at once.  Just want to work out the names so we don't
   have to change any later
+
   NOTE:  considered using "file" instead of "filename", but libarchive did that, and deprecated it later
 */
 
@@ -62,6 +63,7 @@
 #define SRCML_OPTION_CPP_MARKUP_IF0
 #define SRCML_OPTION_APPLY_ROOT
 
+/* Set of languages */
 #define SRCML_LANGUAGE_C "C"
 #define SRCML_LANGUAGE_CXX "C++"
 #define SRCML_LANGUAGE_JAVA "Java"
@@ -74,9 +76,10 @@
 struct srcml_archive;
 
 /* Translates from source code to srcML if the input_filename extension is for source code.
-   Language determined by file extension.
+   Language determined by file extension if language argument is null.
 
    Translates from srcML back to source code if the input_filename extension is '.xml'. 
+   Language argument should be null in this case.
 
    CLI equivalence:  srcml main.cpp -o main.cpp.xml
                      srcml main.cpp.xml -o main.cpp
@@ -94,13 +97,22 @@ int srcml(const char* input_filename, const char* output_filename, const char* l
 /* source-code language is supported */
 int srcml_check_language(const char* language);
 
+/* null-terminated array of supported source-code languages */
+const char** srcml_language_list();
+
 /* currently registered language for a file extension */
 const char* srcml_check_extension(const char* extension);
 
 /* particular encoding is supported, both for input and output */
 int srcml_check_encoding(const char* encoding);
 
-/* whether various features are available */
+/* prefix for an XML namespace */
+const char* srcml_check_prefix(const char* namespace_uri);
+
+/* namespace for an XML prefix */
+const char* srcml_check_namespace(const char* prefix);
+
+/* whether various features are available in this installation */
 int srcml_check_xslt();
 int srcml_check_exslt();
 
@@ -155,7 +167,7 @@ int src2srcml_open_fd      (struct srcml_archive*, int srcml_fd);
 int src2srcml_unit_set_language (struct srcml_archive*, const char* language);
 int src2srcml_unit_set_filename (struct srcml_archive*, const char* filename);
 int src2srcml_unit_set_directory(struct srcml_archive*, const char* directory);
-int src2srcml_archive_set_version  (struct srcml_unit*, const char* version);
+int src2srcml_archive_set_version (struct srcml_archive*, const char* version);
 
 /* Convert to srcml and append to the archive */
 int src2srcml_unit_filename(struct srcml_archive*, const char* src_filename);
@@ -191,24 +203,24 @@ int         srcml_get_tabstop  (const struct srcml_archive*);
 /* srcml utility functions NOTE:  need memory forms of these */
 
 /* srcML attributes with namespaces */
-const char* [][2] srcml_info(const char* srcml_filename);
+const char** srcml_info(const char* srcml_filename);
 
 /* srcML attributes with namespaces and number of units */
-const char* [][2] srcml_longinfo(const char* srcml_filename);
+const char** srcml_longinfo(const char* srcml_filename);
 
 /* srcML attributes with namespaces of a particular unit in an archive */
-const char* [][2] srcml_info_unit(const char* srcml_filename, int unit);
+const char** srcml_info_unit(const char* srcml_filename, int unit);
 
 /* list of filenames */
-const char* [] srcml_list(const char* srcml_filename);
+const char** srcml_list(const char* srcml_filename);
 
 /* srcML XPath query and XSLT transform functions */
 
 /* XPath (as a string) is applied to the input srcml with the query result stored in the output srcml */
 int srcml_xpath_filename_filename(const char* input_srcml_filename, const char* xpath_string, const char* output_srcml_filename, int options);
 int srcml_xpath_filename_memory(const char* input_srcml_filename, const char* xpath_string, char** output_buffer, size_t* size, int options);
-int srcml_xpath_memory_filename(char* input_srcml_buffer, size_t size, const char* xpath_string, const char* output_srcml_filename, int options);
-int srcml_xpath_memory_memory(char* input_srcml_buffer, size_t size, const char* xpath_string, char** output_buffer, size_t* size, int options);
+int srcml_xpath_memory_filename(char* input_srcml_buffer, size_t input_size, const char* xpath_string, const char* output_srcml_filename, int options);
+int srcml_xpath_memory_memory(char* input_srcml_buffer, size_t input_size, const char* xpath_string, char** output_buffer, size_t* size, int options);
 
 /* XSLT file is applied to the input srcml with the transformed result stored in the output srcml */
 int srcml_xslt_filename_filename(const char* input_srcml_filename, const char* xslt_filename, const char* output_srcml_filename, int options, const char* xsltparams[][2]);
