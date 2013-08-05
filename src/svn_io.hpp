@@ -1,12 +1,26 @@
 /*
-  svn_io.hpp
+  svn_io.cpp
 
-  Functions for reading a file form svn
+  Copyright (C) 2013  SDML (www.sdml.info)
 
-  Michael J. Decker
-  mdecker6@kent.edu
+  This file is part of the srcML translator.
+
+  The srcML translator is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  The srcML translator is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with the srcML translator; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+  IO function for reading from subversion.
 */
-
 
 #include <apr.h>
 #include <svn_fs.h>
