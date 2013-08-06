@@ -21,6 +21,7 @@
 /*
   srcml functions form the namespace srcml_*
 
+  NOTE:  Perhaps change "unit" to "entry", e.g., "write_unit_*" -> "write_entry_*"
   NOTE:  Went with camel case as it is c, and libarchive uses camelcase, and I like the way that API feels
   NOTE:  We will probably not support all of this all at once.  Just want to work out the names so we don't
   have to change any later
@@ -142,9 +143,12 @@ int src2srcml_filelist_fd      (char* src_filelist[], int size, int srcml_fd,   
 */
 
 /* create a new srcml archive
-   client will have to free it using src2srcml_free() */
-struct srcml_archive* src2srcml_new_archive();
+   client will have to free it using srcml_free() */
 struct srcml_archive* srcml_write_new_archive();
+struct srcml_archive* srcml_read_new_archive();
+
+/* current entry in archive */
+int srcml_has_entry(struct srcml_archive*);
 
 /* clone the setup of an existing archive
    client will have to free it using src2srcml_free() */
@@ -183,17 +187,30 @@ int srcml_unit_set_filename (struct srcml_archive*, const char* filename);
 int srcml_unit_set_directory(struct srcml_archive*, const char* directory);
 int srcml_unit_set_version (struct srcml_archive*, const char* version);
 
+const char* srcml_unit_get_language (struct srcml_archive*);
+const char* srcml_unit_get_filename (struct srcml_archive*);
+const char* srcml_unit_get_directory(struct srcml_archive*);
+const char* srcml_unit_get_version (struct srcml_archive*);
+
 /* Convert to srcml and append to the archive */
 int srcml_write_unit_filename(struct srcml_archive*, const char* src_filename);
 int srcml_write_unit_memory  (struct srcml_archive*, const char* src_buffer, size_t buffer_size);
 int srcml_write_unit_FILE    (struct srcml_archive*, FILE* srcml_file);
 int srcml_write_unit_fd      (struct srcml_archive*, int srcml_fd);
 
+/* Read the next entry from the archive */
+int srcml_read_unit_filename(struct srcml_archive*, const char* src_filename);
+int srcml_read_unit_memory  (struct srcml_archive*, const char* src_buffer, size_t buffer_size);
+int srcml_read_unit_FILE    (struct srcml_archive*, FILE* srcml_file);
+int srcml_read_unit_fd      (struct srcml_archive*, int srcml_fd);
+
 /* close the srcML archive */
 void srcml_write_close(struct srcml_archive*);
+void srcml_read_close(struct srcml_archive*);
 
 /* free the srcML archive data */
 void srcml_write_free(struct srcml_archive*);
+void srcml_read_free(struct srcml_archive*);
 
 #if 0
 /*
