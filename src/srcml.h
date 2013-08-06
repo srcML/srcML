@@ -126,9 +126,9 @@ int src2srcml(const char* src_filename, const char* srcml_filename);
 
 /* Translates source code to srcML with full control of attr/options */
 int src2srcml_filename_filename(char* src_filename, char* srcml_filename, int options, char* language, char* attr[][2]);
-int src2srcml_filename_memory  (char* src_filename, char** srcml_buffer,  int options, char* language, char* attr[][2]);
+int src2srcml_filename_memory  (char* src_filename, char** srcml_buffer,  size_t size, int options, char* language, char* attr[][2]);
 int src2srcml_memory_filename  (char* src_buffer, char* srcml_filename,   int options, char* language, char* attr[][2]);
-int src2srcml_memory_memory    (char* src_buffer, char** srcml_buffer,    int options, char* language, char* attr[][2]);
+int src2srcml_memory_memory    (char* src_buffer, char** srcml_buffer, size_t size,    int options, char* language, char* attr[][2]);
 
 /* Translates a list of source code files to a srcML archive */
 /* NOTE:  have src_encoding be part of attr? */
@@ -160,7 +160,7 @@ int src2srcml_register_namespace_prefix(struct srcml_archive*, const char* prefi
 
 /* open a srcML archive for output */
 int src2srcml_open_filename(struct srcml_archive*, const char* srcml_filename);
-int src2srcml_open_memory  (struct srcml_archive*, const char** buffer, size_t buffer_size);
+int src2srcml_open_memory  (struct srcml_archive*, const char* buffer, size_t buffer_size);
 int src2srcml_open_FILE    (struct srcml_archive*, FILE* srcml_file);
 int src2srcml_open_fd      (struct srcml_archive*, int srcml_fd);
 
