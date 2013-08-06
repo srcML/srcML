@@ -68,6 +68,7 @@
 */
 
 struct srcml_archive;
+struct srcml_archive_entry;
 
 /* Translates from source code to srcML if the input_filename extension is for source code.
    Language determined by file extension if language argument is null.
@@ -198,12 +199,14 @@ const char* srcml_unit_get_directory(struct srcml_archive*);
 const char* srcml_unit_get_version (struct srcml_archive*);
 
 /* Convert to srcml and append to the archive */
+int srcml_write_unit_archive(struct srcml_archive*, struct srcml_archive_entry*);
 int srcml_write_unit_filename(struct srcml_archive*, const char* src_filename);
 int srcml_write_unit_memory  (struct srcml_archive*, const char* src_buffer, size_t buffer_size);
 int srcml_write_unit_FILE    (struct srcml_archive*, FILE* srcml_file);
 int srcml_write_unit_fd      (struct srcml_archive*, int srcml_fd);
 
 /* Read the next entry from the archive */
+struct srcml_archive_entry* srcml_read_unit_archive (struct srcml_archive*);
 int srcml_read_unit_filename(struct srcml_archive*, const char* src_filename);
 int srcml_read_unit_memory  (struct srcml_archive*, const char* src_buffer, size_t buffer_size);
 int srcml_read_unit_FILE    (struct srcml_archive*, FILE* srcml_file);
@@ -216,6 +219,8 @@ void srcml_read_close(struct srcml_archive*);
 /* free the srcML archive data */
 void srcml_write_free(struct srcml_archive*);
 void srcml_read_free(struct srcml_archive*);
+
+void srcml_free_archive_entry(struct srcml_archive_entry*);
 
 #if 0
 /*
