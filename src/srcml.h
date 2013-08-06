@@ -117,6 +117,9 @@ const char* srcml_check_namespace(const char* prefix);
 int srcml_check_xslt();
 int srcml_check_exslt();
 
+/* string describing last error */
+const char* srcml_error_msg();
+
 /* Translates from source code to srcML. Language determined by file extension.
    For setting attributes, encoding, etc, use src2srcml_filename_filename()
 
@@ -145,6 +148,10 @@ int src2srcml_filelist_fd      (char* src_filelist[], int size, int srcml_fd,   
 /* create a new srcml archive
    client will have to free it using src2srcml_free() */
 struct srcml_archive* src2srcml_new_archive();
+
+/* clone the setup of an existing archive
+   client will have to free it using src2srcml_free() */
+struct srcml_archive* src2srcml_clone_archive(const struct srcml_archive*);
 
 /* setup options for srcml archive */
 int src2srcml_set_encoding  (struct srcml_archive*, const char* encoding);
@@ -216,6 +223,9 @@ const char** srcml_info_unit(const char* srcml_filename, int unit);
 const char** srcml_list(const char* srcml_filename);
 
 /* srcML XPath query and XSLT transform functions */
+
+int srcml_add_transform_xpath(struct srcml_archive*, const char* xpath_string);
+int srcml_add_transform_xslt(struct srcml_archive*, const char* xlst_filename);
 
 /* XPath (as a string) is applied to the input srcml with the query result stored in the output srcml */
 int srcml_xpath_filename_filename(const char* input_srcml_filename, const char* xpath_string, const char* output_srcml_filename, int options);
