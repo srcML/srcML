@@ -1,5 +1,5 @@
 /*
-  srcml_create_archive_filename.c
+  srcml_create_archive_memory.c
 
   Copyright (C) 2013  SDML (www.sdml.info)
 
@@ -21,19 +21,21 @@
 /*
   Example program of the use of the C API for srcML.
 
-  Create an archive, file by file, with an output filename.
+  Create an archive, file by file, with an output memory.
 */
 
 #include "srcml.h"
+#include <stdio.h>
 
 int main(int argc, char* argv[]) {
     int i;
+    char s[500];
 
     /* create a new srcml archive structure */
     struct srcml_archive* archive = src2srcml_new_archive();
 
     /* open a srcML archive for output */
-    src2srcml_open_filename(archive, "project.xml");
+    src2srcml_open_memory(archive, s, 500);
 
     /* add all the files to the archive */
     for (i = 0; i < argc; ++i) {
@@ -47,6 +49,9 @@ int main(int argc, char* argv[]) {
 
     /* free the srcML archive data */
     src2srcml_free(archive);
+
+    /* now dump the contents of the archive */
+    puts(s);
 
     return 0;
 }
