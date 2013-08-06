@@ -167,7 +167,7 @@ int srcml_set_option    (struct srcml_archive*, int option);
 int srcml_clear_option  (struct srcml_archive*, int option);
 int srcml_set_tabstop   (struct srcml_archive*, int tabstop);
 int srcml_register_file_extension(struct srcml_archive*, const char* extension, const char* language);
-int srcml_register_namespace_prefix(struct srcml_archive*, const char* prefix, const char* ns);
+int srcml_register_namespace(struct srcml_archive*, const char* prefix, const char* ns);
 
 /* open a srcML archive for output */
 int srcml_write_open_filename(struct srcml_archive*, const char* srcml_filename);
