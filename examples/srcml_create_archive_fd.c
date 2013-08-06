@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
     srcml_output = open("project.xml", O_WRONLY | O_CREAT);
 
     /* open a srcML archive for output */
-    src2srcml_open_f(archive, srcml_output);
+    src2srcml_open_fd(archive, srcml_output);
 
     /* add all the files to the archive */
     for (i = 0; i < argc; ++i) {

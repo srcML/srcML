@@ -1,5 +1,5 @@
 /*
-  srcml_create_archive_file.c
+  srcml_create_archive_full.c
 
   Copyright (C) 2013  SDML (www.sdml.info)
 
@@ -21,40 +21,42 @@
 /*
   Example program of the use of the C API for srcML.
 
-  Create an archive, file by file, with an output FILE*
+  Create an archive, file by file, with an output filename, showing
+  most of the option features
 */
 
 #include "srcml.h"
-#include <stdio.h>
 
 int main(int argc, char* argv[]) {
     int i;
-    FILE* srcml_output;
 
     /* create a new srcml archive structure */
-    struct srcml_archive* archive = src2srcml_new_archive();
-
-    /* setup our output file using a FILE* */
-    srcml_output = fopen("project.xml", "w");
+    struct srcml_archive* archive = srcml_write_new_archive();
+    srcml_set_language(archive, SRCML_LANGUAGE_CXX);
+    srcml_set_version(archive, "211");
+    srcml_set_options(archive, SRCML_OPTION_LITERAL | SRCML_OPTION_MODIFIER | SRCML_OPTION_POSITION);
+    srcml_set_tabstop(archive, 4);
+    srcml_register_file_extension(archive, "h", SRCML_LANGUAGE_CXX);
 
     /* open a srcML archive for output */
-    src2srcml_open_FILE(archive, srcml_output);
+    srcml_write_open_filename(archive, "project.xml");
 
     /* add all the files to the archive */
     for (i = 0; i < argc; ++i) {
 
+        /* setup this unit.  may be different for each entry */
+        srcml_unit_set_language(archive, SRCML_LANGUAGE_C);
+        srcml_unit_set_filename(archive, argv[i]);
+
         /* Translate to srcml and append to the archive */
-        src2srcml_unit_filename(archive, argv[i]);
+        srcml_write_unit_filename(archive, argv[i]);
     }
 
     /* close the srcML archive */
-    src2srcml_close(archive);
-
-    /* file can now be closed also */
-    fclose(srcml_output);
+    srcml_write_close(archive);
 
     /* free the srcML archive data */
-    src2srcml_free(archive);
+    srcml_write_free(archive);
 
     return 0;
 }
