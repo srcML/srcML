@@ -64,6 +64,7 @@
 #define SRCML_OPTION_APPLY_ROOT
 
 /* Set of languages */
+#define SRCML_LANGUAGE_NONE ""
 #define SRCML_LANGUAGE_C "C"
 #define SRCML_LANGUAGE_CXX "C++"
 #define SRCML_LANGUAGE_JAVA "Java"
