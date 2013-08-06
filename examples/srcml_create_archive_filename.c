@@ -1,5 +1,5 @@
 /*
-  srcml_create_archive.c
+  srcml_create_archive_filename.c
 
   Copyright (C) 2013  SDML (www.sdml.info)
 
@@ -21,7 +21,7 @@
 /*
   Example program of the use of the C API for srcML.
 
-  Full control over creation of an archive, file-by-file
+  Create an archive, file by file, with an output filename.
 */
 
 #include "srcml.h"
@@ -38,8 +38,8 @@ int main(int argc, char* argv[]) {
     /* add all the files to the archive */
     for (i = 0; i < argc; ++i) {
 
-        /* setup options for srcml unit */
-        src2srcml_unit_set_language(archive, "C");
+        /* Translate to srcml and append to the archive */
+        src2srcml_unit_filename(archive, "a.c");
     }
 
     /* close the srcML archive */
