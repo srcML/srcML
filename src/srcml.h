@@ -94,8 +94,13 @@ int srcml_check_language(const char* language);
 /* null-terminated array of supported source-code languages */
 const char** srcml_language_list();
 
-/* currently registered language for a file extension */
-const char* srcml_check_extension(const char* extension);
+/* currently registered language for a file extension
+   Full filename can be provided, and extension will be extracted */
+int srcml_check_extension(const char* filename);
+
+/* currently supported format, e.g., tar.gz
+   Full filename can be provided, and extension will be extracted */
+int srcml_check_format(const char* format);
 
 /* particular encoding is supported, both for input and output */
 int srcml_check_encoding(const char* encoding);
