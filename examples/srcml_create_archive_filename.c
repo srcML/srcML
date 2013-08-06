@@ -30,23 +30,23 @@ int main(int argc, char* argv[]) {
     int i;
 
     /* create a new srcml archive structure */
-    struct srcml_archive* archive = src2srcml_new_archive();
+    struct srcml_archive* archive = srcml_write_new_archive();
 
     /* open a srcML archive for output */
-    src2srcml_open_filename(archive, "project.xml");
+    srcml_write_open_filename(archive, "project.xml");
 
     /* add all the files to the archive */
     for (i = 0; i < argc; ++i) {
 
         /* Translate to srcml and append to the archive */
-        src2srcml_unit_filename(archive, argv[i]);
+        srcml_write_unit_filename(archive, argv[i]);
     }
 
     /* close the srcML archive */
-    src2srcml_close(archive);
+    srcml_write_close(archive);
 
     /* free the srcML archive data */
-    src2srcml_free(archive);
+    srcml_write_free(archive);
 
     return 0;
 }
