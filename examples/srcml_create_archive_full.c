@@ -32,11 +32,24 @@ int main(int argc, char* argv[]) {
 
     /* create a new srcml archive structure */
     struct srcml_archive* archive = srcml_write_new_archive();
+
+    /* setup some options and attributes */
+    srcml_set_options(archive, SRCML_OPTION_LITERAL | SRCML_OPTION_MODIFIER | SRCML_OPTION_POSITION);
     srcml_set_language(archive, SRCML_LANGUAGE_CXX);
     srcml_set_version(archive, "211");
-    srcml_set_options(archive, SRCML_OPTION_LITERAL | SRCML_OPTION_MODIFIER | SRCML_OPTION_POSITION);
     srcml_set_tabstop(archive, 4);
+
+    /* treat "*.h" as C++ */
     srcml_register_file_extension(archive, "h", SRCML_LANGUAGE_CXX);
+
+    /* change prefix of standard namespace */
+    srcml_register_namespace(archive, "s", "http://www.sdml.info/srcML/src");
+    
+    /* default prefix is now for cpp namespace */
+    srcml_register_namespace(archive, "", "http://www.sdml.info/srcML/cpp");
+
+    /* new prefix for further processing */
+    srcml_register_namespace(archive, "doc", "http://www.sdml.info/srcML/doc");
 
     /* open a srcML archive for output */
     srcml_write_open_filename(archive, "project.xml");

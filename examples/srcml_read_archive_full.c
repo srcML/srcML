@@ -28,6 +28,7 @@
 
 int main(int argc, char* argv[]) {
     int i;
+    const char* language;
     const char* filename;
 
     /* create a new srcml archive structure */
@@ -40,7 +41,7 @@ int main(int argc, char* argv[]) {
     while (srcml_has_entry(archive)) {
 
         /* can inquire about the current entry */
-        srcml_unit_get_language(archive);
+        language = srcml_unit_get_language(archive);
         filename = srcml_unit_get_filename(archive);
 
         /* Translate to source and write to a file */
