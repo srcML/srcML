@@ -24,6 +24,11 @@
 #include "UTF8CharBuffer.hpp"
 #include <libxml/encoding.h>
 
+#ifndef LIBXML2_NEW_BUFFER
+#define xmlBufContent(b) (b->content)
+#define xmlBufShrink(b, s) (b->use = s)
+#endif
+
 // Create a character buffer
 UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding)
   : antlr::CharBuffer(std::cin), pos(0), size(0), eof(false), lastcr(false)
@@ -50,16 +55,9 @@ UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding)
 
     // detect (and remove) BOMs for UTF8 and UTF16
     if (size >= 3 &&
-
-#ifdef LIBXML2_NEW_BUFFER
         xmlBufContent(input->buffer)[0] == 0xEF &&
         xmlBufContent(input->buffer)[1] == 0xBB &&
         xmlBufContent(input->buffer)[2] == 0xBF) {
-#else
-        input->buffer->content[0] == 0xEF &&
-        input->buffer->content[1] == 0xBB &&
-        input->buffer->content[2] == 0xBF) {
-#endif
       pos = 3;
 
     } else {
@@ -68,11 +66,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding)
       xmlCharEncoding denc = XML_CHAR_ENCODING_8859_1;
 
       // now see if we can detect it
-#ifdef LIBXML2_NEW_BUFFER
       xmlCharEncoding newdenc = xmlDetectCharEncoding(xmlBufContent(input->buffer), size);
-#else
-      xmlCharEncoding newdenc = xmlDetectCharEncoding(input->buffer->content, size);
-#endif
       if (newdenc)
         denc = newdenc;
 
@@ -150,16 +144,10 @@ UTF8CharBuffer::UTF8CharBuffer(const char* source, const char * encoding, bool i
 
     // detect (and remove) BOMs for UTF8 and UTF16
     if (size >= 3 &&
-
-#ifdef LIBXML2_NEW_BUFFER
         xmlBufContent(input->buffer)[0] == 0xEF &&
         xmlBufContent(input->buffer)[1] == 0xBB &&
         xmlBufContent(input->buffer)[2] == 0xBF) {
-#else
-        input->buffer->content[0] == 0xEF &&
-        input->buffer->content[1] == 0xBB &&
-        input->buffer->content[2] == 0xBF) {
-#endif
+
       pos = 3;
 
     } else {
@@ -168,11 +156,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char* source, const char * encoding, bool i
       xmlCharEncoding denc = XML_CHAR_ENCODING_8859_1;
 
       // now see if we can detect it
-#ifdef LIBXML2_NEW_BUFFER
       xmlCharEncoding newdenc = xmlDetectCharEncoding(xmlBufContent(input->buffer), size);
-#else
-      xmlCharEncoding newdenc = xmlDetectCharEncoding(input->buffer->content, size);
-#endif
       if (newdenc)
         denc = newdenc;
 
@@ -226,11 +210,7 @@ int UTF8CharBuffer::getChar() {
   if (size == 0 || pos >= size) {
 
     // refill the buffer
-#ifdef LIBXML2_NEW_BUFFER
     xmlBufShrink(input->buffer, size);
-#else
-    input->buffer->use = 0;
-#endif
     size = xmlParserInputBufferGrow(input, SRCBUFSIZE);
 
     // found problem or eof
@@ -242,11 +222,7 @@ int UTF8CharBuffer::getChar() {
   }
 
   // individual 8-bit character to return
-#ifdef LIBXML2_NEW_BUFFER
   int c = (int) xmlBufContent(input->buffer)[pos++];
-#else
-  int c = (int) input->buffer->content[pos++];
-#endif
 
   // sequence "\r\n" where the '\r'
   // has already been converted to a '\n' so we need to skip over this '\n'
@@ -257,11 +233,7 @@ int UTF8CharBuffer::getChar() {
     if (pos >= size) {
 
       // refill the buffer
-#ifdef LIBXML2_NEW_BUFFER
-    xmlBufShrink(input->buffer, size);
-#else
-    input->buffer->use = 0;
-#endif
+      xmlBufShrink(input->buffer, size);
 
       size = growBuffer();
 
@@ -274,12 +246,7 @@ int UTF8CharBuffer::getChar() {
     }
 
     // certain to have a character
-#ifdef LIBXML2_NEW_BUFFER
     c = (int) xmlBufContent(input->buffer)[pos++];
-#else
-    c = (int) input->buffer->content[pos++];
-#endif
-
   }
 
   // convert carriage returns to a line feed
