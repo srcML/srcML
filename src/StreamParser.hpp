@@ -64,12 +64,7 @@ class StreamParser : public Base, public TokenStream {
 
     // push the token onto the correct output stream
     pushCorrectToken();
-    /*
-    // save the token
-    if (saveguess) {
-      guessingbuffer.push_back(Base::LT(1));
-    }
-    */
+
     // rest of consume process
     Base::consume();
 
