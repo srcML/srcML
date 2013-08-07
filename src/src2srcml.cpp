@@ -1583,7 +1583,7 @@ void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_o
     filename.replace(basesize, std::string::npos, entry->d_name);
 
     // handle directories later after all the filenames
-    if (xmlCheckFilename(path) != 1)
+    if (xmlCheckFilename(filename.c_str()) != 1)
         continue;
 
     // make sure that we are not processing the output file
@@ -1628,10 +1628,10 @@ void src2srcml_dir(srcMLTranslator& translator, const char* directory, process_o
     filename.replace(basesize, std::string::npos, entry->d_name);
 
     // already handled other types of files
-    if (xmlCheckFilename(path) != 2)
+    if (xmlCheckFilename(filename.c_str()) != 2)
         continue;
 
-    src2srcml_dir(translator, filename.c_str(), poptions, error, outstat);
+    src2srcml_dir(translator, filename.c_str(), poptions, outstat);
   }
 
   // all done with this directory
