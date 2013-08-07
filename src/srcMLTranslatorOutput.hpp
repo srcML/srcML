@@ -28,7 +28,7 @@
 #include <iostream>
 #include "antlr/Token.hpp"
 #include <antlr/TokenStream.hpp>
-#include "StreamParser.hpp"
+#include "StreamMLParser.hpp"
 #include "TokenStream.hpp"
 #include "Options.hpp"
 #include "srcMLException.hpp"
