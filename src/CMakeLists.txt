@@ -26,7 +26,9 @@ add_definitions(-O3)
 find_package(LibArchive)
 find_package(LibXml2)
 find_package(LibXslt)
+if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
 find_package(Boost COMPONENTS program_options)
+endif()
 
 if(LibArchive_FOUND)
         include_directories(${LibArchive_INCLUDE_DIRS})
@@ -106,9 +108,11 @@ endif()
 # srcMLParserTokenTypesMacro
 add_custom_target(srcMLParserTokenTypesMacro.hpp DEPENDS srcMLParserTokenTypes.hpp)
 
+if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
 # srcml
 add_executable(srcml EXCLUDE_FROM_ALL srcml.cpp)
-target_link_libraries(srcml ${Boost_PROGRAM_OPTIONS_LIBRARY})
+#target_link_libraries(srcml ${Boost_PROGRAM_OPTIONS_LIBRARY})
+endif()
 
 # src2srcml
 add_executable(src2srcml src2srcml.cpp)
@@ -120,6 +124,6 @@ add_executable(srcml2src srcml2src.cpp srcMLUtility.cpp SAX2ExtractUnitsSrc.cpp 
 if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
        target_link_libraries(srcml2src  ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} srcml_static)
 else()
-       target_link_libraries(srcml2src  ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBXSLT_LIBRARIES} srcml_static)
+       target_link_libraries(srcml2src  ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBXSLT_LIBRARIES} srcml_shared)
 
 endif()
