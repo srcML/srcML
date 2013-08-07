@@ -748,9 +748,6 @@ next_token[] returns [int token] {
     // consume current token
     consume();
 
-    // consume intermediate skipped tokens
-    consumeSkippedTokens();
-
     token = LA(1);
 
     inputState->guessing--;
@@ -1834,8 +1831,7 @@ block_end[] { ENTRY_DEBUG } :
                     endCurrentMode(MODE_LOCAL);
             }
 
-            // looking for a terminate (';').  may have some whitespace before it
-            consumeSkippedTokens();
+            // looking for a terminate (';')
 
             // some statements end with the block if there is no terminate
             if (inMode(MODE_END_AT_BLOCK_NO_TERMINATE) && LA(1) != TERMINATE) {
@@ -1957,12 +1953,9 @@ terminate_post[] { ENTRY_DEBUG } :
 else_handling[] { ENTRY_DEBUG } :
         {
                 // record the current size of the top of the cppmode stack to detect
-                // any #else or #endif in the consumeSkippedTokens
+                // any #else or #endif in consumeSkippedTokens
                 // see below
                 unsigned int cppmode_size = !cppmode.empty() ? cppmode.top().statesize.size() : 0;
-
-                // move to the next non-skipped token
-                consumeSkippedTokens();
 
                 // catch and finally statements are nested inside of a try, if at that level
                 // so if no CATCH or FINALLY, then end now
@@ -1990,9 +1983,6 @@ else_handling[] { ENTRY_DEBUG } :
 
                             // end the else
                             endCurrentMode(MODE_ELSE);
-
-                            // move to the next non-skipped token
-                            consumeSkippedTokens();
 
                             /*
                               TODO:  Can we only do this if we detect a cpp change?
@@ -4719,8 +4709,6 @@ parameter[] { int type_count = 0; int secondtoken = 0;  DECLTYPE decl_type = NON
         { decl_type == VARIABLE || LA(1) == DOTDOTDOT}?
         parameter_type_count[type_count]
         {
-            consumeSkippedTokens();
-
             // expect a name initialization
             setMode(MODE_VARIABLE_NAME | MODE_INIT);
         }
@@ -4739,9 +4727,6 @@ parameter_type_count[int type_count] { CompleteElement element; ENTRY_DEBUG } :
             startElement(STYPE);
         }
         eat_type[type_count]
-        {
-            consumeSkippedTokens();
-        }
 
         // sometimes there is no parameter name.  if so, we need to eat it
         ( options { greedy = true; } : multops | tripledotop | LBRACKET RBRACKET)*
@@ -4839,9 +4824,6 @@ template_param[] { ENTRY_DEBUG } :
         }
         (
         parameter_type
-        {
-            consumeSkippedTokens();
-        }
         {
             // expect a name initialization
             setMode(MODE_VARIABLE_NAME | MODE_INIT);
