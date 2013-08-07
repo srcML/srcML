@@ -21,7 +21,7 @@
 /*
   Example program of the use of the C API for srcML.
 
-  Clone an archive
+  Clone an archive.
 */
 
 #include "srcml.h"
@@ -59,7 +59,7 @@ int main(int argc, char* argv[]) {
 
     /* free the srcML archive data */
     srcml_write_free(oarchive);
-    srcml_write_free(iarchive);
+    srcml_read_free(iarchive);
 
     return 0;
 }
