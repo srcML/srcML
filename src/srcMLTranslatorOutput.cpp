@@ -518,7 +518,7 @@ void srcMLTranslatorOutput::processAccess(const antlr::RefToken& token) {
 
 void srcMLTranslatorOutput::processToken(const antlr::RefToken& token) {
 
-  std::string s = token2name(token);
+  const std::string& s = token2name(token);
 
   if (s[0] == 0)
     return;
