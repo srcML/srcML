@@ -26,7 +26,6 @@
 
 #ifndef LIBXML2_NEW_BUFFER
 #define xmlBufContent(b) (b->content)
-#define xmlBufShrink(b, s) (b->use = s)
 #endif
 
 // Create a character buffer
@@ -210,7 +209,11 @@ int UTF8CharBuffer::getChar() {
   if (size == 0 || pos >= size) {
 
     // refill the buffer
+#ifdef LIBXML2_NEW_BUFFER
     xmlBufShrink(input->buffer, size);
+#else
+    input->buffer->use = 0;
+#endif
     size = xmlParserInputBufferGrow(input, SRCBUFSIZE);
 
     // found problem or eof
@@ -233,7 +236,11 @@ int UTF8CharBuffer::getChar() {
     if (pos >= size) {
 
       // refill the buffer
-      xmlBufShrink(input->buffer, size);
+#ifdef LIBXML2_NEW_BUFFER
+    xmlBufShrink(input->buffer, size);
+#else
+    input->buffer->use = 0;
+#endif
 
       size = growBuffer();
 
