@@ -4159,9 +4159,7 @@ general_operators[] { CompleteElement element; ENTRY_DEBUG } :
         OPERATORS | TEMPOPS |
             TEMPOPE ({ SkipBufferSize() == 0 }? TEMPOPE)? ({ SkipBufferSize() == 0 }? TEMPOPE)? ({ SkipBufferSize() == 0 }? EQUAL)? |
     EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF | 
-            QMARK ({ SkipBufferSize() == 0 }? QMARK)?
-
-/*            general_operators_list (options { greedy = true; } : { SkipBufferSize() == 0 }? general_operators_list)* */ |
+            QMARK ({ SkipBufferSize() == 0 }? QMARK)? |
 
             // others are not combined
             NEW | DELETE | IN | IS | STACKALLOC | AS | AWAIT | LAMBDA
