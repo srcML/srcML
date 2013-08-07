@@ -58,11 +58,11 @@ int main(int argc, char* argv[]) {
     for (i = 0; i < argc; ++i) {
 
         /* setup this unit.  may be different for each entry */
-        srcml_unit_set_language(archive, SRCML_LANGUAGE_C);
-        srcml_unit_set_filename(archive, argv[i]);
+        srcml_entry_set_language(archive, SRCML_LANGUAGE_C);
+        srcml_entry_set_filename(archive, argv[i]);
 
         /* Translate to srcml and append to the archive */
-        srcml_write_unit_filename(archive, argv[i]);
+        srcml_write_entry_filename(archive, argv[i]);
     }
 
     /* close the srcML archive */

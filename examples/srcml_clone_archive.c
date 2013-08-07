@@ -30,11 +30,11 @@ int main(int argc, char* argv[]) {
     int i;
     struct srcml_archive* iarchive;
     struct srcml_archive* oarchive;
-    struct srcml_archive_entry* entry;
+    struct srcml_entry* entry;
 
     /* open up an existing archive */
     iarchive = srcml_read_archive();
-    srcml_open_read_archive(iarchive, "project.xml");
+    srcml_read_open_filename(iarchive, "project.xml");
 
     /* create a new srcml archive structure */
     /* options and attributes of cloned archive start the same as
@@ -45,10 +45,10 @@ int main(int argc, char* argv[]) {
     srcml_write_open_filename(oarchive, "project2.xml");
 
     /* copy the files from the input archive to the output archive */
-    while (entry = srcml_read_unit_archive(iarchive)) {
+    while (entry = srcml_read_entry_archive(iarchive)) {
 
         /* Translate to srcml and append to the archive */
-        srcml_write_unit_archive(oarchive, entry);
+        srcml_write_entry_archive(oarchive, entry);
 
         srcml_free_archive_entry(entry);
     }

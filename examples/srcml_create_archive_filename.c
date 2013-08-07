@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
     for (i = 0; i < argc; ++i) {
 
         /* Translate to srcml and append to the archive */
-        srcml_write_unit_filename(archive, argv[i]);
+        srcml_write_entry_filename(archive, argv[i]);
     }
 
     /* close the srcML archive */

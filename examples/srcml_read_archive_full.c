@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
     const char* filename;
 
     /* create a new srcml archive structure */
-    struct srcml_archive* archive = srcml_read_new_archive();
+    struct srcml_archive* archive = srcml_read_archive();
 
     /* open a srcML archive for input */
     srcml_read_open_filename(archive, "project.xml");
@@ -41,11 +41,11 @@ int main(int argc, char* argv[]) {
     while (srcml_has_entry(archive)) {
 
         /* can inquire about the current entry */
-        language = srcml_unit_get_language(archive);
-        filename = srcml_unit_get_filename(archive);
+        language = srcml_entry_get_language(archive);
+        filename = srcml_entry_get_filename(archive);
 
         /* Translate to source and write to a file */
-        srcml_read_unit_filename(archive, filename);
+        srcml_read_entry_filename(archive, filename);
     }
 
     /* close the srcML archive */
