@@ -42,7 +42,7 @@ class StreamMLParser : public Base, public TokenStream {
 
   StreamMLParser(antlr::TokenStream& lexer, int language, int parsing_options = 0)
       : Base(lexer, language, parsing_options), options(parsing_options),
-        inskip(false), finaltoken(false), _lexer(lexer) /* , saveguess(false) */ {
+        inskip(false), _lexer(lexer) /* , saveguess(false) */ {
 
     pouttb = &tb;
     pskiptb = &skiptb;
@@ -183,7 +183,6 @@ class StreamMLParser : public Base, public TokenStream {
   }
 
   bool inskip;
-  bool finaltoken;
   antlr::TokenStream& _lexer;
 
   // consume the current token
@@ -195,20 +194,8 @@ class StreamMLParser : public Base, public TokenStream {
     // rest of consume process
     Base::consume();
 
-    if (!finaltoken) {
-      // consume any skipped tokens
-      consumeSkippedTokens();
-    }
-
-    finaltoken = false;
-  }
-
-  inline void setFinalToken() {
-    finaltoken = true;
-  }
-
-  inline void clearFinalToken() {
-    finaltoken = false;
+    // consume any skipped tokens
+    consumeSkippedTokens();
   }
 
   // consume the current token

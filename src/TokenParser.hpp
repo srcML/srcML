@@ -70,8 +70,6 @@ class TokenParser {
 
   virtual antlr::RefToken* CurrentToken() = 0;
 
-  virtual void setFinalToken() = 0;
-
   virtual void consumeSkippedTokens() = 0;
 
   virtual bool checkOption(int) = 0;
