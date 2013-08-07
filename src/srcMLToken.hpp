@@ -1,7 +1,7 @@
 /*
   srcMLToken.hpp
 
-  Copyright (C) 2004-2010  SDML (www.sdml.info)
+  Copyright (C) 2004-2013  SDML (www.sdml.info)
 
   This file is part of the srcML translator.
 
@@ -18,7 +18,9 @@
   You should have received a copy of the GNU General Public License
   along with the srcML translator; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
 
+/*
   Specialized token for srcML markup elements.
 */
 
@@ -33,6 +35,8 @@
 enum { STARTTOKEN = 0, ENDTOKEN = 50, EMPTYTOKEN = 75 };
 
 class srcMLToken : public antlr::Token {
+    friend bool isstart(const antlr::RefToken& token);
+    friend bool isempty(const antlr::RefToken& token);
 
  public:
 
@@ -69,12 +73,6 @@ class srcMLToken : public antlr::Token {
   // set the current text of the token
   virtual void setText(const std::string& s) { text = s; }
 
-  // current category
-  virtual int getCategory() const { return category; }
-
-  // set the current category
-  virtual void setCategory(int cat) { category = cat; }
-
   // destructor
   virtual ~srcMLToken() {}
 
@@ -100,20 +98,14 @@ inline srcMLToken* StartTokenFactory(int token) {
   return new srcMLToken(token, STARTTOKEN);
 }
 
-inline srcMLToken const * const Token2srcMLToken(const antlr::RefToken& token) {
-
-  //  return *token;
-  return static_cast<const srcMLToken*>(&(*token));
-}
-
 inline bool isstart(const antlr::RefToken& token) {
 
-  return Token2srcMLToken(token)->getCategory() != ENDTOKEN;
+  return static_cast<const srcMLToken*>(&(*token))->category != ENDTOKEN;
 }
 
 inline bool isempty(const antlr::RefToken& token) {
 
-  return Token2srcMLToken(token)->getCategory() == EMPTYTOKEN;
+    return static_cast<const srcMLToken*>(&(*token))->category == EMPTYTOKEN;
 }
 
 #endif
