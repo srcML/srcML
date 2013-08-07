@@ -346,26 +346,23 @@ const char* srcMLTranslatorOutput::token2name(const antlr::RefToken& token) cons
 
 const char* srcMLTranslatorOutput::type2name(int token_type) const {
 
-  static std::string name = "";
-
-  name = "";
+  static std::string name;
 
   const char* tagname = ElementNames[token_type];
 
   // no element name
   if (tagname[0] == '\0')
-      return name.c_str();
+      return "";
 
   // non-default namespace name
   const char* prefix = num2prefix[(int)ElementPrefix[token_type]];
   if (prefix[0] != '\0') {
      name = prefix;
      name += ':';
-  }
-  name += tagname;
-
-  // default namespace name
-  return name.c_str();
+     name += tagname;
+     return name.c_str();
+  } else
+      return tagname;
 }
 
 void srcMLTranslatorOutput::srcMLTextWriterStartElement(xmlTextWriter* xout, const xmlChar* s) {
