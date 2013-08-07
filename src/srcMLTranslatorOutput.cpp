@@ -339,12 +339,12 @@ int srcMLTranslatorOutput::consume_next() {
   return token->getType();
 }
 
-const std::string& srcMLTranslatorOutput::token2name(const antlr::RefToken& token) const {
+const char* srcMLTranslatorOutput::token2name(const antlr::RefToken& token) const {
 
   return type2name(token->getType());
 }
 
-const std::string& srcMLTranslatorOutput::type2name(int token_type) const {
+const char* srcMLTranslatorOutput::type2name(int token_type) const {
 
   static std::string name = "";
 
@@ -354,7 +354,7 @@ const std::string& srcMLTranslatorOutput::type2name(int token_type) const {
 
   // no element name
   if (tagname[0] == '\0')
-    return name;
+      return name.c_str();
 
   // non-default namespace name
   const char* prefix = num2prefix[(int)ElementPrefix[token_type]];
@@ -365,7 +365,7 @@ const std::string& srcMLTranslatorOutput::type2name(int token_type) const {
   name += tagname;
 
   // default namespace name
-  return name;
+  return name.c_str();
 }
 
 void srcMLTranslatorOutput::srcMLTextWriterStartElement(xmlTextWriter* xout, const xmlChar* s) {
@@ -382,9 +382,9 @@ void srcMLTranslatorOutput::srcMLTextWriterEndElement(xmlTextWriter* xout) {
 
 void srcMLTranslatorOutput::processEscape(const antlr::RefToken& token) {
 
-  const std::string& s = token2name(token);
+  const char* s = token2name(token);
 
-  srcMLTextWriterStartElement(xout, BAD_CAST s.c_str());
+  srcMLTextWriterStartElement(xout, BAD_CAST s);
 
   int n = token->getText()[0];
 
@@ -444,8 +444,8 @@ void srcMLTranslatorOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION
 void srcMLTranslatorOutput::startUnit(const char* language, const char* dir, const char* filename, const char* version, bool outer) {
 
   // start of main tag
-  const std::string& unit = type2name(SUNIT);
-  srcMLTextWriterStartElement(xout, BAD_CAST unit.c_str());
+  const char* unit = type2name(SUNIT);
+  srcMLTextWriterStartElement(xout, BAD_CAST unit);
 
   // outer units have namespaces
   if (/* outer && */ !isoption(OPTION_NAMESPACEDECL)) {
@@ -505,8 +505,8 @@ void srcMLTranslatorOutput::processAccess(const antlr::RefToken& token) {
   }
 
   // start the element
-  const std::string& tag = token2name(token);
-  srcMLTextWriterStartElement(xout, BAD_CAST tag.c_str());
+  const char* tag = token2name(token);
+  srcMLTextWriterStartElement(xout, BAD_CAST tag);
 
   xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST type_default);
 
@@ -518,13 +518,13 @@ void srcMLTranslatorOutput::processAccess(const antlr::RefToken& token) {
 
 void srcMLTranslatorOutput::processToken(const antlr::RefToken& token) {
 
-  const std::string& s = token2name(token);
+  const char* s = token2name(token);
 
   if (s[0] == 0)
     return;
 
   if (isstart(token) || isempty(token)) {
-    srcMLTextWriterStartElement(xout, BAD_CAST s.c_str());
+    srcMLTextWriterStartElement(xout, BAD_CAST s);
   }
 
   if (!isstart(token) || isempty(token)) {
@@ -535,9 +535,9 @@ void srcMLTranslatorOutput::processToken(const antlr::RefToken& token) {
 void srcMLTranslatorOutput::processJavadocCommentStart(const antlr::RefToken& token) {
   static const char* JAVADOC_COMMENT_ATTR = "javadoc";
 
-  const std::string& s = token2name(token);
+  const char* s = token2name(token);
 
-  srcMLTextWriterStartElement(xout, BAD_CAST s.c_str());
+  srcMLTextWriterStartElement(xout, BAD_CAST s);
 
   xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST JAVADOC_COMMENT_ATTR);
 
@@ -547,9 +547,9 @@ void srcMLTranslatorOutput::processJavadocCommentStart(const antlr::RefToken& to
 void srcMLTranslatorOutput::processBlockCommentStart(const antlr::RefToken& token) {
   static const char* BLOCK_COMMENT_ATTR = "block";
 
-  const std::string& s = token2name(token);
+  const char* s = token2name(token);
 
-  srcMLTextWriterStartElement(xout, BAD_CAST s.c_str());
+  srcMLTextWriterStartElement(xout, BAD_CAST s);
 
   xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST BLOCK_COMMENT_ATTR);
 
@@ -559,9 +559,9 @@ void srcMLTranslatorOutput::processBlockCommentStart(const antlr::RefToken& toke
 void srcMLTranslatorOutput::processLineCommentStart(const antlr::RefToken& token) {
   static const char* const LINE_COMMENT_ATTR = "line";
 
-  const std::string& s = token2name(token);
+  const char* s = token2name(token);
 
-  srcMLTextWriterStartElement(xout, BAD_CAST s.c_str());
+  srcMLTextWriterStartElement(xout, BAD_CAST s);
 
   xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST LINE_COMMENT_ATTR);
 
@@ -589,11 +589,10 @@ void srcMLTranslatorOutput::processEndBlockToken(const antlr::RefToken& token) {
 }
 
 void srcMLTranslatorOutput::processOptional(const antlr::RefToken& token, const char* attr_name, const char* attr_value) {
-
-  const std::string& s = token2name(token);
+  const char* s = token2name(token);
 
   if (isstart(token)) {
-    srcMLTextWriterStartElement(xout, BAD_CAST s.c_str());
+    srcMLTextWriterStartElement(xout, BAD_CAST s);
     xmlTextWriterWriteAttribute(xout, BAD_CAST attr_name, BAD_CAST attr_value);
   } else {
     srcMLTextWriterEndElement(xout);
@@ -623,12 +622,12 @@ void srcMLTranslatorOutput::processBoolean(const antlr::RefToken& token) {
 #if DEBUG
 void srcMLTranslatorOutput::processMarker(const antlr::RefToken& token) {
 
-  const std::string& s = token2name(token);
+  const char* s = token2name(token);
 
   if (s[0] == 0)
     return;
 
-  srcMLTextWriterStartElement(xout, BAD_CAST s.c_str());
+  srcMLTextWriterStartElement(xout, BAD_CAST s);
 
   xmlTextWriterWriteAttribute(xout, BAD_CAST "location", BAD_CAST token->getText().c_str());
 
