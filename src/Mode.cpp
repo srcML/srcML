@@ -99,28 +99,28 @@ const State::MODE_TYPE Mode::MODE_END_AT_COMMA        = ull(0x8000000000000000);
 /*
 int Mode::size() const {
 
-  return pstate->size();
+  return statev.size();
 }
 */
 
 /*
 bool Mode::inMode(const State::MODE_TYPE& m) const {
 
-  return pstate->inMode(m);
+  return statev.inMode(m);
 }
 bool Mode::inTransparentMode(const State::MODE_TYPE& m) const {
 
-  return pstate->inTransparentMode(m);
+  return statev.inTransparentMode(m);
 }
 */
 
 // end elements down to a specific mode
 void Mode::endDownToMode(const State::MODE_TYPE& mode, const State::MODE_TYPE& stopmode) {
 
-  if (!pstate->inTransparentMode(mode))
+  if (!statev.inTransparentMode(mode))
       return;
 
-  while (pstate->size() > 1 && !pstate->inMode(mode) && (stopmode ? !pstate->inMode(stopmode) : true)) {
+  while (statev.size() > 1 && !statev.inMode(mode) && (stopmode ? !statev.inMode(stopmode) : true)) {
       endCurrentMode();
   }
 }
@@ -128,10 +128,10 @@ void Mode::endDownToMode(const State::MODE_TYPE& mode, const State::MODE_TYPE& s
 // end elements down to a specific mode
 void Mode::endDownToFirstMode(const State::MODE_TYPE& mode, const State::MODE_TYPE& stopmode) {
 
-  //  if (pstate->getTransparentMode() & (mode == 0))
+  //  if (statev.getTransparentMode() & (mode == 0))
   //      return;
 
-  while (pstate->size() > 1 && (pstate->getMode() & mode) == 0 && (stopmode ? !pstate->inMode(stopmode) : true)) {
+  while (statev.size() > 1 && (statev.getMode() & mode) == 0 && (stopmode ? !statev.inMode(stopmode) : true)) {
       endCurrentMode();
   }
 }
@@ -139,7 +139,7 @@ void Mode::endDownToFirstMode(const State::MODE_TYPE& mode, const State::MODE_TY
 // end elements down to a specific mode
 void Mode::endDownOverMode(const State::MODE_TYPE& mode, const State::MODE_TYPE& stopmode) {
 
-  while (pstate->size() > 1 && pstate->inMode(mode) && (stopmode ? !pstate->inMode(stopmode) : true)) {
+  while (statev.size() > 1 && statev.inMode(mode) && (stopmode ? !statev.inMode(stopmode) : true)) {
       endCurrentMode();
   }
 }
