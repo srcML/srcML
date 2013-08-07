@@ -111,7 +111,7 @@ add_custom_target(srcMLParserTokenTypesMacro.hpp DEPENDS srcMLParserTokenTypes.h
 if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
 # srcml
 add_executable(srcml EXCLUDE_FROM_ALL srcml.cpp)
-#target_link_libraries(srcml ${Boost_PROGRAM_OPTIONS_LIBRARY})
+target_link_libraries(srcml ${Boost_PROGRAM_OPTIONS_LIBRARY})
 endif()
 
 # src2srcml
