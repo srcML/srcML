@@ -195,47 +195,9 @@ class StreamParser : public Base, public TokenStream {
     // pop and send back the top token
     const antlr::RefToken& tok = tb.front();
 
-    //std::cerr << tok->getType() << " " << tok->getText() << std::endl;
-
     return tok;
   }
 
-
-  /*
-  // guessing buffer
-  std::vector<antlr::RefToken> guessingbuffer;
-
-  bool saveguess;
-
-  int getGuessToken(int pos) {
-    return guessingbuffer[pos]->getType();
-  }
-
-  int getGuessSize() const {
-    return guessingbuffer.size();
-  }
-
-  void startSaveGuess() {
-    saveguess = true;
-    guessingbuffer.clear();
-  }
-
-  void endSaveGuess() {
-    saveguess = false;
-    guessingbuffer.push_back(Base::LT(1));
-  }
-
-  unsigned int mark() {
-    if (saveguess)
-      guessingbuffer.clear();
-
-    return Base::mark();
-  }
-
-  void rewind(unsigned int pos) {
-    Base::rewind(pos);
-  }
-  */
  protected:
 
   // push the token onto the output token stream
