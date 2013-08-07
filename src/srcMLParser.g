@@ -2463,7 +2463,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                 LBRACKET
                        (COMMA)*
 
-                        (RETURN | EVENT | set_bool[global, LT(1)->getText() == "module" || LT(1)->getText() == "assembly"] identifier)?
+                        (RETURN | EVENT | set_bool[global, check_global()] identifier)?
 
                         (COLON)*
 
@@ -2616,6 +2616,12 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
         set_type[type, CONSTRUCTOR, !saveisdestructor && isconstructor]
 )
 ;
+
+check_global[] returns [bool flag] {
+        std::string s = LT(1)->getText();
+
+        flag = s == "module" || s == "assembly";
+}:;
 
 //monitor { std::cerr << namestack[0] << " " << namestack[1] << std::endl; } :;
 
@@ -3117,7 +3123,7 @@ attribute_target[] { CompleteElement element; ENTRY_DEBUG } :
 
 attribute_target_global[] returns [bool global = false] { ENTRY_DEBUG } :
 
-        set_bool[global, LA(1) != RETURN && LA(1) != EVENT && (LT(1)->getText() == "module" || LT(1)->getText() == "assembly")]
+        set_bool[global, LA(1) != RETURN && LA(1) != EVENT && check_global()]
 
         attribute_target
 ;
