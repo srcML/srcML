@@ -50,14 +50,7 @@ class StreamMLParser : public Base, public TokenStream {
     Base::startUnit();
   }
 
- private:
-  int options;
-
- public:
-
   ~StreamMLParser() {}
-
- public:
 
   // checks if an option is set
   bool checkOption(int id) {
@@ -182,9 +175,6 @@ class StreamMLParser : public Base, public TokenStream {
     pushToken(antlr::RefToken(EndTokenFactory(token)), false);
   }
 
-  bool inskip;
-  antlr::TokenStream& _lexer;
-
   // consume the current token
   void consume() {
 
@@ -262,10 +252,6 @@ class StreamMLParser : public Base, public TokenStream {
 
   // flush any skipped tokens to the output token stream
   void flushSkip() {
-    skip2output();
-  }
-
-  void skip2output() {
     flushSkip(output());
   }
 
@@ -283,8 +269,6 @@ class StreamMLParser : public Base, public TokenStream {
     Provide TokenStream interface
   */
 
- public:
-
   // returns the next token in the output token stream
   const antlr::RefToken& nextToken() {
 
@@ -301,8 +285,6 @@ class StreamMLParser : public Base, public TokenStream {
     return tok;
   }
 
- protected:
-
   // push the token onto the output token stream
   void pushToken(const antlr::RefToken& rtoken, bool flush = true) {
 
@@ -312,7 +294,7 @@ class StreamMLParser : public Base, public TokenStream {
 
     // if it isn't an end token flush whitespace tokens
     if (flush) {
-      skip2output();
+        flushSkip(output());
     }
 
     // push the new token into the token buffer
@@ -368,14 +350,15 @@ class StreamMLParser : public Base, public TokenStream {
     pushSkipToken(Base::LT(1));
   }
 
- public:
-
   antlr::RefToken* CurrentToken() {
 
     return &(output().back());
   }
 
- protected:
+private:
+  int options;
+  bool inskip;
+  antlr::TokenStream& _lexer;
 
   // token buffer
   std::list<antlr::RefToken> tb;
