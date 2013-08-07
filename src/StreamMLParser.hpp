@@ -1,7 +1,7 @@
 /*
   StreamMLParser.hpp
 
-  Copyright (C) 2002-2010  SDML (www.sdml.info)
+  Copyright (C) 2002-2013  SDML (www.sdml.info)
 
   This file is part of the srcML translator.
 
@@ -42,7 +42,7 @@ class StreamMLParser : public Base, public TokenStream {
 
   StreamMLParser(antlr::TokenStream& lexer, int language, int parsing_options = 0)
       : Base(lexer, language, parsing_options), options(parsing_options),
-        inskip(false), _lexer(lexer) /* , saveguess(false) */ {
+        inskip(false), _lexer(lexer) {
 
     pouttb = &tb;
     pskiptb = &skiptb;
@@ -138,19 +138,6 @@ class StreamMLParser : public Base, public TokenStream {
     }
   }
 
-/*
-  // push the token onto the output token stream
-  void pushToken(const antlr::RefToken& rtoken, bool flush = true) {
-
-    // don't push any tokens during guessing stage
-    if (Base::inputState->guessing != 0)
-      return;
-
-    // normal pushToken
-    pushToken(rtoken, flush);
-  }
-*/
-
   /*
     Provide markup tag specific pushToken methods
   */
@@ -177,13 +164,6 @@ class StreamMLParser : public Base, public TokenStream {
 
     // rest of consume process
     Base::consume();
-
-    // consume any skipped tokens
-    consumeSkippedTokens();
-  }
-
-  // consume the current token
-  void consumeSkippedTokens() {
 
     // consume any skipped tokens
     while (consumeSkippedToken())
@@ -224,8 +204,11 @@ class StreamMLParser : public Base, public TokenStream {
 
     // actual whitespace
     if (isSkipToken(Base::LA(1))) {
-      // consume skipped character
-      consumeSkip();
+      // skipped tokens are put on a special buffer
+      pushSkipToken();
+
+      // rest of consume process
+      Base::consume();
 
       return true;
     }
