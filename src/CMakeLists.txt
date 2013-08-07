@@ -2,8 +2,9 @@
 #    CMakeLists.txt
 #
 #
-#    Optional cmake file for srcML.
-#    The main way to build srcML is with normal Makefile
+#    The main way to build srcML.
+#    Makefile.old is provided as an alternative.
+
 
 cmake_minimum_required(VERSION 2.8)
 project(srcML)
