@@ -5324,7 +5324,7 @@ eol_post[int directive_token, bool markblockzero] {
                     ++cppifcount;
 
                     // create new context for #if (and possible #else)
-                    if (checkOption(OPTION_CPP_MARKUP_ELSE) && !inputState->guessing) {
+                    if (isoption(parseoptions, OPTION_CPP_MARKUP_ELSE) && !inputState->guessing) {
 
                         cppmode.push(cppmodeitem(size()));
                     }
@@ -5344,7 +5344,7 @@ eol_post[int directive_token, bool markblockzero] {
                         cppifcount = 1;
                     }
 
-                    if (!checkOption(OPTION_CPP_MARKUP_ELSE) && !inputState->guessing) {
+                    if (!isoption(parseoptions, OPTION_CPP_MARKUP_ELSE) && !inputState->guessing) {
 
                         // create an empty cppmode for #if if one doesn't exist
                         if (cppmode.empty())
@@ -5374,7 +5374,7 @@ eol_post[int directive_token, bool markblockzero] {
                     if (skipelse && cppifcount == 0)
                         skipelse = false;
 
-                    if (!checkOption(OPTION_CPP_MARKUP_ELSE) && !inputState->guessing &&
+                    if (!isoption(parseoptions, OPTION_CPP_MARKUP_ELSE) && !inputState->guessing &&
                         !cppmode.empty()) {
 
                         // add new context for #endif in current #if
@@ -5398,8 +5398,8 @@ eol_post[int directive_token, bool markblockzero] {
                 - when guessing and in else (unless in zero block)
                 - when ??? for cppmode
         */
-        if ((!checkOption(OPTION_CPP_MARKUP_IF0) && cpp_zeromode) ||
-            (!checkOption(OPTION_CPP_MARKUP_ELSE) && skipelse) ||
+        if ((!isoption(parseoptions, OPTION_CPP_MARKUP_IF0) && cpp_zeromode) ||
+            (!isoption(parseoptions, OPTION_CPP_MARKUP_ELSE) && skipelse) ||
             (inputState->guessing && skipelse) ||
             (!cppmode.empty() && !cppmode.top().isclosed && cppmode.top().skipelse)
         ) {
@@ -5428,7 +5428,7 @@ cppmode_cleanup[] {
 // ended modes that may lead to needed updates
 cppmode_adjust[] {
 
-    if (checkOption(OPTION_CPP_MARKUP_ELSE) && !cppmode.empty() && 
+    if (isoption(parseoptions, OPTION_CPP_MARKUP_ELSE) && !cppmode.empty() && 
         cppmode.top().isclosed == true &&
         size() < cppmode.top().statesize.back()) {
 
