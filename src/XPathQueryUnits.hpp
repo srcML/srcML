@@ -115,46 +115,43 @@ public :
         dlerror();
         dlsymvar(exsltXpathCtxtRegister,exsltDateXpathCtxtRegister);
         if (dlerror() == NULL)  {
-#endif
             // register exslt functions for XPath usage
             if (exsltDateXpathCtxtRegister(context, BAD_CAST "date") == -1) {
                 fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
                         "srcml2src", "date");
             }
-#if defined(__GNUG__) && !defined(__MINGW32__)
         }
 
         dlerror();
         dlsymvar(exsltXpathCtxtRegister,exsltMathXpathCtxtRegister);
         if (dlerror() == NULL)  {
-#endif
             if (exsltMathXpathCtxtRegister(context, BAD_CAST "math") == -1) {
                 fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
                         "srcml2src", "math");
             }
-#if defined(__GNUG__) && !defined(__MINGW32__)
+
         }
 
         dlerror();
         dlsymvar(exsltXpathCtxtRegister,exsltSetsXpathCtxtRegister);
         if (dlerror() == NULL)  {
-#endif
+
             if (exsltSetsXpathCtxtRegister(context, BAD_CAST "set") == -1) {
                 fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
                         "srcml2src", "set");
             }
-#if defined(__GNUG__) && !defined(__MINGW32__)
+
         }
 
         dlerror();
         dlsymvar(exsltXpathCtxtRegister,exsltStrXpathCtxtRegister);
         if (dlerror() == NULL)  {
-#endif
+
             if (exsltStrXpathCtxtRegister(context, BAD_CAST "str") == -1) {
                 fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
                         "srcml2src", "str");
             }
-#if defined(__GNUG__) && !defined(__MINGW32__)
+
         }
     }
 #endif

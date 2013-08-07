@@ -670,10 +670,12 @@ void dlexsltRegisterAll() {
         dlclose(handle);
         return;
     }
-#endif
 
     // allow for all exslt functions
     exsltRegisterAll();
+
+#endif
+
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
     dlclose(handle);
