@@ -197,7 +197,7 @@ int main(int argc, char * argv[]) {
 			("compress,z", prog_opts::bool_switch()->notifier(&option_compress), "output in gzip format")
 			("help,h", prog_opts::value<std::string>()->implicit_value("")->notifier(&option_help),"display this help and exit. USAGE: help or help [module name]. MODULES: src2srcml, srcml2src")
 			("no-namespace-decl", prog_opts::bool_switch()->notifier(&option_no_namespace_decl), "do not output any namespace declarations")
-			("no-xml-dexlaration", prog_opts::bool_switch()->notifier(&option_no_xml_dexlaration), "do not output the XML declaration")
+			("no-xml-declaration", prog_opts::bool_switch()->notifier(&option_no_xml_dexlaration), "do not output the XML declaration")
 			("output,o", prog_opts::value<std::string>()->notifier(&option_output), "write result ouput to arg which is a FILE or URI")
 			("quiet,q", prog_opts::bool_switch()->notifier(&option_quiet), "suppresses status messages")
 			("src-encoding,t", prog_opts::value<std::string>()->notifier(&option_src_encoding), "set the input source encoding to arg (default:  ISO-8859-1)")
