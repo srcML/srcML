@@ -339,14 +339,16 @@ int srcMLTranslatorOutput::consume_next() {
   return token->getType();
 }
 
-std::string srcMLTranslatorOutput::token2name(const antlr::RefToken& token) const {
+const std::string& srcMLTranslatorOutput::token2name(const antlr::RefToken& token) const {
 
   return type2name(token->getType());
 }
 
-std::string srcMLTranslatorOutput::type2name(int token_type) const {
+const std::string& srcMLTranslatorOutput::type2name(int token_type) const {
 
-  std::string name = "";
+  static std::string name = "";
+
+  name = "";
 
   const char* tagname = ElementNames[token_type];
 
