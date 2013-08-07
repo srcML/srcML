@@ -63,10 +63,6 @@
 #define SRCML_LANGUAGE_JAVA   "Java"
 #define SRCML_LANGUAGE_CSHARP "C#"
 
-/*
-  src2srcml - translate from source code to the srcML format
-*/
-
 struct srcml_archive;
 struct srcml_entry;
 
@@ -78,10 +74,6 @@ struct srcml_entry;
 
    CLI equivalence:  srcml main.cpp -o main.cpp.xml
                      srcml main.cpp.xml -o main.cpp
-
-   NOTE:  Should language be a string?  Or an enumerated type?  Keep in mind, future languages
-   may be user added.  Probably string would be more flexible.  Perhaps provide constants
-   for core languages
 */
 int srcml(const char* input_filename, const char* output_filename, const char* language);
 
@@ -119,31 +111,6 @@ int srcml_check_exslt();
 /* string describing last error */
 const char* srcml_error_string();
 
-#if 0
-/* Translates from source code to srcML. Language determined by file extension.
-   For setting attributes, encoding, etc, use src2srcml_filename_filename()
-
-   (Old) CLI equivalence:  src2srcml main.cpp -o main.cpp.xml
-*/
-int src2srcml(const char* src_filename, const char* srcml_filename);
-#endif
-
-/* Too many parameters.  Favoring set on full archive */
-#if 0
-/* Translates source code to srcML with full control of attr/options */
-int src2srcml_filename_filename(char* src_filename, char* srcml_filename, int options, char* language, char* attr[][2]);
-int src2srcml_filename_memory  (char* src_filename, char** srcml_buffer,  size_t size, int options, char* language, char* attr[][2]);
-int src2srcml_memory_filename  (char* src_buffer, char* srcml_filename,   int options, char* language, char* attr[][2]);
-int src2srcml_memory_memory    (char* src_buffer, char** srcml_buffer, size_t size,    int options, char* language, char* attr[][2]);
-
-/* Translates a list of source code files to a srcML archive */
-/* NOTE:  have src_encoding be part of attr? */
-int src2srcml_filelist_filename(char* src_filelist[], int size, char* srcmlfilename, int options, char* language, char* src_encoding, char* attr[][2]);
-int src2srcml_filelist_memory  (char* src_filelist[], int size, char** srcml_buffer, int options, char* language, char* src_encoding, char* attr[][2]);
-int src2srcml_filelist_FILE    (char* src_filelist[], int size, FILE* srcml_file,    int options, char* language, char* src_encoding, char* attr[][2]);
-int src2srcml_filelist_fd      (char* src_filelist[], int size, int srcml_fd,        int options, char* language, char* src_encoding, char* attr[][2]);
-#endif
-
 /*
   Full API for creating srcML archives
 */
@@ -157,8 +124,7 @@ struct srcml_archive* srcml_read_archive();
 int srcml_has_entry(struct srcml_archive*);
 
 /* clone the setup of an existing archive
-   client will have to free it using src2srcml_free() */
-struct srcml_archive* src2srcml_clone_archive(const struct srcml_archive*);
+   client will have to free it using srcml_archive_free() */
 struct srcml_archive* srcml_clone_archive(const struct srcml_archive*);
 
 /* setup options for srcml archive */
@@ -221,21 +187,6 @@ void srcml_write_free(struct srcml_archive*);
 void srcml_read_free(struct srcml_archive*);
 
 void srcml_free_archive_entry(struct srcml_entry*);
-
-#if 0
-/*
-  srcml2src - translate from the srcML format back to source code
-  NOTE: mirror of src2srcml
-*/
-
-
-/* srcML file converted back to a source code file, or directory of source-code files for an archive */
-int srcml2src(const char* srcml_filename, const char* src_filename);
-
-#if 0
-int srcml2src_filename_filename(const char* srcml_filename, const char* src_filename, int options, const char* src_encoding, int unit);
-#endif
-#endif
 
 const char* srcml_get_encoding (const struct srcml_archive*);
 const char* srcml_get_language (const struct srcml_archive*);
