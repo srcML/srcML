@@ -52,12 +52,6 @@ class StreamMLParser : public Base, public TokenStream {
 
   ~StreamMLParser() {}
 
-  // checks if an option is set
-  bool checkOption(int id) {
-
-    return (options & id) > 0;
-  }
-
   // starts an element
   void startElement(int id) {
 

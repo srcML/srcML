@@ -72,8 +72,6 @@ class TokenParser {
 
   virtual void consumeSkippedTokens() = 0;
 
-  virtual bool checkOption(int) = 0;
-
   virtual ~TokenParser() {}
 };
 
