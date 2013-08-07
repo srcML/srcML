@@ -158,8 +158,7 @@ public:
 
   Mode(TokenParser* ptp, int lang)
     : Language(lang), statev(ptp)
-  {
-  }
+  {}
 
   ~Mode() {}
 
@@ -213,21 +212,6 @@ protected:
   void decTypeCount() {
 
     statev.decTypeCount();
-  }
-
-  State::MODE_TYPE getMode() const {
-
-    return statev.getMode();
-  }
-
-  State::MODE_TYPE getPrevMode() const {
-
-    return statev.getMode();
-  }
-
-  State::MODE_TYPE getTransparentMode() const {
-
-    return statev.getTransparentMode();
   }
 
   void startNewMode(const State::MODE_TYPE& m) {
