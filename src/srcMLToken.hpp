@@ -109,8 +109,6 @@ inline srcMLToken const * const Token2srcMLToken(const antlr::RefToken& token) {
 inline bool isstart(const antlr::RefToken& token) {
 
   return Token2srcMLToken(token)->getCategory() != ENDTOKEN;
-
-  return token->getLine() != ENDTOKEN;
 }
 
 inline bool isempty(const antlr::RefToken& token) {
