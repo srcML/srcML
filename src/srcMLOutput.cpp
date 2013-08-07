@@ -286,6 +286,8 @@ void srcMLOutput::processText(const antlr::RefToken& token) {
     xmlTextWriterWriteAttribute(xout, BAD_CAST columnAttribute.c_str(), BAD_CAST columnAttributeValue(token));
   }
 
-  xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) token->getText().data(), token->getText().size());
+  /* cache string so only one copy is made */
+  std::string s = token->getText();
+  xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) s.data(), s.size());
 }
 
