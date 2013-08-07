@@ -92,7 +92,7 @@ if(NOT CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64" AND NOT CMAKE_SYSTEM_NAME MATCHES
        # libsrcml shared
        add_library(srcml_shared SHARED srcMLParser.cpp KeywordCPPLexer.cpp srcMLTranslator.cpp srcMLTranslatorCore.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp UTF8CharBuffer.cpp PureCommentLexer.cpp Language.cpp URIStream.cpp srcmlapps.cpp libxml_archive_read.cpp libxml_archive_write.cpp srcMLParserTokenTypesMacro.hpp srcMLUtility.cpp SAX2ExtractUnitsSrc.cpp SAX2Utilities.cpp SAX2UnitDOM.cpp SAX2UnitDOMRelaxNG.cpp srcexfun.cpp)
        target_link_libraries(srcml_shared ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB})
-       set_target_properties(srcml_shared PROPERTIES ../bin OUTPUT_NAME srcml)
+       set_target_properties(srcml_shared PROPERTIES OUTPUT_NAME srcml)
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
