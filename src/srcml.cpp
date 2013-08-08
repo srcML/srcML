@@ -20,6 +20,13 @@
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+/*
+  The srcml program to transform to/from the srcML format, plus provides a variety of
+  querying and transformation features.
+
+  Replaces the src2srcml and srcml2src of the original srcML toolkit.
+*/
+
 #include <iostream>
 #include <boost/program_options.hpp>
 #include <string>
@@ -107,6 +114,7 @@ const char* SRCML2SRC_FOOTER = "Examples:\
 //CLI Option Functions
 
 struct srcml_request_t {
+	int request;
     int markup_options;
     std::string filename;
 };
@@ -128,17 +136,16 @@ const int SRCML_REQUEST_INFO_FILENAME = 4;
 
 /* DREW:  Most of the no parameter options could be recorded this way */
 
-template <int moption>
+template <int option>
 void option_markup(bool opt) {
 
-    srcml_request.markup_options |= moption;
+    srcml_request.markup_options |= opt;
 }
 
 template <int request>
 void option_request(bool opt) {
 
-    // would OR this with 
-    request;
+    srcml_request.request |= opt;
 }
 
 void option_filename(const std::string& value) { srcml_request.filename = value; }
