@@ -82,12 +82,10 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   if (isoption(OPTION_POSITION)) {
 
     lineAttribute = num2prefix[SRCML_EXT_POSITION_NS_URI_POS];
-    lineAttribute += ':';
-    lineAttribute += "line";
+    lineAttribute += ":line";
 
     columnAttribute = num2prefix[SRCML_EXT_POSITION_NS_URI_POS];
-    columnAttribute += ':';
-    columnAttribute += "column";
+    columnAttribute += ":column";
   }
 
   // issue the xml declaration, but only if we want to
@@ -209,8 +207,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
   if (isoption(OPTION_POSITION)) {
     stabs << tabsize;
     tabattribute = num2prefix[SRCML_EXT_POSITION_NS_URI_POS];
-    tabattribute.append(":");
-    tabattribute.append("tabs");
+    tabattribute.append(":tabs");
   }
 
   // list of attributes
