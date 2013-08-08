@@ -81,13 +81,13 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   // setup attributes names for line/column position if used
   if (isoption(OPTION_POSITION)) {
 
-    std::ostringstream out;
-    out << num2prefix[SRCML_EXT_POSITION_NS_URI_POS] << ':' << "line";
-    lineAttribute = out.str();
+    lineAttribute = num2prefix[SRCML_EXT_POSITION_NS_URI_POS];
+    lineAttribute += ':';
+    lineAttribute += "line";
 
-    std::ostringstream out2;
-    out2 << num2prefix[SRCML_EXT_POSITION_NS_URI_POS] << ':' << "column";
-    columnAttribute = out2.str();
+    columnAttribute = num2prefix[SRCML_EXT_POSITION_NS_URI_POS];
+    columnAttribute += ':';
+    columnAttribute += "column";
   }
 
   // issue the xml declaration, but only if we want to
