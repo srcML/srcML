@@ -314,7 +314,6 @@ int main(int argc, char * argv[]) {
   return 0;
 }
 
-//Find the custom formatted option and swap it for something boost understands.
 std::pair<std::string, std::string> custom_parser(const std::string& s) {
 	if (s.find("--xmlns:") == 0) {
 		return std::make_pair(std::string("xmlns:"), std::string(s.substr(s.find(":")+1)));
