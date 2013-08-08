@@ -106,9 +106,11 @@ const char* SRCML2SRC_FOOTER = "Examples:\
 //CLI Option Functions
 
 /* These will eventually come from srcml.h, the libsrcml include file */
-const int OPTION_LITERAL = 1;
-const int OPTION_MODIFIER = 2;
-const int OPTION_OPERATOR = 4;
+const int SRCML_OPTION_LITERAL = 1;
+const int SRCML_OPTION_MODIFIER = 2;
+const int SRCML_OPTION_OPERATOR = 4;
+
+/* DREW:  Most of the no parameter options could be recorded this way */
 
 template <int moption>
 void option_markup(bool opt) {
@@ -117,10 +119,10 @@ void option_markup(bool opt) {
     moption;
 }
 
-
+/*
 void option_modifier(bool opt);
 void option_operator(bool opt);
-
+*/
 
 void option_compress(bool opt);
 void option_help(const std::string& opt);
