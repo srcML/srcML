@@ -169,6 +169,7 @@ void positional_args(const std::string& opt);
 
 /* Function used to check that 'opt1' and 'opt2' are not specified
    at the same time. (FROM BOOST LIBRARY EXAMPLES)*/
+std::pair<std::string, std::string> custom_parser(const std::string& s);
 void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, const char* opt2);
 
 // Define Program Options
@@ -297,7 +298,8 @@ int main(int argc, char * argv[]) {
 
 		//ASSIGN THE CLI ARGS TO MAP
 		prog_opts::variables_map cli_map;
-		prog_opts::store(prog_opts::command_line_parser(argc, argv).options(all).positional(input_file).run(), cli_map);
+		prog_opts::store(prog_opts::command_line_parser(argc, argv).options(all).
+			positional(input_file).extra_parser(custom_parser).run(), cli_map);
 		prog_opts::notify(cli_map);
 
 		//CHECK OPTION CONFLICTS
@@ -310,6 +312,16 @@ int main(int argc, char * argv[]) {
   }
 
   return 0;
+}
+
+//Find the custom formatted option and swap it for something boost understands.
+std::pair<std::string, std::string> custom_parser(const std::string& s) {
+	if (s.find("--xmlns:") == 0) {
+		return std::make_pair(std::string("xmlns:"), std::string(s.substr(s.find(":")+1)));
+	}
+	else {
+		return std::make_pair(std::string(), std::string());
+	}
 }
 
 void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, const char* opt2) {
@@ -356,7 +368,7 @@ void option_no_xml_dexlaration(const bool opt){
 }
 
 void option_output(const std::string& opt){
-	std::cout << "Output Option: " << opt << "\n";
+
 }
 
 void option_quiet(const bool opt){
@@ -508,7 +520,7 @@ void option_xmlns_uri(const std::string& opt){
 }
 
 void option_xmlns_prefix(const std::string& opt){
-
+	
 }
 
 void option_apply_root(const bool opt){
@@ -540,5 +552,5 @@ void option_unit(const int opt){
 }
 
 void positional_args(const std::string& opt){
-	std::cout << "Pos Arg: " << opt << "\n";
+	
 }
