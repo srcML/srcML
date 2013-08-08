@@ -113,6 +113,9 @@ const char* srcml_error_string();
 struct srcml_archive* srcml_write_new_archive();
 struct srcml_archive* srcml_read_archive();
 
+struct srcml_entry* srcml_new_entry(struct srcml_archive*);
+int srcml_free_entry(struct srcml_entry*);
+
 /* current entry in archive */
 int srcml_has_entry(struct srcml_archive*);
 
@@ -158,14 +161,14 @@ const char* srcml_entry_get_directory(const struct srcml_entry*);
 const char* srcml_entry_get_version  (const struct srcml_entry*);
 
 /* Convert to srcml and append to the archive */
-int srcml_write_entry_archive (struct srcml_archive*, struct srcml_entry*);
-int srcml_write_entry_filename(struct srcml_archive*, const char* src_filename);
-int srcml_write_entry_memory  (struct srcml_archive*, char* src_buffer, size_t buffer_size);
-int srcml_write_entry_FILE    (struct srcml_archive*, FILE* src_file);
-int srcml_write_entry_fd      (struct srcml_archive*, int src_fd);
+int srcml_write_entry_archive (struct srcml_archive*, const struct srcml_entry*);
+int srcml_write_entry_filename(struct srcml_archive*, const struct srcml_entry*, const char* src_filename);
+int srcml_write_entry_memory  (struct srcml_archive*, const struct srcml_entry*, char* src_buffer, size_t buffer_size);
+int srcml_write_entry_FILE    (struct srcml_archive*, const struct srcml_entry*, FILE* src_file);
+int srcml_write_entry_fd      (struct srcml_archive*, const struct srcml_entry*, int src_fd);
 
 /* Read the next entry from the archive */
-const struct srcml_entry* srcml_read_entry_archive (struct srcml_archive*);
+struct srcml_entry* srcml_read_entry_archive (struct srcml_archive*);
 const struct srcml_entry* srcml_read_archive_current_entry(const struct srcml_archive*);
 int srcml_read_entry_filename(struct srcml_archive*, const char* src_filename);
 int srcml_read_entry_memory  (struct srcml_archive*, const char* src_buffer, size_t buffer_size);
