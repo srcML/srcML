@@ -121,7 +121,7 @@ void option_expression(const bool opt);
 void option_files_from(const std::string& opt);
 void option_interactive(const bool opt);
 void option_language(const std::string& opt);
-void option_register_ext(const std::string& opt);
+void option_register_ext(const std::vector<std::string>& opt);
 
 void option_xml(const bool opt);
 
@@ -154,12 +154,12 @@ void option_show_language(const bool opt);
 void option_show_src_version(const bool opt);
 
 void option_xmlns_uri(const std::string& opt);
-void option_xmlns_prefix(const std::string& opt);
+void option_xmlns_prefix(const std::vector<std::string>& opt);
 
 void option_apply_root(const bool opt);
 void option_relaxng(const std::string& opt);
 void option_xpath(const std::string& opt);
-void option_xpathparam(const std::string& opt);
+void option_xpathparam(const std::vector<std::string>& opt);
 void option_xslt(const std::string& opt);
 
 void option_to_dir(const bool opt);
@@ -214,7 +214,7 @@ int main(int argc, char * argv[]) {
 			("files-from", prog_opts::value<std::string>()->notifier(&option_files_from), "read list of source file names, either FILE or URI, from arg to form a srcML archive")
 			("interactive,c", prog_opts::bool_switch()->notifier(&option_interactive), "immediate output while parsing, default for keyboard input")
 			("language,l", prog_opts::value<std::string>()->notifier(&option_language), "set the language to C, C++, or Java")
-			("register-ext", prog_opts::value<std::string>()->notifier(&option_register_ext), "register file extension EXT for source-code language LANG. arg format EXT=LANG")
+			("register-ext", prog_opts::value< std::vector<std::string> >()->notifier(&option_register_ext), "register file extension EXT for source-code language LANG. arg format EXT=LANG")
 			;
 
 		srcml2src_options.add_options()
@@ -261,14 +261,14 @@ int main(int argc, char * argv[]) {
 
 		prefix.add_options()
 			("xmlns", prog_opts::value<std::string>()->notifier(&option_xmlns_uri), "set the default namespace to arg")
-			("xmlns:", prog_opts::value<std::string>()->notifier(&option_xmlns_prefix), "set the namespace arg format PREFIX=URI")
+			("xmlns:", prog_opts::value< std::vector<std::string> >()->notifier(&option_xmlns_prefix), "set the namespace arg format PREFIX=URI")
 			;
 
 		query_transform.add_options()
 			("apply-root", prog_opts::bool_switch()->notifier(&option_apply_root), "apply an xslt program or xpath query to the root element")
 			("relaxng", prog_opts::value<std::string>()->notifier(&option_relaxng), "output individual units that match RELAXNG_FILE (FILE or URI) arg")
 			("xpath", prog_opts::value<std::string>()->notifier(&option_xpath), "apply XPATH expression arg to each individual unit")
-			("xpathparam", prog_opts::value<std::string>()->notifier(&option_xpathparam), "passes a parameter NAME and VAL arg to the XSLT program. arg format NAME=VAL")
+			("xpathparam", prog_opts::value< std::vector<std::string> >()->notifier(&option_xpathparam), "passes a parameter NAME and VAL arg to the XSLT program. arg format NAME=VAL")
 			("xslt", prog_opts::value<std::string>()->notifier(&option_xslt), "apply XSLT_FILE (FILE or URI) arg transformation to each individual unit")
 			;
 
@@ -414,7 +414,7 @@ void option_language(const std::string& opt){
 
 }
 
-void option_register_ext(const std::string& opt){
+void option_register_ext(const std::vector<std::string>& opt){
 
 }
 
@@ -518,8 +518,8 @@ void option_xmlns_uri(const std::string& opt){
 
 }
 
-void option_xmlns_prefix(const std::string& opt){
-	
+void option_xmlns_prefix(const std::vector<std::string>& opt){
+
 }
 
 void option_apply_root(const bool opt){
@@ -534,7 +534,7 @@ void option_xpath(const std::string& opt){
 
 }
 
-void option_xpathparam(const std::string& opt){
+void option_xpathparam(const std::vector<std::string>& opt){
 
 }
 
