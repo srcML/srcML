@@ -104,6 +104,24 @@ const char* SRCML2SRC_FOOTER = "Examples:\
   Report bugs to collard@uakron.edu";
 
 //CLI Option Functions
+
+/* These will eventually come from srcml.h, the libsrcml include file */
+const int OPTION_LITERAL = 1;
+const int OPTION_MODIFIER = 2;
+const int OPTION_OPERATOR = 4;
+
+template <int moption>
+void option_markup(bool opt) {
+
+    // would OR this with 
+    moption;
+}
+
+
+void option_modifier(bool opt);
+void option_operator(bool opt);
+
+
 void option_compress(bool opt);
 void option_help(const std::string& opt);
 void option_no_namespace_decl(bool opt);
@@ -133,10 +151,6 @@ void option_cpp_text_if0(bool opt);
 
 void option_position(bool opt);
 void option_tabs(const int opt);
-
-void option_literal(bool opt);
-void option_modifier(bool opt);
-void option_operator(bool opt);
 
 void option_directory(const std::string& opt);
 void option_filename(const std::string& opt);
@@ -235,9 +249,9 @@ int main(int argc, char * argv[]) {
 			;
 
 		markup.add_options()
-			("literal", prog_opts::bool_switch()->notifier(&option_literal), "markup literal values, namespace 'http://www.sdml.info/srcML/literal'")
-			("modifier", prog_opts::bool_switch()->notifier(&option_modifier), "markup type modifiers, namespace 'http://www.sdml.info/srcML/modifier'")
-			("operator", prog_opts::bool_switch()->notifier(&option_operator), "markup operators, namespace 'http://www.sdml.info/srcML/operator'")
+                        ("literal", prog_opts::bool_switch()->notifier(&option_markup<OPTION_LITERAL>), "markup literal values, namespace 'http://www.sdml.info/srcML/literal'")
+                        ("modifier", prog_opts::bool_switch()->notifier(&option_markup<OPTION_MODIFIER>), "markup type modifiers, namespace 'http://www.sdml.info/srcML/modifier'")
+                        ("operator", prog_opts::bool_switch()->notifier(&option_markup<OPTION_OPERATOR>), "markup operators, namespace 'http://www.sdml.info/srcML/operator'")
 			;
 
 		src2srcml_metadata.add_options()
@@ -450,10 +464,11 @@ void option_tabs(const int opt) {
 	
 }
 
+/*
 void option_literal(bool opt) {
 
 }
-
+*/
 void option_modifier(bool opt) {
 
 }
