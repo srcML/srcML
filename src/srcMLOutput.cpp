@@ -288,6 +288,6 @@ void srcMLOutput::processText(const antlr::RefToken& token) {
     xmlTextWriterWriteAttribute(xout, BAD_CAST columnAttribute.c_str(), BAD_CAST columnAttributeValue(token));
   }
 
-  processText(((const srcMLToken*)(&(*token)))->text);
+  processText(token->getText());
 }
 
