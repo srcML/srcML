@@ -173,7 +173,7 @@ using namespace LanguageName;
 void output_help(const char* name) {
   printf( "Usage: %s [options] <src_infile>... [-o <srcML_outfile>]\n\n"
 
-          "Translates C, C++, and Java source code into the XML source-code representation srcML.\n"
+          "Translates C, C++, Java, and C# source code into the XML source-code representation srcML.\n"
           "Input can be from standard input, a file, a directory, or an archive file, i.e., tar, cpio, and zip.\n"
           "Multiple files are stored in a srcML archive.\n\n"
 
@@ -278,7 +278,7 @@ void output_help(const char* name) {
 
   printf("\nCPP Markup Options:\n");
 
-  printf("  --%-21s preprocessor parsing and markup for Java and non-C/C++ languages\n", CPP_FLAG);
+  printf("  --%-21s preprocessor parsing and markup for Java and non-C/C++/C# languages\n", CPP_FLAG);
 
   printf("  --%-21s markup cpp #else regions (default)\n", CPP_MARKUP_ELSE_FLAG);
   printf("  --%-21s leave cpp #else regions as text\n\n", CPP_TEXTONLY_ELSE_FLAG);
@@ -536,25 +536,6 @@ int main(int argc, char* argv[]) {
 
   try {
 
-    // translator from input to output using determined language
-    srcMLTranslator translator(poptions.language,
-                               poptions.src_encoding,
-                               poptions.xml_encoding,
-                               poptions.srcml_filename,
-                               options,
-                               poptions.given_directory,
-                               poptions.given_filename,
-                               poptions.given_version,
-                               urisprefix,
-                               poptions.tabsize);
-
-
-    // output source encoding
-    if (isoption(options, OPTION_VERBOSE)) {
-      fprintf(stderr, "Source encoding:  %s\n", poptions.src_encoding);
-      fprintf(stderr, "XML encoding:  %s\n", poptions.xml_encoding);
-    }
-
     // filecount
     gpoptions->count = 0;
 
@@ -568,6 +549,25 @@ int main(int argc, char* argv[]) {
     // setup so we can gracefully stop after a file at a time
     pstd::signal(SIGINT, terminate_handler);
 #endif
+
+    // output source encoding
+    if (isoption(options, OPTION_VERBOSE)) {
+      fprintf(stderr, "Source encoding:  %s\n", poptions.src_encoding);
+      fprintf(stderr, "XML encoding:  %s\n", poptions.xml_encoding);
+    }
+
+    // translator from input to output using determined language
+    srcMLTranslator translator(poptions.language,
+                               poptions.src_encoding,
+                               poptions.xml_encoding,
+                               poptions.srcml_filename,
+                               options,
+                               poptions.given_directory,
+                               poptions.given_filename,
+                               poptions.given_version,
+                               urisprefix,
+                               poptions.tabsize);
+
 
     // translate input filenames from list in file
     if (isoption(options, OPTION_FILELIST)) {
@@ -939,7 +939,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       poptions.language = Language::getLanguage(optarg);
       if (poptions.language == 0) {
         fprintf(stderr, "%s: invalid option -- Language flag must one of the following values:  "
-                "%s %s %s %s\n", PROGRAM_NAME, LANGUAGE_C, LANGUAGE_CXX, LANGUAGE_JAVA, LANGUAGE_ASPECTJ);
+                "%s %s %s %s\n", PROGRAM_NAME, LANGUAGE_C, LANGUAGE_CXX, LANGUAGE_CSHARP, LANGUAGE_JAVA, LANGUAGE_ASPECTJ);
 
         exit(STATUS_INVALID_LANGUAGE);
       }
