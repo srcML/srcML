@@ -76,7 +76,6 @@ class srcMLToken : public antlr::Token {
   // destructor
   virtual ~srcMLToken() {}
 
- private:
   int category;
   int line;
   int column;
