@@ -23,6 +23,7 @@
 #include <iostream>
 #include <boost/program_options.hpp>
 #include <string>
+#include <map>
 
 //Compiled with:
 // g++ -o srcml ./srcml.cpp -lboost_program_options
@@ -105,19 +106,42 @@ const char* SRCML2SRC_FOOTER = "Examples:\
 
 //CLI Option Functions
 
+struct srcml_request_t {
+    int markup_options;
+    std::string filename;
+};
+
+srcml_request_t srcml_request = { 0 };
+
 /* These will eventually come from srcml.h, the libsrcml include file */
+/* see srcml.h for current list */
 const int SRCML_OPTION_LITERAL = 1;
 const int SRCML_OPTION_MODIFIER = 2;
 const int SRCML_OPTION_OPERATOR = 4;
+const int SRCML_OPTION_XML_DECLARATION = 8;
+const int SRCML_OPTION_NAMESPACES = 16;
+
+/* These are internal to srcml */
+const int SRCML_REQUEST_LONGINFO = 1;
+const int SRCML_REQUEST_INFO = 2;
+const int SRCML_REQUEST_INFO_FILENAME = 4;
 
 /* DREW:  Most of the no parameter options could be recorded this way */
 
 template <int moption>
 void option_markup(bool opt) {
 
-    // would OR this with 
-    moption;
+    srcml_request.markup_options |= moption;
 }
+
+template <int request>
+void option_request(bool opt) {
+
+    // would OR this with 
+    request;
+}
+
+void option_filename(const std::string& value) { srcml_request.filename = value; }
 
 /*
 void option_modifier(bool opt);
@@ -155,7 +179,6 @@ void option_position(bool opt);
 void option_tabs(const int opt);
 
 void option_directory(const std::string& opt);
-void option_filename(const std::string& opt);
 void option_src_versions(const std::string& opt);
 
 void option_info(bool opt);
@@ -251,9 +274,9 @@ int main(int argc, char * argv[]) {
 			;
 
 		markup.add_options()
-                        ("literal", prog_opts::bool_switch()->notifier(&option_markup<OPTION_LITERAL>), "markup literal values, namespace 'http://www.sdml.info/srcML/literal'")
-                        ("modifier", prog_opts::bool_switch()->notifier(&option_markup<OPTION_MODIFIER>), "markup type modifiers, namespace 'http://www.sdml.info/srcML/modifier'")
-                        ("operator", prog_opts::bool_switch()->notifier(&option_markup<OPTION_OPERATOR>), "markup operators, namespace 'http://www.sdml.info/srcML/operator'")
+                        ("literal", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_LITERAL>), "markup literal values, namespace 'http://www.sdml.info/srcML/literal'")
+                        ("modifier", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_MODIFIER>), "markup type modifiers, namespace 'http://www.sdml.info/srcML/modifier'")
+                        ("operator", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_OPERATOR>), "markup operators, namespace 'http://www.sdml.info/srcML/operator'")
 			;
 
 		src2srcml_metadata.add_options()
@@ -265,7 +288,7 @@ int main(int argc, char * argv[]) {
 		srcml2src_metadata.add_options()
 			("info,i", prog_opts::bool_switch()->notifier(&option_info), "display most metadata except file count (individual units) and exit")
 			("list", prog_opts::bool_switch()->notifier(&option_list), "list all the files in the srcML archive and exit")
-			("longinfo,L", prog_opts::bool_switch()->notifier(&option_longinfo), "display all metadata including file count (individual units) and exit")
+                        ("longinfo,L", prog_opts::bool_switch()->notifier(&option_request<SRCML_REQUEST_LONGINFO>), "display all metadata including file count (individual units) and exit")
 			("prefix,p", prog_opts::value<std::string>()->notifier(&option_prefix), "display prefix of namespace given by URI arg and exit")
 			("units,n", prog_opts::bool_switch()->notifier(&option_units), "display number of srcML files and exit")
 			("show-directory", prog_opts::bool_switch()->notifier(&option_show_directory), "display source directory name and exit")
@@ -480,10 +503,6 @@ void option_operator(bool opt) {
 }
 
 void option_directory(const std::string& opt) {
-
-}
-
-void option_filename(const std::string& opt) {
 
 }
 
