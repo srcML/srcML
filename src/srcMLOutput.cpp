@@ -18,7 +18,9 @@
   You should have received a copy of the GNU General Public License
   along with the srcML translator; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
 
+/*
   Output of the XML format based on srcMLParser
 */
 
@@ -62,14 +64,18 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 {
   // open the output text writer stream
   // "-" filename is standard output
-  if (output_buffer == 0)
+  if (output_buffer == 0) {
     xout = xmlNewTextWriterFilename(srcml_filename, isoption(OPTION_COMPRESSED));
-  else
+    if (!xout) {
+        fprintf(stderr, "src2srcml: " "Unable to open output file %s\n", srcml_filename);
+        exit(2);
+    }
+  } else {
     xout = xmlNewTextWriterMemory(output_buffer, isoption(OPTION_COMPRESSED));
-  // TODO:  Customize error message for each case, including output buffer
-  if (!xout) {
-    fprintf(stderr, "src2srcml: " "Unable to open output file %s\n", srcml_filename);
-    exit(2);
+    if (!xout) {
+        fprintf(stderr, "src2srcml: " "Unable to open output buffer\n");
+        exit(2);
+    }
   }
 
   // setup attributes names for line/column position if used
@@ -107,7 +113,6 @@ bool srcMLOutput::isoption(const OPTION_TYPE& flag) const {
   return (flag & options) > 0;
 }
 
-// TODO:  make const
 bool srcMLOutput::isoption(const OPTION_TYPE& flag, const OPTION_TYPE& options) {
   return (flag & options) > 0;
 }
