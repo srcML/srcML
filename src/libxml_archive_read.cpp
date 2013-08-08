@@ -41,6 +41,7 @@ struct archiveData {
     int status;
     std::string root_filename;
     void* libxmlcontext;
+    bool ishttp;
 };
 
 archiveData* current_context = 0;
@@ -162,14 +163,12 @@ const char* archiveReadFilename(void* context) {
     return isArchiveRead(context) ? archive_entry_pathname(pcontext->ae) : 0;
 }
 
-static bool ishttp = true;
-
 static int archive_read_open_http_callback(struct archive* a,
                                            void* _client_data) {
 
     archiveData* pcontext = (archiveData*) _client_data;
 
-    pcontext->libxmlcontext = (archiveData*) (ishttp ? xmlNanoHTTPOpen(pcontext->root_filename.c_str(), 0) : xmlNanoFTPOpen(pcontext->root_filename.c_str()));
+    pcontext->libxmlcontext = (archiveData*) (pcontext->ishttp ? xmlNanoHTTPOpen(pcontext->root_filename.c_str(), 0) : xmlNanoFTPOpen(pcontext->root_filename.c_str()));
 
     return 0;
 }
@@ -188,7 +187,7 @@ archive_read_http_callback(struct archive* a,
     static const int len = 4096;
     static std::vector<char> data(len);
     *_buffer = &data[0];
-    int size = ishttp ? xmlNanoHTTPRead(pcontext->libxmlcontext, &data[0], len) : xmlNanoFTPRead(pcontext->libxmlcontext, &data[0], len);
+    int size = pcontext->ishttp ? xmlNanoHTTPRead(pcontext->libxmlcontext, &data[0], len) : xmlNanoFTPRead(pcontext->libxmlcontext, &data[0], len);
 
     return size;
 }
@@ -198,7 +197,7 @@ static int archive_read_close_http_callback(struct archive* a,
 
     archiveData* pcontext = (archiveData*) _client_data;
 
-    if (ishttp)
+    if (pcontext->ishttp)
         xmlNanoHTTPClose(pcontext->libxmlcontext);
     else
         xmlNanoFTPClose(pcontext->libxmlcontext);
@@ -249,8 +248,8 @@ void* archiveReadOpen(const char* URI) {
 #endif
 
     //    int r = archive_read_open_filename(a, URI, 4000);
-    ishttp = xmlIOHTTPMatch(URI);
-    if (ishttp || xmlIOFTPMatch(URI)) {
+    gpcontext->ishttp = xmlIOHTTPMatch(URI);
+    if (gpcontext->ishttp || xmlIOFTPMatch(URI)) {
         gpcontext->root_filename = URI;
         gpcontext->status = archive_read_open(gpcontext->a, gpcontext, archive_read_open_http_callback, archive_read_http_callback,
                                               archive_read_close_http_callback);
