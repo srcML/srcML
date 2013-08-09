@@ -208,8 +208,10 @@ const char * srcMLUtility::long_info(srcMLUtility & su) {
 
   units = state.count;
 
-  return buffer.str().c_str();
+  static std::string s;
+  s = buffer.str();
 
+  return s.c_str();
 }
 
 // count of nested units
