@@ -34,6 +34,17 @@
 #include <io.h>
 #endif
 
+struct archive_write_t {
+
+    struct archive *wa;
+    struct archive_entry *wentry;
+    std::string root_filename;
+    std::string filename;
+    std::string data;
+    bool isstdout;
+    const char* output_format;
+};
+
 class UnsupportedFormat {};
 
 static const char* output_format = 0;
@@ -43,17 +54,7 @@ void archiveWriteOutputFormat(const char* format) {
     output_format = format;
 }
 
-static const int NUMARCHIVES = 4;
-//static const char * ARCHIVE_FILTER_EXTENSIONS[] = {"tar", "zip", "tgz", "cpio", "gz", "bz2", 0};
-
-static struct archive *wa;
-static struct archive_entry *wentry;
-static std::string root_filename;
-static std::string filename;
-
-static std::string data;
-
-static bool isstdout = false;
+archive_write_t archive_data = { 0, 0, "", "", "", false, 0 };
 
 /* A table that maps compressions to functions. */
 static struct { const char *compression; int (*setter)(struct archive *); } compressions[] =
@@ -127,9 +128,9 @@ int archiveWriteMatch_srcml2src(const char * URI) {
 void* archiveWriteRootOpen(const char * URI) {
 
     // save the root URI
-    root_filename = URI;
+    archive_data.root_filename = URI;
 
-    isstdout = root_filename == "-" && isatty(STDOUT_FILENO);
+    archive_data.isstdout = archive_data.root_filename == "-" && isatty(STDOUT_FILENO);
 
     return 0;
 }
@@ -175,38 +176,38 @@ int setupArchive(struct archive* wa, const char* path) {
 // setup archive for this URI
 void* archiveWriteOpen(const char * URI) {
 
-    if (!wa) {
+    if (!archive_data.wa) {
 
-        wentry =  0;
-        if (!isstdout) {
-            wa = archive_write_new();
-            if (!setupArchive(wa, output_format ? std::string(".").append(output_format).c_str() : root_filename.c_str())) {
+        archive_data.wentry =  0;
+        if (!archive_data.isstdout) {
+            archive_data.wa = archive_write_new();
+            if (!setupArchive(archive_data.wa, output_format ? std::string(".").append(output_format).c_str() : archive_data.root_filename.c_str())) {
                 fprintf(stderr, "Invalid or unsupported format/compression\n");
                 throw UnsupportedFormat();
                 return 0;
             }
             // open by direct filename, or stdout ("" instead of "-")
-            archive_write_open_filename(wa, root_filename == "-" ? "" : root_filename.c_str());
+            archive_write_open_filename(archive_data.wa, archive_data.root_filename == "-" ? "" : archive_data.root_filename.c_str());
 
         } else {
-            wa = archive_write_disk_new();
+            archive_data.wa = archive_write_disk_new();
         }
 
         //fprintf(stderr, "Format: %s\n", archive_format_name(wa));
         //fprintf(stderr, "Compression: %s\n", archive_compression_name(wa));
     }
 
-    filename = URI;
+    archive_data.filename = URI;
 
-    data.clear();
+    archive_data.data.clear();
 
-    return wa;
+    return archive_data.wa;
 }
 
 // read from the URI
 int archiveWrite(void * context, const char * buffer, int len) {
 
-    data.append(buffer, len);
+    archive_data.data.append(buffer, len);
 
     return len;
 }
@@ -214,36 +215,36 @@ int archiveWrite(void * context, const char * buffer, int len) {
 // close the open file
 int archiveWriteClose(void * context) {
 
-    if (!wentry) {
-        wentry = archive_entry_new();
-        archive_entry_set_filetype(wentry, AE_IFREG);
-        archive_entry_set_perm(wentry, 0644);
+    if (!archive_data.wentry) {
+        archive_data.wentry = archive_entry_new();
+        archive_entry_set_filetype(archive_data.wentry, AE_IFREG);
+        archive_entry_set_perm(archive_data.wentry, 0644);
         time_t now = time(NULL);
         //    archive_entry_set_birthtime(wentry, now, 0);
-        archive_entry_set_atime(wentry, now, 0);
-        archive_entry_set_ctime(wentry, now, 0);
-        archive_entry_set_mtime(wentry, now, 0);
+        archive_entry_set_atime(archive_data.wentry, now, 0);
+        archive_entry_set_ctime(archive_data.wentry, now, 0);
+        archive_entry_set_mtime(archive_data.wentry, now, 0);
     }
 
-    archive_entry_set_pathname(wentry, filename.c_str());
-    archive_entry_set_size(wentry, data.size());
-    archive_write_header(wa, wentry);
-    archive_write_data(wa, data.c_str(), data.size());
+    archive_entry_set_pathname(archive_data.wentry, archive_data.filename.c_str());
+    archive_entry_set_size(archive_data.wentry, archive_data.data.size());
+    archive_write_header(archive_data.wa, archive_data.wentry);
+    archive_write_data(archive_data.wa, archive_data.data.c_str(), archive_data.data.size());
 
     return 1;
 }
 
 int archiveWriteRootClose(void * context) {
 
-    if (wa) {
-        archive_entry_free(wentry);
-        archive_write_close(wa);
-        archive_write_finish(wa);
+    if (archive_data.wa) {
+        archive_entry_free(archive_data.wentry);
+        archive_write_close(archive_data.wa);
+        archive_write_finish(archive_data.wa);
     }
 
-    wa = 0;
-    root_filename.clear();
-    filename.clear();
+    archive_data.wa = 0;
+    archive_data.root_filename.clear();
+    archive_data.filename.clear();
 
     return 1;
 }
