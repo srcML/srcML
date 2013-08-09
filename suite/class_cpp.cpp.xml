@@ -10,8 +10,7 @@
 </unit>
 
 <unit>
-<class>class <block>{<private type="default"> <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt> </private>}</block>
-<decl/></class>
+<class>class <block>{<private type="default"> <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt> </private>}</block>;</class>
 </unit>
 
 </unit>
