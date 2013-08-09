@@ -198,7 +198,7 @@ void output_info(srcMLUtility& su, int options, int optioncount, int optionorder
 
       if (isoption(options, OPTION_LONG_INFO) && !isoption(options, OPTION_UNIT) && output && isatty(fileno(output)))
 	    fprintf(output, "units=\"%d", 1);
-      else if(isoption(options, OPTION_LONG_INFO) && !isoption(options, OPTION_UNIT))
+      else if(buffer && isoption(options, OPTION_LONG_INFO) && !isoption(options, OPTION_UNIT))
         (*buffer) << "units=\"1\"";
 }
 
