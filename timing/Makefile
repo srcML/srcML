@@ -11,7 +11,7 @@ TIME=${firstword ${wildcard /usr/local/bin/gtime /opt/local/bin/gtime /usr/bin/t
 
 TIMING_MED=timing_med.h
 TIMING_JAVA=timing_java.java
-TIMING_CSHARP=timing_csharp.cs
+TIMING_CSHARP=timing_large.cs
 
 PRINTF_FORMAT="\%1.0f lines/second\\n"
 
@@ -29,7 +29,7 @@ time : ../bin/src2srcml
 	@${ECHO} -ne "C++:\t"
 	@cd .; ${TIME} ${SRC2SRCML_BIN} --language C++ ${TIMING_MED} -o ${TIMING_MED}.xml 2>&1 | ${SED} 's/[0-9\.]*/ 10872 \/ &/' | bc -l |  xargs printf "%'9.0f LOC/sec\n"
 	@${ECHO} -ne "C#:\t"
-	@cd .; ${TIME} ${SRC2SRCML_BIN} ${TIMING_CSHARP} -o ${TIMING_CSHARP}.xml 2>&1 | ${SED} 's/[0-9\.]*/ 24576 \/ &/' | bc -l |  xargs printf "%'9.0f LOC/sec\n"
+	@cd .; ${TIME} ${SRC2SRCML_BIN} ${TIMING_CSHARP} -o ${TIMING_CSHARP}.xml 2>&1 | ${SED} 's/[0-9\.]*/ 102934 \/ &/' | bc -l |  xargs printf "%'9.0f LOC/sec\n"
 	@${ECHO} -ne "Java:\t"
 	@cd .; ${TIME} ${SRC2SRCML_BIN} --language Java ${TIMING_JAVA} -o ${TIMING_JAVA}.xml 2>&1 | ${SED} 's/[0-9\.]*/32628 \/ &/' | bc -l | xargs printf "%'9.0f LOC/sec\n"
 	@${ECHO} -ne "SRC:\t"
