@@ -78,6 +78,7 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, OPTION_
 
   // assume totaling for numeric results
   op |= OPTION_XPATH_TOTAL;
+  options |= OPTION_XPATH_TOTAL;
 
   // empty filename indicates standard input
   if (infile == 0)
@@ -90,7 +91,7 @@ srcMLUtility::srcMLUtility(const char * buffer, int size, const char* encoding, 
 
   // assume totaling for numeric results
   op |= OPTION_XPATH_TOTAL;
-
+  options |= OPTION_XPATH_TOTAL;
 }
 
 // destructor
