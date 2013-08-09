@@ -83,6 +83,13 @@ public :
         dlclose(handle);
         return;
     }
+
+    dlerror();
+    xsltSaveResultToDynamic = (xsltSaveResultTo_function)dlsym(handle, "xsltSaveResultTo");
+    if ((error = dlerror()) != NULL) {
+        dlclose(handle);
+        return;
+    }
 #endif
 
   }
@@ -167,11 +174,13 @@ public :
 	}
 	resroot->nsDef = ret;
       }
+
 #if defined(__GNUG__) && !defined(__MINGW32__)
       xsltSaveResultToDynamic(buf, res, stylesheet);
 #else
       xsltSaveResultTo(buf, res, stylesheet);
 #endif
+
       /*
         for (xmlNodePtr child = res->children; child != NULL; child = child->next)
         xmlNodeDumpOutput(buf, res, child, 0, 0, 0);
