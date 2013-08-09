@@ -45,7 +45,8 @@ SRCML2SRC_PATH=${BIN_DIR}/${SRCML2SRC_BIN}
 
 WIN_SRC2SRCML_PATH=${BIN_DIR}/${SRC2SRCML_EXE}
 WIN_SRCML2SRC_PATH=${BIN_DIR}/${SRCML2SRC_EXE}
-LIBSRCML_DLL=${BIN_DIR}/libsrcml.dll
+LIBSRCML_BASE=${BIN_DIR}/libsrcml
+LIBSRCML_DLL=${LIBSRCML_BASE}.dll
 
 DOC_FILES=${DOC_DIR}/src2srcml.1.gz ${DOC_DIR}/srcml2src.1.gz ${DOC_DIR}/src2srcml.html ${DOC_DIR}/srcml2src.html
 WIN_DOC_FILES=${DOC_DIR}/src2srcml.html ${DOC_DIR}/srcml2src.html
@@ -98,6 +99,7 @@ bin : ${SRC_TAR_GZ}
 	cd ${DOC_DIR} && make
 	strip ${SRC2SRCML_PATH} ${SRCML2SRC_PATH}
 	mkdir ${BASE} && ${CP} -t ${BASE} ${DIST_FILES}
+	( [[ -e ${LIBSRCML_BASE}.so ]] && cp ${LIBSRCML_BASE}.so ${BASE} )  || ( [[ -e ${LIBSRCML_BASE}.dylib ]] && cp ${LIBSRCML_BASE}.dylib ${BASE} )
 	tar czf ${UNIX_TAR_GZ} ${BASE}
 
 windows : ${SRC_ZIP}
