@@ -101,7 +101,7 @@ bin : ${SRC_TAR_GZ}
 	cd ${DOC_DIR} && make
 	strip ${SRC2SRCML_PATH} ${SRCML2SRC_PATH}
 	mkdir ${BASE} && ${CP} -t ${BASE} ${DIST_FILES}
-	( [[ -e ${LIBSRCML_SO} ]] && cp ${LIBSRCML_SO} ${BASE} )  || ( [[ -e ${LIBSRCML_DYLIB} ]] && cp ${LIBSRCML_DYLIB} ${BASE} )
+	( test -e ${LIBSRCML_SO} && cp ${LIBSRCML_SO} ${BASE} ) || ( test -e ${LIBSRCML_DYLIB} && cp ${LIBSRCML_DYLIB} ${BASE} )
 	tar czf ${UNIX_TAR_GZ} ${BASE}
 
 windows : ${SRC_ZIP}
