@@ -69,7 +69,7 @@ public :
 #if defined(__GNUG__) && !defined(__MINGW32__)
     void* handle = dlopen("libxslt.so", RTLD_LAZY);
     if (!handle) {
-        void* handle = dlopen("libxslt.dylib", RTLD_LAZY);
+        handle = dlopen("libxslt.dylib", RTLD_LAZY);
         if (!handle) {
             fprintf(stderr, "Unable to open libxslt library\n");
             return;

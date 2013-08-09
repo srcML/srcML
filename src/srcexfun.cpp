@@ -223,7 +223,7 @@ void xsltsrcMLRegister () {
     typedef int (*xsltRegisterExtModuleFunction_function) (const xmlChar *, const xmlChar *, xmlXPathFunction);
     void* handle = dlopen("libexslt.so", RTLD_LAZY);
     if (!handle) {
-        void* handle = dlopen("libexslt.dylib", RTLD_LAZY);
+        handle = dlopen("libexslt.dylib", RTLD_LAZY);
         if (!handle) {
             fprintf(stderr, "Unable to open libexslt library\n");
             return;
