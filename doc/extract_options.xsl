@@ -37,7 +37,7 @@
     </xsl:when>
 
     <xsl:otherwise>
-      <xsl:value-of select="concat('&quot;', '--', $data, '&quot;')"/>
+      <xsl:value-of select='concat("&apos;", "--", $data, "&apos;")'/>
     </xsl:otherwise>
 
   </xsl:choose>
