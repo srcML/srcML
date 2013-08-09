@@ -140,4 +140,4 @@ class srcMLUtility(object):
 #print utility.extract_text(1)
 #utility.delete()
 
-print srcml_version()
+#print srcml_version()
