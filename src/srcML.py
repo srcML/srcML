@@ -61,6 +61,14 @@ libsrcml.srcml_long_info.argtypes = [c_void_p]
 libsrcml.srcml_delete.restype = None
 libsrcml.srcml_delete.argtypes = [c_ulonglong]
 
+# free functions
+libsrcml.srcml_version.restype = c_char_p
+libsrcml.srcml_version.argtypes = []
+
+def srcml_version() :
+    return libsrcml.srcml_version()
+
+
 class srcMLTranslator(object):
 
     def __init__(self, language, op):
@@ -131,3 +139,5 @@ class srcMLUtility(object):
 #print utility.long_info()
 #print utility.extract_text(1)
 #utility.delete()
+
+print srcml_version()
