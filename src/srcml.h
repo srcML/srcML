@@ -28,6 +28,10 @@
 #include <sys/types.h> /* size_t */
 #include <stdio.h> /* FILE * */
 
+/* Version number in include */
+#define SRCML_VERSION VERSION
+const char * srcml_version();
+
 #ifdef __cplusplus
 //extern "C" {
 #endif
