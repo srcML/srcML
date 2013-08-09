@@ -281,12 +281,14 @@ void srcMLOutput::processText(const char* s, int size) {
 
 void srcMLOutput::processText(const antlr::RefToken& token) {
 
-  if (isoption(OPTION_POSITION)) {
+  processText(token->getText());
+}
 
-    xmlTextWriterWriteAttribute(xout, BAD_CAST lineAttribute.c_str(), BAD_CAST lineAttributeValue(token));
+void srcMLOutput::processTextPosition(const antlr::RefToken& token) {
 
-    xmlTextWriterWriteAttribute(xout, BAD_CAST columnAttribute.c_str(), BAD_CAST columnAttributeValue(token));
-  }
+  xmlTextWriterWriteAttribute(xout, BAD_CAST lineAttribute.c_str(), BAD_CAST lineAttributeValue(token));
+
+  xmlTextWriterWriteAttribute(xout, BAD_CAST columnAttribute.c_str(), BAD_CAST columnAttributeValue(token));
 
   processText(token->getText());
 }

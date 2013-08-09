@@ -302,7 +302,10 @@ srcMLTranslatorOutput::srcMLTranslatorOutput(TokenStream* ints,
                          xmlBuffer* output_buffer
 			 )
   : srcMLOutput(ints, filename, language, xml_enc, op, curi, ts, output_buffer)
-{}
+{
+  if (isoption(OPTION_POSITION))
+      num2process[2] = &srcMLTranslatorOutput::processTextPosition;
+}
 
 srcMLTranslatorOutput::~srcMLTranslatorOutput() {
 }
