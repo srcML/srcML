@@ -711,6 +711,8 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
 
   // parse the stylesheet
   xsltStylesheetPtr stylesheet = xsltParseStylesheetFile(BAD_CAST xslts[0]);
+  if (!stylesheet)
+      return;
 
   // setup parser
   xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
