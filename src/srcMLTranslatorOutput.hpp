@@ -76,9 +76,6 @@ class srcMLTranslatorOutput : public srcMLOutput {
 
   static void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer, const char** num2prefix);
 
-  void srcMLTextWriterStartElement(xmlTextWriter*, const xmlChar* s);
-  void srcMLTextWriterEndElement(xmlTextWriter*);
-
   // List of element names
   static const char* const ElementNames[];
   static const char ElementPrefix[];
