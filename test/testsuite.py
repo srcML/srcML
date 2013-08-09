@@ -362,9 +362,6 @@ Tee(error_filename)
 print "Testing:"
 print 
 
-print src2srcmlversion()
-print srcml2srcversion()
-print
 
 # Handle optional dos line endings
 doseol = False
@@ -375,6 +372,13 @@ while len(sys.argv) > 1 and ( sys.argv[1] == "--dos" or sys.argv[1] == "--exec" 
         else :
                 use_exec = True
         sys.argv.pop(0)
+
+if use_exec :
+        print src2srcmlversion()
+        print srcml2srcversion()
+else :
+        print srcml_version()
+print
 
 specname = ""
 if len(sys.argv) > 1:
@@ -671,7 +675,10 @@ f.close()
 
 # output tool version
 print
-print src2srcmlversion(), srcmltranslator
-print srcml2srcversion(), srcmlutility
+if use_exec :
+        print src2srcmlversion(), srcmltranslator
+        print srcml2srcversion(), srcmlutility
+else :
+        print srcml_version()
 
 exit
