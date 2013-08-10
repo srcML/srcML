@@ -173,45 +173,45 @@ struct TokenPosition {
 
 // Included in the generated srcMLParser.cpp file after antlr includes
 header "post_include_cpp" {
+// Makes sure that a grammar rule forms a complete element
+class CompleteElement {
+public:
+    CompleteElement() : oldsize(masterthis->size()) {}
 
-    class CompleteElement {
+    ~CompleteElement() {
+        int n = masterthis->size() - oldsize;
+        for (int i = 0; i < n; ++i) {
+            masterthis->endCurrentMode();
+        }
+    }
 
-     public:
-     CompleteElement()
-        : oldsize(masterthis->size())
-     {}
+    static srcMLParser* masterthis;
 
-     ~CompleteElement() {
-         int n = masterthis->size() - oldsize;
-         for (int i = 0; i < n; ++i) {
-           masterthis->endCurrentMode();
-         }
-     }
-
-     public:
-       static srcMLParser* masterthis;
-
-     private:
-       const int oldsize;
-    };
+private:
+    const int oldsize;
+};
 
 #ifdef ENTRY_DEBUG
-    class RuleDepth {
+class RuleDepth {
 
-     public:
-     RuleDepth(srcMLParser* t) : pparser(t) { ++pparser->ruledepth; }
-     ~RuleDepth() { --pparser->ruledepth; }
+public:
+    RuleDepth(srcMLParser* t) : pparser(t) { ++pparser->ruledepth; }
+        
+    ~RuleDepth() { --pparser->ruledepth; }
 
-     private:
-       srcMLParser* pparser;
-    };
+private:
+    srcMLParser* pparser;
+};
 #endif
 
-    srcMLParser* CompleteElement::masterthis;
+srcMLParser* CompleteElement::masterthis;
 
+// constructor
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options)
-   : antlr::LLkParser(lexer,1), Mode(this, lang), cpp_zeromode(false), skipelse(false), cppifcount(0), parseoptions(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false)
+   : antlr::LLkParser(lexer,1), Mode(this, lang), cpp_zeromode(false), skipelse(false), cppifcount(0),
+    parseoptions(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false)
 {
+    // inner class needs pointer to outer object
     CompleteElement::masterthis = this;
 
     // root, single mode
@@ -228,26 +228,25 @@ void srcMLParser::endAllModes() {
 
      // expression mode has an extra mode
      if (isoption(parseoptions, OPTION_EXPRESSION))
-        endCurrentMode();
+         endCurrentMode();
 
      // should only be one mode
      if (size() > 1 && isoption(parseoptions, OPTION_DEBUG))
-        emptyElement(SERROR_MODE);
+         emptyElement(SERROR_MODE);
 
-    // end all modes except the last
-    while (size() > 1) {
-        endCurrentMode();
-    }
+     // end all modes except the last
+     while (size() > 1)
+         endCurrentMode();
 
-    // flush any skipped characters
-    flushSkip();
+     // flush any skipped characters
+     flushSkip();
 
-    // end the very last mode which forms the entire unit
-    if (size() == 1)
-        endLastMode();
+     // end the very last mode which forms the entire unit
+     if (size() == 1)
+         endLastMode();
 }
 
-}
+} /* end include */
 
 options {
 	language="Cpp";
@@ -464,61 +463,57 @@ tokens {
 }
 
 /*
-  Included inside of generated class srcMLCPPParser.hpp
+  Included inside of generated class srcMLParser.hpp
 */
 {
 public:
+    friend class CompleteElement;
 
-friend class CompleteElement;
-
-bool cpp_zeromode;
-bool skipelse;
-int cppifcount;
-bool isdestructor;
-int parseoptions;
-std::string namestack[2];
-int ifcount;
+    bool cpp_zeromode;
+    bool skipelse;
+    int cppifcount;
+    bool isdestructor;
+    int parseoptions;
+    std::string namestack[2];
+    int ifcount;
 #ifdef ENTRY_DEBUG
-int ruledepth;
+    int ruledepth;
 #endif
-bool qmark;
-bool notdestructor;
+    bool qmark;
+    bool notdestructor;
 
-~srcMLParser() {}
+    // constructor
+    srcMLParser(antlr::TokenStream& lexer, int lang = LANGUAGE_CXX, int options = 0);
 
-srcMLParser(antlr::TokenStream& lexer, int lang = LANGUAGE_CXX, int options = 0);
+    // destructor
+    ~srcMLParser() {}
 
-struct cppmodeitem {
+    struct cppmodeitem {
         cppmodeitem(int current_size)
-            : statesize(1, current_size), isclosed(false), skipelse(false)
-        {}
+            : statesize(1, current_size), isclosed(false), skipelse(false) {}
 
-        cppmodeitem()
-        {}
+        cppmodeitem() {}
 
         std::vector<int> statesize;
         bool isclosed;
         bool skipelse;
-};
+    };
 
-std::stack<cppmodeitem, std::list<cppmodeitem> > cppmode;
+    std::stack<cppmodeitem, std::list<cppmodeitem> > cppmode;
 
-void startUnit() {
+    void startUnit() {
+        startElement(SUNIT);
+        emptyElement(SUNIT);
+    }
 
-   startElement(SUNIT);
-   emptyElement(SUNIT);
-}
-
-// sets to the current token in the output token stream
-void setTokenPosition(TokenPosition& tp) {
+    // sets to the current token in the output token stream
+    void setTokenPosition(TokenPosition& tp) {
         tp.token = CurrentToken();
         tp.sp = &(currentState().callstack.top());
-}
+    }
 
 public:
-
-void endAllModes();
-
+    void endAllModes();
 }
 
 
@@ -739,7 +734,7 @@ statements_non_cfg[] { int secondtoken = 0;
         expression_statement[type]
 ;
 
-
+// efficient way to view the token after the current LA(1)
 next_token[] returns [int token] {
     
     int place = mark();
@@ -754,6 +749,7 @@ next_token[] returns [int token] {
     rewind(place);
 }:;
 
+// is the next token one of the parameters
 next_token_check[int token1, int token2] returns [bool result] {
 
     int token = next_token();
@@ -761,6 +757,7 @@ next_token_check[int token1, int token2] returns [bool result] {
     result = token == token1 || token == token2;
 }:;
 
+// skips past any skiptokens to get the one after
 look_past[int skiptoken] returns [int token] {
     
     int place = mark();
@@ -775,12 +772,15 @@ look_past[int skiptoken] returns [int token] {
     rewind(place);
 }:;
 
+// skips past any skiptokens to get the one after
 look_past_multiple[int skiptoken1, int skiptoken2, int skiptoken3, int skiptoken4] returns [int token] {
     
     int place = mark();
     inputState->guessing++;
 
-    while (LA(1) != antlr::Token::EOF_TYPE && (LA(1) == skiptoken1 || LA(1) == skiptoken2 || LA(1) == skiptoken3 || (inLanguage(LANGUAGE_CSHARP && LA(1) == skiptoken4))))
+    // TODO:  Why the LANGUAGE_CSHARP check?
+    while (LA(1) != antlr::Token::EOF_TYPE && (LA(1) == skiptoken1 || LA(1) == skiptoken2 || LA(1) == skiptoken3 ||
+          (inLanguage(LANGUAGE_CSHARP && LA(1) == skiptoken4))))
         consume();
 
     token = LA(1);
@@ -799,7 +799,6 @@ function_declaration[int type_count] { ENTRY_DEBUG } :
         function_header[type_count]
 ;
 
-// functions
 function_definition[int type_count] { ENTRY_DEBUG } :
 		{
             startNewMode(MODE_STATEMENT);
@@ -809,6 +808,8 @@ function_definition[int type_count] { ENTRY_DEBUG } :
         function_header[type_count]
 ;
 
+// property methods
+// TODO:  Combine these into one
 property_method[] { ENTRY_DEBUG } :
 		{
             // function definitions have a "nested" block statement
@@ -821,7 +822,6 @@ property_method[] { ENTRY_DEBUG } :
         property_method_names
 ;
 
-// functions
 property_method_decl[] { ENTRY_DEBUG } :
 		{
             // function definitions have a "nested" block statement
@@ -834,7 +834,6 @@ property_method_decl[] { ENTRY_DEBUG } :
         property_method_names
 ;
 
-// functions
 property_method_names[] { CompleteElement element; ENTRY_DEBUG } :
 		{
             startNewMode(MODE_LOCAL);
@@ -865,7 +864,8 @@ perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
         type = CALL;
 
         // call syntax succeeded, however post call token is not legitimate
-        if ((inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY)) && (_tokenSet_1.member(postcalltoken) || postcalltoken == NAME 
+        if ((inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY)) &&
+               (_tokenSet_1.member(postcalltoken) || postcalltoken == NAME 
             || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == LCURLY)
             || postcalltoken == EXTERN || postcalltoken == STRUCT || postcalltoken == UNION || postcalltoken == CLASS
             || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == RCURLY)
@@ -881,9 +881,7 @@ perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
         type = NOCALL;
 
         if ((inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY)) && argumenttoken != 0 && postcalltoken == 0) {
-
             guessing_endGuessing();
-
             type = MACRO;
         }
 
@@ -897,7 +895,8 @@ perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
 
     inputState->guessing--;
     rewind(start);
-ENTRY_DEBUG } :
+
+    ENTRY_DEBUG } :
 ;
 
 call_check[int& postnametoken, int& argumenttoken, int& postcalltoken] { ENTRY_DEBUG } :
@@ -905,8 +904,7 @@ call_check[int& postnametoken, int& argumenttoken, int& postcalltoken] { ENTRY_D
         // detect name, which may be name of macro or even an expression
         function_identifier
 
-        // record token after the function identifier for future use if this
-        // fails
+        // record token after the function identifier for future use if this fails
         markend[postnametoken]
         (
             { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
@@ -938,13 +936,14 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
             identifier set_bool[name, true] |
 
             // special case for something that looks like a declaration
-            { LA(1) == DELEGATE /* eliminate ANTRL warning, will be noped */ }? delegate_anonymous | 
+            { LA(1) == DELEGATE /* eliminates ANTRL warning, will be nop */ }? delegate_anonymous | 
 
             { next_token_check(LCURLY, LPAREN) }?
             lambda_anonymous | 
 
             // found two names in a row, so this is not an expression
             // cause this to fail by next matching END_ELEMENT_TOKEN
+            // TODO:  directly throw exception
             { name && (depth == 0) }?
             identifier guessing_endGuessing END_ELEMENT_TOKEN |
 
@@ -955,14 +954,12 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
         RPAREN
 ;
 
-markend[int& token] { token = LA(1); } :
-;
+// records the current token, even in guessing mode
+markend[int& token] { token = LA(1); }:;
 
 /* Statements CFG */
 
-/*
-  while statement, or while part of do statement
-*/
+// while statement
 while_statement[] { ENTRY_DEBUG } :
         {
             // statement with nested statement (after condition)
@@ -977,9 +974,7 @@ while_statement[] { ENTRY_DEBUG } :
         WHILE 
 ;
 
-/*
- do while statement
-*/
+// do while statement
 do_statement[] { ENTRY_DEBUG } : 
         {
             // statement with nested statement (after condition)
@@ -996,9 +991,7 @@ do_statement[] { ENTRY_DEBUG } :
         DO
 ;
 
-/*
-  while part of do statement
-*/
+// while part of do statement
 do_while[] { ENTRY_DEBUG } :
         {
             // mode for do statement is in top mode so that
@@ -1011,9 +1004,7 @@ do_while[] { ENTRY_DEBUG } :
         WHILE 
 ;
 
-/*
-  start of for statement
-*/
+// start of for statement
 for_statement[] { ENTRY_DEBUG } :
         {
             // statement with nested statement after the for group
@@ -1029,9 +1020,7 @@ for_statement[] { ENTRY_DEBUG } :
         }
 ;
 
-/*
-  start of foreach statement (C#)
-*/
+// start of foreach statement (C#)
 foreach_statement[] { ENTRY_DEBUG } :
         {
             // statement with nested statement after the for group
@@ -1047,9 +1036,7 @@ foreach_statement[] { ENTRY_DEBUG } :
         }
 ;
 
-/*
-  start of for group, i.e., initialization, test, increment
-*/
+// start of for group, i.e., initialization, test, increment
 for_group[] { ENTRY_DEBUG } :
         {
             // start the for group mode that will end at the next matching
