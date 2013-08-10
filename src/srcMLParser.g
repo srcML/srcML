@@ -728,7 +728,7 @@ statements_non_cfg[] { int secondtoken = 0;
         extern_definition |
 
         // call
-        { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY)) && perform_call_check(type, secondtoken) && type == MACRO }?
+        { isoption(parseoptions, OPTION_CPP) && perform_call_check(type, secondtoken) && type == MACRO }?
         macro_call |
 
         expression_statement[type]
@@ -851,7 +851,7 @@ perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
         type = CALL;
 
         // call syntax succeeded, however post call token is not legitimate
-        if ((inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY)) &&
+        if (isoption(parseoptions, OPTION_CPP) &&
                (_tokenSet_1.member(postcalltoken) || postcalltoken == NAME
             || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == LCURLY)
             || postcalltoken == EXTERN || postcalltoken == STRUCT || postcalltoken == UNION || postcalltoken == CLASS
@@ -867,13 +867,13 @@ perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
 
         type = NOCALL;
 
-        if ((inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY)) && argumenttoken != 0 && postcalltoken == 0) {
+        if (isoption(parseoptions, OPTION_CPP) && argumenttoken != 0 && postcalltoken == 0) {
             guessing_endGuessing();
             type = MACRO;
         }
 
         // single macro call followed by statement_cfg
-        else if ((inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY)) && secondtoken != -1
+        else if (isoption(parseoptions, OPTION_CPP) && secondtoken != -1
                  && (_tokenSet_1.member(secondtoken) || secondtoken == LCURLY || secondtoken == 1 /* EOF */
                      || secondtoken == PUBLIC || secondtoken == PRIVATE || secondtoken == PROTECTED))
 
@@ -894,7 +894,7 @@ call_check[int& postnametoken, int& argumenttoken, int& postcalltoken] { ENTRY_D
         // record token after the function identifier for future use if this fails
         markend[postnametoken]
         (
-            { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
+            { isoption(parseoptions, OPTION_CPP) }?
             // check for proper form of argument list
             call_check_paren_pair[argumenttoken]
 
@@ -1583,7 +1583,7 @@ class_default_access_action[int access_token] { ENTRY_DEBUG } :
 
 class_header[] { ENTRY_DEBUG } :
 
-        { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
+        { isoption(parseoptions, OPTION_CPP) }?
         (macro_call_check class_header_base LCURLY)=>
            macro_call class_header_base |
 
@@ -1942,7 +1942,7 @@ statement_part[] { int type_count;  int secondtoken = 0; DECLTYPE decl_type = NO
 
         // start of argument for return or throw statement
         { inMode(MODE_EXPRESSION | MODE_EXPECT) &&
-            inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) && perform_call_check(type, secondtoken) && type == MACRO }?
+            isoption(parseoptions, OPTION_CPP) && perform_call_check(type, secondtoken) && type == MACRO }?
         macro_call |
 
         { inMode(MODE_EXPRESSION | MODE_EXPECT) }?
