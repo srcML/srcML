@@ -682,10 +682,10 @@ statements_non_cfg[] { int secondtoken = 0;
         attribute |
 
         { decl_type == PROPERTY_ACCESSOR }?
-        property_method |
+        property_method[SFUNCTION_DEFINITION] |
 
         { decl_type == PROPERTY_ACCESSOR_DECL }?
-        property_method_decl |
+        property_method[SFUNCTION_DECLARATION] |
 
         // standalone macro
         { decl_type == SINGLE_MACRO }?
@@ -809,26 +809,13 @@ function_definition[int type_count] { ENTRY_DEBUG } :
 ;
 
 // property methods
-// TODO:  Combine these into one
-property_method[] { ENTRY_DEBUG } :
+property_method[int element] { ENTRY_DEBUG } :
 		{
             // function definitions have a "nested" block statement
             startNewMode(MODE_STATEMENT);
 
             // start the function definition element
-            startElement(SFUNCTION_DEFINITION);
-        }
-        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* 
-        property_method_names
-;
-
-property_method_decl[] { ENTRY_DEBUG } :
-		{
-            // function definitions have a "nested" block statement
-            startNewMode(MODE_STATEMENT);
-
-            // start the function definition element
-            startElement(SFUNCTION_DECLARATION);
+            startElement(element);
         }
         ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* 
         property_method_names
