@@ -2338,7 +2338,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
 
                         (COLON)*
 
-                        full_expression set_int[attributecount, attributecount + 1]
+                        complete_expression set_int[attributecount, attributecount + 1]
                 RBRACKET
                 set_type[type, GLOBAL_ATTRIBUTE, global]
                 throw_exception[global] |
@@ -2752,7 +2752,7 @@ linq_from[] { CompleteElement element; ENTRY_DEBUG }:
 
             startElement(SFROM);
         }
-        FROM linq_full_expression (options { greedy = true; } : linq_in)*
+        FROM complete_linq_expression (options { greedy = true; } : linq_in)*
 ;
 
 linq_in[] { CompleteElement element; ENTRY_DEBUG }:
@@ -2762,7 +2762,7 @@ linq_in[] { CompleteElement element; ENTRY_DEBUG }:
 
             startElement(SIN);
         }
-        IN linq_full_expression
+        IN complete_linq_expression
 ;
 
 linq_where[] { CompleteElement element; ENTRY_DEBUG }:
@@ -2772,7 +2772,7 @@ linq_where[] { CompleteElement element; ENTRY_DEBUG }:
 
             startElement(SWHERE);
         }
-        WHERE linq_full_expression
+        WHERE complete_linq_expression
 ;
 
 linq_select[] { CompleteElement element; ENTRY_DEBUG }:
@@ -2782,7 +2782,7 @@ linq_select[] { CompleteElement element; ENTRY_DEBUG }:
 
             startElement(SSELECT);
         }
-        SELECT linq_full_expression
+        SELECT complete_linq_expression
 ;
 
 linq_let[] { CompleteElement element; ENTRY_DEBUG }:
@@ -2792,7 +2792,7 @@ linq_let[] { CompleteElement element; ENTRY_DEBUG }:
 
             startElement(SLET);
         }
-        LET linq_full_expression
+        LET complete_linq_expression
 ;
 
 linq_group[] { CompleteElement element; ENTRY_DEBUG }:
@@ -2802,7 +2802,7 @@ linq_group[] { CompleteElement element; ENTRY_DEBUG }:
 
             startElement(SGROUP);
         }
-        GROUP linq_full_expression
+        GROUP complete_linq_expression
         (options { greedy = true; } : linq_by)*
         (options { greedy = true; } : linq_into)*
 ;
@@ -2814,7 +2814,7 @@ linq_by[] { CompleteElement element; ENTRY_DEBUG }:
 
             startElement(SBY);
         }
-        BY linq_full_expression
+        BY complete_linq_expression
 ;
 
 linq_into[] { CompleteElement element; ENTRY_DEBUG }:
@@ -2824,7 +2824,7 @@ linq_into[] { CompleteElement element; ENTRY_DEBUG }:
 
             startElement(SINTO);
         }
-        INTO linq_full_expression
+        INTO complete_linq_expression
 ;
 
 linq_join[] { CompleteElement element; ENTRY_DEBUG }:
@@ -2834,7 +2834,7 @@ linq_join[] { CompleteElement element; ENTRY_DEBUG }:
 
             startElement(SJOIN);
         }
-        JOIN linq_full_expression
+        JOIN complete_linq_expression
 
         (options { greedy = true; } : linq_in | linq_on | linq_equals | linq_into)*
 ;
@@ -2846,7 +2846,7 @@ linq_on[] { CompleteElement element; ENTRY_DEBUG }:
 
             startElement(SON);
         }
-        ON linq_full_expression
+        ON complete_linq_expression
 ;
 
 linq_equals[] { CompleteElement element; ENTRY_DEBUG }:
@@ -2856,7 +2856,7 @@ linq_equals[] { CompleteElement element; ENTRY_DEBUG }:
 
             startElement(SEQUALS);
         }
-        EQUALS linq_full_expression
+        EQUALS complete_linq_expression
 ;
 
 linq_orderby[] { CompleteElement element; ENTRY_DEBUG }:
@@ -2865,11 +2865,11 @@ linq_orderby[] { CompleteElement element; ENTRY_DEBUG }:
 
             startElement(SORDERBY);
         }
-        ORDERBY linq_full_expression
+        ORDERBY complete_linq_expression
 
         (options { greedy = true; } : linq_ascending | linq_descending)*
 
-        (options { greedy = true; } : COMMA linq_full_expression (options { greedy = true; } : linq_ascending | linq_descending)* )*
+        (options { greedy = true; } : COMMA complete_linq_expression (options { greedy = true; } : linq_ascending | linq_descending)* )*
 ;
 
 linq_ascending[] { CompleteElement element; ENTRY_DEBUG }:
@@ -2914,10 +2914,10 @@ variable_identifier_array_grammar_sub[bool& iscomplex] { CompleteElement element
 
 
 variable_identifier_array_grammar_sub_contents{ ENTRY_DEBUG } :
-        { !inLanguage(LANGUAGE_CSHARP) }? full_expression |
+        { !inLanguage(LANGUAGE_CSHARP) }? complete_expression |
 
         { inLanguage(LANGUAGE_CSHARP) }? (options { greedy = true; } : { LA(1) != RBRACKET }?
-            ({ /* stop warning */ LA(1) == COMMA }? COMMA | full_expression)
+            ({ /* stop warning */ LA(1) == COMMA }? COMMA | complete_expression)
         )*
 ;
 
@@ -2933,7 +2933,7 @@ attribute[] { CompleteElement element; ENTRY_DEBUG } :
 
         ({ next_token() == COLON }? attribute_target COLON)*
 
-        full_expression
+        complete_expression
 
         RBRACKET
 ;
@@ -2957,7 +2957,7 @@ attribute_target_global[] returns [bool global = false] { ENTRY_DEBUG } :
 
 // Full, complete expression matched all at once (no stream).
 // Colon matches range(?) for bits.
-full_expression[] { CompleteElement element; ENTRY_DEBUG } :
+complete_expression[] { CompleteElement element; ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
@@ -2980,7 +2980,7 @@ full_expression[] { CompleteElement element; ENTRY_DEBUG } :
         COLON)*
 ;
 
-linq_full_expression[] { CompleteElement element; ENTRY_DEBUG } :
+complete_linq_expression[] { CompleteElement element; ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
@@ -3338,7 +3338,7 @@ annotation[] { CompleteElement el; ENTRY_DEBUG } :
 
         function_identifier
 
-        (call_argument_list (full_expression | COMMMA)* RPAREN| (full_expression | COMMA)* RPAREN)
+        (call_argument_list (complete_expression | COMMMA)* RPAREN| (complete_expression | COMMA)* RPAREN)
 ;
 
 // call  function call, macro, etc.
@@ -3632,7 +3632,7 @@ lambda_anonymous[] { ENTRY_DEBUG } :
         lambda_marked
 
         /* completely parse a function until it is done */
-        parse_complete_block
+        complete_block
 ;
 
 delegate_anonymous[] { ENTRY_DEBUG } :
@@ -3647,10 +3647,10 @@ delegate_anonymous[] { ENTRY_DEBUG } :
         (options { greedy = true; } : parameter_list)*
 
         /* completely parse a function until it is done */
-        parse_complete_block
+        complete_block
 ;
 
-parse_complete_block[] { ENTRY_DEBUG
+complete_block[] { ENTRY_DEBUG
 
     if (inputState->guessing) {
 
@@ -4328,7 +4328,7 @@ parameter_list[] { CompleteElement element; bool lastwasparam = false; bool foun
             if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
                 endCurrentMode(MODE_LOCAL);
         } comma |
-        full_parameter { foundparam = lastwasparam = true; })* empty_element[SPARAMETER, !lastwasparam && foundparam] rparen[false]
+        complete_parameter { foundparam = lastwasparam = true; })* empty_element[SPARAMETER, !lastwasparam && foundparam] rparen[false]
 ;
 
 indexer_parameter_list[] { bool lastwasparam = false; bool foundparam = false; ENTRY_DEBUG } :
@@ -4350,7 +4350,7 @@ indexer_parameter_list[] { bool lastwasparam = false; bool foundparam = false; E
 //                endCurrentMode(MODE_LOCAL);
         } comma |
 
-        full_parameter { foundparam = lastwasparam = true; })*
+        complete_parameter { foundparam = lastwasparam = true; })*
 ;
 
 empty_element[int ele, bool cond] { CompleteElement element; ENTRY_DEBUG } :
@@ -4364,10 +4364,10 @@ empty_element[int ele, bool cond] { CompleteElement element; ENTRY_DEBUG } :
 ;
 
 kr_parameter[] { ENTRY_DEBUG } :
-        full_parameter terminate_pre terminate_token
+        complete_parameter terminate_pre terminate_token
 ;
 
-full_parameter[] { ENTRY_DEBUG } :
+complete_parameter[] { ENTRY_DEBUG } :
         parameter
         (options { greedy = true; } : parameter_declaration_initialization expression)*
 ;
@@ -5112,7 +5112,7 @@ cpp_condition[bool& markblockzero] { CompleteElement element; ENTRY_DEBUG } :
 
         set_bool[markblockzero, LA(1) == CONSTANTS && LT(1)->getText() == "0"]
 
-        full_expression
+        complete_expression
 ;
 
 cpp_symbol[] { CompleteElement element; ENTRY_DEBUG } :
