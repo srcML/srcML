@@ -763,7 +763,7 @@ look_past[int skiptoken] returns [int token] {
     int place = mark();
     inputState->guessing++;
 
-    while (LA(1) != antlr::Token::EOF_TYPE && LA(1) == skiptoken)
+    while (LA(1) == skiptoken)
         consume();
 
     token = LA(1);
