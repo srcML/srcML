@@ -1,8 +1,7 @@
 /*
-
   UTF8CharBuffer.hpp
 
-  Copyright (C) 2008-2010  SDML (www.sdml.info)
+  Copyright (C) 2008-2013  SDML (www.sdml.info)
 
   This file is part of the srcML translator.
 

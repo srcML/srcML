@@ -1,7 +1,7 @@
 /*
   URIStream.cpp
 
-  Copyright (C) 2010  SDML (www.sdml.info)
+  Copyright (C) 2010-2013  SDML (www.sdml.info)
 
   This file is part of the srcML translator.
 
@@ -19,7 +19,6 @@
   along with the srcML translator; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-
 
 #include "URIStream.hpp"
 #include <cstring>

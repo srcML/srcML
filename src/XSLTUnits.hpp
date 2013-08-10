@@ -1,7 +1,7 @@
 /*
   XSLTUnits.cpp
 
-  Copyright (C) 2008-2012  SDML (www.sdml.info)
+  Copyright (C) 2008-2013  SDML (www.sdml.info)
 
   This file is part of the srcML translator.
 
@@ -18,8 +18,6 @@
   You should have received a copy of the GNU General Public License
   along with the srcML translator; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-
 */
 
 #ifndef INCLUDED_XSLTUNITS_HPP

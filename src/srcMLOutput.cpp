@@ -1,7 +1,7 @@
 /*
   srcMLOutput.cpp
 
-  Copyright (C) 2003-2012  SDML (www.sdml.info)
+  Copyright (C) 2003-2013  SDML (www.sdml.info)
 
   This file is part of the srcML translator.
 
