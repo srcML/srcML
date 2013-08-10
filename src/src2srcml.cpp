@@ -1220,9 +1220,11 @@ void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       return;
     }
 
-    // turnon cpp namespace for non Java-based languages
-    if (!(reallanguage == Language::LANGUAGE_JAVA || reallanguage == Language::LANGUAGE_ASPECTJ))
+    // turn on full cpp namespace for C and C++
+    if (reallanguage == Language::LANGUAGE_C || reallanguage == Language::LANGUAGE_CXX)
       options |= OPTION_CPP;
+    else if (reallanguage == Language::LANGUAGE_CSHARP)
+      options |= OPTION_CPP_NOMACRO;
 
     // open up the file
     void* context = translator.setInput(path);

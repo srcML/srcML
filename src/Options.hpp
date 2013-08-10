@@ -137,11 +137,6 @@ const OPTION_TYPE OPTION_INFO         = ull(1) << 19;
 // @srcml2src
 const OPTION_TYPE OPTION_LONG_INFO    = ull(1) << 20;
 
-// skip encoding
-// @src2srcml
-// @srcml2src
-//  const OPTION_TYPE OPTION_SKIP_ENCODING = ull(1) << 21;
-
 // cpp markup #else sections
 // @src2srcml
 const OPTION_TYPE OPTION_CPP_MARKUP_ELSE = ull(1) << 22;
@@ -175,7 +170,8 @@ const OPTION_TYPE OPTION_XMLNS = ull(1) << 27;
 
 // cpp mode
 // @src2srcml
-const OPTION_TYPE OPTION_CPP = ull(1) << 28;
+const OPTION_TYPE OPTION_CPP_NOMACRO = ull(1) << 21;
+const OPTION_TYPE OPTION_CPP = ull(1) << 28 | OPTION_CPP_NOMACRO;
 
 // xml declaration
 // @src2srcml

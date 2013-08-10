@@ -393,7 +393,8 @@ void srcMLTranslatorOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION
       (depth == 0) ? SRCML_SRC_NS_URI : 0,
 
       // main cpp namespace declaration
-      isoption(OPTION_CPP, options) && (isoption(OPTION_NESTED, options) == !outer) ? SRCML_CPP_NS_URI : 0,
+      (isoption(OPTION_CPP, options) || isoption(OPTION_CPP_NOMACRO, options)) && (isoption(OPTION_NESTED, options) == !outer)
+      ? SRCML_CPP_NS_URI : 0,
 
       // optional debugging xml namespace
       (depth == 0) && isoption(OPTION_DEBUG, options)    ? SRCML_ERR_NS_URI : 0,
