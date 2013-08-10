@@ -2737,7 +2737,8 @@ linq_expression[] { CompleteElement element; ENTRY_DEBUG }:
 
             startElement(SLINQ);
         }
-        (options { greedy = true; } : linq_expression_pure)+
+        linq_expression_pure
+        (options { greedy = true; } : linq_expression_pure)*
 ;
 
 linq_expression_pure[] { ENTRY_DEBUG }:
