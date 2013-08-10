@@ -3262,7 +3262,6 @@ specifier[] { CompleteElement element; ENTRY_DEBUG } :
         )
 ;
 
-// constructor definition
 constructor_declaration[] { ENTRY_DEBUG } :
         {
             // statement
@@ -3274,7 +3273,6 @@ constructor_declaration[] { ENTRY_DEBUG } :
         constructor_header
 ;              
 
-// constructor definition
 constructor_definition[] { ENTRY_DEBUG } :
         {
             // statement with nested block
@@ -3290,7 +3288,6 @@ constructor_definition[] { ENTRY_DEBUG } :
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? member_initialization_list)*
 ;
 
-// constructor definition
 constructor_header[] { ENTRY_DEBUG } :
 
         (options { greedy = true; } : 
@@ -3301,16 +3298,13 @@ constructor_header[] { ENTRY_DEBUG } :
 
             { inLanguage(LANGUAGE_JAVA_FAMILY) }? template_argument_list
         )*
-
         complex_name[true]
-
         parameter_list
         {
             setMode(MODE_FUNCTION_TAIL);
         }
 ;
 
-// member initialization list of constructor
 member_initialization_list[] { ENTRY_DEBUG } :
         {
             // handle member initialization list as a list of calls
@@ -3327,7 +3321,6 @@ identifier_stack[std::string s[]] { s[1] = s[0]; s[0] = LT(1)->getText(); ENTRY_
         identifier[true]
 ;
 
-// destructor definition
 destructor_definition[] { ENTRY_DEBUG } :
         {
             // statement with nested block
@@ -3339,7 +3332,6 @@ destructor_definition[] { ENTRY_DEBUG } :
         destructor_header
 ;
 
-// destructor declaration
 destructor_declaration[] { ENTRY_DEBUG } :
         {
             // just a statement
@@ -3351,8 +3343,6 @@ destructor_declaration[] { ENTRY_DEBUG } :
         destructor_header
 ;              
 
-
-// destructor header
 destructor_header[] { ENTRY_DEBUG } :
 
         (options { greedy = true; } : 
@@ -3361,21 +3351,15 @@ destructor_header[] { ENTRY_DEBUG } :
 
             specifier |
 
-        { LT(1)->getText() == "void" }? simple_identifier[true]
-
-    )*
-
+            { LT(1)->getText() == "void" }? simple_identifier[true]
+        )*
         complex_name[true]
-
         parameter_list
         {
             setMode(MODE_FUNCTION_TAIL);
         }
 ;              
 
-/*
-  call  function call, macro, etc.
-*/
 annotation[] { CompleteElement el; ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
@@ -3391,9 +3375,7 @@ annotation[] { CompleteElement el; ENTRY_DEBUG } :
         (call_argument_list (full_expression | COMMMA)* RPAREN| (full_expression | COMMA)* RPAREN)
 ;
 
-/*
-  call  function call, macro, etc.
-*/
+// call  function call, macro, etc.
 call[] { ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
@@ -3403,13 +3385,9 @@ call[] { ENTRY_DEBUG } :
             startElement(SFUNCTION_CALL);
         }
         function_identifier 
-
         call_argument_list
 ;
 
-/*
- Argument list for a call, e.g., to a function
-*/
 call_argument_list[] { ENTRY_DEBUG } :
         {
             // list of parameters
@@ -3420,12 +3398,6 @@ call_argument_list[] { ENTRY_DEBUG } :
         }
         LPAREN
 ;
-
-/*
-  call
-
-  function call, macro, etc.
-*/
 
 macro_call_check[] { ENTRY_DEBUG } :
         NAME optional_paren_pair
@@ -3459,7 +3431,7 @@ eat_optional_macro_call[] {
         macro_call();
 
     ENTRY_DEBUG
-    } :;
+} :;
 
 macro_call[] { ENTRY_DEBUG } :
         macro_call_inner
@@ -3467,10 +3439,9 @@ macro_call[] { ENTRY_DEBUG } :
             if (inMode(MODE_THEN) && LA(1) == ELSE)
                 endCurrentMode(MODE_THEN);
         }
-    ;
+;
 
 macro_call_inner[] { CompleteElement element; bool first = true; ENTRY_DEBUG } :
-
         {
             // start a mode for the macro that will end after the argument list
             startNewMode(MODE_STATEMENT | MODE_TOP);
@@ -3488,9 +3459,7 @@ macro_call_inner[] { CompleteElement element; bool first = true; ENTRY_DEBUG } :
             startElement(SARGUMENT_LIST);
         }
         LPAREN
-
         macro_call_contents
-
         {
             // end anything started inside of the macro argument list
             endDownToMode(MODE_LIST | MODE_TOP);
@@ -3511,38 +3480,38 @@ catch[antlr::RecognitionException] {
 
 macro_call_contents[] { 
 
-            ENTRY_DEBUG
+    ENTRY_DEBUG
 
-            CompleteElement element;
+    CompleteElement element;
 
-            int parencount = 0;
-            bool start = true;
-            while (LA(1) != 1 /* EOF? */ && !(parencount == 0 && LA(1) == RPAREN)) {
+    int parencount = 0;
+    bool start = true;
+    while (LA(1) != 1 /* EOF? */ && !(parencount == 0 && LA(1) == RPAREN)) {
 
-                if (LA(1) == LPAREN)
-                    ++parencount;
+        if (LA(1) == LPAREN)
+            ++parencount;
 
-                if (LA(1) == RPAREN)
-                    --parencount;
+        if (LA(1) == RPAREN)
+            --parencount;
 
-                if (inputState->guessing == 0 && start) {
-                       // argument with nested expression
-                       startNewMode(MODE_ARGUMENT);
+        if (inputState->guessing == 0 && start) {
+            // argument with nested expression
+            startNewMode(MODE_ARGUMENT);
 
-                       // start of the try statement
-                       startElement(SARGUMENT);
+            // start of the try statement
+            startElement(SARGUMENT);
 
-                       start = false;
-                }
+            start = false;
+        }
 
-                if (inputState->guessing == 0 && LA(1) == COMMA && parencount == 0) {
-                    endCurrentMode();
-                    start = true;
-                }
-                consume();
-            }
+        if (inputState->guessing == 0 && LA(1) == COMMA && parencount == 0) {
+            endCurrentMode();
+            start = true;
+        }
+        consume();
+    }
 
-        } :;
+}:;
 
 try_statement[] { ENTRY_DEBUG } :
         {
@@ -3733,9 +3702,7 @@ parse_complete_block[] { ENTRY_DEBUG
             consume();
         }
     }
-}:
-
-;
+}:;
 
 delegate_marked[] { CompleteElement element; ENTRY_DEBUG } :
         {
@@ -3800,9 +3767,6 @@ expression_statement[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
         expression[type]
 ;
 
-/*
-  Statement for the declaration of a variable or group of variables
-*/
 variable_declaration_statement[int type_count] { ENTRY_DEBUG } :
         {
             // statement
@@ -3822,9 +3786,6 @@ variable_declaration_statement[int type_count] { ENTRY_DEBUG } :
         variable_declaration[type_count]
 ;
 
-/*
-  Statement for the declaration of a variable or group of variables
-*/
 short_variable_declaration[] { ENTRY_DEBUG } :
         {
             // declaration
@@ -3838,15 +3799,6 @@ short_variable_declaration[] { ENTRY_DEBUG } :
         }
 ;
 
-/*
-  Declaration of a variable
-
-  Example:
-    int a;
-    int a = b;
-    int a, b;
-    int a = b, c = d;
-*/
 variable_declaration[int type_count] { ENTRY_DEBUG } :
         {
             // variable declarations may be in a list
@@ -3855,10 +3807,6 @@ variable_declaration[int type_count] { ENTRY_DEBUG } :
         variable_declaration_type[type_count]
 ;
 
-/*
-  A simple variable declaration of a single variable including the type,
-  name, and initialization block.
-*/
 variable_declaration_type[int type_count] { ENTRY_DEBUG } :
         {
             // start a mode for the type that will end in this grammar rule
@@ -3873,10 +3821,9 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
         update_var_typecount
 ;
 
-/*
-  Variable declaration name and optional initialization
-*/
-variable_declaration_nameinit[] { bool isthis = LA(1) == THIS; bool not_csharp = !inLanguage(LANGUAGE_CSHARP); ENTRY_DEBUG } :
+// Variable declaration name and optional initialization
+variable_declaration_nameinit[] { bool isthis = LA(1) == THIS; bool not_csharp = !inLanguage(LANGUAGE_CSHARP);
+        ENTRY_DEBUG } :
         complex_name[true, not_csharp]
         {
             // expect a possible initialization
@@ -3896,11 +3843,7 @@ variable_declaration_nameinit[] { bool isthis = LA(1) == THIS; bool not_csharp =
         }
 ;
 
-/*
-  Initialization of a variable in a declaration.  Does not include the equal sign.
-*/
 function_pointer_initialization[] { ENTRY_DEBUG } :
-
         EQUAL
         {
             // end the init correctly
@@ -3913,7 +3856,6 @@ function_pointer_initialization[] { ENTRY_DEBUG } :
 ;
 
 variable_declaration_initialization[] { ENTRY_DEBUG } :
-
         EQUAL
         {
             // start a new mode that will end after the argument list
@@ -3937,7 +3879,6 @@ variable_declaration_initialization[] { ENTRY_DEBUG } :
 ;
 
 variable_declaration_range[] { ENTRY_DEBUG } :
-
         COLON
         {
             // start a new mode that will end after the argument list
@@ -3949,7 +3890,6 @@ variable_declaration_range[] { ENTRY_DEBUG } :
 ;
 
 parameter_declaration_initialization[] { ENTRY_DEBUG } :
-
         EQUAL
         {
             // end the init correctly
@@ -3971,9 +3911,7 @@ pure_expression_block[] { ENTRY_DEBUG } :
         }
 ;
 
-/*
-  All possible operators
-*/
+// All possible operators
 general_operators[] { CompleteElement element; ENTRY_DEBUG } :
         {
             if (isoption(parseoptions, OPTION_OPERATOR)) {
@@ -4025,7 +3963,8 @@ sole_destop[] { CompleteElement element; ENTRY_DEBUG } :
 ;
 
 general_operators_list[] { ENTRY_DEBUG }:
-        OPERATORS | TEMPOPS | TEMPOPE | EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF | QMARK
+        OPERATORS | TEMPOPS | TEMPOPE | EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS |
+        DOTDOT | RVALUEREF | QMARK
 ;
 
 rparen_operator[bool markup = true] { CompleteElement element; ENTRY_DEBUG } :
@@ -4086,13 +4025,8 @@ rparen[bool markup = true] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
         }
 ;
 
-/*
-  All possible operators
-*/
 
-/*
-  Dot (period) operator
-*/
+// Dot (period) operator
 period[] { CompleteElement element; ENTRY_DEBUG } :
         {
             if (isoption(parseoptions, OPTION_OPERATOR)) {
@@ -4107,9 +4041,7 @@ period[] { CompleteElement element; ENTRY_DEBUG } :
         PERIOD
 ;
 
-/*
-  Namespace operator '::'
-*/
+// Namespace operator '::'
 dcolon[] { CompleteElement element; ENTRY_DEBUG } :
         {
             if (isoption(parseoptions, OPTION_OPERATOR)) {
@@ -4124,9 +4056,6 @@ dcolon[] { CompleteElement element; ENTRY_DEBUG } :
         DCOLON
 ;
 
-/*
-   An expression
-*/
 expression_process[] { ENTRY_DEBUG } : 
         {
             // if expecting an expression start one. except if you are at a right curly brace
@@ -4171,19 +4100,13 @@ guessing_endGuessing[]
 guessing_end[]
     { if (!inputState->guessing && inTransparentMode(MODE_GUESSING)) endDownOverMode(MODE_GUESSING); ENTRY_DEBUG } : ;
 
-
-/*
-   Occurs only within another expression.  The mode is MODE_EXPRESSION.  Only
-   elements such as names and function calls are marked up.
-*/
-
 expression_part_plus_linq[CALLTYPE type = NOCALL] { guessing_end(); ENTRY_DEBUG } :
 
         { inLanguage(LANGUAGE_CSHARP) }?
         (linq_expression_pure)=> linq_expression |
 
         expression_part[type]
-    ;
+;
 
 expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG } :
 
@@ -4282,10 +4205,8 @@ expression_part_default[CALLTYPE type = NOCALL] { guessing_end(); ENTRY_DEBUG } 
         call argument
 ;
 
-/*
-  Only start and end of strings are put directly through the parser.
-  The contents of the string are handled as is whitespace.
-*/
+// Only start and end of strings are put directly through the parser.
+// The contents of the string are handled as whitespace.
 string_literal[] { CompleteElement element; ENTRY_DEBUG } :
         {
             // only markup strings in literal option
@@ -4301,10 +4222,8 @@ string_literal[] { CompleteElement element; ENTRY_DEBUG } :
         (STRING_START STRING_END)
 ;
 
-/*
-  Only start and end of character are put directly through the parser.
-  The contents of the character are handled as is whitespace.
-*/
+// Only start and end of character are put directly through the parser.
+// The contents of the character are handled as whitespace.
 char_literal[] { CompleteElement element; ENTRY_DEBUG } :
         {
             // only markup characters in literal option
@@ -4466,7 +4385,6 @@ indexer_parameter_list[] { bool lastwasparam = false; bool foundparam = false; E
         } comma |
 
         full_parameter { foundparam = lastwasparam = true; })* 
-        /* empty_element[SPARAMETER, !lastwasparam && foundparam] */
 ;
 
 empty_element[int ele, bool cond] { CompleteElement element; ENTRY_DEBUG } :
@@ -4484,7 +4402,6 @@ kr_parameter[] { ENTRY_DEBUG } :
 ;
 
 full_parameter[] { ENTRY_DEBUG } :
-
         parameter
         (options { greedy = true; } : parameter_declaration_initialization expression)*
 ;
@@ -4505,9 +4422,6 @@ argument[] { ENTRY_DEBUG } :
         )
 ;
 
-/*
-  Parameter for a function declaration or definition
-*/                
 parameter[] { int type_count = 0; int secondtoken = 0;  DECLTYPE decl_type = NONE; ENTRY_DEBUG } :
         {
             // end parameter correctly
@@ -4517,30 +4431,30 @@ parameter[] { int type_count = 0; int secondtoken = 0;  DECLTYPE decl_type = NON
             startElement(SPARAMETER);
         }
         (
-        { perform_noncfg_check(decl_type, secondtoken, type_count, true) && decl_type == FUNCTION }?
-        function_declaration[type_count]
+            { perform_noncfg_check(decl_type, secondtoken, type_count, true) && decl_type == FUNCTION }?
+            function_declaration[type_count]
 
-        function_identifier // pointer_name_grammar
+            function_identifier // pointer_name_grammar
 
-        (macro_call_check)*
+            (macro_call_check)*
 
-        parameter_list 
+            parameter_list 
 
-        (options { greedy = true; } : function_pointer_initialization)* |
-        {
-            // start the declaration element
-            startElement(SDECLARATION);
+            (options { greedy = true; } : function_pointer_initialization)* |
+            {
+                // start the declaration element
+                startElement(SDECLARATION);
 
-            if (decl_type != VARIABLE)
-                type_count = 1;
-        }
-        { decl_type == VARIABLE || LA(1) == DOTDOTDOT}?
-        parameter_type_count[type_count]
-        {
-            // expect a name initialization
-            setMode(MODE_VARIABLE_NAME | MODE_INIT);
-        }
-        ( options { greedy = true; } : variable_declaration_nameinit)*
+                if (decl_type != VARIABLE)
+                    type_count = 1;
+            }
+            { decl_type == VARIABLE || LA(1) == DOTDOTDOT}?
+            parameter_type_count[type_count]
+            {
+                // expect a name initialization
+                setMode(MODE_VARIABLE_NAME | MODE_INIT);
+            }
+            ( options { greedy = true; } : variable_declaration_nameinit)*
         )
 ;
 
