@@ -4458,8 +4458,6 @@ parameter[] { int type_count = 0; int secondtoken = 0;  DECLTYPE decl_type = NON
         )
 ;
 
-/*
-*/
 parameter_type_count[int type_count] { CompleteElement element; ENTRY_DEBUG } :
         {
             // local mode so start element will end correctly
@@ -4504,8 +4502,6 @@ tripledotop[] { CompleteElement element; ENTRY_DEBUG } :
         DOTDOTDOT
 ;
 
-/*
-*/
 parameter_type[] { CompleteElement element; int type_count = 0; int secondtoken = 0; DECLTYPE decl_type = NONE; ENTRY_DEBUG } :
         {
             // local mode so start element will end correctly
@@ -4518,13 +4514,8 @@ parameter_type[] { CompleteElement element; int type_count = 0; int secondtoken 
         eat_type[type_count]
 ;
 
-/*
-  Template
-*/
+// Template
 
-/*
-  template declaration
-*/
 template_declaration[] { ENTRY_DEBUG } :
         {
             // template with nested statement (function or class)
@@ -4540,9 +4531,6 @@ template_declaration[] { ENTRY_DEBUG } :
         }
 ;
 
-/*
-  template parameter list
-*/
 template_param_list[] { ENTRY_DEBUG } :
         {
             // start the template parameter list
@@ -4551,11 +4539,6 @@ template_param_list[] { ENTRY_DEBUG } :
         tempops
 ;
 
-/*
-  template parameter
-
-  A template parameter is a subset of a general function parameter
-*/
 template_param[] { ENTRY_DEBUG } :
         {
             // end parameter correctly
@@ -4574,9 +4557,6 @@ template_param[] { ENTRY_DEBUG } :
     )
 ;
 
-/*
-  template argument list
-*/
 template_argument_list[] { CompleteElement element; std::string namestack_save[2]; ENTRY_DEBUG } : 
         {
             // local mode
@@ -4608,9 +4588,6 @@ savenamestack[std::string namestack_save[]] { namestack_save[0] = namestack[0]; 
 
 restorenamestack[std::string namestack_save[]] { namestack[0] = namestack_save[0]; namestack[1] = namestack_save[1]; ENTRY_DEBUG } :;
 
-/*
-  template argument
-*/
 template_argument[] { CompleteElement element; ENTRY_DEBUG } :
         {
             // local mode
@@ -4674,9 +4651,6 @@ tempope[] { ENTRY_DEBUG } :
         }
 ;
 
-/*
-  label statement
-*/
 label_statement[] { CompleteElement element; ENTRY_DEBUG } :
         {
             // statement
@@ -4688,9 +4662,6 @@ label_statement[] { CompleteElement element; ENTRY_DEBUG } :
         identifier[true] COLON
 ;
 
-/*
-  typedef_statement
-*/
 typedef_statement[] { ENTRY_DEBUG } :
         {
             // statement
@@ -4727,11 +4698,9 @@ optional_paren_pair[] {
     }
 
     ENTRY_DEBUG
-} :;
+}:;
 
-/*
-  See if there is a semicolon terminating a statement inside a block at the top level
-*/        
+// See if there is a semicolon terminating a statement inside a block at the top level
 nested_terminate[] {
 
     int parencount = 0;
@@ -4760,9 +4729,6 @@ nested_terminate[] {
         TERMINATE
 ;
         
-/*
-  Definition of an enum.  Start of the enum only
-*/
 enum_definition[] { ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (enum_class_definition nested_terminate)=> enum_class_definition |
@@ -4789,10 +4755,8 @@ enum_definition[] { ENTRY_DEBUG } :
         ENUM
 ;
 
-/*
-  Complete definition of an enum.  Used for enum's embedded in typedef's where the entire
-  enum must be parsed since it is part of the type.
-*/
+// Complete definition of an enum.  Used for enum's embedded in typedef's where the entire
+// enum must be parsed since it is part of the type.
 enum_definition_whole[] { CompleteElement element; ENTRY_DEBUG } :
         enum_definition
 
