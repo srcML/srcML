@@ -1921,18 +1921,17 @@ else_handling[] { ENTRY_DEBUG } :
         }
 ;
 
-/*
-  Handling when mid-statement
-*/
-statement_part[] { int type_count;  int secondtoken = 0; DECLTYPE decl_type = NONE; CALLTYPE type = NOCALL; ENTRY_DEBUG } :
+// mid-statement
+statement_part[] { int type_count;  int secondtoken = 0; DECLTYPE decl_type = NONE;
+                   CALLTYPE type = NOCALL; ENTRY_DEBUG } :
         { inMode(MODE_EAT_TYPE) }?
-            type_identifier
-            update_typecount |
+        type_identifier
+        update_typecount |
 
         // block right after argument list, e.g., throws list in Java
         { inTransparentMode(MODE_END_LIST_AT_BLOCK) }?
         { endDownToMode(MODE_LIST); endCurrentMode(MODE_LIST); }
-            lcurly | 
+        lcurly | 
 
         /*
           MODE_EXPRESSION
@@ -1941,7 +1940,7 @@ statement_part[] { int type_count;  int secondtoken = 0; DECLTYPE decl_type = NO
         // expression block or expressions
         // must check before expression
         { inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT) }?
-             pure_expression_block |
+        pure_expression_block |
 
         /*
           MODE_FUNCTION_TAIL
@@ -1949,16 +1948,16 @@ statement_part[] { int type_count;  int secondtoken = 0; DECLTYPE decl_type = NO
 
         // throw list at end of function header
         { (inLanguage(LANGUAGE_OO)) && inMode(MODE_FUNCTION_TAIL) }?
-             throw_list |
+        throw_list |
 
         // function specifier at end of function header
         { inLanguage(LANGUAGE_CXX_FAMILY) && inMode(MODE_FUNCTION_TAIL) }?
-             function_specifier |
+        function_specifier |
 
         // K&R function parameters
         { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY)) && inMode(MODE_FUNCTION_TAIL) && 
           perform_noncfg_check(decl_type, secondtoken, type_count) && decl_type == VARIABLE }?
-            kr_parameter |
+        kr_parameter |
 
         // start of argument for return or throw statement
         { inMode(MODE_EXPRESSION | MODE_EXPECT) &&
@@ -1971,17 +1970,17 @@ statement_part[] { int type_count;  int secondtoken = 0; DECLTYPE decl_type = NO
         // already in an expression, and run into a keyword
         // so stop the expression, and markup the keyword statement
         { inMode(MODE_EXPRESSION) }?
-             terminate_pre
-             terminate_post
-             cfg |
+        terminate_pre
+        terminate_post
+        cfg |
 
         // already in an expression
         { inMode(MODE_EXPRESSION) }?
-             expression_part_plus_linq |
+        expression_part_plus_linq |
 
         // call list in member initialization list
         { inMode(MODE_CALL | MODE_LIST) }?
-             call |
+        call |
 
         /*
           MODE_VARIABLE_NAME
@@ -1989,46 +1988,46 @@ statement_part[] { int type_count;  int secondtoken = 0; DECLTYPE decl_type = NO
 
         // special case for type modifiers
         { inMode(MODE_VARIABLE_NAME | MODE_INIT) }?
-             multops |
+        multops |
 
         { inMode(MODE_VARIABLE_NAME | MODE_INIT) }?
-             tripledotop |
+        tripledotop |
 
         // start of argument for return or throw statement
         { inMode(MODE_VARIABLE_NAME | MODE_INIT) }?
-             variable_declaration_nameinit |
+        variable_declaration_nameinit |
 
         // variable name
         { inMode(MODE_VARIABLE_NAME) }?
-             variable_identifier |
+        variable_identifier |
 
         // function identifier
         { inMode(MODE_FUNCTION_NAME) }?
-             function_header[0] |
+        function_header[0] |
 
         // function identifier
         { inMode(MODE_FUNCTION_PARAMETER) }?
-             parameter_list |
+        parameter_list |
 
         // start of argument for return or throw statement
         { inMode(MODE_INIT | MODE_EXPECT) && inTransparentMode(MODE_TEMPLATE) }?
-             parameter_declaration_initialization |
+        parameter_declaration_initialization |
 
         // start of argument for return or throw statement
         { inMode(MODE_INIT | MODE_EXPECT) }?
-             variable_declaration_initialization |
+        variable_declaration_initialization |
 
         // start of argument for return or throw statement
         { inMode(MODE_INIT | MODE_EXPECT) && (inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_JAVA)) }?
-             variable_declaration_range |
+        variable_declaration_range |
 
         // in an argument list expecting an argument
         { inMode(MODE_ARGUMENT | MODE_LIST) }?
-             argument |
+        argument |
 
         // start of condition for if/while/switch
         { inMode(MODE_PARAMETER | MODE_EXPECT) }?
-             parameter |
+        parameter |
 
         /*
           Check for MODE_FOR_CONDITION before template stuff, since it can conflict
@@ -2036,34 +2035,34 @@ statement_part[] { int type_count;  int secondtoken = 0; DECLTYPE decl_type = NO
 
         // inside of for group expecting initialization
         { inMode(MODE_FOR_GROUP | MODE_EXPECT) }?
-            for_group |
+        for_group |
 
         // inside of for group expecting initialization
         { inMode(MODE_FOR_INITIALIZATION | MODE_EXPECT) }?
-            for_initialization |
+        for_initialization |
 
         // inside of for group expecting initialization
         { inMode(MODE_FOR_CONDITION | MODE_EXPECT) }?
-            for_condition |
+        for_condition |
 
         // inside of for group expecting initialization
         { inMode(MODE_FOR_INCREMENT | MODE_EXPECT) }?
-            for_increment |
+        for_increment |
 
         { inTransparentMode(MODE_TEMPLATE) && inMode(MODE_LIST | MODE_EXPECT) }?
-             template_param_list |
+        template_param_list |
 
         // expecting a template parameter
         { inTransparentMode(MODE_TEMPLATE) && inMode(MODE_LIST) }?
-             template_param |
+        template_param |
 
         // start of condition for if/while/switch
         { inMode(MODE_CONDITION | MODE_EXPECT) }?
-             condition |
+        condition |
 
         // while part of do statement
         { inMode(MODE_DO_STATEMENT) }?
-             do_while |
+        do_while |
 
         { inMode(MODE_NAMESPACE) }?
         namespace_alias |
@@ -2073,7 +2072,7 @@ statement_part[] { int type_count;  int secondtoken = 0; DECLTYPE decl_type = NO
 
         // string literal of extern
         { inMode(MODE_EXTERN) }?
-             extern_name |
+        extern_name |
 
         // sometimes end up here, as when for group ends early, or with for-each
         rparen |
@@ -2102,7 +2101,8 @@ comma[] { ENTRY_DEBUG }:
         {
             // comma ends the current item in a list
             // or ends the current expression
-            if (!inTransparentMode(MODE_PARSE_EOL) && (inTransparentMode(MODE_LIST) || inTransparentMode(MODE_STATEMENT | MODE_NEST))) {
+            if (!inTransparentMode(MODE_PARSE_EOL)
+                && (inTransparentMode(MODE_LIST) || inTransparentMode(MODE_STATEMENT | MODE_NEST))) {
 
                 // might want to check for !inMode(MODE_INTERNAL_END_CURLY)
                 endDownToFirstMode(MODE_LIST | MODE_STATEMENT);
@@ -2116,6 +2116,7 @@ comma[] { ENTRY_DEBUG }:
         comma_marked
 ;
 
+// marking comma operator
 comma_marked[] { CompleteElement element; ENTRY_DEBUG }:
         {
             if (isoption(parseoptions, OPTION_OPERATOR) && !inMode(MODE_PARAMETER) && !inMode(MODE_ARGUMENT)) {
@@ -2174,7 +2175,7 @@ condition[] { ENTRY_DEBUG } :
         LPAREN
 ;
 
-/* Function */
+/* functions */
 
 function_pointer_name_grammar[] { ENTRY_DEBUG } :
         LPAREN function_pointer_name_base RPAREN
@@ -2196,10 +2197,6 @@ function_pointer_name_base[] { ENTRY_DEBUG bool flag = false; } :
         (variable_identifier_array_grammar_sub[flag])*
 ;
 
-/*
-  Everything except the ";" of a function declaration or the block of a
-  function definition
-*/
 function_header[int type_count] { ENTRY_DEBUG } : 
 
         // no return value functions:  casting operator method and main
@@ -2209,9 +2206,6 @@ function_header[int type_count] { ENTRY_DEBUG } :
         function_type[type_count]
 ;
 
-/*
-Guessing mode only
-*/
 function_tail[] { ENTRY_DEBUG } :
         // at most only one throwlist expected.  0-many is more efficient
         (options { greedy = true; } :
@@ -2513,6 +2507,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
 )
 ;
 
+// C# global attribute target
 check_global[] returns [bool flag] {
         std::string s = LT(1)->getText();
 
@@ -2538,12 +2533,6 @@ set_int[int& name, int value, bool result = true] { if (result) name = value; } 
 
 set_bool[bool& variable, bool value = true] { variable = value; } :;
 
-/*
-message[const char* s] { std::cerr << s << std::endl; ENTRY_DEBUG } :;
-
-message_int[const char* s, int n]  { std::cerr << s << n << std::endl; ENTRY_DEBUG } :;
-*/
-
 function_rest[int& fla] { ENTRY_DEBUG } :
 
         eat_optional_macro_call
@@ -2551,9 +2540,7 @@ function_rest[int& fla] { ENTRY_DEBUG } :
         parameter_list function_tail check_end[fla]
 ;
 
-/*
-  Type of a function.  Includes specifiers
-*/
+// function type, including specifiers
 function_type[int type_count] { ENTRY_DEBUG } :
         {
             // start a mode for the type that will end in this grammar rule
@@ -2568,6 +2555,7 @@ function_type[int type_count] { ENTRY_DEBUG } :
         update_typecount
 ;
 
+/* TODO: combine into one with parameter */
 update_typecount[] {} :
         {
             decTypeCount();
@@ -2590,9 +2578,6 @@ update_var_typecount[] {} :
         }
 ;
 
-/*
-  Type of a function.  Includes specifiers
-*/
 function_type_check[int& type_count] { type_count = 1; ENTRY_DEBUG } :
 
         lead_type_identifier
@@ -2616,9 +2601,7 @@ eat_type[int count] { if (count <= 0) return; ENTRY_DEBUG } :
         eat_type[count - 1]
 ;
 
-/*
-  throw list for a function
-*/
+// throw list for a function
 throw_list[] { ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
@@ -2634,22 +2617,13 @@ throw_list[] { ENTRY_DEBUG } :
             startElement(STHROW_SPECIFIER_JAVA);
         }
         THROWS
-        {
-//            endCurrentMode(MODE_LIST | MODE_EXPECT);
-        }
-;  
+;
 
-/*
-  throw list for a function
-*/
 complete_throw_list[] { bool flag = false; ENTRY_DEBUG } :
         THROW paren_pair | THROWS ( options { greedy = true; } : complex_name_java[true, flag] | COMMA)*
 ;
 
-/*
-   type identifier
-
-*/
+// type identifier
 pure_lead_type_identifier[] { ENTRY_DEBUG } :
 
         // specifiers that occur in a type
@@ -2678,10 +2652,6 @@ pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
         enum_definition_whole
 ;
 
-/*
-   type identifier
-
-*/
 lead_type_identifier[] { ENTRY_DEBUG } :
 
 //        specifier |
@@ -2713,18 +2683,13 @@ non_lead_type_identifier[] { bool iscomplex = false; ENTRY_DEBUG } :
         variable_identifier_array_grammar_sub[iscomplex]
 ;
 
-/*
-  A set of balanced parentheses
-*/
+// set of balanced parentheses
 balanced_parentheses[] :
         LCURLY
         (balanced_parentheses | ~(LCURLY | RCURLY))*
         RCURLY
 ;
 
-/*
-   Name of a function
-*/
 function_identifier[] { ENTRY_DEBUG } :
 
         // typical name
@@ -2764,8 +2729,8 @@ function_identifier_default[] { CompleteElement element; ENTRY_DEBUG } :
         DEFAULT
 ;
 
+// special cases for main
 function_identifier_main[] { CompleteElement element; ENTRY_DEBUG } :
-        // special cases for main
         {
             // end all started elements in this rule
             startNewMode(MODE_LOCAL);
@@ -2773,13 +2738,10 @@ function_identifier_main[] { CompleteElement element; ENTRY_DEBUG } :
             // start of the name element
             startElement(SNAME);
         }
-        // main program
         MAIN
 ;
 
-/*
-  overloaded operator name
-*/
+// overloaded operator name
 overloaded_operator[] { CompleteElement element; ENTRY_DEBUG } :
         {
             // end all started elements in this rule
@@ -2798,6 +2760,7 @@ overloaded_operator[] { CompleteElement element; ENTRY_DEBUG } :
         )
 ;
 
+/* linq expressions */
 linq_expression[] { CompleteElement element; ENTRY_DEBUG }:
         {
             // start a mode to end at right bracket with expressions inside
@@ -2806,11 +2769,11 @@ linq_expression[] { CompleteElement element; ENTRY_DEBUG }:
             startElement(SLINQ);
         }
         (options { greedy = true; } : linq_from | linq_where | linq_select | linq_let | linq_group | linq_join | linq_orderby)+
-    ;
+;
 
 linq_expression_pure[] { ENTRY_DEBUG }:
         linq_from | linq_where | linq_select | linq_let | linq_group | linq_join | linq_orderby
-    ;
+;
 
 linq_from[] { CompleteElement element; ENTRY_DEBUG }:
         {
@@ -2820,7 +2783,7 @@ linq_from[] { CompleteElement element; ENTRY_DEBUG }:
             startElement(SFROM);
         }
         FROM linq_full_expression (options { greedy = true; } : linq_in)*
-    ;
+;
 
 linq_in[] { CompleteElement element; ENTRY_DEBUG }:
         {
@@ -2830,7 +2793,7 @@ linq_in[] { CompleteElement element; ENTRY_DEBUG }:
             startElement(SIN);
         }
         IN linq_full_expression
-    ;
+;
 
 linq_where[] { CompleteElement element; ENTRY_DEBUG }:
         {
@@ -2840,7 +2803,7 @@ linq_where[] { CompleteElement element; ENTRY_DEBUG }:
             startElement(SWHERE);
         }
         WHERE linq_full_expression
-    ;
+;
 
 linq_select[] { CompleteElement element; ENTRY_DEBUG }:
         {
@@ -2850,7 +2813,7 @@ linq_select[] { CompleteElement element; ENTRY_DEBUG }:
             startElement(SSELECT);
         }
         SELECT linq_full_expression
-    ;
+;
 
 linq_let[] { CompleteElement element; ENTRY_DEBUG }:
         {
@@ -2860,7 +2823,7 @@ linq_let[] { CompleteElement element; ENTRY_DEBUG }:
             startElement(SLET);
         }
         LET linq_full_expression
-    ;
+;
 
 linq_group[] { CompleteElement element; ENTRY_DEBUG }:
         {
@@ -2872,7 +2835,7 @@ linq_group[] { CompleteElement element; ENTRY_DEBUG }:
         GROUP linq_full_expression
         (options { greedy = true; } : linq_by)*
         (options { greedy = true; } : linq_into)*
-    ;
+;
 
 linq_by[] { CompleteElement element; ENTRY_DEBUG }:
         {
@@ -2882,7 +2845,7 @@ linq_by[] { CompleteElement element; ENTRY_DEBUG }:
             startElement(SBY);
         }
         BY linq_full_expression
-    ;
+;
 
 linq_into[] { CompleteElement element; ENTRY_DEBUG }:
         {
@@ -2892,7 +2855,7 @@ linq_into[] { CompleteElement element; ENTRY_DEBUG }:
             startElement(SINTO);
         }
         INTO linq_full_expression
-    ;
+;
 
 linq_join[] { CompleteElement element; ENTRY_DEBUG }:
         {
@@ -2902,11 +2865,13 @@ linq_join[] { CompleteElement element; ENTRY_DEBUG }:
             startElement(SJOIN);
         }
         JOIN linq_full_expression 
+
+        /* TODO: Combine to avoid order problems */
         (options { greedy = true; } : linq_in)* 
         (options { greedy = true; } : linq_on)* 
         (options { greedy = true; } : linq_equals)* 
         (options { greedy = true; } : linq_into)* 
-    ;
+;
 
 linq_on[] { CompleteElement element; ENTRY_DEBUG }:
         {
@@ -2916,7 +2881,7 @@ linq_on[] { CompleteElement element; ENTRY_DEBUG }:
             startElement(SON);
         }
         ON linq_full_expression
-    ;
+;
 
 linq_equals[] { CompleteElement element; ENTRY_DEBUG }:
         {
@@ -2926,7 +2891,7 @@ linq_equals[] { CompleteElement element; ENTRY_DEBUG }:
             startElement(SEQUALS);
         }
         EQUALS linq_full_expression
-    ;
+;
 
 linq_orderby[] { CompleteElement element; ENTRY_DEBUG }:
         {
@@ -2939,7 +2904,7 @@ linq_orderby[] { CompleteElement element; ENTRY_DEBUG }:
         (options { greedy = true; } : linq_ascending | linq_descending)*
         
         (options { greedy = true; } : COMMA linq_full_expression (options { greedy = true; } : linq_ascending | linq_descending)* )*
-    ;
+;
 
 linq_ascending[] { CompleteElement element; ENTRY_DEBUG }:
         {
@@ -2949,7 +2914,7 @@ linq_ascending[] { CompleteElement element; ENTRY_DEBUG }:
             startElement(SNAME);
         }
         ASCENDING
-    ;
+;
 
 linq_descending[] { CompleteElement element; ENTRY_DEBUG }:
         {
@@ -2959,7 +2924,7 @@ linq_descending[] { CompleteElement element; ENTRY_DEBUG }:
             startElement(SNAME);
         }
         DESCENDING
-    ;
+;
 
 variable_identifier_array_grammar_sub[bool& iscomplex] { CompleteElement element; ENTRY_DEBUG } :
         {
@@ -3024,10 +2989,8 @@ attribute_target_global[] returns [bool global = false] { ENTRY_DEBUG } :
         attribute_target
 ;
 
-/*
-  Full, complete expression matched all at once (no stream).
-  Colon matches range(?) for bits.
-*/
+// Full, complete expression matched all at once (no stream).
+// Colon matches range(?) for bits.
 full_expression[] { CompleteElement element; ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
@@ -3073,18 +3036,12 @@ linq_full_expression[] { CompleteElement element; ENTRY_DEBUG } :
         COLON)*
 ;
 
-/*
-   A variable name in an expression.  Includes array names, but not
-   function calls
-*/
+// variable name in an expression.  Includes array names, but not function calls
 variable_identifier[] { ENTRY_DEBUG } :
-
         complex_name[true, true]
 ;
 
-/*
-  Name including template argument list
-*/
+// name including template argument list
 simple_name_optional_template[bool marked] { CompleteElement element; TokenPosition tp; ENTRY_DEBUG } :
         {
             if (marked) {
@@ -3112,11 +3069,7 @@ simple_name_optional_template[bool marked] { CompleteElement element; TokenPosit
        )
 ;
 
-/*
-  Basic single token names
-
-  preprocessor tokens that can also be used as identifiers
-*/
+// basic single token name
 identifier[bool marked = false] { CompleteElement element; ENTRY_DEBUG } :
         {
             if (marked) {
@@ -3131,17 +3084,14 @@ identifier[bool marked = false] { CompleteElement element; ENTRY_DEBUG } :
             SUPER | CHECKED | UNCHECKED | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD |
 
             // C# linq
-            FROM | WHERE | SELECT | LET | ORDERBY | ASCENDING | DESCENDING | GROUP | BY | JOIN | ON | EQUALS | INTO | THIS |
+            FROM | WHERE | SELECT | LET | ORDERBY | ASCENDING | DESCENDING | GROUP | BY | JOIN | ON | EQUALS |
+            INTO | THIS |
 
             { inLanguage(LANGUAGE_CSHARP) }? UNION
         )
 ;
 
-/*
-  Basic single token names
-
-  preprocessor tokens that can also be used as identifiers
-*/
+// most basic name
 simple_identifier[bool marked = false] { CompleteElement element; ENTRY_DEBUG } :
         {
             if (marked) {
@@ -3154,9 +3104,6 @@ simple_identifier[bool marked = false] { CompleteElement element; ENTRY_DEBUG } 
         NAME
 ;
 
-/*
-  identifier name marked with name element
-*/
 complex_name[bool marked = true, bool index = false] { CompleteElement element; TokenPosition tp; bool iscomplex_name = false; ENTRY_DEBUG } :
         complex_name_inner[marked, index]
         (options { greedy = true; } : { index }? variable_identifier_array_grammar_sub[iscomplex_name])*
@@ -3207,9 +3154,6 @@ complex_name_inner[bool marked = true, bool index = false] { CompleteElement ele
         }
 ;
 
-/*
-  identifier name marked with name element
-*/
 complex_name_cpp[bool marked, bool& iscomplex_name] { namestack[0] = namestack[1] = ""; bool founddestop = false; ENTRY_DEBUG } :
 
         (dcolon { iscomplex_name = true; })*
@@ -3222,9 +3166,6 @@ complex_name_cpp[bool marked, bool& iscomplex_name] { namestack[0] = namestack[1
         { if (founddestop) iscomplex_name = true; }
 ;
 
-/*
-  identifier name marked with name element
-*/
 complex_name_csharp[bool marked, bool& iscomplex_name] { namestack[0] = namestack[1] = ""; bool founddestop = false; ENTRY_DEBUG } :
 
         (dcolon { iscomplex_name = true; })*
@@ -3237,9 +3178,6 @@ complex_name_csharp[bool marked, bool& iscomplex_name] { namestack[0] = namestac
         { if (founddestop) iscomplex_name = true; }
 ;
 
-/*
-  Identifier markup for C
-*/
 complex_name_c[bool marked, bool& iscomplex_name] { ENTRY_DEBUG } :
         
         identifier[marked]
@@ -3249,9 +3187,6 @@ complex_name_c[bool marked, bool& iscomplex_name] { ENTRY_DEBUG } :
         )*
 ;
 
-/*
-  Identifier markup for Java
-*/
 complex_name_java[bool marked, bool& iscomplex_name] { ENTRY_DEBUG } :
 
         template_argument_list |
@@ -3259,9 +3194,6 @@ complex_name_java[bool marked, bool& iscomplex_name] { ENTRY_DEBUG } :
         (options { greedy = true; } : (period { iscomplex_name = true; } simple_name_optional_template[marked]))*
 ;
 
-/*
-  sequences of "::" and names
-*/
 name_tail[bool& iscomplex, bool marked] { ENTRY_DEBUG } :
 
         // "a::" will cause an exception to be thrown
@@ -3296,11 +3228,6 @@ exception
 catch[antlr::RecognitionException] {
 }
 
-/* end of new identifiers */
-
-/*
-  Specifier for a function
-*/
 function_specifier[] { CompleteElement element; ENTRY_DEBUG } :
         { LA(1) == WHERE }? generic_constraint |
 
@@ -3328,7 +3255,8 @@ specifier[] { CompleteElement element; ENTRY_DEBUG } :
             FINAL | STATIC | ABSTRACT | FRIEND | { inLanguage(LANGUAGE_CSHARP) }? NEW | VOLATILE | MUTABLE |
 
             // C# & Java
-            INTERNAL | SEALED | OVERRIDE | REF | OUT | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE | DELEGATE | PARTIAL | EVENT | ASYNC | VIRTUAL | EXTERN | INLINE | IN | PARAMS |
+            INTERNAL | SEALED | OVERRIDE | REF | OUT | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE |
+            DELEGATE | PARTIAL | EVENT | ASYNC | VIRTUAL | EXTERN | INLINE | IN | PARAMS |
 
             CONST
         )
