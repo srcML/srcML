@@ -1050,9 +1050,7 @@ for_group[] { ENTRY_DEBUG } :
         LPAREN
 ;
 
-/*
-  for parameter list initialization
-*/
+// for parameter list initialization.  used in multiple places
 for_initialization_action[] { ENTRY_DEBUG } :
         {
             assertMode(MODE_FOR_INITIALIZATION | MODE_EXPECT);
@@ -1065,7 +1063,7 @@ for_initialization_action[] { ENTRY_DEBUG } :
 
             startElement(SFOR_INITIALIZATION);
         }
-    ;
+;
 
 for_initialization[] { int type_count = 0;  int secondtoken = 0; DECLTYPE decl_type = NONE; ENTRY_DEBUG } :
         for_initialization_action
@@ -1075,16 +1073,12 @@ for_initialization[] { int type_count = 0;  int secondtoken = 0; DECLTYPE decl_t
             { perform_noncfg_check(decl_type, secondtoken, type_count) && decl_type == VARIABLE }?
             for_initialization_variable_declaration[type_count] |
             
-            // explicitly check for non-terminate so that a large switch statement
-            // isn't needed
             expression
         )
 ;
 
-/*
-  Statement for the declaration of a variable or group of variables
-  in a for initialization
-*/
+// Statement for the declaration of a variable or group of variables
+// in a for initialization
 for_initialization_variable_declaration[int type_count] { ENTRY_DEBUG } :
         {
             // start a new mode for the expression which will end
@@ -1097,9 +1091,7 @@ for_initialization_variable_declaration[int type_count] { ENTRY_DEBUG } :
 ;
 
 
-/*
-  for parameter list condition
-*/
+// for parameter list condition setup.  Used in multiple places.
 for_condition_action[] { ENTRY_DEBUG } :
         {
             assertMode(MODE_FOR_CONDITION | MODE_EXPECT);
@@ -1112,8 +1104,9 @@ for_condition_action[] { ENTRY_DEBUG } :
 
             startElement(SFOR_CONDITION);
         }
-    ;
+;
 
+// for condition
 for_condition[] { ENTRY_DEBUG } :
         for_condition_action
 
@@ -1121,9 +1114,7 @@ for_condition[] { ENTRY_DEBUG } :
         expression
 ;
 
-/*
-  increment in for parameter list
-*/
+// increment in for parameter list
 for_increment[] { ENTRY_DEBUG } :
         { 
             assertMode(MODE_EXPECT | MODE_FOR_INCREMENT);
@@ -1183,9 +1174,7 @@ else_statement[] { ENTRY_DEBUG } :
         ELSE
 ;
 
-/*
- start of switch statement
-*/
+//  start of switch statement
 switch_statement[] { ENTRY_DEBUG } :
         {
             // statement with nested block
@@ -1200,11 +1189,7 @@ switch_statement[] { ENTRY_DEBUG } :
         SWITCH 
 ;
 
-/*
- actions to perform before starting a section
-
- There are no grammar rules to match.
-*/
+// actions to perform before first starting a section.  Uses in multiple places.
 section_entry_action_first[] :
         {
             // start a new section inside the block with nested statements
@@ -1212,11 +1197,7 @@ section_entry_action_first[] :
         }
 ;
 
-/*
- actions to perform before starting a section
-
- There are no grammar rules to match.
-*/
+// actions to perform before starting a section
 section_entry_action[] :
         {
             // end any statements inside the section
@@ -1232,9 +1213,7 @@ section_entry_action[] :
         section_entry_action_first
 ;
 
-/*
- Yes, case isn't really a statement, but it is treated as one
-*/
+// case treated as a statement
 switch_case[] { ENTRY_DEBUG } :
         // start a new section
         section_entry_action
@@ -1248,6 +1227,7 @@ switch_case[] { ENTRY_DEBUG } :
         CASE 
 ;
 
+// default treated as a statement
 switch_default[] { ENTRY_DEBUG } :
         // start a new section
         section_entry_action
@@ -1261,9 +1241,7 @@ switch_default[] { ENTRY_DEBUG } :
         DEFAULT
 ;
 
-/*
-  start of return statement
-*/
+// import statement
 import_statement[] { ENTRY_DEBUG } :
         {
             // statement with a possible expression
@@ -1275,9 +1253,7 @@ import_statement[] { ENTRY_DEBUG } :
         IMPORT
 ;
 
-/*
-  start of package statement
-*/
+// package statement
 package_statement[] { ENTRY_DEBUG } :
         {
             // statement with a possible expression
@@ -1289,9 +1265,7 @@ package_statement[] { ENTRY_DEBUG } :
         PACKAGE
 ;
 
-/*
-  start of return statement
-*/
+// return statement
 return_statement[] { ENTRY_DEBUG } :
         {
             // statement with a possible expression
@@ -1303,6 +1277,7 @@ return_statement[] { ENTRY_DEBUG } :
         RETURN
 ;
 
+// yield statements
 yield_statements[] { int t = next_token(); ENTRY_DEBUG } :
 
         { t == RETURN }?
@@ -1334,20 +1309,6 @@ yield_return_statement[] { ENTRY_DEBUG } :
         yield_specifier RETURN
 ;
 
-/*
-  start of break statement
-*/
-break_statement[] { ENTRY_DEBUG } :
-        {
-            // statement
-            startNewMode(MODE_STATEMENT);
-
-            // start the break statement
-            startElement(SBREAK_STATEMENT);
-        }
-        BREAK
-;
-
 yield_break_statement[] { ENTRY_DEBUG } :
         {
             // statement
@@ -1359,9 +1320,19 @@ yield_break_statement[] { ENTRY_DEBUG } :
         yield_specifier BREAK
 ;
 
-/*
-  start of continue statement
-*/
+// break statement
+break_statement[] { ENTRY_DEBUG } :
+        {
+            // statement
+            startNewMode(MODE_STATEMENT);
+
+            // start the break statement
+            startElement(SBREAK_STATEMENT);
+        }
+        BREAK
+;
+
+// start of continue statement
 continue_statement[] { ENTRY_DEBUG } :
         {
             // statement
@@ -1373,9 +1344,7 @@ continue_statement[] { ENTRY_DEBUG } :
         CONTINUE
 ;
 
-/*
-  start of goto statement
-*/
+// start of goto statement
 goto_statement[] { ENTRY_DEBUG } :
         {
             // statement with an expected label name
@@ -1388,9 +1357,7 @@ goto_statement[] { ENTRY_DEBUG } :
         GOTO
 ;
 
-/*
-  Complete assembly declaration statement
-*/
+// complete assembly declaration statement
 asm_declaration[] { ENTRY_DEBUG } : 
         {
             // statement
@@ -1403,14 +1370,7 @@ asm_declaration[] { ENTRY_DEBUG } :
         (balanced_parentheses | ~(LCURLY | RCURLY | TERMINATE))*
 ;
 
-/*
- Examples:
-   namespace {}
-   namespace name {}
-   namespace name1 = name2;
-
- Past name handled as expression
-*/
+// extern definition
 extern_definition[] { ENTRY_DEBUG } :
         {
             // statement
@@ -1422,9 +1382,7 @@ extern_definition[] { ENTRY_DEBUG } :
         EXTERN
 ;
 
-/*
-  Name of extern section
-*/
+// name of extern section
 extern_name[] { ENTRY_DEBUG } :
         string_literal
         {
@@ -1433,14 +1391,7 @@ extern_name[] { ENTRY_DEBUG } :
         }
 ;
 
-/*
- Examples:
-   namespace {}
-   namespace name {}
-   namespace name1 = name2;
-
- Past name handled as expression
-*/
+// namespaces
 namespace_definition[] { ENTRY_DEBUG } :
         {
             // statement
@@ -1453,7 +1404,6 @@ namespace_definition[] { ENTRY_DEBUG } :
 ;
 
 namespace_alias[] { ENTRY_DEBUG } :
-
         EQUAL 
         {
             // expect a label name
@@ -1470,9 +1420,7 @@ namespace_block[] { ENTRY_DEBUG } :
         lcurly 
 ;
 
-/*
-  start of namespace using directive
-*/
+// using directive
 namespace_directive[] { ENTRY_DEBUG } :
         {
             // statement with an expected namespace name after the keywords
@@ -1490,8 +1438,6 @@ check_end[int& token] { token = LA(1); ENTRY_DEBUG } :
         LCURLY | TERMINATE | COLON | COMMA | RPAREN
 ;
 
-/*
-*/
 class_declaration[] { ENTRY_DEBUG } :
         {
             // statement
@@ -1504,8 +1450,6 @@ class_declaration[] { ENTRY_DEBUG } :
         (specifier)* CLASS class_header
 ;
 
-/*
-*/
 class_preprocessing[int token] { ENTRY_DEBUG } :
         {
             bool intypedef = inMode(MODE_TYPEDEF);
@@ -1593,8 +1537,6 @@ interface_definition[] { ENTRY_DEBUG } :
         ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* (specifier)* INTERFACE class_header lcurly
 ;
 
-/*
-*/
 struct_declaration[] { ENTRY_DEBUG } :
         {
             // statement
@@ -1616,8 +1558,6 @@ struct_union_definition[int element_token] { ENTRY_DEBUG } :
         }
 ;
 
-/*
-*/
 union_declaration[] { ENTRY_DEBUG } :
         {
             // statement
@@ -1629,9 +1569,7 @@ union_declaration[] { ENTRY_DEBUG } :
         ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* (specifier)* UNION class_header
 ;
 
-/*
-   Classes and structs in C++ have a default private/public section.  This handles it.
-*/
+// default private/public section for C++
 class_default_access_action[int access_token] { ENTRY_DEBUG } :
         {
             if (inLanguage(LANGUAGE_CXX_ONLY) && (SkipBufferSize() > 0 ||
@@ -1657,15 +1595,10 @@ class_default_access_action[int access_token] { ENTRY_DEBUG } :
         }
 ;
 
-/*
- header (part before block) of class (or struct or union)
-*/
 class_header[] { ENTRY_DEBUG } :
 
         /*
-          TODO
-          
-          This shouldn't be needed, but uncommenting the predicate causes Java
+          TODO: This shouldn't be needed, but uncommenting the predicate causes Java
           to mess up with template parameters, but not C++ ???
         */
         { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
@@ -1675,9 +1608,6 @@ class_header[] { ENTRY_DEBUG } :
         class_header_base
 ;
 
-/*
- header (part before block) of class (or struct or union)
-*/
 class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 
         complex_name[true]
@@ -1701,9 +1631,7 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
         }
 ;
 
-/*
-  Each instance of an access specifier defines a region in the class
-*/
+// Each instance of an access specifier defines a region in the class
 access_specifier_region[] { ENTRY_DEBUG } : 
         section_entry_action
         {
@@ -1766,11 +1694,7 @@ lcurly[] { ENTRY_DEBUG } :
         }
 ;
 
-/*
-  left curly brace
-
-  Marks the start of a block.  End of the block is handled in right curly brace
-*/
+// left curly brace.  Used in multiple places
 lcurly_base[] { ENTRY_DEBUG } :
         {  
             // need to pass on class mode to detect constructors for Java
@@ -1787,16 +1711,13 @@ lcurly_base[] { ENTRY_DEBUG } :
         LCURLY
 ;
 
-/*
-  Marks the end of a block.  Also indicates the end of some open elements.
-*/
+// end of a block.  Also indicates the end of some open elements.
 block_end[] { ENTRY_DEBUG } :
         // handling of if with then block followed by else
         // handle the block, however scope of then completion stops at if
         rcurly
         { 
             if (inMode(MODE_ANONYMOUS)) {
-
                 endCurrentMode(MODE_ANONYMOUS);
                 return;
             }
@@ -1826,11 +1747,10 @@ block_end[] { ENTRY_DEBUG } :
                 endCurrentMode(MODE_LOCAL);
             }
 
-            if (inTransparentMode(MODE_ENUM) && inLanguage(LANGUAGE_CSHARP)) {
-
+            if (inTransparentMode(MODE_ENUM) && inLanguage(LANGUAGE_CSHARP))
                 endCurrentMode(MODE_LOCAL);
-            }
 
+            // TODO:  combine into one condition
             if (!(anonymous_class))
                 if (!(inMode(MODE_CLASS) || inTransparentMode(MODE_ENUM)) || (inMode(MODE_CLASS) || inTransparentMode(MODE_ENUM)) && endstatement)
                 else_handling();
@@ -1843,14 +1763,9 @@ block_end[] { ENTRY_DEBUG } :
             // end of block may lead to adjustment of cpp modes
             cppmode_adjust();
         }
-
 ;
 
-/*
-  right curly brace
-
-  Not used directly, but called by block_end
-*/
+// right curly brace.  Not used directly, but called by block_end
 rcurly[] { ENTRY_DEBUG } :
         {
             // end any elements inside of the block
@@ -1871,11 +1786,8 @@ rcurly[] { ENTRY_DEBUG } :
         }
 ;
 
-/*
-  End any open expressions, match, then close any open elements
-*/
+// terminate (';')
 terminate[] { ENTRY_DEBUG } :
-
         {
             if (inMode(MODE_IGNORE_TERMINATE)) {
 
@@ -1900,7 +1812,7 @@ terminate_token[] { CompleteElement element; ENTRY_DEBUG } :
             }
         }
         TERMINATE
-    ;
+;
 
 terminate_pre[] { ENTRY_DEBUG } :
         {
@@ -1939,65 +1851,63 @@ terminate_post[] { ENTRY_DEBUG } :
 */
 else_handling[] { ENTRY_DEBUG } :
         {
-                // record the current size of the top of the cppmode stack to detect
-                // any #else or #endif in consumeSkippedTokens
-                // see below
-                unsigned int cppmode_size = !cppmode.empty() ? cppmode.top().statesize.size() : 0;
+            // record the current size of the top of the cppmode stack to detect
+            // any #else or #endif in consumeSkippedTokens
+            // see below
+            unsigned int cppmode_size = !cppmode.empty() ? cppmode.top().statesize.size() : 0;
 
-                // catch and finally statements are nested inside of a try, if at that level
-                // so if no CATCH or FINALLY, then end now
-                bool intry = inMode(MODE_TRY);
-                bool restoftry = LA(1) == CATCH || LA(1) == FINALLY;
-                if (intry && !restoftry) {
-                    endCurrentMode(MODE_TRY);
+            // catch and finally statements are nested inside of a try, if at that level
+            // so if no CATCH or FINALLY, then end now
+            bool intry = inMode(MODE_TRY);
+            bool restoftry = LA(1) == CATCH || LA(1) == FINALLY;
+            if (intry && !restoftry) {
+                endCurrentMode(MODE_TRY);
+                endDownToMode(MODE_TOP);
+            }
+
+            // handle parts of if
+            if (inTransparentMode(MODE_IF) && !(intry && restoftry)) {
+
+                // find out if the next token is an else
+                bool nestedelse = LA(1) == ELSE;
+
+                if (!nestedelse) {
+
                     endDownToMode(MODE_TOP);
+
+                // when an ELSE is next and already in an else, must end properly (not needed for then)
+                } else if (nestedelse && inMode(MODE_ELSE)) {
+
+                    while (inMode(MODE_ELSE)) {
+
+                        // end the else
+                        endCurrentMode(MODE_ELSE);
+
+                        /*
+                          TODO:  Can we only do this if we detect a cpp change?
+                          This would occur EVEN if we have an ifcount of 2.
+                        */
+                        // we have an extra else that is rogue
+                        // it either is a single else statement, or part of an #ifdef ... #else ... #endif
+                        if (LA(1) == ELSE && ifcount == 1)
+                            break;
+
+                        // ending an else means ending an if
+                        if (inMode(MODE_IF)) {
+                            endCurrentModeSafely(MODE_IF);
+                            --ifcount;
+                        }
+                    }  
+
+                    // following ELSE indicates end of outer then
+                    endCurrentModeSafely(MODE_THEN);
                 }
+            } else if (inTransparentMode(MODE_ELSE)) {
 
-                // handle parts of if
-                if (inTransparentMode(MODE_IF) && !(intry && restoftry)) {
-
-                    // find out if the next token is an else
-                    bool nestedelse = LA(1) == ELSE;
-
-                    if (!nestedelse) {
-
-                        endDownToMode(MODE_TOP);
-
-                    // when an ELSE is next and already in an else, must end properly (not needed for then)
-                    } else if (nestedelse && inMode(MODE_ELSE)) {
-
-                        while (inMode(MODE_ELSE)) {
-
-                            // end the else
-                            endCurrentMode(MODE_ELSE);
-
-                            /*
-                              TODO:  Can we only do this if we detect a cpp change?
-
-                              This would occur EVEN if we have an ifcount of 2.
-                             */
-                            // we have an extra else that is rogue
-                            // it either is a single else statement, or part of an #ifdef ... #else ... #endif
-                            if (LA(1) == ELSE && ifcount == 1)
-                                break;
-
-                            // ending an else means ending an if
-                            if (inMode(MODE_IF)) {
-                                endCurrentModeSafely(MODE_IF);
-                                --ifcount;
-                            }
-                        }  
-
-                        // following ELSE indicates end of outer then
-                        endCurrentModeSafely(MODE_THEN);
-                    }
-
-                } else if (inTransparentMode(MODE_ELSE)) {
-
-                    // have an else, but are not in an if.  Could be a fragment,
-                    // or could be due to an #ifdef ... #else ... #endif
-                    endCurrentModeSafely(MODE_ELSE);
-                }
+                // have an else, but are not in an if.  Could be a fragment,
+                // or could be due to an #ifdef ... #else ... #endif
+                endCurrentModeSafely(MODE_ELSE);
+            }
 
             // update the state size in cppmode if changed from using consumeSkippedTokens
             if (!cppmode.empty() && cppmode_size != cppmode.top().statesize.size()) {
@@ -2005,9 +1915,8 @@ else_handling[] { ENTRY_DEBUG } :
                 cppmode.top().statesize.back() = size();
 
                 // remove any finished ones
-                if (cppmode.top().isclosed)    {
+                if (cppmode.top().isclosed)
                         cppmode_cleanup();
-                }
             }
         }
 ;
