@@ -2536,7 +2536,6 @@ function_type[int type_count] { ENTRY_DEBUG } :
         update_typecount[MODE_FUNCTION_NAME]
 ;
 
-/* TODO: combine into one with parameter */
 update_typecount[State::MODE_TYPE mode] {} :
         {
             decTypeCount();
@@ -2731,14 +2730,14 @@ overloaded_operator[] { CompleteElement element; ENTRY_DEBUG } :
 ;
 
 /* linq expressions */
+
 linq_expression[] { CompleteElement element; ENTRY_DEBUG }:
         {
-            // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
 
             startElement(SLINQ);
         }
-        (options { greedy = true; } : linq_from | linq_where | linq_select | linq_let | linq_group | linq_join | linq_orderby)+
+        (options { greedy = true; } : linq_expression_pure)+
 ;
 
 linq_expression_pure[] { ENTRY_DEBUG }:
@@ -2836,7 +2835,6 @@ linq_join[] { CompleteElement element; ENTRY_DEBUG }:
         }
         JOIN linq_full_expression 
 
-        /* TODO: Combine to avoid order problems */
         (options { greedy = true; } : linq_in | linq_on | linq_equals | linq_into)* 
 ;
 
