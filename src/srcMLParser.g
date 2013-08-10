@@ -930,9 +930,8 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
 
             // found two names in a row, so this is not an expression
             // cause this to fail by next matching END_ELEMENT_TOKEN
-            // TODO:  directly throw exception
-            { name && (depth == 0) }?
-            identifier guessing_endGuessing END_ELEMENT_TOKEN |
+            { depth == 0 }?
+            identifier guessing_endGuessing throw_exception[true] |
 
             // forbid parentheses (handled recursively) and cfg tokens
             { !_tokenSet_1.member(LA(1)) }? ~(LPAREN | RPAREN | TERMINATE) set_bool[name, false]
