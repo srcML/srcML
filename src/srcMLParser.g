@@ -2837,10 +2837,7 @@ linq_join[] { CompleteElement element; ENTRY_DEBUG }:
         JOIN linq_full_expression 
 
         /* TODO: Combine to avoid order problems */
-        (options { greedy = true; } : linq_in)* 
-        (options { greedy = true; } : linq_on)* 
-        (options { greedy = true; } : linq_equals)* 
-        (options { greedy = true; } : linq_into)* 
+        (options { greedy = true; } : linq_in | linq_on | linq_equals | linq_into)* 
 ;
 
 linq_on[] { CompleteElement element; ENTRY_DEBUG }:
