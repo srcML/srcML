@@ -1583,10 +1583,6 @@ class_default_access_action[int access_token] { ENTRY_DEBUG } :
 
 class_header[] { ENTRY_DEBUG } :
 
-        /*
-          TODO: This shouldn't be needed, but uncommenting the predicate causes Java
-          to mess up with template parameters, but not C++ ???
-        */
         { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
         (macro_call_check class_header_base LCURLY)=>
            macro_call class_header_base |
@@ -1736,7 +1732,6 @@ block_end[] { ENTRY_DEBUG } :
             if (inTransparentMode(MODE_ENUM) && inLanguage(LANGUAGE_CSHARP))
                 endCurrentMode(MODE_LOCAL);
 
-            // TODO:  combine into one condition
             if (!(anonymous_class) && (!(inMode(MODE_CLASS) || inTransparentMode(MODE_ENUM))
                                        || (inMode(MODE_CLASS) || inTransparentMode(MODE_ENUM)) && endstatement))
                 else_handling();
@@ -1912,7 +1907,7 @@ statement_part[] { int type_count;  int secondtoken = 0; DECLTYPE decl_type = NO
                    CALLTYPE type = NOCALL; ENTRY_DEBUG } :
         { inMode(MODE_EAT_TYPE) }?
         type_identifier
-        update_typecount |
+        update_typecount[MODE_FUNCTION_NAME] |
 
         // block right after argument list, e.g., throws list in Java
         { inTransparentMode(MODE_END_LIST_AT_BLOCK) }?
@@ -2538,28 +2533,17 @@ function_type[int type_count] { ENTRY_DEBUG } :
             startElement(STYPE);
         }
         lead_type_identifier
-        update_typecount
+        update_typecount[MODE_FUNCTION_NAME]
 ;
 
 /* TODO: combine into one with parameter */
-update_typecount[] {} :
+update_typecount[State::MODE_TYPE mode] {} :
         {
             decTypeCount();
 
             if (getTypeCount() <= 0) {
                 endCurrentMode(MODE_LOCAL);
-                setMode(MODE_FUNCTION_NAME); 
-            } 
-        }
-;
-
-update_var_typecount[] {} :
-        {
-            decTypeCount();
-
-            if (getTypeCount() <= 0) {
-                endCurrentMode(MODE_LOCAL);
-                setMode(MODE_VARIABLE_NAME | MODE_INIT); 
+                setMode(mode); 
             } 
         }
 ;
@@ -3804,7 +3788,7 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
             startElement(STYPE);
         }
         lead_type_identifier
-        update_var_typecount
+        update_typecount[MODE_VARIABLE_NAME | MODE_INIT]
 ;
 
 // Variable declaration name and optional initialization
