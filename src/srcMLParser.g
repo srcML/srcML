@@ -3017,7 +3017,7 @@ simple_name_optional_template[bool marked] { CompleteElement element; TokenPosit
                 setTokenPosition(tp);
             }
         }
-        mark_namestack identifier[marked] (
+        push_namestack identifier[marked] (
             { inLanguage(LANGUAGE_CXX_FAMILY) || inLanguage(LANGUAGE_JAVA_FAMILY) }?
             (template_argument_list)=>
                 template_argument_list |
@@ -3122,7 +3122,7 @@ complex_name_cpp[bool marked, bool& iscomplex_name] { namestack[0] = namestack[1
         (DESTOP set_bool[isdestructor] {
             founddestop = true;
         })*
-        (simple_name_optional_template[marked] | mark_namestack overloaded_operator)
+        (simple_name_optional_template[marked] | push_namestack overloaded_operator)
         (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) }? multops)*
         name_tail[iscomplex_name, marked]
         { if (founddestop) iscomplex_name = true; }
@@ -3134,7 +3134,7 @@ complex_name_csharp[bool marked, bool& iscomplex_name] { namestack[0] = namestac
         (DESTOP set_bool[isdestructor] {
             founddestop = true;
         })*
-        (simple_name_optional_template[marked] | mark_namestack overloaded_operator)
+        (simple_name_optional_template[marked] | push_namestack overloaded_operator)
         (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) }? multops)*
         name_tail_csharp[iscomplex_name, marked]
         { if (founddestop) iscomplex_name = true; }
@@ -3164,7 +3164,7 @@ name_tail[bool& iscomplex, bool marked] { ENTRY_DEBUG } :
             ( options { greedy = true; } : dcolon)*
             (DESTOP set_bool[isdestructor])*
             (multops)*
-            (simple_name_optional_template[marked] | mark_namestack overloaded_operator | function_identifier_main)
+            (simple_name_optional_template[marked] | push_namestack overloaded_operator | function_identifier_main)
             (options { greedy = true; } : { look_past_multiple(MULTOPS, REFOPS, RVALUEREF, QMARK) == DCOLON }? multops)*
         )*
 
@@ -3182,7 +3182,7 @@ name_tail_csharp[bool& iscomplex, bool marked] { ENTRY_DEBUG } :
             ( options { greedy = true; } : dcolon)*
             (multops)*
             (DESTOP set_bool[isdestructor])*
-            (simple_name_optional_template[marked] | mark_namestack overloaded_operator | function_identifier_main)
+            (simple_name_optional_template[marked] | push_namestack overloaded_operator | function_identifier_main)
             (options { greedy = true; } : multops)*
         )*
 ;
@@ -3277,7 +3277,7 @@ member_initialization_list[] { ENTRY_DEBUG } :
         COLON
 ;
 
-mark_namestack[] { namestack[1].swap(namestack[0]); namestack[0] = LT(1)->getText(); } :;
+push_namestack[] { namestack[1].swap(namestack[0]); namestack[0] = LT(1)->getText(); } :;
 
 identifier_stack[std::string s[]] { s[1].swap(s[0]); s[0] = LT(1)->getText(); ENTRY_DEBUG } :
         identifier[true]
