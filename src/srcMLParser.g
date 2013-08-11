@@ -146,11 +146,8 @@ enum CALLTYPE { NOCALL, CALL, MACRO };
 // position in output stream
 struct TokenPosition {
 
-    TokenPosition()
+    TokenPosition() 
         : token(0), sp(0) {}
-
-    TokenPosition(antlr::RefToken* p_token, int* p_sp)
-        : token(p_token), sp(p_sp) {}
 
     // sets a particular token in the output token stream
     void setType(int type) {
@@ -162,8 +159,7 @@ struct TokenPosition {
         *sp = type;
     }
 
-    ~TokenPosition() {
-    }
+    ~TokenPosition() {}
 
     antlr::RefToken* token;
     int* sp;
