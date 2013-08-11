@@ -3277,9 +3277,9 @@ member_initialization_list[] { ENTRY_DEBUG } :
         COLON
 ;
 
-mark_namestack[] { namestack[1] = namestack[0]; namestack[0] = LT(1)->getText(); } :;
+mark_namestack[] { namestack[1].swap(namestack[0]); namestack[0] = LT(1)->getText(); } :;
 
-identifier_stack[std::string s[]] { s[1] = s[0]; s[0] = LT(1)->getText(); ENTRY_DEBUG } :
+identifier_stack[std::string s[]] { s[1].swap(s[0]); s[0] = LT(1)->getText(); ENTRY_DEBUG } :
         identifier[true]
 ;
 
@@ -4546,9 +4546,9 @@ generic_constraint[] { CompleteElement element; ENTRY_DEBUG } :
         (options { greedy = true; } : COMMA (complex_name | CLASS | STRUCT | NEW LPAREN RPAREN))*
 ;
 
-savenamestack[std::string namestack_save[]] { namestack_save[0] = namestack[0]; namestack_save[1] = namestack[1]; ENTRY_DEBUG } :;
+savenamestack[std::string namestack_save[]] { namestack_save[0].swap(namestack[0]); namestack_save[1].swap(namestack[1]); ENTRY_DEBUG } :;
 
-restorenamestack[std::string namestack_save[]] { namestack[0] = namestack_save[0]; namestack[1] = namestack_save[1]; ENTRY_DEBUG } :;
+restorenamestack[std::string namestack_save[]] { namestack[0].swap(namestack_save[0]); namestack[1].swap(namestack_save[1]); ENTRY_DEBUG } :;
 
 template_argument[] { CompleteElement element; ENTRY_DEBUG } :
         {
