@@ -477,6 +477,7 @@ public:
 #endif
     bool qmark;
     bool notdestructor;
+    bool operatorname;
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang = LANGUAGE_CXX, int options = 0);
@@ -2365,9 +2366,11 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
 
                 // typical type name
                 { !inLanguage(LANGUAGE_CSHARP) || LA(1) != ASYNC }?
+                set_bool[operatorname, false]
                 complex_name[true, true] set_bool[foundpure]
                     set_bool[isoperatorfunction, isoperatorfunction || (inLanguage(LANGUAGE_CXX_FAMILY) && 
-                             (namestack[0] == "operator" && type_count == specifier_count))] |
+                             operatorname && type_count == specifier_count)] 
+                set_bool[operatorname, false] |
 
                 // special function name
                 MAIN set_bool[isoperatorfunction, type_count == 0] |
@@ -2715,6 +2718,7 @@ overloaded_operator[] { CompleteElement element; ENTRY_DEBUG } :
             // start of the name element
             startElement(SNAME);
         }
+        set_bool[operatorname, true]
         OPERATOR
         (
             // special case for 'operator()'
