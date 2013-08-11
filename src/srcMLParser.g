@@ -3326,7 +3326,7 @@ destructor_header[] { ENTRY_DEBUG } :
         }
 ;
 
-annotation[] { CompleteElement el; ENTRY_DEBUG } :
+annotation[] { CompleteElement element; ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
             startNewMode(MODE_ARGUMENT | MODE_LIST);
