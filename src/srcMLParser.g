@@ -2366,7 +2366,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                 // typical type name
                 { !inLanguage(LANGUAGE_CSHARP) || LA(1) != ASYNC }?
                 complex_name[true, true] set_bool[foundpure]
-                    set_bool[isoperatorfunction, inLanguage(LANGUAGE_CXX_FAMILY) && (isoperatorfunction ||
+                    set_bool[isoperatorfunction, isoperatorfunction || (inLanguage(LANGUAGE_CXX_FAMILY) && 
                              (namestack[0] == "operator" && type_count == specifier_count))] |
 
                 // special function name
