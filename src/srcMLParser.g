@@ -123,8 +123,8 @@ header {
 // Included in the generated srcMLParser.hpp file after antlr includes
 header "post_include_hpp" {
 
-#include <iostream>
-#include <iomanip>
+#include <string>
+#include <vector>
 #include <stack>
 #include "Mode.hpp"
 #include "Options.hpp"
