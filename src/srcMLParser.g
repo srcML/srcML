@@ -2673,7 +2673,6 @@ function_identifier[] { ENTRY_DEBUG } :
 ;
 
 qmark_marked[] { CompleteElement element; ENTRY_DEBUG } :
-        // special cases for main
         {
             // end all started elements in this rule
             startNewMode(MODE_LOCAL);
@@ -2685,7 +2684,6 @@ qmark_marked[] { CompleteElement element; ENTRY_DEBUG } :
 ;
 
 function_identifier_default[] { CompleteElement element; ENTRY_DEBUG } :
-        // special cases for main
         {
             // end all started elements in this rule
             startNewMode(MODE_LOCAL);
@@ -2693,7 +2691,6 @@ function_identifier_default[] { CompleteElement element; ENTRY_DEBUG } :
             // start of the name element
             startElement(SNAME);
         }
-        // main program
         DEFAULT
 ;
 
