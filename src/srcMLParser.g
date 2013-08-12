@@ -1560,7 +1560,7 @@ anonymous_class_super[] { CompleteElement element; ENTRY_DEBUG } :
             // start the super name of an anonymous class
             startElement(SDERIVATION_LIST);
         }
-        compound_name[false]
+        compound_name_inner[false]
 ;
 
 interface_definition[] { ENTRY_DEBUG } :
@@ -1646,7 +1646,7 @@ class_header[] { ENTRY_DEBUG } :
 
 class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 
-        compound_name[false]
+        compound_name_inner[false]
 
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : generic_type_constraint))*
@@ -2198,13 +2198,13 @@ function_pointer_name_base[] { ENTRY_DEBUG bool flag = false; } :
 
         // special case for function pointer names that don't have '*'
         { _tokenSet_12.member(LA(1)) }?
-        compound_name[false] |
+        compound_name_inner[false] |
 
         // special name prefix of namespace or class
         identifier (template_argument_list)* DCOLON function_pointer_name_base |
 
         // typical function pointer name
-        MULTOPS (compound_name[false])*
+        MULTOPS (compound_name_inner[false])*
 
         // optional array declaration
         (variable_identifier_array_grammar_sub[flag])*
@@ -2696,7 +2696,7 @@ balanced_parentheses[] :
 function_identifier[] { ENTRY_DEBUG } :
 
         // typical name
-        compound_name[false] |
+        compound_name_inner[false] |
 
         function_identifier_main |
 
@@ -3098,7 +3098,8 @@ compound_name_inner[bool index = false] { CompleteElement element; TokenPosition
         { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_CSHARP) }?
         compound_name_cpp[iscompound_name]
         )
-        (options { greedy = true; } : { index && !inTransparentMode(MODE_EAT_TYPE) }? variable_identifier_array_grammar_sub[iscompound_name])*
+        (options { greedy = true; } : { index && !inTransparentMode(MODE_EAT_TYPE) }?
+            variable_identifier_array_grammar_sub[iscompound_name])*
         {
             // if it isn't a compound name, nop the element
             if (!iscompound_name)
@@ -3247,7 +3248,7 @@ constructor_header[] { ENTRY_DEBUG } :
 
             { inLanguage(LANGUAGE_JAVA_FAMILY) }? template_argument_list
         )*
-        compound_name[false]
+        compound_name_inner[false]
         parameter_list
         {
             setMode(MODE_FUNCTION_TAIL);
@@ -3303,7 +3304,7 @@ destructor_header[] { ENTRY_DEBUG } :
             // TODO:  'void' should be detected in lexer
             { LT(1)->getText() == "void" }? simple_identifier
         )*
-        compound_name[false]
+        compound_name_inner[false]
         parameter_list
         {
             setMode(MODE_FUNCTION_TAIL);
@@ -3768,7 +3769,7 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
 // Variable declaration name and optional initialization
 variable_declaration_nameinit[] { bool isthis = LA(1) == THIS;
         ENTRY_DEBUG } :
-        ({ inLanguage(LANGUAGE_CSHARP) }? compound_name[false] | compound_name[true])
+        ({ inLanguage(LANGUAGE_CSHARP) }? compound_name_inner[false] | compound_name[true])
         {
             // expect a possible initialization
             setMode(MODE_INIT | MODE_EXPECT);
@@ -4446,9 +4447,9 @@ generic_type_constraint[] { CompleteElement element; ENTRY_DEBUG } :
 
             startElement(SWHERE);
         }
-        WHERE compound_name[false] COLON
-        (compound_name[false] | CLASS | STRUCT | NEW LPAREN RPAREN)
-        (options { greedy = true; } : COMMA (compound_name[false] | CLASS | STRUCT | NEW LPAREN RPAREN))*
+        WHERE compound_name_inner[false] COLON
+        (compound_name_inner[false] | CLASS | STRUCT | NEW LPAREN RPAREN)
+        (options { greedy = true; } : COMMA (compound_name_inner[false] | CLASS | STRUCT | NEW LPAREN RPAREN))*
 ;
 
 savenamestack[std::string namestack_save[]] { namestack_save[0].swap(namestack[0]); namestack_save[1].swap(namestack[1]); ENTRY_DEBUG } :;
