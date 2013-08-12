@@ -3007,30 +3007,29 @@ variable_identifier[] { ENTRY_DEBUG } :
 ;
 
 // name including template argument list
-simple_name_optional_template[bool marked] { CompleteElement element; TokenPosition tp; ENTRY_DEBUG } :
+simple_name_optional_template[] { CompleteElement element; TokenPosition tp; ENTRY_DEBUG } :
         {
-            if (marked) {
-                // local mode that is automatically ended by leaving this function
-                startNewMode(MODE_LOCAL);
+            // local mode that is automatically ended by leaving this function
+            startNewMode(MODE_LOCAL);
 
-                // start outer name
-                startElement(SCNAME);
+            // start outer name
+            startElement(SCNAME);
 
-                // record the name token so we can replace it if necessary
-                setTokenPosition(tp);
-            }
+            // record the name token so we can replace it if necessary
+            setTokenPosition(tp);
         }
-        push_namestack identifier[marked] (
+        push_namestack identifier[true] (
             { inLanguage(LANGUAGE_CXX_FAMILY) || inLanguage(LANGUAGE_JAVA_FAMILY) }?
             (template_argument_list)=>
                 template_argument_list |
 
-            {
-               // if we marked it as a complex name and it isn't, fix
-               if (marked)
-                   // set the token to NOP
-                   tp.setType(SNOP);
-            }
+        {
+           // TODO:  Why is this always a NOP?
+           // if we marked it as a complex name and it isn't, fix
+           if (true)
+               // set the token to NOP
+               tp.setType(SNOP);
+           }
        )
 ;
 
@@ -3114,7 +3113,7 @@ compound_name_cpp[bool& iscompound_name] { namestack[0] = namestack[1] = ""; boo
         (DESTOP set_bool[isdestructor] {
             founddestop = true;
         })*
-        (simple_name_optional_template[true] | push_namestack overloaded_operator)
+        (simple_name_optional_template | push_namestack overloaded_operator)
         (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) }? multops)*
         name_tail[iscompound_name]
         { if (founddestop) iscompound_name = true; }
@@ -3126,7 +3125,7 @@ compound_name_csharp[bool& iscompound_name] { namestack[0] = namestack[1] = ""; 
         (DESTOP set_bool[isdestructor] {
             founddestop = true;
         })*
-        (simple_name_optional_template[true] | push_namestack overloaded_operator)
+        (simple_name_optional_template | push_namestack overloaded_operator)
         (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) }? multops)*
         name_tail_csharp[iscompound_name]
         { if (founddestop) iscompound_name = true; }
@@ -3144,8 +3143,8 @@ compound_name_c[bool& iscompound_name] { ENTRY_DEBUG } :
 compound_name_java[bool& iscompound_name] { ENTRY_DEBUG } :
 
         template_argument_list |
-        simple_name_optional_template[true]
-        (options { greedy = true; } : (period { iscompound_name = true; } simple_name_optional_template[true]))*
+        simple_name_optional_template
+        (options { greedy = true; } : (period { iscompound_name = true; } simple_name_optional_template))*
 ;
 
 name_tail[bool& iscomplex] { ENTRY_DEBUG } :
@@ -3156,7 +3155,7 @@ name_tail[bool& iscomplex] { ENTRY_DEBUG } :
             ( options { greedy = true; } : dcolon)*
             (DESTOP set_bool[isdestructor])*
             (multops)*
-            (simple_name_optional_template[true] | push_namestack overloaded_operator | function_identifier_main)
+            (simple_name_optional_template | push_namestack overloaded_operator | function_identifier_main)
             (options { greedy = true; } : { look_past_multiple(MULTOPS, REFOPS, RVALUEREF, QMARK) == DCOLON }? multops)*
         )*
 
@@ -3174,7 +3173,7 @@ name_tail_csharp[bool& iscomplex] { ENTRY_DEBUG } :
             ( options { greedy = true; } : dcolon)*
             (multops)*
             (DESTOP set_bool[isdestructor])*
-            (simple_name_optional_template[true] | push_namestack overloaded_operator | function_identifier_main)
+            (simple_name_optional_template | push_namestack overloaded_operator | function_identifier_main)
             (options { greedy = true; } : multops)*
         )*
 ;
@@ -3190,7 +3189,7 @@ function_specifier[] { CompleteElement element; ENTRY_DEBUG } :
         // pure virtual specifier
         EQUAL literal |
 
-        simple_name_optional_template[false])
+        simple_name_optional_template)
 ;
 
 specifier[] { SingleElement element; ENTRY_DEBUG } :
