@@ -260,7 +260,7 @@ srcMLParser* SingleElement::masterthis;
 
 // constructor
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options)
-   : antlr::LLkParser(lexer,1), Mode(this, lang), cpp_zeromode(false), skipelse(false), cpp_ifcount(0),
+   : antlr::LLkParser(lexer,1), Mode(this, lang), cpp_zeromode(false), cpp_skipelse(false), cpp_ifcount(0),
     parseoptions(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false)
 {
     // inner class needs pointer to outer object
@@ -524,7 +524,7 @@ public:
     friend class SingleElement;
 
     bool cpp_zeromode;
-    bool skipelse;
+    bool cpp_skipelse;
     int cpp_ifcount;
     bool isdestructor;
     int parseoptions;
@@ -4897,7 +4897,7 @@ eol_post[int directive_token, bool markblockzero] {
 
                     // not in skipped #if, so skip #else until #endif of #if is reached
                     if (!cpp_zeromode) {
-                        skipelse = true;
+                        cpp_skipelse = true;
                         cpp_ifcount = 1;
                     }
 
@@ -4928,8 +4928,8 @@ eol_post[int directive_token, bool markblockzero] {
                         cpp_zeromode = false;
 
                     // #endif reached for #else that started this mode
-                    if (skipelse && cpp_ifcount == 0)
-                        skipelse = false;
+                    if (cpp_skipelse && cpp_ifcount == 0)
+                        cpp_skipelse = false;
 
                     if (!isoption(parseoptions, OPTION_CPP_MARKUP_ELSE) && !inputState->guessing &&
                         !cppmode.empty()) {
@@ -4956,8 +4956,8 @@ eol_post[int directive_token, bool markblockzero] {
                 - when ??? for cppmode
         */
         if ((!isoption(parseoptions, OPTION_CPP_MARKUP_IF0) && cpp_zeromode) ||
-            (!isoption(parseoptions, OPTION_CPP_MARKUP_ELSE) && skipelse) ||
-            (inputState->guessing && skipelse) ||
+            (!isoption(parseoptions, OPTION_CPP_MARKUP_ELSE) && cpp_skipelse) ||
+            (inputState->guessing && cpp_skipelse) ||
             (!cppmode.empty() && !cppmode.top().isclosed && cppmode.top().skipelse)
         ) {
             while (LA(1) != PREPROC && LA(1) != 1 /* EOF */)
