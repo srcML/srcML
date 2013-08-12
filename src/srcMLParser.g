@@ -2402,7 +2402,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                 // typical type name
                 { !inLanguage(LANGUAGE_CSHARP) || LA(1) != ASYNC }?
                 set_bool[operatorname, false]
-                compound_name[true] set_bool[foundpure]
+                compound_name set_bool[foundpure]
                     set_bool[isoperatorfunction, isoperatorfunction || (inLanguage(LANGUAGE_CXX_FAMILY) && 
                              operatorname && type_count == specifier_count)] 
                 set_bool[operatorname, false] |
@@ -2663,7 +2663,7 @@ lead_type_identifier[] { ENTRY_DEBUG } :
 
         // typical type name
         { LA(1) != ASYNC }?
-        compound_name[true] |
+        compound_name |
 
         pure_lead_type_identifier
 ;
@@ -3003,7 +3003,7 @@ complete_linq_expression[] { CompleteElement element; ENTRY_DEBUG } :
 
 // variable name in an expression.  Includes array names, but not function calls
 variable_identifier[] { ENTRY_DEBUG } :
-        compound_name[true]
+        compound_name
 ;
 
 // name including template argument list
@@ -3059,12 +3059,12 @@ simple_identifier[] { SingleElement element; ENTRY_DEBUG } :
         NAME
 ;
 
-compound_name[bool index] { CompleteElement element; TokenPosition tp; bool iscompound_name = false; ENTRY_DEBUG } :
-        compound_name_inner[index]
-        (options { greedy = true; } : { index }? variable_identifier_array_grammar_sub[iscompound_name])*
+compound_name[] { CompleteElement element; bool iscompound_name = false; ENTRY_DEBUG } :
+        compound_name_inner[true]
+        (options { greedy = true; } : variable_identifier_array_grammar_sub[iscompound_name])*
 ;
 
-compound_name_inner[bool index = false] { CompleteElement element; TokenPosition tp; bool iscompound_name = false; ENTRY_DEBUG } :
+compound_name_inner[bool index] { CompleteElement element; TokenPosition tp; bool iscompound_name = false; ENTRY_DEBUG } :
         {
             // There is a problem detecting complex names from
             // complex names of operator methods in namespaces or
@@ -3769,7 +3769,7 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
 // Variable declaration name and optional initialization
 variable_declaration_nameinit[] { bool isthis = LA(1) == THIS;
         ENTRY_DEBUG } :
-        ({ inLanguage(LANGUAGE_CSHARP) }? compound_name_inner[false] | compound_name[true])
+        ({ inLanguage(LANGUAGE_CSHARP) }? compound_name_inner[false] | compound_name)
         {
             // expect a possible initialization
             setMode(MODE_INIT | MODE_EXPECT);
