@@ -877,7 +877,7 @@ property_method[int element] { ENTRY_DEBUG } :
             // start the function definition element
             startElement(element);
         }
-        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)*
+        (attribute)*
         property_method_name
 ;
 
