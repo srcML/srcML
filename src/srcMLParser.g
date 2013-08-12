@@ -3052,10 +3052,9 @@ identifier_list { ENTRY_DEBUG } :
 ;
 
 // most basic name
-simple_identifier[bool marked = false] { LightweightElement element; ENTRY_DEBUG } :
+simple_identifier[] { SingleElement element; ENTRY_DEBUG } :
         {
-            if (marked)
-                startElement(SNAME);
+            startElement(SNAME);
         }
         NAME
 ;
@@ -3301,7 +3300,8 @@ destructor_header[] { ENTRY_DEBUG } :
 
             specifier |
 
-            { LT(1)->getText() == "void" }? simple_identifier[true]
+            // TODO:  'void' should be detected in lexer
+            { LT(1)->getText() == "void" }? simple_identifier
         )*
         compound_name
         parameter_list
