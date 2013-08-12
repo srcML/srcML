@@ -2530,24 +2530,31 @@ check_global[] returns [bool flag] {
         flag = s == "module" || s == "assembly";
 }:;
 
-//monitor { std::cerr << namestack[0] << " " << namestack[1] << std::endl; } :;
+/*
+  Utility rules
 
-//other[bool flag] { std::cerr << flag << std::endl; } :;
+  Work even in guessing mode, which explicit code segments cannot
+*/
 
-throw_exception[bool cond = true] { if (cond) throw antlr::RecognitionException(); } :;
+/* Throws an exception if the condition is true */
+throw_exception[bool condition = true] { if (condition) throw antlr::RecognitionException(); } :;
 
-set_type[DECLTYPE& name, DECLTYPE value, bool result = true] { if (result) name = value; } :;
+/* sets the declaration type to a value if the condition is true */
+set_type[DECLTYPE& name, DECLTYPE value, bool condition = true] { if (condition) name = value; } :;
 
-//trace[const char*s ] { std::cerr << s << std::endl; } :;
-//trace_int[int s] { std::cerr << "HERE " << s << std::endl; } :;
+/* sets the int to a value if the condition is true */
+set_int[int& name, int value, bool condition = true] { if (condition) name = value; } :;
 
-//traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
-
-marker[] { CompleteElement element; startNewMode(MODE_LOCAL); startElement(SMARKER); } :;
-
-set_int[int& name, int value, bool result = true] { if (result) name = value; } :;
-
+/* sets the bool to a value */
 set_bool[bool& variable, bool value = true] { variable = value; } :;
+
+/*
+trace[const char*s ] { std::cerr << s << std::endl; } :;
+trace_int[int s] { std::cerr << "HERE " << s << std::endl; } :;
+
+traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
+marker[] { CompleteElement element; startNewMode(MODE_LOCAL); startElement(SMARKER); } :;
+*/
 
 function_rest[int& fla] { ENTRY_DEBUG } :
 
