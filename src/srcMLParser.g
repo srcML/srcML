@@ -1560,7 +1560,7 @@ anonymous_class_super[] { CompleteElement element; ENTRY_DEBUG } :
             // start the super name of an anonymous class
             startElement(SDERIVATION_LIST);
         }
-        complex_name[true]
+        compound_name[true]
 ;
 
 interface_definition[] { ENTRY_DEBUG } :
@@ -1646,7 +1646,7 @@ class_header[] { ENTRY_DEBUG } :
 
 class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 
-        complex_name[true]
+        compound_name[true]
 
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : generic_type_constraint))*
@@ -2198,13 +2198,13 @@ function_pointer_name_base[] { ENTRY_DEBUG bool flag = false; } :
 
         // special case for function pointer names that don't have '*'
         { _tokenSet_12.member(LA(1)) }?
-        complex_name[true] |
+        compound_name[true] |
 
         // special name prefix of namespace or class
         identifier (template_argument_list)* DCOLON function_pointer_name_base |
 
         // typical function pointer name
-        MULTOPS (complex_name[true])*
+        MULTOPS (compound_name[true])*
 
         // optional array declaration
         (variable_identifier_array_grammar_sub[flag])*
@@ -2402,7 +2402,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                 // typical type name
                 { !inLanguage(LANGUAGE_CSHARP) || LA(1) != ASYNC }?
                 set_bool[operatorname, false]
-                complex_name[true, true] set_bool[foundpure]
+                compound_name[true, true] set_bool[foundpure]
                     set_bool[isoperatorfunction, isoperatorfunction || (inLanguage(LANGUAGE_CXX_FAMILY) && 
                              operatorname && type_count == specifier_count)] 
                 set_bool[operatorname, false] |
@@ -2623,7 +2623,7 @@ throw_list[] { ENTRY_DEBUG } :
 ;
 
 complete_throw_list[] { bool flag = false; ENTRY_DEBUG } :
-        THROW paren_pair | THROWS ( options { greedy = true; } : complex_name_java[true, flag] | COMMA)*
+        THROW paren_pair | THROWS ( options { greedy = true; } : compound_name_java[true, flag] | COMMA)*
 ;
 
 // type identifier
@@ -2663,7 +2663,7 @@ lead_type_identifier[] { ENTRY_DEBUG } :
 
         // typical type name
         { LA(1) != ASYNC }?
-        complex_name[true, true] |
+        compound_name[true, true] |
 
         pure_lead_type_identifier
 ;
@@ -2696,7 +2696,7 @@ balanced_parentheses[] :
 function_identifier[] { ENTRY_DEBUG } :
 
         // typical name
-        complex_name[true] |
+        compound_name[true] |
 
         function_identifier_main |
 
@@ -3003,7 +3003,7 @@ complete_linq_expression[] { CompleteElement element; ENTRY_DEBUG } :
 
 // variable name in an expression.  Includes array names, but not function calls
 variable_identifier[] { ENTRY_DEBUG } :
-        complex_name[true, true]
+        compound_name[true, true]
 ;
 
 // name including template argument list
@@ -3060,12 +3060,12 @@ simple_identifier[bool marked = false] { LightweightElement element; ENTRY_DEBUG
         NAME
 ;
 
-complex_name[bool marked = true, bool index = false] { CompleteElement element; TokenPosition tp; bool iscomplex_name = false; ENTRY_DEBUG } :
-        complex_name_inner[marked, index]
-        (options { greedy = true; } : { index }? variable_identifier_array_grammar_sub[iscomplex_name])*
+compound_name[bool marked = true, bool index = false] { CompleteElement element; TokenPosition tp; bool iscompound_name = false; ENTRY_DEBUG } :
+        compound_name_inner[marked, index]
+        (options { greedy = true; } : { index }? variable_identifier_array_grammar_sub[iscompound_name])*
 ;
 
-complex_name_inner[bool marked = true, bool index = false] { CompleteElement element; TokenPosition tp; bool iscomplex_name = false; ENTRY_DEBUG } :
+compound_name_inner[bool marked = true, bool index = false] { CompleteElement element; TokenPosition tp; bool iscompound_name = false; ENTRY_DEBUG } :
         {
             if (marked) {
                 // There is a problem detecting complex names from
@@ -3090,64 +3090,64 @@ complex_name_inner[bool marked = true, bool index = false] { CompleteElement ele
         }
         (
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
-        complex_name_java[marked, iscomplex_name] |
+        compound_name_java[marked, iscompound_name] |
 
         { inLanguage(LANGUAGE_CSHARP) }?
-        complex_name_csharp[marked, iscomplex_name] |
+        compound_name_csharp[marked, iscompound_name] |
 
         { inLanguage(LANGUAGE_C) }?
-        complex_name_c[marked, iscomplex_name] |
+        compound_name_c[marked, iscompound_name] |
 
         { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_CSHARP) }?
-        complex_name_cpp[marked, iscomplex_name]
+        compound_name_cpp[marked, iscompound_name]
         )
-        (options { greedy = true; } : { index && !inTransparentMode(MODE_EAT_TYPE) }? variable_identifier_array_grammar_sub[iscomplex_name])*
+        (options { greedy = true; } : { index && !inTransparentMode(MODE_EAT_TYPE) }? variable_identifier_array_grammar_sub[iscompound_name])*
         {
             // if we marked it as a complex name and it isn't, fix
-            if (marked && !iscomplex_name)
+            if (marked && !iscompound_name)
                 // set the token to NOP
                 tp.setType(SNOP);
         }
 ;
 
-complex_name_cpp[bool marked, bool& iscomplex_name] { namestack[0] = namestack[1] = ""; bool founddestop = false; ENTRY_DEBUG } :
+compound_name_cpp[bool marked, bool& iscompound_name] { namestack[0] = namestack[1] = ""; bool founddestop = false; ENTRY_DEBUG } :
 
-        (dcolon { iscomplex_name = true; })*
+        (dcolon { iscompound_name = true; })*
         (DESTOP set_bool[isdestructor] {
             founddestop = true;
         })*
         (simple_name_optional_template[marked] | push_namestack overloaded_operator)
         (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) }? multops)*
-        name_tail[iscomplex_name, marked]
-        { if (founddestop) iscomplex_name = true; }
+        name_tail[iscompound_name, marked]
+        { if (founddestop) iscompound_name = true; }
 ;
 
-complex_name_csharp[bool marked, bool& iscomplex_name] { namestack[0] = namestack[1] = ""; bool founddestop = false; ENTRY_DEBUG } :
+compound_name_csharp[bool marked, bool& iscompound_name] { namestack[0] = namestack[1] = ""; bool founddestop = false; ENTRY_DEBUG } :
 
-        (dcolon { iscomplex_name = true; })*
+        (dcolon { iscompound_name = true; })*
         (DESTOP set_bool[isdestructor] {
             founddestop = true;
         })*
         (simple_name_optional_template[marked] | push_namestack overloaded_operator)
         (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) }? multops)*
-        name_tail_csharp[iscomplex_name, marked]
-        { if (founddestop) iscomplex_name = true; }
+        name_tail_csharp[iscompound_name, marked]
+        { if (founddestop) iscompound_name = true; }
 ;
 
-complex_name_c[bool marked, bool& iscomplex_name] { ENTRY_DEBUG } :
+compound_name_c[bool marked, bool& iscompound_name] { ENTRY_DEBUG } :
 
         identifier[marked]
         ( options { greedy = true; } :
-            period { iscomplex_name = true; }
+            period { iscompound_name = true; }
             identifier[marked]
         )*
 ;
 
-complex_name_java[bool marked, bool& iscomplex_name] { ENTRY_DEBUG } :
+compound_name_java[bool marked, bool& iscompound_name] { ENTRY_DEBUG } :
 
         template_argument_list |
         simple_name_optional_template[marked]
-        (options { greedy = true; } : (period { iscomplex_name = true; } simple_name_optional_template[marked]))*
+        (options { greedy = true; } : (period { iscompound_name = true; } simple_name_optional_template[marked]))*
 ;
 
 name_tail[bool& iscomplex, bool marked] { ENTRY_DEBUG } :
@@ -3250,7 +3250,7 @@ constructor_header[] { ENTRY_DEBUG } :
 
             { inLanguage(LANGUAGE_JAVA_FAMILY) }? template_argument_list
         )*
-        complex_name[true]
+        compound_name[true]
         parameter_list
         {
             setMode(MODE_FUNCTION_TAIL);
@@ -3305,7 +3305,7 @@ destructor_header[] { ENTRY_DEBUG } :
 
             { LT(1)->getText() == "void" }? simple_identifier[true]
         )*
-        complex_name[true]
+        compound_name[true]
         parameter_list
         {
             setMode(MODE_FUNCTION_TAIL);
@@ -3770,7 +3770,7 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
 // Variable declaration name and optional initialization
 variable_declaration_nameinit[] { bool isthis = LA(1) == THIS; bool not_csharp = !inLanguage(LANGUAGE_CSHARP);
         ENTRY_DEBUG } :
-        complex_name[true, not_csharp]
+        compound_name[true, not_csharp]
         {
             // expect a possible initialization
             setMode(MODE_INIT | MODE_EXPECT);
@@ -4216,7 +4216,7 @@ super_list[] { bool flag = false; ENTRY_DEBUG } :
         (options { greedy = true; } :
             (derive_access)*
 
-            complex_name_java[true, flag]
+            compound_name_java[true, flag]
         |
             COMMA
         )*
@@ -4448,9 +4448,9 @@ generic_type_constraint[] { CompleteElement element; ENTRY_DEBUG } :
 
             startElement(SWHERE);
         }
-        WHERE complex_name COLON
-        (complex_name | CLASS | STRUCT | NEW LPAREN RPAREN)
-        (options { greedy = true; } : COMMA (complex_name | CLASS | STRUCT | NEW LPAREN RPAREN))*
+        WHERE compound_name COLON
+        (compound_name | CLASS | STRUCT | NEW LPAREN RPAREN)
+        (options { greedy = true; } : COMMA (compound_name | CLASS | STRUCT | NEW LPAREN RPAREN))*
 ;
 
 savenamestack[std::string namestack_save[]] { namestack_save[0].swap(namestack[0]); namestack_save[1].swap(namestack[1]); ENTRY_DEBUG } :;
@@ -4483,7 +4483,7 @@ template_extends_java[] { CompleteElement element; bool iscomplex = false; ENTRY
             startElement(SEXTENDS);
         }
         EXTENDS
-        complex_name_java[true, iscomplex]
+        compound_name_java[true, iscomplex]
 ;
 
 
@@ -4494,7 +4494,7 @@ template_super_java[] { CompleteElement element; bool iscomplex = false; ENTRY_D
             startElement(SDERIVATION_LIST);
         }
         SUPER
-        complex_name_java[true, iscomplex]
+        compound_name_java[true, iscomplex]
 ;
 
 
