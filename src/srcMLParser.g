@@ -1955,6 +1955,7 @@ else_handling[] { ENTRY_DEBUG } :
 // mid-statement
 statement_part[] { int type_count;  int secondtoken = 0; DECLTYPE decl_type = NONE;
                    CALLTYPE type = NOCALL; ENTRY_DEBUG } :
+
         { inMode(MODE_EAT_TYPE) }?
         type_identifier
         update_typecount[MODE_FUNCTION_NAME] |
@@ -2566,8 +2567,12 @@ function_type[int type_count] { ENTRY_DEBUG } :
             // type element begins
             startElement(STYPE);
         }
-        lead_type_identifier
-        update_typecount[MODE_FUNCTION_NAME]
+        lead_type_identifier { decTypeCount(); }
+        ({getTypeCount() > 0}? type_identifier { decTypeCount(); })*
+        {
+            endCurrentMode(MODE_EAT_TYPE);
+            setMode(MODE_FUNCTION_NAME);
+        }
 ;
 
 update_typecount[State::MODE_TYPE mode] {} :
