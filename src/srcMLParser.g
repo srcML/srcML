@@ -3123,28 +3123,22 @@ compound_name_inner[bool index] { CompleteElement element; TokenPosition tp; boo
         }
 ;
 
-compound_name_cpp[bool& iscompound_name = BOOL] { namestack[0] = namestack[1] = ""; bool founddestop = false; ENTRY_DEBUG } :
+compound_name_cpp[bool& iscompound_name = BOOL] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
 
         (dcolon { iscompound_name = true; })*
-        (DESTOP set_bool[isdestructor] {
-            founddestop = true;
-        })*
+        (DESTOP set_bool[isdestructor] { iscompound_name = true; })*
         (simple_name_optional_template | push_namestack overloaded_operator)
         (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) }? multops)*
         name_tail[iscompound_name]
-        { if (founddestop) iscompound_name = true; }
 ;
 
-compound_name_csharp[bool& iscompound_name = BOOL] { namestack[0] = namestack[1] = ""; bool founddestop = false; ENTRY_DEBUG } :
+compound_name_csharp[bool& iscompound_name = BOOL] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
 
         (dcolon { iscompound_name = true; })*
-        (DESTOP set_bool[isdestructor] {
-            founddestop = true;
-        })*
+        (DESTOP set_bool[isdestructor] { iscompound_name = true; })*
         (simple_name_optional_template | push_namestack overloaded_operator)
         (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) }? multops)*
         name_tail_csharp[iscompound_name]
-        { if (founddestop) iscompound_name = true; }
 ;
 
 compound_name_c[bool& iscompound_name = BOOL] { ENTRY_DEBUG } :
