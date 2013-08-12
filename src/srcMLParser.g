@@ -3116,7 +3116,7 @@ compound_name_cpp[bool& iscompound_name] { namestack[0] = namestack[1] = ""; boo
         })*
         (simple_name_optional_template[true] | push_namestack overloaded_operator)
         (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) }? multops)*
-        name_tail[iscompound_name, true]
+        name_tail[iscompound_name]
         { if (founddestop) iscompound_name = true; }
 ;
 
@@ -3128,7 +3128,7 @@ compound_name_csharp[bool& iscompound_name] { namestack[0] = namestack[1] = ""; 
         })*
         (simple_name_optional_template[true] | push_namestack overloaded_operator)
         (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) }? multops)*
-        name_tail_csharp[iscompound_name, true]
+        name_tail_csharp[iscompound_name]
         { if (founddestop) iscompound_name = true; }
 ;
 
@@ -3148,7 +3148,7 @@ compound_name_java[bool& iscompound_name] { ENTRY_DEBUG } :
         (options { greedy = true; } : (period { iscompound_name = true; } simple_name_optional_template[true]))*
 ;
 
-name_tail[bool& iscomplex, bool marked] { ENTRY_DEBUG } :
+name_tail[bool& iscomplex] { ENTRY_DEBUG } :
 
         // "a::" will cause an exception to be thrown
         ( options { greedy = true; } :
@@ -3156,7 +3156,7 @@ name_tail[bool& iscomplex, bool marked] { ENTRY_DEBUG } :
             ( options { greedy = true; } : dcolon)*
             (DESTOP set_bool[isdestructor])*
             (multops)*
-            (simple_name_optional_template[marked] | push_namestack overloaded_operator | function_identifier_main)
+            (simple_name_optional_template[true] | push_namestack overloaded_operator | function_identifier_main)
             (options { greedy = true; } : { look_past_multiple(MULTOPS, REFOPS, RVALUEREF, QMARK) == DCOLON }? multops)*
         )*
 
@@ -3166,7 +3166,7 @@ exception
 catch[antlr::RecognitionException] {
 }
 
-name_tail_csharp[bool& iscomplex, bool marked] { ENTRY_DEBUG } :
+name_tail_csharp[bool& iscomplex] { ENTRY_DEBUG } :
 
         // "a::" will cause an exception to be thrown
         ( options { greedy = true; } :
@@ -3174,7 +3174,7 @@ name_tail_csharp[bool& iscomplex, bool marked] { ENTRY_DEBUG } :
             ( options { greedy = true; } : dcolon)*
             (multops)*
             (DESTOP set_bool[isdestructor])*
-            (simple_name_optional_template[marked] | push_namestack overloaded_operator | function_identifier_main)
+            (simple_name_optional_template[true] | push_namestack overloaded_operator | function_identifier_main)
             (options { greedy = true; } : multops)*
         )*
 ;
