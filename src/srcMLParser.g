@@ -1649,7 +1649,7 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
         complex_name[true]
 
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
-        ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : generic_constraint))*
+        ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : generic_type_constraint))*
 
         ({ inLanguage(LANGUAGE_JAVA_FAMILY) }? (options { greedy = true; } : super_list_java { insuper = true; } extends_list))*
         ({ inLanguage(LANGUAGE_JAVA_FAMILY) }?
@@ -3185,7 +3185,7 @@ catch[antlr::RecognitionException] {
 }
 
 function_specifier[] { CompleteElement element; ENTRY_DEBUG } :
-        { LA(1) == WHERE }? generic_constraint |
+        { LA(1) == WHERE }? generic_type_constraint |
 
         ({ LA(1) != ASYNC }? specifier |
 
@@ -4435,12 +4435,12 @@ template_argument_list[] { CompleteElement element; std::string namestack_save[2
         savenamestack[namestack_save]
         tempops (COMMA | template_argument)* tempope
 
-        (options { greedy = true; } : generic_constraint)*
+        (options { greedy = true; } : generic_type_constraint)*
 
         restorenamestack[namestack_save]
 ;
 
-generic_constraint[] { CompleteElement element; ENTRY_DEBUG } :
+generic_type_constraint[] { CompleteElement element; ENTRY_DEBUG } :
         {
             // local mode
             startNewMode(MODE_LOCAL);
