@@ -222,6 +222,25 @@ private:
     int size;
 };
 
+// Makes sure that a grammar rule forms a complete element
+class SingleElement {
+public:
+    SingleElement() {}
+
+    ~SingleElement() {
+
+        if (masterthis->inputState->guessing)
+            return;
+
+        masterthis->endElement(masterthis->statev.currentState().callstack.top());
+    }
+
+    static srcMLParser* masterthis;
+
+private:
+    int size;
+};
+
 #ifdef ENTRY_DEBUG
 class RuleDepth {
 
@@ -237,6 +256,7 @@ private:
 
 srcMLParser* CompleteElement::masterthis;
 srcMLParser* LightweightElement::masterthis;
+srcMLParser* SingleElement::masterthis;
 
 // constructor
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options)
@@ -244,7 +264,7 @@ srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options
     parseoptions(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false)
 {
     // inner class needs pointer to outer object
-    LightweightElement::masterthis = CompleteElement::masterthis = this;
+    LightweightElement::masterthis = CompleteElement::masterthis = SingleElement::masterthis = this;
 
     // root, single mode
     if (isoption(parseoptions, OPTION_EXPRESSION))
@@ -501,6 +521,7 @@ tokens {
 public:
     friend class CompleteElement;
     friend class LightweightElement;
+    friend class SingleElement;
 
     bool cpp_zeromode;
     bool skipelse;
@@ -2683,14 +2704,14 @@ function_identifier[] { ENTRY_DEBUG } :
         function_pointer_name_grammar eat_optional_macro_call
 ;
 
-qmark_marked[] { LightweightElement element; ENTRY_DEBUG } :
+qmark_marked[] { SingleElement element; ENTRY_DEBUG } :
         {
             startElement(SNAME);
         }
         QMARK
 ;
 
-function_identifier_default[] { LightweightElement element; ENTRY_DEBUG } :
+function_identifier_default[] { SingleElement element; ENTRY_DEBUG } :
         {
             startElement(SNAME);
         }
@@ -2698,7 +2719,7 @@ function_identifier_default[] { LightweightElement element; ENTRY_DEBUG } :
 ;
 
 // special cases for main
-function_identifier_main[] { LightweightElement element; ENTRY_DEBUG } :
+function_identifier_main[] { SingleElement element; ENTRY_DEBUG } :
         {
             startElement(SNAME);
         }
@@ -2868,14 +2889,14 @@ linq_orderby[] { CompleteElement element; ENTRY_DEBUG }:
         (options { greedy = true; } : COMMA complete_linq_expression (options { greedy = true; } : linq_ascending | linq_descending)* )*
 ;
 
-linq_ascending[] { LightweightElement element; ENTRY_DEBUG }:
+linq_ascending[] { SingleElement element; ENTRY_DEBUG }:
         {
             startElement(SNAME);
         }
         ASCENDING
 ;
 
-linq_descending[] { LightweightElement element; ENTRY_DEBUG }:
+linq_descending[] { SingleElement element; ENTRY_DEBUG }:
         {
             startElement(SNAME);
         }
@@ -3187,7 +3208,7 @@ function_specifier[] { CompleteElement element; ENTRY_DEBUG } :
         simple_name_optional_template[false])
 ;
 
-specifier[] { LightweightElement element; ENTRY_DEBUG } :
+specifier[] { SingleElement element; ENTRY_DEBUG } :
         {
             startElement(SFUNCTION_SPECIFIER);
         }
@@ -3648,14 +3669,14 @@ complete_block[] { ENTRY_DEBUG
     }
 }:;
 
-delegate_marked[] { LightweightElement element; ENTRY_DEBUG } :
+delegate_marked[] { SingleElement element; ENTRY_DEBUG } :
         {
             startElement(SNAME);
         }
         DELEGATE
 ;
 
-lambda_marked[] { LightweightElement element; ENTRY_DEBUG } :
+lambda_marked[] { ENTRY_DEBUG } :
         {
         }
         LAMBDA
@@ -5012,7 +5033,7 @@ cpp_condition[bool& markblockzero] { CompleteElement element; ENTRY_DEBUG } :
         complete_expression
 ;
 
-cpp_symbol[] { LightweightElement element; ENTRY_DEBUG } :
+cpp_symbol[] { SingleElement element; ENTRY_DEBUG } :
         {
             // start of the name element
             startElement(SNAME);
