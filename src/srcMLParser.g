@@ -3766,9 +3766,9 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
 ;
 
 // Variable declaration name and optional initialization
-variable_declaration_nameinit[] { bool isthis = LA(1) == THIS; bool not_csharp = !inLanguage(LANGUAGE_CSHARP);
+variable_declaration_nameinit[] { bool isthis = LA(1) == THIS;
         ENTRY_DEBUG } :
-        compound_name[not_csharp]
+        ({ inLanguage(LANGUAGE_CSHARP) }? compound_name[false] | compound_name[true])
         {
             // expect a possible initialization
             setMode(MODE_INIT | MODE_EXPECT);
