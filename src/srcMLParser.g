@@ -2623,7 +2623,7 @@ throw_list[] { ENTRY_DEBUG } :
 ;
 
 complete_throw_list[] { bool flag = false; ENTRY_DEBUG } :
-        THROW paren_pair | THROWS ( options { greedy = true; } : compound_name_java[true, flag] | COMMA)*
+        THROW paren_pair | THROWS ( options { greedy = true; } : compound_name_java[flag] | COMMA)*
 ;
 
 // type identifier
@@ -3061,93 +3061,91 @@ simple_identifier[bool marked = false] { LightweightElement element; ENTRY_DEBUG
 ;
 
 compound_name[bool index = false] { CompleteElement element; TokenPosition tp; bool iscompound_name = false; ENTRY_DEBUG } :
-        compound_name_inner[true, index]
+        compound_name_inner[index]
         (options { greedy = true; } : { index }? variable_identifier_array_grammar_sub[iscompound_name])*
 ;
 
-compound_name_inner[bool marked = true, bool index = false] { CompleteElement element; TokenPosition tp; bool iscompound_name = false; ENTRY_DEBUG } :
+compound_name_inner[bool index = false] { CompleteElement element; TokenPosition tp; bool iscompound_name = false; ENTRY_DEBUG } :
         {
-            if (marked) {
-                // There is a problem detecting complex names from
-                // complex names of operator methods in namespaces or
-                // classes for implicit casting, e.g., A::operator String // () {}.
-                // Detecting before here means lookahead on all A::B::... names
-                // causing a slowdown of almost 20%.  Solution (hack) is to start all complex
-                // names as operator methods, then replace by NOP if not.
+            // There is a problem detecting complex names from
+            // complex names of operator methods in namespaces or
+            // classes for implicit casting, e.g., A::operator String // () {}.
+            // Detecting before here means lookahead on all A::B::... names
+            // causing a slowdown of almost 20%.  Solution (hack) is to start all complex
+            // names as operator methods, then replace by NOP if not.
 
-                // local mode that is automatically ended by leaving this function
-                startNewMode(MODE_LOCAL);
+            // local mode that is automatically ended by leaving this function
+            startNewMode(MODE_LOCAL);
 
-                // start outer name
-                startElement(SONAME);
+            // start outer name
+            startElement(SONAME);
 
-                // start inner name
-                startElement(SCNAME);
+            // start inner name
+            startElement(SCNAME);
 
-                // record the name token so we can replace it if necessary
-                setTokenPosition(tp);
-            }
+            // record the name token so we can replace it if necessary
+            setTokenPosition(tp);
         }
         (
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
-        compound_name_java[marked, iscompound_name] |
+        compound_name_java[iscompound_name] |
 
         { inLanguage(LANGUAGE_CSHARP) }?
-        compound_name_csharp[marked, iscompound_name] |
+        compound_name_csharp[iscompound_name] |
 
         { inLanguage(LANGUAGE_C) }?
-        compound_name_c[marked, iscompound_name] |
+        compound_name_c[iscompound_name] |
 
         { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_CSHARP) }?
-        compound_name_cpp[marked, iscompound_name]
+        compound_name_cpp[iscompound_name]
         )
         (options { greedy = true; } : { index && !inTransparentMode(MODE_EAT_TYPE) }? variable_identifier_array_grammar_sub[iscompound_name])*
         {
-            // if we marked it as a complex name and it isn't, fix
-            if (marked && !iscompound_name)
+            // if it isn't a compound name, nop the element
+            if (!iscompound_name)
                 // set the token to NOP
                 tp.setType(SNOP);
         }
 ;
 
-compound_name_cpp[bool marked, bool& iscompound_name] { namestack[0] = namestack[1] = ""; bool founddestop = false; ENTRY_DEBUG } :
+compound_name_cpp[bool& iscompound_name] { namestack[0] = namestack[1] = ""; bool founddestop = false; ENTRY_DEBUG } :
 
         (dcolon { iscompound_name = true; })*
         (DESTOP set_bool[isdestructor] {
             founddestop = true;
         })*
-        (simple_name_optional_template[marked] | push_namestack overloaded_operator)
+        (simple_name_optional_template[true] | push_namestack overloaded_operator)
         (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) }? multops)*
-        name_tail[iscompound_name, marked]
+        name_tail[iscompound_name, true]
         { if (founddestop) iscompound_name = true; }
 ;
 
-compound_name_csharp[bool marked, bool& iscompound_name] { namestack[0] = namestack[1] = ""; bool founddestop = false; ENTRY_DEBUG } :
+compound_name_csharp[bool& iscompound_name] { namestack[0] = namestack[1] = ""; bool founddestop = false; ENTRY_DEBUG } :
 
         (dcolon { iscompound_name = true; })*
         (DESTOP set_bool[isdestructor] {
             founddestop = true;
         })*
-        (simple_name_optional_template[marked] | push_namestack overloaded_operator)
+        (simple_name_optional_template[true] | push_namestack overloaded_operator)
         (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) }? multops)*
-        name_tail_csharp[iscompound_name, marked]
+        name_tail_csharp[iscompound_name, true]
         { if (founddestop) iscompound_name = true; }
 ;
 
-compound_name_c[bool marked, bool& iscompound_name] { ENTRY_DEBUG } :
+compound_name_c[bool& iscompound_name] { ENTRY_DEBUG } :
 
-        identifier[marked]
+        identifier[true]
         ( options { greedy = true; } :
             period { iscompound_name = true; }
-            identifier[marked]
+            identifier[true]
         )*
 ;
 
-compound_name_java[bool marked, bool& iscompound_name] { ENTRY_DEBUG } :
+compound_name_java[bool& iscompound_name] { ENTRY_DEBUG } :
 
         template_argument_list |
-        simple_name_optional_template[marked]
-        (options { greedy = true; } : (period { iscompound_name = true; } simple_name_optional_template[marked]))*
+        simple_name_optional_template[true]
+        (options { greedy = true; } : (period { iscompound_name = true; } simple_name_optional_template[true]))*
 ;
 
 name_tail[bool& iscomplex, bool marked] { ENTRY_DEBUG } :
@@ -4216,7 +4214,7 @@ super_list[] { bool flag = false; ENTRY_DEBUG } :
         (options { greedy = true; } :
             (derive_access)*
 
-            compound_name_java[true, flag]
+            compound_name_java[flag]
         |
             COMMA
         )*
@@ -4483,7 +4481,7 @@ template_extends_java[] { CompleteElement element; bool iscomplex = false; ENTRY
             startElement(SEXTENDS);
         }
         EXTENDS
-        compound_name_java[true, iscomplex]
+        compound_name_java[iscomplex]
 ;
 
 
@@ -4494,7 +4492,7 @@ template_super_java[] { CompleteElement element; bool iscomplex = false; ENTRY_D
             startElement(SDERIVATION_LIST);
         }
         SUPER
-        compound_name_java[true, iscomplex]
+        compound_name_java[iscomplex]
 ;
 
 
