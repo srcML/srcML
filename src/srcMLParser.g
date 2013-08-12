@@ -876,10 +876,8 @@ property_method[int element] { ENTRY_DEBUG } :
         property_method_names
 ;
 
-property_method_names[] { CompleteElement element; ENTRY_DEBUG } :
+property_method_names[] { SingleElement element; ENTRY_DEBUG } :
 		{
-            startNewMode(MODE_LOCAL);
-
             startElement(SNAME);
         }
         (GET | SET | ADD | REMOVE)
@@ -2727,12 +2725,8 @@ function_identifier_main[] { SingleElement element; ENTRY_DEBUG } :
 ;
 
 // overloaded operator name
-overloaded_operator[] { CompleteElement element; ENTRY_DEBUG } :
+overloaded_operator[] { SingleElement element; ENTRY_DEBUG } :
         {
-            // end all started elements in this rule
-            startNewMode(MODE_LOCAL);
-
-            // start of the name element
             startElement(SNAME);
         }
         set_bool[operatorname, true]
@@ -2764,7 +2758,6 @@ linq_expression_pure[] { ENTRY_DEBUG }:
 
 linq_from[] { CompleteElement element; ENTRY_DEBUG }:
         {
-            // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
 
             startElement(SFROM);
@@ -2774,7 +2767,6 @@ linq_from[] { CompleteElement element; ENTRY_DEBUG }:
 
 linq_in[] { CompleteElement element; ENTRY_DEBUG }:
         {
-            // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
 
             startElement(SIN);
@@ -2784,7 +2776,6 @@ linq_in[] { CompleteElement element; ENTRY_DEBUG }:
 
 linq_where[] { CompleteElement element; ENTRY_DEBUG }:
         {
-            // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
 
             startElement(SWHERE);
@@ -2794,7 +2785,6 @@ linq_where[] { CompleteElement element; ENTRY_DEBUG }:
 
 linq_select[] { CompleteElement element; ENTRY_DEBUG }:
         {
-            // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
 
             startElement(SSELECT);
@@ -2804,7 +2794,6 @@ linq_select[] { CompleteElement element; ENTRY_DEBUG }:
 
 linq_let[] { CompleteElement element; ENTRY_DEBUG }:
         {
-            // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
 
             startElement(SLET);
@@ -2814,7 +2803,6 @@ linq_let[] { CompleteElement element; ENTRY_DEBUG }:
 
 linq_group[] { CompleteElement element; ENTRY_DEBUG }:
         {
-            // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
 
             startElement(SGROUP);
@@ -2826,7 +2814,6 @@ linq_group[] { CompleteElement element; ENTRY_DEBUG }:
 
 linq_by[] { CompleteElement element; ENTRY_DEBUG }:
         {
-            // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
 
             startElement(SBY);
@@ -2836,7 +2823,6 @@ linq_by[] { CompleteElement element; ENTRY_DEBUG }:
 
 linq_into[] { CompleteElement element; ENTRY_DEBUG }:
         {
-            // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
 
             startElement(SINTO);
@@ -2846,7 +2832,6 @@ linq_into[] { CompleteElement element; ENTRY_DEBUG }:
 
 linq_join[] { CompleteElement element; ENTRY_DEBUG }:
         {
-            // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
 
             startElement(SJOIN);
@@ -2858,7 +2843,6 @@ linq_join[] { CompleteElement element; ENTRY_DEBUG }:
 
 linq_on[] { CompleteElement element; ENTRY_DEBUG }:
         {
-            // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
 
             startElement(SON);
@@ -2868,7 +2852,6 @@ linq_on[] { CompleteElement element; ENTRY_DEBUG }:
 
 linq_equals[] { CompleteElement element; ENTRY_DEBUG }:
         {
-            // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_LOCAL);
 
             startElement(SEQUALS);
@@ -3046,7 +3029,6 @@ simple_name_optional_template[bool marked] { CompleteElement element; TokenPosit
        )
 ;
 
-// basic single token name
 identifier[bool marked = false] { LightweightElement element; ENTRY_DEBUG } :
         {
             if (marked)
@@ -4235,11 +4217,8 @@ super_list[] { bool flag = false; ENTRY_DEBUG } :
         )*
 ;
 
-derive_access[] { CompleteElement element; ENTRY_DEBUG } :
+derive_access[] { SingleElement element; ENTRY_DEBUG } :
         {
-            // end all elements at end of rule automatically
-            startNewMode(MODE_LOCAL);
-
             startElement(SCLASS_SPECIFIER);
         }
         (VIRTUAL)* (PUBLIC | PRIVATE | PROTECTED) (options { greedy = true; } : VIRTUAL)*
