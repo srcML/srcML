@@ -174,23 +174,23 @@ header "post_include_cpp" {
 class CompleteElement {
 public:
     CompleteElement() {
-        if (masterthis->inputState->guessing)
+        if (parent->inputState->guessing)
             return;
 
-        oldsize = masterthis->size();
+        oldsize = parent->size();
     }
 
     ~CompleteElement() {
-        if (masterthis->inputState->guessing)
+        if (parent->inputState->guessing)
             return;
 
-        int n = masterthis->size() - oldsize;
+        int n = parent->size() - oldsize;
         for (int i = 0; i < n; ++i) {
-            masterthis->endCurrentMode();
+            parent->endCurrentMode();
         }
     }
 
-    static srcMLParser* masterthis;
+    static srcMLParser* parent;
 
 private:
     int oldsize;
@@ -201,22 +201,22 @@ class LightweightElement {
 public:
     LightweightElement() {
 
-        if (masterthis->inputState->guessing)
+        if (parent->inputState->guessing)
             return;
 
-        size = masterthis->statev.currentState().size();
+        size = parent->statev.currentState().size();
     }
 
     ~LightweightElement() {
 
-        if (masterthis->inputState->guessing)
+        if (parent->inputState->guessing)
             return;
 
-        while (size < masterthis->statev.currentState().size())
-            masterthis->endElement(masterthis->statev.currentState().callstack.top());
+        while (size < parent->statev.currentState().size())
+            parent->endElement(parent->statev.currentState().callstack.top());
     }
 
-    static srcMLParser* masterthis;
+    static srcMLParser* parent;
 
 private:
     int size;
@@ -229,13 +229,13 @@ public:
 
     ~SingleElement() {
 
-        if (masterthis->inputState->guessing)
+        if (parent->inputState->guessing)
             return;
 
-        masterthis->endElement(masterthis->statev.currentState().callstack.top());
+        parent->endElement(parent->statev.currentState().callstack.top());
     }
 
-    static srcMLParser* masterthis;
+    static srcMLParser* parent;
 
 private:
     int size;
@@ -254,9 +254,9 @@ private:
 };
 #endif
 
-srcMLParser* CompleteElement::masterthis;
-srcMLParser* LightweightElement::masterthis;
-srcMLParser* SingleElement::masterthis;
+srcMLParser* CompleteElement::parent;
+srcMLParser* LightweightElement::parent;
+srcMLParser* SingleElement::parent;
 
 // constructor
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options)
@@ -264,7 +264,7 @@ srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options
     parseoptions(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false)
 {
     // inner class needs pointer to outer object
-    LightweightElement::masterthis = CompleteElement::masterthis = SingleElement::masterthis = this;
+    LightweightElement::parent = CompleteElement::parent = SingleElement::parent = this;
 
     // root, single mode
     if (isoption(parseoptions, OPTION_EXPRESSION))
