@@ -201,19 +201,19 @@ class LightweightElement {
 public:
     LightweightElement() {
 
-        if (!masterthis->inputState->guessing) {
+        if (masterthis->inputState->guessing)
+            return;
 
-            size = masterthis->statev.currentState().size();
-        }
+        size = masterthis->statev.currentState().size();
     }
 
     ~LightweightElement() {
 
-        if (!masterthis->inputState->guessing) {
+        if (masterthis->inputState->guessing)
+            return;
 
-            while (size < masterthis->statev.currentState().size())
-                masterthis->endElement(masterthis->statev.currentState().callstack.top());
-        }
+        while (size < masterthis->statev.currentState().size())
+            masterthis->endElement(masterthis->statev.currentState().callstack.top());
     }
 
     static srcMLParser* masterthis;
