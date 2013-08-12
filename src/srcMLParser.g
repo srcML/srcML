@@ -984,7 +984,7 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
             lambda_anonymous |
 
             // found two names in a row, so this is not an expression
-            // cause this to fail by next matching END_ELEMENT_TOKEN
+            // cause this to fail by explicitly throwing exception
             { depth == 0 }?
             identifier guessing_endGuessing throw_exception[true] |
 
