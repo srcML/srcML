@@ -134,7 +134,7 @@ int srcml_has_entry(struct srcml_archive*);
 
 /* clone the setup of an existing archive
    client will have to free it using srcml_archive_free() */
-struct srcml_archive* srcml_archive_clone_setup(const struct srcml_archive*);
+struct srcml_archive* srcml_clone_archive(const struct srcml_archive*);
 
 /* setup options for srcml archive */
 int srcml_set_encoding  (struct srcml_archive*, const char* encoding);
@@ -180,9 +180,7 @@ void srcml_write_close(struct srcml_archive*);
 /* free the srcML archive data */
 void srcml_free_archive(struct srcml_archive*);
 
-
-
-int srcml_write_entry_archive (struct srcml_archive*, const struct srcml_entry*);
+int srcml_write_entry(struct srcml_archive*, const struct srcml_entry*);
 
 /* open a srcML archive for reading */
 int srcml_read_open_filename(struct srcml_archive*, const char* srcml_filename);
@@ -197,16 +195,13 @@ const char* srcml_entry_get_directory(const struct srcml_entry*);
 const char* srcml_entry_get_version  (const struct srcml_entry*);
 
 /* Read the next entry from the archive */
-struct srcml_entry* srcml_read_entry_archive (struct srcml_archive*);
-const struct srcml_entry* srcml_read_archive_current_entry(const struct srcml_archive*);
+struct srcml_entry* srcml_read_entry(struct srcml_archive*);
 int srcml_read_entry_filename(struct srcml_archive*, const char* src_filename);
 int srcml_read_entry_memory  (struct srcml_archive*, const char* src_buffer, size_t buffer_size);
 int srcml_read_entry_FILE    (struct srcml_archive*, FILE* srcml_file);
 int srcml_read_entry_fd      (struct srcml_archive*, int srcml_fd);
 
 void srcml_read_close (struct srcml_archive*);
-
-void srcml_free_archive_entry(struct srcml_entry*);
 
 struct srcml_archive* srcml_read_archive();
 
