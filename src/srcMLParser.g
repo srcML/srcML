@@ -875,10 +875,10 @@ property_method[int element] { ENTRY_DEBUG } :
             startElement(element);
         }
         ({ inLanguage(LANGUAGE_CSHARP) }? attribute)*
-        property_method_names
+        property_method_name
 ;
 
-property_method_names[] { SingleElement element; ENTRY_DEBUG } :
+property_method_name[] { SingleElement element; ENTRY_DEBUG } :
 		{
             startElement(SNAME);
         }
@@ -2376,7 +2376,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                 throw_exception[global] |
 
                 { type_count == attributecount }?
-                property_method_names
+                property_method_name
                 set_type[type, PROPERTY_ACCESSOR, true]
                 /* throw_exception[true] */ |
 
