@@ -124,7 +124,7 @@ header {
 header "post_include_hpp" {
 
 #include <string>
-#include <vector>
+#include <deque>
 #include <stack>
 #include "Mode.hpp"
 #include "Options.hpp"
@@ -549,12 +549,12 @@ public:
 
         cppmodeitem() {}
 
-        std::vector<int> statesize;
+        std::deque<int> statesize;
         bool isclosed;
         bool skipelse;
     };
 
-    std::stack<cppmodeitem, std::list<cppmodeitem> > cppmode;
+    std::stack<cppmodeitem> cppmode;
 
     void startUnit() {
         startElement(SUNIT);
@@ -659,8 +659,9 @@ cfg[] { ENTRY_DEBUG } :
         try_statement | catch_statement | finally_statement | throw_statement |
 
         // namespace statements
-        namespace_definition | using_statement_namespace |
+        namespace_definition | using_namespace_statement |
 
+        // C/C++
         typedef_statement |
 
         // Java - keyword only detected for Java
@@ -669,7 +670,7 @@ cfg[] { ENTRY_DEBUG } :
         // C# - keyword only detected for C#
         checked_statement | unchecked_statement | lock_statement | fixed_statement | unsafe_statement | yield_statements |
 
-        // assembly block
+        // C/C++ assembly block
         asm_declaration /* |
 
         { inLanguage(LANGUAGE_JAVA) }?
@@ -776,7 +777,8 @@ statements_non_cfg[] { int secondtoken = 0;
         sole_destop |
 
         // labels to goto
-        { secondtoken == COLON }? label_statement |
+        { secondtoken == COLON }?
+        label_statement |
 
         // extern block as opposed to enum as part of declaration
         { decl_type == NONE }?
@@ -1505,10 +1507,14 @@ class_preprocessing[int token] { ENTRY_DEBUG } :
         }
 ;
 
+class_preamble[] { ENTRY_DEBUG } :
+        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* (specifier)*
+;
+
 class_definition[] { ENTRY_DEBUG } :
         class_preprocessing[SCLASS]
 
-        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* (specifier)* CLASS (class_header lcurly | lcurly)
+        class_preamble CLASS (class_header lcurly | lcurly)
         {
             if (inLanguage(LANGUAGE_CXX_ONLY))
                 class_default_access_action(SPRIVATE_ACCESS_DEFAULT);
@@ -1518,7 +1524,7 @@ class_definition[] { ENTRY_DEBUG } :
 enum_class_definition[] { ENTRY_DEBUG } :
         class_preprocessing[SENUM]
 
-        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* (specifier)* ENUM (class_header lcurly | lcurly)
+        class_preamble ENUM (class_header lcurly | lcurly)
         {
             if (inLanguage(LANGUAGE_CXX_ONLY))
                 class_default_access_action(SPRIVATE_ACCESS_DEFAULT);
@@ -1532,7 +1538,6 @@ anonymous_class_definition[] { ENTRY_DEBUG } :
 
             // start the class definition
             startElement(SCLASS);
-
         }
 
         // first name in an anonymous class definition is the class it extends
@@ -1569,7 +1574,7 @@ interface_definition[] { ENTRY_DEBUG } :
             // java interfaces end at the end of the block
             setMode(MODE_END_AT_BLOCK);
         }
-        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* (specifier)* INTERFACE class_header lcurly
+        class_preamble INTERFACE class_header lcurly
 ;
 
 struct_declaration[] { ENTRY_DEBUG } :
@@ -1580,13 +1585,13 @@ struct_declaration[] { ENTRY_DEBUG } :
             // start the class definition
             startElement(SSTRUCT_DECLARATION);
         }
-        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* (specifier)* STRUCT class_header
+        class_preamble STRUCT class_header
 ;
 
 struct_union_definition[int element_token] { ENTRY_DEBUG } :
         class_preprocessing[element_token]
 
-        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* (specifier)* (STRUCT | UNION) (class_header lcurly | lcurly)
+        class_preamble (STRUCT | UNION) (class_header lcurly | lcurly)
         {
            if (inLanguage(LANGUAGE_CXX_ONLY))
                class_default_access_action(SPUBLIC_ACCESS_DEFAULT);
@@ -1601,7 +1606,7 @@ union_declaration[] { ENTRY_DEBUG } :
             // start the class definition
             startElement(SUNION_DECLARATION);
         }
-        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* (specifier)* UNION class_header
+        class_preamble UNION class_header
 ;
 
 // default private/public section for C++
@@ -3493,7 +3498,7 @@ unsafe_statement[] { ENTRY_DEBUG } :
         UNSAFE
 ;
 
-using_statement_namespace[] { ENTRY_DEBUG } :
+using_namespace_statement[] { ENTRY_DEBUG } :
 
         { inLanguage(LANGUAGE_CSHARP) && next_token() == LPAREN }?
         using_statement |
@@ -4605,7 +4610,7 @@ enum_definition[] { ENTRY_DEBUG } :
             // start the enum definition element
             startElement(SENUM);
         }
-        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* (specifier)*
+        class_preamble
         ENUM |
         {
             // statement
