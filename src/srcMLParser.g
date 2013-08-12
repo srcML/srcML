@@ -3129,8 +3129,22 @@ compound_name_cpp[bool& iscompound_name = BOOL] { namestack[0] = namestack[1] = 
         (DESTOP set_bool[isdestructor] { iscompound_name = true; })*
         (simple_name_optional_template | push_namestack overloaded_operator)
         (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) }? multops)*
-        name_tail[iscompound_name]
+
+        // "a::" causes an exception to be thrown
+        ( options { greedy = true; } :
+            (dcolon { iscompound_name = true; } | period { iscompound_name = true; })
+            ( options { greedy = true; } : dcolon)*
+            (DESTOP set_bool[isdestructor])*
+            (multops)*
+            (simple_name_optional_template | push_namestack overloaded_operator | function_identifier_main)
+            (options { greedy = true; } : { look_past_multiple(MULTOPS, REFOPS, RVALUEREF, QMARK) == DCOLON }? multops)*
+        )*
+
+        { notdestructor = LA(1) == DESTOP; }
 ;
+exception
+catch[antlr::RecognitionException] {
+}
 
 compound_name_csharp[bool& iscompound_name = BOOL] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
 
@@ -3138,8 +3152,20 @@ compound_name_csharp[bool& iscompound_name = BOOL] { namestack[0] = namestack[1]
         (DESTOP set_bool[isdestructor] { iscompound_name = true; })*
         (simple_name_optional_template | push_namestack overloaded_operator)
         (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) }? multops)*
-        name_tail_csharp[iscompound_name]
+
+        // "a::" causes an exception to be thrown
+        ( options { greedy = true; } :
+            (dcolon { iscompound_name = true; } | period { iscompound_name = true; })
+            ( options { greedy = true; } : dcolon)*
+            (multops)*
+            (DESTOP set_bool[isdestructor])*
+            (simple_name_optional_template | push_namestack overloaded_operator | function_identifier_main)
+            (options { greedy = true; } : multops)*
+        )*
 ;
+exception
+catch[antlr::RecognitionException] {
+}
 
 compound_name_c[bool& iscompound_name = BOOL] { ENTRY_DEBUG } :
 
@@ -3156,40 +3182,6 @@ compound_name_java[bool& iscompound_name = BOOL] { ENTRY_DEBUG } :
         simple_name_optional_template
         (options { greedy = true; } : (period { iscompound_name = true; } simple_name_optional_template))*
 ;
-
-name_tail[bool& iscomplex] { ENTRY_DEBUG } :
-
-        // "a::" will cause an exception to be thrown
-        ( options { greedy = true; } :
-            (dcolon { iscomplex = true; } | period { iscomplex = true; })
-            ( options { greedy = true; } : dcolon)*
-            (DESTOP set_bool[isdestructor])*
-            (multops)*
-            (simple_name_optional_template | push_namestack overloaded_operator | function_identifier_main)
-            (options { greedy = true; } : { look_past_multiple(MULTOPS, REFOPS, RVALUEREF, QMARK) == DCOLON }? multops)*
-        )*
-
-        { notdestructor = LA(1) == DESTOP; }
-;
-exception
-catch[antlr::RecognitionException] {
-}
-
-name_tail_csharp[bool& iscomplex] { ENTRY_DEBUG } :
-
-        // "a::" will cause an exception to be thrown
-        ( options { greedy = true; } :
-            (dcolon { iscomplex = true; } | period { iscomplex = true; })
-            ( options { greedy = true; } : dcolon)*
-            (multops)*
-            (DESTOP set_bool[isdestructor])*
-            (simple_name_optional_template | push_namestack overloaded_operator | function_identifier_main)
-            (options { greedy = true; } : multops)*
-        )*
-;
-exception
-catch[antlr::RecognitionException] {
-}
 
 function_specifier[] { CompleteElement element; ENTRY_DEBUG } :
         { LA(1) == WHERE }? generic_type_constraint |
