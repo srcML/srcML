@@ -2944,7 +2944,7 @@ attribute_target[] { CompleteElement element; ENTRY_DEBUG } :
 
             startElement(STARGET);
         }
-        (RETURN | EVENT | identifier)
+        (RETURN | EVENT | identifier_list)
 ;
 
 attribute_target_global[] returns [bool global = false] { ENTRY_DEBUG } :
@@ -3018,7 +3018,7 @@ simple_name_optional_template[] { CompleteElement element; TokenPosition tp; ENT
             // record the name token so we can replace it if necessary
             setTokenPosition(tp);
         }
-        push_namestack identifier[true] (
+        push_namestack identifier (
             { inLanguage(LANGUAGE_CXX_FAMILY) || inLanguage(LANGUAGE_JAVA_FAMILY) }?
             (template_argument_list)=>
                 template_argument_list |
@@ -3033,12 +3033,14 @@ simple_name_optional_template[] { CompleteElement element; TokenPosition tp; ENT
        )
 ;
 
-identifier[bool marked = false] { LightweightElement element; ENTRY_DEBUG } :
+identifier[] { SingleElement element; ENTRY_DEBUG } :
         {
-            if (marked)
-                startElement(SNAME);
+            startElement(SNAME);
         }
-        (
+        identifier_list
+;
+
+identifier_list { ENTRY_DEBUG } :
             NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
             SUPER | CHECKED | UNCHECKED | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD |
 
@@ -3047,7 +3049,6 @@ identifier[bool marked = false] { LightweightElement element; ENTRY_DEBUG } :
             INTO | THIS |
 
             { inLanguage(LANGUAGE_CSHARP) }? UNION
-        )
 ;
 
 // most basic name
@@ -3133,10 +3134,10 @@ compound_name_csharp[bool& iscompound_name] { namestack[0] = namestack[1] = ""; 
 
 compound_name_c[bool& iscompound_name] { ENTRY_DEBUG } :
 
-        identifier[true]
+        identifier
         ( options { greedy = true; } :
             period { iscompound_name = true; }
-            identifier[true]
+            identifier
         )*
 ;
 
@@ -3267,7 +3268,7 @@ member_initialization_list[] { ENTRY_DEBUG } :
 push_namestack[] { namestack[1].swap(namestack[0]); namestack[0] = LT(1)->getText(); } :;
 
 identifier_stack[std::string s[]] { s[1].swap(s[0]); s[0] = LT(1)->getText(); ENTRY_DEBUG } :
-        identifier[true]
+        identifier
 ;
 
 destructor_definition[] { ENTRY_DEBUG } :
@@ -3398,7 +3399,7 @@ macro_call_inner[] { CompleteElement element; bool first = true; ENTRY_DEBUG } :
             // start the macro call element
             startElement(SMACRO_CALL);
         }
-        identifier[true]
+        identifier
         (options { greedy = true; } : { first }?
         {
             // start a mode for the macro argument list
@@ -4525,7 +4526,7 @@ label_statement[] { CompleteElement element; ENTRY_DEBUG } :
             // start the label element
             startElement(SLABEL_STATEMENT);
         }
-        identifier[true] COLON
+        identifier COLON
 ;
 
 typedef_statement[] { ENTRY_DEBUG } :
