@@ -3074,12 +3074,12 @@ simple_identifier[] { SingleElement element; ENTRY_DEBUG } :
         NAME
 ;
 
-compound_name[] { CompleteElement element; bool iscompound_name = false; ENTRY_DEBUG } :
+compound_name[] { CompleteElement element; bool iscompound = false; ENTRY_DEBUG } :
         compound_name_inner[true]
-        (options { greedy = true; } : variable_identifier_array_grammar_sub[iscompound_name])*
+        (options { greedy = true; } : variable_identifier_array_grammar_sub[iscompound])*
 ;
 
-compound_name_inner[bool index] { CompleteElement element; TokenPosition tp; bool iscompound_name = false; ENTRY_DEBUG } :
+compound_name_inner[bool index] { CompleteElement element; TokenPosition tp; bool iscompound = false; ENTRY_DEBUG } :
         {
             // There is a problem detecting complex names from
             // complex names of operator methods in namespaces or
@@ -3102,37 +3102,37 @@ compound_name_inner[bool index] { CompleteElement element; TokenPosition tp; boo
         }
         (
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
-        compound_name_java[iscompound_name] |
+        compound_name_java[iscompound] |
 
         { inLanguage(LANGUAGE_CSHARP) }?
-        compound_name_csharp[iscompound_name] |
+        compound_name_csharp[iscompound] |
 
         { inLanguage(LANGUAGE_C) }?
-        compound_name_c[iscompound_name] |
+        compound_name_c[iscompound] |
 
         { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_CSHARP) }?
-        compound_name_cpp[iscompound_name]
+        compound_name_cpp[iscompound]
         )
         (options { greedy = true; } : { index && !inTransparentMode(MODE_EAT_TYPE) }?
-            variable_identifier_array_grammar_sub[iscompound_name])*
+            variable_identifier_array_grammar_sub[iscompound])*
         {
             // if it isn't a compound name, nop the element
-            if (!iscompound_name)
+            if (!iscompound)
                 // set the token to NOP
                 tp.setType(SNOP);
         }
 ;
 
-compound_name_cpp[bool& iscompound_name = BOOL] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
+compound_name_cpp[bool& iscompound = BOOL] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
 
-        (dcolon { iscompound_name = true; })*
-        (DESTOP set_bool[isdestructor] { iscompound_name = true; })*
+        (dcolon { iscompound = true; })*
+        (DESTOP set_bool[isdestructor] { iscompound = true; })*
         (simple_name_optional_template | push_namestack overloaded_operator)
         (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) }? multops)*
 
         // "a::" causes an exception to be thrown
         ( options { greedy = true; } :
-            (dcolon { iscompound_name = true; } | period { iscompound_name = true; })
+            (dcolon { iscompound = true; } | period { iscompound = true; })
             ( options { greedy = true; } : dcolon)*
             (DESTOP set_bool[isdestructor])*
             (multops)*
@@ -3146,16 +3146,16 @@ exception
 catch[antlr::RecognitionException] {
 }
 
-compound_name_csharp[bool& iscompound_name = BOOL] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
+compound_name_csharp[bool& iscompound = BOOL] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
 
-        (dcolon { iscompound_name = true; })*
-        (DESTOP set_bool[isdestructor] { iscompound_name = true; })*
+        (dcolon { iscompound = true; })*
+        (DESTOP set_bool[isdestructor] { iscompound = true; })*
         (simple_name_optional_template | push_namestack overloaded_operator)
         (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) }? multops)*
 
         // "a::" causes an exception to be thrown
         ( options { greedy = true; } :
-            (dcolon { iscompound_name = true; } | period { iscompound_name = true; })
+            (dcolon { iscompound = true; } | period { iscompound = true; })
             ( options { greedy = true; } : dcolon)*
             (multops)*
             (DESTOP set_bool[isdestructor])*
@@ -3167,20 +3167,20 @@ exception
 catch[antlr::RecognitionException] {
 }
 
-compound_name_c[bool& iscompound_name = BOOL] { ENTRY_DEBUG } :
+compound_name_c[bool& iscompound = BOOL] { ENTRY_DEBUG } :
 
         identifier
         ( options { greedy = true; } :
-            period { iscompound_name = true; }
+            period { iscompound = true; }
             identifier
         )*
 ;
 
-compound_name_java[bool& iscompound_name = BOOL] { ENTRY_DEBUG } :
+compound_name_java[bool& iscompound = BOOL] { ENTRY_DEBUG } :
 
         template_argument_list |
         simple_name_optional_template
-        (options { greedy = true; } : (period { iscompound_name = true; } simple_name_optional_template))*
+        (options { greedy = true; } : (period { iscompound = true; } simple_name_optional_template))*
 ;
 
 function_specifier[] { CompleteElement element; ENTRY_DEBUG } :
