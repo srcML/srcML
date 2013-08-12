@@ -260,7 +260,7 @@ srcMLParser* SingleElement::masterthis;
 
 // constructor
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options)
-   : antlr::LLkParser(lexer,1), Mode(this, lang), cpp_zeromode(false), skipelse(false), cppifcount(0),
+   : antlr::LLkParser(lexer,1), Mode(this, lang), cpp_zeromode(false), skipelse(false), cpp_ifcount(0),
     parseoptions(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false)
 {
     // inner class needs pointer to outer object
@@ -525,7 +525,7 @@ public:
 
     bool cpp_zeromode;
     bool skipelse;
-    int cppifcount;
+    int cpp_ifcount;
     bool isdestructor;
     int parseoptions;
     std::string namestack[2];
@@ -4433,6 +4433,7 @@ template_argument_list[] { CompleteElement element; std::string namestack_save[2
             startElement(STEMPLATE_ARGUMENT_LIST);
         }
         savenamestack[namestack_save]
+
         tempops (COMMA | template_argument)* tempope
 
         (options { greedy = true; } : generic_type_constraint)*
@@ -4858,7 +4859,7 @@ ENTRY_DEBUG } :
 eol_post[int directive_token, bool markblockzero] {
             // Flags to control skipping of #if 0 and #else.
             // Once in these modes, stay in these modes until the matching #endif is reached
-            // cppifcount used to indicate which #endif matches the #if or #else
+            // cpp_ifcount used to indicate which #endif matches the #if or #else
             switch (directive_token) {
 
                 case IF :
@@ -4873,11 +4874,11 @@ eol_post[int directive_token, bool markblockzero] {
 
                         // keep track of nested if's (inside the #if 0) so we know when
                         // we reach the proper #endif
-                        cppifcount = 0;
+                        cpp_ifcount = 0;
                     }
 
                     // another if reached
-                    ++cppifcount;
+                    ++cpp_ifcount;
 
                     // create new context for #if (and possible #else)
                     if (isoption(parseoptions, OPTION_CPP_MARKUP_ELSE) && !inputState->guessing) {
@@ -4891,13 +4892,13 @@ eol_post[int directive_token, bool markblockzero] {
                 case ELIF :
 
                     // #else reached for #if 0 that started this mode
-                    if (cpp_zeromode && cppifcount == 1)
+                    if (cpp_zeromode && cpp_ifcount == 1)
                         cpp_zeromode = false;
 
                     // not in skipped #if, so skip #else until #endif of #if is reached
                     if (!cpp_zeromode) {
                         skipelse = true;
-                        cppifcount = 1;
+                        cpp_ifcount = 1;
                     }
 
                     if (!isoption(parseoptions, OPTION_CPP_MARKUP_ELSE) && !inputState->guessing) {
@@ -4920,14 +4921,14 @@ eol_post[int directive_token, bool markblockzero] {
                 case ENDIF :
 
                     // another #if ended
-                    --cppifcount;
+                    --cpp_ifcount;
 
                     // #endif reached for #if 0 that started this mode
-                    if (cpp_zeromode && cppifcount == 0)
+                    if (cpp_zeromode && cpp_ifcount == 0)
                         cpp_zeromode = false;
 
                     // #endif reached for #else that started this mode
-                    if (skipelse && cppifcount == 0)
+                    if (skipelse && cpp_ifcount == 0)
                         skipelse = false;
 
                     if (!isoption(parseoptions, OPTION_CPP_MARKUP_ELSE) && !inputState->guessing &&
