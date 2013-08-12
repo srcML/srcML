@@ -173,9 +173,17 @@ header "post_include_cpp" {
 // Makes sure that a grammar rule forms a complete element
 class CompleteElement {
 public:
-    CompleteElement() : oldsize(masterthis->size()) {}
+    CompleteElement() {
+        if (masterthis->inputState->guessing)
+            return;
+
+        oldsize = masterthis->size();
+    }
 
     ~CompleteElement() {
+        if (masterthis->inputState->guessing)
+            return;
+
         int n = masterthis->size() - oldsize;
         for (int i = 0; i < n; ++i) {
             masterthis->endCurrentMode();
@@ -185,7 +193,7 @@ public:
     static srcMLParser* masterthis;
 
 private:
-    const int oldsize;
+    int oldsize;
 };
 
 // Makes sure that a grammar rule forms a complete element
