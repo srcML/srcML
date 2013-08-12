@@ -257,6 +257,7 @@ private:
 srcMLParser* CompleteElement::parent;
 srcMLParser* LightweightElement::parent;
 srcMLParser* SingleElement::parent;
+bool srcMLParser::BOOL;
 
 // constructor
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options)
@@ -536,6 +537,8 @@ public:
     bool qmark;
     bool notdestructor;
     bool operatorname;
+
+    static bool BOOL;
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang = LANGUAGE_CXX, int options = 0);
@@ -2634,8 +2637,8 @@ throw_list[] { ENTRY_DEBUG } :
         THROWS
 ;
 
-complete_throw_list[] { bool flag = false; ENTRY_DEBUG } :
-        THROW paren_pair | THROWS ( options { greedy = true; } : compound_name_java[flag] | COMMA)*
+complete_throw_list[] { ENTRY_DEBUG } :
+        THROW paren_pair | THROWS ( options { greedy = true; } : compound_name_java | COMMA)*
 ;
 
 // type identifier
@@ -3120,7 +3123,7 @@ compound_name_inner[bool index] { CompleteElement element; TokenPosition tp; boo
         }
 ;
 
-compound_name_cpp[bool& iscompound_name] { namestack[0] = namestack[1] = ""; bool founddestop = false; ENTRY_DEBUG } :
+compound_name_cpp[bool& iscompound_name = BOOL] { namestack[0] = namestack[1] = ""; bool founddestop = false; ENTRY_DEBUG } :
 
         (dcolon { iscompound_name = true; })*
         (DESTOP set_bool[isdestructor] {
@@ -3132,7 +3135,7 @@ compound_name_cpp[bool& iscompound_name] { namestack[0] = namestack[1] = ""; boo
         { if (founddestop) iscompound_name = true; }
 ;
 
-compound_name_csharp[bool& iscompound_name] { namestack[0] = namestack[1] = ""; bool founddestop = false; ENTRY_DEBUG } :
+compound_name_csharp[bool& iscompound_name = BOOL] { namestack[0] = namestack[1] = ""; bool founddestop = false; ENTRY_DEBUG } :
 
         (dcolon { iscompound_name = true; })*
         (DESTOP set_bool[isdestructor] {
@@ -3144,7 +3147,7 @@ compound_name_csharp[bool& iscompound_name] { namestack[0] = namestack[1] = ""; 
         { if (founddestop) iscompound_name = true; }
 ;
 
-compound_name_c[bool& iscompound_name] { ENTRY_DEBUG } :
+compound_name_c[bool& iscompound_name = BOOL] { ENTRY_DEBUG } :
 
         identifier
         ( options { greedy = true; } :
@@ -3153,7 +3156,7 @@ compound_name_c[bool& iscompound_name] { ENTRY_DEBUG } :
         )*
 ;
 
-compound_name_java[bool& iscompound_name] { ENTRY_DEBUG } :
+compound_name_java[bool& iscompound_name = BOOL] { ENTRY_DEBUG } :
 
         template_argument_list |
         simple_name_optional_template
@@ -4223,11 +4226,11 @@ implements_list[] { CompleteElement element; ENTRY_DEBUG } :
         super_list
 ;
 
-super_list[] { bool flag = false; ENTRY_DEBUG } :
+super_list[] { ENTRY_DEBUG } :
         (options { greedy = true; } :
             (derive_access)*
 
-            compound_name_java[flag]
+            compound_name_java
         |
             COMMA
         )*
@@ -4487,25 +4490,25 @@ template_argument[] { CompleteElement element; ENTRY_DEBUG } :
         )+
 ;
 
-template_extends_java[] { CompleteElement element; bool iscomplex = false; ENTRY_DEBUG } :
+template_extends_java[] { CompleteElement element; ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
 
             startElement(SEXTENDS);
         }
         EXTENDS
-        compound_name_java[iscomplex]
+        compound_name_java
 ;
 
 
-template_super_java[] { CompleteElement element; bool iscomplex = false; ENTRY_DEBUG } :
+template_super_java[] { CompleteElement element; ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
 
             startElement(SDERIVATION_LIST);
         }
         SUPER
-        compound_name_java[iscomplex]
+        compound_name_java
 ;
 
 
