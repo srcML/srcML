@@ -169,6 +169,7 @@ struct TokenPosition {
 
 // Included in the generated srcMLParser.cpp file after antlr includes
 header "post_include_cpp" {
+
 // Makes sure that a grammar rule forms a complete element
 class CompleteElement {
 public:
@@ -187,6 +188,32 @@ private:
     const int oldsize;
 };
 
+// Makes sure that a grammar rule forms a complete element
+class LightweightElement {
+public:
+    LightweightElement() {
+
+        if (!masterthis->inputState->guessing) {
+
+            size = masterthis->statev.currentState().size();
+        }
+    }
+
+    ~LightweightElement() {
+
+        if (!masterthis->inputState->guessing) {
+
+            while (size < masterthis->statev.currentState().size())
+                masterthis->endElement(masterthis->statev.currentState().callstack.top());
+        }
+    }
+
+    static srcMLParser* masterthis;
+
+private:
+    int size;
+};
+
 #ifdef ENTRY_DEBUG
 class RuleDepth {
 
@@ -201,6 +228,7 @@ private:
 #endif
 
 srcMLParser* CompleteElement::masterthis;
+srcMLParser* LightweightElement::masterthis;
 
 // constructor
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options)
@@ -208,7 +236,7 @@ srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options
     parseoptions(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false)
 {
     // inner class needs pointer to outer object
-    CompleteElement::masterthis = this;
+    LightweightElement::masterthis = CompleteElement::masterthis = this;
 
     // root, single mode
     if (isoption(parseoptions, OPTION_EXPRESSION))
@@ -464,6 +492,7 @@ tokens {
 {
 public:
     friend class CompleteElement;
+    friend class LightweightElement;
 
     bool cpp_zeromode;
     bool skipelse;
@@ -1270,12 +1299,8 @@ yield_statements[] { int t = next_token(); ENTRY_DEBUG } :
         yield_break_statement
 ;
 
-yield_specifier[] { CompleteElement element; ENTRY_DEBUG } :
+yield_specifier[] { LightweightElement element; ENTRY_DEBUG } :
         {
-            // statement
-            startNewMode(MODE_LOCAL);
-
-            // start the function specifier
             startElement(SFUNCTION_SPECIFIER);
         }
         YIELD
@@ -1780,14 +1805,10 @@ terminate[] { ENTRY_DEBUG } :
         terminate_post
 ;
 
-terminate_token[] { CompleteElement element; ENTRY_DEBUG } :
+terminate_token[] { LightweightElement element; ENTRY_DEBUG } :
         {
-            if (inMode(MODE_STATEMENT | MODE_NEST) && !inMode(MODE_DECL)) {
-
-                startNewMode(MODE_LOCAL);
-
+            if (inMode(MODE_STATEMENT | MODE_NEST) && !inMode(MODE_DECL))
                 startElement(SEMPTY);
-            }
         }
         TERMINATE
 ;
@@ -2059,18 +2080,12 @@ statement_part[] { int type_count;  int secondtoken = 0; DECLTYPE decl_type = NO
         colon_marked
 ;
 
-lparen_marked[] { CompleteElement element; ENTRY_DEBUG } :
+lparen_marked[] { LightweightElement element; ENTRY_DEBUG } :
         {
             incParen();
 
-            if (isoption(parseoptions, OPTION_OPERATOR)) {
-
-                // end all elements at end of rule automatically
-                startNewMode(MODE_LOCAL);
-
-                // start the modifier
+            if (isoption(parseoptions, OPTION_OPERATOR))
                 startElement(SOPERATOR);
-            }
         }
         LPAREN
 ;
@@ -2095,30 +2110,18 @@ comma[] { ENTRY_DEBUG }:
 ;
 
 // marking comma operator
-comma_marked[] { CompleteElement element; ENTRY_DEBUG }:
+comma_marked[] { LightweightElement element; ENTRY_DEBUG }:
         {
-            if (isoption(parseoptions, OPTION_OPERATOR) && !inMode(MODE_PARAMETER) && !inMode(MODE_ARGUMENT)) {
-
-                // end all elements at end of rule automatically
-                startNewMode(MODE_LOCAL);
-
-                // start the modifier
+            if (isoption(parseoptions, OPTION_OPERATOR) && !inMode(MODE_PARAMETER) && !inMode(MODE_ARGUMENT))
                 startElement(SOPERATOR);
-            }
         }
         COMMA
 ;
 
-colon_marked[] { CompleteElement element; ENTRY_DEBUG } :
+colon_marked[] { LightweightElement element; ENTRY_DEBUG } :
         {
-            if (isoption(parseoptions, OPTION_OPERATOR)) {
-
-                // end all elements at end of rule automatically
-                startNewMode(MODE_LOCAL);
-
-                // start the modifier
+            if (isoption(parseoptions, OPTION_OPERATOR))
                 startElement(SOPERATOR);
-            }
         }
         COLON
 ;
@@ -2672,35 +2675,23 @@ function_identifier[] { ENTRY_DEBUG } :
         function_pointer_name_grammar eat_optional_macro_call
 ;
 
-qmark_marked[] { CompleteElement element; ENTRY_DEBUG } :
+qmark_marked[] { LightweightElement element; ENTRY_DEBUG } :
         {
-            // end all started elements in this rule
-            startNewMode(MODE_LOCAL);
-
-            // start of the name element
             startElement(SNAME);
         }
         QMARK
 ;
 
-function_identifier_default[] { CompleteElement element; ENTRY_DEBUG } :
+function_identifier_default[] { LightweightElement element; ENTRY_DEBUG } :
         {
-            // end all started elements in this rule
-            startNewMode(MODE_LOCAL);
-
-            // start of the name element
             startElement(SNAME);
         }
         DEFAULT
 ;
 
 // special cases for main
-function_identifier_main[] { CompleteElement element; ENTRY_DEBUG } :
+function_identifier_main[] { LightweightElement element; ENTRY_DEBUG } :
         {
-            // end all started elements in this rule
-            startNewMode(MODE_LOCAL);
-
-            // start of the name element
             startElement(SNAME);
         }
         MAIN
@@ -2869,21 +2860,15 @@ linq_orderby[] { CompleteElement element; ENTRY_DEBUG }:
         (options { greedy = true; } : COMMA complete_linq_expression (options { greedy = true; } : linq_ascending | linq_descending)* )*
 ;
 
-linq_ascending[] { CompleteElement element; ENTRY_DEBUG }:
+linq_ascending[] { LightweightElement element; ENTRY_DEBUG }:
         {
-            // start a mode to end at right bracket with expressions inside
-            startNewMode(MODE_LOCAL);
-
             startElement(SNAME);
         }
         ASCENDING
 ;
 
-linq_descending[] { CompleteElement element; ENTRY_DEBUG }:
+linq_descending[] { LightweightElement element; ENTRY_DEBUG }:
         {
-            // start a mode to end at right bracket with expressions inside
-            startNewMode(MODE_LOCAL);
-
             startElement(SNAME);
         }
         DESCENDING
@@ -3033,14 +3018,10 @@ simple_name_optional_template[bool marked] { CompleteElement element; TokenPosit
 ;
 
 // basic single token name
-identifier[bool marked = false] { CompleteElement element; ENTRY_DEBUG } :
+identifier[bool marked = false] { LightweightElement element; ENTRY_DEBUG } :
         {
-            if (marked) {
-                // local mode that is automatically ended by leaving this function
-                startNewMode(MODE_LOCAL);
-
+            if (marked)
                 startElement(SNAME);
-            }
         }
         (
             NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
@@ -3055,14 +3036,10 @@ identifier[bool marked = false] { CompleteElement element; ENTRY_DEBUG } :
 ;
 
 // most basic name
-simple_identifier[bool marked = false] { CompleteElement element; ENTRY_DEBUG } :
+simple_identifier[bool marked = false] { LightweightElement element; ENTRY_DEBUG } :
         {
-            if (marked) {
-                // local mode that is automatically ended by leaving this function
-                startNewMode(MODE_LOCAL);
-
+            if (marked)
                 startElement(SNAME);
-            }
         }
         NAME
 ;
@@ -3202,12 +3179,8 @@ function_specifier[] { CompleteElement element; ENTRY_DEBUG } :
         simple_name_optional_template[false])
 ;
 
-specifier[] { CompleteElement element; ENTRY_DEBUG } :
+specifier[] { LightweightElement element; ENTRY_DEBUG } :
         {
-            // statement
-            startNewMode(MODE_LOCAL);
-
-            // start the function specifier
             startElement(SFUNCTION_SPECIFIER);
         }
         (
@@ -3667,21 +3640,15 @@ complete_block[] { ENTRY_DEBUG
     }
 }:;
 
-delegate_marked[] { CompleteElement element; ENTRY_DEBUG } :
+delegate_marked[] { LightweightElement element; ENTRY_DEBUG } :
         {
-            // treat catch block as nested block statement
-            startNewMode(MODE_LOCAL);
-
-            // start of the catch statement
             startElement(SNAME);
         }
         DELEGATE
 ;
 
-lambda_marked[] { CompleteElement element; ENTRY_DEBUG } :
+lambda_marked[] { LightweightElement element; ENTRY_DEBUG } :
         {
-            // treat catch block as nested block statement
-            startNewMode(MODE_LOCAL);
         }
         LAMBDA
 ;
@@ -3875,16 +3842,10 @@ pure_expression_block[] { ENTRY_DEBUG } :
 ;
 
 // All possible operators
-general_operators[] { CompleteElement element; ENTRY_DEBUG } :
+general_operators[] { LightweightElement element; ENTRY_DEBUG } :
         {
-            if (isoption(parseoptions, OPTION_OPERATOR)) {
-
-                // end all elements at end of rule automatically
-                startNewMode(MODE_LOCAL);
-
-                // start the modifier
+            if (isoption(parseoptions, OPTION_OPERATOR))
                 startElement(SOPERATOR);
-            }
         }
         (
         OPERATORS | TEMPOPS |
@@ -3897,30 +3858,18 @@ general_operators[] { CompleteElement element; ENTRY_DEBUG } :
         )
 ;
 
-sole_new[] { CompleteElement element; ENTRY_DEBUG } :
+sole_new[] { LightweightElement element; ENTRY_DEBUG } :
         {
-            if (isoption(parseoptions, OPTION_OPERATOR)) {
-
-                // end all elements at end of rule automatically
-                startNewMode(MODE_LOCAL);
-
-                // start the modifier
+            if (isoption(parseoptions, OPTION_OPERATOR))
                 startElement(SOPERATOR);
-            }
         }
         NEW
 ;
 
-sole_destop[] { CompleteElement element; ENTRY_DEBUG } :
+sole_destop[] { LightweightElement element; ENTRY_DEBUG } :
         {
-            if (isoption(parseoptions, OPTION_OPERATOR)) {
-
-                // end all elements at end of rule automatically
-                startNewMode(MODE_LOCAL);
-
-                // start the modifier
+            if (isoption(parseoptions, OPTION_OPERATOR))
                 startElement(SOPERATOR);
-            }
         }
         DESTOP
 ;
@@ -3930,16 +3879,10 @@ general_operators_list[] { ENTRY_DEBUG }:
         DOTDOT | RVALUEREF | QMARK
 ;
 
-rparen_operator[bool markup = true] { CompleteElement element; ENTRY_DEBUG } :
+rparen_operator[bool markup = true] { LightweightElement element; ENTRY_DEBUG } :
         {
-            if (markup && isoption(parseoptions, OPTION_OPERATOR) && !inMode(MODE_END_ONLY_AT_RPAREN)) {
-
-                // end all elements at end of rule automatically
-                startNewMode(MODE_LOCAL);
-
-                // start the modifier
+            if (markup && isoption(parseoptions, OPTION_OPERATOR) && !inMode(MODE_END_ONLY_AT_RPAREN))
                 startElement(SOPERATOR);
-            }
         }
         RPAREN
     ;
@@ -3990,31 +3933,19 @@ rparen[bool markup = true] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
 
 
 // Dot (period) operator
-period[] { CompleteElement element; ENTRY_DEBUG } :
+period[] { LightweightElement element; ENTRY_DEBUG } :
         {
-            if (isoption(parseoptions, OPTION_OPERATOR)) {
-
-                // end all elements at end of rule automatically
-                startNewMode(MODE_LOCAL);
-
-                // start the modifier
+            if (isoption(parseoptions, OPTION_OPERATOR))
                 startElement(SOPERATOR);
-            }
         }
         PERIOD
 ;
 
 // Namespace operator '::'
-dcolon[] { CompleteElement element; ENTRY_DEBUG } :
+dcolon[] { LightweightElement element; ENTRY_DEBUG } :
         {
-            if (isoption(parseoptions, OPTION_OPERATOR)) {
-
-                // end all elements at end of rule automatically
-                startNewMode(MODE_LOCAL);
-
-                // start the modifier
+            if (isoption(parseoptions, OPTION_OPERATOR))
                 startElement(SOPERATOR);
-            }
         }
         DCOLON
 ;
@@ -4170,64 +4101,40 @@ expression_part_default[CALLTYPE type = NOCALL] { guessing_end(); ENTRY_DEBUG } 
 
 // Only start and end of strings are put directly through the parser.
 // The contents of the string are handled as whitespace.
-string_literal[] { CompleteElement element; ENTRY_DEBUG } :
+string_literal[] { LightweightElement element; ENTRY_DEBUG } :
         {
             // only markup strings in literal option
-            if (isoption(parseoptions, OPTION_LITERAL)) {
-
-                // end all elements at end of rule automatically
-                startNewMode(MODE_LOCAL);
-
-                // start the string
+            if (isoption(parseoptions, OPTION_LITERAL))
                 startElement(SSTRING);
-            }
         }
         (STRING_START STRING_END)
 ;
 
 // Only start and end of character are put directly through the parser.
 // The contents of the character are handled as whitespace.
-char_literal[] { CompleteElement element; ENTRY_DEBUG } :
+char_literal[] { LightweightElement element; ENTRY_DEBUG } :
         {
             // only markup characters in literal option
-            if (isoption(parseoptions, OPTION_LITERAL)) {
-
-                // end all elements at end of rule automatically
-                startNewMode(MODE_LOCAL);
-
-                // start the character
+            if (isoption(parseoptions, OPTION_LITERAL))
                 startElement(SCHAR);
-            }
         }
         (CHAR_START CHAR_END)
 ;
 
-literal[] { CompleteElement element; ENTRY_DEBUG } :
+literal[] { LightweightElement element; ENTRY_DEBUG } :
         {
             // only markup literals in literal option
-            if (isoption(parseoptions, OPTION_LITERAL)) {
-
-                // end all elements at end of rule automatically
-                startNewMode(MODE_LOCAL);
-
-                // start the literal value
+            if (isoption(parseoptions, OPTION_LITERAL))
                 startElement(SLITERAL);
-            }
         }
         CONSTANTS
 ;
 
-boolean[] { CompleteElement element; ENTRY_DEBUG } :
+boolean[] { LightweightElement element; ENTRY_DEBUG } :
         {
             // only markup boolean values in literal option
-            if (isoption(parseoptions, OPTION_LITERAL)) {
-
-                // end all elements at end of rule automatically
-                startNewMode(MODE_LOCAL);
-
-                // start the literal value
+            if (isoption(parseoptions, OPTION_LITERAL))
                 startElement(SBOOLEAN);
-            }
         }
         (TRUE | FALSE)
 ;
@@ -4350,13 +4257,10 @@ indexer_parameter_list[] { bool lastwasparam = false; bool foundparam = false; E
         complete_parameter { foundparam = lastwasparam = true; })*
 ;
 
-empty_element[int ele, bool cond] { CompleteElement element; ENTRY_DEBUG } :
+empty_element[int ele, bool cond] { LightweightElement element; ENTRY_DEBUG } :
         {
-            if (cond) {
-                startNewMode(MODE_LOCAL);
-
+            if (cond)
                 startElement(ele);
-            }
         }
 ;
 
@@ -4435,32 +4339,20 @@ parameter_type_count[int type_count] { CompleteElement element; ENTRY_DEBUG } :
         ( options { greedy = true; } : multops | tripledotop | LBRACKET RBRACKET)*
 ;
 
-multops[] { CompleteElement element; ENTRY_DEBUG } :
+multops[] { LightweightElement element; ENTRY_DEBUG } :
         {
             // markup type modifiers if option is on
-            if (isoption(parseoptions, OPTION_MODIFIER)) {
-
-                // end all elements at end of rule automatically
-                startNewMode(MODE_LOCAL);
-
-                // start the modifier
+            if (isoption(parseoptions, OPTION_MODIFIER))
                 startElement(SMODIFIER);
-            }
         }
         (MULTOPS | REFOPS | RVALUEREF | { inLanguage(LANGUAGE_CSHARP) }? QMARK set_bool[qmark, true])
 ;
 
-tripledotop[] { CompleteElement element; ENTRY_DEBUG } :
+tripledotop[] { LightweightElement element; ENTRY_DEBUG } :
         {
             // markup type modifiers if option is on
-            if (isoption(parseoptions, OPTION_MODIFIER)) {
-
-                // end all elements at end of rule automatically
-                startNewMode(MODE_LOCAL);
-
-                // start the modifier
+            if (isoption(parseoptions, OPTION_MODIFIER))
                 startElement(SMODIFIER);
-            }
         }
         DOTDOTDOT
 ;
@@ -5112,11 +5004,8 @@ cpp_condition[bool& markblockzero] { CompleteElement element; ENTRY_DEBUG } :
         complete_expression
 ;
 
-cpp_symbol[] { CompleteElement element; ENTRY_DEBUG } :
+cpp_symbol[] { LightweightElement element; ENTRY_DEBUG } :
         {
-            // end all started elements in this rule
-            startNewMode(MODE_LOCAL);
-
             // start of the name element
             startElement(SNAME);
         }

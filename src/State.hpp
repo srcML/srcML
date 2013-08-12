@@ -42,6 +42,9 @@ class State {
     {}
 
   // callstack methods
+  int size() const {
+    return callstack.size();
+  }
 
   void push(int id) {
     callstack.push(id);
