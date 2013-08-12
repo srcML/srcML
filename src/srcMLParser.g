@@ -1560,7 +1560,7 @@ anonymous_class_super[] { CompleteElement element; ENTRY_DEBUG } :
             // start the super name of an anonymous class
             startElement(SDERIVATION_LIST);
         }
-        compound_name
+        compound_name[false]
 ;
 
 interface_definition[] { ENTRY_DEBUG } :
@@ -1646,7 +1646,7 @@ class_header[] { ENTRY_DEBUG } :
 
 class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 
-        compound_name
+        compound_name[false]
 
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : generic_type_constraint))*
@@ -2198,13 +2198,13 @@ function_pointer_name_base[] { ENTRY_DEBUG bool flag = false; } :
 
         // special case for function pointer names that don't have '*'
         { _tokenSet_12.member(LA(1)) }?
-        compound_name |
+        compound_name[false] |
 
         // special name prefix of namespace or class
         identifier (template_argument_list)* DCOLON function_pointer_name_base |
 
         // typical function pointer name
-        MULTOPS (compound_name)*
+        MULTOPS (compound_name[false])*
 
         // optional array declaration
         (variable_identifier_array_grammar_sub[flag])*
@@ -2696,7 +2696,7 @@ balanced_parentheses[] :
 function_identifier[] { ENTRY_DEBUG } :
 
         // typical name
-        compound_name |
+        compound_name[false] |
 
         function_identifier_main |
 
@@ -3059,7 +3059,7 @@ simple_identifier[] { SingleElement element; ENTRY_DEBUG } :
         NAME
 ;
 
-compound_name[bool index = false] { CompleteElement element; TokenPosition tp; bool iscompound_name = false; ENTRY_DEBUG } :
+compound_name[bool index] { CompleteElement element; TokenPosition tp; bool iscompound_name = false; ENTRY_DEBUG } :
         compound_name_inner[index]
         (options { greedy = true; } : { index }? variable_identifier_array_grammar_sub[iscompound_name])*
 ;
@@ -3247,7 +3247,7 @@ constructor_header[] { ENTRY_DEBUG } :
 
             { inLanguage(LANGUAGE_JAVA_FAMILY) }? template_argument_list
         )*
-        compound_name
+        compound_name[false]
         parameter_list
         {
             setMode(MODE_FUNCTION_TAIL);
@@ -3303,7 +3303,7 @@ destructor_header[] { ENTRY_DEBUG } :
             // TODO:  'void' should be detected in lexer
             { LT(1)->getText() == "void" }? simple_identifier
         )*
-        compound_name
+        compound_name[false]
         parameter_list
         {
             setMode(MODE_FUNCTION_TAIL);
@@ -4446,9 +4446,9 @@ generic_type_constraint[] { CompleteElement element; ENTRY_DEBUG } :
 
             startElement(SWHERE);
         }
-        WHERE compound_name COLON
-        (compound_name | CLASS | STRUCT | NEW LPAREN RPAREN)
-        (options { greedy = true; } : COMMA (compound_name | CLASS | STRUCT | NEW LPAREN RPAREN))*
+        WHERE compound_name[false] COLON
+        (compound_name[false] | CLASS | STRUCT | NEW LPAREN RPAREN)
+        (options { greedy = true; } : COMMA (compound_name[false] | CLASS | STRUCT | NEW LPAREN RPAREN))*
 ;
 
 savenamestack[std::string namestack_save[]] { namestack_save[0].swap(namestack[0]); namestack_save[1].swap(namestack[1]); ENTRY_DEBUG } :;
