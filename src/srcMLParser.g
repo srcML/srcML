@@ -1560,7 +1560,7 @@ anonymous_class_super[] { CompleteElement element; ENTRY_DEBUG } :
             // start the super name of an anonymous class
             startElement(SDERIVATION_LIST);
         }
-        compound_name[true]
+        compound_name
 ;
 
 interface_definition[] { ENTRY_DEBUG } :
@@ -1646,7 +1646,7 @@ class_header[] { ENTRY_DEBUG } :
 
 class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 
-        compound_name[true]
+        compound_name
 
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : generic_type_constraint))*
@@ -2198,13 +2198,13 @@ function_pointer_name_base[] { ENTRY_DEBUG bool flag = false; } :
 
         // special case for function pointer names that don't have '*'
         { _tokenSet_12.member(LA(1)) }?
-        compound_name[true] |
+        compound_name |
 
         // special name prefix of namespace or class
         identifier (template_argument_list)* DCOLON function_pointer_name_base |
 
         // typical function pointer name
-        MULTOPS (compound_name[true])*
+        MULTOPS (compound_name)*
 
         // optional array declaration
         (variable_identifier_array_grammar_sub[flag])*
@@ -2402,7 +2402,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                 // typical type name
                 { !inLanguage(LANGUAGE_CSHARP) || LA(1) != ASYNC }?
                 set_bool[operatorname, false]
-                compound_name[true, true] set_bool[foundpure]
+                compound_name[true] set_bool[foundpure]
                     set_bool[isoperatorfunction, isoperatorfunction || (inLanguage(LANGUAGE_CXX_FAMILY) && 
                              operatorname && type_count == specifier_count)] 
                 set_bool[operatorname, false] |
@@ -2663,7 +2663,7 @@ lead_type_identifier[] { ENTRY_DEBUG } :
 
         // typical type name
         { LA(1) != ASYNC }?
-        compound_name[true, true] |
+        compound_name[true] |
 
         pure_lead_type_identifier
 ;
@@ -2696,7 +2696,7 @@ balanced_parentheses[] :
 function_identifier[] { ENTRY_DEBUG } :
 
         // typical name
-        compound_name[true] |
+        compound_name |
 
         function_identifier_main |
 
@@ -3003,7 +3003,7 @@ complete_linq_expression[] { CompleteElement element; ENTRY_DEBUG } :
 
 // variable name in an expression.  Includes array names, but not function calls
 variable_identifier[] { ENTRY_DEBUG } :
-        compound_name[true, true]
+        compound_name[true]
 ;
 
 // name including template argument list
@@ -3060,8 +3060,8 @@ simple_identifier[bool marked = false] { LightweightElement element; ENTRY_DEBUG
         NAME
 ;
 
-compound_name[bool marked = true, bool index = false] { CompleteElement element; TokenPosition tp; bool iscompound_name = false; ENTRY_DEBUG } :
-        compound_name_inner[marked, index]
+compound_name[bool index = false] { CompleteElement element; TokenPosition tp; bool iscompound_name = false; ENTRY_DEBUG } :
+        compound_name_inner[true, index]
         (options { greedy = true; } : { index }? variable_identifier_array_grammar_sub[iscompound_name])*
 ;
 
@@ -3250,7 +3250,7 @@ constructor_header[] { ENTRY_DEBUG } :
 
             { inLanguage(LANGUAGE_JAVA_FAMILY) }? template_argument_list
         )*
-        compound_name[true]
+        compound_name
         parameter_list
         {
             setMode(MODE_FUNCTION_TAIL);
@@ -3305,7 +3305,7 @@ destructor_header[] { ENTRY_DEBUG } :
 
             { LT(1)->getText() == "void" }? simple_identifier[true]
         )*
-        compound_name[true]
+        compound_name
         parameter_list
         {
             setMode(MODE_FUNCTION_TAIL);
@@ -3770,7 +3770,7 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
 // Variable declaration name and optional initialization
 variable_declaration_nameinit[] { bool isthis = LA(1) == THIS; bool not_csharp = !inLanguage(LANGUAGE_CSHARP);
         ENTRY_DEBUG } :
-        compound_name[true, not_csharp]
+        compound_name[not_csharp]
         {
             // expect a possible initialization
             setMode(MODE_INIT | MODE_EXPECT);
