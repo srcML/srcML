@@ -1,5 +1,5 @@
 /*
-  srcml_clone_archive.c
+  srcml_copy_archive.c
 
   Copyright (C) 2013  SDML (www.sdml.info)
 
@@ -21,7 +21,7 @@
 /*
   Example program of the use of the C API for srcML.
 
-  Clone an archive.
+  Copy an archive.
 */
 
 #include "srcml.h"
@@ -45,12 +45,12 @@ int main(int argc, char* argv[]) {
     srcml_write_open_filename(oarchive, "project2.xml");
 
     /* copy the files from the input archive to the output archive */
-    while (entry = srcml_read_entry_archive(iarchive)) {
+    while (entry = srcml_read_entry(iarchive)) {
 
         /* Translate to srcml and append to the archive */
-        srcml_write_entry_archive(oarchive, entry);
+        srcml_write_entry(oarchive, entry);
 
-        srcml_free_archive_entry(entry);
+        srcml_free_entry(entry);
     }
 
     /* close the archives */
@@ -58,8 +58,8 @@ int main(int argc, char* argv[]) {
     srcml_read_close(iarchive);
 
     /* free the srcML archive data */
-    srcml_write_free(oarchive);
-    srcml_read_free(iarchive);
+    srcml_free_archive(oarchive);
+    srcml_free_archive(iarchive);
 
     return 0;
 }
