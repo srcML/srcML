@@ -30,12 +30,15 @@
 int main(int argc, char* argv[]) {
     int i;
 
+    /*
+      Setup archive
+    */
+
     /* create a new srcml archive structure */
     struct srcml_archive* archive = srcml_write_new_archive();
 
     /* setup some options and attributes */
     srcml_set_options(archive, SRCML_OPTION_LITERAL | SRCML_OPTION_MODIFIER | SRCML_OPTION_POSITION);
-    srcml_set_language(archive, SRCML_LANGUAGE_CXX);
     srcml_set_version(archive, "211");
     srcml_set_tabstop(archive, 4);
 
@@ -51,28 +54,37 @@ int main(int argc, char* argv[]) {
     /* new prefix for further processing */
     srcml_register_namespace(archive, "doc", "http://www.sdml.info/srcML/doc");
 
+    /*
+      Open and write to the archive 
+    */
+
     /* open a srcML archive for output */
     srcml_write_open_filename(archive, "project.xml");
 
-    /* add all the files to the archive */
+    /* add all files on the command line to the archive */
     for (i = 0; i < argc; ++i) {
 
-        /* setup this unit.  may be different for each entry */
+        /* Setup this entry */
         struct srcml_entry* entry = srcml_new_entry(archive);
         srcml_entry_set_language(entry, SRCML_LANGUAGE_C);
         srcml_entry_set_filename(entry, argv[i]);
 
-        /* Translate to srcml and append to the archive */
+        /* Translate the entry to srcML and append to the archive */
         srcml_write_entry_filename(archive, entry, argv[i]);
 
+        /* Done with the entry for now */
         srcml_free_entry(entry);
     }
+
+    /*
+      Finish up
+    */
 
     /* close the srcML archive */
     srcml_write_close(archive);
 
     /* free the srcML archive data */
-    srcml_write_free(archive);
+    srcml_free_archive(archive);
 
     return 0;
 }

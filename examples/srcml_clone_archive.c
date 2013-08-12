@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
     int i;
     struct srcml_archive* iarchive;
     struct srcml_archive* oarchive;
-    const struct srcml_entry* entry;
+    struct srcml_entry* entry;
 
     /* open up an existing archive */
     iarchive = srcml_read_archive();
