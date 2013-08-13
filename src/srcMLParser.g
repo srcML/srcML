@@ -267,6 +267,16 @@ srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options
     // inner class needs pointer to outer object
     LightweightElement::parent = CompleteElement::parent = SingleElement::parent = this;
 
+    // make sure we have the correct token set
+    if (!_tokenSet_1.member(IF))
+        fprintf(stderr, "src2srcml:  Incorrect token set A\n");
+
+    if (!_tokenSet_12.member(INCLUDE))
+        fprintf(stderr, "src2srcml:  Incorrect token set B\n");
+
+    if (!_tokenSet_21.member(CLASS))
+        fprintf(stderr, "src2srcml:  Incorrect token set C\n");
+
     // root, single mode
     if (isoption(parseoptions, OPTION_EXPRESSION))
         // root, single mode to allows for an expression without a statement
@@ -674,7 +684,7 @@ cfg[] { ENTRY_DEBUG } :
         checked_statement | unchecked_statement | lock_statement | fixed_statement | unsafe_statement | yield_statements |
 
         // C/C++ assembly block
-        asm_declaration /* |
+        asm_declaration/* |
 
         { inLanguage(LANGUAGE_JAVA) }?
         annotation*/
