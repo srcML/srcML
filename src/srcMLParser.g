@@ -684,11 +684,7 @@ cfg[] { ENTRY_DEBUG } :
         checked_statement | unchecked_statement | lock_statement | fixed_statement | unsafe_statement | yield_statements |
 
         // C/C++ assembly block
-        asm_declaration/* |
-
-        { inLanguage(LANGUAGE_JAVA) }?
-        annotation*/
-
+        asm_declaration
 ;
 
 /*
@@ -1496,6 +1492,7 @@ class_declaration[] { ENTRY_DEBUG } :
             // start the class definition
             startElement(SCLASS_DECLARATION);
         }
+        ({ inLanguage(LANGUAGE_JAVA) }? annotation)*
         ({ inLanguage(LANGUAGE_CSHARP) }? attribute)*
         (specifier)* CLASS class_header
 ;
@@ -1521,7 +1518,9 @@ class_preprocessing[int token] { ENTRY_DEBUG } :
 ;
 
 class_preamble[] { ENTRY_DEBUG } :
-        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)* (specifier)*
+        ({ inLanguage(LANGUAGE_JAVA) }? annotation)*
+        ({ inLanguage(LANGUAGE_CSHARP) }? attribute)*
+        (specifier)*
 ;
 
 class_definition[] { ENTRY_DEBUG } :
@@ -2414,6 +2413,10 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                 // (template_argument_list)=>
                 template_argument_list set_int[specifier_count, specifier_count + 1] |
 
+                { inLanguage(LANGUAGE_JAVA_FAMILY) }?
+                annotation
+                set_int[attributecount, attributecount + 1] |
+
                 // typical type name
                 { !inLanguage(LANGUAGE_CSHARP) || LA(1) != ASYNC }?
                 set_bool[operatorname, false]
@@ -2432,6 +2435,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                 // type parts that must only occur after other type parts (excluding specifiers)
                 non_lead_type_identifier throw_exception[!foundpure]
             )
+
 
             // another type part
             set_int[type_count, type_count + 1]
@@ -2562,10 +2566,10 @@ set_int[int& name, int value, bool condition = true] { if (condition) name = val
 /* sets the bool to a value */
 set_bool[bool& variable, bool value = true] { variable = value; } :;
 
-/*
 trace[const char*s ] { std::cerr << s << std::endl; } :;
-trace_int[int s] { std::cerr << "HERE " << s << std::endl; } :;
 
+/*
+trace_int[int s] { std::cerr << "HERE " << s << std::endl; } :;
 traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
 marker[] { CompleteElement element; startNewMode(MODE_LOCAL); startElement(SMARKER); } :;
 */
@@ -2661,6 +2665,8 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
 
         { inLanguage(LANGUAGE_CSHARP) && look_past(COMMA) == RBRACKET }?
         LBRACKET (COMMA)* RBRACKET |
+
+        { inLanguage(LANGUAGE_JAVA) }? annotation |
 
         { inLanguage(LANGUAGE_CSHARP) }? attribute |
 
@@ -3232,6 +3238,8 @@ constructor_header[] { ENTRY_DEBUG } :
 
         (options { greedy = true; } :
 
+            { inLanguage(LANGUAGE_JAVA) }? annotation |
+
             { inLanguage(LANGUAGE_CSHARP) }? attribute |
 
             specifier |
@@ -3287,6 +3295,8 @@ destructor_header[] { ENTRY_DEBUG } :
 
         (options { greedy = true; } :
 
+            { inLanguage(LANGUAGE_JAVA) }? annotation |
+
             { inLanguage(LANGUAGE_CSHARP) }? attribute |
 
             specifier |
@@ -3313,7 +3323,7 @@ annotation[] { CompleteElement element; ENTRY_DEBUG } :
 
         function_identifier
 
-        (call_argument_list (complete_expression | COMMMA)* RPAREN| (complete_expression | COMMA)* RPAREN)
+        (call_argument_list (~(RPAREN))* rparen)*
 ;
 
 // call  function call, macro, etc.
