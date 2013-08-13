@@ -1350,13 +1350,13 @@ void src2srcml_archive(srcMLTranslator& translator, const char* path, OPTION_TYP
 
       // special case:  skip directories (in archives)
       if (archiveIsDir(context)) {
-
+/*
         if (!isoption(options, OPTION_QUIET))
             fprintf(stderr, !isoption(options,OPTION_VERBOSE) ? "Skipped '%s':  Directory\n" :
                   "    - %s\tSkipped: Directory\n", unit_filename.c_str());
 
         ++(gpoptions->skipped);
-
+*/
         // explicitly close, since we are skipping it
         archiveReadClose(context);
 
