@@ -2936,11 +2936,8 @@ attribute[] { CompleteElement element; ENTRY_DEBUG } :
         RBRACKET
 ;
 
-attribute_target[] { CompleteElement element; ENTRY_DEBUG } :
+attribute_target[] { SingleElement element; ENTRY_DEBUG } :
         {
-            // start a mode to end at right bracket with expressions inside
-            startNewMode(MODE_LOCAL);
-
             startElement(STARGET);
         }
         (RETURN | EVENT | identifier_list)
