@@ -4654,7 +4654,6 @@ enum_definition_complete[] { CompleteElement element; ENTRY_DEBUG } :
 */
 eof[] :
         {
-            // end all modes
             endAllModes();
         }
         EOF
@@ -4840,9 +4839,7 @@ eol_skip[int directive_token, bool markblockzero] {
 */
 eol[int directive_token, bool markblockzero] {
             // end all preprocessor modes
-            endDownToMode(MODE_PREPROC);
-
-            endCurrentMode(MODE_PREPROC);
+            endDownOverMode(MODE_PREPROC);
 
             endCurrentMode(MODE_PARSE_EOL);
 ENTRY_DEBUG } :
