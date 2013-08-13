@@ -56,7 +56,7 @@ class StateStack {
     return st.top();
   }
 
-  void startNewMode(State::MODE_TYPE m) {
+  void startNewMode(const State::MODE_TYPE& m) {
 
     if (st.size() > MAXSIZE)
       throw Segmentation_Fault();
