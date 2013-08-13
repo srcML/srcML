@@ -103,7 +103,6 @@ public :
     }
 
     virtual bool apply(void* ctx) {
-        fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
 
         xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
         SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
@@ -191,16 +190,11 @@ public :
             }
 
             // put some space between this unit and the next one if compound
-            if (result_type == XML_ELEMENT_NODE && pstate->isarchive && !isoption(options, OPTION_XSLT_ALL)) {
-
+            if (result_type == XML_ELEMENT_NODE && pstate->isarchive && !isoption(options, OPTION_XSLT_ALL))
                 xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
 
-            }
-
             // finished with the result of the transformation
-            fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
             xmlFreeDoc(res);
-            fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
         }
 
         return true;
