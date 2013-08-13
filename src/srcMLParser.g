@@ -2785,37 +2785,29 @@ linq_from[] { CompleteElement element; ENTRY_DEBUG }:
         FROM linq_expression_complete (options { greedy = true; } : linq_in)*
 ;
 
-linq_in[] { CompleteElement element; ENTRY_DEBUG }:
+linq_in[] { SingleElement element; ENTRY_DEBUG }:
         {
-            startNewMode(MODE_LOCAL);
-
             startElement(SIN);
         }
         IN linq_expression_complete
 ;
 
-linq_where[] { CompleteElement element; ENTRY_DEBUG }:
+linq_where[] { SingleElement element; ENTRY_DEBUG }:
         {
-            startNewMode(MODE_LOCAL);
-
             startElement(SWHERE);
         }
         WHERE linq_expression_complete
 ;
 
-linq_select[] { CompleteElement element; ENTRY_DEBUG }:
+linq_select[] { SingleElement element; ENTRY_DEBUG }:
         {
-            startNewMode(MODE_LOCAL);
-
             startElement(SSELECT);
         }
         SELECT linq_expression_complete
 ;
 
-linq_let[] { CompleteElement element; ENTRY_DEBUG }:
+linq_let[] { SingleElement element; ENTRY_DEBUG }:
         {
-            startNewMode(MODE_LOCAL);
-
             startElement(SLET);
         }
         LET linq_expression_complete
@@ -2832,19 +2824,15 @@ linq_group[] { CompleteElement element; ENTRY_DEBUG }:
         (options { greedy = true; } : linq_into)*
 ;
 
-linq_by[] { CompleteElement element; ENTRY_DEBUG }:
+linq_by[] { SingleElement element; ENTRY_DEBUG }:
         {
-            startNewMode(MODE_LOCAL);
-
             startElement(SBY);
         }
         BY linq_expression_complete
 ;
 
-linq_into[] { CompleteElement element; ENTRY_DEBUG }:
+linq_into[] { SingleElement element; ENTRY_DEBUG }:
         {
-            startNewMode(MODE_LOCAL);
-
             startElement(SINTO);
         }
         INTO linq_expression_complete
@@ -2861,19 +2849,15 @@ linq_join[] { CompleteElement element; ENTRY_DEBUG }:
         (options { greedy = true; } : linq_in | linq_on | linq_equals | linq_into)*
 ;
 
-linq_on[] { CompleteElement element; ENTRY_DEBUG }:
+linq_on[] { SingleElement element; ENTRY_DEBUG }:
         {
-            startNewMode(MODE_LOCAL);
-
             startElement(SON);
         }
         ON linq_expression_complete
 ;
 
-linq_equals[] { CompleteElement element; ENTRY_DEBUG }:
+linq_equals[] { SingleElement element; ENTRY_DEBUG }:
         {
-            startNewMode(MODE_LOCAL);
-
             startElement(SEQUALS);
         }
         EQUALS linq_expression_complete
