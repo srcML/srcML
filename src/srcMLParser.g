@@ -2138,7 +2138,7 @@ comma[] { ENTRY_DEBUG }:
             // comma ends the current item in a list
             // or ends the current expression
             if (!inTransparentMode(MODE_PARSE_EOL)
-                && (inTransparentMode(MODE_LIST) || inTransparentMode(MODE_STATEMENT | MODE_NEST))) {
+                && (inTransparentMode(MODE_LIST) || inTransparentMode(MODE_STATEMENT))) {
 
                 // might want to check for !inMode(MODE_INTERNAL_END_CURLY)
                 endDownToFirstMode(MODE_LIST | MODE_STATEMENT);
