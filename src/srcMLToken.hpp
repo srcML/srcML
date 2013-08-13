@@ -38,68 +38,67 @@ class srcMLToken : public antlr::Token {
     friend bool isstart(const antlr::RefToken& token);
     friend bool isempty(const antlr::RefToken& token);
 
- public:
+public:
 
- srcMLToken()
-   : Token(), category(-1) {
-  }
+    srcMLToken()
+        : Token(), category(-1) {
+    }
 
- srcMLToken(int t)
-   : Token(t), category(-1) {
-  }
+    srcMLToken(int t)
+        : Token(t), category(-1) {
+    }
 
- srcMLToken(int t, int cat)
-   : Token(t), category(cat) {
-  }
+    srcMLToken(int t, int cat)
+        : Token(t), category(cat) {
+    }
 
- srcMLToken(int t, std::string& s)
-   : Token(t, s), category(-1) {
-  }
+    srcMLToken(int t, std::string& s)
+        : Token(t, s), category(-1) {
+    }
 
-  static antlr::RefToken factory()
-  {
-    return antlr::RefToken(new srcMLToken());
-  }
+    static antlr::RefToken factory() {
+            return new srcMLToken();
+    }
 
-  virtual void setLine(int l) { line = l; }
-  virtual int getLine() const { return line; }
+    virtual void setLine(int l) { line = l; }
+    virtual int getLine() const { return line; }
 
-  virtual void setColumn(int c) { column = c; }
-  virtual int getColumn() const { return column; }
+    virtual void setColumn(int c) { column = c; }
+    virtual int getColumn() const { return column; }
 
-  // current text of the token
-  virtual std::string getText() const { return text; }
+    // current text of the token
+    virtual std::string getText() const { return text; }
 
-  // set the current text of the token
-  virtual void setText(const std::string& s) { text = s; }
+    // set the current text of the token
+    virtual void setText(const std::string& s) { text = s; }
 
-  // destructor
-  virtual ~srcMLToken() {}
+    // destructor
+    virtual ~srcMLToken() {}
 
-  int category;
-  int line;
-  int column;
-  std::string text;
+    int category;
+    int line;
+    int column;
+    std::string text;
 };
 
 inline srcMLToken* EndTokenFactory(int token) {
 
-  return new srcMLToken(token, ENDTOKEN);
+    return new srcMLToken(token, ENDTOKEN);
 }
 
 inline srcMLToken* EmptyTokenFactory(int token) {
 
-  return new srcMLToken(token, EMPTYTOKEN);
+    return new srcMLToken(token, EMPTYTOKEN);
 }
 
 inline srcMLToken* StartTokenFactory(int token) {
 
-  return new srcMLToken(token, STARTTOKEN);
+    return new srcMLToken(token, STARTTOKEN);
 }
 
 inline bool isstart(const antlr::RefToken& token) {
 
-  return static_cast<const srcMLToken*>(&(*token))->category != ENDTOKEN;
+    return static_cast<const srcMLToken*>(&(*token))->category != ENDTOKEN;
 }
 
 inline bool isempty(const antlr::RefToken& token) {
