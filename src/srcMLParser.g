@@ -694,93 +694,91 @@ cfg[] { ENTRY_DEBUG } :
 
   Basically we have an identifier and we don't know yet whether it starts an expression
   function definition, function declaration, or even a label.
-
-  Important to keep semantic checks, e.g., (constructor)=>, in place.  Most of these rules
-  can start with a name which leaves it ambiguous which to choose.
 */
-statements_non_cfg[] { int secondtoken = 0;
-        int type_count = 0; DECLTYPE decl_type = NONE; CALLTYPE type = NOCALL;
+statements_non_cfg[] { int secondtoken = 0; int type_count = 0;
+        DECLTYPE stmt_type = NONE; CALLTYPE type = NOCALL;
 
-        perform_noncfg_check(decl_type, secondtoken, type_count);
+        // detect the declaration/definition type
+        perform_noncfg_check(stmt_type, secondtoken, type_count);
 
         ENTRY_DEBUG } :
 
         // variable declaration
-        { decl_type == VARIABLE }?
+        { stmt_type == VARIABLE }?
         variable_declaration_statement[type_count] |
 
         // check for declaration of some kind (variable, function, constructor, destructor
-        { decl_type == FUNCTION_DECL }?
+        { stmt_type == FUNCTION_DECL }?
         function_declaration[type_count] |
 
         // function definition
-        { decl_type == FUNCTION }?
+        { stmt_type == FUNCTION }?
         function_definition[type_count] |
 
-        { decl_type == CLASS_DEFN }?
+        { stmt_type == CLASS_DEFN }?
         class_definition |
 
-        { decl_type == INTERFACE_DEFN }?
+        { stmt_type == INTERFACE_DEFN }?
         interface_definition |
 
-        { decl_type == CLASS_DECL }?
+        { stmt_type == CLASS_DECL }?
         class_declaration |
 
-        { decl_type == STRUCT_DEFN }?
+        { stmt_type == STRUCT_DEFN }?
         struct_union_definition[SSTRUCT] |
 
-        { decl_type == STRUCT_DECL }?
+        { stmt_type == STRUCT_DECL }?
         struct_declaration |
 
-        { decl_type == UNION_DEFN }?
+        { stmt_type == UNION_DEFN }?
         struct_union_definition[SUNION] |
 
-        { decl_type == UNION_DECL }?
+        { stmt_type == UNION_DECL }?
         union_declaration |
 
-        { decl_type == ACCESS_REGION }?
+        { stmt_type == ACCESS_REGION }?
         access_specifier_region |
 
         // TODO:  Why no interface declaration?
 
-        { decl_type == GLOBAL_ATTRIBUTE }?
+        { stmt_type == GLOBAL_ATTRIBUTE }?
         attribute |
 
-        { decl_type == PROPERTY_ACCESSOR }?
+        { stmt_type == PROPERTY_ACCESSOR }?
         property_method[SFUNCTION_DEFINITION] |
 
-        { decl_type == PROPERTY_ACCESSOR_DECL }?
+        { stmt_type == PROPERTY_ACCESSOR_DECL }?
         property_method[SFUNCTION_DECLARATION] |
 
         // standalone macro
-        { decl_type == SINGLE_MACRO }?
+        { stmt_type == SINGLE_MACRO }?
         macro_call |
 
         // standalone macro
-        { decl_type == DELEGATE_FUNCTION }?
+        { stmt_type == DELEGATE_FUNCTION }?
         delegate_anonymous |
 
         // constructor
-        { decl_type == CONSTRUCTOR }?
+        { stmt_type == CONSTRUCTOR }?
         constructor_definition |
 
-        { decl_type == CONSTRUCTOR_DECL }?
+        { stmt_type == CONSTRUCTOR_DECL }?
         constructor_declaration |
 
         // destructor
-        { decl_type == DESTRUCTOR }?
+        { stmt_type == DESTRUCTOR }?
         destructor_definition |
 
         // destructor declaration
-        { decl_type == DESTRUCTOR_DECL }?
+        { stmt_type == DESTRUCTOR_DECL }?
         destructor_declaration |
 
         // enum definition as opposed to part of type or declaration
-        { decl_type == ENUM_DECL }?
+        { stmt_type == ENUM_DECL }?
         enum_definition |
 
         // "~" which looked like destructor, but isn't
-        { decl_type == NONE }?
+        { stmt_type == NONE }?
         expression_statement_process
         expression_process
         sole_destop |
@@ -790,7 +788,7 @@ statements_non_cfg[] { int secondtoken = 0;
         label_statement |
 
         // extern block as opposed to enum as part of declaration
-        { decl_type == NONE }?
+        { stmt_type == NONE }?
         extern_definition |
 
         // call
@@ -1115,12 +1113,12 @@ for_initialization_action[] { ENTRY_DEBUG } :
         }
 ;
 
-for_initialization[] { int type_count = 0;  int secondtoken = 0; DECLTYPE decl_type = NONE; ENTRY_DEBUG } :
+for_initialization[] { int type_count = 0;  int secondtoken = 0; DECLTYPE stmt_type = NONE; ENTRY_DEBUG } :
         for_initialization_action
         (
             // explicitly check for a variable declaration since it can easily
             // be confused with an expression
-            { perform_noncfg_check(decl_type, secondtoken, type_count) && decl_type == VARIABLE }?
+            { perform_noncfg_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
             for_initialization_variable_declaration[type_count] |
 
             expression
@@ -1965,7 +1963,7 @@ else_handling[] { ENTRY_DEBUG } :
 ;
 
 // mid-statement
-statement_part[] { int type_count;  int secondtoken = 0; DECLTYPE decl_type = NONE;
+statement_part[] { int type_count;  int secondtoken = 0; DECLTYPE stmt_type = NONE;
                    CALLTYPE type = NOCALL; ENTRY_DEBUG } :
 
         { inMode(MODE_EAT_TYPE) }?
@@ -2000,7 +1998,7 @@ statement_part[] { int type_count;  int secondtoken = 0; DECLTYPE decl_type = NO
 
         // K&R function parameters
         { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY)) && inMode(MODE_FUNCTION_TAIL) &&
-          perform_noncfg_check(decl_type, secondtoken, type_count) && decl_type == VARIABLE }?
+          perform_noncfg_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
         kr_parameter |
 
         // start of argument for return or throw statement
@@ -3504,7 +3502,7 @@ using_namespace_statement[] { ENTRY_DEBUG } :
         namespace_directive
 ;
 
-using_statement[] { int type_count = 0; int secondtoken = 0;  DECLTYPE decl_type = NONE; ENTRY_DEBUG } :
+using_statement[] { int type_count = 0; int secondtoken = 0;  DECLTYPE stmt_type = NONE; ENTRY_DEBUG } :
         {
             // treat try block as nested block statement
             startNewMode(MODE_STATEMENT | MODE_NEST);
@@ -3519,7 +3517,7 @@ using_statement[] { int type_count = 0; int secondtoken = 0;  DECLTYPE decl_type
         (
             // explicitly check for a variable declaration since it can easily
             // be confused with an expression
-            { perform_noncfg_check(decl_type, secondtoken, type_count) && decl_type == VARIABLE }?
+            { perform_noncfg_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
             for_initialization_variable_declaration[type_count] |
 
             {
@@ -3535,7 +3533,7 @@ using_statement[] { int type_count = 0; int secondtoken = 0;  DECLTYPE decl_type
         )
 ;
 
-lock_statement[] { int type_count = 0; int secondtoken = 0;  DECLTYPE decl_type = NONE; ENTRY_DEBUG } :
+lock_statement[] { int type_count = 0; int secondtoken = 0;  DECLTYPE stmt_type = NONE; ENTRY_DEBUG } :
         {
             // treat try block as nested block statement
             startNewMode(MODE_STATEMENT | MODE_NEST);
@@ -3550,7 +3548,7 @@ lock_statement[] { int type_count = 0; int secondtoken = 0;  DECLTYPE decl_type 
         (
             // explicitly check for a variable declaration since it can easily
             // be confused with an expression
-            { perform_noncfg_check(decl_type, secondtoken, type_count) && decl_type == VARIABLE }?
+            { perform_noncfg_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
             for_initialization_variable_declaration[type_count] |
 
             {
@@ -4300,7 +4298,7 @@ argument[] { ENTRY_DEBUG } :
         )
 ;
 
-parameter[] { int type_count = 0; int secondtoken = 0;  DECLTYPE decl_type = NONE; ENTRY_DEBUG } :
+parameter[] { int type_count = 0; int secondtoken = 0;  DECLTYPE stmt_type = NONE; ENTRY_DEBUG } :
         {
             // end parameter correctly
             startNewMode(MODE_PARAMETER);
@@ -4309,7 +4307,7 @@ parameter[] { int type_count = 0; int secondtoken = 0;  DECLTYPE decl_type = NON
             startElement(SPARAMETER);
         }
         (
-            { perform_noncfg_check(decl_type, secondtoken, type_count, true) && decl_type == FUNCTION }?
+            { perform_noncfg_check(stmt_type, secondtoken, type_count, true) && stmt_type == FUNCTION }?
             function_declaration[type_count]
 
             function_identifier // pointer_name_grammar
@@ -4323,10 +4321,10 @@ parameter[] { int type_count = 0; int secondtoken = 0;  DECLTYPE decl_type = NON
                 // start the declaration element
                 startElement(SDECLARATION);
 
-                if (decl_type != VARIABLE)
+                if (stmt_type != VARIABLE)
                     type_count = 1;
             }
-            { decl_type == VARIABLE || LA(1) == DOTDOTDOT}?
+            { stmt_type == VARIABLE || LA(1) == DOTDOTDOT}?
             parameter_type_count[type_count]
             {
                 // expect a name initialization
@@ -4368,7 +4366,7 @@ tripledotop[] { LightweightElement element; ENTRY_DEBUG } :
         DOTDOTDOT
 ;
 
-parameter_type[] { CompleteElement element; int type_count = 0; int secondtoken = 0; DECLTYPE decl_type = NONE; ENTRY_DEBUG } :
+parameter_type[] { CompleteElement element; int type_count = 0; int secondtoken = 0; DECLTYPE stmt_type = NONE; ENTRY_DEBUG } :
         {
             // local mode so start element will end correctly
             startNewMode(MODE_LOCAL);
@@ -4376,7 +4374,7 @@ parameter_type[] { CompleteElement element; int type_count = 0; int secondtoken 
             // start of type
             startElement(STYPE);
         }
-        { perform_noncfg_check(decl_type, secondtoken, type_count) }?
+        { perform_noncfg_check(stmt_type, secondtoken, type_count) }?
         eat_type[type_count]
 ;
 
