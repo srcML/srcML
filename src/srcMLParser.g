@@ -2909,6 +2909,8 @@ linq_descending[] { SingleElement element; ENTRY_DEBUG }:
 
 variable_identifier_array_grammar_sub[bool& iscomplex] { CompleteElement element; ENTRY_DEBUG } :
         {
+            iscomplex = true;
+
             // start a mode to end at right bracket with expressions inside
             if (inLanguage(LANGUAGE_CSHARP))
                 startNewMode(MODE_LOCAL | MODE_TOP | MODE_LIST | MODE_END_AT_COMMA);
@@ -2922,9 +2924,6 @@ variable_identifier_array_grammar_sub[bool& iscomplex] { CompleteElement element
         variable_identifier_array_grammar_sub_contents
 
         RBRACKET
-        {
-            iscomplex = true;
-        }
 ;
 
 
