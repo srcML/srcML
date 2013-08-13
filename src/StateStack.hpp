@@ -73,7 +73,7 @@ class StateStack {
     popMode();
   }
 
-  void endCurrentMode(State::MODE_TYPE m) {
+  void endCurrentMode(const State::MODE_TYPE& m) {
 
     if (st.size() <= 1)
       throw Segmentation_Fault();
@@ -86,7 +86,7 @@ class StateStack {
     popMode();
   }
 
-  void endCurrentModeSafely(State::MODE_TYPE m) {
+  void endCurrentModeSafely(const State::MODE_TYPE& m) {
 
     if (inMode(m))
       endCurrentMode(m);
@@ -107,26 +107,26 @@ class StateStack {
     return !st.empty() ? st.top().getTransparentMode() : 0;
   }
 
-  void setMode(State::MODE_TYPE m) {
+  void setMode(const State::MODE_TYPE& m) {
     if (st.empty())
       throw Segmentation_Fault();
 
     st.top().setMode(m);
   }
 
-  void clearMode(State::MODE_TYPE m) {
+  void clearMode(const State::MODE_TYPE& m) {
     if (st.empty())
       throw Segmentation_Fault();
 
     st.top().clearMode(m);
   }
 
-  void replaceMode(State::MODE_TYPE oldm, State::MODE_TYPE newm) {
+  void replaceMode(const State::MODE_TYPE& oldm, const State::MODE_TYPE& newm) {
     clearMode(oldm);
     setMode(newm);
   }
 
-  void push(State::MODE_TYPE id) {
+  void push(const State::MODE_TYPE& id) {
     if (st.empty())
       throw Segmentation_Fault();
 
@@ -152,17 +152,17 @@ class StateStack {
     return st.empty();
   }
 
-  bool inMode(State::MODE_TYPE m) const {
+  bool inMode(const State::MODE_TYPE& m) const {
 
     return !st.empty() ? st.top().inMode(m) : false;
   }
 
-  bool inPrevMode(State::MODE_TYPE m) const {
+  bool inPrevMode(const State::MODE_TYPE& m) const {
 
     return st.size() > 1 ? st.prev().inMode(m) : false;
   }
 
-  bool inTransparentMode(State::MODE_TYPE m) const {
+  bool inTransparentMode(const State::MODE_TYPE& m) const {
 
     return !st.empty() ? st.top().inTransparentMode(m) : false;
   }
