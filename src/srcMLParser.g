@@ -3038,13 +3038,10 @@ simple_name_optional_template[] { CompleteElement element; TokenPosition tp; ENT
             (template_argument_list)=>
                 template_argument_list |
 
-        {
-           // TODO:  Why is this always a NOP?
-           // if we marked it as a complex name and it isn't, fix
-           if (true)
-               // set the token to NOP
+            {
+               // set the token to NOP since we did not find a template argument list
                tp.setType(SNOP);
-           }
+            }
        )
 ;
 
