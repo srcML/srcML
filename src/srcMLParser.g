@@ -2621,7 +2621,9 @@ type_identifier_count[int& type_count] { ++type_count; ENTRY_DEBUG } :
         type_identifier | MAIN
 ;
 
+/*
 deduct[int& type_count] { --type_count; } :;
+*/
 
 eat_type[int count] { if (count <= 0) return; ENTRY_DEBUG } :
 
@@ -2679,7 +2681,7 @@ pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
 
         // entire enum definition
         { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
-        enum_definition_whole
+        enum_definition_complete
 ;
 
 lead_type_identifier[] { ENTRY_DEBUG } :
@@ -4619,13 +4621,12 @@ enum_definition[] { ENTRY_DEBUG } :
 
 // Complete definition of an enum.  Used for enum's embedded in typedef's where the entire
 // enum must be parsed since it is part of the type.
-enum_definition_whole[] { CompleteElement element; ENTRY_DEBUG } :
+enum_definition_complete[] { CompleteElement element; ENTRY_DEBUG } :
         enum_definition
 
         (variable_identifier)*
 
         // start of enum definition block
-
         {
             startNewMode(MODE_TOP | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_BLOCK | MODE_NEST);
 
@@ -4638,7 +4639,7 @@ enum_definition_whole[] { CompleteElement element; ENTRY_DEBUG } :
 
         // end of enum definition block
         {
-            endDownToMode(MODE_TOP | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_BLOCK | MODE_NEST);
+            endDownToMode(MODE_TOP);
         }
         RCURLY
 ;
