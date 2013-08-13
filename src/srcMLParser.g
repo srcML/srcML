@@ -2374,30 +2374,31 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
 
                         (COLON)*
 
-                        complete_expression set_int[attributecount, attributecount + 1]
+                        //complete_expression
+                        (~(RBRACKET))*
                 RBRACKET
                 set_type[type, GLOBAL_ATTRIBUTE, global]
-                throw_exception[global] |
+                throw_exception[global] 
+                set_int[attributecount, attributecount + 1] |
 
                 { type_count == attributecount }?
                 property_method_name
-                set_type[type, PROPERTY_ACCESSOR, true]
-                /* throw_exception[true] */ |
+                set_type[type, PROPERTY_ACCESSOR, true] |
 
                 { type_count == attributecount + specifier_count }?
-                (CLASS set_type[type, CLASS_DECL, true] |
-                 STRUCT set_type[type, STRUCT_DECL, true] |
-                 UNION set_type[type, UNION_DECL, true] |
-                 INTERFACE  set_type[type, INTERFACE_DECL, true])
-                set_int[type_count, type_count + 1]
+                (CLASS     set_type[type, CLASS_DECL] |
+                 STRUCT    set_type[type, STRUCT_DECL] |
+                 UNION     set_type[type, UNION_DECL] |
+                 INTERFACE set_type[type, INTERFACE_DECL])
                 set_bool[lcurly, LA(1) == LCURLY]
                 (class_header | LCURLY)
-                set_type[type, CLASS_DEFN, type == CLASS_DECL && (LA(1) == LCURLY || lcurly)]
-                set_type[type, STRUCT_DEFN, type == STRUCT_DECL && (LA(1) == LCURLY || lcurly)]
-                set_type[type, UNION_DEFN, type == UNION_DECL && (LA(1) == LCURLY || lcurly)]
+                set_type[type, CLASS_DEFN,     type == CLASS_DECL && (LA(1) == LCURLY || lcurly)]
+                set_type[type, STRUCT_DEFN,    type == STRUCT_DECL && (LA(1) == LCURLY || lcurly)]
+                set_type[type, UNION_DEFN,     type == UNION_DECL && (LA(1) == LCURLY || lcurly)]
                 set_type[type, INTERFACE_DEFN, type == INTERFACE_DECL && (LA(1) == LCURLY || lcurly)]
                 set_type[type, NONE, !(LA(1) == TERMINATE || (LA(1) == LCURLY || lcurly))]
-                throw_exception[type != NONE] |
+                throw_exception[type != NONE] 
+                set_int[type_count, type_count + 1] |
 
                 { inLanguage(LANGUAGE_JAVA_FAMILY) }?
                 // (template_argument_list)=>
