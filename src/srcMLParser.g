@@ -2782,7 +2782,7 @@ linq_from[] { CompleteElement element; ENTRY_DEBUG }:
 
             startElement(SFROM);
         }
-        FROM complete_linq_expression (options { greedy = true; } : linq_in)*
+        FROM linq_expression_complete (options { greedy = true; } : linq_in)*
 ;
 
 linq_in[] { CompleteElement element; ENTRY_DEBUG }:
@@ -2791,7 +2791,7 @@ linq_in[] { CompleteElement element; ENTRY_DEBUG }:
 
             startElement(SIN);
         }
-        IN complete_linq_expression
+        IN linq_expression_complete
 ;
 
 linq_where[] { CompleteElement element; ENTRY_DEBUG }:
@@ -2800,7 +2800,7 @@ linq_where[] { CompleteElement element; ENTRY_DEBUG }:
 
             startElement(SWHERE);
         }
-        WHERE complete_linq_expression
+        WHERE linq_expression_complete
 ;
 
 linq_select[] { CompleteElement element; ENTRY_DEBUG }:
@@ -2809,7 +2809,7 @@ linq_select[] { CompleteElement element; ENTRY_DEBUG }:
 
             startElement(SSELECT);
         }
-        SELECT complete_linq_expression
+        SELECT linq_expression_complete
 ;
 
 linq_let[] { CompleteElement element; ENTRY_DEBUG }:
@@ -2818,7 +2818,7 @@ linq_let[] { CompleteElement element; ENTRY_DEBUG }:
 
             startElement(SLET);
         }
-        LET complete_linq_expression
+        LET linq_expression_complete
 ;
 
 linq_group[] { CompleteElement element; ENTRY_DEBUG }:
@@ -2827,7 +2827,7 @@ linq_group[] { CompleteElement element; ENTRY_DEBUG }:
 
             startElement(SGROUP);
         }
-        GROUP complete_linq_expression
+        GROUP linq_expression_complete
         (options { greedy = true; } : linq_by)*
         (options { greedy = true; } : linq_into)*
 ;
@@ -2838,7 +2838,7 @@ linq_by[] { CompleteElement element; ENTRY_DEBUG }:
 
             startElement(SBY);
         }
-        BY complete_linq_expression
+        BY linq_expression_complete
 ;
 
 linq_into[] { CompleteElement element; ENTRY_DEBUG }:
@@ -2847,7 +2847,7 @@ linq_into[] { CompleteElement element; ENTRY_DEBUG }:
 
             startElement(SINTO);
         }
-        INTO complete_linq_expression
+        INTO linq_expression_complete
 ;
 
 linq_join[] { CompleteElement element; ENTRY_DEBUG }:
@@ -2856,7 +2856,7 @@ linq_join[] { CompleteElement element; ENTRY_DEBUG }:
 
             startElement(SJOIN);
         }
-        JOIN complete_linq_expression
+        JOIN linq_expression_complete
 
         (options { greedy = true; } : linq_in | linq_on | linq_equals | linq_into)*
 ;
@@ -2867,7 +2867,7 @@ linq_on[] { CompleteElement element; ENTRY_DEBUG }:
 
             startElement(SON);
         }
-        ON complete_linq_expression
+        ON linq_expression_complete
 ;
 
 linq_equals[] { CompleteElement element; ENTRY_DEBUG }:
@@ -2876,7 +2876,7 @@ linq_equals[] { CompleteElement element; ENTRY_DEBUG }:
 
             startElement(SEQUALS);
         }
-        EQUALS complete_linq_expression
+        EQUALS linq_expression_complete
 ;
 
 linq_orderby[] { CompleteElement element; ENTRY_DEBUG }:
@@ -2885,11 +2885,11 @@ linq_orderby[] { CompleteElement element; ENTRY_DEBUG }:
 
             startElement(SORDERBY);
         }
-        ORDERBY complete_linq_expression
+        ORDERBY linq_expression_complete
 
         (options { greedy = true; } : linq_ascending | linq_descending)*
 
-        (options { greedy = true; } : COMMA complete_linq_expression (options { greedy = true; } : linq_ascending | linq_descending)* )*
+        (options { greedy = true; } : COMMA linq_expression_complete (options { greedy = true; } : linq_ascending | linq_descending)* )*
 ;
 
 linq_ascending[] { SingleElement element; ENTRY_DEBUG }:
@@ -2994,7 +2994,7 @@ complete_expression[] { CompleteElement element; ENTRY_DEBUG } :
         COLON)*
 ;
 
-complete_linq_expression[] { CompleteElement element; ENTRY_DEBUG } :
+linq_expression_complete[] { CompleteElement element; ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
