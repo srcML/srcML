@@ -171,8 +171,8 @@ void option_request(bool opt) {
 
 void option_filename(const std::string& value) { srcml_request.filename = value; }
 
-//void option_modifier(bool opt);
-//void option_operator(bool opt);
+//void option_modifier(bool opt) {};
+//void option_operator(bool opt) {};
 
 void option_compress(bool opt) {}
 
@@ -375,8 +375,9 @@ int main(int argc, char * argv[]) {
   	return 1;
   }
 
-  std::cout << "Request " << srcml_request.request << "\n";
-  std::cout << "Markup " << srcml_request.markup_options << "\n";
+  // Used just to see the flag results of options
+  //std::cout << "Request " << srcml_request.request << "\n";
+  //std::cout << "Markup " << srcml_request.markup_options << "\n";
 
   return 0;
 }
