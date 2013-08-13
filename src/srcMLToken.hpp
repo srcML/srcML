@@ -57,7 +57,7 @@ public:
     }
 
     static antlr::RefToken factory() {
-            return new srcMLToken();
+        return new srcMLToken();
     }
 
     virtual void setLine(int l) { line = l; }
