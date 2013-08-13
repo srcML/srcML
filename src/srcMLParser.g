@@ -3927,7 +3927,7 @@ rparen[bool markup = true] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
                 if (inMode(MODE_CONDITION) && inPrevMode(MODE_IF)) {
 
                     // end the condition
-                    endDownOverMode(MODE_CONDITION);
+                    endCurrentMode(MODE_CONDITION);
 
                     // then part of the if statement (after the condition)
                     startNewMode(MODE_STATEMENT | MODE_NEST | MODE_THEN);
