@@ -2138,16 +2138,14 @@ comma[] { ENTRY_DEBUG }:
             // comma ends the current item in a list
             // or ends the current expression
             if (!inTransparentMode(MODE_PARSE_EOL)
-                && (inTransparentMode(MODE_LIST) || inTransparentMode(MODE_STATEMENT))) {
+                && (inTransparentMode(MODE_LIST) || inTransparentMode(MODE_STATEMENT)))
 
                 // might want to check for !inMode(MODE_INTERNAL_END_CURLY)
                 endDownToFirstMode(MODE_LIST | MODE_STATEMENT);
-            }
 
             // comma in a variable initialization end init of current variable
-            if (inMode(MODE_IN_INIT)) {
+            if (inMode(MODE_IN_INIT))
                 endCurrentMode(MODE_IN_INIT);
-            }
         }
         comma_marked
 ;
@@ -2171,8 +2169,8 @@ colon_marked[] { LightweightElement element; ENTRY_DEBUG } :
 
 colon[] { ENTRY_DEBUG } :
         {
+            // colon ends the current item in a list
             if (inTransparentMode(MODE_TOP_SECTION))
-                // colon ends the current item in a list
                 endDownToMode(MODE_TOP_SECTION);
         }
         COLON
@@ -2231,7 +2229,7 @@ function_header[int type_count] { ENTRY_DEBUG } :
 ;
 
 function_tail[] { ENTRY_DEBUG } :
-        // at most only one throwlist expected.  0-many is more efficient
+
         (options { greedy = true; } :
 
             /* order is important */
