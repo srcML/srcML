@@ -2367,13 +2367,13 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                 set_bool[foundpure, foundpure || LA(1) == CONST] specifier
                 set_int[specifier_count, specifier_count + 1]
                 set_type[type, ACCESS_REGION,
-                         inLanguage(LANGUAGE_CXX) && LA(1) == COLON && (token == PUBLIC || token == PRIVATE || token == PROTECTED)]
+                        inLanguage(LANGUAGE_CXX) && LA(1) == COLON && (token == PUBLIC || token == PRIVATE || token == PROTECTED)]
                 throw_exception[type == ACCESS_REGION] |
 
                 { inLanguage(LANGUAGE_CSHARP) }?
                 set_bool[global, false]
                 LBRACKET
-                       (COMMA)*
+                        (COMMA)*
 
                         (RETURN | EVENT | set_bool[global, check_global()] identifier)?
 
@@ -2391,15 +2391,15 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                 set_type[type, PROPERTY_ACCESSOR, true] |
 
                 { type_count == attributecount + specifier_count }?
-                (CLASS     set_type[type, CLASS_DECL] |
+                (CLASS     set_type[type, CLASS_DECL]  |
                  STRUCT    set_type[type, STRUCT_DECL] |
-                 UNION     set_type[type, UNION_DECL] |
+                 UNION     set_type[type, UNION_DECL]  |
                  INTERFACE set_type[type, INTERFACE_DECL])
                 set_bool[lcurly, LA(1) == LCURLY]
                 (class_header | LCURLY)
-                set_type[type, CLASS_DEFN,     type == CLASS_DECL && (LA(1) == LCURLY || lcurly)]
-                set_type[type, STRUCT_DEFN,    type == STRUCT_DECL && (LA(1) == LCURLY || lcurly)]
-                set_type[type, UNION_DEFN,     type == UNION_DECL && (LA(1) == LCURLY || lcurly)]
+                set_type[type, CLASS_DEFN,     type == CLASS_DECL     && (LA(1) == LCURLY || lcurly)]
+                set_type[type, STRUCT_DEFN,    type == STRUCT_DECL    && (LA(1) == LCURLY || lcurly)]
+                set_type[type, UNION_DEFN,     type == UNION_DECL     && (LA(1) == LCURLY || lcurly)]
                 set_type[type, INTERFACE_DEFN, type == INTERFACE_DECL && (LA(1) == LCURLY || lcurly)]
                 set_type[type, NONE, !(LA(1) == TERMINATE || (LA(1) == LCURLY || lcurly))]
                 throw_exception[type != NONE] 
@@ -2431,7 +2431,6 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
                 // type parts that must only occur after other type parts (excluding specifiers)
                 non_lead_type_identifier throw_exception[!foundpure]
             )
-
 
             // another type part
             set_int[type_count, type_count + 1]
