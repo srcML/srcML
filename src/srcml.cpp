@@ -115,8 +115,8 @@ const char* SRCML2SRC_FOOTER = "Examples:\
 
 struct srcml_request_t {
 	int request;
-    int markup_options;
-    std::string filename;
+  int markup_options;
+  std::string filename;
 };
 
 srcml_request_t srcml_request = { 0 };
@@ -133,90 +133,6 @@ const int SRCML_OPTION_NAMESPACES = 16;
 const int SRCML_REQUEST_LONGINFO = 1;
 const int SRCML_REQUEST_INFO = 2;
 const int SRCML_REQUEST_INFO_FILENAME = 4;
-
-/* DREW:  Most of the no parameter options could be recorded this way */
-
-template <int option>
-void option_markup(bool opt) {
-
-    srcml_request.markup_options |= opt;
-}
-
-template <int request>
-void option_request(bool opt) {
-
-    srcml_request.request |= opt;
-}
-
-void option_filename(const std::string& value) { srcml_request.filename = value; }
-
-/*
-void option_modifier(bool opt);
-void option_operator(bool opt);
-*/
-
-void option_compress(bool opt);
-void option_help(const std::string& opt);
-void option_no_namespace_decl(bool opt);
-void option_no_xml_dexlaration(bool opt);
-void option_output(const std::string& opt);
-void option_quiet(bool opt);
-void option_src_encoding(const std::string& opt);
-void option_verbose(bool opt);
-void option_version(bool opt);
-
-void option_archive(bool opt);
-void option_debug(bool opt);
-void option_encoding(const std::string& opt);
-void option_expression(bool opt);
-void option_files_from(const std::string& opt);
-void option_interactive(bool opt);
-void option_language(const std::string& opt);
-void option_register_ext(const std::vector<std::string>& opt);
-
-void option_xml(bool opt);
-
-void option_cpp(bool opt);
-void option_cpp_markup_else(bool opt);
-void option_cpp_markup_if0(bool opt);
-void option_cpp_text_else(bool opt);
-void option_cpp_text_if0(bool opt);
-
-void option_position(bool opt);
-void option_tabs(const int opt);
-
-void option_directory(const std::string& opt);
-void option_src_versions(const std::string& opt);
-
-void option_info(bool opt);
-void option_list(bool opt);
-void option_longinfo(bool opt);
-void option_prefix(const std::string& opt);
-void option_units(bool opt);
-void option_show_directory(bool opt);
-void option_show_encoding(bool opt);
-void option_show_filename(bool opt);
-void option_show_language(bool opt);
-void option_show_src_version(bool opt);
-
-void option_xmlns_uri(const std::string& opt);
-void option_xmlns_prefix(const std::vector<std::string>& opt);
-
-void option_apply_root(bool opt);
-void option_relaxng(const std::string& opt);
-void option_xpath(const std::string& opt);
-void option_xpathparam(const std::vector<std::string>& opt);
-void option_xslt(const std::string& opt);
-
-void option_to_dir(bool opt);
-void option_unit(const int opt);
-
-void positional_args(const std::string& opt);
-
-/* Function used to check that 'opt1' and 'opt2' are not specified
-   at the same time. (FROM BOOST LIBRARY EXAMPLES)*/
-std::pair<std::string, std::string> custom_parser(const std::string& s);
-void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, const char* opt2);
 
 // Define Program Options
 prog_opts::options_description general("General Options");
@@ -237,6 +153,108 @@ prog_opts::options_description all("All Options");
 
 // Positional Args
 prog_opts::positional_options_description input_file;
+
+/* DREW:  Most of the no parameter options could be recorded this way */
+
+template <int option>
+void option_markup(bool opt) {
+
+	if (opt)
+  	srcml_request.markup_options |= option;
+}
+
+template <int request>
+void option_request(bool opt) {
+	if (opt)
+  	srcml_request.request |= request;
+}
+
+void option_filename(const std::string& value) { srcml_request.filename = value; }
+
+//void option_modifier(bool opt);
+//void option_operator(bool opt);
+
+void option_compress(bool opt) {}
+
+void option_help(const std::string& help_opt) {
+	if (help_opt == "") {
+		//MIGHT NEED A NEW HEADER AND FOOTER FOR THE GENERAL OPTION
+		std::cout << SRCML_HEADER << "\n";
+		std::cout << general << "\n";
+		std::cout << SRCML_FOOTER << "\n";
+	}
+	else if (help_opt == "src2srcml") {
+		std::cout << SRC2SRCML_HEADER << "\n";
+		std::cout << src2srcml << "\n";
+		std::cout << SRC2SRCML_FOOTER << "\n";
+	}
+	else if (help_opt == "srcml2src") {
+		std::cout << SRCML2SRC_HEADER << "\n";
+		std::cout << srcml2src << "\n";
+		std::cout << SRCML2SRC_FOOTER << "\n";
+	}
+	else {
+		std::cout << "Unknown module '" 
+    	<< help_opt << "' in the --help-module option\n";
+    	exit(1);
+	}
+}
+
+void option_no_namespace_decl(bool opt) {}
+void option_no_xml_dexlaration(bool opt) {}
+void option_output(const std::string& opt) {}
+void option_quiet(bool opt) {}
+void option_src_encoding(const std::string& opt) {}
+void option_verbose(bool opt) {}
+void option_version(bool opt) {}
+void option_archive(bool opt) {}
+void option_debug(bool opt) {}
+void option_encoding(const std::string& opt) {}
+void option_expression(bool opt) {}
+void option_files_from(const std::string& opt) {}
+void option_interactive(bool opt) {}
+void option_language(const std::string& opt) {}
+void option_register_ext(const std::vector<std::string>& opt) {}
+void option_xml(bool opt) {}
+void option_cpp(bool opt) {}
+void option_cpp_markup_else(bool opt) {}
+void option_cpp_markup_if0(bool opt) {}
+void option_cpp_text_else(bool opt) {}
+void option_cpp_text_if0(bool opt) {}
+void option_position(bool opt) {}
+void option_tabs(const int opt) {}
+//void option_literal(bool opt) {}
+void option_modifier(bool opt) {}
+void option_operator(bool opt) {}
+void option_directory(const std::string& opt) {}
+void option_src_versions(const std::string& opt) {}
+void option_info(bool opt) {}
+void option_list(bool opt) {}
+void option_longinfo(bool opt) {}
+void option_prefix(const std::string& opt) {}
+void option_units(bool opt) {}
+void option_show_directory(bool opt) {}
+void option_show_encoding(bool opt) {}
+void option_show_filename(bool opt) {}
+void option_show_language(bool opt) {}
+void option_show_src_version(bool opt) {}
+void option_xmlns_uri(const std::string& opt) {}
+void option_xmlns_prefix(const std::vector<std::string>& opt) {}
+void option_apply_root(bool opt) {}
+void option_relaxng(const std::string& opt) {}
+void option_xpath(const std::string& opt) {}
+void option_xpathparam(const std::vector<std::string>& opt) {}
+void option_xslt(const std::string& opt) {}
+void option_to_dir(bool opt) {}
+void option_unit(const int opt) {}
+void positional_args(const std::string& opt) {}
+
+/* Function used to check that 'opt1' and 'opt2' are not specified
+   at the same time. (FROM BOOST LIBRARY EXAMPLES)*/
+void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, const char* opt2);
+
+// Custom Parser Definition
+std::pair<std::string, std::string> custom_parser(const std::string& s);
 
 int main(int argc, char * argv[]) {
 	try {
@@ -281,9 +299,9 @@ int main(int argc, char * argv[]) {
 			;
 
 		markup.add_options()
-                        ("literal", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_LITERAL>), "markup literal values, namespace 'http://www.sdml.info/srcML/literal'")
-                        ("modifier", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_MODIFIER>), "markup type modifiers, namespace 'http://www.sdml.info/srcML/modifier'")
-                        ("operator", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_OPERATOR>), "markup operators, namespace 'http://www.sdml.info/srcML/operator'")
+      ("literal", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_LITERAL>), "markup literal values, namespace 'http://www.sdml.info/srcML/literal'")
+      ("modifier", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_MODIFIER>), "markup type modifiers, namespace 'http://www.sdml.info/srcML/modifier'")
+      ("operator", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_OPERATOR>), "markup operators, namespace 'http://www.sdml.info/srcML/operator'")
 			;
 
 		src2srcml_metadata.add_options()
@@ -357,6 +375,9 @@ int main(int argc, char * argv[]) {
   	return 1;
   }
 
+  std::cout << "Request " << srcml_request.request << "\n";
+  std::cout << "Markup " << srcml_request.markup_options << "\n";
+
   return 0;
 }
 
@@ -374,225 +395,4 @@ void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, c
 		throw std::logic_error(std::string("Conflicting options '")
 			+ opt1 + "' and '" + opt2 + "'.");
 	} 
-}
-
-void option_compress(bool opt) {
-	
-}
-
-void option_help(const std::string& help_opt) {
-	if (help_opt == "") {
-		//MIGHT NEED A NEW HEADER AND FOOTER FOR THE GENERAL OPTION
-		std::cout << SRCML_HEADER << "\n";
-		std::cout << general << "\n";
-		std::cout << SRCML_FOOTER << "\n";
-	}
-	else if (help_opt == "src2srcml") {
-		std::cout << SRC2SRCML_HEADER << "\n";
-		std::cout << src2srcml << "\n";
-		std::cout << SRC2SRCML_FOOTER << "\n";
-	}
-	else if (help_opt == "srcml2src") {
-		std::cout << SRCML2SRC_HEADER << "\n";
-		std::cout << srcml2src << "\n";
-		std::cout << SRCML2SRC_FOOTER << "\n";
-	}
-	else {
-		std::cout << "Unknown module '" 
-    	<< help_opt << "' in the --help-module option\n";
-    	exit(1);
-	}
-}
-
-void option_no_namespace_decl(bool opt) {
-
-}
-
-void option_no_xml_dexlaration(bool opt) {
-
-}
-
-void option_output(const std::string& opt) {
-
-}
-
-void option_quiet(bool opt) {
-
-}
-
-void option_src_encoding(const std::string& opt) {
-
-}
-
-void option_verbose(bool opt) {
-
-}
-
-void option_version(bool opt) {
-
-}
-
-void option_archive(bool opt) {
-
-}
-
-void option_debug(bool opt) {
-
-}
-
-void option_encoding(const std::string& opt) {
-
-}
-
-void option_expression(bool opt) {
-
-}
-
-void option_files_from(const std::string& opt) {
-
-}
-
-void option_interactive(bool opt) {
-
-}
-
-void option_language(const std::string& opt) {
-
-}
-
-void option_register_ext(const std::vector<std::string>& opt) {
-
-}
-
-void option_xml(bool opt) {
-
-}
-
-void option_cpp(bool opt) {
-
-}
-
-void option_cpp_markup_else(bool opt) {
-
-}
-
-void option_cpp_markup_if0(bool opt) {
-
-}
-
-void option_cpp_text_else(bool opt) {
-
-}
-
-void option_cpp_text_if0(bool opt) {
-
-}
-
-void option_position(bool opt) {
-
-}
-
-void option_tabs(const int opt) {
-	
-}
-
-/*
-void option_literal(bool opt) {
-
-}
-*/
-void option_modifier(bool opt) {
-
-}
-
-void option_operator(bool opt) {
-
-}
-
-void option_directory(const std::string& opt) {
-
-}
-
-void option_src_versions(const std::string& opt) {
-
-}
-
-void option_info(bool opt) {
-
-}
-
-void option_list(bool opt) {
-
-}
-
-void option_longinfo(bool opt) {
-
-}
-
-void option_prefix(const std::string& opt) {
-
-}
-
-void option_units(bool opt) {
-
-}
-
-void option_show_directory(bool opt) {
-
-}
-
-void option_show_encoding(bool opt) {
-
-}
-
-void option_show_filename(bool opt) {
-
-}
-
-void option_show_language(bool opt) {
-
-}
-
-void option_show_src_version(bool opt) {
-
-}
-
-void option_xmlns_uri(const std::string& opt) {
-
-}
-
-void option_xmlns_prefix(const std::vector<std::string>& opt) {
-
-}
-
-void option_apply_root(bool opt) {
-
-}
-
-void option_relaxng(const std::string& opt) {
-
-}
-
-void option_xpath(const std::string& opt) {
-
-}
-
-void option_xpathparam(const std::vector<std::string>& opt) {
-
-}
-
-void option_xslt(const std::string& opt) {
-
-}
-
-void option_to_dir(bool opt) {
-
-}
-
-void option_unit(const int opt) {
-
-}
-
-void positional_args(const std::string& opt) {
-	
 }
