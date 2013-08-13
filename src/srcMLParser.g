@@ -1772,10 +1772,10 @@ block_end[] { ENTRY_DEBUG } :
 
             // some statements end with the block
             if (inMode(MODE_END_AT_BLOCK)) {
-                endCurrentMode(MODE_LOCAL);
+                endCurrentMode();
 
                 if (inTransparentMode(MODE_TEMPLATE))
-                    endCurrentMode(MODE_LOCAL);
+                    endCurrentMode();
             }
 
             // looking for a terminate (';')
@@ -1783,11 +1783,11 @@ block_end[] { ENTRY_DEBUG } :
             // some statements end with the block if there is no terminate
             if (inMode(MODE_END_AT_BLOCK_NO_TERMINATE) && LA(1) != TERMINATE) {
                 endstatement = true;
-                endCurrentMode(MODE_LOCAL);
+                endCurrentMode();
             }
 
             if (inTransparentMode(MODE_ENUM) && inLanguage(LANGUAGE_CSHARP))
-                endCurrentMode(MODE_LOCAL);
+                endCurrentMode();
 
             if (!(anonymous_class) && (!(inMode(MODE_CLASS) || inTransparentMode(MODE_ENUM))
                                        || (inMode(MODE_CLASS) || inTransparentMode(MODE_ENUM)) && endstatement))
@@ -2590,7 +2590,7 @@ update_typecount[State::MODE_TYPE mode] {} :
             decTypeCount();
 
             if (getTypeCount() <= 0) {
-                endCurrentMode(MODE_LOCAL);
+                endCurrentMode();
                 setMode(mode);
             }
         }
@@ -3780,8 +3780,8 @@ variable_declaration_nameinit[] { bool isthis = LA(1) == THIS;
 
                 match(RBRACKET);
 
-                endCurrentMode(MODE_LOCAL);
-                endCurrentMode(MODE_LOCAL);
+                endCurrentMode();
+                endCurrentMode();
             }
         }
 ;
@@ -4240,7 +4240,7 @@ parameter_list[] { CompleteElement element; bool lastwasparam = false; bool foun
         {
             // We are in a parameter list.  Need to make sure we end it down to the start of the parameter list
             if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
-                endCurrentMode(MODE_LOCAL);
+                endCurrentMode();
         } comma |
         complete_parameter { foundparam = lastwasparam = true; })* empty_element[SPARAMETER, !lastwasparam && foundparam] rparen[false]
 ;
@@ -4261,7 +4261,7 @@ indexer_parameter_list[] { bool lastwasparam = false; bool foundparam = false; E
         {
             // We are in a parameter list.  Need to make sure we end it down to the start of the parameter list
 //            if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
-//                endCurrentMode(MODE_LOCAL);
+//                endCurrentMode();
         } comma |
 
         complete_parameter { foundparam = lastwasparam = true; })*
@@ -4695,7 +4695,7 @@ preprocessor[] {
         (
         INCLUDE
         {
-            endCurrentMode(MODE_LOCAL);
+            endCurrentMode();
 
             tp.setType(SCPP_INCLUDE);
         }
@@ -4703,7 +4703,7 @@ preprocessor[] {
 
         DEFINE
         {
-            endCurrentMode(MODE_LOCAL);
+            endCurrentMode();
 
             tp.setType(SCPP_DEFINE);
         }
@@ -4711,7 +4711,7 @@ preprocessor[] {
 
         IFNDEF
         {
-            endCurrentMode(MODE_LOCAL);
+            endCurrentMode();
 
             tp.setType(SCPP_IFNDEF);
         }
@@ -4719,7 +4719,7 @@ preprocessor[] {
 
         UNDEF
         {
-            endCurrentMode(MODE_LOCAL);
+            endCurrentMode();
 
             tp.setType(SCPP_UNDEF);
         }
@@ -4728,7 +4728,7 @@ preprocessor[] {
         IF
             { markblockzero = false; }
         {
-            endCurrentMode(MODE_LOCAL);
+            endCurrentMode();
 
             tp.setType(SCPP_IF);
         }
@@ -4736,7 +4736,7 @@ preprocessor[] {
 
         ELIF
         {
-            endCurrentMode(MODE_LOCAL);
+            endCurrentMode();
 
             tp.setType(SCPP_ELIF);
         }
@@ -4744,21 +4744,21 @@ preprocessor[] {
 
         ELSE
         {
-            endCurrentMode(MODE_LOCAL);
+            endCurrentMode();
 
             tp.setType(SCPP_ELSE);
         } |
 
         ENDIF
         {
-            endCurrentMode(MODE_LOCAL);
+            endCurrentMode();
 
             tp.setType(SCPP_ENDIF);
         } |
 
         IFDEF
         {
-            endCurrentMode(MODE_LOCAL);
+            endCurrentMode();
 
             tp.setType(SCPP_IFDEF);
         }
@@ -4766,7 +4766,7 @@ preprocessor[] {
 
         LINE
         {
-            endCurrentMode(MODE_LOCAL);
+            endCurrentMode();
 
             tp.setType(SCPP_LINE);
         }
@@ -4776,35 +4776,35 @@ preprocessor[] {
 
         PRAGMA
         {
-            endCurrentMode(MODE_LOCAL);
+            endCurrentMode();
 
             tp.setType(SCPP_PRAGMA);
         } |
 
         ERRORPREC
         {
-            endCurrentMode(MODE_LOCAL);
+            endCurrentMode();
 
             tp.setType(SCPP_ERROR);
         } |
 
         NAME
         {
-            endCurrentMode(MODE_LOCAL);
+            endCurrentMode();
 
             tp.setType(SCPP_ERROR);
         } |
 
         REGION
         {
-            endCurrentMode(MODE_LOCAL);
+            endCurrentMode();
 
             tp.setType(SCPP_REGION);
         } |
 
         ENDREGION
         {
-            endCurrentMode(MODE_LOCAL);
+            endCurrentMode();
 
             tp.setType(SCPP_ENDREGION);
         } |
