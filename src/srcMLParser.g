@@ -2528,7 +2528,7 @@ noncfg_check[int& token,      /* second token, after name (always returned) */
 
 // C# global attribute target
 check_global[] returns [bool flag] {
-        std::string s = LT(1)->getText();
+        const std::string& s = LT(1)->getText();
 
         flag = s == "module" || s == "assembly";
 }:;
