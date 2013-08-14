@@ -5020,10 +5020,8 @@ cpp_symbol_optional[] { ENTRY_DEBUG } :
         (options { greedy = true; } : cpp_symbol)*
 ;
 
-cpp_filename[] { CompleteElement element; ENTRY_DEBUG } :
+cpp_filename[] { SingleElement element; ENTRY_DEBUG } :
         {
-            startNewMode(MODE_PREPROC);
-
             startElement(SCPP_FILENAME);
         }
         (string_literal | char_literal | TEMPOPS (~(TEMPOPE | EOL))* TEMPOPE)
