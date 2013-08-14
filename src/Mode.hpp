@@ -275,14 +275,14 @@ protected:
         return statev.inTransparentMode(m);
     }
 
-    // End elements down to a specific mode
-    void endDownToMode(const State::MODE_TYPE& ele, const State::MODE_TYPE& stopmode = 0ULL);
+    // End elements down to a mode
+    void endDownToMode(const State::MODE_TYPE& ele);
 
-    void endDownToFirstMode(const State::MODE_TYPE& ele, const State::MODE_TYPE& stopmode = 0ULL);
+    // End elements down to one of a set of modes
+    void endDownToModeSet(const State::MODE_TYPE& ele);
 
-    // End elements until we skip over a specific mode
-    void endDownOverMode(const State::MODE_TYPE& ele, const State::MODE_TYPE& stopmode = 0ULL);
-
+    // End elements down to a mode, then consume it
+    void endDownOverMode(const State::MODE_TYPE& ele);
 };
 
 #endif

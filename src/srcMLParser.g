@@ -1772,7 +1772,7 @@ block_end[] { ENTRY_DEBUG } :
             // special case when ending then of if statement
 
             // end down to either a block or top section, or to an if, whichever is reached first
-            endDownToFirstMode(MODE_BLOCK | MODE_TOP | MODE_IF | MODE_ELSE | MODE_TRY | MODE_ANONYMOUS);
+            endDownToModeSet(MODE_BLOCK | MODE_TOP | MODE_IF | MODE_ELSE | MODE_TRY | MODE_ANONYMOUS);
 
             bool endstatement = inMode(MODE_END_AT_BLOCK);
             bool anonymous_class = inMode(MODE_CLASS) && inMode(MODE_END_AT_BLOCK);
@@ -1859,7 +1859,7 @@ terminate_pre[] { ENTRY_DEBUG } :
         {
             // end any elements inside of the statement
             if (!inMode(MODE_TOP | MODE_STATEMENT | MODE_NEST))
-                endDownToFirstMode(MODE_STATEMENT | MODE_EXPRESSION_BLOCK |
+                endDownToModeSet(MODE_STATEMENT | MODE_EXPRESSION_BLOCK |
                                    MODE_INTERNAL_END_CURLY | MODE_INTERNAL_END_PAREN);
         }
 ;
@@ -1873,7 +1873,7 @@ terminate_post[] { ENTRY_DEBUG } :
                 !inMode(MODE_INTERNAL_END_CURLY) && !inMode(MODE_INTERNAL_END_PAREN)) {
 
                 // end down to either a block or top section, or to an if or else
-                endDownToFirstMode(MODE_TOP | MODE_IF | MODE_ELSE);
+                endDownToModeSet(MODE_TOP | MODE_IF | MODE_ELSE);
             }
         }
         else_handling
@@ -2141,7 +2141,7 @@ comma[] { ENTRY_DEBUG }:
                 && (inTransparentMode(MODE_LIST) || inTransparentMode(MODE_STATEMENT)))
 
                 // might want to check for !inMode(MODE_INTERNAL_END_CURLY)
-                endDownToFirstMode(MODE_LIST | MODE_STATEMENT);
+                endDownToModeSet(MODE_LIST | MODE_STATEMENT);
 
             // comma in a variable initialization end init of current variable
             if (inMode(MODE_IN_INIT))
@@ -3774,7 +3774,7 @@ variable_declaration_nameinit[] { bool isthis = LA(1) == THIS;
 
                 indexer_parameter_list();
 
-                endDownToFirstMode(MODE_LIST);
+                endDownToModeSet(MODE_LIST);
 
                 match(RBRACKET);
 
@@ -3903,11 +3903,11 @@ rparen[bool markup = true] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
             if (isempty) {
 
                 // additional right parentheses indicates end of non-list modes
-                endDownToFirstMode(MODE_LIST | MODE_PREPROC | MODE_END_ONLY_AT_RPAREN, MODE_ONLY_END_TERMINATE);
+                endDownToModeSet(MODE_LIST | MODE_PREPROC | MODE_END_ONLY_AT_RPAREN | MODE_ONLY_END_TERMINATE);
 
                 // special case:  Get to here, in for-initalization.  Need an extra end mode
                 if (inMode(MODE_VARIABLE_NAME) && inTransparentMode(MODE_FOR_CONDITION))
-                    endDownToFirstMode(MODE_FOR_CONDITION);
+                    endDownToModeSet(MODE_FOR_CONDITION);
 
                 // don't markup since not a normal operator
                 markup = false;
@@ -4063,7 +4063,7 @@ expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG
         { inTransparentMode(MODE_INTERNAL_END_PAREN) }?
         {
             // stop at this matching paren, or a preprocessor statement
-            endDownToFirstMode(MODE_INTERNAL_END_PAREN | MODE_PREPROC);
+            endDownToModeSet(MODE_INTERNAL_END_PAREN | MODE_PREPROC);
 
             endCurrentModeSafely(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN);
         }
