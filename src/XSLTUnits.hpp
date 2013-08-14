@@ -45,8 +45,8 @@ typedef xmlDocPtr (*xsltApplyStylesheetUser_function) (xsltStylesheetPtr,xmlDocP
                                                        xsltTransformContextPtr);
 xsltApplyStylesheetUser_function xsltApplyStylesheetUserDynamic;
 
-typedef int (*xsltSaveResultTo_function) (xmlOutputBufferPtr, xmlDocPtr, xsltStylesheetPtr);
-xsltSaveResultTo_function xsltSaveResultToDynamic;
+//typedef int (*xsltSaveResultTo_function) (xmlOutputBufferPtr, xmlDocPtr, xsltStylesheetPtr);
+//xsltSaveResultTo_function xsltSaveResultToDynamic;
 #else
 #include <libxslt/xslt.h>
 #include <libxslt/xsltInternals.h>
@@ -81,13 +81,14 @@ public :
             dlclose(handle);
             return;
         }
-
+/*
         dlerror();
         xsltSaveResultToDynamic = (xsltSaveResultTo_function)dlsym(handle, "xsltSaveResultTo");
         if ((error = dlerror()) != NULL) {
             dlclose(handle);
             return;
         }
+*/
 #endif
 
     }
@@ -124,19 +125,17 @@ public :
         if (res && res->children) {
 
             // determine the type of data that is going to be output
-            if (!found) {
+            if (!found)
                 result_type = res->children->type;
-            }
 
-            // xml declaration
-            //if (result_type == XML_ELEMENT_NODE && !isoption(options, OPTION_XMLDECL) && !found)
-            //xmlOutputBufferWriteXMLDecl(ctxt, buf);
-
-            // finish the end of the root unit start tag
+            // output the root unit start tag
             // this is only if in per-unit mode and this is the first result found
             // have to do so here because it may be empty
-
             if (result_type == XML_ELEMENT_NODE && pstate->isarchive && !found && !isoption(options, OPTION_XSLT_ALL)) {
+
+                // output the xml declaration, if needed
+                if (!isoption(options, OPTION_XMLDECL))
+                    xmlOutputBufferWriteXMLDecl(ctxt, buf);
 
                 // output a root element, just like the one read in
                 // note that this has to be ended somewhere
@@ -172,17 +171,17 @@ public :
                 }
                 resroot->nsDef = ret;
             }
+/*
+  #if defined(__GNUG__) && !defined(__MINGW32__)
+  xsltSaveResultToDynamic(buf, res, stylesheet);
+  #else
+  xsltSaveResultTo(buf, res, stylesheet);
+  #endif
+*/
+            // output the transformed result
+            for (xmlNodePtr child = res->children; child != NULL; child = child->next)
+                xmlNodeDumpOutput(buf, res, child, 0, 0, 0);
 
-#if defined(__GNUG__) && !defined(__MINGW32__)
-            xsltSaveResultToDynamic(buf, res, stylesheet);
-#else
-            xsltSaveResultTo(buf, res, stylesheet);
-#endif
-
-            /*
-              for (xmlNodePtr child = res->children; child != NULL; child = child->next)
-              xmlNodeDumpOutput(buf, res, child, 0, 0, 0);
-            */
             if (turnoff_namespaces) {
                 xmlFreeNsList(resroot->nsDef);
 
@@ -194,7 +193,7 @@ public :
                 xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
 
             // finished with the result of the transformation
-            xmlFreeDoc(res);
+//            xmlFreeDoc(res);
         }
 
         return true;
