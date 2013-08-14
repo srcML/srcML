@@ -100,9 +100,8 @@ void Mode::endDownToMode(const State::MODE_TYPE& mode, const State::MODE_TYPE& s
     if (!statev.inTransparentMode(mode))
         return;
 
-    while (statev.size() > 1 && !statev.inMode(mode) && (stopmode ? !statev.inMode(stopmode) : true)) {
+    while (statev.size() > 1 && !statev.inMode(mode) && (stopmode ? !statev.inMode(stopmode) : true))
         endCurrentMode();
-    }
 }
 
 // end elements down to a specific mode
@@ -111,15 +110,13 @@ void Mode::endDownToFirstMode(const State::MODE_TYPE& mode, const State::MODE_TY
     //  if (statev.getTransparentMode() & (mode == 0))
     //      return;
 
-    while (statev.size() > 1 && (statev.getMode() & mode) == 0 && (stopmode ? !statev.inMode(stopmode) : true)) {
+    while (statev.size() > 1 && (statev.getMode() & mode) == 0 && (stopmode ? !statev.inMode(stopmode) : true))
         endCurrentMode();
-    }
 }
 
 // end elements down to a specific mode
 void Mode::endDownOverMode(const State::MODE_TYPE& mode, const State::MODE_TYPE& stopmode) {
 
-    while (statev.size() > 1 && statev.inMode(mode) && (stopmode ? !statev.inMode(stopmode) : true)) {
+    while (statev.size() > 1 && statev.inMode(mode) && (stopmode ? !statev.inMode(stopmode) : true))
         endCurrentMode();
-    }
 }
