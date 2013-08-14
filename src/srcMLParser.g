@@ -4093,11 +4093,12 @@ expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG
         {
             endDownToMode(MODE_INTERNAL_END_CURLY);
 
-            endCurrentModeSafely(MODE_INTERNAL_END_CURLY);
+            endCurrentMode(MODE_INTERNAL_END_CURLY);
         }
         RCURLY
         {
-            endCurrentModeSafely(MODE_EXPRESSION | MODE_LIST);
+            if (inMode(MODE_EXPRESSION | MODE_LIST))
+                endCurrentMode(MODE_EXPRESSION | MODE_LIST);
         } |
 
         // variable or literal
