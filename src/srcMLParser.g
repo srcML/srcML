@@ -1907,15 +1907,12 @@ else_handling[] { ENTRY_DEBUG } :
             // handle parts of if
             if (inTransparentMode(MODE_IF) && !(intry && restoftry)) {
 
-                // find out if the next token is an else
-                bool nestedelse = LA(1) == ELSE;
-
-                if (!nestedelse) {
+                if (LA(1) != ELSE) {
 
                     endDownToMode(MODE_TOP);
 
                 // when an ELSE is next and already in an else, must end properly (not needed for then)
-                } else if (nestedelse && inMode(MODE_ELSE)) {
+                } else if (LA(1) == ELSE && inMode(MODE_ELSE)) {
 
                     while (inMode(MODE_ELSE)) {
 
