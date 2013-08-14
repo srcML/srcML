@@ -3999,7 +3999,7 @@ guessing_endDownToMode[State::MODE_TYPE mode]
     { if (inputState->guessing && inTransparentMode(MODE_GUESSING)) endDownToMode(mode | MODE_GUESSING); ENTRY_DEBUG } : ;
 
 guessing_endCurrentModeSafely[State::MODE_TYPE mode]
-    { if (inputState->guessing && inTransparentMode(MODE_GUESSING)) endCurrentModeSafely(mode | MODE_GUESSING); ENTRY_DEBUG } : ;
+    { if (inputState->guessing && inTransparentMode(MODE_GUESSING) && inMode(mode)) endCurrentMode(mode | MODE_GUESSING); ENTRY_DEBUG } : ;
 
 guessing_endGuessing[]
     { if (inTransparentMode(MODE_GUESSING)) endDownOverMode(MODE_GUESSING); ENTRY_DEBUG } : ;
@@ -4515,7 +4515,8 @@ tempope[] { ENTRY_DEBUG } :
         TEMPOPE
         {
             // end the mode created by the start template operator
-            endCurrentModeSafely(MODE_LIST);
+            if (inMode(MODE_LIST))
+                endCurrentMode(MODE_LIST);
         }
 ;
 
