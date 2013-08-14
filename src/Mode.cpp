@@ -101,7 +101,7 @@ void Mode::endDownToMode(const State::MODE_TYPE& mode) {
         return;
 
     while (statev.size() > 1 && !statev.inMode(mode))
-        endCurrentMode();
+        endMode();
 }
 
 // end elements down to a specific mode
@@ -111,12 +111,12 @@ void Mode::endDownToModeSet(const State::MODE_TYPE& mode) {
     //      return;
 
     while (statev.size() > 1 && (statev.getMode() & mode) == 0)
-        endCurrentMode();
+        endMode();
 }
 
 // end elements down to a specific mode
 void Mode::endDownOverMode(const State::MODE_TYPE& mode) {
 
     while (statev.size() > 1 && statev.inMode(mode))
-        endCurrentMode();
+        endMode();
 }

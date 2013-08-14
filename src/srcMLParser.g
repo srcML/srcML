@@ -186,7 +186,7 @@ public:
 
         int n = parent->size() - oldsize;
         for (int i = 0; i < n; ++i) {
-            parent->endCurrentMode();
+            parent->endMode();
         }
     }
 
@@ -291,7 +291,7 @@ void srcMLParser::endAllModes() {
 
      // expression mode has an extra mode
      if (isoption(parseoptions, OPTION_EXPRESSION))
-         endCurrentMode();
+         endMode();
 
      // should only be one mode
      if (size() > 1 && isoption(parseoptions, OPTION_DEBUG))
@@ -299,7 +299,7 @@ void srcMLParser::endAllModes() {
 
      // end all modes except the last
      while (size() > 1)
-         endCurrentMode();
+         endMode();
 
      // flush any skipped characters
      flushSkip();
@@ -1673,7 +1673,7 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
         )*
         {
             if (insuper)
-                endCurrentMode();
+                endMode();
         }
 ;
 
@@ -1712,7 +1712,7 @@ lcurly[] { ENTRY_DEBUG } :
             // special end for conditions
             if (inTransparentMode(MODE_CONDITION)) {
                 endDownToMode(MODE_CONDITION);
-                endCurrentMode(MODE_CONDITION);
+                endMode(MODE_CONDITION);
             }
 
             if (inMode(MODE_IF)) {
@@ -1730,7 +1730,7 @@ lcurly[] { ENTRY_DEBUG } :
                 // end at the last possible place
                 flushSkip();
 
-                endCurrentMode(MODE_LIST | MODE_CALL);
+                endMode(MODE_LIST | MODE_CALL);
             }
         }
         lcurly_base
@@ -1764,7 +1764,7 @@ block_end[] { ENTRY_DEBUG } :
         rcurly
         {
             if (inMode(MODE_ANONYMOUS)) {
-                endCurrentMode(MODE_ANONYMOUS);
+                endMode(MODE_ANONYMOUS);
                 return;
             }
 
@@ -1779,10 +1779,10 @@ block_end[] { ENTRY_DEBUG } :
 
             // some statements end with the block
             if (inMode(MODE_END_AT_BLOCK)) {
-                endCurrentMode();
+                endMode();
 
                 if (inTransparentMode(MODE_TEMPLATE))
-                    endCurrentMode();
+                    endMode();
             }
 
             // looking for a terminate (';')
@@ -1790,11 +1790,11 @@ block_end[] { ENTRY_DEBUG } :
             // some statements end with the block if there is no terminate
             if (inMode(MODE_END_AT_BLOCK_NO_TERMINATE) && LA(1) != TERMINATE) {
                 endstatement = true;
-                endCurrentMode();
+                endMode();
             }
 
             if (inTransparentMode(MODE_ENUM) && inLanguage(LANGUAGE_CSHARP))
-                endCurrentMode();
+                endMode();
 
             if (!(anonymous_class) && (!(inMode(MODE_CLASS) || inTransparentMode(MODE_ENUM))
                                        || (inMode(MODE_CLASS) || inTransparentMode(MODE_ENUM)) && endstatement))
@@ -1827,7 +1827,7 @@ rcurly[] { ENTRY_DEBUG } :
         {
             // end the current mode for the block
             // don't end more than one since they may be nested
-            endCurrentMode(MODE_TOP);
+            endMode(MODE_TOP);
         }
 ;
 
@@ -1902,7 +1902,7 @@ else_handling[] { ENTRY_DEBUG } :
             bool intry = inMode(MODE_TRY);
             bool restoftry = LA(1) == CATCH || LA(1) == FINALLY;
             if (intry && !restoftry) {
-                endCurrentMode(MODE_TRY);
+                endMode(MODE_TRY);
                 endDownToMode(MODE_TOP);
             }
 
@@ -1922,7 +1922,7 @@ else_handling[] { ENTRY_DEBUG } :
                     while (inMode(MODE_ELSE)) {
 
                         // end the else
-                        endCurrentMode(MODE_ELSE);
+                        endMode(MODE_ELSE);
 
                         /*
                           TODO:  Can we only do this if we detect a cpp change?
@@ -1935,21 +1935,21 @@ else_handling[] { ENTRY_DEBUG } :
 
                         // ending an else means ending an if
                         if (inMode(MODE_IF)) {
-                            endCurrentMode(MODE_IF);
+                            endMode(MODE_IF);
                             --ifcount;
                         }
                     }
 
                     // following ELSE indicates end of outer then
                     if (inMode(MODE_THEN))
-                        endCurrentMode(MODE_THEN);
+                        endMode(MODE_THEN);
                 }
             } else if (inTransparentMode(MODE_ELSE)) {
 
                 // have an else, but are not in an if.  Could be a fragment,
                 // or could be due to an #ifdef ... #else ... #endif
                 if (inMode(MODE_ELSE))
-                    endCurrentMode(MODE_ELSE);
+                    endMode(MODE_ELSE);
             }
 
             // update the state size in cppmode if changed from using consumeSkippedTokens
@@ -1974,7 +1974,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMTTYPE stmt_type = NO
 
         // block right after argument list, e.g., throws list in Java
         { inTransparentMode(MODE_END_LIST_AT_BLOCK) }?
-        { endDownToMode(MODE_LIST); endCurrentMode(MODE_LIST); }
+        { endDownToMode(MODE_LIST); endMode(MODE_LIST); }
         lcurly |
 
         /*
@@ -2147,7 +2147,7 @@ comma[] { ENTRY_DEBUG }:
 
             // comma in a variable initialization end init of current variable
             if (inMode(MODE_IN_INIT))
-                endCurrentMode(MODE_IN_INIT);
+                endMode(MODE_IN_INIT);
         }
         comma_marked
 ;
@@ -2592,7 +2592,7 @@ function_type[int type_count] { ENTRY_DEBUG } :
         lead_type_identifier { decTypeCount(); }
         ({getTypeCount() > 0}? type_identifier { decTypeCount(); })*
         {
-            endCurrentMode(MODE_EAT_TYPE);
+            endMode(MODE_EAT_TYPE);
             setMode(MODE_FUNCTION_NAME);
         }
 ;
@@ -2602,7 +2602,7 @@ update_typecount[State::MODE_TYPE mode] {} :
             decTypeCount();
 
             if (getTypeCount() <= 0) {
-                endCurrentMode();
+                endMode();
                 setMode(mode);
             }
         }
@@ -3386,7 +3386,7 @@ macro_call[] { ENTRY_DEBUG } :
         macro_call_inner
         {
             if (inMode(MODE_THEN) && LA(1) == ELSE)
-                endCurrentMode(MODE_THEN);
+                endMode(MODE_THEN);
         }
 ;
 
@@ -3416,7 +3416,7 @@ macro_call_inner[] { CompleteElement element; bool first = true; ENTRY_DEBUG } :
         RPAREN
         {
             // end the macro argument list
-            endCurrentMode(MODE_LIST | MODE_TOP);
+            endMode(MODE_LIST | MODE_TOP);
         } set_bool[first, false] )*
 ;
 exception
@@ -3454,7 +3454,7 @@ macro_call_contents[] {
         }
 
         if (inputState->guessing == 0 && LA(1) == COMMA && parencount == 0) {
-            endCurrentMode();
+            endMode();
             start = true;
         }
         consume();
@@ -3780,8 +3780,8 @@ variable_declaration_nameinit[] { bool isthis = LA(1) == THIS;
 
                 match(RBRACKET);
 
-                endCurrentMode();
-                endCurrentMode();
+                endMode();
+                endMode();
             }
         }
 ;
@@ -3927,7 +3927,7 @@ rparen[bool markup = true] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
                 if (inMode(MODE_CONDITION) && inPrevMode(MODE_IF)) {
 
                     // end the condition
-                    endCurrentMode(MODE_CONDITION);
+                    endMode(MODE_CONDITION);
 
                     // then part of the if statement (after the condition)
                     startNewMode(MODE_STATEMENT | MODE_NEST | MODE_THEN);
@@ -3939,7 +3939,7 @@ rparen[bool markup = true] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
                 // end the single mode that started the list
                 // don't end more than one since they may be nested
                 if (inMode(MODE_LIST))
-                    endCurrentMode(MODE_LIST);
+                    endMode(MODE_LIST);
             }
         }
 ;
@@ -3998,8 +3998,8 @@ guessing_startNewMode[State::MODE_TYPE mode]
 guessing_endDownToMode[State::MODE_TYPE mode]
     { if (inputState->guessing && inTransparentMode(MODE_GUESSING)) endDownToMode(mode | MODE_GUESSING); ENTRY_DEBUG } : ;
 
-guessing_endCurrentModeSafely[State::MODE_TYPE mode]
-    { if (inputState->guessing && inTransparentMode(MODE_GUESSING) && inMode(mode)) endCurrentMode(mode | MODE_GUESSING); ENTRY_DEBUG } : ;
+guessing_endModeSafely[State::MODE_TYPE mode]
+    { if (inputState->guessing && inTransparentMode(MODE_GUESSING) && inMode(mode)) endMode(mode | MODE_GUESSING); ENTRY_DEBUG } : ;
 
 guessing_endGuessing[]
     { if (inTransparentMode(MODE_GUESSING)) endDownOverMode(MODE_GUESSING); ENTRY_DEBUG } : ;
@@ -4068,11 +4068,11 @@ expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG
             endDownToModeSet(MODE_INTERNAL_END_PAREN | MODE_PREPROC);
 
             if (inMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN))
-                endCurrentMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN);
+                endMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN);
         }
         guessing_endDownToMode[MODE_INTERNAL_END_PAREN]
 
-        guessing_endCurrentModeSafely[MODE_INTERNAL_END_PAREN]
+        guessing_endModeSafely[MODE_INTERNAL_END_PAREN]
 
         // treat as operator for operator markup
         rparen[true] |
@@ -4093,12 +4093,12 @@ expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG
         {
             endDownToMode(MODE_INTERNAL_END_CURLY);
 
-            endCurrentMode(MODE_INTERNAL_END_CURLY);
+            endMode(MODE_INTERNAL_END_CURLY);
         }
         RCURLY
         {
             if (inMode(MODE_EXPRESSION | MODE_LIST))
-                endCurrentMode(MODE_EXPRESSION | MODE_LIST);
+                endMode(MODE_EXPRESSION | MODE_LIST);
         } |
 
         // variable or literal
@@ -4242,7 +4242,7 @@ parameter_list[] { CompleteElement element; bool lastwasparam = false; bool foun
         {
             // We are in a parameter list.  Need to make sure we end it down to the start of the parameter list
             if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
-                endCurrentMode();
+                endMode();
         } comma |
         complete_parameter { foundparam = lastwasparam = true; })* empty_element[SPARAMETER, !lastwasparam && foundparam] rparen[false]
 ;
@@ -4263,7 +4263,7 @@ indexer_parameter_list[] { bool lastwasparam = false; bool foundparam = false; E
         {
             // We are in a parameter list.  Need to make sure we end it down to the start of the parameter list
 //            if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
-//                endCurrentMode();
+//                endMode();
         } comma |
 
         complete_parameter { foundparam = lastwasparam = true; })*
@@ -4516,7 +4516,7 @@ tempope[] { ENTRY_DEBUG } :
         {
             // end the mode created by the start template operator
             if (inMode(MODE_LIST))
-                endCurrentMode(MODE_LIST);
+                endMode(MODE_LIST);
         }
 ;
 
@@ -4696,7 +4696,7 @@ preprocessor[] {
         (
         INCLUDE
         {
-            endCurrentMode();
+            endMode();
 
             tp.setType(SCPP_INCLUDE);
         }
@@ -4704,7 +4704,7 @@ preprocessor[] {
 
         DEFINE
         {
-            endCurrentMode();
+            endMode();
 
             tp.setType(SCPP_DEFINE);
         }
@@ -4712,7 +4712,7 @@ preprocessor[] {
 
         IFNDEF
         {
-            endCurrentMode();
+            endMode();
 
             tp.setType(SCPP_IFNDEF);
         }
@@ -4720,7 +4720,7 @@ preprocessor[] {
 
         UNDEF
         {
-            endCurrentMode();
+            endMode();
 
             tp.setType(SCPP_UNDEF);
         }
@@ -4729,7 +4729,7 @@ preprocessor[] {
         IF
             { markblockzero = false; }
         {
-            endCurrentMode();
+            endMode();
 
             tp.setType(SCPP_IF);
         }
@@ -4737,7 +4737,7 @@ preprocessor[] {
 
         ELIF
         {
-            endCurrentMode();
+            endMode();
 
             tp.setType(SCPP_ELIF);
         }
@@ -4745,21 +4745,21 @@ preprocessor[] {
 
         ELSE
         {
-            endCurrentMode();
+            endMode();
 
             tp.setType(SCPP_ELSE);
         } |
 
         ENDIF
         {
-            endCurrentMode();
+            endMode();
 
             tp.setType(SCPP_ENDIF);
         } |
 
         IFDEF
         {
-            endCurrentMode();
+            endMode();
 
             tp.setType(SCPP_IFDEF);
         }
@@ -4767,7 +4767,7 @@ preprocessor[] {
 
         LINE
         {
-            endCurrentMode();
+            endMode();
 
             tp.setType(SCPP_LINE);
         }
@@ -4777,35 +4777,35 @@ preprocessor[] {
 
         PRAGMA
         {
-            endCurrentMode();
+            endMode();
 
             tp.setType(SCPP_PRAGMA);
         } |
 
         ERRORPREC
         {
-            endCurrentMode();
+            endMode();
 
             tp.setType(SCPP_ERROR);
         } |
 
         NAME
         {
-            endCurrentMode();
+            endMode();
 
             tp.setType(SCPP_ERROR);
         } |
 
         REGION
         {
-            endCurrentMode();
+            endMode();
 
             tp.setType(SCPP_REGION);
         } |
 
         ENDREGION
         {
-            endCurrentMode();
+            endMode();
 
             tp.setType(SCPP_ENDREGION);
         } |
@@ -4846,7 +4846,7 @@ eol[int directive_token, bool markblockzero] {
             // end all preprocessor modes
             endDownOverMode(MODE_PREPROC);
 
-            endCurrentMode(MODE_PARSE_EOL);
+            endMode(MODE_PARSE_EOL);
 ENTRY_DEBUG } :
         (EOL | LINECOMMENT_START | eof)
         eol_post[directive_token, markblockzero]
@@ -4989,7 +4989,7 @@ cppmode_adjust[] {
 
             // end if part of cppmode
             while (size() > cppmode.top().statesize.front())
-                endCurrentMode();
+                endMode();
 
             // done with this cppmode
             cppmode.pop();

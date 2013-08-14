@@ -217,12 +217,12 @@ protected:
         statev.startNewMode(m);
     }
 
-    void endCurrentMode() {
+    void endMode() {
 
         statev.endCurrentMode();
     }
 
-    void endCurrentMode(const State::MODE_TYPE& m) {
+    void endMode(const State::MODE_TYPE& m) {
 
         statev.endCurrentMode(m);
     }
