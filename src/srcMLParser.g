@@ -4695,7 +4695,7 @@ preprocessor[] {
 
             tp.setType(SCPP_INCLUDE);
         }
-        cpp_filename |
+        (cpp_filename)* |
 
         DEFINE
         {
@@ -4768,7 +4768,7 @@ preprocessor[] {
         }
             cpp_linenumber
 
-            cpp_filename |
+            (cpp_filename)* |
 
         PRAGMA
         {
@@ -5021,13 +5021,12 @@ cpp_symbol_optional[] { ENTRY_DEBUG } :
 ;
 
 cpp_filename[] { CompleteElement element; ENTRY_DEBUG } :
-        (
         {
             startNewMode(MODE_PREPROC);
 
             startElement(SCPP_FILENAME);
         }
-        (string_literal | char_literal | TEMPOPS (~(TEMPOPE))* TEMPOPE))*
+        (string_literal | char_literal | TEMPOPS (~(TEMPOPE))* TEMPOPE)
 ;
 
 cpp_linenumber[] :
