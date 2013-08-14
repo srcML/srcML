@@ -651,7 +651,7 @@ catch[...] {
 }
 
 /*
-  context-free grammar statements
+  statements that begin with a unique keyword
 */
 keyword_statements[] { ENTRY_DEBUG } :
 
@@ -687,9 +687,7 @@ keyword_statements[] { ENTRY_DEBUG } :
 ;
 
 /*
-  statements non cfg
-
-  Top-level items that must be matched by context.
+  Statements, declarations, and definitions that must be matched by pattern.
 
   Basically we have an identifier and we don't know yet whether it starts an expression
   function definition, function declaration, or even a label.
