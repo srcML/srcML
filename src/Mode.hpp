@@ -227,12 +227,6 @@ protected:
         statev.endCurrentMode(m);
     }
 
-    void endCurrentModeSafely(const State::MODE_TYPE& m) {
-
-        if (statev.inMode(m))
-            statev.endCurrentMode(m);
-    }
-
     void endLastMode() {
 
         statev.endLastMode();
