@@ -4853,94 +4853,92 @@ ENTRY_DEBUG } :
 ;
 
 eol_post[int directive_token, bool markblockzero] {
-            // Flags to control skipping of #if 0 and #else.
-            // Once in these modes, stay in these modes until the matching #endif is reached
-            // cpp_ifcount used to indicate which #endif matches the #if or #else
-            switch (directive_token) {
 
-                case IF :
-                case IFDEF :
-                case IFNDEF :
+        // Flags to control skipping of #if 0 and #else.
+        // Once in these modes, stay in these modes until the matching #endif is reached
+        // cpp_ifcount used to indicate which #endif matches the #if or #else
+        switch (directive_token) {
 
-                    // start a new blank mode for new zero'ed blocks
-                    if (!cpp_zeromode && markblockzero) {
+            case IF :
+            case IFDEF :
+            case IFNDEF :
 
-                        // start a new blank mode for if
-                        cpp_zeromode = true;
+                // start a new blank mode for new zero'ed blocks
+                if (!cpp_zeromode && markblockzero) {
 
-                        // keep track of nested if's (inside the #if 0) so we know when
-                        // we reach the proper #endif
-                        cpp_ifcount = 0;
-                    }
+                    // start a new blank mode for if
+                    cpp_zeromode = true;
 
-                    // another if reached
-                    ++cpp_ifcount;
+                    // keep track of nested if's (inside the #if 0) so we know when
+                    // we reach the proper #endif
+                    cpp_ifcount = 0;
+                }
 
-                    // create new context for #if (and possible #else)
-                    if (isoption(parseoptions, OPTION_CPP_MARKUP_ELSE) && !inputState->guessing)
+                // another if reached
+                ++cpp_ifcount;
+
+                // create new context for #if (and possible #else)
+                if (isoption(parseoptions, OPTION_CPP_MARKUP_ELSE) && !inputState->guessing)
+                    cppmode.push(cppmodeitem(size()));
+
+                break;
+
+            case ELSE :
+            case ELIF :
+
+                // #else reached for #if 0 that started this mode
+                if (cpp_zeromode && cpp_ifcount == 1)
+                    cpp_zeromode = false;
+
+                // not in skipped #if, so skip #else until #endif of #if is reached
+                else if (!cpp_zeromode) {
+                    cpp_skipelse = true;
+                    cpp_ifcount = 1;
+                }
+
+                if (!isoption(parseoptions, OPTION_CPP_MARKUP_ELSE) && !inputState->guessing) {
+
+                    // create an empty cppmode for #if if one doesn't exist
+                    if (cppmode.empty())
                         cppmode.push(cppmodeitem(size()));
 
-                    break;
+                    // add new context for #else in current #if
+                    cppmode.top().statesize.push_back(size());
 
-                case ELSE :
-                case ELIF :
+                    if (!cpp_zeromode && cppmode.top().statesize.front() > size())
+                            cppmode.top().skipelse = true;
+                }
+                break;
 
-                    // #else reached for #if 0 that started this mode
-                    if (cpp_zeromode && cpp_ifcount == 1)
-                        cpp_zeromode = false;
+            case ENDIF :
 
-                    // not in skipped #if, so skip #else until #endif of #if is reached
-                    if (!cpp_zeromode) {
-                        cpp_skipelse = true;
-                        cpp_ifcount = 1;
-                    }
+                // another #if ended
+                --cpp_ifcount;
 
-                    if (!isoption(parseoptions, OPTION_CPP_MARKUP_ELSE) && !inputState->guessing) {
+                // #endif reached for #if 0 that started this mode
+                if (cpp_zeromode && cpp_ifcount == 0)
+                    cpp_zeromode = false;
 
-                        // create an empty cppmode for #if if one doesn't exist
-                        if (cppmode.empty())
-                            cppmode.push(cppmodeitem(size()));
+                // #endif reached for #else that started this mode
+                if (cpp_skipelse && cpp_ifcount == 0)
+                    cpp_skipelse = false;
 
-                        // add new context for #else in current #if
-                        cppmode.top().statesize.push_back(size());
+                if (!isoption(parseoptions, OPTION_CPP_MARKUP_ELSE) && !inputState->guessing &&
+                    !cppmode.empty()) {
 
-                        if (!cpp_zeromode) {
-                            if (cppmode.top().statesize.front() > size())
-                                cppmode.top().skipelse = true;
-                        }
-                    }
+                    // add new context for #endif in current #if
+                    cppmode.top().statesize.push_back(size());
 
-                    break;
+                    // reached #endif so finished adding to this mode
+                    cppmode.top().isclosed = true;
 
-                case ENDIF :
+                    // remove any finished modes
+                    cppmode_cleanup();
+                }
 
-                    // another #if ended
-                    --cpp_ifcount;
-
-                    // #endif reached for #if 0 that started this mode
-                    if (cpp_zeromode && cpp_ifcount == 0)
-                        cpp_zeromode = false;
-
-                    // #endif reached for #else that started this mode
-                    if (cpp_skipelse && cpp_ifcount == 0)
-                        cpp_skipelse = false;
-
-                    if (!isoption(parseoptions, OPTION_CPP_MARKUP_ELSE) && !inputState->guessing &&
-                        !cppmode.empty()) {
-
-                        // add new context for #endif in current #if
-                        cppmode.top().statesize.push_back(size());
-
-                        // reached #endif so finished adding to this mode
-                        cppmode.top().isclosed = true;
-
-                        // remove any finished modes
-                        cppmode_cleanup();
-                    }
-
-                default :
-                    break;
-            }
+            default :
+                break;
+        }
 
         /*
             Skip elements when:
