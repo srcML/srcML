@@ -1002,7 +1002,7 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
 // records the current token, even in guessing mode
 markend[int& token] { token = LA(1); }:;
 
-/* Statements CFG */
+/* Keyword Statements */
 
 // while statement
 while_statement[] { ENTRY_DEBUG } :
@@ -1727,7 +1727,7 @@ lcurly[] { ENTRY_DEBUG } :
                 // end at the last possible place
                 flushSkip();
 
-                endMode(MODE_LIST | MODE_CALL);
+                endMode();
             }
         }
         lcurly_base
@@ -1761,7 +1761,7 @@ block_end[] { ENTRY_DEBUG } :
         rcurly
         {
             if (inMode(MODE_ANONYMOUS)) {
-                endMode(MODE_ANONYMOUS);
+                endMode();
                 return;
             }
 
@@ -1920,7 +1920,7 @@ else_handling[] { ENTRY_DEBUG } :
                     while (inMode(MODE_ELSE)) {
 
                         // end the else
-                        endMode(MODE_ELSE);
+                        endMode();
 
                         /*
                           TODO:  Can we only do this if we detect a cpp change?
@@ -1933,14 +1933,14 @@ else_handling[] { ENTRY_DEBUG } :
 
                         // ending an else means ending an if
                         if (inMode(MODE_IF)) {
-                            endMode(MODE_IF);
+                            endMode();
                             --ifcount;
                         }
                     }
 
                     // following ELSE indicates end of outer then
                     if (inMode(MODE_THEN))
-                        endMode(MODE_THEN);
+                        endMode();
                 }
             } else if (inTransparentMode(MODE_ELSE)) {
 
