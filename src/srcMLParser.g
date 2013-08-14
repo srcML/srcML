@@ -4966,9 +4966,8 @@ cppmode_cleanup[] {
                 break;
             }
 
-        if (!cppmode.empty() && (equal || cppmode.top().statesize.size() == 2)) {
+        if (!cppmode.empty() && (equal || cppmode.top().statesize.size() == 2))
             cppmode.pop();
-        }
 
         ENTRY_DEBUG } :
 ;
@@ -4976,20 +4975,20 @@ cppmode_cleanup[] {
 // ended modes that may lead to needed updates
 cppmode_adjust[] {
 
-    if (isoption(parseoptions, OPTION_CPP_MARKUP_ELSE) && !cppmode.empty() &&
-        cppmode.top().isclosed == true &&
-        size() < cppmode.top().statesize.back()) {
+    if (isoption(parseoptions, OPTION_CPP_MARKUP_ELSE) &&
+        !cppmode.empty() &&
+        cppmode.top().isclosed &&
+        size() < cppmode.top().statesize.back())
 
-           if (size() == cppmode.top().statesize[cppmode.top().statesize.size() - 1 - 1]) {
+        if (size() == cppmode.top().statesize[cppmode.top().statesize.size() - 1 - 1]) {
 
-                // end if part of cppmode
-                while (size() > cppmode.top().statesize.front())
-                    endCurrentMode();
+            // end if part of cppmode
+            while (size() > cppmode.top().statesize.front())
+                endCurrentMode();
 
-                // done with this cppmode
-                cppmode.pop();
-           }
-    }
+            // done with this cppmode
+            cppmode.pop();
+       }
 
     ENTRY_DEBUG } :
 ;
