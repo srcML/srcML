@@ -628,12 +628,11 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         // special default() call for C#
         { LA(1) == DEFAULT && inLanguage(LANGUAGE_CSHARP) && inTransparentMode(MODE_EXPRESSION) && next_token() == LPAREN}? expression_part_default |
 
-        // context-free grammar statements
-        { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) }? cfg |
+        // statements that clearly start with a keyword
+        { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) }? keyword_statements |
 
-        // statements without a context free grammar
-        // last chance to match to a syntactical structure
-        { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) }? statements_non_cfg |
+        // statements identified by pattern (i.e., do not start with a keyword)
+        { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) }? pattern_statements |
 
         // in the middle of a statement
         statement_part
@@ -654,7 +653,7 @@ catch[...] {
 /*
   context-free grammar statements
 */
-cfg[] { ENTRY_DEBUG } :
+keyword_statements[] { ENTRY_DEBUG } :
 
         // conditional statements
         if_statement | else_statement | switch_statement | switch_case | switch_default |
@@ -695,11 +694,11 @@ cfg[] { ENTRY_DEBUG } :
   Basically we have an identifier and we don't know yet whether it starts an expression
   function definition, function declaration, or even a label.
 */
-statements_non_cfg[] { int secondtoken = 0; int type_count = 0;
+pattern_statements[] { int secondtoken = 0; int type_count = 0;
         STMTTYPE stmt_type = NONE; CALLTYPE type = NOCALL;
 
         // detect the declaration/definition type
-        perform_noncfg_check(stmt_type, secondtoken, type_count);
+        perform_pattern_check(stmt_type, secondtoken, type_count);
 
         ENTRY_DEBUG } :
 
@@ -1118,7 +1117,7 @@ for_initialization[] { int type_count = 0;  int secondtoken = 0; STMTTYPE stmt_t
         (
             // explicitly check for a variable declaration since it can easily
             // be confused with an expression
-            { perform_noncfg_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
+            { perform_pattern_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
             for_initialization_variable_declaration[type_count] |
 
             expression
@@ -1805,6 +1804,7 @@ block_end[] { ENTRY_DEBUG } :
             if (inMode(MODE_DECL) && LA(1) != TERMINATE)
                 short_variable_declaration();
 
+            // TODO:  Need a test case that makes this necessary
             // end of block may lead to adjustment of cpp modes
             cppmode_adjust();
         }
@@ -2000,7 +2000,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMTTYPE stmt_type = NO
 
         // K&R function parameters
         { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY)) && inMode(MODE_FUNCTION_TAIL) &&
-          perform_noncfg_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
+          perform_pattern_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
         kr_parameter |
 
         // start of argument for return or throw statement
@@ -2016,7 +2016,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMTTYPE stmt_type = NO
         { inMode(MODE_EXPRESSION) }?
         terminate_pre
         terminate_post
-        cfg |
+        keyword_statements |
 
         // already in an expression
         { inMode(MODE_EXPRESSION) }?
@@ -2257,7 +2257,7 @@ function_tail[] { ENTRY_DEBUG } :
         )*
 ;
 
-perform_noncfg_check[STMTTYPE& type, int& token, int& type_count, bool inparam = false] returns [bool isdecl] {
+perform_pattern_check[STMTTYPE& type, int& token, int& type_count, bool inparam = false] returns [bool isdecl] {
 
     isdecl = true;
 
@@ -2271,7 +2271,7 @@ perform_noncfg_check[STMTTYPE& type, int& token, int& type_count, bool inparam =
     int fla = 0;
 
     try {
-        noncfg_check(token, fla, type_count, type, inparam, sawenum, posin);
+        pattern_check(token, fla, type_count, type, inparam, sawenum, posin);
 
     } catch (...) {
 
@@ -2321,7 +2321,7 @@ perform_noncfg_check[STMTTYPE& type, int& token, int& type_count, bool inparam =
   This is pretty complicated as it has to figure out whether it is a declaration or not,
   and whether it is a function or a variable declaration.
 */
-noncfg_check[int& token,      /* second token, after name (always returned) */
+pattern_check[int& token,      /* second token, after name (always returned) */
              int& fla,        /* for a function, TERMINATE or LCURLY, 0 for a variable */
              int& type_count, /* number of tokens in type (not including name) */
              STMTTYPE& type,
@@ -3518,7 +3518,7 @@ using_statement[] { int type_count = 0; int secondtoken = 0;  STMTTYPE stmt_type
         (
             // explicitly check for a variable declaration since it can easily
             // be confused with an expression
-            { perform_noncfg_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
+            { perform_pattern_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
             for_initialization_variable_declaration[type_count] |
 
             {
@@ -3549,7 +3549,7 @@ lock_statement[] { int type_count = 0; int secondtoken = 0;  STMTTYPE stmt_type 
         (
             // explicitly check for a variable declaration since it can easily
             // be confused with an expression
-            { perform_noncfg_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
+            { perform_pattern_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
             for_initialization_variable_declaration[type_count] |
 
             {
@@ -4310,7 +4310,7 @@ parameter[] { int type_count = 0; int secondtoken = 0;  STMTTYPE stmt_type = NON
             startElement(SPARAMETER);
         }
         (
-            { perform_noncfg_check(stmt_type, secondtoken, type_count, true) && stmt_type == FUNCTION }?
+            { perform_pattern_check(stmt_type, secondtoken, type_count, true) && stmt_type == FUNCTION }?
             function_declaration[type_count]
 
             function_identifier // pointer_name_grammar
@@ -4377,7 +4377,7 @@ parameter_type[] { CompleteElement element; int type_count = 0; int secondtoken 
             // start of type
             startElement(STYPE);
         }
-        { perform_noncfg_check(stmt_type, secondtoken, type_count) }?
+        { perform_pattern_check(stmt_type, secondtoken, type_count) }?
         eat_type[type_count]
 ;
 
