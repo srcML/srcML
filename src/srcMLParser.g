@@ -4872,10 +4872,8 @@ eol_post[int directive_token, bool markblockzero] {
                     ++cpp_ifcount;
 
                     // create new context for #if (and possible #else)
-                    if (isoption(parseoptions, OPTION_CPP_MARKUP_ELSE) && !inputState->guessing) {
-
+                    if (isoption(parseoptions, OPTION_CPP_MARKUP_ELSE) && !inputState->guessing)
                         cppmode.push(cppmodeitem(size()));
-                    }
 
                     break;
 
@@ -4962,14 +4960,16 @@ eol_post[int directive_token, bool markblockzero] {
 cppmode_cleanup[] {
 
         bool equal = true;
-        for (unsigned int i = 0; i < cppmode.top().statesize.size(); ++i) {
-            if (cppmode.top().statesize[i] != cppmode.top().statesize[0])
+        for (unsigned int i = 0; i < cppmode.top().statesize.size(); ++i)
+            if (cppmode.top().statesize[i] != cppmode.top().statesize[0]) {
                 equal = false;
+                break;
             }
 
-            if (!cppmode.empty() && (equal || cppmode.top().statesize.size() == 2)) {
-                cppmode.pop();
-            }
+        if (!cppmode.empty() && (equal || cppmode.top().statesize.size() == 2)) {
+            cppmode.pop();
+        }
+
         ENTRY_DEBUG } :
 ;
 
