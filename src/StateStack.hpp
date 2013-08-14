@@ -86,12 +86,6 @@ class StateStack {
     popMode();
   }
 
-  void endCurrentModeSafely(const State::MODE_TYPE& m) {
-
-    if (inMode(m))
-      endCurrentMode(m);
-  }
-
   State::MODE_TYPE getMode() const {
 
     return !st.empty() ? st.top().getMode() : 0;
@@ -119,11 +113,6 @@ class StateStack {
       throw Segmentation_Fault();
 
     st.top().clearMode(m);
-  }
-
-  void replaceMode(const State::MODE_TYPE& oldm, const State::MODE_TYPE& newm) {
-    clearMode(oldm);
-    setMode(newm);
   }
 
   void push(const State::MODE_TYPE& id) {

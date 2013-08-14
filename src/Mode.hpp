@@ -219,32 +219,28 @@ protected:
 
     void endCurrentMode() {
 
-        // remove the mode
         statev.endCurrentMode();
     }
 
     void endCurrentMode(const State::MODE_TYPE& m) {
 
-        // remove the mode
         statev.endCurrentMode(m);
+    }
+
+    void endCurrentModeSafely(const State::MODE_TYPE& m) {
+
+        if (statev.inMode(m))
+            statev.endCurrentMode(m);
     }
 
     void endLastMode() {
 
-        // remove the mode
         statev.endLastMode();
     }
 
     void endTopMode() {
 
-        // remove the mode
         statev.endCurrentMode();
-    }
-
-    void endCurrentModeSafely(const State::MODE_TYPE& m) {
-
-        // remove the mode
-        statev.endCurrentModeSafely(m);
     }
 
     void setMode(const State::MODE_TYPE& m) {
@@ -257,9 +253,10 @@ protected:
         statev.clearMode(m);
     }
 
-    void replaceMode(const State::MODE_TYPE& o, const State::MODE_TYPE& n) {
+    void replaceMode(const State::MODE_TYPE& oldm, const State::MODE_TYPE& newm) {
 
-        statev.replaceMode(o, n);
+        statev.clearMode(oldm);
+        statev.setMode(newm);
     }
 
     bool inPrevMode(const State::MODE_TYPE& m) const {
@@ -268,10 +265,12 @@ protected:
     }
 
     bool inMode(const State::MODE_TYPE& m) const {
+
         return statev.inMode(m);
     }
 
     bool inTransparentMode(const State::MODE_TYPE& m) const {
+
         return statev.inTransparentMode(m);
     }
 
