@@ -1935,19 +1935,21 @@ else_handling[] { ENTRY_DEBUG } :
 
                         // ending an else means ending an if
                         if (inMode(MODE_IF)) {
-                            endCurrentModeSafely(MODE_IF);
+                            endCurrentMode(MODE_IF);
                             --ifcount;
                         }
                     }
 
                     // following ELSE indicates end of outer then
-                    endCurrentModeSafely(MODE_THEN);
+                    if (inMode(MODE_THEN))
+                        endCurrentMode(MODE_THEN);
                 }
             } else if (inTransparentMode(MODE_ELSE)) {
 
                 // have an else, but are not in an if.  Could be a fragment,
                 // or could be due to an #ifdef ... #else ... #endif
-                endCurrentModeSafely(MODE_ELSE);
+                if (inMode(MODE_ELSE))
+                    endCurrentMode(MODE_ELSE);
             }
 
             // update the state size in cppmode if changed from using consumeSkippedTokens
@@ -4065,7 +4067,8 @@ expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG
             // stop at this matching paren, or a preprocessor statement
             endDownToModeSet(MODE_INTERNAL_END_PAREN | MODE_PREPROC);
 
-            endCurrentModeSafely(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN);
+            if (inMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN))
+                endCurrentMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN);
         }
         guessing_endDownToMode[MODE_INTERNAL_END_PAREN]
 
