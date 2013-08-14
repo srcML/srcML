@@ -5026,7 +5026,7 @@ cpp_filename[] { CompleteElement element; ENTRY_DEBUG } :
 
             startElement(SCPP_FILENAME);
         }
-        (string_literal | char_literal | TEMPOPS (~(TEMPOPE))* TEMPOPE)
+        (string_literal | char_literal | TEMPOPS (~(TEMPOPE | EOL))* TEMPOPE)
 ;
 
 cpp_linenumber[] :
