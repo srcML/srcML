@@ -31,257 +31,257 @@ class Mode : public TokenParser, public Language {
 
 public:
 
-  /* Set of mode flags */
+    /* Set of mode flags */
 
-  // any statement (broad definition includes declarations, etc.)
-  const static State::MODE_TYPE MODE_STATEMENT;
+    // any statement (broad definition includes declarations, etc.)
+    const static State::MODE_TYPE MODE_STATEMENT;
 
-  // list used for comma and right parentheses
-  const static State::MODE_TYPE MODE_LIST;
+    // list used for comma and right parentheses
+    const static State::MODE_TYPE MODE_LIST;
 
-  // a particular mode is expected in the next start
-  const static State::MODE_TYPE MODE_EXPECT;
+    // a particular mode is expected in the next start
+    const static State::MODE_TYPE MODE_EXPECT;
 
-  // statement may be nested inside of the current
-  const static State::MODE_TYPE MODE_DETECT_COLON;
+    // statement may be nested inside of the current
+    const static State::MODE_TYPE MODE_DETECT_COLON;
 
-  //
-  const static State::MODE_TYPE MODE_TEMPLATE;
-  const static State::MODE_TYPE MODE_TEMPLATE_PARAMETER_LIST;
+    //
+    const static State::MODE_TYPE MODE_TEMPLATE;
+    const static State::MODE_TYPE MODE_TEMPLATE_PARAMETER_LIST;
 
-  // an argument to a call
-  const static State::MODE_TYPE MODE_ARGUMENT;
-  const static State::MODE_TYPE MODE_NAMESPACE;
+    // an argument to a call
+    const static State::MODE_TYPE MODE_ARGUMENT;
+    const static State::MODE_TYPE MODE_NAMESPACE;
 
-  // a parameter for a declaration/definition
-  const static State::MODE_TYPE MODE_PARAMETER;
+    // a parameter for a declaration/definition
+    const static State::MODE_TYPE MODE_PARAMETER;
 
-  // expressions
-  const static State::MODE_TYPE MODE_EXPRESSION;
+    // expressions
+    const static State::MODE_TYPE MODE_EXPRESSION;
 
-  // expecting a call (member initialization list)
-  const static State::MODE_TYPE MODE_CALL;
+    // expecting a call (member initialization list)
+    const static State::MODE_TYPE MODE_CALL;
 
-  // setup for expecting a condition and detection of the end
-  // of a condition at a left parentheses of the correct count
-  const static State::MODE_TYPE MODE_CONDITION;
+    // setup for expecting a condition and detection of the end
+    // of a condition at a left parentheses of the correct count
+    const static State::MODE_TYPE MODE_CONDITION;
 
-  const static State::MODE_TYPE MODE_TOP;
+    const static State::MODE_TYPE MODE_TOP;
 
-  // blocks that are not necessarily statements
-  const static State::MODE_TYPE MODE_BLOCK;
-  const static State::MODE_TYPE MODE_INIT;
+    // blocks that are not necessarily statements
+    const static State::MODE_TYPE MODE_BLOCK;
+    const static State::MODE_TYPE MODE_INIT;
 
-  // block tags from being issued.  Should be moved to
-  // output handling
-  const static State::MODE_TYPE MODE_FUNCTION_TAIL;
+    // block tags from being issued.  Should be moved to
+    // output handling
+    const static State::MODE_TYPE MODE_FUNCTION_TAIL;
 
-  // whether to parse the end of line character
-  // used with preprocessor directives
-  const static State::MODE_TYPE MODE_PARSE_EOL;
+    // whether to parse the end of line character
+    // used with preprocessor directives
+    const static State::MODE_TYPE MODE_PARSE_EOL;
 
-  // local mode only used within a grammar rule
-  const static State::MODE_TYPE MODE_LOCAL;
+    // local mode only used within a grammar rule
+    const static State::MODE_TYPE MODE_LOCAL;
 
-  const static State::MODE_TYPE MODE_VARIABLE_NAME;
+    const static State::MODE_TYPE MODE_VARIABLE_NAME;
 
-  // the if statement includes some special processing
-  // including starting a THEN element after the condition
-  // and stopping the ending of statements at the IF when
-  // an ELSE is matched
-  const static State::MODE_TYPE MODE_IF;
+    // the if statement includes some special processing
+    // including starting a THEN element after the condition
+    // and stopping the ending of statements at the IF when
+    // an ELSE is matched
+    const static State::MODE_TYPE MODE_IF;
 
-  // for special sections inside of mode such as in
-  // classes and switch statement blocks
-  const static State::MODE_TYPE MODE_TOP_SECTION;
+    // for special sections inside of mode such as in
+    // classes and switch statement blocks
+    const static State::MODE_TYPE MODE_TOP_SECTION;
 
-  // for flags
-  const static State::MODE_TYPE MODE_FOR_GROUP;          // in a for heading group
-  const static State::MODE_TYPE MODE_FOR_INITIALIZATION; // for initialization (in header)
-  const static State::MODE_TYPE MODE_FOR_CONDITION;      // for condition (in header)
-  const static State::MODE_TYPE MODE_FOR_INCREMENT;      // for increment (in header)
+    // for flags
+    const static State::MODE_TYPE MODE_FOR_GROUP;          // in a for heading group
+    const static State::MODE_TYPE MODE_FOR_INITIALIZATION; // for initialization (in header)
+    const static State::MODE_TYPE MODE_FOR_CONDITION;      // for condition (in header)
+    const static State::MODE_TYPE MODE_FOR_INCREMENT;      // for increment (in header)
 
-  const static State::MODE_TYPE MODE_PREPROC;
-  const static State::MODE_TYPE MODE_NEST;
-  const static State::MODE_TYPE MODE_EXPRESSION_BLOCK;
-  const static State::MODE_TYPE MODE_INTERNAL_END_PAREN; // remove
+    const static State::MODE_TYPE MODE_PREPROC;
+    const static State::MODE_TYPE MODE_NEST;
+    const static State::MODE_TYPE MODE_EXPRESSION_BLOCK;
+    const static State::MODE_TYPE MODE_INTERNAL_END_PAREN; // remove
 
-  // access regions in classes used for matching of
-  const static State::MODE_TYPE MODE_ACCESS_REGION;
-  const static State::MODE_TYPE MODE_DO_STATEMENT;
-  const static State::MODE_TYPE MODE_IGNORE_TERMINATE;
+    // access regions in classes used for matching of
+    const static State::MODE_TYPE MODE_ACCESS_REGION;
+    const static State::MODE_TYPE MODE_DO_STATEMENT;
+    const static State::MODE_TYPE MODE_IGNORE_TERMINATE;
 
-  const static State::MODE_TYPE MODE_EXTERN;
-  const static State::MODE_TYPE MODE_INTERNAL_END_CURLY;
+    const static State::MODE_TYPE MODE_EXTERN;
+    const static State::MODE_TYPE MODE_INTERNAL_END_CURLY;
 
-  const static State::MODE_TYPE MODE_GUESSING;
-  const static State::MODE_TYPE MODE_CLASS;
-  const static State::MODE_TYPE MODE_FUNCTION;
-  const static State::MODE_TYPE MODE_END_AT_BLOCK;
+    const static State::MODE_TYPE MODE_GUESSING;
+    const static State::MODE_TYPE MODE_CLASS;
+    const static State::MODE_TYPE MODE_FUNCTION;
+    const static State::MODE_TYPE MODE_END_AT_BLOCK;
 
-  const static State::MODE_TYPE MODE_END_ONLY_AT_RPAREN;
+    const static State::MODE_TYPE MODE_END_ONLY_AT_RPAREN;
 
-  const static State::MODE_TYPE MODE_END_AT_BLOCK_NO_TERMINATE;
+    const static State::MODE_TYPE MODE_END_AT_BLOCK_NO_TERMINATE;
 
-  const static State::MODE_TYPE MODE_FUNCTION_NAME;
+    const static State::MODE_TYPE MODE_FUNCTION_NAME;
 
-  const static State::MODE_TYPE MODE_THEN;
-  const static State::MODE_TYPE MODE_ELSE;
+    const static State::MODE_TYPE MODE_THEN;
+    const static State::MODE_TYPE MODE_ELSE;
 
-  const static State::MODE_TYPE MODE_TYPEDEF;
+    const static State::MODE_TYPE MODE_TYPEDEF;
 
-  const static State::MODE_TYPE MODE_DECL;
+    const static State::MODE_TYPE MODE_DECL;
 
-  const static State::MODE_TYPE MODE_EAT_TYPE;
+    const static State::MODE_TYPE MODE_EAT_TYPE;
 
-  const static State::MODE_TYPE MODE_FUNCTION_PARAMETER;
+    const static State::MODE_TYPE MODE_FUNCTION_PARAMETER;
 
-  const static State::MODE_TYPE MODE_INNER_DECL;
+    const static State::MODE_TYPE MODE_INNER_DECL;
 
-  const static State::MODE_TYPE MODE_IN_INIT;
+    const static State::MODE_TYPE MODE_IN_INIT;
 
-  const static State::MODE_TYPE MODE_TRY;
+    const static State::MODE_TYPE MODE_TRY;
 
-  const static State::MODE_TYPE MODE_END_LIST_AT_BLOCK;
+    const static State::MODE_TYPE MODE_END_LIST_AT_BLOCK;
 
-  const static State::MODE_TYPE MODE_ONLY_END_TERMINATE;
+    const static State::MODE_TYPE MODE_ONLY_END_TERMINATE;
 
-  const static State::MODE_TYPE MODE_ENUM;
+    const static State::MODE_TYPE MODE_ENUM;
 
-  const static State::MODE_TYPE MODE_ANONYMOUS;
+    const static State::MODE_TYPE MODE_ANONYMOUS;
 
-  const static State::MODE_TYPE MODE_END_AT_COMMA;
+    const static State::MODE_TYPE MODE_END_AT_COMMA;
 
 public:
 
-  Mode(TokenParser* ptp, int lang)
-    : Language(lang), statev(ptp)
-  {}
+    Mode(TokenParser* ptp, int lang)
+        : Language(lang), statev(ptp)
+        {}
 
-  ~Mode() {}
+    ~Mode() {}
 
-  srcMLStateStack statev;
+    srcMLStateStack statev;
 
 protected:
 
-  // flush any skipped tokens to the output token stream
-  // overridden in StreamParser
-  //  void flushSkip() {}
+    // flush any skipped tokens to the output token stream
+    // overridden in StreamParser
+    //  void flushSkip() {}
 
-  int size() const {
-    return statev.size();
-  }
+    int size() const {
+        return statev.size();
+    }
 
-  srcMLState& currentState() {
+    srcMLState& currentState() {
 
-    return statev.currentState();
-  }
+        return statev.currentState();
+    }
 
-  int getParen() const {
+    int getParen() const {
 
-    return statev.getParen();
-  }
+        return statev.getParen();
+    }
 
-  void incParen() {
+    void incParen() {
 
-    statev.incParen();
-  }
+        statev.incParen();
+    }
 
-  void decParen() {
+    void decParen() {
 
-    statev.decParen();
-  }
+        statev.decParen();
+    }
 
-  int getTypeCount() const {
+    int getTypeCount() const {
 
-    return statev.getTypeCount();
-  }
+        return statev.getTypeCount();
+    }
 
-  void setTypeCount(int n) {
+    void setTypeCount(int n) {
 
-    statev.setTypeCount(n);
-  }
+        statev.setTypeCount(n);
+    }
 
-  void incTypeCount() {
+    void incTypeCount() {
 
-    statev.incTypeCount();
-  }
+        statev.incTypeCount();
+    }
 
-  void decTypeCount() {
+    void decTypeCount() {
 
-    statev.decTypeCount();
-  }
+        statev.decTypeCount();
+    }
 
-  void startNewMode(const State::MODE_TYPE& m) {
+    void startNewMode(const State::MODE_TYPE& m) {
 
-    statev.startNewMode(m);
-  }
+        statev.startNewMode(m);
+    }
 
-  void endCurrentMode() {
+    void endCurrentMode() {
 
-    // remove the mode
-    statev.endCurrentMode();
-  }
+        // remove the mode
+        statev.endCurrentMode();
+    }
 
-  void endCurrentMode(const State::MODE_TYPE& m) {
+    void endCurrentMode(const State::MODE_TYPE& m) {
 
-    // remove the mode
-    statev.endCurrentMode(m);
-  }
+        // remove the mode
+        statev.endCurrentMode(m);
+    }
 
-  void endLastMode() {
+    void endLastMode() {
 
-    // remove the mode
-    statev.endLastMode();
-  }
+        // remove the mode
+        statev.endLastMode();
+    }
 
-  void endTopMode() {
+    void endTopMode() {
 
-    // remove the mode
-    statev.endCurrentMode();
-  }
+        // remove the mode
+        statev.endCurrentMode();
+    }
 
-  void endCurrentModeSafely(const State::MODE_TYPE& m) {
+    void endCurrentModeSafely(const State::MODE_TYPE& m) {
 
-    // remove the mode
-    statev.endCurrentModeSafely(m);
-  }
+        // remove the mode
+        statev.endCurrentModeSafely(m);
+    }
 
-  void setMode(const State::MODE_TYPE& m) {
+    void setMode(const State::MODE_TYPE& m) {
 
-    statev.setMode(m);
-  }
+        statev.setMode(m);
+    }
 
-  void clearMode(const State::MODE_TYPE& m) {
+    void clearMode(const State::MODE_TYPE& m) {
 
-    statev.clearMode(m);
-  }
+        statev.clearMode(m);
+    }
 
-  void replaceMode(const State::MODE_TYPE& o, const State::MODE_TYPE& n) {
+    void replaceMode(const State::MODE_TYPE& o, const State::MODE_TYPE& n) {
 
-    statev.replaceMode(o, n);
-  }
+        statev.replaceMode(o, n);
+    }
 
-  bool inPrevMode(const State::MODE_TYPE& m) const {
+    bool inPrevMode(const State::MODE_TYPE& m) const {
 
-    return statev.inPrevMode(m);
-  }
+        return statev.inPrevMode(m);
+    }
 
-  bool inMode(const State::MODE_TYPE& m) const {
-    return statev.inMode(m);
-  }
+    bool inMode(const State::MODE_TYPE& m) const {
+        return statev.inMode(m);
+    }
 
-  bool inTransparentMode(const State::MODE_TYPE& m) const {
-    return statev.inTransparentMode(m);
-  }
+    bool inTransparentMode(const State::MODE_TYPE& m) const {
+        return statev.inTransparentMode(m);
+    }
 
-  // End elements down to a specific mode
-  void endDownToMode(const State::MODE_TYPE& ele, const State::MODE_TYPE& stopmode = 0ULL);
+    // End elements down to a specific mode
+    void endDownToMode(const State::MODE_TYPE& ele, const State::MODE_TYPE& stopmode = 0ULL);
 
-  void endDownToFirstMode(const State::MODE_TYPE& ele, const State::MODE_TYPE& stopmode = 0ULL);
+    void endDownToFirstMode(const State::MODE_TYPE& ele, const State::MODE_TYPE& stopmode = 0ULL);
 
-  // End elements until we skip over a specific mode
-  void endDownOverMode(const State::MODE_TYPE& ele, const State::MODE_TYPE& stopmode = 0ULL);
+    // End elements until we skip over a specific mode
+    void endDownOverMode(const State::MODE_TYPE& ele, const State::MODE_TYPE& stopmode = 0ULL);
 
 };
 
