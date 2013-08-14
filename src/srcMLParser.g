@@ -3771,7 +3771,7 @@ variable_declaration_nameinit[] { bool isthis = LA(1) == THIS;
 
                 indexer_parameter_list();
 
-                endDownToModeSet(MODE_LIST);
+                endDownToMode(MODE_LIST);
 
                 match(RBRACKET);
 
@@ -3987,14 +3987,18 @@ expression_setup_linq[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
         expression_part[type]
 ;
 
+/*
+  All mode actions do not occur during guessing.  These can be used for mode actions
+  during guessing.
+*/
 guessing_startNewMode[State::MODE_TYPE mode]
     { if (inputState->guessing) startNewMode(mode | MODE_GUESSING); ENTRY_DEBUG } : ;
 
 guessing_endDownToMode[State::MODE_TYPE mode]
-    { if (inputState->guessing && inTransparentMode(MODE_GUESSING)) endDownToMode(mode | MODE_GUESSING); ENTRY_DEBUG } : ;
+    { if (inputState->guessing && inTransparentMode(MODE_GUESSING)) endDownToModeSet(mode | MODE_GUESSING); ENTRY_DEBUG } : ;
 
 guessing_endModeSafely[State::MODE_TYPE mode]
-    { if (inputState->guessing && inTransparentMode(MODE_GUESSING) && inMode(mode)) endMode(mode | MODE_GUESSING); ENTRY_DEBUG } : ;
+    { if (inputState->guessing && inTransparentMode(MODE_GUESSING) && inMode(mode)) endMode(); ENTRY_DEBUG } : ;
 
 guessing_endGuessing[]
     { if (inTransparentMode(MODE_GUESSING)) endDownOverMode(MODE_GUESSING); ENTRY_DEBUG } : ;

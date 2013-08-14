@@ -43,7 +43,10 @@
 #if defined(__GNUG__) && !defined(__MINGW32__)
 typedef xmlDocPtr (*xsltApplyStylesheetUser_function) (xsltStylesheetPtr,xmlDocPtr,const char **,const char *, FILE *,
                                                        xsltTransformContextPtr);
+typedef xmlDocPtr (*xsltApplyStylesheet_function) (xsltStylesheetPtr,xmlDocPtr,const char **);
+
 xsltApplyStylesheetUser_function xsltApplyStylesheetUserDynamic;
+xsltApplyStylesheet_function xsltApplyStylesheetDynamic;
 
 //typedef int (*xsltSaveResultTo_function) (xmlOutputBufferPtr, xmlDocPtr, xsltStylesheetPtr);
 //xsltSaveResultTo_function xsltSaveResultToDynamic;
@@ -81,6 +84,12 @@ public :
             dlclose(handle);
             return;
         }
+        dlerror();
+        xsltApplyStylesheetDynamic = (xsltApplyStylesheet_function)dlsym(handle, "xsltApplyStylesheet");
+        if ((error = dlerror()) != NULL) {
+            dlclose(handle);
+            return;
+        }
 /*
         dlerror();
         xsltSaveResultToDynamic = (xsltSaveResultTo_function)dlsym(handle, "xsltSaveResultTo");
@@ -112,7 +121,8 @@ public :
 
         // apply the style sheet to the document, which is the individual unit
 #if defined(__GNUG__) && !defined(__MINGW32__)
-        xmlDocPtr res = xsltApplyStylesheetUserDynamic(stylesheet, ctxt->myDoc, params, 0, 0, 0);
+//        xmlDocPtr res = xsltApplyStylesheetUserDynamic(stylesheet, ctxt->myDoc, params, 0, 0, 0);
+       xmlDocPtr res = xsltApplyStylesheetDynamic(stylesheet, ctxt->myDoc, 0);
 #else
         xmlDocPtr res = xsltApplyStylesheetUser(stylesheet, ctxt->myDoc, params, 0, 0, 0);
 #endif
@@ -193,6 +203,7 @@ public :
                 xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
 
             // finished with the result of the transformation
+            // TODO:  Get rid of this memory leak.
 //            xmlFreeDoc(res);
         }
 
