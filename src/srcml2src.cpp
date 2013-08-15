@@ -39,9 +39,14 @@
 #include "libxml_archive_write.hpp"
 #include "srcexfun.hpp"
 #include "URIStream.hpp"
+
+#if defined(__GNUG__) && !defined(__MINGW32__)
+#include <dlfcn.h>
+#else
 #include <libxslt/xslt.h>
 #include <libxslt/xsltconfig.h>
 #include <libexslt/exslt.h>
+#endif
 
 int option_error_status(int optopt);
 
@@ -247,19 +252,48 @@ void output_version(const char* name) {
     printf("libxml %d, ", LIBXML_VERSION);
   else
     printf("libxml %s (Compiled %d), ", xmlParserVersion, LIBXML_VERSION);
-/*
+
+#ifdef LIBXSLT_VERSION
   if(xsltLibxsltVersion == LIBXSLT_VERSION)
     printf("libxslt %d, ", LIBXSLT_VERSION);
   else
     printf("libxslt %d (Compiled %d), ", xsltLibxsltVersion, LIBXSLT_VERSION);
-*/
 
-/*
   if(exsltLibexsltVersion == LIBEXSLT_VERSION)
     printf("libexslt %d, ", LIBEXSLT_VERSION);
   else
     printf("libexslt %d (Compiled %d), ", exsltLibexsltVersion, LIBEXSLT_VERSION);
-*/
+#else
+    typedef void (*exsltRegisterAll_function)();
+
+    void* handle = dlopen("libexslt.so", RTLD_LAZY);
+    if (!handle) {
+        handle = dlopen("libexslt.dylib", RTLD_LAZY);
+    }
+
+    if (handle) {
+        dlerror();
+        int& xsltLibxsltVersion = *(int*)dlsym(handle, "xsltLibxsltVersion");
+        char* error;
+        if ((error = dlerror()) != NULL) {
+            dlclose(handle);
+            handle = 0;
+        } else
+            printf("libxslt %d, ", xsltLibxsltVersion);
+    }
+
+    if (handle) {
+        dlerror();
+        int& exsltLibexsltVersion = *(int*)dlsym(handle, "exsltLibexsltVersion");
+        char* error;
+        if ((error = dlerror()) != NULL) {
+            dlclose(handle);
+            handle = 0;
+        } else
+            printf("libexslt %d, ", exsltLibexsltVersion);
+    }
+#endif
+
   if(archive_version_number(), ARCHIVE_VERSION_NUMBER)
     printf("libarchive %d\n", ARCHIVE_VERSION_NUMBER);
   else

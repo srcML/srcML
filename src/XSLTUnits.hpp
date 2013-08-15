@@ -131,6 +131,11 @@ public :
             exit(1);
         }
 
+        fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
+        xmlFreeDoc(res);
+        fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
+
+        return false;
         // only interestd in non-empty results
         if (res && res->children) {
 
@@ -204,7 +209,6 @@ public :
 
             // finished with the result of the transformation
             // TODO:  Get rid of this memory leak.
-//            xmlFreeDoc(res);
         }
 
         return true;
