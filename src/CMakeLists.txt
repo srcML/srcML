@@ -73,13 +73,15 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ../bin )
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ../bin )
 
 # Run antlr
-add_custom_command(OUTPUT TextLexer.cpp TextLexer.hpp TextLexerTokenTypes.txt TextLexerTokenTypes.hpp expandedTextLexer.g COMMAND rm -f TextLexer.cpp TextLexer.hpp TextLexerTokenTypes.txt TextLexerTokenTypes.hpp expandedTextLexer.g COMMAND ${ANTLR} -glib \"WSLexer.g\;CommentLexer.g\" TextLexer.g  DEPENDS TextLexer.g WSLexer.cpp CommentLexer.cpp)
-add_custom_command(OUTPUT WSLexer.cpp WSLexer.hpp WSLexerTokenTypes.txt WSLexerTokenTypes.hpp COMMAND rm -f WSLexer.cpp WSLexer.hpp WSLexerTokenTypes.txt WSLexerTokenTypes.hpp COMMAND ${ANTLR} -glib \"CommentTextLexer.g\" WSLexer.g DEPENDS WSLexer.g CommentTextLexer.cpp)
-add_custom_command(OUTPUT CommentLexer.cpp CommentLexer.hpp CommentLexerTokenTypes.txt CommentLexerTokenTypes.hpp expandedCommentLexer.g COMMAND rm -f CommentLexer.cpp CommentLexer.hpp CommentLexerTokenTypes.txt CommentLexerTokenTypes.hpp expandedCommentLexer.g COMMAND ${ANTLR} -glib \"WSLexer.g\" CommentLexer.g DEPENDS CommentLexer.g WSLexer.cpp)
-add_custom_command(OUTPUT OperatorLexer.cpp OperatorLexer.hpp OperatorLexerTokenTypes.txt OperatorLexerTokenTypes.hpp expandedOperatorLexer.g COMMAND rm -f OperatorLexer.cpp OperatorLexer.hpp OperatorLexerTokenTypes.txt OperatorLexerTokenTypes.hpp expandedOperatorLexer.g COMMAND ${ANTLR} -glib \"WSLexer.g\;CommentLexer.g\;TextLexer.g\" OperatorLexer.g DEPENDS OperatorLexer.g CommentLexer.cpp TextLexer.cpp)
-add_custom_command(OUTPUT KeywordLexer.cpp KeywordLexer.hpp KeywordLexerTokenTypes.txt KeywordLexerTokenTypes.hpp expandedKeywordLexer.g COMMAND rm -f KeywordLexer.cpp KeywordLexer.hpp KeywordLexerTokenTypes.txt KeywordLexerTokenTypes.hpp expandedKeywordLexer.g COMMAND ${ANTLR} -glib \"WSLexer.g\;CommentLexer.g\;OperatorLexer.g\;TextLexer.g\" KeywordLexer.g DEPENDS KeywordLexer.g OperatorLexer.cpp)
 add_custom_command(OUTPUT CommentTextLexer.cpp CommentTextLexer.hpp CommentTextLexerTokenTypes.txt CommentTextLexerTokenTypes.hpp COMMAND rm -f CommentTextLexer.cpp CommentTextLexer.hpp CommentTextLexerTokenTypes.txt CommentTextLexerTokenTypes.hpp COMMAND ${ANTLR} CommentTextLexer.g DEPENDS CommentTextLexer.g)
-add_custom_command(OUTPUT srcMLParser.cpp srcMLParser.hpp srcMLParserTokenTypes.txt srcMLParserTokenTypes.hpp COMMAND rm -f srcMLParser.cpp srcMLParser.hpp srcMLParserTokenTypes.txt srcMLParserTokenTypes.hpp COMMAND ${ANTLR} -glib \"WSLexer.g\;CommentLexer.g\;OperatorLexer.g\;TextLexer.g\;KeywordLexer.g\;\" srcMLParser.g DEPENDS srcMLParser.g KeywordLexer.cpp)
+
+add_custom_command(OUTPUT TextLexer.cpp TextLexer.hpp TextLexerTokenTypes.txt TextLexerTokenTypes.hpp expandedTextLexer.g COMMAND rm -f TextLexer.cpp TextLexer.hpp TextLexerTokenTypes.txt TextLexerTokenTypes.hpp expandedTextLexer.g COMMAND ${ANTLR} TextLexer.g DEPENDS TextLexer.g CommentTextLexer.cpp)
+
+add_custom_command(OUTPUT OperatorLexer.cpp OperatorLexer.hpp OperatorLexerTokenTypes.txt OperatorLexerTokenTypes.hpp expandedOperatorLexer.g COMMAND rm -f OperatorLexer.cpp OperatorLexer.hpp OperatorLexerTokenTypes.txt OperatorLexerTokenTypes.hpp expandedOperatorLexer.g COMMAND ${ANTLR} -glib \"TextLexer.g\" OperatorLexer.g DEPENDS OperatorLexer.g TextLexer.cpp)
+
+add_custom_command(OUTPUT KeywordLexer.cpp KeywordLexer.hpp KeywordLexerTokenTypes.txt KeywordLexerTokenTypes.hpp expandedKeywordLexer.g COMMAND rm -f KeywordLexer.cpp KeywordLexer.hpp KeywordLexerTokenTypes.txt KeywordLexerTokenTypes.hpp expandedKeywordLexer.g COMMAND ${ANTLR} -glib \"OperatorLexer.g\;TextLexer.g\" KeywordLexer.g DEPENDS KeywordLexer.g OperatorLexer.cpp)
+
+add_custom_command(OUTPUT srcMLParser.cpp srcMLParser.hpp srcMLParserTokenTypes.txt srcMLParserTokenTypes.hpp COMMAND rm -f srcMLParser.cpp srcMLParser.hpp srcMLParserTokenTypes.txt srcMLParserTokenTypes.hpp COMMAND ${ANTLR} -glib \"OperatorLexer.g\;TextLexer.g\;KeywordLexer.g\;\" srcMLParser.g DEPENDS srcMLParser.g KeywordLexer.cpp)
 
 # Run special command for macro
 add_custom_command(OUTPUT srcMLParserTokenTypesMacro.hpp COMMAND ${GREP} '=' srcMLParserTokenTypes.hpp | ${SED} -e 's/,//g' -e 's/= //g' -e 's/^[ \t]*//' -e 's/^/\#define TOKEN_/g' > srcMLParserTokenTypesMacro.hpp DEPENDS srcMLParserTokenTypes.hpp)

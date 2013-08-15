@@ -40,15 +40,18 @@ options {
     namespaceStd="std";
 }
 
-class TextLexer extends CommentLexer;
+class TextLexer extends Lexer;
 
 options {
 	k = 1;
 	testLiterals = false; 
+    charVocabulary = '\000'..'\377';
+    importVocab=CommentTextLexer;
 }
 
 tokens {
-
+    COMMENT_START;
+    JAVADOC_COMMENT_START;
     CHAR_START;
 }
 
@@ -92,5 +95,81 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); } :
             { $setType(STRING_START); } STRING_START |
 
             (options { greedy = true; } : '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377')*
+        )
+;
+
+// Single-line comments (no EOL)
+LINECOMMENT_START
+    :   '/' ('/' { 
+
+              changetotextlexer(LINECOMMENT_END);
+
+              // when we return, we may have eaten the EOL, so we will turn back on startline
+              startline = true;
+
+              onpreprocline = false;
+            } |
+            '*'
+            { 
+                if (inLanguage(LANGUAGE_JAVA) && LA(1) == '*')
+                    $setType(JAVADOC_COMMENT_START);
+                else
+                    $setType(COMMENT_START);
+
+                changetotextlexer(COMMENT_END);
+
+                // comment are removed before includes are processed, so we are at the start of a line
+                startline = true;
+            } |
+
+            '=' { $setType(OPERATORS); } |
+
+            { $setType(OPERATORS); }
+        )
+;
+
+// whitespace (except for newline)
+WS :
+        (
+            // single space
+            ' '  |
+
+            // horizontal tab
+            '\t'
+        )+
+;
+
+// end of line
+EOL :
+        '\n'
+        { 
+            // onpreprocline is turned on when on a preprocessor line
+            // to prevent mostly string ending problems.
+            // it has to be turned back on when the EOL is reached
+            onpreprocline = false;
+
+            // mark that we are starting a new line, so preproc
+            // can be detected
+            startline = true;
+
+            // record to new lines for optional positions
+            newline();
+        }
+;
+/*
+EOL_BACKSLASH :
+        '\\' EOL
+    ;
+*/
+/*
+  Encode the control character in the text, so that is can be
+  issued in an escape character.
+*/
+CONTROL_CHAR :
+        { startline = true; }
+        (
+        '\000'..'\010' |
+        '\013'..'\014' |
+        '\016'..'\037'
         )
 ;
