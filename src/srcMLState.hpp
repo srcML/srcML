@@ -26,57 +26,57 @@
 #include "State.hpp"
 
 class srcMLState : public State {
- public:
+public:
 
-  srcMLState(const State::MODE_TYPE& mode, const State::MODE_TYPE& transmode)
-    : State(mode, transmode), parencount(0), typecount(0)
-    {}
+    srcMLState(const State::MODE_TYPE& mode, const State::MODE_TYPE& transmode)
+        : State(mode, transmode), parencount(0), typecount(0)
+        {}
 
-  srcMLState()
-    : State(), parencount(0), typecount(0)
-    {}
+    srcMLState()
+        : State(), parencount(0), typecount(0)
+        {}
 
-  // parentheses count
-  int getParen() const {
-    return parencount;
-  }
+    // parentheses count
+    int getParen() const {
+        return parencount;
+    }
 
-  // increment the parentheses count
-  void incParen() {
-    ++parencount;
-  }
+    // increment the parentheses count
+    void incParen() {
+        ++parencount;
+    }
 
-  // decrement the parentheses count
-  void decParen() {
-    --parencount;
-  }
+    // decrement the parentheses count
+    void decParen() {
+        --parencount;
+    }
 
-  // type count
-  int getTypeCount() const {
-    return typecount;
-  }
+    // type count
+    int getTypeCount() const {
+        return typecount;
+    }
 
-  // set type count
-  void setTypeCount(int n) {
-    typecount = n;
-  }
+    // set type count
+    void setTypeCount(int n) {
+        typecount = n;
+    }
 
-  // increment the type count
-  void incTypeCount() {
-    ++typecount;
-  }
+    // increment the type count
+    void incTypeCount() {
+        ++typecount;
+    }
 
-  // decrement the type count
-  void decTypeCount() {
-    --typecount;
-  }
+    // decrement the type count
+    void decTypeCount() {
+        --typecount;
+    }
 
-  ~srcMLState() {
-  }
+    ~srcMLState() {
+    }
 
- private:
-  int parencount;
-  int typecount;
+private:
+    int parencount;
+    int typecount;
 };
 
 #endif

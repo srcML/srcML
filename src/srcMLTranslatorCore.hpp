@@ -33,66 +33,66 @@
 class UTF8CharBuffer;
 
 class srcMLTranslatorCore : public Language {
- public:
+public:
 
-  // constructor
-  srcMLTranslatorCore(int language, const char* srcml_filename, OPTION_TYPE& op);
+    // constructor
+    srcMLTranslatorCore(int language, const char* srcml_filename, OPTION_TYPE& op);
 
-  // constructor
-  srcMLTranslatorCore(int language, xmlBuffer* output_buffer, OPTION_TYPE& op);
+    // constructor
+    srcMLTranslatorCore(int language, xmlBuffer* output_buffer, OPTION_TYPE& op);
 
-  // constructor
-  srcMLTranslatorCore(int language,
-		  const char* src_encoding,
-		  const char* xml_encoding,
-		  const char* srcml_filename,
-		  OPTION_TYPE& options,
-		  const char* directory,
-		  const char* filename,
-		  const char* version,
-		  const char* uri[],
-		  int tabsize
-		  );
+    // constructor
+    srcMLTranslatorCore(int language,
+                        const char* src_encoding,
+                        const char* xml_encoding,
+                        const char* srcml_filename,
+                        OPTION_TYPE& options,
+                        const char* directory,
+                        const char* filename,
+                        const char* version,
+                        const char* uri[],
+                        int tabsize
+        );
 
-  // constructor
-  srcMLTranslatorCore(int language,
-		  const char* src_encoding,
-		  const char* xml_encoding,
-                  xmlBuffer* output_buffer,
-		  OPTION_TYPE& options,
-		  const char* directory,
-		  const char* filename,
-		  const char* version,
-		  const char* uri[],
-		  int tabsize
-		  );
+    // constructor
+    srcMLTranslatorCore(int language,
+                        const char* src_encoding,
+                        const char* xml_encoding,
+                        xmlBuffer* output_buffer,
+                        OPTION_TYPE& options,
+                        const char* directory,
+                        const char* filename,
+                        const char* version,
+                        const char* uri[],
+                        int tabsize
+        );
 
-  void* setInput(const char* path);
-  void* setInputString(const char* source);
+    void* setInput(const char* path);
+    void* setInputString(const char* source);
 
-  void close();
+    void close();
 
-  // translate from input stream to output stream
-  void translate(const char* path,
-		 const char* unit_directory = 0,
-		 const char* unit_filename = 0,
-		 const char* unit_version = 0,
-		 int language = 0);
+    // translate from input stream to output stream
+    void translate(const char* path,
+                   const char* unit_directory = 0,
+                   const char* unit_filename = 0,
+                   const char* unit_version = 0,
+                   int language = 0);
 
-  // destructor
-  ~srcMLTranslatorCore();
+    // destructor
+    ~srcMLTranslatorCore();
 
- private:
-  UTF8CharBuffer* pinput;
-  bool first;
-  const char* root_directory;
-  const char* root_filename;
-  const char* root_version;
-  const char* encoding;
-  int language;
-  OPTION_TYPE& options;
-  srcMLTranslatorOutput out;
-  int tabsize;
+private:
+    UTF8CharBuffer* pinput;
+    bool first;
+    const char* root_directory;
+    const char* root_filename;
+    const char* root_version;
+    const char* encoding;
+    int language;
+    OPTION_TYPE& options;
+    srcMLTranslatorOutput out;
+    int tabsize;
 };
 
 #endif

@@ -39,9 +39,9 @@ void xpathsrcMLRegister(xmlXPathContextPtr context);
 
 struct xpath_ext_function {
 
-  std::string prefix;
-  std::string name;
-  std::string expr;
+    std::string prefix;
+    std::string name;
+    std::string expr;
 };
 
 void xpathRegisterExtensionFunction(const std::string& uri, const std::string & name, const std::string & xpath);

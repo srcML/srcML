@@ -29,206 +29,206 @@
 #include <libxml/parserInternals.h>
 
 class ExtractUnitsXML : public ProcessUnit {
- public :
- ExtractUnitsXML(const char* to_dir, const char* filename, const char* output_encoding)
-   : to_directory(to_dir), ofilename(filename), buffer(0) {
+public :
+    ExtractUnitsXML(const char* to_dir, const char* filename, const char* output_encoding)
+        : to_directory(to_dir), ofilename(filename), buffer(0) {
 
-    handler = xmlFindCharEncodingHandler(output_encoding);
-  }
+        handler = xmlFindCharEncodingHandler(output_encoding);
+    }
 
- ExtractUnitsXML(xmlBufferPtr buffer, const char* output_encoding)
-   : to_directory(0), ofilename(0), buffer(buffer) {
+    ExtractUnitsXML(xmlBufferPtr buffer, const char* output_encoding)
+        : to_directory(0), ofilename(0), buffer(buffer) {
 
-    handler = xmlFindCharEncodingHandler(output_encoding);
-  }
+        handler = xmlFindCharEncodingHandler(output_encoding);
+    }
 
- private :
+private :
     const char* to_directory;
     const char* ofilename;
     xmlBufferPtr buffer;
     xmlCharEncodingHandlerPtr handler;
     PROPERTIES_TYPE nsv;
     PROPERTIES_TYPE attrv;
- 
 
- public :
+
+public :
 
     // handle root unit of compound document
     void startRootUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix,
                        const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces, int nb_attributes,
                        int nb_defaulted, const xmlChar** attributes) {
 
-      xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-      SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+        xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+        SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
-      // fprintf(stderr, "%s\n", __FUNCTION__);
-      // collect namespaces
-      if(isoption(*(pstate->poptions), OPTION_DIFF))
-        collect_namespaces_version(nb_namespaces, namespaces, nsv);
-      else
-        collect_namespaces(nb_namespaces, namespaces, nsv);
+        // fprintf(stderr, "%s\n", __FUNCTION__);
+        // collect namespaces
+        if(isoption(*(pstate->poptions), OPTION_DIFF))
+            collect_namespaces_version(nb_namespaces, namespaces, nsv);
+        else
+            collect_namespaces(nb_namespaces, namespaces, nsv);
 
-      // collect attributes
-      collect_attributes(nb_attributes, attributes, attrv);
+        // collect attributes
+        collect_attributes(nb_attributes, attributes, attrv);
     }
 
     virtual void startUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                         const xmlChar** attributes) {
+                           int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                           const xmlChar** attributes) {
 
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+        xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+        SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
-    // open the output text writer stream
-    // "-" filename is standard output
-    if(ofilename)
-      writer = xmlNewTextWriterFilename(ofilename,
-					      isoption(*(pstate->poptions), OPTION_COMPRESSED) ? 1 : 0);
-    else
-      writer = xmlNewTextWriterMemory(buffer, isoption(*(pstate->poptions), OPTION_COMPRESSED) ? 1 : 0);
+        // open the output text writer stream
+        // "-" filename is standard output
+        if(ofilename)
+            writer = xmlNewTextWriterFilename(ofilename,
+                                              isoption(*(pstate->poptions), OPTION_COMPRESSED) ? 1 : 0);
+        else
+            writer = xmlNewTextWriterMemory(buffer, isoption(*(pstate->poptions), OPTION_COMPRESSED) ? 1 : 0);
 
-    // start this document the same as the current document
-    if (!isoption(*(pstate->poptions), OPTION_XMLDECL))
-      xmlTextWriterStartDocument(writer,
-			       (const char*) ctxt->version,
-			       (const char*) (ctxt->encoding ? ctxt->encoding : ctxt->input->encoding),
-			       ctxt->standalone ? "yes" : "no");
+        // start this document the same as the current document
+        if (!isoption(*(pstate->poptions), OPTION_XMLDECL))
+            xmlTextWriterStartDocument(writer,
+                                       (const char*) ctxt->version,
+                                       (const char*) (ctxt->encoding ? ctxt->encoding : ctxt->input->encoding),
+                                       ctxt->standalone ? "yes" : "no");
 
-    // start element with proper prefix
-    const char* name = qname((const char*) prefix, (const char*) localname);
-    xmlTextWriterStartElement(writer, BAD_CAST name);
+        // start element with proper prefix
+        const char* name = qname((const char*) prefix, (const char*) localname);
+        xmlTextWriterStartElement(writer, BAD_CAST name);
 
-    // merge this units namespaces
-    collect_namespaces(nb_namespaces, namespaces, nsv);
+        // merge this units namespaces
+        collect_namespaces(nb_namespaces, namespaces, nsv);
 
-    // output the merged namespaces
-    if (!isoption(*(pstate->poptions), OPTION_NAMESPACEDECL))
-      for (int i = 0; i < MAXPROPERTIES; ++i) {
-	if (nsv[i].first == "")
-	  break;
+        // output the merged namespaces
+        if (!isoption(*(pstate->poptions), OPTION_NAMESPACEDECL))
+            for (int i = 0; i < MAXPROPERTIES; ++i) {
+                if (nsv[i].first == "")
+                    break;
 
-	xmlTextWriterWriteAttribute(writer, BAD_CAST nsv[i].second.c_str(), BAD_CAST nsv[i].first.c_str());
-      }
+                xmlTextWriterWriteAttribute(writer, BAD_CAST nsv[i].second.c_str(), BAD_CAST nsv[i].first.c_str());
+            }
 
-    // merge this units attributes
-    collect_attributes(nb_attributes, attributes, attrv);
+        // merge this units attributes
+        collect_attributes(nb_attributes, attributes, attrv);
 
-    // output the merged attributes
-    for (int i = 0; i < MAXPROPERTIES; ++i) {
-      if (attrv[i].first == "")
-	break;
+        // output the merged attributes
+        for (int i = 0; i < MAXPROPERTIES; ++i) {
+            if (attrv[i].first == "")
+                break;
 
-      xmlTextWriterWriteAttribute(writer, BAD_CAST attrv[i].first.c_str(), BAD_CAST attrv[i].second.c_str());
-    }
-  }
-
-  virtual void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                              const xmlChar** attributes) {
-
-    // fprintf(stderr, "%s %s\n", __FUNCTION__, localname);
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
-
-    // start element with proper prefix
-    const char* name = qname((const char*) prefix, (const char*) localname);
-    xmlTextWriterStartElement(writer, BAD_CAST name);
-
-    // copy namespaces
-    if (!isoption(*(pstate->poptions), OPTION_NAMESPACE))
-      for (int i = 0, index = 0; i < nb_namespaces; ++i, index += 2) {
-
-	const char* name = xmlnsprefix((const char*) namespaces[index]);
-
-	xmlTextWriterWriteAttribute(writer, BAD_CAST name, namespaces[index + 1]);
-      }
-
-    // copy attributes
-    for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
-
-      const char* name = qname((const char*) attributes[index + 1], (const char*) attributes[index]);
-
-      // write the attribute raw so we don't have to convert
-      // the begin/end pointers of the attribute value to a string
-      xmlTextWriterStartAttribute(writer, BAD_CAST name);
-      xmlTextWriterWriteRawLen(writer, attributes[index + 3],
-			       attributes[index + 4] - attributes[index + 3]);
-      xmlTextWriterEndAttribute(writer);
-    }
-  }
-
-
-  virtual void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
-    // fprintf(stderr, "%s %s\n", __FUNCTION__, localname);
-    xmlTextWriterEndElement(writer);
-  }
-
-  virtual void characters(void* ctx, const xmlChar* ch, int len) {
-
-      // fprintf(stderr, "%s\n", __FUNCTION__);
-    const char* c = (const char*) ch;
-    int pos = 0;
-    const char* chend = (const char*) ch + len;
-    while (c < chend) {
-
-      switch (*c) {
-      case '<' :
-	xmlTextWriterWriteRawLen(writer, BAD_CAST c - pos, pos);
-	pos = 0;
-	xmlTextWriterWriteRawLen(writer, BAD_CAST "&lt;", 4);
-	break;
-
-      case '>' :
-	xmlTextWriterWriteRawLen(writer, BAD_CAST c - pos, pos);
-	pos = 0;
-	xmlTextWriterWriteRawLen(writer, BAD_CAST "&gt;", 4);
-	break;
-
-      case '&' :
-	xmlTextWriterWriteRawLen(writer, BAD_CAST c - pos, pos);
-	pos = 0;
-	xmlTextWriterWriteRawLen(writer, BAD_CAST "&amp;", 5);
-	break;
-
-      default :
-	++pos;
-	break;
-      };
-      ++c;
+            xmlTextWriterWriteAttribute(writer, BAD_CAST attrv[i].first.c_str(), BAD_CAST attrv[i].second.c_str());
+        }
     }
 
-    xmlTextWriterWriteRawLen(writer, BAD_CAST c - pos, pos);
-  }
+    virtual void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                                int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                                const xmlChar** attributes) {
 
-  virtual void endUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
-    // fprintf(stderr, "%s %s\n", __FUNCTION__, localname);
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+        // fprintf(stderr, "%s %s\n", __FUNCTION__, localname);
+        xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+        SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
-    endElementNs(ctx, localname, prefix, URI);
+        // start element with proper prefix
+        const char* name = qname((const char*) prefix, (const char*) localname);
+        xmlTextWriterStartElement(writer, BAD_CAST name);
 
-    xmlTextWriterEndDocument(writer);
+        // copy namespaces
+        if (!isoption(*(pstate->poptions), OPTION_NAMESPACE))
+            for (int i = 0, index = 0; i < nb_namespaces; ++i, index += 2) {
 
-    xmlFreeTextWriter(writer);
+                const char* name = xmlnsprefix((const char*) namespaces[index]);
 
-    if (isoption(*(pstate->poptions), OPTION_NULL)) {
-      putchar('\0');
+                xmlTextWriterWriteAttribute(writer, BAD_CAST name, namespaces[index + 1]);
+            }
+
+        // copy attributes
+        for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
+
+            const char* name = qname((const char*) attributes[index + 1], (const char*) attributes[index]);
+
+            // write the attribute raw so we don't have to convert
+            // the begin/end pointers of the attribute value to a string
+            xmlTextWriterStartAttribute(writer, BAD_CAST name);
+            xmlTextWriterWriteRawLen(writer, attributes[index + 3],
+                                     attributes[index + 4] - attributes[index + 3]);
+            xmlTextWriterEndAttribute(writer);
+        }
     }
-  }
 
-  // comments
-  void comments(void* ctx, const xmlChar* ch) {
 
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+    virtual void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+        // fprintf(stderr, "%s %s\n", __FUNCTION__, localname);
+        xmlTextWriterEndElement(writer);
+    }
 
-    if (!isoption(*(pstate->poptions), OPTION_NULL))
-      xmlTextWriterWriteComment(writer, ch);
-  }
+    virtual void characters(void* ctx, const xmlChar* ch, int len) {
 
- private :
-  const char* filename;      // output filename
-  xmlTextWriterPtr writer;   // output text writer
+        // fprintf(stderr, "%s\n", __FUNCTION__);
+        const char* c = (const char*) ch;
+        int pos = 0;
+        const char* chend = (const char*) ch + len;
+        while (c < chend) {
+
+            switch (*c) {
+            case '<' :
+                xmlTextWriterWriteRawLen(writer, BAD_CAST c - pos, pos);
+                pos = 0;
+                xmlTextWriterWriteRawLen(writer, BAD_CAST "&lt;", 4);
+                break;
+
+            case '>' :
+                xmlTextWriterWriteRawLen(writer, BAD_CAST c - pos, pos);
+                pos = 0;
+                xmlTextWriterWriteRawLen(writer, BAD_CAST "&gt;", 4);
+                break;
+
+            case '&' :
+                xmlTextWriterWriteRawLen(writer, BAD_CAST c - pos, pos);
+                pos = 0;
+                xmlTextWriterWriteRawLen(writer, BAD_CAST "&amp;", 5);
+                break;
+
+            default :
+                ++pos;
+                break;
+            };
+            ++c;
+        }
+
+        xmlTextWriterWriteRawLen(writer, BAD_CAST c - pos, pos);
+    }
+
+    virtual void endUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+        // fprintf(stderr, "%s %s\n", __FUNCTION__, localname);
+        xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+        SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+
+        endElementNs(ctx, localname, prefix, URI);
+
+        xmlTextWriterEndDocument(writer);
+
+        xmlFreeTextWriter(writer);
+
+        if (isoption(*(pstate->poptions), OPTION_NULL)) {
+            putchar('\0');
+        }
+    }
+
+    // comments
+    void comments(void* ctx, const xmlChar* ch) {
+
+        xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+        SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+
+        if (!isoption(*(pstate->poptions), OPTION_NULL))
+            xmlTextWriterWriteComment(writer, ch);
+    }
+
+private :
+    const char* filename;      // output filename
+    xmlTextWriterPtr writer;   // output text writer
 };
 
 #endif

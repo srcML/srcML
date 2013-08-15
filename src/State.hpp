@@ -29,74 +29,74 @@
 #include "srcMLException.hpp"
 
 class State {
- public:
+public:
 
 #ifdef __GNUC__
-  typedef unsigned long long MODE_TYPE;
+    typedef unsigned long long MODE_TYPE;
 #else
-  typedef unsigned __int64 MODE_TYPE;
+    typedef unsigned __int64 MODE_TYPE;
 #endif
 
-  State(const MODE_TYPE& mode = 0, const MODE_TYPE& transmode = 0)
-    : flags(mode), flags_prev(transmode | mode)
-    {}
+    State(const MODE_TYPE& mode = 0, const MODE_TYPE& transmode = 0)
+        : flags(mode), flags_prev(transmode | mode)
+        {}
 
-  // callstack methods
-  int size() const {
-    return callstack.size();
-  }
+    // callstack methods
+    int size() const {
+        return callstack.size();
+    }
 
-  void push(int id) {
-    callstack.push(id);
-  }
+    void push(int id) {
+        callstack.push(id);
+    }
 
-  void pop() {
-    if (callstack.empty())
-      throw Segmentation_Fault();
+    void pop() {
+        if (callstack.empty())
+            throw Segmentation_Fault();
 
-    callstack.pop();
-  }
+        callstack.pop();
+    }
 
-  // mode methods
+    // mode methods
 
-  bool inMode(const MODE_TYPE& m) const {
+    bool inMode(const MODE_TYPE& m) const {
 
-    return (flags & m) == m;
-  }
+        return (flags & m) == m;
+    }
 
-  bool inTransparentMode(const MODE_TYPE& m) const {
+    bool inTransparentMode(const MODE_TYPE& m) const {
 
-    return (flags_prev & m) == m;
-  }
+        return (flags_prev & m) == m;
+    }
 
-  const MODE_TYPE& getMode() const {
-    return flags;
-  }
+    const MODE_TYPE& getMode() const {
+        return flags;
+    }
 
-  const MODE_TYPE& getTransparentMode() const {
-    return flags_prev;
-  }
+    const MODE_TYPE& getTransparentMode() const {
+        return flags_prev;
+    }
 
-  void setMode(const MODE_TYPE& m1) {
+    void setMode(const MODE_TYPE& m1) {
 
-    flags |= m1;
-    flags_prev |= m1;
-  }
+        flags |= m1;
+        flags_prev |= m1;
+    }
 
-  void clearMode(const MODE_TYPE& m) {
+    void clearMode(const MODE_TYPE& m) {
 
-    flags &= ~m;
-    flags_prev &= ~m;
-  }
+        flags &= ~m;
+        flags_prev &= ~m;
+    }
 
-  ~State() {
-  }
+    ~State() {
+    }
 
- public:
-  MODE_TYPE flags;
-  MODE_TYPE flags_prev;
+public:
+    MODE_TYPE flags;
+    MODE_TYPE flags_prev;
 
-  SimpleStack<int, 100> callstack;
+    SimpleStack<int, 100> callstack;
 };
 
 #endif

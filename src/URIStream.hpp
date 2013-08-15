@@ -30,22 +30,22 @@
 class URIStreamFileError {};
 
 class URIStream {
- public:
-  URIStream(const char* uriname);
+public:
+    URIStream(const char* uriname);
 
-  char* readline();
+    char* readline();
 
-  std::string readlines();
+    std::string readlines();
 
-  ~URIStream();
+    ~URIStream();
 
- private:
-  xmlParserInputBufferPtr input;
-  unsigned int startpos;
-  unsigned int endpos;
-  bool first;
-  bool eof;
-  bool done;
+private:
+    xmlParserInputBufferPtr input;
+    unsigned int startpos;
+    unsigned int endpos;
+    bool first;
+    bool eof;
+    bool done;
 };
 
 

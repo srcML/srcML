@@ -28,33 +28,33 @@
 #include "ProcessUnit.hpp"
 
 class ListUnits : public ProcessUnit {
- public :
-  ListUnits() {}
+public :
+    ListUnits() {}
 
- public :
+public :
 
-  virtual void startUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-                         int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                         const xmlChar** attributes) {
+    virtual void startUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                           int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                           const xmlChar** attributes) {
 
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+        xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+        SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
-    // find the directory
-    int dir_index = find_attribute_index(nb_attributes, attributes, UNIT_ATTRIBUTE_DIRECTORY);
-    int dir_size = dir_index != -1 ? (const char*) attributes[dir_index + 4] - (const char*) attributes[dir_index + 3] : 0;
+        // find the directory
+        int dir_index = find_attribute_index(nb_attributes, attributes, UNIT_ATTRIBUTE_DIRECTORY);
+        int dir_size = dir_index != -1 ? (const char*) attributes[dir_index + 4] - (const char*) attributes[dir_index + 3] : 0;
 
-    // find the filename
-    int filename_index = find_attribute_index(nb_attributes, attributes, UNIT_ATTRIBUTE_FILENAME);
-    int filename_size = filename_index != -1 ? (const char*) attributes[filename_index + 4] - (const char*) attributes[filename_index + 3] : 0;
+        // find the filename
+        int filename_index = find_attribute_index(nb_attributes, attributes, UNIT_ATTRIBUTE_FILENAME);
+        int filename_size = filename_index != -1 ? (const char*) attributes[filename_index + 4] - (const char*) attributes[filename_index + 3] : 0;
 
-    // whole purpose
-    fprintf(stdout, "%ld\t%.*s%.*s%.*s\n", pstate->count,
-            dir_size, (char*) attributes[dir_index + 3],
-            dir_size ? 1 : 0, "/",
-            filename_size, (char*) attributes[filename_index + 3]);
+        // whole purpose
+        fprintf(stdout, "%ld\t%.*s%.*s%.*s\n", pstate->count,
+                dir_size, (char*) attributes[dir_index + 3],
+                dir_size ? 1 : 0, "/",
+                filename_size, (char*) attributes[filename_index + 3]);
 
-  }
+    }
 };
 
 #endif

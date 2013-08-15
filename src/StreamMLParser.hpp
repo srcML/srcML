@@ -37,323 +37,323 @@
 template <typename Base>
 class StreamMLParser : public Base, public TokenStream {
 
-  // Follow example of ANTLR generated parsers
- public:
+    // Follow example of ANTLR generated parsers
+public:
 
-  StreamMLParser(antlr::TokenStream& lexer, int language, int parsing_options = 0)
-      : Base(lexer, language, parsing_options), options(parsing_options),
-        inskip(false), _lexer(lexer) {
+    StreamMLParser(antlr::TokenStream& lexer, int language, int parsing_options = 0)
+        : Base(lexer, language, parsing_options), options(parsing_options),
+          inskip(false), _lexer(lexer) {
 
-    pouttb = &tb;
-    pskiptb = &skiptb;
+        pouttb = &tb;
+        pskiptb = &skiptb;
 
-    Base::startUnit();
-  }
-
-  ~StreamMLParser() {}
-
-  // starts an element
-  void startElement(int id) {
-
-    Base::currentState().push(id);
-    pushSToken(id, true);
-  }
-
-  // starts an element
-  void startNoSkipElement(int id) {
-
-    Base::currentState().push(id);
-    pushSToken(id, false);
-  }
-
-  // ends an element
-  void endElement(int id) {
-
-    pushEToken(id);
-    Base::currentState().pop();
-  }
-
-  // starts an element
-  void emptyElement(int id) {
-
-    // push a empty element token
-    pushToken(antlr::RefToken(EmptyTokenFactory(id)));
-  }
-
- private:
-
-  // token skipped during parsing
-  bool isSkipToken(int token_type) const {
-
-    switch (token_type) {
-
-    // Always handled as white space and hidden from
-    // parsing
-    case Base::WS:
-    case Base::CONTROL_CHAR:
-    case Base::EOL_BACKSLASH:
-    case Base::COMMENT_START:
-    case Base::COMMENT_END:
-    case Base::LINECOMMENT_END:
-    case Base::COMMENT_TEXT:
-      return true;
-      break;
-
-    // whether to handle a line comment start or an EOL
-    // depends on whether we are in preprocssing handling or not
-    // where the detection of the end of the preprocessing line
-    // is needed (preprocessing lines end at EOL, or the start of
-    // a line comment)
-    case Base::LINECOMMENT_START:
-    case Base::EOL:
-
-      return !inskip;
-      break;
-
-    // anything else is passed to the parser
-    default:
-
-      return false;
-      break;
-    }
-  }
-
-  // fills the token buffer with new tokens
-  void fillTokenBuffer() {
-
-    try {
-
-      if (consumeSkippedToken()) {
-	flushSkip();
-	return;
-      }
-
-      // more partial parsing to do
-      Base::start();
-
-    } catch (const std::exception&) {
-
-      // when an error occurs just insert an error element
-      emptyElement(Base::SERROR_PARSE);
-    }
-  }
-
-  /*
-    Provide markup tag specific pushToken methods
-  */
-
-  // push the start token onto the output token stream
-  void pushSToken(int token, bool flush = true) {
-
-    // push a new start token
-    pushToken(antlr::RefToken(StartTokenFactory(token)), flush);
-  }
-
-  // push the end token with this number onto the output token stream
-  void pushEToken(int token) {
-
-    // push a new end token
-    pushToken(antlr::RefToken(EndTokenFactory(token)), false);
-  }
-
-  // consume the current token
-  void consume() {
-
-    // push the token onto the correct output stream
-    pushCorrectToken();
-
-    // rest of consume process
-    Base::consume();
-
-    // consume any skipped tokens
-    while (consumeSkippedToken())
-      ;
-  }
-
-  // consume a current token
-  bool consumeSkippedToken() {
-
-    // preprocessor (unless we already are in one)
-    if (!inskip && Base::LA(1) == Base::PREPROC) {
-
-      // start preprocessor handling
-      inskip = true;
-
-      // use preprocessor token buffers
-      pouttb = &pretb;
-      pskiptb = &skippretb;
-
-      // parse preprocessor statement stopping at EOL
-      Base::preprocessor();
-
-      // flush remaining whitespace from preprocessor handling onto preprocessor buffer
-      pretb.splice(pretb.end(), skippretb);
-
-      // move back to normal buffer
-      pskiptb = &skiptb;
-      pouttb = &tb;
-
-      // put preprocessor buffer into skipped buffer
-      skiptb.splice(skiptb.end(), pretb);
-
-      // stop preprocessor handling
-      inskip = false;
-
-      return true;
+        Base::startUnit();
     }
 
-    // actual whitespace
-    if (isSkipToken(Base::LA(1))) {
-      // skipped tokens are put on a special buffer
-      pushSkipToken();
+    ~StreamMLParser() {}
 
-      // rest of consume process
-      Base::consume();
+    // starts an element
+    void startElement(int id) {
 
-      return true;
+        Base::currentState().push(id);
+        pushSToken(id, true);
     }
 
-    // no white space or preprocessor tokens were skipped
-    return false;
-  }
+    // starts an element
+    void startNoSkipElement(int id) {
 
-  // consume the current skipped token
-  void consumeSkip() {
+        Base::currentState().push(id);
+        pushSToken(id, false);
+    }
 
-    // skipped tokens are put on a special buffer
-    pushSkipToken();
+    // ends an element
+    void endElement(int id) {
 
-    // rest of consume process
-    Base::consume();
-  }
+        pushEToken(id);
+        Base::currentState().pop();
+    }
 
-  // flush any skipped tokens to the output token stream
-  void flushSkip() {
-    flushSkip(output());
-  }
+    // starts an element
+    void emptyElement(int id) {
 
-  int SkipBufferSize() {
-    return skiptb.size();
-  }
+        // push a empty element token
+        pushToken(antlr::RefToken(EmptyTokenFactory(id)));
+    }
 
-  // flush any skipped tokens to the output token stream
-  void flushSkip(std::list<antlr::RefToken>& rf) {
+private:
 
-    rf.splice(rf.end(), skip());
-  }
+    // token skipped during parsing
+    bool isSkipToken(int token_type) const {
 
-  /*
-    Provide TokenStream interface
-  */
+        switch (token_type) {
 
-  // returns the next token in the output token stream
-  const antlr::RefToken& nextToken() {
+            // Always handled as white space and hidden from
+            // parsing
+        case Base::WS:
+        case Base::CONTROL_CHAR:
+        case Base::EOL_BACKSLASH:
+        case Base::COMMENT_START:
+        case Base::COMMENT_END:
+        case Base::LINECOMMENT_END:
+        case Base::COMMENT_TEXT:
+            return true;
+            break;
 
-    // assume primed
-    tb.pop_front();
+            // whether to handle a line comment start or an EOL
+            // depends on whether we are in preprocssing handling or not
+            // where the detection of the end of the preprocessing line
+            // is needed (preprocessing lines end at EOL, or the start of
+            // a line comment)
+        case Base::LINECOMMENT_START:
+        case Base::EOL:
 
-    // fill the token buffer if it is empty
-    if (tb.empty())
-      fillTokenBuffer();
+            return !inskip;
+            break;
 
-    // pop and send back the top token
-    const antlr::RefToken& tok = tb.front();
+            // anything else is passed to the parser
+        default:
 
-    return tok;
-  }
+            return false;
+            break;
+        }
+    }
 
-  // push the token onto the output token stream
-  void pushToken(const antlr::RefToken& rtoken, bool flush = true) {
+    // fills the token buffer with new tokens
+    void fillTokenBuffer() {
 
-    // don't push any tokens during guessing stage
-    if (Base::inputState->guessing)
-      return;
+        try {
 
-    // if it isn't an end token flush whitespace tokens
-    if (flush) {
+            if (consumeSkippedToken()) {
+                flushSkip();
+                return;
+            }
+
+            // more partial parsing to do
+            Base::start();
+
+        } catch (const std::exception&) {
+
+            // when an error occurs just insert an error element
+            emptyElement(Base::SERROR_PARSE);
+        }
+    }
+
+    /*
+      Provide markup tag specific pushToken methods
+    */
+
+    // push the start token onto the output token stream
+    void pushSToken(int token, bool flush = true) {
+
+        // push a new start token
+        pushToken(antlr::RefToken(StartTokenFactory(token)), flush);
+    }
+
+    // push the end token with this number onto the output token stream
+    void pushEToken(int token) {
+
+        // push a new end token
+        pushToken(antlr::RefToken(EndTokenFactory(token)), false);
+    }
+
+    // consume the current token
+    void consume() {
+
+        // push the token onto the correct output stream
+        pushCorrectToken();
+
+        // rest of consume process
+        Base::consume();
+
+        // consume any skipped tokens
+        while (consumeSkippedToken())
+            ;
+    }
+
+    // consume a current token
+    bool consumeSkippedToken() {
+
+        // preprocessor (unless we already are in one)
+        if (!inskip && Base::LA(1) == Base::PREPROC) {
+
+            // start preprocessor handling
+            inskip = true;
+
+            // use preprocessor token buffers
+            pouttb = &pretb;
+            pskiptb = &skippretb;
+
+            // parse preprocessor statement stopping at EOL
+            Base::preprocessor();
+
+            // flush remaining whitespace from preprocessor handling onto preprocessor buffer
+            pretb.splice(pretb.end(), skippretb);
+
+            // move back to normal buffer
+            pskiptb = &skiptb;
+            pouttb = &tb;
+
+            // put preprocessor buffer into skipped buffer
+            skiptb.splice(skiptb.end(), pretb);
+
+            // stop preprocessor handling
+            inskip = false;
+
+            return true;
+        }
+
+        // actual whitespace
+        if (isSkipToken(Base::LA(1))) {
+            // skipped tokens are put on a special buffer
+            pushSkipToken();
+
+            // rest of consume process
+            Base::consume();
+
+            return true;
+        }
+
+        // no white space or preprocessor tokens were skipped
+        return false;
+    }
+
+    // consume the current skipped token
+    void consumeSkip() {
+
+        // skipped tokens are put on a special buffer
+        pushSkipToken();
+
+        // rest of consume process
+        Base::consume();
+    }
+
+    // flush any skipped tokens to the output token stream
+    void flushSkip() {
         flushSkip(output());
     }
 
-    // push the new token into the token buffer
-    output().push_back(rtoken);
-  }
+    int SkipBufferSize() {
+        return skiptb.size();
+    }
 
-  std::list<antlr::RefToken>& output() {
-    return *pouttb;
-  }
+    // flush any skipped tokens to the output token stream
+    void flushSkip(std::list<antlr::RefToken>& rf) {
 
-  std::list<antlr::RefToken>& skip() {
-    return *pskiptb;
-  }
+        rf.splice(rf.end(), skip());
+    }
 
-  // push the skipped token onto the output token stream
-  void pushSkipToken(const antlr::RefToken& rtoken) {
+    /*
+      Provide TokenStream interface
+    */
 
-    // don't push any tokens during guessing stage
-    if (Base::inputState->guessing)
-      return;
+    // returns the next token in the output token stream
+    const antlr::RefToken& nextToken() {
 
-    // push the new token into the token buffer
-    skip().push_back(rtoken);
-  }
+        // assume primed
+        tb.pop_front();
 
-  inline void pushCorrectToken() {
+        // fill the token buffer if it is empty
+        if (tb.empty())
+            fillTokenBuffer();
 
-    pushCorrectToken(Base::LT(1));
-  }
+        // pop and send back the top token
+        const antlr::RefToken& tok = tb.front();
 
-  inline void pushCorrectToken(const antlr::RefToken& rtoken) {
+        return tok;
+    }
 
-    if (isSkipToken(Base::LA(1)))
+    // push the token onto the output token stream
+    void pushToken(const antlr::RefToken& rtoken, bool flush = true) {
 
-      // push the token
-      pushSkipToken();
+        // don't push any tokens during guessing stage
+        if (Base::inputState->guessing)
+            return;
 
-    else
+        // if it isn't an end token flush whitespace tokens
+        if (flush) {
+            flushSkip(output());
+        }
 
-      // push the token
-      pushToken();
-  }
+        // push the new token into the token buffer
+        output().push_back(rtoken);
+    }
 
-  // push the token onto the output token stream
-  void pushToken() {
+    std::list<antlr::RefToken>& output() {
+        return *pouttb;
+    }
 
-    pushToken(Base::LT(1));
-  }
+    std::list<antlr::RefToken>& skip() {
+        return *pskiptb;
+    }
 
-  // push the skipped token onto the output token stream
-  void pushSkipToken() {
+    // push the skipped token onto the output token stream
+    void pushSkipToken(const antlr::RefToken& rtoken) {
 
-    pushSkipToken(Base::LT(1));
-  }
+        // don't push any tokens during guessing stage
+        if (Base::inputState->guessing)
+            return;
 
-  antlr::RefToken* CurrentToken() {
+        // push the new token into the token buffer
+        skip().push_back(rtoken);
+    }
 
-    return &(output().back());
-  }
+    inline void pushCorrectToken() {
+
+        pushCorrectToken(Base::LT(1));
+    }
+
+    inline void pushCorrectToken(const antlr::RefToken& rtoken) {
+
+        if (isSkipToken(Base::LA(1)))
+
+            // push the token
+            pushSkipToken();
+
+        else
+
+            // push the token
+            pushToken();
+    }
+
+    // push the token onto the output token stream
+    void pushToken() {
+
+        pushToken(Base::LT(1));
+    }
+
+    // push the skipped token onto the output token stream
+    void pushSkipToken() {
+
+        pushSkipToken(Base::LT(1));
+    }
+
+    antlr::RefToken* CurrentToken() {
+
+        return &(output().back());
+    }
 
 private:
-  int options;
-  bool inskip;
-  antlr::TokenStream& _lexer;
+    int options;
+    bool inskip;
+    antlr::TokenStream& _lexer;
 
-  // token buffer
-  std::list<antlr::RefToken> tb;
+    // token buffer
+    std::list<antlr::RefToken> tb;
 
-  // skipped token buffer
-  std::list<antlr::RefToken> skiptb;
+    // skipped token buffer
+    std::list<antlr::RefToken> skiptb;
 
-  // preprocessor buffer
-  std::list<antlr::RefToken> pretb;
+    // preprocessor buffer
+    std::list<antlr::RefToken> pretb;
 
-  // preprocessor skipped token buffer
-  std::list<antlr::RefToken> skippretb;
+    // preprocessor skipped token buffer
+    std::list<antlr::RefToken> skippretb;
 
-  // current token buffer
-  std::list<antlr::RefToken>* pouttb;
+    // current token buffer
+    std::list<antlr::RefToken>* pouttb;
 
-  // current skipped token buffer
-  std::list<antlr::RefToken>* pskiptb;
+    // current skipped token buffer
+    std::list<antlr::RefToken>* pskiptb;
 };
 
 #endif

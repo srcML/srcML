@@ -41,11 +41,11 @@
 
 class TokenStream {
 
- public:
+public:
 
-  virtual const antlr::RefToken& nextToken() = 0;
+    virtual const antlr::RefToken& nextToken() = 0;
 
-  virtual ~TokenStream() {}
+    virtual ~TokenStream() {}
 };
 
 #endif

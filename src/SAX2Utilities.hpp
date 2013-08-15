@@ -41,14 +41,13 @@ int find_attribute_index(int nb_attributes, const xmlChar** attributes, const ch
 
 // collect attributes
 void collect_attributes(int nb_attributes, const xmlChar** attributes,
-			PROPERTIES_TYPE& attrv);
+                        PROPERTIES_TYPE& attrv);
 
 // collect namespaces
 void collect_namespaces(int nb_namespaces, const xmlChar** namespaces,
-			PROPERTIES_TYPE& nsv);
+                        PROPERTIES_TYPE& nsv);
 
 // collect namespaces
 void collect_namespaces_version(int nb_namespaces, const xmlChar** namespaces,
-			PROPERTIES_TYPE& nsv);
+                                PROPERTIES_TYPE& nsv);
 #endif
-

@@ -38,79 +38,79 @@
 
 class srcMLOutput : public srcMLParserTokenTypes {
 
- public:
-  // constructor
-  srcMLOutput(TokenStream* ints,
-	      const char* srcml_filename,
-	      const char* language,
-	      const char* encoding,
-	      OPTION_TYPE& option,
-	      const char* uri[],
-	      int tabsize,
-              xmlBuffer* output_buffer = 0
-	      );
+public:
+    // constructor
+    srcMLOutput(TokenStream* ints,
+                const char* srcml_filename,
+                const char* language,
+                const char* encoding,
+                OPTION_TYPE& option,
+                const char* uri[],
+                int tabsize,
+                xmlBuffer* output_buffer = 0
+        );
 
-  static bool checkEncoding(const char* encoding);
+    static bool checkEncoding(const char* encoding);
 
-  // start a unit element with the passed metadata
-  void startUnit(const char* unit_language,
-		 const char* unit_directory, const char* unit_filename, const char* unit_version, bool outer);
+    // start a unit element with the passed metadata
+    void startUnit(const char* unit_language,
+                   const char* unit_directory, const char* unit_filename, const char* unit_version, bool outer);
 
-  // close the output
-  void close();
+    // close the output
+    void close();
 
-  // standard processing of text
-  void processText(const antlr::RefToken& token);
-  void processText(const std::string&);
-  void processText(const char* s, int size);
+    // standard processing of text
+    void processText(const antlr::RefToken& token);
+    void processText(const std::string&);
+    void processText(const char* s, int size);
 
-  void processTextPosition(const antlr::RefToken& token);
+    void processTextPosition(const antlr::RefToken& token);
 
-  const char * lineAttributeValue(const antlr::RefToken& token);
-  const char * columnAttributeValue(const antlr::RefToken& token);
+    const char * lineAttributeValue(const antlr::RefToken& token);
+    const char * columnAttributeValue(const antlr::RefToken& token);
 
-  // destructor
-  ~srcMLOutput();
+    // destructor
+    ~srcMLOutput();
 
 public:
-  TokenStream* input;
+    TokenStream* input;
 
-  xmlTextWriter* xout;
+    xmlTextWriter* xout;
 
-  const char* srcml_filename;
-  const char* unit_language;
-  const char* unit_dir;
-  const char* unit_filename;
-  const char* unit_version;
-  OPTION_TYPE& options;
-  const char* xml_encoding;
-  const char** num2prefix;
-  int openelementcount;
+    const char* srcml_filename;
+    const char* unit_language;
+    const char* unit_dir;
+    const char* unit_filename;
+    const char* unit_version;
+    OPTION_TYPE& options;
+    const char* xml_encoding;
+    const char** num2prefix;
+    int openelementcount;
 
-  int curline;
-  int curcolumn;
-  int tabsize;
+    int curline;
+    int curcolumn;
+    int tabsize;
 
-  int depth;
+    int depth;
 
-  // output line attribute content
-  std::string lineAttribute;
-  std::string columnAttribute;
-  char out[21];
+    // output line attribute content
+    std::string lineAttribute;
+    std::string columnAttribute;
+    char out[21];
 
-  int consume_next();
+    int consume_next();
 
-  void outputToken(const antlr::RefToken& token);
+    void outputToken(const antlr::RefToken& token);
 
-  void processUnit(const antlr::RefToken& token);
+    void processUnit(const antlr::RefToken& token);
 
-  static void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer, const char** num2prefix);
+    static void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer, const char** num2prefix);
 
-  bool isoption(const OPTION_TYPE& options) const;
-  static bool isoption(const OPTION_TYPE& flag, const OPTION_TYPE& options);
+    bool isoption(const OPTION_TYPE& options) const;
+    static bool isoption(const OPTION_TYPE& flag, const OPTION_TYPE& options);
 
-  void srcMLTextWriterStartElement(xmlTextWriter*, const xmlChar* s);
-  void srcMLTextWriterEndElement(xmlTextWriter*);
+    void srcMLTextWriterStartElement(xmlTextWriter*, const xmlChar* s);
+    void srcMLTextWriterEndElement(xmlTextWriter*);
 };
 
 #endif

@@ -100,14 +100,14 @@ const char* const OUTPUT_FORMAT_FLAG_FULL = "output-format=EXTENSION";
 
 namespace LanguageName {
 
-const char* const LANGUAGE_NONE = "";
-const char* const LANGUAGE_C = "C";
-const char* const LANGUAGE_CS = "C#";
-const char* const LANGUAGE_CXX = "C++";
-const char* const LANGUAGE_CXX_11 = "C++11";
-const char* const LANGUAGE_JAVA = "Java";
-const char* const LANGUAGE_ASPECTJ = "AspectJ";
-const char* const LANGUAGE_CSHARP = "C#";
+    const char* const LANGUAGE_NONE = "";
+    const char* const LANGUAGE_C = "C";
+    const char* const LANGUAGE_CS = "C#";
+    const char* const LANGUAGE_CXX = "C++";
+    const char* const LANGUAGE_CXX_11 = "C++11";
+    const char* const LANGUAGE_JAVA = "Java";
+    const char* const LANGUAGE_ASPECTJ = "AspectJ";
+    const char* const LANGUAGE_CSHARP = "C#";
 
 };
 
@@ -130,24 +130,24 @@ const int NULL_FLAG_SHORT = '0';
 /* Return Status */
 
 enum RETURN_STATUS {
-  STATUS_SUCCESS = 0,
-  STATUS_ERROR = 1,
-  STATUS_INPUTFILE_PROBLEM = 2,
-  STATUS_UNKNOWN_OPTION = 3,
-  STATUS_UNKNOWN_ENCODING = 4,
-  STATUS_LIBXML2_FEATURE = 5,
-  STATUS_INVALID_LANGUAGE = 6,
-  STATUS_LANGUAGE_MISSING = 7,
-  STATUS_FILENAME_MISSING = 8,
-  STATUS_DIRECTORY_MISSING = 9,
-  STATUS_VERSION_MISSING = 10,
-  STATUS_SRCENCODING_MISSING = 11,
-  STATUS_XMLENCODING_MISSING = 12,
-  STATUS_UNIT_MISSING = 13,
-  STATUS_UNIT_INVALID = 14,
-  STATUS_INVALID_OPTION_COMBINATION = 15,
-  STATUS_TERMINATED = 16,
-  STATUS_INVALID_ARGUMENT = 17,
+    STATUS_SUCCESS = 0,
+    STATUS_ERROR = 1,
+    STATUS_INPUTFILE_PROBLEM = 2,
+    STATUS_UNKNOWN_OPTION = 3,
+    STATUS_UNKNOWN_ENCODING = 4,
+    STATUS_LIBXML2_FEATURE = 5,
+    STATUS_INVALID_LANGUAGE = 6,
+    STATUS_LANGUAGE_MISSING = 7,
+    STATUS_FILENAME_MISSING = 8,
+    STATUS_DIRECTORY_MISSING = 9,
+    STATUS_VERSION_MISSING = 10,
+    STATUS_SRCENCODING_MISSING = 11,
+    STATUS_XMLENCODING_MISSING = 12,
+    STATUS_UNIT_MISSING = 13,
+    STATUS_UNIT_INVALID = 14,
+    STATUS_INVALID_OPTION_COMBINATION = 15,
+    STATUS_TERMINATED = 16,
+    STATUS_INVALID_ARGUMENT = 17,
 };
 
 
@@ -160,7 +160,7 @@ const char* const DEFAULT_XML_ENCODING = "UTF-8";
 
 inline bool argisoption(const char* s) {
 
-  return s[0] == '-';
+    return s[0] == '-';
 }
 
 const int MAXPARAMS = 64;
@@ -179,19 +179,19 @@ const char* clean_filename(const char*);
 #ifdef __MINGW32__
 inline char* strsep(char** stringp, const char* delim) {
 
-  if (!*stringp)
-    return NULL;
+    if (!*stringp)
+        return NULL;
 
-  char* retvalue = *stringp;
-  char* split = strchr(*stringp, delim[0]);
-  if (split) {
-    *stringp = split + 1;
-    *split = '\0';
-  } else {
-    *stringp = NULL;
-  }
+    char* retvalue = *stringp;
+    char* split = strchr(*stringp, delim[0]);
+    if (split) {
+        *stringp = split + 1;
+        *split = '\0';
+    } else {
+        *stringp = NULL;
+    }
 
-  return retvalue;
+    return retvalue;
 }
 #endif
 

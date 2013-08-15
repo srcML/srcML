@@ -33,137 +33,137 @@
 
 class ExtractUnitsDiffXML : public ExtractUnitsXML {
 public :
-  ExtractUnitsDiffXML(const char* to_dir, const char* filename, const char* output_encoding, const char* version)
-    : ExtractUnitsXML(to_dir, filename, output_encoding), version(version) {
+    ExtractUnitsDiffXML(const char* to_dir, const char* filename, const char* output_encoding, const char* version)
+        : ExtractUnitsXML(to_dir, filename, output_encoding), version(version) {
 
-    status = strcmp(version, "1") == 0 ? DIFF_OLD : DIFF_NEW;
-    st.push(DIFF_COMMON);
-  }
+        status = strcmp(version, "1") == 0 ? DIFF_OLD : DIFF_NEW;
+        st.push(DIFF_COMMON);
+    }
 
 private :
-  enum DIFF { DIFF_COMMON, DIFF_OLD, DIFF_NEW };
-  const char* version;
-  std::stack<DIFF> st;
-  int status;
+    enum DIFF { DIFF_COMMON, DIFF_OLD, DIFF_NEW };
+    const char* version;
+    std::stack<DIFF> st;
+    int status;
 
 public :
 
-  // handle root unit of compound document
-  void startRootUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix,
-                     const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces, int nb_attributes,
-                     int nb_defaulted, const xmlChar** attributes) {
+    // handle root unit of compound document
+    void startRootUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix,
+                       const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces, int nb_attributes,
+                       int nb_defaulted, const xmlChar** attributes) {
 
-    // clear out the diff namespace from the array before passing it on
-    bool found = false;
-    int deccount = 0;
-    for (int i = 0, index = 0; i < nb_namespaces; ++i, index += 2) {
+        // clear out the diff namespace from the array before passing it on
+        bool found = false;
+        int deccount = 0;
+        for (int i = 0, index = 0; i < nb_namespaces; ++i, index += 2) {
 
-      const char* uri = (const char*) namespaces[index + 1];
+            const char* uri = (const char*) namespaces[index + 1];
 
-      if (!found && strcmp(uri, "http://www.sdml.info/srcDiff") == 0) {
-        fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
+            if (!found && strcmp(uri, "http://www.sdml.info/srcDiff") == 0) {
+                fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
 
-        found = true;
-        deccount = 1;
-      } else if (found) {
-        namespaces[index - 2] = namespaces[index];
-        namespaces[index + 1 - 2] = namespaces[index + 1];
-      }
+                found = true;
+                deccount = 1;
+            } else if (found) {
+                namespaces[index - 2] = namespaces[index];
+                namespaces[index + 1 - 2] = namespaces[index + 1];
+            }
+        }
+        nb_namespaces -= deccount;
+
+        ExtractUnitsXML::startRootUnit(ctx, localname, prefix, URI, nb_namespaces, namespaces,
+                                       nb_attributes, nb_defaulted, attributes);
     }
-    nb_namespaces -= deccount;
-    
-    ExtractUnitsXML::startRootUnit(ctx, localname, prefix, URI, nb_namespaces, namespaces,
+
+    // handle root unit of compound document
+    void startUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix,
+                   const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces, int nb_attributes,
+                   int nb_defaulted, const xmlChar** attributes) {
+
+        // clear out the diff namespace from the array before passing it on
+        bool found = false;
+        int deccount = 0;
+        for (int i = 0, index = 0; i < nb_namespaces; ++i, index += 2) {
+
+            const char* uri = (const char*) namespaces[index + 1];
+
+            if (strcmp(uri, "http://www.sdml.info/srcDiff") == 0) {
+                found = true;
+                deccount = 1;
+            } else if (found) {
+                namespaces[index - 2] = namespaces[index];
+                namespaces[index + 1 - 2] = namespaces[index + 1];
+            }
+        }
+        nb_namespaces -= deccount;
+
+        ExtractUnitsXML::startUnit(ctx, localname, prefix, URI, nb_namespaces, namespaces,
                                    nb_attributes, nb_defaulted, attributes);
-  }
-
-  // handle root unit of compound document
-  void startUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix,
-                     const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces, int nb_attributes,
-                     int nb_defaulted, const xmlChar** attributes) {
-
-    // clear out the diff namespace from the array before passing it on
-    bool found = false;
-    int deccount = 0;
-    for (int i = 0, index = 0; i < nb_namespaces; ++i, index += 2) {
-
-      const char* uri = (const char*) namespaces[index + 1];
-
-      if (strcmp(uri, "http://www.sdml.info/srcDiff") == 0) {
-        found = true;
-        deccount = 1;
-      } else if (found) {
-        namespaces[index - 2] = namespaces[index];
-        namespaces[index + 1 - 2] = namespaces[index + 1];
-      }
-    }
-    nb_namespaces -= deccount;
-    
-    ExtractUnitsXML::startUnit(ctx, localname, prefix, URI, nb_namespaces, namespaces,
-                                   nb_attributes, nb_defaulted, attributes);
-  }
-
-  void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-                      int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                      const xmlChar** attributes) {
-
-    if (strcmp((const char*) URI, "http://www.sdml.info/srcDiff") == 0) {
-
-      if (strcmp((const char*) localname, "delete") == 0) {
-
-        st.push(DIFF_OLD);
-        return;
-      } else if (strcmp((const char*) localname, "insert") == 0) {
-
-        st.push(DIFF_NEW);
-        return;
-      } else if (strcmp((const char*) localname, "common") == 0) {
-
-        st.push(DIFF_COMMON);
-        return;
-      }
     }
 
-    if (st.top() != DIFF_COMMON && st.top() != status)
-      return;
+    void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                        int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                        const xmlChar** attributes) {
 
-    ExtractUnitsXML::startElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces,
-                                    nb_attributes, nb_defaulted, attributes);
-  }
+        if (strcmp((const char*) URI, "http://www.sdml.info/srcDiff") == 0) {
 
+            if (strcmp((const char*) localname, "delete") == 0) {
 
-  void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+                st.push(DIFF_OLD);
+                return;
+            } else if (strcmp((const char*) localname, "insert") == 0) {
 
-    if ((strcmp((const char*) URI, "http://www.sdml.info/srcDiff") == 0 && (
-        strcmp((const char*) localname, "insert") == 0
-        || strcmp((const char*) localname, "delete") == 0
-        || strcmp((const char*) localname, "common") == 0))) {
+                st.push(DIFF_NEW);
+                return;
+            } else if (strcmp((const char*) localname, "common") == 0) {
 
-          st.pop();
-          return;
+                st.push(DIFF_COMMON);
+                return;
+            }
+        }
+
+        if (st.top() != DIFF_COMMON && st.top() != status)
+            return;
+
+        ExtractUnitsXML::startElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces,
+                                        nb_attributes, nb_defaulted, attributes);
     }
 
-    if (st.top() != DIFF_COMMON && st.top() != status)
-      return;
 
-    ExtractUnitsXML::endElementNs(ctx, localname, prefix, URI);
-  }
+    void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
-  void characters(void* ctx, const xmlChar* ch, int len) {
+        if ((strcmp((const char*) URI, "http://www.sdml.info/srcDiff") == 0 && (
+                 strcmp((const char*) localname, "insert") == 0
+                 || strcmp((const char*) localname, "delete") == 0
+                 || strcmp((const char*) localname, "common") == 0))) {
 
-    if (st.top() != DIFF_COMMON && st.top() != status)
-      return;
+            st.pop();
+            return;
+        }
 
-    ExtractUnitsXML::characters(ctx, ch, len);
-  }
+        if (st.top() != DIFF_COMMON && st.top() != status)
+            return;
 
-  // comments
-  void comments(void* ctx, const xmlChar* ch) {
+        ExtractUnitsXML::endElementNs(ctx, localname, prefix, URI);
+    }
 
-    if (st.top() != DIFF_COMMON && st.top() != status)
-      return;
+    void characters(void* ctx, const xmlChar* ch, int len) {
 
-    ExtractUnitsXML::comments(ctx, ch);
-  }
+        if (st.top() != DIFF_COMMON && st.top() != status)
+            return;
+
+        ExtractUnitsXML::characters(ctx, ch, len);
+    }
+
+    // comments
+    void comments(void* ctx, const xmlChar* ch) {
+
+        if (st.top() != DIFF_COMMON && st.top() != status)
+            return;
+
+        ExtractUnitsXML::comments(ctx, ch);
+    }
 };
 
 #endif

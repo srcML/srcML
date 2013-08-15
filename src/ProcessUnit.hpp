@@ -29,36 +29,36 @@
 
 class ProcessUnit {
 public :
-  virtual void startDocument(void* ctx) {}
+    virtual void startDocument(void* ctx) {}
 
-  virtual void endDocument(void* ctx) {}
+    virtual void endDocument(void* ctx) {}
 
-  virtual void startRootUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                 const xmlChar** attributes) {}
+    virtual void startRootUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                               int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                               const xmlChar** attributes) {}
 
-  virtual void startUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                 const xmlChar** attributes) {}
+    virtual void startUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                           int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                           const xmlChar** attributes) {}
 
-  virtual void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                 const xmlChar** attributes) {}
+    virtual void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                                int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                                const xmlChar** attributes) {}
 
-  virtual void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {}
+    virtual void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {}
 
-  virtual void characters(void* ctx, const xmlChar* ch, int len) {}
+    virtual void characters(void* ctx, const xmlChar* ch, int len) {}
 
-  // comments
-  virtual void comments(void* ctx, const xmlChar* ch) {}
+    // comments
+    virtual void comments(void* ctx, const xmlChar* ch) {}
 
-  virtual void cdatablock(void* ctx, const xmlChar* ch, int len) {}
+    virtual void cdatablock(void* ctx, const xmlChar* ch, int len) {}
 
-  virtual void endUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {}
+    virtual void endUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {}
 
-  virtual void endRootUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {}
+    virtual void endRootUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {}
 
-  virtual int getOptions() const { return 0; }
+    virtual int getOptions() const { return 0; }
 };
 
 #endif

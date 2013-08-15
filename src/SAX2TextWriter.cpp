@@ -36,7 +36,7 @@
 #include "Options.hpp"
 
 SAX2TextWriter::SAX2TextWriter(const char* ofilename, OPTION_TYPE& options, int unit):
-  unit(unit), options(options), filename(ofilename) {
+    unit(unit), options(options), filename(ofilename) {
 
 }
 
@@ -63,14 +63,14 @@ void SAX2TextWriter::startDocument(void *ctx) {
     // open the output text writer stream
     // "-" filename is standard output
     pstate->writer = xmlNewTextWriterFilename(pstate->filename,
-					      isoption(pstate->options, OPTION_COMPRESSED) ? 1 : 0);
+                                              isoption(pstate->options, OPTION_COMPRESSED) ? 1 : 0);
 
     // start this document the same as the current document
     if (!isoption(pstate->options, OPTION_XMLDECL))
-      xmlTextWriterStartDocument(pstate->writer,
-			       (const char*) pstate->ctxt->version,
-			       (const char*) (pstate->ctxt->encoding ? pstate->ctxt->encoding : pstate->ctxt->input->encoding),
-			       pstate->ctxt->standalone ? "yes" : "no");
+        xmlTextWriterStartDocument(pstate->writer,
+                                   (const char*) pstate->ctxt->version,
+                                   (const char*) (pstate->ctxt->encoding ? pstate->ctxt->encoding : pstate->ctxt->input->encoding),
+                                   pstate->ctxt->standalone ? "yes" : "no");
 }
 
 // end document
@@ -93,30 +93,30 @@ void SAX2TextWriter::characters(void* ctx, const xmlChar* ch, int len) {
     const char* chend = (const char*) ch + len;
     while (c < chend) {
 
-      switch (*c) {
-      case '<' :
-	xmlTextWriterWriteRawLen(pstate->writer, BAD_CAST c - pos, pos);
-	pos = 0;
-	xmlTextWriterWriteRawLen(pstate->writer, BAD_CAST "&lt;", 4);
-	break;
+        switch (*c) {
+        case '<' :
+            xmlTextWriterWriteRawLen(pstate->writer, BAD_CAST c - pos, pos);
+            pos = 0;
+            xmlTextWriterWriteRawLen(pstate->writer, BAD_CAST "&lt;", 4);
+            break;
 
-      case '>' :
-	xmlTextWriterWriteRawLen(pstate->writer, BAD_CAST c - pos, pos);
-	pos = 0;
-	xmlTextWriterWriteRawLen(pstate->writer, BAD_CAST "&gt;", 4);
-	break;
+        case '>' :
+            xmlTextWriterWriteRawLen(pstate->writer, BAD_CAST c - pos, pos);
+            pos = 0;
+            xmlTextWriterWriteRawLen(pstate->writer, BAD_CAST "&gt;", 4);
+            break;
 
-      case '&' :
-	xmlTextWriterWriteRawLen(pstate->writer, BAD_CAST c - pos, pos);
-	pos = 0;
-	xmlTextWriterWriteRawLen(pstate->writer, BAD_CAST "&amp;", 5);
-	break;
+        case '&' :
+            xmlTextWriterWriteRawLen(pstate->writer, BAD_CAST c - pos, pos);
+            pos = 0;
+            xmlTextWriterWriteRawLen(pstate->writer, BAD_CAST "&amp;", 5);
+            break;
 
-      default :
-	++pos;
-	break;
-      };
-      ++c;
+        default :
+            ++pos;
+            break;
+        };
+        ++c;
     }
 
     xmlTextWriterWriteRawLen(pstate->writer, BAD_CAST c - pos, pos);
@@ -133,8 +133,8 @@ void SAX2TextWriter::comments(void* ctx, const xmlChar* ch) {
 // start a new output buffer and corresponding file for a
 // unit element
 void SAX2TextWriter::startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-		    const xmlChar** attributes) {
+                                    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                                    const xmlChar** attributes) {
 
     SAX2TextWriter* pstate = (SAX2TextWriter*) ctx;
 
@@ -144,24 +144,24 @@ void SAX2TextWriter::startElementNs(void* ctx, const xmlChar* localname, const x
 
     // copy namespaces
     if (!isoption(pstate->options, OPTION_NAMESPACE))
-      for (int i = 0, index = 0; i < nb_namespaces; ++i, index += 2) {
+        for (int i = 0, index = 0; i < nb_namespaces; ++i, index += 2) {
 
-	const char* name = xmlnsprefix((const char*) namespaces[index]);
+            const char* name = xmlnsprefix((const char*) namespaces[index]);
 
-	xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST name, namespaces[index + 1]);
-      }
+            xmlTextWriterWriteAttribute(pstate->writer, BAD_CAST name, namespaces[index + 1]);
+        }
 
     // copy attributes
     for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
 
-      const char* name = qname((const char*) attributes[index + 1], (const char*) attributes[index]);
+        const char* name = qname((const char*) attributes[index + 1], (const char*) attributes[index]);
 
-      // write the attribute raw so we don't have to convert
-      // the begin/end pointers of the attribute value to a string
-      xmlTextWriterStartAttribute(pstate->writer, BAD_CAST name);
-      xmlTextWriterWriteRawLen(pstate->writer, attributes[index + 3],
-			       attributes[index + 4] - attributes[index + 3]);
-      xmlTextWriterEndAttribute(pstate->writer);
+        // write the attribute raw so we don't have to convert
+        // the begin/end pointers of the attribute value to a string
+        xmlTextWriterStartAttribute(pstate->writer, BAD_CAST name);
+        xmlTextWriterWriteRawLen(pstate->writer, attributes[index + 3],
+                                 attributes[index + 4] - attributes[index + 3]);
+        xmlTextWriterEndAttribute(pstate->writer);
     }
 }
 
@@ -174,12 +174,12 @@ void SAX2TextWriter::endElementNs(void *ctx, const xmlChar *localname, const xml
 
     if (pstate->unit > 0 && pstate->ctxt->nameNr == 2) {
 
-      pstate->ctxt->sax->startDocument  = 0;
-      pstate->ctxt->sax->endDocument    = &SAX2TextWriter::endDocument;
-      pstate->ctxt->sax->startElementNs = 0;
-      pstate->ctxt->sax->endElementNs   = 0;
-      pstate->ctxt->sax->characters     = 0;
+        pstate->ctxt->sax->startDocument  = 0;
+        pstate->ctxt->sax->endDocument    = &SAX2TextWriter::endDocument;
+        pstate->ctxt->sax->startElementNs = 0;
+        pstate->ctxt->sax->endElementNs   = 0;
+        pstate->ctxt->sax->characters     = 0;
 
-      xmlStopParser(pstate->ctxt);
+        xmlStopParser(pstate->ctxt);
     }
 }

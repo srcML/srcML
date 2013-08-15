@@ -28,9 +28,9 @@
 #define INCLUDED_OPTION_HPP
 
 #ifdef __GNUC__
-  typedef unsigned long long OPTION_TYPE;
+typedef unsigned long long OPTION_TYPE;
 #else
-  typedef unsigned __int64 OPTION_TYPE;
+typedef unsigned __int64 OPTION_TYPE;
 #endif
 
 #ifdef __GNUC__
@@ -40,7 +40,7 @@
 #endif
 
 inline bool isoption(OPTION_TYPE options, OPTION_TYPE flag) {
-  return (flag & options) > 0;
+    return (flag & options) > 0;
 }
 
 // issue debugging elements and declare debugging element namespace

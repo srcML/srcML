@@ -32,171 +32,171 @@ void output_info(srcMLUtility& su, int options, int optioncount, int optionorder
 #include <unistd.h>
 
 class Properties : public ProcessUnit {
- public :
-  Properties(srcMLUtility& su, PROPERTIES_TYPE&nsv, PROPERTIES_TYPE& attrv, int optioncount, int optionorder[], FILE * output = stdout)
-    : su(su), nsv(nsv), attrv(attrv), optioncount(optioncount), optionorder(optionorder), output(output), buffer(0)
-    {}
+public :
+    Properties(srcMLUtility& su, PROPERTIES_TYPE&nsv, PROPERTIES_TYPE& attrv, int optioncount, int optionorder[], FILE * output = stdout)
+        : su(su), nsv(nsv), attrv(attrv), optioncount(optioncount), optionorder(optionorder), output(output), buffer(0)
+        {}
 
-  Properties(srcMLUtility& su, PROPERTIES_TYPE&nsv, PROPERTIES_TYPE& attrv, int optioncount, int optionorder[], std::ostringstream * buffer)
-    : su(su), nsv(nsv), attrv(attrv), optioncount(optioncount), optionorder(optionorder), output(0), buffer(buffer)
-    {}
+    Properties(srcMLUtility& su, PROPERTIES_TYPE&nsv, PROPERTIES_TYPE& attrv, int optioncount, int optionorder[], std::ostringstream * buffer)
+        : su(su), nsv(nsv), attrv(attrv), optioncount(optioncount), optionorder(optionorder), output(0), buffer(buffer)
+        {}
 
-  srcMLUtility& su;
-  PROPERTIES_TYPE& nsv;
-  PROPERTIES_TYPE& attrv;
-  int optioncount;
-  int* optionorder;
-  FILE * output;
-  std::ostringstream * buffer;
+    srcMLUtility& su;
+    PROPERTIES_TYPE& nsv;
+    PROPERTIES_TYPE& attrv;
+    int optioncount;
+    int* optionorder;
+    FILE * output;
+    std::ostringstream * buffer;
 
- public :
+public :
 
-  // extract namespace and attributes from root unit element
-  void startRootUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-		     int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-		     const xmlChar** attributes) {
+    // extract namespace and attributes from root unit element
+    void startRootUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                       int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                       const xmlChar** attributes) {
 
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+        xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+        SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
-    // collect namespaces from root
-    collect_namespaces(nb_namespaces, namespaces, nsv);
+        // collect namespaces from root
+        collect_namespaces(nb_namespaces, namespaces, nsv);
 
-    // collect attributes from root
-    collect_attributes(nb_attributes, attributes, attrv);
+        // collect attributes from root
+        collect_attributes(nb_attributes, attributes, attrv);
 
-    // encoding is entered as a property
-    const char* encoding = (const char*) (ctxt->encoding ? ctxt->encoding : ctxt->input->encoding);
+        // encoding is entered as a property
+        const char* encoding = (const char*) (ctxt->encoding ? ctxt->encoding : ctxt->input->encoding);
 
-    if (encoding) {
-      int i;
-      // TODO: Use constant here
-      for (i = 0; i < MAXPROPERTIES; ++i)
-        if (attrv[i].first == "")
-          break;
+        if (encoding) {
+            int i;
+            // TODO: Use constant here
+            for (i = 0; i < MAXPROPERTIES; ++i)
+                if (attrv[i].first == "")
+                    break;
 
-      attrv[i].first = ".encoding";
-      attrv[i].second = encoding;
+            attrv[i].first = ".encoding";
+            attrv[i].second = encoding;
+        }
+
+        // not processing a particular unit, so output
+        if (pstate->unit < 1) {
+
+            // output the current data except for the completion of the nested unit count
+            output_info(su, *(pstate->poptions), optioncount, optionorder, output, buffer);
+
+            // if visiting all, then do so counting, whether visible or not
+            if (pstate->unit == -1) {
+
+                // Keep going, either showing the count or just accumulating it
+                pstate->pprocess = isatty(fileno(output)) ? new CountUnits(output) : new ProcessUnit;
+            }
+        }
     }
 
-    // not processing a particular unit, so output
-    if (pstate->unit < 1) {
+    // extract namespace and attributes from root unit element
+    void startUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                   int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                   const xmlChar** attributes) {
 
-      // output the current data except for the completion of the nested unit count
-      output_info(su, *(pstate->poptions), optioncount, optionorder, output, buffer);
+        xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+        SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
-      // if visiting all, then do so counting, whether visible or not
-      if (pstate->unit == -1) {
+        // collect namespaces
+        collect_namespaces(nb_namespaces, namespaces, nsv);
 
-	// Keep going, either showing the count or just accumulating it
-	pstate->pprocess = isatty(fileno(output)) ? new CountUnits(output) : new ProcessUnit;
-      }
+        // collect attributes
+        collect_attributes(nb_attributes, attributes, attrv);
+
+        // encoding is entered as a property
+        const char* encoding = (const char*) (ctxt->encoding ? ctxt->encoding : ctxt->input->encoding);
+
+        if (encoding) {
+            int i;
+            for (i = 0; i < MAXPROPERTIES; ++i)
+                if (attrv[i].first == "")
+                    break;
+
+            attrv[i].first = ".encoding";
+            attrv[i].second = encoding;
+        }
+
+        // output the current data
+        output_info(su, *(pstate->poptions), optioncount, optionorder, output, buffer);
+
+        // stop, since normal unit processing would continue on to the contents
+        pstate->stopUnit(ctx);
     }
-  }
-
-  // extract namespace and attributes from root unit element
-  void startUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-                 int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                 const xmlChar** attributes) {
-
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
-
-    // collect namespaces
-    collect_namespaces(nb_namespaces, namespaces, nsv);
-
-    // collect attributes
-    collect_attributes(nb_attributes, attributes, attrv);
-
-    // encoding is entered as a property
-    const char* encoding = (const char*) (ctxt->encoding ? ctxt->encoding : ctxt->input->encoding);
-
-    if (encoding) {
-      int i;
-      for (i = 0; i < MAXPROPERTIES; ++i)
-        if (attrv[i].first == "")
-          break;
-
-      attrv[i].first = ".encoding";
-      attrv[i].second = encoding;
-    }
-
-    // output the current data
-    output_info(su, *(pstate->poptions), optioncount, optionorder, output, buffer);
-
-    // stop, since normal unit processing would continue on to the contents
-    pstate->stopUnit(ctx);
-  }
 };
 
 void output_info(srcMLUtility& su, int options, int optioncount, int optionorder[], FILE * output, std::ostringstream * buffer) {
 
-      // output all the namespaces
-      if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {
+    // output all the namespaces
+    if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {
 
-	for (int i = 0; i < MAXNS; ++i) {
-	  if (su.nsv[i].first == "")
-	    break;
+        for (int i = 0; i < MAXNS; ++i) {
+            if (su.nsv[i].first == "")
+                break;
 
-          if(output)
-            fprintf(output, "%s=\"%s\"\n", su.nsv[i].second.c_str(), su.nsv[i].first.c_str());
-          else
-            (*buffer) << su.nsv[i].second.c_str() << "=\"" << su.nsv[i].first.c_str() << "\"\n";
-          
-	}
-      }
-
-      // output attributes in order specified by the options on the command line
-      for (int i = 0; i < optioncount; ++i) {
-
-	// find attribute name from option
-	const char* attribute_name = "";
-	const char* attribute_title = "";
-	int curoption = optionorder[i];
-
-	switch (curoption) {
-	case OPTION_XML_ENCODING:
-	  attribute_name = ".encoding";
-	  attribute_title = "encoding";
-	  break;
-	case OPTION_LANGUAGE:
-	  attribute_name = UNIT_ATTRIBUTE_LANGUAGE;
-	  attribute_title = attribute_name;
-	  break;
-	case OPTION_DIRECTORY:
-	  attribute_name = UNIT_ATTRIBUTE_DIRECTORY;
-	  attribute_title = "directory";
-	  break;
-	case OPTION_FILENAME:
-	  attribute_name = UNIT_ATTRIBUTE_FILENAME;
-	  attribute_title = attribute_name;
-	  break;
-	case OPTION_VERSION:
-	  attribute_name = UNIT_ATTRIBUTE_VERSION;
-	  attribute_title = "src-version";
-	  break;
-	};
-
-	// output the option
-	const char* l = su.attribute(attribute_name);
-	if (l) {
-	  if (optioncount == 1)
             if(output)
-              fprintf(output, "%s\n", l);
+                fprintf(output, "%s=\"%s\"\n", su.nsv[i].second.c_str(), su.nsv[i].first.c_str());
             else
-              (*buffer) << l << '\n';
+                (*buffer) << su.nsv[i].second.c_str() << "=\"" << su.nsv[i].first.c_str() << "\"\n";
 
-	  else
-            if(output)
-              fprintf(output, "%s=\"%s\"\n", attribute_title, l);
+        }
+    }
+
+    // output attributes in order specified by the options on the command line
+    for (int i = 0; i < optioncount; ++i) {
+
+        // find attribute name from option
+        const char* attribute_name = "";
+        const char* attribute_title = "";
+        int curoption = optionorder[i];
+
+        switch (curoption) {
+        case OPTION_XML_ENCODING:
+            attribute_name = ".encoding";
+            attribute_title = "encoding";
+            break;
+        case OPTION_LANGUAGE:
+            attribute_name = UNIT_ATTRIBUTE_LANGUAGE;
+            attribute_title = attribute_name;
+            break;
+        case OPTION_DIRECTORY:
+            attribute_name = UNIT_ATTRIBUTE_DIRECTORY;
+            attribute_title = "directory";
+            break;
+        case OPTION_FILENAME:
+            attribute_name = UNIT_ATTRIBUTE_FILENAME;
+            attribute_title = attribute_name;
+            break;
+        case OPTION_VERSION:
+            attribute_name = UNIT_ATTRIBUTE_VERSION;
+            attribute_title = "src-version";
+            break;
+        };
+
+        // output the option
+        const char* l = su.attribute(attribute_name);
+        if (l) {
+            if (optioncount == 1)
+                if(output)
+                    fprintf(output, "%s\n", l);
+                else
+                    (*buffer) << l << '\n';
+
             else
-              (*buffer) << attribute_title << "=\"" << l << "\"\n";
-	}
-      }
+                if(output)
+                    fprintf(output, "%s=\"%s\"\n", attribute_title, l);
+                else
+                    (*buffer) << attribute_title << "=\"" << l << "\"\n";
+        }
+    }
 
-      if (isoption(options, OPTION_LONG_INFO) && !isoption(options, OPTION_UNIT) && output && isatty(fileno(output)))
-	    fprintf(output, "units=\"%d", 1);
-      else if(buffer && isoption(options, OPTION_LONG_INFO) && !isoption(options, OPTION_UNIT))
+    if (isoption(options, OPTION_LONG_INFO) && !isoption(options, OPTION_UNIT) && output && isatty(fileno(output)))
+        fprintf(output, "units=\"%d", 1);
+    else if(buffer && isoption(options, OPTION_LONG_INFO) && !isoption(options, OPTION_UNIT))
         (*buffer) << "units=\"1\"";
 }
 

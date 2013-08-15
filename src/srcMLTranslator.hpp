@@ -34,96 +34,96 @@ class srcMLTranslatorCore;
 class FileError {};
 
 class srcMLTranslator {
- public:
+public:
 
-  // constructor
-  srcMLTranslator(int language, const char* srcml_filename, OPTION_TYPE& op);
+    // constructor
+    srcMLTranslator(int language, const char* srcml_filename, OPTION_TYPE& op);
 
-  // constructor
-  srcMLTranslator(int language, xmlBuffer* output_buffer, OPTION_TYPE& op);
+    // constructor
+    srcMLTranslator(int language, xmlBuffer* output_buffer, OPTION_TYPE& op);
 
-  srcMLTranslator(int language, OPTION_TYPE op);
+    srcMLTranslator(int language, OPTION_TYPE op);
 
-  // constructor
-  srcMLTranslator(int language,
-		  const char* src_encoding,
-		  const char* xml_encoding,
-		  const char* srcml_filename,
-		  OPTION_TYPE& options,
-		  const char* directory,
-		  const char* filename,
-		  const char* version,
-		  const char* uri[],
-		  int tabsize
-		  );
+    // constructor
+    srcMLTranslator(int language,
+                    const char* src_encoding,
+                    const char* xml_encoding,
+                    const char* srcml_filename,
+                    OPTION_TYPE& options,
+                    const char* directory,
+                    const char* filename,
+                    const char* version,
+                    const char* uri[],
+                    int tabsize
+        );
 
-  // constructor
-  srcMLTranslator(int language,
-		  const char* src_encoding,
-		  const char* xml_encoding,
-		  xmlBuffer* output_buffer,
-		  OPTION_TYPE& options,
-		  const char* directory,
-		  const char* filename,
-		  const char* version,
-		  const char* uri[],
-		  int tabsize
-		  );
+    // constructor
+    srcMLTranslator(int language,
+                    const char* src_encoding,
+                    const char* xml_encoding,
+                    xmlBuffer* output_buffer,
+                    OPTION_TYPE& options,
+                    const char* directory,
+                    const char* filename,
+                    const char* version,
+                    const char* uri[],
+                    int tabsize
+        );
 
-  // constructor
-  srcMLTranslator(int language,                // programming language of source code                                                   
-                  const char* src_encoding,    // text encoding of source code                                                          
-                  const char* xml_encoding,    // xml encoding of result srcML file                                                     
-                  OPTION_TYPE op,             // many and varied options                                                                
-                  const char* directory,       // root unit directory                                                                   
-                  const char* filename,        // root unit filename                                                                    
-                  const char* version,         // root unit version                                                                     
-                  const char* uri[],           // uri prefixes                                                                          
-                  int tabsize                  // size of tabs                                                                          
-                  );
+    // constructor
+    srcMLTranslator(int language,                // programming language of source code
+                    const char* src_encoding,    // text encoding of source code
+                    const char* xml_encoding,    // xml encoding of result srcML file
+                    OPTION_TYPE op,             // many and varied options
+                    const char* directory,       // root unit directory
+                    const char* filename,        // root unit filename
+                    const char* version,         // root unit version
+                    const char* uri[],           // uri prefixes
+                    int tabsize                  // size of tabs
+        );
 
 
-  void* setInput(const char* path);
-  void* setInputString(const char* source);
+    void* setInput(const char* path);
+    void* setInputString(const char* source);
 
-  void close();
+    void close();
 
-  // translate from input stream to output stream
-  void translate(const char* path,
-		 const char* unit_directory = 0,
-		 const char* unit_filename = 0,
-		 const char* unit_version = 0,
-		 int language = 0);
+    // translate from input stream to output stream
+    void translate(const char* path,
+                   const char* unit_directory = 0,
+                   const char* unit_filename = 0,
+                   const char* unit_version = 0,
+                   int language = 0);
 
-  // destructor
-  ~srcMLTranslator();
+    // destructor
+    ~srcMLTranslator();
 
-  srcMLTranslatorCore * getTranslator() {
-    return translator;
-  }
+    srcMLTranslatorCore * getTranslator() {
+        return translator;
+    }
 
-  xmlBuffer * getBuffer() {
-    return output_buffer;
-  }
+    xmlBuffer * getBuffer() {
+        return output_buffer;
+    }
 
- private:
-  xmlBuffer * output_buffer;
-  srcMLTranslatorCore * translator;
-  OPTION_TYPE options;
+private:
+    xmlBuffer * output_buffer;
+    srcMLTranslatorCore * translator;
+    OPTION_TYPE options;
 
 };
 
 extern "C" {
 
-  srcMLTranslator * srcml_new(int language, OPTION_TYPE op);
-  srcMLTranslator * srcml_new_long(int language, const char * src_encoding, const char * xml_encoding, OPTION_TYPE op
-                              , const char * directory, const char * filename, const char * version, const char * uri[], int tabsize);
-  const char * srcml_get_srcml(srcMLTranslator * translator);
-  void* srcml_set_input(srcMLTranslator * translator, const char* path);
-  void* srcml_set_input_source(srcMLTranslator * translator, const char* source);
-  void srcml_close(srcMLTranslator * translator);
-  void srcml_translate(srcMLTranslator * translator, const char* path, const char* unit_directory, const char* unit_filename, const char* unit_version, int language);
-  void srcml_delete(srcMLTranslator * translator);
+    srcMLTranslator * srcml_new(int language, OPTION_TYPE op);
+    srcMLTranslator * srcml_new_long(int language, const char * src_encoding, const char * xml_encoding, OPTION_TYPE op
+                                     , const char * directory, const char * filename, const char * version, const char * uri[], int tabsize);
+    const char * srcml_get_srcml(srcMLTranslator * translator);
+    void* srcml_set_input(srcMLTranslator * translator, const char* path);
+    void* srcml_set_input_source(srcMLTranslator * translator, const char* source);
+    void srcml_close(srcMLTranslator * translator);
+    void srcml_translate(srcMLTranslator * translator, const char* path, const char* unit_directory, const char* unit_filename, const char* unit_version, int language);
+    void srcml_delete(srcMLTranslator * translator);
 
 }
 

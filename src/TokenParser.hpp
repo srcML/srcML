@@ -51,26 +51,26 @@
 
 class TokenParser {
 
- public:
-  // starts an element
-  virtual void startElement(int) = 0;
+public:
+    // starts an element
+    virtual void startElement(int) = 0;
 
-  // starts an element that starts before skipped tokens
-  virtual void startNoSkipElement(int) = 0;
+    // starts an element that starts before skipped tokens
+    virtual void startNoSkipElement(int) = 0;
 
-  // ends an element
-  virtual void endElement(int) = 0;
+    // ends an element
+    virtual void endElement(int) = 0;
 
-  // starts an element
-  virtual void emptyElement(int) = 0;
+    // starts an element
+    virtual void emptyElement(int) = 0;
 
-  virtual void flushSkip() = 0;
+    virtual void flushSkip() = 0;
 
-  virtual int SkipBufferSize() = 0;
+    virtual int SkipBufferSize() = 0;
 
-  virtual antlr::RefToken* CurrentToken() = 0;
+    virtual antlr::RefToken* CurrentToken() = 0;
 
-  virtual ~TokenParser() {}
+    virtual ~TokenParser() {}
 };
 
 #endif

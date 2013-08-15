@@ -35,212 +35,212 @@ const int MAXSIZE = 500;
 
 template <class Base>
 class StateStack {
- public:
+public:
 
-  // token parser constructor
-  StateStack(TokenParser* ptp)
-    : parser(ptp), st()
-    {}
+    // token parser constructor
+    StateStack(TokenParser* ptp)
+        : parser(ptp), st()
+        {}
 
-  const Base& currentState() const {
-    if (st.empty())
-      throw Segmentation_Fault();
+    const Base& currentState() const {
+        if (st.empty())
+            throw Segmentation_Fault();
 
-    return st.top();
-  }
-
-  Base& currentState() {
-    if (st.empty())
-      throw Segmentation_Fault();
-
-    return st.top();
-  }
-
-  void startNewMode(const State::MODE_TYPE& m) {
-
-    if (st.size() > MAXSIZE)
-      throw Segmentation_Fault();
-
-    // prepare for the new stack
-    st.push(Base(m, !empty() ? getTransparentMode() : 0));
-  }
-
-  void endCurrentMode() {
-
-    if (st.size() == 1)
-      throw Segmentation_Fault();
-
-    popMode();
-  }
-
-  void endCurrentMode(const State::MODE_TYPE& m) {
-
-    if (st.size() <= 1)
-      throw Segmentation_Fault();
-
-    popMode();
-  }
-
-  void endLastMode() {
-
-    popMode();
-  }
-
-  State::MODE_TYPE getMode() const {
-
-    return !st.empty() ? st.top().getMode() : 0;
-  }
-
-  State::MODE_TYPE getPrevMode() const {
-
-    return !st.size() > 1 ? st.top().getMode() : 0;
-  }
-
-  State::MODE_TYPE getTransparentMode() const {
-
-    return !st.empty() ? st.top().getTransparentMode() : 0;
-  }
-
-  void setMode(const State::MODE_TYPE& m) {
-    if (st.empty())
-      throw Segmentation_Fault();
-
-    st.top().setMode(m);
-  }
-
-  void clearMode(const State::MODE_TYPE& m) {
-    if (st.empty())
-      throw Segmentation_Fault();
-
-    st.top().clearMode(m);
-  }
-
-  void push(const State::MODE_TYPE& id) {
-    if (st.empty())
-      throw Segmentation_Fault();
-
-    st.top().push((int) id);
-  }
-
-  void pop() {
-    if (st.empty())
-      throw Segmentation_Fault();
-
-    st.top().pop();
-  }
-
-  // stack size
-  int size() const {
-
-    return st.size();
-  }
-
-  // stack empty
-  bool empty() const {
-
-    return st.empty();
-  }
-
-  bool inMode(const State::MODE_TYPE& m) const {
-
-    return !st.empty() ? st.top().inMode(m) : false;
-  }
-
-  bool inPrevMode(const State::MODE_TYPE& m) const {
-
-    return st.size() > 1 ? st.prev().inMode(m) : false;
-  }
-
-  bool inTransparentMode(const State::MODE_TYPE& m) const {
-
-    return !st.empty() ? st.top().inTransparentMode(m) : false;
-  }
-
-  // parentheses count
-  int getParen() const {
-    return !st.empty() ? st.top().getParen() : 0;
-  }
-
-  // increment the parentheses count
-  void incParen() {
-    if (st.empty())
-      throw Segmentation_Fault();
-
-    st.top().incParen();
-  }
-
-  // decrement the parentheses count
-  void decParen() {
-    if (st.empty())
-      throw Segmentation_Fault();
-
-    st.top().decParen();
-  }
-
-  // type count
-  int getTypeCount() const {
-    return !st.empty() ? st.top().getTypeCount() : 0;
-  }
-
-  // set type count
-  void setTypeCount(int n) {
-    if (st.empty())
-      throw Segmentation_Fault();
-
-    st.top().setTypeCount(n);
-  }
-
-  // increment the type count
-  void incTypeCount() {
-    if (st.empty())
-      throw Segmentation_Fault();
-
-    st.top().incTypeCount();
-  }
-
-  // decrement the type count
-  void decTypeCount() {
-    if (st.empty())
-      throw Segmentation_Fault();
-
-    st.top().decTypeCount();
-  }
-
-  // destructor
-  ~StateStack() {
-
-    // end all modes
-    endAllModes();
-  }
-
- protected:
-
-  // destructor
-  void endAllModes() {
-
-    // end all modes
-    while (!st.empty()) {
-      endCurrentMode(getMode());
-    }
-  }
-
-  void popMode() {
-    if (st.empty())
-      throw Segmentation_Fault();
-
-    // close all open elements
-    while (!st.empty() && !st.top().callstack.empty()) {
-      parser->endElement(st.top().callstack.top());
+        return st.top();
     }
 
-    st.pop();
-  }
+    Base& currentState() {
+        if (st.empty())
+            throw Segmentation_Fault();
 
- private:
-  TokenParser* parser;
-  SimpleStack<Base, MAXSIZE> st;
+        return st.top();
+    }
 
-  //  std::stack<Base*, std::list<Base*> > st;
+    void startNewMode(const State::MODE_TYPE& m) {
+
+        if (st.size() > MAXSIZE)
+            throw Segmentation_Fault();
+
+        // prepare for the new stack
+        st.push(Base(m, !empty() ? getTransparentMode() : 0));
+    }
+
+    void endCurrentMode() {
+
+        if (st.size() == 1)
+            throw Segmentation_Fault();
+
+        popMode();
+    }
+
+    void endCurrentMode(const State::MODE_TYPE& m) {
+
+        if (st.size() <= 1)
+            throw Segmentation_Fault();
+
+        popMode();
+    }
+
+    void endLastMode() {
+
+        popMode();
+    }
+
+    State::MODE_TYPE getMode() const {
+
+        return !st.empty() ? st.top().getMode() : 0;
+    }
+
+    State::MODE_TYPE getPrevMode() const {
+
+        return !st.size() > 1 ? st.top().getMode() : 0;
+    }
+
+    State::MODE_TYPE getTransparentMode() const {
+
+        return !st.empty() ? st.top().getTransparentMode() : 0;
+    }
+
+    void setMode(const State::MODE_TYPE& m) {
+        if (st.empty())
+            throw Segmentation_Fault();
+
+        st.top().setMode(m);
+    }
+
+    void clearMode(const State::MODE_TYPE& m) {
+        if (st.empty())
+            throw Segmentation_Fault();
+
+        st.top().clearMode(m);
+    }
+
+    void push(const State::MODE_TYPE& id) {
+        if (st.empty())
+            throw Segmentation_Fault();
+
+        st.top().push((int) id);
+    }
+
+    void pop() {
+        if (st.empty())
+            throw Segmentation_Fault();
+
+        st.top().pop();
+    }
+
+    // stack size
+    int size() const {
+
+        return st.size();
+    }
+
+    // stack empty
+    bool empty() const {
+
+        return st.empty();
+    }
+
+    bool inMode(const State::MODE_TYPE& m) const {
+
+        return !st.empty() ? st.top().inMode(m) : false;
+    }
+
+    bool inPrevMode(const State::MODE_TYPE& m) const {
+
+        return st.size() > 1 ? st.prev().inMode(m) : false;
+    }
+
+    bool inTransparentMode(const State::MODE_TYPE& m) const {
+
+        return !st.empty() ? st.top().inTransparentMode(m) : false;
+    }
+
+    // parentheses count
+    int getParen() const {
+        return !st.empty() ? st.top().getParen() : 0;
+    }
+
+    // increment the parentheses count
+    void incParen() {
+        if (st.empty())
+            throw Segmentation_Fault();
+
+        st.top().incParen();
+    }
+
+    // decrement the parentheses count
+    void decParen() {
+        if (st.empty())
+            throw Segmentation_Fault();
+
+        st.top().decParen();
+    }
+
+    // type count
+    int getTypeCount() const {
+        return !st.empty() ? st.top().getTypeCount() : 0;
+    }
+
+    // set type count
+    void setTypeCount(int n) {
+        if (st.empty())
+            throw Segmentation_Fault();
+
+        st.top().setTypeCount(n);
+    }
+
+    // increment the type count
+    void incTypeCount() {
+        if (st.empty())
+            throw Segmentation_Fault();
+
+        st.top().incTypeCount();
+    }
+
+    // decrement the type count
+    void decTypeCount() {
+        if (st.empty())
+            throw Segmentation_Fault();
+
+        st.top().decTypeCount();
+    }
+
+    // destructor
+    ~StateStack() {
+
+        // end all modes
+        endAllModes();
+    }
+
+protected:
+
+    // destructor
+    void endAllModes() {
+
+        // end all modes
+        while (!st.empty()) {
+            endCurrentMode(getMode());
+        }
+    }
+
+    void popMode() {
+        if (st.empty())
+            throw Segmentation_Fault();
+
+        // close all open elements
+        while (!st.empty() && !st.top().callstack.empty()) {
+            parser->endElement(st.top().callstack.top());
+        }
+
+        st.pop();
+    }
+
+private:
+    TokenParser* parser;
+    SimpleStack<Base, MAXSIZE> st;
+
+    //  std::stack<Base*, std::list<Base*> > st;
 };
 
 #endif

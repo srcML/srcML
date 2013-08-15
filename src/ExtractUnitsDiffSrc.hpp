@@ -31,75 +31,75 @@
 
 class ExtractUnitsDiffSrc : public ExtractUnitsSrc {
 public :
-  ExtractUnitsDiffSrc(const char* to_dir, const char* output_filename, const char* output_encoding, const char* version)
-    : ExtractUnitsSrc(to_dir, output_filename, output_encoding) {
+    ExtractUnitsDiffSrc(const char* to_dir, const char* output_filename, const char* output_encoding, const char* version)
+        : ExtractUnitsSrc(to_dir, output_filename, output_encoding) {
 
-    status = strcmp(version, "1") == 0 ? DIFF_OLD : DIFF_NEW;
-    st.push(DIFF_COMMON);
-  }
+        status = strcmp(version, "1") == 0 ? DIFF_OLD : DIFF_NEW;
+        st.push(DIFF_COMMON);
+    }
 
 private :
-  enum DIFF { DIFF_COMMON, DIFF_OLD, DIFF_NEW };
-  std::stack<DIFF> st;
-  int status;
+    enum DIFF { DIFF_COMMON, DIFF_OLD, DIFF_NEW };
+    std::stack<DIFF> st;
+    int status;
 
 public :
 
-  // escape control character elements
-  void startElementNs(void* ctx, const xmlChar* localname,
-                      const xmlChar* prefix, const xmlChar* URI,
-                      int nb_namespaces, const xmlChar** namespaces,
-                      int nb_attributes, int nb_defaulted,
-                      const xmlChar** attributes) {
+    // escape control character elements
+    void startElementNs(void* ctx, const xmlChar* localname,
+                        const xmlChar* prefix, const xmlChar* URI,
+                        int nb_namespaces, const xmlChar** namespaces,
+                        int nb_attributes, int nb_defaulted,
+                        const xmlChar** attributes) {
 
-    if (strcmp((const char*) URI, "http://www.sdml.info/srcDiff") == 0) {
+        if (strcmp((const char*) URI, "http://www.sdml.info/srcDiff") == 0) {
 
-      if (strcmp((const char*) localname, "delete") == 0) {
+            if (strcmp((const char*) localname, "delete") == 0) {
 
-        st.push(DIFF_OLD);
-        return;
-      } else if (strcmp((const char*) localname, "insert") == 0) {
+                st.push(DIFF_OLD);
+                return;
+            } else if (strcmp((const char*) localname, "insert") == 0) {
 
-        st.push(DIFF_NEW);
-        return;
-      } else if (strcmp((const char*) localname, "common") == 0) {
+                st.push(DIFF_NEW);
+                return;
+            } else if (strcmp((const char*) localname, "common") == 0) {
 
-        st.push(DIFF_COMMON);
-        return;
-      }
+                st.push(DIFF_COMMON);
+                return;
+            }
+        }
+
+        if (st.top() != DIFF_COMMON && st.top() != status)
+            return;
+
+        ExtractUnitsSrc::startElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces,
+                                        nb_attributes, nb_defaulted, attributes);
     }
 
-    if (st.top() != DIFF_COMMON && st.top() != status)
-      return;
+    void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
-    ExtractUnitsSrc::startElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces,
-                                    nb_attributes, nb_defaulted, attributes);
-  }
+        if ((strcmp((const char*) URI, "http://www.sdml.info/srcDiff") == 0 && (
+                 strcmp((const char*) localname, "insert") == 0
+                 || strcmp((const char*) localname, "delete") == 0
+                 || strcmp((const char*) localname, "common") == 0))) {
 
-  void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+            st.pop();
+            return;
+        }
 
-    if ((strcmp((const char*) URI, "http://www.sdml.info/srcDiff") == 0 && (
-        strcmp((const char*) localname, "insert") == 0
-        || strcmp((const char*) localname, "delete") == 0
-        || strcmp((const char*) localname, "common") == 0))) {
+        if (st.top() != DIFF_COMMON && st.top() != status)
+            return;
 
-          st.pop();
-          return;
+        ExtractUnitsSrc::endElementNs(ctx, localname, prefix, URI);
     }
 
-    if (st.top() != DIFF_COMMON && st.top() != status)
-      return;
+    void characters(void* ctx, const xmlChar* ch, int len) {
 
-    ExtractUnitsSrc::endElementNs(ctx, localname, prefix, URI);
-  }
+        if (st.top() != DIFF_COMMON && st.top() != status)
+            return;
 
-  void characters(void* ctx, const xmlChar* ch, int len) {
-
-    if (st.top() != DIFF_COMMON && st.top() != status)
-      return;
-
-    ExtractUnitsSrc::characters(ctx, ch, len);
-  }
+        ExtractUnitsSrc::characters(ctx, ch, len);
+    }
 };
 
 #endif

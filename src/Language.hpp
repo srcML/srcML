@@ -29,87 +29,87 @@
 #include <string>
 
 struct pair {
-  const char* s;
-  int n;
+    const char* s;
+    int n;
 };
 
 class Language {
 
- public:
+public:
 
-  enum Languages {
-    LANGUAGE_C = 1,
-    LANGUAGE_CXX = 2,
-    LANGUAGE_CXX_11 = 4,
-    LANGUAGE_JAVA = 8,
-    LANGUAGE_ASPECTJ = 16,
-    LANGUAGE_CSHARP = 32,
-    LANGUAGE_CXX_FAMILY = LANGUAGE_CXX | LANGUAGE_CXX_11 | LANGUAGE_CSHARP,
-    LANGUAGE_CXX_ONLY = LANGUAGE_CXX | LANGUAGE_CXX_11,
-    LANGUAGE_C_FAMILY = LANGUAGE_C | LANGUAGE_CXX_FAMILY,
-    LANGUAGE_JAVA_FAMILY = LANGUAGE_JAVA | LANGUAGE_ASPECTJ,
-    LANGUAGE_OO = LANGUAGE_CXX_FAMILY | LANGUAGE_JAVA_FAMILY,
-    LANGUAGE_NONE = 64,
-    LANGUAGE_ALL = ~0,
-  };
+    enum Languages {
+        LANGUAGE_C = 1,
+        LANGUAGE_CXX = 2,
+        LANGUAGE_CXX_11 = 4,
+        LANGUAGE_JAVA = 8,
+        LANGUAGE_ASPECTJ = 16,
+        LANGUAGE_CSHARP = 32,
+        LANGUAGE_CXX_FAMILY = LANGUAGE_CXX | LANGUAGE_CXX_11 | LANGUAGE_CSHARP,
+        LANGUAGE_CXX_ONLY = LANGUAGE_CXX | LANGUAGE_CXX_11,
+        LANGUAGE_C_FAMILY = LANGUAGE_C | LANGUAGE_CXX_FAMILY,
+        LANGUAGE_JAVA_FAMILY = LANGUAGE_JAVA | LANGUAGE_ASPECTJ,
+        LANGUAGE_OO = LANGUAGE_CXX_FAMILY | LANGUAGE_JAVA_FAMILY,
+        LANGUAGE_NONE = 64,
+        LANGUAGE_ALL = ~0,
+    };
 
-  Language(int lang)
-    : language(lang) {
+    Language(int lang)
+        : language(lang) {
 
-  }
+    }
 
-  static bool filledLang();
+    static bool filledLang();
 
-  // gets the current language
-  inline bool inLanguage(int l) const {
-    return (l & language) > 0;
-  }
+    // gets the current language
+    inline bool inLanguage(int l) const {
+        return (l & language) > 0;
+    }
 
-  // gets the current language
-  inline int getLanguage() const {
-    return language;
-  }
+    // gets the current language
+    inline int getLanguage() const {
+        return language;
+    }
 
-  // gets the current language
-  static int getLanguage(const char* const s) {
+    // gets the current language
+    static int getLanguage(const char* const s) {
 
-    for (const pair* pos = lang2int; pos->s != 0; ++pos)
-      if (strcmp(pos->s, s) == 0)
-	return pos->n;
+        for (const pair* pos = lang2int; pos->s != 0; ++pos)
+            if (strcmp(pos->s, s) == 0)
+                return pos->n;
 
-    return 0;
-  }
+        return 0;
+    }
 
-  // gets the current language
-  const char* getLanguageString() const {
+    // gets the current language
+    const char* getLanguageString() const {
 
-    for (const pair* pos = lang2int; pos->s != 0; ++pos)
-      if (pos->n == language)
-	return pos->s;
+        for (const pair* pos = lang2int; pos->s != 0; ++pos)
+            if (pos->n == language)
+                return pos->s;
 
-    return "";
-  }
+        return "";
+    }
 
-  static bool registerUserExt(const char* ext, int language);
-  static bool registerUserExt(const char* ext, const char* language);
+    static bool registerUserExt(const char* ext, int language);
+    static bool registerUserExt(const char* ext, const char* language);
 
-  // gets the current language based on the extenstion
-  static int getLanguageFromFilename(const char* const path);
+    // gets the current language based on the extenstion
+    static int getLanguageFromFilename(const char* const path);
 
-  // register the standard language file extensions
-  static void register_standard_file_extensions();
+    // register the standard language file extensions
+    static void register_standard_file_extensions();
 
-  ~Language() {}
+    ~Language() {}
 
- private:
+private:
 
-  const int language;
+    const int language;
 
-  static pair lang2int[];
+    static pair lang2int[];
 
-  static pair ext2int[];
+    static pair ext2int[];
 
-  static pair userext2int[];
+    static pair userext2int[];
 };
 
 #endif

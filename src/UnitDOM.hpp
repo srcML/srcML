@@ -32,172 +32,172 @@
 class UnitDOM : public ProcessUnit {
 public :
 
-  UnitDOM(int options) : rootsize(0), found(false), options(options), error(false) {}
+    UnitDOM(int options) : rootsize(0), found(false), options(options), error(false) {}
 
-  virtual ~UnitDOM() {}
-    
-  virtual int getOptions() const { return options; }
+    virtual ~UnitDOM() {}
 
-  /*
-    Called exactly once at beginnning of document  Override for intended behavior.
-  */
-  virtual void startOutput(void* ctx) = 0;
+    virtual int getOptions() const { return options; }
 
-  /*
-    Called exactly once for each unit.  For an archive, not called on the root unit
+    /*
+      Called exactly once at beginnning of document  Override for intended behavior.
+    */
+    virtual void startOutput(void* ctx) = 0;
 
-    Formed unit combines namespaces from root and individual unit.  Full DOM of
-    individual unit is provided.  Cleanup of DOM unit is automatic.
-  */
-  virtual bool apply(void* ctx) = 0;
+    /*
+      Called exactly once for each unit.  For an archive, not called on the root unit
 
-  /*
-    Called exactly once at end of document.  Override for intended behavior.
-  */
-  virtual void endOutput(void* ctx) = 0;
+      Formed unit combines namespaces from root and individual unit.  Full DOM of
+      individual unit is provided.  Cleanup of DOM unit is automatic.
+    */
+    virtual bool apply(void* ctx) = 0;
 
-  // start creating the document and setup output for the units
-  virtual void startDocument(void* ctx) {
+    /*
+      Called exactly once at end of document.  Override for intended behavior.
+    */
+    virtual void endOutput(void* ctx) = 0;
 
-    // start the document
-    xmlSAX2StartDocument(ctx);
+    // start creating the document and setup output for the units
+    virtual void startDocument(void* ctx) {
 
-    // setup output
-    startOutput(ctx);
+        // start the document
+        xmlSAX2StartDocument(ctx);
 
-    found = true;
-  }
+        // setup output
+        startOutput(ctx);
 
-  // collect namespaces from root unit.  Start to build the tree if OPTION_XSLT_ALL
-  virtual void startRootUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-                             int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                             const xmlChar** attributes) {
-
-    // record namespaces in an extensible list so we can add the per unit
-    for (int i = 0; i < nb_namespaces; ++i) {
-      data.push_back(namespaces[i * 2]);
-      data.push_back(namespaces[i * 2 + 1]);
-    }
-    rootsize = data.size();
-
-    // if we have to build the entire tree, then start now
-    if (isoption(options, OPTION_XSLT_ALL))
-      xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes,
-			    nb_defaulted, attributes);
-  }
-
-  // start to create an individual unit, merging namespace details from the root (if it exists)
-  virtual void startUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-                         int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                         const xmlChar** attributes) {
-
-
-    // if applying to entire archive, then just build this start element node for now
-    if (isoption(options, OPTION_XSLT_ALL)) {
-
-      xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes,
-			    nb_defaulted, attributes);
-      return;
+        found = true;
     }
 
-    // remove per-unit namespaces
-    data.resize(rootsize);
+    // collect namespaces from root unit.  Start to build the tree if OPTION_XSLT_ALL
+    virtual void startRootUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                               int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                               const xmlChar** attributes) {
 
-    // combine namespaces from root and local to this unit
-    for (int i = 0; i < nb_namespaces; ++i) {
-
-      // make sure not already in
-      bool found = false;
-      for (unsigned int j = 0; j < data.size() / 2; ++j)
-        if (xmlStrEqual(data[j * 2], namespaces[i * 2]) &&
-            xmlStrEqual(data[j * 2 + 1], namespaces[i * 2 + 1])) {
-          found = true;
-          break;
+        // record namespaces in an extensible list so we can add the per unit
+        for (int i = 0; i < nb_namespaces; ++i) {
+            data.push_back(namespaces[i * 2]);
+            data.push_back(namespaces[i * 2 + 1]);
         }
-      if (found)
-        continue;
+        rootsize = data.size();
 
-      data.push_back(namespaces[i * 2]);
-      data.push_back(namespaces[i * 2 + 1]);
+        // if we have to build the entire tree, then start now
+        if (isoption(options, OPTION_XSLT_ALL))
+            xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes,
+                                  nb_defaulted, attributes);
     }
 
-    // start the unit (element) at the root using the combined namespaces
-    xmlSAX2StartElementNs(ctx, localname, prefix, URI, data.size() / 2,
-                          &data[0], nb_attributes, nb_defaulted, attributes);
-  }
+    // start to create an individual unit, merging namespace details from the root (if it exists)
+    virtual void startUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                           int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                           const xmlChar** attributes) {
 
-  // build start element nodes in unit tree
-  virtual void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-                              int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                              const xmlChar** attributes) {
 
-    xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
-  }
+        // if applying to entire archive, then just build this start element node for now
+        if (isoption(options, OPTION_XSLT_ALL)) {
 
-  // build end element nodes in unit tree
-  virtual void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+            xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes,
+                                  nb_defaulted, attributes);
+            return;
+        }
 
-    xmlSAX2EndElementNs(ctx, localname, prefix, URI);
-  }
+        // remove per-unit namespaces
+        data.resize(rootsize);
 
-  // characters in unit tree
-  virtual void characters(void* ctx, const xmlChar* ch, int len) {
+        // combine namespaces from root and local to this unit
+        for (int i = 0; i < nb_namespaces; ++i) {
 
-    xmlSAX2Characters(ctx, ch, len);
-  }
+            // make sure not already in
+            bool found = false;
+            for (unsigned int j = 0; j < data.size() / 2; ++j)
+                if (xmlStrEqual(data[j * 2], namespaces[i * 2]) &&
+                    xmlStrEqual(data[j * 2 + 1], namespaces[i * 2 + 1])) {
+                    found = true;
+                    break;
+                }
+            if (found)
+                continue;
 
-  // CDATA block in unit tree
-  virtual void cdatablock(void* ctx, const xmlChar* ch, int len) {
+            data.push_back(namespaces[i * 2]);
+            data.push_back(namespaces[i * 2 + 1]);
+        }
 
-    xmlSAX2CDataBlock(ctx, ch, len);
-  }
+        // start the unit (element) at the root using the combined namespaces
+        xmlSAX2StartElementNs(ctx, localname, prefix, URI, data.size() / 2,
+                              &data[0], nb_attributes, nb_defaulted, attributes);
+    }
 
-  // comments in unit tree
-  virtual void comments(void* ctx, const xmlChar* ch) {
+    // build start element nodes in unit tree
+    virtual void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                                int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                                const xmlChar** attributes) {
 
-    xmlSAX2Comment(ctx, ch);
-  }
+        xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
+    }
 
-  // end the construction of the unit tree, apply processing, and delete
-  virtual void endUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+    // build end element nodes in unit tree
+    virtual void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
-    // finish building the unit tree
-    xmlSAX2EndElementNs(ctx, localname, prefix, URI);
+        xmlSAX2EndElementNs(ctx, localname, prefix, URI);
+    }
 
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+    // characters in unit tree
+    virtual void characters(void* ctx, const xmlChar* ch, int len) {
 
-    // apply the necessary processing
-    if(error = !apply(ctx))
-      pstate->stopUnit(ctxt);
+        xmlSAX2Characters(ctx, ch, len);
+    }
 
-    // unhook the unit tree from the document, leaving an empty document
-    xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
-    xmlUnlinkNode(onode);
-    xmlFreeNode(onode);
-    ctxt->node = 0;
+    // CDATA block in unit tree
+    virtual void cdatablock(void* ctx, const xmlChar* ch, int len) {
 
-  }
+        xmlSAX2CDataBlock(ctx, ch, len);
+    }
 
-  virtual void endDocument(void *ctx) {
+    // comments in unit tree
+    virtual void comments(void* ctx, const xmlChar* ch) {
 
-    // endDocument can be called, even if startDocument was not for empty input
-    if (!found || error)
-      return;
+        xmlSAX2Comment(ctx, ch);
+    }
 
-    // end the entire input document
-    xmlSAX2EndDocument(ctx);
+    // end the construction of the unit tree, apply processing, and delete
+    virtual void endUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
-    // end the output
-    endOutput(ctx);
-  }
+        // finish building the unit tree
+        xmlSAX2EndElementNs(ctx, localname, prefix, URI);
+
+        xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+        SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+
+        // apply the necessary processing
+        if(error = !apply(ctx))
+            pstate->stopUnit(ctxt);
+
+        // unhook the unit tree from the document, leaving an empty document
+        xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
+        xmlUnlinkNode(onode);
+        xmlFreeNode(onode);
+        ctxt->node = 0;
+
+    }
+
+    virtual void endDocument(void *ctx) {
+
+        // endDocument can be called, even if startDocument was not for empty input
+        if (!found || error)
+            return;
+
+        // end the entire input document
+        xmlSAX2EndDocument(ctx);
+
+        // end the output
+        endOutput(ctx);
+    }
 
 protected:
-  std::vector<const xmlChar*> data;
-  int rootsize;
-  bool found;
-  int options;
-  bool error;
+    std::vector<const xmlChar*> data;
+    int rootsize;
+    bool found;
+    int options;
+    bool error;
 };
 
 #endif

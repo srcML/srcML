@@ -35,42 +35,42 @@
 
 class SAX2TextWriter {
 
- public:
+public:
 
-  // constructor
-  SAX2TextWriter(const char* ofilename, OPTION_TYPE& options, int unit);
+    // constructor
+    SAX2TextWriter(const char* ofilename, OPTION_TYPE& options, int unit);
 
-  // sax factory
-  static xmlSAXHandler factory();
+    // sax factory
+    static xmlSAXHandler factory();
 
-  // start document
-  static void startDocument(void *ctx);
+    // start document
+    static void startDocument(void *ctx);
 
-  // end document
-  static void endDocument(void *ctx);
+    // end document
+    static void endDocument(void *ctx);
 
-  // characters
-  static void characters(void* ctx, const xmlChar* ch, int len);
+    // characters
+    static void characters(void* ctx, const xmlChar* ch, int len);
 
-  // startElement
-  static void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-		    const xmlChar** attributes);
+    // startElement
+    static void startElementNs(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                               int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                               const xmlChar** attributes);
 
-  // endElement
-  static void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
+    // endElement
+    static void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
 
-  // comments
-  static void comments(void* ctx, const xmlChar* ch);
+    // comments
+    static void comments(void* ctx, const xmlChar* ch);
 
-  xmlParserCtxtPtr ctxt;
-  int unit;
+    xmlParserCtxtPtr ctxt;
+    int unit;
 
- protected:
+protected:
 
-  OPTION_TYPE options;
-  const char* filename;      // output filename
-  xmlTextWriterPtr writer;   // output text writer
+    OPTION_TYPE options;
+    const char* filename;      // output filename
+    xmlTextWriterPtr writer;   // output text writer
 
 };
 

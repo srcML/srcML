@@ -28,36 +28,36 @@
 #include "ProcessUnit.hpp"
 
 class CountUnits : public ProcessUnit {
- public :
-  CountUnits(FILE* poutput = stdout)
-    : output(poutput)
-  {}
+public :
+    CountUnits(FILE* poutput = stdout)
+        : output(poutput)
+        {}
 
- public :
+public :
 
-  virtual void endUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
+    virtual void endUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+        xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+        SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
-    // check if file to output to
-    if(!output) return;
+        // check if file to output to
+        if(!output) return;
 
-    // back up over the previous display
-    // yes, this is a hack, but it works
-    if(pstate->count == 1)
-      fputc('\b', output);
+        // back up over the previous display
+        // yes, this is a hack, but it works
+        if(pstate->count == 1)
+            fputc('\b', output);
 
-    for (int place = pstate->count - 1; place > 0; place /= 10) {
+        for (int place = pstate->count - 1; place > 0; place /= 10) {
 
-      fputc('\b', output);
+            fputc('\b', output);
+        }
+        fprintf(output, "%ld", pstate->count);
+        fflush(output);
     }
-    fprintf(output, "%ld", pstate->count);
-    fflush(output);
-  }
 
 private:
-  FILE* output;
+    FILE* output;
 };
 
 #endif

@@ -32,25 +32,25 @@ extern "C" void handle_segmentation(int) throw (Segmentation_Fault);
 // empty namespace to keep class and variable private
 namespace {
 
-  // class to handle at the start of the exception
-  class StartException {
-  public:
-    StartException() {
+    // class to handle at the start of the exception
+    class StartException {
+    public:
+        StartException() {
 
             pstd::signal(SIGSEGV, handle_segmentation);
             pstd::signal(SIGABRT, handle_segmentation);
-    }
-  };
+        }
+    };
 
-  // object for starting exception
-  StartException st;
+    // object for starting exception
+    StartException st;
 }
 
 extern "C" void handle_segmentation(int) throw (Segmentation_Fault) {
-  pstd::signal(SIGSEGV, SIG_IGN);
-  pstd::signal(SIGABRT, SIG_IGN);
+    pstd::signal(SIGSEGV, SIG_IGN);
+    pstd::signal(SIGABRT, SIG_IGN);
 
-  throw Segmentation_Fault();
+    throw Segmentation_Fault();
 }
 
 #endif

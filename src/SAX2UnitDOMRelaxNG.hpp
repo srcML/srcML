@@ -33,27 +33,27 @@
 #include "SAX2UnitDOM.hpp"
 
 class SAX2UnitDOMRelaxNG : public SAX2UnitDOM {
- public:
+public:
 
-  SAX2UnitDOMRelaxNG(const char* context_element, const char** fxslt, const char* ofilename, int options);
+    SAX2UnitDOMRelaxNG(const char* context_element, const char** fxslt, const char* ofilename, int options);
 
-  static xmlSAXHandler factory();
+    static xmlSAXHandler factory();
 
-  const char** fxslt;
-  xmlRelaxNGParserCtxtPtr relaxng;
-  xmlRelaxNGPtr rng;
-  xmlRelaxNGValidCtxtPtr rngptr;
+    const char** fxslt;
+    xmlRelaxNGParserCtxtPtr relaxng;
+    xmlRelaxNGPtr rng;
+    xmlRelaxNGValidCtxtPtr rngptr;
 
-  // end document
-  static void endDocument(void *ctx);
+    // end document
+    static void endDocument(void *ctx);
 
-  // start unit elements
-  static void startElementNsUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-		    const xmlChar** attributes);
+    // start unit elements
+    static void startElementNsUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                                   int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                                   const xmlChar** attributes);
 
-  // end unit elements
-  static void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
+    // end unit elements
+    static void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
 };
 
 #endif

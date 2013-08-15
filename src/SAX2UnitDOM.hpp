@@ -32,48 +32,48 @@
 #include "SAX2Utilities.hpp"
 
 class SAX2UnitDOM {
- public:
+public:
 
-  SAX2UnitDOM(const char* context_element, const char* ofilename, int options);
+    SAX2UnitDOM(const char* context_element, const char* ofilename, int options);
 
-  static xmlSAXHandler factory();
+    static xmlSAXHandler factory();
 
-  const char* context_element;
-  const char* ofilename;
-  int options;
-  bool found;
-  xmlOutputBufferPtr buf;
-  int nb_ns;
-  char** ns;
-  xmlBufferPtr rootbuf;
-  bool needroot;
-  bool isnested;
-  int count;
-  PROPERTIES_TYPE root_attributes;
+    const char* context_element;
+    const char* ofilename;
+    int options;
+    bool found;
+    xmlOutputBufferPtr buf;
+    int nb_ns;
+    char** ns;
+    xmlBufferPtr rootbuf;
+    bool needroot;
+    bool isnested;
+    int count;
+    PROPERTIES_TYPE root_attributes;
 
-  // start document
-  static void startDocument(void *ctx);
+    // start document
+    static void startDocument(void *ctx);
 
-  // end document
-  static void endDocument(void *ctx);
+    // end document
+    static void endDocument(void *ctx);
 
-  // start unit elements
-  static void startElementNsRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-		    const xmlChar** attributes);
+    // start unit elements
+    static void startElementNsRoot(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                                   int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                                   const xmlChar** attributes);
 
-  // start unit elements
-  static void startElementNsFirstUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-		    const xmlChar** attributes);
+    // start unit elements
+    static void startElementNsFirstUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                                        int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                                        const xmlChar** attributes);
 
-  // start unit elements
-  static void startElementNsUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-		    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-		    const xmlChar** attributes);
+    // start unit elements
+    static void startElementNsUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                                   int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                                   const xmlChar** attributes);
 
-  // end unit elements
-  static void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
+    // end unit elements
+    static void endElementNs(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI);
 };
 
 #endif

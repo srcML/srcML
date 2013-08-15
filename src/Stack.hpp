@@ -29,68 +29,68 @@
 
 template <class Type, int N>
 class SimpleStack {
- public:
-  SimpleStack()
-    : topindex(-1)
-    {}
+public:
+    SimpleStack()
+        : topindex(-1)
+        {}
 
-  SimpleStack(const SimpleStack& st)
-    : topindex(st.topindex) {
+    SimpleStack(const SimpleStack& st)
+        : topindex(st.topindex) {
 
-    for (int i = 0; i < st.size(); ++i)
-      ar[i] = st.ar[i];
-  }
+        for (int i = 0; i < st.size(); ++i)
+            ar[i] = st.ar[i];
+    }
 
-  Type& top() {
-    if (topindex < 0)
-      throw Segmentation_Fault();
+    Type& top() {
+        if (topindex < 0)
+            throw Segmentation_Fault();
 
-    return ar[topindex];
-  }
+        return ar[topindex];
+    }
 
-  const Type& top() const {
-    if (topindex < 0)
-      throw Segmentation_Fault();
+    const Type& top() const {
+        if (topindex < 0)
+            throw Segmentation_Fault();
 
-    return ar[topindex];
-  }
+        return ar[topindex];
+    }
 
-  const Type& prev() const {
-    if (topindex < 1)
-      throw Segmentation_Fault();
+    const Type& prev() const {
+        if (topindex < 1)
+            throw Segmentation_Fault();
 
-    return ar[topindex - 1];
-  }
+        return ar[topindex - 1];
+    }
 
-  void pop() {
-    --topindex;
-  }
+    void pop() {
+        --topindex;
+    }
 
-  void push(const Type& d) {
-    ar[++topindex] = d;
-  }
+    void push(const Type& d) {
+        ar[++topindex] = d;
+    }
 
-  int size() const {
-    return topindex + 1;
-  }
+    int size() const {
+        return topindex + 1;
+    }
 
-  bool empty() const {
-    return size() == 0;
-  }
+    bool empty() const {
+        return size() == 0;
+    }
 
-  SimpleStack& operator=(const SimpleStack& st) {
+    SimpleStack& operator=(const SimpleStack& st) {
 
-    for (int i = 0; i < st.size(); ++i)
-      ar[i] = st.ar[i];
+        for (int i = 0; i < st.size(); ++i)
+            ar[i] = st.ar[i];
 
-    topindex = st.topindex;
+        topindex = st.topindex;
 
-    return *this;
-  }
+        return *this;
+    }
 
-  Type ar[N];
-  int topindex;
- private:
+    Type ar[N];
+    int topindex;
+private:
 };
 
 #endif
