@@ -26,7 +26,7 @@
 
 #include "srcMLTranslatorCore.hpp"
 #include "srcMLTranslator.hpp"
-#include "KeywordCPPLexer.hpp"
+#include "KeywordLexer.hpp"
 #include "srcMLParser.hpp"
 #include "StreamMLParser.hpp"
 #include "srcMLTranslatorOutput.hpp"
@@ -156,7 +156,7 @@ void srcMLTranslatorCore::translate(const char* path, const char* unit_directory
       antlr::TokenStreamSelector selector;
 
       // srcML lexical analyzer from standard input
-      KeywordCPPLexer lexer(pinput, encoding, language);
+      KeywordLexer lexer(pinput, encoding, language);
       lexer.setSelector(&selector);
       lexer.setTabsize(tabsize);
 

@@ -322,7 +322,7 @@ class srcMLParser extends Parser;
 options {
     classHeaderSuffix="public Mode";
 	k=1;
-    importVocab=KeywordCPPLexer;
+    importVocab=KeywordLexer;
     defaultErrorHandler=false;
     noConstructors=true;
 
