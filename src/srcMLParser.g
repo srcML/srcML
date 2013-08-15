@@ -904,8 +904,6 @@ perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
     try {
         call_check(postnametoken, argumenttoken, postcalltoken);
 
-        guessing_endGuessing();
-
         // call syntax succeeded
         type = CALL;
 
@@ -926,10 +924,8 @@ perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
 
         type = NOCALL;
 
-        if (isoption(parseoptions, OPTION_CPP) && argumenttoken != 0 && postcalltoken == 0) {
-            guessing_endGuessing();
+        if (isoption(parseoptions, OPTION_CPP) && argumenttoken != 0 && postcalltoken == 0)
             type = MACRO;
-        }
 
         // single macro call followed by statement_cfg
         else if (isoption(parseoptions, OPTION_CPP) && secondtoken != -1
@@ -956,8 +952,6 @@ call_check[int& postnametoken, int& argumenttoken, int& postcalltoken] { ENTRY_D
             { isoption(parseoptions, OPTION_CPP) }?
             // check for proper form of argument list
             call_check_paren_pair[argumenttoken]
-
-            guessing_endGuessing
 
             // record token after argument list to differentiate between call and macro
             markend[postcalltoken] |
@@ -990,7 +984,7 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
             // found two names in a row, so this is not an expression
             // cause this to fail by explicitly throwing exception
             { depth == 0 }?
-            identifier guessing_endGuessing throw_exception[true] |
+            identifier throw_exception[true] |
 
             // forbid parentheses (handled recursively) and cfg tokens
             { !_tokenSet_1.member(LA(1)) }? ~(LPAREN | RPAREN | TERMINATE) set_bool[name, false]
@@ -3987,26 +3981,7 @@ expression_setup_linq[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
         expression_part[type]
 ;
 
-/*
-  All mode actions do not occur during guessing.  These can be used for mode actions
-  during guessing.
-*/
-guessing_startNewMode[State::MODE_TYPE mode]
-    { if (inputState->guessing) startNewMode(mode | MODE_GUESSING); ENTRY_DEBUG } : ;
-
-guessing_endDownToMode[State::MODE_TYPE mode]
-    { if (inputState->guessing && inTransparentMode(MODE_GUESSING)) endDownToModeSet(mode | MODE_GUESSING); ENTRY_DEBUG } : ;
-
-guessing_endModeSafely[State::MODE_TYPE mode]
-    { if (inputState->guessing && inTransparentMode(MODE_GUESSING) && inMode(mode)) endMode(); ENTRY_DEBUG } : ;
-
-guessing_endGuessing[]
-    { if (inTransparentMode(MODE_GUESSING)) endDownOverMode(MODE_GUESSING); ENTRY_DEBUG } : ;
-
-guessing_end[]
-    { if (!inputState->guessing && inTransparentMode(MODE_GUESSING)) endDownOverMode(MODE_GUESSING); ENTRY_DEBUG } : ;
-
-expression_part_plus_linq[CALLTYPE type = NOCALL] { guessing_end(); ENTRY_DEBUG } :
+expression_part_plus_linq[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
 
         { inLanguage(LANGUAGE_CSHARP) }?
         (linq_expression_pure)=> linq_expression |
@@ -4014,7 +3989,7 @@ expression_part_plus_linq[CALLTYPE type = NOCALL] { guessing_end(); ENTRY_DEBUG 
         expression_part[type]
 ;
 
-expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG } :
+expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
 
         { next_token() == LPAREN }?
         delegate_anonymous |
@@ -4037,9 +4012,7 @@ expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG
             // Added argument to correct markup of default parameters using a call.
             // normally call claims left paren and start calls argument.
             // however I believe parameter_list matches a right paren of the call.
-            call argument
-
-            guessing_startNewMode[MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN] |
+            call argument |
 
         // macro call
         { type == MACRO }? macro_call |
@@ -4054,7 +4027,6 @@ expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG
 
         // left parentheses
         lparen_marked
-        guessing_startNewMode[MODE_INTERNAL_END_PAREN]
         {
             startNewMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN);
 
@@ -4069,9 +4041,6 @@ expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG
             if (inMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN))
                 endMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN);
         }
-        guessing_endDownToMode[MODE_INTERNAL_END_PAREN]
-
-        guessing_endModeSafely[MODE_INTERNAL_END_PAREN]
 
         // treat as operator for operator markup
         rparen[true] |
@@ -4106,7 +4075,7 @@ expression_part[CALLTYPE type = NOCALL] { guessing_end(); bool flag; ENTRY_DEBUG
         variable_identifier_array_grammar_sub[flag]
 ;
 
-expression_part_default[CALLTYPE type = NOCALL] { guessing_end(); ENTRY_DEBUG } :
+expression_part_default[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
 
         expression_process
 
