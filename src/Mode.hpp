@@ -114,9 +114,7 @@ public:
     const static State::MODE_TYPE MODE_EXTERN;
     const static State::MODE_TYPE MODE_INTERNAL_END_CURLY;
 
-    const static State::MODE_TYPE MODE_GUESSING;
     const static State::MODE_TYPE MODE_CLASS;
-    const static State::MODE_TYPE MODE_FUNCTION;
     const static State::MODE_TYPE MODE_END_AT_BLOCK;
 
     const static State::MODE_TYPE MODE_END_ONLY_AT_RPAREN;
