@@ -55,6 +55,74 @@ options {
 
 tokens {
 
+    // special identifier
+    MAIN;
+
+    // statements
+    BREAK;
+	CONTINUE;
+	GOTO;
+
+    WHILE;
+	DO;
+	FOR;
+	ASM;
+
+    IF;
+    ELSE;
+
+	SWITCH;
+	CASE;
+	DEFAULT;
+
+	ENUM;
+	TYPEDEF;
+
+    // aggregate types
+    UNION;
+	STRUCT;
+
+    // functions
+	RETURN;
+
+    // cpp
+    INCLUDE;
+	DEFINE;
+	ELIF;
+    ENDIF;
+    ERRORPREC;
+	IFDEF;
+	IFNDEF;
+    LINE;
+	PRAGMA;
+	UNDEF;
+
+	INLINE;
+
+    EXTERN;
+
+    // specifiers that are not needed for parsing
+    /*
+	AUTO = "auto";
+    REGISTER = "register";
+    MUTABLE = "mutable";
+	CONST = "const";
+    VOLATILE = "volatile";
+    */
+    STATIC; // = "static";
+
+    // Standard type keywords do not need to be identified
+    /*
+    VOID = "void";
+	BOOL = "bool";
+	CHAR = "char";
+    INT = "int";
+    SHORT = "short";
+    LONG = "long";
+    DOUBLE = "double";
+    FLOAT = "float";
+    */
+
     // exception handling
 	TRY;
 	CATCH;
