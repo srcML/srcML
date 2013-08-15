@@ -24,7 +24,7 @@ header {
    #include "Language.hpp"
    #include "UTF8CharBuffer.hpp"
    #include "antlr/TokenStreamSelector.hpp"
-   #include "PureCommentLexer.hpp"
+   #include "CommentTextLexer.hpp"
    #include "srcMLToken.hpp"
 }
 
@@ -32,7 +32,7 @@ header "post_include_cpp" {
 
 void KeywordCPPLexer::changetotextlexer(int typeend) {
           selector->push("text"); 
-           ((PureCommentLexer* ) (selector->getStream("text")))->init(typeend, onpreprocline, atstring);
+           ((CommentTextLexer* ) (selector->getStream("text")))->init(typeend, onpreprocline, atstring);
 }
 }
 

@@ -1,5 +1,5 @@
 /*
-  PureCommentLexer.g
+  CommentTextLexer.g
 
   Copyright (C) 2008-2011  SDML (www.sdml.info)
 
@@ -33,7 +33,7 @@ options {
     namespaceStd="std";
 }
 
-class PureCommentLexer extends Lexer;
+class CommentTextLexer extends Lexer;
 
 options {
     k = 1;
@@ -65,7 +65,7 @@ bool onpreprocline;
 // ignore character escapes
 bool noescape;
 
-PureCommentLexer(const antlr::LexerSharedInputState& state)
+CommentTextLexer(const antlr::LexerSharedInputState& state)
 	: antlr::CharScanner(state,true), mode(0), onpreprocline(false), noescape(false)
 {}
 

@@ -161,7 +161,7 @@ void srcMLTranslatorCore::translate(const char* path, const char* unit_directory
       lexer.setTabsize(tabsize);
 
       // pure block comment lexer
-      PureCommentLexer textlexer(lexer.getInputState());
+      CommentTextLexer textlexer(lexer.getInputState());
       textlexer.setSelector(&selector);
 
       // switching between lexers

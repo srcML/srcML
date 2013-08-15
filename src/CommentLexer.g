@@ -43,7 +43,7 @@ tokens {
 }
 
 {
-    #include "PureCommentLexer.hpp"
+    #include "CommentTextLexer.hpp"
 }
 
 // Single-line comments (no EOL)
