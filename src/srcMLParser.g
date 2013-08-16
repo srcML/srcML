@@ -140,7 +140,7 @@ header "post_include_hpp" {
 
 #define assertMode(m)
 
-enum STMTTYPE { NONE, VARIABLE, FUNCTION, FUNCTION_DECL, CONSTRUCTOR, CONSTRUCTOR_DECL, DESTRUCTOR, DESTRUCTOR_DECL, SINGLE_MACRO, NULLOPERATOR, DELEGATE_FUNCTION, ENUM_DECL, GLOBAL_ATTRIBUTE, PROPERTY_ACCESSOR, PROPERTY_ACCESSOR_DECL, EXPRESSION, CLASS_DEFN, CLASS_DECL, UNION_DEFN, UNION_DECL, STRUCT_DEFN, STRUCT_DECL, INTERFACE_DEFN, INTERFACE_DECL, ACCESS_REGION };
+enum STMT_TYPE { NONE, VARIABLE, FUNCTION, FUNCTION_DECL, CONSTRUCTOR, CONSTRUCTOR_DECL, DESTRUCTOR, DESTRUCTOR_DECL, SINGLE_MACRO, NULLOPERATOR, DELEGATE_FUNCTION, ENUM_DECL, GLOBAL_ATTRIBUTE, PROPERTY_ACCESSOR, PROPERTY_ACCESSOR_DECL, EXPRESSION, CLASS_DEFN, CLASS_DECL, UNION_DEFN, UNION_DECL, STRUCT_DEFN, STRUCT_DECL, INTERFACE_DEFN, INTERFACE_DECL, ACCESS_REGION };
 enum CALLTYPE { NOCALL, CALL, MACRO };
 
 // position in output stream
@@ -693,7 +693,7 @@ keyword_statements[] { ENTRY_DEBUG } :
   function definition, function declaration, or even a label.
 */
 pattern_statements[] { int secondtoken = 0; int type_count = 0;
-        STMTTYPE stmt_type = NONE; CALLTYPE type = NOCALL;
+        STMT_TYPE stmt_type = NONE; CALLTYPE type = NOCALL;
 
         // detect the declaration/definition type
         perform_pattern_check(stmt_type, secondtoken, type_count);
@@ -1104,7 +1104,7 @@ for_initialization_action[] { ENTRY_DEBUG } :
         }
 ;
 
-for_initialization[] { int type_count = 0;  int secondtoken = 0; STMTTYPE stmt_type = NONE; ENTRY_DEBUG } :
+for_initialization[] { int type_count = 0;  int secondtoken = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
         for_initialization_action
         (
             // explicitly check for a variable declaration since it can easily
@@ -1954,7 +1954,7 @@ else_handling[] { ENTRY_DEBUG } :
 ;
 
 // mid-statement
-statement_part[] { int type_count;  int secondtoken = 0; STMTTYPE stmt_type = NONE;
+statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = NONE;
                    CALLTYPE type = NOCALL; ENTRY_DEBUG } :
 
         { inMode(MODE_EAT_TYPE) }?
@@ -2246,7 +2246,7 @@ function_tail[] { ENTRY_DEBUG } :
         )*
 ;
 
-perform_pattern_check[STMTTYPE& type, int& token, int& type_count, bool inparam = false] returns [bool isdecl] {
+perform_pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false] returns [bool isdecl] {
 
     isdecl = true;
 
@@ -2313,7 +2313,7 @@ perform_pattern_check[STMTTYPE& type, int& token, int& type_count, bool inparam 
 pattern_check[int& token,      /* second token, after name (always returned) */
               int& fla,        /* for a function, TERMINATE or LCURLY, 0 for a variable */
               int& type_count, /* number of tokens in type (not including name) */
-              STMTTYPE& type,
+              STMT_TYPE& type,
               bool inparam,     /* are we in a parameter */
               bool& sawenum,
               int& posin
@@ -2564,7 +2564,7 @@ check_global[] returns [bool flag] {
 throw_exception[bool condition = true] { if (condition) throw antlr::RecognitionException(); } :;
 
 /* sets the declaration type to a value if the condition is true */
-set_type[STMTTYPE& name, STMTTYPE value, bool condition = true] { if (condition) name = value; } :;
+set_type[STMT_TYPE& name, STMT_TYPE value, bool condition = true] { if (condition) name = value; } :;
 
 /* sets the int to a value if the condition is true */
 set_int[int& name, int value, bool condition = true] { if (condition) name = value; } :;
@@ -3512,7 +3512,7 @@ using_namespace_statement[] { ENTRY_DEBUG } :
         namespace_directive
 ;
 
-using_statement[] { int type_count = 0; int secondtoken = 0;  STMTTYPE stmt_type = NONE; ENTRY_DEBUG } :
+using_statement[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
         {
             // treat try block as nested block statement
             startNewMode(MODE_STATEMENT | MODE_NEST);
@@ -3543,7 +3543,7 @@ using_statement[] { int type_count = 0; int secondtoken = 0;  STMTTYPE stmt_type
         )
 ;
 
-lock_statement[] { int type_count = 0; int secondtoken = 0;  STMTTYPE stmt_type = NONE; ENTRY_DEBUG } :
+lock_statement[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
         {
             // treat try block as nested block statement
             startNewMode(MODE_STATEMENT | MODE_NEST);
@@ -4289,7 +4289,7 @@ argument[] { ENTRY_DEBUG } :
         )
 ;
 
-parameter[] { int type_count = 0; int secondtoken = 0;  STMTTYPE stmt_type = NONE; ENTRY_DEBUG } :
+parameter[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
         {
             // end parameter correctly
             startNewMode(MODE_PARAMETER);
@@ -4357,7 +4357,7 @@ tripledotop[] { LightweightElement element; ENTRY_DEBUG } :
         DOTDOTDOT
 ;
 
-parameter_type[] { CompleteElement element; int type_count = 0; int secondtoken = 0; STMTTYPE stmt_type = NONE; ENTRY_DEBUG } :
+parameter_type[] { CompleteElement element; int type_count = 0; int secondtoken = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
         {
             // local mode so start element will end correctly
             startNewMode(MODE_LOCAL);
