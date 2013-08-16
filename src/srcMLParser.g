@@ -696,7 +696,7 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0;
         STMT_TYPE stmt_type = NONE; CALLTYPE type = NOCALL;
 
         // detect the declaration/definition type
-        perform_pattern_check(stmt_type, secondtoken, type_count);
+        pattern_check(stmt_type, secondtoken, type_count);
 
         ENTRY_DEBUG } :
 
@@ -1109,7 +1109,7 @@ for_initialization[] { int type_count = 0;  int secondtoken = 0; STMT_TYPE stmt_
         (
             // explicitly check for a variable declaration since it can easily
             // be confused with an expression
-            { perform_pattern_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
+            { pattern_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
             for_initialization_variable_declaration[type_count] |
 
             expression
@@ -1989,7 +1989,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
 
         // K&R function parameters
         { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY)) && inMode(MODE_FUNCTION_TAIL) &&
-          perform_pattern_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
+          pattern_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
         kr_parameter |
 
         // start of argument for return or throw statement
@@ -2246,7 +2246,7 @@ function_tail[] { ENTRY_DEBUG } :
         )*
 ;
 
-perform_pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false] returns [bool isdecl] {
+pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false] returns [bool isdecl] {
 
     isdecl = true;
 
@@ -2260,7 +2260,7 @@ perform_pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam
     int fla = 0;
 
     try {
-        pattern_check(token, fla, type_count, type, inparam, sawenum, posin);
+        pattern_check_core(token, fla, type_count, type, inparam, sawenum, posin);
 
     } catch (...) {
 
@@ -2310,7 +2310,7 @@ perform_pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam
   This is pretty complicated as it has to figure out whether it is a declaration or not,
   and whether it is a function or a variable declaration.
 */
-pattern_check[int& token,      /* second token, after name (always returned) */
+pattern_check_core[int& token,      /* second token, after name (always returned) */
               int& fla,        /* for a function, TERMINATE or LCURLY, 0 for a variable */
               int& type_count, /* number of tokens in type (not including name) */
               STMT_TYPE& type,
@@ -3527,7 +3527,7 @@ using_statement[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_typ
         (
             // explicitly check for a variable declaration since it can easily
             // be confused with an expression
-            { perform_pattern_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
+            { pattern_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
             for_initialization_variable_declaration[type_count] |
 
             {
@@ -3558,7 +3558,7 @@ lock_statement[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type
         (
             // explicitly check for a variable declaration since it can easily
             // be confused with an expression
-            { perform_pattern_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
+            { pattern_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
             for_initialization_variable_declaration[type_count] |
 
             {
@@ -4298,7 +4298,7 @@ parameter[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NO
             startElement(SPARAMETER);
         }
         (
-            { perform_pattern_check(stmt_type, secondtoken, type_count, true) && stmt_type == FUNCTION }?
+            { pattern_check(stmt_type, secondtoken, type_count, true) && stmt_type == FUNCTION }?
             function_declaration[type_count]
 
             function_identifier // pointer_name_grammar
@@ -4365,7 +4365,7 @@ parameter_type[] { CompleteElement element; int type_count = 0; int secondtoken 
             // start of type
             startElement(STYPE);
         }
-        { perform_pattern_check(stmt_type, secondtoken, type_count) }?
+        { pattern_check(stmt_type, secondtoken, type_count) }?
         eat_type[type_count]
 ;
 
