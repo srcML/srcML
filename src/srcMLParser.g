@@ -2334,7 +2334,6 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             bool endbracket = false;
             bool modifieroperator = false;
             qmark = false;
-            bool global = false;
             int real_type_count = 0;
             bool lcurly = false;
         ENTRY_DEBUG } :
@@ -2381,19 +2380,20 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 throw_exception[type == ACCESS_REGION] |
 
                 { inLanguage(LANGUAGE_CSHARP) }?
-                set_bool[global, false]
                 LBRACKET
                         (COMMA)*
 
-                        (RETURN | EVENT | set_bool[global, check_global()] identifier)?
+                        (RETURN | EVENT |
+
+                        set_type[type, GLOBAL_ATTRIBUTE, check_global()]
+                        throw_exception[type == GLOBAL_ATTRIBUTE] 
+                        identifier)?
 
                         (COLON)*
 
                         //complete_expression
                         (~(RBRACKET))*
                 RBRACKET
-                set_type[type, GLOBAL_ATTRIBUTE, global]
-                throw_exception[global] 
                 set_int[attribute_count, attribute_count + 1] |
 
                 { type_count == attribute_count }?
@@ -2964,13 +2964,6 @@ attribute_target[] { SingleElement element; ENTRY_DEBUG } :
             startElement(STARGET);
         }
         (RETURN | EVENT | identifier_list)
-;
-
-attribute_target_global[] returns [bool global = false] { ENTRY_DEBUG } :
-
-        set_bool[global, LA(1) != RETURN && LA(1) != EVENT && check_global()]
-
-        attribute_target
 ;
 
 // Full, complete expression matched all at once (no stream).
