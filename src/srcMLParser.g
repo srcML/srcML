@@ -2470,8 +2470,6 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         // (except for function pointer, which is handled later)
         set_int[type_count, type_count > 1 ? type_count - 1 : 0]
 
-        set_bool[isoperator, isoperator || isdestructor]
-
         // special case for what looks like a destructor declaration
         throw_exception[isdestructor && (modifieroperator || (type_count - specifier_count - attribute_count) > 1 || ((type_count - specifier_count - attribute_count) == 1))]
 
@@ -2491,6 +2489,8 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
                  // operator methods may not have non-specifier types also
                  !isoperator &&
+
+                 !isdestructor &&
 
                  // entire type is specifiers
                  (type_count == (specifier_count + attribute_count)) &&
@@ -2531,7 +2531,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
             // POF (Plain Old Function)
             // need at least one non-specifier in the type (not including the name)
-            { (type_count - specifier_count > 0) || isoperator || isconstructor}?
+            { (type_count - specifier_count > 0) || isoperator || saveisdestructor || isconstructor}?
             function_rest[fla]
         )
 
@@ -2542,7 +2542,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         set_type[type, DESTRUCTOR, saveisdestructor]
 
         // could also have a constructor
-        set_type[type, CONSTRUCTOR, !saveisdestructor && isconstructor && !isoperator]
+        set_type[type, CONSTRUCTOR, !saveisdestructor && isconstructor && !saveisdestructor && !isoperator]
 )
 ;
 
