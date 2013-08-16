@@ -83,6 +83,8 @@ XSLT_DEFN2DECL=${XSLT} ${XSLT_DEFN2DECL_XSL}
 # wrap in a block
 XSLT_BLOCKUNIT=${XSLT} xsl/insertblock.xsl
 
+XSLT_STRUCTUNIT=${XSLT} xsl/insertstruct.xsl
+
 XSLT_BLOCKUNIT_JAVA=${XSLT} xsl/insertblock.java.xsl
 
 XSLT_ADDEXPLICIT=${XSLT} xsl/addexplicit.xsl
@@ -193,6 +195,8 @@ GEN_CS= ${foreach nm, $(BASE_CS_ALL_GEN), $(nm).cs.xml}
 SEP_PLUS= ${SEP_FILES} ${GEN_SEP}
 SEP_PLUSNOPREPROC= ${SEP_BASE} ${GEN_SEP}
 
+SEP_STRUCT = function function_const function_cpp function_decl function_ns function_operator function_pointer function_throw 
+
 ##
 # generate cases for all
 GEN_ALL= ${foreach nm, $(SEP_PLUS), $(nm).all.cpp.xml} extra_cpp.all.cpp.xml \
@@ -211,6 +215,9 @@ GEN_BLOCK= ${foreach nm, $(SEP_PLUS),          $(nm).block.cpp.xml} \
                ${foreach nm, $(BASE_JAVA_ALL), $(nm).block.java.xml} \
 	       ${foreach nm, $(BASE_ASPECTJ_ALL), $(nm).block.aj.xml} \
 		 extra_c.block.c.xml extra_cpp.block.cpp.xml
+
+# generated cases for structs
+GEN_STRUCT= ${foreach nm, $(SEP_STRUCT),          $(nm).struct.cpp.xml}
 
 # generated cases for comments
 GEN_COMMENT= ${foreach nm, $(SEP_PLUS),          $(nm).comment.cpp.xml} \
@@ -311,6 +318,9 @@ cleanall :
 %.block.cpp.xml : %.cpp.xml
 	${XSLT_BLOCKUNIT} $< > $@
 
+%.struct.cpp.xml : %.cpp.xml
+	${XSLT_STRUCTUNIT} $< > $@
+
 %.block.c.xml : %.c.xml
 	${XSLT_BLOCKUNIT} $< > $@
 
@@ -401,9 +411,9 @@ cleanall :
 %.cpp11.xml : %.cpp.xml
 	${XSLT_SETLANGUAGE_CXX_11} $< > $@
 
-GEN_FILES= $(GEN_JAVA) $(GEN_C) $(GEN_CS) $(GEN_CXX_11) $(GEN_ASPECTJ) ${GEN_PART} ${GEN_ALL} ${GEN_BLOCK} ${GEN_COMMENT} ${GEN_PREPROC} ${GEN_IFTHENELSE} ${GEN_FORMFEED}
+GEN_FILES= $(GEN_JAVA) $(GEN_C) $(GEN_CS) $(GEN_CXX_11) $(GEN_ASPECTJ) ${GEN_PART} ${GEN_ALL} ${GEN_BLOCK} ${GEN_COMMENT} ${GEN_PREPROC} ${GEN_IFTHENELSE} ${GEN_FORMFEED} ${GEN_STRUCT}
 
-GEN_CPP_BASE=${GEN_SEP} ${foreach nm, $(SEP_PLUS), $(nm).all} ${foreach nm, $(SEP_PLUS), $(nm).block} ${foreach nm, $(SEP_PLUS), $(nm).comment} ${foreach nm, $(SEP_PLUS), $(nm).preproc}
+GEN_CPP_BASE=${GEN_SEP} ${foreach nm, $(SEP_PLUS), $(nm).all} ${foreach nm, $(SEP_PLUS), $(nm).block} ${foreach nm, $(SEP_PLUS), $(nm).comment} ${foreach nm, $(SEP_PLUS), $(nm).preproc} ${foreach nm, $(SEP_PLUS), $(nm).struct}
 
 GEN_CPP= ${foreach nm, $(GEN_CPP_BASE), $(nm).cpp}
 
