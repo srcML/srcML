@@ -2272,25 +2272,27 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     if (type == VARIABLE && posin)
         type_count = posin - 1;
 
-    if (type == 0 && sawenum)
+    else if (type == 0 && sawenum)
         type = ENUM_DECL;
 
     // may just have a single macro (no parens possibly) before a statement
-    if (type == 0 && type_count == 0 && _tokenSet_1.member(LA(1)))
+    else if (type == 0 && type_count == 0 && _tokenSet_1.member(LA(1)))
         type = SINGLE_MACRO;
 
     // may just have an expression
-    if (type == DESTRUCTOR && !inLanguage(LANGUAGE_CXX_FAMILY))
+    else if (type == DESTRUCTOR && !inLanguage(LANGUAGE_CXX_FAMILY))
         type = NULLOPERATOR;
 
-    // declaration forms
-    if (type == CONSTRUCTOR && fla == TERMINATE)
+    // declaration form
+    else if (type == CONSTRUCTOR && fla == TERMINATE)
         type = CONSTRUCTOR_DECL;
 
-    if (type == DESTRUCTOR && fla == TERMINATE)
+    // declaration form
+    else if (type == DESTRUCTOR && fla == TERMINATE)
         type = DESTRUCTOR_DECL;
 
-    if (type == FUNCTION && fla == TERMINATE)
+    // declaration form
+    else if (type == FUNCTION && fla == TERMINATE)
         type = FUNCTION_DECL;
 
     if (type == DESTRUCTOR_DECL && (!inTransparentMode(MODE_CLASS) || inTransparentMode(MODE_FUNCTION_TAIL)))
