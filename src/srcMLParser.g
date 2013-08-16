@@ -2311,14 +2311,34 @@ perform_pattern_check[STMTTYPE& type, int& token, int& type_count, bool inparam 
   and whether it is a function or a variable declaration.
 */
 pattern_check[int& token,      /* second token, after name (always returned) */
-             int& fla,        /* for a function, TERMINATE or LCURLY, 0 for a variable */
-             int& type_count, /* number of tokens in type (not including name) */
-             STMTTYPE& type,
-             bool inparam,     /* are we in a parameter */
-             bool& sawenum,
-             int& posin
-        ] { sawenum = false; token = 0; fla = 0; type_count = 0; int specifier_count = 0; isdestructor = false;
-        type = NONE; bool foundpure = false; bool isoperatorfunction = false; bool isconstructor = false; bool saveisdestructor = false; bool endbracket = false; bool modifieroperator = false; bool sawoperator = false; int attributecount = 0; posin = 0; qmark = false; bool global = false; int real_type_count = 0; bool lcurly = false; ENTRY_DEBUG } :
+              int& fla,        /* for a function, TERMINATE or LCURLY, 0 for a variable */
+              int& type_count, /* number of tokens in type (not including name) */
+              STMTTYPE& type,
+              bool inparam,     /* are we in a parameter */
+              bool& sawenum,
+              int& posin
+        ] {
+            token = 0;
+            fla = 0;
+            type_count = 0;
+            type = NONE;
+            sawenum = false;
+            posin = 0;
+            isdestructor = false;           // global flag detected during name matching
+            int attribute_count = 0;
+            int specifier_count = 0;
+            bool foundpure = false;
+            bool isoperator = false;
+            bool isconstructor = false;
+            bool saveisdestructor = false;
+            bool endbracket = false;
+            bool modifieroperator = false;
+            bool sawoperator = false;
+            qmark = false;
+            bool global = false;
+            int real_type_count = 0;
+            bool lcurly = false;
+        ENTRY_DEBUG } :
 
         // main pattern for variable declarations, and most function declaration/definitions.
         // trick is to look for function declarations/definitions, and along the way record
@@ -2375,13 +2395,13 @@ pattern_check[int& token,      /* second token, after name (always returned) */
                 RBRACKET
                 set_type[type, GLOBAL_ATTRIBUTE, global]
                 throw_exception[global] 
-                set_int[attributecount, attributecount + 1] |
+                set_int[attribute_count, attribute_count + 1] |
 
-                { type_count == attributecount }?
+                { type_count == attribute_count }?
                 property_method_name
                 set_type[type, PROPERTY_ACCESSOR, true] |
 
-                { type_count == attributecount + specifier_count }?
+                { type_count == attribute_count + specifier_count }?
                 (CLASS     set_type[type, CLASS_DECL]  |
                  STRUCT    set_type[type, STRUCT_DECL] |
                  UNION     set_type[type, UNION_DECL]  |
@@ -2402,18 +2422,18 @@ pattern_check[int& token,      /* second token, after name (always returned) */
 
                 { inLanguage(LANGUAGE_JAVA_FAMILY) }?
                 annotation
-                set_int[attributecount, attributecount + 1] |
+                set_int[attribute_count, attribute_count + 1] |
 
                 // typical type name
                 { !inLanguage(LANGUAGE_CSHARP) || LA(1) != ASYNC }?
                 set_bool[operatorname, false]
                 compound_name set_bool[foundpure]
-                    set_bool[isoperatorfunction, isoperatorfunction || (inLanguage(LANGUAGE_CXX_FAMILY) && 
+                    set_bool[isoperator, isoperator || (inLanguage(LANGUAGE_CXX_FAMILY) && 
                              operatorname && type_count == specifier_count)] 
                 set_bool[operatorname, false] |
 
                 // special function name
-                MAIN set_bool[isoperatorfunction, type_count == 0] |
+                MAIN set_bool[isoperator, type_count == 0] |
 
                 // type parts that can occur before other type parts (excluding specifiers)
                 { LA(1) != LBRACKET }?
@@ -2431,9 +2451,9 @@ pattern_check[int& token,      /* second token, after name (always returned) */
         )*
 
         // special case for property attributes as names, e.g., get, set, etc.
-        throw_exception[type == PROPERTY_ACCESSOR && (type_count == attributecount + 1) && LA(1) == LCURLY]
+        throw_exception[type == PROPERTY_ACCESSOR && (type_count == attribute_count + 1) && LA(1) == LCURLY]
         set_type[type, PROPERTY_ACCESSOR_DECL, type == PROPERTY_ACCESSOR]
-        throw_exception[type == PROPERTY_ACCESSOR_DECL && (type_count == attributecount + 1) && LA(1) == TERMINATE]
+        throw_exception[type == PROPERTY_ACCESSOR_DECL && (type_count == attribute_count + 1) && LA(1) == TERMINATE]
         set_type[type, NONE, type == PROPERTY_ACCESSOR_DECL]
 
         set_int[real_type_count, type_count]
@@ -2451,10 +2471,10 @@ pattern_check[int& token,      /* second token, after name (always returned) */
         // (except for function pointer, which is handled later)
         set_int[type_count, type_count > 1 ? type_count - 1 : 0]
 
-        set_bool[isoperatorfunction, isoperatorfunction || isdestructor]
+        set_bool[isoperator, isoperator || isdestructor]
 
         // special case for what looks like a destructor declaration
-        throw_exception[isdestructor && (modifieroperator || (type_count - specifier_count - attributecount) > 1 || ((type_count - specifier_count - attributecount) == 1))]
+        throw_exception[isdestructor && (modifieroperator || (type_count - specifier_count - attribute_count) > 1 || ((type_count - specifier_count - attribute_count) == 1))]
 
         /*
           We have a declaration (at this point a variable) if we have:
@@ -2474,7 +2494,7 @@ pattern_check[int& token,      /* second token, after name (always returned) */
                  !sawoperator &&
 
                  // entire type is specifiers
-                 (type_count == (specifier_count + attributecount)) &&
+                 (type_count == (specifier_count + attribute_count)) &&
 
                  (
                     // inside of a C++ class definition
@@ -2500,17 +2520,19 @@ pattern_check[int& token,      /* second token, after name (always returned) */
             // check for function pointer, which must have a non-specifier part of the type
             { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY)) && real_type_count > 0 }?
             (function_pointer_name_grammar eat_optional_macro_call LPAREN)=>
-            set_bool[isconstructor, false]
             function_pointer_name_grammar
 
             // what was assumed to be the name of the function is actually part of the type
             set_int[type_count, type_count + 1]
 
+            // this ain't a constructor
+            set_bool[isconstructor, false]
+
             function_rest[fla] |
 
             // POF (Plain Old Function)
             // need at least one non-specifier in the type (not including the name)
-            { (type_count - specifier_count > 0) || isoperatorfunction || isconstructor}?
+            { (type_count - specifier_count > 0) || isoperator || isconstructor}?
             function_rest[fla]
         )
 
@@ -2521,7 +2543,7 @@ pattern_check[int& token,      /* second token, after name (always returned) */
         set_type[type, DESTRUCTOR, saveisdestructor]
 
         // could also have a constructor
-        set_type[type, CONSTRUCTOR, !saveisdestructor && isconstructor && !isoperatorfunction]
+        set_type[type, CONSTRUCTOR, !saveisdestructor && isconstructor && !isoperator]
 )
 ;
 
