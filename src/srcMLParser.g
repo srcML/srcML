@@ -2372,7 +2372,8 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             (
                 { _tokenSet_21.member(LA(1)) }?
                 set_int[token, LA(1)]
-                set_bool[foundpure, foundpure || LA(1) == CONST] specifier
+                set_bool[foundpure, foundpure || LA(1) == CONST]
+                specifier
                 set_int[specifier_count, specifier_count + 1]
                 set_type[type, ACCESS_REGION,
                         inLanguage(LANGUAGE_CXX) && LA(1) == COLON && (token == PUBLIC || token == PRIVATE || token == PROTECTED)]
@@ -2541,7 +2542,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         set_type[type, DESTRUCTOR, saveisdestructor]
 
         // could also have a constructor
-        set_type[type, CONSTRUCTOR, !saveisdestructor && isconstructor && !saveisdestructor && !isoperator]
+        set_type[type, CONSTRUCTOR, isconstructor && !saveisdestructor && !isoperator]
 )
 ;
 
