@@ -688,6 +688,8 @@ void dlexsltRegisterAll() {
 // xslt evaluation of the nested units
 void srcMLUtility::xslt(const char* context_element, const char* ofilename, const char* xslts[], const char* params[], int paramcount) {
 
+    xmlInitParser();
+
   // allow for all exstl functions
   dlexsltRegisterAll();
 
@@ -848,6 +850,7 @@ extern "C" {
   }
 
 
+  // TODO:  Why does this not return a value?
   const char * srcml_extract_text_buffer(srcMLUtility * su, int unit) {
 
     su->extract_text(unit);

@@ -108,8 +108,6 @@ public :
 
         if (handle) {
 
-            char* error;
-
             dlerror();
             dlsymvar(exsltXpathCtxtRegister,exsltDateXpathCtxtRegister);
             if (dlerror() == NULL)  {

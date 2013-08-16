@@ -941,7 +941,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       poptions.language = Language::getLanguage(optarg);
       if (poptions.language == 0) {
         fprintf(stderr, "%s: invalid option -- Language flag must one of the following values:  "
-                "%s %s %s %s\n", PROGRAM_NAME, LANGUAGE_C, LANGUAGE_CXX, LANGUAGE_CSHARP, LANGUAGE_JAVA, LANGUAGE_ASPECTJ);
+                "%s %s %s %s\n", PROGRAM_NAME, LANGUAGE_C, LANGUAGE_CXX, LANGUAGE_CSHARP, LANGUAGE_JAVA);
 
         exit(STATUS_INVALID_LANGUAGE);
       }
@@ -1234,7 +1234,7 @@ void src2srcml_text(srcMLTranslator& translator, const char* path, OPTION_TYPE& 
       fprintf(stderr, "%s: Unable to open file %s\n", PROGRAM_NAME, path);
 
       options = save_options;
-      gpoptions->error;
+      ++(gpoptions->error);
 
       return;
     }
