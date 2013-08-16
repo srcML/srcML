@@ -39,21 +39,12 @@ class srcMLToken : public antlr::Token {
     friend bool isempty(const antlr::RefToken& token);
 
 public:
-
     srcMLToken()
         : Token(), category(-1) {
     }
 
-    srcMLToken(int t)
-        : Token(t), category(-1) {
-    }
-
     srcMLToken(int t, int cat)
         : Token(t), category(cat) {
-    }
-
-    srcMLToken(int t, std::string& s)
-        : Token(t, s), category(-1) {
     }
 
     static antlr::RefToken factory() {
