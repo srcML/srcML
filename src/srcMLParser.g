@@ -2311,12 +2311,12 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
   and whether it is a function or a variable declaration.
 */
 pattern_check_core[int& token,      /* second token, after name (always returned) */
-              int& fla,        /* for a function, TERMINATE or LCURLY, 0 for a variable */
-              int& type_count, /* number of tokens in type (not including name) */
-              STMT_TYPE& type,
-              bool inparam,     /* are we in a parameter */
-              bool& sawenum,
-              int& posin
+              int& fla,             /* for a function, TERMINATE or LCURLY, 0 for a variable */
+              int& type_count,      /* number of tokens in type (not including name) */
+              STMT_TYPE& type,      /* type discovered */
+              bool inparam,         /* are we in a parameter */
+              bool& sawenum,        /* have we seen an enum */
+              int& posin            /* */
         ] {
             token = 0;
             fla = 0;
@@ -2333,7 +2333,6 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             bool saveisdestructor = false;
             bool endbracket = false;
             bool modifieroperator = false;
-            bool sawoperator = false;
             qmark = false;
             bool global = false;
             int real_type_count = 0;
@@ -2361,7 +2360,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
             set_int[posin, LA(1) == IN ? posin = type_count : posin]
 
-            set_bool[sawoperator, sawoperator || LA(1) == OPERATOR]
+            set_bool[isoperator, isoperator || LA(1) == OPERATOR]
 
             // was their a bracket on the end?  Need to know for Java
             set_bool[endbracket, inLanguage(LANGUAGE_JAVA_FAMILY) && LA(1) == LBRACKET]
@@ -2491,7 +2490,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         set_bool[isconstructor,
 
                  // operator methods may not have non-specifier types also
-                 !sawoperator &&
+                 !isoperator &&
 
                  // entire type is specifiers
                  (type_count == (specifier_count + attribute_count)) &&
