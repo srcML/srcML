@@ -2491,9 +2491,6 @@ pattern_check[int& token,      /* second token, after name (always returned) */
                 )
         ]
 
-        // need to see if we possibly have a constructor/destructor name, with no type
-        set_bool[isoperatorfunction, isoperatorfunction || isconstructor]
-
         // detecting a destructor name uses a data member, since it is detected in during the
         // name detection.  If the parameters use this method, it is reentrant, so cache it
         set_bool[saveisdestructor, isdestructor]
@@ -2513,7 +2510,7 @@ pattern_check[int& token,      /* second token, after name (always returned) */
 
             // POF (Plain Old Function)
             // need at least one non-specifier in the type (not including the name)
-            { (type_count - specifier_count > 0) || isoperatorfunction }?
+            { (type_count - specifier_count > 0) || isoperatorfunction || isconstructor}?
             function_rest[fla]
         )
 
@@ -2524,7 +2521,7 @@ pattern_check[int& token,      /* second token, after name (always returned) */
         set_type[type, DESTRUCTOR, saveisdestructor]
 
         // could also have a constructor
-        set_type[type, CONSTRUCTOR, !saveisdestructor && isconstructor]
+        set_type[type, CONSTRUCTOR, !saveisdestructor && isconstructor && !isoperatorfunction]
 )
 ;
 
