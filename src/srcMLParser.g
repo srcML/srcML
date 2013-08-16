@@ -2283,6 +2283,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     if (type == DESTRUCTOR && !inLanguage(LANGUAGE_CXX_FAMILY))
         type = NULLOPERATOR;
 
+    // declaration forms
     if (type == CONSTRUCTOR && fla == TERMINATE)
         type = CONSTRUCTOR_DECL;
 
@@ -2292,11 +2293,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     if (type == FUNCTION && fla == TERMINATE)
         type = FUNCTION_DECL;
 
-    // false constructor for java
-//    if (inLanguage(LANGUAGE_JAVA_FAMILY) && type == CONSTRUCTOR && fla != LCURLY)
-//        type = NONE;
-
-    if (type == DESTRUCTOR_DECL && !(inTransparentMode(MODE_CLASS) && !inTransparentMode(MODE_FUNCTION_TAIL)))
+    if (type == DESTRUCTOR_DECL && (!inTransparentMode(MODE_CLASS) || inTransparentMode(MODE_FUNCTION_TAIL)))
         type = EXPRESSION;
 
     inputState->guessing--;
