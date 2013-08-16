@@ -2503,6 +2503,7 @@ pattern_check[int& token,      /* second token, after name (always returned) */
             // check for function pointer, which must have a non-specifier part of the type
             { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY)) && real_type_count > 0 }?
             (function_pointer_name_grammar eat_optional_macro_call LPAREN)=>
+            set_bool[isconstructor, false]
             function_pointer_name_grammar
 
             // what was assumed to be the name of the function is actually part of the type
