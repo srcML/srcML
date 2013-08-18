@@ -27,70 +27,55 @@
 #ifndef STACK_HPP
 #define STACK_HPP
 
-template <class Type, int N>
+#include <deque>
+
+template <class Type>
 class SimpleStack {
 public:
-    SimpleStack()
-        : topindex(-1)
-        {}
+    SimpleStack() {}
 
     SimpleStack(const SimpleStack& st)
-        : topindex(st.topindex) {
-
-        for (int i = 0; i < st.size(); ++i)
-            ar[i] = st.ar[i];
-    }
+        : data(st.data) {}
 
     Type& top() {
-        if (topindex < 0)
-            throw Segmentation_Fault();
-
-        return ar[topindex];
+        return data.back();
     }
 
     const Type& top() const {
-        if (topindex < 0)
-            throw Segmentation_Fault();
-
-        return ar[topindex];
+        return data.back();
     }
 
     const Type& prev() const {
-        if (topindex < 1)
-            throw Segmentation_Fault();
-
-        return ar[topindex - 1];
+        typename std::deque<Type>::const_reverse_iterator it = data.rbegin();
+        ++it;
+          
+        return *it;
     }
 
     void pop() {
-        --topindex;
+        data.pop_back();
     }
 
     void push(const Type& d) {
-        ar[++topindex] = d;
+        data.push_back(d);
     }
 
     int size() const {
-        return topindex + 1;
+        return data.size();
     }
 
     bool empty() const {
-        return size() == 0;
+        return data.empty();
     }
 
     SimpleStack& operator=(const SimpleStack& st) {
 
-        for (int i = 0; i < st.size(); ++i)
-            ar[i] = st.ar[i];
-
-        topindex = st.topindex;
+        data = st.data;
 
         return *this;
     }
-
-    Type ar[N];
-    int topindex;
 private:
+    std::deque<Type> data;
 };
 
 #endif

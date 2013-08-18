@@ -96,7 +96,7 @@ public:
     MODE_TYPE flags;
     MODE_TYPE flags_prev;
 
-    SimpleStack<int, 100> callstack;
+    SimpleStack<int> callstack;
 };
 
 #endif
