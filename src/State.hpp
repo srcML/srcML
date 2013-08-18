@@ -41,20 +41,20 @@ public:
         : flags(mode), flags_all(transmode | mode)
         {}
 
-    // callstack methods
+    // openelements methods
     int size() const {
-        return callstack.size();
+        return openelements.size();
     }
 
     void push(int id) {
-        callstack.push(id);
+        openelements.push(id);
     }
 
     void pop() {
-        if (callstack.empty())
+        if (openelements.empty())
             throw Segmentation_Fault();
 
-        callstack.pop();
+        openelements.pop();
     }
 
     // mode methods
@@ -96,7 +96,7 @@ public:
     MODE_TYPE flags;
     MODE_TYPE flags_all;
 
-    SimpleStack<int> callstack;
+    SimpleStack<int> openelements;
 };
 
 #endif

@@ -213,7 +213,7 @@ public:
             return;
 
         while (size < parent->statev.currentState().size())
-            parent->endElement(parent->statev.currentState().callstack.top());
+            parent->endElement(parent->statev.currentState().openelements.top());
     }
 
     static srcMLParser* parent;
@@ -232,7 +232,7 @@ public:
         if (parent->inputState->guessing)
             return;
 
-        parent->endElement(parent->statev.currentState().callstack.top());
+        parent->endElement(parent->statev.currentState().openelements.top());
     }
 
     static srcMLParser* parent;
@@ -577,7 +577,7 @@ public:
     // sets to the current token in the output token stream
     void setTokenPosition(TokenPosition& tp) {
         tp.token = CurrentToken();
-        tp.sp = &(currentState().callstack.top());
+        tp.sp = &(currentState().openelements.top());
     }
 
 public:

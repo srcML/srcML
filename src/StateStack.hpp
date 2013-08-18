@@ -224,8 +224,8 @@ protected:
             throw Segmentation_Fault();
 
         // close all open elements
-        while (!st.empty() && !st.top().callstack.empty()) {
-            parser->endElement(st.top().callstack.top());
+        while (!st.empty() && !st.top().openelements.empty()) {
+            parser->endElement(st.top().openelements.top());
         }
 
         st.pop();
