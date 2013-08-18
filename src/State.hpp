@@ -23,8 +23,7 @@
 #ifndef STATE_HPP
 #define STATE_HPP
 
-#include <list>
-#include "Stack.hpp"
+#include <stack>
 
 #include "srcMLException.hpp"
 
@@ -37,8 +36,8 @@ public:
     typedef unsigned __int64 MODE_TYPE;
 #endif
 
-    State(const MODE_TYPE& mode = 0, const MODE_TYPE& transmode = 0)
-        : flags(mode), flags_all(transmode | mode)
+    State(const MODE_TYPE& mode = 0, const MODE_TYPE& transmode = 0, const MODE_TYPE& prevmode = 0)
+        : flags(mode), flags_prev(prevmode), flags_all(transmode | mode)
         {}
 
     // openelements methods
@@ -62,6 +61,11 @@ public:
     bool inMode(const MODE_TYPE& m) const {
 
         return (flags & m) == m;
+    }
+
+    bool inPrevMode(const MODE_TYPE& m) const {
+
+        return (flags_prev & m) == m;
     }
 
     bool inTransparentMode(const MODE_TYPE& m) const {
@@ -94,9 +98,10 @@ public:
 
 public:
     MODE_TYPE flags;
+    MODE_TYPE flags_prev;
     MODE_TYPE flags_all;
 
-    SimpleStack<int> openelements;
+    std::stack<int> openelements;
 };
 
 #endif

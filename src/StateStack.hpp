@@ -29,7 +29,6 @@
 #include "srcMLException.hpp"
 
 #include "State.hpp"
-#include "Stack.hpp"
 
 template <class Base>
 class StateStack {
@@ -57,7 +56,7 @@ public:
     void startNewMode(const State::MODE_TYPE& m) {
 
         // prepare for the new stack
-        st.push(Base(m, !empty() ? getTransparentMode() : 0));
+        st.push(Base(m, !empty() ? getTransparentMode() : 0, !empty() ? getMode() : 0));
     }
 
     void endCurrentMode() {
@@ -143,7 +142,7 @@ public:
 
     bool inPrevMode(const State::MODE_TYPE& m) const {
 
-        return st.size() > 1 ? st.prev().inMode(m) : false;
+        return st.size() > 1 ? st.top().inPrevMode(m) : false;
     }
 
     bool inTransparentMode(const State::MODE_TYPE& m) const {
@@ -233,7 +232,7 @@ protected:
 
 private:
     TokenParser* parser;
-    SimpleStack<Base> st;
+    std::stack<Base> st;
 };
 
 #endif

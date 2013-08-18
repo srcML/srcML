@@ -28,8 +28,8 @@
 class srcMLState : public State {
 public:
 
-    srcMLState(const State::MODE_TYPE& mode, const State::MODE_TYPE& transmode)
-        : State(mode, transmode), parencount(0), typecount(0)
+    srcMLState(const State::MODE_TYPE& mode, const State::MODE_TYPE& transmode, const State::MODE_TYPE& prevmode)
+        : State(mode, transmode, prevmode), parencount(0), typecount(0)
         {}
 
     srcMLState()
