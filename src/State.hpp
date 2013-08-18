@@ -38,7 +38,7 @@ public:
 #endif
 
     State(const MODE_TYPE& mode = 0, const MODE_TYPE& transmode = 0)
-        : flags(mode), flags_prev(transmode | mode)
+        : flags(mode), flags_all(transmode | mode)
         {}
 
     // callstack methods
@@ -66,7 +66,7 @@ public:
 
     bool inTransparentMode(const MODE_TYPE& m) const {
 
-        return (flags_prev & m) == m;
+        return (flags_all & m) == m;
     }
 
     const MODE_TYPE& getMode() const {
@@ -74,19 +74,19 @@ public:
     }
 
     const MODE_TYPE& getTransparentMode() const {
-        return flags_prev;
+        return flags_all;
     }
 
     void setMode(const MODE_TYPE& m1) {
 
         flags |= m1;
-        flags_prev |= m1;
+        flags_all |= m1;
     }
 
     void clearMode(const MODE_TYPE& m) {
 
         flags &= ~m;
-        flags_prev &= ~m;
+        flags_all &= ~m;
     }
 
     ~State() {
@@ -94,7 +94,7 @@ public:
 
 public:
     MODE_TYPE flags;
-    MODE_TYPE flags_prev;
+    MODE_TYPE flags_all;
 
     SimpleStack<int> callstack;
 };
