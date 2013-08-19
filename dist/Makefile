@@ -115,7 +115,7 @@ bin : ${SRC_TAR_GZ}
 	cd ${SRC_DIR} && cmake . && make
 	cd ${DOC_DIR} && make
 	strip ${SRC2SRCML_PATH} ${SRCML2SRC_PATH}
-	mkdir ${BASE} && ${CP} -t ${BASE} ${DIST_FILES}
+	mkdir ${BASE} && ${CP} ${DIST_FILES} ${BASE}
 	( test -e ${LIBSRCML_SO} && cp ${LIBSRCML_SO} ${BASE} ) || ( test -e ${LIBSRCML_DYLIB} && cp ${LIBSRCML_DYLIB} ${BASE} )
 	tar czf ${UNIX_TAR_GZ} ${BASE}
 
@@ -125,7 +125,7 @@ windows : ${SRC_ZIP}
 	cd ${SRC_DIR} && rm -f CMakeCache.txt && cmake . && make
 	cd ${DOC_DIR} && make
 	i686-pc-mingw32-strip ${WIN_SRC2SRCML_PATH} ${WIN_SRCML2SRC_PATH}
-	mkdir ${WIN_BASE} && ${CP} -t ${WIN_BASE} ${WIN_DIST_FILES}
+	mkdir ${WIN_BASE} && ${CP} ${WIN_DIST_FILES} ${WIN_BASE}
 	unix2dos ${WIN_BASE}/*.html
 	zip -oql ${WIN_ZIP} ${WIN_BASE}/src2srcml.exe ${WIN_BASE}/srcml2src.exe ${WIN_BASE}/*.dll ${WIN_BASE}/src2srcml.html ${WIN_BASE}/srcml2src.html
 
@@ -135,7 +135,7 @@ windowsdyn : ${SRC_ZIP}
 	cd ${SRC_DIR} && rm -f CMakeCache.txt && cmake . && make
 	cd ${DOC_DIR} && make clean && make
 	i686-pc-mingw32-strip ${WIN_SRC2SRCML_PATH} ${WIN_SRCML2SRC_PATH} ${LIBSRCML_DLL}
-	mkdir ${WIN_BASE} && ${CP} -t ${WIN_BASE} ${WIN_DIST_FILES}
+	mkdir ${WIN_BASE} && ${CP} ${WIN_DIST_FILES} ${WIN_BASE}
 	${CP} ../dlls/*.dll ${WIN_BASE}
 	${CP} ${BIN_DIR}/libsrcml.dll ${WIN_BASE}
 	unix2dos ${WIN_BASE}/*.html
