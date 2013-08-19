@@ -13,6 +13,9 @@ CP=${firstword ${wildcard /opt/local/bin/gcp /usr/local/bin/gcp /bin/cp}}
 # svn repo
 SVN_URL=http://calder.sdml.cs.kent.edu/svn/srcML/trunk
 
+# git repo
+GIT_URL=git@github.com:srcML/srcML.git
+
 # file name base
 BASE=srcML
 WIN_BASE=${BASE}-Win
@@ -69,6 +72,7 @@ exp :
 	${ECHO} -n "Trunk ${REVISION}" > ${SRC_DIR_BASE}/src/VERSION
 	${ECHO} -n "${REVISION}" > ${SRC_DIR_BASE}/src/REVISION
 	svn info -r${REVISION} ${SVN_URL}/src | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2- | ${TR} -d '\n' >> ${SRC_DIR_BASE}/src/VERSION
+	#cd ..; git archive master src doc | tar xv -C dist/${SRC_DIR_BASE}
 	mkdir ${SRC_DIR_BASE}/obj
 	mkdir ${SRC_DIR_BASE}/bin
 	svn export -r${REVISION} ${SVN_URL}/doc/ ${SRC_DIR_BASE}/doc --native-eol LF
