@@ -28,7 +28,7 @@
 #include <sys/types.h> /* size_t */
 #include <stdio.h> /* FILE * */
 
-/* Version number in include */
+/* Versioning constructs */
 #define SRCML_VERSION VERSION
 const char * srcml_version();
 
