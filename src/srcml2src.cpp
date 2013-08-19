@@ -259,6 +259,9 @@ void output_version(const char* name) {
   else
     printf("libxslt %d (Compiled %d), ", xsltLibxsltVersion, LIBXSLT_VERSION);
 
+  if(xsltLibxmlVersion != xmlParserVersion)
+    printf("libxslt(libxml) %d, ", xsltLibxsltVersion);
+
   if(exsltLibexsltVersion == LIBEXSLT_VERSION)
     printf("libexslt %d, ", LIBEXSLT_VERSION);
   else
@@ -280,6 +283,17 @@ void output_version(const char* name) {
             handle = 0;
         } else
             printf("libxslt %d, ", xsltLibxsltVersion);
+    }
+
+    if (handle) {
+        dlerror();
+        int& xsltLibxmlVersion = *(int*)dlsym(handle, "xsltLibxmlVersion");
+        char* error;
+        if ((error = dlerror()) != NULL) {
+            dlclose(handle);
+            handle = 0;
+        } else
+            printf("libxslt(libxml) %d, ", xsltLibxmlVersion);
     }
 
     if (handle) {
