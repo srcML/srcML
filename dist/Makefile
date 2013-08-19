@@ -62,10 +62,10 @@ WIN_DIST_FILES=${WIN_DOC_FILES} ${WIN_SRC2SRCML_PATH} ${WIN_SRCML2SRC_PATH}
 all : src bin
 
 REVISION=$(strip $(shell svn info ${SVN_URL}/src | ${GREP} 'Revision:' | ${CUT} -d: -f2-))
-#GITREVISION=$(strip $(shell git log -n 1 --remotes --format="%H"))
+GITREVISION=$(strip $(shell git log -n 1 --remotes --format="%H"))
 
 # export the directories
-gitexp :
+exp :
 	@echo ${GITREVISION}
 	make cleansrc
 	mkdir ${SRC_DIR_BASE}
@@ -76,7 +76,7 @@ gitexp :
 	mkdir ${SRC_DIR_BASE}/bin
 
 # export the directories
-exp :
+svnexp :
 	@echo ${REVISION}
 	make cleansrc
 	mkdir ${SRC_DIR_BASE}
