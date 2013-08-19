@@ -131,9 +131,6 @@ windows : ${SRC_ZIP}
 
 windowsdyn : ${SRC_ZIP}
 	unzip -uq  ${SRC_ZIP}
-	#cd ${SRC_DIR} && make -f Makefile.old mingw32 DYNAMIC=1 DLL_DIR=${DLL_DIR}
-	#cd ${SRC_DIR} && make -f Makefile.old cleanbuild && make -f Makefile.old
-	# note this does not select dynamic
 	cd ${SRC_DIR} && mingw32-cmake . && make
 	cd ${SRC_DIR} && rm -f CMakeCache.txt && cmake . && make
 	cd ${DOC_DIR} && make clean && make
