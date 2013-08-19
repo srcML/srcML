@@ -151,7 +151,11 @@ else()
 endif()
 
 # srcml2src
+if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.8.7)
 add_executable(srcml2src srcml2src.cpp $<TARGET_OBJECTS:srcmlutility>)
+else()
+add_executable(srcml2src srcml2src.cpp)
+endif()
 
 if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
        target_link_libraries(srcml2src  ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} dl srcml_static)
