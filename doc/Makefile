@@ -44,6 +44,7 @@ option.dtd : ${OPTION_SRC}
 	${SRC2SRCML} ${OPTION_SRC} -o temp.xml
 	xsltproc extract_options.xsl temp.xml >> option.dtd
 	xsltproc extract_return_status.xsl temp.xml >> option.dtd
+	rm -f temp.xml
 	#${SRC2SRCML} ${OPTION_SRC} | xsltproc extract_options.xsl /dev/stdin >> option.dtd
 	#${SRC2SRCML} --literal ${OPTION_SRC} |
 
