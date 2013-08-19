@@ -64,6 +64,17 @@ all : src bin
 REVISION=$(strip $(shell svn info ${SVN_URL}/src | ${GREP} 'Revision:' | ${CUT} -d: -f2-))
 
 # export the directories
+gitexp :
+	#@echo ${GITREVISION}
+	make cleansrc
+	mkdir ${SRC_DIR_BASE}
+	cd ..; git archive master src doc | tar xv -C dist/${SRC_DIR_BASE}
+	git log -n 1 --remotes --format="Trunk %H %cd" > ${SRC_DIR_BASE}/src/VERSION
+	git log -n 1 --remotes --format="%H" > ${SRC_DIR_BASE}/src/REVISION
+	mkdir ${SRC_DIR_BASE}/obj
+	mkdir ${SRC_DIR_BASE}/bin
+
+# export the directories
 exp :
 	@echo ${REVISION}
 	make cleansrc
@@ -72,7 +83,6 @@ exp :
 	${ECHO} -n "Trunk ${REVISION}" > ${SRC_DIR_BASE}/src/VERSION
 	${ECHO} -n "${REVISION}" > ${SRC_DIR_BASE}/src/REVISION
 	svn info -r${REVISION} ${SVN_URL}/src | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2- | ${TR} -d '\n' >> ${SRC_DIR_BASE}/src/VERSION
-	#cd ..; git archive master src doc | tar xv -C dist/${SRC_DIR_BASE}
 	mkdir ${SRC_DIR_BASE}/obj
 	mkdir ${SRC_DIR_BASE}/bin
 	svn export -r${REVISION} ${SVN_URL}/doc/ ${SRC_DIR_BASE}/doc --native-eol LF
