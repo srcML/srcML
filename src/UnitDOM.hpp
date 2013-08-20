@@ -18,8 +18,6 @@
   You should have received a copy of the GNU General Public License
   along with the srcML translator; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-
 */
 
 #ifndef INCLUDED_UNITDOM_HPP
@@ -59,13 +57,12 @@ public :
     // start creating the document and setup output for the units
     virtual void startDocument(void* ctx) {
 
-        // start the document
-        xmlSAX2StartDocument(ctx);
+        // apparently endDocument() can be called without startDocument() for an
+        // empty element
+        found = true;
 
         // setup output
         startOutput(ctx);
-
-        found = true;
     }
 
     // collect namespaces from root unit.  Start to build the tree if OPTION_XSLT_ALL
@@ -73,17 +70,20 @@ public :
                                int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                                const xmlChar** attributes) {
 
+        // if we are building the entire tree, start now
+        if (isoption(options, OPTION_XSLT_ALL)) {
+            xmlSAX2StartDocument(ctx);
+            xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes,
+                                  nb_defaulted, attributes);
+            return;
+        }
+
         // record namespaces in an extensible list so we can add the per unit
         for (int i = 0; i < nb_namespaces; ++i) {
             data.push_back(namespaces[i * 2]);
             data.push_back(namespaces[i * 2 + 1]);
         }
         rootsize = data.size();
-
-        // if we have to build the entire tree, then start now
-        if (isoption(options, OPTION_XSLT_ALL))
-            xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes,
-                                  nb_defaulted, attributes);
     }
 
     // start to create an individual unit, merging namespace details from the root (if it exists)
@@ -92,13 +92,16 @@ public :
                            const xmlChar** attributes) {
 
 
-        // if applying to entire archive, then just build this start element node for now
+        // if applying to entire archive, then just build this node
         if (isoption(options, OPTION_XSLT_ALL)) {
 
             xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes,
                                   nb_defaulted, attributes);
             return;
         }
+
+        // start the document for this unit
+        xmlSAX2StartDocument(ctx);
 
         // remove per-unit namespaces
         data.resize(rootsize);
@@ -121,7 +124,7 @@ public :
             data.push_back(namespaces[i * 2 + 1]);
         }
 
-        // start the unit (element) at the root using the combined namespaces
+        // start the unit (element) at the root using the merged namespaces
         xmlSAX2StartElementNs(ctx, localname, prefix, URI, data.size() / 2,
                               &data[0], nb_attributes, nb_defaulted, attributes);
     }
@@ -161,22 +164,26 @@ public :
     // end the construction of the unit tree, apply processing, and delete
     virtual void endUnit(void *ctx, const xmlChar *localname, const xmlChar *prefix, const xmlChar *URI) {
 
-        // finish building the unit tree
-        xmlSAX2EndElementNs(ctx, localname, prefix, URI);
-
         xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
         SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
-        // apply the necessary processing
-        if(error = !apply(ctx))
-            pstate->stopUnit(ctxt);
+        // finish building the unit tree
+        xmlSAX2EndElementNs(ctx, localname, prefix, URI);
+        xmlSAX2EndDocument(ctx);
 
+        // apply the necessary processing
+        if (error = !apply(ctx))
+            pstate->stopUnit(ctx);
+
+        // free up the document that has this particular unit
+        xmlFreeDoc(ctxt->myDoc);
+/*
         // unhook the unit tree from the document, leaving an empty document
         xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
         xmlUnlinkNode(onode);
         xmlFreeNode(onode);
         ctxt->node = 0;
-
+*/
     }
 
     virtual void endDocument(void *ctx) {
@@ -186,7 +193,8 @@ public :
             return;
 
         // end the entire input document
-        xmlSAX2EndDocument(ctx);
+        if (isoption(options, OPTION_XSLT_ALL))
+            xmlSAX2EndDocument(ctx);
 
         // end the output
         endOutput(ctx);
