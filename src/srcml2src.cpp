@@ -269,20 +269,21 @@ void output_version(const char* name) {
 #else
     typedef void (*exsltRegisterAll_function)();
 
-    void* handle = dlopen("libexslt.so", RTLD_LAZY);
+    void* handle = dlopen("libxslt.so", RTLD_LAZY);
     if (!handle) {
-        handle = dlopen("libexslt.dylib", RTLD_LAZY);
+        handle = dlopen("libxslt.dylib", RTLD_LAZY);
     }
 
+    int* xsltLibxsltVersion = 0;
     if (handle) {
         dlerror();
-        int& xsltLibxsltVersion = *(int*)dlsym(handle, "xsltLibxsltVersion");
+        xsltLibxsltVersion = (int*)dlsym(handle, "xsltLibxsltVersion");
         char* error;
         if ((error = dlerror()) != NULL) {
             dlclose(handle);
             handle = 0;
         } else
-            printf("libxslt %d, ", xsltLibxsltVersion);
+            printf("libxslt %d, ", *xsltLibxsltVersion);
     }
 
     if (handle) {
@@ -292,8 +293,20 @@ void output_version(const char* name) {
         if ((error = dlerror()) != NULL) {
             dlclose(handle);
             handle = 0;
-        } else
+        } else if (xsltLibxmlVersion != LIBXML_VERSION) 
             printf("libxslt(libxml) %d, ", xsltLibxmlVersion);
+    }
+
+    // done with libxslt handle
+    if (handle) {
+        dlclose(handle);
+        handle = 0;
+    }
+
+    // now to libexslt
+    handle = dlopen("libexslt.so", RTLD_LAZY);
+    if (!handle) {
+        handle = dlopen("libexslt.dylib", RTLD_LAZY);
     }
 
     if (handle) {
@@ -305,6 +318,28 @@ void output_version(const char* name) {
             handle = 0;
         } else
             printf("libexslt %d, ", exsltLibexsltVersion);
+    }
+
+    if (handle) {
+        dlerror();
+        int& exsltLibxsltVersion = *(int*)dlsym(handle, "exsltLibxsltVersion");
+        char* error;
+        if ((error = dlerror()) != NULL) {
+            dlclose(handle);
+            handle = 0;
+        } else
+            printf("libexslt(libxslt) %d, ", exsltLibxsltVersion);
+    }
+
+    if (handle) {
+        dlerror();
+        int& exsltLibxmlVersion = *(int*)dlsym(handle, "exsltLibxmlVersion");
+        char* error;
+        if ((error = dlerror()) != NULL) {
+            dlclose(handle);
+            handle = 0;
+        } else if (exsltLibxmlVersion != LIBXML_VERSION) 
+            printf("libexslt(libxml) %d, ", exsltLibxmlVersion);
     }
 #endif
 
