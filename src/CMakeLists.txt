@@ -23,6 +23,7 @@ add_definitions(-DVERSION=\"${VERSION}\")
 add_definitions(-DREVISION=\"${REVISION}\")
 add_definitions(-O3)
 add_definitions(-s)
+add_definitions(-fPIC)
 
 # get needed packages and include
 find_package(LibArchive)
