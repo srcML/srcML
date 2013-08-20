@@ -1,6 +1,6 @@
 #!/bin/bash
 
-./prlctlall.py --test exec 'bash -c "cd srcML; svn update; cd ..; chown -R srcml:srcml srcML"'
+./prlctlall.py --test exec 'bash -c "cd srcML; git pull; cd ..; chown -R srcml:srcml srcML"'
 
 scp ~/Dropbox/srcML/Unix/Fedora15/srcML.tar.gz fedora15test:/srcML
 scp ~/Dropbox/srcML/Unix/Fedora16/srcML.tar.gz fedora16test:/srcML
@@ -24,7 +24,7 @@ cp ~/Dropbox/srcML/Unix/OSX/srcML.tar.gz ~/srcML
 ./prlctlall.py --test exec 'bash -c "export SRC2SRCML=\"/srcML/srcML/src2srcml\"; export SRCML2SRC=\"/srcML/srcML/srcml2src\"; cd srcML/trunk/test/; rm -f srcMLTestReport*; make clean; make;"'
 
 cd srcML
-svn update
+git pull
 tar xvf srcML.tar.gz
 export SRC2SRCML="../../srcML/src2srcml"
 export SRCML2SRC="../../srcML/srcml2src"
