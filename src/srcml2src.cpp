@@ -259,7 +259,7 @@ void output_version(const char* name) {
   else
     printf("libxslt %d (Compiled %d), ", xsltLibxsltVersion, LIBXSLT_VERSION);
 
-  if(xsltLibxmlVersion != xmlParserVersion)
+  if(xsltLibxmlVersion != atoi(xmlParserVersion))
     printf("libxslt(libxml) %d, ", xsltLibxsltVersion);
 
   if(exsltLibexsltVersion == LIBEXSLT_VERSION)
