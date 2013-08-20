@@ -21,6 +21,7 @@ scp ~/Dropbox/srcML/Unix/Ubuntu12.04-64/srcML.tar.gz ubuntu12test64:/srcML
 cp ~/Dropbox/srcML/Unix/OSX/srcML.tar.gz ~/srcML
 
 ./prlctlall.py --test exec 'bash -c "cd srcML; tar xvf srcML.tar.gz"'
+./prlctlall.py --test exec 'bash -c "cp srcML/srcML/libsrcml.so srcML/trunk/bin"'
 ./prlctlall.py --test exec 'bash -c "export SRC2SRCML=\"/srcML/srcML/src2srcml\"; export SRCML2SRC=\"/srcML/srcML/srcml2src\"; cd srcML/trunk/test/; rm -f srcMLTestReport*; make clean; make;"'
 
 cd srcML
@@ -28,6 +29,8 @@ git pull
 tar xvf srcML.tar.gz
 export SRC2SRCML="../../srcML/src2srcml"
 export SRCML2SRC="../../srcML/srcml2src"
+cp srcML/libsrcml.dylib trunk/bin
+
 cd trunk/test/
 rm -f srcMLTestReport*
 make clean; make
