@@ -161,6 +161,6 @@ endif()
 if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
        target_link_libraries(srcml2src  ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} dl srcml_static)
 else()
-       target_link_libraries(srcml2src  ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBXSLT_LIBRARIES} srcml_shared)
+       target_link_libraries(srcml2src  ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} srcml_shared)
 
 endif()
