@@ -67,7 +67,6 @@ find_program(SED NAMES gsed sed PATHS /opt/local/bin /usr/local /bin)
 find_program(GREP grep PATHS /bin /usr/bin)
 find_program(ECHO echo PATH /bin)
 find_program(CUT cut PATH /usr/bin)
-find_program(SVNVERSION svnversion PATHS /usr/local/bin /usr/bin)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin )
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ../bin )
