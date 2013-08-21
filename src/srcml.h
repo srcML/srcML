@@ -34,23 +34,19 @@
 #include <sys/types.h> /* size_t */
 #include <stdio.h> /* FILE * */
 
-/* Versioning constructs */
-#define SRCML_VERSION VERSION
-const char * srcml_version();
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/* header file version macros */
+/* Header file version macros */
 #define SRCML_VERSION_NUMBER 1
 #define SRCML_VERSION_STRING "libsrcml 0.9"
 
-/* library version functions */
+/* Library version functions */
 int srcml_version_number(void);
 const char* srcml_version_string(void);
 
-/* srcml data structures */
+/* srcML data structures */
 struct srcml_archive;
 struct srcml_unit;
 
@@ -98,17 +94,17 @@ int srcml(const char* input_filename, const char* output_filename, const char* l
 /*
   Global settings.  Can be used to control convenience function srcml()
 */
-int srcml_global_set_encoding  (const char* encoding);
-int srcml_global_set_language  (const char* language);
-int srcml_global_set_filename  (const char* filename);
-int srcml_global_set_directory (const char* directory);
-int srcml_global_set_version   (const char* version);
-int srcml_global_set_options   (int option);
-int srcml_global_set_option    (int option);
-int srcml_global_clear_option  (int option);
-int srcml_global_set_tabstop   (int tabstop);
-int srcml_global_register_file_extension(const char* extension, const char* language);
-int srcml_global_register_namespace(const char* prefix, const char* ns);
+int srcml_set_encoding  (const char* encoding);
+int srcml_set_language  (const char* language);
+int srcml_set_filename  (const char* filename);
+int srcml_set_directory (const char* directory);
+int srcml_set_version   (const char* version);
+int srcml_set_options   (int option);
+int srcml_set_option    (int option);
+int srcml_clear_option  (int option);
+int srcml_set_tabstop   (int tabstop);
+int srcml_register_file_extension(const char* extension, const char* language);
+int srcml_register_namespace(const char* prefix, const char* ns);
 
 /*
   srcML capabilities
