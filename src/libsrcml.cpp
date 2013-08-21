@@ -33,6 +33,10 @@
 #include "Options.hpp"
 #include "srcmlns.hpp"
 
+#if defined(__GNUG__) && !defined(__MINGW32__)
+#include <dlfcn.h>
+#endif
+
 char srcml_error[512] = { 0 };
 
 struct srcml_archive {
@@ -172,8 +176,36 @@ const char* srcml_check_namespace(const char* prefix) {
 }
 
 /* whether various features are available in this installation */
-int srcml_check_xslt() { return 1; }
-int srcml_check_exslt() { return 1; }
+int srcml_check_xslt() { 
+#ifdef LIBXSLT_VERSION
+  return 1;
+#else 
+  void* handle = dlopen("libxslt.so", RTLD_LAZY);
+  if (!handle)
+    handle = dlopen("libxslt.dylib", RTLD_LAZY);
+   
+  if(!handle) return 0;
+
+  dlclose(handle);
+  return 1;
+#endif
+
+}
+
+int srcml_check_exslt() {
+#ifdef LIBXSLT_VERSION
+  return 1;
+#else
+  void* handle = dlopen("libexslt.so", RTLD_LAZY);
+  if (!handle)
+    handle = dlopen("libexslt.dylib", RTLD_LAZY);
+   
+  if(!handle) return 0;
+
+  dlclose(handle);
+  return 1;
+#endif
+}
 
 /* string describing last error */
 const char* srcml_error_string() { return srcml_error; }
