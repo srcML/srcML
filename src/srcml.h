@@ -19,7 +19,7 @@
 */
 
 /*
-  Some ideas/standards used in this API (For internal use)
+  Ideas/standards used in this API (For internal use)
   * srcml functions form the namespace srcml_*
   * Only types that are passed as parameters:
       - struct srcml_archive*
@@ -58,20 +58,20 @@ struct srcml_unit;
 #define SRCML_LANGUAGE_CSHARP "C#"
 
 /* srcml options */
-#define SRCML_OPTION_LITERAL  1<<0 /* Markups literal in special namespace */
-#define SRCML_OPTION_MODIFIER 1<<1 /* Markups modifiers in special namespace */
-#define SRCML_OPTION_ARCHIVE  1<<2
-#define SRCML_OPTION_POSITION  1<<2
-#define SRCML_OPTION_COMPRESS  1<<1
-#define SRCML_OPTION_NO_XML_DECLARATION
-#define SRCML_OPTION_NO_NAMESPACE_DECLARATION
-#define SRCML_OPTION_CPP
-#define SRCML_OPTION_CPP_TEXT_ELSE
-#define SRCML_OPTION_CPP_MARKUP_IF0
-#define SRCML_OPTION_APPLY_ROOT
+#define SRCML_OPTION_LITERAL           1<<0  /* Markups literal in special namespace */
+#define SRCML_OPTION_MODIFIER          1<<1  /* Markups modifiers in special namespace */
+#define SRCML_OPTION_ARCHIVE           1<<2  /* Create an archive */
+#define SRCML_OPTION_POSITION          1<<3  /* Include line/column position attributes */
+#define SRCML_OPTION_COMPRESS          1<<4  /* Compress the output file */
+#define SRCML_OPTION_NO_XML_DECL       1<<5  /* Do not issue an XML declaration */
+#define SRCML_OPTION_NO_NAMESPACE_DECL 1<<6  /* Do not include any XML namespace declarations */
+#define SRCML_OPTION_CPP               1<<7  /* Markup preprocessor elements (default for C, C++, C#) */
+#define SRCML_OPTION_CPP_TEXT_ELSE     1<<8  /* Leave as text preprocessor else parts (default: markup) */
+#define SRCML_OPTION_CPP_MARKUP_IF0    1<<9  /* Markup preprocessor #if 0 sections (default: leave as text) */
+#define SRCML_OPTION_APPLY_ROOT        1<<10 /* Apply transformations to the entire srcML file (default: each unit */
 
 /* srcml status messages */
-#define SRCML_STATUS_OK 0
+#define SRCML_STATUS_OK    0
 #define SRCML_STATUS_ERROR 1
 
 /*
