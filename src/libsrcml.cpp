@@ -32,6 +32,8 @@
 #include "Options.hpp"
 #include "srcmlns.hpp"
 
+char srcml_error[512] = { 0 };
+
 struct srcml_archive {
     const char* filename;
 };
@@ -48,7 +50,11 @@ int srcml(const char* input_filename, const char* output_filename, const char* l
 
   if(!lang) {
 
-    fprintf(stderr, "Language %s is not supported", language);
+    if(language)
+      snprintf(srcml_error, 512, "Language '%s' is not supported.", language);
+    else
+      snprintf(srcml_error, 512, "No language provided.");
+
     return SRCML_STATUS_ERROR;
 
   }
@@ -65,7 +71,7 @@ int srcml(const char* input_filename, const char* output_filename, const char* l
 }
 
 /* source-code language is supported */
-int srcml_check_language(const char* language) { return Language::getLanguage(language); }
+int srcml_check_language(const char* language) { return language == 0 ? 0 : Language::getLanguage(language); }
 
 /* null-terminated array of supported source-code languages */
 const char** srcml_language_list() {
@@ -138,7 +144,7 @@ int srcml_check_xslt() { return 1; }
 int srcml_check_exslt() { return 1; }
 
 /* string describing last error */
-const char* srcml_error_string() { return ""; }
+const char* srcml_error_string() { return srcml_error; }
 
 /* create a new srcml archive
    client will have to free it using srcml_free() */
