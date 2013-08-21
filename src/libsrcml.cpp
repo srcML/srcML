@@ -27,15 +27,18 @@
 #include <stdlib.h>
 
 struct srcml_archive {
-    char filename[512];
+    const char* filename;
 };
 
 struct srcml_entry {
+    /* Have to remember which archive the unit is from */
     struct srcml_archive* archive;
 };
 
 /* translates to/from srcML */
 int srcml(const char* input_filename, const char* output_filename, const char* language) {
+
+    printf("%s\n", input_filename);
 
     return SRCML_STATUS_OK;
 }
@@ -75,9 +78,7 @@ const char* srcml_error_string() { return ""; }
 
 /* create a new srcml archive
    client will have to free it using srcml_free() */
-struct srcml_archive* srcml_write_new_archive() { return malloc(sizeof(struct srcml_archive)); }
-
-struct srcml_archive* srcml_read_archive() { return malloc(sizeof(struct srcml_archive)); }
+struct srcml_archive* srcml_create_archive() { return (struct srcml_archive*) malloc(sizeof(struct srcml_archive)); }
 
 #if 0
 
