@@ -43,24 +43,16 @@ struct srcml_entry {
 
 /* translates to/from srcML */
 int srcml(const char* input_filename, const char* output_filename, const char* language) {
-  static struct {
-    const char * language_string;
-    int language_int;
 
-  } language2int[] = {   {"C", Language::LANGUAGE_C}
-							 , {"C++", Language::LANGUAGE_CXX}
-							 , {"C#", Language::LANGUAGE_CSHARP}
-							 , {"Java", Language::LANGUAGE_JAVA}
-							 , {0, 0}};
+  int lang = srcml_check_language(language);
 
-  int lang = 0;
-  for(int i = 0; language2int[i].language_string; ++i)
-    if(strcmp(language2int[i].language_string, language) == 0) {
+  if(!lang) {
 
-      lang = language2int[i].language_int;
-      break;
+    fprintf(stderr, "Language %s is not supported", language);
+    return SRCML_STATUS_ERROR;
 
-    }
+  }
+    
 
   OPTION_TYPE options = OPTION_LITERAL | OPTION_OPERATOR | OPTION_MODIFIER;
   options |= lang == Language::LANGUAGE_JAVA ? 0 : OPTION_CPP;
@@ -73,7 +65,22 @@ int srcml(const char* input_filename, const char* output_filename, const char* l
 }
 
 /* source-code language is supported */
-int srcml_check_language(const char* language) { return strcmp(language, "C++") == 0; }
+int srcml_check_language(const char* language) { 
+
+  static struct {
+    const char * language_string;
+    int language_int;
+
+  } language2int[] = {   {"C", Language::LANGUAGE_C}, {"C++", Language::LANGUAGE_CXX},
+			 {"C#", Language::LANGUAGE_CSHARP}, {"Java", Language::LANGUAGE_JAVA}, {0, 0}};
+
+  for(int i = 0; language2int[i].language_string; ++i)
+    if(strcmp(language2int[i].language_string, language) == 0)
+      return language2int[i].language_int;
+
+  return 0;
+
+}
 
 /* null-terminated array of supported source-code languages */
 const char** srcml_language_list() {
