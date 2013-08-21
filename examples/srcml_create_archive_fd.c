@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
     /* add all the files to the archive */
     for (i = 0; i < argc; ++i) {
 
-        unit = srcml_create_unit(archive);
+        unit = srcml_create_unit();
 
         /* Translate to srcml */
         srcml_parse_unit_filename(unit, argv[i]);

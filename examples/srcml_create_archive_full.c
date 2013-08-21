@@ -66,7 +66,7 @@ int main(int argc, char* argv[]) {
     for (i = 0; i < argc; ++i) {
 
         /* Setup this entry */
-        struct srcml_unit* unit = srcml_create_unit(archive);
+        struct srcml_unit* unit = srcml_create_unit();
         srcml_unit_set_language(unit, SRCML_LANGUAGE_C);
         srcml_unit_set_filename(unit, argv[i]);
 
