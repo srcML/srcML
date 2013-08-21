@@ -195,7 +195,7 @@ int         srcml_archive_get_tabstop  (const struct srcml_archive*);
 
 /* create a new srcml unit
    client is responsible for freeing it using srcml_free_unit() */
-struct srcml_unit* srcml_create_unit(struct srcml_archive*);
+struct srcml_unit* srcml_create_unit();
 
 /* Setup options for srcml unit */
 int srcml_unit_set_language (struct srcml_unit*, const char* language);
