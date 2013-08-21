@@ -112,15 +112,14 @@ int srcml_check_format(const char* format) {
   errorcode = errorcode || regexec(&preg, reverse, 3, pmatch, 0);
 
   int ext_len = pmatch[0].rm_eo - pmatch[0].rm_so;
+  return ext_len;
 
-  char * extension = (char *)malloc((ext_len + 1) * sizeof(char));
+  //char * extension = (char *)malloc((ext_len + 1) * sizeof(char));
   // extract the extension from the path, reversing as we go
-  for(int i = 0; i < ext_len; ++i)
-    extension[i] = reverse[pmatch[0].rm_eo - i - 1];
-  extension[ext_len] = 0;
+  //for(int i = 0; i < ext_len; ++i)
+  //extension[i] = reverse[pmatch[0].rm_eo - i - 1];
+  //extension[ext_len] = 0;
 
-  // if we have a non-blank extension, return that
-  return 1;
 }
 
 /* particular encoding is supported, both for input and output */
