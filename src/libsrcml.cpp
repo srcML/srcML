@@ -125,7 +125,7 @@ int srcml_check_format(const char* format) {
 }
 
 /* particular encoding is supported, both for input and output */
-int srcml_check_encoding(const char* encoding) { return 1; }
+int srcml_check_encoding(const char* encoding) { return xmlParseCharEncoding(encoding) > 0; }
 
 struct uridata {
   char const * const uri;
