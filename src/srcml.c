@@ -22,6 +22,6 @@
 
 const char * srcml_version() {
 
-  return SRCML_VERSION;
+  return SRCML_VERSION_STRING;
 
 }
