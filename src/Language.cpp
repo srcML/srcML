@@ -107,11 +107,14 @@ void Language::register_standard_file_extensions()
 {
   Language::registerUserExt("c",    LANGUAGE_C );
   Language::registerUserExt("h",    LANGUAGE_C );
+  Language::registerUserExt("i",    LANGUAGE_C );
 
   //Language::registerUserExt("cs",    LANGUAGE_CS );
   //Language::registerUserExt("hs",    LANGUAGE_CS );
 
   Language::registerUserExt("cpp",  LANGUAGE_CXX );
+  Language::registerUserExt("CPP",  LANGUAGE_CXX );
+  Language::registerUserExt("cp",   LANGUAGE_CXX );
   Language::registerUserExt("hpp",  LANGUAGE_CXX );
   Language::registerUserExt("cxx",  LANGUAGE_CXX );
   Language::registerUserExt("hxx",  LANGUAGE_CXX );
@@ -122,6 +125,7 @@ void Language::register_standard_file_extensions()
   Language::registerUserExt("C",    LANGUAGE_CXX );
   Language::registerUserExt("H",    LANGUAGE_CXX );
   Language::registerUserExt("tcc",  LANGUAGE_CXX );
+  Language::registerUserExt("ii",   LANGUAGE_CXX );
 
   Language::registerUserExt("java", LANGUAGE_JAVA );
 
