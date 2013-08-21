@@ -1,5 +1,5 @@
 /*
-  srcml_copy_archive.c
+  srcml_split_archive.c
 
   Copyright (C) 2013  SDML (www.sdml.info)
 
@@ -21,15 +21,17 @@
 /*
   Example program of the use of the C API for srcML.
 
-  Copy an archive.
+  Split an archive into two, one for .h files and one for other extensions
 */
 
 #include "srcml.h"
+#include <string.h>
 
 int main(int argc, char* argv[]) {
     int i;
     struct srcml_archive* iarchive;
-    struct srcml_archive* oarchive;
+    struct srcml_archive* includearchive;
+    struct srcml_archive* otherarchive;
     struct srcml_unit* unit;
 
     /* open up an existing archive */
@@ -39,26 +41,34 @@ int main(int argc, char* argv[]) {
     /* create a new srcml archive structure */
     /* options and attributes of cloned archive start the same as
        the original archive */
-    oarchive = srcml_clone_archive(iarchive);
+    includearchive = srcml_clone_archive(iarchive);
+    otherarchive = srcml_clone_archive(iarchive);
 
     /* open a srcML archive for output */
-    srcml_write_open_filename(oarchive, "project2.xml");
+    srcml_write_open_filename(includearchive, "project_include.xml");
+    srcml_write_open_filename(otherarchive, "project_other.xml");
 
     /* copy the files from the input archive to the output archive */
     while (unit = srcml_read_unit(iarchive)) {
 
-        /* Translate to srcml and append to the archive */
-        srcml_write_unit(oarchive, unit);
+        /* Get the filename */
+        const char* filename = srcml_unit_get_filename(unit);
+        if (strcmp(".h", filename + strlen(filename) - 2) == 0)
+            srcml_write_unit(includearchive, unit);
+        else
+            srcml_write_unit(otherarchive, unit);
 
         srcml_free_unit(unit);
     }
 
     /* close the archives */
-    srcml_close_archive(oarchive);
+    srcml_close_archive(includearchive);
+    srcml_close_archive(otherarchive);
     srcml_close_archive(iarchive);
 
     /* free the srcML archive data */
-    srcml_free_archive(oarchive);
+    srcml_free_archive(includearchive);
+    srcml_free_archive(otherarchive);
     srcml_free_archive(iarchive);
 
     return 0;
