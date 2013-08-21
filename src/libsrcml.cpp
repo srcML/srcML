@@ -25,6 +25,7 @@
 #include "srcml.h"
 #include <string.h>
 #include <stdlib.h>
+#include <regex.h>
 
 
 #include "srcMLTranslator.hpp"
@@ -90,7 +91,37 @@ const char * srcml_check_extension(const char* filename) {
 
 /* currently supported format, e.g., tar.gz
    Full filename can be provided, and extension will be extracted */
-int srcml_check_format(const char* format) { return 1; }
+int srcml_check_format(const char* format) { 
+
+  static const char * const regex = "(zx\\.|zg\\.|2zb\\.|rat\\.)*";
+
+  // reversed copy of the path
+  int length = strlen(format);
+
+  char * reverse = (char *)malloc((length + 1) * sizeof(char));
+  for(int i = 0; i < length; ++i)
+    reverse[i] = format[length - i - 1];
+  reverse[length] = 0;
+
+  // setup the regular expression
+  static regex_t preg = { 0 };
+  static int errorcode = regcomp(&preg, regex, REG_EXTENDED);
+
+  // evalue the regex
+  regmatch_t pmatch[3];
+  errorcode = errorcode || regexec(&preg, reverse, 3, pmatch, 0);
+
+  int ext_len = pmatch[0].rm_eo - pmatch[0].rm_so;
+
+  char * extension = (char *)malloc((ext_len + 1) * sizeof(char));
+  // extract the extension from the path, reversing as we go
+  for(int i = 0; i < ext_len; ++i)
+    extension[i] = reverse[pmatch[0].rm_eo - i - 1];
+  extension[ext_len] = 0;
+
+  // if we have a non-blank extension, return that
+  return 1;
+}
 
 /* particular encoding is supported, both for input and output */
 int srcml_check_encoding(const char* encoding) { return 1; }
