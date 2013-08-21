@@ -1,5 +1,5 @@
 /*
-  srcml.c
+  libsrcml.cpp
 
   Copyright (C) 2013  SDML (www.sdml.info)
 
@@ -19,51 +19,71 @@
 */
 
 /*
-  srcml functions form the namespace srcml_*
+  Implementation of srcml functions from the namespace srcml_*
 */
 
 #include "srcml.h"
 #include <string.h>
 #include <stdlib.h>
 
+
+// Includes for translator
+#include "srcMLTranslator.hpp"
+#include "Language.hpp"
+#include "Options.hpp"
+
 struct srcml_archive {
-    char filename[512];
+    const char* filename;
 };
 
 struct srcml_entry {
+    /* Have to remember which archive the unit is from */
     struct srcml_archive* archive;
 };
 
-/* Translates from source code to srcML if the input_filename extension is for source code.
-   Language determined by file extension if language argument is null.
-
-   Translates from srcML back to source code if the input_filename extension is '.xml'. 
-   Language argument should be null in this case.
-
-   CLI equivalence:  srcml main.cpp -o main.cpp.xml
-                     srcml main.cpp.xml -o main.cpp
-*/
+/* translates to/from srcML */
 int srcml(const char* input_filename, const char* output_filename, const char* language) {
+  static struct {
+    const char * language_string;
+    int language_int;
 
-    return SRCML_STATUS_OK;
+  } language2int[] = {   {"C", Language::LANGUAGE_C}
+							 , {"C++", Language::LANGUAGE_CXX}
+							 , {"C#", Language::LANGUAGE_CSHARP}
+							 , {"Java", Language::LANGUAGE_JAVA}
+							 , {0, 0}};
+
+  int lang = 0;
+  for(int i = 0; language2int[i].language_string; ++i)
+    if(strcmp(language2int[i].language_string, language) == 0) {
+
+      lang = language2int[i].language_int;
+      break;
+
+    }
+
+  OPTION_TYPE options = OPTION_LITERAL | OPTION_OPERATOR | OPTION_MODIFIER;
+  options |= lang == Language::LANGUAGE_JAVA ? 0 : OPTION_CPP;
+
+  srcMLTranslator translator(lang, output_filename, options); 
+  //translator.translate(input_filename, 0, 0, 0, lang);
+  //translator.close();
+
+  return SRCML_STATUS_OK;
 }
-
-/*
-  srcML capabilities
-*/
 
 /* source-code language is supported */
 int srcml_check_language(const char* language) { return strcmp(language, "C++") == 0; }
 
 /* null-terminated array of supported source-code languages */
 const char** srcml_language_list() {
-    static const char* langs[] = { "C++", "C#", "Java", 0 };
+    static const char* langs[] = { "C", "C++", "C#", "Java", 0 };
     return langs;
 }
 
 /* currently registered language for a file extension
    Full filename can be provided, and extension will be extracted */
-int srcml_check_extension(const char* filename) { return 1; }
+const char * srcml_check_extension(const char* filename) { return 0; }
 
 /* currently supported format, e.g., tar.gz
    Full filename can be provided, and extension will be extracted */
@@ -85,15 +105,9 @@ int srcml_check_exslt() { return 1; }
 /* string describing last error */
 const char* srcml_error_string() { return ""; }
 
-/*
-  Full API for creating srcML archives
-*/
-
 /* create a new srcml archive
    client will have to free it using srcml_free() */
-struct srcml_archive* srcml_write_new_archive() { return malloc(sizeof(struct srcml_archive)); }
-
-struct srcml_archive* srcml_read_archive() { return malloc(sizeof(struct srcml_archive)); }
+struct srcml_archive* srcml_create_archive() { return (struct srcml_archive*) malloc(sizeof(struct srcml_archive)); }
 
 #if 0
 
