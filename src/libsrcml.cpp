@@ -52,7 +52,15 @@ int srcml(const char* input_filename, const char* output_filename, const char* l
 							 , {"C#", Language::LANGUAGE_CSHARP}
 							 , {"Java", Language::LANGUAGE_JAVA}
 							 , {0, 0}};
-  int lang = 1;
+
+  int lang = 0;
+  for(int i = 0; language2int[i].language_string; ++i)
+    if(strcmp(language2int[i].language_string, language) == 0) {
+
+      lang = language2int[i].language_int;
+      break;
+
+    }
 
   OPTION_TYPE options = OPTION_LITERAL | OPTION_OPERATOR | OPTION_MODIFIER;
   options |= lang == Language::LANGUAGE_JAVA ? 0 : OPTION_CPP;
