@@ -35,7 +35,9 @@
 int main(int argc, char* argv[]) {
 
     /* Translate from a source-code file to a srcML file */
-    srcml("a.cpp", "a.cpp.xml", "C++");
+    int error = srcml("a.cpp", "a.cpp.xml", "C++");
+    
+    if(error) puts(srcml_error_string());
 
     return 0;
 }
