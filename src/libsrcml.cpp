@@ -27,10 +27,10 @@
 #include <stdlib.h>
 
 
-// Includes for translator
 #include "srcMLTranslator.hpp"
 #include "Language.hpp"
 #include "Options.hpp"
+#include "srcmlns.hpp"
 
 struct srcml_archive {
     const char* filename;
@@ -76,10 +76,11 @@ const char** srcml_language_list() {
 /* currently registered language for a file extension
    Full filename can be provided, and extension will be extracted */
 const char * srcml_check_extension(const char* filename) {
+
   Language language(Language::getLanguageFromFilename(filename));
   return language.getLanguageString();
 
- }
+}
 
 /* currently supported format, e.g., tar.gz
    Full filename can be provided, and extension will be extracted */
@@ -88,11 +89,49 @@ int srcml_check_format(const char* format) { return 1; }
 /* particular encoding is supported, both for input and output */
 int srcml_check_encoding(const char* encoding) { return 1; }
 
+struct uridata {
+  char const * const uri;
+  char const * const prefix;
+  int option;
+  char const * const description;
+};
+
+struct uridata uris[] = {
+
+    { SRCML_SRC_NS_URI,          SRCML_SRC_NS_PREFIX_DEFAULT, 0,               "primary srcML namespace" },
+    { SRCML_CPP_NS_URI,          SRCML_CPP_NS_PREFIX_DEFAULT, OPTION_CPP,      "namespace for cpreprocessing elements" }
+    ,
+    { SRCML_ERR_NS_URI,          SRCML_ERR_NS_PREFIX_DEFAULT, OPTION_DEBUG,    "namespace for srcML debugging elements" },
+    { SRCML_EXT_LITERAL_NS_URI,  SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT, OPTION_LITERAL,  "namespace for optional literal elements" },
+    { SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT, OPTION_OPERATOR, "namespace for optional operator element"},
+    { SRCML_EXT_MODIFIER_NS_URI, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT, OPTION_MODIFIER, "namespace for optional modifier element"},
+    { SRCML_EXT_POSITION_NS_URI, SRCML_EXT_POSITION_NS_PREFIX_DEFAULT, OPTION_POSITION, "namespace for optional position element and attributes" },
+  };
+
 /* prefix for an XML namespace */
-const char* srcml_check_prefix(const char* namespace_uri) { return "src"; }
+const char* srcml_check_prefix(const char* namespace_uri) {
+
+  for(int i = 0; uris[i].uri; ++i)
+    if(strcmp(uris[i].uri, namespace_uri) == 0)
+      return uris[i].prefix;
+
+  return 0;
+
+}
 
 /* namespace for an XML prefix */
-const char* srcml_check_namespace(const char* prefix) { return "http://www.sdml.info/srcML/src"; }
+const char* srcml_check_namespace(const char* prefix) { 
+
+  // handle default prefix
+  if(prefix == 0) return uris[0].uri;
+
+  for(int i = 1; uris[i].uri; ++i)
+    if(strcmp(uris[i].prefix, prefix) == 0)
+      return uris[i].uri;
+
+  return 0;
+
+}
 
 /* whether various features are available in this installation */
 int srcml_check_xslt() { return 1; }
@@ -103,7 +142,7 @@ const char* srcml_error_string() { return ""; }
 
 /* create a new srcml archive
    client will have to free it using srcml_free() */
-struct srcml_archive* srcml_create_archive() { return (struct srcml_archive*) malloc(sizeof(struct srcml_archive)); }
+inline struct srcml_archive* srcml_create_archive() { return (struct srcml_archive*) malloc(sizeof(struct srcml_archive)); }
 
 #if 0
 
