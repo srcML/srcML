@@ -43,14 +43,23 @@ struct srcml_entry {
 
 /* translates to/from srcML */
 int srcml(const char* input_filename, const char* output_filename, const char* language) {
+  static struct {
+    const char * language_string;
+    int language_int;
 
-  int lang = Language::getLanguage(language);
+  } language2int[] = {   {"C", Language::LANGUAGE_C}
+							 , {"C++", Language::LANGUAGE_CXX}
+							 , {"C#", Language::LANGUAGE_CSHARP}
+							 , {"Java", Language::LANGUAGE_JAVA}
+							 , {0, 0}};
+  int lang = 1;
 
   OPTION_TYPE options = OPTION_LITERAL | OPTION_OPERATOR | OPTION_MODIFIER;
   options |= lang == Language::LANGUAGE_JAVA ? 0 : OPTION_CPP;
 
-
   srcMLTranslator translator(lang, output_filename, options); 
+  //translator.translate(input_filename, 0, 0, 0, lang);
+  //translator.close();
 
   return SRCML_STATUS_OK;
 }
@@ -66,7 +75,7 @@ const char** srcml_language_list() {
 
 /* currently registered language for a file extension
    Full filename can be provided, and extension will be extracted */
-int srcml_check_extension(const char* filename) { return 1; }
+const char * srcml_check_extension(const char* filename) { return 0; }
 
 /* currently supported format, e.g., tar.gz
    Full filename can be provided, and extension will be extracted */
