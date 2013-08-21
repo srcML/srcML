@@ -25,12 +25,17 @@
 #include "srcml.h"
 #include <string.h>
 #include <stdlib.h>
+#include <regex.h>
 
 
 #include "srcMLTranslator.hpp"
 #include "Language.hpp"
 #include "Options.hpp"
 #include "srcmlns.hpp"
+
+#if defined(__GNUG__) && !defined(__MINGW32__)
+#include <dlfcn.h>
+#endif
 
 char srcml_error[512] = { 0 };
 
@@ -90,10 +95,41 @@ const char * srcml_check_extension(const char* filename) {
 
 /* currently supported format, e.g., tar.gz
    Full filename can be provided, and extension will be extracted */
-int srcml_check_format(const char* format) { return 1; }
+int srcml_check_format(const char* format) { 
+
+  static const char * const regex = "(zx\\.|zg\\.|2zb\\.|rat\\.)*";
+
+  // reversed copy of the path
+  int length = strlen(format);
+
+  char * reverse = (char *)malloc((length + 1) * sizeof(char));
+  for(int i = 0; i < length; ++i)
+    reverse[i] = format[length - i - 1];
+  reverse[length] = 0;
+
+  // setup the regular expression
+  static regex_t preg = { 0 };
+  static int errorcode = regcomp(&preg, regex, REG_EXTENDED);
+
+  // evalue the regex
+  regmatch_t pmatch[3];
+  errorcode = errorcode || regexec(&preg, reverse, 3, pmatch, 0);
+
+  int ext_len = pmatch[0].rm_eo - pmatch[0].rm_so;
+  free(reverse);
+  return ext_len;
+
+  //char * extension = (char *)malloc(ext_len * sizeof(char));
+  // extract the extension from the path, reversing as we go
+  //for(int i = 0; i < ext_len - 1; ++i)
+  //extension[i] = reverse[pmatch[0].rm_eo - i - 2];
+  //extension[ext_len - 1] = 0;
+  
+  //return 1;
+}
 
 /* particular encoding is supported, both for input and output */
-int srcml_check_encoding(const char* encoding) { return 1; }
+int srcml_check_encoding(const char* encoding) { return xmlParseCharEncoding(encoding) > 0; }
 
 struct uridata {
   char const * const uri;
@@ -140,8 +176,36 @@ const char* srcml_check_namespace(const char* prefix) {
 }
 
 /* whether various features are available in this installation */
-int srcml_check_xslt() { return 1; }
-int srcml_check_exslt() { return 1; }
+int srcml_check_xslt() { 
+#ifdef LIBXSLT_VERSION
+  return 1;
+#else 
+  void* handle = dlopen("libxslt.so", RTLD_LAZY);
+  if (!handle)
+    handle = dlopen("libxslt.dylib", RTLD_LAZY);
+   
+  if(!handle) return 0;
+
+  dlclose(handle);
+  return 1;
+#endif
+
+}
+
+int srcml_check_exslt() {
+#ifdef LIBXSLT_VERSION
+  return 1;
+#else
+  void* handle = dlopen("libexslt.so", RTLD_LAZY);
+  if (!handle)
+    handle = dlopen("libexslt.dylib", RTLD_LAZY);
+   
+  if(!handle) return 0;
+
+  dlclose(handle);
+  return 1;
+#endif
+}
 
 /* string describing last error */
 const char* srcml_error_string() { return srcml_error; }
