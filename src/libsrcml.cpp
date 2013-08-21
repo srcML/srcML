@@ -19,12 +19,18 @@
 */
 
 /*
-  Implementatio of srcml functions from the namespace srcml_*
+  Implementation of srcml functions from the namespace srcml_*
 */
 
 #include "srcml.h"
 #include <string.h>
 #include <stdlib.h>
+
+
+// Includes for translator
+#include "srcMLTranslator.hpp"
+#include "Language.hpp"
+#include "Options.hpp"
 
 struct srcml_archive {
     const char* filename;
@@ -38,9 +44,15 @@ struct srcml_entry {
 /* translates to/from srcML */
 int srcml(const char* input_filename, const char* output_filename, const char* language) {
 
-    printf("%s\n", input_filename);
+  int lang = Language::getLanguage(language);
 
-    return SRCML_STATUS_OK;
+  OPTION_TYPE options = OPTION_LITERAL | OPTION_OPERATOR | OPTION_MODIFIER;
+  options |= lang == Language::LANGUAGE_JAVA ? 0 : OPTION_CPP;
+
+
+  srcMLTranslator translator(lang, output_filename, options); 
+
+  return SRCML_STATUS_OK;
 }
 
 /* source-code language is supported */
