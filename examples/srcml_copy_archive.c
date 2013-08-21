@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
     int i;
     struct srcml_archive* iarchive;
     struct srcml_archive* oarchive;
-    struct srcml_entry* entry;
+    struct srcml_unit* unit;
 
     /* open up an existing archive */
     iarchive = srcml_read_archive();
@@ -45,17 +45,17 @@ int main(int argc, char* argv[]) {
     srcml_write_open_filename(oarchive, "project2.xml");
 
     /* copy the files from the input archive to the output archive */
-    while (entry = srcml_read_entry(iarchive)) {
+    while (unit = srcml_read_unit(iarchive)) {
 
         /* Translate to srcml and append to the archive */
-        srcml_write_entry(oarchive, entry);
+        srcml_write_unit(oarchive, unit);
 
-        srcml_free_entry(entry);
+        srcml_free_unit(unit);
     }
 
     /* close the archives */
-    srcml_write_close(oarchive);
-    srcml_read_close(iarchive);
+    srcml_close_archive(oarchive);
+    srcml_close_archive(iarchive);
 
     /* free the srcML archive data */
     srcml_free_archive(oarchive);

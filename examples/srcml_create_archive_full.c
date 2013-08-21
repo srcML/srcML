@@ -29,30 +29,31 @@
 
 int main(int argc, char* argv[]) {
     int i;
+    struct srcml_archive* archive;
 
     /*
       Setup archive
     */
 
     /* create a new srcml archive structure */
-    struct srcml_archive* archive = srcml_write_new_archive();
+    archive = srcml_create_archive();
 
-    /* setup some options and attributes */
-    srcml_set_options(archive, SRCML_OPTION_LITERAL | SRCML_OPTION_MODIFIER | SRCML_OPTION_POSITION);
-    srcml_set_version(archive, "211");
-    srcml_set_tabstop(archive, 4);
+    /* setup options and attributes */
+    srcml_archive_set_options(archive, SRCML_OPTION_LITERAL | SRCML_OPTION_MODIFIER | SRCML_OPTION_POSITION);
+    srcml_archive_set_version(archive, "211");
+    srcml_archive_set_tabstop(archive, 4);
 
     /* treat "*.h" as C++ */
-    srcml_register_file_extension(archive, "h", SRCML_LANGUAGE_CXX);
+    srcml_archive_register_file_extension(archive, "h", SRCML_LANGUAGE_CXX);
 
     /* change prefix of standard namespace */
-    srcml_register_namespace(archive, "s", "http://www.sdml.info/srcML/src");
+    srcml_archive_register_namespace(archive, "s", "http://www.sdml.info/srcML/src");
     
     /* default prefix is now for cpp namespace */
-    srcml_register_namespace(archive, "", "http://www.sdml.info/srcML/cpp");
+    srcml_archive_register_namespace(archive, "", "http://www.sdml.info/srcML/cpp");
 
     /* new prefix for further processing */
-    srcml_register_namespace(archive, "doc", "http://www.sdml.info/srcML/doc");
+    srcml_archive_register_namespace(archive, "doc", "http://www.sdml.info/srcML/doc");
 
     /*
       Open and write to the archive 
@@ -65,15 +66,18 @@ int main(int argc, char* argv[]) {
     for (i = 0; i < argc; ++i) {
 
         /* Setup this entry */
-        struct srcml_entry* entry = srcml_new_entry(archive);
-        srcml_entry_set_language(entry, SRCML_LANGUAGE_C);
-        srcml_entry_set_filename(entry, argv[i]);
+        struct srcml_unit* unit = srcml_create_unit(archive);
+        srcml_unit_set_language(unit, SRCML_LANGUAGE_C);
+        srcml_unit_set_filename(unit, argv[i]);
 
-        /* Translate the entry to srcML and append to the archive */
-        srcml_write_entry_filename(archive, entry, argv[i]);
+        /* Translate the entry to srcML */
+        srcml_parse_unit_filename(unit, argv[i]);
+
+        /* Append unit to the archive */
+        srcml_write_unit(archive, unit);
 
         /* Done with the entry for now */
-        srcml_free_entry(entry);
+        srcml_free_unit(unit);
     }
 
     /*
@@ -81,7 +85,7 @@ int main(int argc, char* argv[]) {
     */
 
     /* close the srcML archive */
-    srcml_write_close(archive);
+    srcml_close_archive(archive);
 
     /* free the srcML archive data */
     srcml_free_archive(archive);

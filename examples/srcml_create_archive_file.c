@@ -29,10 +29,11 @@
 
 int main(int argc, char* argv[]) {
     int i;
+    struct srcml_archive* archive;
     FILE* srcml_output;
 
     /* create a new srcml archive structure */
-    struct srcml_archive* archive = srcml_write_new_archive();
+    archive = srcml_create_archive();
 
     /* setup our output file using a FILE* */
     srcml_output = fopen("project.xml", "w");
@@ -43,18 +44,23 @@ int main(int argc, char* argv[]) {
     /* add all the files to the archive */
     for (i = 0; i < argc; ++i) {
 
-        /* Translate to srcml and append to the archive */
-        srcml_write_entry_filename(archive, argv[i]);
+        struct srcml_unit* unit = srcml_create_unit(archive);
+
+        srcml_parse_unit_filename(unit, argv[i]);
+
+        srcml_write_unit(archive, unit);
+
+        srcml_free_unit(unit);
     }
 
     /* close the srcML archive */
-    srcml_write_close(archive);
+    srcml_close_archive(archive);
 
     /* file can now be closed also */
     fclose(srcml_output);
 
     /* free the srcML archive data */
-    srcml_write_free(archive);
+    srcml_free_archive(archive);
 
     return 0;
 }

@@ -30,29 +30,33 @@ int main(int argc, char* argv[]) {
     int i;
     const char* language;
     const char* filename;
+    struct srcml_archive* archive;
+    struct srcml_unit* unit;
 
     /* create a new srcml archive structure */
-    struct srcml_archive* archive = srcml_read_archive();
+    archive = srcml_create_archive();
 
     /* open a srcML archive for input */
     srcml_read_open_filename(archive, "project.xml");
 
     /* add all the files to the archive */
-    while (srcml_has_entry(archive)) {
+    while (unit = srcml_read_unit(archive)) {
 
-        /* can inquire about the current entry */
-        language = srcml_entry_get_language(archive);
-        filename = srcml_entry_get_filename(archive);
+        /* can inquire about the current unit */
+        language = srcml_unit_get_language(unit);
+        filename = srcml_unit_get_filename(unit);
 
-        /* Translate to source and write to a file */
-        srcml_read_entry_filename(archive, filename);
+        /* uparse and write to a file */
+        srcml_unparse_unit_filename(unit, filename);
+
+        srcml_free_unit(unit);
     }
 
     /* close the srcML archive */
-    srcml_read_close(archive);
+    srcml_close_archive(archive);
 
     /* free the srcML archive data */
-    srcml_read_free(archive);
+    srcml_free_archive(archive);
 
     return 0;
 }
