@@ -65,22 +65,7 @@ int srcml(const char* input_filename, const char* output_filename, const char* l
 }
 
 /* source-code language is supported */
-int srcml_check_language(const char* language) { 
-
-  static struct {
-    const char * language_string;
-    int language_int;
-
-  } language2int[] = {   {"C", Language::LANGUAGE_C}, {"C++", Language::LANGUAGE_CXX},
-			 {"C#", Language::LANGUAGE_CSHARP}, {"Java", Language::LANGUAGE_JAVA}, {0, 0}};
-
-  for(int i = 0; language2int[i].language_string; ++i)
-    if(strcmp(language2int[i].language_string, language) == 0)
-      return language2int[i].language_int;
-
-  return 0;
-
-}
+int srcml_check_language(const char* language) { return Language::getLanguage(language); }
 
 /* null-terminated array of supported source-code languages */
 const char** srcml_language_list() {
@@ -90,7 +75,11 @@ const char** srcml_language_list() {
 
 /* currently registered language for a file extension
    Full filename can be provided, and extension will be extracted */
-const char * srcml_check_extension(const char* filename) { return 0; }
+const char * srcml_check_extension(const char* filename) {
+  Language language(Language::getLanguageFromFilename(filename));
+  return language.getLanguageString();
+
+ }
 
 /* currently supported format, e.g., tar.gz
    Full filename can be provided, and extension will be extracted */
