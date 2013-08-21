@@ -225,8 +225,6 @@ int srcml_unparse_unit_memory  (struct srcml_unit*, const char* src_buffer, size
 int srcml_unparse_unit_FILE    (struct srcml_unit*, FILE* srcml_file);
 int srcml_unparse_unit_fd      (struct srcml_unit*, int srcml_fd);
 
-struct srcml_archive* srcml_read_archive();
-
 const char* srcml_get_encoding (const struct srcml_archive*);
 const char* srcml_get_language (const struct srcml_archive*);
 const char* srcml_get_filename (const struct srcml_archive*);
