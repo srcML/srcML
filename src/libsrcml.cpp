@@ -53,13 +53,13 @@ int srcml(const char* input_filename, const char* output_filename, const char* l
 
   }
     
-
   OPTION_TYPE options = OPTION_LITERAL | OPTION_OPERATOR | OPTION_MODIFIER;
   options |= lang == Language::LANGUAGE_JAVA ? 0 : OPTION_CPP;
 
   srcMLTranslator translator(lang, output_filename, options); 
-  //translator.translate(input_filename, 0, 0, 0, lang);
-  //translator.close();
+  translator.setInput(input_filename);
+  translator.translate(input_filename, 0, input_filename, 0, lang);
+  translator.close();
 
   return SRCML_STATUS_OK;
 }
