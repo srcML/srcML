@@ -121,7 +121,7 @@ int srcml_check_format(const char* format) {
   //extension[i] = reverse[pmatch[0].rm_eo - i - 2];
   //extension[ext_len - 1] = 0;
   
-  return 1;
+  //return 1;
 }
 
 /* particular encoding is supported, both for input and output */
