@@ -31,7 +31,7 @@
 </xsl:template>
 
 <!-- filter the then elements, but not the contents of the then -->
-<xsl:template match="src:constructor" xml:space="preserve"><constructor><specifier>explicit</specifier> <xsl:apply-templates/></constructor></xsl:template>
+<xsl:template match="src:constructor" xml:space="preserve"><constructor><specifier>explicit</specifier><xsl:text> </xslt:text><xsl:apply-templates/></constructor></xsl:template>
 
 <xsl:template match="@*|node()">
 	<xsl:copy>
