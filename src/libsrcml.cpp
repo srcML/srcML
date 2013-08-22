@@ -52,24 +52,33 @@ int srcml(const char* input_filename, const char* output_filename, const char* l
 
   int lang = srcml_check_language(language);
 
-  if(!lang) {
+  if(strcmp(language, "xml") != 0) {
 
-    if(language)
-      snprintf(srcml_error, 512, "Language '%s' is not supported.", language);
-    else
-      snprintf(srcml_error, 512, "No language provided.");
+    if(!lang) {
 
-    return SRCML_STATUS_ERROR;
+      if(language)
+	snprintf(srcml_error, 512, "Language '%s' is not supported.", language);
+      else
+	snprintf(srcml_error, 512, "No language provided.");
+
+      return SRCML_STATUS_ERROR;
+
+    }
+    
+    OPTION_TYPE options = OPTION_LITERAL | OPTION_OPERATOR | OPTION_MODIFIER;
+    options |= lang == Language::LANGUAGE_JAVA ? 0 : OPTION_CPP;
+
+    srcMLTranslator translator(lang, output_filename, options); 
+    translator.setInput(input_filename);
+    translator.translate(input_filename, 0, input_filename, 0, lang);
+    translator.close();
+
+  } else {
+
+    srcMLUtility utility(input_filename, "UTF-8", 0, "");
+    utility.extract_text(".", output_filename, 1);
 
   }
-    
-  OPTION_TYPE options = OPTION_LITERAL | OPTION_OPERATOR | OPTION_MODIFIER;
-  options |= lang == Language::LANGUAGE_JAVA ? 0 : OPTION_CPP;
-
-  srcMLTranslator translator(lang, output_filename, options); 
-  translator.setInput(input_filename);
-  translator.translate(input_filename, 0, input_filename, 0, lang);
-  translator.close();
 
   return SRCML_STATUS_OK;
 }
@@ -215,7 +224,7 @@ struct srcml_archive* srcml_create_archive() { return (struct srcml_archive*) ma
 
 /* free srcml archive 
    allocated by srcml_create_archive() */
-void srcml_free_archive(srcml_archive * srcml_archive) { free(srcml_archive); }
+void srcml_free_archive(struct srcml_archive * archive) { free(srcml_archive); }
 
 #if 0
 

@@ -162,7 +162,7 @@ struct srcml_archive* srcml_create_archive();
 
 /* free srcml archive 
    allocated by srcml_create_archive() */
-void srcml_free_archive(srcml_archive * srcml_archive);
+void srcml_free_archive(struct srcml_archive * archive);
 
 /* clone the setup of an existing archive
    client is responsible for freeing it using srcml_free_archive() */
