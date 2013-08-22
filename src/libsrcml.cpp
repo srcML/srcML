@@ -208,7 +208,7 @@ int srcml_check_exslt() {
 }
 
 /* string describing last error */
-const char* srcml_error_string() { return srcml_error; }
+inline const char* srcml_error_string() { return srcml_error; }
 
 /* create a new srcml archive
    client will have to free it using srcml_free() */
