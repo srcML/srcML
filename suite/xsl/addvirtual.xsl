@@ -31,7 +31,7 @@
 </xsl:template>
 
 <!-- filter the then elements, but not the contents of the then -->
-<xsl:template match="src:destructor" xml:space="preserve"><destructor><specifier>virtual</specifier> <xsl:apply-templates/></destructor></xsl:template>
+<xsl:template match="src:destructor" xml:space="preserve"><destructor><specifier>virtual</specifier><xsl:text> </xsl:text><xsl:apply-templates/></destructor></xsl:template>
 
 <xsl:template match="@*|node()">
 	<xsl:copy>
