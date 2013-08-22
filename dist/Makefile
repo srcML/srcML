@@ -9,6 +9,7 @@ GREP=${firstword ${wildcard /bin/grep /usr/bin/grep}}
 CUT=/usr/bin/cut
 TR=/usr/bin/tr
 CP=${firstword ${wildcard /opt/local/bin/gcp /usr/local/bin/gcp /bin/cp}}
+STRIP=${firstword ${wildcard /usr/bin/i686-pc-mingw32-strip /usr/bin/i686-w64-mingw32-strip}}
 
 # svn repo
 SVN_URL=http://calder.sdml.cs.kent.edu/svn/srcML/trunk
@@ -135,7 +136,7 @@ windowsdyn : ${SRC_ZIP}
 	cd ${SRC_DIR} && mingw32-cmake . && make
 	cd ${SRC_DIR} && rm -rf CMakeCache.txt CMakeFiles cmake_install.cmake && cmake . && make
 	cd ${DOC_DIR} && make clean && make
-	i686-pc-mingw32-strip ${WIN_SRC2SRCML_PATH} ${WIN_SRCML2SRC_PATH} ${LIBSRCML_DLL}
+	${STRIP} ${WIN_SRC2SRCML_PATH} ${WIN_SRCML2SRC_PATH} ${LIBSRCML_DLL}
 	mkdir ${WIN_BASE} && ${CP} ${WIN_DIST_FILES} ${WIN_BASE}
 	${CP} ../dlls/*.dll ${WIN_BASE}
 	${CP} ${BIN_DIR}/libsrcml.dll ${WIN_BASE}
