@@ -31,6 +31,7 @@
 #include "Language.hpp"
 #include "Options.hpp"
 #include "srcmlns.hpp"
+#include "srcMLUtility.hpp"
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
 #include <dlfcn.h>
@@ -74,8 +75,8 @@ int srcml(const char* input_filename, const char* output_filename, const char* l
     translator.close();
 
   } else {
-
-    srcMLUtility utility(input_filename, "UTF-8", 0, "");
+    OPTION_TYPE options = 0;
+    srcMLUtility utility(input_filename, "UTF-8", options, "");
     utility.extract_text(".", output_filename, 1);
 
   }
@@ -224,7 +225,7 @@ struct srcml_archive* srcml_create_archive() { return (struct srcml_archive*) ma
 
 /* free srcml archive 
    allocated by srcml_create_archive() */
-void srcml_free_archive(struct srcml_archive * archive) { free(srcml_archive); }
+void srcml_free_archive(struct srcml_archive * archive) { free(archive); }
 
 #if 0
 
