@@ -27,7 +27,6 @@
 #include <stdlib.h>
 #include <regex.h>
 
-
 #include "srcMLTranslator.hpp"
 #include "Language.hpp"
 #include "Options.hpp"
@@ -212,7 +211,11 @@ const char* srcml_error_string() { return srcml_error; }
 
 /* create a new srcml archive
    client will have to free it using srcml_free() */
-inline struct srcml_archive* srcml_create_archive() { return (struct srcml_archive*) malloc(sizeof(struct srcml_archive)); }
+struct srcml_archive* srcml_create_archive() { return (struct srcml_archive*) malloc(sizeof(struct srcml_archive)); }
+
+/* free srcml archive 
+   allocated by srcml_create_archive() */
+void srcml_free_archive(srcml_archive * srcml_archive) { free(srcml_archive); }
 
 #if 0
 
