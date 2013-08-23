@@ -65,20 +65,14 @@ int srcml(const char* input_filename, const char* output_filename, const char* l
     translator.close();
 
   } else {
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
     int is_xml = 0;
     int len = strlen(input_filename);
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, input_filename);
-    fprintf(stderr, "HERE: %s %s %d %c\n", __FILE__, __FUNCTION__, __LINE__, input_filename[len - 1]);
-    fprintf(stderr, "HERE: %s %s %d %c\n", __FILE__, __FUNCTION__, __LINE__, input_filename[len - 2]);
-    fprintf(stderr, "HERE: %s %s %d %c\n", __FILE__, __FUNCTION__, __LINE__, input_filename[len - 3]);
-    fprintf(stderr, "HERE: %s %s %d %c\n", __FILE__, __FUNCTION__, __LINE__, input_filename[len - 4]);
     if((len > 4 && input_filename[len - 1] == 'l' && input_filename[len - 2] == 'm'
         && input_filename[len - 3] == 'x' && input_filename[len - 4] == '.')
        || (language && strcmp(language, "xml") == 0))
       is_xml = 1;
 
-    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, is_xml);
     // not xml or handled language
     if(!is_xml) {
 
