@@ -7,3 +7,6 @@ all : ${GEN_ALL}
 
 %.c.out : %.c libsrcml.cpp srcml.h
 	g++ -I ${LIBXML_INC_DIR} -I ../../../trunk/src/ libsrcml.cpp ../../../trunk/bin/libsrcml.a  -L ${ANTLR_LIB_DIR} -lantlr -lxml2 -larchive $< -o $@
+
+run : ${GEN_ALL}
+	ls *.out | xargs -I% bash -c "./%"
