@@ -54,7 +54,6 @@ int srcml(const char* input_filename, const char* output_filename, const char* l
   Language::register_standard_file_extensions();
   int lang = language ? srcml_check_language(language) : Language::getLanguageFromFilename(input_filename);
 
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, lang);
   if(lang) {
 
     OPTION_TYPE options = OPTION_LITERAL | OPTION_OPERATOR | OPTION_MODIFIER;
@@ -67,7 +66,16 @@ int srcml(const char* input_filename, const char* output_filename, const char* l
 
   } else {
 
-    if(!lang) {
+    int is_xml = 0;
+    int len = strlen(input_filename);
+    if((len > 4 && input_filename[len - 1] == 'l' && input_filename[len - 2] == 'm'
+        && input_filename[len - 3] == 'x' && input_filename[len - 4] == 'l')
+       || (language && strcmp(language, "xml") == 0))
+      is_xml = 1;
+      
+
+    // not xml or handled language
+    if(!is_xml) {
 
       if(language)
         snprintf(srcml_error, 512, "Language '%s' is not supported.", language);
