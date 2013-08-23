@@ -176,7 +176,8 @@ public :
             pstate->stopUnit(ctx);
 
         // free up the document that has this particular unit
-        xmlFreeDoc(ctxt->myDoc);
+	xmlFreeDoc(ctxt->myDoc);
+	ctxt->myDoc = 0;
 /*
         // unhook the unit tree from the document, leaving an empty document
         xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
