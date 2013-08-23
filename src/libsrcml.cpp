@@ -40,12 +40,12 @@
 char srcml_error[512] = { 0 };
 
 struct srcml_archive {
-    const char* filename;
+  const char* filename;
 };
 
 struct srcml_entry {
-    /* Have to remember which archive the unit is from */
-    struct srcml_archive* archive;
+  /* Have to remember which archive the unit is from */
+  struct srcml_archive* archive;
 };
 
 /* translates to/from srcML */
@@ -58,18 +58,18 @@ int srcml(const char* input_filename, const char* output_filename, const char* l
     if(!lang) {
 
       if(language)
-	snprintf(srcml_error, 512, "Language '%s' is not supported.", language);
+        snprintf(srcml_error, 512, "Language '%s' is not supported.", language);
       else
-	snprintf(srcml_error, 512, "No language provided.");
+        snprintf(srcml_error, 512, "No language provided.");
 
       return SRCML_STATUS_ERROR;
 
     }
-    
+
     OPTION_TYPE options = OPTION_LITERAL | OPTION_OPERATOR | OPTION_MODIFIER;
     options |= lang == Language::LANGUAGE_JAVA ? 0 : OPTION_CPP;
 
-    srcMLTranslator translator(lang, output_filename, options); 
+    srcMLTranslator translator(lang, output_filename, options);
     translator.setInput(input_filename);
     translator.translate(input_filename, 0, input_filename, 0, lang);
     translator.close();
@@ -89,8 +89,8 @@ int srcml_check_language(const char* language) { return language == 0 ? 0 : Lang
 
 /* null-terminated array of supported source-code languages */
 const char** srcml_language_list() {
-    static const char* langs[] = { "C", "C++", "C#", "Java", 0 };
-    return langs;
+  static const char* langs[] = { "C", "C++", "C#", "Java", 0 };
+  return langs;
 }
 
 /* currently registered language for a file extension
@@ -104,7 +104,7 @@ const char * srcml_check_extension(const char* filename) {
 
 /* currently supported format, e.g., tar.gz
    Full filename can be provided, and extension will be extracted */
-int srcml_check_format(const char* format) { 
+int srcml_check_format(const char* format) {
 
   static const char * const regex = "(zx\\.|zg\\.|2zb\\.|rat\\.)*";
 
@@ -133,7 +133,7 @@ int srcml_check_format(const char* format) {
   //for(int i = 0; i < ext_len - 1; ++i)
   //extension[i] = reverse[pmatch[0].rm_eo - i - 2];
   //extension[ext_len - 1] = 0;
-  
+
   //return 1;
 }
 
@@ -149,15 +149,15 @@ struct uridata {
 
 struct uridata uris[] = {
 
-    { SRCML_SRC_NS_URI,          SRCML_SRC_NS_PREFIX_DEFAULT, 0,               "primary srcML namespace" },
-    { SRCML_CPP_NS_URI,          SRCML_CPP_NS_PREFIX_DEFAULT, OPTION_CPP,      "namespace for cpreprocessing elements" }
-    ,
-    { SRCML_ERR_NS_URI,          SRCML_ERR_NS_PREFIX_DEFAULT, OPTION_DEBUG,    "namespace for srcML debugging elements" },
-    { SRCML_EXT_LITERAL_NS_URI,  SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT, OPTION_LITERAL,  "namespace for optional literal elements" },
-    { SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT, OPTION_OPERATOR, "namespace for optional operator element"},
-    { SRCML_EXT_MODIFIER_NS_URI, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT, OPTION_MODIFIER, "namespace for optional modifier element"},
-    { SRCML_EXT_POSITION_NS_URI, SRCML_EXT_POSITION_NS_PREFIX_DEFAULT, OPTION_POSITION, "namespace for optional position element and attributes" },
-  };
+  { SRCML_SRC_NS_URI,          SRCML_SRC_NS_PREFIX_DEFAULT, 0,               "primary srcML namespace" },
+  { SRCML_CPP_NS_URI,          SRCML_CPP_NS_PREFIX_DEFAULT, OPTION_CPP,      "namespace for cpreprocessing elements" }
+  ,
+  { SRCML_ERR_NS_URI,          SRCML_ERR_NS_PREFIX_DEFAULT, OPTION_DEBUG,    "namespace for srcML debugging elements" },
+  { SRCML_EXT_LITERAL_NS_URI,  SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT, OPTION_LITERAL,  "namespace for optional literal elements" },
+  { SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT, OPTION_OPERATOR, "namespace for optional operator element"},
+  { SRCML_EXT_MODIFIER_NS_URI, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT, OPTION_MODIFIER, "namespace for optional modifier element"},
+  { SRCML_EXT_POSITION_NS_URI, SRCML_EXT_POSITION_NS_PREFIX_DEFAULT, OPTION_POSITION, "namespace for optional position element and attributes" },
+};
 
 /* prefix for an XML namespace */
 const char* srcml_check_prefix(const char* namespace_uri) {
@@ -171,7 +171,7 @@ const char* srcml_check_prefix(const char* namespace_uri) {
 }
 
 /* namespace for an XML prefix */
-const char* srcml_check_namespace(const char* prefix) { 
+const char* srcml_check_namespace(const char* prefix) {
 
   // handle default prefix
   if(prefix == 0) return uris[0].uri;
@@ -185,14 +185,14 @@ const char* srcml_check_namespace(const char* prefix) {
 }
 
 /* whether various features are available in this installation */
-int srcml_check_xslt() { 
+int srcml_check_xslt() {
 #ifdef LIBXSLT_VERSION
   return 1;
-#else 
+#else
   void* handle = dlopen("libxslt.so", RTLD_LAZY);
   if (!handle)
     handle = dlopen("libxslt.dylib", RTLD_LAZY);
-   
+
   if(!handle) return 0;
 
   dlclose(handle);
@@ -208,7 +208,7 @@ int srcml_check_exslt() {
   void* handle = dlopen("libexslt.so", RTLD_LAZY);
   if (!handle)
     handle = dlopen("libexslt.dylib", RTLD_LAZY);
-   
+
   if(!handle) return 0;
 
   dlclose(handle);
@@ -223,7 +223,7 @@ const char* srcml_error_string() { return srcml_error; }
    client will have to free it using srcml_free() */
 struct srcml_archive* srcml_create_archive() { return (struct srcml_archive*) malloc(sizeof(struct srcml_archive)); }
 
-/* free srcml archive 
+/* free srcml archive
    allocated by srcml_create_archive() */
 void srcml_free_archive(struct srcml_archive * archive) { free(archive); }
 
