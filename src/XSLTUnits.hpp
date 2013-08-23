@@ -138,14 +138,14 @@ public :
             if (!found)
                 result_type = res->children->type;
 
+	    // output the xml declaration, if needed
+	    if (result_type == XML_ELEMENT_NODE && !found && !isoption(options, OPTION_XMLDECL))
+	      xmlOutputBufferWriteXMLDecl(ctxt, buf);
+
             // output the root unit start tag
             // this is only if in per-unit mode and this is the first result found
             // have to do so here because it may be empty
             if (result_type == XML_ELEMENT_NODE && pstate->isarchive && !found && !isoption(options, OPTION_XSLT_ALL)) {
-
-                // output the xml declaration, if needed
-                if (!isoption(options, OPTION_XMLDECL))
-                    xmlOutputBufferWriteXMLDecl(ctxt, buf);
 
                 // output a root element, just like the one read in
                 // note that this has to be ended somewhere
