@@ -77,7 +77,7 @@ int srcml(const char* input_filename, const char* output_filename, const char* l
   } else {
     OPTION_TYPE options = 0;
     srcMLUtility utility(input_filename, "UTF-8", options, "");
-    utility.extract_text(".", output_filename, 1);
+    utility.extract_text(0, output_filename, 1);
 
   }
 
