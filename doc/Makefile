@@ -41,12 +41,8 @@ option.dtd : ${OPTION_SRC}
 	${ECHO} -n "<!ENTITY DATE \"" > option.dtd
 	date | perl -p -e "s|\n||" >> option.dtd
 	${ECHO} "\" >" >> option.dtd
-	${SRC2SRCML} ${OPTION_SRC} -o temp.xml
-	xsltproc extract_options.xsl temp.xml >> option.dtd
-	xsltproc extract_return_status.xsl temp.xml >> option.dtd
-	rm -f temp.xml
-	#${SRC2SRCML} ${OPTION_SRC} | xsltproc extract_options.xsl /dev/stdin >> option.dtd
-	#${SRC2SRCML} --literal ${OPTION_SRC} |
+	${SRC2SRCML} ${OPTION_SRC} | ${SRCML2SRC} --xslt=extract_options.xsl >> option.dtd
+	${SRC2SRCML} --literal ${OPTION_SRC} | ${SRCML2SRC} --xslt=extract_return_status.xsl - >> option.dtd
 
 gzip : src2srcml.1.gz srcml2src.1.gz
 
