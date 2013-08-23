@@ -23,6 +23,7 @@
 */
 
 #include "srcml.h"
+#include <string>
 #include <string.h>
 #include <stdlib.h>
 #include <regex.h>
@@ -60,9 +61,25 @@ int srcml(const char* input_filename, const char* output_filename, const char* l
     options |= lang == Language::LANGUAGE_JAVA ? 0 : OPTION_CPP;
 
     srcMLTranslator translator(lang, output_filename, options);
-    translator.setInput(input_filename);
-    translator.translate(input_filename, 0, input_filename, 0, lang);
+    int error = 0;
+
+    try {
+
+      translator.setInput(input_filename);
+      translator.translate(input_filename, 0, input_filename, 0, lang);
+
+    } catch (FileError) {
+
+
+      error = 1;
+      snprintf(srcml_error, 512, "Error converting '%s' to srcML.", input_filename);
+
+    }
+
     translator.close();
+
+    if(error)
+      return  SRCML_STATUS_ERROR;
 
   } else {
 
