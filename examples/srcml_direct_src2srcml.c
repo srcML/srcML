@@ -27,17 +27,19 @@
   * The language is determined automatically from the source file extension
   * This creates a single-unit srcML file, i.e., a non-archive srcML
   * The srcML attribute filename will be the name of the file passed as the first
-    parameter.
+  parameter.
 */
 
 #include "srcml.h"
 
 int main(int argc, char* argv[]) {
 
+  srcml_check_format("a.tar.gz");
+
     /* Translate from a source-code file to a srcML file */
     int error = srcml("a.cpp", "a.cpp.xml", "C++");
-    
-    if(error) puts(srcml_error_string());
 
-    return 0;
+  if(error) puts(srcml_error_string());
+
+  return 0;
 }
