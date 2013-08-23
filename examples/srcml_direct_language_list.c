@@ -30,7 +30,7 @@
 int main(int argc, char* argv[]) {
     const char** p;
 
-    for (p = srcml_language_list(); *p != 0; ++p);
+    for (p = srcml_language_list(); *p != 0; ++p)
         puts(*p);
     putchar('\n');
 
