@@ -10,3 +10,6 @@ all : ${GEN_ALL}
 
 run : ${GEN_ALL}
 	ls *.out | xargs -I% bash -c "./%"
+
+clean : 
+	rm *.out
