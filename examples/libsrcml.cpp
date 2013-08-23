@@ -51,6 +51,13 @@ struct srcml_entry {
 /* translates to/from srcML */
 int srcml(const char* input_filename, const char* output_filename, const char* language) {
 
+  if(!input_filename) {
+
+    snprintf(srcml_error, 512, "No input file provided");
+    return  SRCML_STATUS_ERROR;
+
+  }
+
   Language::register_standard_file_extensions();
   int lang = language ? srcml_check_language(language) : Language::getLanguageFromFilename(input_filename);
 
