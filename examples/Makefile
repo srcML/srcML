@@ -5,5 +5,5 @@ ANTLR_LIB_DIR=${dir ${firstword ${wildcard /usr/lib64/libantlr* /usr/lib/libantl
 
 all : ${GEN_ALL}
 
-%.c.out : %.c
+%.c.out : %.c libsrcml.cpp srcml.h
 	g++ -I ${LIBXML_INC_DIR} -I ../../../trunk/src/ libsrcml.cpp ../../../trunk/bin/libsrcml.a  -L ${ANTLR_LIB_DIR} -lantlr -lxml2 -larchive $< -o $@
