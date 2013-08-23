@@ -34,10 +34,8 @@
 
 int main(int argc, char* argv[]) {
 
-  srcml_check_format("a.tar.gz");
-
-    /* Translate from a source-code file to a srcML file */
-    int error = srcml("a.cpp", "a.cpp.xml", "C++");
+  /* Translate from a source-code file to a srcML file */
+  int error = srcml("a.cpp", "a.cpp.xml", 0);
 
   if(error) puts(srcml_error_string());
 
