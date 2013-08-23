@@ -39,13 +39,33 @@
 
 char srcml_error[512] = { 0 };
 
+struct uridata {
+  char const * const uri;
+  char const * const prefix;
+
+  // Might want to remove
+  int option;
+  char const * const description;
+};
+
 struct srcml_archive {
   const char* filename;
+  const char * encoding;
+  const char * language;
+  const char * directory;
+  const char * version;
+  const char * attributes;
+  OPTION_TYPE options;
+  int tabstop;
 };
 
 struct srcml_entry {
   /* Have to remember which archive the unit is from */
   struct srcml_archive* archive;
+  const char * language;
+  const char * filename;
+  const char * directory;
+  const char * version;
 };
 
 /* translates to/from srcML */
@@ -175,13 +195,6 @@ int srcml_check_format(const char* format) {
 
 /* particular encoding is supported, both for input and output */
 int srcml_check_encoding(const char* encoding) { return xmlParseCharEncoding(encoding) > 0; }
-
-struct uridata {
-  char const * const uri;
-  char const * const prefix;
-  int option;
-  char const * const description;
-};
 
 struct uridata uris[] = {
 
