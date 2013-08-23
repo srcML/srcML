@@ -190,6 +190,9 @@ public :
 */
             // output the transformed result
             for (xmlNodePtr child = res->children; child != NULL; child = child->next)
+              if (child->type == XML_TEXT_NODE)
+                xmlOutputBufferWriteString(buf, (const char *) child->content);
+	      else
                 xmlNodeDumpOutput(buf, res, child, 0, 0, 0);
 
             if (turnoff_namespaces) {
