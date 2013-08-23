@@ -51,9 +51,20 @@ struct srcml_entry {
 /* translates to/from srcML */
 int srcml(const char* input_filename, const char* output_filename, const char* language) {
 
+  Language::register_standard_file_extensions();
   int lang = language ? srcml_check_language(language) : Language::getLanguageFromFilename(input_filename);
 
-  if(strcmp(language, "xml") != 0) {
+  if(lang) {
+
+    OPTION_TYPE options = OPTION_LITERAL | OPTION_OPERATOR | OPTION_MODIFIER;
+    options |= lang == Language::LANGUAGE_JAVA ? 0 : OPTION_CPP;
+
+    srcMLTranslator translator(lang, output_filename, options);
+    translator.setInput(input_filename);
+    translator.translate(input_filename, 0, input_filename, 0, lang);
+    translator.close();
+
+  } else {
 
     if(!lang) {
 
@@ -66,20 +77,13 @@ int srcml(const char* input_filename, const char* output_filename, const char* l
 
     }
 
-    OPTION_TYPE options = OPTION_LITERAL | OPTION_OPERATOR | OPTION_MODIFIER;
-    options |= lang == Language::LANGUAGE_JAVA ? 0 : OPTION_CPP;
-
-    srcMLTranslator translator(lang, output_filename, options);
-    translator.setInput(input_filename);
-    translator.translate(input_filename, 0, input_filename, 0, lang);
-    translator.close();
-
-  } else {
     OPTION_TYPE options = 0;
     srcMLUtility utility(input_filename, "UTF-8", options, "");
     utility.extract_text(0, output_filename, 1);
 
   }
+
+
 
   return SRCML_STATUS_OK;
 }
