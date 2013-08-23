@@ -223,7 +223,7 @@ public :
             xmlOutputBufferWriteString(buf, found ? "</unit>\n" : "/>\n");
 
         } else if (result_type == XML_ELEMENT_NODE && found && !pstate->isarchive) {
-            //      xmlOutputBufferWriteString(buf, "\n");
+	    xmlOutputBufferWriteString(buf, "\n");
         }
 
         // all done with the buffer
