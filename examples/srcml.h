@@ -52,6 +52,7 @@ const char* srcml_version_string(void);
 #define SRCML_LANGUAGE_CXX    "C++"
 #define SRCML_LANGUAGE_JAVA   "Java"
 #define SRCML_LANGUAGE_CSHARP "C#"
+#define SRCML_LANGUAGE_XML "xml"
 
 /* Options */
 #define SRCML_OPTION_LITERAL           1<<0  /* Markups literal in special namespace */
