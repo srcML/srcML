@@ -542,18 +542,8 @@ int srcml_parse_unit_archive (struct srcml_archive* archive, struct srcml_unit* 
 int srcml_parse_unit_filename(struct srcml_archive * archive, struct srcml_unit* unit, const char* src_filename) {
 
   xmlBuffer * output_buffer = xmlBufferCreate();
-  srcMLTranslator translator(srcml_check_language(archive->language),
-                             0, archive->encoding,
-                             output_buffer,
-                             archive->options,
-                             archive->directory,
-                             archive->filename,
-                             archive->version,
-                             archive->prefixes,
-                             archive->tabstop);
-  translator.setInput(src_filename);
-  translator.translate(src_filename, unit->directory, unit->filename, unit->version, srcml_check_language(unit->language));
-  translator.close();
+  archive->translator->setInput(src_filename);
+  archive->translator->translate_separate(src_filename, unit->directory, unit->filename, unit->version, srcml_check_language(unit->language), output_buffer);
   unit->unit = (const char *)strdup((const char *)output_buffer->content);
 
   xmlBufferFree(output_buffer);
