@@ -294,8 +294,6 @@ const char* srcml_error_string() { return srcml_error; }
 struct srcml_archive* srcml_create_archive()
 
 {
-  // TODO Register extensions to archive and use those extensions.
-  Language::register_standard_file_extensions();
   struct srcml_archive * archive = (struct srcml_archive*) malloc(sizeof(struct srcml_archive));
   memset(archive, 0, sizeof(struct srcml_archive));
   archive->prefixes[0] = SRCML_SRC_NS_PREFIX_DEFAULT;
@@ -315,6 +313,7 @@ struct srcml_archive* srcml_create_archive()
   archive->namespaces[6] = SRCML_EXT_POSITION_NS_URI;
 
   archive->num_namespaces = 7;
+  Language::register_standard_file_extensions(archive->num_registered, archive->registered_languages);
 
   return archive;
 
@@ -485,6 +484,7 @@ int srcml_register_namespace(struct srcml_archive* archive, const char* prefix, 
 /* open a srcML archive for output */
 int srcml_write_open_filename(struct srcml_archive* archive, const char* srcml_filename) {
 
+  archive->type = SRCML_ARCHIVE_WRITE;
   archive->translator = new srcMLTranslator(srcml_check_language(archive->language),
                                             0, archive->encoding,
                                             srcml_filename,

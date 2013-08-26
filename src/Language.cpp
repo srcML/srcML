@@ -42,6 +42,16 @@ pair Language::userext2int[47] = { { 0, 0 } };
 
 const char * const regex = "(zx\\.|zg\\.|2zb\\.)*([^\\.]*)";
 
+bool Language::registerUserExt(const char* ext, int language,
+                               int & num_registered, pair * registered_languages) {
+
+  registered_languages[num_registered].s = ext;
+  registered_languages[num_registered].n = language;
+  ++num_registered;
+
+  return true;
+}
+
 bool Language::registerUserExt(const char* ext, int language) {
 
   userext2int[usercount].s = ext;
@@ -58,9 +68,7 @@ bool Language::registerUserExt(const char* ext, const char* language,
   if (!nlanguage)
     return false;
 
-  registered_languages[num_registered].s = ext;
-  registered_languages[num_registered].n = nlanguage;
-  ++usercount;
+  registerUserExt(ext, nlanguage, num_registered, registered_languages);
 
   return true;
 }
@@ -164,4 +172,35 @@ void Language::register_standard_file_extensions()
   Language::registerUserExt("aj",   LANGUAGE_ASPECTJ );
 
   Language::registerUserExt("cs",   LANGUAGE_CSHARP );
+}
+
+void Language::register_standard_file_extensions(int & num_registered, pair * registered_languages)
+{
+  Language::registerUserExt("c",    LANGUAGE_C, num_registered, registered_languages );
+  Language::registerUserExt("h",    LANGUAGE_C, num_registered, registered_languages );
+  Language::registerUserExt("i",    LANGUAGE_C, num_registered, registered_languages );
+
+  //Language::registerUserExt("cs",    LANGUAGE_CS, num_registered, registered_languages );
+  //Language::registerUserExt("hs",    LANGUAGE_CS, num_registered, registered_languages );
+
+  Language::registerUserExt("cpp",  LANGUAGE_CXX, num_registered, registered_languages );
+  Language::registerUserExt("CPP",  LANGUAGE_CXX, num_registered, registered_languages );
+  Language::registerUserExt("cp",   LANGUAGE_CXX, num_registered, registered_languages );
+  Language::registerUserExt("hpp",  LANGUAGE_CXX, num_registered, registered_languages );
+  Language::registerUserExt("cxx",  LANGUAGE_CXX, num_registered, registered_languages );
+  Language::registerUserExt("hxx",  LANGUAGE_CXX, num_registered, registered_languages );
+  Language::registerUserExt("cc",   LANGUAGE_CXX, num_registered, registered_languages );
+  Language::registerUserExt("hh",   LANGUAGE_CXX, num_registered, registered_languages );
+  Language::registerUserExt("c++",  LANGUAGE_CXX, num_registered, registered_languages );
+  Language::registerUserExt("h++",  LANGUAGE_CXX, num_registered, registered_languages );
+  Language::registerUserExt("C",    LANGUAGE_CXX, num_registered, registered_languages );
+  Language::registerUserExt("H",    LANGUAGE_CXX, num_registered, registered_languages );
+  Language::registerUserExt("tcc",  LANGUAGE_CXX, num_registered, registered_languages );
+  Language::registerUserExt("ii",   LANGUAGE_CXX, num_registered, registered_languages );
+
+  Language::registerUserExt("java", LANGUAGE_JAVA, num_registered, registered_languages );
+
+  Language::registerUserExt("aj",   LANGUAGE_ASPECTJ, num_registered, registered_languages );
+
+  Language::registerUserExt("cs",   LANGUAGE_CSHARP, num_registered, registered_languages );
 }
