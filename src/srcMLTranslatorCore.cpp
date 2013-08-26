@@ -196,7 +196,10 @@ void srcMLTranslatorCore::translate_separate(const char* path, const char* unit_
                                            int language, xmlBuffer* output_buffer) {
 
   // save old output
-  
+  xmlTextWriter * save_writer = out.getWriter();
+
+  xmlTextWriter * writer = xmlNewTextWriterMemory(output_buffer, isoption(options, OPTION_COMPRESSED));
+  out.setWriter(writer);
 
   // root unit for compound srcML documents
   if (first && ((options & OPTION_NESTED) > 0))
@@ -242,6 +245,11 @@ void srcMLTranslatorCore::translate_separate(const char* path, const char* unit_
   catch (...) {
     fprintf(stderr, "ERROR\n");
   }
+
+  out.setWriter(save_writer);
+  xmlTextWriterEndDocument(writer);
+  xmlFreeTextWriter(writer);
+  writer = 0;  
 }
 
 // destructor
