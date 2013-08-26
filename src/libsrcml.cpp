@@ -66,7 +66,6 @@ struct srcml_archive {
   const char * prefixes[32];
   const char * namespaces[32];
   srcMLTranslator * translator;
-  const char * unit;
 };
 
 struct srcml_unit {
@@ -76,6 +75,7 @@ struct srcml_unit {
   const char * filename;
   const char * directory;
   const char * version;
+  const char * unit;
 };
 
 /* translates to/from srcML */
@@ -539,7 +539,7 @@ const char* srcml_unit_get_version  (const struct srcml_unit* unit) {
 
 /* Convert to srcml and append to the archive */
 int srcml_parse_unit_archive (struct srcml_archive* archive, struct srcml_unit* unit) { return 0; }
-int srcml_parse_unit_filename(struct srcml_archive* archive, const char* src_filename) {
+int srcml_parse_unit_filename(struct srcml_archive * archive, struct srcml_unit* unit, const char* src_filename) {
 
   xmlBuffer * output_buffer = xmlBufferCreate();
   srcMLTranslator translator(srcml_check_language(archive->language),
@@ -548,13 +548,13 @@ int srcml_parse_unit_filename(struct srcml_archive* archive, const char* src_fil
                              archive->options,
                              archive->directory,
                              archive->filename,
-                             archive->version,
+                             unit->version,
                              archive->prefixes,
                              archive->tabstop);
   translator.setInput(src_filename);
-  translator.translate(src_filename, 0, src_filename, 0, srcml_check_language(archive->language));
+  translator.translate(src_filename, unit->directory, unit->filename, unit->version, srcml_check_language(unit->language));
   translator.close();
-  archive->unit = (const char *)strdup((const char *)output_buffer->content);
+  unit->unit = (const char *)strdup((const char *)output_buffer->content);
 
   xmlBufferFree(output_buffer);
 
@@ -564,6 +564,13 @@ int srcml_parse_unit_filename(struct srcml_archive* archive, const char* src_fil
 int srcml_parse_unit_memory  (struct srcml_archive* archive, char* src_buffer, size_t buffer_size) { return 0; }
 int srcml_parse_unit_FILE    (struct srcml_archive* archive, FILE* src_file) { return 0; }
 int srcml_parse_unit_fd      (struct srcml_archive* archive, int src_fd) { return 0; }
+
+int srcml_write_unit(struct srcml_archive*, const struct srcml_unit*) {
+
+  // Append to archive
+
+  return SRCML_STATUS_OK;
+}
 
 /* Read the next unit from the archive */
 const struct srcml_unit* srcml_read_unit_archive (struct srcml_archive* archive) { return 0; }
@@ -576,10 +583,17 @@ int srcml_read_unit_fd      (struct srcml_archive* archive, int srcml_fd) { retu
 /* close the srcML archive */
 void srcml_write_close(struct srcml_archive* archive) {}
 void srcml_read_close (struct srcml_archive* archive) {}
+void srcml_close_archive(struct srcml_archive * archive) {}
 
 /* free the srcML archive data */
 void srcml_write_free(struct srcml_archive* archive) {}
 void srcml_read_free (struct srcml_archive* archive) {}
+
+struct srcml_unit * srcml_create_unit() {
+
+  return (struct srcml_unit *)malloc(sizeof(struct srcml_unit));
+
+}
 
 int srcml_free_unit(struct srcml_unit* unit) {
 
