@@ -190,12 +190,12 @@ void srcMLTranslatorCore::translate(const char* path, const char* unit_directory
   }
 }
 
-// translate from input stream to output stream
-void srcMLTranslatorCore::translate_single(const char* path, const char* unit_directory,
+// translate from input stream to output stream separate of current output stream
+void srcMLTranslatorCore::translate_separate(const char* path, const char* unit_directory,
 				const char* unit_filename, const char* unit_version,
                                            int language, xmlBuffer* output_buffer) {
 
-  // save old output buffers
+  // save old output
   
 
   // root unit for compound srcML documents

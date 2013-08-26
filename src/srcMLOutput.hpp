@@ -50,6 +50,9 @@ public:
                 xmlBuffer* output_buffer = 0
         );
 
+  xmlTextWriter * getWriter();
+  void setWriter(xmlTextWriter *);
+
     static bool checkEncoding(const char* encoding);
 
     // start a unit element with the passed metadata

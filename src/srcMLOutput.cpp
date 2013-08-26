@@ -293,3 +293,13 @@ void srcMLOutput::processTextPosition(const antlr::RefToken& token) {
   processText(token->getText());
 }
 
+
+xmlTextWriter * srcMLOutput::getWriter() {
+
+  return xout;
+}
+
+void srcMLOutput::setWriter(xmlTextWriter * writer) {
+
+  xout = writer;
+}
