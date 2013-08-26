@@ -548,7 +548,7 @@ int srcml_parse_unit_filename(struct srcml_archive * archive, struct srcml_unit*
                              archive->options,
                              archive->directory,
                              archive->filename,
-                             unit->version,
+                             archive->version,
                              archive->prefixes,
                              archive->tabstop);
   translator.setInput(src_filename);
@@ -565,9 +565,10 @@ int srcml_parse_unit_memory  (struct srcml_archive* archive, char* src_buffer, s
 int srcml_parse_unit_FILE    (struct srcml_archive* archive, FILE* src_file) { return 0; }
 int srcml_parse_unit_fd      (struct srcml_archive* archive, int src_fd) { return 0; }
 
-int srcml_write_unit(struct srcml_archive*, const struct srcml_unit*) {
+int srcml_write_unit(struct srcml_archive* archive, const struct srcml_unit* unit) {
 
   // Append to archive
+  fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, unit->unit);
 
   return SRCML_STATUS_OK;
 }
@@ -596,6 +597,9 @@ struct srcml_unit * srcml_create_unit() {
 }
 
 int srcml_free_unit(struct srcml_unit* unit) {
+
+  if(unit->unit)
+    free((void *)unit->unit);
 
   free(unit);
 
