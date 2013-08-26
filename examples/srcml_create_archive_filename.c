@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
     srcml_write_open_filename(archive, "project.xml");
 
     /* add all the files to the archive */
-    for (i = 0; i < argc; ++i) {
+    for (i = 1; i < argc; ++i) {
 
         unit = srcml_create_unit();
 
