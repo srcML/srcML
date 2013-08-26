@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) {
         unit = srcml_create_unit();
 
         /* Translate to srcml and append to the archive */
-        srcml_parse_unit_filename(unit, argv[i]);
+        srcml_parse_unit_filename(archive, unit, argv[i]);
 
         /* Translate to srcml and append to the archive */
         srcml_write_unit(archive, unit);

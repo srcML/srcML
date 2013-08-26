@@ -48,6 +48,7 @@ const char* srcml_version_string(void);
 
 /* Core language set */
 #define SRCML_LANGUAGE_NULL   0
+#define SRCML_LANGUAGE_NONE   0
 #define SRCML_LANGUAGE_C      "C"
 #define SRCML_LANGUAGE_CXX    "C++"
 #define SRCML_LANGUAGE_JAVA   "Java"
@@ -211,7 +212,7 @@ int srcml_unit_set_version  (struct srcml_unit*, const char* version);
 /* Convert to srcml.  Files/buffer can be compressed, but not a
    source archive format (e.g., not .tar)
 */
-int srcml_parse_unit_filename(const struct srcml_unit*, const char* src_filename);
+int srcml_parse_unit_filename(struct srcml_archive * archive, struct srcml_unit* unit, const char* src_filename);
 int srcml_parse_unit_memory  (const struct srcml_unit*, char* src_buffer, size_t buffer_size);
 int srcml_parse_unit_FILE    (const struct srcml_unit*, FILE* src_file);
 int srcml_parse_unit_fd      (const struct srcml_unit*, int src_fd);
