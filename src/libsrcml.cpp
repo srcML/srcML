@@ -54,7 +54,7 @@ struct srcml_archive {
   const char * language;
   const char * directory;
   const char * version;
-  const char * attributes;
+  const char *** attributes;
   OPTION_TYPE options;
   int tabstop;
 };
@@ -224,7 +224,6 @@ const char* srcml_check_namespace(const char* prefix) {
 
   // handle default prefix
   if(prefix == 0) return uris[0].uri;
-
   for(int i = 1; uris[i].uri; ++i)
     if(strcmp(uris[i].prefix, prefix) == 0)
       return uris[i].uri;
@@ -286,7 +285,7 @@ struct srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
   new_archive->language = archive->language;
   new_archive->directory = archive->directory;
   new_archive->version = archive->version;
-  new_archive->attributes = archive->attributes;
+  //new_archive->attributes = archive->attributes;
   new_archive->options = archive->options;
   new_archive->tabstop = archive->tabstop;
 
@@ -295,23 +294,68 @@ struct srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
 }
 
 /* setup options for srcml archive */
-int srcml_set_encoding  (struct srcml_archive* archive, const char* encoding)
-{
+int srcml_set_encoding  (struct srcml_archive* archive, const char* encoding) {
 
   archive->encoding = encoding;
   return SRCML_STATUS_OK;
 
 }
 
-int srcml_set_language  (struct srcml_archive* archive, const char* language) { return SRCML_STATUS_OK; }
-int srcml_set_filename  (struct srcml_archive* archive, const char* filename) { return SRCML_STATUS_OK; }
-int srcml_set_directory (struct srcml_archive* archive, const char* directory) { return SRCML_STATUS_OK; }
-int srcml_set_version   (struct srcml_archive* archive, const char* version) { return SRCML_STATUS_OK; }
-int srcml_set_attributes(struct srcml_archive* archive, const char* attr[][2]) { return SRCML_STATUS_OK; }
-int srcml_set_options   (struct srcml_archive* archive, int option) { return SRCML_STATUS_OK; }
-int srcml_set_option    (struct srcml_archive* archive, int option) { return SRCML_STATUS_OK; }
-int srcml_clear_option  (struct srcml_archive* archive, int option) { return SRCML_STATUS_OK; }
-int srcml_set_tabstop   (struct srcml_archive* archive, int tabstop) { return SRCML_STATUS_OK; }
+int srcml_set_language  (struct srcml_archive* archive, const char* language) { 
+
+  archive->language = language;
+  return SRCML_STATUS_OK;
+
+ }
+int srcml_set_filename  (struct srcml_archive* archive, const char* filename) { 
+
+  archive->filename = filename;
+  return SRCML_STATUS_OK; 
+
+}
+int srcml_set_directory (struct srcml_archive* archive, const char* directory) { 
+ 
+  archive->directory = directory;
+  return SRCML_STATUS_OK;
+
+ }
+int srcml_set_version   (struct srcml_archive* archive, const char* version) { 
+ 
+  archive->version = version;
+  return SRCML_STATUS_OK; 
+
+}
+int srcml_set_attributes(struct srcml_archive* archive, const char** attr[2]) { 
+ 
+  archive->attributes = attr;
+  return SRCML_STATUS_OK; 
+
+}
+int srcml_set_options   (struct srcml_archive* archive, int options) { 
+
+  archive->options = options;
+  return SRCML_STATUS_OK; 
+
+}
+int srcml_set_option    (struct srcml_archive* archive, int option) { 
+
+  archive->options |= option;
+  return SRCML_STATUS_OK; 
+
+}
+int srcml_clear_option  (struct srcml_archive* archive, int option) { 
+
+  archive->options &= ~option;
+  return SRCML_STATUS_OK; 
+
+}
+int srcml_set_tabstop   (struct srcml_archive* archive, int tabstop) { 
+
+  archive->tabstop = tabstop;
+  return SRCML_STATUS_OK; 
+
+}
+
 int srcml_register_file_extension(struct srcml_archive* archive, const char* extension, const char* language) { return SRCML_STATUS_OK; }
 int srcml_register_namespace(struct srcml_archive* archive, const char* prefix, const char* ns) { return SRCML_STATUS_OK; }
 
