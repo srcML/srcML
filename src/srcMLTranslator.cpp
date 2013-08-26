@@ -131,6 +131,11 @@ void srcMLTranslator::translate_separate(const char* path, const char* unit_dire
   translator->translate_separate(path, unit_directory, unit_filename, unit_version, language, output_buffer);
 }
 
+void srcMLTranslator::add_unit(const char* xml) {
+
+  translator->add_unit(xml);
+}
+
 // destructor
 srcMLTranslator::~srcMLTranslator() {
 

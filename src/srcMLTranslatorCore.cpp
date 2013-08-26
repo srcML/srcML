@@ -196,16 +196,12 @@ void srcMLTranslatorCore::translate_separate(const char* path, const char* unit_
                                            int language, xmlBuffer* output_buffer) {
 
   // save old output
+  int depth = out.getDepth();
+  out.setDepth(1);
   xmlTextWriter * save_writer = out.getWriter();
 
   xmlTextWriter * writer = xmlNewTextWriterMemory(output_buffer, isoption(options, OPTION_COMPRESSED));
   out.setWriter(writer);
-
-  // root unit for compound srcML documents
-  if (first && ((options & OPTION_NESTED) > 0))
-    out.startUnit(0, root_directory, root_filename, root_version, true);
-
-  first = false;
 
   try {
 
@@ -245,11 +241,28 @@ void srcMLTranslatorCore::translate_separate(const char* path, const char* unit_
   catch (...) {
     fprintf(stderr, "ERROR\n");
   }
-
-  out.setWriter(save_writer);
   xmlTextWriterEndDocument(writer);
   xmlFreeTextWriter(writer);
   writer = 0;  
+
+  out.setWriter(save_writer);
+  out.setDepth(0);
+}
+
+void srcMLTranslatorCore::add_unit(const char* xml) {
+
+
+  // root unit for compound srcML documents
+  options |= OPTION_NESTED;
+  if (first)// && ((options & OPTION_NESTED) > 0))
+    out.startUnit(0, root_directory, root_filename, root_version, true);
+
+  first = false;
+  xmlTextWriterWriteRaw(out.getWriter(), (xmlChar *)xml);
+
+  out.processText("\n\n", 2);
+
+
 }
 
 // destructor

@@ -303,3 +303,13 @@ void srcMLOutput::setWriter(xmlTextWriter * writer) {
 
   xout = writer;
 }
+
+int srcMLOutput::getDepth() {
+
+  return depth;
+}
+
+void srcMLOutput::setDepth(int thedepth) {
+
+  depth = thedepth;
+}

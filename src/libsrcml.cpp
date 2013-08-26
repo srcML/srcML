@@ -545,8 +545,10 @@ int srcml_parse_unit_filename(struct srcml_unit* unit, const char* src_filename)
   xmlBuffer * output_buffer = xmlBufferCreate();
   unit->translator->setInput(src_filename);
   unit->translator->translate_separate(src_filename, unit->directory, unit->filename, unit->version, srcml_check_language(unit->language), output_buffer);
-  unit->unit = (const char *)strdup((const char *)output_buffer->content);
-
+  int length = strlen((const char *)output_buffer->content);
+  while(length > 0 && output_buffer->content[length - 1] == '\n') 
+    --length;
+  unit->unit = (const char *)strndup((const char *)output_buffer->content, length);
   xmlBufferFree(output_buffer);
 
   return SRCML_STATUS_OK;
@@ -558,8 +560,7 @@ int srcml_parse_unit_fd      (struct srcml_archive* archive, int src_fd) { retur
 
 int srcml_write_unit(struct srcml_archive* archive, const struct srcml_unit* unit) {
 
-  // Append to archive
-  fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, unit->unit);
+  archive->translator->add_unit(unit->unit);
 
   return SRCML_STATUS_OK;
 }
@@ -575,7 +576,11 @@ int srcml_read_unit_fd      (struct srcml_archive* archive, int srcml_fd) { retu
 /* close the srcML archive */
 void srcml_write_close(struct srcml_archive* archive) {}
 void srcml_read_close (struct srcml_archive* archive) {}
-void srcml_close_archive(struct srcml_archive * archive) {}
+void srcml_close_archive(struct srcml_archive * archive) {
+
+  archive->translator->close();
+
+}
 
 /* free the srcML archive data */
 void srcml_write_free(struct srcml_archive* archive) {}
