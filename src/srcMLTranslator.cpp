@@ -123,6 +123,14 @@ void srcMLTranslator::translate(const char* path, const char* unit_directory,
   translator->translate(path, unit_directory, unit_filename, unit_version, language);
 }
 
+// translate from input stream to output stream separate of current output stream
+void srcMLTranslator::translate_separate(const char* path, const char* unit_directory,
+				const char* unit_filename, const char* unit_version,
+                                           int language, xmlBuffer* output_buffer) {
+  
+  translator->translate_separate(path, unit_directory, unit_filename, unit_version, language, output_buffer);
+}
+
 // destructor
 srcMLTranslator::~srcMLTranslator() {
 
