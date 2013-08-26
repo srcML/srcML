@@ -40,8 +40,8 @@
 char srcml_error[512] = { 0 };
 
 struct uridata {
-  char const * const uri;
-  char const * const prefix;
+  const char * uri;
+  const char * prefix;
 
   // Might want to remove
   int option;
@@ -57,6 +57,8 @@ struct srcml_archive {
   const char *** attributes;
   OPTION_TYPE options;
   int tabstop;
+  int num_namespaces;
+  struct uridata namespaces[32];
 };
 
 struct srcml_entry {
@@ -301,6 +303,16 @@ struct srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
   new_archive->options = archive->options;
   new_archive->tabstop = archive->tabstop;
 
+  new_archive->num_namespaces = archive->num_namespaces;
+  int pos = 0;
+  for(; archive->namespaces[pos].uri; ++pos) {
+
+    new_archive->namespaces[pos].uri = strdup(archive->namespaces[pos].uri);
+    new_archive->namespaces[pos].prefix = strdup(archive->namespaces[pos].prefix);
+
+  }
+  new_archive->namespaces[pos].uri = 0, new_archive->namespaces[pos].prefix = 0;
+
   return new_archive;
 
 }
@@ -368,8 +380,27 @@ int srcml_set_tabstop   (struct srcml_archive* archive, int tabstop) {
 
 }
 
-int srcml_register_file_extension(struct srcml_archive* archive, const char* extension, const char* language) { return SRCML_STATUS_OK; }
-int srcml_register_namespace(struct srcml_archive* archive, const char* prefix, const char* ns) { return SRCML_STATUS_OK; }
+int srcml_register_file_extension(struct srcml_archive* archive, const char* extension, const char* language) { 
+
+  // TODO make part of archive
+  Language::registerUserExt(extension, language);
+  return SRCML_STATUS_OK; 
+
+}
+
+int srcml_register_namespace(struct srcml_archive* archive, const char* prefix, const char* ns) { 
+
+  // TODO make uridata dynamicly growing.
+  archive->namespaces[archive->num_namespaces].prefix = prefix;
+  archive->namespaces[archive->num_namespaces].uri = ns;
+  ++archive->num_namespaces;
+
+  archive->namespaces[archive->num_namespaces].prefix = 0;
+  archive->namespaces[archive->num_namespaces].uri = 0;
+
+  return SRCML_STATUS_OK;
+
+}
 
 /* open a srcML archive for output */
 int srcml_write_open_filename(struct srcml_archive* archive, const char* srcml_filename) { return 0; }
