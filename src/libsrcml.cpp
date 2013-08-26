@@ -441,8 +441,6 @@ int srcml_set_tabstop   (struct srcml_archive* archive, int tabstop) {
 
 int srcml_register_file_extension(struct srcml_archive* archive, const char* extension, const char* language) {
 
-  // TODO make part of archive
-  //Language::registerUserExt(extension, language);
   Language::registerUserExt(extension, language, archive->num_registered, archive->registered_languages);
   return SRCML_STATUS_OK;
 
