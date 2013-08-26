@@ -63,7 +63,9 @@ struct srcml_archive {
   OPTION_TYPE options;
   int tabstop;
   int num_namespaces;
-  struct uridata namespaces[32];
+  const char * prefixes[32];
+  const char * namespaces[32];
+  srcMLTranslator * translator;
 };
 
 struct srcml_entry {
@@ -311,13 +313,16 @@ struct srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
 
   new_archive->num_namespaces = archive->num_namespaces;
   int pos = 0;
-  for(; archive->namespaces[pos].uri; ++pos) {
+  for(; archive->namespaces[pos]; ++pos) {
 
-    new_archive->namespaces[pos].uri = strdup(archive->namespaces[pos].uri);
-    new_archive->namespaces[pos].prefix = strdup(archive->namespaces[pos].prefix);
+    new_archive->namespaces[pos] = strdup(archive->namespaces[pos]);
+    new_archive->prefixes[pos] = strdup(archive->prefixes[pos]);
 
   }
-  new_archive->namespaces[pos].uri = 0, new_archive->namespaces[pos].prefix = 0;
+  new_archive->namespaces[pos] = 0, new_archive->prefixes[pos] = 0;
+
+  // TODO make complete translator copy
+  new_archive->translator = archive->translator;
 
   return new_archive;
 
@@ -396,20 +401,44 @@ int srcml_register_file_extension(struct srcml_archive* archive, const char* ext
 
 int srcml_register_namespace(struct srcml_archive* archive, const char* prefix, const char* ns) {
 
-  // TODO make uridata dynamicly growing.
-  archive->namespaces[archive->num_namespaces].prefix = prefix;
-  archive->namespaces[archive->num_namespaces].uri = ns;
+  // TODO make dynamicly growing.
+  archive->prefixes[archive->num_namespaces] = prefix;
+  archive->namespaces[archive->num_namespaces] = ns;
   ++archive->num_namespaces;
 
-  archive->namespaces[archive->num_namespaces].prefix = 0;
-  archive->namespaces[archive->num_namespaces].uri = 0;
+  archive->prefixes[archive->num_namespaces] = 0;
+  archive->namespaces[archive->num_namespaces] = 0;
 
   return SRCML_STATUS_OK;
 
 }
 
 /* open a srcML archive for output */
-int srcml_write_open_filename(struct srcml_archive* archive, const char* srcml_filename) { return 0; }
+int srcml_write_open_filename(struct srcml_archive* archive, const char* srcml_filename) {
+
+  const char * prefixes[7] = {SRCML_SRC_NS_PREFIX_DEFAULT, SRCML_CPP_NS_PREFIX_DEFAULT, SRCML_ERR_NS_PREFIX_DEFAULT, 
+                          SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT, 
+                          SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT, SRCML_EXT_POSITION_NS_PREFIX_DEFAULT };
+
+
+  static const char * namespaces[7] = { SRCML_SRC_NS_URI, SRCML_CPP_NS_URI, SRCML_ERR_NS_URI, SRCML_EXT_LITERAL_NS_URI, SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_MODIFIER_NS_URI, SRCML_EXT_POSITION_NS_URI };
+
+  
+
+  archive->translator = new srcMLTranslator(srcml_check_language(archive->language),
+                                            0, archive->encoding,
+                                            srcml_filename,
+                                            archive->options,
+                                            archive->directory,
+                                            archive->filename,
+                                            archive->version,
+                                            prefixes,
+                                            archive->tabstop);
+
+  return 0;
+
+}
+
 int srcml_write_open_memory  (struct srcml_archive* archive, char* buffer, size_t buffer_size) { return 0; }
 int srcml_write_open_FILE    (struct srcml_archive* archive, FILE* srcml_file) { return 0; }
 int srcml_write_open_fd      (struct srcml_archive* archive, int srcml_fd) { return 0; }
