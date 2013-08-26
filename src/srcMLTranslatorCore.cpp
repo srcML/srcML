@@ -190,6 +190,60 @@ void srcMLTranslatorCore::translate(const char* path, const char* unit_directory
   }
 }
 
+// translate from input stream to output stream
+void srcMLTranslatorCore::translate_single(const char* path, const char* unit_directory,
+				const char* unit_filename, const char* unit_version,
+                                           int language, xmlBuffer* output_buffer) {
+
+  // save old output buffers
+  
+
+  // root unit for compound srcML documents
+  if (first && ((options & OPTION_NESTED) > 0))
+    out.startUnit(0, root_directory, root_filename, root_version, true);
+
+  first = false;
+
+  try {
+
+      // master lexer with multiple streams
+      antlr::TokenStreamSelector selector;
+
+      // srcML lexical analyzer from standard input
+      KeywordLexer lexer(pinput, encoding, language);
+      lexer.setSelector(&selector);
+      lexer.setTabsize(tabsize);
+
+      // pure block comment lexer
+      CommentTextLexer textlexer(lexer.getInputState());
+      textlexer.setSelector(&selector);
+
+      // switching between lexers
+      selector.addInputStream(&lexer, "main");
+      selector.addInputStream(&textlexer, "text");
+      selector.select(&lexer);
+
+      // base stream parser srcML connected to lexical analyzer
+      StreamMLParser<srcMLParser> parser(selector, language, options);
+
+      // connect local parser to attribute for output
+      out.setTokenStream(parser);
+
+      // parse and form srcML output with unit attributes
+      Language l(language);
+      out.consume(l.getLanguageString(), unit_directory, unit_filename, unit_version);
+
+  } catch (const std::exception& e) {
+    fprintf(stderr, "SRCML Exception: %s\n", e.what());
+  }
+  catch (UTF8FileError) {
+    throw FileError();
+  }
+  catch (...) {
+    fprintf(stderr, "ERROR\n");
+  }
+}
+
 // destructor
 srcMLTranslatorCore::~srcMLTranslatorCore() {
 }
