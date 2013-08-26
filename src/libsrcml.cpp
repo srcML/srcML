@@ -298,6 +298,8 @@ struct srcml_archive* srcml_create_archive()
   archive->namespaces[5] = SRCML_EXT_MODIFIER_NS_URI;
   archive->namespaces[6] = SRCML_EXT_POSITION_NS_URI;
 
+  archive->num_namespaces = 7;
+
   return archive;
 
 }
@@ -423,13 +425,32 @@ int srcml_register_file_extension(struct srcml_archive* archive, const char* ext
 
 int srcml_register_namespace(struct srcml_archive* archive, const char* prefix, const char* ns) {
 
-  // TODO make dynamicly growing.
-  archive->prefixes[archive->num_namespaces] = prefix;
-  archive->namespaces[archive->num_namespaces] = ns;
-  ++archive->num_namespaces;
+  // check if
+  if(strcmp(ns, SRCML_SRC_NS_URI) == 0) {
+    archive->prefixes[0] = prefix;
+  } else if(strcmp(ns, SRCML_CPP_NS_URI) == 0) {
+    archive->prefixes[1] = prefix;
+  } else if(strcmp(ns, SRCML_ERR_NS_URI) == 0) {
+    archive->prefixes[2] = prefix;
+  } else if(strcmp(ns, SRCML_EXT_LITERAL_NS_URI) == 0) {
+    archive->prefixes[3] = prefix;
+  } else if(strcmp(ns, SRCML_EXT_OPERATOR_NS_URI) == 0) {
+    archive->prefixes[4] = prefix;
+  } else if(strcmp(ns, SRCML_EXT_MODIFIER_NS_URI) == 0) {
+    archive->prefixes[5] = prefix;
+  } else if(strcmp(ns, SRCML_EXT_POSITION_NS_URI) == 0) {
+    archive->prefixes[6] = prefix;
+  } else {
 
-  archive->prefixes[archive->num_namespaces] = 0;
-  archive->namespaces[archive->num_namespaces] = 0;
+    // TODO make dynamicly growing.
+    archive->prefixes[archive->num_namespaces] = prefix;
+    archive->namespaces[archive->num_namespaces] = ns;
+    ++archive->num_namespaces;
+
+    archive->prefixes[archive->num_namespaces] = 0;
+    archive->namespaces[archive->num_namespaces] = 0;
+
+  }
 
   return SRCML_STATUS_OK;
 
