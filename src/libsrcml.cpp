@@ -278,14 +278,28 @@ void srcml_free_archive(struct srcml_archive * archive) { free(archive); }
 
 /* clone the setup of an existing archive
    client will have to free it using srcml_archive_free() */
-struct srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) { return 0; }
+struct srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
+
+  struct srcml_archive * new_archive = srcml_create_archive();
+  new_archive->filename = archive->filename;
+  new_archive->encoding = archive->encoding;
+  new_archive->language = archive->language;
+  new_archive->directory = archive->directory;
+  new_archive->version = archive->version;
+  new_archive->attributes = archive->attributes;
+  new_archive->options = archive->options;
+  new_archive->tabstop = archive->tabstop;
+
+  return new_archive;
+
+}
 
 /* setup options for srcml archive */
 int srcml_set_encoding  (struct srcml_archive* archive, const char* encoding)
 {
 
-
- return SRCML_STATUS_OK;
+  archive->encoding = encoding;
+  return SRCML_STATUS_OK;
 
 }
 
