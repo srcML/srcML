@@ -40,10 +40,12 @@ int main(int argc, char* argv[]) {
     /* add all the files to the archive */
     for (i = 1; i < argc; ++i) {
 
-        unit = srcml_create_unit();
+        unit = srcml_create_unit(archive);
+
+        srcml_unit_set_filename(unit, argv[i]);
 
         /* Translate to srcml and append to the archive */
-        srcml_parse_unit_filename(archive, unit, argv[i]);
+        srcml_parse_unit_filename(unit, argv[i]);
 
         /* Translate to srcml and append to the archive */
         srcml_write_unit(archive, unit);
