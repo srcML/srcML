@@ -253,7 +253,6 @@ void srcMLOutput::processUnit(const antlr::RefToken& token) {
 
     // keep track of number of open elements
     openelementcount = 0;
-
     startUnit(unit_language, unit_dir, unit_filename, unit_version, !isoption(OPTION_NESTED));
 
   } else {

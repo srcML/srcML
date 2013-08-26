@@ -283,7 +283,10 @@ const char* srcml_error_string() { return srcml_error; }
 struct srcml_archive* srcml_create_archive()
 
 {
+  // TODO Register extensions to archive and use those extensions.
+  Language::register_standard_file_extensions();
   struct srcml_archive * archive = (struct srcml_archive*) malloc(sizeof(struct srcml_archive));
+  memset(archive, 0, sizeof(struct srcml_archive));
   archive->prefixes[0] = SRCML_SRC_NS_PREFIX_DEFAULT;
   archive->prefixes[1] = SRCML_CPP_NS_PREFIX_DEFAULT;
   archive->prefixes[2] = SRCML_ERR_NS_PREFIX_DEFAULT;
@@ -542,9 +545,11 @@ const char* srcml_unit_get_version  (const struct srcml_unit* unit) {
 int srcml_parse_unit_archive (struct srcml_archive* archive, struct srcml_unit* unit) { return 0; }
 int srcml_parse_unit_filename(struct srcml_unit* unit, const char* src_filename) {
 
+  int lang = unit->language ? srcml_check_language(unit->language) : Language::getLanguageFromFilename(src_filename);
   xmlBuffer * output_buffer = xmlBufferCreate();
   unit->translator->setInput(src_filename);
-  unit->translator->translate_separate(src_filename, unit->directory, unit->filename, unit->version, srcml_check_language(unit->language), output_buffer);
+
+  unit->translator->translate_separate(src_filename, unit->directory, unit->filename, unit->version, lang, output_buffer);
   int length = strlen((const char *)output_buffer->content);
   while(length > 0 && output_buffer->content[length - 1] == '\n') 
     --length;
@@ -589,6 +594,7 @@ void srcml_read_free (struct srcml_archive* archive) {}
 struct srcml_unit * srcml_create_unit(struct srcml_archive * archive) {
 
   struct srcml_unit * unit = (struct srcml_unit *)malloc(sizeof(struct srcml_unit));
+  memset(unit, 0, sizeof(struct srcml_unit));
   unit->translator = archive->translator;
   return unit;
 
