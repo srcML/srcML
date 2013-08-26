@@ -63,10 +63,10 @@ int main(int argc, char* argv[]) {
     srcml_write_open_filename(archive, "project.xml");
 
     /* add all files on the command line to the archive */
-    for (i = 0; i < argc; ++i) {
+    for (i = 1; i < argc; ++i) {
 
         /* Setup this entry */
-        struct srcml_unit* unit = srcml_create_unit();
+        struct srcml_unit* unit = srcml_create_unit(archive);
         srcml_unit_set_language(unit, SRCML_LANGUAGE_C);
         srcml_unit_set_filename(unit, argv[i]);
 

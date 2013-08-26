@@ -56,10 +56,10 @@ const char* srcml_version_string(void);
 #define SRCML_LANGUAGE_XML "xml"
 
 /* Options */
-#define SRCML_OPTION_LITERAL           1<<0  /* Markups literal in special namespace */
-#define SRCML_OPTION_MODIFIER          1<<1  /* Markups modifiers in special namespace */
+#define SRCML_OPTION_LITERAL           1<<2/*1<<0  /* Markups literal in special namespace */
+#define SRCML_OPTION_MODIFIER          1<<17/*1<<1  /* Markups modifiers in special namespace */
 #define SRCML_OPTION_ARCHIVE           1<<2  /* Create an archive */
-#define SRCML_OPTION_POSITION          1<<3  /* Include line/column position attributes */
+#define SRCML_OPTION_POSITION          1<<10/*1<<3  /* Include line/column position attributes */
 #define SRCML_OPTION_COMPRESS          1<<4  /* Compress the output file */
 #define SRCML_OPTION_NO_XML_DECL       1<<5  /* Do not issue an XML declaration */
 #define SRCML_OPTION_NO_NAMESPACE_DECL 1<<6  /* Do not include any XML namespace declarations */
