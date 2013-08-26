@@ -285,7 +285,19 @@ struct srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
   new_archive->language = strdup(archive->language);
   new_archive->directory = strdup(archive->directory);
   new_archive->version = strdup(archive->version);
-  //new_archive->attributes = archive->attributes;
+
+  int length = 0;
+  for(const char *** p = archive->attributes; (*p)[0]; ++length, ++p)
+    ;
+  new_archive->attributes = (const char ***)malloc((length + 1) * sizeof(const char **));
+  for(int pos = 0; archive->attributes[pos][0]; ++pos) {
+
+    new_archive->attributes[pos][0] = strdup(archive->attributes[pos][0]);
+    new_archive->attributes[pos][1] = strdup(archive->attributes[pos][1]);
+
+  }
+  new_archive->attributes[length][0] = 0, new_archive->attributes[length][1] = 0;
+
   new_archive->options = archive->options;
   new_archive->tabstop = archive->tabstop;
 
