@@ -92,9 +92,11 @@ public:
 
     static bool registerUserExt(const char* ext, int language);
     static bool registerUserExt(const char* ext, const char* language);
-
-    // gets the current language based on the extenstion
+  static bool registerUserExt(const char* ext, const char* language, int & num_registered, pair * registered_languages);
+  
+  // gets the current language based on the extenstion
     static int getLanguageFromFilename(const char* const path);
+    static int getLanguageFromFilename(const char* const path, pair * registered_languages);
 
     // register the standard language file extensions
     static void register_standard_file_extensions();

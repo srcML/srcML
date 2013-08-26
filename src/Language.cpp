@@ -51,6 +51,20 @@ bool Language::registerUserExt(const char* ext, int language) {
   return true;
 }
 
+bool Language::registerUserExt(const char* ext, const char* language,
+                               int & num_registered, pair * registered_languages) {
+
+  int nlanguage = Language::getLanguage(language);
+  if (!nlanguage)
+    return false;
+
+  registered_languages[num_registered].s = ext;
+  registered_languages[num_registered].n = nlanguage;
+  ++usercount;
+
+  return true;
+}
+
 bool Language::registerUserExt(const char* ext, const char* language) {
 
   int nlanguage = Language::getLanguage(language);
@@ -98,6 +112,24 @@ int Language::getLanguageFromFilename(const char* const path) {
   for (int i = usercount - 1; i >= 0; --i) {
     if (strcmp(userext2int[i].s, extension) == 0)
       return userext2int[i].n == LANGUAGE_NONE ? 0 : userext2int[i].n;
+  }
+
+  return 0;
+}
+
+// gets the current language based on the extenstion
+int Language::getLanguageFromFilename(const char* const path, pair * registered_languages) {
+
+  // extract the (pure) extension
+  const char* extension = getLanguageExtension(path);
+
+  if (!extension)
+    return 0;
+
+  // custom extensions
+  for (int i = usercount - 1; i >= 0; --i) {
+    if (strcmp(registered_languages[i].s, extension) == 0)
+      return registered_languages[i].n == LANGUAGE_NONE ? 0 : registered_languages[i].n;
   }
 
   return 0;
