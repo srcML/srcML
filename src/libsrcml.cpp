@@ -280,11 +280,11 @@ void srcml_free_archive(struct srcml_archive * archive) { free(archive); }
 struct srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
 
   struct srcml_archive * new_archive = srcml_create_archive();
-  new_archive->filename = archive->filename;
-  new_archive->encoding = archive->encoding;
-  new_archive->language = archive->language;
-  new_archive->directory = archive->directory;
-  new_archive->version = archive->version;
+  new_archive->filename = strdup(archive->filename);
+  new_archive->encoding = strdup(archive->encoding);
+  new_archive->language = strdup(archive->language);
+  new_archive->directory = strdup(archive->directory);
+  new_archive->version = strdup(archive->version);
   //new_archive->attributes = archive->attributes;
   new_archive->options = archive->options;
   new_archive->tabstop = archive->tabstop;
