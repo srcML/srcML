@@ -50,6 +50,13 @@ struct uridata {
 
 enum SRCML_ARCHIVE_TYPE { SRCML_ARCHIVE_READ, SRCML_ARCHIVE_WRITE };
 
+struct registered_language {
+
+  const char * extension;
+  int language;
+
+};
+
 struct srcml_archive {
 
   SRCML_ARCHIVE_TYPE type;
@@ -66,6 +73,8 @@ struct srcml_archive {
   const char * prefixes[32];
   const char * namespaces[32];
   srcMLTranslator * translator;
+  int num_registered;
+  struct pair registered_languages[47];
 };
 
 struct srcml_unit {
@@ -77,6 +86,8 @@ struct srcml_unit {
   const char * version;
   const char * unit;
   srcMLTranslator * translator;
+  int * num_registered;
+  struct pair * registered_languages;
 };
 
 /* translates to/from srcML */
@@ -283,7 +294,6 @@ const char* srcml_error_string() { return srcml_error; }
 struct srcml_archive* srcml_create_archive()
 
 {
-  Language::register_standard_file_extensions();
   struct srcml_archive * archive = (struct srcml_archive*) malloc(sizeof(struct srcml_archive));
   memset(archive, 0, sizeof(struct srcml_archive));
   archive->prefixes[0] = SRCML_SRC_NS_PREFIX_DEFAULT;
@@ -303,6 +313,7 @@ struct srcml_archive* srcml_create_archive()
   archive->namespaces[6] = SRCML_EXT_POSITION_NS_URI;
 
   archive->num_namespaces = 7;
+  Language::register_standard_file_extensions(archive->num_registered, archive->registered_languages);
 
   return archive;
 
@@ -334,7 +345,7 @@ struct srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
     new_archive->attributes[pos][1] = strdup(archive->attributes[pos][1]);
 
   }
-  new_archive->attributes[length][0] = 0, new_archive->attributes[length][1] = 0;
+  //new_archive->attributes[length][0] = 0, new_archive->attributes[length][1] = 0;
 
   new_archive->options = archive->options;
   new_archive->tabstop = archive->tabstop;
@@ -347,10 +358,19 @@ struct srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
     new_archive->prefixes[pos] = strdup(archive->prefixes[pos]);
 
   }
-  new_archive->namespaces[pos] = 0, new_archive->prefixes[pos] = 0;
+  //new_archive->namespaces[pos] = 0, new_archive->prefixes[pos] = 0;
 
   // TODO make complete translator copy
   new_archive->translator = archive->translator;
+
+  new_archive->num_registered = archive->num_registered;
+  for(int i = 0; i < new_archive->num_registered; ++i) {
+    
+    new_archive->registered_languages[i].s = archive->registered_languages[i].s;
+    new_archive->registered_languages[i].n = archive->registered_languages[i].n;
+  }
+  //new_archive->registered_languages[new_archive->num_registered].s = 0;
+  //new_archive->registered_languages[new_archive->num_registered].n = 0;
 
   return new_archive;
 
@@ -422,7 +442,8 @@ int srcml_set_tabstop   (struct srcml_archive* archive, int tabstop) {
 int srcml_register_file_extension(struct srcml_archive* archive, const char* extension, const char* language) {
 
   // TODO make part of archive
-  Language::registerUserExt(extension, language);
+  //Language::registerUserExt(extension, language);
+  Language::registerUserExt(extension, language, archive->num_registered, archive->registered_languages);
   return SRCML_STATUS_OK;
 
 }
@@ -463,6 +484,7 @@ int srcml_register_namespace(struct srcml_archive* archive, const char* prefix, 
 /* open a srcML archive for output */
 int srcml_write_open_filename(struct srcml_archive* archive, const char* srcml_filename) {
 
+  archive->type = SRCML_ARCHIVE_WRITE;
   archive->translator = new srcMLTranslator(srcml_check_language(archive->language),
                                             0, archive->encoding,
                                             srcml_filename,
@@ -544,7 +566,8 @@ const char* srcml_unit_get_version  (const struct srcml_unit* unit) {
 int srcml_parse_unit_archive (struct srcml_archive* archive, struct srcml_unit* unit) { return 0; }
 int srcml_parse_unit_filename(struct srcml_unit* unit, const char* src_filename) {
 
-  int lang = unit->language ? srcml_check_language(unit->language) : Language::getLanguageFromFilename(src_filename);
+  int lang = unit->language ? srcml_check_language(unit->language) : Language::getLanguageFromFilename(src_filename, *unit->num_registered, unit->registered_languages);
+
   xmlBuffer * output_buffer = xmlBufferCreate();
   unit->translator->setInput(src_filename);
 
@@ -595,6 +618,8 @@ struct srcml_unit * srcml_create_unit(struct srcml_archive * archive) {
   struct srcml_unit * unit = (struct srcml_unit *)malloc(sizeof(struct srcml_unit));
   memset(unit, 0, sizeof(struct srcml_unit));
   unit->translator = archive->translator;
+  unit->num_registered = &archive->num_registered;
+  unit->registered_languages = archive->registered_languages;
   return unit;
 
 }
