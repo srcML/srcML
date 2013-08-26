@@ -66,9 +66,10 @@ struct srcml_archive {
   const char * prefixes[32];
   const char * namespaces[32];
   srcMLTranslator * translator;
+  const char * unit;
 };
 
-struct srcml_entry {
+struct srcml_unit {
   /* Have to remember which archive the unit is from */
   struct srcml_archive* archive;
   const char * language;
@@ -425,7 +426,7 @@ int srcml_register_file_extension(struct srcml_archive* archive, const char* ext
 
 int srcml_register_namespace(struct srcml_archive* archive, const char* prefix, const char* ns) {
 
-  // check if
+  // check if overidding a default prefix
   if(strcmp(ns, SRCML_SRC_NS_URI) == 0) {
     archive->prefixes[0] = prefix;
   } else if(strcmp(ns, SRCML_CPP_NS_URI) == 0) {
@@ -469,7 +470,7 @@ int srcml_write_open_filename(struct srcml_archive* archive, const char* srcml_f
                                             archive->prefixes,
                                             archive->tabstop);
 
-  return 0;
+  return SRCML_STATUS_OK;
 
 }
 
@@ -484,72 +485,93 @@ int srcml_read_open_FILE    (struct srcml_archive* archive, FILE* srcml_file) { 
 int srcml_read_open_fd      (struct srcml_archive* archive, int srcml_fd) { return 0; }
 
 /* setup options for srcml unit */
-int srcml_entry_set_language (struct srcml_entry* entry, const char* language) {
+int srcml_unit_set_language (struct srcml_unit* unit, const char* language) {
 
-  entry->language = language;
+  unit->language = language;
   return SRCML_STATUS_OK;
 
 }
 
-int srcml_entry_set_filename (struct srcml_entry* entry, const char* filename) {
+int srcml_unit_set_filename (struct srcml_unit* unit, const char* filename) {
 
-  entry->filename = filename;
+  unit->filename = filename;
   return SRCML_STATUS_OK;
 
 }
 
-int srcml_entry_set_directory(struct srcml_entry* entry, const char* directory) {
+int srcml_unit_set_directory(struct srcml_unit* unit, const char* directory) {
 
-  entry->directory = directory;
+  unit->directory = directory;
   return SRCML_STATUS_OK;
 
 }
 
-int srcml_entry_set_version  (struct srcml_entry* entry, const char* version) {
+int srcml_unit_set_version  (struct srcml_unit* unit, const char* version) {
 
-  entry->version = version;
+  unit->version = version;
   return SRCML_STATUS_OK;
 
 }
 
-const char* srcml_entry_get_language (const struct srcml_entry* entry) {
+const char* srcml_unit_get_language (const struct srcml_unit* unit) {
 
-  return entry->language;
-
-}
-
-const char* srcml_entry_get_filename (const struct srcml_entry* entry) {
-
-  return entry->filename;
+  return unit->language;
 
 }
 
-const char* srcml_entry_get_directory(const struct srcml_entry* entry) {
+const char* srcml_unit_get_filename (const struct srcml_unit* unit) {
 
-  return entry->filename;
+  return unit->filename;
 
 }
 
-const char* srcml_entry_get_version  (const struct srcml_entry* entry) {
+const char* srcml_unit_get_directory(const struct srcml_unit* unit) {
 
-  return entry->version;
+  return unit->filename;
+
+}
+
+const char* srcml_unit_get_version  (const struct srcml_unit* unit) {
+
+  return unit->version;
 
 }
 
 /* Convert to srcml and append to the archive */
-int srcml_write_entry_archive (struct srcml_archive* archive, struct srcml_entry* entry) { return 0; }
-int srcml_write_entry_filename(struct srcml_archive* archive, const char* src_filename) { return 0; }
-int srcml_write_entry_memory  (struct srcml_archive* archive, char* src_buffer, size_t buffer_size) { return 0; }
-int srcml_write_entry_FILE    (struct srcml_archive* archive, FILE* src_file) { return 0; }
-int srcml_write_entry_fd      (struct srcml_archive* archive, int src_fd) { return 0; }
+int srcml_parse_unit_archive (struct srcml_archive* archive, struct srcml_unit* unit) { return 0; }
+int srcml_parse_unit_filename(struct srcml_archive* archive, const char* src_filename) {
 
-/* Read the next entry from the archive */
-const struct srcml_entry* srcml_read_entry_archive (struct srcml_archive* archive) { return 0; }
-const struct srcml_entry* srcml_read_archive_current_entry(const struct srcml_archive* archive) { return 0; }
-int srcml_read_entry_filename(struct srcml_archive* archive, const char* src_filename) { return 0; }
-int srcml_read_entry_memory  (struct srcml_archive* archive, const char* src_buffer, size_t buffer_size) { return 0; }
-int srcml_read_entry_FILE    (struct srcml_archive* archive, FILE* srcml_file) { return 0; }
-int srcml_read_entry_fd      (struct srcml_archive* archive, int srcml_fd) { return 0; }
+  xmlBuffer * output_buffer = xmlBufferCreate();
+  srcMLTranslator translator(srcml_check_language(archive->language),
+                             0, archive->encoding,
+                             output_buffer,
+                             archive->options,
+                             archive->directory,
+                             archive->filename,
+                             archive->version,
+                             archive->prefixes,
+                             archive->tabstop);
+  translator.setInput(src_filename);
+  translator.translate(src_filename, 0, src_filename, 0, srcml_check_language(archive->language));
+  translator.close();
+  archive->unit = (const char *)strdup((const char *)output_buffer->content);
+
+  xmlBufferFree(output_buffer);
+
+  return SRCML_STATUS_OK;
+
+}
+int srcml_parse_unit_memory  (struct srcml_archive* archive, char* src_buffer, size_t buffer_size) { return 0; }
+int srcml_parse_unit_FILE    (struct srcml_archive* archive, FILE* src_file) { return 0; }
+int srcml_parse_unit_fd      (struct srcml_archive* archive, int src_fd) { return 0; }
+
+/* Read the next unit from the archive */
+const struct srcml_unit* srcml_read_unit_archive (struct srcml_archive* archive) { return 0; }
+const struct srcml_unit* srcml_read_archive_current_unit(const struct srcml_archive* archive) { return 0; }
+int srcml_read_unit_filename(struct srcml_archive* archive, const char* src_filename) { return 0; }
+int srcml_read_unit_memory  (struct srcml_archive* archive, const char* src_buffer, size_t buffer_size) { return 0; }
+int srcml_read_unit_FILE    (struct srcml_archive* archive, FILE* srcml_file) { return 0; }
+int srcml_read_unit_fd      (struct srcml_archive* archive, int srcml_fd) { return 0; }
 
 /* close the srcML archive */
 void srcml_write_close(struct srcml_archive* archive) {}
@@ -559,9 +581,11 @@ void srcml_read_close (struct srcml_archive* archive) {}
 void srcml_write_free(struct srcml_archive* archive) {}
 void srcml_read_free (struct srcml_archive* archive) {}
 
-void srcml_free_archive_entry(struct srcml_entry* entry) {
+int srcml_free_unit(struct srcml_unit* unit) {
 
-  free(entry);
+  free(unit);
+
+  return SRCML_STATUS_OK;
 
 }
 
