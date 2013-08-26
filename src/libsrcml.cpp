@@ -327,6 +327,8 @@ void srcml_free_archive(struct srcml_archive * archive) { free(archive); }
    client will have to free it using srcml_archive_free() */
 struct srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
 
+  // probably memory leaks between here and free.  Who is responsible for freeing internal copied structures?
+
   struct srcml_archive * new_archive = srcml_create_archive();
   new_archive->type = archive->type;
   new_archive->filename = strdup(archive->filename);
