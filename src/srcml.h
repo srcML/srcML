@@ -48,6 +48,7 @@ const char* srcml_version_string(void);
 
 /* Core language set */
 #define SRCML_LANGUAGE_NULL   0
+#define SRCML_LANGUAGE_NONE   0
 #define SRCML_LANGUAGE_C      "C"
 #define SRCML_LANGUAGE_CXX    "C++"
 #define SRCML_LANGUAGE_JAVA   "Java"

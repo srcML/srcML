@@ -48,7 +48,12 @@ struct uridata {
   char const * const description;
 };
 
+enum SRCML_ARCHIVE_TYPE { SRCML_ARCHIVE_READ, SRCML_ARCHIVE_WRITE };
+
 struct srcml_archive {
+
+  SRCML_ARCHIVE_TYPE type;
+
   const char* filename;
   const char * encoding;
   const char * language;
@@ -282,6 +287,7 @@ void srcml_free_archive(struct srcml_archive * archive) { free(archive); }
 struct srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
 
   struct srcml_archive * new_archive = srcml_create_archive();
+  new_archive->type = archive->type;
   new_archive->filename = strdup(archive->filename);
   new_archive->encoding = strdup(archive->encoding);
   new_archive->language = strdup(archive->language);
@@ -415,18 +421,41 @@ int srcml_read_open_FILE    (struct srcml_archive* archive, FILE* srcml_file) { 
 int srcml_read_open_fd      (struct srcml_archive* archive, int srcml_fd) { return 0; }
 
 /* setup options for srcml unit */
-int srcml_entry_set_language (struct srcml_entry*, const char* language) { return 0; }
-int srcml_entry_set_filename (struct srcml_entry*, const char* filename) { return 0; }
-int srcml_entry_set_directory(struct srcml_entry*, const char* directory) { return 0; }
-int srcml_entry_set_version  (struct srcml_entry*, const char* version) { return 0; }
+int srcml_entry_set_language (struct srcml_entry* entry, const char* language) { 
 
-const char* srcml_entry_get_language (const struct srcml_entry*) { return 0; }
-const char* srcml_entry_get_filename (const struct srcml_entry*) { return 0; }
-const char* srcml_entry_get_directory(const struct srcml_entry*) { return 0; }
-const char* srcml_entry_get_version  (const struct srcml_entry*) { return 0; }
+  entry->language = language;
+  return SRCML_STATUS_OK;
+
+}
+
+int srcml_entry_set_filename (struct srcml_entry* entry, const char* filename) { 
+
+  entry->filename = filename;
+  return SRCML_STATUS_OK;
+
+}
+
+int srcml_entry_set_directory(struct srcml_entry* entry, const char* directory) { 
+
+  entry->directory = directory;
+  return SRCML_STATUS_OK;
+
+}
+
+int srcml_entry_set_version  (struct srcml_entry* entry, const char* version) { 
+
+  entry->version = version;
+  return SRCML_STATUS_OK;
+
+}
+
+const char* srcml_entry_get_language (const struct srcml_entry* entry) { return SRCML_STATUS_OK; }
+const char* srcml_entry_get_filename (const struct srcml_entry* entry) { return SRCML_STATUS_OK; }
+const char* srcml_entry_get_directory(const struct srcml_entry* entry) { return SRCML_STATUS_OK; }
+const char* srcml_entry_get_version  (const struct srcml_entry* entry) { return SRCML_STATUS_OK; }
 
 /* Convert to srcml and append to the archive */
-int srcml_write_entry_archive (struct srcml_archive* archive, struct srcml_entry*) { return 0; }
+int srcml_write_entry_archive (struct srcml_archive* archive, struct srcml_entry* entry) { return 0; }
 int srcml_write_entry_filename(struct srcml_archive* archive, const char* src_filename) { return 0; }
 int srcml_write_entry_memory  (struct srcml_archive* archive, char* src_buffer, size_t buffer_size) { return 0; }
 int srcml_write_entry_FILE    (struct srcml_archive* archive, FILE* src_file) { return 0; }
@@ -448,15 +477,23 @@ void srcml_read_close (struct srcml_archive* archive) {}
 void srcml_write_free(struct srcml_archive* archive) {}
 void srcml_read_free (struct srcml_archive* archive) {}
 
-void srcml_free_archive_entry(struct srcml_entry*) {}
+void srcml_free_archive_entry(struct srcml_entry* entry) {
+
+  free(entry);
+
+}
 
 const char* srcml_get_encoding (const struct srcml_archive* archive) {
 
-  return 0; }
+  return archive->encoding;
+
+}
 
 const char* srcml_get_language (const struct srcml_archive* archive) {
 
-  return 0; }
+  return archive->language;
+
+ }
 
 const char* srcml_get_filename (const struct srcml_archive* archive) {
 
