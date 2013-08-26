@@ -118,7 +118,7 @@ int Language::getLanguageFromFilename(const char* const path) {
 }
 
 // gets the current language based on the extenstion
-int Language::getLanguageFromFilename(const char* const path, pair * registered_languages) {
+int Language::getLanguageFromFilename(const char* const path, int num_registered, pair * registered_languages) {
 
   // extract the (pure) extension
   const char* extension = getLanguageExtension(path);
@@ -127,7 +127,7 @@ int Language::getLanguageFromFilename(const char* const path, pair * registered_
     return 0;
 
   // custom extensions
-  for (int i = usercount - 1; i >= 0; --i) {
+  for (int i = num_registered - 1; i >= 0; --i) {
     if (strcmp(registered_languages[i].s, extension) == 0)
       return registered_languages[i].n == LANGUAGE_NONE ? 0 : registered_languages[i].n;
   }

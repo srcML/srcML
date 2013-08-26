@@ -86,6 +86,7 @@ struct srcml_unit {
   const char * version;
   const char * unit;
   srcMLTranslator * translator;
+  int * num_registered;
   struct pair * registered_languages;
 };
 
@@ -565,7 +566,8 @@ const char* srcml_unit_get_version  (const struct srcml_unit* unit) {
 int srcml_parse_unit_archive (struct srcml_archive* archive, struct srcml_unit* unit) { return 0; }
 int srcml_parse_unit_filename(struct srcml_unit* unit, const char* src_filename) {
 
-  int lang = unit->language ? srcml_check_language(unit->language) : Language::getLanguageFromFilename(src_filename, unit->registered_languages);
+  int lang = unit->language ? srcml_check_language(unit->language) : Language::getLanguageFromFilename(src_filename, *unit->num_registered, unit->registered_languages);
+
   xmlBuffer * output_buffer = xmlBufferCreate();
   unit->translator->setInput(src_filename);
 
@@ -616,6 +618,7 @@ struct srcml_unit * srcml_create_unit(struct srcml_archive * archive) {
   struct srcml_unit * unit = (struct srcml_unit *)malloc(sizeof(struct srcml_unit));
   memset(unit, 0, sizeof(struct srcml_unit));
   unit->translator = archive->translator;
+  unit->num_registered = &archive->num_registered;
   unit->registered_languages = archive->registered_languages;
   return unit;
 
