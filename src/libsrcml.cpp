@@ -278,7 +278,29 @@ const char* srcml_error_string() { return srcml_error; }
 
 /* create a new srcml archive
    client will have to free it using srcml_free() */
-struct srcml_archive* srcml_create_archive() { return (struct srcml_archive*) malloc(sizeof(struct srcml_archive)); }
+struct srcml_archive* srcml_create_archive()
+
+{
+  struct srcml_archive * archive = (struct srcml_archive*) malloc(sizeof(struct srcml_archive));
+  archive->prefixes[0] = SRCML_SRC_NS_PREFIX_DEFAULT;
+  archive->prefixes[1] = SRCML_CPP_NS_PREFIX_DEFAULT;
+  archive->prefixes[2] = SRCML_ERR_NS_PREFIX_DEFAULT;
+  archive->prefixes[3] = SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT;
+  archive->prefixes[4] = SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT;
+  archive->prefixes[5] = SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT;
+  archive->prefixes[6] = SRCML_EXT_POSITION_NS_PREFIX_DEFAULT;
+
+  archive->namespaces[0] = SRCML_SRC_NS_URI;
+  archive->namespaces[1] = SRCML_CPP_NS_URI;
+  archive->namespaces[2] = SRCML_ERR_NS_URI;
+  archive->namespaces[3] = SRCML_EXT_LITERAL_NS_URI;
+  archive->namespaces[4] = SRCML_EXT_OPERATOR_NS_URI;
+  archive->namespaces[5] = SRCML_EXT_MODIFIER_NS_URI;
+  archive->namespaces[6] = SRCML_EXT_POSITION_NS_URI;
+
+  return archive;
+
+}
 
 /* free srcml archive
    allocated by srcml_create_archive() */
@@ -416,15 +438,6 @@ int srcml_register_namespace(struct srcml_archive* archive, const char* prefix, 
 /* open a srcML archive for output */
 int srcml_write_open_filename(struct srcml_archive* archive, const char* srcml_filename) {
 
-  const char * prefixes[7] = {SRCML_SRC_NS_PREFIX_DEFAULT, SRCML_CPP_NS_PREFIX_DEFAULT, SRCML_ERR_NS_PREFIX_DEFAULT, 
-                          SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT, 
-                          SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT, SRCML_EXT_POSITION_NS_PREFIX_DEFAULT };
-
-
-  static const char * namespaces[7] = { SRCML_SRC_NS_URI, SRCML_CPP_NS_URI, SRCML_ERR_NS_URI, SRCML_EXT_LITERAL_NS_URI, SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_MODIFIER_NS_URI, SRCML_EXT_POSITION_NS_URI };
-
-  
-
   archive->translator = new srcMLTranslator(srcml_check_language(archive->language),
                                             0, archive->encoding,
                                             srcml_filename,
@@ -432,7 +445,7 @@ int srcml_write_open_filename(struct srcml_archive* archive, const char* srcml_f
                                             archive->directory,
                                             archive->filename,
                                             archive->version,
-                                            prefixes,
+                                            archive->prefixes,
                                             archive->tabstop);
 
   return 0;
