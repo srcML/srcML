@@ -1,2 +1,8 @@
 A collection of libsrcml examples, mainly to assist in developing
 the libsrcml API.
+
+Perform the following to be able to compile:
+
+svn switch http://calder.sdml.cs.kent.edu/svn/srcML/trunk/src/srcml.h srcml.h
+svn switch http://calder.sdml.cs.kent.edu/svn/srcML/trunk/src/libsrcml.cpp libsrcml.cpp
+
