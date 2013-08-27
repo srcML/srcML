@@ -96,11 +96,11 @@ UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding)
 }
 
 // Create a character buffer
-UTF8CharBuffer::UTF8CharBuffer(const char* source, const char * encoding, bool is_source)
+UTF8CharBuffer::UTF8CharBuffer(const char* source, int size, const char * encoding)
   : antlr::CharBuffer(std::cin), pos(0), size(0), eof(false), lastcr(false)
 {
   const char * enc = encoding;
-  size = strlen(source);
+
   /* Use a libxml2 parser input buffer to support URIs.
      If an encoding is specified, then use it.  Otherwise, assume none, and
      try to figure it out later.

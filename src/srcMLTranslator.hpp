@@ -85,6 +85,7 @@ public:
 
     void* setInput(const char* path);
     void* setInputString(const char* source);
+    void* setInputString(const char* source, int size);
 
     void close();
 

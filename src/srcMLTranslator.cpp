@@ -109,6 +109,12 @@ void* srcMLTranslator::setInputString(const char* source) {
   return translator->setInputString(source);
 }
 
+// translate from input stream to output stream
+void* srcMLTranslator::setInputString(const char* source, int size) {
+
+  return translator->setInputString(source);
+}
+
 // close the output
 void srcMLTranslator::close() {
 
