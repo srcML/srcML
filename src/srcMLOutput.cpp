@@ -56,7 +56,8 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 			 OPTION_TYPE& op,
 			 const char* curi[],
 			 int ts,
-                         xmlBuffer* output_buffer
+                         xmlBuffer* output_buffer,
+                         xmlTextWriterPtr writer
 			 )
   : input(ints), xout(0), srcml_filename(filename), unit_language(language), unit_dir(0), unit_filename(0),
     unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(curi), openelementcount(0), curline(0),
@@ -64,14 +65,20 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 {
   // open the output text writer stream
   // "-" filename is standard output
-  if (output_buffer == 0) {
+  if (output_buffer == 0 && writer == 0) {
     xout = xmlNewTextWriterFilename(srcml_filename, isoption(OPTION_COMPRESSED));
     if (!xout) {
         fprintf(stderr, "src2srcml: " "Unable to open output file %s\n", srcml_filename);
         exit(2);
     }
+  } else if (writer == 0) {
+   xout = xmlNewTextWriterMemory(output_buffer, isoption(OPTION_COMPRESSED));
+    if (!xout) {
+        fprintf(stderr, "src2srcml: " "Unable to open output buffer\n");
+        exit(2);
+    }
   } else {
-    xout = xmlNewTextWriterMemory(output_buffer, isoption(OPTION_COMPRESSED));
+    xout = writer;
     if (!xout) {
         fprintf(stderr, "src2srcml: " "Unable to open output buffer\n");
         exit(2);

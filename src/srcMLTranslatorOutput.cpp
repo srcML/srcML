@@ -299,9 +299,10 @@ srcMLTranslatorOutput::srcMLTranslatorOutput(TokenStream* ints,
 			 OPTION_TYPE& op,
 			 const char* curi[],
 			 int ts,
-                         xmlBuffer* output_buffer
+                                             xmlBuffer* output_buffer,
+                          xmlTextWriterPtr writer
 			 )
-  : srcMLOutput(ints, filename, language, xml_enc, op, curi, ts, output_buffer)
+  : srcMLOutput(ints, filename, language, xml_enc, op, curi, ts, output_buffer, writer)
 {
   if (isoption(OPTION_POSITION))
       num2process[2] = &srcMLTranslatorOutput::processTextPosition;

@@ -47,7 +47,8 @@ public:
                 OPTION_TYPE& option,
                 const char* uri[],
                 int tabsize,
-                xmlBuffer* output_buffer = 0
+                xmlBuffer* output_buffer = 0,
+                xmlTextWriterPtr writer = 0
         );
 
   xmlTextWriter * getWriter();
