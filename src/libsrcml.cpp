@@ -105,11 +105,6 @@ struct srcml_unit {
   std::string * directory;
   std::string * version;
   std::string * unit;
-
-  // TODO forgot had archive.  Use archive instead of these and delete these
-  srcMLTranslator * translator;
-  int * num_registered;
-  pair * registered_languages;
 };
 
 /* translates to/from srcML */
@@ -651,12 +646,12 @@ const char* srcml_unit_get_version  (const srcml_unit* unit) {
 int srcml_parse_unit_archive (srcml_archive* archive, srcml_unit* unit) { return 0; }
 int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
-  int lang = unit->language ? srcml_check_language(unit->language->c_str()) : Language::getLanguageFromFilename(src_filename, *unit->num_registered, unit->registered_languages);
+  int lang = unit->language ? srcml_check_language(unit->language->c_str()) : Language::getLanguageFromFilename(src_filename, unit->archive->num_registered, unit->archive->registered_languages);
 
   xmlBuffer * output_buffer = xmlBufferCreate();
-  unit->translator->setInput(src_filename);
+  unit->archive->translator->setInput(src_filename);
 
-  unit->translator->translate_separate(src_filename, unit->directory ? unit->directory->c_str() : 0,
+  unit->archive->translator->translate_separate(src_filename, unit->directory ? unit->directory->c_str() : 0,
                                        unit->filename ? unit->filename->c_str() : 0,
                                        unit->version ? unit->version->c_str() : 0, lang, output_buffer);
 
@@ -675,9 +670,9 @@ int srcml_parse_unit_memory  (srcml_unit* unit, char* src_buffer, size_t buffer_
   int lang = srcml_check_language(unit->language ? unit->language->c_str() : 0);
 
   xmlBuffer * output_buffer = xmlBufferCreate();
-  unit->translator->setInputString(src_buffer, (int)buffer_size);
+  unit->archive->translator->setInputString(src_buffer, (int)buffer_size);
 
-  unit->translator->translate_separate(0, unit->directory ? unit->directory->c_str() : 0,
+  unit->archive->translator->translate_separate(0, unit->directory ? unit->directory->c_str() : 0,
                                        unit->filename ? unit->filename->c_str() : 0,
                                        unit->version ? unit->version->c_str() : 0, lang, output_buffer);
 
@@ -741,9 +736,7 @@ srcml_unit * srcml_create_unit(srcml_archive * archive) {
 
   srcml_unit * unit = new srcml_unit;//(srcml_unit *)malloc(sizeof(srcml_unit));
   memset(unit, 0, sizeof(srcml_unit));
-  unit->translator = archive->translator;
-  unit->num_registered = &archive->num_registered;
-  unit->registered_languages = archive->registered_languages;
+  unit->archive = archive;
 
   return unit;
 
