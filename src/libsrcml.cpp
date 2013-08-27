@@ -496,7 +496,7 @@ int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename
                                             archive->directory.c_str(),
                                             archive->filename.c_str(),
                                             archive->version.c_str(),
-                                            archive->prefixes.data(),
+                                            (const char **)&archive->prefixes.front(),
                                             archive->tabstop);
 
   return SRCML_STATUS_OK;
@@ -518,7 +518,7 @@ int srcml_write_open_memory  (srcml_archive* archive, char* buffer, size_t buffe
                                             archive->directory.c_str(),
                                             archive->filename.c_str(),
                                             archive->version.c_str(),
-                                            archive->prefixes.data(),
+                                            (const char **)&archive->prefixes.front(),
                                             archive->tabstop);
 
   return SRCML_STATUS_OK;
@@ -538,7 +538,7 @@ int srcml_write_open_FILE    (srcml_archive* archive, FILE* srcml_file) {
                                             archive->directory.c_str(),
                                             archive->filename.c_str(),
                                             archive->version.c_str(),
-                                            archive->prefixes.data(),
+                                            (const char **)&archive->prefixes.front(),
                                             archive->tabstop);
 
   archive->output_file = srcml_file;
@@ -560,7 +560,7 @@ int srcml_write_open_fd      (srcml_archive* archive, int srcml_fd) {
                                             archive->directory.c_str(),
                                             archive->filename.c_str(),
                                             archive->version.c_str(),
-                                            archive->prefixes.data(),
+                                            (const char **)&archive->prefixes.front(),
                                             archive->tabstop);
 
   archive->fd = srcml_fd;
