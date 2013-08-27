@@ -47,6 +47,8 @@ int main(int argc, char* argv[]) {
     for (i = 1; i < argc; ++i) {
 
         unit = srcml_create_unit(archive);
+     
+        srcml_unit_set_language(unit, srcml_archive_check_extension(archive, argv[i]));
 
         /* Translate to srcml */
         srcml_parse_unit_filename(unit, argv[i]);
