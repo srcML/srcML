@@ -96,8 +96,8 @@ UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding)
 }
 
 // Create a character buffer
-UTF8CharBuffer::UTF8CharBuffer(const char* source, int size, const char * encoding)
-  : antlr::CharBuffer(std::cin), pos(0), size(0), eof(false), lastcr(false)
+UTF8CharBuffer::UTF8CharBuffer(const char* source, int asize, const char * encoding)
+  : antlr::CharBuffer(std::cin), pos(0), size(asize), eof(false), lastcr(false)
 {
   const char * enc = encoding;
 
