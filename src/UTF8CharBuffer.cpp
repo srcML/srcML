@@ -30,7 +30,7 @@
 
 // Create a character buffer
 UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding)
-  : antlr::CharBuffer(std::cin), pos(0), size(0), eof(false), lastcr(false)
+  : antlr::CharBuffer(std::cin), pos(0), size(0), eof(false), lastcr(false), free(true)
 {
   const char* enc = encoding;
 
@@ -97,7 +97,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding)
 
 // Create a character buffer
 UTF8CharBuffer::UTF8CharBuffer(const char* source, int asize, const char * encoding)
-  : antlr::CharBuffer(std::cin), pos(0), size(asize), eof(false), lastcr(false)
+  : antlr::CharBuffer(std::cin), pos(0), size(asize), eof(false), lastcr(false), free(true)
 {
   const char * enc = encoding;
 
@@ -187,7 +187,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char* source, int asize, const char * encod
 
 // Create a character buffer
 UTF8CharBuffer::UTF8CharBuffer(xmlParserInputBufferPtr pinput, const char * encoding)
-  : antlr::CharBuffer(std::cin), pos(0), size(0), eof(false), lastcr(false), input(pinput)
+  : antlr::CharBuffer(std::cin), pos(0), size(0), eof(false), lastcr(false), input(pinput), free(false)
 {
   const char * enc = encoding;
 
@@ -357,5 +357,6 @@ int UTF8CharBuffer::getChar() {
 
 UTF8CharBuffer::~UTF8CharBuffer() {
 
-  xmlFreeParserInputBuffer(input);
+  if(free)
+    xmlFreeParserInputBuffer(input);
 }

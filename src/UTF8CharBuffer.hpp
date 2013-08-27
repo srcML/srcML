@@ -63,5 +63,6 @@ private:
     bool eof;
     bool lastcr;
     xmlParserInputBufferPtr input;
+    bool free;
 };
 #endif
