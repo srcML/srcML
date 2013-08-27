@@ -316,7 +316,7 @@ const char* srcml_error_string() { return srcml_error; }
 srcml_archive* srcml_create_archive()
 
 {
-  srcml_archive * archive = (srcml_archive*) malloc(sizeof(srcml_archive));
+  srcml_archive * archive = new srcml_archive;//(srcml_archive*) malloc(sizeof(srcml_archive));
   memset(archive, 0, sizeof(srcml_archive));
   archive->prefixes.push_back(SRCML_SRC_NS_PREFIX_DEFAULT);
   archive->prefixes.push_back(SRCML_CPP_NS_PREFIX_DEFAULT);
@@ -618,7 +618,7 @@ const char* srcml_unit_get_filename (const srcml_unit* unit) {
 
 const char* srcml_unit_get_directory(const srcml_unit* unit) {
 
-  return unit->filename.c_str();
+  return unit->directory.c_str();
 
 }
 
@@ -714,11 +714,12 @@ void srcml_read_free (srcml_archive* archive) {}
 
 srcml_unit * srcml_create_unit(srcml_archive * archive) {
 
-  srcml_unit * unit = (srcml_unit *)malloc(sizeof(srcml_unit));
-  memset(unit, 0, sizeof(srcml_unit));
+  srcml_unit * unit = new srcml_unit;//(srcml_unit *)malloc(sizeof(srcml_unit));
+  //memset(unit, 0, sizeof(srcml_unit));
   unit->translator = archive->translator;
   unit->num_registered = &archive->num_registered;
   unit->registered_languages = archive->registered_languages;
+
   return unit;
 
 }
