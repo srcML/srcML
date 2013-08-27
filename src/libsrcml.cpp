@@ -342,7 +342,7 @@ srcml_archive* srcml_create_archive()
 
 /* free srcml archive
    allocated by srcml_create_archive() */
-void srcml_free_archive(srcml_archive * archive) { free(archive); }
+void srcml_free_archive(srcml_archive * archive) { delete archive; }
 
 /* clone the setup of an existing archive
    client will have to free it using srcml_archive_free() */
@@ -735,7 +735,7 @@ srcml_unit * srcml_create_unit(srcml_archive * archive) {
 
 int srcml_free_unit(srcml_unit* unit) {
 
-  free(unit);
+  delete unit;
 
   return SRCML_STATUS_OK;
 
