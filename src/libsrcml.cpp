@@ -84,8 +84,7 @@ struct srcml_archive {
   std::vector<std::string> namespaces;
 
   // registered language extensions
-  int num_registered;
-  pair registered_languages[47];
+  std::vector<pair> registered_languages;
 
   // translator
   srcMLTranslator * translator;
@@ -329,7 +328,7 @@ srcml_archive* srcml_create_archive()
   archive->namespaces.push_back(SRCML_EXT_MODIFIER_NS_URI);
   archive->namespaces.push_back(SRCML_EXT_POSITION_NS_URI);
 
-  Language::register_standard_file_extensions(archive->num_registered, archive->registered_languages);
+  Language::register_standard_file_extensions(archive->registered_languages);
 
   return archive;
 
@@ -379,12 +378,8 @@ srcml_archive* srcml_clone_archive(const srcml_archive* archive) {
   // TODO make complete translator copy
   new_archive->translator = archive->translator;
 
-  new_archive->num_registered = archive->num_registered;
-  for(int i = 0; i < new_archive->num_registered; ++i) {
-    
-    new_archive->registered_languages[i].s = archive->registered_languages[i].s;
-    new_archive->registered_languages[i].n = archive->registered_languages[i].n;
-  }
+  for(int i = 0; i < archive->registered_languages.size(); ++i)    
+    new_archive->registered_languages.push_back(archive->registered_languages.at(i));
 
   return new_archive;
 
@@ -460,7 +455,7 @@ int srcml_archive_set_tabstop   (srcml_archive* archive, int tabstop) {
 
 int srcml_archive_register_file_extension(srcml_archive* archive, const char* extension, const char* language) {
 
-  Language::registerUserExt(extension, language, archive->num_registered, archive->registered_languages);
+  Language::registerUserExt(extension, language, archive->registered_languages);
   return SRCML_STATUS_OK;
 
 }
@@ -646,7 +641,7 @@ const char* srcml_unit_get_version  (const srcml_unit* unit) {
 int srcml_parse_unit_archive (srcml_archive* archive, srcml_unit* unit) { return 0; }
 int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
-  int lang = unit->language ? srcml_check_language(unit->language->c_str()) : Language::getLanguageFromFilename(src_filename, unit->archive->num_registered, unit->archive->registered_languages);
+  int lang = unit->language ? srcml_check_language(unit->language->c_str()) : Language::getLanguageFromFilename(src_filename, unit->archive->registered_languages;
 
   xmlBuffer * output_buffer = xmlBufferCreate();
   unit->archive->translator->setInput(src_filename);
