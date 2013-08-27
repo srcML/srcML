@@ -59,23 +59,36 @@ struct registered_language {
 
 struct srcml_archive {
 
+  // archive type read/write
   SRCML_ARCHIVE_TYPE type;
 
+  // srcML archive attributes
   const char* filename;
   const char * encoding;
   const char * language;
   const char * directory;
   const char * version;
   const char *** attributes;
+
+  // parsing options
   OPTION_TYPE options;
+
+  // tabstop size
   int tabstop;
+
+  // namespace/prefixes
   int num_namespaces;
   const char * prefixes[32];
   const char * namespaces[32];
-  srcMLTranslator * translator;
+
+  // registered language extensions
   int num_registered;
   struct pair registered_languages[47];
 
+  // translator
+  srcMLTranslator * translator;
+
+  // TODO not use buffer to hold results
   xmlBuffer * buffer;
   FILE * output_file;
   int fd;
@@ -525,6 +538,7 @@ int srcml_write_open_memory  (struct srcml_archive* archive, char* buffer, size_
 
 }
 
+// TODO not use buffer to hold results
 int srcml_write_open_FILE    (struct srcml_archive* archive, FILE* srcml_file) { 
 
   archive->buffer = xmlBufferCreate();
@@ -546,6 +560,7 @@ int srcml_write_open_FILE    (struct srcml_archive* archive, FILE* srcml_file) {
 
 }
 
+// TODO not use buffer to hold results
 int srcml_write_open_fd      (struct srcml_archive* archive, int srcml_fd) { 
 
   archive->buffer = xmlBufferCreate();
