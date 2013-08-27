@@ -40,7 +40,7 @@
 #include <dlfcn.h>
 #endif
 
-char srcml_error[512] = { 0 };
+std::string srcml_error;
 
 struct uridata {
   const char * uri;
@@ -111,7 +111,7 @@ int srcml(const char* input_filename, const char* output_filename, const char* l
 
   if(!input_filename) {
 
-    snprintf(srcml_error, 512, "No input file provided");
+    srcml_error = "No input file provided";
     return  SRCML_STATUS_ERROR;
 
   }
@@ -136,7 +136,9 @@ int srcml(const char* input_filename, const char* output_filename, const char* l
 
 
       error = 1;
-      snprintf(srcml_error, 512, "Error converting '%s' to srcML.", input_filename);
+      srcml_error = "Error converting '";
+      srcml_error += input_filename;
+      srcml_error += "' to srcML.";
 
     }
 
@@ -157,10 +159,12 @@ int srcml(const char* input_filename, const char* output_filename, const char* l
     // not xml or handled language
     if(!is_xml) {
 
-      if(language)
-        snprintf(srcml_error, 512, "Language '%s' is not supported.", language);
-      else
-        snprintf(srcml_error, 512, "No language provided.");
+      if(language) {
+        srcml_error = "Language '";
+        srcml_error += language;
+        srcml_error += "' is not supported.";
+      } else
+        srcml_error = "No language provided.";
 
       return SRCML_STATUS_ERROR;
 
@@ -303,7 +307,7 @@ int srcml_check_exslt() {
 }
 
 /* string describing last error */
-const char* srcml_error_string() { return srcml_error; }
+const char* srcml_error_string() { return srcml_error.c_str(); }
 
 /* create a new srcml archive
    client will have to free it using srcml_free() */
