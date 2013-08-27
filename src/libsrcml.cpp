@@ -336,7 +336,7 @@ srcml_archive* srcml_create_archive()
 
 /* free srcml archive
    allocated by srcml_create_archive() */
-void srcml_free_archive(srcml_archive * archive) { 
+void srcml_free_archive(srcml_archive * archive) {
 
   if(archive->filename) delete archive->filename;
   if(archive->encoding) delete archive->encoding;
@@ -375,10 +375,11 @@ srcml_archive* srcml_clone_archive(const srcml_archive* archive) {
 
   }
 
-  // TODO make complete translator copy
+  // TODO overload copy constructor for srcMLTranslator
+  //new_archive->translator = new srcMLTranslator(archive->translator);
   new_archive->translator = archive->translator;
 
-  for(int i = 0; i < archive->registered_languages.size(); ++i)    
+  for(int i = 0; i < archive->registered_languages.size(); ++i)
     new_archive->registered_languages.push_back(archive->registered_languages.at(i));
 
   return new_archive;
@@ -462,29 +463,15 @@ int srcml_archive_register_file_extension(srcml_archive* archive, const char* ex
 
 int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix, const char* ns) {
 
-  // check if overidding a default prefix
-  if(strcmp(ns, SRCML_SRC_NS_URI) == 0) {
-    archive->prefixes.at(0) = prefix;
-  } else if(strcmp(ns, SRCML_CPP_NS_URI) == 0) {
-    archive->prefixes.at(1) = prefix;
-  } else if(strcmp(ns, SRCML_ERR_NS_URI) == 0) {
-    archive->prefixes.at(2) = prefix;
-  } else if(strcmp(ns, SRCML_EXT_LITERAL_NS_URI) == 0) {
-    archive->prefixes.at(3) = prefix;
-  } else if(strcmp(ns, SRCML_EXT_OPERATOR_NS_URI) == 0) {
-    archive->prefixes.at(4) = prefix;
-  } else if(strcmp(ns, SRCML_EXT_MODIFIER_NS_URI) == 0) {
-    archive->prefixes.at(5) = prefix;
-  } else if(strcmp(ns, SRCML_EXT_POSITION_NS_URI) == 0) {
-    archive->prefixes.at(6) = prefix;
-  } else {
+  for(int i = 0; i < archive->prefixes.size(); ++i)
+    if(archive->namespaces.at(i) == ns) {
 
-    // TODO search and replace all previous namespaces
+      archive->prefixes.at(i) = prefix;
+      return SRCML_STATUS_OK;
+    }
 
-    archive->prefixes.push_back(prefix);
-    archive->namespaces.push_back(ns);
-
-  }
+  archive->prefixes.push_back(prefix);
+  archive->namespaces.push_back(ns);
 
   return SRCML_STATUS_OK;
 
@@ -531,7 +518,7 @@ int srcml_write_open_memory  (srcml_archive* archive, char* buffer, size_t buffe
 }
 
 // TODO not use buffer to hold results
-int srcml_write_open_FILE    (srcml_archive* archive, FILE* srcml_file) { 
+int srcml_write_open_FILE    (srcml_archive* archive, FILE* srcml_file) {
 
   archive->buffer = xmlBufferCreate();
 
@@ -553,7 +540,7 @@ int srcml_write_open_FILE    (srcml_archive* archive, FILE* srcml_file) {
 }
 
 // TODO not use buffer to hold results
-int srcml_write_open_fd      (srcml_archive* archive, int srcml_fd) { 
+int srcml_write_open_fd      (srcml_archive* archive, int srcml_fd) {
 
   archive->buffer = xmlBufferCreate();
 
@@ -572,7 +559,7 @@ int srcml_write_open_fd      (srcml_archive* archive, int srcml_fd) {
 
   return SRCML_STATUS_OK;
 
- }
+}
 
 /* open a srcML archive for reading */
 int srcml_read_open_filename(srcml_archive* archive, const char* srcml_filename) { return 0; }
@@ -647,11 +634,11 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
   unit->archive->translator->setInput(src_filename);
 
   unit->archive->translator->translate_separate(src_filename, unit->directory ? unit->directory->c_str() : 0,
-                                       unit->filename ? unit->filename->c_str() : 0,
-                                       unit->version ? unit->version->c_str() : 0, lang, output_buffer);
+                                                unit->filename ? unit->filename->c_str() : 0,
+                                                unit->version ? unit->version->c_str() : 0, lang, output_buffer);
 
   int length = strlen((const char *)output_buffer->content);
-  while(length > 0 && output_buffer->content[length - 1] == '\n') 
+  while(length > 0 && output_buffer->content[length - 1] == '\n')
     --length;
   if(unit->unit) delete unit->unit;
   unit->unit = new std::string((const char *)output_buffer->content, length);
@@ -660,7 +647,7 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
   return SRCML_STATUS_OK;
 
 }
-int srcml_parse_unit_memory  (srcml_unit* unit, char* src_buffer, size_t buffer_size) { 
+int srcml_parse_unit_memory  (srcml_unit* unit, char* src_buffer, size_t buffer_size) {
 
   int lang = srcml_check_language(unit->language ? unit->language->c_str() : 0);
 
@@ -668,11 +655,11 @@ int srcml_parse_unit_memory  (srcml_unit* unit, char* src_buffer, size_t buffer_
   unit->archive->translator->setInputString(src_buffer, (int)buffer_size);
 
   unit->archive->translator->translate_separate(0, unit->directory ? unit->directory->c_str() : 0,
-                                       unit->filename ? unit->filename->c_str() : 0,
-                                       unit->version ? unit->version->c_str() : 0, lang, output_buffer);
+                                                unit->filename ? unit->filename->c_str() : 0,
+                                                unit->version ? unit->version->c_str() : 0, lang, output_buffer);
 
   int length = strlen((const char *)output_buffer->content);
-  while(length > 0 && output_buffer->content[length - 1] == '\n') 
+  while(length > 0 && output_buffer->content[length - 1] == '\n')
     --length;
   if(unit->unit) delete unit->unit;
   unit->unit = new std::string((const char *)output_buffer->content, length);
