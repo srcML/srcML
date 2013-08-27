@@ -342,7 +342,17 @@ srcml_archive* srcml_create_archive()
 
 /* free srcml archive
    allocated by srcml_create_archive() */
-void srcml_free_archive(srcml_archive * archive) { delete archive; }
+void srcml_free_archive(srcml_archive * archive) { 
+
+  if(archive->filename) delete archive->filename;
+  if(archive->encoding) delete archive->encoding;
+  if(archive->language) delete archive->language;
+  if(archive->directory) delete archive->directory;
+  if(archive->version) delete archive->version;
+  if(archive->translator) delete archive->translator;
+
+  delete archive;
+}
 
 /* clone the setup of an existing archive
    client will have to free it using srcml_archive_free() */
@@ -740,6 +750,12 @@ srcml_unit * srcml_create_unit(srcml_archive * archive) {
 }
 
 int srcml_free_unit(srcml_unit* unit) {
+
+  if(unit->language) delete unit->language;
+  if(unit->filename) delete unit->filename;
+  if(unit->directory) delete unit->directory;
+  if(unit->version) delete unit->version;
+  if(unit->unit) delete unit->unit;
 
   delete unit;
 
