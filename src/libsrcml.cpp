@@ -91,7 +91,6 @@ struct srcml_archive {
 
   // TODO not use buffer to hold results
   xmlBuffer * buffer;
-  FILE * output_file;
   int fd;
 };
 
@@ -542,8 +541,6 @@ int srcml_write_open_FILE    (srcml_archive* archive, FILE* srcml_file) {
                                             (const char **)&archive->prefixes.front(),
                                             archive->tabstop);
 
-  archive->output_file = srcml_file;
-
   return SRCML_STATUS_OK;
 
 }
@@ -702,14 +699,13 @@ void srcml_read_close (srcml_archive* archive) {}
 void srcml_close_archive(srcml_archive * archive) {
 
   archive->translator->close();
-  //if(archive->output_file)
-  //fputs((char *)archive->buffer->content, archive->output_file);
+
   if(archive->fd)
     write(archive->fd, (char *)archive->buffer->content, archive->buffer->use);
 
   if(archive->buffer) {
 
-    if(!archive->output_file && !archive->fd)
+    if(!archive->fd)
       archive->buffer->content = 0;
 
     xmlBufferFree(archive->buffer);
