@@ -43,7 +43,7 @@ pair Language::userext2int[47] = { { 0, 0 } };
 const char * const regex = "(zx\\.|zg\\.|2zb\\.)*([^\\.]*)";
 
 bool Language::registerUserExt(const char* ext, int language,
-                               std::vector<pair> registered_languages) {
+                               std::vector<pair> & registered_languages) {
 
   pair apair = { ext, language };
   registered_languages.push_back(apair);
@@ -61,7 +61,7 @@ bool Language::registerUserExt(const char* ext, int language) {
 }
 
 bool Language::registerUserExt(const char* ext, const char* language,
-                               std::vector<pair> registered_languages) {
+                               std::vector<pair> & registered_languages) {
 
   int nlanguage = Language::getLanguage(language);
   if (!nlanguage)
@@ -125,7 +125,7 @@ int Language::getLanguageFromFilename(const char* const path) {
 }
 
 // gets the current language based on the extenstion
-int Language::getLanguageFromFilename(const char* const path, std::vector<pair> registered_languages) {
+int Language::getLanguageFromFilename(const char* const path, std::vector<pair> & registered_languages) {
 
   // extract the (pure) extension
   const char* extension = getLanguageExtension(path);
@@ -173,7 +173,7 @@ void Language::register_standard_file_extensions()
   Language::registerUserExt("cs",   LANGUAGE_CSHARP );
 }
 
-void Language::register_standard_file_extensions(std::vector<pair> registered_languages)
+void Language::register_standard_file_extensions(std::vector<pair> & registered_languages)
 {
   Language::registerUserExt("c",    LANGUAGE_C, registered_languages );
   Language::registerUserExt("h",    LANGUAGE_C, registered_languages );

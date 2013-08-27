@@ -93,16 +93,16 @@ public:
 
   static bool registerUserExt(const char* ext, int language);
   static bool registerUserExt(const char* ext, const char* language);
-  static bool registerUserExt(const char* ext, int language, std::vector<pair> registered_languages);  
-  static bool registerUserExt(const char* ext, const char* language, std::vector<pair> registered_languages);
+  static bool registerUserExt(const char* ext, int language, std::vector<pair> & registered_languages);  
+  static bool registerUserExt(const char* ext, const char* language, std::vector<pair> & registered_languages);
 
   // gets the current language based on the extenstion
   static int getLanguageFromFilename(const char* const path);
-  static int getLanguageFromFilename(const char* const path, std::vector<pair> registered_languages);
+  static int getLanguageFromFilename(const char* const path, std::vector<pair> & registered_languages);
 
   // register the standard language file extensions
   static void register_standard_file_extensions();
-  static void register_standard_file_extensions(std::vector<pair> registered_languages);
+  static void register_standard_file_extensions(std::vector<pair> & registered_languages);
 
   ~Language() {}
 
