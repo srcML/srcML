@@ -113,24 +113,7 @@ void* srcMLTranslatorCore::setInput(const char* path) {
 // translate from input stream to output stream
 void* srcMLTranslatorCore::setInputString(const char* source) {
 
-  try {
-    pinput = new UTF8CharBuffer(source, strlen(source), encoding);
-
-    // return the libxml context of the file
-    if (pinput)
-      return pinput->getContext();
-
-  } catch (const std::exception& e) {
-    fprintf(stderr, "SRCML Exception: %s\n", e.what());
-  }
-  catch (UTF8FileError) {
-    throw FileError();
-  }
-  catch (...) {
-    fprintf(stderr, "ERROR\n");
-  }
-
-  return 0;
+  return setInputString(source, strlen(source));
 }
 
 // translate from input stream to output stream
