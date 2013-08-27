@@ -82,6 +82,19 @@ public:
                     int tabsize                  // size of tabs
         );
 
+    // constructor
+    srcMLTranslator(int language,
+                    const char* src_encoding,
+                    const char* xml_encoding,
+                    xmlTextWriterPtr writer,
+                    OPTION_TYPE& options,
+                    const char* directory,
+                    const char* filename,
+                    const char* version,
+                    const char* uri[],
+                    int tabsize
+        );
+
 
     void* setInput(const char* path);
     void* setInputString(const char* source);
