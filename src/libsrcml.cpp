@@ -75,6 +75,9 @@ struct srcml_archive {
   srcMLTranslator * translator;
   int num_registered;
   struct pair registered_languages[47];
+
+  FILE * output_file;
+  int fd;
 };
 
 struct srcml_unit {
@@ -521,8 +524,47 @@ int srcml_write_open_memory  (struct srcml_archive* archive, char* buffer, size_
 
 }
 
-int srcml_write_open_FILE    (struct srcml_archive* archive, FILE* srcml_file) { return 0; }
-int srcml_write_open_fd      (struct srcml_archive* archive, int srcml_fd) { return 0; }
+int srcml_write_open_FILE    (struct srcml_archive* archive, FILE* srcml_file) { 
+
+  xmlBuffer * output_buffer = xmlBufferCreate();
+
+  archive->type = SRCML_ARCHIVE_WRITE;
+  archive->translator = new srcMLTranslator(srcml_check_language(archive->language),
+                                            0, archive->encoding,
+                                            output_buffer,
+                                            archive->options,
+                                            archive->directory,
+                                            archive->filename,
+                                            archive->version,
+                                            archive->prefixes,
+                                            archive->tabstop);
+
+  archive->output_file = srcml_file;
+
+  return SRCML_STATUS_OK;
+
+}
+
+int srcml_write_open_fd      (struct srcml_archive* archive, int srcml_fd) { 
+
+  xmlBuffer * output_buffer = xmlBufferCreate();
+
+  archive->type = SRCML_ARCHIVE_WRITE;
+  archive->translator = new srcMLTranslator(srcml_check_language(archive->language),
+                                            0, archive->encoding,
+                                            output_buffer,
+                                            archive->options,
+                                            archive->directory,
+                                            archive->filename,
+                                            archive->version,
+                                            archive->prefixes,
+                                            archive->tabstop);
+
+  archive->fd = srcml_fd;
+
+  return SRCML_STATUS_OK;
+
+ }
 
 /* open a srcML archive for reading */
 int srcml_read_open_filename(struct srcml_archive* archive, const char* srcml_filename) { return 0; }
