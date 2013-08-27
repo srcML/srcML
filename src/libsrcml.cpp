@@ -494,13 +494,13 @@ int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix,
 int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename) {
 
   archive->type = SRCML_ARCHIVE_WRITE;
-  archive->translator = new srcMLTranslator(srcml_check_language(archive->language->c_str()),
-                                            0, archive->encoding->c_str(),
+  archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
+                                            0, archive->encoding ? archive->encoding->c_str() : 0,
                                             srcml_filename,
                                             archive->options,
-                                            archive->directory->c_str(),
-                                            archive->filename->c_str(),
-                                            archive->version->c_str(),
+                                            archive->directory ? archive->directory->c_str() : 0,
+                                            archive->filename ? archive->filename->c_str() : 0,
+                                            archive->version ? archive->version->c_str() : 0,
                                             (const char **)&archive->prefixes.front(),
                                             archive->tabstop);
 
@@ -516,13 +516,13 @@ int srcml_write_open_memory  (srcml_archive* archive, char* buffer, size_t buffe
   archive->buffer->content = (xmlChar *)buffer;
 
   archive->type = SRCML_ARCHIVE_WRITE;
-  archive->translator = new srcMLTranslator(srcml_check_language(archive->language->c_str()),
-                                            0, archive->encoding->c_str(),
+  archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
+                                            0, archive->encoding ? archive->encoding->c_str() : 0,
                                             archive->buffer,
                                             archive->options,
-                                            archive->directory->c_str(),
-                                            archive->filename->c_str(),
-                                            archive->version->c_str(),
+                                            archive->directory ? archive->directory->c_str() : 0,
+                                            archive->filename ? archive->filename->c_str() : 0,
+                                            archive->version ? archive->version->c_str() : 0,
                                             (const char **)&archive->prefixes.front(),
                                             archive->tabstop);
 
@@ -536,13 +536,13 @@ int srcml_write_open_FILE    (srcml_archive* archive, FILE* srcml_file) {
   archive->buffer = xmlBufferCreate();
 
   archive->type = SRCML_ARCHIVE_WRITE;
-  archive->translator = new srcMLTranslator(srcml_check_language(archive->language->c_str()),
-                                            0, archive->encoding->c_str(),
+  archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
+                                            0, archive->encoding ? archive->encoding->c_str() : 0,
                                             archive->buffer,
                                             archive->options,
-                                            archive->directory->c_str(),
-                                            archive->filename->c_str(),
-                                            archive->version->c_str(),
+                                            archive->directory ? archive->directory->c_str() : 0,
+                                            archive->filename ? archive->filename->c_str() : 0,
+                                            archive->version ? archive->version->c_str() : 0,
                                             (const char **)&archive->prefixes.front(),
                                             archive->tabstop);
 
@@ -558,13 +558,13 @@ int srcml_write_open_fd      (srcml_archive* archive, int srcml_fd) {
   archive->buffer = xmlBufferCreate();
 
   archive->type = SRCML_ARCHIVE_WRITE;
-  archive->translator = new srcMLTranslator(srcml_check_language(archive->language->c_str()),
-                                            0, archive->encoding->c_str(),
+  archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
+                                            0, archive->encoding ? archive->encoding->c_str() : 0,
                                             archive->buffer,
                                             archive->options,
-                                            archive->directory->c_str(),
-                                            archive->filename->c_str(),
-                                            archive->version->c_str(),
+                                            archive->directory ? archive->directory->c_str() : 0,
+                                            archive->filename ? archive->filename->c_str() : 0,
+                                            archive->version ? archive->version->c_str() : 0,
                                             (const char **)&archive->prefixes.front(),
                                             archive->tabstop);
 
@@ -640,7 +640,7 @@ const char* srcml_unit_get_version  (const srcml_unit* unit) {
 /* Convert to srcml and append to the archive */
 int srcml_parse_unit_archive (srcml_archive* archive, srcml_unit* unit) { return 0; }
 int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   int lang = unit->language ? srcml_check_language(unit->language->c_str()) : Language::getLanguageFromFilename(src_filename, *unit->num_registered, unit->registered_languages);
 
   xmlBuffer * output_buffer = xmlBufferCreate();
@@ -653,7 +653,7 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
     --length;
   unit->unit->append((const char *)output_buffer->content, length);
   xmlBufferFree(output_buffer);
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   return SRCML_STATUS_OK;
 
 }
