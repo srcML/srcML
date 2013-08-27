@@ -528,7 +528,8 @@ int srcml_write_open_memory  (srcml_archive* archive, char* buffer, size_t buffe
 // TODO not use buffer to hold results
 int srcml_write_open_FILE    (srcml_archive* archive, FILE* srcml_file) {
 
-  archive->buffer = xmlBufferCreate();
+  //archive->buffer = xmlBufferCreate();
+  xmlTextWriterPtr writer = xmlNewTextWriter(xmlOutputBufferCreateFile(srcml_file, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
 
   archive->type = SRCML_ARCHIVE_WRITE;
   archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
