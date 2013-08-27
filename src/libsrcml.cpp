@@ -529,12 +529,12 @@ int srcml_write_open_memory  (srcml_archive* archive, char* buffer, size_t buffe
 int srcml_write_open_FILE    (srcml_archive* archive, FILE* srcml_file) {
 
   //archive->buffer = xmlBufferCreate();
-  xmlTextWriterPtr writer = xmlNewTextWriter(xmlOutputBufferCreateFile(srcml_file, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
+  xmlTextWriterPtr writer = xmlNewTextWriter(xmlOutputBufferCreateFile(srcml_file, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0)));
 
   archive->type = SRCML_ARCHIVE_WRITE;
   archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
                                             0, archive->encoding ? archive->encoding->c_str() : 0,
-                                            archive->buffer,
+                                            writer,
                                             archive->options,
                                             archive->directory ? archive->directory->c_str() : 0,
                                             archive->filename ? archive->filename->c_str() : 0,
@@ -702,8 +702,8 @@ void srcml_read_close (srcml_archive* archive) {}
 void srcml_close_archive(srcml_archive * archive) {
 
   archive->translator->close();
-  if(archive->output_file)
-    fputs((char *)archive->buffer->content, archive->output_file);
+  //if(archive->output_file)
+  //fputs((char *)archive->buffer->content, archive->output_file);
   if(archive->fd)
     write(archive->fd, (char *)archive->buffer->content, archive->buffer->use);
 
