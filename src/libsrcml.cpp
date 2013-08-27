@@ -425,7 +425,15 @@ int srcml_archive_set_version   (srcml_archive* archive, const char* version) {
 }
 int srcml_archive_set_attributes(srcml_archive* archive, const char** attr[2]) {
 
-  // TODO fix archive->attributes = attr;
+  archive->attributes.clear();
+
+  while((*attr)[0]) {
+
+    archive->attributes.push_back((*attr)[0]);
+    archive->attributes.push_back((*attr)[1]);
+    ++attr;
+  }
+
   return SRCML_STATUS_OK;
 
 }
