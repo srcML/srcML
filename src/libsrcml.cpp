@@ -197,6 +197,13 @@ const char * srcml_check_extension(const char* filename) {
 
 }
 
+const char * srcml_archive_check_extension(srcml_archive * archive, const char* filename) {
+
+  Language language(Language::getLanguageFromFilename(filename, archive->registered_languages));
+  return language.getLanguageString();
+
+}
+
 /* currently supported format, e.g., tar.gz
    Full filename can be provided, and extension will be extracted */
 int srcml_check_format(const char* format) {
