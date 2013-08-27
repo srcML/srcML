@@ -641,7 +641,7 @@ const char* srcml_unit_get_version  (const srcml_unit* unit) {
 int srcml_parse_unit_archive (srcml_archive* archive, srcml_unit* unit) { return 0; }
 int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
-  int lang = unit->language ? srcml_check_language(unit->language->c_str()) : Language::getLanguageFromFilename(src_filename, unit->archive->registered_languages;
+  int lang = unit->language ? srcml_check_language(unit->language->c_str()) : Language::getLanguageFromFilename(src_filename, unit->archive->registered_languages);
 
   xmlBuffer * output_buffer = xmlBufferCreate();
   unit->archive->translator->setInput(src_filename);
