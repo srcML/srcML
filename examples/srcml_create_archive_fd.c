@@ -38,15 +38,15 @@ int main(int argc, char* argv[]) {
     archive = srcml_create_archive();
 
     /* setup our output file using a file descriptor */
-    srcml_output = open("project.xml", O_WRONLY | O_CREAT);
+    srcml_output = open("project.xml", O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
 
     /* open a srcML archive for output */
     srcml_write_open_fd(archive, srcml_output);
 
     /* add all the files to the archive */
-    for (i = 0; i < argc; ++i) {
+    for (i = 1; i < argc; ++i) {
 
-        unit = srcml_create_unit();
+        unit = srcml_create_unit(archive);
 
         /* Translate to srcml */
         srcml_parse_unit_filename(unit, argv[i]);

@@ -42,9 +42,9 @@ int main(int argc, char* argv[]) {
     srcml_write_open_FILE(archive, srcml_output);
 
     /* add all the files to the archive */
-    for (i = 0; i < argc; ++i) {
+    for (i = 1; i < argc; ++i) {
 
-        struct srcml_unit* unit = srcml_create_unit();
+        struct srcml_unit* unit = srcml_create_unit(archive);
 
         srcml_parse_unit_filename(unit, argv[i]);
 

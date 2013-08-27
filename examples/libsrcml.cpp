@@ -76,6 +76,7 @@ struct srcml_archive {
   int num_registered;
   struct pair registered_languages[47];
 
+  xmlBuffer * buffer;
   FILE * output_file;
   int fd;
 };
@@ -504,15 +505,15 @@ int srcml_write_open_filename(struct srcml_archive* archive, const char* srcml_f
 
 int srcml_write_open_memory  (struct srcml_archive* archive, char* buffer, size_t buffer_size) {
 
-  xmlBuffer * output_buffer = xmlBufferCreate();
-  if(output_buffer->content)
-    free(output_buffer->content);
-  output_buffer->content = (xmlChar *)buffer;
+  archive->buffer = xmlBufferCreate();
+  if(archive->buffer->content)
+    free(archive->buffer->content);
+  archive->buffer->content = (xmlChar *)buffer;
 
   archive->type = SRCML_ARCHIVE_WRITE;
   archive->translator = new srcMLTranslator(srcml_check_language(archive->language),
                                             0, archive->encoding,
-                                            output_buffer,
+                                            archive->buffer,
                                             archive->options,
                                             archive->directory,
                                             archive->filename,
@@ -526,12 +527,12 @@ int srcml_write_open_memory  (struct srcml_archive* archive, char* buffer, size_
 
 int srcml_write_open_FILE    (struct srcml_archive* archive, FILE* srcml_file) { 
 
-  xmlBuffer * output_buffer = xmlBufferCreate();
+  archive->buffer = xmlBufferCreate();
 
   archive->type = SRCML_ARCHIVE_WRITE;
   archive->translator = new srcMLTranslator(srcml_check_language(archive->language),
                                             0, archive->encoding,
-                                            output_buffer,
+                                            archive->buffer,
                                             archive->options,
                                             archive->directory,
                                             archive->filename,
@@ -547,12 +548,12 @@ int srcml_write_open_FILE    (struct srcml_archive* archive, FILE* srcml_file) {
 
 int srcml_write_open_fd      (struct srcml_archive* archive, int srcml_fd) { 
 
-  xmlBuffer * output_buffer = xmlBufferCreate();
+  archive->buffer = xmlBufferCreate();
 
   archive->type = SRCML_ARCHIVE_WRITE;
   archive->translator = new srcMLTranslator(srcml_check_language(archive->language),
                                             0, archive->encoding,
-                                            output_buffer,
+                                            archive->buffer,
                                             archive->options,
                                             archive->directory,
                                             archive->filename,
@@ -688,6 +689,20 @@ void srcml_read_close (struct srcml_archive* archive) {}
 void srcml_close_archive(struct srcml_archive * archive) {
 
   archive->translator->close();
+  if(archive->output_file)
+    fputs((char *)archive->buffer->content, archive->output_file);
+  if(archive->fd)
+    write(archive->fd, (char *)archive->buffer->content, archive->buffer->use);
+
+  if(archive->buffer) {
+
+    if(!archive->output_file && !archive->fd)
+      archive->buffer->content = 0;
+
+    xmlBufferFree(archive->buffer);
+    archive->buffer = 0;
+
+  }
 
 }
 
