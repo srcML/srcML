@@ -700,6 +700,8 @@ void srcml_close_archive(srcml_archive * archive) {
 
   if(archive->buffer) {
 
+    archive->buffer->content = 0;
+
     xmlBufferFree(archive->buffer);
     archive->buffer = 0;
 
