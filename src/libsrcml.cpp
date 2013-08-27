@@ -632,36 +632,10 @@ const char* srcml_unit_get_version  (const srcml_unit* unit) {
 
 }
 
-/* Convert to srcml and append to the archive */
-int srcml_parse_unit_archive (srcml_archive* archive, srcml_unit* unit) { return 0; }
-int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
-  int lang = unit->language ? srcml_check_language(unit->language->c_str()) : Language::getLanguageFromFilename(src_filename, unit->archive->registered_languages);
+void srcml_parse_unit_internal(srcml_unit * unit, int lang) {
 
   xmlBuffer * output_buffer = xmlBufferCreate();
-  unit->archive->translator->setInput(src_filename);
-
-  unit->archive->translator->translate_separate(src_filename, unit->directory ? unit->directory->c_str() : 0,
-                                                unit->filename ? unit->filename->c_str() : 0,
-                                                unit->version ? unit->version->c_str() : 0, lang, output_buffer);
-
-  int length = strlen((const char *)output_buffer->content);
-  while(length > 0 && output_buffer->content[length - 1] == '\n')
-    --length;
-  if(unit->unit) delete unit->unit;
-  unit->unit = new std::string((const char *)output_buffer->content, length);
-  xmlBufferFree(output_buffer);
-
-  return SRCML_STATUS_OK;
-
-}
-int srcml_parse_unit_memory  (srcml_unit* unit, char* src_buffer, size_t buffer_size) {
-
-  int lang = srcml_check_language(unit->language ? unit->language->c_str() : 0);
-
-  xmlBuffer * output_buffer = xmlBufferCreate();
-  unit->archive->translator->setInputString(src_buffer, (int)buffer_size);
-
   unit->archive->translator->translate_separate(0, unit->directory ? unit->directory->c_str() : 0,
                                                 unit->filename ? unit->filename->c_str() : 0,
                                                 unit->version ? unit->version->c_str() : 0, lang, output_buffer);
@@ -672,6 +646,29 @@ int srcml_parse_unit_memory  (srcml_unit* unit, char* src_buffer, size_t buffer_
   if(unit->unit) delete unit->unit;
   unit->unit = new std::string((const char *)output_buffer->content, length);
   xmlBufferFree(output_buffer);
+
+}
+
+/* Convert to srcml and append to the archive */
+int srcml_parse_unit_archive (srcml_archive* archive, srcml_unit* unit) { return 0; }
+int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
+
+  int lang = unit->language ? srcml_check_language(unit->language->c_str()) : Language::getLanguageFromFilename(src_filename, unit->archive->registered_languages);
+
+  unit->archive->translator->setInput(src_filename);
+
+  srcml_parse_unit_internal(unit, lang);
+
+  return SRCML_STATUS_OK;
+
+}
+
+int srcml_parse_unit_memory  (srcml_unit* unit, char* src_buffer, size_t buffer_size) {
+
+  int lang = srcml_check_language(unit->language ? unit->language->c_str() : 0);
+  unit->archive->translator->setInputString(src_buffer, (int)buffer_size);
+
+  srcml_parse_unit_internal(unit, lang);
 
   return SRCML_STATUS_OK;
 
@@ -681,20 +678,10 @@ int srcml_parse_unit_FILE    (srcml_unit* unit, FILE* src_file) {
 
   int lang = srcml_check_language(unit->language ? unit->language->c_str() : 0);
 
-  xmlBuffer * output_buffer = xmlBufferCreate();
   xmlParserInputBufferPtr input = xmlParserInputBufferCreateFile(src_file, unit->archive->encoding ? xmlParseCharEncoding(unit->archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
   unit->archive->translator->setInput(input);
 
-  unit->archive->translator->translate_separate(0, unit->directory ? unit->directory->c_str() : 0,
-                                                unit->filename ? unit->filename->c_str() : 0,
-                                                unit->version ? unit->version->c_str() : 0, lang, output_buffer);
-
-  int length = strlen((const char *)output_buffer->content);
-  while(length > 0 && output_buffer->content[length - 1] == '\n')
-    --length;
-  if(unit->unit) delete unit->unit;
-  unit->unit = new std::string((const char *)output_buffer->content, length);
-  xmlBufferFree(output_buffer);
+  srcml_parse_unit_internal(unit, lang);
   xmlFreeParserInputBuffer(input);
 
   return SRCML_STATUS_OK;
@@ -704,20 +691,10 @@ int srcml_parse_unit_fd      (srcml_unit* unit, int src_fd) {
 
   int lang = srcml_check_language(unit->language ? unit->language->c_str() : 0);
 
-  xmlBuffer * output_buffer = xmlBufferCreate();
   xmlParserInputBufferPtr input = xmlParserInputBufferCreateFd(src_fd, unit->archive->encoding ? xmlParseCharEncoding(unit->archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
   unit->archive->translator->setInput(input);
 
-  unit->archive->translator->translate_separate(0, unit->directory ? unit->directory->c_str() : 0,
-                                                unit->filename ? unit->filename->c_str() : 0,
-                                                unit->version ? unit->version->c_str() : 0, lang, output_buffer);
-
-  int length = strlen((const char *)output_buffer->content);
-  while(length > 0 && output_buffer->content[length - 1] == '\n')
-    --length;
-  if(unit->unit) delete unit->unit;
-  unit->unit = new std::string((const char *)output_buffer->content, length);
-  xmlBufferFree(output_buffer);
+  srcml_parse_unit_internal(unit, lang);
   xmlFreeParserInputBuffer(input);
 
   return SRCML_STATUS_OK;
