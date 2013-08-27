@@ -108,6 +108,29 @@ srcMLTranslatorCore::srcMLTranslatorCore(int language,                // program
 
 
 // translate from input stream to output stream
+void* srcMLTranslatorCore::setInput(xmlParserInputBufferPtr input) {
+
+  try {
+    pinput = new UTF8CharBuffer(input, encoding);
+
+    // return the libxml context of the file
+    if (pinput)
+      return pinput->getContext();
+
+  } catch (const std::exception& e) {
+    fprintf(stderr, "SRCML Exception: %s\n", e.what());
+  }
+  catch (UTF8FileError) {
+    throw FileError();
+  }
+  catch (...) {
+    fprintf(stderr, "ERROR\n");
+  }
+
+  return 0;
+}
+
+// translate from input stream to output stream
 void* srcMLTranslatorCore::setInput(const char* path) {
 
   try {

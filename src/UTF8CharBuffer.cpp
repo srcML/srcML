@@ -185,6 +185,96 @@ UTF8CharBuffer::UTF8CharBuffer(const char* source, int asize, const char * encod
 
 }
 
+// Create a character buffer
+UTF8CharBuffer::UTF8CharBuffer(xmlParserInputBufferPtr pinput, const char * encoding)
+  : antlr::CharBuffer(std::cin), pos(0), size(0), eof(false), lastcr(false), input(pinput)
+{
+  const char * enc = encoding;
+
+  /* Use a libxml2 parser input buffer to support URIs.
+     If an encoding is specified, then use it.  Otherwise, assume none, and
+     try to figure it out later.
+  */
+  if (!input)
+    throw UTF8FileError();
+
+  /* If we do not have an encoding at the start, then there is no raw buffer created
+     or used.  Unfortunately, we have to open the file with our encoding defined. */
+  if(encoding && input->encoder) {
+    pos = 0;
+#ifdef LIBXML2_NEW_BUFFER
+//    if(input->raw)
+//      xmlBufferFree(input->raw);
+    input->raw = input->buffer;
+    input->rawconsumed = 0;
+    xmlParserInputBufferPtr temp_parser = xmlAllocParserInputBuffer(XML_CHAR_ENCODING_8859_1);
+    input->buffer = temp_parser->buffer;
+    temp_parser->buffer = 0;
+    xmlFreeParserInputBuffer(temp_parser);
+    size = growBuffer();
+#else
+    if(input->raw)
+      xmlBufferFree(input->raw);
+    input->raw = input->buffer;
+    input->rawconsumed = 0;
+    input->buffer = xmlBufferCreate();
+    size = growBuffer();
+#endif
+  }
+
+  /* If an encoding was not specified, then try to detect it.
+     This is especially important for the BOM for UTF-8.
+     If nothing is detected, then use ISO-8859-1 */
+  if (!encoding) {
+
+    // input enough characters to detect.
+    // 4 is good because you either get 4 or some standard size which is probably larger (really)
+    size = xmlParserInputBufferGrow(input, 4);
+
+    // detect (and remove) BOMs for UTF8 and UTF16
+    if (size >= 3 &&
+        xmlBufContent(input->buffer)[0] == 0xEF &&
+        xmlBufContent(input->buffer)[1] == 0xBB &&
+        xmlBufContent(input->buffer)[2] == 0xBF) {
+
+      pos = 3;
+
+    } else {
+
+      // assume ISO-8859-1 unless we can detect it otherwise
+      xmlCharEncoding denc = XML_CHAR_ENCODING_8859_1;
+
+      // now see if we can detect it
+      xmlCharEncoding newdenc = xmlDetectCharEncoding(xmlBufContent(input->buffer), size);
+      if (newdenc)
+        denc = newdenc;
+
+      /* Transform the data already read in */
+
+      // since original encoding was NONE, no raw buffer was allocated, so use the regular buffer
+      pos = 0;
+      input->raw = input->buffer;
+      input->rawconsumed = 0;
+
+      // need a new regular buffer
+#ifdef LIBXML2_NEW_BUFFER
+      xmlParserInputBufferPtr temp_parser = xmlAllocParserInputBuffer(denc);
+      input->buffer = temp_parser->buffer;
+      temp_parser->buffer = 0;
+      xmlFreeParserInputBuffer(temp_parser);
+#else
+      input->buffer = xmlBufferCreate();
+#endif
+      // setup the encoder being used
+      input->encoder = xmlGetCharEncodingHandler(denc);
+
+      // fill up the buffer with even more data
+      size = growBuffer();
+    }
+  }
+
+}
+
 int UTF8CharBuffer::growBuffer() {
 
   return xmlParserInputBufferGrow(input, SRCBUFSIZE);
