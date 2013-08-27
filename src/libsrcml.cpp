@@ -379,10 +379,6 @@ srcml_archive* srcml_clone_archive(const srcml_archive* archive) {
 
   }
 
-  // TODO overload copy constructor for srcMLTranslator
-  //new_archive->translator = new srcMLTranslator(archive->translator);
-  new_archive->translator = archive->translator;
-
   for(int i = 0; i < archive->registered_languages.size(); ++i)
     new_archive->registered_languages.push_back(archive->registered_languages.at(i));
 
@@ -491,7 +487,7 @@ int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix,
 
 /* open a srcML archive for output */
 int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename) {
-
+ 
   archive->type = SRCML_ARCHIVE_WRITE;
   archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
                                             0, archive->encoding ? archive->encoding->c_str() : 0,
