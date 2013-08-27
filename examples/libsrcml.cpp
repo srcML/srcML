@@ -499,7 +499,28 @@ int srcml_write_open_filename(struct srcml_archive* archive, const char* srcml_f
 
 }
 
-int srcml_write_open_memory  (struct srcml_archive* archive, char* buffer, size_t buffer_size) { return 0; }
+int srcml_write_open_memory  (struct srcml_archive* archive, char* buffer, size_t buffer_size) {
+
+  xmlBuffer * output_buffer = xmlBufferCreate();
+  if(output_buffer->content)
+    free(output_buffer->content);
+  output_buffer->content = (xmlChar *)buffer;
+
+  archive->type = SRCML_ARCHIVE_WRITE;
+  archive->translator = new srcMLTranslator(srcml_check_language(archive->language),
+                                            0, archive->encoding,
+                                            output_buffer,
+                                            archive->options,
+                                            archive->directory,
+                                            archive->filename,
+                                            archive->version,
+                                            archive->prefixes,
+                                            archive->tabstop);
+
+  return SRCML_STATUS_OK;
+
+}
+
 int srcml_write_open_FILE    (struct srcml_archive* archive, FILE* srcml_file) { return 0; }
 int srcml_write_open_fd      (struct srcml_archive* archive, int srcml_fd) { return 0; }
 
@@ -572,6 +593,7 @@ int srcml_parse_unit_filename(struct srcml_unit* unit, const char* src_filename)
   unit->translator->setInput(src_filename);
 
   unit->translator->translate_separate(src_filename, unit->directory, unit->filename, unit->version, lang, output_buffer);
+
   int length = strlen((const char *)output_buffer->content);
   while(length > 0 && output_buffer->content[length - 1] == '\n') 
     --length;
@@ -581,9 +603,27 @@ int srcml_parse_unit_filename(struct srcml_unit* unit, const char* src_filename)
   return SRCML_STATUS_OK;
 
 }
-int srcml_parse_unit_memory  (struct srcml_archive* archive, char* src_buffer, size_t buffer_size) { return 0; }
-int srcml_parse_unit_FILE    (struct srcml_archive* archive, FILE* src_file) { return 0; }
-int srcml_parse_unit_fd      (struct srcml_archive* archive, int src_fd) { return 0; }
+int srcml_parse_unit_memory  (struct srcml_unit* unit, char* src_buffer, size_t buffer_size) { 
+
+  int lang = srcml_check_language(unit->language);
+
+  xmlBuffer * output_buffer = xmlBufferCreate();
+  unit->translator->setInputString(src_buffer, (int)buffer_size);
+
+  unit->translator->translate_separate(0, unit->directory, unit->filename, unit->version, lang, output_buffer);
+
+  int length = strlen((const char *)output_buffer->content);
+  while(length > 0 && output_buffer->content[length - 1] == '\n') 
+    --length;
+  unit->unit = (const char *)strndup((const char *)output_buffer->content, length);
+  xmlBufferFree(output_buffer);
+
+  return SRCML_STATUS_OK;
+
+}
+
+int srcml_parse_unit_FILE    (struct srcml_unit* unit, FILE* src_file) { return 0; }
+int srcml_parse_unit_fd      (struct srcml_unit* unit, int src_fd) { return 0; }
 
 int srcml_write_unit(struct srcml_archive* archive, const struct srcml_unit* unit) {
 
