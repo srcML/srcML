@@ -252,18 +252,85 @@ int srcml_register_namespace(const char* prefix, const char* ns) {
 
 }
 
-const char* srcml_get_encoding ();
-const char* srcml_get_language ();
-const char* srcml_get_filename ();
-const char* srcml_get_directory();
-const char* srcml_get_version  ();
-int         srcml_get_options  ();
-int         srcml_get_tabstop  ();
-int         srcml_get_namespace_size();
-const char* srcml_get_prefix(int pos);
-const char* srcml_get_prefix_uri(const char* namespace_uri);
-const char* srcml_get_namespace(int pos);
-const char* srcml_get_namespace_prefix(const char* prefix);
+const char* srcml_get_encoding () {
+
+  return srcml_archive_get_encoding(&global_archive);
+
+}
+
+const char* srcml_get_language () {
+
+  return srcml_archive_get_language(&global_archive);
+
+}
+
+const char* srcml_get_filename () {
+
+  return srcml_archive_get_filename(&global_archive);
+
+}
+
+const char* srcml_get_directory() {
+
+  return srcml_archive_get_directory(&global_archive);
+
+}
+
+const char* srcml_get_version  () {
+
+  return srcml_archive_get_version(&global_archive);
+
+}
+
+int         srcml_get_options  () {
+
+  return srcml_archive_get_options(&global_archive);
+
+}
+
+int         srcml_get_tabstop  () {
+
+  return srcml_archive_get_tabstop(&global_archive);
+
+}
+
+int         srcml_get_namespace_size() {
+
+  return global_archive.namespaces.size();
+
+}
+
+const char* srcml_get_prefix(int pos) {
+
+  return global_archive.prefixes.at(pos).c_str();
+
+}
+
+const char* srcml_get_prefix_uri(const char* namespace_uri) {
+
+  for(int i = 0; i < global_archive.prefixes.size(); ++i)
+    if(global_archive.namespaces.at(i) == namespace_uri)
+      return global_archive.prefixes.at(i).c_str();
+
+  return 0;
+}
+
+const char* srcml_get_namespace(int pos) {
+
+
+  return global_archive.namespaces.at(pos).c_str();
+
+}
+
+const char* srcml_get_namespace_prefix(const char* prefix) {
+
+  for(int i = 0; i < global_archive.namespaces.size(); ++i)
+    if(global_archive.prefixes.at(i) == prefix)
+      return global_archive.namespaces.at(i).c_str();
+
+  return 0;
+
+}
 
 
 /* source-code language is supported */
@@ -878,43 +945,43 @@ int srcml_free_unit(srcml_unit* unit) {
 
 }
 
-const char* srcml_get_encoding (const srcml_archive* archive) {
+const char* srcml_archive_get_encoding (const srcml_archive* archive) {
 
   return archive->encoding->c_str();
 
 }
 
-const char* srcml_get_language (const srcml_archive* archive) {
+const char* srcml_archive_get_language (const srcml_archive* archive) {
 
   return archive->language->c_str();
 
 }
 
-const char* srcml_get_filename (const srcml_archive* archive) {
+const char* srcml_archive_get_filename (const srcml_archive* archive) {
 
   return archive->filename->c_str();
 
 }
 
-const char* srcml_get_directory(const srcml_archive* archive) {
+const char* srcml_archive_get_directory(const srcml_archive* archive) {
 
   return archive->directory->c_str();
 
 }
 
-const char* srcml_get_version  (const srcml_archive* archive) {
+const char* srcml_archive_get_version  (const srcml_archive* archive) {
 
   return archive->version->c_str();
 
 }
 
-int         srcml_get_options  (const srcml_archive* archive) {
+int         srcml_archive_get_options  (const srcml_archive* archive) {
 
   return  archive->options;
 
 }
 
-int         srcml_get_tabstop  (const srcml_archive* archive) {
+int         srcml_archive_get_tabstop  (const srcml_archive* archive) {
 
   return archive->tabstop;
 
