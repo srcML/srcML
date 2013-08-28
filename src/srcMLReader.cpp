@@ -2,13 +2,16 @@
 
 #include <libxml/xmlwriter.h>
 
-void outputNode(const xmlNode& node, xmlTextWriterPtr writer);
+#include <vector>
+
+void output_node(const xmlNode & node, xmlTextWriterPtr writer);
 
 srcMLReader::srcMLReader(const char * filename)
   : read_root(false){
 
   reader = xmlNewTextReaderFilename(filename);
-
+  xmlTextReaderRead(reader);
+  node = xmlTextReaderCurrentNode(reader);
 }
 
 srcMLReader::~srcMLReader() {
@@ -24,37 +27,64 @@ std::string * srcMLReader::read() {
   xmlTextWriterPtr writer = xmlNewTextWriterMemory(buffer, 0);
   //xmlTextWriterStartDocument(writer, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
   bool read_unit_start = false;
-  while(xmlTextReaderRead(reader)) {
+
+  // forward to start unit
+  while(true) {
+    if(node && (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT && strcmp((const char *)node->name, "unit") == 0)
+      break;
+    node = xmlTextReaderCurrentNode(reader);
+    node->extra = xmlTextReaderIsEmptyElement(reader);
+  }
+
+  std::vector<xmlNodePtr> save_nodes;
+
+  while(true) {
+
+    if(read_root)
+      output_node(*node, writer);
+    else
+      save_nodes.push_back(node);
+
+    if(strcmp((const char *)node->name, "unit") == 0) {
+
+      if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
+
+        if(read_unit_start)
+          read_root = true;
+
+        read_unit_start = true;
+      }
+
+      if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT)
+        break;
+
+
+    } else if(save_nodes(xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
+
+    }
+
+    xmlFreeNode(node);
+    node = 0;
 
     node = xmlTextReaderCurrentNode(reader);
     node->extra = xmlTextReaderIsEmptyElement(reader);
 
-    if(strcmp((const char *)xmlTextReaderLocalName(reader), "unit") == 0) {
-
-      if(xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT) {
-
-        if(read_unit_start) {
-
-        }
-
-        read_unit_start = true;
-
-      }
-
-      if(xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT)
-        break;
-
-    }
-
-    xmlTextWriterEndDocument(writer);
-    xmlFreeTextWriter(writer);
-
   }
+
+  xmlFreeNode(node);
+  node = 0;
+
+  xmlTextWriterEndDocument(writer);
+  xmlFreeTextWriter(writer);
+
+  std::string * unit = new std::string((const char *)buffer->content);
+  xmlBufferFree(buffer);
+  return unit;
 
 }
 
 // output current XML node in reader
-void outputNode(const xmlNode& node, xmlTextWriterPtr writer) {
+void output_node(const xmlNode & node, xmlTextWriterPtr writer) {
 
   bool isemptyelement = false;
 
