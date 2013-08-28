@@ -20,7 +20,7 @@ class srcMLReader {
 public:
 
   srcMLReader(const char * filename);
-  srcMLReader(std::string * buffer);
+  srcMLReader(const char * buffer, int size);
   srcMLReader(FILE * file);
   srcMLReader(int fd);
   srcMLReader(xmlParserInputBufferPtr input);

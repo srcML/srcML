@@ -27,10 +27,10 @@ srcMLReader::srcMLReader(const char * filename)
   node = getNode(reader);
 }
 
-srcMLReader::srcMLReader(std::string * buffer)
+srcMLReader::srcMLReader(const char * buffer, int size)
   : is_archive(false), done(false), input(0) {
 
-  reader = xmlReaderForMemory(buffer->c_str(), buffer->size(), 0, 0, XML_PARSE_HUGE);
+  reader = xmlReaderForMemory(buffer, size, 0, 0, XML_PARSE_HUGE);
   xmlTextReaderRead(reader);
   node = getNode(reader);
 }

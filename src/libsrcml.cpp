@@ -736,15 +736,39 @@ int srcml_write_open_fd      (srcml_archive* archive, int srcml_fd) {
 int srcml_read_open_filename(srcml_archive* archive, const char* srcml_filename) { 
 
 
+  archive->type = SRCML_ARCHIVE_READ;
   archive->reader = new srcMLReader(srcml_filename);
 
-  return 0;
+  return SRCML_STATUS_OK;
 
 }
 
-int srcml_read_open_memory  (srcml_archive* archive, const char* buffer, size_t buffer_size) { return 0; }
-int srcml_read_open_FILE    (srcml_archive* archive, FILE* srcml_file) { return 0; }
-int srcml_read_open_fd      (srcml_archive* archive, int srcml_fd) { return 0; }
+int srcml_read_open_memory  (srcml_archive* archive, const char* buffer, size_t buffer_size) { 
+
+  archive->type = SRCML_ARCHIVE_READ;
+  archive->reader = new srcMLReader(buffer, buffer_size);
+
+  return SRCML_STATUS_OK;
+
+}
+
+int srcml_read_open_FILE    (srcml_archive* archive, FILE* srcml_file) { 
+
+  archive->type = SRCML_ARCHIVE_READ;
+  archive->reader = new srcMLReader(srcml_file);
+
+  return SRCML_STATUS_OK;
+
+ }
+
+int srcml_read_open_fd      (srcml_archive* archive, int srcml_fd) { 
+
+  archive->type = SRCML_ARCHIVE_READ;
+  archive->reader = new srcMLReader(srcml_fd);
+
+  return SRCML_STATUS_OK;
+
+}
 
 /* setup options for srcml unit */
 int srcml_unit_set_language (srcml_unit* unit, const char* language) {
