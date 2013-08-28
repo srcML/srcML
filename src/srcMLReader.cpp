@@ -116,7 +116,7 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
 
 }
 
-int srcMLReader::read(xmlWriterPtr writer) {
+int srcMLReader::read(xmlTextWriterPtr writer) {
 
   if(done) return 0;
 
