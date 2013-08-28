@@ -27,6 +27,33 @@ srcMLReader::srcMLReader(const char * filename)
   node = getNode(reader);
 }
 
+srcMLReader::srcMLReader(std::string * buffer)
+  : is_archive(false), done(false) {
+
+  reader = xmlReaderForMemory(buffer->c_str(), buffer->size(), 0, 0, XML_PARSE_HUGE);
+  xmlTextReaderRead(reader);
+  node = getNode(reader);
+}
+
+srcMLReader::srcMLReader(FILE * file)
+  : is_archive(false), done(false) {
+
+  //reader = xmlReaderForFile(file, 0, 0, XML_PARSE_HUGE);
+  xmlTextReaderRead(reader);
+  node = getNode(reader);
+}
+
+srcMLReader::srcMLReader(int fd)
+  : is_archive(false), done(false) {
+
+  reader = xmlReaderForFd(fd, 0, 0, XML_PARSE_HUGE);
+  xmlTextReaderRead(reader);
+  node = getNode(reader);
+}
+
+// srcMLReader(FILE * file);
+//srcMLReader(int fd);
+
 srcMLReader::~srcMLReader() {
 
   xmlFreeTextReader(reader);
