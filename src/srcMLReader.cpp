@@ -67,7 +67,7 @@ void srcMLReader::readUnitAttributes(std::string ** language, std::string ** fil
     if(node && (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT && strcmp((const char *)node->name, "unit") == 0)
       break;
 
-    if(xmlTextReaderRead(reader) != 1) done = true, return;
+    if(xmlTextReaderRead(reader) != 1) {done = true; return; }
     freeNode(node);
     node = getNode(reader);
   }
@@ -108,7 +108,7 @@ void srcMLReader::readUnitAttributes(std::string ** language, std::string ** fil
 
 
     freeNode(node);
-    if(xmlTextReaderRead(reader) != 1) done = true, return;
+    if(xmlTextReaderRead(reader) != 1) {done = true; return; }
     node = getNode(reader);
 
   }
@@ -141,7 +141,7 @@ std::string * srcMLReader::read() {
       if(node && (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT && strcmp((const char *)node->name, "unit") == 0)
         break;
 
-      if(xmlTextReaderRead(reader) != 1) done = true, return 0;
+      if(xmlTextReaderRead(reader) != 1) {done = true; return 0; }
       freeNode(node);
       node = getNode(reader);
     }
@@ -194,7 +194,7 @@ std::string * srcMLReader::read() {
     }
 
     freeNode(node);
-    if(xmlTextReaderRead(reader) != 1) done = true, return 0;
+    if(xmlTextReaderRead(reader) != 1) {done = true; return 0; }
     node = getNode(reader);
 
   }
