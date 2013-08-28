@@ -22,18 +22,31 @@ std::string * srcMLReader::read() {
   
   xmlBufferPtr buffer = xmlBufferCreate();
   xmlTextWriterPtr writer = xmlNewTextWriterMemory(buffer, 0);
+  //xmlTextWriterStartDocument(writer, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
 
   while(xmlTextReaderRead(reader)) {
 
-    //    if();
+    outputXML(reader, writer);
 
+    if(strcmp((const char *)xmlTextReaderLocalName(reader), "unit") == 0) {
+
+      if(xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT)
+        ;
+
+      if(xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT)
+        break;
+
+    }
+
+    xmlTextWriterEndDocument(writer);
+    xmlFreeTextWriter(writer);
 
   }
 
 }
 
 // output current XML node in reader
-void outputXML(xmlTextReaderPtr reader, xmlTextWriterPtr writer, const char* name) {
+void outputXML(xmlTextReaderPtr reader, xmlTextWriterPtr writer) {
 
   bool isemptyelement = false;
 
@@ -44,7 +57,7 @@ void outputXML(xmlTextReaderPtr reader, xmlTextWriterPtr writer, const char* nam
     isemptyelement = xmlTextReaderIsEmptyElement(reader) > 0;
 
     // start the element
-    xmlTextWriterStartElement(writer, BAD_CAST name);
+    xmlTextWriterStartElement(writer, xmlTextReaderLocalName(reader));
 
     // copy all the attributes
     while (xmlTextReaderMoveToNextAttribute(reader)) {
