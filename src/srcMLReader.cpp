@@ -22,7 +22,7 @@ void freeNode(xmlNodePtr node) {
 }
 
 srcMLReader::srcMLReader(const char * filename)
-  : read_root(false), done(false) {
+  : is_archive(false), done(false) {
 
   reader = xmlNewTextReaderFilename(filename);
   xmlTextReaderRead(reader);
@@ -108,6 +108,11 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
     node = getNode(reader);
 
   }
+
+  readUnitAttributesInternal(language, filename, directory, version);
+  freeNode(node);
+  if(xmlTextReaderRead(reader) != 1) { done = true; return 0; }
+  node = getNode(reader);
 
   return 1;
 
