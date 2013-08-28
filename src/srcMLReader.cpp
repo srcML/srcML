@@ -1,7 +1,7 @@
 #include "srcMLReader.hpp"
 
 void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer);
-void output_node_source(const xmlNode & node, xmlTextWriterPtr writer);
+void output_node_source(const xmlNode & node, xmlOutputBufferPtr output_buffer);
 
 xmlNodePtr getNode(xmlTextReaderPtr reader) {
 
@@ -125,17 +125,17 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
 
 }
 
-int srcMLReader::read(xmlTextWriterPtr writer) {
+int srcMLReader::read(xmlOutputBufferPtr output_buffer) {
 
   if(done) return 0;
 
-  //xmlTextWriterStartDocument(writer, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
+  //xmlTextWriterStartDocument(output_buffer, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
   bool read_unit_start = false;
 
   if(!save_nodes.empty()) {
 
     for(int i = 0; i < save_nodes.size(); ++i)
-      output_node_source(*save_nodes.at(i), writer);
+      output_node_source(*save_nodes.at(i), output_buffer);
 
     for(int i = 0; i < save_nodes.size(); ++i)
       freeNode(save_nodes.at(i));
@@ -158,7 +158,7 @@ int srcMLReader::read(xmlTextWriterPtr writer) {
 
   while(true) {
 
-    if(is_archive) output_node_source(*node, writer);
+    if(is_archive) output_node_source(*node, output_buffer);
     else save_nodes.push_back(node);
 
     if(strcmp((const char *)node->name, "unit") == 0) {
@@ -171,7 +171,7 @@ int srcMLReader::read(xmlTextWriterPtr writer) {
           for(int i = 0; i < save_nodes.size() - 1; ++i)
             freeNode(save_nodes.at(i));
           save_nodes.clear();
-          output_node_source(*node, writer);
+          output_node_source(*node, output_buffer);
 
         }
 
@@ -190,7 +190,7 @@ int srcMLReader::read(xmlTextWriterPtr writer) {
       is_archive = true;
 
       for(int i = 0; i < save_nodes.size(); ++i)
-        output_node_source(*save_nodes.at(i), writer);
+        output_node_source(*save_nodes.at(i), output_buffer);
 
       for(int i = 0; i < save_nodes.size() - 1; ++i)
         freeNode(save_nodes.at(i));
@@ -208,7 +208,7 @@ int srcMLReader::read(xmlTextWriterPtr writer) {
   if(is_archive) freeNode(node);
   node = 0;
 
-  xmlTextWriterEndDocument(writer);
+  //xmlTextWriterEndDocument(writer);
   return 1;
 
 }
@@ -218,14 +218,13 @@ std::string * srcMLReader::read() {
   if(done) return 0;
 
   xmlBufferPtr buffer = xmlBufferCreate();
-  xmlTextWriterPtr writer = xmlNewTextWriterMemory(buffer, 0);
-  int status = read(writer);
-
-  xmlFreeTextWriter(writer);
+  xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler("UTF-8"));
+  int status = read(output_buffer);
 
   if(!status) return 0;
 
   std::string * unit = new std::string((const char *)buffer->content);
+  xmlOutputBufferClose(output_buffer);
   xmlBufferFree(buffer);
   return unit;
 
@@ -303,7 +302,7 @@ void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer) {
 
 
 // output current XML node in reader
-void output_node_source(const xmlNode & node, xmlTextWriterPtr writer) {
+void output_node_source(const xmlNode & node, xmlOutputBufferPtr output_buffer) {
 
   bool isemptyelement = false;
   switch (node.type) {
@@ -314,14 +313,15 @@ void output_node_source(const xmlNode & node, xmlTextWriterPtr writer) {
     // output the UTF-8 buffer escaping the characters.  Note that the output encoding
     // is handled by libxml
     for (unsigned char* p = (unsigned char*) node.content; *p != 0; ++p) {
+
       if (*p == '&')
-        xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&amp;", 5);
+        xmlOutputBufferWrite(output_buffer, 5, "&amp;");
       else if (*p == '<')
-        xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&lt;", 4);
+        xmlOutputBufferWrite(output_buffer, 4, "&lt;");
       else if (*p == '>')
-        xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&gt;", 4);
+        xmlOutputBufferWrite(output_buffer, 4, "&gt;");
       else
-        xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) p, 1);
+        xmlOutputBufferWrite(output_buffer, 1, (const char *)p);
     }
     break;
 

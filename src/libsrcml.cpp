@@ -886,9 +886,10 @@ int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
   unit->archive->reader->read(writer);
   xmlFreeTextWriter(writer);
 
-  return 0;
+  return SRCML_STATUS_OK;
 
- }
+}
+
 int srcml_unparse_unit_memory  (srcml_unit* unit, const char* src_buffer, size_t buffer_size) { return 0; }
 int srcml_unparse_unit_FILE    (srcml_unit* unit, FILE* srcml_file) { return 0; }
 int srcml_unparse_unit_fd      (srcml_unit* unit, int srcml_fd) { return 0; }

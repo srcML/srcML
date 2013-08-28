@@ -25,9 +25,8 @@ public:
                                   std::string ** directory, std::string ** version);
   int readUnitAttributes(std::string ** language, std::string ** filename,
                           std::string ** directory, std::string ** version);
-  int read(xmlTextWriterPtr writer);
+  int read(xmlOutputBufferPtr output_buffer);
   std::string * read();
-
 
 };
 
