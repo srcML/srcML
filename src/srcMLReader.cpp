@@ -2,8 +2,6 @@
 
 #include <libxml/xmlwriter.h>
 
-#include <vector>
-
 void output_node(const xmlNode & node, xmlTextWriterPtr writer);
 
 xmlNodePtr getNode(xmlTextReaderPtr reader) {
@@ -37,8 +35,8 @@ srcMLReader::~srcMLReader() {
 
 }
 
-void srcMLReader::readUnitHeader(std::string ** language, std::string ** filename,
-                                 std::string ** directory, std::string ** version) {
+void srcMLReader::readUnitAttributesInternal(std::string ** language, std::string ** filename,
+                                             std::string ** directory, std::string ** version) {
 
   xmlAttrPtr attribute = node->properties;
   while (attribute) {
@@ -57,8 +55,65 @@ void srcMLReader::readUnitHeader(std::string ** language, std::string ** filenam
 
 }
 
-std::string * srcMLReader::read(std::string ** language, std::string ** filename,
-                                 std::string ** directory, std::string ** version) {
+void srcMLReader::readUnitAttributes(std::string ** language, std::string ** filename,
+                                     std::string ** directory, std::string ** version) {
+
+  bool read_unit_start = false;
+
+  // forward to start unit
+  while(true) {
+    if(node && (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT && strcmp((const char *)node->name, "unit") == 0)
+      break;
+
+    if(xmlTextReaderRead(reader) != 1) return;
+    freeNode(node);
+    node = getNode(reader);
+  }
+
+  readUnitAttributesInternal(language, filename, directory, version);
+  if(read_root) return;
+
+  while(true) {
+
+    if(!read_root)
+      save_nodes.push_back(node);
+
+    if(strcmp((const char *)node->name, "unit") == 0) {
+
+      if(node->type == (xmlElementType)XML_READER_TYPE_ELEMENT) {
+
+        if(read_unit_start) {
+
+          read_root = true;
+          for(int i = 0; i < save_nodes.size() - 1; ++i)
+            freeNode(save_nodes.at(i));
+          save_nodes.clear();
+          if(*language) delete *language, (*language) = 0;
+          if(*filename) delete *filename, (*filename) = 0;
+          if(*directory) delete *directory, (*directory) = 0;
+          if(*version) delete *version, (*version) = 0;
+          readUnitAttributesInternal(language, filename, directory, version);
+          break;
+        }
+
+        read_unit_start = true;
+      }
+    }
+
+    if(!save_nodes.empty() && node->type == (xmlElementType)XML_READER_TYPE_ELEMENT
+       && strcmp((const char *)node->name, "unit") != 0)
+      break;
+
+
+    freeNode(node);
+    if(xmlTextReaderRead(reader) != 1) return;
+    node = getNode(reader);
+
+  }
+
+}
+
+std::string * srcMLReader::read() {
 
   xmlBufferPtr buffer = xmlBufferCreate();
   xmlTextWriterPtr writer = xmlNewTextWriterMemory(buffer, 0);
@@ -74,8 +129,6 @@ std::string * srcMLReader::read(std::string ** language, std::string ** filename
     freeNode(node);
     node = getNode(reader);
   }
-
-  readUnitHeader(language, filename, directory, version);
 
   std::vector<xmlNodePtr> save_nodes;
   while(true) {
@@ -96,11 +149,7 @@ std::string * srcMLReader::read(std::string ** language, std::string ** filename
             freeNode(save_nodes.at(i));
           save_nodes.clear();
           output_node(*node, writer);
-          if(*language) delete *language, (*language) = 0;
-          if(*filename) delete *filename, (*filename) = 0;
-          if(*directory) delete *directory, (*directory) = 0;
-          if(*version) delete *version, (*version) = 0; 
-          readUnitHeader(language, filename, directory, version);
+
         }
 
         read_unit_start = true;
