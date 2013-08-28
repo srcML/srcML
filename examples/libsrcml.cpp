@@ -1012,31 +1012,31 @@ int srcml_free_unit(srcml_unit* unit) {
 
 const char* srcml_archive_get_encoding (const srcml_archive* archive) {
 
-  return archive->encoding->c_str();
+  return archive->encoding ? archive->encoding->c_str() : 0;
 
 }
 
 const char* srcml_archive_get_language (const srcml_archive* archive) {
 
-  return archive->language->c_str();
+  return archive->language ? archive->language->c_str() : 0;
 
 }
 
 const char* srcml_archive_get_filename (const srcml_archive* archive) {
 
-  return archive->filename->c_str();
+  return archive->filename ? archive->filename->c_str() : 0;
 
 }
 
 const char* srcml_archive_get_directory(const srcml_archive* archive) {
 
-  return archive->directory->c_str();
+  return archive->directory ? archive->directory->c_str() : 0;
 
 }
 
 const char* srcml_archive_get_version  (const srcml_archive* archive) {
 
-  return archive->version->c_str();
+  return archive->version ? archive->version->c_str() : 0;
 
 }
 

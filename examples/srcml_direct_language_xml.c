@@ -35,7 +35,8 @@
 int main(int argc, char* argv[]) {
 
     /* Translate from a source-code file to a srcML file */
-    srcml("a.cpp.xml", "a.cpp", SRCML_LANGUAGE_XML);
+    srcml_set_language(SRCML_LANGUAGE_XML);
+    srcml("a.cpp.xml", "a.cpp");
 
     return 0;
 }
