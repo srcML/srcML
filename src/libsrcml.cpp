@@ -121,7 +121,8 @@ int srcml(const char* input_filename, const char* output_filename, const char* l
 
   }
 
-  Language::register_standard_file_extensions(global_archive.registered_languages);
+  if(global_archive.registered_languages.size() == 0)
+    Language::register_standard_file_extensions(global_archive.registered_languages);
   int lang = language ? srcml_check_language(language) : Language::getLanguageFromFilename(input_filename, global_archive.registered_languages);
 
   if(lang) {
