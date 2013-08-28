@@ -69,6 +69,7 @@ struct srcml_archive {
   // srcML archive attributes
   std::string * filename;
   std::string * encoding;
+  std::string * xml_encoding;
   std::string * language;
   std::string * directory;
   std::string * version;
@@ -108,6 +109,8 @@ struct srcml_unit {
   std::string * unit;
 };
 
+srcml_archive global_archive;
+
 /* translates to/from srcML */
 int srcml(const char* input_filename, const char* output_filename, const char* language) {
 
@@ -118,12 +121,12 @@ int srcml(const char* input_filename, const char* output_filename, const char* l
 
   }
 
-  Language::register_standard_file_extensions();
-  int lang = language ? srcml_check_language(language) : Language::getLanguageFromFilename(input_filename);
+  Language::register_standard_file_extensions(global_archive.registered_languages);
+  int lang = language ? srcml_check_language(language) : Language::getLanguageFromFilename(input_filename, global_archive.registered_languages);
 
   if(lang) {
 
-    OPTION_TYPE options = OPTION_LITERAL | OPTION_OPERATOR | OPTION_MODIFIER;
+    OPTION_TYPE & options = global_archive.options;
     options |= lang == Language::LANGUAGE_JAVA ? 0 : OPTION_CPP;
 
     srcMLTranslator translator(lang, output_filename, options);
@@ -132,7 +135,12 @@ int srcml(const char* input_filename, const char* output_filename, const char* l
     try {
 
       translator.setInput(input_filename);
-      translator.translate(input_filename, 0, input_filename, 0, lang);
+      translator.translate(0, 
+                           global_archive.directory ? global_archive.directory->c_str() : 0,
+                           global_archive.filename ? global_archive.filename->c_str() : output_filename,
+                           global_archive.version ? global_archive.version->c_str() : 0,
+                           lang);
+      options &= ~OPTION_CPP;
 
     } catch (FileError) {
 
@@ -172,8 +180,8 @@ int srcml(const char* input_filename, const char* output_filename, const char* l
 
     }
 
-    OPTION_TYPE options = 0;
-    srcMLUtility utility(input_filename, "UTF-8", options, "");
+    OPTION_TYPE & options = global_archive.options;
+    srcMLUtility utility(input_filename, global_archive.encoding ? global_archive.encoding->c_str() : "UTF-8", options, "");
     utility.extract_text(0, output_filename, 1);
 
   }
@@ -182,6 +190,153 @@ int srcml(const char* input_filename, const char* output_filename, const char* l
 
   return SRCML_STATUS_OK;
 }
+
+int srcml_set_encoding(const char* encoding) {
+
+  return srcml_archive_set_encoding(&global_archive, encoding);
+
+}
+
+int srcml_set_language  (const char* language) {
+
+  return srcml_archive_set_language(&global_archive, language);
+
+}
+
+int srcml_set_filename  (const char* filename) {
+
+  return srcml_archive_set_filename(&global_archive, filename);
+
+}
+
+int srcml_set_directory (const char* directory) {
+
+  return srcml_archive_set_directory(&global_archive, directory);
+
+}
+
+int srcml_set_version   (const char* version) {
+
+  return srcml_archive_set_version(&global_archive, version);
+
+}
+
+int srcml_set_options   (int option) {
+
+  return srcml_archive_set_options(&global_archive, option);
+
+}
+
+int srcml_set_option    (int option) {
+
+  return srcml_archive_set_option(&global_archive, option);
+
+}
+
+int srcml_clear_option  (int option) {
+
+  return srcml_archive_set_option(&global_archive, option);
+
+}
+
+int srcml_set_tabstop   (int tabstop) {
+
+  return srcml_archive_set_tabstop(&global_archive, tabstop);
+
+}
+
+int srcml_register_file_extension(const char* extension, const char* language) {
+  
+  return srcml_archive_register_file_extension(&global_archive, extension, language);
+
+}
+
+int srcml_register_namespace(const char* prefix, const char* ns) {
+
+  return srcml_archive_register_namespace(&global_archive, prefix, ns);
+
+}
+
+const char* srcml_get_encoding () {
+
+  return srcml_archive_get_encoding(&global_archive);
+
+}
+
+const char* srcml_get_language () {
+
+  return srcml_archive_get_language(&global_archive);
+
+}
+
+const char* srcml_get_filename () {
+
+  return srcml_archive_get_filename(&global_archive);
+
+}
+
+const char* srcml_get_directory() {
+
+  return srcml_archive_get_directory(&global_archive);
+
+}
+
+const char* srcml_get_version  () {
+
+  return srcml_archive_get_version(&global_archive);
+
+}
+
+int         srcml_get_options  () {
+
+  return srcml_archive_get_options(&global_archive);
+
+}
+
+int         srcml_get_tabstop  () {
+
+  return srcml_archive_get_tabstop(&global_archive);
+
+}
+
+int         srcml_get_namespace_size() {
+
+  return global_archive.namespaces.size();
+
+}
+
+const char* srcml_get_prefix(int pos) {
+
+  return global_archive.prefixes.at(pos).c_str();
+
+}
+
+const char* srcml_get_prefix_uri(const char* namespace_uri) {
+
+  for(int i = 0; i < global_archive.prefixes.size(); ++i)
+    if(global_archive.namespaces.at(i) == namespace_uri)
+      return global_archive.prefixes.at(i).c_str();
+
+  return 0;
+}
+
+const char* srcml_get_namespace(int pos) {
+
+
+  return global_archive.namespaces.at(pos).c_str();
+
+}
+
+const char* srcml_get_namespace_prefix(const char* prefix) {
+
+  for(int i = 0; i < global_archive.namespaces.size(); ++i)
+    if(global_archive.prefixes.at(i) == prefix)
+      return global_archive.namespaces.at(i).c_str();
+
+  return 0;
+
+}
+
 
 /* source-code language is supported */
 int srcml_check_language(const char* language) { return language == 0 ? 0 : Language::getLanguage(language); }
@@ -795,43 +950,43 @@ int srcml_free_unit(srcml_unit* unit) {
 
 }
 
-const char* srcml_get_encoding (const srcml_archive* archive) {
+const char* srcml_archive_get_encoding (const srcml_archive* archive) {
 
   return archive->encoding->c_str();
 
 }
 
-const char* srcml_get_language (const srcml_archive* archive) {
+const char* srcml_archive_get_language (const srcml_archive* archive) {
 
   return archive->language->c_str();
 
 }
 
-const char* srcml_get_filename (const srcml_archive* archive) {
+const char* srcml_archive_get_filename (const srcml_archive* archive) {
 
   return archive->filename->c_str();
 
 }
 
-const char* srcml_get_directory(const srcml_archive* archive) {
+const char* srcml_archive_get_directory(const srcml_archive* archive) {
 
   return archive->directory->c_str();
 
 }
 
-const char* srcml_get_version  (const srcml_archive* archive) {
+const char* srcml_archive_get_version  (const srcml_archive* archive) {
 
   return archive->version->c_str();
 
 }
 
-int         srcml_get_options  (const srcml_archive* archive) {
+int         srcml_archive_get_options  (const srcml_archive* archive) {
 
   return  archive->options;
 
 }
 
-int         srcml_get_tabstop  (const srcml_archive* archive) {
+int         srcml_archive_get_tabstop  (const srcml_archive* archive) {
 
   return archive->tabstop;
 

@@ -47,7 +47,6 @@ int srcml_version_number(void);
 const char* srcml_version_string(void);
 
 /* Core language set */
-#define SRCML_LANGUAGE_NULL   0
 #define SRCML_LANGUAGE_NONE   0
 #define SRCML_LANGUAGE_C      "C"
 #define SRCML_LANGUAGE_CXX    "C++"
@@ -104,8 +103,7 @@ int srcml(const char* input_filename, const char* output_filename, const char* l
 /*
   Global settings.  Can be used with convenience function srcml()
 */
-int srcml_set_src_encoding(const char* encoding);
-int srcml_set_xml_encoding(const char* encoding);
+int srcml_set_encoding(const char* encoding);
 int srcml_set_language  (const char* language);
 int srcml_set_filename  (const char* filename);
 int srcml_set_directory (const char* directory);
