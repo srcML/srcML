@@ -89,6 +89,9 @@ struct srcml_archive {
   // translator
   srcMLTranslator * translator;
 
+  // utility
+  srcMLUtility * utility;
+
   // TODO  Used for memory function.  May want to try and remove in future
   xmlBuffer * buffer;
 };
@@ -570,7 +573,15 @@ int srcml_write_open_fd      (srcml_archive* archive, int srcml_fd) {
 }
 
 /* open a srcML archive for reading */
-int srcml_read_open_filename(srcml_archive* archive, const char* srcml_filename) { return 0; }
+int srcml_read_open_filename(srcml_archive* archive, const char* srcml_filename) { 
+
+  archive->type = SRCML_ARCHIVE_READ;
+  archive->utility = new srcMLUtility(srcml_filename, archive->encoding->c_str(), archive->options);
+
+  return 0;
+
+}
+
 int srcml_read_open_memory  (srcml_archive* archive, const char* buffer, size_t buffer_size) { return 0; }
 int srcml_read_open_FILE    (srcml_archive* archive, FILE* srcml_file) { return 0; }
 int srcml_read_open_fd      (srcml_archive* archive, int srcml_fd) { return 0; }
@@ -711,10 +722,17 @@ int srcml_write_unit(srcml_archive* archive, const srcml_unit* unit) {
 /* Read the next unit from the archive */
 const srcml_unit* srcml_read_unit_archive (srcml_archive* archive) { return 0; }
 const srcml_unit* srcml_read_archive_current_unit(const srcml_archive* archive) { return 0; }
-int srcml_read_unit_filename(srcml_archive* archive, const char* src_filename) { return 0; }
-int srcml_read_unit_memory  (srcml_archive* archive, const char* src_buffer, size_t buffer_size) { return 0; }
-int srcml_read_unit_FILE    (srcml_archive* archive, FILE* srcml_file) { return 0; }
-int srcml_read_unit_fd      (srcml_archive* archive, int srcml_fd) { return 0; }
+int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) { return 0; }
+int srcml_unparse_unit_memory  (srcml_unit* unit, const char* src_buffer, size_t buffer_size) { return 0; }
+int srcml_unparse_unit_FILE    (srcml_unit* unit, FILE* srcml_file) { return 0; }
+int srcml_unparse_unit_fd      (srcml_unit* unit, int srcml_fd) { return 0; }
+
+/* Read the next unit from the archive */
+srcml_unit* srcml_read_unit(srcml_archive* archive) {
+
+  //
+
+}
 
 /* close the srcML archive */
 void srcml_write_close(srcml_archive* archive) {}
