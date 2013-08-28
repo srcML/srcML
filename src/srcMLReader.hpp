@@ -17,9 +17,9 @@ public:
   srcMLReader(const char * filename);
   ~srcMLReader();
 
-  int readUnitHeader(std::string ** language, std::string **filename,
+  void readUnitHeader(std::string ** language, std::string ** filename,
                                  std::string ** directory, std::string ** version);
-  std::string * read(std::string ** language, std::string **filename,
+  std::string * read(std::string ** language, std::string ** filename,
                                  std::string ** directory, std::string ** version);
   
 

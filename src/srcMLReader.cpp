@@ -37,18 +37,8 @@ srcMLReader::~srcMLReader() {
 
 }
 
-int srcMLReader::readUnitHeader(std::string ** language, std::string **filename,
+void srcMLReader::readUnitHeader(std::string ** language, std::string ** filename,
                                  std::string ** directory, std::string ** version) {
-
-  // forward to start unit
-  while(true) {
-    if(node && (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT && strcmp((const char *)node->name, "unit") == 0)
-      break;
-
-    if(xmlTextReaderRead(reader) != 1) return 1;
-    freeNode(node);
-    node = getNode(reader);
-  }
 
   xmlAttrPtr attribute = node->properties;
   while (attribute) {
@@ -65,19 +55,15 @@ int srcMLReader::readUnitHeader(std::string ** language, std::string **filename,
     attribute = attribute->next;
   }
 
-  return 0;
-
 }
 
-std::string * srcMLReader::read(std::string ** language, std::string **filename,
+std::string * srcMLReader::read(std::string ** language, std::string ** filename,
                                  std::string ** directory, std::string ** version) {
 
   xmlBufferPtr buffer = xmlBufferCreate();
   xmlTextWriterPtr writer = xmlNewTextWriterMemory(buffer, 0);
   //xmlTextWriterStartDocument(writer, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
   bool read_unit_start = false;
-
-  if(readUnitHeader(language, filename, directory, version)) return 0;
 
   // forward to start unit
   while(true) {
@@ -88,6 +74,8 @@ std::string * srcMLReader::read(std::string ** language, std::string **filename,
     freeNode(node);
     node = getNode(reader);
   }
+
+  readUnitHeader(language, filename, directory, version);
 
   std::vector<xmlNodePtr> save_nodes;
   while(true) {
@@ -108,7 +96,10 @@ std::string * srcMLReader::read(std::string ** language, std::string **filename,
             freeNode(save_nodes.at(i));
           save_nodes.clear();
           output_node(*node, writer);
-          delete *language, delete *filename, delete *directory, delete *version; 
+          if(*language) delete *language, (*language) = 0;
+          if(*filename) delete *filename, (*filename) = 0;
+          if(*directory) delete *directory, (*directory) = 0;
+          if(*version) delete *version, (*version) = 0; 
           readUnitHeader(language, filename, directory, version);
         }
 
