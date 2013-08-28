@@ -2,7 +2,7 @@
 
 #include <libxml/xmlwriter.h>
 
-void outputXML(xmlTextReaderPtr reader, xmlTextWriterPtr writer);
+void outputNode(const xmlNode& node, xmlTextWriterPtr writer);
 
 srcMLReader::srcMLReader(const char * filename)
   : read_root(false){
@@ -19,19 +19,27 @@ srcMLReader::~srcMLReader() {
 }
 
 std::string * srcMLReader::read() {
-  
+
   xmlBufferPtr buffer = xmlBufferCreate();
   xmlTextWriterPtr writer = xmlNewTextWriterMemory(buffer, 0);
   //xmlTextWriterStartDocument(writer, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
-
+  bool read_unit_start = false;
   while(xmlTextReaderRead(reader)) {
 
-    outputXML(reader, writer);
+    node = xmlTextReaderCurrentNode(reader);
+    node->extra = xmlTextReaderIsEmptyElement(reader);
 
     if(strcmp((const char *)xmlTextReaderLocalName(reader), "unit") == 0) {
 
-      if(xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT)
-        ;
+      if(xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT) {
+
+        if(read_unit_start) {
+
+        }
+
+        read_unit_start = true;
+
+      }
 
       if(xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT)
         break;
@@ -46,26 +54,40 @@ std::string * srcMLReader::read() {
 }
 
 // output current XML node in reader
-void outputXML(xmlTextReaderPtr reader, xmlTextWriterPtr writer) {
+void outputNode(const xmlNode& node, xmlTextWriterPtr writer) {
 
   bool isemptyelement = false;
 
-  switch (xmlTextReaderNodeType(reader)) {
+  switch (node.type) {
   case XML_READER_TYPE_ELEMENT:
 
     // record if this is an empty element since it will be erased by the attribute copying
-    isemptyelement = xmlTextReaderIsEmptyElement(reader) > 0;
+    isemptyelement = node.extra & 0x1;
 
     // start the element
-    xmlTextWriterStartElement(writer, xmlTextReaderLocalName(reader));
+    if (node.ns && node.ns->prefix) {
+      std::string s = ((char*) node.ns->prefix);
+      s += ":";
+      s += (char*) node.name;
+
+      xmlTextWriterStartElement(writer, BAD_CAST s.c_str());
+
+    } else
+      xmlTextWriterStartElement(writer, (xmlChar *)node.name);
 
     // copy all the attributes
-    while (xmlTextReaderMoveToNextAttribute(reader)) {
-      xmlTextWriterWriteAttribute(writer, xmlTextReaderConstName(reader), xmlTextReaderConstValue(reader));
+    {
+      xmlAttrPtr attribute = node.properties;
+      while (attribute) {
+
+        xmlTextWriterWriteAttribute(writer, (const xmlChar *)attribute->name, (const xmlChar *)attribute->children->content);
+        attribute = attribute->next;
+      }
     }
 
     // end now if this is an empty element
     if (isemptyelement) {
+
       xmlTextWriterEndElement(writer);
     }
 
@@ -76,7 +98,7 @@ void outputXML(xmlTextReaderPtr reader, xmlTextWriterPtr writer) {
     break;
 
   case XML_READER_TYPE_COMMENT:
-    xmlTextWriterWriteComment(writer, xmlTextReaderConstValue(reader));
+    xmlTextWriterWriteComment(writer, (const xmlChar *)node.content);
     break;
 
   case XML_READER_TYPE_TEXT:
@@ -84,7 +106,7 @@ void outputXML(xmlTextReaderPtr reader, xmlTextWriterPtr writer) {
 
     // output the UTF-8 buffer escaping the characters.  Note that the output encoding
     // is handled by libxml
-    for (unsigned char* p = (unsigned char*) xmlTextReaderConstValue(reader); *p != 0; ++p) {
+    for (unsigned char* p = (unsigned char*) node.content; *p != 0; ++p) {
       if (*p == '&')
         xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&amp;", 5);
       else if (*p == '<')
@@ -100,3 +122,4 @@ void outputXML(xmlTextReaderPtr reader, xmlTextWriterPtr writer) {
     break;
   }
 }
+
