@@ -59,6 +59,15 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
 
   bool read_unit_start = false;
 
+  if(!save_nodes.empty()) {
+
+  for(int i = 0; i < save_nodes.size() - 1; ++i)
+    freeNode(save_nodes.at(i));
+  save_nodes.clear();
+
+  }
+
+
   if(done) return 0;
 
   // forward to start unit
@@ -72,9 +81,11 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
   }
 
   readUnitAttributesInternal(language, filename, directory, version);
-  freeNode(node);
-  if(xmlTextReaderRead(reader) != 1) { done = true; return 0; }
+  if(xmlTextReaderRead(reader) != 1) { freeNode(node); done = true; return 0; }
+
+  save_nodes.push_back(node);
   node = getNode(reader);
+
   if(is_archive) return 1;
 
   while(true) {
