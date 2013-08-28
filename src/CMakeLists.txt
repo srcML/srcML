@@ -100,7 +100,7 @@ add_custom_command(OUTPUT srcMLParserTokenTypesMacro.hpp COMMAND ${GREP} '=' src
 
 if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.8.7)
 add_library(parser OBJECT srcMLParser.cpp KeywordLexer.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp CommentTextLexer.cpp srcMLParserTokenTypesMacro.hpp)
-add_library(srcmlutility OBJECT srcMLUtility.cpp SAX2ExtractUnitsSrc.cpp SAX2Utilities.cpp SAX2UnitDOM.cpp SAX2UnitDOMRelaxNG.cpp srcexfun.cpp)
+add_library(srcmlutility OBJECT srcMLUtility.cpp SAX2ExtractUnitsSrc.cpp SAX2Utilities.cpp SAX2UnitDOM.cpp SAX2UnitDOMRelaxNG.cpp srcexfun.cpp srcMLReader.cpp)
 add_library(translator OBJECT srcMLTranslator.cpp srcMLTranslatorCore.cpp UTF8CharBuffer.cpp Language.cpp URIStream.cpp libxml_archive_read.cpp libxml_archive_write.cpp)
 add_library(srcmlapps OBJECT srcmlapps.cpp srcml.c)
 
