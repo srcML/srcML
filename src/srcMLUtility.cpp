@@ -457,6 +457,41 @@ void srcMLUtility::extract_text(const char* to_dir, const char* ofilename, int u
 }
 
 // extract a given unit
+void srcMLUtility::extract_text(xmlOutputBufferPtr output_buffer, int unit) {
+
+  // setup parser
+  xmlParserCtxtPtr ctxt = 0;
+  if(infile)
+    ctxt = srcMLCreateURLParserCtxt(infile);
+  else
+    ctxt = srcMLCreateMemoryParserCtxt(buffer, size);
+
+  // setup sax handler
+  xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
+  ctxt->sax = &sax;
+
+  // setup process handling
+  ExtractUnitsSrc process(output_buffer);
+
+  // setup sax handling state
+  SAX2ExtractUnitsSrc state(&process, &options, unit, diff_version);
+  ctxt->_private = &state;
+
+  // process the document
+  srcMLParseDocument(ctxt, true);
+
+  // local variable, do not want xmlFreeParserCtxt to free
+  ctxt->sax = NULL;
+
+  // all done with parsing
+  xmlFreeParserCtxt(ctxt);
+
+  // make sure we did not end early
+  if (state.unit && state.count < state.unit)
+    throw OutOfRangeUnitError(state.count);
+}
+
+// extract a given unit
 const char * srcMLUtility::extract_text(int unit) {
 
   // setup parser

@@ -884,9 +884,9 @@ const srcml_unit* srcml_read_unit_archive (srcml_archive* archive) { return 0; }
 const srcml_unit* srcml_read_archive_current_unit(const srcml_archive* archive) { return 0; }
 int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) { 
 
-  //xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename(src_filename, xmlFindCharEncodingHandler(unit->archive->encoding ? unit->archive->encoding->c_str() : "UTF-8"), unit->archive->options & SRCML_OPTION_COMPRESS);
-  //unit->archive->reader->read(output_buffer);
-  //xmlOutputBufferClose(output_buffer);
+  xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename(src_filename, xmlFindCharEncodingHandler(unit->archive->encoding ? unit->archive->encoding->c_str() : "UTF-8"), unit->archive->options & SRCML_OPTION_COMPRESS);
+  xmlOutputBufferWrite(output_buffer, unit->unit->size(), unit->unit->c_str());
+  xmlOutputBufferClose(output_buffer);
 
   return SRCML_STATUS_OK;
 
