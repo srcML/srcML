@@ -932,7 +932,7 @@ srcml_unit* srcml_read_unit(srcml_archive* archive) {
 
   std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
   bool done = !archive->reader->readUnitAttributes(&language, &filename, &directory, &version); 
-  //std::string * read_unit = archive->reader->read(); 
+  std::string * read_unit = archive->reader->read(); 
 
   srcml_unit * unit = 0;
   if(!done) {

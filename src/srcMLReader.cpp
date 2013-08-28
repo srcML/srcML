@@ -125,6 +125,96 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
 
 }
 
+int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
+
+  if(done) return 0;
+
+  //xmlTextWriterStartDocument(writer, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
+  bool read_unit_start = false;
+
+  if(!save_nodes.empty()) {
+
+    for(int i = 0; i < save_nodes.size(); ++i)
+      output_node_srcml(*save_nodes.at(i), writer);
+
+    for(int i = 0; i < save_nodes.size(); ++i)
+      freeNode(save_nodes.at(i));
+
+    save_nodes.clear();
+
+  } else {
+
+    // forward to start unit
+    while(true) {
+      if(node && (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT && strcmp((const char *)node->name, "unit") == 0)
+        break;
+
+      if(xmlTextReaderRead(reader) != 1) {done = true; return 0; }
+      freeNode(node);
+      node = getNode(reader);
+    }
+
+  }
+
+  while(true) {
+
+    if(is_archive) output_node_srcml(*node, writer);
+    else save_nodes.push_back(node);
+
+    if(strcmp((const char *)node->name, "unit") == 0) {
+
+      if(node->type == (xmlElementType)XML_READER_TYPE_ELEMENT) {
+
+        if(read_unit_start) {
+
+          is_archive = true;
+          for(int i = 0; i < save_nodes.size() - 1; ++i)
+            freeNode(save_nodes.at(i));
+          save_nodes.clear();
+          output_node_srcml(*node, writer);
+
+        }
+
+        read_unit_start = true;
+      }
+
+      if(node->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT) {
+        break;
+      }
+
+    }
+
+    if(!save_nodes.empty() && node->type == (xmlElementType)XML_READER_TYPE_ELEMENT
+       && strcmp((const char *)node->name, "unit") != 0) {
+
+      is_archive = true;
+
+      for(int i = 0; i < save_nodes.size(); ++i)
+        output_node_srcml(*save_nodes.at(i), writer);
+
+      for(int i = 0; i < save_nodes.size() - 1; ++i)
+        freeNode(save_nodes.at(i));
+
+      save_nodes.clear();
+
+    }
+
+    if(is_archive) freeNode(node);
+    if(xmlTextReaderRead(reader) != 1) {done = true; return 0; }
+    node = getNode(reader);
+
+  }
+
+  if(is_archive) freeNode(node);
+  node = 0;
+
+  xmlTextWriterEndDocument(writer);
+
+  return 1;
+
+}
+
+
 int srcMLReader::read(xmlOutputBufferPtr output_buffer) {
 
   if(done) return 0;
@@ -208,8 +298,25 @@ int srcMLReader::read(xmlOutputBufferPtr output_buffer) {
   if(is_archive) freeNode(node);
   node = 0;
 
-  //xmlTextWriterEndDocument(writer);
   return 1;
+
+}
+
+std::string * srcMLReader::readsrcML() {
+
+  if(done) return 0;
+
+  xmlBufferPtr buffer = xmlBufferCreate();
+  xmlTextWriterPtr writer = xmlNewTextWriterMemory(buffer, 0);
+  int status = readsrcML(writer);
+
+  if(!status) return 0;
+
+  std::string * unit = new std::string((const char *)buffer->content);
+  xmlFreeTextWriter(writer);
+  xmlBufferFree(buffer);
+
+  return unit;
 
 }
 
