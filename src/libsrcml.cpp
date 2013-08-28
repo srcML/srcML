@@ -121,12 +121,12 @@ int srcml(const char* input_filename, const char* output_filename, const char* l
 
   }
 
-  Language::register_standard_file_extensions();
-  int lang = language ? srcml_check_language(language) : Language::getLanguageFromFilename(input_filename);
+  Language::register_standard_file_extensions(global_archive.registered_languages);
+  int lang = language ? srcml_check_language(language) : Language::getLanguageFromFilename(input_filename, global_archive.registered_languages);
 
   if(lang) {
 
-    OPTION_TYPE options = OPTION_LITERAL | OPTION_OPERATOR | OPTION_MODIFIER;
+    OPTION_TYPE & options = global_archive.options;
     options |= lang == Language::LANGUAGE_JAVA ? 0 : OPTION_CPP;
 
     srcMLTranslator translator(lang, output_filename, options);
@@ -135,7 +135,12 @@ int srcml(const char* input_filename, const char* output_filename, const char* l
     try {
 
       translator.setInput(input_filename);
-      translator.translate(input_filename, 0, input_filename, 0, lang);
+      translator.translate(0, 
+                           global_archive.directory ? global_archive.directory->c_str() : 0,
+                           global_archive.filename ? global_archive.filename->c_str() : output_filename,
+                           global_archive.version ? global_archive.version->c_str() : 0,
+                           lang);
+      options &= ~OPTION_CPP;
 
     } catch (FileError) {
 
@@ -175,8 +180,8 @@ int srcml(const char* input_filename, const char* output_filename, const char* l
 
     }
 
-    OPTION_TYPE options = 0;
-    srcMLUtility utility(input_filename, "UTF-8", options, "");
+    OPTION_TYPE & options = global_archive.options;
+    srcMLUtility utility(input_filename, global_archive.encoding ? global_archive.encoding->c_str() : "UTF-8", options, "");
     utility.extract_text(0, output_filename, 1);
 
   }
