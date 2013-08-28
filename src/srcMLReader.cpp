@@ -108,7 +108,7 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
   }
 
   readUnitAttributesInternal(language, filename, directory, version);
-  freeNode(node);
+  save_nodes.push_back(node);
   if(xmlTextReaderRead(reader) != 1) { done = true; return 0; }
   node = getNode(reader);
 
