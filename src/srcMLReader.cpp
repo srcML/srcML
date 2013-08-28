@@ -6,6 +6,15 @@
 
 void output_node(const xmlNode & node, xmlTextWriterPtr writer);
 
+xmlNode * getNode(xmlTextReaderPtr reader) {
+
+    xmlNodePtr node = xmlTextReaderCurrentNode(reader);
+    node->extra = xmlTextReaderIsEmptyElement(reader);
+    node->type = (xmlElementType)xmlTextReaderNodeType(reader);
+
+    return node;
+}
+
 srcMLReader::srcMLReader(const char * filename)
   : read_root(false){
 
@@ -32,14 +41,14 @@ std::string * srcMLReader::read() {
   while(true) {
     if(node && (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT && strcmp((const char *)node->name, "unit") == 0)
       break;
-    xmlFreeNode(node);
-    node = 0;
-    node = xmlTextReaderCurrentNode(reader);
-    node->extra = xmlTextReaderIsEmptyElement(reader);
+    //xmlFreeNode(node);
+    //node = 0;
+    if(xmlTextReaderRead(reader) != 1)
+      return 0;
+    node = getNode(reader);
   }
 
   std::vector<xmlNodePtr> save_nodes;
-
   while(true) {
 
     if(read_root)
@@ -49,47 +58,56 @@ std::string * srcMLReader::read() {
 
     if(strcmp((const char *)node->name, "unit") == 0) {
 
-      if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
+      if(node->type == (xmlElementType)XML_READER_TYPE_ELEMENT) {
 
-        if(read_unit_start)
+        if(read_unit_start) {
+
           read_root = true;
+          //for(int i = 0; i < save_nodes.size() - 1; ++i)
+          //xmlFreeNode(save_nodes.at(i));
+          save_nodes.clear();
+          output_node(*node, writer);
+        }
 
         read_unit_start = true;
       }
 
-      if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT)
+      if(node->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT) {
         break;
-
+      }
 
     } 
 
-    if(!save_nodes.empty() && (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT
+    if(!save_nodes.empty() && node->type == (xmlElementType)XML_READER_TYPE_ELEMENT
        && strcmp((const char *)node->name, "unit") != 0) {
 
       for(int i = 0; i < save_nodes.size(); ++i)
         output_node(*save_nodes.at(i), writer);
 
-      for(int i = 0; i < save_nodes.size() - 1; ++i)
-        xmlFreeNode(save_nodes.at(i));
+      //for(int i = 0; i < save_nodes.size() - 1; ++i)
+      //xmlFreeNode(save_nodes.at(i));
+
+      save_nodes.clear();
         
     }
 
-    xmlFreeNode(node);
+    //xmlFreeNode(node);
     node = 0;
+    if(xmlTextReaderRead(reader) != 1)
+      return 0;
 
-    node = xmlTextReaderCurrentNode(reader);
-    node->extra = xmlTextReaderIsEmptyElement(reader);
+    node = getNode(reader);
 
   }
 
-  xmlFreeNode(node);
+  //xmlFreeNode(node);
   node = 0;
 
   xmlTextWriterEndDocument(writer);
-  xmlFreeTextWriter(writer);
+  //xmlFreeTextWriter(writer);
 
   std::string * unit = new std::string((const char *)buffer->content);
-  xmlBufferFree(buffer);
+  //xmlBufferFree(buffer);
   return unit;
 
 }
