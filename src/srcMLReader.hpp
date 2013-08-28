@@ -9,6 +9,7 @@
 class srcMLReader {
 
   xmlTextReaderPtr reader;
+  bool read_root;
 
 public:
 
