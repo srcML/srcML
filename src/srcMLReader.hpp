@@ -10,6 +10,7 @@
 
 class srcMLReader {
 
+  xmlParserInputBufferPtr input;
   xmlTextReaderPtr reader;
   xmlNodePtr node;
   bool is_archive;

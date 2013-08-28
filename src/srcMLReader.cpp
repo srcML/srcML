@@ -37,8 +37,8 @@ srcMLReader::srcMLReader(std::string * buffer)
 
 srcMLReader::srcMLReader(FILE * file)
   : is_archive(false), done(false) {
-
-  //reader = xmlReaderForFile(file, 0, 0, XML_PARSE_HUGE);
+  input = xmlParserInputBufferCreateFile(file, xmlParseCharEncoding(0));
+  reader = xmlNewTextReader(input, 0);
   xmlTextReaderRead(reader);
   node = getNode(reader);
 }
