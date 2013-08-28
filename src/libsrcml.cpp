@@ -35,6 +35,7 @@
 #include "Options.hpp"
 #include "srcmlns.hpp"
 #include "srcMLUtility.hpp"
+#include "srcMLReader.hpp"
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
 #include <dlfcn.h>
@@ -90,7 +91,7 @@ struct srcml_archive {
   srcMLTranslator * translator;
 
   // utility
-  srcMLUtility * utility;
+  srcMLReader * reader;
 
   // TODO  Used for memory function.  May want to try and remove in future
   xmlBuffer * buffer;
@@ -356,6 +357,7 @@ void srcml_free_archive(srcml_archive * archive) {
   if(archive->directory) delete archive->directory;
   if(archive->version) delete archive->version;
   if(archive->translator) delete archive->translator;
+  if(archive->reader) delete archive->reader;
 
   delete archive;
 }
@@ -575,8 +577,8 @@ int srcml_write_open_fd      (srcml_archive* archive, int srcml_fd) {
 /* open a srcML archive for reading */
 int srcml_read_open_filename(srcml_archive* archive, const char* srcml_filename) { 
 
-  archive->type = SRCML_ARCHIVE_READ;
-  archive->utility = new srcMLUtility(srcml_filename, archive->encoding->c_str(), archive->options);
+
+  archive->reader = new srcMLReader(srcml_filename);
 
   return 0;
 
@@ -621,25 +623,25 @@ int srcml_unit_set_version  (srcml_unit* unit, const char* version) {
 
 const char* srcml_unit_get_language (const srcml_unit* unit) {
 
-  return unit->language->c_str();
+  return unit->language ? unit->language->c_str() : 0;
 
 }
 
 const char* srcml_unit_get_filename (const srcml_unit* unit) {
 
-  return unit->filename->c_str();
+  return unit->filename ? unit->filename->c_str() : 0;
 
 }
 
 const char* srcml_unit_get_directory(const srcml_unit* unit) {
 
-  return unit->directory->c_str();
+  return unit->directory ? unit->directory->c_str() : 0;
 
 }
 
 const char* srcml_unit_get_version  (const srcml_unit* unit) {
 
-  return unit->version->c_str();
+  return unit->version ? unit->version->c_str() : 0;
 
 }
 
@@ -729,9 +731,21 @@ int srcml_unparse_unit_fd      (srcml_unit* unit, int srcml_fd) { return 0; }
 
 /* Read the next unit from the archive */
 srcml_unit* srcml_read_unit(srcml_archive* archive) {
+  
+  std::string * language, * filename, * directory, * version;
 
-  //
-
+  std::string * read_unit = archive->reader->read(&language, &filename, &directory, &version); 
+  srcml_unit * unit = 0;
+  if(read_unit) {
+    unit = srcml_create_unit(archive);
+    unit->unit = read_unit;
+    unit->language = language;
+    unit->filename = filename;
+    unit->directory = directory;
+    unit->version = version;
+  }
+  
+  return unit;
 }
 
 /* close the srcML archive */
@@ -739,8 +753,7 @@ void srcml_write_close(srcml_archive* archive) {}
 void srcml_read_close (srcml_archive* archive) {}
 void srcml_close_archive(srcml_archive * archive) {
 
-  archive->translator->close();
-
+  if(archive->translator) archive->translator->close();
 
   if(archive->buffer) {
 

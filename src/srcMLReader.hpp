@@ -17,7 +17,10 @@ public:
   srcMLReader(const char * filename);
   ~srcMLReader();
 
-  std::string * read();
+  int readUnitHeader(std::string ** language, std::string **filename,
+                                 std::string ** directory, std::string ** version);
+  std::string * read(std::string ** language, std::string **filename,
+                                 std::string ** directory, std::string ** version);
   
 
 };

@@ -19,7 +19,7 @@ void freeNode(xmlNodePtr node) {
 
   if(node && (xmlReaderTypes)node->type != XML_READER_TYPE_TEXT
      && (xmlReaderTypes)node->type != XML_READER_TYPE_SIGNIFICANT_WHITESPACE)
-      xmlFreeNode(node);
+    xmlFreeNode(node);
 }
 
 srcMLReader::srcMLReader(const char * filename)
@@ -37,12 +37,47 @@ srcMLReader::~srcMLReader() {
 
 }
 
-std::string * srcMLReader::read() {
+int srcMLReader::readUnitHeader(std::string ** language, std::string **filename,
+                                 std::string ** directory, std::string ** version) {
+
+  // forward to start unit
+  while(true) {
+    if(node && (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT && strcmp((const char *)node->name, "unit") == 0)
+      break;
+
+    if(xmlTextReaderRead(reader) != 1) return 1;
+    freeNode(node);
+    node = getNode(reader);
+  }
+
+  xmlAttrPtr attribute = node->properties;
+  while (attribute) {
+
+    if(strcmp((const char *)attribute->name, "language") == 0)
+      (*language) = new std::string((const char *)attribute->children->content);
+    else if(strcmp((const char *)attribute->name, "filename") == 0)
+      (*filename) = new std::string((const char *)attribute->children->content);
+    else if(strcmp((const char *)attribute->name, "directory") == 0)
+      (*directory) = new std::string((const char *)attribute->children->content);
+    else if(strcmp((const char *)attribute->name, "version") == 0)
+      (*version) = new std::string((const char *)attribute->children->content);
+
+    attribute = attribute->next;
+  }
+
+  return 0;
+
+}
+
+std::string * srcMLReader::read(std::string ** language, std::string **filename,
+                                 std::string ** directory, std::string ** version) {
 
   xmlBufferPtr buffer = xmlBufferCreate();
   xmlTextWriterPtr writer = xmlNewTextWriterMemory(buffer, 0);
   //xmlTextWriterStartDocument(writer, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
   bool read_unit_start = false;
+
+  if(readUnitHeader(language, filename, directory, version)) return 0;
 
   // forward to start unit
   while(true) {
@@ -73,6 +108,8 @@ std::string * srcMLReader::read() {
             freeNode(save_nodes.at(i));
           save_nodes.clear();
           output_node(*node, writer);
+          delete *language, delete *filename, delete *directory, delete *version; 
+          readUnitHeader(language, filename, directory, version);
         }
 
         read_unit_start = true;
@@ -93,7 +130,7 @@ std::string * srcMLReader::read() {
       for(int i = 0; i < save_nodes.size() - 1; ++i)
         freeNode(save_nodes.at(i));
 
-      
+
       save_nodes.clear();
 
     }
@@ -104,7 +141,7 @@ std::string * srcMLReader::read() {
 
   }
 
-  //if(node) xmlFreeNode(node);
+  freeNode(node);
   node = 0;
 
   xmlTextWriterEndDocument(writer);
