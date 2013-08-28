@@ -6,13 +6,20 @@
 
 void output_node(const xmlNode & node, xmlTextWriterPtr writer);
 
-xmlNode * getNode(xmlTextReaderPtr reader) {
+xmlNodePtr getNode(xmlTextReaderPtr reader) {
 
-    xmlNodePtr node = xmlTextReaderCurrentNode(reader);
-    node->extra = xmlTextReaderIsEmptyElement(reader);
-    node->type = (xmlElementType)xmlTextReaderNodeType(reader);
+  xmlNodePtr node = xmlCopyNode(xmlTextReaderCurrentNode(reader), 2);
+  node->extra = xmlTextReaderIsEmptyElement(reader);
+  node->type = (xmlElementType)xmlTextReaderNodeType(reader);
 
-    return node;
+  return node;
+}
+
+void freeNode(xmlNodePtr node) {
+
+  if(node && (xmlReaderTypes)node->type != XML_READER_TYPE_TEXT
+     && (xmlReaderTypes)node->type != XML_READER_TYPE_SIGNIFICANT_WHITESPACE)
+      xmlFreeNode(node);
 }
 
 srcMLReader::srcMLReader(const char * filename)
@@ -20,7 +27,7 @@ srcMLReader::srcMLReader(const char * filename)
 
   reader = xmlNewTextReaderFilename(filename);
   xmlTextReaderRead(reader);
-  node = xmlTextReaderCurrentNode(reader);
+  node = getNode(reader);
 }
 
 srcMLReader::~srcMLReader() {
@@ -41,10 +48,9 @@ std::string * srcMLReader::read() {
   while(true) {
     if(node && (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT && strcmp((const char *)node->name, "unit") == 0)
       break;
-    //xmlFreeNode(node);
-    //node = 0;
-    if(xmlTextReaderRead(reader) != 1)
-      return 0;
+
+    if(xmlTextReaderRead(reader) != 1) return 0;
+    freeNode(node);
     node = getNode(reader);
   }
 
@@ -63,8 +69,8 @@ std::string * srcMLReader::read() {
         if(read_unit_start) {
 
           read_root = true;
-          //for(int i = 0; i < save_nodes.size() - 1; ++i)
-          //xmlFreeNode(save_nodes.at(i));
+          for(int i = 0; i < save_nodes.size() - 1; ++i)
+            freeNode(save_nodes.at(i));
           save_nodes.clear();
           output_node(*node, writer);
         }
@@ -76,7 +82,7 @@ std::string * srcMLReader::read() {
         break;
       }
 
-    } 
+    }
 
     if(!save_nodes.empty() && node->type == (xmlElementType)XML_READER_TYPE_ELEMENT
        && strcmp((const char *)node->name, "unit") != 0) {
@@ -84,30 +90,28 @@ std::string * srcMLReader::read() {
       for(int i = 0; i < save_nodes.size(); ++i)
         output_node(*save_nodes.at(i), writer);
 
-      //for(int i = 0; i < save_nodes.size() - 1; ++i)
-      //xmlFreeNode(save_nodes.at(i));
+      for(int i = 0; i < save_nodes.size() - 1; ++i)
+        freeNode(save_nodes.at(i));
 
+      
       save_nodes.clear();
-        
+
     }
 
-    //xmlFreeNode(node);
-    node = 0;
-    if(xmlTextReaderRead(reader) != 1)
-      return 0;
-
+    freeNode(node);
+    if(xmlTextReaderRead(reader) != 1) return 0;
     node = getNode(reader);
 
   }
 
-  //xmlFreeNode(node);
+  //if(node) xmlFreeNode(node);
   node = 0;
 
   xmlTextWriterEndDocument(writer);
-  //xmlFreeTextWriter(writer);
+  xmlFreeTextWriter(writer);
 
   std::string * unit = new std::string((const char *)buffer->content);
-  //xmlBufferFree(buffer);
+  xmlBufferFree(buffer);
   return unit;
 
 }
