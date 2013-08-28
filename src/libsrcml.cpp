@@ -946,8 +946,18 @@ srcml_unit* srcml_read_unit(srcml_archive* archive) {
 }
 
 /* close the srcML archive */
-void srcml_write_close(srcml_archive* archive) {}
-void srcml_read_close (srcml_archive* archive) {}
+void srcml_write_close(srcml_archive* archive) {
+
+  srcml_close_archive(archive);
+
+}
+
+void srcml_read_close (srcml_archive* archive) {
+
+  srcml_close_archive(archive);
+
+}
+
 void srcml_close_archive(srcml_archive * archive) {
 
   if(archive->translator) archive->translator->close();
@@ -964,8 +974,17 @@ void srcml_close_archive(srcml_archive * archive) {
 }
 
 /* free the srcML archive data */
-void srcml_write_free(srcml_archive* archive) {}
-void srcml_read_free (srcml_archive* archive) {}
+void srcml_write_free(srcml_archive* archive) {
+
+  srcml_free_archive(archive);
+
+}
+
+void srcml_read_free (srcml_archive* archive) { 
+
+  srcml_free_archive(archive);
+
+}
 
 srcml_unit * srcml_create_unit(srcml_archive * archive) {
 
