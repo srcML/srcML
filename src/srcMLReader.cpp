@@ -120,14 +120,28 @@ std::string * srcMLReader::read() {
   //xmlTextWriterStartDocument(writer, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
   bool read_unit_start = false;
 
-  // forward to start unit
-  while(true) {
-    if(node && (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT && strcmp((const char *)node->name, "unit") == 0)
-      break;
+  if(!save_nodes.empty()) {
 
-    if(xmlTextReaderRead(reader) != 1) return 0;
-    freeNode(node);
-    node = getNode(reader);
+      for(int i = 0; i < save_nodes.size(); ++i)
+        output_node(*save_nodes.at(i), writer);
+
+      for(int i = 0; i < save_nodes.size() - 1; ++i)
+        freeNode(save_nodes.at(i));
+
+      save_nodes.clear();
+
+  } else {
+
+    // forward to start unit
+    while(true) {
+      if(node && (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT && strcmp((const char *)node->name, "unit") == 0)
+        break;
+
+      if(xmlTextReaderRead(reader) != 1) return 0;
+      freeNode(node);
+      node = getNode(reader);
+    }
+
   }
 
   std::vector<xmlNodePtr> save_nodes;
