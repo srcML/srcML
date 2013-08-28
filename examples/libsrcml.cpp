@@ -112,7 +112,7 @@ struct srcml_unit {
 srcml_archive global_archive;
 
 /* translates to/from srcML */
-int srcml(const char* input_filename, const char* output_filename, const char* language) {
+int srcml(const char* input_filename, const char* output_filename) {
 
   if(!input_filename) {
 
@@ -121,8 +121,9 @@ int srcml(const char* input_filename, const char* output_filename, const char* l
 
   }
 
-  Language::register_standard_file_extensions(global_archive.registered_languages);
-  int lang = language ? srcml_check_language(language) : Language::getLanguageFromFilename(input_filename, global_archive.registered_languages);
+  if(global_archive.registered_languages.size() == 0)
+    Language::register_standard_file_extensions(global_archive.registered_languages);
+  int lang = global_archive.language ? srcml_check_language(global_archive.language->c_str()) : Language::getLanguageFromFilename(input_filename, global_archive.registered_languages);
 
   if(lang) {
 
@@ -163,15 +164,15 @@ int srcml(const char* input_filename, const char* output_filename, const char* l
     int len = strlen(input_filename);
     if((len > 4 && input_filename[len - 1] == 'l' && input_filename[len - 2] == 'm'
         && input_filename[len - 3] == 'x' && input_filename[len - 4] == '.')
-       || (language && strcmp(language, "xml") == 0))
+       || (global_archive.language && strcmp(global_archive.language->c_str(), "xml") == 0))
       is_xml = 1;
 
     // not xml or handled language
     if(!is_xml) {
 
-      if(language) {
+      if(global_archive.language) {
         srcml_error = "Language '";
-        srcml_error += language;
+        srcml_error += global_archive.language->c_str();
         srcml_error += "' is not supported.";
       } else
         srcml_error = "No language provided.";
@@ -879,22 +880,62 @@ int srcml_write_unit(srcml_archive* archive, const srcml_unit* unit) {
 /* Read the next unit from the archive */
 const srcml_unit* srcml_read_unit_archive (srcml_archive* archive) { return 0; }
 const srcml_unit* srcml_read_archive_current_unit(const srcml_archive* archive) { return 0; }
-int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) { return 0; }
-int srcml_unparse_unit_memory  (srcml_unit* unit, const char* src_buffer, size_t buffer_size) { return 0; }
-int srcml_unparse_unit_FILE    (srcml_unit* unit, FILE* srcml_file) { return 0; }
-int srcml_unparse_unit_fd      (srcml_unit* unit, int srcml_fd) { return 0; }
+int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) { 
+
+  xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename(src_filename, xmlFindCharEncodingHandler(unit->archive->encoding ? unit->archive->encoding->c_str() : "UTF-8"), unit->archive->options & SRCML_OPTION_COMPRESS);
+  unit->archive->reader->read(output_buffer);
+  xmlOutputBufferClose(output_buffer);
+
+  return SRCML_STATUS_OK;
+
+}
+
+int srcml_unparse_unit_memory  (srcml_unit* unit, const char* src_buffer, size_t buffer_size) {
+
+  xmlBufferPtr buffer = xmlBufferCreate();
+  buffer->content = (xmlChar *)src_buffer;
+  xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(unit->archive->encoding ? unit->archive->encoding->c_str() : "UTF-8"));
+  unit->archive->reader->read(output_buffer);
+  xmlOutputBufferClose(output_buffer);
+
+  buffer->content = 0;
+  xmlBufferFree(buffer);
+
+  return SRCML_STATUS_OK;
+
+}
+
+int srcml_unparse_unit_FILE    (srcml_unit* unit, FILE* srcml_file) { 
+
+  xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFile(srcml_file, xmlFindCharEncodingHandler(unit->archive->encoding ? unit->archive->encoding->c_str() : "UTF-8"));
+  unit->archive->reader->read(output_buffer);
+  xmlOutputBufferClose(output_buffer);
+
+  return SRCML_STATUS_OK;
+
+}
+
+int srcml_unparse_unit_fd      (srcml_unit* unit, int srcml_fd) { 
+
+  xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFd(srcml_fd, xmlFindCharEncodingHandler(unit->archive->encoding ? unit->archive->encoding->c_str() : "UTF-8"));
+  unit->archive->reader->read(output_buffer);
+  xmlOutputBufferClose(output_buffer);
+
+  return SRCML_STATUS_OK;
+
+}
 
 /* Read the next unit from the archive */
 srcml_unit* srcml_read_unit(srcml_archive* archive) {
-  
-  std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
 
-  std::string * read_unit = archive->reader->read(&language, &filename, &directory, &version); 
+  std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+  bool done = !archive->reader->readUnitAttributes(&language, &filename, &directory, &version); 
+  //std::string * read_unit = archive->reader->read(); 
 
   srcml_unit * unit = 0;
-  if(read_unit) {
+  if(!done) {
     unit = srcml_create_unit(archive);
-    unit->unit = read_unit;
+    //unit->unit = read_unit;
     unit->language = language;
     unit->filename = filename;
     unit->directory = directory;
@@ -905,8 +946,18 @@ srcml_unit* srcml_read_unit(srcml_archive* archive) {
 }
 
 /* close the srcML archive */
-void srcml_write_close(srcml_archive* archive) {}
-void srcml_read_close (srcml_archive* archive) {}
+void srcml_write_close(srcml_archive* archive) {
+
+  srcml_close_archive(archive);
+
+}
+
+void srcml_read_close (srcml_archive* archive) {
+
+  srcml_close_archive(archive);
+
+}
+
 void srcml_close_archive(srcml_archive * archive) {
 
   if(archive->translator) archive->translator->close();
@@ -923,8 +974,17 @@ void srcml_close_archive(srcml_archive * archive) {
 }
 
 /* free the srcML archive data */
-void srcml_write_free(srcml_archive* archive) {}
-void srcml_read_free (srcml_archive* archive) {}
+void srcml_write_free(srcml_archive* archive) {
+
+  srcml_free_archive(archive);
+
+}
+
+void srcml_read_free (srcml_archive* archive) { 
+
+  srcml_free_archive(archive);
+
+}
 
 srcml_unit * srcml_create_unit(srcml_archive * archive) {
 
