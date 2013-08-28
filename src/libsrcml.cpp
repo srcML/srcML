@@ -69,6 +69,7 @@ struct srcml_archive {
   // srcML archive attributes
   std::string * filename;
   std::string * encoding;
+  std::string * xml_encoding;
   std::string * language;
   std::string * directory;
   std::string * version;
@@ -107,6 +108,8 @@ struct srcml_unit {
   std::string * version;
   std::string * unit;
 };
+
+srcml_archive global_archive;
 
 /* translates to/from srcML */
 int srcml(const char* input_filename, const char* output_filename, const char* language) {
@@ -182,6 +185,86 @@ int srcml(const char* input_filename, const char* output_filename, const char* l
 
   return SRCML_STATUS_OK;
 }
+
+int srcml_set_encoding(const char* encoding) {
+
+  return srcml_archive_set_encoding(&global_archive, encoding);
+
+}
+
+int srcml_set_language  (const char* language) {
+
+  return srcml_archive_set_language(&global_archive, language);
+
+}
+
+int srcml_set_filename  (const char* filename) {
+
+  return srcml_archive_set_filename(&global_archive, filename);
+
+}
+
+int srcml_set_directory (const char* directory) {
+
+  return srcml_archive_set_directory(&global_archive, directory);
+
+}
+
+int srcml_set_version   (const char* version) {
+
+  return srcml_archive_set_version(&global_archive, version);
+
+}
+
+int srcml_set_options   (int option) {
+
+  return srcml_archive_set_options(&global_archive, option);
+
+}
+
+int srcml_set_option    (int option) {
+
+  return srcml_archive_set_option(&global_archive, option);
+
+}
+
+int srcml_clear_option  (int option) {
+
+  return srcml_archive_set_option(&global_archive, option);
+
+}
+
+int srcml_set_tabstop   (int tabstop) {
+
+  return srcml_archive_set_tabstop(&global_archive, tabstop);
+
+}
+
+int srcml_register_file_extension(const char* extension, const char* language) {
+  
+  return srcml_archive_register_file_extension(&global_archive, extension, language);
+
+}
+
+int srcml_register_namespace(const char* prefix, const char* ns) {
+
+  return srcml_archive_register_namespace(&global_archive, prefix, ns);
+
+}
+
+const char* srcml_get_encoding ();
+const char* srcml_get_language ();
+const char* srcml_get_filename ();
+const char* srcml_get_directory();
+const char* srcml_get_version  ();
+int         srcml_get_options  ();
+int         srcml_get_tabstop  ();
+int         srcml_get_namespace_size();
+const char* srcml_get_prefix(int pos);
+const char* srcml_get_prefix_uri(const char* namespace_uri);
+const char* srcml_get_namespace(int pos);
+const char* srcml_get_namespace_prefix(const char* prefix);
+
 
 /* source-code language is supported */
 int srcml_check_language(const char* language) { return language == 0 ? 0 : Language::getLanguage(language); }
