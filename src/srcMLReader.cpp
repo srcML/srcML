@@ -67,7 +67,7 @@ void srcMLReader::readUnitAttributes(std::string ** language, std::string ** fil
     if(node && (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT && strcmp((const char *)node->name, "unit") == 0)
       break;
 
-    if(xmlTextReaderRead(reader) != 1) {done = true; return; }
+    if(xmlTextReaderRead(reader) != 1) { done = true; return; }
     freeNode(node);
     node = getNode(reader);
   }
