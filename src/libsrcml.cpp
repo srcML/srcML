@@ -880,7 +880,13 @@ int srcml_write_unit(srcml_archive* archive, const srcml_unit* unit) {
 /* Read the next unit from the archive */
 const srcml_unit* srcml_read_unit_archive (srcml_archive* archive) { return 0; }
 const srcml_unit* srcml_read_archive_current_unit(const srcml_archive* archive) { return 0; }
-int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) { return 0; }
+int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) { 
+
+  unit->archive->reader.read();
+
+  return 0;
+
+ }
 int srcml_unparse_unit_memory  (srcml_unit* unit, const char* src_buffer, size_t buffer_size) { return 0; }
 int srcml_unparse_unit_FILE    (srcml_unit* unit, FILE* srcml_file) { return 0; }
 int srcml_unparse_unit_fd      (srcml_unit* unit, int srcml_fd) { return 0; }

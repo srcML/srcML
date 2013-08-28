@@ -1,6 +1,6 @@
 
 #include <libxml/xmlreader.h>
-
+#include <libxml/xmlwriter.h>
 
 #include <string>
 #include <vector>
@@ -25,6 +25,7 @@ public:
                                   std::string ** directory, std::string ** version);
   int readUnitAttributes(std::string ** language, std::string ** filename,
                           std::string ** directory, std::string ** version);
+  int read(xmlTextWriterPtr writer);
   std::string * read();
 
 

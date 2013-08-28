@@ -1,7 +1,5 @@
 #include "srcMLReader.hpp"
 
-#include <libxml/xmlwriter.h>
-
 void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer);
 void output_node_source(const xmlNode & node, xmlTextWriterPtr writer);
 
@@ -118,12 +116,10 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
 
 }
 
-std::string * srcMLReader::read() {
+int srcMLReader::read(xmlWriterPtr writer) {
 
   if(done) return 0;
 
-  xmlBufferPtr buffer = xmlBufferCreate();
-  xmlTextWriterPtr writer = xmlNewTextWriterMemory(buffer, 0);
   //xmlTextWriterStartDocument(writer, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
   bool read_unit_start = false;
 
@@ -206,7 +202,21 @@ std::string * srcMLReader::read() {
   node = 0;
 
   xmlTextWriterEndDocument(writer);
+  return 1;
+
+}
+
+std::string * srcMLReader::read() {
+
+  if(done) return 0;
+
+  xmlBufferPtr buffer = xmlBufferCreate();
+  xmlTextWriterPtr writer = xmlNewTextWriterMemory(buffer, 0);
+  int status = read(writer);
+
   xmlFreeTextWriter(writer);
+
+  if(!status) return 0;
 
   std::string * unit = new std::string((const char *)buffer->content);
   xmlBufferFree(buffer);
