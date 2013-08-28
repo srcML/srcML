@@ -890,9 +890,40 @@ int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
 }
 
-int srcml_unparse_unit_memory  (srcml_unit* unit, const char* src_buffer, size_t buffer_size) { return 0; }
-int srcml_unparse_unit_FILE    (srcml_unit* unit, FILE* srcml_file) { return 0; }
-int srcml_unparse_unit_fd      (srcml_unit* unit, int srcml_fd) { return 0; }
+int srcml_unparse_unit_memory  (srcml_unit* unit, const char* src_buffer, size_t buffer_size) {
+
+  xmlBufferPtr buffer = xmlBufferCreate();
+  buffer->content = (xmlChar *)src_buffer;
+  xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(unit->archive->encoding ? unit->archive->encoding->c_str() : "UTF-8"));
+  unit->archive->reader->read(output_buffer);
+  xmlOutputBufferClose(output_buffer);
+
+  buffer->content = 0;
+  xmlBufferFree(buffer);
+
+  return SRCML_STATUS_OK;
+
+}
+
+int srcml_unparse_unit_FILE    (srcml_unit* unit, FILE* srcml_file) { 
+
+  xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFile(srcml_file, xmlFindCharEncodingHandler(unit->archive->encoding ? unit->archive->encoding->c_str() : "UTF-8"));
+  unit->archive->reader->read(output_buffer);
+  xmlOutputBufferClose(output_buffer);
+
+  return SRCML_STATUS_OK;
+
+}
+
+int srcml_unparse_unit_fd      (srcml_unit* unit, int srcml_fd) { 
+
+  xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFd(srcml_fd, xmlFindCharEncodingHandler(unit->archive->encoding ? unit->archive->encoding->c_str() : "UTF-8"));
+  unit->archive->reader->read(output_buffer);
+  xmlOutputBufferClose(output_buffer);
+
+  return SRCML_STATUS_OK;
+
+}
 
 /* Read the next unit from the archive */
 srcml_unit* srcml_read_unit(srcml_archive* archive) {
