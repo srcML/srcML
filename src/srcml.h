@@ -98,7 +98,7 @@ struct srcml_unit;
     * Options can be queried with the global srcml_get_*() and
       srcml_check_*()
 */
-int srcml(const char* input_filename, const char* output_filename, const char* language);
+int srcml(const char* input_filename, const char* output_filename);
 
 /*
   Global settings.  Can be used with convenience function srcml()

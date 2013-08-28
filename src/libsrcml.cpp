@@ -112,7 +112,7 @@ struct srcml_unit {
 srcml_archive global_archive;
 
 /* translates to/from srcML */
-int srcml(const char* input_filename, const char* output_filename, const char* language) {
+int srcml(const char* input_filename, const char* output_filename) {
 
   if(!input_filename) {
 
@@ -123,7 +123,7 @@ int srcml(const char* input_filename, const char* output_filename, const char* l
 
   if(global_archive.registered_languages.size() == 0)
     Language::register_standard_file_extensions(global_archive.registered_languages);
-  int lang = language ? srcml_check_language(language) : Language::getLanguageFromFilename(input_filename, global_archive.registered_languages);
+  int lang = global_archive.language ? srcml_check_language(global_archive.language->c_str()) : Language::getLanguageFromFilename(input_filename, global_archive.registered_languages);
 
   if(lang) {
 
@@ -164,15 +164,15 @@ int srcml(const char* input_filename, const char* output_filename, const char* l
     int len = strlen(input_filename);
     if((len > 4 && input_filename[len - 1] == 'l' && input_filename[len - 2] == 'm'
         && input_filename[len - 3] == 'x' && input_filename[len - 4] == '.')
-       || (language && strcmp(language, "xml") == 0))
+       || (global_archive.language && strcmp(global_archive.language->c_str(), "xml") == 0))
       is_xml = 1;
 
     // not xml or handled language
     if(!is_xml) {
 
-      if(language) {
+      if(global_archive.language) {
         srcml_error = "Language '";
-        srcml_error += language;
+        srcml_error += global_archive.language->c_str();
         srcml_error += "' is not supported.";
       } else
         srcml_error = "No language provided.";
