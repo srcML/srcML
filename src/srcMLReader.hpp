@@ -14,6 +14,7 @@ class srcMLReader {
   xmlNodePtr node;
   bool read_root;
   std::vector<xmlNodePtr> save_nodes;
+  bool done;
 
 public:
 
@@ -21,11 +22,11 @@ public:
   ~srcMLReader();
 
   void readUnitAttributesInternal(std::string ** language, std::string ** filename,
-                                 std::string ** directory, std::string ** version);
+                                  std::string ** directory, std::string ** version);
   void readUnitAttributes(std::string ** language, std::string ** filename,
-                                 std::string ** directory, std::string ** version);
+                          std::string ** directory, std::string ** version);
   std::string * read();
-  
+
 
 };
 
