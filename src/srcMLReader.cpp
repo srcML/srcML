@@ -67,7 +67,6 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
 
   }
 
-
   if(done) return 0;
 
   // forward to start unit
@@ -98,6 +97,7 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
       for(int i = 0; i < save_nodes.size() - 1; ++i)
         freeNode(save_nodes.at(i));
       save_nodes.clear();
+      save_nodes.push_back(node);
       if(*language) delete *language, (*language) = 0;
       if(*filename) delete *filename, (*filename) = 0;
       if(*directory) delete *directory, (*directory) = 0;
@@ -313,7 +313,6 @@ void output_node_source(const xmlNode & node, xmlOutputBufferPtr output_buffer) 
     // output the UTF-8 buffer escaping the characters.  Note that the output encoding
     // is handled by libxml
     for (unsigned char* p = (unsigned char*) node.content; *p != 0; ++p) {
-
       if (*p == '&')
         xmlOutputBufferWrite(output_buffer, 5, "&amp;");
       else if (*p == '<')
