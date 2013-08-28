@@ -23,6 +23,7 @@ public:
   srcMLReader(std::string * buffer);
   srcMLReader(FILE * file);
   srcMLReader(int fd);
+  srcMLReader(xmlParserInputBufferPtr input);
   ~srcMLReader();
 
   void readUnitAttributesInternal(std::string ** language, std::string ** filename,

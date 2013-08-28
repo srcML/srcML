@@ -20,7 +20,7 @@ void freeNode(xmlNodePtr node) {
 }
 
 srcMLReader::srcMLReader(const char * filename)
-  : is_archive(false), done(false) {
+  : is_archive(false), done(false), input(0) {
 
   reader = xmlNewTextReaderFilename(filename);
   xmlTextReaderRead(reader);
@@ -28,7 +28,7 @@ srcMLReader::srcMLReader(const char * filename)
 }
 
 srcMLReader::srcMLReader(std::string * buffer)
-  : is_archive(false), done(false) {
+  : is_archive(false), done(false), input(0) {
 
   reader = xmlReaderForMemory(buffer->c_str(), buffer->size(), 0, 0, XML_PARSE_HUGE);
   xmlTextReaderRead(reader);
@@ -44,17 +44,24 @@ srcMLReader::srcMLReader(FILE * file)
 }
 
 srcMLReader::srcMLReader(int fd)
-  : is_archive(false), done(false) {
+  : is_archive(false), done(false), input(0) {
 
   reader = xmlReaderForFd(fd, 0, 0, XML_PARSE_HUGE);
   xmlTextReaderRead(reader);
   node = getNode(reader);
 }
 
-// srcMLReader(FILE * file);
-//srcMLReader(int fd);
+srcMLReader::srcMLReader(xmlParserInputBufferPtr input)
+  : is_archive(false), done(false), input(0) {
+
+  reader = xmlNewTextReader(input, 0);
+  xmlTextReaderRead(reader);
+  node = getNode(reader);
+}
 
 srcMLReader::~srcMLReader() {
+
+  if(input) xmlFreeParserInputBuffer(input);
 
   xmlFreeTextReader(reader);
   reader = 0;
