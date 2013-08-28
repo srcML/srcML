@@ -52,7 +52,7 @@ struct uridata {
   char const * const description;
 };
 
-enum SRCML_ARCHIVE_TYPE { SRCML_ARCHIVE_READ, SRCML_ARCHIVE_WRITE };
+enum SRCML_ARCHIVE_TYPE { SRCML_ARCHIVE_RW, SRCML_ARCHIVE_READ, SRCML_ARCHIVE_WRITE };
 
 struct registered_language {
 
@@ -109,7 +109,9 @@ struct srcml_unit {
   std::string * unit;
 };
 
-srcml_archive global_archive;
+srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector<std::string>(), 0,
+                                4, std::vector<std::string>(), std::vector<std::string>(), std::vector<pair>(),
+                                0, 0, 0 };
 
 /* translates to/from srcML */
 int srcml(const char* input_filename, const char* output_filename) {
