@@ -52,7 +52,7 @@ struct uridata {
   char const * const description;
 };
 
-enum SRCML_ARCHIVE_TYPE { SRCML_ARCHIVE_READ, SRCML_ARCHIVE_WRITE };
+enum SRCML_ARCHIVE_TYPE { SRCML_ARCHIVE_RW, SRCML_ARCHIVE_READ, SRCML_ARCHIVE_WRITE };
 
 struct registered_language {
 
@@ -109,7 +109,9 @@ struct srcml_unit {
   std::string * unit;
 };
 
-srcml_archive global_archive;
+srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector<std::string>(), 0,
+                                4, std::vector<std::string>(), std::vector<std::string>(), std::vector<pair>(),
+                                0, 0, 0 };
 
 /* translates to/from srcML */
 int srcml(const char* input_filename, const char* output_filename) {
@@ -882,9 +884,9 @@ const srcml_unit* srcml_read_unit_archive (srcml_archive* archive) { return 0; }
 const srcml_unit* srcml_read_archive_current_unit(const srcml_archive* archive) { return 0; }
 int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) { 
 
-  xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename(src_filename, xmlFindCharEncodingHandler(unit->archive->encoding ? unit->archive->encoding->c_str() : "UTF-8"), unit->archive->options & SRCML_OPTION_COMPRESS);
-  unit->archive->reader->read(output_buffer);
-  xmlOutputBufferClose(output_buffer);
+  xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename(src_filename, xmlFindCharEncodingHandler(unit->archive->encoding ? unit->archive->encoding->c_str() : "ISO-8859-1"), unit->archive->options & SRCML_OPTION_COMPRESS);
+  srcMLUtility utility(unit->unit->c_str(), unit->unit->size(), 0, unit->archive->options);
+  utility.extract_text(output_buffer);
 
   return SRCML_STATUS_OK;
 
@@ -894,9 +896,9 @@ int srcml_unparse_unit_memory  (srcml_unit* unit, const char* src_buffer, size_t
 
   xmlBufferPtr buffer = xmlBufferCreate();
   buffer->content = (xmlChar *)src_buffer;
-  xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(unit->archive->encoding ? unit->archive->encoding->c_str() : "UTF-8"));
-  unit->archive->reader->read(output_buffer);
-  xmlOutputBufferClose(output_buffer);
+  xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(unit->archive->encoding ? unit->archive->encoding->c_str() : "ISO-8859-1"));
+  srcMLUtility utility(unit->unit->c_str(), unit->unit->size(), 0, unit->archive->options);
+  utility.extract_text(output_buffer);
 
   buffer->content = 0;
   xmlBufferFree(buffer);
@@ -907,9 +909,9 @@ int srcml_unparse_unit_memory  (srcml_unit* unit, const char* src_buffer, size_t
 
 int srcml_unparse_unit_FILE    (srcml_unit* unit, FILE* srcml_file) { 
 
-  xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFile(srcml_file, xmlFindCharEncodingHandler(unit->archive->encoding ? unit->archive->encoding->c_str() : "UTF-8"));
-  unit->archive->reader->read(output_buffer);
-  xmlOutputBufferClose(output_buffer);
+  xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFile(srcml_file, xmlFindCharEncodingHandler(unit->archive->encoding ? unit->archive->encoding->c_str() : "ISO-8859-1"));
+  srcMLUtility utility(unit->unit->c_str(), unit->unit->size(), 0, unit->archive->options);
+  utility.extract_text(output_buffer);
 
   return SRCML_STATUS_OK;
 
@@ -917,9 +919,9 @@ int srcml_unparse_unit_FILE    (srcml_unit* unit, FILE* srcml_file) {
 
 int srcml_unparse_unit_fd      (srcml_unit* unit, int srcml_fd) { 
 
-  xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFd(srcml_fd, xmlFindCharEncodingHandler(unit->archive->encoding ? unit->archive->encoding->c_str() : "UTF-8"));
-  unit->archive->reader->read(output_buffer);
-  xmlOutputBufferClose(output_buffer);
+  xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFd(srcml_fd, xmlFindCharEncodingHandler(unit->archive->encoding ? unit->archive->encoding->c_str() : "ISO-8859-1"));
+  srcMLUtility utility(unit->unit->c_str(), unit->unit->size(), 0, unit->archive->options);
+  utility.extract_text(output_buffer);
 
   return SRCML_STATUS_OK;
 
@@ -929,13 +931,13 @@ int srcml_unparse_unit_fd      (srcml_unit* unit, int srcml_fd) {
 srcml_unit* srcml_read_unit(srcml_archive* archive) {
 
   std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
-  bool done = !archive->reader->readUnitAttributes(&language, &filename, &directory, &version); 
-  //std::string * read_unit = archive->reader->read(); 
+  archive->reader->readUnitAttributes(&language, &filename, &directory, &version); 
+  std::string * read_unit = archive->reader->readsrcML(); 
 
   srcml_unit * unit = 0;
-  if(!done) {
+  if(read_unit) {
     unit = srcml_create_unit(archive);
-    //unit->unit = read_unit;
+    unit->unit = read_unit;
     unit->language = language;
     unit->filename = filename;
     unit->directory = directory;
