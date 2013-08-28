@@ -12,7 +12,7 @@ class srcMLReader {
 
   xmlTextReaderPtr reader;
   xmlNodePtr node;
-  bool read_root;
+  bool is_archive;
   std::vector<xmlNodePtr> save_nodes;
   bool done;
 
@@ -23,7 +23,7 @@ public:
 
   void readUnitAttributesInternal(std::string ** language, std::string ** filename,
                                   std::string ** directory, std::string ** version);
-  void readUnitAttributes(std::string ** language, std::string ** filename,
+  int readUnitAttributes(std::string ** language, std::string ** filename,
                           std::string ** directory, std::string ** version);
   std::string * read();
 

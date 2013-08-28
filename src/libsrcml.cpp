@@ -889,13 +889,13 @@ int srcml_unparse_unit_fd      (srcml_unit* unit, int srcml_fd) { return 0; }
 srcml_unit* srcml_read_unit(srcml_archive* archive) {
 
   std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
-  archive->reader->readUnitAttributes(&language, &filename, &directory, &version); 
-  std::string * read_unit = archive->reader->read(); 
+  bool done = !archive->reader->readUnitAttributes(&language, &filename, &directory, &version); 
+  //std::string * read_unit = archive->reader->read(); 
 
   srcml_unit * unit = 0;
-  if(read_unit) {
+  if(!done) {
     unit = srcml_create_unit(archive);
-    unit->unit = read_unit;
+    //unit->unit = read_unit;
     unit->language = language;
     unit->filename = filename;
     unit->directory = directory;

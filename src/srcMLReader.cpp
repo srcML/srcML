@@ -2,7 +2,8 @@
 
 #include <libxml/xmlwriter.h>
 
-void output_node(const xmlNode & node, xmlTextWriterPtr writer);
+void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer);
+void output_node_source(const xmlNode & node, xmlTextWriterPtr writer);
 
 xmlNodePtr getNode(xmlTextReaderPtr reader) {
 
@@ -55,51 +56,46 @@ void srcMLReader::readUnitAttributesInternal(std::string ** language, std::strin
 
 }
 
-void srcMLReader::readUnitAttributes(std::string ** language, std::string ** filename,
-                                     std::string ** directory, std::string ** version) {
+int srcMLReader::readUnitAttributes(std::string ** language, std::string ** filename,
+                                    std::string ** directory, std::string ** version) {
 
   bool read_unit_start = false;
 
-  if(done) return;
+  if(done) return 0;
 
   // forward to start unit
   while(true) {
     if(node && (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT && strcmp((const char *)node->name, "unit") == 0)
       break;
 
-    if(xmlTextReaderRead(reader) != 1) { done = true; return; }
+    if(xmlTextReaderRead(reader) != 1) { done = true; return 0; }
     freeNode(node);
     node = getNode(reader);
   }
 
   readUnitAttributesInternal(language, filename, directory, version);
-  if(read_root) return;
+  freeNode(node);
+  if(xmlTextReaderRead(reader) != 1) { done = true; return 0; }
+  node = getNode(reader);
+  if(is_archive) return 1;
 
   while(true) {
 
-    if(!read_root)
+    if(!is_archive)
       save_nodes.push_back(node);
 
-    if(strcmp((const char *)node->name, "unit") == 0) {
+    if(node->type == (xmlElementType)XML_READER_TYPE_ELEMENT && strcmp((const char *)node->name, "unit") == 0) {
 
-      if(node->type == (xmlElementType)XML_READER_TYPE_ELEMENT) {
-
-        if(read_unit_start) {
-
-          read_root = true;
-          for(int i = 0; i < save_nodes.size() - 1; ++i)
-            freeNode(save_nodes.at(i));
-          save_nodes.clear();
-          if(*language) delete *language, (*language) = 0;
-          if(*filename) delete *filename, (*filename) = 0;
-          if(*directory) delete *directory, (*directory) = 0;
-          if(*version) delete *version, (*version) = 0;
-          readUnitAttributesInternal(language, filename, directory, version);
-          break;
-        }
-
-        read_unit_start = true;
-      }
+      is_archive = true;
+      for(int i = 0; i < save_nodes.size() - 1; ++i)
+        freeNode(save_nodes.at(i));
+      save_nodes.clear();
+      if(*language) delete *language, (*language) = 0;
+      if(*filename) delete *filename, (*filename) = 0;
+      if(*directory) delete *directory, (*directory) = 0;
+      if(*version) delete *version, (*version) = 0;
+      readUnitAttributesInternal(language, filename, directory, version);
+      break;
     }
 
     if(!save_nodes.empty() && node->type == (xmlElementType)XML_READER_TYPE_ELEMENT
@@ -108,10 +104,12 @@ void srcMLReader::readUnitAttributes(std::string ** language, std::string ** fil
 
 
     freeNode(node);
-    if(xmlTextReaderRead(reader) != 1) {done = true; return; }
+    if(xmlTextReaderRead(reader) != 1) {done = true; return 0; }
     node = getNode(reader);
 
   }
+
+  return 1;
 
 }
 
@@ -126,13 +124,13 @@ std::string * srcMLReader::read() {
 
   if(!save_nodes.empty()) {
 
-      for(int i = 0; i < save_nodes.size(); ++i)
-        output_node(*save_nodes.at(i), writer);
+    for(int i = 0; i < save_nodes.size(); ++i)
+      output_node_source(*save_nodes.at(i), writer);
 
-      for(int i = 0; i < save_nodes.size() - 1; ++i)
-        freeNode(save_nodes.at(i));
+    for(int i = 0; i < save_nodes.size() - 1; ++i)
+      freeNode(save_nodes.at(i));
 
-      save_nodes.clear();
+    save_nodes.clear();
 
   } else {
 
@@ -151,8 +149,8 @@ std::string * srcMLReader::read() {
   std::vector<xmlNodePtr> save_nodes;
   while(true) {
 
-    if(read_root)
-      output_node(*node, writer);
+    if(is_archive)
+      output_node_source(*node, writer);
     else
       save_nodes.push_back(node);
 
@@ -162,11 +160,11 @@ std::string * srcMLReader::read() {
 
         if(read_unit_start) {
 
-          read_root = true;
+          is_archive = true;
           for(int i = 0; i < save_nodes.size() - 1; ++i)
             freeNode(save_nodes.at(i));
           save_nodes.clear();
-          output_node(*node, writer);
+          output_node_source(*node, writer);
 
         }
 
@@ -183,7 +181,7 @@ std::string * srcMLReader::read() {
        && strcmp((const char *)node->name, "unit") != 0) {
 
       for(int i = 0; i < save_nodes.size(); ++i)
-        output_node(*save_nodes.at(i), writer);
+        output_node_source(*save_nodes.at(i), writer);
 
       for(int i = 0; i < save_nodes.size() - 1; ++i)
         freeNode(save_nodes.at(i));
@@ -212,7 +210,7 @@ std::string * srcMLReader::read() {
 }
 
 // output current XML node in reader
-void output_node(const xmlNode & node, xmlTextWriterPtr writer) {
+void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer) {
 
   bool isemptyelement = false;
 
@@ -258,6 +256,35 @@ void output_node(const xmlNode & node, xmlTextWriterPtr writer) {
   case XML_READER_TYPE_COMMENT:
     xmlTextWriterWriteComment(writer, (const xmlChar *)node.content);
     break;
+
+  case XML_READER_TYPE_TEXT:
+  case XML_READER_TYPE_SIGNIFICANT_WHITESPACE:
+
+    // output the UTF-8 buffer escaping the characters.  Note that the output encoding
+    // is handled by libxml
+    for (unsigned char* p = (unsigned char*) node.content; *p != 0; ++p) {
+      if (*p == '&')
+        xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&amp;", 5);
+      else if (*p == '<')
+        xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&lt;", 4);
+      else if (*p == '>')
+        xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&gt;", 4);
+      else
+        xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) p, 1);
+    }
+    break;
+
+  default:
+    break;
+  }
+}
+
+
+// output current XML node in reader
+void output_node_source(const xmlNode & node, xmlTextWriterPtr writer) {
+
+  bool isemptyelement = false;
+  switch (node.type) {
 
   case XML_READER_TYPE_TEXT:
   case XML_READER_TYPE_SIGNIFICANT_WHITESPACE:
