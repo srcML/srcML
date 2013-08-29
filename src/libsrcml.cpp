@@ -539,6 +539,8 @@ srcml_archive* srcml_clone_archive(const srcml_archive* archive) {
   new_archive->options = archive->options;
   new_archive->tabstop = archive->tabstop;
 
+  new_archive->prefixes.clear();
+  new_archive->namespaces.clear();
   for(int pos = 0; pos < archive->namespaces.size(); ++pos) {
 
     new_archive->namespaces.push_back(archive->namespaces.at(pos));
