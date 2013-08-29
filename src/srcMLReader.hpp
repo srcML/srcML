@@ -10,7 +10,6 @@
 
 class srcMLReader {
 
-  xmlParserInputBufferPtr input;
   xmlTextReaderPtr reader;
   xmlNodePtr node;
   bool is_archive;
@@ -20,9 +19,6 @@ class srcMLReader {
 public:
 
   srcMLReader(const char * filename);
-  srcMLReader(const char * buffer, int size);
-  srcMLReader(FILE * file);
-  srcMLReader(int fd);
   srcMLReader(xmlParserInputBufferPtr input);
   ~srcMLReader();
 

@@ -93,6 +93,7 @@ struct srcml_archive {
 
   // utility
   srcMLReader * reader;
+  xmlParserInputBufferPtr input;
 
   // TODO  Used for memory function.  May want to try and remove in future
   xmlBuffer * buffer;
@@ -746,6 +747,7 @@ int srcml_read_open_filename(srcml_archive* archive, const char* srcml_filename)
 int srcml_read_open_memory  (srcml_archive* archive, const char* buffer, size_t buffer_size) { 
 
   archive->type = SRCML_ARCHIVE_READ;
+  archive->input = xmlParserInputBufferCreateMem(buffer, buffer_size, xmlParseCharEncoding(0));
   archive->reader = new srcMLReader(buffer, buffer_size);
 
   return SRCML_STATUS_OK;
@@ -755,6 +757,7 @@ int srcml_read_open_memory  (srcml_archive* archive, const char* buffer, size_t 
 int srcml_read_open_FILE    (srcml_archive* archive, FILE* srcml_file) { 
 
   archive->type = SRCML_ARCHIVE_READ;
+  archive->input = xmlParserInputBufferCreateFile(srcml_file, xmlParseCharEncoding(0));
   archive->reader = new srcMLReader(srcml_file);
 
   return SRCML_STATUS_OK;
@@ -764,6 +767,7 @@ int srcml_read_open_FILE    (srcml_archive* archive, FILE* srcml_file) {
 int srcml_read_open_fd      (srcml_archive* archive, int srcml_fd) { 
 
   archive->type = SRCML_ARCHIVE_READ;
+  archive->input = xmlParserInputBufferCreateFd(srcml_fd, xmlParseCharEncoding(0));
   archive->reader = new srcMLReader(srcml_fd);
 
   return SRCML_STATUS_OK;
