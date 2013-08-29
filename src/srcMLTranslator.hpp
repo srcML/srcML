@@ -61,7 +61,7 @@ public:
     srcMLTranslator(int language,
                     const char* src_encoding,
                     const char* xml_encoding,
-                    char** str_buffer,
+                    char** str_buf,
                     OPTION_TYPE& options,
                     const char* directory,
                     const char* filename,
@@ -143,6 +143,7 @@ private:
     xmlBuffer * output_buffer;
     srcMLTranslatorCore * translator;
     OPTION_TYPE options;
+    char ** str_buffer;
 
 };
 
