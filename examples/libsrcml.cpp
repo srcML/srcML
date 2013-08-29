@@ -93,6 +93,7 @@ struct srcml_archive {
 
   // utility
   srcMLReader * reader;
+  xmlParserInputBufferPtr input;
 
   // TODO  Used for memory function.  May want to try and remove in future
   xmlBuffer * buffer;
@@ -110,8 +111,8 @@ struct srcml_unit {
 };
 
 srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector<std::string>(), 0,
-                                4, std::vector<std::string>(), std::vector<std::string>(), std::vector<pair>(),
-                                0, 0, 0 };
+                                 4, std::vector<std::string>(), std::vector<std::string>(), std::vector<pair>(),
+                                 0, 0, 0, 0 };
 
 /* translates to/from srcML */
 int srcml(const char* input_filename, const char* output_filename) {
@@ -509,13 +510,14 @@ srcml_archive* srcml_create_archive()
    allocated by srcml_create_archive() */
 void srcml_free_archive(srcml_archive * archive) {
 
-  if(archive->filename) delete archive->filename;
-  if(archive->encoding) delete archive->encoding;
-  if(archive->language) delete archive->language;
-  if(archive->directory) delete archive->directory;
-  if(archive->version) delete archive->version;
-  if(archive->translator) delete archive->translator;
-  if(archive->reader) delete archive->reader;
+  if(archive->filename) delete archive->filename, archive->filename = 0;
+  if(archive->encoding) delete archive->encoding, archive->encoding = 0;
+  if(archive->language) delete archive->language, archive->language = 0;
+  if(archive->directory) delete archive->directory, archive->directory = 0;
+  if(archive->version) delete archive->version, archive->version = 0;
+  if(archive->translator) delete archive->translator, archive->translator = 0;
+  if(archive->reader) delete archive->reader, archive->reader = 0;
+  if(archive->input) xmlFreeParserInputBuffer(archive->input), archive->input = 0;
 
   delete archive;
 }
@@ -746,7 +748,8 @@ int srcml_read_open_filename(srcml_archive* archive, const char* srcml_filename)
 int srcml_read_open_memory  (srcml_archive* archive, const char* buffer, size_t buffer_size) { 
 
   archive->type = SRCML_ARCHIVE_READ;
-  archive->reader = new srcMLReader(buffer, buffer_size);
+  archive->input = xmlParserInputBufferCreateMem(buffer, buffer_size, xmlParseCharEncoding(0));
+  archive->reader = new srcMLReader(archive->input);
 
   return SRCML_STATUS_OK;
 
@@ -755,7 +758,8 @@ int srcml_read_open_memory  (srcml_archive* archive, const char* buffer, size_t 
 int srcml_read_open_FILE    (srcml_archive* archive, FILE* srcml_file) { 
 
   archive->type = SRCML_ARCHIVE_READ;
-  archive->reader = new srcMLReader(srcml_file);
+  archive->input = xmlParserInputBufferCreateFile(srcml_file, xmlParseCharEncoding(0));
+  archive->reader = new srcMLReader(archive->input);
 
   return SRCML_STATUS_OK;
 
@@ -764,7 +768,8 @@ int srcml_read_open_FILE    (srcml_archive* archive, FILE* srcml_file) {
 int srcml_read_open_fd      (srcml_archive* archive, int srcml_fd) { 
 
   archive->type = SRCML_ARCHIVE_READ;
-  archive->reader = new srcMLReader(srcml_fd);
+  archive->input = xmlParserInputBufferCreateFd(srcml_fd, xmlParseCharEncoding(0));
+  archive->reader = new srcMLReader(archive->input);
 
   return SRCML_STATUS_OK;
 
@@ -845,7 +850,13 @@ void srcml_parse_unit_internal(srcml_unit * unit, int lang) {
 }
 
 /* Convert to srcml and append to the archive */
-int srcml_parse_unit_archive (srcml_archive* archive, srcml_unit* unit) { return 0; }
+// TODO What is this supposed to do.  Right now append unit to archive, that is noop.
+int srcml_parse_unit_archive (srcml_archive* archive, srcml_unit* unit) { 
+
+  return SRCML_STATUS_OK;
+
+}
+
 int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
   int lang = unit->language ? srcml_check_language(unit->language->c_str()) : Language::getLanguageFromFilename(src_filename, unit->archive->registered_languages);
@@ -904,8 +915,30 @@ int srcml_write_unit(srcml_archive* archive, const srcml_unit* unit) {
 }
 
 /* Read the next unit from the archive */
-const srcml_unit* srcml_read_unit_archive (srcml_archive* archive) { return 0; }
-const srcml_unit* srcml_read_archive_current_unit(const srcml_archive* archive) { return 0; }
+const srcml_unit* srcml_read_unit_archive (srcml_archive* archive) {
+
+  return srcml_read_unit(archive);
+
+}
+
+const srcml_unit* srcml_read_archive_current_unit(const srcml_archive* archive) {
+
+  std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+  int done = !archive->reader->readUnitAttributes(&language, &filename, &directory, &version); 
+
+  srcml_unit * unit = 0;
+  if(!done) {
+    unit = srcml_create_unit((srcml_archive *)archive);
+    unit->language = language;
+    unit->filename = filename;
+    unit->directory = directory;
+    unit->version = version;
+  }
+
+  return unit;
+
+}
+
 int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) { 
 
   xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename(src_filename, xmlFindCharEncodingHandler(unit->archive->encoding ? unit->archive->encoding->c_str() : "ISO-8859-1"), unit->archive->options & SRCML_OPTION_COMPRESS);
@@ -1024,11 +1057,11 @@ srcml_unit * srcml_create_unit(srcml_archive * archive) {
 
 int srcml_free_unit(srcml_unit* unit) {
 
-  if(unit->language) delete unit->language;
-  if(unit->filename) delete unit->filename;
-  if(unit->directory) delete unit->directory;
-  if(unit->version) delete unit->version;
-  if(unit->unit) delete unit->unit;
+  if(unit->language) delete unit->language, unit->language = 0;
+  if(unit->filename) delete unit->filename, unit->filename = 0;
+  if(unit->directory) delete unit->directory, unit->directory = 0;
+  if(unit->version) delete unit->version, unit->version = 0;
+  if(unit->unit) delete unit->unit, unit->unit = 0;
 
   delete unit;
 

@@ -1,4 +1,4 @@
-EXAMPLES= $(shell ls *.c | grep "direct") $(shell ls *.c | grep "create") $(shell ls *.c | grep "read") $(shell ls *.c | grep "convenience") 
+EXAMPLES= $(shell ls *.c | grep -v "sort")
 GEN_ALL= ${foreach nm, ${EXAMPLES}, $(nm).out}
 LIBXML_INC_DIR=${firstword ${wildcard /opt/local/include/libxml2  /usr/local/include/libxml2 /usr/include/libxml2}}
 ANTLR_LIB_DIR=${dir ${firstword ${wildcard /usr/lib64/libantlr* /usr/lib/libantlr* /opt/local/lib/libantlr* /usr/local/lib/libantlr*}}}
