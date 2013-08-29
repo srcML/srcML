@@ -85,9 +85,6 @@ struct srcml_archive {
   // utility
   srcMLReader * reader;
   xmlParserInputBufferPtr input;
-
-  // TODO  Used for memory function.  May want to try and remove in future
-  xmlBuffer * buffer;
 };
 
 struct srcml_unit {
@@ -103,7 +100,7 @@ struct srcml_unit {
 
 srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector<std::string>(), 0,
                                  4, std::vector<std::string>(), std::vector<std::string>(), std::vector<pair>(),
-                                 0, 0, 0, 0 };
+                                 0, 0, 0 };
 
 const char * srcml_version() {
 
@@ -1058,15 +1055,6 @@ void srcml_close_archive(srcml_archive * archive) {
   if(archive->translator) delete archive->translator, archive->translator = 0;
   if(archive->reader) delete archive->reader, archive->reader = 0;
   if(archive->input) xmlFreeParserInputBuffer(archive->input), archive->input = 0;
-
-  if(archive->buffer) {
-
-    archive->buffer->content = 0;
-
-    xmlBufferFree(archive->buffer);
-    archive->buffer = 0;
-
-  }
 
 }
 
