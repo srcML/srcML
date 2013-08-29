@@ -80,13 +80,11 @@ struct srcml_unit;
 
     * Translates from source code to srcML if the input_filename
       extension is for source code, e.g., .c, .cpp, .java
-
-    * Language determined by file extension if language argument is
-    * SRCML_LANGUAGE_NULL.
+      Language determined by file extension if language is not
+      set with srcml_set_language()
 
     * Translates from srcML to source code if the input_filename
-      extension is '.xml'.  Language argument should be
-      SRCML_LANGUAGE_NULL in this case.
+      extension is '.xml'.
 
     * Input filenames can be for a file, a compressed file, a
       source-code archive (e.g., .tar), or a URI that is for any of
