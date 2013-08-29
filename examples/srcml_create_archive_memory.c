@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
     archive = srcml_create_archive();
 
     /* open a srcML archive for output */
-    srcml_write_open_memory(archive, s, 500);
+    srcml_write_open_memory(archive, &s);
 
     /* add all the files to the archive */
     for (i = 1; i < argc; ++i) {

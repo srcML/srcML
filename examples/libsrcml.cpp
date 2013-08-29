@@ -105,6 +105,12 @@ srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector
                                  4, std::vector<std::string>(), std::vector<std::string>(), std::vector<pair>(),
                                  0, 0, 0, 0 };
 
+const char * srcml_version() {
+
+  return SRCML_VERSION_STRING;
+
+}
+
 /* prefix for an XML namespace */
 /* translates to/from srcML */
 int srcml(const char* input_filename, const char* output_filename) {
@@ -193,49 +199,49 @@ int srcml_set_encoding(const char* encoding) {
 
 }
 
-int srcml_set_language  (const char* language) {
+int srcml_set_language(const char* language) {
 
   return srcml_archive_set_language(&global_archive, language);
 
 }
 
-int srcml_set_filename  (const char* filename) {
+int srcml_set_filename(const char* filename) {
 
   return srcml_archive_set_filename(&global_archive, filename);
 
 }
 
-int srcml_set_directory (const char* directory) {
+int srcml_set_directory(const char* directory) {
 
   return srcml_archive_set_directory(&global_archive, directory);
 
 }
 
-int srcml_set_version   (const char* version) {
+int srcml_set_version(const char* version) {
 
   return srcml_archive_set_version(&global_archive, version);
 
 }
 
-int srcml_set_options   (int option) {
+int srcml_set_options(int option) {
 
   return srcml_archive_set_options(&global_archive, option);
 
 }
 
-int srcml_set_option    (int option) {
+int srcml_set_option(int option) {
 
   return srcml_archive_set_option(&global_archive, option);
 
 }
 
-int srcml_clear_option  (int option) {
+int srcml_clear_option(int option) {
 
   return srcml_archive_set_option(&global_archive, option);
 
 }
 
-int srcml_set_tabstop   (int tabstop) {
+int srcml_set_tabstop(int tabstop) {
 
   return srcml_archive_set_tabstop(&global_archive, tabstop);
 
@@ -253,19 +259,19 @@ int srcml_register_namespace(const char* prefix, const char* ns) {
 
 }
 
-const char* srcml_get_encoding () {
+const char* srcml_get_encoding() {
 
   return srcml_archive_get_encoding(&global_archive);
 
 }
 
-const char* srcml_get_language () {
+const char* srcml_get_language() {
 
   return srcml_archive_get_language(&global_archive);
 
 }
 
-const char* srcml_get_filename () {
+const char* srcml_get_filename() {
 
   return srcml_archive_get_filename(&global_archive);
 
@@ -277,25 +283,25 @@ const char* srcml_get_directory() {
 
 }
 
-const char* srcml_get_version  () {
+const char* srcml_get_version() {
 
   return srcml_archive_get_version(&global_archive);
 
 }
 
-int         srcml_get_options  () {
+int srcml_get_options() {
 
   return srcml_archive_get_options(&global_archive);
 
 }
 
-int         srcml_get_tabstop  () {
+int srcml_get_tabstop() {
 
   return srcml_archive_get_tabstop(&global_archive);
 
 }
 
-int         srcml_get_namespace_size() {
+int srcml_get_namespace_size() {
 
   return global_archive.namespaces.size();
 
@@ -533,7 +539,7 @@ srcml_archive* srcml_clone_archive(const srcml_archive* archive) {
 }
 
 /* setup options for srcml archive */
-int srcml_archive_set_encoding  (srcml_archive* archive, const char* encoding) {
+int srcml_archive_set_encoding(srcml_archive* archive, const char* encoding) {
 
   if(archive->encoding) delete archive->encoding;
   archive->encoding = new std::string(encoding);
@@ -541,14 +547,14 @@ int srcml_archive_set_encoding  (srcml_archive* archive, const char* encoding) {
 
 }
 
-int srcml_archive_set_language  (srcml_archive* archive, const char* language) {
+int srcml_archive_set_language(srcml_archive* archive, const char* language) {
 
   if(archive->language) delete archive->language;
   archive->language = new std::string(language);
   return SRCML_STATUS_OK;
 
 }
-int srcml_archive_set_filename  (srcml_archive* archive, const char* filename) {
+int srcml_archive_set_filename(srcml_archive* archive, const char* filename) {
 
   if(archive->filename) delete archive->filename;
   archive->filename = new std::string(filename);
@@ -562,7 +568,7 @@ int srcml_archive_set_directory (srcml_archive* archive, const char* directory) 
   return SRCML_STATUS_OK;
 
 }
-int srcml_archive_set_version   (srcml_archive* archive, const char* version) {
+int srcml_archive_set_version(srcml_archive* archive, const char* version) {
 
   if(archive->version) delete archive->version;
   archive->version = new std::string(version);
@@ -583,7 +589,7 @@ int srcml_archive_set_attributes(srcml_archive* archive, const char** attr[2]) {
   return SRCML_STATUS_OK;
 
 }
-int srcml_archive_set_options   (srcml_archive* archive, int options) {
+int srcml_archive_set_options(srcml_archive* archive, int options) {
 
   archive->options = options;
   return SRCML_STATUS_OK;
@@ -595,13 +601,13 @@ int srcml_archive_set_option    (srcml_archive* archive, int option) {
   return SRCML_STATUS_OK;
 
 }
-int srcml_archive_clear_option  (srcml_archive* archive, int option) {
+int srcml_archive_clear_option(srcml_archive* archive, int option) {
 
   archive->options &= ~option;
   return SRCML_STATUS_OK;
 
 }
-int srcml_archive_set_tabstop   (srcml_archive* archive, int tabstop) {
+int srcml_archive_set_tabstop(srcml_archive* archive, int tabstop) {
 
   archive->tabstop = tabstop;
   return SRCML_STATUS_OK;
@@ -649,12 +655,12 @@ int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename
 
 }
 
-int srcml_write_open_memory  (srcml_archive* archive, char* buffer, size_t buffer_size) {
+int srcml_write_open_memory(srcml_archive* archive, char** buffer) {
 
   archive->buffer = xmlBufferCreate();
   if(archive->buffer->content)
     free(archive->buffer->content);
-  archive->buffer->content = (xmlChar *)buffer;
+  archive->buffer->content = (xmlChar *)*buffer;
 
   archive->type = SRCML_ARCHIVE_WRITE;
   archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
@@ -671,7 +677,7 @@ int srcml_write_open_memory  (srcml_archive* archive, char* buffer, size_t buffe
 
 }
 
-int srcml_write_open_FILE    (srcml_archive* archive, FILE* srcml_file) {
+int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
 
   xmlTextWriterPtr writer = xmlNewTextWriter(xmlOutputBufferCreateFile(srcml_file, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0)));
 
@@ -690,7 +696,7 @@ int srcml_write_open_FILE    (srcml_archive* archive, FILE* srcml_file) {
 
 }
 
-int srcml_write_open_fd      (srcml_archive* archive, int srcml_fd) {
+int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
 
   xmlTextWriterPtr writer = xmlNewTextWriter(xmlOutputBufferCreateFd(srcml_fd, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0)));
 
@@ -741,7 +747,7 @@ int srcml_read_open_filename(srcml_archive* archive, const char* srcml_filename)
 
 }
 
-int srcml_read_open_memory  (srcml_archive* archive, const char* buffer, size_t buffer_size) { 
+int srcml_read_open_memory(srcml_archive* archive, const char* buffer, size_t buffer_size) { 
 
   archive->type = SRCML_ARCHIVE_READ;
   archive->input = xmlParserInputBufferCreateMem(buffer, buffer_size, xmlParseCharEncoding(0));
@@ -752,7 +758,7 @@ int srcml_read_open_memory  (srcml_archive* archive, const char* buffer, size_t 
 
 }
 
-int srcml_read_open_FILE    (srcml_archive* archive, FILE* srcml_file) { 
+int srcml_read_open_FILE(srcml_archive* archive, FILE* srcml_file) { 
 
   archive->type = SRCML_ARCHIVE_READ;
   archive->input = xmlParserInputBufferCreateFile(srcml_file, xmlParseCharEncoding(0));
@@ -763,7 +769,7 @@ int srcml_read_open_FILE    (srcml_archive* archive, FILE* srcml_file) {
 
  }
 
-int srcml_read_open_fd      (srcml_archive* archive, int srcml_fd) { 
+int srcml_read_open_fd(srcml_archive* archive, int srcml_fd) { 
 
   archive->type = SRCML_ARCHIVE_READ;
   archive->input = xmlParserInputBufferCreateFd(srcml_fd, xmlParseCharEncoding(0));
@@ -775,7 +781,7 @@ int srcml_read_open_fd      (srcml_archive* archive, int srcml_fd) {
 }
 
 /* setup options for srcml unit */
-int srcml_unit_set_language (srcml_unit* unit, const char* language) {
+int srcml_unit_set_language(srcml_unit* unit, const char* language) {
 
   if(unit->language) delete unit->language;
   unit->language = new std::string(language);
@@ -783,7 +789,7 @@ int srcml_unit_set_language (srcml_unit* unit, const char* language) {
 
 }
 
-int srcml_unit_set_filename (srcml_unit* unit, const char* filename) {
+int srcml_unit_set_filename(srcml_unit* unit, const char* filename) {
 
   if(unit->filename) delete unit->filename;
   unit->filename = new std::string(filename);
@@ -799,7 +805,7 @@ int srcml_unit_set_directory(srcml_unit* unit, const char* directory) {
 
 }
 
-int srcml_unit_set_version  (srcml_unit* unit, const char* version) {
+int srcml_unit_set_version(srcml_unit* unit, const char* version) {
 
   if(unit->version) delete unit->version;
   unit->version = new std::string(version);
@@ -807,13 +813,13 @@ int srcml_unit_set_version  (srcml_unit* unit, const char* version) {
 
 }
 
-const char* srcml_unit_get_language (const srcml_unit* unit) {
+const char* srcml_unit_get_language(const srcml_unit* unit) {
 
   return unit->language ? unit->language->c_str() : 0;
 
 }
 
-const char* srcml_unit_get_filename (const srcml_unit* unit) {
+const char* srcml_unit_get_filename(const srcml_unit* unit) {
 
   return unit->filename ? unit->filename->c_str() : 0;
 
@@ -876,7 +882,7 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
 }
 
-int srcml_parse_unit_memory  (srcml_unit* unit, char* src_buffer, size_t buffer_size) {
+int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buffer_size) {
 
   int lang = srcml_check_language(unit->language ? unit->language->c_str() : 0);
 
@@ -896,7 +902,7 @@ int srcml_parse_unit_memory  (srcml_unit* unit, char* src_buffer, size_t buffer_
 
 }
 
-int srcml_parse_unit_FILE    (srcml_unit* unit, FILE* src_file) {
+int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
 
   int lang = srcml_check_language(unit->language ? unit->language->c_str() : 0);
 
@@ -919,7 +925,7 @@ int srcml_parse_unit_FILE    (srcml_unit* unit, FILE* src_file) {
 
 }
 
-int srcml_parse_unit_fd      (srcml_unit* unit, int src_fd) { 
+int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) { 
 
   int lang = srcml_check_language(unit->language ? unit->language->c_str() : 0);
 
@@ -950,7 +956,7 @@ int srcml_write_unit(srcml_archive* archive, const srcml_unit* unit) {
 }
 
 /* Read the next unit from the archive */
-const srcml_unit* srcml_read_unit_archive (srcml_archive* archive) {
+const srcml_unit* srcml_read_unit_archive(srcml_archive* archive) {
 
   return srcml_read_unit(archive);
 
@@ -984,10 +990,10 @@ int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
 }
 
-int srcml_unparse_unit_memory  (srcml_unit* unit, const char* src_buffer, size_t buffer_size) {
+int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer) {
 
   xmlBufferPtr buffer = xmlBufferCreate();
-  buffer->content = (xmlChar *)src_buffer;
+  buffer->content = (xmlChar *)*src_buffer;
   xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(unit->archive->encoding ? unit->archive->encoding->c_str() : "ISO-8859-1"));
   srcMLUtility utility(unit->unit->c_str(), unit->unit->size(), 0, unit->archive->options);
   utility.extract_text(output_buffer);
@@ -999,7 +1005,7 @@ int srcml_unparse_unit_memory  (srcml_unit* unit, const char* src_buffer, size_t
 
 }
 
-int srcml_unparse_unit_FILE    (srcml_unit* unit, FILE* srcml_file) { 
+int srcml_unparse_unit_FILE(srcml_unit* unit, FILE* srcml_file) { 
 
   xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFile(srcml_file, xmlFindCharEncodingHandler(unit->archive->encoding ? unit->archive->encoding->c_str() : "ISO-8859-1"));
   srcMLUtility utility(unit->unit->c_str(), unit->unit->size(), 0, unit->archive->options);
@@ -1009,7 +1015,7 @@ int srcml_unparse_unit_FILE    (srcml_unit* unit, FILE* srcml_file) {
 
 }
 
-int srcml_unparse_unit_fd      (srcml_unit* unit, int srcml_fd) { 
+int srcml_unparse_unit_fd(srcml_unit* unit, int srcml_fd) { 
 
   xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFd(srcml_fd, xmlFindCharEncodingHandler(unit->archive->encoding ? unit->archive->encoding->c_str() : "ISO-8859-1"));
   srcMLUtility utility(unit->unit->c_str(), unit->unit->size(), 0, unit->archive->options);
@@ -1046,7 +1052,7 @@ void srcml_write_close(srcml_archive* archive) {
 
 }
 
-void srcml_read_close (srcml_archive* archive) {
+void srcml_read_close(srcml_archive* archive) {
 
   srcml_close_archive(archive);
 
@@ -1077,7 +1083,7 @@ void srcml_write_free(srcml_archive* archive) {
 
 }
 
-void srcml_read_free (srcml_archive* archive) { 
+void srcml_read_free(srcml_archive* archive) { 
 
   srcml_free_archive(archive);
 
@@ -1107,19 +1113,19 @@ int srcml_free_unit(srcml_unit* unit) {
 
 }
 
-const char* srcml_archive_get_encoding (const srcml_archive* archive) {
+const char* srcml_archive_get_encoding(const srcml_archive* archive) {
 
   return archive->encoding ? archive->encoding->c_str() : 0;
 
 }
 
-const char* srcml_archive_get_language (const srcml_archive* archive) {
+const char* srcml_archive_get_language(const srcml_archive* archive) {
 
   return archive->language ? archive->language->c_str() : 0;
 
 }
 
-const char* srcml_archive_get_filename (const srcml_archive* archive) {
+const char* srcml_archive_get_filename(const srcml_archive* archive) {
 
   return archive->filename ? archive->filename->c_str() : 0;
 
@@ -1131,19 +1137,19 @@ const char* srcml_archive_get_directory(const srcml_archive* archive) {
 
 }
 
-const char* srcml_archive_get_version  (const srcml_archive* archive) {
+const char* srcml_archive_get_version(const srcml_archive* archive) {
 
   return archive->version ? archive->version->c_str() : 0;
 
 }
 
-int         srcml_archive_get_options  (const srcml_archive* archive) {
+int srcml_archive_get_options(const srcml_archive* archive) {
 
   return  archive->options;
 
 }
 
-int         srcml_archive_get_tabstop  (const srcml_archive* archive) {
+int srcml_archive_get_tabstop(const srcml_archive* archive) {
 
   return archive->tabstop;
 
@@ -1164,5 +1170,5 @@ const char** srcml_list(const char* srcml_filename) { return 0; }
 /* srcML XPath query and XSLT transform functions */
 int srcml_add_transform_xpath(srcml_archive* archive, const char* xpath_string) { return 0; }
 int srcml_add_transform_xslt(srcml_archive* archive, const char* xlst_filename) { return 0; }
-int srcml_add_transform_relaxng(srcml_archive* archive, const char* xlst_filename) { return 0; }
+int srcml_add_transform_relaxng(srcml_archive* archive, const char* relaxng_filename) { return 0; }
 int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) { return 0; }
