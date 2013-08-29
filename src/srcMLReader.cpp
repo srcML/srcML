@@ -460,7 +460,15 @@ void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer) {
       xmlAttrPtr attribute = node.properties;
       while (attribute) {
 
-        xmlTextWriterWriteAttribute(writer, (const xmlChar *)attribute->name, (const xmlChar *)attribute->children->content);
+        std::string s;
+        if(attribute->ns->prefix) {
+          s = (const char *)attribute->ns->prefix;
+          s += ":";
+
+        }
+        s += (const char *)attribute->name;
+
+        xmlTextWriterWriteAttribute(writer, (const xmlChar *)s.c_str(), (const xmlChar *)attribute->children->content);
         attribute = attribute->next;
       }
     }
