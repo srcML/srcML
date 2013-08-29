@@ -47,10 +47,9 @@ int main(int argc, char* argv[]) {
   /* options and attributes of cloned archive start the same as
      the original archive */
   oarchive = srcml_clone_archive(iarchive);
-
+  srcml_read_open_filename(iarchive, inputfile);
   while (true) {
 
-    srcml_read_open_filename(iarchive, inputfile);
 
     units[num_units] = srcml_read_unit(iarchive);
     if (units[num_units] == 0)
