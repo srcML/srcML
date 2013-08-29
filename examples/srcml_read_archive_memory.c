@@ -26,19 +26,24 @@
 
 #include "srcml.h"
 #include <string.h>
+#include <fcntl.h>
 
 int main(int argc, char* argv[]) {
-    const char * srcml_input = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"b.cpp\"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>\n</unit>\n\n</unit>";
     const char* language;
     const char* filename;
     struct srcml_archive* archive;
     struct srcml_unit* unit;
+    int srcml_input;
+    char s[500];
 
     /* create a new srcml archive structure */
     archive = srcml_create_archive();
 
     /* open a srcML archive for input */
-    srcml_read_open_memory(archive, srcml_input, strlen(srcml_input));
+    srcml_input = open("project.xml", O_RDONLY);
+    read(srcml_input, s, 500);
+    close(srcml_input);
+    srcml_read_open_memory(archive, s, strlen(s));
 
     /* add all the files to the archive */
     while (unit = srcml_read_unit(archive)) {

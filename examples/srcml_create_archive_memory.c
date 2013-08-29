@@ -32,6 +32,7 @@ int main(int argc, char* argv[]) {
     struct srcml_archive* archive;
     struct srcml_unit* unit;
     char s[500];
+    FILE * srcml_input;
 
     /* create a new srcml archive structure */
     archive = srcml_create_archive();
@@ -45,7 +46,11 @@ int main(int argc, char* argv[]) {
         unit = srcml_create_unit(archive);
         
         /* Translate to srcml and append to the archive */
-        srcml_parse_unit_filename(unit, argv[i]);
+        char buffer[256];
+        srcml_input = fopen(argv[i], "r");
+        fgets(buffer, 256, srcml_input);
+        fclose(srcml_input);
+        srcml_parse_unit_memory(unit, buffer, 256);
 
         /* Translate to srcml and append to the archive */
         srcml_write_unit(archive, unit);
