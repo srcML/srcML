@@ -655,12 +655,12 @@ int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename
 
 }
 
-int srcml_write_open_memory(srcml_archive* archive, char* buffer, size_t buffer_size) {
+int srcml_write_open_memory(srcml_archive* archive, char** buffer, size_t buffer_size) {
 
   archive->buffer = xmlBufferCreate();
   if(archive->buffer->content)
     free(archive->buffer->content);
-  archive->buffer->content = (xmlChar *)buffer;
+  archive->buffer->content = (xmlChar *)*buffer;
 
   archive->type = SRCML_ARCHIVE_WRITE;
   archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
@@ -882,7 +882,7 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
 }
 
-int srcml_parse_unit_memory(srcml_unit* unit, char* src_buffer, size_t buffer_size) {
+int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buffer_size) {
 
   int lang = srcml_check_language(unit->language ? unit->language->c_str() : 0);
 
@@ -990,10 +990,10 @@ int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
 }
 
-int srcml_unparse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buffer_size) {
+int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer, size_t buffer_size) {
 
   xmlBufferPtr buffer = xmlBufferCreate();
-  buffer->content = (xmlChar *)src_buffer;
+  buffer->content = (xmlChar *)*src_buffer;
   xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(unit->archive->encoding ? unit->archive->encoding->c_str() : "ISO-8859-1"));
   srcMLUtility utility(unit->unit->c_str(), unit->unit->size(), 0, unit->archive->options);
   utility.extract_text(output_buffer);
