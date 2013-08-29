@@ -57,15 +57,15 @@ const char* srcml_version_string(void);
 /* Options */
 #define SRCML_OPTION_LITERAL           1<<2/*1<<0  /* Markups literal in special namespace */
 #define SRCML_OPTION_MODIFIER          1<<17/*1<<1  /* Markups modifiers in special namespace */
-#define SRCML_OPTION_ARCHIVE           1<<2  /* Create an archive */
+#define SRCML_OPTION_ARCHIVE           1<<1/*1<<2  /* Create an archive */
 #define SRCML_OPTION_POSITION          1<<10/*1<<3  /* Include line/column position attributes */
-#define SRCML_OPTION_COMPRESS          1<<4  /* Compress the output file */
-#define SRCML_OPTION_NO_XML_DECL       1<<5  /* Do not issue an XML declaration */
-#define SRCML_OPTION_NO_NAMESPACE_DECL 1<<6  /* Do not include any XML namespace declarations */
-#define SRCML_OPTION_CPP               1<<7  /* Markup preprocessor elements (default for C, C++, C#) */
-#define SRCML_OPTION_CPP_TEXT_ELSE     1<<8  /* Leave as text preprocessor else parts (default: markup) */
-#define SRCML_OPTION_CPP_MARKUP_IF0    1<<9  /* Markup preprocessor #if 0 sections (default: leave as text) */
-#define SRCML_OPTION_APPLY_ROOT        1<<10 /* Apply transformations to the entire srcML file (default: each unit */
+#define SRCML_OPTION_COMPRESS          1<<3/*1<<4  /* Compress the output file */
+#define SRCML_OPTION_NO_XML_DECL       1<<29 | 1<<18/*1<<5  /* Do not issue an XML declaration */
+#define SRCML_OPTION_NO_NAMESPACE_DECL 1<<30 | 1<<18/*1<<6  /* Do not include any XML namespace declarations */
+#define SRCML_OPTION_CPP               1<<28 | 1<<22/*1<<7  /* Markup preprocessor elements (default for C, C++, C#) */
+#define SRCML_OPTION_CPP_TEXT_ELSE     1<<22/*1<<8  /* Leave as text preprocessor else parts (default: markup) */
+#define SRCML_OPTION_CPP_MARKUP_IF0    1<<23/*1<<9  /* Markup preprocessor #if 0 sections (default: leave as text) */
+#define SRCML_OPTION_APPLY_ROOT        1<<27/*1<<10 /* Apply transformations to the entire srcML file (default: each unit */
 
 /* srcml status messages */
 #define SRCML_STATUS_OK    0
@@ -80,13 +80,11 @@ struct srcml_unit;
 
     * Translates from source code to srcML if the input_filename
       extension is for source code, e.g., .c, .cpp, .java
-
-    * Language determined by file extension if language argument is
-    * SRCML_LANGUAGE_NULL.
+      Language determined by file extension if language is not
+      set with srcml_set_language()
 
     * Translates from srcML to source code if the input_filename
-      extension is '.xml'.  Language argument should be
-      SRCML_LANGUAGE_NULL in this case.
+      extension is '.xml'.
 
     * Input filenames can be for a file, a compressed file, a
       source-code archive (e.g., .tar), or a URI that is for any of

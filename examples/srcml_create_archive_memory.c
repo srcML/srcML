@@ -52,6 +52,8 @@ int main(int argc, char* argv[]) {
         srcml_input = open(argv[i], O_RDONLY);
         read(srcml_input, buffer, 256);
         close(srcml_input);
+        srcml_unit_set_language(unit, srcml_archive_check_extension(archive, argv[i]));
+
         srcml_parse_unit_memory(unit, buffer, strlen(buffer));
 
         /* Translate to srcml and append to the archive */

@@ -43,15 +43,6 @@
 
 std::string srcml_error;
 
-struct uridata {
-  const char * uri;
-  const char * prefix;
-
-  // Might want to remove
-  int option;
-  char const * const description;
-};
-
 enum SRCML_ARCHIVE_TYPE { SRCML_ARCHIVE_RW, SRCML_ARCHIVE_READ, SRCML_ARCHIVE_WRITE };
 
 struct registered_language {
@@ -114,6 +105,7 @@ srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector
                                  4, std::vector<std::string>(), std::vector<std::string>(), std::vector<pair>(),
                                  0, 0, 0, 0 };
 
+/* prefix for an XML namespace */
 /* translates to/from srcML */
 int srcml(const char* input_filename, const char* output_filename) {
 
@@ -341,7 +333,6 @@ const char* srcml_get_namespace_prefix(const char* prefix) {
 
 }
 
-
 /* source-code language is supported */
 int srcml_check_language(const char* language) { return language == 0 ? 0 : Language::getLanguage(language); }
 
@@ -406,24 +397,12 @@ int srcml_check_format(const char* format) {
 /* particular encoding is supported, both for input and output */
 int srcml_check_encoding(const char* encoding) { return xmlParseCharEncoding(encoding) > 0; }
 
-struct uridata uris[] = {
-
-  { SRCML_SRC_NS_URI,          SRCML_SRC_NS_PREFIX_DEFAULT, 0,               "primary srcML namespace" },
-  { SRCML_CPP_NS_URI,          SRCML_CPP_NS_PREFIX_DEFAULT, OPTION_CPP,      "namespace for cpreprocessing elements" }
-  ,
-  { SRCML_ERR_NS_URI,          SRCML_ERR_NS_PREFIX_DEFAULT, OPTION_DEBUG,    "namespace for srcML debugging elements" },
-  { SRCML_EXT_LITERAL_NS_URI,  SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT, OPTION_LITERAL,  "namespace for optional literal elements" },
-  { SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT, OPTION_OPERATOR, "namespace for optional operator element"},
-  { SRCML_EXT_MODIFIER_NS_URI, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT, OPTION_MODIFIER, "namespace for optional modifier element"},
-  { SRCML_EXT_POSITION_NS_URI, SRCML_EXT_POSITION_NS_PREFIX_DEFAULT, OPTION_POSITION, "namespace for optional position element and attributes" },
-};
-
 /* prefix for an XML namespace */
 const char* srcml_check_prefix(const char* namespace_uri) {
 
-  for(int i = 0; uris[i].uri; ++i)
-    if(strcmp(uris[i].uri, namespace_uri) == 0)
-      return uris[i].prefix;
+  for(int i = 0; global_archive.namespaces.size(); ++i)
+    if(global_archive.namespaces.at(i) == namespace_uri)
+      return global_archive.prefixes.at(i).c_str();
 
   return 0;
 
@@ -432,11 +411,9 @@ const char* srcml_check_prefix(const char* namespace_uri) {
 /* namespace for an XML prefix */
 const char* srcml_check_namespace(const char* prefix) {
 
-  // handle default prefix
-  if(prefix == 0) return uris[0].uri;
-  for(int i = 1; uris[i].uri; ++i)
-    if(strcmp(uris[i].prefix, prefix) == 0)
-      return uris[i].uri;
+  for(int i = 0; global_archive.prefixes.size(); ++i)
+    if(global_archive.prefixes.at(i) == prefix)
+      return global_archive.namespaces.at(i).c_str();
 
   return 0;
 
@@ -527,11 +504,11 @@ srcml_archive* srcml_clone_archive(const srcml_archive* archive) {
 
   srcml_archive * new_archive = srcml_create_archive();
   new_archive->type = archive->type;
-  new_archive->filename = archive->filename;
-  new_archive->encoding = archive->encoding;
-  new_archive->language = archive->language;
-  new_archive->directory = archive->directory;
-  new_archive->version = archive->version;
+  new_archive->filename = archive->filename ? new std::string(*archive->filename) : 0;
+  new_archive->encoding = archive->encoding ? new std::string(*archive->encoding): 0;
+  new_archive->language = archive->language ? new std::string(*archive->language) : 0;
+  new_archive->directory = archive->directory ? new std::string(*archive->directory) : 0;
+  new_archive->version = archive->version ? new std::string(*archive->version) : 0;
 
   for(int pos = 0; pos < archive->attributes.size(); ++pos)
     new_archive->attributes.push_back(archive->attributes.at(pos));
@@ -539,6 +516,8 @@ srcml_archive* srcml_clone_archive(const srcml_archive* archive) {
   new_archive->options = archive->options;
   new_archive->tabstop = archive->tabstop;
 
+  new_archive->prefixes.clear();
+  new_archive->namespaces.clear();
   for(int pos = 0; pos < archive->namespaces.size(); ++pos) {
 
     new_archive->namespaces.push_back(archive->namespaces.at(pos));
@@ -733,8 +712,12 @@ int srcml_write_open_fd      (srcml_archive* archive, int srcml_fd) {
 
 void srcml_read_internal(srcml_archive * archive) {
 
- std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
-  int done = !archive->reader->readRootUnitAttributes(&language, &filename, &directory, &version); 
+  std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+  int done = !archive->reader->readRootUnitAttributes(&language, &filename, &directory, &version,
+                                                      archive->attributes, archive->prefixes,
+                                                      archive->namespaces,
+                                                      archive->options,
+                                                      archive->tabstop); 
   if(!done) {
 
     archive->language = language;
@@ -877,9 +860,17 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
   int lang = unit->language ? srcml_check_language(unit->language->c_str()) : Language::getLanguageFromFilename(src_filename, unit->archive->registered_languages);
 
+  OPTION_TYPE save_options = unit->archive->options;
+
+  if(lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX)
+    unit->archive->options |= OPTION_CPP;
+  else if (lang == Language::LANGUAGE_CSHARP)
+    unit->archive->options |= OPTION_CPP_NOMACRO;
+
   unit->archive->translator->setInput(src_filename);
 
   srcml_parse_unit_internal(unit, lang);
+
 
   return SRCML_STATUS_OK;
 
@@ -888,9 +879,18 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 int srcml_parse_unit_memory  (srcml_unit* unit, char* src_buffer, size_t buffer_size) {
 
   int lang = srcml_check_language(unit->language ? unit->language->c_str() : 0);
-  unit->archive->translator->setInputString(src_buffer, (int)buffer_size);
 
+  OPTION_TYPE save_options = unit->archive->options;
+
+  if(lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX)
+    unit->archive->options |= OPTION_CPP;
+  else if (lang == Language::LANGUAGE_CSHARP)
+    unit->archive->options |= OPTION_CPP_NOMACRO;
+
+  unit->archive->translator->setInputString(src_buffer, (int)buffer_size);
   srcml_parse_unit_internal(unit, lang);
+
+  unit->archive->options = save_options;
 
   return SRCML_STATUS_OK;
 
@@ -900,11 +900,20 @@ int srcml_parse_unit_FILE    (srcml_unit* unit, FILE* src_file) {
 
   int lang = srcml_check_language(unit->language ? unit->language->c_str() : 0);
 
+  OPTION_TYPE save_options = unit->archive->options;
+
+  if(lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX)
+    unit->archive->options |= OPTION_CPP;
+  else if (lang == Language::LANGUAGE_CSHARP)
+    unit->archive->options |= OPTION_CPP_NOMACRO;
+
   xmlParserInputBufferPtr input = xmlParserInputBufferCreateFile(src_file, unit->archive->encoding ? xmlParseCharEncoding(unit->archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
   unit->archive->translator->setInput(input);
 
   srcml_parse_unit_internal(unit, lang);
   xmlFreeParserInputBuffer(input);
+
+  unit->archive->options = save_options;
 
   return SRCML_STATUS_OK;
 
@@ -914,11 +923,20 @@ int srcml_parse_unit_fd      (srcml_unit* unit, int src_fd) {
 
   int lang = srcml_check_language(unit->language ? unit->language->c_str() : 0);
 
+  OPTION_TYPE save_options = unit->archive->options;
+
+  if(lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX)
+    unit->archive->options |= OPTION_CPP;
+  else if (lang == Language::LANGUAGE_CSHARP)
+    unit->archive->options |= OPTION_CPP_NOMACRO;
+
   xmlParserInputBufferPtr input = xmlParserInputBufferCreateFd(src_fd, unit->archive->encoding ? xmlParseCharEncoding(unit->archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
   unit->archive->translator->setInput(input);
 
   srcml_parse_unit_internal(unit, lang);
   xmlFreeParserInputBuffer(input);
+
+  unit->archive->options = save_options;
 
   return SRCML_STATUS_OK;
 
