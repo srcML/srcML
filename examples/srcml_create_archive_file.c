@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
         srcml_unit_set_language(unit, srcml_archive_check_extension(archive, argv[i]));
 
         srcml_input = fopen(argv[i], "r");
-        srcml_parse_unit_FILE(unit, srcml_output);
+        srcml_parse_unit_FILE(unit, srcml_input);
 
         srcml_write_unit(archive, unit);
 
