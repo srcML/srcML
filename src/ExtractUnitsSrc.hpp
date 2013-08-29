@@ -198,6 +198,7 @@ public :
 
     // finish up this file
     xmlOutputBufferClose(output_buffer[0]);
+    output_buffer[0] = 0;
 
     // stop after this file (and end gracefully) with ctrl-c
     if (isoption(*(pstate->poptions), OPTION_TERMINATE)) {
