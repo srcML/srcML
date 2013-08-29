@@ -60,8 +60,8 @@ const char* srcml_version_string(void);
 #define SRCML_OPTION_ARCHIVE           1<<1/*1<<2  /* Create an archive */
 #define SRCML_OPTION_POSITION          1<<10/*1<<3  /* Include line/column position attributes */
 #define SRCML_OPTION_COMPRESS          1<<3/*1<<4  /* Compress the output file */
-#define SRCML_OPTION_NO_XML_DECL       1<<29/*1<<5  /* Do not issue an XML declaration */
-#define SRCML_OPTION_NO_NAMESPACE_DECL 1<<30/*1<<6  /* Do not include any XML namespace declarations */
+#define SRCML_OPTION_NO_XML_DECL       1<<29 | 1<<18/*1<<5  /* Do not issue an XML declaration */
+#define SRCML_OPTION_NO_NAMESPACE_DECL 1<<30 | 1<<18/*1<<6  /* Do not include any XML namespace declarations */
 #define SRCML_OPTION_CPP               1<<28 | 1<<22/*1<<7  /* Markup preprocessor elements (default for C, C++, C#) */
 #define SRCML_OPTION_CPP_TEXT_ELSE     1<<22/*1<<8  /* Leave as text preprocessor else parts (default: markup) */
 #define SRCML_OPTION_CPP_MARKUP_IF0    1<<23/*1<<9  /* Markup preprocessor #if 0 sections (default: leave as text) */
