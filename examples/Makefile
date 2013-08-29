@@ -12,7 +12,10 @@ libsrcml.so : libsrcml.cpp srcml.h
 	gcc libsrcml.so $< -o $@
 
 run : ${GEN_ALL}
-	ls *.out | xargs -t -I% bash -c "./% a.cpp b.cpp"
+	echo "a;" > a.cpp
+	echo "b;" > b.cpp
+	ls *.out | grep "create" | xargs -t -I% bash -c "./% a.cpp b.cpp"
+	ls *.out | grep -v "create" | xargs -t -I% bash -c "./%"
 
 clean : 
 	rm libsrcml.so *.out
