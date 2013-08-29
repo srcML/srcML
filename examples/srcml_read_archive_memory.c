@@ -48,8 +48,9 @@ int main(int argc, char* argv[]) {
         filename = srcml_unit_get_filename(unit);
 
         /* uparse and write to a file */
-        srcml_unparse_unit_filename(unit, filename);
-
+        char buffer[16] = { 0 };
+        srcml_unparse_unit_memory(unit, buffer, 16);
+        printf("%s", buffer);
         srcml_free_unit(unit);
     }
 
