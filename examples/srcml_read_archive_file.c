@@ -25,9 +25,10 @@
 */
 
 #include "srcml.h"
+#include <stdio.h>
 
 int main(int argc, char* argv[]) {
-    int i;
+    FILE * srcml_input;
     const char* language;
     const char* filename;
     struct srcml_archive* archive;
@@ -37,7 +38,8 @@ int main(int argc, char* argv[]) {
     archive = srcml_create_archive();
 
     /* open a srcML archive for input */
-    srcml_read_open_filename(archive, "project.xml");
+    srcml_input = fopen("project.xml", "r");
+    srcml_read_open_FILE(archive, srcml_input);
 
     /* add all the files to the archive */
     while (unit = srcml_read_unit(archive)) {
