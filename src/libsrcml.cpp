@@ -527,11 +527,11 @@ srcml_archive* srcml_clone_archive(const srcml_archive* archive) {
 
   srcml_archive * new_archive = srcml_create_archive();
   new_archive->type = archive->type;
-  new_archive->filename = archive->filename;
-  new_archive->encoding = archive->encoding;
-  new_archive->language = archive->language;
-  new_archive->directory = archive->directory;
-  new_archive->version = archive->version;
+  new_archive->filename = archive->filename ? new std::string(*archive->filename) : 0;
+  new_archive->encoding = archive->encoding ? new std::string(*archive->encoding): 0;
+  new_archive->language = archive->language ? new std::string(*archive->language) : 0;
+  new_archive->directory = archive->directory ? new std::string(*archive->directory) : 0;
+  new_archive->version = archive->version ? new std::string(*archive->version) : 0;
 
   for(int pos = 0; pos < archive->attributes.size(); ++pos)
     new_archive->attributes.push_back(archive->attributes.at(pos));
@@ -733,7 +733,7 @@ int srcml_write_open_fd      (srcml_archive* archive, int srcml_fd) {
 
 void srcml_read_internal(srcml_archive * archive) {
 
- std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+  std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
   int done = !archive->reader->readRootUnitAttributes(&language, &filename, &directory, &version); 
   if(!done) {
 

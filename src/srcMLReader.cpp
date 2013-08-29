@@ -78,6 +78,7 @@ int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** 
   }
 
   readUnitAttributesInternal(language, filename, directory, version);
+  return 1;
 }
 
 int srcMLReader::readUnitAttributes(std::string ** language, std::string ** filename,
