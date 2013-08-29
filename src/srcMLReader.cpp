@@ -461,7 +461,7 @@ void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer) {
       while (attribute) {
 
         std::string s;
-        if(attribute->ns->prefix) {
+        if(attribute->ns && attribute->ns->prefix) {
           s = (const char *)attribute->ns->prefix;
           s += ":";
 
