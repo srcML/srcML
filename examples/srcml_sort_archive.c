@@ -26,12 +26,14 @@
 */
 
 #include "srcml.h"
+#include <string.h>
 
 int main(int argc, char* argv[]) {
     int i;
     struct srcml_archive* iarchive;
     struct srcml_archive* oarchive;
-    struct srcml_unit* unit;
+    struct srcml_unit* unit_one;
+    struct srcml_unit* unit_two;
     const char* inputfile;
     const char* outputfile;
     bool sorted = false;
@@ -48,23 +50,45 @@ int main(int argc, char* argv[]) {
     oarchive = srcml_clone_archive(iarchive);
 
     while (!sorted) {
-      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+      sorted = 1;
         srcml_read_open_filename(iarchive, inputfile);
-        fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
         /* open a srcML archive for output */
         srcml_write_open_filename(oarchive, outputfile);
-        fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
         /* copy the files from the input archive to the output archive */
         while (true) {
 
-            unit = srcml_read_unit(iarchive);
-            if (unit == 0)
-                break;
+            unit_one = srcml_read_unit(iarchive);
+            if (unit_one == 0)
+              break;
+
+            unit_two = srcml_read_unit(iarchive);
+            if (unit_two == 0) {
+
+              srcml_write_unit(oarchive, unit_one);
+              srcml_free_unit(unit_one);
+              break;
+
+            }
+
+            if(strcmp(srcml_unit_get_filename(unit_one), srcml_unit_get_filename(unit_two)) <=0) {
+              srcml_write_unit(oarchive, unit_one);
+              srcml_write_unit(oarchive, unit_two);
+
+            } else {
+
+              sorted = 0;
+              srcml_write_unit(oarchive, unit_two);
+              srcml_write_unit(oarchive, unit_one);
+
+            }
+              
 
             /* Translate to srcml and append to the archive */
-            srcml_write_unit(oarchive, unit);
 
-            srcml_free_unit(unit);
+            srcml_free_unit(unit_one);
+            srcml_free_unit(unit_two);
         }
 
         /* close the archives */
