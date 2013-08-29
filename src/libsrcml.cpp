@@ -850,7 +850,13 @@ void srcml_parse_unit_internal(srcml_unit * unit, int lang) {
 }
 
 /* Convert to srcml and append to the archive */
-int srcml_parse_unit_archive (srcml_archive* archive, srcml_unit* unit) { return 0; }
+// TODO What is this supposed to do.  Right now append unit to archive, that is noop.
+int srcml_parse_unit_archive (srcml_archive* archive, srcml_unit* unit) { 
+
+  return SRCML_STATUS_OK;
+
+}
+
 int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
   int lang = unit->language ? srcml_check_language(unit->language->c_str()) : Language::getLanguageFromFilename(src_filename, unit->archive->registered_languages);
