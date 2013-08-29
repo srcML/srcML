@@ -29,6 +29,7 @@
 
 int main(int argc, char* argv[]) {
     FILE * srcml_input;
+    FILE * srcml_output;
     const char* language;
     const char* filename;
     struct srcml_archive* archive;
@@ -49,13 +50,16 @@ int main(int argc, char* argv[]) {
         filename = srcml_unit_get_filename(unit);
 
         /* uparse and write to a file */
-        srcml_unparse_unit_filename(unit, filename);
+        srcml_output = fopen(filename, "w");
+        srcml_unparse_unit_FILE(unit, srcml_output);
 
         srcml_free_unit(unit);
+        fclose(srcml_output);
     }
 
     /* close the srcML archive */
     srcml_close_archive(archive);
+    fclose(srcml_input);
 
     /* free the srcML archive data */
     srcml_free_archive(archive);
