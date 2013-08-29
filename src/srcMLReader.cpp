@@ -48,13 +48,14 @@ void srcMLReader::readUnitAttributesInternal(std::string ** language, std::strin
   xmlAttrPtr attribute = node->properties;
   while (attribute) {
 
-    if(strcmp((const char *)attribute->name, "language") == 0)
+    std::string name = (const char *)attribute->name;
+    if(name == "language")
       (*language) = new std::string((const char *)attribute->children->content);
-    else if(strcmp((const char *)attribute->name, "filename") == 0)
+    else if(name == "filename")
       (*filename) = new std::string((const char *)attribute->children->content);
-    else if(strcmp((const char *)attribute->name, "directory") == 0)
+    else if(name == "directory")
       (*directory) = new std::string((const char *)attribute->children->content);
-    else if(strcmp((const char *)attribute->name, "version") == 0)
+    else if(name == "version")
       (*version) = new std::string((const char *)attribute->children->content);
 
     attribute = attribute->next;
@@ -82,15 +83,18 @@ int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** 
 
   xmlAttrPtr attribute = node->properties;
   while (attribute) {
-
-    if(strcmp((const char *)attribute->name, "language") == 0)
+    std::string name = (const char *)attribute->name;
+    if(name == "language")
       (*language) = new std::string((const char *)attribute->children->content);
-    else if(strcmp((const char *)attribute->name, "filename") == 0)
+    else if(name == "filename")
       (*filename) = new std::string((const char *)attribute->children->content);
-    else if(strcmp((const char *)attribute->name, "directory") == 0)
+    else if(name == "directory")
       (*directory) = new std::string((const char *)attribute->children->content);
-    else if(strcmp((const char *)attribute->name, "version") == 0)
+    else if(name == "version")
       (*version) = new std::string((const char *)attribute->children->content);
+    else if(1) { 
+
+    }
 
     attribute = attribute->next;
   }
