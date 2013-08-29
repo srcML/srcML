@@ -860,9 +860,18 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
   int lang = unit->language ? srcml_check_language(unit->language->c_str()) : Language::getLanguageFromFilename(src_filename, unit->archive->registered_languages);
 
+  OPTION_TYPE save_options = unit->archive->options;
+
+  if(lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX)
+    unit->archive->options |= OPTION_CPP;
+  else if (lang == Language::LANGUAGE_CSHARP)
+    unit->archive->options |= OPTION_CPP_NOMACRO;
+
   unit->archive->translator->setInput(src_filename);
 
   srcml_parse_unit_internal(unit, lang);
+
+  unit->archive->options = save_options;
 
   return SRCML_STATUS_OK;
 
