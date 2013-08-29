@@ -48,11 +48,12 @@ int main(int argc, char* argv[]) {
     oarchive = srcml_clone_archive(iarchive);
 
     while (!sorted) {
+      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
         srcml_read_open_filename(iarchive, inputfile);
-
+        fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
         /* open a srcML archive for output */
         srcml_write_open_filename(oarchive, outputfile);
-
+        fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
         /* copy the files from the input archive to the output archive */
         while (true) {
 
