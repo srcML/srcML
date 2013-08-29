@@ -26,13 +26,15 @@
 
 #include "srcml.h"
 #include <stdio.h>
+#include <string.h>
+#include <fcntl.h>
 
 int main(int argc, char* argv[]) {
     int i;
     struct srcml_archive* archive;
     struct srcml_unit* unit;
     char s[500];
-    FILE * srcml_input;
+    int srcml_input;
 
     /* create a new srcml archive structure */
     archive = srcml_create_archive();
@@ -47,10 +49,10 @@ int main(int argc, char* argv[]) {
         
         /* Translate to srcml and append to the archive */
         char buffer[256];
-        srcml_input = fopen(argv[i], "r");
-        fgets(buffer, 256, srcml_input);
-        fclose(srcml_input);
-        srcml_parse_unit_memory(unit, buffer, 256);
+        srcml_input = open(argv[i], O_RDONLY);
+        read(srcml_input, buffer, 256);
+        close(srcml_input);
+        srcml_parse_unit_memory(unit, buffer, strlen(buffer));
 
         /* Translate to srcml and append to the archive */
         srcml_write_unit(archive, unit);
