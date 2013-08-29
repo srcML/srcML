@@ -115,6 +115,8 @@ int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** 
 
     if(ns == SRCML_CPP_NS_URI)
       options |= OPTION_CPP;
+    else if(ns == SRCML_ERR_NS_URI)
+      options |= OPTION_DEBUG;
     else if(ns == SRCML_EXT_LITERAL_NS_URI)
       options |= OPTION_LITERAL;
     else if(ns == SRCML_EXT_OPERATOR_NS_URI)
