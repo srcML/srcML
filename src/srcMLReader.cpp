@@ -66,7 +66,7 @@ void srcMLReader::readUnitAttributesInternal(std::string ** language, std::strin
 int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** filename,
                                         std::string ** directory, std::string ** version,
                                         std::vector<std::string> & attributes,
-                                        std::vector<std::string> & prefix,
+                                        std::vector<std::string> & prefixes,
                                         std::vector<std::string> & namespaces) {
 
   if(done) return 0;
@@ -84,6 +84,7 @@ int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** 
   xmlAttrPtr attribute = node->properties;
   while (attribute) {
     std::string name = (const char *)attribute->name;
+    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, name.c_str());
     if(name == "language")
       (*language) = new std::string((const char *)attribute->children->content);
     else if(name == "filename")
@@ -92,9 +93,7 @@ int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** 
       (*directory) = new std::string((const char *)attribute->children->content);
     else if(name == "version")
       (*version) = new std::string((const char *)attribute->children->content);
-    else if(name.find("xmlns") != std::string::npos) { 
-
-    } else {
+    else {
 
       attributes.push_back(name);
       attributes.push_back((const char *)attribute->children->content);
@@ -102,6 +101,16 @@ int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** 
     }
 
     attribute = attribute->next;
+  }
+
+  xmlNsPtr xmlns = node->ns;
+
+  while(xmlns) {
+
+    prefixes.push_back((const char *)xmlns->prefix);
+    namespaces.push_back((const char *)xmlns->href);
+
+    xmlns = xmlns->next;
   }
 
   return 1;
