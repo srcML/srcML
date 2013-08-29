@@ -31,6 +31,7 @@
 int main(int argc, char* argv[]) {
     int i;
     int srcml_output;
+    int srcml_input;
     struct srcml_archive* archive;
     struct srcml_unit* unit;
 
@@ -51,12 +52,14 @@ int main(int argc, char* argv[]) {
         srcml_unit_set_language(unit, srcml_archive_check_extension(archive, argv[i]));
 
         /* Translate to srcml */
-        srcml_parse_unit_filename(unit, argv[i]);
+        srcml_input = open(argv[i], O_RDONLY);
+        srcml_parse_unit_fd(unit, srcml_input);
 
         /* Append to the archive */
         srcml_write_unit(archive, unit);
 
         srcml_free_unit(unit);
+        close(srcml_input);
     }
 
     /* close the srcML archive */
