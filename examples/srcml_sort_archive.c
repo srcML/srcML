@@ -29,7 +29,6 @@
 #include <string.h>
 
 int main(int argc, char* argv[]) {
-  int i;
   struct srcml_archive* iarchive;
   struct srcml_archive* oarchive;
   int num_units = 0;
@@ -48,7 +47,7 @@ int main(int argc, char* argv[]) {
      the original archive */
   oarchive = srcml_clone_archive(iarchive);
   srcml_read_open_filename(iarchive, inputfile);
-  while (true) {
+  while (1) {
 
 
     units[num_units] = srcml_read_unit(iarchive);
@@ -57,14 +56,15 @@ int main(int argc, char* argv[]) {
     ++num_units;
 
   }
+  int i;
+  for(i = 1; i < num_units; ++i) {
 
-  for(int i = 1; i < num_units; ++i) {
-
-    for(int j = i; j > 0; --j) {
+    int j;
+    for(j = i; j > 0; --j) {
 
       if(strcmp(srcml_unit_get_filename(units[j]), srcml_unit_get_filename(units[j - 1])) < 0) {
 
-        srcml_unit * tmp_unit = units[j];
+        struct srcml_unit * tmp_unit = units[j];
         units[j] = units[j - 1];
         units[j - 1] = tmp_unit;
 
@@ -77,8 +77,8 @@ int main(int argc, char* argv[]) {
 
   /* open a srcML archive for output */
   srcml_write_open_filename(oarchive, outputfile);
-
-  for(int i = 0; i < num_units; ++i) {
+  
+  for(i = 0; i < num_units; ++i) {
 
     /* copy the files from the input archive to the output archive */
     /* Translate to srcml and append to the archive */

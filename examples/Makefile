@@ -5,8 +5,10 @@ ANTLR_LIB_DIR=${dir ${firstword ${wildcard /usr/lib64/libantlr* /usr/lib/libantl
 
 all : ${GEN_ALL}
 
-%.c.out : %.c libsrcml.cpp srcml.h
-	g++ -I ${LIBXML_INC_DIR} -I ../../../trunk/src/ libsrcml.cpp ../../../trunk/bin/libsrcml.a  -L ${ANTLR_LIB_DIR} -lantlr -lxml2 -larchive -ldl $< -o $@
+libsrcml.so : libsrcml.cpp srcml.h
+	g++  -I ${LIBXML_INC_DIR} -I ../../../trunk/src/ libsrcml.cpp ../../../trunk/bin/libsrcml.a  -L ${ANTLR_LIB_DIR} -lantlr -lxml2 -larchive -ldl $< -o $@
+%.c.out : %.c libsrcml.so srcml.h
+	gcc libsrcml.so $< -o $@
 
 run : ${GEN_ALL}
 	ls *.out | xargs -t -I% bash -c "./% a.cpp b.cpp"
