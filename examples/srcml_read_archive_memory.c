@@ -25,9 +25,10 @@
 */
 
 #include "srcml.h"
+#include <string.h>
 
 int main(int argc, char* argv[]) {
-    int i;
+    const char * srcml_input = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"b.cpp\"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>\n\n</unit>\n\n</unit>";
     const char* language;
     const char* filename;
     struct srcml_archive* archive;
@@ -37,7 +38,7 @@ int main(int argc, char* argv[]) {
     archive = srcml_create_archive();
 
     /* open a srcML archive for input */
-    srcml_read_open_filename(archive, "project.xml");
+    srcml_read_open_memory(archive, srcml_input, strlen(srcml_input));
 
     /* add all the files to the archive */
     while (unit = srcml_read_unit(archive)) {
