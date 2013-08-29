@@ -1029,11 +1029,11 @@ srcml_unit * srcml_create_unit(srcml_archive * archive) {
 
 int srcml_free_unit(srcml_unit* unit) {
 
-  if(unit->language) delete unit->language;
-  if(unit->filename) delete unit->filename;
-  if(unit->directory) delete unit->directory;
-  if(unit->version) delete unit->version;
-  if(unit->unit) delete unit->unit;
+  if(unit->language) delete unit->language, unit->language = 0;
+  if(unit->filename) delete unit->filename, unit->filename = 0;
+  if(unit->directory) delete unit->directory, unit->directory = 0;
+  if(unit->version) delete unit->version, unit->version = 0;
+  if(unit->unit) delete unit->unit, unit->unit = 0;
 
   delete unit;
 
