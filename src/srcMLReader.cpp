@@ -408,9 +408,15 @@ std::string * srcMLReader::readsrcML() {
 
   if(!status) return 0;
 
-  std::string * unit = new std::string((const char *)buffer->content);
+  int length = buffer->use;
+
+  while(length > 0 && buffer->content[length - 1] == '\n')
+    --length;
+
+  std::string * unit = new std::string((const char *)buffer->content, length);
   xmlFreeTextWriter(writer);
   xmlBufferFree(buffer);
+
 
   return unit;
 
