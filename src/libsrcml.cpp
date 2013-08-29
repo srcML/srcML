@@ -738,7 +738,8 @@ void srcml_read_internal(srcml_archive * archive) {
   std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
   int done = !archive->reader->readRootUnitAttributes(&language, &filename, &directory, &version,
                                                       archive->attributes, archive->prefixes,
-                                                      archive->namespaces); 
+                                                      archive->namespaces
+                                                      archive->options); 
   if(!done) {
 
     archive->language = language;

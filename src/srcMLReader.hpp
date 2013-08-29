@@ -1,4 +1,6 @@
 
+#include "Options.hpp"
+
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
@@ -23,14 +25,15 @@ public:
   ~srcMLReader();
 
   int readRootUnitAttributes(std::string ** language, std::string ** filename,
-                                        std::string ** directory, std::string ** version,
-                                        std::vector<std::string> & attributes,
-                                        std::vector<std::string> & prefixes,
-                                        std::vector<std::string> & namespaces);
+                             std::string ** directory, std::string ** version,
+                             std::vector<std::string> & attributes,
+                             std::vector<std::string> & prefixes,
+                             std::vector<std::string> & namespaces,
+                             OPTION_TYPE & options);
   void readUnitAttributesInternal(std::string ** language, std::string ** filename,
                                   std::string ** directory, std::string ** version);
   int readUnitAttributes(std::string ** language, std::string ** filename,
-                          std::string ** directory, std::string ** version);
+                         std::string ** directory, std::string ** version);
   int readsrcML(xmlTextWriterPtr writer);
   int read(xmlOutputBufferPtr output_buffer);
   std::string * readsrcML();
