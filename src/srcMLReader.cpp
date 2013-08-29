@@ -92,7 +92,12 @@ int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** 
       (*directory) = new std::string((const char *)attribute->children->content);
     else if(name == "version")
       (*version) = new std::string((const char *)attribute->children->content);
-    else if(1) { 
+    else if(name.find("xmlns") != std::string::npos) { 
+
+    } else {
+
+      attributes.push_back(name);
+      attributes.push_back((const char *)attribute->children->content);
 
     }
 
