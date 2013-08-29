@@ -43,15 +43,6 @@
 
 std::string srcml_error;
 
-struct uridata {
-  const char * uri;
-  const char * prefix;
-
-  // Might want to remove
-  int option;
-  char const * const description;
-};
-
 enum SRCML_ARCHIVE_TYPE { SRCML_ARCHIVE_RW, SRCML_ARCHIVE_READ, SRCML_ARCHIVE_WRITE };
 
 struct registered_language {
@@ -114,6 +105,7 @@ srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector
                                  4, std::vector<std::string>(), std::vector<std::string>(), std::vector<pair>(),
                                  0, 0, 0, 0 };
 
+/* prefix for an XML namespace */
 /* translates to/from srcML */
 int srcml(const char* input_filename, const char* output_filename) {
 
@@ -341,7 +333,6 @@ const char* srcml_get_namespace_prefix(const char* prefix) {
 
 }
 
-
 /* source-code language is supported */
 int srcml_check_language(const char* language) { return language == 0 ? 0 : Language::getLanguage(language); }
 
@@ -406,24 +397,12 @@ int srcml_check_format(const char* format) {
 /* particular encoding is supported, both for input and output */
 int srcml_check_encoding(const char* encoding) { return xmlParseCharEncoding(encoding) > 0; }
 
-struct uridata uris[] = {
-
-  { SRCML_SRC_NS_URI,          SRCML_SRC_NS_PREFIX_DEFAULT, 0,               "primary srcML namespace" },
-  { SRCML_CPP_NS_URI,          SRCML_CPP_NS_PREFIX_DEFAULT, OPTION_CPP,      "namespace for cpreprocessing elements" }
-  ,
-  { SRCML_ERR_NS_URI,          SRCML_ERR_NS_PREFIX_DEFAULT, OPTION_DEBUG,    "namespace for srcML debugging elements" },
-  { SRCML_EXT_LITERAL_NS_URI,  SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT, OPTION_LITERAL,  "namespace for optional literal elements" },
-  { SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT, OPTION_OPERATOR, "namespace for optional operator element"},
-  { SRCML_EXT_MODIFIER_NS_URI, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT, OPTION_MODIFIER, "namespace for optional modifier element"},
-  { SRCML_EXT_POSITION_NS_URI, SRCML_EXT_POSITION_NS_PREFIX_DEFAULT, OPTION_POSITION, "namespace for optional position element and attributes" },
-};
-
 /* prefix for an XML namespace */
 const char* srcml_check_prefix(const char* namespace_uri) {
 
-  for(int i = 0; uris[i].uri; ++i)
-    if(strcmp(uris[i].uri, namespace_uri) == 0)
-      return uris[i].prefix;
+  for(int i = 0; global_archive.namespaces.size(); ++i)
+    if(global_archive.namespaces.at(i) == namespace_uri)
+      return global_archive.prefixes.at(i).c_str();
 
   return 0;
 
@@ -432,11 +411,9 @@ const char* srcml_check_prefix(const char* namespace_uri) {
 /* namespace for an XML prefix */
 const char* srcml_check_namespace(const char* prefix) {
 
-  // handle default prefix
-  if(prefix == 0) return uris[0].uri;
-  for(int i = 1; uris[i].uri; ++i)
-    if(strcmp(uris[i].prefix, prefix) == 0)
-      return uris[i].uri;
+  for(int i = 0; global_archive.prefixes.size(); ++i)
+    if(global_archive.prefixes.at(i) == prefix)
+      return global_archive.namespaces.at(i).c_str();
 
   return 0;
 
