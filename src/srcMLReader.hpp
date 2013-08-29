@@ -29,7 +29,8 @@ public:
                              std::vector<std::string> & attributes,
                              std::vector<std::string> & prefixes,
                              std::vector<std::string> & namespaces,
-                             OPTION_TYPE & options);
+                             OPTION_TYPE & options,
+                             int & tabstop);
   void readUnitAttributesInternal(std::string ** language, std::string ** filename,
                                   std::string ** directory, std::string ** version);
   int readUnitAttributes(std::string ** language, std::string ** filename,

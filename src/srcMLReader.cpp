@@ -1,6 +1,8 @@
 #include "srcMLReader.hpp"
 #include "srcmlns.hpp"
 
+#include <stdlib.h>
+
 void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer);
 void output_node_source(const xmlNode & node, xmlOutputBufferPtr output_buffer);
 
@@ -69,7 +71,8 @@ int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** 
                                         std::vector<std::string> & attributes,
                                         std::vector<std::string> & prefixes,
                                         std::vector<std::string> & namespaces,
-                                        OPTION_TYPE & options) {
+                                        OPTION_TYPE & options,
+                                        int & tabstop) {
 
   if(done) return 0;
 
@@ -94,6 +97,8 @@ int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** 
       (*directory) = new std::string((const char *)attribute->children->content);
     else if(name == "version")
       (*version) = new std::string((const char *)attribute->children->content);
+    else if(name == "tabs")
+      tabstop = atoi((const char *)attribute->children->content);
     else {
 
       attributes.push_back(name);
