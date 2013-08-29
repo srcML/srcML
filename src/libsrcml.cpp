@@ -515,9 +515,6 @@ void srcml_free_archive(srcml_archive * archive) {
   if(archive->language) delete archive->language, archive->language = 0;
   if(archive->directory) delete archive->directory, archive->directory = 0;
   if(archive->version) delete archive->version, archive->version = 0;
-  if(archive->translator) delete archive->translator, archive->translator = 0;
-  if(archive->reader) delete archive->reader, archive->reader = 0;
-  if(archive->input) xmlFreeParserInputBuffer(archive->input), archive->input = 0;
 
   delete archive;
 }
@@ -1020,6 +1017,9 @@ void srcml_read_close (srcml_archive* archive) {
 void srcml_close_archive(srcml_archive * archive) {
 
   if(archive->translator) archive->translator->close();
+  if(archive->translator) delete archive->translator, archive->translator = 0;
+  if(archive->reader) delete archive->reader, archive->reader = 0;
+  if(archive->input) xmlFreeParserInputBuffer(archive->input), archive->input = 0;
 
   if(archive->buffer) {
 
