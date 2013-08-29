@@ -84,7 +84,6 @@ int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** 
   xmlAttrPtr attribute = node->properties;
   while (attribute) {
     std::string name = (const char *)attribute->name;
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, name.c_str());
     if(name == "language")
       (*language) = new std::string((const char *)attribute->children->content);
     else if(name == "filename")
@@ -107,8 +106,20 @@ int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** 
 
   while(xmlns) {
 
-    prefixes.push_back((const char *)xmlns->prefix);
-    namespaces.push_back((const char *)xmlns->href);
+    std::string prefix = (const char *)xmlns->prefix;
+    std::string ns = (const char *)xmlns->href;
+    int i;
+    for(i = 0; i < prefixes.size(); ++i)
+      if(namespaces.at(i) == ns) {
+
+        prefixes.at(i) = prefix;
+        break;
+      }
+
+    if(i == prefixes.size()) {
+      prefixes.push_back(prefix);
+      namespaces.push_back(ns);
+    }
 
     xmlns = xmlns->next;
   }
