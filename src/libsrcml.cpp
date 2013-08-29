@@ -111,8 +111,8 @@ struct srcml_unit {
 };
 
 srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector<std::string>(), 0,
-                                4, std::vector<std::string>(), std::vector<std::string>(), std::vector<pair>(),
-                                0, 0, 0 };
+                                 4, std::vector<std::string>(), std::vector<std::string>(), std::vector<pair>(),
+                                 0, 0, 0, 0 };
 
 /* translates to/from srcML */
 int srcml(const char* input_filename, const char* output_filename) {
@@ -517,6 +517,7 @@ void srcml_free_archive(srcml_archive * archive) {
   if(archive->version) delete archive->version;
   if(archive->translator) delete archive->translator;
   if(archive->reader) delete archive->reader;
+  if(archive->input) xmlFreeParserInputBuffer(archive->input);
 
   delete archive;
 }
@@ -748,7 +749,7 @@ int srcml_read_open_memory  (srcml_archive* archive, const char* buffer, size_t 
 
   archive->type = SRCML_ARCHIVE_READ;
   archive->input = xmlParserInputBufferCreateMem(buffer, buffer_size, xmlParseCharEncoding(0));
-  archive->reader = new srcMLReader(buffer, buffer_size);
+  archive->reader = new srcMLReader(archive->input);
 
   return SRCML_STATUS_OK;
 
@@ -758,7 +759,7 @@ int srcml_read_open_FILE    (srcml_archive* archive, FILE* srcml_file) {
 
   archive->type = SRCML_ARCHIVE_READ;
   archive->input = xmlParserInputBufferCreateFile(srcml_file, xmlParseCharEncoding(0));
-  archive->reader = new srcMLReader(srcml_file);
+  archive->reader = new srcMLReader(archive->input);
 
   return SRCML_STATUS_OK;
 
@@ -768,7 +769,7 @@ int srcml_read_open_fd      (srcml_archive* archive, int srcml_fd) {
 
   archive->type = SRCML_ARCHIVE_READ;
   archive->input = xmlParserInputBufferCreateFd(srcml_fd, xmlParseCharEncoding(0));
-  archive->reader = new srcMLReader(srcml_fd);
+  archive->reader = new srcMLReader(archive->input);
 
   return SRCML_STATUS_OK;
 
