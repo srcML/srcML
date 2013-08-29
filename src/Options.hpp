@@ -139,8 +139,8 @@ const OPTION_TYPE OPTION_LONG_INFO    = ull(1) << 20;
 
 // cpp markup #else sections
 // @src2srcml
-const OPTION_TYPE OPTION_CPP_MARKUP_ELSE = ull(1) << 22;
-const OPTION_TYPE OPTION_XPATH_TOTAL = OPTION_CPP_MARKUP_ELSE;
+const OPTION_TYPE OPTION_CPP_TEXT_ELSE = ull(1) << 22;
+const OPTION_TYPE OPTION_XPATH_TOTAL = OPTION_CPP_TEXT_ELSE;
 
 // cpp markup #if 0 sections
 // @src2srcml

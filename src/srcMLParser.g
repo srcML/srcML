@@ -4858,7 +4858,7 @@ eol_post[int directive_token, bool markblockzero] {
                 ++cpp_ifcount;
 
                 // create new context for #if (and possible #else)
-                if (isoption(parseoptions, OPTION_CPP_MARKUP_ELSE) && !inputState->guessing)
+                if (!isoption(parseoptions, OPTION_CPP_TEXT_ELSE) && !inputState->guessing)
                     cppmode.push(cppmodeitem(size()));
 
                 break;
@@ -4876,7 +4876,7 @@ eol_post[int directive_token, bool markblockzero] {
                     cpp_ifcount = 1;
                 }
 
-                if (!isoption(parseoptions, OPTION_CPP_MARKUP_ELSE) && !inputState->guessing) {
+                if (isoption(parseoptions, OPTION_CPP_TEXT_ELSE) && !inputState->guessing) {
 
                     // create an empty cppmode for #if if one doesn't exist
                     if (cppmode.empty())
@@ -4903,7 +4903,7 @@ eol_post[int directive_token, bool markblockzero] {
                 if (cpp_skipelse && cpp_ifcount == 0)
                     cpp_skipelse = false;
 
-                if (!isoption(parseoptions, OPTION_CPP_MARKUP_ELSE) && !inputState->guessing &&
+                if (isoption(parseoptions, OPTION_CPP_TEXT_ELSE) && !inputState->guessing &&
                     !cppmode.empty()) {
 
                     // add new context for #endif in current #if
@@ -4928,7 +4928,7 @@ eol_post[int directive_token, bool markblockzero] {
                 - when ??? for cppmode
         */
         if ((!isoption(parseoptions, OPTION_CPP_MARKUP_IF0) && cpp_zeromode) ||
-            (!isoption(parseoptions, OPTION_CPP_MARKUP_ELSE) && cpp_skipelse) ||
+            (isoption(parseoptions, OPTION_CPP_TEXT_ELSE) && cpp_skipelse) ||
             (inputState->guessing && cpp_skipelse) ||
             (!cppmode.empty() && !cppmode.top().isclosed && cppmode.top().skipelse)
         ) {
@@ -4958,7 +4958,7 @@ cppmode_cleanup[] {
 // ended modes that may lead to needed updates
 cppmode_adjust[] {
 
-    if (isoption(parseoptions, OPTION_CPP_MARKUP_ELSE) &&
+    if (!isoption(parseoptions, OPTION_CPP_TEXT_ELSE) &&
         !cppmode.empty() &&
         cppmode.top().isclosed &&
         size() < cppmode.top().statesize.back())

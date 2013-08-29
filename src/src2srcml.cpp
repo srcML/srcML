@@ -329,7 +329,7 @@ void output_settings(const char * name)
 void output_features(const char * name)
 {}
 
-OPTION_TYPE options = OPTION_CPP_MARKUP_ELSE;
+OPTION_TYPE options = 0;
 
 #ifdef __GNUG__
 extern "C" void verbose_handler(int);
@@ -1044,7 +1044,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
         exit(STATUS_INVALID_OPTION_COMBINATION);
       }
 
-      options |= OPTION_CPP_MARKUP_ELSE;
+      options &= ~OPTION_CPP_TEXT_ELSE;
       cpp_else = true;
 
       break;
@@ -1056,7 +1056,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
         exit(STATUS_INVALID_OPTION_COMBINATION);
       }
 
-      options &= ~OPTION_CPP_MARKUP_ELSE;
+      options |= OPTION_CPP_TEXT_ELSE;
       cpp_else = true;
 
       break;
