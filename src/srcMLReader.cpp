@@ -1,4 +1,5 @@
 #include "srcMLReader.hpp"
+#include "srcmlns.hpp"
 
 void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer);
 void output_node_source(const xmlNode & node, xmlOutputBufferPtr output_buffer);
@@ -68,81 +69,78 @@ int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** 
                                         std::vector<std::string> & attributes,
                                         std::vector<std::string> & prefixes,
                                         std::vector<std::string> & namespaces,
-                                        OPTION_TYPE & options)
+                                        OPTION_TYPE & options) {
 
   if(done) return 0;
 
-// forward to start unit
-while(true) {
-  if(node && (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT && strcmp((const char *)node->name, "unit") == 0)
-    break;
+  // forward to start unit
+  while(true) {
+    if(node && (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT && strcmp((const char *)node->name, "unit") == 0)
+      break;
 
-  if(xmlTextReaderRead(reader) != 1) { done = true; return 0; }
-  freeNode(node);
-  node = getNode(reader);
- }
-
-xmlAttrPtr attribute = node->properties;
-while (attribute) {
-  std::string name = (const char *)attribute->name;
-  if(name == "language")
-    (*language) = new std::string((const char *)attribute->children->content);
-  else if(name == "filename")
-    (*filename) = new std::string((const char *)attribute->children->content);
-  else if(name == "directory")
-    (*directory) = new std::string((const char *)attribute->children->content);
-  else if(name == "version")
-    (*version) = new std::string((const char *)attribute->children->content);
-  else {
-
-    attributes.push_back(name);
-    attributes.push_back((const char *)attribute->children->content);
-
+    if(xmlTextReaderRead(reader) != 1) { done = true; return 0; }
+    freeNode(node);
+    node = getNode(reader);
   }
 
-  attribute = attribute->next;
- }
+  xmlAttrPtr attribute = node->properties;
+  while (attribute) {
+    std::string name = (const char *)attribute->name;
+    if(name == "language")
+      (*language) = new std::string((const char *)attribute->children->content);
+    else if(name == "filename")
+      (*filename) = new std::string((const char *)attribute->children->content);
+    else if(name == "directory")
+      (*directory) = new std::string((const char *)attribute->children->content);
+    else if(name == "version")
+      (*version) = new std::string((const char *)attribute->children->content);
+    else {
 
-xmlNsPtr xmlns = node->ns;
+      attributes.push_back(name);
+      attributes.push_back((const char *)attribute->children->content);
 
-while(xmlns) {
-
-  std::string prefix = (const char *)xmlns->prefix;
-  std::string ns = (const char *)xmlns->href;
-
-  //const char* const SRCML_ERR_NS_URI = "http://www.sdml.info/srcML/srcerr";
- const char* const SRCML_EXT_OPERATOR_NS_URI = "http://www.sdml.info/srcML/operator";
- const char* const SRCML_EXT_MODIFIER_NS_URI = "http://www.sdml.info/srcML/modifier";
-const char* const SRCML_EXT_POSITION_NS_URI
-
-  if(ns == SRCML_CPP_NS_URI)
-    options |= OPTION_CPP;
-  else if(ns == SRCML_EXT_LITERAL_NS_URI)
-    options |= OPTION_LITERAL;
-  else if(ns == SRCML_EXT_OPERATOR_NS_URI)
-    options |= OPTION_OPERATOR;
-  else if(ns == SRCML_EXT_MODIFIER_NS_URI)
-    options |= OPTION_MODIFER;
-  else if(ns == SRCML_EXT_POSITION_NS_URI)
-    options |= OPTION_POSITION;
-
-  int i;
-  for(i = 0; i < prefixes.size(); ++i)
-    if(namespaces.at(i) == ns) {
-
-      prefixes.at(i) = prefix;
-      break;
     }
 
-  if(i == prefixes.size()) {
-    prefixes.push_back(prefix);
-    namespaces.push_back(ns);
+    attribute = attribute->next;
   }
 
-  xmlns = xmlns->next;
- }
+  xmlNsPtr xmlns = node->ns;
 
-return 1;
+  while(xmlns) {
+
+    std::string prefix = (const char *)xmlns->prefix;
+    std::string ns = (const char *)xmlns->href;
+
+    //const char* const SRCML_ERR_NS_URI = "http://www.sdml.info/srcML/srcerr";
+
+    if(ns == SRCML_CPP_NS_URI)
+      options |= OPTION_CPP;
+    else if(ns == SRCML_EXT_LITERAL_NS_URI)
+      options |= OPTION_LITERAL;
+    else if(ns == SRCML_EXT_OPERATOR_NS_URI)
+      options |= OPTION_OPERATOR;
+    else if(ns == SRCML_EXT_MODIFIER_NS_URI)
+      options |= OPTION_MODIFIER;
+    else if(ns == SRCML_EXT_POSITION_NS_URI)
+      options |= OPTION_POSITION;
+
+    int i;
+    for(i = 0; i < prefixes.size(); ++i)
+      if(namespaces.at(i) == ns) {
+
+        prefixes.at(i) = prefix;
+        break;
+      }
+
+    if(i == prefixes.size()) {
+      prefixes.push_back(prefix);
+      namespaces.push_back(ns);
+    }
+
+    xmlns = xmlns->next;
+  }
+
+  return 1;
 }
 
 int srcMLReader::readUnitAttributes(std::string ** language, std::string ** filename,
