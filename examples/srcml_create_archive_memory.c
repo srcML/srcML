@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
     int i;
     struct srcml_archive* archive;
     struct srcml_unit* unit;
-    char s[500];
+    char * s;
     int srcml_input;
 
     /* create a new srcml archive structure */
@@ -70,6 +70,7 @@ int main(int argc, char* argv[]) {
 
     /* now dump the contents of the archive */
     puts(s);
+    free(s);
 
     return 0;
 }
