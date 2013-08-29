@@ -62,6 +62,24 @@ void srcMLReader::readUnitAttributesInternal(std::string ** language, std::strin
 
 }
 
+int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** filename,
+                                    std::string ** directory, std::string ** version) {
+
+  if(done) return 0;
+
+  // forward to start unit
+  while(true) {
+    if(node && (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT && strcmp((const char *)node->name, "unit") == 0)
+      break;
+
+    if(xmlTextReaderRead(reader) != 1) { done = true; return 0; }
+    freeNode(node);
+    node = getNode(reader);
+  }
+
+  readUnitAttributesInternal(language, filename, directory, version);
+}
+
 int srcMLReader::readUnitAttributes(std::string ** language, std::string ** filename,
                                     std::string ** directory, std::string ** version) {
 

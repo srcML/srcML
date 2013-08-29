@@ -22,6 +22,8 @@ public:
   srcMLReader(xmlParserInputBufferPtr input);
   ~srcMLReader();
 
+  int readRootUnitAttributes(std::string ** language, std::string ** filename,
+                                        std::string ** directory, std::string ** version);
   void readUnitAttributesInternal(std::string ** language, std::string ** filename,
                                   std::string ** directory, std::string ** version);
   int readUnitAttributes(std::string ** language, std::string ** filename,

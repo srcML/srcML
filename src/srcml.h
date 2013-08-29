@@ -212,9 +212,9 @@ int srcml_unit_set_version  (struct srcml_unit*, const char* version);
    source archive format (e.g., not .tar)
 */
 int srcml_parse_unit_filename(struct srcml_unit* unit, const char* src_filename);
-int srcml_parse_unit_memory  (const struct srcml_unit*, char* src_buffer, size_t buffer_size);
-int srcml_parse_unit_FILE    (const struct srcml_unit*, FILE* src_file);
-int srcml_parse_unit_fd      (const struct srcml_unit*, int src_fd);
+int srcml_parse_unit_memory  (struct srcml_unit*, char* src_buffer, size_t buffer_size);
+int srcml_parse_unit_FILE    (struct srcml_unit*, FILE* src_file);
+int srcml_parse_unit_fd      (struct srcml_unit*, int src_fd);
 
 /* Append unit to an archive */
 int srcml_write_unit(struct srcml_archive*, const struct srcml_unit*);
