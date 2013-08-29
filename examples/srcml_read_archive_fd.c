@@ -54,10 +54,13 @@ int main(int argc, char* argv[]) {
         srcml_unparse_unit_fd(unit, srcml_output);
 
         srcml_free_unit(unit);
+        close(srcml_output);
     }
+
 
     /* close the srcML archive */
     srcml_close_archive(archive);
+    close(srcml_input);
 
     /* free the srcML archive data */
     srcml_free_archive(archive);
