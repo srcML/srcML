@@ -510,14 +510,14 @@ srcml_archive* srcml_create_archive()
    allocated by srcml_create_archive() */
 void srcml_free_archive(srcml_archive * archive) {
 
-  if(archive->filename) delete archive->filename;
-  if(archive->encoding) delete archive->encoding;
-  if(archive->language) delete archive->language;
-  if(archive->directory) delete archive->directory;
-  if(archive->version) delete archive->version;
-  if(archive->translator) delete archive->translator;
-  if(archive->reader) delete archive->reader;
-  if(archive->input) xmlFreeParserInputBuffer(archive->input);
+  if(archive->filename) delete archive->filename, archive->filename = 0;
+  if(archive->encoding) delete archive->encoding, archive->encoding = 0;
+  if(archive->language) delete archive->language, archive->language = 0;
+  if(archive->directory) delete archive->directory, archive->directory = 0;
+  if(archive->version) delete archive->version, archive->version = 0;
+  if(archive->translator) delete archive->translator, archive->translator = 0;
+  if(archive->reader) delete archive->reader, archive->reader = 0;
+  if(archive->input) xmlFreeParserInputBuffer(archive->input), archive->input = 0;
 
   delete archive;
 }
