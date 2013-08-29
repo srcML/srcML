@@ -256,7 +256,7 @@ int srcml_unparse_unit_fd      (struct srcml_unit*, int srcml_fd);
 int srcml_clear_transforms(struct srcml_archive*);
 int srcml_append_transform_xpath(struct srcml_archive*, const char* xpath_string);
 int srcml_append_transform_xslt(struct srcml_archive*, const char* xlst_filename);
-int srcml_append_transform_relaxng(struct srcml_archive*, const char* xlst_filename);
+int srcml_append_transform_relaxng(struct srcml_archive*, const char* relaxng_filename);
 int srcml_apply_transforms(struct srcml_archive* iarchive, struct srcml_archive* oarchive);
 
 #ifdef __cplusplus

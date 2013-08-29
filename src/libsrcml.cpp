@@ -105,6 +105,12 @@ srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector
                                  4, std::vector<std::string>(), std::vector<std::string>(), std::vector<pair>(),
                                  0, 0, 0, 0 };
 
+const char * srcml_version() {
+
+  return SRCML_VERSION_STRING;
+
+}
+
 /* prefix for an XML namespace */
 /* translates to/from srcML */
 int srcml(const char* input_filename, const char* output_filename) {
@@ -1164,5 +1170,5 @@ const char** srcml_list(const char* srcml_filename) { return 0; }
 /* srcML XPath query and XSLT transform functions */
 int srcml_add_transform_xpath(srcml_archive* archive, const char* xpath_string) { return 0; }
 int srcml_add_transform_xslt(srcml_archive* archive, const char* xlst_filename) { return 0; }
-int srcml_add_transform_relaxng(srcml_archive* archive, const char* xlst_filename) { return 0; }
+int srcml_add_transform_relaxng(srcml_archive* archive, const char* relaxng_filename) { return 0; }
 int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) { return 0; }
