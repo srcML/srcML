@@ -915,8 +915,30 @@ int srcml_write_unit(srcml_archive* archive, const srcml_unit* unit) {
 }
 
 /* Read the next unit from the archive */
-const srcml_unit* srcml_read_unit_archive (srcml_archive* archive) { return 0; }
-const srcml_unit* srcml_read_archive_current_unit(const srcml_archive* archive) { return 0; }
+const srcml_unit* srcml_read_unit_archive (srcml_archive* archive) {
+
+  return srcml_read_unit(archive);
+
+}
+
+const srcml_unit* srcml_read_archive_current_unit(const srcml_archive* archive) {
+
+  std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+  int done = !archive->reader->readUnitAttributes(&language, &filename, &directory, &version); 
+
+  srcml_unit * unit = 0;
+  if(!done) {
+    unit = srcml_create_unit((srcml_archive *)archive);
+    unit->language = language;
+    unit->filename = filename;
+    unit->directory = directory;
+    unit->version = version;
+  }
+
+  return unit;
+
+}
+
 int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) { 
 
   xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename(src_filename, xmlFindCharEncodingHandler(unit->archive->encoding ? unit->archive->encoding->c_str() : "ISO-8859-1"), unit->archive->options & SRCML_OPTION_COMPRESS);
