@@ -734,7 +734,9 @@ int srcml_write_open_fd      (srcml_archive* archive, int srcml_fd) {
 void srcml_read_internal(srcml_archive * archive) {
 
   std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
-  int done = !archive->reader->readRootUnitAttributes(&language, &filename, &directory, &version); 
+  int done = !archive->reader->readRootUnitAttributes(&language, &filename, &directory, &version,
+                                                      archive->attributes, archive->prefixes,
+                                                      archive->namespaces); 
   if(!done) {
 
     archive->language = language;

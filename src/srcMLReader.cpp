@@ -63,7 +63,10 @@ void srcMLReader::readUnitAttributesInternal(std::string ** language, std::strin
 }
 
 int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** filename,
-                                    std::string ** directory, std::string ** version) {
+                                        std::string ** directory, std::string ** version,
+                                        std::vector<std::string> & attributes,
+                                        std::vector<std::string> & prefix,
+                                        std::vector<std::string> & namespaces) {
 
   if(done) return 0;
 
@@ -77,7 +80,21 @@ int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** 
     node = getNode(reader);
   }
 
-  readUnitAttributesInternal(language, filename, directory, version);
+  xmlAttrPtr attribute = node->properties;
+  while (attribute) {
+
+    if(strcmp((const char *)attribute->name, "language") == 0)
+      (*language) = new std::string((const char *)attribute->children->content);
+    else if(strcmp((const char *)attribute->name, "filename") == 0)
+      (*filename) = new std::string((const char *)attribute->children->content);
+    else if(strcmp((const char *)attribute->name, "directory") == 0)
+      (*directory) = new std::string((const char *)attribute->children->content);
+    else if(strcmp((const char *)attribute->name, "version") == 0)
+      (*version) = new std::string((const char *)attribute->children->content);
+
+    attribute = attribute->next;
+  }
+
   return 1;
 }
 
@@ -88,9 +105,9 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
 
   if(!save_nodes.empty()) {
 
-  for(int i = 0; i < save_nodes.size(); ++i)
-    freeNode(save_nodes.at(i));
-  save_nodes.clear();
+    for(int i = 0; i < save_nodes.size(); ++i)
+      freeNode(save_nodes.at(i));
+    save_nodes.clear();
 
   }
 
