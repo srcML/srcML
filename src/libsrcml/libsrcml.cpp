@@ -30,11 +30,11 @@
 #include <vector>
 #include <string>
 
-#include "srcMLTranslator.hpp"
-#include "Language.hpp"
-#include "Options.hpp"
-#include "srcmlns.hpp"
-#include "srcMLUtility.hpp"
+#include "../srcMLTranslator.hpp"
+#include "../Language.hpp"
+#include "../Options.hpp"
+#include "../srcmlns.hpp"
+#include "../srcMLUtility.hpp"
 #include "srcMLReader.hpp"
 #include "srcml_types.hpp"
 

@@ -103,7 +103,7 @@ add_library(parser OBJECT srcMLParser.cpp KeywordLexer.cpp srcMLOutput.cpp srcML
 add_library(srcmlutility OBJECT srcMLUtility.cpp SAX2ExtractUnitsSrc.cpp SAX2Utilities.cpp SAX2UnitDOM.cpp SAX2UnitDOMRelaxNG.cpp srcexfun.cpp)
 add_library(translator OBJECT srcMLTranslator.cpp srcMLTranslatorCore.cpp UTF8CharBuffer.cpp Language.cpp URIStream.cpp libxml_archive_read.cpp libxml_archive_write.cpp)
 add_library(srcmlapps OBJECT srcmlapps.cpp)
-add_library(libsrcml OBJECT libsrcml.cpp srcMLReader.cpp srcml_transform.cpp srcml_info.cpp)
+add_library(libsrcml OBJECT libsrcml/libsrcml.cpp libsrcml/srcMLReader.cpp libsrcml/srcml_transform.cpp libsrcml/srcml_info.cpp)
 
 # libsrcml static
 add_library(srcml_static STATIC $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:srcmlapps> $<TARGET_OBJECTS:srcmlutility>)

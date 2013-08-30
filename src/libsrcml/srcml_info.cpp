@@ -1,7 +1,7 @@
 #include "srcml.h"
 #include "srcml_types.hpp"
 
-#include "srcMLUtility.hpp"
+#include "../srcMLUtility.hpp"
 
 /* srcML attributes with namespaces (header read only)*/
 const char** srcml_info(const char* srcml_filename) {

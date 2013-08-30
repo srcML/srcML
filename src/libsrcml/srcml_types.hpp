@@ -18,9 +18,9 @@
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "Options.hpp"
-#include "Language.hpp"
-#include "srcMLTranslator.hpp"
+#include "../Options.hpp"
+#include "../Language.hpp"
+#include "../srcMLTranslator.hpp"
 #include "srcMLReader.hpp"
 
 #include <string>
