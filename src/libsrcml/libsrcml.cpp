@@ -33,9 +33,7 @@
 #include "../srcMLTranslator.hpp"
 #include "../Language.hpp"
 #include "../Options.hpp"
-#include "../srcmlns.hpp"
 #include "../srcMLUtility.hpp"
-#include "srcMLReader.hpp"
 #include "srcml_types.hpp"
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
@@ -409,5 +407,3 @@ int srcml_check_exslt() {
 
 /* string describing last error */
 const char* srcml_error_string() { return srcml_error.c_str(); }
-
-
