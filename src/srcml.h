@@ -252,6 +252,8 @@ int srcml_unparse_unit_memory  (struct srcml_unit*, char** src_buffer);
 int srcml_unparse_unit_FILE    (struct srcml_unit*, FILE* srcml_file);
 int srcml_unparse_unit_fd      (struct srcml_unit*, int srcml_fd);
 
+const char** srcml_info(const char* srcml_filename);
+
 /* srcML XPath query and XSLT transform functions */
 int srcml_clear_transforms(struct srcml_archive*);
 int srcml_append_transform_xpath(struct srcml_archive*, const char* xpath_string);
