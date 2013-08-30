@@ -377,7 +377,7 @@ if use_exec :
         print src2srcmlversion()
         print srcml2srcversion()
 else :
-        print srcml_version()
+        print srcml_version_string()
 print
 
 specname = ""
@@ -679,6 +679,6 @@ if use_exec :
         print src2srcmlversion(), srcmltranslator
         print srcml2srcversion(), srcmlutility
 else :
-        print srcml_version()
+        print srcml_version_string()
 
 exit

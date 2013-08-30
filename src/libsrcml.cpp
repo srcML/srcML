@@ -1157,7 +1157,7 @@ const char** srcml_info(const char* srcml_filename) {
     output_carray[i] = strdup(output_array.at(i).c_str());
   output_carray[output_array.size()] = 0;
 
-  return SRCML_STATUS_OK;
+  return output_carray;
 
 }
 
