@@ -25,6 +25,7 @@
 #include <regex.h>
 #include <algorithm>
 
+int Language::lang2intcount = 7;
 pair Language::lang2int[] = {
     { LanguageName::LANGUAGE_C, LANGUAGE_C },
     { LanguageName::LANGUAGE_CXX, LANGUAGE_CXX },

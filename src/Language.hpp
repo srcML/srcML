@@ -74,9 +74,9 @@ public:
   // gets the current language
   static int getLanguage(const char* const s) {
 
-    for (const pair* pos = lang2int; pos->s.c_str() != 0; ++pos)
-      if (strcmp(pos->s.c_str(), s) == 0)
-        return pos->n;
+    for(int i = 0; i < lang2intcount; ++i)
+      if (lang2int[i].s == s)
+        return lang2int[i].n;
 
     return 0;
   }
@@ -84,9 +84,9 @@ public:
   // gets the current language
   const char* getLanguageString() const {
 
-    for (const pair* pos = lang2int; pos->s.c_str() != 0; ++pos)
-      if (pos->n == language)
-        return pos->s.c_str();
+    for(int i = 0; i < lang2intcount; ++i)
+      if (lang2int[i].n == language)
+        return lang2int[i].s.c_str();
 
     return "";
   }
@@ -110,9 +110,8 @@ private:
 
   const int language;
 
+  static int lang2intcount;
   static pair lang2int[];
-
-  static pair ext2int[];
 
   static pair userext2int[];
 };
