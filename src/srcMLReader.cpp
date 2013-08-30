@@ -116,8 +116,6 @@ int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** 
     std::string prefix = xmlns->prefix ? (const char *)xmlns->prefix : "";
     std::string ns = xmlns->href ? (const char *)xmlns->href : "";
 
-    //const char* const SRCML_ERR_NS_URI = "http://www.sdml.info/srcML/srcerr";
-
     if(ns == SRCML_CPP_NS_URI)
       options |= OPTION_CPP;
     else if(ns == SRCML_ERR_NS_URI)
