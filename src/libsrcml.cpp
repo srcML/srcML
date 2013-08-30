@@ -1144,6 +1144,10 @@ int srcml_archive_get_tabstop(const srcml_archive* archive) {
 /* srcML attributes with namespaces (header read only)*/
 const char** srcml_info(const char* srcml_filename) {
 
+  OPTION_TYPE options = 0;
+  srcMLUtility utility(srcml_filename, "UTF-8", options);
+  //utility.move_to_unit(0, su, options, int optioncount, int optionorder[], FILE * output) {
+
   return SRCML_STATUS_OK;
 
 }

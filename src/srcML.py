@@ -68,7 +68,6 @@ libsrcml.srcml_version_string.argtypes = []
 def srcml_version_string() :
     return libsrcml.srcml_version_string()
 
-
 class srcMLTranslator(object):
 
     def __init__(self, language, op):
