@@ -164,6 +164,42 @@ void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE opt
   units = state.count;
 }
 
+// move to a particular nested unit
+void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE options, int optioncount, int optionorder[], std::vector<std::string> & output_array) {
+
+  // setup parser
+  xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
+  if (ctxt == NULL) return;
+
+  // setup sax handler
+  xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
+  ctxt->sax = &sax;
+
+  // setup process handling
+  Properties process(su, nsv, attrv, optioncount, optionorder, &output_array);
+
+  incount = unitnumber == 0;
+
+  // setup sax handling state
+  SAX2ExtractUnitsSrc state(&process, &options, unitnumber, diff_version);
+  ctxt->_private = &state;
+
+  // process the document
+  srcMLParseDocument(ctxt, true);
+
+  // local variable, do not want xmlFreeParserCtxt to free
+  ctxt->sax = NULL;
+
+  // all done with parsing
+  xmlFreeParserCtxt(ctxt);
+
+  // make sure we did not end early
+  if (state.unit >= 1 && state.count != state.unit)
+    throw OutOfRangeUnitError(state.count);
+
+  units = state.count;
+}
+
 const char * srcMLUtility::long_info(srcMLUtility & su) {
 
   int unitnumber = 0;

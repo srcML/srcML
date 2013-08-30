@@ -62,6 +62,7 @@ public:
     // move to a particular nested unit
     //  void move_to_unit(int unitnumber);
     void move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE options, int optioncount, int optionorder[], FILE * output);
+    void move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE options, int optioncount, int optionorder[], std::vector<std::string> & output_array);
     const char * long_info(srcMLUtility & su);
 
     // namespaces and prefixes
