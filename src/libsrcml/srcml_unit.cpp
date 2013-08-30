@@ -3,6 +3,63 @@
 
 #include "../srcMLUtility.hpp"
 
+/* setup options for srcml unit */
+int srcml_unit_set_language(srcml_unit* unit, const char* language) {
+
+  if(unit->language) delete unit->language;
+  unit->language = new std::string(language);
+  return SRCML_STATUS_OK;
+
+}
+
+int srcml_unit_set_filename(srcml_unit* unit, const char* filename) {
+
+  if(unit->filename) delete unit->filename;
+  unit->filename = new std::string(filename);
+  return SRCML_STATUS_OK;
+
+}
+
+int srcml_unit_set_directory(srcml_unit* unit, const char* directory) {
+
+  if(unit->directory) delete unit->directory;
+  unit->directory = new std::string(directory);
+  return SRCML_STATUS_OK;
+
+}
+
+int srcml_unit_set_version(srcml_unit* unit, const char* version) {
+
+  if(unit->version) delete unit->version;
+  unit->version = new std::string(version);
+  return SRCML_STATUS_OK;
+
+}
+
+const char* srcml_unit_get_language(const srcml_unit* unit) {
+
+  return unit->language ? unit->language->c_str() : 0;
+
+}
+
+const char* srcml_unit_get_filename(const srcml_unit* unit) {
+
+  return unit->filename ? unit->filename->c_str() : 0;
+
+}
+
+const char* srcml_unit_get_directory(const srcml_unit* unit) {
+
+  return unit->directory ? unit->directory->c_str() : 0;
+
+}
+
+const char* srcml_unit_get_version  (const srcml_unit* unit) {
+
+  return unit->version ? unit->version->c_str() : 0;
+
+}
+
 void srcml_parse_unit_internal(srcml_unit * unit, int lang) {
 
   xmlBuffer * output_buffer = xmlBufferCreate();
@@ -152,6 +209,30 @@ int srcml_unparse_unit_fd(srcml_unit* unit, int srcml_fd) {
   xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFd(srcml_fd, xmlFindCharEncodingHandler(unit->archive->encoding ? unit->archive->encoding->c_str() : "ISO-8859-1"));
   srcMLUtility utility(unit->unit->c_str(), unit->unit->size(), 0, unit->archive->options);
   utility.extract_text(output_buffer);
+
+  return SRCML_STATUS_OK;
+
+}
+
+srcml_unit * srcml_create_unit(srcml_archive * archive) {
+
+  srcml_unit * unit = new srcml_unit;//(srcml_unit *)malloc(sizeof(srcml_unit));
+  memset(unit, 0, sizeof(srcml_unit));
+  unit->archive = archive;
+
+  return unit;
+
+}
+
+int srcml_free_unit(srcml_unit* unit) {
+
+  if(unit->language) delete unit->language, unit->language = 0;
+  if(unit->filename) delete unit->filename, unit->filename = 0;
+  if(unit->directory) delete unit->directory, unit->directory = 0;
+  if(unit->version) delete unit->version, unit->version = 0;
+  if(unit->unit) delete unit->unit, unit->unit = 0;
+
+  delete unit;
 
   return SRCML_STATUS_OK;
 
