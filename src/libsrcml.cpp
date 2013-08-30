@@ -1146,7 +1146,10 @@ const char** srcml_info(const char* srcml_filename) {
 
   OPTION_TYPE options = 0;
   srcMLUtility utility(srcml_filename, "UTF-8", options);
-  //utility.move_to_unit(0, su, options, int optioncount, int optionorder[], FILE * output) {
+  int optioncount = 5;
+  int optionorder[] = { OPTION_XML_ENCODING, OPTION_LANGUAGE, OPTION_DIRECTORY, OPTION_FILENAME, OPTION_VERSION };
+  std::vector<std::string> output_array;
+  utility.move_to_unit(0, utility, options, optioncount, optionorder, output_array);
 
   return SRCML_STATUS_OK;
 
