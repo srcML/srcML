@@ -1,5 +1,5 @@
 /*
-  srcml_longinfo.c
+  srcml_info_unit.c
 
   Copyright (C) 2013  SDML (www.sdml.info)
 
@@ -21,7 +21,7 @@
 /*
   Example program of the use of the C API for srcML.
 
-  Gather longinfo from an archive.
+  Gather info from an archive from a given unit.
 */
 
 #include <stdio.h>
@@ -30,7 +30,7 @@
 int main(int argc, char* argv[]) {
     const char** p;
 
-    p = srcml_longinfo("project.xml");
+    p = srcml_info_unit("project.xml", 2);
 
     for(; *p; ++p)
       puts(*p);
