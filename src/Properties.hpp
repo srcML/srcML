@@ -94,7 +94,10 @@ public :
             if (pstate->unit == -1) {
 
                 // Keep going, either showing the count or just accumulating it
+              if(output)
                 pstate->pprocess = isatty(fileno(output)) ? new CountUnits(output) : new ProcessUnit;
+              else if(output_array)
+                pstate->pprocess = new CountUnits(output_array);
             }
         }
     }
@@ -125,10 +128,10 @@ public :
             attrv[i].first = ".encoding";
             attrv[i].second = encoding;
         }
-
+        fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
         // output the current data
         output_info(su, *(pstate->poptions), optioncount, optionorder, output, buffer, output_array);
-
+        fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
         // stop, since normal unit processing would continue on to the contents
         pstate->stopUnit(ctx);
     }
