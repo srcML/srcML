@@ -43,10 +43,14 @@
 
 std::string srcml_error;
 
+// archive type read, write, or read/write
 enum SRCML_ARCHIVE_TYPE { SRCML_ARCHIVE_RW, SRCML_ARCHIVE_READ, SRCML_ARCHIVE_WRITE };
 
+// transformation types, xpath, xslt, and relaxng
 enum SRCML_TRANSFORM_TYPE { SRCML_XPATH, SRCML_XSLT, SRCML_RELAXNG };
 
+
+// struct to hold transformation information for latter application.
 struct transform {
 
   SRCML_TRANSFORM_TYPE type;
@@ -54,6 +58,11 @@ struct transform {
 
 };
 
+/*
+  
+  Holds data for a srcML archive read/write.
+
+*/
 struct srcml_archive {
 
   // archive type read/write
@@ -91,14 +100,23 @@ struct srcml_archive {
   std::vector<transform> transformations;
 };
 
+/*
+
+  Hold data pertaining to a unit in an archive,
+  such as the transformed or collected unit.
+
+ */
 struct srcml_unit {
-  /* Have to remember which archive the unit is from */
+  // reference to archive part of
   srcml_archive* archive;
 
+  // srcml attribute information
   std::string * language;
   std::string * filename;
   std::string * directory;
   std::string * version;
+
+  // transformed unit or collected unit
   std::string * unit;
 };
 
@@ -107,19 +125,20 @@ srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector
                                  4, std::vector<std::string>(), std::vector<std::string>(), std::vector<pair>(),
                                  0, 0, 0, std::vector<transform>() };
 
+// version of libsrcml as string
 const char * srcml_version_string() {
 
   return SRCML_VERSION_STRING;
 
 }
 
+// version of libsrcml as number
 int srcml_version_number() {
 
   return SRCML_VERSION_NUMBER;
 
 }
 
-/* prefix for an XML namespace */
 /* translates to/from srcML */
 int srcml(const char* input_filename, const char* output_filename) {
 
