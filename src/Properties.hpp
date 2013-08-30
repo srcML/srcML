@@ -128,10 +128,10 @@ public :
             attrv[i].first = ".encoding";
             attrv[i].second = encoding;
         }
-        fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
         // output the current data
         output_info(su, *(pstate->poptions), optioncount, optionorder, output, buffer, output_array);
-        fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
         // stop, since normal unit processing would continue on to the contents
         pstate->stopUnit(ctx);
     }

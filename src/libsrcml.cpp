@@ -1184,7 +1184,20 @@ const char** srcml_longinfo(const char* srcml_filename) {
 /* srcML attributes with namespaces of a particular unit in an archive */
 const char** srcml_info_unit(const char* srcml_filename, int unit) {
 
-  return SRCML_STATUS_OK;
+  OPTION_TYPE options = OPTION_INFO | OPTION_NAMESPACE;
+  srcMLUtility utility(srcml_filename, "UTF-8", options);
+  int optioncount = 5;
+  int optionorder[] = { OPTION_XML_ENCODING, OPTION_LANGUAGE, OPTION_DIRECTORY, OPTION_FILENAME, OPTION_VERSION };
+  std::vector<std::string> output_array;
+  utility.move_to_unit(unit, utility, options, optioncount, optionorder, output_array);
+
+  const char ** output_carray = (const char **)malloc((output_array.size() + 1) * sizeof(const char *));
+
+  for(int i = 0; i < output_array.size(); ++i)
+    output_carray[i] = strdup(output_array.at(i).c_str());
+  output_carray[output_array.size()] = 0;
+
+  return output_carray;
 
 }
 
