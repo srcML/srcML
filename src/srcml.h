@@ -52,7 +52,7 @@ const char* srcml_version_string(void);
 #define SRCML_LANGUAGE_CXX    "C++"
 #define SRCML_LANGUAGE_JAVA   "Java"
 #define SRCML_LANGUAGE_CSHARP "C#"
-#define SRCML_LANGUAGE_XML "xml"
+#define SRCML_LANGUAGE_XML    "xml"
 
 /* Options */
 #define SRCML_OPTION_LITERAL           1<<2/*1<<0  /* Markups literal in special namespace */
@@ -101,7 +101,7 @@ int srcml(const char* input_filename, const char* output_filename);
 /*
   Global settings.  Can be used with convenience function srcml()
 */
-int srcml_set_encoding(const char* encoding);
+int srcml_set_encoding  (const char* encoding);
 int srcml_set_language  (const char* language);
 int srcml_set_filename  (const char* filename);
 int srcml_set_directory (const char* directory);
