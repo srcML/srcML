@@ -36,89 +36,13 @@
 #include "srcmlns.hpp"
 #include "srcMLUtility.hpp"
 #include "srcMLReader.hpp"
+#include "srcml_types.hpp"
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
 #include <dlfcn.h>
 #endif
 
 std::string srcml_error;
-
-// archive type read, write, or read/write
-enum SRCML_ARCHIVE_TYPE { SRCML_ARCHIVE_RW, SRCML_ARCHIVE_READ, SRCML_ARCHIVE_WRITE };
-
-// transformation types, xpath, xslt, and relaxng
-enum SRCML_TRANSFORM_TYPE { SRCML_XPATH, SRCML_XSLT, SRCML_RELAXNG };
-
-
-// struct to hold transformation information for latter application.
-struct transform {
-
-  SRCML_TRANSFORM_TYPE type;
-  std::string transformation;
-
-};
-
-/*
-
-  Holds data for a srcML archive read/write.
-
-*/
-struct srcml_archive {
-
-  // archive type read/write
-  SRCML_ARCHIVE_TYPE type;
-
-  // srcML archive attributes
-  std::string * filename;
-  std::string * encoding;
-  std::string * xml_encoding;
-  std::string * language;
-  std::string * directory;
-  std::string * version;
-  std::vector<std::string>  attributes;
-
-  // parsing options
-  OPTION_TYPE options;
-
-  // tabstop size
-  int tabstop;
-
-  // namespace/prefixes
-  std::vector<std::string> prefixes;
-  std::vector<std::string> namespaces;
-
-  // registered language extensions
-  std::vector<pair> registered_languages;
-
-  // translator
-  srcMLTranslator * translator;
-
-  // utility
-  srcMLReader * reader;
-  xmlParserInputBufferPtr input;
-
-  std::vector<transform> transformations;
-};
-
-/*
-
-  Hold data pertaining to a unit in an archive,
-  such as the transformed or collected unit.
-
-*/
-struct srcml_unit {
-  // reference to archive part of
-  srcml_archive* archive;
-
-  // srcml attribute information
-  std::string * language;
-  std::string * filename;
-  std::string * directory;
-  std::string * version;
-
-  // transformed unit or collected unit
-  std::string * unit;
-};
 
 // global archive for use with srcml() function.  Defaulted values.
 srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector<std::string>(), 0,

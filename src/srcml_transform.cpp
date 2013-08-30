@@ -1,3 +1,6 @@
+#include "srcml.h"
+#include "srcml_types.hpp"
+
 /* srcML XPath query and XSLT transform functions */
 int srcml_add_transform_xpath(srcml_archive* archive, const char* xpath_string) {
 
