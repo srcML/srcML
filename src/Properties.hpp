@@ -34,11 +34,15 @@ void output_info(srcMLUtility& su, int options, int optioncount, int optionorder
 class Properties : public ProcessUnit {
 public :
     Properties(srcMLUtility& su, PROPERTIES_TYPE&nsv, PROPERTIES_TYPE& attrv, int optioncount, int optionorder[], FILE * output = stdout)
-        : su(su), nsv(nsv), attrv(attrv), optioncount(optioncount), optionorder(optionorder), output(output), buffer(0)
+      : su(su), nsv(nsv), attrv(attrv), optioncount(optioncount), optionorder(optionorder), output(output), buffer(0), output_array(0)
         {}
 
     Properties(srcMLUtility& su, PROPERTIES_TYPE&nsv, PROPERTIES_TYPE& attrv, int optioncount, int optionorder[], std::ostringstream * buffer)
-        : su(su), nsv(nsv), attrv(attrv), optioncount(optioncount), optionorder(optionorder), output(0), buffer(buffer)
+      : su(su), nsv(nsv), attrv(attrv), optioncount(optioncount), optionorder(optionorder), output(0), buffer(buffer), output_array(0)
+        {}
+
+    Properties(srcMLUtility& su, PROPERTIES_TYPE&nsv, PROPERTIES_TYPE& attrv, int optioncount, int optionorder[], char ** output_array)
+      : su(su), nsv(nsv), attrv(attrv), optioncount(optioncount), optionorder(optionorder), output(0), buffer(0), output_array(output_array)
         {}
 
     srcMLUtility& su;
@@ -48,6 +52,7 @@ public :
     int* optionorder;
     FILE * output;
     std::ostringstream * buffer;
+    char ** output_array;
 
 public :
 
