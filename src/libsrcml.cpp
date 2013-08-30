@@ -488,7 +488,7 @@ int srcml_check_exslt() {
 const char* srcml_error_string() { return srcml_error.c_str(); }
 
 /* create a new srcml archive
-   client will have to free it using srcml_free() */
+   client will have to free it using srcml_free_archive() */
 srcml_archive* srcml_create_archive()
 
 {
@@ -530,7 +530,7 @@ void srcml_free_archive(srcml_archive * archive) {
 }
 
 /* clone the setup of an existing archive
-   client will have to free it using srcml_archive_free() */
+   client will have to free it using srcml_free_archive() */
 srcml_archive* srcml_clone_archive(const srcml_archive* archive) {
 
   // probably memory leaks between here and free.  Who is responsible for freeing internal copied structures?

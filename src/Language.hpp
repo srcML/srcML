@@ -30,7 +30,7 @@
 #include <vector>
 
 struct pair {
-  const char* s;
+  std::string s;
   int n;
 };
 
@@ -74,8 +74,8 @@ public:
   // gets the current language
   static int getLanguage(const char* const s) {
 
-    for (const pair* pos = lang2int; pos->s != 0; ++pos)
-      if (strcmp(pos->s, s) == 0)
+    for (const pair* pos = lang2int; pos->s.c_str() != 0; ++pos)
+      if (strcmp(pos->s.c_str(), s) == 0)
         return pos->n;
 
     return 0;
@@ -84,9 +84,9 @@ public:
   // gets the current language
   const char* getLanguageString() const {
 
-    for (const pair* pos = lang2int; pos->s != 0; ++pos)
+    for (const pair* pos = lang2int; pos->s.c_str() != 0; ++pos)
       if (pos->n == language)
-        return pos->s;
+        return pos->s.c_str();
 
     return "";
   }
