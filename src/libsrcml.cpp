@@ -506,24 +506,18 @@ const char * srcml_archive_check_extension(srcml_archive * archive, const char* 
 srcml_archive* srcml_create_archive()
 
 {
-  srcml_archive * archive = new srcml_archive;//(srcml_archive*) malloc(sizeof(srcml_archive));
+  srcml_archive * archive = new srcml_archive;
   memset(archive, 0, sizeof(srcml_archive));
-  archive->prefixes.push_back(SRCML_SRC_NS_PREFIX_DEFAULT);
-  archive->prefixes.push_back(SRCML_CPP_NS_PREFIX_DEFAULT);
-  archive->prefixes.push_back(SRCML_ERR_NS_PREFIX_DEFAULT);
-  archive->prefixes.push_back(SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT);
-  archive->prefixes.push_back(SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT);
-  archive->prefixes.push_back(SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT);
-  archive->prefixes.push_back(SRCML_EXT_POSITION_NS_PREFIX_DEFAULT);
 
-  archive->namespaces.push_back(SRCML_SRC_NS_URI);
-  archive->namespaces.push_back(SRCML_CPP_NS_URI);
-  archive->namespaces.push_back(SRCML_ERR_NS_URI);
-  archive->namespaces.push_back(SRCML_EXT_LITERAL_NS_URI);
-  archive->namespaces.push_back(SRCML_EXT_OPERATOR_NS_URI);
-  archive->namespaces.push_back(SRCML_EXT_MODIFIER_NS_URI);
-  archive->namespaces.push_back(SRCML_EXT_POSITION_NS_URI);
-
+  // default prefixes
+  srcml_archive_register_namespace(archive, SRCML_SRC_NS_PREFIX_DEFAULT, SRCML_SRC_NS_URI);
+  srcml_archive_register_namespace(archive, SRCML_CPP_NS_PREFIX_DEFAULT, SRCML_CPP_NS_URI);
+  srcml_archive_register_namespace(archive, SRCML_ERR_NS_PREFIX_DEFAULT, SRCML_ERR_NS_URI);
+  srcml_archive_register_namespace(archive, SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT, SRCML_EXT_LITERAL_NS_URI);
+  srcml_archive_register_namespace(archive, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT, SRCML_EXT_OPERATOR_NS_URI);
+  srcml_archive_register_namespace(archive, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT, SRCML_EXT_MODIFIER_NS_URI);
+  srcml_archive_register_namespace(archive, SRCML_EXT_POSITION_NS_PREFIX_DEFAULT, SRCML_EXT_POSITION_NS_URI);
+    
   Language::register_standard_file_extensions(archive->registered_languages);
 
   return archive;
