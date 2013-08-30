@@ -23,7 +23,7 @@
 #ifndef INCLUDED_PROPERTIES_HPP
 #define INCLUDED_PROPERTIES_HPP
 
-void output_info(srcMLUtility& su, int options, int optioncount, int optionorder[], FILE * output, std::ostringstream * buffer);
+void output_info(srcMLUtility& su, int options, int optioncount, int optionorder[], FILE * output, std::ostringstream * buffer, std::vector<std::string> * output_array);
 
 #include "ProcessUnit.hpp"
 #include "srcmlapps.hpp"
@@ -41,7 +41,7 @@ public :
       : su(su), nsv(nsv), attrv(attrv), optioncount(optioncount), optionorder(optionorder), output(0), buffer(buffer), output_array(0)
         {}
 
-    Properties(srcMLUtility& su, PROPERTIES_TYPE&nsv, PROPERTIES_TYPE& attrv, int optioncount, int optionorder[], char ** output_array)
+    Properties(srcMLUtility& su, PROPERTIES_TYPE&nsv, PROPERTIES_TYPE& attrv, int optioncount, int optionorder[], std::vector<std::string> * output_array)
       : su(su), nsv(nsv), attrv(attrv), optioncount(optioncount), optionorder(optionorder), output(0), buffer(0), output_array(output_array)
         {}
 
@@ -52,7 +52,7 @@ public :
     int* optionorder;
     FILE * output;
     std::ostringstream * buffer;
-    char ** output_array;
+    std::vector<std::string> * output_array;
 
 public :
 
@@ -88,7 +88,7 @@ public :
         if (pstate->unit < 1) {
 
             // output the current data except for the completion of the nested unit count
-            output_info(su, *(pstate->poptions), optioncount, optionorder, output, buffer);
+            output_info(su, *(pstate->poptions), optioncount, optionorder, output, buffer, output_array);
 
             // if visiting all, then do so counting, whether visible or not
             if (pstate->unit == -1) {
@@ -127,14 +127,14 @@ public :
         }
 
         // output the current data
-        output_info(su, *(pstate->poptions), optioncount, optionorder, output, buffer);
+        output_info(su, *(pstate->poptions), optioncount, optionorder, output, buffer, output_array);
 
         // stop, since normal unit processing would continue on to the contents
         pstate->stopUnit(ctx);
     }
 };
 
-void output_info(srcMLUtility& su, int options, int optioncount, int optionorder[], FILE * output, std::ostringstream * buffer) {
+void output_info(srcMLUtility& su, int options, int optioncount, int optionorder[], FILE * output, std::ostringstream * buffer, std::vector<std::string> * output_array) {
 
     // output all the namespaces
     if (isoption(options, OPTION_INFO) || isoption(options, OPTION_LONG_INFO)) {
@@ -145,9 +145,10 @@ void output_info(srcMLUtility& su, int options, int optioncount, int optionorder
 
             if(output)
                 fprintf(output, "%s=\"%s\"\n", su.nsv[i].second.c_str(), su.nsv[i].first.c_str());
-            else
+            else if(buffer)
                 (*buffer) << su.nsv[i].second.c_str() << "=\"" << su.nsv[i].first.c_str() << "\"\n";
-
+            else
+              ;
         }
     }
 
@@ -188,14 +189,17 @@ void output_info(srcMLUtility& su, int options, int optioncount, int optionorder
             if (optioncount == 1)
                 if(output)
                     fprintf(output, "%s\n", l);
-                else
+                else if(buffer)
                     (*buffer) << l << '\n';
-
+                else
+                  ;
             else
                 if(output)
                     fprintf(output, "%s=\"%s\"\n", attribute_title, l);
-                else
+                else if(buffer)
                     (*buffer) << attribute_title << "=\"" << l << "\"\n";
+                else
+                  ;
         }
     }
 
@@ -203,6 +207,8 @@ void output_info(srcMLUtility& su, int options, int optioncount, int optionorder
         fprintf(output, "units=\"%d", 1);
     else if(buffer && isoption(options, OPTION_LONG_INFO) && !isoption(options, OPTION_UNIT))
         (*buffer) << "units=\"1\"";
+    else if(output_array && isoption(options, OPTION_LONG_INFO) && !isoption(options, OPTION_UNIT))
+      ;
 }
 
 #endif
