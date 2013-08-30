@@ -1253,6 +1253,8 @@ int srcml_add_transform_relaxng(srcml_archive* archive, const char* relaxng_file
 
 }
 
+
+// TODO finish.  what happends to intermediate results?
 int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
   iarchive->transformations.clear();
