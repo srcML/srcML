@@ -105,7 +105,7 @@ struct srcml_unit {
 // global archive for use with srcml() function.  Defaulted values.
 srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector<std::string>(), 0,
                                  4, std::vector<std::string>(), std::vector<std::string>(), std::vector<pair>(),
-                                 0, 0, 0 };
+                                 0, 0, 0, std::vector<transform>() };
 
 const char * srcml_version_string() {
 
