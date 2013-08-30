@@ -148,7 +148,8 @@ void output_info(srcMLUtility& su, int options, int optioncount, int optionorder
             else if(buffer)
                 (*buffer) << su.nsv[i].second.c_str() << "=\"" << su.nsv[i].first.c_str() << "\"\n";
             else
-              ;
+              output_array->push_back(su.nsv[i].second + "=\"" + su.nsv[i].first + "\"");
+
         }
     }
 
@@ -198,8 +199,14 @@ void output_info(srcMLUtility& su, int options, int optioncount, int optionorder
                     fprintf(output, "%s=\"%s\"\n", attribute_title, l);
                 else if(buffer)
                     (*buffer) << attribute_title << "=\"" << l << "\"\n";
-                else
-                  ;
+                else {
+                  std::string attribute_string = attribute_title;
+                  attribute_string += "=\"";
+                  attribute_string += l;
+                  attribute_string += "\"";
+                  output_array->push_back(attribute_string);
+
+                }
         }
     }
 
@@ -208,7 +215,7 @@ void output_info(srcMLUtility& su, int options, int optioncount, int optionorder
     else if(buffer && isoption(options, OPTION_LONG_INFO) && !isoption(options, OPTION_UNIT))
         (*buffer) << "units=\"1\"";
     else if(output_array && isoption(options, OPTION_LONG_INFO) && !isoption(options, OPTION_UNIT))
-      ;
+      output_array->push_back("units=\"1\"");
 }
 
 #endif
