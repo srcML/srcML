@@ -1207,11 +1207,17 @@ const char** srcml_list(const char* srcml_filename) {
   srcml_archive * archive = srcml_create_archive();
   srcml_read_open_filename(archive, srcml_filename);
   srcml_unit * unit;
-  std::vector<std::string> output;
+  std::vector<std::string> output_array;
   while((unit = srcml_read_unit(archive)))
-        output.push_back(srcml_unit_get_filename(unit));
+        output_array.push_back(srcml_unit_get_filename(unit));
 
-  return SRCML_STATUS_OK;
+  const char ** output_carray = (const char **)malloc((output_array.size() + 1) * sizeof(const char *));
+
+  for(int i = 0; i < output_array.size(); ++i)
+    output_carray[i] = strdup(output_array.at(i).c_str());
+  output_carray[output_array.size()] = 0;
+
+  return output_carray;
 
 }
 
