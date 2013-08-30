@@ -62,11 +62,11 @@ libsrcml.srcml_delete.restype = None
 libsrcml.srcml_delete.argtypes = [c_ulonglong]
 
 # free functions
-libsrcml.srcml_version.restype = c_char_p
-libsrcml.srcml_version.argtypes = []
+libsrcml.srcml_version_string.restype = c_char_p
+libsrcml.srcml_version_string.argtypes = []
 
-def srcml_version() :
-    return libsrcml.srcml_version()
+def srcml_version_string() :
+    return libsrcml.srcml_version_string()
 
 
 class srcMLTranslator(object):
