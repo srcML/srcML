@@ -220,6 +220,12 @@ int srcml(const char* input_filename, const char* output_filename) {
   return SRCML_STATUS_OK;
 }
 
+/*
+
+Global archive functions
+
+*/
+
 int srcml_set_encoding(const char* encoding) {
 
   return srcml_archive_set_encoding(&global_archive, encoding);
@@ -486,6 +492,12 @@ int srcml_check_exslt() {
 
 /* string describing last error */
 const char* srcml_error_string() { return srcml_error.c_str(); }
+
+/*
+
+  Full API.
+
+*/
 
 /* create a new srcml archive
    client will have to free it using srcml_free_archive() */
