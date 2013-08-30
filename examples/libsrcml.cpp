@@ -102,9 +102,15 @@ srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector
                                  4, std::vector<std::string>(), std::vector<std::string>(), std::vector<pair>(),
                                  0, 0, 0 };
 
-const char * srcml_version() {
+const char * srcml_version_string() {
 
   return SRCML_VERSION_STRING;
+
+}
+
+int srcml_version_number() {
+
+  return SRCML_VERSION_NUMBER;
 
 }
 
