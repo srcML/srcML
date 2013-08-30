@@ -45,10 +45,12 @@ std::string srcml_error;
 
 enum SRCML_ARCHIVE_TYPE { SRCML_ARCHIVE_RW, SRCML_ARCHIVE_READ, SRCML_ARCHIVE_WRITE };
 
-struct registered_language {
+enum SRCML_TRANSFORM_TYPE { SRCML_XPATH, SRCML_XSLT, SRCML_RELAXNG };
 
-  const char * extension;
-  int language;
+struct transform {
+
+  SRCML_TRANSFORM_TYPE type;
+  const char * transformation;
 
 };
 
@@ -85,6 +87,8 @@ struct srcml_archive {
   // utility
   srcMLReader * reader;
   xmlParserInputBufferPtr input;
+
+  std::vector<transform> transformations;
 };
 
 struct srcml_unit {
