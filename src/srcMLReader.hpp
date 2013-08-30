@@ -31,10 +31,18 @@
 
 class srcMLReader {
 
+  // the text reader
   xmlTextReaderPtr reader;
+
+  // current node
   xmlNodePtr node;
+
+  // have we read through root unit
   bool is_archive;
+  
+  // un output nodes that may need to be output
   std::vector<xmlNodePtr> save_nodes;
+  // are we done processing
   bool done;
 
 public:
