@@ -59,7 +59,7 @@ struct transform {
 };
 
 /*
-  
+
   Holds data for a srcML archive read/write.
 
 */
@@ -105,7 +105,7 @@ struct srcml_archive {
   Hold data pertaining to a unit in an archive,
   such as the transformed or collected unit.
 
- */
+*/
 struct srcml_unit {
   // reference to archive part of
   srcml_archive* archive;
@@ -222,7 +222,7 @@ int srcml(const char* input_filename, const char* output_filename) {
 
 /*
 
-Global archive functions
+  Global archive functions
 
 */
 
@@ -517,7 +517,7 @@ srcml_archive* srcml_create_archive()
   srcml_archive_register_namespace(archive, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT, SRCML_EXT_OPERATOR_NS_URI);
   srcml_archive_register_namespace(archive, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT, SRCML_EXT_MODIFIER_NS_URI);
   srcml_archive_register_namespace(archive, SRCML_EXT_POSITION_NS_PREFIX_DEFAULT, SRCML_EXT_POSITION_NS_URI);
-    
+
   Language::register_standard_file_extensions(archive->registered_languages);
 
   return archive;
@@ -589,6 +589,7 @@ int srcml_archive_set_language(srcml_archive* archive, const char* language) {
   return SRCML_STATUS_OK;
 
 }
+
 int srcml_archive_set_filename(srcml_archive* archive, const char* filename) {
 
   if(archive->filename) delete archive->filename;
@@ -596,6 +597,7 @@ int srcml_archive_set_filename(srcml_archive* archive, const char* filename) {
   return SRCML_STATUS_OK;
 
 }
+
 int srcml_archive_set_directory (srcml_archive* archive, const char* directory) {
 
   if(archive->directory) delete archive->directory;
@@ -603,6 +605,7 @@ int srcml_archive_set_directory (srcml_archive* archive, const char* directory) 
   return SRCML_STATUS_OK;
 
 }
+
 int srcml_archive_set_version(srcml_archive* archive, const char* version) {
 
   if(archive->version) delete archive->version;
@@ -610,6 +613,7 @@ int srcml_archive_set_version(srcml_archive* archive, const char* version) {
   return SRCML_STATUS_OK;
 
 }
+
 int srcml_archive_set_attributes(srcml_archive* archive, const char** attr[2]) {
 
   archive->attributes.clear();
@@ -624,24 +628,28 @@ int srcml_archive_set_attributes(srcml_archive* archive, const char** attr[2]) {
   return SRCML_STATUS_OK;
 
 }
+
 int srcml_archive_set_options(srcml_archive* archive, int options) {
 
   archive->options = options;
   return SRCML_STATUS_OK;
 
 }
+
 int srcml_archive_set_option    (srcml_archive* archive, int option) {
 
   archive->options |= option;
   return SRCML_STATUS_OK;
 
 }
+
 int srcml_archive_clear_option(srcml_archive* archive, int option) {
 
   archive->options &= ~option;
   return SRCML_STATUS_OK;
 
 }
+
 int srcml_archive_set_tabstop(srcml_archive* archive, int tabstop) {
 
   archive->tabstop = tabstop;
@@ -1240,7 +1248,7 @@ const char** srcml_list(const char* srcml_filename) {
   srcml_unit * unit;
   std::vector<std::string> output_array;
   while((unit = srcml_read_unit(archive)))
-        output_array.push_back(srcml_unit_get_filename(unit));
+    output_array.push_back(srcml_unit_get_filename(unit));
 
   const char ** output_carray = (const char **)malloc((output_array.size() + 1) * sizeof(const char *));
 
