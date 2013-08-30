@@ -36,6 +36,7 @@
 #include "srcmlns.hpp"
 #include "srcMLUtility.hpp"
 #include "srcMLReader.hpp"
+#include "srcml_types.hpp"
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
 #include <dlfcn.h>
@@ -43,83 +44,25 @@
 
 std::string srcml_error;
 
-enum SRCML_ARCHIVE_TYPE { SRCML_ARCHIVE_RW, SRCML_ARCHIVE_READ, SRCML_ARCHIVE_WRITE };
-
-enum SRCML_TRANSFORM_TYPE { SRCML_XPATH, SRCML_XSLT, SRCML_RELAXNG };
-
-struct transform {
-
-  SRCML_TRANSFORM_TYPE type;
-  std::string transformation;
-
-};
-
-struct srcml_archive {
-
-  // archive type read/write
-  SRCML_ARCHIVE_TYPE type;
-
-  // srcML archive attributes
-  std::string * filename;
-  std::string * encoding;
-  std::string * xml_encoding;
-  std::string * language;
-  std::string * directory;
-  std::string * version;
-  std::vector<std::string>  attributes;
-
-  // parsing options
-  OPTION_TYPE options;
-
-  // tabstop size
-  int tabstop;
-
-  // namespace/prefixes
-  std::vector<std::string> prefixes;
-  std::vector<std::string> namespaces;
-
-  // registered language extensions
-  std::vector<pair> registered_languages;
-
-  // translator
-  srcMLTranslator * translator;
-
-  // utility
-  srcMLReader * reader;
-  xmlParserInputBufferPtr input;
-
-  std::vector<transform> transformations;
-};
-
-struct srcml_unit {
-  /* Have to remember which archive the unit is from */
-  srcml_archive* archive;
-
-  std::string * language;
-  std::string * filename;
-  std::string * directory;
-  std::string * version;
-  std::string * unit;
-};
-
 // global archive for use with srcml() function.  Defaulted values.
 srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector<std::string>(), 0,
                                  4, std::vector<std::string>(), std::vector<std::string>(), std::vector<pair>(),
-                                 0, 0, 0 };
+                                 0, 0, 0, std::vector<transform>() };
 
+// version of libsrcml as string
 const char * srcml_version_string() {
 
   return SRCML_VERSION_STRING;
 
 }
 
+// version of libsrcml as number
 int srcml_version_number() {
 
   return SRCML_VERSION_NUMBER;
 
 }
 
-/* prefix for an XML namespace */
 /* translates to/from srcML */
 int srcml(const char* input_filename, const char* output_filename) {
 
@@ -200,6 +143,12 @@ int srcml(const char* input_filename, const char* output_filename) {
 
   return SRCML_STATUS_OK;
 }
+
+/*
+
+  Global archive functions
+
+*/
 
 int srcml_set_encoding(const char* encoding) {
 
@@ -365,13 +314,6 @@ const char * srcml_check_extension(const char* filename) {
 
 }
 
-const char * srcml_archive_check_extension(srcml_archive * archive, const char* filename) {
-
-  Language language(Language::getLanguageFromFilename(filename, archive->registered_languages));
-  return language.getLanguageString();
-
-}
-
 /* currently supported format, e.g., tar.gz
    Full filename can be provided, and extension will be extracted */
 int srcml_check_format(const char* format) {
@@ -468,28 +410,37 @@ int srcml_check_exslt() {
 /* string describing last error */
 const char* srcml_error_string() { return srcml_error.c_str(); }
 
+/*
+
+  Full API.
+
+*/
+
+/* currently registered language for a file extension
+   Full filename can be provided, and extension will be extracted */
+const char * srcml_archive_check_extension(srcml_archive * archive, const char* filename) {
+
+  Language language(Language::getLanguageFromFilename(filename, archive->registered_languages));
+  return language.getLanguageString();
+
+}
+
 /* create a new srcml archive
-   client will have to free it using srcml_free() */
+   client will have to free it using srcml_free_archive() */
 srcml_archive* srcml_create_archive()
 
 {
-  srcml_archive * archive = new srcml_archive;//(srcml_archive*) malloc(sizeof(srcml_archive));
+  srcml_archive * archive = new srcml_archive;
   memset(archive, 0, sizeof(srcml_archive));
-  archive->prefixes.push_back(SRCML_SRC_NS_PREFIX_DEFAULT);
-  archive->prefixes.push_back(SRCML_CPP_NS_PREFIX_DEFAULT);
-  archive->prefixes.push_back(SRCML_ERR_NS_PREFIX_DEFAULT);
-  archive->prefixes.push_back(SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT);
-  archive->prefixes.push_back(SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT);
-  archive->prefixes.push_back(SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT);
-  archive->prefixes.push_back(SRCML_EXT_POSITION_NS_PREFIX_DEFAULT);
 
-  archive->namespaces.push_back(SRCML_SRC_NS_URI);
-  archive->namespaces.push_back(SRCML_CPP_NS_URI);
-  archive->namespaces.push_back(SRCML_ERR_NS_URI);
-  archive->namespaces.push_back(SRCML_EXT_LITERAL_NS_URI);
-  archive->namespaces.push_back(SRCML_EXT_OPERATOR_NS_URI);
-  archive->namespaces.push_back(SRCML_EXT_MODIFIER_NS_URI);
-  archive->namespaces.push_back(SRCML_EXT_POSITION_NS_URI);
+  // default prefixes
+  srcml_archive_register_namespace(archive, SRCML_SRC_NS_PREFIX_DEFAULT, SRCML_SRC_NS_URI);
+  srcml_archive_register_namespace(archive, SRCML_CPP_NS_PREFIX_DEFAULT, SRCML_CPP_NS_URI);
+  srcml_archive_register_namespace(archive, SRCML_ERR_NS_PREFIX_DEFAULT, SRCML_ERR_NS_URI);
+  srcml_archive_register_namespace(archive, SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT, SRCML_EXT_LITERAL_NS_URI);
+  srcml_archive_register_namespace(archive, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT, SRCML_EXT_OPERATOR_NS_URI);
+  srcml_archive_register_namespace(archive, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT, SRCML_EXT_MODIFIER_NS_URI);
+  srcml_archive_register_namespace(archive, SRCML_EXT_POSITION_NS_PREFIX_DEFAULT, SRCML_EXT_POSITION_NS_URI);
 
   Language::register_standard_file_extensions(archive->registered_languages);
 
@@ -511,13 +462,12 @@ void srcml_free_archive(srcml_archive * archive) {
 }
 
 /* clone the setup of an existing archive
-   client will have to free it using srcml_archive_free() */
+   client will have to free it using srcml_free_archive() */
 srcml_archive* srcml_clone_archive(const srcml_archive* archive) {
-
-  // probably memory leaks between here and free.  Who is responsible for freeing internal copied structures?
 
   srcml_archive * new_archive = srcml_create_archive();
   new_archive->type = archive->type;
+
   new_archive->filename = archive->filename ? new std::string(*archive->filename) : 0;
   new_archive->encoding = archive->encoding ? new std::string(*archive->encoding): 0;
   new_archive->language = archive->language ? new std::string(*archive->language) : 0;
@@ -530,6 +480,7 @@ srcml_archive* srcml_clone_archive(const srcml_archive* archive) {
   new_archive->options = archive->options;
   new_archive->tabstop = archive->tabstop;
 
+  // clear out those added by srcml_create_archive
   new_archive->prefixes.clear();
   new_archive->namespaces.clear();
   for(int pos = 0; pos < archive->namespaces.size(); ++pos) {
@@ -562,6 +513,7 @@ int srcml_archive_set_language(srcml_archive* archive, const char* language) {
   return SRCML_STATUS_OK;
 
 }
+
 int srcml_archive_set_filename(srcml_archive* archive, const char* filename) {
 
   if(archive->filename) delete archive->filename;
@@ -569,6 +521,7 @@ int srcml_archive_set_filename(srcml_archive* archive, const char* filename) {
   return SRCML_STATUS_OK;
 
 }
+
 int srcml_archive_set_directory (srcml_archive* archive, const char* directory) {
 
   if(archive->directory) delete archive->directory;
@@ -576,6 +529,7 @@ int srcml_archive_set_directory (srcml_archive* archive, const char* directory) 
   return SRCML_STATUS_OK;
 
 }
+
 int srcml_archive_set_version(srcml_archive* archive, const char* version) {
 
   if(archive->version) delete archive->version;
@@ -583,6 +537,7 @@ int srcml_archive_set_version(srcml_archive* archive, const char* version) {
   return SRCML_STATUS_OK;
 
 }
+
 int srcml_archive_set_attributes(srcml_archive* archive, const char** attr[2]) {
 
   archive->attributes.clear();
@@ -597,24 +552,28 @@ int srcml_archive_set_attributes(srcml_archive* archive, const char** attr[2]) {
   return SRCML_STATUS_OK;
 
 }
+
 int srcml_archive_set_options(srcml_archive* archive, int options) {
 
   archive->options = options;
   return SRCML_STATUS_OK;
 
 }
+
 int srcml_archive_set_option    (srcml_archive* archive, int option) {
 
   archive->options |= option;
   return SRCML_STATUS_OK;
 
 }
+
 int srcml_archive_clear_option(srcml_archive* archive, int option) {
 
   archive->options &= ~option;
   return SRCML_STATUS_OK;
 
 }
+
 int srcml_archive_set_tabstop(srcml_archive* archive, int tabstop) {
 
   archive->tabstop = tabstop;
@@ -1145,120 +1104,3 @@ int srcml_archive_get_tabstop(const srcml_archive* archive) {
 
 }
 
-/* srcML attributes with namespaces (header read only)*/
-const char** srcml_info(const char* srcml_filename) {
-
-  OPTION_TYPE options = OPTION_INFO | OPTION_NAMESPACE;
-  srcMLUtility utility(srcml_filename, "UTF-8", options);
-  int optioncount = 5;
-  int optionorder[] = { OPTION_XML_ENCODING, OPTION_LANGUAGE, OPTION_DIRECTORY, OPTION_FILENAME, OPTION_VERSION };
-  std::vector<std::string> output_array;
-  utility.move_to_unit(0, utility, options, optioncount, optionorder, output_array);
-
-  const char ** output_carray = (const char **)malloc((output_array.size() + 1) * sizeof(const char *));
-
-  for(int i = 0; i < output_array.size(); ++i)
-    output_carray[i] = strdup(output_array.at(i).c_str());
-  output_carray[output_array.size()] = 0;
-
-  return output_carray;
-
-}
-
-/* srcML attributes with namespaces and number of units (complete file read) */
-const char** srcml_longinfo(const char* srcml_filename) {
-
-  OPTION_TYPE options = OPTION_LONG_INFO | OPTION_NAMESPACE;
-  srcMLUtility utility(srcml_filename, "UTF-8", options);
-  int optioncount = 5;
-  int optionorder[] = { OPTION_XML_ENCODING, OPTION_LANGUAGE, OPTION_DIRECTORY, OPTION_FILENAME, OPTION_VERSION };
-  std::vector<std::string> output_array;
-  utility.move_to_unit(-1, utility, options, optioncount, optionorder, output_array);
-
-  const char ** output_carray = (const char **)malloc((output_array.size() + 1) * sizeof(const char *));
-
-  for(int i = 0; i < output_array.size(); ++i)
-    output_carray[i] = strdup(output_array.at(i).c_str());
-  output_carray[output_array.size()] = 0;
-
-  return output_carray;
-
-}
-
-/* srcML attributes with namespaces of a particular unit in an archive */
-const char** srcml_info_unit(const char* srcml_filename, int unit) {
-
-  OPTION_TYPE options = OPTION_INFO | OPTION_NAMESPACE;
-  srcMLUtility utility(srcml_filename, "UTF-8", options);
-  int optioncount = 5;
-  int optionorder[] = { OPTION_XML_ENCODING, OPTION_LANGUAGE, OPTION_DIRECTORY, OPTION_FILENAME, OPTION_VERSION };
-  std::vector<std::string> output_array;
-  utility.move_to_unit(unit, utility, options, optioncount, optionorder, output_array);
-
-  const char ** output_carray = (const char **)malloc((output_array.size() + 1) * sizeof(const char *));
-
-  for(int i = 0; i < output_array.size(); ++i)
-    output_carray[i] = strdup(output_array.at(i).c_str());
-  output_carray[output_array.size()] = 0;
-
-  return output_carray;
-
-}
-
-/* list of filenames */
-const char** srcml_list(const char* srcml_filename) {
-
-  srcml_archive * archive = srcml_create_archive();
-  srcml_read_open_filename(archive, srcml_filename);
-  srcml_unit * unit;
-  std::vector<std::string> output_array;
-  while((unit = srcml_read_unit(archive)))
-        output_array.push_back(srcml_unit_get_filename(unit));
-
-  const char ** output_carray = (const char **)malloc((output_array.size() + 1) * sizeof(const char *));
-
-  for(int i = 0; i < output_array.size(); ++i)
-    output_carray[i] = strdup(output_array.at(i).c_str());
-  output_carray[output_array.size()] = 0;
-
-  return output_carray;
-
-}
-
-/* srcML XPath query and XSLT transform functions */
-int srcml_add_transform_xpath(srcml_archive* archive, const char* xpath_string) {
-
-  transform tran = { SRCML_XPATH, xpath_string };
-  archive->transformations.push_back(tran);
-
-  return SRCML_STATUS_OK;
-
-}
-
-int srcml_add_transform_xslt(srcml_archive* archive, const char* xslt_filename) {
-
-  transform tran = { SRCML_XSLT, xslt_filename };
-  archive->transformations.push_back(tran);
-
-  return SRCML_STATUS_OK;
-
-}
-
-int srcml_add_transform_relaxng(srcml_archive* archive, const char* relaxng_filename) {
-
-  transform tran = { SRCML_RELAXNG, relaxng_filename };
-  archive->transformations.push_back(tran);
-
-  return SRCML_STATUS_OK;
-
-}
-
-
-// TODO finish.  what happends to intermediate results?
-int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
-
-  iarchive->transformations.clear();
-
-  return SRCML_STATUS_OK;
-
-}
