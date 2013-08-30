@@ -39,8 +39,11 @@ class srcMLReader {
 
 public:
 
+  // constructors
   srcMLReader(const char * filename);
   srcMLReader(xmlParserInputBufferPtr input);
+
+  // destructors
   ~srcMLReader();
 
   // read attribute and namespace information from root unit.  Does not advance read.

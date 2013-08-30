@@ -26,6 +26,8 @@
 void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer);
 void output_node_source(const xmlNode & node, xmlOutputBufferPtr output_buffer);
 
+
+// get a copy of the current node with attributes set.
 xmlNodePtr getNode(xmlTextReaderPtr reader) {
 
   xmlNodePtr node = xmlCopyNode(xmlTextReaderCurrentNode(reader), 2);
@@ -35,6 +37,7 @@ xmlNodePtr getNode(xmlTextReaderPtr reader) {
   return node;
 }
 
+// free the current node.  Text is not allocated and do not free
 void freeNode(xmlNodePtr node) {
 
   if(node && (xmlReaderTypes)node->type != XML_READER_TYPE_TEXT
@@ -457,7 +460,7 @@ std::string * srcMLReader::read() {
 
 }
 
-// output current XML node in reader
+// output node as srcML
 void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer) {
 
   bool isemptyelement = false;
@@ -536,7 +539,7 @@ void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer) {
 }
 
 
-// output current XML node in reader
+// output node as source code.  Ignore tags and other xml.
 void output_node_source(const xmlNode & node, xmlOutputBufferPtr output_buffer) {
 
   bool isemptyelement = false;
