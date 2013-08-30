@@ -34,12 +34,11 @@ pair Language::lang2int[] = {
     { LanguageName::LANGUAGE_ASPECTJ, LANGUAGE_ASPECTJ },
     { LanguageName::LANGUAGE_CSHARP, LANGUAGE_CSHARP },
     { LanguageName::LANGUAGE_NONE, LANGUAGE_NONE },
-    { 0, 0 }
 };
 
 static int usercount = 0;
 
-pair Language::userext2int[47] = { { 0, 0 } };
+pair Language::userext2int[47];
 
 const char * const regex = "(zx\\.|zg\\.|2zb\\.)*([^\\.]*)";
 
