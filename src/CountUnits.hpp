@@ -63,7 +63,7 @@ public :
       fflush(output);
 
     } else {
-      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
       std::ostringstream ostream;
       ostream << "units=\"" << pstate->count << "\"";
       output_array->back() = ostream.str();
