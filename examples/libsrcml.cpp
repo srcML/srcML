@@ -1204,6 +1204,13 @@ const char** srcml_info_unit(const char* srcml_filename, int unit) {
 /* list of filenames */
 const char** srcml_list(const char* srcml_filename) {
 
+  srcml_archive * archive = srcml_create_archive();
+  srcml_read_open_filename(archive, srcml_filename);
+  srcml_unit * unit;
+  std::vector<std::string> output;
+  while((unit = srcml_read_unit(archive)))
+        output.push_back(srcml_unit_get_filename(unit));
+
   return SRCML_STATUS_OK;
 
 }
