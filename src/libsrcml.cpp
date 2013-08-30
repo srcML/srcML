@@ -541,10 +541,9 @@ void srcml_free_archive(srcml_archive * archive) {
    client will have to free it using srcml_free_archive() */
 srcml_archive* srcml_clone_archive(const srcml_archive* archive) {
 
-  // probably memory leaks between here and free.  Who is responsible for freeing internal copied structures?
-
   srcml_archive * new_archive = srcml_create_archive();
   new_archive->type = archive->type;
+
   new_archive->filename = archive->filename ? new std::string(*archive->filename) : 0;
   new_archive->encoding = archive->encoding ? new std::string(*archive->encoding): 0;
   new_archive->language = archive->language ? new std::string(*archive->language) : 0;
@@ -557,6 +556,7 @@ srcml_archive* srcml_clone_archive(const srcml_archive* archive) {
   new_archive->options = archive->options;
   new_archive->tabstop = archive->tabstop;
 
+  // clear out those added by srcml_create_archive
   new_archive->prefixes.clear();
   new_archive->namespaces.clear();
   for(int pos = 0; pos < archive->namespaces.size(); ++pos) {
