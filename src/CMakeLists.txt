@@ -108,7 +108,7 @@ add_library(libsrcml OBJECT libsrcml.cpp srcMLReader.cpp srcml_transform.cpp src
 # libsrcml static
 add_library(srcml_static STATIC $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:srcmlapps> $<TARGET_OBJECTS:srcmlutility>)
 else()
-add_library(srcml_static STATIC libsrcml.cpp srcMLReader.cpp srcMLParser.cpp KeywordLexer.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp CommentTextLexer.cpp srcMLParserTokenTypesMacro.hpp srcMLUtility.cpp SAX2ExtractUnitsSrc.cpp SAX2Utilities.cpp SAX2UnitDOM.cpp SAX2UnitDOMRelaxNG.cpp srcexfun.cpp srcMLTranslator.cpp srcMLTranslatorCore.cpp UTF8CharBuffer.cpp Language.cpp URIStream.cpp libxml_archive_read.cpp libxml_archive_write.cpp srcmlapps.cpp srcml.c)
+add_library(srcml_static STATIC libsrcml.cpp srcMLReader.cpp srcml_transform.cpp srcml_info.cpp srcMLParser.cpp KeywordLexer.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp CommentTextLexer.cpp srcMLParserTokenTypesMacro.hpp srcMLUtility.cpp SAX2ExtractUnitsSrc.cpp SAX2Utilities.cpp SAX2UnitDOM.cpp SAX2UnitDOMRelaxNG.cpp srcexfun.cpp srcMLTranslator.cpp srcMLTranslatorCore.cpp UTF8CharBuffer.cpp Language.cpp URIStream.cpp libxml_archive_read.cpp libxml_archive_write.cpp srcmlapps.cpp srcml.c)
 endif()
 
 target_link_libraries(srcml_static ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${LIBREGEX_LIBRARY})
