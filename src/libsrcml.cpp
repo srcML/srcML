@@ -165,12 +165,12 @@ int srcml(const char* input_filename, const char* output_filename) {
 
   } else {
 
-    int is_xml = 0;
+    bool is_xml = false;
     int len = strlen(input_filename);
     if((len > 4 && input_filename[len - 1] == 'l' && input_filename[len - 2] == 'm'
         && input_filename[len - 3] == 'x' && input_filename[len - 4] == '.')
        || (global_archive.language && strcmp(global_archive.language->c_str(), "xml") == 0))
-      is_xml = 1;
+      is_xml = true;
 
     // not xml or handled language
     if(!is_xml) {
@@ -720,7 +720,7 @@ void srcml_read_internal(srcml_archive * archive) {
   archive->type = SRCML_ARCHIVE_READ;
 
   std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
-  int done = !archive->reader->readRootUnitAttributes(&language, &filename, &directory, &version,
+  bool done = !archive->reader->readRootUnitAttributes(&language, &filename, &directory, &version,
                                                       archive->attributes, archive->prefixes,
                                                       archive->namespaces,
                                                       archive->options,
@@ -961,7 +961,7 @@ const srcml_unit* srcml_read_unit_archive(srcml_archive* archive) {
 const srcml_unit* srcml_read_archive_current_unit(const srcml_archive* archive) {
 
   std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
-  int done = !archive->reader->readUnitAttributes(&language, &filename, &directory, &version); 
+  bool done = !archive->reader->readUnitAttributes(&language, &filename, &directory, &version); 
 
   srcml_unit * unit = 0;
   if(!done) {
