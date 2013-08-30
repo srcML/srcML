@@ -98,6 +98,7 @@ struct srcml_unit {
   std::string * unit;
 };
 
+// global archive for use with srcml() function.  Defaulted values.
 srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector<std::string>(), 0,
                                  4, std::vector<std::string>(), std::vector<std::string>(), std::vector<pair>(),
                                  0, 0, 0 };
@@ -164,12 +165,12 @@ int srcml(const char* input_filename, const char* output_filename) {
 
   } else {
 
-    int is_xml = 0;
+    bool is_xml = false;
     int len = strlen(input_filename);
     if((len > 4 && input_filename[len - 1] == 'l' && input_filename[len - 2] == 'm'
         && input_filename[len - 3] == 'x' && input_filename[len - 4] == '.')
        || (global_archive.language && strcmp(global_archive.language->c_str(), "xml") == 0))
-      is_xml = 1;
+      is_xml = true;
 
     // not xml or handled language
     if(!is_xml) {
@@ -716,8 +717,10 @@ int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
 
 void srcml_read_internal(srcml_archive * archive) {
 
+  archive->type = SRCML_ARCHIVE_READ;
+
   std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
-  int done = !archive->reader->readRootUnitAttributes(&language, &filename, &directory, &version,
+  bool done = !archive->reader->readRootUnitAttributes(&language, &filename, &directory, &version,
                                                       archive->attributes, archive->prefixes,
                                                       archive->namespaces,
                                                       archive->options,
@@ -736,8 +739,6 @@ void srcml_read_internal(srcml_archive * archive) {
 /* open a srcML archive for reading */
 int srcml_read_open_filename(srcml_archive* archive, const char* srcml_filename) { 
 
-
-  archive->type = SRCML_ARCHIVE_READ;
   archive->reader = new srcMLReader(srcml_filename);
   srcml_read_internal(archive);
  
@@ -747,7 +748,6 @@ int srcml_read_open_filename(srcml_archive* archive, const char* srcml_filename)
 
 int srcml_read_open_memory(srcml_archive* archive, const char* buffer, size_t buffer_size) { 
 
-  archive->type = SRCML_ARCHIVE_READ;
   archive->input = xmlParserInputBufferCreateMem(buffer, buffer_size, xmlParseCharEncoding(0));
   archive->reader = new srcMLReader(archive->input);
   srcml_read_internal(archive);
@@ -758,7 +758,6 @@ int srcml_read_open_memory(srcml_archive* archive, const char* buffer, size_t bu
 
 int srcml_read_open_FILE(srcml_archive* archive, FILE* srcml_file) { 
 
-  archive->type = SRCML_ARCHIVE_READ;
   archive->input = xmlParserInputBufferCreateFile(srcml_file, xmlParseCharEncoding(0));
   archive->reader = new srcMLReader(archive->input);
   srcml_read_internal(archive);
@@ -769,7 +768,6 @@ int srcml_read_open_FILE(srcml_archive* archive, FILE* srcml_file) {
 
 int srcml_read_open_fd(srcml_archive* archive, int srcml_fd) { 
 
-  archive->type = SRCML_ARCHIVE_READ;
   archive->input = xmlParserInputBufferCreateFd(srcml_fd, xmlParseCharEncoding(0));
   archive->reader = new srcMLReader(archive->input);
   srcml_read_internal(archive);
@@ -963,7 +961,7 @@ const srcml_unit* srcml_read_unit_archive(srcml_archive* archive) {
 const srcml_unit* srcml_read_archive_current_unit(const srcml_archive* archive) {
 
   std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
-  int done = !archive->reader->readUnitAttributes(&language, &filename, &directory, &version); 
+  bool done = !archive->reader->readUnitAttributes(&language, &filename, &directory, &version); 
 
   srcml_unit * unit = 0;
   if(!done) {
