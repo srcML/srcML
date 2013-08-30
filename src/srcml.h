@@ -135,7 +135,6 @@ const char** srcml_language_list();
 /* currently registered language for a file extension
    When full filename is given, the extension is extracted */
 const char* srcml_check_extension(const char* filename);
-const char * srcml_archive_check_extension(struct srcml_archive * archive, const char* filename);
 
 /* currently supported format, e.g., tar.gz
    When full filename is given, the extension is extracted */
@@ -154,6 +153,10 @@ const char* srcml_error_string();
 /*
   Full libsrcml API
 */
+
+/* currently registered language for a file extension
+   When full filename is given, the extension is extracted */
+const char * srcml_archive_check_extension(struct srcml_archive * archive, const char* filename);
 
 /* create a new srcml archive
    client is responsible for freeing it using srcml_free_archive() */
