@@ -62,14 +62,18 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
   //switch to mkstemp
   //int mkstemp(char *template);
 
+  const char * input = iarchive->filename->c_str();
+
   for(int i = 0; i < iarchive->transformations.size(); ++i) {
 
     char * transform_filename = mktemp((char *)transform_filename_template);
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, transform_filename);
-    srcMLUtility utility(iarchive->filename->c_str(), iarchive->encoding ? iarchive->encoding->c_str() : "UTF-8", iarchive->options);
+    srcMLUtility utility(input, iarchive->encoding ? iarchive->encoding->c_str() : "UTF-8", iarchive->options);
     const char * xpaths[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
     utility.xpath(transform_filename, "src:unit", xpaths);
-    //unlink(transform_filename);
+
+    if(i > 0) unlink(input);
+    input = transform_filename;
   }
 
   iarchive->transformations.clear();
