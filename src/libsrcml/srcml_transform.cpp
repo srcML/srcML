@@ -66,7 +66,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
     char * transform_filename = strdup(transform_filename_template);
     mktemp(transform_filename);
-    oarchive->options |= OPTION_XPATH | OPTION_XSLT | OPTION_RELAXNG;
+    OPTION_TYPE save_options = oarchive->options;
     srcMLUtility utility(input, oarchive->encoding ? oarchive->encoding->c_str() : "UTF-8", oarchive->options);
 
     switch(iarchive->transformations.at(i).type) {
@@ -75,6 +75,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
       {
 
+        oarchive->options |= OPTION_XPATH;
         const char * xpaths[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
         utility.xpath(transform_filename, "src:unit", xpaths);
         break;
@@ -84,6 +85,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
       {
 
+        oarchive->options |= OPTION_XSLT;
         const char * xslts[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
         const char * params[1] = { 0 };
         utility.xslt("src:unit", transform_filename, xslts, params, 0);
@@ -94,6 +96,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
       {
 
+        oarchive->options |= OPTION_RELAXNG;
         const char * relaxngs[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
         utility.relaxng(transform_filename, relaxngs);
         break;
@@ -106,6 +109,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
     if(i > 0) unlink(input), free((void *)input);
     input = transform_filename;
+    oarchive->options = save_options;
 
   }
 
