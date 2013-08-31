@@ -26,16 +26,16 @@
 #include <stdio.h>
 
 /* srcML XPath query and XSLT transform functions */
-int srcml_add_transform_xpath(srcml_archive* archive, const char* xpath_string) {
-
+int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_string) {
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   transform tran = { SRCML_XPATH, xpath_string };
   archive->transformations.push_back(tran);
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   return SRCML_STATUS_OK;
 
 }
 
-int srcml_add_transform_xslt(srcml_archive* archive, const char* xslt_filename) {
+int srcml_append_transform_xslt(srcml_archive* archive, const char* xslt_filename) {
 
   transform tran = { SRCML_XSLT, xslt_filename };
   archive->transformations.push_back(tran);
@@ -44,7 +44,7 @@ int srcml_add_transform_xslt(srcml_archive* archive, const char* xslt_filename) 
 
 }
 
-int srcml_add_transform_relaxng(srcml_archive* archive, const char* relaxng_filename) {
+int srcml_append_transform_relaxng(srcml_archive* archive, const char* relaxng_filename) {
 
   transform tran = { SRCML_RELAXNG, relaxng_filename };
   archive->transformations.push_back(tran);
@@ -57,17 +57,16 @@ int srcml_add_transform_relaxng(srcml_archive* archive, const char* relaxng_file
 // TODO finish.  what happends to intermediate results?
 int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
-  static const char * transform_filename_template = "srcml_transform_XXXXXXXX";
+  const char * transform_filename_template = "srcml_transform_XXXXXXXX";
 
   //switch to mkstemp
   //int mkstemp(char *template);
-
   const char * input = iarchive->filename->c_str();
-
   for(int i = 0; i < iarchive->transformations.size(); ++i) {
 
-    char * transform_filename = mktemp((char *)transform_filename_template);
-    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, transform_filename);
+    char * transform_filename = strdup(transform_filename_template);
+    mktemp(transform_filename);
+    iarchive->options |= OPTION_XPATH;
     srcMLUtility utility(input, iarchive->encoding ? iarchive->encoding->c_str() : "UTF-8", iarchive->options);
     const char * xpaths[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
     utility.xpath(transform_filename, "src:unit", xpaths);
@@ -76,8 +75,19 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
     input = transform_filename;
   }
 
-  iarchive->transformations.clear();
+  srcml_archive * tmp_archive = srcml_create_archive();
+  srcml_read_open_filename(tmp_archive, input);
+  srcml_unit * unit;
 
+  while((unit = srcml_read_unit(tmp_archive))) {
+
+    srcml_write_unit(oarchive, unit);
+    srcml_free_unit(unit);
+    
+  }
+
+  iarchive->transformations.clear();
+  
   return SRCML_STATUS_OK;
 
 }
