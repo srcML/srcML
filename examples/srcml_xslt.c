@@ -7,7 +7,7 @@ int main(int argc, char * argv[]) {
 
   struct srcml_archive * iarchive = srcml_create_archive();
   struct srcml_archive * oarchive = srcml_create_archive();
-  srcml_write_open_filename(oarchive, "xpath.xml");
+  srcml_write_open_filename(oarchive, "xslt.xml");
 
   srcml_archive_set_filename(iarchive, "project.xml");
   
