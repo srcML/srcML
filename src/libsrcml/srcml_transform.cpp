@@ -94,8 +94,8 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
       {
 
-        const char * xpaths[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
-        utility.xpath(transform_filename, "src:unit", xpaths);
+        const char * relaxngs[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
+        utility.relaxng(transform_filename, relaxngs);
         break;
       }
 
