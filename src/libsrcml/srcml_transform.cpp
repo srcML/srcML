@@ -86,7 +86,6 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
         const char * xslts[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
         const char * params[1] = { 0 };
-        fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, transform_filename);
         utility.xslt("src:unit", transform_filename, xslts, params, 0);
         break;
       }
@@ -111,7 +110,6 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
   }
 
   srcml_archive * tmp_archive = srcml_create_archive();
-  fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, input);
   srcml_read_open_filename(tmp_archive, input);
 
   srcml_unit * unit;
