@@ -53,7 +53,7 @@ int srcml_append_transform_relaxng(srcml_archive* archive, const char* relaxng_f
 
 }
 
-
+void libxml_error(void *ctx, const char *msg, ...) {}
 // TODO finish.  what happends to intermediate results?
 int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
@@ -95,6 +95,10 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
     case SRCML_RELAXNG:
 
       {
+
+        // TODO fix so actually works.  Suppresses error messages.
+        xmlGenericErrorFunc handler = (xmlGenericErrorFunc) libxml_error;
+        initGenericErrorDefaultFunc(&handler);
 
         oarchive->options |= OPTION_RELAXNG;
         const char * relaxngs[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
