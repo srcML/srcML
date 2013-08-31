@@ -86,6 +86,11 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
     
   }
 
+  srcml_close_archive(tmp_archive);
+  srcml_free_archive(tmp_archive);
+  unlink(input);
+  
+
   iarchive->transformations.clear();
   
   return SRCML_STATUS_OK;
