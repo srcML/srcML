@@ -98,7 +98,6 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
         oarchive->options |= OPTION_RELAXNG;
         const char * relaxngs[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
-        fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, relaxngs[0]);
         utility.relaxng(transform_filename, relaxngs);
         break;
       }
