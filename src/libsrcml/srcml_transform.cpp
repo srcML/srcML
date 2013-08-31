@@ -66,7 +66,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
     char * transform_filename = strdup(transform_filename_template);
     mktemp(transform_filename);
-    oarchive->options |= OPTION_XPATH;
+    oarchive->options |= OPTION_XPATH | OPTION_XSLT | OPTION_RELAXNG;
     srcMLUtility utility(input, oarchive->encoding ? oarchive->encoding->c_str() : "UTF-8", oarchive->options);
 
     switch(iarchive->transformations.at(i).type) {
@@ -86,6 +86,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
         const char * xslts[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
         const char * params[1] = { 0 };
+        fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, transform_filename);
         utility.xslt("src:unit", transform_filename, xslts, params, 0);
         break;
       }
@@ -104,14 +105,16 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
     }
 
-    if(i > 0) unlink(input);
+    if(i > 0) unlink(input), free((void *)input);
     input = transform_filename;
+
   }
 
   srcml_archive * tmp_archive = srcml_create_archive();
+  fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, input);
   srcml_read_open_filename(tmp_archive, input);
-  srcml_unit * unit;
 
+  srcml_unit * unit;
   while((unit = srcml_read_unit(tmp_archive))) {
 
     srcml_write_unit(oarchive, unit);
@@ -121,10 +124,11 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
   srcml_close_archive(tmp_archive);
   srcml_free_archive(tmp_archive);
-  unlink(input);
-  
+  if(*iarchive->filename != input)
+    unlink(input), free((void *)input);
+
   iarchive->transformations.clear();
-  
+
   return SRCML_STATUS_OK;
 
 }
