@@ -11,7 +11,7 @@ int main(int argc, char * argv[]) {
 
   srcml_archive_set_filename(iarchive, "project.xml");
   
-  srcml_append_transform_xslt(iarchive, "schema.rng");
+  srcml_append_transform_relaxng(iarchive, "schema.rng");
 
   srcml_apply_transforms(iarchive, oarchive);
 
