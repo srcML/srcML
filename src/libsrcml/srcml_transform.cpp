@@ -67,7 +67,8 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
     char * transform_filename = mktemp((char *)transform_filename_template);
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, transform_filename);
     srcMLUtility utility(iarchive->filename->c_str(), iarchive->encoding ? iarchive->encoding->c_str() : "UTF-8", iarchive->options);
-      //xpath(transform_filename, "src:unit", const char* xpaths[])
+    const char * xpaths[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
+    utility.xpath(transform_filename, "src:unit", xpaths);
     //unlink(transform_filename);
   }
 
