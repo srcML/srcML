@@ -27,10 +27,10 @@
 
 /* srcML XPath query and XSLT transform functions */
 int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_string) {
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   transform tran = { SRCML_XPATH, xpath_string };
   archive->transformations.push_back(tran);
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   return SRCML_STATUS_OK;
 
 }
