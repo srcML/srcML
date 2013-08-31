@@ -20,6 +20,9 @@
 
 #include "srcml.h"
 #include "srcml_types.hpp"
+
+#include "../srcMLUtility.hpp"
+
 #include <stdio.h>
 
 /* srcML XPath query and XSLT transform functions */
@@ -54,11 +57,19 @@ int srcml_add_transform_relaxng(srcml_archive* archive, const char* relaxng_file
 // TODO finish.  what happends to intermediate results?
 int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
-  static char * transform_filename_template = "srcml_transform_XXXXXXXX";
+  static const char * transform_filename_template = "srcml_transform_XXXXXXXX";
 
   //switch to mkstemp
   //int mkstemp(char *template);
-  char * transform_filename = mktemp(transform_filename_template);
+
+  for(int i = 0; i < iarchive->transformations.size(); ++i) {
+
+    char * transform_filename = mktemp((char *)transform_filename_template);
+    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, transform_filename);
+    srcMLUtility utility(iarchive->filename->c_str(), iarchive->encoding ? iarchive->encoding->c_str() : "UTF-8", iarchive->options);
+      //xpath(transform_filename, "src:unit", const char* xpaths[])
+    //unlink(transform_filename);
+  }
 
   iarchive->transformations.clear();
 
