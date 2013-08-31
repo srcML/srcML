@@ -80,6 +80,25 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
         break;
       }
 
+    case SRCML_XSLT:
+
+      {
+
+        const char * xslts[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
+        const char * params[1] = { 0 };
+        utility.xslt("src:unit", transform_filename, xslts, params, 0);
+        break;
+      }
+
+    case SRCML_RELAXNG:
+
+      {
+
+        const char * xpaths[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
+        utility.xpath(transform_filename, "src:unit", xpaths);
+        break;
+      }
+
     default :
       break;
 
