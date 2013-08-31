@@ -66,10 +66,24 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
     char * transform_filename = strdup(transform_filename_template);
     mktemp(transform_filename);
-    iarchive->options |= OPTION_XPATH;
-    srcMLUtility utility(input, iarchive->encoding ? iarchive->encoding->c_str() : "UTF-8", iarchive->options);
-    const char * xpaths[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
-    utility.xpath(transform_filename, "src:unit", xpaths);
+    oarchive->options |= OPTION_XPATH;
+    srcMLUtility utility(input, oarchive->encoding ? oarchive->encoding->c_str() : "UTF-8", oarchive->options);
+
+    switch(iarchive->transformations.at(i).type) {
+
+    case SRCML_XPATH:
+
+      {
+
+        const char * xpaths[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
+        utility.xpath(transform_filename, "src:unit", xpaths);
+        break;
+      }
+
+    default :
+      break;
+
+    }
 
     if(i > 0) unlink(input);
     input = transform_filename;
@@ -90,7 +104,6 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
   srcml_free_archive(tmp_archive);
   unlink(input);
   
-
   iarchive->transformations.clear();
   
   return SRCML_STATUS_OK;
