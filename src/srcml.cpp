@@ -117,6 +117,24 @@ struct srcml_request_t {
 	int command;
   int markup_options;
   std::string filename;
+  std::string output;
+  std::string src_encoding;
+  std::string encoding;
+  std::string files_from;
+  std::string language;
+  std::vector<std::string> register_ext;
+  int tabs;
+  std::string directory;
+  std::string src_versions;
+  std::string prefix;
+  std::string xmlns_uri;
+  std::vector<std::string> xmlns_prefix;
+  std::string relaxng;
+  std::string xpath;
+  std::vector<std::string> xpathparam;
+  std::string xslt;
+  int unit;
+  std::string positional_args;
 };
 
 srcml_request_t srcml_request = { 0 };
@@ -192,6 +210,24 @@ void option_command(bool opt) {
 }
 
 void option_filename(const std::string& value) { srcml_request.filename = value; }
+void option_output(const std::string& value) {srcml_request.output = value;}
+void option_src_encoding(const std::string& value) {srcml_request.src_encoding = value;}
+void option_encoding(const std::string& value) {srcml_request.encoding = value;}
+void option_files_from(const std::string& value) {srcml_request.files_from = value;}
+void option_language(const std::string& value) {srcml_request.language = value;}
+void option_register_ext(const std::vector<std::string>& values) {srcml_request.register_ext = values;}
+void option_tabs(const int value) {srcml_request.tabs = value;}
+void option_directory(const std::string& value) {srcml_request.directory = value;}
+void option_src_versions(const std::string& value) {srcml_request.src_versions = value;}
+void option_prefix(const std::string& value) {srcml_request.prefix = value;}
+void option_xmlns_uri(const std::string& value) {srcml_request.xmlns_uri = value;}
+void option_xmlns_prefix(const std::vector<std::string>& values) {srcml_request.xmlns_prefix = values;}
+void option_relaxng(const std::string& value) {srcml_request.relaxng = value;}
+void option_xpath(const std::string& value) {srcml_request.xpath = value;}
+void option_xpathparam(const std::vector<std::string>& values) {srcml_request.xpathparam = values;}
+void option_xslt(const std::string& value) {srcml_request.xslt = value;}
+void option_unit(const int value) {srcml_request.unit = value;}
+void positional_args(const std::string& value) {srcml_request.positional_args = value;}
 
 void option_help(const std::string& help_opt) {
 	if (help_opt == "") {
@@ -251,25 +287,6 @@ void option_help(const std::string& help_opt) {
 //void option_show_language(bool opt) {}
 //void option_show_src_version(bool opt) {}
 //void option_to_dir(bool opt) {}
-
-void option_output(const std::string& opt) {}
-void option_src_encoding(const std::string& opt) {}
-void option_encoding(const std::string& opt) {}
-void option_files_from(const std::string& opt) {}
-void option_language(const std::string& opt) {}
-void option_register_ext(const std::vector<std::string>& opt) {}
-void option_tabs(const int opt) {}
-void option_directory(const std::string& opt) {}
-void option_src_versions(const std::string& opt) {}
-void option_prefix(const std::string& opt) {}
-void option_xmlns_uri(const std::string& opt) {}
-void option_xmlns_prefix(const std::vector<std::string>& opt) {}
-void option_relaxng(const std::string& opt) {}
-void option_xpath(const std::string& opt) {}
-void option_xpathparam(const std::vector<std::string>& opt) {}
-void option_xslt(const std::string& opt) {}
-void option_unit(const int opt) {}
-void positional_args(const std::string& opt) {}
 
 /* Function used to check that 'opt1' and 'opt2' are not specified
    at the same time. (FROM BOOST LIBRARY EXAMPLES)*/
