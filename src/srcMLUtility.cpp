@@ -68,6 +68,7 @@
 static xmlParserCtxtPtr srcMLCreateURLParserCtxt(const char * infile);
 static xmlParserCtxtPtr srcMLCreateMemoryParserCtxt(const char * buffer, int size);
 static void srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly);
+static xmlParserCtxtPtr srcMLCreateParserCtxt(xmlParserInputBufferPtr buffer_input);
 
 static bool incount = false;
 
@@ -707,7 +708,12 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
   }
 
   // setup parser
-  xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
+  xmlParserCtxtPtr ctxt = 0;
+  if(infile)
+    ctxt = srcMLCreateURLParserCtxt(infile);
+  else
+    ctxt = srcMLCreateParserCtxt(buffer_input);
+
   if (ctxt == NULL) return;
 
   // setup sax handler
