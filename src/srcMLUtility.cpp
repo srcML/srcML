@@ -733,6 +733,7 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
   ctxt->sax = NULL;
 
   // all done with parsing
+  if(buffer_input) inputPop(ctxt);
   xmlFreeParserCtxt(ctxt);
 }
 
@@ -832,6 +833,7 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
   // local variable, do not want xmlFreeParserCtxt to free
   ctxt->sax = NULL;
 
+  if(buffer_input) inputPop(ctxt);
   // all done with parsing
   xmlFreeParserCtxt(ctxt);
 }
@@ -862,6 +864,7 @@ void srcMLUtility::relaxng(const char* ofilename, const char** xslts, int fd) {
 
   ctxt->sax = NULL;
 
+  if(buffer_input) inputPop(ctxt);
   xmlFreeParserCtxt(ctxt);
 }
 

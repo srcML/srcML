@@ -24,6 +24,7 @@
 #include "../srcMLUtility.hpp"
 
 #include <stdio.h>
+#include <sys/fcntl.h>
 
 /* srcML XPath query and XSLT transform functions */
 int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_string) {
@@ -61,9 +62,12 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
   //switch to mkstemp
   int input = 0;
+  const char transform_filename[512] = { 0 };
   for(int i = 0; i < 1/*iarchive->transformations.size()*/; ++i) {
     char * temp_transform_filename = strdup(transform_filename_template);
     int transform_fd = mkstemp(temp_transform_filename);
+    //if(i > 0) unlink(transform_filename);
+    fcntl(transform_fd, F_GETPATH, transform_filename);
     free(temp_transform_filename);
     OPTION_TYPE save_options = oarchive->options;
 
@@ -115,7 +119,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
     }
 
-    //if(i > 0) unlink(input);
+
     //close(transform_fd);
     //lseek(transform_fd, 0, SEEK_SET);
     input = transform_fd;
@@ -125,7 +129,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
   srcml_archive * tmp_archive = srcml_create_archive();
 
-  srcml_read_open_fd(tmp_archive, input);
+  srcml_read_open_filename(tmp_archive, transform_filename);
 
   srcml_unit * unit;
   while((unit = srcml_read_unit(tmp_archive))) {
@@ -137,7 +141,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
   srcml_close_archive(tmp_archive);
   srcml_free_archive(tmp_archive);
-  //unlink(input);
+  //unlink(transform_filename);
 
   iarchive->transformations.clear();
 
