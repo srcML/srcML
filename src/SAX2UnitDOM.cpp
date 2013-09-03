@@ -66,7 +66,10 @@ void SAX2UnitDOM::startDocument(void *ctx) {
     SAX2UnitDOM* pstate = (SAX2UnitDOM*) ctxt->_private;
 
     // setup output
-    pstate->buf = xmlOutputBufferCreateFilename(pstate->ofilename, NULL, 0);
+    if(pstate->ofilename)
+      pstate->buf = xmlOutputBufferCreateFilename(pstate->ofilename, NULL, 0);
+    else
+      pstate->buf = xmlOutputBufferCreateFd(pstate->fd, NULL);
 
     pstate->rootbuf = xmlBufferCreate();
 

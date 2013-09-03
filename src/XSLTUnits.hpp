@@ -107,7 +107,10 @@ public :
     virtual void startOutput(void* ctx) {
 
         // setup output
+      if(ofilename)
         buf = xmlOutputBufferCreateFilename(ofilename, NULL, 0);
+      else
+        buf = xmlOutputBufferCreateFd(fd, NULL);
         // TODO:  Detect error
 
     }

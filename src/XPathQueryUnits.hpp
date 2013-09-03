@@ -61,7 +61,10 @@ public :
         //    fprintf(stderr, "%s\n", __FUNCTION__);
 
         // setup output
+      if(ofilename)
         buf = xmlOutputBufferCreateFilename(ofilename, NULL, 0);
+      else
+        buf = xmlOutputBufferCreateFd(fd, NULL);
         // TODO:  Detect error
 
         xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
