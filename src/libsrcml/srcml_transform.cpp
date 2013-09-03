@@ -69,7 +69,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
     xmlParserInputBufferPtr pinput = 0;
     if(i == 0) pinput = iarchive->input;
-    else pinput = xmlParserInputBufferCreateFilename(transform_filename, xmlParseCharEncoding(0));
+    else pinput = xmlParserInputBufferCreateFilename(last_transform_filename, xmlParseCharEncoding(0));
     srcMLUtility utility(pinput, oarchive->encoding ? oarchive->encoding->c_str() : "UTF-8", oarchive->options);
 
     switch(iarchive->transformations.at(i).type) {
