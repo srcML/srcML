@@ -61,7 +61,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
   //switch to mkstemp
   //int mkstemp(char *template);
-  const char * input = iarchive->filename->c_str();
+  const char * input = 0/*iarchive->filename->c_str()*/;
   for(int i = 0; i < 1/*iarchive->transformations.size()*/; ++i) {
 
     char * transform_filename = strdup(transform_filename_template);
@@ -116,11 +116,10 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
     oarchive->options = save_options;
 
   }
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   srcml_archive * tmp_archive = srcml_create_archive();
-  fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, input);
   srcml_read_open_filename(tmp_archive, input);
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   srcml_unit * unit;
   while((unit = srcml_read_unit(tmp_archive))) {
 
@@ -131,8 +130,8 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
   srcml_close_archive(tmp_archive);
   srcml_free_archive(tmp_archive);
-  if(*iarchive->filename != input)
-    unlink(input), free((void *)input);
+  if(iarchive->filename && input && strcmp(iarchive->filename->c_str(),  input) != 0)
+  unlink(input), free((void *)input);
 
   iarchive->transformations.clear();
 
