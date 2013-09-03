@@ -63,7 +63,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
   //switch to mkstemp
   int input = 0;
   const char transform_filename[512] = { 0 };
-  for(int i = 0; i < 1/*iarchive->transformations.size()*/; ++i) {
+  for(int i = 0; i < iarchive->transformations.size(); ++i) {
     char * temp_transform_filename = strdup(transform_filename_template);
     int transform_fd = mkstemp(temp_transform_filename);
     if(i > 0) unlink(transform_filename);
