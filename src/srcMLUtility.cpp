@@ -898,24 +898,18 @@ static xmlParserCtxtPtr srcMLCreateMemoryParserCtxt(const char * buffer, int siz
 
   return ctxt;
 }
-#if 0
+
 xmlParserCtxtPtr
-xmlCreateMemoryParserCtxt(const char *buffer, int size) {
+srcMLCreateParserCtxt(xmlParserInputBufferPtr buffer_input) {
   xmlParserCtxtPtr ctxt;
   xmlParserInputPtr input;
   xmlParserInputBufferPtr buf;
-
-  if (buffer == NULL)
-    return(NULL);
-  if (size <= 0)
-    return(NULL);
 
   ctxt = xmlNewParserCtxt();
   if (ctxt == NULL)
     return(NULL);
 
-  /* TODO: xmlParserInputBufferCreateStatic, requires some serious changes */
-  buf = xmlParserInputBufferCreateMem(buffer, size, XML_CHAR_ENCODING_NONE);
+  buf = buffer_input;
   if (buf == NULL) {
     xmlFreeParserCtxt(ctxt);
     return(NULL);
@@ -923,20 +917,18 @@ xmlCreateMemoryParserCtxt(const char *buffer, int size) {
 
   input = xmlNewInputStream(ctxt);
   if (input == NULL) {
-    xmlFreeParserInputBuffer(buf);
     xmlFreeParserCtxt(ctxt);
     return(NULL);
   }
 
   input->filename = NULL;
   input->buf = buf;
-  xmlBufResetInput(input->buf->buffer, input);
+  //xmlBufResetInput(input->buf->buffer, input);
 
   inputPush(ctxt, input);
   return(ctxt);
 }
 
-#endif
 
 extern "C" {
 
