@@ -62,12 +62,12 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
   //switch to mkstemp
   //int mkstemp(char *template);
   const char * input = iarchive->filename->c_str();
-  for(int i = 0; i < iarchive->transformations.size(); ++i) {
+  for(int i = 0; i < 1/*iarchive->transformations.size()*/; ++i) {
 
     char * transform_filename = strdup(transform_filename_template);
     mktemp(transform_filename);
     OPTION_TYPE save_options = oarchive->options;
-    srcMLUtility utility(input, oarchive->encoding ? oarchive->encoding->c_str() : "UTF-8", oarchive->options);
+    srcMLUtility utility(iarchive->input, oarchive->encoding ? oarchive->encoding->c_str() : "UTF-8", oarchive->options);
 
     switch(iarchive->transformations.at(i).type) {
 

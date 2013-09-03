@@ -713,7 +713,6 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
     ctxt = srcMLCreateURLParserCtxt(infile);
   else
     ctxt = srcMLCreateParserCtxt(buffer_input);
-
   if (ctxt == NULL) return;
 
   // setup sax handler
@@ -807,7 +806,11 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
     return;
 
   // setup parser
-  xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
+  xmlParserCtxtPtr ctxt = 0;
+  if(infile)
+    ctxt = srcMLCreateURLParserCtxt(infile);
+  else
+    ctxt = srcMLCreateParserCtxt(buffer_input);
   if (ctxt == NULL) return;
 
   // setup sax handler
@@ -840,7 +843,11 @@ void srcMLUtility::relaxng(const char* ofilename, const char** xslts) {
 
   SAX2UnitDOMRelaxNG state(0, xslts, ofilename, 0);
 
-  xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
+  xmlParserCtxtPtr ctxt = 0;
+  if(infile)
+    ctxt = srcMLCreateURLParserCtxt(infile);
+  else
+    ctxt = srcMLCreateParserCtxt(buffer_input);
   if (ctxt == NULL) return;
   ctxt->sax = &sax;
   ctxt->_private = &state;
