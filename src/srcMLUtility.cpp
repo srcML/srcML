@@ -726,41 +726,41 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
 void dlexsltRegisterAll() {
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
-    typedef void (*exsltRegisterAll_function)();
+  typedef void (*exsltRegisterAll_function)();
 
-    void* handle = dlopen("libexslt.so", RTLD_LAZY);
+  void* handle = dlopen("libexslt.so", RTLD_LAZY);
+  if (!handle) {
+    handle = dlopen("libexslt.dylib", RTLD_LAZY);
     if (!handle) {
-        handle = dlopen("libexslt.dylib", RTLD_LAZY);
-        if (!handle) {
-            fprintf(stderr, "Unable to open libexslt library\n");
-            return;
-        }
+      fprintf(stderr, "Unable to open libexslt library\n");
+      return;
     }
+  }
 
-    dlerror();
-    exsltRegisterAll_function exsltRegisterAll = (exsltRegisterAll_function)dlsym(handle, "exsltRegisterAll");
-    char* error;
-    if ((error = dlerror()) != NULL) {
-        dlclose(handle);
-        return;
-    }
+  dlerror();
+  exsltRegisterAll_function exsltRegisterAll = (exsltRegisterAll_function)dlsym(handle, "exsltRegisterAll");
+  char* error;
+  if ((error = dlerror()) != NULL) {
+    dlclose(handle);
+    return;
+  }
 
-    // allow for all exslt functions
-    exsltRegisterAll();
+  // allow for all exslt functions
+  exsltRegisterAll();
 
 #endif
 
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
-    dlclose(handle);
+  dlclose(handle);
 #endif
 }
 
 // xslt evaluation of the nested units
 void srcMLUtility::xslt(const char* context_element, const char* ofilename, const char* xslts[], const char* params[], int paramcount) {
 
-    xmlMemSetup(xmlMemFree, xmlMemMalloc, xmlMemRealloc, xmlMemoryStrdup);
-    xmlInitParser();
+  xmlMemSetup(xmlMemFree, xmlMemMalloc, xmlMemRealloc, xmlMemoryStrdup);
+  xmlInitParser();
 
   // allow for all exstl functions
   dlexsltRegisterAll();
@@ -768,28 +768,28 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
 #if defined(__GNUG__) && !defined(__MINGW32__)
   typedef xsltStylesheetPtr (*xsltParseStylesheetFile_function) (const xmlChar*);
 
-    void* handle = dlopen("libexslt.so", RTLD_LAZY);
+  void* handle = dlopen("libexslt.so", RTLD_LAZY);
+  if (!handle) {
+    handle = dlopen("libexslt.dylib", RTLD_LAZY);
     if (!handle) {
-        handle = dlopen("libexslt.dylib", RTLD_LAZY);
-        if (!handle) {
-            fprintf(stderr, "Unable to open libexslt library\n");
-            return;
-        }
+      fprintf(stderr, "Unable to open libexslt library\n");
+      return;
     }
+  }
 
-    dlerror();
-    xsltParseStylesheetFile_function xsltParseStylesheetFile = (xsltParseStylesheetFile_function)dlsym(handle, "xsltParseStylesheetFile");
-    char* error;
-    if ((error = dlerror()) != NULL) {
-        dlclose(handle);
-        return;
-    }
+  dlerror();
+  xsltParseStylesheetFile_function xsltParseStylesheetFile = (xsltParseStylesheetFile_function)dlsym(handle, "xsltParseStylesheetFile");
+  char* error;
+  if ((error = dlerror()) != NULL) {
+    dlclose(handle);
+    return;
+  }
 #endif
 
   // parse the stylesheet
   xsltStylesheetPtr stylesheet = xsltParseStylesheetFile(BAD_CAST xslts[0]);
   if (!stylesheet)
-      return;
+    return;
 
   // setup parser
   xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
@@ -899,6 +899,37 @@ static xmlParserCtxtPtr srcMLCreateMemoryParserCtxt(const char * buffer, int siz
   return ctxt;
 }
 
+struct xmlBuf {
+  xmlChar *content;           /* The buffer content UTF8 */
+  unsigned int compat_use;    /* for binary compatibility */
+  unsigned int compat_size;   /* for binary compatibility */
+  xmlBufferAllocationScheme alloc; /* The realloc method */
+  xmlChar *contentIO;         /* in IO mode we may have a different base */
+  size_t use;                 /* The buffer size used */
+  size_t size;                /* The buffer size */
+  xmlBufferPtr buffer;        /* wrapper for an old buffer */
+  int error;                  /* an error code if a failure occured */
+};
+
+#define CHECK_COMPAT(buf)                                   \
+  if (buf->size != (size_t) buf->compat_size)            \
+    if (buf->compat_size < INT_MAX)                    \
+      buf->size = buf->compat_size;                  \
+  if (buf->use != (size_t) buf->compat_use)              \
+    if (buf->compat_use < INT_MAX)                     \
+      buf->use = buf->compat_use;
+
+int
+xmlBufResetInput(xmlBuf * buf, xmlParserInputPtr input) {
+  if ((input == NULL) || (buf == NULL) || (buf->error))
+    return(-1);
+    CHECK_COMPAT(buf)
+    input->base = input->cur = buf->content;
+    input->end = &buf->content[buf->use];
+    return(0);
+
+}
+#if 0
 xmlParserCtxtPtr
 srcMLCreateParserCtxt(xmlParserInputBufferPtr buffer_input) {
   xmlParserCtxtPtr ctxt;
@@ -923,12 +954,12 @@ srcMLCreateParserCtxt(xmlParserInputBufferPtr buffer_input) {
 
   input->filename = NULL;
   input->buf = buf;
-  //xmlBufResetInput(input->buf->buffer, input);
+  xmlBufResetInput(input->buf->buffer, input);
 
   inputPush(ctxt, input);
   return(ctxt);
 }
-
+#endif
 
 extern "C" {
 
