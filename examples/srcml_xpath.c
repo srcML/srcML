@@ -14,7 +14,10 @@ int main(int argc, char * argv[]) {
 
   srcml_apply_transforms(iarchive, oarchive);
 
+  srcml_close_archive(iarchive);
   srcml_close_archive(oarchive);
+
+  srcml_free_archive(iarchive);
   srcml_free_archive(oarchive);
 
   return 0;
