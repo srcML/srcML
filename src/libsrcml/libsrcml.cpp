@@ -264,15 +264,26 @@ int srcml_get_namespace_size() {
 
 const char* srcml_get_prefix(int pos) {
 
+  try {
+
   return global_archive.prefixes.at(pos).c_str();
+
+  } catch(...) {
+
+    return 0;
+
+  }
 
 }
 
 const char* srcml_get_prefix_uri(const char* namespace_uri) {
+  try {
 
   for(int i = 0; i < global_archive.prefixes.size(); ++i)
     if(global_archive.namespaces.at(i) == namespace_uri)
       return global_archive.prefixes.at(i).c_str();
+
+  } catch(...) {}
 
   return 0;
 }
