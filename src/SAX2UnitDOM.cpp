@@ -35,8 +35,8 @@
 #include <cstring>
 #include <cassert>
 
-SAX2UnitDOM::SAX2UnitDOM(const char* a_context_element, const char* a_ofilename, int options)
-  : context_element(a_context_element), ofilename(a_ofilename), options(options), found(false), nb_ns(0), ns(0), isnested(false), count(0) {
+SAX2UnitDOM::SAX2UnitDOM(const char* a_context_element, const char* a_ofilename, int options, int fd)
+  : context_element(a_context_element), ofilename(a_ofilename), options(options), found(false), nb_ns(0), ns(0), isnested(false), count(0), fd(fd) {
 
 }
 

@@ -34,7 +34,7 @@
 class SAX2UnitDOM {
 public:
 
-    SAX2UnitDOM(const char* context_element, const char* ofilename, int options);
+    SAX2UnitDOM(const char* context_element, const char* ofilename, int options, int fd = 0);
 
     static xmlSAXHandler factory();
 
@@ -50,6 +50,7 @@ public:
     bool isnested;
     int count;
     PROPERTIES_TYPE root_attributes;
+    int fd;
 
     // start document
     static void startDocument(void *ctx);

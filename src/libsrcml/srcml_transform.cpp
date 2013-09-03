@@ -60,7 +60,6 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
   const char * transform_filename_template = "srcml_transform_XXXXXXXX";
 
   //switch to mkstemp
-  //int mkstemp(char *template);
   int input = 0;
   for(int i = 0; i < 1/*iarchive->transformations.size()*/; ++i) {
     char * temp_transform_filename = strdup(transform_filename_template);

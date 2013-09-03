@@ -35,7 +35,7 @@
 class SAX2UnitDOMRelaxNG : public SAX2UnitDOM {
 public:
 
-    SAX2UnitDOMRelaxNG(const char* context_element, const char** fxslt, const char* ofilename, int options);
+    SAX2UnitDOMRelaxNG(const char* context_element, const char** fxslt, const char* ofilename, int options, int fd = 0);
 
     static xmlSAXHandler factory();
 

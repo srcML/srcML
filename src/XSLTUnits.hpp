@@ -62,10 +62,10 @@ class XSLTUnits : public UnitDOM {
 public :
 
     XSLTUnits(const char* a_context_element, const char* a_ofilename, OPTION_TYPE & options, xsltStylesheetPtr stylesheet,
-              const char** params)
+              const char** params, int fd = 0)
         : UnitDOM(options), ofilename(a_ofilename), options(options),
           stylesheet(stylesheet), total(0), found(false), needroot(true),
-          result_type(0), params(params) {
+          result_type(0), params(params), fd(fd) {
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
         void* handle = dlopen("libxslt.so", RTLD_LAZY);
@@ -338,6 +338,7 @@ private :
     bool closetag;
     int result_type;
     const char** params;
+    int fd;
 };
 
 #endif
