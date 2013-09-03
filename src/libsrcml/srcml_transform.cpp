@@ -116,10 +116,11 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
     oarchive->options = save_options;
 
   }
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   srcml_archive * tmp_archive = srcml_create_archive();
+  fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, input);
   srcml_read_open_filename(tmp_archive, input);
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   srcml_unit * unit;
   while((unit = srcml_read_unit(tmp_archive))) {
 

@@ -331,6 +331,7 @@ void srcml_read_internal(srcml_archive * archive) {
 /* open a srcML archive for reading */
 int srcml_read_open_filename(srcml_archive* archive, const char* srcml_filename) {
 
+  archive->input = xmlParserInputBufferCreateFilename(srcml_filename, xmlParseCharEncoding(0));
   archive->reader = new srcMLReader(srcml_filename);
   srcml_read_internal(archive);
 
