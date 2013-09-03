@@ -720,7 +720,7 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
   ctxt->sax = &sax;
 
   // setup process handling
-  XPathQueryUnits process(context_element, ofilename, options, compiled_xpath);
+  XPathQueryUnits process(context_element, ofilename, options, compiled_xpath, fd);
 
   // setup sax handling state
   SAX2ExtractUnitsSrc state(&process, &options, -1, diff_version);
@@ -818,7 +818,7 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
   ctxt->sax = &sax;
 
   // setup process handling
-  XSLTUnits process(context_element, ofilename, options, stylesheet, params);
+  XSLTUnits process(context_element, ofilename, options, stylesheet, params, fd);
 
   // setup sax handling state
   SAX2ExtractUnitsSrc state(&process, &options, -1, diff_version);
@@ -841,7 +841,7 @@ void srcMLUtility::relaxng(const char* ofilename, const char** xslts, int fd) {
 
   xmlSAXHandler sax = SAX2UnitDOMRelaxNG::factory();
 
-  SAX2UnitDOMRelaxNG state(0, xslts, ofilename, 0);
+  SAX2UnitDOMRelaxNG state(0, xslts, ofilename, 0, fd);
 
   xmlParserCtxtPtr ctxt = 0;
   if(infile)
