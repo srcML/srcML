@@ -66,7 +66,11 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
     int transform_filename = mkstemp(temp_transform_filename);
     free(temp_transform_filename);
     OPTION_TYPE save_options = oarchive->options;
-    srcMLUtility utility(iarchive->input, oarchive->encoding ? oarchive->encoding->c_str() : "UTF-8", oarchive->options);
+
+    xmlParserInputBufferPtr pinput = 0;
+    if(i == 0) pinput = iarchive->input;
+    else pinput = xmlParserInputBufferCreateFd(input, xmlParseCharEncoding(0));
+    srcMLUtility utility(pinput, oarchive->encoding ? oarchive->encoding->c_str() : "UTF-8", oarchive->options);
 
     switch(iarchive->transformations.at(i).type) {
 
