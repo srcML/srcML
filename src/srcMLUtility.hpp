@@ -49,6 +49,7 @@ public:
     // constructor
     srcMLUtility(const char* infilename, const char* encoding, OPTION_TYPE& op, const char* diff_version = "");
     srcMLUtility(const char * buffer, int size, const char* encoding, OPTION_TYPE& op, const char* diff_version = "");
+    srcMLUtility(xmlParserInputBufferPtr buffer_input, const char* encoding, OPTION_TYPE& op, const char* diff_version = "");
 
     // set the input filename after the constructor
     void set_input_filename(const char* infilename);
@@ -123,6 +124,7 @@ private:
     const char* diff_version;
     const char * buffer;
     int size;
+    xmlParserInputBufferPtr buffer_input;
 public:
     PROPERTIES_TYPE nsv;
     PROPERTIES_TYPE attrv;

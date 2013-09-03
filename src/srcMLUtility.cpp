@@ -73,7 +73,7 @@ static bool incount = false;
 
 // constructor
 srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, OPTION_TYPE& op, const char* diff_version)
-  : infile(infilename), output_encoding(encoding), options(op), units(0), diff_version(diff_version), buffer(0), size(0) {
+  : infile(infilename), output_encoding(encoding), options(op), units(0), diff_version(diff_version), buffer(0), size(0), buffer_input(0) {
 
 
   // assume totaling for numeric results
@@ -87,7 +87,16 @@ srcMLUtility::srcMLUtility(const char* infilename, const char* encoding, OPTION_
 
 // constructor
 srcMLUtility::srcMLUtility(const char * buffer, int size, const char* encoding, OPTION_TYPE& op, const char* diff_version)
-  : infile(0), output_encoding(encoding), options(op), units(0), diff_version(diff_version), buffer(buffer), size(size) {
+  : infile(0), output_encoding(encoding), options(op), units(0), diff_version(diff_version), buffer(buffer), size(size), buffer_input(0) {
+
+  // assume totaling for numeric results
+  op |= OPTION_XPATH_TOTAL;
+  options |= OPTION_XPATH_TOTAL;
+}
+
+// constructor
+srcMLUtility::srcMLUtility(xmlParserInputBufferPtr buffer_input, const char* encoding, OPTION_TYPE& op, const char* diff_version)
+  : infile(0), output_encoding(encoding), options(op), units(0), diff_version(diff_version), buffer(0), size(0), buffer_input(buffer_input) {
 
   // assume totaling for numeric results
   op |= OPTION_XPATH_TOTAL;
@@ -899,6 +908,7 @@ static xmlParserCtxtPtr srcMLCreateMemoryParserCtxt(const char * buffer, int siz
   return ctxt;
 }
 
+#ifdef LIBXML2_NEW_BUFFER 
 struct xmlBuf {
   xmlChar *content;           /* The buffer content UTF8 */
   unsigned int compat_use;    /* for binary compatibility */
@@ -910,7 +920,6 @@ struct xmlBuf {
   xmlBufferPtr buffer;        /* wrapper for an old buffer */
   int error;                  /* an error code if a failure occured */
 };
-#ifdef LIBXML2_NEW_BUFFER 
 #define CHECK_COMPAT(buf)                                   \
   if (buf->size != (size_t) buf->compat_size)            \
     if (buf->compat_size < INT_MAX)                    \
