@@ -24,7 +24,6 @@
 #include "../srcMLUtility.hpp"
 
 #include <stdio.h>
-#include <sys/fcntl.h>
 
 /* srcML XPath query and XSLT transform functions */
 int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_string) {
@@ -60,21 +59,17 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
   const char * transform_filename_template = "srcml_transform_XXXXXXXX";
 
-  //switch to mkstemp
   int input = 0;
-  const char transform_filename[512] = { 0 };
+  const char * last_transform_filename = 0;
   for(int i = 0; i < iarchive->transformations.size(); ++i) {
-    char * temp_transform_filename = strdup(transform_filename_template);
-    int transform_fd = mkstemp(temp_transform_filename);
-    if(i > 0) unlink(transform_filename);
-    fcntl(transform_fd, F_GETPATH, transform_filename);
-    free(temp_transform_filename);
+
+    char * transform_filename = strdup(transform_filename_template);
+    int transform_fd = mkstemp(transform_filename);
     OPTION_TYPE save_options = oarchive->options;
 
     xmlParserInputBufferPtr pinput = 0;
-
     if(i == 0) pinput = iarchive->input;
-    else pinput = xmlParserInputBufferCreateFd(input, xmlParseCharEncoding(0));
+    else pinput = xmlParserInputBufferCreateFilename(transform_filename, xmlParseCharEncoding(0));
     srcMLUtility utility(pinput, oarchive->encoding ? oarchive->encoding->c_str() : "UTF-8", oarchive->options);
 
     switch(iarchive->transformations.at(i).type) {
@@ -120,14 +115,16 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
     }
 
     if(i != 0) xmlFreeParserInputBuffer(pinput);
-    input = transform_fd;
+    unlink(last_transform_filename);
+    free((void *)last_transform_filename);
+    last_transform_filename = transform_filename;
     oarchive->options = save_options;
 
   }
 
   srcml_archive * tmp_archive = srcml_create_archive();
 
-  srcml_read_open_filename(tmp_archive, transform_filename);
+  srcml_read_open_filename(tmp_archive, last_transform_filename);
 
   srcml_unit * unit;
   while((unit = srcml_read_unit(tmp_archive))) {
@@ -139,7 +136,8 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
   srcml_close_archive(tmp_archive);
   srcml_free_archive(tmp_archive);
-  unlink(transform_filename);
+  unlink(last_transform_filename);
+  free((void *)last_transform_filename);
 
   iarchive->transformations.clear();
 
