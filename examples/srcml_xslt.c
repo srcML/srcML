@@ -7,9 +7,8 @@ int main(int argc, char * argv[]) {
 
   struct srcml_archive * iarchive = srcml_create_archive();
   struct srcml_archive * oarchive = srcml_create_archive();
+  srcml_read_open_filename(iarchive, "project.xml");
   srcml_write_open_filename(oarchive, "xslt.xml");
-
-  srcml_archive_set_filename(iarchive, "project.xml");
   
   srcml_append_transform_xslt(iarchive, "copy.xsl");
 
