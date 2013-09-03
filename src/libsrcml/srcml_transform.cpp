@@ -61,11 +61,11 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
   //switch to mkstemp
   //int mkstemp(char *template);
-  const char * input = 0/*iarchive->filename->c_str()*/;
+  int input = 0;
   for(int i = 0; i < 1/*iarchive->transformations.size()*/; ++i) {
-
-    char * transform_filename = strdup(transform_filename_template);
-    mktemp(transform_filename);
+    char * temp_transform_filename = strdup(transform_filename_template);
+    int transform_filename = mkstemp(temp_transform_filename);
+    free(temp_transform_filename);
     OPTION_TYPE save_options = oarchive->options;
     srcMLUtility utility(iarchive->input, oarchive->encoding ? oarchive->encoding->c_str() : "UTF-8", oarchive->options);
 
@@ -77,7 +77,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
         oarchive->options |= OPTION_XPATH;
         const char * xpaths[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
-        utility.xpath(transform_filename, "src:unit", xpaths);
+        utility.xpath(0, "src:unit", xpaths, transform_filename);
         break;
       }
 
@@ -88,7 +88,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
         oarchive->options |= OPTION_XSLT;
         const char * xslts[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
         const char * params[1] = { 0 };
-        utility.xslt("src:unit", transform_filename, xslts, params, 0);
+        utility.xslt("src:unit", 0, xslts, params, 0, transform_filename);
         break;
       }
 
@@ -102,7 +102,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
         oarchive->options |= OPTION_RELAXNG;
         const char * relaxngs[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
-        utility.relaxng(transform_filename, relaxngs);
+        utility.relaxng(0, relaxngs, transform_filename);
         break;
       }
 
@@ -111,14 +111,15 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
     }
 
-    if(i > 0) unlink(input), free((void *)input);
+    //if(i > 0) unlink(input);
+    close(transform_filename);
     input = transform_filename;
     oarchive->options = save_options;
 
   }
 
   srcml_archive * tmp_archive = srcml_create_archive();
-  srcml_read_open_filename(tmp_archive, input);
+  //srcml_read_open_filename(tmp_archive, input);
 
   srcml_unit * unit;
   while((unit = srcml_read_unit(tmp_archive))) {
@@ -130,8 +131,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
   srcml_close_archive(tmp_archive);
   srcml_free_archive(tmp_archive);
-  if(iarchive->filename && input && strcmp(iarchive->filename->c_str(),  input) != 0)
-  unlink(input), free((void *)input);
+  //unlink(input);
 
   iarchive->transformations.clear();
 

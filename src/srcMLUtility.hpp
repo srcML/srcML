@@ -98,13 +98,13 @@ public:
                 const char* to_directory = "");
 
     // perform xpath evaluation
-    void xpath(const char* context_element, const char* ofilename, const char* xpaths[]);
+  void xpath(const char* context_element, const char* ofilename, const char* xpaths[], int fd = 0);
 
     // perform xslt evaluation
-    void xslt(const char* context_element, const char* ofilename, const char* xslts[], const char* params[], int paramcount);
+  void xslt(const char* context_element, const char* ofilename, const char* xslts[], const char* params[], int paramcount, int fd = 0);
 
     // perform relaxng evaluation
-    void relaxng(const char* ofilename, const char** xslts);
+  void relaxng(const char* ofilename, const char** xslts, int fd = 0);
 
     static bool checkEncoding(const char* encoding) {
 

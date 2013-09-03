@@ -693,7 +693,7 @@ void srcMLUtility::set_input_filename(const char* infilename) {
 }
 
 // xpath evaluation of the nested units
-void srcMLUtility::xpath(const char* ofilename, const char* context_element, const char* xpaths[]) {
+void srcMLUtility::xpath(const char* ofilename, const char* context_element, const char* xpaths[], int fd) {
 
   // relative xpath changed to at any level
   std::string s = xpaths[0];
@@ -771,7 +771,7 @@ void dlexsltRegisterAll() {
 }
 
 // xslt evaluation of the nested units
-void srcMLUtility::xslt(const char* context_element, const char* ofilename, const char* xslts[], const char* params[], int paramcount) {
+void srcMLUtility::xslt(const char* context_element, const char* ofilename, const char* xslts[], const char* params[], int paramcount, int fd) {
 
   xmlMemSetup(xmlMemFree, xmlMemMalloc, xmlMemRealloc, xmlMemoryStrdup);
   xmlInitParser();
@@ -837,7 +837,7 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
 }
 
 // relaxng evaluation of the nested units
-void srcMLUtility::relaxng(const char* ofilename, const char** xslts) {
+void srcMLUtility::relaxng(const char* ofilename, const char** xslts, int fd) {
 
   xmlSAXHandler sax = SAX2UnitDOMRelaxNG::factory();
 
