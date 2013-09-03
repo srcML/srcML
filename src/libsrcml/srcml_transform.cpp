@@ -66,7 +66,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
   for(int i = 0; i < 1/*iarchive->transformations.size()*/; ++i) {
     char * temp_transform_filename = strdup(transform_filename_template);
     int transform_fd = mkstemp(temp_transform_filename);
-    //if(i > 0) unlink(transform_filename);
+    if(i > 0) unlink(transform_filename);
     fcntl(transform_fd, F_GETPATH, transform_filename);
     free(temp_transform_filename);
     OPTION_TYPE save_options = oarchive->options;
@@ -119,9 +119,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
     }
 
-
-    //close(transform_fd);
-    //lseek(transform_fd, 0, SEEK_SET);
+    if(i != 0) xmlFreeParserInputBuffer(pinput);
     input = transform_fd;
     oarchive->options = save_options;
 
@@ -141,7 +139,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
   srcml_close_archive(tmp_archive);
   srcml_free_archive(tmp_archive);
-  //unlink(transform_filename);
+  unlink(transform_filename);
 
   iarchive->transformations.clear();
 
