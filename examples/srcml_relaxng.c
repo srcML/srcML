@@ -7,10 +7,9 @@ int main(int argc, char * argv[]) {
 
   struct srcml_archive * iarchive = srcml_create_archive();
   struct srcml_archive * oarchive = srcml_create_archive();
+  srcml_read_open_filename(oarchive, "project.xml");
   srcml_write_open_filename(oarchive, "relaxng.xml");
 
-  srcml_archive_set_filename(iarchive, "project.xml");
-  
   srcml_append_transform_relaxng(iarchive, "schema.rng");
 
   srcml_apply_transforms(iarchive, oarchive);
