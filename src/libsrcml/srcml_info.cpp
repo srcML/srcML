@@ -15,8 +15,12 @@ const char** srcml_info(const char* srcml_filename) {
 
   const char ** output_carray = (const char **)malloc((output_array.size() + 1) * sizeof(const char *));
 
+  try {
+
   for(int i = 0; i < output_array.size(); ++i)
     output_carray[i] = strdup(output_array.at(i).c_str());
+
+  } catch(...) {}
   output_carray[output_array.size()] = 0;
 
   return output_carray;
@@ -35,8 +39,12 @@ const char** srcml_longinfo(const char* srcml_filename) {
 
   const char ** output_carray = (const char **)malloc((output_array.size() + 1) * sizeof(const char *));
 
-  for(int i = 0; i < output_array.size(); ++i)
-    output_carray[i] = strdup(output_array.at(i).c_str());
+  try {
+
+    for(int i = 0; i < output_array.size(); ++i)
+      output_carray[i] = strdup(output_array.at(i).c_str());
+
+  } catch(...) {}
   output_carray[output_array.size()] = 0;
 
   return output_carray;
@@ -55,8 +63,12 @@ const char** srcml_info_unit(const char* srcml_filename, int unit) {
 
   const char ** output_carray = (const char **)malloc((output_array.size() + 1) * sizeof(const char *));
 
-  for(int i = 0; i < output_array.size(); ++i)
-    output_carray[i] = strdup(output_array.at(i).c_str());
+  try {
+
+    for(int i = 0; i < output_array.size(); ++i)
+      output_carray[i] = strdup(output_array.at(i).c_str());
+
+  } catch(...) {}
   output_carray[output_array.size()] = 0;
 
   return output_carray;
@@ -75,8 +87,11 @@ const char** srcml_list(const char* srcml_filename) {
 
   const char ** output_carray = (const char **)malloc((output_array.size() + 1) * sizeof(const char *));
 
+  try {
   for(int i = 0; i < output_array.size(); ++i)
     output_carray[i] = strdup(output_array.at(i).c_str());
+
+  } catch(...) {}
   output_carray[output_array.size()] = 0;
 
   return output_carray;
