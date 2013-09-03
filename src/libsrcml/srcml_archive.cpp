@@ -61,8 +61,12 @@ srcml_archive* srcml_clone_archive(const srcml_archive* archive) {
   new_archive->directory = archive->directory ? new std::string(*archive->directory) : 0;
   new_archive->version = archive->version ? new std::string(*archive->version) : 0;
 
-  for(int pos = 0; pos < archive->attributes.size(); ++pos)
-    new_archive->attributes.push_back(archive->attributes.at(pos));
+  try {
+
+    for(int pos = 0; pos < archive->attributes.size(); ++pos)
+      new_archive->attributes.push_back(archive->attributes.at(pos));
+
+  } catch(...) {}
 
   new_archive->options = archive->options;
   new_archive->tabstop = archive->tabstop;
@@ -72,13 +76,21 @@ srcml_archive* srcml_clone_archive(const srcml_archive* archive) {
   new_archive->namespaces.clear();
   for(int pos = 0; pos < archive->namespaces.size(); ++pos) {
 
-    new_archive->namespaces.push_back(archive->namespaces.at(pos));
-    new_archive->prefixes.push_back(archive->prefixes.at(pos));
+    try {
+
+      new_archive->namespaces.push_back(archive->namespaces.at(pos));
+      new_archive->prefixes.push_back(archive->prefixes.at(pos));
+
+    } catch(...) {}
 
   }
 
-  for(int i = 0; i < archive->registered_languages.size(); ++i)
-    new_archive->registered_languages.push_back(archive->registered_languages.at(i));
+  try {
+
+    for(int i = 0; i < archive->registered_languages.size(); ++i)
+      new_archive->registered_languages.push_back(archive->registered_languages.at(i));
+
+  } catch(...) {}
 
   return new_archive;
 
@@ -176,13 +188,16 @@ int srcml_archive_register_file_extension(srcml_archive* archive, const char* ex
 }
 
 int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix, const char* ns) {
+  try {
 
-  for(int i = 0; i < archive->prefixes.size(); ++i)
-    if(archive->namespaces.at(i) == ns) {
-
-      archive->prefixes.at(i) = prefix;
-      return SRCML_STATUS_OK;
+    for(int i = 0; i < archive->prefixes.size(); ++i)
+      if(archive->namespaces.at(i) == ns) {
+        
+        archive->prefixes.at(i) = prefix;
+        return SRCML_STATUS_OK;
     }
+
+  } catch(...) {}
 
   archive->prefixes.push_back(prefix);
   archive->namespaces.push_back(ns);
