@@ -72,47 +72,52 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
     else pinput = xmlParserInputBufferCreateFilename(last_transform_filename, xmlParseCharEncoding(0));
     srcMLUtility utility(pinput, oarchive->encoding ? oarchive->encoding->c_str() : "UTF-8", oarchive->options);
 
-    switch(iarchive->transformations.at(i).type) {
+    try {
 
-    case SRCML_XPATH:
+      switch(iarchive->transformations.at(i).type) {
 
-      {
+      case SRCML_XPATH:
 
-        oarchive->options |= OPTION_XPATH;
-        const char * xpaths[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
-        utility.xpath(0, "src:unit", xpaths, transform_fd);
+        {
+
+          oarchive->options |= OPTION_XPATH;
+          const char * xpaths[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
+          utility.xpath(0, "src:unit", xpaths, transform_fd);
+          break;
+        }
+
+      case SRCML_XSLT:
+
+        {
+
+          oarchive->options |= OPTION_XSLT;
+          const char * xslts[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
+          const char * params[1] = { 0 };
+          utility.xslt("src:unit", 0, xslts, params, 0, transform_fd);
+          break;
+        }
+
+      case SRCML_RELAXNG:
+
+        {
+
+          // TODO fix so actually works.  Suppresses error messages.
+          xmlGenericErrorFunc handler = (xmlGenericErrorFunc) libxml_error;
+          initGenericErrorDefaultFunc(&handler);
+
+          oarchive->options |= OPTION_RELAXNG;
+          const char * relaxngs[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
+          utility.relaxng(0, relaxngs, transform_fd);
+          break;
+        }
+
+      default :
         break;
+
       }
 
-    case SRCML_XSLT:
+    } catch(...) {}
 
-      {
-
-        oarchive->options |= OPTION_XSLT;
-        const char * xslts[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
-        const char * params[1] = { 0 };
-        utility.xslt("src:unit", 0, xslts, params, 0, transform_fd);
-        break;
-      }
-
-    case SRCML_RELAXNG:
-
-      {
-
-        // TODO fix so actually works.  Suppresses error messages.
-        xmlGenericErrorFunc handler = (xmlGenericErrorFunc) libxml_error;
-        initGenericErrorDefaultFunc(&handler);
-
-        oarchive->options |= OPTION_RELAXNG;
-        const char * relaxngs[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
-        utility.relaxng(0, relaxngs, transform_fd);
-        break;
-      }
-
-    default :
-      break;
-
-    }
 
     if(i != 0) xmlFreeParserInputBuffer(pinput);
     unlink(last_transform_filename);
@@ -121,6 +126,8 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
     oarchive->options = save_options;
 
   }
+
+
 
   srcml_archive * tmp_archive = srcml_create_archive();
 
@@ -131,7 +138,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
     srcml_write_unit(oarchive, unit);
     srcml_free_unit(unit);
-    
+
   }
 
   srcml_close_archive(tmp_archive);
