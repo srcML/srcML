@@ -910,7 +910,7 @@ struct xmlBuf {
   xmlBufferPtr buffer;        /* wrapper for an old buffer */
   int error;                  /* an error code if a failure occured */
 };
-
+#ifdef LIBXML2_NEW_BUFFER 
 #define CHECK_COMPAT(buf)                                   \
   if (buf->size != (size_t) buf->compat_size)            \
     if (buf->compat_size < INT_MAX)                    \
@@ -929,7 +929,16 @@ xmlBufResetInput(xmlBuf * buf, xmlParserInputPtr input) {
     return(0);
 
 }
-#if 0
+#else
+int
+xmlBufResetInput(xmlBuffer * buf, xmlParserInputPtr input) {
+  input->base = input->buf->buffer->content;
+  input->cur = input->buf->buffer->content;
+  input->end = &input->buf->buffer->content[input->buf->buffer->use];
+}
+
+#endif
+
 xmlParserCtxtPtr
 srcMLCreateParserCtxt(xmlParserInputBufferPtr buffer_input) {
   xmlParserCtxtPtr ctxt;
@@ -959,7 +968,7 @@ srcMLCreateParserCtxt(xmlParserInputBufferPtr buffer_input) {
   inputPush(ctxt, input);
   return(ctxt);
 }
-#endif
+
 
 extern "C" {
 
