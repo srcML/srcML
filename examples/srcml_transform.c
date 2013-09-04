@@ -38,7 +38,7 @@ int main(int argc, char * argv[]) {
 
   srcml_append_transform_xpath(iarchive, "//src:unit");
   srcml_append_transform_xslt(iarchive, "copy.xsl");
-  srcml_append_transform_relaxng(iarchive, "schema.xsl");
+  srcml_append_transform_relaxng(iarchive, "schema.rng");
 
   srcml_apply_transforms(iarchive, oarchive);
 
