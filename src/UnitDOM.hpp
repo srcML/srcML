@@ -124,8 +124,21 @@ public :
             data.push_back(namespaces[i * 2 + 1]);
         }
 
+        /*
+
+          Passing the prefix was causing an error when set.
+          Hack change localname to have prefix and set prefix to null
+
+        */
+        std::string full_name = "";
+        if(prefix) {
+          full_name = (const char *)prefix;
+          full_name += ":";
+        }
+        full_name += (const char *)localname;
+
         // start the unit (element) at the root using the merged namespaces
-        xmlSAX2StartElementNs(ctx, localname, prefix, URI, data.size() / 2,
+        xmlSAX2StartElementNs(ctx, (xmlChar *)full_name.c_str(), 0, URI, data.size() / 2,
                               &data[0], nb_attributes, nb_defaulted, attributes);
     }
 
@@ -134,7 +147,7 @@ public :
                                 int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                                 const xmlChar** attributes) {
 
-        xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
+      xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
     }
 
     // build end element nodes in unit tree
