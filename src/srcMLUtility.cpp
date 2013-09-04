@@ -696,6 +696,7 @@ void srcMLUtility::set_input_filename(const char* infilename) {
 void srcMLUtility::xpath(const char* ofilename, const char* context_element, const char* xpaths[], int fd) {
 
   // relative xpath changed to at any level
+  if(ofilename) xmlMemSetup(xmlMemFree, xmlMemMalloc, xmlMemRealloc, xmlMemoryStrdup);
   std::string s = xpaths[0];
   //  if (s[0] != '/')
   //    s = "//" + s;
