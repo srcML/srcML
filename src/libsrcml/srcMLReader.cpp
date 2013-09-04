@@ -508,10 +508,11 @@ void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer) {
     // record if this is an empty element since it will be erased by the attribute copying
     isemptyelement = node.extra & 0x1;
 
-    // start the element
-    if (node.ns) {
+    // start the element 
+    {
+
       std::string s = "";
-      if(node.ns->prefix) {
+      if(node.ns && node.ns->prefix) {
 
         s += ((char*) node.ns->prefix);
         s += ":";
@@ -520,8 +521,7 @@ void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer) {
 
       xmlTextWriterStartElement(writer, BAD_CAST s.c_str());
 
-    } else
-      xmlTextWriterStartElement(writer, (xmlChar *)node.name);
+    }
 
     if(strcmp((const char *)node.name, "unit") == 0) {
 
