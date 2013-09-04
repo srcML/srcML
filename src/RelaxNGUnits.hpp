@@ -93,7 +93,10 @@ public :
       found = true;
 
       xmlNodePtr node = xmlDocGetRootElement(ctxt->myDoc);
-      xmlNodeDumpOutput(buf, ctxt->myDoc, node, 0, 0, 0);
+      xmlOutputBufferWriteElementNodeNs(buf, *node);
+
+      for(xmlNodePtr child = node; child; child = child->next)
+        xmlNodeDumpOutput(buf, ctxt->myDoc, node, 0, 0, 0);
       xmlOutputBufferWrite(buf, 2, "\n\n");
 
     }
@@ -158,7 +161,7 @@ public :
 
         }
 
-        std::string prefix = "xmlns";
+        std::string prefix = " xmlns";
         if(xmlns->prefix) {
 
           prefix += ":";
@@ -179,7 +182,7 @@ public :
       xmlAttrPtr attribute = node.properties;
       while (attribute) {
 
-        std::string s;
+        std::string s = " ";
         if(attribute->ns && attribute->ns->prefix) {
           s = (const char *)attribute->ns->prefix;
           s += ":";
