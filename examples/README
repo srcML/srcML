@@ -4,6 +4,6 @@ the libsrcml API.
 Perform the following to be able to build using srcml.h and
 libsrcml.cpp from the trunk:
 
-svn switch --ignore-ancestry http://calder.sdml.cs.kent.edu/svn/srcML/trunk/src/srcml.h srcml.h
-svn switch --ignore-ancestry http://calder.sdml.cs.kent.edu/svn/srcML/trunk/src/libsrcml.cpp libsrcml.cpp
+svn switch --ignore-ancestry http://calder.sdml.cs.kent.edu/svn/srcML/trunk/src/libsrcml/srcml.h srcml.h
+svn switch --ignore-ancestry http://calder.sdml.cs.kent.edu/svn/srcML/trunk/src/libsrcml/libsrcml.cpp libsrcml.cpp
 
