@@ -102,10 +102,6 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
         {
 
-          // TODO fix so actually works.  Suppresses error messages.
-          xmlGenericErrorFunc handler = (xmlGenericErrorFunc) libxml_error;
-          initGenericErrorDefaultFunc(&handler);
-
           oarchive->options |= OPTION_RELAXNG;
           const char * relaxngs[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
           utility.relaxng(0, relaxngs, transform_fd);
