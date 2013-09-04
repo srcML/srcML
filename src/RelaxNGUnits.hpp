@@ -80,10 +80,12 @@ public :
             xmlBufferFree(pstate->rootbuf);
             xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">\n\n"));
             pstate->found = true;
-            }*/
+            }
+          */
 
-          xmlNodeDumpOutput(buf, ctxt->myDoc, ctxt->node, 0, 0, 0);
+          xmlNodeDumpOutput(buf, ctxt->myDoc, xmlDocGetRootElement(ctxt->myDoc), 0, 0, 0);
           xmlOutputBufferWrite(buf, 2, "\n\n");
+
         }
 
         return true;
