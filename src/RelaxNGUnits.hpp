@@ -89,6 +89,7 @@ public :
                                       pstate->isarchive ? pstate->root.nb_attributes : 0, pstate->root.nb_defaulted, pstate->root.attributes);
 
         xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">\n\n"));
+        root_prefix = pstate->root.prefix;
       }
       found = true;
 
@@ -116,7 +117,15 @@ public :
 
     // root unit end tag
     if (pstate->isarchive && !isoption(options, OPTION_XSLT_ALL)) {
-      xmlOutputBufferWriteString(buf, found ? "</unit>\n" : "/>\n");
+      std::string end_unit = "</";
+      if(root_prefix) {
+        end_unit += (const char *)root_prefix;
+        end_unit += ":";
+
+      }
+      end_unit += "unit>\n";
+
+      xmlOutputBufferWriteString(buf, found ? end_unit.c_str() : "/>\n");
     }
 
     // all done with the buffer
@@ -190,7 +199,7 @@ public :
 
         std::string s = " ";
         if(attribute->ns && attribute->ns->prefix) {
-          s = (const char *)attribute->ns->prefix;
+          s += (const char *)attribute->ns->prefix;
           s += ":";
 
         }
@@ -305,6 +314,7 @@ private :
   xmlRelaxNGValidCtxtPtr rngctx;
   int fd;
   bool found;
+  const xmlChar * root_prefix;
 };
 
 #endif
