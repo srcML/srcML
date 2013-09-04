@@ -929,7 +929,7 @@ static xmlParserCtxtPtr srcMLCreateMemoryParserCtxt(const char * buffer, int siz
 }
 
 #ifdef LIBXML2_NEW_BUFFER 
-struct xmlBuf {
+struct _xmlBuf {
   xmlChar *content;           /* The buffer content UTF8 */
   unsigned int compat_use;    /* for binary compatibility */
   unsigned int compat_size;   /* for binary compatibility */
