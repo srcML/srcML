@@ -93,13 +93,18 @@ public :
       found = true;
 
       xmlNodePtr node = xmlDocGetRootElement(ctxt->myDoc);
+      bool isemptyelement = node->extra & 0x1;
       xmlOutputBufferWriteElementNodeNs(buf, *node);
 
-      for(xmlNodePtr child = node->children; child; child = child->next)
-        xmlNodeDumpOutput(buf, ctxt->myDoc, child, 0, 0, 0);
-      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>"));
-      for(xmlNodePtr sibling = node->next; sibling; sibling = sibling->next)
-        xmlNodeDumpOutput(buf, ctxt->myDoc, sibling, 0, 0, 0);
+      if(!isemptyelement) {
+
+        for(xmlNodePtr child = node->children; child; child = child->next)
+          xmlNodeDumpOutput(buf, ctxt->myDoc, child, 0, 0, 0);
+        for(xmlNodePtr sibling = node->next; sibling; sibling = sibling->next)
+          xmlNodeDumpOutput(buf, ctxt->myDoc, sibling, 0, 0, 0);
+        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>"));
+      }
+
       xmlOutputBufferWrite(buf, 2, "\n\n");
 
     }
@@ -202,13 +207,16 @@ public :
       }
     }
 
-    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">"));
 
     // start the element 
     // end now if this is an empty element
     if (isemptyelement) {
 
-      //xmlTextWriterEndElement(writer);
+      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
+    } else {
+
+      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">"));
+
     }
 
   }
