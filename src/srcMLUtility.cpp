@@ -852,24 +852,14 @@ void srcMLUtility::relaxng(const char* ofilename, const char** xslts, int fd) {
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
   ctxt->sax = &sax;
 
-  xmlRelaxNGParserCtxtPtr relaxng;
-  xmlRelaxNGPtr rng;
-  xmlRelaxNGValidCtxtPtr rngptr;
-  relaxng = xmlRelaxNGNewParserCtxt(xslts[0]);
-  rng = xmlRelaxNGParse(relaxng);
-  rngptr = xmlRelaxNGNewValidCtxt(rng);
-  //SAX2UnitDOMRelaxNG state(0, xslts, ofilename, 0, fd);
-  RelaxNGUnits process(ofilename, options, rngptr, fd);
+  xmlRelaxNGParserCtxtPtr relaxng = xmlRelaxNGNewParserCtxt(xslts[0]);
+  xmlRelaxNGPtr rng = xmlRelaxNGParse(relaxng);
+  xmlRelaxNGValidCtxtPtr rngctx = xmlRelaxNGNewValidCtxt(rng);
+  RelaxNGUnits process(ofilename, options, rngctx, fd);
 
   // setup sax handling state
   SAX2ExtractUnitsSrc state(&process, &options, -1, diff_version);
   ctxt->_private = &state;
-  //state.ctxt = ctxt;
-
-  // parse the stylesheet
-  //state.relaxng = xmlRelaxNGNewParserCtxt(state.fxslt[0]);
-  //state.rng = xmlRelaxNGParse(state.relaxng);
-  //state.rngptr = xmlRelaxNGNewValidCtxt(state.rng);
 
   srcMLParseDocument(ctxt, false);
 
@@ -877,6 +867,9 @@ void srcMLUtility::relaxng(const char* ofilename, const char** xslts, int fd) {
 
   if(buffer_input) inputPop(ctxt);
   xmlFreeParserCtxt(ctxt);
+  xmlRelaxNGFreeValidCtxt(rngctx);
+  xmlRelaxNGFree(rng);
+  xmlRelaxNGFreeParserCtxt(relaxng);
 }
 
 
