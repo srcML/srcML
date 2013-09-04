@@ -93,6 +93,13 @@ public :
             found = true;
 
             xmlNodePtr node = xmlDocGetRootElement(ctxt->myDoc);
+            for(xmlNsPtr xmlns = node->ns; xmlns; xmlns = xmlns->next) {
+
+              std::string ns = xmlns->href ? (const char *)xmlns->href : "";
+              if(ns == SRCML_SRC_NS_URI)
+                ;
+
+            }
 
             xmlNodeDumpOutput(buf, ctxt->myDoc, node, 0, 0, 0);
             xmlOutputBufferWrite(buf, 2, "\n\n");
