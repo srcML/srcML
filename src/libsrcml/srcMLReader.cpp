@@ -132,7 +132,7 @@ int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** 
     attribute = attribute->next;
   }
 
-  xmlNsPtr xmlns = node->ns;
+  xmlNsPtr xmlns = node->nsDef;
 
   while(xmlns) {
 

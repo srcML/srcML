@@ -156,7 +156,7 @@ public :
 
     if(strcmp((const char *)node.name, "unit") == 0) {
 
-      xmlNsPtr xmlns = node.ns;
+      xmlNsPtr xmlns = node.nsDef;
       while(xmlns) {
 
         std::string ns = xmlns->href ? (const char *)xmlns->href : "";
