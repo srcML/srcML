@@ -45,8 +45,8 @@
 class RelaxNGUnits : public UnitDOM {
 public :
 
-  RelaxNGUnits(const char* a_context_element, const char* a_ofilename, int options, int fd = 0)
-    : UnitDOM(options), ofilename(a_ofilename), options(options), fd(fd) {
+  RelaxNGUnits(const char* a_ofilename, int options, xmlRelaxNGValidCtxtPtr rngctx, int fd = 0)
+    : UnitDOM(options), ofilename(a_ofilename), options(options), rngctx(rngctx), fd(fd) {
     }
 
     virtual ~RelaxNGUnits() {}
