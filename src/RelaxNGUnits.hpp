@@ -33,13 +33,7 @@
 #include <libxml/xpath.h>
 #include <libxml/xpathInternals.h>
 
-#include <libxslt/transform.h>
-
-#include <libxslt/xslt.h>
-#include <libxslt/xsltInternals.h>
-#include <libxslt/xsltutils.h>
-
-#include <libexslt/exslt.h>
+#include <libxml/relaxng.h>
 
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
 #define LITERALPLUSSIZE(s) s, sizeof(s) - 1
@@ -51,10 +45,8 @@
 class RelaxNGUnits : public UnitDOM {
 public :
 
-    RelaxNGUnits(const char* a_context_element, const char* a_ofilename, int options, xsltStylesheetPtr stylesheet,
-                 const char** params)
-        : UnitDOM(options), ofilename(a_ofilename), options(options),
-          stylesheet(stylesheet), total(0), found(false), needroot(true), result_type(0), params(params) {
+    RelaxNGUnits(const char* a_context_element, const char* a_ofilename, int options)
+        : UnitDOM(options), ofilename(a_ofilename), options(options) {
     }
 
     virtual ~RelaxNGUnits() {}
@@ -72,59 +64,23 @@ public :
         xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
         SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
-        setPosition(pstate->count);
+        // validate
+        int n = xmlRelaxNGValidateDoc(rngctx, ctxt->myDoc);
 
-        // apply the style sheet to the document, which is the individual unit
-        xmlDocPtr res = xsltApplyStylesheetUser(stylesheet, ctxt->myDoc, params, 0, 0, 0);
-        if (!res) {
-            fprintf(stderr, "srcml2src:  Error in applying stylesheet\n");
-            exit(1);
-        }
+        // output if it validates
+        if (n == 0) {
 
-        // only interestd in non-empty results
-        if (res && res->children) {
+          /*
+          // if in per-unit mode and this is the first result found
+          if (pstate->isnested && !pstate->found && !isoption(options, OPTION_XSLT_ALL)) {
+            xmlOutputBufferWrite(buf, pstate->rootbuf->use, (const char*) pstate->rootbuf->content);
+            xmlBufferFree(pstate->rootbuf);
+            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">\n\n"));
+            pstate->found = true;
+            }*/
 
-            // determine the type of data that is going to be output
-            if (!found) {
-                result_type = res->children->type;
-            }
-
-            // xml declaration
-            if (result_type == XML_ELEMENT_NODE && !isoption(options, OPTION_XMLDECL))
-                xmlOutputBufferWriteXMLDecl(ctxt, buf);
-
-            // finish the end of the root unit start tag
-            // this is only if in per-unit mode and this is the first result found
-            // have to do so here because it may be empty
-
-            if (result_type == XML_ELEMENT_NODE && pstate->isarchive && !found && !isoption(options, OPTION_XSLT_ALL)) {
-
-                // output a root element, just like the one read in
-                // note that this has to be ended somewhere
-                xmlOutputBufferWriteElementNs(buf, pstate->root.localname, pstate->root.prefix, pstate->root.URI,
-                                              pstate->root.nb_namespaces, pstate->root.namespaces,
-                                              pstate->isarchive ? pstate->root.nb_attributes : 0, pstate->root.nb_defaulted, pstate->root.attributes);
-
-                xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">\n\n"));
-            }
-            found = true;
-
-            // save the result, but temporarily hide the namespaces since we only want them on the root element
-            xmlNodePtr resroot = xmlDocGetRootElement(res);
-            xmlNsPtr savens = resroot ? resroot->nsDef : 0;
-            bool turnoff_namespaces = savens && pstate->isarchive && !isoption(options, OPTION_XSLT_ALL);
-            if (turnoff_namespaces)
-                resroot->nsDef = 0;
-            xsltSaveResultTo(buf, res, stylesheet);
-            if (turnoff_namespaces)
-                resroot->nsDef = savens;
-
-            // put some space between this unit and the next one if compound
-            if (result_type == XML_ELEMENT_NODE && pstate->isarchive && !isoption(options, OPTION_XSLT_ALL))
-                xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n"));
-
-            // finished with the result of the transformation
-            xmlFreeDoc(res);
+          xmlNodeDumpOutput(buf, ctxt->myDoc, ctxt->node, 0, 0, 0);
+          xmlOutputBufferWrite(buf, 2, "\n\n");
         }
 
         return true;
@@ -135,7 +91,7 @@ public :
         SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
         // root unit end tag
-        if (result_type == XML_ELEMENT_NODE && found && pstate->isarchive && !isoption(options, OPTION_XSLT_ALL)) {
+        if (pstate->isarchive && !isoption(options, OPTION_XSLT_ALL)) {
             xmlOutputBufferWriteString(buf, found ? "</unit>\n" : "/>\n");
         }
 
@@ -240,17 +196,8 @@ public :
 private :
     const char* ofilename;
     int options;
-    xmlXPathContextPtr context;
-    xsltStylesheetPtr stylesheet;
-    double total;
-    bool result_bool;
-    int nodetype;
-    bool found;
     xmlOutputBufferPtr buf;
-    bool needroot;
-    bool closetag;
-    int result_type;
-    const char** params;
+    xmlRelaxNGValidCtxtPtr rngctx;
 };
 
 #endif
