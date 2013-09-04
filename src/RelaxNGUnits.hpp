@@ -45,8 +45,8 @@
 class RelaxNGUnits : public UnitDOM {
 public :
 
-    RelaxNGUnits(const char* a_context_element, const char* a_ofilename, int options)
-        : UnitDOM(options), ofilename(a_ofilename), options(options) {
+  RelaxNGUnits(const char* a_context_element, const char* a_ofilename, int options, int fd = 0)
+    : UnitDOM(options), ofilename(a_ofilename), options(options), fd(fd) {
     }
 
     virtual ~RelaxNGUnits() {}
@@ -54,7 +54,10 @@ public :
     virtual void startOutput(void* ctx) {
 
         // setup output
+      if(ofilename)
         buf = xmlOutputBufferCreateFilename(ofilename, NULL, 0);
+      else
+        buf = xmlOutputBufferCreateFd(fd, NULL);
         // TODO:  Detect error
 
     }
@@ -198,6 +201,7 @@ private :
     int options;
     xmlOutputBufferPtr buf;
     xmlRelaxNGValidCtxtPtr rngctx;
+    int fd;
 };
 
 #endif
