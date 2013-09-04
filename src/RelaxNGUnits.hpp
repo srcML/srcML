@@ -93,17 +93,14 @@ public :
       found = true;
 
       xmlNodePtr node = xmlDocGetRootElement(ctxt->myDoc);
-      bool isemptyelement = node->extra & 0x1;
       xmlOutputBufferWriteElementNodeNs(buf, *node);
-
-      if(!isemptyelement) {
 
         for(xmlNodePtr child = node->children; child; child = child->next)
           xmlNodeDumpOutput(buf, ctxt->myDoc, child, 0, 0, 0);
         for(xmlNodePtr sibling = node->next; sibling; sibling = sibling->next)
           xmlNodeDumpOutput(buf, ctxt->myDoc, sibling, 0, 0, 0);
-        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>"));
-      }
+        if(node->children)
+          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>"));
 
       if(pstate->isarchive) xmlOutputBufferWrite(buf, 2, "\n\n");
       else  xmlOutputBufferWrite(buf, 1, "\n");
@@ -210,14 +207,10 @@ public :
 
     // start the element 
     // end now if this is an empty element
-    if (isemptyelement) {
-
-      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
-    } else {
-
+    if (node.children)
       xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">"));
-
-    }
+    else
+      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
 
   }
 
