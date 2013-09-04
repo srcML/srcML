@@ -529,7 +529,7 @@ void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer) {
       while(xmlns) {
 
         std::string ns = xmlns->href ? (const char *)xmlns->href : "";
-        if(ns == SRCML_SRC_NS_URI) {
+        if(ns != SRCML_CPP_NS_URI) {
 
           xmlns = xmlns->next;
           continue;
