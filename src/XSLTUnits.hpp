@@ -157,6 +157,7 @@ public :
                                               pstate->isarchive ? pstate->root.nb_attributes : 0, pstate->root.nb_defaulted, pstate->root.attributes);
 
                 xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">\n\n"));
+                root_prefix = pstate->root.prefix;
             }
             found = true;
 
@@ -223,7 +224,15 @@ public :
         // root unit end tag
         if (result_type == XML_ELEMENT_NODE && found && pstate->isarchive && !isoption(options, OPTION_XSLT_ALL)) {
 
-            xmlOutputBufferWriteString(buf, found ? "</unit>\n" : "/>\n");
+          std::string end_unit = "</";
+          if(root_prefix) {
+            end_unit += (const char *)root_prefix;
+            end_unit += ":";
+
+          }
+          end_unit += "unit>\n";
+
+          xmlOutputBufferWriteString(buf, found ? end_unit.c_str() : "/>\n");
 
         } else if (result_type == XML_ELEMENT_NODE && found && !pstate->isarchive) {
 	    xmlOutputBufferWriteString(buf, "\n");
@@ -342,6 +351,7 @@ private :
     int result_type;
     const char** params;
     int fd;
+    const xmlChar * root_prefix;
 };
 
 #endif
