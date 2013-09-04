@@ -219,6 +219,7 @@ public :
                                             const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
                                             int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
 
+    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<"));
     if (prefix != NULL) {
       xmlOutputBufferWriteString(buf, (const char*) prefix);
       xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(":"));
