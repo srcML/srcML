@@ -92,8 +92,10 @@ public :
             }
             found = true;
 
-          xmlNodeDumpOutput(buf, ctxt->myDoc, xmlDocGetRootElement(ctxt->myDoc), 0, 0, 0);
-          xmlOutputBufferWrite(buf, 2, "\n\n");
+            xmlNodePtr node = xmlDocGetRootElement(ctxt->myDoc);
+
+            xmlNodeDumpOutput(buf, ctxt->myDoc, node, 0, 0, 0);
+            xmlOutputBufferWrite(buf, 2, "\n\n");
 
         }
 
