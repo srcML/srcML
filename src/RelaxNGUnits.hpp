@@ -95,8 +95,11 @@ public :
       xmlNodePtr node = xmlDocGetRootElement(ctxt->myDoc);
       xmlOutputBufferWriteElementNodeNs(buf, *node);
 
-      for(xmlNodePtr child = node; child; child = child->next)
-        xmlNodeDumpOutput(buf, ctxt->myDoc, node, 0, 0, 0);
+      for(xmlNodePtr child = node->children; child; child = child->next)
+        xmlNodeDumpOutput(buf, ctxt->myDoc, child, 0, 0, 0);
+      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>"));
+      for(xmlNodePtr sibling = node->next; sibling; sibling = sibling->next)
+        xmlNodeDumpOutput(buf, ctxt->myDoc, sibling, 0, 0, 0);
       xmlOutputBufferWrite(buf, 2, "\n\n");
 
     }
