@@ -279,7 +279,7 @@ public :
             xmlOutputBufferWriteString(buf, (const char*) attributes[i * 5]);
             xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("=\""));
 
-            xmlOutputBufferWrite(buf, attributes[i * 5 + 4] - attributes[i * 5 + 3] + 1,
+            xmlOutputBufferWrite(buf, attributes[i * 5 + 4] - attributes[i * 5 + 3],
                                  (const char*) attributes[i * 5 + 3]);
 
             xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
