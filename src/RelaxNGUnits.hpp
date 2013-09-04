@@ -125,11 +125,83 @@ public :
     xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\"?>\n"));
   }
 
+  static void xmlOutputBufferWriteElementNodeNs(xmlOutputBufferPtr buf, xmlNode & node) {
+
+        // record if this is an empty element since it will be erased by the attribute copying
+    bool isemptyelement = node.extra & 0x1;
+    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<"));
+    // start the element 
+    {
+
+      std::string s = "";
+      if(node.ns && node.ns->prefix) {
+
+        s += ((char*) node.ns->prefix);
+        s += ":";
+      }
+      s += (char*) node.name;
+
+      xmlOutputBufferWrite(buf, s.size(), s.c_str());
+
+    }
+
+    if(strcmp((const char *)node.name, "unit") == 0) {
+
+      xmlNsPtr xmlns = node.ns;
+      while(xmlns) {
+
+        std::string ns = xmlns->href ? (const char *)xmlns->href : "";
+        if(ns == SRCML_SRC_NS_URI) {
+
+          xmlns = xmlns->next;
+          continue;
+
+        }
+
+        std::string prefix = "xmlns";
+        if(xmlns->prefix) {
+
+          prefix += ":";
+          prefix += (const char *)xmlns->prefix;
+
+        }
+
+        //xmlOutputBufferWrite(buf, (const xmlChar *)prefix.c_str(), (const xmlChar *)ns.c_str());
+
+        xmlns = xmlns->next;
+      }
+    }
+
+    // copy all the attributes
+    {
+      xmlAttrPtr attribute = node.properties;
+      while (attribute) {
+
+        std::string s;
+        if(attribute->ns && attribute->ns->prefix) {
+          s = (const char *)attribute->ns->prefix;
+          s += ":";
+
+        }
+        s += (const char *)attribute->name;
+
+        //xmlTextWriterWriteAttribute(writer, (const xmlChar *)s.c_str(), (const xmlChar *)attribute->children->content);
+        attribute = attribute->next;
+      }
+    }
+
+    // end now if this is an empty element
+    if (isemptyelement) {
+
+      //xmlTextWriterEndElement(writer);
+    }
+
+  }
+
   static void xmlOutputBufferWriteElementNs(xmlOutputBufferPtr buf, const xmlChar* localname, const xmlChar* prefix,
                                             const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
                                             int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
 
-    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<"));
     if (prefix != NULL) {
       xmlOutputBufferWriteString(buf, (const char*) prefix);
       xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(":"));
