@@ -19,20 +19,12 @@
   along with the srcML translator; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-
 */
 
 #ifndef INCLUDED_RelaxNGUNITS_HPP
 #define INCLUDED_RelaxNGUNITS_HPP
 
-#include <sstream>
-
 #include <libxml/parser.h>
-#include <libxml/xpath.h>
-
-#include <libxml/xpath.h>
-#include <libxml/xpathInternals.h>
-
 #include <libxml/relaxng.h>
 
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, s

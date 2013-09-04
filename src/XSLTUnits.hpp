@@ -23,14 +23,7 @@
 #ifndef INCLUDED_XSLTUNITS_HPP
 #define INCLUDED_XSLTUNITS_HPP
 
-#include <sstream>
-
 #include <libxml/parser.h>
-#include <libxml/xpath.h>
-
-#include <libxml/xpath.h>
-#include <libxml/xpathInternals.h>
-
 #include <libxslt/transform.h>
 
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, s

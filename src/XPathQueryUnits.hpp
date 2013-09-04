@@ -23,8 +23,6 @@
 #ifndef INCLUDED_XPATHQUERYUNITS_HPP
 #define INCLUDED_XPATHQUERYUNITS_HPP
 
-#include <sstream>
-
 #include <libxml/parser.h>
 #include <libxml/xpath.h>
 
