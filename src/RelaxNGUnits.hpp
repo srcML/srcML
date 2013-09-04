@@ -105,8 +105,8 @@ public :
         xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>"));
       }
 
-      xmlOutputBufferWrite(buf, 2, "\n\n");
-
+      if(pstate->isarchive) xmlOutputBufferWrite(buf, 2, "\n\n");
+      else  xmlOutputBufferWrite(buf, 1, "\n");
     }
 
     return true;
