@@ -843,7 +843,14 @@ void srcMLUtility::relaxng(const char* ofilename, const char** xslts, int fd) {
 
   xmlSAXHandler sax = SAX2UnitDOMRelaxNG::factory();
 
-  SAX2UnitDOMRelaxNG state(0, xslts, ofilename, 0, fd);
+  xmlRelaxNGParserCtxtPtr relaxng;
+  xmlRelaxNGPtr rng;
+  xmlRelaxNGValidCtxtPtr rngptr;
+  relaxng = xmlRelaxNGNewParserCtxt(xslts[0]);
+  rng = xmlRelaxNGParse(relaxng);
+  rngptr = xmlRelaxNGNewValidCtxt(rng);
+  //SAX2UnitDOMRelaxNG state(0, xslts, ofilename, 0, fd);
+  RelaxNGUnits state(ofilename, options, rngptr, fd);
 
   xmlParserCtxtPtr ctxt = 0;
   if(infile)
@@ -856,9 +863,9 @@ void srcMLUtility::relaxng(const char* ofilename, const char** xslts, int fd) {
   //state.ctxt = ctxt;
 
   // parse the stylesheet
-  state.relaxng = xmlRelaxNGNewParserCtxt(state.fxslt[0]);
-  state.rng = xmlRelaxNGParse(state.relaxng);
-  state.rngptr = xmlRelaxNGNewValidCtxt(state.rng);
+  //state.relaxng = xmlRelaxNGNewParserCtxt(state.fxslt[0]);
+  //state.rng = xmlRelaxNGParse(state.relaxng);
+  //state.rngptr = xmlRelaxNGNewValidCtxt(state.rng);
 
   srcMLParseDocument(ctxt, false);
 
