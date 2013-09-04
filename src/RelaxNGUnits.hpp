@@ -187,11 +187,18 @@ public :
         }
         s += (const char *)attribute->name;
 
-        //xmlTextWriterWriteAttribute(writer, (const xmlChar *)s.c_str(), (const xmlChar *)attribute->children->content);
+        std::string attribute_string = s + "=\"";
+        attribute_string += (const char *)attribute->children->content;
+        attribute_string += "\"";
+
+        xmlOutputBufferWrite(buf, attribute_string.size(), attribute_string.c_str());
         attribute = attribute->next;
       }
     }
 
+    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">"));
+
+    // start the element 
     // end now if this is an empty element
     if (isemptyelement) {
 
