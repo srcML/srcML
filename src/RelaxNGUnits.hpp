@@ -100,7 +100,15 @@ public :
 
         for(xmlNodePtr child = node->children; child; child = child->next)
           xmlNodeDumpOutput(buf, ctxt->myDoc, child, 0, 0, 0);
-        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>"));
+
+        std::string end_unit = "</";
+        if(root_prefix) {
+          end_unit += (const char *)root_prefix;
+          end_unit += ":";
+        }
+        end_unit += "unit>";
+
+        xmlOutputBufferWrite(buf, end_unit.size(), end_unit.c_str());
 
       }
 
