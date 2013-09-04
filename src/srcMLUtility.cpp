@@ -774,7 +774,7 @@ void dlexsltRegisterAll() {
 // xslt evaluation of the nested units
 void srcMLUtility::xslt(const char* context_element, const char* ofilename, const char* xslts[], const char* params[], int paramcount, int fd) {
 
-  xmlMemSetup(xmlMemFree, xmlMemMalloc, xmlMemRealloc, xmlMemoryStrdup);
+  if(ofilename) xmlMemSetup(xmlMemFree, xmlMemMalloc, xmlMemRealloc, xmlMemoryStrdup);
   xmlInitParser();
 
   // allow for all exstl functions
