@@ -46,7 +46,7 @@ class RelaxNGUnits : public UnitDOM {
 public :
 
   RelaxNGUnits(const char* a_ofilename, int options, xmlRelaxNGValidCtxtPtr rngctx, int fd = 0)
-    : UnitDOM(options), ofilename(a_ofilename), options(options), rngctx(rngctx), fd(fd) {
+    : UnitDOM(options), ofilename(a_ofilename), options(options), rngctx(rngctx), fd(fd), found(false) {
     }
 
     virtual ~RelaxNGUnits() {}
@@ -73,15 +73,24 @@ public :
         // output if it validates
         if (n == 0) {
 
-          /*
-          // if in per-unit mode and this is the first result found
-          if (pstate->isnested && !pstate->found && !isoption(options, OPTION_XSLT_ALL)) {
-            xmlOutputBufferWrite(buf, pstate->rootbuf->use, (const char*) pstate->rootbuf->content);
-            xmlBufferFree(pstate->rootbuf);
-            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">\n\n"));
-            pstate->found = true;
+	    // output the xml declaration, if needed
+	    if (!found && !isoption(options, OPTION_XMLDECL))
+	      xmlOutputBufferWriteXMLDecl(ctxt, buf);
+
+            // output the root unit start tag
+            // this is only if in per-unit mode and this is the first result found
+            // have to do so here because it may be empty
+            if (pstate->isarchive && !found && !isoption(options, OPTION_XSLT_ALL)) {
+
+                // output a root element, just like the one read in
+                // note that this has to be ended somewhere
+                xmlOutputBufferWriteElementNs(buf, pstate->root.localname, pstate->root.prefix, pstate->root.URI,
+                                              pstate->root.nb_namespaces, pstate->root.namespaces,
+                                              pstate->isarchive ? pstate->root.nb_attributes : 0, pstate->root.nb_defaulted, pstate->root.attributes);
+
+                xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">\n\n"));
             }
-          */
+            found = true;
 
           xmlNodeDumpOutput(buf, ctxt->myDoc, xmlDocGetRootElement(ctxt->myDoc), 0, 0, 0);
           xmlOutputBufferWrite(buf, 2, "\n\n");
@@ -204,6 +213,7 @@ private :
     xmlOutputBufferPtr buf;
     xmlRelaxNGValidCtxtPtr rngctx;
     int fd;
+    bool found;
 };
 
 #endif
