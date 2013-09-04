@@ -531,8 +531,8 @@ void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer) {
         std::string ns = xmlns->href ? (const char *)xmlns->href : "";
         std::string prefix = "xmlns";
 
-        if(strcmp((const char *)node.name, "unit") != 0 && ns == SRCML_SRC_NS_URI)
-        continue;
+        if(strcmp((const char *)node.name, "unit") != 0);
+          continue;
 
         if(xmlns->prefix) {
 
