@@ -513,7 +513,7 @@ void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer) {
       std::string s = "";
       if(node.ns->prefix) {
 
-        s+= ((char*) node.ns->prefix);
+        s += ((char*) node.ns->prefix);
         s += ":";
       }
       s += (char*) node.name;
@@ -522,6 +522,27 @@ void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer) {
 
     } else
       xmlTextWriterStartElement(writer, (xmlChar *)node.name);
+
+    {
+
+      xmlNsPtr xmlns = node.ns;
+      while(xmlns) {
+
+        std::string ns = xmlns->href ? (const char *)xmlns->href : "";
+        std::string prefix = "xmlns";
+
+        if(xmlns->prefix) {
+
+          prefix += ":";
+          prefix += (const char *)xmlns->prefix;
+
+        }
+
+        xmlTextWriterWriteAttribute(writer, (const xmlChar *)prefix.c_str(), (const xmlChar *)ns.c_str());
+
+        xmlns = xmlns->next;
+      }
+    }
 
     // copy all the attributes
     {
