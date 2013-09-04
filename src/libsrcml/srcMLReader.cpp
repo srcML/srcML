@@ -509,9 +509,13 @@ void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer) {
     isemptyelement = node.extra & 0x1;
 
     // start the element
-    if (node.ns && node.ns->prefix) {
-      std::string s = ((char*) node.ns->prefix);
-      s += ":";
+    if (node.ns) {
+      std::string s = "";
+      if(node.ns->prefix) {
+
+        s+= ((char*) node.ns->prefix);
+        s += ":";
+      }
       s += (char*) node.name;
 
       xmlTextWriterStartElement(writer, BAD_CAST s.c_str());
