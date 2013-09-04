@@ -166,7 +166,9 @@ public :
 
         }
 
-        //xmlOutputBufferWrite(buf, (const xmlChar *)prefix.c_str(), (const xmlChar *)ns.c_str());
+        std::string xmlns_string = prefix + "=\"" + ns + "\"";
+
+        xmlOutputBufferWrite(buf, xmlns_string.size(), xmlns_string.c_str());
 
         xmlns = xmlns->next;
       }
