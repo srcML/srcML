@@ -841,7 +841,16 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
 // relaxng evaluation of the nested units
 void srcMLUtility::relaxng(const char* ofilename, const char** xslts, int fd) {
 
-  xmlSAXHandler sax = SAX2UnitDOMRelaxNG::factory();
+  xmlParserCtxtPtr ctxt = 0;
+  if(infile)
+    ctxt = srcMLCreateURLParserCtxt(infile);
+  else
+    ctxt = srcMLCreateParserCtxt(buffer_input);
+  if (ctxt == NULL) return;
+
+  // setup sax handler
+  xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
+  ctxt->sax = &sax;
 
   xmlRelaxNGParserCtxtPtr relaxng;
   xmlRelaxNGPtr rng;
@@ -850,15 +859,10 @@ void srcMLUtility::relaxng(const char* ofilename, const char** xslts, int fd) {
   rng = xmlRelaxNGParse(relaxng);
   rngptr = xmlRelaxNGNewValidCtxt(rng);
   //SAX2UnitDOMRelaxNG state(0, xslts, ofilename, 0, fd);
-  RelaxNGUnits state(ofilename, options, rngptr, fd);
+  RelaxNGUnits process(ofilename, options, rngptr, fd);
 
-  xmlParserCtxtPtr ctxt = 0;
-  if(infile)
-    ctxt = srcMLCreateURLParserCtxt(infile);
-  else
-    ctxt = srcMLCreateParserCtxt(buffer_input);
-  if (ctxt == NULL) return;
-  ctxt->sax = &sax;
+  // setup sax handling state
+  SAX2ExtractUnitsSrc state(&process, &options, -1, diff_version);
   ctxt->_private = &state;
   //state.ctxt = ctxt;
 
