@@ -24,6 +24,7 @@
 #include "../srcMLUtility.hpp"
 
 #include <stdio.h>
+#include <unistd.h>
 
 /* srcML XPath query and XSLT transform functions */
 int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_string) {

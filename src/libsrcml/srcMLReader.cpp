@@ -22,6 +22,7 @@
 #include "../srcmlns.hpp"
 
 #include <stdlib.h>
+#include <string.h>
 
 void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer);
 void output_node_source(const xmlNode & node, xmlOutputBufferPtr output_buffer);
