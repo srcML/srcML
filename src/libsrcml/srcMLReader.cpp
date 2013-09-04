@@ -523,16 +523,13 @@ void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer) {
     } else
       xmlTextWriterStartElement(writer, (xmlChar *)node.name);
 
-    {
+    if(strcmp((const char *)node.name, "unit") == 0) {
 
       xmlNsPtr xmlns = node.ns;
       while(xmlns) {
 
         std::string ns = xmlns->href ? (const char *)xmlns->href : "";
         std::string prefix = "xmlns";
-
-        if(strcmp((const char *)node.name, "unit") != 0);
-          continue;
 
         if(xmlns->prefix) {
 
