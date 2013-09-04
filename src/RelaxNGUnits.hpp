@@ -47,182 +47,174 @@ public :
 
   RelaxNGUnits(const char* a_ofilename, int options, xmlRelaxNGValidCtxtPtr rngctx, int fd = 0)
     : UnitDOM(options), ofilename(a_ofilename), options(options), rngctx(rngctx), fd(fd), found(false) {
+  }
+
+  virtual ~RelaxNGUnits() {}
+
+  virtual void startOutput(void* ctx) {
+
+    // setup output
+    if(ofilename)
+      buf = xmlOutputBufferCreateFilename(ofilename, NULL, 0);
+    else
+      buf = xmlOutputBufferCreateFd(fd, NULL);
+    // TODO:  Detect error
+
+  }
+
+  virtual bool apply(void* ctx) {
+
+    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+    SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+
+    // validate
+    int n = xmlRelaxNGValidateDoc(rngctx, ctxt->myDoc);
+
+    // output if it validates
+    if (n == 0) {
+
+      // output the xml declaration, if needed
+      if (!found && !isoption(options, OPTION_XMLDECL))
+        xmlOutputBufferWriteXMLDecl(ctxt, buf);
+
+      // output the root unit start tag
+      // this is only if in per-unit mode and this is the first result found
+      // have to do so here because it may be empty
+      if (pstate->isarchive && !found && !isoption(options, OPTION_XSLT_ALL)) {
+
+        // output a root element, just like the one read in
+        // note that this has to be ended somewhere
+        xmlOutputBufferWriteElementNs(buf, pstate->root.localname, pstate->root.prefix, pstate->root.URI,
+                                      pstate->root.nb_namespaces, pstate->root.namespaces,
+                                      pstate->isarchive ? pstate->root.nb_attributes : 0, pstate->root.nb_defaulted, pstate->root.attributes);
+
+        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">\n\n"));
+      }
+      found = true;
+
+      xmlNodePtr node = xmlDocGetRootElement(ctxt->myDoc);
+      xmlNodeDumpOutput(buf, ctxt->myDoc, node, 0, 0, 0);
+      xmlOutputBufferWrite(buf, 2, "\n\n");
+
     }
 
-    virtual ~RelaxNGUnits() {}
+    return true;
+  }
+  virtual void endOutput(void *ctx) {
 
-    virtual void startOutput(void* ctx) {
+    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+    SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
-        // setup output
-      if(ofilename)
-        buf = xmlOutputBufferCreateFilename(ofilename, NULL, 0);
-      else
-        buf = xmlOutputBufferCreateFd(fd, NULL);
-        // TODO:  Detect error
-
+    // root unit end tag
+    if (pstate->isarchive && !isoption(options, OPTION_XSLT_ALL)) {
+      xmlOutputBufferWriteString(buf, found ? "</unit>\n" : "/>\n");
     }
 
-    virtual bool apply(void* ctx) {
+    // all done with the buffer
+    xmlOutputBufferClose(buf);
+  }
 
-        xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-        SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+  static void xmlOutputBufferWriteXMLDecl(xmlParserCtxtPtr ctxt, xmlOutputBufferPtr buf) {
 
-        // validate
-        int n = xmlRelaxNGValidateDoc(rngctx, ctxt->myDoc);
+    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<?xml version=\""));
+    xmlOutputBufferWriteString(buf, (const char*) ctxt->version);
+    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\" encoding=\""));
+    xmlOutputBufferWriteString(buf, (const char*) (ctxt->encoding ? ctxt->encoding : ctxt->input->encoding));
+    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\" standalone=\""));
+    xmlOutputBufferWriteString(buf, ctxt->standalone ? "yes" : "no");
+    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\"?>\n"));
+  }
 
-        // output if it validates
-        if (n == 0) {
+  static void xmlOutputBufferWriteElementNs(xmlOutputBufferPtr buf, const xmlChar* localname, const xmlChar* prefix,
+                                            const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
+                                            int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
 
-	    // output the xml declaration, if needed
-	    if (!found && !isoption(options, OPTION_XMLDECL))
-	      xmlOutputBufferWriteXMLDecl(ctxt, buf);
-
-            // output the root unit start tag
-            // this is only if in per-unit mode and this is the first result found
-            // have to do so here because it may be empty
-            if (pstate->isarchive && !found && !isoption(options, OPTION_XSLT_ALL)) {
-
-                // output a root element, just like the one read in
-                // note that this has to be ended somewhere
-                xmlOutputBufferWriteElementNs(buf, pstate->root.localname, pstate->root.prefix, pstate->root.URI,
-                                              pstate->root.nb_namespaces, pstate->root.namespaces,
-                                              pstate->isarchive ? pstate->root.nb_attributes : 0, pstate->root.nb_defaulted, pstate->root.attributes);
-
-                xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">\n\n"));
-            }
-            found = true;
-
-            xmlNodePtr node = xmlDocGetRootElement(ctxt->myDoc);
-            for(xmlNsPtr xmlns = node->ns; xmlns; xmlns = xmlns->next) {
-
-              std::string ns = xmlns->href ? (const char *)xmlns->href : "";
-              if(ns == SRCML_SRC_NS_URI)
-                ;
-
-            }
-
-            xmlNodeDumpOutput(buf, ctxt->myDoc, node, 0, 0, 0);
-            xmlOutputBufferWrite(buf, 2, "\n\n");
-
-        }
-
-        return true;
+    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<"));
+    if (prefix != NULL) {
+      xmlOutputBufferWriteString(buf, (const char*) prefix);
+      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(":"));
     }
-    virtual void endOutput(void *ctx) {
+    xmlOutputBufferWriteString(buf, (const char*) localname);
 
-        xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-        SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+    // output the namespaces
+    for (int i = 0; i < nb_namespaces; ++i) {
 
-        // root unit end tag
-        if (pstate->isarchive && !isoption(options, OPTION_XSLT_ALL)) {
-            xmlOutputBufferWriteString(buf, found ? "</unit>\n" : "/>\n");
-        }
-
-        // all done with the buffer
-        xmlOutputBufferClose(buf);
+      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" xmlns"));
+      if (namespaces[i * 2]) {
+        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(":"));
+        xmlOutputBufferWriteString(buf, (const char*) namespaces[i * 2]);
+      }
+      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("=\""));
+      xmlOutputBufferWriteString(buf, (const char*) namespaces[i * 2 + 1]);
+      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
     }
 
-    static void xmlOutputBufferWriteXMLDecl(xmlParserCtxtPtr ctxt, xmlOutputBufferPtr buf) {
+    // output the attributes
+    for (int i = 0; i < nb_attributes; ++i) {
 
-        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<?xml version=\""));
-        xmlOutputBufferWriteString(buf, (const char*) ctxt->version);
-        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\" encoding=\""));
-        xmlOutputBufferWriteString(buf, (const char*) (ctxt->encoding ? ctxt->encoding : ctxt->input->encoding));
-        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\" standalone=\""));
-        xmlOutputBufferWriteString(buf, ctxt->standalone ? "yes" : "no");
-        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\"?>\n"));
+      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" "));
+      if (attributes[i * 5 + 1]) {
+        xmlOutputBufferWriteString(buf, (const char*) attributes[i * 5 + 1]);
+        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(":"));
+      }
+      xmlOutputBufferWriteString(buf, (const char*) attributes[i * 5]);
+      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("=\""));
+
+      xmlOutputBufferWrite(buf, attributes[i * 5 + 4] - attributes[i * 5 + 3] + 1,
+                           (const char*) attributes[i * 5 + 3]);
+
+      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
+    }
+  }
+
+  static void xmlOutputBufferWriteElementNs(std::string& s, const xmlChar* localname, const xmlChar* prefix,
+                                            const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
+                                            int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
+
+    s.append(LITERALPLUSSIZE("<"));
+    if (prefix != NULL) {
+      s.append((const char*) prefix);
+      s.append(LITERALPLUSSIZE(":"));
+    }
+    s.append((const char*) localname);
+
+    // output the namespaces
+    for (int i = 0; i < nb_namespaces; ++i) {
+
+      s.append(LITERALPLUSSIZE(" xmlns"));
+      if (namespaces[i * 2]) {
+        s.append(LITERALPLUSSIZE(":"));
+        s.append((const char*) namespaces[i * 2]);
+      }
+      s.append(LITERALPLUSSIZE("=\""));
+      s.append((const char*) namespaces[i * 2 + 1]);
+      s.append(LITERALPLUSSIZE("\""));
     }
 
-    static void xmlOutputBufferWriteElementNs(xmlOutputBufferPtr buf, const xmlChar* localname, const xmlChar* prefix,
-                                              const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
-                                              int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
+    // output the attributes
+    for (int i = 0; i < nb_attributes; ++i) {
 
-        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<"));
-        if (prefix != NULL) {
-            xmlOutputBufferWriteString(buf, (const char*) prefix);
-            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(":"));
-        }
-        xmlOutputBufferWriteString(buf, (const char*) localname);
+      s.append(LITERALPLUSSIZE(" "));
+      if (attributes[i * 5 + 1]) {
+        s.append((const char*) attributes[i * 5 + 1]);
+        s.append(LITERALPLUSSIZE(":"));
+      }
+      s.append((const char*) attributes[i * 5]);
+      s.append(LITERALPLUSSIZE("=\""));
 
-        // output the namespaces
-        for (int i = 0; i < nb_namespaces; ++i) {
+      s.append((const char*) attributes[i * 5 + 3], attributes[i * 5 + 4] - attributes[i * 5 + 3] + 1);
 
-            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" xmlns"));
-            if (namespaces[i * 2]) {
-                xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(":"));
-                xmlOutputBufferWriteString(buf, (const char*) namespaces[i * 2]);
-            }
-            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("=\""));
-            xmlOutputBufferWriteString(buf, (const char*) namespaces[i * 2 + 1]);
-            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
-        }
-
-        // output the attributes
-        for (int i = 0; i < nb_attributes; ++i) {
-
-            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" "));
-            if (attributes[i * 5 + 1]) {
-                xmlOutputBufferWriteString(buf, (const char*) attributes[i * 5 + 1]);
-                xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(":"));
-            }
-            xmlOutputBufferWriteString(buf, (const char*) attributes[i * 5]);
-            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("=\""));
-
-            xmlOutputBufferWrite(buf, attributes[i * 5 + 4] - attributes[i * 5 + 3] + 1,
-                                 (const char*) attributes[i * 5 + 3]);
-
-            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
-        }
+      s.append(LITERALPLUSSIZE("\""));
     }
-
-    static void xmlOutputBufferWriteElementNs(std::string& s, const xmlChar* localname, const xmlChar* prefix,
-                                              const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
-                                              int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
-
-        s.append(LITERALPLUSSIZE("<"));
-        if (prefix != NULL) {
-            s.append((const char*) prefix);
-            s.append(LITERALPLUSSIZE(":"));
-        }
-        s.append((const char*) localname);
-
-        // output the namespaces
-        for (int i = 0; i < nb_namespaces; ++i) {
-
-            s.append(LITERALPLUSSIZE(" xmlns"));
-            if (namespaces[i * 2]) {
-                s.append(LITERALPLUSSIZE(":"));
-                s.append((const char*) namespaces[i * 2]);
-            }
-            s.append(LITERALPLUSSIZE("=\""));
-            s.append((const char*) namespaces[i * 2 + 1]);
-            s.append(LITERALPLUSSIZE("\""));
-        }
-
-        // output the attributes
-        for (int i = 0; i < nb_attributes; ++i) {
-
-            s.append(LITERALPLUSSIZE(" "));
-            if (attributes[i * 5 + 1]) {
-                s.append((const char*) attributes[i * 5 + 1]);
-                s.append(LITERALPLUSSIZE(":"));
-            }
-            s.append((const char*) attributes[i * 5]);
-            s.append(LITERALPLUSSIZE("=\""));
-
-            s.append((const char*) attributes[i * 5 + 3], attributes[i * 5 + 4] - attributes[i * 5 + 3] + 1);
-
-            s.append(LITERALPLUSSIZE("\""));
-        }
-    }
+  }
 
 private :
-    const char* ofilename;
-    int options;
-    xmlOutputBufferPtr buf;
-    xmlRelaxNGValidCtxtPtr rngctx;
-    int fd;
-    bool found;
+  const char* ofilename;
+  int options;
+  xmlOutputBufferPtr buf;
+  xmlRelaxNGValidCtxtPtr rngctx;
+  int fd;
+  bool found;
 };
 
 #endif
