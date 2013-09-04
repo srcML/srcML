@@ -55,6 +55,8 @@ const char* srcml_version_string();
 #define SRCML_LANGUAGE_XML    "xml"
 
 /* Options */
+// TODO:  Order carefully, then allocate values sequentially.  Change OPTION values in old
+// srcML code to match these.
 #define SRCML_OPTION_LITERAL           1<<2/*1<<0  /* Markups literal in special namespace */
 #define SRCML_OPTION_MODIFIER          1<<17/*1<<1  /* Markups modifiers in special namespace */
 #define SRCML_OPTION_ARCHIVE           1<<1/*1<<2  /* Create an archive */
@@ -156,19 +158,19 @@ const char* srcml_error_string();
 
 /* currently registered language for a file extension
    When full filename is given, the extension is extracted */
-const char * srcml_archive_check_extension(struct srcml_archive * archive, const char* filename);
+const char* srcml_archive_check_extension(struct srcml_archive* archive, const char* filename);
 
 /* create a new srcml archive
    client is responsible for freeing it using srcml_free_archive() */
 struct srcml_archive* srcml_create_archive();
 
-/* free srcml archive 
-   allocated by srcml_create_archive() */
-void srcml_free_archive(struct srcml_archive * archive);
-
 /* clone the setup of an existing archive
    client is responsible for freeing it using srcml_free_archive() */
 struct srcml_archive* srcml_clone_archive(const struct srcml_archive*);
+
+/* free srcml archive 
+   allocated by srcml_create_archive() */
+void srcml_free_archive(struct srcml_archive * archive);
 
 /* open a srcML archive for output */
 int srcml_write_open_filename(struct srcml_archive*, const char* srcml_filename);
@@ -182,7 +184,9 @@ int srcml_archive_set_language  (struct srcml_archive*, const char* language);
 int srcml_archive_set_filename  (struct srcml_archive*, const char* filename);
 int srcml_archive_set_directory (struct srcml_archive*, const char* directory);
 int srcml_archive_set_version   (struct srcml_archive*, const char* version);
+// TODO:  Remove srcml_archive_set_attributes.  Use individual calls to set
 int srcml_archive_set_attributes(struct srcml_archive*, const char* attr[][2]);
+// TODO:  Rename this to srcml_archive_set_all_options()
 int srcml_archive_set_options   (struct srcml_archive*, int option);
 int srcml_archive_set_option    (struct srcml_archive*, int option);
 int srcml_archive_clear_option  (struct srcml_archive*, int option);
@@ -201,7 +205,7 @@ int         srcml_archive_get_tabstop  (const struct srcml_archive*);
 
 /* create a new srcml unit
    client is responsible for freeing it using srcml_free_unit() */
-struct srcml_unit* srcml_create_unit(struct srcml_archive * archive);
+struct srcml_unit* srcml_create_unit(struct srcml_archive* archive);
 
 /* Setup options for srcml unit */
 int srcml_unit_set_language (struct srcml_unit*, const char* language);
@@ -235,14 +239,17 @@ int srcml_read_open_memory  (struct srcml_archive*, const char* buffer, size_t b
 int srcml_read_open_FILE    (struct srcml_archive*, FILE* srcml_file);
 int srcml_read_open_fd      (struct srcml_archive*, int srcml_fd);
 
-/* Read the next unit from the archive */
+/* Read the next unit from the archive 
+   Return 0 if there are no more unit */
 struct srcml_unit* srcml_read_unit(struct srcml_archive*);
 
 /* Read a unit at a specific position in an archive
-   Unit numbers start at 1 */
+   Unit numbers start at 1 
+   Returns 0 if pos unit does not exist */
 struct srcml_unit* srcml_read_unit_position(struct srcml_archive*, int pos);
 
 /* Query options of srcml unit */
+// TODO:  What happens if unit is not parsed yet?  0 returned?
 const char* srcml_unit_get_language (const struct srcml_unit*);
 const char* srcml_unit_get_filename (const struct srcml_unit*);
 const char* srcml_unit_get_directory(const struct srcml_unit*);
@@ -255,9 +262,13 @@ int srcml_unparse_unit_memory  (struct srcml_unit*, char** src_buffer);
 int srcml_unparse_unit_FILE    (struct srcml_unit*, FILE* srcml_file);
 int srcml_unparse_unit_fd      (struct srcml_unit*, int srcml_fd);
 
+// TODO:  Remove these.  Individual srcml_archive_get_*() are used instead
 const char** srcml_info(const char* srcml_filename);
 const char** srcml_longinfo(const char* srcml_filename);
 const char** srcml_info_unit(const char* srcml_filename, int unit);
+
+// TODO:  Consider removing this and making srcml client iterate over the values
+// Problems with memory handling
 const char** srcml_list(const char* srcml_filename);
 
 /* srcML XPath query and XSLT transform functions */
