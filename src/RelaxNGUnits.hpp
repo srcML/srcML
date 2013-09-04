@@ -95,12 +95,13 @@ public :
       xmlNodePtr node = xmlDocGetRootElement(ctxt->myDoc);
       xmlOutputBufferWriteElementNodeNs(buf, *node);
 
+      if(node->children) {
+
         for(xmlNodePtr child = node->children; child; child = child->next)
           xmlNodeDumpOutput(buf, ctxt->myDoc, child, 0, 0, 0);
-        for(xmlNodePtr sibling = node->next; sibling; sibling = sibling->next)
-          xmlNodeDumpOutput(buf, ctxt->myDoc, sibling, 0, 0, 0);
-        if(node->children)
-          xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>"));
+        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>"));
+
+      }
 
       if(pstate->isarchive) xmlOutputBufferWrite(buf, 2, "\n\n");
       else  xmlOutputBufferWrite(buf, 1, "\n");
@@ -135,10 +136,10 @@ public :
 
   static void xmlOutputBufferWriteElementNodeNs(xmlOutputBufferPtr buf, xmlNode & node) {
 
-        // record if this is an empty element since it will be erased by the attribute copying
+    // record if this is an empty element since it will be erased by the attribute copying
     bool isemptyelement = node.extra & 0x1;
     xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<"));
-    // start the element 
+    // start the element
     {
 
       std::string s = "";
@@ -205,7 +206,7 @@ public :
     }
 
 
-    // start the element 
+    // start the element
     // end now if this is an empty element
     if (node.children)
       xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">"));
