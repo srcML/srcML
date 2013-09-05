@@ -102,8 +102,9 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
   unit->archive->translator->setInput(src_filename);
 
-  srcml_parse_unit_internal(unit, lang);
+  int status = srcml_parse_unit_internal(unit, lang);
 
+  unit->archive->options = save_options;
 
   return SRCML_STATUS_OK;
 
@@ -121,7 +122,7 @@ int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buf
     unit->archive->options |= OPTION_CPP_NOMACRO;
 
   unit->archive->translator->setInputString(src_buffer, (int)buffer_size);
-  srcml_parse_unit_internal(unit, lang);
+  int status = srcml_parse_unit_internal(unit, lang);
 
   unit->archive->options = save_options;
 
@@ -143,7 +144,7 @@ int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
   xmlParserInputBufferPtr input = xmlParserInputBufferCreateFile(src_file, unit->archive->encoding ? xmlParseCharEncoding(unit->archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
   unit->archive->translator->setInput(input);
 
-  srcml_parse_unit_internal(unit, lang);
+  int status = srcml_parse_unit_internal(unit, lang);
   xmlFreeParserInputBuffer(input);
 
   unit->archive->options = save_options;
@@ -166,7 +167,7 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
   xmlParserInputBufferPtr input = xmlParserInputBufferCreateFd(src_fd, unit->archive->encoding ? xmlParseCharEncoding(unit->archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
   unit->archive->translator->setInput(input);
 
-  srcml_parse_unit_internal(unit, lang);
+  int status = srcml_parse_unit_internal(unit, lang);
   xmlFreeParserInputBuffer(input);
 
   unit->archive->options = save_options;
