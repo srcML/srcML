@@ -53,7 +53,10 @@ typedef svn_error_t *
                 apr_hash_t **props, const char *path, svn_revnum_t revision, apr_uint32_t dirent_fields,
                 apr_pool_t *pool);
 
+typedef svn_error_t (*svn_ra_initialize_function) (apr_pool_t *pool);
+
 svn_ra_get_dir2_function svn_ra_get_dir2_dynamic;
+svn_ra_initialize_function svn_ra_initialize_dynamic;
 
 int subversion_init() {
 #if defined(__GNUG__) && !defined(__MINGW32__)
@@ -88,7 +91,7 @@ void svn_process_dir(svn_ra_session_t * session, const char * path, svn_revnum_t
   svn_revnum_t fetched_rev;
   apr_hash_t *props;
 
-  svn_ra_get_dir2(session, &dirents, &fetched_rev, &props, path, revision, SVN_DIRENT_ALL, pool);
+  svn_ra_get_dir2_dynamic(session, &dirents, &fetched_rev, &props, path, revision, SVN_DIRENT_ALL, pool);
 
   apr_hash_index_t * item;
   const void * key;
