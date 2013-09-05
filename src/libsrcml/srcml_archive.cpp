@@ -337,7 +337,16 @@ int srcml_write_open_memory(srcml_archive* archive, char** buffer) {
 
 int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
 
-  xmlTextWriterPtr writer = xmlNewTextWriter(xmlOutputBufferCreateFile(srcml_file, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0)));
+  xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFile(srcml_file, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
+  if(output_buffer == NULL) return SRCML_STATUS_ERROR;
+
+  xmlTextWriterPtr writer = xmlNewTextWriter(output_buffer);
+  if(writer == NULL) {
+
+    xmlOutputBufferClose(output_buffer);
+    return SRCML_STATUS_ERROR;
+
+  }
 
   archive->type = SRCML_ARCHIVE_WRITE;
   try {
