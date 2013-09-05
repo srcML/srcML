@@ -50,13 +50,13 @@ int abortfunc(int retcode) {
 
 #define DFDECLARE(F) F ## _function F ## _dynamic;
 
-#define DFLOAD(F)  F ## _dynamic = (F ##_function)dlsym(handle, #F); \
-  { \
-    char* error;                     \
-    if ((error = dlerror()) != NULL) {          \
-      dlclose(handle);                          \
-      return 0;                                 \
-    }                                           \
+#define DFLOAD(F)  F ## _dynamic = (F ##_function)dlsym(handle, #F);    \
+  {                                                                     \
+    char* error;                                                        \
+    if ((error = dlerror()) != NULL) {                                  \
+      dlclose(handle);                                                  \
+      return 0;                                                         \
+    }                                                                   \
   }
 
 typedef svn_error_t * (*svn_ra_get_dir2_function) (svn_ra_session_t *session, apr_hash_t **dirents,
@@ -67,18 +67,18 @@ typedef svn_error_t (*svn_ra_initialize_function) (apr_pool_t *pool);
 typedef svn_error_t * (*svn_config_get_config_function) (apr_hash_t **cfg_hash, const char *config_dir, apr_pool_t *pool);
 typedef svn_error_t * (*svn_client_create_context_function) (svn_client_ctx_t **ctx, apr_pool_t *pool);
 typedef svn_error_t * (*svn_cmdline_create_auth_baton_function) (svn_auth_baton_t **ab, svn_boolean_t non_interactive,
-                              const char *username, const char *password, const char *config_dir,
-                              svn_boolean_t no_auth_cache, svn_boolean_t trust_server_cert,
-                              svn_config_t *cfg, svn_cancel_func_t cancel_func,
-                              void *cancel_baton, apr_pool_t *pool);
+                                                                 const char *username, const char *password, const char *config_dir,
+                                                                 svn_boolean_t no_auth_cache, svn_boolean_t trust_server_cert,
+                                                                 svn_config_t *cfg, svn_cancel_func_t cancel_func,
+                                                                 void *cancel_baton, apr_pool_t *pool);
 typedef svn_error_t * (*svn_client_open_ra_session_function) (svn_ra_session_t **session,
-                           const char *url, svn_client_ctx_t *ctx, apr_pool_t *pool);
+                                                              const char *url, svn_client_ctx_t *ctx, apr_pool_t *pool);
 typedef svn_error_t * (*svn_ra_stat_function) (svn_ra_session_t *session, const char *path, svn_revnum_t revision,
-            svn_dirent_t **dirent, apr_pool_t *pool);
+                                               svn_dirent_t **dirent, apr_pool_t *pool);
 typedef svn_stringbuf_t (*svn_stringbuf_create_ensure_function) (apr_size_t minimum_size, apr_pool_t *pool);
 typedef svn_stream_t * (*svn_stream_from_stringbuf_function) (svn_stringbuf_t *str, apr_pool_t *pool);
 typedef svn_error_t * (*svn_ra_get_file_function) (svn_ra_session_t *session, const char *path, svn_revnum_t revision,
-              svn_stream_t *stream, svn_revnum_t *fetched_rev, apr_hash_t **props, apr_pool_t *pool);
+                                                   svn_stream_t *stream, svn_revnum_t *fetched_rev, apr_hash_t **props, apr_pool_t *pool);
 typedef svn_error_t * (*svn_stream_read_function) (svn_stream_t *stream, char *buffer, apr_size_t *len);
 
 DFDECLARE(svn_ra_get_dir2)
@@ -106,11 +106,20 @@ int subversion_init() {
   }
 
   DFLOAD(svn_ra_get_dir2)
-  DFLOAD(svn_ra_initialize)
-  DFLOAD(svn_ra_stat)
-  DFLOAD(svn_ra_get_file)
+    DFLOAD(svn_ra_initialize)
+    DFLOAD(svn_ra_stat)
+    DFLOAD(svn_ra_get_file)
+
+    DFLOAD(svn_config_get_config)
+    DFLOAD(svn_client_create_context)
+    DFLOAD(svn_cmdline_create_auth_baton)
+    DFLOAD(svn_client_open_ra_session)
+    DFLOAD(svn_stringbuf_create_ensure)
+    DFLOAD(svn_stream_from_stringbuf)
+    DFLOAD(svn_stream_read)
+
 #else
-  return 0;
+    return 0;
 
 #endif
 
