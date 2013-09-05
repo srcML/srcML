@@ -223,8 +223,6 @@ public :
     // end now if this is an empty element
     if (node.children)
       xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">"));
-    else
-      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
 
   }
 
