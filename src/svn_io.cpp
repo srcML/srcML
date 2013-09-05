@@ -51,10 +51,12 @@ int abortfunc(int retcode) {
 #define DFDECLARE(F) F ## _function F ## _dynamic;
 
 #define DFLOAD(F)  F ## _dynamic = (F ##_function)dlsym(handle, #F); \
-  char* error; \
-  if ((error = dlerror()) != NULL) { \
-    dlclose(handle); \
-    return 0; \
+  { \
+    char* error;                     \
+    if ((error = dlerror()) != NULL) {          \
+      dlclose(handle);                          \
+      return 0;                                 \
+    }                                           \
   }
 
 typedef svn_error_t * (*svn_ra_get_dir2_function) (svn_ra_session_t *session, apr_hash_t **dirents,
@@ -103,18 +105,14 @@ int subversion_init() {
     }
   }
 
-  svn_ra_get_dir2_dynamic = (svn_ra_get_dir2_function)dlsym(handle, "svn_ra_get_dir2");
-  char* error;
-  if ((error = dlerror()) != NULL) {
-    dlclose(handle);
-    return 0;
-  }
-
+  DFLOAD(svn_ra_get_dir2)
+  DFLOAD(svn_ra_initialize)
+  DFLOAD(svn_ra_stat)
+  DFLOAD(svn_ra_get_file)
 #else
   return 0;
 
 #endif
-
 
 }
 
