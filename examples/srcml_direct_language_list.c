@@ -32,7 +32,6 @@ int main(int argc, char* argv[]) {
 
     for (p = srcml_language_list(); *p != 0; ++p)
         puts(*p);
-    putchar('\n');
 
     return 0;
 }
