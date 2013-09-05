@@ -361,7 +361,13 @@ int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
                                               (const char **)&archive->prefixes.front(),
                                               archive->tabstop);
 
-  } catch(...) { return SRCML_STATUS_ERROR; }
+  } catch(...) { 
+
+    xmlOutputBufferClose(output_buffer);
+    xmlFreeTextWriter(writer);
+    return SRCML_STATUS_ERROR;
+
+  }
 
   return SRCML_STATUS_OK;
 
@@ -369,6 +375,16 @@ int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
 
 int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
 
+  xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFd(srcml_fd, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
+  if(output_buffer == NULL) return SRCML_STATUS_ERROR;
+
+  xmlTextWriterPtr writer = xmlNewTextWriter(output_buffer);
+  if(writer == NULL) {
+
+    xmlOutputBufferClose(output_buffer);
+    return SRCML_STATUS_ERROR;
+
+  }
   xmlTextWriterPtr writer = xmlNewTextWriter(xmlOutputBufferCreateFd(srcml_fd, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0)));
 
 
@@ -385,7 +401,13 @@ int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
                                               (const char **)&archive->prefixes.front(),
                                               archive->tabstop);
 
-  } catch(...) { return SRCML_STATUS_ERROR; }
+  } catch(...) { 
+
+    xmlOutputBufferClose(output_buffer);
+    xmlFreeTextWriter(writer);
+    return SRCML_STATUS_ERROR;
+
+  }
 
   return SRCML_STATUS_OK;
 
