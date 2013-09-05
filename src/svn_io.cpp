@@ -200,9 +200,9 @@ void svn_process_dir(svn_ra_session_t * session, const char * path, svn_revnum_t
   const void * key;
   void * value;
 
-  for (item = apr_hash_first(pool, dirents); item; item = apr_hash_next(item)) {
+  for (item = apr_hash_first_dynamic(pool, dirents); item; item = apr_hash_next_dynamic(item)) {
 
-    apr_hash_this(item, &key, NULL, &value);
+    apr_hash_this_dynamic(item, &key, NULL, &value);
 
     svn_dirent_t * dirent = (svn_dirent_t *)value;
     //svn_ra_stat(session, path, revision, &dirent, pool);
@@ -214,10 +214,10 @@ void svn_process_dir(svn_ra_session_t * session, const char * path, svn_revnum_t
     new_path += name;
 
     apr_allocator_t * allocator;
-    apr_allocator_create(&allocator);
+    apr_allocator_create_dynamic(&allocator);
 
     apr_pool_t * new_pool;
-    apr_pool_create_ex(&new_pool, NULL, abortfunc, allocator);
+    apr_pool_create_ex_dynamic(&new_pool, NULL, abortfunc, allocator);
 
     if(dirent->kind == svn_node_file)
       svn_process_file(session, new_path.c_str(), revision, new_pool, translator, options, dir, filename, version, language, tabsize, count, skipped, error, showinput, shownumber);
@@ -228,7 +228,7 @@ void svn_process_dir(svn_ra_session_t * session, const char * path, svn_revnum_t
     else if(dirent->kind == svn_node_unknown)
       fprintf(stderr, "%s\n", "Unknown");
 
-    apr_pool_destroy(new_pool);
+    apr_pool_destroy_dynamic(new_pool);
 
   }
 
@@ -324,24 +324,24 @@ void svn_process_file(svn_ra_session_t * session, const char * path, svn_revnum_
 
 void svn_process_session(svn_revnum_t revision, srcMLTranslator & translator, const char * url, OPTION_TYPE & options, const char * dir, const char * filename, const char * version, int language, int tabsize, int & count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
-  apr_initialize();
+  apr_initialize_dynamic();
 
   apr_allocator_t * allocator;
-  apr_allocator_create(&allocator);
+  apr_allocator_create_dynamic(&allocator);
 
   apr_pool_t * pool;
-  apr_pool_create_ex(&pool, NULL, abortfunc, allocator);
+  apr_pool_create_ex_dynamic(&pool, NULL, abortfunc, allocator);
 
   svn_client_ctx_t * ctx;
   apr_hash_t * cfg_hash;
   svn_config_t * cfg_config;
 
-  svn_ra_initialize(pool);
-  svn_config_get_config(&cfg_hash, NULL, pool);
-  svn_client_create_context(&ctx, pool);
+  svn_ra_initialize_dynamic(pool);
+  svn_config_get_config_dynamic(&cfg_hash, NULL, pool);
+  svn_client_create_context_dynamic(&ctx, pool);
   //svn_client_create_context2(&ctx, cfg_hash, pool);
   ctx->config = cfg_hash;
-  cfg_config = (svn_config_t *)apr_hash_get(ctx->config, SVN_CONFIG_CATEGORY_CONFIG, APR_HASH_KEY_STRING);
+  cfg_config = (svn_config_t *)apr_hash_get_dynamic(ctx->config, SVN_CONFIG_CATEGORY_CONFIG, APR_HASH_KEY_STRING);
 
   svn_boolean_t non_interactive = false;
   const char * auth_username = "";
