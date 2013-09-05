@@ -20,7 +20,7 @@ srcml_archive* srcml_create_archive()
   srcml_archive * archive;
   try {
 
-    
+
     archive = new srcml_archive;
 
   } catch(...) { return 0; }
@@ -236,10 +236,10 @@ int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix,
 
     for(int i = 0; i < archive->prefixes.size(); ++i)
       if(archive->namespaces.at(i) == ns) {
-        
+
         archive->prefixes.at(i) = prefix;
         return SRCML_STATUS_OK;
-    }
+      }
 
   } catch(...) { return SRCML_STATUS_ERROR; }
 
@@ -296,15 +296,19 @@ int srcml_archive_get_tabstop(const srcml_archive* archive) {
 int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename) {
 
   archive->type = SRCML_ARCHIVE_WRITE;
-  archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
-                                            0, archive->encoding ? archive->encoding->c_str() : "UTF-8",
-                                            srcml_filename,
-                                            archive->options,
-                                            archive->directory ? archive->directory->c_str() : 0,
-                                            archive->filename ? archive->filename->c_str() : 0,
-                                            archive->version ? archive->version->c_str() : 0,
-                                            (const char **)&archive->prefixes.front(),
-                                            archive->tabstop);
+  try {
+
+    archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
+                                              0, archive->encoding ? archive->encoding->c_str() : "UTF-8",
+                                              srcml_filename,
+                                              archive->options,
+                                              archive->directory ? archive->directory->c_str() : 0,
+                                              archive->filename ? archive->filename->c_str() : 0,
+                                              archive->version ? archive->version->c_str() : 0,
+                                              (const char **)&archive->prefixes.front(),
+                                              archive->tabstop);
+
+  } catch(...) { return SRCML_STATUS_ERROR; }
 
   return SRCML_STATUS_OK;
 
