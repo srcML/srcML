@@ -45,6 +45,34 @@ int abortfunc(int retcode) {
 
   return retcode;
 }
+
+int subversion_init() {
+#if defined(__GNUG__) && !defined(__MINGW32__)
+  void* handle = dlopen("libxslt.so", RTLD_LAZY);
+  if (!handle) {
+    handle = dlopen("libxslt.dylib", RTLD_LAZY);
+    if (!handle) {
+      fprintf(stderr, "Unable to open libxslt library\n");
+      return;
+    }
+  }
+
+  dlerror();
+  xsltApplyStylesheetUserDynamic = (xsltApplyStylesheetUser_function)dlsym(handle, "xsltApplyStylesheetUser");
+  char* error;
+  if ((error = dlerror()) != NULL) {
+    dlclose(handle);
+    return;
+  }
+
+#else
+  return 0;
+
+#endif
+
+
+}
+
 void svn_process_dir(svn_ra_session_t * session, const char * path, svn_revnum_t revision, apr_pool_t * pool, srcMLTranslator & translator, OPTION_TYPE & options, const char * dir, const char * filename, const char * version, int language, int tabsize, int & count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
   apr_hash_t * dirents;
