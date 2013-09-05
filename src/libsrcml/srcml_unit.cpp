@@ -252,6 +252,7 @@ int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
   if(!unit->unit) return SRCML_STATUS_ERROR;
 
   xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename(src_filename, xmlFindCharEncodingHandler(unit->archive->encoding ? unit->archive->encoding->c_str() : "ISO-8859-1"), unit->archive->options & SRCML_OPTION_COMPRESS);
+  if(output_buffer == NULL) return SRCML_STATUS_ERROR;
   srcMLUtility utility(unit->unit->c_str(), unit->unit->size(), 0, unit->archive->options);
   utility.extract_text(output_buffer);
 
@@ -265,7 +266,15 @@ int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer) {
   if(!unit->unit) return SRCML_STATUS_ERROR;
 
   xmlBufferPtr buffer = xmlBufferCreate();
+  if(buffer == NULL) return SRCML_STATUS_ERROR;
   xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(unit->archive->encoding ? unit->archive->encoding->c_str() : "ISO-8859-1"));
+  if(output_buffer == NULL) {
+
+    xmlBufferFree(buffer);
+    return SRCML_STATUS_ERROR;
+
+  }
+
   srcMLUtility utility(unit->unit->c_str(), unit->unit->size(), 0, unit->archive->options);
   utility.extract_text(output_buffer);
 
@@ -282,6 +291,7 @@ int srcml_unparse_unit_FILE(srcml_unit* unit, FILE* srcml_file) {
   if(!unit->unit) return SRCML_STATUS_ERROR;
 
   xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFile(srcml_file, xmlFindCharEncodingHandler(unit->archive->encoding ? unit->archive->encoding->c_str() : "ISO-8859-1"));
+  if(output_buffer == NULL) return SRCML_STATUS_ERROR;
   srcMLUtility utility(unit->unit->c_str(), unit->unit->size(), 0, unit->archive->options);
   utility.extract_text(output_buffer);
 
@@ -295,6 +305,7 @@ int srcml_unparse_unit_fd(srcml_unit* unit, int srcml_fd) {
   if(!unit->unit) return SRCML_STATUS_ERROR;
 
   xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFd(srcml_fd, xmlFindCharEncodingHandler(unit->archive->encoding ? unit->archive->encoding->c_str() : "ISO-8859-1"));
+  if(output_buffer == NULL) return SRCML_STATUS_ERROR;
   srcMLUtility utility(unit->unit->c_str(), unit->unit->size(), 0, unit->archive->options);
   utility.extract_text(output_buffer);
 
