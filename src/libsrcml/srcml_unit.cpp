@@ -7,7 +7,11 @@
 int srcml_unit_set_language(srcml_unit* unit, const char* language) {
 
   if(unit->language) delete unit->language;
-  unit->language = new std::string(language);
+  try {
+
+    unit->language = new std::string(language);
+
+  } catch(...) { return SRCML_STATUS_ERROR; }
   return SRCML_STATUS_OK;
 
 }
@@ -15,7 +19,11 @@ int srcml_unit_set_language(srcml_unit* unit, const char* language) {
 int srcml_unit_set_filename(srcml_unit* unit, const char* filename) {
 
   if(unit->filename) delete unit->filename;
-  unit->filename = new std::string(filename);
+  try {
+
+    unit->filename = new std::string(filename);
+
+  } catch(...) { return SRCML_STATUS_ERROR; }
   return SRCML_STATUS_OK;
 
 }
@@ -23,7 +31,11 @@ int srcml_unit_set_filename(srcml_unit* unit, const char* filename) {
 int srcml_unit_set_directory(srcml_unit* unit, const char* directory) {
 
   if(unit->directory) delete unit->directory;
-  unit->directory = new std::string(directory);
+  try {
+
+    unit->directory = new std::string(directory);
+
+  } catch(...) { return SRCML_STATUS_ERROR; }
   return SRCML_STATUS_OK;
 
 }
@@ -31,7 +43,11 @@ int srcml_unit_set_directory(srcml_unit* unit, const char* directory) {
 int srcml_unit_set_version(srcml_unit* unit, const char* version) {
 
   if(unit->version) delete unit->version;
-  unit->version = new std::string(version);
+  try {
+
+    unit->version = new std::string(version);
+
+  } catch(...) { return SRCML_STATUS_ERROR; }
   return SRCML_STATUS_OK;
 
 }
@@ -105,7 +121,7 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
     unit->archive->translator->setInput(src_filename);
 
-  } catch(...) { 
+  } catch(...) {
 
     unit->archive->options = save_options;
     return SRCML_STATUS_ERROR;
@@ -167,7 +183,7 @@ int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
 
     unit->archive->translator->setInput(input);
 
-  } catch(...) { 
+  } catch(...) {
 
     xmlFreeParserInputBuffer(input);
     unit->archive->options = save_options;
@@ -201,7 +217,7 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
 
     unit->archive->translator->setInput(input);
 
-  } catch(...) { 
+  } catch(...) {
 
     xmlFreeParserInputBuffer(input);
     unit->archive->options = save_options;
