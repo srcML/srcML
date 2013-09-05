@@ -17,9 +17,11 @@ const char * srcml_archive_check_extension(srcml_archive * archive, const char* 
 srcml_archive* srcml_create_archive()
 
 {
+  srcml_archive * archive;
   try {
 
-    srcml_archive * archive = new srcml_archive;
+    
+    archive = new srcml_archive;
 
   } catch(...) { return 0; }
 
@@ -58,6 +60,9 @@ void srcml_free_archive(srcml_archive * archive) {
 srcml_archive* srcml_clone_archive(const srcml_archive* archive) {
 
   srcml_archive * new_archive = srcml_create_archive();
+
+  if(!new_archive) return 0;
+
   new_archive->type = archive->type;
 
   try {
