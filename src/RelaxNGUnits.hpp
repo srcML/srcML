@@ -64,7 +64,7 @@ public :
 
     // output if it validates
     if (n == 0) {
-
+      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
       // output the xml declaration, if needed
       if (!found && !isoption(options, OPTION_XMLDECL))
         xmlOutputBufferWriteXMLDecl(ctxt, buf);
@@ -86,7 +86,7 @@ public :
       found = true;
 
       xmlNodePtr node = xmlDocGetRootElement(ctxt->myDoc);
-      xmlOutputBufferWriteElementNodeNs(buf, *node);
+      xmlOutputBufferWriteElementNodeNs(buf, *node, pstate->isarchive);
 
       if(node->children) {
 
@@ -102,7 +102,8 @@ public :
 
         xmlOutputBufferWrite(buf, end_unit.size(), end_unit.c_str());
 
-      }
+      } else 
+        xmlOutputBufferWrite(buf, 2, "/>");
 
       if(pstate->isarchive) xmlOutputBufferWrite(buf, 2, "\n\n");
       else  xmlOutputBufferWrite(buf, 1, "\n");
@@ -143,7 +144,7 @@ public :
     xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\"?>\n"));
   }
 
-  static void xmlOutputBufferWriteElementNodeNs(xmlOutputBufferPtr buf, xmlNode & node) {
+  static void xmlOutputBufferWriteElementNodeNs(xmlOutputBufferPtr buf, xmlNode & node, bool isarchive) {
 
     // record if this is an empty element since it will be erased by the attribute copying
     bool isemptyelement = node.extra & 0x1;
@@ -169,7 +170,7 @@ public :
       while(xmlns) {
 
         std::string ns = xmlns->href ? (const char *)xmlns->href : "";
-        if(ns == SRCML_SRC_NS_URI) {
+        if(isarchive && ns == SRCML_SRC_NS_URI) {
 
           xmlns = xmlns->next;
           continue;
