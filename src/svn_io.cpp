@@ -90,6 +90,10 @@ typedef apr_status_t (*apr_allocator_create_function) (apr_allocator_t **allocat
 typedef apr_status_t (*apr_pool_create_ex_function) (apr_pool_t **newpool, apr_pool_t *parent,
                                                      apr_abortfunc_t abort_fn, apr_allocator_t *allocator);
 typedef void (*apr_pool_destroy_function) (apr_pool_t *p);
+typedef apr_status_t (*apr_initialize)(void);
+typedef void (*apr_terminate) (void);
+typedef void * (*apr_hash_get) (apr_hash_t *ht, const void *key, apr_ssize_t klen);
+
 //apr_hash_first
 //apr_hash_next
 //apr_hash_this
