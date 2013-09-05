@@ -60,7 +60,7 @@ const char* srcml_unit_get_version  (const srcml_unit* unit) {
 
 }
 
-void srcml_parse_unit_internal(srcml_unit * unit, int lang) {
+int srcml_parse_unit_internal(srcml_unit * unit, int lang) {
 
   xmlBuffer * output_buffer = xmlBufferCreate();
   unit->archive->translator->translate_separate(0, unit->directory ? unit->directory->c_str() : 0,
@@ -73,6 +73,8 @@ void srcml_parse_unit_internal(srcml_unit * unit, int lang) {
   if(unit->unit) delete unit->unit;
   unit->unit = new std::string((const char *)output_buffer->content, length);
   xmlBufferFree(output_buffer);
+
+  return SRCML_STATUS_OK;
 
 }
 
