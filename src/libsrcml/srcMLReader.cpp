@@ -70,7 +70,7 @@ srcMLReader::~srcMLReader() {
 }
 
 int srcMLReader::readUnitAttributesInternal(std::string ** language, std::string ** filename,
-                                             std::string ** directory, std::string ** version) {
+                                            std::string ** directory, std::string ** version) {
 
   xmlAttrPtr attribute = node->properties;
   while (attribute) {
@@ -78,16 +78,16 @@ int srcMLReader::readUnitAttributesInternal(std::string ** language, std::string
     std::string name = (const char *)attribute->name;
     try {
 
-    if(name == "language")
-      (*language) = new std::string((const char *)attribute->children->content);
-    else if(name == "filename")
-      (*filename) = new std::string((const char *)attribute->children->content);
-    else if(name == "directory")
-      (*directory) = new std::string((const char *)attribute->children->content);
-    else if(name == "version")
-      (*version) = new std::string((const char *)attribute->children->content);
+      if(name == "language")
+        (*language) = new std::string((const char *)attribute->children->content);
+      else if(name == "filename")
+        (*filename) = new std::string((const char *)attribute->children->content);
+      else if(name == "directory")
+        (*directory) = new std::string((const char *)attribute->children->content);
+      else if(name == "version")
+        (*version) = new std::string((const char *)attribute->children->content);
 
-    } catch(...) {  
+    } catch(...) {
 
       if(*language) delete *language, (*language) = 0;
       if(*filename) delete *filename, (*filename) = 0;
@@ -127,20 +127,33 @@ int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** 
   xmlAttrPtr attribute = node->properties;
   while (attribute) {
     std::string name = (const char *)attribute->name;
-    if(name == "language")
-      (*language) = new std::string((const char *)attribute->children->content);
-    else if(name == "filename")
-      (*filename) = new std::string((const char *)attribute->children->content);
-    else if(name == "directory")
-      (*directory) = new std::string((const char *)attribute->children->content);
-    else if(name == "version")
-      (*version) = new std::string((const char *)attribute->children->content);
-    else if(name == "tabs")
-      tabstop = atoi((const char *)attribute->children->content);
-    else {
 
-      attributes.push_back(name);
-      attributes.push_back((const char *)attribute->children->content);
+    try {
+
+      if(name == "language")
+        (*language) = new std::string((const char *)attribute->children->content);
+      else if(name == "filename")
+        (*filename) = new std::string((const char *)attribute->children->content);
+      else if(name == "directory")
+        (*directory) = new std::string((const char *)attribute->children->content);
+      else if(name == "version")
+        (*version) = new std::string((const char *)attribute->children->content);
+      else if(name == "tabs")
+        tabstop = atoi((const char *)attribute->children->content);
+      else {
+
+        attributes.push_back(name);
+        attributes.push_back((const char *)attribute->children->content);
+
+      }
+
+    } catch(...) {
+
+      if(*language) delete *language, (*language) = 0;
+      if(*filename) delete *filename, (*filename) = 0;
+      if(*directory) delete *directory, (*directory) = 0;
+      if(*version) delete *version, (*version) = 0;
+      return 0;
 
     }
 
@@ -486,10 +499,15 @@ std::string * srcMLReader::readsrcML() {
   while(length > 0 && buffer->content[length - 1] == '\n')
     --length;
 
-  std::string * unit = new std::string((const char *)buffer->content, length);
+  std::string * unit = 0;
+  try {
+
+    unit = new std::string((const char *)buffer->content, length);
+
+  } catch(...) {}
+
   xmlFreeTextWriter(writer);
   xmlBufferFree(buffer);
-
 
   return unit;
 
@@ -505,7 +523,14 @@ std::string * srcMLReader::read() {
 
   if(!status) return 0;
 
-  std::string * unit = new std::string((const char *)buffer->content);
+  std::string * unit = 0;
+
+  try {
+    
+    unit = new std::string((const char *)buffer->content);
+
+  } catch(...) {}
+
   xmlOutputBufferClose(output_buffer);
   xmlBufferFree(buffer);
   return unit;
@@ -523,7 +548,7 @@ void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer) {
     // record if this is an empty element since it will be erased by the attribute copying
     isemptyelement = node.extra & 0x1;
 
-    // start the element 
+    // start the element
     {
 
       std::string s = "";
