@@ -54,8 +54,6 @@ int srcml_append_transform_relaxng(srcml_archive* archive, const char* relaxng_f
 
 }
 
-void libxml_error(void *ctx, const char *msg, ...) {}
-
 // TODO What happends to intermediate results?
 int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
@@ -72,6 +70,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
     xmlParserInputBufferPtr pinput = 0;
     if(i == 0) pinput = iarchive->input;
     else pinput = xmlParserInputBufferCreateFilename(last_transform_filename, xmlParseCharEncoding(0));
+    if(pinput == NULL) return SRCML_STATUS_ERROR;      
     srcMLUtility utility(pinput, oarchive->encoding ? oarchive->encoding->c_str() : "UTF-8", oarchive->options);
 
     try {
