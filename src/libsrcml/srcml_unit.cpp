@@ -105,7 +105,12 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
     unit->archive->translator->setInput(src_filename);
 
-  } catch(...) { return SRCML_STATUS_ERROR; }
+  } catch(...) { 
+
+    unit->archive->options = save_options;
+    return SRCML_STATUS_ERROR;
+
+  }
 
   int status = srcml_parse_unit_internal(unit, lang);
 
@@ -130,7 +135,12 @@ int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buf
 
     unit->archive->translator->setInputString(src_buffer, (int)buffer_size);
 
-  } catch(...) { return SRCML_STATUS_ERROR; }
+  } catch(...) {
+
+    unit->archive->options = save_options;
+    return SRCML_STATUS_ERROR;
+
+  }
 
   int status = srcml_parse_unit_internal(unit, lang);
 
@@ -157,7 +167,13 @@ int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
 
     unit->archive->translator->setInput(input);
 
-  } catch(...) { return SRCML_STATUS_ERROR; }
+  } catch(...) { 
+
+    xmlFreeParserInputBuffer(input);
+    unit->archive->options = save_options;
+    return SRCML_STATUS_ERROR;
+
+  }
 
   int status = srcml_parse_unit_internal(unit, lang);
   xmlFreeParserInputBuffer(input);
@@ -185,7 +201,13 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
 
     unit->archive->translator->setInput(input);
 
-  } catch(...) { return SRCML_STATUS_ERROR; }
+  } catch(...) { 
+
+    xmlFreeParserInputBuffer(input);
+    unit->archive->options = save_options;
+    return SRCML_STATUS_ERROR;
+
+  }
 
   int status = srcml_parse_unit_internal(unit, lang);
   xmlFreeParserInputBuffer(input);
