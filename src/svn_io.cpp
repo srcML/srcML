@@ -90,19 +90,9 @@ typedef apr_status_t (*apr_allocator_create_function) (apr_allocator_t **allocat
 typedef apr_status_t (*apr_pool_create_ex_function) (apr_pool_t **newpool, apr_pool_t *parent,
                                                      apr_abortfunc_t abort_fn, apr_allocator_t *allocator);
 typedef void (*apr_pool_destroy_function) (apr_pool_t *p);
-typedef apr_status_t (*apr_initialize)(void);
-typedef void (*apr_terminate) (void);
-typedef void * (*apr_hash_get) (apr_hash_t *ht, const void *key, apr_ssize_t klen);
-
-//apr_hash_first
-//apr_hash_next
-//apr_hash_this
-//apr_allocator_create
-//apr_pool_create_ex
-//apr_pool_destroy
-//apr_initialize
-//apr_hash_get
-//apr_terminate
+typedef apr_status_t (*apr_initialize_function)(void);
+typedef void (*apr_terminate_function) (void);
+typedef void * (*apr_hash_get_function) (apr_hash_t *ht, const void *key, apr_ssize_t klen);
 
 DFDECLARE(svn_ra_get_dir2)
 DFDECLARE(svn_ra_initialize);
@@ -116,6 +106,17 @@ DFDECLARE(svn_stringbuf_create_ensure)
 DFDECLARE(svn_stream_from_stringbuf)
 DFDECLARE(svn_ra_get_file)
 DFDECLARE(svn_stream_read)
+
+DFDECLARE(apr_hash_first)
+DFDECLARE(apr_hash_next)
+DFDECLARE(apr_hash_this)
+DFDECLARE(apr_allocator_create)
+DFDECLARE(apr_pool_create_ex)
+DFDECLARE(apr_pool_destroy)
+DFDECLARE(apr_initialize)
+DFDECLARE(apr_hash_get)
+DFDECLARE(apr_terminate)
+
 
 int subversion_init() {
 #if defined(__GNUG__) && !defined(__MINGW32__)
