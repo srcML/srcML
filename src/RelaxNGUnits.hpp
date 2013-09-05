@@ -38,7 +38,7 @@ class RelaxNGUnits : public UnitDOM {
 public :
 
   RelaxNGUnits(const char* a_ofilename, int options, xmlRelaxNGValidCtxtPtr rngctx, int fd = 0)
-    : UnitDOM(options), ofilename(a_ofilename), options(options), rngctx(rngctx), fd(fd), found(false) {
+    : UnitDOM(options), ofilename(a_ofilename), options(options), rngctx(rngctx), fd(fd), found(false), root_prefix(0) {
   }
 
   virtual ~RelaxNGUnits() {}
@@ -64,7 +64,7 @@ public :
 
     // output if it validates
     if (n == 0) {
-      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
       // output the xml declaration, if needed
       if (!found && !isoption(options, OPTION_XMLDECL))
         xmlOutputBufferWriteXMLDecl(ctxt, buf);
@@ -94,8 +94,11 @@ public :
           xmlNodeDumpOutput(buf, ctxt->myDoc, child, 0, 0, 0);
 
         std::string end_unit = "</";
-        if(root_prefix) {
-          end_unit += (const char *)root_prefix;
+        const char * unit_prefix = (const char *)root_prefix;
+        //if(!unit_prefix) unit_prefix = (const char *)node->ns->prefix;
+
+        if(unit_prefix) {
+          end_unit += unit_prefix;
           end_unit += ":";
         }
         end_unit += "unit>";
