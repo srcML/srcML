@@ -76,7 +76,7 @@ typedef svn_error_t * (*svn_client_open_ra_session_function) (svn_ra_session_t *
                                                               const char *url, svn_client_ctx_t *ctx, apr_pool_t *pool);
 typedef svn_error_t * (*svn_ra_stat_function) (svn_ra_session_t *session, const char *path, svn_revnum_t revision,
                                                svn_dirent_t **dirent, apr_pool_t *pool);
-typedef svn_stringbuf_t (*svn_stringbuf_create_ensure_function) (apr_size_t minimum_size, apr_pool_t *pool);
+typedef svn_stringbuf_t * (*svn_stringbuf_create_ensure_function) (apr_size_t minimum_size, apr_pool_t *pool);
 typedef svn_stream_t * (*svn_stream_from_stringbuf_function) (svn_stringbuf_t *str, apr_pool_t *pool);
 typedef svn_error_t * (*svn_ra_get_file_function) (svn_ra_session_t *session, const char *path, svn_revnum_t revision,
                                                    svn_stream_t *stream, svn_revnum_t *fetched_rev, apr_hash_t **props, apr_pool_t *pool);
