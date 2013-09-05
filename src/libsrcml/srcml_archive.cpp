@@ -124,7 +124,11 @@ srcml_archive* srcml_clone_archive(const srcml_archive* archive) {
 int srcml_archive_set_encoding(srcml_archive* archive, const char* encoding) {
 
   if(archive->encoding) delete archive->encoding;
-  archive->encoding = new std::string(encoding);
+  try {
+
+    archive->encoding = new std::string(encoding);
+
+  } catch(...) { return SRCML_STATUS_ERROR; }
   return SRCML_STATUS_OK;
 
 }
@@ -132,7 +136,11 @@ int srcml_archive_set_encoding(srcml_archive* archive, const char* encoding) {
 int srcml_archive_set_language(srcml_archive* archive, const char* language) {
 
   if(archive->language) delete archive->language;
-  archive->language = new std::string(language);
+  try {
+
+    archive->language = new std::string(language);
+
+  } catch(...) { return SRCML_STATUS_ERROR; }
   return SRCML_STATUS_OK;
 
 }
@@ -140,7 +148,11 @@ int srcml_archive_set_language(srcml_archive* archive, const char* language) {
 int srcml_archive_set_filename(srcml_archive* archive, const char* filename) {
 
   if(archive->filename) delete archive->filename;
-  archive->filename = new std::string(filename);
+  try {
+
+    archive->filename = new std::string(filename);
+
+  } catch(...) { return SRCML_STATUS_ERROR; }
   return SRCML_STATUS_OK;
 
 }
@@ -148,7 +160,11 @@ int srcml_archive_set_filename(srcml_archive* archive, const char* filename) {
 int srcml_archive_set_directory (srcml_archive* archive, const char* directory) {
 
   if(archive->directory) delete archive->directory;
-  archive->directory = new std::string(directory);
+  try {
+
+    archive->directory = new std::string(directory);
+
+  } catch(...) { return SRCML_STATUS_ERROR; }
   return SRCML_STATUS_OK;
 
 }
@@ -156,7 +172,11 @@ int srcml_archive_set_directory (srcml_archive* archive, const char* directory) 
 int srcml_archive_set_version(srcml_archive* archive, const char* version) {
 
   if(archive->version) delete archive->version;
-  archive->version = new std::string(version);
+  try {
+
+    archive->version = new std::string(version);
+
+  } catch(...) { return SRCML_STATUS_ERROR; }
   return SRCML_STATUS_OK;
 
 }
