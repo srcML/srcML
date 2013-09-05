@@ -406,7 +406,7 @@ int main(int argc, char* argv[]) {
       DEFAULT_TABSIZE,
 
 #ifdef SVN
-      , SVN_INVALID_REVNUM
+      SVN_INVALID_REVNUM,
 #endif
 
     };
