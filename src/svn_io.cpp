@@ -100,7 +100,7 @@ int subversion_init() {
   if (!handle) {
     handle = dlopen("libsvn_ra-1.dylib", RTLD_LAZY);
     if (!handle) {
-      fprintf(stderr, "Unable to open libxslt library\n");
+      fprintf(stderr, "Unable to open libsvn_ra library\n");
       return 0;
     }
   }
@@ -110,33 +110,33 @@ int subversion_init() {
     DFLOAD(svn_ra_stat)
     DFLOAD(svn_ra_get_file)
 
-  handle = dlopen("libsvn_subr-1.so", RTLD_LAZY);
+    handle = dlopen("libsvn_subr-1.so", RTLD_LAZY);
   if (!handle) {
     handle = dlopen("libsvn_subr-1.dylib", RTLD_LAZY);
     if (!handle) {
-      fprintf(stderr, "Unable to open libxslt library\n");
+      fprintf(stderr, "Unable to open libsvn_subr library\n");
       return 0;
     }
   }
 
-    //subr
-    DFLOAD(svn_config_get_config)
+  //subr
+  DFLOAD(svn_config_get_config)
     DFLOAD(svn_cmdline_create_auth_baton)
     DFLOAD(svn_stringbuf_create_ensure)
     DFLOAD(svn_stream_from_stringbuf)
     DFLOAD(svn_stream_read)
 
-  handle = dlopen("libsvn_client-1.so", RTLD_LAZY);
+    handle = dlopen("libsvn_client-1.so", RTLD_LAZY);
   if (!handle) {
     handle = dlopen("libsvn_client-1.dylib", RTLD_LAZY);
     if (!handle) {
-      fprintf(stderr, "Unable to open libxslt library\n");
+      fprintf(stderr, "Unable to open libsvn_client library\n");
       return 0;
     }
   }
 
-    // client
-    DFLOAD(svn_client_create_context)
+  // client
+  DFLOAD(svn_client_create_context)
     DFLOAD(svn_client_open_ra_session)
 
 #else
