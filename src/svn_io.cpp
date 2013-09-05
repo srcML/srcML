@@ -59,6 +59,7 @@ int abortfunc(int retcode) {
     }                                                                   \
   }
 
+// libsvn_*
 typedef svn_error_t * (*svn_ra_get_dir2_function) (svn_ra_session_t *session, apr_hash_t **dirents,
                                                    svn_revnum_t *fetched_rev, apr_hash_t **props,
                                                    const char *path, svn_revnum_t revision,
@@ -80,6 +81,17 @@ typedef svn_stream_t * (*svn_stream_from_stringbuf_function) (svn_stringbuf_t *s
 typedef svn_error_t * (*svn_ra_get_file_function) (svn_ra_session_t *session, const char *path, svn_revnum_t revision,
                                                    svn_stream_t *stream, svn_revnum_t *fetched_rev, apr_hash_t **props, apr_pool_t *pool);
 typedef svn_error_t * (*svn_stream_read_function) (svn_stream_t *stream, char *buffer, apr_size_t *len);
+
+//libapr
+//apr_hash_first
+//apr_hash_next
+//apr_hash_this
+//apr_allocator_create
+//apr_pool_create_ex
+//apr_pool_destroy
+//apr_initialize
+//apr_hash_get
+//apr_terminate
 
 DFDECLARE(svn_ra_get_dir2)
 DFDECLARE(svn_ra_initialize);
