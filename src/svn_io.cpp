@@ -58,6 +58,16 @@ typedef svn_error_t (*svn_ra_initialize_function) (apr_pool_t *pool);
 svn_ra_get_dir2_function svn_ra_get_dir2_dynamic;
 svn_ra_initialize_function svn_ra_initialize_dynamic;
 
+//svn_config_get_config
+//svn_client_create_context
+//svn_cmdline_create_auth_baton
+//svn_client_open_ra_session
+//svn_ra_stat
+//svn_stringbuf_create_ensure
+//svn_stream_from_stringbuf
+//svn_ra_get_file
+//svn_stream_read
+
 int subversion_init() {
 #if defined(__GNUG__) && !defined(__MINGW32__)
   void* handle = dlopen("libsvn_ra-1.so", RTLD_LAZY);
