@@ -128,6 +128,9 @@ public :
 
           Passing the prefix was causing an error when set.
           Hack change localname to have prefix and set prefix to null
+          Using std::string it some cases seems to cause incorrect access of memory
+          since it does not seem to duplicate the localname.
+          Dynamically allocate for now.
 
         */
         std::string full_name = "";
@@ -137,8 +140,10 @@ public :
         }
         full_name += (const char *)localname;
 
+        prefix_name = (const xmlChar *)strdup(full_name.c_str());
+
         // start the unit (element) at the root using the merged namespaces
-        xmlSAX2StartElementNs(ctx, (xmlChar *)full_name.c_str(), 0, URI, data.size() / 2,
+        xmlSAX2StartElementNs(ctx, prefix_name, 0, URI, data.size() / 2,
                               &data[0], nb_attributes, nb_defaulted, attributes);
     }
 
@@ -191,6 +196,9 @@ public :
         // free up the document that has this particular unit
 	xmlFreeDoc(ctxt->myDoc);
 	ctxt->myDoc = 0;
+
+        free((void *)prefix_name);
+        prefix_name = 0;
 /*
         // unhook the unit tree from the document, leaving an empty document
         xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
@@ -220,6 +228,7 @@ protected:
     bool found;
     int options;
     bool error;
+    const xmlChar * prefix_name;
 };
 
 #endif
