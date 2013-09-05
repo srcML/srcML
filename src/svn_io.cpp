@@ -86,6 +86,9 @@ typedef svn_error_t * (*svn_stream_read_function) (svn_stream_t *stream, char *b
 typedef apr_hash_index_t * (*apr_hash_first_function) (apr_pool_t *p, apr_hash_t *ht);
 typedef apr_hash_index_t * (*apr_hash_next_function) (apr_hash_index_t *hi);
 typedef void (*apr_hash_this_function) (apr_hash_index_t *hi, const void **key, apr_ssize_t *klen, void **val);
+typedef apr_status_t (*apr_allocator_create_function) (apr_allocator_t **allocator);
+typedef apr_status_t (*apr_pool_create_ex_function) (apr_pool_t **newpool, apr_pool_t *parent,
+                                                     apr_abortfunc_t abort_fn, apr_allocator_t *allocator);
 //apr_hash_first
 //apr_hash_next
 //apr_hash_this
