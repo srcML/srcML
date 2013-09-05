@@ -64,6 +64,9 @@ typedef svn_error_t * (*svn_cmdline_create_auth_baton_function) (svn_auth_baton_
                               void *cancel_baton, apr_pool_t *pool);
 typedef svn_error_t * (*svn_client_open_ra_session_function) (svn_ra_session_t **session,
                            const char *url, svn_client_ctx_t *ctx, apr_pool_t *pool);
+typedef svn_error_t * (*svn_ra_stat_function) (svn_ra_session_t *session, const char *path, svn_revnum_t revision,
+            svn_dirent_t **dirent, apr_pool_t *pool);
+
 
 DFDECLARE(svn_ra_get_dir2)
 DFDECLARE(svn_ra_initialize);
