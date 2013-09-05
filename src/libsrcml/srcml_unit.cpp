@@ -106,7 +106,7 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
   unit->archive->options = save_options;
 
-  return SRCML_STATUS_OK;
+  return status;
 
 }
 
@@ -126,7 +126,7 @@ int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buf
 
   unit->archive->options = save_options;
 
-  return SRCML_STATUS_OK;
+  return status;
 
 }
 
@@ -149,7 +149,7 @@ int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
 
   unit->archive->options = save_options;
 
-  return SRCML_STATUS_OK;
+  return status;
 
 }
 
@@ -172,7 +172,7 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
 
   unit->archive->options = save_options;
 
-  return SRCML_STATUS_OK;
+  return status;
 
 }
 
