@@ -217,16 +217,6 @@ private:
         return false;
     }
 
-    // consume the current skipped token
-    void consumeSkip() {
-
-        // skipped tokens are put on a special buffer
-        pushSkipToken();
-
-        // rest of consume process
-        Base::consume();
-    }
-
     // flush any skipped tokens to the output token stream
     void flushSkip() {
         flushSkip(output());
