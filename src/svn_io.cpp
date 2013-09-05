@@ -352,7 +352,7 @@ void svn_process_session(svn_revnum_t revision, srcMLTranslator & translator, co
   svn_boolean_t trust_server_cert = true;
 
   svn_auth_baton_t * ab;
-  svn_cmdline_create_auth_baton(&ab, non_interactive, auth_username, auth_password, config_dir, no_auth_cache, trust_server_cert,
+  svn_cmdline_create_auth_baton_dynamic(&ab, non_interactive, auth_username, auth_password, config_dir, no_auth_cache, trust_server_cert,
                                 cfg_config, ctx->cancel_func, ctx->cancel_baton, pool);
 
   ctx->auth_baton = ab;
@@ -360,7 +360,7 @@ void svn_process_session(svn_revnum_t revision, srcMLTranslator & translator, co
   ctx->conflict_baton = NULL;
 
   svn_ra_session_t * session;
-  svn_error_t * svn_error = svn_client_open_ra_session(&session, url, ctx, pool);
+  svn_error_t * svn_error = svn_client_open_ra_session_dynamic(&session, url, ctx, pool);
   global_session = session;
 
   if(svn_error)
@@ -368,10 +368,10 @@ void svn_process_session(svn_revnum_t revision, srcMLTranslator & translator, co
 
   const char * path = "";
   apr_pool_t * path_pool;
-  apr_pool_create_ex(&path_pool, NULL, abortfunc, allocator);
+  apr_pool_create_ex_dynamic(&path_pool, NULL, abortfunc, allocator);
 
   svn_dirent_t * dirent;
-  svn_ra_stat(session, path, revision, &dirent, path_pool);
+  svn_ra_stat_dynamic(session, path, revision, &dirent, path_pool);
 
   if(dirent->kind == svn_node_file)
     svn_process_file(session, path, revision, path_pool, translator, options, dir, filename, version,
@@ -384,7 +384,7 @@ void svn_process_session(svn_revnum_t revision, srcMLTranslator & translator, co
   else if(dirent->kind == svn_node_unknown)
     fprintf(stderr, "%s\n", "Unknown");
 
-  apr_terminate();
+  apr_terminate_dynamic();
 
 }
 
@@ -399,20 +399,20 @@ void * svnReadOpen(const char * URI) {
   svn_context * context = new svn_context;
 
   apr_allocator_t * allocator;
-  apr_allocator_create(&allocator);
+  apr_allocator_create_dynamic(&allocator);
 
   apr_pool_t * pool;
-  apr_pool_create_ex(&pool, NULL, abortfunc, allocator);
+  apr_pool_create_ex_dynamic(&pool, NULL, abortfunc, allocator);
 
   context->pool = pool;
 
-  svn_stringbuf_t * str = svn_stringbuf_create_ensure(0, context->pool);
-  context->stream = svn_stream_from_stringbuf(str, context->pool);
+  svn_stringbuf_t * str = svn_stringbuf_create_ensure_dynamic(0, context->pool);
+  context->stream = svn_stream_from_stringbuf_dynamic(str, context->pool);
 
   svn_revnum_t fetched_rev;
   apr_hash_t * props;
 
-  svn_ra_get_file(global_session, URI, global_revision, context->stream, &fetched_rev, &props, context->pool);
+  svn_ra_get_file_dynamic(global_session, URI, global_revision, context->stream, &fetched_rev, &props, context->pool);
 
   return context;
 
@@ -425,7 +425,7 @@ int svnRead(void * context, char * buffer, int len) {
 
   apr_size_t length = len;
 
-  svn_error_t * error = svn_stream_read(ctx->stream, buffer, &length);
+  svn_error_t * error = svn_stream_read_dynamic(ctx->stream, buffer, &length);
 
   if(error) return 0;
 
@@ -439,7 +439,7 @@ int svnReadClose(void * context) {
 
   svn_context * ctx = (svn_context *)context;
 
-  apr_pool_destroy(ctx->pool);
+  apr_pool_destroy_dynamic(ctx->pool);
 
   delete ctx;
 
