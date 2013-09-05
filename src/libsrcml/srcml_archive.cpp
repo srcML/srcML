@@ -241,7 +241,7 @@ int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix,
         return SRCML_STATUS_OK;
     }
 
-  } catch(...) {}
+  } catch(...) { return SRCML_STATUS_ERROR; }
 
   archive->prefixes.push_back(prefix);
   archive->namespaces.push_back(ns);
