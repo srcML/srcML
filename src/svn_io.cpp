@@ -48,7 +48,7 @@ int abortfunc(int retcode) {
   return retcode;
 }
 
-//#define DFDECLARE(F) F_function F_dynamic;
+#define DFDECLARE(F) F ## _function F ## _dynamic;
 
 typedef svn_error_t *
 (*svn_ra_get_dir2_function) (svn_ra_session_t *session, apr_hash_t **dirents, svn_revnum_t *fetched_rev,
@@ -60,19 +60,18 @@ typedef svn_error_t (*svn_ra_initialize_function) (apr_pool_t *pool);
 typedef svn_error_t *
 (*svn_config_get_config_function) (apr_hash_t **cfg_hash, const char *config_dir, apr_pool_t *pool);
 
-//DFDECLARE(svn_ra_get_dir2)
-//svn_ra_get_dir2_function svn_ra_get_dir2_dynamic;
-svn_ra_initialize_function svn_ra_initialize_dynamic;
+DFDECLARE(svn_ra_get_dir2)
+DFDECLARE(svn_ra_initialize);
 
-//svn_config_get_config
-//svn_client_create_context
-//svn_cmdline_create_auth_baton
-//svn_client_open_ra_session
-//svn_ra_stat
-//svn_stringbuf_create_ensure
-//svn_stream_from_stringbuf
-//svn_ra_get_file
-//svn_stream_read
+//DFDECLARE(svn_config_get_config)
+//DFDECLARE(svn_client_create_context)
+//DFDECLARE(svn_cmdline_create_auth_baton)
+//DFDECLARE(svn_client_open_ra_session)
+//DFDECLARE(svn_ra_stat)
+//DFDECLARE(svn_stringbuf_create_ensure)
+//DFDECLARE(svn_stream_from_stringbuf)
+//DFDECLARE(svn_ra_get_file)
+//DFDECLARE(svn_stream_read)
 
 int subversion_init() {
 #if defined(__GNUG__) && !defined(__MINGW32__)
