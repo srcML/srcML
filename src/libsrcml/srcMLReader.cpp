@@ -69,13 +69,15 @@ srcMLReader::~srcMLReader() {
 
 }
 
-void srcMLReader::readUnitAttributesInternal(std::string ** language, std::string ** filename,
+int srcMLReader::readUnitAttributesInternal(std::string ** language, std::string ** filename,
                                              std::string ** directory, std::string ** version) {
 
   xmlAttrPtr attribute = node->properties;
   while (attribute) {
 
     std::string name = (const char *)attribute->name;
+    try {
+
     if(name == "language")
       (*language) = new std::string((const char *)attribute->children->content);
     else if(name == "filename")
@@ -85,8 +87,20 @@ void srcMLReader::readUnitAttributesInternal(std::string ** language, std::strin
     else if(name == "version")
       (*version) = new std::string((const char *)attribute->children->content);
 
+    } catch(...) {  
+
+      if(*language) delete *language, (*language) = 0;
+      if(*filename) delete *filename, (*filename) = 0;
+      if(*directory) delete *directory, (*directory) = 0;
+      if(*version) delete *version, (*version) = 0;
+      return 1;
+
+    }
+
     attribute = attribute->next;
   }
+
+  return 0;
 
 }
 
@@ -207,7 +221,7 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
     node = getNode(reader);
   }
 
-  readUnitAttributesInternal(language, filename, directory, version);
+  if(readUnitAttributesInternal(language, filename, directory, version)) return 0;
   if(xmlTextReaderRead(reader) != 1) { freeNode(node); done = true; return 0; }
 
   save_nodes.push_back(node);
@@ -233,7 +247,7 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
       if(*filename) delete *filename, (*filename) = 0;
       if(*directory) delete *directory, (*directory) = 0;
       if(*version) delete *version, (*version) = 0;
-      readUnitAttributesInternal(language, filename, directory, version);
+      if(readUnitAttributesInternal(language, filename, directory, version)) return 0;
       break;
     }
 

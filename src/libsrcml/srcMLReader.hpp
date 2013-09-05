@@ -64,7 +64,7 @@ public:
                              int & tabstop);
 
   // helper function for processing unit attributes.  Does not advance read.
-  void readUnitAttributesInternal(std::string ** language, std::string ** filename,
+  int readUnitAttributesInternal(std::string ** language, std::string ** filename,
                                   std::string ** directory, std::string ** version);
   /* finds next unit tag if not current unit and sets attributes.  Consumes unit.
      Unit is still avaible for readsrcML or read.  But not readUnitAttributes.
