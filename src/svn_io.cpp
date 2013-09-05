@@ -117,7 +117,6 @@ DFDECLARE(apr_initialize)
 DFDECLARE(apr_hash_get)
 DFDECLARE(apr_terminate)
 
-
 int subversion_init() {
 #if defined(__GNUG__) && !defined(__MINGW32__)
   void* handle = dlopen("libsvn_ra-1.so", RTLD_LAZY);
@@ -162,6 +161,25 @@ int subversion_init() {
   // client
   DFLOAD(svn_client_create_context)
     DFLOAD(svn_client_open_ra_session)
+
+    handle = dlopen("libapr-1.so", RTLD_LAZY);
+  if (!handle) {
+    handle = dlopen("libapr-1.dylib", RTLD_LAZY);
+    if (!handle) {
+      fprintf(stderr, "Unable to open libsvn_client library\n");
+      return 0;
+    }
+  }
+
+DFLOAD(apr_hash_first)
+DFLOAD(apr_hash_next)
+DFLOAD(apr_hash_this)
+DFLOAD(apr_allocator_create)
+DFLOAD(apr_pool_create_ex)
+DFLOAD(apr_pool_destroy)
+DFLOAD(apr_initialize)
+DFLOAD(apr_hash_get)
+DFLOAD(apr_terminate)
 
 #else
     return 0;
