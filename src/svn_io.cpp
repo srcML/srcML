@@ -25,6 +25,8 @@
 #include <iostream>
 #include <string>
 
+#include <dlfcn.h>
+
 #include "svn_io.hpp"
 #include "Language.hpp"
 #include "srcmlapps.hpp"
@@ -58,7 +60,7 @@ int subversion_init() {
     handle = dlopen("libsvn_ra-1.dylib", RTLD_LAZY);
     if (!handle) {
       fprintf(stderr, "Unable to open libxslt library\n");
-      return;
+      return 0;
     }
   }
 
@@ -67,7 +69,7 @@ int subversion_init() {
   char* error;
   if ((error = dlerror()) != NULL) {
     dlclose(handle);
-    return;
+    return 0;
   }
 
 #else
