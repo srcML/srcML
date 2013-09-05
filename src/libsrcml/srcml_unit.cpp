@@ -276,7 +276,7 @@ int srcml_unparse_unit_fd(srcml_unit* unit, int srcml_fd) {
 
 srcml_unit * srcml_create_unit(srcml_archive * archive) {
 
-  srcml_unit * unit = new srcml_unit;//(srcml_unit *)malloc(sizeof(srcml_unit));
+  srcml_unit * unit = new srcml_unit;
   memset(unit, 0, sizeof(srcml_unit));
   unit->archive = archive;
 
