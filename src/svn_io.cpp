@@ -68,6 +68,8 @@ typedef svn_error_t * (*svn_ra_stat_function) (svn_ra_session_t *session, const 
             svn_dirent_t **dirent, apr_pool_t *pool);
 typedef svn_stringbuf_t (*svn_stringbuf_create_ensure_function) (apr_size_t minimum_size, apr_pool_t *pool);
 typedef svn_stream_t * (*svn_stream_from_stringbuf) (svn_stringbuf_t *str, apr_pool_t *pool);
+typedef svn_error_t * svn_ra_get_file(svn_ra_session_t *session, const char *path, svn_revnum_t revision,
+              svn_stream_t *stream, svn_revnum_t *fetched_rev, apr_hash_t **props, apr_pool_t *pool);
 
 DFDECLARE(svn_ra_get_dir2)
 DFDECLARE(svn_ra_initialize);
@@ -79,7 +81,7 @@ DFDECLARE(svn_client_open_ra_session)
 DFDECLARE(svn_ra_stat)
 DFDECLARE(svn_stringbuf_create_ensure)
 DFDECLARE(svn_stream_from_stringbuf)
-//DFDECLARE(svn_ra_get_file)
+DFDECLARE(svn_ra_get_file)
 //DFDECLARE(svn_stream_read)
 
 int subversion_init() {
