@@ -110,13 +110,16 @@ int subversion_init() {
     DFLOAD(svn_ra_stat)
     DFLOAD(svn_ra_get_file)
 
+    //subr
     DFLOAD(svn_config_get_config)
-    DFLOAD(svn_client_create_context)
     DFLOAD(svn_cmdline_create_auth_baton)
-    DFLOAD(svn_client_open_ra_session)
     DFLOAD(svn_stringbuf_create_ensure)
     DFLOAD(svn_stream_from_stringbuf)
     DFLOAD(svn_stream_read)
+
+    // client
+    DFLOAD(svn_client_create_context)
+    DFLOAD(svn_client_open_ra_session)
 
 #else
     return 0;
