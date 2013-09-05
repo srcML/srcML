@@ -49,9 +49,11 @@ int abortfunc(int retcode) {
 }
 
 typedef svn_error_t *
-(*svn_ra_get_dir2_dynamic) (svn_ra_session_t *session, apr_hash_t **dirents, svn_revnum_t *fetched_rev,
+(*svn_ra_get_dir2_function) (svn_ra_session_t *session, apr_hash_t **dirents, svn_revnum_t *fetched_rev,
                 apr_hash_t **props, const char *path, svn_revnum_t revision, apr_uint32_t dirent_fields,
                 apr_pool_t *pool);
+
+svn_ra_get_dir2_function svn_ra_get_dir2_dynamic;
 
 int subversion_init() {
 #if defined(__GNUG__) && !defined(__MINGW32__)
@@ -65,7 +67,7 @@ int subversion_init() {
   }
 
   dlerror();
-  //xsltApplyStylesheetUserDynamic = (xsltApplyStylesheetUser_function)dlsym(handle, "xsltApplyStylesheetUser");
+  svn_ra_get_dir2_dynamic = (svn_ra_get_dir2_function)dlsym(handle, "svn_ra_get_dir2");
   char* error;
   if ((error = dlerror()) != NULL) {
     dlclose(handle);
