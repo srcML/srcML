@@ -85,6 +85,7 @@ typedef svn_error_t * (*svn_stream_read_function) (svn_stream_t *stream, char *b
 //libapr
 typedef apr_hash_index_t * (*apr_hash_first_function) (apr_pool_t *p, apr_hash_t *ht);
 typedef apr_hash_index_t * (*apr_hash_next_function) (apr_hash_index_t *hi);
+typedef void (*apr_hash_this_function) (apr_hash_index_t *hi, const void **key, apr_ssize_t *klen, void **val);
 //apr_hash_first
 //apr_hash_next
 //apr_hash_this
