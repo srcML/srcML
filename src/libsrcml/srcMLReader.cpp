@@ -50,14 +50,17 @@ srcMLReader::srcMLReader(const char * filename)
   : is_archive(false), done(false) {
 
   reader = xmlNewTextReaderFilename(filename);
-  xmlTextReaderRead(reader);
+  if(reader == NULL) throw std::string();
+    xmlTextReaderRead(reader);
   node = getNode(reader);
 }
 
 srcMLReader::srcMLReader(xmlParserInputBufferPtr input)
   : is_archive(false), done(false) {
 
+  if(input == NULL) throw std::string();
   reader = xmlNewTextReader(input, 0);
+  if(reader == NULL) throw std::string();
   xmlTextReaderRead(reader);
   node = getNode(reader);
 }
