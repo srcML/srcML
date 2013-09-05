@@ -385,8 +385,6 @@ int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
     return SRCML_STATUS_ERROR;
 
   }
-  xmlTextWriterPtr writer = xmlNewTextWriter(xmlOutputBufferCreateFd(srcml_fd, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0)));
-
 
   archive->type = SRCML_ARCHIVE_WRITE;
   try {
