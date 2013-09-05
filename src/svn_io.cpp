@@ -48,6 +48,8 @@ int abortfunc(int retcode) {
   return retcode;
 }
 
+//#define DFDECLARE(F) F_function F_dynamic;
+
 typedef svn_error_t *
 (*svn_ra_get_dir2_function) (svn_ra_session_t *session, apr_hash_t **dirents, svn_revnum_t *fetched_rev,
                 apr_hash_t **props, const char *path, svn_revnum_t revision, apr_uint32_t dirent_fields,
@@ -55,7 +57,11 @@ typedef svn_error_t *
 
 typedef svn_error_t (*svn_ra_initialize_function) (apr_pool_t *pool);
 
-svn_ra_get_dir2_function svn_ra_get_dir2_dynamic;
+typedef svn_error_t *
+(*svn_config_get_config_function) (apr_hash_t **cfg_hash, const char *config_dir, apr_pool_t *pool);
+
+//DFDECLARE(svn_ra_get_dir2)
+//svn_ra_get_dir2_function svn_ra_get_dir2_dynamic;
 svn_ra_initialize_function svn_ra_initialize_dynamic;
 
 //svn_config_get_config
