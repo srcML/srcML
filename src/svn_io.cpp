@@ -56,20 +56,22 @@ typedef svn_error_t * (*svn_ra_get_dir2_function) (svn_ra_session_t *session, ap
                                                    apr_uint32_t dirent_fields, apr_pool_t *pool);
 typedef svn_error_t (*svn_ra_initialize_function) (apr_pool_t *pool);
 typedef svn_error_t * (*svn_config_get_config_function) (apr_hash_t **cfg_hash, const char *config_dir, apr_pool_t *pool);
-typedef svn_error_t (*svn_client_create_context) (svn_client_ctx_t **ctx, apr_pool_t *pool);
-typdef svn_error_t * (*svn_cmdline_create_auth_baton) (svn_auth_baton_t **ab, svn_boolean_t non_interactive,
+typedef svn_error_t * (*svn_client_create_context_function) (svn_client_ctx_t **ctx, apr_pool_t *pool);
+typedef svn_error_t * (*svn_cmdline_create_auth_baton_function) (svn_auth_baton_t **ab, svn_boolean_t non_interactive,
                               const char *username, const char *password, const char *config_dir,
                               svn_boolean_t no_auth_cache, svn_boolean_t trust_server_cert,
                               svn_config_t *cfg, svn_cancel_func_t cancel_func,
                               void *cancel_baton, apr_pool_t *pool);
+typedef svn_error_t * (*svn_client_open_ra_session_function) (svn_ra_session_t **session,
+                           const char *url, svn_client_ctx_t *ctx, apr_pool_t *pool);
 
 DFDECLARE(svn_ra_get_dir2)
 DFDECLARE(svn_ra_initialize);
 
 DFDECLARE(svn_config_get_config)
-//DFDECLARE(svn_client_create_context)
-//DFDECLARE(svn_cmdline_create_auth_baton)
-//DFDECLARE(svn_client_open_ra_session)
+DFDECLARE(svn_client_create_context)
+DFDECLARE(svn_cmdline_create_auth_baton)
+DFDECLARE(svn_client_open_ra_session)
 //DFDECLARE(svn_ra_stat)
 //DFDECLARE(svn_stringbuf_create_ensure)
 //DFDECLARE(svn_stream_from_stringbuf)
