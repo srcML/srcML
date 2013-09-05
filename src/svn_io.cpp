@@ -48,9 +48,9 @@ int abortfunc(int retcode) {
 
 int subversion_init() {
 #if defined(__GNUG__) && !defined(__MINGW32__)
-  void* handle = dlopen("libxslt.so", RTLD_LAZY);
+  void* handle = dlopen("libsvn_ra-1.so", RTLD_LAZY);
   if (!handle) {
-    handle = dlopen("libxslt.dylib", RTLD_LAZY);
+    handle = dlopen("libsvn_ra-1.dylib", RTLD_LAZY);
     if (!handle) {
       fprintf(stderr, "Unable to open libxslt library\n");
       return;
@@ -58,7 +58,7 @@ int subversion_init() {
   }
 
   dlerror();
-  xsltApplyStylesheetUserDynamic = (xsltApplyStylesheetUser_function)dlsym(handle, "xsltApplyStylesheetUser");
+  //xsltApplyStylesheetUserDynamic = (xsltApplyStylesheetUser_function)dlsym(handle, "xsltApplyStylesheetUser");
   char* error;
   if ((error = dlerror()) != NULL) {
     dlclose(handle);
