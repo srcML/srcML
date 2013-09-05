@@ -185,6 +185,10 @@ void* srcMLTranslatorCore::setInputString(const char* source, int size) {
 // close the output
 void srcMLTranslatorCore::close() {
 
+  // if have not translated anything and nested output root unit
+  if (first && ((options & OPTION_NESTED) > 0))
+    out.startUnit(0, root_directory, root_filename, root_version, true);
+
   out.close();
 }
 
@@ -302,8 +306,7 @@ void srcMLTranslatorCore::add_unit(const char* xml) {
 
 
   // root unit for compound srcML documents
-  options |= OPTION_NESTED;
-  if (first)// && ((options & OPTION_NESTED) > 0))
+  if (first && ((options & OPTION_NESTED) > 0))
     out.startUnit(0, root_directory, root_filename, root_version, true);
 
   first = false;
