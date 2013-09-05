@@ -84,7 +84,7 @@ int srcml_parse_unit_internal(srcml_unit * unit, int lang) {
     unit->archive->translator->translate_separate(0, unit->directory ? unit->directory->c_str() : 0,
                                                   unit->filename ? unit->filename->c_str() : 0,
                                                   unit->version ? unit->version->c_str() : 0, lang, output_buffer);
-  } catch(...) { 
+  } catch(...) {
 
     xmlBufferFree(output_buffer);
     return SRCML_STATUS_ERROR;
@@ -304,7 +304,12 @@ int srcml_unparse_unit_fd(srcml_unit* unit, int srcml_fd) {
 
 srcml_unit * srcml_create_unit(srcml_archive * archive) {
 
-  srcml_unit * unit = new srcml_unit;
+  srcml_unit * unit;
+  try {
+
+    unit = new srcml_unit;
+
+  } catch(...) { return 0; }
   memset(unit, 0, sizeof(srcml_unit));
   unit->archive = archive;
 
