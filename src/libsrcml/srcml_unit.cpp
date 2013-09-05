@@ -220,6 +220,9 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
 
 int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
+  // Must read unit before unparse
+  if(!unit->unit) return SRCML_STATUS_ERROR;
+
   xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename(src_filename, xmlFindCharEncodingHandler(unit->archive->encoding ? unit->archive->encoding->c_str() : "ISO-8859-1"), unit->archive->options & SRCML_OPTION_COMPRESS);
   srcMLUtility utility(unit->unit->c_str(), unit->unit->size(), 0, unit->archive->options);
   utility.extract_text(output_buffer);
@@ -229,6 +232,9 @@ int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
 }
 
 int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer) {
+
+  // Must read unit before unparse
+  if(!unit->unit) return SRCML_STATUS_ERROR;
 
   xmlBufferPtr buffer = xmlBufferCreate();
   xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(unit->archive->encoding ? unit->archive->encoding->c_str() : "ISO-8859-1"));
@@ -244,6 +250,9 @@ int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer) {
 
 int srcml_unparse_unit_FILE(srcml_unit* unit, FILE* srcml_file) {
 
+  // Must read unit before unparse
+  if(!unit->unit) return SRCML_STATUS_ERROR;
+
   xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFile(srcml_file, xmlFindCharEncodingHandler(unit->archive->encoding ? unit->archive->encoding->c_str() : "ISO-8859-1"));
   srcMLUtility utility(unit->unit->c_str(), unit->unit->size(), 0, unit->archive->options);
   utility.extract_text(output_buffer);
@@ -253,6 +262,9 @@ int srcml_unparse_unit_FILE(srcml_unit* unit, FILE* srcml_file) {
 }
 
 int srcml_unparse_unit_fd(srcml_unit* unit, int srcml_fd) {
+
+  // Must read unit before unparse
+  if(!unit->unit) return SRCML_STATUS_ERROR;
 
   xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFd(srcml_fd, xmlFindCharEncodingHandler(unit->archive->encoding ? unit->archive->encoding->c_str() : "ISO-8859-1"));
   srcMLUtility utility(unit->unit->c_str(), unit->unit->size(), 0, unit->archive->options);
