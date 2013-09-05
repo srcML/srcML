@@ -95,7 +95,7 @@ public :
 
         std::string end_unit = "</";
         const char * unit_prefix = (const char *)root_prefix;
-        //if(!unit_prefix) unit_prefix = (const char *)node->ns->prefix;
+        if(!unit_prefix) unit_prefix = (const char *)node->nsDef->prefix;
 
         if(unit_prefix) {
           end_unit += unit_prefix;
