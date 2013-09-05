@@ -17,7 +17,12 @@ const char * srcml_archive_check_extension(srcml_archive * archive, const char* 
 srcml_archive* srcml_create_archive()
 
 {
-  srcml_archive * archive = new srcml_archive;
+  try {
+
+    srcml_archive * archive = new srcml_archive;
+
+  } catch(...) { return 0; }
+
   memset(archive, 0, sizeof(srcml_archive));
 
   // default prefixes
@@ -55,11 +60,25 @@ srcml_archive* srcml_clone_archive(const srcml_archive* archive) {
   srcml_archive * new_archive = srcml_create_archive();
   new_archive->type = archive->type;
 
-  new_archive->filename = archive->filename ? new std::string(*archive->filename) : 0;
-  new_archive->encoding = archive->encoding ? new std::string(*archive->encoding): 0;
-  new_archive->language = archive->language ? new std::string(*archive->language) : 0;
-  new_archive->directory = archive->directory ? new std::string(*archive->directory) : 0;
-  new_archive->version = archive->version ? new std::string(*archive->version) : 0;
+  try {
+
+    new_archive->filename = archive->filename ? new std::string(*archive->filename) : 0;
+    new_archive->encoding = archive->encoding ? new std::string(*archive->encoding): 0;
+    new_archive->language = archive->language ? new std::string(*archive->language) : 0;
+    new_archive->directory = archive->directory ? new std::string(*archive->directory) : 0;
+    new_archive->version = archive->version ? new std::string(*archive->version) : 0;
+
+  } catch(...) {
+
+    // deallocate any allocated before error.
+    // if error version can not have been allocated.
+    if(archive->filename) delete archive->filename;
+    if(archive->encoding) delete archive->encoding;
+    if(archive->language) delete archive->language;
+    if(archive->directory) delete archive->directory;
+    return 0;
+
+  }
 
   try {
 
