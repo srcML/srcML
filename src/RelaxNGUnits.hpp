@@ -167,7 +167,7 @@ public :
 
     }
 
-    if(strcmp((const char *)node.name, "unit") == 0) {
+    {
 
       xmlNsPtr xmlns = node.nsDef;
       while(xmlns) {
