@@ -9,6 +9,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(srcML)
 
+option(SVN_ENABLED "Build with svn" off)
 
 # specify g++ compiler
 if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
@@ -58,6 +59,12 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
 endif()
 
 include_directories(C:/antlr/277/include/antlr)
+
+if(SVN_ENABLED)
+include_directories(/usr/include/apr-1)
+include_directories(/usr/local/include/subversion-1)
+add_definitions(-DSVN)
+endif()
 
 find_library(LIBANTLR_LIB NAMES libantlr-pic.a libantlr.a libantlr2-0.dll PATHS /usr/lib /usr/local/lib ../dlls)
 
@@ -142,7 +149,12 @@ add_executable(srcml EXCLUDE_FROM_ALL srcml.cpp)
 target_link_libraries(srcml ${Boost_PROGRAM_OPTIONS_LIBRARY})
 
 # src2srcml
+if(NOT SVN_ENABLED)
 add_executable(src2srcml src2srcml.cpp)
+else()
+add_executable(src2srcml src2srcml.cpp svn_io.cpp)
+endif()
+
 if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
        target_link_libraries(src2srcml ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} dl srcml_static)
 else()
