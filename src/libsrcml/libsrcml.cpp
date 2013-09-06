@@ -78,7 +78,7 @@ int srcml(const char* input_filename, const char* output_filename) {
   if(lang) {
 
     OPTION_TYPE & options = global_archive.options;
-    options |= lang == Language::LANGUAGE_JAVA ? 0 : OPTION_CPP;
+    options |= lang == Language::LANGUAGE_JAVA ? 0 : SRCML_OPTION_CPP;
 
     srcMLTranslator translator(lang, output_filename, options);
     int error = 0;
@@ -91,7 +91,7 @@ int srcml(const char* input_filename, const char* output_filename) {
                            global_archive.filename ? global_archive.filename->c_str() : output_filename,
                            global_archive.version ? global_archive.version->c_str() : 0,
                            lang);
-      options &= ~OPTION_CPP;
+      options &= ~SRCML_OPTION_CPP;
 
     } catch (FileError) {
 
