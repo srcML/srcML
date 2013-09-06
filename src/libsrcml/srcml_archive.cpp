@@ -40,7 +40,6 @@ srcml_archive* srcml_create_archive()
   srcml_archive * archive;
   try {
 
-
     archive = new srcml_archive;
 
   } catch(...) { return 0; }

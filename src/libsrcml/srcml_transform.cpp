@@ -124,8 +124,6 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
   }
 
-
-
   srcml_archive * tmp_archive = srcml_create_archive();
 
   srcml_read_open_filename(tmp_archive, last_transform_filename);
