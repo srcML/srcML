@@ -429,7 +429,8 @@ void * svnReadOpen(const char * URI) {
   svn_revnum_t fetched_rev;
   apr_hash_t * props;
 
-  svn_ra_get_file_dynamic(global_session, URI, global_revision, context->stream, &fetched_rev, &props, context->pool);
+  svn_error_t * svn_error = 0;
+  CHECK_SVN_ERROR(svn_ra_get_file_dynamic(global_session, URI, global_revision, context->stream, &fetched_rev, &props, context->pool))
 
   return context;
 
