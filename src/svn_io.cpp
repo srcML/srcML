@@ -350,9 +350,9 @@ void svn_process_session(svn_revnum_t revision, srcMLTranslator & translator, co
   svn_config_t * cfg_config;
   svn_error_t * svn_error = 0;
 
-  CHECK_SVN_ERROR(svn_ra_initialize_dynamic(pool));
-  svn_config_get_config_dynamic(&cfg_hash, NULL, pool);
-  svn_client_create_context_dynamic(&ctx, pool);
+  CHECK_SVN_ERROR(svn_ra_initialize_dynamic(pool))
+  CHECK_SVN_ERROR(svn_config_get_config_dynamic(&cfg_hash, NULL, pool))
+  CHECK_SVN_ERROR(svn_client_create_context_dynamic(&ctx, pool))
   //svn_client_create_context2(&ctx, cfg_hash, pool);
   ctx->config = cfg_hash;
   cfg_config = (svn_config_t *)apr_hash_get_dynamic(ctx->config, SVN_CONFIG_CATEGORY_CONFIG, APR_HASH_KEY_STRING);
@@ -366,15 +366,15 @@ void svn_process_session(svn_revnum_t revision, srcMLTranslator & translator, co
   svn_boolean_t trust_server_cert = true;
 
   svn_auth_baton_t * ab;
-  svn_cmdline_create_auth_baton_dynamic(&ab, non_interactive, auth_username, auth_password, config_dir, no_auth_cache, trust_server_cert,
-                                cfg_config, ctx->cancel_func, ctx->cancel_baton, pool);
+  CHECK_SVN_ERROR(svn_cmdline_create_auth_baton_dynamic(&ab, non_interactive, auth_username, auth_password, config_dir, no_auth_cache, trust_server_cert,
+                                                        cfg_config, ctx->cancel_func, ctx->cancel_baton, pool))
 
   ctx->auth_baton = ab;
   ctx->conflict_func = NULL;
   ctx->conflict_baton = NULL;
 
   svn_ra_session_t * session;
-  svn_error = svn_client_open_ra_session_dynamic(&session, url, ctx, pool);
+  CHECK_SVN_ERROR(svn_client_open_ra_session_dynamic(&session, url, ctx, pool))
   global_session = session;
 
   if(svn_error) {
@@ -388,7 +388,7 @@ void svn_process_session(svn_revnum_t revision, srcMLTranslator & translator, co
   apr_pool_create_ex_dynamic(&path_pool, NULL, abortfunc, allocator);
 
   svn_dirent_t * dirent;
-  svn_ra_stat_dynamic(session, path, revision, &dirent, path_pool);
+  CHECK_SVN_ERROR(svn_ra_stat_dynamic(session, path, revision, &dirent, path_pool))
 
   if(dirent->kind == svn_node_file)
     svn_process_file(session, url, path, revision, path_pool, translator, options, dir, filename, version,
@@ -441,10 +441,8 @@ int svnRead(void * context, char * buffer, int len) {
   svn_context * ctx = (svn_context *)context;
 
   apr_size_t length = len;
-
-  svn_error_t * error = svn_stream_read_dynamic(ctx->stream, buffer, &length);
-
-  if(error) return 0;
+  svn_error_t * svn_error = 0;
+  CHECK_SVN_ERROR(svn_stream_read_dynamic(ctx->stream, buffer, &length))
 
   if(length < 0) return 0;
 
