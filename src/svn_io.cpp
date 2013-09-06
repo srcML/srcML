@@ -264,9 +264,11 @@ void svn_process_file(svn_ra_session_t * session, const char * url, const char *
       if (!isoption(options, OPTION_QUIET)) {
         if (unit_filename == "-")
           fprintf(stderr, "Skipped:  Must specify language for standard input.\n" );
-        else
-          fprintf(stderr, "    - %s\tSkipped: Unregistered extension\n",
+        else if(unit_filename != "")
+          fprintf(stderr, "    - %s/%s\tSkipped: Unregistered extension\n", url,
                   unit_filename.c_str() ? unit_filename.c_str() : "standard input");
+        else
+          fprintf(stderr, "    - %s\tSkipped: Unregistered extension\n", url);
       }
 
       ++skipped;
