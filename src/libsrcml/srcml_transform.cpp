@@ -26,9 +26,6 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#define SRCML_OPTION_XPATH 1 << 2
-#define SRCML_OPTION_XSLT  1 << 28 | 1 << 21
-#define SRCML_OPTION_RELAXNG 1 << 25
 
 /* srcML XPath query and XSLT transform functions */
 int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_string) {
@@ -69,7 +66,6 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
     char * transform_filename = strdup(transform_filename_template);
     int transform_fd = mkstemp(transform_filename);
-    OPTION_TYPE save_options = oarchive->options;
 
     xmlParserInputBufferPtr pinput = 0;
     if(i == 0) pinput = iarchive->input;
@@ -85,7 +81,6 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
         {
 
-          oarchive->options |= SRCML_OPTION_XPATH;
           const char * xpaths[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
           utility.xpath(0, "src:unit", xpaths, transform_fd);
           break;
@@ -95,7 +90,6 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
         {
 
-          oarchive->options |= SRCML_OPTION_XSLT;
           const char * xslts[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
           const char * params[1] = { 0 };
           utility.xslt("src:unit", 0, xslts, params, 0, transform_fd);
@@ -106,7 +100,6 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
         {
 
-          oarchive->options |= SRCML_OPTION_RELAXNG;
           const char * relaxngs[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
           utility.relaxng(0, relaxngs, transform_fd);
           break;
@@ -124,7 +117,6 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
     unlink(last_transform_filename);
     free((void *)last_transform_filename);
     last_transform_filename = transform_filename;
-    oarchive->options = save_options;
 
   }
 
