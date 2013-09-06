@@ -1,5 +1,5 @@
 /*
-  srcMLReader.hpp
+  srcMLReader.cpp
 
   Copyright (C) 2013  SDML (www.sdml.info)
 
