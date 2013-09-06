@@ -123,6 +123,7 @@ const char* const CPP_FLAG = "cpp";
 const int CPP_FLAG_CODE = 256 + 11;
 
 const char* const SVN_FLAG = "svn";
+const int SVN_FLAG_CODE = 256 + 12;
 
 const char* const EXAMPLE_TEXT_FILENAME="foo.cpp";
 const char* const EXAMPLE_XML_FILENAME="foo.cpp.xml";
@@ -686,7 +687,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
     { OPERATOR_FLAG, no_argument, &curoption, OPTION_OPERATOR },
     { MODIFIER_FLAG, no_argument, &curoption, OPTION_MODIFIER },
 #ifdef SVN
-    { SVN_FLAG, required_argument, NULL, OPTION_SVN },
+    { SVN_FLAG, required_argument, NULL, SVN_FLAG_CODE },
 #endif
     { CPP_MARKUP_ELSE_FLAG, no_argument, NULL, CPP_MARKUP_ELSE_FLAG_CODE },
     { CPP_TEXTONLY_ELSE_FLAG, no_argument, NULL, CPP_TEXTONLY_ELSE_FLAG_CODE },
@@ -744,7 +745,7 @@ int process_args(int argc, char* argv[], process_options & poptions) {
       poptions.srcml_filename = optarg;
       break;
 #ifdef SVN
-    case OPTION_SVN:
+    case SVN_FLAG_CODE:
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
