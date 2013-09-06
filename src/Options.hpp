@@ -238,25 +238,20 @@ const OPTION_TYPE OPTION_RECURSIVE  = ull(1) << 35;
 // @srcml2src
 const OPTION_TYPE OPTION_QUIET  = ull(1) << 36;
 
-// settings
-// @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_SETTINGS  = ull(1) << 37;
+const OPTION_TYPE OPTION_DIFF  = ull(1) << 37;
 
 // @srcml2src
-const OPTION_TYPE OPTION_DIFF  = ull(1) << 38;
-
-// @srcml2src
-const OPTION_TYPE OPTION_PRESERVE  = ull(1) << 39;
+const OPTION_TYPE OPTION_PRESERVE  = ull(1) << 38;
 
 // @src2srcml
-const OPTION_TYPE OPTION_REVISION  = ull(1) << 40;
+const OPTION_TYPE OPTION_REVISION  = ull(1) << 39;
 
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_NULL  = ull(1) << 41;
+const OPTION_TYPE OPTION_NULL  = ull(1) << 40;
 
 // @src2srcml
-const OPTION_TYPE OPTION_SVN  = ull(1) << 42;
+const OPTION_TYPE OPTION_SVN  = ull(1) << 41;
 
 #endif
