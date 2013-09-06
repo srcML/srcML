@@ -145,9 +145,9 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
   OPTION_TYPE save_options = unit->archive->options;
 
   if(lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX)
-    unit->archive->options |= OPTION_CPP;
+    unit->archive->options |= SRCML_OPTION_CPP;
   else if (lang == Language::LANGUAGE_CSHARP)
-    unit->archive->options |= OPTION_CPP_NOMACRO;
+    unit->archive->options |= SRCML_OPTION_CPP_NOMACRO;
 
   try {
 
@@ -175,9 +175,9 @@ int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buf
   OPTION_TYPE save_options = unit->archive->options;
 
   if(lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX)
-    unit->archive->options |= OPTION_CPP;
+    unit->archive->options |= SRCML_OPTION_CPP;
   else if (lang == Language::LANGUAGE_CSHARP)
-    unit->archive->options |= OPTION_CPP_NOMACRO;
+    unit->archive->options |= SRCML_OPTION_CPP_NOMACRO;
 
   try {
 
@@ -205,9 +205,9 @@ int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
   OPTION_TYPE save_options = unit->archive->options;
 
   if(lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX)
-    unit->archive->options |= OPTION_CPP;
+    unit->archive->options |= SRCML_OPTION_CPP;
   else if (lang == Language::LANGUAGE_CSHARP)
-    unit->archive->options |= OPTION_CPP_NOMACRO;
+    unit->archive->options |= SRCML_OPTION_CPP_NOMACRO;
 
   xmlParserInputBufferPtr input = xmlParserInputBufferCreateFile(src_file, unit->archive->encoding ? xmlParseCharEncoding(unit->archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
 
@@ -239,9 +239,9 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
   OPTION_TYPE save_options = unit->archive->options;
 
   if(lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX)
-    unit->archive->options |= OPTION_CPP;
+    unit->archive->options |= SRCML_OPTION_CPP;
   else if (lang == Language::LANGUAGE_CSHARP)
-    unit->archive->options |= OPTION_CPP_NOMACRO;
+    unit->archive->options |= SRCML_OPTION_CPP_NOMACRO;
 
   xmlParserInputBufferPtr input = xmlParserInputBufferCreateFd(src_fd, unit->archive->encoding ? xmlParseCharEncoding(unit->archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
 
