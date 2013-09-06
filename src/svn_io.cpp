@@ -59,12 +59,20 @@ int abortfunc(int retcode) {
     }                                                                   \
   }
 
+#define CHECK_SVN_ERROR(CALL) svn_error = CALL;                         \
+                          if(svn_error) {                               \
+                                                                        \
+                            fprintf(stderr, "%s\n", svn_error->message); \
+                            exit(STATUS_INPUTFILE_PROBLEM);             \
+                          }
+ 
+
 // libsvn_*
 typedef svn_error_t * (*svn_ra_get_dir2_function) (svn_ra_session_t *session, apr_hash_t **dirents,
                                                    svn_revnum_t *fetched_rev, apr_hash_t **props,
                                                    const char *path, svn_revnum_t revision,
                                                    apr_uint32_t dirent_fields, apr_pool_t *pool);
-typedef svn_error_t (*svn_ra_initialize_function) (apr_pool_t *pool);
+typedef svn_error_t * (*svn_ra_initialize_function) (apr_pool_t *pool);
 typedef svn_error_t * (*svn_config_get_config_function) (apr_hash_t **cfg_hash, const char *config_dir, apr_pool_t *pool);
 typedef svn_error_t * (*svn_client_create_context_function) (svn_client_ctx_t **ctx, apr_pool_t *pool);
 typedef svn_error_t * (*svn_cmdline_create_auth_baton_function) (svn_auth_baton_t **ab, svn_boolean_t non_interactive,
@@ -340,8 +348,9 @@ void svn_process_session(svn_revnum_t revision, srcMLTranslator & translator, co
   svn_client_ctx_t * ctx;
   apr_hash_t * cfg_hash;
   svn_config_t * cfg_config;
+  svn_error_t * svn_error = 0;
 
-  svn_ra_initialize_dynamic(pool);
+  CHECK_SVN_ERROR(svn_ra_initialize_dynamic(pool));
   svn_config_get_config_dynamic(&cfg_hash, NULL, pool);
   svn_client_create_context_dynamic(&ctx, pool);
   //svn_client_create_context2(&ctx, cfg_hash, pool);
@@ -365,7 +374,7 @@ void svn_process_session(svn_revnum_t revision, srcMLTranslator & translator, co
   ctx->conflict_baton = NULL;
 
   svn_ra_session_t * session;
-  svn_error_t * svn_error = svn_client_open_ra_session_dynamic(&session, url, ctx, pool);
+  svn_error = svn_client_open_ra_session_dynamic(&session, url, ctx, pool);
   global_session = session;
 
   if(svn_error) {
