@@ -292,7 +292,10 @@ void svn_process_file(svn_ra_session_t * session, const char * url, const char *
 
     // output the currently processed filename
     if (!isoption(options, OPTION_QUIET))
-      fprintf(stderr, "%5d %s\n", count, c_filename);
+      if(strcmp(c_filename, "") != 0)
+        fprintf(stderr, "%5d %s/%s\n", count, url, c_filename);
+      else
+        fprintf(stderr, "%5d %s\n", count, url);
 
     // translate the file
     translator.translate(path, dir,
