@@ -95,7 +95,6 @@ int srcml(const char* input_filename, const char* output_filename) {
 
     } catch (FileError) {
 
-
       error = 1;
       srcml_error = "Error converting '";
       srcml_error += input_filename;
@@ -136,8 +135,6 @@ int srcml(const char* input_filename, const char* output_filename) {
     utility.extract_text(0, output_filename, 1);
 
   }
-
-
 
   return SRCML_STATUS_OK;
 }
@@ -390,7 +387,6 @@ const char* srcml_check_prefix(const char* namespace_uri) {
 
 /* namespace for an XML prefix */
 const char* srcml_check_namespace(const char* prefix) {
-
 
   try {
 
