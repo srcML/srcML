@@ -85,9 +85,12 @@ public :
       }
       found = true;
 
+      // get the root node of current unit
       xmlNodePtr node = xmlDocGetRootElement(ctxt->myDoc);
+      // output start unit tag
       xmlOutputBufferWriteElementNodeNs(buf, *node, pstate->isarchive);
 
+      // output any children
       if(node->children) {
 
         for(xmlNodePtr child = node->children; child; child = child->next)
@@ -97,6 +100,7 @@ public :
         const char * unit_prefix = (const char *)root_prefix;
         if(!unit_prefix) unit_prefix = (const char *)node->nsDef->prefix;
 
+        // output full end tag if children
         if(unit_prefix) {
           end_unit += unit_prefix;
           end_unit += ":";
@@ -106,6 +110,7 @@ public :
         xmlOutputBufferWrite(buf, end_unit.size(), end_unit.c_str());
 
       } else 
+        // output end as empty element if no children
         xmlOutputBufferWrite(buf, 2, "/>");
 
       if(pstate->isarchive) xmlOutputBufferWrite(buf, 2, "\n\n");
@@ -114,6 +119,7 @@ public :
 
     return true;
   }
+
   virtual void endOutput(void *ctx) {
 
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
