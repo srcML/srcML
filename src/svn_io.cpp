@@ -81,8 +81,7 @@ typedef svn_stream_t * (*svn_stream_from_stringbuf_function) (svn_stringbuf_t *s
 typedef svn_error_t * (*svn_ra_get_file_function) (svn_ra_session_t *session, const char *path, svn_revnum_t revision,
                                                    svn_stream_t *stream, svn_revnum_t *fetched_rev, apr_hash_t **props, apr_pool_t *pool);
 typedef svn_error_t * (*svn_stream_read_function) (svn_stream_t *stream, char *buffer, apr_size_t *len);
-typedef svn_error_t * (*svn_ra_get_latest_revnum_function) (svn_ra_session_t *session, svn_revnum_t *latest_revnum,
-                         apr_pool_t *pool);
+
 //libapr
 typedef apr_hash_index_t * (*apr_hash_first_function) (apr_pool_t *p, apr_hash_t *ht);
 typedef apr_hash_index_t * (*apr_hash_next_function) (apr_hash_index_t *hi);
@@ -107,7 +106,6 @@ DFDECLARE(svn_stringbuf_create_ensure)
 DFDECLARE(svn_stream_from_stringbuf)
 DFDECLARE(svn_ra_get_file)
 DFDECLARE(svn_stream_read)
-DFDECLARE(svn_ra_get_latest_revnum)
 
 DFDECLARE(apr_hash_first)
 DFDECLARE(apr_hash_next)
@@ -134,7 +132,6 @@ int svn_io_init() {
     DFLOAD(svn_ra_initialize)
     DFLOAD(svn_ra_stat)
     DFLOAD(svn_ra_get_file)
-    DFLOAD(svn_ra_get_latest_revnum)
 
     handle = dlopen("libsvn_subr-1.so", RTLD_LAZY);
   if (!handle) {
@@ -375,9 +372,6 @@ void svn_process_session(svn_revnum_t revision, srcMLTranslator & translator, co
   const char * path = "";
   apr_pool_t * path_pool;
   apr_pool_create_ex_dynamic(&path_pool, NULL, abortfunc, allocator);
-
-  if(revision == SVN_INVALID_REVNUM)
-    svn_ra_get_latest_revnum_dynamic(session, &revision, pool);
 
   svn_dirent_t * dirent;
   svn_ra_stat_dynamic(session, path, revision, &dirent, path_pool);
