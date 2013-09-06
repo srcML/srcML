@@ -188,7 +188,7 @@ DFLOAD(apr_terminate)
 
 }
 
-void svn_process_dir(svn_ra_session_t * session, const char * path, svn_revnum_t revision, apr_pool_t * pool, srcMLTranslator & translator, OPTION_TYPE & options, const char * dir, const char * filename, const char * version, int language, int tabsize, int & count, int & skipped, int & error) {
+void svn_process_dir(svn_ra_session_t * session, const char * url, const char * path, svn_revnum_t revision, apr_pool_t * pool, srcMLTranslator & translator, OPTION_TYPE & options, const char * dir, const char * filename, const char * version, int language, int tabsize, int & count, int & skipped, int & error) {
 
   apr_hash_t * dirents;
   svn_revnum_t fetched_rev;
@@ -220,9 +220,9 @@ void svn_process_dir(svn_ra_session_t * session, const char * path, svn_revnum_t
     apr_pool_create_ex_dynamic(&new_pool, NULL, abortfunc, allocator);
 
     if(dirent->kind == svn_node_file)
-      svn_process_file(session, new_path.c_str(), revision, new_pool, translator, options, dir, filename, version, language, tabsize, count, skipped, error);
+      svn_process_file(session, url, new_path.c_str(), revision, new_pool, translator, options, dir, filename, version, language, tabsize, count, skipped, error);
     else if(dirent->kind == svn_node_dir)
-      svn_process_dir(session, new_path.c_str(), revision, new_pool, translator, options, dir, filename, version, language, tabsize, count, skipped, error);
+      svn_process_dir(session, url, new_path.c_str(), revision, new_pool, translator, options, dir, filename, version, language, tabsize, count, skipped, error);
     else if(dirent->kind == svn_node_none)
       fprintf(stderr, "%s\n", "Path does not exist");
     else if(dirent->kind == svn_node_unknown)
@@ -234,7 +234,7 @@ void svn_process_dir(svn_ra_session_t * session, const char * path, svn_revnum_t
 
 }
 
-void svn_process_file(svn_ra_session_t * session, const char * path, svn_revnum_t revision, apr_pool_t * pool, srcMLTranslator & translator, OPTION_TYPE & options, const char * dir, const char * filename, const char * version, int language, int tabsize, int & count, int & skipped, int & error) {
+void svn_process_file(svn_ra_session_t * session, const char * url, const char * path, svn_revnum_t revision, apr_pool_t * pool, srcMLTranslator & translator, OPTION_TYPE & options, const char * dir, const char * filename, const char * version, int language, int tabsize, int & count, int & skipped, int & error) {
 
   global_revision = revision;
 
@@ -377,10 +377,10 @@ void svn_process_session(svn_revnum_t revision, srcMLTranslator & translator, co
   svn_ra_stat_dynamic(session, path, revision, &dirent, path_pool);
 
   if(dirent->kind == svn_node_file)
-    svn_process_file(session, path, revision, path_pool, translator, options, dir, filename, version,
+    svn_process_file(session, url, path, revision, path_pool, translator, options, dir, filename, version,
                      language ? language : Language::getLanguageFromFilename(url), tabsize, count, skipped, error);
   else if(dirent->kind == svn_node_dir)
-    svn_process_dir(session, path, revision, path_pool, translator, options, dir, filename, version, language, tabsize,
+    svn_process_dir(session, url, path, revision, path_pool, translator, options, dir, filename, version, language, tabsize,
                     count, skipped, error);
   else if(dirent->kind == svn_node_none)
     fprintf(stderr, "%s\n", "Path does not exist");
