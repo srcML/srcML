@@ -364,8 +364,11 @@ void svn_process_session(svn_revnum_t revision, srcMLTranslator & translator, co
   svn_error_t * svn_error = svn_client_open_ra_session_dynamic(&session, url, ctx, pool);
   global_session = session;
 
-  if(svn_error)
+  if(svn_error) {
+   
     fprintf(stderr, "%s\n", svn_error->message);
+    exit(STATUS_INPUTFILE_PROBLEM);
+  }
 
   const char * path = "";
   apr_pool_t * path_pool;
