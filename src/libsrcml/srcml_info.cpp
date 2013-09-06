@@ -24,13 +24,13 @@
 #include "../srcMLUtility.hpp"
 
 #define SRCML_OPTION_INFO 1 << 19
-#define SRCML_OPTION_NAMESPACE 1 << 19
+#define SRCML_OPTION_NAMESPACE 1 << 26
 #define SRCML_OPTION_LONG_INFO 1 << 20
-#define SRCML_OPTION_XML_ENCODING 1 << 20
-#define SRCML_OPTION_LANGUAGE 1 << 20
-#define SRCML_OPTION_DIRECTORY 1 << 20
-#define SRCML_OPTION_FILENAME 1 << 20
-#define SRCML_OPTION_VERSION 1 << 20
+#define SRCML_OPTION_XML_ENCODING 1 << 13
+#define SRCML_OPTION_LANGUAGE 1 << 12
+#define SRCML_OPTION_DIRECTORY 1 << 7
+#define SRCML_OPTION_FILENAME 1 << 6
+#define SRCML_OPTION_VERSION 1 << 8
 
 /* srcML attributes with namespaces (header read only)*/
 const char** srcml_info(const char* srcml_filename) {
