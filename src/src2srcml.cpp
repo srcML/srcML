@@ -593,7 +593,7 @@ int main(int argc, char* argv[]) {
         fprintf(stderr, "%s: failed to register svn handler\n", PROGRAM_NAME);
         exit(1);
       }
-      bool showinput;
+
       svn_process_session(poptions.revision, translator, poptions.src_filename, options, poptions.given_directory, poptions.given_filename, poptions.given_version, poptions.language, poptions.tabsize, poptions.count, poptions.skipped, poptions.error);
 
 #endif
