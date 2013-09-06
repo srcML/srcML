@@ -20,6 +20,7 @@
 
 #include "srcMLReader.hpp"
 #include "../srcmlns.hpp"
+#include "srcml.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -171,17 +172,17 @@ int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** 
     std::string ns = xmlns->href ? (const char *)xmlns->href : "";
 
     if(ns == SRCML_CPP_NS_URI)
-      options |= OPTION_CPP;
+      options |= SRCML_OPTION_CPP;
     else if(ns == SRCML_ERR_NS_URI)
-      options |= OPTION_DEBUG;
+      options |= SRCML_OPTION_DEBUG;
     else if(ns == SRCML_EXT_LITERAL_NS_URI)
-      options |= OPTION_LITERAL;
+      options |= SRCML_OPTION_LITERAL;
     else if(ns == SRCML_EXT_OPERATOR_NS_URI)
-      options |= OPTION_OPERATOR;
+      options |= SRCML_OPTION_OPERATOR;
     else if(ns == SRCML_EXT_MODIFIER_NS_URI)
-      options |= OPTION_MODIFIER;
+      options |= SRCML_OPTION_MODIFIER;
     else if(ns == SRCML_EXT_POSITION_NS_URI)
-      options |= OPTION_POSITION;
+      options |= SRCML_OPTION_POSITION;
 
     int i;
     try {

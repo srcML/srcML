@@ -59,6 +59,8 @@ const char* srcml_version_string();
 // srcML code to match these.
 #define SRCML_OPTION_LITERAL           1<<2/*1<<0  /* Markups literal in special namespace */
 #define SRCML_OPTION_MODIFIER          1<<17/*1<<1  /* Markups modifiers in special namespace */
+#define SRCML_OPTION_OPERATOR          1<<16/*1<<1  /* Markups operator in special namespace */
+#define SRCML_OPTION_DEBUG             1<<0/*1<<1  /* Markups operator in special namespace */
 #define SRCML_OPTION_ARCHIVE           1<<1/*1<<2  /* Create an archive */
 #define SRCML_OPTION_POSITION          1<<10/*1<<3  /* Include line/column position attributes */
 #define SRCML_OPTION_COMPRESS          1<<3/*1<<4  /* Compress the output file */
