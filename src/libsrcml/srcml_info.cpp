@@ -23,13 +23,22 @@
 
 #include "../srcMLUtility.hpp"
 
+#define SRCML_OPTION_INFO 1 << 19
+#define SRCML_OPTION_NAMESPACE 1 << 19
+#define SRCML_OPTION_LONG_INFO 1 << 20
+#define SRCML_OPTION_XML_ENCODING 1 << 20
+#define SRCML_OPTION_LANGUAGE 1 << 20
+#define SRCML_OPTION_DIRECTORY 1 << 20
+#define SRCML_OPTION_FILENAME 1 << 20
+#define SRCML_OPTION_VERSION 1 << 20
+
 /* srcML attributes with namespaces (header read only)*/
 const char** srcml_info(const char* srcml_filename) {
 
-  OPTION_TYPE options = OPTION_INFO | OPTION_NAMESPACE;
+  OPTION_TYPE options = SRCML_OPTION_INFO | SRCML_OPTION_NAMESPACE;
   srcMLUtility utility(srcml_filename, "UTF-8", options);
   int optioncount = 5;
-  int optionorder[] = { OPTION_XML_ENCODING, OPTION_LANGUAGE, OPTION_DIRECTORY, OPTION_FILENAME, OPTION_VERSION };
+  int optionorder[] = { SRCML_OPTION_XML_ENCODING, SRCML_OPTION_LANGUAGE, SRCML_OPTION_DIRECTORY, SRCML_OPTION_FILENAME, SRCML_OPTION_VERSION };
   std::vector<std::string> output_array;
   utility.move_to_unit(0, utility, options, optioncount, optionorder, output_array);
 
@@ -50,10 +59,10 @@ const char** srcml_info(const char* srcml_filename) {
 /* srcML attributes with namespaces and number of units (complete file read) */
 const char** srcml_longinfo(const char* srcml_filename) {
 
-  OPTION_TYPE options = OPTION_LONG_INFO | OPTION_NAMESPACE;
+  OPTION_TYPE options = SRCML_OPTION_LONG_INFO | SRCML_OPTION_NAMESPACE;
   srcMLUtility utility(srcml_filename, "UTF-8", options);
   int optioncount = 5;
-  int optionorder[] = { OPTION_XML_ENCODING, OPTION_LANGUAGE, OPTION_DIRECTORY, OPTION_FILENAME, OPTION_VERSION };
+  int optionorder[] = { SRCML_OPTION_XML_ENCODING, SRCML_OPTION_LANGUAGE, SRCML_OPTION_DIRECTORY, SRCML_OPTION_FILENAME, SRCML_OPTION_VERSION };
   std::vector<std::string> output_array;
   utility.move_to_unit(-1, utility, options, optioncount, optionorder, output_array);
 
@@ -74,10 +83,10 @@ const char** srcml_longinfo(const char* srcml_filename) {
 /* srcML attributes with namespaces of a particular unit in an archive */
 const char** srcml_info_unit(const char* srcml_filename, int unit) {
 
-  OPTION_TYPE options = OPTION_INFO | OPTION_NAMESPACE;
+  OPTION_TYPE options = SRCML_OPTION_INFO | SRCML_OPTION_NAMESPACE;
   srcMLUtility utility(srcml_filename, "UTF-8", options);
   int optioncount = 5;
-  int optionorder[] = { OPTION_XML_ENCODING, OPTION_LANGUAGE, OPTION_DIRECTORY, OPTION_FILENAME, OPTION_VERSION };
+  int optionorder[] = { SRCML_OPTION_XML_ENCODING, SRCML_OPTION_LANGUAGE, SRCML_OPTION_DIRECTORY, SRCML_OPTION_FILENAME, SRCML_OPTION_VERSION };
   std::vector<std::string> output_array;
   utility.move_to_unit(unit, utility, options, optioncount, optionorder, output_array);
 
