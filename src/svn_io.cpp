@@ -117,7 +117,7 @@ DFDECLARE(apr_initialize)
 DFDECLARE(apr_hash_get)
 DFDECLARE(apr_terminate)
 
-int subversion_init() {
+int svn_io_init() {
 #if defined(__GNUG__) && !defined(__MINGW32__)
   void* handle = dlopen("libsvn_ra-1.so", RTLD_LAZY);
   if (!handle) {
@@ -324,6 +324,7 @@ void svn_process_file(svn_ra_session_t * session, const char * path, svn_revnum_
 
 void svn_process_session(svn_revnum_t revision, srcMLTranslator & translator, const char * url, OPTION_TYPE & options, const char * dir, const char * filename, const char * version, int language, int tabsize, int & count, int & skipped, int & error, bool & showinput, bool shownumber) {
 
+  svn_io_init();
   apr_initialize_dynamic();
 
   apr_allocator_t * allocator;
