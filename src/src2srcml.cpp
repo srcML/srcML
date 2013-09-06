@@ -353,9 +353,9 @@ struct process_options
   const char* given_filename;
   const char* given_version;
   int tabsize;
-    int count; // archive total count
-    int skipped;
-    int error;
+  int count; // archive total count
+  int skipped;
+  int error;
     
 #ifdef SVN
 
@@ -593,8 +593,8 @@ int main(int argc, char* argv[]) {
         fprintf(stderr, "%s: failed to register svn handler\n", PROGRAM_NAME);
         exit(1);
       }
-      int count = 0; bool showinput;
-      svn_process_session(poptions.revision, translator, poptions.src_filename, options, poptions.given_directory, poptions.given_filename, poptions.given_version, poptions.language, poptions.tabsize, count, count, error, showinput, showinput);
+      bool showinput;
+      svn_process_session(poptions.revision, translator, poptions.src_filename, options, poptions.given_directory, poptions.given_filename, poptions.given_version, poptions.language, poptions.tabsize, poptions.count, poptions.skipped, poptions.error);
 
 #endif
     }
