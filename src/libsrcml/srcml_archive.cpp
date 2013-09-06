@@ -315,7 +315,7 @@ int srcml_archive_get_tabstop(const srcml_archive* archive) {
 int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename) {
 
   archive->type = SRCML_ARCHIVE_WRITE;
-  archive->options |= OPTION_NESTED;
+  archive->options |= SRCML_OPTION_ARCHIVE;
   try {
 
     archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
@@ -337,7 +337,7 @@ int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename
 int srcml_write_open_memory(srcml_archive* archive, char** buffer) {
 
   archive->type = SRCML_ARCHIVE_WRITE;
-  archive->options |= OPTION_NESTED;
+  archive->options |= SRCML_OPTION_ARCHIVE;
   try {
 
     archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
@@ -370,7 +370,7 @@ int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
   }
 
   archive->type = SRCML_ARCHIVE_WRITE;
-  archive->options |= OPTION_NESTED;
+  archive->options |= SRCML_OPTION_ARCHIVE;
   try {
 
     archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
@@ -409,7 +409,7 @@ int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
   }
 
   archive->type = SRCML_ARCHIVE_WRITE;
-  archive->options |= OPTION_NESTED;
+  archive->options |= SRCML_OPTION_ARCHIVE;
   try {
 
     archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
