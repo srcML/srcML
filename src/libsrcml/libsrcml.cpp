@@ -19,7 +19,7 @@
 */
 
 /*
-  Implementation of srcml functions from the namespace srcml_*
+  Implementation of srcml simple API (global archive) functions from the namespace srcml_*
 */
 
 #include "srcml.h"
