@@ -540,7 +540,7 @@ int srcml_read_open_fd(srcml_archive* archive, int srcml_fd) {
 /* Read the next unit from the archive */
 const srcml_unit* srcml_read_unit_archive(srcml_archive* archive) {
 
-  if(archive->type != SRCML_ARCHIVE_READ || archive->type != SRCML_ARCHIVE_RW) return 0;
+  if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return 0;
 
   return srcml_read_unit(archive);
 
@@ -548,7 +548,7 @@ const srcml_unit* srcml_read_unit_archive(srcml_archive* archive) {
 
 const srcml_unit* srcml_read_archive_current_unit(const srcml_archive* archive) {
 
-  if(archive->type != SRCML_ARCHIVE_READ || archive->type != SRCML_ARCHIVE_RW) return 0;
+  if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return 0;
 
   std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
   bool done = !archive->reader->readUnitAttributes(&language, &filename, &directory, &version);
@@ -568,8 +568,7 @@ const srcml_unit* srcml_read_archive_current_unit(const srcml_archive* archive) 
 
 int srcml_write_unit(srcml_archive* archive, const srcml_unit* unit) {
 
-  if(archive->type != SRCML_ARCHIVE_WRITE || archive->type != SRCML_ARCHIVE_RW) return 0;
-
+  if(archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW) return 0;
   archive->translator->add_unit(unit->unit->c_str());
 
   return SRCML_STATUS_OK;
@@ -578,7 +577,7 @@ int srcml_write_unit(srcml_archive* archive, const srcml_unit* unit) {
 /* Read the next unit from the archive */
 srcml_unit* srcml_read_unit(srcml_archive* archive) {
 
-  if(archive->type != SRCML_ARCHIVE_READ || archive->type != SRCML_ARCHIVE_RW) return 0;
+  if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return 0;
 
   std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
   archive->reader->readUnitAttributes(&language, &filename, &directory, &version);
@@ -600,14 +599,14 @@ srcml_unit* srcml_read_unit(srcml_archive* archive) {
 /* close the srcML archive */
 void srcml_write_close(srcml_archive* archive) {
 
-  //if(archive->type != SRCML_ARCHIVE_WRITE || archive->type != SRCML_ARCHIVE_RW);
+  //if(archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW);
   srcml_close_archive(archive);
 
 }
 
 void srcml_read_close(srcml_archive* archive) {
 
-  //if(archive->type != SRCML_ARCHIVE_READ || archive->type != SRCML_ARCHIVE_RW);
+  //if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW);
   srcml_close_archive(archive);
 
 }
@@ -624,14 +623,14 @@ void srcml_close_archive(srcml_archive * archive) {
 /* free the srcML archive data */
 void srcml_write_free(srcml_archive* archive) {
 
-  //if(archive->type != SRCML_ARCHIVE_WRITE || archive->type != SRCML_ARCHIVE_RW);
+  //if(archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW);
   srcml_free_archive(archive);
 
 }
 
 void srcml_read_free(srcml_archive* archive) {
 
-  //if(archive->type != SRCML_ARCHIVE_READ || archive->type != SRCML_ARCHIVE_RW);
+  //if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW);
   srcml_free_archive(archive);
 
 }
