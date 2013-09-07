@@ -58,9 +58,8 @@ int srcml_append_transform_relaxng(srcml_archive* archive, const char* relaxng_f
 // TODO What happends to intermediate results?
 int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
-  const char * transform_filename_template = "srcml_transform_XXXXXXXX";
+  static const char * transform_filename_template = "srcml_transform_XXXXXXXX";
 
-  int input = 0;
   const char * last_transform_filename = 0;
   for(int i = 0; i < iarchive->transformations.size(); ++i) {
 
@@ -110,8 +109,14 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
       }
 
-    } catch(...) {}
-
+    } catch(...) {
+ 
+      if(i != 0) xmlFreeParserInputBuffer(pinput);
+      unlink(last_transform_filename);
+      free((void *)last_transform_filename);
+  
+      return SRCML_STATUS_ERROR;
+    }
 
     if(i != 0) xmlFreeParserInputBuffer(pinput);
     unlink(last_transform_filename);
