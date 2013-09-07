@@ -42,7 +42,8 @@
 
 std::string srcml_error;
 
-// global archive for use with srcml() function.  Defaulted values.
+// global archive for use with srcml() function.  Defaulted values. Archive is used for both read and write
+// first call to srcml initializes other parameters.
 srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector<std::string>(), 0,
                                  4, std::vector<std::string>(), std::vector<std::string>(), std::vector<pair>(),
                                  0, 0, 0, std::vector<transform>() };
@@ -61,7 +62,12 @@ int srcml_version_number() {
 
 }
 
-/* translates to/from srcML */
+/* 
+   translates to/from srcML 
+   Input files with extension xml and language set to xml result in srcml2src behaviour.
+   All other ending extensions result in src2srcml.  Currently, xml files are not detected if they are 
+   in any other archive format e.g. tar, gz i.e. a.xml.tar.gz.  Only a.xml will be detected from extension.
+*/
 int srcml(const char* input_filename, const char* output_filename) {
 
   if(!input_filename) {
