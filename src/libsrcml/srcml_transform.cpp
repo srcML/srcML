@@ -28,6 +28,7 @@
 
 
 /* srcML XPath query and XSLT transform functions */
+// As of yet no way to specify context
 int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_string) {
 
   transform tran = { SRCML_XPATH, xpath_string };
@@ -37,6 +38,7 @@ int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_strin
 
 }
 
+// As of yet no way to specify parameters or context
 int srcml_append_transform_xslt(srcml_archive* archive, const char* xslt_filename) {
 
   transform tran = { SRCML_XSLT, xslt_filename };
@@ -55,13 +57,18 @@ int srcml_append_transform_relaxng(srcml_archive* archive, const char* relaxng_f
 
 }
 
-// TODO What happends to intermediate results?
+/*
+
+  Apply appended transformations inorder added and consecutively.
+  Intermediate results are stored in a temporary file.
+
+ */
 int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
   static const char * transform_filename_template = "srcml_transform_XXXXXXXX";
 
   const char * last_transform_filename = 0;
-  for(int i = 0; i < iarchive->transformations.size(); ++i) {
+  for(unsigned int i = 0; i < iarchive->transformations.size(); ++i) {
 
     char * transform_filename = strdup(transform_filename_template);
     int transform_fd = mkstemp(transform_filename);
@@ -69,25 +76,29 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
     xmlParserInputBufferPtr pinput = 0;
     if(i == 0) pinput = iarchive->input;
     else pinput = xmlParserInputBufferCreateFilename(last_transform_filename, xmlParseCharEncoding(0));
-    if(pinput == NULL) return SRCML_STATUS_ERROR;      
+
+    if(pinput == NULL) {
+
+      close(transform_fd);
+      free((void *)transform_filename);
+      return SRCML_STATUS_ERROR;
+
+    }      
+
     srcMLUtility utility(pinput, oarchive->encoding ? oarchive->encoding->c_str() : "UTF-8", oarchive->options);
 
     try {
 
       switch(iarchive->transformations.at(i).type) {
 
-      case SRCML_XPATH:
-
-        {
+      case SRCML_XPATH: {
 
           const char * xpaths[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
           utility.xpath(0, "src:unit", xpaths, transform_fd);
           break;
         }
 
-      case SRCML_XSLT:
-
-        {
+      case SRCML_XSLT: {
 
           const char * xslts[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
           const char * params[1] = { 0 };
@@ -95,22 +106,20 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
           break;
         }
 
-      case SRCML_RELAXNG:
-
-        {
+      case SRCML_RELAXNG: {
 
           const char * relaxngs[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
           utility.relaxng(0, relaxngs, transform_fd);
           break;
         }
 
-      default :
-        break;
+      default : break;
 
       }
 
     } catch(...) {
  
+      close(transform_fd);
       if(i != 0) xmlFreeParserInputBuffer(pinput);
       unlink(last_transform_filename);
       free((void *)last_transform_filename);
