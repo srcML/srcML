@@ -64,7 +64,7 @@ int srcml_append_transform_relaxng(srcml_archive* archive, const char* relaxng_f
 
  */
 int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
-
+#if defined(__GNUG__) && !defined(__MINGW32__)
   static const char * transform_filename_template = "srcml_transform_XXXXXXXX";
 
   const char * last_transform_filename = 0;
@@ -152,7 +152,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
   free((void *)last_transform_filename);
 
   iarchive->transformations.clear();
-
+#endif
   return SRCML_STATUS_OK;
 
 }
