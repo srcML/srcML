@@ -26,6 +26,8 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 /* srcML XPath query and XSLT transform functions */
 // As of yet no way to specify context
