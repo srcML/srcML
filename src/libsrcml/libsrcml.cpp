@@ -408,9 +408,7 @@ const char* srcml_check_namespace(const char* prefix) {
 
 /* whether various features are available in this installation */
 int srcml_check_xslt() {
-#ifdef LIBXSLT_VERSION
-  return 1;
-#else
+#if defined(__GNUG__) && !defined(__MINGW32__)
   void* handle = dlopen("libxslt.so", RTLD_LAZY);
   if (!handle)
     handle = dlopen("libxslt.dylib", RTLD_LAZY);
@@ -419,21 +417,23 @@ int srcml_check_xslt() {
 
   dlclose(handle);
   return 1;
+#else
+  return 1;
 #endif
 
 }
 
 int srcml_check_exslt() {
-#ifdef LIBXSLT_VERSION
-  return 1;
-#else
-  void* handle = dlopen("libexslt.so", RTLD_LAZY);
+#if defined(__GNUG__) && !defined(__MINGW32__)
+  void* handle = dlopen("libxslt.so", RTLD_LAZY);
   if (!handle)
-    handle = dlopen("libexslt.dylib", RTLD_LAZY);
+    handle = dlopen("libxslt.dylib", RTLD_LAZY);
 
   if(!handle) return 0;
 
   dlclose(handle);
+  return 1;
+#else
   return 1;
 #endif
 }
