@@ -25,8 +25,7 @@
 
 #include <stdio.h>
 #include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
+#include <fcntl.h>
 
 /* srcML XPath query and XSLT transform functions */
 // As of yet no way to specify context
@@ -75,11 +74,9 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 #if defined(__GNUG__) && !defined(__MINGW32__)
     int transform_fd = mkstemp(transform_filename);
 #else
-    mkstemp(transform_filename);
-    int transform_fd = open(transform_filename, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | IWUSR | S_IRGRP | S_IROTH);
-
+    mktemp(transform_filename);
+    int transform_fd = open(transform_filename, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 #endif
-
 
     xmlParserInputBufferPtr pinput = 0;
     if(i == 0) pinput = iarchive->input;
