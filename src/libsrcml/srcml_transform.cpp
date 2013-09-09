@@ -75,7 +75,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
     int transform_fd = mkstemp(transform_filename);
 #else
     mkstemp(transform_filename);
-    int transform_fd = open(transform_filename, O_WRONLY | O_CREAT | O_TRUNC);
+    int transform_fd = open(transform_filename, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | IWUSR | S_IRGRP | S_IROTH);
 
 #endif
 
