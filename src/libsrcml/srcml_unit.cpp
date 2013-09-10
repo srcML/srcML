@@ -29,7 +29,7 @@ int srcml_unit_set_language(srcml_unit* unit, const char* language) {
   if(unit->language) delete unit->language;
   try {
 
-    unit->language = new std::string(language);
+    unit->language = language  ? new std::string(language) : 0;
 
   } catch(...) { return SRCML_STATUS_ERROR; }
   return SRCML_STATUS_OK;
@@ -41,7 +41,7 @@ int srcml_unit_set_filename(srcml_unit* unit, const char* filename) {
   if(unit->filename) delete unit->filename;
   try {
 
-    unit->filename = new std::string(filename);
+    unit->filename = filename ? new std::string(filename) : 0;
 
   } catch(...) { return SRCML_STATUS_ERROR; }
   return SRCML_STATUS_OK;
@@ -53,7 +53,7 @@ int srcml_unit_set_directory(srcml_unit* unit, const char* directory) {
   if(unit->directory) delete unit->directory;
   try {
 
-    unit->directory = new std::string(directory);
+    unit->directory = directory ? new std::string(directory) : 0;
 
   } catch(...) { return SRCML_STATUS_ERROR; }
   return SRCML_STATUS_OK;
@@ -65,7 +65,7 @@ int srcml_unit_set_version(srcml_unit* unit, const char* version) {
   if(unit->version) delete unit->version;
   try {
 
-    unit->version = new std::string(version);
+    unit->version = version ? new std::string(version) : 0;
 
   } catch(...) { return SRCML_STATUS_ERROR; }
   return SRCML_STATUS_OK;
