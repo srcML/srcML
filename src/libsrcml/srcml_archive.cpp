@@ -201,7 +201,7 @@ int srcml_archive_set_version(srcml_archive* archive, const char* version) {
 
 }
 
-int srcml_archive_set_attributes(srcml_archive* archive, const char** attr[2]) {
+int srcml_archive_set_attributes(srcml_archive* archive, const char* (*attr)[2]) {
 
   archive->attributes.clear();
 
