@@ -241,6 +241,21 @@ int main(int argc, char * argv[]) {
 
     assert(srcml_archive_register_file_extension(archive, "foo", "C+") == SRCML_STATUS_ERROR);
 
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    assert(srcml_archive_register_file_extension(archive, "foo", 0) == SRCML_STATUS_ERROR);
+
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    assert(srcml_archive_register_file_extension(archive, 0, "C++") == SRCML_STATUS_ERROR);
 
   }
 
