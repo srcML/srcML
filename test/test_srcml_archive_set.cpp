@@ -160,6 +160,60 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(archive);
   }
 
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    srcml_archive_set_options(archive, 1);
+    srcml_archive_set_option(archive, 2 | 4);
+
+    assert(archive->options == (1 | 2 | 4));
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    srcml_archive_clear_option(archive, 0);
+
+    assert(archive->options == 0);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    srcml_archive_set_options(archive, 1 | 2 | 4);
+    srcml_archive_clear_option(archive, 0);
+
+    assert(archive->options == (1 | 2 | 4));
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    srcml_archive_set_options(archive, 1 | 2 | 4);
+    srcml_archive_clear_option(archive, 2);
+
+    assert(archive->options ==  (1 | 4));
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    srcml_archive_set_options(archive, 1 | 2 | 4);
+    srcml_archive_clear_option(archive, 1 | 2);
+
+    assert(archive->options ==  4);
+    srcml_free_archive(archive);
+  }
+
 
   return 0;
 }
