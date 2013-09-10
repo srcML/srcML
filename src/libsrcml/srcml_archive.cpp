@@ -207,6 +207,12 @@ int srcml_archive_set_attributes(srcml_archive* archive, const char** attr[2]) {
 
   while((*attr)[0]) {
 
+    if((*attr)[0] == 0 || (*attr)[1] == 0) {
+      archive->attributes.clear();
+      return SRCML_STATUS_ERROR;
+
+    }
+
     archive->attributes.push_back((*attr)[0]);
     archive->attributes.push_back((*attr)[1]);
     ++attr;
