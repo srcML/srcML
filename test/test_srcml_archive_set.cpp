@@ -101,10 +101,24 @@ int main(int argc, char * argv[]) {
 
     srcml_archive_set_attributes(archive, attr);
 
+    assert(archive->attributes.size() == 4);
     assert(archive->attributes.at(0) == "foo");
     assert(archive->attributes.at(1) == "bar");
     assert(archive->attributes.at(2) == "");
     assert(archive->attributes.at(3) == "");
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    const char * attribute_one[2] = {"foo", "bar"};
+    const char * attribute_two[2] = {"", ""};
+    const char * attr[3][2] = { "foo", "bar", "", 0, 0, 0 };
+
+    srcml_archive_set_attributes(archive, attr);
+
+    assert(archive->attributes.size() == 0);
     srcml_free_archive(archive);
   }
 
