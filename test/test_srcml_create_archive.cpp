@@ -51,6 +51,8 @@ int main(int argc, char * argv[]) {
     assert(archive->input == 0);
 
     assert(archive->transformations.size() == 0);
+
+    srcml_free_archive(archive);
   }
 
   return 0;
