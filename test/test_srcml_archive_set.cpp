@@ -228,12 +228,11 @@ int main(int argc, char * argv[]) {
 
     srcml_archive * archive = srcml_create_archive();
 
-    srcml_archive_register_file_extension(archive, "foo", "C++");
+    srcml_register_file_extension(archive, "foo", "C++");
 
-    assert(archive->tabstop == 4);
+    assert(archive->registered_languages.back().s == "fo");
     srcml_free_archive(archive);
   }
-
 
   return 0;
 }
