@@ -30,6 +30,9 @@ int main(int argc, char * argv[]) {
     assert(archive->namespaces.size() == 7);
     assert(archive->registered_languages.size() != 0);
 
+    assert(archive->prefix.at(0) == SRCML_SRC_NS_PREFIX_DEFAULT);
+    assert(archive->namespaces.at(0) == SRCML_SRC_NS_URI);
+
     assert(archive->translator == 0);
     assert(archive->reader == 0);
     assert(archive->input == 0);
