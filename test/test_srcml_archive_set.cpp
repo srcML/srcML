@@ -231,7 +231,7 @@ int main(int argc, char * argv[]) {
     srcml_archive_register_file_extension(archive, "foo", "C++");
 
     assert(archive->registered_languages.back().s == "foo");
-    assert(archive->registered_languages.back().n == );
+    assert(archive->registered_languages.back().n == 2);
     srcml_free_archive(archive);
   }
 
