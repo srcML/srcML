@@ -1,13 +1,14 @@
 /*
 
   Test cases for srcml_create_archive.
- */
+*/
 #include <stdio.h>
 #include <string.h>
 #include <cassert>
 
 #include <srcml.h>
 #include <srcml_types.hpp>
+#include <srcmlns.hpp>
 
 int main(int argc, char * argv[]) {
 
@@ -31,7 +32,19 @@ int main(int argc, char * argv[]) {
     assert(archive->registered_languages.size() != 0);
 
     assert(archive->prefix.at(0) == SRCML_SRC_NS_PREFIX_DEFAULT);
-    assert(archive->namespaces.at(0) == SRCML_SRC_NS_URI);
+    assert(archive->namepspaces.at(0) == SRCML_SRC_NS_URI);
+    assert(archive->prefix.at(0) == SRCML_CPP_NS_PREFIX_DEFAULT);
+    assert(archive->namepspaces.at(0) == SRCML_CPP_NS_URI);
+    assert(archive->prefix.at(0) == SRCML_ERR_NS_PREFIX_DEFAULT);
+    assert(archive->namepspaces.at(0) == SRCML_ERR_NS_URI);
+    assert(archive->prefix.at(0) == SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT);
+    assert(archive->namepspaces.at(0) == SRCML_EXT_LITERAL_NS_URI);
+    assert(archive->prefix.at(0) == SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT);
+    assert(archive->namepspaces.at(0) == SRCML_EXT_OPERATOR_NS_URI);
+    assert(archive->prefix.at(0) == SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT);
+    assert(archive->namepspaces.at(0) == SRCML_EXT_MODIFIER_NS_URI);
+    assert(archive->prefix.at(0) == SRCML_EXT_POSITION_NS_PREFIX_DEFAULT);
+    assert(archive->namepspaces.at(0) == SRCML_EXT_POSITION_NS_URI);
 
     assert(archive->translator == 0);
     assert(archive->reader == 0);
