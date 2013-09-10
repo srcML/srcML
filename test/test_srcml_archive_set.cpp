@@ -124,7 +124,7 @@ int main(int argc, char * argv[]) {
 
     srcml_archive_set_options(archive, 1 | 2 | 4);
 
-    assert(archive->options ==  1 | 2 | 4);
+    assert(archive->options == (1 | 2 | 4));
     srcml_free_archive(archive);
   }
 
@@ -135,7 +135,7 @@ int main(int argc, char * argv[]) {
     srcml_archive_set_options(archive, 1 | 2 | 4);
     srcml_archive_set_options(archive, 1);
 
-    assert(archive->options ==  1);
+    assert(archive->options == 1);
     srcml_free_archive(archive);
   }
 
@@ -145,7 +145,7 @@ int main(int argc, char * argv[]) {
 
     srcml_archive_set_option(archive, 1);
 
-    assert(archive->options ==  1);
+    assert(archive->options == 1);
     srcml_free_archive(archive);
   }
 
@@ -156,7 +156,7 @@ int main(int argc, char * argv[]) {
     srcml_archive_set_options(archive, 1 | 2);
     srcml_archive_set_option(archive, 4);
 
-    assert(archive->options ==  1 | 2 | 4);
+    assert(archive->options == (1 | 2 | 4));
     srcml_free_archive(archive);
   }
 
