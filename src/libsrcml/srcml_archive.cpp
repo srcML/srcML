@@ -207,7 +207,7 @@ int srcml_archive_set_attributes(srcml_archive* archive, const char* (*attr)[2])
 
   while((*attr)[0]) {
 
-    if((*attr)[0] == 0 || (*attr)[1] == 0) {
+    if((*attr)[1] == 0) {
       archive->attributes.clear();
       return SRCML_STATUS_ERROR;
 
@@ -216,6 +216,7 @@ int srcml_archive_set_attributes(srcml_archive* archive, const char* (*attr)[2])
     archive->attributes.push_back((*attr)[0]);
     archive->attributes.push_back((*attr)[1]);
     ++attr;
+
   }
 
   return SRCML_STATUS_OK;
@@ -252,9 +253,12 @@ int srcml_archive_set_tabstop(srcml_archive* archive, int tabstop) {
 
 int srcml_archive_register_file_extension(srcml_archive* archive, const char* extension, const char* language) {
 
-  Language::registerUserExt(extension, language, archive->registered_languages);
-  return SRCML_STATUS_OK;
+  if(extension == 0 || language == 0)
+    return SRCML_STATUS_ERROR;
 
+  if(Language::registerUserExt(extension, language, archive->registered_languages))
+    return SRCML_STATUS_OK;
+  return SRCML_STATUS_ERROR;
 }
 
 int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix, const char* ns) {
