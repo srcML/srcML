@@ -23,9 +23,9 @@ int main(int argc, char * argv[]) {
     assert(archive->version == 0);
     assert(archive->attributes.size() == 0);
 
-    //assert(archive->options == 0);
+    assert(archive->options == 0);
 
-    int tabstop;
+    assert(archive->tabstop == 0);
     std::vector<std::string> prefixes;
     std::vector<std::string> namespaces;
     std::vector<pair> registered_languages;
@@ -34,7 +34,7 @@ int main(int argc, char * argv[]) {
     assert(archive->reader == 0);
     assert(archive->input == 0);
 
-    assert(archive->transformations.size() = 0);
+    assert(archive->transformations.size() == 0);
   }
 
   return 0;
