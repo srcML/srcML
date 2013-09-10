@@ -26,9 +26,9 @@ int main(int argc, char * argv[]) {
     assert(archive->options == 0);
 
     assert(archive->tabstop == 0);
-    std::vector<std::string> prefixes;
-    std::vector<std::string> namespaces;
-    std::vector<pair> registered_languages;
+    assert(archive->prefixes.size() == 7);
+    assert(archive->namespaces.size() == 7);
+    assert(archive->registered_languages.size() != 0);
 
     assert(archive->translator == 0);
     assert(archive->reader == 0);
