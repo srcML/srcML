@@ -146,7 +146,7 @@ int srcml_archive_set_encoding(srcml_archive* archive, const char* encoding) {
   if(archive->encoding) delete archive->encoding;
   try {
 
-    archive->encoding = new std::string(encoding);
+    archive->encoding = encoding ? new std::string(encoding) : 0;
 
   } catch(...) { return SRCML_STATUS_ERROR; }
   return SRCML_STATUS_OK;
@@ -158,7 +158,7 @@ int srcml_archive_set_language(srcml_archive* archive, const char* language) {
   if(archive->language) delete archive->language;
   try {
 
-    archive->language = new std::string(language);
+    archive->language = language ? new std::string(language) : 0;
 
   } catch(...) { return SRCML_STATUS_ERROR; }
   return SRCML_STATUS_OK;
@@ -170,7 +170,7 @@ int srcml_archive_set_filename(srcml_archive* archive, const char* filename) {
   if(archive->filename) delete archive->filename;
   try {
 
-    archive->filename = new std::string(filename);
+    archive->filename = filename ? new std::string(filename) : 0;
 
   } catch(...) { return SRCML_STATUS_ERROR; }
   return SRCML_STATUS_OK;
@@ -182,7 +182,7 @@ int srcml_archive_set_directory (srcml_archive* archive, const char* directory) 
   if(archive->directory) delete archive->directory;
   try {
 
-    archive->directory = new std::string(directory);
+    archive->directory = directory ? new std::string(directory) : 0;
 
   } catch(...) { return SRCML_STATUS_ERROR; }
   return SRCML_STATUS_OK;
@@ -194,7 +194,7 @@ int srcml_archive_set_version(srcml_archive* archive, const char* version) {
   if(archive->version) delete archive->version;
   try {
 
-    archive->version = new std::string(version);
+    archive->version = version ? new std::string(version) : 0;
 
   } catch(...) { return SRCML_STATUS_ERROR; }
   return SRCML_STATUS_OK;
