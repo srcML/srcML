@@ -199,7 +199,7 @@ int main(int argc, char * argv[]) {
     srcml_archive_set_options(archive, 1 | 2 | 4);
     srcml_archive_clear_option(archive, 2);
 
-    assert(archive->options ==  (1 | 4));
+    assert(archive->options == (1 | 4));
     srcml_free_archive(archive);
   }
 
@@ -210,9 +210,30 @@ int main(int argc, char * argv[]) {
     srcml_archive_set_options(archive, 1 | 2 | 4);
     srcml_archive_clear_option(archive, 1 | 2);
 
-    assert(archive->options ==  4);
+    assert(archive->options == 4);
     srcml_free_archive(archive);
   }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    srcml_archive_set_tabstop(archive, 4);
+
+    assert(archive->tabstop == 4);
+    srcml_free_archive(archive);
+  }
+
+    {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    srcml_archive_register_file_extension(archive, "foo", "bar");
+
+    srcml_free_archive(archive);
+  }
+
+  
 
 
   return 0;
