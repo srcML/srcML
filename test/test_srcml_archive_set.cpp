@@ -228,9 +228,9 @@ int main(int argc, char * argv[]) {
 
     srcml_archive * archive = srcml_create_archive();
 
-    srcml_register_file_extension(archive, "foo", "C++");
+    srcml_archive_register_file_extension(archive, "foo", "C++");
 
-    assert(archive->registered_languages.back().s == "fo");
+    assert(archive->registered_languages.back().s == "foo");
     srcml_free_archive(archive);
   }
 
