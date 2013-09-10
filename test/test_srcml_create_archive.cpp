@@ -31,20 +31,20 @@ int main(int argc, char * argv[]) {
     assert(archive->namespaces.size() == 7);
     assert(archive->registered_languages.size() != 0);
 
-    assert(archive->prefix.at(0) == SRCML_SRC_NS_PREFIX_DEFAULT);
-    assert(archive->namepspaces.at(0) == SRCML_SRC_NS_URI);
-    assert(archive->prefix.at(0) == SRCML_CPP_NS_PREFIX_DEFAULT);
-    assert(archive->namepspaces.at(0) == SRCML_CPP_NS_URI);
-    assert(archive->prefix.at(0) == SRCML_ERR_NS_PREFIX_DEFAULT);
-    assert(archive->namepspaces.at(0) == SRCML_ERR_NS_URI);
-    assert(archive->prefix.at(0) == SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT);
-    assert(archive->namepspaces.at(0) == SRCML_EXT_LITERAL_NS_URI);
-    assert(archive->prefix.at(0) == SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT);
-    assert(archive->namepspaces.at(0) == SRCML_EXT_OPERATOR_NS_URI);
-    assert(archive->prefix.at(0) == SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT);
-    assert(archive->namepspaces.at(0) == SRCML_EXT_MODIFIER_NS_URI);
-    assert(archive->prefix.at(0) == SRCML_EXT_POSITION_NS_PREFIX_DEFAULT);
-    assert(archive->namepspaces.at(0) == SRCML_EXT_POSITION_NS_URI);
+    assert(archive->prefixes.at(0) == SRCML_SRC_NS_PREFIX_DEFAULT);
+    assert(archive->namespaces.at(0) == SRCML_SRC_NS_URI);
+    assert(archive->prefixes.at(1) == SRCML_CPP_NS_PREFIX_DEFAULT);
+    assert(archive->namespaces.at(1) == SRCML_CPP_NS_URI);
+    assert(archive->prefixes.at(2) == SRCML_ERR_NS_PREFIX_DEFAULT);
+    assert(archive->namespaces.at(2) == SRCML_ERR_NS_URI);
+    assert(archive->prefixes.at(3) == SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT);
+    assert(archive->namespaces.at(3) == SRCML_EXT_LITERAL_NS_URI);
+    assert(archive->prefixes.at(4) == SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT);
+    assert(archive->namespaces.at(4) == SRCML_EXT_OPERATOR_NS_URI);
+    assert(archive->prefixes.at(5) == SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT);
+    assert(archive->namespaces.at(5) == SRCML_EXT_MODIFIER_NS_URI);
+    assert(archive->prefixes.at(6) == SRCML_EXT_POSITION_NS_PREFIX_DEFAULT);
+    assert(archive->namespaces.at(6) == SRCML_EXT_POSITION_NS_URI);
 
     assert(archive->translator == 0);
     assert(archive->reader == 0);
