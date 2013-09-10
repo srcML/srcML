@@ -224,16 +224,15 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(archive);
   }
 
-    {
+  {
 
     srcml_archive * archive = srcml_create_archive();
 
-    srcml_archive_register_file_extension(archive, "foo", "bar");
+    srcml_archive_register_file_extension(archive, "foo", "C++");
 
+    assert(archive->tabstop == 4);
     srcml_free_archive(archive);
   }
-
-  
 
 
   return 0;
