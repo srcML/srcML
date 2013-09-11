@@ -62,7 +62,7 @@ void extract_text(const char * input_buffer, int size, xmlOutputBufferPtr output
 }
 
 // xpath evaluation of the nested units
-void xpath(xmlParserInputBufferPtr input_buffer, const char* context_element, const char* xpaths[], int fd) {
+void xpath(xmlParserInputBufferPtr input_buffer, const char* context_element, const char* xpaths[], int fd, OPTION_TYPE options) {
 
   // relative xpath changed to at any level
   std::string s = xpaths[0];
@@ -85,7 +85,7 @@ void xpath(xmlParserInputBufferPtr input_buffer, const char* context_element, co
   ctxt->sax = &sax;
 
   // setup process handling
-  XPathQueryUnits process(context_element, ofilename, options, compiled_xpath, fd);
+  XPathQueryUnits process(context_element, 0, options, compiled_xpath, fd);
 
   // setup sax handling state
   SAX2ExtractUnitsSrc state(&process, &options, -1, diff_version);
@@ -98,7 +98,7 @@ void xpath(xmlParserInputBufferPtr input_buffer, const char* context_element, co
   ctxt->sax = NULL;
 
   // all done with parsing
-  if(buffer_input) inputPop(ctxt);
+  if(input_buffer) inputPop(ctxt);
   xmlFreeParserCtxt(ctxt);
 }
 
@@ -137,7 +137,7 @@ void dlexsltRegisterAll() {
 }
 
 // xslt evaluation of the nested units
-void xslt(const char* context_element, const char* ofilename, const char* xslts[], const char* params[], int paramcount, int fd) {
+void xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, const char* xslts[], const char* params[], int paramcount, int fd, OPTION_TYPE options) {
 
   xmlInitParser();
 
@@ -171,7 +171,7 @@ void xslt(const char* context_element, const char* ofilename, const char* xslts[
     return;
 
   // setup parser
-  xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(buffer_input);
+  xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(input_buffer);
   if (ctxt == NULL) return;
 
   // setup sax handler
@@ -179,7 +179,7 @@ void xslt(const char* context_element, const char* ofilename, const char* xslts[
   ctxt->sax = &sax;
 
   // setup process handling
-  XSLTUnits process(context_element, ofilename, options, stylesheet, params, fd);
+  XSLTUnits process(context_element, 0, options, stylesheet, params, fd);
 
   // setup sax handling state
   SAX2ExtractUnitsSrc state(&process, &options, -1, diff_version);
@@ -193,15 +193,15 @@ void xslt(const char* context_element, const char* ofilename, const char* xslts[
   // local variable, do not want xmlFreeParserCtxt to free
   ctxt->sax = NULL;
 
-  if(buffer_input) inputPop(ctxt);
+  if(input_buffer) inputPop(ctxt);
   // all done with parsing
   xmlFreeParserCtxt(ctxt);
 }
 
 // relaxng evaluation of the nested units
-void relaxng(const char* ofilename, const char** xslts, int fd) {
+void relaxng(xmlParserInputBufferPtr input_buffer, const char** xslts, int fd, OPTION_TYPE options) {
 
-  xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(buffer_input);
+  xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(input_buffer);
   if (ctxt == NULL) return;
 
   // setup sax handler
@@ -211,7 +211,7 @@ void relaxng(const char* ofilename, const char** xslts, int fd) {
   xmlRelaxNGParserCtxtPtr relaxng = xmlRelaxNGNewParserCtxt(xslts[0]);
   xmlRelaxNGPtr rng = xmlRelaxNGParse(relaxng);
   xmlRelaxNGValidCtxtPtr rngctx = xmlRelaxNGNewValidCtxt(rng);
-  RelaxNGUnits process(ofilename, options, rngctx, fd);
+  RelaxNGUnits process(0, options, rngctx, fd);
 
   // setup sax handling state
   SAX2ExtractUnitsSrc state(&process, &options, -1, diff_version);
@@ -221,7 +221,7 @@ void relaxng(const char* ofilename, const char** xslts, int fd) {
 
   ctxt->sax = NULL;
 
-  if(buffer_input) inputPop(ctxt);
+  if(input_buffer) inputPop(ctxt);
   xmlFreeParserCtxt(ctxt);
   xmlRelaxNGFreeValidCtxt(rngctx);
   xmlRelaxNGFree(rng);
