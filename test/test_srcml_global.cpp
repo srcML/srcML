@@ -41,7 +41,7 @@ int main(int argc, char * argv[]) {
   {
     global_archive.language  = new std::string("foo");
     assert(srcml_get_language() == std::string("foo"));
-    delete global_archive.encoding;
+    delete global_archive.language;
   }
 
   /* 
@@ -56,7 +56,7 @@ int main(int argc, char * argv[]) {
   {
     global_archive.filename  = new std::string("foo");
     assert(srcml_get_filename() == std::string("foo"));
-    delete global_archive.encoding;
+    delete global_archive.filename;
   }
 
   /* 
@@ -71,7 +71,7 @@ int main(int argc, char * argv[]) {
   {
     global_archive.directory  = new std::string("foo");
     assert(srcml_get_directory() == std::string("foo"));
-    delete global_archive.encoding;
+    delete global_archive.directory;
   }
 
   /* 
@@ -95,7 +95,7 @@ int main(int argc, char * argv[]) {
 
   {
     srcml_set_encoding(0);
-    assert(*global_archive.encoding == 0);
+    assert(global_archive.encoding == 0);
   }
 
   {
@@ -109,7 +109,7 @@ int main(int argc, char * argv[]) {
 
   {
     srcml_set_language(0);
-    assert(*global_archive.language == 0);
+    assert(global_archive.language == 0);
   }
 
   {
@@ -123,7 +123,7 @@ int main(int argc, char * argv[]) {
 
   {
     srcml_set_filename(0);
-    assert(*global_archive.filename == 0);
+    assert(global_archive.filename == 0);
   }
 
   {
@@ -137,7 +137,7 @@ int main(int argc, char * argv[]) {
 
   {
     srcml_set_directory(0);
-    assert(*global_archive.directory == 0);
+    assert(global_archive.directory == 0);
   }
 
   {
@@ -151,7 +151,7 @@ int main(int argc, char * argv[]) {
 
   {
     srcml_set_version(0);
-    assert(*global_archive.version == 0);
+    assert(global_archive.version == 0);
   }
 
   {
