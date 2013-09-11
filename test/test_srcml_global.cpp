@@ -15,6 +15,76 @@ extern srcml_archive global_archive;
 int main(int argc, char * argv[]) {
 
   /* 
+     srcml_set_encoding
+   */
+
+  {
+    srcml_set_encoding(0);
+    assert(global_archive.encoding == 0);
+  }
+
+  {
+    srcml_set_encoding("foo");
+    assert(*global_archive.encoding == "foo");
+  }
+
+  /* 
+     srcml_set_language
+   */
+
+  {
+    srcml_set_language(0);
+    assert(global_archive.language == 0);
+  }
+
+  {
+    srcml_set_language("foo");
+    assert(*global_archive.language == "foo");
+  }
+
+  /* 
+     srcml_set_filename
+   */
+
+  {
+    srcml_set_filename(0);
+    assert(global_archive.filename == 0);
+  }
+
+  {
+    srcml_set_filename("foo");
+    assert(*global_archive.filename == "foo");
+  }
+
+  /* 
+     srcml_set_directory
+   */
+
+  {
+    srcml_set_directory(0);
+    assert(global_archive.directory == 0);
+  }
+
+  {
+    srcml_set_directory("foo");
+    assert(*global_archive.directory == "foo");
+  }
+
+  /* 
+     srcml_set_version
+   */
+
+  {
+    srcml_set_version(0);
+    assert(global_archive.version == 0);
+  }
+
+  {
+    srcml_set_version("foo");
+    assert(*global_archive.version == "foo");
+  }
+
+  /* 
      srcml_get_encoding
    */
 
@@ -93,77 +163,6 @@ int main(int argc, char * argv[]) {
     delete global_archive.version; 
     global_archive.version = 0;
  }
-
-  /* 
-     srcml_get_encoding
-   */
-
-  {
-    srcml_set_encoding(0);
-    assert(global_archive.encoding == 0);
-  }
-
-  {
-    srcml_set_encoding("foo");
-    assert(*global_archive.encoding == "foo");
-  }
-
-  /* 
-     srcml_get_language
-   */
-
-  {
-    srcml_set_language(0);
-    assert(global_archive.language == 0);
-  }
-
-  {
-    srcml_set_language("foo");
-    assert(*global_archive.language == "foo");
-  }
-
-  /* 
-     srcml_get_filename
-   */
-
-  {
-    srcml_set_filename(0);
-    assert(global_archive.filename == 0);
-  }
-
-  {
-    srcml_set_filename("foo");
-    assert(*global_archive.filename == "foo");
-  }
-
-  /* 
-     srcml_get_directory
-   */
-
-  {
-    srcml_set_directory(0);
-    assert(global_archive.directory == 0);
-  }
-
-  {
-    srcml_set_directory("foo");
-    assert(*global_archive.directory == "foo");
-  }
-
-  /* 
-     srcml_get_version
-   */
-
-  {
-    srcml_set_version(0);
-    assert(global_archive.version == 0);
-  }
-
-  {
-    srcml_set_version("foo");
-    assert(*global_archive.version == "foo");
-  }
-
 
   return 0;
 
