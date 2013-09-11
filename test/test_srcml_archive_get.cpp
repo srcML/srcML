@@ -19,8 +19,8 @@ int main(int argc, char * argv[]) {
   {
 
     srcml_archive * archive = srcml_create_archive();
-    srcml_archive_set_encoding(archive, 0);
-    assert(archive->encoding == 0);
+    archive->encoding = 0;
+    assert(srcml_archive_get_encoding(archive) == 0);
     srcml_free_archive(archive);
   }
 
