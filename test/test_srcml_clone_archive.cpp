@@ -21,6 +21,14 @@ int main(int argc, char * argv[]) {
     archive->language = new std::string ("l");
     archive->directory = new std::string ("d");
     archive->version = new std::string ("v");
+    archive->attributes.push_back("a");
+    archive->attributes.push_back("a");
+    archive->options = 1 | 2;
+    archive->tabstop = 4;
+    archive->prefixes.at(2) = "c";
+    archive->prefixes.push_back("foo");
+    archive->namespaces.push_back("bar");
+    srcml_archive_register_file_extension(archive, "foo", "C++");
 
     assert(archive->type == SRCML_ARCHIVE_INVALID);
     assert(archive->filename == 0);
