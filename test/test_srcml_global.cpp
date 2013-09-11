@@ -58,6 +58,15 @@ int main(int argc, char * argv[]) {
     assert(srcml_language_list()[4] == 0);
   }
 
+  /* 
+     srcml_check_extension
+   */
+
+  {
+    srcml_register_file_extension("cpp", "C++");
+    assert(srcml_check_extension("a.cpp") == std::string("C++"));
+  }
+
   return 0;
 
 }
