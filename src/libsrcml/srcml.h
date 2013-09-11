@@ -244,6 +244,11 @@ int srcml_read_open_fd      (struct srcml_archive*, int srcml_fd);
    Return 0 if there are no more unit */
 struct srcml_unit* srcml_read_unit(struct srcml_archive*);
 
+// TODO:  Consider having this method.  Way of counting, and moving to a unit
+/* Read over the next unit from the archive
+   Returns 0 if no unit to skip */
+int srcml_skip_unit(struct srcml_archive*);
+
 /* Read a unit at a specific position in an archive
    Unit numbers start at 1 
    Returns 0 if pos unit does not exist */
