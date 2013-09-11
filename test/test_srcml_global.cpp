@@ -121,6 +121,33 @@ int main(int argc, char * argv[]) {
   }
 
   /* 
+     srcml_clear_option
+   */
+
+  {
+    srcml_clear_option(0);
+    assert(global_archive.options == 0);
+  }
+
+  {
+    srcml_set_all_options(1 | 2 | 4);
+    srcml_clear_option(0);
+    assert(global_archive.options == (1 | 2 | 4));
+  }
+
+  {
+    srcml_set_all_options(1 | 2 | 4);
+    srcml_clear_option(2);
+    assert(global_archive.options == (1 | 4));
+  }
+
+  {
+    srcml_set_all_options(1 | 2 | 4);
+    srcml_clear_option(1 | 2);
+    assert(global_archive.options == 4);
+  }
+
+  /* 
      srcml_get_encoding
    */
 
