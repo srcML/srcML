@@ -20,6 +20,7 @@
 
 #include "srcml.h"
 #include "srcml_types.hpp"
+#include "srcml_sax2_utilities.hpp"
 
 #include "../srcMLUtility.hpp"
 
@@ -101,7 +102,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
       case SRCML_XPATH: {
 
           const char * xpaths[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
-          utility.xpath(0, "src:unit", xpaths, transform_fd);
+          xpath(pinput, "src:unit", xpaths, transform_fd, oarchive-> options);
           break;
         }
 
