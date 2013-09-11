@@ -284,6 +284,29 @@ int main(int argc, char * argv[]) {
     global_archive.version = 0;
  }
 
+  /* 
+     srcml_get_options
+   */
+
+  {
+    global_archive.options = 1;
+    assert(srcml_get_options() == 1);
+  }
+
+  {
+    global_archive.options = 1 | 2;
+    assert(srcml_get_options() == (1 | 2));
+  }
+
+  /* 
+     srcml_get_tabstop
+   */
+
+  {
+    global_archive.tabstop = 4;
+    assert(srcml_get_options() == 4);
+  }
+
   return 0;
 
 }
