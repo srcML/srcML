@@ -144,31 +144,6 @@ int main(int argc, char * argv[]) {
   */
 
   /*
-    srcml_archive_set_all_options
-   */
-
-  {
-
-    srcml_archive * archive = srcml_create_archive();
-
-    srcml_archive_set_all_options(archive, 1 | 2 | 4);
-
-    assert(archive->options == (1 | 2 | 4));
-    srcml_free_archive(archive);
-  }
-
-  {
-
-    srcml_archive * archive = srcml_create_archive();
-
-    srcml_archive_set_all_options(archive, 1 | 2 | 4);
-    srcml_archive_set_all_options(archive, 1);
-
-    assert(archive->options == 1);
-    srcml_free_archive(archive);
-  }
-
-  /*
     srcml_archive_set_option
    */
 
@@ -178,7 +153,7 @@ int main(int argc, char * argv[]) {
 
     srcml_archive_set_option(archive, 1);
 
-    assert(archive->options == 1);
+    assert(srcml_archive_set_option(archive) == 1);
     srcml_free_archive(archive);
   }
 
@@ -187,67 +162,8 @@ int main(int argc, char * argv[]) {
     srcml_archive * archive = srcml_create_archive();
 
     srcml_archive_set_all_options(archive, 1 | 2);
-    srcml_archive_set_option(archive, 4);
 
-    assert(archive->options == (1 | 2 | 4));
-    srcml_free_archive(archive);
-  }
-
-  {
-
-    srcml_archive * archive = srcml_create_archive();
-
-    srcml_archive_set_all_options(archive, 1);
-    srcml_archive_set_option(archive, 2 | 4);
-
-    assert(archive->options == (1 | 2 | 4));
-    srcml_free_archive(archive);
-  }
-
-  /*
-    srcml_archive_clear_option
-  */
-
-  {
-
-    srcml_archive * archive = srcml_create_archive();
-
-    srcml_archive_clear_option(archive, 0);
-
-    assert(archive->options == 0);
-    srcml_free_archive(archive);
-  }
-
-  {
-
-    srcml_archive * archive = srcml_create_archive();
-
-    srcml_archive_set_all_options(archive, 1 | 2 | 4);
-    srcml_archive_clear_option(archive, 0);
-
-    assert(archive->options == (1 | 2 | 4));
-    srcml_free_archive(archive);
-  }
-
-  {
-
-    srcml_archive * archive = srcml_create_archive();
-
-    srcml_archive_set_all_options(archive, 1 | 2 | 4);
-    srcml_archive_clear_option(archive, 2);
-
-    assert(archive->options == (1 | 4));
-    srcml_free_archive(archive);
-  }
-
-  {
-
-    srcml_archive * archive = srcml_create_archive();
-
-    srcml_archive_set_all_options(archive, 1 | 2 | 4);
-    srcml_archive_clear_option(archive, 1 | 2);
-
-    assert(archive->options == 4);
+    assert(srcml_archive_set_option(archive == (1 | 2));
     srcml_free_archive(archive);
   }
 
