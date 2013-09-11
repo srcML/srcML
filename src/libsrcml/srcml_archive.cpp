@@ -82,6 +82,8 @@ void srcml_free_archive(srcml_archive * archive) {
    client will have to free it using srcml_free_archive() */
 srcml_archive* srcml_clone_archive(const srcml_archive* archive) {
 
+  if(archive == NULL) return 0;
+
   srcml_archive * new_archive = srcml_create_archive();
 
   if(!new_archive) return 0;
@@ -286,43 +288,43 @@ int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix,
 
 const char* srcml_archive_get_encoding(const srcml_archive* archive) {
 
-  return archive->encoding ? archive->encoding->c_str() : 0;
+  return archive && archive->encoding ? archive->encoding->c_str() : 0;
 
 }
 
 const char* srcml_archive_get_language(const srcml_archive* archive) {
 
-  return archive->language ? archive->language->c_str() : 0;
+  return archive && archive->language ? archive->language->c_str() : 0;
 
 }
 
 const char* srcml_archive_get_filename(const srcml_archive* archive) {
 
-  return archive->filename ? archive->filename->c_str() : 0;
+  return archive && archive->filename ? archive->filename->c_str() : 0;
 
 }
 
 const char* srcml_archive_get_directory(const srcml_archive* archive) {
 
-  return archive->directory ? archive->directory->c_str() : 0;
+  return archive && archive->directory ? archive->directory->c_str() : 0;
 
 }
 
 const char* srcml_archive_get_version(const srcml_archive* archive) {
 
-  return archive->version ? archive->version->c_str() : 0;
+  return archive && archive->version ? archive->version->c_str() : 0;
 
 }
 
 int srcml_archive_get_options(const srcml_archive* archive) {
 
-  return archive->options;
+  return archive ? archive->options : 0;
 
 }
 
 int srcml_archive_get_tabstop(const srcml_archive* archive) {
 
-  return archive->tabstop;
+  return archive ? archive->tabstop : 0;
 
 }
 
