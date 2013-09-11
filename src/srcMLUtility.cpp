@@ -709,11 +709,7 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
   }
 
   // setup parser
-  xmlParserCtxtPtr ctxt = 0;
-  if(infile)
-    ctxt = srcMLCreateURLParserCtxt(infile);
-  else
-    ctxt = srcMLCreateParserCtxt(buffer_input);
+  xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
   if (ctxt == NULL) return;
 
   // setup sax handler
@@ -739,7 +735,7 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
 }
 
 // allow for all exslt functions
-void dlexsltRegisterAll() {
+static void dlexsltRegisterAll() {
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
   typedef void (*exsltRegisterAll_function)();
@@ -808,11 +804,7 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
     return;
 
   // setup parser
-  xmlParserCtxtPtr ctxt = 0;
-  if(infile)
-    ctxt = srcMLCreateURLParserCtxt(infile);
-  else
-    ctxt = srcMLCreateParserCtxt(buffer_input);
+  xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
   if (ctxt == NULL) return;
 
   // setup sax handler
@@ -842,11 +834,7 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
 // relaxng evaluation of the nested units
 void srcMLUtility::relaxng(const char* ofilename, const char** xslts, int fd) {
 
-  xmlParserCtxtPtr ctxt = 0;
-  if(infile)
-    ctxt = srcMLCreateURLParserCtxt(infile);
-  else
-    ctxt = srcMLCreateParserCtxt(buffer_input);
+  xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
   if (ctxt == NULL) return;
 
   // setup sax handler
@@ -928,77 +916,6 @@ static xmlParserCtxtPtr srcMLCreateMemoryParserCtxt(const char * buffer, int siz
 
   return ctxt;
 }
-
-#ifdef LIBXML2_NEW_BUFFER 
-struct _xmlBuf {
-  xmlChar *content;           /* The buffer content UTF8 */
-  unsigned int compat_use;    /* for binary compatibility */
-  unsigned int compat_size;   /* for binary compatibility */
-  xmlBufferAllocationScheme alloc; /* The realloc method */
-  xmlChar *contentIO;         /* in IO mode we may have a different base */
-  size_t use;                 /* The buffer size used */
-  size_t size;                /* The buffer size */
-  xmlBufferPtr buffer;        /* wrapper for an old buffer */
-  int error;                  /* an error code if a failure occured */
-};
-#define CHECK_COMPAT(buf)                                   \
-  if (buf->size != (size_t) buf->compat_size)            \
-    if (buf->compat_size < INT_MAX)                    \
-      buf->size = buf->compat_size;                  \
-  if (buf->use != (size_t) buf->compat_use)              \
-    if (buf->compat_use < INT_MAX)                     \
-      buf->use = buf->compat_use;
-
-int
-xmlBufResetInput(xmlBuf * buf, xmlParserInputPtr input) {
-  if ((input == NULL) || (buf == NULL) || (buf->error))
-    return(-1);
-    CHECK_COMPAT(buf)
-    input->base = input->cur = buf->content;
-    input->end = &buf->content[buf->use];
-    return(0);
-
-}
-#else
-int
-xmlBufResetInput(xmlBuffer * buf, xmlParserInputPtr input) {
-  input->base = input->buf->buffer->content;
-  input->cur = input->buf->buffer->content;
-  input->end = &input->buf->buffer->content[input->buf->buffer->use];
-}
-
-#endif
-
-xmlParserCtxtPtr
-srcMLCreateParserCtxt(xmlParserInputBufferPtr buffer_input) {
-  xmlParserCtxtPtr ctxt;
-  xmlParserInputPtr input;
-  xmlParserInputBufferPtr buf;
-
-  ctxt = xmlNewParserCtxt();
-  if (ctxt == NULL)
-    return(NULL);
-
-  buf = buffer_input;
-  if (buf == NULL) {
-    xmlFreeParserCtxt(ctxt);
-    return(NULL);
-  }
-
-  input = xmlNewInputStream(ctxt);
-  if (input == NULL) {
-    xmlFreeParserCtxt(ctxt);
-    return(NULL);
-  }
-
-  input->filename = NULL;
-  input->buf = buf;
-  xmlBufResetInput(input->buf->buffer, input);
-
-  inputPush(ctxt, input);
-  return(ctxt);
-}
-
 
 extern "C" {
 
