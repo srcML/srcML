@@ -29,7 +29,7 @@ int main(int argc, char * argv[]) {
 
     srcml_archive * archive = srcml_create_archive();
     archive->encoding = new std::string("foo");
-    assert(srcml_archive_get_encoding(archive) == "foo");
+    assert(srcml_archive_get_encoding(archive) == std::string("foo"));
     srcml_free_archive(archive);
   }
 
@@ -49,7 +49,7 @@ int main(int argc, char * argv[]) {
 
     srcml_archive * archive = srcml_create_archive();
     archive->language = new std::string("foo");
-    assert(srcml_archive_get_language(archive) == "foo");
+    assert(srcml_archive_get_language(archive) == std::string("foo"));
     srcml_free_archive(archive);
   }
 
@@ -69,7 +69,7 @@ int main(int argc, char * argv[]) {
 
     srcml_archive * archive = srcml_create_archive();
     archive->filename == new std::string("foo");
-    assert(srcml_archive_get_filename(archive) == "foo");
+    assert(srcml_archive_get_filename(archive) == std::string("foo"));
     srcml_free_archive(archive);
   }
 
@@ -89,7 +89,7 @@ int main(int argc, char * argv[]) {
 
     srcml_archive * archive = srcml_create_archive();
     archive->directory == new std::string("foo");
-    assert(srcml_archive_get_directory(archive) == "foo");
+    assert(srcml_archive_get_directory(archive) == std::string("foo"));
     srcml_free_archive(archive);
   }
 
@@ -109,7 +109,7 @@ int main(int argc, char * argv[]) {
 
     srcml_archive * archive = srcml_create_archive();
     archive->version == new std::string("foo");
-    assert(srcml_archive_get_version(archive) == "foo");
+    assert(srcml_archive_get_version(archive) == std::string("foo"));
     srcml_free_archive(archive);
   }
 
