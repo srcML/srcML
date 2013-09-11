@@ -104,6 +104,7 @@ int main(int argc, char * argv[]) {
    */
 
   {
+    srcml_set_all_options(0);
     srcml_set_option(1);
     assert(global_archive.options == 1);
   }
@@ -146,6 +147,15 @@ int main(int argc, char * argv[]) {
     srcml_set_all_options(1 | 2 | 4);
     srcml_clear_option(1 | 2);
     assert(global_archive.options == 4);
+  }
+
+  /* 
+     srcml_set_tabstop
+   */
+
+  {
+    srcml_set_tabstop(4);
+    assert(global_archive.tabstop == 4);
   }
 
   /* 
