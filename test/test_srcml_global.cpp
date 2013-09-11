@@ -164,7 +164,7 @@ int main(int argc, char * argv[]) {
 
   {
     srcml_register_file_extension("foo", "C++");
-    assert(global_archive.registered_languages.back().s == "C++");
+    assert(global_archive.registered_languages.back().s == "foo");
     assert(global_archive.registered_languages.back().n == 2);
   }
 
