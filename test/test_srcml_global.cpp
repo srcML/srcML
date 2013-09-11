@@ -304,7 +304,37 @@ int main(int argc, char * argv[]) {
 
   {
     global_archive.tabstop = 4;
-    assert(srcml_get_options() == 4);
+    assert(srcml_get_tabstop() == 4);
+  }
+
+  /* 
+     srcml_get_namespace_size
+   */
+
+  {
+    assert(srcml_get_namespace_size() == 1);
+  }
+
+  {
+    srcml_register_namespace("foo2", "bar2");
+    srcml_register_namespace("foo3", "bar3");
+    assert(srcml_get_namespace_size() == 3);
+  }
+
+  /* 
+     srcml_get_prefix
+   */
+
+  {
+    assert(srcml_get_prefix(1) == std::string("foo2"));
+  }
+
+  {
+    assert(srcml_get_prefix(-1) == 0);
+  }
+
+  {
+    assert(srcml_get_prefix(3) == 0);
   }
 
   return 0;
