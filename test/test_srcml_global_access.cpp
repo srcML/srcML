@@ -1,6 +1,7 @@
 /*
 
-  Test cases for srcml_archive_set_*.
+  Test cases for srcml_global get and set
+
 */
 #include <stdio.h>
 #include <string.h>
