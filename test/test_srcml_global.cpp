@@ -27,6 +27,7 @@ int main(int argc, char * argv[]) {
     global_archive.encoding = new std::string("foo");
     assert(srcml_get_encoding() == std::string("foo"));
     delete global_archive.encoding;
+    global_archive.encoding = 0;
   }
 
   /* 
@@ -42,6 +43,7 @@ int main(int argc, char * argv[]) {
     global_archive.language = new std::string("foo");
     assert(srcml_get_language() == std::string("foo"));
     delete global_archive.language;
+    global_archive.language = 0;
   }
 
   /* 
@@ -57,6 +59,7 @@ int main(int argc, char * argv[]) {
     global_archive.filename = new std::string("foo");
     assert(srcml_get_filename() == std::string("foo"));
     delete global_archive.filename;
+    global_archive.filename = 0;
   }
 
   /* 
@@ -71,8 +74,9 @@ int main(int argc, char * argv[]) {
   {
     global_archive.directory = new std::string("foo");
     assert(srcml_get_directory() == std::string("foo"));
-    delete global_archive.directory;
-  }
+    delete global_archive.directory; 
+    global_archive.directory = 0;
+ }
 
   /* 
      srcml_get_version
@@ -86,8 +90,9 @@ int main(int argc, char * argv[]) {
   {
     global_archive.version = new std::string("foo");
     assert(srcml_get_version() == std::string("foo"));
-    delete global_archive.version;
-  }
+    delete global_archive.version; 
+    global_archive.version = 0;
+ }
 
   /* 
      srcml_get_encoding
