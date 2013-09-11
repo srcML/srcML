@@ -12,6 +12,10 @@
 
 int main(int argc, char * argv[]) {
 
+  /* 
+     srcml_set_encoding
+   */
+
   {
 
     srcml_archive * archive = srcml_create_archive();
@@ -20,6 +24,7 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(archive);
   }
 
+
   {
 
     srcml_archive * archive = srcml_create_archive();
@@ -27,6 +32,10 @@ int main(int argc, char * argv[]) {
     assert(*archive->encoding == "foo");
     srcml_free_archive(archive);
   }
+
+  /* 
+     srcml_set_language
+   */
 
   {
 
@@ -44,6 +53,10 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(archive);
   }
 
+  /* 
+     srcml_set_filename
+   */
+
   {
 
     srcml_archive * archive = srcml_create_archive();
@@ -60,6 +73,10 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(archive);
   }
 
+  /* 
+     srcml_set_directory
+   */
+
   {
 
     srcml_archive * archive = srcml_create_archive();
@@ -75,6 +92,10 @@ int main(int argc, char * argv[]) {
     assert(*archive->directory == "foo");
     srcml_free_archive(archive);
   }
+
+  /* 
+     srcml_set_version
+   */
 
   {
 
@@ -93,6 +114,8 @@ int main(int argc, char * argv[]) {
   }
 
   /*
+
+    srcml_archive_set_attributes
   {
 
     srcml_archive * archive = srcml_create_archive();
@@ -120,6 +143,10 @@ int main(int argc, char * argv[]) {
   }
   */
 
+  /*
+    srcml_archive_set_all_options
+   */
+
   {
 
     srcml_archive * archive = srcml_create_archive();
@@ -140,6 +167,10 @@ int main(int argc, char * argv[]) {
     assert(archive->options == 1);
     srcml_free_archive(archive);
   }
+
+  /*
+    srcml_archive_set_option
+   */
 
   {
 
@@ -172,6 +203,10 @@ int main(int argc, char * argv[]) {
     assert(archive->options == (1 | 2 | 4));
     srcml_free_archive(archive);
   }
+
+  /*
+    srcml_archive_clear_option
+  */
 
   {
 
@@ -216,6 +251,10 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(archive);
   }
 
+  /*
+    srcml_archive_set_tabstop
+  */
+
   {
 
     srcml_archive * archive = srcml_create_archive();
@@ -225,6 +264,10 @@ int main(int argc, char * argv[]) {
     assert(archive->tabstop == 4);
     srcml_free_archive(archive);
   }
+
+  /*
+    srcml_archive_register_file_extension
+  */
 
   {
 
@@ -260,6 +303,10 @@ int main(int argc, char * argv[]) {
     assert(srcml_archive_register_file_extension(archive, 0, "C++") == SRCML_STATUS_ERROR);
 
   }
+
+  /*
+    srcml_archive_register_namespace
+  */
 
   {
 
