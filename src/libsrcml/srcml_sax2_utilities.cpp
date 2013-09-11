@@ -31,10 +31,10 @@ void srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly);
 xmlParserCtxtPtr srcMLCreateParserCtxt(xmlParserInputBufferPtr buffer_input);
 
 // extract a given unit
-void extract_text(xmlOutputBufferPtr output_buffer, int unit) {
+void extract_text(const char * input_buffer, int size, xmlOutputBufferPtr output_buffer, int unit, OPTION_TYPE options) {
 
   // setup parser
-  xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(buffer, size);
+  xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(input_buffer, size);
 
   // setup sax handler
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
@@ -62,7 +62,7 @@ void extract_text(xmlOutputBufferPtr output_buffer, int unit) {
 }
 
 // xpath evaluation of the nested units
-void xpath(const char* ofilename, const char* context_element, const char* xpaths[], int fd) {
+void xpath(xmlParserInputBufferPtr input_buffer, const char* context_element, const char* xpaths[], int fd) {
 
   // relative xpath changed to at any level
   std::string s = xpaths[0];
@@ -77,7 +77,7 @@ void xpath(const char* ofilename, const char* context_element, const char* xpath
   }
 
   // setup parser
-  xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(buffer_input);
+  xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(input_buffer);
   if (ctxt == NULL) return;
 
   // setup sax handler
