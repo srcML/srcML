@@ -28,8 +28,8 @@ int main(int argc, char * argv[]) {
   {
 
     srcml_archive * archive = srcml_create_archive();
-    srcml_archive_set_encoding(archive, "foo");
-    assert(*archive->encoding == "foo");
+    archive->encoding = new std::string("foo");
+    assert(srcml_archive_get_encoding(archive) == "foo");
     srcml_free_archive(archive);
   }
 
