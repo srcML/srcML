@@ -20,6 +20,7 @@
 
 #include "srcml.h"
 #include "srcml_types.hpp"
+#include "srcml_sax2_utilities.hpp"
 
 #include "../srcMLUtility.hpp"
 
@@ -273,8 +274,7 @@ int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
   xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename(src_filename, xmlFindCharEncodingHandler(unit->archive->encoding ? unit->archive->encoding->c_str() : "ISO-8859-1"), unit->archive->options & SRCML_OPTION_COMPRESS);
   if(output_buffer == NULL) return SRCML_STATUS_ERROR;
-  srcMLUtility utility(unit->unit->c_str(), unit->unit->size(), 0, unit->archive->options);
-  utility.extract_text(output_buffer);
+  extract_text(unit->unit->c_str(), unit->unit->size(), output_buffer, unit->archive->options);
 
   return SRCML_STATUS_OK;
 

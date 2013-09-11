@@ -20,7 +20,7 @@ void srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly);
 xmlParserCtxtPtr srcMLCreateParserCtxt(xmlParserInputBufferPtr buffer_input);
 
 // extract a given unit
-void extract_text(const char * input_buffer, int size, xmlOutputBufferPtr output_buffer, int unit, OPTION_TYPE options) {
+void extract_text(const char * input_buffer, int size, xmlOutputBufferPtr output_buffer, OPTION_TYPE options, int unit) {
 
   // setup parser
   xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(input_buffer, size);
@@ -33,7 +33,7 @@ void extract_text(const char * input_buffer, int size, xmlOutputBufferPtr output
   ExtractUnitsSrc process(output_buffer);
 
   // setup sax handling state
-  SAX2ExtractUnitsSrc state(&process, &options, unit, diff_version);
+  SAX2ExtractUnitsSrc state(&process, &options, unit, "");
   ctxt->_private = &state;
 
   // process the document
@@ -77,7 +77,7 @@ void xpath(xmlParserInputBufferPtr input_buffer, const char* context_element, co
   XPathQueryUnits process(context_element, 0, options, compiled_xpath, fd);
 
   // setup sax handling state
-  SAX2ExtractUnitsSrc state(&process, &options, -1, diff_version);
+  SAX2ExtractUnitsSrc state(&process, &options, -1, "");
   ctxt->_private = &state;
 
   // process the document
@@ -171,7 +171,7 @@ void xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, con
   XSLTUnits process(context_element, 0, options, stylesheet, params, fd);
 
   // setup sax handling state
-  SAX2ExtractUnitsSrc state(&process, &options, -1, diff_version);
+  SAX2ExtractUnitsSrc state(&process, &options, -1, "");
   ctxt->_private = &state;
 
   xsltsrcMLRegister();
@@ -203,7 +203,7 @@ void relaxng(xmlParserInputBufferPtr input_buffer, const char** xslts, int fd, O
   RelaxNGUnits process(0, options, rngctx, fd);
 
   // setup sax handling state
-  SAX2ExtractUnitsSrc state(&process, &options, -1, diff_version);
+  SAX2ExtractUnitsSrc state(&process, &options, -1, "");
   ctxt->_private = &state;
 
   srcMLParseDocument(ctxt, false);
