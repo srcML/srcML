@@ -337,6 +337,22 @@ int main(int argc, char * argv[]) {
     assert(srcml_get_prefix(3) == 0);
   }
 
+  /* 
+     srcml_get_prefix_uri
+   */
+
+  {
+    assert(srcml_get_prefix_uri("bar2") == std::string("foo2"));
+  }
+
+  {
+    assert(srcml_get_prefix_uri("bar4") == 0);
+  }
+
+  {
+    assert(srcml_get_prefix_uri("bar4") == 0);
+  }
+
   return 0;
 
 }
