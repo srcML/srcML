@@ -272,5 +272,16 @@ int main(int argc, char * argv[]) {
 
   }
 
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    srcml_archive_register_namespace(archive, "foo", "http://www.sdml.info/srcML/src");
+
+    assert(archive->prefixes.at(0) == "foo");
+    assert(archive->namespaces.at(0)  == "http://www.sdml.info/srcML/src");
+
+  }
+
   return 0;
 }
