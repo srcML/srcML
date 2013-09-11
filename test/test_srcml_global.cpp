@@ -42,6 +42,22 @@ int main(int argc, char * argv[]) {
     assert(srcml_language_list()[0] == std::string("C"));
   }
 
+  {
+    assert(srcml_language_list()[1] == std::string("C++"));
+  }
+
+  {
+    assert(srcml_language_list()[2] == std::string("C#"));
+  }
+
+  {
+    assert(srcml_language_list()[3] == std::string("Java"));
+  }
+
+  {
+    assert(srcml_language_list()[4] == 0);
+  }
+
   return 0;
 
 }
