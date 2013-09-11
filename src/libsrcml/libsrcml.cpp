@@ -345,6 +345,8 @@ const char * srcml_check_extension(const char* filename) {
    Full filename can be provided, and extension will be extracted */
 int srcml_check_format(const char* format) {
 
+  if(format == NULL) return 0;
+
   static const char * const regex = "(zx\\.|zg\\.|2zb\\.|rat\\.)*";
 
   // reversed copy of the path
@@ -366,7 +368,7 @@ int srcml_check_format(const char* format) {
   // minus 1 to remove starting .
   int ext_len = pmatch[0].rm_eo - pmatch[0].rm_so - 1;
   free(reverse);
-  return ext_len;
+  return ext_len > 0;
 
   //char * extension = (char *)malloc(ext_len * sizeof(char));
   // extract the extension from the path, reversing as we go
