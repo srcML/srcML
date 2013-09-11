@@ -181,6 +181,16 @@ int main(int argc, char * argv[]) {
   }
 
   /* 
+     srcml_register_namespace
+   */
+
+  {
+    srcml_register_file_extension("foo", "bar");
+    assert(global_archive.prefixes.back() == "foo");
+    assert(global_archive.namespaces.back() == "bar");
+  }
+
+  /* 
      srcml_get_encoding
    */
 
