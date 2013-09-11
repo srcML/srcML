@@ -117,7 +117,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
       case SRCML_RELAXNG: {
 
           const char * relaxngs[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
-          utility.relaxng(0, relaxngs, transform_fd);
+          relaxng(pinput, relaxngs, transform_fd, oarchive->options);
           break;
         }
 
