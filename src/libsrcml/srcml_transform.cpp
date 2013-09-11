@@ -22,8 +22,6 @@
 #include "srcml_types.hpp"
 #include "srcml_sax2_utilities.hpp"
 
-#include "../srcMLUtility.hpp"
-
 #include <stdio.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -92,8 +90,6 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
       return SRCML_STATUS_ERROR;
 
     }      
-
-    srcMLUtility utility(pinput, oarchive->encoding ? oarchive->encoding->c_str() : "UTF-8", oarchive->options);
 
     try {
 
