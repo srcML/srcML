@@ -262,6 +262,9 @@ int srcml_archive_register_file_extension(srcml_archive* archive, const char* ex
 }
 
 int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix, const char* ns) {
+
+  if(prefix == 0 || ns == 0) return SRCML_STATUS_ERROR;
+
   try {
 
     for(int i = 0; i < archive->prefixes.size(); ++i)
