@@ -21,7 +21,7 @@
 #include "srcml.h"
 #include "srcml_types.hpp"
 
-#include "../srcMLUtility.hpp"
+//#include "../srcMLUtility.hpp"
 
 #define SRCML_OPTION_INFO 1 << 19
 #define SRCML_OPTION_NAMESPACE 1 << 26
@@ -35,7 +35,7 @@
 int optioncount = 5;
 int optionorder[] = { SRCML_OPTION_XML_ENCODING, SRCML_OPTION_LANGUAGE, SRCML_OPTION_DIRECTORY, SRCML_OPTION_FILENAME, SRCML_OPTION_VERSION };
 
-
+#if 0
 /* srcML attributes with namespaces (header read only)*/
 const char** srcml_info(const char* srcml_filename) {
 
@@ -101,6 +101,7 @@ const char** srcml_info_unit(const char* srcml_filename, int unit) {
   return output_carray;
 
 }
+#endif
 
 /* list of filenames */
 const char** srcml_list(const char* srcml_filename) {
