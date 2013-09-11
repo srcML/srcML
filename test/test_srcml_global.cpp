@@ -111,6 +111,22 @@ int main(int argc, char * argv[]) {
     assert(srcml_check_format(0) == 0);
   }
 
+  /* 
+     srcml_check_encoding
+   */
+
+  {
+    assert(srcml_check_encoding("UTF-8") != 0);
+  }
+
+  {
+    assert(srcml_check_encoding("foo") == 0);
+  }
+
+  {
+    assert(srcml_check_encoding(0) == 0);
+  }
+
   return 0;
 
 }
