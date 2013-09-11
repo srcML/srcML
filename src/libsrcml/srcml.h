@@ -264,11 +264,6 @@ int srcml_unparse_unit_memory  (struct srcml_unit*, char** src_buffer);
 int srcml_unparse_unit_FILE    (struct srcml_unit*, FILE* srcml_file);
 int srcml_unparse_unit_fd      (struct srcml_unit*, int srcml_fd);
 
-// TODO:  Remove these.  Individual srcml_archive_get_*() are used instead
-const char** srcml_info(const char* srcml_filename);
-const char** srcml_longinfo(const char* srcml_filename);
-const char** srcml_info_unit(const char* srcml_filename, int unit);
-
 // TODO:  Consider removing this and making srcml client iterate over the values
 // Problems with memory handling
 const char** srcml_list(const char* srcml_filename);
