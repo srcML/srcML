@@ -21,6 +21,11 @@ int main(int argc, char * argv[]) {
     assert(srcml_get_encoding() == 0);
   }
 
+  {
+    srcml_set_encoding("foo");
+    assert(srcml_get_encoding() == std::string("foo"));
+  }
+
   return 0;
 
 }
