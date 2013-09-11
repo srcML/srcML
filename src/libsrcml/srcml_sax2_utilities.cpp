@@ -1,4 +1,4 @@
-#include <libxml/parserInternals.h>
+#include "srcml_sax2_utilities.hpp"
 
 #include "../ExtractUnitsSrc.hpp"
 #include "../Properties.hpp"

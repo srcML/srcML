@@ -1,3 +1,7 @@
+#include "../Options.hpp"
+
+#include <libxml/parserInternals.h>
+
 #ifndef INCLUDDED_SRCML_SAX2_UTILITIES_HPP
 #define INCLUDDED_SRCML_SAX2_UTILITIES_HPP
 
