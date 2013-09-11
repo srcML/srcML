@@ -27,6 +27,8 @@
    Full filename can be provided, and extension will be extracted */
 const char * srcml_archive_check_extension(srcml_archive * archive, const char* filename) {
 
+  if(filename == NULL) return 0;
+
   Language language(Language::getLanguageFromFilename(filename, archive->registered_languages));
   const char * lang_string = language.getLanguageString();
   return strcmp(lang_string, "") == 0 ? 0 : lang_string;
