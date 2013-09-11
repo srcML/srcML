@@ -40,16 +40,16 @@ int main(int argc, char * argv[]) {
   {
 
     srcml_archive * archive = srcml_create_archive();
-    srcml_archive_set_language(archive, 0);
-    assert(archive->language == 0);
+    archive->language = 0;
+    assert(srcml_archive_get_language(archive) == 0);
     srcml_free_archive(archive);
   }
 
   {
 
     srcml_archive * archive = srcml_create_archive();
-    srcml_archive_set_language(archive, "foo");
-    assert(*archive->language == "foo");
+    archive->language = new std::string("foo");
+    assert(srcml_archive_get_language(archive) == "foo");
     srcml_free_archive(archive);
   }
 
@@ -60,16 +60,16 @@ int main(int argc, char * argv[]) {
   {
 
     srcml_archive * archive = srcml_create_archive();
-    srcml_archive_set_filename(archive, 0);
-    assert(archive->filename == 0);
+    archive->filename == 0;
+    assert(srcml_archive_get_filename(archive) == 0);
     srcml_free_archive(archive);
   }
 
   {
 
     srcml_archive * archive = srcml_create_archive();
-    srcml_archive_set_filename(archive, "foo");
-    assert(*archive->filename == "foo");
+    archive->filename == new std::string("foo");
+    assert(srcml_archive_get_filename(archive) == "foo");
     srcml_free_archive(archive);
   }
 
@@ -80,16 +80,16 @@ int main(int argc, char * argv[]) {
   {
 
     srcml_archive * archive = srcml_create_archive();
-    srcml_archive_set_directory(archive, 0);
-    assert(archive->directory == 0);
+    archive->directory == 0;
+    assert(srcml_archive_get_directory(archive) == 0);
     srcml_free_archive(archive);
   }
 
   {
 
     srcml_archive * archive = srcml_create_archive();
-    srcml_archive_set_directory(archive, "foo");
-    assert(*archive->directory == "foo");
+    archive->directory == new std::string("foo");
+    assert(srcml_archive_get_directory(archive) == "foo");
     srcml_free_archive(archive);
   }
 
@@ -100,16 +100,16 @@ int main(int argc, char * argv[]) {
   {
 
     srcml_archive * archive = srcml_create_archive();
-    srcml_archive_set_version(archive, 0);
-    assert(archive->version == 0);
+    archive->version == 0;
+    assert(srcml_archive_get_version(archive) == 0);
     srcml_free_archive(archive);
   }
 
   {
 
     srcml_archive * archive = srcml_create_archive();
-    srcml_archive_set_version(archive, "foo");
-    assert(*archive->version == "foo");
+    archive->version == new std::string("foo");
+    assert(srcml_archive_get_version(archive) == "foo");
     srcml_free_archive(archive);
   }
 
