@@ -195,7 +195,7 @@ int srcml_set_option(int option) {
 
 int srcml_clear_option(int option) {
 
-  return srcml_archive_set_option(&global_archive, option);
+  return srcml_archive_clear_option(&global_archive, option);
 
 }
 
