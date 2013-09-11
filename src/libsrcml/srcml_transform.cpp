@@ -110,7 +110,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
           const char * xslts[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
           const char * params[1] = { 0 };
-          utility.xslt("src:unit", 0, xslts, params, 0, transform_fd);
+          xslt(pinput, "src:unit", xslts, params, 0, transform_fd, oarchive->options);
           break;
         }
 
