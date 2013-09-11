@@ -1,7 +1,6 @@
 #include <libxml/parserInternals.h>
 
 #include "../ExtractUnitsSrc.hpp"
-#include "../CountUnits.hpp"
 #include "../Properties.hpp"
 #include "../XPathQueryUnits.hpp"
 #include "../XSLTUnits.hpp"
