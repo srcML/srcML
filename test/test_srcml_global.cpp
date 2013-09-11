@@ -201,7 +201,7 @@ int main(int argc, char * argv[]) {
   }
 
   {
-    assert(srcml_register_namespace("foo2", 0) == SRCML_STATUS_ERROR);
+    assert(srcml_register_namespace("foo", 0) == SRCML_STATUS_ERROR);
   }
 
   /* 
