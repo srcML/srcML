@@ -1,21 +1,11 @@
 #include <libxml/parserInternals.h>
 
-#include "../ProcessUnit.hpp"
 #include "../ExtractUnitsSrc.hpp"
-#include "../ExtractUnitsDiffSrc.hpp"
 #include "../CountUnits.hpp"
 #include "../Properties.hpp"
-#include "../ListUnits.hpp"
-#include "../ExtractUnitsXML.hpp"
-#include "../ExtractUnitsDiffXML.hpp"
-#include "../ExtractUnitsDiffXMLPreserve.hpp"
 #include "../XPathQueryUnits.hpp"
 #include "../XSLTUnits.hpp"
 #include "../RelaxNGUnits.hpp"
-
-#include "../SAX2ExtractUnitsSrc.hpp"
-
-#include "../SAX2UnitDOMRelaxNG.hpp"
 
 #include "../srcexfun.hpp"
 
@@ -230,7 +220,7 @@ void relaxng(xmlParserInputBufferPtr input_buffer, const char** xslts, int fd, O
 
 
 // process srcML document with error reporting
-static void srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly) {
+void srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly) {
 
   // process the document
   int status;
@@ -241,9 +231,6 @@ static void srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly) {
     // special case
     if (allowendearly && (ep->code == XML_ERR_EXTRA_CONTENT || ep->code == XML_ERR_DOCUMENT_END))
       return;
-
-    if (incount)
-      fprintf(stderr, "\n");
 
     // report error
     char* partmsg = strdup(ep->message);
