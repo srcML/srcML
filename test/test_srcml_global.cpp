@@ -79,6 +79,38 @@ int main(int argc, char * argv[]) {
     assert(srcml_check_extension(0) == 0);
   }
 
+  /* 
+     srcml_check_format
+   */
+
+  {
+    assert(srcml_check_format("a.tar") != 0);
+  }
+
+  {
+    assert(srcml_check_format("a.tar.bz2") != 0);
+  }
+
+  {
+    assert(srcml_check_format("a.tar.gz") != 0);
+  }
+
+  {
+    assert(srcml_check_format("a.tar.xz") != 0);
+  }
+
+  {
+    assert(srcml_check_format("a.xz") != 0);
+  }
+
+  {
+    assert(srcml_check_format("a.foo") == 0);
+  }
+
+  {
+    assert(srcml_check_format(0) == 0);
+  }
+
   return 0;
 
 }
