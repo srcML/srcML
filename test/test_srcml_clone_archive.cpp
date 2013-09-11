@@ -15,7 +15,7 @@ int main(int argc, char * argv[]) {
   {
 
     srcml_archive * archive = srcml_create_archive();
-    srcml_archive->type = SRCML_ARCHIVE_READ;
+    archive->type = SRCML_ARCHIVE_READ;
     archive->filename = new std::string ("f");
     archive->encoding = new std::string ("e");
     archive->language = new std::string ("l");
@@ -29,9 +29,11 @@ int main(int argc, char * argv[]) {
     archive->prefixes.push_back("foo");
     archive->namespaces.push_back("bar");
     srcml_archive_register_file_extension(archive, "foo", "bar");
-    archive->translator = 1;
-    archive->reader = 1;
-    archive->input = 1;
+    archive->translator = (srcMLTranslator *)1;
+    archive->reader = (srcMLReader *)1;
+    archive->input = (xmlParserInputBufferPtr)1;
+    transform trans = {SRCML_XPATH, "//src:unit"};
+    archive->transformations.push_back(trans);
 
 
     assert(archive->type == SRCML_ARCHIVE_INVALID);
