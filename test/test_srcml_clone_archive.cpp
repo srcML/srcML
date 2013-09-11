@@ -29,6 +29,10 @@ int main(int argc, char * argv[]) {
     archive->prefixes.push_back("foo");
     archive->namespaces.push_back("bar");
     srcml_archive_register_file_extension(archive, "foo", "bar");
+    archive->translator = 1;
+    archive->reader = 1;
+    archive->input = 1;
+
 
     assert(archive->type == SRCML_ARCHIVE_INVALID);
     assert(*archive->filename == "f");
@@ -71,6 +75,9 @@ int main(int argc, char * argv[]) {
 
     assert(archive->transformations.size() == 0);
 
+    archive->translator = 0;
+    archive->reader = 0;
+    archive->input = 0;
     srcml_free_archive(archive);
   }
 
