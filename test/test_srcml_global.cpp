@@ -350,7 +350,7 @@ int main(int argc, char * argv[]) {
   }
 
   {
-    assert(srcml_get_prefix_uri("bar4") == 0);
+    assert(srcml_get_prefix_uri(0) == 0);
   }
 
   return 0;
