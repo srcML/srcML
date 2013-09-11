@@ -13,7 +13,7 @@
 int main(int argc, char * argv[]) {
 
   /* 
-     srcml_set_encoding
+     srcml_get_encoding
    */
 
   {
@@ -34,7 +34,7 @@ int main(int argc, char * argv[]) {
   }
 
   /* 
-     srcml_set_language
+     srcml_get_language
    */
 
   {
@@ -54,7 +54,7 @@ int main(int argc, char * argv[]) {
   }
 
   /* 
-     srcml_set_filename
+     srcml_get_filename
    */
 
   {
@@ -74,7 +74,7 @@ int main(int argc, char * argv[]) {
   }
 
   /* 
-     srcml_set_directory
+     srcml_get_directory
    */
 
   {
@@ -94,7 +94,7 @@ int main(int argc, char * argv[]) {
   }
 
   /* 
-     srcml_set_version
+     srcml_get_version
    */
 
   {
@@ -114,37 +114,7 @@ int main(int argc, char * argv[]) {
   }
 
   /*
-
-    srcml_archive_set_attributes
-  {
-
-    srcml_archive * archive = srcml_create_archive();
-    const char * attr[3][2] = { "foo", "bar", "", "", 0, 0 };
-
-    srcml_archive_set_attributes(archive, attr);
-
-    assert(archive->attributes.size() == 4);
-    assert(archive->attributes.at(0) == "foo");
-    assert(archive->attributes.at(1) == "bar");
-    assert(archive->attributes.at(2) == "");
-    assert(archive->attributes.at(3) == "");
-    srcml_free_archive(archive);
-  }
-
-  {
-
-    srcml_archive * archive = srcml_create_archive();
-    const char * attr[3][2] = { "foo", "bar", "", 0, 0, 0 };
-
-    srcml_archive_set_attributes(archive, attr);
-
-    assert(archive->attributes.size() == 0);
-    srcml_free_archive(archive);
-  }
-  */
-
-  /*
-    srcml_archive_set_option
+    srcml_archive_get_option
    */
 
   {
@@ -168,14 +138,14 @@ int main(int argc, char * argv[]) {
   }
 
   /*
-    srcml_archive_set_tabstop
+    srcml_archive_get_tabstop
   */
 
   {
 
     srcml_archive * archive = srcml_create_archive();
 
-    srcml_archive_set_tabstop(archive, 4);
+    archive->tabstop = 4;
 
     assert(srcml_archive_get_tabstop(archive) == 4);
     srcml_free_archive(archive);
