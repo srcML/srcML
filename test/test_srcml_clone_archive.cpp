@@ -85,5 +85,11 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(new_archive);
   }
 
+  {
+
+    assert(srcml_clone_archive(0) == 0);
+
+  }
+
   return 0;
 }
