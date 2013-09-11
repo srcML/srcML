@@ -168,6 +168,18 @@ int main(int argc, char * argv[]) {
     assert(global_archive.registered_languages.back().n == 2);
   }
 
+  {
+    assert(srcml_register_file_extension("foo", "C+") == SRCML_STATUS_ERROR);
+  }
+
+  {
+    assert(srcml_register_file_extension("foo", 0) == SRCML_STATUS_ERROR);
+  }
+
+  {
+    assert(srcml_register_file_extension(0, "C++") == SRCML_STATUS_ERROR);
+  }
+
   /* 
      srcml_get_encoding
    */
