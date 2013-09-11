@@ -15,6 +15,13 @@ int main(int argc, char * argv[]) {
   {
 
     srcml_archive * archive = srcml_create_archive();
+    srcml_archive->type = SRCML_ARCHIVE_READ;
+    archive->filename = new std::string ("f");
+    archive->encoding = new std::string ("e");
+    archive->language = new std::string ("l");
+    archive->directory = new std::string ("d");
+    archive->version = new std::string ("v");
+
     assert(archive->type == SRCML_ARCHIVE_INVALID);
     assert(archive->filename == 0);
     assert(archive->encoding == 0);
