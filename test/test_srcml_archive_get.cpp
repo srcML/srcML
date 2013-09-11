@@ -151,9 +151,9 @@ int main(int argc, char * argv[]) {
 
     srcml_archive * archive = srcml_create_archive();
 
-    srcml_archive_set_option(archive, 1);
+    archive->options = 1;
 
-    assert(srcml_archive_set_option(archive) == 1);
+    assert(srcml_archive_get_options(archive) == 1);
     srcml_free_archive(archive);
   }
 
@@ -161,9 +161,9 @@ int main(int argc, char * argv[]) {
 
     srcml_archive * archive = srcml_create_archive();
 
-    srcml_archive_set_all_options(archive, 1 | 2);
+    archive->options = 1 | 2;
 
-    assert(srcml_archive_set_option(archive == (1 | 2));
+    assert(srcml_archive_get_options(archive) == (1 | 2));
     srcml_free_archive(archive);
   }
 
@@ -177,89 +177,8 @@ int main(int argc, char * argv[]) {
 
     srcml_archive_set_tabstop(archive, 4);
 
-    assert(archive->tabstop == 4);
+    assert(srcml_archive_get_tabstop(archive) == 4);
     srcml_free_archive(archive);
-  }
-
-  /*
-    srcml_archive_register_file_extension
-  */
-
-  {
-
-    srcml_archive * archive = srcml_create_archive();
-
-    srcml_archive_register_file_extension(archive, "foo", "C++");
-
-    assert(archive->registered_languages.back().s == "foo");
-    assert(archive->registered_languages.back().n == 2);
-    srcml_free_archive(archive);
-  }
-
-  {
-
-    srcml_archive * archive = srcml_create_archive();
-
-    assert(srcml_archive_register_file_extension(archive, "foo", "C+") == SRCML_STATUS_ERROR);
-
-  }
-
-  {
-
-    srcml_archive * archive = srcml_create_archive();
-
-    assert(srcml_archive_register_file_extension(archive, "foo", 0) == SRCML_STATUS_ERROR);
-
-  }
-
-  {
-
-    srcml_archive * archive = srcml_create_archive();
-
-    assert(srcml_archive_register_file_extension(archive, 0, "C++") == SRCML_STATUS_ERROR);
-
-  }
-
-  /*
-    srcml_archive_register_namespace
-  */
-
-  {
-
-    srcml_archive * archive = srcml_create_archive();
-
-    srcml_archive_register_namespace(archive, "foo", "bar");
-
-    assert(archive->prefixes.back() == "foo");
-    assert(archive->namespaces.back() == "bar");
-
-  }
-
-  {
-
-    srcml_archive * archive = srcml_create_archive();
-
-    srcml_archive_register_namespace(archive, "foo", "http://www.sdml.info/srcML/src");
-
-    assert(archive->prefixes.at(0) == "foo");
-    assert(archive->namespaces.at(0)  == "http://www.sdml.info/srcML/src");
-
-  }
-
-  {
-
-    srcml_archive * archive = srcml_create_archive();
-
-    assert(srcml_archive_register_namespace(archive, 0, "bar") == SRCML_STATUS_ERROR);
-
-  }
-
-  {
-
-    srcml_archive * archive = srcml_create_archive();
-
-    assert(srcml_archive_register_namespace(archive, "foo", 0) == SRCML_STATUS_ERROR);
-
   }
 
   return 0;
