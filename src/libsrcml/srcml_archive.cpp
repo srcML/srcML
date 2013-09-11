@@ -86,8 +86,6 @@ srcml_archive* srcml_clone_archive(const srcml_archive* archive) {
 
   if(!new_archive) return 0;
 
-  new_archive->type = archive->type;
-
   try {
 
     new_archive->filename = archive->filename ? new std::string(*archive->filename) : 0;
