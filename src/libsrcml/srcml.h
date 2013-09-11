@@ -111,7 +111,7 @@ int srcml_set_language  (const char* language);
 int srcml_set_filename  (const char* filename);
 int srcml_set_directory (const char* directory);
 int srcml_set_version   (const char* version);
-int srcml_set_options   (int option);
+int srcml_set_all_options   (int option);
 int srcml_set_option    (int option);
 int srcml_clear_option  (int option);
 int srcml_set_tabstop   (int tabstop);
@@ -187,10 +187,9 @@ int srcml_archive_set_language  (struct srcml_archive*, const char* language);
 int srcml_archive_set_filename  (struct srcml_archive*, const char* filename);
 int srcml_archive_set_directory (struct srcml_archive*, const char* directory);
 int srcml_archive_set_version   (struct srcml_archive*, const char* version);
-// TODO:  Remove srcml_archive_set_attributes.  Use individual calls to set
-int srcml_archive_set_attributes(struct srcml_archive*, const char* attr[][2]);
+
 // TODO:  Rename this to srcml_archive_set_all_options()
-int srcml_archive_set_options   (struct srcml_archive*, int option);
+int srcml_archive_set_all_options   (struct srcml_archive*, int option);
 int srcml_archive_set_option    (struct srcml_archive*, int option);
 int srcml_archive_clear_option  (struct srcml_archive*, int option);
 int srcml_archive_set_tabstop   (struct srcml_archive*, int tabstop);

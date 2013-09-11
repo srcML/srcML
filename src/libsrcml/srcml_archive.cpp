@@ -223,7 +223,7 @@ int srcml_archive_set_attributes(srcml_archive* archive, const char* (*attr)[2])
 
 }
 
-int srcml_archive_set_options(srcml_archive* archive, int options) {
+int srcml_archive_set_all_options(srcml_archive* archive, int options) {
 
   archive->options = options;
   return SRCML_STATUS_OK;

@@ -181,9 +181,9 @@ int srcml_set_version(const char* version) {
 
 }
 
-int srcml_set_options(int option) {
+int srcml_set_all_options(int option) {
 
-  return srcml_archive_set_options(&global_archive, option);
+  return srcml_archive_set_all_options(&global_archive, option);
 
 }
 
