@@ -1,3 +1,35 @@
+#include <libxml/parserInternals.h>
+
+#include "../ProcessUnit.hpp"
+#include "../ExtractUnitsSrc.hpp"
+#include "../ExtractUnitsDiffSrc.hpp"
+#include "../CountUnits.hpp"
+#include "../Properties.hpp"
+#include "../ListUnits.hpp"
+#include "../ExtractUnitsXML.hpp"
+#include "../ExtractUnitsDiffXML.hpp"
+#include "../ExtractUnitsDiffXMLPreserve.hpp"
+#include "../XPathQueryUnits.hpp"
+#include "../XSLTUnits.hpp"
+#include "../RelaxNGUnits.hpp"
+
+#include "../SAX2ExtractUnitsSrc.hpp"
+
+#include "../SAX2UnitDOMRelaxNG.hpp"
+
+#include "../srcexfun.hpp"
+
+#include <libexslt/exslt.h>
+
+#if defined(__GNUG__) && !defined(__MINGW32__)
+#include <dlfcn.h>
+#endif
+
+// local function forward declarations
+xmlParserCtxtPtr srcMLCreateMemoryParserCtxt(const char * buffer, int size);
+void srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly);
+xmlParserCtxtPtr srcMLCreateParserCtxt(xmlParserInputBufferPtr buffer_input);
+
 // extract a given unit
 void extract_text(xmlOutputBufferPtr output_buffer, int unit) {
 
