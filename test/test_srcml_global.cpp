@@ -353,6 +353,38 @@ int main(int argc, char * argv[]) {
     assert(srcml_get_prefix_uri(0) == 0);
   }
 
+  /* 
+     srcml_get_namespace
+   */
+
+  {
+    assert(srcml_get_namespace(1) == std::string("bar2"));
+  }
+
+  {
+    assert(srcml_get_namespace(-1) == 0);
+  }
+
+  {
+    assert(srcml_get_namespace(3) == 0);
+  }
+
+  /* 
+     srcml_get_namespace_prefix
+   */
+
+  {
+    assert(srcml_get_namespace_prefix("foo2") == std::string("bar"));
+  }
+
+  {
+    assert(srcml_get_namespace_prefix("foo4") == 0);
+  }
+
+  {
+    assert(srcml_get_namespace_prefix(0) == 0);
+  }
+
   return 0;
 
 }
