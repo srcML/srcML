@@ -93,6 +93,33 @@ int main(int argc, char * argv[]) {
     assert(global_archive.options == (1 | 2 | 3));
   }
 
+  {
+    srcml_set_all_options(1 | 2 | 3);
+    srcml_set_all_options(1);
+    assert(global_archive.options == 1);
+  }
+
+  /* 
+     srcml_set_option
+   */
+
+  {
+    srcml_set_option(1);
+    assert(global_archive.options == 1);
+  }
+
+  {
+    srcml_set_all_options(1 | 2);
+    srcml_set_option(4);
+    assert(global_archive.options == (1 | 2 | 4));
+  }
+
+  {
+    srcml_set_all_options(1);
+    srcml_set_option(2 | 4);
+    assert(global_archive.options == (1 | 2 | 4));
+  }
+
   /* 
      srcml_get_encoding
    */
