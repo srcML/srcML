@@ -125,6 +125,7 @@ int main(int argc, char * argv[]) {
    */
 
   {
+    srcml_set_all_options(0);
     srcml_clear_option(0);
     assert(global_archive.options == 0);
   }
