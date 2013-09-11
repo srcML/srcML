@@ -382,36 +382,6 @@ int srcml_check_format(const char* format) {
 /* particular encoding is supported, both for input and output */
 int srcml_check_encoding(const char* encoding) { return xmlParseCharEncoding(encoding) > 0; }
 
-/* prefix for an XML namespace */
-const char* srcml_check_prefix(const char* namespace_uri) {
-
-  try {
-
-    for(int i = 0; global_archive.namespaces.size(); ++i)
-      if(global_archive.namespaces.at(i) == namespace_uri)
-        return global_archive.prefixes.at(i).c_str();
-
-  } catch(...) {}
-
-  return 0;
-
-}
-
-/* namespace for an XML prefix */
-const char* srcml_check_namespace(const char* prefix) {
-
-  try {
-
-    for(int i = 0; global_archive.prefixes.size(); ++i)
-      if(global_archive.prefixes.at(i) == prefix)
-        return global_archive.namespaces.at(i).c_str();
-
-  } catch(...) {}
-
-  return 0;
-
-}
-
 /* whether various features are available in this installation */
 int srcml_check_xslt() {
 #if defined(__GNUG__) && !defined(__MINGW32__)
