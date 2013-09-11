@@ -24,13 +24,16 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(archive);
   }
 
-
   {
 
     srcml_archive * archive = srcml_create_archive();
     srcml_archive_set_encoding(archive, "foo");
     assert(*archive->encoding == "foo");
     srcml_free_archive(archive);
+  }
+
+  {
+    assert(srcml_archive_set_encoding(0, "foo") == 0);
   }
 
   /* 
@@ -53,6 +56,10 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(archive);
   }
 
+  {
+    assert(srcml_archive_set_language(0, "foo") == 0);
+  }
+
   /* 
      srcml_set_filename
    */
@@ -71,6 +78,10 @@ int main(int argc, char * argv[]) {
     srcml_archive_set_filename(archive, "foo");
     assert(*archive->filename == "foo");
     srcml_free_archive(archive);
+  }
+
+  {
+    assert(srcml_archive_set_filename(0, "foo") == 0);
   }
 
   /* 
@@ -93,6 +104,10 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(archive);
   }
 
+  {
+    assert(srcml_archive_set_directory(0, "foo") == 0);
+  }
+
   /* 
      srcml_set_version
    */
@@ -111,6 +126,10 @@ int main(int argc, char * argv[]) {
     srcml_archive_set_version(archive, "foo");
     assert(*archive->version == "foo");
     srcml_free_archive(archive);
+  }
+
+  {
+    assert(srcml_archive_set_version(0, "foo") == 0);
   }
 
   /*
@@ -168,6 +187,10 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(archive);
   }
 
+  {
+    assert(srcml_archive_set_all_options(0, 1 | 2 | 4) == 0);
+  }
+
   /*
     srcml_archive_set_option
    */
@@ -202,6 +225,10 @@ int main(int argc, char * argv[]) {
 
     assert(archive->options == (1 | 2 | 4));
     srcml_free_archive(archive);
+  }
+
+  {
+    assert(srcml_archive_set_option(0, 1) == 0);
   }
 
   /*
@@ -251,6 +278,10 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(archive);
   }
 
+  {
+    assert(srcml_archive_clear_option(0, 1) == 0);
+  }
+
   /*
     srcml_archive_set_tabstop
   */
@@ -263,6 +294,10 @@ int main(int argc, char * argv[]) {
 
     assert(archive->tabstop == 4);
     srcml_free_archive(archive);
+  }
+
+  {
+    assert(srcml_archive_set_tabstop(0, 4) == 0);
   }
 
   /*
@@ -302,6 +337,10 @@ int main(int argc, char * argv[]) {
 
     assert(srcml_archive_register_file_extension(archive, 0, "C++") == SRCML_STATUS_ERROR);
 
+  }
+
+  {
+    assert(srcml_archive_register_file_extension(0, "foo", "C++") == 0);
   }
 
   /*
@@ -344,6 +383,10 @@ int main(int argc, char * argv[]) {
 
     assert(srcml_archive_register_namespace(archive, "foo", 0) == SRCML_STATUS_ERROR);
 
+  }
+
+  {
+    assert(srcml_archive_register_namespace(0, "foo", "bar") == 0);
   }
 
   return 0;
