@@ -27,7 +27,7 @@
    Full filename can be provided, and extension will be extracted */
 const char * srcml_archive_check_extension(srcml_archive * archive, const char* filename) {
 
-  if(filename == NULL) return 0;
+  if(archive == NULL || filename == NULL) return 0;
 
   Language language(Language::getLanguageFromFilename(filename, archive->registered_languages));
   const char * lang_string = language.getLanguageString();
@@ -146,6 +146,8 @@ srcml_archive* srcml_clone_archive(const srcml_archive* archive) {
 /* setup options for srcml archive */
 int srcml_archive_set_encoding(srcml_archive* archive, const char* encoding) {
 
+  if(archive == NULL) return SRCML_STATUS_ERROR;
+
   if(archive->encoding) delete archive->encoding;
   try {
 
@@ -157,6 +159,8 @@ int srcml_archive_set_encoding(srcml_archive* archive, const char* encoding) {
 }
 
 int srcml_archive_set_language(srcml_archive* archive, const char* language) {
+
+  if(archive == NULL) return SRCML_STATUS_ERROR;
 
   if(archive->language) delete archive->language;
   try {
@@ -170,6 +174,8 @@ int srcml_archive_set_language(srcml_archive* archive, const char* language) {
 
 int srcml_archive_set_filename(srcml_archive* archive, const char* filename) {
 
+  if(archive == NULL) return SRCML_STATUS_ERROR;
+
   if(archive->filename) delete archive->filename;
   try {
 
@@ -181,6 +187,8 @@ int srcml_archive_set_filename(srcml_archive* archive, const char* filename) {
 }
 
 int srcml_archive_set_directory (srcml_archive* archive, const char* directory) {
+
+  if(archive == NULL) return SRCML_STATUS_ERROR;
 
   if(archive->directory) delete archive->directory;
   try {
@@ -194,6 +202,8 @@ int srcml_archive_set_directory (srcml_archive* archive, const char* directory) 
 
 int srcml_archive_set_version(srcml_archive* archive, const char* version) {
 
+  if(archive == NULL) return SRCML_STATUS_ERROR;
+
   if(archive->version) delete archive->version;
   try {
 
@@ -205,6 +215,8 @@ int srcml_archive_set_version(srcml_archive* archive, const char* version) {
 }
 
 int srcml_archive_set_attributes(srcml_archive* archive, const char* (*attr)[2]) {
+
+  if(archive == NULL) return SRCML_STATUS_ERROR;
 
   archive->attributes.clear();
 
@@ -228,12 +240,16 @@ int srcml_archive_set_attributes(srcml_archive* archive, const char* (*attr)[2])
 
 int srcml_archive_set_all_options(srcml_archive* archive, int options) {
 
+  if(archive == NULL) return SRCML_STATUS_ERROR;
+
   archive->options = options;
   return SRCML_STATUS_OK;
 
 }
 
 int srcml_archive_set_option    (srcml_archive* archive, int option) {
+
+  if(archive == NULL) return SRCML_STATUS_ERROR;
 
   archive->options |= option;
   return SRCML_STATUS_OK;
@@ -242,12 +258,16 @@ int srcml_archive_set_option    (srcml_archive* archive, int option) {
 
 int srcml_archive_clear_option(srcml_archive* archive, int option) {
 
+  if(archive == NULL) return SRCML_STATUS_ERROR;
+
   archive->options &= ~option;
   return SRCML_STATUS_OK;
 
 }
 
 int srcml_archive_set_tabstop(srcml_archive* archive, int tabstop) {
+
+  if(archive == NULL) return SRCML_STATUS_ERROR;
 
   archive->tabstop = tabstop;
   return SRCML_STATUS_OK;
@@ -256,7 +276,7 @@ int srcml_archive_set_tabstop(srcml_archive* archive, int tabstop) {
 
 int srcml_archive_register_file_extension(srcml_archive* archive, const char* extension, const char* language) {
 
-  if(extension == 0 || language == 0)
+  if(archive == NULL || extension == 0 || language == 0)
     return SRCML_STATUS_ERROR;
 
   if(Language::registerUserExt(extension, language, archive->registered_languages))
@@ -266,7 +286,7 @@ int srcml_archive_register_file_extension(srcml_archive* archive, const char* ex
 
 int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix, const char* ns) {
 
-  if(prefix == 0 || ns == 0) return SRCML_STATUS_ERROR;
+  if(archive == NULL || prefix == 0 || ns == 0) return SRCML_STATUS_ERROR;
 
   try {
 
