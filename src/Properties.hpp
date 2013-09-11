@@ -26,7 +26,9 @@
 void output_info(srcMLUtility& su, int options, int optioncount, int optionorder[], FILE * output, std::ostringstream * buffer, std::vector<std::string> * output_array);
 
 #include "ProcessUnit.hpp"
+#include "CountUnits.hpp"
 #include "srcmlapps.hpp"
+#include "srcmlns.hpp"
 #include <sstream>
 
 #include <unistd.h>

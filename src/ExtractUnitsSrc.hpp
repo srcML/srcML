@@ -26,6 +26,7 @@
 #include "SAX2ExtractUnitsSrc.hpp"
 #include "ProcessUnit.hpp"
 #include "srcmlapps.hpp"
+#include "srcmlns.hpp"
 
 #if defined(__GNUC__)
 #define EOL "\n"

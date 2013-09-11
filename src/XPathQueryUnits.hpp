@@ -36,6 +36,7 @@
 
 #include "srcexfun.hpp"
 #include "UnitDOM.hpp"
+#include "srcmlns.hpp"
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
 #include <dlfcn.h>
