@@ -131,7 +131,7 @@ srcml_archive* srcml_clone_archive(const srcml_archive* archive) {
   }
 
   try {
-
+    new_archive->registered_languages.clear();
     for(int i = 0; i < archive->registered_languages.size(); ++i)
       new_archive->registered_languages.push_back(archive->registered_languages.at(i));
 
