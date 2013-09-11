@@ -35,6 +35,10 @@ int main(int argc, char * argv[]) {
     assert(srcml_archive_check_extension(archive, 0) == 0);
   }
 
+  {
+    assert(srcml_archive_check_extension(0, "a.cpp") == 0);
+  }
+
   srcml_free_archive(archive);
 
   return 0;
