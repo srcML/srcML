@@ -2,11 +2,7 @@
 void srcMLUtility::extract_text(xmlOutputBufferPtr output_buffer, int unit) {
 
   // setup parser
-  xmlParserCtxtPtr ctxt = 0;
-  if(infile)
-    ctxt = srcMLCreateURLParserCtxt(infile);
-  else
-    ctxt = srcMLCreateMemoryParserCtxt(buffer, size);
+  xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(buffer, size);
 
   // setup sax handler
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
@@ -37,7 +33,6 @@ void srcMLUtility::extract_text(xmlOutputBufferPtr output_buffer, int unit) {
 void srcMLUtility::xpath(const char* ofilename, const char* context_element, const char* xpaths[], int fd) {
 
   // relative xpath changed to at any level
-  if(ofilename) xmlMemSetup(xmlMemFree, xmlMemMalloc, xmlMemRealloc, xmlMemoryStrdup);
   std::string s = xpaths[0];
   //  if (s[0] != '/')
   //    s = "//" + s;
@@ -50,11 +45,7 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
   }
 
   // setup parser
-  xmlParserCtxtPtr ctxt = 0;
-  if(infile)
-    ctxt = srcMLCreateURLParserCtxt(infile);
-  else
-    ctxt = srcMLCreateParserCtxt(buffer_input);
+  xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(buffer_input);
   if (ctxt == NULL) return;
 
   // setup sax handler
@@ -116,7 +107,6 @@ void dlexsltRegisterAll() {
 // xslt evaluation of the nested units
 void srcMLUtility::xslt(const char* context_element, const char* ofilename, const char* xslts[], const char* params[], int paramcount, int fd) {
 
-  if(ofilename) xmlMemSetup(xmlMemFree, xmlMemMalloc, xmlMemRealloc, xmlMemoryStrdup);
   xmlInitParser();
 
   // allow for all exstl functions
@@ -149,11 +139,7 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
     return;
 
   // setup parser
-  xmlParserCtxtPtr ctxt = 0;
-  if(infile)
-    ctxt = srcMLCreateURLParserCtxt(infile);
-  else
-    ctxt = srcMLCreateParserCtxt(buffer_input);
+  xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(buffer_input);
   if (ctxt == NULL) return;
 
   // setup sax handler
@@ -183,11 +169,7 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
 // relaxng evaluation of the nested units
 void srcMLUtility::relaxng(const char* ofilename, const char** xslts, int fd) {
 
-  xmlParserCtxtPtr ctxt = 0;
-  if(infile)
-    ctxt = srcMLCreateURLParserCtxt(infile);
-  else
-    ctxt = srcMLCreateParserCtxt(buffer_input);
+  xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(buffer_input);
   if (ctxt == NULL) return;
 
   // setup sax handler
