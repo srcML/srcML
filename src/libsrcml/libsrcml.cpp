@@ -337,8 +337,7 @@ const char** srcml_language_list() {
    Full filename can be provided, and extension will be extracted */
 const char * srcml_check_extension(const char* filename) {
 
-  Language language(Language::getLanguageFromFilename(filename));
-  return language.getLanguageString();
+  return srcml_archive_check_extension(&global_archive, filename);
 
 }
 
