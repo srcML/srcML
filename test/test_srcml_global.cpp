@@ -67,6 +67,18 @@ int main(int argc, char * argv[]) {
     assert(srcml_check_extension("a.cpp") == std::string("C++"));
   }
 
+  {
+    assert(srcml_check_extension("a.cpp.gz") == std::string("C++"));
+  }
+
+  {
+    assert(srcml_check_extension("a.foo") == 0);
+  }
+
+  {
+    assert(srcml_check_extension(0) == 0);
+  }
+
   return 0;
 
 }
