@@ -280,6 +280,9 @@ const char* srcml_get_prefix(int pos) {
 }
 
 const char* srcml_get_prefix_uri(const char* namespace_uri) {
+
+  if(namespace_uri == NULL) return 0;
+
   try {
 
     for(int i = 0; i < global_archive.prefixes.size(); ++i)
@@ -306,6 +309,8 @@ const char* srcml_get_namespace(int pos) {
 }
 
 const char* srcml_get_namespace_prefix(const char* prefix) {
+
+  if(prefix == NULL) return 0;
 
   try {
 
