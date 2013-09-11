@@ -1,5 +1,5 @@
 // extract a given unit
-void srcMLUtility::extract_text(xmlOutputBufferPtr output_buffer, int unit) {
+void extract_text(xmlOutputBufferPtr output_buffer, int unit) {
 
   // setup parser
   xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(buffer, size);
@@ -30,7 +30,7 @@ void srcMLUtility::extract_text(xmlOutputBufferPtr output_buffer, int unit) {
 }
 
 // xpath evaluation of the nested units
-void srcMLUtility::xpath(const char* ofilename, const char* context_element, const char* xpaths[], int fd) {
+void xpath(const char* ofilename, const char* context_element, const char* xpaths[], int fd) {
 
   // relative xpath changed to at any level
   std::string s = xpaths[0];
@@ -105,7 +105,7 @@ void dlexsltRegisterAll() {
 }
 
 // xslt evaluation of the nested units
-void srcMLUtility::xslt(const char* context_element, const char* ofilename, const char* xslts[], const char* params[], int paramcount, int fd) {
+void xslt(const char* context_element, const char* ofilename, const char* xslts[], const char* params[], int paramcount, int fd) {
 
   xmlInitParser();
 
@@ -167,7 +167,7 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
 }
 
 // relaxng evaluation of the nested units
-void srcMLUtility::relaxng(const char* ofilename, const char** xslts, int fd) {
+void relaxng(const char* ofilename, const char** xslts, int fd) {
 
   xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(buffer_input);
   if (ctxt == NULL) return;
@@ -220,9 +220,9 @@ static void srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly) {
     exit(STATUS_INPUTFILE_PROBLEM);
   }
 }
-
+#if 0
 // create srcml parser with error reporting
-static xmlParserCtxtPtr srcMLCreateURLParserCtxt(const char * infile) {
+xmlParserCtxtPtr srcMLCreateURLParserCtxt(const char * infile) {
 
   xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT | XML_PARSE_HUGE);
   if (ctxt == NULL) {
@@ -235,9 +235,10 @@ static xmlParserCtxtPtr srcMLCreateURLParserCtxt(const char * infile) {
 
   return ctxt;
 }
+#endif
 
 // create srcml parser with error reporting
-static xmlParserCtxtPtr srcMLCreateMemoryParserCtxt(const char * buffer, int size) {
+xmlParserCtxtPtr srcMLCreateMemoryParserCtxt(const char * buffer, int size) {
 
   xmlParserCtxtPtr ctxt = xmlCreateMemoryParserCtxt(buffer, size);
 
