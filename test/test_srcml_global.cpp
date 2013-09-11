@@ -85,6 +85,15 @@ int main(int argc, char * argv[]) {
   }
 
   /* 
+     srcml_set_all_options
+   */
+
+  {
+    srcml_set_all_options(1 | 2 | 3);
+    assert(global_archive.options == (1 | 2 | 3));
+  }
+
+  /* 
      srcml_get_encoding
    */
 
