@@ -315,7 +315,7 @@ const char* srcml_archive_get_version(const srcml_archive* archive) {
 
 int srcml_archive_get_options(const srcml_archive* archive) {
 
-  return  archive->options;
+  return archive->options;
 
 }
 
