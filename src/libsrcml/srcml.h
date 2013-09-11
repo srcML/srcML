@@ -188,7 +188,6 @@ int srcml_archive_set_filename  (struct srcml_archive*, const char* filename);
 int srcml_archive_set_directory (struct srcml_archive*, const char* directory);
 int srcml_archive_set_version   (struct srcml_archive*, const char* version);
 
-// TODO:  Rename this to srcml_archive_set_all_options()
 int srcml_archive_set_all_options   (struct srcml_archive*, int option);
 int srcml_archive_set_option    (struct srcml_archive*, int option);
 int srcml_archive_clear_option  (struct srcml_archive*, int option);
