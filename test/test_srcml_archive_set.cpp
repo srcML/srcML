@@ -283,5 +283,21 @@ int main(int argc, char * argv[]) {
 
   }
 
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    assert(srcml_archive_register_namespace(archive, 0, "bar") == SRCML_STATUS_ERROR);
+
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+
+    assert(srcml_archive_register_namespace(archive, "foo", 0) == SRCML_STATUS_ERROR);
+
+  }
+
   return 0;
 }
