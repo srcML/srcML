@@ -1,6 +1,6 @@
 /*
 
-  Test cases for srcml_archive_set_*.
+  Test cases for srcml_unit_set_*.
 */
 #include <stdio.h>
 #include <string.h>
@@ -15,7 +15,7 @@ int main(int argc, char * argv[]) {
   srcml_archive * archive = srcml_create_archive();
 
   /* 
-     srcml_set_language
+     srcml_unit_set_language
    */
 
   {
@@ -39,7 +39,7 @@ int main(int argc, char * argv[]) {
   }
 
   /* 
-     srcml_set_filename
+     srcml_unit_set_filename
    */
 
   {
@@ -63,7 +63,7 @@ int main(int argc, char * argv[]) {
   }
 
   /* 
-     srcml_set_directory
+     srcml_unit_set_directory
    */
 
   {
@@ -87,7 +87,7 @@ int main(int argc, char * argv[]) {
   }
 
   /* 
-     srcml_set_version
+     srcml_unit_set_version
    */
 
   {
