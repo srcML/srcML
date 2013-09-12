@@ -247,6 +247,9 @@ int main(int argc, char * argv[]) {
   close(fd);
   }
 
+  unlink("project.xml");
+  unlink("project_ns.xml");
+
   return 0;
 
 }
