@@ -252,7 +252,7 @@ int main(int argc, char * argv[]) {
     srcml_write_open_filename(archive, "project.xml");
     srcml_unit * unit = srcml_create_unit(archive);
     srcml_unit_set_language(unit, "C");
-    assert(srcml_parse_unit_fd(unit, 0) == SRCML_STATUS_ERROR);
+    assert(srcml_parse_unit_fd(unit, -1) == SRCML_STATUS_ERROR);
    
     srcml_free_unit(unit);
     srcml_close_archive(archive);
