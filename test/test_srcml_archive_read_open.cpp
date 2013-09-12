@@ -1,6 +1,6 @@
 /*
 
-  Test cases for srcml_archive_check_extension
+  Test cases for read open for archives
 */
 #include <stdio.h>
 #include <string.h>
