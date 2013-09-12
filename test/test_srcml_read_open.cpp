@@ -30,6 +30,7 @@ int main(int argc, char * argv[]) {
   srcml_read_open_filename(archive, "project.xml");
 
   assert(archive->reader != 0);
+  assert(srcml_archive_get_directory(archive) == std::string("test"));
   assert(srcml_archive_get_options(archive) == 0);
 
   srcml_close_archive(archive);
@@ -69,6 +70,7 @@ int main(int argc, char * argv[]) {
   srcml_read_open_memory(archive, srcml.c_str(), srcml.size());
 
   assert(archive->reader != 0);
+  assert(srcml_archive_get_directory(archive) == std::string("test"));
   assert(srcml_archive_get_options(archive) == 0);
 
   srcml_close_archive(archive);
