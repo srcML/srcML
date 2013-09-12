@@ -59,7 +59,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
 endif()
 
 include_directories(C:/antlr/277/include/antlr)
-include_directories(.)
+include_directories(. libsrcml)
 
 if(SVN_ENABLED)
 include_directories(/usr/include/apr-1)
