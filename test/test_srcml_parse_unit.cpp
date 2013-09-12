@@ -80,6 +80,7 @@ int main(int argc, char * argv[]) {
     srcml_archive * archive = srcml_create_archive();
     srcml_write_open_filename(archive, "project.xml");
     srcml_unit * unit = srcml_create_unit(archive);
+    srcml_unit_set_language(unit, "C");
     srcml_parse_unit_memory(unit, src.c_str(), src.size());
     assert(*unit->unit == srcml);
    
@@ -92,6 +93,7 @@ int main(int argc, char * argv[]) {
 
     srcml_archive * archive = srcml_create_archive();
     srcml_unit * unit = srcml_create_unit(archive);
+    srcml_unit_set_language(unit, "C");
     assert(srcml_parse_unit_memory(unit, src.c_str(), src.size()) == SRCML_STATUS_ERROR);
    
     srcml_free_unit(unit);
@@ -103,6 +105,7 @@ int main(int argc, char * argv[]) {
     srcml_archive * archive = srcml_create_archive();
     srcml_write_open_filename(archive, "project.xml");
     srcml_unit * unit = srcml_create_unit(archive);
+    srcml_unit_set_language(unit, "C");
     assert(srcml_parse_unit_memory(unit, 0, src.size()) == SRCML_STATUS_ERROR);
    
     srcml_free_unit(unit);
@@ -115,6 +118,7 @@ int main(int argc, char * argv[]) {
     srcml_archive * archive = srcml_create_archive();
     srcml_write_open_filename(archive, "project.xml");
     srcml_unit * unit = srcml_create_unit(archive);
+    srcml_unit_set_language(unit, "C");
     assert(srcml_parse_unit_memory(unit, src.c_str(), 0) == SRCML_STATUS_ERROR);
    
     srcml_free_unit(unit);
@@ -127,6 +131,7 @@ int main(int argc, char * argv[]) {
     srcml_archive * archive = srcml_create_archive();
     srcml_write_open_filename(archive, "project.xml");
     srcml_unit * unit = srcml_create_unit(archive);
+    srcml_unit_set_language(unit, "C");
     assert(srcml_parse_unit_memory(0, src.c_str(), src.size()) == SRCML_STATUS_ERROR);
    
     srcml_free_unit(unit);
