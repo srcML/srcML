@@ -7,6 +7,7 @@
 #include <cassert>
 #include <fstream>
 #include <unistd.h>
+#include <fcntl.h>
 
 #include <srcml.h>
 #include <srcml_types.hpp>
@@ -190,6 +191,60 @@ int main(int argc, char * argv[]) {
   FILE * file = fopen("project_ns.xml", "r");
   assert(srcml_read_open_FILE(0, file) == SRCML_STATUS_ERROR);
   fclose(file);
+  }
+
+  /* 
+     srcml_read_open_fd
+  */
+
+  {
+  int fd = open("project.xml", 0);
+
+  srcml_archive * archive = srcml_create_archive();
+  srcml_read_open_fd(archive, fd);
+
+  assert(archive->reader != 0);
+  assert(srcml_archive_get_filename(archive) == std::string("project"));
+  assert(srcml_archive_get_directory(archive) == std::string("test"));
+  assert(srcml_archive_get_version(archive) == std::string("1"));
+  assert(srcml_archive_get_options(archive) == 0);
+
+  srcml_close_archive(archive);
+  srcml_free_archive(archive);
+  close(fd);
+
+  }
+
+  {
+
+  int fd = open("project_ns.xml", 0);
+
+  srcml_archive * archive = srcml_create_archive();
+  srcml_read_open_fd(archive, fd);
+
+  assert(archive->reader != 0);
+  assert(archive->prefixes.at(0) == "s");
+  assert(srcml_archive_get_options(archive) == 0);
+
+  srcml_close_archive(archive);
+  srcml_free_archive(archive);
+  close(fd);
+
+  }
+
+  {
+
+  srcml_archive * archive = srcml_create_archive();
+  assert(srcml_read_open_fd(archive, -1) == SRCML_STATUS_ERROR);
+
+  srcml_free_archive(archive);
+
+  }
+
+  {
+  int fd = open("project_ns.xml", 0);
+  assert(srcml_read_open_fd(0, fd) == SRCML_STATUS_ERROR);
+  close(fd);
   }
 
   return 0;
