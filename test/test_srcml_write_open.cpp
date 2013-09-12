@@ -25,18 +25,9 @@ int main(int argc, char * argv[]) {
   srcml_write_open_filename(archive, "project.xml");
 
   assert(archive->translator != 0);
-  assert(srcml_archive_get_options(archive) == 0);
+  assert(srcml_archive_get_options(archive) == SRCML_OPTION_ARCHIVE);
 
   srcml_close_archive(archive);
-  srcml_free_archive(archive);
-
-  }
-
-  {
-
-  srcml_archive * archive = srcml_create_archive();
-  assert(srcml_write_open_filename(archive, "foobar.xml") == SRCML_STATUS_ERROR);
-
   srcml_free_archive(archive);
 
   }
@@ -65,7 +56,7 @@ int main(int argc, char * argv[]) {
   srcml_write_open_memory(archive, &s);
 
   assert(archive->translator != 0);
-  assert(srcml_archive_get_options(archive) == 0);
+  assert(srcml_archive_get_options(archive) == SRCML_OPTION_ARCHIVE);
 
   srcml_close_archive(archive);
   srcml_free_archive(archive);
@@ -97,7 +88,7 @@ int main(int argc, char * argv[]) {
   srcml_write_open_FILE(archive, file);
 
   assert(archive->translator != 0);
-  assert(srcml_archive_get_options(archive) == 0);
+  assert(srcml_archive_get_options(archive) == SRCML_OPTION_ARCHIVE);
 
   srcml_close_archive(archive);
   srcml_free_archive(archive);
@@ -131,7 +122,7 @@ int main(int argc, char * argv[]) {
   srcml_write_open_fd(archive, fd);
 
   assert(archive->translator != 0);
-  assert(srcml_archive_get_options(archive) == 0);
+  assert(srcml_archive_get_options(archive) == SRCML_OPTION_ARCHIVE);
 
   srcml_close_archive(archive);
   srcml_free_archive(archive);
