@@ -19,6 +19,10 @@ int main(int argc, char * argv[]) {
   std::ofstream src_file("project.c");
   src_file << src;
   src_file.close();
+
+  /*
+    srcml_parse_unit_filename
+   */
   
   {
 
@@ -61,6 +65,69 @@ int main(int argc, char * argv[]) {
     srcml_write_open_filename(archive, "project.xml");
     srcml_unit * unit = srcml_create_unit(archive);
     assert(srcml_parse_unit_filename(0, "project.c") == SRCML_STATUS_ERROR);
+   
+    srcml_free_unit(unit);
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  /*
+    srcml_parse_unit_memory
+   */
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_write_open_filename(archive, "project.xml");
+    srcml_unit * unit = srcml_create_unit(archive);
+    srcml_parse_unit_memory(unit, src.c_str(), src.size());
+    assert(*unit->unit == srcml);
+   
+    srcml_free_unit(unit);
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_unit * unit = srcml_create_unit(archive);
+    assert(srcml_parse_unit_memory(unit, src.c_str(), src.size()) == SRCML_STATUS_ERROR);
+   
+    srcml_free_unit(unit);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_write_open_filename(archive, "project.xml");
+    srcml_unit * unit = srcml_create_unit(archive);
+    assert(srcml_parse_unit_memory(unit, 0, src.size()) == SRCML_STATUS_ERROR);
+   
+    srcml_free_unit(unit);
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_write_open_filename(archive, "project.xml");
+    srcml_unit * unit = srcml_create_unit(archive);
+    assert(srcml_parse_unit_memory(unit, src.c_str(), 0) == SRCML_STATUS_ERROR);
+   
+    srcml_free_unit(unit);
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_write_open_filename(archive, "project.xml");
+    srcml_unit * unit = srcml_create_unit(archive);
+    assert(srcml_parse_unit_memory(0, src.c_str(), src.size()) == SRCML_STATUS_ERROR);
    
     srcml_free_unit(unit);
     srcml_close_archive(archive);
