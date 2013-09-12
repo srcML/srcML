@@ -29,6 +29,41 @@ int main(int argc, char * argv[]) {
     assert(*unit->unit == srcml);
    
     srcml_free_unit(unit);
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_unit * unit = srcml_create_unit(archive);
+    assert(srcml_parse_unit_filename(unit, "project.c") == SRCML_STATUS_ERROR);
+   
+    srcml_free_unit(unit);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_write_open_filename(archive, "project.xml");
+    srcml_unit * unit = srcml_create_unit(archive);
+    assert(srcml_parse_unit_filename(unit, 0) == SRCML_STATUS_ERROR);
+   
+    srcml_free_unit(unit);
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_write_open_filename(archive, "project.xml");
+    srcml_unit * unit = srcml_create_unit(archive);
+    assert(srcml_parse_unit_filename(0, "project.c") == SRCML_STATUS_ERROR);
+   
+    srcml_free_unit(unit);
+    srcml_close_archive(archive);
     srcml_free_archive(archive);
   }
 
