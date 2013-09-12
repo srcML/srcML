@@ -1,6 +1,6 @@
 /*
 
-  Test cases for srcml_create_archive.
+  Test cases for srcml_create_unit.
 */
 #include <stdio.h>
 #include <string.h>
