@@ -503,6 +503,8 @@ void srcml_read_internal(srcml_archive * archive) {
 /* open a srcML archive for reading */
 int srcml_read_open_filename(srcml_archive* archive, const char* srcml_filename) {
 
+  if(archive == NULL || srcml_filename == NULL) return SRCML_STATUS_ERROR;
+
   archive->input = xmlParserInputBufferCreateFilename(srcml_filename, xmlParseCharEncoding(0));
   try {
 
@@ -522,6 +524,8 @@ int srcml_read_open_filename(srcml_archive* archive, const char* srcml_filename)
 }
 
 int srcml_read_open_memory(srcml_archive* archive, const char* buffer, size_t buffer_size) {
+
+  if(archive == NULL || buffer == NULL || buffer_size <= 0) return SRCML_STATUS_ERROR;
 
   archive->input = xmlParserInputBufferCreateMem(buffer, buffer_size, xmlParseCharEncoding(0));
   try {
@@ -543,6 +547,8 @@ int srcml_read_open_memory(srcml_archive* archive, const char* buffer, size_t bu
 
 int srcml_read_open_FILE(srcml_archive* archive, FILE* srcml_file) {
 
+  if(archive == NULL || srcml_file == NULL) return SRCML_STATUS_ERROR;
+
   archive->input = xmlParserInputBufferCreateFile(srcml_file, xmlParseCharEncoding(0));
   try {
 
@@ -562,6 +568,8 @@ int srcml_read_open_FILE(srcml_archive* archive, FILE* srcml_file) {
 }
 
 int srcml_read_open_fd(srcml_archive* archive, int srcml_fd) {
+
+  if(archive == NULL || srcml_fd < 0) return SRCML_STATUS_ERROR;
 
   archive->input = xmlParserInputBufferCreateFd(srcml_fd, xmlParseCharEncoding(0));
   try {
