@@ -18,15 +18,15 @@
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "srcml_sax2_utilities.hpp"
+#include <srcml_sax2_utilities.hpp>
 
-#include "../ExtractUnitsSrc.hpp"
-#include "../Properties.hpp"
-#include "../XPathQueryUnits.hpp"
-#include "../XSLTUnits.hpp"
-#include "../RelaxNGUnits.hpp"
+#include <ExtractUnitsSrc.hpp>
+#include <Properties.hpp>
+#include <XPathQueryUnits.hpp>
+#include <XSLTUnits.hpp>
+#include <RelaxNGUnits.hpp>
 
-#include "../srcexfun.hpp"
+#include <srcexfun.hpp>
 
 #include <libexslt/exslt.h>
 

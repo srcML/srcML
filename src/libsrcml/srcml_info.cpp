@@ -18,8 +18,8 @@
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "srcml.h"
-#include "srcml_types.hpp"
+#include <srcml.h>
+#include <srcml_types.hpp>
 
 //#include "../srcMLUtility.hpp"
 

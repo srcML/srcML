@@ -18,10 +18,10 @@
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "srcml.h"
-#include "srcml_types.hpp"
+#include <srcml.h>
+#include <srcml_types.hpp>
 
-#include "../srcmlns.hpp"
+#include <srcmlns.hpp>
 
 /* currently registered language for a file extension
    Full filename can be provided, and extension will be extracted */
