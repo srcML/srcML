@@ -13,33 +13,31 @@
 int main(int argc, char * argv[]) {
 
   /* 
-     srcml_check_extension
+     srcml_read_open_filename
    */
 
+  {
+
   srcml_archive * archive = srcml_create_archive();
-  srcml_archive_register_file_extension(archive, "cpp", "C++");
+  srcml_archive_read_open_filename(archive, "a.cpp.xml");
 
-  {
-    assert(srcml_archive_check_extension(archive, "a.cpp") == std::string("C++"));
+  srcml_close(archive);
+  srcml_free_archive(archive);
+
   }
 
   {
-    assert(srcml_archive_check_extension(archive, "a.cpp.gz") == std::string("C++"));
-  }
 
-  {
-    assert(srcml_archive_check_extension(archive, "a.foo") == 0);
-  }
-
-  {
-    assert(srcml_archive_check_extension(archive, 0) == 0);
-  }
-
-  {
-    assert(srcml_archive_check_extension(0, "a.cpp") == 0);
-  }
+  srcml_archive * archive = srcml_create_archive();
+  assert(srcml_archive_read_open_filename(archive, 0) == SRCML_STATUS_ERROR);
 
   srcml_free_archive(archive);
+
+  }
+
+  {
+  assert(srcml_archive_read_open_filename(0, "a.cpp.xml") == SRCML_STATUS_ERROR);
+  }
 
   return 0;
 
