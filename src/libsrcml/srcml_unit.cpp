@@ -25,6 +25,8 @@
 /* setup options for srcml unit */
 int srcml_unit_set_language(srcml_unit* unit, const char* language) {
 
+  if(unit == NULL) return SRCML_STATUS_ERROR;
+
   if(unit->language) delete unit->language;
   try {
 
@@ -36,6 +38,8 @@ int srcml_unit_set_language(srcml_unit* unit, const char* language) {
 }
 
 int srcml_unit_set_filename(srcml_unit* unit, const char* filename) {
+
+  if(unit == NULL) return SRCML_STATUS_ERROR;
 
   if(unit->filename) delete unit->filename;
   try {
@@ -49,6 +53,8 @@ int srcml_unit_set_filename(srcml_unit* unit, const char* filename) {
 
 int srcml_unit_set_directory(srcml_unit* unit, const char* directory) {
 
+  if(unit == NULL) return SRCML_STATUS_ERROR;
+
   if(unit->directory) delete unit->directory;
   try {
 
@@ -60,6 +66,8 @@ int srcml_unit_set_directory(srcml_unit* unit, const char* directory) {
 }
 
 int srcml_unit_set_version(srcml_unit* unit, const char* version) {
+
+  if(unit == NULL) return SRCML_STATUS_ERROR;
 
   if(unit->version) delete unit->version;
   try {
@@ -73,11 +81,15 @@ int srcml_unit_set_version(srcml_unit* unit, const char* version) {
 
 const char* srcml_unit_get_language(const srcml_unit* unit) {
 
+  if(unit == NULL) return SRCML_STATUS_ERROR;
+
   return unit->language ? unit->language->c_str() : 0;
 
 }
 
 const char* srcml_unit_get_filename(const srcml_unit* unit) {
+
+  if(unit == NULL) return SRCML_STATUS_ERROR;
 
   return unit->filename ? unit->filename->c_str() : 0;
 
@@ -85,11 +97,15 @@ const char* srcml_unit_get_filename(const srcml_unit* unit) {
 
 const char* srcml_unit_get_directory(const srcml_unit* unit) {
 
+  if(unit == NULL) return SRCML_STATUS_ERROR;
+
   return unit->directory ? unit->directory->c_str() : 0;
 
 }
 
 const char* srcml_unit_get_version  (const srcml_unit* unit) {
+
+  if(unit == NULL) return SRCML_STATUS_ERROR;
 
   return unit->version ? unit->version->c_str() : 0;
 
@@ -133,11 +149,15 @@ int srcml_parse_unit_internal(srcml_unit * unit, int lang) {
 // TODO What is this supposed to do.  Right now append unit to archive, that is noop.
 int srcml_parse_unit_archive (srcml_archive* archive, srcml_unit* unit) {
 
+  if(unit == NULL) return SRCML_STATUS_ERROR;
+
   return SRCML_STATUS_OK;
 
 }
 
 int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
+
+  if(unit == NULL || src_filename == NULL) return SRCML_STATUS_ERROR;
 
   int lang = unit->language ? srcml_check_language(unit->language->c_str()) : Language::getLanguageFromFilename(src_filename, unit->archive->registered_languages);
 
@@ -169,6 +189,8 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
 int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buffer_size) {
 
+  if(unit == NULL || src_buffer == NULL || buffer_size <= 0) return SRCML_STATUS_ERROR;
+
   int lang = srcml_check_language(unit->language ? unit->language->c_str() : 0);
 
   OPTION_TYPE save_options = unit->archive->options;
@@ -198,6 +220,8 @@ int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buf
 }
 
 int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
+
+  if(unit == NULL || src_file == NULL) return SRCML_STATUS_ERROR;
 
   int lang = srcml_check_language(unit->language ? unit->language->c_str() : 0);
 
@@ -232,6 +256,8 @@ int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
 }
 
 int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
+
+  if(unit == NULL || src_fd < 0) return SRCML_STATUS_ERROR;
 
   int lang = srcml_check_language(unit->language ? unit->language->c_str() : 0);
 
