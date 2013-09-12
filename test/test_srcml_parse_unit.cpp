@@ -7,6 +7,7 @@
 #include <cassert>
 #include <fstream>
 #include <unistd.h>
+#include <fcntl.h>
 
 #include <srcml.h>
 #include <srcml_types.hpp>
@@ -206,6 +207,67 @@ int main(int argc, char * argv[]) {
     FILE * file = fopen("project.c", "r");
     assert(srcml_parse_unit_FILE(0, file) == SRCML_STATUS_ERROR);
     fclose(file);
+   
+    srcml_free_unit(unit);
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  /*
+    srcml_parse_unit_fd
+   */
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_write_open_filename(archive, "project.xml");
+    srcml_unit * unit = srcml_create_unit(archive);
+    srcml_unit_set_language(unit, "C");
+    int fd = open("project.c", O_RDONLY);
+    srcml_parse_unit_fd(unit, fd);
+    assert(*unit->unit == srcml);
+    close(fd);
+
+    srcml_free_unit(unit);
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_unit * unit = srcml_create_unit(archive);
+    srcml_unit_set_language(unit, "C");
+    int fd = open("project.c", O_RDONLY);
+    assert(srcml_parse_unit_fd(unit, fd) == SRCML_STATUS_ERROR);
+    close(fd);
+   
+    srcml_free_unit(unit);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_write_open_filename(archive, "project.xml");
+    srcml_unit * unit = srcml_create_unit(archive);
+    srcml_unit_set_language(unit, "C");
+    assert(srcml_parse_unit_fd(unit, 0) == SRCML_STATUS_ERROR);
+   
+    srcml_free_unit(unit);
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_write_open_filename(archive, "project.xml");
+    srcml_unit * unit = srcml_create_unit(archive);
+    srcml_unit_set_language(unit, "C");
+    int fd = open("project.c", O_RDONLY);
+    assert(srcml_parse_unit_fd(0, fd) == SRCML_STATUS_ERROR);
+    close(fd);
    
     srcml_free_unit(unit);
     srcml_close_archive(archive);
