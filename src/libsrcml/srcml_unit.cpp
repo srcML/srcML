@@ -189,7 +189,7 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
 int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buffer_size) {
 
-  if(unit == NULL || src_buffer == NULL || buffer_size <= 0) return SRCML_STATUS_ERROR;
+  if(unit == NULL || src_buffer == NULL || buffer_size <= 0 || (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
 
   int lang = srcml_check_language(unit->language ? unit->language->c_str() : 0);
 
@@ -221,7 +221,7 @@ int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buf
 
 int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
 
-  if(unit == NULL || src_file == NULL) return SRCML_STATUS_ERROR;
+  if(unit == NULL || src_file == NULL || (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
 
   int lang = srcml_check_language(unit->language ? unit->language->c_str() : 0);
 
@@ -257,7 +257,7 @@ int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
 
 int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
 
-  if(unit == NULL || src_fd < 0) return SRCML_STATUS_ERROR;
+  if(unit == NULL || src_fd < 0 || (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
 
   int lang = srcml_check_language(unit->language ? unit->language->c_str() : 0);
 
@@ -293,7 +293,7 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
 
 int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
-  if(unit == NULL || src_filename == NULL) return SRCML_STATUS_ERROR;
+  if(unit == NULL || src_filename == NULL || (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
 
   // Must read unit before unparse
   if(!unit->unit) return SRCML_STATUS_ERROR;
@@ -308,7 +308,7 @@ int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
 int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer) {
 
-  if(unit == NULL || src_buffer == NULL) return SRCML_STATUS_ERROR;
+  if(unit == NULL || src_buffer == NULL || (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
 
   // Must read unit before unparse
   if(!unit->unit) return SRCML_STATUS_ERROR;
@@ -333,7 +333,7 @@ int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer) {
 
 int srcml_unparse_unit_FILE(srcml_unit* unit, FILE* srcml_file) {
 
-  if(unit == NULL || srcml_file == NULL) return SRCML_STATUS_ERROR;
+  if(unit == NULL || srcml_file == NULL || (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
 
   // Must read unit before unparse
   if(!unit->unit) return SRCML_STATUS_ERROR;
@@ -348,7 +348,7 @@ int srcml_unparse_unit_FILE(srcml_unit* unit, FILE* srcml_file) {
 
 int srcml_unparse_unit_fd(srcml_unit* unit, int srcml_fd) {
 
-  if(unit == NULL || srcml_fd < 0) return SRCML_STATUS_ERROR;
+  if(unit == NULL || srcml_fd < 0 || (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
 
   // Must read unit before unparse
   if(!unit->unit) return SRCML_STATUS_ERROR;
