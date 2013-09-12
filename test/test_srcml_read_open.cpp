@@ -14,7 +14,7 @@
 
 int main(int argc, char * argv[]) {
 
-  const std::string srcml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" dir=\"test\">\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"b.cpp\"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>\n</unit>\n\n</unit>\n";
+  const std::string srcml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" dir=\"test\" filename=\"project\" version=\"1\">\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"b.cpp\"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>\n</unit>\n\n</unit>\n";
 
   std::ofstream srcml_file("project.xml");
   srcml_file << srcml;
@@ -30,7 +30,9 @@ int main(int argc, char * argv[]) {
   srcml_read_open_filename(archive, "project.xml");
 
   assert(archive->reader != 0);
+  assert(srcml_archive_get_filename(archive) == std::string("project"));
   assert(srcml_archive_get_directory(archive) == std::string("test"));
+  assert(srcml_archive_get_version(archive) == std::string("1"));
   assert(srcml_archive_get_options(archive) == 0);
 
   srcml_close_archive(archive);
@@ -70,7 +72,9 @@ int main(int argc, char * argv[]) {
   srcml_read_open_memory(archive, srcml.c_str(), srcml.size());
 
   assert(archive->reader != 0);
+  assert(srcml_archive_get_filename(archive) == std::string("project"));
   assert(srcml_archive_get_directory(archive) == std::string("test"));
+  assert(srcml_archive_get_version(archive) == std::string("1"));
   assert(srcml_archive_get_options(archive) == 0);
 
   srcml_close_archive(archive);
