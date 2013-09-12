@@ -70,7 +70,7 @@ int srcml_version_number() {
 */
 int srcml(const char* input_filename, const char* output_filename) {
 
-  if(!input_filename || !outputfilename) {
+  if(!input_filename || !output_filename) {
 
     srcml_error = "No input file provided";
     return  SRCML_STATUS_ERROR;
