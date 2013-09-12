@@ -18,9 +18,9 @@
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "srcml.h"
-#include "srcml_types.hpp"
-#include "srcml_sax2_utilities.hpp"
+#include <srcml.h>
+#include <srcml_types.hpp>
+#include <srcml_sax2_utilities.hpp>
 
 /* setup options for srcml unit */
 int srcml_unit_set_language(srcml_unit* unit, const char* language) {
