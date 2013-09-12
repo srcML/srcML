@@ -157,7 +157,7 @@ int srcml_parse_unit_archive (srcml_archive* archive, srcml_unit* unit) {
 
 int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
-  if(unit == NULL || src_filename == NULL) return SRCML_STATUS_ERROR;
+  if(unit == NULL || src_filename == NULL || unit->archive->type != SRCML_ARCHIVE_WRITE) return SRCML_STATUS_ERROR;
 
   int lang = unit->language ? srcml_check_language(unit->language->c_str()) : Language::getLanguageFromFilename(src_filename, unit->archive->registered_languages);
 
