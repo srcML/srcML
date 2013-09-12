@@ -198,7 +198,7 @@ int main(int argc, char * argv[]) {
   */
 
   {
-  int fd = open("project.xml", 0);
+  int fd = open("project.xml", O_RDONLY);
 
   srcml_archive * archive = srcml_create_archive();
   srcml_read_open_fd(archive, fd);
@@ -217,7 +217,7 @@ int main(int argc, char * argv[]) {
 
   {
 
-  int fd = open("project_ns.xml", 0);
+  int fd = open("project_ns.xml", O_RDONLY);
 
   srcml_archive * archive = srcml_create_archive();
   srcml_read_open_fd(archive, fd);
@@ -242,7 +242,7 @@ int main(int argc, char * argv[]) {
   }
 
   {
-  int fd = open("project_ns.xml", 0);
+  int fd = open("project_ns.xml", O_RDONLY);
   assert(srcml_read_open_fd(0, fd) == SRCML_STATUS_ERROR);
   close(fd);
   }
