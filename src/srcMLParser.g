@@ -4003,6 +4003,14 @@ expression_part_plus_linq[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
 
 expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
 
+        // cast
+        { inTransparentMode(MODE_INTERNAL_END_PAREN) }?
+        UNION |
+
+        // cast
+        { inTransparentMode(MODE_INTERNAL_END_PAREN) }?
+        CLASS |
+
         { next_token() == LPAREN }?
         delegate_anonymous |
 
@@ -4041,7 +4049,6 @@ expression_part[CALLTYPE type = NOCALL] { bool flag; ENTRY_DEBUG } :
         lparen_marked
         {
             startNewMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN);
-
         } |
 
         // right parentheses that only matches a left parentheses of an expression
