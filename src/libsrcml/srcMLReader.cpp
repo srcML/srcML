@@ -86,7 +86,7 @@ int srcMLReader::readUnitAttributesInternal(std::string ** language, std::string
         (*language) = new std::string((const char *)attribute->children->content);
       else if(name == "filename")
         (*filename) = new std::string((const char *)attribute->children->content);
-      else if(name == "directory")
+      else if(name == "dir")
         (*directory) = new std::string((const char *)attribute->children->content);
       else if(name == "version")
         (*version) = new std::string((const char *)attribute->children->content);
@@ -138,7 +138,7 @@ int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** 
         (*language) = new std::string((const char *)attribute->children->content);
       else if(name == "filename")
         (*filename) = new std::string((const char *)attribute->children->content);
-      else if(name == "directory")
+      else if(name == "dir")
         (*directory) = new std::string((const char *)attribute->children->content);
       else if(name == "version")
         (*version) = new std::string((const char *)attribute->children->content);
