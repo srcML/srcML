@@ -32,6 +32,8 @@
 // As of yet no way to specify context
 int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_string) {
 
+  if(archive == NULL) return SRCML_STATUS_ERROR;
+
   transform tran = { SRCML_XPATH, xpath_string };
   archive->transformations.push_back(tran);
 
@@ -42,6 +44,8 @@ int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_strin
 // As of yet no way to specify parameters or context
 int srcml_append_transform_xslt(srcml_archive* archive, const char* xslt_filename) {
 
+  if(archive == NULL) return SRCML_STATUS_ERROR;
+
   transform tran = { SRCML_XSLT, xslt_filename };
   archive->transformations.push_back(tran);
 
@@ -50,6 +54,8 @@ int srcml_append_transform_xslt(srcml_archive* archive, const char* xslt_filenam
 }
 
 int srcml_append_transform_relaxng(srcml_archive* archive, const char* relaxng_filename) {
+
+  if(archive == NULL) return SRCML_STATUS_ERROR;
 
   transform tran = { SRCML_RELAXNG, relaxng_filename };
   archive->transformations.push_back(tran);
@@ -65,6 +71,8 @@ int srcml_append_transform_relaxng(srcml_archive* archive, const char* relaxng_f
 
  */
 int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
+
+  if(iarchive == NULL || oarchive == NULL) return SRCML_STATUS_ERROR;
 
   static const char * transform_filename_template = "srcml_transform_XXXXXXXX";
 
