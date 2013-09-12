@@ -5,6 +5,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <cassert>
+#include <fstream>
+#include <unistd.h>
+#include <fcntl.h>
 
 #include <srcml.h>
 #include <srcml_types.hpp>
@@ -13,33 +16,143 @@
 int main(int argc, char * argv[]) {
 
   /* 
-     srcml_check_extension
-   */
+     srcml_write_open_filename
+  */
+
+  {
 
   srcml_archive * archive = srcml_create_archive();
-  srcml_archive_register_file_extension(archive, "cpp", "C++");
+  srcml_write_open_filename(archive, "project.xml");
 
-  {
-    assert(srcml_archive_check_extension(archive, "a.cpp") == std::string("C++"));
+  assert(archive->translator != 0);
+  assert(srcml_archive_get_options(archive) == 0);
+
+  srcml_close_archive(archive);
+  srcml_free_archive(archive);
+
   }
 
   {
-    assert(srcml_archive_check_extension(archive, "a.cpp.gz") == std::string("C++"));
-  }
 
-  {
-    assert(srcml_archive_check_extension(archive, "a.foo") == 0);
-  }
-
-  {
-    assert(srcml_archive_check_extension(archive, 0) == 0);
-  }
-
-  {
-    assert(srcml_archive_check_extension(0, "a.cpp") == 0);
-  }
+  srcml_archive * archive = srcml_create_archive();
+  assert(srcml_write_open_filename(archive, "foobar.xml") == SRCML_STATUS_ERROR);
 
   srcml_free_archive(archive);
+
+  }
+
+  {
+
+  srcml_archive * archive = srcml_create_archive();
+  assert(srcml_write_open_filename(archive, 0) == SRCML_STATUS_ERROR);
+
+  srcml_free_archive(archive);
+
+  }
+
+  {
+  assert(srcml_write_open_filename(0, "project.xml") == SRCML_STATUS_ERROR);
+  }
+
+  /* 
+     srcml_write_open_memory
+  */
+
+  {
+
+  char * s;
+  srcml_archive * archive = srcml_create_archive();
+  srcml_write_open_memory(archive, &s);
+
+  assert(archive->translator != 0);
+  assert(srcml_archive_get_options(archive) == 0);
+
+  srcml_close_archive(archive);
+  srcml_free_archive(archive);
+
+  }
+
+  {
+
+  srcml_archive * archive = srcml_create_archive();
+  assert(srcml_write_open_memory(archive, 0) == SRCML_STATUS_ERROR);
+
+  srcml_free_archive(archive);
+
+  }
+
+  {
+    char * s;
+    assert(srcml_write_open_memory(0, &s) == SRCML_STATUS_ERROR);
+  }
+
+  /* 
+     srcml_write_open_FILE
+  */
+
+  {
+  FILE * file = fopen("project.xml", "w");
+
+  srcml_archive * archive = srcml_create_archive();
+  srcml_write_open_FILE(archive, file);
+
+  assert(archive->translator != 0);
+  assert(srcml_archive_get_options(archive) == 0);
+
+  srcml_close_archive(archive);
+  srcml_free_archive(archive);
+  fclose(file);
+
+  }
+
+  {
+
+  srcml_archive * archive = srcml_create_archive();
+  assert(srcml_write_open_FILE(archive, 0) == SRCML_STATUS_ERROR);
+
+  srcml_free_archive(archive);
+
+  }
+
+  {
+  FILE * file = fopen("project_ns.xml", "r");
+  assert(srcml_write_open_FILE(0, file) == SRCML_STATUS_ERROR);
+  fclose(file);
+  }
+
+  /* 
+     srcml_write_open_fd
+  */
+
+  {
+  int fd = open("project.xml", O_WRONLY);
+
+  srcml_archive * archive = srcml_create_archive();
+  srcml_write_open_fd(archive, fd);
+
+  assert(archive->translator != 0);
+  assert(srcml_archive_get_options(archive) == 0);
+
+  srcml_close_archive(archive);
+  srcml_free_archive(archive);
+  close(fd);
+
+  }
+
+  {
+
+  srcml_archive * archive = srcml_create_archive();
+  assert(srcml_write_open_fd(archive, -1) == SRCML_STATUS_ERROR);
+
+  srcml_free_archive(archive);
+
+  }
+
+  {
+  int fd = open("project_ns.xml", O_WRONLY);
+  assert(srcml_write_open_fd(0, fd) == SRCML_STATUS_ERROR);
+  close(fd);
+  }
 
   return 0;
 
