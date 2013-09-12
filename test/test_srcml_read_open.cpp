@@ -49,6 +49,20 @@ int main(int argc, char * argv[]) {
   {
 
   srcml_archive * archive = srcml_create_archive();
+  srcml_read_open_filename(archive, "project_ns.xml");
+
+  assert(archive->reader != 0);
+  assert(archive->prefixes.at(0) == "s");
+  assert(srcml_archive_get_options(archive) == 0);
+
+  srcml_close_archive(archive);
+  srcml_free_archive(archive);
+
+  }
+
+  {
+
+  srcml_archive * archive = srcml_create_archive();
   assert(srcml_read_open_filename(archive, "foobar.xml") == SRCML_STATUS_ERROR);
 
   srcml_free_archive(archive);
@@ -81,6 +95,20 @@ int main(int argc, char * argv[]) {
   assert(srcml_archive_get_filename(archive) == std::string("project"));
   assert(srcml_archive_get_directory(archive) == std::string("test"));
   assert(srcml_archive_get_version(archive) == std::string("1"));
+  assert(srcml_archive_get_options(archive) == 0);
+
+  srcml_close_archive(archive);
+  srcml_free_archive(archive);
+
+  }
+
+  {
+
+  srcml_archive * archive = srcml_create_archive();
+  srcml_read_open_memory(archive, srcml_ns.c_str(), srcml_ns.size());
+
+  assert(archive->reader != 0);
+  assert(archive->prefixes.at(0) == "s");
   assert(srcml_archive_get_options(archive) == 0);
 
   srcml_close_archive(archive);
