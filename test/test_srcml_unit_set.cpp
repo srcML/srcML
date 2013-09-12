@@ -12,7 +12,7 @@
 
 int main(int argc, char * argv[]) {
 
-  srcml_archive * archive;
+  srcml_archive * archive = srcml_create_archive();
 
   /* 
      srcml_set_language
@@ -109,6 +109,8 @@ int main(int argc, char * argv[]) {
   {
     assert(srcml_unit_set_version(0, "foo") == SRCML_STATUS_ERROR);
   }
+
+  srcml_free_archive(archive);
 
   return 0;
 }
