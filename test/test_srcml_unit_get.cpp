@@ -15,30 +15,6 @@ int main(int argc, char * argv[]) {
   srcml_archive * archive = srcml_create_archive();
 
   /* 
-     srcml_unit_get_encoding
-   */
-
-  {
-
-    srcml_unit * unit = srcml_create_unit(archive);
-    unit->encoding = 0;
-    assert(srcml_unit_get_encoding(unit) == 0);
-    srcml_free_unit(unit);
-  }
-
-  {
-    assert(srcml_unit_get_encoding(0) == 0);
-  }
-
-  {
-
-    srcml_unit * unit = srcml_create_unit(archive);
-    unit->encoding = new std::string("foo");
-    assert(srcml_unit_get_encoding(unit) == std::string("foo"));
-    srcml_free_unit(unit);
-  }
-
-  /* 
      srcml_unit_get_language
    */
 
