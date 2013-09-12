@@ -19,9 +19,9 @@ int main(int argc, char * argv[]) {
   {
 
   srcml_archive * archive = srcml_create_archive();
-  srcml_archive_read_open_filename(archive, "a.cpp.xml");
+  srcml_read_open_filename(archive, "a.cpp.xml");
 
-  srcml_close(archive);
+  srcml_close_archive(archive);
   srcml_free_archive(archive);
 
   }
@@ -29,14 +29,14 @@ int main(int argc, char * argv[]) {
   {
 
   srcml_archive * archive = srcml_create_archive();
-  assert(srcml_archive_read_open_filename(archive, 0) == SRCML_STATUS_ERROR);
+  assert(srcml_read_open_filename(archive, 0) == SRCML_STATUS_ERROR);
 
   srcml_free_archive(archive);
 
   }
 
   {
-  assert(srcml_archive_read_open_filename(0, "a.cpp.xml") == SRCML_STATUS_ERROR);
+  assert(srcml_read_open_filename(0, "a.cpp.xml") == SRCML_STATUS_ERROR);
   }
 
   return 0;
