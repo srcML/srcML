@@ -22,19 +22,20 @@
   Implementation of srcml simple API (global archive) functions from the namespace srcml_*
 */
 
-#include "srcml.h"
+#include <srcml.h>
+#include <srcml_types.hpp>
+
+#include <srcMLTranslator.hpp>
+#include <Language.hpp>
+#include <Options.hpp>
+#include <srcMLUtility.hpp>
+
 #include <string.h>
 #include <stdlib.h>
 #include <regex.h>
 
 #include <vector>
 #include <string>
-
-#include "../srcMLTranslator.hpp"
-#include "../Language.hpp"
-#include "../Options.hpp"
-#include "../srcMLUtility.hpp"
-#include "srcml_types.hpp"
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
 #include <dlfcn.h>

@@ -18,9 +18,9 @@
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "srcMLReader.hpp"
-#include "../srcmlns.hpp"
-#include "srcml.h"
+#include <srcMLReader.hpp>
+#include <../srcmlns.hpp>
+#include <srcml.h>
 
 #include <stdlib.h>
 #include <string.h>
