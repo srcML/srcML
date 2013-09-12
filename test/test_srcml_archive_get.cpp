@@ -1,6 +1,6 @@
 /*
 
-  Test cases for srcml_archive_set_*.
+  Test cases for srcml_archive_get_*.
 */
 #include <stdio.h>
 #include <string.h>
@@ -13,7 +13,7 @@
 int main(int argc, char * argv[]) {
 
   /* 
-     srcml_get_encoding
+     srcml_archive_get_encoding
    */
 
   {
@@ -38,7 +38,7 @@ int main(int argc, char * argv[]) {
   }
 
   /* 
-     srcml_get_language
+     srcml_archive_get_language
    */
 
   {
@@ -62,7 +62,7 @@ int main(int argc, char * argv[]) {
   }
 
   /* 
-     srcml_get_filename
+     srcml_archive_get_filename
    */
 
   {
@@ -86,7 +86,7 @@ int main(int argc, char * argv[]) {
   }
 
   /* 
-     srcml_get_directory
+     srcml_archive_get_directory
    */
 
   {
@@ -110,7 +110,7 @@ int main(int argc, char * argv[]) {
   }
 
   /* 
-     srcml_get_version
+     srcml_archive_get_version
    */
 
   {

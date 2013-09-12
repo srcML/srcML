@@ -13,7 +13,7 @@
 int main(int argc, char * argv[]) {
 
   /* 
-     srcml_set_encoding
+     srcml_archive_set_encoding
    */
 
   {
@@ -37,7 +37,7 @@ int main(int argc, char * argv[]) {
   }
 
   /* 
-     srcml_set_language
+     srcml_archive_set_language
    */
 
   {
@@ -61,7 +61,7 @@ int main(int argc, char * argv[]) {
   }
 
   /* 
-     srcml_set_filename
+     srcml_archive_set_filename
    */
 
   {
@@ -85,7 +85,7 @@ int main(int argc, char * argv[]) {
   }
 
   /* 
-     srcml_set_directory
+     srcml_archive_set_directory
    */
 
   {
@@ -109,7 +109,7 @@ int main(int argc, char * argv[]) {
   }
 
   /* 
-     srcml_set_version
+     srcml_archive_set_version
    */
 
   {
