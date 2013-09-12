@@ -351,6 +351,8 @@ int srcml_archive_get_tabstop(const srcml_archive* archive) {
 /* open a srcML archive for output */
 int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename) {
 
+  if(archive == NULL || srcml_filename == NULL) return SRCML_STATUS_ERROR;
+
   archive->type = SRCML_ARCHIVE_WRITE;
   archive->options |= SRCML_OPTION_ARCHIVE;
   try {
@@ -373,6 +375,8 @@ int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename
 
 int srcml_write_open_memory(srcml_archive* archive, char** buffer) {
 
+  if(archive == NULL || buffer == NULL) return SRCML_STATUS_ERROR;
+
   archive->type = SRCML_ARCHIVE_WRITE;
   archive->options |= SRCML_OPTION_ARCHIVE;
   try {
@@ -394,6 +398,8 @@ int srcml_write_open_memory(srcml_archive* archive, char** buffer) {
 }
 
 int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
+
+  if(archive == NULL || srcml_file == NULL) return SRCML_STATUS_ERROR;
 
   xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFile(srcml_file, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
   if(output_buffer == NULL) return SRCML_STATUS_ERROR;
@@ -433,6 +439,8 @@ int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
 }
 
 int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
+
+  if(archive == NULL || srcml_fd < 0) return SRCML_STATUS_ERROR;
 
   xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFd(srcml_fd, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
   if(output_buffer == NULL) return SRCML_STATUS_ERROR;
