@@ -138,6 +138,60 @@ int main(int argc, char * argv[]) {
     assert(srcml_read_open_memory(0, srcml.c_str(), srcml.size()) == SRCML_STATUS_ERROR);
   }
 
+  /* 
+     srcml_read_open_FILE
+  */
+
+  {
+  FILE * file = fopen("project.xml", "r");
+
+  srcml_archive * archive = srcml_create_archive();
+  srcml_read_open_FILE(archive, file);
+
+  assert(archive->reader != 0);
+  assert(srcml_archive_get_filename(archive) == std::string("project"));
+  assert(srcml_archive_get_directory(archive) == std::string("test"));
+  assert(srcml_archive_get_version(archive) == std::string("1"));
+  assert(srcml_archive_get_options(archive) == 0);
+
+  srcml_close_archive(archive);
+  srcml_free_archive(archive);
+  fclose(file);
+
+  }
+
+  {
+
+  FILE * file = fopen("project_ns.xml", "r");
+
+  srcml_archive * archive = srcml_create_archive();
+  srcml_read_open_FILE(archive, file);
+
+  assert(archive->reader != 0);
+  assert(archive->prefixes.at(0) == "s");
+  assert(srcml_archive_get_options(archive) == 0);
+
+  srcml_close_archive(archive);
+  srcml_free_archive(archive);
+  fclose(file);
+
+  }
+
+  {
+
+  srcml_archive * archive = srcml_create_archive();
+  assert(srcml_read_open_FILE(archive, 0) == SRCML_STATUS_ERROR);
+
+  srcml_free_archive(archive);
+
+  }
+
+  {
+  FILE * file = fopen("project_ns.xml", "r");
+  assert(srcml_read_open_FILE(0, file) == SRCML_STATUS_ERROR);
+  fclose(file);
+  }
+
   return 0;
 
 }
