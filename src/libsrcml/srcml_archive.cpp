@@ -69,6 +69,8 @@ srcml_archive* srcml_create_archive()
    allocated by srcml_create_archive() */
 void srcml_free_archive(srcml_archive * archive) {
 
+  if(archive == NULL) return;
+
   if(archive->filename) delete archive->filename, archive->filename = 0;
   if(archive->encoding) delete archive->encoding, archive->encoding = 0;
   if(archive->language) delete archive->language, archive->language = 0;
@@ -592,6 +594,8 @@ int srcml_read_open_fd(srcml_archive* archive, int srcml_fd) {
 /* Read the next unit from the archive */
 const srcml_unit* srcml_read_unit_archive(srcml_archive* archive) {
 
+  if(archive == NULL) return 0;
+
   if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return 0;
 
   return srcml_read_unit(archive);
@@ -599,6 +603,8 @@ const srcml_unit* srcml_read_unit_archive(srcml_archive* archive) {
 }
 
 const srcml_unit* srcml_read_archive_current_unit(const srcml_archive* archive) {
+
+  if(archive == NULL) return 0;
 
   if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return 0;
 
@@ -620,6 +626,8 @@ const srcml_unit* srcml_read_archive_current_unit(const srcml_archive* archive) 
 
 int srcml_write_unit(srcml_archive* archive, const srcml_unit* unit) {
 
+  if(archive == NULL || unit == NULL) return SRCML_STATUS_ERROR;
+
   if(archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW) return 0;
   archive->translator->add_unit(unit->unit->c_str());
 
@@ -628,6 +636,8 @@ int srcml_write_unit(srcml_archive* archive, const srcml_unit* unit) {
 
 /* Read the next unit from the archive */
 srcml_unit* srcml_read_unit(srcml_archive* archive) {
+
+  if(archive == NULL) return 0;
 
   if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return 0;
 
@@ -664,6 +674,8 @@ void srcml_read_close(srcml_archive* archive) {
 }
 
 void srcml_close_archive(srcml_archive * archive) {
+
+  if(archive == NULL) return;
 
   if(archive->translator) archive->translator->close();
   if(archive->translator) delete archive->translator, archive->translator = 0;
