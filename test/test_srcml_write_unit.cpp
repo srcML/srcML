@@ -41,6 +41,24 @@ int main(int argc, char * argv[]) {
     assert(s == srcml_a_archive);
   }
 
+  {
+    char * s;
+    srcml_archive * archive = srcml_create_archive();
+    srcml_write_open_memory(archive, &s);
+    srcml_archive_set_language(archive, "C++");
+    srcml_archive_set_filename(archive, "project");
+    srcml_archive_set_directory(archive, "test");
+    srcml_archive_set_version(archive, "1");
+    srcml_unit * unit = srcml_create_unit(archive);
+    unit->unit = new std::string(srcml_b);
+    srcml_write_unit(archive, unit);
+    srcml_free_unit(unit);
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+ 
+    assert(s == srcml_b_archive);
+  }
+
   return 0;
 
 }
