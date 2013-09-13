@@ -48,7 +48,7 @@ void freeNode(xmlNodePtr node) {
 }
 
 srcMLReader::srcMLReader(const char * filename)
-  : is_archive(false), done(false) {
+  : is_archive(false), is_single(false), done(false) {
 
   reader = xmlNewTextReaderFilename(filename);
   if(reader == NULL) throw std::string();
@@ -271,6 +271,7 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
     if(node->type == (xmlElementType)XML_READER_TYPE_ELEMENT
        && strcmp((const char *)node->name, "unit") != 0) {
       is_archive = true;
+      is_single = true;
       break;
     }
 
@@ -299,7 +300,7 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
     try {
 
       for(int i = 0; i < save_nodes.size(); ++i)
-        output_node_srcml(*save_nodes.at(i), writer, true);
+        output_node_srcml(*save_nodes.at(i), writer, is_single);
 
       for(int i = 0; i < save_nodes.size(); ++i)
         freeNode(save_nodes.at(i));
@@ -324,7 +325,7 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
 
   while(true) {
 
-    if(is_archive) output_node_srcml(*node, writer, false);
+    if(is_archive) output_node_srcml(*node, writer, is_single);
     else save_nodes.push_back(node);
 
     if(strcmp((const char *)node->name, "unit") == 0) {
@@ -342,7 +343,7 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
           } catch(...) {}
 
           save_nodes.clear();
-          output_node_srcml(*node, writer, false);
+          output_node_srcml(*node, writer, is_single);
 
         }
 
@@ -359,11 +360,12 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
        && strcmp((const char *)node->name, "unit") != 0) {
 
       is_archive = true;
+      is_single = true;
 
       try {
 
         for(int i = 0; i < save_nodes.size(); ++i)
-          output_node_srcml(*save_nodes.at(i), writer, true);
+          output_node_srcml(*save_nodes.at(i), writer, is_single);
 
         for(int i = 0; i < save_nodes.size() - 1; ++i)
           freeNode(save_nodes.at(i));

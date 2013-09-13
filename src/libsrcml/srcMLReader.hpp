@@ -39,6 +39,7 @@ class srcMLReader {
 
   // have we read through root unit
   bool is_archive;
+  bool is_single;
   
   // un output nodes that may need to be output
   std::vector<xmlNodePtr> save_nodes;
