@@ -25,7 +25,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer);
+void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer, bool is_archive);
 void output_node_source(const xmlNode & node, xmlOutputBufferPtr output_buffer);
 
 
@@ -299,7 +299,7 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
     try {
 
       for(int i = 0; i < save_nodes.size(); ++i)
-        output_node_srcml(*save_nodes.at(i), writer);
+        output_node_srcml(*save_nodes.at(i), writer, is_archive);
 
       for(int i = 0; i < save_nodes.size(); ++i)
         freeNode(save_nodes.at(i));
@@ -324,7 +324,7 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
 
   while(true) {
 
-    if(is_archive) output_node_srcml(*node, writer);
+    if(is_archive) output_node_srcml(*node, writer, is_archive);
     else save_nodes.push_back(node);
 
     if(strcmp((const char *)node->name, "unit") == 0) {
@@ -342,7 +342,7 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
           } catch(...) {}
 
           save_nodes.clear();
-          output_node_srcml(*node, writer);
+          output_node_srcml(*node, writer, is_archive);
 
         }
 
@@ -358,17 +358,18 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
     if(!save_nodes.empty() && node->type == (xmlElementType)XML_READER_TYPE_ELEMENT
        && strcmp((const char *)node->name, "unit") != 0) {
 
-      is_archive = true;
 
       try {
 
         for(int i = 0; i < save_nodes.size(); ++i)
-          output_node_srcml(*save_nodes.at(i), writer);
+          output_node_srcml(*save_nodes.at(i), writer, is_archive);
 
         for(int i = 0; i < save_nodes.size() - 1; ++i)
           freeNode(save_nodes.at(i));
 
       } catch(...) {}
+
+      is_archive = true;
 
       save_nodes.clear();
 
@@ -542,7 +543,7 @@ std::string * srcMLReader::read() {
 }
 
 // output node as srcML
-void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer) {
+void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer, bool is_archive) {
 
   bool isemptyelement = false;
 
@@ -573,7 +574,7 @@ void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer) {
       while(xmlns) {
 
         std::string ns = xmlns->href ? (const char *)xmlns->href : "";
-        if(ns != SRCML_CPP_NS_URI) {
+        if(is_archive && ns != SRCML_CPP_NS_URI) {
 
           xmlns = xmlns->next;
           continue;
