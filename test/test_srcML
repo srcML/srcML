@@ -1,14 +1,17 @@
 #!/bin/bash
 
-./prlctlall.py --test exec 'bash -c "cd srcML; git pull; cd ..; chown -R srcml:srcml srcML"'
+./sshall.py --test exec 'bash -c "cd srcML; git pull; cd ..; chown -R srcml:srcml srcML"'
 
-scp ~/Dropbox/srcML/Unix/Fedora15/srcML.tar.gz fedora15test:/srcML
-scp ~/Dropbox/srcML/Unix/Fedora16/srcML.tar.gz fedora16test:/srcML
+#scp ~/Dropbox/srcML/Unix/Fedora15/srcML.tar.gz fedora15test:/srcML
+#scp ~/Dropbox/srcML/Unix/Fedora16/srcML.tar.gz fedora16test:/srcML
 scp ~/Dropbox/srcML/Unix/Fedora17/srcML.tar.gz fedora17test:/srcML
+scp ~/Dropbox/srcML/Unix/Fedora18/srcML.tar.gz fedora18test:/srcML
+scp ~/Dropbox/srcML/Unix/Fedora19/srcML.tar.gz fedora19test:/srcML
 
-scp ~/Dropbox/srcML/Unix/Fedora15-64/srcML.tar.gz fedora15test64:/srcML
-scp ~/Dropbox/srcML/Unix/Fedora16-64/srcML.tar.gz fedora16test64:/srcML
-scp ~/Dropbox/srcML/Unix/Fedora17-64/srcML.tar.gz fedora17test64:/srcML
+#scp ~/Dropbox/srcML/Unix/Fedora15-64/srcML.tar.gz fedora15test64:/srcML
+#scp ~/Dropbox/srcML/Unix/Fedora16-64/srcML.tar.gz fedora16test64:/srcML
+scp ~/Dropbox/srcML/Unix/Fedora18-64/srcML.tar.gz fedora18test64:/srcML
+scp ~/Dropbox/srcML/Unix/Fedora19-64/srcML.tar.gz fedora19test64:/srcML
 
 scp ~/Dropbox/srcML/Unix/Ubuntu10.04/srcML.tar.gz ubuntu10test:/srcML
 #scp ~/Dropbox/srcML/Unix/Ubuntu11.04/srcML.tar.gz ubuntu11test:/srcML
@@ -20,20 +23,20 @@ scp ~/Dropbox/srcML/Unix/Ubuntu12.04-64/srcML.tar.gz ubuntu12test64:/srcML
 
 cp ~/Dropbox/srcML/Unix/OSX/srcML.tar.gz ~/srcML
 
-./prlctlall.py --test exec 'bash -c "cd srcML; tar xvf srcML.tar.gz"'
-./prlctlall.py --test exec 'bash -c "rm -rf srcML/trunk/bin; mkdir srcML/trunk/bin; cp srcML/srcML/libsrcml.so srcML/trunk/bin"'
-./prlctlall.py --test exec 'bash -c "export SRC2SRCML=\"/srcML/srcML/src2srcml\"; export SRCML2SRC=\"/srcML/srcML/srcml2src\"; cd srcML/trunk/test/; rm -f srcMLTestReport*; make clean; make;"'
+./sshall.py --test exec 'bash -c "cd /srcML; tar xvf srcML.tar.gz"'
+./sshall.py --test exec 'bash -c "rm -rf /srcML/bin; mkdir /srcML/bin; cp /srcML/srcML/libsrcml.so /srcML/bin"'
+./sshall.py --test exec 'bash -c "export SRC2SRCML=\"/srcML/srcML/src2srcml\"; export SRCML2SRC=\"/srcML/srcML/srcml2src\"; cd /srcML/test/; rm -f srcMLTestReport*; make clean; make;"'
 
 cd srcML
 git pull
 tar xvf srcML.tar.gz
-export SRC2SRCML="../../srcML/src2srcml"
-export SRCML2SRC="../../srcML/srcml2src"
-rm -rf trunk/bin; mkdir trunk/bin; cp srcML/libsrcml.dylib trunk/bin
+export SRC2SRCML="../srcML/src2srcml"
+export SRCML2SRC="../srcML/srcml2src"
+rm -rf bin; mkdir bin; cp srcML/libsrcml.dylib bin
 
 cd trunk/test/
 rm -f srcMLTestReport*
 make clean; make
 
-~/prlctlall.py --test exec 'bash -c "grep -a \"Errors:\" srcML/trunk/test/srcMLTestReport*"'
+~/sshall.py --test exec 'bash -c "grep -a \"Errors:\" /srcML/test/srcMLTestReport*"'
 grep -a "Errors:" srcMLTestReport*
