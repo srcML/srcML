@@ -39,6 +39,7 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(archive);
  
     assert(s == srcml_a_archive);
+    free(s);
   }
 
   {
@@ -62,6 +63,7 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(archive);
 
     assert(s == srcml_ns);
+    free(s);
   }
 
   {
@@ -80,6 +82,7 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(archive);
  
     assert(s == srcml);
+    free(s);
   }
 
   {
@@ -99,6 +102,37 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(archive);
 
     assert(s == srcml_b_archive);
+    free(s);
+  }
+
+  {
+    srcml_archive * archive = srcml_create_archive();
+    srcml_unit * unit = srcml_create_unit(archive);
+    assert(srcml_write_unit(archive, unit) == SRCML_STATUS_ERROR);
+    srcml_free_unit(unit);
+    srcml_free_archive(archive);
+  }
+
+  {
+    char * s;
+    srcml_archive * archive = srcml_create_archive();
+    srcml_archive_set_language(archive, "C++");
+    srcml_archive_set_filename(archive, "project");
+    srcml_archive_set_directory(archive, "test");
+    srcml_archive_set_version(archive, "1");
+    srcml_archive_register_namespace(archive, "s", "http://www.sdml.info/srcML/src");
+    srcml_write_open_memory(archive, &s);
+    assert(srcml_write_unit(archive, 0) == SRCML_STATUS_ERROR);
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+    srcml_archive * archive = srcml_create_archive();
+    srcml_unit * unit = srcml_create_unit(archive);
+    assert(srcml_write_unit(0, unit) == SRCML_STATUS_ERROR);
+    srcml_free_unit(unit);
+    srcml_free_archive(archive);
   }
 
   return 0;
