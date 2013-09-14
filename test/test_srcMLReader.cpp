@@ -96,7 +96,6 @@ int main(int argc, char * argv[]) {
      readRootUnitAttributes
   */
 
-
   {
     srcMLReader reader("project.xml");
     std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
@@ -375,12 +374,60 @@ int main(int argc, char * argv[]) {
   }
 
   /*
-    read
+    combined
    */
 
   {
-
-  }
+    srcMLReader reader("project.xml");
+    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    std::vector<std::string> attributes;
+    std::vector<std::string> prefixes;
+    std::vector<std::string> namespaces;
+    OPTION_TYPE options = 0;
+    int tabstop = 0;
+    reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop);
+    assert(*language == "C++");
+    assert(*filename == "project");
+    assert(*directory == "test");
+    assert(*version == "1");
+    assert(attributes.size() == 2);
+    assert(attributes.at(0) == "foo");
+    assert(attributes.at(1) == "bar");
+    assert(prefixes.size() == 2);
+    assert(prefixes.at(0) == "");
+    assert(prefixes.at(1) == "pos");
+    assert(namespaces.size() == 2);
+    assert(namespaces.at(0) == "http://www.sdml.info/srcML/src");
+    assert(namespaces.at(1) == "http://www.sdml.info/srcML/position");
+    assert(options == SRCML_OPTION_POSITION);
+    assert(tabstop == 4);
+    delete language, delete filename, delete directory, delete version;
+    language = 0, filename = 0, directory = 0, version = 0;
+    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    assert(*language == "C++");
+    assert(*filename == "a.cpp");
+    assert(*directory == "test");
+    assert(*version == "1");
+    delete language, delete filename, delete directory, delete version;
+    language = 0, filename = 0, directory = 0, version = 0;
+    std::string * unit = reader.readsrcML();
+    assert(*unit == srcml_a);
+    delete unit;
+    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    assert(*language == "C++");
+    assert(*filename == "b.cpp");
+    assert(directory == 0);
+    assert(version == 0);
+    delete language, delete filename, delete directory, delete version;
+    unit = reader.readsrcML();
+    assert(*unit == srcml_b);
+    delete unit;
+    unit = reader.readsrcML();
+    assert(unit == 0);  
+    assert(reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
+    assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
+    assert(reader.readsrcML() == 0);
+}
 
   unlink("project.xml");
   unlink("project_single.xml");
