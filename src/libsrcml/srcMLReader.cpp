@@ -575,7 +575,7 @@ void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer, bool is_ro
       while(xmlns) {
 
         std::string ns = xmlns->href ? (const char *)xmlns->href : "";
-        if(!is_root && ns != SRCML_CPP_NS_URI) {
+        if(ns != SRCML_CPP_NS_URI) {
 
           xmlns = xmlns->next;
           continue;
