@@ -189,6 +189,7 @@ int main(int argc, char * argv[]) {
     reader.readUnitAttributes(&language, &filename, &directory, &version);
     delete language, delete filename, delete directory, delete version;
     assert(reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
+    assert(reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
   }
 
   {
@@ -212,7 +213,6 @@ int main(int argc, char * argv[]) {
     OPTION_TYPE options = 0;
     int tabstop = 0;
     assert(reader.readRootUnitAttributes(0, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
-    reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop);
     delete language, delete filename, delete directory, delete version;
   }
 
@@ -225,7 +225,6 @@ int main(int argc, char * argv[]) {
     OPTION_TYPE options = 0;
     int tabstop = 0;
     assert(reader.readRootUnitAttributes(&language, 0, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
-    reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop);
     delete language, delete filename, delete directory, delete version;
   }
 
@@ -275,6 +274,7 @@ int main(int argc, char * argv[]) {
     assert(version == 0);
     delete language, delete filename, delete directory, delete version;
     assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
+    assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
   }
 
   {
@@ -294,6 +294,7 @@ int main(int argc, char * argv[]) {
     assert(version == 0);
     delete language, delete filename, delete directory, delete version;
     assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
+    assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
   }
 
   {
@@ -305,6 +306,7 @@ int main(int argc, char * argv[]) {
     assert(*directory == "test");
     assert(*version == "1");
     delete language, delete filename, delete directory, delete version;
+    assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
     assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
   }
 
@@ -350,6 +352,8 @@ int main(int argc, char * argv[]) {
     delete unit;
     unit = reader.readsrcML();
     assert(unit == 0);
+    unit = reader.readsrcML();
+    assert(unit == 0);
   }
 
   {
@@ -362,6 +366,8 @@ int main(int argc, char * argv[]) {
     delete unit;
     unit = reader.readsrcML();
     assert(unit == 0);
+    unit = reader.readsrcML();
+    assert(unit == 0);
   }
 
   {
@@ -369,6 +375,8 @@ int main(int argc, char * argv[]) {
     std::string * unit = reader.readsrcML();
     assert(*unit == srcml_single_a);
     delete unit;
+    unit = reader.readsrcML();
+    assert(unit == 0);
     unit = reader.readsrcML();
     assert(unit == 0);
   }
