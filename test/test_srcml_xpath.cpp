@@ -92,6 +92,12 @@ int main(int argc, char * argv[]) {
     assert(srcml_extract_text(s, strlen(s), 0, 0, 0) == SRCML_STATUS_ERROR);
   }
 
+  {
+    const xpaths[2] = {"//src:unit", 0 };
+    int fd = open("", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+    srcml_xpath(input_buffer, "src:unit", xpaths, fd, 0);
+  }
+
   return 0;
 
 }
