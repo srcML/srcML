@@ -28,7 +28,6 @@
 void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer, bool is_root);
 void output_node_source(const xmlNode & node, xmlOutputBufferPtr output_buffer);
 
-
 // get a copy of the current node with attributes set.
 xmlNodePtr getNode(xmlTextReaderPtr reader) {
 
@@ -76,6 +75,8 @@ srcMLReader::~srcMLReader() {
 int srcMLReader::readUnitAttributesInternal(std::string ** language, std::string ** filename,
                                             std::string ** directory, std::string ** version) {
 
+  if(language == 0 || filename == 0 || directory == 0 || version == 0) return 1;
+
   xmlAttrPtr attribute = node->properties;
   while (attribute) {
 
@@ -115,6 +116,8 @@ int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** 
                                         std::vector<std::string> & namespaces,
                                         OPTION_TYPE & options,
                                         int & tabstop) {
+
+  if(language == 0 || filename == 0 || directory == 0 || version == 0) return 1;
 
   if(done) return 0;
 
@@ -210,6 +213,8 @@ int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** 
 
 int srcMLReader::readUnitAttributes(std::string ** language, std::string ** filename,
                                     std::string ** directory, std::string ** version) {
+
+  if(language == 0 || filename == 0 || directory == 0 || version == 0) return 1;
 
   bool read_unit_start = false;
 
