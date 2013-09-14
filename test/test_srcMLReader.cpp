@@ -73,6 +73,14 @@ int main(int argc, char * argv[]) {
 
   }
 
+  {
+    try {
+      srcMLReader reader((xmlParserInputBufferPtr)NULL);
+      assert(false);
+    } catch(...) {}
+
+  }
+
 
   unlink("project.xml");
   unlink("project_single.xml");
