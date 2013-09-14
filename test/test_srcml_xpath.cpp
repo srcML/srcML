@@ -57,6 +57,12 @@ int main(int argc, char * argv[]) {
   {
     const char * s = "<unit/>";
     xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, strlen(s));
+    assert(srcMLParseDocument(ctxt, false) == SRCML_STATUS_OK);
+  }
+
+  {
+    const char * s = "<unit/>";
+    xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, strlen(s));
     assert(srcMLParseDocument(0, false) == SRCML_STATUS_ERROR);
   }
 
