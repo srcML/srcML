@@ -37,6 +37,31 @@ int main(int argc, char * argv[]) {
      srcMLReader(const char * filename)
   */
 
+  {
+    try {
+      srcMLReader reader("project.xml");
+
+    } catch(...) {
+      assert(false);
+    }
+
+  }
+
+  {
+    try {
+      srcMLReader reader("foo.xml");
+      assert(false);
+    } catch(...) {}
+
+  }
+  {
+    try {
+      srcMLReader reader((const char *)NULL);
+      assert(false);
+    } catch(...) {}
+
+  }
+
 
   unlink("project.xml");
   unlink("project_single.xml");
