@@ -106,6 +106,13 @@ int main(int argc, char * argv[]) {
     assert(attributes.size() == 2);
     assert(attributes.at(0) == "foo");
     assert(attributes.at(1) == "bar");
+    assert(prefixes.size() == 2);
+    assert(prefixes.at(0) == "");
+    assert(prefixes.at(1) == "pos");
+    assert(namespaces.size() == 2);
+    assert(namespaces.at(0) == "http://www.sdml.info/srcML/src");
+    assert(namespaces.at(1) == "http://www.sdml.info/srcML/position");
+    assert(options == SRCML_OPTION_POSITION);
   }
 
 
