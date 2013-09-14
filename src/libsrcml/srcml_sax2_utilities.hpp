@@ -30,4 +30,9 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_elemen
 int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, const char* xslts[], const char* params[], int paramcount, int fd, OPTION_TYPE options);
 int srcml_relaxng(xmlParserInputBufferPtr input_buffer, const char** xslts, int fd, OPTION_TYPE options);
 
+// local function forward declarations
+xmlParserCtxtPtr srcMLCreateMemoryParserCtxt(const char * buffer, int size);
+int srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly);
+xmlParserCtxtPtr srcMLCreateParserCtxt(xmlParserInputBufferPtr buffer_input);
+
 #endif

@@ -35,16 +35,12 @@
 #include <dlfcn.h>
 #endif
 
-// local function forward declarations
-xmlParserCtxtPtr srcMLCreateMemoryParserCtxt(const char * buffer, int size);
-int srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly);
-xmlParserCtxtPtr srcMLCreateParserCtxt(xmlParserInputBufferPtr buffer_input);
-
 // extract a given unit
 int srcml_extract_text(const char * input_buffer, int size, xmlOutputBufferPtr output_buffer, OPTION_TYPE options, int unit) {
 
   // setup parser
   xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(input_buffer, size);
+  if(ctxt == NULL) return SRCML_STATUS_ERROR;
 
   // setup sax handler
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
@@ -262,6 +258,8 @@ int srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly) {
 
     return SRCML_STATUS_ERROR;
   }
+
+  return SRCML_STATUS_OK;
 }
 
 // create srcml parser with error reporting
