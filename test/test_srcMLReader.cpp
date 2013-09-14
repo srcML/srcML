@@ -121,6 +121,8 @@ int main(int argc, char * argv[]) {
     assert(options == SRCML_OPTION_POSITION);
     assert(tabstop == 4);
     delete language, delete filename, delete directory, delete version;
+    language = 0, filename = 0, directory = 0, version = 0, attributes.clear(), prefixes.clear(), namespaces.clear();
+    options = 0, tabstop = 0;
   }
 
   {
