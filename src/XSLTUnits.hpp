@@ -158,7 +158,6 @@ public :
             xmlNodePtr resroot = xmlDocGetRootElement(res);
             xmlNsPtr savens = resroot ? resroot->nsDef : 0;
             bool turnoff_namespaces = savens && pstate->isarchive && !isoption(options, OPTION_XSLT_ALL);
-            turnoff_namespaces = false;
             if (turnoff_namespaces) {
                 xmlNsPtr cur = savens;
                 xmlNsPtr ret = NULL;
