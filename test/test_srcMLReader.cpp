@@ -252,7 +252,6 @@ int main(int argc, char * argv[]) {
      readUnitAttributes
   */
 
-
   {
     srcMLReader reader("project.xml");
     std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
@@ -301,6 +300,34 @@ int main(int argc, char * argv[]) {
     assert(*version == "1");
     delete language, delete filename, delete directory, delete version;
     assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
+  }
+
+  {
+    srcMLReader reader("project.xml");
+    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    assert(reader.readUnitAttributes(0, &filename, &directory, &version) == 0);
+    delete language, delete filename, delete directory, delete version;
+  }
+
+  {
+    srcMLReader reader("project.xml");
+    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    assert(reader.readUnitAttributes(&language, 0, &directory, &version) == 0);
+    delete language, delete filename, delete directory, delete version;
+  }
+
+  {
+    srcMLReader reader("project.xml");
+    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    assert(reader.readUnitAttributes(&language, &filename, 0, &version) == 0);
+    delete language, delete filename, delete directory, delete version;
+  }
+
+  {
+    srcMLReader reader("project.xml");
+    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    assert(reader.readUnitAttributes(&language, &filename, &directory, 0) == 0);
+    delete language, delete filename, delete directory, delete version;
   }
 
   unlink("project.xml");
