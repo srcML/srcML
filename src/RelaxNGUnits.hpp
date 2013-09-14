@@ -88,17 +88,18 @@ public :
       // get the root node of current unit
       xmlNodePtr node = xmlDocGetRootElement(ctxt->myDoc);
       // output start unit tag
-      xmlOutputBufferWriteElementNodeNs(buf, *node, pstate->isarchive);
+      if(node)
+        xmlOutputBufferWriteElementNodeNs(buf, *node, pstate->isarchive);
 
       // output any children
-      if(node->children) {
+      if(node && node->children) {
 
         for(xmlNodePtr child = node->children; child; child = child->next)
           xmlNodeDumpOutput(buf, ctxt->myDoc, child, 0, 0, 0);
 
         std::string end_unit = "</";
         const char * unit_prefix = (const char *)root_prefix;
-        if(!unit_prefix) unit_prefix = (const char *)node->nsDef->prefix;
+        if(!unit_prefix) unit_prefix = node->nsDef && node->nsDef->prefix ? (const char *)node->nsDef->prefix : 0;
 
         // output full end tag if children
         if(unit_prefix) {
@@ -115,6 +116,7 @@ public :
 
       if(pstate->isarchive) xmlOutputBufferWrite(buf, 2, "\n\n");
       else  xmlOutputBufferWrite(buf, 1, "\n");
+
     }
 
     return true;

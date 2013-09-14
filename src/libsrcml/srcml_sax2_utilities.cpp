@@ -235,9 +235,7 @@ int srcml_relaxng(xmlParserInputBufferPtr input_buffer, const char** xslts, int 
   // setup sax handling state
   SAX2ExtractUnitsSrc state(&process, &options, -1, "");
   ctxt->_private = &state;
-
   int status = srcMLParseDocument(ctxt, false);
-
   ctxt->sax = NULL;
 
   if(input_buffer) inputPop(ctxt);
