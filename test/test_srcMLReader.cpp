@@ -54,11 +54,22 @@ int main(int argc, char * argv[]) {
     } catch(...) {}
 
   }
+
   {
     try {
       srcMLReader reader((const char *)NULL);
       assert(false);
     } catch(...) {}
+
+  }
+
+  {
+    try {
+      xmlParserInputBufferPtr input = xmlParserInputBufferCreateFilename("project.xml", xmlParseCharEncoding(0));
+      srcMLReader reader(input);
+    } catch(...) {      
+      assert(false);
+    }
 
   }
 
