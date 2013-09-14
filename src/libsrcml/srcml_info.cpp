@@ -24,7 +24,7 @@
 /* list of filenames */
 const char** srcml_list(const char* srcml_filename) {
 
-  if(srcml_filename == NULL) return SRCML_STATUS_ERROR;
+  if(srcml_filename == NULL) return 0;
 
   srcml_archive * archive = srcml_create_archive();
   if(srcml_read_open_filename(archive, srcml_filename) == SRCML_STATUS_ERROR) return 0;
