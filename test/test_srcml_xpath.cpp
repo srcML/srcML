@@ -7,6 +7,7 @@
 #include <cassert>
 #include <fstream>
 #include <unistd.h>
+#include <fcntl.h>
 
 #include <srcml_sax2_utilities.hpp>
 #include <srcml.h>
@@ -93,9 +94,14 @@ int main(int argc, char * argv[]) {
   }
 
   {
-    const xpaths[2] = {"//src:unit", 0 };
-    int fd = open("", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-    srcml_xpath(input_buffer, "src:unit", xpaths, fd, 0);
+    const char * s = "<unit/>";
+    std::ofstream file("input.xml");
+    file << s;
+    file.close();
+    xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename(s, xmlParseCharEncoding(0));
+    const char * xpaths[2] = {"//src:unit", 0 };
+    int fd = open("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+    assert(srcml_xpath(buffer_input, "src:unit", xpaths, fd, 0) == SRCML_STATUS_OK);
   }
 
   return 0;
