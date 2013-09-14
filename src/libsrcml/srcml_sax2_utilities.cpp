@@ -74,7 +74,7 @@ int srcml_extract_text(const char * input_buffer, int size, xmlOutputBufferPtr o
 // xpath evaluation of the nested units
 int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_element, const char* xpaths[], int fd, OPTION_TYPE options) {
 
-  if(input_buffer == NULL || context_element == NULL || xpaths || xpaths[0] || fd < 0) return SRCML_STATUS_ERROR;
+  if(input_buffer == NULL || context_element == NULL || xpaths == NULL || xpaths[0] == NULL || fd < 0) return SRCML_STATUS_ERROR;
 
   // relative xpath changed to at any level
   std::string s = xpaths[0];
@@ -152,6 +152,8 @@ void dlexsltRegisterAll() {
 
 // xslt evaluation of the nested units
 int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, const char* xslts[], const char* params[], int paramcount, int fd, OPTION_TYPE options) {
+
+  if(input_buffer == NULL || context_element == NULL || xslts == NULL || xslts[0] == NULL || fd < 0) return SRCML_STATUS_ERROR;
 
   xmlInitParser();
 
