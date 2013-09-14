@@ -39,6 +39,49 @@ int main(int argc, char * argv[]) {
     unlink("project.xml");
   }
 
+  {
+    const char * relaxngs[2] = {"schema.rng", 0 };
+    int fd = open("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+    assert(srcml_relaxng(0, relaxngs, fd, 0) == SRCML_STATUS_ERROR);
+    unlink("project.xml");
+  }
+
+  {
+    const char * s = "<unit>a;</unit>";
+    std::ofstream file("input.xml");
+    file << s;
+    file.close();
+    xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
+    int fd = open("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+    assert(srcml_relaxng(buffer_input, 0, fd, 0) == SRCML_STATUS_ERROR);
+    unlink("input.xml");
+    unlink("project.xml");
+  }
+
+  {
+    const char * s = "<unit>a;</unit>";
+    std::ofstream file("input.xml");
+    file << s;
+    file.close();
+    xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
+    const char * relaxngs[2] = {0, 0 };
+    int fd = open("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+    assert(srcml_relaxng(buffer_input, relaxngs, fd, 0) == SRCML_STATUS_ERROR);
+    unlink("input.xml");
+    unlink("project.xml");
+  }
+
+  {
+    const char * s = "<unit>a;</unit>";
+    std::ofstream file("input.xml");
+    file << s;
+    file.close();
+    xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
+    const char * relaxngs[2] = {"schema.rng", 0 };
+    assert(srcml_relaxng(buffer_input, relaxngs, -1, 0) == SRCML_STATUS_ERROR);
+    unlink("input.xml");
+  }
+
   return 0;
 
 }
