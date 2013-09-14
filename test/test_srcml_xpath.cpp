@@ -5,8 +5,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <cassert>
-#include <srcml_sax2_utilities.hpp>
+#include <fstream>
 
+#include <srcml_sax2_utilities.hpp>
 #include <srcml.h>
 #include <srcml_types.hpp>
 #include <srcmlns.hpp>
@@ -62,6 +63,18 @@ int main(int argc, char * argv[]) {
 
   {
     const char * s = "<unit/>";
+    xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, strlen(s));
+    assert(srcMLParseDocument(0, false) == SRCML_STATUS_ERROR);
+  }
+
+    const char * s = "<unit/>";
+    std::ofstream file("project.xml");
+    file << s;
+    file.close();
+
+  {
+    srcml_extract_text(s, strlen(s), xmlOutputBufferCreateFilename("project.xml", xmlFindCharEncodingHandler("ISO-8859-1"), 0), 0, 0);
+    
     xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, strlen(s));
     assert(srcMLParseDocument(0, false) == SRCML_STATUS_ERROR);
   }
