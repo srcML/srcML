@@ -114,6 +114,7 @@ int main(int argc, char * argv[]) {
     assert(namespaces.at(1) == "http://www.sdml.info/srcML/position");
     assert(options == SRCML_OPTION_POSITION);
     assert(tabstop == 4);
+    delete language, delete filename, delete directory, delete version;
   }
 
   {
@@ -140,6 +141,7 @@ int main(int argc, char * argv[]) {
     assert(namespaces.at(1) == "http://www.sdml.info/srcML/position");
     assert(options == SRCML_OPTION_POSITION);
     assert(tabstop == 4);
+    delete language, delete filename, delete directory, delete version;
   }
 
   {
@@ -166,8 +168,24 @@ int main(int argc, char * argv[]) {
     assert(namespaces.at(1) == "http://www.sdml.info/srcML/cpp");
     assert(options == SRCML_OPTION_CPP);
     assert(tabstop == 4);
+    delete language, delete filename, delete directory, delete version;
   }
 
+  /* 
+     readUnitAttributes
+  */
+
+
+  {
+    srcMLReader reader("project.xml");
+    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    assert(*language == "C++");
+    assert(*filename == "a.cpp");
+    assert(*directory == "test");
+    assert(*version == "1");
+    delete language, delete filename, delete directory, delete version;
+  }
 
   unlink("project.xml");
   unlink("project_single.xml");
