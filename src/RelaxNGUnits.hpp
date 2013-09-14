@@ -196,7 +196,8 @@ public :
 
         std::string xmlns_string = prefix + "=\"" + ns + "\"";
 
-        xmlOutputBufferWrite(buf, xmlns_string.size(), xmlns_string.c_str());
+        if(xmlns->href)
+          xmlOutputBufferWrite(buf, xmlns_string.size(), xmlns_string.c_str());
 
         xmlns = xmlns->next;
       }
