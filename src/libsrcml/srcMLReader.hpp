@@ -76,11 +76,11 @@ public:
   // read the next unit add write it to writer as srcML
   int readsrcML(xmlTextWriterPtr writer);
   // reads the next unit and writes it to and output buffer as source code
-  int read(xmlOutputBufferPtr output_buffer);
+  //  int read(xmlOutputBufferPtr output_buffer);
   // reads the next unit and returns it srcML
   std::string * readsrcML();
   // reads the next unit and return it as source code
-  std::string * read();
+  //std::string * read();
 
 };
 

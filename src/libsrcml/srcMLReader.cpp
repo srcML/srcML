@@ -49,6 +49,8 @@ void freeNode(xmlNodePtr node) {
 srcMLReader::srcMLReader(const char * filename)
   : is_archive(false), is_single(false), done(false) {
 
+  if(filename == NULL) throw std::string();
+
   reader = xmlNewTextReaderFilename(filename);
   if(reader == NULL) throw std::string();
     xmlTextReaderRead(reader);
@@ -117,7 +119,7 @@ int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** 
                                         OPTION_TYPE & options,
                                         int & tabstop) {
 
-  if(language == 0 || filename == 0 || directory == 0 || version == 0) return 1;
+  if(language == 0 || filename == 0 || directory == 0 || version == 0) return 0;
 
   if(done) return 0;
 
@@ -214,7 +216,7 @@ int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** 
 int srcMLReader::readUnitAttributes(std::string ** language, std::string ** filename,
                                     std::string ** directory, std::string ** version) {
 
-  if(language == 0 || filename == 0 || directory == 0 || version == 0) return 1;
+  if(language == 0 || filename == 0 || directory == 0 || version == 0) return 0;
 
   bool read_unit_start = false;
 
@@ -396,105 +398,6 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
 
 }
 
-
-int srcMLReader::read(xmlOutputBufferPtr output_buffer) {
-
-  if(done) return 0;
-
-  //xmlTextWriterStartDocument(output_buffer, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
-  bool read_unit_start = false;
-
-  if(!save_nodes.empty()) {
-
-    try {
-
-      for(int i = 0; i < save_nodes.size(); ++i)
-        output_node_source(*save_nodes.at(i), output_buffer);
-
-      for(int i = 0; i < save_nodes.size(); ++i)
-        freeNode(save_nodes.at(i));
-
-    } catch(...) {}
-
-    save_nodes.clear();
-
-  } else {
-
-    // forward to start unit
-    while(true) {
-      if(node && (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT && strcmp((const char *)node->name, "unit") == 0)
-        break;
-
-      if(xmlTextReaderRead(reader) != 1) {done = true; return 0; }
-      freeNode(node);
-      node = getNode(reader);
-    }
-
-  }
-
-  while(true) {
-
-    if(is_archive) output_node_source(*node, output_buffer);
-    else save_nodes.push_back(node);
-
-    if(strcmp((const char *)node->name, "unit") == 0) {
-
-      if(node->type == (xmlElementType)XML_READER_TYPE_ELEMENT) {
-
-        if(read_unit_start) {
-
-          is_archive = true;
-          try {
-
-            for(int i = 0; i < save_nodes.size() - 1; ++i)
-              freeNode(save_nodes.at(i));
-
-          } catch(...) {}
-          save_nodes.clear();
-          output_node_source(*node, output_buffer);
-
-        }
-
-        read_unit_start = true;
-      }
-
-      if(node->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT) {
-        break;
-      }
-
-    }
-
-    if(!save_nodes.empty() && node->type == (xmlElementType)XML_READER_TYPE_ELEMENT
-       && strcmp((const char *)node->name, "unit") != 0) {
-
-      is_archive = true;
-      try {
-
-        for(int i = 0; i < save_nodes.size(); ++i)
-          output_node_source(*save_nodes.at(i), output_buffer);
-
-        for(int i = 0; i < save_nodes.size() - 1; ++i)
-          freeNode(save_nodes.at(i));
-
-      } catch(...) {}
-
-      save_nodes.clear();
-
-    }
-
-    if(is_archive) freeNode(node);
-    if(xmlTextReaderRead(reader) != 1) {done = true; return 0; }
-    node = getNode(reader);
-
-  }
-
-  if(is_archive) freeNode(node);
-  node = 0;
-
-  return 1;
-
-}
-
 std::string * srcMLReader::readsrcML() {
 
   if(done) return 0;
@@ -520,30 +423,6 @@ std::string * srcMLReader::readsrcML() {
   xmlFreeTextWriter(writer);
   xmlBufferFree(buffer);
 
-  return unit;
-
-}
-
-std::string * srcMLReader::read() {
-
-  if(done) return 0;
-
-  xmlBufferPtr buffer = xmlBufferCreate();
-  xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler("UTF-8"));
-  int status = read(output_buffer);
-
-  if(!status) return 0;
-
-  std::string * unit = 0;
-
-  try {
-    
-    unit = new std::string((const char *)buffer->content);
-
-  } catch(...) {}
-
-  xmlOutputBufferClose(output_buffer);
-  xmlBufferFree(buffer);
   return unit;
 
 }
