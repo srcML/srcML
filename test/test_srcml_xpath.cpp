@@ -6,6 +6,7 @@
 #include <string.h>
 #include <cassert>
 #include <fstream>
+#include <unistd.h>
 
 #include <srcml_sax2_utilities.hpp>
 #include <srcml.h>
@@ -53,30 +54,42 @@ int main(int argc, char * argv[]) {
     const char * s = "<unit/>";
     xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, strlen(s));
     assert(srcMLParseDocument(ctxt, true) == SRCML_STATUS_OK);
+    xmlFreeParserCtxt(ctxt);
   }
 
   {
     const char * s = "<unit/>";
     xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, strlen(s));
     assert(srcMLParseDocument(ctxt, false) == SRCML_STATUS_OK);
+    xmlFreeParserCtxt(ctxt);
   }
 
   {
     const char * s = "<unit/>";
     xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, strlen(s));
     assert(srcMLParseDocument(0, false) == SRCML_STATUS_ERROR);
+    xmlFreeParserCtxt(ctxt);
   }
 
+  {
     const char * s = "<unit/>";
-    std::ofstream file("project.xml");
-    file << s;
-    file.close();
+    assert(srcml_extract_text(s, strlen(s), xmlOutputBufferCreateFilename("project.xml", xmlFindCharEncodingHandler("ISO-8859-1"), 0), 0, 0) == SRCML_STATUS_OK);
+    unlink("project.xml");
+  }
 
   {
-    srcml_extract_text(s, strlen(s), xmlOutputBufferCreateFilename("project.xml", xmlFindCharEncodingHandler("ISO-8859-1"), 0), 0, 0);
-    
-    xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(s, strlen(s));
-    assert(srcMLParseDocument(0, false) == SRCML_STATUS_ERROR);
+    const char * s = "<unit/>";
+    assert(srcml_extract_text(0, strlen(s), xmlOutputBufferCreateFilename("project.xml", xmlFindCharEncodingHandler("ISO-8859-1"), 0), 0, 0) == SRCML_STATUS_ERROR);
+  }
+
+  {
+    const char * s = "<unit/>";
+    assert(srcml_extract_text(s, 0, xmlOutputBufferCreateFilename("project.xml", xmlFindCharEncodingHandler("ISO-8859-1"), 0), 0, 0) == SRCML_STATUS_ERROR);
+  }
+
+  {
+    const char * s = "<unit/>";
+    assert(srcml_extract_text(s, strlen(s), 0, 0, 0) == SRCML_STATUS_ERROR);
   }
 
   return 0;
