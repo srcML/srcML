@@ -185,6 +185,14 @@ int main(int argc, char * argv[]) {
     assert(*directory == "test");
     assert(*version == "1");
     delete language, delete filename, delete directory, delete version;
+    language = 0, filename = 0, directory = 0, version = 0;
+    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    assert(*language == "C++");
+    assert(*filename == "b.cpp");
+    assert(directory == 0);
+    assert(version == 0);
+    delete language, delete filename, delete directory, delete version;
+    assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
   }
 
   unlink("project.xml");
