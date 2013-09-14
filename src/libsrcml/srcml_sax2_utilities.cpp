@@ -58,7 +58,7 @@ int srcml_extract_text(const char * input_buffer, int size, xmlOutputBufferPtr o
   ctxt->_private = &state;
 
   // process the document
-  srcMLParseDocument(ctxt, true);
+  int status = srcMLParseDocument(ctxt, true);
 
   // local variable, do not want xmlFreeParserCtxt to free
   ctxt->sax = NULL;
@@ -70,7 +70,7 @@ int srcml_extract_text(const char * input_buffer, int size, xmlOutputBufferPtr o
   if (state.unit && state.count < state.unit)
     throw OutOfRangeUnitError(state.count);
 
-  return SRCML_STATUS_OK;
+  return status;
 }
 
 // xpath evaluation of the nested units
@@ -104,7 +104,7 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_elemen
   ctxt->_private = &state;
 
   // process the document
-  srcMLParseDocument(ctxt, false);
+  int status = srcMLParseDocument(ctxt, false);
 
   // local variable, do not want xmlFreeParserCtxt to free
   ctxt->sax = NULL;
@@ -112,6 +112,8 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_elemen
   // all done with parsing
   if(input_buffer) inputPop(ctxt);
   xmlFreeParserCtxt(ctxt);
+
+  return status;
 }
 
 // allow for all exslt functions
@@ -200,7 +202,7 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
   xsltsrcMLRegister();
 
   // process the document
-  srcMLParseDocument(ctxt, false);
+  int status = srcMLParseDocument(ctxt, false);
 
   // local variable, do not want xmlFreeParserCtxt to free
   ctxt->sax = NULL;
@@ -209,7 +211,7 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
   // all done with parsing
   xmlFreeParserCtxt(ctxt);
 
-  return SRCML_STATUS_OK;
+  return status;
 }
 
 // relaxng evaluation of the nested units
@@ -231,7 +233,7 @@ int srcml_relaxng(xmlParserInputBufferPtr input_buffer, const char** xslts, int 
   SAX2ExtractUnitsSrc state(&process, &options, -1, "");
   ctxt->_private = &state;
 
-  srcMLParseDocument(ctxt, false);
+  int status = srcMLParseDocument(ctxt, false);
 
   ctxt->sax = NULL;
 
@@ -241,7 +243,7 @@ int srcml_relaxng(xmlParserInputBufferPtr input_buffer, const char** xslts, int 
   xmlRelaxNGFree(rng);
   xmlRelaxNGFreeParserCtxt(relaxng);
 
-  return SRCML_STATUS_OK;
+  return status;
 }
 
 
