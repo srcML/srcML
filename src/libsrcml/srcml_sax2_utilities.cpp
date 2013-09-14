@@ -38,6 +38,8 @@
 // extract a given unit
 int srcml_extract_text(const char * input_buffer, int size, xmlOutputBufferPtr output_buffer, OPTION_TYPE options, int unit) {
 
+  if(output_buffer == NULL) return SRCML_STATUS_ERROR;
+
   // setup parser
   xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(input_buffer, size);
   if(ctxt == NULL) return SRCML_STATUS_ERROR;
@@ -71,6 +73,8 @@ int srcml_extract_text(const char * input_buffer, int size, xmlOutputBufferPtr o
 
 // xpath evaluation of the nested units
 int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_element, const char* xpaths[], int fd, OPTION_TYPE options) {
+
+  if(input_buffer == NULL || context_element == NULL || xpaths || xpaths[0] || fd < 0) return SRCML_STATUS_ERROR;
 
   // relative xpath changed to at any level
   std::string s = xpaths[0];
@@ -106,7 +110,7 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_elemen
   ctxt->sax = NULL;
 
   // all done with parsing
-  if(input_buffer) inputPop(ctxt);
+  inputPop(ctxt);
   xmlFreeParserCtxt(ctxt);
 
   return status;
