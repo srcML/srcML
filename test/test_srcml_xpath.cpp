@@ -35,7 +35,19 @@ int main(int argc, char * argv[]) {
     assert(ctxt == NULL);
   }
 
-  //xmlParserCtxtPtr  srcMLCreateParserCtxt(xmlParserInputBufferPtr buffer_input)
+  {
+    const char * s = "test_srcml_xpath.cpp";
+    xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename(s, xmlParseCharEncoding(0));
+    xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(buffer_input);
+    assert(ctxt != NULL);
+    xmlFreeParserCtxt(ctxt);
+  }
+
+  {
+    xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(0);
+    assert(ctxt == NULL);
+  }
+
   //srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly)
 
   return 0;
