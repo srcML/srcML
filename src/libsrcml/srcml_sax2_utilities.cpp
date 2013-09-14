@@ -19,6 +19,7 @@
 */
 
 #include <srcml_sax2_utilities.hpp>
+#include <srcml.h>
 
 #include <ExtractUnitsSrc.hpp>
 #include <Properties.hpp>
@@ -36,11 +37,11 @@
 
 // local function forward declarations
 xmlParserCtxtPtr srcMLCreateMemoryParserCtxt(const char * buffer, int size);
-void srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly);
+int srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly);
 xmlParserCtxtPtr srcMLCreateParserCtxt(xmlParserInputBufferPtr buffer_input);
 
 // extract a given unit
-void extract_text(const char * input_buffer, int size, xmlOutputBufferPtr output_buffer, OPTION_TYPE options, int unit) {
+int extract_text(const char * input_buffer, int size, xmlOutputBufferPtr output_buffer, OPTION_TYPE options, int unit) {
 
   // setup parser
   xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(input_buffer, size);
@@ -68,10 +69,12 @@ void extract_text(const char * input_buffer, int size, xmlOutputBufferPtr output
   // make sure we did not end early
   if (state.unit && state.count < state.unit)
     throw OutOfRangeUnitError(state.count);
+
+  return SRCML_STATUS_OK;
 }
 
 // xpath evaluation of the nested units
-void xpath(xmlParserInputBufferPtr input_buffer, const char* context_element, const char* xpaths[], int fd, OPTION_TYPE options) {
+int xpath(xmlParserInputBufferPtr input_buffer, const char* context_element, const char* xpaths[], int fd, OPTION_TYPE options) {
 
   // relative xpath changed to at any level
   std::string s = xpaths[0];
@@ -82,12 +85,12 @@ void xpath(xmlParserInputBufferPtr input_buffer, const char* context_element, co
   xmlXPathCompExprPtr compiled_xpath = xmlXPathCompile(BAD_CAST s.c_str());
   if (compiled_xpath == 0) {
     fprintf(stderr, "srcml2src:  Unable to compile XPath '%s'\n", s.c_str());
-    return;
+    return SRCML_STATUS_ERROR;
   }
 
   // setup parser
   xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(input_buffer);
-  if (ctxt == NULL) return;
+  if (ctxt == NULL) return SRCML_STATUS_ERROR;
 
   // setup sax handler
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
@@ -146,7 +149,7 @@ void dlexsltRegisterAll() {
 }
 
 // xslt evaluation of the nested units
-void xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, const char* xslts[], const char* params[], int paramcount, int fd, OPTION_TYPE options) {
+int xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, const char* xslts[], const char* params[], int paramcount, int fd, OPTION_TYPE options) {
 
   xmlInitParser();
 
@@ -161,7 +164,7 @@ void xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, con
     handle = dlopen("libexslt.dylib", RTLD_LAZY);
     if (!handle) {
       fprintf(stderr, "Unable to open libexslt library\n");
-      return;
+      return SRCML_STATUS_ERROR;
     }
   }
 
@@ -170,18 +173,18 @@ void xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, con
   char* error;
   if ((error = dlerror()) != NULL) {
     dlclose(handle);
-    return;
+    return SRCML_STATUS_ERROR;
   }
 #endif
 
   // parse the stylesheet
   xsltStylesheetPtr stylesheet = xsltParseStylesheetFile(BAD_CAST xslts[0]);
   if (!stylesheet)
-    return;
+    return SRCML_STATUS_ERROR;
 
   // setup parser
   xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(input_buffer);
-  if (ctxt == NULL) return;
+  if (ctxt == NULL) return SRCML_STATUS_ERROR;
 
   // setup sax handler
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
@@ -205,13 +208,15 @@ void xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, con
   if(input_buffer) inputPop(ctxt);
   // all done with parsing
   xmlFreeParserCtxt(ctxt);
+
+  return SRCML_STATUS_OK;
 }
 
 // relaxng evaluation of the nested units
-void relaxng(xmlParserInputBufferPtr input_buffer, const char** xslts, int fd, OPTION_TYPE options) {
+int relaxng(xmlParserInputBufferPtr input_buffer, const char** xslts, int fd, OPTION_TYPE options) {
 
   xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(input_buffer);
-  if (ctxt == NULL) return;
+  if (ctxt == NULL) return SRCML_STATUS_ERROR;
 
   // setup sax handler
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
@@ -235,11 +240,13 @@ void relaxng(xmlParserInputBufferPtr input_buffer, const char** xslts, int fd, O
   xmlRelaxNGFreeValidCtxt(rngctx);
   xmlRelaxNGFree(rng);
   xmlRelaxNGFreeParserCtxt(relaxng);
+
+  return SRCML_STATUS_OK;
 }
 
 
 // process srcML document with error reporting
-void srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly) {
+int srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly) {
 
   // process the document
   int status;
@@ -249,44 +256,16 @@ void srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly) {
 
     // special case
     if (allowendearly && (ep->code == XML_ERR_EXTRA_CONTENT || ep->code == XML_ERR_DOCUMENT_END))
-      return;
+      return SRCML_STATUS_OK;
 
-    // report error
-    char* partmsg = strdup(ep->message);
-    partmsg[strlen(partmsg) - 1] = '\0';
-    fprintf(stderr, "%s: %s in '%s'\n", "srcml2src", partmsg, ep->file);
-    exit(STATUS_INPUTFILE_PROBLEM);
+    return SRCML_STATUS_ERROR;
   }
 }
-#if 0
-// create srcml parser with error reporting
-xmlParserCtxtPtr srcMLCreateURLParserCtxt(const char * infile) {
-
-  xmlParserCtxtPtr ctxt = xmlCreateURLParserCtxt(infile, XML_PARSE_COMPACT | XML_PARSE_HUGE);
-  if (ctxt == NULL) {
-
-    // report error
-    xmlErrorPtr ep = xmlGetLastError();
-    fprintf(stderr, "%s: %s", "srcml2src", ep->message);
-    exit(STATUS_INPUTFILE_PROBLEM);
-  }
-
-  return ctxt;
-}
-#endif
 
 // create srcml parser with error reporting
 xmlParserCtxtPtr srcMLCreateMemoryParserCtxt(const char * buffer, int size) {
 
   xmlParserCtxtPtr ctxt = xmlCreateMemoryParserCtxt(buffer, size);
-
-  if (ctxt == NULL) {
-
-    // report error
-    xmlErrorPtr ep = xmlGetLastError();
-    fprintf(stderr, "%s: %s", "srcml2src", ep->message);
-    exit(STATUS_INPUTFILE_PROBLEM);
-  }
 
   return ctxt;
 }
