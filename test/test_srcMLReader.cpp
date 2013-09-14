@@ -123,6 +123,23 @@ int main(int argc, char * argv[]) {
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0, attributes.clear(), prefixes.clear(), namespaces.clear();
     options = 0, tabstop = 0;
+    reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop);
+    assert(*language == "C++");
+    assert(*filename == "project");
+    assert(*directory == "test");
+    assert(*version == "1");
+    assert(attributes.size() == 2);
+    assert(attributes.at(0) == "foo");
+    assert(attributes.at(1) == "bar");
+    assert(prefixes.size() == 2);
+    assert(prefixes.at(0) == "");
+    assert(prefixes.at(1) == "pos");
+    assert(namespaces.size() == 2);
+    assert(namespaces.at(0) == "http://www.sdml.info/srcML/src");
+    assert(namespaces.at(1) == "http://www.sdml.info/srcML/position");
+    assert(options == SRCML_OPTION_POSITION);
+    assert(tabstop == 4);
+    delete language, delete filename, delete directory, delete version;
   }
 
   {
@@ -150,6 +167,25 @@ int main(int argc, char * argv[]) {
     assert(options == SRCML_OPTION_POSITION);
     assert(tabstop == 4);
     delete language, delete filename, delete directory, delete version;
+    language = 0, filename = 0, directory = 0, version = 0, attributes.clear(), prefixes.clear(), namespaces.clear();
+    options = 0, tabstop = 0;
+    reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop);
+    assert(*language == "C++");
+    assert(*filename == "project");
+    assert(*directory == "test");
+    assert(*version == "1");
+    assert(attributes.size() == 2);
+    assert(attributes.at(0) == "foo");
+    assert(attributes.at(1) == "bar");
+    assert(prefixes.size() == 2);
+    assert(prefixes.at(0) == "s");
+    assert(prefixes.at(1) == "pos");
+    assert(namespaces.size() == 2);
+    assert(namespaces.at(0) == "http://www.sdml.info/srcML/src");
+    assert(namespaces.at(1) == "http://www.sdml.info/srcML/position");
+    assert(options == SRCML_OPTION_POSITION);
+    assert(tabstop == 4);
+    delete language, delete filename, delete directory, delete version;
   }
 
   {
@@ -160,6 +196,25 @@ int main(int argc, char * argv[]) {
     std::vector<std::string> namespaces;
     OPTION_TYPE options = 0;
     int tabstop = 0;
+    reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop);
+    assert(*language == "C++");
+    assert(*filename == "project");
+    assert(*directory == "test");
+    assert(*version == "1");
+    assert(attributes.size() == 2);
+    assert(attributes.at(0) == "foo");
+    assert(attributes.at(1) == "bar");
+    assert(prefixes.size() == 2);
+    assert(prefixes.at(0) == "");
+    assert(prefixes.at(1) == "cpp");
+    assert(namespaces.size() == 2);
+    assert(namespaces.at(0) == "http://www.sdml.info/srcML/src");
+    assert(namespaces.at(1) == "http://www.sdml.info/srcML/cpp");
+    assert(options == SRCML_OPTION_CPP);
+    assert(tabstop == 4);
+    delete language, delete filename, delete directory, delete version;
+    language = 0, filename = 0, directory = 0, version = 0, attributes.clear(), prefixes.clear(), namespaces.clear();
+    options = 0, tabstop = 0;
     reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop);
     assert(*language == "C++");
     assert(*filename == "project");
