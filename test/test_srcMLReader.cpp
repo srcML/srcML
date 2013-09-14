@@ -171,6 +171,20 @@ int main(int argc, char * argv[]) {
     delete language, delete filename, delete directory, delete version;
   }
 
+  {
+    srcMLReader reader("project_single.xml");
+    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    std::vector<std::string> attributes;
+    std::vector<std::string> prefixes;
+    std::vector<std::string> namespaces;
+    OPTION_TYPE options = 0;
+    int tabstop = 0;
+    
+    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    delete language, delete filename, delete directory, delete version;
+    assert(reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
+  }
+
   /* 
      readUnitAttributes
   */
@@ -191,6 +205,37 @@ int main(int argc, char * argv[]) {
     assert(*filename == "b.cpp");
     assert(directory == 0);
     assert(version == 0);
+    delete language, delete filename, delete directory, delete version;
+    assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
+  }
+
+  {
+    srcMLReader reader("project_ns.xml");
+    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    assert(*language == "C++");
+    assert(*filename == "a.cpp");
+    assert(directory == 0);
+    assert(version == 0);
+    delete language, delete filename, delete directory, delete version;
+    language = 0, filename = 0, directory = 0, version = 0;
+    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    assert(*language == "C++");
+    assert(*filename == "b.cpp");
+    assert(directory == 0);
+    assert(version == 0);
+    delete language, delete filename, delete directory, delete version;
+    assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
+  }
+
+  {
+    srcMLReader reader("project_single.xml");
+    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    assert(*language == "C++");
+    assert(*filename == "project");
+    assert(*directory == "test");
+    assert(*version == "1");
     delete language, delete filename, delete directory, delete version;
     assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
   }
