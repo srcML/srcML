@@ -15,7 +15,7 @@
 
 int main(int argc, char * argv[]) {
 
-  const std::string srcml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" dir=\"test\" filename=\"project\" version=\"1\">\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"a.cpp\" version=\"1\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"b.cpp\"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>\n</unit>\n\n</unit>\n";
+  const std::string srcml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\"  xmlns:pos=\"http://www.sdml.info/srcML/position\" dir=\"test\" filename=\"project\" version=\"1\" pos:tabs=\"4\">\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"a.cpp\" version=\"1\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"b.cpp\"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>\n</unit>\n\n</unit>\n";
 
   const std::string srcml_single = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>\n";
 
@@ -63,6 +63,10 @@ int main(int argc, char * argv[]) {
 
   }
 
+  /* 
+     srcMLReader(xmlParserInputBufferPtr input)
+  */
+
   {
     try {
       xmlParserInputBufferPtr input = xmlParserInputBufferCreateFilename("project.xml", xmlParseCharEncoding(0));
@@ -81,14 +85,24 @@ int main(int argc, char * argv[]) {
 
   }
 
+  /* 
+     readRootUnitAttributes
+  */
+
+
   {
     srcMLReader reader("project.xml");
-    std::string * language, * filename, * directory, * version;
-    reader.readUnitAttributesInternal(&language, &filename, &directory, &version);
+    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    std::vector<std::string> attributes;
+    std::vector<std::string> prefixes;
+    std::vector<std::string> namespaces;
+    OPTION_TYPE options = 0;
+    int tabstop = 0;
+    reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop);
     assert(*language == "C++");
-    assert(*filename == "C++");
-    assert(*directory == "C++");
-    assert(*version == "C++");
+    assert(*filename == "project");
+    assert(*directory == "test");
+    assert(*version == "1");
   }
 
 
