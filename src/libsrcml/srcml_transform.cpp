@@ -101,8 +101,8 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
       free((void *)transform_filename);
       return SRCML_STATUS_ERROR;
 
-    }      
-
+    }
+    int error = 0;
     try {
 
       switch(iarchive->transformations.at(i).type) {
@@ -110,7 +110,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
       case SRCML_XPATH: {
 
           const char * xpaths[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
-          xpath(pinput, "src:unit", xpaths, transform_fd, oarchive-> options);
+          error = xpath(pinput, "src:unit", xpaths, transform_fd, oarchive-> options);
           break;
         }
 
@@ -118,14 +118,14 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
           const char * xslts[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
           const char * params[1] = { 0 };
-          xslt(pinput, "src:unit", xslts, params, 0, transform_fd, oarchive->options);
+          error = xslt(pinput, "src:unit", xslts, params, 0, transform_fd, oarchive->options);
           break;
         }
 
       case SRCML_RELAXNG: {
 
           const char * relaxngs[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
-          relaxng(pinput, relaxngs, transform_fd, oarchive->options);
+          error = relaxng(pinput, relaxngs, transform_fd, oarchive->options);
           break;
         }
 
@@ -147,6 +147,11 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
     unlink(last_transform_filename);
     free((void *)last_transform_filename);
     last_transform_filename = transform_filename;
+    if(error) {
+      unlink(last_transform_filename);
+      free((void *)last_transform_filename);
+      return error;
+    }
 
   }
 
