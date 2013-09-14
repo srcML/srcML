@@ -219,6 +219,7 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
 // relaxng evaluation of the nested units
 int srcml_relaxng(xmlParserInputBufferPtr input_buffer, const char** xslts, int fd, OPTION_TYPE options) {
 
+  if(input_buffer == NULL || xslts == NULL || xslts[0] == NULL || fd < 0) return SRCML_STATUS_ERROR;
   xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(input_buffer);
   if (ctxt == NULL) return SRCML_STATUS_ERROR;
 
