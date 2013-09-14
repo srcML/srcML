@@ -56,7 +56,7 @@ srcMLReader::srcMLReader(const char * filename)
 }
 
 srcMLReader::srcMLReader(xmlParserInputBufferPtr input)
-  : is_archive(false), done(false) {
+  : is_archive(false), is_single(false), done(false) {
 
   if(input == NULL) throw std::string();
   reader = xmlNewTextReader(input, 0);
