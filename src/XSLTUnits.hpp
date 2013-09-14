@@ -158,14 +158,14 @@ public :
             xmlNodePtr resroot = xmlDocGetRootElement(res);
             xmlNsPtr savens = resroot ? resroot->nsDef : 0;
             bool turnoff_namespaces = savens && pstate->isarchive && !isoption(options, OPTION_XSLT_ALL);
-
+            turnoff_namespaces = false;
             if (turnoff_namespaces) {
                 xmlNsPtr cur = savens;
                 xmlNsPtr ret = NULL;
                 xmlNsPtr p = NULL;
 
                 while (cur != NULL) {
-                    if (strcmp((const char*) cur->href, SRCML_CPP_NS_URI) == 0) {
+                    if (cur->href && strcmp((const char*) cur->href, SRCML_CPP_NS_URI) == 0) {
                         xmlNsPtr q = xmlCopyNamespace(cur);
                         if (p == NULL) {
                             ret = p = q;
