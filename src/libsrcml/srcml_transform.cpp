@@ -55,6 +55,7 @@ int srcml_append_transform_xslt(srcml_archive* archive, const char* xslt_filenam
 
 }
 
+// add relaxng to transformation
 int srcml_append_transform_relaxng(srcml_archive* archive, const char* relaxng_filename) {
 
   if(archive == NULL || relaxng_filename == 0) return SRCML_STATUS_ERROR;
