@@ -147,7 +147,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
     unlink(last_transform_filename);
     free((void *)last_transform_filename);
     last_transform_filename = transform_filename;
-    if(error) {
+    if(error == SRCML_STATUS_ERROR) {
       unlink(last_transform_filename);
       free((void *)last_transform_filename);
       return error;
