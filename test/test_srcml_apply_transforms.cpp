@@ -32,10 +32,64 @@ int main(int argc, char * argv[]) {
     srcml_archive * oarchive = srcml_clone_archive(iarchive);
     srcml_write_open_memory(oarchive, &s);
 
+    srcml_apply_transforms(iarchive, oarchive);
+
     srcml_close_archive(oarchive);
     srcml_free_archive(oarchive);  
     srcml_close_archive(iarchive);
     srcml_free_archive(iarchive);  
+    //assert(s == srcml);
+  }
+
+  {
+    char * s;
+    srcml_archive * iarchive = srcml_create_archive();
+    srcml_read_open_memory(iarchive, srcml_full.c_str(), srcml_full.size());
+    srcml_append_transform_xpath(iarchive, "//src:unit");
+    srcml_archive * oarchive = srcml_clone_archive(iarchive);
+    srcml_write_open_memory(oarchive, &s);
+
+    srcml_apply_transforms(iarchive, oarchive);
+
+    srcml_close_archive(oarchive);
+    srcml_free_archive(oarchive);  
+    srcml_close_archive(iarchive);
+    srcml_free_archive(iarchive);  
+    //assert(s == srcml_full);
+  }
+
+  {
+    char * s;
+    srcml_archive * iarchive = srcml_create_archive();
+    srcml_read_open_memory(iarchive, srcml_a.c_str(), srcml_a.size());
+    srcml_append_transform_xpath(iarchive, "//src:unit");
+    srcml_archive * oarchive = srcml_clone_archive(iarchive);
+    srcml_write_open_memory(oarchive, &s);
+
+    srcml_apply_transforms(iarchive, oarchive);
+
+    srcml_close_archive(oarchive);
+    srcml_free_archive(oarchive);  
+    srcml_close_archive(iarchive);
+    srcml_free_archive(iarchive);  
+    //assert(s == srcml_a_after);
+  }
+
+  {
+    char * s;
+    srcml_archive * iarchive = srcml_create_archive();
+    srcml_read_open_memory(iarchive, srcml_b.c_str(), srcml_b.size());
+    srcml_append_transform_xpath(iarchive, "//src:unit");
+    srcml_archive * oarchive = srcml_clone_archive(iarchive);
+    srcml_write_open_memory(oarchive, &s);
+
+    srcml_apply_transforms(iarchive, oarchive);
+
+    srcml_close_archive(oarchive);
+    srcml_free_archive(oarchive);  
+    srcml_close_archive(iarchive);
+    srcml_free_archive(iarchive);  
+    //assert(s == srcml_b_after);
   }
 
   {
