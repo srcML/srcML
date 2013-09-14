@@ -235,6 +235,42 @@ int main(int argc, char * argv[]) {
   }
 
   {
+    srcMLReader reader("project.xml");
+    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    std::vector<std::string> attributes;
+    std::vector<std::string> prefixes;
+    std::vector<std::string> namespaces;
+    OPTION_TYPE options = 0;
+    int tabstop = 0;
+    
+    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    delete language, delete filename, delete directory, delete version;
+    language = 0, filename = 0, directory = 0, version = 0;
+    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    delete language, delete filename, delete directory, delete version;
+    assert(reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
+    assert(reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
+  }
+
+  {
+    srcMLReader reader("project_ns.xml");
+    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    std::vector<std::string> attributes;
+    std::vector<std::string> prefixes;
+    std::vector<std::string> namespaces;
+    OPTION_TYPE options = 0;
+    int tabstop = 0;
+    
+    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    delete language, delete filename, delete directory, delete version;
+    language = 0, filename = 0, directory = 0, version = 0;
+    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    delete language, delete filename, delete directory, delete version;
+    assert(reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
+    assert(reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
+  }
+
+  {
     srcMLReader reader("project_single.xml");
     std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
     std::vector<std::string> attributes;
