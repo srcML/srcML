@@ -110,7 +110,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
       case SRCML_XPATH: {
 
           const char * xpaths[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
-          error = xpath(pinput, "src:unit", xpaths, transform_fd, oarchive-> options);
+          error = srcml_xpath(pinput, "src:unit", xpaths, transform_fd, oarchive-> options);
           break;
         }
 
@@ -118,14 +118,14 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
           const char * xslts[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
           const char * params[1] = { 0 };
-          error = xslt(pinput, "src:unit", xslts, params, 0, transform_fd, oarchive->options);
+          error = srcml_xslt(pinput, "src:unit", xslts, params, 0, transform_fd, oarchive->options);
           break;
         }
 
       case SRCML_RELAXNG: {
 
           const char * relaxngs[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
-          error = relaxng(pinput, relaxngs, transform_fd, oarchive->options);
+          error = srcml_relaxng(pinput, relaxngs, transform_fd, oarchive->options);
           break;
         }
 

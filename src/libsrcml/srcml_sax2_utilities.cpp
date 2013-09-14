@@ -41,7 +41,7 @@ int srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly);
 xmlParserCtxtPtr srcMLCreateParserCtxt(xmlParserInputBufferPtr buffer_input);
 
 // extract a given unit
-int extract_text(const char * input_buffer, int size, xmlOutputBufferPtr output_buffer, OPTION_TYPE options, int unit) {
+int srcml_extract_text(const char * input_buffer, int size, xmlOutputBufferPtr output_buffer, OPTION_TYPE options, int unit) {
 
   // setup parser
   xmlParserCtxtPtr ctxt = srcMLCreateMemoryParserCtxt(input_buffer, size);
@@ -74,7 +74,7 @@ int extract_text(const char * input_buffer, int size, xmlOutputBufferPtr output_
 }
 
 // xpath evaluation of the nested units
-int xpath(xmlParserInputBufferPtr input_buffer, const char* context_element, const char* xpaths[], int fd, OPTION_TYPE options) {
+int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_element, const char* xpaths[], int fd, OPTION_TYPE options) {
 
   // relative xpath changed to at any level
   std::string s = xpaths[0];
@@ -149,7 +149,7 @@ void dlexsltRegisterAll() {
 }
 
 // xslt evaluation of the nested units
-int xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, const char* xslts[], const char* params[], int paramcount, int fd, OPTION_TYPE options) {
+int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, const char* xslts[], const char* params[], int paramcount, int fd, OPTION_TYPE options) {
 
   xmlInitParser();
 
@@ -213,7 +213,7 @@ int xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, cons
 }
 
 // relaxng evaluation of the nested units
-int relaxng(xmlParserInputBufferPtr input_buffer, const char** xslts, int fd, OPTION_TYPE options) {
+int srcml_relaxng(xmlParserInputBufferPtr input_buffer, const char** xslts, int fd, OPTION_TYPE options) {
 
   xmlParserCtxtPtr ctxt = srcMLCreateParserCtxt(input_buffer);
   if (ctxt == NULL) return SRCML_STATUS_ERROR;
