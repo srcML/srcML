@@ -83,4 +83,9 @@
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 </unit>
 
+<unit>
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+<cpp:error>#<cpp:directive/></cpp:error>
+</unit>
+
 </unit>
