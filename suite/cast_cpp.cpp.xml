@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="cast" filename="cast_cpp">
+
+<unit>
+<decl_stmt><decl><type><name>A</name></type> <name>a</name> =<init> <expr>(<name>A</name>)<name>a</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+</unit>
