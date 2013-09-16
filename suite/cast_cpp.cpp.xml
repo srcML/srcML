@@ -5,4 +5,12 @@
 <decl_stmt><decl><type><name>A</name></type> <name>a</name> =<init> <expr>(<name>A</name>)<name>a</name></expr></init></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><name>A</name> *</type> <name>a</name> =<init> <expr>(<name>A</name> *)<name>a</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>A</name> *</type> <name>a</name> =<init> <expr>(struct <name>A</name> *)<name>a</name></expr></init></decl>;</decl_stmt>
+</unit>
+
 </unit>
