@@ -190,114 +190,245 @@ int srcml_set_encoding(const char* encoding) {
 
 }
 
+/**
+ * srcml_set_language:
+ * @language: a language
+ *
+ * Set the language to use to parse.
+ *
+ * Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ */
 int srcml_set_language(const char* language) {
 
   return srcml_archive_set_language(&global_archive, language);
 
 }
 
+/**
+ * srcml_set_filename:
+ * @filname: name of a file
+ *
+ * Set the filename attribute for the root unit.
+ *
+ * Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ */
 int srcml_set_filename(const char* filename) {
 
   return srcml_archive_set_filename(&global_archive, filename);
 
 }
 
+/**
+ * srcml_set_directory:
+ * @directory: a directory path
+ *
+ * Set the directory attribute for the root unit.
+ *
+ * Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ */
 int srcml_set_directory(const char* directory) {
 
   return srcml_archive_set_directory(&global_archive, directory);
 
 }
 
+/**
+ * srcml_set_version:
+ * @version: a version string
+ *
+ * Set the version attribute.
+ *
+ * Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ */
 int srcml_set_version(const char* version) {
 
   return srcml_archive_set_version(&global_archive, version);
 
 }
 
+/**
+ * srcml_set_all_options:
+ * @option: a srcml options
+ *
+ * Set the srcml options.  Clears all previously set.
+ *
+ * Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ */
 int srcml_set_all_options(int option) {
 
   return srcml_archive_set_all_options(&global_archive, option);
 
 }
 
+/**
+ * srcml_set_option:
+ * @option: a srcml option
+ *
+ * Set the srcml options.  Multiple may be set.
+ *
+ * Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ */
 int srcml_set_option(int option) {
 
   return srcml_archive_set_option(&global_archive, option);
 
 }
 
+/**
+ * srcml_clear_option:
+ * @option: a srcml option
+ *
+ * Remove an option.  May use multiple option with the same call.
+ *
+ * Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ */
 int srcml_clear_option(int option) {
 
   return srcml_archive_clear_option(&global_archive, option);
 
 }
 
+/**
+ * srcml_set_tabstop:
+ * @tabstop: tabstop size
+ *
+ * Set the size of the tabstop.
+ *
+ * Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ */
 int srcml_set_tabstop(int tabstop) {
 
   return srcml_archive_set_tabstop(&global_archive, tabstop);
 
 }
 
+/**
+ * srcml_register_file_extension:
+ * @extension: a file extension
+ * @language: a language
+ *
+ * Associate the given extension with the given language.
+ *
+ * Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ */
 int srcml_register_file_extension(const char* extension, const char* language) {
 
   return srcml_archive_register_file_extension(&global_archive, extension, language);
 
 }
 
+/**
+ * srcml_register_namespace:
+ * @prefix: a XML namespace prefix
+ * @ns: a XML namespace
+ *
+ * Add a new namespace or change the prefix of an existing namespace.
+ *
+ * Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ */
 int srcml_register_namespace(const char* prefix, const char* ns) {
 
   return srcml_archive_register_namespace(&global_archive, prefix, ns);
 
 }
 
+/**
+ * srcml_get_encoding:
+ *
+ * Get the output encoding on success and NULL on failure.
+ */
 const char* srcml_get_encoding() {
 
   return srcml_archive_get_encoding(&global_archive);
 
 }
 
+/**
+ * srcml_get_language:
+ *
+ * Get the language on success and NULL on failure.
+ */
 const char* srcml_get_language() {
 
   return srcml_archive_get_language(&global_archive);
 
 }
 
+/**
+ * srcml_get_filename:
+ *
+ * Get the filename attribute for the root unit on success
+ * and NULL on failure.
+ */
 const char* srcml_get_filename() {
 
   return srcml_archive_get_filename(&global_archive);
 
 }
 
+/**
+ * srcml_get_directory:
+ *
+ * Get the directory attribute for the root unit on success
+ * and NULL on failure
+ */
 const char* srcml_get_directory() {
 
   return srcml_archive_get_directory(&global_archive);
 
 }
 
+/**
+ * srcml_get_version:
+ *
+ * Get the version attribute on success and NULL on failure.
+ */
 const char* srcml_get_version() {
 
   return srcml_archive_get_version(&global_archive);
 
 }
 
+/**
+ * srcml_get_options:
+ *
+ * Get the currently set options on success and NULL on failure.
+ */
 int srcml_get_options() {
 
   return srcml_archive_get_options(&global_archive);
 
 }
 
+/**
+ * srcml_get_tabstop:
+ *
+ * Get the tabstop size on success and NULL On failure.
+ */
 int srcml_get_tabstop() {
 
   return srcml_archive_get_tabstop(&global_archive);
 
 }
 
+/**
+ * srcml_get_namespace_size:
+ *
+ * Get the number of currently defined namespaces.
+ */
 int srcml_get_namespace_size() {
 
   return global_archive.namespaces.size();
 
 }
 
+/**
+ * srcml_get_prefix:
+ * @pos: namespace position
+ *
+ * Get prefix for the given position on success
+ * and NULL on failure.
+ */
 const char* srcml_get_prefix(int pos) {
 
   try {
@@ -312,6 +443,13 @@ const char* srcml_get_prefix(int pos) {
 
 }
 
+/**
+ * srcml_get_prefix_uri:
+ * @namespace_uri: an XML namespace
+ *
+ * Get the registered prefix for the given namespace
+ * on success and NULL on failure.
+ */
 const char* srcml_get_prefix_uri(const char* namespace_uri) {
 
   if(namespace_uri == NULL) return 0;
@@ -327,6 +465,13 @@ const char* srcml_get_prefix_uri(const char* namespace_uri) {
   return 0;
 }
 
+/**
+ * srcml_get_namespace:
+ * @pos: position in namespaces
+ *
+ * Get the namespace at the given pos on succcess
+ * and NULL on failure.
+ */
 const char* srcml_get_namespace(int pos) {
 
   try {
@@ -341,6 +486,13 @@ const char* srcml_get_namespace(int pos) {
 
 }
 
+/**
+ * srcml_get_namespace_prefix:
+ * @prefix: an XML prefix
+ *
+ * Get the first namespace for the given prefix on success
+ * and NULL on failure.
+ */
 const char* srcml_get_namespace_prefix(const char* prefix) {
 
   if(prefix == NULL) return 0;
