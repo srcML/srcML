@@ -332,6 +332,12 @@ int srcml_register_namespace(const char* prefix, const char* ns) {
 
 }
 
+/******************************************************************************
+ *                                                                            *
+ *                           Global get functions                             *
+ *                                                                            *
+ ******************************************************************************/
+
 /**
  * srcml_get_encoding:
  *
@@ -509,7 +515,20 @@ const char* srcml_get_namespace_prefix(const char* prefix) {
 
 }
 
-/* source-code language is supported */
+/******************************************************************************
+ *                                                                            *
+ *                           libsrcml utility functions                       *
+ *                                                                            *
+ ******************************************************************************/
+
+/**
+ * srcml_check_language:
+ * @language: a language
+ *
+ * Check if the current language is supported.
+ * if so return the numeric representation for that language.
+ * Not supported returns 0.
+ */
 int srcml_check_language(const char* language) { return language == 0 ? 0 : Language::getLanguage(language); }
 
 /* null-terminated array of supported source-code languages */
@@ -518,19 +537,31 @@ const char** srcml_language_list() {
   return langs;
 }
 
-/* currently registered language for a file extension
-   Full filename can be provided, and extension will be extracted */
+/**
+ * srcml_check_extension:
+ * @filename: name of a file
+ *
+ * Get the currently registered language for a file extension
+ * Full filename can be provided, and extension will be extracted.
+ * Returns language on success and NULL on failure. 
+ */
 const char * srcml_check_extension(const char* filename) {
 
   return srcml_archive_check_extension(&global_archive, filename);
 
 }
 
-/* currently supported format, e.g., tar.gz
-   Full filename can be provided, and extension will be extracted */
+/*
+ * srcml_check_format:
+ * @format: an archive or compression extension, e.g., tar.gz
+ *
+ * Check if the format is currently supported
+ * Full filename can be provided, and extension will be extracted 
+ * Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ */
 int srcml_check_format(const char* format) {
 
-  if(format == NULL) return 0;
+  if(format == NULL) return SRCML_STATUS_ERROR;
 
   static const char * const regex = "(zx\\.|zg\\.|2zb\\.|rat\\.)*";
 
@@ -553,7 +584,9 @@ int srcml_check_format(const char* format) {
   // minus 1 to remove starting .
   int ext_len = pmatch[0].rm_eo - pmatch[0].rm_so - 1;
   free(reverse);
-  return ext_len > 0;
+  if(ext_len > 0)
+    return SRCML_STATUS_OK;
+  return SRCML_STATUS_ERROR;
 
   //char * extension = (char *)malloc(ext_len * sizeof(char));
   // extract the extension from the path, reversing as we go
@@ -564,8 +597,18 @@ int srcml_check_format(const char* format) {
   //return 1;
 }
 
-/* particular encoding is supported, both for input and output */
-int srcml_check_encoding(const char* encoding) { return xmlParseCharEncoding(encoding) > 0; }
+/**
+ * srcml_check_encoding:
+ * @encoding: an encoding
+ *
+ * Check if the particular encoding is supported, both for input and output.
+ * Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure
+ */
+int srcml_check_encoding(const char* encoding) {
+
+  return xmlParseCharEncoding(encoding) > 0 ? SRCML_STATUS_OK : SRCML_STATUS_ERROR;
+
+}
 
 /* whether various features are available in this installation */
 int srcml_check_xslt() {
