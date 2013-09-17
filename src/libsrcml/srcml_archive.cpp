@@ -81,6 +81,7 @@ srcml_archive* srcml_create_archive()
  * 
  * Free a srcml archive that was previously
  * allocated by srcml_create_archive(). 
+ * archive must be reallocated/re-created to use again.
  */
 void srcml_free_archive(srcml_archive * archive) {
 
@@ -821,7 +822,15 @@ int srcml_read_open_fd(srcml_archive* archive, int srcml_fd) {
 
 }
 
-/* Read the next unit from the archive */
+/**
+ * srcml_read_unit_archive:
+ * @archive a srcml_archive opened for reading
+ *
+ * Read the next unit from the archive.
+ * Return a srcml_unit containing the read unit on success.
+ * and NULL on failure.
+ * The unit must be freed with srcml_free_unit.
+ */
 const srcml_unit* srcml_read_unit_archive(srcml_archive* archive) {
 
   if(archive == NULL) return 0;
@@ -832,6 +841,15 @@ const srcml_unit* srcml_read_unit_archive(srcml_archive* archive) {
 
 }
 
+/**
+ * srcml_read_unit_current_unit:
+ * @archive a srcml_archive opened for reading
+ *
+ * Read the attributes from the current archive.
+ * Return a srcml_unit containing the read unit attributes on success
+ * and NULL on failure.
+ * The unit must be freed with srcml_free_unit.
+*/
 const srcml_unit* srcml_read_archive_current_unit(const srcml_archive* archive) {
 
   if(archive == NULL) return 0;
@@ -854,6 +872,14 @@ const srcml_unit* srcml_read_archive_current_unit(const srcml_archive* archive) 
 
 }
 
+/**
+ * srcml_write_unit:
+ * @archive: a srcml archive opened for writing
+ * @unit: a srcml_unit to output
+ *
+ * Append the srcml_unit unit to the srcml_archive archive.
+ * Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ */
 int srcml_write_unit(srcml_archive* archive, const srcml_unit* unit) {
 
   if(archive == NULL || unit == NULL) return SRCML_STATUS_ERROR;
@@ -864,7 +890,14 @@ int srcml_write_unit(srcml_archive* archive, const srcml_unit* unit) {
   return SRCML_STATUS_OK;
 }
 
-/* Read the next unit from the archive */
+/**
+ * srcml_read_unit:
+ * @archive: a srcml archive open for reading 
+ * 
+ * Read the next unit from the archive. Return the read srcml_unit on success.
+ * unit contains read attributes and complete srcml.
+ * On failure returns NULL.
+ */
 srcml_unit* srcml_read_unit(srcml_archive* archive) {
 
   if(archive == NULL) return 0;
@@ -888,7 +921,13 @@ srcml_unit* srcml_read_unit(srcml_archive* archive) {
   return unit;
 }
 
-/* close the srcML archive */
+/**
+ * srcml_write_close:
+ * @archive: a srcml archive opened for writing
+ *
+ * Close a srcML archive opened for writing.
+ * Archive can be reopened.
+ */
 void srcml_write_close(srcml_archive* archive) {
 
   //if(archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW);
@@ -896,6 +935,13 @@ void srcml_write_close(srcml_archive* archive) {
 
 }
 
+/**
+ * srcml_read_close:
+ * @archive: a srcml archive opened for reading
+ *
+ * Close a srcML archive opened for reading.
+ * Archive can be reopened.
+ */
 void srcml_read_close(srcml_archive* archive) {
 
   //if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW);
@@ -903,6 +949,14 @@ void srcml_read_close(srcml_archive* archive) {
 
 }
 
+/**
+ * srcml_close_arachive:
+ * @archive: an open srcml archive
+ *
+ * Close a srcML archive opened using srcml_read_open_*
+ * or srcml_write_open_*.
+ * Archive can be reopened.
+ */
 void srcml_close_archive(srcml_archive * archive) {
 
   if(archive == NULL) return;
@@ -915,7 +969,13 @@ void srcml_close_archive(srcml_archive * archive) {
 
 }
 
-/* free the srcML archive data */
+/**
+ * srcml_write_free:
+ * @archive: a srcml archive opened for writing
+ * 
+ * Free the srcML archive data that is opened for writing.
+ * Archive must be reallocated to use further.
+ */
 void srcml_write_free(srcml_archive* archive) {
 
   //if(archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW);
@@ -923,6 +983,13 @@ void srcml_write_free(srcml_archive* archive) {
 
 }
 
+/**
+ * srcml_read_free:
+ * @archive: a srcml archive opened for reading
+ * 
+ * Free the srcML archive data that is opened for reading.
+ * Archive must be reallocated to use further.
+*/
 void srcml_read_free(srcml_archive* archive) {
 
   //if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW);
