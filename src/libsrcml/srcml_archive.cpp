@@ -25,8 +25,8 @@
 
 /**
  * srcml_archive_check_extension:
- * @archive
- * @filename
+ * @archive: a srcml_archive
+ * @filename: name of a file
  * 
  * Retrieve the currently registered language for a file extension.
  * Full filename can be provided, and extension will be extracted.
@@ -41,8 +41,12 @@ const char * srcml_archive_check_extension(srcml_archive * archive, const char* 
 
 }
 
-/* create a new srcml archive
-   client will have to free it using srcml_free_archive() */
+/**
+ * srcml_create_archive:
+ * 
+ * Create a new srcml archive.
+ * Client will have to free it using srcml_free_archive().
+ */
 srcml_archive* srcml_create_archive()
 
 {
@@ -71,8 +75,13 @@ srcml_archive* srcml_create_archive()
 
 }
 
-/* free srcml archive
-   allocated by srcml_create_archive() */
+/**
+ * srcml_free_archive:
+ * @archive: a srcml_archive
+ * 
+ * Free a srcml archive that was previously
+ * allocated by srcml_create_archive(). 
+ */
 void srcml_free_archive(srcml_archive * archive) {
 
   if(archive == NULL) return;
@@ -86,8 +95,13 @@ void srcml_free_archive(srcml_archive * archive) {
   delete archive;
 }
 
-/* clone the setup of an existing archive
-   client will have to free it using srcml_free_archive() */
+/**
+ * srcml_clone_archive:
+ * @archive: a srcml_archive
+ *
+ * Clone the setup of an existing archive.
+ * Client will have to free it using srcml_free_archive().
+*/
 srcml_archive* srcml_clone_archive(const srcml_archive* archive) {
 
   if(archive == NULL) return 0;
@@ -151,7 +165,13 @@ srcml_archive* srcml_clone_archive(const srcml_archive* archive) {
 
 }
 
-/* setup options for srcml archive */
+/**
+ * srcml_archive_set_encoding:
+ * @archive: a srcml_archive
+ * @encoding: an encoding
+ *
+ * Set the encoding of the srcML Archive.
+ */
 int srcml_archive_set_encoding(srcml_archive* archive, const char* encoding) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
@@ -166,6 +186,13 @@ int srcml_archive_set_encoding(srcml_archive* archive, const char* encoding) {
 
 }
 
+/**
+ * srcml_archive_set_language:
+ * @archive: a srcml_archive
+ * @language: a language
+ *
+ * Set the language of the srcML Archive.
+ */
 int srcml_archive_set_language(srcml_archive* archive, const char* language) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
@@ -180,6 +207,13 @@ int srcml_archive_set_language(srcml_archive* archive, const char* language) {
 
 }
 
+/**
+ * srcml_archive_set_filename:
+ * @archive: a srcml_archive
+ * @filename: the name of a file
+ *
+ * Set the root filename attribute of the srcML Archive.
+ */
 int srcml_archive_set_filename(srcml_archive* archive, const char* filename) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
@@ -194,6 +228,13 @@ int srcml_archive_set_filename(srcml_archive* archive, const char* filename) {
 
 }
 
+/**
+ * srcml_archive_set_directory:
+ * @archive: a srcml_archive
+ * @directory: a directory path
+ *
+ * Set the root directory attribute of the srcML Archive.
+ */
 int srcml_archive_set_directory (srcml_archive* archive, const char* directory) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
@@ -208,6 +249,13 @@ int srcml_archive_set_directory (srcml_archive* archive, const char* directory) 
 
 }
 
+/**
+ * srcml_archive_set_version:
+ * @archive a srcml_archive
+ * @version a version string
+ *
+ * Set the root version attribute of the srcML Archive.
+ */
 int srcml_archive_set_version(srcml_archive* archive, const char* version) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
@@ -222,6 +270,13 @@ int srcml_archive_set_version(srcml_archive* archive, const char* version) {
 
 }
 
+/**
+ * srcml_archive_set_attributes:
+ * @archive: a srcml_archive
+ * @attr: an array of name-value c string pairs
+ *
+ * Set/add other root attributes.
+ */
 int srcml_archive_set_attributes(srcml_archive* archive, const char* (*attr)[2]) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
@@ -246,6 +301,13 @@ int srcml_archive_set_attributes(srcml_archive* archive, const char* (*attr)[2])
 
 }
 
+/**
+ * srcml_archive_set_all_options:
+ * @archive: a srcml_archive
+ * @options: a set of srcml options
+ *
+ * Set all options for processing an archive (erases all previous).
+ */
 int srcml_archive_set_all_options(srcml_archive* archive, int options) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
@@ -255,6 +317,14 @@ int srcml_archive_set_all_options(srcml_archive* archive, int options) {
 
 }
 
+/**
+ * srcml_archive_set_options:
+ * @archive: a srcml_archive
+ * @option: a srcml option
+ *
+ * Set a srcml option, adding to the previously active options.
+ * May set multiple options with same call by |ing each.
+ */
 int srcml_archive_set_option    (srcml_archive* archive, int option) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
@@ -264,6 +334,14 @@ int srcml_archive_set_option    (srcml_archive* archive, int option) {
 
 }
 
+/**
+ * srcml_archive_clear_option:
+ * @archive a srcml_archive
+ * @option a srcml option
+ *
+ * Remove a srcml option.
+ * May clear multiple options with same call by |ing each.
+ */
 int srcml_archive_clear_option(srcml_archive* archive, int option) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
@@ -273,6 +351,13 @@ int srcml_archive_clear_option(srcml_archive* archive, int option) {
 
 }
 
+/**
+ * srcml_archive_set_tabstop
+ * @archive: a srcml_archive
+ * @tabstop: size of a tabstop
+ *
+ * Set the tabstop size for position/column calculation.
+ */
 int srcml_archive_set_tabstop(srcml_archive* archive, int tabstop) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
@@ -282,6 +367,14 @@ int srcml_archive_set_tabstop(srcml_archive* archive, int tabstop) {
 
 }
 
+/**
+ * srcml_archive_register_file_extension:
+ * @archive: a srcml_archive
+ * @extension: a file extension
+ * @language: a language
+ *
+ * Set the given extension to be associate with the given language.
+ */
 int srcml_archive_register_file_extension(srcml_archive* archive, const char* extension, const char* language) {
 
   if(archive == NULL || extension == 0 || language == 0)
@@ -292,6 +385,14 @@ int srcml_archive_register_file_extension(srcml_archive* archive, const char* ex
   return SRCML_STATUS_ERROR;
 }
 
+/**
+ * srcml_archive_register_namespace:
+ * @archive: a srcml_archive
+ * @prefix: a XML namespace prefix
+ * @ns: a XML namespace
+ *
+ * Create a new namespace or change the prefix of an existing namespace.
+ */
 int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix, const char* ns) {
 
   if(archive == NULL || prefix == 0 || ns == 0) return SRCML_STATUS_ERROR;
