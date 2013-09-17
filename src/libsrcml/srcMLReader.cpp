@@ -26,7 +26,6 @@
 #include <string.h>
 
 void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer, bool is_root);
-void output_node_source(const xmlNode & node, xmlOutputBufferPtr output_buffer);
 
 /**
  * getNode:
