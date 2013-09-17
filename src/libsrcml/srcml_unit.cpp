@@ -430,6 +430,16 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
 
 }
 
+/**
+ * srcml_unparse_unit_filename:
+ * @unit a srcml unit
+ * @src_filename: name of a file to output contents of unit as source
+ * 
+ * Convert the srcML in unit into source code and place it into the file
+ * src_filename.
+ *
+ * Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ */
 int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
   if(unit == NULL || src_filename == NULL || (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
