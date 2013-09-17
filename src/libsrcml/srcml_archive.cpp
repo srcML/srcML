@@ -415,45 +415,87 @@ int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix,
 
 }
 
+/**
+ * srcml_archive_get_encoding:
+ * @archive: a srcml_archive
+ *
+ * Retrieve the currently set encoding or NULL.
+ */
 const char* srcml_archive_get_encoding(const srcml_archive* archive) {
 
   return archive && archive->encoding ? archive->encoding->c_str() : 0;
 
 }
 
+/**
+ * srcml_archive_get_language:
+ * @archive: a srcml_archive
+ *
+ * Retrieve the currently set language or NULL.
+ */
 const char* srcml_archive_get_language(const srcml_archive* archive) {
 
   return archive && archive->language ? archive->language->c_str() : 0;
 
 }
 
+/**
+ * srcml_archive_get_filename:
+ * @archive: a srcml_archive
+ *
+ * Retrieve the currently set root filename attribute or NULL.
+ */
 const char* srcml_archive_get_filename(const srcml_archive* archive) {
 
   return archive && archive->filename ? archive->filename->c_str() : 0;
 
 }
 
+/**
+ * srcml_archive_get_directory:
+ * @archive: a srcml_archive
+ *
+ * Retrieve the currently set root directory attribute or NULL.
+ */
 const char* srcml_archive_get_directory(const srcml_archive* archive) {
 
   return archive && archive->directory ? archive->directory->c_str() : 0;
 
 }
 
+/**
+ * srcml_archive_get_version:
+ * @archive: a srcml_archive
+ *
+ * Retrieve the currently set root version attribute or NULL.
+ */
 const char* srcml_archive_get_version(const srcml_archive* archive) {
 
   return archive && archive->version ? archive->version->c_str() : 0;
 
 }
 
+/**
+ * srcml_archive_get_options:
+ * @archive: a srcml_archive
+ *
+ * Retrieve the currently set options.
+ */
 int srcml_archive_get_options(const srcml_archive* archive) {
 
-  return archive ? archive->options : 0;
+  return archive->options;
 
 }
 
+/**
+ * srcml_archive_get_tabstop:
+ * @archive: a srcml_archive
+ *
+ * Retrieve the currently set tabstop size.
+ */
 int srcml_archive_get_tabstop(const srcml_archive* archive) {
 
-  return archive ? archive->tabstop : 0;
+  return archive->tabstop;
 
 }
 
