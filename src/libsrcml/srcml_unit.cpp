@@ -430,6 +430,12 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
 
 }
 
+/******************************************************************************
+ *                                                                            *
+ *                           Unit unparsing functions                         *
+ *                                                                            *
+ ******************************************************************************/
+
 /**
  * srcml_unparse_unit_filename:
  * @unit a srcml unit
@@ -547,6 +553,19 @@ int srcml_unparse_unit_fd(srcml_unit* unit, int srcml_fd) {
 
 }
 
+/******************************************************************************
+ *                                                                            *
+ *                       Unit creation/cleanup functions                      *
+ *                                                                            *
+ ******************************************************************************/
+
+/**
+ * srcml_create_unit:
+ * @archive: a srcml archvie
+ * 
+ * Create a srcml_unit tied to the srcml_archive archive on success.
+ * On failure returns NULL
+ */
 srcml_unit * srcml_create_unit(srcml_archive * archive) {
 
   if(archive == NULL) return 0;
@@ -564,6 +583,14 @@ srcml_unit * srcml_create_unit(srcml_archive * archive) {
 
 }
 
+/**
+ * srcml_free_unit:
+ * @unit a srcml unit
+ * 
+ * Free the contents of a srcml_unit.
+ *
+ * Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ */
 int srcml_free_unit(srcml_unit* unit) {
 
   if(unit == NULL) return SRCML_STATUS_ERROR;
