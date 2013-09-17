@@ -120,6 +120,12 @@ int srcml_unit_set_version(srcml_unit* unit, const char* version) {
 
 }
 
+/******************************************************************************
+ *                                                                            *
+ *                           Accessor functions                               *
+ *                                                                            *
+ ******************************************************************************/
+
 /**
  * srcml_unit_get_language:
  * @unit: a srcml unit
@@ -180,6 +186,23 @@ const char* srcml_unit_get_version(const srcml_unit* unit) {
 
 }
 
+/******************************************************************************
+ *                                                                            *
+ *                           Unit parsing functions                           *
+ *                                                                            *
+ ******************************************************************************/
+
+/**
+ * srcml_parse_unit_internal:
+ * @unit a srcml unit
+ * @lang an interger representation of a language.
+ *
+ * Function for internal use for parsing functions. Creates
+ * output buffer, translates a current input and places the
+ * contents into the unit.
+ * 
+ * Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ */
 int srcml_parse_unit_internal(srcml_unit * unit, int lang) {
 
   xmlBuffer * output_buffer = xmlBufferCreate();
@@ -214,8 +237,14 @@ int srcml_parse_unit_internal(srcml_unit * unit, int lang) {
 
 }
 
-/* Convert to srcml and append to the archive */
-// TODO What is this supposed to do.  Right now append unit to archive, that is noop.
+/**
+ * srcml_parse_unit_archive:
+ * @archive: a srcml archive open for writing
+ * @unit: a unit to parse the results to
+ *
+ * Convert to srcml and append to the archive 
+ * I have no idea what this is supposed to do.
+ */
 int srcml_parse_unit_archive (srcml_archive* archive, srcml_unit* unit) {
 
   if(unit == NULL) return SRCML_STATUS_ERROR;
@@ -224,6 +253,16 @@ int srcml_parse_unit_archive (srcml_archive* archive, srcml_unit* unit) {
 
 }
 
+/**
+ * srcml_parse_unit_archive:
+ * @unit: a unit to parse the results to
+ * @src_filename: name of a file to parse into srcML
+ *
+ * Convert to srcML the contents of src_filename and 
+ * place it into the unit.
+ *
+ * Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ */
 int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
   if(unit == NULL || src_filename == NULL || (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
