@@ -502,10 +502,11 @@ int srcml_archive_get_tabstop(const srcml_archive* archive) {
 /**
  * srcml_archive_open_filename:
  * @archive: a srcml_archive
- * @srcml_filename: name of a file
+ * @srcml_filename: name of an output file
  *
  * Open up a srcml_archive for writing.  Set the output
- * to go to the file srcml_filename.
+ * to go to the file srcml_filename. Return SRCML_STATUS_OK on success
+ * and SRCML_STATUS_ERROR on failure.
  */
 int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename) {
 
@@ -539,6 +540,8 @@ int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename
  * Open up a srcml_archive for writing.  Set the output
  * to be to memory.  Buffer is allocated and set to the location
  * buffer points at.  Buffer must be freed after use.
+ * Return SRCML_STATUS_OK on success
+ * and SRCML_STATUS_ERROR on failure. 
  */
 int srcml_write_open_memory(srcml_archive* archive, char** buffer) {
 
@@ -570,7 +573,8 @@ int srcml_write_open_memory(srcml_archive* archive, char** buffer) {
  * @srcml_file: FILE opened for writing
  *
  * Open up a srcml_archive for writing.  Set the output
- * to go to the FILE srcml_file.
+ * to go to the FILE srcml_file.  Return SRCML_STATUS_OK on success
+ * and SRCML_STATUS_ERROR on failure.
  */
 int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
 
@@ -619,7 +623,8 @@ int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
  * @srcml_fd: output file descriptor
  *
  * Open up a srcml_archive for writing.  Set the output
- * to go to the file descriptor srcml_fd.
+ * to go to the file descriptor srcml_fd.  Return SRCML_STATUS_OK on success
+ * and SRCML_STATUS_ERROR on failure.
  */
 int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
 
@@ -662,6 +667,14 @@ int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
 
 }
 
+/**
+ * srcml_read_internal:
+ * @archive: a srcml_archive
+ *
+ * Function used internally to the srcml_read_open_* functions.
+ * Reads and sets the open type as well as gathers the attributes
+ * and sets the options from the opened srcML Archive.
+ */
 void srcml_read_internal(srcml_archive * archive) {
 
   archive->type = SRCML_ARCHIVE_READ;
@@ -683,7 +696,15 @@ void srcml_read_internal(srcml_archive * archive) {
 
 }
 
-/* open a srcML archive for reading */
+/**
+ * srcml_read_open_filename:
+ * @archive: a srcml_archive
+ * @srcml_filename: name of an input file
+ *
+ * Open a srcML archive for reading.  Set the input to be read from
+ * srcml_filename.  Return SRCML_STATUS_OK on success
+ * and SRCML_STATUS_ERROR on failure.
+ */
 int srcml_read_open_filename(srcml_archive* archive, const char* srcml_filename) {
 
   if(archive == NULL || srcml_filename == NULL) return SRCML_STATUS_ERROR;
@@ -706,6 +727,16 @@ int srcml_read_open_filename(srcml_archive* archive, const char* srcml_filename)
 
 }
 
+/**
+ * srcml_read_open_memory:
+ * @archive: a srcml_archive
+ * @buffer: an input buffer
+ * @buffer_size: size of the input buffer
+ *
+ * Open a srcML archive for reading.  Set the input to be read from
+ * the buffer up until buffer_size.  Return SRCML_STATUS_OK on success
+ * and SRCML_STATUS_ERROR on failure.
+ */
 int srcml_read_open_memory(srcml_archive* archive, const char* buffer, size_t buffer_size) {
 
   if(archive == NULL || buffer == NULL || buffer_size <= 0) return SRCML_STATUS_ERROR;
@@ -728,6 +759,15 @@ int srcml_read_open_memory(srcml_archive* archive, const char* buffer, size_t bu
 
 }
 
+/**
+ * srcml_read_open_FILE:
+ * @archive: a srcml_archive
+ * @srcml_file: a FILE opened for reading
+ *
+ * Open a srcML archive for reading.  Set the input to be read from
+ * the FILE srcml_file.  Return SRCML_STATUS_OK on success
+ * and SRCML_STATUS_ERROR on failure.
+ */
 int srcml_read_open_FILE(srcml_archive* archive, FILE* srcml_file) {
 
   if(archive == NULL || srcml_file == NULL) return SRCML_STATUS_ERROR;
@@ -750,6 +790,15 @@ int srcml_read_open_FILE(srcml_archive* archive, FILE* srcml_file) {
 
 }
 
+/**
+ * srcml_read_open_fd:
+ * @archive: a srcml_archive
+ * @srcml_fd: a file descriptor opened for reading
+ *
+ * Open a srcML archive for reading.  Set the input to be read from
+ * the file descriptor srcml_fd.  Return SRCML_STATUS_OK on success
+ * and SRCML_STATUS_ERROR on failure.
+ */
 int srcml_read_open_fd(srcml_archive* archive, int srcml_fd) {
 
   if(archive == NULL || srcml_fd < 0) return SRCML_STATUS_ERROR;
