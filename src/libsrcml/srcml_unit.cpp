@@ -37,7 +37,6 @@
  * Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR
  * on failure.
  */
-
 int srcml_unit_set_language(srcml_unit* unit, const char* language) {
 
   if(unit == NULL) return SRCML_STATUS_ERROR;
@@ -52,6 +51,15 @@ int srcml_unit_set_language(srcml_unit* unit, const char* language) {
 
 }
 
+/**
+ * srcml_unit_set_filename:
+ * @unit: a srcml unit
+ * @filename: the name of a file
+ * 
+ * Set the filename attribute for the srcml unit.
+ * Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR
+ * on failure.
+ */
 int srcml_unit_set_filename(srcml_unit* unit, const char* filename) {
 
   if(unit == NULL) return SRCML_STATUS_ERROR;
@@ -66,6 +74,15 @@ int srcml_unit_set_filename(srcml_unit* unit, const char* filename) {
 
 }
 
+/**
+ * srcml_unit_set_directory:
+ * @unit: a srcml unit
+ * @directory: a directory path
+ * 
+ * Set the directory attribute for the srcml unit.
+ * Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR
+ * on failure.
+ */
 int srcml_unit_set_directory(srcml_unit* unit, const char* directory) {
 
   if(unit == NULL) return SRCML_STATUS_ERROR;
@@ -80,6 +97,15 @@ int srcml_unit_set_directory(srcml_unit* unit, const char* directory) {
 
 }
 
+/**
+ * srcml_unit_set_version:
+ * @unit: a srcml unit
+ * @version: a version string
+ * 
+ * Set the version attribute for the srcml unit.
+ * Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR
+ * on failure.
+ */
 int srcml_unit_set_version(srcml_unit* unit, const char* version) {
 
   if(unit == NULL) return SRCML_STATUS_ERROR;
@@ -94,6 +120,14 @@ int srcml_unit_set_version(srcml_unit* unit, const char* version) {
 
 }
 
+/**
+ * srcml_unit_get_language:
+ * @unit: a srcml unit
+ * 
+ * Get the language for the srcml unit on success.
+ * and NULL on failure.
+ * 
+ */
 const char* srcml_unit_get_language(const srcml_unit* unit) {
 
   if(unit == NULL) return 0;
@@ -102,6 +136,13 @@ const char* srcml_unit_get_language(const srcml_unit* unit) {
 
 }
 
+/**
+ * srcml_unit_get_filename:
+ * @unit: a srcml unit
+ * 
+ * Fet the filename attribute for the srcml unit.
+ * and NULL on failure.
+ */
 const char* srcml_unit_get_filename(const srcml_unit* unit) {
 
   if(unit == NULL) return 0;
@@ -110,6 +151,12 @@ const char* srcml_unit_get_filename(const srcml_unit* unit) {
 
 }
 
+/**
+ * srcml_unit_get_directory:
+ * 
+ * Get the directory attribute for the srcml unit.
+ * and NULL on failure.
+ */
 const char* srcml_unit_get_directory(const srcml_unit* unit) {
 
   if(unit == NULL) return 0;
@@ -118,7 +165,14 @@ const char* srcml_unit_get_directory(const srcml_unit* unit) {
 
 }
 
-const char* srcml_unit_get_version  (const srcml_unit* unit) {
+/**
+ * srcml_unit_get_version:
+ * @unit: a srcml unit
+ * 
+ * Get the version for the srcml unit.
+ * and NULL on failure.
+ */
+const char* srcml_unit_get_version(const srcml_unit* unit) {
 
   if(unit == NULL) return 0;
 
