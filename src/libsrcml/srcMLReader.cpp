@@ -28,7 +28,12 @@
 void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer, bool is_root);
 void output_node_source(const xmlNode & node, xmlOutputBufferPtr output_buffer);
 
-// get a copy of the current node with attributes set.
+/**
+ * getNode:
+ * @reader: an XML text reader
+ *
+ * Get a copy of the current node with attributes set.
+ */
 xmlNodePtr getNode(xmlTextReaderPtr reader) {
 
   xmlNodePtr node = xmlCopyNode(xmlTextReaderCurrentNode(reader), 2);
@@ -38,7 +43,12 @@ xmlNodePtr getNode(xmlTextReaderPtr reader) {
   return node;
 }
 
-// free the current node.  Text is not allocated and do not free
+/**
+ * freeNode:
+ * @node an XML node
+ * 
+ * Free the current node.  Text is not allocated and do not free
+ */
 void freeNode(xmlNodePtr node) {
 
   if(node && (xmlReaderTypes)node->type != XML_READER_TYPE_TEXT
@@ -46,6 +56,13 @@ void freeNode(xmlNodePtr node) {
     xmlFreeNode(node);
 }
 
+
+/**
+ * srcMLReader:
+ * @filename: name of a file
+ *
+ * Construct a srcMLReader using a filename
+ */
 srcMLReader::srcMLReader(const char * filename)
   : is_archive(false), is_single(false), done(false) {
 
@@ -57,6 +74,12 @@ srcMLReader::srcMLReader(const char * filename)
   node = getNode(reader);
 }
 
+/**
+ * srcMLReader:
+ * @input: parser input buffer
+ *
+ * Construct a srcMLReader using a parser input buffer
+ */
 srcMLReader::srcMLReader(xmlParserInputBufferPtr input)
   : is_archive(false), is_single(false), done(false) {
 
@@ -67,6 +90,11 @@ srcMLReader::srcMLReader(xmlParserInputBufferPtr input)
   node = getNode(reader);
 }
 
+/**
+ * ~srcMLReader:
+ *
+ * Destructor a srcMLReader
+ */
 srcMLReader::~srcMLReader() {
 
   xmlFreeTextReader(reader);
