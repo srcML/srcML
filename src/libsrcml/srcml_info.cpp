@@ -21,7 +21,14 @@
 #include <srcml.h>
 #include <srcml_types.hpp>
 
-/* list of filenames */
+/**
+ * srcml_list:
+ * @srcml_filename: name of a file
+ *
+ * List all of the filenames in the srcML Archive srcml_filename
+
+ * Return NULL terminated array on success and 0 on failure.
+ */
 const char** srcml_list(const char* srcml_filename) {
 
   if(srcml_filename == NULL) return 0;
