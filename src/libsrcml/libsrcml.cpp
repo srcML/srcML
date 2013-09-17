@@ -610,7 +610,12 @@ int srcml_check_encoding(const char* encoding) {
 
 }
 
-/* whether various features are available in this installation */
+/**
+ * srcml_check_xslt:
+ * 
+ * Check whether xslt is available.
+ * Return 1 on success and 0 on failure.
+ */ 
 int srcml_check_xslt() {
 #if defined(__GNUG__) && !defined(__MINGW32__)
   void* handle = dlopen("libxslt.so", RTLD_LAZY);
@@ -627,6 +632,12 @@ int srcml_check_xslt() {
 
 }
 
+/**
+ * srcml_check_exslt:
+ * 
+ * Check whether exslt is available.
+ * Return 1 on success and 0 on failure.
+ */
 int srcml_check_exslt() {
 #if defined(__GNUG__) && !defined(__MINGW32__)
   void* handle = dlopen("libxslt.so", RTLD_LAZY);
@@ -642,5 +653,15 @@ int srcml_check_exslt() {
 #endif
 }
 
-/* string describing last error */
+/******************************************************************************
+ *                                                                            *
+ *                           libsrcml error functions                         *
+ *                                                                            *
+ ******************************************************************************/
+
+/**
+ * srcml_error_string:
+ * 
+ * Return a string describing last recorded error.
+ */
 const char* srcml_error_string() { return srcml_error.c_str(); }
