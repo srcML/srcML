@@ -254,7 +254,7 @@ int srcml_parse_unit_archive (srcml_archive* archive, srcml_unit* unit) {
 }
 
 /**
- * srcml_parse_unit_archive:
+ * srcml_parse_unit_filename:
  * @unit: a unit to parse the results to
  * @src_filename: name of a file to parse into srcML
  *
@@ -295,6 +295,17 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
 }
 
+/**
+ * srcml_parse_unit_memory:
+ * @unit: a unit to parse the results to
+ * @src_buffer: buffer containing source code to parse into srcML
+ * @buffer_size: size of the buffer to parse
+ *
+ * Convert to srcML the contents of buffer up to size buffer_size and
+ * place it into the unit.
+ *
+ * Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ */
 int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buffer_size) {
 
   if(unit == NULL || src_buffer == NULL || buffer_size <= 0 || (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
@@ -327,6 +338,16 @@ int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buf
 
 }
 
+/**
+ * srcml_parse_unit_FILE:
+ * @unit: a unit to parse the results to
+ * @src_file: a FILE opened for reading
+ *
+ * Convert to srcML the contents of src_file and
+ * place it into the unit.
+ *
+ * Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ */
 int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
 
   if(unit == NULL || src_file == NULL || (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
@@ -363,6 +384,16 @@ int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
 
 }
 
+/**
+ * srcml_parse_unit_fd:
+ * @unit: a unit to parse the results to
+ * @src_fd: a file descriptor open for reading
+ *
+ * Convert to srcML the contents of src_fd
+ * place it into the unit.
+ *
+ * Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ */
 int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
 
   if(unit == NULL || src_fd < 0 || (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
