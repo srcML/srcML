@@ -49,6 +49,12 @@ srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector
                                  4, std::vector<std::string>(), std::vector<std::string>(), std::vector<pair>(),
                                  0, 0, 0, std::vector<transform>() };
 
+/******************************************************************************
+ *                                                                            *
+ *                           Version functions                                *
+ *                                                                            *
+ ******************************************************************************/
+
 /**
  * srcml_version_string:
  *
@@ -70,6 +76,12 @@ int srcml_version_number() {
   return SRCML_VERSION_NUMBER;
 
 }
+
+/******************************************************************************
+ *                                                                            *
+ *                           srcML Convenience                                *
+ *                                                                            *
+ ******************************************************************************/
 
 /**
  * srcml:
@@ -158,12 +170,20 @@ int srcml(const char* input_filename, const char* output_filename) {
   return SRCML_STATUS_OK;
 }
 
-/*
+/******************************************************************************
+ *                                                                            *
+ *                           Global set functions                             *
+ *                                                                            *
+ ******************************************************************************/
 
-  Global archive functions
-
-*/
-
+/**
+ * srcml_set_encoding:
+ * @encoding: an output encoding
+ *
+ * Set the output encoding.
+ *
+ * Return SRCML_STATUS_OK success and SRCML_STATUS_ERROR on failure.
+ */
 int srcml_set_encoding(const char* encoding) {
 
   return srcml_archive_set_encoding(&global_archive, encoding);
