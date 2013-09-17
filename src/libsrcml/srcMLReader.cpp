@@ -102,6 +102,15 @@ srcMLReader::~srcMLReader() {
 
 }
 
+/**
+ * readAttributesInternal:
+ * @language: a location to store the language attribute
+ * @filename: a location to store the filename attribute
+ * @directory: a location to store the directory attribute
+ * @version: a location to store the version attribute
+ *
+ * Internal function to read unit attributes.
+ */
 int srcMLReader::readUnitAttributesInternal(std::string ** language, std::string ** filename,
                                             std::string ** directory, std::string ** version) {
 
@@ -139,6 +148,21 @@ int srcMLReader::readUnitAttributesInternal(std::string ** language, std::string
 
 }
 
+/**
+ * readRootUnitAttributes:
+ * @language: location to store the language attribute
+ * @filename: location to store the filename attribute
+ * @directory: location to store the directory attribute
+ * @version: location to store the version attribute
+ * @attributes: array to store other attributes gathered
+ * @prefixes: array to store gathered XML namespace prefixes
+ * @namepaces: array to store gathered XML naamespaces
+ * @options: variable to set used options
+ * @tabstop: variable to set the tabstop
+ *
+ * Read attributes and namespace information fromt the root unit,
+ * setting the necessary options.
+ */
 int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** filename,
                                         std::string ** directory, std::string ** version,
                                         std::vector<std::string> & attributes,
