@@ -49,26 +49,38 @@ srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector
                                  4, std::vector<std::string>(), std::vector<std::string>(), std::vector<pair>(),
                                  0, 0, 0, std::vector<transform>() };
 
-// version of libsrcml as string
+/**
+ * srcml_version_string:
+ *
+ * Return version of libsrcml as string.
+ */
 const char * srcml_version_string() {
 
   return SRCML_VERSION_STRING;
 
 }
 
-// version of libsrcml as number
+/**
+ * srcml_version_number:
+ * 
+ * Return version of libsrcml as number.
+ */
 int srcml_version_number() {
 
   return SRCML_VERSION_NUMBER;
 
 }
 
-/* 
-   translates to/from srcML 
-   Input files with extension xml and language set to xml result in srcml2src behaviour.
-   All other ending extensions result in src2srcml.  Currently, xml files are not detected if they are 
-   in any other archive format e.g. tar, gz i.e. a.xml.tar.gz.  Only a.xml will be detected from extension.
-*/
+/**
+ * srcml:
+ * @input_filename: input file to turn to srcML or source code.
+ * @output_filename: file to output srcML or source code
+ * 
+ * Translates to/from srcML 
+ * Input files with extension xml and language set to xml result in srcml2src behaviour.
+ * All other ending extensions result in src2srcml.  Currently, xml files are not detected if they are 
+ * in any other archive format e.g. tar, gz i.e. a.xml.tar.gz.  Only a.xml will be detected from extension.
+ */
 int srcml(const char* input_filename, const char* output_filename) {
 
   if(!input_filename || !output_filename) {
