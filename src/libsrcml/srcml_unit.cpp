@@ -22,7 +22,22 @@
 #include <srcml_types.hpp>
 #include <srcml_sax2_utilities.hpp>
 
-/* setup options for srcml unit */
+/******************************************************************************
+ *                                                                            *
+ *                           Set up functions                                 *
+ *                                                                            *
+ ******************************************************************************/
+
+/**
+ * srcml_unit_set_language:
+ * @unit: a srcml unit
+ * @language: a language
+ * 
+ * Set the language for the srcml unit.
+ * Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR
+ * on failure.
+ */
+
 int srcml_unit_set_language(srcml_unit* unit, const char* language) {
 
   if(unit == NULL) return SRCML_STATUS_ERROR;

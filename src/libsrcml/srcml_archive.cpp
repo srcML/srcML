@@ -170,7 +170,7 @@ srcml_archive* srcml_clone_archive(const srcml_archive* archive) {
  *                                                                            *
  *                           Set up functions                                 *
  *                                                                            *
- ******************************************************************************
+ ******************************************************************************/
 
 /**
  * srcml_archive_set_encoding:
@@ -426,7 +426,7 @@ int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix,
  *                                                                            *
  *                           Accessor Functions                               *
  *                                                                            *
- ******************************************************************************
+ ******************************************************************************/
 
 /**
  * srcml_archive_get_encoding:
@@ -516,7 +516,7 @@ int srcml_archive_get_tabstop(const srcml_archive* archive) {
  *                                                                            *
  *                       Archive write open functions                         *
  *                                                                            *
- ******************************************************************************
+ ******************************************************************************/
 
 /**
  * srcml_archive_open_filename:
@@ -690,7 +690,7 @@ int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
  *                                                                            *
  *                       Archive read open functions                          *
  *                                                                            *
- ******************************************************************************
+ ******************************************************************************/
 
 /**
  * srcml_read_internal:
@@ -850,7 +850,7 @@ int srcml_read_open_fd(srcml_archive* archive, int srcml_fd) {
  *                                                                            *
  *                       Archive read/write unit functions                    *
  *                                                                            *
- ******************************************************************************
+ ******************************************************************************/
 
 /**
  * srcml_read_unit_archive:
@@ -955,7 +955,7 @@ srcml_unit* srcml_read_unit(srcml_archive* archive) {
  *                                                                            *
  *                       Archive close unit functions                         *
  *                                                                            *
- ******************************************************************************
+ ******************************************************************************/
 
 /**
  * srcml_write_close:
@@ -1009,7 +1009,7 @@ void srcml_close_archive(srcml_archive * archive) {
  *                                                                            *
  *                       Archive free unit functions                          *
  *                                                                            *
- ******************************************************************************
+ ******************************************************************************/
 
 /**
  * srcml_write_free:
