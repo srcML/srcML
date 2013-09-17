@@ -30,7 +30,7 @@ int srcml_unit_set_language(srcml_unit* unit, const char* language) {
   if(unit->language) delete unit->language;
   try {
 
-    unit->language = language  ? new std::string(language) : 0;
+    unit->language = language ? new std::string(language) : 0;
 
   } catch(...) { return SRCML_STATUS_ERROR; }
   return SRCML_STATUS_OK;
