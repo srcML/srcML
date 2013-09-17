@@ -150,15 +150,15 @@ int srcMLReader::readUnitAttributesInternal(std::string ** language, std::string
 
 /**
  * readRootUnitAttributes:
- * @language: location to store the language attribute
- * @filename: location to store the filename attribute
- * @directory: location to store the directory attribute
- * @version: location to store the version attribute
+ * @language: a location to store the language attribute
+ * @filename: a location to store the filename attribute
+ * @directory: a location to store the directory attribute
+ * @version: a location to store the version attribute
  * @attributes: array to store other attributes gathered
- * @prefixes: array to store gathered XML namespace prefixes
- * @namepaces: array to store gathered XML naamespaces
- * @options: variable to set used options
- * @tabstop: variable to set the tabstop
+ * @prefixes: an array to store gathered XML namespace prefixes
+ * @namepaces: an array to store gathered XML naamespaces
+ * @options: a variable to set used options
+ * @tabstop: a variable to set the tabstop
  *
  * Read attributes and namespace information fromt the root unit,
  * setting the necessary options.
@@ -265,6 +265,14 @@ int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** 
   return 1;
 }
 
+/**
+ * readUnitAttributes:
+ * @language: a location to store the language attribute
+ * @filename: a location to store the filename attribute
+ * @directory: a location to store the directory attribute
+ * @version: a location to store the version attribute
+ *
+ */
 int srcMLReader::readUnitAttributes(std::string ** language, std::string ** filename,
                                     std::string ** directory, std::string ** version) {
 
@@ -347,6 +355,15 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
 
 }
 
+/**
+ * readsrcML:
+ * @writer: an XML text writer
+ *
+ * Read the next unit of a srcML Archive.
+ * and write it to the writer.
+ *
+ * Return 0 when finished and 1 otherwize.
+ */
 int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
 
   if(done) return 0;
@@ -450,6 +467,15 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
 
 }
 
+/**
+ * readsrcML:
+ * 
+ * Read the next unit from a srcML Archive
+ * and return it as a std::string. Uses
+ * readsrcML(xmlTextWriterPtr writer).
+ *
+ * When finished return a 0.
+ */
 std::string * srcMLReader::readsrcML() {
 
   if(done) return 0;
@@ -479,7 +505,14 @@ std::string * srcMLReader::readsrcML() {
 
 }
 
-// output node as srcML
+/**
+ * output_node_srcml:
+ * @node: an XML node
+ * @writer: an XML text writer
+ * @is_root: boolean indicating if parsing root unit
+ *
+ * Output node as srcML.
+ */
 void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer, bool is_root) {
 
   bool isemptyelement = false;
@@ -587,33 +620,3 @@ void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer, bool is_ro
     break;
   }
 }
-
-
-// output node as source code.  Ignore tags and other xml.
-void output_node_source(const xmlNode & node, xmlOutputBufferPtr output_buffer) {
-
-  bool isemptyelement = false;
-  switch (node.type) {
-
-  case XML_READER_TYPE_TEXT:
-  case XML_READER_TYPE_SIGNIFICANT_WHITESPACE:
-
-    // output the UTF-8 buffer escaping the characters.  Note that the output encoding
-    // is handled by libxml
-    for (unsigned char* p = (unsigned char*) node.content; *p != 0; ++p) {
-      if (*p == '&')
-        xmlOutputBufferWrite(output_buffer, 5, "&amp;");
-      else if (*p == '<')
-        xmlOutputBufferWrite(output_buffer, 4, "&lt;");
-      else if (*p == '>')
-        xmlOutputBufferWrite(output_buffer, 4, "&gt;");
-      else
-        xmlOutputBufferWrite(output_buffer, 1, (const char *)p);
-    }
-    break;
-
-  default:
-    break;
-  }
-}
-
