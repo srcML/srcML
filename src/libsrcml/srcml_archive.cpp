@@ -23,8 +23,14 @@
 
 #include <srcmlns.hpp>
 
-/* currently registered language for a file extension
-   Full filename can be provided, and extension will be extracted */
+/**
+ * srcml_archive_check_extension:
+ * @archive
+ * @filename
+ * 
+ * Retrieve the currently registered language for a file extension.
+ * Full filename can be provided, and extension will be extracted.
+ */
 const char * srcml_archive_check_extension(srcml_archive * archive, const char* filename) {
 
   if(archive == NULL || filename == NULL) return 0;
