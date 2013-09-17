@@ -499,7 +499,14 @@ int srcml_archive_get_tabstop(const srcml_archive* archive) {
 
 }
 
-/* open a srcML archive for output */
+/**
+ * srcml_archive_open_filename:
+ * @archive: a srcml_archive
+ * @srcml_filename: name of a file
+ *
+ * Open up a srcml_archive for writing.  Set the output
+ * to go to the file srcml_filename.
+ */
 int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename) {
 
   if(archive == NULL || srcml_filename == NULL) return SRCML_STATUS_ERROR;
@@ -524,6 +531,15 @@ int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename
 
 }
 
+/**
+ * srcml_archive_open_memory:
+ * @archive: a srcml_archive
+ * @buffer: location to return output string
+ *
+ * Open up a srcml_archive for writing.  Set the output
+ * to be to memory.  Buffer is allocated and set to the location
+ * buffer points at.  Buffer must be freed after use.
+ */
 int srcml_write_open_memory(srcml_archive* archive, char** buffer) {
 
   if(archive == NULL || buffer == NULL) return SRCML_STATUS_ERROR;
@@ -548,6 +564,14 @@ int srcml_write_open_memory(srcml_archive* archive, char** buffer) {
 
 }
 
+/**
+ * srcml_archive_open_FILE:
+ * @archive: a srcml_archive
+ * @srcml_file: FILE opened for writing
+ *
+ * Open up a srcml_archive for writing.  Set the output
+ * to go to the FILE srcml_file.
+ */
 int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
 
   if(archive == NULL || srcml_file == NULL) return SRCML_STATUS_ERROR;
@@ -589,6 +613,14 @@ int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
 
 }
 
+/**
+ * srcml_archive_open_fd:
+ * @archive: a srcml_archive
+ * @srcml_fd: output file descriptor
+ *
+ * Open up a srcml_archive for writing.  Set the output
+ * to go to the file descriptor srcml_fd.
+ */
 int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
 
   if(archive == NULL || srcml_fd < 0) return SRCML_STATUS_ERROR;
