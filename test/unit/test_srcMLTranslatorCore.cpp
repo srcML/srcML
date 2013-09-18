@@ -34,7 +34,7 @@ int main(int argc, char * argv[]) {
     xmlBufferPtr buffer = xmlBufferCreate();
     xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
     xmlTextWriterPtr writer = xmlNewTextWriter(output_buffer);
-    OPTION_TYPE op;
+    OPTION_TYPE op = 0;
 
     srcMLTranslatorCore translator(Language::getLanguage("C++"), "ISO-8859-1", "ISO-8859-1", 
                                  writer, op, "", "", "", urisprefix, 4);
@@ -55,7 +55,7 @@ int main(int argc, char * argv[]) {
     xmlBufferPtr buffer = xmlBufferCreate();
     xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
     xmlTextWriterPtr writer = xmlNewTextWriter(output_buffer);
-    OPTION_TYPE op;
+    OPTION_TYPE op = 0;
 
     srcMLTranslatorCore translator(Language::getLanguage("C++"), "ISO-8859-1", "ISO-8859-1", 
                                  writer, op, "", "", "", urisprefix, 4);
@@ -77,7 +77,7 @@ int main(int argc, char * argv[]) {
     xmlBufferPtr buffer = xmlBufferCreate();
     xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
     xmlTextWriterPtr writer = xmlNewTextWriter(output_buffer);
-    OPTION_TYPE op;
+    OPTION_TYPE op = 0;
 
     srcMLTranslatorCore translator(Language::getLanguage("C++"), "ISO-8859-1", "ISO-8859-1", 
                                  writer, op, "", "", "", urisprefix, 4);
@@ -97,7 +97,7 @@ int main(int argc, char * argv[]) {
     xmlBufferPtr buffer = xmlBufferCreate();
     xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
     xmlTextWriterPtr writer = xmlNewTextWriter(output_buffer);
-    OPTION_TYPE op;
+    OPTION_TYPE op = 0;
 
     srcMLTranslatorCore translator(Language::getLanguage("C++"), "ISO-8859-1", "ISO-8859-1", 
                                  writer, op, "", "", "", urisprefix, 4);
@@ -123,7 +123,7 @@ int main(int argc, char * argv[]) {
     xmlBufferPtr buffer = xmlBufferCreate();
     xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
     xmlTextWriterPtr writer = xmlNewTextWriter(output_buffer);
-    OPTION_TYPE op;
+    OPTION_TYPE op = 0;
 
     srcMLTranslatorCore translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1", 
                                  writer, op, 0, 0, 0, urisprefix, 4);
@@ -135,6 +135,58 @@ int main(int argc, char * argv[]) {
 
     xmlBufferFree(output);
     translator.close();
+    xmlBufferFree(buffer);
+    
+  }
+
+  /*
+
+    add_unit
+
+   */
+
+  {
+
+    xmlBufferPtr buffer = xmlBufferCreate();
+    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
+    xmlTextWriterPtr writer = xmlNewTextWriter(output_buffer);
+    OPTION_TYPE op = 0;
+
+    srcMLTranslatorCore translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1", 
+                                 writer, op, 0, 0, 0, urisprefix, 4);
+
+    std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
+    std::string s = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+
+    translator.add_unit(s.c_str());
+    translator.close();
+    std::string result = (const char *)buffer->content;
+    assert(result == decl + "\n" + s + "\n\n\n");
+
+    xmlBufferFree(buffer);
+    
+  }
+
+
+  {
+
+    xmlBufferPtr buffer = xmlBufferCreate();
+    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
+    xmlTextWriterPtr writer = xmlNewTextWriter(output_buffer);
+    OPTION_TYPE op = OPTION_NESTED;
+
+    srcMLTranslatorCore translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1", 
+                                 writer, op, 0, 0, 0, urisprefix, 4);
+
+    std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
+    std::string s = "<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
+
+    translator.add_unit(s.c_str());
+    translator.add_unit(s.c_str());
+    translator.close();
+    std::string result = (const char *)buffer->content;
+    assert(result == decl + "\n<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
+
     xmlBufferFree(buffer);
     
   }
