@@ -30,11 +30,12 @@
 
 /**
  * srcml_unit_set_language
- * @unit a srcml unit
- * @language a language
+ * @param unit a srcml unit
+ * @param language a language
  * 
  * Set the language for the srcml unit.
- * Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR
+ *
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR
  * on failure.
  */
 int srcml_unit_set_language(srcml_unit* unit, const char* language) {
@@ -53,11 +54,12 @@ int srcml_unit_set_language(srcml_unit* unit, const char* language) {
 
 /**
  * srcml_unit_set_filename
- * @unit a srcml unit
- * @filename the name of a file
+ * @param unit a srcml unit
+ * @param filename the name of a file
  * 
  * Set the filename attribute for the srcml unit.
- * Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR
+ *
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR
  * on failure.
  */
 int srcml_unit_set_filename(srcml_unit* unit, const char* filename) {
@@ -76,11 +78,12 @@ int srcml_unit_set_filename(srcml_unit* unit, const char* filename) {
 
 /**
  * srcml_unit_set_directory
- * @unit a srcml unit
- * @directory a directory path
+ * @param unit a srcml unit
+ * @param directory a directory path
  * 
  * Set the directory attribute for the srcml unit.
- * Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR
+ *
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR
  * on failure.
  */
 int srcml_unit_set_directory(srcml_unit* unit, const char* directory) {
@@ -99,11 +102,12 @@ int srcml_unit_set_directory(srcml_unit* unit, const char* directory) {
 
 /**
  * srcml_unit_set_version
- * @unit a srcml unit
- * @version a version string
+ * @param unit a srcml unit
+ * @param version a version string
  * 
  * Set the version attribute for the srcml unit.
- * Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR
+ *
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR
  * on failure.
  */
 int srcml_unit_set_version(srcml_unit* unit, const char* version) {
@@ -128,11 +132,11 @@ int srcml_unit_set_version(srcml_unit* unit, const char* version) {
 
 /**
  * srcml_unit_get_language
- * @unit a srcml unit
+ * @param unit a srcml unit
  * 
- * Get the language for the srcml unit on success.
- * and NULL on failure.
- * 
+ * Get the language for the srcml unit
+ *
+ * @returns langauge on success and NULL on failure.
  */
 const char* srcml_unit_get_language(const srcml_unit* unit) {
 
@@ -144,10 +148,11 @@ const char* srcml_unit_get_language(const srcml_unit* unit) {
 
 /**
  * srcml_unit_get_filename
- * @unit a srcml unit
+ * @param unit a srcml unit
  * 
- * Fet the filename attribute for the srcml unit.
- * and NULL on failure.
+ * Get the filename attribute for the srcml unit.
+ *
+ * @returns filename attribute on success and NULL on failure.
  */
 const char* srcml_unit_get_filename(const srcml_unit* unit) {
 
@@ -159,9 +164,11 @@ const char* srcml_unit_get_filename(const srcml_unit* unit) {
 
 /**
  * srcml_unit_get_directory
+ * @param unit a srcml unit
  * 
  * Get the directory attribute for the srcml unit.
- * and NULL on failure.
+ *
+ * @returns directory attribute on successand NULL on failure.
  */
 const char* srcml_unit_get_directory(const srcml_unit* unit) {
 
@@ -173,10 +180,11 @@ const char* srcml_unit_get_directory(const srcml_unit* unit) {
 
 /**
  * srcml_unit_get_version
- * @unit a srcml unit
+ * @param unit a srcml unit
  * 
  * Get the version for the srcml unit.
- * and NULL on failure.
+ *
+ * @returns version on success and NULL on failure.
  */
 const char* srcml_unit_get_version(const srcml_unit* unit) {
 
@@ -194,14 +202,14 @@ const char* srcml_unit_get_version(const srcml_unit* unit) {
 
 /**
  * srcml_parse_unit_internal
- * @unit a srcml unit
- * @lang an interger representation of a language.
+ * @param unit a srcml unit
+ * @param lang an interger representation of a language.
  *
  * Function for internal use for parsing functions. Creates
  * output buffer, translates a current input and places the
  * contents into the unit.
  * 
- * Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
 int srcml_parse_unit_internal(srcml_unit * unit, int lang) {
 
@@ -239,11 +247,13 @@ int srcml_parse_unit_internal(srcml_unit * unit, int lang) {
 
 /**
  * srcml_parse_unit_archive
- * @archive a srcml archive open for writing
- * @unit a unit to parse the results to
+ * @param archive a srcml archive open for writing
+ * @param unit a unit to parse the results to
  *
  * Convert to srcml and append to the archive 
  * I have no idea what this is supposed to do.
+ *
+ * @returns SRCML_STATUS_ERROR on success and SRCML_STATUS_ERROR failure.
  */
 int srcml_parse_unit_archive (srcml_archive* archive, srcml_unit* unit) {
 
@@ -255,13 +265,13 @@ int srcml_parse_unit_archive (srcml_archive* archive, srcml_unit* unit) {
 
 /**
  * srcml_parse_unit_filename
- * @unit a unit to parse the results to
- * @src_filename name of a file to parse into srcML
+ * @param unit a unit to parse the results to
+ * @param src_filename name of a file to parse into srcML
  *
  * Convert to srcML the contents of src_filename and 
  * place it into the unit.
  *
- * Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
 int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
@@ -297,14 +307,14 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
 /**
  * srcml_parse_unit_memory
- * @unit a unit to parse the results to
- * @src_buffer buffer containing source code to parse into srcML
- * @buffer_size size of the buffer to parse
+ * @param unit a unit to parse the results to
+ * @param src_buffer buffer containing source code to parse into srcML
+ * @param buffer_size size of the buffer to parse
  *
  * Convert to srcML the contents of buffer up to size buffer_size and
  * place it into the unit.
  *
- * Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
 int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buffer_size) {
 
@@ -340,13 +350,13 @@ int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buf
 
 /**
  * srcml_parse_unit_FILE
- * @unit a unit to parse the results to
- * @src_file a FILE opened for reading
+ * @param unit a unit to parse the results to
+ * @param src_file a FILE opened for reading
  *
  * Convert to srcML the contents of src_file and
  * place it into the unit.
  *
- * Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
 int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
 
@@ -386,13 +396,13 @@ int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
 
 /**
  * srcml_parse_unit_fd
- * @unit a unit to parse the results to
- * @src_fd a file descriptor open for reading
+ * @param unit a unit to parse the results to
+ * @param src_fd a file descriptor open for reading
  *
  * Convert to srcML the contents of src_fd
  * place it into the unit.
  *
- * Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
 int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
 
@@ -438,13 +448,13 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
 
 /**
  * srcml_unparse_unit_filename
- * @unit a srcml unit
- * @src_filename name of a file to output contents of unit as source
+ * @param unit a srcml unit
+ * @param src_filename name of a file to output contents of unit as source
  * 
  * Convert the srcML in unit into source code and place it into the file
  * src_filename.
  *
- * Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
 int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
@@ -463,14 +473,14 @@ int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
 /**
  * srcml_unparse_unit_memory
- * @unit a srcml unit
- * @src_buffer an output buffer address
+ * @param unit a srcml unit
+ * @param src_buffer an output buffer address
  * 
  * Convert the srcML in unit into source code and place it into the address
  * pointed to by src_buffer.  src_buffer is allocated in the function and
  * needs to be freed after finished using.
  *
- * Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @param Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
 int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer) {
 
@@ -505,13 +515,13 @@ int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer) {
 
 /**
  * srcml_unparse_unit_FILE
- * @unit a srcml unit
- * @src_file FILE opened for writing
+ * @param unit a srcml unit
+ * @param src_file FILE opened for writing
  * 
  * Convert the srcML in unit into source code and place it into the FILE
  * src_file.
  *
- * Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
 int srcml_unparse_unit_FILE(srcml_unit* unit, FILE* srcml_file) {
 
@@ -530,13 +540,13 @@ int srcml_unparse_unit_FILE(srcml_unit* unit, FILE* srcml_file) {
 
 /**
  * srcml_unparse_unit_fd
- * @unit a srcml unit
- * @src_fd file descriptor opened for writing.
+ * @param unit a srcml unit
+ * @param src_fd file descriptor opened for writing.
  * 
  * Convert the srcML in unit into source code and place it into the file
  * descriptor srcml_fd.
  *
- * Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
 int srcml_unparse_unit_fd(srcml_unit* unit, int srcml_fd) {
 
@@ -561,10 +571,11 @@ int srcml_unparse_unit_fd(srcml_unit* unit, int srcml_fd) {
 
 /**
  * srcml_create_unit
- * @archive a srcml archvie
+ * @param archive a srcml archvie
  * 
- * Create a srcml_unit tied to the srcml_archive archive on success.
- * On failure returns NULL
+ * Create a srcml_unit tied to the srcml_archive archive
+ *
+ * @returns unit on success and on failure returns NULL
  */
 srcml_unit * srcml_create_unit(srcml_archive * archive) {
 
@@ -585,11 +596,11 @@ srcml_unit * srcml_create_unit(srcml_archive * archive) {
 
 /**
  * srcml_free_unit
- * @unit a srcml unit
+ * @param unit a srcml unit
  * 
  * Free the contents of a srcml_unit.
  *
- * Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
 int srcml_free_unit(srcml_unit* unit) {
 
