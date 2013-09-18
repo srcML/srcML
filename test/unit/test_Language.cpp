@@ -50,5 +50,15 @@ int main(int argc, char * argv[]) {
     assert(Language::getLanguage("C++") == Language::LANGUAGE_CXX);
   }
 
+  /*
+    registerUserExt()
+   */ 
+  {
+    std::vector<pair> reg_ext;
+    assert(Language::registerUserExt("cpp", "C++", reg_ext));
+    assert(reg_ext.at(0).n == Language::LANGUAGE_CXX);
+    assert(reg_ext.at(0).s == "cpp");
+  }
+
   return 0;
 }
