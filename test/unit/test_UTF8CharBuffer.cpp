@@ -40,7 +40,8 @@ int main(int argc, char * argv[]) {
 
   {
 
-    //UTF8CharBuffer(, "UTF-8");
+    xmlParserInputBufferPtr input = xmlParserInputBufferCreateMem("abc", 3, XML_CHAR_ENCODING_NONE);
+    UTF8CharBuffer(input, "UTF-8");
 
   }
 
