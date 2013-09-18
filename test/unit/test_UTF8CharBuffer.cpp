@@ -34,11 +34,39 @@ int main(int argc, char * argv[]) {
 
   {
 
-    xmlParserInputBufferPtr input = xmlParserInputBufferCreateMem("abc", 3, XML_CHAR_ENCODING_NONE);
+    xmlParserInputBufferPtr input = xmlParserInputBufferCreateMem("abc", 3, xmlParseCharEncoding("UTF-8"));
     UTF8CharBuffer utf8(input, "UTF-8");
-    //assert(utf8.getChar() == 'a');
-    //assert(utf8.getChar() == 'b');
-    //assert(utf8.getChar() == 'c');
+    assert(utf8.getChar() == 'a');
+    assert(utf8.getChar() == 'b');
+    assert(utf8.getChar() == 'c');
+
+  }
+
+  /*
+
+    getContext()
+
+   */
+
+  {
+
+    UTF8CharBuffer utf8("test_UTF8CharBuffer.cpp", "UTF-8");
+    assert(utf8.getContext() != 0);
+
+  }
+
+  {
+
+    UTF8CharBuffer utf8("abc", 3, "UTF-8");
+    assert(utf8.getContext() != 0);
+
+  }
+
+  {
+
+    xmlParserInputBufferPtr input = xmlParserInputBufferCreateMem("abc", 3, xmlParseCharEncoding("UTF-8"));
+    UTF8CharBuffer utf8(input, "UTF-8");
+    assert(utf8.getContext() != 0);
 
   }
 
