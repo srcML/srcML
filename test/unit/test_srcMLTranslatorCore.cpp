@@ -39,6 +39,7 @@ int main(int argc, char * argv[]) {
     srcMLTranslatorCore translator(Language::getLanguage("C++"), "ISO-8859-1", "ISO-8859-1", 
                                  writer, op, "", "", "", urisprefix, 4);
 
+    translator.close();
     xmlBufferFree(buffer);
     
   }
@@ -60,6 +61,7 @@ int main(int argc, char * argv[]) {
                                  writer, op, "", "", "", urisprefix, 4);
 
 
+    translator.close();
     xmlBufferFree(buffer);
     
   }
@@ -85,6 +87,7 @@ int main(int argc, char * argv[]) {
       translator.setInput(input);
     } catch(...) { assert(false); }
     xmlFreeParserInputBuffer(input);
+    translator.close();
     xmlBufferFree(buffer);
     
   }
@@ -104,6 +107,7 @@ int main(int argc, char * argv[]) {
       assert(false);
     } catch(...) {}
 
+    translator.close();
     xmlBufferFree(buffer);
     
   }
@@ -124,11 +128,13 @@ int main(int argc, char * argv[]) {
     srcMLTranslatorCore translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1", 
                                  writer, op, 0, 0, 0, urisprefix, 4);
 
-    xmlParserInputBufferPtr input = xmlParserInputBufferCreateMem("a;", 2, xmlParseCharEncoding(0));
+    xmlParserInputBufferPtr input = xmlParserInputBufferCreateMem("", 1, xmlParseCharEncoding(0));
     translator.setInput(input);
     xmlBufferPtr output = xmlBufferCreate();
-    translator.translate_separate("", "",  "", "", Language::LANGUAGE_CXX, output);
+    translator.translate_separate(0, 0,  0, 0, Language::LANGUAGE_CXX, output);
+    assert((char *)output->content == std::string("<unit language=\"C++\"/>\n"));
     xmlFreeParserInputBuffer(input);
+    translator.close();
     xmlBufferFree(buffer);
     
   }
