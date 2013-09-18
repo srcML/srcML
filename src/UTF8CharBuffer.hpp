@@ -43,7 +43,6 @@ public:
 
     // Create a character buffer
     UTF8CharBuffer(const char* ifilename, const char* encoding);
-    UTF8CharBuffer(const char* source);
     UTF8CharBuffer(const char* source, int asize, const char * encoding);
     UTF8CharBuffer(xmlParserInputBufferPtr pinput, const char * encoding);
 
@@ -56,6 +55,8 @@ public:
     ~UTF8CharBuffer();
 
 private:
+ 
+    void init(const char * encoding);
 
     int growBuffer();
     int pos;
