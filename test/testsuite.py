@@ -5,13 +5,14 @@
 # Michael L. Collard
 
 import sys
-sys.path.append("../src")
 import os.path
 import re
 import subprocess
 import difflib
 import string
 from datetime import datetime, time
+
+sys.path.append("../src")
 from srcML import *
 
 maxcount = 700
