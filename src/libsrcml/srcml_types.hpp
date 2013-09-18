@@ -38,14 +38,13 @@ enum SRCML_TRANSFORM_TYPE { SRCML_XPATH, SRCML_XSLT, SRCML_RELAXNG };
 
 /**
  * transform
- * @type a transformation type
- * @transformation the transformation to perform
  *
  * Struct to hold transformation information for latter application.
  */
 struct transform {
-
+  /** type a transformation type */
   SRCML_TRANSFORM_TYPE type;
+  /** transformation the transformation to perform */
   std::string transformation;
 
 };
@@ -59,85 +58,75 @@ enum SRCML_ARCHIVE_TYPE { SRCML_ARCHIVE_INVALID, SRCML_ARCHIVE_RW, SRCML_ARCHIVE
 
 /**
  * srcml_archive
- * @filename an attribute for a name of a file
- * @encoding an attribute for an encoding
- * @xml_encoding an attribute for an ecoding
- * @language an attribute for a language
- * @directory an attribute for a directory path
- * @version an attribute for a version string
- * @attributes an array of name-value attribute pairs
- * @options srcml options
- * @tabstop size of tabstop
- * @prefixes an array of XML namespace prefixes
- * @namespaces an array of XML namespaces
- * @registered_languages an array of registered extension language pairs
- * @translator a srcMLTranslator for writing and parsing
- * @reader a srcMLReader for reading
- * @input xmlParserInputBuffer for reading
- * @transformations an array of transformations to apply
  *
  * Holds data for a srcML archive read/write.
-*/
+ */
 struct srcml_archive {
 
-  // archive type read/write
+  /** type archive type read/write */
   SRCML_ARCHIVE_TYPE type;
 
-  // srcML archive attributes
+  /** filename an attribute for a name of a file */
   std::string * filename;
+  /** encoding an attribute for an encoding */
   std::string * encoding;
+  /** xml_encoding an attribute for an ecoding */
   std::string * xml_encoding;
+  /** language an attribute for a language */
   std::string * language;
+  /** directory an attribute for a directory path */
   std::string * directory;
+  /** version an attribute for a version string */
   std::string * version;
+  /** attributes an array of name-value attribute pairs */
   std::vector<std::string>  attributes;
 
-  // parsing options
+  /** options srcml options */
   OPTION_TYPE options;
 
-  // tabstop size
+  /** tabstop size of tabstop */
   int tabstop;
 
-  // namespace/prefixes
+  /** prefixes an array of XML namespace prefixes */
   std::vector<std::string> prefixes;
+  /** namespaces an array of XML namespaces */
   std::vector<std::string> namespaces;
 
-  // registered language extensions
+  /** registered_languages an array of registered extension language pairs */
   std::vector<pair> registered_languages;
 
-  // translator
+  /** translator a srcMLTranslator for writing and parsing */
   srcMLTranslator * translator;
 
-  // utility
+  /** reader a srcMLReader for reading */
   srcMLReader * reader;
+  /** input xmlParserInputBuffer for reading */
   xmlParserInputBufferPtr input;
 
+  /** transformations an array of transformations to apply */
   std::vector<transform> transformations;
 };
 
 /*
  * srcml_unit
- * @archive the archive the unit is created from
- * @language an attribute for a language
- * @filename an attribute name for a file
- * @directory an attribute for a directory path
- * @version an attribute for a version string
- * @unit a buffer to store srcml from read and after parsing
  *
  * Hold data pertaining to a unit in an archive,
  * such as the transformed or collected unit.
 */
 struct srcml_unit {
-  // reference to archive part of
+  /** @archive the archive the unit is created from */
   srcml_archive* archive;
 
-  // srcml attribute information
+  /** @language an attribute for a language */
   std::string * language;
+  /** @filename an attribute name for a file */
   std::string * filename;
+  /** @directory an attribute for a directory path */
   std::string * directory;
+  /** @version an attribute for a version string */
   std::string * version;
 
-  // transformed unit or collected unit
+  /** @unit a buffer to store srcml from read and after parsing */
   std::string * unit;
 };
 
