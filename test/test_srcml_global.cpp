@@ -104,31 +104,31 @@ int main(int argc, char * argv[]) {
    */
 
   {
-    assert(srcml_check_format("a.tar") != 0);
+    assert(srcml_check_format("a.tar") == SRCML_STATUS_OK);
   }
 
   {
-    assert(srcml_check_format("a.tar.bz2") != 0);
+    assert(srcml_check_format("a.tar.bz2") == SRCML_STATUS_OK);
   }
 
   {
-    assert(srcml_check_format("a.tar.gz") != 0);
+    assert(srcml_check_format("a.tar.gz") == SRCML_STATUS_OK);
   }
 
   {
-    assert(srcml_check_format("a.tar.xz") != 0);
+    assert(srcml_check_format("a.tar.xz") == SRCML_STATUS_OK);
   }
 
   {
-    assert(srcml_check_format("a.xz") != 0);
+    assert(srcml_check_format("a.xz") == SRCML_STATUS_OK);
   }
 
   {
-    assert(srcml_check_format("a.foo") == 0);
+    assert(srcml_check_format("a.foo") == SRCML_STATUS_ERROR);
   }
 
   {
-    assert(srcml_check_format(0) == 0);
+    assert(srcml_check_format(0) == SRCML_STATUS_ERROR);
   }
 
   /* 
@@ -136,15 +136,15 @@ int main(int argc, char * argv[]) {
    */
 
   {
-    assert(srcml_check_encoding("UTF-8") != 0);
+    assert(srcml_check_encoding("UTF-8") == SRCML_STATUS_OK);
   }
 
   {
-    assert(srcml_check_encoding("foo") == 0);
+    assert(srcml_check_encoding("foo") == SRCML_STATUS_ERROR);
   }
 
   {
-    assert(srcml_check_encoding(0) == 0);
+    assert(srcml_check_encoding(0) == SRCML_STATUS_ERROR);
   }
 
   return 0;
