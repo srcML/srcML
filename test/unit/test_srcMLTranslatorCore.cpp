@@ -128,12 +128,12 @@ int main(int argc, char * argv[]) {
     srcMLTranslatorCore translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1", 
                                  writer, op, 0, 0, 0, urisprefix, 4);
 
-    xmlParserInputBufferPtr input = xmlParserInputBufferCreateMem("", 1, xmlParseCharEncoding(0));
-    translator.setInput(input);
+    translator.setInputString("a;");
     xmlBufferPtr output = xmlBufferCreate();
     translator.translate_separate(0, 0,  0, 0, Language::LANGUAGE_CXX, output);
-    assert((char *)output->content == std::string("<unit language=\"C++\"/>\n"));
-    xmlFreeParserInputBuffer(input);
+    assert((char *)output->content == std::string("<unit language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>\n"));
+
+    xmlBufferFree(output);
     translator.close();
     xmlBufferFree(buffer);
     
