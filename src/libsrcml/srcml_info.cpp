@@ -27,7 +27,7 @@
  *
  * List all of the filenames in the srcML Archive srcml_filename
  *
- * @return Return NULL terminated array on success and 0 on failure.
+ * @returns Return NULL terminated array on success and 0 on failure.
  */
 const char** srcml_list(const char* srcml_filename) {
 
