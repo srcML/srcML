@@ -10,38 +10,35 @@ int main(int argc, char * argv[]) {
 
   /*
 
-    UTF8CharBuffer(const char* ifilename, const char* encoding)
+    getChar()
 
    */
 
   {
 
     UTF8CharBuffer utf8("test_UTF8CharBuffer.cpp", "UTF-8");
+    assert(utf8.getChar() == '/');
+    assert(utf8.getChar() == '*');
+    assert(utf8.getChar() == '\n');
 
   }
-
-  /*
-
-    UTF8CharBuffer(const char* source, int asize, const char * encoding)
-
-   */
 
   {
 
-    UTF8CharBuffer("abc", 3, "UTF-8");
+    UTF8CharBuffer utf8("abc", 3, "UTF-8");
+    assert(utf8.getChar() == 'a');
+    assert(utf8.getChar() == 'b');
+    assert(utf8.getChar() == 'c');
 
   }
-
-  /*
-
-    UTF8CharBuffer(xmlParserInputBufferPtr pinput, const char * encoding)
-
-   */
 
   {
 
     xmlParserInputBufferPtr input = xmlParserInputBufferCreateMem("abc", 3, XML_CHAR_ENCODING_NONE);
-    UTF8CharBuffer(input, "UTF-8");
+    UTF8CharBuffer utf8(input, "UTF-8");
+    //assert(utf8.getChar() == 'a');
+    //assert(utf8.getChar() == 'b');
+    //assert(utf8.getChar() == 'c');
 
   }
 
