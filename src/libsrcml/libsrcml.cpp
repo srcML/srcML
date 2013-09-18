@@ -56,7 +56,7 @@ srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector
  ******************************************************************************/
 
 /**
- * srcml_version_string:
+ * srcml_version_string
  *
  * Return version of libsrcml as string.
  */
@@ -67,7 +67,7 @@ const char * srcml_version_string() {
 }
 
 /**
- * srcml_version_number:
+ * srcml_version_number
  * 
  * Return version of libsrcml as number.
  */
@@ -84,9 +84,9 @@ int srcml_version_number() {
  ******************************************************************************/
 
 /**
- * srcml:
- * @input_filename: input file to turn to srcML or source code.
- * @output_filename: file to output srcML or source code
+ * srcml
+ * @input_filename input file to turn to srcML or source code.
+ * @output_filename file to output srcML or source code
  * 
  * Translates to/from srcML 
  * Input files with extension xml and language set to xml result in srcml2src behaviour.
@@ -177,8 +177,8 @@ int srcml(const char* input_filename, const char* output_filename) {
  ******************************************************************************/
 
 /**
- * srcml_set_encoding:
- * @encoding: an output encoding
+ * srcml_set_encoding
+ * @encoding an output encoding
  *
  * Set the output encoding.
  *
@@ -191,8 +191,8 @@ int srcml_set_encoding(const char* encoding) {
 }
 
 /**
- * srcml_set_language:
- * @language: a language
+ * srcml_set_language
+ * @language a language
  *
  * Set the language to use to parse.
  *
@@ -205,8 +205,8 @@ int srcml_set_language(const char* language) {
 }
 
 /**
- * srcml_set_filename:
- * @filname: name of a file
+ * srcml_set_filename
+ * @filname name of a file
  *
  * Set the filename attribute for the root unit.
  *
@@ -219,8 +219,8 @@ int srcml_set_filename(const char* filename) {
 }
 
 /**
- * srcml_set_directory:
- * @directory: a directory path
+ * srcml_set_directory
+ * @directory a directory path
  *
  * Set the directory attribute for the root unit.
  *
@@ -233,8 +233,8 @@ int srcml_set_directory(const char* directory) {
 }
 
 /**
- * srcml_set_version:
- * @version: a version string
+ * srcml_set_version
+ * @version a version string
  *
  * Set the version attribute.
  *
@@ -247,8 +247,8 @@ int srcml_set_version(const char* version) {
 }
 
 /**
- * srcml_set_all_options:
- * @option: a srcml options
+ * srcml_set_all_options
+ * @option a srcml options
  *
  * Set the srcml options.  Clears all previously set.
  *
@@ -261,8 +261,8 @@ int srcml_set_all_options(int option) {
 }
 
 /**
- * srcml_set_option:
- * @option: a srcml option
+ * srcml_set_option
+ * @option a srcml option
  *
  * Set the srcml options.  Multiple may be set.
  *
@@ -275,8 +275,8 @@ int srcml_set_option(int option) {
 }
 
 /**
- * srcml_clear_option:
- * @option: a srcml option
+ * srcml_clear_option
+ * @option a srcml option
  *
  * Remove an option.  May use multiple option with the same call.
  *
@@ -289,8 +289,8 @@ int srcml_clear_option(int option) {
 }
 
 /**
- * srcml_set_tabstop:
- * @tabstop: tabstop size
+ * srcml_set_tabstop
+ * @tabstop tabstop size
  *
  * Set the size of the tabstop.
  *
@@ -303,9 +303,9 @@ int srcml_set_tabstop(int tabstop) {
 }
 
 /**
- * srcml_register_file_extension:
- * @extension: a file extension
- * @language: a language
+ * srcml_register_file_extension
+ * @extension a file extension
+ * @language a language
  *
  * Associate the given extension with the given language.
  *
@@ -318,9 +318,9 @@ int srcml_register_file_extension(const char* extension, const char* language) {
 }
 
 /**
- * srcml_register_namespace:
- * @prefix: a XML namespace prefix
- * @ns: a XML namespace
+ * srcml_register_namespace
+ * @prefix a XML namespace prefix
+ * @ns a XML namespace
  *
  * Add a new namespace or change the prefix of an existing namespace.
  *
@@ -339,7 +339,7 @@ int srcml_register_namespace(const char* prefix, const char* ns) {
  ******************************************************************************/
 
 /**
- * srcml_get_encoding:
+ * srcml_get_encoding
  *
  * Get the output encoding on success and NULL on failure.
  */
@@ -350,7 +350,7 @@ const char* srcml_get_encoding() {
 }
 
 /**
- * srcml_get_language:
+ * srcml_get_language
  *
  * Get the language on success and NULL on failure.
  */
@@ -361,7 +361,7 @@ const char* srcml_get_language() {
 }
 
 /**
- * srcml_get_filename:
+ * srcml_get_filename
  *
  * Get the filename attribute for the root unit on success
  * and NULL on failure.
@@ -373,7 +373,7 @@ const char* srcml_get_filename() {
 }
 
 /**
- * srcml_get_directory:
+ * srcml_get_directory
  *
  * Get the directory attribute for the root unit on success
  * and NULL on failure
@@ -385,7 +385,7 @@ const char* srcml_get_directory() {
 }
 
 /**
- * srcml_get_version:
+ * srcml_get_version
  *
  * Get the version attribute on success and NULL on failure.
  */
@@ -396,7 +396,7 @@ const char* srcml_get_version() {
 }
 
 /**
- * srcml_get_options:
+ * srcml_get_options
  *
  * Get the currently set options on success and NULL on failure.
  */
@@ -407,7 +407,7 @@ int srcml_get_options() {
 }
 
 /**
- * srcml_get_tabstop:
+ * srcml_get_tabstop
  *
  * Get the tabstop size on success and NULL On failure.
  */
@@ -418,7 +418,7 @@ int srcml_get_tabstop() {
 }
 
 /**
- * srcml_get_namespace_size:
+ * srcml_get_namespace_size
  *
  * Get the number of currently defined namespaces.
  */
@@ -429,8 +429,8 @@ int srcml_get_namespace_size() {
 }
 
 /**
- * srcml_get_prefix:
- * @pos: namespace position
+ * srcml_get_prefix
+ * @pos namespace position
  *
  * Get prefix for the given position on success
  * and NULL on failure.
@@ -450,8 +450,8 @@ const char* srcml_get_prefix(int pos) {
 }
 
 /**
- * srcml_get_prefix_uri:
- * @namespace_uri: an XML namespace
+ * srcml_get_prefix_uri
+ * @namespace_uri an XML namespace
  *
  * Get the registered prefix for the given namespace
  * on success and NULL on failure.
@@ -472,8 +472,8 @@ const char* srcml_get_prefix_uri(const char* namespace_uri) {
 }
 
 /**
- * srcml_get_namespace:
- * @pos: position in namespaces
+ * srcml_get_namespace
+ * @pos position in namespaces
  *
  * Get the namespace at the given pos on succcess
  * and NULL on failure.
@@ -493,8 +493,8 @@ const char* srcml_get_namespace(int pos) {
 }
 
 /**
- * srcml_get_namespace_prefix:
- * @prefix: an XML prefix
+ * srcml_get_namespace_prefix
+ * @prefix an XML prefix
  *
  * Get the first namespace for the given prefix on success
  * and NULL on failure.
@@ -522,8 +522,8 @@ const char* srcml_get_namespace_prefix(const char* prefix) {
  ******************************************************************************/
 
 /**
- * srcml_check_language:
- * @language: a language
+ * srcml_check_language
+ * @language a language
  *
  * Check if the current language is supported.
  * if so return the numeric representation for that language.
@@ -538,8 +538,8 @@ const char** srcml_language_list() {
 }
 
 /**
- * srcml_check_extension:
- * @filename: name of a file
+ * srcml_check_extension
+ * @filename name of a file
  *
  * Get the currently registered language for a file extension
  * Full filename can be provided, and extension will be extracted.
@@ -552,8 +552,8 @@ const char * srcml_check_extension(const char* filename) {
 }
 
 /*
- * srcml_check_format:
- * @format: an archive or compression extension, e.g., tar.gz
+ * srcml_check_format
+ * @format an archive or compression extension, e.g., tar.gz
  *
  * Check if the format is currently supported
  * Full filename can be provided, and extension will be extracted 
@@ -598,8 +598,8 @@ int srcml_check_format(const char* format) {
 }
 
 /**
- * srcml_check_encoding:
- * @encoding: an encoding
+ * srcml_check_encoding
+ * @encoding an encoding
  *
  * Check if the particular encoding is supported, both for input and output.
  * Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure
@@ -611,7 +611,7 @@ int srcml_check_encoding(const char* encoding) {
 }
 
 /**
- * srcml_check_xslt:
+ * srcml_check_xslt
  * 
  * Check whether xslt is available.
  * Return 1 on success and 0 on failure.
@@ -633,7 +633,7 @@ int srcml_check_xslt() {
 }
 
 /**
- * srcml_check_exslt:
+ * srcml_check_exslt
  * 
  * Check whether exslt is available.
  * Return 1 on success and 0 on failure.
@@ -660,7 +660,7 @@ int srcml_check_exslt() {
  ******************************************************************************/
 
 /**
- * srcml_error_string:
+ * srcml_error_string
  * 
  * Return a string describing last recorded error.
  */
