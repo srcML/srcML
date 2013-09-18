@@ -36,12 +36,12 @@
 #endif
 
 /**
- * srcml_extract_text:
- * @input_buffer: srcML to extract text
- * @size: size of input buffer
- * @output_buffer: output buffer to write text
- * @options: srcml options
- * @unit: unit number to extract
+ * srcml_extract_text
+ * @input_buffer srcML to extract text
+ * @size size of input buffer
+ * @output_buffer output buffer to write text
+ * @options srcml options
+ * @unit unit number to extract
  *
  * 
  * Extract a given unit from supplied srcML input buffer.
@@ -84,12 +84,12 @@ int srcml_extract_text(const char * input_buffer, int size, xmlOutputBufferPtr o
 }
 
 /**
- * srcml_xpath:
- * @input_buffer: a parser input buffer
- * @context_element: a srcML element that is to be used as the context
- * @xpaths: NULL-terminated list of xpath expressions
- * @fd: output file descriptor
- * @options: srcml options
+ * srcml_xpath
+ * @input_buffer a parser input buffer
+ * @context_element a srcML element that is to be used as the context
+ * @xpaths NULL-terminated list of xpath expressions
+ * @fd output file descriptor
+ * @options srcml options
  *
  * XPath evaluation of the nested units.
  *
@@ -140,7 +140,7 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_elemen
 }
 
 /**
- * dlexsltRegisterAll:
+ * dlexsltRegisterAll
  * 
  * Allow for all exslt functions by dynamic load
  * of exslt library.
@@ -179,14 +179,14 @@ void dlexsltRegisterAll() {
 }
 
 /**
- * srcml_xslt:
- * @input_buffer: a parser input buffer
+ * srcml_xslt
+ * @input_buffer a parser input buffer
  * @context_element a srcml element to be used as the context
- * @xslts: NULL-terminated list of XSLT program filenames.
- * @params: NULL-terminated list of XSLT parameters
- * @paramcount: number of XSLT parameters
- * @fd: output file descriptor
- * @options: srcml options
+ * @xslts NULL-terminated list of XSLT program filenames.
+ * @params NULL-terminated list of XSLT parameters
+ * @paramcount number of XSLT parameters
+ * @fd output file descriptor
+ * @options srcml options
  *
  * XSLT evaluation of the nested units.
  *
@@ -258,11 +258,11 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
 }
 
 /**
- * srcml_relaxng:
- * @input_buffer: a parser input buffer
- * @xslts: a NULL-terminated list of RelaxNG schemas
- * @fd: output file descriptor
- * @options: srcml options
+ * srcml_relaxng
+ * @input_buffer a parser input buffer
+ * @xslts a NULL-terminated list of RelaxNG schemas
+ * @fd output file descriptor
+ * @options srcml options
  *
  * RelaxNG evaluation of the nested units.
  *
@@ -300,9 +300,9 @@ int srcml_relaxng(xmlParserInputBufferPtr input_buffer, const char** xslts, int 
 
 
 /** 
- * srcMLParseDocument:
- * @ctxt: an XML parser ctxt
- * @allowendearly: allow early termination of SAX2 parser
+ * srcMLParseDocument
+ * @ctxt an XML parser ctxt
+ * @allowendearly allow early termination of SAX2 parser
  * 
  * Process srcML document with error reporting.
  *
@@ -327,9 +327,9 @@ int srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly) {
 }
 
 /**
- * srcMLCreateMemoryParserCtxt:
- * @buffer: a buffer in memory to read from
- * @size: size of input buffer
+ * srcMLCreateMemoryParserCtxt
+ * @buffer a buffer in memory to read from
+ * @size size of input buffer
  *
  * Create srcml parser from memory.
  */
@@ -361,9 +361,9 @@ struct _xmlBuf {
       buf->use = buf->compat_use;
 
 /**
- * xmlBufResetInput:
- * @buf: XML buffer
- * @input: XML parser input
+ * xmlBufResetInput
+ * @buf XML buffer
+ * @input XML parser input
  *
  * Function is taken from libxml2.
  */
@@ -379,8 +379,8 @@ xmlBufResetInput(xmlBuf * buf, xmlParserInputPtr input) {
 }
 #else
 /**
- * xmlBufResetInput:
- * @buf: XML buffer
+ * xmlBufResetInput
+ * @buf XML buffer
  * @input XML parser input
  *
  * Function is taken fro libxml2.
@@ -395,8 +395,8 @@ xmlBufResetInput(xmlBuffer * buf, xmlParserInputPtr input) {
 #endif
 
 /**
- * srcMLCreateParserCtxt:
- * @buffer_input: a parser input buffer
+ * srcMLCreateParserCtxt
+ * @buffer_input a parser input buffer
  *
  * Create a ctxt from a parser input buffer.
  * Modeled after function in libxml2.
