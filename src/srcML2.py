@@ -24,12 +24,18 @@ libsrcml.srcml_close_archive.argtypes = [c_void_p]
 libsrcml.srcml_write_open_memory.restype = c_int
 libsrcml.srcml_write_open_memory.argtypes = [c_void_p, c_void_p]
 
+libsrcml.srcml_write_unit.restype = c_int
+libsrcml.srcml_write_unit.argtypes = [c_void_p, c_void_p]
+
 # srcml_unit
 libsrcml.srcml_create_unit.restype = c_void_p
 libsrcml.srcml_create_unit.argtypes = [c_void_p]
 
 libsrcml.srcml_free_unit.restype = None
 libsrcml.srcml_free_unit.argtypes = [c_void_p]
+
+libsrcml.srcml_parse_unit_memory.restype = c_int
+libsrcml.srcml_parse_unit_memory.argtypes = [c_void_p, c_char_p, c_int]
 
 
 # free functions
@@ -46,12 +52,14 @@ class srcMLTranslator(object):
         self.buffer = c_char_p()
         libsrcml.srcml_write_open_memory(self.archive, pointer(self.buffer))
 
-    def translate(self, path, unit_directory, unit_filename, unit_version, language):
+    def translate(self, src):
         self.unit = libsrcml.srcml_create_unit(self.archive)
-        libsrcml.srcml_parse_unit_memory(self.translator, path, unit_directory, unit_filename, unit_version, language)
+        libsrcml.srcml_parse_unit_memory(self.unit, src, len(src))
+        libsrcml.srcml_write_unit(self.archive, self.unit)
+        libsrcml.srcml_free_unit(self.unit)
 
-    def getsrcML(self) :
-        return libsrcml.srcml_get_srcml(self.translator)
+    def close(self) :
+        libsrcml.srcml_close_archive(self.archive)
 
     def delete(self) :
         libsrcml.srcml_free_archive(self.archive)
