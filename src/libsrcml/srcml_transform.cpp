@@ -30,13 +30,13 @@
 
 /** 
  * srcml_append_transform_xpath
- * @archive a srcml archive
- * @xpath_string an XPath expression
+ * @param archive a srcml archive
+ * @param xpath_string an XPath expression
  *
  * Append the XPath expression to the list
  * of transformation/queries.  As of yet no way to specify context
  *
- * Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
 int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_string) {
 
@@ -52,13 +52,13 @@ int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_strin
 
 /**
  * srcml_append_transform_xslt
- * @archive a srcml_archive
- * @xslt_filename an XSLT program filename path
+ * @param archive a srcml_archive
+ * @param xslt_filename an XSLT program filename path
  *
  * Append the XSLT program filename path to the list 
  * of transformation/queries.  As of yet no way to specify parameters or context
  *
- * Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
 int srcml_append_transform_xslt(srcml_archive* archive, const char* xslt_filename) {
 
@@ -74,13 +74,13 @@ int srcml_append_transform_xslt(srcml_archive* archive, const char* xslt_filenam
 
 /**
  * srcml_append_transform_relaxng
- * @archive a srcml archive
- * @relaxng_filename a RelaxNG schema filename path
+ * @param archive a srcml archive
+ * @param relaxng_filename a RelaxNG schema filename path
  *
  * Append the RelaxNG schema filename path to the list
  * of transformation/queries.
  *
- * Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
  int srcml_append_transform_relaxng(srcml_archive* archive, const char* relaxng_filename) {
 
@@ -96,13 +96,13 @@ int srcml_append_transform_xslt(srcml_archive* archive, const char* xslt_filenam
 
 /**
  * srcml_apply_transforms
- * @iarchive an input srcml archive
- * @oarchvie and output srcml archive
+ * @param iarchive an input srcml archive
+ * @param oarchvie and output srcml archive
  *
  * Apply appended transformations inorder added and consecutively.
  * Intermediate results are stored in a temporary file.
  *
- * Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
 int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
