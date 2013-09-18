@@ -117,10 +117,16 @@ struct srcml_archive {
 };
 
 /*
-
-  Hold data pertaining to a unit in an archive,
-  such as the transformed or collected unit.
-
+ * srcml_unit:
+ * @archive: the archive the unit is created from
+ * @language: an attribute for a language
+ * @filename: an attribute name for a file
+ * @directory: an attribute for a directory path
+ * @version: an attribute for a version string
+ * @unit: a buffer to store srcml from read and after parsing
+ *
+ * Hold data pertaining to a unit in an archive,
+ * such as the transformed or collected unit.
 */
 struct srcml_unit {
   // reference to archive part of
