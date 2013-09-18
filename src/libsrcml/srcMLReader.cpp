@@ -29,9 +29,9 @@ void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer, bool is_ro
 
 /**
  * getNode
- * @reader an XML text reader
+ * @param reader an XML text reader
  *
- * Get a copy of the current node with attributes set.
+ * @returns Get a copy of the current node with attributes set.
  */
 xmlNodePtr getNode(xmlTextReaderPtr reader) {
 
@@ -44,7 +44,7 @@ xmlNodePtr getNode(xmlTextReaderPtr reader) {
 
 /**
  * freeNode
- * @node an XML node
+ * @param node an XML node
  * 
  * Free the current node.  Text is not allocated and do not free
  */
@@ -58,7 +58,7 @@ void freeNode(xmlNodePtr node) {
 
 /**
  * srcMLReader
- * @filename name of a file
+ * @param filename name of a file
  *
  * Construct a srcMLReader using a filename
  */
@@ -75,7 +75,7 @@ srcMLReader::srcMLReader(const char * filename)
 
 /**
  * srcMLReader
- * @input parser input buffer
+ * @param input parser input buffer
  *
  * Construct a srcMLReader using a parser input buffer
  */
@@ -103,12 +103,14 @@ srcMLReader::~srcMLReader() {
 
 /**
  * readAttributesInternal
- * @language a location to store the language attribute
- * @filename a location to store the filename attribute
- * @directory a location to store the directory attribute
- * @version a location to store the version attribute
+ * @param language a location to store the language attribute
+ * @param filename a location to store the filename attribute
+ * @param directory a location to store the directory attribute
+ * @param version a location to store the version attribute
  *
  * Internal function to read unit attributes.
+ *
+ * @returns 0 on success and 1 on failure.
  */
 int srcMLReader::readUnitAttributesInternal(std::string ** language, std::string ** filename,
                                             std::string ** directory, std::string ** version) {
@@ -149,18 +151,20 @@ int srcMLReader::readUnitAttributesInternal(std::string ** language, std::string
 
 /**
  * readRootUnitAttributes
- * @language a location to store the language attribute
- * @filename a location to store the filename attribute
- * @directory a location to store the directory attribute
- * @version a location to store the version attribute
- * @attributes array to store other attributes gathered
- * @prefixes an array to store gathered XML namespace prefixes
- * @namepaces an array to store gathered XML naamespaces
- * @options a variable to set used options
- * @tabstop a variable to set the tabstop
+ * @param language a location to store the language attribute
+ * @param filename a location to store the filename attribute
+ * @param directory a location to store the directory attribute
+ * @param version a location to store the version attribute
+ * @param attributes array to store other attributes gathered
+ * @param prefixes an array to store gathered XML namespace prefixes
+ * @param namepaces an array to store gathered XML naamespaces
+ * @param options a variable to set used options
+ * @param tabstop a variable to set the tabstop
  *
  * Read attributes and namespace information fromt the root unit,
  * setting the necessary options.
+ *
+ * @returns 1 on success and 0 on failure.
  */
 int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** filename,
                                         std::string ** directory, std::string ** version,
@@ -266,11 +270,14 @@ int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** 
 
 /**
  * readUnitAttributes
- * @language a location to store the language attribute
- * @filename a location to store the filename attribute
- * @directory a location to store the directory attribute
- * @version a location to store the version attribute
+ * @param language a location to store the language attribute
+ * @param filename a location to store the filename attribute
+ * @param directory a location to store the directory attribute
+ * @param version a location to store the version attribute
  *
+ * Read attributes from next unit.
+ *
+ * @returns 1 on success and 0 on failure.
  */
 int srcMLReader::readUnitAttributes(std::string ** language, std::string ** filename,
                                     std::string ** directory, std::string ** version) {
@@ -356,12 +363,12 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
 
 /**
  * readsrcML
- * @writer an XML text writer
+ * @param writer an XML text writer
  *
  * Read the next unit of a srcML Archive.
  * and write it to the writer.
  *
- * Return 0 when finished and 1 otherwize.
+ * @returns Return 0 when finished and 1 otherwize.
  */
 int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
 
@@ -473,7 +480,7 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
  * and return it as a std::string. Uses
  * readsrcML(xmlTextWriterPtr writer).
  *
- * When finished return a 0.
+ * @returns string on success and finished return a 0.
  */
 std::string * srcMLReader::readsrcML() {
 
@@ -506,9 +513,9 @@ std::string * srcMLReader::readsrcML() {
 
 /**
  * output_node_srcml
- * @node an XML node
- * @writer an XML text writer
- * @is_root boolean indicating if parsing root unit
+ * @param node an XML node
+ * @param writer an XML text writer
+ * @param is_root boolean indicating if parsing root unit
  *
  * Output node as srcML.
  */
