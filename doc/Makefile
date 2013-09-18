@@ -31,10 +31,10 @@ srcml2src.1.gz : srcml2src.1
 	gzip -f srcml2src.1
 
 src2srcml.html : src2srcml.1
-	${MAN2HTML} < $<| tail -n +3 > $@
+	man ./$< | ${MAN2HTML} | tail -n +3 > $@
 
 srcml2src.html : srcml2src.1
-	${MAN2HTML} < $< | tail -n +3 > $@
+	man ./$< | ${MAN2HTML} | tail -n +3 > $@
 
 OPTION_SRC= ../src/src2srcml.cpp ../src/srcml2src.cpp ../src/srcmlapps.hpp ../src/srcmlns.hpp
 option.dtd : ${OPTION_SRC}
@@ -48,6 +48,9 @@ gzip : src2srcml.1.gz srcml2src.1.gz
 
 install : ${MAN_GZIP}
 	cp src2srcml.1.gz srcml2src.1.gz /usr/share/man/man1/.
+
+doxygen:
+	doxygen config
 
 clean :
 	rm -f ${MAN_PAGES} ${MAN_GZIP} option.dtd ${HTML_PAGES}
