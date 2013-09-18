@@ -108,7 +108,7 @@ int main(int argc, char * argv[]) {
 
   {
     std::vector<pair> reg_ext;
-    assert(Language::register_standar_file_extensions(reg_ext));
+    Language::register_standard_file_extensions(reg_ext);
     assert(reg_ext.size() != 0);
   }
 
