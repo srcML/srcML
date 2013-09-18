@@ -22,12 +22,12 @@
 #include <srcml_types.hpp>
 
 /**
- * srcml_list:
- * @srcml_filename: name of a file
+ * srcml_list
+ * @param srcml_filename name of a file
  *
  * List all of the filenames in the srcML Archive srcml_filename
-
- * Return NULL terminated array on success and 0 on failure.
+ *
+ * @return Return NULL terminated array on success and 0 on failure.
  */
 const char** srcml_list(const char* srcml_filename) {
 

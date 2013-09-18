@@ -29,15 +29,14 @@
 #ifndef INCLUDED_SRCML_TYPES_HPP
 #define INCLUDED_SRCML_TYPES_HPP
 
-/*
+/**
  * SRCML_TRANSORM_TYPE:
  * 
  * Transformation types, xpath, xslt, and relaxng
  */
-
 enum SRCML_TRANSFORM_TYPE { SRCML_XPATH, SRCML_XSLT, SRCML_RELAXNG };
 
-/*
+/**
  * transform:
  * @type: a transformation type
  * @transformation: the transformation to perform
@@ -51,14 +50,14 @@ struct transform {
 
 };
 
-/*
+/**
  * SRCML_ARCHIVE_TYPE:
  * 
  * Archive type read, write, or read/write.
  */
 enum SRCML_ARCHIVE_TYPE { SRCML_ARCHIVE_INVALID, SRCML_ARCHIVE_RW, SRCML_ARCHIVE_READ, SRCML_ARCHIVE_WRITE };
 
-/*
+/**
  * srcml_archive:
  * @filename: an attribute for a name of a file
  * @encoding: an attribute for an encoding
