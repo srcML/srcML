@@ -39,7 +39,7 @@ int main(int argc, char * argv[]) {
     assert(utf8.getChar() == 'a');
     assert(utf8.getChar() == 'b');
     assert(utf8.getChar() == 'c');
-
+    xmlFreeParserInputBuffer(input);
   }
 
   /*
@@ -67,6 +67,7 @@ int main(int argc, char * argv[]) {
     xmlParserInputBufferPtr input = xmlParserInputBufferCreateMem("abc", 3, xmlParseCharEncoding("UTF-8"));
     UTF8CharBuffer utf8(input, "UTF-8");
     assert(utf8.getContext() != 0);
+    xmlFreeParserInputBuffer(input);
 
   }
 
