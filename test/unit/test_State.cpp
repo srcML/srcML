@@ -66,5 +66,46 @@ int main(int argc, char * argv[]) {
     assert(!s.inTransparentMode(4));
   }
 
+  /*
+    getMode
+   */ 
+
+  {
+    State s(1);
+    assert(s.getMode() == 1);
+  }
+
+  /*
+    getTransparentMode
+   */ 
+
+  {
+    State s(1, 2);
+    assert(s.getTransparentMode() == 3);
+  }
+
+  /*
+    setMode
+   */ 
+
+  {
+    State s(1, 2);
+    s.setMode(4);
+    assert(s.getMode() == 5);
+    assert(s.getTransparentMode() == 7);
+  }
+
+  /*
+    setMode
+   */ 
+
+  {
+    State s(1 | 4, 2 | 8);
+    s.clearMode(4);
+    s.clearMode(8);
+    assert(s.getMode() == 1);
+    assert(s.getTransparentMode() == 3);
+  }
+
   return 0;
 }
