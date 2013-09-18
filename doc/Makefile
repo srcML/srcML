@@ -53,4 +53,4 @@ doxygen:
 	doxygen config
 
 clean :
-	rm -f ${MAN_PAGES} ${MAN_GZIP} option.dtd ${HTML_PAGES}
+	rm -f ${MAN_PAGES} ${MAN_GZIP} option.dtd ${HTML_PAGES} html latex
