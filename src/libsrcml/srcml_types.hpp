@@ -30,16 +30,16 @@
 #define INCLUDED_SRCML_TYPES_HPP
 
 /**
- * SRCML_TRANSORM_TYPE:
+ * SRCML_TRANSORM_TYPE
  * 
  * Transformation types, xpath, xslt, and relaxng
  */
 enum SRCML_TRANSFORM_TYPE { SRCML_XPATH, SRCML_XSLT, SRCML_RELAXNG };
 
 /**
- * transform:
- * @type: a transformation type
- * @transformation: the transformation to perform
+ * transform
+ * @type a transformation type
+ * @transformation the transformation to perform
  *
  * Struct to hold transformation information for latter application.
  */
@@ -51,30 +51,30 @@ struct transform {
 };
 
 /**
- * SRCML_ARCHIVE_TYPE:
+ * SRCML_ARCHIVE_TYPE
  * 
  * Archive type read, write, or read/write.
  */
 enum SRCML_ARCHIVE_TYPE { SRCML_ARCHIVE_INVALID, SRCML_ARCHIVE_RW, SRCML_ARCHIVE_READ, SRCML_ARCHIVE_WRITE };
 
 /**
- * srcml_archive:
- * @filename: an attribute for a name of a file
- * @encoding: an attribute for an encoding
- * @xml_encoding: an attribute for an ecoding
- * @language: an attribute for a language
- * @directory: an attribute for a directory path
- * @version: an attribute for a version string
- * @attributes: an array of name-value attribute pairs
- * @options: srcml options
- * @tabstop: size of tabstop
- * @prefixes: an array of XML namespace prefixes
- * @namespaces: an array of XML namespaces
- * @registered_languages: an array of registered extension language pairs
- * @translator: a srcMLTranslator for writing and parsing
- * @reader: a srcMLReader for reading
- * @input: xmlParserInputBuffer for reading
- * @transformations: an array of transformations to apply
+ * srcml_archive
+ * @filename an attribute for a name of a file
+ * @encoding an attribute for an encoding
+ * @xml_encoding an attribute for an ecoding
+ * @language an attribute for a language
+ * @directory an attribute for a directory path
+ * @version an attribute for a version string
+ * @attributes an array of name-value attribute pairs
+ * @options srcml options
+ * @tabstop size of tabstop
+ * @prefixes an array of XML namespace prefixes
+ * @namespaces an array of XML namespaces
+ * @registered_languages an array of registered extension language pairs
+ * @translator a srcMLTranslator for writing and parsing
+ * @reader a srcMLReader for reading
+ * @input xmlParserInputBuffer for reading
+ * @transformations an array of transformations to apply
  *
  * Holds data for a srcML archive read/write.
 */
@@ -116,13 +116,13 @@ struct srcml_archive {
 };
 
 /*
- * srcml_unit:
- * @archive: the archive the unit is created from
- * @language: an attribute for a language
- * @filename: an attribute name for a file
- * @directory: an attribute for a directory path
- * @version: an attribute for a version string
- * @unit: a buffer to store srcml from read and after parsing
+ * srcml_unit
+ * @archive the archive the unit is created from
+ * @language an attribute for a language
+ * @filename an attribute name for a file
+ * @directory an attribute for a directory path
+ * @version an attribute for a version string
+ * @unit a buffer to store srcml from read and after parsing
  *
  * Hold data pertaining to a unit in an archive,
  * such as the transformed or collected unit.
