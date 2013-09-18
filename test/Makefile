@@ -1,5 +1,5 @@
-EXAMPLES= $(shell ls *.cpp)
-GEN_ALL= ${foreach nm, ${EXAMPLES}, $(nm).out}
+TESTS= $(shell ls *.cpp)
+GEN_ALL= ${foreach nm, ${TESTS}, $(nm).out}
 
 all : ${GEN_ALL}
 
