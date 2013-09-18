@@ -26,6 +26,7 @@
 #include <string.h>
 #include <cassert>
 #include <fstream>
+#include <unistd.h>
 
 #include <srcml.h>
 #include <srcml_types.hpp>
@@ -73,6 +74,9 @@ int main(int argc, char * argv[]) {
     assert(list == 0);
 
   }
+
+  unlink("project_one.xml");
+  unlink("project_two.xml");
 
   return 0;
 
