@@ -37,16 +37,16 @@
 
 /**
  * srcml_extract_text
- * @input_buffer srcML to extract text
- * @size size of input buffer
- * @output_buffer output buffer to write text
- * @options srcml options
- * @unit unit number to extract
+ * @param input_buffer srcML to extract text
+ * @param size size of input buffer
+ * @param output_buffer output buffer to write text
+ * @param options srcml options
+ * @param unit unit number to extract
  *
  * 
  * Extract a given unit from supplied srcML input buffer.
  *
- * Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
 int srcml_extract_text(const char * input_buffer, int size, xmlOutputBufferPtr output_buffer, OPTION_TYPE options, int unit) {
 
@@ -85,15 +85,15 @@ int srcml_extract_text(const char * input_buffer, int size, xmlOutputBufferPtr o
 
 /**
  * srcml_xpath
- * @input_buffer a parser input buffer
- * @context_element a srcML element that is to be used as the context
- * @xpaths NULL-terminated list of xpath expressions
- * @fd output file descriptor
- * @options srcml options
+ * @param input_buffer a parser input buffer
+ * @param context_element a srcML element that is to be used as the context
+ * @param xpaths NULL-terminated list of xpath expressions
+ * @param fd output file descriptor
+ * @param options srcml options
  *
  * XPath evaluation of the nested units.
  *
- * Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
 int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_element, const char* xpaths[], int fd, OPTION_TYPE options) {
 
@@ -180,17 +180,17 @@ void dlexsltRegisterAll() {
 
 /**
  * srcml_xslt
- * @input_buffer a parser input buffer
- * @context_element a srcml element to be used as the context
- * @xslts NULL-terminated list of XSLT program filenames.
- * @params NULL-terminated list of XSLT parameters
- * @paramcount number of XSLT parameters
- * @fd output file descriptor
- * @options srcml options
+ * @param input_buffer a parser input buffer
+ * @param context_element a srcml element to be used as the context
+ * @param xslts NULL-terminated list of XSLT program filenames.
+ * @param params NULL-terminated list of XSLT parameters
+ * @param paramcount number of XSLT parameters
+ * @param fd output file descriptor
+ * @param options srcml options
  *
  * XSLT evaluation of the nested units.
  *
- * Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
 int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, const char* xslts[], const char* params[], int paramcount, int fd, OPTION_TYPE options) {
 
@@ -259,14 +259,14 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
 
 /**
  * srcml_relaxng
- * @input_buffer a parser input buffer
- * @xslts a NULL-terminated list of RelaxNG schemas
- * @fd output file descriptor
- * @options srcml options
+ * @param input_buffer a parser input buffer
+ * @param xslts a NULL-terminated list of RelaxNG schemas
+ * @param fd output file descriptor
+ * @param options srcml options
  *
  * RelaxNG evaluation of the nested units.
  *
- * Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
 int srcml_relaxng(xmlParserInputBufferPtr input_buffer, const char** xslts, int fd, OPTION_TYPE options) {
 
@@ -301,12 +301,12 @@ int srcml_relaxng(xmlParserInputBufferPtr input_buffer, const char** xslts, int 
 
 /** 
  * srcMLParseDocument
- * @ctxt an XML parser ctxt
- * @allowendearly allow early termination of SAX2 parser
+ * @param ctxt an XML parser ctxt
+ * @param allowendearly allow early termination of SAX2 parser
  * 
  * Process srcML document with error reporting.
  *
- * Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
 int srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly) {
 
@@ -328,10 +328,12 @@ int srcMLParseDocument(xmlParserCtxtPtr ctxt, bool allowendearly) {
 
 /**
  * srcMLCreateMemoryParserCtxt
- * @buffer a buffer in memory to read from
- * @size size of input buffer
+ * @param buffer a buffer in memory to read from
+ * @param size size of input buffer
  *
  * Create srcml parser from memory.
+ *
+ * @returns xml parser ctxt
  */
 xmlParserCtxtPtr srcMLCreateMemoryParserCtxt(const char * buffer, int size) {
 
@@ -362,10 +364,12 @@ struct _xmlBuf {
 
 /**
  * xmlBufResetInput
- * @buf XML buffer
- * @input XML parser input
+ * @param buf XML buffer
+ * @param input XML parser input
  *
  * Function is taken from libxml2.
+ *
+ * @returns 0 on success and -1 on error.
  */
 int
 xmlBufResetInput(xmlBuf * buf, xmlParserInputPtr input) {
@@ -380,26 +384,31 @@ xmlBufResetInput(xmlBuf * buf, xmlParserInputPtr input) {
 #else
 /**
  * xmlBufResetInput
- * @buf XML buffer
- * @input XML parser input
+ * @param buf XML buffer
+ * @param input XML parser input
  *
  * Function is taken fro libxml2.
+ *
+ * @returns 0 
  */
 int
 xmlBufResetInput(xmlBuffer * buf, xmlParserInputPtr input) {
   input->base = input->buf->buffer->content;
   input->cur = input->buf->buffer->content;
   input->end = &input->buf->buffer->content[input->buf->buffer->use];
+  return 0;
 }
 
 #endif
 
 /**
  * srcMLCreateParserCtxt
- * @buffer_input a parser input buffer
+ * @param buffer_input a parser input buffer
  *
  * Create a ctxt from a parser input buffer.
  * Modeled after function in libxml2.
+ *
+ * @returns xml parser ctxt
  */
 xmlParserCtxtPtr
 srcMLCreateParserCtxt(xmlParserInputBufferPtr buffer_input) {
