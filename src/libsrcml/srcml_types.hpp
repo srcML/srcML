@@ -59,9 +59,25 @@ struct transform {
 enum SRCML_ARCHIVE_TYPE { SRCML_ARCHIVE_INVALID, SRCML_ARCHIVE_RW, SRCML_ARCHIVE_READ, SRCML_ARCHIVE_WRITE };
 
 /*
-
-  Holds data for a srcML archive read/write.
-
+ * srcml_archive:
+ * @filename: an attribute for a name of a file
+ * @encoding: an attribute for an encoding
+ * @xml_encoding: an attribute for an ecoding
+ * @language: an attribute for a language
+ * @directory: an attribute for a directory path
+ * @version: an attribute for a version string
+ * @attributes: an array of name-value attribute pairs
+ * @options: srcml options
+ * @tabstop: size of tabstop
+ * @prefixes: an array of XML namespace prefixes
+ * @namespaces: an array of XML namespaces
+ * @registered_languages: an array of registered extension language pairs
+ * @translator: a srcMLTranslator for writing and parsing
+ * @reader: a srcMLReader for reading
+ * @input: xmlParserInputBuffer for reading
+ * @transformations: an array of transformations to apply
+ *
+ * Holds data for a srcML archive read/write.
 */
 struct srcml_archive {
 
