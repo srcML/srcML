@@ -61,16 +61,18 @@ class srcMLTranslator(object):
     def close(self) :
         libsrcml.srcml_close_archive(self.archive)
 
+    def getsrcML(self) :
+        return self.buffer.value
+
     def delete(self) :
         libsrcml.srcml_free_archive(self.archive)
 
 # test
 #from srcMLapps import *
 translator = srcMLTranslator()
-#translator.setInputString("a;")
-#translator.translate("a", "b", "c", "d", 2)
-#translator.close()
-#print translator.getsrcML()
+translator.translate("a;")
+translator.close()
+print translator.getsrcML()
 translator.delete()
 
 #srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
