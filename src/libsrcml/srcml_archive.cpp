@@ -496,7 +496,7 @@ const char* srcml_archive_get_version(const srcml_archive* archive) {
  */
 int srcml_archive_get_options(const srcml_archive* archive) {
 
-  return archive->options;
+  return archive ? archive->options : 0;
 
 }
 
@@ -508,7 +508,7 @@ int srcml_archive_get_options(const srcml_archive* archive) {
  */
 int srcml_archive_get_tabstop(const srcml_archive* archive) {
 
-  return archive->tabstop;
+  return archive ? archive->tabstop : 0;
 
 }
 
