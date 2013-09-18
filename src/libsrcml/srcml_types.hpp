@@ -29,10 +29,21 @@
 #ifndef INCLUDED_SRCML_TYPES_HPP
 #define INCLUDED_SRCML_TYPES_HPP
 
-// transformation types, xpath, xslt, and relaxng
+/*
+ * SRCML_TRANSORM_TYPE:
+ * 
+ * Transformation types, xpath, xslt, and relaxng
+ */
+
 enum SRCML_TRANSFORM_TYPE { SRCML_XPATH, SRCML_XSLT, SRCML_RELAXNG };
 
-// struct to hold transformation information for latter application.
+/*
+ * transform:
+ * @type: a transformation type
+ * @transformation: the transformation to perform
+ *
+ * Struct to hold transformation information for latter application.
+ */
 struct transform {
 
   SRCML_TRANSFORM_TYPE type;
@@ -40,7 +51,11 @@ struct transform {
 
 };
 
-// archive type read, write, or read/write
+/*
+ * SRCML_ARCHIVE_TYPE:
+ * 
+ * Archive type read, write, or read/write.
+ */
 enum SRCML_ARCHIVE_TYPE { SRCML_ARCHIVE_INVALID, SRCML_ARCHIVE_RW, SRCML_ARCHIVE_READ, SRCML_ARCHIVE_WRITE };
 
 /*
