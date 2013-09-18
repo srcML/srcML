@@ -1,7 +1,7 @@
 /*
-  test_srcMLStateStackStack.cpp
+  test_Mode.cpp
 
-  Unit tests for srcMLStateStack.
+  Unit tests for Mode.
 
  */
 
@@ -11,7 +11,7 @@
 #include <cassert>
 #include <TokenParser.hpp>
 
-class TP : TokenParser {
+class TP : public TokenParser {
 
 public:
   TP() {}
@@ -30,19 +30,14 @@ int main(int argc, char * argv[]) {
 
   /*
     size
+
+    anything above zero causes exception on Destructor.
    */ 
 
   {
     TP tp;
-    //srcMLStateStack s(&tp);
-    //assert(s.size() == 0);
-  }
-
-  {
-    TP tp;
-    //srcMLStateStack s(&tp);
-    //s.startNewMode(1);
-    //assert(s.size() == 1);
+    srcMLStateStack s(&tp);
+    assert(s.size() == 0);
   }
 
   return 0;
