@@ -110,7 +110,7 @@ void srcml_free_archive(srcml_archive * archive) {
  *
  * @return the cloned archive
  */
-srcml_archive* srcml_clone_archive(const srcml_archive* archive) {
+srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
 
   if(archive == NULL) return 0;
 
@@ -465,7 +465,7 @@ int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix,
  *
  * @returns Retrieve the currently set encoding or NULL.
  */
-const char* srcml_archive_get_encoding(const srcml_archive* archive) {
+const char* srcml_archive_get_encoding(const struct srcml_archive* archive) {
 
   return archive && archive->encoding ? archive->encoding->c_str() : 0;
 
@@ -477,7 +477,7 @@ const char* srcml_archive_get_encoding(const srcml_archive* archive) {
  *
  * @returns Retrieve the currently set language or NULL.
  */
-const char* srcml_archive_get_language(const srcml_archive* archive) {
+const char* srcml_archive_get_language(const struct srcml_archive* archive) {
 
   return archive && archive->language ? archive->language->c_str() : 0;
 
@@ -489,7 +489,7 @@ const char* srcml_archive_get_language(const srcml_archive* archive) {
  *
  * @returns Retrieve the currently set root filename attribute or NULL.
  */
-const char* srcml_archive_get_filename(const srcml_archive* archive) {
+const char* srcml_archive_get_filename(const struct srcml_archive* archive) {
 
   return archive && archive->filename ? archive->filename->c_str() : 0;
 
@@ -501,7 +501,7 @@ const char* srcml_archive_get_filename(const srcml_archive* archive) {
  *
  * @returns Retrieve the currently set root directory attribute or NULL.
  */
-const char* srcml_archive_get_directory(const srcml_archive* archive) {
+const char* srcml_archive_get_directory(const struct srcml_archive* archive) {
 
   return archive && archive->directory ? archive->directory->c_str() : 0;
 
@@ -513,7 +513,7 @@ const char* srcml_archive_get_directory(const srcml_archive* archive) {
  *
  * @returns Retrieve the currently set root version attribute or NULL.
  */
-const char* srcml_archive_get_version(const srcml_archive* archive) {
+const char* srcml_archive_get_version(const struct srcml_archive* archive) {
 
   return archive && archive->version ? archive->version->c_str() : 0;
 
@@ -525,7 +525,7 @@ const char* srcml_archive_get_version(const srcml_archive* archive) {
  *
  * @returns Retrieve the currently set options.
  */
-int srcml_archive_get_options(const srcml_archive* archive) {
+int srcml_archive_get_options(const struct srcml_archive* archive) {
 
   return archive ? archive->options : 0;
 
@@ -537,7 +537,7 @@ int srcml_archive_get_options(const srcml_archive* archive) {
  *
  * @returns Retrieve the currently set tabstop size.
  */
-int srcml_archive_get_tabstop(const srcml_archive* archive) {
+int srcml_archive_get_tabstop(const struct srcml_archive* archive) {
 
   return archive ? archive->tabstop : 0;
 
@@ -920,7 +920,7 @@ const srcml_unit* srcml_read_unit_archive(srcml_archive* archive) {
  * @returns Return a srcml_unit containing the read unit attributes on success
  * and NULL on failure.
 */
-const srcml_unit* srcml_read_archive_current_unit(const srcml_archive* archive) {
+const srcml_unit* srcml_read_archive_current_unit(const struct srcml_archive* archive) {
 
   if(archive == NULL) return 0;
 
@@ -951,7 +951,7 @@ const srcml_unit* srcml_read_archive_current_unit(const srcml_archive* archive) 
  *
  * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-int srcml_write_unit(srcml_archive* archive, const srcml_unit* unit) {
+int srcml_write_unit(srcml_archive* archive, const struct srcml_unit* unit) {
 
   if(archive == NULL || unit == NULL) return SRCML_STATUS_ERROR;
 

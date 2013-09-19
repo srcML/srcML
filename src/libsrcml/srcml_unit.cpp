@@ -139,7 +139,7 @@ int srcml_unit_set_version(srcml_unit* unit, const char* version) {
  *
  * @returns langauge on success and NULL on failure.
  */
-const char* srcml_unit_get_language(const srcml_unit* unit) {
+const char* srcml_unit_get_language(const struct srcml_unit* unit) {
 
   if(unit == NULL) return 0;
 
@@ -155,7 +155,7 @@ const char* srcml_unit_get_language(const srcml_unit* unit) {
  *
  * @returns filename attribute on success and NULL on failure.
  */
-const char* srcml_unit_get_filename(const srcml_unit* unit) {
+const char* srcml_unit_get_filename(const struct srcml_unit* unit) {
 
   if(unit == NULL) return 0;
 
@@ -171,7 +171,7 @@ const char* srcml_unit_get_filename(const srcml_unit* unit) {
  *
  * @returns directory attribute on successand NULL on failure.
  */
-const char* srcml_unit_get_directory(const srcml_unit* unit) {
+const char* srcml_unit_get_directory(const struct srcml_unit* unit) {
 
   if(unit == NULL) return 0;
 
@@ -187,7 +187,7 @@ const char* srcml_unit_get_directory(const srcml_unit* unit) {
  *
  * @returns version on success and NULL on failure.
  */
-const char* srcml_unit_get_version(const srcml_unit* unit) {
+const char* srcml_unit_get_version(const struct srcml_unit* unit) {
 
   if(unit == NULL) return 0;
 
