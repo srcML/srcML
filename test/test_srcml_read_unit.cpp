@@ -143,5 +143,29 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(archive);
   }
 
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_read_open_memory(archive, srcml_two.c_str(), srcml_two.size());
+    assert(srcml_skip_unit(archive) == 1);
+    assert(srcml_skip_unit(archive) == 1);
+    assert(srcml_skip_unit(archive) == 0);
+   
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    assert(srcml_skip_unit(archive) == 0);
+   
+    srcml_free_archive(archive);
+  }
+
+  {
+    assert(srcml_skip_unit(0) == 0);
+  }
+
   return 0;
 }
