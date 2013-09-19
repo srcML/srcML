@@ -195,6 +195,22 @@ const char* srcml_unit_get_version(const struct srcml_unit* unit) {
 
 }
 
+/**
+ * srcml_unit_get_xml
+ * @param unit a srcml unit
+ * 
+ * Get the parsed or collected srcml from an archive.
+ *
+ * @returns the unit srcML on success and NULL on failure.
+ */
+const char* srcml_unit_get_xml(const struct srcml_unit* unit) {
+
+  if(unit == NULL) return 0;
+
+  return unit->unit ? unit->unit->c_str() : 0;
+
+}
+
 /******************************************************************************
  *                                                                            *
  *                           Unit parsing functions                           *
