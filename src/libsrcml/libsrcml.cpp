@@ -534,7 +534,13 @@ const char* srcml_get_namespace_prefix(const char* prefix) {
  */
 int srcml_check_language(const char* language) { return language == 0 ? 0 : Language::getLanguage(language); }
 
-/* null-terminated array of supported source-code languages */
+/**
+ * srcml_language_list
+ *
+ * Gets list of supported source-code languages as NULL-terminated array.
+ *
+ * @returns NULL-terminated array of supported source-code languages 
+*/
 const char** srcml_language_list() {
   static const char* langs[] = { "C", "C++", "C#", "Java", 0 };
   return langs;
