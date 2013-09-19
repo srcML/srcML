@@ -103,7 +103,7 @@ int srcml_append_transform_xslt(srcml_archive* archive, const char* xslt_filenam
  *
  * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure. 
  */
-int srcml_clear_transforms (struct srcml_archive * archive) {
+int srcml_clear_transforms (srcml_archive * archive) {
 
   if(archive == NULL) return SRCML_STATUS_ERROR;
 
@@ -111,7 +111,6 @@ int srcml_clear_transforms (struct srcml_archive * archive) {
 
   return SRCML_STATUS_OK;
   
-
 }
 
 /**
