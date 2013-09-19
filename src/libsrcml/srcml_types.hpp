@@ -43,9 +43,9 @@ enum SRCML_TRANSFORM_TYPE { SRCML_XPATH, SRCML_XSLT, SRCML_RELAXNG };
  * Struct to hold transformation information for latter application.
  */
 struct transform {
-  /** type a transformation type */
+  /** a transformation type */
   SRCML_TRANSFORM_TYPE type;
-  /** transformation the transformation to perform */
+  /** the transformation to perform */
   std::string transformation;
 
 };
@@ -67,44 +67,44 @@ struct srcml_archive {
   /** type archive type read/write */
   SRCML_ARCHIVE_TYPE type;
 
-  /** filename an attribute for a name of a file */
+  /** an attribute for a name of a file */
   std::string * filename;
-  /** encoding an attribute for an encoding */
+  /** an attribute for an encoding */
   std::string * encoding;
-  /** xml_encoding an attribute for an ecoding */
+  /** an attribute for an ecoding */
   std::string * xml_encoding;
-  /** language an attribute for a language */
+  /** an attribute for a language */
   std::string * language;
-  /** directory an attribute for a directory path */
+  /** an attribute for a directory path */
   std::string * directory;
-  /** version an attribute for a version string */
+  /** an attribute for a version string */
   std::string * version;
-  /** attributes an array of name-value attribute pairs */
+  /** an array of name-value attribute pairs */
   std::vector<std::string>  attributes;
 
-  /** options srcml options */
+  /** srcml options */
   OPTION_TYPE options;
 
-  /** tabstop size of tabstop */
+  /** size of tabstop */
   int tabstop;
 
-  /** prefixes an array of XML namespace prefixes */
+  /** an array of XML namespace prefixes */
   std::vector<std::string> prefixes;
   /** namespaces an array of XML namespaces */
   std::vector<std::string> namespaces;
 
-  /** registered_languages an array of registered extension language pairs */
+  /** an array of registered extension language pairs */
   std::vector<pair> registered_languages;
 
-  /** translator a srcMLTranslator for writing and parsing */
+  /** a srcMLTranslator for writing and parsing */
   srcMLTranslator * translator;
 
-  /** reader a srcMLReader for reading */
+  /** a srcMLReader for reading */
   srcMLReader * reader;
-  /** input xmlParserInputBuffer for reading */
+  /** xmlParserInputBuffer for reading */
   xmlParserInputBufferPtr input;
 
-  /** transformations an array of transformations to apply */
+  /** an array of transformations to apply */
   std::vector<transform> transformations;
 };
 
@@ -115,19 +115,19 @@ struct srcml_archive {
  * such as the transformed or collected unit.
 */
 struct srcml_unit {
-  /** archive the archive the unit is created from */
+  /** the archive the unit is created from */
   srcml_archive* archive;
 
-  /** language an attribute for a language */
+  /** an attribute for a language */
   std::string * language;
-  /** filename an attribute name for a file */
+  /** an attribute name for a file */
   std::string * filename;
-  /** directory an attribute for a directory path */
+  /** an attribute for a directory path */
   std::string * directory;
-  /** version an attribute for a version string */
+  /** an attribute for a version string */
   std::string * version;
 
-  /** unit a buffer to store srcml from read and after parsing */
+  /** a buffer to store srcml from read and after parsing */
   std::string * unit;
 };
 
