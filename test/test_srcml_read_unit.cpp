@@ -167,5 +167,83 @@ int main(int argc, char * argv[]) {
     assert(srcml_skip_unit(0) == 0);
   }
 
+  /*
+    srcml_read_unit_position
+   */
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_read_open_memory(archive, srcml.c_str(), srcml.size());
+    srcml_unit * unit = srcml_read_unit_position(archive, 1);
+    assert(*unit->unit == srcml_a);
+   
+    srcml_free_unit(unit);
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_read_open_memory(archive, srcml_full.c_str(), srcml_full.size());
+    srcml_unit * unit = srcml_read_unit_position(archive, 1);
+    assert(srcml_unit_get_language(unit) == std::string("C++"));
+    assert(srcml_unit_get_filename(unit) == std::string("project"));
+    assert(srcml_unit_get_directory(unit) == std::string("test"));
+    assert(srcml_unit_get_version(unit) == std::string("1"));
+    assert(*unit->unit == srcml_b);
+   
+    srcml_free_unit(unit);
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_read_open_memory(archive, srcml_single.c_str(), srcml_single.size());
+    srcml_unit * unit = srcml_read_unit_position(archive, 1);
+    assert(srcml_unit_get_language(unit) == std::string("C++"));
+    assert(srcml_unit_get_filename(unit) == std::string("project"));
+    assert(srcml_unit_get_directory(unit) == std::string("test"));
+    assert(srcml_unit_get_version(unit) == std::string("1"));
+    assert(*unit->unit == srcml_b_single);
+
+    srcml_free_unit(unit);
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_read_open_memory(archive, srcml.c_str(), srcml.size());
+    assert(srcml_read_unit_position(archive, 2) == 0);
+   
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_read_open_memory(archive, srcml_full.c_str(), srcml_full.size());
+    assert(srcml_read_unit_position(archive, 2) == 0);
+   
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_read_open_memory(archive, srcml_single.c_str(), srcml_single.size());
+    assert(srcml_read_unit_position(archive, 2) == 0);
+   
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
   return 0;
 }
