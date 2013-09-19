@@ -948,6 +948,34 @@ srcml_unit* srcml_read_unit(srcml_archive* archive) {
   return unit;
 }
 
+/**
+ * srcml_skip_unit
+ * @param archive a srcml archive to read from
+ *
+ *  Read over (skipping) the next unit from the archive
+ *
+ *  @returns Returns 0 if no unit to skip, 1 otherwise
+ */
+int srcml_skip_unit(struct srcml_archive* archive) {
+
+}
+
+/**
+ * srcml_read_unit_position
+ * @param archive a srcml_archive
+ * @param pos a relative position in archive
+ *
+ *
+ * Read a unit at a specific relative position in an archive
+ * Unit numbers start at 1.  ssrcml_read_unit_position(archive, 1)
+ * is equivalent to srcml_read_unit
+ *
+ * @returns Returns 0 if pos unit does not exist and the read unit otherwise.
+ */
+struct srcml_unit* srcml_read_unit_position(srcml_archive* archive, int pos) {
+
+}
+
 /******************************************************************************
  *                                                                            *
  *                       Archive close function                               *
