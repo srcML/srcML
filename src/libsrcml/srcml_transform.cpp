@@ -102,7 +102,7 @@ int srcml_append_transform_xslt(srcml_archive* archive, const char* xslt_filenam
  * srcml_apply_transforms
  * @related transform
  * @param iarchive an input srcml archive
- * @param oarchvie and output srcml archive
+ * @param oarchive and output srcml archive
  *
  * Apply appended transformations inorder added and consecutively.
  * Intermediate results are stored in a temporary file.

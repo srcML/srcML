@@ -158,7 +158,7 @@ int srcMLReader::readUnitAttributesInternal(std::string ** language, std::string
  * @param version a location to store the version attribute
  * @param attributes array to store other attributes gathered
  * @param prefixes an array to store gathered XML namespace prefixes
- * @param namepaces an array to store gathered XML naamespaces
+ * @param namespaces an array to store gathered XML naamespaces
  * @param options a variable to set used options
  * @param tabstop a variable to set the tabstop
  *

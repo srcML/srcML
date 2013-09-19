@@ -209,7 +209,7 @@ int srcml_set_language(const char* language) {
 
 /**
  * srcml_set_filename
- * @param filname name of a file
+ * @param filename name of a file
  *
  * Set the filename attribute for the root unit.
  *
