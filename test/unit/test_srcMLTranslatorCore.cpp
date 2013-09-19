@@ -36,7 +36,7 @@ int main(int argc, char * argv[]) {
     xmlTextWriterPtr writer = xmlNewTextWriter(output_buffer);
     OPTION_TYPE op = 0;
 
-    srcMLTranslatorCore translator(Language::getLanguage("C++"), "ISO-8859-1", "ISO-8859-1", 
+    srcMLTranslatorCore translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1", 
                                  writer, op, "", "", "", urisprefix, 4);
 
     translator.close();
@@ -57,7 +57,7 @@ int main(int argc, char * argv[]) {
     xmlTextWriterPtr writer = xmlNewTextWriter(output_buffer);
     OPTION_TYPE op = 0;
 
-    srcMLTranslatorCore translator(Language::getLanguage("C++"), "ISO-8859-1", "ISO-8859-1", 
+    srcMLTranslatorCore translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1", 
                                  writer, op, "", "", "", urisprefix, 4);
 
 
@@ -79,7 +79,7 @@ int main(int argc, char * argv[]) {
     xmlTextWriterPtr writer = xmlNewTextWriter(output_buffer);
     OPTION_TYPE op = 0;
 
-    srcMLTranslatorCore translator(Language::getLanguage("C++"), "ISO-8859-1", "ISO-8859-1", 
+    srcMLTranslatorCore translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1", 
                                  writer, op, "", "", "", urisprefix, 4);
 
     xmlParserInputBufferPtr input = xmlParserInputBufferCreateMem("a;", 2, xmlParseCharEncoding(0));
@@ -99,7 +99,7 @@ int main(int argc, char * argv[]) {
     xmlTextWriterPtr writer = xmlNewTextWriter(output_buffer);
     OPTION_TYPE op = 0;
 
-    srcMLTranslatorCore translator(Language::getLanguage("C++"), "ISO-8859-1", "ISO-8859-1", 
+    srcMLTranslatorCore translator(Language::LANGUAGE_CXX, "ISO-8859-1", "ISO-8859-1", 
                                  writer, op, "", "", "", urisprefix, 4);
 
     try {
