@@ -10,6 +10,7 @@ scp ~/Dropbox/srcML/Unix/Fedora19/srcML.tar.gz fedora19test:/srcML
 
 #scp ~/Dropbox/srcML/Unix/Fedora15-64/srcML.tar.gz fedora15test64:/srcML
 #scp ~/Dropbox/srcML/Unix/Fedora16-64/srcML.tar.gz fedora16test64:/srcML
+scp ~/Dropbox/srcML/Unix/Fedora17-64/srcML.tar.gz fedora17test64:/srcML
 scp ~/Dropbox/srcML/Unix/Fedora18-64/srcML.tar.gz fedora18test64:/srcML
 scp ~/Dropbox/srcML/Unix/Fedora19-64/srcML.tar.gz fedora19test64:/srcML
 
