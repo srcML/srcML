@@ -281,7 +281,7 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
   OPTION_TYPE save_options = unit->archive->options;
 
   if(lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX)
-    unit->archive->options |= SRCML_OPTION_CPP;
+    unit->archive->options |= SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO;
   else if (lang == Language::LANGUAGE_CSHARP)
     unit->archive->options |= SRCML_OPTION_CPP_NOMACRO;
 
@@ -324,7 +324,7 @@ int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buf
   OPTION_TYPE save_options = unit->archive->options;
 
   if(lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX)
-    unit->archive->options |= SRCML_OPTION_CPP;
+    unit->archive->options |= SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO;
   else if (lang == Language::LANGUAGE_CSHARP)
     unit->archive->options |= SRCML_OPTION_CPP_NOMACRO;
 
@@ -366,7 +366,7 @@ int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
   OPTION_TYPE save_options = unit->archive->options;
 
   if(lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX)
-    unit->archive->options |= SRCML_OPTION_CPP;
+    unit->archive->options |= SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO;
   else if (lang == Language::LANGUAGE_CSHARP)
     unit->archive->options |= SRCML_OPTION_CPP_NOMACRO;
 
@@ -412,7 +412,7 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
   OPTION_TYPE save_options = unit->archive->options;
 
   if(lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX)
-    unit->archive->options |= SRCML_OPTION_CPP;
+    unit->archive->options |= SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO;
   else if (lang == Language::LANGUAGE_CSHARP)
     unit->archive->options |= SRCML_OPTION_CPP_NOMACRO;
 

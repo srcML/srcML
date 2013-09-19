@@ -64,8 +64,6 @@ extern "C" {
 #define SRCML_LANGUAGE_XML    "xml"
 
 /* Options */
-/** @todo  Order carefully, then allocate values sequentially.  Change OPTION values in old */
-// srcML code to match these.
 /** Create an archive */
 #define SRCML_OPTION_ARCHIVE           1<<0
 /** Markups literal in special namespace */
@@ -78,7 +76,7 @@ extern "C" {
 #define SRCML_OPTION_DEBUG             1<<4
 /** Include line/column position attributes */
 #define SRCML_OPTION_POSITION          1<<5
-/** Markup preprocessor elements (default for C, C++, C#) */
+/** Markup preprocessor elements (default for C, C++) */
 #define SRCML_OPTION_CPP               1<<6
 /** Markup preprocessor elements (default for C, C++, C#) */
 #define SRCML_OPTION_CPP_NOMACRO       1<<7
