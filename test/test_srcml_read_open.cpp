@@ -85,7 +85,7 @@ int main(int argc, char * argv[]) {
   assert(srcml_archive_get_filename(archive) == std::string("project"));
   assert(srcml_archive_get_directory(archive) == std::string("test"));
   assert(srcml_archive_get_version(archive) == std::string("1"));
-  assert(srcml_archive_get_options(archive) == SRCML_OPTION_CPP);
+  assert(srcml_archive_get_options(archive) == SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO);
 
   srcml_close_archive(archive);
   srcml_free_archive(archive);
@@ -161,7 +161,7 @@ int main(int argc, char * argv[]) {
   assert(srcml_archive_get_filename(archive) == std::string("project"));
   assert(srcml_archive_get_directory(archive) == std::string("test"));
   assert(srcml_archive_get_version(archive) == std::string("1"));
-  assert(srcml_archive_get_options(archive) == SRCML_OPTION_CPP);
+  assert(srcml_archive_get_options(archive) == SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO);
 
   srcml_close_archive(archive);
   srcml_free_archive(archive);
@@ -240,7 +240,7 @@ int main(int argc, char * argv[]) {
   assert(srcml_archive_get_filename(archive) == std::string("project"));
   assert(srcml_archive_get_directory(archive) == std::string("test"));
   assert(srcml_archive_get_version(archive) == std::string("1"));
-  assert(srcml_archive_get_options(archive) == SRCML_OPTION_CPP);
+  assert(srcml_archive_get_options(archive) == SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO);
 
   srcml_close_archive(archive);
   srcml_free_archive(archive);
@@ -316,7 +316,7 @@ int main(int argc, char * argv[]) {
   assert(srcml_archive_get_filename(archive) == std::string("project"));
   assert(srcml_archive_get_directory(archive) == std::string("test"));
   assert(srcml_archive_get_version(archive) == std::string("1"));
-  assert(srcml_archive_get_options(archive) == SRCML_OPTION_CPP);
+  assert(srcml_archive_get_options(archive) == SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO);
 
   srcml_close_archive(archive);
   srcml_free_archive(archive);
