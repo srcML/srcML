@@ -40,7 +40,7 @@ int main(int argc, char * argv[]) {
     UTF8CharBuffer utf8("test_UTF8CharBuffer.cpp", "UTF-8");
     assert(utf8.getChar() == '/');
     assert(utf8.getChar() == '*');
-    assert(utf8.getChar() == '\n');
+    assert(utf8.getChar() == '*');
 
   }
 
