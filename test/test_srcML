@@ -1,6 +1,6 @@
 #!/bin/bash
 
-./sshall.py --test exec 'bash -c "cd srcML; git pull; cd ..; chown -R srcml:srcml srcML"'
+./sshall.py --test exec 'bash -c "cd /srcML; git pull; cd ..; chown -R srcml:srcml /srcML"'
 
 #scp ~/Dropbox/srcML/Unix/Fedora15/srcML.tar.gz fedora15test:/srcML
 #scp ~/Dropbox/srcML/Unix/Fedora16/srcML.tar.gz fedora16test:/srcML
