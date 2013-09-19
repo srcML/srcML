@@ -40,10 +40,13 @@ int main(int argc, char * argv[]) {
 
   const std::string srcml_b_single = "<s:unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>\n</s:unit>";
 
+  const std::string srcml_b_two = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C\" filename=\"project.c\"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>\n</unit>";
+
   const std::string srcml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C\" filename=\"project.c\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>\n\n</unit>\n";
   const std::string srcml_full = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<s:unit xmlns:s=\"http://www.sdml.info/srcML/src\">\n\n<s:unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>\n</s:unit>\n\n</s:unit>\n";
   const std::string srcml_single = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<s:unit xmlns:s=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>\n</s:unit>\n";
 
+  const std::string srcml_two = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C\" filename=\"project.c\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C\" filename=\"project.c\"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>\n</unit>\n\n</unit>\n";
   /*
     srcml_read_unit
    */
@@ -101,6 +104,43 @@ int main(int argc, char * argv[]) {
 
   {
     assert(srcml_read_unit(0) == 0);
+  }
+
+  /*
+    srcml_skip_unit
+   */
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_read_open_memory(archive, srcml.c_str(), srcml.size());
+    assert(srcml_skip_unit(archive) == 1);
+    assert(srcml_skip_unit(archive) == 0);
+   
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_read_open_memory(archive, srcml_full.c_str(), srcml_full.size());
+    assert(srcml_skip_unit(archive) == 1);
+    assert(srcml_skip_unit(archive) == 0);
+   
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_read_open_memory(archive, srcml_single.c_str(), srcml_single.size());
+    assert(srcml_skip_unit(archive) == 1);
+    assert(srcml_skip_unit(archive) == 0);
+   
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
   }
 
   return 0;
