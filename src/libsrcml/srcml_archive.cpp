@@ -974,6 +974,13 @@ int srcml_skip_unit(struct srcml_archive* archive) {
  */
 struct srcml_unit* srcml_read_unit_position(srcml_archive* archive, int pos) {
 
+  if(archive == NULL || pos <= 0) return 0;
+
+  for(; pos != 1; --pos)
+    srcml_skip_unit(archive);
+
+  return srcml_read_unit(archive);
+
 }
 
 /******************************************************************************
