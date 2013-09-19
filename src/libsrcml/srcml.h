@@ -67,33 +67,33 @@ extern "C" {
 /** @todo  Order carefully, then allocate values sequentially.  Change OPTION values in old */
 // srcML code to match these.
 /** Create an archive */
-#define SRCML_OPTION_ARCHIVE           1<<1
+#define SRCML_OPTION_ARCHIVE           1<<0
 /** Markups literal in special namespace */
-#define SRCML_OPTION_LITERAL           1<<2
+#define SRCML_OPTION_LITERAL           1<<1
 /** Markups modifiers in special namespace */
-#define SRCML_OPTION_MODIFIER          1<<17
+#define SRCML_OPTION_MODIFIER          1<<2
 /** Markups operator in special namespace */
-#define SRCML_OPTION_OPERATOR          1<<16
+#define SRCML_OPTION_OPERATOR          1<<3
 /** Markups operator in special namespace */
-#define SRCML_OPTION_DEBUG             1<<0
+#define SRCML_OPTION_DEBUG             1<<4
 /** Include line/column position attributes */
-#define SRCML_OPTION_POSITION          1<<10
+#define SRCML_OPTION_POSITION          1<<5
 /** Markup preprocessor elements (default for C, C++, C#) */
-#define SRCML_OPTION_CPP               1<<28 | 1<<21
+#define SRCML_OPTION_CPP               1<<6
 /** Markup preprocessor elements (default for C, C++, C#) */
-#define SRCML_OPTION_CPP_NOMACRO       1<<21
+#define SRCML_OPTION_CPP_NOMACRO       1<<7
 /** Do not issue an XML declaration */
-#define SRCML_OPTION_NO_XML_DECL       1<<29 | 1<<18
+#define SRCML_OPTION_NO_XML_DECL       1<<8
 /** Do not include any XML namespace declarations */
-#define SRCML_OPTION_NO_NAMESPACE_DECL 1<<30 | 1<<18
+#define SRCML_OPTION_NO_NAMESPACE_DECL 1<<9
 /** Leave as text preprocessor else parts (default: markup) */
-#define SRCML_OPTION_CPP_TEXT_ELSE     1<<22
+#define SRCML_OPTION_CPP_TEXT_ELSE     1<<10
 /** Markup preprocessor @code #if 0 @endcode sections (default: leave as text) */
-#define SRCML_OPTION_CPP_MARKUP_IF0    1<<23
+#define SRCML_OPTION_CPP_MARKUP_IF0    1<<11
 /** Apply transformations to the entire srcML file (default: each unit */
-#define SRCML_OPTION_APPLY_ROOT        1<<27
+#define SRCML_OPTION_APPLY_ROOT        1<<12
 /** Compress the output file */
-#define SRCML_OPTION_COMPRESS          1<<3
+#define SRCML_OPTION_COMPRESS          1<<13
 
 /* srcml status messages */
 /** Return status indicating no errors */
