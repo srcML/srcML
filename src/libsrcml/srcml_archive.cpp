@@ -960,6 +960,8 @@ int srcml_skip_unit(struct srcml_archive* archive) {
 
   if(archive == NULL) return 0;
 
+  if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return 0;
+
   srcml_unit * unit = srcml_read_unit(archive);
   if(unit == 0) return 0;
 
@@ -982,6 +984,8 @@ int srcml_skip_unit(struct srcml_archive* archive) {
 struct srcml_unit* srcml_read_unit_position(srcml_archive* archive, int pos) {
 
   if(archive == NULL || pos <= 0) return 0;
+
+  if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return 0;
 
   for(; pos != 1 && srcml_skip_unit(archive); --pos)
     ;
