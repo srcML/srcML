@@ -96,12 +96,32 @@ int srcml_append_transform_xslt(srcml_archive* archive, const char* xslt_filenam
 }
 
 /**
+ * srcml_clear_transforms
+ * @param archive an archive
+ *
+ * Remove all transformations from archive.
+ *
+ * @returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure. 
+ */
+int srcml_clear_transforms (struct srcml_archive * archive) {
+
+  if(archive == NULL) return SRCML_STATUS_ERROR;
+
+  archive->transformations.clear();
+
+  return SRCML_STATUS_OK;
+  
+
+}
+
+/**
  * srcml_apply_transforms
  * @param iarchive an input srcml archive
  * @param oarchive and output srcml archive
  *
  * Apply appended transformations inorder added and consecutively.
  * Intermediate results are stored in a temporary file.
+ * Transformations are cleared.
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
