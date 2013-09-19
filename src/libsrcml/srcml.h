@@ -90,7 +90,7 @@ extern "C" {
 #define SRCML_OPTION_CPP_NOMACRO       1<<21
 /** Leave as text preprocessor else parts (default: markup) */
 #define SRCML_OPTION_CPP_TEXT_ELSE     1<<22
-/** Markup preprocessor #if 0 sections (default: leave as text) */
+/** Markup preprocessor @code #if 0 @endcode sections (default: leave as text) */
 #define SRCML_OPTION_CPP_MARKUP_IF0    1<<23
 /** Apply transformations to the entire srcML file (default: each unit */
 #define SRCML_OPTION_APPLY_ROOT        1<<27
