@@ -897,58 +897,6 @@ int srcml_read_open_fd(srcml_archive* archive, int srcml_fd) {
  ******************************************************************************/
 
 /**
- * srcml_read_unit_archive
- * @param archive a srcml_archive opened for reading
- *
- * Read the next unit from the archive.
- * The unit must be freed with srcml_free_unit.
- *
- * @returns Return a srcml_unit containing the read unit on success
- * and NULL on failure.
- */
-const srcml_unit* srcml_read_unit_archive(srcml_archive* archive) {
-
-  if(archive == NULL) return 0;
-
-  if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return 0;
-
-  return srcml_read_unit(archive);
-
-}
-
-/**
- * srcml_read_unit_current_unit
- * @param archive a srcml_archive opened for reading
- *
- * Read the attributes from the current archive.
- * The unit must be freed with srcml_free_unit.
- *
- * @returns Return a srcml_unit containing the read unit attributes on success
- * and NULL on failure.
-*/
-const srcml_unit* srcml_read_archive_current_unit(const struct srcml_archive* archive) {
-
-  if(archive == NULL) return 0;
-
-  if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return 0;
-
-  std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
-  bool done = !archive->reader->readUnitAttributes(&language, &filename, &directory, &version);
-
-  srcml_unit * unit = 0;
-  if(!done) {
-    unit = srcml_create_unit((srcml_archive *)archive);
-    unit->language = language;
-    unit->filename = filename;
-    unit->directory = directory;
-    unit->version = version;
-  }
-
-  return unit;
-
-}
-
-/**
  * srcml_write_unit
  * @param archive a srcml archive opened for writing
  * @param unit a srcml_unit to output
