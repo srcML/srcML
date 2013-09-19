@@ -31,7 +31,6 @@
 
 /** 
  * srcml_append_transform_xpath
- * @related transform
  * @param archive a srcml archive
  * @param xpath_string an XPath expression
  *
@@ -54,7 +53,6 @@ int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_strin
 
 /**
  * srcml_append_transform_xslt
- * @related transform
  * @param archive a srcml_archive
  * @param xslt_filename an XSLT program filename path
  *
@@ -77,7 +75,6 @@ int srcml_append_transform_xslt(srcml_archive* archive, const char* xslt_filenam
 
 /**
  * srcml_append_transform_relaxng
- * @related transform
  * @param archive a srcml archive
  * @param relaxng_filename a RelaxNG schema filename path
  *
@@ -100,7 +97,6 @@ int srcml_append_transform_xslt(srcml_archive* archive, const char* xslt_filenam
 
 /**
  * srcml_apply_transforms
- * @related transform
  * @param iarchive an input srcml archive
  * @param oarchive and output srcml archive
  *
