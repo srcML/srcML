@@ -570,7 +570,7 @@ const char * srcml_check_extension(const char* filename) {
 
 }
 
-/*
+/**
  * srcml_check_format
  * @param format an archive or compression extension, e.g., tar.gz
  *
