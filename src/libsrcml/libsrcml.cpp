@@ -42,10 +42,20 @@
 #include <dlfcn.h>
 #endif
 
+/**
+ * @var srcml_error
+ *
+ * Global structure to hold error string.
+ */
 std::string srcml_error;
 
-// global archive for use with srcml() function.  Defaulted values. Archive is used for both read and write
-// first call to srcml initializes other parameters.
+/**
+ * @var global_archive
+ *
+ * global archive for use with srcml() function.  Defaulted values.
+ * Archive is used for both read and write first call to srcml()
+ * initializes other parameters.
+ */
 srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector<std::string>(), 0,
                                  4, std::vector<std::string>(), std::vector<std::string>(), std::vector<pair>(),
                                  0, 0, 0, std::vector<transform>() };
