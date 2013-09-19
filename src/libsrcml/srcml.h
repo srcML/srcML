@@ -40,7 +40,9 @@ extern "C" {
 #endif
 
 /* Header file version macros */
+/** number representing libsrcml version */
 #define SRCML_VERSION_NUMBER 1
+/** string containing libsrcml version */
 #define SRCML_VERSION_STRING "libsrcml 0.6"
 
 /* Library version functions */
@@ -48,11 +50,17 @@ int srcml_version_number();
 const char* srcml_version_string();
 
 /* Core language set */
+/** srcML language not set */
 #define SRCML_LANGUAGE_NONE   0
+/** string for language C */
 #define SRCML_LANGUAGE_C      "C"
+/** string for language C++ */
 #define SRCML_LANGUAGE_CXX    "C++"
+/** string for language Java */
 #define SRCML_LANGUAGE_JAVA   "Java"
+/** string for language C# */
 #define SRCML_LANGUAGE_CSHARP "C#"
+/** string for language XML */
 #define SRCML_LANGUAGE_XML    "xml"
 
 /* Options */
