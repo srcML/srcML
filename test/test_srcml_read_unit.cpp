@@ -245,5 +245,117 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(archive);
   }
 
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_read_open_memory(archive, srcml.c_str(), srcml.size());
+    assert(srcml_read_unit_position(archive, 3) == 0);
+   
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_read_open_memory(archive, srcml_full.c_str(), srcml_full.size());
+    assert(srcml_read_unit_position(archive, 3) == 0);
+   
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_read_open_memory(archive, srcml_single.c_str(), srcml_single.size());
+    assert(srcml_read_unit_position(archive, 3) == 0);
+   
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_read_open_memory(archive, srcml_two.c_str(), srcml_two.size());
+    srcml_unit * unit = srcml_read_unit_position(archive, 1);
+    assert(*unit->unit == srcml_a);
+    srcml_free_unit(unit);
+    unit = srcml_read_unit_position(archive, 1);
+    assert(*unit->unit == srcml_b_two);
+    srcml_free_unit(unit);
+    assert(srcml_read_unit_position(archive, 1) == 0);
+
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_read_open_memory(archive, srcml_two.c_str(), srcml_two.size());
+    srcml_unit * unit = srcml_read_unit_position(archive, 2);
+    assert(*unit->unit == srcml_b_two);
+    srcml_free_unit(unit);
+    assert(srcml_read_unit_position(archive, 1) == 0);
+
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_read_open_memory(archive, srcml_two.c_str(), srcml_two.size());
+    assert(srcml_read_unit_position(archive, 3) == 0);
+
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_read_open_memory(archive, srcml_two.c_str(), srcml_two.size());
+    assert(srcml_read_unit_position(archive, 4) == 0);
+
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    assert(srcml_read_unit_position(archive, 1) == 0);
+
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+    assert(srcml_read_unit_position(0, 1) == 0);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_read_open_memory(archive, srcml.c_str(), srcml.size());
+    assert(srcml_read_unit_position(archive, 0) == 0);
+
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
+  {
+
+    srcml_archive * archive = srcml_create_archive();
+    srcml_read_open_memory(archive, srcml.c_str(), srcml.size());
+    assert(srcml_read_unit_position(archive, -1) == 0);
+
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
+
   return 0;
 }
