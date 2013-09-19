@@ -1,7 +1,6 @@
 /**
+ * @file srcml_transform.cpp
  * @copyright
- *
- * srcml_transform.cpp
  *
  * Copyright (C) 2013  SDML (www.sdml.info)
  *

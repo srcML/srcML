@@ -1,7 +1,6 @@
 /**
+ * @file srcml.h
  * @copyright
- *
- * srcml.h
  *
  * Copyright (C) 2013  SDML (www.sdml.info)
  *

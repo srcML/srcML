@@ -1,7 +1,6 @@
 /**
+ * @file libsrcml.cpp
  * @copyright
- *
- * libsrcml.cpp
  *
  * Copyright (C) 2013  SDML (www.sdml.info)
  *

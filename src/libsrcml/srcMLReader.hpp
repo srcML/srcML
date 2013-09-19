@@ -1,7 +1,6 @@
 /**
+ * @file srcMLReader.hpp
  * @copyright
- *
- * srcMLReader.hpp
  *
  * Copyright (C) 2013  SDML (www.sdml.info)
  *

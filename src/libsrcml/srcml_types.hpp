@@ -1,7 +1,6 @@
 /**
+ * @file srcml_types.hpp
  * @copyright
- *
- * srcml_types.hpp
  *
  * Copyright (C) 2013  SDML (www.sdml.info)
  *

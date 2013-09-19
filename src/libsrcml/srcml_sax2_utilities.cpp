@@ -1,7 +1,6 @@
 /**
+ * @file srcml_sax2_utilities.cpp
  * @copyright
- *
- * srcml_sax2_utilities.h
  *
  * Copyright (C) 2013  SDML (www.sdml.info)
  *

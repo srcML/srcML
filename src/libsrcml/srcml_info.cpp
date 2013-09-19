@@ -1,7 +1,6 @@
 /**
+ * @file srcml_info.cpp
  * @copyright
- *
- * srcml_info.cpp
  *
  * Copyright (C) 2013  SDML (www.sdml.info)
  *
