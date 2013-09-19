@@ -31,7 +31,7 @@
 
 /**
  * srcml_unit_set_language
- * @related srcml_unit
+ * @memberof srcml_unit
  * @param unit a srcml unit
  * @param language a language
  * 
@@ -56,7 +56,7 @@ int srcml_unit_set_language(srcml_unit* unit, const char* language) {
 
 /**
  * srcml_unit_set_filename
- * @related srcml_unit
+ * @memberof srcml_unit
  * @param unit a srcml unit
  * @param filename the name of a file
  * 
@@ -81,7 +81,7 @@ int srcml_unit_set_filename(srcml_unit* unit, const char* filename) {
 
 /**
  * srcml_unit_set_directory
- * @related srcml_unit
+ * @memberof srcml_unit
  * @param unit a srcml unit
  * @param directory a directory path
  * 
@@ -106,7 +106,7 @@ int srcml_unit_set_directory(srcml_unit* unit, const char* directory) {
 
 /**
  * srcml_unit_set_version
- * @related srcml_unit
+ * @memberof srcml_unit
  * @param unit a srcml unit
  * @param version a version string
  * 
@@ -137,7 +137,7 @@ int srcml_unit_set_version(srcml_unit* unit, const char* version) {
 
 /**
  * srcml_unit_get_language
- * @related srcml_unit
+ * @memberof srcml_unit
  * @param unit a srcml unit
  * 
  * Get the language for the srcml unit
@@ -154,7 +154,7 @@ const char* srcml_unit_get_language(const srcml_unit* unit) {
 
 /**
  * srcml_unit_get_filename
- * @related srcml_unit
+ * @memberof srcml_unit
  * @param unit a srcml unit
  * 
  * Get the filename attribute for the srcml unit.
@@ -171,7 +171,7 @@ const char* srcml_unit_get_filename(const srcml_unit* unit) {
 
 /**
  * srcml_unit_get_directory
- * @related srcml_unit
+ * @memberof srcml_unit
  * @param unit a srcml unit
  * 
  * Get the directory attribute for the srcml unit.
@@ -188,7 +188,7 @@ const char* srcml_unit_get_directory(const srcml_unit* unit) {
 
 /**
  * srcml_unit_get_version
- * @related srcml_unit
+ * @memberof srcml_unit
  * @param unit a srcml unit
  * 
  * Get the version for the srcml unit.
@@ -211,7 +211,7 @@ const char* srcml_unit_get_version(const srcml_unit* unit) {
 
 /**
  * srcml_parse_unit_internal
- * @related srcml_unit
+ * @memberof srcml_unit
  * @param unit a srcml unit
  * @param lang an interger representation of a language.
  *
@@ -257,7 +257,7 @@ int srcml_parse_unit_internal(srcml_unit * unit, int lang) {
 
 /**
  * srcml_parse_unit_archive
- * @related srcml_unit
+ * @memberof srcml_unit
  * @param archive a srcml archive open for writing
  * @param unit a unit to parse the results to
  *
@@ -276,7 +276,7 @@ int srcml_parse_unit_archive (srcml_archive* archive, srcml_unit* unit) {
 
 /**
  * srcml_parse_unit_filename
- * @related srcml_unit
+ * @memberof srcml_unit
  * @param unit a unit to parse the results to
  * @param src_filename name of a file to parse into srcML
  *
@@ -319,7 +319,7 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
 /**
  * srcml_parse_unit_memory
- * @related srcml_unit
+ * @memberof srcml_unit
  * @param unit a unit to parse the results to
  * @param src_buffer buffer containing source code to parse into srcML
  * @param buffer_size size of the buffer to parse
@@ -363,7 +363,7 @@ int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buf
 
 /**
  * srcml_parse_unit_FILE
- * @related srcml_unit
+ * @memberof srcml_unit
  * @param unit a unit to parse the results to
  * @param src_file a FILE opened for reading
  *
@@ -410,7 +410,7 @@ int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
 
 /**
  * srcml_parse_unit_fd
- * @related srcml_unit
+ * @memberof srcml_unit
  * @param unit a unit to parse the results to
  * @param src_fd a file descriptor open for reading
  *
@@ -463,7 +463,7 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
 
 /**
  * srcml_unparse_unit_filename
- * @related srcml_unit
+ * @memberof srcml_unit
  * @param unit a srcml unit
  * @param src_filename name of a file to output contents of unit as source
  * 
@@ -489,7 +489,7 @@ int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
 /**
  * srcml_unparse_unit_memory
- * @related srcml_unit
+ * @memberof srcml_unit
  * @param unit a srcml unit
  * @param src_buffer an output buffer address
  * 
@@ -532,7 +532,7 @@ int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer) {
 
 /**
  * srcml_unparse_unit_FILE
- * @related srcml_unit
+ * @memberof srcml_unit
  * @param unit a srcml unit
  * @param srcml_file FILE opened for writing
  * 
@@ -558,7 +558,7 @@ int srcml_unparse_unit_FILE(srcml_unit* unit, FILE* srcml_file) {
 
 /**
  * srcml_unparse_unit_fd
- * @related srcml_unit
+ * @memberof srcml_unit
  * @param unit a srcml unit
  * @param srcml_fd file descriptor opened for writing
  * 
@@ -590,7 +590,7 @@ int srcml_unparse_unit_fd(srcml_unit* unit, int srcml_fd) {
 
 /**
  * srcml_create_unit
- * @related srcml_unit
+ * @memberof srcml_unit
  * @param archive a srcml archvie
  * 
  * Create a srcml_unit tied to the srcml_archive archive
@@ -616,7 +616,7 @@ srcml_unit * srcml_create_unit(srcml_archive * archive) {
 
 /**
  * srcml_free_unit
- * @related srcml_unit
+ * @memberof srcml_unit
  * @param unit a srcml unit
  * 
  * Free the contents of a srcml_unit.

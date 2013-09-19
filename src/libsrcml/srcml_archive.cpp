@@ -26,7 +26,7 @@
 
 /**
  * srcml_archive_check_extension
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml_archive
  * @param filename name of a file
  * 
@@ -47,7 +47,7 @@ const char * srcml_archive_check_extension(srcml_archive * archive, const char* 
 
 /**
  * srcml_create_archive
- * @related srcml_archive
+ * @memberof srcml_archive
  * 
  * Create a new srcml archive.
  * Client will have to free it using srcml_free_archive().
@@ -84,7 +84,7 @@ srcml_archive* srcml_create_archive()
 
 /**
  * srcml_free_archive
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml_archive
  * 
  * Free a srcml archive that was previously
@@ -106,7 +106,7 @@ void srcml_free_archive(srcml_archive * archive) {
 
 /**
  * srcml_clone_archive
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml_archive
  *
  * Clone the setup of an existing archive.
@@ -185,7 +185,7 @@ srcml_archive* srcml_clone_archive(const srcml_archive* archive) {
 
 /**
  * srcml_archive_set_encoding
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml_archive
  * @param encoding an encoding
  *
@@ -209,7 +209,7 @@ int srcml_archive_set_encoding(srcml_archive* archive, const char* encoding) {
 
 /**
  * srcml_archive_set_language
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml_archive
  * @param language a language
  *
@@ -233,7 +233,7 @@ int srcml_archive_set_language(srcml_archive* archive, const char* language) {
 
 /**
  * srcml_archive_set_filename
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml_archive
  * @param filename the name of a file
  *
@@ -257,7 +257,7 @@ int srcml_archive_set_filename(srcml_archive* archive, const char* filename) {
 
 /**
  * srcml_archive_set_directory
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml_archive
  * @param directory a directory path
  *
@@ -281,7 +281,7 @@ int srcml_archive_set_directory (srcml_archive* archive, const char* directory) 
 
 /**
  * srcml_archive_set_version
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml_archive
  * @param version a version string
  *
@@ -305,7 +305,7 @@ int srcml_archive_set_version(srcml_archive* archive, const char* version) {
 
 /**
  * srcml_archive_set_attributes
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml_archive
  * @param attr an array of name-value c string pairs
  *
@@ -339,7 +339,7 @@ int srcml_archive_set_attributes(srcml_archive* archive, const char* (*attr)[2])
 
 /**
  * srcml_archive_set_all_options
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml_archive
  * @param options a set of srcml options
  *
@@ -358,7 +358,7 @@ int srcml_archive_set_all_options(srcml_archive* archive, int options) {
 
 /**
  * srcml_archive_set_options
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml_archive
  * @param option a srcml option
  *
@@ -378,7 +378,7 @@ int srcml_archive_set_option(srcml_archive* archive, int option) {
 
 /**
  * srcml_archive_clear_option
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml_archive
  * @param option a srcml option
  *
@@ -398,7 +398,7 @@ int srcml_archive_clear_option(srcml_archive* archive, int option) {
 
 /**
  * srcml_archive_set_tabstop
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml_archive
  * @param tabstop size of a tabstop
  *
@@ -417,7 +417,7 @@ int srcml_archive_set_tabstop(srcml_archive* archive, int tabstop) {
 
 /**
  * srcml_archive_register_file_extension
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml_archive
  * @param extension a file extension
  * @param language a language
@@ -438,7 +438,7 @@ int srcml_archive_register_file_extension(srcml_archive* archive, const char* ex
 
 /**
  * srcml_archive_register_namespace
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml_archive
  * @param prefix a XML namespace prefix
  * @param ns a XML namespace
@@ -477,7 +477,7 @@ int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix,
 
 /**
  * srcml_archive_get_encoding
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml_archive
  *
  * @returns Retrieve the currently set encoding or NULL.
@@ -490,7 +490,7 @@ const char* srcml_archive_get_encoding(const srcml_archive* archive) {
 
 /**
  * srcml_archive_get_language
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml_archive
  *
  * @returns Retrieve the currently set language or NULL.
@@ -503,7 +503,7 @@ const char* srcml_archive_get_language(const srcml_archive* archive) {
 
 /**
  * srcml_archive_get_filename
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml_archive
  *
  * @returns Retrieve the currently set root filename attribute or NULL.
@@ -516,7 +516,7 @@ const char* srcml_archive_get_filename(const srcml_archive* archive) {
 
 /**
  * srcml_archive_get_directory
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml_archive
  *
  * @returns Retrieve the currently set root directory attribute or NULL.
@@ -529,7 +529,7 @@ const char* srcml_archive_get_directory(const srcml_archive* archive) {
 
 /**
  * srcml_archive_get_version
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml_archive
  *
  * @returns Retrieve the currently set root version attribute or NULL.
@@ -542,7 +542,7 @@ const char* srcml_archive_get_version(const srcml_archive* archive) {
 
 /**
  * srcml_archive_get_options
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml_archive
  *
  * @returns Retrieve the currently set options.
@@ -555,7 +555,7 @@ int srcml_archive_get_options(const srcml_archive* archive) {
 
 /**
  * srcml_archive_get_tabstop
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml_archive
  *
  * @returns Retrieve the currently set tabstop size.
@@ -574,7 +574,7 @@ int srcml_archive_get_tabstop(const srcml_archive* archive) {
 
 /**
  * srcml_archive_open_filename
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml_archive
  * @param srcml_filename name of an output file
  *
@@ -609,7 +609,7 @@ int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename
 
 /**
  * srcml_archive_open_memory
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml_archive
  * @param buffer location to return output string
  *
@@ -645,7 +645,7 @@ int srcml_write_open_memory(srcml_archive* archive, char** buffer) {
 
 /**
  * srcml_archive_open_FILE
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml_archive
  * @param srcml_file FILE opened for writing
  *
@@ -697,7 +697,7 @@ int srcml_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
 
 /**
  * srcml_archive_open_fd
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml_archive
  * @param srcml_fd output file descriptor
  *
@@ -755,7 +755,7 @@ int srcml_write_open_fd(srcml_archive* archive, int srcml_fd) {
 
 /**
  * srcml_read_internal
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml_archive
  *
  * Function used internally to the srcml_read_open_* functions.
@@ -785,7 +785,7 @@ void srcml_read_internal(srcml_archive * archive) {
 
 /**
  * srcml_read_open_filename
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml_archive
  * @param srcml_filename name of an input file
  *
@@ -818,7 +818,7 @@ int srcml_read_open_filename(srcml_archive* archive, const char* srcml_filename)
 
 /**
  * srcml_read_open_memory
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml_archive
  * @param buffer an input buffer
  * @param buffer_size size of the input buffer
@@ -852,7 +852,7 @@ int srcml_read_open_memory(srcml_archive* archive, const char* buffer, size_t bu
 
 /**
  * srcml_read_open_FILE
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml_archive
  * @param srcml_file a FILE opened for reading
  *
@@ -885,7 +885,7 @@ int srcml_read_open_FILE(srcml_archive* archive, FILE* srcml_file) {
 
 /**
  * srcml_read_open_fd
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml_archive
  * @param srcml_fd a file descriptor opened for reading
  *
@@ -924,7 +924,7 @@ int srcml_read_open_fd(srcml_archive* archive, int srcml_fd) {
 
 /**
  * srcml_read_unit_archive
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml_archive opened for reading
  *
  * Read the next unit from the archive.
@@ -945,7 +945,7 @@ const srcml_unit* srcml_read_unit_archive(srcml_archive* archive) {
 
 /**
  * srcml_read_unit_current_unit
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml_archive opened for reading
  *
  * Read the attributes from the current archive.
@@ -978,7 +978,7 @@ const srcml_unit* srcml_read_archive_current_unit(const srcml_archive* archive) 
 
 /**
  * srcml_write_unit
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml archive opened for writing
  * @param unit a srcml_unit to output
  *
@@ -998,7 +998,7 @@ int srcml_write_unit(srcml_archive* archive, const srcml_unit* unit) {
 
 /**
  * srcml_read_unit
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml archive open for reading 
  * 
  * Read the next unit from the archive.
@@ -1038,7 +1038,7 @@ srcml_unit* srcml_read_unit(srcml_archive* archive) {
 
 /**
  * srcml_write_close
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml archive opened for writing
  *
  * Close a srcML archive opened for writing.
@@ -1053,7 +1053,7 @@ void srcml_write_close(srcml_archive* archive) {
 
 /**
  * srcml_read_close
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml archive opened for reading
  *
  * Close a srcML archive opened for reading.
@@ -1068,7 +1068,7 @@ void srcml_read_close(srcml_archive* archive) {
 
 /**
  * srcml_close_arachive
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive an open srcml archive
  *
  * Close a srcML archive opened using srcml_read_open_*
@@ -1095,7 +1095,7 @@ void srcml_close_archive(srcml_archive * archive) {
 
 /**
  * srcml_write_free
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml archive opened for writing
  * 
  * Free the srcML archive data that is opened for writing.
@@ -1110,7 +1110,7 @@ void srcml_write_free(srcml_archive* archive) {
 
 /**
  * srcml_read_free
- * @related srcml_archive
+ * @memberof srcml_archive
  * @param archive a srcml archive opened for reading
  * 
  * Free the srcML archive data that is opened for reading.
