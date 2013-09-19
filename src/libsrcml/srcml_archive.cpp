@@ -186,10 +186,12 @@ srcml_archive* srcml_clone_archive(const srcml_archive* archive) {
 /**
  * srcml_archive_set_encoding
  * @related srcml_archive
- * @archive a srcml_archive
- * @encoding an encoding
+ * @param archive a srcml_archive
+ * @param encoding an encoding
  *
  * Set the encoding of the srcML Archive.
+ *
+ * @returns SRCML_STATUS_OK on success andd SRCML_STATUS_ERROR on failure.
  */
 int srcml_archive_set_encoding(srcml_archive* archive, const char* encoding) {
 

@@ -497,7 +497,7 @@ int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
  * pointed to by src_buffer.  src_buffer is allocated in the function and
  * needs to be freed after finished using.
  *
- * @param Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
 int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer) {
 
@@ -534,10 +534,10 @@ int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer) {
  * srcml_unparse_unit_FILE
  * @related srcml_unit
  * @param unit a srcml unit
- * @param src_file FILE opened for writing
+ * @param srcml_file FILE opened for writing
  * 
  * Convert the srcML in unit into source code and place it into the FILE
- * src_file.
+ * srcml_file.
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
@@ -560,7 +560,7 @@ int srcml_unparse_unit_FILE(srcml_unit* unit, FILE* srcml_file) {
  * srcml_unparse_unit_fd
  * @related srcml_unit
  * @param unit a srcml unit
- * @param src_fd file descriptor opened for writing.
+ * @param srcml_fd file descriptor opened for writing
  * 
  * Convert the srcML in unit into source code and place it into the file
  * descriptor srcml_fd.

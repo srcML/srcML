@@ -115,19 +115,19 @@ struct srcml_archive {
  * such as the transformed or collected unit.
 */
 struct srcml_unit {
-  /** @archive the archive the unit is created from */
+  /** archive the archive the unit is created from */
   srcml_archive* archive;
 
-  /** @language an attribute for a language */
+  /** language an attribute for a language */
   std::string * language;
-  /** @filename an attribute name for a file */
+  /** filename an attribute name for a file */
   std::string * filename;
-  /** @directory an attribute for a directory path */
+  /** directory an attribute for a directory path */
   std::string * directory;
-  /** @version an attribute for a version string */
+  /** version an attribute for a version string */
   std::string * version;
 
-  /** @unit a buffer to store srcml from read and after parsing */
+  /** unit a buffer to store srcml from read and after parsing */
   std::string * unit;
 };
 
