@@ -965,6 +965,7 @@ int srcml_skip_unit(struct srcml_archive* archive) {
 
   srcml_free_unit(unit);
 
+  return 1;
 }
 
 /**
