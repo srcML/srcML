@@ -958,6 +958,9 @@ srcml_unit* srcml_read_unit(srcml_archive* archive) {
  */
 int srcml_skip_unit(struct srcml_archive* archive) {
 
+  srcml_unit * unit = srcml_read_unit(archive);
+  srcml_free_unit(unit);
+
 }
 
 /**
@@ -965,10 +968,9 @@ int srcml_skip_unit(struct srcml_archive* archive) {
  * @param archive a srcml_archive
  * @param pos a relative position in archive
  *
- *
  * Read a unit at a specific relative position in an archive
- * Unit numbers start at 1.  ssrcml_read_unit_position(archive, 1)
- * is equivalent to srcml_read_unit
+ * Unit numbers are positive and start at 1.  srcml_read_unit_position(archive, 1)
+ * is equivalent to srcml_read_unit.
  *
  * @returns Returns 0 if pos unit does not exist and the read unit otherwise.
  */
