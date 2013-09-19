@@ -95,8 +95,10 @@ extern "C" {
 /** Apply transformations to the entire srcML file (default: each unit */
 #define SRCML_OPTION_APPLY_ROOT        1<<27
 
-  /* srcml status messages */
+/* srcml status messages */
+/** Return status indicating no errors */
 #define SRCML_STATUS_OK    0
+/** Return status indicating errors occurred */
 #define SRCML_STATUS_ERROR 1
 
   /* srcML data structures */
