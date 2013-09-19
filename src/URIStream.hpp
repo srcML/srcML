@@ -1,7 +1,7 @@
 /*
   URIStream.hpp
 
-  Copyright (C) 2010-2011  SDML (www.sdml.info)
+  Copyright (C) 2010-2011  SDML (www.srcML.org)
 
   This file is part of the srcML translator.
 

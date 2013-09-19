@@ -1,7 +1,7 @@
 /*
   SAX2UnitDOM.cpp
 
-  Copyright (C) 2010  SDML (www.sdml.info)
+  Copyright (C) 2010  SDML (www.srcML.org)
 
   This file is part of the srcML translator.
 

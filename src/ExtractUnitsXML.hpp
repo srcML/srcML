@@ -1,7 +1,7 @@
 /*
   ExtractUnitsXML.cpp
 
-  Copyright (C) 2013  SDML (www.sdml.info)
+  Copyright (C) 2013  SDML (www.srcML.org)
 
   This file is part of the srcML translator.
 

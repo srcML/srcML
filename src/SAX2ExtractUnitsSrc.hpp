@@ -1,7 +1,7 @@
 /*
   SAX2ExtractUnitsSrc.hpp
 
-  Copyright (C) 2008-2012  SDML (www.sdml.info)
+  Copyright (C) 2008-2012  SDML (www.srcML.org)
 
   This file is part of the srcML translator.
 
