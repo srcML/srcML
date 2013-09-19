@@ -63,9 +63,9 @@ extern "C" {
   /** string for language XML */
 #define SRCML_LANGUAGE_XML    "xml"
 
-  /* Options */
-  // TODO:  Order carefully, then allocate values sequentially.  Change OPTION values in old
-  // srcML code to match these.
+/* Options */
+/** @todo  Order carefully, then allocate values sequentially.  Change OPTION values in old */
+// srcML code to match these.
 /** Markups literal in special namespace */
 #define SRCML_OPTION_LITERAL           1<<2
 /** Markups modifiers in special namespace */
@@ -269,7 +269,6 @@ extern "C" {
      Return 0 if there are no more unit */
   struct srcml_unit* srcml_read_unit(struct srcml_archive*);
 
-  // TODO:  Consider having this method.  Way of counting, and moving to a unit
   /* Read over the next unit from the archive
      Returns 0 if no unit to skip */
   int srcml_skip_unit(struct srcml_archive*);
@@ -280,7 +279,6 @@ extern "C" {
   struct srcml_unit* srcml_read_unit_position(struct srcml_archive*, int pos);
 
   /* Query options of srcml unit */
-  // TODO:  What happens if unit is not parsed yet?  0 returned?
   const char* srcml_unit_get_language (const struct srcml_unit*);
   const char* srcml_unit_get_filename (const struct srcml_unit*);
   const char* srcml_unit_get_directory(const struct srcml_unit*);
@@ -293,7 +291,7 @@ extern "C" {
   int srcml_unparse_unit_FILE    (struct srcml_unit*, FILE* srcml_file);
   int srcml_unparse_unit_fd      (struct srcml_unit*, int srcml_fd);
 
-  // TODO:  Consider removing this and making srcml client iterate over the values
+  // @todo Consider removing this and making srcml client iterate over the values
   // Problems with memory handling
   const char** srcml_list(const char* srcml_filename);
 
