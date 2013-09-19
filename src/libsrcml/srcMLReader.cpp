@@ -232,9 +232,19 @@ int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** 
     std::string prefix = xmlns->prefix ? (const char *)xmlns->prefix : "";
     std::string ns = xmlns->href ? (const char *)xmlns->href : "";
 
-    if(ns == SRCML_CPP_NS_URI)
-      options |= SRCML_OPTION_CPP;
-    else if(ns == SRCML_ERR_NS_URI)
+    if(ns == SRCML_CPP_NS_URI) {
+
+      if(*language) {
+
+        if((**language) == "C++" || (**language) == "C")
+           options |= SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO;
+        else if((**language) == "C#")
+           options |= SRCML_OPTION_CPP_NOMACRO;
+        else
+           options |= SRCML_OPTION_CPP;
+      }
+
+    } else if(ns == SRCML_ERR_NS_URI)
       options |= SRCML_OPTION_DEBUG;
     else if(ns == SRCML_EXT_LITERAL_NS_URI)
       options |= SRCML_OPTION_LITERAL;
