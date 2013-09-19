@@ -44,6 +44,12 @@ const char * srcml_archive_check_extension(srcml_archive * archive, const char* 
 
 }
 
+/******************************************************************************
+ *                                                                            *
+ *                        Allocation/cleanup functions                        *
+ *                                                                            *
+ ******************************************************************************/
+
 /**
  * srcml_create_archive
  * 
@@ -996,37 +1002,9 @@ srcml_unit* srcml_read_unit(srcml_archive* archive) {
 
 /******************************************************************************
  *                                                                            *
- *                       Archive close unit functions                         *
+ *                       Archive close function                               *
  *                                                                            *
  ******************************************************************************/
-
-/**
- * srcml_write_close
- * @param archive a srcml archive opened for writing
- *
- * Close a srcML archive opened for writing.
- * Archive can be reopened.
- */
-void srcml_write_close(srcml_archive* archive) {
-
-  //if(archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW);
-  srcml_close_archive(archive);
-
-}
-
-/**
- * srcml_read_close
- * @param archive a srcml archive opened for reading
- *
- * Close a srcML archive opened for reading.
- * Archive can be reopened.
- */
-void srcml_read_close(srcml_archive* archive) {
-
-  //if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW);
-  srcml_close_archive(archive);
-
-}
 
 /**
  * srcml_close_arachive
@@ -1045,39 +1023,5 @@ void srcml_close_archive(srcml_archive * archive) {
   if(archive->reader) delete archive->reader, archive->reader = 0;
   if(archive->input) xmlFreeParserInputBuffer(archive->input), archive->input = 0;
   archive->type = SRCML_ARCHIVE_INVALID;
-
-}
-
-/******************************************************************************
- *                                                                            *
- *                       Archive free unit functions                          *
- *                                                                            *
- ******************************************************************************/
-
-/**
- * srcml_write_free
- * @param archive a srcml archive opened for writing
- * 
- * Free the srcML archive data that is opened for writing.
- * Archive must be reallocated to use further.
- */
-void srcml_write_free(srcml_archive* archive) {
-
-  //if(archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW);
-  srcml_free_archive(archive);
-
-}
-
-/**
- * srcml_read_free
- * @param archive a srcml archive opened for reading
- * 
- * Free the srcML archive data that is opened for reading.
- * Archive must be reallocated to use further.
-*/
-void srcml_read_free(srcml_archive* archive) {
-
-  //if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW);
-  srcml_free_archive(archive);
 
 }

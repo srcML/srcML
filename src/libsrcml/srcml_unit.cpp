@@ -263,24 +263,6 @@ int srcml_parse_unit_internal(srcml_unit * unit, int lang) {
 }
 
 /**
- * srcml_parse_unit_archive
- * @param archive a srcml archive open for writing
- * @param unit a unit to parse the results to
- *
- * Convert to srcml and append to the archive 
- * I have no idea what this is supposed to do.
- *
- * @returns SRCML_STATUS_ERROR on success and SRCML_STATUS_ERROR failure.
- */
-int srcml_parse_unit_archive (srcml_archive* archive, srcml_unit* unit) {
-
-  if(unit == NULL) return SRCML_STATUS_ERROR;
-
-  return SRCML_STATUS_OK;
-
-}
-
-/**
  * srcml_parse_unit_filename
  * @param unit a unit to parse the results to
  * @param src_filename name of a file to parse into srcML
