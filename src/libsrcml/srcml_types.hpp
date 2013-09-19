@@ -108,7 +108,7 @@ struct srcml_archive {
   std::vector<transform> transformations;
 };
 
-/*
+/**
  * srcml_unit
  *
  * Hold data pertaining to a unit in an archive,

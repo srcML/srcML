@@ -30,6 +30,13 @@
 #ifndef INCLUDED_SRCML_READER_HPP
 #define INCLUDED_SRCML_READER_HPP
 
+/**
+ * srcMLReader
+ *
+ * Extend XML Text Reader interface to
+ * progressively read a srcML Archive collecting
+ * units and reading unit attributes.
+ */
 class srcMLReader {
 
   // the text reader
