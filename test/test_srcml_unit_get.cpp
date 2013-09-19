@@ -130,6 +130,30 @@ int main(int argc, char * argv[]) {
     assert(srcml_unit_get_version(0) == 0);
   }
 
+  /* 
+     srcml_unit_get_xml
+   */
+
+  {
+
+    srcml_unit * unit = srcml_create_unit(archive);
+    unit->unit = 0;
+    assert(srcml_unit_get_xml(unit) == 0);
+    srcml_free_unit(unit);
+  }
+
+  {
+
+    srcml_unit * unit = srcml_create_unit(archive);
+    unit->unit = new std::string("<unit/>");
+    assert(srcml_unit_get_xml(unit) == std::string("<unit/>"));
+    srcml_free_unit(unit);
+  }
+
+  {
+    assert(srcml_unit_get_xml(0) == 0);
+  }
+
   srcml_free_archive(archive);
 
   return 0;
