@@ -141,7 +141,7 @@ void SAX2UnitDOM::startElementNsFirstUnit(void* ctx, const xmlChar* localname, c
 
   // if reached a non-unit as the first nested element, then we have a non-nested xml file
   // so we need to process normally
-  if (isoption(pstate->options, OPTION_XSLT_ALL) || strcmp((const char*) localname, "unit") != 0) {
+  if (isoption(pstate->options, OPTION_APPLY_ROOT) || strcmp((const char*) localname, "unit") != 0) {
 
     pstate->count = 1;
     setPosition(pstate->count);

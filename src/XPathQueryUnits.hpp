@@ -183,7 +183,7 @@ public :
             // node set result
         case XPATH_NODESET:
 
-            if (needroot && !isoption(options, OPTION_XSLT_ALL)) {
+            if (needroot && !isoption(options, OPTION_APPLY_ROOT)) {
 
                 // xml declaration
                 if (!isoption(options, OPTION_XMLDECL))
@@ -451,7 +451,7 @@ public :
         case XPATH_NODESET:
 
             // root unit end tag
-            if (!isoption(options, OPTION_XSLT_ALL))
+            if (!isoption(options, OPTION_APPLY_ROOT))
                 xmlOutputBufferWriteString(buf, found ? "</unit>\n" : "/>\n");
 
             break;

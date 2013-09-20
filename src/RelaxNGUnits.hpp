@@ -72,7 +72,7 @@ public :
       // output the root unit start tag
       // this is only if in per-unit mode and this is the first result found
       // have to do so here because it may be empty
-      if (pstate->isarchive && !found && !isoption(options, OPTION_XSLT_ALL)) {
+      if (pstate->isarchive && !found && !isoption(options, OPTION_APPLY_ROOT)) {
 
         // output a root element, just like the one read in
         // note that this has to be ended somewhere
@@ -128,7 +128,7 @@ public :
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
     // root unit end tag
-    if (pstate->isarchive && !isoption(options, OPTION_XSLT_ALL)) {
+    if (pstate->isarchive && !isoption(options, OPTION_APPLY_ROOT)) {
       std::string end_unit = "</";
       if(root_prefix) {
         end_unit += (const char *)root_prefix;

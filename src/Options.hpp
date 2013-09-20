@@ -95,7 +95,7 @@ const OPTION_TYPE OPTION_CPP_MARKUP_IF0 = ull(1) << 11;
 
 // xslt all evaluation
 // @srcml2src
-const OPTION_TYPE OPTION_XSLT_ALL      = ull(1) << 12;
+const OPTION_TYPE OPTION_APPLY_ROOT      = ull(1) << 12;
 
 // output is compressed (gzip)
 // @src2srcml
@@ -198,7 +198,7 @@ const OPTION_TYPE OPTION_OMIT = ull(1) << 31;
 
 // xmlns mode
 // @src2srcml
-const OPTION_TYPE OPTION_XMLNS = OPTION_XSLT_ALL;
+const OPTION_TYPE OPTION_XMLNS = OPTION_APPLY_ROOT;
 
 // self version
 //  const OPTION_TYPE OPTION_SELF_VERSION = 0x02000000;

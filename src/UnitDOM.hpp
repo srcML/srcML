@@ -65,13 +65,13 @@ public :
         startOutput(ctx);
     }
 
-    // collect namespaces from root unit.  Start to build the tree if OPTION_XSLT_ALL
+    // collect namespaces from root unit.  Start to build the tree if OPTION_APPLY_ROOT
     virtual void startRootUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                                int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                                const xmlChar** attributes) {
 
         // if we are building the entire tree, start now
-        if (isoption(options, OPTION_XSLT_ALL)) {
+        if (isoption(options, OPTION_APPLY_ROOT)) {
             xmlSAX2StartDocument(ctx);
             xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes,
                                   nb_defaulted, attributes);
@@ -111,7 +111,7 @@ public :
         prefix_name = (const xmlChar *)strdup(full_name.c_str());
 
         // if applying to entire archive, then just build this node
-        if (isoption(options, OPTION_XSLT_ALL)) {
+        if (isoption(options, OPTION_APPLY_ROOT)) {
 
             xmlSAX2StartElementNs(ctx, localname, prefix_name, 0, nb_namespaces, namespaces, nb_attributes,
                                   nb_defaulted, attributes);
@@ -218,7 +218,7 @@ public :
             return;
 
         // end the entire input document
-        if (isoption(options, OPTION_XSLT_ALL))
+        if (isoption(options, OPTION_APPLY_ROOT))
             xmlSAX2EndDocument(ctx);
 
         // end the output

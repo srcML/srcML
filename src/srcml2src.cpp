@@ -95,8 +95,8 @@ char const * const STRING_PARAM_FLAG = "param";
 const int STRING_PARAM_FLAG_CODE = 256 + 3;
 char const * const STRING_PARAM_FLAG_FULL = "param NAME=VAL";
 
-char const * const XSLT_ALL_FLAG = "apply-root";
-const int XSLT_ALL_FLAG_CODE = 256 + 4;
+char const * const APPLY_ROOT_FLAG = "apply-root";
+const int APPLY_ROOT_FLAG_CODE = 256 + 4;
 
 char const * const RELAXNG_FLAG = "relaxng";
 const int RELAXNG_FLAG_CODE = 256 + 5;
@@ -225,7 +225,7 @@ void output_help(const char* name) {
   //  printf("  --%-21s passes a parameter NAME and VAL to an XSLT program\n", STRING_PARAM_FLAG_FULL);
   printf("  --%-21s passes a parameter NAME and VAL to the XSLT program\n", PARAM_FLAG_FULL);
   printf("  --%-21s output individual units that match RELAXNG_FILE (FILE or URI)\n", RELAXNG_FLAG_FULL);
-  printf("  --%-21s apply an xslt program or xpath query to the root element\n\n", XSLT_ALL_FLAG);
+  printf("  --%-21s apply an xslt program or xpath query to the root element\n\n", APPLY_ROOT_FLAG);
 
   printf("Examples:\n"
 	    "  Read from file main.cpp.xml, write to file main.cpp:\n\n"
@@ -790,7 +790,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
     { PARAM_FLAG, required_argument, NULL, PARAM_FLAG_CODE },
     { STRING_PARAM_FLAG, required_argument, NULL, STRING_PARAM_FLAG_CODE },
     { RELAXNG_FLAG, required_argument, NULL, RELAXNG_FLAG_CODE },
-    { XSLT_ALL_FLAG, no_argument, NULL, XSLT_ALL_FLAG_CODE },
+    { APPLY_ROOT_FLAG, no_argument, NULL, APPLY_ROOT_FLAG_CODE },
     //    { CONTEXT_FLAG, required_argument, NULL, 'C' },
     { 0, 0, 0, 0 }
   };
@@ -1178,9 +1178,9 @@ int process_args(int argc, char* argv[], process_options & poptions)
       poptions.transforms[poptions.transformcount++] = optarg;
       break;
 
-    case XSLT_ALL_FLAG_CODE:
+    case APPLY_ROOT_FLAG_CODE:
 
-      options |= OPTION_XSLT_ALL;
+      options |= OPTION_APPLY_ROOT;
       break;
 
     default:

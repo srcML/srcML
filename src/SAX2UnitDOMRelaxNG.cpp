@@ -80,7 +80,7 @@ void SAX2UnitDOMRelaxNG::endElementNs(void *ctx, const xmlChar *localname, const
  if (n == 0) {
 
     // if in per-unit mode and this is the first result found
-    if (pstate->isnested && !pstate->found && !isoption(pstate->options, OPTION_XSLT_ALL)) {
+    if (pstate->isnested && !pstate->found && !isoption(pstate->options, OPTION_APPLY_ROOT)) {
       xmlOutputBufferWrite(pstate->buf, pstate->rootbuf->use, (const char*) pstate->rootbuf->content);
       xmlBufferFree(pstate->rootbuf);
       xmlOutputBufferWrite(pstate->buf, SIZEPLUSLITERAL(">\n\n"));
@@ -104,7 +104,7 @@ void SAX2UnitDOMRelaxNG::endDocument(void *ctx) {
   xmlSAX2EndDocument(ctx);
 
   // root unit end tag
-  if (pstate->isnested && !isoption(pstate->options, OPTION_XSLT_ALL))
+  if (pstate->isnested && !isoption(pstate->options, OPTION_APPLY_ROOT))
       xmlOutputBufferWriteString(pstate->buf, pstate->found ? "</unit>\n" : "/>\n");
 
   // standard end document
