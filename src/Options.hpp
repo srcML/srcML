@@ -95,7 +95,7 @@ const OPTION_TYPE OPTION_CPP_MARKUP_IF0 = ull(1) << 11;
 
 // xslt all evaluation
 // @srcml2src
-const OPTION_TYPE OPTION_XSLT_ALL      = 12;
+const OPTION_TYPE OPTION_XSLT_ALL      = ull(1) << 12;
 
 // output is compressed (gzip)
 // @src2srcml

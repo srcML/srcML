@@ -69,7 +69,7 @@ public :
     virtual void startRootUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                                int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                                const xmlChar** attributes) {
-
+      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
         // if we are building the entire tree, start now
         if (isoption(options, OPTION_XSLT_ALL)) {
             xmlSAX2StartDocument(ctx);
@@ -84,28 +84,30 @@ public :
             data.push_back(namespaces[i * 2 + 1]);
         }
         rootsize = data.size();
+        fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     }
 
     // start to create an individual unit, merging namespace details from the root (if it exists)
     virtual void startUnit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                            int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                            const xmlChar** attributes) {
-
-
+      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
         // if applying to entire archive, then just build this node
         if (isoption(options, OPTION_XSLT_ALL)) {
-
+          fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
             xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes,
                                   nb_defaulted, attributes);
+            fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
             return;
         }
-
+        fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
         // start the document for this unit
         xmlSAX2StartDocument(ctx);
-
+        fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
         // remove per-unit namespaces
         data.resize(rootsize);
-
+        fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
         // combine namespaces from root and local to this unit
         for (int i = 0; i < nb_namespaces; ++i) {
 
@@ -123,7 +125,7 @@ public :
             data.push_back(namespaces[i * 2]);
             data.push_back(namespaces[i * 2 + 1]);
         }
-
+        fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
         /*
 
           Passing the prefix was causing an error when set.
@@ -139,12 +141,13 @@ public :
           full_name += ":";
         }
         full_name += (const char *)localname;
-
+        fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
         prefix_name = (const xmlChar *)strdup(full_name.c_str());
 
         // start the unit (element) at the root using the merged namespaces
         xmlSAX2StartElementNs(ctx, prefix_name, 0, URI, data.size() / 2,
                               &data[0], nb_attributes, nb_defaulted, attributes);
+        fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     }
 
     // build start element nodes in unit tree

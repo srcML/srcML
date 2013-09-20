@@ -278,16 +278,18 @@ int srcml_relaxng(xmlParserInputBufferPtr input_buffer, const char** xslts, int 
   // setup sax handler
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
   ctxt->sax = &sax;
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   xmlRelaxNGParserCtxtPtr relaxng = xmlRelaxNGNewParserCtxt(xslts[0]);
   xmlRelaxNGPtr rng = xmlRelaxNGParse(relaxng);
   xmlRelaxNGValidCtxtPtr rngctx = xmlRelaxNGNewValidCtxt(rng);
   RelaxNGUnits process(0, options, rngctx, fd);
-
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   // setup sax handling state
   SAX2ExtractUnitsSrc state(&process, &options, -1, "");
   ctxt->_private = &state;
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   int status = srcMLParseDocument(ctxt, false);
+  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   ctxt->sax = NULL;
 
   if(input_buffer) inputPop(ctxt);
