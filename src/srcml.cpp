@@ -27,6 +27,8 @@
   Replaces the src2srcml and srcml2src of the original srcML toolkit.
 */
 
+#include <srcml.h>
+
 #include <iostream>
 #include <boost/program_options.hpp>
 #include <string>
@@ -141,17 +143,6 @@ srcml_request_t srcml_request = { 0 };
 
 /* These will eventually come from srcml.h, the libsrcml include file */
 /* see srcml.h for current list */
-const int SRCML_OPTION_LITERAL = 1<<2;/*1<<0  /* Markups literal in special namespace */
-const int SRCML_OPTION_MODIFIER = 1<<17;/*1<<1  /* Markups modifiers in special namespace */
-const int SRCML_OPTION_ARCHIVE = 1<<1;/*1<<2  /* Create an archive */
-const int SRCML_OPTION_POSITION = 1<<10;/*1<<3  /* Include line/column position attributes */
-const int SRCML_OPTION_COMPRESS = 1<<3;/*1<<4  /* Compress the output file */
-const int SRCML_OPTION_NO_XML_DECL = 1<<29 | 1<<18;/*1<<5  /* Do not issue an XML declaration */
-const int SRCML_OPTION_NO_NAMESPACE_DECL = 1<<30 | 1<<18;/*1<<6  /* Do not include any XML namespace declarations */
-const int SRCML_OPTION_CPP = 1<<28 | 1<<22;/*1<<7  /* Markup preprocessor elements (default for C, C++, C#) */
-const int SRCML_OPTION_CPP_TEXT_ELSE = 1<<22;/*1<<8  /* Leave as text preprocessor else parts (default: markup) */
-const int SRCML_OPTION_CPP_MARKUP_IF0 = 1<<23;/*1<<9  /* Markup preprocessor #if 0 sections (default: leave as text) */
-const int SRCML_OPTION_APPLY_ROOT = 1<<27;/*1<<10 /* Apply transformations to the entire srcML file (default: each unit */
 
 /* These are internal to srcml */
 const int SRCML_COMMAND_LONGINFO = 1<<0;
