@@ -103,7 +103,9 @@ extern "C" {
   struct srcml_archive;
   struct srcml_unit;
 
+  /** srcml archive remove struct requirement for old style C*/
   typedef struct srcml_archive srcml_archive;
+  /** srcml unit remove struct requirement for old style C*/
   typedef struct srcml_unit srcml_unit;
 
   /*
