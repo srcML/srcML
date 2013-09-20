@@ -39,28 +39,28 @@
 extern "C" {
 #endif
 
-  /* Header file version macros */
-  /** number representing libsrcml version */
+/* Header file version macros */
+/** number representing libsrcml version */
 #define SRCML_VERSION_NUMBER 1
-  /** string containing libsrcml version */
+/** string containing libsrcml version */
 #define SRCML_VERSION_STRING "libsrcml 0.9"
 
-  /* Library version functions */
-  int srcml_version_number();
-  const char* srcml_version_string();
+/* Library version functions */
+int srcml_version_number();
+const char* srcml_version_string();
 
-  /* Core language set */
-  /** srcML language not set */
+/* Core language set */
+/** srcML language not set */
 #define SRCML_LANGUAGE_NONE   0
-  /** string for language C */
+/** string for language C */
 #define SRCML_LANGUAGE_C      "C"
-  /** string for language C++ */
+/** string for language C++ */
 #define SRCML_LANGUAGE_CXX    "C++"
-  /** string for language Java */
+/** string for language Java */
 #define SRCML_LANGUAGE_JAVA   "Java"
-  /** string for language C# */
+/** string for language C# */
 #define SRCML_LANGUAGE_CSHARP "C#"
-  /** string for language XML */
+/** string for language XML */
 #define SRCML_LANGUAGE_XML    "xml"
 
 /* Options */
@@ -99,211 +99,211 @@ extern "C" {
 /** Return status indicating errors occurred */
 #define SRCML_STATUS_ERROR 1
 
-  /* srcML data structures */
-  struct srcml_archive;
-  struct srcml_unit;
+/* srcML data structures */
+struct srcml_archive;
+struct srcml_unit;
 
-  /** remove struct requirement for old style C so can just use srcml_archive */
-  typedef struct srcml_archive srcml_archive;
-  /** remove struct requirement for old style C so can just use srcml_unit */
-  typedef struct srcml_unit srcml_unit;
+/** remove struct requirement for old style C so can just use srcml_archive */
+typedef struct srcml_archive srcml_archive;
+/** remove struct requirement for old style C so can just use srcml_unit */
+typedef struct srcml_unit srcml_unit;
 
-  /*
-    Convenience function for translating to and from the srcML format
+/*
+  Convenience function for translating to and from the srcML format
 
-    * Translates from source code to srcML if the input_filename
-    extension is for source code, e.g., .c, .cpp, .java
-    Language determined by file extension if language is not
-    set with srcml_set_language()
+  * Translates from source code to srcML if the input_filename
+  extension is for source code, e.g., .c, .cpp, .java
+  Language determined by file extension if language is not
+  set with srcml_set_language()
+  
+  * Translates from srcML to source code if the input_filename
+  extension is '.xml'.
 
-    * Translates from srcML to source code if the input_filename
-    extension is '.xml'.
+  * Input filenames can be for a file, a compressed file, a
+  source-code archive (e.g., .tar), or a URI that is for any of
+  these.  Additionally, the input filename can be for a directory.
 
-    * Input filenames can be for a file, a compressed file, a
-    source-code archive (e.g., .tar), or a URI that is for any of
-    these.  Additionally, the input filename can be for a directory.
+  * Options can be specified with the global srcml_set_*(),
+  srcml_clear_(), and srcml_register_*()
 
-    * Options can be specified with the global srcml_set_*(),
-    srcml_clear_(), and srcml_register_*()
+  * Options can be queried with the global srcml_get_*() and
+  srcml_check_*()
+*/
+int srcml(const char* input_filename, const char* output_filename);
 
-    * Options can be queried with the global srcml_get_*() and
-    srcml_check_*()
-  */
-  int srcml(const char* input_filename, const char* output_filename);
+/*
+  Global settings.  Can be used with convenience function srcml()
+*/
+int srcml_set_encoding  (const char* encoding);
+int srcml_set_language  (const char* language);
+int srcml_set_filename  (const char* filename);
+int srcml_set_directory (const char* directory);
+int srcml_set_version   (const char* version);
+int srcml_set_all_options   (int option);
+int srcml_set_option    (int option);
+int srcml_clear_option  (int option);
+int srcml_set_tabstop   (int tabstop);
+int srcml_register_file_extension(const char* extension, const char* language);
+int srcml_register_namespace(const char* prefix, const char* ns);
 
-  /*
-    Global settings.  Can be used with convenience function srcml()
-  */
-  int srcml_set_encoding  (const char* encoding);
-  int srcml_set_language  (const char* language);
-  int srcml_set_filename  (const char* filename);
-  int srcml_set_directory (const char* directory);
-  int srcml_set_version   (const char* version);
-  int srcml_set_all_options   (int option);
-  int srcml_set_option    (int option);
-  int srcml_clear_option  (int option);
-  int srcml_set_tabstop   (int tabstop);
-  int srcml_register_file_extension(const char* extension, const char* language);
-  int srcml_register_namespace(const char* prefix, const char* ns);
+const char* srcml_get_encoding ();
+const char* srcml_get_language ();
+const char* srcml_get_filename ();
+const char* srcml_get_directory();
+const char* srcml_get_version  ();
+int         srcml_get_options  ();
+int         srcml_get_tabstop  ();
+int         srcml_get_namespace_size();
+const char* srcml_get_prefix(int pos);
+const char* srcml_get_prefix_uri(const char* namespace_uri);
+const char* srcml_get_namespace(int pos);
+const char* srcml_get_namespace_prefix(const char* prefix);
 
-  const char* srcml_get_encoding ();
-  const char* srcml_get_language ();
-  const char* srcml_get_filename ();
-  const char* srcml_get_directory();
-  const char* srcml_get_version  ();
-  int         srcml_get_options  ();
-  int         srcml_get_tabstop  ();
-  int         srcml_get_namespace_size();
-  const char* srcml_get_prefix(int pos);
-  const char* srcml_get_prefix_uri(const char* namespace_uri);
-  const char* srcml_get_namespace(int pos);
-  const char* srcml_get_namespace_prefix(const char* prefix);
+/* source-code language is supported */
+int srcml_check_language(const char* language);
 
-  /* source-code language is supported */
-  int srcml_check_language(const char* language);
+/* null-terminated array of supported source-code languages */
+const char** srcml_language_list();
 
-  /* null-terminated array of supported source-code languages */
-  const char** srcml_language_list();
+/* currently registered language for a file extension
+   When full filename is given, the extension is extracted */
+const char* srcml_check_extension(const char* filename);
 
-  /* currently registered language for a file extension
-     When full filename is given, the extension is extracted */
-  const char* srcml_check_extension(const char* filename);
+/* currently supported format, e.g., tar.gz
+   When full filename is given, the extension is extracted */
+int srcml_check_format(const char* format);
 
-  /* currently supported format, e.g., tar.gz
-     When full filename is given, the extension is extracted */
-  int srcml_check_format(const char* format);
+/* particular encoding is supported, both for input and output */
+int srcml_check_encoding(const char* encoding);
 
-  /* particular encoding is supported, both for input and output */
-  int srcml_check_encoding(const char* encoding);
+/* whether various features are available in this installation */
+int srcml_check_xslt();
+int srcml_check_exslt();
 
-  /* whether various features are available in this installation */
-  int srcml_check_xslt();
-  int srcml_check_exslt();
+/* string describing last error */
+const char* srcml_error_string();
 
-  /* string describing last error */
-  const char* srcml_error_string();
+/*
+  Full libsrcml API
+*/
 
-  /*
-    Full libsrcml API
-  */
+/* currently registered language for a file extension
+   When full filename is given, the extension is extracted */
+const char* srcml_archive_check_extension(srcml_archive* archive, const char* filename);
 
-  /* currently registered language for a file extension
-     When full filename is given, the extension is extracted */
-  const char* srcml_archive_check_extension(srcml_archive* archive, const char* filename);
+/* create a new srcml archive
+   client is responsible for freeing it using srcml_free_archive() */
+srcml_archive* srcml_create_archive();
 
-  /* create a new srcml archive
-     client is responsible for freeing it using srcml_free_archive() */
-  srcml_archive* srcml_create_archive();
+/* clone the setup of an existing archive
+   client is responsible for freeing it using srcml_free_archive() */
+srcml_archive* srcml_clone_archive(const srcml_archive*);
 
-  /* clone the setup of an existing archive
-     client is responsible for freeing it using srcml_free_archive() */
-  srcml_archive* srcml_clone_archive(const srcml_archive*);
+/* free srcml archive
+   allocated by srcml_create_archive() */
+void srcml_free_archive(srcml_archive* archive);
 
-  /* free srcml archive
-     allocated by srcml_create_archive() */
-  void srcml_free_archive(srcml_archive* archive);
+/* open a srcML archive for output */
+int srcml_write_open_filename(srcml_archive*, const char* srcml_filename);
+int srcml_write_open_memory  (srcml_archive*, char** buffer);
+int srcml_write_open_FILE    (srcml_archive*, FILE* srcml_file);
+int srcml_write_open_fd      (srcml_archive*, int srcml_fd);
 
-  /* open a srcML archive for output */
-  int srcml_write_open_filename(srcml_archive*, const char* srcml_filename);
-  int srcml_write_open_memory  (srcml_archive*, char** buffer);
-  int srcml_write_open_FILE    (srcml_archive*, FILE* srcml_file);
-  int srcml_write_open_fd      (srcml_archive*, int srcml_fd);
+/* setup options for srcml archive */
+int srcml_archive_set_encoding  (srcml_archive*, const char* encoding);
+int srcml_archive_set_language  (srcml_archive*, const char* language);
+int srcml_archive_set_filename  (srcml_archive*, const char* filename);
+int srcml_archive_set_directory (srcml_archive*, const char* directory);
+int srcml_archive_set_version   (srcml_archive*, const char* version);
 
-  /* setup options for srcml archive */
-  int srcml_archive_set_encoding  (srcml_archive*, const char* encoding);
-  int srcml_archive_set_language  (srcml_archive*, const char* language);
-  int srcml_archive_set_filename  (srcml_archive*, const char* filename);
-  int srcml_archive_set_directory (srcml_archive*, const char* directory);
-  int srcml_archive_set_version   (srcml_archive*, const char* version);
+int srcml_archive_set_all_options   (srcml_archive*, int option);
+int srcml_archive_set_option    (srcml_archive*, int option);
+int srcml_archive_clear_option  (srcml_archive*, int option);
+int srcml_archive_set_tabstop   (srcml_archive*, int tabstop);
+int srcml_archive_register_file_extension(srcml_archive*, const char* extension, const char* language);
+int srcml_archive_register_namespace(srcml_archive*, const char* prefix, const char* ns);
 
-  int srcml_archive_set_all_options   (srcml_archive*, int option);
-  int srcml_archive_set_option    (srcml_archive*, int option);
-  int srcml_archive_clear_option  (srcml_archive*, int option);
-  int srcml_archive_set_tabstop   (srcml_archive*, int tabstop);
-  int srcml_archive_register_file_extension(srcml_archive*, const char* extension, const char* language);
-  int srcml_archive_register_namespace(srcml_archive*, const char* prefix, const char* ns);
+/* query options for srcml archive */
+const char* srcml_archive_get_encoding (const srcml_archive*);
+const char* srcml_archive_get_language (const srcml_archive*);
+const char* srcml_archive_get_filename (const srcml_archive*);
+const char* srcml_archive_get_directory(const srcml_archive*);
+const char* srcml_archive_get_version  (const srcml_archive*);
+int         srcml_archive_get_options  (const srcml_archive*);
+int         srcml_archive_get_tabstop  (const srcml_archive*);
 
-  /* query options for srcml archive */
-  const char* srcml_archive_get_encoding (const srcml_archive*);
-  const char* srcml_archive_get_language (const srcml_archive*);
-  const char* srcml_archive_get_filename (const srcml_archive*);
-  const char* srcml_archive_get_directory(const srcml_archive*);
-  const char* srcml_archive_get_version  (const srcml_archive*);
-  int         srcml_archive_get_options  (const srcml_archive*);
-  int         srcml_archive_get_tabstop  (const srcml_archive*);
+/* create a new srcml unit
+   client is responsible for freeing it using srcml_free_unit() */
+srcml_unit* srcml_create_unit(srcml_archive* archive);
 
-  /* create a new srcml unit
-     client is responsible for freeing it using srcml_free_unit() */
-  srcml_unit* srcml_create_unit(srcml_archive* archive);
+/* Setup options for srcml unit */
+int srcml_unit_set_language (srcml_unit*, const char* language);
+int srcml_unit_set_filename (srcml_unit*, const char* filename);
+int srcml_unit_set_directory(srcml_unit*, const char* directory);
+int srcml_unit_set_version  (srcml_unit*, const char* version);
 
-  /* Setup options for srcml unit */
-  int srcml_unit_set_language (srcml_unit*, const char* language);
-  int srcml_unit_set_filename (srcml_unit*, const char* filename);
-  int srcml_unit_set_directory(srcml_unit*, const char* directory);
-  int srcml_unit_set_version  (srcml_unit*, const char* version);
+/* Convert to srcml.  Files/buffer can be compressed, but not a
+   source archive format (e.g., not .tar)
+*/
+int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename);
+int srcml_parse_unit_memory  (srcml_unit*, const char* src_buffer, size_t buffer_size);
+int srcml_parse_unit_FILE    (srcml_unit*, FILE* src_file);
+int srcml_parse_unit_fd      (srcml_unit*, int src_fd);
 
-  /* Convert to srcml.  Files/buffer can be compressed, but not a
-     source archive format (e.g., not .tar)
-  */
-  int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename);
-  int srcml_parse_unit_memory  (srcml_unit*, const char* src_buffer, size_t buffer_size);
-  int srcml_parse_unit_FILE    (srcml_unit*, FILE* src_file);
-  int srcml_parse_unit_fd      (srcml_unit*, int src_fd);
+/* Append unit to an archive */
+int srcml_write_unit(srcml_archive*, const srcml_unit*);
 
-  /* Append unit to an archive */
-  int srcml_write_unit(srcml_archive*, const srcml_unit*);
+/* Free allocated unit */
+int srcml_free_unit(srcml_unit*);
 
-  /* Free allocated unit */
-  int srcml_free_unit(srcml_unit*);
+/* close the srcML archive */
+void srcml_close_archive(srcml_archive*);
 
-  /* close the srcML archive */
-  void srcml_close_archive(srcml_archive*);
+/* free the srcML archive data */
+void srcml_free_archive(srcml_archive*);
 
-  /* free the srcML archive data */
-  void srcml_free_archive(srcml_archive*);
+/* open a srcML archive for reading */
+int srcml_read_open_filename(srcml_archive*, const char* srcml_filename);
+int srcml_read_open_memory  (srcml_archive*, const char* buffer, size_t buffer_size);
+int srcml_read_open_FILE    (srcml_archive*, FILE* srcml_file);
+int srcml_read_open_fd      (srcml_archive*, int srcml_fd);
 
-  /* open a srcML archive for reading */
-  int srcml_read_open_filename(srcml_archive*, const char* srcml_filename);
-  int srcml_read_open_memory  (srcml_archive*, const char* buffer, size_t buffer_size);
-  int srcml_read_open_FILE    (srcml_archive*, FILE* srcml_file);
-  int srcml_read_open_fd      (srcml_archive*, int srcml_fd);
+/* Read the next unit from the archive
+   Return 0 if there are no more unit */
+srcml_unit* srcml_read_unit(srcml_archive*);
 
-  /* Read the next unit from the archive
-     Return 0 if there are no more unit */
-  srcml_unit* srcml_read_unit(srcml_archive*);
+/* Read over the next unit from the archive
+   Returns 0 if no unit to skip */
+int srcml_skip_unit(srcml_archive*);
 
-  /* Read over the next unit from the archive
-     Returns 0 if no unit to skip */
-  int srcml_skip_unit(srcml_archive*);
+/* Read a unit at a specific position in an archive
+   Unit numbers start at 1
+   Returns 0 if pos unit does not exist */
+srcml_unit* srcml_read_unit_position(srcml_archive*, int pos);
 
-  /* Read a unit at a specific position in an archive
-     Unit numbers start at 1
-     Returns 0 if pos unit does not exist */
-  srcml_unit* srcml_read_unit_position(srcml_archive*, int pos);
+/* Query options of srcml unit */
+const char* srcml_unit_get_language (const srcml_unit*);
+const char* srcml_unit_get_filename (const srcml_unit*);
+const char* srcml_unit_get_directory(const srcml_unit*);
+const char* srcml_unit_get_version  (const srcml_unit*);
+const char* srcml_unit_get_xml      (const srcml_unit*);
 
-  /* Query options of srcml unit */
-  const char* srcml_unit_get_language (const srcml_unit*);
-  const char* srcml_unit_get_filename (const srcml_unit*);
-  const char* srcml_unit_get_directory(const srcml_unit*);
-  const char* srcml_unit_get_version  (const srcml_unit*);
-  const char* srcml_unit_get_xml      (const srcml_unit*);
+/* Convert from srcML to source code */
+int srcml_unparse_unit_filename(srcml_unit*, const char* src_filename);
+int srcml_unparse_unit_memory  (srcml_unit*, char** src_buffer);
+int srcml_unparse_unit_FILE    (srcml_unit*, FILE* srcml_file);
+int srcml_unparse_unit_fd      (srcml_unit*, int srcml_fd);
 
-  /* Convert from srcML to source code */
-  int srcml_unparse_unit_filename(srcml_unit*, const char* src_filename);
-  int srcml_unparse_unit_memory  (srcml_unit*, char** src_buffer);
-  int srcml_unparse_unit_FILE    (srcml_unit*, FILE* srcml_file);
-  int srcml_unparse_unit_fd      (srcml_unit*, int srcml_fd);
+// @todo Consider removing this and making srcml client iterate over the values
+// Problems with memory handling
+const char** srcml_list(const char* srcml_filename);
 
-  // @todo Consider removing this and making srcml client iterate over the values
-  // Problems with memory handling
-  const char** srcml_list(const char* srcml_filename);
-
-  /* srcML XPath query and XSLT transform functions */
-  int srcml_clear_transforms(srcml_archive*);
-  int srcml_append_transform_xpath(srcml_archive*, const char* xpath_string);
-  int srcml_append_transform_xslt(srcml_archive*, const char* xslt_filename);
-  int srcml_append_transform_relaxng(srcml_archive*, const char* relaxng_filename);
-  int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive);
+/* srcML XPath query and XSLT transform functions */
+int srcml_clear_transforms(srcml_archive*);
+int srcml_append_transform_xpath(srcml_archive*, const char* xpath_string);
+int srcml_append_transform_xslt(srcml_archive*, const char* xslt_filename);
+int srcml_append_transform_relaxng(srcml_archive*, const char* relaxng_filename);
+int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive);
 
 #ifdef __cplusplus
 }
