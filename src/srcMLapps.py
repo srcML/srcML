@@ -15,11 +15,11 @@ OPTION_LITERAL         = 1 << 1
 OPTION_MODIFIER        = 1 << 2
 OPTION_OPERATOR        = 1 << 3
 OPTION_DEBUG           = 1 << 4
+OPTION_CPP             = 1 << 7
 OPTION_CPP_TEXT_ELSE   = 1 << 10
 OPTION_XPATH_TOTAL     = OPTION_CPP_TEXT_ELSE
 OPTION_CPP_MARKUP_IF0  = 1 << 11
 OPTION_EXPRESSION      = 1 << 29
-OPTION_CPP             = 1 << 7
 
 # default uri
 URI_TYPE = c_char_p * 8
