@@ -193,7 +193,7 @@ public :
         xmlSAX2EndDocument(ctx);
 
         // apply the necessary processing
-        if (error = !apply(ctx))
+        if ((error = !apply(ctx)))
             pstate->stopUnit(ctx);
 
         // free up the document that has this particular unit

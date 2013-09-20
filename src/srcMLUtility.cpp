@@ -943,7 +943,7 @@ extern "C" {
   // TODO:  Why does this not return a value?
   const char * srcml_extract_text_buffer(srcMLUtility * su, int unit) {
 
-    su->extract_text(unit);
+    return su->extract_text(unit);
 
   }
 
