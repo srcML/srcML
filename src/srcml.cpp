@@ -141,9 +141,6 @@ struct srcml_request_t {
 
 srcml_request_t srcml_request = { 0 };
 
-/* These will eventually come from srcml.h, the libsrcml include file */
-/* see srcml.h for current list */
-
 /* These are internal to srcml */
 const int SRCML_COMMAND_LONGINFO = 1<<0;
 const int SRCML_COMMAND_INFO = 1<<1;
