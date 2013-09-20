@@ -43,7 +43,7 @@ extern "C" {
   /** number representing libsrcml version */
 #define SRCML_VERSION_NUMBER 1
   /** string containing libsrcml version */
-#define SRCML_VERSION_STRING "libsrcml 0.6"
+#define SRCML_VERSION_STRING "libsrcml 0.9"
 
   /* Library version functions */
   int srcml_version_number();
