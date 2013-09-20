@@ -115,7 +115,7 @@
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term><option>&EXPAND_FLAG_SHORT;, &EXPAND_FLAG;</option></term>
+      <term><option>&TO_DIR_FLAG_SHORT;, &TO_DIR_FLAG;</option></term>
       <listitem>
 	<para>
 	  Extracts all files from a srcML archive back into
