@@ -498,7 +498,7 @@ else :
 
 #remove
 if platform.system() != "Windows" :
-        checkNoOutput([srcml2src, option.EXPAND_FLAG + '=.'], sxmlfile1)
+        checkNoOutput([srcml2src, option.TO_DIR_FLAG + '=.'], sxmlfile1)
 
         validate(open("sub/a.cpp", "r").read(), sfile1)
 
@@ -509,14 +509,14 @@ else :
         os.system("del sub\\a.cpp sub\\b.cpp")
 
 if platform.system() != "Windows" :
-        checkNoOutput([srcml2src, option.EXPAND_FLAG + '=.'], nestedfile)
+        checkNoOutput([srcml2src, option.TO_DIR_FLAG + '=.'], nestedfile)
 
         validate(open("sub/a.cpp", "r").read(), sfile1)
         validate(open("sub/b.cpp", "r").read(), sfile2)
 
 #os.system("rm -f sub/a.cpp sub/b.cpp")
 
-#checkNoOutput([srcml2src, option.EXPAND_FLAG_SHORT, '.'], nestedfile)
+#checkNoOutput([srcml2src, option.TO_DIR_FLAG_SHORT, '.'], nestedfile)
 
 #validate(open("sub/a.cpp", "r").read(), sfile1)
 #validate(open("sub/b.cpp", "r").read(), sfile2)
@@ -2004,7 +2004,7 @@ else :
 
 #remove
 if platform.system() != "Windows":
-        checkNoOutput([srcml2src, option.EXPAND_FLAG + '=.', 'sub/a.cpp.xml'], srcml)
+        checkNoOutput([srcml2src, option.TO_DIR_FLAG + '=.', 'sub/a.cpp.xml'], srcml)
 
         validate(open("sub/a.cpp", "r").read(), sfile1)
 
@@ -2019,13 +2019,13 @@ else :
 
 #remove
 if platform.system() != "Windows":
-        checkNoOutput([srcml2src, option.EXPAND_FLAG + '=.', 'sub/a.cpp.xml'], "")
+        checkNoOutput([srcml2src, option.TO_DIR_FLAG + '=.', 'sub/a.cpp.xml'], "")
         validate(open('sub/a.cpp', 'r').read(), sfile1)
         validate(open('sub/b.cpp', 'r').read(), sfile2)
 
 #os.system("rm -f sub/a.cpp sub/b.cpp")
 
-        checkNoOutput([srcml2src, option.EXPAND_FLAG_SHORT, '.', 'sub/a.cpp.xml'], "")
+        checkNoOutput([srcml2src, option.TO_DIR_FLAG_SHORT, '.', 'sub/a.cpp.xml'], "")
 #validate(open('sub/a.cpp', 'r').read(), sfile1)
 #validate(open('sub/b.cpp', 'r').read(), sfile2)
 
@@ -3109,18 +3109,18 @@ checkError([srcml2src, option.NESTED_FLAG, 'xml_error/illformedarchive.xml'], ''
 
 # escaped xml test
 
-extract_option_xpath_simple ="concat('&lt;', string(//src:decl[string(src:name)='EXPAND_FLAG']/src:name), '&gt;')"
+extract_option_xpath_simple ="concat('&lt;', string(//src:decl[string(src:name)='TO_DIR_FLAG']/src:name), '&gt;')"
 
 extract_option_xpath = "concat('&lt;&#33;ENTITY ', string(//src:decl[substring(src:name, string-length(src:name) - 4)='_FLAG']/src:name), ' \"--', substring(string(//src:decl[substring(src:name, string-length(src:name) - 4)='_FLAG']/src:init/src:expr), 2, string-length(string(//src:decl[substring(src:name, string-length(src:name) - 4)='_FLAG']/src:init/src:expr)) - 2), '\"&gt;')"
 
-extract_option_xpath_output_simple = """<EXPAND_FLAG>
+extract_option_xpath_output_simple = """<TO_DIR_FLAG>
 """
 
-extract_option_xpath_output = """<!ENTITY EXPAND_FLAG "--to-dir">
+extract_option_xpath_output = """<!ENTITY TO_DIR_FLAG "--to-dir">
 """
 
-extract_options_output = """<!ENTITY EXPAND_FLAG "--to-dir">
-<!ENTITY EXPAND_FLAG_SHORT '-a'>
+extract_options_output = """<!ENTITY TO_DIR_FLAG "--to-dir">
+<!ENTITY TO_DIR_FLAG_SHORT '-a'>
 <!ENTITY UNIT_FLAG "--unit">
 <!ENTITY UNIT_FLAG_SHORT '-U'>
 <!ENTITY XML_FLAG "--xml">
