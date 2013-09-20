@@ -186,7 +186,7 @@ void* srcMLTranslatorCore::setInputString(const char* source, int size) {
 void srcMLTranslatorCore::close() {
 
   // if have not translated anything and nested output root unit
-  if (first && ((options & OPTION_NESTED) > 0))
+  if (first && ((options & OPTION_ARCHIVE) > 0))
     out.startUnit(0, root_directory, root_filename, root_version, true);
 
   out.close();
@@ -198,7 +198,7 @@ void srcMLTranslatorCore::translate(const char* path, const char* unit_directory
 				int language) {
 
   // root unit for compound srcML documents
-  if (first && ((options & OPTION_NESTED) > 0))
+  if (first && ((options & OPTION_ARCHIVE) > 0))
     out.startUnit(0, root_directory, root_filename, root_version, true);
 
   first = false;
@@ -306,7 +306,7 @@ void srcMLTranslatorCore::add_unit(const char* xml) {
 
 
   // root unit for compound srcML documents
-  if (first && ((options & OPTION_NESTED) > 0))
+  if (first && ((options & OPTION_ARCHIVE) > 0))
     out.startUnit(0, root_directory, root_filename, root_version, true);
 
   first = false;

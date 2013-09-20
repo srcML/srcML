@@ -48,7 +48,7 @@ inline bool isoption(OPTION_TYPE options, OPTION_TYPE flag) {
 // unit is nested a root unit
 // @src2srcml
 // @srcml2src
-const OPTION_TYPE OPTION_NESTED      = ull(1) << 0;
+const OPTION_TYPE OPTION_ARCHIVE      = ull(1) << 0;
 
 // markup literal values
 // @src2srcml

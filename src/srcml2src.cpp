@@ -618,7 +618,7 @@ int main(int argc, char* argv[]) {
       }
 
     // process non-attribute options
-    } else if (isoption(options, OPTION_NESTED)) {
+    } else if (isoption(options, OPTION_ARCHIVE)) {
 
 #ifdef __GNUG__
       // gracefully finish current file in srcML archive mode
@@ -903,7 +903,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
       break;
 
     case NESTED_FLAG_SHORT:
-      options |= OPTION_NESTED;
+      options |= OPTION_ARCHIVE;
       break;
 
     case INFO_FLAG_SHORT:
