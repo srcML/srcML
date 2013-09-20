@@ -23,8 +23,8 @@
   Ideas/standards used in this API (For internal use)
   * srcml functions form the namespace srcml_*
   * Only types that are passed as parameters:
-  - srcml_archive_ptr (struct srcml_archive*)
-  - srcml_unit_ptr (struct srcml_unit*)
+  - srcml_archive* (struct srcml_archive*)
+  - srcml_unit* (struct srcml_unit*)
   - char*
   - int
 */
