@@ -87,7 +87,7 @@ const char* archiveReadCompression(void* context) {
 
     archiveData* pcontext = (archiveData*) context;
 
-    return (!pcontext || !pcontext->a) ? 0 : archive_compression_name(pcontext->a);
+    return (!pcontext || !pcontext->a) ? 0 : archive_filter_name(pcontext->a, 0);
 }
 
 // match the extension
@@ -222,12 +222,12 @@ void* archiveReadOpen(const char* URI) {
     gpcontext = new archiveData;
     gpcontext->status = 0;
     gpcontext->a = archive_read_new();
-    //archive_read_support_compression_all(gpcontext->a);
+    //archive_read_support_filter_all(gpcontext->a);
 #if ARCHIVE_VERSION_NUMBER >= 3000003
-    archive_read_support_compression_bzip2(gpcontext->a);
-    archive_read_support_compression_gzip(gpcontext->a);
+    archive_read_support_filter_bzip2(gpcontext->a);
+    archive_read_support_filter_gzip(gpcontext->a);
 #else
-    archive_read_support_compression_all(gpcontext->a);
+    archive_read_support_filter_all(gpcontext->a);
 #endif
 
 #if ARCHIVE_VERSION_NUMBER >= 3001002
