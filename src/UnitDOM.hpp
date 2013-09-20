@@ -92,10 +92,28 @@ public :
                            int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                            const xmlChar** attributes) {
 
+        /*
+
+          Passing the prefix was causing an error when set.
+          Hack change localname to have prefix and set prefix to null
+          Using std::string it some cases seems to cause incorrect access of memory
+          since it does not seem to duplicate the localname.
+          Dynamically allocate for now.
+
+        */
+        std::string full_name = "";
+        if(prefix) {
+          full_name = (const char *)prefix;
+          full_name += ":";
+        }
+        full_name += (const char *)localname;
+
+        prefix_name = (const xmlChar *)strdup(full_name.c_str());
+
         // if applying to entire archive, then just build this node
         if (isoption(options, OPTION_XSLT_ALL)) {
 
-            xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes,
+            xmlSAX2StartElementNs(ctx, localname, prefix_name, 0, nb_namespaces, namespaces, nb_attributes,
                                   nb_defaulted, attributes);
 
             return;
@@ -125,23 +143,6 @@ public :
             data.push_back(namespaces[i * 2 + 1]);
         }
 
-        /*
-
-          Passing the prefix was causing an error when set.
-          Hack change localname to have prefix and set prefix to null
-          Using std::string it some cases seems to cause incorrect access of memory
-          since it does not seem to duplicate the localname.
-          Dynamically allocate for now.
-
-        */
-        std::string full_name = "";
-        if(prefix) {
-          full_name = (const char *)prefix;
-          full_name += ":";
-        }
-        full_name += (const char *)localname;
-
-        prefix_name = (const xmlChar *)strdup(full_name.c_str());
 
         // start the unit (element) at the root using the merged namespaces
         xmlSAX2StartElementNs(ctx, prefix_name, 0, URI, data.size() / 2,
