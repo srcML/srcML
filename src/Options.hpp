@@ -162,7 +162,7 @@ const OPTION_TYPE OPTION_UNIT         = OPTION_OPERATOR;
 
 // expand nested units OPTION_TYPEo separate files
 // @srcml2src
-const OPTION_TYPE OPTION_EXPAND       = OPTION_MODIFIER;
+const OPTION_TYPE OPTION_TO_DIR       = OPTION_MODIFIER;
 
 // output is xml
 // @srcml2src

@@ -55,8 +55,8 @@ const char* diff_version;
 #define BASE_PROGRAM_NAME "srcml2src"
 const char* PROGRAM_NAME = BASE_PROGRAM_NAME;
 
-char const * const EXPAND_FLAG = "to-dir";
-char const EXPAND_FLAG_SHORT = 'a';
+char const * const TO_DIR_FLAG = "to-dir";
+char const TO_DIR_FLAG_SHORT = 'a';
 
 char const * const UNIT_FLAG = "unit";
 char const UNIT_FLAG_SHORT = 'U';
@@ -217,7 +217,7 @@ void output_help(const char* name) {
 	  UNIT_FLAG_SHORT, UNIT_FLAG_FULL);
 
   printf("  -%c, --%-17s extract all files from srcML and create them in the filesystem\n\n",
-	  EXPAND_FLAG_SHORT, EXPAND_FLAG);
+	  TO_DIR_FLAG_SHORT, TO_DIR_FLAG);
 
   printf("Query and Transformation Options:\n"
 	 "  --%-21s apply XPATH expression to each individual unit\n", XPATH_FLAG_FULL);
@@ -511,7 +511,7 @@ int main(int argc, char* argv[]) {
   }
 
   if (isoption(options, OPTION_NULL) && !isoption(options, OPTION_XML))
-    options |= OPTION_EXPAND;
+    options |= OPTION_TO_DIR;
 
   // register default xpath and xslt extension functions if needed
   if (isoption(options, OPTION_XPATH) || isoption(options, OPTION_XSLT)) {
@@ -635,7 +635,7 @@ int main(int argc, char* argv[]) {
       if (isoption(options, OPTION_TERMINATE))
 	exit_status = STATUS_TERMINATED;
 
-    } else if (isoption(options, OPTION_EXPAND)) {
+    } else if (isoption(options, OPTION_TO_DIR)) {
 
 #ifdef __GNUG__
       // gracefully finish current file in srcML archive mode
@@ -760,7 +760,7 @@ int process_args(int argc, char* argv[], process_options & poptions)
     { NESTED_FLAG, no_argument, NULL, NESTED_FLAG_SHORT },
     { INFO_FLAG, no_argument, NULL, INFO_FLAG_SHORT },
     { LONG_INFO_FLAG, no_argument, NULL, LONG_INFO_FLAG_SHORT },
-    { EXPAND_FLAG, required_argument, NULL, EXPAND_FLAG_SHORT },
+    { TO_DIR_FLAG, required_argument, NULL, TO_DIR_FLAG_SHORT },
     { VERBOSE_FLAG, no_argument, NULL, VERBOSE_FLAG_SHORT },
     { XML_FLAG, no_argument, NULL, XML_FLAG_SHORT },
     { COMPRESSED_FLAG, no_argument, NULL, COMPRESSED_FLAG_SHORT },
@@ -914,12 +914,12 @@ int process_args(int argc, char* argv[], process_options & poptions)
       options |= OPTION_LONG_INFO;
       break;
 
-    case EXPAND_FLAG_SHORT:
+    case TO_DIR_FLAG_SHORT:
 
       // check for missing argument confused by an argument that looks like an option
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
-      options |= OPTION_EXPAND;
+      options |= OPTION_TO_DIR;
 
       poptions.to_directory = optarg;
       break;
