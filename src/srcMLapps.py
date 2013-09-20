@@ -1,4 +1,5 @@
 from ctypes import *
+
 # language constants
 LANGUAGE_NONE = ("", 64)
 LANGUAGE_C = ("C", 1)
