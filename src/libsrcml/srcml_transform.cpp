@@ -173,11 +173,9 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
         }
 
       case SRCML_RELAXNG: {
-        fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
           const char * relaxngs[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
-          fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
           error = srcml_relaxng(pinput, relaxngs, transform_fd, oarchive->options);
-          fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
           break;
         }
 
@@ -194,12 +192,11 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
   
       return SRCML_STATUS_ERROR;
     }
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
     if(i != 0) xmlFreeParserInputBuffer(pinput);
     unlink(last_transform_filename);
     free((void *)last_transform_filename);
     last_transform_filename = transform_filename;
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     if(error == SRCML_STATUS_ERROR) {
       unlink(last_transform_filename);
       free((void *)last_transform_filename);
@@ -207,7 +204,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
     }
 
   }
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   srcml_archive * tmp_archive = srcml_create_archive();
 
   srcml_read_open_filename(tmp_archive, last_transform_filename);
