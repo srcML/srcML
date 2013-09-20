@@ -257,7 +257,7 @@ void* archiveReadOpen(const char* URI) {
         gpcontext->status = archive_read_open_filename(gpcontext->a, strcmp(URI, "-") == 0 ? 0 : URI, 4000);
     }
     if (gpcontext->status != ARCHIVE_OK) {
-        archive_read_finish(gpcontext->a);
+        archive_read_free(gpcontext->a);
         delete gpcontext;
         return 0;
     }
@@ -265,7 +265,7 @@ void* archiveReadOpen(const char* URI) {
     gpcontext->status = archive_read_next_header(gpcontext->a, &gpcontext->ae);
     if (gpcontext->status != ARCHIVE_EOF && gpcontext->status != ARCHIVE_OK) {
 
-        archive_read_finish(gpcontext->a);
+        archive_read_free(gpcontext->a);
         gpcontext->a = 0;
         return 0;
     }
@@ -284,10 +284,10 @@ int archiveReadClose(void* context) {
     if (pcontext->status != ARCHIVE_OK)
         return 0;
 
-    // read the next header.  If there isn't one, then really finish
+    // read the next header.  If there isn't one, then really free
     pcontext->status = archive_read_next_header(pcontext->a, &pcontext->ae);
     if (pcontext->status != ARCHIVE_OK)
-        archive_read_finish(pcontext->a);
+        archive_read_free(pcontext->a);
 
     return 0;
 }
