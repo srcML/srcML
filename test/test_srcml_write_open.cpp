@@ -1,7 +1,7 @@
 /*
   test_srcml_write_open.cpp
 
-  Copyright (C) 2013  SDML (www.sdml.info)
+  Copyright (C) 2013  SDML (www.srcML.org)
 
   The srcML Toolkit is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
