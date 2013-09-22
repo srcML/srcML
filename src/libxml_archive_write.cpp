@@ -56,20 +56,20 @@ void archiveWriteOutputFormat(const char* format) {
 
 archive_write_t archive_data = { 0, 0, "", "", "", false, 0 };
 
-/* A table that maps filters to functions. */
-static struct { const char *filter; int (*setter)(struct archive *); } filters[] =
+/* A table that maps compressions to functions. */
+static struct { const char *compression; int (*setter)(struct archive *); } compressions[] =
 {
-    { "gz",  archive_write_add_filter_gzip },
-    { "bz2", archive_write_add_filter_bzip2 },
-    { "tgz", archive_write_add_filter_gzip },
+    { "gz",  archive_write_set_compression_gzip },
+    { "bz2", archive_write_set_compression_bzip2 },
+    { "tgz", archive_write_set_compression_gzip },
     { 0,0 }
 };
 
-int archive_write_set_filter_by_name(struct archive *wa, const char *filter)
+int archive_write_set_compression_by_name(struct archive *wa, const char *compression)
 {
-    for (int i = 0; filters[i].filter != NULL; ++i) {
-        if (strcmp(filter, filters[i].filter) == 0)
-            return ((filters[i].setter)(wa));
+    for (int i = 0; compressions[i].compression != NULL; ++i) {
+        if (strcmp(compression, compressions[i].compression) == 0)
+            return ((compressions[i].setter)(wa));
     }
 
     return (ARCHIVE_FATAL);
@@ -136,7 +136,7 @@ void* archiveWriteRootOpen(const char * URI) {
 }
 
 /*
-  Setup the format and filter for archive wa
+  Setup the format and compression for archive wa
   based on the path.
 */
 int setupArchive(struct archive* wa, const char* path) {
@@ -166,8 +166,8 @@ int setupArchive(struct archive* wa, const char* path) {
     if (setarchive == ARCHIVE_FATAL)
         return 0;
 
-    // try to set the filter based on the last extension (may fail)
-    archive_write_set_filter_by_name(wa, outer);
+    // try to set the compression based on the last extension (may fail)
+    archive_write_set_compression_by_name(wa, outer);
 
     return 1;
 }
@@ -182,7 +182,7 @@ void* archiveWriteOpen(const char * URI) {
         if (!archive_data.isstdout) {
             archive_data.wa = archive_write_new();
             if (!setupArchive(archive_data.wa, output_format ? std::string(".").append(output_format).c_str() : archive_data.root_filename.c_str())) {
-                fprintf(stderr, "Invalid or unsupported format/filter\n");
+                fprintf(stderr, "Invalid or unsupported format/compression\n");
                 throw UnsupportedFormat();
                 return 0;
             }
@@ -194,7 +194,7 @@ void* archiveWriteOpen(const char * URI) {
         }
 
         //fprintf(stderr, "Format: %s\n", archive_format_name(wa));
-        //fprintf(stderr, "Filter: %s\n", archive_filter_name(wa));
+        //fprintf(stderr, "Compression: %s\n", archive_compression_name(wa));
     }
 
     archive_data.filename = URI;
@@ -239,7 +239,7 @@ int archiveWriteRootClose(void * context) {
     if (archive_data.wa) {
         archive_entry_free(archive_data.wentry);
         archive_write_close(archive_data.wa);
-        archive_write_free(archive_data.wa);
+        archive_write_finish(archive_data.wa);
     }
 
     archive_data.wa = 0;
