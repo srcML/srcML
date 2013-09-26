@@ -177,6 +177,8 @@ public :
         xmlNodePtr onode = 0;
         int result_size = 0;
         nodetype = result_nodes->type;
+//        fprintf(stderr, "DEBUG:  %s %s %d DATA: %d\n", __FILE__,  __FUNCTION__, __LINE__, nodetype);
+//        fprintf(stderr, "DEBUG:  %s %s %d DATA: %d\n", __FILE__,  __FUNCTION__, __LINE__, result_nodes->nodesetval);
 
         switch (nodetype) {
 
@@ -198,6 +200,7 @@ public :
                 closetag = true;
             }
             needroot = false;
+
 
             // may not have any values or results
             result_size = xmlXPathNodeSetGetLength(result_nodes->nodesetval);
