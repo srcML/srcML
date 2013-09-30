@@ -350,7 +350,7 @@ const char* srcMLTranslatorOutput::token2name(const antlr::RefToken& token) cons
 
 const char* srcMLTranslatorOutput::type2name(int token_type) const {
 
-  static std::string name;
+  std::string name;
 
   const char* tagname = ElementNames[token_type];
 
