@@ -86,7 +86,7 @@ const char* archiveReadFormat(void* context) {
 const char* archiveReadCompression(void* context) {
 
     archiveData* pcontext = (archiveData*) context;
-#if ARCHIVE_VERSION_NUMBER < 3001002
+#if ARCHIVE_VERSION_NUMBER <= 3000200
     return (!pcontext || !pcontext->a) ? 0 : archive_compression_name(pcontext->a);
 #else
     return (!pcontext || !pcontext->a) ? 0 : archive_filter_name(pcontext->a, 0);
@@ -227,7 +227,7 @@ void* archiveReadOpen(const char* URI) {
     gpcontext->a = archive_read_new();
     //archive_read_support_compression_all(gpcontext->a);
 #if ARCHIVE_VERSION_NUMBER >= 3000003
-#if ARCHIVE_VERSION_NUMBER < 3001002
+#if ARCHIVE_VERSION_NUMBER <= 3000200
     archive_read_support_compression_bzip2(gpcontext->a);
     archive_read_support_compression_gzip(gpcontext->a);
 #else
@@ -265,7 +265,7 @@ void* archiveReadOpen(const char* URI) {
         gpcontext->status = archive_read_open_filename(gpcontext->a, strcmp(URI, "-") == 0 ? 0 : URI, 4000);
     }
     if (gpcontext->status != ARCHIVE_OK) {
-#if ARCHIVE_VERSION_NUMBER < 3001002
+#if ARCHIVE_VERSION_NUMBER <= 3000200
         archive_read_finish(gpcontext->a);
 #else
         archive_read_free(gpcontext->a);
@@ -276,7 +276,7 @@ void* archiveReadOpen(const char* URI) {
 
     gpcontext->status = archive_read_next_header(gpcontext->a, &gpcontext->ae);
     if (gpcontext->status != ARCHIVE_EOF && gpcontext->status != ARCHIVE_OK) {
-#if ARCHIVE_VERSION_NUMBER < 3001002
+#if ARCHIVE_VERSION_NUMBER <= 3000200
         archive_read_finish(gpcontext->a);
 #else
         archive_read_free(gpcontext->a);
@@ -302,7 +302,7 @@ int archiveReadClose(void* context) {
     // read the next header.  If there isn't one, then really finish
     pcontext->status = archive_read_next_header(pcontext->a, &pcontext->ae);
     if (pcontext->status != ARCHIVE_OK)
-#if ARCHIVE_VERSION_NUMBER < 3001002
+#if ARCHIVE_VERSION_NUMBER <= 3000200
         archive_read_finish(pcontext->a);
 #else
         archive_read_free(pcontext->a);
