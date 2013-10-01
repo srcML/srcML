@@ -59,9 +59,15 @@ archive_write_t archive_data = { 0, 0, "", "", "", false, 0 };
 /* A table that maps compressions to functions. */
 static struct { const char *compression; int (*setter)(struct archive *); } compressions[] =
 {
+#if ARCHIVE_VERSION_NUMBER < 3001002
     { "gz",  archive_write_set_compression_gzip },
     { "bz2", archive_write_set_compression_bzip2 },
     { "tgz", archive_write_set_compression_gzip },
+#else
+    { "gz",  archive_write_add_filter_gzip },
+    { "bz2", archive_write_add_filter_bzip2 },
+    { "tgz", archive_write_add_filter_gzip },
+#endif
     { 0,0 }
 };
 
@@ -239,7 +245,11 @@ int archiveWriteRootClose(void * context) {
     if (archive_data.wa) {
         archive_entry_free(archive_data.wentry);
         archive_write_close(archive_data.wa);
+#if ARCHIVE_VERSION_NUMBER < 3001002
         archive_write_finish(archive_data.wa);
+#else
+        archive_write_free(archive_data.wa);
+#endif
     }
 
     archive_data.wa = 0;
