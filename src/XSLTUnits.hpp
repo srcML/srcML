@@ -204,7 +204,7 @@ public :
 
             // finished with the result of the transformation
             // TODO:  Get rid of this memory leak.
-//            xmlFreeDoc(res);
+            xmlFreeDoc(res);
         }
 
         return true;
