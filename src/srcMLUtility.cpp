@@ -270,7 +270,7 @@ int srcMLUtility::unit_count(FILE* output) {
   else
     ctxt = srcMLCreateMemoryParserCtxt(buffer, size);
   if (ctxt == NULL) return -1;
-
+  xmlSAXHandlerPtr save_sax = ctxt->sax;
   // setup sax handler
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
   ctxt->sax = &sax;
@@ -290,7 +290,7 @@ int srcMLUtility::unit_count(FILE* output) {
   srcMLParseDocument(ctxt, false);
 
   // local variable, do not want xmlFreeParserCtxt to free
-  ctxt->sax = NULL;
+  ctxt->sax = save_sax;
 
   delete pprocess;
 
