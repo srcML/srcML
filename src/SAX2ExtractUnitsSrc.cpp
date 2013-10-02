@@ -64,6 +64,18 @@ void SAX2ExtractUnitsSrc::endDocument(void *ctx) {
   SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
   pstate->pprocess->endDocument(ctx);
+
+  free((void *)pstate->root.localname);
+  free((void *)pstate->root.prefix);
+  free((void *)pstate->root.URI);
+
+  int ns_length = pstate->root.nb_namespaces * 2;
+
+  for (int i = 0; i < ns_length; ++i)
+    if(pstate->root.namespaces[i])
+      free((void *)pstate->root.namespaces[i]);
+  free((void *)pstate->root.namespaces);
+
 }
 
 /*
@@ -312,6 +324,7 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
     return;
 
   pstate->firstcharacters.clear();
+
 }
 
 /*
