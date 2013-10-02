@@ -307,7 +307,7 @@ int archiveReadClose(void* context) {
 #else
         archive_read_free(pcontext->a);
 #endif
-
+        delete pcontext;
     return 0;
 }
 
