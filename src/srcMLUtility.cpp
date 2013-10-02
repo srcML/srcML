@@ -861,10 +861,11 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
   ctxt->sax = save_sax;
 
   if(buffer_input) inputPop(ctxt);
+
   // all done with parsing
-  xmlFreeParserCtxt(ctxt);
   xsltFreeStylesheet(stylesheet);
   xsltCleanupGlobals();
+  xmlFreeParserCtxt(ctxt);
 }
 
 // relaxng evaluation of the nested units
