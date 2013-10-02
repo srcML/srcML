@@ -796,7 +796,7 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
   typedef xsltStylesheetPtr (*xsltParseStylesheetFile_function) (const xmlChar*);
-  typedef void (*xsltUninit_function)();
+  typedef void (*xsltCleanupGlobals_function)();
   typedef void (*xsltFreeStylesheet_function)(xsltStylesheetPtr);
 
   void* handle = dlopen("libexslt.so", RTLD_LAZY);
@@ -817,7 +817,7 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
   }
 
   dlerror();
-  xsltUninit_function xsltUninit = (xsltUninit_function)dlsym(handle, "xsltUninit");
+  xsltCleanupGlobals_function xsltCleanupGlobals = (xsltCleanupGlobals_function)dlsym(handle, "xsltCleanupGlobals");
   if ((error = dlerror()) != NULL) {
     dlclose(handle);
     return;
@@ -864,7 +864,7 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
   // all done with parsing
   xmlFreeParserCtxt(ctxt);
   xsltFreeStylesheet(stylesheet);
-  xsltUninit();
+  xsltCleanupGlobals();
 }
 
 // relaxng evaluation of the nested units
