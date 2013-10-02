@@ -166,7 +166,7 @@ void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE opt
   ctxt->sax = save_sax;
 
   // all done with parsing
-  void * context = ctxt->input->buf->context;xmlFreeParserCtxt(ctxt);archiveDeleteContext(context);
+  xmlFreeParserCtxt(ctxt);
 
   // make sure we did not end early
   if (state.unit >= 1 && state.count != state.unit)
@@ -203,7 +203,7 @@ void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE opt
   ctxt->sax = save_sax;
 
   // all done with parsing
-  void * context = ctxt->input->buf->context;xmlFreeParserCtxt(ctxt);archiveDeleteContext(context);
+  xmlFreeParserCtxt(ctxt);
 
   // make sure we did not end early
   if (state.unit >= 1 && state.count != state.unit)
@@ -249,7 +249,7 @@ const char * srcMLUtility::long_info(srcMLUtility & su) {
   ctxt->sax = save_sax;
 
   // all done with parsing
-  void * context = ctxt->input->buf->context;xmlFreeParserCtxt(ctxt);archiveDeleteContext(context);
+  xmlFreeParserCtxt(ctxt);
 
   // make sure we did not end early
   if (state.unit >= 1 && state.count != state.unit)
@@ -340,7 +340,7 @@ void srcMLUtility::extract_xml(const char* ofilename, int unit) {
   ctxt->sax = save_sax;
 
   // all done with parsing
-  void * context = ctxt->input->buf->context;xmlFreeParserCtxt(ctxt);archiveDeleteContext(context);
+  xmlFreeParserCtxt(ctxt);
 
   // make sure we did not end early
   if (state.unit && state.count < state.unit)
@@ -381,7 +381,7 @@ const char * srcMLUtility::extract_xml(int unit) {
   ctxt->sax = save_sax;
 
   // all done with parsing
-  void * context = ctxt->input->buf->context;xmlFreeParserCtxt(ctxt);archiveDeleteContext(context);
+  xmlFreeParserCtxt(ctxt);
 
   // make sure we did not end early
   if (state.unit && state.count < state.unit)
@@ -419,7 +419,7 @@ void srcMLUtility::extract_diff_xml(const char* ofilename, int unit, const char*
   ctxt->sax = save_sax;
 
   // all done with parsing
-  void * context = ctxt->input->buf->context;xmlFreeParserCtxt(ctxt);archiveDeleteContext(context);
+  xmlFreeParserCtxt(ctxt);
 
   // make sure we did not end early
   if (state.unit && state.count < state.unit)
@@ -452,7 +452,7 @@ void srcMLUtility::extract_xml_uri(const char* ofilename, int unit, const char* 
   ctxt->sax = save_sax;
 
   // all done with parsing
-  void * context = ctxt->input->buf->context;xmlFreeParserCtxt(ctxt);archiveDeleteContext(context);
+  xmlFreeParserCtxt(ctxt);
 
   // make sure we did not end early
   if (state.unit && state.count < state.unit)
@@ -506,7 +506,7 @@ void srcMLUtility::extract_text(const char* to_dir, const char* ofilename, int u
   ctxt->sax = save_sax;
 
   // all done with parsing
-  void * context = ctxt->input->buf->context;xmlFreeParserCtxt(ctxt);archiveDeleteContext(context);
+  xmlFreeParserCtxt(ctxt);
 
   // make sure we did not end early
   if (state.unit && state.count < state.unit)
@@ -542,7 +542,7 @@ void srcMLUtility::extract_text(xmlOutputBufferPtr output_buffer, int unit) {
   ctxt->sax = save_sax;
 
   // all done with parsing
-  void * context = ctxt->input->buf->context;xmlFreeParserCtxt(ctxt);archiveDeleteContext(context);
+  xmlFreeParserCtxt(ctxt);
 
   // make sure we did not end early
   if (state.unit && state.count < state.unit)
@@ -584,7 +584,7 @@ const char * srcMLUtility::extract_text(int unit) {
   ctxt->sax = save_sax;
 
   // all done with parsing
-  void * context = ctxt->input->buf->context;xmlFreeParserCtxt(ctxt);archiveDeleteContext(context);
+  xmlFreeParserCtxt(ctxt);
 
   // make sure we did not end early
   if (state.unit && state.count < state.unit)
@@ -621,7 +621,7 @@ void srcMLUtility::extract_diff_text(const char* to_dir, const char* ofilename, 
   ctxt->sax = save_sax;
 
   // all done with parsing
-  void * context = ctxt->input->buf->context;xmlFreeParserCtxt(ctxt);archiveDeleteContext(context);
+  xmlFreeParserCtxt(ctxt);
 
   // make sure we did not end early
   if (state.unit && state.count < state.unit)
@@ -665,7 +665,7 @@ void srcMLUtility::expand(const char* root_filename, const char* format, const c
   ctxt->sax = save_sax;
 
   // all done with parsing
-  void * context = ctxt->input->buf->context;xmlFreeParserCtxt(ctxt);archiveDeleteContext(context);
+  xmlFreeParserCtxt(ctxt);
 }
 
 // list the elements
@@ -694,7 +694,7 @@ void srcMLUtility::list() {
   ctxt->sax = save_sax;
 
   // all done with parsing
-  void * context = ctxt->input->buf->context;xmlFreeParserCtxt(ctxt);archiveDeleteContext(context);
+  xmlFreeParserCtxt(ctxt);
 }
 /*
 // namespaces and prefixes
@@ -748,7 +748,7 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
 
   // all done with parsing
   if(buffer_input) inputPop(ctxt);
-  void * context = ctxt->input->buf->context;xmlFreeParserCtxt(ctxt);archiveDeleteContext(context);
+  xmlFreeParserCtxt(ctxt);
 }
 
 // allow for all exslt functions
@@ -785,31 +785,87 @@ static void dlexsltRegisterAll() {
 #endif
 }
 
-#include <libxslt/extensions.h>
-
 // xslt evaluation of the nested units
 void srcMLUtility::xslt(const char* context_element, const char* ofilename, const char* xslts[], const char* params[], int paramcount, int fd) {
 
   if(ofilename) xmlMemSetup(xmlMemFree, xmlMemMalloc, xmlMemRealloc, xmlMemoryStrdup);
   xmlInitParser();
 
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, xmlMemUsed());
-
   // allow for all exstl functions
-  //dlexsltRegisterAll();
+  dlexsltRegisterAll();
+
+#if defined(__GNUG__) && !defined(__MINGW32__)
+  typedef xsltStylesheetPtr (*xsltParseStylesheetFile_function) (const xmlChar*);
+  typedef void (*xsltCleanupGlobals_function)();
+  typedef void (*xsltFreeStylesheet_function)(xsltStylesheetPtr);
+
+  void* handle = dlopen("libexslt.so", RTLD_LAZY);
+  if (!handle) {
+    handle = dlopen("libexslt.dylib", RTLD_LAZY);
+    if (!handle) {
+      fprintf(stderr, "Unable to open libexslt library\n");
+      return;
+    }
+  }
+
+  dlerror();
+  xsltParseStylesheetFile_function xsltParseStylesheetFile = (xsltParseStylesheetFile_function)dlsym(handle, "xsltParseStylesheetFile");
+  char* error;
+  if ((error = dlerror()) != NULL) {
+    dlclose(handle);
+    return;
+  }
+
+  dlerror();
+  xsltCleanupGlobals_function xsltCleanupGlobals = (xsltCleanupGlobals_function)dlsym(handle, "xsltCleanupGlobals");
+  if ((error = dlerror()) != NULL) {
+    dlclose(handle);
+    return;
+  }
+
+  dlerror();
+  xsltFreeStylesheet_function xsltFreeStylesheet = (xsltFreeStylesheet_function)dlsym(handle, "xsltFreeStylesheet");
+  if ((error = dlerror()) != NULL) {
+    dlclose(handle);
+    return;
+  }
+#endif
 
   // parse the stylesheet
   xsltStylesheetPtr stylesheet = xsltParseStylesheetFile(BAD_CAST xslts[0]);
   if (!stylesheet)
     return;
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, xmlMemUsed());
+
+  // setup parser
+  xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
+  if (ctxt == NULL) return;
+
+  // setup sax handler
+  xmlSAXHandlerPtr save_sax = ctxt->sax;
+  xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
+  ctxt->sax = &sax;
+
+  // setup process handling
+  XSLTUnits process(context_element, ofilename, options, stylesheet, params, fd);
+
+  // setup sax handling state
+  SAX2ExtractUnitsSrc state(&process, &options, -1, diff_version);
+  ctxt->_private = &state;
+
+  xsltsrcMLRegister();
+
+  // process the document
+  srcMLParseDocument(ctxt, false);
+
+  // local variable, do not want xmlFreeParserCtxt to free
+  ctxt->sax = save_sax;
+
+  if(buffer_input) inputPop(ctxt);
 
   // all done with parsing
   xsltFreeStylesheet(stylesheet);
   xsltCleanupGlobals();
-  xsltDebugDumpExtensions(NULL);
-
-  fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, xmlMemUsed());
+  xmlFreeParserCtxt(ctxt);
 }
 
 // relaxng evaluation of the nested units
@@ -837,7 +893,7 @@ void srcMLUtility::relaxng(const char* ofilename, const char** xslts, int fd) {
   ctxt->sax = save_sax;
 
   if(buffer_input) inputPop(ctxt);
-  void * context = ctxt->input->buf->context;xmlFreeParserCtxt(ctxt);archiveDeleteContext(context);
+  xmlFreeParserCtxt(ctxt);
   xmlRelaxNGFreeValidCtxt(rngctx);
   xmlRelaxNGFree(rng);
   xmlRelaxNGFreeParserCtxt(relaxng);

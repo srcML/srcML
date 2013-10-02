@@ -119,7 +119,7 @@ else()
 add_library(srcml_static STATIC libsrcml/libsrcml.cpp libsrcml/srcMLReader.cpp libsrcml/srcml_transform.cpp libsrcml/srcml_info.cpp libsrcml/srcml_archive.cpp libsrcml/srcml_unit.cpp libsrcml/srcml_sax2_utilities.cpp srcMLParser.cpp KeywordLexer.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp CommentTextLexer.cpp srcMLParserTokenTypesMacro.hpp srcMLUtility.cpp SAX2ExtractUnitsSrc.cpp SAX2Utilities.cpp SAX2UnitDOM.cpp SAX2UnitDOMRelaxNG.cpp srcexfun.cpp srcMLTranslator.cpp srcMLTranslatorCore.cpp UTF8CharBuffer.cpp Language.cpp URIStream.cpp libxml_archive_read.cpp libxml_archive_write.cpp srcmlapps.cpp)
 endif()
 
-target_link_libraries(srcml_static ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${LIBREGEX_LIBRARY} xslt)
+target_link_libraries(srcml_static ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${LIBREGEX_LIBRARY})
 set_target_properties(srcml_static PROPERTIES OUTPUT_NAME srcml)
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
@@ -129,7 +129,7 @@ if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_
 else()
        add_library(srcml_shared SHARED libsrcml/libsrcml.cpp libsrcml/srcMLReader.cpp libsrcml/srcml_transform.cpp libsrcml/srcml_info.cpp libsrcml/srcml_archive.cpp libsrcml/srcml_unit.cpp libsrcml/srcml_sax2_utilities.cpp srcMLParser.cpp KeywordLexer.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp CommentTextLexer.cpp srcMLParserTokenTypesMacro.hpp srcMLUtility.cpp SAX2ExtractUnitsSrc.cpp SAX2Utilities.cpp SAX2UnitDOM.cpp SAX2UnitDOMRelaxNG.cpp srcexfun.cpp srcMLTranslator.cpp srcMLTranslatorCore.cpp UTF8CharBuffer.cpp Language.cpp URIStream.cpp libxml_archive_read.cpp libxml_archive_write.cpp srcmlapps.cpp)
 endif()
-       target_link_libraries(srcml_shared ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} ${LIBREGEX_LIBRARY} xslt)
+       target_link_libraries(srcml_shared ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} ${LIBREGEX_LIBRARY})
        set_target_properties(srcml_shared PROPERTIES OUTPUT_NAME srcml)
 else()
        # libsrcml shared
@@ -138,7 +138,7 @@ if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_
 else()
        add_library(srcml_shared SHARED libsrcml/libsrcml.cpp libsrcml/srcMLReader.cpp libsrcml/srcml_transform.cpp libsrcml/srcml_info.cpp libsrcml/srcml_archive.cpp libsrcml/srcml_unit.cpp libsrcml/srcml_sax2_utilities.cpp srcMLParser.cpp KeywordLexer.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp CommentTextLexer.cpp srcMLParserTokenTypesMacro.hpp srcMLUtility.cpp SAX2ExtractUnitsSrc.cpp SAX2Utilities.cpp SAX2UnitDOM.cpp SAX2UnitDOMRelaxNG.cpp srcexfun.cpp srcMLTranslator.cpp srcMLTranslatorCore.cpp UTF8CharBuffer.cpp Language.cpp URIStream.cpp libxml_archive_read.cpp libxml_archive_write.cpp srcmlapps.cpp)
 endif()
-       target_link_libraries(srcml_shared ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} xslt)
+       target_link_libraries(srcml_shared ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB})
        set_target_properties(srcml_shared PROPERTIES OUTPUT_NAME srcml)
 endif()
 
@@ -170,7 +170,7 @@ add_executable(srcml2src srcml2src.cpp)
 endif()
 
 if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
-       target_link_libraries(srcml2src  ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} dl srcml_static xslt)
+       target_link_libraries(srcml2src  ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} dl srcml_static)
 else()
        target_link_libraries(srcml2src  ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} srcml_shared)
 
