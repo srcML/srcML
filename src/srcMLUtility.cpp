@@ -747,6 +747,7 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
   // all done with parsing
   if(buffer_input) inputPop(ctxt);
   void * context = ctxt->input->buf->context;xmlFreeParserCtxt(ctxt);archiveDeleteContext(context);
+  xmlXPathFreeCompExpr(compiled_xpath);
 }
 
 // allow for all exslt functions
