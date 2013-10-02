@@ -747,6 +747,7 @@ int main(int argc, char* argv[]) {
 
   xmlCleanupCharEncodingHandlers();
   xmlCleanupGlobals();
+  xmlDictCleanup();
 
   return exit_status;
 }
