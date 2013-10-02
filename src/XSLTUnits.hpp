@@ -91,6 +91,7 @@ public :
   return;
   }
 */
+        dlclose(handle);
 #endif
 
     }
