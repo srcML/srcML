@@ -741,6 +741,10 @@ int main(int argc, char* argv[]) {
       exit_status = STATUS_ERROR;
   }
 
+  if (strcmp(poptions.ofilename, "") != 0 && (strcmp(poptions.ofilename, "-") != 0)) {
+    fclose(output);
+  }
+
   return exit_status;
 }
 
