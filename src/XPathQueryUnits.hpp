@@ -156,6 +156,7 @@ public :
 
             }
         }
+        dlclose(handle);
 #endif
 #endif
     }
