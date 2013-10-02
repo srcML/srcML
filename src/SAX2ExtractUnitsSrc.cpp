@@ -76,6 +76,17 @@ void SAX2ExtractUnitsSrc::endDocument(void *ctx) {
       free((void *)pstate->root.namespaces[i]);
   free((void *)pstate->root.namespaces);
 
+  for (int i = 0, index = 0; i < pstate->root.nb_attributes; ++i, index += 5) {
+    if(pstate->root.attributes[index])
+      free((void *)pstate->root.attributes[index]);
+    if(pstate->root.attributes[index + 1])
+      free((void *)pstate->root.attributes[index + 1]);
+    if(pstate->root.attributes[index + 2])
+      free((void *)pstate->root.attributes[index + 2]);
+    free((void *)pstate->root.attributes[index + 3]);
+  }
+  free((void *)pstate->root.attributes);
+
 }
 
 /*
