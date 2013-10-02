@@ -295,7 +295,9 @@ int srcMLUtility::unit_count(FILE* output) {
   delete pprocess;
 
   // all done with parsing
+  void * context = ctxt->input->buf->context;
   xmlFreeParserCtxt(ctxt);
+  archiveDeleteContext(context);
 
   return state.count;
 }
