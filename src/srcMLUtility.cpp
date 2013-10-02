@@ -146,6 +146,7 @@ void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE opt
   if (ctxt == NULL) return;
 
   // setup sax handler
+  xmlSAXHandlerPtr save_sax = ctxt->sax;
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
   ctxt->sax = &sax;
 
@@ -162,7 +163,7 @@ void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE opt
   srcMLParseDocument(ctxt, true);
 
   // local variable, do not want xmlFreeParserCtxt to free
-  ctxt->sax = NULL;
+  ctxt->sax = save_sax;
 
   // all done with parsing
   xmlFreeParserCtxt(ctxt);
@@ -182,6 +183,7 @@ void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE opt
   if (ctxt == NULL) return;
 
   // setup sax handler
+  xmlSAXHandlerPtr save_sax = ctxt->sax;
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
   ctxt->sax = &sax;
 
@@ -198,7 +200,7 @@ void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE opt
   srcMLParseDocument(ctxt, true);
 
   // local variable, do not want xmlFreeParserCtxt to free
-  ctxt->sax = NULL;
+  ctxt->sax = save_sax;
 
   // all done with parsing
   xmlFreeParserCtxt(ctxt);
@@ -226,6 +228,7 @@ const char * srcMLUtility::long_info(srcMLUtility & su) {
   if (ctxt == NULL) return 0;
 
   // setup sax handler
+  xmlSAXHandlerPtr save_sax = ctxt->sax;
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
   ctxt->sax = &sax;
 
@@ -243,7 +246,7 @@ const char * srcMLUtility::long_info(srcMLUtility & su) {
   srcMLParseDocument(ctxt, true);
 
   // local variable, do not want xmlFreeParserCtxt to free
-  ctxt->sax = NULL;
+  ctxt->sax = save_sax;
 
   // all done with parsing
   xmlFreeParserCtxt(ctxt);
@@ -270,8 +273,9 @@ int srcMLUtility::unit_count(FILE* output) {
   else
     ctxt = srcMLCreateMemoryParserCtxt(buffer, size);
   if (ctxt == NULL) return -1;
-  xmlSAXHandlerPtr save_sax = ctxt->sax;
+
   // setup sax handler
+  xmlSAXHandlerPtr save_sax = ctxt->sax;
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
   ctxt->sax = &sax;
 
@@ -315,6 +319,7 @@ void srcMLUtility::extract_xml(const char* ofilename, int unit) {
   if (ctxt == NULL) return;
 
   // setup sax handler
+  xmlSAXHandlerPtr save_sax = ctxt->sax;
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
   ctxt->sax = &sax;
 
@@ -332,7 +337,7 @@ void srcMLUtility::extract_xml(const char* ofilename, int unit) {
   srcMLParseDocument(ctxt, true);
 
   // local variable, do not want xmlFreeParserCtxt to free
-  ctxt->sax = NULL;
+  ctxt->sax = save_sax;
 
   // all done with parsing
   xmlFreeParserCtxt(ctxt);
@@ -354,6 +359,7 @@ const char * srcMLUtility::extract_xml(int unit) {
   if (ctxt == NULL) return 0;
 
   // setup sax handler
+  xmlSAXHandlerPtr save_sax = ctxt->sax;
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
   ctxt->sax = &sax;
 
@@ -372,7 +378,7 @@ const char * srcMLUtility::extract_xml(int unit) {
   srcMLParseDocument(ctxt, true);
 
   // local variable, do not want xmlFreeParserCtxt to free
-  ctxt->sax = NULL;
+  ctxt->sax = save_sax;
 
   // all done with parsing
   xmlFreeParserCtxt(ctxt);
@@ -395,6 +401,7 @@ void srcMLUtility::extract_diff_xml(const char* ofilename, int unit, const char*
   if (ctxt == NULL) return;
 
   // setup sax handler
+  xmlSAXHandlerPtr save_sax = ctxt->sax;
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
   ctxt->sax = &sax;
 
@@ -409,7 +416,7 @@ void srcMLUtility::extract_diff_xml(const char* ofilename, int unit, const char*
   srcMLParseDocument(ctxt, true);
 
   // local variable, do not want xmlFreeParserCtxt to free
-  ctxt->sax = NULL;
+  ctxt->sax = save_sax;
 
   // all done with parsing
   xmlFreeParserCtxt(ctxt);
@@ -427,6 +434,7 @@ void srcMLUtility::extract_xml_uri(const char* ofilename, int unit, const char* 
   if (ctxt == NULL) return;
 
   // setup sax handler
+  xmlSAXHandlerPtr save_sax = ctxt->sax;
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
   ctxt->sax = &sax;
 
@@ -441,7 +449,7 @@ void srcMLUtility::extract_xml_uri(const char* ofilename, int unit, const char* 
   srcMLParseDocument(ctxt, true);
 
   // local variable, do not want xmlFreeParserCtxt to free
-  ctxt->sax = NULL;
+  ctxt->sax = save_sax;
 
   // all done with parsing
   xmlFreeParserCtxt(ctxt);
@@ -475,6 +483,7 @@ void srcMLUtility::extract_text(const char* to_dir, const char* ofilename, int u
     ctxt = srcMLCreateMemoryParserCtxt(buffer, size);
 
   // setup sax handler
+  xmlSAXHandlerPtr save_sax = ctxt->sax;
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
   ctxt->sax = &sax;
 
@@ -494,7 +503,7 @@ void srcMLUtility::extract_text(const char* to_dir, const char* ofilename, int u
 #endif
 
   // local variable, do not want xmlFreeParserCtxt to free
-  ctxt->sax = NULL;
+  ctxt->sax = save_sax;
 
   // all done with parsing
   xmlFreeParserCtxt(ctxt);
@@ -515,6 +524,7 @@ void srcMLUtility::extract_text(xmlOutputBufferPtr output_buffer, int unit) {
     ctxt = srcMLCreateMemoryParserCtxt(buffer, size);
 
   // setup sax handler
+  xmlSAXHandlerPtr save_sax = ctxt->sax;
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
   ctxt->sax = &sax;
 
@@ -529,7 +539,7 @@ void srcMLUtility::extract_text(xmlOutputBufferPtr output_buffer, int unit) {
   srcMLParseDocument(ctxt, true);
 
   // local variable, do not want xmlFreeParserCtxt to free
-  ctxt->sax = NULL;
+  ctxt->sax = save_sax;
 
   // all done with parsing
   xmlFreeParserCtxt(ctxt);
@@ -550,6 +560,7 @@ const char * srcMLUtility::extract_text(int unit) {
     ctxt = srcMLCreateMemoryParserCtxt(buffer, size);
 
   // setup sax handler
+  xmlSAXHandlerPtr save_sax = ctxt->sax;
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
   ctxt->sax = &sax;
 
@@ -570,7 +581,7 @@ const char * srcMLUtility::extract_text(int unit) {
 #endif
 
   // local variable, do not want xmlFreeParserCtxt to free
-  ctxt->sax = NULL;
+  ctxt->sax = save_sax;
 
   // all done with parsing
   xmlFreeParserCtxt(ctxt);
@@ -592,6 +603,7 @@ void srcMLUtility::extract_diff_text(const char* to_dir, const char* ofilename, 
   xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
 
   // setup sax handler
+  xmlSAXHandlerPtr save_sax = ctxt->sax;
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
   ctxt->sax = &sax;
 
@@ -606,7 +618,7 @@ void srcMLUtility::extract_diff_text(const char* to_dir, const char* ofilename, 
   srcMLParseDocument(ctxt, true);
 
   // local variable, do not want xmlFreeParserCtxt to free
-  ctxt->sax = NULL;
+  ctxt->sax = save_sax;
 
   // all done with parsing
   xmlFreeParserCtxt(ctxt);
@@ -633,6 +645,7 @@ void srcMLUtility::expand(const char* root_filename, const char* format, const c
   if (ctxt == NULL) return;
 
   // setup sax handler
+  xmlSAXHandlerPtr save_sax = ctxt->sax;
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
   ctxt->sax = &sax;
 
@@ -649,7 +662,7 @@ void srcMLUtility::expand(const char* root_filename, const char* format, const c
   archiveWriteRootClose(0);
 
   // local variable, do not want xmlFreeParserCtxt to free
-  ctxt->sax = NULL;
+  ctxt->sax = save_sax;
 
   // all done with parsing
   xmlFreeParserCtxt(ctxt);
@@ -663,6 +676,7 @@ void srcMLUtility::list() {
   if (ctxt == NULL) return;
 
   // setup sax handler
+  xmlSAXHandlerPtr save_sax = ctxt->sax;
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
   ctxt->sax = &sax;
 
@@ -677,7 +691,7 @@ void srcMLUtility::list() {
   srcMLParseDocument(ctxt, false);
 
   // local variable, do not want xmlFreeParserCtxt to free
-  ctxt->sax = NULL;
+  ctxt->sax = save_sax;
 
   // all done with parsing
   xmlFreeParserCtxt(ctxt);
@@ -715,6 +729,7 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
   if (ctxt == NULL) return;
 
   // setup sax handler
+  xmlSAXHandlerPtr save_sax = ctxt->sax;
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
   ctxt->sax = &sax;
 
@@ -729,7 +744,7 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
   srcMLParseDocument(ctxt, false);
 
   // local variable, do not want xmlFreeParserCtxt to free
-  ctxt->sax = NULL;
+  ctxt->sax = save_sax;
 
   // all done with parsing
   if(buffer_input) inputPop(ctxt);
@@ -810,6 +825,7 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
   if (ctxt == NULL) return;
 
   // setup sax handler
+  xmlSAXHandlerPtr save_sax = ctxt->sax;
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
   ctxt->sax = &sax;
 
@@ -826,7 +842,7 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
   srcMLParseDocument(ctxt, false);
 
   // local variable, do not want xmlFreeParserCtxt to free
-  ctxt->sax = NULL;
+  ctxt->sax = save_sax;
 
   if(buffer_input) inputPop(ctxt);
   // all done with parsing
@@ -840,6 +856,7 @@ void srcMLUtility::relaxng(const char* ofilename, const char** xslts, int fd) {
   if (ctxt == NULL) return;
 
   // setup sax handler
+  xmlSAXHandlerPtr save_sax = ctxt->sax;
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
   ctxt->sax = &sax;
 
@@ -854,7 +871,7 @@ void srcMLUtility::relaxng(const char* ofilename, const char** xslts, int fd) {
 
   srcMLParseDocument(ctxt, false);
 
-  ctxt->sax = NULL;
+  ctxt->sax = save_sax;
 
   if(buffer_input) inputPop(ctxt);
   xmlFreeParserCtxt(ctxt);
