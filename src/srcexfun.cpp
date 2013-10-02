@@ -258,6 +258,10 @@ void xsltsrcMLRegister () {
                                   BAD_CAST MACROS[i].prefix.c_str(),
                                   srcMacrosFunction);
   }
+
+#if defined(__GNUG__) && !defined(__MINGW32__)
+  dlclose(handle);
+#endif
 }
 
 void xpathRegisterExtensionFunction(const std::string& prefix, const std::string & name, const std::string & xpath) {
