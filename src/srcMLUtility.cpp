@@ -864,6 +864,11 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
   xsltFreeStylesheet(stylesheet);
   xsltCleanupGlobals();
   void * context = ctxt->input->buf->context;xmlFreeParserCtxt(ctxt);archiveDeleteContext(context);
+
+#if defined(__GNUG__) && !defined(__MINGW32__)
+    dlclose(handle);
+#endif
+
 }
 
 // relaxng evaluation of the nested units
