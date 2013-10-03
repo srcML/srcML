@@ -80,16 +80,21 @@ public :
     for(int i = 0, pos = 0; i < nb_attributes; ++i, pos += 5) {
 
       std::string attribute = (const char *)attributes[pos];
+      std::string value = "";
+      value.append((const char *)attributes[pos + 3], attributes[pos + 4] - attributes[pos + 3]);
 
       if(attribute == "language")
-        root_language = attribute;
+        root_language = value;
       else if(attribute == "filename")
-        root_filename = attribute;
+        root_filename = value;
       else if(attribute == "directory")
         root_directory = attribute;
       else if(attribute == "version")
-        root_version = attribute;
-
+        root_version = value;
+      else {
+        attributes.push_back(attribute);
+        attributes.push_back(value);
+      }
 
     }
 
