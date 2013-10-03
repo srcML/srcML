@@ -227,6 +227,20 @@ public :
 
   }
 
+  /**
+   * startUnit
+   * @param localname tag name
+   * @param prefix prefix for the tag
+   * @param URI uri for tag
+   * @param nb_namespaces number of xml namespaces
+   * @param namespaces the prefix/namespaces pairs
+   * @param nb_attributes number of attributes
+   * @param nb_defaulted number defaulted attributes
+   * @param attributes the attributes (name/prefix/uri/value start/value end/)
+   *
+   * Overidden startUnit to handle collection of Unit attributes and tag. Stop before continue
+   * if collecting attributes.
+   */
   virtual void startUnit(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
                          int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
                          const xmlChar ** attributes) {
@@ -268,6 +282,19 @@ public :
 
   }
 
+  /**
+   * startElementNs
+   * @param localname tag name
+   * @param prefix prefix for the tag
+   * @param URI uri for tag
+   * @param nb_namespaces number of xml namespaces
+   * @param namespaces the prefix/namespaces pairs
+   * @param nb_attributes number of attributes
+   * @param nb_defaulted number defaulted attributes
+   * @param attributes the attributes (name/prefix/uri/value start/value end/)
+   *
+   * Overidden startElementNs to handle collection of srcML elements.
+   */
   virtual void startElementNs(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
                               int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
                               const xmlChar ** attributes) {
