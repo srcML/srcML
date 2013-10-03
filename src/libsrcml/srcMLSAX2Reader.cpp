@@ -27,7 +27,20 @@
 #include <stdlib.h>
 #include <string.h>
 
-void * start_routine(void *) {
+struct thread_args {
+
+  srcMLControlHandler * control;
+  srcMLReaderHandler * handler;
+
+};
+
+void * start_routine(void * arguments) {
+
+  thread_args * args = (thread_args *)arguments;
+
+  args->control->parse(args->handler);
+
+  return 0;
 
 }
 
@@ -40,7 +53,9 @@ void * start_routine(void *) {
 srcMLSAX2Reader::srcMLSAX2Reader(const char * filename) 
   : control(filename) {
 
-  pthread_create(&thread, 0, start_routine, &handler);
+  thread_args args = { &control, &handler };
+
+  pthread_create(&thread, 0, start_routine, &args);
   handler.wait();
 
 }
@@ -120,6 +135,11 @@ int srcMLSAX2Reader::readUnitAttributes(std::string ** language, std::string ** 
                                     std::string ** directory, std::string ** version) {
 
   if(language == 0 || filename == 0 || directory == 0 || version == 0) return 0;
+
+  *language = new std::string(handler.unit_language);
+  *filename = new std::string(handler.unit_filename);
+  *directory = new std::string(handler.unit_directory);
+  *version = new std::string(handler.unit_version);
 
   return 1;
 
