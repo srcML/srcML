@@ -368,6 +368,13 @@ public :
 
   }
 
+  /**
+   * charactersUnit
+   * @param ch the characters 
+   * @param len length of the characters
+   *
+   * Overidden charactersUnit to collect srcML.
+   */
   virtual void charactersUnit(const xmlChar * ch, int len) {
 
     unit.append((const char *)ch, len);
@@ -376,6 +383,19 @@ public :
 
 private :
 
+  /**
+   * write_startTag
+   * @param localname tag name
+   * @param prefix prefix for the tag
+   * @param URI uri for tag
+   * @param nb_namespaces number of xml namespaces
+   * @param namespaces the prefix/namespaces pairs
+   * @param nb_attributes number of attributes
+   * @param nb_defaulted number defaulted attributes
+   * @param attributes the attributes (name/prefix/uri/value start/value end/)
+   *
+   * Write out the start tag to the unit string.
+   */
   void write_startTag(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
                       int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
                       const xmlChar ** attributes) {
@@ -424,6 +444,14 @@ private :
 
   }
 
+  /**
+   * endElementNs
+   * @param localname tag name
+   * @param prefix prefix for the tag
+   * @param URI uri for tag
+   *
+   * Write out the end tag to the unit string.
+   */
   void write_endTag(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {
 
     unit += "</";
