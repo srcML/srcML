@@ -18,10 +18,10 @@ private :
   pthread_cond_t is_done_cond;
 
   // collecting variables
-  std::string language;
-  std::string filename;
-  std::string directory; 
-  std::string version;
+  std::string root_language;
+  std::string root_filename;
+  std::string root_directory; 
+  std::string root_version;
   std::vector<std::string> attributes;
   std::vector<std::string> prefixes;
   std::vector<std::string> namespaces;
@@ -73,11 +73,20 @@ public :
                          int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
                          const xmlChar ** attributes) {
 
+    for(int i = 0, pos = 0; i < nb_attributes; ++i, pos += 4) {
+
+      fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)attributes[pos]);
+
+
+    }
+
     // pause
+        /*
     pthread_mutex_lock(&mutex);
     pthread_cond_broadcast(&is_done_cond);
     pthread_cond_wait(&cond, &mutex);
     pthread_mutex_unlock(&mutex);
+        */
 
   }
 
