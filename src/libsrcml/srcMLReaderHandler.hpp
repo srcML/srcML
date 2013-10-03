@@ -209,7 +209,8 @@ public :
 
     if(collect_srcml) {
 
-      
+      write_startTag(localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted,
+                     attributes)      
 
     }
 
