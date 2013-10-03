@@ -44,6 +44,8 @@ private :
   srcMLControlHandler control;
   srcMLReaderHandler handler;
 
+  pthread_t thread;
+
 public :
 
   // constructors
