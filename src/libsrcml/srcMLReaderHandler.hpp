@@ -92,19 +92,17 @@ public :
       else if(attribute == "version")
         root_version = value;
       else {
-        attributes.push_back(attribute);
-        attributes.push_back(value);
+        this->attributes.push_back(attribute);
+        this->attributes.push_back(value);
       }
 
     }
 
     // pause
-        /*
     pthread_mutex_lock(&mutex);
     pthread_cond_broadcast(&is_done_cond);
     pthread_cond_wait(&cond, &mutex);
     pthread_mutex_unlock(&mutex);
-        */
 
   }
 
