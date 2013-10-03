@@ -93,6 +93,14 @@ int srcMLSAX2Reader::readRootUnitAttributes(std::string ** language, std::string
   if(language == 0 || filename == 0 || directory == 0 || version == 0) return 0;
 
   *language = new std::string(handler.root_language);
+  *filename = new std::string(handler.root_filename);
+  *directory = new std::string(handler.root_directory);
+  *version = new std::string(handler.root_version);
+  attributes = handler.attributes;
+  prefixes = handler.prefixes;
+  namespaces = handler.namespaces;
+  options = handler.options;
+  tabstop = handler.tabstop;
 
   return 1;
 }
