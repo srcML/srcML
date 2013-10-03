@@ -99,8 +99,8 @@ public :
         root_language = value;
       else if(attribute == "filename")
         root_filename = value;
-      else if(attribute == "directory")
-        root_directory = attribute;
+      else if(attribute == "dir")
+        root_directory = value;
       else if(attribute == "version")
         root_version = value;
       else if(attribute == "tabs")
