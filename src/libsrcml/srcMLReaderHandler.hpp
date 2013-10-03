@@ -308,6 +308,14 @@ public :
 
   }
 
+  /**
+   * endRoot
+   * @param localname tag name
+   * @param prefix prefix for the tag
+   * @param URI uri for tag
+   *
+   * Overidden endRoot to indicate done with parsing and free any waiting process.
+   */
   virtual void endRoot(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {
 
     is_done = true;
@@ -317,6 +325,14 @@ public :
 
   }
 
+  /**
+   * endUnit
+   * @param localname tag name
+   * @param prefix prefix for the tag
+   * @param URI uri for tag
+   *
+   * Overidden endUnit to collect srcml and stop parsing.  Clear collect srcML after pause.
+   */
   virtual void endUnit(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {
 
     if(collect_srcml) {
@@ -335,6 +351,14 @@ public :
 
   }
 
+  /**
+   * endElementNs
+   * @param localname tag name
+   * @param prefix prefix for the tag
+   * @param URI uri for tag
+   *
+   * Overidden endElementNs to collect srcML.
+   */
   virtual void endElementNs(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {
 
     if(collect_srcml) {
