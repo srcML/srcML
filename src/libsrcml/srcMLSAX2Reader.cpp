@@ -27,13 +27,28 @@
 #include <stdlib.h>
 #include <string.h>
 
+/**
+ * thread_args
+ *
+ * Structure to hold information to pass
+ * to thread function.
+ */
 struct thread_args {
 
+  /** control for sax processing */
   srcMLControlHandler * control;
+
+  /** handler with hooks for sax processing */
   srcMLReaderHandler * handler;
 
 };
 
+/**
+ * start_routine
+ * @param arguments thread_args structure with control and handler
+ *
+ * Starts the parsing of the document.
+ */
 void * start_routine(void * arguments) {
 
   thread_args * args = (thread_args *)arguments;
