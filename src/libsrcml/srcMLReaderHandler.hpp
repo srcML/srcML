@@ -314,6 +314,17 @@ private :
 
   void write_endTag(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {
 
+    unit += "</";
+    if(prefix) {
+
+      unit += (const char *)prefix;
+      unit += ":";
+
+    }
+    unit += (const char *)localname;
+
+    unit += ">";
+
   }
 
 };
