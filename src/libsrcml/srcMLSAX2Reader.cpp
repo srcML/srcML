@@ -20,13 +20,14 @@
  */
 
 #include <srcMLSAX2Reader.hpp>
+
 #include <../srcmlns.hpp>
 #include <srcml.h>
 
 #include <stdlib.h>
 #include <string.h>
 
-void * start_rountine(void *) {
+void * start_routine(void *) {
 
 }
 
@@ -64,54 +65,6 @@ srcMLSAX2Reader::~srcMLSAX2Reader() {
 }
 
 /**
- * readAttributesInternal
- * @param language a location to store the language attribute
- * @param filename a location to store the filename attribute
- * @param directory a location to store the directory attribute
- * @param version a location to store the version attribute
- *
- * Internal function to read unit attributes.
- *
- * @returns 0 on success and 1 on failure.
- */
-int srcMLSAX2Reader::readUnitAttributesInternal(std::string ** language, std::string ** filename,
-                                            std::string ** directory, std::string ** version) {
-
-  if(language == 0 || filename == 0 || directory == 0 || version == 0) return 1;
-
-  xmlAttrPtr attribute = node->properties;
-  while (attribute) {
-
-    std::string name = (const char *)attribute->name;
-    try {
-
-      if(name == "language")
-        (*language) = new std::string((const char *)attribute->children->content);
-      else if(name == "filename")
-        (*filename) = new std::string((const char *)attribute->children->content);
-      else if(name == "dir")
-        (*directory) = new std::string((const char *)attribute->children->content);
-      else if(name == "version")
-        (*version) = new std::string((const char *)attribute->children->content);
-
-    } catch(...) {
-
-      if(*language) delete *language, (*language) = 0;
-      if(*filename) delete *filename, (*filename) = 0;
-      if(*directory) delete *directory, (*directory) = 0;
-      if(*version) delete *version, (*version) = 0;
-      return 1;
-
-    }
-
-    attribute = attribute->next;
-  }
-
-  return 0;
-
-}
-
-/**
  * readRootUnitAttributes
  * @param language a location to store the language attribute
  * @param filename a location to store the filename attribute
@@ -137,6 +90,8 @@ int srcMLSAX2Reader::readRootUnitAttributes(std::string ** language, std::string
                                         int & tabstop) {
 
   if(language == 0 || filename == 0 || directory == 0 || version == 0) return 0;
+
+  *language = new root_language;
 
   return 1;
 }
