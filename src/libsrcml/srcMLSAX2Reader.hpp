@@ -68,18 +68,12 @@ public :
                              OPTION_TYPE & options,
                              int & tabstop);
 
-  // helper function for processing unit attributes.  Does not advance read.
-  int readUnitAttributesInternal(std::string ** language, std::string ** filename,
-                                  std::string ** directory, std::string ** version);
 
   /* finds next unit tag if not current unit and sets attributes.  Consumes unit.
      Unit is still avaible for readsrcML or read.  But not readUnitAttributes.
    */
   int readUnitAttributes(std::string ** language, std::string ** filename,
                          std::string ** directory, std::string ** version);
-
-  // read the next unit add write it to writer as srcML
-  int readsrcML(xmlTextWriterPtr writer);
 
   // reads the next unit and returns it srcML
   std::string * readsrcML();
