@@ -210,7 +210,7 @@ public :
     if(collect_srcml) {
 
       write_startTag(localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted,
-                     attributes)      
+                     attributes);
 
     }
 
@@ -230,7 +230,7 @@ public :
   }
 
   virtual void endUnit(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {
-    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, unit->c_str());
+    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, unit.c_str());
     if(collect_srcml) {
 
       // pause
