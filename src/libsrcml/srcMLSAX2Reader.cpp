@@ -163,6 +163,8 @@ int srcMLSAX2Reader::readUnitAttributes(std::string ** language, std::string ** 
  */
 int srcMLSAX2Reader::readsrcML(xmlTextWriterPtr writer) {
 
+  if(handler.is_done) return 0;
+
   handler.resume();
   handler.wait();
 
