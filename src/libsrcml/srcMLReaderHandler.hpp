@@ -79,7 +79,16 @@ public :
 
     for(int i = 0, pos = 0; i < nb_attributes; ++i, pos += 5) {
 
-      fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)attributes[pos]);
+      std::string attribute = (const char *)attributes[pos];
+
+      if(attribute == "language")
+        root_language = attribute;
+      else if(attribute == "filename")
+        root_filename = attribute;
+      else if(attribute == "directory")
+        root_directory = attribute;
+      else if(attribute == "version")
+        root_version = attribute;
 
 
     }
