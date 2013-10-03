@@ -40,6 +40,7 @@ srcMLSAX2Reader::srcMLSAX2Reader(const char * filename)
   : control(filename) {
 
   pthread_create(&thread, 0, start_routine, &handler);
+  handler.wait();
 
 }
 
