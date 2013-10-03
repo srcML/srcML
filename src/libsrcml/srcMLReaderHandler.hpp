@@ -275,7 +275,25 @@ private :
       }
 
       unit += "=\"";
-      unit += (const char *)namespaces[pos = 1];
+      unit += (const char *)namespaces[pos + 1];
+      unit += "\"";
+
+    }
+
+
+    for(int i = 0, pos = 0; i < nb_attributes; ++i, pos += 5) {
+
+      unit += " ";
+      if(attributes[pos]) {
+
+        unit += (const char *)attributes[pos + 1];
+        unit += ":";
+
+      }
+        unit += (const char *)attributes[pos];
+
+      unit += "=\"";
+      unit.append((const char *)attributes[pos + 3], attributes[pos + 4] - attributes[pos + 3]);
       unit += "\"";
 
     }
