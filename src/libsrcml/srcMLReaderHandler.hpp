@@ -44,6 +44,8 @@ private :
 
   // state
   bool is_done;
+  bool collect_unit_attributes;
+  bool collect_srcml;
 
 public :
 
@@ -185,21 +187,25 @@ public :
       value.append((const char *)attributes[pos + 3], attributes[pos + 4] - attributes[pos + 3]);
 
       if(attribute == "language")
-        root_language = value;
+        unit_language = value;
       else if(attribute == "filename")
-        root_filename = value;
+        unit_filename = value;
       else if(attribute == "directory")
-        root_directory = attribute;
+        unit_directory = attribute;
       else if(attribute == "version")
-        root_version = value;
+        unit_version = value;
 
     }
 
-    // pause
-    pthread_mutex_lock(&mutex);
-    pthread_cond_broadcast(&is_done_cond);
-    pthread_cond_wait(&cond, &mutex);
-    pthread_mutex_unlock(&mutex);
+    if(collect_unit_attributes) {
+
+      // pause
+      pthread_mutex_lock(&mutex);
+      pthread_cond_broadcast(&is_done_cond);
+      pthread_cond_wait(&cond, &mutex);
+      pthread_mutex_unlock(&mutex);
+
+    }
 
   }
 
