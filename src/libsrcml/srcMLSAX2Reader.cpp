@@ -1,5 +1,5 @@
 /**
- * @file srcMLReader.cpp
+ * @file srcMLSAX2Reader.cpp
  * @copyright
  *
  * Copyright (C) 2013  SDML (www.srcML.org)
@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <srcMLReader.hpp>
+#include <srcMLSAX2Reader.hpp>
 #include <../srcmlns.hpp>
 #include <srcml.h>
 
@@ -58,12 +58,12 @@ void freeNode(xmlNodePtr node) {
 
 
 /**
- * srcMLReader
+ * srcMLSAX2Reader
  * @param filename name of a file
  *
- * Construct a srcMLReader using a filename
+ * Construct a srcMLSAX2Reader using a filename
  */
-srcMLReader::srcMLReader(const char * filename)
+srcMLSAX2Reader::srcMLSAX2Reader(const char * filename)
   : is_archive(false), is_single(false), done(false) {
 
   if(filename == NULL) throw std::string();
@@ -75,12 +75,12 @@ srcMLReader::srcMLReader(const char * filename)
 }
 
 /**
- * srcMLReader
+ * srcMLSAX2Reader
  * @param input parser input buffer
  *
- * Construct a srcMLReader using a parser input buffer
+ * Construct a srcMLSAX2Reader using a parser input buffer
  */
-srcMLReader::srcMLReader(xmlParserInputBufferPtr input)
+srcMLSAX2Reader::srcMLSAX2Reader(xmlParserInputBufferPtr input)
   : is_archive(false), is_single(false), done(false) {
 
   if(input == NULL) throw std::string();
@@ -91,11 +91,11 @@ srcMLReader::srcMLReader(xmlParserInputBufferPtr input)
 }
 
 /**
- * ~srcMLReader
+ * ~srcMLSAX2Reader
  *
- * Destructor a srcMLReader
+ * Destructor a srcMLSAX2Reader
  */
-srcMLReader::~srcMLReader() {
+srcMLSAX2Reader::~srcMLSAX2Reader() {
 
   xmlFreeTextReader(reader);
   reader = 0;
@@ -113,7 +113,7 @@ srcMLReader::~srcMLReader() {
  *
  * @returns 0 on success and 1 on failure.
  */
-int srcMLReader::readUnitAttributesInternal(std::string ** language, std::string ** filename,
+int srcMLSAX2Reader::readUnitAttributesInternal(std::string ** language, std::string ** filename,
                                             std::string ** directory, std::string ** version) {
 
   if(language == 0 || filename == 0 || directory == 0 || version == 0) return 1;
@@ -167,7 +167,7 @@ int srcMLReader::readUnitAttributesInternal(std::string ** language, std::string
  *
  * @returns 1 on success and 0 on failure.
  */
-int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** filename,
+int srcMLSAX2Reader::readRootUnitAttributes(std::string ** language, std::string ** filename,
                                         std::string ** directory, std::string ** version,
                                         std::vector<std::string> & attributes,
                                         std::vector<std::string> & prefixes,
@@ -290,7 +290,7 @@ int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** 
  *
  * @returns 1 on success and 0 on failure.
  */
-int srcMLReader::readUnitAttributes(std::string ** language, std::string ** filename,
+int srcMLSAX2Reader::readUnitAttributes(std::string ** language, std::string ** filename,
                                     std::string ** directory, std::string ** version) {
 
   if(language == 0 || filename == 0 || directory == 0 || version == 0) return 0;
@@ -381,7 +381,7 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
  *
  * @returns Return 0 when finished and 1 otherwize.
  */
-int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
+int srcMLSAX2Reader::readsrcML(xmlTextWriterPtr writer) {
 
   if(done) return 0;
 
@@ -493,7 +493,7 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
  *
  * @returns string on success and finished return a 0.
  */
-std::string * srcMLReader::readsrcML() {
+std::string * srcMLSAX2Reader::readsrcML() {
 
   if(done) return 0;
 
