@@ -3,9 +3,13 @@
 
 #include <srcMLHandler.hpp>
 
+#include <string>
+#include <vector>
+
 #include <libxml/parser.h>
 #include <stdio.h>
 #include <pthread.h>
+#include <Options.hpp>
 
 class srcMLReaderHandler : public srcMLHandler {
 
@@ -73,7 +77,7 @@ public :
                          int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
                          const xmlChar ** attributes) {
 
-    for(int i = 0, pos = 0; i < nb_attributes; ++i, pos += 4) {
+    for(int i = 0, pos = 0; i < nb_attributes; ++i, pos += 5) {
 
       fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)attributes[pos]);
 
