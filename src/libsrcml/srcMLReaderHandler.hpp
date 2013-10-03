@@ -10,6 +10,8 @@
 #include <stdio.h>
 #include <pthread.h>
 #include <Options.hpp>
+#include <srcmlns.hpp>
+#include <srcml.h>
 
 class srcMLReaderHandler : public srcMLHandler {
 
@@ -111,11 +113,11 @@ public :
 
       if(ns == SRCML_CPP_NS_URI) {
 
-        if(language != "") {
+        if(root_language != "") {
 
-          if(language == "C++" || language == "C")
+          if(root_language == "C++" || root_language == "C")
             options |= SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO;
-          else if(language == "C#")
+          else if(root_language == "C#")
             options |= SRCML_OPTION_CPP_NOMACRO;
           //else
           //options |= SRCML_OPTION_CPP;
@@ -132,20 +134,20 @@ public :
       else if(ns == SRCML_EXT_POSITION_NS_URI)
         options |= SRCML_OPTION_POSITION;
 
-      int i;
+      int index;
       try {
 
-        for(i = 0; i < prefixes.size(); ++i)
+        for(index = 0; index < prefixes.size(); ++index)
 
-          if(this->namespaces.at(i) == ns) {
+          if(this->namespaces.at(index) == ns) {
 
-            prefixes.at(i) = prefix;
+            prefixes.at(index) = prefix;
             break;
           }
 
       } catch(...) {}
 
-      if(i == prefixes.size()) {
+      if(index == prefixes.size()) {
         prefixes.push_back(prefix);
         this->namespaces.push_back(ns);
       }
