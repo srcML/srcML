@@ -72,9 +72,15 @@ private :
 
 public :
 
+  //** Give access to membeers for srcMLSAX2Reader class */
   friend class srcMLSAX2Reader;
 
-  srcMLReaderHandler() : is_done(false) {
+  /**
+   * srcMLReaderHandler
+   *
+   * Constructor.  Sets up mutex, conditions and state.
+   */
+  srcMLReaderHandler() : is_done(false), collect_unit_attributes(false), collect_srcml(false) {
 
     pthread_mutex_init(&mutex, 0);
     pthread_cond_init(&cond, 0);
@@ -82,6 +88,11 @@ public :
 
   }
 
+  /**
+   * ~srcMLReaderHandler
+   *
+   * Destructor, deletes mutex and conditions.
+   */
   ~srcMLReaderHandler() {
 
     pthread_mutex_destroy(&mutex);
@@ -90,6 +101,12 @@ public :
 
   }
 
+  /**
+   * wait
+   *
+   * Allows calling thread to wait until reached
+   * end of unit.
+   */
   void wait() {
 
     pthread_mutex_lock(&mutex);
@@ -98,6 +115,11 @@ public :
 
   }
 
+  /**
+   * resume
+   *
+   * Resume SAX2 execution.
+   */
   void resume() {
 
     pthread_mutex_lock(&mutex);
