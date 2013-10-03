@@ -128,6 +128,19 @@ public :
 
   }
 
+  /**
+   * startRoot
+   * @param localname tag name
+   * @param prefix prefix for the tag
+   * @param URI uri for tag
+   * @param nb_namespaces number of xml namespaces
+   * @param namespaces the prefix/namespaces pairs
+   * @param nb_attributes number of attributes
+   * @param nb_defaulted number defaulted attributes
+   * @param attributes the attributes (name/prefix/uri/value start/value end/)
+   *
+   * Overidden startRoot to handle collection of root attributes. Stop before continue
+   */
   virtual void startRoot(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
                          int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
                          const xmlChar ** attributes) {
