@@ -51,7 +51,8 @@ srcMLSAX2Reader::srcMLSAX2Reader(const char * filename)
  *
  * Construct a srcMLSAX2Reader using a parser input buffer
  */
-srcMLSAX2Reader::srcMLSAX2Reader(xmlParserInputBufferPtr input) {
+srcMLSAX2Reader::srcMLSAX2Reader(xmlParserInputBufferPtr input) 
+  : control("test.xml") {
 
 }
 
@@ -91,7 +92,7 @@ int srcMLSAX2Reader::readRootUnitAttributes(std::string ** language, std::string
 
   if(language == 0 || filename == 0 || directory == 0 || version == 0) return 0;
 
-  *language = new root_language;
+  *language = new std::string(handler.root_language);
 
   return 1;
 }
@@ -127,7 +128,7 @@ int srcMLSAX2Reader::readUnitAttributes(std::string ** language, std::string ** 
  */
 int srcMLSAX2Reader::readsrcML(xmlTextWriterPtr writer) {
 
-  if(done) return 0;
+  //if(done) return 0;
 
   return 1;
 
@@ -144,7 +145,7 @@ int srcMLSAX2Reader::readsrcML(xmlTextWriterPtr writer) {
  */
 std::string * srcMLSAX2Reader::readsrcML() {
 
-  if(done) return 0;
+  //if(done) return 0;
 
   xmlBufferPtr buffer = xmlBufferCreate();
   xmlTextWriterPtr writer = xmlNewTextWriterMemory(buffer, 0);
