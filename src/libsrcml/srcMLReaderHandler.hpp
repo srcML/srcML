@@ -218,7 +218,16 @@ public :
 
   virtual void startElementNs(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
                               int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
-                              const xmlChar ** attributes) {}
+                              const xmlChar ** attributes) {
+
+    if(collect_srcml) {
+
+      write_startTag(localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted,
+                     attributes);
+
+    }
+
+  }
 
   virtual void endRoot(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {
 
@@ -230,7 +239,7 @@ public :
   }
 
   virtual void endUnit(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {
-    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, unit.c_str());
+
     if(collect_srcml) {
 
       // pause
@@ -256,8 +265,8 @@ public :
 private :
 
   void write_startTag(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
-                             int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
-                         const xmlChar ** attributes) {
+                      int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
+                      const xmlChar ** attributes) {
     unit += "<";
     if(prefix) {
       unit += (const char *)prefix;
@@ -285,20 +294,20 @@ private :
     for(int i = 0, pos = 0; i < nb_attributes; ++i, pos += 5) {
 
       unit += " ";
-      if(attributes[pos]) {
+      if(attributes[pos + 1]) {
 
         unit += (const char *)attributes[pos + 1];
         unit += ":";
 
       }
-        unit += (const char *)attributes[pos];
+      unit += (const char *)attributes[pos];
 
       unit += "=\"";
       unit.append((const char *)attributes[pos + 3], attributes[pos + 4] - attributes[pos + 3]);
       unit += "\"";
 
-    }
 
+    }
     unit += ">";
 
   }
