@@ -42,11 +42,14 @@ private :
 
   std::string unit;
 
+  // state
+  bool is_done;
+
 public :
 
   friend class srcMLSAX2Reader;
 
-  srcMLReaderHandler() {
+  srcMLReaderHandler() : is_done(false) {
 
     pthread_mutex_init(&mutex, 0);
     pthread_mutex_init(&is_done_mutex, 0);
@@ -192,13 +195,23 @@ public :
 
     }
 
+    // pause
+    pthread_mutex_lock(&mutex);
+    pthread_cond_broadcast(&is_done_cond);
+    pthread_cond_wait(&cond, &mutex);
+    pthread_mutex_unlock(&mutex);
+
   }
 
   virtual void startElementNs(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
                               int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
                               const xmlChar ** attributes) {}
 
-  virtual void endRoot(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {}
+  virtual void endRoot(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {
+
+    is_done = true;
+
+  }
 
   virtual void endUnit(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {
 
