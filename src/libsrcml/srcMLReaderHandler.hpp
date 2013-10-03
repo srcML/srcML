@@ -11,16 +11,27 @@ class srcMLReaderHandler : public srcMLHandler {
 
 private :
 
+  // threading 
   pthread_mutex_t mutex;
   pthread_mutex_t is_done_mutex;
   pthread_cond_t cond;
   pthread_cond_t is_done_cond;
 
-  bool is_done;
+  // collecting variables
+  std::string language;
+  std::string filename;
+  std::string directory; 
+  std::string version;
+  std::vector<std::string> attributes;
+  std::vector<std::string> prefixes;
+  std::vector<std::string> namespaces;
+  OPTION_TYPE options;
+  int tabstop;
+
 
 public :
 
-  srcMLReaderHandler() : is_done(false) {
+  srcMLReaderHandler() {
 
     pthread_mutex_init(&mutex, 0);
     pthread_mutex_init(&is_done_mutex, 0);
