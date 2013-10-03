@@ -93,6 +93,9 @@ srcMLSAX2Reader::srcMLSAX2Reader(xmlParserInputBufferPtr input)
  */
 srcMLSAX2Reader::~srcMLSAX2Reader() {
 
+  void * ret;
+  pthread_join(thread, &ret);
+
 }
 
 /**
