@@ -100,17 +100,13 @@ public :
       }
 
     }
-
+    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     // collect namespaces
     for(int i = 0, pos = 0; i < nb_namespaces; ++i, pos += 2) {
 
-      std::string attribute = (const char *)namespaces[pos];
-      std::string value = "";
-      value.append((const char *)namespaces[pos + 3], namespaces[pos + 4] - namespaces[pos + 3]);
-
       std::string prefix = (const char *)namespaces[pos];
       std::string ns = (const char *)namespaces[pos + 1];
-
+      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
       if(ns == SRCML_CPP_NS_URI) {
 
         if(root_language != "") {
@@ -133,7 +129,7 @@ public :
         options |= SRCML_OPTION_MODIFIER;
       else if(ns == SRCML_EXT_POSITION_NS_URI)
         options |= SRCML_OPTION_POSITION;
-
+      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
       int index;
       try {
 
@@ -146,7 +142,7 @@ public :
           }
 
       } catch(...) {}
-
+      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
       if(index == prefixes.size()) {
         prefixes.push_back(prefix);
         this->namespaces.push_back(ns);
