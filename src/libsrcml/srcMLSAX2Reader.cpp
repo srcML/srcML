@@ -26,13 +26,18 @@
 #include <stdlib.h>
 #include <string.h>
 
+void * start_rountine(void *) {
+
+}
+
 /**
  * srcMLSAX2Reader
  * @param filename name of a file
  *
  * Construct a srcMLSAX2Reader using a filename
  */
-srcMLSAX2Reader::srcMLSAX2Reader(const char * filename) {
+srcMLSAX2Reader::srcMLSAX2Reader(const char * filename) 
+  : control(filename) {
 
 }
 

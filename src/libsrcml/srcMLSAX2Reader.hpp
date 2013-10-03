@@ -39,7 +39,12 @@
  */
 class srcMLSAX2Reader {
 
-public:
+private :
+
+  srcMLControlHandler control;
+  srcMLReaderHandler handler;
+
+public :
 
   // constructors
   srcMLSAX2Reader(const char * filename);
