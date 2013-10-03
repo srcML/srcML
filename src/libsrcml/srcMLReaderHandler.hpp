@@ -13,6 +13,14 @@
 #include <srcmlns.hpp>
 #include <srcml.h>
 
+/**
+ * srcMLReaderHandler
+ *
+ * Inherits from srcMLHandler to provide hooks into
+ * SAX2 parsing. Provides starting and stoping using
+ * threads.  Collects attributes, namespaces and srcML
+ * from units.
+ */
 class srcMLReaderHandler : public srcMLHandler {
 
 private :
@@ -84,10 +92,6 @@ public :
     pthread_mutex_unlock(&mutex);
 
   }
-
-  virtual void startDocument() {}
-
-  virtual void endDocument() {}
 
   virtual void startRoot(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
                          int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
@@ -264,8 +268,6 @@ public :
     }
 
   }
-
-  virtual void charactersRoot(const xmlChar * ch, int len) {}
 
   virtual void charactersUnit(const xmlChar * ch, int len) {
 
