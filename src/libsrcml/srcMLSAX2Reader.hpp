@@ -45,9 +45,12 @@ class srcMLSAX2Reader {
 
 private :
 
+  /** control for sax parsing */
   srcMLControlHandler control;
+  /** handler with hooks for sax parsing */
   srcMLReaderHandler handler;
 
+  /** thread running execution */
   pthread_t thread;
 
 public :
