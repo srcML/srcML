@@ -242,6 +242,8 @@ public :
 
     if(collect_srcml) {
 
+      write_endTag(localname, prefix, URI);
+
       // pause
       pthread_mutex_lock(&mutex);
       pthread_cond_broadcast(&is_done_cond);
@@ -254,11 +256,20 @@ public :
 
   }
 
-  virtual void endElementNs(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {}
+  virtual void endElementNs(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {
+
+    if(collect_srcml) {
+
+      write_endTag(localname, prefix, URI);
+    }
+
+  }
 
   virtual void charactersRoot(const xmlChar * ch, int len) {}
 
   virtual void charactersUnit(const xmlChar * ch, int len) {
+
+    unit.append((const char *)ch, len);
 
   }
 
