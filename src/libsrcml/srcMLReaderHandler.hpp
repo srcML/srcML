@@ -263,6 +263,23 @@ private :
       unit += ":";
     }
     unit += (const char *)localname;
+
+    for(int i = 0, pos = 0; i < nb_namespaces; ++i, pos += 2) {
+
+      unit += " xmlns";
+      if(namespaces[pos]) {
+
+        unit += ":";
+        unit += (const char *)namespaces[pos];
+
+      }
+
+      unit += "=\"";
+      unit += (const char *)namespaces[pos = 1];
+      unit += "\"";
+
+    }
+
     unit += ">";
 
   }
