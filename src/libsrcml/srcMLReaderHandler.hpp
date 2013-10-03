@@ -229,7 +229,7 @@ public :
   }
 
   virtual void endUnit(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {
-
+    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, unit->c_str());
     if(collect_srcml) {
 
       // pause

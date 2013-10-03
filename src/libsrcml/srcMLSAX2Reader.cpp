@@ -154,28 +154,6 @@ int srcMLSAX2Reader::readUnitAttributes(std::string ** language, std::string ** 
 
 /**
  * readsrcML
- * @param writer an XML text writer
- *
- * Read the next unit of a srcML Archive.
- * and write it to the writer.
- *
- * @returns Return 0 when finished and 1 otherwize.
- */
-int srcMLSAX2Reader::readsrcML(xmlTextWriterPtr writer) {
-
-  if(handler.is_done) return 0;
-
-  handler.resume();
-  handler.wait();
-
-  if(handler.is_done) return 0;
-
-  return 1;
-
-}
-
-/**
- * readsrcML
  * 
  * Read the next unit from a srcML Archive
  * and return it as a std::string. Uses
@@ -185,28 +163,17 @@ int srcMLSAX2Reader::readsrcML(xmlTextWriterPtr writer) {
  */
 std::string * srcMLSAX2Reader::readsrcML() {
 
-  //if(done) return 0;
+  if(handler.is_done) return 0;
 
-  xmlBufferPtr buffer = xmlBufferCreate();
-  xmlTextWriterPtr writer = xmlNewTextWriterMemory(buffer, 0);
-  int status = readsrcML(writer);
+  handler.resume();
+  handler.wait();
 
-  if(!status) return 0;
+  if(handler.is_done) return 0;
 
-  int length = buffer->use;
-
-  while(length > 0 && buffer->content[length - 1] == '\n')
-    --length;
-
-  std::string * unit = 0;
+  std::string unit = 0;
   try {
-
-    unit = new std::string((const char *)buffer->content, length);
-
+    unit = new std::string(handler.unit);
   } catch(...) {}
-
-  xmlFreeTextWriter(writer);
-  xmlBufferFree(buffer);
 
   return unit;
 
