@@ -94,6 +94,8 @@ public :
         root_directory = attribute;
       else if(attribute == "version")
         root_version = value;
+      else if(attribute == "tabs")
+        tabstop = atoi(value.c_str());
       else {
         this->attributes.push_back(attribute);
         this->attributes.push_back(value);
