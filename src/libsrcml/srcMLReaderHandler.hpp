@@ -207,6 +207,12 @@ public :
 
     }
 
+    if(collect_srcml) {
+
+      
+
+    }
+
   }
 
   virtual void startElementNs(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
@@ -234,6 +240,8 @@ public :
 
     }
 
+    unit.clear();
+
   }
 
   virtual void endElementNs(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {}
@@ -244,6 +252,21 @@ public :
 
   }
 
+private :
+
+  static void write_startTag(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
+                             int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
+                         const xmlChar ** attributes) {
+
+
+  }
+
+  static void write_endTag(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {
+
+  }
+
 };
+
+
 
 #endif
