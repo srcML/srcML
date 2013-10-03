@@ -3,15 +3,15 @@
 
 #include <srcMLHandler.hpp>
 
-#include <string>
-#include <vector>
-
 #include <libxml/parser.h>
 #include <stdio.h>
 #include <pthread.h>
 #include <Options.hpp>
 #include <srcmlns.hpp>
 #include <srcml.h>
+
+#include <string>
+#include <vector>
 
 /**
  * srcMLReaderHandler
@@ -72,7 +72,7 @@ private :
 
 public :
 
-  //** Give access to membeers for srcMLSAX2Reader class */
+  /** Give access to membeers for srcMLSAX2Reader class */
   friend class srcMLSAX2Reader;
 
   /**
