@@ -136,6 +136,8 @@ int srcMLSAX2Reader::readUnitAttributes(std::string ** language, std::string ** 
 
   if(language == 0 || filename == 0 || directory == 0 || version == 0) return 0;
 
+  if(handler.is_done) return 0;
+
   handler.resume();
   handler.wait();
 

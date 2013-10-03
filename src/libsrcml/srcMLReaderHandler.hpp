@@ -216,16 +216,23 @@ public :
   virtual void endRoot(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {
 
     is_done = true;
+    pthread_mutex_lock(&mutex);
+    pthread_cond_broadcast(&is_done_cond);
+    pthread_mutex_unlock(&mutex);
 
   }
 
   virtual void endUnit(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {
 
-    // pause
-    pthread_mutex_lock(&mutex);
-    pthread_cond_broadcast(&is_done_cond);
-    pthread_cond_wait(&cond, &mutex);
-    pthread_mutex_unlock(&mutex);
+    if(collect_srcml) {
+
+      // pause
+      pthread_mutex_lock(&mutex);
+      pthread_cond_broadcast(&is_done_cond);
+      pthread_cond_wait(&cond, &mutex);
+      pthread_mutex_unlock(&mutex);
+
+    }
 
   }
 
