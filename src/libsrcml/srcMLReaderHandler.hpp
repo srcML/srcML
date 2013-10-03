@@ -25,34 +25,49 @@ class srcMLReaderHandler : public srcMLHandler {
 
 private :
 
-  // threading
+  /** mutex to halt both threads on */
   pthread_mutex_t mutex;
-  pthread_mutex_t is_done_mutex;
+  /** sax stop/start condition */
   pthread_cond_t cond;
+  /** calling thread stop/start condition */
   pthread_cond_t is_done_cond;
 
-  // root collecting variables
+  /** collected root language */
   std::string root_language;
+  /** collected root filename */
   std::string root_filename;
+  /** collected root directory */
   std::string root_directory;
+  /** collected root version */
   std::string root_version;
+  /** collected root attributes */
   std::vector<std::string> attributes;
+  /** collected root prefixes */
   std::vector<std::string> prefixes;
+  /** collected root namespaces */
   std::vector<std::string> namespaces;
-  OPTION_TYPE options;
+  /** collected root options */
+  OPTION_TYPE options; 
+  /** collected root tabstop */
   int tabstop;
 
-  // unit collecting variables
+  /** collected unit language */
   std::string unit_language;
+  /** collected unit filename */
   std::string unit_filename;
+  /** collected unit directory */
   std::string unit_directory;
+  /** collected unit version */
   std::string unit_version;
 
+  /** collect srcML */
   std::string unit;
 
-  // state
+  /** has reached end of parsing*/
   bool is_done;
+  /** stop after collecting unit attribute*/
   bool collect_unit_attributes;
+  /** collect srcML as parse*/
   bool collect_srcml;
 
 public :
@@ -62,7 +77,6 @@ public :
   srcMLReaderHandler() : is_done(false) {
 
     pthread_mutex_init(&mutex, 0);
-    pthread_mutex_init(&is_done_mutex, 0);
     pthread_cond_init(&cond, 0);
     pthread_cond_init(&is_done_cond, 0);
 
@@ -71,7 +85,6 @@ public :
   ~srcMLReaderHandler() {
 
     pthread_mutex_destroy(&mutex);
-    pthread_mutex_destroy(&is_done_mutex);
     pthread_cond_destroy(&cond);
     pthread_cond_destroy(&is_done_cond);
 
