@@ -254,14 +254,20 @@ public :
 
 private :
 
-  static void write_startTag(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
+  void write_startTag(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
                              int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
                          const xmlChar ** attributes) {
-
+    unit += "<";
+    if(prefix) {
+      unit += (const char *)prefix;
+      unit += ":";
+    }
+    unit += (const char *)localname;
+    unit += ">";
 
   }
 
-  static void write_endTag(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {
+  void write_endTag(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {
 
   }
 
