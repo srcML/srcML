@@ -26,52 +26,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer, bool is_root);
-
-/**
- * getNode
- * @param reader an XML text reader
- *
- * @returns Get a copy of the current node with attributes set.
- */
-xmlNodePtr getNode(xmlTextReaderPtr reader) {
-
-  xmlNodePtr node = xmlCopyNode(xmlTextReaderCurrentNode(reader), 2);
-  node->extra = xmlTextReaderIsEmptyElement(reader);
-  node->type = (xmlElementType)xmlTextReaderNodeType(reader);
-
-  return node;
-}
-
-/**
- * freeNode
- * @param node an XML node
- * 
- * Free the current node.  Text is not allocated and do not free
- */
-void freeNode(xmlNodePtr node) {
-
-  if(node && (xmlReaderTypes)node->type != XML_READER_TYPE_TEXT
-     && (xmlReaderTypes)node->type != XML_READER_TYPE_SIGNIFICANT_WHITESPACE)
-    xmlFreeNode(node);
-}
-
-
 /**
  * srcMLSAX2Reader
  * @param filename name of a file
  *
  * Construct a srcMLSAX2Reader using a filename
  */
-srcMLSAX2Reader::srcMLSAX2Reader(const char * filename)
-  : is_archive(false), is_single(false), done(false) {
+srcMLSAX2Reader::srcMLSAX2Reader(const char * filename) {
 
-  if(filename == NULL) throw std::string();
-
-  reader = xmlNewTextReaderFilename(filename);
-  if(reader == NULL) throw std::string();
-    xmlTextReaderRead(reader);
-  node = getNode(reader);
 }
 
 /**
@@ -80,14 +42,8 @@ srcMLSAX2Reader::srcMLSAX2Reader(const char * filename)
  *
  * Construct a srcMLSAX2Reader using a parser input buffer
  */
-srcMLSAX2Reader::srcMLSAX2Reader(xmlParserInputBufferPtr input)
-  : is_archive(false), is_single(false), done(false) {
+srcMLSAX2Reader::srcMLSAX2Reader(xmlParserInputBufferPtr input) {
 
-  if(input == NULL) throw std::string();
-  reader = xmlNewTextReader(input, 0);
-  if(reader == NULL) throw std::string();
-  xmlTextReaderRead(reader);
-  node = getNode(reader);
 }
 
 /**
@@ -96,9 +52,6 @@ srcMLSAX2Reader::srcMLSAX2Reader(xmlParserInputBufferPtr input)
  * Destructor a srcMLSAX2Reader
  */
 srcMLSAX2Reader::~srcMLSAX2Reader() {
-
-  xmlFreeTextReader(reader);
-  reader = 0;
 
 }
 
@@ -177,105 +130,6 @@ int srcMLSAX2Reader::readRootUnitAttributes(std::string ** language, std::string
 
   if(language == 0 || filename == 0 || directory == 0 || version == 0) return 0;
 
-  if(done) return 0;
-
-  // forward to start unit
-  while(true) {
-    if(node && (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT && strcmp((const char *)node->name, "unit") == 0)
-      break;
-
-    if(xmlTextReaderRead(reader) != 1) { done = true; return 0; }
-    freeNode(node);
-    node = getNode(reader);
-  }
-
-  xmlAttrPtr attribute = node->properties;
-  while (attribute) {
-    std::string name = (const char *)attribute->name;
-
-    try {
-
-      if(name == "language")
-        (*language) = new std::string((const char *)attribute->children->content);
-      else if(name == "filename")
-        (*filename) = new std::string((const char *)attribute->children->content);
-      else if(name == "dir")
-        (*directory) = new std::string((const char *)attribute->children->content);
-      else if(name == "version")
-        (*version) = new std::string((const char *)attribute->children->content);
-      else if(name == "tabs")
-        tabstop = atoi((const char *)attribute->children->content);
-      else {
-
-        attributes.push_back(name);
-        attributes.push_back((const char *)attribute->children->content);
-
-      }
-
-    } catch(...) {
-
-      if(*language) delete *language, (*language) = 0;
-      if(*filename) delete *filename, (*filename) = 0;
-      if(*directory) delete *directory, (*directory) = 0;
-      if(*version) delete *version, (*version) = 0;
-      return 0;
-
-    }
-
-    attribute = attribute->next;
-  }
-
-  xmlNsPtr xmlns = node->nsDef;
-
-  while(xmlns) {
-
-    std::string prefix = xmlns->prefix ? (const char *)xmlns->prefix : "";
-    std::string ns = xmlns->href ? (const char *)xmlns->href : "";
-
-    if(ns == SRCML_CPP_NS_URI) {
-
-      if(*language) {
-
-        if((**language) == "C++" || (**language) == "C")
-           options |= SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO;
-        else if((**language) == "C#")
-           options |= SRCML_OPTION_CPP_NOMACRO;
-        else
-           options |= SRCML_OPTION_CPP;
-      }
-
-    } else if(ns == SRCML_ERR_NS_URI)
-      options |= SRCML_OPTION_DEBUG;
-    else if(ns == SRCML_EXT_LITERAL_NS_URI)
-      options |= SRCML_OPTION_LITERAL;
-    else if(ns == SRCML_EXT_OPERATOR_NS_URI)
-      options |= SRCML_OPTION_OPERATOR;
-    else if(ns == SRCML_EXT_MODIFIER_NS_URI)
-      options |= SRCML_OPTION_MODIFIER;
-    else if(ns == SRCML_EXT_POSITION_NS_URI)
-      options |= SRCML_OPTION_POSITION;
-
-    int i;
-    try {
-
-      for(i = 0; i < prefixes.size(); ++i)
-
-        if(namespaces.at(i) == ns) {
-
-          prefixes.at(i) = prefix;
-          break;
-        }
-
-    } catch(...) {}
-
-    if(i == prefixes.size()) {
-      prefixes.push_back(prefix);
-      namespaces.push_back(ns);
-    }
-
-    xmlns = xmlns->next;
-  }
-
   return 1;
 }
 
@@ -295,79 +149,6 @@ int srcMLSAX2Reader::readUnitAttributes(std::string ** language, std::string ** 
 
   if(language == 0 || filename == 0 || directory == 0 || version == 0) return 0;
 
-  bool read_unit_start = false;
-
-  if(!save_nodes.empty()) {
-
-    try {
-
-      for(int i = 0; i < save_nodes.size(); ++i)
-        freeNode(save_nodes.at(i));
-
-    } catch(...) {}
-
-    save_nodes.clear();
-
-  }
-
-  if(done) return 0;
-
-  // forward to start unit
-  while(true) {
-    if(node && (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT && strcmp((const char *)node->name, "unit") == 0)
-      break;
-
-    if(xmlTextReaderRead(reader) != 1) { done = true; return 0; }
-    freeNode(node);
-    node = getNode(reader);
-  }
-
-  if(readUnitAttributesInternal(language, filename, directory, version)) return 0;
-  if(xmlTextReaderRead(reader) != 1) { freeNode(node); done = true; return 0; }
-
-  save_nodes.push_back(node);
-  node = getNode(reader);
-
-  if(is_archive) return 1;
-
-  while(true) {
-
-    save_nodes.push_back(node);
-
-    if(node->type == (xmlElementType)XML_READER_TYPE_ELEMENT && strcmp((const char *)node->name, "unit") == 0) {
-
-      is_archive = true;
-      try {
-        for(int i = 0; i < save_nodes.size() - 1; ++i)
-          freeNode(save_nodes.at(i));
-
-      } catch(...) {}
-      save_nodes.clear();
-      save_nodes.push_back(node);
-      if(*language) delete *language, (*language) = 0;
-      if(*filename) delete *filename, (*filename) = 0;
-      if(*directory) delete *directory, (*directory) = 0;
-      if(*version) delete *version, (*version) = 0;
-      if(readUnitAttributesInternal(language, filename, directory, version)) return 0;
-      break;
-    }
-
-    if(node->type == (xmlElementType)XML_READER_TYPE_ELEMENT
-       && strcmp((const char *)node->name, "unit") != 0) {
-      is_archive = true;
-      is_single = true;
-      break;
-    }
-
-    if(xmlTextReaderRead(reader) != 1) {done = true; return 0; }
-    node = getNode(reader);
-
-  }
-
-  readUnitAttributesInternal(language, filename, directory, version);
-  if(xmlTextReaderRead(reader) != 1) { done = true; return 0; }
-  node = getNode(reader);
-
   return 1;
 
 }
@@ -384,101 +165,6 @@ int srcMLSAX2Reader::readUnitAttributes(std::string ** language, std::string ** 
 int srcMLSAX2Reader::readsrcML(xmlTextWriterPtr writer) {
 
   if(done) return 0;
-
-  //xmlTextWriterStartDocument(writer, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
-  bool read_unit_start = false;
-
-  if(!save_nodes.empty()) {
-
-    try {
-
-      for(int i = 0; i < save_nodes.size(); ++i)
-        output_node_srcml(*save_nodes.at(i), writer, is_single);
-
-      for(int i = 0; i < save_nodes.size(); ++i)
-        freeNode(save_nodes.at(i));
-
-    } catch(...) {}
-
-    save_nodes.clear();
-
-  } else {
-
-    // forward to start unit
-    while(true) {
-      if(node && (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT && strcmp((const char *)node->name, "unit") == 0)
-        break;
-
-      if(xmlTextReaderRead(reader) != 1) {done = true; return 0; }
-      freeNode(node);
-      node = getNode(reader);
-    }
-
-  }
-
-  while(true) {
-
-    if(is_archive) output_node_srcml(*node, writer, is_single);
-    else save_nodes.push_back(node);
-
-    if(strcmp((const char *)node->name, "unit") == 0) {
-
-      if(node->type == (xmlElementType)XML_READER_TYPE_ELEMENT) {
-
-        if(read_unit_start) {
-
-          is_archive = true;
-          try {
-
-            for(int i = 0; i < save_nodes.size() - 1; ++i)
-              freeNode(save_nodes.at(i));
-
-          } catch(...) {}
-
-          save_nodes.clear();
-          output_node_srcml(*node, writer, is_single);
-
-        }
-
-        read_unit_start = true;
-      }
-
-      if(node->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT) {
-        break;
-      }
-
-    }
-
-    if(!save_nodes.empty() && node->type == (xmlElementType)XML_READER_TYPE_ELEMENT
-       && strcmp((const char *)node->name, "unit") != 0) {
-
-      is_archive = true;
-      is_single = true;
-
-      try {
-
-        for(int i = 0; i < save_nodes.size(); ++i)
-          output_node_srcml(*save_nodes.at(i), writer, is_single);
-
-        for(int i = 0; i < save_nodes.size() - 1; ++i)
-          freeNode(save_nodes.at(i));
-
-      } catch(...) {}
-
-      save_nodes.clear();
-
-    }
-
-    if(is_archive) freeNode(node);
-    if(xmlTextReaderRead(reader) != 1) {done = true; return 0; }
-    node = getNode(reader);
-
-  }
-
-  if(is_archive) freeNode(node);
-  node = 0;
-
-  xmlTextWriterEndDocument(writer);
 
   return 1;
 
@@ -520,120 +206,4 @@ std::string * srcMLSAX2Reader::readsrcML() {
 
   return unit;
 
-}
-
-/**
- * output_node_srcml
- * @param node an XML node
- * @param writer an XML text writer
- * @param is_root boolean indicating if parsing root unit
- *
- * Output node as srcML.
- */
-void output_node_srcml(const xmlNode & node, xmlTextWriterPtr writer, bool is_root) {
-
-  bool isemptyelement = false;
-
-  switch (node.type) {
-  case XML_READER_TYPE_ELEMENT:
-
-    // record if this is an empty element since it will be erased by the attribute copying
-    isemptyelement = node.extra & 0x1;
-
-    // start the element
-    {
-
-      std::string s = "";
-      if(node.ns && node.ns->prefix) {
-
-        s += ((char*) node.ns->prefix);
-        s += ":";
-      }
-      s += (char*) node.name;
-
-      xmlTextWriterStartElement(writer, BAD_CAST s.c_str());
-
-    }
-
-    if(strcmp((const char *)node.name, "unit") == 0) {
-
-      xmlNsPtr xmlns = node.nsDef;
-      while(xmlns) {
-
-        std::string ns = xmlns->href ? (const char *)xmlns->href : "";
-        if(ns != SRCML_CPP_NS_URI) {
-
-          xmlns = xmlns->next;
-          continue;
-
-        }
-
-        std::string prefix = "xmlns";
-        if(xmlns->prefix) {
-
-          prefix += ":";
-          prefix += (const char *)xmlns->prefix;
-
-        }
-
-        xmlTextWriterWriteAttribute(writer, (const xmlChar *)prefix.c_str(), (const xmlChar *)ns.c_str());
-
-        xmlns = xmlns->next;
-      }
-    }
-
-    // copy all the attributes
-    {
-      xmlAttrPtr attribute = node.properties;
-      while (attribute) {
-
-        std::string s;
-        if(attribute->ns && attribute->ns->prefix) {
-          s = (const char *)attribute->ns->prefix;
-          s += ":";
-
-        }
-        s += (const char *)attribute->name;
-
-        xmlTextWriterWriteAttribute(writer, (const xmlChar *)s.c_str(), (const xmlChar *)attribute->children->content);
-        attribute = attribute->next;
-      }
-    }
-
-    // end now if this is an empty element
-    if (isemptyelement) {
-
-      xmlTextWriterEndElement(writer);
-    }
-
-    break;
-
-  case XML_READER_TYPE_END_ELEMENT:
-    xmlTextWriterEndElement(writer);
-    break;
-
-  case XML_READER_TYPE_COMMENT:
-    xmlTextWriterWriteComment(writer, (const xmlChar *)node.content);
-    break;
-
-  case XML_READER_TYPE_TEXT:
-  case XML_READER_TYPE_SIGNIFICANT_WHITESPACE:
-
-    // output the UTF-8 buffer escaping the characters.  Note that the output encoding
-    // is handled by libxml
-    for (unsigned char* p = (unsigned char*) node.content; *p != 0; ++p) {
-      if (*p == '&')
-        xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&amp;", 5);
-      else if (*p == '<')
-        xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&lt;", 4);
-      else if (*p == '>')
-        xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&gt;", 4);
-      else
-        xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) p, 1);
-    }
-    break;
-
-  default:
-    break;
-  }
 }

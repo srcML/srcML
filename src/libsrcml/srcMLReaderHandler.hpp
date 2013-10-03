@@ -23,7 +23,7 @@ private :
   pthread_cond_t cond;
   pthread_cond_t is_done_cond;
 
-  // collecting variables
+  // root collecting variables
   std::string root_language;
   std::string root_filename;
   std::string root_directory;
@@ -34,8 +34,17 @@ private :
   OPTION_TYPE options;
   int tabstop;
 
+  // unit collecting variables
+  std::string unit_language;
+  std::string unit_filename;
+  std::string unit_directory;
+  std::string unit_version;
+
+  std::string unit;
 
 public :
+
+  friend class srcMLSAX2Reader;
 
   srcMLReaderHandler() {
 
@@ -163,7 +172,27 @@ public :
 
   virtual void startUnit(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
                          int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
-                         const xmlChar ** attributes) {}
+                         const xmlChar ** attributes) {
+
+    // collect attributes
+    for(int i = 0, pos = 0; i < nb_attributes; ++i, pos += 5) {
+
+      std::string attribute = (const char *)attributes[pos];
+      std::string value = "";
+      value.append((const char *)attributes[pos + 3], attributes[pos + 4] - attributes[pos + 3]);
+
+      if(attribute == "language")
+        root_language = value;
+      else if(attribute == "filename")
+        root_filename = value;
+      else if(attribute == "directory")
+        root_directory = attribute;
+      else if(attribute == "version")
+        root_version = value;
+
+    }
+
+  }
 
   virtual void startElementNs(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
                               int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
