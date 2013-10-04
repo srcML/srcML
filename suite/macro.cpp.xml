@@ -91,7 +91,7 @@
 <expr_stmt><expr>.<name>macro</name> <name><name>a</name>
 <cpp:error># <cpp:directive>comment</cpp:directive></cpp:error>
 <cpp:error>#</cpp:error>
-.<name>endm</name></name></expr></expr_stmt>
+.<name>endm</name></name></expr>;</expr_stmt>
 </unit>
 
 <unit>
