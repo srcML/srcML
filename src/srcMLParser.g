@@ -4793,7 +4793,7 @@ preprocessor[] {
         } |
 
         /* blank preproc */
-        { endMode(); tp_directive.setType(SNOP); } (cpp_garbage)*
+        { endMode(); } (cpp_garbage)*
 
         )
         eol_skip[directive_token, markblockzero]
