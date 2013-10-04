@@ -120,4 +120,14 @@
 <macro><name>M</name><argument_list>(<argument>A</argument>)</argument_list></macro> <decl_stmt><decl><type><specifier>const</specifier> <name>int</name></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr>.<name>macro</name></expr></expr_stmt>
+<cpp:error>#(</cpp:error>
+</unit>
+
+<unit>
+<expr_stmt><expr>.<name>macro</name></expr></expr_stmt>
+<cpp:error># (</cpp:error>
+</unit>
+
 </unit>
