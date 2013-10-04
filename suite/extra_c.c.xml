@@ -85,7 +85,7 @@
 
 <unit>
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<cpp:error>#<cpp:directive/></cpp:error>
+<cpp:error>#</cpp:error>
 </unit>
 
 </unit>
