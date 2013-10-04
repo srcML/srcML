@@ -65,9 +65,9 @@ void SAX2ExtractUnitsSrc::endDocument(void *ctx) {
 
   pstate->pprocess->endDocument(ctx);
 
-  free((void *)pstate->root.localname);
-  free((void *)pstate->root.prefix);
-  free((void *)pstate->root.URI);
+  if(pstate->root.localname) free((void *)pstate->root.localname);
+  if(pstate->root.prefix) free((void *)pstate->root.prefix);
+  if(pstate->root.URI) free((void *)pstate->root.URI);
 
   int ns_length = pstate->root.nb_namespaces * 2;
 
