@@ -22,7 +22,7 @@
 #include <Options.hpp>
 #include <Language.hpp>
 #include <srcMLTranslator.hpp>
-#include <srcMLReader.hpp>
+#include <srcMLSAX2Reader.hpp>
 
 #include <string>
 #include <vector>
@@ -100,7 +100,7 @@ struct srcml_archive {
   srcMLTranslator * translator;
 
   /** a srcMLReader for reading */
-  srcMLReader * reader;
+  srcMLSAX2Reader * reader;
   /** xmlParserInputBuffer for reading */
   xmlParserInputBufferPtr input;
 

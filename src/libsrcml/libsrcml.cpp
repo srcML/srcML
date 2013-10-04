@@ -25,6 +25,7 @@
 
 #include <srcml.h>
 #include <srcml_types.hpp>
+#include <srcml_sax2_utilities.hpp>
 
 #include <srcMLTranslator.hpp>
 #include <Language.hpp>
@@ -37,6 +38,7 @@
 
 #include <vector>
 #include <string>
+#include <fstream>
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
 #include <dlfcn.h>
@@ -174,10 +176,16 @@ int srcml(const char* input_filename, const char* output_filename) {
 
     }
 
-    OPTION_TYPE & options = global_archive.options;
-    srcMLUtility utility(input_filename, global_archive.encoding ? global_archive.encoding->c_str() : "UTF-8", options, "");
-    utility.extract_text(0, output_filename, 1);
+    std::string buffer;
+    std::string tmp;
+    std::ifstream in(input_filename);
+    while(in >> tmp)
+      buffer += tmp;
 
+    OPTION_TYPE & options = global_archive.options;
+
+    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename(output_filename, xmlFindCharEncodingHandler(global_archive.encoding ? global_archive.encoding->c_str() : "ISO-8859-1"), global_archive.options & SRCML_OPTION_COMPRESS);
+                                                                     srcml_extract_text(buffer.c_str(), buffer.size(), output_buffer, options, 1);
   }
 
   return SRCML_STATUS_OK;
