@@ -177,15 +177,16 @@ int srcml(const char* input_filename, const char* output_filename) {
     }
 
     std::string buffer;
-    std::string tmp;
+    char tmp;
     std::ifstream in(input_filename);
-    while(in >> tmp)
+    while(in.get(tmp))
       buffer += tmp;
 
     OPTION_TYPE & options = global_archive.options;
-
+    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, buffer.c_str());
     xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename(output_filename, xmlFindCharEncodingHandler(global_archive.encoding ? global_archive.encoding->c_str() : "ISO-8859-1"), global_archive.options & SRCML_OPTION_COMPRESS);
-                                                                     srcml_extract_text(buffer.c_str(), buffer.size(), output_buffer, options, 1);
+    //srcml_extract_text(buffer.c_str(), buffer.size(), output_buffer, options, 1);
+    xmlOutputBufferClose(output_buffer);
   }
 
   return SRCML_STATUS_OK;
