@@ -88,10 +88,10 @@
 </unit>
 
 <unit>
-<expr_stmt><expr>.<name>macro</name> <name>a</name>
+<expr_stmt><expr>.<name>macro</name> <name><name>a</name>
 <cpp:error># <cpp:directive>comment</cpp:directive></cpp:error>
-<cpp:error>#<cpp:directive/></cpp:error>
-.<name>endm</name></expr></expr_stmt>
+<cpp:error>#</cpp:error>
+.<name>endm</name></name></expr></expr_stmt>
 </unit>
 
 <unit>
