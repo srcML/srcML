@@ -4648,6 +4648,7 @@ eof[] :
     Match on the directive itself not the entire directive
 */
 preprocessor[] {
+
         int directive_token = 0;
         bool markblockzero = false;
 
@@ -4667,6 +4668,7 @@ preprocessor[] {
         }
         PREPROC markend[directive_token]
         {
+
             startNewMode(MODE_LOCAL);
 
             startElement(SCPP_DIRECTIVE);
@@ -4789,7 +4791,7 @@ preprocessor[] {
         } |
 
         /* blank preproc */
-        { endMode(); }
+        { endMode(); } (cpp_garbage)*
 
         )
         eol_skip[directive_token, markblockzero]
@@ -4798,6 +4800,13 @@ exception
 catch[...] {
         eol_skip(directive_token, markblockzero);
 }
+
+cpp_garbage[] :
+
+ ~(EOL | LINECOMMENT_START | COMMENT_START | JAVADOC_COMMENT_START | EOF)
+
+;
+  
 
 eol_skip[int directive_token, bool markblockzero] {
 
