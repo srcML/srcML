@@ -1,6 +1,6 @@
 #!/bin/bash
 
-./sshall.py --build 'bash -c "cd /srcML; git pull"'
+./sshall.py --build 'bash -c "cd /srcML; git checkout master; git pull"'
 
 ./sshall.py --build 'bash -c "cd /srcML/dist; make clean; make"'
 ./sshall.py --build 'bash -c "chown -R srcml:srcml /srcML"'
