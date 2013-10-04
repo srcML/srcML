@@ -4653,6 +4653,7 @@ preprocessor[] {
         bool markblockzero = false;
 
         TokenPosition tp;
+        TokenPosition tp_directive;
 
         // parse end of line
         startNewMode(MODE_PARSE_EOL);
@@ -4672,6 +4673,7 @@ preprocessor[] {
             startNewMode(MODE_LOCAL);
 
             startElement(SCPP_DIRECTIVE);
+            setTokenPosition(tp_directive);
         }
         (
         INCLUDE
@@ -4791,7 +4793,7 @@ preprocessor[] {
         } |
 
         /* blank preproc */
-        { endMode(); } (cpp_garbage)*
+        { endMode(); tp_directive.setType(SNOP); } (cpp_garbage)*
 
         )
         eol_skip[directive_token, markblockzero]
