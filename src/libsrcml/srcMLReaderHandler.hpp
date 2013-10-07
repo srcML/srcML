@@ -424,8 +424,6 @@ public :
     unit->unit->append((const char *)ch, len);
 
 #ifdef DEBUG
-    std::string chars;
-    chars.append((const char *), len);
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
 #endif
 
