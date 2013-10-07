@@ -90,6 +90,12 @@ public :
   void wait() {
 
     pthread_mutex_lock(&mutex);
+
+    if(is_done) {
+      pthread_mutex_unlock(&mutex);
+      return;
+    }
+
     pthread_cond_wait(&is_done_cond, &mutex);
     pthread_mutex_unlock(&mutex);
 
