@@ -82,7 +82,12 @@ srcMLSAX2Reader::srcMLSAX2Reader(const char * filename)
  * Construct a srcMLSAX2Reader using a parser input buffer
  */
 srcMLSAX2Reader::srcMLSAX2Reader(xmlParserInputBufferPtr input) 
-  : control("test.xml") {
+  : control(input) {
+
+  thread_args args = { &control, &handler };
+
+  pthread_create(&thread, 0, start_routine, &args);
+  handler.wait();
 
 }
 
