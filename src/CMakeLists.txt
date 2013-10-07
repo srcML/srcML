@@ -112,8 +112,8 @@ add_library(srcmlutility OBJECT srcMLUtility.cpp SAX2ExtractUnitsSrc.cpp SAX2Uti
 add_library(translator OBJECT srcMLTranslator.cpp srcMLTranslatorCore.cpp UTF8CharBuffer.cpp Language.cpp URIStream.cpp libxml_archive_read.cpp libxml_archive_write.cpp)
 add_library(srcmlapps OBJECT srcmlapps.cpp)
 
-file(GLOB LIBSRCML_SRC libsrcml/srcml_*.cpp )
-add_library(libsrcml OBJECT ${LIBSRCML_SRC} libsrcml/libsrcml.cpp libsrcml/srcMLReader.cpp)
+file(GLOB LIBSRCML_SRC libsrcml/srcml_*.cpp libsrcml/libsrcml.cpp libsrcml/srcMLReader.cpp)
+add_library(libsrcml OBJECT ${LIBSRCML_SRC})
 
 # libsrcml static
 add_library(srcml_static STATIC $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:srcmlapps> $<TARGET_OBJECTS:srcmlutility>)
