@@ -131,6 +131,10 @@ public :
                          int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
                          const xmlChar ** attributes) {
 
+#ifdef DEBUG
+    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+#endif
+
     // collect attributes
     for(int i = 0, pos = 0; i < nb_attributes; ++i, pos += 5) {
 
@@ -211,6 +215,10 @@ public :
     pthread_cond_wait(&cond, &mutex);
     pthread_mutex_unlock(&mutex);
 
+#ifdef DEBUG
+    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+#endif
+
   }
 
   /**
@@ -230,6 +238,10 @@ public :
   virtual void startUnit(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
                          int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
                          const xmlChar ** attributes) {
+
+#ifdef DEBUG
+    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+#endif
 
     unit = srcml_create_unit(archive);
     unit->unit = new std::string();
@@ -269,6 +281,10 @@ public :
 
     }
 
+#ifdef DEBUG
+    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+#endif
+
   }
 
   /**
@@ -288,12 +304,20 @@ public :
                               int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
                               const xmlChar ** attributes) {
 
+#ifdef DEBUG
+    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+#endif
+
     if(collect_srcml) {
 
       write_startTag(localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted,
                      attributes);
 
     }
+
+#ifdef DEBUG
+    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+#endif
 
   }
 
@@ -307,10 +331,18 @@ public :
    */
   virtual void endRoot(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {
 
+#ifdef DEBUG
+    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+#endif
+
     is_done = true;
     pthread_mutex_lock(&mutex);
     pthread_cond_broadcast(&is_done_cond);
     pthread_mutex_unlock(&mutex);
+
+#ifdef DEBUG
+    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+#endif
 
   }
 
@@ -323,6 +355,10 @@ public :
    * Overidden endUnit to collect srcml and stop parsing.  Clear collect srcML after pause.
    */
   virtual void endUnit(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {
+
+#ifdef DEBUG
+    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+#endif
 
     if(collect_srcml) {
 
@@ -337,6 +373,11 @@ public :
     }
 
     srcml_free_unit(unit);
+    unit = 0;
+
+#ifdef DEBUG
+    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+#endif
 
   }
 
@@ -350,10 +391,18 @@ public :
    */
   virtual void endElementNs(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {
 
+#ifdef DEBUG
+    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+#endif
+
     if(collect_srcml) {
 
       write_endTag(localname, prefix, URI);
     }
+
+#ifdef DEBUG
+    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+#endif
 
   }
 
@@ -366,7 +415,19 @@ public :
    */
   virtual void charactersUnit(const xmlChar * ch, int len) {
 
+#ifdef DEBUG
+    std::string chars;
+    chars.append((const char *), len);
+    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
+#endif
+
     unit->unit->append((const char *)ch, len);
+
+#ifdef DEBUG
+    std::string chars;
+    chars.append((const char *), len);
+    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
+#endif
 
   }
 
