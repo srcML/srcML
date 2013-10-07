@@ -15,7 +15,6 @@
 #include <vector>
 
 #include <cstring>
-#define DEBUG
 
 /**
  * srcMLReaderHandler
