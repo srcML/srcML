@@ -10,6 +10,7 @@ cmake_minimum_required(VERSION 2.8)
 project(srcML)
 
 option(SVN_ENABLED "Build with svn" off)
+option(LIBSRCML_SAX2_ENABLED "Build with SAX2Framework for srcML" off)
 
 # specify g++ compiler
 if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
@@ -112,7 +113,12 @@ add_library(srcmlutility OBJECT srcMLUtility.cpp SAX2ExtractUnitsSrc.cpp SAX2Uti
 add_library(translator OBJECT srcMLTranslator.cpp srcMLTranslatorCore.cpp UTF8CharBuffer.cpp Language.cpp URIStream.cpp libxml_archive_read.cpp libxml_archive_write.cpp)
 add_library(srcmlapps OBJECT srcmlapps.cpp)
 
+if(LIBSRCML_SAX2_ENABLED)
+file(GLOB LIBSRCML_SRC libsrcml/*.cpp)
+add_definitions(-DSAX2)
+else()
 file(GLOB LIBSRCML_SRC libsrcml/srcml_*.cpp libsrcml/libsrcml.cpp libsrcml/srcMLReader.cpp)
+endif()
 add_library(libsrcml OBJECT ${LIBSRCML_SRC})
 
 # libsrcml static
