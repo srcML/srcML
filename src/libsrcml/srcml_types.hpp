@@ -19,6 +19,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#ifndef INCLUDED_SRCML_TYPES_HPP
+#define INCLUDED_SRCML_TYPES_HPP
+
 #include <Options.hpp>
 #include <Language.hpp>
 #include <srcMLTranslator.hpp>
@@ -30,9 +33,6 @@
 
 #include <string>
 #include <vector>
-
-#ifndef INCLUDED_SRCML_TYPES_HPP
-#define INCLUDED_SRCML_TYPES_HPP
 
 /**
  * SRCML_TRANSORM_TYPE
