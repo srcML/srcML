@@ -117,6 +117,13 @@ public :
 
   }
 
+  void stop() {
+
+    resume();
+    terminate = true;
+
+  }
+
   /**
    * startRoot
    * @param localname tag name
@@ -218,6 +225,8 @@ public :
     pthread_cond_wait(&cond, &mutex);
     pthread_mutex_unlock(&mutex);
 
+    if(terminate) stop_parser();
+
 #ifdef DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
@@ -284,6 +293,8 @@ public :
 
     }
 
+    if(terminate) stop_parser();
+
 #ifdef DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
@@ -318,6 +329,8 @@ public :
 
     }
 
+    if(terminate) stop_parser();
+
 #ifdef DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
@@ -342,6 +355,8 @@ public :
     is_done = true;
     pthread_cond_broadcast(&is_done_cond);
     pthread_mutex_unlock(&mutex);
+
+    if(terminate) stop_parser();
 
 #ifdef DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -378,6 +393,8 @@ public :
     srcml_free_unit(unit);
     unit = 0;
 
+    if(terminate) stop_parser();
+
 #ifdef DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
@@ -403,6 +420,8 @@ public :
       write_endTag(localname, prefix, URI);
     }
 
+    if(terminate) stop_parser();
+
 #ifdef DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
@@ -425,6 +444,8 @@ public :
 #endif
 
     unit->unit->append((const char *)ch, len);
+
+    if(terminate) stop_parser();
 
 #ifdef DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
