@@ -99,7 +99,7 @@ srcMLSAX2Reader::srcMLSAX2Reader(xmlParserInputBufferPtr input)
 srcMLSAX2Reader::~srcMLSAX2Reader() {
 
   handler.stop();
-  pthread_cancel(thread);
+  pthread_join(thread, NULL);
 
 }
 
