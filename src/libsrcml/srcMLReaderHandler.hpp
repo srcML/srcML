@@ -131,13 +131,13 @@ public :
       value.append((const char *)attributes[pos + 3], attributes[pos + 4] - attributes[pos + 3]);
 
       if(attribute == "language")
-        archive->language = value;
+        srcml_archive_set_language(archive, value.c_str());
       else if(attribute == "filename")
-        archive->filename = value;
+        srcml_archive_set_filename(archive, value.c_str());
       else if(attribute == "dir")
-        archive->directory = value;
+        srcml_archive_set_directory(archive, value.c_str());
       else if(attribute == "version")
-        archive->version = value;
+        srcml_archive_set_version(archive, value.c_str());
       else if(attribute == "tabs")
         archive->tabstop = atoi(value.c_str());
       else {
@@ -234,13 +234,13 @@ public :
       value.append((const char *)attributes[pos + 3], attributes[pos + 4] - attributes[pos + 3]);
 
       if(attribute == "language")
-        unit->language = value;
+        srcml_unit_set_language(unit, value.c_str());
       else if(attribute == "filename")
-        unit->filename = value;
+        srcml_unit_set_filename(unit, value.c_str());
       else if(attribute == "directory")
-        unit->directory = attribute;
+        srcml_unit_set_directory(unit, value.c_str());
       else if(attribute == "version")
-        unit->version = value;
+        srcml_unit_set_version(unit, value.c_str());
 
     }
 
