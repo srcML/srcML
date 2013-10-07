@@ -21,6 +21,11 @@
 
 #include <srcml.h>
 #include <srcml_types.hpp>
+#ifdef SAX2
+#include <srcMLSAX2Reader.hpp>
+#else
+#include <srcMLReader.hpp>
+#endif
 
 #include <srcmlns.hpp>
 

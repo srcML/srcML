@@ -25,14 +25,12 @@
 #include <Options.hpp>
 #include <Language.hpp>
 #include <srcMLTranslator.hpp>
-#ifdef SAX2
-#include <srcMLSAX2Reader.hpp>
-#else
-#include <srcMLReader.hpp>
-#endif
 
 #include <string>
 #include <vector>
+
+class srcMLReader;
+class srcMLSAX2Reader;
 
 /**
  * SRCML_TRANSORM_TYPE
