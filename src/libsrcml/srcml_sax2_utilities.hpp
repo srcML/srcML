@@ -19,12 +19,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDDED_SRCML_SAX2_UTILITIES_HPP
-#define INCLUDDED_SRCML_SAX2_UTILITIES_HPP
-
 #include <Options.hpp>
 
 #include <libxml/parserInternals.h>
+
+#ifndef INCLUDDED_SRCML_SAX2_UTILITIES_HPP
+#define INCLUDDED_SRCML_SAX2_UTILITIES_HPP
 
 int srcml_extract_text(const char * input_buffer, int size, xmlOutputBufferPtr output_buffer, OPTION_TYPE options, int unit = 0);
 int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_element, const char* xpaths[], int fd, OPTION_TYPE options);

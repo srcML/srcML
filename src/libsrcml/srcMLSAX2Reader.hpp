@@ -19,9 +19,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_SRCML_SAX2_READER_HPP
-#define INCLUDED_SRCML_SAX2_READER_HPP
-
 #include <srcMLReaderHandler.hpp>
 
 #include <srcMLControlHandler.hpp>
@@ -33,6 +30,9 @@
 
 #include <string>
 #include <vector>
+
+#ifndef INCLUDED_SRCML_SAX2_READER_HPP
+#define INCLUDED_SRCML_SAX2_READER_HPP
 
 /**
  * srcMLSAX2Reader

@@ -1,6 +1,3 @@
-#ifndef INCLUDED_SRCML_READER_HANDLER_HPP
-#define INCLUDED_SRCML_READER_HANDLER_HPP
-
 #include <srcMLHandler.hpp>
 #include <srcml_types.hpp>
 
@@ -13,6 +10,9 @@
 
 #include <string>
 #include <vector>
+
+#ifndef INCLUDED_SRCML_READER_HANDLER_HPP
+#define INCLUDED_SRCML_READER_HANDLER_HPP
 
 /**
  * srcMLReaderHandler
