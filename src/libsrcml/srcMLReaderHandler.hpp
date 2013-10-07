@@ -14,6 +14,8 @@
 #include <string>
 #include <vector>
 
+#include <cstring>
+
 /**
  * srcMLReaderHandler
  *
@@ -388,6 +390,9 @@ private :
     *unit->unit += (const char *)localname;
 
     for(int i = 0, pos = 0; i < nb_namespaces; ++i, pos += 2) {
+
+      if(strcmp((const char *)namespaces[pos + 1], SRCML_SRC_NS_URI) == 0)
+        continue;
 
       *unit->unit += " xmlns";
       if(namespaces[pos]) {
