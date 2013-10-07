@@ -2,6 +2,7 @@
 #define INCLUDED_SRCML_READER_HANDLER_HPP
 
 #include <srcMLHandler.hpp>
+#include <srcml_types.hpp>
 
 #include <libxml/parser.h>
 #include <stdio.h>
@@ -33,35 +34,10 @@ private :
   pthread_cond_t is_done_cond;
 
   /** collected root language */
-  std::string root_language;
-  /** collected root filename */
-  std::string root_filename;
-  /** collected root directory */
-  std::string root_directory;
-  /** collected root version */
-  std::string root_version;
-  /** collected root attributes */
-  std::vector<std::string> attributes;
-  /** collected root prefixes */
-  std::vector<std::string> prefixes;
-  /** collected root namespaces */
-  std::vector<std::string> namespaces;
-  /** collected root options */
-  OPTION_TYPE options; 
-  /** collected root tabstop */
-  int tabstop;
+  srcml_archive * archive;
 
   /** collected unit language */
-  std::string unit_language;
-  /** collected unit filename */
-  std::string unit_filename;
-  /** collected unit directory */
-  std::string unit_directory;
-  /** collected unit version */
-  std::string unit_version;
-
-  /** collect srcML */
-  std::string unit;
+  srcml_unit * unit;
 
   /** has reached end of parsing*/
   bool is_done;
@@ -80,7 +56,9 @@ public :
    *
    * Constructor.  Sets up mutex, conditions and state.
    */
-  srcMLReaderHandler() : is_done(false), collect_unit_attributes(false), collect_srcml(false) {
+  srcMLReaderHandler() : unit(0), is_done(false), collect_unit_attributes(false), collect_srcml(false) {
+
+    archive = srcml_create_archive();
 
     pthread_mutex_init(&mutex, 0);
     pthread_cond_init(&cond, 0);
@@ -153,15 +131,15 @@ public :
       value.append((const char *)attributes[pos + 3], attributes[pos + 4] - attributes[pos + 3]);
 
       if(attribute == "language")
-        root_language = value;
+        archive->language = value;
       else if(attribute == "filename")
-        root_filename = value;
+        archive->filename = value;
       else if(attribute == "dir")
-        root_directory = value;
+        archive->directory = value;
       else if(attribute == "version")
-        root_version = value;
+        archive->version = value;
       else if(attribute == "tabs")
-        tabstop = atoi(value.c_str());
+        archive->tabstop = atoi(value.c_str());
       else {
         this->attributes.push_back(attribute);
         this->attributes.push_back(value);
@@ -177,43 +155,43 @@ public :
 
       if(ns == SRCML_CPP_NS_URI) {
 
-        if(root_language != "") {
+        if(archive->language != "") {
 
-          if(root_language == "C++" || root_language == "C")
-            options |= SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO;
-          else if(root_language == "C#")
-            options |= SRCML_OPTION_CPP_NOMACRO;
+          if(*archive->language == "C++" || *archive->language == "C")
+            archive->options |= SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO;
+          else if(*archive->language == "C#")
+            archive->options |= SRCML_OPTION_CPP_NOMACRO;
           //else
           //options |= SRCML_OPTION_CPP;
         }
 
       } else if(ns == SRCML_ERR_NS_URI)
-        options |= SRCML_OPTION_DEBUG;
+        archive->options |= SRCML_OPTION_DEBUG;
       else if(ns == SRCML_EXT_LITERAL_NS_URI)
-        options |= SRCML_OPTION_LITERAL;
+        archive->options |= SRCML_OPTION_LITERAL;
       else if(ns == SRCML_EXT_OPERATOR_NS_URI)
-        options |= SRCML_OPTION_OPERATOR;
+        archive->options |= SRCML_OPTION_OPERATOR;
       else if(ns == SRCML_EXT_MODIFIER_NS_URI)
-        options |= SRCML_OPTION_MODIFIER;
+        archive->options |= SRCML_OPTION_MODIFIER;
       else if(ns == SRCML_EXT_POSITION_NS_URI)
-        options |= SRCML_OPTION_POSITION;
+        archive->options |= SRCML_OPTION_POSITION;
 
       int index;
       try {
 
-        for(index = 0; index < prefixes.size(); ++index)
+        for(index = 0; index < archive->prefixes.size(); ++index)
 
-          if(this->namespaces.at(index) == ns) {
+          if(archive->namespaces.at(index) == ns) {
 
-            prefixes.at(index) = prefix;
+            archive->prefixes.at(index) = prefix;
             break;
           }
 
       } catch(...) {}
 
-      if(index == prefixes.size()) {
-        prefixes.push_back(prefix);
-        this->namespaces.push_back(ns);
+      if(index == archive->prefixes.size()) {
+        archive->prefixes.push_back(prefix);
+        archive->namespaces.push_back(ns);
       }
 
 
@@ -245,6 +223,9 @@ public :
                          int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
                          const xmlChar ** attributes) {
 
+    unit = srcml_create_unit(archive);
+    unit->unit = new std::string();
+
     // collect attributes
     for(int i = 0, pos = 0; i < nb_attributes; ++i, pos += 5) {
 
@@ -253,13 +234,13 @@ public :
       value.append((const char *)attributes[pos + 3], attributes[pos + 4] - attributes[pos + 3]);
 
       if(attribute == "language")
-        unit_language = value;
+        unit->language = value;
       else if(attribute == "filename")
-        unit_filename = value;
+        unit->filename = value;
       else if(attribute == "directory")
-        unit_directory = attribute;
+        unit->directory = attribute;
       else if(attribute == "version")
-        unit_version = value;
+        unit->version = value;
 
     }
 
@@ -347,7 +328,7 @@ public :
 
     }
 
-    unit.clear();
+    srcml_free_unit(unit);
 
   }
 
@@ -377,7 +358,7 @@ public :
    */
   virtual void charactersUnit(const xmlChar * ch, int len) {
 
-    unit.append((const char *)ch, len);
+    unit->unit->append((const char *)ch, len);
 
   }
 
@@ -399,48 +380,48 @@ private :
   void write_startTag(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
                       int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
                       const xmlChar ** attributes) {
-    unit += "<";
+    unit->unit += "<";
     if(prefix) {
-      unit += (const char *)prefix;
-      unit += ":";
+      unit->unit += (const char *)prefix;
+      unit->unit += ":";
     }
-    unit += (const char *)localname;
+    unit->unit += (const char *)localname;
 
     for(int i = 0, pos = 0; i < nb_namespaces; ++i, pos += 2) {
 
-      unit += " xmlns";
+      unit->unit += " xmlns";
       if(namespaces[pos]) {
 
-        unit += ":";
-        unit += (const char *)namespaces[pos];
+        unit->unit += ":";
+        unit->unit += (const char *)namespaces[pos];
 
       }
 
-      unit += "=\"";
-      unit += (const char *)namespaces[pos + 1];
-      unit += "\"";
+      unit->unit += "=\"";
+      unit->unit += (const char *)namespaces[pos + 1];
+      unit->unit += "\"";
 
     }
 
 
     for(int i = 0, pos = 0; i < nb_attributes; ++i, pos += 5) {
 
-      unit += " ";
+      unit->unit += " ";
       if(attributes[pos + 1]) {
 
-        unit += (const char *)attributes[pos + 1];
-        unit += ":";
+        unit->unit += (const char *)attributes[pos + 1];
+        unit->unit += ":";
 
       }
-      unit += (const char *)attributes[pos];
+      unit->unit += (const char *)attributes[pos];
 
-      unit += "=\"";
-      unit.append((const char *)attributes[pos + 3], attributes[pos + 4] - attributes[pos + 3]);
-      unit += "\"";
+      unit->unit += "=\"";
+      unit->unit->append((const char *)attributes[pos + 3], attributes[pos + 4] - attributes[pos + 3]);
+      unit->unit += "\"";
 
 
     }
-    unit += ">";
+    unit->unit += ">";
 
   }
 
@@ -454,16 +435,16 @@ private :
    */
   void write_endTag(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {
 
-    unit += "</";
+    unit->unit += "</";
     if(prefix) {
 
-      unit += (const char *)prefix;
-      unit += ":";
+      unit->unit += (const char *)prefix;
+      unit->unit += ":";
 
     }
-    unit += (const char *)localname;
+    unit->unit += (const char *)localname;
 
-    unit += ">";
+    unit->unit += ">";
 
   }
 
