@@ -42,7 +42,6 @@ const char** srcml_list(const char* srcml_filename) {
   srcml_unit * unit;
   while((unit = srcml_read_unit(archive)))
     output_array.push_back(srcml_unit_get_filename(unit));
-
   const char ** output_carray = (const char **)malloc((output_array.size() + 1) * sizeof(const char *));
 
   try {
@@ -52,6 +51,9 @@ const char** srcml_list(const char* srcml_filename) {
 
   } catch(...) {}
   output_carray[output_array.size()] = 0;
+
+  srcml_close_archive(archive);
+  srcml_free_archive(archive);
 
   return output_carray;
 
