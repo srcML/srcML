@@ -49,6 +49,8 @@ private :
   /** collect srcML as parse*/
   bool collect_srcml;
 
+  bool terminate;
+
 public :
 
   /** Give access to membeers for srcMLSAX2Reader class */
@@ -59,7 +61,7 @@ public :
    *
    * Constructor.  Sets up mutex, conditions and state.
    */
-  srcMLReaderHandler() : unit(0), is_done(false), collect_unit_attributes(false), collect_srcml(false) {
+  srcMLReaderHandler() : unit(0), is_done(false), collect_unit_attributes(false), collect_srcml(false), terminate(false) {
 
     archive = srcml_create_archive();
 
