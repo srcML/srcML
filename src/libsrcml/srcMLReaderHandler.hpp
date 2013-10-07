@@ -141,8 +141,8 @@ public :
       else if(attribute == "tabs")
         archive->tabstop = atoi(value.c_str());
       else {
-        this->attributes.push_back(attribute);
-        this->attributes.push_back(value);
+        archive->attributes.push_back(attribute);
+        archive->attributes.push_back(value);
       }
 
     }
@@ -155,7 +155,7 @@ public :
 
       if(ns == SRCML_CPP_NS_URI) {
 
-        if(archive->language != "") {
+        if(archive->language != 0) {
 
           if(*archive->language == "C++" || *archive->language == "C")
             archive->options |= SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO;
@@ -380,48 +380,48 @@ private :
   void write_startTag(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
                       int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
                       const xmlChar ** attributes) {
-    unit->unit += "<";
+    *unit->unit += "<";
     if(prefix) {
-      unit->unit += (const char *)prefix;
-      unit->unit += ":";
+      *unit->unit += (const char *)prefix;
+      *unit->unit += ":";
     }
-    unit->unit += (const char *)localname;
+    *unit->unit += (const char *)localname;
 
     for(int i = 0, pos = 0; i < nb_namespaces; ++i, pos += 2) {
 
-      unit->unit += " xmlns";
+      *unit->unit += " xmlns";
       if(namespaces[pos]) {
 
-        unit->unit += ":";
-        unit->unit += (const char *)namespaces[pos];
+        *unit->unit += ":";
+        *unit->unit += (const char *)namespaces[pos];
 
       }
 
-      unit->unit += "=\"";
-      unit->unit += (const char *)namespaces[pos + 1];
-      unit->unit += "\"";
+      *unit->unit += "=\"";
+      *unit->unit += (const char *)namespaces[pos + 1];
+      *unit->unit += "\"";
 
     }
 
 
     for(int i = 0, pos = 0; i < nb_attributes; ++i, pos += 5) {
 
-      unit->unit += " ";
+      *unit->unit += " ";
       if(attributes[pos + 1]) {
 
-        unit->unit += (const char *)attributes[pos + 1];
-        unit->unit += ":";
+        *unit->unit += (const char *)attributes[pos + 1];
+        *unit->unit += ":";
 
       }
-      unit->unit += (const char *)attributes[pos];
+      *unit->unit += (const char *)attributes[pos];
 
-      unit->unit += "=\"";
+      *unit->unit += "=\"";
       unit->unit->append((const char *)attributes[pos + 3], attributes[pos + 4] - attributes[pos + 3]);
-      unit->unit += "\"";
+      *unit->unit += "\"";
 
 
     }
-    unit->unit += ">";
+    *unit->unit += ">";
 
   }
 
@@ -435,16 +435,16 @@ private :
    */
   void write_endTag(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {
 
-    unit->unit += "</";
+    *unit->unit += "</";
     if(prefix) {
 
-      unit->unit += (const char *)prefix;
-      unit->unit += ":";
+      *unit->unit += (const char *)prefix;
+      *unit->unit += ":";
 
     }
-    unit->unit += (const char *)localname;
+    *unit->unit += (const char *)localname;
 
-    unit->unit += ">";
+    *unit->unit += ">";
 
   }
 
