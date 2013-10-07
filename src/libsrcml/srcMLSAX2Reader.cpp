@@ -198,7 +198,7 @@ std::string * srcMLSAX2Reader::readsrcML() {
 
   std::string * unit = 0;
   try {
-    unit = new std::string(*handler.unit->unit);
+    if(handler.unit->unit) unit = new std::string(*handler.unit->unit);
   } catch(...) {}
 
   return unit;
