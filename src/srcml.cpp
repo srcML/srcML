@@ -27,7 +27,7 @@
   Replaces the src2srcml and srcml2src of the original srcML toolkit.
 */
 
-#include <srcml.h>
+#include "libsrcml/srcml.h"
 
 #include <iostream>
 #include <boost/program_options.hpp>
@@ -35,7 +35,7 @@
 #include <map>
 
 //Compiled with:
-// g++ -o srcml ./srcml.cpp -lboost_program_options
+// g++ srcml.cpp -lboost_program_options -o srcml
 
 namespace prog_opts = boost::program_options;
 
@@ -174,7 +174,7 @@ prog_opts::options_description src2srcml_metadata("Metadata Options");
 prog_opts::options_description srcml2src_metadata("Metadata Options");
 prog_opts::options_description prefix("Prefix Options");
 prog_opts::options_description query_transform("Query and Transform Options");
-prog_opts::options_description srcml_archive("srcML Archive Options");
+prog_opts::options_description archive("srcML Archive Options");
 prog_opts::options_description src2srcml("src2srcml");
 prog_opts::options_description srcml2src("srcml2src");
 prog_opts::options_description positional_options("positional");
@@ -363,7 +363,7 @@ int main(int argc, char * argv[]) {
 			("xslt", prog_opts::value<std::string>()->notifier(&option_xslt), "apply XSLT_FILE (FILE or URI) arg transformation to each individual unit")
 			;
 
-		srcml_archive.add_options()
+		archive.add_options()
 			("to-dir", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_TO_DIRECTORY>), "extract all files from srcML and create them in the filesystem")
 			("unit,U", prog_opts::value<int>()->notifier(&option_unit), "extract individual unit number arg from srcML")
 			;    
@@ -376,12 +376,12 @@ int main(int argc, char * argv[]) {
 		src2srcml.add(general).add(src2srcml_options).add(cpp_markup).add(line_col).add(markup).add(src2srcml_metadata).add(prefix);
 
 		//Group srcml2src Options
-		srcml2src.add(general).add(srcml2src_options).add(src2srcml_metadata).add(query_transform).add(srcml_archive);
+		srcml2src.add(general).add(srcml2src_options).add(src2srcml_metadata).add(query_transform).add(archive);
 
 		//Group all Options
 		all.add(general).add(src2srcml_options).add(srcml2src_options).
 			add(cpp_markup).add(line_col).add(markup).add(src2srcml_metadata).
-			add(srcml2src_metadata).add(prefix).add(query_transform).add(srcml_archive).
+			add(srcml2src_metadata).add(prefix).add(query_transform).add(archive).
 			add(positional_options);
 
 		//Positional Args
