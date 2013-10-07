@@ -15,6 +15,7 @@
 #include <vector>
 
 #include <cstring>
+#define DEBUG
 
 /**
  * srcMLReaderHandler
@@ -417,7 +418,7 @@ public :
 
 #ifdef DEBUG
     std::string chars;
-    chars.append((const char *), len);
+    chars.append((const char *)ch, len);
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
 #endif
 
