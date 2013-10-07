@@ -336,8 +336,8 @@ public :
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-    is_done = true;
     pthread_mutex_lock(&mutex);
+    is_done = true;
     pthread_cond_broadcast(&is_done_cond);
     pthread_mutex_unlock(&mutex);
 
