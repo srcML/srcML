@@ -907,7 +907,8 @@ perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
             || postcalltoken == 1 /* EOF ? */
             || postcalltoken == TEMPLATE || postcalltoken == PUBLIC || postcalltoken == PRIVATE
             || postcalltoken == PROTECTED
-            || postcalltoken == STATIC))
+            || postcalltoken == STATIC
+            || postcalltoken == CONST))
 
             type = MACRO;
 
