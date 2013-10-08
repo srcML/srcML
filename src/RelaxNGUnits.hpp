@@ -158,7 +158,6 @@ public :
   static void xmlOutputBufferWriteElementNodeNs(xmlOutputBufferPtr buf, xmlNode & node, bool isarchive) {
 
     // record if this is an empty element since it will be erased by the attribute copying
-    bool isemptyelement = node.extra & 0x1;
     xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<"));
     // start the element
     {

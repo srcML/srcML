@@ -295,7 +295,6 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
 
   if(language == 0 || filename == 0 || directory == 0 || version == 0) return 0;
 
-  bool read_unit_start = false;
 
   if(!save_nodes.empty()) {
 
