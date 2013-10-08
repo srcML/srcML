@@ -1975,14 +1975,14 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         { (inLanguage(LANGUAGE_OO)) && inMode(MODE_FUNCTION_TAIL) }?
         throw_list |
 
-        // function specifier at end of function header
-        { inLanguage(LANGUAGE_CXX_FAMILY) && inMode(MODE_FUNCTION_TAIL) }?
-        function_specifier |
-
         // K&R function parameters
         { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY)) && inMode(MODE_FUNCTION_TAIL) &&
           pattern_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
         kr_parameter |
+
+        // function specifier at end of function header
+        { inLanguage(LANGUAGE_CXX_FAMILY) && inMode(MODE_FUNCTION_TAIL) }?
+        function_specifier |
 
         // start of argument for return or throw statement
         { inMode(MODE_EXPRESSION | MODE_EXPECT) &&
