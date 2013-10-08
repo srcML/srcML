@@ -24,7 +24,6 @@ execute_process(COMMAND cat REVISION COMMAND tr -d "\n" OUTPUT_VARIABLE REVISION
 add_definitions(-DVERSION=\"${VERSION}\")
 add_definitions(-DREVISION=\"${REVISION}\")
 add_definitions(-O3)
-add_definitions(-s)
 add_definitions(-fPIC)
 
 # get needed packages and include
