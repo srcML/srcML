@@ -235,7 +235,6 @@ public:
 
 private:
     srcMLParser* parent;
-    int size;
 };
 
 #ifdef ENTRY_DEBUG
