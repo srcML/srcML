@@ -50,20 +50,20 @@ int abortfunc(int retcode) {
 
 #define DFDECLARE(F) F ## _function F ## _dynamic;
 
-#define DFLOAD(F)  F ## _dynamic = (F ##_function)dlsym(handle, #F);    \
-  {                                                                     \
-    char* error;                                                        \
-    if ((error = dlerror()) != NULL) {                                  \
-      dlclose(handle);                                                  \
-      return 0;                                                         \
-    }                                                                   \
+#define DFLOAD(F)  F ## _dynamic = (F ##_function)dlsym(handle, #F);     \
+  {                                                                      \
+    char* error;                                                         \
+    if ((error = dlerror()) != NULL) {                                   \
+      dlclose(handle);                                                   \
+      return 0;                                                          \
+    }                                                                    \
   }
 
-#define CHECK_SVN_ERROR(CALL) svn_error = CALL;                         \
-                          if(svn_error) {                               \
-                                                                        \
+#define CHECK_SVN_ERROR(CALL) svn_error = CALL;                          \
+                          if(svn_error) {                                \
+                                                                         \
                             fprintf(stderr, "%s\n", svn_error->message); \
-                            exit(STATUS_INPUTFILE_PROBLEM);             \
+                            exit(STATUS_INPUTFILE_PROBLEM);              \
                           }
  
 
