@@ -268,7 +268,7 @@ public :
         srcml_unit_set_language(unit, value.c_str());
       else if(attribute == "filename")
         srcml_unit_set_filename(unit, value.c_str());
-      else if(attribute == "directory")
+      else if(attribute == "dir")
         srcml_unit_set_directory(unit, value.c_str());
       else if(attribute == "version")
         srcml_unit_set_version(unit, value.c_str());
