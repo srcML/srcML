@@ -22,6 +22,10 @@
   Handles comments as separate tokens in the character stream.
 */
 
+header "pre_include_hpp" {
+   #include <cstring>
+}
+
 header {
    #include <iostream>
    #include "antlr/TokenStreamSelector.hpp"

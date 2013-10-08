@@ -20,6 +20,10 @@
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+header "pre_include_hpp" {
+   #include <cstring>
+}
+
 header {
    #include "Language.hpp"
    #include "UTF8CharBuffer.hpp"
