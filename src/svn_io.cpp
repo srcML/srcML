@@ -137,9 +137,9 @@ int svn_io_init() {
   }
 
   DFLOAD(svn_ra_get_dir2)
-    DFLOAD(svn_ra_initialize)
-    DFLOAD(svn_ra_stat)
-    DFLOAD(svn_ra_get_file)
+  DFLOAD(svn_ra_initialize)
+  DFLOAD(svn_ra_stat)
+  DFLOAD(svn_ra_get_file)
 
     handle = dlopen("libsvn_subr-1.so", RTLD_LAZY);
   if (!handle) {
@@ -152,10 +152,10 @@ int svn_io_init() {
 
   //subr
   DFLOAD(svn_config_get_config)
-    DFLOAD(svn_cmdline_create_auth_baton)
-    DFLOAD(svn_stringbuf_create_ensure)
-    DFLOAD(svn_stream_from_stringbuf)
-    DFLOAD(svn_stream_read)
+  DFLOAD(svn_cmdline_create_auth_baton)
+  DFLOAD(svn_stringbuf_create_ensure)
+  DFLOAD(svn_stream_from_stringbuf)
+  DFLOAD(svn_stream_read)
 
     handle = dlopen("libsvn_client-1.so", RTLD_LAZY);
   if (!handle) {
@@ -168,7 +168,7 @@ int svn_io_init() {
 
   // client
   DFLOAD(svn_client_create_context)
-    DFLOAD(svn_client_open_ra_session)
+  DFLOAD(svn_client_open_ra_session)
 
     handle = dlopen("libapr-1.so", RTLD_LAZY);
   if (!handle) {
@@ -178,16 +178,16 @@ int svn_io_init() {
       return 0;
     }
   }
-
-DFLOAD(apr_hash_first)
-DFLOAD(apr_hash_next)
-DFLOAD(apr_hash_this)
-DFLOAD(apr_allocator_create)
-DFLOAD(apr_pool_create_ex)
-DFLOAD(apr_pool_destroy)
-DFLOAD(apr_initialize)
-DFLOAD(apr_hash_get)
-DFLOAD(apr_terminate)
+  
+  DFLOAD(apr_hash_first)
+  DFLOAD(apr_hash_next)
+  DFLOAD(apr_hash_this)
+  DFLOAD(apr_allocator_create)
+  DFLOAD(apr_pool_create_ex)
+  DFLOAD(apr_pool_destroy)
+  DFLOAD(apr_initialize)
+  DFLOAD(apr_hash_get)
+  DFLOAD(apr_terminate)
 
 #else
     return 0;
