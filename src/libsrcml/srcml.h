@@ -285,7 +285,7 @@ const char* srcml_unit_get_xml      (const struct srcml_unit*);
 
 /* Convert from srcML to source code */
 int srcml_unparse_unit_filename(struct srcml_unit*, const char* src_filename);
-int srcml_unparse_unit_memory  (struct srcml_unit*, char** src_buffer, int * size);
+int srcml_unparse_unit_memory  (struct srcml_unit*, char** src_buffer, int * src_size);
 int srcml_unparse_unit_FILE    (struct srcml_unit*, FILE* srcml_file);
 int srcml_unparse_unit_fd      (struct srcml_unit*, int srcml_fd);
 

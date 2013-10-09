@@ -28,19 +28,19 @@
 #include "srcMLTranslatorCore.hpp"
 
 // constructor
-srcMLTranslator::srcMLTranslator(int language, const char* srcml_filename, OPTION_TYPE& op) : output_buffer(0), str_buffer(0) {
+srcMLTranslator::srcMLTranslator(int language, const char* srcml_filename, OPTION_TYPE& op) : output_buffer(0), str_buffer(0), size(0) {
 
   translator = new srcMLTranslatorCore(language, srcml_filename, op);
 }
 
 // constructor
-srcMLTranslator::srcMLTranslator(int language, xmlBuffer* output_buffer, OPTION_TYPE& op) : output_buffer(0), str_buffer(0) {
+srcMLTranslator::srcMLTranslator(int language, xmlBuffer* output_buffer, OPTION_TYPE& op) : output_buffer(0), str_buffer(0), size(0) {
 
   translator = new srcMLTranslatorCore(language, output_buffer, op);
 }
 
 // constructor
-srcMLTranslator::srcMLTranslator(int language, OPTION_TYPE op) : str_buffer(0) {
+srcMLTranslator::srcMLTranslator(int language, OPTION_TYPE op) : str_buffer(0), size(0) {
 
   output_buffer = xmlBufferCreate();
   options = op;
@@ -58,7 +58,7 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
                                  const char* version,         // root unit version
                                  const char* uri[],           // uri prefixes
                                  int tabsize                  // size of tabs
-                                 ) : output_buffer(0), str_buffer(0) {
+                                 ) : output_buffer(0), str_buffer(0), size(0) {
 
   translator = new srcMLTranslatorCore(language, src_encoding, xml_encoding, srcml_filename, op, directory, filename, version, uri, tabsize);
 }
@@ -68,13 +68,14 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
                                  const char* src_encoding,    // text encoding of source code
                                  const char* xml_encoding,    // xml encoding of result srcML file
                                  char ** str_buf,
+                                 int * size,
                                  OPTION_TYPE & op,             // many and varied options
                                  const char* directory,       // root unit directory
                                  const char* filename,        // root unit filename
                                  const char* version,         // root unit version
                                  const char* uri[],           // uri prefixes
                                  int tabsize                  // size of tabs
-                                 ) : str_buffer(str_buf) {
+                                 ) : str_buffer(str_buf), size(0) {
 
   output_buffer = xmlBufferCreate();
   translator = new srcMLTranslatorCore(language, src_encoding, xml_encoding, output_buffer, op, directory, filename, version, uri, tabsize);
@@ -91,7 +92,7 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
                                  const char* version,         // root unit version
                                  const char* uri[],           // uri prefixes
                                  int tabsize                  // size of tabs
-                                 ) : output_buffer(0), str_buffer(0) {
+                                 ) : output_buffer(0), str_buffer(0), size(0) {
 
   translator = new srcMLTranslatorCore(language, src_encoding, xml_encoding, output_buffer, op, directory, filename, version, uri, tabsize);
 }
@@ -106,7 +107,7 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
                                  const char* version,         // root unit version
                                  const char* uri[],           // uri prefixes
                                  int tabsize                  // size of tabs
-                                 ) : str_buffer(0) {
+                                 ) : str_buffer(0), size(0) {
 
   output_buffer = xmlBufferCreate();
   options = op;
@@ -124,7 +125,7 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
                                  const char* version,         // root unit version
                                  const char* uri[],           // uri prefixes
                                  int tabsize                  // size of tabs
-                                 ) : output_buffer(0), str_buffer(0) {
+                                 ) : output_buffer(0), str_buffer(0), size(0) {
 
   translator = new srcMLTranslatorCore(language, src_encoding, xml_encoding, writer, op, directory, filename, version, uri, tabsize);
 }
@@ -184,8 +185,10 @@ void srcMLTranslator::add_unit(const char* xml) {
 srcMLTranslator::~srcMLTranslator() {
 
   delete translator;
-  if(str_buffer)
+  if(str_buffer) {
     (*str_buffer) = strdup((const char *)output_buffer->content);
+    *size = strlen(*str_buffer);
+  }
 
   if(output_buffer)
     xmlBufferFree(output_buffer);

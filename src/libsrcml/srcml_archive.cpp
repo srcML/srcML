@@ -616,6 +616,7 @@ int srcml_write_open_memory(srcml_archive* archive, char** buffer, int * size) {
     archive->translator = new srcMLTranslator(srcml_check_language(archive->language ? archive->language->c_str() : 0),
                                               0, archive->encoding ? archive->encoding->c_str() : "UTF-8",
                                               buffer,
+                                              size,
                                               archive->options,
                                               archive->directory ? archive->directory->c_str() : 0,
                                               archive->filename ? archive->filename->c_str() : 0,
