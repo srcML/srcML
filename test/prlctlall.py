@@ -64,12 +64,12 @@ for option in options :
         if machine.lower().find(option) == -1 :
             matches.remove(machine)
 
-args = "'"
+args = ""
 
 for arg in argv[2:] :
 
     args += " " + arg
-args += "'"
+args += ""
 
 if args == "''" :
     args = ""
@@ -77,7 +77,7 @@ if args == "''" :
 if background == "" :
     for match in matches :
 
-        command = "prlctl " + argv[1] + " " + match + " " + args
+        command = "prlctl " + argv[1] + " " + match + args
         print command
 
         os.system(command)
@@ -88,7 +88,7 @@ else :
         list += match + "\\n"
     list += "'"
 
-    command = "gecho -e " + list + " | gxargs -I% -t prlctl " + argv[1] + " '%' " + args 
+    command = "gecho -e " + list + " | gxargs -I% -t prlctl " + argv[1] + " '%'" + args 
     print command
 
     os.system(command)
