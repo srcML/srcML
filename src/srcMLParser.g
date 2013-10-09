@@ -4260,7 +4260,7 @@ kr_parameter[] { ENTRY_DEBUG } :
 
 complete_parameter[] { ENTRY_DEBUG } :
         parameter
-        (options { greedy = true; } : parameter_declaration_initialization expression)*
+        (options { greedy = true; } : parameter_declaration_initialization ({LA(1) != RPAREN }? expression)*)*
 ;
 
 argument[] { ENTRY_DEBUG } :
