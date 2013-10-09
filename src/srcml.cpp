@@ -136,7 +136,7 @@ struct srcml_request_t {
   std::vector<std::string> xpathparam;
   std::string xslt;
   int unit;
-  std::string positional_args;
+  std::vector<std::string> positional_args;
 };
 
 srcml_request_t srcml_request = { 0 };
@@ -215,7 +215,7 @@ void option_xpath(const std::string& value) {srcml_request.xpath = value;}
 void option_xpathparam(const std::vector<std::string>& values) {srcml_request.xpathparam = values;}
 void option_xslt(const std::string& value) {srcml_request.xslt = value;}
 void option_unit(const int value) {srcml_request.unit = value;}
-void positional_args(const std::string& value) {srcml_request.positional_args = value;}
+void positional_args(const std::vector<std::string>& value) {srcml_request.positional_args = value;}
 
 void option_help(const std::string& help_opt) {
 	if (help_opt == "") {
@@ -369,7 +369,7 @@ int main(int argc, char * argv[]) {
 			;    
 
 		positional_options.add_options()
-			("input-file", prog_opts::value<std::string>()->notifier(&positional_args), "input file")
+			("input-files", prog_opts::value< std::vector<std::string> >()->notifier(&positional_args), "input files")
 			;
 
 		//Group src2srcml Options
@@ -385,7 +385,7 @@ int main(int argc, char * argv[]) {
 			add(positional_options);
 
 		//Positional Args
-		input_file.add("input-file", 1);
+		input_file.add("input-files", -1);
 
 		//ASSIGN THE CLI ARGS TO MAP
 		prog_opts::variables_map cli_map;
@@ -395,13 +395,18 @@ int main(int argc, char * argv[]) {
 
 		//CHECK OPTION CONFLICTS
 		conflicting_options(cli_map, "quiet", "verbose");	
-	
+
 	}
 	catch(std::exception& e) {
   	std::cerr << e.what() << "\n";
   	return 1;
   }
 
+  if (!srcml_request.positional_args.empty()) {
+    for(int i = 0; i < srcml_request.positional_args.size(); ++i) {
+    	std::cout << "ARG #" << i << " " << srcml_request.positional_args[i] << "\n";
+    }
+	}
   // Used just to see the flag results of options
   //std::cout << "Request " << srcml_request.request << "\n";
   //std::cout << "Markup " << srcml_request.markup_options << "\n";
