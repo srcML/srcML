@@ -34,15 +34,21 @@ int main(int argc, char* argv[]) {
     struct srcml_archive* archive;
     struct srcml_unit* unit;
     int srcml_input;
-    char s[1024];
+    char* s =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
+        "<unit xmlns=\"http://www.sdml.info/srcML/src\">"
+        ""
+        "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>"
+        "</unit>"
+        ""
+        "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"b.cpp\"><decl_stmt><decl><type><name>int</name></type> <name>b</name></decl>;</decl_stmt>"
+        "</unit>"
+        ""
+        "</unit>";
 
     /* create a new srcml archive structure */
     archive = srcml_create_archive();
 
-    /* open a srcML archive for input */
-    srcml_input = open("project.xml", O_RDONLY);
-    read(srcml_input, s, 1024);
-    close(srcml_input);
     srcml_read_open_memory(archive, s, strlen(s));
 
     /* add all the files to the archive */
