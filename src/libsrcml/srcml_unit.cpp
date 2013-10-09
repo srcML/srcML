@@ -481,7 +481,7 @@ int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure.
  */
-int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer) {
+int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer, int * src_size) {
 
   if(unit == NULL || src_buffer == NULL || (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
 
@@ -507,6 +507,7 @@ int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer) {
   
   (*src_buffer) = strdup((const char *)buffer->content);
   xmlBufferFree(buffer);
+  *src_size = strlen(*src_buffer);
 
   return SRCML_STATUS_OK;
 

@@ -605,7 +605,7 @@ int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename
  *
  * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_ERROR on failure. 
  */
-int srcml_write_open_memory(srcml_archive* archive, char** buffer) {
+int srcml_write_open_memory(srcml_archive* archive, char** buffer, int * size) {
 
   if(archive == NULL || buffer == NULL) return SRCML_STATUS_ERROR;
 
