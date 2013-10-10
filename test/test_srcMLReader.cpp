@@ -30,7 +30,7 @@
 #include <fcntl.h>
 
 #include <srcml.h>
-#include <srcml_types.hpp>
+#include <srcMLReader.hpp>
 #include <srcmlns.hpp>
 
 int main(int argc, char * argv[]) {
