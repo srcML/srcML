@@ -483,7 +483,7 @@ int srcml_unparse_unit_filename(srcml_unit* unit, const char* src_filename) {
  */
 int srcml_unparse_unit_memory(srcml_unit* unit, char** src_buffer, int * src_size) {
 
-  if(unit == NULL || src_buffer == NULL || (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
+  if(unit == NULL || src_buffer == NULL || src_size == NULL || (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_ERROR;
 
   // Must read unit before unparse
   if(!unit->unit) return SRCML_STATUS_ERROR;
