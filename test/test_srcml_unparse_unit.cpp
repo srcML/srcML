@@ -140,7 +140,17 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(archive);
   }
 
-  // TODO put in null size test
+  {
+    char *s;
+    srcml_archive * archive = srcml_create_archive();
+    srcml_read_open_filename(archive, "project.xml");
+    srcml_unit * unit = srcml_read_unit(archive);
+    assert(srcml_unparse_unit_memory(unit, &s, 0) == SRCML_STATUS_ERROR);
+   
+    srcml_free_unit(unit);
+    srcml_close_archive(archive);
+    srcml_free_archive(archive);
+  }
 
   {
     char * s;
