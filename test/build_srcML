@@ -29,7 +29,7 @@ scp ubuntu12build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu12.04-6
 ./sshall.py --fedora --build --19 'bash -c "chown -R srcml:srcml /srcML"'
 scp fedora19build:/srcML/dist/srcML*.zip ~/Dropbox/srcML/Windows
 
-cd ~/Dropbox/srcML/Windows; unzip -uq srcML-Win.zip
+cd ~/Dropbox/srcML/Windows; unzip -ouq srcML-Win.zip
 cd
 
 cd srcML; git pull
