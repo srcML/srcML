@@ -4,20 +4,12 @@ import os
 import sys
 
 machines = [
-#    "fedora15build"
-#    , "fedora15test"
-#     "fedora16build"
-#    , "fedora16test"
     "fedora17build"
     , "fedora17test"
     , "fedora18build"
     , "fedora18test"
     , "fedora19build"
     , "fedora19test"
-#    , "fedora15build64"
-#    , "fedora15test64"
-#    , "fedora16build64"
-#    , "fedora16test64"
     , "fedora17build64"
     , "fedora17test64"
     , "fedora18build64"
