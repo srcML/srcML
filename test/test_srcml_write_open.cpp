@@ -96,7 +96,15 @@ int main(int argc, char * argv[]) {
 
   }
 
-  // TODO null size test
+  {
+
+  char * s;
+  srcml_archive * archive = srcml_create_archive();
+  assert(srcml_write_open_memory(archive, &s, 0) == SRCML_STATUS_ERROR);
+
+  srcml_free_archive(archive);
+
+  }
 
   {
     char * s;
