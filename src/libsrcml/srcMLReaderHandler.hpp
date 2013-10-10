@@ -43,6 +43,8 @@ private :
 
   /** has reached end of parsing*/
   bool is_done;
+  /** has passed root*/
+  bool read_root;
   /** stop after collecting unit attribute*/
   bool collect_unit_attributes;
   /** collect srcML as parse*/
@@ -60,7 +62,7 @@ public :
    *
    * Constructor.  Sets up mutex, conditions and state.
    */
-  srcMLReaderHandler() : unit(0), is_done(false), collect_unit_attributes(false), collect_srcml(false), terminate(false) {
+  srcMLReaderHandler() : unit(0), is_done(false), read_root(false), collect_unit_attributes(false), collect_srcml(false), terminate(false) {
 
     archive = srcml_create_archive();
     archive->prefixes.clear();
@@ -226,6 +228,8 @@ public :
     pthread_cond_broadcast(&is_done_cond);
     pthread_cond_wait(&cond, &mutex);
     pthread_mutex_unlock(&mutex);
+
+    read_root = true;
 
     if(terminate) stop_parser();
 
