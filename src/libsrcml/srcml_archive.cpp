@@ -607,7 +607,7 @@ int srcml_write_open_filename(srcml_archive* archive, const char* srcml_filename
  */
 int srcml_write_open_memory(srcml_archive* archive, char** buffer, int * size) {
 
-  if(archive == NULL || buffer == NULL) return SRCML_STATUS_ERROR;
+  if(archive == NULL || buffer == NULL || size == NULL) return SRCML_STATUS_ERROR;
 
   archive->type = SRCML_ARCHIVE_WRITE;
   archive->options |= SRCML_OPTION_ARCHIVE;
