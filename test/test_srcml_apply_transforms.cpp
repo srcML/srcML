@@ -46,11 +46,12 @@ int main(int argc, char * argv[]) {
 
   {
     char * s;
+    int size;
     srcml_archive * iarchive = srcml_create_archive();
     srcml_read_open_memory(iarchive, srcml.c_str(), srcml.size());
     srcml_append_transform_xpath(iarchive, "//src:unit");
     srcml_archive * oarchive = srcml_clone_archive(iarchive);
-    srcml_write_open_memory(oarchive, &s);
+    srcml_write_open_memory(oarchive, &s, &size);
 
     srcml_apply_transforms(iarchive, oarchive);
 
@@ -63,11 +64,12 @@ int main(int argc, char * argv[]) {
 
   {
     char * s;
+    int size;
     srcml_archive * iarchive = srcml_create_archive();
     srcml_read_open_memory(iarchive, srcml_full.c_str(), srcml_full.size());
     srcml_append_transform_xpath(iarchive, "//src:unit");
     srcml_archive * oarchive = srcml_clone_archive(iarchive);
-    srcml_write_open_memory(oarchive, &s);
+    srcml_write_open_memory(oarchive, &s, &size);
 
     srcml_apply_transforms(iarchive, oarchive);
 
@@ -80,11 +82,12 @@ int main(int argc, char * argv[]) {
 
   {
     char * s;
+    int size;
     srcml_archive * iarchive = srcml_create_archive();
     srcml_read_open_memory(iarchive, srcml_a.c_str(), srcml_a.size());
     srcml_append_transform_xpath(iarchive, "//src:unit");
     srcml_archive * oarchive = srcml_clone_archive(iarchive);
-    srcml_write_open_memory(oarchive, &s);
+    srcml_write_open_memory(oarchive, &s, &size);
 
     srcml_apply_transforms(iarchive, oarchive);
 
@@ -97,11 +100,12 @@ int main(int argc, char * argv[]) {
 
   {
     char * s;
+    int size;
     srcml_archive * iarchive = srcml_create_archive();
     srcml_read_open_memory(iarchive, srcml_b.c_str(), srcml_b.size());
     srcml_append_transform_xpath(iarchive, "//src:unit");
     srcml_archive * oarchive = srcml_clone_archive(iarchive);
-    srcml_write_open_memory(oarchive, &s);
+    srcml_write_open_memory(oarchive, &s, &size);
 
     srcml_apply_transforms(iarchive, oarchive);
 
@@ -114,11 +118,12 @@ int main(int argc, char * argv[]) {
 
   {
     char * s;
+    int size;
     srcml_archive * iarchive = srcml_create_archive();
     srcml_read_open_memory(iarchive, srcml.c_str(), srcml.size());
     srcml_append_transform_xslt(iarchive, "copy.xsl");
     srcml_archive * oarchive = srcml_clone_archive(iarchive);
-    srcml_write_open_memory(oarchive, &s);
+    srcml_write_open_memory(oarchive, &s, &size);
 
     srcml_apply_transforms(iarchive, oarchive);
 
@@ -131,11 +136,12 @@ int main(int argc, char * argv[]) {
 
   {
     char * s;
+    int size;
     srcml_archive * iarchive = srcml_create_archive();
     srcml_read_open_memory(iarchive, srcml_full.c_str(), srcml_full.size());
     srcml_append_transform_xslt(iarchive, "copy.xsl");
     srcml_archive * oarchive = srcml_clone_archive(iarchive);
-    srcml_write_open_memory(oarchive, &s);
+    srcml_write_open_memory(oarchive, &s, &size);
 
     srcml_apply_transforms(iarchive, oarchive);
 
@@ -148,11 +154,12 @@ int main(int argc, char * argv[]) {
 
   {
     char * s;
+    int size;
     srcml_archive * iarchive = srcml_create_archive();
     srcml_read_open_memory(iarchive, srcml_a.c_str(), srcml_a.size());
     srcml_append_transform_xslt(iarchive, "copy.xsl");
     srcml_archive * oarchive = srcml_clone_archive(iarchive);
-    srcml_write_open_memory(oarchive, &s);
+    srcml_write_open_memory(oarchive, &s, &size);
 
     srcml_apply_transforms(iarchive, oarchive);
 
@@ -165,11 +172,12 @@ int main(int argc, char * argv[]) {
 
   {
     char * s;
+    int size;
     srcml_archive * iarchive = srcml_create_archive();
     srcml_read_open_memory(iarchive, srcml_b.c_str(), srcml_b.size());
     srcml_append_transform_xslt(iarchive, "copy.xsl");
     srcml_archive * oarchive = srcml_clone_archive(iarchive);
-    srcml_write_open_memory(oarchive, &s);
+    srcml_write_open_memory(oarchive, &s, &size);
 
     srcml_apply_transforms(iarchive, oarchive);
 
@@ -182,11 +190,12 @@ int main(int argc, char * argv[]) {
 
   {
     char * s;
+    int size;
     srcml_archive * iarchive = srcml_create_archive();
     srcml_read_open_memory(iarchive, srcml.c_str(), srcml.size());
     srcml_append_transform_relaxng(iarchive, "schema.rng");
     srcml_archive * oarchive = srcml_clone_archive(iarchive);
-    srcml_write_open_memory(oarchive, &s);
+    srcml_write_open_memory(oarchive, &s, &size);
 
     srcml_apply_transforms(iarchive, oarchive);
 
@@ -199,11 +208,12 @@ int main(int argc, char * argv[]) {
 
   {
     char * s;
+    int size;
     srcml_archive * iarchive = srcml_create_archive();
     srcml_read_open_memory(iarchive, srcml_full.c_str(), srcml_full.size());
     srcml_append_transform_relaxng(iarchive, "schema.rng");
     srcml_archive * oarchive = srcml_clone_archive(iarchive);
-    srcml_write_open_memory(oarchive, &s);
+    srcml_write_open_memory(oarchive, &s, &size);
 
     srcml_apply_transforms(iarchive, oarchive);
 
@@ -216,11 +226,12 @@ int main(int argc, char * argv[]) {
 
   {
     char * s;
+    int size;
     srcml_archive * iarchive = srcml_create_archive();
     srcml_read_open_memory(iarchive, srcml_a.c_str(), srcml_a.size());
     srcml_append_transform_relaxng(iarchive, "schema.rng");
     srcml_archive * oarchive = srcml_clone_archive(iarchive);
-    srcml_write_open_memory(oarchive, &s);
+    srcml_write_open_memory(oarchive, &s, &size);
 
     srcml_apply_transforms(iarchive, oarchive);
 
@@ -233,11 +244,12 @@ int main(int argc, char * argv[]) {
 
   {
     char * s;
+    int size;
     srcml_archive * iarchive = srcml_create_archive();
     srcml_read_open_memory(iarchive, srcml_b.c_str(), srcml_b.size());
     srcml_append_transform_relaxng(iarchive, "schema.rng");
     srcml_archive * oarchive = srcml_clone_archive(iarchive);
-    srcml_write_open_memory(oarchive, &s);
+    srcml_write_open_memory(oarchive, &s, &size);
 
     srcml_apply_transforms(iarchive, oarchive);
 
