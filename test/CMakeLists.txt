@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
+cmake_policy(SET CMP0015 NEW)
 
 find_package(LibXml2)
 if(LIBXML2_FOUND)
@@ -6,9 +7,11 @@ if(LIBXML2_FOUND)
 endif()
 
 include_directories(../../../trunk/src ../../../trunk/src/libsrcml)
+link_directories(../../../trunk/bin)
 enable_testing()
 
 add_executable(test_srcMLReader test_srcMLReader.cpp)
+target_link_libraries(test_srcMLReader srcml)
 add_executable(test_srcml_append_transform test_srcml_append_transform.cpp)
 add_executable(test_srcml_apply_transforms test_srcml_apply_transforms.cpp)
 add_executable(test_srcml_archive_check_extension test_srcml_archive_check_extension.cpp)
