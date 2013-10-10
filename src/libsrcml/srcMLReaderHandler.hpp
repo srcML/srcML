@@ -63,6 +63,9 @@ public :
   srcMLReaderHandler() : unit(0), is_done(false), collect_unit_attributes(false), collect_srcml(false), terminate(false) {
 
     archive = srcml_create_archive();
+    archive->prefixes.clear();
+    archive->namespaces.clear();
+
 
     pthread_mutex_init(&mutex, 0);
     pthread_cond_init(&cond, 0);
