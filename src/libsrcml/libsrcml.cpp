@@ -186,7 +186,7 @@ int srcml(const char* input_filename, const char* output_filename) {
 
     xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename(output_filename, xmlFindCharEncodingHandler(global_archive.encoding ? global_archive.encoding->c_str() : "ISO-8859-1"), global_archive.options & SRCML_OPTION_COMPRESS);
     srcml_extract_text(buffer.c_str(), buffer.size(), output_buffer, options, 1);
-    //xmlOutputBufferClose(output_buffer);
+
   }
 
   return SRCML_STATUS_OK;
