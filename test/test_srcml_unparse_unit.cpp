@@ -103,10 +103,11 @@ int main(int argc, char * argv[]) {
   {
 
     char * s;
+    int size;
     srcml_archive * archive = srcml_create_archive();
     srcml_read_open_filename(archive, "project.xml");
     srcml_unit * unit = srcml_read_unit(archive);
-    srcml_unparse_unit_memory(unit, &s);
+    srcml_unparse_unit_memory(unit, &s, &size);
     assert(s == src);
    
     srcml_free_unit(unit);
@@ -117,33 +118,37 @@ int main(int argc, char * argv[]) {
 
   {
     char * s;
+    int size;
     srcml_archive * archive = srcml_create_archive();
     srcml_read_open_filename(archive, "project.xml");
     srcml_unit * unit = srcml_create_unit(archive);
-    assert(srcml_unparse_unit_memory(unit, &s) == SRCML_STATUS_ERROR);
+    assert(srcml_unparse_unit_memory(unit, &s, &size) == SRCML_STATUS_ERROR);
    
     srcml_free_unit(unit);
     srcml_free_archive(archive);
   }
 
   {
-
+    int size;
     srcml_archive * archive = srcml_create_archive();
     srcml_read_open_filename(archive, "project.xml");
     srcml_unit * unit = srcml_read_unit(archive);
-    assert(srcml_unparse_unit_memory(unit, 0) == SRCML_STATUS_ERROR);
+    assert(srcml_unparse_unit_memory(unit, 0, &size) == SRCML_STATUS_ERROR);
    
     srcml_free_unit(unit);
     srcml_close_archive(archive);
     srcml_free_archive(archive);
   }
 
+  // TODO put in null size test
+
   {
     char * s;
+    int size;
     srcml_archive * archive = srcml_create_archive();
     srcml_read_open_filename(archive, "project.xml");
     srcml_unit * unit = srcml_read_unit(archive);
-    assert(srcml_unparse_unit_memory(0, &s) == SRCML_STATUS_ERROR);
+    assert(srcml_unparse_unit_memory(0, &s, &size) == SRCML_STATUS_ERROR);
    
     srcml_free_unit(unit);
     srcml_close_archive(archive);

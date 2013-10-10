@@ -49,8 +49,9 @@ int main(int argc, char * argv[]) {
 
   {
     char * s;
+    int size;
     srcml_archive * archive = srcml_create_archive();
-    srcml_write_open_memory(archive, &s);
+    srcml_write_open_memory(archive, &s, &size);
     srcml_unit * unit = srcml_create_unit(archive);
     unit->unit = new std::string(srcml_a);
     srcml_write_unit(archive, unit);
@@ -64,13 +65,14 @@ int main(int argc, char * argv[]) {
 
   {
     char * s;
+    int size;
     srcml_archive * archive = srcml_create_archive();
     srcml_archive_set_language(archive, "C++");
     srcml_archive_set_filename(archive, "project");
     srcml_archive_set_directory(archive, "test");
     srcml_archive_set_version(archive, "1");
     srcml_archive_register_namespace(archive, "s", "http://www.sdml.info/srcML/src");
-    srcml_write_open_memory(archive, &s);
+    srcml_write_open_memory(archive, &s, &size);
     srcml_unit * unit = srcml_create_unit(archive);
     unit->unit = new std::string(srcml_b);
     srcml_write_unit(archive, unit);
@@ -88,8 +90,9 @@ int main(int argc, char * argv[]) {
 
   {
     char * s;
+    int size;
     srcml_archive * archive = srcml_create_archive();
-    srcml_write_open_memory(archive, &s);
+    srcml_write_open_memory(archive, &s, &size);
     srcml_unit * unit = srcml_create_unit(archive);
     unit->unit = new std::string(srcml_a);
     srcml_write_unit(archive, unit);
@@ -107,13 +110,14 @@ int main(int argc, char * argv[]) {
 
   {
     char * s;
+    int size;
     srcml_archive * archive = srcml_create_archive();
     srcml_archive_set_language(archive, "C++");
     srcml_archive_set_filename(archive, "project");
     srcml_archive_set_directory(archive, "test");
     srcml_archive_set_version(archive, "1");
     srcml_archive_register_namespace(archive, "s", "http://www.sdml.info/srcML/src");
-    srcml_write_open_memory(archive, &s);
+    srcml_write_open_memory(archive, &s, &size);
     srcml_unit * unit = srcml_create_unit(archive);
     unit->unit = new std::string(srcml_b);
     srcml_write_unit(archive, unit);
@@ -135,13 +139,14 @@ int main(int argc, char * argv[]) {
 
   {
     char * s;
+    int size;
     srcml_archive * archive = srcml_create_archive();
     srcml_archive_set_language(archive, "C++");
     srcml_archive_set_filename(archive, "project");
     srcml_archive_set_directory(archive, "test");
     srcml_archive_set_version(archive, "1");
     srcml_archive_register_namespace(archive, "s", "http://www.sdml.info/srcML/src");
-    srcml_write_open_memory(archive, &s);
+    srcml_write_open_memory(archive, &s, &size);
     assert(srcml_write_unit(archive, 0) == SRCML_STATUS_ERROR);
     srcml_close_archive(archive);
     srcml_free_archive(archive);
