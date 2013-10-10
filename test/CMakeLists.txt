@@ -8,7 +8,6 @@ endif()
 
 include_directories(../../../trunk/src ../../../trunk/src/libsrcml)
 link_directories(../../../trunk/bin)
-enable_testing()
 
 add_executable(test_srcMLReader test_srcMLReader.cpp)
 target_link_libraries(test_srcMLReader srcml ${LIBXML2_LIBRARIES})
@@ -64,6 +63,12 @@ add_executable(test_srcml_xpath test_srcml_xpath.cpp)
 target_link_libraries(test_srcml_xpath srcml ${LIBXML2_LIBRARIES})
 add_executable(test_srcml_xslt test_srcml_xslt.cpp)
 target_link_libraries(test_srcml_xslt srcml ${LIBXML2_LIBRARIES})
+
+
+# ctest
+include(CTest)
+enable_testing()
+#ctest_memcheck()
 
 add_test(NAME test_srcMLReader COMMAND test_srcMLReader)
 #add_test(NAME test_srcMLSAX2Reader COMMAND test_srcMLSAX2Reader)
