@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 
 find_package(LibXml2)
-if(LibArchive_FOUND)
-        include_directories(${LibArchive_INCLUDE_DIRS})
+if(LIBXML2_FOUND)
+        include_directories(${LIBXML2_INCLUDE_DIR})
 endif()
 
 include_directories(../../../trunk/src ../../../trunk/src/libsrcml)
