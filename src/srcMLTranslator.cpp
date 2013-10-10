@@ -185,10 +185,9 @@ void srcMLTranslator::add_unit(const char* xml) {
 srcMLTranslator::~srcMLTranslator() {
 
   delete translator;
-  if(str_buffer) {
-    (*str_buffer) = strdup((const char *)output_buffer->content);
-    *size = strlen(*str_buffer);
-  }
+  if(str_buffer) (*str_buffer) = strdup((const char *)output_buffer->content);
+  if(size) *size = strlen(*str_buffer);
+
 
   if(output_buffer)
     xmlBufferFree(output_buffer);
