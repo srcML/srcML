@@ -7,6 +7,7 @@ if(LIBXML2_FOUND)
 endif()
 
 add_definitions(-g)
+add_definitions(--coverage)
 
 include_directories(../../../trunk/src ../../../trunk/src/libsrcml)
 link_directories(../../../trunk/bin)
