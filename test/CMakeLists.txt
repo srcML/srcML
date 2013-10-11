@@ -6,6 +6,8 @@ if(LIBXML2_FOUND)
         include_directories(${LIBXML2_INCLUDE_DIR})
 endif()
 
+add_definitions(-g)
+
 include_directories(../../../trunk/src ../../../trunk/src/libsrcml)
 link_directories(../../../trunk/bin)
 
@@ -69,7 +71,8 @@ target_link_libraries(test_srcml_xslt srcml ${LIBXML2_LIBRARIES})
 include(CTest)
 enable_testing()
 set(CTEST_DROP_SITE_CDASH FALSE)
-SET(MEMORYCHECK_COMMAND /usr/local/bin/valgrind)
+set(MEMORYCHECK_COMMAND /usr/local/bin/valgrind)
+set(COVERAGE_COMMAND /usr/bin/gcov)
 
 add_test(NAME test_srcMLReader COMMAND test_srcMLReader)
 #add_test(NAME test_srcMLSAX2Reader COMMAND test_srcMLSAX2Reader)
