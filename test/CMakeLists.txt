@@ -68,7 +68,7 @@ target_link_libraries(test_srcml_xslt srcml ${LIBXML2_LIBRARIES})
 # ctest
 include(CTest)
 enable_testing()
-#ctest_memcheck()
+SET(MEMORYCHECK_COMMAND /usr/local/bin/valgrind)
 
 add_test(NAME test_srcMLReader COMMAND test_srcMLReader)
 #add_test(NAME test_srcMLSAX2Reader COMMAND test_srcMLSAX2Reader)
