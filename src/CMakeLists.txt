@@ -31,6 +31,7 @@ if(LIBSRCML_DEBUG)
 add_definitions(-g)
 add_definitions(--coverage)
 set(CMAKE_EXE_LINKER_FLAGS -fprofile-arcs)
+set(CMAKE_SHARED_LINKER_FLAGS -fprofile-arcs)
 endif()
 
 # get needed packages and include
