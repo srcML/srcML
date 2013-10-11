@@ -13,7 +13,6 @@ include_directories(../../../trunk/src ../../../trunk/src/libsrcml)
 link_directories(../../../trunk/bin)
 set(CMAKE_EXE_LINKER_FLAGS -fprofile-arcs)
 
-
 add_executable(test_srcMLReader test_srcMLReader.cpp)
 target_link_libraries(test_srcMLReader srcml ${LIBXML2_LIBRARIES})
 #add_executable(test_srcMLSAX2Reader test_srcMLSAX2Reader.cpp)
@@ -75,6 +74,7 @@ include(CTest)
 enable_testing()
 set(CTEST_DROP_SITE_CDASH FALSE)
 set(MEMORYCHECK_COMMAND /usr/local/bin/valgrind)
+set(MEMORYCHECK_COMMAND_OPTIONS "--leak-check=full")
 set(COVERAGE_COMMAND /usr/bin/gcov)
 
 add_test(NAME test_srcMLReader COMMAND test_srcMLReader)
