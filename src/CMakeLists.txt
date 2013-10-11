@@ -11,6 +11,7 @@ project(srcML)
 
 option(SVN_ENABLED "Build with svn" off)
 option(LIBSRCML_SAX2_ENABLED "Build with SAX2Framework for srcML" off)
+option(LIBSRCML_DEBUG "Build with debug options" off)
 
 # specify g++ compiler
 if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
@@ -25,6 +26,12 @@ add_definitions(-DVERSION=\"${VERSION}\")
 add_definitions(-DREVISION=\"${REVISION}\")
 add_definitions(-O3)
 add_definitions(-fPIC)
+
+if(LIBSRCML_DEBUG)
+add_definitions(-g)
+add_definitions(--coverage)
+set(CMAKE_EXE_LINKER_FLAGS -fprofile-arcs)
+endif()
 
 # get needed packages and include
 find_package(LibArchive)
