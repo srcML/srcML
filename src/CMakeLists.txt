@@ -24,14 +24,16 @@ execute_process(COMMAND cat VERSION COMMAND tr -d "\n" OUTPUT_VARIABLE VERSION)
 execute_process(COMMAND cat REVISION COMMAND tr -d "\n" OUTPUT_VARIABLE REVISION)
 add_definitions(-DVERSION=\"${VERSION}\")
 add_definitions(-DREVISION=\"${REVISION}\")
-add_definitions(-O3)
 add_definitions(-fPIC)
 
 if(LIBSRCML_DEBUG)
 add_definitions(-g)
 add_definitions(--coverage)
+add_definitions(-O0)
 set(CMAKE_EXE_LINKER_FLAGS -fprofile-arcs)
 set(CMAKE_SHARED_LINKER_FLAGS -fprofile-arcs)
+else()
+add_definitions(-O3)
 endif()
 
 # get needed packages and include
