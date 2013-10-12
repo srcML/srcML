@@ -4,7 +4,7 @@
 #
 #    The main way to build srcML.
 #    Makefile.old is provided as an alternative.
-
+#    However, Makefile.old may not be maintained.
 
 cmake_minimum_required(VERSION 2.8)
 project(srcML)
@@ -15,8 +15,8 @@ option(LIBSRCML_DEBUG "Build with debug options" off)
 
 # specify g++ compiler
 if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
-       include(CMakeForceCompiler)
-       CMAKE_FORCE_CXX_COMPILER(/usr/bin/g++ "g++")
+    include(CMakeForceCompiler)
+    CMAKE_FORCE_CXX_COMPILER(/usr/bin/g++ "g++")
 endif()
 
 # get version and revision
@@ -27,13 +27,13 @@ add_definitions(-DREVISION=\"${REVISION}\")
 add_definitions(-fPIC)
 
 if(LIBSRCML_DEBUG)
-add_definitions(-g)
-add_definitions(--coverage)
-add_definitions(-O0)
-set(CMAKE_EXE_LINKER_FLAGS -fprofile-arcs)
-set(CMAKE_SHARED_LINKER_FLAGS -fprofile-arcs)
+    add_definitions(-g)
+    add_definitions(--coverage)
+    add_definitions(-O0)
+    set(CMAKE_EXE_LINKER_FLAGS -fprofile-arcs)
+    set(CMAKE_SHARED_LINKER_FLAGS -fprofile-arcs)
 else()
-add_definitions(-O3)
+      add_definitions(-O3)
 endif()
 
 # get needed packages and include
@@ -43,38 +43,38 @@ find_package(LibXslt)
 find_package(Boost COMPONENTS program_options)
 
 if(LibArchive_FOUND)
-        include_directories(${LibArchive_INCLUDE_DIRS})
+    include_directories(${LibArchive_INCLUDE_DIRS})
 endif()
 
 if(LIBXML2_FOUND)
-        include_directories(${LIBXML2_INCLUDE_DIR})
+    include_directories(${LIBXML2_INCLUDE_DIR})
 else()
 
 endif()
 
 if(LIBXSLT_FOUND)
-        include_directories(${LIBXSLT_INCLUDE_DIR})
+    include_directories(${LIBXSLT_INCLUDE_DIR})
 endif()
 
 if(BOOST_FOUND)
-        include_directories(${Boost_INCLUDE_DIR})
+    include_directories(${Boost_INCLUDE_DIR})
 endif()
 
 if(NOT DEFINED LIBXSLT_EXSLT_LIBRARY)
-		set(LIBXSLT_EXSLT_LIBRARY exslt)
+    set(LIBXSLT_EXSLT_LIBRARY exslt)
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
-		set(LIBREGEX_LIBRARY regex)
+    set(LIBREGEX_LIBRARY regex)
 endif()
 
 include_directories(C:/antlr/277/include/antlr)
 include_directories(. libsrcml)
 
 if(SVN_ENABLED)
-include_directories(/usr/include/apr-1)
-include_directories(/usr/local/include/subversion-1)
-add_definitions(-DSVN)
+    include_directories(/usr/include/apr-1)
+    include_directories(/usr/local/include/subversion-1)
+    add_definitions(-DSVN)
 endif()
 
 find_library(LIBANTLR_LIB NAMES libantlr-pic.a libantlr.a libantlr2-0.dll PATHS /usr/lib /usr/local/lib ../dlls)
@@ -117,46 +117,46 @@ COMMAND touch srcMLParser.cpp srcMLParser.hpp srcMLParserTokenTypes.txt srcMLPar
 add_custom_command(OUTPUT srcMLParserTokenTypesMacro.hpp COMMAND ${GREP} '=' srcMLParserTokenTypes.hpp | ${SED} -e 's/,//g' -e 's/= //g' -e 's/^[ \t]*//' -e 's/^/\#define TOKEN_/g' > srcMLParserTokenTypesMacro.hpp DEPENDS srcMLParserTokenTypes.hpp)
 
 if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.8.7)
-add_library(parser OBJECT srcMLParser.cpp KeywordLexer.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp CommentTextLexer.cpp srcMLParserTokenTypesMacro.hpp)
-add_library(srcmlutility OBJECT srcMLUtility.cpp SAX2ExtractUnitsSrc.cpp SAX2Utilities.cpp SAX2UnitDOM.cpp SAX2UnitDOMRelaxNG.cpp srcexfun.cpp)
-add_library(translator OBJECT srcMLTranslator.cpp srcMLTranslatorCore.cpp UTF8CharBuffer.cpp Language.cpp URIStream.cpp libxml_archive_read.cpp libxml_archive_write.cpp)
-add_library(srcmlapps OBJECT srcmlapps.cpp)
+    add_library(parser OBJECT srcMLParser.cpp KeywordLexer.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp CommentTextLexer.cpp srcMLParserTokenTypesMacro.hpp)
+    add_library(srcmlutility OBJECT srcMLUtility.cpp SAX2ExtractUnitsSrc.cpp SAX2Utilities.cpp SAX2UnitDOM.cpp SAX2UnitDOMRelaxNG.cpp srcexfun.cpp)
+    add_library(translator OBJECT srcMLTranslator.cpp srcMLTranslatorCore.cpp UTF8CharBuffer.cpp Language.cpp URIStream.cpp libxml_archive_read.cpp libxml_archive_write.cpp)
+    add_library(srcmlapps OBJECT srcmlapps.cpp)
 
-if(LIBSRCML_SAX2_ENABLED)
-file(GLOB LIBSRCML_SRC libsrcml/*.cpp)
-add_definitions(-DSAX2)
-else()
-file(GLOB LIBSRCML_SRC libsrcml/srcml_*.cpp libsrcml/libsrcml.cpp libsrcml/srcMLReader.cpp)
-endif()
-add_library(libsrcml OBJECT ${LIBSRCML_SRC})
+    if(LIBSRCML_SAX2_ENABLED)
+        file(GLOB LIBSRCML_SRC libsrcml/*.cpp)
+        add_definitions(-DSAX2)
+    else()
+        file(GLOB LIBSRCML_SRC libsrcml/srcml_*.cpp libsrcml/libsrcml.cpp libsrcml/srcMLReader.cpp)
+    endif()
+    add_library(libsrcml OBJECT ${LIBSRCML_SRC})
 
-# libsrcml static
-add_library(srcml_static STATIC $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:srcmlapps> $<TARGET_OBJECTS:srcmlutility>)
+    # libsrcml static
+    add_library(srcml_static STATIC $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:srcmlapps> $<TARGET_OBJECTS:srcmlutility>)
 else()
-add_library(srcml_static STATIC libsrcml/libsrcml.cpp libsrcml/srcMLReader.cpp libsrcml/srcml_transform.cpp libsrcml/srcml_info.cpp libsrcml/srcml_archive.cpp libsrcml/srcml_unit.cpp libsrcml/srcml_sax2_utilities.cpp srcMLParser.cpp KeywordLexer.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp CommentTextLexer.cpp srcMLParserTokenTypesMacro.hpp srcMLUtility.cpp SAX2ExtractUnitsSrc.cpp SAX2Utilities.cpp SAX2UnitDOM.cpp SAX2UnitDOMRelaxNG.cpp srcexfun.cpp srcMLTranslator.cpp srcMLTranslatorCore.cpp UTF8CharBuffer.cpp Language.cpp URIStream.cpp libxml_archive_read.cpp libxml_archive_write.cpp srcmlapps.cpp)
+    add_library(srcml_static STATIC libsrcml/libsrcml.cpp libsrcml/srcMLReader.cpp libsrcml/srcml_transform.cpp libsrcml/srcml_info.cpp libsrcml/srcml_archive.cpp libsrcml/srcml_unit.cpp libsrcml/srcml_sax2_utilities.cpp srcMLParser.cpp KeywordLexer.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp CommentTextLexer.cpp srcMLParserTokenTypesMacro.hpp srcMLUtility.cpp SAX2ExtractUnitsSrc.cpp SAX2Utilities.cpp SAX2UnitDOM.cpp SAX2UnitDOMRelaxNG.cpp srcexfun.cpp srcMLTranslator.cpp srcMLTranslatorCore.cpp UTF8CharBuffer.cpp Language.cpp URIStream.cpp libxml_archive_read.cpp libxml_archive_write.cpp srcmlapps.cpp)
 endif()
 
 target_link_libraries(srcml_static ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${LIBREGEX_LIBRARY})
 set_target_properties(srcml_static PROPERTIES OUTPUT_NAME srcml)
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
-       # libsrcml shared
-if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.8.7)
-       add_library(srcml_shared SHARED $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:srcmlutility> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:srcmlapps>)
+    # libsrcml shared
+    if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.8.7)
+        add_library(srcml_shared SHARED $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:srcmlutility> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:srcmlapps>)
+    else()
+        add_library(srcml_shared SHARED libsrcml/libsrcml.cpp libsrcml/srcMLReader.cpp libsrcml/srcml_transform.cpp libsrcml/srcml_info.cpp libsrcml/srcml_archive.cpp libsrcml/srcml_unit.cpp libsrcml/srcml_sax2_utilities.cpp srcMLParser.cpp KeywordLexer.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp CommentTextLexer.cpp srcMLParserTokenTypesMacro.hpp srcMLUtility.cpp SAX2ExtractUnitsSrc.cpp SAX2Utilities.cpp SAX2UnitDOM.cpp SAX2UnitDOMRelaxNG.cpp srcexfun.cpp srcMLTranslator.cpp srcMLTranslatorCore.cpp UTF8CharBuffer.cpp Language.cpp URIStream.cpp libxml_archive_read.cpp libxml_archive_write.cpp srcmlapps.cpp)
+    endif()
+    target_link_libraries(srcml_shared ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} ${LIBREGEX_LIBRARY})
+    set_target_properties(srcml_shared PROPERTIES OUTPUT_NAME srcml)
 else()
-       add_library(srcml_shared SHARED libsrcml/libsrcml.cpp libsrcml/srcMLReader.cpp libsrcml/srcml_transform.cpp libsrcml/srcml_info.cpp libsrcml/srcml_archive.cpp libsrcml/srcml_unit.cpp libsrcml/srcml_sax2_utilities.cpp srcMLParser.cpp KeywordLexer.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp CommentTextLexer.cpp srcMLParserTokenTypesMacro.hpp srcMLUtility.cpp SAX2ExtractUnitsSrc.cpp SAX2Utilities.cpp SAX2UnitDOM.cpp SAX2UnitDOMRelaxNG.cpp srcexfun.cpp srcMLTranslator.cpp srcMLTranslatorCore.cpp UTF8CharBuffer.cpp Language.cpp URIStream.cpp libxml_archive_read.cpp libxml_archive_write.cpp srcmlapps.cpp)
-endif()
-       target_link_libraries(srcml_shared ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} ${LIBREGEX_LIBRARY})
-       set_target_properties(srcml_shared PROPERTIES OUTPUT_NAME srcml)
+    # libsrcml shared
+    if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.8.7)
+        add_library(srcml_shared SHARED $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:srcmlutility> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:srcmlapps>)
 else()
-       # libsrcml shared
-if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.8.7)
-       add_library(srcml_shared SHARED $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:srcmlutility> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:srcmlapps>)
-else()
-       add_library(srcml_shared SHARED libsrcml/libsrcml.cpp libsrcml/srcMLReader.cpp libsrcml/srcml_transform.cpp libsrcml/srcml_info.cpp libsrcml/srcml_archive.cpp libsrcml/srcml_unit.cpp libsrcml/srcml_sax2_utilities.cpp srcMLParser.cpp KeywordLexer.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp CommentTextLexer.cpp srcMLParserTokenTypesMacro.hpp srcMLUtility.cpp SAX2ExtractUnitsSrc.cpp SAX2Utilities.cpp SAX2UnitDOM.cpp SAX2UnitDOMRelaxNG.cpp srcexfun.cpp srcMLTranslator.cpp srcMLTranslatorCore.cpp UTF8CharBuffer.cpp Language.cpp URIStream.cpp libxml_archive_read.cpp libxml_archive_write.cpp srcmlapps.cpp)
-endif()
-       target_link_libraries(srcml_shared ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB})
-       set_target_properties(srcml_shared PROPERTIES OUTPUT_NAME srcml)
+        add_library(srcml_shared SHARED libsrcml/libsrcml.cpp libsrcml/srcMLReader.cpp libsrcml/srcml_transform.cpp libsrcml/srcml_info.cpp libsrcml/srcml_archive.cpp libsrcml/srcml_unit.cpp libsrcml/srcml_sax2_utilities.cpp srcMLParser.cpp KeywordLexer.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp CommentTextLexer.cpp srcMLParserTokenTypesMacro.hpp srcMLUtility.cpp SAX2ExtractUnitsSrc.cpp SAX2Utilities.cpp SAX2UnitDOM.cpp SAX2UnitDOMRelaxNG.cpp srcexfun.cpp srcMLTranslator.cpp srcMLTranslatorCore.cpp UTF8CharBuffer.cpp Language.cpp URIStream.cpp libxml_archive_read.cpp libxml_archive_write.cpp srcmlapps.cpp)
+    endif()
+    target_link_libraries(srcml_shared ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB})
+    set_target_properties(srcml_shared PROPERTIES OUTPUT_NAME srcml)
 endif()
 
 # srcMLParserTokenTypesMacro
@@ -168,27 +168,27 @@ target_link_libraries(srcml ${Boost_PROGRAM_OPTIONS_LIBRARY})
 
 # src2srcml
 if(NOT SVN_ENABLED)
-add_executable(src2srcml src2srcml.cpp)
+    add_executable(src2srcml src2srcml.cpp)
 else()
-add_executable(src2srcml src2srcml.cpp svn_io.cpp)
+    add_executable(src2srcml src2srcml.cpp svn_io.cpp)
 endif()
 
 if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
-       target_link_libraries(src2srcml ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} dl srcml_static)
+    target_link_libraries(src2srcml ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} dl srcml_static)
 else()
-        target_link_libraries(src2srcml ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} srcml_shared)
+    target_link_libraries(src2srcml ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} srcml_shared)
 endif()
 
 # srcml2src
 if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.8.7)
-add_executable(srcml2src srcml2src.cpp $<TARGET_OBJECTS:srcmlutility>)
+    add_executable(srcml2src srcml2src.cpp $<TARGET_OBJECTS:srcmlutility>)
 else()
-add_executable(srcml2src srcml2src.cpp)
+    add_executable(srcml2src srcml2src.cpp)
 endif()
 
 if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
-       target_link_libraries(srcml2src  ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} dl srcml_static)
+    target_link_libraries(srcml2src  ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} dl srcml_static)
 else()
-       target_link_libraries(srcml2src  ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} srcml_shared)
+    target_link_libraries(srcml2src  ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} srcml_shared)
 
 endif()
