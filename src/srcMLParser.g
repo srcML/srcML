@@ -1779,7 +1779,7 @@ block_end[] { ENTRY_DEBUG } :
                 endMode();
 
             if (!(anonymous_class) && (!(inMode(MODE_CLASS) || inTransparentMode(MODE_ENUM))
-                                       || (inMode(MODE_CLASS) || inTransparentMode(MODE_ENUM)) && endstatement))
+                                       || ((inMode(MODE_CLASS) || inTransparentMode(MODE_ENUM)) && endstatement)))
                 else_handling();
 
             // if we are in a declaration (as part of a class/struct/union definition)
