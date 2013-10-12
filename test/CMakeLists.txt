@@ -74,7 +74,6 @@ include(CTest)
 enable_testing()
 set(CTEST_DROP_SITE_CDASH FALSE)
 set(MEMORYCHECK_COMMAND /usr/local/bin/valgrind)
-set(MEMORYCHECK_COMMAND_OPTIONS --leak-check=full --xml=yes --xml-file=/dev/stdout)
 set(COVERAGE_COMMAND /usr/bin/gcov)
 
 add_test(NAME test_srcMLReader COMMAND test_srcMLReader)
