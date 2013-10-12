@@ -8,7 +8,6 @@ SET(CPACK_PACKAGE_RELOCATABLE "true")
 SET(CPACK_PACKAGE_VERSION "0.1.1")
 SET(CPACK_STRIP_FILES "bin")
 
-set(CPACK_INSTALLED_DIRECTORIES . src)
-SET(CPACK_IGNORE_FILES "/CVS/;/\\.svn/;/\\.bzr/;/\\.hg/;/\\.git/;\\.swp$;\\.#;/#;\\..*")
+SET(CPACK_IGNORE_FILES "\\.svn/;\\.git;\\.DS_Store;.*~;\\..*")
 set(CPACK_SOURCE_PACKAGE_FILE_NAME srcML-src)
 
