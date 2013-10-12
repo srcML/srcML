@@ -9,6 +9,8 @@
 cmake_minimum_required(VERSION 2.8)
 project(srcML)
 
+#include(CPack)
+
 option(SVN_ENABLED "Build with svn" off)
 option(LIBSRCML_SAX2_ENABLED "Build with SAX2Framework for srcML" off)
 option(LIBSRCML_DEBUG "Build with debug options" off)
@@ -192,3 +194,5 @@ else()
     target_link_libraries(srcml2src  ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} srcml_shared)
 
 endif()
+
+install(TARGETS src2srcml srcml2src srcml_shared RUNTIME DESTINATION bin LIBRARY DESTINATION lib)
