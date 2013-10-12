@@ -320,7 +320,7 @@ int archiveRead(void* context, char* buffer, int len) {
         return 0;
 
     size_t size = archive_read_data(pcontext->a, buffer, len);
-    if (size < 0)
+    if ((signed)size < 0)
         return 0;
 
     return size;
