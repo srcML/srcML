@@ -13,6 +13,7 @@ link_directories(../../bin)
 # set compile and linker flags
 add_definitions(-g)
 add_definitions(--coverage)
+add_definitions(-O0)
 set(CMAKE_EXE_LINKER_FLAGS -fprofile-arcs)
 
 add_executable(test_Language test_Language.cpp)
