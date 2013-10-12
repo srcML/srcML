@@ -1,18 +1,21 @@
 cmake_minimum_required(VERSION 2.8)
 cmake_policy(SET CMP0015 NEW)
 
+# set include and link locations
 find_package(LibXml2)
 if(LIBXML2_FOUND)
         include_directories(${LIBXML2_INCLUDE_DIR})
 endif()
 
-add_definitions(-g)
-add_definitions(--coverage)
-
 include_directories(../../../trunk/src ../../../trunk/src/libsrcml)
 link_directories(../../../trunk/bin)
+
+# set compile and linker flags
+add_definitions(-g)
+add_definitions(--coverage)
 set(CMAKE_EXE_LINKER_FLAGS -fprofile-arcs)
 
+# Build tests
 add_executable(test_srcMLReader test_srcMLReader.cpp)
 target_link_libraries(test_srcMLReader srcml ${LIBXML2_LIBRARIES})
 #add_executable(test_srcMLSAX2Reader test_srcMLSAX2Reader.cpp)
