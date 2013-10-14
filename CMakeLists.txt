@@ -84,9 +84,9 @@ find_program(ANTLR NAMES antlr runantlr cantlr antlr2 antlr.bat PATHS /usr/bin /
 find_program(SED NAMES gsed sed PATHS /opt/local/bin /usr/local /bin)
 find_program(GREP grep PATHS /bin /usr/bin)
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY bin )
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY bin )
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY bin )
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY bin)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY bin)
 
 # Run antlr
 add_custom_command(OUTPUT src/CommentTextLexer.cpp src/CommentTextLexer.hpp src/CommentTextLexerTokenTypes.txt src/CommentTextLexerTokenTypes.hpp 
@@ -94,7 +94,8 @@ COMMAND ${ANTLR} -o src src/CommentTextLexer.g DEPENDS src/CommentTextLexer.g
 COMMAND touch src/CommentTextLexer.cpp src/CommentTextLexer.hpp src/CommentTextLexerTokenTypes.txt src/CommentTextLexerTokenTypes.hpp src/expandedCommentTextLexer.g 
 )
 
-add_custom_command(OUTPUT src/TextLexer.cpp src/TextLexer.hpp src/TextLexerTokenTypes.txt src/TextLexerTokenTypes.hpp src/expandedTextLexer.g COMMAND ${ANTLR} -o src src/TextLexer.g DEPENDS src/TextLexer.g src/CommentTextLexer.cpp
+add_custom_command(OUTPUT src/TextLexer.cpp src/TextLexer.hpp src/TextLexerTokenTypes.txt src/TextLexerTokenTypes.hpp src/expandedTextLexer.g 
+COMMAND ${ANTLR} -o src src/TextLexer.g DEPENDS src/TextLexer.g src/CommentTextLexer.cpp
 COMMAND touch src/TextLexer.cpp src/TextLexer.hpp src/TextLexerTokenTypes.txt src/TextLexerTokenTypes.hpp src/expandedTextLexer.g 
 )
 
@@ -105,7 +106,8 @@ COMMAND touch src/OperatorLexer.cpp src/OperatorLexer.hpp src/OperatorLexerToken
 
 add_custom_command(OUTPUT src/KeywordLexer.cpp src/KeywordLexer.hpp src/KeywordLexerTokenTypes.txt src/KeywordLexerTokenTypes.hpp src/expandedKeywordLexer.g
 COMMAND ${ANTLR} -o src -glib \"src/OperatorLexer.g\;src/TextLexer.g\" src/KeywordLexer.g DEPENDS src/KeywordLexer.g src/OperatorLexer.cpp
-COMMAND touch src/KeywordLexer.cpp src/KeywordLexer.hpp src/KeywordLexerTokenTypes.txt src/KeywordLexerTokenTypes.hpp src/expandedKeywordLexer.g 
+COMMAND touch src/KeywordLexer.cpp src/KeywordLexer.hpp src/KeywordLexerTokenTypes.txt src/KeywordLexerTokenTypes.hpp src/expandedKeywordLexer.g
+COMMAND rm -rf OperatorLexerTokenTypes.txt TextLexerTokenTypes.txt
 )
 
 add_custom_command(OUTPUT src/srcMLParser.cpp src/srcMLParser.hpp src/srcMLParserTokenTypes.txt src/srcMLParserTokenTypes.hpp
@@ -115,7 +117,9 @@ COMMAND touch src/srcMLParser.cpp src/srcMLParser.hpp src/srcMLParserTokenTypes.
 
 
 # Run special command for macro
-add_custom_command(OUTPUT src/srcMLParserTokenTypesMacro.hpp COMMAND ${GREP} '=' src/srcMLParserTokenTypes.hpp | ${SED} -e 's/,//g' -e 's/= //g' -e 's/^[ \t]*//' -e 's/^/\#define TOKEN_/g' > src/srcMLParserTokenTypesMacro.hpp DEPENDS src/srcMLParserTokenTypes.hpp)
+add_custom_command(OUTPUT src/srcMLParserTokenTypesMacro.hpp 
+COMMAND ${GREP} '=' src/srcMLParserTokenTypes.hpp | ${SED} -e 's/,//g' -e 's/= //g' -e 's/^[ \t]*//' -e 's/^/\#define TOKEN_/g' > src/srcMLParserTokenTypesMacro.hpp DEPENDS src/srcMLParserTokenTypes.hpp
+)
 
 if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.8.7)
     add_library(parser OBJECT src/srcMLParser.cpp src/KeywordLexer.cpp src/srcMLOutput.cpp src/srcMLTranslatorOutput.cpp src/Mode.cpp src/CommentTextLexer.cpp src/srcMLParserTokenTypesMacro.hpp)
