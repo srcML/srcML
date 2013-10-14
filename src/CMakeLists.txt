@@ -9,6 +9,9 @@
 cmake_minimum_required(VERSION 2.8)
 project(srcML)
 
+# cpack
+include(CPackConfig.inc)
+
 option(SVN_ENABLED "Build with svn" off)
 option(LIBSRCML_SAX2_ENABLED "Build with SAX2Framework for srcML" off)
 option(LIBSRCML_DEBUG "Build with debug options" off)
@@ -196,6 +199,4 @@ endif()
 # install handling
 include(CMakeInstall.inc)
 
-# cpack
-include(CPackConfig.inc)
 
