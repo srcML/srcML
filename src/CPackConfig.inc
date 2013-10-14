@@ -4,7 +4,7 @@
 # CMake directives and config for CPack.
 
 # Generator settings
-if(MAKE_SYSTEM_NAME MATCHES "Windows")
+if(CMAKE_SYSTEM_NAME MATCHES "Windows")
 set(CPACK_GENERATOR "ZIP")
 else()
 set(CPACK_GENERATOR "TGZ;TBZ2")
