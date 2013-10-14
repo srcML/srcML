@@ -7,6 +7,12 @@ if(LIBXML2_FOUND)
         include_directories(${LIBXML2_INCLUDE_DIR})
 endif()
 
+macro(add_unit_test TEST_NAME FILE_NAME)
+    add_executable(${TEST_NAME} ${FILE_NAME})
+    target_link_libraries(${TEST_NAME} srcml ${ARGS})
+    add_test(${TEST_NAME})
+endmacro()
+
 include_directories(../../src ../../src/libsrcml)
 link_directories(../../bin)
 
