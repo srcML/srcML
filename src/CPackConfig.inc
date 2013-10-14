@@ -11,7 +11,6 @@ set(CPACK_GENERATOR "TBZ2")
 endif()
 
 # set package name
-set(CPACK_PACKAGE_NAME "srcML")
 set(CPACK_PACKAGE_FILE_NAME "srcML-${CMAKE_SYSTEM_NAME}")
 
 # package version
