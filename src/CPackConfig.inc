@@ -19,6 +19,8 @@ set(CPACK_PACKAGE_VERSION_MAJOR "1")
 set(CPACK_PACKAGE_VERSION_MINOR "0")
 set(CPACK_PACKAGE_VERSION_PATCH "0")
 
+# strip executables
+set(CPACK_STRIP_FILES ON)
 
 # needs to be last so not overwritten
 include(CPack)
