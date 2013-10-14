@@ -69,7 +69,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
 endif()
 
 include_directories(C:/antlr/277/include/antlr)
-include_directories(. libsrcml)
+include_directories(. src src/libsrcml)
 
 if(SVN_ENABLED)
     include_directories(/usr/include/apr-1)
@@ -84,56 +84,56 @@ find_program(ANTLR NAMES antlr runantlr cantlr antlr2 antlr.bat PATHS /usr/bin /
 find_program(SED NAMES gsed sed PATHS /opt/local/bin /usr/local /bin)
 find_program(GREP grep PATHS /bin /usr/bin)
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin )
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ../bin )
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ../bin )
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY bin )
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY bin )
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY bin )
 
 # Run antlr
-add_custom_command(OUTPUT CommentTextLexer.cpp CommentTextLexer.hpp CommentTextLexerTokenTypes.txt CommentTextLexerTokenTypes.hpp 
-COMMAND ${ANTLR} CommentTextLexer.g DEPENDS CommentTextLexer.g
-COMMAND touch CommentTextLexer.cpp CommentTextLexer.hpp CommentTextLexerTokenTypes.txt CommentTextLexerTokenTypes.hpp expandedCommentTextLexer.g 
+add_custom_command(OUTPUT src/CommentTextLexer.cpp src/CommentTextLexer.hpp src/CommentTextLexerTokenTypes.txt src/CommentTextLexerTokenTypes.hpp 
+COMMAND ${ANTLR} -o src src/CommentTextLexer.g DEPENDS src/CommentTextLexer.g
+COMMAND touch src/CommentTextLexer.cpp src/CommentTextLexer.hpp src/CommentTextLexerTokenTypes.txt src/CommentTextLexerTokenTypes.hpp src/expandedCommentTextLexer.g 
 )
 
-add_custom_command(OUTPUT TextLexer.cpp TextLexer.hpp TextLexerTokenTypes.txt TextLexerTokenTypes.hpp expandedTextLexer.g COMMAND ${ANTLR} TextLexer.g DEPENDS TextLexer.g CommentTextLexer.cpp
-COMMAND touch TextLexer.cpp TextLexer.hpp TextLexerTokenTypes.txt TextLexerTokenTypes.hpp expandedTextLexer.g 
+add_custom_command(OUTPUT src/TextLexer.cpp src/TextLexer.hpp src/TextLexerTokenTypes.txt src/TextLexerTokenTypes.hpp src/expandedTextLexer.g COMMAND ${ANTLR} -o src src/TextLexer.g DEPENDS src/TextLexer.g src/CommentTextLexer.cpp
+COMMAND touch src/TextLexer.cpp src/TextLexer.hpp src/TextLexerTokenTypes.txt src/TextLexerTokenTypes.hpp src/expandedTextLexer.g 
 )
 
-add_custom_command(OUTPUT OperatorLexer.cpp OperatorLexer.hpp OperatorLexerTokenTypes.txt OperatorLexerTokenTypes.hpp expandedOperatorLexer.g 
-COMMAND ${ANTLR} -glib \"TextLexer.g\" OperatorLexer.g DEPENDS OperatorLexer.g TextLexer.cpp
-COMMAND touch OperatorLexer.cpp OperatorLexer.hpp OperatorLexerTokenTypes.txt OperatorLexerTokenTypes.hpp expandedOperatorLexer.g
+add_custom_command(OUTPUT src/OperatorLexer.cpp src/OperatorLexer.hpp src/OperatorLexerTokenTypes.txt src/OperatorLexerTokenTypes.hpp src/expandedOperatorLexer.g 
+COMMAND ${ANTLR} -o src -glib \"src/TextLexer.g\" src/OperatorLexer.g DEPENDS src/OperatorLexer.g src/TextLexer.cpp
+COMMAND touch src/OperatorLexer.cpp src/OperatorLexer.hpp src/OperatorLexerTokenTypes.txt src/OperatorLexerTokenTypes.hpp src/expandedOperatorLexer.g
 )
 
-add_custom_command(OUTPUT KeywordLexer.cpp KeywordLexer.hpp KeywordLexerTokenTypes.txt KeywordLexerTokenTypes.hpp expandedKeywordLexer.g
-COMMAND ${ANTLR} -glib \"OperatorLexer.g\;TextLexer.g\" KeywordLexer.g DEPENDS KeywordLexer.g OperatorLexer.cpp
-COMMAND touch KeywordLexer.cpp KeywordLexer.hpp KeywordLexerTokenTypes.txt KeywordLexerTokenTypes.hpp expandedKeywordLexer.g 
+add_custom_command(OUTPUT src/KeywordLexer.cpp src/KeywordLexer.hpp src/KeywordLexerTokenTypes.txt src/KeywordLexerTokenTypes.hpp src/expandedKeywordLexer.g
+COMMAND ${ANTLR} -o src -glib \"src/OperatorLexer.g\;src/TextLexer.g\" src/KeywordLexer.g DEPENDS src/KeywordLexer.g src/OperatorLexer.cpp
+COMMAND touch src/KeywordLexer.cpp src/KeywordLexer.hpp src/KeywordLexerTokenTypes.txt src/KeywordLexerTokenTypes.hpp src/expandedKeywordLexer.g 
 )
 
-add_custom_command(OUTPUT srcMLParser.cpp srcMLParser.hpp srcMLParserTokenTypes.txt srcMLParserTokenTypes.hpp
-COMMAND ${ANTLR} -glib \"OperatorLexer.g\;TextLexer.g\;KeywordLexer.g\;\" srcMLParser.g DEPENDS srcMLParser.g KeywordLexer.cpp
-COMMAND touch srcMLParser.cpp srcMLParser.hpp srcMLParserTokenTypes.txt srcMLParserTokenTypes.hpp 
+add_custom_command(OUTPUT src/srcMLParser.cpp src/srcMLParser.hpp src/srcMLParserTokenTypes.txt src/srcMLParserTokenTypes.hpp
+COMMAND ${ANTLR} -o src -glib \"src/OperatorLexer.g\;src/TextLexer.g\;src/KeywordLexer.g\;\" src/srcMLParser.g DEPENDS src/srcMLParser.g src/KeywordLexer.cpp
+COMMAND touch src/srcMLParser.cpp src/srcMLParser.hpp src/srcMLParserTokenTypes.txt src/srcMLParserTokenTypes.hpp 
 )
 
 # Run special command for macro
-add_custom_command(OUTPUT srcMLParserTokenTypesMacro.hpp COMMAND ${GREP} '=' srcMLParserTokenTypes.hpp | ${SED} -e 's/,//g' -e 's/= //g' -e 's/^[ \t]*//' -e 's/^/\#define TOKEN_/g' > srcMLParserTokenTypesMacro.hpp DEPENDS srcMLParserTokenTypes.hpp)
+add_custom_command(OUTPUT src/srcMLParserTokenTypesMacro.hpp COMMAND ${GREP} '=' src/srcMLParserTokenTypes.hpp | ${SED} -e 's/,//g' -e 's/= //g' -e 's/^[ \t]*//' -e 's/^/\#define TOKEN_/g' > src/srcMLParserTokenTypesMacro.hpp DEPENDS src/srcMLParserTokenTypes.hpp)
 
 if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.8.7)
-    add_library(parser OBJECT srcMLParser.cpp KeywordLexer.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp CommentTextLexer.cpp srcMLParserTokenTypesMacro.hpp)
-    add_library(srcmlutility OBJECT srcMLUtility.cpp SAX2ExtractUnitsSrc.cpp SAX2Utilities.cpp SAX2UnitDOM.cpp SAX2UnitDOMRelaxNG.cpp srcexfun.cpp)
-    add_library(translator OBJECT srcMLTranslator.cpp srcMLTranslatorCore.cpp UTF8CharBuffer.cpp Language.cpp URIStream.cpp libxml_archive_read.cpp libxml_archive_write.cpp)
-    add_library(srcmlapps OBJECT srcmlapps.cpp)
+    add_library(parser OBJECT src/srcMLParser.cpp src/KeywordLexer.cpp src/srcMLOutput.cpp src/srcMLTranslatorOutput.cpp src/Mode.cpp src/CommentTextLexer.cpp src/srcMLParserTokenTypesMacro.hpp)
+    add_library(srcmlutility OBJECT src/srcMLUtility.cpp src/SAX2ExtractUnitsSrc.cpp src/SAX2Utilities.cpp src/SAX2UnitDOM.cpp src/SAX2UnitDOMRelaxNG.cpp src/srcexfun.cpp)
+    add_library(translator OBJECT src/srcMLTranslator.cpp src/srcMLTranslatorCore.cpp src/UTF8CharBuffer.cpp src/Language.cpp src/URIStream.cpp src/libxml_archive_read.cpp src/libxml_archive_write.cpp)
+    add_library(srcmlapps OBJECT src/srcmlapps.cpp)
 
     if(LIBSRCML_SAX2_ENABLED)
-        file(GLOB LIBSRCML_SRC libsrcml/*.cpp)
+        file(GLOB LIBSRCML_SRC src/libsrcml/*.cpp)
         add_definitions(-DSAX2)
     else()
-        file(GLOB LIBSRCML_SRC libsrcml/srcml_*.cpp libsrcml/libsrcml.cpp libsrcml/srcMLReader.cpp)
+        file(GLOB LIBSRCML_SRC src/libsrcml/srcml_*.cpp src/libsrcml/libsrcml.cpp src/libsrcml/srcMLReader.cpp)
     endif()
     add_library(libsrcml OBJECT ${LIBSRCML_SRC})
 
     # libsrcml static
     add_library(srcml_static STATIC $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:srcmlapps> $<TARGET_OBJECTS:srcmlutility>)
 else()
-    add_library(srcml_static STATIC libsrcml/libsrcml.cpp libsrcml/srcMLReader.cpp libsrcml/srcml_transform.cpp libsrcml/srcml_info.cpp libsrcml/srcml_archive.cpp libsrcml/srcml_unit.cpp libsrcml/srcml_sax2_utilities.cpp srcMLParser.cpp KeywordLexer.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp CommentTextLexer.cpp srcMLParserTokenTypesMacro.hpp srcMLUtility.cpp SAX2ExtractUnitsSrc.cpp SAX2Utilities.cpp SAX2UnitDOM.cpp SAX2UnitDOMRelaxNG.cpp srcexfun.cpp srcMLTranslator.cpp srcMLTranslatorCore.cpp UTF8CharBuffer.cpp Language.cpp URIStream.cpp libxml_archive_read.cpp libxml_archive_write.cpp srcmlapps.cpp)
+    add_library(srcml_static STATIC src/libsrcml/libsrcml.cpp src/libsrcml/srcMLReader.cpp src/libsrcml/srcml_transform.cpp src/libsrcml/srcml_info.cpp src/libsrcml/srcml_archive.cpp src/libsrcml/srcml_unit.cpp src/libsrcml/srcml_sax2_utilities.cpp src/srcMLParser.cpp src/KeywordLexer.cpp src/srcMLOutput.cpp src/srcMLTranslatorOutput.cpp src/Mode.cpp src/CommentTextLexer.cpp src/srcMLParserTokenTypesMacro.hpp src/srcMLUtility.cpp src/SAX2ExtractUnitsSrc.cpp src/SAX2Utilities.cpp src/SAX2UnitDOM.cpp src/SAX2UnitDOMRelaxNG.cpp src/srcexfun.cpp src/srcMLTranslator.cpp src/srcMLTranslatorCore.cpp src/UTF8CharBuffer.cpp src/Language.cpp src/URIStream.cpp src/libxml_archive_read.cpp src/libxml_archive_write.cpp src/srcmlapps.cpp)
 endif()
 
 target_link_libraries(srcml_static ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${LIBREGEX_LIBRARY})
@@ -144,7 +144,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.8.7)
         add_library(srcml_shared SHARED $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:srcmlutility> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:srcmlapps>)
     else()
-        add_library(srcml_shared SHARED libsrcml/libsrcml.cpp libsrcml/srcMLReader.cpp libsrcml/srcml_transform.cpp libsrcml/srcml_info.cpp libsrcml/srcml_archive.cpp libsrcml/srcml_unit.cpp libsrcml/srcml_sax2_utilities.cpp srcMLParser.cpp KeywordLexer.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp CommentTextLexer.cpp srcMLParserTokenTypesMacro.hpp srcMLUtility.cpp SAX2ExtractUnitsSrc.cpp SAX2Utilities.cpp SAX2UnitDOM.cpp SAX2UnitDOMRelaxNG.cpp srcexfun.cpp srcMLTranslator.cpp srcMLTranslatorCore.cpp UTF8CharBuffer.cpp Language.cpp URIStream.cpp libxml_archive_read.cpp libxml_archive_write.cpp srcmlapps.cpp)
+        add_library(srcml_shared SHARED src/libsrcml/libsrcml.cpp src/libsrcml/srcMLReader.cpp src/libsrcml/srcml_transform.cpp src/libsrcml/srcml_info.cpp src/libsrcml/srcml_archive.cpp src/libsrcml/srcml_unit.cpp src/libsrcml/srcml_sax2_utilities.cpp src/srcMLParser.cpp src/KeywordLexer.cpp src/srcMLOutput.cpp src/srcMLTranslatorOutput.cpp src/Mode.cpp src/CommentTextLexer.cpp src/srcMLParserTokenTypesMacro.hpp src/srcMLUtility.cpp src/SAX2ExtractUnitsSrc.cpp src/SAX2Utilities.cpp src/SAX2UnitDOM.cpp src/SAX2UnitDOMRelaxNG.cpp src/srcexfun.cpp src/srcMLTranslator.cpp src/srcMLTranslatorCore.cpp src/UTF8CharBuffer.cpp src/Language.cpp src/URIStream.cpp src/libxml_archive_read.cpp src/libxml_archive_write.cpp src/srcmlapps.cpp)
     endif()
     target_link_libraries(srcml_shared ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} ${LIBREGEX_LIBRARY})
     set_target_properties(srcml_shared PROPERTIES OUTPUT_NAME srcml)
@@ -153,24 +153,24 @@ else()
     if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.8.7)
         add_library(srcml_shared SHARED $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:srcmlutility> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:srcmlapps>)
 else()
-        add_library(srcml_shared SHARED libsrcml/libsrcml.cpp libsrcml/srcMLReader.cpp libsrcml/srcml_transform.cpp libsrcml/srcml_info.cpp libsrcml/srcml_archive.cpp libsrcml/srcml_unit.cpp libsrcml/srcml_sax2_utilities.cpp srcMLParser.cpp KeywordLexer.cpp srcMLOutput.cpp srcMLTranslatorOutput.cpp Mode.cpp CommentTextLexer.cpp srcMLParserTokenTypesMacro.hpp srcMLUtility.cpp SAX2ExtractUnitsSrc.cpp SAX2Utilities.cpp SAX2UnitDOM.cpp SAX2UnitDOMRelaxNG.cpp srcexfun.cpp srcMLTranslator.cpp srcMLTranslatorCore.cpp UTF8CharBuffer.cpp Language.cpp URIStream.cpp libxml_archive_read.cpp libxml_archive_write.cpp srcmlapps.cpp)
+       add_library(srcml_shared SHARED src/libsrcml/libsrcml.cpp src/libsrcml/srcMLReader.cpp src/libsrcml/srcml_transform.cpp src/libsrcml/srcml_info.cpp src/libsrcml/srcml_archive.cpp src/libsrcml/srcml_unit.cpp src/libsrcml/srcml_sax2_utilities.cpp src/srcMLParser.cpp src/KeywordLexer.cpp src/srcMLOutput.cpp src/srcMLTranslatorOutput.cpp src/Mode.cpp src/CommentTextLexer.cpp src/srcMLParserTokenTypesMacro.hpp src/srcMLUtility.cpp src/SAX2ExtractUnitsSrc.cpp src/SAX2Utilities.cpp src/SAX2UnitDOM.cpp src/SAX2UnitDOMRelaxNG.cpp src/srcexfun.cpp src/srcMLTranslator.cpp src/srcMLTranslatorCore.cpp src/UTF8CharBuffer.cpp src/Language.cpp src/URIStream.cpp src/libxml_archive_read.cpp src/libxml_archive_write.cpp src/srcmlapps.cpp)
     endif()
     target_link_libraries(srcml_shared ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB})
     set_target_properties(srcml_shared PROPERTIES OUTPUT_NAME srcml)
 endif()
 
 # srcMLParserTokenTypesMacro
-add_custom_target(srcMLParserTokenTypesMacro.hpp DEPENDS srcMLParserTokenTypes.hpp)
+add_custom_target(srcMLParserTokenTypesMacro.hpp DEPENDS src/srcMLParserTokenTypes.hpp)
 
 # srcml
-add_executable(srcml EXCLUDE_FROM_ALL srcml.cpp)
+add_executable(srcml EXCLUDE_FROM_ALL src/srcml.cpp)
 target_link_libraries(srcml ${Boost_PROGRAM_OPTIONS_LIBRARY})
 
 # src2srcml
 if(NOT SVN_ENABLED)
-    add_executable(src2srcml src2srcml.cpp)
+    add_executable(src2srcml src/src2srcml.cpp)
 else()
-    add_executable(src2srcml src2srcml.cpp svn_io.cpp)
+    add_executable(src2srcml src/src2srcml.cpp src/svn_io.cpp)
 endif()
 
 if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
@@ -181,9 +181,9 @@ endif()
 
 # srcml2src
 if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.8.7)
-    add_executable(srcml2src srcml2src.cpp $<TARGET_OBJECTS:srcmlutility>)
+    add_executable(srcml2src src/srcml2src.cpp $<TARGET_OBJECTS:srcmlutility>)
 else()
-    add_executable(srcml2src srcml2src.cpp)
+    add_executable(srcml2src src/srcml2src.cpp)
 endif()
 
 if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
