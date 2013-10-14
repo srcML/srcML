@@ -7,7 +7,7 @@
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
 set(CPACK_GENERATOR "ZIP")
 else()
-set(CPACK_GENERATOR "TBZ2")
+set(CPACK_GENERATOR "TGZ;TBZ2")
 endif()
 
 # set package name
