@@ -164,9 +164,6 @@ else()
     set_target_properties(srcml_shared PROPERTIES OUTPUT_NAME srcml)
 endif()
 
-# srcMLParserTokenTypesMacro
-add_custom_target(srcMLParserTokenTypesMacro.hpp DEPENDS src/srcMLParserTokenTypes.hpp)
-
 # srcml
 add_executable(srcml EXCLUDE_FROM_ALL src/srcml.cpp)
 target_link_libraries(srcml ${Boost_PROGRAM_OPTIONS_LIBRARY})
