@@ -113,6 +113,7 @@ COMMAND ${ANTLR} -o src -glib \"src/OperatorLexer.g\;src/TextLexer.g\;src/Keywor
 COMMAND touch src/srcMLParser.cpp src/srcMLParser.hpp src/srcMLParserTokenTypes.txt src/srcMLParserTokenTypes.hpp 
 )
 
+
 # Run special command for macro
 add_custom_command(OUTPUT src/srcMLParserTokenTypesMacro.hpp COMMAND ${GREP} '=' src/srcMLParserTokenTypes.hpp | ${SED} -e 's/,//g' -e 's/= //g' -e 's/^[ \t]*//' -e 's/^/\#define TOKEN_/g' > src/srcMLParserTokenTypesMacro.hpp DEPENDS src/srcMLParserTokenTypes.hpp)
 
@@ -187,9 +188,9 @@ else()
 endif()
 
 if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
-    target_link_libraries(srcml2src  ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} dl srcml_static)
+    target_link_libraries(srcml2src ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} dl srcml_static)
 else()
-    target_link_libraries(srcml2src  ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} srcml_shared)
+    target_link_libraries(srcml2src ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} srcml_shared)
 
 endif()
 
