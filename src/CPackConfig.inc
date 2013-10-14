@@ -10,6 +10,9 @@ else()
 set(CPACK_GENERATOR "TGZ;TBZ2")
 endif()
 
+# set package name
+set(CPACK_PACKAGE_FILE_NAME "srcML-"${CMAKE_SYSTEM_NAME})
+
 # package version
 set(CPACK_PACKAGE_VERSION "")
 set(CPACK_PACKAGE_VERSION_MAJOR "1")
