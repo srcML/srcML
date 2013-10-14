@@ -21,5 +21,8 @@ set(CPACK_PACKAGE_VERSION_PATCH "0")
 # strip executables
 set(CPACK_STRIP_FILES ON)
 
+# set output directory
+set(CPACK_PACKAGE_DIRECTORY ${CMAKE_HOME_DIRECTORY}/dist)
+
 # needs to be last so not overwritten
 include(CPack)
