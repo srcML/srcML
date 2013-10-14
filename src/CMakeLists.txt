@@ -199,5 +199,5 @@ install(FILES libsrcml/srcml.h DESTINATION include)
 install(DIRECTORY libsrcml DESTINATION src FILES_MATCHING REGEX [ch]pp$)
 
 # cpack
-include(CPackConfig.cmake.inc)
+include(CPackConfig.inc)
 
