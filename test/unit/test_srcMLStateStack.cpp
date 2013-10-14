@@ -21,8 +21,8 @@ public:
   virtual void endElement(int) {}
   virtual void emptyElement(int) {}
   virtual void flushSkip() {}
-  virtual int SkipBufferSize() {}
-  virtual antlr::RefToken* CurrentToken() {}
+  virtual int SkipBufferSize() { return 0; }
+  virtual antlr::RefToken* CurrentToken() { return 0; }
   virtual ~TP() {}
 };
 
