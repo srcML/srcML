@@ -4793,7 +4793,7 @@ preprocessor[] {
         } |
 
         /* blank preproc */
-        { tp_directive.setType(SNOP); endMode(); } (cpp_garbage)*
+         { tp_directive.setType(SNOP); endMode(); } (cpp_garbage)*
 
         )
         eol_skip[directive_token, markblockzero]
@@ -4803,12 +4803,6 @@ catch[...] {
         eol_skip(directive_token, markblockzero);
 }
 
-blank_preprocessor_directive[] :
-
-        ~(INCLUDE | DEFINE | IFNDEF | UNDEF | IF | ELIF | ELSE | ENDIF | IFDEF | LINE | PRAGMA | ERRORPREC | NAME | REGION | ENDREGION) | EOL
-
-;
- 
 cpp_garbage[] :
 
  ~(EOL | LINECOMMENT_START | COMMENT_START | JAVADOC_COMMENT_START | EOF)
