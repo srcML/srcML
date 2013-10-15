@@ -1977,7 +1977,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         // K&R function parameters
         { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX_ONLY)) && inMode(MODE_FUNCTION_TAIL) &&
           pattern_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
-        kr_parameter |
+        kr_parameter[type_count] |
 
         // function specifier at end of function header
         { inLanguage(LANGUAGE_CXX_FAMILY) && inMode(MODE_FUNCTION_TAIL) }?
@@ -4254,8 +4254,9 @@ empty_element[int ele, bool cond] { LightweightElement element(this); ENTRY_DEBU
         }
 ;
 
-kr_parameter[] { ENTRY_DEBUG } :
-        complete_parameter terminate_pre terminate_token
+kr_parameter[int type_count] { ENTRY_DEBUG } :
+        variable_declaration_statement[type_count] ({ inMode(MODE_EAT_TYPE) }? type_identifier update_typecount[MODE_FUNCTION_NAME])* variable_declaration_nameinit terminate_pre terminate_token { endDownToModeSet(MODE_FUNCTION_TAIL); }
+        //complete_parameter terminate_pre terminate_token
 ;
 
 complete_parameter[] { ENTRY_DEBUG } :
