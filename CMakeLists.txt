@@ -115,7 +115,8 @@ COMMAND ${GREP} '=' src/srcMLParserTokenTypes.hpp | ${SED} -e 's/,//g' -e 's/= /
 )
 
 if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.8.7)
-    add_library(parser OBJECT src/srcMLParser.cpp src/KeywordLexer.cpp src/srcMLOutput.cpp src/srcMLTranslatorOutput.cpp src/Mode.cpp src/CommentTextLexer.cpp src/srcMLParserTokenTypesMacro.hpp)
+    set(PARSER_SRC src/srcMLParser.cpp;src/KeywordLexer.cpp;src/srcMLOutput.cpp;src/srcMLTranslatorOutput.cpp;src/Mode.cpp;src/CommentTextLexer.cpp;src/srcMLParserTokenTypesMacro.hpp)
+    add_library(parser OBJECT ${PARSER_SRC})
     add_library(srcmlutility OBJECT src/srcMLUtility.cpp src/SAX2ExtractUnitsSrc.cpp src/SAX2Utilities.cpp src/SAX2UnitDOM.cpp src/SAX2UnitDOMRelaxNG.cpp src/srcexfun.cpp)
     add_library(translator OBJECT src/srcMLTranslator.cpp src/srcMLTranslatorCore.cpp src/UTF8CharBuffer.cpp src/Language.cpp src/URIStream.cpp src/libxml_archive_read.cpp src/libxml_archive_write.cpp)
     add_library(srcmlapps OBJECT src/srcmlapps.cpp)
