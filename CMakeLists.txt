@@ -123,7 +123,9 @@ if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_
 
     set(TRANSLATOR_SRC src/srcMLTranslator.cpp;src/srcMLTranslatorCore.cpp;src/UTF8CharBuffer.cpp;src/Language.cpp;src/URIStream.cpp;src/libxml_archive_read.cpp;src/libxml_archive_write.cpp)
     add_library(translator OBJECT ${TRANSLATOR_SRC})
-    add_library(srcmlapps OBJECT src/srcmlapps.cpp)
+
+    set(SRCMLAPPS_SRC src/srcmlapps.cpp)
+    add_library(srcmlapps OBJECT ${SRCMLAPPS_SRC})
 
     if(LIBSRCML_SAX2_ENABLED)
         file(GLOB LIBSRCML_SRC src/libsrcml/*.cpp)
@@ -136,7 +138,7 @@ if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_
     # libsrcml static
     add_library(srcml_static STATIC $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:srcmlapps> $<TARGET_OBJECTS:srcmlutility>)
 else()
-    add_library(srcml_static STATIC ${LIBSRCML_SRC} ${PARSER_SRC} ${SRCMLUTILITY_SRC} ${TRANSLATOR_SRC} src/srcmlapps.cpp)
+    add_library(srcml_static STATIC ${LIBSRCML_SRC} ${PARSER_SRC} ${SRCMLUTILITY_SRC} ${TRANSLATOR_SRC} ${SRCMLAPPS_SRC})
 endif()
 
 target_link_libraries(srcml_static ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${LIBREGEX_LIBRARY})
@@ -147,7 +149,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.8.7)
         add_library(srcml_shared SHARED $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:srcmlutility> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:srcmlapps>)
     else()
-        add_library(srcml_shared SHARED ${LIBSRCML_SRC} ${PARSER_SRC} ${SRCMLUTILITY_SRC} ${TRANSLATOR_SRC} src/srcmlapps.cpp)
+        add_library(srcml_shared SHARED ${LIBSRCML_SRC} ${PARSER_SRC} ${SRCMLUTILITY_SRC} ${TRANSLATOR_SRC} ${SRCMLAPPS_SRC})
     endif()
     target_link_libraries(srcml_shared ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} ${LIBREGEX_LIBRARY})
     set_target_properties(srcml_shared PROPERTIES OUTPUT_NAME srcml)
@@ -156,7 +158,7 @@ else()
     if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.8.7)
         add_library(srcml_shared SHARED $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:srcmlutility> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:srcmlapps>)
 else()
-       add_library(srcml_shared SHARED ${LIBSRCML_SRC} ${PARSER_SRC} ${SRCMLUTILITY_SRC} ${TRANSLATOR_SRC} src/srcmlapps.cpp)
+       add_library(srcml_shared SHARED ${LIBSRCML_SRC} ${PARSER_SRC} ${SRCMLUTILITY_SRC} ${TRANSLATOR_SRC} ${SRCMLAPPS_SRC})
     endif()
     target_link_libraries(srcml_shared ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB})
     set_target_properties(srcml_shared PROPERTIES OUTPUT_NAME srcml)
