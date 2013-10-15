@@ -9,12 +9,12 @@
 cmake_minimum_required(VERSION 2.8)
 project(srcML)
 
-set(CMAKE_CXX_FLAGS_DEBUG "-g --coverage -O0 -fprofile-arcs")
+set(CMAKE_BUILD_TYPE RELEASE)
+set(CMAKE_CXX_FLAGS_DEBUG "-g --coverage -O0 -fprofile-arcs -DDEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE -O3)
 
 option(SVN_ENABLED "Build with svn" off)
 option(LIBSRCML_SAX2_ENABLED "Build with SAX2Framework for srcML" off)
-option(LIBSRCML_DEBUG "Build with debug options" off)
 
 # specify g++ compiler
 if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
