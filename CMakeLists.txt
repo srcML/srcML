@@ -50,11 +50,11 @@ if(NOT DEFINED LIBXSLT_EXSLT_LIBRARY)
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+    include_directories(C:/antlr/277/include/antlr)
     set(LIBREGEX_LIBRARY regex)
 endif()
 
-include_directories(C:/antlr/277/include/antlr)
-include_directories(. src src/libsrcml)
+include_directories(src src/libsrcml)
 
 if(SVN_ENABLED)
     include_directories(/usr/include/apr-1)
