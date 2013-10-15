@@ -57,8 +57,7 @@ endif()
 include_directories(src src/libsrcml)
 
 if(SVN_ENABLED)
-    include_directories(/usr/include/apr-1)
-    include_directories(/usr/local/include/subversion-1)
+    include_directories(/usr/include/apr-1 /usr/local/include/subversion-1)
     add_definitions(-DSVN)
 endif()
 
