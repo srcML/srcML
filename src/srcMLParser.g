@@ -4255,7 +4255,7 @@ empty_element[int ele, bool cond] { LightweightElement element(this); ENTRY_DEBU
 ;
 
 kr_parameter[int type_count] { ENTRY_DEBUG } :
-        variable_declaration_statement[type_count] ({ inMode(MODE_EAT_TYPE) }? type_identifier update_typecount[MODE_FUNCTION_NAME])* variable_declaration_nameinit terminate_pre terminate_token { endDownToModeSet(MODE_FUNCTION_TAIL); }
+        variable_declaration_statement[type_count] ({ inMode(MODE_EAT_TYPE) }? type_identifier update_typecount[MODE_FUNCTION_NAME])* ((comma)* variable_declaration_nameinit)* terminate_pre terminate_token { endDownToModeSet(MODE_FUNCTION_TAIL); }
         //complete_parameter terminate_pre terminate_token
 ;
 
