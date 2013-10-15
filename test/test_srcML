@@ -2,24 +2,19 @@
 
 ./sshall.py --test 'bash -c "cd /srcML; git pull; cd ..; chown -R srcml:srcml /srcML"'
 
-#scp ~/Dropbox/srcML/Unix/Fedora15/srcML.tar.gz fedora15test:/srcML
-#scp ~/Dropbox/srcML/Unix/Fedora16/srcML.tar.gz fedora16test:/srcML
 scp ~/Dropbox/srcML/Unix/Fedora17/srcML.tar.gz fedora17test:/srcML
 scp ~/Dropbox/srcML/Unix/Fedora18/srcML.tar.gz fedora18test:/srcML
 scp ~/Dropbox/srcML/Unix/Fedora19/srcML.tar.gz fedora19test:/srcML
 
-#scp ~/Dropbox/srcML/Unix/Fedora15-64/srcML.tar.gz fedora15test64:/srcML
-#scp ~/Dropbox/srcML/Unix/Fedora16-64/srcML.tar.gz fedora16test64:/srcML
+
 scp ~/Dropbox/srcML/Unix/Fedora17-64/srcML.tar.gz fedora17test64:/srcML
 scp ~/Dropbox/srcML/Unix/Fedora18-64/srcML.tar.gz fedora18test64:/srcML
 scp ~/Dropbox/srcML/Unix/Fedora19-64/srcML.tar.gz fedora19test64:/srcML
 
 scp ~/Dropbox/srcML/Unix/Ubuntu10.04/srcML.tar.gz ubuntu10test:/srcML
-#scp ~/Dropbox/srcML/Unix/Ubuntu11.04/srcML.tar.gz ubuntu11test:/srcML
 scp ~/Dropbox/srcML/Unix/Ubuntu12.04/srcML.tar.gz ubuntu12test:/srcML
 
 scp ~/Dropbox/srcML/Unix/Ubuntu10.04-64/srcML.tar.gz ubuntu10test64:/srcML
-#scp ~/Dropbox/srcML/Unix/Ubuntu11.04-64/srcML.tar.gz ubuntu11test64:/srcML
 scp ~/Dropbox/srcML/Unix/Ubuntu12.04-64/srcML.tar.gz ubuntu12test64:/srcML
 
 cp ~/Dropbox/srcML/Unix/OSX/srcML.tar.gz ~/srcML
