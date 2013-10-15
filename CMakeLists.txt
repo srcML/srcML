@@ -30,20 +30,12 @@ add_definitions(-DREVISION=\"${REVISION}\")
 add_definitions(-fPIC)
 
 # get needed packages and include
-find_package(LibArchive)
-find_package(LibXml2)
+find_package(LibArchive REQUIRED)
+find_package(LibXml2 REQUIRED)
 find_package(LibXslt)
 find_package(Boost COMPONENTS program_options)
 
-if(LibArchive_FOUND)
-    include_directories(${LibArchive_INCLUDE_DIRS})
-endif()
-
-if(LIBXML2_FOUND)
-    include_directories(${LIBXML2_INCLUDE_DIR})
-else()
-
-endif()
+include_directories(${LibArchive_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIR})
 
 if(LIBXSLT_FOUND)
     include_directories(${LIBXSLT_INCLUDE_DIR})
