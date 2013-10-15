@@ -99,32 +99,28 @@ COMMAND ${ANTLR} -o src -glib \"src/OperatorLexer.g\;src/TextLexer.g\;src/Keywor
 COMMAND touch src/srcMLParser.cpp src/srcMLParser.hpp src/srcMLParserTokenTypes.txt src/srcMLParserTokenTypes.hpp 
 )
 
-
 # Run special command for macro
 add_custom_command(OUTPUT src/srcMLParserTokenTypesMacro.hpp 
 COMMAND ${GREP} '=' src/srcMLParserTokenTypes.hpp | ${SED} -e 's/,//g' -e 's/= //g' -e 's/^[ \t]*//' -e 's/^/\#define TOKEN_/g' > src/srcMLParserTokenTypesMacro.hpp DEPENDS src/srcMLParserTokenTypes.hpp
 )
 
+set(PARSER_SRC src/srcMLParser.cpp;src/KeywordLexer.cpp;src/srcMLOutput.cpp;src/srcMLTranslatorOutput.cpp;src/Mode.cpp;src/CommentTextLexer.cpp;src/srcMLParserTokenTypesMacro.hpp)
+set(SRCMLUTILITY_SRC src/srcMLUtility.cpp;src/SAX2ExtractUnitsSrc.cpp;src/SAX2Utilities.cpp;src/SAX2UnitDOM.cpp;src/SAX2UnitDOMRelaxNG.cpp;src/srcexfun.cpp)
+set(TRANSLATOR_SRC src/srcMLTranslator.cpp;src/srcMLTranslatorCore.cpp;src/UTF8CharBuffer.cpp;src/Language.cpp;src/URIStream.cpp;src/libxml_archive_read.cpp;src/libxml_archive_write.cpp)
+set(SRCMLAPPS_SRC src/srcmlapps.cpp)
+if(LIBSRCML_SAX2_ENABLED)
+    file(GLOB LIBSRCML_SRC src/libsrcml/*.cpp)
+    add_definitions(-DSAX2)
+else()
+    file(GLOB LIBSRCML_SRC src/libsrcml/srcml_*.cpp src/libsrcml/libsrcml.cpp src/libsrcml/srcMLReader.cpp)
+endif()
+
 if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.8.7)
 
-    set(PARSER_SRC src/srcMLParser.cpp;src/KeywordLexer.cpp;src/srcMLOutput.cpp;src/srcMLTranslatorOutput.cpp;src/Mode.cpp;src/CommentTextLexer.cpp;src/srcMLParserTokenTypesMacro.hpp)
     add_library(parser OBJECT ${PARSER_SRC})
-
-    set(SRCMLUTILITY_SRC src/srcMLUtility.cpp;src/SAX2ExtractUnitsSrc.cpp;src/SAX2Utilities.cpp;src/SAX2UnitDOM.cpp;src/SAX2UnitDOMRelaxNG.cpp;src/srcexfun.cpp)
     add_library(srcmlutility OBJECT ${SRCMLUTILITY_SRC})
-
-    set(TRANSLATOR_SRC src/srcMLTranslator.cpp;src/srcMLTranslatorCore.cpp;src/UTF8CharBuffer.cpp;src/Language.cpp;src/URIStream.cpp;src/libxml_archive_read.cpp;src/libxml_archive_write.cpp)
     add_library(translator OBJECT ${TRANSLATOR_SRC})
-
-    set(SRCMLAPPS_SRC src/srcmlapps.cpp)
     add_library(srcmlapps OBJECT ${SRCMLAPPS_SRC})
-
-    if(LIBSRCML_SAX2_ENABLED)
-        file(GLOB LIBSRCML_SRC src/libsrcml/*.cpp)
-        add_definitions(-DSAX2)
-    else()
-        file(GLOB LIBSRCML_SRC src/libsrcml/srcml_*.cpp src/libsrcml/libsrcml.cpp src/libsrcml/srcMLReader.cpp)
-    endif()
     add_library(libsrcml OBJECT ${LIBSRCML_SRC})
 
     # libsrcml static
@@ -137,6 +133,7 @@ target_link_libraries(srcml_static ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${
 set_target_properties(srcml_static PROPERTIES OUTPUT_NAME srcml)
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+
     # libsrcml shared
     if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.8.7)
         add_library(srcml_shared SHARED $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:srcmlutility> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:srcmlapps>)
@@ -146,6 +143,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     target_link_libraries(srcml_shared ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} ${LIBREGEX_LIBRARY})
     set_target_properties(srcml_shared PROPERTIES OUTPUT_NAME srcml)
 else()
+
     # libsrcml shared
     if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.8.7)
         add_library(srcml_shared SHARED $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:srcmlutility> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:srcmlapps>)
