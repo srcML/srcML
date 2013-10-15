@@ -173,11 +173,7 @@ endif()
 target_link_libraries(src2srcml ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${SRC2SRCML_LIB})
 
 # srcml2src
-if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.8.7)
-    add_executable(srcml2src src/srcml2src.cpp $<TARGET_OBJECTS:srcmlutility>)
-else()
-    add_executable(srcml2src src/srcml2src.cpp)
-endif()
+add_executable(srcml2src src/srcml2src.cpp)
 
 target_link_libraries(srcml2src ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${SRCML2SRC_LIB})
 
