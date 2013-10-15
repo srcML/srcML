@@ -52,6 +52,9 @@ endif()
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     include_directories(C:/antlr/277/include/antlr)
     set(LIBREGEX_LIBRARY regex)
+    set(SRCML_LIB srcml_shared)
+else()
+    set(SRCML_LIB dl;srcml_static)
 endif()
 
 include_directories(src src/libsrcml)
@@ -165,11 +168,7 @@ else()
     add_executable(src2srcml src/src2srcml.cpp src/svn_io.cpp)
 endif()
 
-if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
-    target_link_libraries(src2srcml ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} dl srcml_static)
-else()
-    target_link_libraries(src2srcml ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} srcml_shared)
-endif()
+target_link_libraries(src2srcml ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${SRCML_LIB})
 
 # srcml2src
 if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.8.7)
