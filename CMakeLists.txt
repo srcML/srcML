@@ -52,11 +52,11 @@ endif()
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     include_directories(C:/antlr/277/include/antlr)
     set(LIBREGEX_LIBRARY regex)
-    set(SRC2SRCML_LIB srcml_shared)
-    set(SRCML2SRC_LIB ${LIBXSLT_LIBRARIES};${LIBXSLT_EXSLT_LIBRARY};srcml_shared)
+    set(SRC2SRCML_LIBS srcml_shared)
+    set(SRCML2SRC_LIBS ${LIBXSLT_LIBRARIES};${LIBXSLT_EXSLT_LIBRARY};srcml_shared)
 else()
-    set(SRC2SRCML_LIB dl;srcml_static)
-    set(SRCML2SRC_LIB dl;srcml_static)
+    set(SRC2SRCML_LIBS dl;srcml_static)
+    set(SRCML2SRC_LIBS dl;srcml_static)
 endif()
 
 include_directories(src src/libsrcml)
@@ -169,13 +169,11 @@ if(NOT SVN_ENABLED)
 else()
     add_executable(src2srcml src/src2srcml.cpp src/svn_io.cpp)
 endif()
-
-target_link_libraries(src2srcml ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${SRC2SRCML_LIB})
+target_link_libraries(src2srcml ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${SRC2SRCML_LIBS})
 
 # srcml2src
 add_executable(srcml2src src/srcml2src.cpp)
-
-target_link_libraries(srcml2src ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${SRCML2SRC_LIB})
+target_link_libraries(srcml2src ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${SRCML2SRC_LIBS})
 
 # install handling
 include(CMakeInstall.inc)
