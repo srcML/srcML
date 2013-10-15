@@ -2230,7 +2230,7 @@ function_tail[] { ENTRY_DEBUG } :
 
             // FIXME:  Must be integrated into other C-based languages
             // FIXME:  Wrong markup
-            (macro_call_check)=> macro_call |
+            (NAME paren_pair)=> macro_call |
             { look_past(NAME) == LCURLY }? NAME |
               parameter (MULTOPS | NAME | COMMA)* TERMINATE
             )
