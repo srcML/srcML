@@ -54,8 +54,12 @@ void freeNode(xmlNodePtr & node) {
   if(node && (xmlReaderTypes)node->type != XML_READER_TYPE_TEXT
      && (xmlReaderTypes)node->type != XML_READER_TYPE_SIGNIFICANT_WHITESPACE)
     xmlFreeNode(node);
-  else
+  else {
+    if(node->content) xmlFree(node->content);
     xmlFree(node);
+
+  }
+
   node = 0;
 }
 
