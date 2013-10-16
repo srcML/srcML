@@ -64,6 +64,27 @@ srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector
 
 /******************************************************************************
  *                                                                            *
+ *                           Global Cleanup function                          *
+ *                                                                            *
+ ******************************************************************************/
+
+/**
+ * srcml_cleanup_globals
+ *
+ * Cleanup and free globals allocated at the global level
+ * usually by libxml2.
+ */
+void srcml_cleanup_globals() {
+
+  xmlCleanupCharEncodingHandlers();
+  xmlCleanupGlobals();
+  xmlDictCleanup();
+  xmlCleanupParser();
+
+}
+
+/******************************************************************************
+ *                                                                            *
  *                           Version functions                                *
  *                                                                            *
  ******************************************************************************/

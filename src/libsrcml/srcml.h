@@ -45,6 +45,9 @@ extern "C" {
 /** string containing libsrcml version */
 #define SRCML_VERSION_STRING "libsrcml 0.9"
 
+/* Cleanup the globally allocated items */
+void srcml_cleanup_globals();
+
 /* Library version functions */
 int srcml_version_number();
 const char* srcml_version_string();
