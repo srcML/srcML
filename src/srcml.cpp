@@ -406,10 +406,8 @@ int main(int argc, char * argv[]) {
       std::cout << "ARG #" << i << " " << srcml_request.positional_args[i] << "\n";
     }
   }
-  // Used just to see the flag results of options
-  //std::cout << "Request " << srcml_request.request << "\n";
-  //std::cout << "Markup " << srcml_request.markup_options << "\n";
-
+  
+  
   return 0;
 }
 
