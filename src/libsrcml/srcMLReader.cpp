@@ -502,7 +502,13 @@ std::string * srcMLReader::readsrcML() {
   xmlTextWriterPtr writer = xmlNewTextWriterMemory(buffer, 0);
   int status = readsrcML(writer);
 
-  if(!status) return 0;
+  if(!status) {
+
+    xmlFreeTextWriter(writer);
+    xmlBufferFree(buffer);
+    return 0;
+
+  }
 
   int length = buffer->use;
 
