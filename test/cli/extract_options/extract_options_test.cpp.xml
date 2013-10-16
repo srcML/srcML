@@ -47,8 +47,8 @@
 <cpp:define>#<cpp:directive>define</cpp:directive> <name>BASE_PROGRAM_NAME</name> "srcml2src"</cpp:define>
 <decl_stmt><decl><type><name>const</name> <name>char</name>*</type> <name>PROGRAM_NAME</name> =<init> <expr><name>BASE_PROGRAM_NAME</name></expr></init></decl>;</decl_stmt>
 
-<decl_stmt><decl><type><name>char</name> <name>const</name> * <name>const</name></type> <name>EXPAND_FLAG</name> =<init> <expr>"to-dir"</expr></init></decl>;</decl_stmt>
-<decl_stmt><decl><type><name>char</name> <name>const</name></type> <name>EXPAND_FLAG_SHORT</name> =<init> <expr>'a'</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>char</name> <name>const</name> * <name>const</name></type> <name>TO_DIR_FLAG</name> =<init> <expr>"to-dir"</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>char</name> <name>const</name></type> <name>TO_DIR_FLAG_SHORT</name> =<init> <expr>'a'</expr></init></decl>;</decl_stmt>
 
 <decl_stmt><decl><type><name>char</name> <name>const</name> * <name>const</name></type> <name>UNIT_FLAG</name> =<init> <expr>"unit"</expr></init></decl>;</decl_stmt>
 <decl_stmt><decl><type><name>char</name> <name>const</name></type> <name>UNIT_FLAG_SHORT</name> =<init> <expr>'U'</expr></init></decl>;</decl_stmt>
