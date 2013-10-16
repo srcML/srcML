@@ -54,6 +54,7 @@ void freeNode(xmlNodePtr node) {
   if(node && (xmlReaderTypes)node->type != XML_READER_TYPE_TEXT
      && (xmlReaderTypes)node->type != XML_READER_TYPE_SIGNIFICANT_WHITESPACE)
     xmlFreeNode(node);
+  node = 0;
 }
 
 
@@ -97,6 +98,7 @@ srcMLReader::srcMLReader(xmlParserInputBufferPtr input)
  */
 srcMLReader::~srcMLReader() {
 
+  freeNode(node);
   xmlFreeTextReader(reader);
   reader = 0;
 
