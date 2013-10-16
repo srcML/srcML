@@ -136,6 +136,7 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_elemen
   // all done with parsing
   inputPop(ctxt);
   xmlFreeParserCtxt(ctxt);
+  xmlXPathFreeCompExpr(compiled_xpath);
 
   return status;
 }
