@@ -104,7 +104,7 @@ public :
         std::string full_name = "";
         if(prefix) {
           full_name = (const char *)prefix;
-          full_name += "";
+          full_name += ":";
         }
         full_name += (const char *)localname;
 
@@ -113,7 +113,7 @@ public :
         // if applying to entire archive, then just build this node
         if (isoption(options, OPTION_APPLY_ROOT)) {
 
-            xmlSAX2StartElementNs(ctx, localname, prefix, 0, nb_namespaces, namespaces, nb_attributes,
+            xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes,
                                   nb_defaulted, attributes);
 
             return;
