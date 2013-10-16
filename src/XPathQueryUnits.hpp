@@ -451,14 +451,24 @@ public :
     virtual void endOutput(void *ctx) {
 
         //    fprintf(stderr, "%s %d\n", __FUNCTION__, nodetype);
+      xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+      SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
         // finalize results
         switch (nodetype) {
         case XPATH_NODESET:
 
             // root unit end tag
-            if (!isoption(options, OPTION_APPLY_ROOT))
-                xmlOutputBufferWriteString(buf, found ? "</unit>\n" : "/>\n");
+          if (!isoption(options, OPTION_APPLY_ROOT)) {
+            std::string full_unit = "</";
+            if(pstate->root.prefix) {
+              full_unit += (const char *)pstate->root.prefix;
+              full_unit += ":";
+            }
+            full_unit += "unit>/n";
+           xmlOutputBufferWriteString(buf, found ? full_unit.c_str() : "/>\n");
+
+}
 
             break;
 
@@ -605,6 +615,7 @@ private :
     bool closetag;
     bool isarchive;
     int fd;
+    const char * src_prefix;
 };
 
 #endif
