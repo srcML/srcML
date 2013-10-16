@@ -59,7 +59,8 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(oarchive);  
     srcml_close_archive(iarchive);
     srcml_free_archive(iarchive);  
-    //assert(s == srcml);
+    assert(s == srcml);
+    free(s);
   }
 
   {
