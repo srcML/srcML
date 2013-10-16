@@ -292,5 +292,7 @@ int main(int argc, char * argv[]) {
   unlink("project.c");
   unlink("project.xml");
 
+  srcml_cleanup_globals();
+
   return 0;
 }

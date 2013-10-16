@@ -102,6 +102,8 @@ int main(int argc, char * argv[]) {
     unlink("input.xml");
   }
 
+  srcml_cleanup_globals();
+
   return 0;
 
 }

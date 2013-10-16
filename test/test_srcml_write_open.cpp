@@ -185,6 +185,8 @@ int main(int argc, char * argv[]) {
   unlink("project.xml");
   unlink("project_ns.xml");
 
+  srcml_cleanup_globals();
+
   return 0;
 
 }

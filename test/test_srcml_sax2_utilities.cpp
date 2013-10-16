@@ -100,6 +100,8 @@ int main(int argc, char * argv[]) {
     xmlFreeParserCtxt(ctxt);
   }
 
+  srcml_cleanup_globals();
+
   return 0;
 
 }
