@@ -31,6 +31,12 @@
 #include <vector>
 
 struct Element {
+
+  Element() : localname(0), prefix(0), URI(0),
+              nb_namespaces(0), namespaces(0), nb_attributes(0),
+              nb_defaulted(0), attributes(0)
+  {}
+
     const xmlChar* localname;
     const xmlChar* prefix;
     const xmlChar* URI;
