@@ -78,6 +78,7 @@ int main(int argc, char * argv[]) {
     srcml_close_archive(iarchive);
     srcml_free_archive(iarchive);  
     //assert(s == srcml_full);
+    free(s);
   }
 
   {
@@ -96,6 +97,7 @@ int main(int argc, char * argv[]) {
     srcml_close_archive(iarchive);
     srcml_free_archive(iarchive);  
     //assert(s == srcml_a_after);
+    free(s);
   }
 
   {
@@ -114,6 +116,7 @@ int main(int argc, char * argv[]) {
     srcml_close_archive(iarchive);
     srcml_free_archive(iarchive);  
     //assert(s == srcml_b_after);
+    free(s);
   }
 
   {
@@ -132,6 +135,7 @@ int main(int argc, char * argv[]) {
     srcml_close_archive(iarchive);
     srcml_free_archive(iarchive);  
     assert(s == srcml);
+    free(s);
   }
 
   {
@@ -150,6 +154,7 @@ int main(int argc, char * argv[]) {
     srcml_close_archive(iarchive);
     srcml_free_archive(iarchive);  
     assert(s == srcml_full);
+    free(s);
   }
 
   {
@@ -168,6 +173,7 @@ int main(int argc, char * argv[]) {
     srcml_close_archive(iarchive);
     srcml_free_archive(iarchive);  
     assert(s == srcml_a_after);
+    free(s);
   }
 
   {
@@ -186,6 +192,7 @@ int main(int argc, char * argv[]) {
     srcml_close_archive(iarchive);
     srcml_free_archive(iarchive);  
     assert(s == srcml_b_after);
+    free(s);
   }
 
   {
@@ -204,6 +211,7 @@ int main(int argc, char * argv[]) {
     srcml_close_archive(iarchive);
     srcml_free_archive(iarchive);  
     assert(s == srcml);
+    free(s);
   }
 
   {
@@ -222,6 +230,7 @@ int main(int argc, char * argv[]) {
     srcml_close_archive(iarchive);
     srcml_free_archive(iarchive);  
     assert(s == srcml_full);
+    free(s);
   }
 
   {
@@ -240,6 +249,7 @@ int main(int argc, char * argv[]) {
     srcml_close_archive(iarchive);
     srcml_free_archive(iarchive);  
     assert(s == srcml_a_after);
+    free(s);
   }
 
   {
@@ -258,6 +268,7 @@ int main(int argc, char * argv[]) {
     srcml_close_archive(iarchive);
     srcml_free_archive(iarchive);  
     assert(s == srcml_b_after);
+    free(s);
   }
  
   srcml_cleanup_globals();
