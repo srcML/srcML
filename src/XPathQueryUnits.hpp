@@ -75,6 +75,39 @@ public :
         // allow for all exslt functions
         //    exsltRegisterAll();
 
+    }
+
+    virtual bool apply(void *ctx) {
+
+        xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+        SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+
+        context = xmlXPathNewContext(ctxt->myDoc);
+        // TODO:  Detect error
+
+        xpathsrcMLRegister(context);
+        // TODO:  Detect error
+
+        // register standard prefixes for standard namespaces
+        const char* prefixes[] = {
+            SRCML_SRC_NS_URI, "src",
+            SRCML_CPP_NS_URI, SRCML_CPP_NS_PREFIX_DEFAULT,
+            SRCML_ERR_NS_URI, SRCML_ERR_NS_PREFIX_DEFAULT,
+            SRCML_EXT_LITERAL_NS_URI, SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT,
+            SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT,
+            SRCML_EXT_MODIFIER_NS_URI, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT,
+            SRCML_EXT_POSITION_NS_URI, SRCML_EXT_POSITION_NS_PREFIX_DEFAULT,
+            SRCML_DIFF_NS_URI, SRCML_DIFF_NS_PREFIX_DEFAULT,
+            0, 0
+        };
+
+        for (unsigned int i = 0; prefixes[i] != 0; i += 2){
+            if (xmlXPathRegisterNs(context, BAD_CAST prefixes[i + 1], BAD_CAST prefixes[i]) == -1) {
+                fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "srcml2src", prefixes[i + 1], prefixes[i]);
+                exit(1);
+            }
+        }
+
 #if LIBEXSLT_VERSION > 813
 #if defined(__GNUG__) && !defined(__MINGW32__)
         typedef int (*exsltXpathCtxtRegister)(xmlXPathContextPtr, const xmlChar*);
@@ -133,39 +166,6 @@ public :
         dlclose(handle);
 #endif
 #endif
-
-    }
-
-    virtual bool apply(void *ctx) {
-
-        xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-        SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
-
-        context = xmlXPathNewContext(ctxt->myDoc);
-        // TODO:  Detect error
-
-        xpathsrcMLRegister(context);
-        // TODO:  Detect error
-
-        // register standard prefixes for standard namespaces
-        const char* prefixes[] = {
-            SRCML_SRC_NS_URI, "src",
-            SRCML_CPP_NS_URI, SRCML_CPP_NS_PREFIX_DEFAULT,
-            SRCML_ERR_NS_URI, SRCML_ERR_NS_PREFIX_DEFAULT,
-            SRCML_EXT_LITERAL_NS_URI, SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT,
-            SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT,
-            SRCML_EXT_MODIFIER_NS_URI, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT,
-            SRCML_EXT_POSITION_NS_URI, SRCML_EXT_POSITION_NS_PREFIX_DEFAULT,
-            SRCML_DIFF_NS_URI, SRCML_DIFF_NS_PREFIX_DEFAULT,
-            0, 0
-        };
-
-        for (unsigned int i = 0; prefixes[i] != 0; i += 2){
-            if (xmlXPathRegisterNs(context, BAD_CAST prefixes[i + 1], BAD_CAST prefixes[i]) == -1) {
-                fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "srcml2src", prefixes[i + 1], prefixes[i]);
-                exit(1);
-            }
-        }
 
         isarchive = pstate->isarchive;
 
