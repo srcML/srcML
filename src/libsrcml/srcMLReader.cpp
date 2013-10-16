@@ -98,6 +98,19 @@ srcMLReader::srcMLReader(xmlParserInputBufferPtr input)
  */
 srcMLReader::~srcMLReader() {
 
+  if(!save_nodes.empty()) {
+
+    try {
+
+      for(int i = 0; i < save_nodes.size(); ++i)
+        freeNode(save_nodes.at(i));
+
+    } catch(...) {}
+
+    save_nodes.clear();
+
+  }
+
   freeNode(node);
   xmlFreeTextReader(reader);
   reader = 0;
@@ -365,7 +378,7 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
 
   }
 
-  readUnitAttributesInternal(language, filename, directory, version);
+  //readUnitAttributesInternal(language, filename, directory, version);
   if(xmlTextReaderRead(reader) != 1) { done = true; return 0; }
   node = getNode(reader);
 
@@ -470,14 +483,13 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
 
     }
 
-    if(is_archive) freeNode(node);
     if(xmlTextReaderRead(reader) != 1) {done = true; return 0; }
+    if(is_archive) freeNode(node);
     node = getNode(reader);
 
   }
 
-  if(is_archive) freeNode(node);
-  node = 0;
+  freeNode(node);
 
   xmlTextWriterEndDocument(writer);
 
