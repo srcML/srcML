@@ -259,6 +259,8 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(iarchive);  
     assert(s == srcml_b_after);
   }
+ 
+  srcml_cleanup_globals();
 
   return 0;
 
