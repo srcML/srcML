@@ -85,7 +85,8 @@ void SAX2ExtractUnitsSrc::endDocument(void *ctx) {
       free((void *)pstate->root.attributes[index + 2]);
     free((void *)pstate->root.attributes[index + 3]);
   }
-  free((void *)pstate->root.attributes);
+  
+  if(pstate->root.attributes) free((void *)pstate->root.attributes);
 
 }
 
