@@ -95,13 +95,13 @@ int main(int argc, char * argv[]) {
   */
 
   {
+    xmlParserInputBufferPtr input = xmlParserInputBufferCreateFilename("project.xml", xmlParseCharEncoding(0));
     try {
-      xmlParserInputBufferPtr input = xmlParserInputBufferCreateFilename("project.xml", xmlParseCharEncoding(0));
       srcMLReader reader(input);
     } catch(...) {      
       assert(false);
     }
-
+    xmlFreeParserInputBuffer(input);
   }
 
   {
