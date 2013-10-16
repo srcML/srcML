@@ -204,6 +204,8 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
   typedef xsltStylesheetPtr (*xsltParseStylesheetFile_function) (const xmlChar*);
+  typedef void (*xsltCleanupGlobals_function)();
+  typedef void (*xsltFreeStylesheet_function)(xsltStylesheetPtr);
 
   void* handle = dlopen("libexslt.so", RTLD_LAZY);
   if (!handle) {
@@ -217,6 +219,20 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
   dlerror();
   xsltParseStylesheetFile_function xsltParseStylesheetFile = (xsltParseStylesheetFile_function)dlsym(handle, "xsltParseStylesheetFile");
   char* error;
+  if ((error = dlerror()) != NULL) {
+    dlclose(handle);
+    return SRCML_STATUS_ERROR;
+  }
+
+  dlerror();
+  xsltCleanupGlobals_function xsltCleanupGlobals = (xsltCleanupGlobals_function)dlsym(handle, "xsltCleanupGlobals");
+  if ((error = dlerror()) != NULL) {
+    dlclose(handle);
+    return SRCML_STATUS_ERROR;
+  }
+
+  dlerror();
+  xsltFreeStylesheet_function xsltFreeStylesheet = (xsltFreeStylesheet_function)dlsym(handle, "xsltFreeStylesheet");
   if ((error = dlerror()) != NULL) {
     dlclose(handle);
     return SRCML_STATUS_ERROR;
@@ -251,6 +267,8 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
   // local variable, do not want xmlFreeParserCtxt to free
   ctxt->sax = NULL;
 
+  xsltFreeStylesheet(stylesheet);
+  xsltCleanupGlobals();
   if(input_buffer) inputPop(ctxt);
   // all done with parsing
   xmlFreeParserCtxt(ctxt);
