@@ -49,7 +49,7 @@ xmlNodePtr getNode(xmlTextReaderPtr reader) {
  * 
  * Free the current node.  Text is not allocated and do not free
  */
-void freeNode(xmlNodePtr node) {
+void freeNode(xmlNodePtr & node) {
 
   if(node && (xmlReaderTypes)node->type != XML_READER_TYPE_TEXT
      && (xmlReaderTypes)node->type != XML_READER_TYPE_SIGNIFICANT_WHITESPACE)
