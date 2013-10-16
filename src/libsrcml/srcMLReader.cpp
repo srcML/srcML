@@ -193,6 +193,7 @@ int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** 
   if(language == 0 || filename == 0 || directory == 0 || version == 0) return 0;
 
   if(done) return 0;
+  if(is_single || is_archive) return 0;
 
   // forward to start unit
   while(true) {
@@ -337,7 +338,7 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
   }
 
   if(readUnitAttributesInternal(language, filename, directory, version)) return 0;
-  if(xmlTextReaderRead(reader) != 1) { freeNode(node); done = true; return 0; }
+  if(xmlTextReaderRead(reader) != 1) { done = true; return 0; }
 
   save_nodes.push_back(node);
   node = getNode(reader);
@@ -378,7 +379,6 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
 
   }
 
-  //readUnitAttributesInternal(language, filename, directory, version);
   if(xmlTextReaderRead(reader) != 1) { done = true; return 0; }
   node = getNode(reader);
 
