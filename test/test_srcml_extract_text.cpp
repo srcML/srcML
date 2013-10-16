@@ -67,6 +67,8 @@ int main(int argc, char * argv[]) {
     assert(srcml_extract_text(s, strlen(s), 0, 0, 0) == SRCML_STATUS_ERROR);
   }
 
+  srcml_cleanup_globals();
+
   return 0;
 
 }

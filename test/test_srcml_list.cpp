@@ -78,6 +78,8 @@ int main(int argc, char * argv[]) {
   unlink("project_one.xml");
   unlink("project_two.xml");
 
+  srcml_cleanup_globals();
+
   return 0;
 
 }
