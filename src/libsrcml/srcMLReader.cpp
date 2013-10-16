@@ -46,21 +46,27 @@ xmlNodePtr getNode(xmlTextReaderPtr reader) {
 /**
  * freeNode
  * @param node an XML node
- * 
+ *
  * Free the current node.  Text is not allocated and do not free
  */
 void freeNode(xmlNodePtr & node) {
 
-  if(node && (xmlReaderTypes)node->type != XML_READER_TYPE_TEXT
-     && (xmlReaderTypes)node->type != XML_READER_TYPE_SIGNIFICANT_WHITESPACE)
-    xmlFreeNode(node);
-  else {
-    if(node->content) xmlFree(node->content);
-    xmlFree(node);
+  if(node) {
+
+    if((xmlReaderTypes)node->type != XML_READER_TYPE_TEXT
+       && (xmlReaderTypes)node->type != XML_READER_TYPE_SIGNIFICANT_WHITESPACE)
+      xmlFreeNode(node);
+    else {
+
+      if(node->content) xmlFree(node->content);
+      xmlFree(node);
+
+    }
 
   }
 
   node = 0;
+
 }
 
 
@@ -77,7 +83,7 @@ srcMLReader::srcMLReader(const char * filename)
 
   reader = xmlNewTextReaderFilename(filename);
   if(reader == NULL) throw std::string();
-    xmlTextReaderRead(reader);
+  xmlTextReaderRead(reader);
   node = getNode(reader);
 }
 
@@ -259,11 +265,11 @@ int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** 
       if(*language) {
 
         if((**language) == "C++" || (**language) == "C")
-           options |= SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO;
+          options |= SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO;
         else if((**language) == "C#")
-           options |= SRCML_OPTION_CPP_NOMACRO;
+          options |= SRCML_OPTION_CPP_NOMACRO;
         else
-           options |= SRCML_OPTION_CPP;
+          options |= SRCML_OPTION_CPP;
       }
 
     } else if(ns == SRCML_ERR_NS_URI)
@@ -505,7 +511,7 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
 
 /**
  * readsrcML
- * 
+ *
  * Read the next unit from a srcML Archive
  * and return it as a std::string. Uses
  * readsrcML(xmlTextWriterPtr writer).
