@@ -294,10 +294,11 @@ public :
                     // create a new list of namespaces
                     // skip over the namespaces on the root
                     xmlNsPtr savens = onode->nsDef;
+                  if(!isoption(options, OPTION_APPLY_ROOT)) {
                     onode->nsDef = savens;
                     for (int i = 0; i < UnitDOM::rootsize / 2; ++i)
                         onode->nsDef = onode->nsDef->next;
-
+                  }
                     // dump the namespace-modified tree
                     xmlNodeDumpOutput(buf, ctxt->myDoc, onode, 0, 0, 0);
 
