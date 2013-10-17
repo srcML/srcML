@@ -189,7 +189,8 @@ public :
 
         // finish building the unit tree
         xmlSAX2EndElementNs(ctx, localname, prefix, URI);
-        xmlSAX2EndDocument(ctx);
+        if(!isoption(options, OPTION_APPLY_ROOT))
+          xmlSAX2EndDocument(ctx);
 
         // apply the necessary processing
         if ((error = !apply(ctx)))
