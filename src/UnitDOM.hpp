@@ -115,8 +115,9 @@ public :
 
     // if applying to entire archive, then just build this node
     if (isoption(options, OPTION_APPLY_ROOT)) {
-
-      if(!pstate->isarchive) xmlSAX2StartDocument(ctx);
+      static bool started = false;
+      if(!pstate->isarchive && !started) xmlSAX2StartDocument(ctx);
+      started = true;
       xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes,
                             nb_defaulted, attributes);
 
