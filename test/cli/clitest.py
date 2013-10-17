@@ -3137,7 +3137,7 @@ extract_options_output = """<!ENTITY TO_DIR_FLAG "--to-dir">
 <!ENTITY XSLT_FLAG "--xslt">
 <!ENTITY PARAM_FLAG "--xpathparam">
 <!ENTITY STRING_PARAM_FLAG "--param">
-<!ENTITY XSLT_ALL_FLAG "--apply-root">
+<!ENTITY APPLY_ROOT_FLAG "--apply-root">
 <!ENTITY RELAXNG_FLAG "--relaxng">
 <!ENTITY CONTEXT_FLAG "--context">
 <!ENTITY LIST_FLAG "--list">

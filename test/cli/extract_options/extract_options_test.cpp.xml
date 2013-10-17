@@ -87,8 +87,8 @@
 <decl_stmt><decl><type><name>const</name> <name>int</name></type> <name>STRING_PARAM_FLAG_CODE</name> =<init> <expr>256 + 3</expr></init></decl>;</decl_stmt>
 <decl_stmt><decl><type><name>char</name> <name>const</name> * <name>const</name></type> <name>STRING_PARAM_FLAG_FULL</name> =<init> <expr>"param NAME=VAL"</expr></init></decl>;</decl_stmt>
 
-<decl_stmt><decl><type><name>char</name> <name>const</name> * <name>const</name></type> <name>XSLT_ALL_FLAG</name> =<init> <expr>"apply-root"</expr></init></decl>;</decl_stmt>
-<decl_stmt><decl><type><name>const</name> <name>int</name></type> <name>XSLT_ALL_FLAG_CODE</name> =<init> <expr>256 + 4</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>char</name> <name>const</name> * <name>const</name></type> <name>APPLY_ROOT_FLAG</name> =<init> <expr>"apply-root"</expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>const</name> <name>int</name></type> <name>APPLY_ROOT_FLAG_CODE</name> =<init> <expr>256 + 4</expr></init></decl>;</decl_stmt>
 
 <decl_stmt><decl><type><name>char</name> <name>const</name> * <name>const</name></type> <name>RELAXNG_FLAG</name> =<init> <expr>"relaxng"</expr></init></decl>;</decl_stmt>
 <decl_stmt><decl><type><name>const</name> <name>int</name></type> <name>RELAXNG_FLAG_CODE</name> =<init> <expr>256 + 5</expr></init></decl>;</decl_stmt>
@@ -211,7 +211,7 @@
   <comment type="line">//  printf("  --%-21s passes a parameter NAME and VAL to an XSLT program\n", STRING_PARAM_FLAG_FULL);</comment>
   <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"  --%-21s passes a parameter NAME and VAL to the XSLT program\n"</expr></argument>, <argument><expr><name>PARAM_FLAG_FULL</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
   <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"  --%-21s output individual units that match RELAXNG_FILE (FILE or URI)\n"</expr></argument>, <argument><expr><name>RELAXNG_FLAG_FULL</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-  <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"  --%-21s apply an xslt program or xpath query to the root element\n\n"</expr></argument>, <argument><expr><name>XSLT_ALL_FLAG</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"  --%-21s apply an xslt program or xpath query to the root element\n\n"</expr></argument>, <argument><expr><name>APPLY_ROOT_FLAG</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 
   <expr_stmt><expr><call><name>printf</name><argument_list>(<argument><expr>"Examples:\n"
 	    "  Read from file main.cpp.xml, write to file main.cpp:\n\n"
@@ -636,7 +636,7 @@
     <expr><block>{ <expr><name>PARAM_FLAG</name></expr>, <expr><name>required_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>PARAM_FLAG_CODE</name></expr> }</block></expr>,
     <expr><block>{ <expr><name>STRING_PARAM_FLAG</name></expr>, <expr><name>required_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>STRING_PARAM_FLAG_CODE</name></expr> }</block></expr>,
     <expr><block>{ <expr><name>RELAXNG_FLAG</name></expr>, <expr><name>required_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>RELAXNG_FLAG_CODE</name></expr> }</block></expr>,
-    <expr><block>{ <expr><name>XSLT_ALL_FLAG</name></expr>, <expr><name>no_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>XSLT_ALL_FLAG_CODE</name></expr> }</block></expr>,
+    <expr><block>{ <expr><name>APPLY_ROOT_FLAG</name></expr>, <expr><name>no_argument</name></expr>, <expr><name>NULL</name></expr>, <expr><name>APPLY_ROOT_FLAG_CODE</name></expr> }</block></expr>,
     <comment type="line">//    { CONTEXT_FLAG, required_argument, NULL, 'C' },</comment>
     <expr><block>{ <expr>0</expr>, <expr>0</expr>, <expr>0</expr>, <expr>0</expr> }</block></expr>
   }</block></expr></init></decl>;</decl_stmt>
@@ -999,9 +999,9 @@
       <expr_stmt><expr><name>poptions</name>.<name><name>transforms</name><index>[<expr><name>poptions</name>.<name>transformcount</name>++</expr>]</index></name> = <name>optarg</name></expr>;</expr_stmt>
       <break>break;</break>
 
-    </case><case>case <expr><name>XSLT_ALL_FLAG_CODE</name></expr>:
+    </case><case>case <expr><name>APPLY_ROOT_FLAG_CODE</name></expr>:
 
-      <expr_stmt><expr><name>options</name> |= <name>OPTION_XSLT_ALL</name></expr>;</expr_stmt>
+      <expr_stmt><expr><name>options</name> |= <name>OPTION_APPLY_ROOT</name></expr>;</expr_stmt>
       <break>break;</break>
 
     </case><default>default:
