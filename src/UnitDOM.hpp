@@ -92,6 +92,9 @@ public :
                            int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                            const xmlChar** attributes) {
 
+        xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+        SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
+
         /*
 
           Passing the prefix was causing an error when set.
@@ -112,6 +115,8 @@ public :
 
         // if applying to entire archive, then just build this node
         if (isoption(options, OPTION_APPLY_ROOT)) {
+          if(!pstate->isarchive)
+            xmlSAX2StartDocument(ctx);
 
             xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes,
                                   nb_defaulted, attributes);
