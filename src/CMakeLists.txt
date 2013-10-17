@@ -164,7 +164,7 @@ add_custom_target(srcMLParserTokenTypesMacro.hpp DEPENDS srcMLParserTokenTypes.h
 
 # srcml
 add_executable(srcml EXCLUDE_FROM_ALL srcml.cpp)
-target_link_libraries(srcml ${Boost_PROGRAM_OPTIONS_LIBRARY})
+target_link_libraries(srcml ${Boost_PROGRAM_OPTIONS_LIBRARY} ${LibArchive_LIBRARY} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} srcml_static)
 
 # src2srcml
 if(NOT SVN_ENABLED)
