@@ -2399,6 +2399,41 @@ validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
 validate(getreturn([srcml2src, option.XPATH_FLAG], srcml), status.STATUS_ERROR)
 validate(getreturn([srcml2src, option.XPATH_FLAG + '='], srcml), status.STATUS_ERROR)
 
+# xpath apply root
+
+checkError([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit'], "", xpath_error)
+validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit'], ""), 2)
+
+check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit'], srcml, xpath)
+check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit', 'sub/a.cpp.xml'], "", xpath)
+check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
+validate(open('sub/b.cpp.xml', 'r').read(), xpath)
+check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
+validate(open('sub/b.cpp.xml', 'r').read(), xpath)
+
+validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG], srcml), status.STATUS_ERROR)
+validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '='], srcml), status.STATUS_ERROR)
+
+check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:unit'], srcml, xpath)
+check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:unit', 'sub/a.cpp.xml'], "", xpath)
+check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
+validate(open('sub/b.cpp.xml', 'r').read(), xpath)
+check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
+validate(open('sub/b.cpp.xml', 'r').read(), xpath)
+
+validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG], srcml), status.STATUS_ERROR)
+validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '='], srcml), status.STATUS_ERROR)
+
+check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=src:unit'], srcml, xpath_empty)
+check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=src:unit', 'sub/a.cpp.xml'], "", xpath_empty)
+check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
+validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
+check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
+validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
+
+validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG], srcml), status.STATUS_ERROR)
+validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '='], srcml), status.STATUS_ERROR)
+
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
