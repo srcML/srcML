@@ -227,7 +227,7 @@ public :
 
           xmlOutputBufferWriteString(buf, found ? end_unit.c_str() : "/>\n");
 
-        } else if (result_type == XML_ELEMENT_NODE && found && !pstate->isarchive) {
+        } else if (result_type == XML_ELEMENT_NODE && found) {
 	    xmlOutputBufferWriteString(buf, "\n");
         }
 
