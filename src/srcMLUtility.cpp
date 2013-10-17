@@ -923,6 +923,8 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
 // relaxng evaluation of the nested units
 void srcMLUtility::relaxng(const char* ofilename, const char** xslts, int fd) {
 
+  if(ofilename) xmlMemSetup(xmlMemFree, xmlMemMalloc, xmlMemRealloc, xmlMemoryStrdup);
+
   xmlParserCtxtPtr ctxt = srcMLCreateURLParserCtxt(infile);
   if (ctxt == NULL) return;
 
