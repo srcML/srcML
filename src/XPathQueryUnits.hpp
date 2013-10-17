@@ -242,9 +242,16 @@ public :
 
                         // output a wrapping element, just like the one read in
                         // note that this has to be ended somewhere
+                      if(!isoption(options, OPTION_APPLY_ROOT))
                         xmlOutputBufferWriteElementNs(wrap, pstate->root.localname, pstate->root.prefix, pstate->root.URI,
                                                       (data.size() - rootsize) / 2, &data[rootsize],
                                                       0, 0, 0);
+                      else {
+
+                           xmlOutputBufferWriteElementNs(wrap, pstate->root.localname, pstate->root.prefix, pstate->root.URI,
+                                                         data.size() / 2, &data[0],
+                                                         0, 0, 0);
+                      }
 
                         // output all the current attributes from the individual unit
                         for (xmlAttrPtr pAttr = a_node->properties; pAttr; pAttr = pAttr->next) {

@@ -265,7 +265,7 @@ void SAX2ExtractUnitsSrc::startElementNsFirst(void* ctx, const xmlChar* localnam
 
   // see if this is really a nested unit.  If not, then we have an individual
   // unit (not a srcML archive) and need to process the cached root
-  pstate->isarchive = !isoption(pstate->pprocess->getOptions(), OPTION_APPLY_ROOT) && strcmp((const char*) localname, "unit") == 0 && strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0;
+  pstate->isarchive = strcmp((const char*) localname, "unit") == 0 && strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0;
   if (!pstate->isarchive) {
 
     pstate->count = 0;

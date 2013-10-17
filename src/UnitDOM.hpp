@@ -70,6 +70,13 @@ public :
                              int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                              const xmlChar** attributes) {
 
+    // record namespaces in an extensible list so we can add the per unit
+    for (int i = 0; i < nb_namespaces; ++i) {
+      data.push_back(namespaces[i * 2]);
+      data.push_back(namespaces[i * 2 + 1]);
+    }
+    rootsize = data.size();
+
     // if we are building the entire tree, start now
     if (isoption(options, OPTION_APPLY_ROOT)) {
       xmlSAX2StartDocument(ctx);
@@ -77,13 +84,6 @@ public :
                             nb_defaulted, attributes);
       return;
     }
-
-    // record namespaces in an extensible list so we can add the per unit
-    for (int i = 0; i < nb_namespaces; ++i) {
-      data.push_back(namespaces[i * 2]);
-      data.push_back(namespaces[i * 2 + 1]);
-    }
-    rootsize = data.size();
 
   }
 
