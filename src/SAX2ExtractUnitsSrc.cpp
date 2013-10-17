@@ -484,7 +484,8 @@ void SAX2ExtractUnitsSrc::endElementNsSkip(void *ctx, const xmlChar *localname, 
 
   // now waiting for start of next unit
   ctxt->sax->startElementNs = &startElementNs;
-  ctxt->sax->characters = 0;
+  if(!isoption(*pstate->poptions, OPTION_APPLY_ROOT))
+     ctxt->sax->characters = 0;
 }
 
 // end unit element and current file/buffer (started by startElementNs
