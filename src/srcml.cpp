@@ -33,9 +33,10 @@
 #include <boost/program_options.hpp>
 #include <string>
 #include <map>
-
-//Compiled with:
-// g++ srcml.cpp -lboost_program_options -o srcml
+#include <archive.h>
+#include <archive_entry.h>
+#include <curl/curl.h>
+#include <pthread.h>
 
 namespace prog_opts = boost::program_options;
 
@@ -406,8 +407,13 @@ int main(int argc, char * argv[]) {
       std::cout << "ARG #" << i << " " << srcml_request.positional_args[i] << "\n";
     }
   }
-  
-  
+
+  archive *arch = archive_read_new();
+  archive_entry *archEntry = archive_entry_new();
+  struct srcml_archive *srcmlArch = srcml_create_archive();
+  struct srcml_unit *srcmlEntry = srcml_create_unit(srcmlArch);
+  CURL *handle = curl_easy_init();
+
   return 0;
 }
 
