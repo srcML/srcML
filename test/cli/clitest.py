@@ -3578,7 +3578,7 @@ print
 print src2srcmlversion()
 print srcml2srcversion()
 
-cli_file = open("srcMLcliTest.txt", "w")
+cli_file = open("srcMLcliTestReport.txt", "w")
 cli_file.write("Error count:\t\t" +  str(error_count) + "\t" + str(error_list) + "\n")
 cli_file.write("EOL Error count:\t" +  str(eol_error_count) + "\t" + str(eol_error_list) + "\n")
 cli_file.write("Exception count:\t" +  str(exception_count) + "\n")
