@@ -341,7 +341,8 @@ public :
 
                     // dump the namespace-modified tree
                     xmlNodeDumpOutput(buf, ctxt->myDoc, onode, 0, 0, 0);
-                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n"));
+                    if(result_size > 1)
+                      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
 
                   }
 
@@ -369,7 +370,7 @@ public :
             }
 
             if(isoption(options, OPTION_APPLY_ROOT) && result_size > 1)
-              xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>\n"));
+              xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>"));
 
             break;
 
@@ -484,7 +485,8 @@ public :
             full_unit += "unit>\n";
            xmlOutputBufferWriteString(buf, found ? full_unit.c_str() : "/>\n");
 
-}
+          } else 
+           xmlOutputBufferWriteString(buf, "\n");
 
             break;
 
