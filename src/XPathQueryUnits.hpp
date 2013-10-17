@@ -220,6 +220,9 @@ public :
 
             found = true;
 
+            if(isoption(options, OPTION_APPLY_ROOT) && result_size > 1)
+              xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<unit>\n\n"));
+
             // output all the found nodes
             for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
 
@@ -364,6 +367,9 @@ public :
                     xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>\n\n"));
                 }
             }
+
+            if(isoption(options, OPTION_APPLY_ROOT) && result_size > 1)
+              xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>\n"));
 
             break;
 
