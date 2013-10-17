@@ -291,7 +291,7 @@ public :
                 // input was an archive, xpath result is a unit
                 if (onode->type == XML_ELEMENT_NODE && pstate->isarchive && !outputunit) {
 
-                    // create a new list of namespaces
+                   // create a new list of namespaces
                     // skip over the namespaces on the root
                     xmlNsPtr savens = onode->nsDef;
                   if(!isoption(options, OPTION_APPLY_ROOT)) {
@@ -341,6 +341,9 @@ public :
 
                     // dump the namespace-modified tree
                     xmlNodeDumpOutput(buf, ctxt->myDoc, onode, 0, 0, 0);
+
+                    // space between internal units
+                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
 
                   }
 
