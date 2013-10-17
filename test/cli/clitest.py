@@ -2957,21 +2957,21 @@ srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 """
 
-relaxn_error = """srcml2src: Start tag expected, '<' not found in '-'
+relaxng_error = """srcml2src: Start tag expected, '<' not found in '-'
 """
 
 file = open('sub/a.cpp.xml', 'w')
 file.write(srcml)
 file.close()
 
-checkError([srcml2src, option.RELAXNG_FLAG + '=copy.xsl'], "", relaxng_error)
-validate(getreturn([srcml2src, option.RELAXNG_FLAG + '=copy.xsl'], ""), 2)
+checkError([srcml2src, option.RELAXNG_FLAG + '=schema.rng'], "", relaxng_error)
+validate(getreturn([srcml2src, option.RELAXNG_FLAG + '=schema.rng'], ""), 2)
 
-check([srcml2src, option.RELAXNG_FLAG + '=copy.xsl'], srcml, srcml)
-check([srcml2src, option.RELAXNG_FLAG + '=copy.xsl', 'sub/a.cpp.xml'], "", srcml)
-check([srcml2src, option.RELAXNG_FLAG + '=copy.xsl', '-o', 'sub/b.cpp.xml'], srcml, "")
+check([srcml2src, option.RELAXNG_FLAG + '=schema.rng'], srcml, srcml)
+check([srcml2src, option.RELAXNG_FLAG + '=schema.rng', 'sub/a.cpp.xml'], "", srcml)
+check([srcml2src, option.RELAXNG_FLAG + '=schema.rng', '-o', 'sub/b.cpp.xml'], srcml, "")
 validate(open('sub/b.cpp.xml', 'r').read(), srcml)
-check([srcml2src, option.RELAXNG_FLAG + '=copy.xsl', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
+check([srcml2src, option.RELAXNG_FLAG + '=schema.rng', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), srcml)
 
 validate(getreturn([srcml2src, option.RELAXNG_FLAG], srcml), status.STATUS_ERROR)
@@ -2979,14 +2979,14 @@ validate(getreturn([srcml2src, option.RELAXNG_FLAG + '='], srcml), status.STATUS
 
 # relaxng apply root
 
-checkError([srcml2src, option.APPLY_ROOT_FLAG, option.RELAXNG_FLAG + '=copy.xsl'], "", relaxng_error)
-validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.RELAXNG_FLAG + '=copy.xsl'], ""), 2)
+checkError([srcml2src, option.APPLY_ROOT_FLAG, option.RELAXNG_FLAG + '=schema.rng'], "", relaxng_error)
+validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.RELAXNG_FLAG + '=schema.rng'], ""), 2)
 
-check([srcml2src, option.APPLY_ROOT_FLAG, option.RELAXNG_FLAG + '=copy.xsl'], srcml, srcml)
-check([srcml2src, option.APPLY_ROOT_FLAG, option.RELAXNG_FLAG + '=copy.xsl', 'sub/a.cpp.xml'], "", srcml)
-check([srcml2src, option.APPLY_ROOT_FLAG, option.RELAXNG_FLAG + '=copy.xsl', '-o', 'sub/b.cpp.xml'], srcml, "")
+check([srcml2src, option.APPLY_ROOT_FLAG, option.RELAXNG_FLAG + '=schema.rng'], srcml, srcml)
+check([srcml2src, option.APPLY_ROOT_FLAG, option.RELAXNG_FLAG + '=schema.rng', 'sub/a.cpp.xml'], "", srcml)
+check([srcml2src, option.APPLY_ROOT_FLAG, option.RELAXNG_FLAG + '=schema.rng', '-o', 'sub/b.cpp.xml'], srcml, "")
 validate(open('sub/b.cpp.xml', 'r').read(), srcml)
-check([srcml2src, option.APPLY_ROOT_FLAG, option.RELAXNG_FLAG + '=copy.xsl', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
+check([srcml2src, option.APPLY_ROOT_FLAG, option.RELAXNG_FLAG + '=schema.rng', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), srcml)
 
 validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.RELAXNG_FLAG], srcml), status.STATUS_ERROR)
