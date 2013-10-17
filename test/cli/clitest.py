@@ -2365,7 +2365,6 @@ file = open('sub/a.cpp.xml', 'w')
 file.write(srcml)
 file.close()
 
-
 checkError([srcml2src, option.XPATH_FLAG + '=/src:unit'], "", xpath_error)
 validate(getreturn([srcml2src, option.XPATH_FLAG + '=/src:unit'], ""), 2)
 
@@ -2400,6 +2399,29 @@ validate(getreturn([srcml2src, option.XPATH_FLAG], srcml), status.STATUS_ERROR)
 validate(getreturn([srcml2src, option.XPATH_FLAG + '='], srcml), status.STATUS_ERROR)
 
 # xpath apply root
+
+srcml = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
+"""
+
+xpath_error = """srcml2src: Start tag expected, '<' not found in '-'
+"""
+
+xpath = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
+
+</unit>
+"""
+
+xpath_empty = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src"/>
+"""
+
+file = open('sub/a.cpp.xml', 'w')
+file.write(srcml)
+file.close()
 
 checkError([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit'], "", xpath_error)
 validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit'], ""), 2)
