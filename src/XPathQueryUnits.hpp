@@ -114,7 +114,7 @@ public :
 
     void* handle = dlopen("libexslt.so", RTLD_LAZY);
     if (!handle) {
-      handle = dlopen("libexslt.so.1", RTLD_LAZY);
+      handle = dlopen("libexslt.so.0", RTLD_LAZY);
       if (!handle) {
         handle = dlopen("libexslt.dylib", RTLD_LAZY);
         if (!handle)
