@@ -803,10 +803,13 @@ static void dlexsltRegisterAll() {
 
   void* handle = dlopen("libexslt.so", RTLD_LAZY);
   if (!handle) {
-    handle = dlopen("libexslt.dylib", RTLD_LAZY);
+    handle = dlopen("libexslt.so.0", RTLD_LAZY);
     if (!handle) {
-      fprintf(stderr, "Unable to open libexslt library\n");
-      return;
+      handle = dlopen("libexslt.dylib", RTLD_LAZY);
+      if (!handle) {
+        fprintf(stderr, "Unable to open libexslt library\n");
+        return;
+      }
     }
   }
 
@@ -915,7 +918,7 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
     archiveDeleteContext(context);
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
-    dlclose(handle);
+  dlclose(handle);
 #endif
 
 }
