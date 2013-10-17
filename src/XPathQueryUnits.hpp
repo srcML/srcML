@@ -207,6 +207,8 @@ public :
 
             // may not have any values or results
             result_size = xmlXPathNodeSetGetLength(result_nodes->nodesetval);
+            if (isoption(options, OPTION_APPLY_ROOT) && result_size == 0)
+                xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
             if (result_size == 0)
                 break;
 
