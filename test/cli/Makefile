@@ -19,3 +19,4 @@ clean :
 	rm -f filelistab
 	rm -fR sub
 	rm -rf archive/*.cpp.*
+	rm -f srcMLcliTestReport.txt
