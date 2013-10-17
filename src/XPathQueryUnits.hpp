@@ -50,7 +50,7 @@ public :
     XPathQueryUnits(const char* a_context_element, const char* a_ofilename, int options,
                     xmlXPathCompExprPtr compiled_xpath, int fd = 0)
         : UnitDOM(options), ofilename(a_ofilename), options(options), context(0),
-          compiled_xpath(compiled_xpath), total(0), found(false), needroot(true), fd(fd) {
+          compiled_xpath(compiled_xpath), total(0), found(false), needroot(true), fd(fd), closetag(false) {
     }
 
     virtual ~XPathQueryUnits() {
@@ -310,6 +310,7 @@ public :
                     // input was not an archive, xpath result is a unit
 
                     // namespace list only need the cpp namespace, if it exists
+                  if(!isoption(options, OPTION_APPLY_ROOT)) {
                     xmlNsPtr savens = onode->nsDef;
                     for (onode->nsDef = savens; onode->nsDef; onode->nsDef = onode->nsDef->next)
                         if (strcmp((const char*) onode->nsDef->href, SRCML_CPP_NS_URI) == 0)
@@ -332,6 +333,15 @@ public :
 
                     // space between internal units
                     xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
+ 
+                 } else {
+
+                    // dump the namespace-modified tree
+                    xmlNodeDumpOutput(buf, ctxt->myDoc, onode, 0, 0, 0);
+                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n"));
+
+                  }
+
 
                 } else if (onode->type == XML_ATTRIBUTE_NODE) {
 
