@@ -366,9 +366,6 @@ public :
                 }
             }
 
-            if(isoption(options, OPTION_APPLY_ROOT) && result_size > 1)
-              xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>"));
-
             break;
 
             // numeric result
