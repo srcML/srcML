@@ -189,7 +189,7 @@ public :
             // node set result
         case XPATH_NODESET:
 
-            if (needroot && !isoption(options, OPTION_APPLY_ROOT)) {
+          if (needroot /*&& !isoption(options, OPTION_APPLY_ROOT)*/) {
 
                 // xml declaration
                 if (!isoption(options, OPTION_XMLDECL))
