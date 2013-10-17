@@ -312,7 +312,7 @@ public :
                     onode->nsDef = savens;
 
                     // space between internal units
-                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
+                    //                 xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
 
                 } else if (onode->type == XML_ELEMENT_NODE && !pstate->isarchive && !outputunit) {
 
