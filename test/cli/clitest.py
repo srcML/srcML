@@ -2493,8 +2493,7 @@ xpath_nested_recursive = xml_declaration + """
 xpath_single_expr_stmt = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src">
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" item="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-</unit>
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" item="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
 
 </unit>
 """
@@ -2502,11 +2501,9 @@ xpath_single_expr_stmt = xml_declaration + """
 xpath_nested_expr_stmt = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src">
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" item="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-</unit>
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" item="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" item="2"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
-</unit>
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" item="2"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
 
 </unit>
 """
