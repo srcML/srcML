@@ -271,7 +271,7 @@ void output_version(const char* name) {
 
   void* handle = dlopen("libxslt.so", RTLD_LAZY);
   if (!handle) {
-    void* handle = dlopen("libxslt.so.1", RTLD_LAZY);
+    handle = dlopen("libxslt.so.1", RTLD_LAZY);
     if (!handle) {
       handle = dlopen("libxslt.dylib", RTLD_LAZY);
     }
