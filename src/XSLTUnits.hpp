@@ -227,7 +227,9 @@ public :
 
           xmlOutputBufferWriteString(buf, found ? end_unit.c_str() : "/>\n");
 
-        } else if (result_type == XML_ELEMENT_NODE && found) {
+        } else if (result_type == XML_ELEMENT_NODE && found && !pstate->isarchive) {
+	    xmlOutputBufferWriteString(buf, "\n");
+        }else if (result_type == XML_ELEMENT_NODE && found && isoption(options, OPTION_APPLY_ROOT)) {
 	    xmlOutputBufferWriteString(buf, "\n");
         }
 
