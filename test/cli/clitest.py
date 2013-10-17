@@ -2974,8 +2974,9 @@ validate(open('sub/b.cpp.xml', 'r').read(), srcml)
 check([srcml2src, option.RELAXNG_FLAG + '=schema.rng', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), srcml)
 
-validate(getreturn([srcml2src, option.RELAXNG_FLAG], srcml), status.STATUS_ERROR)
-validate(getreturn([srcml2src, option.RELAXNG_FLAG + '='], srcml), status.STATUS_ERROR)
+# TODO really make sure this is ok to return ok when no schema supplied.
+validate(getreturn([srcml2src, option.RELAXNG_FLAG], srcml), status.STATUS_SUCCESS)
+validate(getreturn([srcml2src, option.RELAXNG_FLAG + '='], srcml), status.STATUS_SUCCESS)
 
 # relaxng apply root
 
@@ -2989,8 +2990,9 @@ validate(open('sub/b.cpp.xml', 'r').read(), srcml)
 check([srcml2src, option.APPLY_ROOT_FLAG, option.RELAXNG_FLAG + '=schema.rng', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), srcml)
 
-validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.RELAXNG_FLAG], srcml), status.STATUS_ERROR)
-validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.RELAXNG_FLAG + '='], srcml), status.STATUS_ERROR)
+# TODO really make sure this is ok to return ok when no schema supplied.
+validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.RELAXNG_FLAG], srcml), status.STATUS_SUCCESS)
+validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.RELAXNG_FLAG + '='], srcml), status.STATUS_SUCCESS)
 
 # position
 
