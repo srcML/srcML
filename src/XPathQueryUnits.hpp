@@ -480,6 +480,8 @@ public :
             xmlOutputBufferWriteString(buf, found ? full_unit.c_str() : "/>\n");
           } else if(found)
             xmlOutputBufferWriteString(buf, "</unit>\n");
+          else
+            xmlOutputBufferWriteString(buf, "\n");
 
             break;
 
