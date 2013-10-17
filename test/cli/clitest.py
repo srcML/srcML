@@ -2490,6 +2490,15 @@ xpath_nested_recursive = xml_declaration + """
 </unit>
 """
 
+xpath_single_expr_stmt = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+"""
+
 xpath_nested_expr_stmt = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src">
 
@@ -2519,6 +2528,13 @@ check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:unit', '-o
 validate(open('sub/b.cpp.xml', 'r').read(), xpath_nested_recursive)
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), xpath_nested_recursive)
+
+check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit/src:unit[1]/src:expr_stmt'], srcml_nested, xpath_single_expr_stmt)
+check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit/src:unit[1]/src:expr_stmt', 'sub/a.cpp.xml'], "", xpath_single_expr_stmt)
+check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit/src:unit[1]/src:expr_stmt', '-o', 'sub/b.cpp.xml'], srcml_nested, "")
+validate(open('sub/b.cpp.xml', 'r').read(), xpath_single_expr_stmt)
+check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit/src:unit[1]/src:expr_stmt', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
+validate(open('sub/b.cpp.xml', 'r').read(), xpath_single_expr_stmt)
 
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:expr_stmt'], srcml_nested, xpath_nested_expr_stmt)
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:expr_stmt', 'sub/a.cpp.xml'], "", xpath_nested_expr_stmt)
