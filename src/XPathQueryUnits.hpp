@@ -222,9 +222,6 @@ public :
 
             found = true;
 
-            if(isoption(options, OPTION_APPLY_ROOT) && result_size > 1)
-              xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<unit>\n\n"));
-
             // output all the found nodes
             for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
 
@@ -350,8 +347,6 @@ public :
 
                     // dump the namespace-modified tree
                     xmlNodeDumpOutput(buf, ctxt->myDoc, onode, 0, 0, 0);
-                    if(result_size > 1)
-                      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
 
                   }
 
@@ -492,10 +487,8 @@ public :
               full_unit += ":";
             }
             full_unit += "unit>\n";
-           xmlOutputBufferWriteString(buf, found ? full_unit.c_str() : "/>\n");
-
-          } else 
-           xmlOutputBufferWriteString(buf, "\n");
+            xmlOutputBufferWriteString(buf, found ? full_unit.c_str() : "/>\n");
+          }
 
             break;
 
