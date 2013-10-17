@@ -2645,6 +2645,21 @@ validate(open('sub/b.cpp.xml', 'r').read(), srcml)
 validate(getreturn([srcml2src, option.XSLT_FLAG], srcml), status.STATUS_ERROR)
 validate(getreturn([srcml2src, option.XSLT_FLAG + '='], srcml), status.STATUS_ERROR)
 
+# xslt apply root
+
+checkError([srcml2src, option.APPLY_ROOT_FLAG, option.XSLT_FLAG + '=copy.xsl'], "", xslt_error)
+validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.XSLT_FLAG + '=copy.xsl'], ""), 2)
+
+check([srcml2src, option.APPLY_ROOT_FLAG, option.XSLT_FLAG + '=copy.xsl'], srcml, srcml)
+check([srcml2src, option.APPLY_ROOT_FLAG, option.XSLT_FLAG + '=copy.xsl', 'sub/a.cpp.xml'], "", srcml)
+check([srcml2src, option.APPLY_ROOT_FLAG, option.XSLT_FLAG + '=copy.xsl', '-o', 'sub/b.cpp.xml'], srcml, "")
+validate(open('sub/b.cpp.xml', 'r').read(), srcml)
+check([srcml2src, option.APPLY_ROOT_FLAG, option.XSLT_FLAG + '=copy.xsl', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
+validate(open('sub/b.cpp.xml', 'r').read(), srcml)
+
+validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.XSLT_FLAG], srcml), status.STATUS_ERROR)
+validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.XSLT_FLAG + '='], srcml), status.STATUS_ERROR)
+
 # param
 
 check([srcml2src, option.XSLT_FLAG + '=copy.xsl', option.PARAM_FLAG, 'NAME=VALUE'], srcml, srcml)
