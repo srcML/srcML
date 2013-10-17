@@ -2410,7 +2410,7 @@ xpath_error = """srcml2src: Start tag expected, '<' not found in '-'
 xpath = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src">
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
 
 </unit>
 """
@@ -2468,10 +2468,26 @@ srcml_nested = xml_declaration + """
 </unit>
 """
 
+xpath_nested = xml_declaration + """
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+
+</unit>
+"""
+
 xpath_nested_recursive = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src">
 
-<unit>
+<unit xmlns="http://www.sdml.info/srcML/src">
 
 <unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
@@ -2512,12 +2528,12 @@ file = open('sub/a.cpp.xml', 'w')
 file.write(srcml_nested)
 file.close()
 
-check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit'], srcml_nested, xpath_nested_recursive)
-check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit', 'sub/a.cpp.xml'], "", xpath_nested_recursive)
+check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit'], srcml_nested, xpath_nested)
+check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit', 'sub/a.cpp.xml'], "", xpath_nested)
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit', '-o', 'sub/b.cpp.xml'], srcml_nested, "")
-validate(open('sub/b.cpp.xml', 'r').read(), xpath_nested_recursive)
+validate(open('sub/b.cpp.xml', 'r').read(), xpath_nested)
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
-validate(open('sub/b.cpp.xml', 'r').read(), xpath_nested_recursive)
+validate(open('sub/b.cpp.xml', 'r').read(), xpath_nested)
 
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:unit'], srcml_nested, xpath_nested_recursive)
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:unit', 'sub/a.cpp.xml'], "", xpath_nested_recursive)
