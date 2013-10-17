@@ -2502,6 +2502,31 @@ xpath_nested_expr_stmt = xml_declaration + """
 </unit>
 """
 
+file = open('sub/a.cpp.xml', 'w')
+file.write(srcml_nested)
+file.close()
+
+check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit'], srcml_nested, xpath_nested_recursive)
+check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit', 'sub/a.cpp.xml'], "", xpath_nested_recursive)
+check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit', '-o', 'sub/b.cpp.xml'], srcml_nested, "")
+validate(open('sub/b.cpp.xml', 'r').read(), xpath_nested_recursive)
+check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
+validate(open('sub/b.cpp.xml', 'r').read(), xpath_nested_recursive)
+
+check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:unit'], srcml_nested, xpath_nested_recursive)
+check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:unit', 'sub/a.cpp.xml'], "", xpath_nested_recursive)
+check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:unit', '-o', 'sub/b.cpp.xml'], srcml_nested, "")
+validate(open('sub/b.cpp.xml', 'r').read(), xpath_nested_recursive)
+check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
+validate(open('sub/b.cpp.xml', 'r').read(), xpath_nested_recursive)
+
+check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:expr_stmt'], srcml_nested, xpath_nested_expr_stmt)
+check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:expr_stmt', 'sub/a.cpp.xml'], "", xpath_nested_expr_stmt)
+check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:expr_stmt', '-o', 'sub/b.cpp.xml'], srcml_nested, "")
+validate(open('sub/b.cpp.xml', 'r').read(), xpath_nested_expr_stmt)
+check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:expr_stmt', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
+validate(open('sub/b.cpp.xml', 'r').read(), xpath_nested_expr_stmt)
+
 srcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
@@ -2523,23 +2548,6 @@ xpath_empty = xml_declaration + """
 file = open('sub/a.cpp.xml', 'w')
 file.write(srcml)
 file.close()
-
-check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit'], srcml, xpath)
-check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit', 'sub/a.cpp.xml'], "", xpath)
-check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), xpath)
-check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
-validate(open('sub/b.cpp.xml', 'r').read(), xpath)
-
-validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG], srcml), status.STATUS_ERROR)
-validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '='], srcml), status.STATUS_ERROR)
-
-check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:unit'], srcml, xpath)
-check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:unit', 'sub/a.cpp.xml'], "", xpath)
-check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), xpath)
-check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
-validate(open('sub/b.cpp.xml', 'r').read(), xpath)
 
 check([srcml2src, option.XPATH_FLAG + '=/src:unit/src:expr_stmt/src:expr/src:name'], srcml, xpath)
 check([srcml2src, option.XPATH_FLAG + '=/src:unit/src:expr_stmt/src:expr/src:name', 'sub/a.cpp.xml'], "", xpath)
