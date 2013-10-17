@@ -138,58 +138,58 @@ void output_help(const char* name) {
   printf("Usage: %s [options] <srcML_infile>... [-o <src_outfile>]\n\n"
          "Translates from the the XML source-code representation srcML back to source-code.\n\n"
          "Extracts back to standard output, the disk, or to traditional archive formats,\n"
-	 "e.g., tar, cpio, zip, and with optional gzip, bzip2 compression.\n"
+         "e.g., tar, cpio, zip, and with optional gzip, bzip2 compression.\n"
          "Provides access to metadata about the srcML document. For srcML archives\n"
-	 "provides extraction of specific files, and efficient querying/transformation\n"
-	 "using XPath, XSLT, and RelaxNG.\n\n"
+         "provides extraction of specific files, and efficient querying/transformation\n"
+         "using XPath, XSLT, and RelaxNG.\n\n"
 
-	 "srcML archives contain multiple individual source code files,\n"
-	 "e.g., an entire project or directory tree.\n\n"
+         "srcML archives contain multiple individual source code files,\n"
+         "e.g., an entire project or directory tree.\n\n"
 
-	 "By default, output is to stdout.  You can specify a file for output using the --%s or -%c option.\n"
+         "By default, output is to stdout.  You can specify a file for output using the --%s or -%c option.\n"
          "When no filenames are given, input is from stdin and output is to stdout.\n"
-	 "An input filename of '-' also reads from stdin.\n\n"
+         "An input filename of '-' also reads from stdin.\n\n"
 
-	 "Any input file, including XSLT and RelaxNG files, can be a local\n"
-	 "filename (FILE) or a URI with the protocols http:, ftp:, or file:\n\n"
+         "Any input file, including XSLT and RelaxNG files, can be a local\n"
+         "filename (FILE) or a URI with the protocols http:, ftp:, or file:\n\n"
 
          "The srcML files can be in xml, or compressed with gzip or bzip2 (detected automatically).\n\n"
 
-	 "Options:\n", name, OUTPUT_FLAG, OUTPUT_FLAG_SHORT);
+         "Options:\n", name, OUTPUT_FLAG, OUTPUT_FLAG_SHORT);
 
   printf("  -%c, --%-17s display this help and exit\n", HELP_FLAG_SHORT, HELP_FLAG);
   printf("  -%c, --%-17s display version number and exit\n\n", VERSION_FLAG_SHORT, VERSION_FLAG);
   /*
-  printf("  --%-21s ???\n\n", INPUT_FORMAT_FLAG);
+    printf("  --%-21s ???\n\n", INPUT_FORMAT_FLAG);
   */
   printf("  -%c, --%-17s write result to OUTPUT which is a FILE or URI\n", OUTPUT_FLAG_SHORT, OUTPUT_FLAG_FULL);
   /*
-  printf("  --%-21s ???\n\n", OUTPUT_FORMAT_FLAG);
+    printf("  --%-21s ???\n\n", OUTPUT_FORMAT_FLAG);
   */
 
   printf("  -%c, --%-17s set the output source encoding to ENC (default:  %s) \n",
-	  SRC_ENCODING_FLAG_SHORT, SRC_ENCODING_FLAG_FULL, DEFAULT_TEXT_ENCODING);
+         SRC_ENCODING_FLAG_SHORT, SRC_ENCODING_FLAG_FULL, DEFAULT_TEXT_ENCODING);
 
   printf("  -%c, --%-17s output text or XML in gzip format\n",
-	  COMPRESSED_FLAG_SHORT, COMPRESSED_FLAG);
+         COMPRESSED_FLAG_SHORT, COMPRESSED_FLAG);
 
   printf("  -%c, --%-17s conversion and status information to stderr\n",
-	  VERBOSE_FLAG_SHORT, VERBOSE_FLAG);
+         VERBOSE_FLAG_SHORT, VERBOSE_FLAG);
 
   printf("  -%c, --%-17s suppresses status messages\n\n",
-	  QUIET_FLAG_SHORT, QUIET_FLAG);
+         QUIET_FLAG_SHORT, QUIET_FLAG);
 
   printf("  -%c, --%-17s output in XML instead of text\n",
-	  XML_FLAG_SHORT, XML_FLAG);
+         XML_FLAG_SHORT, XML_FLAG);
 
   printf("  --%-21s do not output the XML declaration in XML output\n",
-	  NO_XML_DECLARATION_FLAG);
+         NO_XML_DECLARATION_FLAG);
 
   printf("  --%-21s do not output any namespace declarations in XML output\n\n",
-	  NO_NAMESPACE_DECLARATION_FLAG);
+         NO_NAMESPACE_DECLARATION_FLAG);
 
   printf("Metadata Options:\n"
-	 "  -%c, --%-17s display source language and exit\n", LANGUAGE_FLAG_SHORT, LANGUAGE_FLAG);
+         "  -%c, --%-17s display source language and exit\n", LANGUAGE_FLAG_SHORT, LANGUAGE_FLAG);
 
   printf("  -%c, --%-17s display source directory name and exit\n", DIRECTORY_FLAG_SHORT, DIRECTORY_FLAG);
 
@@ -200,27 +200,27 @@ void output_help(const char* name) {
   printf("  -%c, --%-17s display xml encoding and exit\n", ENCODING_FLAG_SHORT, ENCODING_FLAG);
 
   printf("  -%c, --%-17s display prefix of namespace given by URI and exit\n",
-	  NAMESPACE_FLAG_SHORT, NAMESPACE_FLAG_FULL);
+         NAMESPACE_FLAG_SHORT, NAMESPACE_FLAG_FULL);
 
   printf("  -%c, --%-17s display number of srcML files and exit\n\n", NESTED_FLAG_SHORT, NESTED_FLAG);
 
   printf("  -%c, --%-17s display most metadata except file count (individual units) and exit\n",
-	  INFO_FLAG_SHORT, INFO_FLAG);
+         INFO_FLAG_SHORT, INFO_FLAG);
 
   printf("  -%c, --%-17s display all metadata including file count (individual units) and exit\n",
-	  LONG_INFO_FLAG_SHORT, LONG_INFO_FLAG);
+         LONG_INFO_FLAG_SHORT, LONG_INFO_FLAG);
 
   printf("  --%-21s list all the files in the srcML archive and exit\n\n", LIST_FLAG);
 
   printf("srcML Archive Options:\n"
-	 "  -%c, --%-17s extract individual unit NUM from srcML\n",
-	  UNIT_FLAG_SHORT, UNIT_FLAG_FULL);
+         "  -%c, --%-17s extract individual unit NUM from srcML\n",
+         UNIT_FLAG_SHORT, UNIT_FLAG_FULL);
 
   printf("  -%c, --%-17s extract all files from srcML and create them in the filesystem\n\n",
-	  TO_DIR_FLAG_SHORT, TO_DIR_FLAG);
+         TO_DIR_FLAG_SHORT, TO_DIR_FLAG);
 
   printf("Query and Transformation Options:\n"
-	 "  --%-21s apply XPATH expression to each individual unit\n", XPATH_FLAG_FULL);
+         "  --%-21s apply XPATH expression to each individual unit\n", XPATH_FLAG_FULL);
   printf("  --%-21s apply XSLT_FILE (FILE or URI) transformation to each individual unit\n", XSLT_FLAG_FULL);
   //  printf("  --%-21s passes a parameter NAME and VAL to an XSLT program\n", STRING_PARAM_FLAG_FULL);
   printf("  --%-21s passes a parameter NAME and VAL to the XSLT program\n", PARAM_FLAG_FULL);
@@ -228,14 +228,14 @@ void output_help(const char* name) {
   printf("  --%-21s apply an xslt program or xpath query to the root element\n\n", APPLY_ROOT_FLAG);
 
   printf("Examples:\n"
-	    "  Read from file main.cpp.xml, write to file main.cpp:\n\n"
-	    "  " BASE_PROGRAM_NAME " main.cpp.xml -o main.cpp\n\n"
+         "  Read from file main.cpp.xml, write to file main.cpp:\n\n"
+         "  " BASE_PROGRAM_NAME " main.cpp.xml -o main.cpp\n\n"
 
-	    "  Read from URI, write to file main.cpp:\n\n"
-	    "  " BASE_PROGRAM_NAME " http://www.sdml.info/projects/srcml/ex/main.cpp.xml main.cpp\n\n"
+         "  Read from URI, write to file main.cpp:\n\n"
+         "  " BASE_PROGRAM_NAME " http://www.sdml.info/projects/srcml/ex/main.cpp.xml main.cpp\n\n"
 
-	    "  Read from file main.cpp.xml, output language attribute to stdout:\n\n"
-            "  " BASE_PROGRAM_NAME " main.cpp.xml --language\n\n");
+         "  Read from file main.cpp.xml, output language attribute to stdout:\n\n"
+         "  " BASE_PROGRAM_NAME " main.cpp.xml --language\n\n");
 
   printf("www.sdml.info\n"
          "Report bugs to %s\n", EMAIL_ADDRESS);
@@ -245,7 +245,7 @@ void output_help(const char* name) {
 void output_version(const char* name) {
 
   printf("%s Version %s\n"
-	 "%s\n", name, VERSION, COPYRIGHT);
+         "%s\n", name, VERSION, COPYRIGHT);
 
   printf("Using: ");
   if(atoi(xmlParserVersion) == LIBXML_VERSION)
@@ -267,83 +267,87 @@ void output_version(const char* name) {
   else
     printf("libexslt %d (Compiled %d), ", exsltLibexsltVersion, LIBEXSLT_VERSION);
 #else
-    typedef void (*exsltRegisterAll_function)();
+  typedef void (*exsltRegisterAll_function)();
 
-    void* handle = dlopen("libxslt.so", RTLD_LAZY);
+  void* handle = dlopen("libxslt.so", RTLD_LAZY);
+  if (!handle) {
+    void* handle = dlopen("libxslt.so.1", RTLD_LAZY);
     if (!handle) {
-      void* handle = dlopen("libxslt.so.1", RTLD_LAZY);
-      if (!handle) {
-        handle = dlopen("libxslt.dylib", RTLD_LAZY);
-      }
+      handle = dlopen("libxslt.dylib", RTLD_LAZY);
     }
+  }
 
-    int* xsltLibxsltVersion = 0;
-    if (handle) {
-        dlerror();
-        xsltLibxsltVersion = (int*)dlsym(handle, "xsltLibxsltVersion");
-        char* error;
-        if ((error = dlerror()) != NULL) {
-            dlclose(handle);
-            handle = 0;
-        } else
-            printf("libxslt %d, ", *xsltLibxsltVersion);
-    }
+  int* xsltLibxsltVersion = 0;
+  if (handle) {
+    dlerror();
+    xsltLibxsltVersion = (int*)dlsym(handle, "xsltLibxsltVersion");
+    char* error;
+    if ((error = dlerror()) != NULL) {
+      dlclose(handle);
+      handle = 0;
+    } else
+      printf("libxslt %d, ", *xsltLibxsltVersion);
+  }
 
-    if (handle) {
-        dlerror();
-        int& xsltLibxmlVersion = *(int*)dlsym(handle, "xsltLibxmlVersion");
-        char* error;
-        if ((error = dlerror()) != NULL) {
-            dlclose(handle);
-            handle = 0;
-        } else if (xsltLibxmlVersion != LIBXML_VERSION) 
-            printf("libxslt(libxml) %d, ", xsltLibxmlVersion);
-    }
+  if (handle) {
+    dlerror();
+    int& xsltLibxmlVersion = *(int*)dlsym(handle, "xsltLibxmlVersion");
+    char* error;
+    if ((error = dlerror()) != NULL) {
+      dlclose(handle);
+      handle = 0;
+    } else if (xsltLibxmlVersion != LIBXML_VERSION)
+      printf("libxslt(libxml) %d, ", xsltLibxmlVersion);
+  }
 
-    // done with libxslt handle
-    if (handle) {
-        dlclose(handle);
-        handle = 0;
-    }
+  // done with libxslt handle
+  if (handle) {
+    dlclose(handle);
+    handle = 0;
+  }
 
+  // now to libexslt
+  handle = dlopen("libexslt.so", RTLD_LAZY);
+  if (!handle) {
     // now to libexslt
-    handle = dlopen("libexslt.so", RTLD_LAZY);
+    handle = dlopen("libexslt.so.0", RTLD_LAZY);
     if (!handle) {
-        handle = dlopen("libexslt.dylib", RTLD_LAZY);
+      handle = dlopen("libexslt.dylib", RTLD_LAZY);
     }
+  }
 
-    if (handle) {
-        dlerror();
-        int& exsltLibexsltVersion = *(int*)dlsym(handle, "exsltLibexsltVersion");
-        char* error;
-        if ((error = dlerror()) != NULL) {
-            dlclose(handle);
-            handle = 0;
-        } else
-            printf("libexslt %d, ", exsltLibexsltVersion);
-    }
+  if (handle) {
+    dlerror();
+    int& exsltLibexsltVersion = *(int*)dlsym(handle, "exsltLibexsltVersion");
+    char* error;
+    if ((error = dlerror()) != NULL) {
+      dlclose(handle);
+      handle = 0;
+    } else
+      printf("libexslt %d, ", exsltLibexsltVersion);
+  }
 
-    if (handle) {
-        dlerror();
-        int& exsltLibxsltVersion = *(int*)dlsym(handle, "exsltLibxsltVersion");
-        char* error;
-        if ((error = dlerror()) != NULL) {
-            dlclose(handle);
-            handle = 0;
-        } else
-            printf("libexslt(libxslt) %d, ", exsltLibxsltVersion);
-    }
+  if (handle) {
+    dlerror();
+    int& exsltLibxsltVersion = *(int*)dlsym(handle, "exsltLibxsltVersion");
+    char* error;
+    if ((error = dlerror()) != NULL) {
+      dlclose(handle);
+      handle = 0;
+    } else
+      printf("libexslt(libxslt) %d, ", exsltLibxsltVersion);
+  }
 
-    if (handle) {
-        dlerror();
-        int& exsltLibxmlVersion = *(int*)dlsym(handle, "exsltLibxmlVersion");
-        char* error;
-        if ((error = dlerror()) != NULL) {
-            dlclose(handle);
-            handle = 0;
-        } else if (exsltLibxmlVersion != LIBXML_VERSION) 
-            printf("libexslt(libxml) %d, ", exsltLibxmlVersion);
-    }
+  if (handle) {
+    dlerror();
+    int& exsltLibxmlVersion = *(int*)dlsym(handle, "exsltLibxmlVersion");
+    char* error;
+    if ((error = dlerror()) != NULL) {
+      dlclose(handle);
+      handle = 0;
+    } else if (exsltLibxmlVersion != LIBXML_VERSION)
+      printf("libexslt(libxml) %d, ", exsltLibxmlVersion);
+  }
 #endif
 
   if(archive_version_number(), ARCHIVE_VERSION_NUMBER)
@@ -420,10 +424,10 @@ int main(int argc, char* argv[]) {
     exit(1);
   }
   /*
-  if (xmlRegisterOutputCallbacks(archiveWriteDiskMatch, archiveWriteDiskOpen, archiveWriteDisk, archiveWriteDiskClose) < 0) {
+    if (xmlRegisterOutputCallbacks(archiveWriteDiskMatch, archiveWriteDiskOpen, archiveWriteDisk, archiveWriteDiskClose) < 0) {
     fprintf(stderr, "%s: failed to register archive handler\n", PROGRAM_NAME);
     exit(1);
-  }
+    }
   */
 
   /* signal handling */
@@ -437,27 +441,27 @@ int main(int argc, char* argv[]) {
 
   process_options poptions =
     {
-     "-",
-     0,
-     0,
-     0,
-     DEFAULT_TEXT_ENCODING,
-     0,
-     0,
-     "src:unit",
-     0,
-     { 0 },
-     0,
-     { 0 },
-     0,
-     { 0 },
-     0,
-     { 0 },
-     0,
-     { 0 },
-     0,
-     { 0 }
-  };
+      "-",
+      0,
+      0,
+      0,
+      DEFAULT_TEXT_ENCODING,
+      0,
+      0,
+      "src:unit",
+      0,
+      { 0 },
+      0,
+      { 0 },
+      0,
+      { 0 },
+      0,
+      { 0 },
+      0,
+      { 0 },
+      0,
+      { 0 }
+    };
 
   // process command-line arguments
   int curarg = process_args(argc, argv, poptions);
@@ -539,10 +543,10 @@ int main(int argc, char* argv[]) {
                                    "descendant::diff:*[self::diff:insert or self::diff:delete]");
 
     xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "haschange",
-           "descendant::diff:insert[following-sibling::node()[1][self::diff:delete] or preceding-sibling::node()[1][self::diff:delete]][1]");
+                                   "descendant::diff:insert[following-sibling::node()[1][self::diff:delete] or preceding-sibling::node()[1][self::diff:delete]][1]");
 
     // srcdiff includes functions
-    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "common", 
+    xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "common",
                                    "not(ancestor::diff:*[1][self::diff:insert or self::diff:delete])");
 
     xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "inserted",
@@ -555,7 +559,7 @@ int main(int argc, char* argv[]) {
                                    "ancestor::diff:*[1][self::diff:insert or self::diff:delete]");
 
     xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "changed",
-           "ancestor::diff:*[1][self::diff:insert[following-sibling::node()[1][self::diff:delete] or preceding-sibling::node()[1][self::diff:delete]] or self::diff:delete[following-sibling::node()[1][self::diff:insert] or preceding-sibling::node()[1][self::diff:insert]]]");
+                                   "ancestor::diff:*[1][self::diff:insert[following-sibling::node()[1][self::diff:delete] or preceding-sibling::node()[1][self::diff:delete]] or self::diff:delete[following-sibling::node()[1][self::diff:insert] or preceding-sibling::node()[1][self::diff:insert]]]");
 
   }
 
@@ -581,46 +585,46 @@ int main(int argc, char* argv[]) {
 
       su.list();
 
-    // process get attribute options
+      // process get attribute options
     } else if (optioncount > 0) {
 
       if (isoption(options, OPTION_LONG_INFO))
-	poptions.unit = -1;
+        poptions.unit = -1;
 
       // move to the appropriate unit and output the appropriate metadata
       su.move_to_unit(poptions.unit, su, options, optioncount, optionorder, output);
 
       // now finish longinfo
       if (isoption(options, OPTION_LONG_INFO)) {
-	if (!isoption(options, OPTION_UNIT)) {
-	  if (isatty(fileno(output)))
+        if (!isoption(options, OPTION_UNIT)) {
+          if (isatty(fileno(output)))
             fprintf(output, "\r");
 
           fprintf(output, "units=\"%d\"\n", su.curunits());
-	}
+        }
       }
 
-    // namespace
+      // namespace
     } else if (isoption(options, OPTION_NAMESPACE)) {
 
       su.move_to_unit(poptions.unit, su, options, optioncount, optionorder, output);
 
       for (int i = 0; i < poptions.nscount; ++i) {
-	
-	const char* prefix = su.namespace_ext(poptions.ns[i]);
-	if (prefix) {
-	  if (poptions.nscount == 1)
-	    fprintf(output, "%s\n", prefix);
-	  else {
-	    fprintf(output, "xmlns");
-	    if (prefix[0] != '\0')
-	      fprintf(output, ":%s", prefix);
-	    fprintf(output, "=\"%s\"\n", poptions.ns[i]);
-	  }
-	}
+
+        const char* prefix = su.namespace_ext(poptions.ns[i]);
+        if (prefix) {
+          if (poptions.nscount == 1)
+            fprintf(output, "%s\n", prefix);
+          else {
+            fprintf(output, "xmlns");
+            if (prefix[0] != '\0')
+              fprintf(output, ":%s", prefix);
+            fprintf(output, "=\"%s\"\n", poptions.ns[i]);
+          }
+        }
       }
 
-    // process non-attribute options
+      // process non-attribute options
     } else if (isoption(options, OPTION_ARCHIVE)) {
 
 #ifdef __GNUG__
@@ -632,11 +636,11 @@ int main(int argc, char* argv[]) {
       long count = su.unit_count(output);
 
       if (!isatty(fileno(output)))
-	fprintf(output, "%ld\n", count);
+        fprintf(output, "%ld\n", count);
 
       // if we terminated early, output the correct status
       if (isoption(options, OPTION_TERMINATE))
-	exit_status = STATUS_TERMINATED;
+        exit_status = STATUS_TERMINATED;
 
     } else if (isoption(options, OPTION_TO_DIR)) {
 
@@ -649,16 +653,16 @@ int main(int argc, char* argv[]) {
 
       // if we terminated early, output the correct status
       if (isoption(options, OPTION_TERMINATE))
-	exit_status = STATUS_TERMINATED;
+        exit_status = STATUS_TERMINATED;
       /*
-      while (curarg < argc) {
-	fprintf(stderr, "ANOTHER: %s\n", argv[curarg]);
-	su.set_input_filename(argv[curarg]);
-	++curarg;
+        while (curarg < argc) {
+        fprintf(stderr, "ANOTHER: %s\n", argv[curarg]);
+        su.set_input_filename(argv[curarg]);
+        ++curarg;
 
-	//	su.expand(poptions.ofilename, poptions.output_format, poptions.to_directory);
-      }
-	*/
+        //      su.expand(poptions.ofilename, poptions.output_format, poptions.to_directory);
+        }
+      */
 
     } else if (isoption(options, OPTION_PRESERVE)) {
 
@@ -711,14 +715,14 @@ int main(int argc, char* argv[]) {
   } catch (const OutOfRangeUnitError& e) {
 
     fprintf(stderr, "%s: unit %d  was selected from srcML that only contains "
-	    "%d units\n", PROGRAM_NAME, poptions.unit, e.size);
+            "%d units\n", PROGRAM_NAME, poptions.unit, e.size);
     exit_status = STATUS_UNIT_INVALID;
 
     return exit_status;
     /*
-  } catch (LibXMLError) {
-    exit_status = STATUS_UNIT_INVALID;
-    throw "XML error";
+      } catch (LibXMLError) {
+      exit_status = STATUS_UNIT_INVALID;
+      throw "XML error";
     */
   } catch (TerminateLibXMLError error) {
 
@@ -881,8 +885,8 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
       // validate source encoding
       if (!srcMLUtility::checkEncoding(poptions.src_encoding)) {
-	fprintf(stderr, "%s: text encoding \"%s\" is not supported.\n", PROGRAM_NAME, poptions.src_encoding);
-	exit(STATUS_UNKNOWN_ENCODING);
+        fprintf(stderr, "%s: text encoding \"%s\" is not supported.\n", PROGRAM_NAME, poptions.src_encoding);
+        exit(STATUS_UNKNOWN_ENCODING);
       }
       break;
 
@@ -960,14 +964,14 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
       // validate type of unit number
       if (errno == EINVAL || strlen(end) == strlen(optarg)) {
-	fprintf(stderr, "%s: unit option value \"%s\" must be numeric.\n", PROGRAM_NAME, optarg);
-	exit(STATUS_UNIT_INVALID);
+        fprintf(stderr, "%s: unit option value \"%s\" must be numeric.\n", PROGRAM_NAME, optarg);
+        exit(STATUS_UNIT_INVALID);
       }
 
       // validate range of unit number
       if (poptions.unit <= 0) {
-	fprintf(stderr, "%s: unit option value \"%d\" must be > 0.\n", PROGRAM_NAME, poptions.unit);
-	exit(STATUS_UNIT_INVALID);
+        fprintf(stderr, "%s: unit option value \"%d\" must be > 0.\n", PROGRAM_NAME, poptions.unit);
+        exit(STATUS_UNIT_INVALID);
       }
 
       break;
@@ -982,24 +986,24 @@ int process_args(int argc, char* argv[], process_options & poptions)
       exit(STATUS_SUCCESS);
       break;
       /*
-    case INPUT_FORMAT_FLAG_CODE:
+        case INPUT_FORMAT_FLAG_CODE:
 
-      // check for missing argument confused by an argument that looks like an option
-      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
+        // check for missing argument confused by an argument that looks like an option
+        checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
-      options |= OPTION_INPUT_FORMAT;
-      poptions.input_format = optarg;
-      break;
+        options |= OPTION_INPUT_FORMAT;
+        poptions.input_format = optarg;
+        break;
       */
       /*
-    case OUTPUT_FORMAT_FLAG_CODE:
+        case OUTPUT_FORMAT_FLAG_CODE:
 
-      // check for missing argument confused by an argument that looks like an option
-      checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
+        // check for missing argument confused by an argument that looks like an option
+        checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
-      options |= OPTION_OUTPUT_FORMAT;
-      poptions.output_format = optarg;
-      break;
+        options |= OPTION_OUTPUT_FORMAT;
+        poptions.output_format = optarg;
+        break;
       */
     case LIST_FLAG_CODE :
       options |= OPTION_LIST;
@@ -1015,8 +1019,8 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
       // must be both name and value, but value could be empty
       if (!strchr(optarg, '=')) {
-	fprintf(stderr, "%s: Register extension name and value must be given.\n", PROGRAM_NAME);
-	exit(1);
+        fprintf(stderr, "%s: Register extension name and value must be given.\n", PROGRAM_NAME);
+        exit(1);
       }
 
       // registerext value
@@ -1043,8 +1047,8 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
       // must be both name and value, but value could be empty
       if (!strchr(optarg, '=')) {
-	fprintf(stderr, "%s: Register extension function name and value must be given.\n", PROGRAM_NAME);
-	exit(1);
+        fprintf(stderr, "%s: Register extension function name and value must be given.\n", PROGRAM_NAME);
+        exit(1);
       }
 
       // register xpath extension function
@@ -1102,10 +1106,10 @@ int process_args(int argc, char* argv[], process_options & poptions)
       checkargisnonempty(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       if(poptions.transformcount != 0)
-      {
-	fprintf(stderr, "%s: Only one xpath expression, xslt file, or relaxng file may be used.\n", PROGRAM_NAME);
-	exit(STATUS_ERROR);
-      }
+        {
+          fprintf(stderr, "%s: Only one xpath expression, xslt file, or relaxng file may be used.\n", PROGRAM_NAME);
+          exit(STATUS_ERROR);
+        }
 
       options |= OPTION_XPATH;
       poptions.transforms[poptions.transformcount++] = optarg;
@@ -1120,10 +1124,10 @@ int process_args(int argc, char* argv[], process_options & poptions)
       checkargisnonempty(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       if(poptions.transformcount != 0)
-      {
-	fprintf(stderr, "%s: Only one xpath expression, xslt file, or relaxng file may be used.\n", PROGRAM_NAME);
-	exit(STATUS_ERROR);
-      }
+        {
+          fprintf(stderr, "%s: Only one xpath expression, xslt file, or relaxng file may be used.\n", PROGRAM_NAME);
+          exit(STATUS_ERROR);
+        }
 
       options |= OPTION_XSLT;
       poptions.transforms[poptions.transformcount++] = optarg;
@@ -1139,8 +1143,8 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
       // must be both name and value, but value could be empty
       if (!strchr(optarg, '=')) {
-	fprintf(stderr, "%s: Param name and value must be given.\n", PROGRAM_NAME);
-	exit(1);
+        fprintf(stderr, "%s: Param name and value must be given.\n", PROGRAM_NAME);
+        exit(1);
       }
 
       // param value
@@ -1160,8 +1164,8 @@ int process_args(int argc, char* argv[], process_options & poptions)
 
       // must be both name and value, but value could be empty
       if (!strchr(optarg, '=')) {
-	fprintf(stderr, "%s: Param name and value must be given.\n", PROGRAM_NAME);
-	exit(1);
+        fprintf(stderr, "%s: Param name and value must be given.\n", PROGRAM_NAME);
+        exit(1);
       }
 
       // param name
@@ -1181,10 +1185,10 @@ int process_args(int argc, char* argv[], process_options & poptions)
       checkargisoption(PROGRAM_NAME, argv[lastoptind], optarg, optind, lastoptind);
 
       if(poptions.transformcount != 0)
-      {
-	fprintf(stderr, "%s: Only one xpath expression, xslt file, or relaxng file may be used.\n", PROGRAM_NAME);
-	exit(STATUS_ERROR);
-      }
+        {
+          fprintf(stderr, "%s: Only one xpath expression, xslt file, or relaxng file may be used.\n", PROGRAM_NAME);
+          exit(STATUS_ERROR);
+        }
 
       options |= OPTION_RELAXNG;
       poptions.transforms[poptions.transformcount++] = optarg;
@@ -1298,8 +1302,8 @@ void register_xpath_functions_from_filename(const char * filename) {
 
       // must be both name and value, but value could be empty
       if (!strchr(extension_function, '=')) {
-	fprintf(stderr, "%s: Register extension function name and value must be given.\n", PROGRAM_NAME);
-	exit(1);
+        fprintf(stderr, "%s: Register extension function name and value must be given.\n", PROGRAM_NAME);
+        exit(1);
       }
 
       // register xpath extension function

@@ -32,8 +32,8 @@
 #include <libxml/xmlreader.h>
 
 /*
-static xmlChar* unit_directory = 0;
-static xmlChar* unit_filename = 0;
+  static xmlChar* unit_directory = 0;
+  static xmlChar* unit_filename = 0;
 */
 
 #include <libxml/tree.h>
@@ -178,7 +178,7 @@ static void srcPowersetFunction (xmlXPathParserContextPtr ctxt, int nargs) {
     // create this set, only leaving in what fits the bit position
     for (int i = 0; i < master->nodeNr; ++i) {
 
-      if (setnum & (1 << i)) {      
+      if (setnum & (1 << i)) {
         xmlNodePtr node = xmlCopyNode(master->nodeTab[i], 1);
         xmlAddChild(setnode, node);
       }
@@ -220,23 +220,26 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
 void xsltsrcMLRegister () {
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
-    typedef int (*xsltRegisterExtModuleFunction_function) (const xmlChar *, const xmlChar *, xmlXPathFunction);
-    void* handle = dlopen("libexslt.so", RTLD_LAZY);
+  typedef int (*xsltRegisterExtModuleFunction_function) (const xmlChar *, const xmlChar *, xmlXPathFunction);
+  void* handle = dlopen("libexslt.so", RTLD_LAZY);
+  if (!handle) {
+    handle = dlopen("libexslt.so.0", RTLD_LAZY);
     if (!handle) {
-        handle = dlopen("libexslt.dylib", RTLD_LAZY);
-        if (!handle) {
-            fprintf(stderr, "Unable to open libexslt library\n");
-            return;
-        }
-    }
-
-    dlerror();
-    xsltRegisterExtModuleFunction_function xsltRegisterExtModuleFunction = (xsltRegisterExtModuleFunction_function)dlsym(handle, "xsltRegisterExtModuleFunction");
-    char* error;
-    if ((error = dlerror()) != NULL) {
-        dlclose(handle);
+      handle = dlopen("libexslt.dylib", RTLD_LAZY);
+      if (!handle) {
+        fprintf(stderr, "Unable to open libexslt library\n");
         return;
+      }
     }
+  }
+
+  dlerror();
+  xsltRegisterExtModuleFunction_function xsltRegisterExtModuleFunction = (xsltRegisterExtModuleFunction_function)dlsym(handle, "xsltRegisterExtModuleFunction");
+  char* error;
+  if ((error = dlerror()) != NULL) {
+    dlclose(handle);
+    return;
+  }
 #endif
 
   xsltRegisterExtModuleFunction(BAD_CAST "unit",
