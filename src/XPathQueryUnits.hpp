@@ -465,7 +465,7 @@ public :
               full_unit += (const char *)pstate->root.prefix;
               full_unit += ":";
             }
-            full_unit += "unit>/n";
+            full_unit += "unit>\n";
            xmlOutputBufferWriteString(buf, found ? full_unit.c_str() : "/>\n");
 
 }
