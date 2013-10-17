@@ -113,20 +113,6 @@ public :
 
     prefix_name = (const xmlChar *)strdup(full_name.c_str());
 
-    // if applying to entire archive, then just build this node
-    if (isoption(options, OPTION_APPLY_ROOT)) {
-      static bool started = false;
-      if(!pstate->isarchive && !started) xmlSAX2StartDocument(ctx);
-      started = true;
-      xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes,
-                            nb_defaulted, attributes);
-
-      return;
-    }
-
-    // start the document for this unit
-    xmlSAX2StartDocument(ctx);
-
     // remove per-unit namespaces
     data.resize(rootsize);
 
@@ -147,6 +133,20 @@ public :
       data.push_back(namespaces[i * 2]);
       data.push_back(namespaces[i * 2 + 1]);
     }
+
+    // if applying to entire archive, then just build this node
+    if (isoption(options, OPTION_APPLY_ROOT)) {
+      static bool started = false;
+      if(!pstate->isarchive && !started) xmlSAX2StartDocument(ctx);
+      started = true;
+      xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes,
+                            nb_defaulted, attributes);
+
+      return;
+    }
+
+    // start the document for this unit
+    xmlSAX2StartDocument(ctx);
 
     // start the unit (element) at the root using the merged namespaces
     xmlSAX2StartElementNs(ctx, localname, 0, URI, data.size() / 2,
