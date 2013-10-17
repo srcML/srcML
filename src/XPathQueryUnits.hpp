@@ -120,6 +120,7 @@ public :
         if (!handle)
           fprintf(stderr, "Unable to open libexslt library\n");
       }
+    }
 
       if (handle) {
 
