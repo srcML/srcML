@@ -2,6 +2,10 @@
 <unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="synchronized_statement" filename="synchronzied_statement_java">
 
 <unit>
+<synchronized>synchronized(<expr><name>foo</name></expr>) <block>{}</block></synchronized>
+</unit>
+
+<unit>
 <synchronized>synchronized(<expr><name>factories</name></expr>) <block>{}</block></synchronized>
 </unit>
 
