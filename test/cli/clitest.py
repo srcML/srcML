@@ -1568,28 +1568,32 @@ f.write(nestedfile)
 f.close()
 
 checkallformsfile(srcml2src, 'sub/a.cpp.xml', "-U", option.UNIT_FLAG, "1", "", sfile1)
-check([srcml2src, option.UNIT_FLAG, "1", '-o', "sub/a.cpp"], nestedfile, "")
-validate(open('sub/a.cpp', 'r').read(), sfile1)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.UNIT_FLAG, "1", '-o', "sub/a.cpp"], nestedfile, "")
+        validate(open('sub/a.cpp', 'r').read(), sfile1)
 check([srcml2src, option.UNIT_FLAG, "1", 'sub/a.cpp.xml', '-o', "sub/a.cpp"], "", "")
 validate(open('sub/a.cpp', 'r').read(), sfile1)
 
 checkallformsfile(srcml2src, 'sub/a.cpp.xml', "-U", option.UNIT_FLAG, "2", "", sfile2)
-check([srcml2src, option.UNIT_FLAG, "2", '-o', "sub/b.cpp"], nestedfile, "")
-validate(open('sub/b.cpp', 'r').read(), sfile2)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.UNIT_FLAG, "2", '-o', "sub/b.cpp"], nestedfile, "")
+        validate(open('sub/b.cpp', 'r').read(), sfile2)
 check([srcml2src, option.UNIT_FLAG, "2", 'sub/a.cpp.xml', '-o', "sub/b.cpp"], "", "")
 validate(open('sub/b.cpp', 'r').read(), sfile2)
 
 # check xml and unit option
 
 check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "1", 'sub/a.cpp.xml'], "", sxmlfile1)
-check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "1", '-o', 'sub/b.cpp.xml'], nestedfile, "")
-validate(open('sub/b.cpp.xml', 'r').read(), sxmlfile1)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "1", '-o', 'sub/b.cpp.xml'], nestedfile, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), sxmlfile1)
 check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "1", 'sub/a.cpp.xml', '-o', "sub/b.cpp.xml"], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), sxmlfile1)
 
 check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "2", 'sub/a.cpp.xml'], "", sxmlfile2)
-check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "2", '-o', 'sub/b.cpp.xml'], nestedfile, "")
-validate(open('sub/b.cpp.xml', 'r').read(), sxmlfile2)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "2", '-o', 'sub/b.cpp.xml'], nestedfile, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), sxmlfile2)
 check([srcml2src, option.XML_FLAG, option.UNIT_FLAG, "2", 'sub/a.cpp.xml', '-o', "sub/b.cpp.xml"], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), sxmlfile2)
 
@@ -1662,8 +1666,9 @@ f.close()
 checkallforms(srcml2src, option.SRC_ENCODING_FLAG_SHORT, option.SRC_ENCODING_FLAG, "ISO-8859-1", sxmlfile1, sfile1)
 checkallformsfile(srcml2src, 'sub/a.cpp.xml', option.SRC_ENCODING_FLAG_SHORT, option.SRC_ENCODING_FLAG, "ISO-8859-1", "", sfile1)
 check([srcml2src, option.SRC_ENCODING_FLAG, "ISO-8859-1", 'sub/a.cpp.xml'], "", sfile1)
-check([srcml2src, option.SRC_ENCODING_FLAG, "ISO-8859-1", '-o', 'sub/a.cpp'], sxmlfile1, "")
-validate(open('sub/a.cpp', 'r').read(), sfile1)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.SRC_ENCODING_FLAG, "ISO-8859-1", '-o', 'sub/a.cpp'], sxmlfile1, "")
+        validate(open('sub/a.cpp', 'r').read(), sfile1)
 check([srcml2src, option.SRC_ENCODING_FLAG, "ISO-8859-1", 'sub/a.cpp.xml', '-o', 'sub/a.cpp'], "", "")
 validate(open('sub/a.cpp', 'r').read(), sfile1)
 
@@ -1740,8 +1745,9 @@ if platform.system() != "Windows" :
 
         check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++'], gzipped, sxmlfile)
         check([src2srcml, 'sub/a.cpp.gz'], "", fxmlfile)
-        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', '-o', 'sub/a.cpp.xml'], gzipped, "")
-        validate(open('sub/a.cpp.xml', 'r').read(), sxmlfile)
+        if sys.platform != 'cygwin' :
+                check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', '-o', 'sub/a.cpp.xml'], gzipped, "")
+                validate(open('sub/a.cpp.xml', 'r').read(), sxmlfile)
         check([src2srcml, 'sub/a.cpp.gz', '-o', 'sub/a.cpp.xml'], "", "")
         validate(open('sub/a.cpp.xml', 'r').read(), fxmlfile)
         
@@ -1751,8 +1757,9 @@ if platform.system() != "Windows" :
 
         check([srcml2src], gzipped, sfile)
         check([srcml2src, 'sub/a.cpp.xml.gz'], "", sfile)
-        check([srcml2src, '-o', 'sub/a.cpp'], gzipped, "")
-        validate(open('sub/a.cpp', 'r').read(), sfile)
+        if sys.platform != 'cygwin' :
+                check([srcml2src, '-o', 'sub/a.cpp'], gzipped, "")
+                validate(open('sub/a.cpp', 'r').read(), sfile)
         check([srcml2src, 'sub/a.cpp.xml.gz', '-o', 'sub/a.cpp'], "", "")
         validate(open('sub/a.cpp', 'r').read(), sfile)
 
@@ -1774,8 +1781,9 @@ fsrcml = xml_declaration + """
 
 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.LITERAL_FLAG], sfile, srcml)
 check([src2srcml, option.LITERAL_FLAG, 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.LITERAL_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
-validate(open('sub/a.cpp.xml', 'r').read(), srcml)
+if sys.platform != 'cygwin' :
+        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.LITERAL_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+        validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.LITERAL_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
@@ -1789,8 +1797,9 @@ fsrcml = xml_declaration + """
 
 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.OPERATOR_FLAG], sfile, srcml)
 check([src2srcml, option.OPERATOR_FLAG, 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.OPERATOR_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
-validate(open('sub/a.cpp.xml', 'r').read(), srcml)
+if sys.platform != 'cygwin' :
+        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.OPERATOR_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+        validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.OPERATOR_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
@@ -1804,8 +1813,9 @@ fsrcml = xml_declaration + """
 
 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.MODIFIER_FLAG], sfile, srcml)
 check([src2srcml, option.MODIFIER_FLAG, 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.MODIFIER_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
-validate(open('sub/a.cpp.xml', 'r').read(), srcml)
+if sys.platform != 'cygwin' :
+        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.MODIFIER_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+        validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.MODIFIER_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
@@ -1819,15 +1829,17 @@ fsrcml = xml_declaration + """
 
 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.LITERAL_FLAG, option.OPERATOR_FLAG], sfile, srcml)
 check([src2srcml, option.LITERAL_FLAG, option.OPERATOR_FLAG, 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.LITERAL_FLAG, option.OPERATOR_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
-validate(open('sub/a.cpp.xml', 'r').read(), srcml)
+if sys.platform != 'cygwin' :
+        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.LITERAL_FLAG, option.OPERATOR_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+        validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.LITERAL_FLAG, option.OPERATOR_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.OPERATOR_FLAG, option.LITERAL_FLAG], sfile, srcml)
 check([src2srcml, option.OPERATOR_FLAG, option.LITERAL_FLAG, 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.OPERATOR_FLAG, option.LITERAL_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
-validate(open('sub/a.cpp.xml', 'r').read(), srcml)
+if sys.platform != 'cygwin' :
+        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.OPERATOR_FLAG, option.LITERAL_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+        validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.OPERATOR_FLAG, option.LITERAL_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
@@ -1841,15 +1853,17 @@ fsrcml = xml_declaration + """
 
 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.LITERAL_FLAG, option.MODIFIER_FLAG], sfile, srcml)
 check([src2srcml, option.LITERAL_FLAG, option.MODIFIER_FLAG, 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.LITERAL_FLAG, option.MODIFIER_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
-validate(open('sub/a.cpp.xml', 'r').read(), srcml)
+if sys.platform != 'cygwin' :
+        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.LITERAL_FLAG, option.MODIFIER_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+        validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.LITERAL_FLAG, option.MODIFIER_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.MODIFIER_FLAG, option.LITERAL_FLAG], sfile, srcml)
 check([src2srcml, option.MODIFIER_FLAG, option.LITERAL_FLAG, 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.MODIFIER_FLAG, option.LITERAL_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
-validate(open('sub/a.cpp.xml', 'r').read(), srcml)
+if sys.platform != 'cygwin' :
+        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.MODIFIER_FLAG, option.LITERAL_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+        validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.MODIFIER_FLAG, option.LITERAL_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
@@ -1863,15 +1877,17 @@ fsrcml = xml_declaration + """
 
 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.OPERATOR_FLAG, option.MODIFIER_FLAG], sfile, srcml)
 check([src2srcml, option.OPERATOR_FLAG, option.MODIFIER_FLAG, 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.OPERATOR_FLAG, option.MODIFIER_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
-validate(open('sub/a.cpp.xml', 'r').read(), srcml)
+if sys.platform != 'cygwin' :
+        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.OPERATOR_FLAG, option.MODIFIER_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+        validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.OPERATOR_FLAG, option.MODIFIER_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.MODIFIER_FLAG, option.OPERATOR_FLAG], sfile, srcml)
 check([src2srcml, option.MODIFIER_FLAG, option.OPERATOR_FLAG, 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.MODIFIER_FLAG, option.OPERATOR_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
-validate(open('sub/a.cpp.xml', 'r').read(), srcml)
+if sys.platform != 'cygwin' :
+        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.MODIFIER_FLAG, option.OPERATOR_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+        validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.MODIFIER_FLAG, option.OPERATOR_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
@@ -1885,43 +1901,49 @@ fsrcml = xml_declaration + """
 
 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.LITERAL_FLAG, option.OPERATOR_FLAG, option.MODIFIER_FLAG], sfile, srcml)
 check([src2srcml, option.LITERAL_FLAG, option.OPERATOR_FLAG, option.MODIFIER_FLAG, 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.LITERAL_FLAG, option.OPERATOR_FLAG, option.MODIFIER_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
-validate(open('sub/a.cpp.xml', 'r').read(), srcml)
+if sys.platform != 'cygwin' :
+        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.LITERAL_FLAG, option.OPERATOR_FLAG, option.MODIFIER_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+        validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.LITERAL_FLAG, option.OPERATOR_FLAG, option.MODIFIER_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.LITERAL_FLAG, option.MODIFIER_FLAG, option.OPERATOR_FLAG], sfile, srcml)
 check([src2srcml, option.LITERAL_FLAG, option.MODIFIER_FLAG, option.OPERATOR_FLAG, 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.LITERAL_FLAG, option.MODIFIER_FLAG, option.OPERATOR_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
-validate(open('sub/a.cpp.xml', 'r').read(), srcml)
+if sys.platform != 'cygwin' :
+        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.LITERAL_FLAG, option.MODIFIER_FLAG, option.OPERATOR_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+        validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.LITERAL_FLAG, option.MODIFIER_FLAG, option.OPERATOR_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.OPERATOR_FLAG, option.LITERAL_FLAG, option.MODIFIER_FLAG], sfile, srcml)
 check([src2srcml, option.OPERATOR_FLAG, option.LITERAL_FLAG, option.MODIFIER_FLAG, 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.OPERATOR_FLAG, option.LITERAL_FLAG, option.MODIFIER_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
-validate(open('sub/a.cpp.xml', 'r').read(), srcml)
+if sys.platform != 'cygwin' :
+        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.OPERATOR_FLAG, option.LITERAL_FLAG, option.MODIFIER_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+        validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.OPERATOR_FLAG, option.LITERAL_FLAG, option.MODIFIER_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.OPERATOR_FLAG, option.MODIFIER_FLAG, option.LITERAL_FLAG], sfile, srcml)
 check([src2srcml, option.OPERATOR_FLAG, option.MODIFIER_FLAG, option.LITERAL_FLAG, 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.OPERATOR_FLAG, option.MODIFIER_FLAG, option.LITERAL_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
-validate(open('sub/a.cpp.xml', 'r').read(), srcml)
+if sys.platform != 'cygwin' :
+        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.OPERATOR_FLAG, option.MODIFIER_FLAG, option.LITERAL_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+        validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.OPERATOR_FLAG, option.MODIFIER_FLAG, option.LITERAL_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.MODIFIER_FLAG, option.LITERAL_FLAG, option.OPERATOR_FLAG], sfile, srcml)
 check([src2srcml, option.MODIFIER_FLAG, option.LITERAL_FLAG, option.OPERATOR_FLAG, 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.MODIFIER_FLAG, option.LITERAL_FLAG, option.OPERATOR_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
-validate(open('sub/a.cpp.xml', 'r').read(), srcml)
+if sys.platform != 'cygwin' :
+        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.MODIFIER_FLAG, option.LITERAL_FLAG, option.OPERATOR_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+        validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.MODIFIER_FLAG, option.LITERAL_FLAG, option.OPERATOR_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.MODIFIER_FLAG, option.OPERATOR_FLAG, option.LITERAL_FLAG], sfile, srcml)
 check([src2srcml, option.MODIFIER_FLAG, option.OPERATOR_FLAG, option.LITERAL_FLAG, 'sub/a.cpp'], "", fsrcml)
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.MODIFIER_FLAG, option.OPERATOR_FLAG, option.LITERAL_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
-validate(open('sub/a.cpp.xml', 'r').read(), srcml)
+if sys.platform != 'cygwin' :
+        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.MODIFIER_FLAG, option.OPERATOR_FLAG, option.LITERAL_FLAG, '-o', 'sub/a.cpp.xml'], sfile, "")
+        validate(open('sub/a.cpp.xml', 'r').read(), srcml)
 check([src2srcml, option.MODIFIER_FLAG, option.OPERATOR_FLAG, option.LITERAL_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fsrcml)
 
@@ -2065,8 +2087,9 @@ f.close()
 
 check([srcml2src, option.XML_FLAG], srcml, srcml)
 check([srcml2src, option.XML_FLAG, 'sub/a.cpp.xml'], "", srcml)
-check([srcml2src, option.XML_FLAG, '-o', 'sub/a.cpp.xml'], srcml, "")
-validate(open('sub/a.cpp.xml').read(), srcml)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.XML_FLAG, '-o', 'sub/a.cpp.xml'], srcml, "")
+        validate(open('sub/a.cpp.xml').read(), srcml)
 check([srcml2src, option.XML_FLAG, 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml').read(), srcml)
 
