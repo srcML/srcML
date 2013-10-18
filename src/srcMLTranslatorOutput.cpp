@@ -209,6 +209,7 @@ namespace {
   ELEMENT_MAP(SIMPLEMENTS,    "implements")
   ELEMENT_MAP(SIMPORT,        "import")
   ELEMENT_MAP(SPACKAGE,       "package")
+  ELEMENT_MAP(SSYNCHRONIZED_STATEMENT, "synchronized")
   ELEMENT_MAP(SINTERFACE,     "class")
 
   // special characters

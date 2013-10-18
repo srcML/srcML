@@ -364,6 +364,7 @@ tokens {
 
     SWHILE_STATEMENT;
     SLOCK_STATEMENT;
+    SSYNCHRONIZED_STATEMENT;
     SFIXED_STATEMENT;
 	SDO_STATEMENT;
 
@@ -667,7 +668,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         typedef_statement |
 
         // Java - keyword only detected for Java
-        import_statement | package_statement |
+        import_statement | package_statement | synchronized_statement
 
         // C# - keyword only detected for C#
         checked_statement | unchecked_statement | lock_statement | fixed_statement | unsafe_statement | yield_statements |
@@ -3539,6 +3540,38 @@ lock_statement[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type
             startNewMode(MODE_TOP | MODE_LIST | MODE_EXPECT | MODE_INTERNAL_END_PAREN);
         }
         LOCK LPAREN
+        (
+            // explicitly check for a variable declaration since it can easily
+            // be confused with an expression
+            { pattern_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
+            for_initialization_variable_declaration[type_count] |
+
+            {
+                // use a new mode without the expect so we don't nest expression parts
+                startNewMode(MODE_EXPRESSION);
+
+                // start the expression element
+                startElement(SEXPRESSION);
+            }
+            // explicitly check for non-terminate so that a large switch statement
+            // isn't needed
+            expression
+        )
+;
+
+
+synchronized_statement[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+        {
+            // treat try block as nested block statement
+            startNewMode(MODE_STATEMENT | MODE_NEST);
+
+            // start of the try statement
+            startElement(SSYNCHRONIZED_STATEMENT);
+
+            // expect a condition to follow the keyword
+            startNewMode(MODE_TOP | MODE_LIST | MODE_EXPECT | MODE_INTERNAL_END_PAREN);
+        }
+        SYNCHRONIZED LPAREN
         (
             // explicitly check for a variable declaration since it can easily
             // be confused with an expression
