@@ -102,6 +102,8 @@ const char* getLanguageExtension(const char * const inpath)
   extension.assign(&path[pmatch[2].rm_so], &path[pmatch[2].rm_eo]);
   std::reverse(extension.begin(), extension.end());
 
+  regfree(&preg);
+
   // if we have a non-blank extension, return that
   return extension.empty() ? 0 : extension.c_str();
 }
