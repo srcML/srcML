@@ -3175,14 +3175,14 @@ for file in dir :
 
 srcml += srcmlend
 
-if platform.system() == "Windows" :
+if platform.system() == "Windows" or sys.platform == 'cygwin' :
         srcml = string.replace(srcml, "dir/", "dir\\")
 
 check([src2srcml, 'dir'], "", srcml)
 check([src2srcml, 'dir', '-o', 'dir/dir.xml'], "", "")
 validate(open('dir/dir.xml', 'r').read(), srcml)
 
-if platform.system() != "Windows" :
+if platform.system() != "Windows" and sys.platform != 'cygwin' :
         execute(['tar', 'czf', 'dir/foo.tar', 'dir/file.c'], "")
 
         check([src2srcml, 'dir'], "", srcml)
@@ -3226,7 +3226,7 @@ srcmlend = """
 </unit>
 """
 
-if platform.system() != "Windows" :
+if platform.system() != "Windows" and sys.platform != 'cygwin' :
         os.system('rm sub/a.cpp; touch sub/a.cpp')
 else :
         os.system("del sub\\a.cpp")
@@ -3244,7 +3244,7 @@ check([src2srcml, 'sub/a.java', 'sub/a.cpp'], '', srcmlstart + java + cppempty +
 check([src2srcml, 'sub/a.java', 'sub/a.cpp', '-o', 'sub/all.xml'], '', '')
 validate(open('sub/all.xml', 'r').read(), srcmlstart + java + cppempty + srcmlend)
 
-if platform.system() != "Windows" :
+if platform.system() != "Windows" and sys.platform != 'cygwin' :
         os.system('rm sub/a.java; touch sub/a.java')
 else :
         os.system("del sub\\a.java")
@@ -3268,7 +3268,7 @@ cpp = """
 </unit>
 """
 
-if platform.system() != "Windows" :
+if platform.system() != "Windows" and sys.platform != 'cygwin' :
         os.system('rm sub/a.cpp; touch sub/a.cpp')
 else :
         os.system("del sub\\a.cpp")
@@ -3292,7 +3292,7 @@ java = """
 </unit>
 """
 
-if platform.system() != "Windows" :
+if platform.system() != "Windows" and sys.platform != 'cygwin' :
         os.system('rm sub/a.java; touch sub/a.java')
 else :
         os.system("del sub\\a.java")
