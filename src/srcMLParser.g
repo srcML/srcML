@@ -668,7 +668,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         typedef_statement |
 
         // Java - keyword only detected for Java
-        import_statement | package_statement | synchronized_statement
+        import_statement | package_statement | synchronized_statement |
 
         // C# - keyword only detected for C#
         checked_statement | unchecked_statement | lock_statement | fixed_statement | unsafe_statement | yield_statements |
