@@ -84,15 +84,15 @@ bool Language::registerUserExt(const char* ext, const char* language) {
 const char* getLanguageExtension(const char * const inpath)
 {
   // internal string for returning constant
-  static std::string extension;
+   std::string extension;
 
   // reversed copy of the path
   std::string path(inpath);
   std::reverse(path.begin(), path.end());
 
   // setup the regular expression
-  static regex_t preg = { 0 };
-  static int errorcode = regcomp(&preg, regex, REG_EXTENDED);
+  regex_t preg = { 0 };
+   int errorcode = regcomp(&preg, regex, REG_EXTENDED);
 
   // evalue the regex
   regmatch_t pmatch[3];
