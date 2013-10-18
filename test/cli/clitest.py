@@ -2337,7 +2337,7 @@ f.write(sxmlfile)
 f.close()
  
 # src2srcml
-if platform.system() != "Windows" :
+if platform.system() != "Windows" and sys.platform != 'cygwin' :
 
         globals()["test_count"] += 1
         globals()["test_line"] = os.path.basename(src2srcml) + ' ' + option.VERBOSE_FLAG
@@ -2352,7 +2352,7 @@ if platform.system() != "Windows" :
         execute(['grep', srcencoding + xmlencoding], line)
 
 # srcml2src
-if platform.system() != "Windows" :
+if platform.system() != "Windows" and sys.platform != 'cygwin' :
 
         globals()["test_count"] += 1
         globals()["test_line"] = os.path.basename(srcml2src) + ' ' + option.VERBOSE_FLAG
