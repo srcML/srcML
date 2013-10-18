@@ -1694,7 +1694,7 @@ fxmlfile = xml_declaration + """
 """
 
 # src2srcml
-if platform.system() != "Windows":
+if platform.system() != "Windows" :
 
         f = open('sub/a.cpp', 'w')
         f.write(sfile)
