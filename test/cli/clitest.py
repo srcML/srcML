@@ -1710,7 +1710,7 @@ if platform.system() != "Windows":
 
 # srcml2src
 
-if platform.system() != "Windows" and sys.platform != 'cygwin':
+if platform.system() != "Windows" :
 
         f = open('sub/a.cpp.xml', 'w')
         f.write(fxmlfile)
