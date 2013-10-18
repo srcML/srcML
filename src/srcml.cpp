@@ -35,7 +35,7 @@
 #include <map>
 #include <archive.h>
 #include <archive_entry.h>
-#include <curl/curl.h>
+//#include <curl/curl.h>
 #include <pthread.h>
 
 namespace prog_opts = boost::program_options;
@@ -102,7 +102,7 @@ const char* SRCML2SRC_FOOTER = "Examples:\
   Read from file main.cpp.xml, write to file main.cpp:\
   \n\
   srcml main.cpp.xml -o main.cpp\
-	\n\n\
+  \n\n\
   Read from URI, write to file main.cpp:\
   \n\
   srcml http://www.sdml.info/projects/srcml/ex/main.cpp.xml main.cpp\
@@ -293,7 +293,7 @@ int main(int argc, char * argv[]) {
       ("output,o", prog_opts::value<std::string>()->notifier(&option_output), "write result ouput to arg which is a FILE or URI")
       ("quiet,q", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_QUIET>), "suppresses status messages")
       ("src-encoding,t", prog_opts::value<std::string>()->notifier(&option_src_encoding), "set the input source encoding to arg (default:  ISO-8859-1)")
-      ("verbose,v", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERBOSE>), "conversion and status information to stderr")		
+      ("verbose,v", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERBOSE>), "conversion and status information to stderr")    
       ("version,V", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERSION>), "display version number and exit")
       ;
 
@@ -394,25 +394,54 @@ int main(int argc, char * argv[]) {
     prog_opts::notify(cli_map);
 
     //CHECK OPTION CONFLICTS
-    conflicting_options(cli_map, "quiet", "verbose");	
+    conflicting_options(cli_map, "quiet", "verbose"); 
 
   }
   catch(std::exception& e) {
     std::cerr << e.what() << "\n";
     return 1;
   }
+  
+  
 
   if (!srcml_request.positional_args.empty()) {
+
+    struct srcml_archive* archive;
+    struct srcml_unit* unit;
+
+    /* create a new srcml archive structure */
+    archive = srcml_create_archive();
+
+    /* open a srcML archive for output */
+    srcml_write_open_filename(archive, "project.xml");
+
+    /* add all the files to the archive */
     for(int i = 0; i < srcml_request.positional_args.size(); ++i) {
-      std::cout << "ARG #" << i << " " << srcml_request.positional_args[i] << "\n";
+      std::cout << "ARG #" << i+1 << " " << srcml_request.positional_args[i] << "\n";
+      unit = srcml_create_unit(archive);
+
+      srcml_unit_set_filename(unit, srcml_request.positional_args[i].c_str());
+
+      /* Translate to srcml and append to the archive */
+      srcml_parse_unit_filename(unit, srcml_request.positional_args[i].c_str());
+
+      /* Translate to srcml and append to the archive */
+      srcml_write_unit(archive, unit);
+
+      srcml_free_unit(unit);
     }
+
+    /* close the srcML archive */
+    srcml_close_archive(archive);
+
+    /* free the srcML archive data */
+    srcml_free_archive(archive);
   }
 
-  archive *arch = archive_read_new();
-  archive_entry *archEntry = archive_entry_new();
-  struct srcml_archive *srcmlArch = srcml_create_archive();
-  struct srcml_unit *srcmlEntry = srcml_create_unit(srcmlArch);
-  CURL *handle = curl_easy_init();
+  //NEED THESE LATER
+  //archive *arch = archive_read_new();
+  //archive_entry *archEntry = archive_entry_new();
+  //CURL *handle = curl_easy_init();
 
   return 0;
 }
