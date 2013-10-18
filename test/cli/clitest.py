@@ -3072,7 +3072,8 @@ validate(open('sub/b.cpp.xml', 'r').read(), srcml)
 
 # TODO really make sure this is ok to return ok when no schema supplied.
 validate(getreturn([srcml2src, option.RELAXNG_FLAG], srcml), status.STATUS_SUCCESS)
-validate(getreturn([srcml2src, option.RELAXNG_FLAG + '='], srcml), status.STATUS_SUCCESS)
+if sys.platform != 'cygwin' :
+        validate(getreturn([srcml2src, option.RELAXNG_FLAG + '='], srcml), status.STATUS_SUCCESS)
 
 # relaxng apply root
 
@@ -3090,7 +3091,8 @@ validate(open('sub/b.cpp.xml', 'r').read(), srcml)
 
 # TODO really make sure this is ok to return ok when no schema supplied.
 validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.RELAXNG_FLAG], srcml), status.STATUS_SUCCESS)
-validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.RELAXNG_FLAG + '='], srcml), status.STATUS_SUCCESS)
+if sys.platform != 'cygwin' :
+        validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.RELAXNG_FLAG + '='], srcml), status.STATUS_SUCCESS)
 
 # position
 
