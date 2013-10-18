@@ -57,7 +57,7 @@ def validateWithInput(input, gen, expected):
         gen = str(gen)
         expected = str(expected)
 
-        if (platform.system() == "Windows" or platform.system() == "CYGWIN_NT-6.1") and string.find(gen, "\r\n") != -1:
+        if (platform.system() == "Windows" or platform.system() == "CYGWIN_NT-6.1" or sys.platfrom == 'cygwin') and string.find(gen, "\r\n") != -1:
                 expected = string.replace(expected, "\n", "\r\n")
 
         if string.find(gen, "\r\n") != -1:
@@ -78,7 +78,7 @@ def validate(gen, expected):
         gen = str(gen)
         expected = str(expected)
 
-        if (platform.system() == "Windows" or platform.system() == "CYGWIN_NT-6.1") and string.find(gen, "\r\n") != -1:
+        if (platform.system() == "Windows" or platform.system() == "CYGWIN_NT-6.1" or sys.platform == 'cygwin') and string.find(gen, "\r\n") != -1:
                 expected = string.replace(expected, "\n", "\r\n")
 
         if string.find(gen, "\r\n") != -1:
