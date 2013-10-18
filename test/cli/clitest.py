@@ -3328,7 +3328,7 @@ check([src2srcml, 'sub/a.java', 'sub/a.cpp'], '', srcmlstart + java + cppempty +
 check([src2srcml, 'sub/a.java', 'sub/a.cpp', '-o', 'sub/all.xml'], '', '')
 validate(open('sub/all.xml', 'r').read(), srcmlstart + java + cppempty + srcmlend)
 
-if platform.system() != "Windows" and sys.platform != 'cygwin' :
+if platform.system() != "Windows" :
         os.system('rm sub/a.java; touch sub/a.java')
 else :
         os.system("del sub\\a.java")
@@ -3352,7 +3352,7 @@ cpp = """
 </unit>
 """
 
-if platform.system() != "Windows" and sys.platform != 'cygwin' :
+if platform.system() != "Windows" :
         os.system('rm sub/a.cpp; touch sub/a.cpp')
 else :
         os.system("del sub\\a.cpp")
@@ -3376,7 +3376,7 @@ java = """
 </unit>
 """
 
-if platform.system() != "Windows" and sys.platform != 'cygwin' :
+if platform.system() != "Windows" :
         os.system('rm sub/a.java; touch sub/a.java')
 else :
         os.system("del sub\\a.java")
