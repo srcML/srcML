@@ -648,7 +648,8 @@ validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.ENCODIN
 # srcml2src error return
 
 # invalid input filename
-validate(getreturn([srcml2src, "foobar"], None), status.STATUS_INPUTFILE_PROBLEM)
+if sys.platform != 'cygwin' :
+        validate(getreturn([srcml2src, "foobar"], None), status.STATUS_INPUTFILE_PROBLEM)
 
 # unknown option
 validate(getreturn([srcml2src, "--strip", "foobar"], None), status.STATUS_UNKNOWN_OPTION)
@@ -922,10 +923,11 @@ validate(open('sub/a.cpp.xml', 'r').read(), fxmlfile)
 check([src2srcml, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fxmlfile)
 
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', '-', '-o', 'sub/a.cpp.xml'], sfile, "")
-validate(open('sub/a.cpp.xml', 'r').read(), sxmlfile)
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', '-o', 'sub/a.cpp.xml'], sfile, "")
-validate(open('sub/a.cpp.xml', 'r').read(), sxmlfile)
+if sys.platform != 'cygwin' :
+        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', '-', '-o', 'sub/a.cpp.xml'], sfile, "")
+        validate(open('sub/a.cpp.xml', 'r').read(), sxmlfile)
+        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', '-o', 'sub/a.cpp.xml'], sfile, "")
+        validate(open('sub/a.cpp.xml', 'r').read(), sxmlfile)
 
 # non-windows
 if platform.system() != "Windows" :
