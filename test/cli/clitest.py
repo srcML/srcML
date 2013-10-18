@@ -63,7 +63,7 @@ def validateWithInput(input, gen, expected):
         if (platform.system() == "Windows" or platform.system() == "CYGWIN_NT-6.1" or sys.platform == 'cygwin') and string.find(gen, "\r\n") != -1:
                 expected = string.replace(expected, "\n", "\r\n")
 
-        if string.find(gen, "\r\n") != -1:
+        if (platform.system() != "Windows" and platform.system() != "CYGWIN_NT-6.1" and sys.platform != 'cygwin') and string.find(gen, "\r\n") != -1:
                 globals()["eol_error_count"] += 1
                 globals()["eol_error_list"].append(globals()["test_count"])
 
@@ -84,7 +84,7 @@ def validate(gen, expected):
         if (platform.system() == "Windows" or platform.system() == "CYGWIN_NT-6.1" or sys.platform == 'cygwin') and string.find(gen, "\r\n") != -1:
                 expected = string.replace(expected, "\n", "\r\n")
 
-        if string.find(gen, "\r\n") != -1:
+        if (platform.system() != "Windows" and platform.system() != "CYGWIN_NT-6.1" and sys.platform != 'cygwin') and string.find(gen, "\r\n") != -1:
                 globals()["eol_error_count"] += 1
                 globals()["eol_error_list"].append(globals()["test_count"])
 
