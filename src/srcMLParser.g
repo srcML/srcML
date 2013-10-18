@@ -261,7 +261,7 @@ srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, int parser_options
     if (!_tokenSet_1.member(IF))
         fprintf(stderr, "src2srcml:  Incorrect token set A\n");
 
-    if (!_tokenSet_12.member(INCLUDE))
+    if (!_tokenSet_13.member(INCLUDE))
         fprintf(stderr, "src2srcml:  Incorrect token set B\n");
 
     if (!_tokenSet_21.member(CLASS))
@@ -2191,7 +2191,7 @@ function_pointer_name_grammar[] { ENTRY_DEBUG } :
 function_pointer_name_base[] { ENTRY_DEBUG bool flag = false; } :
 
         // special case for function pointer names that don't have '*'
-        { _tokenSet_12.member(LA(1)) }?
+        { _tokenSet_13.member(LA(1)) }?
         compound_name_inner[false] |
 
         // special name prefix of namespace or class
