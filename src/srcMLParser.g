@@ -622,6 +622,8 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         // statements that clearly start with a keyword
         { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) }? keyword_statements |
 
+        { inLanguage(LANGUAGE_JAVA) }? (SYNCHRONIZED LPAREN)=>synchronized_statement |
+
         // statements identified by pattern (i.e., do not start with a keyword)
         { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) }? pattern_statements |
 
@@ -668,7 +670,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         typedef_statement |
 
         // Java - keyword only detected for Java
-        import_statement | package_statement | { inLanguage(LANGUAGE_JAVA) }? (SYNCHRONIZED LPAREN)=>synchronized_statement |
+        import_statement | package_statement |
 
         // C# - keyword only detected for C#
         checked_statement | unchecked_statement | lock_statement | fixed_statement | unsafe_statement | yield_statements |
@@ -3558,7 +3560,6 @@ lock_statement[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type
             expression
         )
 ;
-
 
 synchronized_statement[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
         {
