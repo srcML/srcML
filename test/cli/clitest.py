@@ -2889,8 +2889,9 @@ validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.XSLT_FLAG + '=copy
 
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XSLT_FLAG + '=copy.xsl'], srcml, srcml)
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XSLT_FLAG + '=copy.xsl', 'sub/a.cpp.xml'], "", srcml)
-check([srcml2src, option.APPLY_ROOT_FLAG, option.XSLT_FLAG + '=copy.xsl', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), srcml)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.APPLY_ROOT_FLAG, option.XSLT_FLAG + '=copy.xsl', '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), srcml)
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XSLT_FLAG + '=copy.xsl', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), srcml)
 
@@ -2901,8 +2902,9 @@ validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.XSLT_FLAG + '='], 
 
 check([srcml2src, option.XSLT_FLAG + '=copy.xsl', option.PARAM_FLAG, 'NAME=VALUE'], srcml, srcml)
 check([srcml2src, option.XSLT_FLAG + '=copy.xsl', option.PARAM_FLAG, 'NAME=VALUE', 'sub/a.cpp.xml'], "", srcml)
-check([srcml2src, option.XSLT_FLAG + '=copy.xsl', option.PARAM_FLAG, 'NAME=VALUE', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), srcml)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.XSLT_FLAG + '=copy.xsl', option.PARAM_FLAG, 'NAME=VALUE', '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), srcml)
 check([srcml2src, option.XSLT_FLAG + '=copy.xsl', option.PARAM_FLAG, 'NAME=VALUE', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), srcml)
 
@@ -2914,8 +2916,9 @@ xslt = """a
 
 check([srcml2src, option.XSLT_FLAG + '=param.xsl', option.PARAM_FLAG, 'name="a"'], srcml, xslt)
 check([srcml2src, option.XSLT_FLAG + '=param.xsl', option.PARAM_FLAG, 'name="a"', 'sub/a.cpp.xml'], "", xslt)
-check([srcml2src, option.XSLT_FLAG + '=param.xsl', option.PARAM_FLAG, 'name="a"', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), xslt)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.XSLT_FLAG + '=param.xsl', option.PARAM_FLAG, 'name="a"', '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), xslt)
 check([srcml2src, option.XSLT_FLAG + '=param.xsl', option.PARAM_FLAG, 'name="a"', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), xslt)
 
@@ -2926,8 +2929,9 @@ validate(getreturn([srcml2src, option.XSLT_FLAG + '=copy.xsl', option.PARAM_FLAG
 
 check([srcml2src, option.XSLT_FLAG + '=copy.xsl', option.STRING_PARAM_FLAG, 'NAME=VALUE'], srcml, srcml)
 check([srcml2src, option.XSLT_FLAG + '=copy.xsl', option.STRING_PARAM_FLAG, 'NAME=VALUE', 'sub/a.cpp.xml'], "", srcml)
-check([srcml2src, option.XSLT_FLAG + '=copy.xsl', option.STRING_PARAM_FLAG, 'NAME=VALUE', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), srcml)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.XSLT_FLAG + '=copy.xsl', option.STRING_PARAM_FLAG, 'NAME=VALUE', '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), srcml)
 check([srcml2src, option.XSLT_FLAG + '=copy.xsl', option.STRING_PARAM_FLAG, 'NAME=VALUE', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), srcml)
 
@@ -2939,8 +2943,9 @@ xslt = """a
 
 check([srcml2src, option.XSLT_FLAG + '=param.xsl', option.STRING_PARAM_FLAG, 'name=a'], srcml, xslt)
 check([srcml2src, option.XSLT_FLAG + '=param.xsl', option.STRING_PARAM_FLAG, 'name=a', 'sub/a.cpp.xml'], "", xslt)
-check([srcml2src, option.XSLT_FLAG + '=param.xsl', option.STRING_PARAM_FLAG, 'name=a', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), xslt)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.XSLT_FLAG + '=param.xsl', option.STRING_PARAM_FLAG, 'name=a', '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), xslt)
 check([srcml2src, option.XSLT_FLAG + '=param.xsl', option.STRING_PARAM_FLAG, 'name=a', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), xslt)
 
@@ -2965,8 +2970,9 @@ file.close()
 
 check([srcml2src, option.XSLT_FLAG + '=archive.xsl'], srcml, xslt)
 check([srcml2src, option.XSLT_FLAG + '=archive.xsl', 'sub/a.cpp.xml'], "", xslt)
-check([srcml2src, option.XSLT_FLAG + '=archive.xsl', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), xslt)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.XSLT_FLAG + '=archive.xsl', '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), xslt)
 check([srcml2src, option.XSLT_FLAG + '=archive.xsl', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), xslt)
 
@@ -2991,8 +2997,9 @@ file.close()
 
 check([srcml2src, option.XSLT_FLAG + '=archive.xsl'], srcml, xslt)
 check([srcml2src, option.XSLT_FLAG + '=archive.xsl', 'sub/a.cpp.xml'], "", xslt)
-check([srcml2src, option.XSLT_FLAG + '=archive.xsl', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), xslt)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.XSLT_FLAG + '=archive.xsl', '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), xslt)
 check([srcml2src, option.XSLT_FLAG + '=archive.xsl', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), xslt)
 
@@ -3023,8 +3030,9 @@ file.close()
 
 check([srcml2src, option.XSLT_FLAG + '=archive.xsl'], srcml, xslt)
 check([srcml2src, option.XSLT_FLAG + '=archive.xsl', 'sub/a.cpp.xml'], "", xslt)
-check([srcml2src, option.XSLT_FLAG + '=archive.xsl', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), xslt)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.XSLT_FLAG + '=archive.xsl', '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), xslt)
 check([srcml2src, option.XSLT_FLAG + '=archive.xsl', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), xslt)
 
@@ -3049,8 +3057,9 @@ validate(getreturn([srcml2src, option.RELAXNG_FLAG + '=schema.rng'], ""), 2)
 
 check([srcml2src, option.RELAXNG_FLAG + '=schema.rng'], srcml, srcml)
 check([srcml2src, option.RELAXNG_FLAG + '=schema.rng', 'sub/a.cpp.xml'], "", srcml)
-check([srcml2src, option.RELAXNG_FLAG + '=schema.rng', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), srcml)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.RELAXNG_FLAG + '=schema.rng', '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), srcml)
 check([srcml2src, option.RELAXNG_FLAG + '=schema.rng', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), srcml)
 
@@ -3065,8 +3074,9 @@ validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.RELAXNG_FLAG + '=s
 
 check([srcml2src, option.APPLY_ROOT_FLAG, option.RELAXNG_FLAG + '=schema.rng'], srcml, srcml)
 check([srcml2src, option.APPLY_ROOT_FLAG, option.RELAXNG_FLAG + '=schema.rng', 'sub/a.cpp.xml'], "", srcml)
-check([srcml2src, option.APPLY_ROOT_FLAG, option.RELAXNG_FLAG + '=schema.rng', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), srcml)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.APPLY_ROOT_FLAG, option.RELAXNG_FLAG + '=schema.rng', '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), srcml)
 check([srcml2src, option.APPLY_ROOT_FLAG, option.RELAXNG_FLAG + '=schema.rng', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), srcml)
 
@@ -3090,8 +3100,9 @@ f.close()
 
 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.POSITION_FLAG], "", sxmlfile)
 check([src2srcml, option.POSITION_FLAG, 'sub/a.cpp'], "", fsxmlfile)
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.POSITION_FLAG, '-o', 'sub/a.cpp.xml'], "", "")
-validate(open('sub/a.cpp.xml').read(), sxmlfile)
+if sys.platform != 'cygwin' :
+        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.POSITION_FLAG, '-o', 'sub/a.cpp.xml'], "", "")
+        validate(open('sub/a.cpp.xml').read(), sxmlfile)
 check([src2srcml, option.POSITION_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml').read(), fsxmlfile)
 
@@ -3111,8 +3122,9 @@ f.close()
 
 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.TABS_FLAG, '4'], "", sxmlfile)
 check([src2srcml, option.TABS_FLAG, '4', 'sub/a.cpp'], "", fsxmlfile)
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.TABS_FLAG, '4', '-o', 'sub/a.cpp.xml'], "", "")
-validate(open('sub/a.cpp.xml').read(), sxmlfile)
+if sys.platform != 'cygwin' :
+        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.TABS_FLAG, '4', '-o', 'sub/a.cpp.xml'], "", "")
+        validate(open('sub/a.cpp.xml').read(), sxmlfile)
 check([src2srcml, option.TABS_FLAG, '4', 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml').read(), fsxmlfile)
 
@@ -3135,8 +3147,9 @@ f.close()
 
 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.POSITION_FLAG, option.TABS_FLAG, '2'], "", sxmlfile)
 check([src2srcml, option.POSITION_FLAG, option.TABS_FLAG, '2', 'sub/a.cpp'], "", fsxmlfile)
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.POSITION_FLAG, option.TABS_FLAG, '2', '-o', 'sub/a.cpp.xml'], "", "")
-validate(open('sub/a.cpp.xml').read(), sxmlfile)
+if sys.platform != 'cygwin' :
+        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.POSITION_FLAG, option.TABS_FLAG, '2', '-o', 'sub/a.cpp.xml'], "", "")
+        validate(open('sub/a.cpp.xml').read(), sxmlfile)
 check([src2srcml, option.POSITION_FLAG, option.TABS_FLAG, '2', 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml').read(), fsxmlfile)
 
@@ -3145,8 +3158,9 @@ validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.POSITIO
 
 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.TABS_FLAG, '2', option.POSITION_FLAG], "", sxmlfile)
 check([src2srcml, option.TABS_FLAG, '2', option.POSITION_FLAG, 'sub/a.cpp'], "", fsxmlfile)
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.TABS_FLAG, '2', option.POSITION_FLAG, '-o', 'sub/a.cpp.xml'], "", "")
-validate(open('sub/a.cpp.xml').read(), sxmlfile)
+if sys.platform != 'cygwin' :
+        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.TABS_FLAG, '2', option.POSITION_FLAG, '-o', 'sub/a.cpp.xml'], "", "")
+        validate(open('sub/a.cpp.xml').read(), sxmlfile)
 check([src2srcml, option.TABS_FLAG, '2', option.POSITION_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml').read(), fsxmlfile)
 
@@ -3165,8 +3179,9 @@ f.close()
 
 check([src2srcml, option.REGISTER_EXT_FLAG, 'cpp=Java', 'sub/a.cpp'], "", fsxmlfile)
 check([src2srcml, option.REGISTER_EXT_FLAG + '=cpp=Java', 'sub/a.cpp'], "", fsxmlfile)
-check([src2srcml, option.REGISTER_EXT_FLAG, 'cpp=Java', 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
-validate(open('sub/a.cpp.xml').read(), fsxmlfile)
+if sys.platform != 'cygwin' :
+        check([src2srcml, option.REGISTER_EXT_FLAG, 'cpp=Java', 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
+        validate(open('sub/a.cpp.xml').read(), fsxmlfile)
 
 validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.REGISTER_EXT_FLAG], ""), status.STATUS_ERROR)
 validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.REGISTER_EXT_FLAG, "cpp=Jawa"], ""), status.STATUS_ERROR)
@@ -3182,8 +3197,9 @@ else :
 
 check([src2srcml, option.REGISTER_EXT_FLAG, 'xml=Java', 'sub/a.xml'], "", fsxmlfile)
 check([src2srcml, option.REGISTER_EXT_FLAG + '=xml=Java', 'sub/a.xml'], "", fsxmlfile)
-check([src2srcml, option.REGISTER_EXT_FLAG, 'xml=Java', 'sub/a.xml', '-o', 'sub/a.cpp.xml'], "", "")
-validate(open('sub/a.cpp.xml').read(), fsxmlfile)
+if sys.platform != 'cygwin' :
+        check([src2srcml, option.REGISTER_EXT_FLAG, 'xml=Java', 'sub/a.xml', '-o', 'sub/a.cpp.xml'], "", "")
+        validate(open('sub/a.cpp.xml').read(), fsxmlfile)
 
 validate(getreturn([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.REGISTER_EXT_FLAG, "xml=Jawa"], ""), status.STATUS_ERROR)
 
@@ -3641,8 +3657,9 @@ fsrcml = xml_declaration + """
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Java" filename="sub/a.java"/>
 """
 checkallformsfile(src2srcml, 'sub/a.java', option.CPP_FLAG, option.CPP_FLAG, "", "", fsrcml)
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'Java', option.CPP_FLAG, '-o', 'sub/a.java.xml'], sfile1, "")
-validate(open('sub/a.java.xml', 'r').read(), srcml)
+if sys.platform != 'cygwin' :
+        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'Java', option.CPP_FLAG, '-o', 'sub/a.java.xml'], sfile1, "")
+        validate(open('sub/a.java.xml', 'r').read(), srcml)
 check([src2srcml, option.CPP_FLAG, 'sub/a.java','-o', 'sub/a.java.xml'], "", "")
 validate(open('sub/a.java.xml', 'r').read(), fsrcml)
 
