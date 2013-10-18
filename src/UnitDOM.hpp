@@ -149,7 +149,7 @@ public :
     xmlSAX2StartDocument(ctx);
 
     // start the unit (element) at the root using the merged namespaces
-    xmlSAX2StartElementNs(ctx, localname, 0, URI, data.size() / 2,
+    xmlSAX2StartElementNs(ctx, prefix_name, 0, URI, data.size() / 2,
                           &data[0], nb_attributes, nb_defaulted, attributes);
 
   }
