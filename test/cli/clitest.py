@@ -2017,7 +2017,7 @@ else :
         os.system("del sub\\a.cpp")
 
 #remove
-if platform.system() != "Windows":
+if platform.system() != "Windows" and sys.platform != 'cygwin':
         checkNoOutput([srcml2src, option.TO_DIR_FLAG + '=.', 'sub/a.cpp.xml'], srcml)
 
         validate(open("sub/a.cpp", "r").read(), sfile1)
@@ -2032,7 +2032,7 @@ else :
         os.system("del sub\\a.cpp sub\\b.cpp")
 
 #remove
-if platform.system() != "Windows":
+if platform.system() != "Windows" and sys.platform != 'cygwin':
         checkNoOutput([srcml2src, option.TO_DIR_FLAG + '=.', 'sub/a.cpp.xml'], "")
         validate(open('sub/a.cpp', 'r').read(), sfile1)
         validate(open('sub/b.cpp', 'r').read(), sfile2)
