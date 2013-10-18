@@ -1025,7 +1025,7 @@ srcml_unit* srcml_read_unit_position(srcml_archive* archive, int pos) {
  ******************************************************************************/
 
 /**
- * srcml_close_arachive
+ * srcml_close_archive
  * @param archive an open srcml archive
  *
  * Close a srcML archive opened using srcml_read_open_*

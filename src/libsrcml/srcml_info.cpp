@@ -40,6 +40,7 @@ const char** srcml_list(const char* srcml_filename) {
   if(srcml_archive_get_filename(archive))
     output_array.push_back(srcml_archive_get_filename(archive));
   srcml_unit * unit;
+
   while((unit = srcml_read_unit(archive)))
     output_array.push_back(srcml_unit_get_filename(unit));
   const char ** output_carray = (const char **)malloc((output_array.size() + 1) * sizeof(const char *));
