@@ -2424,8 +2424,9 @@ file = open('sub/a.cpp.xml', 'w')
 file.write(srcml)
 file.close()
 
-checkError([srcml2src, option.XPATH_FLAG + '=/src:unit'], "", xpath_error)
-validate(getreturn([srcml2src, option.XPATH_FLAG + '=/src:unit'], ""), 2)
+if sys.platform != 'cygwin' :
+        checkError([srcml2src, option.XPATH_FLAG + '=/src:unit'], "", xpath_error)
+        validate(getreturn([srcml2src, option.XPATH_FLAG + '=/src:unit'], ""), 2)
 
 check([srcml2src, option.XPATH_FLAG + '=/src:unit'], srcml, xpath)
 check([srcml2src, option.XPATH_FLAG + '=/src:unit', 'sub/a.cpp.xml'], "", xpath)
@@ -2485,8 +2486,9 @@ file = open('sub/a.cpp.xml', 'w')
 file.write(srcml)
 file.close()
 
-checkError([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit'], "", xpath_error)
-validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit'], ""), 2)
+if sys.platform != 'cygwin' :
+        checkError([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit'], "", xpath_error)
+        validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit'], ""), 2)
 
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit'], srcml, xpath)
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit', 'sub/a.cpp.xml'], "", xpath)
@@ -2870,8 +2872,9 @@ file.close()
 
 # xslt
 
-checkError([srcml2src, option.XSLT_FLAG + '=copy.xsl'], "", xslt_error)
-validate(getreturn([srcml2src, option.XSLT_FLAG + '=copy.xsl'], ""), 2)
+if sys.platform != 'cygwin' :
+        checkError([srcml2src, option.XSLT_FLAG + '=copy.xsl'], "", xslt_error)
+        validate(getreturn([srcml2src, option.XSLT_FLAG + '=copy.xsl'], ""), 2)
 
 check([srcml2src, option.XSLT_FLAG + '=copy.xsl'], srcml, srcml)
 check([srcml2src, option.XSLT_FLAG + '=copy.xsl', 'sub/a.cpp.xml'], "", srcml)
@@ -2886,8 +2889,9 @@ validate(getreturn([srcml2src, option.XSLT_FLAG + '='], srcml), status.STATUS_ER
 
 # xslt apply root
 
-checkError([srcml2src, option.APPLY_ROOT_FLAG, option.XSLT_FLAG + '=copy.xsl'], "", xslt_error)
-validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.XSLT_FLAG + '=copy.xsl'], ""), 2)
+if sys.platform != 'cygwin' :
+        checkError([srcml2src, option.APPLY_ROOT_FLAG, option.XSLT_FLAG + '=copy.xsl'], "", xslt_error)
+        validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.XSLT_FLAG + '=copy.xsl'], ""), 2)
 
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XSLT_FLAG + '=copy.xsl'], srcml, srcml)
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XSLT_FLAG + '=copy.xsl', 'sub/a.cpp.xml'], "", srcml)
@@ -3054,8 +3058,9 @@ file = open('sub/a.cpp.xml', 'w')
 file.write(srcml)
 file.close()
 
-checkError([srcml2src, option.RELAXNG_FLAG + '=schema.rng'], "", relaxng_error)
-validate(getreturn([srcml2src, option.RELAXNG_FLAG + '=schema.rng'], ""), 2)
+if sys.platform != 'cygwin' :
+        checkError([srcml2src, option.RELAXNG_FLAG + '=schema.rng'], "", relaxng_error)
+        validate(getreturn([srcml2src, option.RELAXNG_FLAG + '=schema.rng'], ""), 2)
 
 check([srcml2src, option.RELAXNG_FLAG + '=schema.rng'], srcml, srcml)
 check([srcml2src, option.RELAXNG_FLAG + '=schema.rng', 'sub/a.cpp.xml'], "", srcml)
@@ -3071,8 +3076,9 @@ validate(getreturn([srcml2src, option.RELAXNG_FLAG + '='], srcml), status.STATUS
 
 # relaxng apply root
 
-checkError([srcml2src, option.APPLY_ROOT_FLAG, option.RELAXNG_FLAG + '=schema.rng'], "", relaxng_error)
-validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.RELAXNG_FLAG + '=schema.rng'], ""), 2)
+if sys.platform != 'cygwin' :
+        checkError([srcml2src, option.APPLY_ROOT_FLAG, option.RELAXNG_FLAG + '=schema.rng'], "", relaxng_error)
+        validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.RELAXNG_FLAG + '=schema.rng'], ""), 2)
 
 check([srcml2src, option.APPLY_ROOT_FLAG, option.RELAXNG_FLAG + '=schema.rng'], srcml, srcml)
 check([srcml2src, option.APPLY_ROOT_FLAG, option.RELAXNG_FLAG + '=schema.rng', 'sub/a.cpp.xml'], "", srcml)
