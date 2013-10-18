@@ -207,7 +207,9 @@ def srcml2srcversion():
 
 src2srcml = os.environ.get("SRC2SRCML")
 if src2srcml == "" or src2srcml == None:
-        if os.path.exists('../../bin/src2srcml') :
+        if sys.platform() == 'cygwin')
+                src2srcml = "../../bin/src2srcml.exe"
+        elif os.path.exists('../../bin/src2srcml') :
                 src2srcml = "../../bin/src2srcml"
         elif os.path.exists('../../bin/src2srcml.exe') :
                 src2srcml = "../../bin/src2srcml.exe"
@@ -217,7 +219,9 @@ if src2srcml == "" or src2srcml == None:
         
 srcml2src = os.environ.get("SRCML2SRC")
 if srcml2src == "" or srcml2src == None:
-        if os.path.exists('../../bin/srcml2src') :
+        if sys.platform() == 'cygwin')
+                srcml2src = "../../bin/srcml2src2.exe"
+        elif os.path.exists('../../bin/srcml2src') :
                 srcml2src = "../../bin/srcml2src"
         elif os.path.exists('../../bin/srcml2src.exe') :
                 srcml2src = "../../bin/srcml2src.exe"
