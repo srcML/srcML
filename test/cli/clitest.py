@@ -1347,14 +1347,16 @@ f.write(cpp_src)
 f.close()
 
 check([src2srcml, 'sub/a.cpp'], "", fcpp_marked_srcml)
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', '-o', 'sub/a.cpp.xml'], cpp_src, "")
-validate(open('sub/a.cpp.xml', 'r').read(), cpp_marked_srcml)
+if sys.platform != 'cygwin' :
+        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', '-o', 'sub/a.cpp.xml'], cpp_src, "")
+        validate(open('sub/a.cpp.xml', 'r').read(), cpp_marked_srcml)
 check([src2srcml, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fcpp_marked_srcml)
 
 check([src2srcml, option.CPP_MARKUP_ELSE_FLAG, 'sub/a.cpp'], "", fcpp_marked_srcml)
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.CPP_MARKUP_ELSE_FLAG, '-o', 'sub/a.cpp.xml'], cpp_src, "")
-validate(open('sub/a.cpp.xml', 'r').read(), cpp_marked_srcml)
+if sys.platform != 'cygwin' :
+        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.CPP_MARKUP_ELSE_FLAG, '-o', 'sub/a.cpp.xml'], cpp_src, "")
+        validate(open('sub/a.cpp.xml', 'r').read(), cpp_marked_srcml)
 check([src2srcml, option.CPP_MARKUP_ELSE_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fcpp_marked_srcml)
 
@@ -1379,8 +1381,9 @@ return;
 """
 
 check([src2srcml, option.CPP_TEXTONLY_ELSE_FLAG, 'sub/a.cpp'], "", fcpp_textonly_srcml)
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.CPP_TEXTONLY_ELSE_FLAG, '-o', 'sub/a.cpp.xml'], cpp_src, "")
-validate(open('sub/a.cpp.xml', 'r').read(), cpp_textonly_srcml)
+if sys.platform != 'cygwin' :
+        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.CPP_TEXTONLY_ELSE_FLAG, '-o', 'sub/a.cpp.xml'], cpp_src, "")
+        validate(open('sub/a.cpp.xml', 'r').read(), cpp_textonly_srcml)
 check([src2srcml, option.CPP_TEXTONLY_ELSE_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fcpp_textonly_srcml)
 
@@ -1414,14 +1417,16 @@ f.write(cpp_if0)
 f.close()
 
 check([src2srcml, 'sub/a.cpp'], "", fcpp_textonly_srcml)
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', '-o', 'sub/a.cpp.xml'], cpp_if0, "")
-validate(open('sub/a.cpp.xml', 'r').read(), cpp_textonly_srcml)
+if sys.platform != 'cygwin' :
+        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', '-o', 'sub/a.cpp.xml'], cpp_if0, "")
+        validate(open('sub/a.cpp.xml', 'r').read(), cpp_textonly_srcml)
 check([src2srcml, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fcpp_textonly_srcml)
 
 check([src2srcml, option.CPP_TEXTONLY_IF0_FLAG, 'sub/a.cpp'], "", fcpp_textonly_srcml)
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.CPP_TEXTONLY_IF0_FLAG, '-o', 'sub/a.cpp.xml'], cpp_if0, "")
-validate(open('sub/a.cpp.xml', 'r').read(), cpp_textonly_srcml)
+if sys.platform != 'cygwin' :
+        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.CPP_TEXTONLY_IF0_FLAG, '-o', 'sub/a.cpp.xml'], cpp_if0, "")
+        validate(open('sub/a.cpp.xml', 'r').read(), cpp_textonly_srcml)
 check([src2srcml, option.CPP_TEXTONLY_IF0_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fcpp_textonly_srcml)
 
@@ -1442,8 +1447,9 @@ fcpp_marked_srcml = xml_declaration + """
 """
 
 check([src2srcml, option.CPP_MARKUP_IF0_FLAG, 'sub/a.cpp'], "", fcpp_marked_srcml)
-check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.CPP_MARKUP_IF0_FLAG, '-o', 'sub/a.cpp.xml'], cpp_if0, "")
-validate(open('sub/a.cpp.xml', 'r').read(), cpp_marked_srcml)
+if sys.platform != 'cygwin' :
+        check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.CPP_MARKUP_IF0_FLAG, '-o', 'sub/a.cpp.xml'], cpp_if0, "")
+        validate(open('sub/a.cpp.xml', 'r').read(), cpp_marked_srcml)
 check([src2srcml, option.CPP_MARKUP_IF0_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml'], "", "")
 validate(open('sub/a.cpp.xml', 'r').read(), fcpp_marked_srcml)
 
