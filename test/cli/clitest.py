@@ -1701,7 +1701,7 @@ if platform.system() != "Windows":
         check(['gunzip', '-c', 'sub/a.cpp.xml.gz'], "", fxmlfile)
         check([src2srcml, option.COMPRESSED_FLAG, 'sub/a.cpp', '-o', 'sub/a.cpp.xml.gz'], "", "")
         check(['gunzip', '-c', 'sub/a.cpp.xml.gz'], "", fxmlfile)
-        if sys.platform 1= 'cygwin' :
+        if sys.platform == 'cygwin' :
                 check([src2srcml, option.LANGUAGE_FLAG_SHORT, 'C++', option.COMPRESSED_FLAG_SHORT, '-o', 'sub/a.cpp.xml.gz'], sfile, "")
                 check(['gunzip', '-c', 'sub/a.cpp.xml.gz'], "", sxmlfile)
 
@@ -1717,7 +1717,7 @@ if platform.system() != "Windows" and sys.platform != 'cygwin':
         check(['gunzip', '-c', 'sub/a.cpp.gz'], "", sfile)
         check([srcml2src, option.COMPRESSED_FLAG, 'sub/a.cpp.xml', '-o', 'sub/a.cpp.gz'], "", "")
         check(['gunzip', '-c', 'sub/a.cpp.gz'], "", sfile)
-        if sys.platform 1= 'cygwin' :
+        if sys.platform == 'cygwin' :
                 check([srcml2src, option.COMPRESSED_FLAG_SHORT, '-o', 'sub/a.cpp.gz'], fxmlfile, "")
                 check(['gunzip', '-c', 'sub/a.cpp.gz'], "", sfile)
 
