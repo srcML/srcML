@@ -221,7 +221,7 @@ if src2srcml == "" or src2srcml == None:
 srcml2src = os.environ.get("SRCML2SRC")
 if srcml2src == "" or srcml2src == None:
         if sys.platform == 'cygwin' :
-                srcml2src = "../../bin/srcml2src2.exe"
+                srcml2src = "../../bin/srcml2src.exe"
         elif os.path.exists('../../bin/srcml2src') :
                 srcml2src = "../../bin/srcml2src"
         elif os.path.exists('../../bin/srcml2src.exe') :
