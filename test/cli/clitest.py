@@ -2109,22 +2109,25 @@ f.close()
 
 check([srcml2src, option.XML_FLAG, option.NO_XML_DECLARATION_FLAG], srcml, srcmlout)
 check([srcml2src, option.XML_FLAG, option.NO_XML_DECLARATION_FLAG, 'sub/a.cpp.xml'], "", srcmlout)
-check([srcml2src, option.XML_FLAG, option.NO_XML_DECLARATION_FLAG, '-o', 'sub/a.cpp.xml'], srcml, "")
-validate(open('sub/a.cpp.xml').read(), srcmlout)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.XML_FLAG, option.NO_XML_DECLARATION_FLAG, '-o', 'sub/a.cpp.xml'], srcml, "")
+        validate(open('sub/a.cpp.xml').read(), srcmlout)
 check([srcml2src, option.XML_FLAG, option.NO_XML_DECLARATION_FLAG, 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml').read(), srcmlout)
 
 check([srcml2src, option.NO_XML_DECLARATION_FLAG, option.XML_FLAG], srcml, srcmlout)
 check([srcml2src, option.NO_XML_DECLARATION_FLAG, option.XML_FLAG, 'sub/a.cpp.xml'], "", srcmlout)
-check([srcml2src, option.NO_XML_DECLARATION_FLAG, option.XML_FLAG, '-o', 'sub/a.cpp.xml'], srcml, "")
-validate(open('sub/a.cpp.xml').read(), srcmlout)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.NO_XML_DECLARATION_FLAG, option.XML_FLAG, '-o', 'sub/a.cpp.xml'], srcml, "")
+        validate(open('sub/a.cpp.xml').read(), srcmlout)
 check([srcml2src, option.NO_XML_DECLARATION_FLAG, option.XML_FLAG, 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml').read(), srcmlout)
 
 check([srcml2src, option.NO_XML_DECLARATION_FLAG], srcml, srcmlout)
 check([srcml2src, option.NO_XML_DECLARATION_FLAG, 'sub/a.cpp.xml'], "", srcmlout)
-check([srcml2src, option.NO_XML_DECLARATION_FLAG, '-o', 'sub/a.cpp.xml'], srcml, "")
-validate(open('sub/a.cpp.xml').read(), srcmlout)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.NO_XML_DECLARATION_FLAG, '-o', 'sub/a.cpp.xml'], srcml, "")
+        validate(open('sub/a.cpp.xml').read(), srcmlout)
 check([srcml2src, option.NO_XML_DECLARATION_FLAG, 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml').read(), srcmlout)
 
@@ -2143,22 +2146,25 @@ f.close()
 
 check([srcml2src, option.XML_FLAG, option.NO_XML_DECLARATION_FLAG], srcml, srcmlout)
 check([srcml2src, option.XML_FLAG, option.NO_XML_DECLARATION_FLAG, 'sub/a.cpp.xml'], "", srcmlout)
-check([srcml2src, option.XML_FLAG, option.NO_XML_DECLARATION_FLAG, '-o', 'sub/a.cpp.xml'], srcml, "")
-validate(open('sub/a.cpp.xml').read(), srcmlout)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.XML_FLAG, option.NO_XML_DECLARATION_FLAG, '-o', 'sub/a.cpp.xml'], srcml, "")
+        validate(open('sub/a.cpp.xml').read(), srcmlout)
 check([srcml2src, option.XML_FLAG, option.NO_XML_DECLARATION_FLAG, 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml').read(), srcmlout)
 
 check([srcml2src, option.NO_XML_DECLARATION_FLAG, option.XML_FLAG], srcml, srcmlout)
 check([srcml2src, option.NO_XML_DECLARATION_FLAG, option.XML_FLAG, 'sub/a.cpp.xml'], "", srcmlout)
-check([srcml2src, option.NO_XML_DECLARATION_FLAG, option.XML_FLAG, '-o', 'sub/a.cpp.xml'], srcml, "")
-validate(open('sub/a.cpp.xml').read(), srcmlout)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.NO_XML_DECLARATION_FLAG, option.XML_FLAG, '-o', 'sub/a.cpp.xml'], srcml, "")
+        validate(open('sub/a.cpp.xml').read(), srcmlout)
 check([srcml2src, option.NO_XML_DECLARATION_FLAG, option.XML_FLAG, 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml').read(), srcmlout)
 
 check([srcml2src, option.NO_XML_DECLARATION_FLAG], srcml, srcmlout)
 check([srcml2src, option.NO_XML_DECLARATION_FLAG, 'sub/a.cpp.xml'], "", srcmlout)
-check([srcml2src, option.NO_XML_DECLARATION_FLAG, '-o', 'sub/a.cpp.xml'], srcml, "")
-validate(open('sub/a.cpp.xml').read(), srcmlout)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.NO_XML_DECLARATION_FLAG, '-o', 'sub/a.cpp.xml'], srcml, "")
+        validate(open('sub/a.cpp.xml').read(), srcmlout)
 check([srcml2src, option.NO_XML_DECLARATION_FLAG, 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml').read(), srcmlout)
 
@@ -2179,22 +2185,25 @@ f.close()
 
 check([srcml2src, option.XML_FLAG, option.NO_NAMESPACE_DECLARATION_FLAG], srcml, srcmlout)
 check([srcml2src, option.XML_FLAG, option.NO_NAMESPACE_DECLARATION_FLAG, 'sub/a.cpp.xml'], "", srcmlout)
-check([srcml2src, option.XML_FLAG, option.NO_NAMESPACE_DECLARATION_FLAG, '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml').read(), srcmlout)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.XML_FLAG, option.NO_NAMESPACE_DECLARATION_FLAG, '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml').read(), srcmlout)
 check([srcml2src, option.XML_FLAG, option.NO_NAMESPACE_DECLARATION_FLAG, 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml').read(), srcmlout)
 
 check([srcml2src, option.NO_NAMESPACE_DECLARATION_FLAG, option.XML_FLAG], srcml, srcmlout)
 check([srcml2src, option.NO_NAMESPACE_DECLARATION_FLAG, option.XML_FLAG, 'sub/a.cpp.xml'], "", srcmlout)
-check([srcml2src, option.NO_NAMESPACE_DECLARATION_FLAG, option.XML_FLAG, '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml').read(), srcmlout)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.NO_NAMESPACE_DECLARATION_FLAG, option.XML_FLAG, '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml').read(), srcmlout)
 check([srcml2src, option.NO_NAMESPACE_DECLARATION_FLAG, option.XML_FLAG, 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml').read(), srcmlout)
 
 check([srcml2src, option.NO_NAMESPACE_DECLARATION_FLAG], srcml, srcmlout)
 check([srcml2src, option.NO_NAMESPACE_DECLARATION_FLAG, 'sub/a.cpp.xml'], "", srcmlout)
-check([srcml2src, option.NO_NAMESPACE_DECLARATION_FLAG, '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml').read(), srcmlout)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.NO_NAMESPACE_DECLARATION_FLAG, '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml').read(), srcmlout)
 check([srcml2src, option.NO_NAMESPACE_DECLARATION_FLAG, 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml').read(), srcmlout)
 
@@ -2214,22 +2223,25 @@ f.close()
 
 check([srcml2src, option.XML_FLAG, option.NO_NAMESPACE_DECLARATION_FLAG], srcml, srcmlout)
 check([srcml2src, option.XML_FLAG, option.NO_NAMESPACE_DECLARATION_FLAG, 'sub/a.cpp.xml'], "", srcmlout)
-check([srcml2src, option.XML_FLAG, option.NO_NAMESPACE_DECLARATION_FLAG, '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml').read(), srcmlout)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.XML_FLAG, option.NO_NAMESPACE_DECLARATION_FLAG, '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml').read(), srcmlout)
 check([srcml2src, option.XML_FLAG, option.NO_NAMESPACE_DECLARATION_FLAG, 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml').read(), srcmlout)
 
 check([srcml2src, option.NO_NAMESPACE_DECLARATION_FLAG, option.XML_FLAG], srcml, srcmlout)
 check([srcml2src, option.NO_NAMESPACE_DECLARATION_FLAG, option.XML_FLAG, 'sub/a.cpp.xml'], "", srcmlout)
-check([srcml2src, option.NO_NAMESPACE_DECLARATION_FLAG, option.XML_FLAG, '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml').read(), srcmlout)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.NO_NAMESPACE_DECLARATION_FLAG, option.XML_FLAG, '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml').read(), srcmlout)
 check([srcml2src, option.NO_NAMESPACE_DECLARATION_FLAG, option.XML_FLAG, 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml').read(), srcmlout)
 
 check([srcml2src, option.NO_NAMESPACE_DECLARATION_FLAG], srcml, srcmlout)
 check([srcml2src, option.NO_NAMESPACE_DECLARATION_FLAG, 'sub/a.cpp.xml'], "", srcmlout)
-check([srcml2src, option.NO_NAMESPACE_DECLARATION_FLAG, '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml').read(), srcmlout)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.NO_NAMESPACE_DECLARATION_FLAG, '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml').read(), srcmlout)
 check([srcml2src, option.NO_NAMESPACE_DECLARATION_FLAG, 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml').read(), srcmlout)
 
@@ -2415,8 +2427,9 @@ validate(getreturn([srcml2src, option.XPATH_FLAG + '=/src:unit'], ""), 2)
 
 check([srcml2src, option.XPATH_FLAG + '=/src:unit'], srcml, xpath)
 check([srcml2src, option.XPATH_FLAG + '=/src:unit', 'sub/a.cpp.xml'], "", xpath)
-check([srcml2src, option.XPATH_FLAG + '=/src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), xpath)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.XPATH_FLAG + '=/src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), xpath)
 check([srcml2src, option.XPATH_FLAG + '=/src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), xpath)
 
@@ -2425,8 +2438,9 @@ validate(getreturn([srcml2src, option.XPATH_FLAG + '='], srcml), status.STATUS_E
 
 check([srcml2src, option.XPATH_FLAG + '=//src:unit'], srcml, xpath)
 check([srcml2src, option.XPATH_FLAG + '=//src:unit', 'sub/a.cpp.xml'], "", xpath)
-check([srcml2src, option.XPATH_FLAG + '=//src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), xpath)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.XPATH_FLAG + '=//src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), xpath)
 check([srcml2src, option.XPATH_FLAG + '=//src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), xpath)
 
@@ -2435,8 +2449,9 @@ validate(getreturn([srcml2src, option.XPATH_FLAG + '='], srcml), status.STATUS_E
 
 check([srcml2src, option.XPATH_FLAG + '=src:unit'], srcml, xpath_empty)
 check([srcml2src, option.XPATH_FLAG + '=src:unit', 'sub/a.cpp.xml'], "", xpath_empty)
-check([srcml2src, option.XPATH_FLAG + '=src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.XPATH_FLAG + '=src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
 check([srcml2src, option.XPATH_FLAG + '=src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
 
@@ -2473,8 +2488,9 @@ validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/sr
 
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit'], srcml, xpath)
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit', 'sub/a.cpp.xml'], "", xpath)
-check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), xpath)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), xpath)
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), xpath)
 
@@ -2483,8 +2499,9 @@ validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '='],
 
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:unit'], srcml, xpath)
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:unit', 'sub/a.cpp.xml'], "", xpath)
-check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), xpath)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), xpath)
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), xpath)
 
@@ -2493,8 +2510,9 @@ validate(getreturn([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '='],
 
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=src:unit'], srcml, xpath_empty)
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=src:unit', 'sub/a.cpp.xml'], "", xpath_empty)
-check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
 
@@ -2575,29 +2593,33 @@ file.close()
 
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit'], srcml_nested, xpath_nested)
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit', 'sub/a.cpp.xml'], "", xpath_nested)
-check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit', '-o', 'sub/b.cpp.xml'], srcml_nested, "")
-validate(open('sub/b.cpp.xml', 'r').read(), xpath_nested)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit', '-o', 'sub/b.cpp.xml'], srcml_nested, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), xpath_nested)
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), xpath_nested)
 
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:unit'], srcml_nested, xpath_nested_recursive)
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:unit', 'sub/a.cpp.xml'], "", xpath_nested_recursive)
-check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:unit', '-o', 'sub/b.cpp.xml'], srcml_nested, "")
-validate(open('sub/b.cpp.xml', 'r').read(), xpath_nested_recursive)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:unit', '-o', 'sub/b.cpp.xml'], srcml_nested, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), xpath_nested_recursive)
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), xpath_nested_recursive)
 
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit/src:unit[1]/src:expr_stmt'], srcml_nested, xpath_single_expr_stmt)
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit/src:unit[1]/src:expr_stmt', 'sub/a.cpp.xml'], "", xpath_single_expr_stmt)
-check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit/src:unit[1]/src:expr_stmt', '-o', 'sub/b.cpp.xml'], srcml_nested, "")
-validate(open('sub/b.cpp.xml', 'r').read(), xpath_single_expr_stmt)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit/src:unit[1]/src:expr_stmt', '-o', 'sub/b.cpp.xml'], srcml_nested, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), xpath_single_expr_stmt)
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=/src:unit/src:unit[1]/src:expr_stmt', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), xpath_single_expr_stmt)
 
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:expr_stmt'], srcml_nested, xpath_nested_expr_stmt)
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:expr_stmt', 'sub/a.cpp.xml'], "", xpath_nested_expr_stmt)
-check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:expr_stmt', '-o', 'sub/b.cpp.xml'], srcml_nested, "")
-validate(open('sub/b.cpp.xml', 'r').read(), xpath_nested_expr_stmt)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:expr_stmt', '-o', 'sub/b.cpp.xml'], srcml_nested, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), xpath_nested_expr_stmt)
 check([srcml2src, option.APPLY_ROOT_FLAG, option.XPATH_FLAG + '=//src:expr_stmt', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), xpath_nested_expr_stmt)
 
@@ -2625,8 +2647,9 @@ file.close()
 
 check([srcml2src, option.XPATH_FLAG + '=/src:unit/src:expr_stmt/src:expr/src:name'], srcml, xpath)
 check([srcml2src, option.XPATH_FLAG + '=/src:unit/src:expr_stmt/src:expr/src:name', 'sub/a.cpp.xml'], "", xpath)
-check([srcml2src, option.XPATH_FLAG + '=/src:unit/src:expr_stmt/src:expr/src:name', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), xpath)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.XPATH_FLAG + '=/src:unit/src:expr_stmt/src:expr/src:name', '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), xpath)
 check([srcml2src, option.XPATH_FLAG + '=/src:unit/src:expr_stmt/src:expr/src:name', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), xpath)
 
@@ -2635,8 +2658,9 @@ validate(getreturn([srcml2src, option.XPATH_FLAG + '='], srcml), status.STATUS_E
 
 check([srcml2src, option.XPATH_FLAG + '=//src:name'], srcml, xpath)
 check([srcml2src, option.XPATH_FLAG + '=//src:name', 'sub/a.cpp.xml'], "", xpath)
-check([srcml2src, option.XPATH_FLAG + '=//src:name', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), xpath)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.XPATH_FLAG + '=//src:name', '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), xpath)
 check([srcml2src, option.XPATH_FLAG + '=//src:name', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), xpath)
 
@@ -2645,8 +2669,9 @@ validate(getreturn([srcml2src, option.XPATH_FLAG + '='], srcml), status.STATUS_E
 
 check([srcml2src, option.XPATH_FLAG + '=src:name'], srcml, xpath_empty)
 check([srcml2src, option.XPATH_FLAG + '=src:name', 'sub/a.cpp.xml'], "", xpath_empty)
-check([srcml2src, option.XPATH_FLAG + '=src:name', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.XPATH_FLAG + '=src:name', '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
 check([srcml2src, option.XPATH_FLAG + '=src:name', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
 
@@ -2687,8 +2712,9 @@ file.close()
 
 check([srcml2src, option.XPATH_FLAG + '=/src:unit/src:expr_stmt/src:expr/src:name'], srcml, xpath)
 check([srcml2src, option.XPATH_FLAG + '=/src:unit/src:expr_stmt/src:expr/src:name', 'sub/a.cpp.xml'], "", xpath)
-check([srcml2src, option.XPATH_FLAG + '=/src:unit/src:expr_stmt/src:expr/src:name', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), xpath)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.XPATH_FLAG + '=/src:unit/src:expr_stmt/src:expr/src:name', '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), xpath)
 check([srcml2src, option.XPATH_FLAG + '=/src:unit/src:expr_stmt/src:expr/src:name', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), xpath)
 
@@ -2697,8 +2723,9 @@ validate(getreturn([srcml2src, option.XPATH_FLAG + '='], srcml), status.STATUS_E
 
 check([srcml2src, option.XPATH_FLAG + '=//src:name'], srcml, xpath)
 check([srcml2src, option.XPATH_FLAG + '=//src:name', 'sub/a.cpp.xml'], "", xpath)
-check([srcml2src, option.XPATH_FLAG + '=//src:name', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), xpath)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.XPATH_FLAG + '=//src:name', '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), xpath)
 check([srcml2src, option.XPATH_FLAG + '=//src:name', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), xpath)
 
@@ -2707,8 +2734,9 @@ validate(getreturn([srcml2src, option.XPATH_FLAG + '='], srcml), status.STATUS_E
 
 check([srcml2src, option.XPATH_FLAG + '=src:name'], srcml, xpath_empty)
 check([srcml2src, option.XPATH_FLAG + '=src:name', 'sub/a.cpp.xml'], "", xpath_empty)
-check([srcml2src, option.XPATH_FLAG + '=src:name', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.XPATH_FLAG + '=src:name', '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
 check([srcml2src, option.XPATH_FLAG + '=src:name', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
 
@@ -2739,8 +2767,9 @@ file.close()
 
 check([srcml2src, option.XPATH_FLAG + '=/src:unit'], srcml, srcml)
 check([srcml2src, option.XPATH_FLAG + '=/src:unit', 'sub/a.cpp.xml'], "", srcml)
-check([srcml2src, option.XPATH_FLAG + '=/src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), srcml)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.XPATH_FLAG + '=/src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), srcml)
 check([srcml2src, option.XPATH_FLAG + '=/src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), srcml)
 
@@ -2749,8 +2778,9 @@ validate(getreturn([srcml2src, option.XPATH_FLAG + '='], srcml), status.STATUS_E
 
 check([srcml2src, option.XPATH_FLAG + '=//src:unit'], srcml, srcml)
 check([srcml2src, option.XPATH_FLAG + '=//src:unit', 'sub/a.cpp.xml'], "", srcml)
-check([srcml2src, option.XPATH_FLAG + '=//src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), srcml)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.XPATH_FLAG + '=//src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), srcml)
 check([srcml2src, option.XPATH_FLAG + '=//src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), srcml)
 
@@ -2759,8 +2789,9 @@ validate(getreturn([srcml2src, option.XPATH_FLAG + '='], srcml), status.STATUS_E
 
 check([srcml2src, option.XPATH_FLAG + '=src:unit'], srcml, xpath_empty)
 check([srcml2src, option.XPATH_FLAG + '=src:unit', 'sub/a.cpp.xml'], "", xpath_empty)
-check([srcml2src, option.XPATH_FLAG + '=src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.XPATH_FLAG + '=src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
 check([srcml2src, option.XPATH_FLAG + '=src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
 
@@ -2791,8 +2822,9 @@ file.close()
 
 check([srcml2src, option.XPATH_FLAG + '=/src:unit'], srcml, srcml)
 check([srcml2src, option.XPATH_FLAG + '=/src:unit', 'sub/a.cpp.xml'], "", srcml)
-check([srcml2src, option.XPATH_FLAG + '=/src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), srcml)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.XPATH_FLAG + '=/src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), srcml)
 check([srcml2src, option.XPATH_FLAG + '=/src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), srcml)
 
@@ -2801,8 +2833,9 @@ validate(getreturn([srcml2src, option.XPATH_FLAG + '='], srcml), status.STATUS_E
 
 check([srcml2src, option.XPATH_FLAG + '=//src:unit'], srcml, srcml)
 check([srcml2src, option.XPATH_FLAG + '=//src:unit', 'sub/a.cpp.xml'], "", srcml)
-check([srcml2src, option.XPATH_FLAG + '=//src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), srcml)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.XPATH_FLAG + '=//src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), srcml)
 check([srcml2src, option.XPATH_FLAG + '=//src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), srcml)
 
@@ -2811,8 +2844,9 @@ validate(getreturn([srcml2src, option.XPATH_FLAG + '='], srcml), status.STATUS_E
 
 check([srcml2src, option.XPATH_FLAG + '=src:unit'], srcml, xpath_empty)
 check([srcml2src, option.XPATH_FLAG + '=src:unit', 'sub/a.cpp.xml'], "", xpath_empty)
-check([srcml2src, option.XPATH_FLAG + '=src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.XPATH_FLAG + '=src:unit', '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
 check([srcml2src, option.XPATH_FLAG + '=src:unit', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), xpath_empty)
 
@@ -2839,8 +2873,9 @@ validate(getreturn([srcml2src, option.XSLT_FLAG + '=copy.xsl'], ""), 2)
 
 check([srcml2src, option.XSLT_FLAG + '=copy.xsl'], srcml, srcml)
 check([srcml2src, option.XSLT_FLAG + '=copy.xsl', 'sub/a.cpp.xml'], "", srcml)
-check([srcml2src, option.XSLT_FLAG + '=copy.xsl', '-o', 'sub/b.cpp.xml'], srcml, "")
-validate(open('sub/b.cpp.xml', 'r').read(), srcml)
+if sys.platform != 'cygwin' :
+        check([srcml2src, option.XSLT_FLAG + '=copy.xsl', '-o', 'sub/b.cpp.xml'], srcml, "")
+        validate(open('sub/b.cpp.xml', 'r').read(), srcml)
 check([srcml2src, option.XSLT_FLAG + '=copy.xsl', 'sub/a.cpp.xml', '-o', 'sub/b.cpp.xml'], "", "")
 validate(open('sub/b.cpp.xml', 'r').read(), srcml)
 
