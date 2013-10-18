@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="synchronzied_specifier" filename="synchronzied_specifier_java">
+<unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="synchronized_statement" filename="synchronzied_statement_java">
+
+<unit>
+<function><type><specifier>synchronized</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><specifier>public</specifier> <specifier>synchronized</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><specifier>public</specifier> <specifier>synchronized</specifier> <name>void</name></type> <name>increment</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><name>c</name>++</expr>;</expr_stmt>
+    }</block></function>
+</unit>
 
 </unit>

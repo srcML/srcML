@@ -135,6 +135,8 @@ LANGUAGE_JAVA literal_java
 LANGUAGE_JAVA function_java
 LANGUAGE_JAVA operator_java
 LANGUAGE_JAVA anonymous_class_java
+LANGUAGE_JAVA synchronzied_specifier_java
+LANGUAGE_JAVA synchronzied_statement_java
 
 LANGUAGE_OO catch_form
 LANGUAGE_OO foreach
