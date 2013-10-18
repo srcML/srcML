@@ -213,7 +213,7 @@ if src2srcml == "" or src2srcml == None:
                 src2srcml = "../../bin/src2srcml.exe"
         else :
                 print "src2srcml Not found"
-                exit(1)
+                exit
         
 srcml2src = os.environ.get("SRCML2SRC")
 if srcml2src == "" or srcml2src == None:
@@ -223,7 +223,7 @@ if srcml2src == "" or srcml2src == None:
                 srcml2src = "../../bin/srcml2src.exe"
         else :
                 print "srcml2src Not found"
-                exit(1)
+                exit
 
 default_src2srcml_encoding = "UTF-8"
 default_srcml2src_encoding = "UTF-8"
