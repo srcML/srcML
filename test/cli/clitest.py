@@ -511,18 +511,18 @@ else :
         os.system("del sub\\a.cpp")
 
 #remove
-if platform.system() != "Windows" and sys.platform == 'cygwin' :
+if platform.system() != "Windows" and sys.platform != 'cygwin' :
         checkNoOutput([srcml2src, option.TO_DIR_FLAG + '=.'], sxmlfile1)
 
         validate(open("sub/a.cpp", "r").read(), sfile1)
 
 #remove
-if platform.system() != "Windows" and sys.platform == 'cygwin' :
+if platform.system() != "Windows" and sys.platform != 'cygwin' :
         os.system("rm -f sub/a.cpp sub/b.cpp;")
 else :
         os.system("del sub\\a.cpp sub\\b.cpp")
 
-if platform.system() != "Windows" and sys.platform == 'cygwin' :
+if platform.system() != "Windows" and sys.platform != 'cygwin' :
         checkNoOutput([srcml2src, option.TO_DIR_FLAG + '=.'], nestedfile)
 
         validate(open("sub/a.cpp", "r").read(), sfile1)
