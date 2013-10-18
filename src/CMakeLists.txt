@@ -41,6 +41,7 @@ find_package(LibArchive)
 find_package(LibXml2)
 find_package(LibXslt)
 find_package(Boost COMPONENTS program_options)
+find_package(CURL)
 
 if(LibArchive_FOUND)
     include_directories(${LibArchive_INCLUDE_DIRS})
@@ -58,6 +59,10 @@ endif()
 
 if(BOOST_FOUND)
     include_directories(${Boost_INCLUDE_DIR})
+endif()
+    include_directories(${CURL_INCLUDE_DIRS})
+if(CURL_FOUND)
+
 endif()
 
 if(NOT DEFINED LIBXSLT_EXSLT_LIBRARY)
@@ -164,7 +169,7 @@ add_custom_target(srcMLParserTokenTypesMacro.hpp DEPENDS srcMLParserTokenTypes.h
 
 # srcml
 add_executable(srcml EXCLUDE_FROM_ALL srcml.cpp)
-target_link_libraries(srcml ${Boost_PROGRAM_OPTIONS_LIBRARY} ${LibArchive_LIBRARY} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} srcml_static)
+target_link_libraries(srcml ${Boost_PROGRAM_OPTIONS_LIBRARY} ${LibArchive_LIBRARY} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} ${CURL_LIBRARIES} srcml_static)
 
 # src2srcml
 if(NOT SVN_ENABLED)
