@@ -382,19 +382,18 @@ int main(int argc, char * argv[]) {
   
 #if 0
   if (!srcml_request.positional_args.empty()) {
-
-    struct srcml_archive* archive;
-    struct srcml_unit* unit;
+    
+    
 
     /* create a new srcml archive structure */
-    archive = srcml_create_archive();
+    srcml_archive * archive = srcml_create_archive();
 
     /* open a srcML archive for output */
     srcml_write_open_filename(archive, "project.xml");
 
     /* add all the files to the archive */
     for(int i = 0; i < srcml_request.positional_args.size(); ++i) {
-      unit = srcml_create_unit(archive);
+      srcml_unit * unit = srcml_create_unit(archive);
 
       srcml_unit_set_filename(unit, srcml_request.positional_args[i].c_str());
 
