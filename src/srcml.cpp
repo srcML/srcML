@@ -437,7 +437,7 @@ void debug_cli_opts(const struct srcml_request_t srcml_request) {
   std::cerr << "Prefix: " << srcml_request.prefix << "\n";
   std::cerr << "Xmlns Uri: " << srcml_request.xmlns_uri << "\n";
   
-  for(int i = 0; i < srcml_request.xpathparam.size(); ++i) {
+  for(int i = 0; i < srcml_request.xmlns_prefix.size(); ++i) {
     std::cerr << "Xmlns Prefix #" << i << ": " << srcml_request.xmlns_prefix[i] << "\n";
   }
   
