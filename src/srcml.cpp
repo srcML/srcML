@@ -252,6 +252,8 @@ std::pair<std::string, std::string> custom_parser(const std::string& s);
 
 // Markup Options Function
 
+// Debug
+void debug_cli_opts(const struct srcml_request_t srcml_request);
 
 int main(int argc, char * argv[]) {
   try {
@@ -371,9 +373,10 @@ int main(int argc, char * argv[]) {
     std::cerr << e.what() << "\n";
     return 1;
   }
-  
-    
 
+  debug_cli_opts(srcml_request);
+  
+#if 0
   if (!srcml_request.positional_args.empty()) {
 
     struct srcml_archive* archive;
@@ -387,7 +390,6 @@ int main(int argc, char * argv[]) {
 
     /* add all the files to the archive */
     for(int i = 0; i < srcml_request.positional_args.size(); ++i) {
-      std::cout << "ARG #" << i+1 << " " << srcml_request.positional_args[i] << "\n";
       unit = srcml_create_unit(archive);
 
       srcml_unit_set_filename(unit, srcml_request.positional_args[i].c_str());
@@ -407,8 +409,51 @@ int main(int argc, char * argv[]) {
     /* free the srcML archive data */
     srcml_free_archive(archive);
   }
-
+#endif
   return 0;
+
+}
+
+// Early Debugging
+void debug_cli_opts(const struct srcml_request_t srcml_request) {
+  
+  std::cerr << "Commands: " << srcml_request.command << "\n";
+  std::cerr << "Markup: " << srcml_request.markup_options << "\n";
+  std::cerr << "Filename: " << srcml_request.filename << "\n";
+  std::cerr << "Output: " << srcml_request.output << "\n";
+  std::cerr << "SRC Encoding: " << srcml_request.src_encoding << "\n";
+  std::cerr << "Encoding: " << srcml_request.encoding << "\n";
+  std::cerr << "Files From: " << srcml_request.files_from << "\n";
+  std::cerr << "Language: " << srcml_request.language << "\n";
+
+  for(int i = 0; i < srcml_request.register_ext.size(); ++i) {
+    std::cerr << "Register Ext #" << i <<": " << srcml_request.register_ext[i] << "\n";
+  }
+  
+  std::cerr << "Tabs: " << srcml_request.tabs << "\n";
+  std::cerr << "Directory: " << srcml_request.directory << "\n";
+  std::cerr << "Src Versions: " << srcml_request.src_versions << "\n";
+  std::cerr << "Prefix: " << srcml_request.prefix << "\n";
+  std::cerr << "Xmlns Uri: " << srcml_request.xmlns_uri << "\n";
+  
+  for(int i = 0; i < srcml_request.xpathparam.size(); ++i) {
+    std::cerr << "Xmlns Prefix #" << i << ": " << srcml_request.xmlns_prefix[i] << "\n";
+  }
+  
+  std::cerr << "Relaxng: " << srcml_request.relaxng << "\n";
+  std::cerr << "Xpath: " << srcml_request.xpath << "\n";
+
+  for(int i = 0; i < srcml_request.xpathparam.size(); ++i) {
+    std::cerr << "Xpathparam #" << i <<": " << srcml_request.xpathparam[i] << "\n";
+  }
+
+  std::cerr << "Xslt: " << srcml_request.xslt << "\n";
+  std::cerr << "Unit: " << srcml_request.unit << "\n";
+
+  for(int i = 0; i < srcml_request.positional_args.size(); ++i) {
+    std::cerr << "Arg #" << i <<": " << srcml_request.positional_args[i] << "\n";
+  }
+
 }
 
 std::pair<std::string, std::string> custom_parser(const std::string& s) {
@@ -418,11 +463,13 @@ std::pair<std::string, std::string> custom_parser(const std::string& s) {
   else {
     return std::make_pair(std::string(), std::string());
   }
+
 }
 
 void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, const char* opt2) {
   if (vm.count(opt1) && !vm[opt1].defaulted() && vm.count(opt2) && !vm[opt2].defaulted()) {
     throw std::logic_error(std::string("Conflicting options '")
       + opt1 + "' and '" + opt2 + "'.");
-  } 
+  }
+ 
 }
