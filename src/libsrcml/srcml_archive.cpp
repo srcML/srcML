@@ -929,7 +929,7 @@ int srcml_read_open_fd(srcml_archive* archive, int srcml_fd) {
  */
 int srcml_write_unit(srcml_archive* archive, const srcml_unit* unit) {
 
-  if(archive == NULL || unit == NULL) return SRCML_STATUS_ERROR;
+  if(archive == NULL || unit == NULL || unit->unit) return SRCML_STATUS_ERROR;
 
   if(archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_ERROR;
   archive->translator->add_unit(unit->unit->c_str());
