@@ -76,6 +76,8 @@ srcml_archive* srcml_create_archive()
   memset(archive, 0, sizeof(srcml_archive));
   archive->type = SRCML_ARCHIVE_INVALID;
 
+  archive->tabstop = 8;
+
   // default prefixes
   srcml_archive_register_namespace(archive, SRCML_SRC_NS_PREFIX_DEFAULT, SRCML_SRC_NS_URI);
   srcml_archive_register_namespace(archive, SRCML_CPP_NS_PREFIX_DEFAULT, SRCML_CPP_NS_URI);
