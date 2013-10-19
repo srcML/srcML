@@ -248,6 +248,9 @@ void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, c
 // Custom Parser Definition
 std::pair<std::string, std::string> custom_parser(const std::string& s);
 
+// Global Options Function
+void set_globals(const struct srcml_request_t srcml_request);
+
 // Command Options Function
 
 // Markup Options Function
@@ -375,6 +378,7 @@ int main(int argc, char * argv[]) {
   }
 
   debug_cli_opts(srcml_request);
+  set_globals(srcml_request);
   
 #if 0
   if (!srcml_request.positional_args.empty()) {
@@ -456,6 +460,38 @@ void debug_cli_opts(const struct srcml_request_t srcml_request) {
 
 }
 
+// Setup for Globals
+void set_globals(const struct srcml_request_t srcml_request) {
+  if (srcml_request.encoding != "") {
+    srcml_set_encoding(srcml_request.encoding.c_str());
+  }
+  if (srcml_request.language != "") {
+    if (srcml_request.language == "C" || srcml_request.language == "c") {
+      srcml_set_language(SRCML_LANGUAGE_C);
+    }
+    else if (srcml_request.language == "C++" || srcml_request.language == "c++") {
+      srcml_set_language(SRCML_LANGUAGE_CXX);
+    }
+    else if (srcml_request.language == "Java" || srcml_request.language == "java" || srcml_request.language == "JAVA") {
+      srcml_set_language(SRCML_LANGUAGE_JAVA);
+    }
+    else if (srcml_request.language == "C#" || srcml_request.language == "c#") {
+      srcml_set_language(SRCML_LANGUAGE_CSHARP);
+    }
+    else if (srcml_request.language == "Xml" || srcml_request.language == "xml" || srcml_request.language == "XML") {
+      srcml_set_language(SRCML_LANGUAGE_XML);
+    }
+    else {
+      //INVALID OPTION
+    }
+  }
+  else {
+    srcml_set_language(SRCML_LANGUAGE_NONE);
+  }
+  
+}
+
+// Custom Parser for xmlns: option
 std::pair<std::string, std::string> custom_parser(const std::string& s) {
   if (s.find("--xmlns:") == 0) {
     return std::make_pair(std::string("xmlns:"), std::string(s.substr(s.find(":")+1)));
@@ -466,6 +502,7 @@ std::pair<std::string, std::string> custom_parser(const std::string& s) {
 
 }
 
+// Set to detect option conflicts
 void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, const char* opt2) {
   if (vm.count(opt1) && !vm[opt1].defaulted() && vm.count(opt2) && !vm[opt2].defaulted()) {
     throw std::logic_error(std::string("Conflicting options '")
