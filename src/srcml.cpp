@@ -506,9 +506,9 @@ void set_globals(const struct srcml_request_t srcml_request) {
   for(int i = 0; i < srcml_request.register_ext.size(); ++i) {
     int pos = srcml_request.register_ext[i].find('=');
     srcml_register_file_extension(srcml_request.register_ext[i].substr(0,pos).c_str(),
-				  srcml_request.register_ext[i].substr(pos+1));
+				  srcml_request.register_ext[i].substr(pos+1).c_str());
   }
-
+  
 }
 
 // Custom Parser for xmlns: option
