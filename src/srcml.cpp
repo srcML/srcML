@@ -383,8 +383,6 @@ int main(int argc, char * argv[]) {
 #if 0
   if (!srcml_request.positional_args.empty()) {
     
-    
-
     /* create a new srcml archive structure */
     srcml_archive * archive = srcml_create_archive();
 
