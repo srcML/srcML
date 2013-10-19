@@ -241,47 +241,17 @@ void option_help(const std::string& help_opt) {
   }
 }
 
-//OPTIONS DEFINED BY srcml.h
-//void option_literal(bool opt) {};
-//void option_modifier(bool opt) {};
-//void option_archive(bool opt) {}
-//void option_position(bool opt) {}
-//void option_compress(bool opt) {}
-//void option_no_xml_dexlaration(bool opt) {}
-//void option_no_namespace_decl(bool opt) {}
-//void option_cpp(bool opt) {}
-//void option_cpp_text_else(bool opt) {}
-//void option_cpp_markup_if0(bool opt) {}
-//void option_apply_root(bool opt) {}
-
-//INTERNAL SRCML COMMANDS
-//void option_longinfo(bool opt) {}
-//void option_info(bool opt) {}
-//void option_show_filename(bool opt) {} //INFO_FILENAME?
-//void option_operator(bool opt) {}
-//void option_cpp_text_if0(bool opt) {}
-//void option_cpp_markup_else(bool opt) {}
-//void option_quiet(bool opt) {}
-//void option_verbose(bool opt) {}
-//void option_version(bool opt) {}
-//void option_debug(bool opt) {}
-//void option_expression(bool opt) {}
-//void option_interactive(bool opt) {}
-//void option_xml(bool opt) {}
-//void option_list(bool opt) {}
-//void option_units(bool opt) {}
-//void option_show_directory(bool opt) {}
-//void option_show_encoding(bool opt) {}
-//void option_show_language(bool opt) {}
-//void option_show_src_version(bool opt) {}
-//void option_to_dir(bool opt) {}
-
 /* Function used to check that 'opt1' and 'opt2' are not specified
    at the same time. (FROM BOOST LIBRARY EXAMPLES)*/
 void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, const char* opt2);
 
 // Custom Parser Definition
 std::pair<std::string, std::string> custom_parser(const std::string& s);
+
+// Command Options Function
+
+// Markup Options Function
+
 
 int main(int argc, char * argv[]) {
   try {
@@ -402,7 +372,7 @@ int main(int argc, char * argv[]) {
     return 1;
   }
   
-  
+    
 
   if (!srcml_request.positional_args.empty()) {
 
@@ -437,11 +407,6 @@ int main(int argc, char * argv[]) {
     /* free the srcML archive data */
     srcml_free_archive(archive);
   }
-
-  //NEED THESE LATER
-  //archive *arch = archive_read_new();
-  //archive_entry *archEntry = archive_entry_new();
-  //CURL *handle = curl_easy_init();
 
   return 0;
 }
