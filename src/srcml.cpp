@@ -488,7 +488,27 @@ void set_globals(const struct srcml_request_t srcml_request) {
   else {
     srcml_set_language(SRCML_LANGUAGE_NONE);
   }
-  
+  if (srcml_request.filename != "") {
+    srcml_set_filename(srcml_request.filename.c_str());
+  }
+  if (srcml_request.directory != "") {
+    srcml_set_directory(srcml_request.directory.c_str());
+  }
+  if (srcml_request.src_versions != "") {
+    srcml_set_version(srcml_request.src_versions.c_str());
+  }
+  if (srcml_request.tabs >= 0) {
+    srcml_set_tabstop(srcml_request.tabs);
+  }
+  else {
+    //INVALID OPTION
+  }
+  for(int i = 0; i < srcml_request.register_ext.size(); ++i) {
+    int pos = srcml_request.register_ext[i].find('=');
+    srcml_register_file_extension(srcml_request.register_ext[i].substr(0,pos).c_str(),
+				  srcml_request.register_ext[i].substr(pos+1));
+  }
+
 }
 
 // Custom Parser for xmlns: option
