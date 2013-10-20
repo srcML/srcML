@@ -460,7 +460,13 @@ void debug_cli_opts(const struct srcml_request_t srcml_request) {
 // Setup for Globals
 void set_globals(const struct srcml_request_t srcml_request) {
   if (srcml_request.encoding != "") {
-    srcml_set_encoding(srcml_request.encoding.c_str());
+    if (srcml_check_encoding(srcml_request.encoding.c_str())) {
+      srcml_set_encoding(srcml_request.encoding.c_str());
+    }
+    else {
+      //INVALID OPTION
+      std::cerr << "Invalid Encoding.\n";
+    }
   }
   if (srcml_request.language != "") {
     if (srcml_check_language(srcml_request.language.c_str()) != 0) {
@@ -468,7 +474,7 @@ void set_globals(const struct srcml_request_t srcml_request) {
     }
     else {
       //INVALID OPTION
-      std::cerr << "Language not found.\n";
+      std::cerr << "Invalid Language.\n";
     }
   }
   else {
