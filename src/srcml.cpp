@@ -463,23 +463,12 @@ void set_globals(const struct srcml_request_t srcml_request) {
     srcml_set_encoding(srcml_request.encoding.c_str());
   }
   if (srcml_request.language != "") {
-    if (srcml_request.language == "C" || srcml_request.language == "c") {
-      srcml_set_language(SRCML_LANGUAGE_C);
-    }
-    else if (srcml_request.language == "C++" || srcml_request.language == "c++") {
-      srcml_set_language(SRCML_LANGUAGE_CXX);
-    }
-    else if (srcml_request.language == "Java" || srcml_request.language == "java" || srcml_request.language == "JAVA") {
-      srcml_set_language(SRCML_LANGUAGE_JAVA);
-    }
-    else if (srcml_request.language == "C#" || srcml_request.language == "c#") {
-      srcml_set_language(SRCML_LANGUAGE_CSHARP);
-    }
-    else if (srcml_request.language == "Xml" || srcml_request.language == "xml" || srcml_request.language == "XML") {
-      srcml_set_language(SRCML_LANGUAGE_XML);
+    if (srcml_check_language(srcml_request.language.c_str()) != 0) {
+      srcml_set_language(srcml_request.language.c_str());
     }
     else {
       //INVALID OPTION
+      std::cerr << "Language not found.\n";
     }
   }
   else {
