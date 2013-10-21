@@ -49,13 +49,13 @@ public :
 
   XPathQueryUnits(const char* a_context_element, const char* a_ofilename, int options,
                   xmlXPathCompExprPtr compiled_xpath, int fd = 0)
-    : UnitDOM(options), ofilename(a_ofilename), options(options), context(0),
+    : UnitDOM(options), ofilename(a_ofilename), options(options),
       compiled_xpath(compiled_xpath), total(0), found(false), needroot(true), fd(fd), closetag(false) {
   }
 
   virtual ~XPathQueryUnits() {
 
-    if(context) xmlXPathFreeContext(context);
+    //if(context) xmlXPathFreeContext(context);
 
   }
 
@@ -82,7 +82,7 @@ public :
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
-    context = xmlXPathNewContext(ctxt->myDoc);
+    xmlXPathContextPtr context = xmlXPathNewContext(ctxt->myDoc);
     // TODO:  Detect error
 
     xpathsrcMLRegister(context);
@@ -462,6 +462,7 @@ public :
 
       // finished with the result nodes
       xmlXPathFreeObject(result_nodes);
+      if(context) xmlXPathFreeContext(context);
 
       return true;
     }
@@ -624,7 +625,7 @@ public :
   private :
     const char* ofilename;
     int options;
-    xmlXPathContextPtr context;
+  //xmlXPathContextPtr context;
     xmlXPathCompExprPtr compiled_xpath;
     double total;
     bool result_bool;
