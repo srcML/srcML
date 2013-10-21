@@ -351,10 +351,11 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
     node = getNode(reader);
   }
 
+  save_nodes.push_back(node);
+
   if(readUnitAttributesInternal(language, filename, directory, version)) return 0;
   if(xmlTextReaderRead(reader) != 1) { done = true; return 0; }
 
-  save_nodes.push_back(node);
   node = getNode(reader);
 
   if(is_archive) return 1;
@@ -503,7 +504,7 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
 
   }
 
-  freeNode(node);
+  //freeNode(node);
 
   xmlTextWriterEndDocument(writer);
 
