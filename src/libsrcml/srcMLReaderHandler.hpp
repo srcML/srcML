@@ -66,7 +66,7 @@ public :
    *
    * Constructor.  Sets up mutex, conditions and state.
    */
-  srcMLReaderHandler() : unit(0), is_done(false), read_root(false), collect_unit_attributes(false), collect_srcml(false), terminate(false), is_empty(true) {
+  srcMLReaderHandler() : unit(0), is_done(false), read_root(false), collect_unit_attributes(false), collect_srcml(false), terminate(false), is_empty(false) {
 
     archive = srcml_create_archive();
     archive->prefixes.clear();
@@ -334,6 +334,7 @@ public :
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
+    if(is_empty) *unit->unit += ">";
     is_empty = true;
 
     if(collect_srcml) {
@@ -392,6 +393,7 @@ public :
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
+    if(is_empty) *unit->unit += ">";
     if(collect_srcml) {
 
       write_endTag(localname, prefix, URI, is_empty);
@@ -431,6 +433,7 @@ public :
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
+    if(is_empty) *unit->unit += ">";
     if(collect_srcml) {
 
       write_endTag(localname, prefix, URI, is_empty);
@@ -461,6 +464,7 @@ public :
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
 #endif
 
+    if(is_empty) *unit->unit += ">";
     is_empty = false;
 
     unit->unit->append((const char *)ch, len);
@@ -547,7 +551,7 @@ private :
    *
    * Write out the end tag to the unit string.
    */
-  void write_endTag(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI, bool is_empty) {
+  void write_endTag(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI, bool & is_empty) {
 
     if(is_empty) {
 
@@ -568,6 +572,7 @@ private :
     *unit->unit += ">";
 
   }
+
 
 };
 
