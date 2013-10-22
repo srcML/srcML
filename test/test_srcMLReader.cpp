@@ -328,13 +328,11 @@ int main(int argc, char * argv[]) {
     assert(attributes.size() == 2);
     assert(attributes.at(0) == "foo");
     assert(attributes.at(1) == "bar");
-    assert(prefixes.size() == 2);
+    assert(prefixes.size() == 1);
     assert(prefixes.at(0) == "");
-    assert(prefixes.at(1) == "cpp");
-    assert(namespaces.size() == 2);
+    assert(namespaces.size() == 1);
     assert(namespaces.at(0) == "http://www.sdml.info/srcML/src");
-    assert(namespaces.at(1) == "http://www.sdml.info/srcML/cpp");
-    assert(options == (SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
+    assert(options == 0);
     assert(tabstop == 4);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0, attributes.clear(), prefixes.clear(), namespaces.clear();
@@ -347,13 +345,11 @@ int main(int argc, char * argv[]) {
     assert(attributes.size() == 2);
     assert(attributes.at(0) == "foo");
     assert(attributes.at(1) == "bar");
-    assert(prefixes.size() == 2);
+    assert(prefixes.size() == 1);
     assert(prefixes.at(0) == "");
-    assert(prefixes.at(1) == "cpp");
-    assert(namespaces.size() == 2);
+    assert(namespaces.size() == 1);
     assert(namespaces.at(0) == "http://www.sdml.info/srcML/src");
-    assert(namespaces.at(1) == "http://www.sdml.info/srcML/cpp");
-    assert(options == (SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
+    assert(options == 0);
     assert(tabstop == 4);
     delete language, delete filename, delete directory, delete version;
   }
