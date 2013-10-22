@@ -37,10 +37,8 @@ const char** srcml_list(const char* srcml_filename) {
   srcml_archive * archive = srcml_create_archive();
   if(srcml_read_open_filename(archive, srcml_filename) == SRCML_STATUS_ERROR) return 0;
   std::vector<std::string> output_array;
-  if(srcml_archive_get_filename(archive))
-    output_array.push_back(srcml_archive_get_filename(archive));
-  srcml_unit * unit;
 
+  srcml_unit * unit;
   while((unit = srcml_read_unit(archive)))
     output_array.push_back(srcml_unit_get_filename(unit));
   const char ** output_carray = (const char **)malloc((output_array.size() + 1) * sizeof(const char *));
