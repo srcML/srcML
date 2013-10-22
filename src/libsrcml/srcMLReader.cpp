@@ -317,6 +317,7 @@ int srcMLReader::readRootUnitAttributes(std::string ** language, std::string ** 
  * @param version a location to store the version attribute
  *
  * Read attributes from next unit.
+ * @todo add handling for empty root element.
  *
  * @returns 1 on success and 0 on failure.
  */
@@ -324,7 +325,6 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
                                     std::string ** directory, std::string ** version) {
 
   if(language == 0 || filename == 0 || directory == 0 || version == 0) return 0;
-
 
   if(!save_nodes.empty()) {
 
@@ -352,6 +352,7 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
   }
 
   save_nodes.push_back(node);
+  node = 0;
 
   if(readUnitAttributesInternal(language, filename, directory, version)) return 0;
   if(xmlTextReaderRead(reader) != 1) { done = true; return 0; }
@@ -363,6 +364,7 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
   while(true) {
 
     save_nodes.push_back(node);
+    node = 0;
 
     if(node->type == (xmlElementType)XML_READER_TYPE_ELEMENT && strcmp((const char *)node->name, "unit") == 0) {
 
@@ -374,6 +376,7 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
       } catch(...) {}
       save_nodes.clear();
       save_nodes.push_back(node);
+      node = 0;
       if(*language) delete *language, (*language) = 0;
       if(*filename) delete *filename, (*filename) = 0;
       if(*directory) delete *directory, (*directory) = 0;
@@ -407,6 +410,7 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
  *
  * Read the next unit of a srcML Archive.
  * and write it to the writer.
+ * @todo add handling for empty root element.
  *
  * @returns Return 0 when finished and 1 otherwize.
  */
@@ -448,7 +452,7 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
   while(true) {
 
     if(is_archive) output_node_srcml(*node, writer, is_single);
-    else save_nodes.push_back(node);
+    else save_nodes.push_back(node), node = 0;
 
     if(strcmp((const char *)node->name, "unit") == 0) {
 

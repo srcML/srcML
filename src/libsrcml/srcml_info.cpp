@@ -33,18 +33,18 @@
 const char** srcml_list(const char* srcml_filename) {
 
   if(srcml_filename == NULL) return 0;
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   srcml_archive * archive = srcml_create_archive();
   if(srcml_read_open_filename(archive, srcml_filename) == SRCML_STATUS_ERROR) return 0;
   std::vector<std::string> output_array;
   if(srcml_archive_get_filename(archive))
     output_array.push_back(srcml_archive_get_filename(archive));
   srcml_unit * unit;
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   while((unit = srcml_read_unit(archive)))
     output_array.push_back(srcml_unit_get_filename(unit));
   const char ** output_carray = (const char **)malloc((output_array.size() + 1) * sizeof(const char *));
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   try {
 
     for(int i = 0; i < output_array.size(); ++i)
@@ -52,9 +52,8 @@ const char** srcml_list(const char* srcml_filename) {
 
   } catch(...) {}
   output_carray[output_array.size()] = 0;
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   srcml_close_archive(archive);
-  fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   srcml_free_archive(archive);
 
   return output_carray;
