@@ -480,6 +480,19 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
           save_nodes.clear();
           output_node_srcml(*node, writer, is_single);
 
+        } else if(node->extra) {
+
+          is_archive = true;
+          try {
+
+            for(int i = 0; i < save_nodes.size() - 1; ++i)
+              freeNode(save_nodes.at(i));
+
+          } catch(...) {}
+
+          save_nodes.clear();
+          output_node_srcml(*node, writer, is_single);
+
         }
 
         read_unit_start = true;
