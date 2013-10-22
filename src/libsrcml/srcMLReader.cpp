@@ -147,7 +147,7 @@ int srcMLReader::readUnitAttributesInternal(std::string ** language, std::string
 
   if(language == 0 || filename == 0 || directory == 0 || version == 0) return 1;
 
-  xmlAttrPtr attribute = node->properties;
+  xmlAttrPtr attribute = save_nodes.back()->properties;
   while (attribute) {
 
     std::string name = (const char *)attribute->name;
@@ -352,9 +352,10 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
   }
 
   save_nodes.push_back(node);
-  node = 0;
 
   if(readUnitAttributesInternal(language, filename, directory, version)) return 0;
+  node = 0;
+
   if(xmlTextReaderRead(reader) != 1) { done = true; return 0; }
 
   node = getNode(reader);
@@ -366,7 +367,7 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
     save_nodes.push_back(node);
     node = 0;
 
-    if(node->type == (xmlElementType)XML_READER_TYPE_ELEMENT && strcmp((const char *)node->name, "unit") == 0) {
+    if(save_nodes.back()->type == (xmlElementType)XML_READER_TYPE_ELEMENT && strcmp((const char *)save_nodes.back()->name, "unit") == 0) {
 
       is_archive = true;
       try {
@@ -376,7 +377,6 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
       } catch(...) {}
       save_nodes.clear();
       save_nodes.push_back(node);
-      node = 0;
       if(*language) delete *language, (*language) = 0;
       if(*filename) delete *filename, (*filename) = 0;
       if(*directory) delete *directory, (*directory) = 0;
@@ -385,13 +385,21 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
       break;
     }
 
-    if(node->type == (xmlElementType)XML_READER_TYPE_ELEMENT
-       && strcmp((const char *)node->name, "unit") != 0) {
+    if(save_nodes.back()->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
+       && strcmp((const char *)save_nodes.back()->name, "unit") == 0) {
       is_archive = true;
       is_single = true;
       break;
     }
 
+    if(save_nodes.back()->type == (xmlElementType)XML_READER_TYPE_ELEMENT
+       && strcmp((const char *)save_nodes.back()->name, "unit") != 0) {
+      is_archive = true;
+      is_single = true;
+      break;
+    }
+
+    node = 0;
     if(xmlTextReaderRead(reader) != 1) {done = true; return 0; }
     node = getNode(reader);
 
@@ -452,7 +460,7 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
   while(true) {
 
     if(is_archive) output_node_srcml(*node, writer, is_single);
-    else save_nodes.push_back(node), node = 0;
+    else save_nodes.push_back(node);
 
     if(strcmp((const char *)node->name, "unit") == 0) {
 
@@ -477,6 +485,7 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
       }
 
       if(node->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT) {
+
         break;
       }
 
