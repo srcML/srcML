@@ -46,7 +46,7 @@ int main(int argc, char * argv[]) {
 
     assert(archive->options == 0);
 
-    assert(archive->tabstop == 0);
+    assert(archive->tabstop == 8);
     assert(archive->prefixes.size() == 7);
     assert(archive->namespaces.size() == 7);
     assert(archive->registered_languages.size() != 0);

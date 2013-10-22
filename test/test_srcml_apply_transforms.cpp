@@ -153,7 +153,7 @@ int main(int argc, char * argv[]) {
     srcml_close_archive(oarchive);
     srcml_free_archive(oarchive);  
     srcml_close_archive(iarchive);
-    srcml_free_archive(iarchive);  
+    srcml_free_archive(iarchive);
     assert(s == srcml_full);
     free(s);
   }
