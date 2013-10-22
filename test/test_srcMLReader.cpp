@@ -897,9 +897,8 @@ int main(int argc, char * argv[]) {
     assert(attributes.size() == 2);
     assert(attributes.at(0) == "foo");
     assert(attributes.at(1) == "bar");
-    assert(prefixes.size() == 2);
+    assert(prefixes.size() == 1);
     assert(prefixes.at(0) == "");
-    assert(prefixes.at(1) == "cpp");
     assert(namespaces.size() == 1);
     assert(namespaces.at(0) == "http://www.sdml.info/srcML/src");
     assert(options == 0);
