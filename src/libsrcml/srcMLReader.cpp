@@ -467,7 +467,7 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
 
       if(node->type == (xmlElementType)XML_READER_TYPE_ELEMENT) {
 
-        if(read_unit_start) {
+        if(read_unit_start || node->extra) {
 
           is_archive = true;
           try {
@@ -480,26 +480,19 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
           save_nodes.clear();
           output_node_srcml(*node, writer, is_single);
 
-        } else if(node->extra) {
+        }
 
-          is_archive = true;
-          try {
-
-            for(int i = 0; i < save_nodes.size() - 1; ++i)
-              freeNode(save_nodes.at(i));
-
-          } catch(...) {}
-
-          save_nodes.clear();
-          output_node_srcml(*node, writer, is_single);
+        if(node->extra) {
+          
           freeNode(node);
           if(xmlTextReaderRead(reader) != 1) {done = true;   xmlTextWriterEndDocument(writer); return 1; }
           node = getNode(reader);
-
+        
         }
 
         read_unit_start = true;
       }
+
 
       if(node->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT || (node->type == (xmlElementType)XML_READER_TYPE_ELEMENT && node->extra)) {
 
