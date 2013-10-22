@@ -50,7 +50,7 @@ int main(int argc, char * argv[]) {
 
   const std::string srcml_empty_single = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\" tabs=\"4\" foo=\"bar\"/>";
 
-  const std::string srcml_empty_nested = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\" tabs=\"4\" foo=\"bar\">\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"/>\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"/>\n\n</unit";
+  const std::string srcml_empty_nested = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\" tabs=\"4\" foo=\"bar\">\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"/>\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"b.cpp\"/>\n\n</unit";
 
   std::ofstream srcml_file("project.xml");
   srcml_file << srcml;
@@ -548,6 +548,39 @@ int main(int argc, char * argv[]) {
     assert(*filename == "project");
     assert(*directory == "test");
     assert(*version == "1");
+    delete language, delete filename, delete directory, delete version;
+    assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
+    assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
+  }
+
+  {
+    srcMLReader reader("project_empty_single.xml");
+    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    assert(*language == "C++");
+    assert(*filename == "project");
+    assert(*directory == "test");
+    assert(*version == "1");
+    delete language, delete filename, delete directory, delete version;
+    assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
+    assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
+  }
+
+  {
+    srcMLReader reader("project_empty_nested.xml");
+    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    assert(*language == "C++");
+    assert(*filename == "a.cpp");
+    assert(directory == 0);
+    assert(version == 0);
+    delete language, delete filename, delete directory, delete version;
+    language = 0, filename = 0, directory = 0, version = 0;
+    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    assert(*language == "C++");
+    assert(*filename == "b.cpp");
+    assert(directory == 0);
+    assert(version == 0);
     delete language, delete filename, delete directory, delete version;
     assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
     assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
