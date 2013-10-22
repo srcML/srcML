@@ -393,7 +393,7 @@ public :
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-    if(is_empty) *unit->unit += ">";
+    //if(is_empty) *unit->unit += ">";
     if(collect_srcml) {
 
       write_endTag(localname, prefix, URI, is_empty);
@@ -539,7 +539,7 @@ private :
 
 
     }
-    *unit->unit += ">";
+    //*unit->unit += ">";
 
   }
 
