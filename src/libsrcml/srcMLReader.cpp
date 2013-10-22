@@ -485,7 +485,7 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
         read_unit_start = true;
       }
 
-      if(node->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT) {
+      if(node->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT || (node->type == (xmlElementType)XML_READER_TYPE_ELEMENT && node->extra)) {
 
         break;
       }
