@@ -492,6 +492,9 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
 
           save_nodes.clear();
           output_node_srcml(*node, writer, is_single);
+          freeNode(node);
+          if(xmlTextReaderRead(reader) != 1) {done = true; return 0; }
+          node = getNode(reader);
 
         }
 
