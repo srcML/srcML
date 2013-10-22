@@ -334,7 +334,7 @@ public :
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-    is_empty = false;
+    is_empty = true;
 
     if(collect_srcml) {
 
@@ -394,7 +394,7 @@ public :
 
     if(collect_srcml) {
 
-      write_endTag(localname, prefix, URI);
+      write_endTag(localname, prefix, URI, is_empty);
 
       // pause
       pthread_mutex_lock(&mutex);
@@ -403,6 +403,8 @@ public :
       pthread_mutex_unlock(&mutex);
 
     }
+
+    is_empty = false;
 
     srcml_free_unit(unit);
     unit = 0;
@@ -429,12 +431,12 @@ public :
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-    is_empty = false;
-
     if(collect_srcml) {
 
-      write_endTag(localname, prefix, URI);
+      write_endTag(localname, prefix, URI, is_empty);
     }
+
+    is_empty = false;
 
     if(terminate) stop_parser();
 
@@ -545,7 +547,14 @@ private :
    *
    * Write out the end tag to the unit string.
    */
-  void write_endTag(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {
+  void write_endTag(const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI, bool is_empty) {
+
+    if(is_empty) {
+
+      *unit->unit += "/>";
+      return;
+
+    }
 
     *unit->unit += "</";
     if(prefix) {
