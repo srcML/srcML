@@ -356,7 +356,7 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
   if(readUnitAttributesInternal(language, filename, directory, version)) return 0;
   node = 0;
 
-  if(xmlTextReaderRead(reader) != 1) { done = true; return 0; }
+  if(xmlTextReaderRead(reader) != 1) { done = true; if(save_nodes.back()->extra) return 1; return 0; }
 
   node = getNode(reader);
 
@@ -425,8 +425,6 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
  */
 int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
 
-  if(done) return 0;
-
   //xmlTextWriterStartDocument(writer, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
   bool read_unit_start = false;
 
@@ -444,7 +442,11 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
 
     save_nodes.clear();
 
+    if(done) return 1;
+
   } else {
+
+    if(done) return 0;
 
     // forward to start unit
     while(true) {
@@ -545,8 +547,6 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
  * @returns string on success and finished return a 0.
  */
 std::string * srcMLReader::readsrcML() {
-
-  if(done) return 0;
 
   xmlBufferPtr buffer = xmlBufferCreate();
   xmlTextWriterPtr writer = xmlNewTextWriterMemory(buffer, 0);
