@@ -441,8 +441,7 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
     } catch(...) {}
 
     save_nodes.clear();
-
-    if(done) return 1;
+    if(done) { xmlTextWriterEndDocument(writer); return 1; }
 
   } else {
 
