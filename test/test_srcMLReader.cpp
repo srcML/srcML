@@ -22,6 +22,8 @@
 
   Test cases for srcMLReader
 */
+
+// includes
 #include <stdio.h>
 #include <string.h>
 #include <cassert>
@@ -42,6 +44,13 @@ int main(int argc, char * argv[]) {
   const std::string srcml_ns_b = "<s:unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"b.cpp\"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>\n</s:unit>";
 
   const std::string srcml_single_a = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\" tabs=\"4\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>";
+
+  const std::string srcml_empty_single_as_unit = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\" tabs=\"4\" foo=\"bar\"/>";
+
+  const std::string srcml_empty_nested_a = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"/>";
+
+  const std::string srcml_empty_nested_b = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"b.cpp\"/>";
+
   const std::string srcml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:pos=\"http://www.sdml.info/srcML/position\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\" pos:tabs=\"4\" foo=\"bar\">\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"a.cpp\" version=\"1\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"b.cpp\"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>\n</unit>\n\n</unit>\n";
 
   const std::string srcml_single = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\" tabs=\"4\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>\n";
@@ -660,7 +669,7 @@ int main(int argc, char * argv[]) {
   {
     srcMLReader reader("project_empty_single.xml");
     std::string * unit = reader.readsrcML();
-    assert(*unit == srcml_single_a);
+    assert(*unit == srcml_empty_single_as_unit);
     delete unit;
     unit = reader.readsrcML();
     assert(unit == 0);
@@ -671,10 +680,10 @@ int main(int argc, char * argv[]) {
   {
     srcMLReader reader("project_empty_nested.xml");
     std::string * unit = reader.readsrcML();
-    assert(*unit == srcml_single_a);
+    assert(*unit == srcml_empty_nested_a);
     delete unit;
     unit = reader.readsrcML();
-    assert(*unit == srcml_single_a);
+    assert(*unit == srcml_empty_nested_b);
     delete unit;
     unit = reader.readsrcML();
     assert(unit == 0);
