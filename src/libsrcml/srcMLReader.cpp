@@ -375,8 +375,9 @@ int srcMLReader::readUnitAttributes(std::string ** language, std::string ** file
           freeNode(save_nodes.at(i));
 
       } catch(...) {}
+      xmlNodePtr save_node = save_nodes.back();
       save_nodes.clear();
-      save_nodes.push_back(node);
+      save_nodes.push_back(save_node);
       if(*language) delete *language, (*language) = 0;
       if(*filename) delete *filename, (*filename) = 0;
       if(*directory) delete *directory, (*directory) = 0;
