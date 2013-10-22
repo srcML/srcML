@@ -142,7 +142,7 @@ int main(int argc, char * argv[]) {
   }
 
   {
-  FILE * file = fopen("project_ns.xml", "r");
+  FILE * file = fopen("project_ns.xml", "w");
   assert(srcml_write_open_FILE(0, file) == SRCML_STATUS_ERROR);
   fclose(file);
   }
