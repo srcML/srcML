@@ -380,38 +380,37 @@ int main(int argc, char * argv[]) {
   debug_cli_opts(srcml_request);
   set_globals(srcml_request);
   
-  if (!srcml_request.positional_args.empty()) {
+  if (srcml_request.positional_args.empty())
+    return 0;
     
-    /* create a new srcml archive structure */
-    srcml_archive * archive = srcml_create_archive();
+  /* create a new srcml archive structure */
+  srcml_archive * archive = srcml_create_archive();
 
-    /* open a srcML archive for output */
-    srcml_write_open_filename(archive, srcml_request.output.c_str());
+  /* open a srcML archive for output */
+  srcml_write_open_filename(archive, srcml_request.output.c_str());
 
-    /* add all the files to the archive */
-    for(int i = 0; i < srcml_request.positional_args.size(); ++i) {
-      srcml_unit * unit = srcml_create_unit(archive);
+  /* add all the files to the archive */
+  for(int i = 0; i < srcml_request.positional_args.size(); ++i) {
+    srcml_unit * unit = srcml_create_unit(archive);
 
-      srcml_unit_set_filename(unit, srcml_request.positional_args[i].c_str());
+    srcml_unit_set_filename(unit, srcml_request.positional_args[i].c_str());
 
-      /* Translate to srcml and append to the archive */
-      srcml_parse_unit_filename(unit, srcml_request.positional_args[i].c_str());
+    /* Translate to srcml and append to the archive */
+    srcml_parse_unit_filename(unit, srcml_request.positional_args[i].c_str());
 
-      /* Translate to srcml and append to the archive */
-      srcml_write_unit(archive, unit);
+    /* Translate to srcml and append to the archive */
+    srcml_write_unit(archive, unit);
 
-      srcml_free_unit(unit);
-    }
-
-    /* close the srcML archive */
-    srcml_close_archive(archive);
-
-    /* free the srcML archive data */
-    srcml_free_archive(archive);
+    srcml_free_unit(unit);
   }
 
-  return 0;
+  /* close the srcML archive */
+  srcml_close_archive(archive);
 
+  /* free the srcML archive data */
+  srcml_free_archive(archive);
+
+  return 0;
 }
 
 // Early Debugging
