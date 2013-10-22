@@ -430,6 +430,10 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
 
   if(!save_nodes.empty()) {
 
+    bool is_empty = false;
+    if(strcmp((const char *)save_nodes.back()->name, "unit") == 0 && save_nodes.back()->extra)
+      is_empty = true;
+
     try {
 
       for(int i = 0; i < save_nodes.size(); ++i)
@@ -441,7 +445,7 @@ int srcMLReader::readsrcML(xmlTextWriterPtr writer) {
     } catch(...) {}
 
     save_nodes.clear();
-    if(done) { xmlTextWriterEndDocument(writer); return 1; }
+    if(done || is_empty) { xmlTextWriterEndDocument(writer); return 1; }
 
   } else {
 
