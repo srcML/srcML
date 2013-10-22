@@ -50,7 +50,11 @@ private :
   /** collect srcML as parse*/
   bool collect_srcml;
 
+  /** terminate */
   bool terminate;
+
+  /** track if empty unit */
+  bool is_empty;
 
 public :
 
@@ -62,7 +66,7 @@ public :
    *
    * Constructor.  Sets up mutex, conditions and state.
    */
-  srcMLReaderHandler() : unit(0), is_done(false), read_root(false), collect_unit_attributes(false), collect_srcml(false), terminate(false) {
+  srcMLReaderHandler() : unit(0), is_done(false), read_root(false), collect_unit_attributes(false), collect_srcml(false), terminate(false), is_empty(true) {
 
     archive = srcml_create_archive();
     archive->prefixes.clear();
@@ -264,6 +268,8 @@ public :
     unit = srcml_create_unit(archive);
     unit->unit = new std::string();
 
+    is_empty = true;
+
     // collect attributes
     for(int i = 0, pos = 0; i < nb_attributes; ++i, pos += 5) {
 
@@ -327,6 +333,8 @@ public :
 #ifdef DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
+
+    is_empty = false;
 
     if(collect_srcml) {
 
@@ -421,6 +429,8 @@ public :
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
+    is_empty = false;
+
     if(collect_srcml) {
 
       write_endTag(localname, prefix, URI);
@@ -448,6 +458,8 @@ public :
     chars.append((const char *)ch, len);
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
 #endif
+
+    is_empty = false;
 
     unit->unit->append((const char *)ch, len);
 
