@@ -50,7 +50,7 @@ int main(int argc, char * argv[]) {
 
   const std::string srcml_empty_single = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\" tabs=\"4\" foo=\"bar\"/>";
 
-  const std::string srcml_empty_nested = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\" tabs=\"4\" foo=\"bar\">\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"/>\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"b.cpp\"/>\n\n</unit";
+  const std::string srcml_empty_nested = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\" tabs=\"4\" foo=\"bar\">\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"/>\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"b.cpp\"/>\n\n</unit>";
 
   std::ofstream srcml_file("project.xml");
   srcml_file << srcml;
@@ -649,6 +649,31 @@ int main(int argc, char * argv[]) {
   {
     srcMLReader reader("project_single.xml");
     std::string * unit = reader.readsrcML();
+    assert(*unit == srcml_single_a);
+    delete unit;
+    unit = reader.readsrcML();
+    assert(unit == 0);
+    unit = reader.readsrcML();
+    assert(unit == 0);
+  }
+
+  {
+    srcMLReader reader("project_empty_single.xml");
+    std::string * unit = reader.readsrcML();
+    assert(*unit == srcml_single_a);
+    delete unit;
+    unit = reader.readsrcML();
+    assert(unit == 0);
+    unit = reader.readsrcML();
+    assert(unit == 0);
+  }
+
+  {
+    srcMLReader reader("project_empty_nested.xml");
+    std::string * unit = reader.readsrcML();
+    assert(*unit == srcml_single_a);
+    delete unit;
+    unit = reader.readsrcML();
     assert(*unit == srcml_single_a);
     delete unit;
     unit = reader.readsrcML();
