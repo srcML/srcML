@@ -81,8 +81,8 @@ int main(int argc, char * argv[]) {
   srcml_file_empty_nested << srcml_empty_nested;
   srcml_file_empty_nested.close();
 
-  /* 
-     srcMLReader(const char * filename)
+  /*
+    srcMLReader(const char * filename)
   */
 
   {
@@ -111,15 +111,15 @@ int main(int argc, char * argv[]) {
 
   }
 
-  /* 
-     srcMLReader(xmlParserInputBufferPtr input)
+  /*
+    srcMLReader(xmlParserInputBufferPtr input)
   */
 
   {
     xmlParserInputBufferPtr input = xmlParserInputBufferCreateFilename("project.xml", xmlParseCharEncoding(0));
     try {
       srcMLReader reader(input);
-    } catch(...) {      
+    } catch(...) {
       assert(false);
     }
     xmlFreeParserInputBuffer(input);
@@ -133,8 +133,8 @@ int main(int argc, char * argv[]) {
 
   }
 
-  /* 
-     readRootUnitAttributes
+  /*
+    readRootUnitAttributes
   */
 
   {
@@ -371,7 +371,7 @@ int main(int argc, char * argv[]) {
     std::vector<std::string> namespaces;
     OPTION_TYPE options = 0;
     int tabstop = 0;
-    
+
     reader.readUnitAttributes(&language, &filename, &directory, &version);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0;
@@ -389,7 +389,7 @@ int main(int argc, char * argv[]) {
     std::vector<std::string> namespaces;
     OPTION_TYPE options = 0;
     int tabstop = 0;
-    
+
     reader.readUnitAttributes(&language, &filename, &directory, &version);
     delete language, delete filename, delete directory, delete version;
     language = 0, filename = 0, directory = 0, version = 0;
@@ -407,7 +407,7 @@ int main(int argc, char * argv[]) {
     std::vector<std::string> namespaces;
     OPTION_TYPE options = 0;
     int tabstop = 0;
-    
+
     reader.readUnitAttributes(&language, &filename, &directory, &version);
     delete language, delete filename, delete directory, delete version;
     assert(reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
@@ -422,7 +422,7 @@ int main(int argc, char * argv[]) {
     std::vector<std::string> namespaces;
     OPTION_TYPE options = 0;
     int tabstop = 0;
-    
+
     reader.readUnitAttributes(&language, &filename, &directory, &version);
     delete language, delete filename, delete directory, delete version;
     assert(reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
@@ -437,7 +437,7 @@ int main(int argc, char * argv[]) {
     std::vector<std::string> namespaces;
     OPTION_TYPE options = 0;
     int tabstop = 0;
-    
+
     reader.readUnitAttributes(&language, &filename, &directory, &version);
     delete language, delete filename, delete directory, delete version;
     assert(reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
@@ -505,8 +505,8 @@ int main(int argc, char * argv[]) {
     delete language, delete filename, delete directory, delete version;
   }
 
-  /* 
-     readUnitAttributes
+  /*
+    readUnitAttributes
   */
 
   {
@@ -693,7 +693,7 @@ int main(int argc, char * argv[]) {
 
   /*
     combined
-   */
+  */
 
   {
     srcMLReader reader("project.xml");
@@ -741,11 +741,11 @@ int main(int argc, char * argv[]) {
     assert(*unit == srcml_b);
     delete unit;
     unit = reader.readsrcML();
-    assert(unit == 0);  
+    assert(unit == 0);
     assert(reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
     assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
     assert(reader.readsrcML() == 0);
-}
+  }
 
   {
     srcMLReader reader("project_ns.xml");
@@ -793,11 +793,11 @@ int main(int argc, char * argv[]) {
     assert(*unit == srcml_ns_b);
     delete unit;
     unit = reader.readsrcML();
-    assert(unit == 0);  
+    assert(unit == 0);
     assert(reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
     assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
     assert(reader.readsrcML() == 0);
-}
+  }
 
   {
     srcMLReader reader("project_single.xml");
@@ -838,7 +838,90 @@ int main(int argc, char * argv[]) {
     assert(reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
     assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
     assert(reader.readsrcML() == 0);
-}
+  }
+
+  {
+    srcMLReader reader("project_empty_single.xml");
+    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    std::vector<std::string> attributes;
+    std::vector<std::string> prefixes;
+    std::vector<std::string> namespaces;
+    OPTION_TYPE options = 0;
+    int tabstop = 0;
+    reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop);
+    assert(*language == "C++");
+    assert(*filename == "project");
+    assert(*directory == "test");
+    assert(*version == "1");
+    assert(attributes.size() == 2);
+    assert(attributes.at(0) == "foo");
+    assert(attributes.at(1) == "bar");
+    assert(prefixes.size() == 2);
+    assert(prefixes.at(0) == "");
+    assert(prefixes.at(1) == "cpp");
+    assert(namespaces.size() == 2);
+    assert(namespaces.at(0) == "http://www.sdml.info/srcML/src");
+    assert(namespaces.at(1) == "http://www.sdml.info/srcML/cpp");
+    assert(options == (SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
+    assert(tabstop == 4);
+    delete language, delete filename, delete directory, delete version;
+    language = 0, filename = 0, directory = 0, version = 0;
+    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    assert(*language == "C++");
+    assert(*filename == "project");
+    assert(*directory == "test");
+    assert(*version == "1");
+    delete language, delete filename, delete directory, delete version;
+    language = 0, filename = 0, directory = 0, version = 0;
+    std::string * unit = reader.readsrcML();
+    assert(*unit == srcml_single_a);
+    delete unit;
+    assert(reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
+    assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
+    assert(reader.readsrcML() == 0);
+  }
+
+  {
+    srcMLReader reader("project_empty_nested.xml");
+    std::string * language = 0, * filename = 0, * directory = 0, * version = 0;
+    std::vector<std::string> attributes;
+    std::vector<std::string> prefixes;
+    std::vector<std::string> namespaces;
+    OPTION_TYPE options = 0;
+    int tabstop = 0;
+    reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop);
+    assert(*language == "C++");
+    assert(*filename == "project");
+    assert(*directory == "test");
+    assert(*version == "1");
+    assert(attributes.size() == 2);
+    assert(attributes.at(0) == "foo");
+    assert(attributes.at(1) == "bar");
+    assert(prefixes.size() == 2);
+    assert(prefixes.at(0) == "");
+    assert(prefixes.at(1) == "cpp");
+    assert(namespaces.size() == 2);
+    assert(namespaces.at(0) == "http://www.sdml.info/srcML/src");
+    assert(namespaces.at(1) == "http://www.sdml.info/srcML/cpp");
+    assert(options == (SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
+    assert(tabstop == 4);
+    delete language, delete filename, delete directory, delete version;
+    language = 0, filename = 0, directory = 0, version = 0;
+    reader.readUnitAttributes(&language, &filename, &directory, &version);
+    assert(*language == "C++");
+    assert(*filename == "project");
+    assert(*directory == "test");
+    assert(*version == "1");
+    delete language, delete filename, delete directory, delete version;
+    language = 0, filename = 0, directory = 0, version = 0;
+    std::string * unit = reader.readsrcML();
+    assert(*unit == srcml_single_a);
+    delete unit;
+    assert(reader.readRootUnitAttributes(&language, &filename, &directory, &version, attributes, prefixes, namespaces, options, tabstop) == 0);
+    assert(reader.readUnitAttributes(&language, &filename, &directory, &version) == 0);
+    assert(reader.readsrcML() == 0);
+  }
+
 
   unlink("project.xml");
   unlink("project_single.xml");
