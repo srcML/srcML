@@ -201,8 +201,8 @@ public :
       if ((error = !apply(ctx)))
         pstate->stopUnit(ctx);
 
-      xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
-      onode->name = NULL;
+      //xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
+      //onode->name = NULL;
 
       // free up the document that has this particular unit
       xmlFreeDoc(ctxt->myDoc);
