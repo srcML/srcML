@@ -54,7 +54,8 @@ int main(int argc, char * argv[]) {
     assert(list != 0);
     assert(list[0] == std::string("a.cpp"));
     assert(list[1] == 0);
-    free((void *)list[0]);
+    for(int i = 0; list[i]; ++i)
+      free((void *)list[i]);
     free((void *)list);
 
   }
@@ -67,8 +68,8 @@ int main(int argc, char * argv[]) {
     assert(list[1] == std::string("b.cpp"));
     assert(list[2] == std::string("c.cpp"));
     assert(list[3] == 0);
-    free((void *)list[0]);
-    free((void *)list[1]);
+    for(int i = 0; list[i]; ++i)
+      free((void *)list[i]);
     free((void *)list);
   }
 
