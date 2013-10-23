@@ -11,9 +11,6 @@ TR=/usr/bin/tr
 CP=${firstword ${wildcard /opt/local/bin/gcp /usr/local/bin/gcp /bin/cp}}
 STRIP=${firstword ${wildcard /usr/bin/i686-pc-mingw32-strip /usr/bin/i686-w64-mingw32-strip}}
 
-# svn repo
-SVN_URL=http://calder.sdml.cs.kent.edu/svn/srcML/trunk
-
 # git repo
 GIT_URL=git@github.com:srcML/srcML.git
 
@@ -62,9 +59,7 @@ WIN_DIST_FILES=${WIN_DOC_FILES} ${WIN_SRC2SRCML_PATH} ${WIN_SRCML2SRC_PATH}
 # generate files
 all : src bin
 
-REVISION=$(strip $(shell svn info ${SVN_URL}/src | ${GREP} 'Revision:' | ${CUT} -d: -f2-))
-#GITREVISION=$(strip $(shell git log -n 1 --remotes --format="%H"))
-GITREVISION=$(strip $(shell git log -n1 --format="%b" | cut -d " " -f 2 | cut -d "@" -f 2))
+GITREVISION=$(strip $(shell git log -n 1 --remotes --format="%H"))
 
 # export the directories
 exp :
@@ -76,19 +71,6 @@ exp :
 	${ECHO} "${GITREVISION}" > ${SRC_DIR_BASE}/src/REVISION
 	mkdir ${SRC_DIR_BASE}/obj
 	mkdir ${SRC_DIR_BASE}/bin
-
-# export the directories
-svnexp :
-	@echo ${REVISION}
-	make cleansrc
-	mkdir ${SRC_DIR_BASE}
-	svn export -r${REVISION} ${SVN_URL}/src/ ${SRC_DIR_BASE}/src
-	${ECHO} -n "Trunk ${REVISION}" > ${SRC_DIR_BASE}/src/VERSION
-	${ECHO} -n "${REVISION}" > ${SRC_DIR_BASE}/src/REVISION
-	svn info -r${REVISION} ${SVN_URL}/src | ${GREP} 'Last Changed Date:' | ${CUT} -d: -f2- | ${TR} -d '\n' >> ${SRC_DIR_BASE}/src/VERSION
-	mkdir ${SRC_DIR_BASE}/obj
-	mkdir ${SRC_DIR_BASE}/bin
-	svn export -r${REVISION} ${SVN_URL}/doc/ ${SRC_DIR_BASE}/doc --native-eol LF
 
 clean :
 	make cleansrc
