@@ -59,6 +59,7 @@ int srcml_extract_text(const char * input_buffer, int size, xmlOutputBufferPtr o
 
   // setup sax handler
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
+  xmlSAXHandlerPtr sax_save = ctxt->sax;
   ctxt->sax = &sax;
 
   // setup process handling
@@ -72,7 +73,7 @@ int srcml_extract_text(const char * input_buffer, int size, xmlOutputBufferPtr o
   int status = srcMLParseDocument(ctxt, true);
 
   // local variable, do not want xmlFreeParserCtxt to free
-  ctxt->sax = NULL;
+  ctxt->sax = sax_save;
 
   // all done with parsing
   xmlFreeParserCtxt(ctxt);
@@ -118,6 +119,7 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_elemen
 
   // setup sax handler
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
+  xmlSAXHandlerPtr sax_save = ctxt->sax;
   ctxt->sax = &sax;
 
   // setup process handling
@@ -131,7 +133,7 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_elemen
   int status = srcMLParseDocument(ctxt, false);
 
   // local variable, do not want xmlFreeParserCtxt to free
-  ctxt->sax = NULL;
+  ctxt->sax = sax_save;
 
   // all done with parsing
   xmlParserInputPtr input = inputPop(ctxt);
@@ -253,6 +255,7 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
 
   // setup sax handler
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
+  xmlSAXHandlerPtr sax_save = ctxt->sax;
   ctxt->sax = &sax;
 
   // setup process handling
@@ -268,7 +271,7 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
   int status = srcMLParseDocument(ctxt, false);
 
   // local variable, do not want xmlFreeParserCtxt to free
-  ctxt->sax = NULL;
+  ctxt->sax = sax_save;
 
   xsltFreeStylesheet(stylesheet);
   xsltCleanupGlobals();
@@ -300,6 +303,7 @@ int srcml_relaxng(xmlParserInputBufferPtr input_buffer, const char** xslts, int 
 
   // setup sax handler
   xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
+  xmlSAXHandlerPtr sax_save = ctxt->sax;
   ctxt->sax = &sax;
 
   xmlRelaxNGParserCtxtPtr relaxng = xmlRelaxNGNewParserCtxt(xslts[0]);
@@ -313,7 +317,7 @@ int srcml_relaxng(xmlParserInputBufferPtr input_buffer, const char** xslts, int 
 
   int status = srcMLParseDocument(ctxt, false);
 
-  ctxt->sax = NULL;
+  ctxt->sax = sax_save;
 
   xmlParserInputPtr input = inputPop(ctxt);
   input->buf = NULL;
