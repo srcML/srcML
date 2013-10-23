@@ -71,6 +71,7 @@ int main(int argc, char * argv[]) {
     assert(srcml_unparse_unit_filename(unit, "project.c") == SRCML_STATUS_ERROR);
    
     srcml_free_unit(unit);
+    srcml_close_archive(archive);
     srcml_free_archive(archive);
   }
 
@@ -125,6 +126,7 @@ int main(int argc, char * argv[]) {
     assert(srcml_unparse_unit_memory(unit, &s, &size) == SRCML_STATUS_ERROR);
    
     srcml_free_unit(unit);
+    srcml_close_archive(archive);
     srcml_free_archive(archive);
   }
 
@@ -198,6 +200,7 @@ int main(int argc, char * argv[]) {
     fclose(file);
    
     srcml_free_unit(unit);
+    srcml_close_archive(archive);
     srcml_free_archive(archive);
   }
 
@@ -260,6 +263,7 @@ int main(int argc, char * argv[]) {
     close(fd);
    
     srcml_free_unit(unit);
+    srcml_close_archive(archive);
     srcml_free_archive(archive);
   }
 
