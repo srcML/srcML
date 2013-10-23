@@ -385,7 +385,12 @@ int main(int argc, char * argv[]) {
   
   if (srcml_request.positional_args.empty())
     return 0;
-    
+  
+  if (srcml_request.positional_args.size() == 1) {
+    srcml(srcml_request.positional_args[0].c_str(), srcml_request.output.c_str());
+    return 0;
+  }
+
   /* create a new srcml archive structure */
   srcml_archive * archive = srcml_create_archive();
 
@@ -506,7 +511,7 @@ void set_globals(const struct srcml_request_t srcml_request) {
     srcml_register_namespace(srcml_request.xmlns_prefix[i].substr(0,pos).c_str(),
 			     srcml_request.xmlns_prefix[i].substr(pos+1).c_str());
   }
-  srcml_archive_set_all_options(srcml_request.markup_options);
+  srcml_set_all_options(srcml_request.markup_options);
 
 }
 
