@@ -272,8 +272,10 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
 
   xsltFreeStylesheet(stylesheet);
   xsltCleanupGlobals();
-  if(input_buffer) inputPop(ctxt);
   // all done with parsing
+  xmlParserInputPtr input = inputPop(ctxt);
+  input->buf = NULL;
+  xmlFreeInputStream(input);
   xmlFreeParserCtxt(ctxt);
 
   return status;
@@ -313,7 +315,9 @@ int srcml_relaxng(xmlParserInputBufferPtr input_buffer, const char** xslts, int 
 
   ctxt->sax = NULL;
 
-  if(input_buffer) inputPop(ctxt);
+  xmlParserInputPtr input = inputPop(ctxt);
+  input->buf = NULL;
+  xmlFreeInputStream(input);
   xmlFreeParserCtxt(ctxt);
   xmlRelaxNGFreeValidCtxt(rngctx);
   xmlRelaxNGFree(rng);
