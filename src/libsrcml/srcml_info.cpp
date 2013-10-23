@@ -39,8 +39,10 @@ const char** srcml_list(const char* srcml_filename) {
   std::vector<std::string> output_array;
 
   srcml_unit * unit;
-  while((unit = srcml_read_unit(archive)))
+  while((unit = srcml_read_unit(archive))) {
     output_array.push_back(srcml_unit_get_filename(unit));
+    srcml_free_unit(unit);
+  }
   const char ** output_carray = (const char **)malloc((output_array.size() + 1) * sizeof(const char *));
 
   try {
