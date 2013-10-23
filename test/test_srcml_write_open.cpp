@@ -83,7 +83,7 @@ int main(int argc, char * argv[]) {
 
   srcml_close_archive(archive);
   srcml_free_archive(archive);
-
+  free(s);
   }
 
   {
@@ -93,7 +93,6 @@ int main(int argc, char * argv[]) {
   assert(srcml_write_open_memory(archive, 0, &size) == SRCML_STATUS_ERROR);
 
   srcml_free_archive(archive);
-
   }
 
   {
@@ -103,7 +102,6 @@ int main(int argc, char * argv[]) {
   assert(srcml_write_open_memory(archive, &s, 0) == SRCML_STATUS_ERROR);
 
   srcml_free_archive(archive);
-
   }
 
   {
