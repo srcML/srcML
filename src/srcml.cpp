@@ -376,8 +376,11 @@ int main(int argc, char * argv[]) {
     std::cerr << e.what() << "\n";
     return 1;
   }
-
+  
+  //DEBUG TO SEE CLI INPUTS
   debug_cli_opts(srcml_request);
+
+  //SETUP GLOBALS FOR LIBSRCML
   set_globals(srcml_request);
   
   if (srcml_request.positional_args.empty())
