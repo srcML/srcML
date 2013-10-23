@@ -435,7 +435,7 @@ void srcMLTranslatorOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION
 void srcMLTranslatorOutput::startUnit(const char* language, const char* dir, const char* filename, const char* version, bool outer) {
 
   std::string full_unit = "";
-  if(num2prefix[SRCML_SRC_NS_URI_POS]) {
+  if(num2prefix[SRCML_SRC_NS_URI_POS] && strcmp(num2prefix[SRCML_SRC_NS_URI_POS], "") != 0) {
 
     full_unit += num2prefix[SRCML_SRC_NS_URI_POS];
     full_unit += ":";
