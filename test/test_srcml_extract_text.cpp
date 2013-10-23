@@ -50,7 +50,6 @@ int main(int argc, char * argv[]) {
     while(in >> temp)
       output += temp;
     assert(output == "a;");
-    xmlOutputBufferClose(output_buffer);
     unlink("project.xml");
   }
 
