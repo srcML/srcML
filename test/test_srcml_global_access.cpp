@@ -47,6 +47,7 @@ int main(int argc, char * argv[]) {
   {
     srcml_set_encoding("foo");
     assert(*global_archive.encoding == "foo");
+    delete global_archive.encoding;
   }
 
   /* 
@@ -61,6 +62,7 @@ int main(int argc, char * argv[]) {
   {
     srcml_set_language("foo");
     assert(*global_archive.language == "foo");
+    delete global_archive.language;
   }
 
   /* 
@@ -75,6 +77,7 @@ int main(int argc, char * argv[]) {
   {
     srcml_set_filename("foo");
     assert(*global_archive.filename == "foo");
+    delete global_archive.filename;
   }
 
   /* 
@@ -89,6 +92,7 @@ int main(int argc, char * argv[]) {
   {
     srcml_set_directory("foo");
     assert(*global_archive.directory == "foo");
+    delete global_archive.directory;
   }
 
   /* 
@@ -103,6 +107,7 @@ int main(int argc, char * argv[]) {
   {
     srcml_set_version("foo");
     assert(*global_archive.version == "foo");
+    delete global_archive.version;
   }
 
   /* 
