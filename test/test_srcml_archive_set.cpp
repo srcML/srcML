@@ -340,6 +340,7 @@ int main(int argc, char * argv[]) {
     srcml_archive * archive = srcml_create_archive();
 
     assert(srcml_archive_register_file_extension(archive, "foo", "C+") == SRCML_STATUS_ERROR);
+    srcml_free_archive(archive);
 
   }
 
@@ -348,6 +349,7 @@ int main(int argc, char * argv[]) {
     srcml_archive * archive = srcml_create_archive();
 
     assert(srcml_archive_register_file_extension(archive, "foo", 0) == SRCML_STATUS_ERROR);
+    srcml_free_archive(archive);
 
   }
 
@@ -356,6 +358,7 @@ int main(int argc, char * argv[]) {
     srcml_archive * archive = srcml_create_archive();
 
     assert(srcml_archive_register_file_extension(archive, 0, "C++") == SRCML_STATUS_ERROR);
+    srcml_free_archive(archive);
 
   }
 
@@ -375,6 +378,7 @@ int main(int argc, char * argv[]) {
 
     assert(archive->prefixes.back() == "foo");
     assert(archive->namespaces.back() == "bar");
+    srcml_free_archive(archive);
 
   }
 
@@ -386,6 +390,7 @@ int main(int argc, char * argv[]) {
 
     assert(archive->prefixes.at(0) == "foo");
     assert(archive->namespaces.at(0)  == "http://www.sdml.info/srcML/src");
+    srcml_free_archive(archive);
 
   }
 
@@ -394,6 +399,7 @@ int main(int argc, char * argv[]) {
     srcml_archive * archive = srcml_create_archive();
 
     assert(srcml_archive_register_namespace(archive, 0, "bar") == SRCML_STATUS_ERROR);
+    srcml_free_archive(archive);
 
   }
 
@@ -402,6 +408,7 @@ int main(int argc, char * argv[]) {
     srcml_archive * archive = srcml_create_archive();
 
     assert(srcml_archive_register_namespace(archive, "foo", 0) == SRCML_STATUS_ERROR);
+    srcml_free_archive(archive);
 
   }
 
