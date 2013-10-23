@@ -42,24 +42,30 @@ int main(int argc, char * argv[]) {
 
   {
     const char * s = "<unit>a;</unit>";
-    assert(srcml_extract_text(s, strlen(s), xmlOutputBufferCreateFilename("project.xml", xmlFindCharEncodingHandler("ISO-8859-1"), 0), 0, 0) == SRCML_STATUS_OK);
+    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename("project.xml", xmlFindCharEncodingHandler("ISO-8859-1"), 0);
+    assert(srcml_extract_text(s, strlen(s), output_buffer, 0, 0) == SRCML_STATUS_OK);
     std::ifstream in("project.xml");
     std::string output;
     std::string temp;
     while(in >> temp)
       output += temp;
     assert(output == "a;");
+    xmlOutputBufferClose(output_buffer);
     unlink("project.xml");
   }
 
   {
     const char * s = "<unit>a;</unit>";
-    assert(srcml_extract_text(0, strlen(s), xmlOutputBufferCreateFilename("project.xml", xmlFindCharEncodingHandler("ISO-8859-1"), 0), 0, 0) == SRCML_STATUS_ERROR);
+    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename("project.xml", xmlFindCharEncodingHandler("ISO-8859-1"), 0);
+    assert(srcml_extract_text(0, strlen(s), output_buffer, 0, 0) == SRCML_STATUS_ERROR);
+    xmlOutputBufferClose(output_buffer);
   }
 
   {
     const char * s = "<unit>a;</unit>";
-    assert(srcml_extract_text(s, 0, xmlOutputBufferCreateFilename("project.xml", xmlFindCharEncodingHandler("ISO-8859-1"), 0), 0, 0) == SRCML_STATUS_ERROR);
+    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename("project.xml", xmlFindCharEncodingHandler("ISO-8859-1"), 0);
+    assert(srcml_extract_text(s, 0, output_buffer, 0, 0) == SRCML_STATUS_ERROR);
+    xmlOutputBufferClose(output_buffer);
   }
 
   {
