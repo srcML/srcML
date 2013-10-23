@@ -623,8 +623,8 @@ int srcml_check_format(const char* format) {
   reverse[length] = 0;
 
   // setup the regular expression
-  static regex_t preg = { 0 };
-  static int errorcode = regcomp(&preg, regex, REG_EXTENDED);
+  regex_t preg = { 0 };
+  int errorcode = regcomp(&preg, regex, REG_EXTENDED);
 
   // evalue the regex
   regmatch_t pmatch[3];
@@ -632,6 +632,7 @@ int srcml_check_format(const char* format) {
 
   // minus 1 to remove starting .
   int ext_len = pmatch[0].rm_eo - pmatch[0].rm_so - 1;
+  regfree(&preg);
   free(reverse);
   if(ext_len > 0)
     return SRCML_STATUS_OK;
