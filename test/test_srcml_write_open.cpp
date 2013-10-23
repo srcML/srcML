@@ -72,7 +72,7 @@ int main(int argc, char * argv[]) {
 
   {
 
-  char * s;
+  char * s = 0;
   int size;
   srcml_archive * archive = srcml_create_archive();
   srcml_write_open_memory(archive, &s, &size);
@@ -97,17 +97,19 @@ int main(int argc, char * argv[]) {
 
   {
 
-  char * s;
+  char * s = 0;
   srcml_archive * archive = srcml_create_archive();
   assert(srcml_write_open_memory(archive, &s, 0) == SRCML_STATUS_ERROR);
 
   srcml_free_archive(archive);
+  free(s);
   }
 
   {
-    char * s;
+    char * s = 0;
     int size;
     assert(srcml_write_open_memory(0, &s, &size) == SRCML_STATUS_ERROR);
+  free(s);
   }
 
   /* 
