@@ -136,6 +136,8 @@ public :
 
     // if applying to entire archive, then just build this node
     if (isoption(options, OPTION_APPLY_ROOT)) {
+
+      // if apply root and not archive then startRoot may not have been called
       static bool started = false;
       if(!pstate->isarchive && !started) xmlSAX2StartDocument(ctx);
       started = true;
