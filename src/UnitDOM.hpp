@@ -72,17 +72,20 @@ public :
 
     // record namespaces in an extensible list so we can add the per unit
     for (int i = 0; i < nb_namespaces; ++i) {
+
       data.push_back(namespaces[i * 2]);
       data.push_back(namespaces[i * 2 + 1]);
+
     }
     rootsize = data.size();
 
     // if we are building the entire tree, start now
     if (isoption(options, OPTION_APPLY_ROOT)) {
+
       xmlSAX2StartDocument(ctx);
       xmlSAX2StartElementNs(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes,
                             nb_defaulted, attributes);
-      return;
+
     }
 
   }
@@ -127,6 +130,7 @@ public :
           found = true;
           break;
         }
+
       if (found)
         continue;
 
@@ -137,7 +141,7 @@ public :
     // if applying to entire archive, then just build this node
     if (isoption(options, OPTION_APPLY_ROOT)) {
 
-      // if apply root and not archive then startRoot may not have been called
+      // if apply root and not archive then startRootUnit may not have been called
       static bool started = false;
       if(!pstate->isarchive && !started) xmlSAX2StartDocument(ctx);
       started = true;
@@ -196,15 +200,14 @@ public :
 
     // finish building the unit tree
     xmlSAX2EndElementNs(ctx, localname, prefix, URI);
+
+    // End the document and free it if applied to unit individually
     if(!isoption(options, OPTION_APPLY_ROOT)) {
       xmlSAX2EndDocument(ctx);
 
       // apply the necessary processing
       if ((error = !apply(ctx)))
         pstate->stopUnit(ctx);
-
-      //xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
-      //onode->name = NULL;
 
       // free up the document that has this particular unit
       xmlFreeDoc(ctxt->myDoc);
@@ -214,13 +217,6 @@ public :
 
     }
 
-    /*
-    // unhook the unit tree from the document, leaving an empty document
-    xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
-    xmlUnlinkNode(onode);
-    xmlFreeNode(onode);
-    ctxt->node = 0;
-    */
   }
 
   virtual void endDocument(void *ctx) {
@@ -232,7 +228,7 @@ public :
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     SAX2ExtractUnitsSrc* pstate = (SAX2ExtractUnitsSrc*) ctxt->_private;
 
-    // end the entire input document
+    // end the entire input document and run apply if applied to root.
     if (isoption(options, OPTION_APPLY_ROOT)) {
       xmlSAX2EndDocument(ctx);
 

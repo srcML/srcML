@@ -97,8 +97,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   }
 
   // issue the xml declaration, but only if we want to
-  if (!isoption(OPTION_XMLDECL))
-    xmlTextWriterStartDocument(xout, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
+  if (!isoption(OPTION_XMLDECL)) xmlTextWriterStartDocument(xout, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
 }
 
 srcMLOutput::~srcMLOutput() {
