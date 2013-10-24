@@ -281,6 +281,10 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
   xmlFreeInputStream(input);
   xmlFreeParserCtxt(ctxt);
 
+#if defined(__GNUG__) && !defined(__MINGW32__)
+  dlclose(handle);
+#endif
+
   return status;
 }
 
