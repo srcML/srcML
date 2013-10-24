@@ -412,7 +412,18 @@ int process_args(int argc, char* argv[], process_options & poptions);
 // read and register xpath functions from a file
 void register_xpath_functions_from_filename(const char * filename);
 
+void exit_cleanup() {
+
+  xmlCleanupCharEncodingHandlers();
+  xmlCleanupGlobals();
+  xmlDictCleanup();
+  xmlCleanupParser();
+
+}
+
 int main(int argc, char* argv[]) {
+
+  atexit(exit_cleanup);
 
   xmlGenericErrorFunc handler = (xmlGenericErrorFunc) libxml_error;
   initGenericErrorDefaultFunc(&handler);
@@ -751,11 +762,6 @@ int main(int argc, char* argv[]) {
   if (strcmp(poptions.ofilename, "") != 0 && (strcmp(poptions.ofilename, "-") != 0)) {
     fclose(output);
   }
-
-  xmlCleanupCharEncodingHandlers();
-  xmlCleanupGlobals();
-  xmlDictCleanup();
-  xmlCleanupParser();
 
   return exit_status;
 }
