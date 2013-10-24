@@ -196,7 +196,8 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
 
 void srcMLOutput::startUnit(const char* language, const char* dir, const char* filename, const char* version, bool outer) {
 
-  std::string maintag = convert_num2prefix(0);
+  const char * prefix = convert_num2prefix(0);
+  std::string maintag = prefix ? prefix : "";
   if (!maintag.empty())
     maintag += ":";
   maintag += "unit";
