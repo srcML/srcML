@@ -78,12 +78,13 @@ srcMLTranslatorCore::srcMLTranslatorCore(int language,                // program
 				 const char* filename,        // root unit filename
 				 const char* version,         // root unit version
 				 const char* uri[],           // uri prefixes
-				 int tabsize                  // size of tabs
-				 )
+                                 int tabsize,                  // size of tabs
+                                 std::string * suri
+                                 )
   : Language(language), pinput(0), first(true),
     root_directory(directory), root_filename(filename), root_version(version),
     encoding(src_encoding), options(op),
-  out(0, 0, getLanguageString(), xml_encoding, options, uri, tabsize, output_buffer), tabsize(tabsize) {
+    out(0, 0, getLanguageString(), xml_encoding, options, uri, tabsize, output_buffer, 0, suri), tabsize(tabsize) {
 
 }
 

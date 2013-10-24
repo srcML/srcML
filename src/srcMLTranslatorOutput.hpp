@@ -37,6 +37,8 @@
 #include "srcMLOutput.hpp"
 #include <libxml/xmlwriter.h>
 
+#include <string>
+
 class srcMLTranslatorOutput : public srcMLOutput {
 
 public:
@@ -49,7 +51,8 @@ public:
                           const char* uri[],
                           int tabsize,
                           xmlBuffer* output_buffer = 0,
-                          xmlTextWriterPtr writer = 0
+                          xmlTextWriterPtr writer = 0,
+                          std::string * suri = 0
         );
 
     static bool checkEncoding(const char* encoding);

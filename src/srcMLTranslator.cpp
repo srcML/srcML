@@ -73,12 +73,12 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
                                  const char* directory,       // root unit directory
                                  const char* filename,        // root unit filename
                                  const char* version,         // root unit version
-                                 const char* uri[],           // uri prefixes
+                                 std::string * uri,           // uri prefixes
                                  int tabsize                  // size of tabs
                                  ) : str_buffer(str_buf), size(0) {
 
   output_buffer = xmlBufferCreate();
-  translator = new srcMLTranslatorCore(language, src_encoding, xml_encoding, output_buffer, op, directory, filename, version, uri, tabsize);
+  translator = new srcMLTranslatorCore(language, src_encoding, xml_encoding, output_buffer, op, directory, filename, version, 0, tabsize, uri);
 }
 
 // constructor

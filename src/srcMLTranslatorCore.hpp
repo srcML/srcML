@@ -30,6 +30,8 @@
 #include "Language.hpp"
 #include "srcMLTranslatorOutput.hpp"
 
+#include <string>
+
 class UTF8CharBuffer;
 
 class srcMLTranslatorCore : public Language {
@@ -64,7 +66,8 @@ public:
                         const char* filename,
                         const char* version,
                         const char* uri[],
-                        int tabsize
+                        int tabsize,
+                        std::string * suri = 0
         );
 
     // constructor

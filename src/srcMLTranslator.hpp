@@ -30,6 +30,8 @@
 #include "Options.hpp"
 #include <libxml/xmlwriter.h>
 
+#include <string>
+
 class srcMLTranslatorCore;
 class FileError {};
 
@@ -67,7 +69,7 @@ public:
                     const char* directory,
                     const char* filename,
                     const char* version,
-                    const char* uri[],
+                    std::string * uri,
                     int tabsize
         );
 

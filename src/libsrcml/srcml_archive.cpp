@@ -623,7 +623,7 @@ int srcml_write_open_memory(srcml_archive* archive, char** buffer, int * size) {
                                               archive->directory ? archive->directory->c_str() : 0,
                                               archive->filename ? archive->filename->c_str() : 0,
                                               archive->version ? archive->version->c_str() : 0,
-                                              (const char **)&archive->prefixes.front(),
+                                              &archive->prefixes.front(),
                                               archive->tabstop);
 
   } catch(...) { return SRCML_STATUS_ERROR; }
