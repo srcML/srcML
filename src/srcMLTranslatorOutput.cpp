@@ -386,7 +386,7 @@ void srcMLTranslatorOutput::processEscape(const antlr::RefToken& token) {
   --openelementcount;
 }
 
-void srcMLTranslatorOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer, const char** num2prefix) {
+void srcMLTranslatorOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer) {
 
     // figure out which namespaces are needed
     char const * const ns[] = {
@@ -445,7 +445,7 @@ void srcMLTranslatorOutput::startUnit(const char* language, const char* dir, con
 
   // outer units have namespaces
   if (/* outer && */ !isoption(OPTION_NAMESPACEDECL)) {
-    outputNamespaces(xout, options, depth, outer, num2prefix);
+    outputNamespaces(xout, options, depth, outer);
   }
 
   // setting up for tabs, even if not used

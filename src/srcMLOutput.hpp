@@ -33,6 +33,7 @@
 #include "TokenStream.hpp"
 #include "Options.hpp"
 #include "srcMLException.hpp"
+#include <string>
 
 #include <libxml/xmlwriter.h>
 
@@ -48,7 +49,8 @@ public:
                 const char* uri[],
                 int tabsize,
                 xmlBuffer* output_buffer = 0,
-                xmlTextWriterPtr writer = 0
+                xmlTextWriterPtr writer = 0,
+                std::string * string_uri = 0
         );
 
   xmlTextWriter * getWriter();
@@ -75,6 +77,8 @@ public:
     const char * lineAttributeValue(const antlr::RefToken& token);
     const char * columnAttributeValue(const antlr::RefToken& token);
 
+    inline const char * convert_num2prefix(unsigned int i);
+
     // destructor
     ~srcMLOutput();
 
@@ -91,6 +95,7 @@ public:
     OPTION_TYPE& options;
     const char* xml_encoding;
     const char** num2prefix;
+    std::string * num2sprefix;
     int openelementcount;
 
     int curline;
@@ -110,7 +115,7 @@ public:
 
     void processUnit(const antlr::RefToken& token);
 
-    static void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer, const char** num2prefix);
+    void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer);
 
     bool isoption(const OPTION_TYPE& options) const;
     static bool isoption(const OPTION_TYPE& flag, const OPTION_TYPE& options);

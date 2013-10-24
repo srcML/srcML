@@ -57,11 +57,12 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 			 const char* curi[],
 			 int ts,
                          xmlBuffer* output_buffer,
-                         xmlTextWriterPtr writer
+                         xmlTextWriterPtr writer,
+                         std::string * string_uri
 			 )
   : input(ints), xout(0), srcml_filename(filename), unit_language(language), unit_dir(0), unit_filename(0),
     unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(curi), openelementcount(0), curline(0),
-    curcolumn(0), tabsize(ts), depth(0)
+    curcolumn(0), tabsize(ts), depth(0), num2sprefix(string_uri)
 {
   // open the output text writer stream
   // "-" filename is standard output
@@ -88,10 +89,10 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
   // setup attributes names for line/column position if used
   if (isoption(OPTION_POSITION)) {
 
-    lineAttribute = num2prefix[SRCML_EXT_POSITION_NS_URI_POS];
+    lineAttribute = convert_num2prefix(SRCML_EXT_POSITION_NS_URI_POS);
     lineAttribute += ":line";
 
-    columnAttribute = num2prefix[SRCML_EXT_POSITION_NS_URI_POS];
+    columnAttribute = convert_num2prefix(SRCML_EXT_POSITION_NS_URI_POS);
     columnAttribute += ":column";
   }
 
@@ -148,7 +149,7 @@ const char * srcMLOutput::columnAttributeValue(const antlr::RefToken& token) {
   return out;
 }
 
-void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer, const char** num2prefix) {
+void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth, bool outer) {
 
     // figure out which namespaces are needed
     char const * const ns[] = {
@@ -184,9 +185,9 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
 	continue;
 
       std::string prefix = "xmlns";
-      if (num2prefix[i][0] != '\0') {
+      if (convert_num2prefix(i)[0] != '\0') {
 	prefix += ':';
-	prefix += num2prefix[i];
+	prefix += convert_num2prefix(i);
       }
 
       xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST ns[i]);
@@ -195,7 +196,7 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
 
 void srcMLOutput::startUnit(const char* language, const char* dir, const char* filename, const char* version, bool outer) {
 
-  std::string maintag = num2prefix[0];
+  std::string maintag = convert_num2prefix(0);
   if (!maintag.empty())
     maintag += ":";
   maintag += "unit";
@@ -205,7 +206,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
 
   // outer units have namespaces
   if (/* outer && */ !isoption(OPTION_NAMESPACEDECL)) {
-    outputNamespaces(xout, options, depth, outer, num2prefix);
+    outputNamespaces(xout, options, depth, outer);
   }
 
   // setting up for tabs, even if not used
@@ -213,7 +214,7 @@ void srcMLOutput::startUnit(const char* language, const char* dir, const char* f
   std::string tabattribute;
   if (isoption(OPTION_POSITION)) {
     stabs << tabsize;
-    tabattribute = num2prefix[SRCML_EXT_POSITION_NS_URI_POS];
+    tabattribute = convert_num2prefix(SRCML_EXT_POSITION_NS_URI_POS);
     tabattribute.append(":tabs");
   }
 
@@ -318,4 +319,11 @@ int srcMLOutput::getDepth() {
 void srcMLOutput::setDepth(int thedepth) {
 
   depth = thedepth;
+}
+
+const char * srcMLOutput::convert_num2prefix(unsigned int i) {
+
+  if(num2sprefix) return num2sprefix[i].c_str();
+  else return num2prefix[i];
+
 }
