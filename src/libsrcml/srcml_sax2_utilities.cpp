@@ -158,10 +158,13 @@ void dlexsltRegisterAll() {
 
   void* handle = dlopen("libexslt.so", RTLD_LAZY);
   if (!handle) {
-    handle = dlopen("libexslt.dylib", RTLD_LAZY);
+    handle = dlopen("libexslt.so.0", RTLD_LAZY);
     if (!handle) {
-      fprintf(stderr, "Unable to open libexslt library\n");
-      return;
+      handle = dlopen("libexslt.dylib", RTLD_LAZY);
+      if (!handle) {
+        fprintf(stderr, "Unable to open libexslt library\n");
+        return;
+      }
     }
   }
 
@@ -177,7 +180,6 @@ void dlexsltRegisterAll() {
   exsltRegisterAll();
 
 #endif
-
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
   dlclose(handle);
@@ -214,10 +216,13 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
 
   void* handle = dlopen("libexslt.so", RTLD_LAZY);
   if (!handle) {
-    handle = dlopen("libexslt.dylib", RTLD_LAZY);
+    handle = dlopen("libexslt.so.0", RTLD_LAZY);
     if (!handle) {
-      fprintf(stderr, "Unable to open libexslt library\n");
-      return SRCML_STATUS_ERROR;
+      handle = dlopen("libexslt.dylib", RTLD_LAZY);
+      if (!handle) {
+        fprintf(stderr, "Unable to open libexslt library\n");
+        return SRCML_STATUS_ERROR;
+      }
     }
   }
 
