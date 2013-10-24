@@ -627,11 +627,6 @@ int main(int argc, char* argv[]) {
       }
     }
 
-    xmlCleanupCharEncodingHandlers();
-    xmlCleanupGlobals();
-    xmlDictCleanup();
-    xmlCleanupParser();
-
     if (gpoptions->count == 0)
       exit(STATUS_INPUTFILE_PROBLEM);
 
@@ -647,6 +642,11 @@ int main(int argc, char* argv[]) {
     fprintf(stderr, "%s: Translation encoding problem\n", PROGRAM_NAME);
     exit(STATUS_UNKNOWN_ENCODING);
   }
+
+  xmlCleanupCharEncodingHandlers();
+  xmlCleanupGlobals();
+  xmlDictCleanup();
+  xmlCleanupParser();
 
   return exit_status;
 }
