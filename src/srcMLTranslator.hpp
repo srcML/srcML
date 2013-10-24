@@ -56,7 +56,8 @@ public:
                     const char* filename,
                     const char* version,
                     const char* uri[],
-                    int tabsize
+                    int tabsize,
+                    std::string * suri = 0
         );
 
     // constructor
@@ -108,7 +109,8 @@ public:
                     const char* filename,
                     const char* version,
                     const char* uri[],
-                    int tabsize
+                    int tabsize,
+                    std::string * suri = 0
         );
 
 

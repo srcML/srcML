@@ -57,10 +57,11 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
                                  const char* filename,        // root unit filename
                                  const char* version,         // root unit version
                                  const char* uri[],           // uri prefixes
-                                 int tabsize                  // size of tabs
+                                 int tabsize,                  // size of tabs
+                                 std::string * suri
                                  ) : output_buffer(0), str_buffer(0), size(0) {
 
-  translator = new srcMLTranslatorCore(language, src_encoding, xml_encoding, srcml_filename, op, directory, filename, version, uri, tabsize);
+  translator = new srcMLTranslatorCore(language, src_encoding, xml_encoding, srcml_filename, op, directory, filename, version, uri, tabsize, suri);
 }
 
 // constructor
@@ -124,10 +125,11 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
                                  const char* filename,        // root unit filename
                                  const char* version,         // root unit version
                                  const char* uri[],           // uri prefixes
-                                 int tabsize                  // size of tabs
+                                 int tabsize,                  // size of tabs
+                                 std::string * suri
                                  ) : output_buffer(0), str_buffer(0), size(0) {
 
-  translator = new srcMLTranslatorCore(language, src_encoding, xml_encoding, writer, op, directory, filename, version, uri, tabsize);
+  translator = new srcMLTranslatorCore(language, src_encoding, xml_encoding, writer, op, directory, filename, version, uri, tabsize, suri);
 }
 
 // translate from input stream to output stream
