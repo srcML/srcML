@@ -348,6 +348,9 @@ void output_version(const char* name) {
     } else if (exsltLibxmlVersion != LIBXML_VERSION)
       printf("libexslt(libxml) %d, ", exsltLibxmlVersion);
   }
+
+  if(handle) dlclose(handle);
+  handle = 0;
 #endif
 
   if(archive_version_number(), ARCHIVE_VERSION_NUMBER)
