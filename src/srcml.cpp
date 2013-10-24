@@ -37,7 +37,7 @@
 #include <archive_entry.h>
 //#include <curl/curl.h>
 #include <pthread.h>
-#include <queue.hpp>
+#include <thread_queue.hpp>
 
 namespace prog_opts = boost::program_options;
 
