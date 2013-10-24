@@ -633,7 +633,7 @@ int main(int argc, char* argv[]) {
     xmlCleanupParser();
 
     if (gpoptions->count == 0)
-      exit(STATUS_INPUTFILE_PROBLEM);
+      return STATUS_INPUTFILE_PROBLEM;
 
     else if (isoption(options, OPTION_VERBOSE) && isoption(options, OPTION_ARCHIVE) && !isoption(options, OPTION_QUIET)) {
       fprintf(stderr, "\n"
