@@ -434,17 +434,13 @@ void srcMLTranslatorOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION
 
 void srcMLTranslatorOutput::startUnit(const char* language, const char* dir, const char* filename, const char* version, bool outer) {
 
-  std::string full_unit = "";
-  if(num2prefix[SRCML_SRC_NS_URI_POS] && strcmp(num2prefix[SRCML_SRC_NS_URI_POS], "") != 0) {
-
-    full_unit += num2prefix[SRCML_SRC_NS_URI_POS];
-    full_unit += ":";
-
-  }
-  full_unit += "unit";
+  std::string maintag = num2prefix[0];
+  if (!maintag.empty())
+    maintag += ":";
+  maintag += "unit";
 
   // start of main tag
-  xmlTextWriterStartElement(xout, BAD_CAST full_unit.c_str());
+  xmlTextWriterStartElement(xout, BAD_CAST maintag.c_str());
   ++openelementcount;
 
   // outer units have namespaces
