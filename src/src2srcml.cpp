@@ -374,7 +374,18 @@ void src2srcml_filelist(srcMLTranslator& translator, process_options& poptions);
 // setup options and collect info from arguments
 int process_args(int argc, char* argv[], process_options & poptions);
 
+void exit_cleanup() {
+
+    xmlCleanupCharEncodingHandlers();
+    xmlCleanupGlobals();
+    xmlDictCleanup();
+    xmlCleanupParser();
+
+}
+
 int main(int argc, char* argv[]) {
+
+  atexit(exit_cleanup);
 
   int exit_status = EXIT_SUCCESS;
 
@@ -626,11 +637,6 @@ int main(int argc, char* argv[]) {
                        poptions.language);
       }
     }
-
-    xmlCleanupCharEncodingHandlers();
-    xmlCleanupGlobals();
-    xmlDictCleanup();
-    xmlCleanupParser();
 
     if (gpoptions->count == 0)
       return STATUS_INPUTFILE_PROBLEM;
