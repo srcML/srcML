@@ -160,6 +160,7 @@ int main(int argc, char * argv[]) {
     srcml_free_archive(archive);
   }
 
+  srcml_cleanup_globals();
   return 0;
 
 }
