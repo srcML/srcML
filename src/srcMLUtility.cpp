@@ -168,8 +168,7 @@ void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE opt
   // all done with parsing
   void * context = ctxt->input->buf->context;
   xmlFreeParserCtxt(ctxt);
-  if(infile)
-    archiveDeleteContext(context);
+  if(infile) archiveDeleteContext(context);
 
   // make sure we did not end early
   if (state.unit >= 1 && state.count != state.unit)
@@ -208,8 +207,7 @@ void srcMLUtility::move_to_unit(int unitnumber, srcMLUtility&su, OPTION_TYPE opt
   // all done with parsing
   void * context = ctxt->input->buf->context;
   xmlFreeParserCtxt(ctxt);
-  if(infile)
-    archiveDeleteContext(context);
+  if(infile) archiveDeleteContext(context);
 
   // make sure we did not end early
   if (state.unit >= 1 && state.count != state.unit)
@@ -257,8 +255,7 @@ const char * srcMLUtility::long_info(srcMLUtility & su) {
   // all done with parsing
   void * context = ctxt->input->buf->context;
   xmlFreeParserCtxt(ctxt);
-  if(infile)
-    archiveDeleteContext(context);
+  if(infile) archiveDeleteContext(context);
 
   // make sure we did not end early
   if (state.unit >= 1 && state.count != state.unit)
@@ -310,8 +307,7 @@ int srcMLUtility::unit_count(FILE* output) {
   // all done with parsing
   void * context = ctxt->input->buf->context;
   xmlFreeParserCtxt(ctxt);
-  if(infile)
-    archiveDeleteContext(context);
+  if(infile) archiveDeleteContext(context);
 
   return state.count;
 }
@@ -352,8 +348,7 @@ void srcMLUtility::extract_xml(const char* ofilename, int unit) {
   // all done with parsing
   void * context = ctxt->input->buf->context;
   xmlFreeParserCtxt(ctxt);
-  if(infile)
-    archiveDeleteContext(context);
+  if(infile) archiveDeleteContext(context);
 
   // make sure we did not end early
   if (state.unit && state.count < state.unit)
@@ -396,8 +391,7 @@ const char * srcMLUtility::extract_xml(int unit) {
   // all done with parsing
   void * context = ctxt->input->buf->context;
   xmlFreeParserCtxt(ctxt);
-  if(infile)
-    archiveDeleteContext(context);
+  if(infile) archiveDeleteContext(context);
 
   // make sure we did not end early
   if (state.unit && state.count < state.unit)
@@ -437,8 +431,7 @@ void srcMLUtility::extract_diff_xml(const char* ofilename, int unit, const char*
   // all done with parsing
   void * context = ctxt->input->buf->context;
   xmlFreeParserCtxt(ctxt);
-  if(infile)
-    archiveDeleteContext(context);
+  if(infile) archiveDeleteContext(context);
 
   // make sure we did not end early
   if (state.unit && state.count < state.unit)
@@ -473,8 +466,7 @@ void srcMLUtility::extract_xml_uri(const char* ofilename, int unit, const char* 
   // all done with parsing
   void * context = ctxt->input->buf->context;
   xmlFreeParserCtxt(ctxt);
-  if(infile)
-    archiveDeleteContext(context);
+  if(infile) archiveDeleteContext(context);
 
   // make sure we did not end early
   if (state.unit && state.count < state.unit)
@@ -530,8 +522,7 @@ void srcMLUtility::extract_text(const char* to_dir, const char* ofilename, int u
   // all done with parsing
   void * context = ctxt->input->buf->context;
   xmlFreeParserCtxt(ctxt);
-  if(infile)
-    archiveDeleteContext(context);
+  if(infile) archiveDeleteContext(context);
 
   // make sure we did not end early
   if (state.unit && state.count < state.unit)
@@ -569,8 +560,7 @@ void srcMLUtility::extract_text(xmlOutputBufferPtr output_buffer, int unit) {
   // all done with parsing
   void * context = ctxt->input->buf->context;
   xmlFreeParserCtxt(ctxt);
-  if(infile)
-    archiveDeleteContext(context);
+  if(infile) archiveDeleteContext(context);
 
   // make sure we did not end early
   if (state.unit && state.count < state.unit)
@@ -614,8 +604,7 @@ const char * srcMLUtility::extract_text(int unit) {
   // all done with parsing
   void * context = ctxt->input->buf->context;
   xmlFreeParserCtxt(ctxt);
-  if(infile)
-    archiveDeleteContext(context);
+  if(infile) archiveDeleteContext(context);
 
   // make sure we did not end early
   if (state.unit && state.count < state.unit)
@@ -654,8 +643,7 @@ void srcMLUtility::extract_diff_text(const char* to_dir, const char* ofilename, 
   // all done with parsing
   void * context = ctxt->input->buf->context;
   xmlFreeParserCtxt(ctxt);
-  if(infile)
-    archiveDeleteContext(context);
+  if(infile) archiveDeleteContext(context);
 
   // make sure we did not end early
   if (state.unit && state.count < state.unit)
@@ -701,8 +689,7 @@ void srcMLUtility::expand(const char* root_filename, const char* format, const c
   // all done with parsing
   void * context = ctxt->input->buf->context;
   xmlFreeParserCtxt(ctxt);
-  if(infile)
-    archiveDeleteContext(context);
+  if(infile) archiveDeleteContext(context);
 }
 
 // list the elements
@@ -733,15 +720,8 @@ void srcMLUtility::list() {
   // all done with parsing
   void * context = ctxt->input->buf->context;
   xmlFreeParserCtxt(ctxt);
-  if(infile)
-    archiveDeleteContext(context);
+  if(infile) archiveDeleteContext(context);
 }
-/*
-// namespaces and prefixes
-const PROPERTIES_TYPE* srcMLUtility::getNS() const {
-return nsv;
-}
-*/
 
 // set the input filename after the constructor
 void srcMLUtility::set_input_filename(const char* infilename) {
@@ -790,8 +770,7 @@ void srcMLUtility::xpath(const char* ofilename, const char* context_element, con
   if(buffer_input) inputPop(ctxt);
   void * context = ctxt->input->buf->context;
   xmlFreeParserCtxt(ctxt);
-  if(infile)
-    archiveDeleteContext(context);
+  if(infile) archiveDeleteContext(context);
   xmlXPathFreeCompExpr(compiled_xpath);
 }
 
@@ -825,7 +804,6 @@ static void dlexsltRegisterAll() {
   exsltRegisterAll();
 
 #endif
-
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
   dlclose(handle);
@@ -917,8 +895,7 @@ void srcMLUtility::xslt(const char* context_element, const char* ofilename, cons
   xsltCleanupGlobals();
   void * context = ctxt->input->buf->context;
   xmlFreeParserCtxt(ctxt);
-  if(infile)
-    archiveDeleteContext(context);
+  if(infile) archiveDeleteContext(context);
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
   dlclose(handle);
@@ -955,8 +932,7 @@ void srcMLUtility::relaxng(const char* ofilename, const char** xslts, int fd) {
   if(buffer_input) inputPop(ctxt);
   void * context = ctxt->input->buf->context;
   xmlFreeParserCtxt(ctxt);
-  if(infile)
-    archiveDeleteContext(context);
+  if(infile) archiveDeleteContext(context);
   xmlRelaxNGFreeValidCtxt(rngctx);
   xmlRelaxNGFree(rng);
   xmlRelaxNGFreeParserCtxt(relaxng);
