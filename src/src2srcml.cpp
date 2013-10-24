@@ -742,19 +742,11 @@ int process_args(int argc, char* argv[], process_options & poptions) {
 
     case HELP_FLAG_SHORT:
       output_help(PROGRAM_NAME);
-      xmlCleanupCharEncodingHandlers();
-      xmlCleanupGlobals();
-      xmlDictCleanup();
-      xmlCleanupParser();
       exit(STATUS_SUCCESS);
       break;
 
     case VERSION_FLAG_SHORT:
       output_version(PROGRAM_NAME);
-      xmlCleanupCharEncodingHandlers();
-      xmlCleanupGlobals();
-      xmlDictCleanup();
-      xmlCleanupParser();
       exit(STATUS_SUCCESS);
       break;
 
