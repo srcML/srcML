@@ -643,6 +643,11 @@ int main(int argc, char* argv[]) {
     exit(STATUS_UNKNOWN_ENCODING);
   }
 
+  xmlCleanupCharEncodingHandlers();
+  xmlCleanupGlobals();
+  xmlDictCleanup();
+  xmlCleanupParser();
+
   return exit_status;
 }
 
