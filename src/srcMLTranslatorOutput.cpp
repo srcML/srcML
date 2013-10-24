@@ -360,7 +360,7 @@ const char* srcMLTranslatorOutput::type2name(int token_type) const {
       return "";
 
   // non-default namespace name
-  const char* prefix = num2prefix[(int)ElementPrefix[token_type]];
+  const char* prefix = convert_num2prefix((int)ElementPrefix[token_type]);
   if (prefix[0] != '\0') {
      name = prefix;
      name += ':';
@@ -423,9 +423,9 @@ void srcMLTranslatorOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION
 	continue;
 
       std::string prefix = "xmlns";
-      if (num2prefix[i][0] != '\0') {
+      if (convert_num2prefix(i)[0] != '\0') {
 	prefix += ':';
-	prefix += num2prefix[i];
+	prefix += convert_num2prefix(i);
       }
 
       xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST ns[i]);
@@ -434,7 +434,7 @@ void srcMLTranslatorOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION
 
 void srcMLTranslatorOutput::startUnit(const char* language, const char* dir, const char* filename, const char* version, bool outer) {
 
-  std::string maintag = num2prefix[0];
+  std::string maintag = convert_num2prefix(0);
   if (!maintag.empty())
     maintag += ":";
   maintag += "unit";
@@ -453,7 +453,7 @@ void srcMLTranslatorOutput::startUnit(const char* language, const char* dir, con
   std::string tabattribute;
   if (isoption(OPTION_POSITION)) {
     stabs << tabsize;
-    tabattribute = num2prefix[SRCML_EXT_POSITION_NS_URI_POS];
+    tabattribute = convert_num2prefix(SRCML_EXT_POSITION_NS_URI_POS);
     tabattribute.append(":");
     tabattribute.append("tabs");
   }

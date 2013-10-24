@@ -77,7 +77,7 @@ public:
     const char * lineAttributeValue(const antlr::RefToken& token);
     const char * columnAttributeValue(const antlr::RefToken& token);
 
-    inline const char * convert_num2prefix(unsigned int i);
+    virtual inline const char * convert_num2prefix(unsigned int i) const;
 
     // destructor
     ~srcMLOutput();

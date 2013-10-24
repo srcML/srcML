@@ -321,7 +321,7 @@ void srcMLOutput::setDepth(int thedepth) {
   depth = thedepth;
 }
 
-const char * srcMLOutput::convert_num2prefix(unsigned int i) {
+const char * srcMLOutput::convert_num2prefix(unsigned int i) const {
 
   if(num2sprefix) return num2sprefix[i].c_str();
   else return num2prefix[i];
