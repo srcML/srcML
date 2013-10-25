@@ -231,7 +231,8 @@ void SAX2ExtractUnitsSrc::startElementNsRoot(void* ctx, const xmlChar* localname
     pstate->root.attributes[index + 1] = attributes[index + 1] ? (xmlChar*) strdup((const char*) attributes[index + 1]) : 0;
     pstate->root.attributes[index + 2] = attributes[index + 2] ? (xmlChar*) strdup((const char*) attributes[index + 2]) : 0;
     int vallength = attributes[index + 4] - attributes[index + 3];
-    pstate->root.attributes[index + 3] = (const xmlChar*) malloc(vallength);
+    pstate->root.attributes[index + 3] = (const xmlChar*) malloc(vallength + 1);
+    memset((void *)pstate->root.attributes[index + 3], 0, vallength + 1);
     strncpy((char *) pstate->root.attributes[index + 3], (const char*) attributes[index + 3], vallength);
     pstate->root.attributes[index + 4] = pstate->root.attributes[index + 3] + vallength;
   }
