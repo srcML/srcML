@@ -194,7 +194,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
     }
 
     if(i != 0) xmlFreeParserInputBuffer(pinput);
-    unlink(last_transform_filename);
+    if(last_transform_filename) unlink(last_transform_filename);
     free((void *)last_transform_filename);
     last_transform_filename = transform_filename;
     if(error == SRCML_STATUS_ERROR) {
