@@ -125,6 +125,12 @@ public :
 
   }
 
+  /**
+   * stop
+   *
+   * Stops SAX2 parsing Completely.  Parsing
+   * Can not be restarted.
+   */
   void stop() {
 
     resume();
