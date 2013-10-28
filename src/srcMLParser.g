@@ -2370,7 +2370,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 specifier
                 set_int[specifier_count, specifier_count + 1]
                 set_type[type, ACCESS_REGION,
-                        inLanguage(LANGUAGE_CXX) && LA(1) == COLON && (token == PUBLIC || token == PRIVATE || token == PROTECTED)]
+                        inLanguage(LANGUAGE_CXX) && look_past(NAME) == COLON && (token == PUBLIC || token == PRIVATE || token == PROTECTED)]
                 throw_exception[type == ACCESS_REGION] |
 
                 { inLanguage(LANGUAGE_CSHARP) }?
