@@ -54,6 +54,7 @@ options {
     testLiterals = false;
     noConstructors = true;
     defaultErrorHandler = false;
+    importVocab=OperatorLexer;
 //    codeGenBitsetTestThreshold=20; 
 }
 
