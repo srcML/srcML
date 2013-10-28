@@ -418,6 +418,7 @@ tokens {
 	SPRIVATE_ACCESS;
 	SPRIVATE_ACCESS_DEFAULT;
 	SPROTECTED_ACCESS;
+	SSIGNAL_ACCESS;
     SMEMBER_INITIALIZATION_LIST;
 	SCONSTRUCTOR_DEFINITION;
 	SCONSTRUCTOR_DECLARATION;
@@ -1682,7 +1683,12 @@ access_specifier_region[] { ENTRY_DEBUG } :
             {
                 startElement(SPROTECTED_ACCESS);
             }
-            PROTECTED
+            PROTECTED |
+            {
+                startElement(SSIGNAL_ACCESS);
+            }
+            SIGNAL
+
         ) 
     (NAME)* COLON
 ;
@@ -2370,7 +2376,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 specifier
                 set_int[specifier_count, specifier_count + 1]
                 set_type[type, ACCESS_REGION,
-                        inLanguage(LANGUAGE_CXX) && look_past(NAME) == COLON && (token == PUBLIC || token == PRIVATE || token == PROTECTED)]
+                        inLanguage(LANGUAGE_CXX) && look_past(NAME) == COLON && (token == PUBLIC || token == PRIVATE || token == PROTECTED || token == SIGNAL)]
                 throw_exception[type == ACCESS_REGION] |
 
                 { inLanguage(LANGUAGE_CSHARP) }?
@@ -3188,7 +3194,7 @@ specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         }
         (
             // access
-            PUBLIC | PRIVATE | PROTECTED |
+            PUBLIC | PRIVATE | PROTECTED | { inLanguage(LANGUAGE_CXX) }? SIGNAL |
 
             // C++
             FINAL | STATIC | ABSTRACT | FRIEND | { inLanguage(LANGUAGE_CSHARP) }? NEW | VOLATILE | MUTABLE |
