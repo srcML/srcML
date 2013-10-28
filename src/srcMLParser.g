@@ -1663,7 +1663,7 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 ;
 
 // Each instance of an access specifier defines a region in the class
-access_specifier_region[] { ENTRY_DEBUG } :
+access_specifier_region[] { ENTRY_DEBUG fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);} :
         section_entry_action
         {
             // mark access regions to detect statements that only occur in them
@@ -1683,8 +1683,8 @@ access_specifier_region[] { ENTRY_DEBUG } :
                 startElement(SPROTECTED_ACCESS);
             }
             PROTECTED
-        )
-        COLON
+        ) 
+    (NAME)* COLON
 ;
 
 /*
