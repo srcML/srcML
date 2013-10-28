@@ -378,6 +378,12 @@ int main(int argc, char * argv[]) {
     return 1;
   }
   
+  #if ARCHIVE_VERSION_NUMBER < 3000000
+    std::cout << "YUP YOU HAVE V2\n";
+  #else
+    std::cout << "YUP YOU HAVE V3\n";
+  #endif
+
   //DEBUG TO SEE CLI INPUTS
   debug_cli_opts(srcml_request);
 
