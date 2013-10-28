@@ -418,6 +418,7 @@ tokens {
 	SPRIVATE_ACCESS;
 	SPRIVATE_ACCESS_DEFAULT;
 	SPROTECTED_ACCESS;
+	SSIGNAL_ACCESS;
     SMEMBER_INITIALIZATION_LIST;
 	SCONSTRUCTOR_DEFINITION;
 	SCONSTRUCTOR_DECLARATION;
@@ -1608,7 +1609,7 @@ union_declaration[] { ENTRY_DEBUG } :
 class_default_access_action[int access_token] { ENTRY_DEBUG } :
         {
             if (inLanguage(LANGUAGE_CXX_ONLY) && (SkipBufferSize() > 0 ||
-                !(LA(1) == PUBLIC || LA(1) == PRIVATE || LA(1) == PROTECTED))) {
+                !(LA(1) == PUBLIC || LA(1) == PRIVATE || LA(1) == PROTECTED || LA(1) == SIGNAL))) {
 
                 // setup block section
                 section_entry_action_first();
@@ -1682,9 +1683,14 @@ access_specifier_region[] { ENTRY_DEBUG } :
             {
                 startElement(SPROTECTED_ACCESS);
             }
-            PROTECTED
-        )
-        COLON
+            PROTECTED |
+            {
+                startElement(SSIGNAL_ACCESS);
+            }
+            SIGNAL
+
+        ) 
+    (NAME)* COLON
 ;
 
 /*
@@ -2370,7 +2376,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 specifier
                 set_int[specifier_count, specifier_count + 1]
                 set_type[type, ACCESS_REGION,
-                        inLanguage(LANGUAGE_CXX) && LA(1) == COLON && (token == PUBLIC || token == PRIVATE || token == PROTECTED)]
+                        inLanguage(LANGUAGE_CXX) && look_past(NAME) == COLON && (token == PUBLIC || token == PRIVATE || token == PROTECTED || token == SIGNAL)]
                 throw_exception[type == ACCESS_REGION] |
 
                 { inLanguage(LANGUAGE_CSHARP) }?
@@ -3046,6 +3052,7 @@ identifier[] { SingleElement element(this); ENTRY_DEBUG } :
 identifier_list { ENTRY_DEBUG } :
             NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
             SUPER | CHECKED | UNCHECKED | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD |
+            SIGNAL |
 
             // C# linq
             FROM | WHERE | SELECT | LET | ORDERBY | ASCENDING | DESCENDING | GROUP | BY | JOIN | ON | EQUALS |
@@ -3188,7 +3195,7 @@ specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         }
         (
             // access
-            PUBLIC | PRIVATE | PROTECTED |
+            PUBLIC | PRIVATE | PROTECTED | { inLanguage(LANGUAGE_CXX) }? SIGNAL |
 
             // C++
             FINAL | STATIC | ABSTRACT | FRIEND | { inLanguage(LANGUAGE_CSHARP) }? NEW | VOLATILE | MUTABLE |
