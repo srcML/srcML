@@ -378,10 +378,12 @@ int main(int argc, char * argv[]) {
     return 1;
   }
   
+  // CHECK TO SEE WHAT VERSION OF LIBARCHIVE IS RUNNING
+  // SWITCH ON FEATURES (LIBARCHIVE FOR DIRECTORY, ETC.)
   #if ARCHIVE_VERSION_NUMBER < 3000000
-    std::cout << "YUP YOU HAVE V2\n";
+    //YOU HAVE V2 OR LOWER
   #else
-    std::cout << "YUP YOU HAVE V3\n";
+    //YOU HAVE V3 OR HIGHER
   #endif
 
   //DEBUG TO SEE CLI INPUTS
