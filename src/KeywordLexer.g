@@ -54,6 +54,7 @@ options {
     testLiterals = false;
     noConstructors = true;
     defaultErrorHandler = false;
+    importVocab=OperatorLexer;
 //    codeGenBitsetTestThreshold=20; 
 }
 
@@ -138,6 +139,7 @@ tokens {
 	PUBLIC;
 	PRIVATE;
 	PROTECTED;
+	SIGNAL;
     VIRTUAL;
 	FRIEND;
 	OPERATOR;
@@ -326,6 +328,7 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         { "public"        , PUBLIC        , LANGUAGE_OO }, 
         { "private"       , PRIVATE       , LANGUAGE_OO }, 
         { "protected"     , PROTECTED     , LANGUAGE_OO }, 
+        { "signal"        , SIGNAL        , LANGUAGE_CXX }, 
 
         { "new"           , NEW           , LANGUAGE_OO }, 
 
