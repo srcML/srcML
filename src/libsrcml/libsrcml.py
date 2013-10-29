@@ -92,18 +92,3 @@ class srcml_unit :
     def __del__(self) :
         libsrcml.srcml_free_unit(self.unit)
 
-# test api
-archive = srcml_archive()
-archive.write_open_memory()
-
-unit = srcml_unit(archive)
-unit.parse_filename("a.cpp")
-archive.write_unit(unit)
-
-unit = srcml_unit(archive)
-unit.parse_memory("b;")
-archive.write_unit(unit)
-
-archive.close()
-
-print archive.srcML()
