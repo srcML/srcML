@@ -135,6 +135,36 @@ class srcml_archive :
     def write_open_filename(self, srcml_filename) :
         libsrcml.srcml_write_open_filename(self.archive, srcml_filename)
 
+    def set_encoding(self, encoding) :
+        libsrcml.srcml_archive_set_encoding(self.archive, encoding)
+
+    def set_language(self, language) :
+        libsrcml.srcml_archive_set_language(self.archive, language)
+
+    def set_filename(self, filename) :
+        libsrcml.srcml_archive_set_filename(self.archive, filename)
+
+    def set_directory(self, directory) :
+        libsrcml.srcml_archive_set_directory(self.archive, directory)
+
+    def set_version(self, version) :
+        libsrcml.srcml_archive_set_version(self.archive, version)
+
+    def get_encoding(self) :
+        return libsrcml.srcml_archive_get_encoding(self.archive)
+
+    def get_language(self) :
+        return libsrcml.srcml_archive_get_language(self.archive)
+
+    def get_filename(self) :
+        return libsrcml.srcml_archive_get_filename(self.archive)
+
+    def get_directory(self) :
+        return libsrcml.srcml_archive_get_directory(self.archive)
+
+    def get_version(self) :
+        return libsrcml.srcml_archive_get_version(self.archive)
+
     def write_open_memory(self) :
         self.size = c_int()
         self.buffer = c_char_p()
