@@ -44,14 +44,40 @@ libsrcml.srcml_free_unit.restype = None
 libsrcml.srcml_free_unit.argtypes = [c_void_p]
 
 # test
-archive = libsrcml.srcml_create_archive()
 
-libsrcml.srcml_write_open_filename(archive, "project.xml")
-unit = libsrcml.srcml_create_unit(archive)
-libsrcml.srcml_parse_unit_filename(unit, "a.cpp")
+class srcml_archive :
 
-libsrcml.srcml_write_unit(archive, unit)
+    def __init__(self) :
+        self.archive = libsrcml.srcml_create_archive()
 
-libsrcml.srcml_free_unit(unit)
-libsrcml.srcml_close_archive(archive)
-libsrcml.srcml_free_archive(archive)
+    def srcml_write_open_filename(self, srcml_filename) :
+        libsrcml.srcml_write_open_filename(self.archive, srcml_filename)
+
+    def srcml_write_unit(self, unit) :
+        libsrcml.srcml_write_unit(self.archive, unit.unit)
+
+    def srcml_close_archive(self) :
+        libsrcml.srcml_close_archive(self.archive)
+
+    def __del__(self) :
+        libsrcml.srcml_free_archive(self.archive)
+
+class srcml_unit :
+    def __init__(self, archive) :
+        self.unit = libsrcml.srcml_create_unit(archive.archive)
+
+    def srcml_parse_unit_filename(self, src_filename) :
+        libsrcml.srcml_parse_unit_filename(self.unit, src_filename)
+
+    def __del__(self) :
+        libsrcml.srcml_free_unit(self.unit)
+
+archive = srcml_archive()
+
+archive.srcml_write_open_filename("project.xml")
+
+unit = srcml_unit(archive)
+unit.srcml_parse_unit_filename("a.cpp")
+archive.srcml_write_unit(unit)
+
+archive.srcml_close_archive()
