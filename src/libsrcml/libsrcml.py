@@ -104,6 +104,9 @@ libsrcml.srcml_archive_get_options.argtypes = [c_void_p]
 libsrcml.srcml_archive_get_tabstop.restype = c_int
 libsrcml.srcml_archive_get_tabstop.argtypes = [c_void_p]
 
+# const char* srcml_archive_check_extension(struct srcml_archive* archive, const char* filename);
+libsrcml.srcml_archive_check_extension.restype = c_char_p
+libsrcml.srcml_archive_check_extension.argtypes = [c_void_p, c_char_p]
 
 
 # int srcml_parse_unit_filename(struct srcml_unit* unit, const char* src_filename);
@@ -150,6 +153,24 @@ class srcml_archive :
     def set_version(self, version) :
         libsrcml.srcml_archive_set_version(self.archive, version)
 
+    def set_all_options(self, options) :
+        libsrcml.srcml_archive_set_all_options(self.archive, options)
+
+    def set_option(self, option) :
+        libsrcml.srcml_archive_set_option(self.archive, option)
+
+    def clear_option(self, option) :
+        libsrcml.srcml_archive_clear_option(self.archive, option)
+
+    def set_tabstop(self, tabstop) :
+        libsrcml.srcml_archive_set_tabstop(self.archive, tabstop)
+
+    def register_file_extension(self, extension, language) :
+        libsrcml.srcml_archive_set_tabstop(self.archive, extension, language)
+
+    def register_namespace(self, prefix, ns) :
+        libsrcml.srcml_archive_set_tabstop(self.archive, prefix, ns)
+
     def get_encoding(self) :
         return libsrcml.srcml_archive_get_encoding(self.archive)
 
@@ -164,6 +185,15 @@ class srcml_archive :
 
     def get_version(self) :
         return libsrcml.srcml_archive_get_version(self.archive)
+
+    def get_options(self) :
+        return libsrcml.srcml_archive_get_options(self.archive)
+
+    def get_tabstop(self) :
+        return libsrcml.srcml_archive_get_tabstop(self.archive)
+
+    def check_extension(self, filename) :
+        return libsrcml.srcml_archive_check_extension(self.archive, filename)
 
     def write_open_memory(self) :
         self.size = c_int()
