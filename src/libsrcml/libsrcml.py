@@ -31,6 +31,10 @@ libsrcml.srcml_close_archive.argtypes = [c_void_p]
 libsrcml.srcml_parse_unit_filename.restype = c_int
 libsrcml.srcml_parse_unit_filename.argtypes = [c_void_p, c_char_p]
 
+# int srcml_parse_unit_memory  (struct srcml_unit*, const char* src_buffer, size_t buffer_size);
+libsrcml.srcml_parse_unit_memory.restype = c_int
+libsrcml.srcml_parse_unit_memory.argtypes = [c_void_p, c_char_p, c_int]
+
 # int srcml_write_unit(struct srcml_archive*, const struct srcml_unit*);
 libsrcml.srcml_write_unit.restype = c_int
 libsrcml.srcml_write_unit.argtypes = [c_void_p, c_void_p]
@@ -67,8 +71,11 @@ class srcml_unit :
     def __init__(self, archive) :
         self.unit = libsrcml.srcml_create_unit(archive.archive)
 
-    def parse_unit_filename(self, src_filename) :
+    def parse_filename(self, src_filename) :
         libsrcml.srcml_parse_unit_filename(self.unit, src_filename)
+
+    def parse_memory(self, src_buffer) :
+        libsrcml.srcml_parse_unit_memory(self.unit, src_buffer, len(src_buffer))
 
     def __del__(self) :
         libsrcml.srcml_free_unit(self.unit)
@@ -79,7 +86,11 @@ archive = srcml_archive()
 archive.write_open_filename("project.xml")
 
 unit = srcml_unit(archive)
-unit.parse_unit_filename("a.cpp")
+unit.parse_filename("a.cpp")
+archive.write_unit(unit)
+
+unit = srcml_unit(archive)
+unit.parse_memory("b;")
 archive.write_unit(unit)
 
 archive.close()
