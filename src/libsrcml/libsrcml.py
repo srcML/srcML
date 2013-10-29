@@ -24,8 +24,8 @@ libsrcml.srcml_free_archive.restype = None
 libsrcml.srcml_free_archive.argtypes = [c_void_p]
 
 # void srcml_close_archive(struct srcml_archive*);
-libsrcml.srcml_free_archive.restype = None
-libsrcml.srcml_free_archive.argtypes = [c_void_p]
+libsrcml.srcml_close_archive.restype = None
+libsrcml.srcml_close_archive.argtypes = [c_void_p]
 
 # int srcml_parse_unit_filename(struct srcml_unit* unit, const char* src_filename);
 libsrcml.srcml_parse_unit_filename.restype = c_int
@@ -42,3 +42,16 @@ libsrcml.srcml_create_unit.argtypes = [c_void_p]
 # int srcml_free_unit(struct srcml_unit*);
 libsrcml.srcml_free_unit.restype = None
 libsrcml.srcml_free_unit.argtypes = [c_void_p]
+
+# test
+archive = libsrcml.srcml_create_archive()
+
+libsrcml.srcml_write_open_filename(archive, "project.xml")
+unit = libsrcml.srcml_create_unit(archive)
+libsrcml.srcml_parse_unit_filename(unit, "a.cpp")
+
+libsrcml.srcml_write_unit(archive, unit)
+
+libsrcml.srcml_free_unit(unit)
+libsrcml.srcml_close_archive(archive)
+libsrcml.srcml_free_archive(archive)
