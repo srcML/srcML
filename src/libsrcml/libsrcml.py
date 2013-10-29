@@ -11,6 +11,18 @@ elif os.path.exists('../../bin/libsrcml.dll') :
 
 libsrcml = cdll.LoadLibrary(LIBSRCML_PATH)
 
+# void srcml_cleanup_globals();
+libsrcml.srcml_cleanup_globals.restype = None
+libsrcml.srcml_cleanup_globals.argtypes = []
+
+# int srcml_version_number();
+libsrcml.srcml_version_number.restype = c_int
+libsrcml.srcml_version_number.argtypes = []
+
+# const char* srcml_version_string();
+libsrcml.srcml_version_string.restype = c_char_p
+libsrcml.srcml_version_string.argtypes = []
+
 # struct srcml_archive* srcml_create_archive();
 libsrcml.srcml_create_archive.restype = c_void_p
 libsrcml.srcml_create_archive.argtypes = []
@@ -22,6 +34,14 @@ libsrcml.srcml_write_open_filename.argtypes = [c_void_p, c_char_p]
 # int srcml_write_open_memory  (struct srcml_archive*, char** buffer, int * size);
 libsrcml.srcml_write_open_memory.restype = c_int
 libsrcml.srcml_write_open_memory.argtypes = [c_void_p, c_void_p, c_void_p]
+
+# int srcml_read_open_filename(struct srcml_archive*, const char* srcml_filename);
+libsrcml.srcml_read_open_filename.restype = c_int
+libsrcml.srcml_read_open_filename.argtypes = [c_void_p, c_char_p]
+
+# int srcml_read_open_memory  (struct srcml_archive*, const char* buffer, size_t buffer_size);
+libsrcml.srcml_read_open_memory.restype = c_int
+libsrcml.srcml_read_open_memory.argtypes = [c_void_p, c_char_p, c_int]
 
 # void srcml_free_archive(struct srcml_archive* archive);
 libsrcml.srcml_free_archive.restype = None
@@ -117,9 +137,21 @@ libsrcml.srcml_parse_unit_filename.argtypes = [c_void_p, c_char_p]
 libsrcml.srcml_parse_unit_memory.restype = c_int
 libsrcml.srcml_parse_unit_memory.argtypes = [c_void_p, c_char_p, c_int]
 
+# int srcml_unparse_unit_filename(struct srcml_unit*, const char* src_filename);
+libsrcml.srcml_unparse_unit_filename.restype = c_int
+libsrcml.srcml_unparse_unit_filename.argtypes = [c_void_p, c_char_p]
+
+# int srcml_unparse_unit_memory  (struct srcml_unit*, char** src_buffer, int * src_size);
+libsrcml.srcml_unparse_unit_memory.restype = c_int
+libsrcml.srcml_unparse_unit_memory.argtypes = [c_void_p, c_void_p, c_void_p]
+
 # int srcml_write_unit(struct srcml_archive*, const struct srcml_unit*);
 libsrcml.srcml_write_unit.restype = c_int
 libsrcml.srcml_write_unit.argtypes = [c_void_p, c_void_p]
+
+# struct srcml_unit* srcml_read_unit(struct srcml_archive*);
+libsrcml.srcml_read_unit.restype = c_void_p
+libsrcml.srcml_read_unit.argtypes = [c_void_p]
 
 # struct srcml_unit* srcml_create_unit(struct srcml_archive* archive);
 libsrcml.srcml_create_unit.restype = c_void_p
@@ -173,6 +205,17 @@ class srcml_archive :
 
     def write_open_filename(self, srcml_filename) :
         libsrcml.srcml_write_open_filename(self.archive, srcml_filename)
+
+    def write_open_memory(self) :
+        self.buffer = c_char_p()
+        self.size = c_int()
+        libsrcml.srcml_write_open_memory(self.archive, pointer(self.buffer), pointer(self.size))
+
+    def read_open_filename(self, srcml_filename) :
+        libsrcml.srcml_read_open_filename(self.archive, srcml_filename)
+
+    def read_open_memory(self, buffer) :
+        libsrcml.srcml_read_open_memory(self.archive, buffer, len(buffer))
 
     def set_encoding(self, encoding) :
         libsrcml.srcml_archive_set_encoding(self.archive, encoding)
@@ -231,16 +274,14 @@ class srcml_archive :
     def check_extension(self, filename) :
         return libsrcml.srcml_archive_check_extension(self.archive, filename)
 
-    def write_open_memory(self) :
-        self.size = c_int()
-        self.buffer = c_char_p()
-        libsrcml.srcml_write_open_memory(self.archive, pointer(self.buffer), pointer(self.size))
-
     def srcML(self) :
         return self.buffer.value
 
     def write_unit(self, unit) :
         libsrcml.srcml_write_unit(self.archive, unit.unit)
+
+    def read_unit(self) :
+        return srcml_unit(0, libsrcml.srcml_read_unit(self.archive))
 
     def close(self) :
         libsrcml.srcml_close_archive(self.archive)
@@ -251,14 +292,24 @@ class srcml_archive :
 # srcml_unit wrapper
 class srcml_unit :
 
-    def __init__(self, archive) :
-        self.unit = libsrcml.srcml_create_unit(archive.archive)
+    def __init__(self, archive, unit = 0) :
+        self.unit = unit
+        if self.unit == 0 :
+            self.unit = libsrcml.srcml_create_unit(archive.archive)
 
     def parse_filename(self, src_filename) :
         libsrcml.srcml_parse_unit_filename(self.unit, src_filename)
 
     def parse_memory(self, src_buffer) :
         libsrcml.srcml_parse_unit_memory(self.unit, src_buffer, len(src_buffer))
+
+    def unparse_filename(self, src_filename) :
+        libsrcml.srcml_parse_unit_filename(self.unit, src_filename)
+
+    def unparse_memory(self) :
+        self.src_size = c_int()
+        self.src_buffer = c_char_p()
+        libsrcml.srcml_unparse_unit_memory(self.unit, pointer(self.src_buffer), pointer(self.src_size))
 
     def set_language(self, language) :
         libsrcml.srcml_unit_set_language(self.unit, language)
@@ -286,6 +337,9 @@ class srcml_unit :
 
     def get_xml(self) :
         return libsrcml.srcml_unit_get_xml(self.unit)
+
+    def src(self) :
+        return self.src_buffer.value
 
     def __del__(self) :
         libsrcml.srcml_free_unit(self.unit)
