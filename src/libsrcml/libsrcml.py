@@ -11,6 +11,18 @@ elif os.path.exists('../../bin/libsrcml.dll') :
 
 libsrcml = cdll.LoadLibrary(LIBSRCML_PATH)
 
+# void srcml_cleanup_globals();
+libsrcml.srcml_cleanup_globals.restype = None
+libsrcml.srcml_cleanup_globals.argtypes = []
+
+# int srcml_version_number();
+libsrcml.srcml_version_number.restype = c_int
+libsrcml.srcml_version_number.argtypes = []
+
+# const char* srcml_version_string();
+libsrcml.srcml_version_string.restype = c_char_p
+libsrcml.srcml_version_string.argtypes = []
+
 # struct srcml_archive* srcml_create_archive();
 libsrcml.srcml_create_archive.restype = c_void_p
 libsrcml.srcml_create_archive.argtypes = []
@@ -174,6 +186,11 @@ class srcml_archive :
     def write_open_filename(self, srcml_filename) :
         libsrcml.srcml_write_open_filename(self.archive, srcml_filename)
 
+    def write_open_memory(self) :
+        self.size = c_int()
+        self.buffer = c_char_p()
+        libsrcml.srcml_write_open_memory(self.archive, pointer(self.buffer), pointer(self.size))
+
     def set_encoding(self, encoding) :
         libsrcml.srcml_archive_set_encoding(self.archive, encoding)
 
@@ -230,11 +247,6 @@ class srcml_archive :
 
     def check_extension(self, filename) :
         return libsrcml.srcml_archive_check_extension(self.archive, filename)
-
-    def write_open_memory(self) :
-        self.size = c_int()
-        self.buffer = c_char_p()
-        libsrcml.srcml_write_open_memory(self.archive, pointer(self.buffer), pointer(self.size))
 
     def srcML(self) :
         return self.buffer.value
