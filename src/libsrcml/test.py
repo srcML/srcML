@@ -26,9 +26,20 @@ archive.write_unit(unit)
 
 archive.close()
 
+print archive.srcML()
+srcml = archive.srcML()
+
 print archive.get_filename()
 print archive.get_language()
 print archive.get_directory()
 print archive.get_version()
 
-print archive.srcML()
+archive = libsrcml.srcml_archive()
+archive.read_open_memory(srcml)
+
+unit = archive.read_unit()
+
+unit.unparse_memory()
+
+print unit.src()
+print unit.get_xml()
