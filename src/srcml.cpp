@@ -378,6 +378,14 @@ int main(int argc, char * argv[]) {
     return 1;
   }
   
+  // CHECK TO SEE WHAT VERSION OF LIBARCHIVE IS RUNNING
+  // SWITCH ON FEATURES (LIBARCHIVE FOR DIRECTORY, ETC.)
+  #if ARCHIVE_VERSION_NUMBER < 3000000
+    //YOU HAVE V2 OR LOWER
+  #else
+    //YOU HAVE V3 OR HIGHER
+  #endif
+
   //DEBUG TO SEE CLI INPUTS
   debug_cli_opts(srcml_request);
 

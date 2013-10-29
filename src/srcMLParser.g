@@ -908,10 +908,9 @@ perform_call_check[CALLTYPE& type, int secondtoken] returns [bool iscall] {
             || postcalltoken == EXTERN || postcalltoken == STRUCT || postcalltoken == UNION || postcalltoken == CLASS
             || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == RCURLY)
             || postcalltoken == 1 /* EOF ? */
-            || postcalltoken == TEMPLATE || postcalltoken == PUBLIC || postcalltoken == PRIVATE
-            || postcalltoken == PROTECTED
-            || postcalltoken == STATIC
-            || postcalltoken == CONST))
+            || postcalltoken == TEMPLATE
+            || postcalltoken == PUBLIC || postcalltoken == PRIVATE || postcalltoken == PROTECTED
+            || postcalltoken == STATIC || postcalltoken == CONST))
 
             type = MACRO;
 
@@ -1690,7 +1689,7 @@ access_specifier_region[] { ENTRY_DEBUG } :
             SIGNAL
 
         ) 
-    (NAME)* COLON
+    (compound_name)* COLON
 ;
 
 /*
@@ -2272,6 +2271,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     if (type == VARIABLE && posin)
         type_count = posin - 1;
 
+    // enum
     else if (type == 0 && sawenum)
         type = ENUM_DECL;
 
@@ -2295,6 +2295,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     else if (type == FUNCTION && fla == TERMINATE)
         type = FUNCTION_DECL;
 
+    // not really a destructor
     if (type == DESTRUCTOR_DECL && (!inTransparentMode(MODE_CLASS) || inTransparentMode(MODE_FUNCTION_TAIL)))
         type = EXPRESSION;
 
@@ -2370,10 +2371,10 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
             set_bool[sawenum, sawenum || LA(1) == ENUM]
             (
-                { _tokenSet_21.member(LA(1)) }?
+                { _tokenSet_21.member(LA(1)) && (token != SIGNAL || (token == SIGNAL && look_past(SIGNAL) == COLON))}?
                 set_int[token, LA(1)]
                 set_bool[foundpure, foundpure || LA(1) == CONST]
-                specifier
+                (specifier | (SIGNAL COLON)=>SIGNAL)
                 set_int[specifier_count, specifier_count + 1]
                 set_type[type, ACCESS_REGION,
                         inLanguage(LANGUAGE_CXX) && look_past(NAME) == COLON && (token == PUBLIC || token == PRIVATE || token == PROTECTED || token == SIGNAL)]
@@ -3195,7 +3196,7 @@ specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         }
         (
             // access
-            PUBLIC | PRIVATE | PROTECTED | { inLanguage(LANGUAGE_CXX) }? SIGNAL |
+            PUBLIC | PRIVATE | PROTECTED |
 
             // C++
             FINAL | STATIC | ABSTRACT | FRIEND | { inLanguage(LANGUAGE_CSHARP) }? NEW | VOLATILE | MUTABLE |
