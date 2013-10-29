@@ -31,6 +31,61 @@ libsrcml.srcml_free_archive.argtypes = [c_void_p]
 libsrcml.srcml_close_archive.restype = None
 libsrcml.srcml_close_archive.argtypes = [c_void_p]
 
+
+# int srcml_archive_set_encoding  (struct srcml_archive*, const char* encoding);
+libsrcml.srcml_archive_set_encoding.restype = c_int
+libsrcml.srcml_archive_set_encoding.argtypes = [c_void_p, c_char_p]
+
+# int srcml_archive_set_language  (struct srcml_archive*, const char* language);
+libsrcml.srcml_archive_set_language.restype = c_int
+libsrcml.srcml_archive_set_language.argtypes = [c_void_p, c_char_p]
+
+# int srcml_archive_set_filename  (struct srcml_archive*, const char* filename);
+libsrcml.srcml_archive_set_filename.restype = c_int
+libsrcml.srcml_archive_set_filename.argtypes = [c_void_p, c_char_p]
+
+# int srcml_archive_set_directory (struct srcml_archive*, const char* directory)
+libsrcml.srcml_archive_set_directory.restype = c_int
+libsrcml.srcml_archive_set_directory.argtypes = [c_void_p, c_char_p]
+
+# int srcml_archive_set_version   (struct srcml_archive*, const char* version)
+libsrcml.srcml_archive_set_version.restype = c_int
+libsrcml.srcml_archive_set_version.argtypes = [c_void_p, c_char_p]
+
+# int srcml_archive_set_all_options   (struct srcml_archive*, int option);
+libsrcml.srcml_archive_set_all_options.restype = c_int
+libsrcml.srcml_archive_set_all_options.argtypes = [c_void_p, c_int]
+
+# int srcml_archive_set_option    (struct srcml_archive*, int option);
+libsrcml.srcml_archive_set_option.restype = c_int
+libsrcml.srcml_archive_set_option.argtypes = [c_void_p, c_int]
+
+# int srcml_archive_clear_option  (struct srcml_archive*, int option);
+libsrcml.srcml_archive_clear_option.restype = c_int
+libsrcml.srcml_archive_clear_option.argtypes = [c_void_p, c_int]
+
+# int srcml_archive_set_tabstop   (struct srcml_archive*, int tabstop);
+libsrcml.srcml_archive_set_tabstop.restype = c_int
+libsrcml.srcml_archive_set_tabstop.argtypes = [c_void_p, c_int]
+
+# int srcml_archive_register_file_extension(struct srcml_archive*, const char* extension, const char* language);
+libsrcml.srcml_archive_register_file_extension.restype = c_int
+libsrcml.srcml_archive_register_file_extension.argtypes = [c_void_p, c_char_p, c_char_p]
+
+# int srcml_archive_register_namespace(struct srcml_archive*, const char* prefix, const char* ns);
+libsrcml.srcml_archive_register_namespace.restype = c_int
+libsrcml.srcml_archive_register_namespace.argtypes = [c_void_p, c_char_p, c_char_p]
+
+# const char* srcml_archive_get_encoding (const struct srcml_archive*);
+# const char* srcml_archive_get_language (const struct srcml_archive*);
+# const char* srcml_archive_get_filename (const struct srcml_archive*);
+# const char* srcml_archive_get_directory(const struct srcml_archive*);
+# const char* srcml_archive_get_version  (const struct srcml_archive*);
+# int         srcml_archive_get_options  (const struct srcml_archive*);
+# int         srcml_archive_get_tabstop  (const struct srcml_archive*);
+
+
+
 # int srcml_parse_unit_filename(struct srcml_unit* unit, const char* src_filename);
 libsrcml.srcml_parse_unit_filename.restype = c_int
 libsrcml.srcml_parse_unit_filename.argtypes = [c_void_p, c_char_p]
