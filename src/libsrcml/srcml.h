@@ -197,10 +197,6 @@ struct srcml_archive* srcml_create_archive();
    client is responsible for freeing it using srcml_free_archive() */
 struct srcml_archive* srcml_clone_archive(const struct srcml_archive*);
 
-/* free srcml archive
-   allocated by srcml_create_archive() */
-void srcml_free_archive(struct srcml_archive* archive);
-
 /* open a srcML archive for output */
 int srcml_write_open_filename(struct srcml_archive*, const char* srcml_filename);
 int srcml_write_open_memory  (struct srcml_archive*, char** buffer, int * size);
