@@ -77,12 +77,32 @@ libsrcml.srcml_archive_register_namespace.restype = c_int
 libsrcml.srcml_archive_register_namespace.argtypes = [c_void_p, c_char_p, c_char_p]
 
 # const char* srcml_archive_get_encoding (const struct srcml_archive*);
+libsrcml.srcml_archive_get_encoding.restype = c_char_p
+libsrcml.srcml_archive_get_encoding.argtypes = [c_void_p]
+
 # const char* srcml_archive_get_language (const struct srcml_archive*);
+libsrcml.srcml_archive_get_language.restype = c_char_p
+libsrcml.srcml_archive_get_language.argtypes = [c_void_p]
+
 # const char* srcml_archive_get_filename (const struct srcml_archive*);
+libsrcml.srcml_archive_get_filename.restype = c_char_p
+libsrcml.srcml_archive_get_filename.argtypes = [c_void_p]
+
 # const char* srcml_archive_get_directory(const struct srcml_archive*);
+libsrcml.srcml_archive_get_directory.restype = c_char_p
+libsrcml.srcml_archive_get_directory.argtypes = [c_void_p]
+
 # const char* srcml_archive_get_version  (const struct srcml_archive*);
+libsrcml.srcml_archive_get_version.restype = c_char_p
+libsrcml.srcml_archive_get_version.argtypes = [c_void_p]
+
 # int         srcml_archive_get_options  (const struct srcml_archive*);
+libsrcml.srcml_archive_get_options.restype = c_int
+libsrcml.srcml_archive_get_options.argtypes = [c_void_p]
+
 # int         srcml_archive_get_tabstop  (const struct srcml_archive*);
+libsrcml.srcml_archive_get_tabstop.restype = c_int
+libsrcml.srcml_archive_get_tabstop.argtypes = [c_void_p]
 
 
 
