@@ -19,6 +19,10 @@ libsrcml.srcml_create_archive.argtypes = []
 libsrcml.srcml_write_open_filename.restype = c_int
 libsrcml.srcml_write_open_filename.argtypes = [c_void_p, c_char_p]
 
+# int srcml_write_open_memory  (struct srcml_archive*, char** buffer, int * size);
+libsrcml.srcml_write_open_memory.restype = c_int
+libsrcml.srcml_write_open_memory.argtypes = [c_void_p, c_void_p, c_void_p]
+
 # void srcml_free_archive(struct srcml_archive* archive);
 libsrcml.srcml_free_archive.restype = None
 libsrcml.srcml_free_archive.argtypes = [c_void_p]
@@ -56,6 +60,14 @@ class srcml_archive :
     def write_open_filename(self, srcml_filename) :
         libsrcml.srcml_write_open_filename(self.archive, srcml_filename)
 
+    def write_open_memory(self) :
+        self.size = c_int()
+        self.buffer = c_char_p()
+        libsrcml.srcml_write_open_memory(self.archive, pointer(self.buffer), pointer(self.size))
+
+    def srcML(self) :
+        return self.buffer.value
+
     def write_unit(self, unit) :
         libsrcml.srcml_write_unit(self.archive, unit.unit)
 
@@ -82,8 +94,7 @@ class srcml_unit :
 
 # test api
 archive = srcml_archive()
-
-archive.write_open_filename("project.xml")
+archive.write_open_memory()
 
 unit = srcml_unit(archive)
 unit.parse_filename("a.cpp")
@@ -94,3 +105,5 @@ unit.parse_memory("b;")
 archive.write_unit(unit)
 
 archive.close()
+
+print archive.srcML()
