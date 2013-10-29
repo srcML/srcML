@@ -2271,6 +2271,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     if (type == VARIABLE && posin)
         type_count = posin - 1;
 
+    // enum
     else if (type == 0 && sawenum)
         type = ENUM_DECL;
 
@@ -2294,6 +2295,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     else if (type == FUNCTION && fla == TERMINATE)
         type = FUNCTION_DECL;
 
+    // not really a destructor
     if (type == DESTRUCTOR_DECL && (!inTransparentMode(MODE_CLASS) || inTransparentMode(MODE_FUNCTION_TAIL)))
         type = EXPRESSION;
 
