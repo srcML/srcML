@@ -1690,7 +1690,7 @@ access_specifier_region[] { ENTRY_DEBUG } :
             SIGNAL
 
         ) 
-    (NAME)* COLON
+    (compound_name)* COLON
 ;
 
 /*

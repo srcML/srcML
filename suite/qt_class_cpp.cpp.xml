@@ -2,19 +2,19 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="qt_class_cpp">
 
 <unit>
-<class>class <block>{<public>public slots: </public>}</block>;</class>
+<class>class <block>{<public>public <name>slots</name>: </public>}</block>;</class>
 </unit>
 
 <unit>
-<class>class <block>{<private>private slots: </private>}</block>;</class>
+<class>class <block>{<private>private <name>slots</name>: </private>}</block>;</class>
 </unit>
 
 <unit>
-<class>class <block>{<protected>protected slots: </protected>}</block>;</class>
+<class>class <block>{<protected>protected <name>slots</name>: </protected>}</block>;</class>
 </unit>
 
 <unit>
-<class>class <block>{<public>public Q_SLOTS: </public>}</block>;</class>
+<class>class <block>{<public>public <name>Q_SLOTS</name>: </public>}</block>;</class>
 </unit>
 
 <unit>
