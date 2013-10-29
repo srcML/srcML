@@ -129,6 +129,42 @@ libsrcml.srcml_create_unit.argtypes = [c_void_p]
 libsrcml.srcml_free_unit.restype = None
 libsrcml.srcml_free_unit.argtypes = [c_void_p]
 
+#int srcml_unit_set_language (struct srcml_unit*, const char* language);
+libsrcml.srcml_unit_set_language.restype = c_int
+libsrcml.srcml_unit_set_language.argtypes = [c_void_p, c_char_p]
+
+#int srcml_unit_set_filename (struct srcml_unit*, const char* filename);
+libsrcml.srcml_unit_set_filename.restype = c_int
+libsrcml.srcml_unit_set_filename.argtypes = [c_void_p, c_char_p]
+
+#int srcml_unit_set_directory(struct srcml_unit*, const char* directory);
+libsrcml.srcml_unit_set_directory.restype = c_int
+libsrcml.srcml_unit_set_directory.argtypes = [c_void_p, c_char_p]
+
+#int srcml_unit_set_version  (struct srcml_unit*, const char* version);
+libsrcml.srcml_unit_set_version.restype = c_int
+libsrcml.srcml_unit_set_version.argtypes = [c_void_p, c_char_p]
+
+#const char* srcml_unit_get_language (const struct srcml_unit*);
+libsrcml.srcml_unit_get_language.restype = c_char_p
+libsrcml.srcml_unit_get_language.argtypes = [c_void_p]
+
+#const char* srcml_unit_get_filename (const struct srcml_unit*);
+libsrcml.srcml_unit_get_filename.restype = c_char_p
+libsrcml.srcml_unit_get_filename.argtypes = [c_void_p]
+
+#const char* srcml_unit_get_directory(const struct srcml_unit*);
+libsrcml.srcml_unit_get_directory.restype = c_char_p
+libsrcml.srcml_unit_get_directory.argtypes = [c_void_p]
+
+#const char* srcml_unit_get_version  (const struct srcml_unit*);
+libsrcml.srcml_unit_get_version.restype = c_char_p
+libsrcml.srcml_unit_get_version.argtypes = [c_void_p]
+
+#const char* srcml_unit_get_xml      (const struct srcml_unit*);
+libsrcml.srcml_unit_get_xml.restype = c_char_p
+libsrcml.srcml_unit_get_xml.argtypes = [c_void_p]
+
 # srcml_archive wrapper
 class srcml_archive :
 
@@ -223,6 +259,33 @@ class srcml_unit :
 
     def parse_memory(self, src_buffer) :
         libsrcml.srcml_parse_unit_memory(self.unit, src_buffer, len(src_buffer))
+
+    def set_language(self, language) :
+        libsrcml.srcml_unit_set_language(self.unit, language)
+
+    def set_filename(self, filename) :
+        libsrcml.srcml_unit_set_filename(self.unit, filename)
+
+    def set_directory(self, directory) :
+        libsrcml.srcml_unit_set_directory(self.unit, directory)
+
+    def set_version(self, version) :
+        libsrcml.srcml_unit_set_version(self.unit, version)
+
+    def get_language(self) :
+        return libsrcml.srcml_unit_get_language(self.unit)
+
+    def get_filename(self) :
+        return libsrcml.srcml_unit_get_filename(self.unit)
+
+    def get_directory(self) :
+        return libsrcml.srcml_unit_get_directory(self.unit)
+
+    def get_version(self) :
+        return libsrcml.srcml_unit_get_version(self.unit)
+
+    def get_xml(self) :
+        return libsrcml.srcml_unit_get_xml(self.unit)
 
     def __del__(self) :
         libsrcml.srcml_free_unit(self.unit)
