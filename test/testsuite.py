@@ -105,26 +105,30 @@ def extract_all_executable(src):
 
 	return safe_communicate(command, src)
 
-def extract_one(archive, list) :
+def extract_one(archive, list, src_list) :
 
         unit = archive.read_unit()
         if unit.get_xml() != None :
                 list.append(unit.get_xml())
-                extract_one(archive, list)
+                unit.unparse_memory()
+                src_list.append(unit.src())
+                extract_one(archive, list, src_list)
 
 # extracts a particular unit from a srcML file
 def extract_all(src):
 
         all = []
+        src_all = []
 
         archive = srcml_archive()
         archive.read_open_memory(src)
-        extract_one(archive, all)
+        extract_one(archive, all, src_all)
         archive.close()
 
         all.append(0)
+        src_all.append(0)
 
-	return all
+	return all, src_all
 
 def name2filestr(src_filename):
 	file = open(src_filename).read()
@@ -493,7 +497,7 @@ try:
                                 if use_exec :
                                         all = string.split(extract_all_executable(filexml), '\0')
                                 else :
-                                        all = extract_all(filexml)
+                                        all, src_all = extract_all(filexml)
 
                                 number = len(all) - 1
                                 if use_exec :
@@ -532,7 +536,7 @@ try:
                                                 if use_exec :
                                                         unittext = srcml2src_executable(unitxml, encoding)
                                                 else :
-                                                        unittext = srcml2src(unitxml, encoding)
+                                                        unittext = src_all[count - 1]
 
 						# convert the unit in xml to text (if needed)
                                                 if doseol:
