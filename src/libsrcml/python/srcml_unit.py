@@ -1,6 +1,6 @@
 from globals import libsrcml
 from ctypes import c_int, c_void_p, c_char_p, pointer
-from types import *
+from exception import *
 
 # int srcml_parse_unit_filename(struct srcml_unit* unit, const char* src_filename);
 libsrcml.srcml_parse_unit_filename.restype = c_int
@@ -17,14 +17,6 @@ libsrcml.srcml_unparse_unit_filename.argtypes = [c_void_p, c_char_p]
 # int srcml_unparse_unit_memory  (struct srcml_unit*, char** src_buffer, int * src_size);
 libsrcml.srcml_unparse_unit_memory.restype = c_int
 libsrcml.srcml_unparse_unit_memory.argtypes = [c_void_p, c_void_p, c_void_p]
-
-# int srcml_write_unit(struct srcml_archive*, const struct srcml_unit*);
-libsrcml.srcml_write_unit.restype = c_int
-libsrcml.srcml_write_unit.argtypes = [c_void_p, c_void_p]
-
-# struct srcml_unit* srcml_read_unit(struct srcml_archive*);
-libsrcml.srcml_read_unit.restype = c_void_p
-libsrcml.srcml_read_unit.argtypes = [c_void_p]
 
 # struct srcml_unit* srcml_create_unit(struct srcml_archive* archive);
 libsrcml.srcml_create_unit.restype = c_void_p

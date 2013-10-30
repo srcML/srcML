@@ -14,7 +14,10 @@ archive.write_open_memory()
 
 unit = libsrcml.srcml_unit(archive)
 unit.parse_filename("a.cpp")
-archive.write_unit(unit)
+#try :
+    archive.write_unit(unit)
+#except libsrcml.srcMLException as e:
+#     print e
 
 unit = libsrcml.srcml_unit(archive)
 unit.set_filename("b.cpp")

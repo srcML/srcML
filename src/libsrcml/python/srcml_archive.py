@@ -2,7 +2,7 @@ from globals import libsrcml
 from ctypes import c_int, c_void_p, c_char_p, pointer
 
 from srcml_unit import srcml_unit
-from types import *
+from exception import *
 
 # struct srcml_archive* srcml_create_archive();
 libsrcml.srcml_create_archive.restype = c_void_p
@@ -113,6 +113,14 @@ libsrcml.srcml_archive_get_tabstop.argtypes = [c_void_p]
 libsrcml.srcml_archive_check_extension.restype = c_char_p
 libsrcml.srcml_archive_check_extension.argtypes = [c_void_p, c_char_p]
 
+# int srcml_write_unit(struct srcml_archive*, const struct srcml_unit*);
+libsrcml.srcml_write_unit.restype = c_int
+libsrcml.srcml_write_unit.argtypes = [c_void_p, c_void_p]
+
+# struct srcml_unit* srcml_read_unit(struct srcml_archive*);
+libsrcml.srcml_read_unit.restype = c_void_p
+libsrcml.srcml_read_unit.argtypes = [c_void_p]
+
 # srcml_archive wrapper
 class srcml_archive :
 
@@ -130,46 +138,46 @@ class srcml_archive :
     def write_open_memory(self) :
         self.buffer = c_char_p()
         self.size = c_int()
-        libsrcml.srcml_write_open_memory(self.archive, pointer(self.buffer), pointer(self.size))
+        check_return(libsrcml.srcml_write_open_memory(self.archive, pointer(self.buffer), pointer(self.size)))
 
     def read_open_filename(self, srcml_filename) :
-        libsrcml.srcml_read_open_filename(self.archive, srcml_filename)
+        check_return(libsrcml.srcml_read_open_filename(self.archive, srcml_filename))
 
     def read_open_memory(self, buffer) :
-        libsrcml.srcml_read_open_memory(self.archive, buffer, len(buffer))
+        check_return(libsrcml.srcml_read_open_memory(self.archive, buffer, len(buffer)))
 
     def set_encoding(self, encoding) :
-        libsrcml.srcml_archive_set_encoding(self.archive, encoding)
+        check_return(libsrcml.srcml_archive_set_encoding(self.archive, encoding))
 
     def set_language(self, language) :
-        libsrcml.srcml_archive_set_language(self.archive, language)
+        check_return(libsrcml.srcml_archive_set_language(self.archive, language))
 
     def set_filename(self, filename) :
-        libsrcml.srcml_archive_set_filename(self.archive, filename)
+        check_return(libsrcml.srcml_archive_set_filename(self.archive, filename))
 
     def set_directory(self, directory) :
-        libsrcml.srcml_archive_set_directory(self.archive, directory)
+        check_return(libsrcml.srcml_archive_set_directory(self.archive, directory))
 
     def set_version(self, version) :
-        libsrcml.srcml_archive_set_version(self.archive, version)
+        check_return(libsrcml.srcml_archive_set_version(self.archive, version))
 
     def set_all_options(self, options) :
-        libsrcml.srcml_archive_set_all_options(self.archive, options)
+        check_return(libsrcml.srcml_archive_set_all_options(self.archive, options))
 
     def set_option(self, option) :
-        libsrcml.srcml_archive_set_option(self.archive, option)
+        check_return(libsrcml.srcml_archive_set_option(self.archive, option))
 
     def clear_option(self, option) :
-        libsrcml.srcml_archive_clear_option(self.archive, option)
+        check_return(libsrcml.srcml_archive_clear_option(self.archive, option))
 
     def set_tabstop(self, tabstop) :
-        libsrcml.srcml_archive_set_tabstop(self.archive, tabstop)
+        check_return(libsrcml.srcml_archive_set_tabstop(self.archive, tabstop))
 
     def register_file_extension(self, extension, language) :
-        libsrcml.srcml_archive_set_tabstop(self.archive, extension, language)
+        check_return(libsrcml.srcml_archive_set_tabstop(self.archive, extension, language))
 
     def register_namespace(self, prefix, ns) :
-        libsrcml.srcml_archive_set_tabstop(self.archive, prefix, ns)
+        check_return(libsrcml.srcml_archive_set_tabstop(self.archive, prefix, ns))
 
     def get_encoding(self) :
         return libsrcml.srcml_archive_get_encoding(self.archive)
@@ -199,7 +207,7 @@ class srcml_archive :
         return self.buffer.value
 
     def write_unit(self, unit) :
-        libsrcml.srcml_write_unit(self.archive, unit.unit)
+        check_return(libsrcml.srcml_write_unit(self.archive, unit.unit))
 
     def read_unit(self) :
         return srcml_unit(0, libsrcml.srcml_read_unit(self.archive))
