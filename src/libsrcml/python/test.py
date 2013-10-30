@@ -1,6 +1,10 @@
 import libsrcml
 
 # test api
+
+print str(libsrcml.version_number())
+print libsrcml.version_string()
+
 archive = libsrcml.srcml_archive()
 archive.set_filename("project")
 archive.set_language("C++")
