@@ -39,28 +39,100 @@ def version_string() :
     return libsrcml.srcml_version_string()
 
 # int srcml(const char* input_filename, const char* output_filename);
+libsrcml.srcml.restype = c_int
+libsrcml.srcml.argtypes = [c_char_p, c_char_p]
 
 # int srcml_set_encoding  (const char* encoding);
+libsrcml.srcml_set_encoding.restype = c_int
+libsrcml.srcml_set_encoding.argtypes = [c_char_p]
+
 # int srcml_set_language  (const char* language);
+libsrcml.srcml_set_language.restype = c_int
+libsrcml.srcml_set_language.argtypes = [c_char_p]
+
 # int srcml_set_filename  (const char* filename);
+libsrcml.srcml_set_filename.restype = c_int
+libsrcml.srcml_set_filename.argtypes = [c_char_p]
+
 # int srcml_set_directory (const char* directory);
+libsrcml.srcml_set_directory.restype = c_int
+libsrcml.srcml_set_directory.argtypes = [c_char_p]
+
 # int srcml_set_version   (const char* version);
+libsrcml.srcml_set_version.restype = c_int
+libsrcml.srcml_set_version.argtypes = [c_char_p]
+
 # int srcml_set_all_options   (int option);
+libsrcml.srcml_set_all_options.restype = c_int
+libsrcml.srcml_set_all_options.argtypes = [c_int]
+
 # int srcml_set_option    (int option);
+libsrcml.srcml_set_option.restype = c_int
+libsrcml.srcml_set_option.argtypes = [c_int]
+
 # int srcml_clear_option  (int option);
+libsrcml.srcml_clear_option.restype = c_int
+libsrcml.srcml_clear_option.argtypes = [c_int]
+
 # int srcml_set_tabstop   (int tabstop);
+libsrcml.srcml_set_option.restype = c_int
+libsrcml.srcml_set_tabstop.argtypes = [c_int]
+
 # int srcml_register_file_extension(const char* extension, const char* language);
+libsrcml.srcml_register_file_extension.restype = c_int
+libsrcml.srcml_register_file_extension.argtypes = [c_int]
+
 # int srcml_register_namespace(const char* prefix, const char* ns);
+libsrcml.srcml_register_namespace.restype = c_int
+libsrcml.srcml_register_namespace.argtypes = [c_int]
 
 # const char* srcml_get_encoding ();
+libsrcml.srcml_get_encoding.restype = c_char_p
+libsrcml.srcml_get_encoding.argtypes = []
+
 # const char* srcml_get_language ();
+libsrcml.srcml_get_language.restype = c_char_p
+libsrcml.srcml_get_language.argtypes = []
+
 # const char* srcml_get_filename ();
+libsrcml.srcml_get_filename.restype = c_char_p
+libsrcml.srcml_get_filename.argtypes = []
+
 # const char* srcml_get_directory();
+libsrcml.srcml_get_directory.restype = c_char_p
+libsrcml.srcml_get_directory.argtypes = []
+
 # const char* srcml_get_version  ();
+libsrcml.srcml_get_version.restype = c_char_p
+libsrcml.srcml_get_version.argtypes = []
+
 # int         srcml_get_options  ();
+libsrcml.srcml_get_options.restype = c_int
+libsrcml.srcml_get_options.argtypes = []
+
 # int         srcml_get_tabstop  ();
+libsrcml.srcml_get_tabstop.restype = c_int
+libsrcml.srcml_get_tabstop.argtypes = []
+
 # int         srcml_get_namespace_size();
+libsrcml.srcml_get_namespace_size.restype = c_int
+libsrcml.srcml_get_namespace_size.argtypes = []
+
 # const char* srcml_get_prefix(int pos);
+libsrcml.srcml_get_prefix.restype = c_char_p
+libsrcml.srcml_get_prefix.argtypes = [c_int]
+
 # const char* srcml_get_prefix_uri(const char* namespace_uri);
+libsrcml.srcml_get_prefix_uri.restype = c_char_p
+libsrcml.srcml_get_prefix_uri.argtypes = [c_char_p]
+
 # const char* srcml_get_namespace(int pos);
+libsrcml.srcml_get_namespace.restype = c_char_p
+libsrcml.srcml_get_namespace.argtypes = [c_int]
+
 # const char* srcml_get_namespace_prefix(const char* prefix);
+libsrcml.srcml_get_namespace_prefix.restype = c_char_p
+libsrcml.srcml_get_namespace_prefix.argtypes = [c_char_p]
+
+def srcml(input_filename, output_filename) :
+    libsrcml.srcml(input_filename_output_filename)
