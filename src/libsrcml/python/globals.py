@@ -31,3 +31,30 @@ def version_number() :
 
 def version_string() :
     return libsrcml.srcml_version_string()
+
+# int srcml(const char* input_filename, const char* output_filename);
+
+# int srcml_set_encoding  (const char* encoding);
+# int srcml_set_language  (const char* language);
+# int srcml_set_filename  (const char* filename);
+# int srcml_set_directory (const char* directory);
+# int srcml_set_version   (const char* version);
+# int srcml_set_all_options   (int option);
+# int srcml_set_option    (int option);
+# int srcml_clear_option  (int option);
+# int srcml_set_tabstop   (int tabstop);
+# int srcml_register_file_extension(const char* extension, const char* language);
+# int srcml_register_namespace(const char* prefix, const char* ns);
+
+# const char* srcml_get_encoding ();
+# const char* srcml_get_language ();
+# const char* srcml_get_filename ();
+# const char* srcml_get_directory();
+# const char* srcml_get_version  ();
+# int         srcml_get_options  ();
+# int         srcml_get_tabstop  ();
+# int         srcml_get_namespace_size();
+# const char* srcml_get_prefix(int pos);
+# const char* srcml_get_prefix_uri(const char* namespace_uri);
+# const char* srcml_get_namespace(int pos);
+# const char* srcml_get_namespace_prefix(const char* prefix);
