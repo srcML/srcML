@@ -79,4 +79,6 @@ struct srcml_request_t {
 class srcmlCLI {
   public :
     static srcml_request_t parseCLI (int argc, const char* argv);
-}
+};
+
+#endif
