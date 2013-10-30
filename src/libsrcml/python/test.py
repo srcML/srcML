@@ -40,10 +40,13 @@ print archive.get_version()
 
 archive = libsrcml.srcml_archive()
 archive.read_open_memory(srcml)
+clone = archive.clone()
 
 unit = archive.read_unit()
 
 unit.unparse_memory()
+archive.close()
+clone.close()
 
 print unit.src()
 print unit.get_xml()

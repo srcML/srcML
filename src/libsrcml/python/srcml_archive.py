@@ -7,6 +7,10 @@ from srcml_unit import srcml_unit
 libsrcml.srcml_create_archive.restype = c_void_p
 libsrcml.srcml_create_archive.argtypes = []
 
+# struct srcml_archive* srcml_clone_archive(const struct srcml_archive*);
+libsrcml.srcml_clone_archive.restype = c_void_p
+libsrcml.srcml_clone_archive.argtypes = [c_void_p]
+
 # int srcml_write_open_filename(struct srcml_archive*, const char* srcml_filename);
 libsrcml.srcml_write_open_filename.restype = c_int
 libsrcml.srcml_write_open_filename.argtypes = [c_void_p, c_char_p]
@@ -111,8 +115,13 @@ libsrcml.srcml_archive_check_extension.argtypes = [c_void_p, c_char_p]
 # srcml_archive wrapper
 class srcml_archive :
 
-    def __init__(self) :
-        self.archive = libsrcml.srcml_create_archive()
+    def __init__(self, archive = 0) :
+        self.archive = archive
+        if self.archive == 0 :
+            self.archive = libsrcml.srcml_create_archive()
+
+    def clone(self) :
+        return srcml_archive(libsrcml.srcml_clone_archive(self.archive))
 
     def write_open_filename(self, srcml_filename) :
         libsrcml.srcml_write_open_filename(self.archive, srcml_filename)
