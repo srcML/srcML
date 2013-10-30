@@ -210,7 +210,11 @@ class srcml_archive :
         check_return(libsrcml.srcml_write_unit(self.archive, unit.unit))
 
     def read_unit(self) :
-        return srcml_unit(0, libsrcml.srcml_read_unit(self.archive))
+        unit = libsrcml.srcml_read_unit(self.archive)
+
+        if unit != None :
+            return srcml_unit(0, unit)
+        return None
 
     def close(self) :
         libsrcml.srcml_close_archive(self.archive)

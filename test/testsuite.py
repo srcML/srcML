@@ -106,7 +106,7 @@ def extract_all_executable(src):
 def extract_one(archive, list, src_list) :
 
         unit = archive.read_unit()
-        if unit.get_xml() != None :
+        if unit != None :
                 list.append(unit.get_xml())
                 unit.unparse_memory()
                 src_list.append(unit.src())
