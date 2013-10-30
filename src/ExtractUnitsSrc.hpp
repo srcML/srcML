@@ -219,8 +219,8 @@ public :
     // needs to be expanded to the equivalent character.
     // So make it as quick as possible, since this is rare
     if (localname[0] == 'e' && localname[1] == 's' &&
-        strcmp((const char*) localname, "escape") == 0 &&
-        strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0) {
+        strcmp((const char*) localname, "escape") == 0 /*&&
+        strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0*/) {
 
       // convert from the escaped to the unescaped value
       char value = strtod((const char*) attributes[3], NULL);
