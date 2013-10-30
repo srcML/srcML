@@ -2,6 +2,7 @@ from globals import libsrcml
 from ctypes import c_int, c_void_p, c_char_p, pointer
 
 from srcml_unit import srcml_unit
+from types import *
 
 # struct srcml_archive* srcml_create_archive();
 libsrcml.srcml_create_archive.restype = c_void_p
@@ -124,7 +125,7 @@ class srcml_archive :
         return srcml_archive(libsrcml.srcml_clone_archive(self.archive))
 
     def write_open_filename(self, srcml_filename) :
-        libsrcml.srcml_write_open_filename(self.archive, srcml_filename)
+        check_return(libsrcml.srcml_write_open_filename(self.archive, srcml_filename))
 
     def write_open_memory(self) :
         self.buffer = c_char_p()
