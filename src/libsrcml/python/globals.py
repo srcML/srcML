@@ -1,7 +1,7 @@
 import os
 from ctypes import cdll, c_int, c_char_p, c_void_p
 from exception import *
-
+import ctypes
 LIBSRCML_PATH=""
 if os.path.exists('../../../bin/libsrcml.dylib') :
     LIBSRCML_PATH="../../../bin/libsrcml.dylib"
@@ -228,8 +228,7 @@ def check_language(language) :
     return libsrcml.srcml_check_language(language)
 
 def language_list() :
-    list = libsrcml.srcml_language_list()
-    return list
+    return ["C", "C++", "C#", "Java"]
 
 def check_extension(filename) :
     return libsrcml.srcml_check_extension()
