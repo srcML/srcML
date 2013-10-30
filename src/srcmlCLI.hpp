@@ -30,6 +30,28 @@
 #include <string>
 #include <vector>
 
+/* These are internal to srcml */
+#define SRCML_COMMAND_LONGINFO          1<<0
+#define SRCML_COMMAND_INFO              1<<1
+#define SRCML_COMMAND_INFO_FILENAME     1<<2
+
+#define SRCML_COMMAND_CPP_TEXT_IF0      1<<4
+#define SRCML_COMMAND_CPP_MARKUP_ELSE   1<<5
+#define SRCML_COMMAND_QUIET             1<<6
+#define SRCML_COMMAND_VERBOSE           1<<7
+#define SRCML_COMMAND_VERSION           1<<8
+#define SRCML_COMMAND_DEBUG             1<<9
+#define SRCML_COMMAND_EXPRESSION        1<<10
+#define SRCML_COMMAND_INTERACTIVE       1<<11
+#define SRCML_COMMAND_XML               1<<12
+#define SRCML_COMMAND_LIST              1<<13
+#define SRCML_COMMAND_UNITS             1<<14
+#define SRCML_COMMAND_INFO_DIRECTORY    1<<15
+#define SRCML_COMMAND_INFO_ENCODING     1<<16
+#define SRCML_COMMAND_INFO_LANGUAGE     1<<17
+#define SRCML_COMMAND_INFO_SRC_VERSION  1<<18
+#define SRCML_COMMAND_TO_DIRECTORY      1<<19
+
 struct srcml_request_t {
   int command;
   int markup_options;
