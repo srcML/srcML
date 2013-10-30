@@ -13,9 +13,7 @@ import string
 from datetime import datetime, time
 
 sys.path.append("../src/libsrcml/python")
-sys.path.append("../src")
 from libsrcml import *
-#from srcML import *
 
 maxcount = 700
 error_filename = "srcMLTestReport"
@@ -681,6 +679,6 @@ if use_exec :
         print src2srcmlversion(), srcmltranslator
         print srcml2srcversion(), srcmlutility
 else :
-        print srcml_version_string()
+        print version_string()
 
 exit
