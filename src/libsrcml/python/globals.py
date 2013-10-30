@@ -1,5 +1,6 @@
 import os
 from ctypes import cdll, c_int, c_char_p
+from exception import *
 
 LIBSRCML_PATH=""
 if os.path.exists('../../../bin/libsrcml.dylib') :
@@ -136,3 +137,57 @@ libsrcml.srcml_get_namespace_prefix.argtypes = [c_char_p]
 
 def srcml(input_filename, output_filename) :
     libsrcml.srcml(input_filename_output_filename)
+
+def set_encoding(self, encoding) :
+    check_return(libsrcml.srcml_set_encoding(self.archive, encoding))
+
+def set_language(self, language) :
+    check_return(libsrcml.srcml_set_language(self.archive, language))
+
+def set_filename(self, filename) :
+    check_return(libsrcml.srcml_set_filename(self.archive, filename))
+
+def set_directory(self, directory) :
+    check_return(libsrcml.srcml_set_directory(self.archive, directory))
+
+def set_version(self, version) :
+    check_return(libsrcml.srcml_set_version(self.archive, version))
+
+def set_all_options(self, options) :
+    check_return(libsrcml.srcml_set_all_options(self.archive, options))
+
+def set_option(self, option) :
+    check_return(libsrcml.srcml_set_option(self.archive, option))
+
+def clear_option(self, option) :
+    check_return(libsrcml.srcml_clear_option(self.archive, option))
+
+def set_tabstop(self, tabstop) :
+    check_return(libsrcml.srcml_set_tabstop(self.archive, tabstop))
+
+def register_file_extension(self, extension, language) :
+    check_return(libsrcml.srcml_set_tabstop(self.archive, extension, language))
+
+def register_namespace(self, prefix, ns) :
+    check_return(libsrcml.srcml_set_tabstop(self.archive, prefix, ns))
+
+def get_encoding(self) :
+    return libsrcml.srcml_get_encoding(self.archive)
+
+def get_language(self) :
+    return libsrcml.srcml_get_language(self.archive)
+
+def get_filename(self) :
+    return libsrcml.srcml_get_filename(self.archive)
+
+def get_directory(self) :
+    return libsrcml.srcml_get_directory(self.archive)
+
+def get_version(self) :
+    return libsrcml.srcml_get_version(self.archive)
+
+def get_options(self) :
+    return libsrcml.srcml_get_options(self.archive)
+
+def get_tabstop(self) :
+    return libsrcml.srcml_get_tabstop(self.archive)
