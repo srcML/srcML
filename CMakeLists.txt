@@ -160,8 +160,8 @@ else()
 endif()
 
 # srcml
-add_executable(srcml EXCLUDE_FROM_ALL src/srcml.cpp)
-target_link_libraries(srcml ${Boost_PROGRAM_OPTIONS_LIBRARY})
+add_executable(srcml EXCLUDE_FROM_ALL src/srcml.cpp src/srcmlCLI.cpp)
+target_link_libraries(srcml ${Boost_PROGRAM_OPTIONS_LIBRARY} ${LibArchive_LIBRARY} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} ${CURL_LIBRARIES} srcml_static)
 
 # src2srcml
 if(NOT SVN_ENABLED)
