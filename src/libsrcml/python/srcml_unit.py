@@ -71,30 +71,30 @@ class srcml_unit :
             self.unit = libsrcml.srcml_create_unit(archive.archive)
 
     def parse_filename(self, src_filename) :
-        libsrcml.srcml_parse_unit_filename(self.unit, src_filename)
+        check_return(libsrcml.srcml_parse_unit_filename(self.unit, src_filename))
 
     def parse_memory(self, src_buffer) :
-        libsrcml.srcml_parse_unit_memory(self.unit, src_buffer, len(src_buffer))
+        check_return(libsrcml.srcml_parse_unit_memory(self.unit, src_buffer, len(src_buffer)))
 
     def unparse_filename(self, src_filename) :
-        libsrcml.srcml_parse_unit_filename(self.unit, src_filename)
+        check_return(libsrcml.srcml_parse_unit_filename(self.unit, src_filename))
 
     def unparse_memory(self) :
         self.src_size = c_int()
         self.src_buffer = c_char_p()
-        libsrcml.srcml_unparse_unit_memory(self.unit, pointer(self.src_buffer), pointer(self.src_size))
+        check_return(libsrcml.srcml_unparse_unit_memory(self.unit, pointer(self.src_buffer), pointer(self.src_size)))
 
     def set_language(self, language) :
-        libsrcml.srcml_unit_set_language(self.unit, language)
+        check_return(libsrcml.srcml_unit_set_language(self.unit, language))
 
     def set_filename(self, filename) :
-        libsrcml.srcml_unit_set_filename(self.unit, filename)
+        check_return(libsrcml.srcml_unit_set_filename(self.unit, filename))
 
     def set_directory(self, directory) :
-        libsrcml.srcml_unit_set_directory(self.unit, directory)
+        check_return(libsrcml.srcml_unit_set_directory(self.unit, directory))
 
     def set_version(self, version) :
-        libsrcml.srcml_unit_set_version(self.unit, version)
+        check_return(libsrcml.srcml_unit_set_version(self.unit, version))
 
     def get_language(self) :
         return libsrcml.srcml_unit_get_language(self.unit)

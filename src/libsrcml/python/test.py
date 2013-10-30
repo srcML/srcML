@@ -1,7 +1,6 @@
 import libsrcml
 
 # test api
-
 print str(libsrcml.version_number())
 print libsrcml.version_string()
 
@@ -15,7 +14,7 @@ archive.write_open_memory()
 unit = libsrcml.srcml_unit(archive)
 unit.parse_filename("a.cpp")
 #try :
-    archive.write_unit(unit)
+archive.write_unit(unit)
 #except libsrcml.srcMLException as e:
 #     print e
 
