@@ -1,5 +1,5 @@
 import os
-from ctypes import cdll, c_int, c_char_p
+from ctypes import cdll, c_int, c_char_p, c_void_p
 from exception import *
 
 LIBSRCML_PATH=""
@@ -135,59 +135,116 @@ libsrcml.srcml_get_namespace.argtypes = [c_int]
 libsrcml.srcml_get_namespace_prefix.restype = c_char_p
 libsrcml.srcml_get_namespace_prefix.argtypes = [c_char_p]
 
+# int srcml_check_language(const char* language);
+libsrcml.srcml_check_language.restype = c_int
+libsrcml.srcml_check_language.argtypes = [c_char_p]
+
+# const char** srcml_language_list();
+libsrcml.srcml_language_list.restype = c_void_p
+libsrcml.srcml_language_list.argtypes = []
+
+# const char* srcml_check_extension(const char* filename);
+libsrcml.srcml_check_extension.restype = c_char_p
+libsrcml.srcml_check_extension.argtypes = [c_char_p]
+
+# int srcml_check_format(const char* format);
+libsrcml.srcml_check_format.restype = c_int
+libsrcml.srcml_check_format.argtypes = [c_char_p]
+
+# int srcml_check_encoding(const char* encoding);
+libsrcml.srcml_check_encoding.restype = c_int
+libsrcml.srcml_check_encoding.argtypes = [c_char_p]
+
+# int srcml_check_xslt();
+libsrcml.srcml_check_xslt.restype = c_int
+libsrcml.srcml_check_xslt.argtypes = []
+
+# int srcml_check_exslt();
+libsrcml.srcml_check_exslt.restype = c_int
+libsrcml.srcml_check_exslt.argtypes = []
+
+# const char* srcml_error_string();
+libsrcml.srcml_error_string.restype = c_char_p
+libsrcml.srcml_error_string.argtypes = []
+
 def srcml(input_filename, output_filename) :
     libsrcml.srcml(input_filename_output_filename)
 
-def set_encoding(self, encoding) :
-    check_return(libsrcml.srcml_set_encoding(self.archive, encoding))
+def set_encoding(encoding) :
+    check_return(libsrcml.srcml_set_encoding(encoding))
 
-def set_language(self, language) :
-    check_return(libsrcml.srcml_set_language(self.archive, language))
+def set_language(language) :
+    check_return(libsrcml.srcml_set_language(language))
 
-def set_filename(self, filename) :
-    check_return(libsrcml.srcml_set_filename(self.archive, filename))
+def set_filename(filename) :
+    check_return(libsrcml.srcml_set_filename(filename))
 
-def set_directory(self, directory) :
-    check_return(libsrcml.srcml_set_directory(self.archive, directory))
+def set_directory(directory) :
+    check_return(libsrcml.srcml_set_directory(directory))
 
-def set_version(self, version) :
-    check_return(libsrcml.srcml_set_version(self.archive, version))
+def set_version(version) :
+    check_return(libsrcml.srcml_set_version(version))
 
-def set_all_options(self, options) :
-    check_return(libsrcml.srcml_set_all_options(self.archive, options))
+def set_all_options(options) :
+    check_return(libsrcml.srcml_set_all_options(options))
 
-def set_option(self, option) :
-    check_return(libsrcml.srcml_set_option(self.archive, option))
+def set_option(option) :
+    check_return(libsrcml.srcml_set_option(option))
 
-def clear_option(self, option) :
-    check_return(libsrcml.srcml_clear_option(self.archive, option))
+def clear_option(option) :
+    check_return(libsrcml.srcml_clear_option(option))
 
-def set_tabstop(self, tabstop) :
-    check_return(libsrcml.srcml_set_tabstop(self.archive, tabstop))
+def set_tabstop(tabstop) :
+    check_return(libsrcml.srcml_set_tabstop(tabstop))
 
-def register_file_extension(self, extension, language) :
-    check_return(libsrcml.srcml_set_tabstop(self.archive, extension, language))
+def register_file_extension(extension, language) :
+    check_return(libsrcml.srcml_set_tabstop(extension, language))
 
-def register_namespace(self, prefix, ns) :
-    check_return(libsrcml.srcml_set_tabstop(self.archive, prefix, ns))
+def register_namespace(prefix, ns) :
+    check_return(libsrcml.srcml_set_tabstop(prefix, ns))
 
-def get_encoding(self) :
-    return libsrcml.srcml_get_encoding(self.archive)
+def get_encoding() :
+    return libsrcml.srcml_get_encoding()
 
-def get_language(self) :
-    return libsrcml.srcml_get_language(self.archive)
+def get_language() :
+    return libsrcml.srcml_get_language()
 
-def get_filename(self) :
-    return libsrcml.srcml_get_filename(self.archive)
+def get_filename() :
+    return libsrcml.srcml_get_filename()
 
-def get_directory(self) :
-    return libsrcml.srcml_get_directory(self.archive)
+def get_directory() :
+    return libsrcml.srcml_get_directory()
 
-def get_version(self) :
-    return libsrcml.srcml_get_version(self.archive)
+def get_version() :
+    return libsrcml.srcml_get_version()
 
-def get_options(self) :
-    return libsrcml.srcml_get_options(self.archive)
+def get_options() :
+    return libsrcml.srcml_get_options()
 
-def get_tabstop(self) :
-    return libsrcml.srcml_get_tabstop(self.archive)
+def get_tabstop() :
+    return libsrcml.srcml_get_tabstop()
+
+def check_language(language) :
+    return libsrcml.srcml_check_language(language)
+
+def language_list() :
+    list = libsrcml.srcml_language_list()
+    return list
+
+def check_extension(filename) :
+    return libsrcml.srcml_check_extension()
+
+def check_format(format) :
+    return libsrcml.srcml_check_format()
+
+def check_encoding(encoding) :
+    return libsrcml.srcml_check_encoding()
+
+def check_xslt() :
+    return libsrcml.srcml_check_xslt()
+
+def check_exslt() :
+    return libsrcml.srcml_check_exslt()
+
+def error_string() :
+    return libsrcml.srcml_error_string()
