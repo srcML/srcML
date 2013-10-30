@@ -12,7 +12,9 @@ import difflib
 import string
 from datetime import datetime, time
 
+sys.path.append("../src/libsrcml/python")
 sys.path.append("../src")
+from libsrcml import *
 from srcML import *
 
 maxcount = 700
@@ -103,18 +105,22 @@ def extract_all_executable(src):
 
 	return safe_communicate(command, src)
 
+def extract_one(archive, list) :
+
+        unit = archive.read_unit()
+        if unit.get_xml() != None :
+                list.append(unit.get_xml())
+                extract_one(archive, list)
+
 # extracts a particular unit from a srcML file
 def extract_all(src):
-
+        print "HERE"
         all = []
-        utility = srcMLUtility(src, len(src) + 1, encoding, 0, "")
-        count = utility.unit_count(None)
 
-        for i in range(1, count + 1) :
-
-                all.append(utility.extract_xml(i))
-
-        utility.delete()
+        archive = srcml_archive()
+        archive.read_open_memory(src)
+        extract_one(archive, all)
+        archive.close()
 
         all.append(0)
 
@@ -185,40 +191,34 @@ def src2srcML_executable(text_file, encoding, language, directory, filename, pre
 # find differences of two files
 def src2srcML(text_file, encoding, language, directory, filename, prefixlist):
 
-        options = OPTION_CPP
+        options = SRCML_OPTION_CPP
 
         if filename == "" :
                 filename = None;
 
         if prefixlist.count("--xmlns:op=http://www.sdml.info/srcML/operator") :
-                options = options | OPTION_OPERATOR
+                options = options | SRCML_OPTION_OPERATOR
         if prefixlist.count("--xmlns:lit=http://www.sdml.info/srcML/literal") :
-                options = options | OPTION_LITERAL
+                options = options | SRCML_OPTION_LITERAL
         if prefixlist.count("--xmlns:type=http://www.sdml.info/srcML/modifier") :
-                options = options | OPTION_MODIFER
+                options = options | SRCML_OPTION_MODIFER
 
-        lang = LANGUAGE_NONE[1]
-        if language == LANGUAGE_C[0] :
-                lang = LANGUAGE_C[1]
-        elif language == LANGUAGE_CS[0] :
-                lang = LANGUAGE_CS[1]
-        elif language == LANGUAGE_CXX[0] :
-                lang = LANGUAGE_CXX[1]
-        elif language == LANGUAGE_CXX_11[0] :
-                lang = LANGUAGE_CXX_11[1]
-        elif language == LANGUAGE_JAVA[0] :
-                lang = LANGUAGE_JAVA[1]
-                options = options & ~OPTION_CPP
-        elif language == LANGUAGE_ASPECTJ[0] :
-                lang = LANGUAGE_ASPECTJ[1]
-                options = options & ~OPTION_CPP
+        archive = srcml_archive()
 
-        translator = srcMLTranslator(lang, encoding, encoding, options, None, None, None, URI_PREFIX, 8)
-        translator.setInputString(text_file)
-        translator.translate(None, directory, filename, None, lang)
-        translator.close()
-        srcml = translator.getsrcML()
-        translator.delete()
+        archive.write_open_memory()
+        archive.set_all_options(options)
+        unit = srcml_unit(archive)
+        unit.set_language(language)
+        is_all =  directory.find(".all") 
+        if is_all != -1 :
+                unit.set_filename(filename)
+                unit.set_directory(directory)
+
+        unit.parse_memory(text_file)
+        archive.close()
+        srcml = unit.get_xml()
+        if is_all == -1 :
+                srcml = "<unit>" + srcml[srcml.find(">") + 1:]
 
         return srcml
 
