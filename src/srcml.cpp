@@ -147,7 +147,7 @@ srcml_request_t srcml_request = { 0 };
 const int SRCML_COMMAND_LONGINFO = 1<<0;
 const int SRCML_COMMAND_INFO = 1<<1;
 const int SRCML_COMMAND_INFO_FILENAME = 1<<2;
-const int SRCML_COMMAND_OPERATOR = 1<<3;
+
 const int SRCML_COMMAND_CPP_TEXT_IF0 = 1<<4;
 const int SRCML_COMMAND_CPP_MARKUP_ELSE = 1<<5;
 const int SRCML_COMMAND_QUIET = 1<<6;
@@ -304,7 +304,7 @@ int main(int argc, char * argv[]) {
     markup.add_options()
       ("literal", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_LITERAL>), "markup literal values, namespace 'http://www.sdml.info/srcML/literal'")
       ("modifier", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_MODIFIER>), "markup type modifiers, namespace 'http://www.sdml.info/srcML/modifier'")
-      ("operator", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_OPERATOR>), "markup operators, namespace 'http://www.sdml.info/srcML/operator'")
+      ("operator", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_OPERATOR>), "markup operators, namespace 'http://www.sdml.info/srcML/operator'")
       ;
       
     src2srcml_metadata.add_options()

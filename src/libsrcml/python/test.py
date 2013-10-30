@@ -1,6 +1,9 @@
 import libsrcml
 
 # test api
+print str(libsrcml.version_number())
+print libsrcml.version_string()
+
 archive = libsrcml.srcml_archive()
 archive.set_filename("project")
 archive.set_language("C++")
@@ -10,7 +13,10 @@ archive.write_open_memory()
 
 unit = libsrcml.srcml_unit(archive)
 unit.parse_filename("a.cpp")
+#try :
 archive.write_unit(unit)
+#except libsrcml.srcMLException as e:
+#     print e
 
 unit = libsrcml.srcml_unit(archive)
 unit.set_filename("b.cpp")
@@ -36,10 +42,13 @@ print archive.get_version()
 
 archive = libsrcml.srcml_archive()
 archive.read_open_memory(srcml)
+clone = archive.clone()
 
 unit = archive.read_unit()
 
 unit.unparse_memory()
+archive.close()
+clone.close()
 
 print unit.src()
 print unit.get_xml()
