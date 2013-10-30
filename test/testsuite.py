@@ -15,7 +15,7 @@ from datetime import datetime, time
 sys.path.append("../src/libsrcml/python")
 sys.path.append("../src")
 from libsrcml import *
-from srcML import *
+#from srcML import *
 
 maxcount = 700
 error_filename = "srcMLTestReport"
@@ -196,19 +196,12 @@ def src2srcML_executable(text_file, encoding, language, directory, filename, pre
 # find differences of two files
 def src2srcML(text_file, encoding, language, directory, filename, prefixlist):
 
-        options = 0
+        options = xmlns
         if language != "Java" :
-                options = SRCML_OPTION_CPP
+                options |= SRCML_OPTION_CPP
 
         if filename == "" :
                 filename = None;
-
-        if prefixlist.count("--xmlns:op=http://www.sdml.info/srcML/operator") :
-                options = options | SRCML_OPTION_OPERATOR
-        if prefixlist.count("--xmlns:lit=http://www.sdml.info/srcML/literal") :
-                options = options | SRCML_OPTION_LITERAL
-        if prefixlist.count("--xmlns:type=http://www.sdml.info/srcML/modifier") :
-                options = options | SRCML_OPTION_MODIFER
 
         archive = srcml_archive()
 
@@ -302,12 +295,11 @@ def getfullxmlns_executable(xml_file):
 # xmlns attribute
 def getfullxmlns(xml_file):
 
-	l = []
-        utility = srcMLUtility(xml_file, len(xml_file) + 1, encoding, 0, "")
-	for a in utility.long_info().split():
-		if a[0:5] == "xmlns":
-			l.append("--" + a.replace('"', ""))
-        utility.delete()
+        archive = srcml_archive()
+        archive.read_open_memory(xml_file)
+        l = archive.get_options()
+
+        archive.close()
 
 	return l
 
@@ -387,7 +379,7 @@ if use_exec :
         print src2srcmlversion()
         print srcml2srcversion()
 else :
-        print srcml_version_string()
+        print version_string()
 print
 
 specname = ""
@@ -502,14 +494,14 @@ try:
 
                                 number = len(all) - 1
                                 if use_exec :
-                                        xmlns = defaultxmlns(getfullxmlns_executable(filexml))
-                                else :
-                                        xmlns = defaultxmlns(getfullxmlns(filexml))
-				while len(xmlns) == 0 :
-					if use_exec :
+                                        fxmlns = defaultxmlns(getfullxmlns_executable(filexml))
+
+                                if use_exec :
+                                        while len(xmlns) == 0 :
 						xmlns = defaultxmlns(getfullxmlns_executable(filexml))
-					else :
-						xmlns = defaultxmlns(getfullxmlns(filexml))
+                                else :
+                                        xmlns = getfullxmlns(filexml)
+
 				while count == 0 or count < number:
 
 					try: 
