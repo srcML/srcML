@@ -115,13 +115,14 @@ def extract_one(archive, list, src_list) :
                 extract_one(archive, list, src_list)
 
 # extracts a particular unit from a srcML file
-def extract_all(src):
+def extract_all(src, encoding):
 
         all = []
         src_all = []
 
         archive = srcml_archive()
         archive.read_open_memory(src)
+        archive.set_encoding(encoding)
         extract_one(archive, all, src_all)
         archive.close()
 
@@ -497,7 +498,7 @@ try:
                                 if use_exec :
                                         all = string.split(extract_all_executable(filexml), '\0')
                                 else :
-                                        all, src_all = extract_all(filexml)
+                                        all, src_all = extract_all(filexml, encoding)
 
                                 number = len(all) - 1
                                 if use_exec :
