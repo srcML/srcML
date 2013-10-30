@@ -1,5 +1,5 @@
 from globals import libsrcml
-from ctypes import *
+from ctypes import c_int, c_void_p, c_char_p, pointer
 
 from srcml_unit import srcml_unit
 

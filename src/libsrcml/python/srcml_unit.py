@@ -1,5 +1,5 @@
 from globals import libsrcml
-from ctypes import *
+from ctypes import c_int, c_void_p, c_char_p, pointer
 
 # int srcml_parse_unit_filename(struct srcml_unit* unit, const char* src_filename);
 libsrcml.srcml_parse_unit_filename.restype = c_int
