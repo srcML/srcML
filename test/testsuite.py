@@ -114,7 +114,7 @@ def extract_one(archive, list) :
 
 # extracts a particular unit from a srcML file
 def extract_all(src):
-        print "HERE"
+
         all = []
 
         archive = srcml_archive()
@@ -191,7 +191,9 @@ def src2srcML_executable(text_file, encoding, language, directory, filename, pre
 # find differences of two files
 def src2srcML(text_file, encoding, language, directory, filename, prefixlist):
 
-        options = SRCML_OPTION_CPP
+        options = 0
+        if language != "Java" :
+                options = SRCML_OPTION_CPP
 
         if filename == "" :
                 filename = None;
@@ -210,14 +212,15 @@ def src2srcML(text_file, encoding, language, directory, filename, prefixlist):
         unit = srcml_unit(archive)
         unit.set_language(language)
         is_all =  directory.find(".all") 
-        if is_all != -1 :
+        is_unicode = directory.find("unicode")
+        if is_all != -1 or is_unicode != -1:
                 unit.set_filename(filename)
                 unit.set_directory(directory)
 
         unit.parse_memory(text_file)
         archive.close()
         srcml = unit.get_xml()
-        if is_all == -1 :
+        if is_all == -1 and is_unicode == -1:
                 srcml = "<unit>" + srcml[srcml.find(">") + 1:]
 
         return srcml
