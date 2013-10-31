@@ -149,12 +149,6 @@ void* srcMLTranslatorCore::setInput(const char* path) {
 }
 
 // translate from input stream to output stream
-void* srcMLTranslatorCore::setInputString(const char* source) {
-
-  return setInputString(source, strlen(source));
-}
-
-// translate from input stream to output stream
 void* srcMLTranslatorCore::setInputString(const char* source, int size) {
 
   try {
