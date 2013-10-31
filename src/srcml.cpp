@@ -39,6 +39,19 @@
 #include <iostream>
 #include <string>
 
+struct ParseRequest {
+    ParseRequest() : buffer(0) {}
+
+    void swap(ParseRequest& other) {
+
+        filename.swap(other.filename);
+        buffer.swap(other.buffer);
+    }
+
+    std::string filename;
+    std::vector<char> buffer;
+};
+
 // Global Options Function
 void set_globals(const struct srcml_request_t srcml_request);
 
@@ -54,6 +67,8 @@ int main(int argc, char * argv[]) {
   #else
     //YOU HAVE V3 OR HIGHER
   #endif
+
+  ThreadQueue<ParseRequest, 10> queue;
 
   //SETUP GLOBALS FOR LIBSRCML
   set_globals(srcml_request);
