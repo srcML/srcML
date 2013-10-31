@@ -307,15 +307,15 @@ srcml_request_t srcmlCLI::parseCLI(int argc, char* argv[]) {
     //CHECK OPTION CONFLICTS
     conflicting_options(cli_map, "quiet", "verbose"); 
 
-    //DEBUG TO SEE CLI INPUTS
-    debug_cli_opts(srcml_request);
-
-    return srcml_request;
   }
   catch(std::exception& e) {
     std::cerr << e.what() << "\n";
+    srcml_request.error = true;
     return srcml_request;
   }
+    //DEBUG TO SEE CLI INPUTS
+    debug_cli_opts(srcml_request);
+    srcml_request.error = false;
     return srcml_request;
 }
 

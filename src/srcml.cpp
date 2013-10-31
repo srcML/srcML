@@ -45,7 +45,8 @@ void set_globals(const struct srcml_request_t srcml_request);
 int main(int argc, char * argv[]) {
   
   srcml_request_t srcml_request = srcmlCLI::parseCLI(argc, argv);
-
+  if (srcml_request.error)
+    return 1;
   // CHECK TO SEE WHAT VERSION OF LIBARCHIVE IS RUNNING
   // SWITCH ON FEATURES (LIBARCHIVE FOR DIRECTORY, ETC.)
   #if ARCHIVE_VERSION_NUMBER < 3000000
