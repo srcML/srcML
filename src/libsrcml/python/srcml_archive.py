@@ -129,6 +129,26 @@ libsrcml.srcml_skip_unit.argtypes = [c_void_p]
 libsrcml.srcml_read_unit_position.restype = c_void_p
 libsrcml.srcml_read_unit_position.argtypes = [c_void_p, c_int]
 
+# int srcml_clear_transforms(struct srcml_archive*);
+libsrcml.srcml_clear_transforms.restype = c_int
+libsrcml.srcml_clear_transforms.argtypes = [c_void_p]
+
+# int srcml_append_transform_xpath(struct srcml_archive*, const char* xpath_string);
+libsrcml.srcml_append_transform_xpath.restype = c_int
+libsrcml.srcml_append_transform_xpath.argtypes = [c_void_p]
+
+# int srcml_append_transform_xslt(struct srcml_archive*, const char* xslt_filename);
+libsrcml.srcml_append_transform_xslt.restype = c_int
+libsrcml.srcml_append_transform_xslt.argtypes = [c_void_p]
+
+# int srcml_append_transform_relaxng(struct srcml_archive*, const char* relaxng_filename);
+libsrcml.srcml_append_transform_relaxng.restype = c_int
+libsrcml.srcml_append_transform_relaxng.argtypes = [c_void_p]
+
+# int srcml_apply_transforms(struct srcml_archive* iarchive, struct srcml_archive* oarchive);
+libsrcml.srcml_apply_transforms.restype = c_int
+libsrcml.srcml_apply_transforms.argtypes = [c_void_p, c_void_p]
+
 # srcml_archive wrapper
 class srcml_archive :
 
@@ -233,6 +253,21 @@ class srcml_archive :
          if unit != None :
              return srcml_unit(0, unit)
          return None
+
+    def clear_transforms(self) :
+        check_return(libsrcml.srcml_clear_transforms(self.archive))
+
+    def append_transform_xpath(self, xpath_string) :
+        check_return(libsrcml.srcml_append_transform_xpath(self.archive, xpath_string))
+
+    def append_transform_xslt(self, xslt_filename) :
+        check_return(libsrcml.srcml_append_transform_xslt(self.archive, xslt_filename))
+
+    def append_transform_relaxng(self, relaxng_filename) :
+        check_return(libsrcml.srcml_append_transform_relaxng(self.archive, relaxng_filename))
+
+    def apply_transforms(self, oarchive) :
+        check_return(libsrcml.srcml_apply_transforms(self.archive, oarchive))
 
     def close(self) :
         libsrcml.srcml_close_archive(self.archive)
