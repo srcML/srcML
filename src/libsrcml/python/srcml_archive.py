@@ -20,6 +20,9 @@ libsrcml.srcml_write_open_filename.argtypes = [c_void_p, c_char_p]
 libsrcml.srcml_write_open_memory.restype = c_int
 libsrcml.srcml_write_open_memory.argtypes = [c_void_p, c_void_p, c_void_p]
 
+# int srcml_write_open_FILE    (struct srcml_archive*, FILE* srcml_file);
+# int srcml_write_open_fd      (struct srcml_archive*, int srcml_fd);
+
 # int srcml_read_open_filename(struct srcml_archive*, const char* srcml_filename);
 libsrcml.srcml_read_open_filename.restype = c_int
 libsrcml.srcml_read_open_filename.argtypes = [c_void_p, c_char_p]
@@ -27,6 +30,9 @@ libsrcml.srcml_read_open_filename.argtypes = [c_void_p, c_char_p]
 # int srcml_read_open_memory  (struct srcml_archive*, const char* buffer, size_t buffer_size);
 libsrcml.srcml_read_open_memory.restype = c_int
 libsrcml.srcml_read_open_memory.argtypes = [c_void_p, c_char_p, c_int]
+
+# int srcml_read_open_FILE    (struct srcml_archive*, FILE* srcml_file);
+# int srcml_read_open_fd      (struct srcml_archive*, int srcml_fd);
 
 # void srcml_free_archive(struct srcml_archive* archive);
 libsrcml.srcml_free_archive.restype = None
