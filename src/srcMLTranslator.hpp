@@ -83,18 +83,6 @@ public:
         );
 
     // constructor
-    srcMLTranslator(int language,                // programming language of source code
-                    const char* src_encoding,    // text encoding of source code
-                    const char* xml_encoding,    // xml encoding of result srcML file
-                    OPTION_TYPE op,             // many and varied options
-                    const char* directory,       // root unit directory
-                    const char* filename,        // root unit filename
-                    const char* version,         // root unit version
-                    const char* uri[],           // uri prefixes
-                    int tabsize                  // size of tabs
-        );
-
-    // constructor
     srcMLTranslator(int language,
                     const char* src_encoding,
                     const char* xml_encoding,
@@ -133,10 +121,6 @@ public:
 
     srcMLTranslatorCore * getTranslator() {
         return translator;
-    }
-
-    xmlBuffer * getBuffer() {
-        return output_buffer;
     }
 
 private:
