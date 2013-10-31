@@ -140,7 +140,7 @@ libsrcml.srcml_check_language.restype = c_int
 libsrcml.srcml_check_language.argtypes = [c_char_p]
 
 # const char** srcml_language_list();
-libsrcml.srcml_language_list.restype = c_void_p
+libsrcml.srcml_language_list.restype = type(ctypes.pointer(c_char_p()))
 libsrcml.srcml_language_list.argtypes = []
 
 # const char* srcml_check_extension(const char* filename);
@@ -228,7 +228,17 @@ def check_language(language) :
     return libsrcml.srcml_check_language(language)
 
 def language_list() :
-    return ["C", "C++", "C#", "Java"]
+
+    list = libsrcml.srcml_language_list()
+
+    ret = []
+
+    i = 0
+    while list[i] != None :
+        ret.append(list[i])
+        i = i + 1
+
+    return ret
 
 def check_extension(filename) :
     return libsrcml.srcml_check_extension()
