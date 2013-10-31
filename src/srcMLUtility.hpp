@@ -77,12 +77,10 @@ public:
 
     // extract (intact) current unit as XML
     void extract_xml(const char* ofilename, int unit = 0);
-    const char * extract_xml(int unit);
 
     // extract (intact) current unit as text
     void extract_text(const char* to_dir, const char* ofilename, int unit = 0);
     void extract_text(xmlOutputBufferPtr output_buffer, int unit = 0);
-    const char * extract_text(int unit = 0);
 
     // extract a particular srcML version from srcDiff format
     void extract_diff_xml(const char* ofilename, int unit, const char* version);
@@ -152,28 +150,5 @@ public:
 
     int size;
 };
-
-extern "C" {
-
-    // constructor
-    srcMLUtility * srcml_utility_file_new(const char* infilename, const char* encoding, OPTION_TYPE op, const char* diff_version = "");
-    srcMLUtility * srcml_utility_memory_new(const char * buffer, int size, const char* encoding, OPTION_TYPE op, const char* diff_version = "");
-
-    // extract (intact) current unit as text
-    void srcml_extract_text_file(srcMLUtility * su, const char* to_dir, const char* ofilename, int unit);
-    const char * srcml_extract_text_buffer(srcMLUtility * su, int unit);
-
-    // count of nested units
-    int srcml_unit_count(srcMLUtility * su, FILE* output);
-
-    // extract (intact) current unit as XML
-    //void srcml_extract_xml_file(const char* ofilename, int unit);
-    const char * srcml_extract_xml_buffer(srcMLUtility * su, int unit);
-
-    const char * srcml_long_info(srcMLUtility * su);
-
-    void srcml_utility_delete(srcMLUtility * su);
-
-}
 
 #endif
