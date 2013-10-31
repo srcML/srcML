@@ -42,11 +42,6 @@ public:
     srcMLTranslator(int language, const char* srcml_filename, OPTION_TYPE& op);
 
     // constructor
-    srcMLTranslator(int language, xmlBuffer* output_buffer, OPTION_TYPE& op);
-
-    srcMLTranslator(int language, OPTION_TYPE op);
-
-    // constructor
     srcMLTranslator(int language,
                     const char* src_encoding,
                     const char* xml_encoding,

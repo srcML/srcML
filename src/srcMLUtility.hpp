@@ -77,12 +77,10 @@ public:
 
     // extract (intact) current unit as XML
     void extract_xml(const char* ofilename, int unit = 0);
-    const char * extract_xml(int unit);
 
     // extract (intact) current unit as text
     void extract_text(const char* to_dir, const char* ofilename, int unit = 0);
     void extract_text(xmlOutputBufferPtr output_buffer, int unit = 0);
-    const char * extract_text(int unit = 0);
 
     // extract a particular srcML version from srcDiff format
     void extract_diff_xml(const char* ofilename, int unit, const char* version);
