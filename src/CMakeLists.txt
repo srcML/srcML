@@ -73,6 +73,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     set(LIBREGEX_LIBRARY regex)
 endif()
 
+include_directories(/usr/local/include)
 include_directories(C:/antlr/277/include/antlr)
 include_directories(. libsrcml)
 
