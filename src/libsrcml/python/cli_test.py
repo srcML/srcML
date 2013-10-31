@@ -1,9 +1,22 @@
 import libsrcml
 
-# test api
-print libsrcml.language_list()
-print str(libsrcml.version_number())
-print libsrcml.version_string()
+test_count = 0
+error_count = 0
+
+def verify_test(input, output) :
+
+    globals()['test_count'] += 1
+
+    if input != output :
+        print "input|" + input + "|"
+        print "output|" + output + "|"
+        globals()['error_count'] += 1
+
+# test language
+verify_test("['C', 'C++', 'C#', 'Java']", str(libsrcml.language_list()))
+
+verify_test("10000", str(libsrcml.version_number()))
+verify_test("0.9", libsrcml.version_string())
 
 archive = libsrcml.srcml_archive()
 archive.set_filename("project")
