@@ -13,11 +13,11 @@ archive.set_version("1.0")
 archive.write_open_memory()
 
 unit = libsrcml.srcml_unit(archive)
-unit.parse_filename("a.cpp")
-#try :
-archive.write_unit(unit)
-#except libsrcml.srcMLException as e:
-#     print e
+try :
+    unit.parse_filename("a.cpp")
+    archive.write_unit(unit)
+except libsrcml.srcMLException as e :
+    print str(e) + " - File does not exist"
 
 unit = libsrcml.srcml_unit(archive)
 unit.set_filename("b.cpp")
