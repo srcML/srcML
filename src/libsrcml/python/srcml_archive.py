@@ -21,7 +21,12 @@ libsrcml.srcml_write_open_memory.restype = c_int
 libsrcml.srcml_write_open_memory.argtypes = [c_void_p, c_void_p, c_void_p]
 
 # int srcml_write_open_FILE    (struct srcml_archive*, FILE* srcml_file);
+libsrcml.srcml_write_open_FILE.restype = c_int
+libsrcml.srcml_write_open_FILE.argtypes = [c_void_p, c_void_p]
+
 # int srcml_write_open_fd      (struct srcml_archive*, int srcml_fd);
+libsrcml.srcml_write_open_fd.restype = c_int
+libsrcml.srcml_write_open_fd.argtypes = [c_void_p, c_int]
 
 # int srcml_read_open_filename(struct srcml_archive*, const char* srcml_filename);
 libsrcml.srcml_read_open_filename.restype = c_int
@@ -32,7 +37,12 @@ libsrcml.srcml_read_open_memory.restype = c_int
 libsrcml.srcml_read_open_memory.argtypes = [c_void_p, c_char_p, c_int]
 
 # int srcml_read_open_FILE    (struct srcml_archive*, FILE* srcml_file);
+libsrcml.srcml_read_open_FILE.restype = c_int
+libsrcml.srcml_read_open_FILE.argtypes = [c_void_p, c_void_p]
+
 # int srcml_read_open_fd      (struct srcml_archive*, int srcml_fd);
+libsrcml.srcml_read_open_filename.restype = c_int
+libsrcml.srcml_read_open_filename.argtypes = [c_void_p, c_int]
 
 # void srcml_free_archive(struct srcml_archive* archive);
 libsrcml.srcml_free_archive.restype = None
@@ -41,7 +51,6 @@ libsrcml.srcml_free_archive.argtypes = [c_void_p]
 # void srcml_close_archive(struct srcml_archive*);
 libsrcml.srcml_close_archive.restype = None
 libsrcml.srcml_close_archive.argtypes = [c_void_p]
-
 
 # int srcml_archive_set_encoding  (struct srcml_archive*, const char* encoding);
 libsrcml.srcml_archive_set_encoding.restype = c_int
