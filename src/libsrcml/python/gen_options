@@ -1,0 +1,3 @@
+#!/bin/bash
+
+src2srcml ../srcml.h | srcml2src --xpath "//cpp:define | //src:comment[following-sibling::*[1][self::cpp:define]]" | srcml2src -0 | tr "\0" "\n" | tail +2 | sed "s/#define *//" | sed "s/ [^ ]/ =&/" | sed "s/\/[*]* =/\#/" | sed "s/ *\*\///"

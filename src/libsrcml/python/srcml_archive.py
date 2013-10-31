@@ -20,6 +20,14 @@ libsrcml.srcml_write_open_filename.argtypes = [c_void_p, c_char_p]
 libsrcml.srcml_write_open_memory.restype = c_int
 libsrcml.srcml_write_open_memory.argtypes = [c_void_p, c_void_p, c_void_p]
 
+# int srcml_write_open_FILE    (struct srcml_archive*, FILE* srcml_file);
+libsrcml.srcml_write_open_FILE.restype = c_int
+libsrcml.srcml_write_open_FILE.argtypes = [c_void_p, c_void_p]
+
+# int srcml_write_open_fd      (struct srcml_archive*, int srcml_fd);
+libsrcml.srcml_write_open_fd.restype = c_int
+libsrcml.srcml_write_open_fd.argtypes = [c_void_p, c_int]
+
 # int srcml_read_open_filename(struct srcml_archive*, const char* srcml_filename);
 libsrcml.srcml_read_open_filename.restype = c_int
 libsrcml.srcml_read_open_filename.argtypes = [c_void_p, c_char_p]
@@ -28,6 +36,14 @@ libsrcml.srcml_read_open_filename.argtypes = [c_void_p, c_char_p]
 libsrcml.srcml_read_open_memory.restype = c_int
 libsrcml.srcml_read_open_memory.argtypes = [c_void_p, c_char_p, c_int]
 
+# int srcml_read_open_FILE    (struct srcml_archive*, FILE* srcml_file);
+libsrcml.srcml_read_open_FILE.restype = c_int
+libsrcml.srcml_read_open_FILE.argtypes = [c_void_p, c_void_p]
+
+# int srcml_read_open_fd      (struct srcml_archive*, int srcml_fd);
+libsrcml.srcml_read_open_filename.restype = c_int
+libsrcml.srcml_read_open_filename.argtypes = [c_void_p, c_int]
+
 # void srcml_free_archive(struct srcml_archive* archive);
 libsrcml.srcml_free_archive.restype = None
 libsrcml.srcml_free_archive.argtypes = [c_void_p]
@@ -35,7 +51,6 @@ libsrcml.srcml_free_archive.argtypes = [c_void_p]
 # void srcml_close_archive(struct srcml_archive*);
 libsrcml.srcml_close_archive.restype = None
 libsrcml.srcml_close_archive.argtypes = [c_void_p]
-
 
 # int srcml_archive_set_encoding  (struct srcml_archive*, const char* encoding);
 libsrcml.srcml_archive_set_encoding.restype = c_int
@@ -121,6 +136,34 @@ libsrcml.srcml_write_unit.argtypes = [c_void_p, c_void_p]
 libsrcml.srcml_read_unit.restype = c_void_p
 libsrcml.srcml_read_unit.argtypes = [c_void_p]
 
+# int srcml_skip_unit(struct srcml_archive*);
+libsrcml.srcml_skip_unit.restype = c_int
+libsrcml.srcml_skip_unit.argtypes = [c_void_p]
+
+# struct srcml_unit* srcml_read_unit_position(struct srcml_archive*, int pos);
+libsrcml.srcml_read_unit_position.restype = c_void_p
+libsrcml.srcml_read_unit_position.argtypes = [c_void_p, c_int]
+
+# int srcml_clear_transforms(struct srcml_archive*);
+libsrcml.srcml_clear_transforms.restype = c_int
+libsrcml.srcml_clear_transforms.argtypes = [c_void_p]
+
+# int srcml_append_transform_xpath(struct srcml_archive*, const char* xpath_string);
+libsrcml.srcml_append_transform_xpath.restype = c_int
+libsrcml.srcml_append_transform_xpath.argtypes = [c_void_p]
+
+# int srcml_append_transform_xslt(struct srcml_archive*, const char* xslt_filename);
+libsrcml.srcml_append_transform_xslt.restype = c_int
+libsrcml.srcml_append_transform_xslt.argtypes = [c_void_p]
+
+# int srcml_append_transform_relaxng(struct srcml_archive*, const char* relaxng_filename);
+libsrcml.srcml_append_transform_relaxng.restype = c_int
+libsrcml.srcml_append_transform_relaxng.argtypes = [c_void_p]
+
+# int srcml_apply_transforms(struct srcml_archive* iarchive, struct srcml_archive* oarchive);
+libsrcml.srcml_apply_transforms.restype = c_int
+libsrcml.srcml_apply_transforms.argtypes = [c_void_p, c_void_p]
+
 # srcml_archive wrapper
 class srcml_archive :
 
@@ -140,11 +183,23 @@ class srcml_archive :
         self.size = c_int()
         check_return(libsrcml.srcml_write_open_memory(self.archive, pointer(self.buffer), pointer(self.size)))
 
+    def write_open_FILE(self, srcml_file) :
+        check_return(libsrcml.srcml_write_open_FILE(self.archive, srcml_file))
+
+    def write_open_fd(self, srcml_fd) :
+        check_return(libsrcml.srcml_write_open_fd(self.archive, srcml_fd))
+
     def read_open_filename(self, srcml_filename) :
         check_return(libsrcml.srcml_read_open_filename(self.archive, srcml_filename))
 
     def read_open_memory(self, buffer) :
         check_return(libsrcml.srcml_read_open_memory(self.archive, buffer, len(buffer)))
+
+    def read_open_FILE(self, srcml_file) :
+        check_return(libsrcml.srcml_read_open_FILE(self.archive, srcml_file))
+
+    def read_open_fd(self, srcml_fd) :
+        check_return(libsrcml.srcml_read_open_fd(self.archive, srcml_fd))
 
     def set_encoding(self, encoding) :
         check_return(libsrcml.srcml_archive_set_encoding(self.archive, encoding))
@@ -215,6 +270,31 @@ class srcml_archive :
         if unit != None :
             return srcml_unit(0, unit)
         return None
+
+    def skip_unit(self) :
+        check_return(libsrcml.srcml_skip_unit(self.archive))
+
+    def read_unit_position(self, pos) :
+         unit = libsrcml.srcml_read_unit_position(self.archive, pos)
+
+         if unit != None :
+             return srcml_unit(0, unit)
+         return None
+
+    def clear_transforms(self) :
+        check_return(libsrcml.srcml_clear_transforms(self.archive))
+
+    def append_transform_xpath(self, xpath_string) :
+        check_return(libsrcml.srcml_append_transform_xpath(self.archive, xpath_string))
+
+    def append_transform_xslt(self, xslt_filename) :
+        check_return(libsrcml.srcml_append_transform_xslt(self.archive, xslt_filename))
+
+    def append_transform_relaxng(self, relaxng_filename) :
+        check_return(libsrcml.srcml_append_transform_relaxng(self.archive, relaxng_filename))
+
+    def apply_transforms(self, oarchive) :
+        check_return(libsrcml.srcml_apply_transforms(self.archive, oarchive))
 
     def close(self) :
         libsrcml.srcml_close_archive(self.archive)
