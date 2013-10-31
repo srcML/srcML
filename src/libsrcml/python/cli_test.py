@@ -41,6 +41,9 @@ srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 """
 
 # filename
+file = open("a.cpp", "w")
+gen = file.write("a;\n")
+file.close()
 archive = libsrcml.srcml_archive()
 archive.write_open_filename("project.xml")
 unit = libsrcml.srcml_unit(archive)
