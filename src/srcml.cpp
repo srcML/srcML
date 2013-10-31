@@ -153,7 +153,7 @@ const int SRCML_COMMAND_CPP_MARKUP_ELSE = 1<<5;
 const int SRCML_COMMAND_QUIET = 1<<6;
 const int SRCML_COMMAND_VERBOSE = 1<<7;
 const int SRCML_COMMAND_VERSION = 1<<8;
-const int SRCML_COMMAND_DEBUG = 1<<9;
+
 const int SRCML_COMMAND_EXPRESSION = 1<<10;
 const int SRCML_COMMAND_INTERACTIVE = 1<<11;
 const int SRCML_COMMAND_XML = 1<<12;
@@ -275,7 +275,7 @@ int main(int argc, char * argv[]) {
 
     src2srcml_options.add_options()
       ("archive,r", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_ARCHIVE>), "store output in a srcML archive, default for multiple input files")
-      ("debug,g", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DEBUG>), "markup translation errors, namespace http://www.sdml.info/srcML/srcerr")
+      ("debug,g", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_DEBUG>), "markup translation errors, namespace http://www.sdml.info/srcML/srcerr")
       ("encoding,x", prog_opts::value<std::string>()->notifier(&option_encoding),"set the output XML encoding to ENC (default:  UTF-8)")
       ("expression,e", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_EXPRESSION>), "expression mode for translating a single expression not in a statement")
       ("files-from", prog_opts::value<std::string>()->notifier(&option_files_from), "read list of source file names, either FILE or URI, from arg to form a srcML archive")

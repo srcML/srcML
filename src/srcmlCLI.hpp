@@ -40,7 +40,7 @@
 #define SRCML_COMMAND_QUIET             1<<6
 #define SRCML_COMMAND_VERBOSE           1<<7
 #define SRCML_COMMAND_VERSION           1<<8
-#define SRCML_COMMAND_DEBUG             1<<9
+
 #define SRCML_COMMAND_EXPRESSION        1<<10
 #define SRCML_COMMAND_INTERACTIVE       1<<11
 #define SRCML_COMMAND_XML               1<<12
