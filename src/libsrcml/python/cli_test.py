@@ -3,12 +3,12 @@ import libsrcml
 test_count = 0
 error_count = 0
 
-def verify_test(input, output) :
+def verify_test(correct, output) :
 
     globals()['test_count'] += 1
 
-    if input != output :
-        print "input|" + input + "|"
+    if correct != output :
+        print "correct|" + correct + "|"
         print "output|" + output + "|"
         globals()['error_count'] += 1
 
@@ -16,13 +16,18 @@ def verify_test(input, output) :
 verify_test("['C', 'C++', 'C#', 'Java']", str(libsrcml.language_list()))
 
 verify_test("10000", str(libsrcml.version_number()))
-verify_test("0.9", libsrcml.version_string())
+verify_test("libsrcml 0.9", libsrcml.version_string())
 
 archive = libsrcml.srcml_archive()
 archive.set_filename("project")
 archive.set_language("C++")
 archive.set_directory("dir")
 archive.set_version("1.0")
+verify_test("project", archive.get_filename())
+verify_test("C++", archive.get_language())
+verify_test("dir", archive.get_directory())
+verify_test("1.0", archive.get_version())
+
 archive.write_open_memory()
 
 unit = libsrcml.srcml_unit(archive)
@@ -48,11 +53,6 @@ archive.close()
 
 print archive.srcML()
 srcml = archive.srcML()
-
-print archive.get_filename()
-print archive.get_language()
-print archive.get_directory()
-print archive.get_version()
 
 archive = libsrcml.srcml_archive()
 archive.read_open_memory(srcml)
