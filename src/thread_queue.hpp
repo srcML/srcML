@@ -17,7 +17,6 @@
 */
 
 #include <pthread.h>
-#include <stdio.h>
 
 #ifndef THREAD_QUEUE_H
 #define THREAD_QUEUE_H
@@ -44,17 +43,6 @@ public:
         pthread_cond_signal(&cond_empty);
     }
 
-    void pop() {
-        pthread_mutex_lock(&mutex);
-        while (used == 0)
-            pthread_cond_wait(&cond_empty, &mutex);
-        ++front_index;
-        front_index %= Capacity;
-        --used;
-        pthread_mutex_unlock(&mutex);
-        pthread_cond_signal(&cond_full);
-    }
-
     void pop(Type& place) {
         pthread_mutex_lock(&mutex);
         while (used == 0)
@@ -65,16 +53,6 @@ public:
         --used;
         pthread_mutex_unlock(&mutex);
         pthread_cond_signal(&cond_full);
-    }
-
-    const Type& front() {
-        pthread_mutex_lock(&mutex);
-        while (used == 0)
-            pthread_cond_wait(&cond_empty, &mutex);
-        Type* pvalue = &(buffer[front_index]);
-        pthread_mutex_unlock(&mutex);
-        pthread_cond_broadcast(&cond_full);
-        return *pvalue;
     }
 
     int size() {
