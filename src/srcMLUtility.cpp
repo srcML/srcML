@@ -52,8 +52,6 @@
 
 #include "SAX2ExtractUnitsSrc.hpp"
 
-#include "SAX2UnitDOMRelaxNG.hpp"
-
 #include "srcexfun.hpp"
 
 #include <libexslt/exslt.h>
