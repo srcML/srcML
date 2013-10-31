@@ -1,7 +1,7 @@
 import os
-from ctypes import cdll, c_int, c_char_p, c_void_p
+from ctypes import cdll, c_int, c_char_p, POINTER
 from exception import *
-import ctypes
+
 LIBSRCML_PATH=""
 if os.path.exists('../../../bin/libsrcml.dylib') :
     LIBSRCML_PATH="../../../bin/libsrcml.dylib"
@@ -140,7 +140,7 @@ libsrcml.srcml_check_language.restype = c_int
 libsrcml.srcml_check_language.argtypes = [c_char_p]
 
 # const char** srcml_language_list();
-libsrcml.srcml_language_list.restype = type(ctypes.pointer(c_char_p()))
+libsrcml.srcml_language_list.restype = POINTER(c_char_p)
 libsrcml.srcml_language_list.argtypes = []
 
 # const char* srcml_check_extension(const char* filename);
