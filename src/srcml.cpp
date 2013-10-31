@@ -48,9 +48,16 @@ struct ParseRequest {
         buffer.swap(other.buffer);
     }
 
+    // empty ParseRequests indicate termination
+    bool empty() const {
+        return filename.empty() && buffer.empty();
+    }
+
     std::string filename;
     std::vector<char> buffer;
 };
+
+ParseRequest NullParseRequest;
 
 // Global Options Function
 void set_globals(const struct srcml_request_t srcml_request);
