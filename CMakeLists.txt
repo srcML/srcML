@@ -110,7 +110,7 @@ COMMAND ${GREP} '=' src/srcMLParserTokenTypes.hpp | ${SED} -e 's/,//g' -e 's/= /
 )
 
 set(PARSER_SRC src/srcMLParser.cpp;src/KeywordLexer.cpp;src/srcMLOutput.cpp;src/srcMLTranslatorOutput.cpp;src/Mode.cpp;src/CommentTextLexer.cpp;src/srcMLParserTokenTypesMacro.hpp)
-set(SRCMLUTILITY_SRC src/srcMLUtility.cpp;src/SAX2ExtractUnitsSrc.cpp;src/SAX2Utilities.cpp;src/SAX2UnitDOM.cpp;src/SAX2UnitDOMRelaxNG.cpp;src/srcexfun.cpp)
+set(SRCMLUTILITY_SRC src/srcMLUtility.cpp;src/SAX2ExtractUnitsSrc.cpp;src/SAX2Utilities.cpp;src/srcexfun.cpp)
 set(TRANSLATOR_SRC src/srcMLTranslator.cpp;src/srcMLTranslatorCore.cpp;src/UTF8CharBuffer.cpp;src/Language.cpp;src/URIStream.cpp;src/libxml_archive_read.cpp;src/libxml_archive_write.cpp)
 set(SRCMLAPPS_SRC src/srcmlapps.cpp)
 if(LIBSRCML_SAX2_ENABLED)
