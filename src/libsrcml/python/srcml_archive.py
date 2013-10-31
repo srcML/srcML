@@ -183,11 +183,23 @@ class srcml_archive :
         self.size = c_int()
         check_return(libsrcml.srcml_write_open_memory(self.archive, pointer(self.buffer), pointer(self.size)))
 
+    def write_open_FILE(self, srcml_file) :
+        check_return(libsrcml.srcml_write_open_FILE(self.archive, srcml_file))
+
+    def write_open_fd(self, srcml_fd) :
+        check_return(libsrcml.srcml_write_open_fd(self.archive, srcml_fd))
+
     def read_open_filename(self, srcml_filename) :
         check_return(libsrcml.srcml_read_open_filename(self.archive, srcml_filename))
 
     def read_open_memory(self, buffer) :
         check_return(libsrcml.srcml_read_open_memory(self.archive, buffer, len(buffer)))
+
+    def read_open_FILE(self, srcml_file) :
+        check_return(libsrcml.srcml_read_open_FILE(self.archive, srcml_file))
+
+    def read_open_fd(self, srcml_fd) :
+        check_return(libsrcml.srcml_read_open_fd(self.archive, srcml_fd))
 
     def set_encoding(self, encoding) :
         check_return(libsrcml.srcml_archive_set_encoding(self.archive, encoding))
