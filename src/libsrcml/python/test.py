@@ -1,6 +1,7 @@
 import libsrcml
 
 # test api
+print libsrcml.language_list()
 print str(libsrcml.version_number())
 print libsrcml.version_string()
 
