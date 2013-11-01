@@ -289,6 +289,26 @@ archive.close()
 
 verify_test(srcml, oarchive.srcML())
 
+#
+archive = libsrcml.srcml_archive()
+archive.read_open_memory(srcml)
+archive.append_transform_xpath("//src:unit")
+archive.append_transform_xslt("copy.xsl")
+archive.append_transform_relaxng("schema.rng")
+archive.clear_transforms()
+oarchive = libsrcml.srcml_archive()
+oarchive.write_open_memory()
+archive.apply_transforms(oarchive)
+oarchive.close()
+archive.close()
+
+srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+</unit>
+"""
+verify_test(srcml, oarchive.srcML())
+
 # unit set/get
 archive = libsrcml.srcml_archive()
 unit = libsrcml.srcml_unit(archive)
