@@ -33,6 +33,7 @@ verify_test("1.0", archive.get_version())
 archive.close()
 
 # write/parse tests
+src = "a;\n"
 srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src">
 
@@ -44,7 +45,7 @@ srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
 # filename
 file = open("a.cpp", "w")
-gen = file.write("a;\n")
+gen = file.write(src)
 file.close()
 archive = libsrcml.srcml_archive()
 archive.write_open_filename("project.xml")
@@ -63,12 +64,37 @@ archive = libsrcml.srcml_archive()
 archive.write_open_memory()
 unit = libsrcml.srcml_unit(archive)
 unit.set_language("C++")
-unit.parse_memory("a;\n")
+unit.parse_memory(src)
 archive.write_unit(unit)
 archive.close()
 
 verify_test(srcml, archive.srcML())
 
+# read/unparse
+
+# filename
+file = open("project.xml", "w")
+gen = file.write(srcml)
+file.close()
+archive = libsrcml.srcml_archive()
+archive.read_open_filename("project.xml")
+unit = archive.read_unit()
+unit.unparse_filename("a.cpp")
+archive.write_unit(unit)
+archive.close()
+
+file = open("a.cpp", "r")
+gen = file.read()
+file.close()
+verify_test(src, gen)
+
+# memory
+archive = libsrcml.srcml_archive()
+archive.read_open_memory(srcml)
+unit = archive.read_unit()
+unit.unparse_memory()
+archive.close()
+verify_test(src, unit.src())
 
 # unit set/get
 archive = libsrcml.srcml_archive()
