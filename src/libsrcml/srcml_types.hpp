@@ -109,6 +109,8 @@ struct srcml_archive {
 #endif
   /** xmlParserInputBuffer for reading */
   xmlParserInputBufferPtr input;
+  /** close the input buffer? */
+  bool close_input;
 
   /** an array of transformations to apply */
   std::vector<transform> transformations;

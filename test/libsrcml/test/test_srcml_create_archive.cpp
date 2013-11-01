@@ -69,6 +69,7 @@ int main(int argc, char * argv[]) {
     assert(archive->translator == 0);
     assert(archive->reader == 0);
     assert(archive->input == 0);
+    assert(archive->close_input == 0);
 
     assert(archive->transformations.size() == 0);
 

@@ -1,5 +1,6 @@
 import libsrcml
 import difflib
+import os
 
 test_count = 0
 error_count = 0
@@ -17,7 +18,7 @@ def verify_test(correct, output) :
 verify_test("['C', 'C++', 'C#', 'Java']", str(libsrcml.language_list()))
 
 # test versions
-verify_test(libsrcml.SRCML_VERSION_NUMBER, str(libsrcml.version_number()))
+verify_test(libsrcml.SRCML_VERSION_NUMBER, libsrcml.version_number())
 verify_test(libsrcml.SRCML_VERSION_STRING, libsrcml.version_string())
 
 # test set/get archive
@@ -66,6 +67,7 @@ file = open("project.xml", "r")
 gen = file.read()
 file.close()
 verify_test(srcml, gen)
+os.remove("project.xml")
 
 # memory
 archive = libsrcml.srcml_archive()
@@ -77,6 +79,50 @@ archive.write_unit(unit)
 archive.close()
 
 verify_test(srcml, archive.srcML())
+
+# fd
+file = open("a.cpp", "w")
+gen = file.write("a;\n")
+file.close()
+archive = libsrcml.srcml_archive()
+fd = os.open("project.xml", os.O_WRONLY | os.O_CREAT)
+archive.write_open_fd(fd)
+src_fd = os.open("a.cpp", os.O_RDONLY)
+unit = libsrcml.srcml_unit(archive)
+unit.set_language("C++")
+unit.parse_fd(src_fd)
+archive.write_unit(unit)
+archive.close()
+os.close(src_fd)
+os.close(fd)
+
+file = open("project.xml", "r")
+gen = file.read()
+file.close()
+verify_test(srcml, gen)
+os.remove("project.xml")
+
+# FILE
+#file = open("a.cpp", "w")
+#gen = file.write("a;\n")
+#file.close()
+#archive = libsrcml.srcml_archive()
+#file = open("project.xml", "w")
+#archive.write_open_FILE(file)
+#src_file = open("a.cpp", "r")
+#unit = libsrcml.srcml_unit(archive)
+#unit.set_language("C++")
+#unit.parse_FILE(src_file)
+#archive.write_unit(unit)
+#archive.close()
+#close(src_file)
+#close(file)
+
+#file = open("project.xml", "r")
+#gen = file.read()
+#file.close()
+#verify_test(srcml, gen)
+#os.remove("project.xml")
 
 # read/unparse
 
@@ -94,6 +140,7 @@ file = open("a.cpp", "r")
 gen = file.read()
 file.close()
 verify_test(src, gen)
+os.remove("a.cpp")
 
 # memory
 archive = libsrcml.srcml_archive()
@@ -102,6 +149,21 @@ unit = archive.read_unit()
 unit.unparse_memory()
 archive.close()
 verify_test(src, unit.src())
+
+# fd
+file = open("project.xml", "w")
+gen = file.write(srcml)
+file.close()
+archive = libsrcml.srcml_archive()
+fd = os.open("project.xml", os.O_RDONLY)
+archive.read_open_fd(fd)
+unit = archive.read_unit()
+src_fd = os.open("a.cpp", os.O_WRONLY | os.O_CREAT)
+unit.unparse_filename("a.cpp")
+archive.close()
+os.close(src_fd)
+os.close(fd)
+os.remove("a.cpp")
 
 # unit set/get
 archive = libsrcml.srcml_archive()
