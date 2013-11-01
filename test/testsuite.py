@@ -111,7 +111,7 @@ def extract_all(src, encoding):
 
         archive = srcml_archive()
         archive.read_open_memory(src)
-        archive.set_encoding(encoding)
+        #archive.set_encoding(encoding)
 
         unit = archive.read_unit()
         while unit != None :
@@ -493,6 +493,7 @@ try:
                                         fxmlns = defaultxmlns(getfullxmlns_executable(filexml))
 
                                 if use_exec :
+					xmlns = defaultxmlns(getfullxmlns_executable(filexml))
                                         while len(xmlns) == 0 :
 						xmlns = defaultxmlns(getfullxmlns_executable(filexml))
                                 else :

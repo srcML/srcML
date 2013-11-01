@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="ISO-8859-1"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="problem">
 
 <unit>
 <comment type="block">/*
- * Ã¤Ã¶Ã¼Ã„Ã–Ãœ
+ * äöüÄÖÜ
  * A comment 
  */</comment>
 </unit>
@@ -11,7 +11,7 @@
 <!-- Taken from linux kernel source sys.c -->
 <unit>
 <comment type="block">/*
- * Samma pÃ¥ svenska..
+ * Samma på svenska..
 */</comment>
 </unit>
 

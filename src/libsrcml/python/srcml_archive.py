@@ -41,8 +41,8 @@ libsrcml.srcml_read_open_FILE.restype = c_int
 libsrcml.srcml_read_open_FILE.argtypes = [c_void_p, c_void_p]
 
 # int srcml_read_open_fd      (struct srcml_archive*, int srcml_fd);
-libsrcml.srcml_read_open_filename.restype = c_int
-libsrcml.srcml_read_open_filename.argtypes = [c_void_p, c_int]
+libsrcml.srcml_read_open_fd.restype = c_int
+libsrcml.srcml_read_open_fd.argtypes = [c_void_p, c_int]
 
 # void srcml_free_archive(struct srcml_archive* archive);
 libsrcml.srcml_free_archive.restype = None

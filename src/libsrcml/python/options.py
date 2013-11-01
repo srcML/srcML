@@ -1,5 +1,5 @@
 # number representing libsrcml version
-SRCML_VERSION_NUMBER = 1
+SRCML_VERSION_NUMBER = 10000
 # string containing libsrcml version
 SRCML_VERSION_STRING = "libsrcml 0.9"
 # srcML language not set

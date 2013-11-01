@@ -9,16 +9,18 @@ def verify_test(correct, output) :
     globals()['test_count'] += 1
 
     if correct != output :
-        for line in difflib.unified_diff(correct.split("\n"), output.split("\n")) :
+        for line in difflib.unified_diff(str(correct).split("\n"), str(output).split("\n")) :
             print line
         globals()['error_count'] += 1
 
 # test language
 verify_test("['C', 'C++', 'C#', 'Java']", str(libsrcml.language_list()))
 
-verify_test("10000", str(libsrcml.version_number()))
-verify_test("libsrcml 0.9", libsrcml.version_string())
+# test versions
+verify_test(libsrcml.SRCML_VERSION_NUMBER, str(libsrcml.version_number()))
+verify_test(libsrcml.SRCML_VERSION_STRING, libsrcml.version_string())
 
+# test set/get archive
 archive = libsrcml.srcml_archive()
 archive.set_filename("project")
 archive.set_language("C++")
@@ -28,9 +30,18 @@ verify_test("project", archive.get_filename())
 verify_test("C++", archive.get_language())
 verify_test("dir", archive.get_directory())
 verify_test("1.0", archive.get_version())
+
+archive.set_option(1)
+archive.set_option(2)
+verify_test(3, archive.get_options())
+archive.clear_option(2)
+verify_test(1, archive.get_options())
+archive.set_all_options(2)
+verify_test(2, archive.get_options())
 archive.close()
 
 # write/parse tests
+src = "a;\n"
 srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src">
 
@@ -42,7 +53,7 @@ srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
 # filename
 file = open("a.cpp", "w")
-gen = file.write("a;\n")
+gen = file.write(src)
 file.close()
 archive = libsrcml.srcml_archive()
 archive.write_open_filename("project.xml")
@@ -61,47 +72,57 @@ archive = libsrcml.srcml_archive()
 archive.write_open_memory()
 unit = libsrcml.srcml_unit(archive)
 unit.set_language("C++")
-unit.parse_memory("a;\n")
+unit.parse_memory(src)
 archive.write_unit(unit)
 archive.close()
 
 verify_test(srcml, archive.srcML())
 
-archive = libsrcml.srcml_archive()
-archive.write_open_memory()
-try :
-    unit = libsrcml.srcml_unit(archive)
-    unit.parse_filename("a.cpp")
-    archive.write_unit(unit)
-except libsrcml.srcMLException as e :
-    print str(e) + " - File does not exist"
+# read/unparse
 
+# filename
+file = open("project.xml", "w")
+gen = file.write(srcml)
+file.close()
+archive = libsrcml.srcml_archive()
+archive.read_open_filename("project.xml")
+unit = archive.read_unit()
+unit.unparse_filename("a.cpp")
+archive.close()
+
+file = open("a.cpp", "r")
+gen = file.read()
+file.close()
+verify_test(src, gen)
+
+# memory
+archive = libsrcml.srcml_archive()
+archive.read_open_memory(srcml)
+unit = archive.read_unit()
+unit.unparse_memory()
+archive.close()
+verify_test(src, unit.src())
+
+# unit set/get
+archive = libsrcml.srcml_archive()
 unit = libsrcml.srcml_unit(archive)
 unit.set_filename("b.cpp")
 unit.set_language("C")
 unit.set_directory("directory")
 unit.set_version("1.1")
-unit.parse_memory("b;")
-print unit.get_filename()
-print unit.get_language()
-print unit.get_directory()
-print unit.get_version()
-archive.write_unit(unit)
-
+verify_test("b.cpp", unit.get_filename())
+verify_test("C", unit.get_language())
+verify_test("directory", unit.get_directory())
+verify_test("1.1", unit.get_version())
 archive.close()
 
-print archive.srcML()
-srcml = archive.srcML()
-
+# exception
 archive = libsrcml.srcml_archive()
-archive.read_open_memory(srcml)
-clone = archive.clone()
-
-unit = archive.read_unit()
-
-unit.unparse_memory()
+test = ""
+try :
+    archive.write_unit(unit)
+    
+except libsrcml.srcMLException as e :
+    test = "Exception"
 archive.close()
-clone.close()
-
-print unit.src()
-print unit.get_xml()
+verify_test("Exception", test)
