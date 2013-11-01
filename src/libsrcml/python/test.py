@@ -9,7 +9,7 @@ def verify_test(correct, output) :
     globals()['test_count'] += 1
 
     if correct != output :
-        for line in difflib.unified_diff(correct.split("\n"), output.split("\n")) :
+        for line in difflib.unified_diff(str(correct).split("\n"), str(output).split("\n")) :
             print line
         globals()['error_count'] += 1
 
@@ -17,8 +17,8 @@ def verify_test(correct, output) :
 verify_test("['C', 'C++', 'C#', 'Java']", str(libsrcml.language_list()))
 
 # test versions
-verify_test("10000", str(libsrcml.version_number()))
-verify_test("libsrcml 0.9", libsrcml.version_string())
+verify_test(libsrcml.SRCML_VERSION_NUMBER, str(libsrcml.version_number()))
+verify_test(libsrcml.SRCML_VERSION_STRING, libsrcml.version_string())
 
 # test set/get archive
 archive = libsrcml.srcml_archive()
@@ -30,6 +30,14 @@ verify_test("project", archive.get_filename())
 verify_test("C++", archive.get_language())
 verify_test("dir", archive.get_directory())
 verify_test("1.0", archive.get_version())
+
+archive.set_option(1)
+archive.set_option(2)
+verify_test(3, archive.get_options())
+archive.clear_option(2)
+verify_test(1, archive.get_options())
+archive.set_all_options(2)
+verify_test(2, archive.get_options())
 archive.close()
 
 # write/parse tests
