@@ -244,6 +244,13 @@ unit.unparse_memory()
 archive.close()
 verify_test(src, unit.src())
 
+# clone
+archive = libsrcml.srcml_archive()
+archive.set_language("C++")
+clone_archive = archive.clone()
+verify_test("C++", clone_archive.get_language())
+archive.close()
+
 # unit set/get
 archive = libsrcml.srcml_archive()
 unit = libsrcml.srcml_unit(archive)
