@@ -229,10 +229,10 @@ class srcml_archive :
         check_return(libsrcml.srcml_archive_set_tabstop(self.archive, tabstop))
 
     def register_file_extension(self, extension, language) :
-        check_return(libsrcml.srcml_archive_set_tabstop(self.archive, extension, language))
+        check_return(libsrcml.srcml_archive_register_file_extension(self.archive, extension, language))
 
     def register_namespace(self, prefix, ns) :
-        check_return(libsrcml.srcml_archive_set_tabstop(self.archive, prefix, ns))
+        check_return(libsrcml.srcml_archive_register_namespace(self.archive, prefix, ns))
 
     def get_encoding(self) :
         return libsrcml.srcml_archive_get_encoding(self.archive)

@@ -39,7 +39,25 @@ archive.clear_option(2)
 verify_test(1, archive.get_options())
 archive.set_all_options(2)
 verify_test(2, archive.get_options())
+
+archive.set_tabstop(4)
+verify_test(4, archive.get_tabstop())
+
 archive.close()
+
+file = open("a.foo", "w")
+gen = file.write("")
+file.close()
+archive = libsrcml.srcml_archive()
+archive.register_file_extension("foo", "C++")
+archive.register_namespace("s", "http://www.sdml.info/srcML/src")
+archive.write_open_memory()
+unit = libsrcml.srcml_unit(archive)
+unit.parse_filename("a.foo")
+archive.write_unit(unit)
+archive.close()
+os.remove("a.foo")
+verify_test("""<s:unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>""", unit.get_xml())
 
 # write/parse tests
 src = "a;\n"
@@ -83,7 +101,7 @@ verify_test(srcml, archive.srcML())
 
 # fd
 file = open("a.cpp", "w")
-gen = file.write("a;\n")
+gen = file.write(src)
 file.close()
 archive = libsrcml.srcml_archive()
 fd = os.open("project.xml", os.O_WRONLY | os.O_CREAT)
@@ -106,7 +124,7 @@ os.remove("project.xml")
 
 # FILE
 #file = open("a.cpp", "w")
-#gen = file.write("a;\n")
+#gen = file.write(src)
 #file.close()
 #archive = libsrcml.srcml_archive()
 #file = open("project.xml", "w")
