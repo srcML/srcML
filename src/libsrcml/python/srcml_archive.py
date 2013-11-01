@@ -229,10 +229,10 @@ class srcml_archive :
         check_return(libsrcml.srcml_archive_set_tabstop(self.archive, tabstop))
 
     def register_file_extension(self, extension, language) :
-        check_return(libsrcml.srcml_archive_set_tabstop(self.archive, extension, language))
+        check_return(libsrcml.srcml_archive_register_file_extension(self.archive, extension, language))
 
     def register_namespace(self, prefix, ns) :
-        check_return(libsrcml.srcml_archive_set_tabstop(self.archive, prefix, ns))
+        check_return(libsrcml.srcml_archive_register_namespace(self.archive, prefix, ns))
 
     def get_encoding(self) :
         return libsrcml.srcml_archive_get_encoding(self.archive)
@@ -272,7 +272,7 @@ class srcml_archive :
         return None
 
     def skip_unit(self) :
-        check_return(libsrcml.srcml_skip_unit(self.archive))
+        return libsrcml.srcml_skip_unit(self.archive)
 
     def read_unit_position(self, pos) :
          unit = libsrcml.srcml_read_unit_position(self.archive, pos)
@@ -294,7 +294,7 @@ class srcml_archive :
         check_return(libsrcml.srcml_append_transform_relaxng(self.archive, relaxng_filename))
 
     def apply_transforms(self, oarchive) :
-        check_return(libsrcml.srcml_apply_transforms(self.archive, oarchive))
+        check_return(libsrcml.srcml_apply_transforms(self.archive, oarchive.archive))
 
     def close(self) :
         libsrcml.srcml_close_archive(self.archive)
