@@ -67,6 +67,7 @@ file = open("project.xml", "r")
 gen = file.read()
 file.close()
 verify_test(srcml, gen)
+os.remove("a.cpp")
 os.remove("project.xml")
 
 # memory
@@ -100,6 +101,7 @@ file = open("project.xml", "r")
 gen = file.read()
 file.close()
 verify_test(srcml, gen)
+os.remove("a.cpp")
 os.remove("project.xml")
 
 # FILE
@@ -122,6 +124,7 @@ os.remove("project.xml")
 #gen = file.read()
 #file.close()
 #verify_test(srcml, gen)
+#os.remove("a.cpp")
 #os.remove("project.xml")
 
 # read/unparse
@@ -141,6 +144,7 @@ gen = file.read()
 file.close()
 verify_test(src, gen)
 os.remove("a.cpp")
+os.remove("project.xml")
 
 # memory
 archive = libsrcml.srcml_archive()
@@ -159,11 +163,38 @@ fd = os.open("project.xml", os.O_RDONLY)
 archive.read_open_fd(fd)
 unit = archive.read_unit()
 src_fd = os.open("a.cpp", os.O_WRONLY | os.O_CREAT)
-unit.unparse_filename("a.cpp")
+unit.unparse_fd(src_fd)
 archive.close()
 os.close(src_fd)
 os.close(fd)
+
+file = open("a.cpp", "r")
+gen = file.read()
+file.close()
+verify_test(src, gen)
 os.remove("a.cpp")
+os.remove("project.xml")
+
+# FILE
+#file = open("project.xml", "w")
+#gen = file.write(srcml)
+#file.close()
+#archive = libsrcml.srcml_archive()
+#file = open("project.xml", "r")
+#archive.read_open_FILE(file)
+#unit = archive.read_unit()
+#src_file = os.open("a.cpp", "w")
+#unit.unparse_FILE(src_fd)
+#archive.close()
+#os.close(src_fd)
+#os.close(fd)
+
+#file = open("a.cpp", "r")
+#gen = file.read()
+#file.close()
+#verify_test(src, gen)
+#os.remove("a.cpp")
+#os.remove("project.xml")
 
 # unit set/get
 archive = libsrcml.srcml_archive()
