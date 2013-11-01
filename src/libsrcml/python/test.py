@@ -14,9 +14,6 @@ def verify_test(correct, output) :
             print line
         globals()['error_count'] += 1
 
-# test language
-verify_test("['C', 'C++', 'C#', 'Java']", str(libsrcml.language_list()))
-
 # test versions
 verify_test(libsrcml.SRCML_VERSION_NUMBER, libsrcml.version_number())
 verify_test(libsrcml.SRCML_VERSION_STRING, libsrcml.version_string())
@@ -332,3 +329,29 @@ except libsrcml.srcMLException as e :
     test = "Exception"
 archive.close()
 verify_test("Exception", test)
+
+# cleanup_globals
+libsrcml.cleanup_globals()
+
+# test language
+verify_test("['C', 'C++', 'C#', 'Java']", str(libsrcml.language_list()))
+
+libsrcml.set_language("C++")
+libsrcml.set_filename("a.cpp")
+libsrcml.set_directory("directory")
+libsrcml.set_version("version")
+
+verify_test("C++", libsrcml.get_language())
+verify_test("a.cpp", libsrcml.get_filename())
+verify_test("directory", libsrcml.get_directory())
+verify_test("version", libsrcml.get_version())
+
+libsrcml.set_option(1)
+verify_test(1, libsrcml.get_options())
+
+libsrcml.set_all_options(2)
+verify_test(2, libsrcml.get_options())
+
+libsrcml.set_all_options(1 | 2)
+libsrcml.clear_option(2)
+verify_test(1, libsrcml.get_options())
