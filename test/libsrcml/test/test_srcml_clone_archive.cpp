@@ -95,6 +95,7 @@ int main(int argc, char * argv[]) {
     assert(new_archive->translator == 0);
     assert(new_archive->reader == 0);
     assert(new_archive->input == 0);
+    assert(new_archive->close_input == 0);
 
     assert(new_archive->transformations.size() == 0);
 

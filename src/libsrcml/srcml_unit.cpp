@@ -385,6 +385,9 @@ int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
   }
 
   int status = srcml_parse_unit_internal(unit, lang);
+  input->context = 0;
+  input->readcallback = 0;
+  input->closecallback = 0;
   xmlFreeParserInputBuffer(input);
 
   unit->archive->options = save_options;
@@ -431,6 +434,9 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
   }
 
   int status = srcml_parse_unit_internal(unit, lang);
+  input->context = 0;
+  input->readcallback = 0;
+  input->closecallback = 0;
   xmlFreeParserInputBuffer(input);
 
   unit->archive->options = save_options;
