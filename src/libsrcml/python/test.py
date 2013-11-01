@@ -336,6 +336,22 @@ libsrcml.cleanup_globals()
 # test language
 verify_test("['C', 'C++', 'C#', 'Java']", str(libsrcml.language_list()))
 
+file = open("a.cpp", "w")
+file.write("a;\n")
+file.close()
+
+libsrcml.srcml("a.cpp", "project.xml")
+
+file = open("project.xml", "r")
+xml = file.read()
+file.close()
+
+srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="project.xml"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+"""
+verify_test(srcml, xml)
+
 libsrcml.set_language("C++")
 libsrcml.set_filename("a.cpp")
 libsrcml.set_directory("directory")
@@ -355,3 +371,6 @@ verify_test(2, libsrcml.get_options())
 libsrcml.set_all_options(1 | 2)
 libsrcml.clear_option(2)
 verify_test(1, libsrcml.get_options())
+
+libsrcml.set_tabstop(4)
+verify_test(4, libsrcml.get_tabstop())

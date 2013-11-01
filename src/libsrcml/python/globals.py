@@ -172,7 +172,7 @@ libsrcml.srcml_list.restype = POINTER(c_char_p)
 libsrcml.srcml_list.argtypes = [c_char_p]
 
 def srcml(input_filename, output_filename) :
-    libsrcml.srcml(input_filename_output_filename)
+    libsrcml.srcml(input_filename, output_filename)
 
 def set_encoding(encoding) :
     check_return(libsrcml.srcml_set_encoding(encoding))
