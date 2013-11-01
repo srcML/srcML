@@ -80,7 +80,6 @@ archive = libsrcml.srcml_archive()
 archive.read_open_filename("project.xml")
 unit = archive.read_unit()
 unit.unparse_filename("a.cpp")
-archive.write_unit(unit)
 archive.close()
 
 file = open("a.cpp", "r")
