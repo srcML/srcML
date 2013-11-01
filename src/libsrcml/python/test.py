@@ -16,9 +16,11 @@ def verify_test(correct, output) :
 # test language
 verify_test("['C', 'C++', 'C#', 'Java']", str(libsrcml.language_list()))
 
+# test versions
 verify_test("10000", str(libsrcml.version_number()))
 verify_test("libsrcml 0.9", libsrcml.version_string())
 
+# test set/get archive
 archive = libsrcml.srcml_archive()
 archive.set_filename("project")
 archive.set_language("C++")
@@ -67,41 +69,27 @@ archive.close()
 
 verify_test(srcml, archive.srcML())
 
-archive = libsrcml.srcml_archive()
-archive.write_open_memory()
-try :
-    unit = libsrcml.srcml_unit(archive)
-    unit.parse_filename("a.cpp")
-    archive.write_unit(unit)
-except libsrcml.srcMLException as e :
-    print str(e) + " - File does not exist"
 
+# unit set/get
+archive = libsrcml.srcml_archive()
 unit = libsrcml.srcml_unit(archive)
 unit.set_filename("b.cpp")
 unit.set_language("C")
 unit.set_directory("directory")
 unit.set_version("1.1")
-unit.parse_memory("b;")
-print unit.get_filename()
-print unit.get_language()
-print unit.get_directory()
-print unit.get_version()
-archive.write_unit(unit)
-
+verify_test("b.cpp", unit.get_filename())
+verify_test("C", unit.get_language())
+verify_test("directory", unit.get_directory())
+verify_test("1.1", unit.get_version())
 archive.close()
 
-print archive.srcML()
-srcml = archive.srcML()
-
+# exception
 archive = libsrcml.srcml_archive()
-archive.read_open_memory(srcml)
-clone = archive.clone()
-
-unit = archive.read_unit()
-
-unit.unparse_memory()
+test = ""
+try :
+    archive.write_unit(unit)
+    
+except libsrcml.srcMLException as e :
+    test = "Exception"
 archive.close()
-clone.close()
-
-print unit.src()
-print unit.get_xml()
+verify_test("Exception", test)
