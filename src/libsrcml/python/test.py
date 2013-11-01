@@ -252,9 +252,35 @@ verify_test("C++", clone_archive.get_language())
 archive.close()
 
 # transforms
+
+# xpath
 archive = libsrcml.srcml_archive()
 archive.read_open_memory(srcml)
 archive.append_transform_xpath("//src:unit")
+oarchive = libsrcml.srcml_archive()
+oarchive.write_open_memory()
+archive.apply_transforms(oarchive)
+oarchive.close()
+archive.close()
+
+verify_test(srcml, oarchive.srcML())
+
+# xslt
+archive = libsrcml.srcml_archive()
+archive.read_open_memory(srcml)
+archive.append_transform_xslt("copy.xsl")
+oarchive = libsrcml.srcml_archive()
+oarchive.write_open_memory()
+archive.apply_transforms(oarchive)
+oarchive.close()
+archive.close()
+
+verify_test(srcml, oarchive.srcML())
+
+# relaxng
+archive = libsrcml.srcml_archive()
+archive.read_open_memory(srcml)
+archive.append_transform_relaxng("schema.rng")
 oarchive = libsrcml.srcml_archive()
 oarchive.write_open_memory()
 archive.apply_transforms(oarchive)
