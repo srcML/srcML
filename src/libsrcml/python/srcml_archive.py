@@ -294,7 +294,7 @@ class srcml_archive :
         check_return(libsrcml.srcml_append_transform_relaxng(self.archive, relaxng_filename))
 
     def apply_transforms(self, oarchive) :
-        check_return(libsrcml.srcml_apply_transforms(self.archive, oarchive))
+        check_return(libsrcml.srcml_apply_transforms(self.archive, oarchive.archive))
 
     def close(self) :
         libsrcml.srcml_close_archive(self.archive)

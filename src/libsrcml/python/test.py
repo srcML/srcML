@@ -251,6 +251,18 @@ clone_archive = archive.clone()
 verify_test("C++", clone_archive.get_language())
 archive.close()
 
+# transforms
+archive = libsrcml.srcml_archive()
+archive.read_open_memory(srcml)
+archive.append_transform_xpath("//src:unit")
+oarchive = libsrcml.srcml_archive()
+oarchive.write_open_memory()
+archive.apply_transforms(oarchive)
+oarchive.close()
+archive.close()
+
+verify_test(srcml, oarchive.srcML())
+
 # unit set/get
 archive = libsrcml.srcml_archive()
 unit = libsrcml.srcml_unit(archive)

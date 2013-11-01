@@ -160,7 +160,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
       case SRCML_XPATH: {
 
           const char * xpaths[2] = { iarchive->transformations.at(i).transformation.c_str(), 0 };
-          error = srcml_xpath(pinput, "src:unit", xpaths, transform_fd, oarchive-> options);
+          error = srcml_xpath(pinput, "src:unit", xpaths, transform_fd, oarchive->options);
           break;
         }
 
