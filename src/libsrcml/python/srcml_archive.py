@@ -272,7 +272,7 @@ class srcml_archive :
         return None
 
     def skip_unit(self) :
-        check_return(libsrcml.srcml_skip_unit(self.archive))
+        return libsrcml.srcml_skip_unit(self.archive)
 
     def read_unit_position(self, pos) :
          unit = libsrcml.srcml_read_unit_position(self.archive, pos)

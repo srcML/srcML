@@ -214,6 +214,36 @@ os.remove("project.xml")
 #os.remove("a.cpp")
 #os.remove("project.xml")
 
+src = "b;\n"
+srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+"""
+
+# skip_unit
+archive = libsrcml.srcml_archive()
+archive.read_open_memory(srcml)
+archive.skip_unit()
+unit = archive.read_unit()
+unit.unparse_memory()
+archive.close()
+verify_test(src, unit.src())
+
+# read_unit_position
+archive = libsrcml.srcml_archive()
+archive.read_open_memory(srcml)
+unit = archive.read_unit_position(2)
+unit.unparse_memory()
+archive.close()
+verify_test(src, unit.src())
+
 # unit set/get
 archive = libsrcml.srcml_archive()
 unit = libsrcml.srcml_unit(archive)
