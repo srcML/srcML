@@ -31,7 +31,6 @@
 #include <Language.hpp>
 #include <Options.hpp>
 #include <srcmlns.hpp>
-#include <srcMLUtility.hpp>
 
 #include <string.h>
 #include <stdlib.h>
@@ -139,8 +138,40 @@ int srcml(const char* input_filename, const char* output_filename) {
 
   }
 
-  if(global_archive.registered_languages.size() == 0) {
+  static bool first = true;
+  if(first) {
+
+    first = false;
+    std::vector<pair> save_ext;
+    for(int i = 0; i < global_archive.registered_languages.size(); ++i)
+      try {
+        save_ext.push_back(global_archive.registered_languages.at(i));
+      } catch(...) {
+        return SRCML_STATUS_ERROR;
+      }
+
     Language::register_standard_file_extensions(global_archive.registered_languages);
+
+    for(int i = 0; i < save_ext.size(); ++i)
+      try {
+        global_archive.registered_languages.push_back(save_ext.at(i));
+      } catch(...) {
+        return SRCML_STATUS_ERROR;
+      }
+
+    std::vector<std::string> save_prefix;
+    std::vector<std::string> save_ns;
+    try {
+      for(int i = 0; i < global_archive.prefixes.size(); ++i) {
+        save_prefix.push_back(global_archive.prefixes.at(i));
+        save_ns.push_back(global_archive.namespaces.at(i));
+
+      }
+
+    } catch(...) {
+      return SRCML_STATUS_ERROR;
+    }
+
     srcml_archive_register_namespace(&global_archive, SRCML_SRC_NS_PREFIX_DEFAULT, SRCML_SRC_NS_URI);
     srcml_archive_register_namespace(&global_archive, SRCML_CPP_NS_PREFIX_DEFAULT, SRCML_CPP_NS_URI);
     srcml_archive_register_namespace(&global_archive, SRCML_ERR_NS_PREFIX_DEFAULT, SRCML_ERR_NS_URI);
@@ -149,7 +180,16 @@ int srcml(const char* input_filename, const char* output_filename) {
     srcml_archive_register_namespace(&global_archive, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT, SRCML_EXT_MODIFIER_NS_URI);
     srcml_archive_register_namespace(&global_archive, SRCML_EXT_POSITION_NS_PREFIX_DEFAULT, SRCML_EXT_POSITION_NS_URI);
 
+    for(int i = 0; i < save_prefix.size(); ++i) {
+      try {
+        srcml_archive_register_namespace(&global_archive, save_prefix.at(i).c_str(), save_ns.at(i).c_str());
+      } catch(...) {
+        return SRCML_STATUS_ERROR;
+      }
+    }
+
   }
+
   int lang = global_archive.language ? srcml_check_language(global_archive.language->c_str()) : Language::getLanguageFromFilename(input_filename, global_archive.registered_languages);
 
   if(lang) {
