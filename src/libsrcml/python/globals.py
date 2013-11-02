@@ -81,11 +81,11 @@ libsrcml.srcml_set_tabstop.argtypes = [c_int]
 
 # int srcml_register_file_extension(const char* extension, const char* language);
 libsrcml.srcml_register_file_extension.restype = c_int
-libsrcml.srcml_register_file_extension.argtypes = [c_int]
+libsrcml.srcml_register_file_extension.argtypes = [c_char_p, c_char_p]
 
 # int srcml_register_namespace(const char* prefix, const char* ns);
 libsrcml.srcml_register_namespace.restype = c_int
-libsrcml.srcml_register_namespace.argtypes = [c_int]
+libsrcml.srcml_register_namespace.argtypes = [c_char_p, c_char_p]
 
 # const char* srcml_get_encoding ();
 libsrcml.srcml_get_encoding.restype = c_char_p
@@ -202,10 +202,10 @@ def set_tabstop(tabstop) :
     check_return(libsrcml.srcml_set_tabstop(tabstop))
 
 def register_file_extension(extension, language) :
-    check_return(libsrcml.srcml_set_tabstop(extension, language))
+    check_return(libsrcml.srcml_register_file_extension(extension, language))
 
 def register_namespace(prefix, ns) :
-    check_return(libsrcml.srcml_set_tabstop(prefix, ns))
+    check_return(libsrcml.srcml_register_namespace(prefix, ns))
 
 def get_encoding() :
     return libsrcml.srcml_get_encoding()

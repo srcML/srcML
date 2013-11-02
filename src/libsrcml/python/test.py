@@ -374,3 +374,30 @@ verify_test(1, libsrcml.get_options())
 
 libsrcml.set_tabstop(4)
 verify_test(4, libsrcml.get_tabstop())
+
+os.remove("project.xml")
+
+file = open("a.foo", "w")
+file.write("a;\n")
+file.close()
+
+libsrcml.set_language(None)
+libsrcml.set_filename(None)
+libsrcml.set_directory(None)
+libsrcml.set_version(None)
+libsrcml.set_all_options(0)
+libsrcml.set_tabstop(8)
+
+libsrcml.register_file_extension("foo", "C++")
+libsrcml.register_namespace("s", "http://www.sdml.info/srcML/src")
+libsrcml.srcml("a.foo", "project.xml")
+
+file = open("project.xml", "r")
+xml = file.read()
+file.close()
+
+srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<s:unit xmlns:s="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="project.xml"><s:expr_stmt><s:expr><s:name>a</s:name></s:expr>;</s:expr_stmt>
+</s:unit>
+"""
+verify_test(srcml, xml)

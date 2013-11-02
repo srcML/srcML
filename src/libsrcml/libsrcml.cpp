@@ -30,6 +30,7 @@
 #include <srcMLTranslator.hpp>
 #include <Language.hpp>
 #include <Options.hpp>
+#include <srcmlns.hpp>
 #include <srcMLUtility.hpp>
 
 #include <string.h>
@@ -59,7 +60,7 @@ std::string srcml_error;
  * initializes other parameters.
  */
 srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, 0, 0, 0, std::vector<std::string>(), 0,
-                                 4, std::vector<std::string>(), std::vector<std::string>(), std::vector<pair>(),
+                                 8, std::vector<std::string>(), std::vector<std::string>(), std::vector<pair>(),
                                  0, 0, 0, 0, std::vector<transform>() };
 
 /******************************************************************************
@@ -138,8 +139,17 @@ int srcml(const char* input_filename, const char* output_filename) {
 
   }
 
-  if(global_archive.registered_languages.size() == 0)
+  if(global_archive.registered_languages.size() == 0) {
     Language::register_standard_file_extensions(global_archive.registered_languages);
+    srcml_archive_register_namespace(&global_archive, SRCML_SRC_NS_PREFIX_DEFAULT, SRCML_SRC_NS_URI);
+    srcml_archive_register_namespace(&global_archive, SRCML_CPP_NS_PREFIX_DEFAULT, SRCML_CPP_NS_URI);
+    srcml_archive_register_namespace(&global_archive, SRCML_ERR_NS_PREFIX_DEFAULT, SRCML_ERR_NS_URI);
+    srcml_archive_register_namespace(&global_archive, SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT, SRCML_EXT_LITERAL_NS_URI);
+    srcml_archive_register_namespace(&global_archive, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT, SRCML_EXT_OPERATOR_NS_URI);
+    srcml_archive_register_namespace(&global_archive, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT, SRCML_EXT_MODIFIER_NS_URI);
+    srcml_archive_register_namespace(&global_archive, SRCML_EXT_POSITION_NS_PREFIX_DEFAULT, SRCML_EXT_POSITION_NS_URI);
+
+  }
   int lang = global_archive.language ? srcml_check_language(global_archive.language->c_str()) : Language::getLanguageFromFilename(input_filename, global_archive.registered_languages);
 
   if(lang) {
@@ -147,9 +157,18 @@ int srcml(const char* input_filename, const char* output_filename) {
     OPTION_TYPE & options = global_archive.options;
     options |= lang == Language::LANGUAGE_JAVA ? 0 : SRCML_OPTION_CPP;
 
-    srcMLTranslator translator(lang, output_filename, options);
+    srcMLTranslator translator(lang,
+                               global_archive.encoding ? global_archive.encoding->c_str() : "UTF-8",
+                               global_archive.encoding ? global_archive.encoding->c_str() : "UTF-8",
+                               output_filename,
+                               options,
+                               0,
+                               0,
+                               0,
+                               0,
+                               global_archive.tabstop,
+                               &global_archive.prefixes.front());
     int error = 0;
-
     try {
 
       translator.setInput(input_filename);
