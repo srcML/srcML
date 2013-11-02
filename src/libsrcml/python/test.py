@@ -401,3 +401,8 @@ srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </s:unit>
 """
 verify_test(srcml, xml)
+
+verify_test(2, libsrcml.check_language("C++"))
+verify_test("C++", libsrcml.check_extension("a.cpp"))
+verify_test(0, libsrcml.check_format("a.cpp.tar"))
+verify_test(0, libsrcml.check_encoding("UTF-8"))

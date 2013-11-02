@@ -245,13 +245,13 @@ def language_list() :
     return ret
 
 def check_extension(filename) :
-    return libsrcml.srcml_check_extension()
+    return libsrcml.srcml_check_extension(filename)
 
 def check_format(format) :
-    return libsrcml.srcml_check_format()
+    return libsrcml.srcml_check_format(format)
 
 def check_encoding(encoding) :
-    return libsrcml.srcml_check_encoding()
+    return libsrcml.srcml_check_encoding(encoding)
 
 def check_xslt() :
     return libsrcml.srcml_check_xslt()
