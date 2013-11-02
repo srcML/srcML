@@ -263,7 +263,7 @@ def error_string() :
     return libsrcml.srcml_error_string()
 
 def filename_list(srcml_filename) :
-    file_list = libsrcml_srcml_list(srcml_filename)
+    file_list = libsrcml.srcml_list(srcml_filename)
 
     i = 0
     ret = []

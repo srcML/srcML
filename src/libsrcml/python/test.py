@@ -406,3 +406,24 @@ verify_test(2, libsrcml.check_language("C++"))
 verify_test("C++", libsrcml.check_extension("a.cpp"))
 verify_test(0, libsrcml.check_format("a.cpp.tar"))
 verify_test(0, libsrcml.check_encoding("UTF-8"))
+verify_test(1, libsrcml.check_xslt())
+verify_test(1, libsrcml.check_exslt())
+libsrcml.srcml("", "")
+verify_test("No language provided.", libsrcml.error_string())
+
+srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="a.cpp"/>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="b.cpp"/>
+
+</unit>
+"""
+
+file = open("project.xml", "w")
+file.write(srcml)
+file.close()
+
+verify_test("['a.cpp', 'b.cpp']", libsrcml.filename_list("project.xml"))
+os.remove("project.xml")
