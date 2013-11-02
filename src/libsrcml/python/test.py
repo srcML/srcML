@@ -14,9 +14,6 @@ def verify_test(correct, output) :
             print line
         globals()['error_count'] += 1
 
-# test language
-verify_test("['C', 'C++', 'C#', 'Java']", str(libsrcml.language_list()))
-
 # test versions
 verify_test(libsrcml.SRCML_VERSION_NUMBER, libsrcml.version_number())
 verify_test(libsrcml.SRCML_VERSION_STRING, libsrcml.version_string())
@@ -332,3 +329,101 @@ except libsrcml.srcMLException as e :
     test = "Exception"
 archive.close()
 verify_test("Exception", test)
+
+# cleanup_globals
+libsrcml.cleanup_globals()
+
+# test language
+verify_test("['C', 'C++', 'C#', 'Java']", str(libsrcml.language_list()))
+
+file = open("a.cpp", "w")
+file.write("a;\n")
+file.close()
+
+libsrcml.srcml("a.cpp", "project.xml")
+
+file = open("project.xml", "r")
+xml = file.read()
+file.close()
+
+srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="project.xml"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+"""
+verify_test(srcml, xml)
+
+libsrcml.set_language("C++")
+libsrcml.set_filename("a.cpp")
+libsrcml.set_directory("directory")
+libsrcml.set_version("version")
+
+verify_test("C++", libsrcml.get_language())
+verify_test("a.cpp", libsrcml.get_filename())
+verify_test("directory", libsrcml.get_directory())
+verify_test("version", libsrcml.get_version())
+
+libsrcml.set_option(1)
+verify_test(1, libsrcml.get_options())
+
+libsrcml.set_all_options(2)
+verify_test(2, libsrcml.get_options())
+
+libsrcml.set_all_options(1 | 2)
+libsrcml.clear_option(2)
+verify_test(1, libsrcml.get_options())
+
+libsrcml.set_tabstop(4)
+verify_test(4, libsrcml.get_tabstop())
+
+os.remove("project.xml")
+
+file = open("a.foo", "w")
+file.write("a;\n")
+file.close()
+
+libsrcml.set_language(None)
+libsrcml.set_filename(None)
+libsrcml.set_directory(None)
+libsrcml.set_version(None)
+libsrcml.set_all_options(0)
+libsrcml.set_tabstop(8)
+
+libsrcml.register_file_extension("foo", "C++")
+libsrcml.register_namespace("s", "http://www.sdml.info/srcML/src")
+libsrcml.srcml("a.foo", "project.xml")
+
+file = open("project.xml", "r")
+xml = file.read()
+file.close()
+
+srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<s:unit xmlns:s="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="project.xml"><s:expr_stmt><s:expr><s:name>a</s:name></s:expr>;</s:expr_stmt>
+</s:unit>
+"""
+verify_test(srcml, xml)
+
+verify_test(2, libsrcml.check_language("C++"))
+verify_test("C++", libsrcml.check_extension("a.cpp"))
+verify_test(0, libsrcml.check_format("a.cpp.tar"))
+verify_test(0, libsrcml.check_encoding("UTF-8"))
+verify_test(1, libsrcml.check_xslt())
+verify_test(1, libsrcml.check_exslt())
+libsrcml.srcml("", "")
+verify_test("No language provided.", libsrcml.error_string())
+
+srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src">
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="a.cpp"/>
+
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="b.cpp"/>
+
+</unit>
+"""
+
+file = open("project.xml", "w")
+file.write(srcml)
+file.close()
+
+verify_test("['a.cpp', 'b.cpp']", libsrcml.filename_list("project.xml"))
+os.remove("project.xml")

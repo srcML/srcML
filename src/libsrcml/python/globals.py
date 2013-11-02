@@ -81,11 +81,11 @@ libsrcml.srcml_set_tabstop.argtypes = [c_int]
 
 # int srcml_register_file_extension(const char* extension, const char* language);
 libsrcml.srcml_register_file_extension.restype = c_int
-libsrcml.srcml_register_file_extension.argtypes = [c_int]
+libsrcml.srcml_register_file_extension.argtypes = [c_char_p, c_char_p]
 
 # int srcml_register_namespace(const char* prefix, const char* ns);
 libsrcml.srcml_register_namespace.restype = c_int
-libsrcml.srcml_register_namespace.argtypes = [c_int]
+libsrcml.srcml_register_namespace.argtypes = [c_char_p, c_char_p]
 
 # const char* srcml_get_encoding ();
 libsrcml.srcml_get_encoding.restype = c_char_p
@@ -172,7 +172,7 @@ libsrcml.srcml_list.restype = POINTER(c_char_p)
 libsrcml.srcml_list.argtypes = [c_char_p]
 
 def srcml(input_filename, output_filename) :
-    libsrcml.srcml(input_filename_output_filename)
+    libsrcml.srcml(input_filename, output_filename)
 
 def set_encoding(encoding) :
     check_return(libsrcml.srcml_set_encoding(encoding))
@@ -202,10 +202,10 @@ def set_tabstop(tabstop) :
     check_return(libsrcml.srcml_set_tabstop(tabstop))
 
 def register_file_extension(extension, language) :
-    check_return(libsrcml.srcml_set_tabstop(extension, language))
+    check_return(libsrcml.srcml_register_file_extension(extension, language))
 
 def register_namespace(prefix, ns) :
-    check_return(libsrcml.srcml_set_tabstop(prefix, ns))
+    check_return(libsrcml.srcml_register_namespace(prefix, ns))
 
 def get_encoding() :
     return libsrcml.srcml_get_encoding()
@@ -245,13 +245,13 @@ def language_list() :
     return ret
 
 def check_extension(filename) :
-    return libsrcml.srcml_check_extension()
+    return libsrcml.srcml_check_extension(filename)
 
 def check_format(format) :
-    return libsrcml.srcml_check_format()
+    return libsrcml.srcml_check_format(format)
 
 def check_encoding(encoding) :
-    return libsrcml.srcml_check_encoding()
+    return libsrcml.srcml_check_encoding(encoding)
 
 def check_xslt() :
     return libsrcml.srcml_check_xslt()
@@ -263,7 +263,7 @@ def error_string() :
     return libsrcml.srcml_error_string()
 
 def filename_list(srcml_filename) :
-    file_list = libsrcml_srcml_list(srcml_filename)
+    file_list = libsrcml.srcml_list(srcml_filename)
 
     i = 0
     ret = []
