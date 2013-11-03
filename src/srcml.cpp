@@ -59,13 +59,53 @@ struct ParseRequest {
 
 ParseRequest NullParseRequest;
 
-// Global Options Function
-void set_globals(const struct srcml_request_t srcml_request);
-
 int main(int argc, char * argv[]) {
   
   srcml_request_t srcml_request = srcmlCLI::parseCLI(argc, argv);
- 
+
+  // CHECK FOR INVALID GLOBAL FLAGS
+  if (srcml_request.encoding != "" && srcml_check_encoding(srcml_request.encoding.c_str()) == 0) {
+    std::cerr << "Invalid Encoding.\n";
+    return 1; //ERROR CODE TBD
+  }
+  if (srcml_request.language != "" && srcml_check_language(srcml_request.language.c_str()) == 0) {
+    //INVALID OPTION
+    std::cerr << "Invalid Language.\n";
+    return 1; //ERROR CODE TBD
+  }
+  if (srcml_request.tabs <= 0) {
+    //INVALID OPTION
+    std::cerr << "Invalid Tab Stop.\n";
+    return 1; //ERROR CODE TBD
+  }
+  
+  // SET GLOBAL OPTIONS
+  srcml_set_encoding(srcml_request.encoding.c_str());
+  srcml_set_filename(srcml_request.filename.c_str());
+  srcml_set_directory(srcml_request.directory.c_str());
+  srcml_set_version(srcml_request.src_versions.c_str());
+  srcml_set_tabstop(srcml_request.tabs);
+  srcml_set_all_options(srcml_request.markup_options);
+
+  if (srcml_request.language != "") {
+    srcml_set_language(srcml_request.language.c_str());  
+  }
+  else {
+    srcml_set_language(SRCML_LANGUAGE_NONE);  
+  }
+
+  for(int i = 0; i < srcml_request.register_ext.size(); ++i) {
+    int pos = srcml_request.register_ext[i].find('=');
+    srcml_register_file_extension(srcml_request.register_ext[i].substr(0,pos).c_str(),
+          srcml_request.register_ext[i].substr(pos+1).c_str());
+  }
+
+  for(int i = 0; i < srcml_request.xmlns_prefix.size(); ++i) {
+    int pos = srcml_request.xmlns_prefix[i].find('=');
+    srcml_register_namespace(srcml_request.xmlns_prefix[i].substr(0,pos).c_str(),
+           srcml_request.xmlns_prefix[i].substr(pos+1).c_str());
+  }
+
   // CHECK TO SEE WHAT VERSION OF LIBARCHIVE IS RUNNING
   // SWITCH ON FEATURES (LIBARCHIVE FOR DIRECTORY, ETC.)
   #if ARCHIVE_VERSION_NUMBER < 3000000
@@ -75,9 +115,6 @@ int main(int argc, char * argv[]) {
   #endif
 
   ThreadQueue<ParseRequest, 10> queue;
-
-  //SETUP GLOBALS FOR LIBSRCML
-  set_globals(srcml_request);
   
   if (srcml_request.positional_args.empty())
     return 0;
@@ -115,55 +152,4 @@ int main(int argc, char * argv[]) {
   srcml_free_archive(archive);
 
   return 0;
-}
-
-// Setup for Globals
-void set_globals(const struct srcml_request_t srcml_request) {
-  if (srcml_request.encoding != "") {
-    if (srcml_check_encoding(srcml_request.encoding.c_str())) {
-      srcml_set_encoding(srcml_request.encoding.c_str());
-    }
-    else {
-      //INVALID OPTION
-      std::cerr << "Invalid Encoding.\n";
-    }
-  }
-  if (srcml_request.language != "") {
-    if (srcml_check_language(srcml_request.language.c_str()) != 0) {
-      srcml_set_language(srcml_request.language.c_str());
-    }
-    else {
-      //INVALID OPTION
-      std::cerr << "Invalid Language.\n";
-    }
-  }
-  else {
-    srcml_set_language(SRCML_LANGUAGE_NONE);
-  }
-  if (srcml_request.filename != "") {
-    srcml_set_filename(srcml_request.filename.c_str());
-  }
-  if (srcml_request.directory != "") {
-    srcml_set_directory(srcml_request.directory.c_str());
-  }
-  if (srcml_request.src_versions != "") {
-    srcml_set_version(srcml_request.src_versions.c_str());
-  }
-  if (srcml_request.tabs >= 0) {
-    srcml_set_tabstop(srcml_request.tabs);
-  }
-  else {
-    //INVALID OPTION
-  }
-  for(int i = 0; i < srcml_request.register_ext.size(); ++i) {
-    int pos = srcml_request.register_ext[i].find('=');
-    srcml_register_file_extension(srcml_request.register_ext[i].substr(0,pos).c_str(),
-				  srcml_request.register_ext[i].substr(pos+1).c_str());
-  }
-  for(int i = 0; i < srcml_request.xmlns_prefix.size(); ++i) {
-    int pos = srcml_request.xmlns_prefix[i].find('=');
-    srcml_register_namespace(srcml_request.xmlns_prefix[i].substr(0,pos).c_str(),
-			     srcml_request.xmlns_prefix[i].substr(pos+1).c_str());
-  }
-  srcml_set_all_options(srcml_request.markup_options);
 }
