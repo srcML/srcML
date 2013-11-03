@@ -313,7 +313,7 @@ srcml_request_t srcmlCLI::parseCLI(int argc, char* argv[]) {
     exit(1);
   }
     //DEBUG TO SEE CLI INPUTS
-    debug_cli_opts(srcml_request);
+    //debug_cli_opts(srcml_request);
     return srcml_request;
 }
 
