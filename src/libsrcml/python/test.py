@@ -1,9 +1,17 @@
 import libsrcml
 import difflib
 import os
+import ctypes
 
 test_count = 0
 error_count = 0
+LIBC_PATH = ""
+LIBC_PATH = "libc.dylib"
+libc = ctypes.cdll.LoadLibrary(LIBC_PATH)
+libc.fopen.restype = ctypes.c_void_p 
+libc.fopen.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
+libc.fclose.restype = ctypes.c_int
+libc.fclose.argtypes = [ctypes.c_void_p]
 
 def verify_test(correct, output) :
 
@@ -120,27 +128,27 @@ os.remove("a.cpp")
 os.remove("project.xml")
 
 # FILE
-#file = open("a.cpp", "w")
-#gen = file.write(src)
-#file.close()
-#archive = libsrcml.srcml_archive()
-#file = open("project.xml", "w")
-#archive.write_open_FILE(file)
-#src_file = open("a.cpp", "r")
-#unit = libsrcml.srcml_unit(archive)
-#unit.set_language("C++")
-#unit.parse_FILE(src_file)
-#archive.write_unit(unit)
-#archive.close()
-#close(src_file)
-#close(file)
+file = open("a.cpp", "w")
+gen = file.write(src)
+file.close()
+archive = libsrcml.srcml_archive()
+file = libc.fopen("project.xml", "w")
+archive.write_open_FILE(file)
+src_file = libc.fopen("a.cpp", "r")
+unit = libsrcml.srcml_unit(archive)
+unit.set_language("C++")
+unit.parse_FILE(src_file)
+archive.write_unit(unit)
+archive.close()
+libc.fclose(src_file)
+libc.fclose(file)
 
-#file = open("project.xml", "r")
-#gen = file.read()
-#file.close()
-#verify_test(srcml, gen)
-#os.remove("a.cpp")
-#os.remove("project.xml")
+file = open("project.xml", "r")
+gen = file.read()
+file.close()
+verify_test(srcml, gen)
+os.remove("a.cpp")
+os.remove("project.xml")
 
 # read/unparse
 
