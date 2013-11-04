@@ -804,6 +804,20 @@ next_token[] returns [int token] {
     rewind(place);
 }:;
 
+next_token_string[] returns [const char * token] {
+
+    int place = mark();
+    inputState->guessing++;
+
+    // consume current token
+    consume();
+
+    token = LT(1)->getText().c_str();
+
+    inputState->guessing--;
+    rewind(place);
+}:;
+
 // is the next token one of the parameters
 next_token_check[int token1, int token2] returns [bool result] {
 
@@ -4029,7 +4043,7 @@ expression_setup_linq[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
 
 expression_part_plus_linq[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
 
-        { inLanguage(LANGUAGE_CSHARP) && next_token() != RPAREN && next_token() != OPERATORS && next_token() != EQUAL }?
+        { inLanguage(LANGUAGE_CSHARP) && next_token() != RPAREN && index(next_token_string(), '=') == NULL }?
         (linq_expression_pure)=> linq_expression |
 
         expression_part[type]
