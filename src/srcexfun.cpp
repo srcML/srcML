@@ -38,7 +38,7 @@
 
 #include <libxml/tree.h>
 
-#if defined(__GNUG__) && !defined(__MINGW32__)
+#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
 #include <dlfcn.h>
 #else
 #include <libxslt/xsltutils.h>
@@ -219,7 +219,7 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
 
 void xsltsrcMLRegister () {
 
-#if defined(__GNUG__) && !defined(__MINGW32__)
+#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
   typedef int (*xsltRegisterExtModuleFunction_function) (const xmlChar *, const xmlChar *, xmlXPathFunction);
   void* handle = dlopen("libexslt.so", RTLD_LAZY);
   if (!handle) {
@@ -262,7 +262,7 @@ void xsltsrcMLRegister () {
                                   srcMacrosFunction);
   }
 
-#if defined(__GNUG__) && !defined(__MINGW32__)
+#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
   dlclose(handle);
 #endif
 }

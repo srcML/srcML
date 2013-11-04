@@ -10,7 +10,7 @@ cmake_minimum_required(VERSION 2.8)
 project(srcML)
 
 set(CMAKE_BUILD_TYPE RELEASE)
-set(CMAKE_CXX_FLAGS_DEBUG "-g --coverage -O0 -fprofile-arcs -DDEBUG")
+set(CMAKE_CXX_FLAGS_DEBUG "-g --coverage -O0 -fprofile-arcs -DDEBUG -DNO_DLLOAD")
 set(CMAKE_CXX_FLAGS_RELEASE -O3)
 
 option(SVN_ENABLED "Build with svn" off)
@@ -58,6 +58,12 @@ else()
     set(SRC2SRCML_LIBS dl;srcml_static)
     set(SRCML2SRC_LIBS dl;srcml_static)
 endif()
+
+set(LINK_EXTRA "")
+if(CMAKE_BUILD_TYPE MATCHES "DEBUG")
+    set(LINK_EXTRA ${LIBXSLT_LIBRARIES};${LIBXSLT_EXSLT_LIBRARY})
+endif()
+
 
 include_directories(src src/libsrcml)
 
@@ -134,7 +140,7 @@ else()
     add_library(srcml_static STATIC ${LIBSRCML_SRC} ${PARSER_SRC} ${SRCMLUTILITY_SRC} ${TRANSLATOR_SRC} ${SRCMLAPPS_SRC})
 endif()
 
-target_link_libraries(srcml_static ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${LIBREGEX_LIBRARY})
+target_link_libraries(srcml_static ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${LIBREGEX_LIBRARY} ${LINK_EXTRA})
 set_target_properties(srcml_static PROPERTIES OUTPUT_NAME srcml)
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
@@ -155,7 +161,7 @@ else()
 else()
        add_library(srcml_shared SHARED ${LIBSRCML_SRC} ${PARSER_SRC} ${SRCMLUTILITY_SRC} ${TRANSLATOR_SRC} ${SRCMLAPPS_SRC})
     endif()
-    target_link_libraries(srcml_shared ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB})
+    target_link_libraries(srcml_shared ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${LINK_EXTRA})
     set_target_properties(srcml_shared PROPERTIES OUTPUT_NAME srcml)
 endif()
 
@@ -169,11 +175,11 @@ if(NOT SVN_ENABLED)
 else()
     add_executable(src2srcml src/src2srcml.cpp src/svn_io.cpp)
 endif()
-target_link_libraries(src2srcml ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${SRC2SRCML_LIBS})
+target_link_libraries(src2srcml ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${SRC2SRCML_LIBS} ${LINK_EXTRA})
 
 # srcml2src
 add_executable(srcml2src src/srcml2src.cpp)
-target_link_libraries(srcml2src ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${SRCML2SRC_LIBS})
+target_link_libraries(srcml2src ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${SRCML2SRC_LIBS} ${LINK_EXTRA})
 
 # install handling
 include(CMakeInstall.inc)
