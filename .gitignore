@@ -36,6 +36,14 @@ CMakeFiles
 CPackConfig.cmake
 CPackSourceConfig.cmake
 cmake_install.cmake
+Makefile
+!dist/Makefile
+!doc/Makefile
+!src/ElementInfo/Makefile
+!suite/Makefile
+!test/cli/Makefile
+!test/Makefile
+!timing/Makefile
 
 abstract_cs.all.cs.xml
 abstract_cs.block.cs.xml
