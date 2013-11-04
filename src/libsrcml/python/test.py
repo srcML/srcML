@@ -350,6 +350,7 @@ file.close()
 
 libsrcml.srcml("a.cpp", "project.xml")
 
+os.remove("a.cpp")
 file = open("project.xml", "r")
 xml = file.read()
 file.close()
@@ -403,6 +404,7 @@ libsrcml.srcml("a.foo", "project.xml")
 file = open("project.xml", "r")
 xml = file.read()
 file.close()
+os.remove("a.foo")
 
 srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <s:unit xmlns:s="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="project.xml"><s:expr_stmt><s:expr><s:name>a</s:name></s:expr>;</s:expr_stmt>
