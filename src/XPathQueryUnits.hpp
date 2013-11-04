@@ -38,7 +38,7 @@
 #include "UnitDOM.hpp"
 #include "srcmlns.hpp"
 
-#if defined(__GNUG__) && !defined(__MINGW32__)
+#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
 #include <dlfcn.h>
 #endif
 
@@ -109,7 +109,7 @@ public :
     }
 
 #if LIBEXSLT_VERSION > 813
-#if defined(__GNUG__) && !defined(__MINGW32__)
+#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
     typedef int (*exsltXpathCtxtRegister)(xmlXPathContextPtr, const xmlChar*);
 
     void* handle = dlopen("libexslt.so", RTLD_LAZY);

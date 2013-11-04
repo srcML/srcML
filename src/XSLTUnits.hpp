@@ -60,7 +60,7 @@ public :
       stylesheet(stylesheet), found(false),
       result_type(0), params(params), fd(fd) {
 
-#if defined(__GNUG__) && !defined(__MINGW32__)
+#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
     void* handle = dlopen("libxslt.so", RTLD_LAZY);
     if (!handle) {
       handle = dlopen("libxslt.so.1", RTLD_LAZY);
@@ -120,7 +120,7 @@ public :
     setPosition(pstate->count);
 
     // apply the style sheet to the document, which is the individual unit
-#if defined(__GNUG__) && !defined(__MINGW32__)
+#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
     xmlDocPtr res = xsltApplyStylesheetUserDynamic(stylesheet, ctxt->myDoc, params, 0, 0, 0);
     //      xmlDocPtr res = xsltApplyStylesheetDynamic(stylesheet, ctxt->myDoc, 0);
 #else
