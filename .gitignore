@@ -41,6 +41,7 @@ CPackSourceConfig.cmake
 cmake_install.cmake
 CTestTestfile.cmake
 DartConfiguration.tcl
+Testing
 Makefile
 !dist/Makefile
 !doc/Makefile
