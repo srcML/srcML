@@ -1,9 +1,10 @@
+# general
 *~
 \#*\#
 .\#*
 *.pyc
-srcMLTestReport*
 
+# antlr gen
 src/CommentTextLexer.cpp
 src/CommentTextLexer.hpp
 src/CommentTextLexerTokenTypes.hpp
@@ -31,12 +32,29 @@ src/srcMLParserTokenTypes.txt
 src/srcMLParserTokenTypesMacro.hpp
 
 bin
+
+# cmake/ctest/cpack
 CMakeCache.txt
 CMakeFiles
 CPackConfig.cmake
 CPackSourceConfig.cmake
 cmake_install.cmake
+CTestTestfile.cmake
+DartConfiguration.tcl
+Testing
+Makefile
+!dist/Makefile
+!doc/Makefile
+!src/ElementInfo/Makefile
+!suite/Makefile
+!test/cli/Makefile
+!test/Makefile
+!timing/Makefile
 
+# testing report files
+srcMLTestReport*
+
+# suite generated files
 abstract_cs.all.cs.xml
 abstract_cs.block.cs.xml
 abstract_cs.comment.cs.xml
@@ -1400,3 +1418,57 @@ yield_cs.comment.cs.xml
 yield_cs.formfeed.cs.xml
 yield_cs.ifthenelse.cs.xml
 yield_cs.preproc.cs.xml
+
+# libsrcml examples
+srcml_convenient
+srcml_copy_archive
+srcml_create_archive_fd
+srcml_create_archive_file
+srcml_create_archive_filename
+srcml_create_archive_full
+srcml_create_archive_memory
+srcml_direct_language
+srcml_direct_language_list
+srcml_direct_language_xml
+srcml_direct_src2srcml
+srcml_direct_srcml2src
+srcml_list
+srcml_read_archive_fd
+srcml_read_archive_file
+srcml_read_archive_filename
+srcml_read_archive_full
+srcml_read_archive_memory
+srcml_relaxng
+srcml_sort_archive
+srcml_split_archive
+srcml_transform
+srcml_xpath
+srcml_xslt
+
+# libsrcml test executables
+test_srcMLReader
+test_srcml_append_transform
+test_srcml_apply_transforms
+test_srcml_archive_check_extension
+test_srcml_archive_get
+test_srcml_archive_set
+test_srcml_clear_transforms
+test_srcml_clone_archive
+test_srcml_create_archive
+test_srcml_create_unit
+test_srcml_extract_text
+test_srcml_global
+test_srcml_global_access
+test_srcml_list
+test_srcml_parse_unit
+test_srcml_read_open
+test_srcml_read_unit
+test_srcml_relaxng
+test_srcml_sax2_utilities
+test_srcml_unit_get
+test_srcml_unit_set
+test_srcml_unparse_unit
+test_srcml_write_open
+test_srcml_write_unit
+test_srcml_xpath
+test_srcml_xslt
