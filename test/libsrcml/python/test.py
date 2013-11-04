@@ -1,8 +1,10 @@
+import sys
+sys.path.append("../../../src/libsrcml/python")
 import libsrcml
 import difflib
 import os
 import ctypes
-import sys
+
 
 test_count = 0
 error_count = 0
