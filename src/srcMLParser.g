@@ -4029,7 +4029,7 @@ expression_setup_linq[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
 
 expression_part_plus_linq[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
 
-        { inLanguage(LANGUAGE_CSHARP) }?
+        { inLanguage(LANGUAGE_CSHARP) && next_token() != RPAREN && next_token() != OPERATORS && next_token() != EQUAL }?
         (linq_expression_pure)=> linq_expression |
 
         expression_part[type]

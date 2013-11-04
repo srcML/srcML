@@ -153,4 +153,26 @@
 <decl_stmt><decl><type><name>var</name></type> <name>let</name></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<if>if<condition>(<expr><name>select</name></expr>)</condition><then><block>{
+        <expr_stmt><expr><name>PostConfig</name> = <name>PostConfig</name> | <name>ep</name></expr>;</expr_stmt>
+}</block></then></if>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>select</name> = <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>select</name> =+ <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>select</name> += <name>a</name> + <name>b</name></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>var</name></type> <name>a</name> =<init> <expr><linq><where>where <expr>(<name>a</name> % 2) == 2</expr></where></linq></expr></init></decl>;</decl_stmt>
+</unit>
+
 </unit>
