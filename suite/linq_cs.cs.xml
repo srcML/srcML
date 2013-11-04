@@ -153,4 +153,10 @@
 <decl_stmt><decl><type><name>var</name></type> <name>let</name></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<if>if<condition>(<expr><name>select</name></expr>)</condition><then><block>{
+        <expr_stmt><expr><name>PostConfig</name> = <name>PostConfig</name> | <name>ep</name></expr>;</expr_stmt>
+}</block></then></if>
+</unit>
+
 </unit>
