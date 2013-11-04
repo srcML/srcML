@@ -2,11 +2,18 @@ import libsrcml
 import difflib
 import os
 import ctypes
+import sys
 
 test_count = 0
 error_count = 0
 LIBC_PATH = ""
-LIBC_PATH = "libc.dylib"
+if sys.platform == "darwin" :
+    LIBC_PATH = "libc.dylib"
+elif sys.platform == "linux2" :
+    LIBC_PATH = "libc.so"
+else :
+    LIBC_PATH = "libc.dll"
+
 libc = ctypes.cdll.LoadLibrary(LIBC_PATH)
 libc.fopen.restype = ctypes.c_void_p 
 libc.fopen.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
