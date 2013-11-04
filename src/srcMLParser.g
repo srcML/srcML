@@ -804,7 +804,7 @@ next_token[] returns [int token] {
     rewind(place);
 }:;
 
-next_token_string[] returns [const char * token] {
+next_token_string[] returns [std::string token] {
 
     int place = mark();
     inputState->guessing++;
@@ -812,7 +812,7 @@ next_token_string[] returns [const char * token] {
     // consume current token
     consume();
 
-    token = LT(1)->getText().c_str();
+    token = LT(1)->getText();
 
     inputState->guessing--;
     rewind(place);
@@ -4043,7 +4043,7 @@ expression_setup_linq[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
 
 expression_part_plus_linq[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
 
-        { inLanguage(LANGUAGE_CSHARP) && next_token() != RPAREN && index(next_token_string(), '=') == NULL }?
+        { inLanguage(LANGUAGE_CSHARP) && next_token() != RPAREN && next_token_string().find('=') == std::string::npos }?
         (linq_expression_pure)=> linq_expression |
 
         expression_part[type]
