@@ -36,6 +36,7 @@ CMakeFiles
 CPackConfig.cmake
 CPackSourceConfig.cmake
 cmake_install.cmake
+CTestTestfile.cmake
 Makefile
 !dist/Makefile
 !doc/Makefile
@@ -1408,3 +1409,29 @@ yield_cs.comment.cs.xml
 yield_cs.formfeed.cs.xml
 yield_cs.ifthenelse.cs.xml
 yield_cs.preproc.cs.xml
+
+# libsrcml examples
+srcml_convenient
+srcml_copy_archive
+srcml_create_archive_fd
+srcml_create_archive_file
+srcml_create_archive_filename
+srcml_create_archive_full
+srcml_create_archive_memory
+srcml_direct_language
+srcml_direct_language_list
+srcml_direct_language_xml
+srcml_direct_src2srcml
+srcml_direct_srcml2src
+srcml_list
+srcml_read_archive_fd
+srcml_read_archive_file
+srcml_read_archive_filename
+srcml_read_archive_full
+srcml_read_archive_memory
+srcml_relaxng
+srcml_sort_archive
+srcml_split_archive
+srcml_transform
+srcml_xpath
+srcml_xslt
