@@ -10,7 +10,7 @@ LIBC_PATH = ""
 if sys.platform == "darwin" :
     LIBC_PATH = "libc.dylib"
 elif sys.platform == "linux2" :
-    LIBC_PATH = "libc.so"
+    LIBC_PATH = "libc.so.6"
 else :
     LIBC_PATH = "libc.dll"
 
