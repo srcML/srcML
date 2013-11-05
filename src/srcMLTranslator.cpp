@@ -113,7 +113,6 @@ void* srcMLTranslator::setInput(xmlParserInputBufferPtr input) {
   return translator->setInput(input);
 }
 
-
 // translate from input stream to output stream
 void* srcMLTranslator::setInputString(const char* source, int size) {
 
