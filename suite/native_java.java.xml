@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="native" filename="native_java">
+
+<unit>
+<function><type><specifier>native</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><specifier>public</specifier> <specifier>native</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><specifier>public</specifier> <specifier>native</specifier> <name>void</name></type> <name>increment</name><parameter_list>()</parameter_list> <block>{
+        <expr_stmt><expr><name>c</name>++</expr>;</expr_stmt>
+    }</block></function>
+</unit>
+
+</unit>
