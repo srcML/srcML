@@ -114,7 +114,7 @@ LINECOMMENT_START
             { 
                 if (inLanguage(LANGUAGE_JAVA) && LA(1) == '*')
                     $setType(JAVADOC_COMMENT_START);
-                else if (inLanguage(LANGUAGE_CXX) && LA(1) == '*')
+                else if (inLanguage(LANGUAGE_CXX) && (LA(1) == '*' || LA(1) == '!'))
                     $setType(DOXYGEN_COMMENT_START);
                 else
                     $setType(COMMENT_START);
