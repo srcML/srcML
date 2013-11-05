@@ -57,6 +57,7 @@ namespace {
   ELEMENT_MAP(LINECOMMENT_END, ELEMENT_MAP_CALL(COMMENT_START))
   ELEMENT_MAP(JAVADOC_COMMENT_START, ELEMENT_MAP_CALL(COMMENT_START))
   ELEMENT_MAP(DOXYGEN_COMMENT_START, ELEMENT_MAP_CALL(COMMENT_START))
+  ELEMENT_MAP(LINE_DOXYGEN_COMMENT_START, ELEMENT_MAP_CALL(COMMENT_START))
 
   // No op
   ELEMENT_MAP(SNOP, "")
@@ -536,23 +537,40 @@ void srcMLTranslatorOutput::processToken(const antlr::RefToken& token) {
 }
 
 void srcMLTranslatorOutput::processJavadocCommentStart(const antlr::RefToken& token) {
+  static const char* BLOCK_COMMENT_ATTR = "block";
   static const char* JAVADOC_COMMENT_ATTR = "javadoc";
 
   xmlTextWriterStartElement(xout, BAD_CAST token2name(token));
   ++openelementcount;
 
-  xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST JAVADOC_COMMENT_ATTR);
+  xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST BLOCK_COMMENT_ATTR);
+  xmlTextWriterWriteAttribute(xout, BAD_CAST "format", BAD_CAST JAVADOC_COMMENT_ATTR);
 
   processText(token);
 }
 
 void srcMLTranslatorOutput::processDoxygenCommentStart(const antlr::RefToken& token) {
+  static const char* BLOCK_COMMENT_ATTR = "block";
   static const char* DOXYGEN_COMMENT_ATTR = "doxygen";
 
   xmlTextWriterStartElement(xout, BAD_CAST token2name(token));
   ++openelementcount;
 
-  xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST DOXYGEN_COMMENT_ATTR);
+  xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST BLOCK_COMMENT_ATTR);
+  xmlTextWriterWriteAttribute(xout, BAD_CAST "format", BAD_CAST DOXYGEN_COMMENT_ATTR);
+
+  processText(token);
+}
+
+void srcMLTranslatorOutput::processLineDoxygenCommentStart(const antlr::RefToken& token) {
+  static const char* LINE_COMMENT_ATTR = "line";
+  static const char* DOXYGEN_COMMENT_ATTR = "doxygen";
+
+  xmlTextWriterStartElement(xout, BAD_CAST token2name(token));
+  ++openelementcount;
+
+  xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST LINE_COMMENT_ATTR);
+  xmlTextWriterWriteAttribute(xout, BAD_CAST "format", BAD_CAST DOXYGEN_COMMENT_ATTR);
 
   processText(token);
 }
