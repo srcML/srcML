@@ -10,7 +10,7 @@ cmake_minimum_required(VERSION 2.8)
 project(srcML)
 
 option(SVN_ENABLED "Build with svn" off)
-option(LIBSRCML_SAX2_ENABLED "Build with SAX2Framework for srcML" off)
+option(LIBSRCML_SAX2_ENABLED "Build with SAX2Framework for srcML" on)
 option(LIBSRCML_DEBUG "Build with debug options" off)
 
 # specify g++ compiler
@@ -129,7 +129,8 @@ if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_
     add_library(srcmlapps OBJECT srcmlapps.cpp)
 
     if(LIBSRCML_SAX2_ENABLED)
-        file(GLOB LIBSRCML_SRC libsrcml/*.cpp)
+        include_directories(../SAX2Framework)
+        file(GLOB LIBSRCML_SRC libsrcml/*.cpp ../SAX2Framework/*.cpp)
         add_definitions(-DSAX2)
     else()
         file(GLOB LIBSRCML_SRC libsrcml/srcml_*.cpp libsrcml/libsrcml.cpp libsrcml/srcMLReader.cpp)

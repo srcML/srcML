@@ -15,7 +15,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -DDEBUG -DNO_DLLOAD")
 set(CMAKE_CXX_FLAGS_RELEASE -O3)
 
 option(SVN_ENABLED "Build with svn" off)
-option(LIBSRCML_SAX2_ENABLED "Build with SAX2Framework for srcML" off)
+option(LIBSRCML_SAX2_ENABLED "Build with SAX2Framework for srcML" on)
 
 # specify g++ compiler
 if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
@@ -121,7 +121,8 @@ set(SRCMLUTILITY_SRC src/srcMLUtility.cpp;src/SAX2ExtractUnitsSrc.cpp;src/SAX2Ut
 set(TRANSLATOR_SRC src/srcMLTranslator.cpp;src/srcMLTranslatorCore.cpp;src/UTF8CharBuffer.cpp;src/Language.cpp;src/URIStream.cpp;src/libxml_archive_read.cpp;src/libxml_archive_write.cpp)
 set(SRCMLAPPS_SRC src/srcmlapps.cpp)
 if(LIBSRCML_SAX2_ENABLED)
-    file(GLOB LIBSRCML_SRC src/libsrcml/*.cpp)
+    include_directories(SAX2Framework)
+    file(GLOB LIBSRCML_SRC src/libsrcml/*.cpp SAX2Framework/*.cpp)
     add_definitions(-DSAX2)
 else()
     file(GLOB LIBSRCML_SRC src/libsrcml/srcml_*.cpp src/libsrcml/libsrcml.cpp src/libsrcml/srcMLReader.cpp)
