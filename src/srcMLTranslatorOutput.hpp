@@ -96,6 +96,7 @@ public:
     void processToken(const antlr::RefToken& token);
     void processBlockCommentStart(const antlr::RefToken& token);
     void processJavadocCommentStart(const antlr::RefToken& token);
+    void processDoxygenCommentStart(const antlr::RefToken& token);
     void processLineCommentStart(const antlr::RefToken& token);
     void processEndBlockToken(const antlr::RefToken& token);
     void processEndLineToken(const antlr::RefToken& token);
