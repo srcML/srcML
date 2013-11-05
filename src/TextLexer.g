@@ -53,6 +53,7 @@ tokens {
     COMMENT_START;
     JAVADOC_COMMENT_START;
     DOXYGEN_COMMENT_START;
+    LINE_DOXYGEN_COMMENT_START;
     CHAR_START;
 }
 
@@ -104,7 +105,7 @@ LINECOMMENT_START
     :   '/' ('/' { 
 
                 if(inLanguage(LANGUAGE_CXX) && (LA(1) == '/' || LA(1) == '!'))
-                    $setType(DOXYGEN_COMMENT_START);
+                    $setType(LINE_DOXYGEN_COMMENT_START);
                 
                 changetotextlexer(LINECOMMENT_END);
 

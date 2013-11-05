@@ -4870,7 +4870,7 @@ catch[...] {
 
 cpp_garbage[] :
 
- ~(EOL | LINECOMMENT_START | COMMENT_START | JAVADOC_COMMENT_START | DOXYGEN_COMMENT_START | EOF)
+ ~(EOL | LINECOMMENT_START | COMMENT_START | JAVADOC_COMMENT_START | DOXYGEN_COMMENT_START | LINE_DOXYGEN_COMMENT_START | EOF)
 
 ;
 
@@ -4881,6 +4881,7 @@ eol_skip[int directive_token, bool markblockzero] {
            LA(1) != COMMENT_START &&
            LA(1) != JAVADOC_COMMENT_START &&
            LA(1) != DOXYGEN_COMMENT_START &&
+           LA(1) != LINE_DOXYGEN_COMMENT_START &&
            LA(1) != 1 /* EOF? */
         )
                 consume();

@@ -2,22 +2,22 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Java" dir="javadoc">
 
 <unit>
-<comment type="javadoc">/** */</comment>
+<comment type="block" format="javadoc">/** */</comment>
 </unit>
 
 <unit>
-<comment type="javadoc">/**
+<comment type="block" format="javadoc">/**
 */</comment>
 </unit>
 
 <unit>
-<comment type="javadoc">/**
+<comment type="block" format="javadoc">/**
 *
 */</comment>
 </unit>
 
 <unit>
-<comment type="javadoc">/**
+<comment type="block" format="javadoc">/**
 
 */</comment>
 </unit>
