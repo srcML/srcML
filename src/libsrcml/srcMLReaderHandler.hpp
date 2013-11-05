@@ -473,7 +473,18 @@ public :
     if(is_empty) *unit->unit += ">";
     is_empty = false;
 
-    unit->unit->append((const char *)ch, len);
+    for(int i = 0; i < len; ++i) {
+      char character = (char)ch[i];
+
+      if(character == '&')
+        (*unit->unit) += "&amp;";
+      else if(character == '<')
+        (*unit->unit) += "&lt;";
+      else if(character == '>')
+        (*unit->unit) += "&gt;";
+      else
+        (*unit->unit) += character;
+    }
 
     if(terminate) stop_parser();
 
