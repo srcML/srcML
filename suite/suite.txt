@@ -139,6 +139,8 @@ LANGUAGE_JAVA anonymous_class_java
 LANGUAGE_JAVA synchronized_specifier_java
 LANGUAGE_JAVA synchronized_statement_java
 LANGUAGE_JAVA javadoc_java
+LANGUAGE_JAVA native_java
+LANGUAGE_JAVA strictfp_java
 
 LANGUAGE_OO catch_form
 LANGUAGE_OO foreach

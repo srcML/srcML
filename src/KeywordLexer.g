@@ -222,6 +222,8 @@ tokens {
     EQUALS;
     INTO;
     SYNCHRONIZED;
+    NATIVE;
+    STRICTFP;
 }
 
 {
@@ -391,6 +393,12 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
 
         // synchronized
         { "synchronized"  , SYNCHRONIZED  , LANGUAGE_JAVA },
+
+        // native
+        { "native"  , NATIVE  , LANGUAGE_JAVA },
+
+        // strictfp
+        { "strictfp"  , STRICTFP  , LANGUAGE_JAVA },
 
         // add all C# specific keywords to the literals table
         { "foreach"       , FOREACH       , LANGUAGE_CSHARP }, 

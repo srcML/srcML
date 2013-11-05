@@ -13,7 +13,7 @@ macro(add_unit_test TEST_NAME FILE_NAME)
     add_test(${TEST_NAME} ${TEST_NAME})
 endmacro(add_unit_test)
 
-include_directories(../../../src ../../../src/libsrcml)
+include_directories(../../../src ../../../src/libsrcml ../../../SAX2Framework)
 link_directories(../../../bin)
 
 # set compile and linker flags
@@ -32,7 +32,7 @@ set(COVERAGE_COMMAND /usr/bin/gcov)
 
 # Build and add tests
 add_unit_test(test_srcMLReader test_srcMLReader.cpp ${LIBXML2_LIBRARIES})
-#add_unit_test(test_srcMLSAX2Reader test_srcMLSAX2Reader.cpp ${LIBXML2_LIBRARIES})
+add_unit_test(test_srcMLSAX2Reader test_srcMLSAX2Reader.cpp ${LIBXML2_LIBRARIES})
 add_unit_test(test_srcml_append_transform test_srcml_append_transform.cpp)
 add_unit_test(test_srcml_apply_transforms test_srcml_apply_transforms.cpp)
 add_unit_test(test_srcml_archive_check_extension test_srcml_archive_check_extension.cpp)
