@@ -2800,7 +2800,6 @@ overloaded_operator[] { SingleElement element(this); ENTRY_DEBUG } :
 ;
 
 /* linq expressions */
-
 linq_expression[] { CompleteElement element(this); ENTRY_DEBUG }:
         {
             startNewMode(MODE_LOCAL);
@@ -2948,7 +2947,6 @@ variable_identifier_array_grammar_sub[bool& iscomplex] { CompleteElement element
         RBRACKET
 ;
 
-
 variable_identifier_array_grammar_sub_contents{ ENTRY_DEBUG } :
         { !inLanguage(LANGUAGE_CSHARP) }? complete_expression |
 
@@ -2956,7 +2954,6 @@ variable_identifier_array_grammar_sub_contents{ ENTRY_DEBUG } :
             ({ /* stop warning */ LA(1) == COMMA }? COMMA | complete_expression)
         )*
 ;
-
 
 attribute[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
@@ -3993,7 +3990,6 @@ rparen[bool markup = true] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
         }
 ;
 
-
 // Dot (period) operator
 period[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
@@ -4328,8 +4324,6 @@ kr_parameter_terminate[] { ENTRY_DEBUG }:
     terminate_pre terminate_token { endDownToModeSet(MODE_FUNCTION_TAIL); }
 ;
 
-
-
 complete_parameter[] { ENTRY_DEBUG } :
         parameter
         (options { greedy = true; } : parameter_declaration_initialization ({LA(1) != RPAREN }? expression)*)*
@@ -4545,7 +4539,6 @@ template_super_java[] { CompleteElement element(this); ENTRY_DEBUG } :
         SUPER
         compound_name_java
 ;
-
 
 tempops[] { ENTRY_DEBUG } :
         {
@@ -4880,7 +4873,6 @@ cpp_garbage[] :
  ~(EOL | LINECOMMENT_START | COMMENT_START | JAVADOC_COMMENT_START | EOF)
 
 ;
-  
 
 eol_skip[int directive_token, bool markblockzero] {
 
