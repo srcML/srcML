@@ -2,75 +2,75 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="doxygen">
 
 <unit>
-<comment type="doxygen">/** */</comment>
+<comment type="block" format="doxygen">/** */</comment>
 </unit>
 
 <unit>
-<comment type="doxygen">/**
+<comment type="block" format="doxygen">/**
 */</comment>
 </unit>
 
 <unit>
-<comment type="doxygen">/**
+<comment type="block" format="doxygen">/**
 *
 */</comment>
 </unit>
 
 <unit>
-<comment type="doxygen">/**
+<comment type="block" format="doxygen">/**
 
 */</comment>
 </unit>
 
 <unit>
-<comment type="doxygen">/*! */</comment>
+<comment type="block" format="doxygen">/*! */</comment>
 </unit>
 
 <unit>
-<comment type="doxygen">/*!
+<comment type="block" format="doxygen">/*!
 */</comment>
 </unit>
 
 <unit>
-<comment type="doxygen">/*!
+<comment type="block" format="doxygen">/*!
 *
 */</comment>
 </unit>
 
 <unit>
-<comment type="doxygen">/*!
+<comment type="block" format="doxygen">/*!
 
 */</comment>
 </unit>
 
 <unit>
-<comment type="doxygen">/// </comment>
+<comment type="line" format="doxygen">/// </comment>
 </unit>
 
 <unit>
-<comment type="doxygen">/// </comment>
-<comment type="doxygen">/// </comment>
+<comment type="line" format="doxygen">/// </comment>
+<comment type="line" format="doxygen">/// </comment>
 </unit>
 
 <unit>
-<comment type="doxygen">/// </comment>
-<comment type="doxygen">/// </comment>
-<comment type="doxygen">/// </comment>
+<comment type="line" format="doxygen">/// </comment>
+<comment type="line" format="doxygen">/// </comment>
+<comment type="line" format="doxygen">/// </comment>
 </unit>
 
 <unit>
-<comment type="doxygen">//! </comment>
+<comment type="line" format="doxygen">//! </comment>
 </unit>
 
 <unit>
-<comment type="doxygen">//! </comment>
-<comment type="doxygen">//! </comment>
+<comment type="line" format="doxygen">//! </comment>
+<comment type="line" format="doxygen">//! </comment>
 </unit>
 
 <unit>
-<comment type="doxygen">//! </comment>
-<comment type="doxygen">//! </comment>
-<comment type="doxygen">//! </comment>
+<comment type="line" format="doxygen">//! </comment>
+<comment type="line" format="doxygen">//! </comment>
+<comment type="line" format="doxygen">//! </comment>
 </unit>
 
 </unit>
