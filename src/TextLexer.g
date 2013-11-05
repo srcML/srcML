@@ -52,6 +52,7 @@ options {
 tokens {
     COMMENT_START;
     JAVADOC_COMMENT_START;
+    DOXYGEN_COMMENT_START;
     CHAR_START;
 }
 
@@ -102,17 +103,22 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); } :
 LINECOMMENT_START
     :   '/' ('/' { 
 
-              changetotextlexer(LINECOMMENT_END);
+                if(inLanguage(LANGUAGE_CXX) && (LA(1) == '/' || LA(1) == '!'))
+                    $setType(DOXYGEN_COMMENT_START);
+                
+                changetotextlexer(LINECOMMENT_END);
 
-              // when we return, we may have eaten the EOL, so we will turn back on startline
-              startline = true;
+                // when we return, we may have eaten the EOL, so we will turn back on startline
+                startline = true;
 
-              onpreprocline = false;
+                onpreprocline = false;
             } |
             '*'
             { 
                 if (inLanguage(LANGUAGE_JAVA) && LA(1) == '*')
                     $setType(JAVADOC_COMMENT_START);
+                else if (inLanguage(LANGUAGE_CXX) && (LA(1) == '*' || LA(1) == '!'))
+                    $setType(DOXYGEN_COMMENT_START);
                 else
                     $setType(COMMENT_START);
 

@@ -10,7 +10,8 @@ cmake_minimum_required(VERSION 2.8)
 project(srcML)
 
 set(CMAKE_BUILD_TYPE RELEASE)
-set(CMAKE_CXX_FLAGS_DEBUG "-g --coverage -O0 -fprofile-arcs -DDEBUG -DNO_DLLOAD")
+set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -DDEBUG -DNO_DLLOAD")
+#set(CMAKE_CXX_FLAGS_DEBUG "-g --coverage -O0 -fprofile-arcs -DDEBUG -DNO_DLLOAD")
 set(CMAKE_CXX_FLAGS_RELEASE -O3)
 
 option(SVN_ENABLED "Build with svn" off)
