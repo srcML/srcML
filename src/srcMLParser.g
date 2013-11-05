@@ -3061,7 +3061,7 @@ identifier[] { SingleElement element(this); ENTRY_DEBUG } :
         identifier_list
 ;
 
-identifier_list { ENTRY_DEBUG } :
+identifier_list[] { ENTRY_DEBUG } :
             NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
             SUPER | CHECKED | UNCHECKED | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD |
             SIGNAL |
@@ -3215,7 +3215,7 @@ specifier[] { SingleElement element(this); ENTRY_DEBUG } :
             // C# & Java
             INTERNAL | SEALED | OVERRIDE | REF | OUT | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE |
             DELEGATE | PARTIAL | EVENT | ASYNC | VIRTUAL | EXTERN | INLINE | IN | PARAMS |
-            { inLanguage(LANGUAGE_JAVA) }? SYNCHRONIZED |
+            { inLanguage(LANGUAGE_JAVA) }? (SYNCHRONIZED | NATIVE | STRICTFP) |
 
             CONST
         )
