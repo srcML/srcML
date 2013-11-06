@@ -66,7 +66,7 @@ if(CMAKE_BUILD_TYPE MATCHES "DEBUG")
 endif()
 
 
-include_directories(src src/libsrcml src/oldclient src/parser src/srcml src/translator)
+include_directories(src src/libsrcml src/oldclient src/parser src/srcml src/translator src/SAX2Framework)
 
 if(SVN_ENABLED)
     include_directories(/usr/include/apr-1 /usr/local/include/subversion-1)
@@ -117,29 +117,25 @@ COMMAND ${GREP} '=' src/parser/srcMLParserTokenTypes.hpp | ${SED} -e 's/,//g' -e
 )
 
 set(PARSER_SRC src/parser/srcMLParser.cpp;src/parser/KeywordLexer.cpp;src/parser/srcMLOutput.cpp;src/parser/srcMLTranslatorOutput.cpp;src/parser/Mode.cpp;src/parser/CommentTextLexer.cpp;src/parser/srcMLParserTokenTypesMacro.hpp)
-set(SRCMLUTILITY_SRC src/libsrcml/srcMLUtility.cpp;src/libsrcml/SAX2ExtractUnitsSrc.cpp;src/libsrcml/SAX2Utilities.cpp;src/libsrcml/srcexfun.cpp)
-set(TRANSLATOR_SRC src/translator/srcMLTranslator.cpp;src/translator/srcMLTranslatorCore.cpp;src/translator/UTF8CharBuffer.cpp;src/translator/Language.cpp;src/translator/URIStream.cpp;src/translator/libxml_archive_read.cpp;src/translator/libxml_archive_write.cpp)
+file(GLOB TRANSLATOR_SRC src/translator/*.cpp)
 set(SRCMLAPPS_SRC src/srcml/srcmlapps.cpp)
+file(GLOB LIBSRCML_SRC src/libsrcml/*.cpp src/SAX2Framework/*.cpp)
+
 if(LIBSRCML_SAX2_ENABLED)
-    include_directories(SAX2Framework)
-    file(GLOB LIBSRCML_SRC src/libsrcml/*.cpp SAX2Framework/*.cpp)
     add_definitions(-DSAX2)
-else()
-    file(GLOB LIBSRCML_SRC src/libsrcml/srcml_*.cpp src/libsrcml/libsrcml.cpp src/libsrcml/srcMLReader.cpp)
 endif()
 
 if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.8.7)
 
     add_library(parser OBJECT ${PARSER_SRC})
-    add_library(srcmlutility OBJECT ${SRCMLUTILITY_SRC})
     add_library(translator OBJECT ${TRANSLATOR_SRC})
     add_library(srcmlapps OBJECT ${SRCMLAPPS_SRC})
     add_library(libsrcml OBJECT ${LIBSRCML_SRC})
 
     # libsrcml static
-    add_library(srcml_static STATIC $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:srcmlapps> $<TARGET_OBJECTS:srcmlutility>)
+    add_library(srcml_static STATIC $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:srcmlapps>)
 else()
-    add_library(srcml_static STATIC ${LIBSRCML_SRC} ${PARSER_SRC} ${SRCMLUTILITY_SRC} ${TRANSLATOR_SRC} ${SRCMLAPPS_SRC})
+    add_library(srcml_static STATIC ${LIBSRCML_SRC} ${PARSER_SRC} ${TRANSLATOR_SRC} ${SRCMLAPPS_SRC})
 endif()
 
 target_link_libraries(srcml_static ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${LIBREGEX_LIBRARY} ${LINK_EXTRA})
@@ -149,9 +145,9 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
 
     # libsrcml shared
     if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.8.7)
-        add_library(srcml_shared SHARED $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:srcmlutility> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:srcmlapps>)
+        add_library(srcml_shared SHARED $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:srcmlapps>)
     else()
-        add_library(srcml_shared SHARED ${LIBSRCML_SRC} ${PARSER_SRC} ${SRCMLUTILITY_SRC} ${TRANSLATOR_SRC} ${SRCMLAPPS_SRC})
+        add_library(srcml_shared SHARED ${LIBSRCML_SRC} ${PARSER_SRC} ${TRANSLATOR_SRC} ${SRCMLAPPS_SRC})
     endif()
     target_link_libraries(srcml_shared ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} ${LIBREGEX_LIBRARY})
     set_target_properties(srcml_shared PROPERTIES OUTPUT_NAME srcml)
@@ -159,9 +155,9 @@ else()
 
     # libsrcml shared
     if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.8.7)
-        add_library(srcml_shared SHARED $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:srcmlutility> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:srcmlapps>)
+        add_library(srcml_shared SHARED $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:srcmlapps>)
 else()
-       add_library(srcml_shared SHARED ${LIBSRCML_SRC} ${PARSER_SRC} ${SRCMLUTILITY_SRC} ${TRANSLATOR_SRC} ${SRCMLAPPS_SRC})
+       add_library(srcml_shared SHARED ${LIBSRCML_SRC} ${PARSER_SRC} ${TRANSLATOR_SRC} ${SRCMLAPPS_SRC})
     endif()
     target_link_libraries(srcml_shared ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${LINK_EXTRA})
     set_target_properties(srcml_shared PROPERTIES OUTPUT_NAME srcml)
