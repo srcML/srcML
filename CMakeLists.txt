@@ -80,9 +80,9 @@ find_program(ANTLR NAMES antlr runantlr cantlr antlr2 antlr.bat PATHS /usr/bin /
 find_program(SED NAMES gsed sed PATHS /opt/local/bin /usr/local /bin)
 find_program(GREP grep PATHS /bin /usr/bin)
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY bin)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY bin)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY build)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY build)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY build)
 
 # Run antlr
 add_custom_command(OUTPUT src/parser/CommentTextLexer.cpp src/parser/CommentTextLexer.hpp src/parser/CommentTextLexerTokenTypes.txt src/parser/CommentTextLexerTokenTypes.hpp 
