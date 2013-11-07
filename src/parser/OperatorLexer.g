@@ -56,6 +56,7 @@ TERMINATE; // = ";";
 PREPROC;
 COLON; // = ":";
 QMARK;
+BAR; // |
 
 // define value in master grammar so that it depends on language
 DCOLON;

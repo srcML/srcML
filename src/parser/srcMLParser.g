@@ -597,7 +597,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         // end of line
         line_continuation | EOL | LINECOMMENT_START |
 
-        comma |
+        comma | bar |
 
         { !inTransparentMode(MODE_INTERNAL_END_PAREN) || inPrevMode(MODE_CONDITION) }? rparen[false] |
 
@@ -2137,6 +2137,23 @@ lparen_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
         LPAREN
 ;
 
+bar[] { ENTRY_DEBUG }:
+        {
+            // comma ends the current item in a list
+            // or ends the current expression
+            if (!inTransparentMode(MODE_PARSE_EOL)
+                && (inTransparentMode(MODE_LIST) || inTransparentMode(MODE_STATEMENT)))
+
+                // might want to check for !inMode(MODE_INTERNAL_END_CURLY)
+                endDownToModeSet(MODE_LIST | MODE_STATEMENT);
+
+            // comma in a variable initialization end init of current variable
+            if (inMode(MODE_IN_INIT))
+                endMode(MODE_IN_INIT);
+        }
+        BAR
+;
+
 comma[] { ENTRY_DEBUG }:
         {
             // comma ends the current item in a list
@@ -2496,7 +2513,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
               and it is part of a parameter list
         */
         set_type[type, VARIABLE, ((type_count - specifier_count > 0) ||
-                                 (inparam && (LA(1) == RPAREN || LA(1) == COMMA || LA(1) == LBRACKET ||
+                                 (inparam && (LA(1) == RPAREN || LA(1) == COMMA || LA(1) == BAR|| LA(1) == LBRACKET ||
                                               ((inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_C)) && LA(1) == EQUAL))))]
 
         // need to see if we possibly have a constructor/destructor name, with no type
@@ -4274,7 +4291,7 @@ parameter_list[] { CompleteElement element(this); bool lastwasparam = false; boo
             // We are in a parameter list.  Need to make sure we end it down to the start of the parameter list
             if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
                 endMode();
-        } comma |
+        } comma | bar |
         complete_parameter { foundparam = lastwasparam = true; })* empty_element[SPARAMETER, !lastwasparam && foundparam] rparen[false]
 ;
 

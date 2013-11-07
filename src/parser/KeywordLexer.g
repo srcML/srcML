@@ -273,6 +273,7 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
 	    { ":"             , COLON         , LANGUAGE_ALL }, 
 	    { "}"             , RCURLY        , LANGUAGE_ALL }, 
 	    { ","             , COMMA         , LANGUAGE_ALL }, 
+	    { "|"             , BAR         , LANGUAGE_JAVA }, 
 	    { "]"             , RBRACKET      , LANGUAGE_ALL }, 
 	    { "{"             , LCURLY        , LANGUAGE_ALL }, 
 	    { "["             , LBRACKET      , LANGUAGE_ALL }, 
