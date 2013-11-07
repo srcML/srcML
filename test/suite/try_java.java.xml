@@ -2,19 +2,19 @@
 <unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="try">
 
 <unit>
-<try>try() <block>{}</block></try>
+<try>try(<expr/>) <block>{}</block></try>
 </unit>
 
 <unit>
-<try>try(a) <block>{}</block></try>
+<try>try(<expr><name>a</name></expr>) <block>{}</block></try>
 </unit>
 
 <unit>
-<try>try(a = b) <block>{}</block></try>
+<try>try(<expr><name>a</name> = <name>b</name></expr>) <block>{}</block></try>
 </unit>
 <unit>
 
-<try>try(A a = A()) <block>{}</block></try>
+<try>try(<decl><type>A</type> <name>a</name> =<init> new <call><name>A</name><argument_list>()</argument_list></call></init></decl>) <block>{}</block></try>
 </unit>
 
 </unit>
