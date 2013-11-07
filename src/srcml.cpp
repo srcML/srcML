@@ -59,6 +59,19 @@ struct ParseRequest {
 
 ParseRequest NullParseRequest;
 
+bool checkLocalFile(const std::string& pos_arg) {
+  FILE * local;
+  if(pos_arg.find("http:") == std::string::npos){
+    local = fopen(pos_arg.c_str(),"r");
+    if (local == NULL) {
+      std::cerr << "File " << pos_arg << " not found.\n";
+      return false;
+    }
+    fclose(local);
+  }
+  return true;
+}
+
 int main(int argc, char * argv[]) {
   
   srcml_request_t srcml_request = srcmlCLI::parseCLI(argc, argv);
@@ -106,19 +119,29 @@ int main(int argc, char * argv[]) {
            srcml_request.xmlns_prefix[i].substr(pos+1).c_str());
   }
 
-  // CHECK TO SEE WHAT VERSION OF LIBARCHIVE IS RUNNING
-  // SWITCH ON FEATURES (LIBARCHIVE FOR DIRECTORY, ETC.)
-  #if ARCHIVE_VERSION_NUMBER < 3000000
-    //YOU HAVE V2 OR LOWER
-  #else
-    //YOU HAVE V3 OR HIGHER
-  #endif
+  /* 
+    MIGHT USE THIS LATER:
+    CHECK TO SEE WHAT VERSION OF LIBARCHIVE IS RUNNING
+    SWITCH ON FEATURES (LIBARCHIVE FOR DIRECTORY, ETC.)
+    #if ARCHIVE_VERSION_NUMBER < 3000000
+      //YOU HAVE V2 OR LOWER
+    #else
+      //YOU HAVE V3 OR HIGHER
+    #endif
+  */
 
   ThreadQueue<ParseRequest, 10> queue;
   
-  if (srcml_request.positional_args.empty())
+  if (srcml_request.positional_args.empty()) {
+    std::cerr << "No input files found.\n";
     return 0;
+  }
   
+  for (int i = 0; i < srcml_request.positional_args.size(); ++i) {
+    if (!checkLocalFile(srcml_request.positional_args[i]))
+      return 1;
+  } 
+
   if (srcml_request.positional_args.size() == 1) {
     srcml(srcml_request.positional_args[0].c_str(), srcml_request.output.c_str());
     return 0;
@@ -133,7 +156,6 @@ int main(int argc, char * argv[]) {
   /* add all the files to the archive */
   for(int i = 0; i < srcml_request.positional_args.size(); ++i) {
     srcml_unit * unit = srcml_create_unit(archive);
-
     srcml_unit_set_filename(unit, srcml_request.positional_args[i].c_str());
 
     /* Translate to srcml and append to the archive */
@@ -141,7 +163,6 @@ int main(int argc, char * argv[]) {
 
     /* Translate to srcml and append to the archive */
     srcml_write_unit(archive, unit);
-
     srcml_free_unit(unit);
   }
 
