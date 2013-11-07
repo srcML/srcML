@@ -6,6 +6,10 @@
 </unit>
 
 <unit>
+<catch>catch (<param><decl><type><name>a</name></type></decl></param>|<param><decl><type><name>b</name></type></decl> <name>c</name></param>) <block>{}</block></catch>
+</unit>
+
+<unit>
 <catch>catch (<param><decl><type><name>a</name></type> <name>b</name></decl></param>|<param><decl><type><name>c</name></type></decl> <name>d</name></param>) <block>{}</block></catch>
 </unit>
 
