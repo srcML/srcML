@@ -2385,7 +2385,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
             set_bool[sawenum, sawenum || LA(1) == ENUM]
             (
-                { _tokenSet_21.member(LA(1)) && (token != SIGNAL || (token == SIGNAL && look_past(SIGNAL) == COLON))}?
+                { _tokenSet_21.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON))}?
                 set_int[token, LA(1)]
                 set_bool[foundpure, foundpure || LA(1) == CONST]
                 (specifier | (SIGNAL COLON)=>SIGNAL)
@@ -3210,12 +3210,12 @@ specifier[] { SingleElement element(this); ENTRY_DEBUG } :
             PUBLIC | PRIVATE | PROTECTED |
 
             // C++
-            FINAL | STATIC | ABSTRACT | FRIEND | { inLanguage(LANGUAGE_CSHARP) }? NEW | VOLATILE | MUTABLE |
+            FINAL | STATIC | ABSTRACT | FRIEND | { inLanguage(LANGUAGE_CSHARP) }? NEW | MUTABLE |
 
             // C# & Java
             INTERNAL | SEALED | OVERRIDE | REF | OUT | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE |
             DELEGATE | PARTIAL | EVENT | ASYNC | VIRTUAL | EXTERN | INLINE | IN | PARAMS |
-            { inLanguage(LANGUAGE_JAVA) }? (SYNCHRONIZED | NATIVE | STRICTFP) |
+            { inLanguage(LANGUAGE_JAVA) }? (SYNCHRONIZED | NATIVE | STRICTFP | TRANSIENT) |
 
             CONST
         )
