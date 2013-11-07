@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="catch">
+
+<unit>
+<catch>catch (<param><decl><type><name>a</name></type></decl></param>|<param><decl><type><name>b</name></type></decl></param>) <block>{}</block></catch>
+</unit>
+
+<unit>
+<catch>catch (<param><decl><type><name>a</name></type> <name>b</name></decl></param>|<param><decl><type><name>c</name></type></decl> <name>d</name></param>) <block>{}</block></catch>
+</unit>
+
+</unit>
