@@ -242,8 +242,4 @@
 <decl_stmt><decl><type><name>var</name></type> <name>signal</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
-<decl_stmt><decl><type><specifier>volatile</specifier> <name>var</name></type> <name>signal</name></decl>;</decl_stmt>
-</unit>
-
 </unit>
