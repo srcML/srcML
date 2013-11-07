@@ -83,7 +83,7 @@ STRING_START :
 
 CONSTANTS :
         { startline = false; }
-        ('0'..'9') (options { greedy = true; } : '0'..'9' | 'x' | 'A'..'F' | 'a'..'f' )*
+        ('0'..'9') (options { greedy = true; } : '0'..'9' | 'x' | 'A'..'F' | 'a'..'f' | '_' )*
         (options { greedy = true; } : "." | '0'..'9')*
         (options { greedy = true; } : NAME)*
 ;
