@@ -273,7 +273,6 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
 	    { ":"             , COLON         , LANGUAGE_ALL }, 
 	    { "}"             , RCURLY        , LANGUAGE_ALL }, 
 	    { ","             , COMMA         , LANGUAGE_ALL }, 
-	    { "|"             , BAR         , LANGUAGE_JAVA }, 
 	    { "]"             , RBRACKET      , LANGUAGE_ALL }, 
 	    { "{"             , LCURLY        , LANGUAGE_ALL }, 
 	    { "["             , LBRACKET      , LANGUAGE_ALL }, 
@@ -400,6 +399,10 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
 
         // strictfp
         { "strictfp"  , STRICTFP  , LANGUAGE_JAVA },
+
+        // catch seperator
+	    { "|"             , BAR         , LANGUAGE_JAVA }, 
+
 
         // add all C# specific keywords to the literals table
         { "foreach"       , FOREACH       , LANGUAGE_CSHARP }, 
