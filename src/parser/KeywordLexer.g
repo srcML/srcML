@@ -159,6 +159,7 @@ tokens {
     CONST;
     MUTABLE;
     VOLATILE;
+    TRANSIENT;
 
     // Java tokens
     IMPORT;
@@ -316,7 +317,7 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
 
         { "const"         , CONST         , LANGUAGE_ALL }, 
         { "mutable"       , MUTABLE       , LANGUAGE_CXX }, 
-        { "volatile"      , VOLATILE      , LANGUAGE_CXX_FAMILY }, 
+        { "volatile"      , VOLATILE      , LANGUAGE_OO }, 
 
         // add all C++ and Java specific keywords to the literals table
 
@@ -399,6 +400,7 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
 
         // strictfp
         { "strictfp"  , STRICTFP  , LANGUAGE_JAVA },
+        { "transient"      , TRANSIENT      , LANGUAGE_JAVA }, 
 
         // add all C# specific keywords to the literals table
         { "foreach"       , FOREACH       , LANGUAGE_CSHARP }, 
@@ -424,7 +426,6 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         { "endregion"     , ENDREGION     , LANGUAGE_CSHARP }, 
         { "unsafe"        , UNSAFE        , LANGUAGE_CSHARP }, 
         { "readonly"      , READONLY      , LANGUAGE_CSHARP }, 
-        { "volatile"      , VOLATILE      , LANGUAGE_CSHARP }, 
         { "partial"       , PARTIAL       , LANGUAGE_CSHARP }, 
         { "get"           , GET           , LANGUAGE_CSHARP }, 
         { "set"           , SET           , LANGUAGE_CSHARP }, 
