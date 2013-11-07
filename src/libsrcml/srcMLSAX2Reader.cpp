@@ -164,9 +164,7 @@ int srcMLSAX2Reader::readUnitAttributes(std::string ** language, std::string ** 
   if(handler.is_done) return 0;
 
   handler.collect_unit_attributes = true;
-
-  handler.resume();
-  handler.wait();
+  handler.resume_and_wait();
   handler.collect_unit_attributes = false;
 
   if(handler.is_done) return 0;
@@ -193,8 +191,7 @@ std::string * srcMLSAX2Reader::readsrcML() {
 
   if(handler.is_done) return 0;
   handler.collect_srcml = true;
-  handler.resume();
-  handler.wait();
+  handler.resume_and_wait();
   handler.collect_srcml = false;
 
   if(handler.is_done) return 0;

@@ -111,7 +111,7 @@ public :
     pthread_mutex_unlock(&mutex);
 
   }
-
+ 
   /**
    * resume
    *
@@ -121,6 +121,25 @@ public :
 
     pthread_mutex_lock(&mutex);
     pthread_cond_broadcast(&cond);
+    pthread_mutex_unlock(&mutex);
+
+  }
+
+  /**
+   * resume_and_wait
+   *
+   * Atomic resume SAX2 execution then wait.
+   */
+  void resume_and_wait() {
+
+    pthread_mutex_lock(&mutex);
+    pthread_cond_broadcast(&cond);
+    if(is_done) {
+      pthread_mutex_unlock(&mutex);
+      return;
+    }
+
+    pthread_cond_wait(&is_done_cond, &mutex);
     pthread_mutex_unlock(&mutex);
 
   }
