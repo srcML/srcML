@@ -190,7 +190,7 @@ def src2srcML_executable(text_file, encoding, language, directory, filename, pre
         return safe_communicate(command, text_file)
 
 # find differences of two files
-def src2srcML(text_file, encoding, language, directory, filename, prefixlist):
+def src2srcML(text_file, encoding, language, directory, filename, xmlns):
 
         options = xmlns
         if language != "Java" :
