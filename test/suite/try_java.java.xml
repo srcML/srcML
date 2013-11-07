@@ -14,7 +14,7 @@
 </unit>
 <unit>
 
-<try>try(<decl><type>A</type> <name>a</name> =<init> new <call><name>A</name><argument_list>()</argument_list></call></init></decl>) <block>{}</block></try>
+<try>try(<decl><type><name>A</name></type> <name>a</name> =<init> <expr>new <call><name>A</name><argument_list>()</argument_list></call></expr></init></decl>) <block>{}</block></try>
 </unit>
 
 </unit>
