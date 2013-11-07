@@ -56,6 +56,9 @@ private :
   /** track if empty unit */
   bool is_empty;
 
+  /** indicate if we need to wait on the root */
+  bool wait_root;
+
 public :
 
   /** Give access to membeers for srcMLSAX2Reader class */
@@ -66,7 +69,7 @@ public :
    *
    * Constructor.  Sets up mutex, conditions and state.
    */
-  srcMLReaderHandler() : unit(0), is_done(false), read_root(false), collect_unit_attributes(false), collect_srcml(false), terminate(false), is_empty(false) {
+  srcMLReaderHandler() : unit(0), is_done(false), read_root(false), collect_unit_attributes(false), collect_srcml(false), terminate(false), is_empty(false), wait_root(true) {
 
     archive = srcml_create_archive();
     archive->prefixes.clear();
@@ -107,7 +110,7 @@ public :
       return;
     }
 
-    if(!read_root) pthread_cond_wait(&is_done_cond, &mutex);
+    if(wait_root) pthread_cond_wait(&is_done_cond, &mutex);
     pthread_mutex_unlock(&mutex);
 
   }
@@ -255,10 +258,11 @@ public :
 
     // pause
     pthread_mutex_lock(&mutex);
-    read_root = true;
+    wait_root = false;
     pthread_cond_broadcast(&is_done_cond);
     pthread_cond_wait(&cond, &mutex);
     pthread_mutex_unlock(&mutex);
+    read_root = true;
 
     if(terminate) stop_parser();
 
