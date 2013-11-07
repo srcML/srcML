@@ -15,7 +15,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -DDEBUG -DNO_DLLOAD")
 set(CMAKE_CXX_FLAGS_RELEASE -O3)
 
 option(SVN_ENABLED "Build with svn" off)
-option(LIBSRCML_SAX2_ENABLED "Build with SAX2Framework for srcML" off)
+option(LIBSRCML_SAX2_ENABLED "Build with SAX2Framework for srcML" on)
 
 # specify g++ compiler
 if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
