@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="try">
+
+<unit>
+<try>try(<expr/>) <block>{}</block></try>
+</unit>
+
+<unit>
+<try>try(<expr><name>a</name></expr>) <block>{}</block></try>
+</unit>
+
+<unit>
+<try>try(<expr><name>a</name> = <name>b</name></expr>) <block>{}</block></try>
+</unit>
+<unit>
+
+<try>try(<decl><type><name>A</name></type> <name>a</name> =<init> <expr>new <call><name>A</name><argument_list>()</argument_list></call></expr></init></decl>) <block>{}</block></try>
+</unit>
+
+</unit>

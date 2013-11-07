@@ -662,7 +662,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         template_declaration |
 
         // exception statements
-        try_statement | catch_statement | finally_statement | throw_statement |
+        { inLanguage(LANGUAGE_JAVA) }? (TRY LPAREN)=>try_statement_with_resource | try_statement | catch_statement | finally_statement | throw_statement |
 
         // namespace statements
         namespace_definition | using_namespace_statement |
@@ -3486,6 +3486,38 @@ try_statement[] { ENTRY_DEBUG } :
             startElement(STRY_BLOCK);
         }
         TRY
+;
+
+try_statement_with_resource[] {  int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+        {
+            // treat try block as nested block statement
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_TRY);
+
+            // start of the try statement
+            startElement(STRY_BLOCK);
+            // expect a condition to follow the keyword
+
+            startNewMode(MODE_TOP | MODE_LIST | MODE_EXPECT | MODE_INTERNAL_END_PAREN);
+        }
+        TRY LPAREN
+        (
+            // explicitly check for a variable declaration since it can easily
+            // be confused with an expression
+            { pattern_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
+            for_initialization_variable_declaration[type_count] |
+
+            {
+                // use a new mode without the expect so we don't nest expression parts
+                startNewMode(MODE_EXPRESSION);
+
+                // start the expression element
+                startElement(SEXPRESSION);
+            }
+            // explicitly check for non-terminate so that a large switch statement
+            // isn't needed
+            expression
+        )
+
 ;
 
 checked_statement[] { ENTRY_DEBUG } :
