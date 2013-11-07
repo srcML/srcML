@@ -14,11 +14,19 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="number">_10</lit:literal></expr>;</expr_stmt>
+<expr_stmt><expr><lit:literal type="number">10_</lit:literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><lit:literal type="number">10_</lit:literal></expr>;</expr_stmt>
+<expr_stmt><expr><lit:literal type="number">0._1</lit:literal></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><lit:literal type="number">0.1_</lit:literal></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><lit:literal type="number">1_1.1_1</lit:literal></expr>;</expr_stmt>
 </unit>
 
 </unit>
