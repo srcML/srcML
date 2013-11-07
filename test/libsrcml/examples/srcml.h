@@ -1,31 +1,32 @@
-/*
-  srcml.h
-
-  Copyright (C) 2013  SDML (www.sdml.info)
-
-  The srcML translator is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  The srcML translator is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with the srcML translator; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+/**
+ * @file srcml.h
+ * @copyright
+ *
+ * Copyright (C) 2013  SDML (www.srcML.org)
+ *
+ * The srcML Toolkit is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * The srcML Toolkit is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with the srcML Toolkit; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 /*
   Ideas/standards used in this API (For internal use)
   * srcml functions form the namespace srcml_*
   * Only types that are passed as parameters:
-      - struct srcml_archive*
-      - struct srcml_unit*
-      - char*
-      - int
+  - srcml_archive* (struct srcml_archive*)
+  - srcml_unit* (struct srcml_unit*)
+  - char*
+  - int
 */
 
 #ifndef INCLUDED_SRCML_H
@@ -39,36 +40,66 @@ extern "C" {
 #endif
 
 /* Header file version macros */
-#define SRCML_VERSION_NUMBER 1
-#define SRCML_VERSION_STRING "libsrcml 0.5"
+/** number representing libsrcml version */
+#define SRCML_VERSION_NUMBER 10000
+/** string containing libsrcml version */
+#define SRCML_VERSION_STRING "libsrcml 0.9"
+
+/* Cleanup the globally allocated items */
+void srcml_cleanup_globals();
 
 /* Library version functions */
 int srcml_version_number();
 const char* srcml_version_string();
 
 /* Core language set */
+/** srcML language not set */
 #define SRCML_LANGUAGE_NONE   0
+/** string for language C */
 #define SRCML_LANGUAGE_C      "C"
+/** string for language C++ */
 #define SRCML_LANGUAGE_CXX    "C++"
+/** string for language Java */
 #define SRCML_LANGUAGE_JAVA   "Java"
+/** string for language C# */
 #define SRCML_LANGUAGE_CSHARP "C#"
+/** string for language XML */
 #define SRCML_LANGUAGE_XML    "xml"
 
 /* Options */
-#define SRCML_OPTION_LITERAL           1<<2/*1<<0  /* Markups literal in special namespace */
-#define SRCML_OPTION_MODIFIER          1<<17/*1<<1  /* Markups modifiers in special namespace */
-#define SRCML_OPTION_ARCHIVE           1<<1/*1<<2  /* Create an archive */
-#define SRCML_OPTION_POSITION          1<<10/*1<<3  /* Include line/column position attributes */
-#define SRCML_OPTION_COMPRESS          1<<3/*1<<4  /* Compress the output file */
-#define SRCML_OPTION_NO_XML_DECL       1<<29 | 1<<18/*1<<5  /* Do not issue an XML declaration */
-#define SRCML_OPTION_NO_NAMESPACE_DECL 1<<30 | 1<<18/*1<<6  /* Do not include any XML namespace declarations */
-#define SRCML_OPTION_CPP               1<<28 | 1<<22/*1<<7  /* Markup preprocessor elements (default for C, C++, C#) */
-#define SRCML_OPTION_CPP_TEXT_ELSE     1<<22/*1<<8  /* Leave as text preprocessor else parts (default: markup) */
-#define SRCML_OPTION_CPP_MARKUP_IF0    1<<23/*1<<9  /* Markup preprocessor #if 0 sections (default: leave as text) */
-#define SRCML_OPTION_APPLY_ROOT        1<<27/*1<<10 /* Apply transformations to the entire srcML file (default: each unit */
+/** Create an archive */
+#define SRCML_OPTION_ARCHIVE           1<<0
+/** Markups literal in special namespace */
+#define SRCML_OPTION_LITERAL           1<<1
+/** Markups modifiers in special namespace */
+#define SRCML_OPTION_MODIFIER          1<<2
+/** Markups operator in special namespace */
+#define SRCML_OPTION_OPERATOR          1<<3
+/** Markups operator in special namespace */
+#define SRCML_OPTION_DEBUG             1<<4
+/** Include line/column position attributes */
+#define SRCML_OPTION_POSITION          1<<5
+/** Markup preprocessor elements (default for C, C++) */
+#define SRCML_OPTION_CPP               1<<6
+/** Markup preprocessor elements (default for C, C++, C#) */
+#define SRCML_OPTION_CPP_NOMACRO       1<<7
+/** Do not issue an XML declaration */
+#define SRCML_OPTION_NO_XML_DECL       1<<8
+/** Do not include any XML namespace declarations */
+#define SRCML_OPTION_NO_NAMESPACE_DECL 1<<9
+/** Leave as text preprocessor else parts (default: markup) */
+#define SRCML_OPTION_CPP_TEXT_ELSE     1<<10
+/** Markup preprocessor @code #if 0 @endcode sections (default: leave as text) */
+#define SRCML_OPTION_CPP_MARKUP_IF0    1<<11
+/** Apply transformations to the entire srcML file (default: each unit */
+#define SRCML_OPTION_APPLY_ROOT        1<<12
+/** Compress the output file */
+#define SRCML_OPTION_COMPRESS          1<<13
 
 /* srcml status messages */
+/** Return status indicating no errors */
 #define SRCML_STATUS_OK    0
+/** Return status indicating errors occurred */
 #define SRCML_STATUS_ERROR 1
 
 /* srcML data structures */
@@ -78,23 +109,23 @@ struct srcml_unit;
 /*
   Convenience function for translating to and from the srcML format
 
-    * Translates from source code to srcML if the input_filename
-      extension is for source code, e.g., .c, .cpp, .java
-      Language determined by file extension if language is not
-      set with srcml_set_language()
+  * Translates from source code to srcML if the input_filename
+  extension is for source code, e.g., .c, .cpp, .java
+  Language determined by file extension if language is not
+  set with srcml_set_language()
+  
+  * Translates from srcML to source code if the input_filename
+  extension is '.xml'.
 
-    * Translates from srcML to source code if the input_filename
-      extension is '.xml'.
+  * Input filenames can be for a file, a compressed file, a
+  source-code archive (e.g., .tar), or a URI that is for any of
+  these.  Additionally, the input filename can be for a directory.
 
-    * Input filenames can be for a file, a compressed file, a
-      source-code archive (e.g., .tar), or a URI that is for any of
-      these.  Additionally, the input filename can be for a directory.
+  * Options can be specified with the global srcml_set_*(),
+  srcml_clear_(), and srcml_register_*()
 
-    * Options can be specified with the global srcml_set_*(),
-      srcml_clear_(), and srcml_register_*()
-
-    * Options can be queried with the global srcml_get_*() and
-      srcml_check_*()
+  * Options can be queried with the global srcml_get_*() and
+  srcml_check_*()
 */
 int srcml(const char* input_filename, const char* output_filename);
 
@@ -106,7 +137,7 @@ int srcml_set_language  (const char* language);
 int srcml_set_filename  (const char* filename);
 int srcml_set_directory (const char* directory);
 int srcml_set_version   (const char* version);
-int srcml_set_options   (int option);
+int srcml_set_all_options   (int option);
 int srcml_set_option    (int option);
 int srcml_clear_option  (int option);
 int srcml_set_tabstop   (int tabstop);
@@ -156,15 +187,11 @@ const char* srcml_error_string();
 
 /* currently registered language for a file extension
    When full filename is given, the extension is extracted */
-const char * srcml_archive_check_extension(struct srcml_archive * archive, const char* filename);
+const char* srcml_archive_check_extension(struct srcml_archive* archive, const char* filename);
 
 /* create a new srcml archive
    client is responsible for freeing it using srcml_free_archive() */
 struct srcml_archive* srcml_create_archive();
-
-/* free srcml archive 
-   allocated by srcml_create_archive() */
-void srcml_free_archive(struct srcml_archive * archive);
 
 /* clone the setup of an existing archive
    client is responsible for freeing it using srcml_free_archive() */
@@ -172,7 +199,7 @@ struct srcml_archive* srcml_clone_archive(const struct srcml_archive*);
 
 /* open a srcML archive for output */
 int srcml_write_open_filename(struct srcml_archive*, const char* srcml_filename);
-int srcml_write_open_memory  (struct srcml_archive*, char** buffer);
+int srcml_write_open_memory  (struct srcml_archive*, char** buffer, int * size);
 int srcml_write_open_FILE    (struct srcml_archive*, FILE* srcml_file);
 int srcml_write_open_fd      (struct srcml_archive*, int srcml_fd);
 
@@ -182,8 +209,8 @@ int srcml_archive_set_language  (struct srcml_archive*, const char* language);
 int srcml_archive_set_filename  (struct srcml_archive*, const char* filename);
 int srcml_archive_set_directory (struct srcml_archive*, const char* directory);
 int srcml_archive_set_version   (struct srcml_archive*, const char* version);
-int srcml_archive_set_attributes(struct srcml_archive*, const char* attr[][2]);
-int srcml_archive_set_options   (struct srcml_archive*, int option);
+
+int srcml_archive_set_all_options   (struct srcml_archive*, int option);
 int srcml_archive_set_option    (struct srcml_archive*, int option);
 int srcml_archive_clear_option  (struct srcml_archive*, int option);
 int srcml_archive_set_tabstop   (struct srcml_archive*, int tabstop);
@@ -201,7 +228,7 @@ int         srcml_archive_get_tabstop  (const struct srcml_archive*);
 
 /* create a new srcml unit
    client is responsible for freeing it using srcml_free_unit() */
-struct srcml_unit* srcml_create_unit(struct srcml_archive * archive);
+struct srcml_unit* srcml_create_unit(struct srcml_archive* archive);
 
 /* Setup options for srcml unit */
 int srcml_unit_set_language (struct srcml_unit*, const char* language);
@@ -235,11 +262,17 @@ int srcml_read_open_memory  (struct srcml_archive*, const char* buffer, size_t b
 int srcml_read_open_FILE    (struct srcml_archive*, FILE* srcml_file);
 int srcml_read_open_fd      (struct srcml_archive*, int srcml_fd);
 
-/* Read the next unit from the archive */
+/* Read the next unit from the archive
+   Return 0 if there are no more unit */
 struct srcml_unit* srcml_read_unit(struct srcml_archive*);
 
+/* Read over the next unit from the archive
+   Returns 0 if no unit to skip */
+int srcml_skip_unit(struct srcml_archive*);
+
 /* Read a unit at a specific position in an archive
-   Unit numbers start at 1 */
+   Unit numbers start at 1
+   Returns 0 if pos unit does not exist */
 struct srcml_unit* srcml_read_unit_position(struct srcml_archive*, int pos);
 
 /* Query options of srcml unit */
@@ -251,13 +284,12 @@ const char* srcml_unit_get_xml      (const struct srcml_unit*);
 
 /* Convert from srcML to source code */
 int srcml_unparse_unit_filename(struct srcml_unit*, const char* src_filename);
-int srcml_unparse_unit_memory  (struct srcml_unit*, char** src_buffer);
+int srcml_unparse_unit_memory  (struct srcml_unit*, char** src_buffer, int * src_size);
 int srcml_unparse_unit_FILE    (struct srcml_unit*, FILE* srcml_file);
 int srcml_unparse_unit_fd      (struct srcml_unit*, int srcml_fd);
 
-const char** srcml_info(const char* srcml_filename);
-const char** srcml_longinfo(const char* srcml_filename);
-const char** srcml_info_unit(const char* srcml_filename, int unit);
+// @todo Consider removing this and making srcml client iterate over the values
+// Problems with memory handling
 const char** srcml_list(const char* srcml_filename);
 
 /* srcML XPath query and XSLT transform functions */
