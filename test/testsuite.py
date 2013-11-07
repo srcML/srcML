@@ -407,7 +407,7 @@ elif len(sys.argv) > 2:
 		speclang = sys.argv[3]
 
 # base directory
-base_dir = "../suite"
+base_dir = "suite"
 
 errorlist = []
 

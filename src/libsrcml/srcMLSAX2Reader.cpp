@@ -21,7 +21,7 @@
 
 #include <srcMLSAX2Reader.hpp>
 
-#include <../srcmlns.hpp>
+#include <srcmlns.hpp>
 #include <srcml.h>
 
 #include <stdlib.h>

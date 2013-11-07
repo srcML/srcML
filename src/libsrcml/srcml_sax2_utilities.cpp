@@ -32,7 +32,7 @@
 
 #include <libexslt/exslt.h>
 
-#if defined(__GNUG__) && !defined(__MINGW32__)
+#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
 #include <dlfcn.h>
 #endif
 
@@ -153,7 +153,7 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_elemen
  */
 void dlexsltRegisterAll() {
 
-#if defined(__GNUG__) && !defined(__MINGW32__)
+#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
   typedef void (*exsltRegisterAll_function)();
 
   void* handle = dlopen("libexslt.so", RTLD_LAZY);
@@ -181,7 +181,7 @@ void dlexsltRegisterAll() {
 
 #endif
 
-#if defined(__GNUG__) && !defined(__MINGW32__)
+#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
   dlclose(handle);
 #endif
 }
@@ -209,7 +209,7 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
   // allow for all exstl functions
   dlexsltRegisterAll();
 
-#if defined(__GNUG__) && !defined(__MINGW32__)
+#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
   typedef xsltStylesheetPtr (*xsltParseStylesheetFile_function) (const xmlChar*);
   typedef void (*xsltCleanupGlobals_function)();
   typedef void (*xsltFreeStylesheet_function)(xsltStylesheetPtr);
@@ -286,7 +286,7 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
   xmlFreeInputStream(input);
   xmlFreeParserCtxt(ctxt);
 
-#if defined(__GNUG__) && !defined(__MINGW32__)
+#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
   dlclose(handle);
 #endif
 

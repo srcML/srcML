@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="decl_simple_cpp">
+
+<unit>
+<decl_stmt><decl><type><specifier>const</specifier> <name><name>std</name>::<name>s</name></name>&amp;</type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name><name>A</name>::<name>b</name>&amp;::<name>d</name></name></type> <name>c</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name><name>A</name>::<name>b</name>*::<name>d</name></name></type> <name>c</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name><name>A</name>::<name>b</name>::*<name>d</name></name></type> <name>c</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name><name>A</name>::<name>b</name>::&amp;<name>d</name></name></type> <name>c</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name><name>A</name>::<name>b</name>&amp;*::<name>d</name></name></type> <name>c</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name><name>A</name>::<name>b</name>*&amp;::<name>d</name></name></type> <name>c</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name><name>A</name>::<name>b</name>::*&amp;<name>d</name></name></type> <name>c</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name><name>A</name>::<name>b</name>::&amp;*<name>d</name></name></type> <name>c</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>const</specifier> <name>int</name></type> <name>c</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>int</name> <specifier>const</specifier></type> <name>c</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>int</name> <specifier>const</specifier> *</type> <name>c</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>int</name> <specifier>const</specifier> * <specifier>const</specifier></type> <name>c</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>native</name></type> <name>n</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>strictfp</name></type> <name>s</name></decl>;</decl_stmt>
+</unit>
+
+</unit>
