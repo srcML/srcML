@@ -355,7 +355,10 @@ void endElementNs(void * ctx, const xmlChar * localname, const xmlChar * prefix,
       state->process->startUnit(state->root.localname, state->root.prefix, state->root.URI,
                                 state->root.nb_namespaces, state->root.namespaces, state->root.nb_attributes,
                                 state->root.nb_defaulted, state->root.attributes);
-      
+     
+      if(state->root.characters != "")
+        state->process->charactersUnit((const xmlChar *)state->root.characters.c_str(), state->root.characters.size());
+
 
     } 
 

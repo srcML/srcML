@@ -13,8 +13,8 @@ macro(add_unit_test TEST_NAME FILE_NAME)
     add_test(${TEST_NAME} ${TEST_NAME})
 endmacro(add_unit_test)
 
-include_directories(../../../src ../../../src/libsrcml ../../../SAX2Framework)
-link_directories(../../../bin)
+include_directories(../../../src/parser ../../../src/translator ../../../src/libsrcml ../../../src/SAX2Framework)
+link_directories(../../../build)
 
 # set compile and linker flags
 add_definitions(-g)

@@ -60,7 +60,9 @@ srcMLTranslatorOutput::PROCESS_PTR srcMLTranslatorOutput::num2process[] = {
     &srcMLTranslatorOutput::processEndBlockToken,
     &srcMLTranslatorOutput::processLineCommentStart,
     &srcMLTranslatorOutput::processEndLineToken,
-    //  &srcMLTranslatorOutput::processMarker,
+#if DEBUG
+    &srcMLTranslatorOutput::processMarker,
+#endif
     &srcMLTranslatorOutput::processAccess,
     &srcMLTranslatorOutput::processString,
     &srcMLTranslatorOutput::processChar,
