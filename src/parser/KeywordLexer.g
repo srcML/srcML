@@ -159,6 +159,7 @@ tokens {
     CONST;
     MUTABLE;
     VOLATILE;
+    TRANSIENT;
 
     // Java tokens
     IMPORT;
@@ -399,6 +400,7 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
 
         // strictfp
         { "strictfp"  , STRICTFP  , LANGUAGE_JAVA },
+        { "transient"      , TRANSIENT      , LANGUAGE_JAVA }, 
 
         // add all C# specific keywords to the literals table
         { "foreach"       , FOREACH       , LANGUAGE_CSHARP }, 
