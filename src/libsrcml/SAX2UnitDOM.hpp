@@ -29,7 +29,7 @@
 #define INCLUDED_SAX2UNITDOM_HPP
 
 #include <libxml/parser.h>
-#include "SAX2Utilities.hpp"
+#include <SAX2Utilities.hpp>
 
 class SAX2UnitDOM {
 public:

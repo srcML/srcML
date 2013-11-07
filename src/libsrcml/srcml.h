@@ -41,7 +41,7 @@ extern "C" {
 
 /* Header file version macros */
 /** number representing libsrcml version */
-#define SRCML_VERSION_NUMBER 1
+#define SRCML_VERSION_NUMBER 10000
 /** string containing libsrcml version */
 #define SRCML_VERSION_STRING "libsrcml 0.9"
 

@@ -22,12 +22,12 @@
 
 */
 
-#include "SAX2ExtractUnitsSrc.hpp"
-#include "srcmlns.hpp"
-#include "srcmlapps.hpp"
-#include "ProcessUnit.hpp"
-#include "ExtractUnitsSrc.hpp"
-#include "srcexfun.hpp"
+#include <SAX2ExtractUnitsSrc.hpp>
+#include <srcmlns.hpp>
+#include <srcmlapps.hpp>
+#include <ProcessUnit.hpp>
+#include <ExtractUnitsSrc.hpp>
+#include <srcexfun.hpp>
 
 static bool diff_filename = true;
 static bool setupDiff(SAX2ExtractUnitsSrc* pstate,

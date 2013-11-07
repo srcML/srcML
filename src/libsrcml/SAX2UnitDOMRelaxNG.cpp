@@ -22,16 +22,16 @@
 
 */
 
-#include "SAX2TextWriter.hpp"
-#include "SAX2UnitDOMRelaxNG.hpp"
-#include "SAX2Utilities.hpp"
-#include "srcmlns.hpp"
+#include <SAX2TextWriter.hpp>
+#include <SAX2UnitDOMRelaxNG.hpp>
+#include <SAX2Utilities.hpp>
+#include <srcmlns.hpp>
 
 #include <cstring>
-#include "Options.hpp"
-#include "srcmlns.hpp"
+#include <Options.hpp>
+#include <srcmlns.hpp>
 
-#include "srcexfun.hpp"
+#include <srcexfun.hpp>
 #include <cassert>
 
 #include <libxml/SAX2.h>

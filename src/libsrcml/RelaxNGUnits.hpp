@@ -30,9 +30,9 @@
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
 #define LITERALPLUSSIZE(s) s, sizeof(s) - 1
 
-#include "srcexfun.hpp"
+#include <srcexfun.hpp>
 
-#include "UnitDOM.hpp"
+#include <UnitDOM.hpp>
 
 class RelaxNGUnits : public UnitDOM {
 public :

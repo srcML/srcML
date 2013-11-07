@@ -1,182 +1,97 @@
-###
+#
 #    CMakeLists.txt
-#
-#
-#    The main way to build srcML.
-#    Makefile.old is provided as an alternative.
-#    However, Makefile.old may not be maintained.
+# @copyright
+# 
+# Copyright (C) 2013  SDML (www.srcML.org)
+# 
+# The srcML Toolkit is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# The srcML Toolkit is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with the srcML Toolkit; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+#
+#    The CMake project file for srcML.
+#
 cmake_minimum_required(VERSION 2.8)
 project(srcML)
+enable_testing()
+# Setting up Project includes.
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
+include (srcml)
 
-set(CMAKE_BUILD_TYPE RELEASE)
-set(CMAKE_CXX_FLAGS_DEBUG "-g --coverage -O0 -fprofile-arcs -DDEBUG")
-set(CMAKE_CXX_FLAGS_RELEASE -O3)
+# Setting up source include directories.
+include_directories(src/srcml src/libsrcml src/parser src/translator)
 
-option(SVN_ENABLED "Build with svn" off)
-option(LIBSRCML_SAX2_ENABLED "Build with SAX2Framework for srcML" off)
+# Reading Major and minor version numbers and adding them as definitions.
 
-# specify g++ compiler
-if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
-    include(CMakeForceCompiler)
-    CMAKE_FORCE_CXX_COMPILER(/usr/bin/g++ "g++")
-endif()
+# add_definitions(-DVERSION=\"${VERSION_NUMBER}\")
+add_definitions(-DVERSION=\"1\")
+add_definitions(-DREVISION=\"1\")
 
-# get version and revision
-execute_process(COMMAND cat VERSION COMMAND tr -d "\n" OUTPUT_VARIABLE VERSION)
-execute_process(COMMAND cat REVISION COMMAND tr -d "\n" OUTPUT_VARIABLE REVISION)
-add_definitions(-DVERSION=\"${VERSION}\")
-add_definitions(-DREVISION=\"${REVISION}\")
+#MESSAGE(STATUS "${VERSION} ${REVISION}")
+# This is being moved to be more compiler independent.
 add_definitions(-fPIC)
 
-# get needed packages and include
-find_package(LibArchive REQUIRED)
-find_package(LibXml2 REQUIRED)
-find_package(LibXslt)
-find_package(Boost COMPONENTS program_options)
-
-include_directories(${LibArchive_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIR})
-
-if(LIBXSLT_FOUND)
-    include_directories(${LIBXSLT_INCLUDE_DIR})
+# Adding global compiler definitions.
+# This allows for compilation of a re-locatable execuatable on GCC I need to be sure that I
+# can make this portable to compilers other than GCC.
+if(CMAKE_COMPILER_IS_GNUXX)
+    add_definitions(-fPIC)
 endif()
-
-if(BOOST_FOUND)
-    include_directories(${Boost_INCLUDE_DIR})
-endif()
-
-if(NOT DEFINED LIBXSLT_EXSLT_LIBRARY)
-    set(LIBXSLT_EXSLT_LIBRARY exslt)
-endif()
-
-if(CMAKE_SYSTEM_NAME MATCHES "Windows")
-    include_directories(C:/antlr/277/include/antlr)
-    set(LIBREGEX_LIBRARY regex)
-    set(SRC2SRCML_LIBS srcml_shared)
-    set(SRCML2SRC_LIBS ${LIBXSLT_LIBRARIES};${LIBXSLT_EXSLT_LIBRARY};srcml_shared)
-else()
-    set(SRC2SRCML_LIBS dl;srcml_static)
-    set(SRCML2SRC_LIBS dl;srcml_static)
-endif()
-
-include_directories(src src/libsrcml)
-
-if(SVN_ENABLED)
-    include_directories(/usr/include/apr-1 /usr/local/include/subversion-1)
+get_property(SVN_ENABLED GLOBAL PROPERTY SVN_ENABLED)
+if(${SVN_ENABLED})
     add_definitions(-DSVN)
 endif()
 
-find_library(LIBANTLR_LIB NAMES libantlr-pic.a libantlr.a libantlr2-0.dll PATHS /usr/lib /usr/local/lib ../dlls)
-
-# define needed programs
-find_program(ANTLR NAMES antlr runantlr cantlr antlr2 antlr.bat PATHS /usr/bin /opt/local/bin /usr/local/bin C:/antlr/277/bin)
-find_program(SED NAMES gsed sed PATHS /opt/local/bin /usr/local /bin)
-find_program(GREP grep PATHS /bin /usr/bin)
-
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY bin)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY bin)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY bin)
-
-# Run antlr
-add_custom_command(OUTPUT src/CommentTextLexer.cpp src/CommentTextLexer.hpp src/CommentTextLexerTokenTypes.txt src/CommentTextLexerTokenTypes.hpp 
-COMMAND ${ANTLR} -o src src/CommentTextLexer.g DEPENDS src/CommentTextLexer.g
-COMMAND touch src/CommentTextLexer.cpp src/CommentTextLexer.hpp src/CommentTextLexerTokenTypes.txt src/CommentTextLexerTokenTypes.hpp src/expandedCommentTextLexer.g 
-)
-
-add_custom_command(OUTPUT src/TextLexer.cpp src/TextLexer.hpp src/TextLexerTokenTypes.txt src/TextLexerTokenTypes.hpp src/expandedTextLexer.g 
-COMMAND ${ANTLR} -o src src/TextLexer.g DEPENDS src/TextLexer.g src/CommentTextLexer.cpp
-COMMAND touch src/TextLexer.cpp src/TextLexer.hpp src/TextLexerTokenTypes.txt src/TextLexerTokenTypes.hpp src/expandedTextLexer.g 
-)
-
-add_custom_command(OUTPUT src/OperatorLexer.cpp src/OperatorLexer.hpp src/OperatorLexerTokenTypes.txt src/OperatorLexerTokenTypes.hpp src/expandedOperatorLexer.g 
-COMMAND ${ANTLR} -o src -glib \"src/TextLexer.g\" src/OperatorLexer.g DEPENDS src/OperatorLexer.g src/TextLexer.cpp
-COMMAND touch src/OperatorLexer.cpp src/OperatorLexer.hpp src/OperatorLexerTokenTypes.txt src/OperatorLexerTokenTypes.hpp src/expandedOperatorLexer.g
-)
-
-add_custom_command(OUTPUT src/KeywordLexer.cpp src/KeywordLexer.hpp src/KeywordLexerTokenTypes.txt src/KeywordLexerTokenTypes.hpp src/expandedKeywordLexer.g
-COMMAND ${ANTLR} -o src -glib \"src/OperatorLexer.g\;src/TextLexer.g\" src/KeywordLexer.g DEPENDS src/KeywordLexer.g src/OperatorLexer.cpp
-COMMAND touch src/KeywordLexer.cpp src/KeywordLexer.hpp src/KeywordLexerTokenTypes.txt src/KeywordLexerTokenTypes.hpp src/expandedKeywordLexer.g
-#COMMAND rm -rf OperatorLexerTokenTypes.txt TextLexerTokenTypes.txt
-)
-
-add_custom_command(OUTPUT src/srcMLParser.cpp src/srcMLParser.hpp src/srcMLParserTokenTypes.txt src/srcMLParserTokenTypes.hpp
-COMMAND ${ANTLR} -o src -glib \"src/OperatorLexer.g\;src/TextLexer.g\;src/KeywordLexer.g\;\" src/srcMLParser.g DEPENDS src/srcMLParser.g src/KeywordLexer.cpp
-COMMAND touch src/srcMLParser.cpp src/srcMLParser.hpp src/srcMLParserTokenTypes.txt src/srcMLParserTokenTypes.hpp 
-)
-
-# Run special command for macro
-add_custom_command(OUTPUT src/srcMLParserTokenTypesMacro.hpp 
-COMMAND ${GREP} '=' src/srcMLParserTokenTypes.hpp | ${SED} -e 's/,//g' -e 's/= //g' -e 's/^[ \t]*//' -e 's/^/\#define TOKEN_/g' > src/srcMLParserTokenTypesMacro.hpp DEPENDS src/srcMLParserTokenTypes.hpp
-)
-
-set(PARSER_SRC src/srcMLParser.cpp;src/KeywordLexer.cpp;src/srcMLOutput.cpp;src/srcMLTranslatorOutput.cpp;src/Mode.cpp;src/CommentTextLexer.cpp;src/srcMLParserTokenTypesMacro.hpp)
-set(SRCMLUTILITY_SRC src/srcMLUtility.cpp;src/SAX2ExtractUnitsSrc.cpp;src/SAX2Utilities.cpp;src/SAX2UnitDOM.cpp;src/SAX2UnitDOMRelaxNG.cpp;src/srcexfun.cpp)
-set(TRANSLATOR_SRC src/srcMLTranslator.cpp;src/srcMLTranslatorCore.cpp;src/UTF8CharBuffer.cpp;src/Language.cpp;src/URIStream.cpp;src/libxml_archive_read.cpp;src/libxml_archive_write.cpp)
-set(SRCMLAPPS_SRC src/srcmlapps.cpp)
-if(LIBSRCML_SAX2_ENABLED)
-    file(GLOB LIBSRCML_SRC src/libsrcml/*.cpp)
+get_property(SAX2_ENABLED GLOBAL PROPERTY SAX2_ENABLED)
+if(${SAX2_ENABLED})
     add_definitions(-DSAX2)
-else()
-    file(GLOB LIBSRCML_SRC src/libsrcml/srcml_*.cpp src/libsrcml/libsrcml.cpp src/libsrcml/srcMLReader.cpp)
 endif()
 
-if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.8.7)
 
-    add_library(parser OBJECT ${PARSER_SRC})
-    add_library(srcmlutility OBJECT ${SRCMLUTILITY_SRC})
-    add_library(translator OBJECT ${TRANSLATOR_SRC})
-    add_library(srcmlapps OBJECT ${SRCMLAPPS_SRC})
-    add_library(libsrcml OBJECT ${LIBSRCML_SRC})
+# Including extra directories.
+subdirs(src test timing)
 
-    # libsrcml static
-    add_library(srcml_static STATIC $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:srcmlapps> $<TARGET_OBJECTS:srcmlutility>)
-else()
-    add_library(srcml_static STATIC ${LIBSRCML_SRC} ${PARSER_SRC} ${SRCMLUTILITY_SRC} ${TRANSLATOR_SRC} ${SRCMLAPPS_SRC})
-endif()
+# Remove this later.
+MESSAGE(STATUS "")
+MESSAGE(STATUS "")
+MESSAGE(STATUS "----------- Testing global properties --------------")
 
-target_link_libraries(srcml_static ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${LIBREGEX_LIBRARY})
-set_target_properties(srcml_static PROPERTIES OUTPUT_NAME srcml)
+get_property(SAX2_ENABLED GLOBAL PROPERTY SAX2_ENABLED)
+get_property(LIBXML2_LIBS GLOBAL PROPERTY LIBXML2_LIBS)
+get_property(LIBXSLT_LIBS GLOBAL PROPERTY LIBXSLT_LIBS)
+get_property(BOOST_PROGRAM_OPTIONS_LIB GLOBAL PROPERTY BOOST_PROGRAM_OPTIONS_LIB)
+get_property(WINDOWS_DEP_PATH GLOBAL PROPERTY WINDOWS_DEP_PATH)
+get_property(ANTLR_LIB GLOBAL PROPERTY ANTLR_LIB)
+get_property(ANTLR_EXE GLOBAL PROPERTY ANTLR_EXE)
+get_property(SED_EXE GLOBAL PROPERTY SED_EXE)
+get_property(GREP_EXE GLOBAL PROPERTY GREP_EXE)
+get_property(LIBARCHIVE_LIBS  GLOBAL PROPERTY LIBARCHIVE_LIBS)
 
-if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+#  Printing global property values.
+MESSAGE(STATUS "SVN_ENABLED ${SVN_ENABLED}")
+MESSAGE(STATUS "SAX2_ENABLED ${SAX2_ENABLED}")
+MESSAGE(STATUS "LIBXML2_LIBS: ${LIBXML2_LIBS}")
+MESSAGE(STATUS "LIBXSLT_LIBS: ${LIBXSLT_LIBS}")
+MESSAGE(STATUS "BOOST_PROGRAM_OPTIONS_LIB: ${BOOST_PROGRAM_OPTIONS_LIB}")
+MESSAGE(STATUS "WINDOWS_DEP_PATH: ${WINDOWS_DEP_PATH}")
+MESSAGE(STATUS "ANTLR_LIB: ${ANTLR_LIB}")
+MESSAGE(STATUS "ANTLR_EXE: ${ANTLR_EXE}")
+MESSAGE(STATUS "SED_EXE: ${SED_EXE}")
+MESSAGE(STATUS "GREP_EXE: ${GREP_EXE}")
+MESSAGE(STATUS "LIBARCHIVE_LIBS: ${LIBARCHIVE_LIBS}")
+MESSAGE(STATUS "")
+MESSAGE(STATUS "")
 
-    # libsrcml shared
-    if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.8.7)
-        add_library(srcml_shared SHARED $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:srcmlutility> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:srcmlapps>)
-    else()
-        add_library(srcml_shared SHARED ${LIBSRCML_SRC} ${PARSER_SRC} ${SRCMLUTILITY_SRC} ${TRANSLATOR_SRC} ${SRCMLAPPS_SRC})
-    endif()
-    target_link_libraries(srcml_shared ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} ${LIBREGEX_LIBRARY})
-    set_target_properties(srcml_shared PROPERTIES OUTPUT_NAME srcml)
-else()
 
-    # libsrcml shared
-    if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.8.7)
-        add_library(srcml_shared SHARED $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:srcmlutility> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:srcmlapps>)
-else()
-       add_library(srcml_shared SHARED ${LIBSRCML_SRC} ${PARSER_SRC} ${SRCMLUTILITY_SRC} ${TRANSLATOR_SRC} ${SRCMLAPPS_SRC})
-    endif()
-    target_link_libraries(srcml_shared ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB})
-    set_target_properties(srcml_shared PROPERTIES OUTPUT_NAME srcml)
-endif()
 
-# srcml
-add_executable(srcml EXCLUDE_FROM_ALL src/srcml.cpp src/srcmlCLI.cpp)
-target_link_libraries(srcml ${Boost_PROGRAM_OPTIONS_LIBRARY} ${LibArchive_LIBRARY} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} ${CURL_LIBRARIES} srcml_static)
 
-# src2srcml
-if(NOT SVN_ENABLED)
-    add_executable(src2srcml src/src2srcml.cpp)
-else()
-    add_executable(src2srcml src/src2srcml.cpp src/svn_io.cpp)
-endif()
-target_link_libraries(src2srcml ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${LIBANTLR_LIB} ${SRC2SRCML_LIBS})
-
-# srcml2src
-add_executable(srcml2src src/srcml2src.cpp)
-target_link_libraries(srcml2src ${LibArchive_LIBRARY} ${LIBXML2_LIBRARIES} ${SRCML2SRC_LIBS})
-
-# install handling
-include(CMakeInstall.inc)
-
-# cpack
-include(CPackConfig.inc)

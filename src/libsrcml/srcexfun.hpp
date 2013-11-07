@@ -24,7 +24,7 @@
 #define INCLUDED_SRCEXFUN_HPP
 
 #include <libxml/xpath.h>
-#include "SAX2Utilities.hpp"
+#include <SAX2Utilities.hpp>
 #include <vector>
 
 void setPosition(int n);

@@ -22,9 +22,9 @@
   Class for straightforward translation
 */
 
-#include "srcMLUtility.hpp"
+#include <srcMLUtility.hpp>
 #include <cstring>
-#include "srcmlns.hpp"
+#include <srcmlns.hpp>
 #include <sys/stat.h>
 
 #if defined(__GNUC__) && !defined(__MINGW32__)
@@ -35,30 +35,28 @@
 
 #include <libxml/parserInternals.h>
 
-#include "Options.hpp"
+#include <Options.hpp>
 
-#include "ProcessUnit.hpp"
-#include "ExtractUnitsSrc.hpp"
-#include "ExtractUnitsDiffSrc.hpp"
-#include "CountUnits.hpp"
-#include "Properties.hpp"
-#include "ListUnits.hpp"
-#include "ExtractUnitsXML.hpp"
-#include "ExtractUnitsDiffXML.hpp"
-#include "ExtractUnitsDiffXMLPreserve.hpp"
-#include "XPathQueryUnits.hpp"
-#include "XSLTUnits.hpp"
-#include "RelaxNGUnits.hpp"
+#include <ProcessUnit.hpp>
+#include <ExtractUnitsSrc.hpp>
+#include <ExtractUnitsDiffSrc.hpp>
+#include <CountUnits.hpp>
+#include <Properties.hpp>
+#include <ListUnits.hpp>
+#include <ExtractUnitsXML.hpp>
+#include <ExtractUnitsDiffXML.hpp>
+#include <ExtractUnitsDiffXMLPreserve.hpp>
+#include <XPathQueryUnits.hpp>
+#include <XSLTUnits.hpp>
+#include <RelaxNGUnits.hpp>
 
-#include "SAX2ExtractUnitsSrc.hpp"
+#include <SAX2ExtractUnitsSrc.hpp>
 
-#include "SAX2UnitDOMRelaxNG.hpp"
-
-#include "srcexfun.hpp"
+#include <srcexfun.hpp>
 
 #include <libexslt/exslt.h>
-#include "libxml_archive_read.hpp"
-#include "libxml_archive_write.hpp"
+#include <libxml_archive_read.hpp>
+#include <libxml_archive_write.hpp>
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
 #include <dlfcn.h>
@@ -356,54 +354,6 @@ void srcMLUtility::extract_xml(const char* ofilename, int unit) {
 }
 
 // extract a given unit
-const char * srcMLUtility::extract_xml(int unit) {
-
-  // setup parser
-  xmlParserCtxtPtr ctxt = 0;
-  if(infile)
-    ctxt = srcMLCreateURLParserCtxt(infile);
-  else
-    ctxt = srcMLCreateMemoryParserCtxt(buffer, size);
-  if (ctxt == NULL) return 0;
-
-  // setup sax handler
-  xmlSAXHandlerPtr save_sax = ctxt->sax;
-  xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
-  ctxt->sax = &sax;
-
-  // setup process handling
-  xmlBufferPtr buffer = xmlBufferCreate();
-  ExtractUnitsXML process(buffer, output_encoding);
-
-  if (isoption(options, OPTION_NULL))
-    unit = -1;
-
-  // setup sax handling state
-  SAX2ExtractUnitsSrc state(&process, &options, unit, diff_version);
-  ctxt->_private = &state;
-
-  // process the document
-  srcMLParseDocument(ctxt, true);
-
-  // local variable, do not want xmlFreeParserCtxt to free
-  ctxt->sax = save_sax;
-
-  // all done with parsing
-  void * context = ctxt->input->buf->context;
-  xmlFreeParserCtxt(ctxt);
-  if(infile) archiveDeleteContext(context);
-
-  // make sure we did not end early
-  if (state.unit && state.count < state.unit)
-    throw OutOfRangeUnitError(state.count);
-
-  const char * content = strdup((const char *)buffer->content);
-  xmlBufferFree(buffer);
-  return content;
-
-}
-
-// extract a given unit
 void srcMLUtility::extract_diff_xml(const char* ofilename, int unit, const char* version) {
 
   // setup parser
@@ -565,55 +515,6 @@ void srcMLUtility::extract_text(xmlOutputBufferPtr output_buffer, int unit) {
   // make sure we did not end early
   if (state.unit && state.count < state.unit)
     throw OutOfRangeUnitError(state.count);
-}
-
-// extract a given unit
-const char * srcMLUtility::extract_text(int unit) {
-
-  // setup parser
-  xmlParserCtxtPtr ctxt = 0;
-  if(infile)
-    ctxt = srcMLCreateURLParserCtxt(infile);
-  else
-    ctxt = srcMLCreateMemoryParserCtxt(buffer, size);
-
-  // setup sax handler
-  xmlSAXHandlerPtr save_sax = ctxt->sax;
-  xmlSAXHandler sax = SAX2ExtractUnitsSrc::factory();
-  ctxt->sax = &sax;
-
-  // setup process handling
-  xmlBufferPtr buffer = xmlBufferCreate();
-  ExtractUnitsSrc process(buffer, output_encoding);
-
-  // setup sax handling state
-  SAX2ExtractUnitsSrc state(&process, &options, unit, diff_version);
-  ctxt->_private = &state;
-
-  // process the document
-  srcMLParseDocument(ctxt, true);
-
-#if 0
-  if (archiveWriteMatch_src2srcml(ofilename))
-    archiveWriteRootClose(0);
-#endif
-
-  // local variable, do not want xmlFreeParserCtxt to free
-  ctxt->sax = save_sax;
-
-  // all done with parsing
-  void * context = ctxt->input->buf->context;
-  xmlFreeParserCtxt(ctxt);
-  if(infile) archiveDeleteContext(context);
-
-  // make sure we did not end early
-  if (state.unit && state.count < state.unit)
-    throw OutOfRangeUnitError(state.count);
-
-  const char * content = strdup((const char *)buffer->content);
-  xmlBufferFree(buffer);
-  return content;
-
 }
 
 // extract a given unit
@@ -992,62 +893,4 @@ static xmlParserCtxtPtr srcMLCreateMemoryParserCtxt(const char * buffer, int siz
   }
 
   return ctxt;
-}
-
-extern "C" {
-
-  // constructor
-  srcMLUtility * srcml_utility_file_new(const char* infilename, const char* encoding, OPTION_TYPE op, const char* diff_version) {
-
-    return new srcMLUtility(infilename, encoding, op, diff_version);
-
-  }
-
-  srcMLUtility * srcml_utility_memory_new(const char * buffer, int size, const char* encoding, OPTION_TYPE op, const char* diff_version) {
-
-    return new srcMLUtility(buffer, size, encoding, op, diff_version);
-
-  }
-
-  // extract (intact) current unit as text
-  void srcml_extract_text_file(srcMLUtility * su, const char* to_dir, const char* ofilename, int unit) {
-
-    su->extract_text(to_dir, ofilename, unit);
-
-  }
-
-
-  // TODO:  Why does this not return a value?
-  const char * srcml_extract_text_buffer(srcMLUtility * su, int unit) {
-
-    return su->extract_text(unit);
-
-  }
-
-  // count of nested units
-  int srcml_unit_count(srcMLUtility * su, FILE* output) {
-
-    return su->unit_count(output);
-
-  }
-
-  const char * srcml_extract_xml_buffer(srcMLUtility * su, int unit) {
-
-    return su->extract_xml(unit);
-
-  }
-
-  const char * srcml_long_info(srcMLUtility * su) {
-
-    return su->long_info(*su);
-
-  }
-
-  void srcml_utility_delete(srcMLUtility * su) {
-
-    delete su;
-
-  }
-
-
 }

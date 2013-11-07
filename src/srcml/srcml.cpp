@@ -27,7 +27,7 @@
   Replaces the src2srcml and srcml2src of the original srcML toolkit.
 */
 
-#include "libsrcml/srcml.h"
+#include <srcml.h>
 #include <srcmlCLI.hpp>
 #include <thread_queue.hpp>
 
@@ -38,6 +38,26 @@
 
 #include <iostream>
 #include <string>
+
+struct ParseRequest {
+    ParseRequest() : buffer(0) {}
+
+    void swap(ParseRequest& other) {
+
+        filename.swap(other.filename);
+        buffer.swap(other.buffer);
+    }
+
+    // empty ParseRequests indicate termination
+    bool empty() const {
+        return filename.empty() && buffer.empty();
+    }
+
+    std::string filename;
+    std::vector<char> buffer;
+};
+
+ParseRequest NullParseRequest;
 
 // Global Options Function
 void set_globals(const struct srcml_request_t srcml_request);
@@ -54,6 +74,8 @@ int main(int argc, char * argv[]) {
   #else
     //YOU HAVE V3 OR HIGHER
   #endif
+
+  ThreadQueue<ParseRequest, 10> queue;
 
   //SETUP GLOBALS FOR LIBSRCML
   set_globals(srcml_request);

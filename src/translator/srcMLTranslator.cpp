@@ -34,20 +34,6 @@ srcMLTranslator::srcMLTranslator(int language, const char* srcml_filename, OPTIO
 }
 
 // constructor
-srcMLTranslator::srcMLTranslator(int language, xmlBuffer* output_buffer, OPTION_TYPE& op) : output_buffer(0), str_buffer(0), size(0) {
-
-  translator = new srcMLTranslatorCore(language, output_buffer, op);
-}
-
-// constructor
-srcMLTranslator::srcMLTranslator(int language, OPTION_TYPE op) : str_buffer(0), size(0) {
-
-  output_buffer = xmlBufferCreate();
-  options = op;
-  translator = new srcMLTranslatorCore(language, output_buffer, options);
-}
-
-// constructor
 srcMLTranslator::srcMLTranslator(int language,                // programming language of source code
                                  const char* src_encoding,    // text encoding of source code
                                  const char* xml_encoding,    // xml encoding of result srcML file
@@ -102,23 +88,6 @@ srcMLTranslator::srcMLTranslator(int language,                // programming lan
 srcMLTranslator::srcMLTranslator(int language,                // programming language of source code
                                  const char* src_encoding,    // text encoding of source code
                                  const char* xml_encoding,    // xml encoding of result srcML file
-                                 OPTION_TYPE op,             // many and varied options
-                                 const char* directory,       // root unit directory
-                                 const char* filename,        // root unit filename
-                                 const char* version,         // root unit version
-                                 const char* uri[],           // uri prefixes
-                                 int tabsize                  // size of tabs
-                                 ) : str_buffer(0), size(0) {
-
-  output_buffer = xmlBufferCreate();
-  options = op;
-  translator = new srcMLTranslatorCore(language, src_encoding, xml_encoding, output_buffer, options, directory, filename, version, uri, tabsize);
-}
-
-// constructor
-srcMLTranslator::srcMLTranslator(int language,                // programming language of source code
-                                 const char* src_encoding,    // text encoding of source code
-                                 const char* xml_encoding,    // xml encoding of result srcML file
                                  xmlTextWriterPtr writer,
                                  OPTION_TYPE& op,             // many and varied options
                                  const char* directory,       // root unit directory
@@ -144,16 +113,11 @@ void* srcMLTranslator::setInput(xmlParserInputBufferPtr input) {
   return translator->setInput(input);
 }
 
-// translate from input stream to output stream
-void* srcMLTranslator::setInputString(const char* source) {
-
-  return translator->setInputString(source);
-}
 
 // translate from input stream to output stream
 void* srcMLTranslator::setInputString(const char* source, int size) {
 
-  return translator->setInputString(source);
+  return translator->setInputString(source, size);
 }
 
 // close the output
@@ -195,56 +159,3 @@ srcMLTranslator::~srcMLTranslator() {
     xmlBufferFree(output_buffer);
 }
 
-extern "C" {
-
-  // factory method
-  srcMLTranslator * srcml_new(int language, OPTION_TYPE op) {
-    
-    return new srcMLTranslator(language, op);
-  }
-  srcMLTranslator * srcml_new_long(int language, const char * src_encoding, const char * xml_encoding, OPTION_TYPE op
-                              , const char * directory, const char * filename, const char * version, const char * uri[], int tabsize) {
-
-
-    return new srcMLTranslator(language, src_encoding, xml_encoding, op, directory, filename, version, uri, tabsize);
-  }
-
-  // translate from input stream to output stream
-  void* srcml_set_input(srcMLTranslator * translator, const char* path) {
-
-    return translator->getTranslator()->setInput(path);
-  }
-
-  // translate from input stream to output stream
-  void* srcml_set_input_string(srcMLTranslator * translator, const char* source) {
-
-    return translator->getTranslator()->setInputString(source);
-  }
-
-  // close the output
-  void srcml_close(srcMLTranslator * translator) {
-
-    translator->getTranslator()->close();
-  }
-
-  // translate from input stream to output stream
-  void srcml_translate(srcMLTranslator * translator, const char* path, const char* unit_directory,
-                                                        const char* unit_filename, const char* unit_version,
-                                                        int language) {
-
-    translator->translate(path, unit_directory, unit_filename, unit_version, language);
-  }
-
-  const char * srcml_get_srcml(srcMLTranslator * translator) {
-
-    return (const char *)translator->getBuffer()->content;
-  }
-
-  // destructor
-  void srcml_delete(srcMLTranslator * translator) {
-
-    delete translator;
-  }
-
-
-}

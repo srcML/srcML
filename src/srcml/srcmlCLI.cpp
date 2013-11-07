@@ -24,7 +24,7 @@
   srcmlCLI handles parsing for CLI options for srcml
 */
 
-#include "libsrcml/srcml.h"
+#include <srcml.h>
 
 #include <srcmlCLI.hpp>
 #include <boost/program_options.hpp>

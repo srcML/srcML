@@ -17,79 +17,61 @@
 */
 
 #include <pthread.h>
-#include <stdio.h>
 
-#ifndef _QUEUE_H
-#define _QUEUE_H
+#ifndef THREAD_QUEUE_H
+#define THREAD_QUEUE_H
 
 template <typename Type, int Capacity>
-class queue {
-
-    queue() :
-        buffer(0), qsize(0), in(0), out(0), mutex((pthread_mutex_t)PTHREAD_MUTEX_INITIALIZER),
-        cond_full((pthread_cond_t)PTHREAD_COND_INITIALIZER), cond_empty((pthread_cond_t)PTHREAD_COND_INITIALIZER)
+class ThreadQueue {
+public:
+    ThreadQueue() :
+        used(0), back_index(0), front_index(0),
+        mutex(    (pthread_mutex_t)PTHREAD_MUTEX_INITIALIZER),
+        cond_full( (pthread_cond_t)PTHREAD_COND_INITIALIZER),
+        cond_empty((pthread_cond_t)PTHREAD_COND_INITIALIZER)
         {}
-
-    Type buffer[Capacity];
-    int qsize;
-    int in;
-    int out;
-    pthread_mutex_t mutex;
-    pthread_cond_t cond_full;
-    pthread_cond_t cond_empty;
 
     void push(Type& value) {
         pthread_mutex_lock(&mutex);
-        while (qsize == Capacity)
+        while (used == Capacity)
             pthread_cond_wait(&cond_full, &mutex);
-        buffer[in].swap(value);
-        ++in;
-        in %= Capacity;
-        ++qsize;
+        buffer[back_index].swap(value);
+        ++back_index;
+        back_index %= Capacity;
+        ++used;
         pthread_mutex_unlock(&mutex);
         pthread_cond_signal(&cond_empty);
     }
 
-    void pop() {
-        pthread_mutex_lock(&mutex);
-        while (qsize == 0)
-            pthread_cond_wait(&cond_empty, &mutex);
-        ++out;
-        out %= Capacity;
-        --qsize;
-        pthread_mutex_unlock(&mutex);
-        pthread_cond_signal(&cond_full);
-    }
-
     void pop(Type& place) {
         pthread_mutex_lock(&mutex);
-        while (qsize == 0)
+        while (used == 0)
             pthread_cond_wait(&cond_empty, &mutex);
-        place.swap(buffer[out]);
-        ++out;
-        out %= Capacity;
-        --qsize;
+        place.swap(buffer[front_index]);
+        ++front_index;
+        front_index %= Capacity;
+        --used;
         pthread_mutex_unlock(&mutex);
         pthread_cond_signal(&cond_full);
-    }
-
-    const Type& front() {
-        pthread_mutex_lock(&mutex);
-        while (qsize == 0)
-            pthread_cond_wait(&cond_empty, &mutex);
-        Type* pvalue = &(buffer[out]);
-        pthread_mutex_unlock(&mutex);
-        pthread_cond_broadcast(&cond_full);
-        return *pvalue;
     }
 
     int size() {
         pthread_mutex_lock(&mutex);
-        int tsize = qsize;
+        int tsize = used;
         pthread_mutex_unlock(&mutex);
         return tsize;
     }
 
+    ~ThreadQueue() {}
+
+private:
+    Type buffer[Capacity];
+    int used;
+    int back_index;
+    int front_index;
+    pthread_mutex_t mutex;
+    pthread_cond_t cond_full;
+    pthread_cond_t cond_empty;
 };
 
 #endif

@@ -41,9 +41,6 @@ public:
     srcMLTranslatorCore(int language, const char* srcml_filename, OPTION_TYPE& op);
 
     // constructor
-    srcMLTranslatorCore(int language, xmlBuffer* output_buffer, OPTION_TYPE& op);
-
-    // constructor
     srcMLTranslatorCore(int language,
                         const char* src_encoding,
                         const char* xml_encoding,
@@ -87,7 +84,6 @@ public:
 
     void* setInput(const char* path);
     void* setInput(xmlParserInputBufferPtr input);
-    void* setInputString(const char* source);
     void* setInputString(const char* source, int size);
 
     void close();

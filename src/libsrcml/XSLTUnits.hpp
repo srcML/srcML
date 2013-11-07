@@ -29,9 +29,9 @@
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
 #define LITERALPLUSSIZE(s) s, sizeof(s) - 1
 
-#include "srcexfun.hpp"
+#include <srcexfun.hpp>
 
-#include "UnitDOM.hpp"
+#include <UnitDOM.hpp>
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
 typedef xmlDocPtr (*xsltApplyStylesheetUser_function) (xsltStylesheetPtr,xmlDocPtr,const char **,const char *, FILE *,

@@ -1,0 +1,1 @@
+MESSAGE(STATUS "Fix file: doc.cmake")

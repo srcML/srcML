@@ -81,11 +81,11 @@ libsrcml.srcml_set_tabstop.argtypes = [c_int]
 
 # int srcml_register_file_extension(const char* extension, const char* language);
 libsrcml.srcml_register_file_extension.restype = c_int
-libsrcml.srcml_register_file_extension.argtypes = [c_int]
+libsrcml.srcml_register_file_extension.argtypes = [c_char_p, c_char_p]
 
 # int srcml_register_namespace(const char* prefix, const char* ns);
 libsrcml.srcml_register_namespace.restype = c_int
-libsrcml.srcml_register_namespace.argtypes = [c_int]
+libsrcml.srcml_register_namespace.argtypes = [c_char_p, c_char_p]
 
 # const char* srcml_get_encoding ();
 libsrcml.srcml_get_encoding.restype = c_char_p
@@ -167,8 +167,12 @@ libsrcml.srcml_check_exslt.argtypes = []
 libsrcml.srcml_error_string.restype = c_char_p
 libsrcml.srcml_error_string.argtypes = []
 
+# const char** srcml_list(const char* srcml_filename);
+libsrcml.srcml_list.restype = POINTER(c_char_p)
+libsrcml.srcml_list.argtypes = [c_char_p]
+
 def srcml(input_filename, output_filename) :
-    libsrcml.srcml(input_filename_output_filename)
+    libsrcml.srcml(input_filename, output_filename)
 
 def set_encoding(encoding) :
     check_return(libsrcml.srcml_set_encoding(encoding))
@@ -198,10 +202,10 @@ def set_tabstop(tabstop) :
     check_return(libsrcml.srcml_set_tabstop(tabstop))
 
 def register_file_extension(extension, language) :
-    check_return(libsrcml.srcml_set_tabstop(extension, language))
+    check_return(libsrcml.srcml_register_file_extension(extension, language))
 
 def register_namespace(prefix, ns) :
-    check_return(libsrcml.srcml_set_tabstop(prefix, ns))
+    check_return(libsrcml.srcml_register_namespace(prefix, ns))
 
 def get_encoding() :
     return libsrcml.srcml_get_encoding()
@@ -229,25 +233,25 @@ def check_language(language) :
 
 def language_list() :
 
-    list = libsrcml.srcml_language_list()
+    lang_list = libsrcml.srcml_language_list()
 
     ret = []
 
     i = 0
-    while list[i] != None :
-        ret.append(list[i])
+    while lang_list[i] != None :
+        ret.append(lang_list[i])
         i = i + 1
 
     return ret
 
 def check_extension(filename) :
-    return libsrcml.srcml_check_extension()
+    return libsrcml.srcml_check_extension(filename)
 
 def check_format(format) :
-    return libsrcml.srcml_check_format()
+    return libsrcml.srcml_check_format(format)
 
 def check_encoding(encoding) :
-    return libsrcml.srcml_check_encoding()
+    return libsrcml.srcml_check_encoding(encoding)
 
 def check_xslt() :
     return libsrcml.srcml_check_xslt()
@@ -257,3 +261,15 @@ def check_exslt() :
 
 def error_string() :
     return libsrcml.srcml_error_string()
+
+def filename_list(srcml_filename) :
+    file_list = libsrcml.srcml_list(srcml_filename)
+
+    i = 0
+    ret = []
+
+    while file_list[i] != None :
+        ret.append(file_list[i])
+        i = i + 1
+
+    return ret

@@ -103,15 +103,6 @@ def extract_all_executable(src):
 
 	return safe_communicate(command, src)
 
-def extract_one(archive, list, src_list) :
-
-        unit = archive.read_unit()
-        if unit != None :
-                list.append(unit.get_xml())
-                unit.unparse_memory()
-                src_list.append(unit.src())
-                extract_one(archive, list, src_list)
-
 # extracts a particular unit from a srcML file
 def extract_all(src, encoding):
 
@@ -120,8 +111,15 @@ def extract_all(src, encoding):
 
         archive = srcml_archive()
         archive.read_open_memory(src)
-        archive.set_encoding(encoding)
-        extract_one(archive, all, src_all)
+        #archive.set_encoding(encoding)
+
+        unit = archive.read_unit()
+        while unit != None :
+                all.append(unit.get_xml())
+                unit.unparse_memory()
+                src_all.append(unit.src())
+		unit = archive.read_unit()
+
         archive.close()
 
         all.append(0)
@@ -495,6 +493,7 @@ try:
                                         fxmlns = defaultxmlns(getfullxmlns_executable(filexml))
 
                                 if use_exec :
+					xmlns = defaultxmlns(getfullxmlns_executable(filexml))
                                         while len(xmlns) == 0 :
 						xmlns = defaultxmlns(getfullxmlns_executable(filexml))
                                 else :
