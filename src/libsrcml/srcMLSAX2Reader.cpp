@@ -130,7 +130,7 @@ int srcMLSAX2Reader::readRootUnitAttributes(std::string ** language, std::string
 
   if(language == 0 || filename == 0 || directory == 0 || version == 0) return 0;
 
-  //if(handler.read_root) return 0;
+  if(handler.read_root) return 0;
 
   if(handler.archive->language) *language = new std::string(*handler.archive->language);
   if(handler.archive->filename) *filename = new std::string(*handler.archive->filename);
