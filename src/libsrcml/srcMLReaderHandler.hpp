@@ -107,7 +107,7 @@ public :
       return;
     }
 
-    pthread_cond_wait(&is_done_cond, &mutex);
+    if(!read_root) pthread_cond_wait(&is_done_cond, &mutex);
     pthread_mutex_unlock(&mutex);
 
   }
@@ -135,6 +135,7 @@ public :
     pthread_mutex_lock(&mutex);
     pthread_cond_broadcast(&cond);
     if(is_done) {
+
       pthread_mutex_unlock(&mutex);
       return;
     }
@@ -254,11 +255,10 @@ public :
 
     // pause
     pthread_mutex_lock(&mutex);
+    read_root = true;
     pthread_cond_broadcast(&is_done_cond);
     pthread_cond_wait(&cond, &mutex);
     pthread_mutex_unlock(&mutex);
-
-    read_root = true;
 
     if(terminate) stop_parser();
 
