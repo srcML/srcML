@@ -3365,7 +3365,7 @@ annotation[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         function_identifier
 
-        (call_argument_list (~(RPAREN))* rparen)*
+        (call_argument_list ({LA(1) != RPAREN }? argument)* rparen)*
 ;
 
 // call  function call, macro, etc.
