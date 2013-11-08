@@ -9,4 +9,12 @@
 <catch>catch (<param><decl><type><name>a</name></type>|<type><name>b</name></type> <name>c</name></decl></param>) <block>{}</block></catch>
 </unit>
 
+<unit>
+<catch>catch (<param><decl><type><name>a</name></type>|<type><name>b</name></type>|<type><name>c</name></type> <name>d</name></decl></param>) <block>{}</block></catch>
+</unit>
+
+<unit>
+<catch>catch (<param><decl><type><name>a</name></type>|<type><name>b</name></type>|<type><name>c</name></type></decl></param>) <block>{}</block></catch>
+</unit>
+
 </unit>
