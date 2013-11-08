@@ -2665,10 +2665,12 @@ type_identifier_count[int& type_count] { ++type_count; ENTRY_DEBUG } :
 deduct[int& type_count] { --type_count; } :;
 */
 
-eat_type[int count] { if (count <= 0 || LA(1) == BAR) return; ENTRY_DEBUG } :
+eat_type[int & count] { if (count <= 0 || LA(1) == BAR) return; ENTRY_DEBUG } :
 
         type_identifier
-        eat_type[count - 1]
+        set_int[count, count - 1]
+        eat_type[count]
+
 ;
 
 // throw list for a function
@@ -4419,7 +4421,7 @@ parameter[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NO
                     type_count = 1;
             }
             { stmt_type == VARIABLE || LA(1) == DOTDOTDOT}?
-            parameter_type_count[type_count] ({ LA(1) == BAR }? bar parameter_type_count[1])*
+            parameter_type_count[type_count] ({ LA(1) == BAR }? bar set_int[type_count, type_count > 1 ? type_count - 1 : 1] parameter_type_count[type_count])*
             {
                 // expect a name initialization
                 setMode(MODE_VARIABLE_NAME | MODE_INIT);
@@ -4428,7 +4430,7 @@ parameter[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NO
         )
 ;
 
-parameter_type_count[int type_count] { CompleteElement element(this); ENTRY_DEBUG } :
+parameter_type_count[int & type_count] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // local mode so start element will end correctly
             startNewMode(MODE_LOCAL);
