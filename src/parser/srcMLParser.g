@@ -2471,6 +2471,8 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 // special function name
                 MAIN set_bool[isoperator, type_count == 0] |
 
+                bar |
+
                 // type parts that can occur before other type parts (excluding specifiers)
                 { LA(1) != LBRACKET }?
                 pure_lead_type_identifier_no_specifiers set_bool[foundpure] |
@@ -2672,7 +2674,7 @@ type_identifier_count[int& type_count] { ++type_count; ENTRY_DEBUG } :
 deduct[int& type_count] { --type_count; } :;
 */
 
-eat_type[int count] { if (count <= 0) return; ENTRY_DEBUG } :
+eat_type[int count] { if (count <= 0 || LA(1) == BAR) return; ENTRY_DEBUG } :
 
         type_identifier
         eat_type[count - 1]
@@ -4426,7 +4428,7 @@ parameter[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NO
                     type_count = 1;
             }
             { stmt_type == VARIABLE || LA(1) == DOTDOTDOT}?
-            parameter_type_count[type_count]
+            parameter_type_count[type_count] { LA(1) == BAR }? bar parameter_type_count[1]
             {
                 // expect a name initialization
                 setMode(MODE_VARIABLE_NAME | MODE_INIT);
