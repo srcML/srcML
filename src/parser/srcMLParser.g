@@ -4419,7 +4419,7 @@ parameter[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NO
                     type_count = 1;
             }
             { stmt_type == VARIABLE || LA(1) == DOTDOTDOT}?
-            parameter_type_count[type_count] { LA(1) == BAR }? bar parameter_type_count[1]
+            parameter_type_count[type_count] ({ LA(1) == BAR }? bar parameter_type_count[1])*
             {
                 // expect a name initialization
                 setMode(MODE_VARIABLE_NAME | MODE_INIT);
