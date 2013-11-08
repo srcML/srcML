@@ -33,4 +33,22 @@
   }</block></class>
 </unit>
 
+<unit>
+<class><annotation>@<name>Entity</name></annotation>
+<annotation>@<name>Table</name><argument_list>(<argument><expr><name>name</name> = "people"</expr></argument>)</argument_list></annotation>
+class <name>Person</name> <super><implements>implements <name>Serializable</name></implements></super> <block>{}</block></class>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><annotation>@<name>Id</name></annotation>
+<annotation>@<name>GeneratedValue</name><argument_list>(<argument><expr><name>strategy</name> = <name><name>GenerationType</name>.<name>AUTO</name></name></expr></argument>)</argument_list></annotation>
+<specifier>private</specifier> <name>Integer</name></type> <name>id</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<function><type><annotation>@<name>Id</name></annotation>
+<annotation>@<name>GeneratedValue</name><argument_list>(<argument><expr><name>strategy</name> = <name><name>GenerationType</name>.<name>AUTO</name></name></expr></argument>)</argument_list></annotation>
+<specifier>private</specifier> <name>Integer</name></type> <name>id</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
 </unit>
