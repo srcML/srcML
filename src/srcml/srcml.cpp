@@ -81,31 +81,43 @@ int main(int argc, char * argv[]) {
     std::cerr << "Invalid Encoding.\n";
     return 1; //ERROR CODE TBD
   }
+  
   if (srcml_request.language != "" && srcml_check_language(srcml_request.language.c_str()) == 0) {
-    //INVALID OPTION
     std::cerr << "Invalid Language.\n";
     return 1; //ERROR CODE TBD
   }
+
   if (srcml_request.tabs <= 0) {
-    //INVALID OPTION
     std::cerr << "Invalid Tab Stop.\n";
     return 1; //ERROR CODE TBD
   }
   
   // SET GLOBAL OPTIONS
-  srcml_set_encoding(srcml_request.encoding.c_str());
-  srcml_set_filename(srcml_request.filename.c_str());
-  srcml_set_directory(srcml_request.directory.c_str());
-  srcml_set_version(srcml_request.src_versions.c_str());
-  srcml_set_tabstop(srcml_request.tabs);
-  srcml_set_all_options(srcml_request.markup_options);
-
+  if (srcml_request.encoding != "") {
+    srcml_set_encoding(srcml_request.encoding.c_str());
+  }
+  if (srcml_request.filename != "") {
+    srcml_set_filename(srcml_request.filename.c_str());
+  }
+  //TODO: THIS NEEDS A FLAG TOO AS "" CAN BE A VALID DIRECTORY
+  if (srcml_request.directory != "") {
+    srcml_set_directory(srcml_request.directory.c_str());
+  }
+  if (srcml_request.src_versions != "") {
+    srcml_set_version(srcml_request.src_versions.c_str());
+  }
+  if (srcml_request.markup_options != 0) {
+    srcml_set_all_options(srcml_request.markup_options);
+  }
+  
   if (srcml_request.language != "") {
     srcml_set_language(srcml_request.language.c_str());  
   }
   else {
     srcml_set_language(SRCML_LANGUAGE_NONE);  
   }
+
+  srcml_set_tabstop(srcml_request.tabs);
 
   for(int i = 0; i < srcml_request.register_ext.size(); ++i) {
     int pos = srcml_request.register_ext[i].find('=');
