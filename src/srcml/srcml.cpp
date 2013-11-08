@@ -142,35 +142,73 @@ int main(int argc, char * argv[]) {
       return 1;
   } 
 
+  
   if (srcml_request.positional_args.size() == 1) {
     srcml(srcml_request.positional_args[0].c_str(), srcml_request.output.c_str());
     return 0;
   }
 
-  /* create a new srcml archive structure */
-  srcml_archive * archive = srcml_create_archive();
+  /* LibsrcML Setup */
+  srcml_archive * srcml_arch = srcml_create_archive();
+  srcml_write_open_filename(srcml_arch, srcml_request.output.c_str());
 
-  /* open a srcML archive for output */
-  srcml_write_open_filename(archive, srcml_request.output.c_str());
+  for (int i = 0; i < srcml_request.positional_args.size(); ++i) {
 
-  /* add all the files to the archive */
-  for(int i = 0; i < srcml_request.positional_args.size(); ++i) {
-    srcml_unit * unit = srcml_create_unit(archive);
-    srcml_unit_set_filename(unit, srcml_request.positional_args[i].c_str());
+    /* LibArchive Setup */
+    archive * arch = archive_read_new();
+    archive_entry * arch_entry = archive_entry_new();
 
-    /* Translate to srcml and append to the archive */
-    srcml_parse_unit_filename(unit, srcml_request.positional_args[i].c_str());
+    archive_read_support_format_raw(arch);
+    archive_read_support_format_7zip(arch);
+    archive_read_support_format_all(arch);
+    archive_read_support_format_ar(arch);
+    archive_read_support_format_cab(arch);
+    archive_read_support_format_cpio(arch);
+    archive_read_support_format_empty(arch);
+    archive_read_support_format_gnutar(arch);
+    archive_read_support_format_iso9660(arch);
+    archive_read_support_format_lha(arch);
+    archive_read_support_format_mtree(arch);
+    archive_read_support_format_rar(arch);
+    archive_read_support_format_raw(arch);
+    archive_read_support_format_tar(arch);
+    archive_read_support_format_xar(arch);
+    archive_read_support_format_zip(arch);
+    
+    archive_read_support_compression_all(arch);
 
-    /* Translate to srcml and append to the archive */
-    srcml_write_unit(archive, unit);
-    srcml_free_unit(unit);
+    if(archive_read_open_filename(arch, srcml_request.positional_args[0].c_str(), 16384) == ARCHIVE_OK) {
+
+      const void* buffer; //DATA CHUNK
+      const char* cptr;  
+      size_t size;        //SIZE OF CHUNK
+      int64_t offset;     //OFFSET FROM START OF DATA (IF DATA REQUIRES MULTIPLE CHUNKS)
+
+      while (archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) {
+        srcml_unit * unit = srcml_create_unit(srcml_arch);
+        srcml_unit_set_filename(unit, srcml_request.positional_args[i].c_str());
+        
+        while (true) {
+          int readStatus = archive_read_data_block(arch, &buffer, &size, &offset);
+          cptr = (char*)buffer;
+          srcml_parse_unit_memory(unit, cptr, size);
+          srcml_write_unit(srcml_arch, unit);
+
+          if (readStatus != ARCHIVE_OK) {
+            break;
+          }
+        }
+      }
+    }
+    else {
+      std::cerr << "Unable to open archive\n";
+      return 1;
+    }
+    archive_read_finish(arch);
   }
 
-  /* close the srcML archive */
-  srcml_close_archive(archive);
-
-  /* free the srcML archive data */
-  srcml_free_archive(archive);
+  srcml_close_archive(srcml_arch);
+  srcml_free_archive(srcml_arch);
 
   return 0;
 }
