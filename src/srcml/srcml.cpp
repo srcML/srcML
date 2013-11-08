@@ -147,13 +147,13 @@ int main(int argc, char * argv[]) {
     return 0;
   }
 
-  /* LibsrcML Setup */
+  // libsrcML Setup
   srcml_archive * srcml_arch = srcml_create_archive();
   srcml_write_open_filename(srcml_arch, srcml_request.output.c_str());
 
   for (int i = 0; i < srcml_request.positional_args.size(); ++i) {
 
-    /* LibArchive Setup */
+    // libArchive Setup
     archive * arch = archive_read_new();
     archive_entry * arch_entry = archive_entry_new();
 
@@ -176,10 +176,10 @@ int main(int argc, char * argv[]) {
 
     if(archive_read_open_filename(arch, srcml_request.positional_args[i].c_str(), 16384) == ARCHIVE_OK) {
 
-      const void* buffer; //DATA CHUNK
+      const void* buffer;
       const char* cptr;  
-      size_t size;        //SIZE OF CHUNK
-      int64_t offset;     //OFFSET FROM START OF DATA (IF DATA REQUIRES MULTIPLE CHUNKS)
+      size_t size;
+      int64_t offset;
 
       while (archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) { 
         srcml_unit * unit = srcml_create_unit(srcml_arch);
@@ -189,12 +189,14 @@ int main(int argc, char * argv[]) {
           That needs to be swapped out with the actual file name from the 
           CLI arg.
         */
-        std::string fileName = archive_entry_pathname(arch_entry);
-        if (fileName.compare("data") != 0) {
-          srcml_unit_set_filename(unit, fileName.c_str());
+        std::string filename = archive_entry_pathname(arch_entry);
+        if (filename.compare("data") != 0) {
+          srcml_unit_set_filename(unit, filename.c_str());
+          srcml_unit_set_language(unit, srcml_archive_check_extension(srcml_arch, filename.c_str()));
         }
         else {
           srcml_unit_set_filename(unit, srcml_request.positional_args[i].c_str()); 
+          srcml_unit_set_language(unit, srcml_archive_check_extension(srcml_arch, srcml_request.positional_args[i].c_str()));
         }
         
         while (true) {
