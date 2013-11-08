@@ -499,6 +499,7 @@ try:
                                 else :
                                         xmlns = getfullxmlns(filexml)
 
+				line_count = 0
 				while count == 0 or count < number:
 
 					try: 
@@ -543,8 +544,18 @@ try:
 						
 						# find the difference
 						result = xmldiff(unitxml, unitsrcml)
-						if count > 0 and (count % MAX_COUNT) == 0:
+						if count > 99 :
+							line_count += 3
+						elif count > 9 :
+							line_count += 2
+						else :
+							line_count += 1
+						line_count += 1
+
+						if count > 0 and line_count >= 75:
 							print "\n", "".rjust(FIELD_WIDTH_LANGUAGE), " ", "...".ljust(FIELD_WIDTH_DIRECTORY), " ",
+							line_count = 0
+
 						if result != "":
 							error_count += 1
 							

@@ -141,6 +141,8 @@ LANGUAGE_JAVA javadoc_java
 LANGUAGE_JAVA native_java
 LANGUAGE_JAVA strictfp_java
 LANGUAGE_JAVA catch_form_java
+LANGUAGE_JAVA try_java
+LANGUAGE_JAVA decl_java
 
 LANGUAGE_OO catch_form
 LANGUAGE_OO foreach

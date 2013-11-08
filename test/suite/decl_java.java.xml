@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="decl" filename="decl_java">
+
+<unit>
+<decl_stmt><decl><type><specifier>transient</specifier> <name>int</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>volatile</specifier> <name>var</name></type> <name>signal</name></decl>;</decl_stmt>
+</unit>
+
+</unit>

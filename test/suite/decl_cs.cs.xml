@@ -49,4 +49,20 @@
 <decl_stmt><decl><type><name>int</name><index>[, ,]</index></type> <name>array1</name> =<init> <expr>new <name><name>int</name><index>[<expr>4</expr>, <expr>2</expr>, <expr>3</expr>]</index></name></expr></init></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><name>native</name></type> <name>n</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>strictfp</name></type> <name>s</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>transient</name></type> <name>s</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>volatile</specifier> <name>var</name></type> <name>signal</name></decl>;</decl_stmt>
+</unit>
+
 </unit>
