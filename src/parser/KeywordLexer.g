@@ -402,6 +402,10 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         { "strictfp"  , STRICTFP  , LANGUAGE_JAVA },
         { "transient"      , TRANSIENT      , LANGUAGE_JAVA }, 
 
+        // catch seperator
+	    { "|"             , BAR         , LANGUAGE_JAVA }, 
+
+
         // add all C# specific keywords to the literals table
         { "foreach"       , FOREACH       , LANGUAGE_CSHARP }, 
         { "ref"           , REF           , LANGUAGE_CSHARP }, 
