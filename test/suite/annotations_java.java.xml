@@ -1,5 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="annotation" filename="annotation_java">
 
+<unit>
+<function><type><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <name>void</name></type> <name>speak</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<class><specifier>public</specifier> <annotation>@<name>Twizzle</name></annotation> <block>{
+  }</block></class>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><annotation>@<name>Edible</name><argument_list>(true)</argument_list></annotation>
+  <name>Item</name></type> <name>item</name> =<init> <expr>new <call><name>Carrot</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><annotation>@<name>Edible</name><argument_list>(value = true)</argument_list></annotation>
+  <name>Item</name></type> <name>item</name> =<init> <expr>new <call><name>Carrot</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><annotation>@<name>Author</name><argument_list>(first = Oompah, last = Loompah)</argument_list></annotation>
+  <name>Book</name></type> <name>book</name> =<init> <expr>new <call><name>Book</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+</unit>
 
 </unit>
