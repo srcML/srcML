@@ -1583,7 +1583,7 @@ interface_definition[] { ENTRY_DEBUG } :
             // java interfaces end at the end of the block
             setMode(MODE_END_AT_BLOCK);
         }
-        class_preamble INTERFACE class_header lcurly
+        class_preamble (interface_annotation | INTERFACE) class_header lcurly
 ;
 
 struct_declaration[] { ENTRY_DEBUG } :
@@ -2429,10 +2429,10 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 set_type[type, PROPERTY_ACCESSOR, true] |
 
                 { type_count == attribute_count + specifier_count }?
-                (CLASS     set_type[type, CLASS_DECL]  |
-                 STRUCT    set_type[type, STRUCT_DECL] |
-                 UNION     set_type[type, UNION_DECL]  |
-                 INTERFACE set_type[type, INTERFACE_DECL])
+                (CLASS               set_type[type, CLASS_DECL]  |
+                 STRUCT              set_type[type, STRUCT_DECL] |
+                 UNION               set_type[type, UNION_DECL]  |
+                 (ATSIGN)* INTERFACE set_type[type, INTERFACE_DECL])
                 set_bool[lcurly, LA(1) == LCURLY]
                 (class_header | LCURLY)
                 set_type[type, CLASS_DEFN,     type == CLASS_DECL     && (LA(1) == LCURLY || lcurly)]
@@ -3339,6 +3339,20 @@ destructor_header[] { ENTRY_DEBUG } :
         {
             setMode(MODE_FUNCTION_TAIL);
         }
+;
+
+interface_annotation[] { ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
+
+            // start the function call element
+            startElement(SANNOTATION);
+        }
+        ATSIGN INTERFACE
+        {
+            endMode(MODE_LOCAL);
+        }
+
 ;
 
 annotation[] { CompleteElement element(this); ENTRY_DEBUG } :
