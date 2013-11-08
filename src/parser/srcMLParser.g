@@ -3365,7 +3365,7 @@ annotation[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         function_identifier
 
-        (call_argument_list ({LA(1) != RPAREN }? argument)* rparen)*
+        (call_argument_list ({LA(1) != RPAREN }? annotation_argument) rparen)*
 ;
 
 // call  function call, macro, etc.
@@ -4404,6 +4404,22 @@ argument[] { ENTRY_DEBUG } :
 
         type_identifier
         )
+;
+
+annotation_argument[] { ENTRY_DEBUG } :
+        { getParen() == 0 }? rparen[false] |
+        {
+            // argument with nested expression
+            startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
+
+            // start the argument
+            startElement(SARGUMENT);
+        }
+        (
+        { !(LA(1) == RPAREN) }? expression |
+
+        type_identifier
+        )*
 ;
 
 parameter[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
