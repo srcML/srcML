@@ -2138,22 +2138,13 @@ lparen_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
 ;
 
 bar[] { ENTRY_DEBUG }:
-        {
-            // comma ends the current item in a list
-            // or ends the current expression
-            if (inTransparentMode(MODE_PARAMETER))
-                
-                // might want to check for !inMode(MODE_INTERNAL_END_CURLY)
-                endDownToModeSet(MODE_LIST | MODE_STATEMENT);
-
-        }
         bar_marked
 ;
 
 // marking comma operator
 bar_marked[] { LightweightElement element(this); ENTRY_DEBUG }:
         {
-            if (isoption(parseoptions, OPTION_OPERATOR) && !inMode(MODE_PARAMETER) && !inMode(MODE_ARGUMENT))
+            if (isoption(parseoptions, OPTION_OPERATOR) && !inMode(MODE_PARAMETER))
                 startElement(SOPERATOR);
         }
         BAR
