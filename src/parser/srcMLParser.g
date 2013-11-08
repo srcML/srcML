@@ -597,7 +597,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         // end of line
         line_continuation | EOL | LINECOMMENT_START |
 
-        comma |
+        comma | { inLanguage(LANGUAGE_JAVA) }? bar |
 
         { !inTransparentMode(MODE_INTERNAL_END_PAREN) || inPrevMode(MODE_CONDITION) }? rparen[false] |
 
@@ -2137,6 +2137,19 @@ lparen_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
         LPAREN
 ;
 
+bar[] { ENTRY_DEBUG }:
+        bar_marked
+;
+
+// marking comma operator
+bar_marked[] { LightweightElement element(this); ENTRY_DEBUG }:
+        {
+            if (isoption(parseoptions, OPTION_OPERATOR) && !inMode(MODE_PARAMETER))
+                startElement(SOPERATOR);
+        }
+        BAR
+;
+
 comma[] { ENTRY_DEBUG }:
         {
             // comma ends the current item in a list
@@ -2449,6 +2462,8 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 // special function name
                 MAIN set_bool[isoperator, type_count == 0] |
 
+        { inLanguage(LANGUAGE_JAVA) && inMode(MODE_PARAMETER) }? bar |
+
                 // type parts that can occur before other type parts (excluding specifiers)
                 { LA(1) != LBRACKET }?
                 pure_lead_type_identifier_no_specifiers set_bool[foundpure] |
@@ -2496,7 +2511,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
               and it is part of a parameter list
         */
         set_type[type, VARIABLE, ((type_count - specifier_count > 0) ||
-                                 (inparam && (LA(1) == RPAREN || LA(1) == COMMA || LA(1) == LBRACKET ||
+                                 (inparam && (LA(1) == RPAREN || LA(1) == COMMA || LA(1) == BAR || LA(1) == LBRACKET ||
                                               ((inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_C)) && LA(1) == EQUAL))))]
 
         // need to see if we possibly have a constructor/destructor name, with no type
@@ -2650,10 +2665,12 @@ type_identifier_count[int& type_count] { ++type_count; ENTRY_DEBUG } :
 deduct[int& type_count] { --type_count; } :;
 */
 
-eat_type[int count] { if (count <= 0) return; ENTRY_DEBUG } :
+eat_type[int & count] { if (count <= 0 || LA(1) == BAR) return; ENTRY_DEBUG } :
 
         type_identifier
-        eat_type[count - 1]
+        set_int[count, count - 1]
+        eat_type[count]
+
 ;
 
 // throw list for a function
@@ -3942,7 +3959,7 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
         OPERATORS | TEMPOPS |
             TEMPOPE ({ SkipBufferSize() == 0 }? TEMPOPE)? ({ SkipBufferSize() == 0 }? TEMPOPE)? ({ SkipBufferSize() == 0 }? EQUAL)? |
     EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF |
-            QMARK ({ SkipBufferSize() == 0 }? QMARK)? |
+            QMARK ({ SkipBufferSize() == 0 }? QMARK)? | { inLanguage(LANGUAGE_JAVA) }? BAR |
 
             // others are not combined
             NEW | DELETE | IN | IS | STACKALLOC | AS | AWAIT | LAMBDA
@@ -4306,7 +4323,7 @@ parameter_list[] { CompleteElement element(this); bool lastwasparam = false; boo
             // We are in a parameter list.  Need to make sure we end it down to the start of the parameter list
             if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
                 endMode();
-        } comma |
+        } comma | { inLanguage(LANGUAGE_JAVA) }? bar |
         complete_parameter { foundparam = lastwasparam = true; })* empty_element[SPARAMETER, !lastwasparam && foundparam] rparen[false]
 ;
 
@@ -4404,7 +4421,7 @@ parameter[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NO
                     type_count = 1;
             }
             { stmt_type == VARIABLE || LA(1) == DOTDOTDOT}?
-            parameter_type_count[type_count]
+            parameter_type_count[type_count] ({ LA(1) == BAR }? bar set_int[type_count, type_count > 1 ? type_count - 1 : 1] parameter_type_count[type_count])*
             {
                 // expect a name initialization
                 setMode(MODE_VARIABLE_NAME | MODE_INIT);
@@ -4413,7 +4430,7 @@ parameter[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NO
         )
 ;
 
-parameter_type_count[int type_count] { CompleteElement element(this); ENTRY_DEBUG } :
+parameter_type_count[int & type_count] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // local mode so start element will end correctly
             startNewMode(MODE_LOCAL);
