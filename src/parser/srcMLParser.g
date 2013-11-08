@@ -2462,7 +2462,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 // special function name
                 MAIN set_bool[isoperator, type_count == 0] |
 
-                bar |
+        { inLanguage(LANGUAGE_JAVA) && inMode(MODE_PARAMETER) }? bar |
 
                 // type parts that can occur before other type parts (excluding specifiers)
                 { LA(1) != LBRACKET }?
