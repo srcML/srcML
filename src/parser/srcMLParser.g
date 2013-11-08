@@ -2428,11 +2428,14 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 property_method_name
                 set_type[type, PROPERTY_ACCESSOR, true] |
 
-                { type_count == attribute_count + specifier_count }?
-                (CLASS               set_type[type, CLASS_DECL]  |
-                 STRUCT              set_type[type, STRUCT_DECL] |
-                 UNION               set_type[type, UNION_DECL]  |
-                 (ATSIGN)* INTERFACE set_type[type, INTERFACE_DECL])
+                { type_count == attribute_count + specifier_count  && (!inLanguage(LANGUAGE_JAVA) 
+            || (inLanguage(LANGUAGE_JAVA) && (LA(1) != ATSIGN 
+                                             || (LA(1) == ATSIGN && next_token() == INTERFACE)))) }?
+                (CLASS               set_type[type, CLASS_DECL]     |
+                 STRUCT              set_type[type, STRUCT_DECL]    |
+                 UNION               set_type[type, UNION_DECL]     |
+                 INTERFACE           set_type[type, INTERFACE_DECL] |
+                 ATSIGN INTERFACE set_type[type, INTERFACE_DECL])
                 set_bool[lcurly, LA(1) == LCURLY]
                 (class_header | LCURLY)
                 set_type[type, CLASS_DEFN,     type == CLASS_DECL     && (LA(1) == LCURLY || lcurly)]
