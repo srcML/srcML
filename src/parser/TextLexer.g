@@ -93,8 +93,8 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); } :
         ('a'..'z' | 'A'..'Z' | '_' | '\200'..'\377')
         (
 
-            { lastchar == 'L' }?
-            { $setType(STRING_START); } STRING_START |
+            { lastchar == 'L' || lastchar == 'R' || lastchar == 'U' || lastchar == 'u' }?
+            { $setType(STRING_START); } ('8' | 'R')* STRING_START |
 
             (options { greedy = true; } : '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377')*
         )
