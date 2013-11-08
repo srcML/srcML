@@ -142,7 +142,6 @@ int main(int argc, char * argv[]) {
       return 1;
   } 
 
-  
   if (srcml_request.positional_args.size() == 1) {
     srcml(srcml_request.positional_args[0].c_str(), srcml_request.output.c_str());
     return 0;
@@ -158,9 +157,7 @@ int main(int argc, char * argv[]) {
     archive * arch = archive_read_new();
     archive_entry * arch_entry = archive_entry_new();
 
-    archive_read_support_format_raw(arch);
     archive_read_support_format_7zip(arch);
-    archive_read_support_format_all(arch);
     archive_read_support_format_ar(arch);
     archive_read_support_format_cab(arch);
     archive_read_support_format_cpio(arch);
@@ -174,29 +171,42 @@ int main(int argc, char * argv[]) {
     archive_read_support_format_tar(arch);
     archive_read_support_format_xar(arch);
     archive_read_support_format_zip(arch);
-    
+
     archive_read_support_compression_all(arch);
 
-    if(archive_read_open_filename(arch, srcml_request.positional_args[0].c_str(), 16384) == ARCHIVE_OK) {
+    if(archive_read_open_filename(arch, srcml_request.positional_args[i].c_str(), 16384) == ARCHIVE_OK) {
 
       const void* buffer; //DATA CHUNK
       const char* cptr;  
       size_t size;        //SIZE OF CHUNK
       int64_t offset;     //OFFSET FROM START OF DATA (IF DATA REQUIRES MULTIPLE CHUNKS)
 
-      while (archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) {
+      while (archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) { 
         srcml_unit * unit = srcml_create_unit(srcml_arch);
-        srcml_unit_set_filename(unit, srcml_request.positional_args[i].c_str());
+        
+        /* 
+          The header path for a standard file is just "data".
+          That needs to be swapped out with the actual file name from the 
+          CLI arg.
+        */
+        std::string fileName = archive_entry_pathname(arch_entry);
+        if (fileName.compare("data") != 0) {
+          srcml_unit_set_filename(unit, fileName.c_str());
+        }
+        else {
+          srcml_unit_set_filename(unit, srcml_request.positional_args[i].c_str()); 
+        }
         
         while (true) {
           int readStatus = archive_read_data_block(arch, &buffer, &size, &offset);
           cptr = (char*)buffer;
-          srcml_parse_unit_memory(unit, cptr, size);
-          srcml_write_unit(srcml_arch, unit);
-
+          
           if (readStatus != ARCHIVE_OK) {
             break;
           }
+          
+          srcml_parse_unit_memory(unit, cptr, size);
+          srcml_write_unit(srcml_arch, unit);
         }
       }
     }
