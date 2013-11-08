@@ -3341,17 +3341,12 @@ destructor_header[] { ENTRY_DEBUG } :
         }
 ;
 
-interface_annotation[] { ENTRY_DEBUG } :
+interface_annotation[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            startNewMode(MODE_LOCAL);
-
             // start the function call element
             startElement(SANNOTATION);
         }
         ATSIGN INTERFACE
-        {
-            endMode(MODE_LOCAL);
-        }
 
 ;
 
