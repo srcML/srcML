@@ -219,3 +219,7 @@ relaxng.xml
 transform.xml
 xpath.xml
 xslt.xml
+
+# timing ignore
+timing_*.xml
+*.hv2
