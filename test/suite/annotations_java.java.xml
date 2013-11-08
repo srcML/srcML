@@ -7,7 +7,7 @@
 </unit>
 
 <unit>
-<class type="interface"><specifier>public</specifier> <annotation>@<name>Twizzle</name></annotation> <block>{
+<class type="interface"><specifier>public</specifier> <annotation>@interface</annotation> <name>Twizzle</name> <block>{
   }</block></class>
 </unit>
 
@@ -26,9 +26,11 @@
   <name>Book</name></type> <name>book</name> =<init> <expr>new <call><name>Book</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
 </unit>
 
+<unit>
 <class type="interface"><specifier>public</specifier> <annotation>@interface</annotation> <name>Author</name> <block>{
     <function_decl><type><name>String</name></type> <name>first</name><parameter_list>()</parameter_list>;</function_decl>
     <function_decl><type><name>String</name></type> <name>last</name><parameter_list>()</parameter_list>;</function_decl>
   }</block></class>
+</unit>
 
 </unit>
