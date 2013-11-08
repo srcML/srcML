@@ -152,7 +152,7 @@ int main(int argc, char * argv[]) {
   srcml_write_open_filename(srcml_arch, srcml_request.output.c_str());
 
   for (int i = 0; i < srcml_request.positional_args.size(); ++i) {
-
+    
     // libArchive Setup
     archive * arch = archive_read_new();
     archive_entry * arch_entry = archive_entry_new();
@@ -175,21 +175,20 @@ int main(int argc, char * argv[]) {
     archive_read_support_compression_all(arch);
 
     if(archive_read_open_filename(arch, srcml_request.positional_args[i].c_str(), 16384) == ARCHIVE_OK) {
-
       const void* buffer;
-      const char* cptr;  
+      const char* cptr;
       size_t size;
       int64_t offset;
 
       while (archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) { 
         srcml_unit * unit = srcml_create_unit(srcml_arch);
-        
+        std::string filename = archive_entry_pathname(arch_entry);
+
         /* 
           The header path for a standard file is just "data".
           That needs to be swapped out with the actual file name from the 
           CLI arg.
         */
-        std::string filename = archive_entry_pathname(arch_entry);
         if (filename.compare("data") != 0) {
           srcml_unit_set_filename(unit, filename.c_str());
           srcml_unit_set_language(unit, srcml_archive_check_extension(srcml_arch, filename.c_str()));
