@@ -89,7 +89,7 @@ bool checkArchive(const std::string& filename) {
   archive_read_support_format_xar(arch);
   archive_read_support_format_zip(arch);
 
-  archive_read_support_compression_all(arch);
+  archive_read_support_filter_all(arch);
 
   if(archive_read_open_filename(arch, filename.c_str(), 16384) == ARCHIVE_OK) {
     archive_read_finish(arch);
@@ -211,7 +211,7 @@ int main(int argc, char * argv[]) {
     archive_read_support_format_xar(arch);
     archive_read_support_format_zip(arch);
 
-    archive_read_support_compression_all(arch);
+    archive_read_support_filter_all(arch);
 
     if(archive_read_open_filename(arch, srcml_request.positional_args[i].c_str(), 16384) == ARCHIVE_OK) {
       const void* buffer;
