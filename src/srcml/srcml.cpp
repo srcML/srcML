@@ -72,7 +72,7 @@ bool checkLocalFile(const std::string& pos_arg) {
   return true;
 }
 
-bool convenience(const std::string& filename) {
+bool convenienceCheck(const std::string& filename) {
   archive * arch = archive_read_new();
   archive_entry * arch_entry = archive_entry_new();
 
@@ -188,7 +188,7 @@ int main(int argc, char * argv[]) {
   } 
 
   if (srcml_request.positional_args.size() == 1) {
-    if(convenience(srcml_request.positional_args[0])) {
+    if(convenienceCheck(srcml_request.positional_args[0])) {
       srcml(srcml_request.positional_args[0].c_str(), srcml_request.output.c_str());
       return 0;
     }
