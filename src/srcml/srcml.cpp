@@ -72,7 +72,7 @@ bool checkLocalFile(const std::string& pos_arg) {
   return true;
 }
 
-bool checkArchive(const std::string& filename) {
+bool convenience(const std::string& filename) {
   archive * arch = archive_read_new();
   archive_entry * arch_entry = archive_entry_new();
 
@@ -88,14 +88,20 @@ bool checkArchive(const std::string& filename) {
   archive_read_support_format_tar(arch);
   archive_read_support_format_xar(arch);
   archive_read_support_format_zip(arch);
+  archive_read_support_format_raw(arch);
 
   archive_read_support_filter_all(arch);
 
   if(archive_read_open_filename(arch, filename.c_str(), 16384) == ARCHIVE_OK) {
-    archive_read_finish(arch);
-    return true;
+    if(archive_read_next_header(arch, &arch_entry) == ARCHIVE_OK) {
+      if(archive_filter_code(arch,0) == ARCHIVE_FILTER_NONE &&
+        archive_format(arch) == ARCHIVE_FORMAT_RAW){
+        archive_read_finish(arch);
+        return true;
+      }
+    }
   }
-
+  archive_read_finish(arch);
   return false;
 }
 
@@ -181,9 +187,11 @@ int main(int argc, char * argv[]) {
       return 1;
   } 
 
-  if (srcml_request.positional_args.size() == 1 && !checkArchive(srcml_request.positional_args[0])) {
-    srcml(srcml_request.positional_args[0].c_str(), srcml_request.output.c_str());
-    return 0;
+  if (srcml_request.positional_args.size() == 1) {
+    if(convenience(srcml_request.positional_args[0])) {
+      srcml(srcml_request.positional_args[0].c_str(), srcml_request.output.c_str());
+      return 0;
+    }
   }
   
   // libsrcML Setup
