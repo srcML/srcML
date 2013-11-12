@@ -18,7 +18,7 @@
 </unit>
 
 <unit>
-<function_decl><type><name>NonCopyable</name> &amp;</type> <name>operator=</name><parameter_list>(<param><decl><type><specifier>const</specifier></type> <name>NonCopyable</name>&amp;</decl></param>)</parameter_list> = delete;</function_decl>
+<function_decl><type><name>NonCopyable</name> &amp;</type> <name>operator=</name><parameter_list>(<param><decl><type><specifier>const</specifier></type> <name>NonCopyable</name>&amp;</decl></param>)</parameter_list> = <specifier>delete</specifier>;</function_decl>
 </unit>
 
 </unit>
