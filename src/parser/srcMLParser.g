@@ -1583,7 +1583,7 @@ interface_definition[] { ENTRY_DEBUG } :
             // java interfaces end at the end of the block
             setMode(MODE_END_AT_BLOCK);
         }
-        class_preamble INTERFACE class_header lcurly
+        class_preamble (interface_annotation | INTERFACE) class_header lcurly
 ;
 
 struct_declaration[] { ENTRY_DEBUG } :
@@ -2428,11 +2428,14 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 property_method_name
                 set_type[type, PROPERTY_ACCESSOR, true] |
 
-                { type_count == attribute_count + specifier_count }?
-                (CLASS     set_type[type, CLASS_DECL]  |
-                 STRUCT    set_type[type, STRUCT_DECL] |
-                 UNION     set_type[type, UNION_DECL]  |
-                 INTERFACE set_type[type, INTERFACE_DECL])
+                { type_count == attribute_count + specifier_count  && (!inLanguage(LANGUAGE_JAVA) 
+            || (inLanguage(LANGUAGE_JAVA) && (LA(1) != ATSIGN 
+                                             || (LA(1) == ATSIGN && next_token() == INTERFACE)))) }?
+                (CLASS               set_type[type, CLASS_DECL]     |
+                 STRUCT              set_type[type, STRUCT_DECL]    |
+                 UNION               set_type[type, UNION_DECL]     |
+                 INTERFACE           set_type[type, INTERFACE_DECL] |
+                 ATSIGN INTERFACE set_type[type, INTERFACE_DECL])
                 set_bool[lcurly, LA(1) == LCURLY]
                 (class_header | LCURLY)
                 set_type[type, CLASS_DEFN,     type == CLASS_DECL     && (LA(1) == LCURLY || lcurly)]
@@ -3341,6 +3344,15 @@ destructor_header[] { ENTRY_DEBUG } :
         }
 ;
 
+interface_annotation[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            // start the function call element
+            startElement(SANNOTATION);
+        }
+        ATSIGN INTERFACE
+
+;
+
 annotation[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
@@ -3353,7 +3365,7 @@ annotation[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         function_identifier
 
-        (call_argument_list (~(RPAREN))* rparen)*
+        (call_argument_list ({ LA(1) != RPAREN && LA(1) != COMMA }? annotation_argument (comma)*)* rparen)*
 ;
 
 // call  function call, macro, etc.
@@ -4392,6 +4404,22 @@ argument[] { ENTRY_DEBUG } :
 
         type_identifier
         )
+;
+
+annotation_argument[] { ENTRY_DEBUG } :
+        { getParen() == 0 }? rparen[false] |
+        {
+            // argument with nested expression
+            startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
+
+            // start the argument
+            startElement(SARGUMENT);
+        }
+        (
+        { !(LA(1) == RPAREN) }? expression |
+
+        type_identifier
+        )*
 ;
 
 parameter[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :

@@ -27,11 +27,11 @@ xml_filename = ""
 
 srcmltranslator = os.environ.get("SRC2SRCML")
 if srcmltranslator == "" or srcmltranslator == None:
-	srcmltranslator = "../bin/src2srcml"
+	srcmltranslator = "../build/src2srcml"
 
 srcmlutility = os.environ.get("SRCML2SRC")
 if srcmlutility == "" or srcmlutility == None:
-	srcmlutility = "../bin/srcml2src"
+	srcmlutility = "../build/srcml2src"
 
 # Walk into directories in filesystem
 # Ripped from os module and slightly modified
