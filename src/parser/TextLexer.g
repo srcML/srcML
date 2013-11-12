@@ -82,7 +82,7 @@ STRING_START :
                         consume();
                     }
                     consume();
-                    while(LA(1) != ')') {
+                    while(true) {
                         char save_char = LA(1);
                         consume();
                         if(save_char != ')') continue; 
