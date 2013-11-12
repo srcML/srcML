@@ -6,11 +6,11 @@
 </unit>
 
 <unit>
-<class>class <name>NonCopyable</name> <block>{<public type="default"> <constructor_decl><name>NonCopyable</name><parameter_list>()</parameter_list> = default;</constructor_decl> </public>}</block>;</class>
+<class>class <name>NonCopyable</name> <block>{<private type="default"> <constructor_decl><name>NonCopyable</name><parameter_list>()</parameter_list> = default;</constructor_decl> </private>}</block>;</class>
 </unit>
 
 <unit>
-<class>class <name>NonCopyable</name> <block>{<public type="default"> <constructor_decl><name>NonCopyable</name><parameter_list>(<param><decl><type><specifier>const</specifier></type> <name>NonCopyable</name>&amp;</decl></param>)</parameter_list> = delete;</constructor_decl> </public>}</block>;</class>
+<class>class <name>NonCopyable</name> <block>{<private type="default"> <constructor_decl><name>NonCopyable</name><parameter_list>(<param><decl><type><specifier>const</specifier></type> <name>NonCopyable</name>&amp;</decl></param>)</parameter_list> = delete;</constructor_decl> </private>}</block>;</class>
 </unit>
 
 </unit>
