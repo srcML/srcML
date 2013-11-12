@@ -25,6 +25,7 @@ header "pre_include_hpp" {
 }
 
 header {
+   #include <string>
    #include "Language.hpp"
    #include "UTF8CharBuffer.hpp"
    #include "antlr/TokenStreamSelector.hpp"
@@ -36,7 +37,7 @@ header "post_include_cpp" {
 
 void KeywordLexer::changetotextlexer(int typeend) {
           selector->push("text"); 
-           ((CommentTextLexer* ) (selector->getStream("text")))->init(typeend, onpreprocline, atstring);
+           ((CommentTextLexer* ) (selector->getStream("text")))->init(typeend, onpreprocline, atstring, rawstring, delimiter);
 }
 }
 
@@ -234,6 +235,7 @@ bool onpreprocline;
 bool startline;
 bool atstring;
 bool rawstring;
+std::string delimiter;
 
 // map from text of literal to token number, adjusted to language
 struct keyword { char const * const text; int token; int language; };

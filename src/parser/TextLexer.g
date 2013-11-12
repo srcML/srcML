@@ -62,6 +62,7 @@ public:
 
 bool onpreprocline;
 bool rawstring;
+std::string delimiter;
 
 }
 
@@ -75,28 +76,13 @@ STRING_START :
             // note that the "abc does not end at the end of this line,
             // but the #define must end, so EOL is not a valid string character
             '"' { if(rawstring) {
-                    rawstring = false;
-                    std::string delimiter;
+                    //rawstring = false;
+                    //std::string delimiter;
                     while(LA(1) != '(') {
                         delimiter += LA(1);
                         consume();
                     }
                     consume();
-                    while(true) {
-                        char save_char = LA(1);
-                        consume();
-                        if(save_char != ')') continue; 
-                        int pos = 0;
-                        while(LA(1) == delimiter[pos]) {
-                            ++pos;
-                            consume();
-                        }
-
-                        if(pos != delimiter.size())
-                            continue;
-                        break;
-                    }
-
 
                 }
                 changetotextlexer(STRING_END); } |
@@ -104,7 +90,7 @@ STRING_START :
             // character literal or single quoted string
             '\'' { $setType(CHAR_START); changetotextlexer(CHAR_END); }
         )
-        { atstring = false; }
+        { atstring = false; rawstring = false; delimiter = ""; }
 ;
 
 CONSTANTS :
