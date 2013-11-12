@@ -24,14 +24,6 @@ file(GLOB SRCML_SOURCE *.cpp)
 list(REMOVE_ITEM SRCML_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/srcml.cpp)
 add_library(tempLib STATIC ${SRCML_HEADERS} ${SRCML_SOURCE})
 
-
-get_property(LIBXML2_LIBS GLOBAL PROPERTY LIBXML2_LIBS)
-get_property(LIBXSLT_LIBS GLOBAL PROPERTY LIBXSLT_LIBS)
-get_property(BOOST_PROGRAM_OPTIONS_LIB GLOBAL PROPERTY BOOST_PROGRAM_OPTIONS_LIB)
-get_property(ANTLR_LIB GLOBAL PROPERTY ANTLR_LIB)
-get_property(LIBARCHIVE_LIBS GLOBAL PROPERTY LIBARCHIVE_LIBS)
-
-add_executable(srcml srcml.cpp)
-target_link_libraries(srcml tempLib srcml_static)
+srcMLExec(srcml srcml.cpp tempLib srcml_static)
 
 

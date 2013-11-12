@@ -18,8 +18,5 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-add_executable(src2srcml src2srcml.cpp)
-target_link_libraries(src2srcml srcml_static)
-
-add_executable(srcml2src srcml2src.cpp)
-target_link_libraries(srcml2src srcml_static)
+srcMLExec(src2srcml src2srcml.cpp srcml_static)
+srcMLExec(srcml2src srcml2src.cpp srcml_static)

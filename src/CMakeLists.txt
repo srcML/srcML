@@ -19,11 +19,14 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 subdirs(parser translator libsrcml srcml oldclient)
+
+# Building static and dynamic libraries for srcML.
 add_library(srcml_static STATIC $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:translator> srcml/srcmlapps.cpp)
 set_target_properties(srcml_static PROPERTIES OUTPUT_NAME srcml)
 target_link_libraries(srcml_static ${LIBXML2_LIBS} ${LIBXSLT_LIBS} ${BOOST_PROGRAM_OPTIONS_LIB} ${ANTLR_LIB} ${LIBARCHIVE_LIBS} dl)
+set_target_properties(srcml_static PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 add_library(srcml_shared SHARED $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:translator> srcml/srcmlapps.cpp)
 set_target_properties(srcml_shared PROPERTIES OUTPUT_NAME srcml)
 target_link_libraries(srcml_shared ${LIBXML2_LIBS} ${BOOST_PROGRAM_OPTIONS_LIB} ${ANTLR_LIB} ${LIBARCHIVE_LIBS} dl)
-
+set_target_properties(srcml_shared PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)

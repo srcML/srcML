@@ -89,11 +89,6 @@ set_property(GLOBAL PROPERTY SED_EXE ${SED_EXE})
 find_program(GREP_EXE grep PATHS /bin /usr/bin ${WINDOWS_DEP_PATH}/bin)
 set_property(GLOBAL PROPERTY GREP_EXE ${GREP_EXE})
 
-
 #  Figure out exactly what package curl is and where it is located.
 # find_package(libcurl3)
 
-# Configuring output directories for libraries and executables.
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)

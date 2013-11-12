@@ -114,7 +114,7 @@ add_library(parser OBJECT
     ${SrcMLParserOutputFiles}
     ${KeywordLexerOutputFiles}
     ${CommentTextLexerOutputFiles}
+    ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp
     ${PARSER_HEADERS}
     ${PARSER_SOURCE}
-    ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp
 )
