@@ -63,7 +63,6 @@ LANGUAGE_CXX try
 LANGUAGE_CXX typedef_struct
 LANGUAGE_CXX operator
 LANGUAGE_CXX function_cpp
-LANGUAGE_CXX literal_cpp
 LANGUAGE_CXX call_ns
 LANGUAGE_CXX expression_pointer
 LANGUAGE_CXX enum_cpp

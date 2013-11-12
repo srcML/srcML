@@ -61,6 +61,8 @@ tokens {
 public:
 
 bool onpreprocline;
+bool rawstring;
+std::string delimiter;
 
 }
 
@@ -73,12 +75,22 @@ STRING_START :
             // #define a "abc
             // note that the "abc does not end at the end of this line,
             // but the #define must end, so EOL is not a valid string character
-            '"' { changetotextlexer(STRING_END); } |
+            '"' { if(rawstring) {
+                    //rawstring = false;
+                    //std::string delimiter;
+                    while(LA(1) != '(') {
+                        delimiter += LA(1);
+                        consume();
+                    }
+                    consume();
+
+                }
+                changetotextlexer(STRING_END); } |
 
             // character literal or single quoted string
             '\'' { $setType(CHAR_START); changetotextlexer(CHAR_END); }
         )
-        { atstring = false; }
+        { atstring = false; rawstring = false; delimiter = ""; }
 ;
 
 CONSTANTS :
@@ -93,8 +105,11 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); } :
         ('a'..'z' | 'A'..'Z' | '_' | '\200'..'\377')
         (
 
-            { lastchar == 'L' }?
-            { $setType(STRING_START); } STRING_START |
+            { lastchar == 'L' || lastchar == 'U' || lastchar == 'u' }?
+            { $setType(STRING_START); } ('8' | { rawstring = true; } 'R')* STRING_START |
+
+            { lastchar == 'R' }?
+            { $setType(STRING_START); rawstring = true; } STRING_START |
 
             (options { greedy = true; } : '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377')*
         )
