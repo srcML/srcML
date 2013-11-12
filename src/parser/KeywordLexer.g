@@ -243,7 +243,7 @@ struct keyword { char const * const text; int token; int language; };
 void changetotextlexer(int typeend);
 
 KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
-    : antlr::CharScanner(pinput,true), Language(language), onpreprocline(false), startline(true), atstring(false)
+    : antlr::CharScanner(pinput,true), Language(language), onpreprocline(false), startline(true), atstring(false), rawstring(false), delimiter("")
 {
     setTokenObjectFactory(srcMLToken::factory);
 
