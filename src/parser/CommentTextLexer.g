@@ -191,7 +191,7 @@ COMMENT_TEXT {
 
         '\050' |
 
-        '\051' /* ')' */ {
+        '\051' /* ')' */ { if(rawstring) {
 
                 int pos = 0;
                 while(pos < delimiter.size() && LA(1) == delimiter[pos]) {
@@ -202,7 +202,9 @@ COMMENT_TEXT {
                 if(pos == delimiter.size()) {
                     rawstring = false;
                 }
-        }|
+
+            }
+        } |
 
         '\052'..'\056' |
 

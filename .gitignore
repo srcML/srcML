@@ -3,6 +3,7 @@
 \#*\#
 .\#*
 *.pyc
+.DS_Store
 
 # antlr gen
 CommentTextLexer.cpp
