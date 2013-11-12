@@ -22,6 +22,10 @@
 </unit>
 
 <unit>
+<expr_stmt><expr><lit:literal type="string">R"()"</lit:literal></expr>;</expr_stmt>
+</unit>
+
+<unit>
 <expr_stmt><expr><lit:literal type="string">R"(The String Data \ Stuff " )"</lit:literal></expr>;</expr_stmt>
 </unit>
 
