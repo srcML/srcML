@@ -75,16 +75,17 @@ STRING_START :
             // note that the "abc does not end at the end of this line,
             // but the #define must end, so EOL is not a valid string character
             '"' { if(rawstring) {
-                    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+                    rawstring = false;
                     std::string delimiter;
                     while(LA(1) != '(') {
-                        fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, LA(1));
                         delimiter += LA(1);
                         consume();
                     }
-                    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, delimiter.c_str());
+                    consume();
                     while(LA(1) != ')') {
+                        char save_char = LA(1);
                         consume();
+                        if(save_char != ')') continue; 
                         int pos = 0;
                         while(LA(1) == delimiter[pos]) {
                             ++pos;
