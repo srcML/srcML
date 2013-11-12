@@ -3215,11 +3215,12 @@ function_specifier[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         ({ LA(1) != ASYNC }? specifier |
 
-        // pure virtual specifier
-        EQUAL literal |
+        // pure virtual specifier = default and = delete
+        EQUAL (literal | DEFAULT | DELETE) |
 
         simple_name_optional_template)
 ;
+
 
 specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         {
