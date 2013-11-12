@@ -22,3 +22,4 @@
 file(GLOB TRANSLATOR_HEADERS *.hpp)
 file(GLOB TRANSLATOR_SOURCE *.cpp)
 add_library(translator OBJECT ${TRANSLATOR_SOURCE} ${TRANSLATOR_HEADERS})
+add_dependencies(translator parser)
