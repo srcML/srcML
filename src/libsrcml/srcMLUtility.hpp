@@ -25,10 +25,10 @@
 #ifndef SRCMLUTILITY_HPP
 #define SRCMLUTILITY_HPP
 
-#include "Language.hpp"
-#include "Options.hpp"
+#include <Language.hpp>
+#include <Options.hpp>
 
-#include "SAX2Utilities.hpp"
+#include <SAX2Utilities.hpp>
 
 class LibXMLError;
 class TerminateLibXMLError;

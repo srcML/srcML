@@ -22,9 +22,9 @@
   Class for straightforward translation
 */
 
-#include "srcMLUtility.hpp"
+#include <srcMLUtility.hpp>
 #include <cstring>
-#include "srcmlns.hpp"
+#include <srcmlns.hpp>
 #include <sys/stat.h>
 
 #if defined(__GNUC__) && !defined(__MINGW32__)
@@ -35,28 +35,28 @@
 
 #include <libxml/parserInternals.h>
 
-#include "Options.hpp"
+#include <Options.hpp>
 
-#include "ProcessUnit.hpp"
-#include "ExtractUnitsSrc.hpp"
-#include "ExtractUnitsDiffSrc.hpp"
-#include "CountUnits.hpp"
-#include "Properties.hpp"
-#include "ListUnits.hpp"
-#include "ExtractUnitsXML.hpp"
-#include "ExtractUnitsDiffXML.hpp"
-#include "ExtractUnitsDiffXMLPreserve.hpp"
-#include "XPathQueryUnits.hpp"
-#include "XSLTUnits.hpp"
-#include "RelaxNGUnits.hpp"
+#include <ProcessUnit.hpp>
+#include <ExtractUnitsSrc.hpp>
+#include <ExtractUnitsDiffSrc.hpp>
+#include <CountUnits.hpp>
+#include <Properties.hpp>
+#include <ListUnits.hpp>
+#include <ExtractUnitsXML.hpp>
+#include <ExtractUnitsDiffXML.hpp>
+#include <ExtractUnitsDiffXMLPreserve.hpp>
+#include <XPathQueryUnits.hpp>
+#include <XSLTUnits.hpp>
+#include <RelaxNGUnits.hpp>
 
-#include "SAX2ExtractUnitsSrc.hpp"
+#include <SAX2ExtractUnitsSrc.hpp>
 
-#include "srcexfun.hpp"
+#include <srcexfun.hpp>
 
 #include <libexslt/exslt.h>
-#include "libxml_archive_read.hpp"
-#include "libxml_archive_write.hpp"
+#include <libxml_archive_read.hpp>
+#include <libxml_archive_write.hpp>
 
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
 #include <dlfcn.h>

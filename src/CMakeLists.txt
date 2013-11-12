@@ -18,20 +18,12 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+subdirs(parser translator libsrcml srcml oldclient)
+add_library(srcml_static STATIC $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:translator> srcml/srcmlapps.cpp)
+set_target_properties(srcml_static PROPERTIES OUTPUT_NAME srcml)
+target_link_libraries(srcml_static ${LIBXML2_LIBS} ${LIBXSLT_LIBS} ${BOOST_PROGRAM_OPTIONS_LIB} ${ANTLR_LIB} ${LIBARCHIVE_LIBS} dl)
 
-file(GLOB SRCML_HEADERS *.hpp)
-file(GLOB SRCML_SOURCE *.cpp)
-list(REMOVE_ITEM SRCML_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/srcml.cpp)
-add_library(tempLib STATIC ${SRCML_HEADERS} ${SRCML_SOURCE})
-
-
-get_property(LIBXML2_LIBS GLOBAL PROPERTY LIBXML2_LIBS)
-get_property(LIBXSLT_LIBS GLOBAL PROPERTY LIBXSLT_LIBS)
-get_property(BOOST_PROGRAM_OPTIONS_LIB GLOBAL PROPERTY BOOST_PROGRAM_OPTIONS_LIB)
-get_property(ANTLR_LIB GLOBAL PROPERTY ANTLR_LIB)
-get_property(LIBARCHIVE_LIBS GLOBAL PROPERTY LIBARCHIVE_LIBS)
-
-add_executable(srcml srcml.cpp)
-target_link_libraries(srcml tempLib srcml_static)
-
+add_library(srcml_shared SHARED $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:translator> srcml/srcmlapps.cpp)
+set_target_properties(srcml_shared PROPERTIES OUTPUT_NAME srcml)
+target_link_libraries(srcml_shared ${LIBXML2_LIBS} ${BOOST_PROGRAM_OPTIONS_LIB} ${ANTLR_LIB} ${LIBARCHIVE_LIBS} dl)
 

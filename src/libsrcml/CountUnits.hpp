@@ -25,8 +25,8 @@
 
 #include <cstdio>
 #include <sstream>
-#include "SAX2ExtractUnitsSrc.hpp"
-#include "ProcessUnit.hpp"
+#include <SAX2ExtractUnitsSrc.hpp>
+#include <ProcessUnit.hpp>
 
 class CountUnits : public ProcessUnit {
 public :

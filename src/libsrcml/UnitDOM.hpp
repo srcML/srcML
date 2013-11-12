@@ -25,7 +25,7 @@
 
 #include <libxml/SAX2.h>
 
-#include "ProcessUnit.hpp"
+#include <ProcessUnit.hpp>
 
 class UnitDOM : public ProcessUnit {
 public :

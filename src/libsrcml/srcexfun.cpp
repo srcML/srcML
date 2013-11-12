@@ -20,8 +20,8 @@
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "srcexfun.hpp"
-#include "srcmlns.hpp"
+#include <srcexfun.hpp>
+#include <srcmlns.hpp>
 #include <cmath>
 #include <cstring>
 #include <string>
@@ -46,7 +46,7 @@
 #include <libxslt/extensions.h>
 #endif
 
-#include "URIStream.hpp"
+#include <URIStream.hpp>
 
 static int Position;
 static PROPERTIES_TYPE* oldpattributes;
