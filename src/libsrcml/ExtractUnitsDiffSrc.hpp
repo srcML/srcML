@@ -25,8 +25,8 @@
 #ifndef INCLUDED_EXTRACTUNITSDIFFSRC_HPP
 #define INCLUDED_EXTRACTUNITSDIFFSRC_HPP
 
-#include "ExtractUnitsSrc.hpp"
-#include "srcmlapps.hpp"
+#include <ExtractUnitsSrc.hpp>
+#include <srcmlapps.hpp>
 #include <stack>
 
 class ExtractUnitsDiffSrc : public ExtractUnitsSrc {

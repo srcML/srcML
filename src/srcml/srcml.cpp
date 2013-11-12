@@ -27,7 +27,7 @@
   Replaces the src2srcml and srcml2src of the original srcML toolkit.
 */
 
-#include "libsrcml/srcml.h"
+#include <srcml.h>
 #include <srcmlCLI.hpp>
 #include <thread_queue.hpp>
 
