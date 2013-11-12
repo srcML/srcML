@@ -14,6 +14,10 @@
 </unit>
 
 <unit>
+<function_decl><type><specifier>virtual</specifier> <name>NonCopyable</name> &amp;</type> <name>operator=</name><parameter_list>(<param><decl><type><specifier>const</specifier></type> <name>NonCopyable</name>&amp;</decl></param>)</parameter_list> = 0;</function_decl>
+</unit>
+
+<unit>
 <function_decl><type><name>NonCopyable</name> &amp;</type> <name>operator=</name><parameter_list>(<param><decl><type><specifier>const</specifier></type> <name>NonCopyable</name>&amp;</decl></param>)</parameter_list> = delete;</function_decl>
 </unit>
 
