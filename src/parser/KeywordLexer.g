@@ -233,6 +233,7 @@ public:
 bool onpreprocline;
 bool startline;
 bool atstring;
+bool rawstring;
 
 // map from text of literal to token number, adjusted to language
 struct keyword { char const * const text; int token; int language; };

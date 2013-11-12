@@ -61,6 +61,7 @@ tokens {
 public:
 
 bool onpreprocline;
+bool rawstring;
 
 }
 
@@ -73,7 +74,31 @@ STRING_START :
             // #define a "abc
             // note that the "abc does not end at the end of this line,
             // but the #define must end, so EOL is not a valid string character
-            '"' { changetotextlexer(STRING_END); } |
+            '"' { if(rawstring) {
+                    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+                    std::string delimiter;
+                    while(LA(1) != '(') {
+                        fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, LA(1));
+                        delimiter += LA(1);
+                        consume();
+                    }
+                    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, delimiter.c_str());
+                    while(LA(1) != ')') {
+                        consume();
+                        int pos = 0;
+                        while(LA(1) == delimiter[pos]) {
+                            ++pos;
+                            consume();
+                        }
+
+                        if(pos != delimiter.size())
+                            continue;
+                        break;
+                    }
+
+
+                }
+                changetotextlexer(STRING_END); } |
 
             // character literal or single quoted string
             '\'' { $setType(CHAR_START); changetotextlexer(CHAR_END); }
@@ -93,8 +118,11 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); } :
         ('a'..'z' | 'A'..'Z' | '_' | '\200'..'\377')
         (
 
-            { lastchar == 'L' || lastchar == 'R' || lastchar == 'U' || lastchar == 'u' }?
-            { $setType(STRING_START); } ('8' | 'R')* STRING_START |
+            { lastchar == 'L' || lastchar == 'U' || lastchar == 'u' }?
+            { $setType(STRING_START); } ('8' | { rawstring = true; } 'R')* STRING_START |
+
+            { lastchar == 'R' }?
+            { $setType(STRING_START); rawstring = true; } STRING_START |
 
             (options { greedy = true; } : '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377')*
         )
