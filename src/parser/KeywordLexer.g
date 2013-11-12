@@ -25,6 +25,7 @@ header "pre_include_hpp" {
 }
 
 header {
+   #include <string>
    #include "Language.hpp"
    #include "UTF8CharBuffer.hpp"
    #include "antlr/TokenStreamSelector.hpp"
@@ -36,7 +37,7 @@ header "post_include_cpp" {
 
 void KeywordLexer::changetotextlexer(int typeend) {
           selector->push("text"); 
-           ((CommentTextLexer* ) (selector->getStream("text")))->init(typeend, onpreprocline, atstring);
+           ((CommentTextLexer* ) (selector->getStream("text")))->init(typeend, onpreprocline, atstring, rawstring, delimiter);
 }
 }
 
@@ -159,6 +160,7 @@ tokens {
     CONST;
     MUTABLE;
     VOLATILE;
+    TRANSIENT;
 
     // Java tokens
     IMPORT;
@@ -222,6 +224,8 @@ tokens {
     EQUALS;
     INTO;
     SYNCHRONIZED;
+    NATIVE;
+    STRICTFP;
 }
 
 {
@@ -230,6 +234,8 @@ public:
 bool onpreprocline;
 bool startline;
 bool atstring;
+bool rawstring;
+std::string delimiter;
 
 // map from text of literal to token number, adjusted to language
 struct keyword { char const * const text; int token; int language; };
@@ -314,7 +320,7 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
 
         { "const"         , CONST         , LANGUAGE_ALL }, 
         { "mutable"       , MUTABLE       , LANGUAGE_CXX }, 
-        { "volatile"      , VOLATILE      , LANGUAGE_CXX_FAMILY }, 
+        { "volatile"      , VOLATILE      , LANGUAGE_OO }, 
 
         // add all C++ and Java specific keywords to the literals table
 
@@ -392,6 +398,17 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         // synchronized
         { "synchronized"  , SYNCHRONIZED  , LANGUAGE_JAVA },
 
+        // native
+        { "native"  , NATIVE  , LANGUAGE_JAVA },
+
+        // strictfp
+        { "strictfp"  , STRICTFP  , LANGUAGE_JAVA },
+        { "transient"      , TRANSIENT      , LANGUAGE_JAVA }, 
+
+        // catch seperator
+	    { "|"             , BAR         , LANGUAGE_JAVA }, 
+
+
         // add all C# specific keywords to the literals table
         { "foreach"       , FOREACH       , LANGUAGE_CSHARP }, 
         { "ref"           , REF           , LANGUAGE_CSHARP }, 
@@ -416,7 +433,6 @@ KeywordLexer(UTF8CharBuffer* pinput, const char* encoding, int language)
         { "endregion"     , ENDREGION     , LANGUAGE_CSHARP }, 
         { "unsafe"        , UNSAFE        , LANGUAGE_CSHARP }, 
         { "readonly"      , READONLY      , LANGUAGE_CSHARP }, 
-        { "volatile"      , VOLATILE      , LANGUAGE_CSHARP }, 
         { "partial"       , PARTIAL       , LANGUAGE_CSHARP }, 
         { "get"           , GET           , LANGUAGE_CSHARP }, 
         { "set"           , SET           , LANGUAGE_CSHARP }, 

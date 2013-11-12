@@ -32,6 +32,8 @@ enum {
     PROCESSTEXT,
     PROCESSBLOCKCOMMENTSTART,
     PROCESSJAVADOCCOMMENTSTART,
+    PROCESSDOXYGENCOMMENTSTART,
+    PROCESSLINEDOXYGENCOMMENTSTART,
     PROCESSENDBLOCKTOKEN,
     PROCESSLINECOMMENTSTART,
     PROCESSENDLINETOKEN,
@@ -53,10 +55,14 @@ srcMLTranslatorOutput::PROCESS_PTR srcMLTranslatorOutput::num2process[] = {
     &srcMLTranslatorOutput::processText,
     &srcMLTranslatorOutput::processBlockCommentStart,
     &srcMLTranslatorOutput::processJavadocCommentStart,
+    &srcMLTranslatorOutput::processDoxygenCommentStart,
+    &srcMLTranslatorOutput::processLineDoxygenCommentStart,
     &srcMLTranslatorOutput::processEndBlockToken,
     &srcMLTranslatorOutput::processLineCommentStart,
     &srcMLTranslatorOutput::processEndLineToken,
-    //  &srcMLTranslatorOutput::processMarker,
+#if DEBUG
+    &srcMLTranslatorOutput::processMarker,
+#endif
     &srcMLTranslatorOutput::processAccess,
     &srcMLTranslatorOutput::processString,
     &srcMLTranslatorOutput::processChar,
@@ -89,6 +95,8 @@ namespace {
     ELEMENT_MAP(LINECOMMENT_START, PROCESSLINECOMMENTSTART)
     ELEMENT_MAP(LINECOMMENT_END, PROCESSENDLINETOKEN)
     ELEMENT_MAP(JAVADOC_COMMENT_START, PROCESSJAVADOCCOMMENTSTART)
+    ELEMENT_MAP(DOXYGEN_COMMENT_START, PROCESSDOXYGENCOMMENTSTART)
+    ELEMENT_MAP(LINE_DOXYGEN_COMMENT_START, PROCESSLINEDOXYGENCOMMENTSTART)
 
 #if DEBUG
     ELEMENT_MAP(SMARKER, PROCESSMARKER)

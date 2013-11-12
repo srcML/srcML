@@ -130,7 +130,7 @@ header "post_include_hpp" {
 #include "Options.hpp"
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != 11 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != 18 ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
@@ -597,7 +597,7 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
         // end of line
         line_continuation | EOL | LINECOMMENT_START |
 
-        comma |
+        comma | { inLanguage(LANGUAGE_JAVA) }? bar |
 
         { !inTransparentMode(MODE_INTERNAL_END_PAREN) || inPrevMode(MODE_CONDITION) }? rparen[false] |
 
@@ -662,7 +662,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         template_declaration |
 
         // exception statements
-        try_statement | catch_statement | finally_statement | throw_statement |
+        { inLanguage(LANGUAGE_JAVA) }? (TRY LPAREN)=>try_statement_with_resource | try_statement | catch_statement | finally_statement | throw_statement |
 
         // namespace statements
         namespace_definition | using_namespace_statement |
@@ -799,6 +799,20 @@ next_token[] returns [int token] {
     consume();
 
     token = LA(1);
+
+    inputState->guessing--;
+    rewind(place);
+}:;
+
+next_token_string[] returns [std::string token] {
+
+    int place = mark();
+    inputState->guessing++;
+
+    // consume current token
+    consume();
+
+    token = LT(1)->getText();
 
     inputState->guessing--;
     rewind(place);
@@ -1569,7 +1583,7 @@ interface_definition[] { ENTRY_DEBUG } :
             // java interfaces end at the end of the block
             setMode(MODE_END_AT_BLOCK);
         }
-        class_preamble INTERFACE class_header lcurly
+        class_preamble (interface_annotation | INTERFACE) class_header lcurly
 ;
 
 struct_declaration[] { ENTRY_DEBUG } :
@@ -2123,6 +2137,19 @@ lparen_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
         LPAREN
 ;
 
+bar[] { ENTRY_DEBUG }:
+        bar_marked
+;
+
+// marking comma operator
+bar_marked[] { LightweightElement element(this); ENTRY_DEBUG }:
+        {
+            if (isoption(parseoptions, OPTION_OPERATOR) && !inMode(MODE_PARAMETER))
+                startElement(SOPERATOR);
+        }
+        BAR
+;
+
 comma[] { ENTRY_DEBUG }:
         {
             // comma ends the current item in a list
@@ -2371,7 +2398,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
             set_bool[sawenum, sawenum || LA(1) == ENUM]
             (
-                { _tokenSet_21.member(LA(1)) && (token != SIGNAL || (token == SIGNAL && look_past(SIGNAL) == COLON))}?
+                { _tokenSet_21.member(LA(1)) && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON))}?
                 set_int[token, LA(1)]
                 set_bool[foundpure, foundpure || LA(1) == CONST]
                 (specifier | (SIGNAL COLON)=>SIGNAL)
@@ -2401,11 +2428,14 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 property_method_name
                 set_type[type, PROPERTY_ACCESSOR, true] |
 
-                { type_count == attribute_count + specifier_count }?
-                (CLASS     set_type[type, CLASS_DECL]  |
-                 STRUCT    set_type[type, STRUCT_DECL] |
-                 UNION     set_type[type, UNION_DECL]  |
-                 INTERFACE set_type[type, INTERFACE_DECL])
+                { type_count == attribute_count + specifier_count  && (!inLanguage(LANGUAGE_JAVA) 
+            || (inLanguage(LANGUAGE_JAVA) && (LA(1) != ATSIGN 
+                                             || (LA(1) == ATSIGN && next_token() == INTERFACE)))) }?
+                (CLASS               set_type[type, CLASS_DECL]     |
+                 STRUCT              set_type[type, STRUCT_DECL]    |
+                 UNION               set_type[type, UNION_DECL]     |
+                 INTERFACE           set_type[type, INTERFACE_DECL] |
+                 ATSIGN INTERFACE set_type[type, INTERFACE_DECL])
                 set_bool[lcurly, LA(1) == LCURLY]
                 (class_header | LCURLY)
                 set_type[type, CLASS_DEFN,     type == CLASS_DECL     && (LA(1) == LCURLY || lcurly)]
@@ -2434,6 +2464,8 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
                 // special function name
                 MAIN set_bool[isoperator, type_count == 0] |
+
+        { inLanguage(LANGUAGE_JAVA) && inMode(MODE_PARAMETER) }? bar |
 
                 // type parts that can occur before other type parts (excluding specifiers)
                 { LA(1) != LBRACKET }?
@@ -2482,7 +2514,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
               and it is part of a parameter list
         */
         set_type[type, VARIABLE, ((type_count - specifier_count > 0) ||
-                                 (inparam && (LA(1) == RPAREN || LA(1) == COMMA || LA(1) == LBRACKET ||
+                                 (inparam && (LA(1) == RPAREN || LA(1) == COMMA || LA(1) == BAR || LA(1) == LBRACKET ||
                                               ((inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_C)) && LA(1) == EQUAL))))]
 
         // need to see if we possibly have a constructor/destructor name, with no type
@@ -2636,10 +2668,12 @@ type_identifier_count[int& type_count] { ++type_count; ENTRY_DEBUG } :
 deduct[int& type_count] { --type_count; } :;
 */
 
-eat_type[int count] { if (count <= 0) return; ENTRY_DEBUG } :
+eat_type[int & count] { if (count <= 0 || LA(1) == BAR) return; ENTRY_DEBUG } :
 
         type_identifier
-        eat_type[count - 1]
+        set_int[count, count - 1]
+        eat_type[count]
+
 ;
 
 // throw list for a function
@@ -2786,7 +2820,6 @@ overloaded_operator[] { SingleElement element(this); ENTRY_DEBUG } :
 ;
 
 /* linq expressions */
-
 linq_expression[] { CompleteElement element(this); ENTRY_DEBUG }:
         {
             startNewMode(MODE_LOCAL);
@@ -2934,7 +2967,6 @@ variable_identifier_array_grammar_sub[bool& iscomplex] { CompleteElement element
         RBRACKET
 ;
 
-
 variable_identifier_array_grammar_sub_contents{ ENTRY_DEBUG } :
         { !inLanguage(LANGUAGE_CSHARP) }? complete_expression |
 
@@ -2942,7 +2974,6 @@ variable_identifier_array_grammar_sub_contents{ ENTRY_DEBUG } :
             ({ /* stop warning */ LA(1) == COMMA }? COMMA | complete_expression)
         )*
 ;
-
 
 attribute[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
@@ -3050,7 +3081,7 @@ identifier[] { SingleElement element(this); ENTRY_DEBUG } :
         identifier_list
 ;
 
-identifier_list { ENTRY_DEBUG } :
+identifier_list[] { ENTRY_DEBUG } :
             NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
             SUPER | CHECKED | UNCHECKED | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD |
             SIGNAL |
@@ -3199,12 +3230,12 @@ specifier[] { SingleElement element(this); ENTRY_DEBUG } :
             PUBLIC | PRIVATE | PROTECTED |
 
             // C++
-            FINAL | STATIC | ABSTRACT | FRIEND | { inLanguage(LANGUAGE_CSHARP) }? NEW | VOLATILE | MUTABLE |
+            FINAL | STATIC | ABSTRACT | FRIEND | { inLanguage(LANGUAGE_CSHARP) }? NEW | MUTABLE |
 
             // C# & Java
             INTERNAL | SEALED | OVERRIDE | REF | OUT | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE |
             DELEGATE | PARTIAL | EVENT | ASYNC | VIRTUAL | EXTERN | INLINE | IN | PARAMS |
-            { inLanguage(LANGUAGE_JAVA) }? SYNCHRONIZED |
+            { inLanguage(LANGUAGE_JAVA) }? (SYNCHRONIZED | NATIVE | STRICTFP | TRANSIENT) |
 
             CONST
         )
@@ -3313,6 +3344,15 @@ destructor_header[] { ENTRY_DEBUG } :
         }
 ;
 
+interface_annotation[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            // start the function call element
+            startElement(SANNOTATION);
+        }
+        ATSIGN INTERFACE
+
+;
+
 annotation[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
@@ -3325,7 +3365,7 @@ annotation[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         function_identifier
 
-        (call_argument_list (~(RPAREN))* rparen)*
+        (call_argument_list ({ LA(1) != RPAREN && LA(1) != COMMA }? annotation_argument (comma)*)* rparen)*
 ;
 
 // call  function call, macro, etc.
@@ -3475,6 +3515,38 @@ try_statement[] { ENTRY_DEBUG } :
             startElement(STRY_BLOCK);
         }
         TRY
+;
+
+try_statement_with_resource[] {  int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+        {
+            // treat try block as nested block statement
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_TRY);
+
+            // start of the try statement
+            startElement(STRY_BLOCK);
+            // expect a condition to follow the keyword
+
+            startNewMode(MODE_TOP | MODE_LIST | MODE_EXPECT | MODE_INTERNAL_END_PAREN);
+        }
+        TRY LPAREN
+        (
+            // explicitly check for a variable declaration since it can easily
+            // be confused with an expression
+            { pattern_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
+            for_initialization_variable_declaration[type_count] |
+
+            {
+                // use a new mode without the expect so we don't nest expression parts
+                startNewMode(MODE_EXPRESSION);
+
+                // start the expression element
+                startElement(SEXPRESSION);
+            }
+            // explicitly check for non-terminate so that a large switch statement
+            // isn't needed
+            expression
+        )
+
 ;
 
 checked_statement[] { ENTRY_DEBUG } :
@@ -3899,7 +3971,7 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
         OPERATORS | TEMPOPS |
             TEMPOPE ({ SkipBufferSize() == 0 }? TEMPOPE)? ({ SkipBufferSize() == 0 }? TEMPOPE)? ({ SkipBufferSize() == 0 }? EQUAL)? |
     EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF |
-            QMARK ({ SkipBufferSize() == 0 }? QMARK)? |
+            QMARK ({ SkipBufferSize() == 0 }? QMARK)? | { inLanguage(LANGUAGE_JAVA) }? BAR |
 
             // others are not combined
             NEW | DELETE | IN | IS | STACKALLOC | AS | AWAIT | LAMBDA
@@ -3979,7 +4051,6 @@ rparen[bool markup = true] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
         }
 ;
 
-
 // Dot (period) operator
 period[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
@@ -4029,7 +4100,7 @@ expression_setup_linq[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
 
 expression_part_plus_linq[CALLTYPE type = NOCALL] { ENTRY_DEBUG } :
 
-        { inLanguage(LANGUAGE_CSHARP) }?
+        { inLanguage(LANGUAGE_CSHARP) && next_token() != RPAREN && next_token_string().find('=') == std::string::npos }?
         (linq_expression_pure)=> linq_expression |
 
         expression_part[type]
@@ -4264,7 +4335,7 @@ parameter_list[] { CompleteElement element(this); bool lastwasparam = false; boo
             // We are in a parameter list.  Need to make sure we end it down to the start of the parameter list
             if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
                 endMode();
-        } comma |
+        } comma | { inLanguage(LANGUAGE_JAVA) }? bar |
         complete_parameter { foundparam = lastwasparam = true; })* empty_element[SPARAMETER, !lastwasparam && foundparam] rparen[false]
 ;
 
@@ -4314,8 +4385,6 @@ kr_parameter_terminate[] { ENTRY_DEBUG }:
     terminate_pre terminate_token { endDownToModeSet(MODE_FUNCTION_TAIL); }
 ;
 
-
-
 complete_parameter[] { ENTRY_DEBUG } :
         parameter
         (options { greedy = true; } : parameter_declaration_initialization ({LA(1) != RPAREN }? expression)*)*
@@ -4335,6 +4404,22 @@ argument[] { ENTRY_DEBUG } :
 
         type_identifier
         )
+;
+
+annotation_argument[] { ENTRY_DEBUG } :
+        { getParen() == 0 }? rparen[false] |
+        {
+            // argument with nested expression
+            startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
+
+            // start the argument
+            startElement(SARGUMENT);
+        }
+        (
+        { !(LA(1) == RPAREN) }? expression |
+
+        type_identifier
+        )*
 ;
 
 parameter[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
@@ -4364,7 +4449,7 @@ parameter[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NO
                     type_count = 1;
             }
             { stmt_type == VARIABLE || LA(1) == DOTDOTDOT}?
-            parameter_type_count[type_count]
+            parameter_type_count[type_count] ({ LA(1) == BAR }? bar set_int[type_count, type_count > 1 ? type_count - 1 : 1] parameter_type_count[type_count])*
             {
                 // expect a name initialization
                 setMode(MODE_VARIABLE_NAME | MODE_INIT);
@@ -4373,7 +4458,7 @@ parameter[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NO
         )
 ;
 
-parameter_type_count[int type_count] { CompleteElement element(this); ENTRY_DEBUG } :
+parameter_type_count[int & type_count] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // local mode so start element will end correctly
             startNewMode(MODE_LOCAL);
@@ -4531,7 +4616,6 @@ template_super_java[] { CompleteElement element(this); ENTRY_DEBUG } :
         SUPER
         compound_name_java
 ;
-
 
 tempops[] { ENTRY_DEBUG } :
         {
@@ -4863,10 +4947,9 @@ catch[...] {
 
 cpp_garbage[] :
 
- ~(EOL | LINECOMMENT_START | COMMENT_START | JAVADOC_COMMENT_START | EOF)
+ ~(EOL | LINECOMMENT_START | COMMENT_START | JAVADOC_COMMENT_START | DOXYGEN_COMMENT_START | LINE_DOXYGEN_COMMENT_START | EOF)
 
 ;
-  
 
 eol_skip[int directive_token, bool markblockzero] {
 
@@ -4874,6 +4957,8 @@ eol_skip[int directive_token, bool markblockzero] {
            LA(1) != LINECOMMENT_START &&
            LA(1) != COMMENT_START &&
            LA(1) != JAVADOC_COMMENT_START &&
+           LA(1) != DOXYGEN_COMMENT_START &&
+           LA(1) != LINE_DOXYGEN_COMMENT_START &&
            LA(1) != 1 /* EOF? */
         )
                 consume();

@@ -69,8 +69,12 @@ bool onpreprocline;
 // ignore character escapes
 bool noescape;
 
+bool rawstring;
+
+std::string delimiter;
+
 CommentTextLexer(const antlr::LexerSharedInputState& state)
-	: antlr::CharScanner(state,true), mode(0), onpreprocline(false), noescape(false)
+	: antlr::CharScanner(state,true), mode(0), onpreprocline(false), noescape(false), rawstring(false), delimiter("")
 {}
 
 private:
@@ -82,13 +86,17 @@ public:
     }
 
     // reinitialize comment lexer
-    void init(int m, bool onpreproclinestate, bool nescape = false) {
+    void init(int m, bool onpreproclinestate, bool nescape = false, bool rstring = false, std::string dstring = "") {
 
         onpreprocline = onpreproclinestate;
 
         mode = m;
 
         noescape = nescape;
+        
+        rawstring = rstring;
+
+        delimiter = dstring;
     }
 }
 
@@ -166,7 +174,7 @@ COMMENT_TEXT {
                                 $setType(mode); selector->pop();
                             }
 
-                    } else if ((prevLA != '\\') && mode == STRING_END) {
+                    } else if ((prevLA != '\\') && mode == STRING_END && !rawstring) {
                         $setType(mode); selector->pop();
                     } 
                 } |
@@ -181,7 +189,22 @@ COMMENT_TEXT {
         '\047' /* '\'' */
                 { if (prevLA != '\\' && mode == CHAR_END) { $setType(mode); selector->pop(); } } |
 
-        '\050'..'\056' |
+        '\050' |
+
+        '\051' /* ')' */ {
+
+                int pos = 0;
+                while(pos < delimiter.size() && LA(1) == delimiter[pos]) {
+                    ++pos;
+                    consume();
+                }
+
+                if(pos == delimiter.size()) {
+                    rawstring = false;
+                }
+        }|
+
+        '\052'..'\056' |
 
         '\057' /* '/' */
                 { if (prevLA == '*' && mode == COMMENT_END) { $setType(mode); selector->pop(); } } |

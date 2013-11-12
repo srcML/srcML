@@ -63,7 +63,6 @@ LANGUAGE_CXX try
 LANGUAGE_CXX typedef_struct
 LANGUAGE_CXX operator
 LANGUAGE_CXX function_cpp
-LANGUAGE_CXX literal_cpp
 LANGUAGE_CXX call_ns
 LANGUAGE_CXX expression_pointer
 LANGUAGE_CXX enum_cpp
@@ -72,6 +71,7 @@ LANGUAGE_CXX call_cpp
 LANGUAGE_CXX class_cpp
 LANGUAGE_CXX decl_simple_cpp
 LANGUAGE_CXX cast_cpp
+LANGUAGE_CXX doxygen
 
 LANGUAGE_CSHARP_GEN asm
 LANGUAGE_CSHARP_GEN extern
@@ -132,11 +132,16 @@ LANGUAGE_JAVA package_java
 LANGUAGE_JAVA finally_java
 LANGUAGE_JAVA generics_java
 LANGUAGE_JAVA literal_java
-LANGUAGE_JAVA function_java
 LANGUAGE_JAVA operator_java
 LANGUAGE_JAVA anonymous_class_java
 LANGUAGE_JAVA synchronized_specifier_java
 LANGUAGE_JAVA synchronized_statement_java
+LANGUAGE_JAVA javadoc_java
+LANGUAGE_JAVA native_java
+LANGUAGE_JAVA strictfp_java
+LANGUAGE_JAVA catch_form_java
+LANGUAGE_JAVA try_java
+LANGUAGE_JAVA decl_java
 
 LANGUAGE_OO catch_form
 LANGUAGE_OO foreach

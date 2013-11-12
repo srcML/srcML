@@ -56,6 +56,9 @@ private :
   /** track if empty unit */
   bool is_empty;
 
+  /** indicate if we need to wait on the root */
+  bool wait_root;
+
 public :
 
   /** Give access to membeers for srcMLSAX2Reader class */
@@ -66,7 +69,7 @@ public :
    *
    * Constructor.  Sets up mutex, conditions and state.
    */
-  srcMLReaderHandler() : unit(0), is_done(false), read_root(false), collect_unit_attributes(false), collect_srcml(false), terminate(false), is_empty(false) {
+  srcMLReaderHandler() : unit(0), is_done(false), read_root(false), collect_unit_attributes(false), collect_srcml(false), terminate(false), is_empty(false), wait_root(true) {
 
     archive = srcml_create_archive();
     archive->prefixes.clear();
@@ -107,11 +110,11 @@ public :
       return;
     }
 
-    pthread_cond_wait(&is_done_cond, &mutex);
+    if(wait_root) pthread_cond_wait(&is_done_cond, &mutex);
     pthread_mutex_unlock(&mutex);
 
   }
-
+ 
   /**
    * resume
    *
@@ -121,6 +124,26 @@ public :
 
     pthread_mutex_lock(&mutex);
     pthread_cond_broadcast(&cond);
+    pthread_mutex_unlock(&mutex);
+
+  }
+
+  /**
+   * resume_and_wait
+   *
+   * Atomic resume SAX2 execution then wait.
+   */
+  void resume_and_wait() {
+
+    pthread_mutex_lock(&mutex);
+    pthread_cond_broadcast(&cond);
+    if(is_done) {
+
+      pthread_mutex_unlock(&mutex);
+      return;
+    }
+
+    pthread_cond_wait(&is_done_cond, &mutex);
     pthread_mutex_unlock(&mutex);
 
   }
@@ -235,10 +258,10 @@ public :
 
     // pause
     pthread_mutex_lock(&mutex);
+    wait_root = false;
     pthread_cond_broadcast(&is_done_cond);
     pthread_cond_wait(&cond, &mutex);
     pthread_mutex_unlock(&mutex);
-
     read_root = true;
 
     if(terminate) stop_parser();
@@ -439,7 +462,6 @@ public :
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-    if(is_empty) *unit->unit += ">";
     if(collect_srcml) {
 
       write_endTag(localname, prefix, URI, is_empty);
@@ -473,7 +495,18 @@ public :
     if(is_empty) *unit->unit += ">";
     is_empty = false;
 
-    unit->unit->append((const char *)ch, len);
+    for(int i = 0; i < len; ++i) {
+      char character = (char)ch[i];
+
+      if(character == '&')
+        (*unit->unit) += "&amp;";
+      else if(character == '<')
+        (*unit->unit) += "&lt;";
+      else if(character == '>')
+        (*unit->unit) += "&gt;";
+      else
+        (*unit->unit) += character;
+    }
 
     if(terminate) stop_parser();
 
@@ -510,7 +543,7 @@ private :
 
     for(int i = 0, pos = 0; i < nb_namespaces; ++i, pos += 2) {
 
-      if(strcmp((const char *)namespaces[pos + 1], SRCML_SRC_NS_URI) == 0)
+      if(strcmp((const char *)namespaces[pos + 1], SRCML_CPP_NS_URI) != 0)
         continue;
 
       *unit->unit += " xmlns";

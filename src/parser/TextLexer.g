@@ -52,6 +52,8 @@ options {
 tokens {
     COMMENT_START;
     JAVADOC_COMMENT_START;
+    DOXYGEN_COMMENT_START;
+    LINE_DOXYGEN_COMMENT_START;
     CHAR_START;
 }
 
@@ -59,6 +61,8 @@ tokens {
 public:
 
 bool onpreprocline;
+bool rawstring;
+std::string delimiter;
 
 }
 
@@ -71,17 +75,27 @@ STRING_START :
             // #define a "abc
             // note that the "abc does not end at the end of this line,
             // but the #define must end, so EOL is not a valid string character
-            '"' { changetotextlexer(STRING_END); } |
+            '"' { if(rawstring) {
+                    //rawstring = false;
+                    //std::string delimiter;
+                    while(LA(1) != '(') {
+                        delimiter += LA(1);
+                        consume();
+                    }
+                    consume();
+
+                }
+                changetotextlexer(STRING_END); } |
 
             // character literal or single quoted string
             '\'' { $setType(CHAR_START); changetotextlexer(CHAR_END); }
         )
-        { atstring = false; }
+        { atstring = false; rawstring = false; delimiter = ""; }
 ;
 
 CONSTANTS :
         { startline = false; }
-        ('0'..'9') (options { greedy = true; } : '0'..'9' | 'x' | 'A'..'F' | 'a'..'f' )*
+        ('0'..'9') (options { greedy = true; } : '0'..'9' | 'x' | 'A'..'F' | 'a'..'f' | '_' )*
         (options { greedy = true; } : "." | '0'..'9')*
         (options { greedy = true; } : NAME)*
 ;
@@ -91,8 +105,11 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); } :
         ('a'..'z' | 'A'..'Z' | '_' | '\200'..'\377')
         (
 
-            { lastchar == 'L' }?
-            { $setType(STRING_START); } STRING_START |
+            { lastchar == 'L' || lastchar == 'U' || lastchar == 'u' }?
+            { $setType(STRING_START); } ('8' | { rawstring = true; } 'R')* STRING_START |
+
+            { lastchar == 'R' }?
+            { $setType(STRING_START); rawstring = true; } STRING_START |
 
             (options { greedy = true; } : '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377')*
         )
@@ -102,17 +119,22 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); } :
 LINECOMMENT_START
     :   '/' ('/' { 
 
-              changetotextlexer(LINECOMMENT_END);
+                if(inLanguage(LANGUAGE_CXX) && (LA(1) == '/' || LA(1) == '!'))
+                    $setType(LINE_DOXYGEN_COMMENT_START);
+                
+                changetotextlexer(LINECOMMENT_END);
 
-              // when we return, we may have eaten the EOL, so we will turn back on startline
-              startline = true;
+                // when we return, we may have eaten the EOL, so we will turn back on startline
+                startline = true;
 
-              onpreprocline = false;
+                onpreprocline = false;
             } |
             '*'
             { 
                 if (inLanguage(LANGUAGE_JAVA) && LA(1) == '*')
                     $setType(JAVADOC_COMMENT_START);
+                else if (inLanguage(LANGUAGE_CXX) && (LA(1) == '*' || LA(1) == '!'))
+                    $setType(DOXYGEN_COMMENT_START);
                 else
                     $setType(COMMENT_START);
 

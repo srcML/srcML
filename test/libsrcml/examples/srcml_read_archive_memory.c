@@ -34,6 +34,8 @@ int main(int argc, char* argv[]) {
     struct srcml_archive* archive;
     struct srcml_unit* unit;
     int srcml_input;
+    char * buffer;
+    int size = 0;
     char* s =
         "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
         "<unit xmlns=\"http://www.sdml.info/srcML/src\">"
@@ -59,10 +61,10 @@ int main(int argc, char* argv[]) {
         filename = srcml_unit_get_filename(unit);
 
         /* uparse and write to a file */
-        char * buffer;
-        srcml_unparse_unit_memory(unit, &buffer);
+        srcml_unparse_unit_memory(unit, &buffer, &size);
+
         printf("%s", buffer);
-        free(buffer);
+        free((void *)buffer);
         srcml_free_unit(unit);
     }
 

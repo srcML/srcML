@@ -27,11 +27,11 @@ xml_filename = ""
 
 srcmltranslator = os.environ.get("SRC2SRCML")
 if srcmltranslator == "" or srcmltranslator == None:
-	srcmltranslator = "../bin/src2srcml"
+	srcmltranslator = "../build/src2srcml"
 
 srcmlutility = os.environ.get("SRCML2SRC")
 if srcmlutility == "" or srcmlutility == None:
-	srcmlutility = "../bin/srcml2src"
+	srcmlutility = "../build/srcml2src"
 
 # Walk into directories in filesystem
 # Ripped from os module and slightly modified
@@ -190,7 +190,7 @@ def src2srcML_executable(text_file, encoding, language, directory, filename, pre
         return safe_communicate(command, text_file)
 
 # find differences of two files
-def src2srcML(text_file, encoding, language, directory, filename, prefixlist):
+def src2srcML(text_file, encoding, language, directory, filename, xmlns):
 
         options = xmlns
         if language != "Java" :
@@ -407,7 +407,7 @@ elif len(sys.argv) > 2:
 		speclang = sys.argv[3]
 
 # base directory
-base_dir = "../suite"
+base_dir = "suite"
 
 errorlist = []
 
@@ -499,6 +499,7 @@ try:
                                 else :
                                         xmlns = getfullxmlns(filexml)
 
+				line_count = 0
 				while count == 0 or count < number:
 
 					try: 
@@ -543,8 +544,18 @@ try:
 						
 						# find the difference
 						result = xmldiff(unitxml, unitsrcml)
-						if count > 0 and (count % MAX_COUNT) == 0:
+						if count > 99 :
+							line_count += 3
+						elif count > 9 :
+							line_count += 2
+						else :
+							line_count += 1
+						line_count += 1
+
+						if count > 0 and line_count >= 75:
 							print "\n", "".rjust(FIELD_WIDTH_LANGUAGE), " ", "...".ljust(FIELD_WIDTH_DIRECTORY), " ",
+							line_count = 0
+
 						if result != "":
 							error_count += 1
 							

@@ -34,13 +34,14 @@ int main(int argc, char* argv[]) {
     struct srcml_archive* archive;
     struct srcml_unit* unit;
     char * s;
+    int size;
     int srcml_input;
 
     /* create a new srcml archive structure */
     archive = srcml_create_archive();
 
     /* open a srcML archive for output */
-    srcml_write_open_memory(archive, &s);
+    srcml_write_open_memory(archive, &s, &size);
 
     /* add all the files to the archive */
     for (i = 1; i < argc; ++i) {
