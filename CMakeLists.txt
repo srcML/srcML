@@ -31,9 +31,7 @@ include (srcml)
 # Setting up source include directories.
 include_directories(src/srcml src/libsrcml src/parser src/translator)
 
-# Reading Major and minor version numbers and adding them as definitions.
-
-# add_definitions(-DVERSION=\"${VERSION_NUMBER}\")
+# Setting major and minor version numbers.
 add_definitions(-DVERSION=\"1\")
 add_definitions(-DREVISION=\"1\")
 

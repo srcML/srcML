@@ -20,8 +20,15 @@
 
 subdirs(parser translator libsrcml srcml oldclient)
 
+get_property(SAX2_ENABLED GLOBAL PROPERTY SAX2_ENABLED)
+get_property(LIBXML2_LIBS GLOBAL PROPERTY LIBXML2_LIBS)
+get_property(LIBXSLT_LIBS GLOBAL PROPERTY LIBXSLT_LIBS)
+get_property(BOOST_PROGRAM_OPTIONS_LIB GLOBAL PROPERTY BOOST_PROGRAM_OPTIONS_LIB)
+get_property(ANTLR_LIB GLOBAL PROPERTY ANTLR_LIB)
+get_property(LIBARCHIVE_LIBS  GLOBAL PROPERTY LIBARCHIVE_LIBS)
+
 # Building static and dynamic libraries for srcML.
-add_library(srcml_static STATIC $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:translator> srcml/srcmlapps.cpp)
+add_library(srcml_static STATIC $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:libsrcml> srcml/srcmlapps.cpp)
 set_target_properties(srcml_static PROPERTIES OUTPUT_NAME srcml)
 target_link_libraries(srcml_static ${LIBXML2_LIBS} ${LIBXSLT_LIBS} ${BOOST_PROGRAM_OPTIONS_LIB} ${ANTLR_LIB} ${LIBARCHIVE_LIBS} dl)
 set_target_properties(srcml_static PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
