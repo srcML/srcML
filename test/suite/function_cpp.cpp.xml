@@ -40,4 +40,17 @@
 <function><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name>*</type> <name>a</name></decl></param>)</parameter_list><block>{}</block></function>
 </unit>
 
+
+<unit>
+<function><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name>*</type> <name>a</name></decl></param>)</parameter_list><block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><specifier>constexpr</specifier> <name>int</name></type> <name>get_five</name><parameter_list>()</parameter_list> <block>{<return>return <expr>5</expr>;</return>}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>get_five</name><parameter_list>()</parameter_list> <specifier>const</specifier> <block>{<return>return <expr>5</expr>;</return>}</block></function>
+</unit>
+
 </unit>
